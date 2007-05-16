@@ -1155,7 +1155,19 @@ namespace Epsitec.Common.Designer
 			}
 			else
 			{
-				if (this.IsBundlesType)
+				if (this.type == Type.Strings2)
+				{
+					CollectionView cv = new CollectionView(this.accessor.Collection);
+					foreach (CultureMap item in cv.Items)
+					{
+						err = ResourceAccess.CheckNames(item.Name, name);
+						if (err != null)
+						{
+							return err;
+						}
+					}
+				}
+				else if (this.IsBundlesType)
 				{
 					string n = this.AddFilter(name, false);
 					foreach (ResourceBundle.Field field in this.primaryBundle.Fields)
@@ -1170,8 +1182,7 @@ namespace Epsitec.Common.Designer
 						}
 					}
 				}
-
-				if (this.type == Type.Panels)
+				else if (this.type == Type.Panels)
 				{
 					foreach (ResourceBundle bundle in this.panelsList)
 					{
@@ -3012,6 +3023,36 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
+
+		public int SortDefer(int index)
+		{
+			//	Empêche tous les tris jusqu'au Undefer.
+			//	Retourne l'index pour accéder à une ressource après la suppression du tri. En effet,
+			//	comme il n'y aura plus de tri, l'index change !
+			if (this.collectionView != null)
+			{
+				CultureMap item = this.collectionView.Items[index] as CultureMap;
+				this.SortDefer();
+				index = this.collectionView.Items.IndexOf(item);
+			}
+
+			return index;
+		}
+
+		public int SortUndefer(int index)
+		{
+			//	Permet de nouveau les tris.
+			//	Retourne l'index pour accéder à une ressource après la remise du tri. En effet,
+			//	avec le nouveau tri, l'index change !
+			if (this.collectionView != null)
+			{
+				CultureMap item = this.collectionView.Items[index] as CultureMap;
+				this.SortUndefer();
+				index = this.collectionView.Items.IndexOf(item);
+			}
+
+			return index;
+		}
 
 		public void SortDefer()
 		{

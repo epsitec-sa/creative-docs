@@ -167,11 +167,7 @@ namespace Epsitec.Common.Designer.Viewers
 				{
 					this.access.AccessIndex = this.access.Sort(searcher.Row, false);
 					this.UpdateArray();
-
-					if (array != null)
-					{
-						this.array.ShowSelectedRow();
-					}
+					this.ShowSelectedRow();
 				}
 			}
 			else
@@ -216,12 +212,7 @@ namespace Epsitec.Common.Designer.Viewers
 			{
 				this.access.AccessIndex = this.access.Sort(this.access.AccessIndex, true);
 				this.UpdateArray();
-
-				if (this.array != null)
-				{
-					this.array.ShowSelectedRow();
-				}
-				
+				this.ShowSelectedRow();
 				this.UpdateEdit();
 				this.UpdateCommands();
 
@@ -1121,6 +1112,8 @@ namespace Epsitec.Common.Designer.Viewers
 		protected void UpdateFieldName(AbstractTextField edit, int sel)
 		{
 			//	Change le 'Name' d'une ressource, en gérant les diverses impossibilités.
+			sel = this.access.SortDefer(sel);
+
 			string editedName = edit.Text;
 			string initialName = this.access.GetField(sel, null, ResourceAccess.FieldType.Name).String;
 
@@ -1131,6 +1124,7 @@ namespace Epsitec.Common.Designer.Viewers
 			if (err != null)
 			{
 				this.access.SetField(sel, null, ResourceAccess.FieldType.Name, new ResourceAccess.Field(initialName));
+				this.access.SortUndefer();
 
 				this.ignoreChange = true;
 				edit.Text = initialName;
@@ -1159,9 +1153,10 @@ namespace Epsitec.Common.Designer.Viewers
 				}
 			}
 			
+			sel = this.access.SortUndefer(sel);
 			this.access.AccessIndex = this.access.Sort(sel, false);
 			this.UpdateArray();
-			this.array.ShowSelectedRow();
+			this.ShowSelectedRow();
 		}
 
 		protected void RenameStructuredFields(string initialName, string newName)

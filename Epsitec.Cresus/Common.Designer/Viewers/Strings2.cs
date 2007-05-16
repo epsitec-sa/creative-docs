@@ -870,8 +870,8 @@ namespace Epsitec.Common.Designer.Viewers
 
 			if (edit == this.labelEdit)
 			{
-				item.Name = text;
-				//?this.UpdateFieldName(edit, this.access.CollectionView.CurrentPosition);
+				//?item.Name = text;
+				this.UpdateFieldName(edit, this.access.CollectionView.CurrentPosition);
 				this.access.Accessor.PersistChanges();
 				this.access.CollectionView.Refresh();
 			}
