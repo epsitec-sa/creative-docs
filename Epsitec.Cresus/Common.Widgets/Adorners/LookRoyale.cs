@@ -1472,11 +1472,19 @@ namespace Epsitec.Common.Widgets.Adorners
 				{
 					Drawing.Rectangle rTitle = rect;
 					rTitle.Height = 3;
+					rTitle.Left += 2;
+					rTitle.Right -= 2;
 					graphics.AddFilledRectangle(rTitle);
 					graphics.RenderSolid(this.colorHilite);
 				}
 
+#if false
 				graphics.AddLine(rect.Left+0.5, rect.Bottom+2.0, rect.Left+0.5, rect.Top-3.0);
+#else
+				graphics.AddLine(rect.Left+1.5, rect.Bottom+0.5, rect.Left+1.5, rect.Top-0.5);
+				graphics.AddLine(rect.Right-1.5, rect.Bottom+0.5, rect.Right-1.5, rect.Top-0.5);
+				graphics.AddLine(rect.Left+1.5, rect.Top-0.5, rect.Right-1.5, rect.Top-0.5);
+#endif
 				graphics.RenderSolid(this.colorBorderLight);
 			}
 
@@ -1486,11 +1494,19 @@ namespace Epsitec.Common.Widgets.Adorners
 				{
 					Drawing.Rectangle rTitle = rect;
 					rTitle.Left = rTitle.Right-3;
+					rTitle.Bottom += 2;
+					rTitle.Top -= 2;
 					graphics.AddFilledRectangle(rTitle);
 					graphics.RenderSolid(this.colorHilite);
 				}
 
+#if false
 				graphics.AddLine(rect.Left+3.0, rect.Top-0.5, rect.Right-2.0, rect.Top-0.5);
+#else
+				graphics.AddLine(rect.Left+0.5, rect.Top-0.5, rect.Right-0.5, rect.Top-0.5);
+				graphics.AddLine(rect.Left+0.5, rect.Bottom+0.5, rect.Right-0.5, rect.Bottom+0.5);
+				graphics.AddLine(rect.Left+0.5, rect.Bottom+0.5, rect.Left+0.5, rect.Top-0.5);
+#endif
 				graphics.RenderSolid(this.colorBorderLight);
 			}
 		}

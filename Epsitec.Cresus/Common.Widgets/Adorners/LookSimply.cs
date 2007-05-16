@@ -1378,20 +1378,40 @@ namespace Epsitec.Common.Widgets.Adorners
 			graphics.AddFilledRectangle(rect);
 			graphics.RenderSolid(this.colorControl);
 
-			if ( (state&WidgetPaintState.Entered) != 0 )  // bouton survolé ?
+			if ( dir == Direction.Up )
 			{
-				if ( dir == Direction.Up )
+				if ( (state&WidgetPaintState.Entered) != 0 )  // bouton survolé ?
 				{
-					rect.Top = rect.Bottom+2;
-					graphics.AddFilledRectangle(rect);
+					Drawing.Rectangle rTitle = rect;
+					rTitle.Top = rTitle.Bottom+2;
+					rTitle.Left += 2;
+					rTitle.Right -= 2;
+					graphics.AddFilledRectangle(rTitle);
 					graphics.RenderSolid(this.colorHilite);
 				}
-				if ( dir == Direction.Left )
+
+				graphics.AddLine(rect.Left+1.5, rect.Bottom+0.5, rect.Left+1.5, rect.Top-0.5);
+				graphics.AddLine(rect.Right-1.5, rect.Bottom+0.5, rect.Right-1.5, rect.Top-0.5);
+				graphics.AddLine(rect.Left+1.5, rect.Top-0.5, rect.Right-1.5, rect.Top-0.5);
+				graphics.RenderSolid(this.colorControlDark);
+			}
+
+			if ( dir == Direction.Left )
+			{
+				if ( (state&WidgetPaintState.Entered) != 0 )  // bouton survolé ?
 				{
-					rect.Left = rect.Right-2;
-					graphics.AddFilledRectangle(rect);
+					Drawing.Rectangle rTitle = rect;
+					rTitle.Left = rTitle.Right-2;
+					rTitle.Bottom += 2;
+					rTitle.Top -= 2;
+					graphics.AddFilledRectangle(rTitle);
 					graphics.RenderSolid(this.colorHilite);
 				}
+
+				graphics.AddLine(rect.Left+0.5, rect.Top-0.5, rect.Right-0.5, rect.Top-0.5);
+				graphics.AddLine(rect.Left+0.5, rect.Bottom+0.5, rect.Right-0.5, rect.Bottom+0.5);
+				graphics.AddLine(rect.Left+0.5, rect.Bottom+0.5, rect.Left+0.5, rect.Top-0.5);
+				graphics.RenderSolid(this.colorControlDark);
 			}
 		}
 
