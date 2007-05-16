@@ -2168,37 +2168,8 @@ namespace Epsitec.Common.Designer
 
 				if (this.type == Type.Strings2)
 				{
-					if (cultureName == null)
-					{
-						cultureName = "00";
-					}
-
 					CultureMap item = this.collectionView.Items[index] as CultureMap;
-					StructuredData data = item.GetCultureData(cultureName);
-
-					if (data.IsEmpty)
-					{
-						return ModificationState.Empty;
-					}
-
-					string text = data.GetValue(Support.Res.Fields.ResourceString.Text) as string;
-					if (string.IsNullOrEmpty(text))
-					{
-						return ModificationState.Empty;
-					}
-
-					if (cultureName != "00")  // culture secondaire ?
-					{
-						StructuredData primaryData = item.GetCultureData("00");
-						int pmod = (int) primaryData.GetValue(Support.Res.Fields.Resource.ModificationId);
-						int cmod = (int) data.GetValue(Support.Res.Fields.Resource.ModificationId);
-						if (pmod > cmod)
-						{
-							return ModificationState.Modified;
-						}
-					}
-
-					return ModificationState.Normal;
+					return this.GetModification(item, cultureName);
 				}
 				else if (this.IsBundlesType)
 				{
@@ -2235,6 +2206,46 @@ namespace Epsitec.Common.Designer
 						}
 					}
 				}
+			}
+
+			return ModificationState.Normal;
+		}
+
+		public ModificationState GetModification(CultureMap item, string cultureName)
+		{
+			//	Donne l'état 'modifié'.
+			if (this.type == Type.Strings2)
+			{
+				if (cultureName == null)
+				{
+					cultureName = "00";
+				}
+
+				StructuredData data = item.GetCultureData(cultureName);
+
+				if (data.IsEmpty)
+				{
+					return ModificationState.Empty;
+				}
+
+				string text = data.GetValue(Support.Res.Fields.ResourceString.Text) as string;
+				if (string.IsNullOrEmpty(text))
+				{
+					return ModificationState.Empty;
+				}
+
+				if (cultureName != "00")  // culture secondaire ?
+				{
+					StructuredData primaryData = item.GetCultureData("00");
+					int pmod = (int) primaryData.GetValue(Support.Res.Fields.Resource.ModificationId);
+					int cmod = (int) data.GetValue(Support.Res.Fields.Resource.ModificationId);
+					if (pmod > cmod)
+					{
+						return ModificationState.Modified;
+					}
+				}
+
+				return ModificationState.Normal;
 			}
 
 			return ModificationState.Normal;

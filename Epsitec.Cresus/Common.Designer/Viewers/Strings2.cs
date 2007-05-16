@@ -354,8 +354,9 @@ namespace Epsitec.Common.Designer.Viewers
 		protected void UpdateColor()
 		{
 			//	Met à jour les couleurs dans toutes les bandes.
-			ResourceAccess.ModificationState state1 = this.GetModificationState(this.GetTwoLetters(0));
-			ResourceAccess.ModificationState state2 = this.GetModificationState(this.GetTwoLetters(1));
+			CultureMap item = this.access.CollectionView.CurrentItem as CultureMap;
+			ResourceAccess.ModificationState state1 = this.access.GetModification(item, this.GetTwoLetters(0));
+			ResourceAccess.ModificationState state2 = this.access.GetModification(item, this.GetTwoLetters(1));
 			this.ColoriseBands(state1, state2);
 		}
 
@@ -368,9 +369,11 @@ namespace Epsitec.Common.Designer.Viewers
 				return;
 			}
 
+			CultureMap item = this.access.CollectionView.CurrentItem as CultureMap;
+
 			foreach (IconButtonMark button in this.secondaryButtonsCulture)
 			{
-				ResourceAccess.ModificationState state = this.GetModificationState(button.Name);
+				ResourceAccess.ModificationState state = this.access.GetModification(item, button.Name);
 
 				if (state == ResourceAccess.ModificationState.Normal)
 				{
@@ -472,48 +475,6 @@ namespace Epsitec.Common.Designer.Viewers
 			return (row == 0) ? Resources.DefaultTwoLetterISOLanguageName : this.secondaryCulture;
 		}
 
-
-		protected ResourceAccess.ModificationState GetModificationState(string twoLettersCulture)
-		{
-			//	Retourne l'état d'une ressource (qui défini la couleur du fond).
-			CultureMap item = this.access.CollectionView.CurrentItem as CultureMap;
-			return this.GetModificationState(item, twoLettersCulture);
-		}
-
-		protected ResourceAccess.ModificationState GetModificationState(CultureMap item, string twoLettersCulture)
-		{
-			//	Retourne l'état d'une ressource (qui défini la couleur du fond).
-			if (twoLettersCulture == null)
-			{
-				return ResourceAccess.ModificationState.Empty;
-			}
-
-			StructuredData data = item.GetCultureData(twoLettersCulture);
-
-			if (data.IsEmpty)
-			{
-				return ResourceAccess.ModificationState.Empty;
-			}
-
-			string text = data.GetValue(Support.Res.Fields.ResourceString.Text) as string;
-			if (string.IsNullOrEmpty(text))
-			{
-				return ResourceAccess.ModificationState.Empty;
-			}
-
-			if (twoLettersCulture != this.GetTwoLetters(0))  // culture secondaire ?
-			{
-				StructuredData primaryData = item.GetCultureData(this.GetTwoLetters(0));
-				int pmod = (int) primaryData.GetValue(Support.Res.Fields.Resource.ModificationId);
-				int cmod = (int)        data.GetValue(Support.Res.Fields.Resource.ModificationId);
-				if (pmod > cmod)
-				{
-					return ResourceAccess.ModificationState.Modified;
-				}
-			}
-
-			return ResourceAccess.ModificationState.Normal;
-		}
 
 		protected string GetSummary(string twoLettersCulture)
 		{
@@ -1035,7 +996,7 @@ namespace Epsitec.Common.Designer.Viewers
 				//	Crée le contenu pour une colonne primaire ou secondaire.
 				//	Par optimisation, un seul widget est créé s'il n'y a pas de couleur de fond.
 				StaticText main, text;
-				ResourceAccess.ModificationState state = this.owner.GetModificationState(item, twoLettersCulture);
+				ResourceAccess.ModificationState state = this.owner.access.GetModification(item, twoLettersCulture);
 
 				if (state == ResourceAccess.ModificationState.Normal)
 				{
