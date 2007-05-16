@@ -206,6 +206,8 @@ namespace Epsitec.Common.Designer.Viewers
 			this.secondaryComment.TabIndex = this.tabIndex++;
 			this.secondaryComment.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 
+			this.access.CollectionView.MoveCurrentToFirst();
+
 			this.UpdateDisplayMode();
 			this.UpdateButtonsCultures();
 			this.UpdateTitle();
