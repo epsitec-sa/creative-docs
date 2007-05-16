@@ -502,6 +502,17 @@ namespace Epsitec.Common.Designer
 			EnumType et = null;
 			StructuredType st = null;
 
+			if (this.type == Type.Strings2)
+			{
+				CultureMap item = this.collectionView.CurrentItem as CultureMap;
+				// TODO: comment faire pour dupliquer une ressource existante ?
+				this.collectionView.Items.Add(item);
+				this.accessor.PersistChanges();
+
+				this.IsDirty = true;
+				return;
+			}
+
 			if (this.type == Type.Types && !duplicateContent)
 			{
 				TypeType tt = this.lastTypeTypeCreatated;
@@ -737,6 +748,16 @@ namespace Epsitec.Common.Designer
 		public void Delete()
 		{
 			//	Supprime la ressource courante dans toutes les cultures.
+			if (this.type == Type.Strings2)
+			{
+				CultureMap item = this.collectionView.CurrentItem as CultureMap;
+				this.collectionView.Items.Remove(item);
+				this.accessor.PersistChanges();
+
+				this.IsDirty = true;
+				return;
+			}
+
 			if (this.IsBundlesType)
 			{
 				Druid druid = this.druidsIndex[this.accessIndex];
