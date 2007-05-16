@@ -822,6 +822,8 @@ namespace Epsitec.Common.Designer.Viewers
 
 		private void HandleTableSelectionChanged(object sender)
 		{
+			this.mainWindow.LocatorFix();
+
 			this.UpdateTitle();
 			this.UpdateEdit();
 			this.UpdateColor();

@@ -186,6 +186,7 @@ namespace Epsitec.Common.Designer
 			switch (type)
 			{
 				case Type.Strings:
+				case Type.Strings2:
 					return many ? Res.Strings.BundleType.Strings : Res.Strings.BundleType.String;
 
 				case Type.Captions:
@@ -984,7 +985,8 @@ namespace Epsitec.Common.Designer
 			//	Retourne le druid d'un index donné.
 			if (this.type == Type.Strings2)
 			{
-				return Druid.Empty;
+				CultureMap item = this.collectionView.Items[index] as CultureMap;
+				return item.Id;
 			}
 			else
 			{
@@ -1004,6 +1006,14 @@ namespace Epsitec.Common.Designer
 			//	Retourne l'index d'un Druid.
 			if (this.type == Type.Strings2)
 			{
+				for (int i=0; i<this.collectionView.Items.Count; i++)
+				{
+					CultureMap item = this.collectionView.Items[i] as CultureMap;
+					if (item.Id == druid)
+					{
+						return i;
+					}
+				}
 				return -1;
 			}
 			else

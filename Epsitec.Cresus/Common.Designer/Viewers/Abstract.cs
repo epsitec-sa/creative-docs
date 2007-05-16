@@ -717,7 +717,10 @@ namespace Epsitec.Common.Designer.Viewers
 		public virtual void ShowSelectedRow()
 		{
 			//	Montre la ressource sélectionnée dans le tableau.
-			this.array.ShowSelectedRow();
+			if (this.array != null)
+			{
+				this.array.ShowSelectedRow();
+			}
 		}
 
 		protected virtual void UpdateModificationsState()
