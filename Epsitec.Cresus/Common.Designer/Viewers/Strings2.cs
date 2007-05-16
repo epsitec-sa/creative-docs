@@ -24,8 +24,6 @@ namespace Epsitec.Common.Designer.Viewers
 
 		public Strings2(Module module, PanelsContext context, ResourceAccess access, MainWindow mainWindow) : base(module, context, access, mainWindow)
 		{
-			//?this.secondaryCulture = "en";
-
 			StructuredType cultureMapType = new StructuredType();
 			cultureMapType.Fields.Add("Name", StringType.Default);
 			cultureMapType.Fields.Add("Primary", StringType.Default);
@@ -873,6 +871,7 @@ namespace Epsitec.Common.Designer.Viewers
 			if (edit == this.labelEdit)
 			{
 				item.Name = text;
+				//?this.UpdateFieldName(edit, this.access.CollectionView.CurrentPosition);
 				this.access.Accessor.PersistChanges();
 				this.access.CollectionView.Refresh();
 			}
@@ -1004,7 +1003,8 @@ namespace Epsitec.Common.Designer.Viewers
 				StaticText widget = new StaticText();
 
 				widget.Margins = new Margins(5, 5, 0, 0);
-				widget.Text = TextLayout.ConvertToTaggedText(item.Name);
+				//?widget.Text = TextLayout.ConvertToTaggedText(item.Name);
+				widget.Text = item.Name;
 				widget.TextBreakMode = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine;
 				widget.PreferredSize = widget.GetBestFitSize();
 
@@ -1049,8 +1049,9 @@ namespace Epsitec.Common.Designer.Viewers
 				}
 
 				text.Margins = new Margins(5, 5, 0, 0);
-				text.Text = TextLayout.ConvertToTaggedText(value);
-				text.TextBreakMode = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine;
+				//?text.Text = TextLayout.ConvertToTaggedText(value);
+				text.Text = value;
+				text.TextBreakMode = TextBreakMode.Ellipsis | TextBreakMode.Split;
 				text.PreferredSize = text.GetBestFitSize();
 
 				return main;
