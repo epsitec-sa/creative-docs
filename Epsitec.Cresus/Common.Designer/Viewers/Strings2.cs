@@ -96,7 +96,7 @@ namespace Epsitec.Common.Designer.Viewers
 			//	Crée la partie droite, bande supérieure pour les boutons des cultures.
 			Widget sup = new Widget(this.right);
 			sup.Name = "Sup";
-			sup.PreferredHeight = 25;
+			sup.PreferredHeight = 26;
 			sup.Padding = new Margins(0, 17, 1, 0);
 			sup.ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow;
 			sup.Dock = DockStyle.Top;
@@ -209,11 +209,11 @@ namespace Epsitec.Common.Designer.Viewers
 			this.access.CollectionView.MoveCurrentToFirst();
 
 			this.UpdateDisplayMode();
-			this.UpdateButtonsCultures();
+			this.UpdateCultures();
 			this.UpdateTitle();
 			this.UpdateEdit();
 			this.UpdateColor();
-			this.UpdateButtonsModificationsCulture();
+			this.UpdateModificationsCulture();
 			this.UpdateCommands();
 		}
 
@@ -270,7 +270,7 @@ namespace Epsitec.Common.Designer.Viewers
 			//	Met à jour le contenu du Viewer.
 			this.UpdateEdit();
 			this.UpdateColor();
-			this.UpdateButtonsModificationsCulture();
+			this.UpdateModificationsCulture();
 			this.UpdateCommands();
 		}
 
@@ -348,7 +348,7 @@ namespace Epsitec.Common.Designer.Viewers
 		{
 			//	Met à jour en fonction des modifications (fonds de couleur, etc).
 			this.UpdateColor();
-			this.UpdateButtonsModificationsCulture();
+			this.UpdateModificationsCulture();
 		}
 
 		protected void UpdateColor()
@@ -360,7 +360,7 @@ namespace Epsitec.Common.Designer.Viewers
 		}
 
 
-		protected void UpdateButtonsModificationsCulture()
+		protected override void UpdateModificationsCulture()
 		{
 			//	Met à jour les pastilles dans les boutons des cultures.
 			if (this.secondaryButtonsCulture == null)  // pas de culture secondaire ?
@@ -383,7 +383,7 @@ namespace Epsitec.Common.Designer.Viewers
 			}
 		}
 
-		protected void UpdateButtonsSelectedCulture()
+		protected override void UpdateSelectedCulture()
 		{
 			//	Sélectionne le bouton correspondant à la culture secondaire.
 			this.table.ColumnHeader.SetColumnText(1, Misc.CultureName(this.access.GetBaseCultureName()));
@@ -407,7 +407,7 @@ namespace Epsitec.Common.Designer.Viewers
 			}
 		}
 
-		protected void UpdateButtonsCultures()
+		protected override void UpdateCultures()
 		{
 			//	Met à jour les boutons des cultures en fonction des cultures existantes.
 			if (this.secondaryButtonsCulture != null)
@@ -460,7 +460,7 @@ namespace Epsitec.Common.Designer.Viewers
 			{
 				this.secondaryCulture = value;
 
-				this.UpdateButtonsSelectedCulture();
+				this.UpdateSelectedCulture();
 				this.UpdateArray();
 			}
 		}
@@ -827,7 +827,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.UpdateTitle();
 			this.UpdateEdit();
 			this.UpdateColor();
-			this.UpdateButtonsModificationsCulture();
+			this.UpdateModificationsCulture();
 			this.UpdateCommands();
 		}
 
@@ -917,7 +917,7 @@ namespace Epsitec.Common.Designer.Viewers
 				edit.Focus();
 			}
 
-			this.UpdateButtonsModificationsCulture();
+			this.UpdateModificationsCulture();
 		}
 
 		private void HandleTextRejected(object sender)

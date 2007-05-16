@@ -488,7 +488,7 @@ namespace Epsitec.Common.Designer.Viewers
 		{
 			//	Crée une nouvelle culture.
 			string name = this.module.MainWindow.DlgNewCulture(this.access);
-			if ( name == null )  return;
+			if (name == null)  return;
 			this.access.CreateCulture(name);
 
 			this.UpdateCultures();
@@ -504,7 +504,7 @@ namespace Epsitec.Common.Designer.Viewers
 			ResourceBundle bundle = this.access.GetCultureBundle(this.secondaryCulture);
 			string question = string.Format(Res.Strings.Dialog.DeleteCulture.Question, Misc.CultureName(bundle.Culture));
 			Common.Dialogs.DialogResult result = this.module.MainWindow.DialogQuestion(question);
-			if ( result != Epsitec.Common.Dialogs.DialogResult.Yes )  return;
+			if (result != Epsitec.Common.Dialogs.DialogResult.Yes)  return;
 
 			this.access.DeleteCulture(this.secondaryCulture);
 
@@ -514,6 +514,7 @@ namespace Epsitec.Common.Designer.Viewers
 				this.UpdateSelectedCulture();
 			}
 			this.UpdateArray();
+			this.UpdateEdit();
 			this.UpdateModificationsCulture();
 			this.UpdateClientGeometry();
 			this.UpdateCommands();
@@ -719,7 +720,7 @@ namespace Epsitec.Common.Designer.Viewers
 			//	Met à jour en fonction des modifications (fonds de couleur, etc).
 		}
 
-		protected void UpdateModificationsCulture()
+		protected virtual void UpdateModificationsCulture()
 		{
 			//	Met à jour les pastilles dans les boutons des cultures.
 			if (this.secondaryCultures == null)  // pas de culture secondaire ?
@@ -744,7 +745,7 @@ namespace Epsitec.Common.Designer.Viewers
 			}
 		}
 
-		protected void UpdateSelectedCulture()
+		protected virtual void UpdateSelectedCulture()
 		{
 			//	Sélectionne le bouton correspondant à la culture secondaire.
 			for (int i=0; i<this.secondaryCultures.Length; i++)
@@ -769,7 +770,7 @@ namespace Epsitec.Common.Designer.Viewers
 			}
 		}
 
-		protected void UpdateCultures()
+		protected virtual void UpdateCultures()
 		{
 			//	Met à jour les boutons des cultures en fonction des cultures existantes.
 			if (this.secondaryCultures != null)
