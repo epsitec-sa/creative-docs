@@ -51,7 +51,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.right.Name = "Right";
 			this.right.MinWidth = 200;
 			this.right.Dock = DockStyle.Fill;
-			this.right.Padding = new Margins(1, 1, 1, 1);
+			this.right.Padding = new Margins(10, 10, 10, 10);
 			this.right.TabIndex = this.tabIndex++;
 			this.right.TabNavigationMode = TabNavigationMode.ForwardTabPassive;
 			
@@ -96,8 +96,8 @@ namespace Epsitec.Common.Designer.Viewers
 			//	Crée la partie droite, bande supérieure pour les boutons des cultures.
 			Widget sup = new Widget(this.right);
 			sup.Name = "Sup";
-			sup.PreferredHeight = 35;
-			sup.Padding = new Margins(1, 18, 10, 0);
+			sup.PreferredHeight = 25;
+			sup.Padding = new Margins(0, 17, 1, 0);
 			sup.ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow;
 			sup.Dock = DockStyle.Top;
 			sup.TabIndex = this.tabIndex++;
@@ -125,7 +125,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.titleBox.DrawFullFrame = true;
 			this.titleBox.PreferredHeight = 26;
 			this.titleBox.Dock = DockStyle.Top;
-			this.titleBox.Margins = new Margins(1, 1, 1, -1);
+			this.titleBox.Margins = new Margins(0, 0, 1, -1);
 
 			this.titleText = new StaticText(this.titleBox);
 			this.titleText.ContentAlignment = ContentAlignment.MiddleCenter;
@@ -138,7 +138,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.scrollable.Name = "Scrollable";
 			this.scrollable.MinWidth = 100;
 			this.scrollable.MinHeight = 100;
-			this.scrollable.Margins = new Margins(1, 1, 0, 1);
+			this.scrollable.Margins = new Margins(0, 0, 0, 0);
 			this.scrollable.Dock = DockStyle.Fill;
 			this.scrollable.HorizontalScrollerMode = ScrollableScrollerMode.HideAlways;
 			this.scrollable.VerticalScrollerMode = ScrollableScrollerMode.ShowAlways;
