@@ -325,6 +325,17 @@ namespace Epsitec.Common.Designer.Viewers
 			this.table.ItemPanel.Refresh();
 		}
 
+		public override void ShowSelectedRow()
+		{
+			//	Montre la ressource sélectionnée dans le tableau.
+			if (this.table != null)
+			{
+				int pos = this.access.CollectionView.CurrentPosition;
+				UI.ItemView item = this.table.ItemPanel.GetItemView(pos);
+				this.table.ItemPanel.Show(item);
+			}
+		}
+
 		protected void UpdateTitle()
 		{
 			//	Met à jour le titre en dessus de la zone scrollable.
@@ -651,6 +662,7 @@ namespace Epsitec.Common.Designer.Viewers
 			set
 			{
 				this.access.CollectionView.MoveCurrentToPosition(value);
+				this.ShowSelectedRow();
 			}
 		}
 

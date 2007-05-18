@@ -594,7 +594,7 @@ namespace Epsitec.Common.Designer.Viewers
 			set
 			{
 				this.array.SelectedRow = value;
-				this.array.ShowSelectedRow();
+				this.ShowSelectedRow();
 			}
 		}
 

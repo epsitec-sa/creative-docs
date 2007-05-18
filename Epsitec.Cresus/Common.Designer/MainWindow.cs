@@ -1304,6 +1304,11 @@ namespace Epsitec.Common.Designer
 				viewer.Dock = DockStyle.Fill;
 				mi.Module.Modifier.AttachViewer(viewer);
 				mi.Module.Modifier.ActiveViewer = viewer;
+
+				//	Montre la ressource sélectionnée. Il faut le faire très tard, lorsque le tableau UI.ItemTable
+				//	est correctement dimensionné.
+				viewer.Window.ForceLayout();
+				viewer.ShowSelectedRow();
 			}
 		}
 
