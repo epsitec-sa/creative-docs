@@ -12,7 +12,7 @@ namespace Epsitec.Common.Designer.Ribbons
 		public Character(MainWindow mainWindow) : base(mainWindow)
 		{
 			this.Title = Res.Strings.Ribbon.Section.Character;
-			this.PreferredWidth = 8 + 22*4 + 5;
+			this.PreferredWidth = 8 + 22*3;
 
 			this.buttonBold       = this.CreateIconButton("FontBold");
 			this.buttonItalic     = this.CreateIconButton("FontItalic");
@@ -51,7 +51,10 @@ namespace Epsitec.Common.Designer.Ribbons
 			this.buttonItalic.SetManualBounds(rect);
 			rect.Offset(dx, 0);
 			this.buttonUnderline.SetManualBounds(rect);
-			rect.Offset(dx+5, 0);
+
+			rect = this.UsefulZone;
+			rect.Width  = dx;
+			rect.Height = dy;
 			this.buttonGlyphs.SetManualBounds(rect);
 		}
 
