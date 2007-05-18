@@ -229,7 +229,11 @@ namespace Epsitec.Common.Designer.Viewers
 			this.secondaryComment.TabIndex = this.tabIndex++;
 			this.secondaryComment.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 
-			this.access.CollectionView.MoveCurrentToFirst();
+			if (this.access.IsJustLoaded)
+			{
+				this.access.IsJustLoaded = false;
+				this.access.CollectionView.MoveCurrentToFirst();
+			}
 
 			this.UpdateDisplayMode();
 			this.UpdateCultures();

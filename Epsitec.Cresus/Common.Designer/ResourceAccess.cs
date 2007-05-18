@@ -84,7 +84,6 @@ namespace Epsitec.Common.Designer
 			if (this.type == Type.Strings2)
 			{
 				this.accessor = new Support.ResourceAccessors.StringResourceAccessor();
-				this.accessor.Load(this.resourceManager);
 
 				this.collectionView = new CollectionView(this.accessor.Collection);
 				this.collectionView.Filter = this.CollectionViewFilter;
@@ -376,9 +375,27 @@ namespace Epsitec.Common.Designer
 		}
 
 
+		public bool IsJustLoaded
+		{
+			get
+			{
+				return this.isJustLoaded;
+			}
+			set
+			{
+				this.isJustLoaded = value;
+			}
+		}
+
 		public void Load()
 		{
 			//	Charge les ressources.
+			if (this.type == Type.Strings2)
+			{
+				this.accessor.Load(this.resourceManager);
+				this.collectionView.MoveCurrentToFirst();
+			}
+
 			if (this.IsBundlesType)
 			{
 				this.LoadBundles();
@@ -393,6 +410,7 @@ namespace Epsitec.Common.Designer
 			this.SetFilter("", Searcher.SearchingMode.None);
 
 			this.IsDirty = false;
+			this.isJustLoaded = true;
 		}
 
 		public void Save()
@@ -4028,6 +4046,7 @@ namespace Epsitec.Common.Designer
 		protected ResourceModuleInfo						moduleInfo;
 		protected MainWindow								mainWindow;
 		protected bool										isDirty = false;
+		protected bool										isJustLoaded = false;
 
 		protected Support.ResourceAccessors.StringResourceAccessor accessor;
 		protected CollectionView							collectionView;
