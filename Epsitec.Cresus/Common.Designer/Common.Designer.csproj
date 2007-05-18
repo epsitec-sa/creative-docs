@@ -123,6 +123,7 @@
     <Compile Include="Viewers\Commands.cs" />
     <Compile Include="Viewers\AbstractCaptions.cs" />
     <Compile Include="Viewers\Abstract2.cs" />
+    <Compile Include="Viewers\Captions2.cs" />
     <Compile Include="Viewers\Strings2.cs" />
     <Compile Include="Viewers\Locator.cs" />
     <Compile Include="Viewers\Fields.cs" />

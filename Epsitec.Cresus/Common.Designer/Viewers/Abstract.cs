@@ -41,6 +41,7 @@ namespace Epsitec.Common.Designer.Viewers
 			if (type == ResourceAccess.Type.Strings)  return new Strings(module, context, access, mainWindow);
 			if (type == ResourceAccess.Type.Strings2)  return new Strings2(module, context, access, mainWindow);
 			if (type == ResourceAccess.Type.Captions)  return new Captions(module, context, access, mainWindow);
+			if (type == ResourceAccess.Type.Captions2)  return new Captions2(module, context, access, mainWindow);
 			if (type == ResourceAccess.Type.Fields)  return new Fields(module, context, access, mainWindow);
 			if (type == ResourceAccess.Type.Commands)  return new Commands(module, context, access, mainWindow);
 			if (type == ResourceAccess.Type.Types)  return new Types(module, context, access, mainWindow);
@@ -1247,6 +1248,10 @@ namespace Epsitec.Common.Designer.Viewers
 
 				case ResourceAccess.Type.Strings2:
 					Strings2.SearchCreateFilterGroup(parent, handler);
+					break;
+
+				case ResourceAccess.Type.Captions2:
+					Captions2.SearchCreateFilterGroup(parent, handler);
 					break;
 
 				case ResourceAccess.Type.Captions:

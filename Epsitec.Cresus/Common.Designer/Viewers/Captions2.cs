@@ -10,9 +10,9 @@ namespace Epsitec.Common.Designer.Viewers
 	/// <summary>
 	/// Permet de représenter les ressources d'un module.
 	/// </summary>
-	public class Strings2 : Abstract2
+	public class Captions2 : Abstract2
 	{
-		public Strings2(Module module, PanelsContext context, ResourceAccess access, MainWindow mainWindow) : base(module, context, access, mainWindow)
+		public Captions2(Module module, PanelsContext context, ResourceAccess access, MainWindow mainWindow) : base(module, context, access, mainWindow)
 		{
 			this.itemViewFactory = new ItemViewFactory(this);
 			
@@ -120,7 +120,7 @@ namespace Epsitec.Common.Designer.Viewers
 		{
 			get
 			{
-				return ResourceAccess.Type.Strings2;
+				return ResourceAccess.Type.Captions2;
 			}
 		}
 
@@ -431,7 +431,7 @@ namespace Epsitec.Common.Designer.Viewers
 		private class ItemViewFactory : UI.AbstractItemViewFactory
 		{
 			//	Cette classe peuple les 3 colonnes du tableau.
-			public ItemViewFactory(Strings2 owner)
+			public ItemViewFactory(Captions2 owner)
 			{
 				this.owner = owner;
 			}
@@ -515,7 +515,7 @@ namespace Epsitec.Common.Designer.Viewers
 			}
 			
 
-			Strings2 owner;
+			Captions2 owner;
 		}
 
 

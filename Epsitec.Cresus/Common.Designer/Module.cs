@@ -24,11 +24,12 @@ namespace Epsitec.Common.Designer
 
 			this.modifier = new Modifier(this);
 
-			this.accessStrings  = new ResourceAccess(ResourceAccess.Type.Strings,  this.resourceManager, this.moduleInfo, this.mainWindow);
-			this.accessStrings2 = new ResourceAccess(ResourceAccess.Type.Strings2, this.resourceManager, this.moduleInfo, this.mainWindow);
-			this.accessCaptions = new ResourceAccess(ResourceAccess.Type.Captions, this.resourceManager, this.moduleInfo, this.mainWindow);
-			this.accessPanels   = new ResourceAccess(ResourceAccess.Type.Panels,   this.resourceManager, this.moduleInfo, this.mainWindow);
-			this.accessScripts  = new ResourceAccess(ResourceAccess.Type.Scripts,  this.resourceManager, this.moduleInfo, this.mainWindow);
+			this.accessStrings   = new ResourceAccess(ResourceAccess.Type.Strings,   this.resourceManager, this.moduleInfo, this.mainWindow);
+			this.accessStrings2  = new ResourceAccess(ResourceAccess.Type.Strings2,  this.resourceManager, this.moduleInfo, this.mainWindow);
+			this.accessCaptions  = new ResourceAccess(ResourceAccess.Type.Captions,  this.resourceManager, this.moduleInfo, this.mainWindow);
+			this.accessCaptions2 = new ResourceAccess(ResourceAccess.Type.Captions2, this.resourceManager, this.moduleInfo, this.mainWindow);
+			this.accessPanels    = new ResourceAccess(ResourceAccess.Type.Panels,    this.resourceManager, this.moduleInfo, this.mainWindow);
+			this.accessScripts   = new ResourceAccess(ResourceAccess.Type.Scripts,   this.resourceManager, this.moduleInfo, this.mainWindow);
 
 			foreach (ResourceAccess access in Access)
 			{
@@ -116,6 +117,14 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
+		public ResourceAccess AccessCaptions2
+		{
+			get
+			{
+				return this.accessCaptions2;
+			}
+		}
+
 		public ResourceAccess AccessPanels
 		{
 			get
@@ -141,6 +150,9 @@ namespace Epsitec.Common.Designer
 				case ResourceAccess.Type.Types:
 				case ResourceAccess.Type.Values:
 					return this.accessCaptions;
+
+				case ResourceAccess.Type.Captions2:
+					return this.accessCaptions2;
 
 				case ResourceAccess.Type.Panels:
 					return this.accessPanels;
@@ -252,6 +264,7 @@ namespace Epsitec.Common.Designer
 				yield return accessStrings;
 				yield return accessStrings2;
 				yield return accessCaptions;
+				yield return accessCaptions2;
 				yield return accessPanels;
 				yield return accessScripts;
 			}
@@ -288,6 +301,7 @@ namespace Epsitec.Common.Designer
 		protected ResourceAccess			accessStrings;
 		protected ResourceAccess			accessStrings2;
 		protected ResourceAccess			accessCaptions;
+		protected ResourceAccess			accessCaptions2;
 		protected ResourceAccess			accessPanels;
 		protected ResourceAccess			accessScripts;
 	}

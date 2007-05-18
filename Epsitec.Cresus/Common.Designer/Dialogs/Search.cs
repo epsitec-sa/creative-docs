@@ -110,6 +110,18 @@ namespace Epsitec.Common.Designer.Dialogs
 
 				Viewers.Abstract.SearchCreateFilterGroup(this.groupCaptions, this.HandleCheckActiveStateChanged, ResourceAccess.Type.Captions);
 
+				//	Crée le groupe pour le type 'Captions2'.
+				this.groupCaptions2 = new GroupBox(left);
+				this.groupCaptions2.Text = Res.Strings.Dialog.Search.Check.Who;
+				this.groupCaptions2.PreferredWidth = 160;
+				this.groupCaptions2.PreferredHeight = 28+16*2;
+				this.groupCaptions2.Dock = DockStyle.Top;
+				this.groupCaptions2.Padding = new Margins(5, 5, 5, 5);
+				this.groupCaptions2.TabIndex = tabIndex++;
+				this.groupCaptions2.TabNavigationMode = TabNavigationMode.ForwardTabPassive;
+
+				Viewers.Abstract.SearchCreateFilterGroup(this.groupCaptions2, this.HandleCheckActiveStateChanged, ResourceAccess.Type.Captions2);
+
 				//	Boutons à cocher de droite.
 				Widget right = new Widget(main);
 				right.PreferredWidth = 120;
@@ -279,6 +291,10 @@ namespace Epsitec.Common.Designer.Dialogs
 				{
 					return Viewers.Abstract.SearchGetFilterGroup(this.groupStrings2, ResourceAccess.Type.Strings2);
 				}
+				else if (this.bundleType == ResourceAccess.Type.Captions2)
+				{
+					return Viewers.Abstract.SearchGetFilterGroup(this.groupCaptions2, ResourceAccess.Type.Captions2);
+				}
 				else if (this.bundleType == ResourceAccess.Type.Captions || this.bundleType == ResourceAccess.Type.Fields || this.bundleType == ResourceAccess.Type.Commands || this.bundleType == ResourceAccess.Type.Types)
 				{
 					return Viewers.Abstract.SearchGetFilterGroup(this.groupCaptions, ResourceAccess.Type.Captions);
@@ -333,6 +349,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.groupStrings.Visibility = (this.bundleType == ResourceAccess.Type.Strings);
 				this.groupStrings2.Visibility = (this.bundleType == ResourceAccess.Type.Strings2);
 				this.groupCaptions.Visibility = (this.bundleType == ResourceAccess.Type.Captions || this.bundleType == ResourceAccess.Type.Fields || this.bundleType == ResourceAccess.Type.Commands || this.bundleType == ResourceAccess.Type.Types);
+				this.groupCaptions2.Visibility = (this.bundleType == ResourceAccess.Type.Captions2);
 			}
 		}
 
@@ -435,6 +452,7 @@ namespace Epsitec.Common.Designer.Dialogs
 		protected GroupBox						groupStrings;
 		protected GroupBox						groupStrings2;
 		protected GroupBox						groupCaptions;
+		protected GroupBox						groupCaptions2;
 		protected Button						buttonSearchPrev;
 		protected Button						buttonSearchNext;
 		protected Button						buttonCount;

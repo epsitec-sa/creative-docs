@@ -17,13 +17,15 @@ namespace Epsitec.Common.Designer.MyWidgets
 			sep.Margins = new Margins(0, 0, 0, 0);
 			sep.Dock = DockStyle.Bottom;
 
+			double width = 90;
+
 			this.buttonStrings = new IconButtonMark(this);
 			this.buttonStrings.Text = ResourceAccess.TypeDisplayName(ResourceAccess.Type.Strings);
 			this.buttonStrings.Name = BundleType.Convert(ResourceAccess.Type.Strings);
 			this.buttonStrings.ButtonStyle = ButtonStyle.ActivableIcon;
 			this.buttonStrings.SiteMark = ButtonMarkDisposition.Below;
 			this.buttonStrings.MarkDimension = 5;
-			this.buttonStrings.PreferredWidth = 100;
+			this.buttonStrings.PreferredWidth = width;
 			this.buttonStrings.MinHeight = 20+5;
 			this.buttonStrings.AutoFocus = false;
 			this.buttonStrings.Margins = new Margins(10, 0, 10, 0);
@@ -36,7 +38,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.buttonStrings2.ButtonStyle = ButtonStyle.ActivableIcon;
 			this.buttonStrings2.SiteMark = ButtonMarkDisposition.Below;
 			this.buttonStrings2.MarkDimension = 5;
-			this.buttonStrings2.PreferredWidth = 100;
+			this.buttonStrings2.PreferredWidth = width;
 			this.buttonStrings2.MinHeight = 20+5;
 			this.buttonStrings2.AutoFocus = false;
 			this.buttonStrings2.Margins = new Margins(2, 0, 10, 0);
@@ -49,12 +51,25 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.buttonCaptions.ButtonStyle = ButtonStyle.ActivableIcon;
 			this.buttonCaptions.SiteMark = ButtonMarkDisposition.Below;
 			this.buttonCaptions.MarkDimension = 5;
-			this.buttonCaptions.PreferredWidth = 100;
+			this.buttonCaptions.PreferredWidth = width;
 			this.buttonCaptions.MinHeight = 20+5;
 			this.buttonCaptions.AutoFocus = false;
 			this.buttonCaptions.Margins = new Margins(2, 0, 10, 0);
 			this.buttonCaptions.Dock = DockStyle.Left;
 			this.buttonCaptions.Clicked += new MessageEventHandler(this.HandleButtonClicked);
+
+			this.buttonCaptions2 = new IconButtonMark(this);
+			this.buttonCaptions2.Text = ResourceAccess.TypeDisplayName(ResourceAccess.Type.Captions);
+			this.buttonCaptions2.Name = BundleType.Convert(ResourceAccess.Type.Captions2);
+			this.buttonCaptions2.ButtonStyle = ButtonStyle.ActivableIcon;
+			this.buttonCaptions2.SiteMark = ButtonMarkDisposition.Below;
+			this.buttonCaptions2.MarkDimension = 5;
+			this.buttonCaptions2.PreferredWidth = width;
+			this.buttonCaptions2.MinHeight = 20+5;
+			this.buttonCaptions2.AutoFocus = false;
+			this.buttonCaptions2.Margins = new Margins(2, 0, 10, 0);
+			this.buttonCaptions2.Dock = DockStyle.Left;
+			this.buttonCaptions2.Clicked += new MessageEventHandler(this.HandleButtonClicked);
 
 			this.buttonCommands = new IconButtonMark(this);
 			this.buttonCommands.Text = ResourceAccess.TypeDisplayName(ResourceAccess.Type.Commands);
@@ -62,7 +77,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.buttonCommands.ButtonStyle = ButtonStyle.ActivableIcon;
 			this.buttonCommands.SiteMark = ButtonMarkDisposition.Below;
 			this.buttonCommands.MarkDimension = 5;
-			this.buttonCommands.PreferredWidth = 100;
+			this.buttonCommands.PreferredWidth = width;
 			this.buttonCommands.MinHeight = 20+5;
 			this.buttonCommands.AutoFocus = false;
 			this.buttonCommands.Margins = new Margins(2, 0, 10, 0);
@@ -75,7 +90,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.buttonTypes.ButtonStyle = ButtonStyle.ActivableIcon;
 			this.buttonTypes.SiteMark = ButtonMarkDisposition.Below;
 			this.buttonTypes.MarkDimension = 5;
-			this.buttonTypes.PreferredWidth = 100;
+			this.buttonTypes.PreferredWidth = width;
 			this.buttonTypes.MinHeight = 20+5;
 			this.buttonTypes.AutoFocus = false;
 			this.buttonTypes.Margins = new Margins(2, 0, 10, 0);
@@ -88,7 +103,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.buttonFields.ButtonStyle = ButtonStyle.ActivableIcon;
 			this.buttonFields.SiteMark = ButtonMarkDisposition.Below;
 			this.buttonFields.MarkDimension = 5;
-			this.buttonFields.PreferredWidth = 100;
+			this.buttonFields.PreferredWidth = width;
 			this.buttonFields.MinHeight = 20+5;
 			this.buttonFields.AutoFocus = false;
 			this.buttonFields.Margins = new Margins(2, 0, 10, 0);
@@ -101,7 +116,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.buttonValues.ButtonStyle = ButtonStyle.ActivableIcon;
 			this.buttonValues.SiteMark = ButtonMarkDisposition.Below;
 			this.buttonValues.MarkDimension = 5;
-			this.buttonValues.PreferredWidth = 100;
+			this.buttonValues.PreferredWidth = width;
 			this.buttonValues.MinHeight = 20+5;
 			this.buttonValues.AutoFocus = false;
 			this.buttonValues.Margins = new Margins(2, 0, 10, 0);
@@ -114,7 +129,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.buttonPanels.ButtonStyle = ButtonStyle.ActivableIcon;
 			this.buttonPanels.SiteMark = ButtonMarkDisposition.Below;
 			this.buttonPanels.MarkDimension = 5;
-			this.buttonPanels.PreferredWidth = 100;
+			this.buttonPanels.PreferredWidth = width;
 			this.buttonPanels.MinHeight = 20+5;
 			this.buttonPanels.AutoFocus = false;
 			this.buttonPanels.Margins = new Margins(2, 0, 10, 0);
@@ -127,7 +142,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.buttonScripts.ButtonStyle = ButtonStyle.ActivableIcon;
 			this.buttonScripts.SiteMark = ButtonMarkDisposition.Below;
 			this.buttonScripts.MarkDimension = 5;
-			this.buttonScripts.PreferredWidth = 100;
+			this.buttonScripts.PreferredWidth = width;
 			this.buttonScripts.MinHeight = 20+5;
 			this.buttonScripts.AutoFocus = false;
 			this.buttonScripts.Margins = new Margins(2, 0, 10, 0);
@@ -165,15 +180,16 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		protected void UpdateButtons()
 		{
-			this.buttonStrings.ActiveState  = (this.currentType == ResourceAccess.Type.Strings ) ? ActiveState.Yes : ActiveState.No;
-			this.buttonStrings2.ActiveState = (this.currentType == ResourceAccess.Type.Strings2) ? ActiveState.Yes : ActiveState.No;
-			this.buttonCaptions.ActiveState = (this.currentType == ResourceAccess.Type.Captions) ? ActiveState.Yes : ActiveState.No;
-			this.buttonFields.ActiveState   = (this.currentType == ResourceAccess.Type.Fields  ) ? ActiveState.Yes : ActiveState.No;
-			this.buttonCommands.ActiveState = (this.currentType == ResourceAccess.Type.Commands) ? ActiveState.Yes : ActiveState.No;
-			this.buttonTypes.ActiveState    = (this.currentType == ResourceAccess.Type.Types   ) ? ActiveState.Yes : ActiveState.No;
-			this.buttonValues.ActiveState   = (this.currentType == ResourceAccess.Type.Values  ) ? ActiveState.Yes : ActiveState.No;
-			this.buttonPanels.ActiveState   = (this.currentType == ResourceAccess.Type.Panels  ) ? ActiveState.Yes : ActiveState.No;
-			this.buttonScripts.ActiveState  = (this.currentType == ResourceAccess.Type.Scripts ) ? ActiveState.Yes : ActiveState.No;
+			this.buttonStrings.ActiveState   = (this.currentType == ResourceAccess.Type.Strings  ) ? ActiveState.Yes : ActiveState.No;
+			this.buttonStrings2.ActiveState  = (this.currentType == ResourceAccess.Type.Strings2 ) ? ActiveState.Yes : ActiveState.No;
+			this.buttonCaptions2.ActiveState = (this.currentType == ResourceAccess.Type.Captions2) ? ActiveState.Yes : ActiveState.No;
+			this.buttonCaptions.ActiveState  = (this.currentType == ResourceAccess.Type.Captions ) ? ActiveState.Yes : ActiveState.No;
+			this.buttonFields.ActiveState    = (this.currentType == ResourceAccess.Type.Fields   ) ? ActiveState.Yes : ActiveState.No;
+			this.buttonCommands.ActiveState  = (this.currentType == ResourceAccess.Type.Commands ) ? ActiveState.Yes : ActiveState.No;
+			this.buttonTypes.ActiveState     = (this.currentType == ResourceAccess.Type.Types    ) ? ActiveState.Yes : ActiveState.No;
+			this.buttonValues.ActiveState    = (this.currentType == ResourceAccess.Type.Values   ) ? ActiveState.Yes : ActiveState.No;
+			this.buttonPanels.ActiveState    = (this.currentType == ResourceAccess.Type.Panels   ) ? ActiveState.Yes : ActiveState.No;
+			this.buttonScripts.ActiveState   = (this.currentType == ResourceAccess.Type.Scripts  ) ? ActiveState.Yes : ActiveState.No;
 		}
 
 
@@ -225,6 +241,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected IconButtonMark			buttonStrings2;
 		protected IconButtonMark			buttonScripts;
 		protected IconButtonMark			buttonCaptions;
+		protected IconButtonMark			buttonCaptions2;
 		protected IconButtonMark			buttonFields;
 		protected IconButtonMark			buttonCommands;
 		protected IconButtonMark			buttonPanels;

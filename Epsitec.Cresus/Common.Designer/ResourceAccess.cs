@@ -18,6 +18,7 @@ namespace Epsitec.Common.Designer
 			Strings,
 			Strings2,
 			Captions,
+			Captions2,
 			Fields,
 			Commands,
 			Types,
@@ -81,7 +82,7 @@ namespace Epsitec.Common.Designer
 			this.moduleInfo = moduleInfo;
 			this.mainWindow = mainWindow;
 
-			if (this.type == Type.Strings2)
+			if (this.IsAbstract2)
 			{
 				this.accessor = new Support.ResourceAccessors.StringResourceAccessor();
 
@@ -189,6 +190,7 @@ namespace Epsitec.Common.Designer
 					return many ? Res.Strings.BundleType.Strings : Res.Strings.BundleType.String;
 
 				case Type.Captions:
+				case Type.Captions2:
 					return many ? Res.Strings.BundleType.Captions : Res.Strings.BundleType.Caption;
 
 				case Type.Fields:
@@ -390,7 +392,7 @@ namespace Epsitec.Common.Designer
 		public void Load()
 		{
 			//	Charge les ressources.
-			if (this.type == Type.Strings2)
+			if (this.IsAbstract2)
 			{
 				this.accessor.Load(this.resourceManager);
 				this.collectionView.MoveCurrentToFirst();
@@ -520,7 +522,7 @@ namespace Epsitec.Common.Designer
 			EnumType et = null;
 			StructuredType st = null;
 
-			if (this.type == Type.Strings2)
+			if (this.IsAbstract2)
 			{
 				CultureMap item = this.collectionView.CurrentItem as CultureMap;
 				// TODO: comment faire pour dupliquer une ressource existante ?
@@ -766,7 +768,7 @@ namespace Epsitec.Common.Designer
 		public void Delete()
 		{
 			//	Supprime la ressource courante dans toutes les cultures.
-			if (this.type == Type.Strings2)
+			if (this.IsAbstract2)
 			{
 				CultureMap item = this.collectionView.CurrentItem as CultureMap;
 				this.collectionView.Items.Remove(item);
@@ -861,7 +863,7 @@ namespace Epsitec.Common.Designer
 		public void SetFilter(string filter, Searcher.SearchingMode mode)
 		{
 			//	Construit l'index en fonction des ressources primaires.
-			if (this.type == Type.Strings2)
+			if (this.IsAbstract2)
 			{
 				if (this.collectionViewFilter != filter || this.collectionViewMode != mode)
 				{
@@ -978,7 +980,7 @@ namespace Epsitec.Common.Designer
 			//	Retourne le nombre de données accessibles.
 			get
 			{
-				if (this.type == Type.Strings2)
+				if (this.IsAbstract2)
 				{
 				}
 				else
@@ -1008,7 +1010,7 @@ namespace Epsitec.Common.Designer
 			//	Retourne le nombre de données accessibles.
 			get
 			{
-				if (this.type == Type.Strings2)
+				if (this.IsAbstract2)
 				{
 					return this.collectionView.Count;
 				}
@@ -1022,7 +1024,7 @@ namespace Epsitec.Common.Designer
 		public Druid AccessDruid(int index)
 		{
 			//	Retourne le druid d'un index donné.
-			if (this.type == Type.Strings2)
+			if (this.IsAbstract2)
 			{
 				CultureMap item = this.collectionView.Items[index] as CultureMap;
 				return item.Id;
@@ -1043,7 +1045,7 @@ namespace Epsitec.Common.Designer
 		public int AccessIndexOfDruid(Druid druid)
 		{
 			//	Retourne l'index d'un Druid.
-			if (this.type == Type.Strings2)
+			if (this.IsAbstract2)
 			{
 				for (int i=0; i<this.collectionView.Items.Count; i++)
 				{
@@ -1066,7 +1068,7 @@ namespace Epsitec.Common.Designer
 			//	Index de l'accès en cours.
 			get
 			{
-				if (this.type == Type.Strings2)
+				if (this.IsAbstract2)
 				{
 					return this.collectionView.CurrentPosition;
 				}
@@ -1078,7 +1080,7 @@ namespace Epsitec.Common.Designer
 
 			set
 			{
-				if (this.type == Type.Strings2)
+				if (this.IsAbstract2)
 				{
 					value = System.Math.Max(value, 0);
 					value = System.Math.Min(value, this.collectionView.Count-1);
@@ -1173,7 +1175,7 @@ namespace Epsitec.Common.Designer
 			}
 			else
 			{
-				if (this.type == Type.Strings2)
+				if (this.IsAbstract2)
 				{
 					CollectionView cv = new CollectionView(this.accessor.Collection);
 					foreach (CultureMap item in cv.Items)
@@ -1733,7 +1735,7 @@ namespace Epsitec.Common.Designer
 			this.lastAccessField = fieldType;
 			this.CacheResource(index, cultureName);
 
-			if (this.type == Type.Strings2)
+			if (this.IsAbstract2)
 			{
 				CultureMap item = this.collectionView.Items[index] as CultureMap;
 
@@ -1909,7 +1911,7 @@ namespace Epsitec.Common.Designer
 			//	Si cultureName est nul, on accède à la culture de base.
 			this.CacheResource(index, cultureName);
 
-			if (this.type == Type.Strings2)
+			if (this.IsAbstract2)
 			{
 				CultureMap item = this.collectionView.Items[index] as CultureMap;
 
@@ -2184,7 +2186,7 @@ namespace Epsitec.Common.Designer
 			{
 				this.CacheResource(index, cultureName);
 
-				if (this.type == Type.Strings2)
+				if (this.IsAbstract2)
 				{
 					CultureMap item = this.collectionView.Items[index] as CultureMap;
 					return this.GetModification(item, cultureName);
@@ -2232,7 +2234,7 @@ namespace Epsitec.Common.Designer
 		public ModificationState GetModification(CultureMap item, string cultureName)
 		{
 			//	Donne l'état 'modifié'.
-			if (this.type == Type.Strings2)
+			if (this.IsAbstract2)
 			{
 				if (cultureName == null)
 				{
@@ -2293,7 +2295,7 @@ namespace Epsitec.Common.Designer
 			//	Considère une ressource comme 'à jour' dans une culture.
 			this.CacheResource(index, cultureName);
 
-			if (this.type == Type.Strings2)
+			if (this.IsAbstract2)
 			{
 				CultureMap item = this.collectionView.Items[index] as CultureMap;
 				StructuredData data = item.GetCultureData(cultureName);
@@ -2317,7 +2319,7 @@ namespace Epsitec.Common.Designer
 		public void ModificationSetAll(int index)
 		{
 			//	Considère une ressource comme 'modifiée' dans toutes les cultures.
-			if (this.type == Type.Strings2)
+			if (this.IsAbstract2)
 			{
 				CultureMap item = this.collectionView.Items[index] as CultureMap;
 				StructuredData primaryData = item.GetCultureData("00");
@@ -2340,7 +2342,7 @@ namespace Epsitec.Common.Designer
 		public bool IsModificationAll(int index)
 		{
 			//	Donne l'état de la commande ModificationAll.
-			if (this.type == Type.Strings2)
+			if (this.IsAbstract2)
 			{
 				CultureMap item = this.collectionView.Items[index] as CultureMap;
 				StructuredData primaryData = item.GetCultureData("00");
@@ -2426,7 +2428,7 @@ namespace Epsitec.Common.Designer
 				}
 			}
 
-			if (this.IsCaptionsType)
+			if (this.IsCaptionsType || this.type == Type.Captions2)
 			{
 				switch (field)
 				{
@@ -2492,7 +2494,7 @@ namespace Epsitec.Common.Designer
 		protected void CacheResource(int index, string cultureName)
 		{
 			//	Cache une ressource.
-			if (this.type == Type.Strings2)
+			if (this.IsAbstract2)
 			{
 			}
 			else if (this.IsBundlesType)
@@ -3110,7 +3112,7 @@ namespace Epsitec.Common.Designer
 			//	A partir d'une liste déjà triée, déplace un seul élément modifié pour qu'il
 			//	soit de nouveau trié. Si resortAll = true, trie toutes les ressources et retourne
 			//	le nouvel index du Druid.
-			if (this.type == Type.Strings2)
+			if (this.IsAbstract2)
 			{
 				return index;
 			}
@@ -3586,6 +3588,15 @@ namespace Epsitec.Common.Designer
 			get
 			{
 				return (this.type == Type.Captions || this.type == Type.Fields || this.type == Type.Commands || this.type == Type.Types || this.type == Type.Values);
+			}
+		}
+
+		protected bool IsAbstract2
+		{
+			//	Retourne true si on accède à des ressources de type nouveau.
+			get
+			{
+				return (this.type == Type.Strings2 || this.type == Type.Captions2);
 			}
 		}
 
