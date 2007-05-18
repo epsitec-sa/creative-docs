@@ -33,7 +33,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.buttonStrings.Clicked += new MessageEventHandler(this.HandleButtonClicked);
 
 			this.buttonStrings2 = new IconButtonMark(this);
-			this.buttonStrings2.Text = ResourceAccess.TypeDisplayName(ResourceAccess.Type.Strings);
+			this.buttonStrings2.Text = ResourceAccess.TypeDisplayName(ResourceAccess.Type.Strings)+" 2";
 			this.buttonStrings2.Name = BundleType.Convert(ResourceAccess.Type.Strings2);
 			this.buttonStrings2.ButtonStyle = ButtonStyle.ActivableIcon;
 			this.buttonStrings2.SiteMark = ButtonMarkDisposition.Below;
@@ -59,7 +59,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.buttonCaptions.Clicked += new MessageEventHandler(this.HandleButtonClicked);
 
 			this.buttonCaptions2 = new IconButtonMark(this);
-			this.buttonCaptions2.Text = ResourceAccess.TypeDisplayName(ResourceAccess.Type.Captions);
+			this.buttonCaptions2.Text = ResourceAccess.TypeDisplayName(ResourceAccess.Type.Captions)+" 2";
 			this.buttonCaptions2.Name = BundleType.Convert(ResourceAccess.Type.Captions2);
 			this.buttonCaptions2.ButtonStyle = ButtonStyle.ActivableIcon;
 			this.buttonCaptions2.SiteMark = ButtonMarkDisposition.Below;

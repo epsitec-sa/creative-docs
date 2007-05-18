@@ -84,7 +84,14 @@ namespace Epsitec.Common.Designer
 
 			if (this.IsAbstract2)
 			{
-				this.accessor = new Support.ResourceAccessors.StringResourceAccessor();
+				if (this.type == Type.Strings2)
+				{
+					this.accessor = new Support.ResourceAccessors.StringResourceAccessor();
+				}
+				if (this.type == Type.Captions2)
+				{
+					this.accessor = new Support.ResourceAccessors.CaptionResourceAccessor();
+				}
 
 				this.collectionView = new CollectionView(this.accessor.Collection);
 				this.collectionView.Filter = this.CollectionViewFilter;
@@ -3578,7 +3585,7 @@ namespace Epsitec.Common.Designer
 			//	"un bundle par culture, plusieurs ressources par bundle".
 			get
 			{
-				return (this.type == Type.Strings || this.type == Type.Strings2 || this.IsCaptionsType);
+				return (this.type == Type.Strings || this.type == Type.Strings2 || this.type == Type.Captions2 || this.IsCaptionsType);
 			}
 		}
 
@@ -4059,7 +4066,7 @@ namespace Epsitec.Common.Designer
 		protected bool										isDirty = false;
 		protected bool										isJustLoaded = false;
 
-		protected Support.ResourceAccessors.StringResourceAccessor accessor;
+		protected Support.ResourceAccessors.AbstractResourceAccessor accessor;
 		protected CollectionView							collectionView;
 		protected Searcher.SearchingMode					collectionViewMode;
 		protected string									collectionViewFilter;
