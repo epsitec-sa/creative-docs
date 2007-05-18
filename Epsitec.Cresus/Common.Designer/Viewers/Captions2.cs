@@ -26,31 +26,84 @@ namespace Epsitec.Common.Designer.Viewers
 			this.primarySummary.MinHeight = 30;
 			this.primarySummary.Dock = DockStyle.Fill;
 
+			this.primarySummaryIcon = new IconButton(leftContainer.Container);
+			this.primarySummaryIcon.MinSize = new Size(30, 30);
+			this.primarySummaryIcon.Dock = DockStyle.Right;
+
 			this.secondarySummary = new StaticText(rightContainer.Container);
 			this.secondarySummary.MinHeight = 30;
 			this.secondarySummary.Dock = DockStyle.Fill;
+
+			this.secondarySummaryIcon = new IconButton(rightContainer.Container);
+			this.secondarySummaryIcon.MinSize = new Size(30, 30);
+			this.secondarySummaryIcon.Dock = DockStyle.Right;
 
 			//	Textes.
 			this.buttonCaptionCompact = this.CreateBand(out leftContainer, out rightContainer, Res.Strings.Viewers.Captions.Labels.Title, BandMode.CaptionView, GlyphShape.ArrowUp, false, 0.2);
 			this.buttonCaptionCompact.Clicked += new MessageEventHandler(this.HandleButtonCompactOrExtendClicked);
 
-			this.primaryText = new TextFieldMulti(leftContainer.Container);
-			this.primaryText.PreferredHeight = 10+14*6;
-			this.primaryText.Dock = DockStyle.StackBegin;
-			this.primaryText.TextChanged += new EventHandler(this.HandleTextChanged);
-			this.primaryText.CursorChanged += new EventHandler(this.HandleCursorChanged);
-			this.primaryText.KeyboardFocusChanged += new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleEditKeyboardFocusChanged);
-			this.primaryText.TabIndex = this.tabIndex++;
-			this.primaryText.TabNavigationMode = TabNavigationMode.ActivateOnTab;
+			this.primaryLabels = new MyWidgets.StringCollection(leftContainer.Container);
+			this.primaryLabels.Dock = DockStyle.StackBegin;
+			this.primaryLabels.StringTextChanged += new EventHandler(this.HandleStringTextCollectionChanged);
+			this.primaryLabels.StringFocusChanged += new EventHandler(this.HandleStringFocusCollectionChanged);
+			this.primaryLabels.TabIndex = this.tabIndex++;
+			this.primaryLabels.TabNavigationMode = TabNavigationMode.ForwardTabPassive;
 
-			this.secondaryText = new TextFieldMulti(rightContainer.Container);
-			this.secondaryText.PreferredHeight = 10+14*6;
-			this.secondaryText.Dock = DockStyle.StackBegin;
-			this.secondaryText.TextChanged += new EventHandler(this.HandleTextChanged);
-			this.secondaryText.CursorChanged += new EventHandler(this.HandleCursorChanged);
-			this.secondaryText.KeyboardFocusChanged += new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleEditKeyboardFocusChanged);
-			this.secondaryText.TabIndex = this.tabIndex++;
-			this.secondaryText.TabNavigationMode = TabNavigationMode.ActivateOnTab;
+			this.secondaryLabels = new MyWidgets.StringCollection(rightContainer.Container);
+			this.secondaryLabels.Dock = DockStyle.StackBegin;
+			this.secondaryLabels.StringTextChanged += new EventHandler(this.HandleStringTextCollectionChanged);
+			this.secondaryLabels.StringFocusChanged += new EventHandler(this.HandleStringFocusCollectionChanged);
+			this.secondaryLabels.TabIndex = this.tabIndex++;
+			this.secondaryLabels.TabNavigationMode = TabNavigationMode.ForwardTabPassive;
+
+			//	Description.
+			this.CreateBand(out leftContainer, out rightContainer, Res.Strings.Viewers.Captions.Description.Title, BandMode.CaptionView, GlyphShape.None, false, 0.2);
+
+			this.primaryDescription = new TextFieldMulti(leftContainer.Container);
+			this.primaryDescription.PreferredHeight = 10+14*4;
+			this.primaryDescription.Dock = DockStyle.StackBegin;
+			this.primaryDescription.TextChanged += new EventHandler(this.HandleTextChanged);
+			this.primaryDescription.CursorChanged += new EventHandler(this.HandleCursorChanged);
+			this.primaryDescription.KeyboardFocusChanged += new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleEditKeyboardFocusChanged);
+			this.primaryDescription.TabIndex = this.tabIndex++;
+			this.primaryDescription.TabNavigationMode = TabNavigationMode.ActivateOnTab;
+
+			this.secondaryDescription = new TextFieldMulti(rightContainer.Container);
+			this.secondaryDescription.PreferredHeight = 10+14*4;
+			this.secondaryDescription.Dock = DockStyle.StackBegin;
+			this.secondaryDescription.TextChanged += new EventHandler(this.HandleTextChanged);
+			this.secondaryDescription.CursorChanged += new EventHandler(this.HandleCursorChanged);
+			this.secondaryDescription.KeyboardFocusChanged += new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleEditKeyboardFocusChanged);
+			this.secondaryDescription.TabIndex = this.tabIndex++;
+			this.secondaryDescription.TabNavigationMode = TabNavigationMode.ActivateOnTab;
+
+			//	Icône.
+			this.CreateBand(out leftContainer, Res.Strings.Viewers.Captions.Icon.Title, BandMode.CaptionView, GlyphShape.None, false, 0.2);
+
+			StaticText label = new StaticText(leftContainer.Container);
+			label.Text = Res.Strings.Viewers.Captions.Icon.Title;
+			label.MinHeight = 30;  // attention, très important !
+			label.PreferredHeight = 30;
+			label.PreferredWidth = 30;
+			label.ContentAlignment = ContentAlignment.MiddleRight;
+			label.Margins = new Margins(0, 5, 0, 0);
+			label.Dock = DockStyle.Left;
+
+			this.primaryIcon = new IconButton(leftContainer.Container);
+			this.primaryIcon.MinHeight = 30;  // attention, très important !
+			this.primaryIcon.PreferredHeight = 30;
+			this.primaryIcon.PreferredWidth = 30;
+			this.primaryIcon.ButtonStyle = ButtonStyle.ActivableIcon;
+			this.primaryIcon.Dock = DockStyle.Left;
+			this.primaryIcon.TabIndex = this.tabIndex++;
+			this.primaryIcon.TabNavigationMode = TabNavigationMode.ActivateOnTab;
+			this.primaryIcon.Clicked += new MessageEventHandler(this.HandlePrimaryIconClicked);
+
+			this.primaryIconInfo = new StaticText(leftContainer.Container);
+			this.primaryIconInfo.PreferredHeight = 30;
+			this.primaryIconInfo.PreferredWidth = 300;
+			this.primaryIconInfo.Margins = new Margins(10, 0, 0, 0);
+			this.primaryIconInfo.Dock = DockStyle.Left;
 
 			//	Commentaires.
 			this.CreateBand(out leftContainer, out rightContainer, Res.Strings.Viewers.Captions.About.Title, BandMode.CaptionView, GlyphShape.None, false, 0.2);
@@ -95,13 +148,21 @@ namespace Epsitec.Common.Designer.Viewers
 				this.buttonCaptionExtend.Clicked -= new MessageEventHandler(this.HandleButtonCompactOrExtendClicked);
 				this.buttonCaptionCompact.Clicked -= new MessageEventHandler(this.HandleButtonCompactOrExtendClicked);
 
-				this.primaryText.TextChanged -= new EventHandler(this.HandleTextChanged);
-				this.primaryText.CursorChanged -= new EventHandler(this.HandleCursorChanged);
-				this.primaryText.KeyboardFocusChanged -= new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleEditKeyboardFocusChanged);
+				this.primaryLabels.StringTextChanged -= new EventHandler(this.HandleStringTextCollectionChanged);
+				this.primaryLabels.StringFocusChanged -= new EventHandler(this.HandleStringFocusCollectionChanged);
 
-				this.secondaryText.TextChanged -= new EventHandler(this.HandleTextChanged);
-				this.secondaryText.CursorChanged -= new EventHandler(this.HandleCursorChanged);
-				this.secondaryText.KeyboardFocusChanged -= new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleEditKeyboardFocusChanged);
+				this.secondaryLabels.StringTextChanged -= new EventHandler(this.HandleStringTextCollectionChanged);
+				this.secondaryLabels.StringFocusChanged -= new EventHandler(this.HandleStringFocusCollectionChanged);
+
+				this.primaryDescription.TextChanged -= new EventHandler(this.HandleTextChanged);
+				this.primaryDescription.CursorChanged -= new EventHandler(this.HandleCursorChanged);
+				this.primaryDescription.KeyboardFocusChanged -= new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleEditKeyboardFocusChanged);
+
+				this.secondaryDescription.TextChanged -= new EventHandler(this.HandleTextChanged);
+				this.secondaryDescription.CursorChanged -= new EventHandler(this.HandleCursorChanged);
+				this.secondaryDescription.KeyboardFocusChanged -= new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleEditKeyboardFocusChanged);
+
+				this.primaryIcon.Clicked -= new MessageEventHandler(this.HandlePrimaryIconClicked);
 
 				this.primaryComment.TextChanged -= new EventHandler(this.HandleTextChanged);
 				this.primaryComment.CursorChanged -= new EventHandler(this.HandleCursorChanged);
@@ -140,27 +201,64 @@ namespace Epsitec.Common.Designer.Viewers
 			this.labelEdit.Text = item.Name;
 
 			data = item.GetCultureData(this.GetTwoLetters(0));
-			this.primaryText.Text = data.GetValue(Support.Res.Fields.ResourceCaption.Description) as string;
+			this.SetTextField(this.primaryLabels, data.GetValue(Support.Res.Fields.ResourceCaption.Labels) as IList<string>);
+			this.primaryDescription.Text = data.GetValue(Support.Res.Fields.ResourceCaption.Description) as string;
 			this.primaryComment.Text = data.GetValue(Support.Res.Fields.Resource.Comment) as string;
 
 			if (this.GetTwoLetters(1) == null)
 			{
-				this.secondaryText.Text = "";
+				this.secondaryLabels.Collection = null;
+				this.secondaryDescription.Text = "";
 				this.secondaryComment.Text = "";
-				this.secondaryText.Enable = false;
+				this.secondaryLabels.Enable = false;
+				this.secondaryDescription.Enable = false;
 				this.secondaryComment.Enable = false;
 			}
 			else
 			{
 				data = item.GetCultureData(this.GetTwoLetters(1));
-				this.secondaryText.Text = data.GetValue(Support.Res.Fields.ResourceCaption.Description) as string;
+				this.SetTextField(this.secondaryLabels, data.GetValue(Support.Res.Fields.ResourceCaption.Labels) as IList<string>);
+				this.secondaryDescription.Text = data.GetValue(Support.Res.Fields.ResourceCaption.Description) as string;
 				this.secondaryComment.Text = data.GetValue(Support.Res.Fields.Resource.Comment) as string;
-				this.secondaryText.Enable = true;
+				this.secondaryDescription.Enable = true;
 				this.secondaryComment.Enable = true;
 			}
 
+			this.UpdateIcon();
+
 			this.ignoreChange = iic;
 			this.UpdateCommands();
+		}
+
+		protected void UpdateIcon()
+		{
+			CultureMap item = this.access.CollectionView.CurrentItem as CultureMap;
+			StructuredData data = item.GetCultureData("00");
+			string icon = data.GetValue(Support.Res.Fields.ResourceCaption.Icon) as string;
+			if (string.IsNullOrEmpty(icon))
+			{
+				this.primaryIcon.Enable = false;
+				this.primaryIcon.IconName = null;
+
+				this.primaryIconInfo.Text = Res.Strings.Dialog.Icon.None;
+			}
+			else
+			{
+				this.primaryIcon.Enable = true;
+				this.primaryIcon.IconName = icon;
+
+				string module, name;
+				Misc.GetIconNames(icon, out module, out name);
+				
+				if (string.IsNullOrEmpty(name))
+				{
+					this.primaryIconInfo.Text = Res.Strings.Dialog.Icon.None;
+				}
+				else
+				{
+					this.primaryIconInfo.Text = string.Format("{0}<br/>{1}", module, name);
+				}
+			}
 		}
 
 
@@ -280,7 +378,7 @@ namespace Epsitec.Common.Designer.Viewers
 				return;
 			}
 
-			if (textField == this.primaryText)
+			if (textField == this.primaryDescription)
 			{
 				field = 1;
 				return;
@@ -294,7 +392,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 			if (this.secondaryCulture != null)
 			{
-				if (textField == this.secondaryText)
+				if (textField == this.secondaryDescription)
 				{
 					field = 2;
 					return;
@@ -322,10 +420,10 @@ namespace Epsitec.Common.Designer.Viewers
 						return this.labelEdit;
 
 					case 1:
-						return this.primaryText;
+						return this.primaryDescription;
 
 					case 2:
-						return this.secondaryText;
+						return this.secondaryDescription;
 
 					case 3:
 						return this.primaryComment;
@@ -353,7 +451,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 			CultureMap item = this.access.CollectionView.CurrentItem as CultureMap;
 
-			if (edit == this.primaryText)
+			if (edit == this.primaryDescription)
 			{
 				StructuredData data = item.GetCultureData(this.GetTwoLetters(0));
 				data.SetValue(Support.Res.Fields.ResourceCaption.Description, text);
@@ -363,7 +461,7 @@ namespace Epsitec.Common.Designer.Viewers
 				edit.Focus();
 			}
 
-			if (edit == this.secondaryText)
+			if (edit == this.secondaryDescription)
 			{
 				StructuredData data = item.GetCultureData(this.GetTwoLetters(1));
 				data.SetValue(Support.Res.Fields.ResourceCaption.Description, text);
@@ -394,6 +492,60 @@ namespace Epsitec.Common.Designer.Viewers
 			}
 
 			this.UpdateModificationsCulture();
+		}
+
+		private void HandleStringTextCollectionChanged(object sender)
+		{
+			//	Une collection de textes a changé.
+			if (this.ignoreChange)
+			{
+				return;
+			}
+
+			MyWidgets.StringCollection sc = sender as MyWidgets.StringCollection;
+			int sel = this.access.AccessIndex;
+
+			if (sc == this.primaryLabels)
+			{
+				this.access.SetField(sel, null, ResourceAccess.FieldType.Labels, new ResourceAccess.Field(sc.Collection));
+			}
+
+			if (sc == this.secondaryLabels)
+			{
+				this.access.SetField(sel, this.secondaryCulture, ResourceAccess.FieldType.Labels, new ResourceAccess.Field(sc.Collection));
+			}
+
+			this.UpdateColor();
+			this.UpdateModificationsCulture();
+		}
+
+		private void HandleStringFocusCollectionChanged(object sender)
+		{
+			//	Le focus a changé dans une collection.
+			if (this.ignoreChange)
+			{
+				return;
+			}
+
+			MyWidgets.StringCollection sc = sender as MyWidgets.StringCollection;
+			this.currentTextField = sc.FocusedTextField;
+		}
+
+		private void HandlePrimaryIconClicked(object sender, MessageEventArgs e)
+		{
+			//	Le boutons pour choisir l'icône a été cliqué.
+			ResourceAccess.Field field = this.access.GetField(this.access.AccessIndex, null, ResourceAccess.FieldType.Icon);
+			string initialIcon = field.String;
+
+			string icon = this.module.MainWindow.DlgIcon(this.module.ResourceManager, initialIcon);
+
+			if (icon != initialIcon)
+			{
+				this.access.SetField(this.access.AccessIndex, null, ResourceAccess.FieldType.Icon, new ResourceAccess.Field(icon));
+
+				this.SetTextField(this.primaryIcon, this.access.AccessIndex, null, ResourceAccess.FieldType.Icon);
+				this.UpdateIcon();
+			}
 		}
 
 		protected void HandleButtonCompactOrExtendClicked(object sender, MessageEventArgs e)
@@ -524,9 +676,15 @@ namespace Epsitec.Common.Designer.Viewers
 		protected GlyphButton					buttonCaptionExtend;
 		protected GlyphButton					buttonCaptionCompact;
 		protected StaticText					primarySummary;
+		protected IconButton					primarySummaryIcon;
 		protected StaticText					secondarySummary;
-		protected TextFieldMulti				primaryText;
-		protected TextFieldMulti				secondaryText;
+		protected IconButton					secondarySummaryIcon;
+		protected MyWidgets.StringCollection	primaryLabels;
+		protected MyWidgets.StringCollection	secondaryLabels;
+		protected TextFieldMulti				primaryDescription;
+		protected TextFieldMulti				secondaryDescription;
+		protected IconButton					primaryIcon;
+		protected StaticText					primaryIconInfo;
 		protected TextFieldMulti				primaryComment;
 		protected TextFieldMulti				secondaryComment;
 	}

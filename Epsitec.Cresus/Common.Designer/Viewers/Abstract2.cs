@@ -391,6 +391,28 @@ namespace Epsitec.Common.Designer.Viewers
 			this.ColoriseBands(state1, state2);
 		}
 
+
+		protected void SetTextField(MyWidgets.StringCollection collection, IList<string> list)
+		{
+			if (list == null)
+			{
+				collection.Enable = false;
+				collection.Collection = null;
+			}
+			else
+			{
+				//	TODO: on doit pouvoir faire plus simple !
+				List<string> l = new List<string>();
+				foreach (string text in list)
+				{
+					l.Add(text);
+				}
+
+				collection.Enable = true;
+				collection.Collection = l;
+			}
+		}
+
 		
 		protected virtual UI.IItemViewFactory ItemViewFactoryGetter(UI.ItemView itemView)
 		{

@@ -2279,8 +2279,9 @@ namespace Epsitec.Common.Designer
 
 				if (this.type == Type.Captions2)
 				{
+					IList<string> labels = data.GetValue(Support.Res.Fields.ResourceCaption.Labels) as IList<string>;
 					string text = data.GetValue(Support.Res.Fields.ResourceCaption.Description) as string;
-					if (string.IsNullOrEmpty(text))
+					if (labels.Count == 0 && string.IsNullOrEmpty(text))
 					{
 						return ModificationState.Empty;
 					}
