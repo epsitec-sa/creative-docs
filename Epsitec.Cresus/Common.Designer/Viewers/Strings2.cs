@@ -98,9 +98,9 @@ namespace Epsitec.Common.Designer.Viewers
 			this.table.ItemPanel.CustomItemViewFactoryGetter = this.ItemViewFactoryGetter;
 			this.table.SourceType = cultureMapType;
 			this.table.Items = this.access.CollectionView;
-			this.table.Columns.Add(new UI.ItemTableColumn("Name", new Widgets.Layouts.GridLength(this.mainWindow.DisplayHorizontal ? 200 : 250, Widgets.Layouts.GridUnitType.Proportional)));
-			this.table.Columns.Add(new UI.ItemTableColumn("Primary", new Widgets.Layouts.GridLength(this.mainWindow.DisplayHorizontal ? 100 : 300, Widgets.Layouts.GridUnitType.Proportional)));
-			this.table.Columns.Add(new UI.ItemTableColumn("Secondary", new Widgets.Layouts.GridLength(this.mainWindow.DisplayHorizontal ? 100 : 300, Widgets.Layouts.GridUnitType.Proportional)));
+			this.table.Columns.Add(new UI.ItemTableColumn("Name", new Widgets.Layouts.GridLength(this.GetColumnWidth(0), Widgets.Layouts.GridUnitType.Proportional)));
+			this.table.Columns.Add(new UI.ItemTableColumn("Primary", new Widgets.Layouts.GridLength(this.GetColumnWidth(1), Widgets.Layouts.GridUnitType.Proportional)));
+			this.table.Columns.Add(new UI.ItemTableColumn("Secondary", new Widgets.Layouts.GridLength(this.GetColumnWidth(2), Widgets.Layouts.GridUnitType.Proportional)));
 			this.table.ColumnHeader.SetColumnText(0, "Nom");
 			this.table.HorizontalScrollMode = this.mainWindow.DisplayHorizontal ? UI.ItemTableScrollMode.Linear : UI.ItemTableScrollMode.None;
 			this.table.VerticalScrollMode = UI.ItemTableScrollMode.ItemBased;
@@ -539,13 +539,6 @@ namespace Epsitec.Common.Designer.Viewers
 		}
 
 
-		protected double GetColomnWidth(int column)
-		{
-			//	Retourne la largeur d'une colonne.
-			return this.table.Columns[column].Width.Value;
-		}
-
-
 		#region Band
 		protected GlyphButton CreateBand(out MyWidgets.StackedPanel leftContainer, out MyWidgets.StackedPanel rightContainer, string title, BandMode mode, GlyphShape extendShape, bool isNewSection, double backgroundIntensity)
 		{
@@ -817,6 +810,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 		private void HandleTableSelectionChanged(object sender)
 		{
+			//	La ligne sélectionnée dans le tableau a changé.
 			this.mainWindow.LocatorFix();
 
 			this.UpdateTitle();
@@ -828,6 +822,8 @@ namespace Epsitec.Common.Designer.Viewers
 
 		private void HandleTableSizeChanged(object sender, Epsitec.Common.Types.DependencyPropertyChangedEventArgs e)
 		{
+			//	Les dimensions du tableau ont changé.
+#if false
 			UI.ItemTable table = (UI.ItemTable) sender;
 			Drawing.Size size = (Drawing.Size) e.NewValue;
 
@@ -835,10 +831,13 @@ namespace Epsitec.Common.Designer.Viewers
 			//?table.ColumnHeader.SetColumnWidth(0, width);
 
 			table.ItemPanel.ItemViewDefaultSize = new Size(width, 20);
+#endif
 		}
 
 		private void HandleColumnHeaderColumnWidthChanged(object sender, UI.ColumnWidthChangeEventArgs e)
 		{
+			//	La largeur d'une colonne du tableau a changé.
+			this.SetColumnWidth(e.Column, e.NewWidth);
 		}
 
 		private void HandleButtonSecondaryCultureClicked(object sender, MessageEventArgs e)

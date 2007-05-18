@@ -1277,6 +1277,33 @@ namespace Epsitec.Common.Designer.Viewers
 		}
 
 
+		protected double GetColumnWidth(int column)
+		{
+			//	Retourne la largeur à utiliser pour une colonne de la liste de gauche.
+			if (this.mainWindow.DisplayHorizontal)
+			{
+				return Abstract.columnWidthHorizontal[column];
+			}
+			else
+			{
+				return Abstract.columnWidthVertical[column];
+			}
+		}
+
+		protected void SetColumnWidth(int column, double value)
+		{
+			//	Mémorise la largeur à utiliser pour une colonne de la liste de gauche.
+			if (this.mainWindow.DisplayHorizontal)
+			{
+				Abstract.columnWidthHorizontal[column] = value;
+			}
+			else
+			{
+				Abstract.columnWidthVertical[column] = value;
+			}
+		}
+
+
 		protected void HandleEditKeyboardFocusChanged(object sender, Epsitec.Common.Types.DependencyPropertyChangedEventArgs e)
 		{
 			//	Appelé lorsqu'une ligne éditable voit son focus changer.
@@ -1303,6 +1330,8 @@ namespace Epsitec.Common.Designer.Viewers
 
 		protected static double				leftArrayWidth = 439;
 		protected static double				topArrayHeight = 220;
+		protected static double[]			columnWidthHorizontal = {200, 100, 100};
+		protected static double[]			columnWidthVertical = {250, 300, 300};
 
 		protected Module					module;
 		protected PanelsContext				context;
