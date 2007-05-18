@@ -5,7 +5,7 @@ using Epsitec.Common.Drawing;
 namespace Epsitec.Common.Designer.Ribbons
 {
 	/// <summary>
-	/// La classe Locator correspond au menu fichiers.
+	/// La classe Locator correspond aux commandes de navigation précédent/suivant.
 	/// </summary>
 	public class Locator : Abstract
 	{

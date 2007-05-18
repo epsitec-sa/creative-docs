@@ -45,7 +45,7 @@ namespace Epsitec.Common.Designer.Ribbons
 		protected IconButton CreateIconButton(string command, string iconSize)
 		{
 			//	Crée un bouton pour une commande, en précisant la taille préférée pour l'icône.
-			Command c = Widgets.Command.Get (command);
+			Command c = Widgets.Command.Get(command);
 			IconButton button = new IconButton(this);
 
 #if false
@@ -74,7 +74,7 @@ namespace Epsitec.Common.Designer.Ribbons
 		protected IconButtonCombo CreateIconButtonCombo(string command)
 		{
 			//	Crée un bouton combo pour une commande.
-			Command c = Widgets.Command.Get (command);
+			Command c = Widgets.Command.Get(command);
 			IconButtonCombo button = new IconButtonCombo(this);
 
 			button.CommandObject = c;
@@ -117,7 +117,7 @@ namespace Epsitec.Common.Designer.Ribbons
 		protected IconButtonsCombo CreateIconButtonsCombo(string command)
 		{
 			//	Crée un bouton combo pour une commande.
-			Command c = Widgets.Command.Get (command);
+			Command c = Widgets.Command.Get(command);
 			IconButtonsCombo button = new IconButtonsCombo(this);
 
 			button.CommandObject = c;

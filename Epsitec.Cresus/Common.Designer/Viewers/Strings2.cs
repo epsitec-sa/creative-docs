@@ -34,22 +34,45 @@ namespace Epsitec.Common.Designer.Viewers
 			//	Crée les deux volets gauche/droite séparés d'un splitter.
 			this.left = new Widget(this);
 			this.left.Name = "Left";
-			this.left.MinWidth = 80;
-			this.left.MaxWidth = 600;
-			this.left.PreferredWidth = Abstract.leftArrayWidth;
-			this.left.Dock = DockStyle.Left;
+			if (this.mainWindow.DisplayHorizontal)
+			{
+				this.left.MinWidth = 80;
+				this.left.MaxWidth = 600;
+				this.left.PreferredWidth = Abstract.leftArrayWidth;
+			}
+			else
+			{
+				this.left.MinHeight = 150;
+				this.left.MaxHeight = 600;
+				this.left.PreferredHeight = Abstract.leftArrayHeight;
+			}
+			this.left.Dock = this.mainWindow.DisplayHorizontal ? DockStyle.Left : DockStyle.Top;
 			this.left.Padding = new Margins(10, 10, 10, 10);
 			this.left.TabIndex = this.tabIndex++;
 			this.left.TabNavigationMode = TabNavigationMode.ForwardTabPassive;
 
-			this.splitter = new VSplitter(this);
-			this.splitter.Dock = DockStyle.Left;
+			if (this.mainWindow.DisplayHorizontal)
+			{
+				this.splitter = new VSplitter(this);
+			}
+			else
+			{
+				this.splitter = new HSplitter(this);
+			}
+			this.splitter.Dock = this.mainWindow.DisplayHorizontal ? DockStyle.Left : DockStyle.Top;
 			this.splitter.SplitterDragged += new EventHandler(this.HandleSplitterDragged);
 			VSplitter.SetAutoCollapseEnable(this.left, true);
 
 			this.right = new Widget(this);
 			this.right.Name = "Right";
-			this.right.MinWidth = 200;
+			if (this.mainWindow.DisplayHorizontal)
+			{
+				this.right.MinWidth = 200;
+			}
+			else
+			{
+				this.right.MinHeight = 100;
+			}
 			this.right.Dock = DockStyle.Fill;
 			this.right.Padding = new Margins(10, 10, 10, 10);
 			this.right.TabIndex = this.tabIndex++;
@@ -75,9 +98,9 @@ namespace Epsitec.Common.Designer.Viewers
 			this.table.ItemPanel.CustomItemViewFactoryGetter = this.ItemViewFactoryGetter;
 			this.table.SourceType = cultureMapType;
 			this.table.Items = this.access.CollectionView;
-			this.table.Columns.Add(new UI.ItemTableColumn("Name", new Widgets.Layouts.GridLength(200, Widgets.Layouts.GridUnitType.Proportional)));
-			this.table.Columns.Add(new UI.ItemTableColumn("Primary", new Widgets.Layouts.GridLength(100, Widgets.Layouts.GridUnitType.Proportional)));
-			this.table.Columns.Add(new UI.ItemTableColumn("Secondary", new Widgets.Layouts.GridLength(100, Widgets.Layouts.GridUnitType.Proportional)));
+			this.table.Columns.Add(new UI.ItemTableColumn("Name", new Widgets.Layouts.GridLength(this.mainWindow.DisplayHorizontal ? 200 : 250, Widgets.Layouts.GridUnitType.Proportional)));
+			this.table.Columns.Add(new UI.ItemTableColumn("Primary", new Widgets.Layouts.GridLength(this.mainWindow.DisplayHorizontal ? 100 : 300, Widgets.Layouts.GridUnitType.Proportional)));
+			this.table.Columns.Add(new UI.ItemTableColumn("Secondary", new Widgets.Layouts.GridLength(this.mainWindow.DisplayHorizontal ? 100 : 300, Widgets.Layouts.GridUnitType.Proportional)));
 			this.table.ColumnHeader.SetColumnText(0, "Nom");
 			this.table.HorizontalScrollMode = UI.ItemTableScrollMode.Linear;
 			this.table.VerticalScrollMode = UI.ItemTableScrollMode.ItemBased;
@@ -778,7 +801,14 @@ namespace Epsitec.Common.Designer.Viewers
 		private void HandleSplitterDragged(object sender)
 		{
 			//	Le splitter a été bougé.
-			Abstract.leftArrayWidth = this.left.ActualWidth;
+			if (this.mainWindow.DisplayHorizontal)
+			{
+				Abstract.leftArrayWidth = this.left.ActualWidth;
+			}
+			else
+			{
+				Abstract.leftArrayHeight = this.left.ActualHeight;
+			}
 		}
 
 		private void HandleTableSelectionChanged(object sender)
@@ -1038,7 +1068,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 		protected Widget						left;
 		protected Widget						right;
-		protected VSplitter						splitter;
+		protected AbstractSplitter				splitter;
 		protected UI.ItemTable					table;
 		protected MyWidgets.TextFieldExName		labelEdit;
 		protected IconButtonMark				primaryButtonCulture;

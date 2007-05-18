@@ -287,6 +287,7 @@ namespace Epsitec.Common.Designer
 			}
 			this.ribbonMain.Items.Add(new Ribbons.Access(this));
 			this.ribbonMain.Items.Add(new Ribbons.Character(this));
+			this.ribbonMain.Items.Add(new Ribbons.Display(this));
 			this.ribbonMain.Items.Add(new Ribbons.Locator(this));
 
 			//	Crée le ruban des opérations.
@@ -750,12 +751,38 @@ namespace Epsitec.Common.Designer
 			this.LocatorNext();
 		}
 
+		[Command("DisplayHorizontal")]
+		void CommandDisplayHorizontal(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			this.DisplayHorizontal = true;
+		}
+
+		[Command("DisplayVertical")]
+		void CommandDisplayVertical(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			this.DisplayHorizontal = false;
+		}
+
 		[Command ("LocatorListDo")]
 		void CommandLocatorListDo(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
 			string value = StructuredCommand.GetFieldValue(e.CommandState, "Name") as string;
 			int i = System.Convert.ToInt32(value);
 			this.LocatorMenuGoto(i);
+		}
+
+		public bool DisplayHorizontal
+		{
+			get
+			{
+				return this.displayHorizontalState.ActiveState == ActiveState.Yes;
+			}
+			set
+			{
+				this.displayHorizontalState.ActiveState = value ? ActiveState.Yes : ActiveState.No;
+				this.displayVerticalState.ActiveState = value ? ActiveState.No : ActiveState.Yes;
+				this.HandleTypeChanged(null);
+			}
 		}
 
 		protected void InitCommands()
@@ -861,6 +888,10 @@ namespace Epsitec.Common.Designer
 
 			this.locatorPrevState = this.CreateCommandState("LocatorPrev", KeyCode.ArrowLeft|KeyCode.ModifierAlt);
 			this.locatorNextState = this.CreateCommandState("LocatorNext", KeyCode.ArrowRight|KeyCode.ModifierAlt);
+
+			this.displayHorizontalState = this.CreateCommandState("DisplayHorizontal");
+			this.displayVerticalState = this.CreateCommandState("DisplayVertical");
+			this.displayHorizontalState.ActiveState = ActiveState.Yes;
 		}
 
 		protected CommandState CreateCommandState(string commandName, params Widgets.Shortcut[] shortcuts)
@@ -878,7 +909,7 @@ namespace Epsitec.Common.Designer
 
 				string iconName = commandName;
 				string description = Res.Strings.GetString ("Action."+commandName);
-				bool statefull = (commandName == "FontBold" || commandName == "FontItalic" || commandName == "FontUnderline" || commandName.StartsWith("PanelShow"));
+				bool statefull = (commandName == "FontBold" || commandName == "FontItalic" || commandName == "FontUnderline" || commandName.StartsWith("PanelShow") || commandName.StartsWith("DisplayHorizontal") || commandName.StartsWith("DisplayVertical"));
 
 				command.ManuallyDefineCommand (description, Misc.Icon(iconName), null, statefull);
 			}
@@ -1271,7 +1302,7 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
-		void HandleTypeChanged(object sender)
+		private void HandleTypeChanged(object sender)
 		{
 			//	Appelé lorsque le type de vue a changé.
 			this.CreateViewerLayout();
@@ -1881,6 +1912,8 @@ namespace Epsitec.Common.Designer
 		protected CommandState					tabIndexRenumState;
 		protected CommandState					locatorPrevState;
 		protected CommandState					locatorNextState;
+		protected CommandState					displayHorizontalState;
+		protected CommandState					displayVerticalState;
 
 		public static readonly DependencyProperty InstanceProperty = DependencyProperty.RegisterAttached("Instance", typeof(MainWindow), typeof(MainWindow));
 	}

@@ -5,6 +5,7 @@
   <data name="Ribbon.Oper" id="02">Opérations</data>
   <data name="Ribbon.Text" id="03">Texte</data>
   <data name="Ribbon.Section.File" id="04">Fichier</data>
+  <data name="Ribbon.Section.Display" id="09A">Affichage</data>
   <data name="Ribbon.Section.Clipboard" id="05">Presse-papiers</data>
   <data name="Ribbon.Section.Edit" id="06">Edition</data>
   <data name="Ribbon.Section.Character" id="07">Caractère</data>
@@ -140,6 +141,8 @@
   <data name="Action.Close" id="001">Fermer</data>
   <data name="Action.CloseAll" id="011">Fermer tout</data>
   <data name="Action.Save" id="021">Enregistrer</data>
+  <data name="Action.DisplayHorizontal" id="0AA">Affichage horizontal</data>
+  <data name="Action.DisplayVertical" id="0BA">Affichage vertical</data>
   <data name="Action.SaveAs" id="031">Enregistrer sous...</data>
   <data name="Action.Check" id="0U5" mod="1">Vérifier</data>
   <data name="Action.LastFiles" id="041">Fichiers récents</data>
