@@ -141,8 +141,8 @@
   <data name="Action.Close" id="001">Fermer</data>
   <data name="Action.CloseAll" id="011">Fermer tout</data>
   <data name="Action.Save" id="021">Enregistrer</data>
-  <data name="Action.DisplayHorizontal" id="0AA">Affichage horizontal</data>
-  <data name="Action.DisplayVertical" id="0BA">Affichage vertical</data>
+  <data name="Action.DisplayHorizontal" id="0AA">Disposition horizontale</data>
+  <data name="Action.DisplayVertical" id="0BA">Disposition verticale</data>
   <data name="Action.SaveAs" id="031">Enregistrer sous...</data>
   <data name="Action.Check" id="0U5" mod="1">Vérifier</data>
   <data name="Action.LastFiles" id="041">Fichiers récents</data>

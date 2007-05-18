@@ -31,25 +31,25 @@ namespace Epsitec.Common.Designer.Viewers
 
 			this.itemViewFactory = new ItemViewFactory(this);
 			
-			//	Crée les deux volets gauche/droite séparés d'un splitter.
-			this.left = new Widget(this);
-			this.left.Name = "Left";
+			//	Crée les deux volets séparés d'un splitter.
+			this.firstPane = new Widget(this);
+			this.firstPane.Name = "FirstPane";
 			if (this.mainWindow.DisplayHorizontal)
 			{
-				this.left.MinWidth = 80;
-				this.left.MaxWidth = 600;
-				this.left.PreferredWidth = Abstract.leftArrayWidth;
+				this.firstPane.MinWidth = 80;
+				this.firstPane.MaxWidth = 600;
+				this.firstPane.PreferredWidth = Abstract.leftArrayWidth;
 			}
 			else
 			{
-				this.left.MinHeight = 100;
-				this.left.MaxHeight = 600;
-				this.left.PreferredHeight = Abstract.leftArrayHeight;
+				this.firstPane.MinHeight = 100;
+				this.firstPane.MaxHeight = 600;
+				this.firstPane.PreferredHeight = Abstract.topArrayHeight;
 			}
-			this.left.Dock = this.mainWindow.DisplayHorizontal ? DockStyle.Left : DockStyle.Top;
-			this.left.Padding = new Margins(10, 10, 10, 10);
-			this.left.TabIndex = this.tabIndex++;
-			this.left.TabNavigationMode = TabNavigationMode.ForwardTabPassive;
+			this.firstPane.Dock = this.mainWindow.DisplayHorizontal ? DockStyle.Left : DockStyle.Top;
+			this.firstPane.Padding = new Margins(10, 10, 10, 10);
+			this.firstPane.TabIndex = this.tabIndex++;
+			this.firstPane.TabNavigationMode = TabNavigationMode.ForwardTabPassive;
 
 			if (this.mainWindow.DisplayHorizontal)
 			{
@@ -61,25 +61,25 @@ namespace Epsitec.Common.Designer.Viewers
 			}
 			this.splitter.Dock = this.mainWindow.DisplayHorizontal ? DockStyle.Left : DockStyle.Top;
 			this.splitter.SplitterDragged += new EventHandler(this.HandleSplitterDragged);
-			VSplitter.SetAutoCollapseEnable(this.left, true);
+			VSplitter.SetAutoCollapseEnable(this.firstPane, true);
 
-			this.right = new Widget(this);
-			this.right.Name = "Right";
+			this.lastPane = new Widget(this);
+			this.lastPane.Name = "LastPane";
 			if (this.mainWindow.DisplayHorizontal)
 			{
-				this.right.MinWidth = 200;
+				this.lastPane.MinWidth = 200;
 			}
 			else
 			{
-				this.right.MinHeight = 50;
+				this.lastPane.MinHeight = 50;
 			}
-			this.right.Dock = DockStyle.Fill;
-			this.right.Padding = new Margins(10, 10, 10, 10);
-			this.right.TabIndex = this.tabIndex++;
-			this.right.TabNavigationMode = TabNavigationMode.ForwardTabPassive;
+			this.lastPane.Dock = DockStyle.Fill;
+			this.lastPane.Padding = new Margins(10, 10, 10, 10);
+			this.lastPane.TabIndex = this.tabIndex++;
+			this.lastPane.TabNavigationMode = TabNavigationMode.ForwardTabPassive;
 			
-			//	Crée la partie gauche.
-			this.labelEdit = new MyWidgets.TextFieldExName(this.left);
+			//	Crée la première partie (gauche ou supérieure).
+			this.labelEdit = new MyWidgets.TextFieldExName(this.firstPane);
 			this.labelEdit.Name = "LabelEdit";
 			this.labelEdit.Margins = new Margins(0, 0, 10, 0);
 			this.labelEdit.Dock = DockStyle.Bottom;
@@ -94,7 +94,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.labelEdit.Visibility = (this.module.Mode == DesignerMode.Build);
 			this.currentTextField = this.labelEdit;
 
-			this.table = new UI.ItemTable(this.left);
+			this.table = new UI.ItemTable(this.firstPane);
 			this.table.ItemPanel.CustomItemViewFactoryGetter = this.ItemViewFactoryGetter;
 			this.table.SourceType = cultureMapType;
 			this.table.Items = this.access.CollectionView;
@@ -116,8 +116,8 @@ namespace Epsitec.Common.Designer.Viewers
 			this.table.Dock = Widgets.DockStyle.Fill;
 			this.table.Margins = Drawing.Margins.Zero;
 
-			//	Crée la partie droite, bande supérieure pour les boutons des cultures.
-			Widget sup = new Widget(this.right);
+			//	Crée la dernière partie (droite ou inférieure), bande supérieure pour les boutons des cultures.
+			Widget sup = new Widget(this.lastPane);
 			sup.Name = "Sup";
 			sup.PreferredHeight = 26;
 			sup.Padding = new Margins(0, 17, 1, 0);
@@ -144,7 +144,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.secondaryButtonsCultureGroup.TabNavigationMode = TabNavigationMode.ForwardTabPassive;
 
 			//	Crée le titre.
-			this.titleBox = new FrameBox(this.right);
+			this.titleBox = new FrameBox(this.lastPane);
 			this.titleBox.DrawFullFrame = true;
 			this.titleBox.PreferredHeight = 26;
 			this.titleBox.Dock = DockStyle.Top;
@@ -156,8 +156,8 @@ namespace Epsitec.Common.Designer.Viewers
 			this.titleText.Dock = DockStyle.Fill;
 			this.titleText.Margins = new Margins(4, 4, 0, 0);
 
-			//	Crée la partie droite, bande inférieure pour la zone d'étition scrollable.
-			this.scrollable = new Scrollable(this.right);
+			//	Crée la dernière partie (droite ou inférieure), bande inférieure pour la zone d'étition scrollable.
+			this.scrollable = new Scrollable(this.lastPane);
 			this.scrollable.Name = "Scrollable";
 			this.scrollable.MinWidth = 100;
 			this.scrollable.MinHeight = 39;
@@ -803,11 +803,11 @@ namespace Epsitec.Common.Designer.Viewers
 			//	Le splitter a été bougé.
 			if (this.mainWindow.DisplayHorizontal)
 			{
-				Abstract.leftArrayWidth = this.left.ActualWidth;
+				Abstract.leftArrayWidth = this.firstPane.ActualWidth;
 			}
 			else
 			{
-				Abstract.leftArrayHeight = this.left.ActualHeight;
+				Abstract.topArrayHeight = this.firstPane.ActualHeight;
 			}
 		}
 
@@ -1066,8 +1066,8 @@ namespace Epsitec.Common.Designer.Viewers
 
 		private ItemViewFactory					itemViewFactory;
 
-		protected Widget						left;
-		protected Widget						right;
+		protected Widget						firstPane;
+		protected Widget						lastPane;
 		protected AbstractSplitter				splitter;
 		protected UI.ItemTable					table;
 		protected MyWidgets.TextFieldExName		labelEdit;

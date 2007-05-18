@@ -751,6 +751,14 @@ namespace Epsitec.Common.Designer
 			this.LocatorNext();
 		}
 
+		[Command ("LocatorListDo")]
+		void CommandLocatorListDo(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			string value = StructuredCommand.GetFieldValue(e.CommandState, "Name") as string;
+			int i = System.Convert.ToInt32(value);
+			this.LocatorMenuGoto(i);
+		}
+
 		[Command("DisplayHorizontal")]
 		void CommandDisplayHorizontal(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
@@ -761,28 +769,6 @@ namespace Epsitec.Common.Designer
 		void CommandDisplayVertical(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
 			this.DisplayHorizontal = false;
-		}
-
-		[Command ("LocatorListDo")]
-		void CommandLocatorListDo(CommandDispatcher dispatcher, CommandEventArgs e)
-		{
-			string value = StructuredCommand.GetFieldValue(e.CommandState, "Name") as string;
-			int i = System.Convert.ToInt32(value);
-			this.LocatorMenuGoto(i);
-		}
-
-		public bool DisplayHorizontal
-		{
-			get
-			{
-				return this.displayHorizontalState.ActiveState == ActiveState.Yes;
-			}
-			set
-			{
-				this.displayHorizontalState.ActiveState = value ? ActiveState.Yes : ActiveState.No;
-				this.displayVerticalState.ActiveState = value ? ActiveState.No : ActiveState.Yes;
-				this.HandleTypeChanged(null);
-			}
 		}
 
 		protected void InitCommands()
@@ -917,6 +903,25 @@ namespace Epsitec.Common.Designer
 			return this.CommandContext.GetCommandState (command);
 		}
 		#endregion
+
+
+		public bool DisplayHorizontal
+		{
+			//	Disposition de l'affichage (horizontal ou vertical).
+			get
+			{
+				return this.displayHorizontalState.ActiveState == ActiveState.Yes;
+			}
+			set
+			{
+				if (this.DisplayHorizontal != value)
+				{
+					this.displayHorizontalState.ActiveState = value ? ActiveState.Yes : ActiveState.No;
+					this.displayVerticalState.ActiveState = value ? ActiveState.No : ActiveState.Yes;
+					this.HandleTypeChanged(null);
+				}
+			}
+		}
 
 
 		#region Locator
