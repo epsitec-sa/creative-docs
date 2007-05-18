@@ -1763,6 +1763,12 @@ namespace Epsitec.Common.Designer
 					return new Field(text);
 				}
 
+				if (fieldType == FieldType.Description)
+				{
+					string text = data.GetValue(Support.Res.Fields.ResourceCaption.Description) as string;
+					return new Field(text);
+				}
+
 				if (fieldType == FieldType.About)
 				{
 					string text = data.GetValue(Support.Res.Fields.Resource.Comment) as string;
@@ -1938,6 +1944,13 @@ namespace Epsitec.Common.Designer
 				if (fieldType == FieldType.String)
 				{
 					data.SetValue(Support.Res.Fields.ResourceString.Text, field.String);
+					this.accessor.PersistChanges();
+					this.collectionView.Refresh();
+				}
+
+				if (fieldType == FieldType.Description)
+				{
+					data.SetValue(Support.Res.Fields.ResourceCaption.Description, field.String);
 					this.accessor.PersistChanges();
 					this.collectionView.Refresh();
 				}
@@ -2255,10 +2268,22 @@ namespace Epsitec.Common.Designer
 					return ModificationState.Empty;
 				}
 
-				string text = data.GetValue(Support.Res.Fields.ResourceString.Text) as string;
-				if (string.IsNullOrEmpty(text))
+				if (this.type == Type.Strings2)
 				{
-					return ModificationState.Empty;
+					string text = data.GetValue(Support.Res.Fields.ResourceString.Text) as string;
+					if (string.IsNullOrEmpty(text))
+					{
+						return ModificationState.Empty;
+					}
+				}
+
+				if (this.type == Type.Captions2)
+				{
+					string text = data.GetValue(Support.Res.Fields.ResourceCaption.Description) as string;
+					if (string.IsNullOrEmpty(text))
+					{
+						return ModificationState.Empty;
+					}
 				}
 
 				if (cultureName != "00")  // culture secondaire ?

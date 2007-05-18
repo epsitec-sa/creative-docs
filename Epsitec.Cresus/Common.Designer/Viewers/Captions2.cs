@@ -140,7 +140,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.labelEdit.Text = item.Name;
 
 			data = item.GetCultureData(this.GetTwoLetters(0));
-			this.primaryText.Text = data.GetValue(Support.Res.Fields.ResourceString.Text) as string;
+			this.primaryText.Text = data.GetValue(Support.Res.Fields.ResourceCaption.Description) as string;
 			this.primaryComment.Text = data.GetValue(Support.Res.Fields.Resource.Comment) as string;
 
 			if (this.GetTwoLetters(1) == null)
@@ -153,7 +153,7 @@ namespace Epsitec.Common.Designer.Viewers
 			else
 			{
 				data = item.GetCultureData(this.GetTwoLetters(1));
-				this.secondaryText.Text = data.GetValue(Support.Res.Fields.ResourceString.Text) as string;
+				this.secondaryText.Text = data.GetValue(Support.Res.Fields.ResourceCaption.Description) as string;
 				this.secondaryComment.Text = data.GetValue(Support.Res.Fields.Resource.Comment) as string;
 				this.secondaryText.Enable = true;
 				this.secondaryComment.Enable = true;
@@ -178,7 +178,7 @@ namespace Epsitec.Common.Designer.Viewers
 				CultureMap item = this.access.CollectionView.CurrentItem as CultureMap;
 				StructuredData data = item.GetCultureData(twoLettersCulture);
 
-				string text = data.GetValue(Support.Res.Fields.ResourceString.Text) as string;
+				string text = data.GetValue(Support.Res.Fields.ResourceCaption.Description) as string;
 				if (string.IsNullOrEmpty(text))
 				{
 					buffer.Append(Misc.Italic("(indéfini)"));
@@ -356,7 +356,7 @@ namespace Epsitec.Common.Designer.Viewers
 			if (edit == this.primaryText)
 			{
 				StructuredData data = item.GetCultureData(this.GetTwoLetters(0));
-				data.SetValue(Support.Res.Fields.ResourceString.Text, text);
+				data.SetValue(Support.Res.Fields.ResourceCaption.Description, text);
 				
 				this.access.Accessor.PersistChanges();
 				this.access.CollectionView.Refresh();  // TODO: ne mettre à jour que la ligne modifiée
@@ -366,7 +366,7 @@ namespace Epsitec.Common.Designer.Viewers
 			if (edit == this.secondaryText)
 			{
 				StructuredData data = item.GetCultureData(this.GetTwoLetters(1));
-				data.SetValue(Support.Res.Fields.ResourceString.Text, text);
+				data.SetValue(Support.Res.Fields.ResourceCaption.Description, text);
 				
 				this.access.Accessor.PersistChanges();
 				this.access.CollectionView.Refresh();  // TODO: ne mettre à jour que la ligne modifiée
@@ -502,7 +502,7 @@ namespace Epsitec.Common.Designer.Viewers
 				if (twoLettersCulture != null)
 				{
 					StructuredData data = item.GetCultureData(twoLettersCulture);
-					value = data.GetValue(Support.Res.Fields.ResourceString.Text) as string;
+					value = data.GetValue(Support.Res.Fields.ResourceCaption.Description) as string;
 				}
 
 				text.Margins = new Margins(5, 5, 0, 0);
