@@ -42,7 +42,7 @@ namespace Epsitec.Common.Designer.Viewers
 			}
 			else
 			{
-				this.left.MinHeight = 150;
+				this.left.MinHeight = 100;
 				this.left.MaxHeight = 600;
 				this.left.PreferredHeight = Abstract.leftArrayHeight;
 			}
@@ -71,7 +71,7 @@ namespace Epsitec.Common.Designer.Viewers
 			}
 			else
 			{
-				this.right.MinHeight = 100;
+				this.right.MinHeight = 50;
 			}
 			this.right.Dock = DockStyle.Fill;
 			this.right.Padding = new Margins(10, 10, 10, 10);
@@ -102,7 +102,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.table.Columns.Add(new UI.ItemTableColumn("Primary", new Widgets.Layouts.GridLength(this.mainWindow.DisplayHorizontal ? 100 : 300, Widgets.Layouts.GridUnitType.Proportional)));
 			this.table.Columns.Add(new UI.ItemTableColumn("Secondary", new Widgets.Layouts.GridLength(this.mainWindow.DisplayHorizontal ? 100 : 300, Widgets.Layouts.GridUnitType.Proportional)));
 			this.table.ColumnHeader.SetColumnText(0, "Nom");
-			this.table.HorizontalScrollMode = UI.ItemTableScrollMode.Linear;
+			this.table.HorizontalScrollMode = this.mainWindow.DisplayHorizontal ? UI.ItemTableScrollMode.Linear : UI.ItemTableScrollMode.None;
 			this.table.VerticalScrollMode = UI.ItemTableScrollMode.ItemBased;
 			this.table.HeaderVisibility = true;
 			this.table.FrameVisibility = true;
@@ -160,7 +160,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.scrollable = new Scrollable(this.right);
 			this.scrollable.Name = "Scrollable";
 			this.scrollable.MinWidth = 100;
-			this.scrollable.MinHeight = 100;
+			this.scrollable.MinHeight = 39;
 			this.scrollable.Margins = new Margins(0, 0, 0, 0);
 			this.scrollable.Dock = DockStyle.Fill;
 			this.scrollable.HorizontalScrollerMode = ScrollableScrollerMode.HideAlways;
