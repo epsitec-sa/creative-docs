@@ -392,6 +392,22 @@ namespace Epsitec.Common.Designer.Viewers
 		}
 
 
+		protected void SetValue(CultureMap item, StructuredData data, Druid id, object value, bool update)
+		{
+			//	Méthode appelée pour modifier un champ.
+			data.SetValue(id, value);
+			this.access.IsDirty = true;
+			
+			this.UpdateColor();
+			this.access.Accessor.PersistChanges();
+
+			if (update)
+			{
+				this.access.CollectionView.Refresh();  // TODO: ne mettre à jour que la ligne modifiée
+			}
+		}
+
+
 		protected void SetTextField(MyWidgets.StringCollection collection, IList<string> list)
 		{
 			if (list == null)

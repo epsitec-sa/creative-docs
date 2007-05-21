@@ -478,48 +478,28 @@ namespace Epsitec.Common.Designer.Viewers
 			if (edit == this.primaryDescription)
 			{
 				StructuredData data = item.GetCultureData(this.GetTwoLetters(0));
-				data.SetValue(Support.Res.Fields.ResourceCaption.Description, text);
-				this.access.IsDirty = true;
-				
-				this.UpdateColor();
-				this.access.Accessor.PersistChanges();
-				this.access.CollectionView.Refresh();  // TODO: ne mettre à jour que la ligne modifiée
+				this.SetValue(item, data, Support.Res.Fields.ResourceCaption.Description, text, true);
 				edit.Focus();
 			}
 
 			if (edit == this.secondaryDescription)
 			{
 				StructuredData data = item.GetCultureData(this.GetTwoLetters(1));
-				data.SetValue(Support.Res.Fields.ResourceCaption.Description, text);
-				this.access.IsDirty = true;
-				
-				this.UpdateColor();
-				this.access.Accessor.PersistChanges();
-				this.access.CollectionView.Refresh();  // TODO: ne mettre à jour que la ligne modifiée
+				this.SetValue(item, data, Support.Res.Fields.ResourceCaption.Description, text, true);
 				edit.Focus();
 			}
 
 			if (edit == this.primaryComment)
 			{
 				StructuredData data = item.GetCultureData(this.GetTwoLetters(0));
-				data.SetValue(Support.Res.Fields.Resource.Comment, text);
-				this.access.IsDirty = true;
-				
-				this.UpdateColor();
-				this.access.Accessor.PersistChanges();
-				this.access.CollectionView.Refresh();  // TODO: ne mettre à jour que la ligne modifiée
+				this.SetValue(item, data, Support.Res.Fields.Resource.Comment, text, true);
 				edit.Focus();
 			}
 
 			if (edit == this.secondaryComment)
 			{
 				StructuredData data = item.GetCultureData(this.GetTwoLetters(1));
-				data.SetValue(Support.Res.Fields.Resource.Comment, text);
-				this.access.IsDirty = true;
-				
-				this.UpdateColor();
-				this.access.Accessor.PersistChanges();
-				this.access.CollectionView.Refresh();  // TODO: ne mettre à jour que la ligne modifiée
+				this.SetValue(item, data, Support.Res.Fields.Resource.Comment, text, true);
 				edit.Focus();
 			}
 
@@ -574,10 +554,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 			if (icon != initialIcon)
 			{
-				data.SetValue(Support.Res.Fields.ResourceCaption.Icon, icon);
-				this.access.IsDirty = true;
-				this.access.Accessor.PersistChanges();
-
+				this.SetValue(item, data, Support.Res.Fields.ResourceCaption.Icon, icon, false);
 				this.UpdateIcon();
 			}
 		}
