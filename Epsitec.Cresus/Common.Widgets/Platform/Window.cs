@@ -1450,7 +1450,16 @@ namespace Epsitec.Common.Widgets.Platform
 			
 			if (this.dirty_rectangle.IsValid)
 			{
-				this.Update ();
+				this.is_sync_updating++;
+
+				try
+				{
+					this.Update ();
+				}
+				finally
+				{
+					this.is_sync_updating--;
+				}
 			}
 		}
 		
@@ -1536,11 +1545,15 @@ namespace Epsitec.Common.Widgets.Platform
 
 			lock (Window.dispatch_window)
 			{
-				if (Window.is_sync_requested)
+				if (this.is_sync_updating == 0)
 				{
-					Window.is_sync_requested = false;
-					syncCommandCache = true;
+					if (Window.is_sync_requested)
+					{
+						Window.is_sync_requested = false;
+						syncCommandCache = true;
+					}
 				}
+				
 				if (Window.is_awake_requested)
 				{
 					Window.is_awake_requested = false;
@@ -2467,6 +2480,7 @@ namespace Epsitec.Common.Widgets.Platform
 		private bool							is_size_move_in_progress;
 		private bool							is_layout_in_progress;
 		private int								disable_sync_paint;
+		private int								is_sync_updating;
 		
 		private static bool						is_app_active;
 		private static bool						is_sync_requested;
