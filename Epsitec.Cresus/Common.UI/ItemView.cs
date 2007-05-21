@@ -400,7 +400,7 @@ namespace Epsitec.Common.UI
 				if ((this.owner.GetFocusedItemView () == this) &&
 					(this.owner.ContainsKeyboardFocus))
 				{
-					System.Diagnostics.Debug.WriteLine ("Refocus " + this.widget);
+					//-System.Diagnostics.Debug.WriteLine ("Refocus " + this.widget);
 					this.widget.Focus ();
 				}
 			}
@@ -425,7 +425,7 @@ namespace Epsitec.Common.UI
 			
 			if (this.widget != null)
 			{
-				System.Diagnostics.Debug.WriteLine ("Defining " + this.index + "/" + this.GetCollectionIndex () + " -> " + this.widget.ToString () + " in " + this.owner.ToString ());
+				//-System.Diagnostics.Debug.WriteLine ("Defining " + this.index + "/" + this.GetCollectionIndex () + " -> " + this.widget.ToString () + " in " + this.owner.ToString ());
 			}
 		}
 
@@ -438,7 +438,7 @@ namespace Epsitec.Common.UI
 		{
 			if (this.widget != null)
 			{
-				System.Diagnostics.Debug.WriteLine ("Clearing " + this.index + "/" + this.GetCollectionIndex () + " -> " + this.widget.ToString () + " in " + this.owner.ToString ());
+				//-System.Diagnostics.Debug.WriteLine ("Clearing " + this.index + "/" + this.GetCollectionIndex () + " -> " + this.widget.ToString () + " in " + this.owner.ToString ());
 				
 				ItemPanelGroup group = this.Group;
 
@@ -462,7 +462,7 @@ namespace Epsitec.Common.UI
 		/// </summary>
 		internal void DisposeUserInterface()
 		{
-			System.Diagnostics.Debug.WriteLine ("Disposing " + this.index + "/" + this.GetCollectionIndex () + " -> " + this.widget.ToString () + " in " + this.owner.ToString ());
+			//-System.Diagnostics.Debug.WriteLine ("Disposing " + this.index + "/" + this.GetCollectionIndex () + " -> " + this.widget.ToString () + " in " + this.owner.ToString ());
 
 			if (this.widget != null)
 			{
