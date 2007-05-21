@@ -551,8 +551,12 @@ namespace Epsitec.Common.Document
 
 				DocumentDialogs.CreateTitle(container, Res.Strings.Dialog.ExportICO.Param);
 				this.CreateCombo(container, "ExportICOFormat");
-                DocumentDialogs.CreateSeparator(container);
-            }
+
+				DocumentDialogs.CreateTitle(container, Res.Strings.Dialog.Export.Generic);
+				this.CreateCombo(container, "ExportICOCrop");
+				this.CreateBool(container, "ExportICOOnlySelected");
+				DocumentDialogs.CreateSeparator(container);
+			}
 
             this.UpdateExportICO(true);
         }

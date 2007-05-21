@@ -49,6 +49,7 @@ namespace Epsitec.Common.Document.Settings
 					break;
 
 				case "ImageCrop":
+				case "ExportICOCrop":
 					this.text = Res.Strings.Dialog.Integer.ImageCrop.Text;
 					break;
 
@@ -116,6 +117,7 @@ namespace Epsitec.Common.Document.Settings
 						return Properties.Image.FilterNameToIndex(this.document.Settings.PrintInfo.GetImageNameFilter(1));
 
 					case "ImageCrop":
+					case "ExportICOCrop":
 						return (int) this.document.Printer.ImageCrop;
 
 					case "ImageDepth":
@@ -177,6 +179,7 @@ namespace Epsitec.Common.Document.Settings
 						break;
 
 					case "ImageCrop":
+					case "ExportICOCrop":
 						this.document.Printer.ImageCrop = (ExportImageCrop) value;
 						break;
 
@@ -309,6 +312,7 @@ namespace Epsitec.Common.Document.Settings
 					break;
 
 				case "ImageCrop":
+				case "ExportICOCrop":
 					ExportImageCrop xic = (ExportImageCrop) type;
 					if ( xic == ExportImageCrop.Page      )  return Res.Strings.Dialog.Integer.ImageCrop.Page;
 					if ( xic == ExportImageCrop.Objects   )  return Res.Strings.Dialog.Integer.ImageCrop.Objects;
@@ -410,6 +414,7 @@ namespace Epsitec.Common.Document.Settings
 					return -1;
 
 				case "ImageCrop":
+				case "ExportICOCrop":
 					if ( rank == 0 )  return (int) ExportImageCrop.Page;
 					if ( rank == 1 )  return (int) ExportImageCrop.Objects;
 					if ( rank == 2 )  return (int) ExportImageCrop.Selection;

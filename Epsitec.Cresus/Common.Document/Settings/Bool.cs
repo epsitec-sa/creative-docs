@@ -122,6 +122,7 @@ namespace Epsitec.Common.Document.Settings
 					break;
 
 				case "ImageOnlySelected":
+				case "ExportICOOnlySelected":
 					this.text = Res.Strings.Dialog.Bool.ImageOnlySelected;
 					break;
 
@@ -215,6 +216,7 @@ namespace Epsitec.Common.Document.Settings
 						return this.document.Settings.PrintInfo.DebugArea;
 
 					case "ImageOnlySelected":
+					case "ExportICOOnlySelected":
 						return this.document.Printer.ImageOnlySelected;
 
 					case "ExportPDFTarget":
@@ -327,6 +329,7 @@ namespace Epsitec.Common.Document.Settings
 						break;
 
 					case "ImageOnlySelected":
+					case "ExportICOOnlySelected":
 						this.document.Printer.ImageOnlySelected = value;
 						break;
 
@@ -352,14 +355,14 @@ namespace Epsitec.Common.Document.Settings
 			{
 				bool enabled = true;
 
-				if ( this.name == "ImageOnlySelected" )
+				switch (this.name)
 				{
-					enabled = (this.document.Modifier.TotalSelected > 0);
-				}
-
-				if ( this.name == "ImageCropSelection" )
-				{
-					enabled = (this.document.Modifier.TotalSelected > 0);
+					case "ImageOnlySelected":
+					case "ExportICOOnlySelected":
+					case "ImageCropSelection":
+					case "ExportICOCropSelection":
+						enabled = (this.document.Modifier.TotalSelected > 0);
+						break;
 				}
 
 				return enabled;

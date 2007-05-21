@@ -1269,7 +1269,7 @@ namespace Epsitec.Common.Document
             }
 
             byte[] data;
-            string err = this.ExportGeometry(drawingContext, pageNumber, format, dpi, ImageCompression.None, 32, 1.0, 1.0, true, false, ExportImageCrop.Page, out data);
+            string err = this.ExportGeometry(drawingContext, pageNumber, format, dpi, ImageCompression.None, 32, 1.0, 1.0, true, this.ImageOnlySelected, this.ImageCrop, out data);
             if (err != "")
             {
                 return err;

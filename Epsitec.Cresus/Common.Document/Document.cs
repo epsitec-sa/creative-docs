@@ -2320,7 +2320,6 @@ namespace Epsitec.Common.Document
         {
             //	Exporte le document.
             System.Diagnostics.Debug.Assert(this.mode == DocumentMode.Modify);
-            this.Modifier.DeselectAll();
 
 			//	MainWindowSetFrozen évite des appels à ImageCache.SetResolution pendant l'exportation,
 			//	si la fenêtre doit être repeinte !

@@ -130,6 +130,8 @@ namespace Epsitec.Common.Document.Settings
 			this.CreateDefaultInteger("ExportPDF", "ExportPDFImageFilterB");
 
             this.CreateDefaultInteger("ExportICO", "ExportICOFormat");
+			this.CreateDefaultBool("ExportICO", "ExportICOOnlySelected");
+			this.CreateDefaultInteger("ExportICO", "ExportICOCrop");
         }
 
 		protected void CreateDefaultBool(string dialog, string name)
