@@ -259,6 +259,12 @@ namespace Epsitec.Common.Designer.Viewers
 					this.primaryIconInfo.Text = string.Format("{0}<br/>{1}", module, name);
 				}
 			}
+
+			this.primarySummaryIcon.Enable = this.primaryIcon.Enable;
+			this.primarySummaryIcon.IconName = this.primaryIcon.IconName;
+
+			this.secondarySummaryIcon.Enable = this.primaryIcon.Enable;
+			this.secondarySummaryIcon.IconName = this.primaryIcon.IconName;
 		}
 
 
