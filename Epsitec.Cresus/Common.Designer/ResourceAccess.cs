@@ -2433,7 +2433,16 @@ namespace Epsitec.Common.Designer
 			}
 			else
 			{
-				return (int) data.GetValue(Support.Res.Fields.Resource.ModificationId);
+				object value = data.GetValue(Support.Res.Fields.Resource.ModificationId);
+				
+				if (Types.UndefinedValue.IsUndefinedValue(value))
+				{
+					return 0;
+				}
+				else
+				{
+					return (int) value;
+				}
 			}
 		}
 
