@@ -277,9 +277,9 @@ namespace Epsitec.Common.Designer.Viewers
 				StructuredData data = item.GetCultureData(twoLettersCulture);
 
 				IList<string> list = data.GetValue(Support.Res.Fields.ResourceCaption.Labels) as IList<string>;
-				string text = data.GetValue(Support.Res.Fields.ResourceCaption.Description) as string;
+				string desc = data.GetValue(Support.Res.Fields.ResourceCaption.Description) as string;
 
-				if ((list == null || list.Count == 0) && string.IsNullOrEmpty(text))
+				if ((list == null || list.Count == 0) && string.IsNullOrEmpty(desc))
 				{
 					buffer.Append(Misc.Italic("(indéfini)"));
 				}
@@ -298,9 +298,9 @@ namespace Epsitec.Common.Designer.Viewers
 						buffer.Append("<br/>");
 					}
 
-					if (!string.IsNullOrEmpty(text))
+					if (!string.IsNullOrEmpty(desc))
 					{
-						buffer.Append(text);
+						buffer.Append(desc);
 					}
 				}
 
@@ -671,8 +671,33 @@ namespace Epsitec.Common.Designer.Viewers
 				string value = "";
 				if (twoLettersCulture != null)
 				{
+					System.Text.StringBuilder buffer = new System.Text.StringBuilder();
 					StructuredData data = item.GetCultureData(twoLettersCulture);
-					value = data.GetValue(Support.Res.Fields.ResourceCaption.Description) as string;
+
+					IList<string> list = data.GetValue(Support.Res.Fields.ResourceCaption.Labels) as IList<string>;
+					if (list != null && list.Count != 0)
+					{
+						foreach(string s in list)
+						{
+							if (buffer.Length != 0)
+							{
+								buffer.Append(", ");
+							}
+							buffer.Append(s);
+						}
+					}
+
+					string desc = data.GetValue(Support.Res.Fields.ResourceCaption.Description) as string;
+					if (!string.IsNullOrEmpty(desc))
+					{
+						if (buffer.Length != 0)
+						{
+							buffer.Append(", ");
+						}
+						buffer.Append(desc);
+					}
+
+					value = buffer.ToString();
 				}
 
 				text.Margins = new Margins(5, 5, 0, 0);
