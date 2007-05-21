@@ -357,7 +357,9 @@ namespace Epsitec.Common.Designer.Viewers
 			{
 				StructuredData data = item.GetCultureData(this.GetTwoLetters(0));
 				data.SetValue(Support.Res.Fields.ResourceString.Text, text);
+				this.access.IsDirty = true;
 				
+				this.UpdateColor();
 				this.access.Accessor.PersistChanges();
 				this.access.CollectionView.Refresh();  // TODO: ne mettre à jour que la ligne modifiée
 				edit.Focus();
@@ -367,7 +369,9 @@ namespace Epsitec.Common.Designer.Viewers
 			{
 				StructuredData data = item.GetCultureData(this.GetTwoLetters(1));
 				data.SetValue(Support.Res.Fields.ResourceString.Text, text);
+				this.access.IsDirty = true;
 				
+				this.UpdateColor();
 				this.access.Accessor.PersistChanges();
 				this.access.CollectionView.Refresh();  // TODO: ne mettre à jour que la ligne modifiée
 				edit.Focus();
@@ -377,7 +381,9 @@ namespace Epsitec.Common.Designer.Viewers
 			{
 				StructuredData data = item.GetCultureData(this.GetTwoLetters(0));
 				data.SetValue(Support.Res.Fields.Resource.Comment, text);
+				this.access.IsDirty = true;
 				
+				this.UpdateColor();
 				this.access.Accessor.PersistChanges();
 				this.access.CollectionView.Refresh();  // TODO: ne mettre à jour que la ligne modifiée
 				edit.Focus();
@@ -387,7 +393,9 @@ namespace Epsitec.Common.Designer.Viewers
 			{
 				StructuredData data = item.GetCultureData(this.GetTwoLetters(1));
 				data.SetValue(Support.Res.Fields.Resource.Comment, text);
+				this.access.IsDirty = true;
 				
+				this.UpdateColor();
 				this.access.Accessor.PersistChanges();
 				this.access.CollectionView.Refresh();  // TODO: ne mettre à jour que la ligne modifiée
 				edit.Focus();
