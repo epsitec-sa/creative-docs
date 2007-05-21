@@ -531,10 +531,17 @@ namespace Epsitec.Common.Designer
 
 			if (this.IsAbstract2)
 			{
+#if false
 				CultureMap item = this.collectionView.CurrentItem as CultureMap;
+				CultureMap newItem = this.accessor.CreateItem();
+				this.accessor.Collection.Add(newItem);
+
+				void DumpStructuredData...
+
 				// TODO: comment faire pour dupliquer une ressource existante ?
 				this.collectionView.Items.Add(item);
 				this.accessor.PersistChanges();
+#endif
 
 				this.IsDirty = true;
 				return;

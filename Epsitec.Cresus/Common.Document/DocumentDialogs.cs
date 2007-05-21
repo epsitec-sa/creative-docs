@@ -2024,9 +2024,8 @@ namespace Epsitec.Common.Document
 
 			if ( this.windowExportICO != null )
 			{
-				Widget parent = this.windowExportICO.Root.FindChild("Book");
-				this.DeletePage(parent, "Generic");
-				this.DeletePage(parent, "Image");
+				Widget parent = this.windowExportICO.Root.FindChild("Panel");
+				this.DeleteContainer(parent, "Container");
 				this.windowExportICO = null;
 			}
 
@@ -2035,13 +2034,16 @@ namespace Epsitec.Common.Document
 
 		protected void DeletePage(Widget parent, string name)
 		{
-			Widget container = parent.FindChild(name);
-			if ( container != null )
+			if (parent != null)
 			{
-				Widget page = container.FindChild("Container");
-				if ( page != null )
+				Widget container = parent.FindChild(name);
+				if (container != null)
 				{
-					page.Dispose();
+					Widget page = container.FindChild("Container");
+					if (page != null)
+					{
+						page.Dispose();
+					}
 				}
 			}
 		}
