@@ -3883,9 +3883,15 @@ namespace Epsitec.Common.Document
 				}
 			}
 
+			bool nothing = false;
 			if ( guide.Position == Settings.Guide.Undefined )
 			{
 				this.document.Settings.GuidesRemoveAt(this.guideInteractive);
+				
+				if (this.guideCreate)
+				{
+					nothing = true;
+				}
 			}
 			else
 			{
@@ -3910,9 +3916,17 @@ namespace Epsitec.Common.Document
 				}
 			}
 
-			this.document.Modifier.OpletQueueValidateAction();
+			if (nothing)
+			{
+				this.document.Modifier.OpletQueueCancelAction();
+			}
+			else
+			{
+				this.document.Modifier.OpletQueueValidateAction();
+			}
 			this.document.Notifier.NotifyGuidesChanged();
 			this.guideInteractive = -1;
+			this.mouseDragging = false;
 		}
 		#endregion
 
