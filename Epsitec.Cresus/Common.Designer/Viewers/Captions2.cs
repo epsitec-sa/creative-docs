@@ -473,7 +473,9 @@ namespace Epsitec.Common.Designer.Viewers
 			{
 				StructuredData data = item.GetCultureData(this.GetTwoLetters(0));
 				data.SetValue(Support.Res.Fields.ResourceCaption.Description, text);
+				this.access.IsDirty = true;
 				
+				this.UpdateColor();
 				this.access.Accessor.PersistChanges();
 				this.access.CollectionView.Refresh();  // TODO: ne mettre à jour que la ligne modifiée
 				edit.Focus();
@@ -483,7 +485,9 @@ namespace Epsitec.Common.Designer.Viewers
 			{
 				StructuredData data = item.GetCultureData(this.GetTwoLetters(1));
 				data.SetValue(Support.Res.Fields.ResourceCaption.Description, text);
+				this.access.IsDirty = true;
 				
+				this.UpdateColor();
 				this.access.Accessor.PersistChanges();
 				this.access.CollectionView.Refresh();  // TODO: ne mettre à jour que la ligne modifiée
 				edit.Focus();
@@ -493,7 +497,9 @@ namespace Epsitec.Common.Designer.Viewers
 			{
 				StructuredData data = item.GetCultureData(this.GetTwoLetters(0));
 				data.SetValue(Support.Res.Fields.Resource.Comment, text);
+				this.access.IsDirty = true;
 				
+				this.UpdateColor();
 				this.access.Accessor.PersistChanges();
 				this.access.CollectionView.Refresh();  // TODO: ne mettre à jour que la ligne modifiée
 				edit.Focus();
@@ -503,7 +509,9 @@ namespace Epsitec.Common.Designer.Viewers
 			{
 				StructuredData data = item.GetCultureData(this.GetTwoLetters(1));
 				data.SetValue(Support.Res.Fields.Resource.Comment, text);
+				this.access.IsDirty = true;
 				
+				this.UpdateColor();
 				this.access.Accessor.PersistChanges();
 				this.access.CollectionView.Refresh();  // TODO: ne mettre à jour que la ligne modifiée
 				edit.Focus();
@@ -552,16 +560,18 @@ namespace Epsitec.Common.Designer.Viewers
 		private void HandlePrimaryIconClicked(object sender, MessageEventArgs e)
 		{
 			//	Le boutons pour choisir l'icône a été cliqué.
-			ResourceAccess.Field field = this.access.GetField(this.access.AccessIndex, null, ResourceAccess.FieldType.Icon);
-			string initialIcon = field.String;
+			CultureMap item = this.access.CollectionView.CurrentItem as CultureMap;
+			StructuredData data = item.GetCultureData("00");
+			string initialIcon = data.GetValue(Support.Res.Fields.ResourceCaption.Icon) as string;
 
 			string icon = this.module.MainWindow.DlgIcon(this.module.ResourceManager, initialIcon);
 
 			if (icon != initialIcon)
 			{
-				this.access.SetField(this.access.AccessIndex, null, ResourceAccess.FieldType.Icon, new ResourceAccess.Field(icon));
+				data.SetValue(Support.Res.Fields.ResourceCaption.Icon, icon);
+				this.access.IsDirty = true;
+				this.access.Accessor.PersistChanges();
 
-				this.SetTextField(this.primaryIcon, this.access.AccessIndex, null, ResourceAccess.FieldType.Icon);
 				this.UpdateIcon();
 			}
 		}
