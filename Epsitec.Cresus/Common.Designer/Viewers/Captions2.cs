@@ -276,14 +276,32 @@ namespace Epsitec.Common.Designer.Viewers
 				CultureMap item = this.access.CollectionView.CurrentItem as CultureMap;
 				StructuredData data = item.GetCultureData(twoLettersCulture);
 
+				IList<string> list = data.GetValue(Support.Res.Fields.ResourceCaption.Labels) as IList<string>;
 				string text = data.GetValue(Support.Res.Fields.ResourceCaption.Description) as string;
-				if (string.IsNullOrEmpty(text))
+
+				if ((list == null || list.Count == 0) && string.IsNullOrEmpty(text))
 				{
 					buffer.Append(Misc.Italic("(indéfini)"));
 				}
 				else
 				{
-					buffer.Append(text);
+					if (list != null && list.Count != 0)
+					{
+						for (int i=0; i<list.Count; i++)
+						{
+							buffer.Append(list[i]);
+							if (i < list.Count-1)
+							{
+								buffer.Append(", ");
+							}
+						}
+						buffer.Append("<br/>");
+					}
+
+					if (!string.IsNullOrEmpty(text))
+					{
+						buffer.Append(text);
+					}
 				}
 
 				string comment = data.GetValue(Support.Res.Fields.Resource.Comment) as string;
