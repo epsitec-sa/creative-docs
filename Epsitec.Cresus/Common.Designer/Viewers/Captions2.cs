@@ -515,19 +515,22 @@ namespace Epsitec.Common.Designer.Viewers
 			}
 
 			MyWidgets.StringCollection sc = sender as MyWidgets.StringCollection;
-			int sel = this.access.AccessIndex;
+			CultureMap item = this.access.CollectionView.CurrentItem as CultureMap;
 
 			if (sc == this.primaryLabels)
 			{
-				this.access.SetField(sel, null, ResourceAccess.FieldType.Labels, new ResourceAccess.Field(sc.Collection));
+				StructuredData data = item.GetCultureData(this.GetTwoLetters(0));
+				this.SetValue(item, data, Support.Res.Fields.ResourceCaption.Labels, sc.Collection, true);
+				sc.Focus();
 			}
 
 			if (sc == this.secondaryLabels)
 			{
-				this.access.SetField(sel, this.secondaryCulture, ResourceAccess.FieldType.Labels, new ResourceAccess.Field(sc.Collection));
+				StructuredData data = item.GetCultureData(this.GetTwoLetters(1));
+				this.SetValue(item, data, Support.Res.Fields.ResourceCaption.Labels, sc.Collection, true);
+				sc.Focus();
 			}
 
-			this.UpdateColor();
 			this.UpdateModificationsCulture();
 		}
 
