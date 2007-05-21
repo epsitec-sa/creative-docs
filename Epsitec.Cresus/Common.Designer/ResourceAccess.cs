@@ -531,17 +531,19 @@ namespace Epsitec.Common.Designer
 
 			if (this.IsAbstract2)
 			{
-#if false
 				CultureMap item = this.collectionView.CurrentItem as CultureMap;
+
 				CultureMap newItem = this.accessor.CreateItem();
+				newItem.Name = newName;
 				this.accessor.Collection.Add(newItem);
+				this.collectionView.MoveCurrentTo(newItem);
 
-				void DumpStructuredData...
+				if (duplicateContent)
+				{
+					//?void DumpStructuredData...
+				}
 
-				// TODO: comment faire pour dupliquer une ressource existante ?
-				this.collectionView.Items.Add(item);
 				this.accessor.PersistChanges();
-#endif
 
 				this.IsDirty = true;
 				return;
@@ -2297,8 +2299,8 @@ namespace Epsitec.Common.Designer
 				if (cultureName != "00")  // culture secondaire ?
 				{
 					StructuredData primaryData = item.GetCultureData("00");
-					int pmod = (int) primaryData.GetValue(Support.Res.Fields.Resource.ModificationId);
-					int cmod = (int) data.GetValue(Support.Res.Fields.Resource.ModificationId);
+					int pmod = this.GetModificationId(primaryData);
+					int cmod = this.GetModificationId(data);
 					if (pmod > cmod)
 					{
 						return ModificationState.Modified;
@@ -2341,7 +2343,7 @@ namespace Epsitec.Common.Designer
 				StructuredData data = item.GetCultureData(cultureName);
 				StructuredData primaryData = item.GetCultureData("00");
 
-				int primaryValue = (int) primaryData.GetValue(Support.Res.Fields.Resource.ModificationId);
+				int primaryValue = this.GetModificationId(primaryData);
 				data.SetValue(Support.Res.Fields.Resource.ModificationId, primaryValue);
 			}
 			else if (this.IsBundlesType)
@@ -2364,7 +2366,7 @@ namespace Epsitec.Common.Designer
 				CultureMap item = this.collectionView.Items[index] as CultureMap;
 				StructuredData primaryData = item.GetCultureData("00");
 
-				int value = (int) primaryData.GetValue(Support.Res.Fields.Resource.ModificationId);
+				int value = this.GetModificationId(primaryData);
 				primaryData.SetValue(Support.Res.Fields.Resource.ModificationId, value+1);
 			}
 			else if (this.IsBundlesType)
@@ -2386,18 +2388,14 @@ namespace Epsitec.Common.Designer
 			{
 				CultureMap item = this.collectionView.Items[index] as CultureMap;
 				StructuredData primaryData = item.GetCultureData("00");
-				int primaryValue = (int) primaryData.GetValue(Support.Res.Fields.Resource.ModificationId);
+				int primaryValue = this.GetModificationId(primaryData);
 
 				List<string> cultures = this.GetSecondaryCultureNames();
 				int count = 0;
 				foreach (string culture in cultures)
 				{
 					StructuredData data = item.GetCultureData(culture);
-					int value = 0;
-					if (!data.IsEmpty)
-					{
-						value = (int) data.GetValue(Support.Res.Fields.Resource.ModificationId);
-					}
+					int value = this.GetModificationId(data);
 
 					if (value < primaryValue)
 					{
@@ -2425,6 +2423,18 @@ namespace Epsitec.Common.Designer
 			}
 
 			return false;
+		}
+
+		protected int GetModificationId(StructuredData data)
+		{
+			if (data.IsEmpty)
+			{
+				return 0;
+			}
+			else
+			{
+				return (int) data.GetValue(Support.Res.Fields.Resource.ModificationId);
+			}
 		}
 
 
