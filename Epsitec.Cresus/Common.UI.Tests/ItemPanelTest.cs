@@ -442,6 +442,7 @@ namespace Epsitec.Common.UI
 			Widgets.Button buttonPrev   = ItemPanelTest.CreateButton (box, "&lt;");
 			Widgets.Button buttonNext   = ItemPanelTest.CreateButton (box, "&gt;");
 			Widgets.Button buttonCreate = ItemPanelTest.CreateButton (box, "+");
+			Widgets.Button buttonRefresh= ItemPanelTest.CreateButton (box, "R");
 
 			buttonClear.Clicked += delegate
 			{
@@ -471,6 +472,11 @@ namespace Epsitec.Common.UI
 			buttonCreate.Clicked += delegate
 			{
 				source.Add (ItemPanelTest.CreateRandomRecord ());
+			};
+
+			buttonRefresh.Clicked += delegate
+			{
+				panel.Items.Refresh ();
 			};
 
 			buttonCreate.Margins = new Drawing.Margins (8, 0, 0, 0);

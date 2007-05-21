@@ -438,7 +438,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public bool								ContainsKeyboardFocus
+		public virtual bool						ContainsKeyboardFocus
 		{
 			get
 			{

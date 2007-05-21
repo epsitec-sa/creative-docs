@@ -391,6 +391,14 @@ namespace Epsitec.Common.UI
 			}
 		}
 
+		public override bool ContainsKeyboardFocus
+		{
+			get
+			{
+				return this.containsKeyboardFocus || base.ContainsKeyboardFocus;
+			}
+		}
+
 		/// <summary>
 		/// Gets the layout used by this panel. This queries the root panel for
 		/// the appropriate <c>Layout</c>, <c>LayoutGroups</c> or <c>LayoutSubgroups</c>
@@ -1060,8 +1068,10 @@ namespace Epsitec.Common.UI
 		public void Refresh()
 		{
 			this.isRefreshPending = false;
+			this.containsKeyboardFocus = base.ContainsKeyboardFocus;
 			this.ClearUserInterface ();
 			this.RefreshItemViews ();
+			this.containsKeyboardFocus = false;
 
 			if (this.IsRootPanel)
 			{
@@ -3563,6 +3573,7 @@ namespace Epsitec.Common.UI
 		bool							isRefreshing;
 		bool							isRefreshPending;
 		bool							isCurrentShowPending;
+		bool							containsKeyboardFocus;
 		int								manualTrackingCounter;
 
 		ItemPanelGroup					parentGroup;

@@ -397,9 +397,8 @@ namespace Epsitec.Common.UI
 				this.widget.SetEmbedder (this.owner);
 				this.widget.SetManualBounds (this.bounds);
 
-				//	TODO: ...gérer le cas où le panel n'aurait plus focus du tout...
-
-				if (this.owner.GetFocusedItemView () == this)
+				if ((this.owner.GetFocusedItemView () == this) &&
+					(this.owner.ContainsKeyboardFocus))
 				{
 					System.Diagnostics.Debug.WriteLine ("Refocus " + this.widget);
 					this.widget.Focus ();
