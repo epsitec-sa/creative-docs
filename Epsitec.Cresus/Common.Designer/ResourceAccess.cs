@@ -1982,7 +1982,12 @@ namespace Epsitec.Common.Designer
 
 				if (fieldType == FieldType.Labels)
 				{
-					data.SetValue(Support.Res.Fields.ResourceCaption.Labels, field.StringCollection);
+					IList<string> list = data.GetValue(Support.Res.Fields.ResourceCaption.Labels) as IList<string>;
+					list.Clear();
+					foreach (string text in field.StringCollection)
+					{
+						list.Add(text);
+					}
 					this.accessor.PersistChanges();
 					this.collectionView.Refresh();
 				}
