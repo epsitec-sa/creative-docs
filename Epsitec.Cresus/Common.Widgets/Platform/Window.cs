@@ -972,6 +972,11 @@ namespace Epsitec.Common.Widgets.Platform
 				this.forced_close = false;
 			}
 		}
+
+		internal void SetFrozen(bool frozen)
+		{
+			this.is_frozen = frozen;
+		}
 		
 		protected override void Dispose(bool disposing)
 		{
