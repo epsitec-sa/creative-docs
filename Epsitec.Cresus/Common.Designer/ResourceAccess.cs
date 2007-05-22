@@ -1788,6 +1788,12 @@ namespace Epsitec.Common.Designer
 					return new Field(text);
 				}
 
+				if (fieldType == FieldType.Labels)
+				{
+					IList<string> list = data.GetValue(Support.Res.Fields.ResourceCaption.Labels) as IList<string>;
+					return new Field(list);
+				}
+
 				if (fieldType == FieldType.About)
 				{
 					string text = data.GetValue(Support.Res.Fields.Resource.Comment) as string;
@@ -1970,6 +1976,13 @@ namespace Epsitec.Common.Designer
 				if (fieldType == FieldType.Description)
 				{
 					data.SetValue(Support.Res.Fields.ResourceCaption.Description, field.String);
+					this.accessor.PersistChanges();
+					this.collectionView.Refresh();
+				}
+
+				if (fieldType == FieldType.Labels)
+				{
+					data.SetValue(Support.Res.Fields.ResourceCaption.Labels, field.StringCollection);
 					this.accessor.PersistChanges();
 					this.collectionView.Refresh();
 				}

@@ -326,20 +326,27 @@ namespace Epsitec.Common.Designer.Viewers
 		{
 			StaticText label;
 			CheckButton check;
-			
+
 			label = new StaticText(parent);
 			label.PreferredWidth = 80;
 			label.ContentAlignment = ContentAlignment.MiddleRight;
-			label.Text = Res.Strings.Viewers.Strings.Edit;
+			label.Text = Res.Strings.Viewers.Captions.Labels.Title;
 			label.Anchor = AnchorStyles.Top | AnchorStyles.Left;
 			label.Margins = new Margins(0, 0, 0, 0);
 
 			label = new StaticText(parent);
 			label.PreferredWidth = 80;
 			label.ContentAlignment = ContentAlignment.MiddleRight;
-			label.Text = Res.Strings.Viewers.Strings.About;
+			label.Text = Res.Strings.Viewers.Captions.Description.Short;
 			label.Anchor = AnchorStyles.Top | AnchorStyles.Left;
 			label.Margins = new Margins(0, 0, 16, 0);
+
+			label = new StaticText(parent);
+			label.PreferredWidth = 80;
+			label.ContentAlignment = ContentAlignment.MiddleRight;
+			label.Text = Res.Strings.Viewers.Captions.About.Title;
+			label.Anchor = AnchorStyles.Top | AnchorStyles.Left;
+			label.Margins = new Margins(0, 0, 32, 0);
 
 			check = new CheckButton(parent);
 			check.Name = "0";  // (*)
@@ -358,7 +365,7 @@ namespace Epsitec.Common.Designer.Viewers
 			check.Margins = new Margins(90+20*1, 0, 0, 0);
 			check.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			check.ActiveStateChanged += new EventHandler(handler);
-			ToolTip.Default.SetToolTip(check, Res.Strings.Dialog.Search.Check.PrimaryText);
+			ToolTip.Default.SetToolTip(check, Res.Strings.Dialog.Search.Check.PrimaryLabels);
 
 			check = new CheckButton(parent);
 			check.Name = "2";  // (*)
@@ -368,7 +375,7 @@ namespace Epsitec.Common.Designer.Viewers
 			check.Margins = new Margins(90+20*2, 0, 0, 0);
 			check.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			check.ActiveStateChanged += new EventHandler(handler);
-			ToolTip.Default.SetToolTip(check, Res.Strings.Dialog.Search.Check.SecondaryText);
+			ToolTip.Default.SetToolTip(check, Res.Strings.Dialog.Search.Check.SecondaryLabels);
 
 			check = new CheckButton(parent);
 			check.Name = "3";  // (*)
@@ -377,13 +384,31 @@ namespace Epsitec.Common.Designer.Viewers
 			check.Margins = new Margins(90+20*1, 0, 16, 0);
 			check.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			check.ActiveStateChanged += new EventHandler(handler);
-			ToolTip.Default.SetToolTip(check, Res.Strings.Dialog.Search.Check.PrimaryAbout);
+			ToolTip.Default.SetToolTip(check, Res.Strings.Dialog.Search.Check.PrimaryDescription);
 
 			check = new CheckButton(parent);
 			check.Name = "4";  // (*)
 			check.Anchor = AnchorStyles.Top | AnchorStyles.Left;
 			check.PreferredWidth = check.PreferredHeight;
 			check.Margins = new Margins(90+20*2, 0, 16, 0);
+			check.TabNavigationMode = TabNavigationMode.ActivateOnTab;
+			check.ActiveStateChanged += new EventHandler(handler);
+			ToolTip.Default.SetToolTip(check, Res.Strings.Dialog.Search.Check.SecondaryDescription);
+
+			check = new CheckButton(parent);
+			check.Name = "5";  // (*)
+			check.Anchor = AnchorStyles.Top | AnchorStyles.Left;
+			check.PreferredWidth = check.PreferredHeight;
+			check.Margins = new Margins(90+20*1, 0, 32, 0);
+			check.TabNavigationMode = TabNavigationMode.ActivateOnTab;
+			check.ActiveStateChanged += new EventHandler(handler);
+			ToolTip.Default.SetToolTip(check, Res.Strings.Dialog.Search.Check.PrimaryAbout);
+
+			check = new CheckButton(parent);
+			check.Name = "6";  // (*)
+			check.Anchor = AnchorStyles.Top | AnchorStyles.Left;
+			check.PreferredWidth = check.PreferredHeight;
+			check.Margins = new Margins(90+20*2, 0, 32, 0);
 			check.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			check.ActiveStateChanged += new EventHandler(handler);
 			ToolTip.Default.SetToolTip(check, Res.Strings.Dialog.Search.Check.SecondaryAbout);
@@ -394,37 +419,54 @@ namespace Epsitec.Common.Designer.Viewers
 		protected override void TextFieldToIndex(AbstractTextField textField, out int field, out int subfield)
 		{
 			//	Cherche les index correspondant à un texte éditable.
-			subfield = 0;
-
 			if (textField == this.labelEdit)
 			{
 				field = 0;
+				subfield = 0;
 				return;
 			}
 
-			if (textField == this.primaryDescription)
+			subfield = this.primaryLabels.GetIndex(textField);
+			if (subfield != -1)
 			{
 				field = 1;
 				return;
 			}
 
-			if (textField == this.primaryComment)
+			if (textField == this.primaryDescription)
 			{
 				field = 3;
+				subfield = 0;
+				return;
+			}
+
+			if (textField == this.primaryComment)
+			{
+				field = 5;
+				subfield = 0;
 				return;
 			}
 
 			if (this.secondaryCulture != null)
 			{
-				if (textField == this.secondaryDescription)
+				subfield = this.secondaryLabels.GetIndex(textField);
+				if (subfield != -1)
 				{
 					field = 2;
 					return;
 				}
 
-				if (textField == this.secondaryComment)
+				if (textField == this.secondaryDescription)
 				{
 					field = 4;
+					subfield = 0;
+					return;
+				}
+
+				if (textField == this.secondaryComment)
+				{
+					field = 6;
+					subfield = 0;
 					return;
 				}
 			}
@@ -443,19 +485,29 @@ namespace Epsitec.Common.Designer.Viewers
 					case 0:
 						return this.labelEdit;
 
-					case 1:
+					case 3:
 						return this.primaryDescription;
 
-					case 2:
+					case 4:
 						return this.secondaryDescription;
 
-					case 3:
+					case 5:
 						return this.primaryComment;
 
-					case 4:
+					case 6:
 						return this.secondaryComment;
 
 				}
+			}
+
+			if (field == 1)
+			{
+				return this.primaryLabels.GetTextField(subfield);
+			}
+
+			if (field == 2)
+			{
+				return this.secondaryLabels.GetTextField(subfield);
 			}
 
 			return null;
