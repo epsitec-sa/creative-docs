@@ -84,6 +84,19 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.buttonCommands.Dock = DockStyle.Left;
 			this.buttonCommands.Clicked += new MessageEventHandler(this.HandleButtonClicked);
 
+			this.buttonCommands2 = new IconButtonMark(this);
+			this.buttonCommands2.Text = ResourceAccess.TypeDisplayName(ResourceAccess.Type.Commands)+" 2";
+			this.buttonCommands2.Name = BundleType.Convert(ResourceAccess.Type.Commands2);
+			this.buttonCommands2.ButtonStyle = ButtonStyle.ActivableIcon;
+			this.buttonCommands2.SiteMark = ButtonMarkDisposition.Below;
+			this.buttonCommands2.MarkDimension = 5;
+			this.buttonCommands2.PreferredWidth = width;
+			this.buttonCommands2.MinHeight = 20+5;
+			this.buttonCommands2.AutoFocus = false;
+			this.buttonCommands2.Margins = new Margins(2, 0, 10, 0);
+			this.buttonCommands2.Dock = DockStyle.Left;
+			this.buttonCommands2.Clicked += new MessageEventHandler(this.HandleButtonClicked);
+
 			this.buttonTypes = new IconButtonMark(this);
 			this.buttonTypes.Text = ResourceAccess.TypeDisplayName(ResourceAccess.Type.Types);
 			this.buttonTypes.Name = BundleType.Convert(ResourceAccess.Type.Types);
@@ -186,6 +199,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.buttonCaptions.ActiveState  = (this.currentType == ResourceAccess.Type.Captions ) ? ActiveState.Yes : ActiveState.No;
 			this.buttonFields.ActiveState    = (this.currentType == ResourceAccess.Type.Fields   ) ? ActiveState.Yes : ActiveState.No;
 			this.buttonCommands.ActiveState  = (this.currentType == ResourceAccess.Type.Commands ) ? ActiveState.Yes : ActiveState.No;
+			this.buttonCommands2.ActiveState = (this.currentType == ResourceAccess.Type.Commands2) ? ActiveState.Yes : ActiveState.No;
 			this.buttonTypes.ActiveState     = (this.currentType == ResourceAccess.Type.Types    ) ? ActiveState.Yes : ActiveState.No;
 			this.buttonValues.ActiveState    = (this.currentType == ResourceAccess.Type.Values   ) ? ActiveState.Yes : ActiveState.No;
 			this.buttonPanels.ActiveState    = (this.currentType == ResourceAccess.Type.Panels   ) ? ActiveState.Yes : ActiveState.No;
@@ -244,6 +258,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected IconButtonMark			buttonCaptions2;
 		protected IconButtonMark			buttonFields;
 		protected IconButtonMark			buttonCommands;
+		protected IconButtonMark			buttonCommands2;
 		protected IconButtonMark			buttonPanels;
 		protected IconButtonMark			buttonTypes;
 		protected IconButtonMark			buttonValues;

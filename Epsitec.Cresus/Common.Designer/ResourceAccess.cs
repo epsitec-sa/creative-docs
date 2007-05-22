@@ -21,6 +21,7 @@ namespace Epsitec.Common.Designer
 			Captions2,
 			Fields,
 			Commands,
+			Commands2,
 			Types,
 			Values,
 			Panels,
@@ -91,6 +92,10 @@ namespace Epsitec.Common.Designer
 				if (this.type == Type.Captions2)
 				{
 					this.accessor = new Support.ResourceAccessors.CaptionResourceAccessor();
+				}
+				if (this.type == Type.Commands2)
+				{
+					this.accessor = new Support.ResourceAccessors.CommandResourceAccessor();
 				}
 
 				this.collectionView = new CollectionView(this.accessor.Collection);
@@ -204,6 +209,7 @@ namespace Epsitec.Common.Designer
 					return many ? Res.Strings.BundleType.Fields : Res.Strings.BundleType.Field;
 
 				case Type.Commands:
+				case Type.Commands2:
 					return many ? Res.Strings.BundleType.Commands : Res.Strings.BundleType.Command;
 
 				case Type.Types:
@@ -2314,7 +2320,7 @@ namespace Epsitec.Common.Designer
 					}
 				}
 
-				if (this.type == Type.Captions2)
+				if (this.type == Type.Captions2 || this.type == Type.Commands2)
 				{
 					IList<string> labels = data.GetValue(Support.Res.Fields.ResourceCaption.Labels) as IList<string>;
 					string text = data.GetValue(Support.Res.Fields.ResourceCaption.Description) as string;
@@ -2515,7 +2521,7 @@ namespace Epsitec.Common.Designer
 				}
 			}
 
-			if (this.IsCaptionsType || this.type == Type.Captions2)
+			if (this.IsCaptionsType || this.type == Type.Captions2 || this.type == Type.Commands2)
 			{
 				switch (field)
 				{
@@ -3665,7 +3671,7 @@ namespace Epsitec.Common.Designer
 			//	"un bundle par culture, plusieurs ressources par bundle".
 			get
 			{
-				return (this.type == Type.Strings || this.type == Type.Strings2 || this.type == Type.Captions2 || this.IsCaptionsType);
+				return (this.type == Type.Strings || this.type == Type.Strings2 || this.type == Type.Captions2 || this.type == Type.Commands2 || this.IsCaptionsType);
 			}
 		}
 
@@ -3683,7 +3689,7 @@ namespace Epsitec.Common.Designer
 			//	Retourne true si on accède à des ressources de type nouveau.
 			get
 			{
-				return (this.type == Type.Strings2 || this.type == Type.Captions2);
+				return (this.type == Type.Strings2 || this.type == Type.Captions2 || this.type == Type.Commands2);
 			}
 		}
 

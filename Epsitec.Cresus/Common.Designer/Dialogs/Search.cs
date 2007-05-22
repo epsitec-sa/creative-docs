@@ -291,7 +291,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				{
 					return Viewers.Abstract.SearchGetFilterGroup(this.groupStrings2, ResourceAccess.Type.Strings2);
 				}
-				else if (this.bundleType == ResourceAccess.Type.Captions2)
+				else if (this.bundleType == ResourceAccess.Type.Captions2 || this.bundleType == ResourceAccess.Type.Commands2)
 				{
 					return Viewers.Abstract.SearchGetFilterGroup(this.groupCaptions2, ResourceAccess.Type.Captions2);
 				}
@@ -349,7 +349,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.groupStrings.Visibility = (this.bundleType == ResourceAccess.Type.Strings);
 				this.groupStrings2.Visibility = (this.bundleType == ResourceAccess.Type.Strings2);
 				this.groupCaptions.Visibility = (this.bundleType == ResourceAccess.Type.Captions || this.bundleType == ResourceAccess.Type.Fields || this.bundleType == ResourceAccess.Type.Commands || this.bundleType == ResourceAccess.Type.Types);
-				this.groupCaptions2.Visibility = (this.bundleType == ResourceAccess.Type.Captions2);
+				this.groupCaptions2.Visibility = (this.bundleType == ResourceAccess.Type.Captions2 || this.bundleType == ResourceAccess.Type.Commands2);
 			}
 		}
 

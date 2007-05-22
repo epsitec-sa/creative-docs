@@ -28,6 +28,7 @@ namespace Epsitec.Common.Designer
 			this.accessStrings2  = new ResourceAccess(ResourceAccess.Type.Strings2,  this.resourceManager, this.moduleInfo, this.mainWindow);
 			this.accessCaptions  = new ResourceAccess(ResourceAccess.Type.Captions,  this.resourceManager, this.moduleInfo, this.mainWindow);
 			this.accessCaptions2 = new ResourceAccess(ResourceAccess.Type.Captions2, this.resourceManager, this.moduleInfo, this.mainWindow);
+			this.accessCommands2 = new ResourceAccess(ResourceAccess.Type.Commands2, this.resourceManager, this.moduleInfo, this.mainWindow);
 			this.accessPanels    = new ResourceAccess(ResourceAccess.Type.Panels,    this.resourceManager, this.moduleInfo, this.mainWindow);
 			this.accessScripts   = new ResourceAccess(ResourceAccess.Type.Scripts,   this.resourceManager, this.moduleInfo, this.mainWindow);
 
@@ -125,6 +126,14 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
+		public ResourceAccess AccessCommands2
+		{
+			get
+			{
+				return this.accessCommands2;
+			}
+		}
+
 		public ResourceAccess AccessPanels
 		{
 			get
@@ -153,6 +162,9 @@ namespace Epsitec.Common.Designer
 
 				case ResourceAccess.Type.Captions2:
 					return this.accessCaptions2;
+
+				case ResourceAccess.Type.Commands2:
+					return this.accessCommands2;
 
 				case ResourceAccess.Type.Panels:
 					return this.accessPanels;
@@ -265,6 +277,7 @@ namespace Epsitec.Common.Designer
 				yield return accessStrings2;
 				yield return accessCaptions;
 				yield return accessCaptions2;
+				yield return accessCommands2;
 				yield return accessPanels;
 				yield return accessScripts;
 			}
@@ -302,6 +315,7 @@ namespace Epsitec.Common.Designer
 		protected ResourceAccess			accessStrings2;
 		protected ResourceAccess			accessCaptions;
 		protected ResourceAccess			accessCaptions2;
+		protected ResourceAccess			accessCommands2;
 		protected ResourceAccess			accessPanels;
 		protected ResourceAccess			accessScripts;
 	}
