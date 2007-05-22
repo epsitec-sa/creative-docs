@@ -175,11 +175,50 @@ namespace Epsitec.Common.Designer.Viewers
 			StructuredData data;
 
 			data = item.GetCultureData(this.GetTwoLetters(0));
-			string shortcut = data.GetValue(Support.Res.Fields.ResourceCommand.Shortcuts) as string;
+			IList<StructuredData> shortcuts = data.GetValue(Support.Res.Fields.ResourceCommand.Shortcuts) as IList<StructuredData>;
+			this.SetShortcut(this.primaryShortcut1, this.primaryShortcut2, shortcuts);
+
 
 			
 
 			this.ignoreChange = iic;
+		}
+
+		protected void SetShortcut(ShortcutEditor editor1, ShortcutEditor editor2, IList<StructuredData> shortcuts)
+		{
+			if (shortcuts == null)
+			{
+				editor1.Enable = false;
+				editor2.Enable = false;
+
+				editor1.Shortcut = new Shortcut(KeyCode.None);
+				editor2.Shortcut = new Shortcut(KeyCode.None);
+			}
+			else
+			{
+				editor1.Enable = true;
+				editor2.Enable = true;
+
+				if (shortcuts.Count < 1)
+				{
+					editor1.Shortcut = new Shortcut(KeyCode.None);
+				}
+				else
+				{
+					string keyCode = shortcuts[0].GetValue(Support.Res.Fields.Shortcut.KeyCode) as string;
+					editor1.Shortcut = (KeyCode) System.Enum.Parse(typeof(KeyCode), keyCode);
+				}
+
+				if (shortcuts.Count < 2)
+				{
+					editor2.Shortcut = new Shortcut(KeyCode.None);
+				}
+				else
+				{
+					string keyCode = shortcuts[1].GetValue(Support.Res.Fields.Shortcut.KeyCode) as string;
+					editor2.Shortcut = (KeyCode) System.Enum.Parse(typeof(KeyCode), keyCode);
+				}
+			}
 		}
 
 		protected void UpdateGroupCombo()
