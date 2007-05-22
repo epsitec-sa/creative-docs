@@ -768,25 +768,49 @@ namespace Epsitec.Common.Designer
 				//	La donnée que l'on cherche à modifier est verrouillée; c'est
 				//	sans doute parce que c'est une collection et que l'on n'a pas
 				//	le droit de la remplacer...
-				IEnumerable<string> source = value as IEnumerable<string>;
-				IList<string>  destination = data.GetValue (id) as IList<string>;
-
-				if (destination != null)
-				{
-					destination.Clear ();
-				}
-
-				if (source != null && destination != null)
-				{
-					foreach (string text in source)
-					{
-						destination.Add (text);
-					}
-				}
+				
+				ResourceAccess.AttemptCollectionCopy<string> (data, id, value, null);
+				ResourceAccess.AttemptCollectionCopy<StructuredData> (data, id, value, ResourceAccess.CopyStructuredData);
 			}
 			else
 			{
 				data.SetValue (id, value);
+			}
+		}
+
+		private delegate T CopyCallback<T>(T obj);
+
+		private static StructuredData CopyStructuredData(StructuredData data)
+		{
+			//	TODO: améliorer ce code pour le jour où l'on doit être capable
+			//	de copier des structures de données gérées par un IResourceAccessor;
+			//	pour le moment, ça suffit...
+			return data.GetShallowCopy ();
+		}
+
+		private static void AttemptCollectionCopy<T>(StructuredData data, string id, object value, CopyCallback<T> copyMethod)
+		{
+			IEnumerable<T> source = value as IEnumerable<T>;
+			IList<T>  destination = data.GetValue (id) as IList<T>;
+			
+			if (destination != null)
+			{
+				destination.Clear ();
+			}
+
+			if (source != null && destination != null)
+			{
+				foreach (T item in source)
+				{
+					if (copyMethod == null)
+					{
+						destination.Add (item);
+					}
+					else
+					{
+						destination.Add (copyMethod (item));
+					}
+				}
 			}
 		}
 
