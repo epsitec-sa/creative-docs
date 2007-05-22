@@ -357,28 +357,24 @@ namespace Epsitec.Common.Designer.Viewers
 			{
 				StructuredData data = item.GetCultureData(this.GetTwoLetters(0));
 				this.SetValue(item, data, Support.Res.Fields.ResourceString.Text, text, true);
-				edit.Focus();
 			}
 
 			if (edit == this.secondaryText)
 			{
 				StructuredData data = item.GetCultureData(this.GetTwoLetters(1));
 				this.SetValue(item, data, Support.Res.Fields.ResourceString.Text, text, true);
-				edit.Focus();
 			}
 
 			if (edit == this.primaryComment)
 			{
 				StructuredData data = item.GetCultureData(this.GetTwoLetters(0));
 				this.SetValue(item, data, Support.Res.Fields.Resource.Comment, text, true);
-				edit.Focus();
 			}
 
 			if (edit == this.secondaryComment)
 			{
 				StructuredData data = item.GetCultureData(this.GetTwoLetters(1));
 				this.SetValue(item, data, Support.Res.Fields.Resource.Comment, text, true);
-				edit.Focus();
 			}
 
 			this.UpdateModificationsCulture();

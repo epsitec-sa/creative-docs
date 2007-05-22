@@ -479,28 +479,24 @@ namespace Epsitec.Common.Designer.Viewers
 			{
 				StructuredData data = item.GetCultureData(this.GetTwoLetters(0));
 				this.SetValue(item, data, Support.Res.Fields.ResourceCaption.Description, text, true);
-				edit.Focus();
 			}
 
 			if (edit == this.secondaryDescription)
 			{
 				StructuredData data = item.GetCultureData(this.GetTwoLetters(1));
 				this.SetValue(item, data, Support.Res.Fields.ResourceCaption.Description, text, true);
-				edit.Focus();
 			}
 
 			if (edit == this.primaryComment)
 			{
 				StructuredData data = item.GetCultureData(this.GetTwoLetters(0));
 				this.SetValue(item, data, Support.Res.Fields.Resource.Comment, text, true);
-				edit.Focus();
 			}
 
 			if (edit == this.secondaryComment)
 			{
 				StructuredData data = item.GetCultureData(this.GetTwoLetters(1));
 				this.SetValue(item, data, Support.Res.Fields.Resource.Comment, text, true);
-				edit.Focus();
 			}
 
 			this.UpdateModificationsCulture();
@@ -521,14 +517,12 @@ namespace Epsitec.Common.Designer.Viewers
 			{
 				StructuredData data = item.GetCultureData(this.GetTwoLetters(0));
 				this.SetValue(item, data, Support.Res.Fields.ResourceCaption.Labels, sc.Collection, true);
-				sc.Focus();
 			}
 
 			if (sc == this.secondaryLabels)
 			{
 				StructuredData data = item.GetCultureData(this.GetTwoLetters(1));
 				this.SetValue(item, data, Support.Res.Fields.ResourceCaption.Labels, sc.Collection, true);
-				sc.Focus();
 			}
 
 			this.UpdateModificationsCulture();
