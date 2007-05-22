@@ -42,6 +42,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			{
 				data = new Types.StructuredData (this.GetStructuredType ());
 				item.RecordCultureData (twoLetterISOLanguageName, data);
+				this.FillDataFromCaption (item, data, new Caption ());
 			}
 			else
 			{
@@ -219,8 +220,8 @@ namespace Epsitec.Common.Support.ResourceAccessors
 
 		private Types.StructuredData LoadFromField(ResourceBundle.Field field, int module, string twoLetterISOLanguageName)
 		{
-			Druid id = new Druid (field.Id, module);
-			bool insert = false;
+			Druid id     = new Druid (field.Id, module);
+			bool  insert = false;
 
 			CultureMap item = this.Collection[id];
 

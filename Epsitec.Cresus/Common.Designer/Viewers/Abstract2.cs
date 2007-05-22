@@ -395,32 +395,7 @@ namespace Epsitec.Common.Designer.Viewers
 		protected void SetValue(CultureMap item, StructuredData data, Druid id, object value, bool update)
 		{
 			//	Méthode appelée pour modifier un champ.
-			if (data.IsValueLocked(id))
-			{
-				//	La donnée que l'on cherche à modifier est verrouillée; c'est
-				//	sans doute parce que c'est une collection et que l'on n'a pas
-				//	le droit de la remplacer...
-				IEnumerable<string> source = value as IEnumerable<string>;
-				IList<string> destination = data.GetValue(id) as IList<string>;
-
-				if (destination != null)
-				{
-					destination.Clear();
-				}
-
-				if (source != null && destination != null)
-				{
-					foreach (string text in source)
-					{
-						destination.Add(text);
-					}
-				}
-			}
-			else
-			{
-				data.SetValue(id, value);
-			}
-
+			ResourceAccess.SetStructuredDataValue(data, id.ToString(), value);
 			this.access.IsDirty = true;
 			
 			this.UpdateColor();

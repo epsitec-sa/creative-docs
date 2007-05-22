@@ -546,16 +546,15 @@ namespace Epsitec.Common.Designer
 
 				if (duplicateContent)
 				{
-					foreach (ResourceBundle bundle in this.bundles)
+					//	Construit la liste des cultures à copier
+					List<string> cultures = this.GetSecondaryCultureNames ();
+					cultures.Insert(0, Resources.DefaultTwoLetterISOLanguageName);
+					
+					foreach (string culture in cultures)
 					{
-						StructuredData data = item.GetCultureData(bundle.Culture.Name);
-						StructuredData newData = newItem.GetCultureData(bundle.Culture.Name);
-
-						Types.IStructuredType type = data.StructuredType;
-						foreach (string fieldId in type.GetFieldIds())
-						{
-							newData.SetValue(fieldId, data.GetValue(fieldId)); 
-						}
+						StructuredData data = item.GetCultureData(culture);
+						StructuredData newData = newItem.GetCultureData(culture);
+						ResourceAccess.CopyData(data, newData);
 					}
 				}
 
@@ -738,6 +737,57 @@ namespace Epsitec.Common.Designer
 #endif
 
 			this.IsDirty = true;
+		}
+
+		private static void CopyData(StructuredData src, StructuredData dst)
+		{
+			//	Copie les données d'un StructuredData vers un autre, en tenant
+			//	compte des collections de données qui ne peuvent pas être copiées
+			//	sans autre.
+
+			Types.IStructuredType type = src.StructuredType;
+
+			foreach (string fieldId in type.GetFieldIds ())
+			{
+				object value = src.GetValue(fieldId);
+
+				if (!UndefinedValue.IsUndefinedValue (value))
+				{
+					ResourceAccess.SetStructuredDataValue (dst, fieldId, value);
+				}
+			}
+		}
+
+		public static void SetStructuredDataValue(StructuredData data, string id, object value)
+		{
+			//	Réalise un StructuredData.SetValue qui tienne compte des cas
+			//	particuliers où les données à copier sont dans une collection.
+
+			if (data.IsValueLocked (id))
+			{
+				//	La donnée que l'on cherche à modifier est verrouillée; c'est
+				//	sans doute parce que c'est une collection et que l'on n'a pas
+				//	le droit de la remplacer...
+				IEnumerable<string> source = value as IEnumerable<string>;
+				IList<string>  destination = data.GetValue (id) as IList<string>;
+
+				if (destination != null)
+				{
+					destination.Clear ();
+				}
+
+				if (source != null && destination != null)
+				{
+					foreach (string text in source)
+					{
+						destination.Add (text);
+					}
+				}
+			}
+			else
+			{
+				data.SetValue (id, value);
+			}
 		}
 
 		protected EnumType CreateEnumValues(System.Type stype)
