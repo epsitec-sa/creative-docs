@@ -540,7 +540,17 @@ namespace Epsitec.Common.Designer
 
 				if (duplicateContent)
 				{
-					//?void DumpStructuredData...
+					foreach (ResourceBundle bundle in this.bundles)
+					{
+						StructuredData data = item.GetCultureData(bundle.Culture.Name);
+						StructuredData newData = newItem.GetCultureData(bundle.Culture.Name);
+
+						Types.IStructuredType type = data.StructuredType;
+						foreach (string fieldId in type.GetFieldIds())
+						{
+							newData.SetValue(fieldId, data.GetValue(fieldId)); 
+						}
+					}
 				}
 
 				this.accessor.PersistChanges();
