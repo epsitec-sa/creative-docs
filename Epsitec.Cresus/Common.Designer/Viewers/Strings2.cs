@@ -19,8 +19,8 @@ namespace Epsitec.Common.Designer.Viewers
 			//	Résumé des captions.
 			MyWidgets.StackedPanel leftContainer, rightContainer;
 
-			this.buttonCaptionExtend = this.CreateBand(out leftContainer, out rightContainer, "Résumé", BandMode.CaptionSummary, GlyphShape.ArrowDown, false, 0.2);
-			this.buttonCaptionExtend.Clicked += new MessageEventHandler(this.HandleButtonCompactOrExtendClicked);
+			this.buttonMainExtend = this.CreateBand(out leftContainer, out rightContainer, "Résumé", BandMode.MainSummary, GlyphShape.ArrowDown, false, 0.2);
+			this.buttonMainExtend.Clicked += new MessageEventHandler(this.HandleButtonCompactOrExtendClicked);
 
 			this.primarySummary = new StaticText(leftContainer.Container);
 			this.primarySummary.MinHeight = 30;
@@ -31,8 +31,8 @@ namespace Epsitec.Common.Designer.Viewers
 			this.secondarySummary.Dock = DockStyle.Fill;
 
 			//	Textes.
-			this.buttonCaptionCompact = this.CreateBand(out leftContainer, out rightContainer, Res.Strings.Viewers.Captions.Labels.Title, BandMode.CaptionView, GlyphShape.ArrowUp, false, 0.2);
-			this.buttonCaptionCompact.Clicked += new MessageEventHandler(this.HandleButtonCompactOrExtendClicked);
+			this.buttonMainCompact = this.CreateBand(out leftContainer, out rightContainer, Res.Strings.Viewers.Captions.Labels.Title, BandMode.MainView, GlyphShape.ArrowUp, false, 0.2);
+			this.buttonMainCompact.Clicked += new MessageEventHandler(this.HandleButtonCompactOrExtendClicked);
 
 			this.primaryText = new TextFieldMulti(leftContainer.Container);
 			this.primaryText.PreferredHeight = 10+14*6;
@@ -53,7 +53,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.secondaryText.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 
 			//	Commentaires.
-			this.CreateBand(out leftContainer, out rightContainer, Res.Strings.Viewers.Captions.About.Title, BandMode.CaptionView, GlyphShape.None, false, 0.2);
+			this.CreateBand(out leftContainer, out rightContainer, Res.Strings.Viewers.Captions.About.Title, BandMode.MainView, GlyphShape.None, false, 0.2);
 
 			this.primaryComment = new TextFieldMulti(leftContainer.Container);
 			this.primaryComment.PreferredHeight = 10+14*4;
@@ -79,22 +79,13 @@ namespace Epsitec.Common.Designer.Viewers
 				this.access.CollectionView.MoveCurrentToFirst();
 			}
 
-			this.UpdateDisplayMode();
-			this.UpdateCultures();
-			this.UpdateTitle();
-			this.UpdateEdit();
-			this.UpdateColor();
-			this.UpdateModificationsCulture();
-			this.UpdateCommands();
+			this.UpdateAll();
 		}
 
 		protected override void Dispose(bool disposing)
 		{
 			if (disposing)
 			{
-				this.buttonCaptionExtend.Clicked -= new MessageEventHandler(this.HandleButtonCompactOrExtendClicked);
-				this.buttonCaptionCompact.Clicked -= new MessageEventHandler(this.HandleButtonCompactOrExtendClicked);
-
 				this.primaryText.TextChanged -= new EventHandler(this.HandleTextChanged);
 				this.primaryText.CursorChanged -= new EventHandler(this.HandleCursorChanged);
 				this.primaryText.KeyboardFocusChanged -= new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleEditKeyboardFocusChanged);
@@ -380,23 +371,6 @@ namespace Epsitec.Common.Designer.Viewers
 			this.UpdateModificationsCulture();
 		}
 
-		protected void HandleButtonCompactOrExtendClicked(object sender, MessageEventArgs e)
-		{
-			//	Un bouton pour changer le mode d'affichage a été cliqué.
-			if (sender == this.buttonCaptionCompact)
-			{
-				Abstract2.captionExtended = false;
-			}
-
-			if (sender == this.buttonCaptionExtend)
-			{
-				Abstract2.captionExtended = true;
-			}
-
-			this.UpdateDisplayMode();
-			this.UpdateEdit();  // pour que le résumé prenne en compte les modifications
-		}
-
 
 		protected override UI.IItemViewFactory ItemViewFactoryGetter(UI.ItemView itemView)
 		{
@@ -505,8 +479,6 @@ namespace Epsitec.Common.Designer.Viewers
 
 		private ItemViewFactory					itemViewFactory;
 
-		protected GlyphButton					buttonCaptionExtend;
-		protected GlyphButton					buttonCaptionCompact;
 		protected StaticText					primarySummary;
 		protected StaticText					secondarySummary;
 		protected TextFieldMulti				primaryText;

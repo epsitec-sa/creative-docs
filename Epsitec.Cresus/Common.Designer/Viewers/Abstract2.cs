@@ -14,8 +14,8 @@ namespace Epsitec.Common.Designer.Viewers
 	{
 		protected enum BandMode
 		{
-			CaptionSummary,
-			CaptionView,
+			MainSummary,
+			MainView,
 			Separator,
 			SuiteSummary,
 			SuiteView,
@@ -176,6 +176,18 @@ namespace Epsitec.Common.Designer.Viewers
 		{
 			if (disposing)
 			{
+				if (this.buttonMainExtend != null)
+				{
+					this.buttonMainExtend.Clicked -= new MessageEventHandler(this.HandleButtonCompactOrExtendClicked);
+					this.buttonMainCompact.Clicked -= new MessageEventHandler(this.HandleButtonCompactOrExtendClicked);
+				}
+
+				if (this.buttonSuiteExtend != null)
+				{
+					this.buttonSuiteExtend.Clicked -= new MessageEventHandler(this.HandleButtonCompactOrExtendClicked);
+					this.buttonSuiteCompact.Clicked -= new MessageEventHandler(this.HandleButtonCompactOrExtendClicked);
+				}
+
 				this.splitter.SplitterDragged -= new EventHandler(this.HandleSplitterDragged);
 
 				this.labelEdit.EditionAccepted -= new EventHandler(this.HandleTextChanged);
@@ -234,6 +246,17 @@ namespace Epsitec.Common.Designer.Viewers
 		public override void Update()
 		{
 			//	Met à jour le contenu du Viewer.
+			this.UpdateEdit();
+			this.UpdateColor();
+			this.UpdateModificationsCulture();
+			this.UpdateCommands();
+		}
+
+		protected void UpdateAll()
+		{
+			this.UpdateDisplayMode();
+			this.UpdateCultures();
+			this.UpdateTitle();
 			this.UpdateEdit();
 			this.UpdateColor();
 			this.UpdateModificationsCulture();
@@ -364,12 +387,20 @@ namespace Epsitec.Common.Designer.Viewers
 			{
 				switch (bands[i].bandMode)
 				{
-					case BandMode.CaptionSummary:
-						this.bands[i].bandContainer.Visibility = !Abstract2.captionExtended;
+					case BandMode.MainSummary:
+						this.bands[i].bandContainer.Visibility = !Abstract2.mainExtended;
 						break;
 
-					case BandMode.CaptionView:
-						this.bands[i].bandContainer.Visibility = Abstract2.captionExtended;
+					case BandMode.MainView:
+						this.bands[i].bandContainer.Visibility = Abstract2.mainExtended;
+						break;
+
+					case BandMode.SuiteSummary:
+						this.bands[i].bandContainer.Visibility = !Abstract2.suiteExtended;
+						break;
+
+					case BandMode.SuiteView:
+						this.bands[i].bandContainer.Visibility = Abstract2.suiteExtended;
 						break;
 				}
 			}
@@ -588,6 +619,33 @@ namespace Epsitec.Common.Designer.Viewers
 			this.SetColumnWidth(e.Column, e.NewWidth);
 		}
 
+		protected void HandleButtonCompactOrExtendClicked(object sender, MessageEventArgs e)
+		{
+			//	Un bouton pour changer le mode d'affichage a été cliqué.
+			if (sender == this.buttonMainCompact)
+			{
+				Abstract2.mainExtended = false;
+			}
+
+			if (sender == this.buttonMainExtend)
+			{
+				Abstract2.mainExtended = true;
+			}
+
+			if (sender == this.buttonSuiteCompact)
+			{
+				Abstract2.suiteExtended = false;
+			}
+
+			if (sender == this.buttonSuiteExtend)
+			{
+				Abstract2.suiteExtended = true;
+			}
+
+			this.UpdateDisplayMode();
+			this.UpdateEdit();  // pour que le résumé prenne en compte les modifications
+		}
+
 		private void HandleTextChanged(object sender)
 		{
 			//	Un texte éditable a changé.
@@ -642,7 +700,8 @@ namespace Epsitec.Common.Designer.Viewers
 
 
 		
-		protected static bool					captionExtended = false;
+		protected static bool					mainExtended = false;
+		protected static bool					suiteExtended = false;
 
 		protected Widget						firstPane;
 		protected Widget						lastPane;
@@ -658,5 +717,10 @@ namespace Epsitec.Common.Designer.Viewers
 		protected IconButtonMark				primaryButtonCulture;
 		protected Widget						secondaryButtonsCultureGroup;
 		protected IconButtonMark[]				secondaryButtonsCulture;
+
+		protected GlyphButton					buttonMainExtend;
+		protected GlyphButton					buttonMainCompact;
+		protected GlyphButton					buttonSuiteExtend;
+		protected GlyphButton					buttonSuiteCompact;
 	}
 }
