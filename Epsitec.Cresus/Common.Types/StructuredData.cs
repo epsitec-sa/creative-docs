@@ -53,7 +53,37 @@ namespace Epsitec.Common.Types
 		{
 			get
 			{
-				return (this.values == null) || (this.values.Count == 0);
+				if ((this.values == null) ||
+					(this.values.Count == 0))
+				{
+					return true;
+				}
+
+				//	Check that all values are undefined (or empty collections if they
+				//	happen to be locked fields)
+
+				foreach (Record record in this.values.Values)
+				{
+					if (UndefinedValue.IsUndefinedValue (record.Data))
+					{
+						continue;
+					}
+
+					if (!record.IsReadOnly)
+					{
+						return false;
+					}
+					
+					System.Collections.ICollection collection = record.Data as System.Collections.ICollection;
+					
+					if ((collection == null) ||
+						(collection.Count > 0))
+					{
+						return false;
+					}
+				}
+				
+				return true;
 			}
 		}
 

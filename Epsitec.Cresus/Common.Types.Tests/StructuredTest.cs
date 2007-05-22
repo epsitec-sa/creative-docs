@@ -27,6 +27,8 @@ namespace Epsitec.Common.Types
 
 			Assert.AreEqual (0, Collection.Count (data.GetValueIds ()));
 			Assert.AreEqual (0, Collection.Count (data.StructuredType.GetFieldIds ()));
+			
+			Assert.IsTrue (data.IsEmpty);
 
 			data.SetValue ("A", 10);
 			data.SetValue ("B", 20);
@@ -60,6 +62,20 @@ namespace Epsitec.Common.Types
 
 			data.SetValue ("A", 10);
 			data.SetValue ("B", 20);
+
+			data = new StructuredData ();
+
+			data.SetValue ("U", UndefinedValue.Instance);
+			Assert.IsTrue (data.IsEmpty);
+			data.SetValue ("L", new List<string> ());
+
+			Assert.IsFalse (data.IsEmpty);
+			data.LockValue ("L");
+			Assert.IsTrue (data.IsEmpty);
+			((List<string>) data.GetValue ("L")).Add ("x");
+			Assert.IsFalse (data.IsEmpty);
+			((List<string>) data.GetValue ("L")).Clear ();
+			Assert.IsTrue (data.IsEmpty);
 		}
 
 		[Test]
