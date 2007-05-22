@@ -422,6 +422,32 @@ namespace Epsitec.Common.Designer.Viewers
 			this.ColoriseBands(state1, state2);
 		}
 
+		protected override void UpdateEdit()
+		{
+			//	Met à jour les lignes éditables en fonction de la sélection dans le tableau.
+			base.UpdateEdit();
+
+			bool iic = this.ignoreChange;
+			this.ignoreChange = true;
+
+			if (this.primarySummary != null)
+			{
+				this.primarySummary.Text = this.GetSummary(this.GetTwoLetters(0));
+				this.secondarySummary.Text = this.GetSummary(this.GetTwoLetters(1));
+			}
+
+			CultureMap item = this.access.CollectionView.CurrentItem as CultureMap;
+			this.labelEdit.Text = item.Name;
+
+			this.ignoreChange = iic;
+		}
+
+		protected virtual string GetSummary(string twoLettersCulture)
+		{
+			//	Retourne le texte résumé de la ressource sélectionnée.
+			return null;
+		}
+
 
 		protected void SetValue(CultureMap item, StructuredData data, Druid id, object value, bool update)
 		{
@@ -718,6 +744,8 @@ namespace Epsitec.Common.Designer.Viewers
 		protected Widget						secondaryButtonsCultureGroup;
 		protected IconButtonMark[]				secondaryButtonsCulture;
 
+		protected StaticText					primarySummary;
+		protected StaticText					secondarySummary;
 		protected GlyphButton					buttonMainExtend;
 		protected GlyphButton					buttonMainCompact;
 		protected GlyphButton					buttonSuiteExtend;

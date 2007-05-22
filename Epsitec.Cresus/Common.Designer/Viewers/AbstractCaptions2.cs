@@ -169,16 +169,13 @@ namespace Epsitec.Common.Designer.Viewers
 		protected override void UpdateEdit()
 		{
 			//	Met à jour les lignes éditables en fonction de la sélection dans le tableau.
+			base.UpdateEdit();
+
 			bool iic = this.ignoreChange;
 			this.ignoreChange = true;
 
 			CultureMap item = this.access.CollectionView.CurrentItem as CultureMap;
 			StructuredData data;
-
-			this.primarySummary.Text = this.GetSummary(this.GetTwoLetters(0));
-			this.secondarySummary.Text = this.GetSummary(this.GetTwoLetters(1));
-
-			this.labelEdit.Text = item.Name;
 
 			data = item.GetCultureData(this.GetTwoLetters(0));
 			this.SetTextField(this.primaryLabels, data.GetValue(Support.Res.Fields.ResourceCaption.Labels) as IList<string>);
@@ -207,7 +204,6 @@ namespace Epsitec.Common.Designer.Viewers
 			this.UpdateIcon();
 
 			this.ignoreChange = iic;
-			this.UpdateCommands();
 		}
 
 		protected void UpdateIcon()
@@ -248,7 +244,7 @@ namespace Epsitec.Common.Designer.Viewers
 		}
 
 
-		protected string GetSummary(string twoLettersCulture)
+		protected override string GetSummary(string twoLettersCulture)
 		{
 			//	Retourne le texte résumé de la ressource sélectionnée.
 			System.Text.StringBuilder buffer = new System.Text.StringBuilder();
@@ -721,9 +717,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 		private ItemViewFactory					itemViewFactory;
 
-		protected StaticText					primarySummary;
 		protected IconButton					primarySummaryIcon;
-		protected StaticText					secondarySummary;
 		protected IconButton					secondarySummaryIcon;
 		protected MyWidgets.StringCollection	primaryLabels;
 		protected MyWidgets.StringCollection	secondaryLabels;

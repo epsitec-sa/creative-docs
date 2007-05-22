@@ -163,6 +163,25 @@ namespace Epsitec.Common.Designer.Viewers
 		}
 
 
+		protected override void UpdateEdit()
+		{
+			//	Met à jour les lignes éditables en fonction de la sélection dans le tableau.
+			base.UpdateEdit();
+
+			bool iic = this.ignoreChange;
+			this.ignoreChange = true;
+
+			CultureMap item = this.access.CollectionView.CurrentItem as CultureMap;
+			StructuredData data;
+
+			data = item.GetCultureData(this.GetTwoLetters(0));
+			string shortcut = data.GetValue(Support.Res.Fields.ResourceCommand.Shortcuts) as string;
+
+			
+
+			this.ignoreChange = iic;
+		}
+
 		protected void UpdateGroupCombo()
 		{
 			//	Met à jour le menu du combo des groupes.
