@@ -1767,7 +1767,7 @@ namespace Epsitec.Common.Designer
 
 				if (cultureName == null)
 				{
-					cultureName = "00";
+					cultureName = Resources.DefaultTwoLetterISOLanguageName;
 				}
 				StructuredData data = item.GetCultureData(cultureName);
 
@@ -1955,7 +1955,7 @@ namespace Epsitec.Common.Designer
 
 				if (cultureName == null)
 				{
-					cultureName = "00";
+					cultureName = Resources.DefaultTwoLetterISOLanguageName;
 				}
 				StructuredData data = item.GetCultureData(cultureName);
 
@@ -2295,7 +2295,7 @@ namespace Epsitec.Common.Designer
 			{
 				if (cultureName == null)
 				{
-					cultureName = "00";
+					cultureName = Resources.DefaultTwoLetterISOLanguageName;
 				}
 
 				StructuredData data = item.GetCultureData(cultureName);
@@ -2324,9 +2324,9 @@ namespace Epsitec.Common.Designer
 					}
 				}
 
-				if (cultureName != "00")  // culture secondaire ?
+				if (cultureName != Resources.DefaultTwoLetterISOLanguageName)  // culture secondaire ?
 				{
-					StructuredData primaryData = item.GetCultureData("00");
+					StructuredData primaryData = item.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
 					int pmod = this.GetModificationId(primaryData);
 					int cmod = this.GetModificationId(data);
 					if (pmod > cmod)
@@ -2369,7 +2369,7 @@ namespace Epsitec.Common.Designer
 			{
 				CultureMap item = this.collectionView.Items[index] as CultureMap;
 				StructuredData data = item.GetCultureData(cultureName);
-				StructuredData primaryData = item.GetCultureData("00");
+				StructuredData primaryData = item.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
 
 				int primaryValue = this.GetModificationId(primaryData);
 				data.SetValue(Support.Res.Fields.Resource.ModificationId, primaryValue);
@@ -2392,7 +2392,7 @@ namespace Epsitec.Common.Designer
 			if (this.IsAbstract2)
 			{
 				CultureMap item = this.collectionView.Items[index] as CultureMap;
-				StructuredData primaryData = item.GetCultureData("00");
+				StructuredData primaryData = item.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
 
 				int value = this.GetModificationId(primaryData);
 				primaryData.SetValue(Support.Res.Fields.Resource.ModificationId, value+1);
@@ -2415,7 +2415,7 @@ namespace Epsitec.Common.Designer
 			if (this.IsAbstract2)
 			{
 				CultureMap item = this.collectionView.Items[index] as CultureMap;
-				StructuredData primaryData = item.GetCultureData("00");
+				StructuredData primaryData = item.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
 				int primaryValue = this.GetModificationId(primaryData);
 
 				List<string> cultures = this.GetSecondaryCultureNames();
