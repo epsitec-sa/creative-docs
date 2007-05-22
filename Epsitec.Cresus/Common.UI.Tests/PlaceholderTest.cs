@@ -130,8 +130,9 @@ namespace Epsitec.Common.UI
 			Placeholder placeholder3 = new Placeholder ();
 			Placeholder placeholder4 = new Placeholder ();
 
-			placeholder1.Controller = "*";
-			placeholder1.PreferredHeight = 20;
+			placeholder1.Controller = "String";
+			placeholder1.ControllerParameter = "Multiline";
+			placeholder1.PreferredHeight = 40;
 			placeholder1.TabIndex = 1;
 			Widgets.Layouts.GridLayoutEngine.SetColumn (placeholder1, 0);
 			Widgets.Layouts.GridLayoutEngine.SetRow (placeholder1, 1);

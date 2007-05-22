@@ -15,6 +15,7 @@ namespace Epsitec.Common.UI.Controllers
 	{
 		public StringController(string parameter)
 		{
+			this.parameter = parameter;
 		}
 
 		public override object GetActualValue()
@@ -60,7 +61,7 @@ namespace Epsitec.Common.UI.Controllers
 		private void CreateReadWriteUserInterface(Caption caption)
 		{
 			this.label = new StaticText ();
-			this.field = new TextField ();
+			this.field = this.CreateTextField ();
 
 			this.label.HorizontalAlignment = HorizontalAlignment.Right;
 			this.label.VerticalAlignment = VerticalAlignment.BaseLine;
@@ -97,6 +98,25 @@ namespace Epsitec.Common.UI.Controllers
 			this.AddWidget (this.field);
 
 			this.validator = new Validators.ControllerBasedValidator (this.field, this);
+		}
+
+		private AbstractTextField CreateTextField()
+		{
+			AbstractTextField text;
+
+			switch (this.parameter)
+			{
+				case "Multiline":
+					text = new TextFieldMulti ();
+					text.PreferredHeight = this.Placeholder.PreferredHeight;
+					break;
+				
+				default:
+					text = new TextField ();
+					break;
+			}
+
+			return text;
 		}
 
 		protected override void PrepareUserInterfaceDisposal()
@@ -177,8 +197,9 @@ namespace Epsitec.Common.UI.Controllers
 
 		#endregion
 		
-		private TextField field;
+		private AbstractTextField field;
 		private StaticText label;
 		private IValidator validator;
+		private string parameter;
 	}
 }
