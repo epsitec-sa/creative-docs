@@ -1,5 +1,6 @@
-using System;
 using Epsitec.Common.Designer;
+
+using System.Collections.Generic;
 
 namespace App.Designer
 {
@@ -8,13 +9,13 @@ namespace App.Designer
 		/// <summary>
 		/// The main entry point for the application.
 		/// </summary>
-		[STAThread]
-		static void Main()
+		[System.STAThread]
+		static void Main(string[] args)
 		{
 			Epsitec.Common.Widgets.Widget.Initialize ();
 			Epsitec.Common.Document.Engine.Initialize ();
 
-			string[] paths = new string[]
+			List<string> paths = new List<string> (new string[]
 			{
 				@"S:\Epsitec.Cresus\Common.Dialogs\Resources",
 				@"S:\Epsitec.Cresus\Common.Designer\Resources",
@@ -23,10 +24,27 @@ namespace App.Designer
 				@"S:\Epsitec.Cresus\Common.Types\Resources",
 				@"S:\Epsitec.Cresus\Common.Widgets\Resources",
 				@"S:\Epsitec.Cresus\App.DocumentEditor\Resources",
-			};
+			});
+
+			for (int i = 0; i < args.Length; i++)
+			{
+				switch (args[i])
+				{
+					case "-no-default-paths":
+						paths.Clear ();
+						break;
+
+					case "-add-path":
+						paths.Add (args[++i]);
+						break;
+
+					default:
+						throw new System.NotSupportedException (string.Format ("Option {0} not supported", args[i]));
+				}
+			}
 			
 			Epsitec.Common.Widgets.Adorners.Factory.SetActive ("LookRoyale");
-			Epsitec.Common.Support.Implementation.FileProvider.DefineGlobalProbingPath (string.Join (";", paths));
+			Epsitec.Common.Support.Implementation.FileProvider.DefineGlobalProbingPath (string.Join (";", paths.ToArray ()));
 			
 			MainWindow designerMainWindow;
 			
