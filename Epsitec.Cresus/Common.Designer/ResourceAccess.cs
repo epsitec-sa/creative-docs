@@ -744,16 +744,14 @@ namespace Epsitec.Common.Designer
 			//	Copie les données d'un StructuredData vers un autre, en tenant
 			//	compte des collections de données qui ne peuvent pas être copiées
 			//	sans autre.
-
 			Types.IStructuredType type = src.StructuredType;
-
-			foreach (string fieldId in type.GetFieldIds ())
+			foreach (string fieldId in type.GetFieldIds())
 			{
 				object value = src.GetValue(fieldId);
 
-				if (!UndefinedValue.IsUndefinedValue (value))
+				if (!UndefinedValue.IsUndefinedValue(value))
 				{
-					ResourceAccess.SetStructuredDataValue (dst, fieldId, value);
+					ResourceAccess.SetStructuredDataValue(dst, fieldId, value);
 				}
 			}
 		}
@@ -762,19 +760,17 @@ namespace Epsitec.Common.Designer
 		{
 			//	Réalise un StructuredData.SetValue qui tienne compte des cas
 			//	particuliers où les données à copier sont dans une collection.
-
-			if (data.IsValueLocked (id))
+			if (data.IsValueLocked(id))
 			{
 				//	La donnée que l'on cherche à modifier est verrouillée; c'est
 				//	sans doute parce que c'est une collection et que l'on n'a pas
 				//	le droit de la remplacer...
-				
 				ResourceAccess.AttemptCollectionCopy<string> (data, id, value, null);
 				ResourceAccess.AttemptCollectionCopy<StructuredData> (data, id, value, ResourceAccess.CopyStructuredData);
 			}
 			else
 			{
-				data.SetValue (id, value);
+				data.SetValue(id, value);
 			}
 		}
 
@@ -785,17 +781,17 @@ namespace Epsitec.Common.Designer
 			//	TODO: améliorer ce code pour le jour où l'on doit être capable
 			//	de copier des structures de données gérées par un IResourceAccessor;
 			//	pour le moment, ça suffit...
-			return data.GetShallowCopy ();
+			return data.GetShallowCopy();
 		}
 
 		private static void AttemptCollectionCopy<T>(StructuredData data, string id, object value, CopyCallback<T> copyMethod)
 		{
 			IEnumerable<T> source = value as IEnumerable<T>;
-			IList<T>  destination = data.GetValue (id) as IList<T>;
+			IList<T>  destination = data.GetValue(id) as IList<T>;
 			
 			if (destination != null)
 			{
-				destination.Clear ();
+				destination.Clear();
 			}
 
 			if (source != null && destination != null)
@@ -804,11 +800,11 @@ namespace Epsitec.Common.Designer
 				{
 					if (copyMethod == null)
 					{
-						destination.Add (item);
+						destination.Add(item);
 					}
 					else
 					{
-						destination.Add (copyMethod (item));
+						destination.Add(copyMethod (item));
 					}
 				}
 			}

@@ -413,10 +413,12 @@ namespace Epsitec.Common.Designer.Viewers
 			CultureMap item = this.access.CollectionView.CurrentItem as CultureMap;
 			StructuredData data = item.GetCultureData(this.GetTwoLetters(row));
 			IList<StructuredData> shortcuts = data.GetValue(Support.Res.Fields.ResourceCommand.Shortcuts) as IList<StructuredData>;
+
 			IDataBroker shortcutBroker = this.access.Accessor.GetDataBroker(data, Support.Res.Fields.ResourceCommand.Shortcuts);
+			
 			string sc = editor.Shortcut.KeyCode.ToString();
-			StructuredData scData = shortcutBroker.CreateData (item);
-			scData.SetValue (Support.Res.Fields.Shortcut.KeyCode, sc);
+			StructuredData scData = shortcutBroker.CreateData(item);
+			scData.SetValue(Support.Res.Fields.Shortcut.KeyCode, sc);
 
 			if (rank == 0)  // raccourci principal ?
 			{
@@ -434,6 +436,10 @@ namespace Epsitec.Common.Designer.Viewers
 			{
 				if (shortcuts.Count == 0)
 				{
+					StructuredData scNone = shortcutBroker.CreateData(item);
+					scNone.SetValue(Support.Res.Fields.Shortcut.KeyCode, "None");
+					shortcuts.Add(scNone);  // insère un raccourci principal inexistant
+
 					shortcuts.Add(scData);  // insère le raccourci supplémentaire
 				}
 				else if (shortcuts.Count == 1)
@@ -446,15 +452,17 @@ namespace Epsitec.Common.Designer.Viewers
 				}
 			}
 
-#if false
 			//	Supprime tous les raccourcis inexistant KeyCode.None de la collection.
 			int i = 0;
 			bool removed = false;
-			while (i < collection.Count)
+			while (i < shortcuts.Count)
 			{
-				if (collection[i] == KeyCode.None)
+				string keyCode = shortcuts[i].GetValue(Support.Res.Fields.Shortcut.KeyCode) as string;
+				KeyCode kc = (KeyCode) System.Enum.Parse(typeof(KeyCode), keyCode);
+
+				if (kc == KeyCode.None)
 				{
-					collection.RemoveAt(i);
+					shortcuts.RemoveAt(i);
 					removed = true;
 				}
 				else
@@ -468,28 +476,9 @@ namespace Epsitec.Common.Designer.Viewers
 			if (removed)
 			{
 				this.ignoreChange = true;
-				
-				if (collection.Count < 1)
-				{
-					editor1.Shortcut = new Shortcut(KeyCode.None);
-				}
-				else
-				{
-					editor1.Shortcut = collection[0];
-				}
-
-				if (collection.Count < 2)
-				{
-					editor2.Shortcut = new Shortcut(KeyCode.None);
-				}
-				else
-				{
-					editor2.Shortcut = collection[1];
-				}
-
+				this.SetShortcut(editor1, editor2, shortcuts);
 				this.ignoreChange = false;
 			}
-#endif
 
 			this.UpdateColor();
 		}
