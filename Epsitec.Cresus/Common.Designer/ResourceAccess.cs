@@ -877,7 +877,7 @@ namespace Epsitec.Common.Designer
 			if (this.IsAbstract2)
 			{
 				CultureMap item = this.collectionView.CurrentItem as CultureMap;
-				this.collectionView.Items.Remove(item);
+				this.accessor.Collection.Remove(item);
 				this.accessor.PersistChanges();
 
 				this.IsDirty = true;
