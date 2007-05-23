@@ -350,8 +350,10 @@ namespace Epsitec.Common.Designer.Viewers
 			}
 
 			bool statefull = (this.primaryStatefull.ActiveState == ActiveState.No);
-			int sel = this.access.AccessIndex;
-			this.access.SetField(sel, null, ResourceAccess.FieldType.Statefull, new ResourceAccess.Field(statefull));
+
+			CultureMap item = this.access.CollectionView.CurrentItem as CultureMap;
+			StructuredData data = item.GetCultureData(this.GetTwoLetters(0));
+			data.SetValue(Support.Res.Fields.ResourceCommand.Statefull, statefull);
 
 			this.UpdateColor();
 		}
