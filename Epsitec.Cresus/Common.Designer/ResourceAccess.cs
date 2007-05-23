@@ -2543,7 +2543,7 @@ namespace Epsitec.Common.Designer
 			{
 				object value = data.GetValue(Support.Res.Fields.Resource.ModificationId);
 				
-				if (Types.UndefinedValue.IsUndefinedValue(value))
+				if (UndefinedValue.IsUndefinedValue(value))
 				{
 					return 0;
 				}

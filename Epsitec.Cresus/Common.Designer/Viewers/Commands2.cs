@@ -178,8 +178,16 @@ namespace Epsitec.Common.Designer.Viewers
 			data = item.GetCultureData(this.GetTwoLetters(0));
 
 			string dp = data.GetValue(Support.Res.Fields.ResourceCommand.DefaultParameter) as string;
-			string sf = data.GetValue(Support.Res.Fields.ResourceCommand.Statefull) as string;
-			//	TODO: je ne sais pas si c'est juste, ni comment continuer...
+			this.primaryAspectIcon.ActiveState = (dp == "IconButton" || string.IsNullOrEmpty(dp)) ? ActiveState.Yes : ActiveState.No;
+			this.primaryAspectDialog.ActiveState = (dp == "DialogButton") ? ActiveState.Yes : ActiveState.No;
+
+			bool statefull = false;
+			object value = data.GetValue(Support.Res.Fields.ResourceCommand.Statefull);
+			if (!UndefinedValue.IsUndefinedValue(value))
+			{
+				statefull = (bool) value;
+			}
+			this.primaryStatefull.ActiveState = statefull ? ActiveState.Yes : ActiveState.No;
 			
 			shortcuts = data.GetValue(Support.Res.Fields.ResourceCommand.Shortcuts) as IList<StructuredData>;
 			this.SetShortcut(this.primaryShortcut1, this.primaryShortcut2, shortcuts);
@@ -397,6 +405,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 			System.Diagnostics.Debug.Assert(rank != -1);
 
+#if false
 			IList<StructuredData> shortcuts = data.GetValue(Support.Res.Fields.ResourceCommand.Shortcuts) as IList<StructuredData>;
 			//?		string keyCode = shortcuts[0].GetValue(Support.Res.Fields.Shortcut.KeyCode) as string;
 			//?		editor1.Shortcut = (KeyCode) System.Enum.Parse(typeof(KeyCode), keyCode);
@@ -475,6 +484,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 			this.access.SetField(sel, cultureName, ResourceAccess.FieldType.Shortcuts, new ResourceAccess.Field(collection));
 			this.UpdateColor();
+#endif
 		}
 
 		private void HandleGroupComboOpening(object sender, CancelEventArgs e)
