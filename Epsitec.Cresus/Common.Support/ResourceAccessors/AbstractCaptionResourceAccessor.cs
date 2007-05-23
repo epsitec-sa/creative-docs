@@ -18,7 +18,6 @@ namespace Epsitec.Common.Support.ResourceAccessors
 	public abstract class AbstractCaptionResourceAccessor : AbstractResourceAccessor
 	{
 		public AbstractCaptionResourceAccessor()
-			: base (new ResourceBrokers.StringDataBroker ())
 		{
 		}
 
@@ -50,6 +49,11 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			}
 
 			return data;
+		}
+
+		public override IDataBroker GetDataBroker(StructuredData container, Druid fieldId)
+		{
+			return base.GetDataBroker (container, fieldId);
 		}
 
 		protected abstract IStructuredType GetStructuredType();

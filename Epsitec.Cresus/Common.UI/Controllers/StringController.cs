@@ -110,6 +110,11 @@ namespace Epsitec.Common.UI.Controllers
 					text = new TextFieldMulti ();
 					text.PreferredHeight = this.Placeholder.PreferredHeight;
 					break;
+
+				case "Password":
+					text = new TextField ();
+					text.IsPassword = true;
+					break;
 				
 				default:
 					text = new TextField ();

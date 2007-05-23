@@ -12,9 +12,8 @@ namespace Epsitec.Common.Support.ResourceAccessors
 	/// </summary>
 	public abstract class AbstractResourceAccessor : Types.DependencyObject, IResourceAccessor
 	{
-		protected AbstractResourceAccessor(IDataBroker dataBroker)
+		protected AbstractResourceAccessor()
 		{
-			this.dataBroker = dataBroker;
 			this.items.CollectionChanged += this.HandleItemsCollectionChanged;
 		}
 
@@ -47,12 +46,9 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			}
 		}
 
-		public IDataBroker DataBroker
+		public virtual IDataBroker GetDataBroker(Types.StructuredData container, Druid fieldId)
 		{
-			get
-			{
-				return this.dataBroker;
-			}
+			return null;
 		}
 
 		public bool ContainsChanges
@@ -211,7 +207,6 @@ namespace Epsitec.Common.Support.ResourceAccessors
 
 		private readonly CultureMapList items = new CultureMapList ();
 		private readonly Dictionary<CultureMap, bool> dirtyItems = new Dictionary<CultureMap, bool> ();
-		private readonly IDataBroker dataBroker;
 
 		private ResourceManager resourceManager;
 		private int suspendNotifications;

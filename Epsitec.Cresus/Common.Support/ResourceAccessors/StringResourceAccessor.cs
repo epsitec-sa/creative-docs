@@ -17,7 +17,6 @@ namespace Epsitec.Common.Support.ResourceAccessors
 	public class StringResourceAccessor : AbstractResourceAccessor
 	{
 		public StringResourceAccessor()
-			: base (new ResourceBrokers.StringDataBroker ())
 		{
 		}
 
@@ -48,6 +47,11 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			}
 
 			return data;
+		}
+
+		public override IDataBroker GetDataBroker(StructuredData container, Druid fieldId)
+		{
+			return base.GetDataBroker (container, fieldId);
 		}
 
 		protected override Druid CreateId()

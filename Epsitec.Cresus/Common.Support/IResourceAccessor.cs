@@ -21,14 +21,14 @@ namespace Epsitec.Common.Support
 		}
 
 		/// <summary>
-		/// Gets the data broker associated with the root data stored in the
-		/// collection.
+		/// Gets the data broker associated with the specified field. Usually,
+		/// this is only meaningful if the field defines a collection of
+		/// <see cref="StructuredData"/> items.
 		/// </summary>
-		/// <value>The data broker.</value>
-		IDataBroker DataBroker
-		{
-			get;
-		}
+		/// <param name="container">The container.</param>
+		/// <param name="fieldId">The id for the field in the specified container.</param>
+		/// <returns>The data broker or <c>null</c>.</returns>
+		IDataBroker GetDataBroker(Types.StructuredData container, Druid fieldId);
 
 		/// <summary>
 		/// Gets a value indicating whether this accessor contains changes.

@@ -152,6 +152,22 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+		public bool								IsPassword
+		{
+			get
+			{
+				return this.is_password;
+			}
+			set
+			{
+				if (this.is_password != value)
+				{
+					this.is_password = value;
+					this.Invalidate ();
+				}
+			}
+		}
+
 		public bool								IsTextEmpty
 		{
 			get
@@ -1476,7 +1492,7 @@ namespace Epsitec.Common.Widgets
 
 		protected virtual void PaintTextFieldText(Drawing.Graphics graphics, IAdorner adorner, WidgetPaintState state, Drawing.Rectangle clipRect, Drawing.Rectangle rInside, Drawing.Point pos)
 		{
-			TextLayout textLayout = this.TextLayout;
+			TextLayout textLayout = this.GetPaintTextLayout ();
 			
 			if ((this.KeyboardFocus && this.IsEnabled) || this.contextMenu != null)
 			{
@@ -1563,6 +1579,20 @@ namespace Epsitec.Common.Widgets
 				//	On n'a pas le focus...
 
 				adorner.PaintGeneralTextLayout (graphics, clipRect, pos, textLayout, state&~WidgetPaintState.Focused, PaintTextStyle.TextField, this.textDisplayMode, this.BackColor);
+			}
+		}
+
+		protected virtual TextLayout GetPaintTextLayout()
+		{
+			if (this.is_password)
+			{
+				TextLayout layout = new TextLayout (this.TextLayout);
+				layout.Text = new string ('*', this.TextLayout.Text.Length);
+				return layout;
+			}
+			else
+			{
+				return this.TextLayout;
 			}
 		}
 
@@ -1908,6 +1938,7 @@ namespace Epsitec.Common.Widgets
 		protected TextDisplayMode				initial_text_display_mode;
 		private bool							is_editing;
 		private bool							is_modal;
+		private bool							is_password;
 		protected bool							has_edited_text;
 		protected bool							swallow_return;
 		protected bool							swallow_escape;

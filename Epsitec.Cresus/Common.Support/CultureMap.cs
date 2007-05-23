@@ -189,11 +189,6 @@ namespace Epsitec.Common.Support
 			this.OnPropertyChanged (e);
 		}
 
-		private Types.StructuredData CreateData(string twoLetterISOLanguageName)
-		{
-			return this.owner.DataBroker.CreateData ();
-		}
-
 		private readonly IResourceAccessor owner;
 		private readonly Druid id;
 		private string name;
