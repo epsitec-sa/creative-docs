@@ -1,7 +1,6 @@
 ﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <StartWorkingDirectory>S:\Epsitec.Cresus\External</StartWorkingDirectory>
-    <StartArguments>
-    </StartArguments>
+    <StartArguments>-no-default-paths -add-path "C:\Sources\Matisseo\PhotoBook V1\Resources\Resources"</StartArguments>
   </PropertyGroup>
 </Project>

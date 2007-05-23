@@ -41,6 +41,7 @@ namespace Epsitec.Common.Types
 			this.Refresh ();
 
 			System.Diagnostics.Debug.Assert (this.sortedList != null);
+			System.Diagnostics.Debug.Assert (this.readOnlySortedList != null);
 
 			this.SetCurrentToPosition (0);
 		}
@@ -141,7 +142,7 @@ namespace Epsitec.Common.Types
 
 				lock (this)
 				{
-					return this.sortedList;
+					return this.readOnlySortedList;
 				}
 			}
 		}
@@ -1290,9 +1291,10 @@ namespace Epsitec.Common.Types
 
 						lock (this)
 						{
-							this.sortedList      = list;
-							this.itemCount       = list.Count;
-							this.dirtySortedList = false;
+							this.sortedList         = list;
+							this.readOnlySortedList = new Collections.ReadOnlyList<object> (this.sortedList);
+							this.itemCount          = list.Count;
+							this.dirtySortedList    = false;
 						}
 					}
 
@@ -1547,6 +1549,7 @@ namespace Epsitec.Common.Types
 
 		private readonly System.Collections.IList sourceList;
 		private List<object> sortedList;
+		private Collections.ReadOnlyList<object> readOnlySortedList;
 		private int itemCount;
 		private bool dirtyGroups;
 		private bool dirtySortedList;
