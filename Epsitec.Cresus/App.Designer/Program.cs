@@ -26,21 +26,45 @@ namespace App.Designer
 				@"S:\Epsitec.Cresus\App.DocumentEditor\Resources",
 			});
 
+			List<string> addPaths = new List<string> ();
+			bool noDefaultPaths = false;
+
 			for (int i = 0; i < args.Length; i++)
 			{
 				switch (args[i])
 				{
+					case "-command-file":
+						if (System.IO.File.Exists (args[++i]))
+						{
+							args = System.IO.File.ReadAllLines (args[i]);
+							i = -1;
+						}
+						break;
+
 					case "-no-default-paths":
-						paths.Clear ();
+						noDefaultPaths = true;
 						break;
 
 					case "-add-path":
-						paths.Add (args[++i]);
+						if (System.IO.Directory.Exists (args[++i]))
+						{
+							addPaths.Add (args[i]);
+						}
 						break;
 
 					default:
 						throw new System.NotSupportedException (string.Format ("Option {0} not supported", args[i]));
 				}
+			}
+
+			if (addPaths.Count > 0)
+			{
+				if (noDefaultPaths)
+				{
+					paths.Clear ();
+				}
+
+				paths.AddRange (addPaths);
 			}
 			
 			Epsitec.Common.Widgets.Adorners.Factory.SetActive ("LookRoyale");

@@ -1,7 +1,6 @@
 ﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <StartWorkingDirectory>S:\Epsitec.Cresus\External</StartWorkingDirectory>
-    <StartArguments>
-    </StartArguments>
+    <StartArguments>-command-file "C:\Sources\Epsitec.Cresus\App.Designer\settings.ini"</StartArguments>
   </PropertyGroup>
 </Project>

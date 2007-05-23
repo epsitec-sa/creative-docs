@@ -43,6 +43,14 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			{
 				Widgets.Command.SetStatefull (caption, (bool) data.GetValue (Res.Fields.ResourceCommand.Statefull));
 			}
+			if (!Types.UndefinedValue.IsUndefinedValue (data.GetValue (Res.Fields.ResourceCommand.DefaultParameter)))
+			{
+				Widgets.Command.SetDefaultParameter (caption, (string) data.GetValue (Res.Fields.ResourceCommand.DefaultParameter));
+			}
+			if (!Types.UndefinedValue.IsUndefinedValue (data.GetValue (Res.Fields.ResourceCommand.Group)))
+			{
+				Widgets.Command.SetGroup (caption, (string) data.GetValue (Res.Fields.ResourceCommand.Group));
+			}
 
 			IList<StructuredData> shortcuts = data.GetValue (Res.Fields.ResourceCommand.Shortcuts) as IList<StructuredData>;
 
@@ -80,6 +88,14 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			if (!Types.UndefinedValue.IsUndefinedValue (caption.GetValue (Widgets.Command.StatefullProperty)))
 			{
 				data.SetValue (Res.Fields.ResourceCommand.Statefull, caption.GetValue (Widgets.Command.StatefullProperty));
+			}
+			if (!Types.UndefinedValue.IsUndefinedValue (caption.GetValue (Widgets.Command.DefaultParameterProperty)))
+			{
+				data.SetValue (Res.Fields.ResourceCommand.DefaultParameter, caption.GetValue (Widgets.Command.DefaultParameterProperty));
+			}
+			if (!Types.UndefinedValue.IsUndefinedValue (caption.GetValue (Widgets.Command.GroupProperty)))
+			{
+				data.SetValue (Res.Fields.ResourceCommand.Group, caption.GetValue (Widgets.Command.GroupProperty));
 			}
 		}
 	}
