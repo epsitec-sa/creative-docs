@@ -221,7 +221,6 @@
     <Compile Include="ResourceAccessors\CaptionResourceAccessor.cs" />
     <Compile Include="ResourceAccessors\AbstractCaptionResourceAccessor.cs" />
     <Compile Include="ResourceAccessors\StringResourceAccessor.cs" />
-    <Compile Include="ResourceBrokers\StringDataBroker.cs" />
     <Compile Include="SerialAlgorithm.cs">
       <SubType>Code</SubType>
     </Compile>

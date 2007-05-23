@@ -120,8 +120,50 @@ namespace Epsitec.Common.Support.ResourceAccessors
 
 			public void HandleCollectionChanged(object sender, CollectionChangedEventArgs e)
 			{
+				switch (e.Action)
+				{
+					case CollectionChangedAction.Add:
+						this.HandleCollectionAdd (e.NewItems);
+						break;
+					
+					case CollectionChangedAction.Remove:
+						this.HandleCollectionRemove (e.OldItems);
+						break;
+					
+					case CollectionChangedAction.Replace:
+						this.HandleCollectionRemove (e.OldItems);
+						this.HandleCollectionAdd (e.NewItems);
+						break;
+				}
+				
 				System.Diagnostics.Debug.WriteLine (string.Format ("{0}: index {1} -> {2}", e.Action, e.OldStartingIndex, e.NewStartingIndex));
 				this.accessor.NotifyItemChanged (this.item);
+			}
+
+			private void HandleCollectionAdd(System.Collections.IEnumerable list)
+			{
+				foreach (object item in list)
+				{
+					StructuredData data = item as StructuredData;
+					
+					if (data != null)
+					{
+						this.item.NotifyDataAdded (data);
+					}
+				}
+			}
+
+			private void HandleCollectionRemove(System.Collections.IEnumerable list)
+			{
+				foreach (object item in list)
+				{
+					StructuredData data = item as StructuredData;
+
+					if (data != null)
+					{
+						this.item.NotifyDataRemoved (data);
+					}
+				}
 			}
 
 			private CaptionResourceAccessor accessor;

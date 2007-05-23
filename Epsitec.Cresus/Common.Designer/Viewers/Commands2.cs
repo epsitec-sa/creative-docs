@@ -410,41 +410,36 @@ namespace Epsitec.Common.Designer.Viewers
 			CultureMap item = this.access.CollectionView.CurrentItem as CultureMap;
 			StructuredData data = item.GetCultureData(this.GetTwoLetters(row));
 			IList<StructuredData> shortcuts = data.GetValue(Support.Res.Fields.ResourceCommand.Shortcuts) as IList<StructuredData>;
+			IDataBroker shortcutBroker = this.access.Accessor.GetDataBroker(data, Support.Res.Fields.ResourceCommand.Shortcuts);
 			string sc = editor.Shortcut.KeyCode.ToString();
+			StructuredData scData = shortcutBroker.CreateData (item);
+			scData.SetValue (Support.Res.Fields.Shortcut.KeyCode, sc);
 
 			if (rank == 0)  // raccourci principal ?
 			{
-				if (shortcuts == null)
+				if (shortcuts.Count == 0)
 				{
-					//	TODO:
-				}
-				else if (shortcuts.Count == 0)
-				{
-					//?shortcuts.Add(sc);  // insère le raccourci principal
+					shortcuts.Add(scData);  // insère le raccourci principal
 				}
 				else
 				{
-					shortcuts[rank].SetValue(Support.Res.Fields.Shortcut.KeyCode, sc);
+					shortcuts[rank] = scData;
 				}
 			}
 
 			if (rank == 1)  // raccourci supplémentaire ?
 			{
-				if (shortcuts == null)
+				if (shortcuts.Count == 0)
 				{
-					//	TODO:
-				}
-				else if (shortcuts.Count == 0)
-				{
-					//?shortcuts.Add(sc);  // insère le raccourci supplémentaire
+					shortcuts.Add(scData);  // insère le raccourci supplémentaire
 				}
 				else if (shortcuts.Count == 1)
 				{
-					//?shortcuts.Add(sc);  // insère le raccourci supplémentaire
+					shortcuts.Add(scData);  // insère le raccourci supplémentaire
 				}
 				else
 				{
-					shortcuts[rank].SetValue(Support.Res.Fields.Shortcut.KeyCode, sc);
+					shortcuts[rank] = scData;
 				}
 			}
 

@@ -22,6 +22,18 @@ namespace Epsitec.Common.Support.ResourceAccessors
 		{
 		}
 
+		public override IDataBroker GetDataBroker(StructuredData container, Druid fieldId)
+		{
+			if (fieldId == Res.Fields.ResourceCommand.Shortcuts)
+			{
+				return new Broker ();
+			}
+			else
+			{
+				return base.GetDataBroker (container, fieldId);
+			}
+		}
+		
 		protected override string Prefix
 		{
 			get
@@ -97,6 +109,19 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			{
 				data.SetValue (Res.Fields.ResourceCommand.Group, caption.GetValue (Widgets.Command.GroupProperty));
 			}
+		}
+
+
+		private class Broker : IDataBroker
+		{
+			#region IDataBroker Members
+
+			public StructuredData CreateData(CultureMap container)
+			{
+				return new StructuredData (Res.Types.Shortcut);
+			}
+
+			#endregion
 		}
 	}
 }

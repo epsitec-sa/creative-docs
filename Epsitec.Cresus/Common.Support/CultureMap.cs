@@ -149,6 +149,16 @@ namespace Epsitec.Common.Support
 
 		#endregion
 
+		public void NotifyDataAdded(StructuredData data)
+		{
+			data.ValueChanged += this.HandleDataValueChanged;
+		}
+		
+		public void NotifyDataRemoved(StructuredData data)
+		{
+			data.ValueChanged -= this.HandleDataValueChanged;
+		}
+		
 		protected virtual void OnPropertyChanged(DependencyPropertyChangedEventArgs e)
 		{
 			this.owner.NotifyItemChanged (this);
