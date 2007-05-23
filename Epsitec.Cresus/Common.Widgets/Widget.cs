@@ -1949,7 +1949,8 @@ namespace Epsitec.Common.Widgets
 				}
 				
 				if ((widget.Name == null) ||
-					(widget.Name.Length == 0))
+					(widget.Name.Length == 0) ||
+					((mode & ChildFindMode.Deep) != 0))
 				{
 					Widget child = widget.FindChild (name, mode);
 					
