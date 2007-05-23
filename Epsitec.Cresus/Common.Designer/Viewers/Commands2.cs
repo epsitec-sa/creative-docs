@@ -367,13 +367,12 @@ namespace Epsitec.Common.Designer.Viewers
 			ShortcutEditor editor = sender as ShortcutEditor;
 			ShortcutEditor editor1 = null;
 			ShortcutEditor editor2 = null;
-			int sel = this.access.AccessIndex;
-			string cultureName = null;
+			int row = -1;
 			int rank = -1;
 
 			if (editor == this.primaryShortcut1)
 			{
-				cultureName = null;  // culture principale
+				row = 0;  // culture principale
 				rank = 0;  // raccourci principal
 				editor1 = this.primaryShortcut1;
 				editor2 = this.primaryShortcut2;
@@ -381,7 +380,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 			if (editor == this.primaryShortcut2)
 			{
-				cultureName = null;  // culture principale
+				row = 0;  // culture principale
 				rank = 1;  // raccourci supplémentaire
 				editor1 = this.primaryShortcut1;
 				editor2 = this.primaryShortcut2;
@@ -389,7 +388,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 			if (editor == this.secondaryShortcut1)
 			{
-				cultureName = this.secondaryCulture;  // culture secondaire
+				row = 1;  // culture secondaire
 				rank = 0;  // raccourci principal
 				editor1 = this.secondaryShortcut1;
 				editor2 = this.secondaryShortcut2;
@@ -397,48 +396,56 @@ namespace Epsitec.Common.Designer.Viewers
 
 			if (editor == this.secondaryShortcut2)
 			{
-				cultureName = this.secondaryCulture;  // culture secondaire
+				row = 1;  // culture secondaire
 				rank = 1;  // raccourci supplémentaire
 				editor1 = this.secondaryShortcut1;
 				editor2 = this.secondaryShortcut2;
 			}
 
-			System.Diagnostics.Debug.Assert(rank != -1);
+			System.Diagnostics.Debug.Assert(row != -1 && rank != -1);
 
-#if false
+			CultureMap item = this.access.CollectionView.CurrentItem as CultureMap;
+			StructuredData data = item.GetCultureData(this.GetTwoLetters(row));
 			IList<StructuredData> shortcuts = data.GetValue(Support.Res.Fields.ResourceCommand.Shortcuts) as IList<StructuredData>;
-			//?		string keyCode = shortcuts[0].GetValue(Support.Res.Fields.Shortcut.KeyCode) as string;
-			//?		editor1.Shortcut = (KeyCode) System.Enum.Parse(typeof(KeyCode), keyCode);
+			string sc = editor.Shortcut.KeyCode.ToString();
 
 			if (rank == 0)  // raccourci principal ?
 			{
-				if (shortcuts.Count == 0)
+				if (shortcuts == null)
 				{
-					shortcuts.Add(editor.Shortcut);  // insère le raccourci principal
+					//	TODO:
+				}
+				else if (shortcuts.Count == 0)
+				{
+					//?shortcuts.Add(sc);  // insère le raccourci principal
 				}
 				else
 				{
-					shortcuts[rank] = editor.Shortcut;  // modifie le raccourci principal
+					shortcuts[rank].SetValue(Support.Res.Fields.Shortcut.KeyCode, sc);
 				}
 			}
 
 			if (rank == 1)  // raccourci supplémentaire ?
 			{
-				if (shortcuts.Count == 0)
+				if (shortcuts == null)
 				{
-					shortcuts.Add(new Shortcut(KeyCode.None));  // insère un raccourci principal inexistant
-					shortcuts.Add(editor.Shortcut);  // insère le raccourci supplémentaire
+					//	TODO:
+				}
+				else if (shortcuts.Count == 0)
+				{
+					//?shortcuts.Add(sc);  // insère le raccourci supplémentaire
 				}
 				else if (shortcuts.Count == 1)
 				{
-					shortcuts.Add(editor.Shortcut);  // insère le raccourci supplémentaire
+					//?shortcuts.Add(sc);  // insère le raccourci supplémentaire
 				}
 				else
 				{
-					shortcuts[rank] = editor.Shortcut;  // modifie le raccourci supplémentaire
+					shortcuts[rank].SetValue(Support.Res.Fields.Shortcut.KeyCode, sc);
 				}
 			}
 
+#if false
 			//	Supprime tous les raccourcis inexistant KeyCode.None de la collection.
 			int i = 0;
 			bool removed = false;
@@ -481,10 +488,9 @@ namespace Epsitec.Common.Designer.Viewers
 
 				this.ignoreChange = false;
 			}
-
-			this.access.SetField(sel, cultureName, ResourceAccess.FieldType.Shortcuts, new ResourceAccess.Field(collection));
-			this.UpdateColor();
 #endif
+
+			this.UpdateColor();
 		}
 
 		private void HandleGroupComboOpening(object sender, CancelEventArgs e)
