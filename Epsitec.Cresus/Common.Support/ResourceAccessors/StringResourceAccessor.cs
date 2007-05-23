@@ -49,7 +49,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			return data;
 		}
 
-		public override IDataBroker GetDataBroker(StructuredData container, Druid fieldId)
+		public override IDataBroker GetDataBroker(StructuredData container, string fieldId)
 		{
 			return base.GetDataBroker (container, fieldId);
 		}

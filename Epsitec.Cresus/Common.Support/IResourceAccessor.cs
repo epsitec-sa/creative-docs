@@ -28,7 +28,7 @@ namespace Epsitec.Common.Support
 		/// <param name="container">The container.</param>
 		/// <param name="fieldId">The id for the field in the specified container.</param>
 		/// <returns>The data broker or <c>null</c>.</returns>
-		IDataBroker GetDataBroker(Types.StructuredData container, Druid fieldId);
+		IDataBroker GetDataBroker(Types.StructuredData container, string fieldId);
 
 		/// <summary>
 		/// Gets a value indicating whether this accessor contains changes.

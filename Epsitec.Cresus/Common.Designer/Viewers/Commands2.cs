@@ -414,7 +414,7 @@ namespace Epsitec.Common.Designer.Viewers
 			StructuredData data = item.GetCultureData(this.GetTwoLetters(row));
 			IList<StructuredData> shortcuts = data.GetValue(Support.Res.Fields.ResourceCommand.Shortcuts) as IList<StructuredData>;
 
-			IDataBroker shortcutBroker = this.access.Accessor.GetDataBroker(data, Support.Res.Fields.ResourceCommand.Shortcuts);
+			IDataBroker shortcutBroker = this.access.Accessor.GetDataBroker(data, Support.Res.Fields.ResourceCommand.Shortcuts.ToString());
 			
 			string sc = editor.Shortcut.KeyCode.ToString();
 			StructuredData scData = shortcutBroker.CreateData(item);

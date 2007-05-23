@@ -46,7 +46,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			}
 		}
 
-		public virtual IDataBroker GetDataBroker(Types.StructuredData container, Druid fieldId)
+		public virtual IDataBroker GetDataBroker(Types.StructuredData container, string fieldId)
 		{
 			return null;
 		}

@@ -554,7 +554,7 @@ namespace Epsitec.Common.Designer
 					{
 						StructuredData data = item.GetCultureData(culture);
 						StructuredData newData = newItem.GetCultureData(culture);
-						ResourceAccess.CopyData(data, newData);
+						ResourceAccess.CopyData(this.accessor, newItem, data, newData);
 					}
 				}
 
@@ -739,7 +739,7 @@ namespace Epsitec.Common.Designer
 			this.IsDirty = true;
 		}
 
-		private static void CopyData(StructuredData src, StructuredData dst)
+		private static void CopyData(IResourceAccessor accessor, CultureMap dstItem, StructuredData src, StructuredData dst)
 		{
 			//	Copie les données d'un StructuredData vers un autre, en tenant
 			//	compte des collections de données qui ne peuvent pas être copiées
@@ -751,12 +751,12 @@ namespace Epsitec.Common.Designer
 
 				if (!UndefinedValue.IsUndefinedValue(value))
 				{
-					ResourceAccess.SetStructuredDataValue(dst, fieldId, value);
+					ResourceAccess.SetStructuredDataValue (accessor, dstItem, dst, fieldId, value);
 				}
 			}
 		}
 
-		public static void SetStructuredDataValue(StructuredData data, string id, object value)
+		public static void SetStructuredDataValue(IResourceAccessor accessor, CultureMap map, StructuredData data, string id, object value)
 		{
 			//	Réalise un StructuredData.SetValue qui tienne compte des cas
 			//	particuliers où les données à copier sont dans une collection.
@@ -765,8 +765,8 @@ namespace Epsitec.Common.Designer
 				//	La donnée que l'on cherche à modifier est verrouillée; c'est
 				//	sans doute parce que c'est une collection et que l'on n'a pas
 				//	le droit de la remplacer...
-				ResourceAccess.AttemptCollectionCopy<string> (data, id, value, null);
-				ResourceAccess.AttemptCollectionCopy<StructuredData> (data, id, value, ResourceAccess.CopyStructuredData);
+				ResourceAccess.AttemptCollectionCopy<string> (accessor, map, data, id, value, null);
+				ResourceAccess.AttemptCollectionCopy<StructuredData> (accessor, map, data, id, value, ResourceAccess.CopyStructuredData);
 			}
 			else
 			{
@@ -774,17 +774,19 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
-		private delegate T CopyCallback<T>(T obj);
+		private delegate T CopyCallback<T>(IResourceAccessor accessor, CultureMap map, StructuredData container, string fieldId, T obj);
 
-		private static StructuredData CopyStructuredData(StructuredData data)
+		private static StructuredData CopyStructuredData(IResourceAccessor accessor, CultureMap map, StructuredData container, string fieldId, StructuredData source)
 		{
-			//	TODO: améliorer ce code pour le jour où l'on doit être capable
-			//	de copier des structures de données gérées par un IResourceAccessor;
-			//	pour le moment, ça suffit...
-			return data.GetShallowCopy();
+			//	Copie (récursivement) les données au niveau actuel en demandant au
+			//	broker de s'occuper de l'allocation du StructuredData.
+			IDataBroker broker = accessor.GetDataBroker (container, fieldId);
+			StructuredData copy = broker.CreateData (map);
+			ResourceAccess.CopyData (accessor, map, source, copy);
+			return copy;
 		}
 
-		private static void AttemptCollectionCopy<T>(StructuredData data, string id, object value, CopyCallback<T> copyMethod)
+		private static void AttemptCollectionCopy<T>(IResourceAccessor accessor, CultureMap map, StructuredData data, string id, object value, CopyCallback<T> copyMethod)
 		{
 			IEnumerable<T> source = value as IEnumerable<T>;
 			IList<T>  destination = data.GetValue(id) as IList<T>;
@@ -804,7 +806,7 @@ namespace Epsitec.Common.Designer
 					}
 					else
 					{
-						destination.Add(copyMethod (item));
+						destination.Add(copyMethod (accessor, map, data, id, item));
 					}
 				}
 			}

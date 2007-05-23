@@ -452,7 +452,7 @@ namespace Epsitec.Common.Designer.Viewers
 		protected void SetValue(CultureMap item, StructuredData data, Druid id, object value, bool update)
 		{
 			//	Méthode appelée pour modifier un champ.
-			ResourceAccess.SetStructuredDataValue(data, id.ToString(), value);
+			ResourceAccess.SetStructuredDataValue(this.access.Accessor, item, data, id.ToString(), value);
 			this.access.IsDirty = true;
 			
 			this.UpdateColor();

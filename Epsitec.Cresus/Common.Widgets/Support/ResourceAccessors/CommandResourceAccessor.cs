@@ -22,9 +22,9 @@ namespace Epsitec.Common.Support.ResourceAccessors
 		{
 		}
 
-		public override IDataBroker GetDataBroker(StructuredData container, Druid fieldId)
+		public override IDataBroker GetDataBroker(StructuredData container, string fieldId)
 		{
-			if (fieldId == Res.Fields.ResourceCommand.Shortcuts)
+			if (fieldId == Res.Fields.ResourceCommand.Shortcuts.ToString ())
 			{
 				return new Broker ();
 			}
@@ -91,6 +91,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 				StructuredData x = new StructuredData (Res.Types.Shortcut);
 				x.SetValue (Res.Fields.Shortcut.KeyCode, shortcut.GetValue (Widgets.Shortcut.KeyCodeProperty));
 				shortcuts.Add (x);
+				item.NotifyDataAdded (x);
 			}
 			
 			data.SetValue (Res.Fields.ResourceCommand.Shortcuts, shortcuts);
