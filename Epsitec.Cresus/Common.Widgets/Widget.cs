@@ -1947,6 +1947,11 @@ namespace Epsitec.Common.Widgets
 						}
 					}
 				}
+
+				if (widget.Name == name)
+				{
+					return widget;
+				}
 				
 				if ((widget.Name == null) ||
 					(widget.Name.Length == 0) ||
@@ -1958,10 +1963,6 @@ namespace Epsitec.Common.Widgets
 					{
 						return child;
 					}
-				}
-				else if (widget.Name == name)
-				{
-					return widget;
 				}
 			}
 			
