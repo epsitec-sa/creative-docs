@@ -173,15 +173,80 @@ namespace Epsitec.Common.Designer.Viewers
 
 			CultureMap item = this.access.CollectionView.CurrentItem as CultureMap;
 			StructuredData data;
+			IList<StructuredData> shortcuts;
 
 			data = item.GetCultureData(this.GetTwoLetters(0));
-			IList<StructuredData> shortcuts = data.GetValue(Support.Res.Fields.ResourceCommand.Shortcuts) as IList<StructuredData>;
+
+			string dp = data.GetValue(Support.Res.Fields.ResourceCommand.DefaultParameter) as string;
+			string sf = data.GetValue(Support.Res.Fields.ResourceCommand.Statefull) as string;
+			//	TODO: je ne sais pas si c'est juste, ni comment continuer...
+			
+			shortcuts = data.GetValue(Support.Res.Fields.ResourceCommand.Shortcuts) as IList<StructuredData>;
 			this.SetShortcut(this.primaryShortcut1, this.primaryShortcut2, shortcuts);
 
+			if (this.GetTwoLetters(1) == null)
+			{
+				this.SetShortcut(this.secondaryShortcut1, this.secondaryShortcut2, null);
+			}
+			else
+			{
+				data = item.GetCultureData(this.GetTwoLetters(1));
+				shortcuts = data.GetValue(Support.Res.Fields.ResourceCommand.Shortcuts) as IList<StructuredData>;
+				this.SetShortcut(this.secondaryShortcut1, this.secondaryShortcut2, shortcuts);
+			}
 
-			
+			//	Met à jour le résumé en fonction des widgets éditables.
+			this.primarySuiteSummary.Text = this.GetSuiteSummary(this.primaryShortcut1, this.primaryShortcut2, this.primaryGroup);
+			this.secondarySuiteSummary.Text = this.GetSuiteSummary(this.secondaryShortcut1, this.secondaryShortcut2, this.primaryGroup);
+
+			string icon = null;
+			if (this.primaryAspectIcon.ActiveState == ActiveState.Yes)
+			{
+				icon = Misc.Icon("ButtonAspectIcon");
+			}
+			if (this.primaryAspectDialog.ActiveState == ActiveState.Yes)
+			{
+				icon = Misc.Icon("ButtonAspectDialog");
+			}
+			this.primarySuiteSummaryIcon.IconName = icon;
+			this.secondarySuiteSummaryIcon.IconName = icon;
 
 			this.ignoreChange = iic;
+		}
+
+		protected string GetSuiteSummary(ShortcutEditor editor1, ShortcutEditor editor2, TextFieldCombo group)
+		{
+			//	Retourne le texte de la 2ème partie du résumé en fonction des widgets éditables.
+			System.Text.StringBuilder builder = new System.Text.StringBuilder();
+			string s;
+
+			s = editor1.Shortcut.ToString();
+			if (!string.IsNullOrEmpty(s))
+			{
+				builder.Append(s);
+			}
+			
+			s = editor2.Shortcut.ToString();
+			if (!string.IsNullOrEmpty(s))
+			{
+				if (builder.Length > 0)
+				{
+					builder.Append(", ");
+				}
+				builder.Append(s);
+			}
+
+			s = group.Text;
+			if (!string.IsNullOrEmpty(s))
+			{
+				if (builder.Length > 0)
+				{
+					builder.Append("<br/>");
+				}
+				builder.Append(s);
+			}
+
+			return builder.ToString();
 		}
 
 		protected void SetShortcut(ShortcutEditor editor1, ShortcutEditor editor2, IList<StructuredData> shortcuts)
@@ -332,35 +397,36 @@ namespace Epsitec.Common.Designer.Viewers
 
 			System.Diagnostics.Debug.Assert(rank != -1);
 
-			ResourceAccess.Field field = this.access.GetField(sel, cultureName, ResourceAccess.FieldType.Shortcuts);
-			Widgets.Collections.ShortcutCollection collection = field.ShortcutCollection;
+			IList<StructuredData> shortcuts = data.GetValue(Support.Res.Fields.ResourceCommand.Shortcuts) as IList<StructuredData>;
+			//?		string keyCode = shortcuts[0].GetValue(Support.Res.Fields.Shortcut.KeyCode) as string;
+			//?		editor1.Shortcut = (KeyCode) System.Enum.Parse(typeof(KeyCode), keyCode);
 
 			if (rank == 0)  // raccourci principal ?
 			{
-				if (collection.Count == 0)
+				if (shortcuts.Count == 0)
 				{
-					collection.Add(editor.Shortcut);  // insère le raccourci principal
+					shortcuts.Add(editor.Shortcut);  // insère le raccourci principal
 				}
 				else
 				{
-					collection[rank] = editor.Shortcut;  // modifie le raccourci principal
+					shortcuts[rank] = editor.Shortcut;  // modifie le raccourci principal
 				}
 			}
 
 			if (rank == 1)  // raccourci supplémentaire ?
 			{
-				if (collection.Count == 0)
+				if (shortcuts.Count == 0)
 				{
-					collection.Add(new Shortcut(KeyCode.None));  // insère un raccourci principal inexistant
-					collection.Add(editor.Shortcut);  // insère le raccourci supplémentaire
+					shortcuts.Add(new Shortcut(KeyCode.None));  // insère un raccourci principal inexistant
+					shortcuts.Add(editor.Shortcut);  // insère le raccourci supplémentaire
 				}
-				else if (collection.Count == 1)
+				else if (shortcuts.Count == 1)
 				{
-					collection.Add(editor.Shortcut);  // insère le raccourci supplémentaire
+					shortcuts.Add(editor.Shortcut);  // insère le raccourci supplémentaire
 				}
 				else
 				{
-					collection[rank] = editor.Shortcut;  // modifie le raccourci supplémentaire
+					shortcuts[rank] = editor.Shortcut;  // modifie le raccourci supplémentaire
 				}
 			}
 
