@@ -1010,7 +1010,14 @@ namespace Epsitec.Common.Types
 			}
 			else
 			{
-				return property.GetMetadata (source).CaptionId;
+				Support.Druid id = property.GetMetadata (source).CaptionId;
+				
+				if (id.IsEmpty)
+				{
+					id = property.CaptionId;
+				}
+
+				return id;
 			}
 		}
 
