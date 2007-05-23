@@ -208,9 +208,11 @@ namespace Epsitec.Common.Types
 
 		StructuredTypeField IStructuredType.GetField(string fieldId)
 		{
-			INamedType namedType = TypeRosetta.GetNamedTypeFromTypeObject (this.GetProperty (fieldId));
+			DependencyProperty property  = this.GetProperty (fieldId);
+			INamedType         namedType = TypeRosetta.GetNamedTypeFromTypeObject (property);
+			Support.Druid      captionId = property.CaptionId;
 
-			return new StructuredTypeField (fieldId, namedType);
+			return new StructuredTypeField (fieldId, namedType, captionId);
 		}
 		
 		IEnumerable<string> IStructuredType.GetFieldIds()

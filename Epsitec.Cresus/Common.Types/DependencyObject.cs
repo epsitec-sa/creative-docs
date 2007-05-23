@@ -14,7 +14,7 @@ namespace Epsitec.Common.Types
 	/// This is useful for easy run-time analysis, handling zero-storage default
 	/// values, automatic change event generation, etc.
 	/// </summary>
-	public abstract class DependencyObject : System.IDisposable, IInheritedPropertyCache, IStructuredData
+	public abstract class DependencyObject : System.IDisposable, IInheritedPropertyCache, IStructuredData, IStructuredTypeProvider
 	{
 		/// <summary>
 		/// Initializes a new instance of the <see cref="T:DependencyObject"/>
@@ -1308,6 +1308,15 @@ namespace Epsitec.Common.Types
 			}
 
 			this.SetValue (property, value);
+		}
+
+		#endregion
+		
+		#region IStructuredTypeProvider Members
+
+		IStructuredType IStructuredTypeProvider.GetStructuredType()
+		{
+			return this.ObjectType;
 		}
 
 		#endregion

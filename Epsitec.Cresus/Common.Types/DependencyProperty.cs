@@ -162,6 +162,14 @@ namespace Epsitec.Common.Types
 			}
 		}
 
+		public Support.Druid					CaptionId
+		{
+			get
+			{
+				return this.captionId;
+			}
+		}
+		
 		internal int							InheritedPropertyCacheMask
 		{
 			get
@@ -437,6 +445,23 @@ namespace Epsitec.Common.Types
 			
 			this.overriddenMetadata[type] = metadata;
 		}
+
+		/// <summary>
+		/// Defines the caption id associated with this dependency property.
+		/// </summary>
+		/// <param name="captionId">The caption id.</param>
+		public void DefineCaptionId(Support.Druid captionId)
+		{
+			if ((this.captionId == captionId) ||
+				(this.captionId.IsEmpty))
+			{
+				this.captionId = captionId;
+			}
+			else
+			{
+				throw new System.InvalidOperationException ("CaptionId may not be redefined");
+			}
+		}
 		
 		public DependencyPropertyMetadata GetMetadata(DependencyObject o)
 		{
@@ -620,6 +645,7 @@ namespace Epsitec.Common.Types
 		private bool							hasTypeConverter;
 		private bool							typeConverterOk;
 		private ISerializationConverter			typeConverter;
+		private Support.Druid					captionId;
 		
 		Dictionary<System.Type, DependencyPropertyMetadata>	overriddenMetadata;
 		
