@@ -192,6 +192,9 @@ namespace Epsitec.Common.Designer.Viewers
 			shortcuts = data.GetValue(Support.Res.Fields.ResourceCommand.Shortcuts) as IList<StructuredData>;
 			this.SetShortcut(this.primaryShortcut1, this.primaryShortcut2, shortcuts);
 
+			string group = data.GetValue(Support.Res.Fields.ResourceCommand.Group) as string;
+			this.primaryGroup.Text = group;
+
 			if (this.GetTwoLetters(1) == null)
 			{
 				this.SetShortcut(this.secondaryShortcut1, this.secondaryShortcut2, null);
@@ -299,16 +302,16 @@ namespace Epsitec.Common.Designer.Viewers
 			//	Met à jour le menu du combo des groupes.
 			List<string> list = new List<string>();
 
-			for (int i=0; i<this.access.TotalCount; i++)
+			foreach (CultureMap item in this.access.Accessor.Collection)
 			{
-				Druid druid = this.access.DirectGetDruid(i);
-				string group = this.access.DirectGetGroup(druid);
-				if (group != null && !list.Contains(group))
+				StructuredData data = item.GetCultureData(this.GetTwoLetters(0));
+				string group = data.GetValue(Support.Res.Fields.ResourceCommand.Group) as string;
+
+				if (!string.IsNullOrEmpty(group) && !list.Contains(group))
 				{
 					list.Add(group);
 				}
 			}
-
 			list.Sort();  // trie par ordre alphabétique
 
 			this.primaryGroup.Items.Clear();
@@ -507,11 +510,13 @@ namespace Epsitec.Common.Designer.Viewers
 
 			AbstractTextField edit = sender as AbstractTextField;
 			string text = edit.Text;
-			int sel = this.access.AccessIndex;
+
+			CultureMap item = this.access.CollectionView.CurrentItem as CultureMap;
 
 			if (edit == this.primaryGroup)
 			{
-				this.access.SetField(sel, null, ResourceAccess.FieldType.Group, new ResourceAccess.Field(text));
+				StructuredData data = item.GetCultureData(this.GetTwoLetters(0));
+				this.SetValue(item, data, Support.Res.Fields.ResourceCommand.Group, text, true);
 			}
 
 			this.UpdateColor();
