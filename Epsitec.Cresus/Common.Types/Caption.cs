@@ -175,6 +175,26 @@ namespace Epsitec.Common.Types
 			}
 		}
 
+		/// <summary>
+		/// Gets the default label.
+		/// </summary>
+		/// <value>The default label or an empty string.</value>
+		public string							DefaultLabel
+		{
+			get
+			{
+				if ((this.labels == null) ||
+					(this.labels.Count == 0))
+				{
+					return "";
+				}
+				else
+				{
+					return this.labels[0];
+				}
+			}
+		}
+
 
 		/// <summary>
 		/// Defines the ID associated with the caption. The ID can be defined
