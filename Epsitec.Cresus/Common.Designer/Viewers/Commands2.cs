@@ -334,8 +334,9 @@ namespace Epsitec.Common.Designer.Viewers
 				defaultParameter = "IconButton";
 			}
 
-			int sel = this.access.AccessIndex;
-			this.access.SetField(sel, null, ResourceAccess.FieldType.Controller, new ResourceAccess.Field(defaultParameter));
+			CultureMap item = this.access.CollectionView.CurrentItem as CultureMap;
+			StructuredData data = item.GetCultureData(this.GetTwoLetters(0));
+			data.SetValue(Support.Res.Fields.ResourceCommand.DefaultParameter, defaultParameter);
 
 			this.UpdateEdit();
 			this.UpdateColor();
