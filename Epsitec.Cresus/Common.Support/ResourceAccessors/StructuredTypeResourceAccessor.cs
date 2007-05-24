@@ -15,9 +15,9 @@ namespace Epsitec.Common.Support.ResourceAccessors
 	/// stored in the <c>Captions</c> resource bundle and which have a field
 	/// name prefixed with <c>"Typ."</c>.
 	/// </summary>
-	public class EntityResourceAccessor : CaptionResourceAccessor
+	public class StructuredTypeResourceAccessor : CaptionResourceAccessor
 	{
-		public EntityResourceAccessor()
+		public StructuredTypeResourceAccessor()
 		{
 		}
 
@@ -41,23 +41,51 @@ namespace Epsitec.Common.Support.ResourceAccessors
 
 		protected override Caption GetCaptionFromData(Types.StructuredData data, string name)
 		{
-			Caption caption = base.GetCaptionFromData (data, name);
+			Caption     caption = base.GetCaptionFromData (data, name);
+			StructuredType type = this.GetTypeFromData (data);
 
-			//	TODO: hook structured type with caption
+			AbstractType.SetComplexType (caption, type);
 			
 			return caption;
+		}
+
+		private StructuredType GetTypeFromData(StructuredData data)
+		{
+			throw new System.Exception ("The method or operation is not implemented.");
 		}
 
 		protected override void FillDataFromCaption(CultureMap item, Types.StructuredData data, Caption caption)
 		{
 			base.FillDataFromCaption (item, data, caption);
 
-			//	TODO: extract structured type information from caption
+			StructuredType type = AbstractType.GetComplexType (caption) as StructuredType;
+
+			if (type != null)
+			{
+				this.FillDataFromType (item, data, type);
+			}
+		}
+
+		private void FillDataFromType(CultureMap item, StructuredData data, StructuredType type)
+		{
+			throw new System.Exception ("The method or operation is not implemented.");
 		}
 
 		protected override bool FilterField(ResourceBundle.Field field)
 		{
 			return base.FilterField (field);
 		}
-	}
+
+
+		private class FieldBroker : IDataBroker
+		{
+			#region IDataBroker Members
+
+			public StructuredData CreateData(CultureMap container)
+			{
+			}
+
+			#endregion
+		}
+}
 }
