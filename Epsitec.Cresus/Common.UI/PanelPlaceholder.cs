@@ -148,9 +148,10 @@ namespace Epsitec.Common.UI
 
 		#region IDeserialization Members
 
-		void Types.Serialization.IDeserialization.NotifyDeserializationStarted(Types.Serialization.Context context)
+		bool Types.Serialization.IDeserialization.NotifyDeserializationStarted(Types.Serialization.Context context)
 		{
 			this.suspendUserInterfaceCreation++;
+			return true;
 		}
 
 		void Types.Serialization.IDeserialization.NotifyDeserializationCompleted(Types.Serialization.Context context)

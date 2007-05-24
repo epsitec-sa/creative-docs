@@ -116,13 +116,18 @@ namespace Epsitec.Common.Types
 						list.Add (context.RestoreObjectDefinition ());
 					}
 
+					List<Serialization.IDeserialization> deserialized = new List<Serialization.IDeserialization> ();
+
 					foreach (DependencyObject obj in list)
 					{
 						Serialization.IDeserialization deserialization = obj as Serialization.IDeserialization;
 
 						if (deserialization != null)
 						{
-							deserialization.NotifyDeserializationStarted (context);
+							if (deserialization.NotifyDeserializationStarted (context))
+							{
+								deserialized.Add (deserialization);
+							}
 						}
 					}
 
@@ -131,14 +136,9 @@ namespace Epsitec.Common.Types
 						context.RestoreObjectData (context.ObjectMap.GetId (obj), obj);
 					}
 
-					foreach (DependencyObject obj in list)
+					foreach (Serialization.IDeserialization deserialization in deserialized)
 					{
-						Serialization.IDeserialization deserialization = obj as Serialization.IDeserialization;
-
-						if (deserialization != null)
-						{
-							deserialization.NotifyDeserializationCompleted (context);
-						}
+						deserialization.NotifyDeserializationCompleted (context);
 					}
 
 					root = context.ObjectMap.GetValue (rootId);

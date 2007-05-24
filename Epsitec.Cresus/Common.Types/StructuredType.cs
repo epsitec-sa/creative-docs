@@ -13,7 +13,7 @@ namespace Epsitec.Common.Types
 	/// The <c>StructuredType</c> class describes the type of the data stored in
 	/// a <see cref="StructuredData"/> class.
 	/// </summary>
-	public class StructuredType : AbstractType, IStructuredType, Serialization.ISerialization
+	public class StructuredType : AbstractType, IStructuredType, Serialization.ISerialization, Serialization.IDeserialization
 	{
 		/// <summary>
 		/// Initializes a new instance of the <see cref="StructuredType"/> class,
@@ -261,6 +261,24 @@ namespace Epsitec.Common.Types
 
 		#endregion
 
+
+		#region IDeserialization Members
+
+		bool Serialization.IDeserialization.NotifyDeserializationStarted(Serialization.Context context)
+		{
+			System.Diagnostics.Debug.Assert (this.fieldInheritance == FieldInheritance.Undefined);
+			this.fieldInheritance = FieldInheritance.Disabled;
+			return true;
+		}
+
+		void Serialization.IDeserialization.NotifyDeserializationCompleted(Serialization.Context context)
+		{
+			System.Diagnostics.Debug.Assert (this.fieldInheritance == FieldInheritance.Disabled);
+			this.fieldInheritance = FieldInheritance.Undefined;
+		}
+
+		#endregion
+		
 		#region RankComparerImplementation Class
 		
 		private class RankComparerImplementation : IComparer<StructuredTypeField>
