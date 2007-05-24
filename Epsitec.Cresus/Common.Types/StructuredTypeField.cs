@@ -16,12 +16,8 @@ namespace Epsitec.Common.Types
 		/// Initializes a new instance of the <see cref="StructuredTypeField"/> class.
 		/// </summary>
 		public StructuredTypeField()
+			: this (null, null, Support.Druid.Empty)
 		{
-			this.id = null;
-			this.type = null;
-			this.captionId = Support.Druid.Empty;
-			this.rank = 0;
-			this.relation = Relation.None;
 		}
 		
 		/// <summary>
@@ -30,12 +26,8 @@ namespace Epsitec.Common.Types
 		/// <param name="id">The field id.</param>
 		/// <param name="type">The field type.</param>
 		public StructuredTypeField(string id, INamedType type)
+			: this (id, type, Support.Druid.Empty)
 		{
-			this.id = id;
-			this.type = type;
-			this.captionId = Support.Druid.Empty;
-			this.rank = -1;
-			this.relation = Relation.None;
 		}
 
 		/// <summary>
@@ -45,12 +37,8 @@ namespace Epsitec.Common.Types
 		/// <param name="type">The field type.</param>
 		/// <param name="captionId">The field caption DRUID.</param>
 		public StructuredTypeField(string id, INamedType type, Support.Druid captionId)
+			: this (id, type, captionId, -1, Relation.None, null, FieldMembership.Local)
 		{
-			this.id = id ?? (captionId.IsValid ? captionId.ToString () : null);
-			this.type = type;
-			this.captionId = captionId;
-			this.rank = -1;
-			this.relation = Relation.None;
 		}
 
 		/// <summary>
@@ -61,12 +49,8 @@ namespace Epsitec.Common.Types
 		/// <param name="captionId">The field caption DRUID.</param>
 		/// <param name="rank">The field rank when listed in a user interface.</param>
 		public StructuredTypeField(string id, INamedType type, Support.Druid captionId, int rank)
+			: this (id, type, captionId, rank, Relation.None, null, FieldMembership.Local)
 		{
-			this.id = id ?? (captionId.IsValid ? captionId.ToString () : null);
-			this.type = type;
-			this.captionId = captionId;
-			this.rank = rank;
-			this.relation = Relation.None;
 		}
 
 		/// <summary>
@@ -78,12 +62,8 @@ namespace Epsitec.Common.Types
 		/// <param name="rank">The field rank when listed in a user interface.</param>
 		/// <param name="relation">The relation.</param>
 		public StructuredTypeField(string id, INamedType type, Support.Druid captionId, int rank, Relation relation)
+			: this (id, type, captionId, rank, relation, null, FieldMembership.Local)
 		{
-			this.id = id ?? (captionId.IsValid ? captionId.ToString () : null);
-			this.captionId = captionId;
-			this.rank = rank;
-			this.relation = relation;
-			this.DefineType (type);
 		}
 
 		/// <summary>
@@ -96,11 +76,27 @@ namespace Epsitec.Common.Types
 		/// <param name="relation">The relation.</param>
 		/// <param name="sourceFieldId">The source field id.</param>
 		public StructuredTypeField(string id, INamedType type, Support.Druid captionId, int rank, Relation relation, string sourceFieldId)
+			: this (id, type, captionId, rank, relation, sourceFieldId, FieldMembership.Local)
+		{
+		}
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="StructuredTypeField"/> class.
+		/// </summary>
+		/// <param name="id">The field id.</param>
+		/// <param name="type">The field type.</param>
+		/// <param name="captionId">The field caption DRUID.</param>
+		/// <param name="rank">The field rank when listed in a user interface.</param>
+		/// <param name="relation">The relation.</param>
+		/// <param name="sourceFieldId">The source field id.</param>
+		/// <param name="membership">The field membership.</param>
+		public StructuredTypeField(string id, INamedType type, Support.Druid captionId, int rank, Relation relation, string sourceFieldId, FieldMembership membership)
 		{
 			this.id = id ?? (captionId.IsValid ? captionId.ToString () : null);
 			this.captionId = captionId;
 			this.rank = rank;
 			this.relation = relation;
+			this.membership = membership;
 			this.sourceFieldId = string.IsNullOrEmpty (sourceFieldId) ? null : sourceFieldId;
 			this.DefineType (type);
 		}
@@ -119,7 +115,8 @@ namespace Epsitec.Common.Types
 			this.id = id ?? (captionId.IsValid ? captionId.ToString () : null);
 			this.captionId = captionId;
 			this.rank = rank;
-			this.relation = (Relation) (flags & 0x0f);
+			this.relation = (Relation) ((flags >> StructuredTypeField.RelationShift) & StructuredTypeField.RelationMask);
+			this.membership = (FieldMembership) ((flags >> StructuredTypeField.MembershipShift) & StructuredTypeField.MembershipMask);
 			this.sourceFieldId = string.IsNullOrEmpty (sourceFieldId) ? null : sourceFieldId;
 			this.DefineType (type);
 		}
@@ -187,6 +184,18 @@ namespace Epsitec.Common.Types
 		}
 
 		/// <summary>
+		/// Gets the field membership (either <c>Local</c> or <c>Inherited</c>).
+		/// </summary>
+		/// <value>The field membership.</value>
+		public FieldMembership					Membership
+		{
+			get
+			{
+				return this.membership;
+			}
+		}
+
+		/// <summary>
 		/// Gets the ID of the source field if this field defines an inclusion
 		/// relation (see <see cref="T:Relation.Inclusion"/>).
 		/// </summary>
@@ -202,7 +211,8 @@ namespace Epsitec.Common.Types
 		#region Private Fields
 
 		/// <summary>
-		/// Gets a bitwise representation of the relation property.
+		/// Gets a bitwise representation of the relation property and other
+		/// settings such as the field membership.
 		/// </summary>
 		/// <value>The flags.</value>
 		private int								Flags
@@ -211,7 +221,8 @@ namespace Epsitec.Common.Types
 			{
 				int flags = 0;
 				
-				flags |= (0x0f & (int) this.relation) << 0;
+				flags |= (StructuredTypeField.RelationMask & (int) this.relation) << StructuredTypeField.RelationShift;
+				flags |= (StructuredTypeField.MembershipMask & (int) this.membership) << StructuredTypeField.MembershipShift;
 
 				return flags;
 			}
@@ -341,12 +352,19 @@ namespace Epsitec.Common.Types
 		}
 
 		#endregion
+
+
+		const int RelationShift = 0;
+		const int RelationMask = 0x0f;
+		const int MembershipShift = 4;
+		const int MembershipMask = 0x03;
 		
 		private readonly string					id;
 		private INamedType						type;
 		private readonly Support.Druid			captionId;
 		private readonly int					rank;
 		private readonly Relation				relation;
+		private readonly FieldMembership		membership;
 		private readonly string					sourceFieldId;
 	}
 }

@@ -486,7 +486,7 @@ namespace Epsitec.Common.Types
 		public static readonly DependencyProperty DebugDisableChecksProperty = DependencyProperty.Register ("DebugDisableChecks", typeof (bool), typeof (StructuredType), new DependencyPropertyMetadata (false));
 		public static readonly DependencyProperty FieldsProperty = DependencyProperty.RegisterReadOnly ("Fields", typeof (Collections.StructuredTypeFieldCollection), typeof (StructuredType), new DependencyPropertyMetadata (StructuredType.GetFieldsValue).MakeReadOnlySerializable ());
 		public static readonly DependencyProperty ClassProperty = DependencyProperty.RegisterReadOnly ("Class", typeof (StructuredTypeClass), typeof (StructuredType), new DependencyPropertyMetadata (StructuredTypeClass.None).MakeReadOnlySerializable ());
-		public static readonly DependencyProperty BaseTypeIdProperty = DependencyProperty.RegisterReadOnly ("BaseTypeId", typeof (Support.Druid), typeof (StructuredType), new DependencyPropertyMetadata ().MakeReadOnlySerializable ());
+		public static readonly DependencyProperty BaseTypeIdProperty = DependencyProperty.RegisterReadOnly ("BaseTypeId", typeof (Support.Druid), typeof (StructuredType), new DependencyPropertyMetadata (Support.Druid.Empty).MakeReadOnlySerializable ());
 
 		private Collections.HostedStructuredTypeFieldDictionary fields;
 	}

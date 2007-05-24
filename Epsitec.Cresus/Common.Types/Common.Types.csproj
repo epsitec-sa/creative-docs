@@ -105,6 +105,7 @@
     <Compile Include="CollectionType.cs" />
     <Compile Include="AbstractDateTimeType.cs" />
     <Compile Include="BinaryType.cs" />
+    <Compile Include="FieldMembership.cs" />
     <Compile Include="DruidType.cs" />
     <Compile Include="Serialization\ISerialization.cs" />
     <Compile Include="StructuredTypeClass.cs" />
