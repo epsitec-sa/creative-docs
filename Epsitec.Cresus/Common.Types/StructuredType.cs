@@ -474,13 +474,21 @@ namespace Epsitec.Common.Types
 			return (data != null) && (data.StructuredType == this);
 		}
 
+		/// <summary>
+		/// Refreshes the list of inherited fields. Call this method if there
+		/// have been changes to one of the base types.
+		/// </summary>
 		public void RefreshInheritedFields()
 		{
 			this.RemoveInheritedFields ();
 			this.IncludeInheritedFields ();
 		}
 
-		public virtual void IncludeInheritedFields()
+		/// <summary>
+		/// Includes the inherited fields; this is done automatically whenever
+		/// fields are accessed through the public methods and properties.
+		/// </summary>
+		protected virtual void IncludeInheritedFields()
 		{
 			if (this.fieldInheritance == FieldInheritance.Undefined)
 			{
@@ -508,7 +516,11 @@ namespace Epsitec.Common.Types
 			}
 		}
 
-		public virtual void RemoveInheritedFields()
+		/// <summary>
+		/// Removes the inherited fields; this is used to clean up the fields
+		/// collection to keep only the locally defined fields.
+		/// </summary>
+		protected virtual void RemoveInheritedFields()
 		{
 			if (this.fieldInheritance == FieldInheritance.Defined)
 			{
@@ -645,12 +657,16 @@ namespace Epsitec.Common.Types
 			return data;
 		}
 
+		#region FieldInheritance Enumeration
+
 		private enum FieldInheritance
 		{
 			Undefined,
 			Defined,
 			Disabled
 		}
+
+		#endregion
 
 		public static readonly DependencyProperty DebugDisableChecksProperty = DependencyProperty.Register ("DebugDisableChecks", typeof (bool), typeof (StructuredType), new DependencyPropertyMetadata (false));
 		public static readonly DependencyProperty FieldsProperty = DependencyProperty.RegisterReadOnly ("Fields", typeof (Collections.StructuredTypeFieldCollection), typeof (StructuredType), new DependencyPropertyMetadata (StructuredType.GetFieldsValue).MakeReadOnlySerializable ());
