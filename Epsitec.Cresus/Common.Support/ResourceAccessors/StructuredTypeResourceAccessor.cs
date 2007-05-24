@@ -30,7 +30,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 		{
 			get
 			{
-				return "Typ.";
+				return "Typ.StructuredType.";
 			}
 		}
 
@@ -83,6 +83,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 
 			public StructuredData CreateData(CultureMap container)
 			{
+				return null;
 			}
 
 			#endregion

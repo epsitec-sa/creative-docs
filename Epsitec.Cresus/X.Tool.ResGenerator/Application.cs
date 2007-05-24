@@ -894,9 +894,20 @@ namespace Epsitec.Common.Tool.ResGenerator
 
 			System.Array.Sort (sortKeys, fields);
 
+			string[] wellKnownPrefixes = new string[] { "CollectionType.", "StructuredType." };
+
 			for (int i = 0; i < fields.Length; i++)
 			{
 				string field = fields[i].Substring (4);
+
+				foreach (string wellKnownPrefix in wellKnownPrefixes)
+				{
+					if (field.StartsWith (wellKnownPrefix))
+					{
+						field = field.Substring (wellKnownPrefix.Length);
+						break;
+					}
+				}
 
 				while (prefix != "" && !field.StartsWith (prefix + "."))
 				{

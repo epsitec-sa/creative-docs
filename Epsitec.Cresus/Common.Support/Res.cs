@@ -9,16 +9,16 @@ namespace Epsitec.Common.Support
 		
 		public static class Types
 		{
-			public static readonly Epsitec.Common.Types.StructuredType Field = (Epsitec.Common.Types.StructuredType) Epsitec.Common.Types.TypeRosetta.CreateTypeObject (Epsitec.Common.Support.Druid.FromLong (_moduleId, 36));
 			public static readonly Epsitec.Common.Types.CollectionType FieldCollection = (Epsitec.Common.Types.CollectionType) Epsitec.Common.Types.TypeRosetta.CreateTypeObject (Epsitec.Common.Support.Druid.FromLong (_moduleId, 35));
+			public static readonly Epsitec.Common.Types.CollectionType ShortcutCollection = (Epsitec.Common.Types.CollectionType) Epsitec.Common.Types.TypeRosetta.CreateTypeObject (Epsitec.Common.Support.Druid.FromLong (_moduleId, 25));
+			public static readonly Epsitec.Common.Types.CollectionType StringCollection = (Epsitec.Common.Types.CollectionType) Epsitec.Common.Types.TypeRosetta.CreateTypeObject (Epsitec.Common.Support.Druid.FromLong (_moduleId, 15));
+			public static readonly Epsitec.Common.Types.StructuredType Field = (Epsitec.Common.Types.StructuredType) Epsitec.Common.Types.TypeRosetta.CreateTypeObject (Epsitec.Common.Support.Druid.FromLong (_moduleId, 36));
 			public static readonly Epsitec.Common.Types.StructuredType ResourceBase = (Epsitec.Common.Types.StructuredType) Epsitec.Common.Types.TypeRosetta.CreateTypeObject (Epsitec.Common.Support.Druid.FromLong (_moduleId, 43));
 			public static readonly Epsitec.Common.Types.StructuredType ResourceCaption = (Epsitec.Common.Types.StructuredType) Epsitec.Common.Types.TypeRosetta.CreateTypeObject (Epsitec.Common.Support.Druid.FromLong (_moduleId, 6));
 			public static readonly Epsitec.Common.Types.StructuredType ResourceCommand = (Epsitec.Common.Types.StructuredType) Epsitec.Common.Types.TypeRosetta.CreateTypeObject (Epsitec.Common.Support.Druid.FromLong (_moduleId, 16));
 			public static readonly Epsitec.Common.Types.StructuredType ResourceEntity = (Epsitec.Common.Types.StructuredType) Epsitec.Common.Types.TypeRosetta.CreateTypeObject (Epsitec.Common.Support.Druid.FromLong (_moduleId, 17));
 			public static readonly Epsitec.Common.Types.StructuredType ResourceString = (Epsitec.Common.Types.StructuredType) Epsitec.Common.Types.TypeRosetta.CreateTypeObject (Epsitec.Common.Support.Druid.FromLong (_moduleId, 7));
 			public static readonly Epsitec.Common.Types.StructuredType Shortcut = (Epsitec.Common.Types.StructuredType) Epsitec.Common.Types.TypeRosetta.CreateTypeObject (Epsitec.Common.Support.Druid.FromLong (_moduleId, 26));
-			public static readonly Epsitec.Common.Types.CollectionType ShortcutCollection = (Epsitec.Common.Types.CollectionType) Epsitec.Common.Types.TypeRosetta.CreateTypeObject (Epsitec.Common.Support.Druid.FromLong (_moduleId, 25));
-			public static readonly Epsitec.Common.Types.CollectionType StringCollection = (Epsitec.Common.Types.CollectionType) Epsitec.Common.Types.TypeRosetta.CreateTypeObject (Epsitec.Common.Support.Druid.FromLong (_moduleId, 15));
 		}
 		
 		public static class Fields
