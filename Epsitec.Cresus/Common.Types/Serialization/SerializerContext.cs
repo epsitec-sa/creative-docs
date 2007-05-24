@@ -20,6 +20,13 @@ namespace Epsitec.Common.Types.Serialization
 			
 			this.AssertWritable ();
 
+			ISerialization serialization = obj as ISerialization;
+
+			if (serialization != null)
+			{
+				serialization.NotifySerializationStarted (this);
+			}
+
 			this.writer.BeginObject (id, obj);
 
 			this.StoreObjectBindings (obj);
@@ -27,6 +34,11 @@ namespace Epsitec.Common.Types.Serialization
 //			this.StoreObjectChildren (obj);
 			
 			this.writer.EndObject (id, obj);
+			
+			if (serialization != null)
+			{
+				serialization.NotifySerializationCompleted (this);
+			}
 		}
 
 		private void StoreObjectBindings(DependencyObject obj)
