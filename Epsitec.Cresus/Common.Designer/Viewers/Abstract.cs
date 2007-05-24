@@ -49,6 +49,7 @@ namespace Epsitec.Common.Designer.Viewers
 			if (type == ResourceAccess.Type.Values)  return new Values(module, context, access, mainWindow);
 			if (type == ResourceAccess.Type.Panels)  return new Panels(module, context, access, mainWindow);
 			if (type == ResourceAccess.Type.Scripts)  return new Scripts(module, context, access, mainWindow);
+			if (type == ResourceAccess.Type.Entities)  return new Entities(module, context, access, mainWindow);
 			return null;
 		}
 

@@ -55,6 +55,7 @@
     <Compile Include="Dialogs\Icon.cs" />
     <Compile Include="InsideSurface.cs" />
     <Compile Include="MyWidgets\AbstractTypeEditor.cs" />
+    <Compile Include="MyWidgets\EntityBox.cs" />
     <Compile Include="MyWidgets\TreeBranches.cs" />
     <Compile Include="MyWidgets\TypeEditorBinary.cs" />
     <Compile Include="MyWidgets\TypeEditorDateTime.cs" />
@@ -126,6 +127,7 @@
     <Compile Include="Viewers\Captions2.cs" />
     <Compile Include="Viewers\Commands2.cs" />
     <Compile Include="Viewers\AbstractCaptions2.cs" />
+    <Compile Include="Viewers\Entities.cs" />
     <Compile Include="Viewers\Strings2.cs" />
     <Compile Include="Viewers\Locator.cs" />
     <Compile Include="Viewers\Fields.cs" />

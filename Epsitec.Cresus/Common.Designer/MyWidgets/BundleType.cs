@@ -17,7 +17,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			sep.Margins = new Margins(0, 0, 0, 0);
 			sep.Dock = DockStyle.Bottom;
 
-			double width = 90;
+			double width = 80;
 
 			this.buttonStrings = new IconButtonMark(this);
 			this.buttonStrings.Text = ResourceAccess.TypeDisplayName(ResourceAccess.Type.Strings);
@@ -163,6 +163,19 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.buttonScripts.Clicked += new MessageEventHandler(this.HandleButtonClicked);
 			this.buttonScripts.Visibility = false;
 
+			this.buttonEntities = new IconButtonMark(this);
+			this.buttonEntities.Text = "Entités"; // ResourceAccess.TypeDisplayName(ResourceAccess.Type.Entities);
+			this.buttonEntities.Name = BundleType.Convert(ResourceAccess.Type.Entities);
+			this.buttonEntities.ButtonStyle = ButtonStyle.ActivableIcon;
+			this.buttonEntities.SiteMark = ButtonMarkDisposition.Below;
+			this.buttonEntities.MarkDimension = 5;
+			this.buttonEntities.PreferredWidth = width;
+			this.buttonEntities.MinHeight = 20+5;
+			this.buttonEntities.AutoFocus = false;
+			this.buttonEntities.Margins = new Margins(2, 0, 10, 0);
+			this.buttonEntities.Dock = DockStyle.Left;
+			this.buttonEntities.Clicked += new MessageEventHandler(this.HandleButtonClicked);
+
 			this.UpdateButtons();
 		}
 
@@ -204,6 +217,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.buttonValues.ActiveState    = (this.currentType == ResourceAccess.Type.Values   ) ? ActiveState.Yes : ActiveState.No;
 			this.buttonPanels.ActiveState    = (this.currentType == ResourceAccess.Type.Panels   ) ? ActiveState.Yes : ActiveState.No;
 			this.buttonScripts.ActiveState   = (this.currentType == ResourceAccess.Type.Scripts  ) ? ActiveState.Yes : ActiveState.No;
+			this.buttonEntities.ActiveState  = (this.currentType == ResourceAccess.Type.Entities ) ? ActiveState.Yes : ActiveState.No;
 		}
 
 
@@ -254,6 +268,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected IconButtonMark			buttonStrings;
 		protected IconButtonMark			buttonStrings2;
 		protected IconButtonMark			buttonScripts;
+		protected IconButtonMark			buttonEntities;
 		protected IconButtonMark			buttonCaptions;
 		protected IconButtonMark			buttonCaptions2;
 		protected IconButtonMark			buttonFields;

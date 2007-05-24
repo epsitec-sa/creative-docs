@@ -26,6 +26,7 @@ namespace Epsitec.Common.Designer
 			Values,
 			Panels,
 			Scripts,
+			Entities,
 		}
 
 		public enum FieldType
@@ -96,6 +97,11 @@ namespace Epsitec.Common.Designer
 				if (this.type == Type.Commands2)
 				{
 					this.accessor = new Support.ResourceAccessors.CommandResourceAccessor();
+				}
+				if (this.type == Type.Entities)
+				{
+					//?this.accessor = new Support.ResourceAccessors.EntityResourceAccessor();
+					this.accessor = new Support.ResourceAccessors.CaptionResourceAccessor();  // TODO: provisoire...
 				}
 
 				this.collectionView = new CollectionView(this.accessor.Collection);
@@ -223,6 +229,9 @@ namespace Epsitec.Common.Designer
 
 				case Type.Scripts:
 					return many ? Res.Strings.BundleType.Scripts : Res.Strings.BundleType.Script;
+
+				case Type.Entities:
+					return many ? "Entités" : "Entité";
 			}
 
 			return "?";
@@ -780,9 +789,9 @@ namespace Epsitec.Common.Designer
 		{
 			//	Copie (récursivement) les données au niveau actuel en demandant au
 			//	broker de s'occuper de l'allocation du StructuredData.
-			IDataBroker broker = accessor.GetDataBroker (container, fieldId);
-			StructuredData copy = broker.CreateData (map);
-			ResourceAccess.CopyData (accessor, map, source, copy);
+			IDataBroker broker = accessor.GetDataBroker(container, fieldId);
+			StructuredData copy = broker.CreateData(map);
+			ResourceAccess.CopyData(accessor, map, source, copy);
 			return copy;
 		}
 
@@ -3743,7 +3752,7 @@ namespace Epsitec.Common.Designer
 			//	"un bundle par culture, plusieurs ressources par bundle".
 			get
 			{
-				return (this.type == Type.Strings || this.type == Type.Strings2 || this.type == Type.Captions2 || this.type == Type.Commands2 || this.IsCaptionsType);
+				return (this.type == Type.Strings || this.type == Type.Strings2 || this.type == Type.Captions2 || this.type == Type.Commands2 || this.type == Type.Entities || this.IsCaptionsType);
 			}
 		}
 
@@ -3761,7 +3770,7 @@ namespace Epsitec.Common.Designer
 			//	Retourne true si on accède à des ressources de type nouveau.
 			get
 			{
-				return (this.type == Type.Strings2 || this.type == Type.Captions2 || this.type == Type.Commands2);
+				return (this.type == Type.Strings2 || this.type == Type.Captions2 || this.type == Type.Commands2 || this.type == Type.Entities);
 			}
 		}
 
