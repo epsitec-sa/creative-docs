@@ -13,10 +13,11 @@
   <data name="Typ.Shortcut" id="0Q">&lt;objects xmlns:s="*1" xmlns:f="*1"&gt;&lt;s:storage s:root="_1" s:n_ext="0" s:n_typ="3" s:n_obj="2"&gt;&lt;s:type id="_1" s:name="*C" /&gt;&lt;s:type id="_2" s:name="*aT" /&gt;&lt;s:type id="_3" s:name="*S" /&gt;&lt;s:object id="_1" s:type="_1" /&gt;&lt;s:object id="_2" s:type="_3" /&gt;&lt;s:data id="_1" f:_2.ComplexType="{ObjRef _2}" f:_2.DefaultController="{Null}" f:Name="Shortcut" f:Labels="{Collection {Text 'Raccourci'}}" /&gt;&lt;s:data id="_2" f:Class="Entity" f:Fields="{Collection {Text '[700R];[1008];0;[700R]'}}" /&gt;&lt;/s:storage&gt;&lt;/objects&gt;</data>
   <data name="Typ.Field" id="041">&lt;objects xmlns:s="*1" xmlns:f="*1"&gt;&lt;s:storage s:root="_1" s:n_ext="0" s:n_typ="3" s:n_obj="2"&gt;&lt;s:type id="_1" s:name="*C" /&gt;&lt;s:type id="_2" s:name="*aT" /&gt;&lt;s:type id="_3" s:name="*S" /&gt;&lt;s:object id="_1" s:type="_1" /&gt;&lt;s:object id="_2" s:type="_3" /&gt;&lt;s:data id="_1" f:_2.ComplexType="{ObjRef _2}" f:_2.DefaultController="{Null}" f:Name="Field" f:Labels="{Collection {Text 'Champ'}}" /&gt;&lt;s:data id="_2" f:Class="Entity" f:Fields="{Collection {Text '[70051];[100K];0;[70051]'}, {Text '[70061];[7006];0;[70061]'}, {Text '[70071];[100M];0;[70071]'}, {Text '[70081];[100K];0;[70081]'}}" /&gt;&lt;/s:storage&gt;&lt;/objects&gt;</data>
   <data name="Val.New" id="04">&lt;s:data id="_0" f:Name="New" /&gt;</data>
+
+  <data name="Fld.ResourceBase.Comment" id="0A" mod="1">&lt;s:data id="_0" f:Name="Comment" f:Labels="{Collection {Text 'Commentaire'}}" /&gt;</data>
+  <data name="Fld.ResourceBase.ModificationId" id="091" mod="1">&lt;s:data id="_0" f:Name="ModificationId" f:Labels="{Collection {Text 'Marqueur de modification'}}" /&gt;</data>
   
   <data name="Fld.ResourceString.Text" id="08" mod="1">&lt;s:data id="_0" f:Name="Text" f:Labels="{Collection {Text 'Texte'}}" /&gt;</data>
-  <data name="Fld.Resource.Comment" id="0A" mod="1">&lt;s:data id="_0" f:Name="Comment" f:Labels="{Collection {Text 'Commentaire'}}" /&gt;</data>
-  <data name="Fld.Resource.ModificationId" id="091" mod="1">&lt;s:data id="_0" f:Name="ModificationId" f:Labels="{Collection {Text 'Marqueur de modification'}}" /&gt;</data>
 
   <data name="Fld.ResourceCaption.Labels" id="0B" mod="1">&lt;s:data id="_0" f:Name="Labels" f:Labels="{Collection {Text 'Textes'}}" /&gt;</data>
   <data name="Fld.ResourceCaption.Description" id="0C" mod="1">&lt;s:data id="_0" f:Name="Description" f:Labels="{Collection {Text 'Description'}}" /&gt;</data>
@@ -33,7 +34,7 @@
   <data name="Fld.ResourceEntity.Nullable" id="011" mod="1">&lt;s:data id="_0" f:Name="Nullable" f:Labels="{Collection {Text 'Nullable'}}" /&gt;</data>
   <data name="Fld.ResourceEntity.Fields" id="021" mod="1">&lt;s:data id="_0" f:Name="Fields" f:Labels="{Collection {Text 'Champs'}}" /&gt;</data>
 
-  <data name="Fld.Field.Type" id="051" mod="1">&lt;s:data id="_0" f:Name="Fields" f:Labels="{Collection {Text 'Type'}}" /&gt;</data>
+  <data name="Fld.Field.Type" id="051" mod="1">&lt;s:data id="_0" f:Name="Type" f:Labels="{Collection {Text 'Type'}}" /&gt;</data>
   <data name="Fld.Field.Caption" id="061" mod="1">&lt;s:data id="_0" f:Name="Caption" f:Labels="{Collection {Text 'Légende'}}" /&gt;</data>
   <data name="Fld.Field.Relation" id="071" mod="1">&lt;s:data id="_0" f:Name="Relation" f:Labels="{Collection {Text 'Relation'}}" /&gt;</data>
   <data name="Fld.Field.SourceField" id="081" mod="1">&lt;s:data id="_0" f:Name="SourceField" f:Labels="{Collection {Text 'Champ source'}}" /&gt;</data>

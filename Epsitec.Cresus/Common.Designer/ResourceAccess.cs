@@ -1883,7 +1883,7 @@ namespace Epsitec.Common.Designer
 
 				if (fieldType == FieldType.About)
 				{
-					string text = data.GetValue(Support.Res.Fields.Resource.Comment) as string;
+					string text = data.GetValue(Support.Res.Fields.ResourceBase.Comment) as string;
 					return new Field(text);
 				}
 			}
@@ -2081,7 +2081,7 @@ namespace Epsitec.Common.Designer
 
 				if (fieldType == FieldType.About)
 				{
-					data.SetValue(Support.Res.Fields.Resource.Comment, field.String);
+					data.SetValue(Support.Res.Fields.ResourceBase.Comment, field.String);
 					this.accessor.PersistChanges();
 					this.collectionView.Refresh();
 				}
@@ -2459,7 +2459,7 @@ namespace Epsitec.Common.Designer
 				StructuredData primaryData = item.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
 
 				int primaryValue = this.GetModificationId(primaryData);
-				data.SetValue(Support.Res.Fields.Resource.ModificationId, primaryValue);
+				data.SetValue(Support.Res.Fields.ResourceBase.ModificationId, primaryValue);
 			}
 			else if (this.IsBundlesType)
 			{
@@ -2482,7 +2482,7 @@ namespace Epsitec.Common.Designer
 				StructuredData primaryData = item.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
 
 				int value = this.GetModificationId(primaryData);
-				primaryData.SetValue(Support.Res.Fields.Resource.ModificationId, value+1);
+				primaryData.SetValue(Support.Res.Fields.ResourceBase.ModificationId, value+1);
 			}
 			else if (this.IsBundlesType)
 			{
@@ -2548,7 +2548,7 @@ namespace Epsitec.Common.Designer
 			}
 			else
 			{
-				object value = data.GetValue(Support.Res.Fields.Resource.ModificationId);
+				object value = data.GetValue(Support.Res.Fields.ResourceBase.ModificationId);
 				
 				if (UndefinedValue.IsUndefinedValue(value))
 				{

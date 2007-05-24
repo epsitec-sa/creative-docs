@@ -138,8 +138,8 @@ namespace Epsitec.Common.Support.ResourceAccessors
 
 			Caption caption = this.GetCaptionFromData (data, item.Name);
 			string  name    = this.GetFieldNameFromName (data, item.Name);
-			string  about   = data.GetValue (Res.Fields.Resource.Comment) as string;
-			object  modId   = data.GetValue (Res.Fields.Resource.ModificationId);
+			string  about   = data.GetValue (Res.Fields.ResourceBase.Comment) as string;
+			object  modId   = data.GetValue (Res.Fields.ResourceBase.ModificationId);
 			
 			field.SetName (name);
 			field.SetStringValue (caption.SerializeToString ());
@@ -176,8 +176,8 @@ namespace Epsitec.Common.Support.ResourceAccessors
 
 				data    = item.GetCultureData (twoLetterISOLanguageName);
 				caption = this.GetCaptionFromData (data, null);
-				about   = data.GetValue (Res.Fields.Resource.Comment) as string;
-				modId   = data.GetValue (Res.Fields.Resource.ModificationId);
+				about   = data.GetValue (Res.Fields.ResourceBase.Comment) as string;
+				modId   = data.GetValue (Res.Fields.ResourceBase.ModificationId);
 				
 				if (caption == null)
 				{
@@ -243,8 +243,8 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			caption.DeserializeFromString (field.AsString);
 
 			this.FillDataFromCaption (item, data, caption);
-			data.SetValue (Res.Fields.Resource.Comment, field.About);
-			data.SetValue (Res.Fields.Resource.ModificationId, field.ModificationId);
+			data.SetValue (Res.Fields.ResourceBase.Comment, field.About);
+			data.SetValue (Res.Fields.ResourceBase.ModificationId, field.ModificationId);
 
 			item.Name = name ?? item.Name;
 			item.RecordCultureData (twoLetterISOLanguageName, data);

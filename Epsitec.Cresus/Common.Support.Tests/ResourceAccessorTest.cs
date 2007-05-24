@@ -176,7 +176,7 @@ namespace Epsitec.Common.Support
 
 			Assert.AreSame (data1, data2);
 			Assert.AreEqual ("Bonjour", data1.GetValue (Res.Fields.ResourceString.Text));
-			Assert.AreEqual (0, data1.GetValue (Res.Fields.Resource.ModificationId));
+			Assert.AreEqual (0, data1.GetValue (Res.Fields.ResourceBase.ModificationId));
 			Assert.IsFalse (accessor.ContainsChanges);
 
 			data1 = accessor.Collection["Text1"].GetCultureData ("de");
@@ -191,7 +191,7 @@ namespace Epsitec.Common.Support
 			data1 = accessor.Collection["Text1"].GetCultureData ("fr");
 			data1.SetValue (Res.Fields.ResourceString.Text, "Bonjour tout le monde");
 			data2.SetValue (Res.Fields.ResourceString.Text, "Hallo, Welt");
-			data2.SetValue (Res.Fields.Resource.ModificationId, 1);
+			data2.SetValue (Res.Fields.ResourceBase.ModificationId, 1);
 
 			Assert.IsTrue (accessor.ContainsChanges);
 			Assert.AreEqual (1, accessor.PersistChanges ());

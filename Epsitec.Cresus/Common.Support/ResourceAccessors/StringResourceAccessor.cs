@@ -130,8 +130,8 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			StructuredData data = item.GetCultureData (Resources.DefaultTwoLetterISOLanguageName);
 
 			string text  = data.GetValue (Res.Fields.ResourceString.Text) as string;
-			string about = data.GetValue (Res.Fields.Resource.Comment) as string;
-			object modId = data.GetValue (Res.Fields.Resource.ModificationId);
+			string about = data.GetValue (Res.Fields.ResourceBase.Comment) as string;
+			object modId = data.GetValue (Res.Fields.ResourceBase.ModificationId);
 
 			field.SetName (item.Name);
 			field.SetStringValue (text);
@@ -174,8 +174,8 @@ namespace Epsitec.Common.Support.ResourceAccessors
 				else
 				{
 					text  = data.GetValue (Res.Fields.ResourceString.Text) as string;
-					about = data.GetValue (Res.Fields.Resource.Comment) as string;
-					modId = data.GetValue (Res.Fields.Resource.ModificationId);
+					about = data.GetValue (Res.Fields.ResourceBase.Comment) as string;
+					modId = data.GetValue (Res.Fields.ResourceBase.ModificationId);
 					
 					field.SetStringValue (text);
 					field.SetAbout (about);
@@ -226,8 +226,8 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			Types.StructuredData data = new Types.StructuredData (Res.Types.ResourceString);
 
 			data.SetValue (Res.Fields.ResourceString.Text, field.AsString);
-			data.SetValue (Res.Fields.Resource.Comment, field.About);
-			data.SetValue (Res.Fields.Resource.ModificationId, field.ModificationId);
+			data.SetValue (Res.Fields.ResourceBase.Comment, field.About);
+			data.SetValue (Res.Fields.ResourceBase.ModificationId, field.ModificationId);
 
 			item.Name = field.Name ?? item.Name;
 			item.RecordCultureData (twoLetterISOLanguageName, data);

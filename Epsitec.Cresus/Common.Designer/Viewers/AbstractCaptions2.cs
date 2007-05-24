@@ -180,7 +180,7 @@ namespace Epsitec.Common.Designer.Viewers
 			data = item.GetCultureData(this.GetTwoLetters(0));
 			this.SetTextField(this.primaryLabels, data.GetValue(Support.Res.Fields.ResourceCaption.Labels) as IList<string>);
 			this.primaryDescription.Text = data.GetValue(Support.Res.Fields.ResourceCaption.Description) as string;
-			this.primaryComment.Text = data.GetValue(Support.Res.Fields.Resource.Comment) as string;
+			this.primaryComment.Text = data.GetValue(Support.Res.Fields.ResourceBase.Comment) as string;
 
 			if (this.GetTwoLetters(1) == null)
 			{
@@ -196,7 +196,7 @@ namespace Epsitec.Common.Designer.Viewers
 				data = item.GetCultureData(this.GetTwoLetters(1));
 				this.SetTextField(this.secondaryLabels, data.GetValue(Support.Res.Fields.ResourceCaption.Labels) as IList<string>);
 				this.secondaryDescription.Text = data.GetValue(Support.Res.Fields.ResourceCaption.Description) as string;
-				this.secondaryComment.Text = data.GetValue(Support.Res.Fields.Resource.Comment) as string;
+				this.secondaryComment.Text = data.GetValue(Support.Res.Fields.ResourceBase.Comment) as string;
 				this.secondaryDescription.Enable = true;
 				this.secondaryComment.Enable = true;
 			}
@@ -286,7 +286,7 @@ namespace Epsitec.Common.Designer.Viewers
 					}
 				}
 
-				string comment = data.GetValue(Support.Res.Fields.Resource.Comment) as string;
+				string comment = data.GetValue(Support.Res.Fields.ResourceBase.Comment) as string;
 				if (!string.IsNullOrEmpty(comment))
 				{
 					buffer.Append("<br/>");
@@ -518,13 +518,13 @@ namespace Epsitec.Common.Designer.Viewers
 			if (edit == this.primaryComment)
 			{
 				StructuredData data = item.GetCultureData(this.GetTwoLetters(0));
-				this.SetValue(item, data, Support.Res.Fields.Resource.Comment, text, true);
+				this.SetValue(item, data, Support.Res.Fields.ResourceBase.Comment, text, true);
 			}
 
 			if (edit == this.secondaryComment)
 			{
 				StructuredData data = item.GetCultureData(this.GetTwoLetters(1));
-				this.SetValue(item, data, Support.Res.Fields.Resource.Comment, text, true);
+				this.SetValue(item, data, Support.Res.Fields.ResourceBase.Comment, text, true);
 			}
 
 			this.UpdateModificationsCulture();
