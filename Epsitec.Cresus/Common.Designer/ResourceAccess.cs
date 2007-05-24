@@ -301,7 +301,7 @@ namespace Epsitec.Common.Designer
 				case TypeType.Decimal:      abstractType = new DecimalType(); break;
 				case TypeType.String:       abstractType = new StringType(); break;
 				case TypeType.Enum:         abstractType = new EnumType(); break;
-				case TypeType.Structured:	abstractType = new StructuredType(StructuredTypeClass.Entity, null); break;
+				case TypeType.Structured:	abstractType = new StructuredType(StructuredTypeClass.Entity, Druid.Empty); break;
 				case TypeType.Collection:   abstractType = new CollectionType(); break;
 				case TypeType.Date:         abstractType = new DateType(); break;
 				case TypeType.Time:         abstractType = new TimeType(); break;

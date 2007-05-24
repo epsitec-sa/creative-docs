@@ -719,9 +719,9 @@ namespace Epsitec.Common.Types
 			//	Manually create 3 entities based on captions stored in the Test
 			//	and OtherModule modules :
 
-			e1 = new StructuredType (StructuredTypeClass.Entity, null);
-			e2 = new StructuredType (StructuredTypeClass.Entity, null);
-			e3 = new StructuredType (StructuredTypeClass.Entity, null);
+			e1 = new StructuredType (StructuredTypeClass.Entity, Support.Druid.Empty);
+			e2 = new StructuredType (StructuredTypeClass.Entity, Support.Druid.Empty);
+			e3 = new StructuredType (StructuredTypeClass.Entity, Support.Druid.Empty);
 
 			e1.DefineCaption (this.manager.GetCaption (Support.Druid.Parse ("[400C]")));	//	from Test, Application layer
 			e2.DefineCaption (this.manager.GetCaption (Support.Druid.Parse ("[400D]")));	//	from Test, Application layer
