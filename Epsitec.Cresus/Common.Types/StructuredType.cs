@@ -196,16 +196,20 @@ namespace Epsitec.Common.Types
 		{
 			this.IncludeInheritedFields ();
 
-			StructuredTypeField[] fields = new StructuredTypeField[this.fields.Values.Count];
-			
-			this.fields.Values.CopyTo (fields, 0);
-
-			System.Array.Sort (fields, StructuredType.RankComparer);
+			StructuredTypeField[] fields = this.GetSortedFields ();
 			
 			foreach (StructuredTypeField field in fields)
 			{
 				yield return field.Id;
 			}
+		}
+
+		private StructuredTypeField[] GetSortedFields()
+		{
+			StructuredTypeField[] fields = new StructuredTypeField[this.fields.Values.Count];
+			this.fields.Values.CopyTo (fields, 0);
+			System.Array.Sort (fields, StructuredType.RankComparer);
+			return fields;
 		}
 
 		/// <summary>
@@ -486,7 +490,17 @@ namespace Epsitec.Common.Types
 				{
 					foreach (string id in baseType.GetFieldIds ())
 					{
-						this.fields.Add (id, baseType.Fields[id]);
+						this.fields.Add (id, new StructuredTypeField (baseType.Fields[id], FieldMembership.Inherited));
+					}
+
+					StructuredTypeField[] fields = this.GetSortedFields ();
+
+					for (int i = 0; i < fields.Length; i++)
+					{
+						if (fields[i].Rank != -1)
+						{
+							fields[i].ResetRank (i);
+						}
 					}
 					
 					this.fieldInheritance = FieldInheritance.Defined;

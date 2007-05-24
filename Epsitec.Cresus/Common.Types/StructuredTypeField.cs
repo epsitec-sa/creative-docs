@@ -121,6 +121,11 @@ namespace Epsitec.Common.Types
 			this.DefineType (type);
 		}
 
+		internal StructuredTypeField(StructuredTypeField model, FieldMembership membership)
+			: this (model.id, model.type, model.captionId, model.rank, model.relation, model.sourceFieldId, membership)
+		{
+		}
+
 		/// <summary>
 		/// Gets the field id.
 		/// </summary>
@@ -206,6 +211,15 @@ namespace Epsitec.Common.Types
 			{
 				return this.sourceFieldId;
 			}
+		}
+
+		/// <summary>
+		/// Resets the rank; the use of this method is reserved for <see cref="StructuredType"/>.
+		/// </summary>
+		/// <param name="rank">The rank.</param>
+		internal void ResetRank(int rank)
+		{
+			this.rank = rank;
 		}
 
 		#region Private Fields
@@ -362,7 +376,7 @@ namespace Epsitec.Common.Types
 		private readonly string					id;
 		private INamedType						type;
 		private readonly Support.Druid			captionId;
-		private readonly int					rank;
+		private int								rank;
 		private readonly Relation				relation;
 		private readonly FieldMembership		membership;
 		private readonly string					sourceFieldId;
