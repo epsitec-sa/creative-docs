@@ -96,12 +96,12 @@ namespace Epsitec.Common.Designer.Viewers
 				box.SetManualBounds(bounds);
 			}
 
-			this.UpdateLink(this.links[0], this.boxes[0], 1, this.boxes[1], Relation.Reference);  // lien client
-			this.UpdateLink(this.links[1], this.boxes[0], 2, this.boxes[2], Relation.Collection);  // lien articles
-			this.UpdateLink(this.links[2], this.boxes[0], 4, this.boxes[3], Relation.Inclusion);  // lien rabais
+			this.UpdateLink(this.links[0], this.boxes[0], 1, this.boxes[1], FieldRelation.Reference);  // lien client
+			this.UpdateLink(this.links[1], this.boxes[0], 2, this.boxes[2], FieldRelation.Collection);  // lien articles
+			this.UpdateLink(this.links[2], this.boxes[0], 4, this.boxes[3], FieldRelation.Inclusion);  // lien rabais
 		}
 
-		protected void UpdateLink(MyWidgets.EntityLink link, MyWidgets.EntityBox src, int srcRank, MyWidgets.EntityBox dst, Relation relation)
+		protected void UpdateLink(MyWidgets.EntityLink link, MyWidgets.EntityBox src, int srcRank, MyWidgets.EntityBox dst, FieldRelation relation)
 		{
 			//	Met à jour la géométrie d'une liaison.
 			link.SetManualBounds(this.scrollable.Panel.Client.Bounds);

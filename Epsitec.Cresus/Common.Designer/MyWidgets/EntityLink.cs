@@ -64,7 +64,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 		}
 
-		public Relation Relation
+		public FieldRelation Relation
 		{
 			get
 			{
@@ -88,7 +88,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				Point p1 = this.MapParentToClient(this.source);
 				Point p2 = this.MapParentToClient(this.destination);
 
-				if (this.relation == Relation.Collection)
+				if (this.relation == FieldRelation.Collection)
 				{
 					double radius = 5;
 					p1.X += radius;
@@ -96,7 +96,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 					p1.X += radius;
 				}
 
-				if (this.relation == Relation.Inclusion)
+				if (this.relation == FieldRelation.Inclusion)
 				{
 					double length = 4;
 					graphics.AddLine(new Point(p1.X, p1.Y+length), new Point(p1.X+length*2, p1.Y));
@@ -112,6 +112,6 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		protected Point source;
 		protected Point destination;
-		protected Relation relation;
+		protected FieldRelation relation;
 	}
 }
