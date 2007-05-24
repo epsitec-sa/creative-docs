@@ -41,15 +41,24 @@ namespace Epsitec.Common.Designer.Viewers
 			box3.SetManualBounds(new Rectangle(20+(180+40)*2, 1000-20-100, 180, 100));
 			box3.GeometryChanged += new EventHandler(this.HandleBoxGeometryChanged);
 
+			MyWidgets.EntityBox box4 = new MyWidgets.EntityBox(this.scrollable.Panel);
+			box4.Title = "Rabais";
+			box4.SetContent("Normal;Revendeur;Grossiste");
+			box4.SetManualBounds(new Rectangle(20+(180+40)*3, 1000-20-100, 180, 100));
+			box4.GeometryChanged += new EventHandler(this.HandleBoxGeometryChanged);
+
 			this.boxes.Add(box1);
 			this.boxes.Add(box2);
 			this.boxes.Add(box3);
+			this.boxes.Add(box4);
 
 			MyWidgets.EntityLink link1 = new MyWidgets.EntityLink(this.scrollable.Panel);
 			MyWidgets.EntityLink link2 = new MyWidgets.EntityLink(this.scrollable.Panel);
+			MyWidgets.EntityLink link3 = new MyWidgets.EntityLink(this.scrollable.Panel);
 
 			this.links.Add(link1);
 			this.links.Add(link2);
+			this.links.Add(link3);
 
 			this.UpdateGeometry();
 			this.UpdateAll();
@@ -89,6 +98,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 			this.UpdateLink(this.links[0], this.boxes[0], 1, this.boxes[1], Relation.Reference);  // lien client
 			this.UpdateLink(this.links[1], this.boxes[0], 2, this.boxes[2], Relation.Collection);  // lien articles
+			this.UpdateLink(this.links[2], this.boxes[0], 4, this.boxes[3], Relation.Inclusion);  // lien rabais
 		}
 
 		protected void UpdateLink(MyWidgets.EntityLink link, MyWidgets.EntityBox src, int srcRank, MyWidgets.EntityBox dst, Relation relation)

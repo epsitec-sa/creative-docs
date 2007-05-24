@@ -96,6 +96,14 @@ namespace Epsitec.Common.Designer.MyWidgets
 					p1.X += radius;
 				}
 
+				if (this.relation == Relation.Inclusion)
+				{
+					double length = 4;
+					graphics.AddLine(new Point(p1.X, p1.Y+length), new Point(p1.X+length*2, p1.Y));
+					graphics.AddLine(new Point(p1.X, p1.Y-length), new Point(p1.X+length*2, p1.Y));
+					p1.X += length*2;
+				}
+
 				graphics.AddLine(p1, p2);
 				graphics.RenderSolid(Color.FromBrightness(0));
 			}
