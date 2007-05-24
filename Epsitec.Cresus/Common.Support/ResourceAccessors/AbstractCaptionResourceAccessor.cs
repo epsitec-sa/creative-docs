@@ -40,8 +40,8 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			if (field.IsEmpty)
 			{
 				data = new Types.StructuredData (this.GetStructuredType ());
-				item.RecordCultureData (twoLetterISOLanguageName, data);
 				this.FillDataFromCaption (item, data, new Caption ());
+				item.RecordCultureData (twoLetterISOLanguageName, data);
 			}
 			else
 			{

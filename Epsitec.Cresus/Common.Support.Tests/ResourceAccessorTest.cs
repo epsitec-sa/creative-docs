@@ -24,6 +24,8 @@ namespace Epsitec.Common.Support
 		[Test]
 		public void CheckBasicTypes()
 		{
+			Assert.IsNotNull (Types.DruidType.Default);
+
 			Types.StructuredType typeStruct = Res.Types.ResourceStructuredType;
 			Types.StructuredType typeField  = Res.Types.Field;
 			Types.CollectionType typeFields = Res.Types.FieldCollection;
@@ -71,7 +73,7 @@ namespace Epsitec.Common.Support
 
 			Assert.IsNotNull (data1);
 			Assert.AreSame (data1, data2);
-			Assert.AreEqual (Types.UndefinedValue.Instance, data1.GetValue (Res.Fields.ResourceCaption.Labels));
+			Assert.AreEqual (0, ((IList<string>)data1.GetValue (Res.Fields.ResourceCaption.Labels)).Count);
 			Assert.AreEqual (Types.UndefinedValue.Instance, data1.GetValue (Res.Fields.ResourceCaption.Description));
 			Assert.IsFalse (accessor.ContainsChanges);
 
@@ -159,11 +161,15 @@ namespace Epsitec.Common.Support
 
 			Assert.IsFalse (accessor.ContainsChanges);
 
-			accessor.Load (Support.Res.Manager);
+			accessor.Load (Res.Manager);
 
 			Assert.AreEqual (8, accessor.Collection.Count);
 
-			CultureMap map = accessor.Collection[Support.Res.Types.ResourceStructuredType.CaptionId];
+			CultureMap map = accessor.Collection[Res.Types.ResourceStructuredType.CaptionId];
+
+			Assert.AreEqual ("ResourceStructuredType", map.Name);
+			Assert.AreEqual ("Typ.StructuredType.ResourceStructuredType", Res.Manager.GetBundle (Resources.CaptionsBundleName, ResourceLevel.Default)[Res.Types.ResourceStructuredType.CaptionId].Name);
+			Assert.AreEqual ("Fld.ResourceStructuredType.Fields", Res.Manager.GetBundle (Resources.CaptionsBundleName, ResourceLevel.Default)[Res.Fields.ResourceStructuredType.Fields].Name);
 			
 			Types.StructuredData        data       = map.GetCultureData (Resources.DefaultTwoLetterISOLanguageName);
 			Types.StructuredTypeClass   typeClass  = (Types.StructuredTypeClass) data.GetValue (Res.Fields.ResourceStructuredType.Class);
@@ -174,6 +180,20 @@ namespace Epsitec.Common.Support
 
 			Assert.AreEqual (Res.Fields.ResourceBase.ModificationId, fields[0].GetValue (Res.Fields.Field.Caption));
 			Assert.AreEqual (Res.Fields.ResourceBase.Comment,        fields[1].GetValue (Res.Fields.Field.Caption));
+
+			map.Name = "ResourceEntityType";
+			accessor.PersistChanges ();
+
+			Assert.AreEqual ("ResourceEntityType", map.Name);
+			Assert.AreEqual ("Typ.StructuredType.ResourceEntityType", Res.Manager.GetBundle (Resources.CaptionsBundleName, ResourceLevel.Default)[Res.Types.ResourceStructuredType.CaptionId].Name);
+			Assert.AreEqual ("Fld.ResourceEntityType.Fields", Res.Manager.GetBundle (Resources.CaptionsBundleName, ResourceLevel.Default)[Res.Fields.ResourceStructuredType.Fields].Name);
+			
+			map.Name = "ResourceStructuredType";
+			accessor.PersistChanges ();
+
+			Assert.AreEqual ("ResourceStructuredType", map.Name);
+			Assert.AreEqual ("Typ.StructuredType.ResourceStructuredType", Res.Manager.GetBundle (Resources.CaptionsBundleName, ResourceLevel.Default)[Res.Types.ResourceStructuredType.CaptionId].Name);
+			Assert.AreEqual ("Fld.ResourceStructuredType.Fields", Res.Manager.GetBundle (Resources.CaptionsBundleName, ResourceLevel.Default)[Res.Fields.ResourceStructuredType.Fields].Name);
 		}
 
 		[Test]
@@ -187,7 +207,7 @@ namespace Epsitec.Common.Support
 			stringAccessor.Load (this.manager);
 			captionAccessor.Load (this.manager);
 			commandAccessor.Load (this.manager);
-			structAccessor.Load (Support.Res.Manager);
+			structAccessor.Load (Res.Manager);
 
 			System.Console.Out.WriteLine ("Strings:");
 			this.DumpCultureMap (stringAccessor.Collection[0]);

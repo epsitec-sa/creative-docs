@@ -37,7 +37,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 		protected override string GetNameFromFieldName(string fieldName)
 		{
 			System.Diagnostics.Debug.Assert (fieldName.StartsWith (this.Prefix));
-			return fieldName.Substring (4);
+			return fieldName.Substring (this.Prefix.Length);
 		}
 
 		protected override string GetFieldNameFromName(Types.StructuredData data, string name)

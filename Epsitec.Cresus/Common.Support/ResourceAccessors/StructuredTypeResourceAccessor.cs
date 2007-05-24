@@ -20,6 +20,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 	{
 		public StructuredTypeResourceAccessor()
 		{
+			this.Collection.CollectionChanged += this.HandleCollectionChanged;
 		}
 
 		public override IDataBroker GetDataBroker(StructuredData container, string fieldId)
@@ -63,7 +64,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			StructuredType type = new StructuredType (typeClass, baseType);
 			type.DefineCaption (caption);
 
-			List<StructuredData> fieldsData = data.GetValue (Res.Fields.ResourceStructuredType.Fields) as List<StructuredData>;
+			IList<StructuredData> fieldsData = data.GetValue (Res.Fields.ResourceStructuredType.Fields) as IList<StructuredData>;
 
 			int rank = 0;
 
@@ -130,6 +131,72 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			
 			fields.CollectionChanged += new Listener (this, item).HandleCollectionChanged;
 
+		}
+
+		private void HandleCollectionChanged(object sender, CollectionChangedEventArgs e)
+		{
+			switch (e.Action)
+			{
+				case CollectionChangedAction.Add:
+					foreach (CultureMap item in e.NewItems)
+					{
+						this.HandleCultureMapAdded (item);
+					}
+					break;
+				case CollectionChangedAction.Remove:
+					foreach (CultureMap item in e.OldItems)
+					{
+						this.HandleCultureMapRemoved (item);
+					}
+					break;
+				case CollectionChangedAction.Replace:
+					foreach (CultureMap item in e.OldItems)
+					{
+						this.HandleCultureMapRemoved (item);
+					}
+					foreach (CultureMap item in e.NewItems)
+					{
+						this.HandleCultureMapAdded (item);
+					}
+					break;
+			}
+		}
+
+		private void HandleCultureMapAdded(CultureMap item)
+		{
+			item.PropertyChanged += this.HandleItemPropertyChanged;
+		}
+
+		private void HandleCultureMapRemoved(CultureMap item)
+		{
+			item.PropertyChanged -= this.HandleItemPropertyChanged;
+		}
+
+		void HandleItemPropertyChanged(object sender, DependencyPropertyChangedEventArgs e)
+		{
+			if (e.PropertyName == "Name")
+			{
+				string oldName = e.OldValue as string;
+				string newName = e.NewValue as string;
+
+				this.ChangeFieldPrefix (oldName, newName);
+			}
+		}
+
+		private void ChangeFieldPrefix(string oldName, string newName)
+		{
+			ResourceBundle bundle = this.ResourceManager.GetBundle (Resources.CaptionsBundleName, ResourceLevel.Default);
+
+			string oldPrefix = string.Concat ("Fld.", oldName, ".");
+			string newPrefix = string.Concat ("Fld.", newName, ".");
+
+			foreach (ResourceBundle.Field field in bundle.Fields)
+			{
+				if (field.Name.StartsWith (oldPrefix))
+				{
+					field.SetName (newPrefix + field.Name.Substring (oldPrefix.Length));
+				}
+			}
 		}
 
 		

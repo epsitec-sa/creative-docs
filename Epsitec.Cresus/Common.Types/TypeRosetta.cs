@@ -751,6 +751,7 @@ namespace Epsitec.Common.Types
 			TypeRosetta.AddType (LongIntegerType.Default);
 			TypeRosetta.AddType (StringType.Default);
 			TypeRosetta.AddType (VoidType.Default);
+			TypeRosetta.AddType (DruidType.Default);
 		}
 
 		private static void AddType(AbstractType type)
