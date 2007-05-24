@@ -37,7 +37,7 @@ namespace Epsitec.Common.Types
 		/// <param name="type">The field type.</param>
 		/// <param name="captionId">The field caption DRUID.</param>
 		public StructuredTypeField(string id, INamedType type, Support.Druid captionId)
-			: this (id, type, captionId, -1, Relation.None, null, FieldMembership.Local)
+			: this (id, type, captionId, -1, FieldRelation.None, null, FieldMembership.Local)
 		{
 		}
 
@@ -49,7 +49,7 @@ namespace Epsitec.Common.Types
 		/// <param name="captionId">The field caption DRUID.</param>
 		/// <param name="rank">The field rank when listed in a user interface.</param>
 		public StructuredTypeField(string id, INamedType type, Support.Druid captionId, int rank)
-			: this (id, type, captionId, rank, Relation.None, null, FieldMembership.Local)
+			: this (id, type, captionId, rank, FieldRelation.None, null, FieldMembership.Local)
 		{
 		}
 
@@ -61,7 +61,7 @@ namespace Epsitec.Common.Types
 		/// <param name="captionId">The field caption DRUID.</param>
 		/// <param name="rank">The field rank when listed in a user interface.</param>
 		/// <param name="relation">The relation.</param>
-		public StructuredTypeField(string id, INamedType type, Support.Druid captionId, int rank, Relation relation)
+		public StructuredTypeField(string id, INamedType type, Support.Druid captionId, int rank, FieldRelation relation)
 			: this (id, type, captionId, rank, relation, null, FieldMembership.Local)
 		{
 		}
@@ -75,7 +75,7 @@ namespace Epsitec.Common.Types
 		/// <param name="rank">The field rank when listed in a user interface.</param>
 		/// <param name="relation">The relation.</param>
 		/// <param name="sourceFieldId">The source field id.</param>
-		public StructuredTypeField(string id, INamedType type, Support.Druid captionId, int rank, Relation relation, string sourceFieldId)
+		public StructuredTypeField(string id, INamedType type, Support.Druid captionId, int rank, FieldRelation relation, string sourceFieldId)
 			: this (id, type, captionId, rank, relation, sourceFieldId, FieldMembership.Local)
 		{
 		}
@@ -90,7 +90,7 @@ namespace Epsitec.Common.Types
 		/// <param name="relation">The relation.</param>
 		/// <param name="sourceFieldId">The source field id.</param>
 		/// <param name="membership">The field membership.</param>
-		public StructuredTypeField(string id, INamedType type, Support.Druid captionId, int rank, Relation relation, string sourceFieldId, FieldMembership membership)
+		public StructuredTypeField(string id, INamedType type, Support.Druid captionId, int rank, FieldRelation relation, string sourceFieldId, FieldMembership membership)
 		{
 			this.id = id ?? (captionId.IsValid ? captionId.ToString () : null);
 			this.captionId = captionId;
@@ -115,7 +115,7 @@ namespace Epsitec.Common.Types
 			this.id = id ?? (captionId.IsValid ? captionId.ToString () : null);
 			this.captionId = captionId;
 			this.rank = rank;
-			this.relation = (Relation) ((flags >> StructuredTypeField.RelationShift) & StructuredTypeField.RelationMask);
+			this.relation = (FieldRelation) ((flags >> StructuredTypeField.RelationShift) & StructuredTypeField.RelationMask);
 			this.membership = (FieldMembership) ((flags >> StructuredTypeField.MembershipShift) & StructuredTypeField.MembershipMask);
 			this.sourceFieldId = string.IsNullOrEmpty (sourceFieldId) ? null : sourceFieldId;
 			this.DefineType (type);
@@ -180,7 +180,7 @@ namespace Epsitec.Common.Types
 		/// field is a reference.
 		/// </summary>
 		/// <value>The relation.</value>
-		public Relation							Relation
+		public FieldRelation							Relation
 		{
 			get
 			{
@@ -258,15 +258,15 @@ namespace Epsitec.Common.Types
 
 				switch (this.relation)
 				{
-					case Relation.Collection:
-					case Relation.Reference:
+					case FieldRelation.Collection:
+					case FieldRelation.Reference:
 						if (!isStructuredType)
 						{
 							throw new System.ArgumentException (string.Format ("Invalid type {0} in relation {1} for field {2}", abstractType.Name, this.relation, this.id));
 						}
 						break;
 
-					case Relation.Inclusion:
+					case FieldRelation.Inclusion:
 						if (!isStructuredType)
 						{
 							throw new System.ArgumentException (string.Format ("Invalid type {0} in relation {1} for field {2}", abstractType.Name, this.relation, this.id));
@@ -377,7 +377,7 @@ namespace Epsitec.Common.Types
 		private INamedType						type;
 		private readonly Support.Druid			captionId;
 		private int								rank;
-		private readonly Relation				relation;
+		private readonly FieldRelation				relation;
 		private readonly FieldMembership		membership;
 		private readonly string					sourceFieldId;
 	}

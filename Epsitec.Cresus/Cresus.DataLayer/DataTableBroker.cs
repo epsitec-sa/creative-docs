@@ -369,14 +369,14 @@ namespace Epsitec.Cresus.DataLayer
 
 				switch (field.Relation)
 				{
-					case Relation.Reference:
+					case FieldRelation.Reference:
 						break;
 
-					case Relation.Collection:
+					case FieldRelation.Collection:
 						this.SetValueFromRowCollection (dataRow, data, id, field, fieldId);
 						break;
 					
-					case Relation.None:
+					case FieldRelation.None:
 						this.SetValueFromRowValue (dataRow, data, fieldId);
 						break;
 

@@ -381,7 +381,7 @@ namespace Epsitec.Common.Designer
 						UI.TablePlaceholder table = obj as UI.TablePlaceholder;
 
 						System.Diagnostics.Debug.Assert(field != null);
-						System.Diagnostics.Debug.Assert(field.Relation == Relation.Collection);
+						System.Diagnostics.Debug.Assert(field.Relation == FieldRelation.Collection);
 
 						table.SourceTypeId = field.Type.CaptionId;
 					}

@@ -460,7 +460,7 @@ namespace Epsitec.Common.Types
 			}
 
 			AbstractType type = fieldType.Type as AbstractType;
-			Relation relation = fieldType.Relation;
+			FieldRelation relation = fieldType.Relation;
 
 			if (type != null)
 			{
@@ -493,7 +493,7 @@ namespace Epsitec.Common.Types
 
 						if (structuredType != null)
 						{
-							if (relation == Relation.Collection)
+							if (relation == FieldRelation.Collection)
 							{
 								List<StructuredData> list = new List<StructuredData> ();
 								for (int i = 0; i < 3; i++)

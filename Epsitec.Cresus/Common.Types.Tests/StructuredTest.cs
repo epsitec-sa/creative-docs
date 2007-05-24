@@ -158,8 +158,8 @@ namespace Epsitec.Common.Types
 			data1.UndefinedValueMode = UndefinedValueMode.Undefined;
 			data2.UndefinedValueMode = UndefinedValueMode.Undefined;
 
-			type1.Fields.Add (new StructuredTypeField ("A", type2, Support.Druid.Empty, 0, Relation.Reference));
-			type1.Fields.Add (new StructuredTypeField ("B", type2, Support.Druid.Empty, 1, Relation.Collection));
+			type1.Fields.Add (new StructuredTypeField ("A", type2, Support.Druid.Empty, 0, FieldRelation.Reference));
+			type1.Fields.Add (new StructuredTypeField ("B", type2, Support.Druid.Empty, 1, FieldRelation.Collection));
 
 			type2.Fields.Add ("X", new IntegerType (0, 100));
 			type2.DefineIsNullable (true);
@@ -416,7 +416,7 @@ namespace Epsitec.Common.Types
 			StructuredType type = new StructuredType (StructuredTypeClass.Entity);
 			type.SetValue (StructuredType.DebugDisableChecksProperty, true);
 
-			type.Fields.Add (new StructuredTypeField ("Name", StringType.Default, Support.Druid.Empty, 0, Relation.Reference));
+			type.Fields.Add (new StructuredTypeField ("Name", StringType.Default, Support.Druid.Empty, 0, FieldRelation.Reference));
 		}
 
 		[Test]
@@ -431,8 +431,8 @@ namespace Epsitec.Common.Types
 
 			type.DefineCaptionId (typeId);
 
-			type.Fields.Add (new StructuredTypeField ("Name", StringType.Default, Support.Druid.Empty, 0, Relation.None));
-			type.Fields.Add (new StructuredTypeField ("SelfName", type, Support.Druid.Empty, 1, Relation.Inclusion, null));
+			type.Fields.Add (new StructuredTypeField ("Name", StringType.Default, Support.Druid.Empty, 0, FieldRelation.None));
+			type.Fields.Add (new StructuredTypeField ("SelfName", type, Support.Druid.Empty, 1, FieldRelation.Inclusion, null));
 		}
 
 		[Test]
@@ -442,7 +442,7 @@ namespace Epsitec.Common.Types
 			StructuredType type = new StructuredType (StructuredTypeClass.View);
 			type.SetValue (StructuredType.DebugDisableChecksProperty, true);
 
-			type.Fields.Add (new StructuredTypeField ("Name", StringType.Default, Support.Druid.Empty, 0, Relation.None));
+			type.Fields.Add (new StructuredTypeField ("Name", StringType.Default, Support.Druid.Empty, 0, FieldRelation.None));
 		}
 
 		[Test]
@@ -463,10 +463,10 @@ namespace Epsitec.Common.Types
 			type.DefineCaptionId (typeId1);
 			view.DefineCaptionId (typeId2);
 
-			type.Fields.Add (new StructuredTypeField ("Name", StringType.Default, Support.Druid.Empty, 0, Relation.None));
+			type.Fields.Add (new StructuredTypeField ("Name", StringType.Default, Support.Druid.Empty, 0, FieldRelation.None));
 
-			view.Fields.Add (new StructuredTypeField ("Name1", type, Support.Druid.Empty, 1, Relation.Inclusion, "Name"));
-			view.Fields.Add (new StructuredTypeField ("Name2", view, Support.Druid.Empty, 2, Relation.Inclusion, "Name"));
+			view.Fields.Add (new StructuredTypeField ("Name1", type, Support.Druid.Empty, 1, FieldRelation.Inclusion, "Name"));
+			view.Fields.Add (new StructuredTypeField ("Name2", view, Support.Druid.Empty, 2, FieldRelation.Inclusion, "Name"));
 		}
 
 		[Test]
@@ -483,13 +483,13 @@ namespace Epsitec.Common.Types
 
 			entity.DefineCaptionId (typeId);
 
-			entity.Fields.Add (new StructuredTypeField ("Name", StringType.Default, Support.Druid.Empty, 0, Relation.None));
-			entity.Fields.Add (new StructuredTypeField ("SelfRef", entity, Support.Druid.Empty, 1, Relation.Reference));
-			entity.Fields.Add (new StructuredTypeField ("SelfName", entity, Support.Druid.Empty, 2, Relation.Inclusion, "Name"));
-			entity.Fields.Add (new StructuredTypeField ("SelfCollection", entity, Support.Druid.Empty, 3, Relation.Collection));
+			entity.Fields.Add (new StructuredTypeField ("Name", StringType.Default, Support.Druid.Empty, 0, FieldRelation.None));
+			entity.Fields.Add (new StructuredTypeField ("SelfRef", entity, Support.Druid.Empty, 1, FieldRelation.Reference));
+			entity.Fields.Add (new StructuredTypeField ("SelfName", entity, Support.Druid.Empty, 2, FieldRelation.Inclusion, "Name"));
+			entity.Fields.Add (new StructuredTypeField ("SelfCollection", entity, Support.Druid.Empty, 3, FieldRelation.Collection));
 
-			view.Fields.Add (new StructuredTypeField ("Name", entity, Support.Druid.Empty, 0, Relation.Inclusion, "Name"));
-			view.Fields.Add (new StructuredTypeField ("Ref", entity, Support.Druid.Empty, 0, Relation.Inclusion, "SelfRef"));
+			view.Fields.Add (new StructuredTypeField ("Name", entity, Support.Druid.Empty, 0, FieldRelation.Inclusion, "Name"));
+			view.Fields.Add (new StructuredTypeField ("Ref", entity, Support.Druid.Empty, 0, FieldRelation.Inclusion, "SelfRef"));
 		}
 
 		[Test]
@@ -507,7 +507,7 @@ namespace Epsitec.Common.Types
 
 			type.Fields["Name"] = new StructuredTypeField ("Name", StringType.Default, Support.Druid.Empty, 1);
 
-			type.Fields.Add (new StructuredTypeField ("SelfName", type, Support.Druid.Empty, 2, Relation.Inclusion, "Name"));
+			type.Fields.Add (new StructuredTypeField ("SelfName", type, Support.Druid.Empty, 2, FieldRelation.Inclusion, "Name"));
 
 			Assert.IsNull (type.SystemType);
 

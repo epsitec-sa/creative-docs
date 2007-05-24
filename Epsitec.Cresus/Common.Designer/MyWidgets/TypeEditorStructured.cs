@@ -258,9 +258,9 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			if (st)
 			{
-				this.buttonRelationRef.ActiveState = (field.Relation == Relation.Reference ) ? ActiveState.Yes : ActiveState.No;
-				this.buttonRelationCol.ActiveState = (field.Relation == Relation.Collection) ? ActiveState.Yes : ActiveState.No;
-				this.buttonRelationInc.ActiveState = (field.Relation == Relation.Inclusion ) ? ActiveState.Yes : ActiveState.No;
+				this.buttonRelationRef.ActiveState = (field.Relation == FieldRelation.Reference ) ? ActiveState.Yes : ActiveState.No;
+				this.buttonRelationCol.ActiveState = (field.Relation == FieldRelation.Collection) ? ActiveState.Yes : ActiveState.No;
+				this.buttonRelationInc.ActiveState = (field.Relation == FieldRelation.Inclusion ) ? ActiveState.Yes : ActiveState.No;
 			}
 			else
 			{
@@ -274,7 +274,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.buttonTypeGoto.Enable = (sel != -1 && !typeDruid.IsEmpty);
 			this.buttonType.Enable = (sel != -1);
 			
-			this.buttonInc.Enable = (sel != -1 && st && field.Relation == Relation.Inclusion);
+			this.buttonInc.Enable = (sel != -1 && st && field.Relation == FieldRelation.Inclusion);
 		}
 
 		protected void UpdateArray()
@@ -297,9 +297,9 @@ namespace Epsitec.Common.Designer.MyWidgets
 					{
 						if (type is StructuredType)
 						{
-							if (field.Relation == Relation.Reference )  iconRelation = Misc.Image("RelationReference");
-							if (field.Relation == Relation.Inclusion )  iconRelation = Misc.Image("RelationInclusion");
-							if (field.Relation == Relation.Collection)  iconRelation = Misc.Image("RelationCollection");
+							if (field.Relation == FieldRelation.Reference )  iconRelation = Misc.Image("RelationReference");
+							if (field.Relation == FieldRelation.Inclusion )  iconRelation = Misc.Image("RelationInclusion");
+							if (field.Relation == FieldRelation.Collection)  iconRelation = Misc.Image("RelationCollection");
 						}
 
 						Caption caption = this.module.ResourceManager.GetCaption(type.Caption.Id);
@@ -480,7 +480,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.OnContentChanged();
 		}
 
-		protected void ArrayRelation(Relation relation)
+		protected void ArrayRelation(FieldRelation relation)
 		{
 			//	Change le type de relation.
 			int sel = this.array.SelectedRow;
@@ -492,7 +492,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			StructuredTypeField actualField = this.fields[sel];
 
 			string sourceField = null;
-			if (relation == Relation.Inclusion)
+			if (relation == FieldRelation.Inclusion)
 			{
 				StructuredType type = actualField.Type as StructuredType;
 				if (type != null)
@@ -612,14 +612,14 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 
 			type = TypeRosetta.GetTypeObject(this.module.ResourceManager.GetCaption(druid));
-			Relation relation = actualField.Relation;
+			FieldRelation relation = actualField.Relation;
 			string sourceField = actualField.SourceFieldId;
 			if (type is StructuredType)
 			{
 			}
 			else
 			{
-				relation = Relation.None;
+				relation = FieldRelation.None;
 				sourceField = null;
 			}
 			System.Diagnostics.Debug.Assert(type != null);
@@ -642,7 +642,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 
 			StructuredTypeField actualField = this.fields[sel];
-			if (actualField.Relation != Relation.Inclusion)
+			if (actualField.Relation != FieldRelation.Inclusion)
 			{
 				return;
 			}
@@ -778,17 +778,17 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			if (sender == this.buttonRelationRef)
 			{
-				this.ArrayRelation(Relation.Reference);
+				this.ArrayRelation(FieldRelation.Reference);
 			}
 
 			if (sender == this.buttonRelationCol)
 			{
-				this.ArrayRelation(Relation.Collection);
+				this.ArrayRelation(FieldRelation.Collection);
 			}
 
 			if (sender == this.buttonRelationInc)
 			{
-				this.ArrayRelation(Relation.Inclusion);
+				this.ArrayRelation(FieldRelation.Inclusion);
 			}
 
 			if (sender == this.buttonCaptionGoto)

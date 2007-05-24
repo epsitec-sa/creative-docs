@@ -280,11 +280,11 @@ namespace Epsitec.Cresus.DataLayer
 
 					switch (field.Relation)
 					{
-						case Relation.Reference:
+						case FieldRelation.Reference:
 							column = Adapter.CreateReferenceColumn (transaction, infrastructure, targetType, tables, columnName, targetName, isNullable);
 							break;
 
-						case Relation.Collection:
+						case FieldRelation.Collection:
 							column = Adapter.CreateCollectionColumn (transaction, infrastructure, type, targetType, tables, tableName, columnName, targetName, isNullable);
 							break;
 
@@ -336,7 +336,7 @@ namespace Epsitec.Cresus.DataLayer
 				{
 					switch (field.Relation)
 					{
-						case Relation.Reference:
+						case FieldRelation.Reference:
 							ok = true;
 							break;
 					}

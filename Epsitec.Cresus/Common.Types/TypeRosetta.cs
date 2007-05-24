@@ -343,14 +343,14 @@ namespace Epsitec.Common.Types
 
 			switch (field.Relation)
 			{
-				case Relation.None:
-				case Relation.Reference:
+				case FieldRelation.None:
+				case FieldRelation.Reference:
 					return TypeRosetta.IsValidValue (value, field.Type);
 				
-				case Relation.Collection:
+				case FieldRelation.Collection:
 					return TypeRosetta.IsValidValueForCollectionOfType (value, field.Type);
 
-				case Relation.Inclusion:
+				case FieldRelation.Inclusion:
 					//	TODO: handle inclusion
 
 				default:

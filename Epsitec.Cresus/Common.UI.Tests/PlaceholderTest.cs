@@ -436,8 +436,8 @@ namespace Epsitec.Common.UI
 			StructuredType staffType = new StructuredType ();
 			StructuredData staff = new StructuredData (staffType);
 
-			staffType.Fields.Add (new StructuredTypeField ("Boss", type, Support.Druid.Empty, 0, Relation.Reference));
-			staffType.Fields.Add (new StructuredTypeField ("Employees", type, Support.Druid.Empty, 0, Relation.Collection));
+			staffType.Fields.Add (new StructuredTypeField ("Boss", type, Support.Druid.Empty, 0, FieldRelation.Reference));
+			staffType.Fields.Add (new StructuredTypeField ("Employees", type, Support.Druid.Empty, 0, FieldRelation.Collection));
 
 			List<StructuredData> list = new List<StructuredData> ();
 			list.Add (data1);

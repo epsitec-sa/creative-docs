@@ -278,7 +278,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				}
 
 				if (this.objectType == ObjectModifier.ObjectType.Table &&
-					field.Relation != Relation.Collection)
+					field.Relation != FieldRelation.Collection)
 				{
 					continue;
 				}
@@ -341,9 +341,9 @@ namespace Epsitec.Common.Designer.Dialogs
 					{
 						if (type is StructuredType)
 						{
-							if (field.Relation == Relation.Reference )  iconRelation = Misc.Image("RelationReference");
+							if (field.Relation == FieldRelation.Reference )  iconRelation = Misc.Image("RelationReference");
 //-							if (field.Relation == Relation.Bijective )  iconRelation = Misc.Image("RelationBijective");
-							if (field.Relation == Relation.Collection)  iconRelation = Misc.Image("RelationCollection");
+							if (field.Relation == FieldRelation.Collection)  iconRelation = Misc.Image("RelationCollection");
 						}
 
 						Caption caption = this.module.ResourceManager.GetCaption(type.Caption.Id);

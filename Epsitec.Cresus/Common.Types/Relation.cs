@@ -1,14 +1,15 @@
 //	Copyright © 2006-2007, EPSITEC SA, CH-1092 BELMONT, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 namespace Epsitec.Common.Types
 {
 	/// <summary>
-	/// The <c>Relation</c> enumeration defines what relation binds a
+	/// The <c>FieldRelation</c> enumeration defines what relation binds a
 	/// field from one structure with other structures.
 	/// See <see cref="StructuredTypeField"/>.
 	/// </summary>
-	public enum Relation
+	[Designer]
+	public enum FieldRelation
 	{
 		/// <summary>
 		/// There is no relation defined for this field.

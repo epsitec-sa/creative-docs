@@ -567,7 +567,7 @@ namespace Epsitec.Common.Types
 				//	A structured type used to represent a view may only contain fields
 				//	using an inclusion relation with the same target (structured) type.
 
-				if (field.Relation != Relation.Inclusion)
+				if (field.Relation != FieldRelation.Inclusion)
 				{
 					throw new System.ArgumentException (string.Format ("View may not use field with {0} relation", field.Relation));
 				}

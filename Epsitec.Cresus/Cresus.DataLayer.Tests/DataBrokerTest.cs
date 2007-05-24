@@ -265,7 +265,7 @@ namespace Epsitec.Cresus.DataLayer
 			StructuredType record = new StructuredType ();
 			StructuredData source = new StructuredData (record);
 
-			record.Fields.Add (new StructuredTypeField ("Friends", type, Druid.Empty, -1, Relation.Collection));
+			record.Fields.Add (new StructuredTypeField ("Friends", type, Druid.Empty, -1, FieldRelation.Collection));
 
 			source.SetValue ("Friends", broker);
 
