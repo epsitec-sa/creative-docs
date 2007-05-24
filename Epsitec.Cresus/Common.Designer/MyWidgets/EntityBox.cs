@@ -14,13 +14,6 @@ namespace Epsitec.Common.Designer.MyWidgets
 		{
 #if true // provisoire
 			this.fields = new List<string>();
-			this.fields.Add("Titre");
-			this.fields.Add("Nom");
-			this.fields.Add("Prénom");
-			this.fields.Add("Adresse");
-			this.fields.Add("NPA");
-			this.fields.Add("Ville");
-			this.fields.Add("Pays");
 #endif
 
 			this.isExtended = false;
@@ -75,6 +68,20 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 		}
 
+		public void SetContent(string content)
+		{
+			//	Provisoire...
+			string[] list = content.Split(';');
+
+			foreach (string text in list)
+			{
+				this.fields.Add(text);
+			}
+
+			this.UpdateTable();
+			this.UpdateExtendButton();
+		}
+
 		public bool IsExtended
 		{
 			//	Etat de la boîte.
@@ -89,6 +96,21 @@ namespace Epsitec.Common.Designer.MyWidgets
 					this.isExtended = value;
 					this.Invalidate();
 				}
+			}
+		}
+
+
+		public double GetBestHeight()
+		{
+			//?return this.GetBestFitSize().Height;
+			if (this.isExtended)
+			{
+				double h = this.table[0].ActualHeight + this.table[0].Margins.Top + this.table[0].Margins.Bottom;
+				return EntityBox.headerHeight + h*this.table.Count + EntityBox.footerHeight + 16;
+			}
+			else
+			{
+				return EntityBox.headerHeight + 6;
 			}
 		}
 
@@ -117,6 +139,35 @@ namespace Epsitec.Common.Designer.MyWidgets
 				st.Dock = DockStyle.Top;
 
 				this.table.Add(st);
+			}
+		}
+
+
+		protected override void ProcessMessage(Message message, Point pos)
+		{
+			if (message.MessageType == MessageType.MouseMove)
+			{
+				this.HiliteWidget(pos);
+			}
+		}
+
+		protected void HiliteWidget(Point pos)
+		{
+			IAdorner adorner = Common.Widgets.Adorners.Factory.Active;
+			Widget finded = this.FindChild(pos);
+
+			foreach (StaticText st in this.table)
+			{
+				if (st == finded)
+				{
+					Color color = adorner.ColorCaption;
+					color.A = 0.1;
+					st.BackColor = color;
+				}
+				else
+				{
+					st.BackColor = Color.Empty;
+				}
 			}
 		}
 
@@ -223,7 +274,33 @@ namespace Epsitec.Common.Designer.MyWidgets
 		{
 			this.IsExtended = !this.IsExtended;
 			this.UpdateExtendButton();
+			this.OnGeometryChanged();
 		}
+
+
+		#region Event
+		protected virtual void OnGeometryChanged()
+		{
+			//	Génère un événement pour dire que la géométrie a changé.
+			EventHandler handler = (EventHandler) this.GetUserEventHandler("GeometryChanged");
+			if (handler != null)
+			{
+				handler(this);
+			}
+		}
+
+		public event Support.EventHandler GeometryChanged
+		{
+			add
+			{
+				this.AddUserEventHandler("GeometryChanged", value);
+			}
+			remove
+			{
+				this.RemoveUserEventHandler("GeometryChanged", value);
+			}
+		}
+		#endregion
 
 
 		protected static readonly double roundRectRadius = 16;
