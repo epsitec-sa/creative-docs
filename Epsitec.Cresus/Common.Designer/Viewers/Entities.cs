@@ -20,29 +20,36 @@ namespace Epsitec.Common.Designer.Viewers
 			this.scrollable.Panel.ContainerLayoutMode = ContainerLayoutMode.None;
 			this.scrollable.Panel.SurfaceSize = new Size(1000, 1000);
 
-			this.boxes = new List<Epsitec.Common.Designer.MyWidgets.EntityBox>();
+			this.boxes = new List<MyWidgets.EntityBox>();
+			this.links = new List<MyWidgets.EntityLink>();
 
 			MyWidgets.EntityBox box1 = new MyWidgets.EntityBox(this.scrollable.Panel);
 			box1.Title = "Facture";
-			box1.SetContent("Numéro;Client;Articles;Frais de port");
-			box1.SetManualBounds(new Rectangle(20+(180+40)*0, 1000-20-150, 180, 150));
+			box1.SetContent("Numéro;Client;Articles;TVA;Rabais;Frais de port");
+			box1.SetManualBounds(new Rectangle(20+(180+40)*0, 1000-20-100, 180, 100));
 			box1.GeometryChanged += new EventHandler(this.HandleBoxGeometryChanged);
 
 			MyWidgets.EntityBox box2 = new MyWidgets.EntityBox(this.scrollable.Panel);
 			box2.Title = "Client";
-			box2.SetContent("Titre;Nom;Prénom;Adresse;NPA;Ville;Pays");
-			box2.SetManualBounds(new Rectangle(20+(180+40)*1, 1000-20-200, 180, 200));
+			box2.SetContent("Numéro;Titre;Nom;Prénom;Entreprise;Adresse;NPA;Ville;Pays;Téléphone professionnel;Téléphone privé;Téléphone mobile;E-mail professionnel;E-mail privé;Site web");
+			box2.SetManualBounds(new Rectangle(20+(180+40)*1, 1000-20-100, 180, 100));
 			box2.GeometryChanged += new EventHandler(this.HandleBoxGeometryChanged);
 
 			MyWidgets.EntityBox box3 = new MyWidgets.EntityBox(this.scrollable.Panel);
 			box3.Title = "Article";
-			box3.SetContent("Désignation;Quantité;Prix");
-			box3.SetManualBounds(new Rectangle(20+(180+40)*2, 1000-20-150, 180, 150));
+			box3.SetContent("Numéro;Désignation;Quantité;Prix");
+			box3.SetManualBounds(new Rectangle(20+(180+40)*2, 1000-20-100, 180, 100));
 			box3.GeometryChanged += new EventHandler(this.HandleBoxGeometryChanged);
 
 			this.boxes.Add(box1);
 			this.boxes.Add(box2);
 			this.boxes.Add(box3);
+
+			MyWidgets.EntityLink link1 = new MyWidgets.EntityLink(this.scrollable.Panel);
+			MyWidgets.EntityLink link2 = new MyWidgets.EntityLink(this.scrollable.Panel);
+
+			this.links.Add(link1);
+			this.links.Add(link2);
 
 			this.UpdateGeometry();
 			this.UpdateAll();
@@ -78,6 +85,47 @@ namespace Epsitec.Common.Designer.Viewers
 				bounds.Height = h;
 				box.SetManualBounds(bounds);
 			}
+
+			this.UpdateLink(this.links[0], this.boxes[0], 1, this.boxes[1]);
+			this.UpdateLink(this.links[1], this.boxes[0], 2, this.boxes[2]);
+		}
+
+		protected void UpdateLink(MyWidgets.EntityLink link, MyWidgets.EntityBox src, int srcRank, MyWidgets.EntityBox dst)
+		{
+			link.SetManualBounds(this.scrollable.Panel.Client.Bounds);
+
+			Rectangle srcBounds = src.ActualBounds;
+			Rectangle dstBounds = dst.ActualBounds;
+
+			double v = src.GetLinkVerticalPosition(srcRank);
+			if (double.IsNaN(v))
+			{
+				link.Visibility = false;
+			}
+			else
+			{
+				link.Visibility = true;
+
+				Point p = new Point(0, v);
+				p = src.MapClientToParent(p);
+
+				double dv = p.Y;
+				if (dv < dstBounds.Bottom || dv > dstBounds.Top)
+				{
+					dv = dstBounds.Center.Y;
+				}
+
+				if (srcBounds.Right < dstBounds.Left)
+				{
+					link.Source = new Point(srcBounds.Right, p.Y);
+					link.Destination = new Point(dstBounds.Left, dv);
+				}
+				else
+				{
+					link.Source = new Point(srcBounds.Left, p.Y);
+					link.Destination = new Point(dstBounds.Right, dv);
+				}
+			}
 		}
 
 
@@ -89,5 +137,6 @@ namespace Epsitec.Common.Designer.Viewers
 
 		
 		List<MyWidgets.EntityBox> boxes;
+		List<MyWidgets.EntityLink> links;
 	}
 }

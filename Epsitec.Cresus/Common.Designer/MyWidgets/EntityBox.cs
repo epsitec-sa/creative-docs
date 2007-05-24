@@ -105,13 +105,24 @@ namespace Epsitec.Common.Designer.MyWidgets
 			//	Retourne la hauteur requise selon le nombre de champs définis.
 			if (this.isExtended)
 			{
-				return EntityBox.headerHeight + this.FieldHeight*this.table.Count + EntityBox.footerHeight + 16;
+				return EntityBox.headerHeight + this.FieldHeight*this.table.Count + EntityBox.footerHeight + 15;
 			}
 			else
 			{
 				return EntityBox.headerHeight + 6;
 			}
 			//?return this.GetBestFitSize().Height;
+		}
+
+		public double GetLinkVerticalPosition(int rank)
+		{
+			//	Retourne le position verticale pour un trait de liaison.
+			if (this.isExtended && this.table != null && rank < this.table.Count)
+			{
+				return this.Client.Bounds.Top - (EntityBox.headerHeight + this.FieldHeight*rank + 16);
+			}
+
+			return double.NaN;
 		}
 
 		protected double FieldHeight
@@ -161,6 +172,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		public override Margins GetShapeMargins()
 		{
+			//	Retourne les marges supplémentaires à droite et en bas, pour dessiner l'ombre.
 			return new Margins(0, EntityBox.shadowOffset, 0, EntityBox.shadowOffset);
 		}
 
@@ -170,10 +182,16 @@ namespace Epsitec.Common.Designer.MyWidgets
 			{
 				this.HiliteWidget(pos);
 			}
+
+			if (message.MessageType == MessageType.MouseLeave)
+			{
+				this.HiliteWidget(Point.Zero);
+			}
 		}
 
 		protected void HiliteWidget(Point pos)
 		{
+			//	Colore le widget visé par la souris.
 			IAdorner adorner = Common.Widgets.Adorners.Factory.Active;
 			Widget finded = this.FindChild(pos);
 
@@ -224,12 +242,19 @@ namespace Epsitec.Common.Designer.MyWidgets
 			//	Peint en blanc la zone pour les champs.
 			if (this.isExtended)
 			{
-				graphics.AddFilledRectangle(bounds.Left, bounds.Bottom+EntityBox.footerHeight, bounds.Width, bounds.Height-EntityBox.footerHeight-EntityBox.headerHeight);
+				Rectangle inside = new Rectangle(bounds.Left, bounds.Bottom+EntityBox.footerHeight, bounds.Width, bounds.Height-EntityBox.footerHeight-EntityBox.headerHeight);
+				graphics.AddFilledRectangle(inside);
 				graphics.RenderSolid(Color.FromBrightness(1));
+				graphics.AddFilledRectangle(inside);
+				Color ci1 = adorner.ColorCaption;
+				Color ci2 = adorner.ColorCaption;
+				ci1.A = 0.1;
+				ci2.A = 0.0;
+				this.RenderHorizontalGradient(graphics, inside, ci1, ci2);
 
-				Rectangle shadow = new Rectangle(bounds.Left, bounds.Top-EntityBox.headerHeight-10, bounds.Width, 10);
+				Rectangle shadow = new Rectangle(bounds.Left, bounds.Top-EntityBox.headerHeight-8, bounds.Width, 8);
 				graphics.AddFilledRectangle(shadow);
-				this.RenderVerticalGradient(graphics, shadow, Color.FromAlphaRgb(0.0, 0, 0, 0), Color.FromAlphaRgb(0.2, 0, 0, 0));
+				this.RenderVerticalGradient(graphics, shadow, Color.FromAlphaRgb(0.0, 0, 0, 0), Color.FromAlphaRgb(0.3, 0, 0, 0));
 			}
 
 			//	Peint le cadre en noir.
