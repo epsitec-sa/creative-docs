@@ -151,6 +151,18 @@ namespace Epsitec.Common.Types
 		}
 
 		/// <summary>
+		/// Gets the field type DRUID.
+		/// </summary>
+		/// <value>The field type DRUID.</value>
+		public Support.Druid					TypeId
+		{
+			get
+			{
+				return this.typeId;
+			}
+		}
+
+		/// <summary>
 		/// Gets the field caption DRUID.
 		/// </summary>
 		/// <value>The field caption DRUID.</value>
@@ -180,7 +192,7 @@ namespace Epsitec.Common.Types
 		/// field is a reference.
 		/// </summary>
 		/// <value>The relation.</value>
-		public FieldRelation							Relation
+		public FieldRelation					Relation
 		{
 			get
 			{
@@ -278,8 +290,21 @@ namespace Epsitec.Common.Types
 						break;
 				}
 
-				this.type = abstractType;
+				this.type   = abstractType;
+				this.typeId = abstractType.CaptionId;
 			}
+		}
+
+		/// <summary>
+		/// Defines the type id (only use this internally).
+		/// </summary>
+		/// <param name="typeId">The type id.</param>
+		public void DefineTypeId(Support.Druid typeId)
+		{
+			System.Diagnostics.Debug.Assert (this.type == null);
+			System.Diagnostics.Debug.Assert (this.typeId.IsEmpty);
+
+			this.typeId = typeId;
 		}
 		
 		#region SerializationConverter Class
@@ -292,29 +317,29 @@ namespace Epsitec.Common.Types
 			{
 				StructuredTypeField field = (StructuredTypeField) value;
 
-				string captionId = field.type == null ? Support.Druid.Empty.ToString () : field.type.CaptionId.ToString ();
-				string rank  = field.rank == -1 ? "" : field.rank.ToString (System.Globalization.CultureInfo.InvariantCulture);
-				string flags = field.Flags == 0 ? "" : field.Flags.ToString (System.Globalization.CultureInfo.InvariantCulture);
+				string typeId = field.typeId.ToString ();
+				string rank   = field.rank == -1 ? "" : field.rank.ToString (System.Globalization.CultureInfo.InvariantCulture);
+				string flags  = field.Flags == 0 ? "" : field.Flags.ToString (System.Globalization.CultureInfo.InvariantCulture);
 
 				if (field.sourceFieldId != null)
 				{
-					return string.Concat (field.id, ";", captionId, ";", rank, ";", field.captionId.ToString (), ";", flags, ";", field.sourceFieldId);
+					return string.Concat (field.id, ";", typeId, ";", rank, ";", field.captionId.ToString (), ";", flags, ";", field.sourceFieldId);
 				}
 				else if (!string.IsNullOrEmpty (flags))
 				{
-					return string.Concat (field.id, ";", captionId, ";", rank, ";", field.captionId.ToString (), ";", flags);
+					return string.Concat (field.id, ";", typeId, ";", rank, ";", field.captionId.ToString (), ";", flags);
 				}
 				else if (field.captionId.IsValid)
 				{
-					return string.Concat (field.id, ";", captionId, ";", rank, ";", field.captionId.ToString ());
+					return string.Concat (field.id, ";", typeId, ";", rank, ";", field.captionId.ToString ());
 				}
 				else if (string.IsNullOrEmpty (rank))
 				{
-					return string.Concat (field.id, ";", captionId);
+					return string.Concat (field.id, ";", typeId);
 				}
 				else
 				{
-					return string.Concat (field.id, ";", captionId, ";", rank);
+					return string.Concat (field.id, ";", typeId, ";", rank);
 				}
 			}
 
@@ -325,7 +350,7 @@ namespace Epsitec.Common.Types
 				string[] args = value.Split (';');
 				
 				string        name      = args[0];
-				Support.Druid druid     = Support.Druid.Parse (args[1]);
+				Support.Druid typeId    = Support.Druid.Parse (args[1]);
 				string        rank      = args.Length < 3 ? "-1" : string.IsNullOrEmpty (args[2]) ? "-1" : args[2];
 				Support.Druid captionId = args.Length < 4 ? Support.Druid.Empty : Support.Druid.Parse (args[3]);
 				string        flags     = args.Length < 5 ? "0" : args[4];
@@ -336,9 +361,11 @@ namespace Epsitec.Common.Types
 				
 				StructuredTypeField field = new StructuredTypeField (name, null, captionId, rankValue, flagsValue, sourceId);
 
-				if (druid.IsValid)
+				field.typeId = typeId;
+
+				if (typeId.IsValid)
 				{
-					INamedType type = TypeRosetta.GetTypeObject (druid);
+					INamedType type = TypeRosetta.GetTypeObject (typeId);
 
 					if (type == null)
 					{
@@ -349,7 +376,7 @@ namespace Epsitec.Common.Types
 						TypeRosetta.QueueFixUp (
 							delegate ()
 							{
-								Caption caption = (manager ?? Support.Resources.DefaultManager).GetCaption (druid);
+								Caption caption = (manager ?? Support.Resources.DefaultManager).GetCaption (typeId);
 								field.DefineType (TypeRosetta.GetTypeObject (caption));
 							});
 					}
@@ -368,16 +395,17 @@ namespace Epsitec.Common.Types
 		#endregion
 
 
-		const int RelationShift = 0;
-		const int RelationMask = 0x0f;
-		const int MembershipShift = 4;
-		const int MembershipMask = 0x03;
+		const int								RelationShift	= 0;
+		const int								RelationMask	= 0x0f;
+		const int								MembershipShift	= 4;
+		const int								MembershipMask	= 0x03;
 		
 		private readonly string					id;
 		private INamedType						type;
+		private Support.Druid					typeId;
 		private readonly Support.Druid			captionId;
 		private int								rank;
-		private readonly FieldRelation				relation;
+		private readonly FieldRelation			relation;
 		private readonly FieldMembership		membership;
 		private readonly string					sourceFieldId;
 	}

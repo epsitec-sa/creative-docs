@@ -156,13 +156,24 @@ namespace Epsitec.Common.Support
 		public void CheckStructuredTypeAccessor()
 		{
 			ResourceAccessors.StructuredTypeResourceAccessor accessor = new ResourceAccessors.StructuredTypeResourceAccessor ();
-			ResourceManager manager = Support.Res.Manager;
 
 			Assert.IsFalse (accessor.ContainsChanges);
 
-			accessor.Load (manager);
+			accessor.Load (Support.Res.Manager);
 
-			Assert.AreEqual (7, accessor.Collection.Count);
+			Assert.AreEqual (8, accessor.Collection.Count);
+
+			CultureMap map = accessor.Collection[Support.Res.Types.ResourceStructuredType.CaptionId];
+			
+			Types.StructuredData        data       = map.GetCultureData (Resources.DefaultTwoLetterISOLanguageName);
+			Types.StructuredTypeClass   typeClass  = (Types.StructuredTypeClass) data.GetValue (Res.Fields.ResourceStructuredType.Class);
+			Druid                       baseTypeId = (Druid) data.GetValue (Res.Fields.ResourceStructuredType.BaseType);
+			IList<Types.StructuredData> fields     = data.GetValue (Res.Fields.ResourceStructuredType.Fields) as IList<Types.StructuredData>;
+
+			Assert.AreEqual (10, fields.Count);
+
+			Assert.AreEqual (Res.Fields.ResourceBase.ModificationId, fields[0].GetValue (Res.Fields.Field.Caption));
+			Assert.AreEqual (Res.Fields.ResourceBase.Comment,        fields[1].GetValue (Res.Fields.Field.Caption));
 		}
 
 		[Test]
@@ -171,10 +182,12 @@ namespace Epsitec.Common.Support
 			ResourceAccessors.StringResourceAccessor  stringAccessor  = new ResourceAccessors.StringResourceAccessor ();
 			ResourceAccessors.CaptionResourceAccessor captionAccessor = new ResourceAccessors.CaptionResourceAccessor ();
 			ResourceAccessors.CommandResourceAccessor commandAccessor = new ResourceAccessors.CommandResourceAccessor ();
+			ResourceAccessors.StructuredTypeResourceAccessor structAccessor = new ResourceAccessors.StructuredTypeResourceAccessor ();
 
 			stringAccessor.Load (this.manager);
 			captionAccessor.Load (this.manager);
 			commandAccessor.Load (this.manager);
+			structAccessor.Load (Support.Res.Manager);
 
 			System.Console.Out.WriteLine ("Strings:");
 			this.DumpCultureMap (stringAccessor.Collection[0]);
@@ -182,6 +195,8 @@ namespace Epsitec.Common.Support
 			this.DumpCultureMap (captionAccessor.Collection[0]);
 			System.Console.Out.WriteLine ("Commands:");
 			this.DumpCultureMap (commandAccessor.Collection[0]);
+			System.Console.Out.WriteLine ("Structured Types:");
+			this.DumpCultureMap (structAccessor.Collection[0]);
 		}
 
 		[Test]

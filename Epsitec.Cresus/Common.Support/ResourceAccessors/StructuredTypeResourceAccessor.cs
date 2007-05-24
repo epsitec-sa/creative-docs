@@ -24,6 +24,11 @@ namespace Epsitec.Common.Support.ResourceAccessors
 
 		public override IDataBroker GetDataBroker(StructuredData container, string fieldId)
 		{
+			if (fieldId == Res.Fields.ResourceStructuredType.Fields.ToString ())
+			{
+				return new FieldBroker ();
+			}
+
 			return base.GetDataBroker (container, fieldId);
 		}
 
@@ -52,10 +57,38 @@ namespace Epsitec.Common.Support.ResourceAccessors
 
 		private StructuredType GetTypeFromData(StructuredData data, Caption caption)
 		{
-			StructuredType type = new StructuredType ();
+			StructuredTypeClass typeClass = (StructuredTypeClass) data.GetValue (Res.Fields.ResourceStructuredType.Class);
+			Druid               baseType  = StructuredTypeResourceAccessor.ToDruid (data.GetValue (Res.Fields.ResourceStructuredType.BaseType));
+			
+			StructuredType type = new StructuredType (typeClass, baseType);
 			type.DefineCaption (caption);
 
+			List<StructuredData> fieldsData = data.GetValue (Res.Fields.ResourceStructuredType.Fields) as List<StructuredData>;
+
+			int rank = 0;
+
+			foreach (StructuredData fieldData in fieldsData)
+			{
+				Druid fieldType = StructuredTypeResourceAccessor.ToDruid (fieldData.GetValue (Res.Fields.Field.Type));
+				Druid fieldCaption = StructuredTypeResourceAccessor.ToDruid (fieldData.GetValue (Res.Fields.Field.Caption));
+				Druid sourceFieldId = StructuredTypeResourceAccessor.ToDruid (fieldData.GetValue (Res.Fields.Field.SourceField));
+				FieldRelation relation = (FieldRelation) fieldData.GetValue (Res.Fields.Field.Relation);
+				FieldMembership membership = (FieldMembership) fieldData.GetValue (Res.Fields.Field.Membership);
+
+				if (membership == FieldMembership.Local)
+				{
+					StructuredTypeField field = new StructuredTypeField (null, null, fieldCaption, rank++, relation, sourceFieldId.ToString (), membership);
+					field.DefineTypeId (fieldType);
+					type.Fields.Add (field);
+				}
+			}
+
 			return type;
+		}
+
+		private static Druid ToDruid(object value)
+		{
+			return UndefinedValue.IsUndefinedValue (value) ? Druid.Empty : (Druid) value;
 		}
 
 		protected override void FillDataFromCaption(CultureMap item, Types.StructuredData data, Caption caption)
@@ -83,6 +116,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 				x.SetValue (Res.Fields.Field.Caption, field.CaptionId);
 				x.SetValue (Res.Fields.Field.Relation, field.Relation);
 				x.SetValue (Res.Fields.Field.Membership, field.Membership);
+				x.SetValue (Res.Fields.Field.SourceField, string.IsNullOrEmpty (field.SourceFieldId) ? Druid.Empty : Druid.Parse (field.SourceFieldId));
 				fields.Add (x);
 				
 				item.NotifyDataAdded (x);
@@ -90,24 +124,22 @@ namespace Epsitec.Common.Support.ResourceAccessors
 
 			data.SetValue (Res.Fields.ResourceStructuredType.Fields, fields);
 			data.LockValue (Res.Fields.ResourceStructuredType.Fields);
+
+			data.SetValue (Res.Fields.ResourceStructuredType.BaseType, type.BaseTypeId);
+			data.SetValue (Res.Fields.ResourceStructuredType.Class, type.Class);
 			
 			fields.CollectionChanged += new Listener (this, item).HandleCollectionChanged;
 
 		}
 
-		protected override bool FilterField(ResourceBundle.Field field)
-		{
-			return base.FilterField (field);
-		}
-
-
+		
 		private class FieldBroker : IDataBroker
 		{
 			#region IDataBroker Members
 
 			public StructuredData CreateData(CultureMap container)
 			{
-				return null;
+				return new StructuredData (Res.Types.Field);
 			}
 
 			#endregion
