@@ -26,6 +26,7 @@ namespace Epsitec.Common.Support
 			public static class Field
 			{
 				public static readonly Epsitec.Common.Support.Druid Caption = Epsitec.Common.Support.Druid.FromLong (_moduleId, 38);
+				public static readonly Epsitec.Common.Support.Druid Membership = Epsitec.Common.Support.Druid.FromLong (_moduleId, 3);
 				public static readonly Epsitec.Common.Support.Druid Relation = Epsitec.Common.Support.Druid.FromLong (_moduleId, 39);
 				public static readonly Epsitec.Common.Support.Druid SourceField = Epsitec.Common.Support.Druid.FromLong (_moduleId, 40);
 				public static readonly Epsitec.Common.Support.Druid Type = Epsitec.Common.Support.Druid.FromLong (_moduleId, 37);

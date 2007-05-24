@@ -22,6 +22,24 @@ namespace Epsitec.Common.Support
 		}
 
 		[Test]
+		public void CheckBasicTypes()
+		{
+			Types.StructuredType typeEntity = Res.Types.ResourceEntity;
+			Types.StructuredType typeField  = Res.Types.Field;
+			Types.CollectionType typeFields = Res.Types.FieldCollection;
+			
+			Types.EnumType typeFieldRelation   = Types.Res.Types.FieldRelation;
+			Types.EnumType typeFieldMembership = Types.Res.Types.FieldMembership;
+
+			Assert.AreEqual (typeFields, typeEntity.GetField (Res.Fields.ResourceEntity.Fields.ToString ()).Type);
+			Assert.AreEqual (typeField, typeFields.ItemType);
+			Assert.AreEqual (typeof (Types.FieldRelation), typeFieldRelation.SystemType);
+			Assert.AreEqual (typeof (Types.FieldMembership), typeFieldMembership.SystemType);
+			Assert.AreEqual (typeFieldRelation.SystemType, typeField.GetField (Res.Fields.Field.Relation.ToString ()).Type.SystemType);
+			Assert.AreEqual (typeFieldMembership.SystemType, typeField.GetField (Res.Fields.Field.Membership.ToString ()).Type.SystemType);
+		}
+
+		[Test]
 		public void CheckCaptionAccessor()
 		{
 			ResourceAccessors.CaptionResourceAccessor accessor = new ResourceAccessors.CaptionResourceAccessor ();

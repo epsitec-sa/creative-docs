@@ -10,7 +10,8 @@ namespace Epsitec.Common.Types
 		public static class Types
 		{
 			public static readonly Epsitec.Common.Types.EnumType BindingMode = (Epsitec.Common.Types.EnumType) Epsitec.Common.Types.TypeRosetta.CreateTypeObject (Epsitec.Common.Support.Druid.FromLong (_moduleId, 16));
-			public static readonly Epsitec.Common.Types.EnumType Relation = (Epsitec.Common.Types.EnumType) Epsitec.Common.Types.TypeRosetta.CreateTypeObject (Epsitec.Common.Support.Druid.FromLong (_moduleId, 22));
+			public static readonly Epsitec.Common.Types.EnumType FieldMembership = (Epsitec.Common.Types.EnumType) Epsitec.Common.Types.TypeRosetta.CreateTypeObject (Epsitec.Common.Support.Druid.FromLong (_moduleId, 29));
+			public static readonly Epsitec.Common.Types.EnumType FieldRelation = (Epsitec.Common.Types.EnumType) Epsitec.Common.Types.TypeRosetta.CreateTypeObject (Epsitec.Common.Support.Druid.FromLong (_moduleId, 22));
 			public static class Default
 			{
 				public static readonly Epsitec.Common.Types.BooleanType Boolean = (Epsitec.Common.Types.BooleanType) Epsitec.Common.Types.TypeRosetta.CreateTypeObject (Epsitec.Common.Support.Druid.FromLong (_moduleId, 3));
@@ -38,7 +39,13 @@ namespace Epsitec.Common.Types
 				public static Epsitec.Common.Types.Caption TwoWay { get { return Res._manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 15)); } }
 			}
 			
-			public static class Relation
+			public static class FieldMembership
+			{
+				public static Epsitec.Common.Types.Caption Inherited { get { return Res._manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 28)); } }
+				public static Epsitec.Common.Types.Caption Local { get { return Res._manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 27)); } }
+			}
+			
+			public static class FieldRelation
 			{
 				public static Epsitec.Common.Types.Caption Collection { get { return Res._manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 26)); } }
 				public static Epsitec.Common.Types.Caption Inclusion { get { return Res._manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 25)); } }
