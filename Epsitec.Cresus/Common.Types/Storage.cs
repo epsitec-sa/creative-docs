@@ -51,7 +51,8 @@ namespace Epsitec.Common.Types
 					context.StoreObjectData (id, map.GetValue (id));
 				}
 			}
-			
+
+			context.NotifySerializationCompleted ();
 			context.ActiveWriter.EndStorageBundle ();
 		}
 

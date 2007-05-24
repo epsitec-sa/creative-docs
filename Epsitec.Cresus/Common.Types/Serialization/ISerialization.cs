@@ -9,7 +9,7 @@ namespace Epsitec.Common.Types.Serialization
 	/// </summary>
 	public interface ISerialization
 	{
-		void NotifySerializationStarted(Serialization.Context context);
+		bool NotifySerializationStarted(Serialization.Context context);
 		void NotifySerializationCompleted(Serialization.Context context);
 	}
 }

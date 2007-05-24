@@ -309,6 +309,10 @@ namespace Epsitec.Common.Types.Serialization
 
 		#endregion
 
+		public virtual void NotifySerializationCompleted()
+		{
+		}
+		
 		/// <summary>
 		/// Gets the active context.
 		/// </summary>

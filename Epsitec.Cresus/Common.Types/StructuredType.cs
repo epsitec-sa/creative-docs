@@ -13,7 +13,7 @@ namespace Epsitec.Common.Types
 	/// The <c>StructuredType</c> class describes the type of the data stored in
 	/// a <see cref="StructuredData"/> class.
 	/// </summary>
-	public class StructuredType : AbstractType, IStructuredType
+	public class StructuredType : AbstractType, IStructuredType, Serialization.ISerialization
 	{
 		/// <summary>
 		/// Initializes a new instance of the <see cref="StructuredType"/> class,
@@ -44,7 +44,7 @@ namespace Epsitec.Common.Types
 		/// Initializes a new instance of the <see cref="StructuredType"/> class.
 		/// </summary>
 		/// <param name="class">The structured type class.</param>
-		/// <param name="baseType">The structured type this instance extends.</param>
+		/// <param name="baseTypeId">The structured type this instance extends.</param>
 		public StructuredType(StructuredTypeClass @class, Support.Druid baseTypeId)
 			: this (@class)
 		{
@@ -62,6 +62,7 @@ namespace Epsitec.Common.Types
 		{
 			get
 			{
+				this.IncludeInheritedFields ();
 				return this.fields;
 			}
 		}
@@ -83,7 +84,7 @@ namespace Epsitec.Common.Types
 		/// its base type).
 		/// </summary>
 		/// <value>The structured type id this instance extends or <c>Druid.Empty</c>.</value>
-		public Support.Druid BaseType
+		public Support.Druid BaseTypeId
 		{
 			get
 			{
@@ -97,6 +98,33 @@ namespace Epsitec.Common.Types
 				{
 					return (Support.Druid) value;
 				}
+			}
+		}
+
+		/// <summary>
+		/// Gets the structured type extended by this instance (also known as
+		/// its base type). This uses the <c>BaseTypeId</c> and an access through
+		/// the resource manager to resolve the structured type.
+		/// </summary>
+		/// <value>The structured type this instance extends or <c>null</c>.</value>
+		public StructuredType BaseType
+		{
+			get
+			{
+				Support.Druid baseTypeId = this.BaseTypeId;
+
+				if (baseTypeId.IsValid)
+				{
+					Support.ResourceManager manager = this.FindAssociatedResourceManager ();
+					Caption                 caption = manager.GetCaption (baseTypeId);
+
+					if (caption != null)
+					{
+						return TypeRosetta.GetTypeObject (caption) as StructuredType;
+					}
+				}
+
+				return null;
 			}
 		}
 
@@ -146,6 +174,8 @@ namespace Epsitec.Common.Types
 		/// </returns>
 		public StructuredTypeField GetField(string fieldId)
 		{
+			this.IncludeInheritedFields ();
+
 			StructuredTypeField field;
 
 			if (this.fields.TryGetValue (fieldId, out field))
@@ -164,6 +194,8 @@ namespace Epsitec.Common.Types
 		/// <returns>A collection of field identifiers.</returns>
 		public IEnumerable<string> GetFieldIds()
 		{
+			this.IncludeInheritedFields ();
+
 			StructuredTypeField[] fields = new StructuredTypeField[this.fields.Values.Count];
 			
 			this.fields.Values.CopyTo (fields, 0);
@@ -205,6 +237,30 @@ namespace Epsitec.Common.Types
 
 		#endregion
 
+		#region ISerialization Members
+
+		bool Serialization.ISerialization.NotifySerializationStarted(Serialization.Context context)
+		{
+			//	Remove any inherited fields from the fields collection, so we don't serialize
+			//	inherited fields.
+
+			System.Diagnostics.Debug.Assert (this.fieldInheritance != FieldInheritance.Disabled);
+			
+			this.RemoveInheritedFields ();
+			this.fieldInheritance = FieldInheritance.Disabled;
+			
+			return true;
+		}
+
+		void Serialization.ISerialization.NotifySerializationCompleted(Serialization.Context context)
+		{
+			System.Diagnostics.Debug.Assert (this.fieldInheritance == FieldInheritance.Disabled);
+			
+			this.fieldInheritance = FieldInheritance.Undefined;
+		}
+
+		#endregion
+
 		#region RankComparerImplementation Class
 		
 		private class RankComparerImplementation : IComparer<StructuredTypeField>
@@ -213,6 +269,19 @@ namespace Epsitec.Common.Types
 
 			public int Compare(StructuredTypeField valX, StructuredTypeField valY)
 			{
+				if (valX.Membership != valY.Membership)
+				{
+					if ((valX.Membership == FieldMembership.Inherited) &&
+						(valY.Membership != FieldMembership.Inherited))
+					{
+						return -1;
+					}
+					else
+					{
+						return 1;
+					}
+				}
+
 				int rx = valX.Rank;
 				int ry = valY.Rank;
 
@@ -264,15 +333,15 @@ namespace Epsitec.Common.Types
 			{
 				throw new System.ArgumentException (string.Format ("Cannot merge StructuredType of Class {0} and {1}", a.Class, b.Class));
 			}
-			if (a.BaseType != b.BaseType)
+			if (a.BaseTypeId != b.BaseTypeId)
 			{
 				throw new System.ArgumentException ("Cannot merge StructuredType with different base types");
 			}
 
-			StructuredType merge = new StructuredType (b.Class, b.BaseType);
+			StructuredType merge = new StructuredType (b.Class, b.BaseTypeId);
 			
-			if (((bool)a.GetValue(StructuredType.DebugDisableChecksProperty)) ||
-				((bool)b.GetValue(StructuredType.DebugDisableChecksProperty)))
+			if (((bool)a.GetValue (StructuredType.DebugDisableChecksProperty)) ||
+				((bool)b.GetValue (StructuredType.DebugDisableChecksProperty)))
 			{
 				merge.SetValue (StructuredType.DebugDisableChecksProperty, true);
 			}
@@ -289,25 +358,33 @@ namespace Epsitec.Common.Types
 			foreach (string id in a.GetFieldIds ())
 			{
 				StructuredTypeField field = a.GetField (id);
-				
-				merge.fields.Add (new StructuredTypeField (id, field.Type, field.CaptionId, rank++,
-														   field.Relation, field.SourceFieldId));
+
+				if (field.Membership == FieldMembership.Local)
+				{
+					merge.fields.Add (new StructuredTypeField (id, field.Type, field.CaptionId, rank++,
+															   field.Relation, field.SourceFieldId));
+				}
 			}
 
 			foreach (string id in b.GetFieldIds ())
 			{
 				StructuredTypeField field = b.GetField (id);
 
-				if (merge.fields.ContainsKey (id))
+				if (field.Membership == FieldMembership.Local)
 				{
-					merge.fields[id] = new StructuredTypeField (id, field.Type, field.CaptionId, merge.fields[id].Rank, field.Relation, field.SourceFieldId);
-				}
-				else
-				{
-					merge.fields.Add (new StructuredTypeField (id, field.Type, field.CaptionId, rank++,
-															   field.Relation, field.SourceFieldId));
+					if (merge.fields.ContainsKey (id))
+					{
+						merge.fields[id] = new StructuredTypeField (id, field.Type, field.CaptionId, merge.fields[id].Rank, field.Relation, field.SourceFieldId);
+					}
+					else
+					{
+						merge.fields.Add (new StructuredTypeField (id, field.Type, field.CaptionId, rank++,
+																   field.Relation, field.SourceFieldId));
+					}
 				}
 			}
+
+			System.Diagnostics.Debug.Assert (merge.fieldInheritance == FieldInheritance.Undefined);
 
 			//	Make the merged structure type belong to the same bundle/module
 			//	as the lower layer source structured type :
@@ -375,6 +452,53 @@ namespace Epsitec.Common.Types
 			return (data != null) && (data.StructuredType == this);
 		}
 
+		public void RefreshInheritedFields()
+		{
+			this.RemoveInheritedFields ();
+			this.IncludeInheritedFields ();
+		}
+
+		public virtual void IncludeInheritedFields()
+		{
+			if (this.fieldInheritance == FieldInheritance.Undefined)
+			{
+				StructuredType baseType = this.BaseType;
+				
+				if (baseType != null)
+				{
+					foreach (string id in baseType.GetFieldIds ())
+					{
+						this.fields.Add (id, baseType.Fields[id]);
+					}
+					
+					this.fieldInheritance = FieldInheritance.Defined;
+				}
+			}
+		}
+
+		public virtual void RemoveInheritedFields()
+		{
+			if (this.fieldInheritance == FieldInheritance.Defined)
+			{
+				List<string> ids = new List<string> ();
+				
+				foreach (KeyValuePair<string, StructuredTypeField> fieldEntry in this.fields)
+				{
+					if (fieldEntry.Value.Membership == FieldMembership.Inherited)
+					{
+						ids.Add (fieldEntry.Key);
+					}
+				}
+
+				foreach (string id in ids)
+				{
+					this.fields.Remove (id);
+				}
+				
+				this.fieldInheritance = FieldInheritance.Undefined;
+			}
+		}
+		
 		#region Private and Protected Methods
 
 		protected override void OnCaptionDefined()
@@ -428,12 +552,8 @@ namespace Epsitec.Common.Types
 					//	Ensure that the field ID matches the field's caption ID. This is
 					//	a strict requirement for entities and views.
 
-					Support.ResourceBundle  bundle  = Support.ResourceManager.GetSourceBundle (this.Caption);
-					Support.ResourceManager manager = bundle == null
-						? (Serialization.Context.GetResourceManager (Storage.CurrentDeserializationContext) ?? Support.Resources.DefaultManager)
-						: bundle.ResourceManager;
-
-					Caption caption = manager.GetCaption (field.CaptionId);
+					Support.ResourceManager manager = this.FindAssociatedResourceManager ();
+					Caption                 caption = manager.GetCaption (field.CaptionId);
 
 					if ((caption == null) ||
 						(string.IsNullOrEmpty (caption.Name)))
@@ -453,6 +573,16 @@ namespace Epsitec.Common.Types
 					}
 				}
 			}
+		}
+
+		private Support.ResourceManager FindAssociatedResourceManager()
+		{
+			Support.ResourceBundle  bundle  = Support.ResourceManager.GetSourceBundle (this.Caption);
+			Support.ResourceManager manager = bundle == null
+						? (Serialization.Context.GetResourceManager (Storage.CurrentDeserializationContext) ?? Support.Resources.DefaultManager)
+						: bundle.ResourceManager;
+			
+			return manager;
 		}
 
 		private void NotifyFieldRemoval(string name, StructuredTypeField field)
@@ -483,11 +613,19 @@ namespace Epsitec.Common.Types
 			return data;
 		}
 
+		private enum FieldInheritance
+		{
+			Undefined,
+			Defined,
+			Disabled
+		}
+
 		public static readonly DependencyProperty DebugDisableChecksProperty = DependencyProperty.Register ("DebugDisableChecks", typeof (bool), typeof (StructuredType), new DependencyPropertyMetadata (false));
 		public static readonly DependencyProperty FieldsProperty = DependencyProperty.RegisterReadOnly ("Fields", typeof (Collections.StructuredTypeFieldCollection), typeof (StructuredType), new DependencyPropertyMetadata (StructuredType.GetFieldsValue).MakeReadOnlySerializable ());
 		public static readonly DependencyProperty ClassProperty = DependencyProperty.RegisterReadOnly ("Class", typeof (StructuredTypeClass), typeof (StructuredType), new DependencyPropertyMetadata (StructuredTypeClass.None).MakeReadOnlySerializable ());
 		public static readonly DependencyProperty BaseTypeIdProperty = DependencyProperty.RegisterReadOnly ("BaseTypeId", typeof (Support.Druid), typeof (StructuredType), new DependencyPropertyMetadata (Support.Druid.Empty).MakeReadOnlySerializable ());
 
 		private Collections.HostedStructuredTypeFieldDictionary fields;
+		private FieldInheritance fieldInheritance;
 	}
 }

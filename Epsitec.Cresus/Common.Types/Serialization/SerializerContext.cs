@@ -24,7 +24,10 @@ namespace Epsitec.Common.Types.Serialization
 
 			if (serialization != null)
 			{
-				serialization.NotifySerializationStarted (this);
+				if (serialization.NotifySerializationStarted (this))
+				{
+					this.serializedObjects.Add (serialization);
+				}
 			}
 
 			this.writer.BeginObject (id, obj);
@@ -34,8 +37,11 @@ namespace Epsitec.Common.Types.Serialization
 //			this.StoreObjectChildren (obj);
 			
 			this.writer.EndObject (id, obj);
-			
-			if (serialization != null)
+		}
+
+		public override void NotifySerializationCompleted()
+		{
+			foreach (ISerialization serialization in this.serializedObjects)
 			{
 				serialization.NotifySerializationCompleted (this);
 			}
@@ -259,5 +265,7 @@ namespace Epsitec.Common.Types.Serialization
 			}
 
 		}
+
+		private List<ISerialization> serializedObjects = new List<ISerialization> ();
 	}
 }
