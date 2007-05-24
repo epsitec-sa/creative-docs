@@ -116,13 +116,28 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		public double GetLinkVerticalPosition(int rank)
 		{
-			//	Retourne le position verticale pour un trait de liaison.
+			//	Retourne la position verticale pour un trait de liaison.
 			if (this.isExtended && this.table != null && rank < this.table.Count)
 			{
 				return this.Client.Bounds.Top - (EntityBox.headerHeight + this.FieldHeight*rank + 16);
 			}
 
 			return double.NaN;
+		}
+
+		public double GetLinkVerticalDestination(double posv)
+		{
+			//	Retourne la position verticale où accrocher la destination.
+			Rectangle bounds = this.ActualBounds;
+
+			if (posv >= bounds.Bottom+EntityBox.roundRectRadius && posv <= bounds.Top-EntityBox.roundRectRadius)
+			{
+				return posv;
+			}
+			else
+			{
+				return bounds.Center.Y;
+			}
 		}
 
 		protected double FieldHeight
@@ -341,7 +356,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		#region Event
 		protected virtual void OnGeometryChanged()
 		{
-			//	Génère un événement pour dire que la géométrie a changé.
+			//	Génère un événement pour dire que la géométrie a changé (changement compact/étendu).
 			EventHandler handler = (EventHandler) this.GetUserEventHandler("GeometryChanged");
 			if (handler != null)
 			{

@@ -76,6 +76,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 		protected void UpdateGeometry()
 		{
+			//	Met à jour la géométrie de toutes les boîtes et de toutes les liaisons.
 			foreach (MyWidgets.EntityBox box in this.boxes)
 			{
 				Rectangle bounds = box.ActualBounds;
@@ -86,13 +87,15 @@ namespace Epsitec.Common.Designer.Viewers
 				box.SetManualBounds(bounds);
 			}
 
-			this.UpdateLink(this.links[0], this.boxes[0], 1, this.boxes[1]);
-			this.UpdateLink(this.links[1], this.boxes[0], 2, this.boxes[2]);
+			this.UpdateLink(this.links[0], this.boxes[0], 1, this.boxes[1], Relation.Reference);  // lien client
+			this.UpdateLink(this.links[1], this.boxes[0], 2, this.boxes[2], Relation.Collection);  // lien articles
 		}
 
-		protected void UpdateLink(MyWidgets.EntityLink link, MyWidgets.EntityBox src, int srcRank, MyWidgets.EntityBox dst)
+		protected void UpdateLink(MyWidgets.EntityLink link, MyWidgets.EntityBox src, int srcRank, MyWidgets.EntityBox dst, Relation relation)
 		{
+			//	Met à jour la géométrie d'une liaison.
 			link.SetManualBounds(this.scrollable.Panel.Client.Bounds);
+			link.Relation = relation;
 
 			Rectangle srcBounds = src.ActualBounds;
 			Rectangle dstBounds = dst.ActualBounds;
@@ -109,11 +112,7 @@ namespace Epsitec.Common.Designer.Viewers
 				Point p = new Point(0, v);
 				p = src.MapClientToParent(p);
 
-				double dv = p.Y;
-				if (dv < dstBounds.Bottom || dv > dstBounds.Top)
-				{
-					dv = dstBounds.Center.Y;
-				}
+				double dv = dst.GetLinkVerticalDestination(p.Y);
 
 				if (srcBounds.Right < dstBounds.Left)
 				{
@@ -131,6 +130,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 		private void HandleBoxGeometryChanged(object sender)
 		{
+			//	Appelé lorsque la géométrie d'une boîte a changé (changement compact/étendu).
 			this.UpdateGeometry();
 		}
 
