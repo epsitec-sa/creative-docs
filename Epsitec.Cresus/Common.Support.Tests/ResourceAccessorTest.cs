@@ -153,6 +153,19 @@ namespace Epsitec.Common.Support
 		}
 
 		[Test]
+		public void CheckStructuredTypeAccessor()
+		{
+			ResourceAccessors.StructuredTypeResourceAccessor accessor = new ResourceAccessors.StructuredTypeResourceAccessor ();
+			ResourceManager manager = Support.Res.Manager;
+
+			Assert.IsFalse (accessor.ContainsChanges);
+
+			accessor.Load (manager);
+
+			Assert.AreEqual (7, accessor.Collection.Count);
+		}
+
+		[Test]
 		public void CheckMetadata()
 		{
 			ResourceAccessors.StringResourceAccessor  stringAccessor  = new ResourceAccessors.StringResourceAccessor ();

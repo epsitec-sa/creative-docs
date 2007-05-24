@@ -24,4 +24,8 @@
   <data id="0T">&lt;s:type id="_1" s:name="*aT" /&gt;&lt;s:type id="_2" s:name="*eT" /&gt;&lt;s:data id="_0" f:_1.SystemType="E:Epsitec.Common.Types.FieldMembership, Common.Types" f:_2.EnumValues="{Collection {Text '0 [100R]'}, {Text '1 [100S]'}}" f:_1.DefaultController="Enum" f:_1.DefaultControllerParameter="Icons" /&gt;</data>
   <data id="0S">&lt;s:data id="_0" f:Labels="{Collection {Text 'Inherited field'}}" /&gt;</data>
   <data id="0R">&lt;s:data id="_0" f:Labels="{Collection {Text 'Local field'}}" /&gt;</data>
+  <data id="011">&lt;s:type id="_1" s:name="*aT" /&gt;&lt;s:type id="_2" s:name="*eT" /&gt;&lt;s:data id="_0" f:_1.SystemType="E:Epsitec.Common.Types.StructuredTypeClass, Common.Types" f:_2.EnumValues="{Collection {Text '0 [100U]'}, {Text '1 [100V]'}, {Text '2 [10001]'}}" f:_1.DefaultController="Enum" f:_1.DefaultControllerParameter="Icons" /&gt;</data>
+  <data id="0U">&lt;s:data id="_0" f:Labels="{Collection {Text 'Undefined class'}}" /&gt;</data>
+  <data id="0V">&lt;s:data id="_0" f:Labels="{Collection {Text 'Entity'}}" /&gt;</data>
+  <data id="001">&lt;s:data id="_0" f:Labels="{Collection {Text 'Entity view'}}" /&gt;</data>
 </bundle>

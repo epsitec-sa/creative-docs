@@ -3,6 +3,7 @@
 
 using Epsitec.Common.Support;
 using Epsitec.Common.Types;
+using Epsitec.Common.Types.Collections;
 
 using System.Collections.Generic;
 
@@ -42,16 +43,19 @@ namespace Epsitec.Common.Support.ResourceAccessors
 		protected override Caption GetCaptionFromData(Types.StructuredData data, string name)
 		{
 			Caption     caption = base.GetCaptionFromData (data, name);
-			StructuredType type = this.GetTypeFromData (data);
+			StructuredType type = this.GetTypeFromData (data, caption);
 
 			AbstractType.SetComplexType (caption, type);
 			
 			return caption;
 		}
 
-		private StructuredType GetTypeFromData(StructuredData data)
+		private StructuredType GetTypeFromData(StructuredData data, Caption caption)
 		{
-			throw new System.Exception ("The method or operation is not implemented.");
+			StructuredType type = new StructuredType ();
+			type.DefineCaption (caption);
+
+			return type;
 		}
 
 		protected override void FillDataFromCaption(CultureMap item, Types.StructuredData data, Caption caption)
@@ -68,7 +72,27 @@ namespace Epsitec.Common.Support.ResourceAccessors
 
 		private void FillDataFromType(CultureMap item, StructuredData data, StructuredType type)
 		{
-			throw new System.Exception ("The method or operation is not implemented.");
+			ObservableList<StructuredData> fields = new ObservableList<StructuredData> ();
+
+			foreach (string fieldId in type.GetFieldIds ())
+			{
+				StructuredTypeField field = type.Fields[fieldId];
+				StructuredData x = new StructuredData (Res.Types.Field);
+				
+				x.SetValue (Res.Fields.Field.Type, field.Type.CaptionId);
+				x.SetValue (Res.Fields.Field.Caption, field.CaptionId);
+				x.SetValue (Res.Fields.Field.Relation, field.Relation);
+				x.SetValue (Res.Fields.Field.Membership, field.Membership);
+				fields.Add (x);
+				
+				item.NotifyDataAdded (x);
+			}
+
+			data.SetValue (Res.Fields.ResourceEntity.Fields, fields);
+			data.LockValue (Res.Fields.ResourceEntity.Fields);
+			
+			fields.CollectionChanged += new Listener (this, item).HandleCollectionChanged;
+
 		}
 
 		protected override bool FilterField(ResourceBundle.Field field)

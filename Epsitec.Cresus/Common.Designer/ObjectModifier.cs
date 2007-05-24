@@ -12,7 +12,7 @@ namespace Epsitec.Common.Designer
 	/// </summary>
 	public class ObjectModifier
 	{
-		[Types.Designer]
+		[Types.DesignerVisible]
 		public enum ChildrenPlacement
 		{
 			[Types.Hidden] None,
@@ -22,7 +22,7 @@ namespace Epsitec.Common.Designer
 			Grid,
 		}
 
-		[Types.Designer]
+		[Types.DesignerVisible]
 		public enum AnchoredHorizontalAttachment
 		{
 			[Types.Hidden] None,
@@ -31,7 +31,7 @@ namespace Epsitec.Common.Designer
 			Fill,
 		}
 
-		[Types.Designer]
+		[Types.DesignerVisible]
 		public enum AnchoredVerticalAttachment
 		{
 			[Types.Hidden] None,
@@ -40,7 +40,7 @@ namespace Epsitec.Common.Designer
 			Fill,
 		}
 
-		[Types.Designer]
+		[Types.DesignerVisible]
 		public enum StackedHorizontalAttachment
 		{
 			[Types.Hidden] None,
@@ -49,7 +49,7 @@ namespace Epsitec.Common.Designer
 			Fill,
 		}
 
-		[Types.Designer]
+		[Types.DesignerVisible]
 		public enum StackedVerticalAttachment
 		{
 			[Types.Hidden] None,
@@ -58,7 +58,7 @@ namespace Epsitec.Common.Designer
 			Fill,
 		}
 
-		[Types.Designer]
+		[Types.DesignerVisible]
 		public enum StackedHorizontalAlignment
 		{
 			[Types.Hidden] None,
@@ -68,7 +68,7 @@ namespace Epsitec.Common.Designer
 			Right,
 		}
 
-		[Types.Designer]
+		[Types.DesignerVisible]
 		public enum StackedVerticalAlignment
 		{
 			[Types.Hidden] None,
@@ -79,7 +79,7 @@ namespace Epsitec.Common.Designer
 			BaseLine,
 		}
 
-		[Types.Designer]
+		[Types.DesignerVisible]
 		public enum GridMode
 		{
 			[Types.Hidden] None,

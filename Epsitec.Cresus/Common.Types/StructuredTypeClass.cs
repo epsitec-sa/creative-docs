@@ -10,6 +10,7 @@ namespace Epsitec.Common.Types
 	/// structured type should be interpreted.
 	/// See <see cref="StructuredType"/>.
 	/// </summary>
+	[DesignerVisible]
 	public enum StructuredTypeClass
 	{
 		/// <summary>

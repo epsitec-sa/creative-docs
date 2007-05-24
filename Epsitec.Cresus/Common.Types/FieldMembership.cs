@@ -8,7 +8,7 @@ namespace Epsitec.Common.Types
 	/// originally defined.
 	/// See <see cref="StructuredTypeField"/>.
 	/// </summary>
-	[Designer]
+	[DesignerVisible]
 	public enum FieldMembership
 	{
 		/// <summary>

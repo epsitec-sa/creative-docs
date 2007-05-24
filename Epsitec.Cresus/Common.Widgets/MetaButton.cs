@@ -5,7 +5,7 @@ using Epsitec.Common.Types;
 
 namespace Epsitec.Common.Widgets
 {
-	[Types.Designer]
+	[Types.DesignerVisible]
 	public enum ButtonAspect
 	{
 		[Types.Hidden] None,

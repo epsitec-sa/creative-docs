@@ -12,6 +12,7 @@ namespace Epsitec.Common.Types
 			public static readonly Epsitec.Common.Types.EnumType BindingMode = (Epsitec.Common.Types.EnumType) Epsitec.Common.Types.TypeRosetta.CreateTypeObject (Epsitec.Common.Support.Druid.FromLong (_moduleId, 16));
 			public static readonly Epsitec.Common.Types.EnumType FieldMembership = (Epsitec.Common.Types.EnumType) Epsitec.Common.Types.TypeRosetta.CreateTypeObject (Epsitec.Common.Support.Druid.FromLong (_moduleId, 29));
 			public static readonly Epsitec.Common.Types.EnumType FieldRelation = (Epsitec.Common.Types.EnumType) Epsitec.Common.Types.TypeRosetta.CreateTypeObject (Epsitec.Common.Support.Druid.FromLong (_moduleId, 22));
+			public static readonly Epsitec.Common.Types.EnumType StructuredTypeClass = (Epsitec.Common.Types.EnumType) Epsitec.Common.Types.TypeRosetta.CreateTypeObject (Epsitec.Common.Support.Druid.FromLong (_moduleId, 33));
 			public static class Default
 			{
 				public static readonly Epsitec.Common.Types.BooleanType Boolean = (Epsitec.Common.Types.BooleanType) Epsitec.Common.Types.TypeRosetta.CreateTypeObject (Epsitec.Common.Support.Druid.FromLong (_moduleId, 3));
@@ -51,6 +52,13 @@ namespace Epsitec.Common.Types
 				public static Epsitec.Common.Types.Caption Inclusion { get { return Res._manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 25)); } }
 				public static Epsitec.Common.Types.Caption None { get { return Res._manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 23)); } }
 				public static Epsitec.Common.Types.Caption Reference { get { return Res._manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 24)); } }
+			}
+			
+			public static class StructuredTypeClass
+			{
+				public static Epsitec.Common.Types.Caption Entity { get { return Res._manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 31)); } }
+				public static Epsitec.Common.Types.Caption None { get { return Res._manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 30)); } }
+				public static Epsitec.Common.Types.Caption View { get { return Res._manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 32)); } }
 			}
 		}
 		

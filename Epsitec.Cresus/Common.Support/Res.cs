@@ -55,6 +55,8 @@ namespace Epsitec.Common.Support
 			
 			public static class ResourceEntity
 			{
+				public static readonly Epsitec.Common.Support.Druid BaseType = Epsitec.Common.Support.Druid.FromLong (_moduleId, 45);
+				public static readonly Epsitec.Common.Support.Druid Class = Epsitec.Common.Support.Druid.FromLong (_moduleId, 44);
 				public static readonly Epsitec.Common.Support.Druid DefaultController = Epsitec.Common.Support.Druid.FromLong (_moduleId, 32);
 				public static readonly Epsitec.Common.Support.Druid Fields = Epsitec.Common.Support.Druid.FromLong (_moduleId, 34);
 				public static readonly Epsitec.Common.Support.Druid Nullable = Epsitec.Common.Support.Druid.FromLong (_moduleId, 33);

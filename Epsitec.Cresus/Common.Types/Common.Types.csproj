@@ -146,7 +146,7 @@
     <Compile Include="UndefinedValueMode.cs" />
     <Compile Include="UnresolvedEnum.cs" />
     <Compile Include="SystemTypeFamily.cs" />
-    <Compile Include="DesignerAttribute.cs" />
+    <Compile Include="DesignerVisibleAttribute.cs" />
     <Compile Include="EnumLister.cs" />
     <Compile Include="CurrentChangingEventArgs.cs" />
     <Compile Include="ICollectionView.cs" />

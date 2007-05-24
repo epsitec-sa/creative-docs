@@ -47,7 +47,7 @@ namespace Epsitec.Common.Types
 
 				foreach (System.Type type in EnumLister.GetPublicEnums ())
 				{
-					object[] attributes = type.GetCustomAttributes (typeof (DesignerAttribute), false);
+					object[] attributes = type.GetCustomAttributes (typeof (DesignerVisibleAttribute), false);
 					
 					if (attributes.Length > 0)
 					{

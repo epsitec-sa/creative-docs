@@ -8,7 +8,7 @@ namespace Epsitec.Common.Types
 	/// field from one structure with other structures.
 	/// See <see cref="StructuredTypeField"/>.
 	/// </summary>
-	[Designer]
+	[DesignerVisible]
 	public enum FieldRelation
 	{
 		/// <summary>
