@@ -102,15 +102,31 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		public double GetBestHeight()
 		{
-			//?return this.GetBestFitSize().Height;
+			//	Retourne la hauteur requise selon le nombre de champs définis.
 			if (this.isExtended)
 			{
-				double h = this.table[0].ActualHeight + this.table[0].Margins.Top + this.table[0].Margins.Bottom;
-				return EntityBox.headerHeight + h*this.table.Count + EntityBox.footerHeight + 16;
+				return EntityBox.headerHeight + this.FieldHeight*this.table.Count + EntityBox.footerHeight + 16;
 			}
 			else
 			{
 				return EntityBox.headerHeight + 6;
+			}
+			//?return this.GetBestFitSize().Height;
+		}
+
+		protected double FieldHeight
+		{
+			//	Retourne la hauteur nécessaire pour un champ.
+			get
+			{
+				if (this.table == null || this.table.Count == 0)
+				{
+					return 0;
+				}
+				else
+				{
+					return this.table[0].ActualHeight + this.table[0].Margins.Top + this.table[0].Margins.Bottom;
+				}
 			}
 		}
 
@@ -142,6 +158,11 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 		}
 
+
+		public override Margins GetShapeMargins()
+		{
+			return new Margins(0, EntityBox.shadowOffset, 0, EntityBox.shadowOffset);
+		}
 
 		protected override void ProcessMessage(Message message, Point pos)
 		{
@@ -176,11 +197,23 @@ namespace Epsitec.Common.Designer.MyWidgets
 		{
 			IAdorner adorner = Common.Widgets.Adorners.Factory.Active;
 
+			//	Dessine l'ombre.
 			Rectangle bounds = this.Client.Bounds;
+			bounds.Offset(EntityBox.shadowOffset, -EntityBox.shadowOffset);
+			Path path = this.PathRoundRectangle(bounds, EntityBox.roundRectRadius+EntityBox.shadowOffset);
+			graphics.Rasterizer.AddSurface(path);
+			graphics.RenderSolid(Color.FromAlphaRgb(0.2, 0, 0, 0));
+
+			//	Construit le chemin du cadre arrondi.
+			bounds = this.Client.Bounds;
 			bounds.Deflate(1);
+			path = this.PathRoundRectangle(bounds, EntityBox.roundRectRadius);
 
-			Path path = this.PathRoundRectangle(bounds, EntityBox.roundRectRadius);
+			//	Peint l'intérieur en blanc.
+			graphics.Rasterizer.AddSurface(path);
+			graphics.RenderSolid(Color.FromBrightness(1));
 
+			//	Peint l'intérieur en dégradé.
 			graphics.Rasterizer.AddSurface(path);
 			Color c1 = adorner.ColorCaption;
 			Color c2 = adorner.ColorCaption;
@@ -188,6 +221,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			c2.A = 0.1;
 			this.RenderHorizontalGradient(graphics, bounds, c1, c2);
 
+			//	Peint en blanc la zone pour les champs.
 			if (this.isExtended)
 			{
 				graphics.AddFilledRectangle(bounds.Left, bounds.Bottom+EntityBox.footerHeight, bounds.Width, bounds.Height-EntityBox.footerHeight-EntityBox.headerHeight);
@@ -198,6 +232,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				this.RenderVerticalGradient(graphics, shadow, Color.FromAlphaRgb(0.0, 0, 0, 0), Color.FromAlphaRgb(0.2, 0, 0, 0));
 			}
 
+			//	Peint le cadre en noir.
 			graphics.Rasterizer.AddOutline(path, 2);
 			if (this.isExtended)
 			{
@@ -304,6 +339,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 
 		protected static readonly double roundRectRadius = 16;
+		protected static readonly double shadowOffset = 3;
 		protected static readonly double headerHeight = 30;
 		protected static readonly double footerHeight = 10;
 
