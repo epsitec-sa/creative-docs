@@ -37,7 +37,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 
 		protected override IStructuredType GetStructuredType()
 		{
-			return Res.Types.ResourceEntity;
+			return Res.Types.ResourceStructuredType;
 		}
 
 		protected override Caption GetCaptionFromData(Types.StructuredData data, string name)
@@ -88,8 +88,8 @@ namespace Epsitec.Common.Support.ResourceAccessors
 				item.NotifyDataAdded (x);
 			}
 
-			data.SetValue (Res.Fields.ResourceEntity.Fields, fields);
-			data.LockValue (Res.Fields.ResourceEntity.Fields);
+			data.SetValue (Res.Fields.ResourceStructuredType.Fields, fields);
+			data.LockValue (Res.Fields.ResourceStructuredType.Fields);
 			
 			fields.CollectionChanged += new Listener (this, item).HandleCollectionChanged;
 

@@ -14,10 +14,11 @@ namespace Epsitec.Common.Support
 			public static readonly Epsitec.Common.Types.CollectionType StringCollection = (Epsitec.Common.Types.CollectionType) Epsitec.Common.Types.TypeRosetta.CreateTypeObject (Epsitec.Common.Support.Druid.FromLong (_moduleId, 15));
 			public static readonly Epsitec.Common.Types.StructuredType Field = (Epsitec.Common.Types.StructuredType) Epsitec.Common.Types.TypeRosetta.CreateTypeObject (Epsitec.Common.Support.Druid.FromLong (_moduleId, 36));
 			public static readonly Epsitec.Common.Types.StructuredType ResourceBase = (Epsitec.Common.Types.StructuredType) Epsitec.Common.Types.TypeRosetta.CreateTypeObject (Epsitec.Common.Support.Druid.FromLong (_moduleId, 43));
+			public static readonly Epsitec.Common.Types.StructuredType ResourceBaseType = (Epsitec.Common.Types.StructuredType) Epsitec.Common.Types.TypeRosetta.CreateTypeObject (Epsitec.Common.Support.Druid.FromLong (_moduleId, 5));
 			public static readonly Epsitec.Common.Types.StructuredType ResourceCaption = (Epsitec.Common.Types.StructuredType) Epsitec.Common.Types.TypeRosetta.CreateTypeObject (Epsitec.Common.Support.Druid.FromLong (_moduleId, 6));
 			public static readonly Epsitec.Common.Types.StructuredType ResourceCommand = (Epsitec.Common.Types.StructuredType) Epsitec.Common.Types.TypeRosetta.CreateTypeObject (Epsitec.Common.Support.Druid.FromLong (_moduleId, 16));
-			public static readonly Epsitec.Common.Types.StructuredType ResourceEntity = (Epsitec.Common.Types.StructuredType) Epsitec.Common.Types.TypeRosetta.CreateTypeObject (Epsitec.Common.Support.Druid.FromLong (_moduleId, 17));
 			public static readonly Epsitec.Common.Types.StructuredType ResourceString = (Epsitec.Common.Types.StructuredType) Epsitec.Common.Types.TypeRosetta.CreateTypeObject (Epsitec.Common.Support.Druid.FromLong (_moduleId, 7));
+			public static readonly Epsitec.Common.Types.StructuredType ResourceStructuredType = (Epsitec.Common.Types.StructuredType) Epsitec.Common.Types.TypeRosetta.CreateTypeObject (Epsitec.Common.Support.Druid.FromLong (_moduleId, 17));
 			public static readonly Epsitec.Common.Types.StructuredType Shortcut = (Epsitec.Common.Types.StructuredType) Epsitec.Common.Types.TypeRosetta.CreateTypeObject (Epsitec.Common.Support.Druid.FromLong (_moduleId, 26));
 		}
 		
@@ -38,6 +39,12 @@ namespace Epsitec.Common.Support
 				public static readonly Epsitec.Common.Support.Druid ModificationId = Epsitec.Common.Support.Druid.FromLong (_moduleId, 41);
 			}
 			
+			public static class ResourceBaseType
+			{
+				public static readonly Epsitec.Common.Support.Druid DefaultController = Epsitec.Common.Support.Druid.FromLong (_moduleId, 32);
+				public static readonly Epsitec.Common.Support.Druid Nullable = Epsitec.Common.Support.Druid.FromLong (_moduleId, 33);
+			}
+			
 			public static class ResourceCaption
 			{
 				public static readonly Epsitec.Common.Support.Druid Description = Epsitec.Common.Support.Druid.FromLong (_moduleId, 12);
@@ -53,18 +60,16 @@ namespace Epsitec.Common.Support
 				public static readonly Epsitec.Common.Support.Druid Statefull = Epsitec.Common.Support.Druid.FromLong (_moduleId, 23);
 			}
 			
-			public static class ResourceEntity
-			{
-				public static readonly Epsitec.Common.Support.Druid BaseType = Epsitec.Common.Support.Druid.FromLong (_moduleId, 45);
-				public static readonly Epsitec.Common.Support.Druid Class = Epsitec.Common.Support.Druid.FromLong (_moduleId, 44);
-				public static readonly Epsitec.Common.Support.Druid DefaultController = Epsitec.Common.Support.Druid.FromLong (_moduleId, 32);
-				public static readonly Epsitec.Common.Support.Druid Fields = Epsitec.Common.Support.Druid.FromLong (_moduleId, 34);
-				public static readonly Epsitec.Common.Support.Druid Nullable = Epsitec.Common.Support.Druid.FromLong (_moduleId, 33);
-			}
-			
 			public static class ResourceString
 			{
 				public static readonly Epsitec.Common.Support.Druid Text = Epsitec.Common.Support.Druid.FromLong (_moduleId, 8);
+			}
+			
+			public static class ResourceStructuredType
+			{
+				public static readonly Epsitec.Common.Support.Druid BaseType = Epsitec.Common.Support.Druid.FromLong (_moduleId, 45);
+				public static readonly Epsitec.Common.Support.Druid Class = Epsitec.Common.Support.Druid.FromLong (_moduleId, 44);
+				public static readonly Epsitec.Common.Support.Druid Fields = Epsitec.Common.Support.Druid.FromLong (_moduleId, 34);
 			}
 			
 			public static class Shortcut

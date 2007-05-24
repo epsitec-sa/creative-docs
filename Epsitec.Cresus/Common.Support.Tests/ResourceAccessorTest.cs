@@ -24,14 +24,14 @@ namespace Epsitec.Common.Support
 		[Test]
 		public void CheckBasicTypes()
 		{
-			Types.StructuredType typeEntity = Res.Types.ResourceEntity;
+			Types.StructuredType typeStruct = Res.Types.ResourceStructuredType;
 			Types.StructuredType typeField  = Res.Types.Field;
 			Types.CollectionType typeFields = Res.Types.FieldCollection;
 			
 			Types.EnumType typeFieldRelation   = Types.Res.Types.FieldRelation;
 			Types.EnumType typeFieldMembership = Types.Res.Types.FieldMembership;
 
-			Assert.AreEqual (typeFields, typeEntity.GetField (Res.Fields.ResourceEntity.Fields.ToString ()).Type);
+			Assert.AreEqual (typeFields, typeStruct.GetField (Res.Fields.ResourceStructuredType.Fields.ToString ()).Type);
 			Assert.AreEqual (typeField, typeFields.ItemType);
 			Assert.AreEqual (typeof (Types.FieldRelation), typeFieldRelation.SystemType);
 			Assert.AreEqual (typeof (Types.FieldMembership), typeFieldMembership.SystemType);
