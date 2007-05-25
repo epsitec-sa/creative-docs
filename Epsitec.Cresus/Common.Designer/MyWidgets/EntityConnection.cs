@@ -13,8 +13,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 	{
 		public EntityConnection() : base()
 		{
-			this.source = Point.Zero;
-			this.destination = Point.Zero;
+			this.points = new List<Point>();
 		}
 
 		public EntityConnection(Widget embedder) : this()
@@ -32,35 +31,11 @@ namespace Epsitec.Common.Designer.MyWidgets
 		}
 
 
-		public Point Source
+		public List<Point> Points
 		{
 			get
 			{
-				return this.source;
-			}
-			set
-			{
-				if (this.source != value)
-				{
-					this.source = value;
-					this.Invalidate();
-				}
-			}
-		}
-
-		public Point Destination
-		{
-			get
-			{
-				return this.destination;
-			}
-			set
-			{
-				if (this.destination != value)
-				{
-					this.destination = value;
-					this.Invalidate();
-				}
+				return this.points;
 			}
 		}
 
@@ -84,21 +59,35 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
 		{
-			if (!this.source.IsZero && !this.destination.IsZero)
+			if (this.points.Count >= 2)
 			{
-				Point p1 = this.MapParentToClient(this.source);
-				Point p2 = this.MapParentToClient(this.destination);
+				Point start = this.GetPoint(0);
 
-				graphics.AddFilledCircle(p1, EntityConnection.circleRadius);
+				graphics.AddFilledCircle(start, EntityConnection.circleRadius);
 				graphics.RenderSolid(Color.FromBrightness(1));
 
-				graphics.AddCircle(p1, EntityConnection.circleRadius);
-				p1 = Point.Move(p1, p2, EntityConnection.circleRadius);
+				graphics.AddCircle(start, EntityConnection.circleRadius);
+				start = Point.Move(start, this.GetPoint(1), EntityConnection.circleRadius);
 
-				graphics.AddLine(p1, p2);
-				this.PaintArrow(graphics, p1, p2);
+				for (int i=0; i<this.points.Count-1; i++)
+				{
+					Point p1 = (i==0) ? start : this.GetPoint(i);
+					Point p2 = this.GetPoint(i+1);
+
+					graphics.AddLine(p1, p2);
+
+					if (i == this.points.Count-2)
+					{
+						this.PaintArrow(graphics, p1, p2);
+					}
+				}
 				graphics.RenderSolid(Color.FromBrightness(0));
 			}
+		}
+
+		protected Point GetPoint(int rank)
+		{
+			return this.MapParentToClient(this.points[rank]);
 		}
 
 		protected void PaintArrow(Graphics graphics, Point start, Point end)
@@ -136,8 +125,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected static readonly double arrowLength = 12;
 		protected static readonly double arrowAngle = 25;
 
-		protected Point source;
-		protected Point destination;
+		protected List<Point> points;
 		protected FieldRelation relation;
 	}
 }

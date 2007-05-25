@@ -66,6 +66,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.UpdateConnection(this.connections[0], this.boxes[0], 2, this.boxes[1], FieldRelation.Reference);  // lien client
 			this.UpdateConnection(this.connections[1], this.boxes[0], 3, this.boxes[2], FieldRelation.Collection);  // lien articles
 			this.UpdateConnection(this.connections[2], this.boxes[0], 5, this.boxes[3], FieldRelation.Inclusion);  // lien rabais
+			this.Invalidate();
 		}
 
 		protected void UpdateConnection(MyWidgets.EntityConnection connection, MyWidgets.EntityBox src, int srcRank, MyWidgets.EntityBox dst, FieldRelation relation)
@@ -129,8 +130,9 @@ namespace Epsitec.Common.Designer.MyWidgets
 					}
 				}
 
-				connection.Source = new Point(right ? srcBounds.Right-1 : srcBounds.Left+1, p.Y);
-				connection.Destination = dst.GetConnectionDestination(p.Y, best);
+				connection.Points.Clear();
+				connection.Points.Add(new Point(right ? srcBounds.Right-1 : srcBounds.Left+1, p.Y));
+				connection.Points.Add(dst.GetConnectionDestination(p.Y, best));
 			}
 		}
 
