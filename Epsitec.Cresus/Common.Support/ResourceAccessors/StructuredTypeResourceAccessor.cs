@@ -70,9 +70,9 @@ namespace Epsitec.Common.Support.ResourceAccessors
 
 			foreach (StructuredData fieldData in fieldsData)
 			{
-				Druid fieldType = StructuredTypeResourceAccessor.ToDruid (fieldData.GetValue (Res.Fields.Field.Type));
-				Druid fieldCaption = StructuredTypeResourceAccessor.ToDruid (fieldData.GetValue (Res.Fields.Field.Caption));
-				Druid sourceFieldId = StructuredTypeResourceAccessor.ToDruid (fieldData.GetValue (Res.Fields.Field.SourceField));
+				Druid fieldType = StructuredTypeResourceAccessor.ToDruid (fieldData.GetValue (Res.Fields.Field.TypeId));
+				Druid fieldCaption = StructuredTypeResourceAccessor.ToDruid (fieldData.GetValue (Res.Fields.Field.CaptionId));
+				Druid sourceFieldId = StructuredTypeResourceAccessor.ToDruid (fieldData.GetValue (Res.Fields.Field.SourceFieldId));
 				FieldRelation relation = (FieldRelation) fieldData.GetValue (Res.Fields.Field.Relation);
 				FieldMembership membership = (FieldMembership) fieldData.GetValue (Res.Fields.Field.Membership);
 
@@ -113,11 +113,11 @@ namespace Epsitec.Common.Support.ResourceAccessors
 				StructuredTypeField field = type.Fields[fieldId];
 				StructuredData x = new StructuredData (Res.Types.Field);
 				
-				x.SetValue (Res.Fields.Field.Type, field.Type.CaptionId);
-				x.SetValue (Res.Fields.Field.Caption, field.CaptionId);
+				x.SetValue (Res.Fields.Field.TypeId, field.Type.CaptionId);
+				x.SetValue (Res.Fields.Field.CaptionId, field.CaptionId);
 				x.SetValue (Res.Fields.Field.Relation, field.Relation);
 				x.SetValue (Res.Fields.Field.Membership, field.Membership);
-				x.SetValue (Res.Fields.Field.SourceField, string.IsNullOrEmpty (field.SourceFieldId) ? Druid.Empty : Druid.Parse (field.SourceFieldId));
+				x.SetValue (Res.Fields.Field.SourceFieldId, string.IsNullOrEmpty (field.SourceFieldId) ? Druid.Empty : Druid.Parse (field.SourceFieldId));
 				fields.Add (x);
 				
 				item.NotifyDataAdded (x);

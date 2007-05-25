@@ -178,8 +178,8 @@ namespace Epsitec.Common.Support
 
 			Assert.AreEqual (10, fields.Count);
 
-			Assert.AreEqual (Res.Fields.ResourceBase.ModificationId, fields[0].GetValue (Res.Fields.Field.Caption));
-			Assert.AreEqual (Res.Fields.ResourceBase.Comment,        fields[1].GetValue (Res.Fields.Field.Caption));
+			Assert.AreEqual (Res.Fields.ResourceBase.ModificationId, fields[0].GetValue (Res.Fields.Field.CaptionId));
+			Assert.AreEqual (Res.Fields.ResourceBase.Comment,        fields[1].GetValue (Res.Fields.Field.CaptionId));
 
 			map.Name = "ResourceEntityType";
 			accessor.PersistChanges ();
