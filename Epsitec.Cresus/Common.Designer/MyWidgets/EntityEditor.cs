@@ -37,7 +37,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		{
 			box.GeometryChanged += new EventHandler(this.HandleBoxGeometryChanged);
 			box.SetParent(this);
-			box.SetManualBounds(new Rectangle(20+(180+40)*this.boxes.Count, 1000-20-100, 180, 100));
+			box.SetManualBounds(new Rectangle(20+(180+40)*this.boxes.Count, 1000-20-30*this.boxes.Count-100, 180, 100));
 
 			this.boxes.Add(box);
 		}

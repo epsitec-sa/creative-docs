@@ -153,8 +153,10 @@ namespace Epsitec.Common.Designer.MyWidgets
 			{
 				return this.Client.Bounds.Top - (EntityBox.headerHeight + 8 + (EntityBox.fieldHeight+1)*rank + EntityBox.fieldHeight/2);
 			}
-
-			return double.NaN;
+			else
+			{
+				return this.Client.Bounds.Center.Y;
+			}
 		}
 
 		public Point GetConnectionDestination(double posv, ConnectionAnchor anchor)
