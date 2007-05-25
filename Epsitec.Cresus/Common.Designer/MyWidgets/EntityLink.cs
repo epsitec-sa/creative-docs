@@ -94,7 +94,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				graphics.RenderSolid(Color.FromBrightness(1));
 
 				graphics.AddCircle(p1, EntityLink.circleRadius);
-				p1.X += EntityLink.circleRadius;
+				p1 = Point.Move(p1, p2, EntityLink.circleRadius);
 
 				graphics.AddLine(p1, p2);
 				this.PaintArrow(graphics, p1, p2);

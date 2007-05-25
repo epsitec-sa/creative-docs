@@ -105,21 +105,20 @@ namespace Epsitec.Common.Designer.MyWidgets
 			//	Retourne la hauteur requise selon le nombre de champs définis.
 			if (this.isExtended)
 			{
-				return EntityBox.headerHeight + this.FieldHeight*this.table.Count + EntityBox.footerHeight + 15;
+				return EntityBox.headerHeight + (EntityBox.fieldHeight+1)*this.fields.Count + EntityBox.footerHeight + 15;
 			}
 			else
 			{
 				return EntityBox.headerHeight + 6;
 			}
-			//?return this.GetBestFitSize().Height;
 		}
 
 		public double GetLinkVerticalPosition(int rank)
 		{
 			//	Retourne la position verticale pour un trait de liaison.
-			if (this.isExtended && this.table != null && rank < this.table.Count)
+			if (this.isExtended && this.table != null && rank < this.fields.Count)
 			{
-				return this.Client.Bounds.Top - (EntityBox.headerHeight + this.FieldHeight*rank + 16);
+				return this.Client.Bounds.Top - (EntityBox.headerHeight + 8 + (EntityBox.fieldHeight+1)*rank + EntityBox.fieldHeight/2);
 			}
 
 			return double.NaN;
@@ -137,22 +136,6 @@ namespace Epsitec.Common.Designer.MyWidgets
 			else
 			{
 				return bounds.Center.Y;
-			}
-		}
-
-		protected double FieldHeight
-		{
-			//	Retourne la hauteur nécessaire pour un champ.
-			get
-			{
-				if (this.table == null || this.table.Count == 0)
-				{
-					return 0;
-				}
-				else
-				{
-					return this.table[0].ActualHeight + this.table[0].Margins.Top + this.table[0].Margins.Bottom;
-				}
 			}
 		}
 
@@ -175,12 +158,25 @@ namespace Epsitec.Common.Designer.MyWidgets
 			{
 				string field = this.fields[i];
 
-				StaticText st = new StaticText(this);
-				st.Text = field;
-				st.Margins = new Margins(20, 20, 0, (i==this.fields.Count-1) ? EntityBox.footerHeight+8 : 2);
-				st.Dock = DockStyle.Top;
+				StaticText container = new StaticText(this);
+				container.PreferredHeight = EntityBox.fieldHeight;
+				container.Margins = new Margins(2, 2, 0, 0);
+				container.Dock = DockStyle.Top;
+				this.table.Add(container);
 
-				this.table.Add(st);
+				StaticText st = new StaticText(container);
+				st.Text = field;
+				st.ContentAlignment = ContentAlignment.MiddleLeft;
+				st.Margins = new Margins(20, 20, 0, 0);
+				st.Dock = DockStyle.Fill;
+
+				StaticText sep = new StaticText(this);
+				sep.Name = "Separator";
+				sep.BackColor = Color.FromBrightness(0.9);
+				sep.PreferredHeight = 1;
+				sep.Margins = new Margins(2, 2, 0, 0);
+				sep.Dock = DockStyle.Top;
+				this.table.Add(sep);
 			}
 		}
 
@@ -212,15 +208,18 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			foreach (StaticText st in this.table)
 			{
-				if (st == finded)
+				if (st.Name != "Separator")
 				{
-					Color color = adorner.ColorCaption;
-					color.A = 0.1;
-					st.BackColor = color;
-				}
-				else
-				{
-					st.BackColor = Color.Empty;
+					if (st == finded)
+					{
+						Color color = adorner.ColorCaption;
+						color.A = 0.1;
+						st.BackColor = color;
+					}
+					else
+					{
+						st.BackColor = Color.Empty;
+					}
 				}
 			}
 		}
@@ -394,8 +393,9 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		protected static readonly double roundRectRadius = 16;
 		protected static readonly double shadowOffset = 6;
-		protected static readonly double headerHeight = 30;
+		protected static readonly double headerHeight = 32;
 		protected static readonly double footerHeight = 10;
+		protected static readonly double fieldHeight = 20;
 
 		protected bool isExtended;
 		protected string title;
