@@ -165,20 +165,29 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		protected void MouseHilite(Point pos)
 		{
-			foreach (Widget widget in this.Children)
+			//	Met en évidence tous les widgets selon la position visée par la souris.
+			for (int i=this.Children.Count-1; i>=0; i--)
 			{
+				Widget widget = this.Children[i] as Widget;
+
 				if (widget is MyWidgets.EntityBox)
 				{
 					MyWidgets.EntityBox box = widget as MyWidgets.EntityBox;
-					box.Hilite(pos);
+					if (box.Hilite(pos))
+					{
+						pos = Point.Zero;  // si on était dans cette boîte -> plus aucun hilite pour les boîtes placées dessous
+					}
 				}
 			}
 		}
 
 		protected MyWidgets.EntityBox DetectBox(Point pos)
 		{
-			foreach (Widget widget in this.Children)
+			//	Détecte la boîte visée par la souris. La boîte à l'avant-plan a la priorité.
+			for (int i=this.Children.Count-1; i>=0; i--)
 			{
+				Widget widget = this.Children[i] as Widget;
+
 				if (widget is MyWidgets.EntityBox)
 				{
 					MyWidgets.EntityBox box = widget as MyWidgets.EntityBox;

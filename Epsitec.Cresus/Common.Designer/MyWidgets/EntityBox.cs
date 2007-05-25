@@ -260,11 +260,26 @@ namespace Epsitec.Common.Designer.MyWidgets
 			return new Margins(0, EntityBox.shadowOffset, 0, EntityBox.shadowOffset);
 		}
 
-		public void Hilite(Point pos)
+		public bool Hilite(Point pos)
 		{
-			pos = this.MapParentToClient(pos);
+			//	Met en évidence la boîte selon la position de la souris.
+			//	Si la souris est dans cette boîte, retourne true.
+			if (!pos.IsZero)
+			{
+				pos = this.MapParentToClient(pos);
+			}
+
 			this.HiliteBox(pos);
 			this.HiliteField(pos);
+
+			if (pos.IsZero)
+			{
+				return false;
+			}
+			else
+			{
+				return this.Client.Bounds.Contains(pos);
+			}
 		}
 
 		protected void HiliteBox(Point pos)
@@ -285,7 +300,12 @@ namespace Epsitec.Common.Designer.MyWidgets
 		{
 			//	Colore le champ visé par la souris.
 			IAdorner adorner = Common.Widgets.Adorners.Factory.Active;
-			Widget finded = this.FindChild(pos);
+
+			Widget finded = null;
+			if (!pos.IsZero)
+			{
+				finded = this.FindChild(pos);
+			}
 
 			foreach (StaticText st in this.table)
 			{
