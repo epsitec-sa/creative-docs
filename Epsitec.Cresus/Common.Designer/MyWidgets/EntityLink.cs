@@ -81,6 +81,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		}
 
 
+
 		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
 		{
 			if (!this.source.IsZero && !this.destination.IsZero)
@@ -88,27 +89,51 @@ namespace Epsitec.Common.Designer.MyWidgets
 				Point p1 = this.MapParentToClient(this.source);
 				Point p2 = this.MapParentToClient(this.destination);
 
-				if (this.relation == FieldRelation.Collection)
-				{
-					double radius = 5;
-					p1.X += radius;
-					graphics.AddCircle(p1, radius);
-					p1.X += radius;
-				}
+				p1.X -= 1;
+				graphics.AddFilledCircle(p1, EntityLink.circleRadius);
+				graphics.RenderSolid(Color.FromBrightness(1));
 
-				if (this.relation == FieldRelation.Inclusion)
-				{
-					double length = 4;
-					graphics.AddLine(new Point(p1.X, p1.Y+length), new Point(p1.X+length*2, p1.Y));
-					graphics.AddLine(new Point(p1.X, p1.Y-length), new Point(p1.X+length*2, p1.Y));
-					p1.X += length*2;
-				}
+				graphics.AddCircle(p1, EntityLink.circleRadius);
+				p1.X += EntityLink.circleRadius;
 
 				graphics.AddLine(p1, p2);
+				this.PaintArrow(graphics, p1, p2);
 				graphics.RenderSolid(Color.FromBrightness(0));
 			}
 		}
 
+		protected void PaintArrow(Graphics graphics, Point start, Point end)
+		{
+			this.PaintArrowBase(graphics, start, end);
+
+			if (this.relation == FieldRelation.Collection)
+			{
+				end = Point.Move(end, start, EntityLink.arrowLength*0.5);
+				this.PaintArrowBase(graphics, start, end);
+			}
+
+			if (this.relation == FieldRelation.Inclusion)
+			{
+				this.PaintArrowBase(graphics, end, start);
+			}
+		}
+
+		protected void PaintArrowBase(Graphics graphics, Point start, Point end)
+		{
+			Point p = Point.Move(end, start, EntityLink.arrowLength);
+
+			Point e1 = Transform.RotatePointDeg(end, EntityLink.arrowAngle, p);
+			Point e2 = Transform.RotatePointDeg(end, -EntityLink.arrowAngle, p);
+
+			graphics.AddLine(end, e1);
+			graphics.AddLine(end, e2);
+		}
+
+
+
+		protected static readonly double circleRadius = 4;
+		protected static readonly double arrowLength = 12;
+		protected static readonly double arrowAngle = 25;
 
 		protected Point source;
 		protected Point destination;

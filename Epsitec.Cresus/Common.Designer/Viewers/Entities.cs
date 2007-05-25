@@ -25,19 +25,19 @@ namespace Epsitec.Common.Designer.Viewers
 
 			MyWidgets.EntityBox box1 = new MyWidgets.EntityBox(this.scrollable.Panel);
 			box1.Title = "Facture";
-			box1.SetContent("Numéro;Client;Articles;TVA;Rabais;Frais de port");
+			box1.SetContent("Numéro de facture;Date;Client;Articles;TVA;Rabais;Frais de port");
 			box1.SetManualBounds(new Rectangle(20+(180+40)*0, 1000-20-100, 180, 100));
 			box1.GeometryChanged += new EventHandler(this.HandleBoxGeometryChanged);
 
 			MyWidgets.EntityBox box2 = new MyWidgets.EntityBox(this.scrollable.Panel);
 			box2.Title = "Client";
-			box2.SetContent("Numéro;Titre;Nom;Prénom;Entreprise;Adresse;NPA;Ville;Pays;Téléphone professionnel;Téléphone privé;Téléphone mobile;E-mail professionnel;E-mail privé;Site web");
+			box2.SetContent("Numéro de client;Titre;Nom;Prénom;Entreprise;Adresse;NPA;Ville;Pays;Téléphone professionnel;Téléphone privé;Téléphone mobile;E-mail professionnel;E-mail privé;Site web");
 			box2.SetManualBounds(new Rectangle(20+(180+40)*1, 1000-20-100, 180, 100));
 			box2.GeometryChanged += new EventHandler(this.HandleBoxGeometryChanged);
 
 			MyWidgets.EntityBox box3 = new MyWidgets.EntityBox(this.scrollable.Panel);
 			box3.Title = "Article";
-			box3.SetContent("Numéro;Désignation;Quantité;Prix");
+			box3.SetContent("Numéro d'article;Désignation;Quantité;Prix d'achat;Prix de vente");
 			box3.SetManualBounds(new Rectangle(20+(180+40)*2, 1000-20-100, 180, 100));
 			box3.GeometryChanged += new EventHandler(this.HandleBoxGeometryChanged);
 
@@ -96,9 +96,9 @@ namespace Epsitec.Common.Designer.Viewers
 				box.SetManualBounds(bounds);
 			}
 
-			this.UpdateLink(this.links[0], this.boxes[0], 1, this.boxes[1], FieldRelation.Reference);  // lien client
-			this.UpdateLink(this.links[1], this.boxes[0], 2, this.boxes[2], FieldRelation.Collection);  // lien articles
-			this.UpdateLink(this.links[2], this.boxes[0], 4, this.boxes[3], FieldRelation.Inclusion);  // lien rabais
+			this.UpdateLink(this.links[0], this.boxes[0], 2, this.boxes[1], FieldRelation.Reference);  // lien client
+			this.UpdateLink(this.links[1], this.boxes[0], 3, this.boxes[2], FieldRelation.Collection);  // lien articles
+			this.UpdateLink(this.links[2], this.boxes[0], 5, this.boxes[3], FieldRelation.Inclusion);  // lien rabais
 		}
 
 		protected void UpdateLink(MyWidgets.EntityLink link, MyWidgets.EntityBox src, int srcRank, MyWidgets.EntityBox dst, FieldRelation relation)
