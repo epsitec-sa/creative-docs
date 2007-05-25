@@ -271,6 +271,8 @@ namespace Epsitec.Common.Types
 				switch (this.relation)
 				{
 					case FieldRelation.Collection:
+						break;
+
 					case FieldRelation.Reference:
 						if (!isStructuredType)
 						{

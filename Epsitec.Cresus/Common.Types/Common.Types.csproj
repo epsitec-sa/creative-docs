@@ -110,7 +110,7 @@
     <Compile Include="Serialization\ISerialization.cs" />
     <Compile Include="StructuredTypeClass.cs" />
     <Compile Include="Internal\BindingHelper.cs" />
-    <Compile Include="Relation.cs" />
+    <Compile Include="FieldRelation.cs" />
     <Compile Include="Serialization\IDeserialization.cs" />
     <Compile Include="Support\ResourceModuleLayer.cs" />
     <Compile Include="TypedObject.cs" />
