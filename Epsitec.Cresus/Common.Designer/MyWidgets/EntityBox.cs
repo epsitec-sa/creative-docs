@@ -10,8 +10,20 @@ namespace Epsitec.Common.Designer.MyWidgets
 	/// </summary>
 	public class EntityBox : Widget
 	{
+		public enum LinkAnchor
+		{
+			Left,
+			Right,
+			Bottom,
+			Top,
+		}
+
+
 		public EntityBox() : base()
 		{
+			this.AutoEngage = true;
+			this.InternalState |= InternalState.Engageable;
+
 #if true // provisoire
 			this.fields = new List<string>();
 #endif
@@ -99,6 +111,24 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 		}
 
+		public bool IsHilited
+		{
+			//	Est-ce que la boîte est survolée par la souris ?
+			get
+			{
+				return this.isHilited;
+			}
+			set
+			{
+				if (this.isHilited != value)
+				{
+					this.isHilited = value;
+					this.UpdateSeparator();
+					this.Invalidate();
+				}
+			}
+		}
+
 
 		public double GetBestHeight()
 		{
@@ -124,19 +154,41 @@ namespace Epsitec.Common.Designer.MyWidgets
 			return double.NaN;
 		}
 
-		public double GetLinkVerticalDestination(double posv)
+		public Point GetLinkDestination(double posv, LinkAnchor anchor)
 		{
-			//	Retourne la position verticale où accrocher la destination.
+			//	Retourne la position où accrocher la destination.
 			Rectangle bounds = this.ActualBounds;
 
-			if (posv >= bounds.Bottom+EntityBox.roundRectRadius && posv <= bounds.Top-EntityBox.roundRectRadius)
+			switch (anchor)
 			{
-				return posv;
+				case LinkAnchor.Left:
+					if (posv >= bounds.Bottom+EntityBox.roundRectRadius && posv <= bounds.Top-EntityBox.roundRectRadius)
+					{
+						return new Point(bounds.Left, posv);
+					}
+					else
+					{
+						return new Point(bounds.Left, bounds.Center.Y);
+					}
+
+				case LinkAnchor.Right:
+					if (posv >= bounds.Bottom+EntityBox.roundRectRadius && posv <= bounds.Top-EntityBox.roundRectRadius)
+					{
+						return new Point(bounds.Right, posv);
+					}
+					else
+					{
+						return new Point(bounds.Right, bounds.Center.Y);
+					}
+
+				case LinkAnchor.Bottom:
+					return new Point(bounds.Center.X, bounds.Bottom);
+
+				case LinkAnchor.Top:
+					return new Point(bounds.Center.X, bounds.Top);
 			}
-			else
-			{
-				return bounds.Center.Y;
-			}
+
+			return Point.Zero;
 		}
 
 
@@ -180,6 +232,27 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 		}
 
+		protected void UpdateSeparator()
+		{
+			//	Met à jour la couleur des séparateurs.
+			Color color = Color.FromBrightness(0.9);
+
+			if (this.isHilited)
+			{
+				IAdorner adorner = Common.Widgets.Adorners.Factory.Active;
+				color = adorner.ColorCaption;
+				color.A = 0.3;
+			}
+
+			foreach (StaticText st in this.table)
+			{
+				if (st.Name == "Separator")
+				{
+					st.BackColor = color;
+				}
+			}
+		}
+
 
 		public override Margins GetShapeMargins()
 		{
@@ -187,22 +260,30 @@ namespace Epsitec.Common.Designer.MyWidgets
 			return new Margins(0, EntityBox.shadowOffset, 0, EntityBox.shadowOffset);
 		}
 
-		protected override void ProcessMessage(Message message, Point pos)
+		public void Hilite(Point pos)
 		{
-			if (message.MessageType == MessageType.MouseMove)
-			{
-				this.HiliteWidget(pos);
-			}
+			pos = this.MapParentToClient(pos);
+			this.HiliteBox(pos);
+			this.HiliteField(pos);
+		}
 
-			if (message.MessageType == MessageType.MouseLeave)
+		protected void HiliteBox(Point pos)
+		{
+			//	Met en évidence la boîte.
+			if (pos.IsZero || !this.Client.Bounds.Contains(pos))
 			{
-				this.HiliteWidget(Point.Zero);
+				this.IsHilited = false;
+			}
+			else
+			{
+				this.IsHilited = (pos.Y >= this.Client.Bounds.Top-EntityBox.headerHeight-4 ||
+								  pos.Y <= this.Client.Bounds.Bottom+EntityBox.footerHeight);
 			}
 		}
 
-		protected void HiliteWidget(Point pos)
+		protected void HiliteField(Point pos)
 		{
-			//	Colore le widget visé par la souris.
+			//	Colore le champ visé par la souris.
 			IAdorner adorner = Common.Widgets.Adorners.Factory.Active;
 			Widget finded = this.FindChild(pos);
 
@@ -247,8 +328,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 			graphics.Rasterizer.AddSurface(path);
 			Color c1 = adorner.ColorCaption;
 			Color c2 = adorner.ColorCaption;
-			c1.A = 0.4;
-			c2.A = 0.1;
+			c1.A = this.IsHilited ? 0.6 : 0.4;
+			c2.A = this.IsHilited ? 0.2 : 0.1;
 			this.RenderHorizontalGradient(graphics, bounds, c1, c2);
 
 			//	Peint en blanc la zone pour les champs.
@@ -260,7 +341,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				graphics.AddFilledRectangle(inside);
 				Color ci1 = adorner.ColorCaption;
 				Color ci2 = adorner.ColorCaption;
-				ci1.A = 0.1;
+				ci1.A = this.IsHilited ? 0.2 : 0.1;
 				ci2.A = 0.0;
 				this.RenderHorizontalGradient(graphics, inside, ci1, ci2);
 
@@ -276,7 +357,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				graphics.AddLine(bounds.Left, bounds.Top-EntityBox.headerHeight-0.5, bounds.Right, bounds.Top-EntityBox.headerHeight-0.5);
 				graphics.AddLine(bounds.Left+2, bounds.Bottom+EntityBox.footerHeight+0.5, bounds.Right-2, bounds.Bottom+EntityBox.footerHeight+0.5);
 			}
-			graphics.RenderSolid(Color.FromBrightness(0));
+			graphics.RenderSolid(this.IsHilited ? adorner.ColorCaption : Color.FromBrightness(0));
 		}
 
 
@@ -398,6 +479,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected static readonly double fieldHeight = 20;
 
 		protected bool isExtended;
+		protected bool isHilited;
 		protected string title;
 		protected StaticText staticTitle;
 		protected GlyphButton extendButton;

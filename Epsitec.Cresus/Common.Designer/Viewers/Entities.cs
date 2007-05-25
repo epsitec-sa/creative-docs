@@ -20,47 +20,40 @@ namespace Epsitec.Common.Designer.Viewers
 			this.scrollable.Panel.ContainerLayoutMode = ContainerLayoutMode.None;
 			this.scrollable.Panel.SurfaceSize = new Size(1000, 1000);
 
-			this.boxes = new List<MyWidgets.EntityBox>();
-			this.links = new List<MyWidgets.EntityLink>();
+			this.editor = new MyWidgets.EntityEditor(this.scrollable.Panel);
+			//?this.editor.Dock = DockStyle.Fill;  // TODO: pourquoi ça ne marche pas ???
+			this.editor.SetManualBounds(new Rectangle(Point.Zero, this.scrollable.Panel.SurfaceSize));
 
-			MyWidgets.EntityBox box1 = new MyWidgets.EntityBox(this.scrollable.Panel);
+			MyWidgets.EntityBox box1 = new MyWidgets.EntityBox();
 			box1.Title = "Facture";
 			box1.SetContent("Numéro de facture;Date;Client;Articles;TVA;Rabais;Frais de port");
-			box1.SetManualBounds(new Rectangle(20+(180+40)*0, 1000-20-100, 180, 100));
-			box1.GeometryChanged += new EventHandler(this.HandleBoxGeometryChanged);
+			this.editor.AddBox(box1);
 
-			MyWidgets.EntityBox box2 = new MyWidgets.EntityBox(this.scrollable.Panel);
+			MyWidgets.EntityBox box2 = new MyWidgets.EntityBox();
 			box2.Title = "Client";
 			box2.SetContent("Numéro de client;Titre;Nom;Prénom;Entreprise;Adresse;NPA;Ville;Pays;Téléphone professionnel;Téléphone privé;Téléphone mobile;E-mail professionnel;E-mail privé;Site web");
-			box2.SetManualBounds(new Rectangle(20+(180+40)*1, 1000-20-100, 180, 100));
-			box2.GeometryChanged += new EventHandler(this.HandleBoxGeometryChanged);
+			this.editor.AddBox(box2);
 
-			MyWidgets.EntityBox box3 = new MyWidgets.EntityBox(this.scrollable.Panel);
+			MyWidgets.EntityBox box3 = new MyWidgets.EntityBox();
 			box3.Title = "Article";
 			box3.SetContent("Numéro d'article;Désignation;Quantité;Prix d'achat;Prix de vente");
-			box3.SetManualBounds(new Rectangle(20+(180+40)*2, 1000-20-100, 180, 100));
-			box3.GeometryChanged += new EventHandler(this.HandleBoxGeometryChanged);
+			this.editor.AddBox(box3);
 
-			MyWidgets.EntityBox box4 = new MyWidgets.EntityBox(this.scrollable.Panel);
+			MyWidgets.EntityBox box4 = new MyWidgets.EntityBox();
 			box4.Title = "Rabais";
 			box4.SetContent("Normal;Revendeur;Grossiste");
-			box4.SetManualBounds(new Rectangle(20+(180+40)*3, 1000-20-100, 180, 100));
-			box4.GeometryChanged += new EventHandler(this.HandleBoxGeometryChanged);
+			this.editor.AddBox(box4);
 
-			this.boxes.Add(box1);
-			this.boxes.Add(box2);
-			this.boxes.Add(box3);
-			this.boxes.Add(box4);
+			MyWidgets.EntityLink link1 = new MyWidgets.EntityLink();
+			this.editor.AddLink(link1);
 
-			MyWidgets.EntityLink link1 = new MyWidgets.EntityLink(this.scrollable.Panel);
-			MyWidgets.EntityLink link2 = new MyWidgets.EntityLink(this.scrollable.Panel);
-			MyWidgets.EntityLink link3 = new MyWidgets.EntityLink(this.scrollable.Panel);
+			MyWidgets.EntityLink link2 = new MyWidgets.EntityLink();
+			this.editor.AddLink(link2);
 
-			this.links.Add(link1);
-			this.links.Add(link2);
-			this.links.Add(link3);
+			MyWidgets.EntityLink link3 = new MyWidgets.EntityLink();
+			this.editor.AddLink(link3);
 
-			this.UpdateGeometry();
+			this.editor.UpdateGeometry();
 			this.UpdateAll();
 		}
 
@@ -83,70 +76,6 @@ namespace Epsitec.Common.Designer.Viewers
 		}
 
 
-		protected void UpdateGeometry()
-		{
-			//	Met à jour la géométrie de toutes les boîtes et de toutes les liaisons.
-			foreach (MyWidgets.EntityBox box in this.boxes)
-			{
-				Rectangle bounds = box.ActualBounds;
-				double top = bounds.Top;
-				double h = box.GetBestHeight();
-				bounds.Bottom = top-h;
-				bounds.Height = h;
-				box.SetManualBounds(bounds);
-			}
-
-			this.UpdateLink(this.links[0], this.boxes[0], 2, this.boxes[1], FieldRelation.Reference);  // lien client
-			this.UpdateLink(this.links[1], this.boxes[0], 3, this.boxes[2], FieldRelation.Collection);  // lien articles
-			this.UpdateLink(this.links[2], this.boxes[0], 5, this.boxes[3], FieldRelation.Inclusion);  // lien rabais
-		}
-
-		protected void UpdateLink(MyWidgets.EntityLink link, MyWidgets.EntityBox src, int srcRank, MyWidgets.EntityBox dst, FieldRelation relation)
-		{
-			//	Met à jour la géométrie d'une liaison.
-			link.SetManualBounds(this.scrollable.Panel.Client.Bounds);
-			link.Relation = relation;
-
-			Rectangle srcBounds = src.ActualBounds;
-			Rectangle dstBounds = dst.ActualBounds;
-
-			double v = src.GetLinkVerticalPosition(srcRank);
-			if (double.IsNaN(v))
-			{
-				link.Visibility = false;
-			}
-			else
-			{
-				link.Visibility = true;
-
-				Point p = new Point(0, v);
-				p = src.MapClientToParent(p);
-
-				double dv = dst.GetLinkVerticalDestination(p.Y);
-
-				if (srcBounds.Right < dstBounds.Left)
-				{
-					link.Source = new Point(srcBounds.Right, p.Y);
-					link.Destination = new Point(dstBounds.Left, dv);
-				}
-				else
-				{
-					link.Source = new Point(srcBounds.Left, p.Y);
-					link.Destination = new Point(dstBounds.Right, dv);
-				}
-			}
-		}
-
-
-		private void HandleBoxGeometryChanged(object sender)
-		{
-			//	Appelé lorsque la géométrie d'une boîte a changé (changement compact/étendu).
-			this.UpdateGeometry();
-		}
-
-
-		
-		List<MyWidgets.EntityBox> boxes;
-		List<MyWidgets.EntityLink> links;
+		protected MyWidgets.EntityEditor editor;
 	}
 }

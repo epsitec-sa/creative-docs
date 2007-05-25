@@ -89,7 +89,6 @@ namespace Epsitec.Common.Designer.MyWidgets
 				Point p1 = this.MapParentToClient(this.source);
 				Point p2 = this.MapParentToClient(this.destination);
 
-				p1.X -= 1;
 				graphics.AddFilledCircle(p1, EntityLink.circleRadius);
 				graphics.RenderSolid(Color.FromBrightness(1));
 
