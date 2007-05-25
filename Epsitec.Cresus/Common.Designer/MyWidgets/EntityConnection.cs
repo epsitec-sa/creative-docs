@@ -9,15 +9,15 @@ namespace Epsitec.Common.Designer.MyWidgets
 	/// <summary>
 	/// Boîte pour représenter un lien entre des entités.
 	/// </summary>
-	public class EntityLink : Widget
+	public class EntityConnection : Widget
 	{
-		public EntityLink() : base()
+		public EntityConnection() : base()
 		{
 			this.source = Point.Zero;
 			this.destination = Point.Zero;
 		}
 
-		public EntityLink(Widget embedder) : this()
+		public EntityConnection(Widget embedder) : this()
 		{
 			this.SetEmbedder(embedder);
 		}
@@ -89,11 +89,11 @@ namespace Epsitec.Common.Designer.MyWidgets
 				Point p1 = this.MapParentToClient(this.source);
 				Point p2 = this.MapParentToClient(this.destination);
 
-				graphics.AddFilledCircle(p1, EntityLink.circleRadius);
+				graphics.AddFilledCircle(p1, EntityConnection.circleRadius);
 				graphics.RenderSolid(Color.FromBrightness(1));
 
-				graphics.AddCircle(p1, EntityLink.circleRadius);
-				p1 = Point.Move(p1, p2, EntityLink.circleRadius);
+				graphics.AddCircle(p1, EntityConnection.circleRadius);
+				p1 = Point.Move(p1, p2, EntityConnection.circleRadius);
 
 				graphics.AddLine(p1, p2);
 				this.PaintArrow(graphics, p1, p2);
@@ -108,7 +108,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			if (this.relation == FieldRelation.Collection)
 			{
-				end = Point.Move(end, start, EntityLink.arrowLength*0.75);
+				end = Point.Move(end, start, EntityConnection.arrowLength*0.75);
 				this.PaintArrowBase(graphics, start, end);
 			}
 
@@ -121,10 +121,10 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected void PaintArrowBase(Graphics graphics, Point start, Point end)
 		{
 			//	Dessine une flèche à l'extrémité 'end'.
-			Point p = Point.Move(end, start, EntityLink.arrowLength);
+			Point p = Point.Move(end, start, EntityConnection.arrowLength);
 
-			Point e1 = Transform.RotatePointDeg(end, EntityLink.arrowAngle, p);
-			Point e2 = Transform.RotatePointDeg(end, -EntityLink.arrowAngle, p);
+			Point e1 = Transform.RotatePointDeg(end, EntityConnection.arrowAngle, p);
+			Point e2 = Transform.RotatePointDeg(end, -EntityConnection.arrowAngle, p);
 
 			graphics.AddLine(end, e1);
 			graphics.AddLine(end, e2);

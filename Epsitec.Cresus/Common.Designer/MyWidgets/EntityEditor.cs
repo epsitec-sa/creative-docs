@@ -14,7 +14,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		public EntityEditor()
 		{
 			this.boxes = new List<MyWidgets.EntityBox>();
-			this.links = new List<MyWidgets.EntityLink>();
+			this.connections = new List<MyWidgets.EntityConnection>();
 		}
 
 		public EntityEditor(Widget embedder) : this()
@@ -42,10 +42,10 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.boxes.Add(box);
 		}
 
-		public void AddLink(MyWidgets.EntityLink link)
+		public void AddConnection(MyWidgets.EntityConnection connection)
 		{
-			link.SetParent(this);
-			this.links.Add(link);
+			connection.SetParent(this);
+			this.connections.Add(connection);
 		}
 
 
@@ -63,16 +63,16 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 
 			//	TODO: provisoire !
-			this.UpdateLink(this.links[0], this.boxes[0], 2, this.boxes[1], FieldRelation.Reference);  // lien client
-			this.UpdateLink(this.links[1], this.boxes[0], 3, this.boxes[2], FieldRelation.Collection);  // lien articles
-			this.UpdateLink(this.links[2], this.boxes[0], 5, this.boxes[3], FieldRelation.Inclusion);  // lien rabais
+			this.UpdateConnection(this.connections[0], this.boxes[0], 2, this.boxes[1], FieldRelation.Reference);  // lien client
+			this.UpdateConnection(this.connections[1], this.boxes[0], 3, this.boxes[2], FieldRelation.Collection);  // lien articles
+			this.UpdateConnection(this.connections[2], this.boxes[0], 5, this.boxes[3], FieldRelation.Inclusion);  // lien rabais
 		}
 
-		protected void UpdateLink(MyWidgets.EntityLink link, MyWidgets.EntityBox src, int srcRank, MyWidgets.EntityBox dst, FieldRelation relation)
+		protected void UpdateConnection(MyWidgets.EntityConnection connection, MyWidgets.EntityBox src, int srcRank, MyWidgets.EntityBox dst, FieldRelation relation)
 		{
 			//	Met à jour la géométrie d'une liaison.
-			link.SetManualBounds(this.Client.Bounds);
-			link.Relation = relation;
+			connection.SetManualBounds(this.Client.Bounds);
+			connection.Relation = relation;
 
 			Rectangle srcBounds = src.ActualBounds;
 			Rectangle dstBounds = dst.ActualBounds;
@@ -83,26 +83,26 @@ namespace Epsitec.Common.Designer.MyWidgets
 			srcBoundsLittle.Deflate(2);
 			dstBoundsLittle.Deflate(2);
 
-			double v = src.GetLinkVerticalPosition(srcRank);
+			double v = src.GetConnectionVerticalPosition(srcRank);
 			if (double.IsNaN(v))
 			{
-				link.Visibility = false;
+				connection.Visibility = false;
 			}
 			else
 			{
-				link.Visibility = true;
+				connection.Visibility = true;
 
 				Point p = new Point(0, v);
 				p = src.MapClientToParent(p);
 
 				double min = double.MaxValue;
-				MyWidgets.EntityBox.LinkAnchor best = EntityBox.LinkAnchor.Left;
+				MyWidgets.EntityBox.ConnectionAnchor best = EntityBox.ConnectionAnchor.Left;
 				bool right = true;
 
 				//	Cherche la meilleure liaison possible, parmi huit possibilités.
-				foreach (MyWidgets.EntityBox.LinkAnchor anchor in System.Enum.GetValues(typeof(MyWidgets.EntityBox.LinkAnchor)))
+				foreach (MyWidgets.EntityBox.ConnectionAnchor anchor in System.Enum.GetValues(typeof(MyWidgets.EntityBox.ConnectionAnchor)))
 				{
-					Point end = dst.GetLinkDestination(p.Y, anchor);
+					Point end = dst.GetConnectionDestination(p.Y, anchor);
 					Point start;
 					double d;
 
@@ -129,8 +129,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 					}
 				}
 
-				link.Source = new Point(right ? srcBounds.Right-1 : srcBounds.Left+1, p.Y);
-				link.Destination = dst.GetLinkDestination(p.Y, best);
+				connection.Source = new Point(right ? srcBounds.Right-1 : srcBounds.Left+1, p.Y);
+				connection.Destination = dst.GetConnectionDestination(p.Y, best);
 			}
 		}
 
@@ -166,6 +166,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected void MouseHilite(Point pos)
 		{
 			//	Met en évidence tous les widgets selon la position visée par la souris.
+			//	La boîte à l'avant-plan a la priorité.
 			for (int i=this.Children.Count-1; i>=0; i--)
 			{
 				Widget widget = this.Children[i] as Widget;
@@ -183,7 +184,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		protected MyWidgets.EntityBox DetectBox(Point pos)
 		{
-			//	Détecte la boîte visée par la souris. La boîte à l'avant-plan a la priorité.
+			//	Détecte la boîte visée par la souris.
+			//	La boîte à l'avant-plan a la priorité.
 			for (int i=this.Children.Count-1; i>=0; i--)
 			{
 				Widget widget = this.Children[i] as Widget;
@@ -240,7 +242,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 
 		protected List<MyWidgets.EntityBox> boxes;
-		protected List<MyWidgets.EntityLink> links;
+		protected List<MyWidgets.EntityConnection> connections;
 		protected bool isDragging;
 		protected Point draggingPos;
 		protected MyWidgets.EntityBox draggingBox;

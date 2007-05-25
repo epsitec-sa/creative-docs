@@ -10,7 +10,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 	/// </summary>
 	public class EntityBox : Widget
 	{
-		public enum LinkAnchor
+		public enum ConnectionAnchor
 		{
 			Left,
 			Right,
@@ -96,7 +96,9 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		public bool IsExtended
 		{
-			//	Etat de la boîte.
+			//	Etat de la boîte (compact ou étendu).
+			//	En mode compact, seul le titre est visible.
+			//	En mode étendu, les champs sont visibles.
 			get
 			{
 				return this.isExtended;
@@ -114,6 +116,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		public bool IsHilited
 		{
 			//	Est-ce que la boîte est survolée par la souris ?
+			//	Si la boîte est survolée, on peut la déplacer globalement.
 			get
 			{
 				return this.isHilited;
@@ -123,7 +126,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				if (this.isHilited != value)
 				{
 					this.isHilited = value;
-					this.UpdateSeparator();
+					this.UpdateSeparators();
 					this.Invalidate();
 				}
 			}
@@ -143,7 +146,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 		}
 
-		public double GetLinkVerticalPosition(int rank)
+		public double GetConnectionVerticalPosition(int rank)
 		{
 			//	Retourne la position verticale pour un trait de liaison.
 			if (this.isExtended && this.table != null && rank < this.fields.Count)
@@ -154,14 +157,14 @@ namespace Epsitec.Common.Designer.MyWidgets
 			return double.NaN;
 		}
 
-		public Point GetLinkDestination(double posv, LinkAnchor anchor)
+		public Point GetConnectionDestination(double posv, ConnectionAnchor anchor)
 		{
 			//	Retourne la position où accrocher la destination.
 			Rectangle bounds = this.ActualBounds;
 
 			switch (anchor)
 			{
-				case LinkAnchor.Left:
+				case ConnectionAnchor.Left:
 					if (posv >= bounds.Bottom+EntityBox.roundRectRadius && posv <= bounds.Top-EntityBox.roundRectRadius)
 					{
 						return new Point(bounds.Left, posv);
@@ -171,7 +174,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 						return new Point(bounds.Left, bounds.Center.Y);
 					}
 
-				case LinkAnchor.Right:
+				case ConnectionAnchor.Right:
 					if (posv >= bounds.Bottom+EntityBox.roundRectRadius && posv <= bounds.Top-EntityBox.roundRectRadius)
 					{
 						return new Point(bounds.Right, posv);
@@ -181,10 +184,10 @@ namespace Epsitec.Common.Designer.MyWidgets
 						return new Point(bounds.Right, bounds.Center.Y);
 					}
 
-				case LinkAnchor.Bottom:
+				case ConnectionAnchor.Bottom:
 					return new Point(bounds.Center.X, bounds.Bottom);
 
-				case LinkAnchor.Top:
+				case ConnectionAnchor.Top:
 					return new Point(bounds.Center.X, bounds.Top);
 			}
 
@@ -194,6 +197,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		protected void UpdateExtendButton()
 		{
+			//	Met à jour le bouton pour étendre on compacter.
 			this.extendButton.GlyphShape = this.isExtended ? GlyphShape.ArrowUp : GlyphShape.ArrowDown;
 
 			foreach (StaticText st in this.table)
@@ -204,6 +208,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		protected void UpdateTable()
 		{
+			//	Met à jour la table en fonction des champs.
 			this.table = new List<StaticText>();
 
 			for (int i=0; i<fields.Count; i++)
@@ -232,7 +237,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 		}
 
-		protected void UpdateSeparator()
+		protected void UpdateSeparators()
 		{
 			//	Met à jour la couleur des séparateurs.
 			Color color = Color.FromBrightness(0.9);
@@ -284,13 +289,15 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		protected void HiliteBox(Point pos)
 		{
-			//	Met en évidence la boîte.
+			//	Met en évidence la boîte, selon la position de la souris.
+			//	Si la boîte est survolée, on peut la déplacer globalement.
 			if (pos.IsZero || !this.Client.Bounds.Contains(pos))
 			{
 				this.IsHilited = false;
 			}
 			else
 			{
+				//	Retourne true si on est dans l'en-tête ou le pied.
 				this.IsHilited = (pos.Y >= this.Client.Bounds.Top-EntityBox.headerHeight-4 ||
 								  pos.Y <= this.Client.Bounds.Bottom+EntityBox.footerHeight);
 			}

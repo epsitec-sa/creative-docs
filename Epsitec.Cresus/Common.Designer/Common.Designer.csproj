@@ -57,7 +57,7 @@
     <Compile Include="InsideSurface.cs" />
     <Compile Include="MyWidgets\AbstractTypeEditor.cs" />
     <Compile Include="MyWidgets\EntityEditor.cs" />
-    <Compile Include="MyWidgets\EntityLink.cs" />
+    <Compile Include="MyWidgets\EntityConnection.cs" />
     <Compile Include="MyWidgets\EntityBox.cs" />
     <Compile Include="MyWidgets\TreeBranches.cs" />
     <Compile Include="MyWidgets\TypeEditorBinary.cs" />

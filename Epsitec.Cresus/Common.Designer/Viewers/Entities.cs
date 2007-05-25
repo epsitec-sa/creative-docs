@@ -44,14 +44,14 @@ namespace Epsitec.Common.Designer.Viewers
 			box4.SetContent("Normal;Revendeur;Grossiste");
 			this.editor.AddBox(box4);
 
-			MyWidgets.EntityLink link1 = new MyWidgets.EntityLink();
-			this.editor.AddLink(link1);
+			MyWidgets.EntityConnection connection1 = new MyWidgets.EntityConnection();
+			this.editor.AddConnection(connection1);
 
-			MyWidgets.EntityLink link2 = new MyWidgets.EntityLink();
-			this.editor.AddLink(link2);
+			MyWidgets.EntityConnection connection2 = new MyWidgets.EntityConnection();
+			this.editor.AddConnection(connection2);
 
-			MyWidgets.EntityLink link3 = new MyWidgets.EntityLink();
-			this.editor.AddLink(link3);
+			MyWidgets.EntityConnection connection3 = new MyWidgets.EntityConnection();
+			this.editor.AddConnection(connection3);
 
 			this.editor.UpdateGeometry();
 			this.UpdateAll();
