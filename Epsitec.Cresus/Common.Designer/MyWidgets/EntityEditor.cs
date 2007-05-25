@@ -62,6 +62,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				box.SetManualBounds(bounds);
 			}
 
+			//	TODO: provisoire !
 			this.UpdateLink(this.links[0], this.boxes[0], 2, this.boxes[1], FieldRelation.Reference);  // lien client
 			this.UpdateLink(this.links[1], this.boxes[0], 3, this.boxes[2], FieldRelation.Collection);  // lien articles
 			this.UpdateLink(this.links[2], this.boxes[0], 5, this.boxes[3], FieldRelation.Inclusion);  // lien rabais
@@ -76,6 +77,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			Rectangle srcBounds = src.ActualBounds;
 			Rectangle dstBounds = dst.ActualBounds;
 
+			//	Calcul des rectangles plus petits, pour les tests d'intersections.
 			Rectangle srcBoundsLittle = srcBounds;
 			Rectangle dstBoundsLittle = dstBounds;
 			srcBoundsLittle.Deflate(2);
@@ -97,6 +99,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				MyWidgets.EntityBox.LinkAnchor best = EntityBox.LinkAnchor.Left;
 				bool right = true;
 
+				//	Cherche la meilleure liaison possible, parmi huit possibilités.
 				foreach (MyWidgets.EntityBox.LinkAnchor anchor in System.Enum.GetValues(typeof(MyWidgets.EntityBox.LinkAnchor)))
 				{
 					Point end = dst.GetLinkDestination(p.Y, anchor);
@@ -105,8 +108,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 					start = new Point(srcBounds.Right-1, p.Y);
 					d = Point.Distance(start, end);
-					if (Geometry.IsOver(srcBoundsLittle, start, end, 20))  d *= 20;
-					if (Geometry.IsOver(dstBoundsLittle, start, end, 20))  d *= 10;
+					if (Geometry.IsOver(srcBoundsLittle, start, end, 20))  d *= 20;  // très mauvais si chevauchement avec la source
+					if (Geometry.IsOver(dstBoundsLittle, start, end, 20))  d *= 10;  // mauvais si chevauchement avec la destination
 					if (d < min)
 					{
 						min = d;
@@ -116,8 +119,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 					start = new Point(srcBounds.Left+1, p.Y);
 					d = Point.Distance(start, end);
-					if (Geometry.IsOver(srcBoundsLittle, start, end, 20))  d *= 20;
-					if (Geometry.IsOver(dstBoundsLittle, start, end, 20))  d *= 10;
+					if (Geometry.IsOver(srcBoundsLittle, start, end, 20))  d *= 20;  // très mauvais si chevauchement avec la source
+					if (Geometry.IsOver(dstBoundsLittle, start, end, 20))  d *= 10;  // mauvais si chevauchement avec la destination
 					if (d < min)
 					{
 						min = d;

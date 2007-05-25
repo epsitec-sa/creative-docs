@@ -10,6 +10,17 @@ namespace Epsitec.Common.Designer
 		public static bool IsOver(Rectangle rect, Point a, Point b, double margin)
 		{
 			//	Retourne true si la droite ab passe sur le rectangle.
+			//	Les 4 droites du rectangle sont étendues selon margin, pour éviter des liaisons
+			//	presque parallèles:
+			//	    o        o
+			//	    |        |
+			//	o---o--------o---o
+			//	    |        |
+			//	    |        | margin
+			//	    |        <--->
+			//	o---o--------o---o
+			//	    |        |
+			//	    o        o
 			if (rect.Contains(a) && rect.Contains(b))
 			{
 				return true;
@@ -40,6 +51,7 @@ namespace Epsitec.Common.Designer
 
 		public static bool IsIntersect(Point a, Point b, Point c, Point d)
 		{
+			//	Retourne true si le point d'intersection de deux droites est sur l'une des deux.
 			Point[] i = Geometry.Intersect(a, b, c, d);
 			if (i == null)
 			{
