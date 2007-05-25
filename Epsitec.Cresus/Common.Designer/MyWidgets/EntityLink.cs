@@ -104,11 +104,12 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		protected void PaintArrow(Graphics graphics, Point start, Point end)
 		{
+			//	Dessine une flèche selon le type de la relation.
 			this.PaintArrowBase(graphics, start, end);
 
 			if (this.relation == FieldRelation.Collection)
 			{
-				end = Point.Move(end, start, EntityLink.arrowLength*0.5);
+				end = Point.Move(end, start, EntityLink.arrowLength*0.75);
 				this.PaintArrowBase(graphics, start, end);
 			}
 
@@ -120,6 +121,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		protected void PaintArrowBase(Graphics graphics, Point start, Point end)
 		{
+			//	Dessine une flèche à l'extrémité 'end'.
 			Point p = Point.Move(end, start, EntityLink.arrowLength);
 
 			Point e1 = Transform.RotatePointDeg(end, EntityLink.arrowAngle, p);

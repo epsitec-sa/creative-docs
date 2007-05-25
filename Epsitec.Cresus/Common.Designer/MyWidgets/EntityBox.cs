@@ -232,15 +232,13 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			//	Dessine l'ombre.
 			Rectangle bounds = this.Client.Bounds;
-			bounds.Offset(EntityBox.shadowOffset, -EntityBox.shadowOffset);
-			Path path = this.PathRoundRectangle(bounds, EntityBox.roundRectRadius+EntityBox.shadowOffset);
-			graphics.Rasterizer.AddSurface(path);
-			graphics.RenderSolid(Color.FromAlphaRgb(0.2, 0, 0, 0));
+			bounds.Offset(EntityBox.shadowOffset, -(EntityBox.shadowOffset));
+			this.PaintShadow(graphics, bounds, EntityBox.roundRectRadius+EntityBox.shadowOffset, (int)EntityBox.shadowOffset, 0.2);
 
 			//	Construit le chemin du cadre arrondi.
 			bounds = this.Client.Bounds;
 			bounds.Deflate(1);
-			path = this.PathRoundRectangle(bounds, EntityBox.roundRectRadius);
+			Path path = this.PathRoundRectangle(bounds, EntityBox.roundRectRadius);
 
 			//	Peint l'intérieur en blanc.
 			graphics.Rasterizer.AddSurface(path);
@@ -282,6 +280,22 @@ namespace Epsitec.Common.Designer.MyWidgets
 			graphics.RenderSolid(Color.FromBrightness(0));
 		}
 
+
+		protected void PaintShadow(Graphics graphics, Rectangle rect, double radius, int smooth, double alpha)
+		{
+			//	Dessine une ombre douce.
+			alpha /= smooth;
+
+			for (int i=0; i<smooth; i++)
+			{
+				Path path = this.PathRoundRectangle(rect, radius);
+				graphics.Rasterizer.AddSurface(path);
+				graphics.RenderSolid(Color.FromAlphaRgb(alpha, 0, 0, 0));
+
+				rect.Deflate(1);
+				radius -= 1;
+			}
+		}
 
 		protected void RenderHorizontalGradient(Graphics graphics, Rectangle rect, Color leftColor, Color rightColor)
 		{
@@ -379,7 +393,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 
 		protected static readonly double roundRectRadius = 16;
-		protected static readonly double shadowOffset = 3;
+		protected static readonly double shadowOffset = 6;
 		protected static readonly double headerHeight = 30;
 		protected static readonly double footerHeight = 10;
 
