@@ -92,13 +92,98 @@ namespace Epsitec.Common.Designer.MyWidgets
 			else
 			{
 				connection.Visibility = true;
+				connection.Points.Clear();
 
 				Point p = new Point(0, v);
 				p = src.MapClientToParent(p);
 
+#if true
+				if (dstBounds.Center.X > srcBounds.Right+EntityEditor.connectionDetour)  // destination à droite ?
+				{
+					Point start = new Point(srcBounds.Right-1, p.Y);
+					connection.Points.Add(start);
+
+					if (dstBounds.Top < start.Y-EntityEditor.connectionDetour)  // destination plus basse ?
+					{
+						Point end = dst.GetConnectionDestination(start.Y, EntityBox.ConnectionAnchor.Top);
+						connection.Points.Add(new Point(end.X, start.Y));
+						connection.Points.Add(end);
+					}
+					else if (dstBounds.Bottom > start.Y+EntityEditor.connectionDetour)  // destination plus haute ?
+					{
+						Point end = dst.GetConnectionDestination(start.Y, EntityBox.ConnectionAnchor.Bottom);
+						connection.Points.Add(new Point(end.X, start.Y));
+						connection.Points.Add(end);
+					}
+					else
+					{
+						Point end = dst.GetConnectionDestination(start.Y, EntityBox.ConnectionAnchor.Left);
+						if (start.Y != end.Y && end.X-start.X > EntityEditor.connectionDetour)
+						{
+							connection.Points.Add(new Point((start.X+end.X)/2, start.Y));
+							connection.Points.Add(new Point((start.X+end.X)/2, end.Y));
+						}
+						connection.Points.Add(end);
+					}
+				}
+				else if (dstBounds.Center.X < srcBounds.Left-EntityEditor.connectionDetour)  // destination à gauche ?
+				{
+					Point start = new Point(srcBounds.Left+1, p.Y);
+					connection.Points.Add(start);
+
+					if (dstBounds.Top < start.Y-EntityEditor.connectionDetour)  // destination plus basse ?
+					{
+						Point end = dst.GetConnectionDestination(start.Y, EntityBox.ConnectionAnchor.Top);
+						connection.Points.Add(new Point(end.X, start.Y));
+						connection.Points.Add(end);
+					}
+					else if (dstBounds.Bottom > start.Y+EntityEditor.connectionDetour)  // destination plus haute ?
+					{
+						Point end = dst.GetConnectionDestination(start.Y, EntityBox.ConnectionAnchor.Bottom);
+						connection.Points.Add(new Point(end.X, start.Y));
+						connection.Points.Add(end);
+					}
+					else
+					{
+						Point end = dst.GetConnectionDestination(start.Y, EntityBox.ConnectionAnchor.Right);
+						if (start.Y != end.Y && start.X-end.X > EntityEditor.connectionDetour)
+						{
+							connection.Points.Add(new Point((start.X+end.X)/2, start.Y));
+							connection.Points.Add(new Point((start.X+end.X)/2, end.Y));
+						}
+						connection.Points.Add(end);
+					}
+				}
+				else if (dstBounds.Center.X > srcBounds.Center.X)  // destination à droite à cheval ?
+				{
+					Point start = new Point(srcBounds.Right-1, p.Y);
+					connection.Points.Add(start);
+
+					Point end = dst.GetConnectionDestination(start.Y, EntityBox.ConnectionAnchor.Right);
+					double posx = System.Math.Max(start.X, end.X)+EntityEditor.connectionDetour;
+					connection.Points.Add(new Point(posx, start.Y));
+					connection.Points.Add(new Point(posx, end.Y));
+					connection.Points.Add(end);
+				}
+				else  // destination à gauche à cheval ?
+				{
+					Point start = new Point(srcBounds.Left+1, p.Y);
+					connection.Points.Add(start);
+
+					Point end = dst.GetConnectionDestination(start.Y, EntityBox.ConnectionAnchor.Left);
+					double posx = System.Math.Min(start.X, end.X)-EntityEditor.connectionDetour;
+					connection.Points.Add(new Point(posx, start.Y));
+					connection.Points.Add(new Point(posx, end.Y));
+					connection.Points.Add(end);
+				}
+#endif
+
+#if false
 				double min = double.MaxValue;
 				MyWidgets.EntityBox.ConnectionAnchor best = EntityBox.ConnectionAnchor.Left;
 				bool right = true;
+				bool over = false;
+				Point bestEnd = Point.Zero;
 
 				//	Cherche la meilleure liaison possible, parmi huit possibilités.
 				foreach (MyWidgets.EntityBox.ConnectionAnchor anchor in System.Enum.GetValues(typeof(MyWidgets.EntityBox.ConnectionAnchor)))
@@ -106,33 +191,83 @@ namespace Epsitec.Common.Designer.MyWidgets
 					Point end = dst.GetConnectionDestination(p.Y, anchor);
 					Point start;
 					double d;
+					bool bad;
 
 					start = new Point(srcBounds.Right-1, p.Y);
 					d = Point.Distance(start, end);
-					if (Geometry.IsOver(srcBoundsLittle, start, end, 20))  d *= 20;  // très mauvais si chevauchement avec la source
-					if (Geometry.IsOver(dstBoundsLittle, start, end, 20))  d *= 10;  // mauvais si chevauchement avec la destination
+					bad = false;
+					if (Geometry.IsOver(srcBoundsLittle, start, end, 20))
+					{
+						d *= 20;  // très mauvais si chevauchement avec la source
+						bad = true;
+					}
+					if (Geometry.IsOver(dstBoundsLittle, start, end, 20))
+					{
+						d *= 10;  // mauvais si chevauchement avec la destination
+						bad = true;
+					}
 					if (d < min)
 					{
 						min = d;
 						best = anchor;
 						right = true;
+						over = bad;
+						bestEnd = end;
 					}
 
 					start = new Point(srcBounds.Left+1, p.Y);
 					d = Point.Distance(start, end);
-					if (Geometry.IsOver(srcBoundsLittle, start, end, 20))  d *= 20;  // très mauvais si chevauchement avec la source
-					if (Geometry.IsOver(dstBoundsLittle, start, end, 20))  d *= 10;  // mauvais si chevauchement avec la destination
+					bad = false;
+					if (Geometry.IsOver(srcBoundsLittle, start, end, 20))
+					{
+						d *= 20;  // très mauvais si chevauchement avec la source
+						bad = true;
+					}
+					if (Geometry.IsOver(dstBoundsLittle, start, end, 20))
+					{
+						d *= 10;  // mauvais si chevauchement avec la destination
+						bad = true;
+					}
 					if (d < min)
 					{
 						min = d;
 						best = anchor;
 						right = false;
+						over = bad;
+						bestEnd = end;
 					}
 				}
 
-				connection.Points.Clear();
 				connection.Points.Add(new Point(right ? srcBounds.Right-1 : srcBounds.Left+1, p.Y));
-				connection.Points.Add(dst.GetConnectionDestination(p.Y, best));
+
+				if (over)
+				{
+					if (right)
+					{
+						double posx = System.Math.Max(srcBounds.Right, bestEnd.X)+EntityEditor.connectionDetour;
+
+						double ov = 0;
+						if (best == EntityBox.ConnectionAnchor.Bottom)  ov = -EntityEditor.connectionDetour;
+						if (best == EntityBox.ConnectionAnchor.Top   )  ov =  EntityEditor.connectionDetour;
+
+						connection.Points.Add(new Point(posx, p.Y));
+						connection.Points.Add(new Point(posx, bestEnd.Y+ov));
+					}
+					else
+					{
+						double posx = System.Math.Min(srcBounds.Left, bestEnd.X)-EntityEditor.connectionDetour;
+
+						double ov = 0;
+						if (best == EntityBox.ConnectionAnchor.Bottom)  ov = -EntityEditor.connectionDetour;
+						if (best == EntityBox.ConnectionAnchor.Top   )  ov =  EntityEditor.connectionDetour;
+
+						connection.Points.Add(new Point(posx, p.Y));
+						connection.Points.Add(new Point(posx, bestEnd.Y+ov));
+					}
+				}
+
+				connection.Points.Add(bestEnd);
+#endif
 			}
 		}
 
@@ -242,6 +377,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 		}
 
 
+
+		protected static readonly double connectionDetour = 30;
 
 		protected List<MyWidgets.EntityBox> boxes;
 		protected List<MyWidgets.EntityConnection> connections;

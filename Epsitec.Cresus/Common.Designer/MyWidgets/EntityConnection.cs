@@ -74,11 +74,16 @@ namespace Epsitec.Common.Designer.MyWidgets
 					Point p1 = (i==0) ? start : this.GetPoint(i);
 					Point p2 = this.GetPoint(i+1);
 
+					if (i == 0)
+					{
+						this.PaintStartingArrow(graphics, p1, p2);
+					}
+
 					graphics.AddLine(p1, p2);
 
 					if (i == this.points.Count-2)
 					{
-						this.PaintArrow(graphics, p1, p2);
+						this.PaintEndingArrow(graphics, p1, p2);
 					}
 				}
 				graphics.RenderSolid(Color.FromBrightness(0));
@@ -90,7 +95,16 @@ namespace Epsitec.Common.Designer.MyWidgets
 			return this.MapParentToClient(this.points[rank]);
 		}
 
-		protected void PaintArrow(Graphics graphics, Point start, Point end)
+		protected void PaintStartingArrow(Graphics graphics, Point start, Point end)
+		{
+			//	Dessine une flèche selon le type de la relation.
+			if (this.relation == FieldRelation.Inclusion)
+			{
+				this.PaintArrowBase(graphics, end, start);
+			}
+		}
+
+		protected void PaintEndingArrow(Graphics graphics, Point start, Point end)
 		{
 			//	Dessine une flèche selon le type de la relation.
 			this.PaintArrowBase(graphics, start, end);
@@ -99,11 +113,6 @@ namespace Epsitec.Common.Designer.MyWidgets
 			{
 				end = Point.Move(end, start, EntityConnection.arrowLength*0.75);
 				this.PaintArrowBase(graphics, start, end);
-			}
-
-			if (this.relation == FieldRelation.Inclusion)
-			{
-				this.PaintArrowBase(graphics, end, start);
 			}
 		}
 
