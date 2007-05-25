@@ -750,7 +750,17 @@ namespace Epsitec.Common.Types
 			if (typeProvider != null)
 			{
 				IStructuredType structuredType = typeProvider.GetStructuredType ();
-				return structuredType.GetField (fieldId).Type.SystemType;
+				
+				if (structuredType != null)
+				{
+					StructuredTypeField field = structuredType.GetField (fieldId);
+					
+					if ((field != null) &&
+						(field.Type != null))
+					{
+						return field.Type.SystemType;
+					}
+				}
 			}
 
 			return null;

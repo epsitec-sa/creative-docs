@@ -210,7 +210,7 @@ namespace Epsitec.Common.Types
 		{
 			DependencyProperty property  = this.GetProperty (fieldId);
 			INamedType         namedType = TypeRosetta.GetNamedTypeFromTypeObject (property);
-			Support.Druid      captionId = property.CaptionId;
+			Support.Druid      captionId = property == null ? Support.Druid.Empty : property.CaptionId;
 
 			return new StructuredTypeField (fieldId, namedType, captionId);
 		}

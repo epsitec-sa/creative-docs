@@ -161,11 +161,14 @@ namespace Epsitec.Common.Support
 		
 		protected virtual void OnPropertyChanged(DependencyPropertyChangedEventArgs e)
 		{
-			this.owner.NotifyItemChanged (this);
-
-			if (this.PropertyChanged != null)
+			if (this.owner != null)
 			{
-				this.PropertyChanged (this, e);
+				this.owner.NotifyItemChanged (this);
+
+				if (this.PropertyChanged != null)
+				{
+					this.PropertyChanged (this, e);
+				}
 			}
 		}
 		

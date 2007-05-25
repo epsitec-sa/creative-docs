@@ -9,6 +9,12 @@ namespace Epsitec.Common.Support
 	[TestFixture]
 	public class CommandTest
 	{
+		[SetUp]
+		public void Initialize()
+		{
+			Epsitec.Common.Widgets.Widget.Initialize ();
+		}
+		
 		[Test]
 		public void CheckCommandContext()
 		{

@@ -28,13 +28,14 @@ namespace Epsitec.Common.Support
 
 			Types.StructuredType typeStruct = Res.Types.ResourceStructuredType;
 			Types.StructuredType typeField  = Res.Types.Field;
-			Types.CollectionType typeFields = Res.Types.FieldCollection;
+//-			Types.CollectionType typeFields = Res.Types.FieldCollection;
 			
 			Types.EnumType typeFieldRelation   = Types.Res.Types.FieldRelation;
 			Types.EnumType typeFieldMembership = Types.Res.Types.FieldMembership;
 
-			Assert.AreEqual (typeFields, typeStruct.GetField (Res.Fields.ResourceStructuredType.Fields.ToString ()).Type);
-			Assert.AreEqual (typeField, typeFields.ItemType);
+			Assert.AreEqual (typeField, typeStruct.GetField (Res.Fields.ResourceStructuredType.Fields.ToString ()).Type);
+			Assert.AreEqual (Types.FieldRelation.Collection, typeStruct.GetField (Res.Fields.ResourceStructuredType.Fields.ToString ()).Relation);
+//-			Assert.AreEqual (typeField, typeFields.ItemType);
 			Assert.AreEqual (typeof (Types.FieldRelation), typeFieldRelation.SystemType);
 			Assert.AreEqual (typeof (Types.FieldMembership), typeFieldMembership.SystemType);
 			Assert.AreEqual (typeFieldRelation.SystemType, typeField.GetField (Res.Fields.Field.Relation.ToString ()).Type.SystemType);
@@ -422,14 +423,20 @@ namespace Epsitec.Common.Support
 
 		private void DumpStructuredData(string indent, Types.StructuredData data, Types.IStructuredType type)
 		{
+			if (data == null)
+			{
+				return;
+			}
+
 			foreach (string fieldId in type.GetFieldIds ())
 			{
 				Types.StructuredTypeField field = type.GetField (fieldId);
 				Types.Caption caption = this.manager.GetCaption (field.CaptionId);
 
-				System.Console.Out.WriteLine ("{4}{0} ({1}) : type = {2}, data = {3}", fieldId, caption.Name, field.Type.Name, data.GetValue (fieldId), indent);
+				System.Console.Out.WriteLine ("{4}{0} ({1}) : type = {2}, data = {3}, relation = {5}, {6}", fieldId, (caption == null) ? "<?>" : caption.Name, (field.Type == null) ? "<null>" : field.Type.Name, data.GetValue (fieldId), indent, field.Relation, field.Membership);
 
-				if (field.Type is Types.IStructuredType)
+				if ((field.Type is Types.IStructuredType) &&
+					(field.Relation != Types.FieldRelation.Collection))
 				{
 					this.DumpStructuredData ("  " + indent, data.GetValue (fieldId) as Types.StructuredData, field.Type as Types.IStructuredType);
 				}
@@ -452,6 +459,27 @@ namespace Epsitec.Common.Support
 						}
 
 						this.DumpStructuredData ("* " + indent, item0, collectionType.ItemType as Types.IStructuredType);
+					}
+				}
+				else if (field.Relation == Types.FieldRelation.Collection)
+				{
+					Types.AbstractType collectionType = field.Type as Types.AbstractType;
+
+					if (collectionType is Types.IStructuredType)
+					{
+						System.Collections.IList collection = data.GetValue (fieldId) as System.Collections.IList;
+						Types.StructuredData item0;
+
+						if (collection.Count > 0)
+						{
+							item0 = collection[0] as Types.StructuredData;
+						}
+						else
+						{
+							item0 = new Types.StructuredData (collectionType as Types.IStructuredType);
+						}
+
+						this.DumpStructuredData ("* " + indent, item0, collectionType as Types.IStructuredType);
 					}
 				}
 			}
