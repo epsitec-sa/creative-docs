@@ -296,6 +296,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected void PushLayout(MyWidgets.EntityBox exclude, PushDirection direction, double margin)
 		{
 			//	Pousse les boîtes pour éviter tout chevauchement.
+			//	Une boîte peut être poussée hors de la surface de dessin.
 			for (int max=0; max<100; max++)
 			{
 				bool push = false;
@@ -350,7 +351,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		protected void PushAction(MyWidgets.EntityBox box, MyWidgets.EntityBox inter, PushDirection direction, double margin)
 		{
-			//	Pousse 'inter' pour venir après 'box'.
+			//	Pousse 'inter' pour venir après 'box' selon la direction choisie.
 			Rectangle rect = inter.ActualBounds;
 
 			double dr = box.ActualBounds.Right - rect.Left + margin;
@@ -568,6 +569,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		protected void MouseDraggingBegin(Point pos)
 		{
+			//	Début du déplacement d'une boîte.
 			MyWidgets.EntityBox box = this.DetectBox(pos);
 
 			if (box != null && box.IsHilited)
@@ -580,6 +582,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		protected void MouseDraggingMove(Point pos)
 		{
+			//	Déplacement d'une boîte.
 			Rectangle bounds = this.draggingBox.ActualBounds;
 
 			bounds.Offset(pos-this.draggingPos);
@@ -591,6 +594,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		protected void MouseDraggingEnd(Point pos)
 		{
+			//	Fin du déplacement d'une boîte.
 			this.PushBoxesInside(EntityEditor.pushMargin);
 			this.PushLayout(this.draggingBox, PushDirection.Automatic, EntityEditor.pushMargin);
 			this.RecenterBoxes(EntityEditor.pushMargin);
@@ -607,7 +611,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			//	Appelé lorsque la géométrie d'une boîte a changé (changement compact/étendu).
 			MyWidgets.EntityBox box = sender as MyWidgets.EntityBox;
 
-			this.UpdateBoxes();  // adapte la taille
+			this.UpdateBoxes();  // adapte la taille selon compact/étendu
 			
 			this.PushBoxesInside(EntityEditor.pushMargin);
 			this.PushLayout(box, PushDirection.Automatic, EntityEditor.pushMargin);
