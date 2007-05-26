@@ -106,7 +106,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			dstBoundsLittle.Deflate(2);
 
 			double v = src.GetConnectionVerticalPosition(srcRank);
-			if (double.IsNaN(v))
+			if (double.IsNaN(v) || srcBounds.IntersectsWith(dstBounds))
 			{
 				connection.Visibility = false;
 			}
@@ -425,7 +425,11 @@ namespace Epsitec.Common.Designer.MyWidgets
 						bounds.Offset(0, this.ActualHeight-margin-bounds.Top);
 					}
 
-					box.SetManualBounds(bounds);
+					if (bounds != box.ActualBounds)
+					{
+						box.SetManualBounds(bounds);
+						this.PushLayout(box, PushDirection.Automatic, EntityEditor.pushMargin);
+					}
 				}
 			}
 		}
