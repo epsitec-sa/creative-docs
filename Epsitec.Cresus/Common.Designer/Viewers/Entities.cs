@@ -20,6 +20,41 @@ namespace Epsitec.Common.Designer.Viewers
 			this.scrollable.Panel.ContainerLayoutMode = ContainerLayoutMode.None;
 			this.scrollable.Panel.SurfaceSize = new Size(1000, 1000);
 
+#if true
+			this.editor = new EntitiesEditor.Editor(this.scrollable.Panel);
+			this.editor.SetManualBounds(new Rectangle(Point.Zero, this.scrollable.Panel.SurfaceSize));
+
+			EntitiesEditor.ObjectBox box;
+
+			box = new EntitiesEditor.ObjectBox();
+			box.Title = "Facture";
+			box.SetContent("Numéro de facture;Date;Client;Articles;TVA;Rabais;Frais de port");
+			this.editor.AddBox(box);
+
+			box = new EntitiesEditor.ObjectBox();
+			box.Title = "Client";
+			box.SetContent("Numéro de client;Titre;Nom;Prénom;Entreprise;Adresse;NPA;Ville;Pays;Téléphone professionnel;Téléphone privé;Téléphone mobile;E-mail professionnel;E-mail privé;Site web");
+			this.editor.AddBox(box);
+
+			box = new EntitiesEditor.ObjectBox();
+			box.Title = "Article";
+			box.SetContent("Numéro d'article;Désignation;Quantité;Prix d'achat;Prix de vente");
+			this.editor.AddBox(box);
+
+			box = new EntitiesEditor.ObjectBox();
+			box.Title = "Rabais";
+			box.SetContent("Normal;Revendeur;Grossiste");
+			this.editor.AddBox(box);
+
+			this.editor.AddConnection(new EntitiesEditor.ObjectConnection());
+			this.editor.AddConnection(new EntitiesEditor.ObjectConnection());
+			this.editor.AddConnection(new EntitiesEditor.ObjectConnection());
+
+			this.editor.UpdateGeometry();
+			this.UpdateAll();
+#endif
+
+#if false
 			this.editor = new MyWidgets.EntityEditor(this.scrollable.Panel);
 			//?this.editor.Dock = DockStyle.Fill;  // TODO: pourquoi ça ne marche pas ???
 			this.editor.SetManualBounds(new Rectangle(Point.Zero, this.scrollable.Panel.SurfaceSize));
@@ -55,6 +90,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 			this.editor.UpdateGeometry();
 			this.UpdateAll();
+#endif
 		}
 
 		protected override void Dispose(bool disposing)
@@ -76,6 +112,6 @@ namespace Epsitec.Common.Designer.Viewers
 		}
 
 
-		protected MyWidgets.EntityEditor editor;
+		protected EntitiesEditor.Editor editor;
 	}
 }

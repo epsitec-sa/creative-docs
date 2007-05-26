@@ -53,6 +53,10 @@
     <Compile Include="Dialogs\ResourceTypeType.cs" />
     <Compile Include="Dialogs\Open.cs" />
     <Compile Include="Dialogs\Icon.cs" />
+    <Compile Include="EntitiesEditor\AbstractObject.cs" />
+    <Compile Include="EntitiesEditor\ObjectBox.cs" />
+    <Compile Include="EntitiesEditor\ObjectConnection.cs" />
+    <Compile Include="EntitiesEditor\Editor.cs" />
     <Compile Include="Geometry.cs" />
     <Compile Include="InsideSurface.cs" />
     <Compile Include="MyWidgets\AbstractTypeEditor.cs" />
