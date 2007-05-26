@@ -392,6 +392,44 @@ namespace Epsitec.Common.Designer.MyWidgets
 		}
 
 
+		protected void PushBoxesInside(double margin)
+		{
+			//	Remet les boîtes dans la surface de dessin.
+			for (int i=0; i<this.Children.Count; i++)
+			{
+				Widget widget = this.Children[i] as Widget;
+
+				if (widget is MyWidgets.EntityBox)
+				{
+					MyWidgets.EntityBox box = widget as MyWidgets.EntityBox;
+
+					Rectangle bounds = box.ActualBounds;
+
+					if (bounds.Left < margin)
+					{
+						bounds.Offset(margin-bounds.Left, 0);
+					}
+
+					if (bounds.Right > this.ActualWidth-margin)
+					{
+						bounds.Offset(this.ActualWidth-margin-bounds.Right, 0);
+					}
+
+					if (bounds.Bottom < margin)
+					{
+						bounds.Offset(0, margin-bounds.Bottom);
+					}
+
+					if (bounds.Top > this.ActualHeight-margin)
+					{
+						bounds.Offset(0, this.ActualHeight-margin-bounds.Top);
+					}
+
+					box.SetManualBounds(bounds);
+				}
+			}
+		}
+
 		protected void RecenterBoxes(double margin)
 		{
 			//	Si des boîtes dépassent de la surface de dessin, recentre le tout.
@@ -549,8 +587,10 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		protected void MouseDraggingEnd(Point pos)
 		{
+			this.PushBoxesInside(EntityEditor.pushMargin);
 			this.PushLayout(this.draggingBox, PushDirection.Automatic, EntityEditor.pushMargin);
 			this.RecenterBoxes(EntityEditor.pushMargin);
+			this.PushBoxesInside(EntityEditor.pushMargin);
 			this.UpdateConnections();
 
 			this.draggingBox = null;
@@ -562,8 +602,12 @@ namespace Epsitec.Common.Designer.MyWidgets
 		{
 			//	Appelé lorsque la géométrie d'une boîte a changé (changement compact/étendu).
 			MyWidgets.EntityBox box = sender as MyWidgets.EntityBox;
-			this.UpdateBoxes();
-			this.PushLayout(box, PushDirection.Bottom, EntityEditor.pushMargin);
+
+			this.UpdateBoxes();  // adapte la taille
+			
+			this.PushBoxesInside(EntityEditor.pushMargin);
+			this.PushLayout(box, PushDirection.Automatic, EntityEditor.pushMargin);
+			this.PushBoxesInside(EntityEditor.pushMargin);
 			this.UpdateConnections();
 		}
 
