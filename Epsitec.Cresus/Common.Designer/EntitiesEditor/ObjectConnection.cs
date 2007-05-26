@@ -44,6 +44,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		public override void Draw(Graphics graphics)
 		{
+			//	Dessine l'objet.
 			if (this.points.Count >= 2)
 			{
 				Point start = this.points[0];

@@ -112,7 +112,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			//	Retourne la position verticale pour un trait de liaison.
 			if (this.isExtended && rank < this.fields.Count)
 			{
-				return this.bounds.Top - (ObjectBox.headerHeight + 8 + (ObjectBox.fieldHeight+1)*rank + ObjectBox.fieldHeight/2);
+				Rectangle rect = this.GetFieldBounds(rank);
+				return rect.Center.Y;
 			}
 			else
 			{
@@ -155,6 +156,17 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 
 			return Point.Zero;
+		}
+
+		protected Rectangle GetFieldBounds(int rank)
+		{
+			//	Retourne le rectangle occupé par un champ.
+			Rectangle rect = this.bounds;
+
+			rect.Bottom = rect.Top - ObjectBox.headerHeight - ObjectBox.fieldHeight*(rank+1) - 12;
+			rect.Height = ObjectBox.fieldHeight;
+
+			return rect;
 		}
 
 
@@ -223,8 +235,10 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		}
 
 
+
 		public override void Draw(Graphics graphics)
 		{
+			//	Dessine l'objet.
 			IAdorner adorner = Common.Widgets.Adorners.Factory.Active;
 
 			//	Dessine l'ombre.
@@ -278,10 +292,6 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			{
 				font = Font.GetFont("Tahoma", "Regular");
 
-				Rectangle rect = this.bounds;
-				rect.Bottom = rect.Top-ObjectBox.headerHeight-ObjectBox.fieldHeight-12;
-				rect.Height = ObjectBox.fieldHeight;
-
 				Color color = Color.FromBrightness(0.9);
 				if (this.isHilited)
 				{
@@ -291,6 +301,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 				for (int i=0; i<this.fields.Count; i++)
 				{
+					Rectangle rect = this.GetFieldBounds(i);
+
 					graphics.AddText(rect.Left+10, rect.Bottom, rect.Width-20, ObjectBox.fieldHeight, this.fields[i], font, 11, ContentAlignment.MiddleLeft);
 					graphics.RenderSolid(Color.FromBrightness(0));
 

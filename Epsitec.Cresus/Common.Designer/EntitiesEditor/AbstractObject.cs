@@ -32,6 +32,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		public virtual void Draw(Graphics graphics)
 		{
+			//	Dessine l'objet.
 		}
 
 
