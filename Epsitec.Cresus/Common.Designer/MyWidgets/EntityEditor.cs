@@ -47,7 +47,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		{
 			box.GeometryChanged += new EventHandler(this.HandleBoxGeometryChanged);
 			box.SetParent(this);
-			box.SetManualBounds(new Rectangle(20+(180+40)*this.boxes.Count, 1000-20-30*this.boxes.Count-100, 180, 100));
+			box.SetManualBounds(new Rectangle(20+(EntityEditor.defaultWidth+40)*this.boxes.Count, this.ActualHeight-20-30*this.boxes.Count-100, EntityEditor.defaultWidth, 100));
 
 			this.boxes.Add(box);
 		}
@@ -392,6 +392,70 @@ namespace Epsitec.Common.Designer.MyWidgets
 		}
 
 
+		protected void RecenterBoxes(double margin)
+		{
+			//	Si des boîtes dépassent de la surface de dessin, recentre le tout.
+			Rectangle bounds = this.ComputeBoxBounds();
+
+			if (bounds.Left < margin)
+			{
+				this.MoveBoxes(margin-bounds.Left, 0);
+			}
+
+			if (bounds.Right > this.ActualWidth-margin)
+			{
+				this.MoveBoxes(this.ActualWidth-margin-bounds.Right, 0);
+			}
+
+			if (bounds.Bottom < margin)
+			{
+				this.MoveBoxes(0, margin-bounds.Bottom);
+			}
+
+			if (bounds.Top > this.ActualHeight-margin)
+			{
+				this.MoveBoxes(0, this.ActualHeight-margin-bounds.Top);
+			}
+		}
+
+		protected Rectangle ComputeBoxBounds()
+		{
+			//	Retourne le rectangle englobant toutes les boîtes.
+			Rectangle bounds = Rectangle.Empty;
+
+			for (int i=0; i<this.Children.Count; i++)
+			{
+				Widget widget = this.Children[i] as Widget;
+
+				if (widget is MyWidgets.EntityBox)
+				{
+					MyWidgets.EntityBox box = widget as MyWidgets.EntityBox;
+					bounds = Rectangle.Union(bounds, box.ActualBounds);
+				}
+			}
+
+			return bounds;
+		}
+
+		protected void MoveBoxes(double dx, double dy)
+		{
+			//	Déplace toutes les boîtes.
+			for (int i=0; i<this.Children.Count; i++)
+			{
+				Widget widget = this.Children[i] as Widget;
+
+				if (widget is MyWidgets.EntityBox)
+				{
+					MyWidgets.EntityBox box = widget as MyWidgets.EntityBox;
+
+					Rectangle bounds = box.ActualBounds;
+					bounds.Offset(dx, dy);
+					box.SetManualBounds(bounds);
+				}
+			}
+		}
+
+
 		protected override void ProcessMessage(Message message, Point pos)
 		{
 			switch (message.MessageType)
@@ -485,7 +549,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		protected void MouseDraggingEnd(Point pos)
 		{
-			this.PushLayout(this.draggingBox, PushDirection.Automatic, 20);
+			this.PushLayout(this.draggingBox, PushDirection.Automatic, EntityEditor.pushMargin);
+			this.RecenterBoxes(EntityEditor.pushMargin);
 			this.UpdateConnections();
 
 			this.draggingBox = null;
@@ -498,13 +563,15 @@ namespace Epsitec.Common.Designer.MyWidgets
 			//	Appelé lorsque la géométrie d'une boîte a changé (changement compact/étendu).
 			MyWidgets.EntityBox box = sender as MyWidgets.EntityBox;
 			this.UpdateBoxes();
-			this.PushLayout(box, PushDirection.Bottom, 20);
+			this.PushLayout(box, PushDirection.Bottom, EntityEditor.pushMargin);
 			this.UpdateConnections();
 		}
 
 
 
+		protected static readonly double defaultWidth = 180;
 		protected static readonly double connectionDetour = 30;
+		protected static readonly double pushMargin = 10;
 
 		protected List<MyWidgets.EntityBox> boxes;
 		protected List<MyWidgets.EntityConnection> connections;
