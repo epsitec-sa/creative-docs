@@ -19,7 +19,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		}
 
 
-		public ObjectBox() : base()
+		public ObjectBox(Editor editor) : base(editor)
 		{
 #if true // provisoire
 			this.fields = new List<string>();
@@ -70,6 +70,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				if (this.isExtended != value)
 				{
 					this.isExtended = value;
+					this.editor.Invalidate();
 				}
 			}
 		}
@@ -87,6 +88,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				if (this.isHilited != value)
 				{
 					this.isHilited = value;
+					this.editor.Invalidate();
 				}
 			}
 		}
@@ -292,7 +294,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					graphics.AddText(rect.Left+10, rect.Bottom, rect.Width-20, ObjectBox.fieldHeight, this.fields[i], font, 11, ContentAlignment.MiddleLeft);
 					graphics.RenderSolid(Color.FromBrightness(0));
 
-					graphics.AddLine(rect.Left, rect.Bottom, rect.Right, rect.Bottom);
+					graphics.AddLine(rect.Left, rect.Bottom+0.5, rect.Right, rect.Bottom+0.5);
 					graphics.RenderSolid(color);
 
 					rect.Offset(0, -ObjectBox.fieldHeight);

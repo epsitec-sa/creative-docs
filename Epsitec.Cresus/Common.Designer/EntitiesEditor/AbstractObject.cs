@@ -11,9 +11,10 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 	/// </summary>
 	public abstract class AbstractObject
 	{
-		public AbstractObject()
+		public AbstractObject(Editor editor)
 		{
 			//	Constructeur.
+			this.editor = editor;
 		}
 
 
@@ -112,6 +113,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		}
 
 
+		protected Editor editor;
 		protected Rectangle bounds;
 	}
 }

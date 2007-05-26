@@ -11,7 +11,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 	/// </summary>
 	public class ObjectConnection : AbstractObject
 	{
-		public ObjectConnection() : base()
+		public ObjectConnection(Editor editor) : base(editor)
 		{
 			this.points = new List<Point>();
 		}

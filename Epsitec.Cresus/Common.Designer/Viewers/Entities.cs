@@ -26,29 +26,29 @@ namespace Epsitec.Common.Designer.Viewers
 
 			EntitiesEditor.ObjectBox box;
 
-			box = new EntitiesEditor.ObjectBox();
+			box = new EntitiesEditor.ObjectBox(this.editor);
 			box.Title = "Facture";
 			box.SetContent("Numéro de facture;Date;Client;Articles;TVA;Rabais;Frais de port");
 			this.editor.AddBox(box);
 
-			box = new EntitiesEditor.ObjectBox();
+			box = new EntitiesEditor.ObjectBox(this.editor);
 			box.Title = "Client";
 			box.SetContent("Numéro de client;Titre;Nom;Prénom;Entreprise;Adresse;NPA;Ville;Pays;Téléphone professionnel;Téléphone privé;Téléphone mobile;E-mail professionnel;E-mail privé;Site web");
 			this.editor.AddBox(box);
 
-			box = new EntitiesEditor.ObjectBox();
+			box = new EntitiesEditor.ObjectBox(this.editor);
 			box.Title = "Article";
 			box.SetContent("Numéro d'article;Désignation;Quantité;Prix d'achat;Prix de vente");
 			this.editor.AddBox(box);
 
-			box = new EntitiesEditor.ObjectBox();
+			box = new EntitiesEditor.ObjectBox(this.editor);
 			box.Title = "Rabais";
 			box.SetContent("Normal;Revendeur;Grossiste");
 			this.editor.AddBox(box);
 
-			this.editor.AddConnection(new EntitiesEditor.ObjectConnection());
-			this.editor.AddConnection(new EntitiesEditor.ObjectConnection());
-			this.editor.AddConnection(new EntitiesEditor.ObjectConnection());
+			this.editor.AddConnection(new EntitiesEditor.ObjectConnection(this.editor));
+			this.editor.AddConnection(new EntitiesEditor.ObjectConnection(this.editor));
+			this.editor.AddConnection(new EntitiesEditor.ObjectConnection(this.editor));
 
 			this.editor.UpdateGeometry();
 			this.UpdateAll();
