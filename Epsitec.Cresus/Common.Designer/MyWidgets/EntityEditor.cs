@@ -51,6 +51,12 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		public void UpdateGeometry()
 		{
+			this.UpdateBoxes();
+			this.UpdateConnections();
+		}
+
+		protected void UpdateBoxes()
+		{
 			//	Met à jour la géométrie de toutes les boîtes et de toutes les liaisons.
 			foreach (MyWidgets.EntityBox box in this.boxes)
 			{
@@ -61,7 +67,10 @@ namespace Epsitec.Common.Designer.MyWidgets
 				bounds.Height = h;
 				box.SetManualBounds(bounds);
 			}
+		}
 
+		protected void UpdateConnections()
+		{
 			//	TODO: provisoire !
 			this.UpdateConnection(this.connections[0], this.boxes[0], 2, this.boxes[1], FieldRelation.Reference);  // lien client
 			this.UpdateConnection(this.connections[1], this.boxes[0], 3, this.boxes[2], FieldRelation.Collection);  // lien articles
@@ -272,6 +281,76 @@ namespace Epsitec.Common.Designer.MyWidgets
 		}
 
 
+		protected void PushLayout(MyWidgets.EntityBox exclude, bool horizontal, double margin)
+		{
+			//	Pousse les boîtes pour éviter tout chevauchement.
+			bool push;
+			do
+			{
+				push = false;
+				for (int i=0; i<this.Children.Count; i++)
+				{
+					Widget widget = this.Children[i] as Widget;
+
+					if (widget is MyWidgets.EntityBox)
+					{
+						MyWidgets.EntityBox box = widget as MyWidgets.EntityBox;
+						MyWidgets.EntityBox inter = this.PushSearch(box, exclude, margin);
+						if (inter != null)
+						{
+							push = true;
+							this.PushAction(box, inter, horizontal, margin);
+						}
+					}
+				}
+			}
+			while(push);
+		}
+
+		protected MyWidgets.EntityBox PushSearch(MyWidgets.EntityBox box, MyWidgets.EntityBox exclude, double margin)
+		{
+			//	Cherche une boîte qui chevauche 'box'.
+			Rectangle rect = box.ActualBounds;
+			rect.Inflate(margin);
+
+			for (int i=0; i<this.Children.Count; i++)
+			{
+				Widget widget = this.Children[i] as Widget;
+
+				if (widget is MyWidgets.EntityBox && widget != box && widget != exclude)
+				{
+					MyWidgets.EntityBox b = widget as MyWidgets.EntityBox;
+
+					if (b.ActualBounds.IntersectsWith(rect))
+					{
+						return b;
+					}
+				}
+			}
+
+			return null;
+		}
+
+		protected void PushAction(MyWidgets.EntityBox box, MyWidgets.EntityBox inter, bool horizontal, double margin)
+		{
+			//	Pousse 'inter' pour venir après 'box'.
+			Rectangle rect = inter.ActualBounds;
+
+			if (horizontal)
+			{
+				double d = box.ActualBounds.Right - rect.Left + margin;
+				rect.Offset(d, 0);
+			}
+			else
+			{
+				double d = box.ActualBounds.Bottom - rect.Top - margin;
+				rect.Offset(0, d);
+			}
+
+			inter.SetManualBounds(rect);
+		}
+
+
 		protected override void ProcessMessage(Message message, Point pos)
 		{
 			switch (message.MessageType)
@@ -360,7 +439,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.draggingPos = pos;
 
 			this.draggingBox.SetManualBounds(bounds);
-			this.UpdateGeometry();
+			this.UpdateConnections();
 		}
 
 		protected void MouseDraggingEnd(Point pos)
@@ -373,7 +452,10 @@ namespace Epsitec.Common.Designer.MyWidgets
 		private void HandleBoxGeometryChanged(object sender)
 		{
 			//	Appelé lorsque la géométrie d'une boîte a changé (changement compact/étendu).
-			this.UpdateGeometry();
+			MyWidgets.EntityBox box = sender as MyWidgets.EntityBox;
+			this.UpdateBoxes();
+			this.PushLayout(box, false, 20);
+			this.UpdateConnections();
 		}
 
 
