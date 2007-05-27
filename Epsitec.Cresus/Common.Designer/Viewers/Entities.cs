@@ -14,15 +14,30 @@ namespace Epsitec.Common.Designer.Viewers
 	{
 		public Entities(Module module, PanelsContext context, ResourceAccess access, MainWindow mainWindow) : base(module, context, access, mainWindow)
 		{
+			HToolBar header = new HToolBar(this.lastPane);
+			header.Dock = DockStyle.Top;
+			header.Margins = new Margins(0, 0, 1, 0);
+
 			this.scrollable.HorizontalScrollerMode = ScrollableScrollerMode.ShowAlways;
 			this.scrollable.VerticalScrollerMode = ScrollableScrollerMode.ShowAlways;
 			this.scrollable.Panel.IsAutoFitting = false;
 			this.scrollable.Panel.ContainerLayoutMode = ContainerLayoutMode.None;
 			this.scrollable.Panel.SurfaceSize = new Size(1000, 1000);
 
-#if true
 			this.editor = new EntitiesEditor.Editor(this.scrollable.Panel);
 			this.editor.SetManualBounds(new Rectangle(Point.Zero, this.scrollable.Panel.SurfaceSize));
+
+			HSlider slider = new HSlider(header);
+			slider.MinValue = (decimal) 0.2;
+			slider.MaxValue = (decimal) 1.0;
+			slider.SmallChange = 0.1M;
+			slider.LargeChange = 0.2M;
+			slider.Resolution = 0.01M;
+			slider.Value = (decimal) this.editor.Zoom;
+			slider.PreferredWidth = 80;
+			slider.Margins = new Margins(10, 0, 4, 4);
+			slider.Dock = DockStyle.Left;
+			slider.ValueChanged += new EventHandler(this.HandleSliderValueChanged);
 
 			EntitiesEditor.ObjectBox box;
 
@@ -52,45 +67,6 @@ namespace Epsitec.Common.Designer.Viewers
 
 			this.editor.UpdateGeometry();
 			this.UpdateAll();
-#endif
-
-#if false
-			this.editor = new MyWidgets.EntityEditor(this.scrollable.Panel);
-			//?this.editor.Dock = DockStyle.Fill;  // TODO: pourquoi ça ne marche pas ???
-			this.editor.SetManualBounds(new Rectangle(Point.Zero, this.scrollable.Panel.SurfaceSize));
-
-			MyWidgets.EntityBox box1 = new MyWidgets.EntityBox();
-			box1.Title = "Facture";
-			box1.SetContent("Numéro de facture;Date;Client;Articles;TVA;Rabais;Frais de port");
-			this.editor.AddBox(box1);
-
-			MyWidgets.EntityBox box2 = new MyWidgets.EntityBox();
-			box2.Title = "Client";
-			box2.SetContent("Numéro de client;Titre;Nom;Prénom;Entreprise;Adresse;NPA;Ville;Pays;Téléphone professionnel;Téléphone privé;Téléphone mobile;E-mail professionnel;E-mail privé;Site web");
-			this.editor.AddBox(box2);
-
-			MyWidgets.EntityBox box3 = new MyWidgets.EntityBox();
-			box3.Title = "Article";
-			box3.SetContent("Numéro d'article;Désignation;Quantité;Prix d'achat;Prix de vente");
-			this.editor.AddBox(box3);
-
-			MyWidgets.EntityBox box4 = new MyWidgets.EntityBox();
-			box4.Title = "Rabais";
-			box4.SetContent("Normal;Revendeur;Grossiste");
-			this.editor.AddBox(box4);
-
-			MyWidgets.EntityConnection connection1 = new MyWidgets.EntityConnection();
-			this.editor.AddConnection(connection1);
-
-			MyWidgets.EntityConnection connection2 = new MyWidgets.EntityConnection();
-			this.editor.AddConnection(connection2);
-
-			MyWidgets.EntityConnection connection3 = new MyWidgets.EntityConnection();
-			this.editor.AddConnection(connection3);
-
-			this.editor.UpdateGeometry();
-			this.UpdateAll();
-#endif
 		}
 
 		protected override void Dispose(bool disposing)
@@ -109,6 +85,13 @@ namespace Epsitec.Common.Designer.Viewers
 			{
 				return ResourceAccess.Type.Entities;
 			}
+		}
+
+
+		private void HandleSliderValueChanged(object sender)
+		{
+			HSlider slider = sender as HSlider;
+			this.editor.Zoom = (double) slider.Value;
 		}
 
 

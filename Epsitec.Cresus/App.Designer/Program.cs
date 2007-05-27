@@ -68,6 +68,7 @@ namespace App.Designer
 			}
 			
 			Epsitec.Common.Widgets.Adorners.Factory.SetActive ("LookRoyale");
+			//?Epsitec.Common.Widgets.Adorners.Factory.SetActive ("LookMetal");
 			Epsitec.Common.Support.Implementation.FileProvider.DefineGlobalProbingPath (string.Join (";", paths.ToArray ()));
 			
 			MainWindow designerMainWindow;

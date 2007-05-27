@@ -26,6 +26,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			this.objects = new List<AbstractObject>();
 			this.boxes = new List<ObjectBox>();
 			this.connections = new List<ObjectConnection>();
+			this.zoom = 1;
 		}
 
 		public Editor(Widget embedder) : this()
@@ -57,6 +58,23 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		{
 			this.objects.Add(connection);
 			this.connections.Add(connection);
+		}
+
+
+		public double Zoom
+		{
+			get
+			{
+				return this.zoom;
+			}
+			set
+			{
+				if (this.zoom != value)
+				{
+					this.zoom = value;
+					this.Invalidate();
+				}
+			}
 		}
 
 
@@ -414,6 +432,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		protected override void ProcessMessage(Message message, Point pos)
 		{
+			pos = this.ConvWidgetToEditor(pos);
+
 			switch (message.MessageType)
 			{
 				case MessageType.MouseMove:
@@ -438,6 +458,15 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					message.Consumer = this;
 					break;
 			}
+		}
+
+		protected Point ConvWidgetToEditor(Point pos)
+		{
+			pos.Y = this.Client.Size.Height-pos.Y;
+			pos /= this.zoom;
+			pos.Y = this.Client.Size.Height-pos.Y;
+
+			return pos;
 		}
 
 		protected void MouseHilite(Point pos)
@@ -540,10 +569,16 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
 		{
+			Transform transform = graphics.Transform;
+			//?graphics.ScaleTransform(this.zoom, this.zoom, this.Client.Size.Width/2, this.Client.Size.Height/2);
+			graphics.ScaleTransform(this.zoom, this.zoom, 0, this.Client.Size.Height);
+
 			foreach (AbstractObject obj in this.objects)
 			{
 				obj.Draw(graphics);
 			}
+
+			graphics.Transform = transform;
 		}
 
 
@@ -555,6 +590,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		protected List<AbstractObject> objects;
 		protected List<ObjectBox> boxes;
 		protected List<ObjectConnection> connections;
+		protected double zoom;
 		protected bool isDragging;
 		protected Point draggingPos;
 		protected ObjectBox draggingBox;
