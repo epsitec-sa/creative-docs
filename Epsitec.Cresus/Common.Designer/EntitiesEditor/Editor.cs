@@ -47,7 +47,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		public void AddBox(ObjectBox box)
 		{
-			box.Bounds = new Rectangle(20+(Editor.defaultWidth+40)*this.boxes.Count, this.ActualHeight-20-30*this.boxes.Count-100, Editor.defaultWidth, 100);
+			box.Bounds = new Rectangle(20+(Editor.defaultWidth+40)*this.boxes.Count, this.areaSize.Height-20-30*this.boxes.Count-100, Editor.defaultWidth, 100);
 			box.IsExtended = (this.boxes.Count == 0);
 
 			this.objects.Add(box);
@@ -61,8 +61,26 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		}
 
 
+		public Size AreaSize
+		{
+			//	Dimensions de la surface pour représenter les boîtes et les liaisons.
+			get
+			{
+				return this.areaSize;
+			}
+			set
+			{
+				if (this.areaSize != value)
+				{
+					this.areaSize = value;
+					this.Invalidate();
+				}
+			}
+		}
+
 		public double Zoom
 		{
+			//	Zoom pour représenter les boîtes et les liaisons.
 			get
 			{
 				return this.zoom;
@@ -342,9 +360,9 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 						bounds.Offset(margin-bounds.Left, 0);
 					}
 
-					if (bounds.Right > this.ActualWidth-margin)
+					if (bounds.Right > this.areaSize.Width-margin)
 					{
-						bounds.Offset(this.ActualWidth-margin-bounds.Right, 0);
+						bounds.Offset(this.areaSize.Width-margin-bounds.Right, 0);
 					}
 
 					if (bounds.Bottom < margin)
@@ -352,9 +370,9 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 						bounds.Offset(0, margin-bounds.Bottom);
 					}
 
-					if (bounds.Top > this.ActualHeight-margin)
+					if (bounds.Top > this.areaSize.Height-margin)
 					{
-						bounds.Offset(0, this.ActualHeight-margin-bounds.Top);
+						bounds.Offset(0, this.areaSize.Height-margin-bounds.Top);
 					}
 
 					if (bounds != box.Bounds)
@@ -376,9 +394,9 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				this.MoveBoxes(margin-bounds.Left, 0);
 			}
 
-			if (bounds.Right > this.ActualWidth-margin)
+			if (bounds.Right > this.areaSize.Width-margin)
 			{
-				this.MoveBoxes(this.ActualWidth-margin-bounds.Right, 0);
+				this.MoveBoxes(this.areaSize.Width-margin-bounds.Right, 0);
 			}
 
 			if (bounds.Bottom < margin)
@@ -386,9 +404,9 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				this.MoveBoxes(0, margin-bounds.Bottom);
 			}
 
-			if (bounds.Top > this.ActualHeight-margin)
+			if (bounds.Top > this.areaSize.Height-margin)
 			{
-				this.MoveBoxes(0, this.ActualHeight-margin-bounds.Top);
+				this.MoveBoxes(0, this.areaSize.Height-margin-bounds.Top);
 			}
 		}
 
@@ -462,6 +480,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		protected Point ConvWidgetToEditor(Point pos)
 		{
+			//?graphics.TranslateTransform(0, this.Client.Bounds.Height);
 			pos.Y = this.Client.Size.Height-pos.Y;
 			pos /= this.zoom;
 			pos.Y = this.Client.Size.Height-pos.Y;
@@ -569,16 +588,31 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
 		{
-			Transform transform = graphics.Transform;
-			//?graphics.ScaleTransform(this.zoom, this.zoom, this.Client.Size.Width/2, this.Client.Size.Height/2);
-			graphics.ScaleTransform(this.zoom, this.zoom, 0, this.Client.Size.Height);
+			IAdorner adorner = Common.Widgets.Adorners.Factory.Active;
+			Rectangle rect;
 
+			Transform initialTransform = graphics.Transform;
+			graphics.TranslateTransform(0, this.Client.Bounds.Height-this.areaSize.Height*this.zoom);
+			graphics.ScaleTransform(this.zoom, this.zoom, 0, 0);
+
+			//	Dessine la zone utile.
+			rect = new Rectangle(Point.Zero, this.areaSize);
+			graphics.AddRectangle(rect);
+			graphics.RenderSolid(adorner.ColorBorder);
+
+			//	Dessine tous les objets.
 			foreach (AbstractObject obj in this.objects)
 			{
 				obj.Draw(graphics);
 			}
 
-			graphics.Transform = transform;
+			graphics.Transform = initialTransform;
+
+			//	Dessine le cadre.
+			rect = this.Client.Bounds;
+			rect.Deflate(0.5);
+			graphics.AddRectangle(rect);
+			graphics.RenderSolid(adorner.ColorBorder);
 		}
 
 
@@ -590,6 +624,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		protected List<AbstractObject> objects;
 		protected List<ObjectBox> boxes;
 		protected List<ObjectConnection> connections;
+		protected Size areaSize;
 		protected double zoom;
 		protected bool isDragging;
 		protected Point draggingPos;

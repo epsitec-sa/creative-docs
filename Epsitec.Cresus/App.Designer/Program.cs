@@ -67,8 +67,8 @@ namespace App.Designer
 				paths.AddRange (addPaths);
 			}
 			
-			//?Epsitec.Common.Widgets.Adorners.Factory.SetActive ("LookRoyale");
-			Epsitec.Common.Widgets.Adorners.Factory.SetActive ("LookMetal");
+			Epsitec.Common.Widgets.Adorners.Factory.SetActive ("LookRoyale");
+			//?Epsitec.Common.Widgets.Adorners.Factory.SetActive ("LookMetal");
 			Epsitec.Common.Support.Implementation.FileProvider.DefineGlobalProbingPath (string.Join (";", paths.ToArray ()));
 			
 			MainWindow designerMainWindow;

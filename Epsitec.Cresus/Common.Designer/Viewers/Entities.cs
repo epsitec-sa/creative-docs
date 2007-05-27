@@ -14,20 +14,29 @@ namespace Epsitec.Common.Designer.Viewers
 	{
 		public Entities(Module module, PanelsContext context, ResourceAccess access, MainWindow mainWindow) : base(module, context, access, mainWindow)
 		{
-			this.scrollable.HorizontalScrollerMode = ScrollableScrollerMode.ShowAlways;
-			this.scrollable.VerticalScrollerMode = ScrollableScrollerMode.ShowAlways;
-			this.scrollable.Panel.IsAutoFitting = false;
-			this.scrollable.Panel.ContainerLayoutMode = ContainerLayoutMode.None;
-			this.scrollable.Panel.SurfaceSize = new Size(1000, 1000);
+			this.scrollable.Visibility = false;
 
-			this.editor = new EntitiesEditor.Editor(this.scrollable.Panel);
-			this.editor.SetManualBounds(new Rectangle(Point.Zero, this.scrollable.Panel.SurfaceSize));
+			//	Crée les grands blocs de widgets.
+			Widget band = new Widget(this.lastPane);
+			band.Dock = DockStyle.Fill;
 
-			//	Crée et peuple la toolbar.
+			this.editor = new EntitiesEditor.Editor(band);
+			this.editor.Dock = DockStyle.Fill;
+			this.editor.AreaSize = this.areaSize;
+			this.editor.Zoom = this.zoom;
+
+			this.vscroler = new VScroller(band);
+			this.vscroler.Dock = DockStyle.Right;
+
 			this.toolbar = new HToolBar(this.lastPane);
 			this.toolbar.Dock = DockStyle.Bottom;
 			this.toolbar.Margins = new Margins(0, 0, 5, 0);
 
+			this.hscroler = new HScroller(this.lastPane);
+			this.hscroler.Margins = new Margins(0, this.vscroler.PreferredWidth, 0, 0);
+			this.hscroler.Dock = DockStyle.Bottom;
+
+			//	Peuple la toolbar.
 			StaticText stz = new StaticText(this.toolbar);
 			stz.Text = "Zoom";
 			stz.ContentAlignment = ContentAlignment.MiddleRight;
@@ -40,7 +49,6 @@ namespace Epsitec.Common.Designer.Viewers
 			this.fieldZoom.MaxValue = (decimal) 1.0;
 			this.fieldZoom.Step = (decimal) 0.1;
 			this.fieldZoom.Resolution = (decimal) 0.01;
-			this.fieldZoom.Value = (decimal) this.editor.Zoom;
 			this.fieldZoom.PreferredWidth = 50;
 			this.fieldZoom.Margins = new Margins(0, 5, 1, 1);
 			this.fieldZoom.Dock = DockStyle.Left;
@@ -53,11 +61,13 @@ namespace Epsitec.Common.Designer.Viewers
 			this.sliderZoom.SmallChange = (decimal) 0.1;
 			this.sliderZoom.LargeChange = (decimal) 0.2;
 			this.sliderZoom.Resolution = (decimal) 0.01;
-			this.sliderZoom.Value = (decimal) this.editor.Zoom;
 			this.sliderZoom.PreferredWidth = 120;
 			this.sliderZoom.Margins = new Margins(0, 0, 4, 4);
 			this.sliderZoom.Dock = DockStyle.Left;
 			this.sliderZoom.ValueChanged += new EventHandler(this.HandleSliderZoomValueChanged);
+
+			this.AreaSize = new Size(1000, 1000);
+			this.Zoom = 1;
 
 			//	Provisoire:
 			EntitiesEditor.ObjectBox box;
@@ -109,22 +119,64 @@ namespace Epsitec.Common.Designer.Viewers
 		}
 
 
+		protected Size AreaSize
+		{
+			//	Dimensions de la surface pour représenter les boîtes et les liaisons.
+			get
+			{
+				return this.areaSize;
+			}
+			set
+			{
+				if (this.areaSize != value)
+				{
+					this.areaSize = value;
+
+					this.editor.AreaSize = this.areaSize;
+				}
+			}
+		}
+
+		protected double Zoom
+		{
+			//	Zoom pour représenter les boîtes et les liaisons.
+			get
+			{
+				return this.zoom;
+			}
+			set
+			{
+				if (this.zoom != value)
+				{
+					this.zoom = value;
+
+					this.editor.Zoom = this.zoom;
+
+					this.fieldZoom.Value = (decimal) this.zoom;
+					this.sliderZoom.Value = (decimal) this.zoom;
+				}
+			}
+		}
+
+
 		private void HandleFieldZoomValueChanged(object sender)
 		{
 			TextFieldUpDown field = sender as TextFieldUpDown;
-			this.editor.Zoom = (double) field.Value;
-			this.sliderZoom.Value = (decimal) this.editor.Zoom;
+			this.Zoom = (double) field.Value;
 		}
 
 		private void HandleSliderZoomValueChanged(object sender)
 		{
 			HSlider slider = sender as HSlider;
-			this.editor.Zoom = (double) slider.Value;
-			this.fieldZoom.Value = (decimal) this.editor.Zoom;
+			this.Zoom = (double) slider.Value;
 		}
 
 
 		protected EntitiesEditor.Editor editor;
+		protected VScroller vscroler;
+		protected HScroller hscroler;
+		protected Size areaSize;
+		protected double zoom;
 		protected HToolBar toolbar;
 		protected TextFieldUpDown fieldZoom;
 		protected HSlider sliderZoom;
