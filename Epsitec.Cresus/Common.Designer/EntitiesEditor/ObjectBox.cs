@@ -18,6 +18,14 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			Top,
 		}
 
+		protected enum ActiveElement
+		{
+			None,
+			ExtendButton,
+			Header,
+			Field,
+		}
+
 
 		public ObjectBox(Editor editor) : base(editor)
 		{
@@ -26,6 +34,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 #endif
 
 			this.isExtended = false;
+			this.hilitedElement = ActiveElement.None;
 		}
 
 
@@ -75,21 +84,13 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 		}
 
-		public bool IsHilited
+		public bool IsReadyForDragging
 		{
 			//	Est-ce que la boîte est survolée par la souris ?
 			//	Si la boîte est survolée, on peut la déplacer globalement.
 			get
 			{
-				return this.isHilited;
-			}
-			set
-			{
-				if (this.isHilited != value)
-				{
-					this.isHilited = value;
-					this.editor.Invalidate();
-				}
+				return this.hilitedElement == ActiveElement.Header;
 			}
 		}
 
@@ -103,7 +104,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 			else
 			{
-				return ObjectBox.headerHeight + 6;
+				return ObjectBox.headerHeight;
 			}
 		}
 
@@ -158,6 +159,68 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			return Point.Zero;
 		}
 
+
+		public bool MouseHilite(Point pos)
+		{
+			//	Met en évidence la boîte selon la position de la souris.
+			//	Si la souris est dans cette boîte, retourne true.
+			ActiveElement element;
+			int fieldRank;
+			this.MouseDetect(pos, out element, out fieldRank);
+
+			if (this.hilitedElement != element || this.hilitedFieldRank != fieldRank)
+			{
+				this.hilitedElement = element;
+				this.hilitedFieldRank = fieldRank;
+				this.editor.Invalidate();
+			}
+
+			return (this.hilitedElement != ActiveElement.None);
+		}
+
+		protected bool MouseDetect(Point pos, out ActiveElement element, out int fieldRank)
+		{
+			//	Détecte l'élément actif visé par la souris.
+			element = ActiveElement.None;
+			fieldRank = -1;
+
+			if (pos.IsZero || !this.bounds.Contains(pos))
+			{
+				return false;
+			}
+
+			//	Souris dans le bouton compact/étendu ?
+			Point center = new Point(this.bounds.Right-ObjectBox.buttonRadius-5, this.bounds.Top-ObjectBox.headerHeight/2);
+			double d = Point.Distance(center, pos);
+			if (d <= ObjectBox.buttonRadius)
+			{
+				element = ActiveElement.ExtendButton;
+				return true;
+			}
+
+			//	Souris dans l'en-tête ?
+			if (pos.Y >= this.bounds.Top-ObjectBox.headerHeight ||
+				pos.Y <= this.bounds.Bottom+ObjectBox.footerHeight)
+			{
+				element = ActiveElement.Header;
+				return true;
+			}
+
+			//	Souris dans un champ ?
+			for (int i=0; i<this.fields.Count; i++)
+			{
+				Rectangle rect = this.GetFieldBounds(i);
+				if (rect.Contains(pos))
+				{
+					element = ActiveElement.Field;
+					fieldRank = i;
+					return true;
+				}
+			}
+
+			return false;
+		}
+
 		protected Rectangle GetFieldBounds(int rank)
 		{
 			//	Retourne le rectangle occupé par un champ.
@@ -170,86 +233,22 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		}
 
 
-		public bool Hilite(Point pos)
-		{
-			//	Met en évidence la boîte selon la position de la souris.
-			//	Si la souris est dans cette boîte, retourne true.
-			this.HiliteBox(pos);
-			this.HiliteField(pos);
-
-			if (pos.IsZero)
-			{
-				return false;
-			}
-			else
-			{
-				return this.bounds.Contains(pos);
-			}
-		}
-
-		protected void HiliteBox(Point pos)
-		{
-			//	Met en évidence la boîte, selon la position de la souris.
-			//	Si la boîte est survolée, on peut la déplacer globalement.
-			if (pos.IsZero || !this.bounds.Contains(pos))
-			{
-				this.IsHilited = false;
-			}
-			else
-			{
-				//	Retourne true si on est dans l'en-tête ou le pied.
-				this.IsHilited = (pos.Y >= this.bounds.Top-ObjectBox.headerHeight-4 ||
-								  pos.Y <= this.bounds.Bottom+ObjectBox.footerHeight);
-			}
-		}
-
-		protected void HiliteField(Point pos)
-		{
-			//	Colore le champ visé par la souris.
-#if false
-			IAdorner adorner = Common.Widgets.Adorners.Factory.Active;
-
-			Widget finded = null;
-			if (!pos.IsZero)
-			{
-				finded = this.FindChild(pos);
-			}
-
-			foreach (StaticText st in this.table)
-			{
-				if (st.Name != "Separator")
-				{
-					if (st == finded)
-					{
-						Color color = adorner.ColorCaption;
-						color.A = 0.1;
-						st.BackColor = color;
-					}
-					else
-					{
-						st.BackColor = Color.Empty;
-					}
-				}
-			}
-#endif
-		}
-
-
-
 		public override void Draw(Graphics graphics)
 		{
+			Rectangle rect;
+
 			//	Dessine l'objet.
 			IAdorner adorner = Common.Widgets.Adorners.Factory.Active;
 
 			//	Dessine l'ombre.
-			Rectangle bounds = this.bounds;
-			bounds.Offset(ObjectBox.shadowOffset, -(ObjectBox.shadowOffset));
-			this.PaintShadow(graphics, bounds, ObjectBox.roundRectRadius+ObjectBox.shadowOffset, (int)ObjectBox.shadowOffset, 0.2);
+			rect = this.bounds;
+			rect.Offset(ObjectBox.shadowOffset, -(ObjectBox.shadowOffset));
+			this.PaintShadow(graphics, rect, ObjectBox.roundRectRadius+ObjectBox.shadowOffset, (int)ObjectBox.shadowOffset, 0.2);
 
 			//	Construit le chemin du cadre arrondi.
-			bounds = this.bounds;
-			bounds.Deflate(1);
-			Path path = this.PathRoundRectangle(bounds, ObjectBox.roundRectRadius);
+			rect = this.bounds;
+			rect.Deflate(1);
+			Path path = this.PathRoundRectangle(rect, ObjectBox.roundRectRadius);
 
 			//	Dessine l'intérieur en blanc.
 			graphics.Rasterizer.AddSurface(path);
@@ -259,33 +258,48 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			graphics.Rasterizer.AddSurface(path);
 			Color c1 = adorner.ColorCaption;
 			Color c2 = adorner.ColorCaption;
-			c1.A = this.IsHilited ? 0.6 : 0.4;
-			c2.A = this.IsHilited ? 0.2 : 0.1;
-			this.RenderHorizontalGradient(graphics, bounds, c1, c2);
+			c1.A = this.IsReadyForDragging ? 0.6 : 0.4;
+			c2.A = this.IsReadyForDragging ? 0.2 : 0.1;
+			this.RenderHorizontalGradient(graphics, this.bounds, c1, c2);
 
 			//	Dessine en blanc la zone pour les champs.
 			if (this.isExtended)
 			{
-				Rectangle inside = new Rectangle(bounds.Left, bounds.Bottom+ObjectBox.footerHeight, bounds.Width, bounds.Height-ObjectBox.footerHeight-ObjectBox.headerHeight);
+				Rectangle inside = new Rectangle(this.bounds.Left+1, this.bounds.Bottom+ObjectBox.footerHeight, this.bounds.Width-2, this.bounds.Height-ObjectBox.footerHeight-ObjectBox.headerHeight);
 				graphics.AddFilledRectangle(inside);
 				graphics.RenderSolid(Color.FromBrightness(1));
 				graphics.AddFilledRectangle(inside);
 				Color ci1 = adorner.ColorCaption;
 				Color ci2 = adorner.ColorCaption;
-				ci1.A = this.IsHilited ? 0.2 : 0.1;
+				ci1.A = this.IsReadyForDragging ? 0.2 : 0.1;
 				ci2.A = 0.0;
 				this.RenderHorizontalGradient(graphics, inside, ci1, ci2);
 
-				Rectangle shadow = new Rectangle(bounds.Left, bounds.Top-ObjectBox.headerHeight-8, bounds.Width, 8);
+				Rectangle shadow = new Rectangle(this.bounds.Left+1, this.bounds.Top-ObjectBox.headerHeight-8, this.bounds.Width-2, 8);
 				graphics.AddFilledRectangle(shadow);
 				this.RenderVerticalGradient(graphics, shadow, Color.FromAlphaRgb(0.0, 0, 0, 0), Color.FromAlphaRgb(0.3, 0, 0, 0));
 			}
 
+			Color hiliteColor = adorner.ColorCaption;
+			hiliteColor.A = 0.1;
+
 			//	Dessine le titre.
 			Font font = Font.GetFont("Tahoma", "Bold");
 
-			graphics.AddText(bounds.Left, bounds.Top-ObjectBox.headerHeight, bounds.Width, ObjectBox.headerHeight, this.title, font, 16, ContentAlignment.MiddleCenter);
+			graphics.AddText(this.bounds.Left+4, this.bounds.Top-ObjectBox.headerHeight+2, this.bounds.Width-ObjectBox.buttonRadius*2-5-6, ObjectBox.headerHeight-2, this.title, font, 14, ContentAlignment.MiddleCenter);
 			graphics.RenderSolid(Color.FromBrightness(0));
+
+			//	Dessine le bouton compact/étendu.
+			Point center = new Point(this.bounds.Right-ObjectBox.buttonRadius-5, this.bounds.Top-ObjectBox.headerHeight/2);
+
+			graphics.AddFilledCircle(center, ObjectBox.buttonRadius);
+			graphics.RenderSolid(this.hilitedElement == ActiveElement.ExtendButton ? hiliteColor : Color.FromBrightness(1));
+
+			graphics.AddCircle(center, ObjectBox.buttonRadius);
+			graphics.RenderSolid(Color.FromBrightness(0));
+
+			rect = new Rectangle(center.X-ObjectBox.buttonRadius, center.Y-ObjectBox.buttonRadius, ObjectBox.buttonRadius*2, ObjectBox.buttonRadius*2);
+			adorner.PaintGlyph(graphics, rect, WidgetPaintState.Enabled, this.isExtended ? GlyphShape.ArrowUp : GlyphShape.ArrowDown, PaintTextStyle.Button);
 
 			//	Dessine les noms des champs.
 			if (this.isExtended)
@@ -293,7 +307,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				font = Font.GetFont("Tahoma", "Regular");
 
 				Color color = Color.FromBrightness(0.9);
-				if (this.isHilited)
+				if (this.IsReadyForDragging)
 				{
 					color = adorner.ColorCaption;
 					color.A = 0.3;
@@ -301,7 +315,13 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 				for (int i=0; i<this.fields.Count; i++)
 				{
-					Rectangle rect = this.GetFieldBounds(i);
+					rect = this.GetFieldBounds(i);
+
+					if (this.hilitedElement == ActiveElement.Field && this.hilitedFieldRank == i)
+					{
+						graphics.AddFilledRectangle(rect);
+						graphics.RenderSolid(hiliteColor);
+					}
 
 					graphics.AddText(rect.Left+10, rect.Bottom, rect.Width-20, ObjectBox.fieldHeight, this.fields[i], font, 11, ContentAlignment.MiddleLeft);
 					graphics.RenderSolid(Color.FromBrightness(0));
@@ -317,23 +337,25 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			graphics.Rasterizer.AddOutline(path, 2);
 			if (this.isExtended)
 			{
-				graphics.AddLine(bounds.Left, bounds.Top-ObjectBox.headerHeight-0.5, bounds.Right, bounds.Top-ObjectBox.headerHeight-0.5);
-				graphics.AddLine(bounds.Left+2, bounds.Bottom+ObjectBox.footerHeight+0.5, bounds.Right-2, bounds.Bottom+ObjectBox.footerHeight+0.5);
+				graphics.AddLine(this.bounds.Left+2, this.bounds.Top-ObjectBox.headerHeight-0.5, this.bounds.Right-2, this.bounds.Top-ObjectBox.headerHeight-0.5);
+				graphics.AddLine(this.bounds.Left+2, this.bounds.Bottom+ObjectBox.footerHeight+0.5, this.bounds.Right-2, this.bounds.Bottom+ObjectBox.footerHeight+0.5);
 			}
-			graphics.RenderSolid(this.IsHilited ? adorner.ColorCaption : Color.FromBrightness(0));
+			graphics.RenderSolid(this.IsReadyForDragging ? adorner.ColorCaption : Color.FromBrightness(0));
 		}
 
 
 
 
-		protected static readonly double roundRectRadius = 16;
+		protected static readonly double roundRectRadius = 12;
 		protected static readonly double shadowOffset = 6;
 		protected static readonly double headerHeight = 32;
 		protected static readonly double footerHeight = 10;
+		protected static readonly double buttonRadius = 8;
 		protected static readonly double fieldHeight = 20;
 
 		protected bool isExtended;
-		protected bool isHilited;
+		protected ActiveElement hilitedElement;
+		protected int hilitedFieldRank;
 		protected string title;
 		protected List<string> fields;
 	}

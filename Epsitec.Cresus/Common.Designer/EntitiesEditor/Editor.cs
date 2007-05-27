@@ -440,7 +440,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				if (obj is ObjectBox)
 				{
 					ObjectBox box = obj as ObjectBox;
-					if (box.Hilite(pos))
+					if (box.MouseHilite(pos))
 					{
 						pos = Point.Zero;  // si on était dans cette boîte -> plus aucun hilite pour les boîtes placées dessous
 					}
@@ -474,7 +474,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			//	Début du déplacement d'une boîte.
 			ObjectBox box = this.DetectBox(pos);
 
-			if (box != null && box.IsHilited)
+			if (box != null && box.IsReadyForDragging)
 			{
 				this.draggingBox = box;
 				this.draggingPos = pos;
