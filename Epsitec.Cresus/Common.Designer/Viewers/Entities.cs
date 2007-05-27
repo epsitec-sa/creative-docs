@@ -25,8 +25,8 @@ namespace Epsitec.Common.Designer.Viewers
 
 			//	Crée et peuple la toolbar.
 			this.toolbar = new HToolBar(this.lastPane);
-			this.toolbar.Dock = DockStyle.Top;
-			this.toolbar.Margins = new Margins(0, 0, 1, 0);
+			this.toolbar.Dock = DockStyle.Bottom;
+			this.toolbar.Margins = new Margins(0, 0, 5, 0);
 
 			StaticText stz = new StaticText(this.toolbar);
 			stz.Text = "Zoom";
