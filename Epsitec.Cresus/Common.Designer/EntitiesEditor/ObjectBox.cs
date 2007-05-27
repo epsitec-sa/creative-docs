@@ -178,6 +178,21 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			return (this.hilitedElement != ActiveElement.None);
 		}
 
+		public void MouseDown(Point pos)
+		{
+			//	Le bouton de la souris est pressé.
+		}
+
+		public void MouseUp(Point pos)
+		{
+			//	Le bouton de la souris est relâché.
+			if (this.hilitedElement == ActiveElement.ExtendButton)
+			{
+				this.IsExtended = !this.IsExtended;
+				this.editor.UpdateAfterGeometryChanged(this);
+			}
+		}
+
 		protected bool MouseDetect(Point pos, out ActiveElement element, out int fieldRank)
 		{
 			//	Détecte l'élément actif visé par la souris.

@@ -67,6 +67,17 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			this.UpdateConnections();
 		}
 
+		public void UpdateAfterGeometryChanged(ObjectBox box)
+		{
+			//	Appelé lorsque la géométrie d'une boîte a changé (changement compact/étendu).
+			this.UpdateBoxes();  // adapte la taille selon compact/étendu
+			
+			this.PushBoxesInside(Editor.pushMargin);
+			this.PushLayout(box, PushDirection.Automatic, Editor.pushMargin);
+			this.PushBoxesInside(Editor.pushMargin);
+			this.UpdateConnections();
+		}
+
 		protected void UpdateBoxes()
 		{
 			//	Met à jour la géométrie de toutes les boîtes.
@@ -418,12 +429,12 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					break;
 
 				case MessageType.MouseDown:
-					this.MouseDraggingBegin(pos);
+					this.MouseDown(pos);
 					message.Consumer = this;
 					break;
 
 				case MessageType.MouseUp:
-					this.MouseDraggingEnd(pos);
+					this.MouseUp(pos);
 					message.Consumer = this;
 					break;
 			}
@@ -444,6 +455,62 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					{
 						pos = Point.Zero;  // si on était dans cette boîte -> plus aucun hilite pour les boîtes placées dessous
 					}
+				}
+			}
+		}
+
+		protected void MouseDown(Point pos)
+		{
+			//	Début du déplacement d'une boîte.
+			ObjectBox box = this.DetectBox(pos);
+
+			if (box != null)
+			{
+				if (box.IsReadyForDragging)
+				{
+					this.draggingBox = box;
+					this.draggingPos = pos;
+					this.isDragging = true;
+				}
+				else
+				{
+					box.MouseDown(pos);
+				}
+			}
+		}
+
+		protected void MouseDraggingMove(Point pos)
+		{
+			//	Déplacement d'une boîte.
+			Rectangle bounds = this.draggingBox.Bounds;
+
+			bounds.Offset(pos-this.draggingPos);
+			this.draggingPos = pos;
+
+			this.draggingBox.Bounds = bounds;
+			this.UpdateConnections();
+		}
+
+		protected void MouseUp(Point pos)
+		{
+			//	Fin du déplacement d'une boîte.
+			if (this.isDragging)
+			{
+				this.PushBoxesInside(Editor.pushMargin);
+				this.PushLayout(this.draggingBox, PushDirection.Automatic, Editor.pushMargin);
+				this.RecenterBoxes(Editor.pushMargin);
+				this.PushBoxesInside(Editor.pushMargin);
+				this.UpdateConnections();
+
+				this.draggingBox = null;
+				this.isDragging = false;
+			}
+			else
+			{
+				ObjectBox box = this.DetectBox(pos);
+				if (box != null)
+				{
+					box.MouseUp(pos);
 				}
 			}
 		}
@@ -469,57 +536,6 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			return null;
 		}
 
-		protected void MouseDraggingBegin(Point pos)
-		{
-			//	Début du déplacement d'une boîte.
-			ObjectBox box = this.DetectBox(pos);
-
-			if (box != null && box.IsReadyForDragging)
-			{
-				this.draggingBox = box;
-				this.draggingPos = pos;
-				this.isDragging = true;
-			}
-		}
-
-		protected void MouseDraggingMove(Point pos)
-		{
-			//	Déplacement d'une boîte.
-			Rectangle bounds = this.draggingBox.Bounds;
-
-			bounds.Offset(pos-this.draggingPos);
-			this.draggingPos = pos;
-
-			this.draggingBox.Bounds = bounds;
-			this.UpdateConnections();
-		}
-
-		protected void MouseDraggingEnd(Point pos)
-		{
-			//	Fin du déplacement d'une boîte.
-			this.PushBoxesInside(Editor.pushMargin);
-			this.PushLayout(this.draggingBox, PushDirection.Automatic, Editor.pushMargin);
-			this.RecenterBoxes(Editor.pushMargin);
-			this.PushBoxesInside(Editor.pushMargin);
-			this.UpdateConnections();
-
-			this.draggingBox = null;
-			this.isDragging = false;
-		}
-
-
-		private void HandleBoxGeometryChanged(object sender)
-		{
-			//	Appelé lorsque la géométrie d'une boîte a changé (changement compact/étendu).
-			ObjectBox box = sender as ObjectBox;
-
-			this.UpdateBoxes();  // adapte la taille selon compact/étendu
-			
-			this.PushBoxesInside(Editor.pushMargin);
-			this.PushLayout(box, PushDirection.Automatic, Editor.pushMargin);
-			this.PushBoxesInside(Editor.pushMargin);
-			this.UpdateConnections();
-		}
 
 
 		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
