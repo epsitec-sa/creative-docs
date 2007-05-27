@@ -14,10 +14,6 @@ namespace Epsitec.Common.Designer.Viewers
 	{
 		public Entities(Module module, PanelsContext context, ResourceAccess access, MainWindow mainWindow) : base(module, context, access, mainWindow)
 		{
-			HToolBar header = new HToolBar(this.lastPane);
-			header.Dock = DockStyle.Top;
-			header.Margins = new Margins(0, 0, 1, 0);
-
 			this.scrollable.HorizontalScrollerMode = ScrollableScrollerMode.ShowAlways;
 			this.scrollable.VerticalScrollerMode = ScrollableScrollerMode.ShowAlways;
 			this.scrollable.Panel.IsAutoFitting = false;
@@ -27,18 +23,43 @@ namespace Epsitec.Common.Designer.Viewers
 			this.editor = new EntitiesEditor.Editor(this.scrollable.Panel);
 			this.editor.SetManualBounds(new Rectangle(Point.Zero, this.scrollable.Panel.SurfaceSize));
 
-			HSlider slider = new HSlider(header);
-			slider.MinValue = (decimal) 0.2;
-			slider.MaxValue = (decimal) 1.0;
-			slider.SmallChange = 0.1M;
-			slider.LargeChange = 0.2M;
-			slider.Resolution = 0.01M;
-			slider.Value = (decimal) this.editor.Zoom;
-			slider.PreferredWidth = 80;
-			slider.Margins = new Margins(10, 0, 4, 4);
-			slider.Dock = DockStyle.Left;
-			slider.ValueChanged += new EventHandler(this.HandleSliderValueChanged);
+			//	Crée et peuple la toolbar.
+			this.toolbar = new HToolBar(this.lastPane);
+			this.toolbar.Dock = DockStyle.Top;
+			this.toolbar.Margins = new Margins(0, 0, 1, 0);
 
+			StaticText stz = new StaticText(this.toolbar);
+			stz.Text = "Zoom";
+			stz.ContentAlignment = ContentAlignment.MiddleRight;
+			stz.PreferredWidth = 40;
+			stz.Margins = new Margins(0, 5, 0, 0);
+			stz.Dock = DockStyle.Left;
+
+			this.fieldZoom = new TextFieldUpDown(this.toolbar);
+			this.fieldZoom.MinValue = (decimal) 0.2;
+			this.fieldZoom.MaxValue = (decimal) 1.0;
+			this.fieldZoom.Step = (decimal) 0.1;
+			this.fieldZoom.Resolution = (decimal) 0.01;
+			this.fieldZoom.Value = (decimal) this.editor.Zoom;
+			this.fieldZoom.PreferredWidth = 50;
+			this.fieldZoom.Margins = new Margins(0, 5, 1, 1);
+			this.fieldZoom.Dock = DockStyle.Left;
+			this.fieldZoom.ValueChanged += new EventHandler(this.HandleFieldZoomValueChanged);
+
+			this.sliderZoom = new HSlider(this.toolbar);
+			this.sliderZoom.ShowMinMaxButtons = true;
+			this.sliderZoom.MinValue = (decimal) 0.2;
+			this.sliderZoom.MaxValue = (decimal) 1.0;
+			this.sliderZoom.SmallChange = (decimal) 0.1;
+			this.sliderZoom.LargeChange = (decimal) 0.2;
+			this.sliderZoom.Resolution = (decimal) 0.01;
+			this.sliderZoom.Value = (decimal) this.editor.Zoom;
+			this.sliderZoom.PreferredWidth = 120;
+			this.sliderZoom.Margins = new Margins(0, 0, 4, 4);
+			this.sliderZoom.Dock = DockStyle.Left;
+			this.sliderZoom.ValueChanged += new EventHandler(this.HandleSliderZoomValueChanged);
+
+			//	Provisoire:
 			EntitiesEditor.ObjectBox box;
 
 			box = new EntitiesEditor.ObjectBox(this.editor);
@@ -88,13 +109,24 @@ namespace Epsitec.Common.Designer.Viewers
 		}
 
 
-		private void HandleSliderValueChanged(object sender)
+		private void HandleFieldZoomValueChanged(object sender)
+		{
+			TextFieldUpDown field = sender as TextFieldUpDown;
+			this.editor.Zoom = (double) field.Value;
+			this.sliderZoom.Value = (decimal) this.editor.Zoom;
+		}
+
+		private void HandleSliderZoomValueChanged(object sender)
 		{
 			HSlider slider = sender as HSlider;
 			this.editor.Zoom = (double) slider.Value;
+			this.fieldZoom.Value = (decimal) this.editor.Zoom;
 		}
 
 
 		protected EntitiesEditor.Editor editor;
+		protected HToolBar toolbar;
+		protected TextFieldUpDown fieldZoom;
+		protected HSlider sliderZoom;
 	}
 }
