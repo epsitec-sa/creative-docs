@@ -241,6 +241,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			//	Retourne le rectangle occupé par un champ.
 			Rectangle rect = this.bounds;
 
+			rect.Deflate(2, 0);
 			rect.Bottom = rect.Top - ObjectBox.headerHeight - ObjectBox.fieldHeight*(rank+1) - 12;
 			rect.Height = ObjectBox.fieldHeight;
 
