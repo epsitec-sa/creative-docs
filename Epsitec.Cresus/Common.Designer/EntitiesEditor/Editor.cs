@@ -480,10 +480,9 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		protected Point ConvWidgetToEditor(Point pos)
 		{
-			//?graphics.TranslateTransform(0, this.Client.Bounds.Height);
 			pos.Y = this.Client.Size.Height-pos.Y;
 			pos /= this.zoom;
-			pos.Y = this.Client.Size.Height-pos.Y;
+			pos.Y = this.areaSize.Height-pos.Y;
 
 			return pos;
 		}
