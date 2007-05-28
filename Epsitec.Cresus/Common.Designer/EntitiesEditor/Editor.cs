@@ -522,18 +522,14 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		protected void MouseHilite(Point pos)
 		{
 			//	Met en évidence tous les widgets selon la position visée par la souris.
-			//	La boîte à l'avant-plan a la priorité.
+			//	L'objet à l'avant-plan a la priorité.
 			for (int i=this.objects.Count-1; i>=0; i--)
 			{
 				AbstractObject obj = this.objects[i];
 
-				if (obj is ObjectBox)
+				if (obj.MouseHilite(pos))
 				{
-					ObjectBox box = obj as ObjectBox;
-					if (box.MouseHilite(pos))
-					{
-						pos = Point.Zero;  // si on était dans cette boîte -> plus aucun hilite pour les boîtes placées dessous
-					}
+					pos = Point.Zero;  // si on était dans cet objet -> plus aucun hilite pour les objets placés dessous
 				}
 			}
 		}

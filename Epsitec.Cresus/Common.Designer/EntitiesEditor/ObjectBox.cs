@@ -224,10 +224,9 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		public override void Draw(Graphics graphics)
 		{
-			Rectangle rect;
-
 			//	Dessine l'objet.
 			IAdorner adorner = Common.Widgets.Adorners.Factory.Active;
+			Rectangle rect;
 
 			//	Dessine l'ombre.
 			rect = this.bounds;

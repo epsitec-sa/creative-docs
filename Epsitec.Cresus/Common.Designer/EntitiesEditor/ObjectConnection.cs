@@ -42,9 +42,44 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 
 
+		public override void MouseDown(Point pos)
+		{
+			//	Le bouton de la souris est pressé.
+		}
+
+		public override void MouseUp(Point pos)
+		{
+			//	Le bouton de la souris est relâché.
+		}
+
+		protected override bool MouseDetect(Point pos, out ActiveElement element, out int fieldRank)
+		{
+			//	Détecte l'élément actif visé par la souris.
+			element = ActiveElement.None;
+			fieldRank = -1;
+
+			if (pos.IsZero || this.points.Count < 2)
+			{
+				return false;
+			}
+
+			//	Souris dans la pastille ronde du départ de la connection ?
+			double d = Point.Distance(pos, this.points[0]);
+			if (d <= ObjectConnection.circleRadius+6)
+			{
+				element = ActiveElement.Connection;
+				return true;
+			}
+
+			return false;
+		}
+
+
 		public override void Draw(Graphics graphics)
 		{
 			//	Dessine l'objet.
+			IAdorner adorner = Common.Widgets.Adorners.Factory.Active;
+
 			if (this.points.Count >= 2)
 			{
 				Point start = this.points[0];
@@ -73,10 +108,28 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 				//	Dessine le cercle au point de départ.
 				start = this.points[0];
-				graphics.AddFilledCircle(start, ObjectConnection.circleRadius);
-				graphics.RenderSolid(Color.FromBrightness(1));
-				graphics.AddCircle(start, ObjectConnection.circleRadius);
-				graphics.RenderSolid(Color.FromBrightness(0));
+				if (this.hilitedElement == ActiveElement.Connection)
+				{
+					Color c = adorner.ColorCaption;
+					c.A = 0.2;
+
+					graphics.AddFilledCircle(start, ObjectConnection.circleRadius+4);
+					graphics.RenderSolid(Color.FromBrightness(1));
+
+					graphics.AddFilledCircle(start, ObjectConnection.circleRadius+4);
+					graphics.RenderSolid(c);
+
+					graphics.AddCircle(start, ObjectConnection.circleRadius+4);
+					graphics.RenderSolid(Color.FromBrightness(0));
+				}
+				else
+				{
+					graphics.AddFilledCircle(start, ObjectConnection.circleRadius);
+					graphics.RenderSolid(Color.FromBrightness(1));
+
+					graphics.AddCircle(start, ObjectConnection.circleRadius);
+					graphics.RenderSolid(Color.FromBrightness(0));
+				}
 			}
 		}
 
