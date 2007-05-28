@@ -23,7 +23,6 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		public Editor()
 		{
-			this.objects = new List<AbstractObject>();
 			this.boxes = new List<ObjectBox>();
 			this.connections = new List<ObjectConnection>();
 			this.zoom = 1;
@@ -51,13 +50,11 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			box.Bounds = new Rectangle(20+(Editor.defaultWidth+40)*this.boxes.Count, this.areaSize.Height-20-30*this.boxes.Count-100, Editor.defaultWidth, 100);
 			box.IsExtended = (this.boxes.Count == 0);
 
-			this.objects.Add(box);
 			this.boxes.Add(box);
 		}
 
 		public void AddConnection(ObjectConnection connection)
 		{
-			this.objects.Add(connection);
 			this.connections.Add(connection);
 		}
 
@@ -268,20 +265,16 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			{
 				bool push = false;
 
-				for (int i=0; i<this.objects.Count; i++)
+				for (int i=0; i<this.boxes.Count; i++)
 				{
-					AbstractObject obj = this.objects[i];
+					ObjectBox box = this.boxes[i];
 
-					if (obj is ObjectBox)
+					ObjectBox inter = this.PushSearch(box, exclude, margin);
+					if (inter != null)
 					{
-						ObjectBox box = obj as ObjectBox;
-						ObjectBox inter = this.PushSearch(box, exclude, margin);
-						if (inter != null)
-						{
-							push = true;
-							this.PushAction(box, inter, direction, margin);
-							this.PushLayout(inter, direction, margin);
-						}
+						push = true;
+						this.PushAction(box, inter, direction, margin);
+						this.PushLayout(inter, direction, margin);
 					}
 				}
 
@@ -298,17 +291,15 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			Rectangle rect = box.Bounds;
 			rect.Inflate(margin);
 
-			for (int i=0; i<this.objects.Count; i++)
+			for (int i=0; i<this.boxes.Count; i++)
 			{
-				AbstractObject obj = this.objects[i];
+				ObjectBox obj = this.boxes[i];
 
-				if (obj is ObjectBox && obj != box && obj != exclude)
+				if (obj != box && obj != exclude)
 				{
-					ObjectBox b = obj as ObjectBox;
-
-					if (b.Bounds.IntersectsWith(rect))
+					if (obj.Bounds.IntersectsWith(rect))
 					{
-						return b;
+						return obj;
 					}
 				}
 			}
@@ -363,41 +354,35 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		protected void PushBoxesInside(double margin)
 		{
 			//	Remet les boîtes dans la surface de dessin.
-			for (int i=0; i<this.objects.Count; i++)
+			for (int i=0; i<this.boxes.Count; i++)
 			{
-				AbstractObject obj = this.objects[i];
+				ObjectBox box = this.boxes[i];
+				Rectangle bounds = box.Bounds;
 
-				if (obj is ObjectBox)
+				if (bounds.Left < margin)
 				{
-					ObjectBox box = obj as ObjectBox;
+					bounds.Offset(margin-bounds.Left, 0);
+				}
 
-					Rectangle bounds = box.Bounds;
+				if (bounds.Right > this.areaSize.Width-margin)
+				{
+					bounds.Offset(this.areaSize.Width-margin-bounds.Right, 0);
+				}
 
-					if (bounds.Left < margin)
-					{
-						bounds.Offset(margin-bounds.Left, 0);
-					}
+				if (bounds.Bottom < margin)
+				{
+					bounds.Offset(0, margin-bounds.Bottom);
+				}
 
-					if (bounds.Right > this.areaSize.Width-margin)
-					{
-						bounds.Offset(this.areaSize.Width-margin-bounds.Right, 0);
-					}
+				if (bounds.Top > this.areaSize.Height-margin)
+				{
+					bounds.Offset(0, this.areaSize.Height-margin-bounds.Top);
+				}
 
-					if (bounds.Bottom < margin)
-					{
-						bounds.Offset(0, margin-bounds.Bottom);
-					}
-
-					if (bounds.Top > this.areaSize.Height-margin)
-					{
-						bounds.Offset(0, this.areaSize.Height-margin-bounds.Top);
-					}
-
-					if (bounds != box.Bounds)
-					{
-						box.Bounds = bounds;
-						this.PushLayout(box, PushDirection.Automatic, Editor.pushMargin);
-					}
+				if (bounds != box.Bounds)
+				{
+					box.Bounds = bounds;
+					this.PushLayout(box, PushDirection.Automatic, Editor.pushMargin);
 				}
 			}
 		}
@@ -433,15 +418,10 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			//	Retourne le rectangle englobant toutes les boîtes.
 			Rectangle bounds = Rectangle.Empty;
 
-			for (int i=0; i<this.objects.Count; i++)
+			for (int i=0; i<this.boxes.Count; i++)
 			{
-				AbstractObject obj = this.objects[i];
-
-				if (obj is ObjectBox)
-				{
-					ObjectBox box = obj as ObjectBox;
-					bounds = Rectangle.Union(bounds, box.Bounds);
-				}
+				ObjectBox box = this.boxes[i];
+				bounds = Rectangle.Union(bounds, box.Bounds);
 			}
 
 			return bounds;
@@ -450,18 +430,13 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		protected void MoveBoxes(double dx, double dy)
 		{
 			//	Déplace toutes les boîtes.
-			for (int i=0; i<this.objects.Count; i++)
+			for (int i=0; i<this.boxes.Count; i++)
 			{
-				AbstractObject obj = this.objects[i];
+				ObjectBox box = this.boxes[i];
 
-				if (obj is ObjectBox)
-				{
-					ObjectBox box = obj as ObjectBox;
-
-					Rectangle bounds = box.Bounds;
-					bounds.Offset(dx, dy);
-					box.Bounds = bounds;
-				}
+				Rectangle bounds = box.Bounds;
+				bounds.Offset(dx, dy);
+				box.Bounds = bounds;
 			}
 		}
 
@@ -523,9 +498,19 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		{
 			//	Met en évidence tous les widgets selon la position visée par la souris.
 			//	L'objet à l'avant-plan a la priorité.
-			for (int i=this.objects.Count-1; i>=0; i--)
+			for (int i=this.connections.Count-1; i>=0; i--)
 			{
-				AbstractObject obj = this.objects[i];
+				AbstractObject obj = this.connections[i];
+
+				if (obj.MouseHilite(pos))
+				{
+					pos = Point.Zero;  // si on était dans cet objet -> plus aucun hilite pour les objets placés dessous
+				}
+			}
+
+			for (int i=this.boxes.Count-1; i>=0; i--)
+			{
+				AbstractObject obj = this.boxes[i];
 
 				if (obj.MouseHilite(pos))
 				{
@@ -594,17 +579,13 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		{
 			//	Détecte la boîte visée par la souris.
 			//	La boîte à l'avant-plan a la priorité.
-			for (int i=this.objects.Count-1; i>=0; i--)
+			for (int i=this.boxes.Count-1; i>=0; i--)
 			{
-				AbstractObject obj = this.objects[i];
+				ObjectBox box = this.boxes[i];
 
-				if (obj is ObjectBox)
+				if (box.Bounds.Contains(pos))
 				{
-					ObjectBox box = obj as ObjectBox;
-					if (box.Bounds.Contains(pos))
-					{
-						return box;
-					}
+					return box;
 				}
 			}
 
@@ -643,7 +624,12 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			graphics.RenderSolid(colorOver);
 
 			//	Dessine tous les objets.
-			foreach (AbstractObject obj in this.objects)
+			foreach (AbstractObject obj in this.boxes)
+			{
+				obj.Draw(graphics);
+			}
+
+			foreach (AbstractObject obj in this.connections)
 			{
 				obj.Draw(graphics);
 			}
@@ -663,7 +649,6 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		protected static readonly double connectionDetour = 30;
 		protected static readonly double pushMargin = 10;
 
-		protected List<AbstractObject> objects;
 		protected List<ObjectBox> boxes;
 		protected List<ObjectConnection> connections;
 		protected Size areaSize;
