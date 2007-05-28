@@ -91,7 +91,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			//	Retourne la hauteur requise selon le nombre de champs définis.
 			if (this.isExtended)
 			{
-				return ObjectBox.headerHeight + (ObjectBox.fieldHeight+1)*this.fields.Count + ObjectBox.footerHeight + 15;
+				return ObjectBox.headerHeight + ObjectBox.fieldHeight*this.fields.Count + ObjectBox.footerHeight + 20;
 			}
 			else
 			{
