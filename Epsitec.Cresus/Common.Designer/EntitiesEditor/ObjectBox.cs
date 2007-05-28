@@ -18,14 +18,6 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			Top,
 		}
 
-		protected enum ActiveElement
-		{
-			None,
-			ExtendButton,
-			Header,
-			Field,
-		}
-
 
 		public ObjectBox(Editor editor) : base(editor)
 		{
@@ -34,7 +26,6 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 #endif
 
 			this.isExtended = false;
-			this.hilitedElement = ActiveElement.None;
 		}
 
 
@@ -160,30 +151,12 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		}
 
 
-		public bool MouseHilite(Point pos)
-		{
-			//	Met en évidence la boîte selon la position de la souris.
-			//	Si la souris est dans cette boîte, retourne true.
-			ActiveElement element;
-			int fieldRank;
-			this.MouseDetect(pos, out element, out fieldRank);
-
-			if (this.hilitedElement != element || this.hilitedFieldRank != fieldRank)
-			{
-				this.hilitedElement = element;
-				this.hilitedFieldRank = fieldRank;
-				this.editor.Invalidate();
-			}
-
-			return (this.hilitedElement != ActiveElement.None);
-		}
-
-		public void MouseDown(Point pos)
+		public override void MouseDown(Point pos)
 		{
 			//	Le bouton de la souris est pressé.
 		}
 
-		public void MouseUp(Point pos)
+		public override void MouseUp(Point pos)
 		{
 			//	Le bouton de la souris est relâché.
 			if (this.hilitedElement == ActiveElement.ExtendButton)
@@ -193,7 +166,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 		}
 
-		protected bool MouseDetect(Point pos, out ActiveElement element, out int fieldRank)
+		protected override bool MouseDetect(Point pos, out ActiveElement element, out int fieldRank)
 		{
 			//	Détecte l'élément actif visé par la souris.
 			element = ActiveElement.None;
@@ -372,8 +345,6 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		protected static readonly double fieldHeight = 20;
 
 		protected bool isExtended;
-		protected ActiveElement hilitedElement;
-		protected int hilitedFieldRank;
 		protected string title;
 		protected List<string> fields;
 	}

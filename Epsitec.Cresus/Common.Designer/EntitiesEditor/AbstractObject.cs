@@ -11,10 +11,21 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 	/// </summary>
 	public abstract class AbstractObject
 	{
+		protected enum ActiveElement
+		{
+			None,
+			ExtendButton,
+			Header,
+			Field,
+			Connection,
+		}
+
+
 		public AbstractObject(Editor editor)
 		{
 			//	Constructeur.
 			this.editor = editor;
+			this.hilitedElement = ActiveElement.None;
 		}
 
 
@@ -35,6 +46,43 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		public virtual void Draw(Graphics graphics)
 		{
 			//	Dessine l'objet.
+		}
+
+
+		public virtual bool MouseHilite(Point pos)
+		{
+			//	Met en évidence la boîte selon la position de la souris.
+			//	Si la souris est dans cette boîte, retourne true.
+			ActiveElement element;
+			int fieldRank;
+			this.MouseDetect(pos, out element, out fieldRank);
+
+			if (this.hilitedElement != element || this.hilitedFieldRank != fieldRank)
+			{
+				this.hilitedElement = element;
+				this.hilitedFieldRank = fieldRank;
+				this.editor.Invalidate();
+			}
+
+			return (this.hilitedElement != ActiveElement.None);
+		}
+
+		public virtual void MouseDown(Point pos)
+		{
+			//	Le bouton de la souris est pressé.
+		}
+
+		public virtual void MouseUp(Point pos)
+		{
+			//	Le bouton de la souris est relâché.
+		}
+
+		protected virtual bool MouseDetect(Point pos, out ActiveElement element, out int fieldRank)
+		{
+			//	Détecte l'élément actif visé par la souris.
+			element = ActiveElement.None;
+			fieldRank = -1;
+			return false;
 		}
 
 
@@ -118,5 +166,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		protected Editor editor;
 		protected Rectangle bounds;
+		protected ActiveElement hilitedElement;
+		protected int hilitedFieldRank;
 	}
 }
