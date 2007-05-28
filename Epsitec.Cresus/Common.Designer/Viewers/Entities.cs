@@ -41,9 +41,33 @@ namespace Epsitec.Common.Designer.Viewers
 			this.hscroller.ValueChanged += new EventHandler(this.HandleScrollerValueChanged);
 
 			//	Peuple la toolbar.
+			this.buttonZoomMin = new IconButton(this.toolbar);
+			this.buttonZoomMin.IconName = Misc.Icon("ZoomMin");
+			this.buttonZoomMin.ButtonStyle = ButtonStyle.ActivableIcon;
+			this.buttonZoomMin.AutoFocus = false;
+			this.buttonZoomMin.Dock = DockStyle.Left;
+			this.buttonZoomMin.Clicked += new MessageEventHandler(this.HandleButtonZoomClicked);
+			ToolTip.Default.SetToolTip(this.buttonZoomMin, "Zoom minimal");
+
+			this.buttonZoomDefault = new IconButton(this.toolbar);
+			this.buttonZoomDefault.IconName = Misc.Icon("ZoomDefault");
+			this.buttonZoomDefault.ButtonStyle = ButtonStyle.ActivableIcon;
+			this.buttonZoomDefault.AutoFocus = false;
+			this.buttonZoomDefault.Dock = DockStyle.Left;
+			this.buttonZoomDefault.Clicked += new MessageEventHandler(this.HandleButtonZoomClicked);
+			ToolTip.Default.SetToolTip(this.buttonZoomDefault, "Zoom par défaut (1:1)");
+
+			this.buttonZoomMax = new IconButton(this.toolbar);
+			this.buttonZoomMax.IconName = Misc.Icon("ZoomMax");
+			this.buttonZoomMax.ButtonStyle = ButtonStyle.ActivableIcon;
+			this.buttonZoomMax.AutoFocus = false;
+			this.buttonZoomMax.Dock = DockStyle.Left;
+			this.buttonZoomMax.Clicked += new MessageEventHandler(this.HandleButtonZoomClicked);
+			ToolTip.Default.SetToolTip(this.buttonZoomMax, "Zoom maximal");
+
 			this.fieldZoom = new StatusField(this.toolbar);
 			this.fieldZoom.PreferredWidth = 50;
-			this.fieldZoom.Margins = new Margins(0, 5, 1, 1);
+			this.fieldZoom.Margins = new Margins(5, 5, 1, 1);
 			this.fieldZoom.Dock = DockStyle.Left;
 			this.fieldZoom.Clicked += new MessageEventHandler(this.HandleFieldZoomClicked);
 			ToolTip.Default.SetToolTip(this.fieldZoom, "Cliquez pour choisir le zoom dans un menu");
@@ -150,6 +174,10 @@ namespace Epsitec.Common.Designer.Viewers
 					this.fieldZoom.Text = string.Concat(System.Math.Floor(this.zoom*100).ToString(), "%");
 					this.sliderZoom.Value = (decimal) this.zoom;
 
+					this.buttonZoomMin.ActiveState     = (this.zoom == 0.2) ? ActiveState.Yes : ActiveState.No;
+					this.buttonZoomDefault.ActiveState = (this.zoom == 1.0) ? ActiveState.Yes : ActiveState.No;
+					this.buttonZoomMax.ActiveState     = (this.zoom == 2.0) ? ActiveState.Yes : ActiveState.No;
+
 					this.UpdateScroller();
 				}
 			}
@@ -215,6 +243,24 @@ namespace Epsitec.Common.Designer.Viewers
 			this.editor.AreaOffset = new Point(ox, oy);
 		}
 
+		private void HandleButtonZoomClicked(object sender, MessageEventArgs e)
+		{
+			if (sender == this.buttonZoomMin)
+			{
+				this.Zoom = 0.2;
+			}
+
+			if (sender == this.buttonZoomDefault)
+			{
+				this.Zoom = 1.0;
+			}
+			
+			if (sender == this.buttonZoomMax)
+			{
+				this.Zoom = 2.0;
+			}
+		}
+
 		private void HandleFieldZoomClicked(object sender, MessageEventArgs e)
 		{
 			//	Appelé lorsque le champ du zoom a été cliqué.
@@ -240,6 +286,9 @@ namespace Epsitec.Common.Designer.Viewers
 		protected Size areaSize;
 		protected double zoom;
 		protected HToolBar toolbar;
+		protected IconButton buttonZoomMin;
+		protected IconButton buttonZoomDefault;
+		protected IconButton buttonZoomMax;
 		protected StatusField fieldZoom;
 		protected HSlider sliderZoom;
 	}

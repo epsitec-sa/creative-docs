@@ -897,24 +897,23 @@ namespace Epsitec.Common.Designer
 		protected CommandState CreateCommandState(string commandName, params Widgets.Shortcut[] shortcuts)
 		{
 			//	Crée une nouvelle commande et son command state associé.
-			
-			Command command = Command.Get (commandName);
+			Command command = Command.Get(commandName);
 
 			if (command.IsReadWrite)
 			{
 				if (shortcuts.Length > 0)
 				{
-					command.Shortcuts.AddRange (shortcuts);
+					command.Shortcuts.AddRange(shortcuts);
 				}
 
 				string iconName = commandName;
-				string description = Res.Strings.GetString ("Action."+commandName);
+				string description = Res.Strings.GetString("Action."+commandName);
 				bool statefull = (commandName == "FontBold" || commandName == "FontItalic" || commandName == "FontUnderline" || commandName.StartsWith("PanelShow") || commandName.StartsWith("DisplayHorizontal") || commandName.StartsWith("DisplayVertical"));
 
-				command.ManuallyDefineCommand (description, Misc.Icon(iconName), null, statefull);
+				command.ManuallyDefineCommand(description, Misc.Icon(iconName), null, statefull);
 			}
 
-			return this.CommandContext.GetCommandState (command);
+			return this.CommandContext.GetCommandState(command);
 		}
 		#endregion
 
