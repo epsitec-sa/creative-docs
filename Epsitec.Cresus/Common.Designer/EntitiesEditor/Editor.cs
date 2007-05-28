@@ -498,10 +498,23 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		protected Point ConvWidgetToEditor(Point pos)
 		{
+			//	Conversion d'une coordonnée dans l'espace normal des widgets vers l'espace de l'éditeur,
+			//	qui varie selon les ascenseurs (AreaOffset) et le zoom.
 			pos.Y = this.Client.Size.Height-pos.Y;
 			pos /= this.zoom;
 			pos += this.areaOffset;
 			pos.Y = this.areaSize.Height-pos.Y;
+
+			return pos;
+		}
+
+		protected Point ConvEditorToWidget(Point pos)
+		{
+			//	Conversion d'une coordonnée dans l'espace de l'éditeur vers l'espace normal des widgets.
+			pos.Y = this.areaSize.Height-pos.Y;
+			pos -= this.areaOffset;
+			pos *= this.zoom;
+			pos.Y = this.Client.Size.Height-pos.Y;
 
 			return pos;
 		}
@@ -613,10 +626,25 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			graphics.TranslateTransform(-this.areaOffset.X*this.zoom, this.Client.Bounds.Height-(this.areaSize.Height-this.areaOffset.Y)*this.zoom);
 			graphics.ScaleTransform(this.zoom, this.zoom, 0, 0);
 
-			//	Dessine la zone utile.
-			rect = new Rectangle(Point.Zero, this.areaSize);
-			graphics.AddRectangle(rect);
-			graphics.RenderSolid(adorner.ColorBorder);
+			//	Dessine les surfaces hors de la zone utile.
+			Point bl = this.ConvWidgetToEditor(this.Client.Bounds.BottomLeft);
+			Point tr = this.ConvWidgetToEditor(this.Client.Bounds.TopRight);
+
+			rect = new Rectangle(this.areaSize.Width, bl.Y, tr.X-this.areaSize.Width, tr.Y-bl.Y);
+			if (!rect.IsSurfaceZero)
+			{
+				graphics.AddFilledRectangle(rect);  // à droite
+			}
+			
+			rect = new Rectangle(0, bl.Y, this.areaSize.Width, -bl.Y);
+			if (!rect.IsSurfaceZero)
+			{
+				graphics.AddFilledRectangle(rect);  // en bas
+			}
+
+			Color colorOver = adorner.ColorBorder;
+			colorOver.A = 0.3;
+			graphics.RenderSolid(colorOver);
 
 			//	Dessine tous les objets.
 			foreach (AbstractObject obj in this.objects)
