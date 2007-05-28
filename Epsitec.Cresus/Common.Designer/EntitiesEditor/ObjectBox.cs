@@ -207,7 +207,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			//	Souris dans le bouton compact/étendu ?
 			Point center = new Point(this.bounds.Right-ObjectBox.buttonRadius-5, this.bounds.Top-ObjectBox.headerHeight/2);
 			double d = Point.Distance(center, pos);
-			if (d <= ObjectBox.buttonRadius+2)
+			if (d <= ObjectBox.buttonRadius+3)
 			{
 				element = ActiveElement.ExtendButton;
 				return true;
@@ -296,9 +296,6 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				this.RenderVerticalGradient(graphics, shadow, Color.FromAlphaRgb(0.0, 0, 0, 0), Color.FromAlphaRgb(0.3, 0, 0, 0));
 			}
 
-			Color hiliteColor = adorner.ColorCaption;
-			hiliteColor.A = 0.1;
-
 			//	Dessine le titre.
 			Font font = Font.GetFont("Tahoma", "Bold");
 
@@ -309,15 +306,20 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			Point center = new Point(this.bounds.Right-ObjectBox.buttonRadius-5, this.bounds.Top-ObjectBox.headerHeight/2);
 
 			graphics.AddFilledCircle(center, ObjectBox.buttonRadius);
-			graphics.RenderSolid(this.hilitedElement == ActiveElement.ExtendButton ? hiliteColor : Color.FromBrightness(1));
+			graphics.RenderSolid(this.hilitedElement == ActiveElement.ExtendButton ? adorner.ColorCaption : Color.FromBrightness(1));
 
 			graphics.AddCircle(center, ObjectBox.buttonRadius);
 			graphics.RenderSolid(Color.FromBrightness(0));
 
 			rect = new Rectangle(center.X-ObjectBox.buttonRadius, center.Y-ObjectBox.buttonRadius, ObjectBox.buttonRadius*2, ObjectBox.buttonRadius*2);
-			adorner.PaintGlyph(graphics, rect, WidgetPaintState.Enabled, this.isExtended ? GlyphShape.ArrowUp : GlyphShape.ArrowDown, PaintTextStyle.Button);
+			GlyphShape shape = this.isExtended ? GlyphShape.ArrowUp : GlyphShape.ArrowDown;
+			Color cb = (this.hilitedElement == ActiveElement.ExtendButton) ? Color.FromBrightness(1) : Color.FromBrightness(0);
+			adorner.PaintGlyph(graphics, rect, WidgetPaintState.Enabled, cb, shape, PaintTextStyle.Button);
 
 			//	Dessine les noms des champs.
+			Color hiliteColor = adorner.ColorCaption;
+			hiliteColor.A = 0.1;
+
 			if (this.isExtended)
 			{
 				font = Font.GetFont("Tahoma", "Regular");
@@ -366,7 +368,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		protected static readonly double shadowOffset = 6;
 		protected static readonly double headerHeight = 32;
 		protected static readonly double footerHeight = 10;
-		protected static readonly double buttonRadius = 8;
+		protected static readonly double buttonRadius = 10;
 		protected static readonly double fieldHeight = 20;
 
 		protected bool isExtended;
