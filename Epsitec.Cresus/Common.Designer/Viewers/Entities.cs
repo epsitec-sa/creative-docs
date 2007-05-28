@@ -24,8 +24,10 @@ namespace Epsitec.Common.Designer.Viewers
 			this.editor.Dock = DockStyle.Fill;
 			this.editor.AreaSize = this.areaSize;
 			this.editor.Zoom = this.zoom;
+			this.editor.SizeChanged += new EventHandler<DependencyPropertyChangedEventArgs>(this.HandleEditorSizeChanged);
 
 			this.vscroler = new VScroller(band);
+			this.vscroler.IsInverted = true;
 			this.vscroler.Dock = DockStyle.Right;
 
 			this.toolbar = new HToolBar(this.lastPane);
@@ -133,6 +135,7 @@ namespace Epsitec.Common.Designer.Viewers
 					this.areaSize = value;
 
 					this.editor.AreaSize = this.areaSize;
+					this.UpdateScroller();
 				}
 			}
 		}
@@ -154,10 +157,46 @@ namespace Epsitec.Common.Designer.Viewers
 
 					this.fieldZoom.Value = (decimal) this.zoom;
 					this.sliderZoom.Value = (decimal) this.zoom;
+
+					this.UpdateScroller();
 				}
 			}
 		}
 
+		protected void UpdateScroller()
+		{
+			double w = this.areaSize.Width*this.zoom - this.editor.Client.Size.Width;
+			if (w <= 0)
+			{
+				this.hscroler.Enable = false;
+			}
+			else
+			{
+				this.hscroler.Enable = true;
+				this.hscroler.MinValue = (decimal) 0;
+				this.hscroler.MaxValue = (decimal) w;
+				this.hscroler.VisibleRangeRatio = (decimal) (this.editor.Client.Size.Width / (this.areaSize.Width*this.zoom));
+			}
+
+			double h = this.areaSize.Height*this.zoom - this.editor.Client.Size.Height;
+			if (h <= 0)
+			{
+				this.vscroler.Enable = false;
+			}
+			else
+			{
+				this.vscroler.Enable = true;
+				this.vscroler.MinValue = (decimal) 0;
+				this.vscroler.MaxValue = (decimal) h;
+				this.vscroler.VisibleRangeRatio = (decimal) (this.editor.Client.Size.Height / (this.areaSize.Height*this.zoom));
+			}
+		}
+
+
+		private void HandleEditorSizeChanged(object sender, DependencyPropertyChangedEventArgs e)
+		{
+			this.UpdateScroller();
+		}
 
 		private void HandleFieldZoomValueChanged(object sender)
 		{
