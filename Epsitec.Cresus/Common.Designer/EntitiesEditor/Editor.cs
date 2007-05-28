@@ -27,6 +27,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			this.boxes = new List<ObjectBox>();
 			this.connections = new List<ObjectConnection>();
 			this.zoom = 1;
+			this.areaOffset = Point.Zero;
 		}
 
 		public Editor(Widget embedder) : this()
@@ -90,6 +91,23 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				if (this.zoom != value)
 				{
 					this.zoom = value;
+					this.Invalidate();
+				}
+			}
+		}
+
+		public Point AreaOffset
+		{
+			//	Offset de la zone visible, déterminée par les ascenseurs.
+			get
+			{
+				return this.areaOffset;
+			}
+			set
+			{
+				if (this.areaOffset != value)
+				{
+					this.areaOffset = value;
 					this.Invalidate();
 				}
 			}
@@ -591,7 +609,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			Rectangle rect;
 
 			Transform initialTransform = graphics.Transform;
-			graphics.TranslateTransform(0, this.Client.Bounds.Height-this.areaSize.Height*this.zoom);
+			graphics.TranslateTransform(-this.areaOffset.X, this.Client.Bounds.Height-(this.areaSize.Height-this.areaOffset.Y)*this.zoom);
 			graphics.ScaleTransform(this.zoom, this.zoom, 0, 0);
 
 			//	Dessine la zone utile.
@@ -625,6 +643,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		protected List<ObjectConnection> connections;
 		protected Size areaSize;
 		protected double zoom;
+		protected Point areaOffset;
 		protected bool isDragging;
 		protected Point draggingPos;
 		protected ObjectBox draggingBox;

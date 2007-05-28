@@ -26,17 +26,19 @@ namespace Epsitec.Common.Designer.Viewers
 			this.editor.Zoom = this.zoom;
 			this.editor.SizeChanged += new EventHandler<DependencyPropertyChangedEventArgs>(this.HandleEditorSizeChanged);
 
-			this.vscroler = new VScroller(band);
-			this.vscroler.IsInverted = true;
-			this.vscroler.Dock = DockStyle.Right;
+			this.vscroller = new VScroller(band);
+			this.vscroller.IsInverted = true;
+			this.vscroller.Dock = DockStyle.Right;
+			this.vscroller.ValueChanged += new EventHandler(this.HandleScrolerValueChanged);
 
 			this.toolbar = new HToolBar(this.lastPane);
 			this.toolbar.Dock = DockStyle.Bottom;
 			this.toolbar.Margins = new Margins(0, 0, 5, 0);
 
-			this.hscroler = new HScroller(this.lastPane);
-			this.hscroler.Margins = new Margins(0, this.vscroler.PreferredWidth, 0, 0);
-			this.hscroler.Dock = DockStyle.Bottom;
+			this.hscroller = new HScroller(this.lastPane);
+			this.hscroller.Margins = new Margins(0, this.vscroller.PreferredWidth, 0, 0);
+			this.hscroller.Dock = DockStyle.Bottom;
+			this.hscroller.ValueChanged += new EventHandler(this.HandleScrolerValueChanged);
 
 			//	Peuple la toolbar.
 			StaticText stz = new StaticText(this.toolbar);
@@ -168,52 +170,65 @@ namespace Epsitec.Common.Designer.Viewers
 			double w = this.areaSize.Width*this.zoom - this.editor.Client.Size.Width;
 			if (w <= 0)
 			{
-				this.hscroler.Enable = false;
+				this.hscroller.Enable = false;
 			}
 			else
 			{
-				this.hscroler.Enable = true;
-				this.hscroler.MinValue = (decimal) 0;
-				this.hscroler.MaxValue = (decimal) w;
-				this.hscroler.VisibleRangeRatio = (decimal) (this.editor.Client.Size.Width / (this.areaSize.Width*this.zoom));
+				this.hscroller.Enable = true;
+				this.hscroller.MinValue = (decimal) 0;
+				this.hscroller.MaxValue = (decimal) w;
+				this.hscroller.SmallChange = (decimal) (w/10);
+				this.hscroller.LargeChange = (decimal) (w/5);
+				this.hscroller.VisibleRangeRatio = (decimal) (this.editor.Client.Size.Width / (this.areaSize.Width*this.zoom));
 			}
 
 			double h = this.areaSize.Height*this.zoom - this.editor.Client.Size.Height;
 			if (h <= 0)
 			{
-				this.vscroler.Enable = false;
+				this.vscroller.Enable = false;
 			}
 			else
 			{
-				this.vscroler.Enable = true;
-				this.vscroler.MinValue = (decimal) 0;
-				this.vscroler.MaxValue = (decimal) h;
-				this.vscroler.VisibleRangeRatio = (decimal) (this.editor.Client.Size.Height / (this.areaSize.Height*this.zoom));
+				this.vscroller.Enable = true;
+				this.vscroller.MinValue = (decimal) 0;
+				this.vscroller.MaxValue = (decimal) h;
+				this.vscroller.SmallChange = (decimal) (h/10);
+				this.vscroller.LargeChange = (decimal) (h/5);
+				this.vscroller.VisibleRangeRatio = (decimal) (this.editor.Client.Size.Height / (this.areaSize.Height*this.zoom));
 			}
 		}
 
 
 		private void HandleEditorSizeChanged(object sender, DependencyPropertyChangedEventArgs e)
 		{
+			//	Appelé lorsque la taille de la fenêtre de l'éditeur change.
 			this.UpdateScroller();
+		}
+
+		private void HandleScrolerValueChanged(object sender)
+		{
+			//	Appelé lorsqu'un ascenseur a été bougé.
+			this.editor.AreaOffset = new Point((double)this.hscroller.Value, (double)this.vscroller.Value);
 		}
 
 		private void HandleFieldZoomValueChanged(object sender)
 		{
+			//	Appelé lorsque le champ éditable du zoom a été modifié.
 			TextFieldUpDown field = sender as TextFieldUpDown;
 			this.Zoom = (double) field.Value;
 		}
 
 		private void HandleSliderZoomValueChanged(object sender)
 		{
+			//	Appelé lorsque le slider du zoom a été bougé.
 			HSlider slider = sender as HSlider;
 			this.Zoom = (double) slider.Value;
 		}
 
 
 		protected EntitiesEditor.Editor editor;
-		protected VScroller vscroler;
-		protected HScroller hscroler;
+		protected VScroller vscroller;
+		protected HScroller hscroller;
 		protected Size areaSize;
 		protected double zoom;
 		protected HToolBar toolbar;
