@@ -48,13 +48,9 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			if (this.points.Count >= 2)
 			{
 				Point start = this.points[0];
-
-				graphics.AddFilledCircle(start, ObjectConnection.circleRadius);
-				graphics.RenderSolid(Color.FromBrightness(1));
-
-				graphics.AddCircle(start, ObjectConnection.circleRadius);
 				start = Point.Move(start, this.points[1], ObjectConnection.circleRadius);
 
+				graphics.LineWidth = 2;
 				for (int i=0; i<this.points.Count-1; i++)
 				{
 					Point p1 = (i==0) ? start : this.points[i];
@@ -72,6 +68,13 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 						this.PaintEndingArrow(graphics, p1, p2);
 					}
 				}
+				graphics.LineWidth = 1;
+				graphics.RenderSolid(Color.FromBrightness(0));
+
+				start = this.points[0];
+				graphics.AddFilledCircle(start, ObjectConnection.circleRadius);
+				graphics.RenderSolid(Color.FromBrightness(1));
+				graphics.AddCircle(start, ObjectConnection.circleRadius);
 				graphics.RenderSolid(Color.FromBrightness(0));
 			}
 		}

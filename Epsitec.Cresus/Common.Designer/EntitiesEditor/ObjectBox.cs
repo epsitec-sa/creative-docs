@@ -207,7 +207,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			//	Souris dans le bouton compact/étendu ?
 			Point center = new Point(this.bounds.Right-ObjectBox.buttonRadius-5, this.bounds.Top-ObjectBox.headerHeight/2);
 			double d = Point.Distance(center, pos);
-			if (d <= ObjectBox.buttonRadius)
+			if (d <= ObjectBox.buttonRadius+2)
 			{
 				element = ActiveElement.ExtendButton;
 				return true;
