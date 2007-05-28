@@ -57,6 +57,7 @@
     <Compile Include="EntitiesEditor\ObjectBox.cs" />
     <Compile Include="EntitiesEditor\ObjectConnection.cs" />
     <Compile Include="EntitiesEditor\Editor.cs" />
+    <Compile Include="EntitiesEditor\ZoomMenu.cs" />
     <Compile Include="Geometry.cs" />
     <Compile Include="InsideSurface.cs" />
     <Compile Include="MyWidgets\AbstractTypeEditor.cs" />
@@ -496,6 +497,12 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Images\DisplayHorizontal.icon" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Images\RadioNo.icon" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Images\RadioYes.icon" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

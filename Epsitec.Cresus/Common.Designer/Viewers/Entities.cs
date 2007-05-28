@@ -41,34 +41,24 @@ namespace Epsitec.Common.Designer.Viewers
 			this.hscroller.ValueChanged += new EventHandler(this.HandleScrollerValueChanged);
 
 			//	Peuple la toolbar.
-			StaticText stz = new StaticText(this.toolbar);
-			stz.Text = "Zoom";
-			stz.ContentAlignment = ContentAlignment.MiddleRight;
-			stz.PreferredWidth = 40;
-			stz.Margins = new Margins(0, 5, 0, 0);
-			stz.Dock = DockStyle.Left;
-
-			this.fieldZoom = new TextFieldUpDown(this.toolbar);
-			this.fieldZoom.MinValue = (decimal) 0.2;
-			this.fieldZoom.MaxValue = (decimal) 1.0;
-			this.fieldZoom.Step = (decimal) 0.1;
-			this.fieldZoom.Resolution = (decimal) 0.01;
+			this.fieldZoom = new StatusField(this.toolbar);
 			this.fieldZoom.PreferredWidth = 50;
 			this.fieldZoom.Margins = new Margins(0, 5, 1, 1);
 			this.fieldZoom.Dock = DockStyle.Left;
-			this.fieldZoom.ValueChanged += new EventHandler(this.HandleFieldZoomValueChanged);
+			this.fieldZoom.Clicked += new MessageEventHandler(this.HandleFieldZoomClicked);
+			ToolTip.Default.SetToolTip(this.fieldZoom, "Cliquez pour choisir le zoom dans un menu");
 
 			this.sliderZoom = new HSlider(this.toolbar);
-			this.sliderZoom.ShowMinMaxButtons = true;
 			this.sliderZoom.MinValue = (decimal) 0.2;
-			this.sliderZoom.MaxValue = (decimal) 1.0;
+			this.sliderZoom.MaxValue = (decimal) 2.0;
 			this.sliderZoom.SmallChange = (decimal) 0.1;
 			this.sliderZoom.LargeChange = (decimal) 0.2;
 			this.sliderZoom.Resolution = (decimal) 0.01;
-			this.sliderZoom.PreferredWidth = 120;
+			this.sliderZoom.PreferredWidth = 90;
 			this.sliderZoom.Margins = new Margins(0, 0, 4, 4);
 			this.sliderZoom.Dock = DockStyle.Left;
 			this.sliderZoom.ValueChanged += new EventHandler(this.HandleSliderZoomValueChanged);
+			ToolTip.Default.SetToolTip(this.sliderZoom, "Choix du zoom");
 
 			this.AreaSize = new Size(1000, 1000);
 			this.Zoom = 1;
@@ -142,7 +132,7 @@ namespace Epsitec.Common.Designer.Viewers
 			}
 		}
 
-		protected double Zoom
+		public double Zoom
 		{
 			//	Zoom pour représenter les boîtes et les liaisons.
 			get
@@ -157,7 +147,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 					this.editor.Zoom = this.zoom;
 
-					this.fieldZoom.Value = (decimal) this.zoom;
+					this.fieldZoom.Text = string.Concat(System.Math.Floor(this.zoom*100).ToString(), "%");
 					this.sliderZoom.Value = (decimal) this.zoom;
 
 					this.UpdateScroller();
@@ -225,11 +215,15 @@ namespace Epsitec.Common.Designer.Viewers
 			this.editor.AreaOffset = new Point(ox, oy);
 		}
 
-		private void HandleFieldZoomValueChanged(object sender)
+		private void HandleFieldZoomClicked(object sender, MessageEventArgs e)
 		{
-			//	Appelé lorsque le champ éditable du zoom a été modifié.
-			TextFieldUpDown field = sender as TextFieldUpDown;
-			this.Zoom = (double) field.Value;
+			//	Appelé lorsque le champ du zoom a été cliqué.
+			StatusField sf = sender as StatusField;
+			if (sf == null)  return;
+			VMenu menu = EntitiesEditor.ZoomMenu.CreateZoomMenu(this.zoom, 1.0, null);
+			menu.Host = sf.Window;
+			TextFieldCombo.AdjustComboSize(sf, menu, false);
+			menu.ShowAsComboList(sf, Point.Zero, sf);
 		}
 
 		private void HandleSliderZoomValueChanged(object sender)
@@ -246,7 +240,7 @@ namespace Epsitec.Common.Designer.Viewers
 		protected Size areaSize;
 		protected double zoom;
 		protected HToolBar toolbar;
-		protected TextFieldUpDown fieldZoom;
+		protected StatusField fieldZoom;
 		protected HSlider sliderZoom;
 	}
 }

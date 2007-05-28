@@ -71,6 +71,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				graphics.LineWidth = 1;
 				graphics.RenderSolid(Color.FromBrightness(0));
 
+				//	Dessine le cercle au point de départ.
 				start = this.points[0];
 				graphics.AddFilledCircle(start, ObjectConnection.circleRadius);
 				graphics.RenderSolid(Color.FromBrightness(1));

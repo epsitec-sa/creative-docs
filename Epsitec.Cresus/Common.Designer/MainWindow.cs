@@ -436,7 +436,7 @@ namespace Epsitec.Common.Designer
 		{
 			string text = "";
 			Module module = this.CurrentModule;
-			if (module != null && module.Modifier.ActiveViewer!= null)
+			if (module != null && module.Modifier.ActiveViewer != null)
 			{
 				text = module.Modifier.ActiveViewer.InfoAccessText;
 			}
@@ -769,6 +769,20 @@ namespace Epsitec.Common.Designer
 		void CommandDisplayVertical(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
 			this.DisplayHorizontal = false;
+		}
+
+		[Command ("ZoomChange")]
+		void CommandZoomChange(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			string value = StructuredCommand.GetFieldValue(e.CommandState, "Name") as string;
+			double zoom = System.Convert.ToDouble(value);
+
+			Module module = this.CurrentModule;
+			Viewers.Entities ve = module.Modifier.ActiveViewer as Viewers.Entities;
+			if (module != null && ve != null)
+			{
+				ve.Zoom = zoom;
+			}
 		}
 
 		protected void InitCommands()

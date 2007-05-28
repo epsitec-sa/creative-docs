@@ -20,6 +20,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		public Rectangle Bounds
 		{
+			//	Boîte de l'objet.
+			//	Attention: le dessin peut déborder, par exemple pour l'ombre.
 			get
 			{
 				return this.bounds;
