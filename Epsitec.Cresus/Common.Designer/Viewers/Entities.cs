@@ -231,13 +231,13 @@ namespace Epsitec.Common.Designer.Viewers
 			double ox = 0;
 			if (this.hscroller.IsEnabled)
 			{
-				ox = (double) this.hscroller.Value;
+				ox = (double) this.hscroller.Value/this.zoom;
 			}
 
 			double oy = 0;
 			if (this.vscroller.IsEnabled)
 			{
-				oy = (double) this.vscroller.Value;
+				oy = (double) this.vscroller.Value/this.zoom;
 			}
 
 			this.editor.AreaOffset = new Point(ox, oy);
