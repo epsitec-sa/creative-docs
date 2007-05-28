@@ -29,7 +29,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.vscroller = new VScroller(band);
 			this.vscroller.IsInverted = true;
 			this.vscroller.Dock = DockStyle.Right;
-			this.vscroller.ValueChanged += new EventHandler(this.HandleScrolerValueChanged);
+			this.vscroller.ValueChanged += new EventHandler(this.HandleScrollerValueChanged);
 
 			this.toolbar = new HToolBar(this.lastPane);
 			this.toolbar.Dock = DockStyle.Bottom;
@@ -38,7 +38,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.hscroller = new HScroller(this.lastPane);
 			this.hscroller.Margins = new Margins(0, this.vscroller.PreferredWidth, 0, 0);
 			this.hscroller.Dock = DockStyle.Bottom;
-			this.hscroller.ValueChanged += new EventHandler(this.HandleScrolerValueChanged);
+			this.hscroller.ValueChanged += new EventHandler(this.HandleScrollerValueChanged);
 
 			//	Peuple la toolbar.
 			StaticText stz = new StaticText(this.toolbar);
@@ -196,6 +196,8 @@ namespace Epsitec.Common.Designer.Viewers
 				this.vscroller.LargeChange = (decimal) (h/5);
 				this.vscroller.VisibleRangeRatio = (decimal) (this.editor.Client.Size.Height / (this.areaSize.Height*this.zoom));
 			}
+
+			this.HandleScrollerValueChanged(null);
 		}
 
 
@@ -205,10 +207,22 @@ namespace Epsitec.Common.Designer.Viewers
 			this.UpdateScroller();
 		}
 
-		private void HandleScrolerValueChanged(object sender)
+		private void HandleScrollerValueChanged(object sender)
 		{
 			//	Appelé lorsqu'un ascenseur a été bougé.
-			this.editor.AreaOffset = new Point((double)this.hscroller.Value, (double)this.vscroller.Value);
+			double ox = 0;
+			if (this.hscroller.IsEnabled)
+			{
+				ox = (double) this.hscroller.Value;
+			}
+
+			double oy = 0;
+			if (this.vscroller.IsEnabled)
+			{
+				oy = (double) this.vscroller.Value;
+			}
+
+			this.editor.AreaOffset = new Point(ox, oy);
 		}
 
 		private void HandleFieldZoomValueChanged(object sender)

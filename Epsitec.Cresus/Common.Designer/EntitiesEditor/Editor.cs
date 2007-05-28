@@ -500,6 +500,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		{
 			pos.Y = this.Client.Size.Height-pos.Y;
 			pos /= this.zoom;
+			pos += this.areaOffset;
 			pos.Y = this.areaSize.Height-pos.Y;
 
 			return pos;
@@ -609,7 +610,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			Rectangle rect;
 
 			Transform initialTransform = graphics.Transform;
-			graphics.TranslateTransform(-this.areaOffset.X, this.Client.Bounds.Height-(this.areaSize.Height-this.areaOffset.Y)*this.zoom);
+			graphics.TranslateTransform(-this.areaOffset.X*this.zoom, this.Client.Bounds.Height-(this.areaSize.Height-this.areaOffset.Y)*this.zoom);
 			graphics.ScaleTransform(this.zoom, this.zoom, 0, 0);
 
 			//	Dessine la zone utile.
