@@ -60,9 +60,10 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				if (this.field.IsExplored)
 				{
 					this.field.IsExplored = false;
+					this.field.DstBox = null;
 
 					ObjectBox dst = this.editor.SearchParent(this.field);
-					this.editor.RemoveBox(dst);
+					this.CloseBoxes(dst);
 
 					this.editor.CreateConnections();
 					this.editor.UpdateGeometry();
@@ -83,6 +84,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 						box.Title = item.Name;
 						box.SetContent(fields);
 
+						this.field.DstBox = box;
 						this.editor.AddBox(box);
 						this.editor.UpdateGeometry();
 
@@ -96,6 +98,23 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					}
 				}
 			}
+		}
+
+		protected void CloseBoxes(ObjectBox box)
+		{
+			//	Ferme récursivement toutes les boîtes liées.
+			foreach (ObjectBox.Field field in box.Fields)
+			{
+				if (field.Relation != FieldRelation.None)
+				{
+					if (field.DstBox != null)
+					{
+						this.CloseBoxes(field.DstBox);
+					}
+				}
+			}
+
+			this.editor.RemoveBox(box);
 		}
 
 		protected override bool MouseDetect(Point pos, out ActiveElement element, out int fieldRank)

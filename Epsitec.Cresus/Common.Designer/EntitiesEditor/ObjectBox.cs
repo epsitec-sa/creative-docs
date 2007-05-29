@@ -71,20 +71,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				field.Relation = rel;
 				field.Destination = typeId;
 				field.Rank = i;
+				field.SrcBox = this;
 
-				this.fields.Add(field);
-			}
-		}
-
-		public void SetContent(string content)
-		{
-			//	Provisoire...
-			string[] list = content.Split(';');
-
-			foreach (string text in list)
-			{
-				Field field = new Field();
-				field.Text = text;
 				this.fields.Add(field);
 			}
 		}
@@ -329,16 +317,9 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 
 			//	Dessine le titre.
-#if false
-			Font font = Font.GetFont("Tahoma", "Bold");
-
-			graphics.AddText(this.bounds.Left+4, this.bounds.Top-ObjectBox.headerHeight+2, this.bounds.Width-ObjectBox.buttonRadius*2-5-6, ObjectBox.headerHeight-2, this.title, font, 14, ContentAlignment.MiddleCenter);
-			graphics.RenderSolid(Color.FromBrightness(0));
-#else
 			rect = new Rectangle(this.bounds.Left+4, this.bounds.Top-ObjectBox.headerHeight+2, this.bounds.Width-ObjectBox.buttonRadius*2-5-6, ObjectBox.headerHeight-2);
 			this.title.LayoutSize = rect.Size;
 			this.title.Paint(rect.BottomLeft, graphics);
-#endif
 
 			//	Dessine le bouton compact/étendu.
 			Point center = new Point(this.bounds.Right-ObjectBox.buttonRadius-5, this.bounds.Top-ObjectBox.headerHeight/2);
@@ -360,8 +341,6 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 			if (this.isExtended)
 			{
-				//?font = Font.GetFont("Tahoma", "Regular");
-
 				Color color = Color.FromBrightness(0.9);
 				if (this.IsReadyForDragging)
 				{
@@ -481,6 +460,30 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				}
 			}
 
+			public ObjectBox SrcBox
+			{
+				get
+				{
+					return this.srcBox;
+				}
+				set
+				{
+					this.srcBox = value;
+				}
+			}
+
+			public ObjectBox DstBox
+			{
+				get
+				{
+					return this.dstBox;
+				}
+				set
+				{
+					this.dstBox = value;
+				}
+			}
+
 			public bool IsExplored
 			{
 				//	Indique si une relation est explorée, c'est-à-dire si l'on voit l'entité destination.
@@ -511,6 +514,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			protected FieldRelation relation;
 			protected Druid destination;
 			protected int rank;
+			protected ObjectBox srcBox;
+			protected ObjectBox dstBox;
 			protected bool isExplored;
 			protected bool isSourceExpanded;
 		}

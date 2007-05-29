@@ -180,13 +180,6 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		protected void UpdateConnections()
 		{
 			//	Met à jour la géométrie de toutes les liaisons.
-#if false
-			//	TODO: provisoire !
-			this.UpdateConnection(this.connections[0], this.boxes[0], 2, this.boxes[1]);  // lien client
-			this.UpdateConnection(this.connections[1], this.boxes[0], 3, this.boxes[2]);  // lien articles
-			this.UpdateConnection(this.connections[2], this.boxes[0], 5, this.boxes[3]);  // lien rabais
-#endif
-
 			foreach (ObjectBox box in this.boxes)
 			{
 				for (int i=0; i<box.Fields.Count; i++)
@@ -323,7 +316,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		public void CreateConnections()
 		{
-			//	Crée toutes les liaisons nécessaires.
+			//	Crée (ou recrée) toutes les liaisons nécessaires.
 			this.connections.Clear();
 
 			foreach (ObjectBox box in this.boxes)
