@@ -100,8 +100,7 @@ namespace Epsitec.Common.Designer
 				}
 				if (this.type == Type.Entities)
 				{
-					//?this.accessor = new Support.ResourceAccessors.EntityResourceAccessor();
-					this.accessor = new Support.ResourceAccessors.CaptionResourceAccessor();  // TODO: provisoire...
+					this.accessor = new Support.ResourceAccessors.TypeResourceAccessor();
 				}
 
 				this.collectionView = new CollectionView(this.accessor.Collection);
