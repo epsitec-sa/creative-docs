@@ -64,7 +64,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				// TODO: pourquoi est-ce que tous les strings retournés sont nuls ???
 
 				Field field = new Field();
-				field.Text = "Tralala";
+				field.Text = "Je n'arrive pas accéder aux noms des champs !!!";
 				this.fields.Add(field);
 			}
 		}

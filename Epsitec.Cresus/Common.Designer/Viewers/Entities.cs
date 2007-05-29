@@ -243,13 +243,16 @@ namespace Epsitec.Common.Designer.Viewers
 			this.editor.Clear();
 
 			CultureMap item = this.access.CollectionView.CurrentItem as CultureMap;
-			StructuredData data = item.GetCultureData(this.GetTwoLetters(0));
-			IList<StructuredData> fields = data.GetValue(Support.Res.Fields.ResourceStructuredType.Fields) as IList<StructuredData>;
+			if (item != null)
+			{
+				StructuredData data = item.GetCultureData(this.GetTwoLetters(0));
+				IList<StructuredData> fields = data.GetValue(Support.Res.Fields.ResourceStructuredType.Fields) as IList<StructuredData>;
 
-			EntitiesEditor.ObjectBox box = new EntitiesEditor.ObjectBox(this.editor);
-			box.Title = item.Name;
-			box.SetContent(fields);
-			this.editor.AddBox(box);
+				EntitiesEditor.ObjectBox box = new EntitiesEditor.ObjectBox(this.editor);
+				box.Title = item.Name;
+				box.SetContent(fields);
+				this.editor.AddBox(box);
+			}
 
 			this.editor.UpdateGeometry();
 		}

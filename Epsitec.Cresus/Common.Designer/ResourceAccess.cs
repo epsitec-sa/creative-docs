@@ -2384,6 +2384,11 @@ namespace Epsitec.Common.Designer
 					cultureName = Resources.DefaultTwoLetterISOLanguageName;
 				}
 
+				if (item == null)
+				{
+					return ModificationState.Empty;
+				}
+
 				StructuredData data = item.GetCultureData(cultureName);
 
 				if (data.IsEmpty)
