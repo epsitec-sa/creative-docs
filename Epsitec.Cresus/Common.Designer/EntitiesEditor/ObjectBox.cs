@@ -55,7 +55,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		{
 			foreach (StructuredData data in fields)
 			{
-				Caption s1 = data.GetValue(Support.Res.Fields.Field.Caption) as Caption; // pas implémenté, utiliser CaptionId à la place
+				//?Caption s1 = data.GetValue(Support.Res.Fields.Field.Caption) as Caption; // pas implémenté, utiliser CaptionId à la place
 				Druid fieldCaptionId = (Druid) data.GetValue(Support.Res.Fields.Field.CaptionId);
 				FieldMembership membership = (FieldMembership) data.GetValue(Support.Res.Fields.Field.Membership);
 				FieldRelation rel = (FieldRelation) data.GetValue(Support.Res.Fields.Field.Relation);
@@ -67,6 +67,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				Field field = new Field();
 				field.Text = name;
 				field.Relation = rel;
+				field.Destination = typeId;
 
 				this.fields.Add(field);
 			}
@@ -380,6 +381,9 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 
 
+		/// <summary>
+		/// Cette classe contient toutes les informations relatives à une ligne, c'est-à-dire à un champ.
+		/// </summary>
 		public class Field
 		{
 			public Field()
@@ -388,10 +392,15 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				this.textLayout.DefaultFontSize = 10;
 				this.textLayout.Alignment = ContentAlignment.MiddleLeft;
 				this.textLayout.BreakMode = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine;
+
+				this.relation = FieldRelation.None;
+				this.destination = Druid.Empty;
+				this.isExplored = false;
 			}
 
 			public string Text
 			{
+				//	Nom du champ.
 				get
 				{
 					return this.textLayout.Text;
@@ -412,6 +421,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 			public FieldRelation Relation
 			{
+				//	Type de la relation éventuelle du champ.
 				get
 				{
 					return this.relation;
@@ -422,8 +432,36 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				}
 			}
 
+			public Druid Destination
+			{
+				//	Destination de la relation éventuelle du champ.
+				get
+				{
+					return this.destination;
+				}
+				set
+				{
+					this.destination = value;
+				}
+			}
+
+			public bool IsExplored
+			{
+				//	Indique si une relation est explorée, c'est-à-dire si l'on voit l'entité destination.
+				get
+				{
+					return this.isExplored;
+				}
+				set
+				{
+					this.isExplored = value;
+				}
+			}
+
 			protected TextLayout textLayout;
 			protected FieldRelation relation;
+			protected Druid destination;
+			protected bool isExplored;
 		}
 
 

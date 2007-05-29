@@ -17,6 +17,18 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		}
 
 
+		public ObjectBox.Field Field
+		{
+			get
+			{
+				return this.field;
+			}
+			set
+			{
+				this.field = value;
+			}
+		}
+
 		public List<Point> Points
 		{
 			get
@@ -24,22 +36,6 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				return this.points;
 			}
 		}
-
-		public FieldRelation Relation
-		{
-			get
-			{
-				return this.relation;
-			}
-			set
-			{
-				if (this.relation != value)
-				{
-					this.relation = value;
-				}
-			}
-		}
-
 
 
 		public override void MouseDown(Point pos)
@@ -139,7 +135,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		protected void PaintStartingArrow(Graphics graphics, Point start, Point end)
 		{
 			//	Dessine une flèche selon le type de la relation.
-			if (this.relation == FieldRelation.Inclusion)
+			if (this.field.Relation == FieldRelation.Inclusion)
 			{
 				this.PaintArrowBase(graphics, end, start);
 			}
@@ -150,7 +146,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			//	Dessine une flèche selon le type de la relation.
 			this.PaintArrowBase(graphics, start, end);
 
-			if (this.relation == FieldRelation.Collection)
+			if (this.field.Relation == FieldRelation.Collection)
 			{
 				end = Point.Move(end, start, ObjectConnection.arrowLength*0.75);
 				this.PaintArrowBase(graphics, start, end);
@@ -175,7 +171,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		protected static readonly double arrowLength = 12;
 		protected static readonly double arrowAngle = 25;
 
+		protected ObjectBox.Field field;
 		protected List<Point> points;
-		protected FieldRelation relation;
 	}
 }

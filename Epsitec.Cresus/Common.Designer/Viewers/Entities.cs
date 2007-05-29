@@ -255,6 +255,7 @@ namespace Epsitec.Common.Designer.Viewers
 				this.editor.AddBox(box);
 			}
 
+			this.editor.CreateConnections();
 			this.editor.UpdateGeometry();
 		}
 

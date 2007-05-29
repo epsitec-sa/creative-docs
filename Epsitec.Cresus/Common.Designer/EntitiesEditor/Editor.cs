@@ -167,12 +167,10 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			//	Met à jour la géométrie de toutes les liaisons.
 #if false
 			//	TODO: provisoire !
-			this.UpdateConnection(this.connections[0], this.boxes[0], 2, this.boxes[1], FieldRelation.Reference);  // lien client
-			this.UpdateConnection(this.connections[1], this.boxes[0], 3, this.boxes[2], FieldRelation.Collection);  // lien articles
-			this.UpdateConnection(this.connections[2], this.boxes[0], 5, this.boxes[3], FieldRelation.Inclusion);  // lien rabais
+			this.UpdateConnection(this.connections[0], this.boxes[0], 2, this.boxes[1]);  // lien client
+			this.UpdateConnection(this.connections[1], this.boxes[0], 3, this.boxes[2]);  // lien articles
+			this.UpdateConnection(this.connections[2], this.boxes[0], 5, this.boxes[3]);  // lien rabais
 #endif
-
-			this.connections.Clear();
 
 			foreach (ObjectBox box in this.boxes)
 			{
@@ -182,12 +180,21 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 					if (field.Relation != FieldRelation.None)
 					{
-						double posv = box.GetConnectionVerticalPosition(i);
-						Point pos = new Point(box.Bounds.Right-1, posv);
+						ObjectConnection connection = this.SearchConnection(field);
+						System.Diagnostics.Debug.Assert(connection != null);
 
-						ObjectConnection connection = new ObjectConnection(this);
-						connection.Points.Add(pos);
-						this.AddConnection(connection);
+						connection.Points.Clear();
+
+						if (field.IsExplored)
+						{
+						}
+						else
+						{
+							double posv = box.GetConnectionVerticalPosition(i);
+							Point pos = new Point(box.Bounds.Right-1, posv);
+
+							connection.Points.Add(pos);
+						}
 					}
 				}
 			}
@@ -195,11 +202,10 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			this.Invalidate();
 		}
 
-		protected void UpdateConnection(ObjectConnection connection, ObjectBox src, int srcRank, ObjectBox dst, FieldRelation relation)
+		protected void UpdateConnection(ObjectConnection connection, ObjectBox src, int srcRank, ObjectBox dst)
 		{
 			//	Met à jour la géométrie d'une liaison.
 			connection.Bounds = this.Client.Bounds;
-			connection.Relation = relation;
 
 			Rectangle srcBounds = src.Bounds;
 			Rectangle dstBounds = dst.Bounds;
@@ -296,6 +302,45 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					connection.Points.Add(end);
 				}
 			}
+		}
+
+		public void CreateConnections()
+		{
+			//	Crée toutes les liaisons nécessaires.
+			this.connections.Clear();
+
+			foreach (ObjectBox box in this.boxes)
+			{
+				for (int i=0; i<box.Fields.Count; i++)
+				{
+					ObjectBox.Field field = box.Fields[i];
+
+					if (field.Relation != FieldRelation.None)
+					{
+						double posv = box.GetConnectionVerticalPosition(i);
+						Point pos = new Point(box.Bounds.Right-1, posv);
+
+						ObjectConnection connection = new ObjectConnection(this);
+						connection.Field = field;
+						this.AddConnection(connection);
+					}
+				}
+			}
+
+			this.Invalidate();
+		}
+
+		protected ObjectConnection SearchConnection(ObjectBox.Field field)
+		{
+			foreach (ObjectConnection connection in this.connections)
+			{
+				if (connection.Field == field)
+				{
+					return connection;
+				}
+			}
+
+			return null;
 		}
 
 
