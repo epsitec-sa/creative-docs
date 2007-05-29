@@ -58,7 +58,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			element = ActiveElement.None;
 			fieldRank = -1;
 
-			if (pos.IsZero || this.points.Count < 2)
+			if (pos.IsZero || this.points.Count == 0)
 			{
 				return false;
 			}
@@ -105,9 +105,12 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				}
 				graphics.LineWidth = 1;
 				graphics.RenderSolid(Color.FromBrightness(0));
+			}
 
+			if (this.points.Count != 0)
+			{
 				//	Dessine le cercle au point de départ.
-				start = this.points[0];
+				Point start = this.points[0];
 				if (this.hilitedElement == ActiveElement.Connection)
 				{
 					Color c = adorner.ColorCaption;

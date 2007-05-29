@@ -53,22 +53,30 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		public void SetContent(IList<StructuredData> fields)
 		{
-			foreach (StructuredData data in fields)
+			for (int i=0; i<fields.Count; i++)
 			{
+				StructuredData data = fields[i];
+
 				string s1 = data.GetValue(Support.Res.Fields.Field.Caption).ToString();
 				string s2 = data.GetValue(Support.Res.Fields.Field.CaptionId).ToString();
 				string s3 = data.GetValue(Support.Res.Fields.Field.Membership).ToString();
 				string s4 = data.GetValue(Support.Res.Fields.Field.Relation).ToString();
 				string s5 = data.GetValue(Support.Res.Fields.Field.SourceFieldId).ToString();
 				string s6 = data.GetValue(Support.Res.Fields.Field.TypeId).ToString();
-				// TODO: pourquoi est-ce que tous les strings retournés sont nuls ???
+				// TODO: est-ce normal d'accéder ainsi aux valeurs ???
 
 				Druid d = new Druid(s2);
 				string name = this.editor.Module.AccessEntities.DirectGetName(d);
 
+				FieldRelation rel = FieldRelation.None;
+				if (s4 == "Reference")  rel = FieldRelation.Reference;
+				if (s4 == "Collection")  rel = FieldRelation.Collection;
+				if (s4 == "Inclusion")  rel = FieldRelation.Inclusion;
+
 				Field field = new Field();
-				//?field.Text = "Je n'arrive pas accéder aux noms des champs !!!";
 				field.Text = name;
+				field.Relation = rel;
+
 				this.fields.Add(field);
 			}
 		}
@@ -83,6 +91,14 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				Field field = new Field();
 				field.Text = text;
 				this.fields.Add(field);
+			}
+		}
+
+		public List<Field> Fields
+		{
+			get
+			{
+				return this.fields;
 			}
 		}
 
@@ -373,7 +389,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 
 
-		protected class Field
+		public class Field
 		{
 			public Field()
 			{
@@ -403,7 +419,20 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				}
 			}
 
+			public FieldRelation Relation
+			{
+				get
+				{
+					return this.relation;
+				}
+				set
+				{
+					this.relation = value;
+				}
+			}
+
 			protected TextLayout textLayout;
+			protected FieldRelation relation;
 		}
 
 

@@ -171,6 +171,27 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			this.UpdateConnection(this.connections[1], this.boxes[0], 3, this.boxes[2], FieldRelation.Collection);  // lien articles
 			this.UpdateConnection(this.connections[2], this.boxes[0], 5, this.boxes[3], FieldRelation.Inclusion);  // lien rabais
 #endif
+
+			this.connections.Clear();
+
+			foreach (ObjectBox box in this.boxes)
+			{
+				for (int i=0; i<box.Fields.Count; i++)
+				{
+					ObjectBox.Field field = box.Fields[i];
+
+					if (field.Relation != FieldRelation.None)
+					{
+						double posv = box.GetConnectionVerticalPosition(i);
+						Point pos = new Point(box.Bounds.Right-1, posv);
+
+						ObjectConnection connection = new ObjectConnection(this);
+						connection.Points.Add(pos);
+						this.AddConnection(connection);
+					}
+				}
+			}
+
 			this.Invalidate();
 		}
 
