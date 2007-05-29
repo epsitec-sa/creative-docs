@@ -30,7 +30,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.editor = new EntitiesEditor.Editor(band);
 			this.editor.Dock = DockStyle.Fill;
 			this.editor.AreaSize = this.areaSize;
-			this.editor.Zoom = this.zoom;
+			this.editor.Zoom = this.Zoom;
 			this.editor.SizeChanged += new EventHandler<DependencyPropertyChangedEventArgs>(this.HandleEditorSizeChanged);
 
 			this.vscroller = new VScroller(band);
@@ -92,7 +92,6 @@ namespace Epsitec.Common.Designer.Viewers
 			ToolTip.Default.SetToolTip(this.sliderZoom, "Choix du zoom");
 
 			this.AreaSize = new Size(1000, 1000);
-			this.Zoom = 1;
 
 			//	Provisoire:
 			EntitiesEditor.ObjectBox box;
@@ -122,6 +121,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.editor.AddConnection(new EntitiesEditor.ObjectConnection(this.editor));
 
 			this.editor.UpdateGeometry();
+			this.UpdateZoom();
 			this.UpdateAll();
 		}
 
@@ -168,31 +168,35 @@ namespace Epsitec.Common.Designer.Viewers
 			//	Zoom pour représenter les boîtes et les liaisons.
 			get
 			{
-				return this.zoom;
+				return Entities.zoom;
 			}
 			set
 			{
-				if (this.zoom != value)
+				if (Entities.zoom != value)
 				{
-					this.zoom = value;
+					Entities.zoom = value;
 
-					this.editor.Zoom = this.zoom;
-
-					this.fieldZoom.Text = string.Concat(System.Math.Floor(this.zoom*100).ToString(), "%");
-					this.sliderZoom.Value = (decimal) this.zoom;
-
-					this.buttonZoomMin.ActiveState     = (this.zoom == 0.2) ? ActiveState.Yes : ActiveState.No;
-					this.buttonZoomDefault.ActiveState = (this.zoom == 1.0) ? ActiveState.Yes : ActiveState.No;
-					this.buttonZoomMax.ActiveState     = (this.zoom == 2.0) ? ActiveState.Yes : ActiveState.No;
-
+					this.UpdateZoom();
 					this.UpdateScroller();
 				}
 			}
 		}
 
+		protected void UpdateZoom()
+		{
+			this.editor.Zoom = this.Zoom;
+
+			this.fieldZoom.Text = string.Concat(System.Math.Floor(this.Zoom*100).ToString(), "%");
+			this.sliderZoom.Value = (decimal) this.Zoom;
+
+			this.buttonZoomMin.ActiveState     = (this.Zoom == 0.2) ? ActiveState.Yes : ActiveState.No;
+			this.buttonZoomDefault.ActiveState = (this.Zoom == 1.0) ? ActiveState.Yes : ActiveState.No;
+			this.buttonZoomMax.ActiveState     = (this.Zoom == 2.0) ? ActiveState.Yes : ActiveState.No;
+		}
+
 		protected void UpdateScroller()
 		{
-			double w = this.areaSize.Width*this.zoom - this.editor.Client.Size.Width;
+			double w = this.areaSize.Width*this.Zoom - this.editor.Client.Size.Width;
 			if (w <= 0)
 			{
 				this.hscroller.Enable = false;
@@ -204,10 +208,10 @@ namespace Epsitec.Common.Designer.Viewers
 				this.hscroller.MaxValue = (decimal) w;
 				this.hscroller.SmallChange = (decimal) (w/10);
 				this.hscroller.LargeChange = (decimal) (w/5);
-				this.hscroller.VisibleRangeRatio = (decimal) (this.editor.Client.Size.Width / (this.areaSize.Width*this.zoom));
+				this.hscroller.VisibleRangeRatio = (decimal) (this.editor.Client.Size.Width / (this.areaSize.Width*this.Zoom));
 			}
 
-			double h = this.areaSize.Height*this.zoom - this.editor.Client.Size.Height;
+			double h = this.areaSize.Height*this.Zoom - this.editor.Client.Size.Height;
 			if (h <= 0)
 			{
 				this.vscroller.Enable = false;
@@ -219,7 +223,7 @@ namespace Epsitec.Common.Designer.Viewers
 				this.vscroller.MaxValue = (decimal) h;
 				this.vscroller.SmallChange = (decimal) (h/10);
 				this.vscroller.LargeChange = (decimal) (h/5);
-				this.vscroller.VisibleRangeRatio = (decimal) (this.editor.Client.Size.Height / (this.areaSize.Height*this.zoom));
+				this.vscroller.VisibleRangeRatio = (decimal) (this.editor.Client.Size.Height / (this.areaSize.Height*this.Zoom));
 			}
 
 			this.HandleScrollerValueChanged(null);
@@ -238,13 +242,13 @@ namespace Epsitec.Common.Designer.Viewers
 			double ox = 0;
 			if (this.hscroller.IsEnabled)
 			{
-				ox = (double) this.hscroller.Value/this.zoom;
+				ox = (double) this.hscroller.Value/this.Zoom;
 			}
 
 			double oy = 0;
 			if (this.vscroller.IsEnabled)
 			{
-				oy = (double) this.vscroller.Value/this.zoom;
+				oy = (double) this.vscroller.Value/this.Zoom;
 			}
 
 			this.editor.AreaOffset = new Point(ox, oy);
@@ -273,7 +277,7 @@ namespace Epsitec.Common.Designer.Viewers
 			//	Appelé lorsque le champ du zoom a été cliqué.
 			StatusField sf = sender as StatusField;
 			if (sf == null)  return;
-			VMenu menu = EntitiesEditor.ZoomMenu.CreateZoomMenu(this.zoom, 1.0, null);
+			VMenu menu = EntitiesEditor.ZoomMenu.CreateZoomMenu(this.Zoom, 1.0, null);
 			menu.Host = sf.Window;
 			TextFieldCombo.AdjustComboSize(sf, menu, false);
 			menu.ShowAsComboList(sf, Point.Zero, sf);
@@ -287,12 +291,13 @@ namespace Epsitec.Common.Designer.Viewers
 		}
 
 
+		protected static double zoom = 1.0;
+
 		protected HSplitter hsplitter;
 		protected EntitiesEditor.Editor editor;
 		protected VScroller vscroller;
 		protected HScroller hscroller;
 		protected Size areaSize;
-		protected double zoom;
 		protected HToolBar toolbar;
 		protected IconButton buttonZoomMin;
 		protected IconButton buttonZoomDefault;
