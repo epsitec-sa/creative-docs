@@ -603,6 +603,11 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			graphics.TranslateTransform(-this.areaOffset.X*this.zoom, this.Client.Bounds.Height-(this.areaSize.Height-this.areaOffset.Y)*this.zoom);
 			graphics.ScaleTransform(this.zoom, this.zoom, 0, 0);
 
+			//	Dessine la surface de dessin.
+			rect = new Rectangle(0, 0, this.areaSize.Width, this.areaSize.Height);
+			graphics.AddFilledRectangle(rect);  // surface de dessin
+			graphics.RenderSolid(Color.FromBrightness(1));
+
 			//	Dessine les surfaces hors de la zone utile.
 			Point bl = this.ConvWidgetToEditor(this.Client.Bounds.BottomLeft);
 			Point tr = this.ConvWidgetToEditor(this.Client.Bounds.TopRight);

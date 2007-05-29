@@ -14,10 +14,17 @@ namespace Epsitec.Common.Designer.Viewers
 	{
 		public Entities(Module module, PanelsContext context, ResourceAccess access, MainWindow mainWindow) : base(module, context, access, mainWindow)
 		{
-			this.scrollable.Visibility = false;
+			this.lastGroup.Dock = DockStyle.Top;
+
+			this.hsplitter = new HSplitter(this.lastPane);
+			this.hsplitter.Dock = DockStyle.Top;
+
+			Widget editorGroup = new Widget(this.lastPane);
+			editorGroup.Padding = new Margins(10, 10, 10, 10);
+			editorGroup.Dock = DockStyle.Fill;
 
 			//	Crée les grands blocs de widgets.
-			Widget band = new Widget(this.lastPane);
+			Widget band = new Widget(editorGroup);
 			band.Dock = DockStyle.Fill;
 
 			this.editor = new EntitiesEditor.Editor(band);
@@ -31,11 +38,11 @@ namespace Epsitec.Common.Designer.Viewers
 			this.vscroller.Dock = DockStyle.Right;
 			this.vscroller.ValueChanged += new EventHandler(this.HandleScrollerValueChanged);
 
-			this.toolbar = new HToolBar(this.lastPane);
+			this.toolbar = new HToolBar(editorGroup);
 			this.toolbar.Dock = DockStyle.Bottom;
 			this.toolbar.Margins = new Margins(0, 0, 5, 0);
 
-			this.hscroller = new HScroller(this.lastPane);
+			this.hscroller = new HScroller(editorGroup);
 			this.hscroller.Margins = new Margins(0, this.vscroller.PreferredWidth, 0, 0);
 			this.hscroller.Dock = DockStyle.Bottom;
 			this.hscroller.ValueChanged += new EventHandler(this.HandleScrollerValueChanged);
@@ -280,6 +287,7 @@ namespace Epsitec.Common.Designer.Viewers
 		}
 
 
+		protected HSplitter hsplitter;
 		protected EntitiesEditor.Editor editor;
 		protected VScroller vscroller;
 		protected HScroller hscroller;

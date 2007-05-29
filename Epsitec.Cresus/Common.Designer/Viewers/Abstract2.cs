@@ -52,14 +52,15 @@ namespace Epsitec.Common.Designer.Viewers
 			if (this.mainWindow.DisplayHorizontal)
 			{
 				this.splitter = new VSplitter(this);
+				this.splitter.Dock = DockStyle.Left;
 			}
 			else
 			{
 				this.splitter = new HSplitter(this);
+				this.splitter.Dock = DockStyle.Top;
 			}
-			this.splitter.Dock = this.mainWindow.DisplayHorizontal ? DockStyle.Left : DockStyle.Top;
 			this.splitter.SplitterDragged += new EventHandler(this.HandleSplitterDragged);
-			VSplitter.SetAutoCollapseEnable(this.firstPane, true);
+			AbstractSplitter.SetAutoCollapseEnable(this.firstPane, true);
 
 			this.lastPane = new Widget(this);
 			this.lastPane.Name = "LastPane";
@@ -72,7 +73,6 @@ namespace Epsitec.Common.Designer.Viewers
 				this.lastPane.MinHeight = 50;
 			}
 			this.lastPane.Dock = DockStyle.Fill;
-			this.lastPane.Padding = new Margins(10, 10, 10, 10);
 			this.lastPane.TabIndex = this.tabIndex++;
 			this.lastPane.TabNavigationMode = TabNavigationMode.ForwardTabPassive;
 			
@@ -115,7 +115,11 @@ namespace Epsitec.Common.Designer.Viewers
 			this.table.Margins = Drawing.Margins.Zero;
 
 			//	Crée la dernière partie (droite ou inférieure), bande supérieure pour les boutons des cultures.
-			Widget sup = new Widget(this.lastPane);
+			this.lastGroup = new Widget(this.lastPane);
+			this.lastGroup.Padding = new Margins(10, 10, 10, 10);
+			this.lastGroup.Dock = DockStyle.Fill;
+
+			Widget sup = new Widget(this.lastGroup);
 			sup.Name = "Sup";
 			sup.PreferredHeight = 26;
 			sup.Padding = new Margins(0, 17, 1, 0);
@@ -142,7 +146,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.secondaryButtonsCultureGroup.TabNavigationMode = TabNavigationMode.ForwardTabPassive;
 
 			//	Crée le titre.
-			this.titleBox = new FrameBox(this.lastPane);
+			this.titleBox = new FrameBox(this.lastGroup);
 			this.titleBox.DrawFullFrame = true;
 			this.titleBox.PreferredHeight = 26;
 			this.titleBox.Dock = DockStyle.Top;
@@ -155,7 +159,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.titleText.Margins = new Margins(4, 4, 0, 0);
 
 			//	Crée la dernière partie (droite ou inférieure), bande inférieure pour la zone d'étition scrollable.
-			this.scrollable = new Scrollable(this.lastPane);
+			this.scrollable = new Scrollable(this.lastGroup);
 			this.scrollable.Name = "Scrollable";
 			this.scrollable.MinWidth = 100;
 			this.scrollable.MinHeight = 39;
@@ -735,6 +739,7 @@ namespace Epsitec.Common.Designer.Viewers
 		protected UI.ItemTable					table;
 		protected MyWidgets.TextFieldExName		labelEdit;
 
+		protected Widget						lastGroup;
 		protected FrameBox						titleBox;
 		protected StaticText					titleText;
 		protected Scrollable					scrollable;
