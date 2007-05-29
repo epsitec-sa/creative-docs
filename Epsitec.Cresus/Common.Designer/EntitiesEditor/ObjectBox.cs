@@ -55,16 +55,20 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		{
 			foreach (StructuredData data in fields)
 			{
-				string s1 = data.GetValue(Support.Res.Fields.Field.Caption) as string;
-				string s2 = data.GetValue(Support.Res.Fields.Field.CaptionId) as string;
-				string s3 = data.GetValue(Support.Res.Fields.Field.Membership) as string;
-				string s4 = data.GetValue(Support.Res.Fields.Field.Relation) as string;
-				string s5 = data.GetValue(Support.Res.Fields.Field.SourceFieldId) as string;
-				string s6 = data.GetValue(Support.Res.Fields.Field.TypeId) as string;
+				string s1 = data.GetValue(Support.Res.Fields.Field.Caption).ToString();
+				string s2 = data.GetValue(Support.Res.Fields.Field.CaptionId).ToString();
+				string s3 = data.GetValue(Support.Res.Fields.Field.Membership).ToString();
+				string s4 = data.GetValue(Support.Res.Fields.Field.Relation).ToString();
+				string s5 = data.GetValue(Support.Res.Fields.Field.SourceFieldId).ToString();
+				string s6 = data.GetValue(Support.Res.Fields.Field.TypeId).ToString();
 				// TODO: pourquoi est-ce que tous les strings retournés sont nuls ???
 
+				Druid d = new Druid(s2);
+				string name = this.editor.Module.AccessEntities.DirectGetName(d);
+
 				Field field = new Field();
-				field.Text = "Je n'arrive pas accéder aux noms des champs !!!";
+				//?field.Text = "Je n'arrive pas accéder aux noms des champs !!!";
+				field.Text = name;
 				this.fields.Add(field);
 			}
 		}

@@ -29,6 +29,7 @@ namespace Epsitec.Common.Designer.Viewers
 			band.Dock = DockStyle.Fill;
 
 			this.editor = new EntitiesEditor.Editor(band);
+			this.editor.Module = this.module;
 			this.editor.Dock = DockStyle.Fill;
 			this.editor.AreaSize = this.areaSize;
 			this.editor.Zoom = this.Zoom;
@@ -245,7 +246,7 @@ namespace Epsitec.Common.Designer.Viewers
 			CultureMap item = this.access.CollectionView.CurrentItem as CultureMap;
 			if (item != null)
 			{
-				StructuredData data = item.GetCultureData(this.GetTwoLetters(0));
+				StructuredData data = item.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
 				IList<StructuredData> fields = data.GetValue(Support.Res.Fields.ResourceStructuredType.Fields) as IList<StructuredData>;
 
 				EntitiesEditor.ObjectBox box = new EntitiesEditor.ObjectBox(this.editor);

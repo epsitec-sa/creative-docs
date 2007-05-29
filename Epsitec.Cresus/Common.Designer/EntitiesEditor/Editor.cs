@@ -45,6 +45,19 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		}
 
 
+		public Module Module
+		{
+			get
+			{
+				return this.module;
+			}
+			set
+			{
+				this.module = value;
+			}
+		}
+
+
 		public void AddBox(ObjectBox box)
 		{
 			box.Bounds = new Rectangle(20+(Editor.defaultWidth+40)*this.boxes.Count, this.areaSize.Height-20-30*this.boxes.Count-100, Editor.defaultWidth, 100);
@@ -662,6 +675,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		protected static readonly double connectionDetour = 30;
 		protected static readonly double pushMargin = 10;
 
+		protected Module module;
 		protected List<ObjectBox> boxes;
 		protected List<ObjectConnection> connections;
 		protected Size areaSize;

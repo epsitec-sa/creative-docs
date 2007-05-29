@@ -143,6 +143,14 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
+		public ResourceAccess AccessEntities
+		{
+			get
+			{
+				return this.accessEntities;
+			}
+		}
+
 		public ResourceAccess GetAccess(ResourceAccess.Type type)
 		{
 			//	Cherche un accès d'après son type.
