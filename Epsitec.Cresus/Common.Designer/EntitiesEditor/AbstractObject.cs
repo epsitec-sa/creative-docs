@@ -49,6 +49,24 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		}
 
 
+		public bool IsReadyForAction
+		{
+			//	Est-ce que l'objet est prêt pour une action.
+			get
+			{
+				return (this.hilitedElement != ActiveElement.None);
+			}
+		}
+
+		public virtual bool IsReadyForDragging
+		{
+			//	Est-ce que l'objet est dragable ?
+			get
+			{
+				return false;
+			}
+		}
+
 		public virtual bool MouseHilite(Point pos)
 		{
 			//	Met en évidence la boîte selon la position de la souris.

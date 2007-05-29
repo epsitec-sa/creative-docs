@@ -38,6 +38,15 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		}
 
 
+		public override bool IsReadyForDragging
+		{
+			//	Est-ce que l'objet est dragable ?
+			get
+			{
+				return false;
+			}
+		}
+
 		public override void MouseDown(Point pos)
 		{
 			//	Le bouton de la souris est pressé.
@@ -46,6 +55,47 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		public override void MouseUp(Point pos)
 		{
 			//	Le bouton de la souris est relâché.
+			if (this.hilitedElement == ActiveElement.Connection)
+			{
+				if (this.field.IsExplored)
+				{
+					this.field.IsExplored = false;
+
+					ObjectBox dst = this.editor.SearchParent(this.field);
+					this.editor.RemoveBox(dst);
+
+					this.editor.CreateConnections();
+					this.editor.UpdateGeometry();
+				}
+				else
+				{
+					this.field.IsExplored = true;
+
+					Module module = this.editor.Module.MainWindow.SearchModule(this.field.Destination);
+					CultureMap item = module.AccessEntities.Accessor.Collection[this.field.Destination];
+					if (item != null)
+					{
+						StructuredData data = item.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
+						IList<StructuredData> fields = data.GetValue(Support.Res.Fields.ResourceStructuredType.Fields) as IList<StructuredData>;
+
+						ObjectBox box = new ObjectBox(this.editor);
+						box.ParentField = this.field;
+						box.Title = item.Name;
+						box.SetContent(fields);
+
+						this.editor.AddBox(box);
+						this.editor.UpdateGeometry();
+
+						ObjectBox src = this.editor.SearchSource(this.field);
+						Rectangle bounds = box.Bounds;
+						bounds.Location = new Point(src.Bounds.Right+50, src.Bounds.Top-box.Bounds.Height);
+						box.Bounds = bounds;
+
+						this.editor.CreateConnections();
+						this.editor.UpdateAfterMoving(box);
+					}
+				}
+			}
 		}
 
 		protected override bool MouseDetect(Point pos, out ActiveElement element, out int fieldRank)

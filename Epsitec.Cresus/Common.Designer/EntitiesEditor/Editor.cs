@@ -66,6 +66,11 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			this.boxes.Add(box);
 		}
 
+		public void RemoveBox(ObjectBox box)
+		{
+			this.boxes.Remove(box);
+		}
+
 		public void AddConnection(ObjectConnection connection)
 		{
 			this.connections.Add(connection);
@@ -148,6 +153,16 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			this.UpdateConnections();
 		}
 
+		public void UpdateAfterMoving(ObjectBox box)
+		{
+			//	Appelé lorsqu'une boîte a été bougée.
+			this.PushBoxesInside(Editor.pushMargin);
+			this.PushLayout(box, PushDirection.Automatic, Editor.pushMargin);
+			this.RecenterBoxes(Editor.pushMargin);
+			this.PushBoxesInside(Editor.pushMargin);
+			this.UpdateConnections();
+		}
+
 		protected void UpdateBoxes()
 		{
 			//	Met à jour la géométrie de toutes les boîtes.
@@ -181,19 +196,24 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					if (field.Relation != FieldRelation.None)
 					{
 						ObjectConnection connection = this.SearchConnection(field);
-						System.Diagnostics.Debug.Assert(connection != null);
-
-						connection.Points.Clear();
-
-						if (field.IsExplored)
+						if (connection != null)
 						{
-						}
-						else
-						{
-							double posv = box.GetConnectionVerticalPosition(i);
-							Point pos = new Point(box.Bounds.Right-1, posv);
+							connection.Points.Clear();
 
-							connection.Points.Add(pos);
+							if (field.IsExplored)
+							{
+								ObjectBox dst = this.SearchParent(field);
+								this.UpdateConnection(connection, box, field.Rank, dst);
+							}
+							else
+							{
+								double posv = box.GetConnectionVerticalPosition(i);
+								if (!double.IsNaN(posv))
+								{
+									Point pos = new Point(box.Bounds.Right-1, posv);
+									connection.Points.Add(pos);
+								}
+							}
 						}
 					}
 				}
@@ -317,9 +337,6 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 					if (field.Relation != FieldRelation.None)
 					{
-						double posv = box.GetConnectionVerticalPosition(i);
-						Point pos = new Point(box.Bounds.Right-1, posv);
-
 						ObjectConnection connection = new ObjectConnection(this);
 						connection.Field = field;
 						this.AddConnection(connection);
@@ -337,6 +354,35 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				if (connection.Field == field)
 				{
 					return connection;
+				}
+			}
+
+			return null;
+		}
+
+		public ObjectBox SearchSource(ObjectBox.Field field)
+		{
+			foreach (ObjectBox box in this.boxes)
+			{
+				foreach (ObjectBox.Field objField in box.Fields)
+				{
+					if (objField == field)
+					{
+						return box;
+					}
+				}
+			}
+
+			return null;
+		}
+
+		public ObjectBox SearchParent(ObjectBox.Field field)
+		{
+			foreach (ObjectBox box in this.boxes)
+			{
+				if (box.ParentField == field)
+				{
+					return box;
 				}
 			}
 
@@ -609,19 +655,19 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		protected void MouseDown(Point pos)
 		{
 			//	Début du déplacement d'une boîte.
-			ObjectBox box = this.DetectBox(pos);
+			AbstractObject obj = this.DetectObject(pos);
 
-			if (box != null)
+			if (obj != null)
 			{
-				if (box.IsReadyForDragging)
+				if (obj.IsReadyForDragging)
 				{
-					this.draggingBox = box;
+					this.draggingObject = obj;
 					this.draggingPos = pos;
 					this.isDragging = true;
 				}
 				else
 				{
-					box.MouseDown(pos);
+					obj.MouseDown(pos);
 				}
 			}
 		}
@@ -629,12 +675,12 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		protected void MouseDraggingMove(Point pos)
 		{
 			//	Déplacement d'une boîte.
-			Rectangle bounds = this.draggingBox.Bounds;
+			Rectangle bounds = this.draggingObject.Bounds;
 
 			bounds.Offset(pos-this.draggingPos);
 			this.draggingPos = pos;
 
-			this.draggingBox.Bounds = bounds;
+			this.draggingObject.Bounds = bounds;
 			this.UpdateConnections();
 		}
 
@@ -643,34 +689,44 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			//	Fin du déplacement d'une boîte.
 			if (this.isDragging)
 			{
-				this.PushBoxesInside(Editor.pushMargin);
-				this.PushLayout(this.draggingBox, PushDirection.Automatic, Editor.pushMargin);
-				this.RecenterBoxes(Editor.pushMargin);
-				this.PushBoxesInside(Editor.pushMargin);
-				this.UpdateConnections();
+				ObjectBox box = this.draggingObject as ObjectBox;
+				if (box != null)
+				{
+					this.UpdateAfterMoving(box);
+				}
 
-				this.draggingBox = null;
+				this.draggingObject = null;
 				this.isDragging = false;
 			}
 			else
 			{
-				ObjectBox box = this.DetectBox(pos);
-				if (box != null)
+				AbstractObject obj = this.DetectObject(pos);
+				if (obj != null)
 				{
-					box.MouseUp(pos);
+					obj.MouseUp(pos);
 				}
 			}
 		}
 
-		protected ObjectBox DetectBox(Point pos)
+		protected AbstractObject DetectObject(Point pos)
 		{
-			//	Détecte la boîte visée par la souris.
-			//	La boîte à l'avant-plan a la priorité.
+			//	Détecte l'objet visé par la souris.
+			//	L'objet à l'avant-plan a la priorité.
+			for (int i=this.connections.Count-1; i>=0; i--)
+			{
+				ObjectConnection connection = this.connections[i];
+
+				if (connection.IsReadyForAction)
+				{
+					return connection;
+				}
+			}
+
 			for (int i=this.boxes.Count-1; i>=0; i--)
 			{
 				ObjectBox box = this.boxes[i];
 
-				if (box.Bounds.Contains(pos))
+				if (box.IsReadyForAction)
 				{
 					return box;
 				}
@@ -749,6 +805,6 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		protected Point areaOffset;
 		protected bool isDragging;
 		protected Point draggingPos;
-		protected ObjectBox draggingBox;
+		protected AbstractObject draggingObject;
 	}
 }

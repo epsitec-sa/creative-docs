@@ -53,8 +53,10 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		public void SetContent(IList<StructuredData> fields)
 		{
-			foreach (StructuredData data in fields)
+			for (int i=0; i<fields.Count; i++)
 			{
+				StructuredData data = fields[i];
+
 				//?Caption s1 = data.GetValue(Support.Res.Fields.Field.Caption) as Caption; // pas implémenté, utiliser CaptionId à la place
 				Druid fieldCaptionId = (Druid) data.GetValue(Support.Res.Fields.Field.CaptionId);
 				FieldMembership membership = (FieldMembership) data.GetValue(Support.Res.Fields.Field.Membership);
@@ -68,6 +70,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				field.Text = name;
 				field.Relation = rel;
 				field.Destination = typeId;
+				field.Rank = i;
 
 				this.fields.Add(field);
 			}
@@ -94,6 +97,18 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 		}
 
+		public Field ParentField
+		{
+			get
+			{
+				return this.parentField;
+			}
+			set
+			{
+				this.parentField = value;
+			}
+		}
+
 		public bool IsExtended
 		{
 			//	Etat de la boîte (compact ou étendu).
@@ -110,16 +125,6 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					this.isExtended = value;
 					this.editor.Invalidate();
 				}
-			}
-		}
-
-		public bool IsReadyForDragging
-		{
-			//	Est-ce que la boîte est survolée par la souris ?
-			//	Si la boîte est survolée, on peut la déplacer globalement.
-			get
-			{
-				return this.hilitedElement == ActiveElement.Header;
 			}
 		}
 
@@ -147,7 +152,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 			else
 			{
-				return this.bounds.Center.Y;
+				//?return this.bounds.Center.Y;
+				return double.NaN;
 			}
 		}
 
@@ -188,6 +194,17 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			return Point.Zero;
 		}
 
+
+		public override bool IsReadyForDragging
+		{
+			//	Est-ce que l'objet est dragable ?
+			//	Est-ce que la boîte est survolée par la souris ?
+			//	Si la boîte est survolée, on peut la déplacer globalement.
+			get
+			{
+				return this.hilitedElement == ActiveElement.Header;
+			}
+		}
 
 		public override void MouseDown(Point pos)
 		{
@@ -395,6 +412,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 				this.relation = FieldRelation.None;
 				this.destination = Druid.Empty;
+				this.rank = -1;
 				this.isExplored = false;
 			}
 
@@ -445,6 +463,18 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				}
 			}
 
+			public int Rank
+			{
+				get
+				{
+					return this.rank;
+				}
+				set
+				{
+					this.rank = value;
+				}
+			}
+
 			public bool IsExplored
 			{
 				//	Indique si une relation est explorée, c'est-à-dire si l'on voit l'entité destination.
@@ -461,6 +491,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			protected TextLayout textLayout;
 			protected FieldRelation relation;
 			protected Druid destination;
+			protected int rank;
 			protected bool isExplored;
 		}
 
@@ -475,5 +506,6 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		protected bool isExtended;
 		protected TextLayout title;
 		protected List<Field> fields;
+		protected Field parentField;
 	}
 }
