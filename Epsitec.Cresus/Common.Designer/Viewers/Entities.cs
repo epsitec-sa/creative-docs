@@ -232,6 +232,18 @@ namespace Epsitec.Common.Designer.Viewers
 		}
 
 
+		protected override void UpdateEdit()
+		{
+			//	Met à jour les lignes éditables en fonction de la sélection dans le tableau.
+			base.UpdateEdit();
+
+			CultureMap item = this.access.CollectionView.CurrentItem as CultureMap;
+			StructuredData data = item.GetCultureData(this.GetTwoLetters(0));
+			IList<StructuredData> fields = data.GetValue(Support.Res.Fields.ResourceStructuredType.Fields) as IList<StructuredData>;
+			//	TODO: pourquoi fields est-il toujours null ???
+		}
+
+
 		private void HandleEditorSizeChanged(object sender, DependencyPropertyChangedEventArgs e)
 		{
 			//	Appelé lorsque la taille de la fenêtre de l'éditeur change.
