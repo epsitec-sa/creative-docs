@@ -58,6 +58,12 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			this.connections.Add(connection);
 		}
 
+		public void Clear()
+		{
+			this.boxes.Clear();
+			this.connections.Clear();
+		}
+
 
 		public Size AreaSize
 		{
@@ -146,10 +152,12 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		protected void UpdateConnections()
 		{
 			//	Met à jour la géométrie de toutes les liaisons.
+#if false
 			//	TODO: provisoire !
 			this.UpdateConnection(this.connections[0], this.boxes[0], 2, this.boxes[1], FieldRelation.Reference);  // lien client
 			this.UpdateConnection(this.connections[1], this.boxes[0], 3, this.boxes[2], FieldRelation.Collection);  // lien articles
 			this.UpdateConnection(this.connections[2], this.boxes[0], 5, this.boxes[3], FieldRelation.Inclusion);  // lien rabais
+#endif
 			this.Invalidate();
 		}
 

@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Support;
+using Epsitec.Common.Types;
 using Epsitec.Common.Drawing;
 
 namespace Epsitec.Common.Designer.EntitiesEditor
@@ -21,9 +22,12 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		public ObjectBox(Editor editor) : base(editor)
 		{
-#if true // provisoire
-			this.fields = new List<string>();
-#endif
+			this.title = new TextLayout();
+			this.title.DefaultFontSize = 12;
+			this.title.Alignment = ContentAlignment.MiddleCenter;
+			this.title.BreakMode = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine;
+
+			this.fields = new List<Field>();
 
 			this.isExtended = false;
 		}
@@ -34,14 +38,34 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			//	Titre au sommet de la boîte.
 			get
 			{
-				return this.title;
+				return this.title.Text;
 			}
 			set
 			{
-				if (this.title != value)
+				value = string.Concat("<b>", value, "</b>");
+
+				if (this.title.Text != value)
 				{
-					this.title = value;
+					this.title.Text = value;
 				}
+			}
+		}
+
+		public void SetContent(IList<StructuredData> fields)
+		{
+			foreach (StructuredData data in fields)
+			{
+				string s1 = data.GetValue(Support.Res.Fields.Field.Caption) as string;
+				string s2 = data.GetValue(Support.Res.Fields.Field.CaptionId) as string;
+				string s3 = data.GetValue(Support.Res.Fields.Field.Membership) as string;
+				string s4 = data.GetValue(Support.Res.Fields.Field.Relation) as string;
+				string s5 = data.GetValue(Support.Res.Fields.Field.SourceFieldId) as string;
+				string s6 = data.GetValue(Support.Res.Fields.Field.TypeId) as string;
+				// TODO: pourquoi est-ce que tous les strings retournés sont nuls ???
+
+				Field field = new Field();
+				field.Text = "Tralala";
+				this.fields.Add(field);
 			}
 		}
 
@@ -52,7 +76,9 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 			foreach (string text in list)
 			{
-				this.fields.Add(text);
+				Field field = new Field();
+				field.Text = text;
+				this.fields.Add(field);
 			}
 		}
 
@@ -269,10 +295,16 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 
 			//	Dessine le titre.
+#if false
 			Font font = Font.GetFont("Tahoma", "Bold");
 
 			graphics.AddText(this.bounds.Left+4, this.bounds.Top-ObjectBox.headerHeight+2, this.bounds.Width-ObjectBox.buttonRadius*2-5-6, ObjectBox.headerHeight-2, this.title, font, 14, ContentAlignment.MiddleCenter);
 			graphics.RenderSolid(Color.FromBrightness(0));
+#else
+			rect = new Rectangle(this.bounds.Left+4, this.bounds.Top-ObjectBox.headerHeight+2, this.bounds.Width-ObjectBox.buttonRadius*2-5-6, ObjectBox.headerHeight-2);
+			this.title.LayoutSize = rect.Size;
+			this.title.Paint(rect.BottomLeft, graphics);
+#endif
 
 			//	Dessine le bouton compact/étendu.
 			Point center = new Point(this.bounds.Right-ObjectBox.buttonRadius-5, this.bounds.Top-ObjectBox.headerHeight/2);
@@ -294,7 +326,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 			if (this.isExtended)
 			{
-				font = Font.GetFont("Tahoma", "Regular");
+				//?font = Font.GetFont("Tahoma", "Regular");
 
 				Color color = Color.FromBrightness(0.9);
 				if (this.IsReadyForDragging)
@@ -313,9 +345,11 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 						graphics.RenderSolid(hiliteColor);
 					}
 
-					graphics.AddText(rect.Left+10, rect.Bottom, rect.Width-20, ObjectBox.fieldHeight, this.fields[i], font, 11, ContentAlignment.MiddleLeft);
-					graphics.RenderSolid(Color.FromBrightness(0));
+					rect.Deflate(10, 0);
+					this.fields[i].TextLayout.LayoutSize = rect.Size;
+					this.fields[i].TextLayout.Paint(rect.BottomLeft, graphics);
 
+					rect.Inflate(10, 0);
 					graphics.AddLine(rect.Left, rect.Bottom+0.5, rect.Right, rect.Bottom+0.5);
 					graphics.RenderSolid(color);
 
@@ -335,6 +369,39 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 
 
+		protected class Field
+		{
+			public Field()
+			{
+				this.textLayout = new TextLayout();
+				this.textLayout.DefaultFontSize = 10;
+				this.textLayout.Alignment = ContentAlignment.MiddleLeft;
+				this.textLayout.BreakMode = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine;
+			}
+
+			public string Text
+			{
+				get
+				{
+					return this.textLayout.Text;
+				}
+				set
+				{
+					this.textLayout.Text = value;
+				}
+			}
+
+			public TextLayout TextLayout
+			{
+				get
+				{
+					return this.textLayout;
+				}
+			}
+
+			protected TextLayout textLayout;
+		}
+
 
 		protected static readonly double roundRectRadius = 12;
 		protected static readonly double shadowOffset = 6;
@@ -344,7 +411,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		protected static readonly double fieldHeight = 20;
 
 		protected bool isExtended;
-		protected string title;
-		protected List<string> fields;
+		protected TextLayout title;
+		protected List<Field> fields;
 	}
 }

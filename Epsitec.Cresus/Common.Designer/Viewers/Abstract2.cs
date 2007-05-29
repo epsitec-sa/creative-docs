@@ -288,8 +288,11 @@ namespace Epsitec.Common.Designer.Viewers
 		{
 			//	Met à jour le titre en dessus de la zone scrollable.
 			CultureMap item = this.access.CollectionView.CurrentItem as CultureMap;
-			string name = item.Name;
-			this.titleText.Text = string.Concat("<font size=\"150%\">", name, "</font>");
+			if (item != null)
+			{
+				string name = item.Name;
+				this.titleText.Text = string.Concat("<font size=\"150%\">", name, "</font>");
+			}
 		}
 
 

@@ -10,7 +10,8 @@ namespace Epsitec.Common.Designer.Viewers
 	/// <summary>
 	/// Permet de représenter les ressources d'un module.
 	/// </summary>
-	public class Entities : AbstractCaptions2
+	//?public class Entities : AbstractCaptions2
+	public class Entities : Abstract2
 	{
 		public Entities(Module module, PanelsContext context, ResourceAccess access, MainWindow mainWindow) : base(module, context, access, mainWindow)
 		{
@@ -93,6 +94,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 			this.AreaSize = new Size(1000, 1000);
 
+#if false
 			//	Provisoire:
 			EntitiesEditor.ObjectBox box;
 
@@ -119,6 +121,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.editor.AddConnection(new EntitiesEditor.ObjectConnection(this.editor));
 			this.editor.AddConnection(new EntitiesEditor.ObjectConnection(this.editor));
 			this.editor.AddConnection(new EntitiesEditor.ObjectConnection(this.editor));
+#endif
 
 			this.editor.UpdateGeometry();
 			this.UpdateZoom();
@@ -237,10 +240,18 @@ namespace Epsitec.Common.Designer.Viewers
 			//	Met à jour les lignes éditables en fonction de la sélection dans le tableau.
 			base.UpdateEdit();
 
+			this.editor.Clear();
+
 			CultureMap item = this.access.CollectionView.CurrentItem as CultureMap;
 			StructuredData data = item.GetCultureData(this.GetTwoLetters(0));
 			IList<StructuredData> fields = data.GetValue(Support.Res.Fields.ResourceStructuredType.Fields) as IList<StructuredData>;
-			//	TODO: pourquoi fields est-il toujours null ???
+
+			EntitiesEditor.ObjectBox box = new EntitiesEditor.ObjectBox(this.editor);
+			box.Title = item.Name;
+			box.SetContent(fields);
+			this.editor.AddBox(box);
+
+			this.editor.UpdateGeometry();
 		}
 
 
