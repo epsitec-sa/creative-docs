@@ -104,7 +104,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			element = ActiveElement.None;
 			fieldRank = -1;
 
-			if (pos.IsZero || this.points.Count == 0)
+			if (pos.IsZero || this.points.Count == 0 || !this.field.IsSourceExpanded)
 			{
 				return false;
 			}
@@ -129,7 +129,10 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			if (this.points.Count >= 2)
 			{
 				Point start = this.points[0];
-				start = Point.Move(start, this.points[1], ObjectConnection.circleRadius);
+				if (this.field.IsSourceExpanded)
+				{
+					start = Point.Move(start, this.points[1], ObjectConnection.circleRadius);
+				}
 
 				graphics.LineWidth = 2;
 				for (int i=0; i<this.points.Count-1; i++)
@@ -153,7 +156,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				graphics.RenderSolid(Color.FromBrightness(0));
 			}
 
-			if (this.points.Count != 0)
+			if (this.points.Count != 0 && this.field.IsSourceExpanded)
 			{
 				//	Dessine le cercle au point de départ.
 				Point start = this.points[0];

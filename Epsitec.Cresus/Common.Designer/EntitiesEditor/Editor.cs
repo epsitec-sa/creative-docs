@@ -208,11 +208,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 							else
 							{
 								double posv = box.GetConnectionVerticalPosition(i);
-								if (!double.IsNaN(posv))
-								{
-									Point pos = new Point(box.Bounds.Right-1, posv);
-									connection.Points.Add(pos);
-								}
+								Point pos = new Point(box.Bounds.Right-1, posv);
+								connection.Points.Add(pos);
 							}
 						}
 					}
@@ -239,7 +236,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			connection.Points.Clear();
 
 			double v = src.GetConnectionVerticalPosition(srcRank);
-			if (!double.IsNaN(v) && !srcBounds.IntersectsWith(dstBounds))
+			if (!srcBounds.IntersectsWith(dstBounds))
 			{
 				Point p = new Point(0, v);
 

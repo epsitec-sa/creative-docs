@@ -123,6 +123,12 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				if (this.isExtended != value)
 				{
 					this.isExtended = value;
+
+					foreach (Field field in this.fields)
+					{
+						field.IsSourceExpanded = this.isExtended;
+					}
+
 					this.editor.Invalidate();
 				}
 			}
@@ -152,8 +158,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 			else
 			{
-				//?return this.bounds.Center.Y;
-				return double.NaN;
+				return this.bounds.Center.Y;
 			}
 		}
 
@@ -414,6 +419,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				this.destination = Druid.Empty;
 				this.rank = -1;
 				this.isExplored = false;
+				this.isSourceExpanded = false;
 			}
 
 			public string Text
@@ -488,11 +494,25 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				}
 			}
 
+			public bool IsSourceExpanded
+			{
+				//	Indique si la boîte source d'une relation est étendue.
+				get
+				{
+					return this.isSourceExpanded;
+				}
+				set
+				{
+					this.isSourceExpanded = value;
+				}
+			}
+
 			protected TextLayout textLayout;
 			protected FieldRelation relation;
 			protected Druid destination;
 			protected int rank;
 			protected bool isExplored;
+			protected bool isSourceExpanded;
 		}
 
 
