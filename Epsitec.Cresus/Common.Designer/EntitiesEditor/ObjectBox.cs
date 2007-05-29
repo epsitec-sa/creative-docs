@@ -53,25 +53,16 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		public void SetContent(IList<StructuredData> fields)
 		{
-			for (int i=0; i<fields.Count; i++)
+			foreach (StructuredData data in fields)
 			{
-				StructuredData data = fields[i];
-
-				string s1 = data.GetValue(Support.Res.Fields.Field.Caption).ToString();
-				string s2 = data.GetValue(Support.Res.Fields.Field.CaptionId).ToString();
-				string s3 = data.GetValue(Support.Res.Fields.Field.Membership).ToString();
-				string s4 = data.GetValue(Support.Res.Fields.Field.Relation).ToString();
-				string s5 = data.GetValue(Support.Res.Fields.Field.SourceFieldId).ToString();
-				string s6 = data.GetValue(Support.Res.Fields.Field.TypeId).ToString();
-				// TODO: est-ce normal d'accéder ainsi aux valeurs ???
-
-				Druid d = new Druid(s2);
-				string name = this.editor.Module.AccessEntities.DirectGetName(d);
-
-				FieldRelation rel = FieldRelation.None;
-				if (s4 == "Reference")  rel = FieldRelation.Reference;
-				if (s4 == "Collection")  rel = FieldRelation.Collection;
-				if (s4 == "Inclusion")  rel = FieldRelation.Inclusion;
+				Caption s1 = data.GetValue(Support.Res.Fields.Field.Caption) as Caption; // pas implémenté, utiliser CaptionId à la place
+				Druid fieldCaptionId = (Druid) data.GetValue(Support.Res.Fields.Field.CaptionId);
+				FieldMembership membership = (FieldMembership) data.GetValue(Support.Res.Fields.Field.Membership);
+				FieldRelation rel = (FieldRelation) data.GetValue(Support.Res.Fields.Field.Relation);
+				Druid sourceId = (Druid) data.GetValue(Support.Res.Fields.Field.SourceFieldId);
+				Druid typeId = (Druid) data.GetValue(Support.Res.Fields.Field.TypeId);
+				
+				string name = this.editor.Module.AccessEntities.DirectGetName(fieldCaptionId);
 
 				Field field = new Field();
 				field.Text = name;
