@@ -10,8 +10,7 @@ namespace Epsitec.Common.Designer.Viewers
 	/// <summary>
 	/// Permet de représenter les ressources d'un module.
 	/// </summary>
-	//?public class Entities : AbstractCaptions2
-	public class Entities : Abstract2
+	public class Entities : AbstractCaptions2
 	{
 		public Entities(Module module, PanelsContext context, ResourceAccess access, MainWindow mainWindow) : base(module, context, access, mainWindow)
 		{
