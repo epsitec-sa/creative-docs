@@ -14,6 +14,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		protected enum ActiveElement
 		{
 			None,
+			Inside,
 			ExtendButton,
 			HeaderDragging,
 			FieldSelect,

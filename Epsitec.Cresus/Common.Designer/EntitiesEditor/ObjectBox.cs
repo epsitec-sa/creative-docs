@@ -318,7 +318,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				}
 			}
 
-			return false;
+			element = ActiveElement.Inside;
+			return true;
 		}
 
 		protected Rectangle GetFieldRemoveBounds(int rank)
@@ -590,6 +591,29 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					graphics.RenderSolid(color);
 
 					rect.Offset(0, -ObjectBox.fieldHeight);
+				}
+
+				if (this.hilitedElement != ActiveElement.None)
+				{
+					rect = Rectangle.Union(this.GetFieldAddBounds(-1), this.GetFieldAddBounds(this.fields.Count-1));
+					rect.Inflate(-0.5, 3.5);
+					Path pathButtons = this.PathRoundRectangle(rect, rect.Width/2);
+
+					Color hiliteColor = Color.FromBrightness(1);
+					if (this.hilitedElement == ActiveElement.FieldAdd ||
+						this.hilitedElement == ActiveElement.FieldRemove)
+					{
+						hiliteColor = adorner.ColorCaption;
+						hiliteColor.R = 1-(1-hiliteColor.R)*0.2;
+						hiliteColor.G = 1-(1-hiliteColor.G)*0.2;
+						hiliteColor.B = 1-(1-hiliteColor.B)*0.2;
+					}
+
+					graphics.Rasterizer.AddSurface(pathButtons);
+					graphics.RenderSolid(hiliteColor);
+
+					graphics.Rasterizer.AddOutline(pathButtons);
+					graphics.RenderSolid(Color.FromBrightness(0));
 				}
 
 				if (this.hilitedElement == ActiveElement.FieldRemove)
