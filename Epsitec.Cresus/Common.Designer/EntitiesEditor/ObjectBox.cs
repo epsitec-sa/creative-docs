@@ -362,9 +362,15 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 			StructuredData newField = new StructuredData();
 			// TODO: ce n'est certainement pas ainsi qu'il faut créer un nouveau champ !
+			// PA: en effet... il fallait faire comme pour Commands2; cf. ci-après...
 
 			StructuredData data = this.cultureMap.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
 			IList<StructuredData> dataFields = data.GetValue(Support.Res.Fields.ResourceStructuredType.Fields) as IList<StructuredData>;
+
+			IResourceAccessor accessor = this.editor.Module.AccessEntities.Accessor;
+			IDataBroker broker = accessor.GetDataBroker (data, Support.Res.Fields.ResourceStructuredType.Fields.ToString ());
+			newField = broker.CreateData (this.cultureMap);
+
 			dataFields.Insert(rank+1, newField);
 
 			Field field = this.CreateField(newField);
@@ -387,7 +393,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			Druid typeId = (Druid) data.GetValue(Support.Res.Fields.Field.TypeId);
 			
 			Module dstModule = this.editor.Module.MainWindow.SearchModule(typeId);
-			CultureMap dstItem = dstModule.AccessEntities.Accessor.Collection[typeId];
+			CultureMap dstItem = dstModule == null ? null : dstModule.AccessEntities.Accessor.Collection[typeId];
 			if (dstItem == null)
 			{
 				rel = FieldRelation.None;  // ce n'est pas une vraie relation !

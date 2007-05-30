@@ -206,7 +206,15 @@ namespace Epsitec.Common.Support.ResourceAccessors
 
 			public StructuredData CreateData(CultureMap container)
 			{
-				return new StructuredData (Res.Types.Field);
+				StructuredData data = new StructuredData (Res.Types.Field);
+
+				data.SetValue (Res.Fields.Field.TypeId, Druid.Empty);
+				data.SetValue (Res.Fields.Field.CaptionId, Druid.Empty);
+				data.SetValue (Res.Fields.Field.Relation, FieldRelation.None);
+				data.SetValue (Res.Fields.Field.Membership, FieldMembership.Local);
+				data.SetValue (Res.Fields.Field.SourceFieldId, Druid.Empty);
+				
+				return data;
 			}
 
 			#endregion

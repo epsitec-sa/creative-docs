@@ -6,6 +6,7 @@ using Epsitec.Common.Types;
 
 using System.Collections.Generic;
 
+#if false
 namespace Epsitec.Common.Support.ResourceAccessors
 {
 	using CultureInfo=System.Globalization.CultureInfo;
@@ -173,3 +174,4 @@ namespace Epsitec.Common.Support.ResourceAccessors
 		#endregion
 	}
 }
+#endif
