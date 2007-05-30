@@ -64,6 +64,13 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				Druid sourceId = (Druid) data.GetValue(Support.Res.Fields.Field.SourceFieldId);
 				Druid typeId = (Druid) data.GetValue(Support.Res.Fields.Field.TypeId);
 				
+				Module dstModule = this.editor.Module.MainWindow.SearchModule(typeId);
+				CultureMap dstItem = dstModule.AccessEntities.Accessor.Collection[typeId];
+				if (dstItem == null)
+				{
+					rel = FieldRelation.None;  // ce n'est pas une vraie relation !
+				}
+
 				string name = this.editor.Module.AccessEntities.DirectGetName(fieldCaptionId);
 
 				Field field = new Field();

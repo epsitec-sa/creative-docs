@@ -58,12 +58,12 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			if (this.hilitedElement == ActiveElement.ConnectionOpenLeft ||
 				this.hilitedElement == ActiveElement.ConnectionOpenRight)
 			{
-				this.field.IsExplored = true;
-
 				Module module = this.editor.Module.MainWindow.SearchModule(this.field.Destination);
 				CultureMap item = module.AccessEntities.Accessor.Collection[this.field.Destination];
 				if (item != null)
 				{
+					this.field.IsExplored = true;
+
 					StructuredData data = item.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
 					IList<StructuredData> fields = data.GetValue(Support.Res.Fields.ResourceStructuredType.Fields) as IList<StructuredData>;
 
