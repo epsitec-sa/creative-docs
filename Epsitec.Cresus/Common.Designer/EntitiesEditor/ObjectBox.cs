@@ -46,15 +46,15 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			//	Titre au sommet de la boîte.
 			get
 			{
-				return this.title.Text;
+				return this.titleString;
 			}
 			set
 			{
-				value = string.Concat("<b>", value, "</b>");
-
-				if (this.title.Text != value)
+				if (this.titleString != value)
 				{
-					this.title.Text = value;
+					this.titleString = value;
+
+					this.title.Text = string.Concat("<b>", this.titleString, "</b>");
 				}
 			}
 		}
@@ -333,25 +333,24 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			return rect;
 		}
 
+
 		protected void RemoveField(int rank)
 		{
 			//	Supprime un champ.
 			string question = string.Format("Voulez-vous supprimer le champ <b>{0}</b> ?", this.fields[rank].Text);
-			if (this.editor.Module.MainWindow.DialogQuestion(question) != Epsitec.Common.Dialogs.DialogResult.Yes)
+			if (this.editor.Module.MainWindow.DialogQuestion(question) == Epsitec.Common.Dialogs.DialogResult.Yes)
 			{
-				return;
+				this.CloseBoxes(this.fields[rank].DstBox);
+
+				StructuredData data = this.cultureMap.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
+				IList<StructuredData> dataFields = data.GetValue(Support.Res.Fields.ResourceStructuredType.Fields) as IList<StructuredData>;
+				dataFields.RemoveAt(rank);
+
+				this.fields.RemoveAt(rank);
+
+				this.UpdateFields();
+				this.editor.UpdateAfterAddOrRemoveConnection();
 			}
-
-			this.CloseBoxes(this.fields[rank].DstBox);
-
-			StructuredData data = this.cultureMap.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
-			IList<StructuredData> dataFields = data.GetValue(Support.Res.Fields.ResourceStructuredType.Fields) as IList<StructuredData>;
-			dataFields.RemoveAt(rank);
-
-			this.fields.RemoveAt(rank);
-
-			this.UpdateFields();
-			this.editor.UpdateAfterAddOrRemoveConnection();
 			this.hilitedElement = ActiveElement.None;
 		}
 
@@ -364,6 +363,9 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			IResourceAccessor accessor = this.editor.Module.AccessEntities.Accessor;
 			IDataBroker broker = accessor.GetDataBroker(data, Support.Res.Fields.ResourceStructuredType.Fields.ToString());
 			StructuredData newField = broker.CreateData(this.cultureMap);
+
+			Druid druid = this.CreateFieldCaption();
+			newField.SetValue(Support.Res.Fields.Field.CaptionId, druid);
 
 			dataFields.Insert(rank+1, newField);
 
@@ -387,7 +389,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			Druid typeId = (Druid) data.GetValue(Support.Res.Fields.Field.TypeId);
 			
 			Module dstModule = this.editor.Module.MainWindow.SearchModule(typeId);
-			CultureMap dstItem = dstModule == null ? null : dstModule.AccessEntities.Accessor.Collection[typeId];
+			CultureMap dstItem = (dstModule == null) ? null : dstModule.AccessEntities.Accessor.Collection[typeId];
 			if (dstItem == null)
 			{
 				rel = FieldRelation.None;  // ce n'est pas une vraie relation !
@@ -412,6 +414,51 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				this.fields[i].IsSourceExpanded = this.isExtended;
 				this.fields[i].Rank = i;
 			}
+		}
+
+		protected Druid CreateFieldCaption()
+		{
+			//	Crée un nouveau Caption de type Field (dont le nom commence par "Fld.").
+			//	TODO: remplacer cette cuisine par les nouveaux mécanismes...
+			string text = this.GetNewName();
+			string name = string.Concat(this.Title, ".", text);
+
+			//	Crée un Caption de type Field (dont le nom commence par "Fld.").
+			ResourceAccess access = this.editor.Module.AccessCaptions;
+
+			access.BypassFilterOpenAccess(ResourceAccess.Type.Fields, ResourceAccess.TypeType.None, null, null);
+			Druid druid = access.BypassFilterCreate(access.GetCultureBundle(null), name, text);
+			access.BypassFilterCloseAccess();
+
+			return druid;
+		}
+
+		protected string GetNewName()
+		{
+			//	Cherche un nouveau nom jamais utilisé.
+			for (int i=1; i<10000; i++)
+			{
+				string name = string.Format(Res.Strings.Viewers.Types.Structured.NewName, i.ToString(System.Globalization.CultureInfo.InvariantCulture));
+				if (!this.IsExistingName(name))
+				{
+					return name;
+				}
+			}
+			return null;
+		}
+
+		protected bool IsExistingName(string name)
+		{
+			//	Indique si un nom existe.
+			for (int i=0; i<this.fields.Count; i++)
+			{
+				if (name == this.fields[i].Text)
+				{
+					return true;
+				}
+			}
+
+			return false;
 		}
 
 
@@ -694,6 +741,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		protected CultureMap cultureMap;
 		protected Rectangle bounds;
 		protected bool isExtended;
+		protected string titleString;
 		protected TextLayout title;
 		protected List<Field> fields;
 		protected Field parentField;
