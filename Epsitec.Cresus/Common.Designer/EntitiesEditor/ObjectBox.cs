@@ -687,6 +687,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				if (this.hilitedElement != ActiveElement.None && !this.isFieldMoving)
 				{
 					//	Dessine le rectangle à droite pour suggérer les boutons Add/Remove des champs.
+#if false
 					rect = Rectangle.Union(this.GetFieldAddBounds(-1), this.GetFieldAddBounds(this.fields.Count-1));
 					rect.Inflate(-0.5, 3.5);
 					Path pathButtons = this.PathRoundRectangle(rect, rect.Width/2);
@@ -706,6 +707,31 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 					graphics.Rasterizer.AddOutline(pathButtons);
 					graphics.RenderSolid(Color.FromBrightness(0));
+#else
+					rect = Rectangle.Union(this.GetFieldAddBounds(-1), this.GetFieldAddBounds(this.fields.Count-1));
+					rect.Inflate(6.5, 10.0);
+					this.PaintShadow(graphics, rect, rect.Width/2, 8, 0.2);
+
+					rect = Rectangle.Union(this.GetFieldAddBounds(-1), this.GetFieldAddBounds(this.fields.Count-1));
+					rect.Inflate(-4.5, -0.5);
+					Path pathButtons = this.PathRoundRectangle(rect, rect.Width/2);
+
+					Color hiliteColor = Color.FromBrightness(1);
+					if (this.hilitedElement == ActiveElement.FieldAdd ||
+						this.hilitedElement == ActiveElement.FieldRemove)
+					{
+						hiliteColor = adorner.ColorCaption;
+						hiliteColor.R = 1-(1-hiliteColor.R)*0.2;
+						hiliteColor.G = 1-(1-hiliteColor.G)*0.2;
+						hiliteColor.B = 1-(1-hiliteColor.B)*0.2;
+					}
+
+					graphics.Rasterizer.AddSurface(pathButtons);
+					graphics.RenderSolid(hiliteColor);
+
+					graphics.Rasterizer.AddOutline(pathButtons);
+					graphics.RenderSolid(Color.FromBrightness(0));
+#endif
 				}
 
 				if (this.hilitedElement == ActiveElement.FieldRemove)
