@@ -229,23 +229,11 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 					if (hilite)
 					{
-						graphics.AddFilledCircle(start, ObjectConnection.circleRadius+4);
-						graphics.RenderSolid(adorner.ColorCaption);
-
-						graphics.AddCircle(start, ObjectConnection.circleRadius+4);
-						graphics.RenderSolid(Color.FromBrightness(0));
-
-						Rectangle rect = new Rectangle(start.X-ObjectConnection.circleRadius, start.Y-ObjectConnection.circleRadius, ObjectConnection.circleRadius*2, ObjectConnection.circleRadius*2);
-						rect.Inflate(4);
-						adorner.PaintGlyph(graphics, rect, WidgetPaintState.Enabled, Color.FromBrightness(1), shape, PaintTextStyle.Button);
+						this.DrawRoundButton(graphics, start, ObjectConnection.circleRadius+4, shape, true);
 					}
 					else
 					{
-						graphics.AddFilledCircle(start, ObjectConnection.circleRadius);
-						graphics.RenderSolid(Color.FromBrightness(1));
-
-						graphics.AddCircle(start, ObjectConnection.circleRadius);
-						graphics.RenderSolid(Color.FromBrightness(0));
+						this.DrawRoundButton(graphics, start, ObjectConnection.circleRadius, GlyphShape.None, false);
 					}
 				}
 			}

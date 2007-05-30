@@ -15,8 +15,10 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		{
 			None,
 			ExtendButton,
-			Header,
-			Field,
+			HeaderDragging,
+			FieldSelect,
+			FieldAdd,
+			FieldRemove,
 			ConnectionOpenLeft,
 			ConnectionOpenRight,
 			ConnectionClose,
@@ -91,6 +93,25 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			return false;
 		}
 
+
+		protected void DrawRoundButton(Graphics graphics, Point center, double radius, GlyphShape shape, bool hilited)
+		{
+			//	Dessine un bouton circulaire.
+			IAdorner adorner = Common.Widgets.Adorners.Factory.Active;
+
+			graphics.AddFilledCircle(center, radius);
+			graphics.RenderSolid(hilited ? adorner.ColorCaption : Color.FromBrightness(1));
+
+			graphics.AddCircle(center, radius);
+			graphics.RenderSolid(Color.FromBrightness(0));
+
+			if (shape != GlyphShape.None)
+			{
+				Rectangle rect = new Rectangle(center.X-radius, center.Y-radius, radius*2, radius*2);
+				Color color = hilited ? Color.FromBrightness(1) : Color.FromBrightness(0);
+				adorner.PaintGlyph(graphics, rect, WidgetPaintState.Enabled, color, shape, PaintTextStyle.Button);
+			}
+		}
 
 		protected void PaintShadow(Graphics graphics, Rectangle rect, double radius, int smooth, double alpha)
 		{

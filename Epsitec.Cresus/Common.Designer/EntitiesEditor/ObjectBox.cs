@@ -216,7 +216,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			//	Si la boîte est survolée, on peut la déplacer globalement.
 			get
 			{
-				return this.hilitedElement == ActiveElement.Header;
+				return this.hilitedElement == ActiveElement.HeaderDragging;
 			}
 		}
 
@@ -259,23 +259,67 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			if (pos.Y >= this.bounds.Top-ObjectBox.headerHeight ||
 				pos.Y <= this.bounds.Bottom+ObjectBox.footerHeight)
 			{
-				element = ActiveElement.Header;
+				element = ActiveElement.HeaderDragging;
 				return true;
+			}
+
+			//	Souris entre deux champs ?
+			for (int i=-1; i<this.fields.Count; i++)
+			{
+				Rectangle rect = this.GetFieldAddBounds(i);
+				if (rect.Contains(pos))
+				{
+					element = ActiveElement.FieldAdd;
+					fieldRank = i;
+					return true;
+				}
 			}
 
 			//	Souris dans un champ ?
 			for (int i=0; i<this.fields.Count; i++)
 			{
-				Rectangle rect = this.GetFieldBounds(i);
+				Rectangle rect = this.GetFieldRemoveBounds(i);
 				if (rect.Contains(pos))
 				{
-					element = ActiveElement.Field;
+					element = ActiveElement.FieldRemove;
+					fieldRank = i;
+					return true;
+				}
+
+				rect = this.GetFieldBounds(i);
+				if (rect.Contains(pos))
+				{
+					element = ActiveElement.FieldSelect;
 					fieldRank = i;
 					return true;
 				}
 			}
 
 			return false;
+		}
+
+		protected Rectangle GetFieldRemoveBounds(int rank)
+		{
+			//	Retourne le rectangle occupé par le bouton (-) d'un champ.
+			Rectangle rect = this.GetFieldBounds(rank);
+
+			rect.Left = rect.Right-rect.Height;
+			rect.Offset(-3, 0);
+			
+			return rect;
+		}
+
+		protected Rectangle GetFieldAddBounds(int rank)
+		{
+			//	Retourne le rectangle occupé par le bouton (+) d'un champ.
+			Rectangle rect = this.GetFieldBounds(rank);
+			
+			rect.Left = rect.Right-rect.Height;
+			rect.Bottom -= 6;
+			rect.Height = 6*2;
+			rect.Offset(-3, 0);
+
+			return rect;
 		}
 
 		protected Rectangle GetFieldBounds(int rank)
@@ -344,17 +388,9 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 			//	Dessine le bouton compact/étendu.
 			Point center = new Point(this.bounds.Right-ObjectBox.buttonRadius-5, this.bounds.Top-ObjectBox.headerHeight/2);
-
-			graphics.AddFilledCircle(center, ObjectBox.buttonRadius);
-			graphics.RenderSolid(this.hilitedElement == ActiveElement.ExtendButton ? adorner.ColorCaption : Color.FromBrightness(1));
-
-			graphics.AddCircle(center, ObjectBox.buttonRadius);
-			graphics.RenderSolid(Color.FromBrightness(0));
-
-			rect = new Rectangle(center.X-ObjectBox.buttonRadius, center.Y-ObjectBox.buttonRadius, ObjectBox.buttonRadius*2, ObjectBox.buttonRadius*2);
 			GlyphShape shape = this.isExtended ? GlyphShape.ArrowUp : GlyphShape.ArrowDown;
-			Color cb = (this.hilitedElement == ActiveElement.ExtendButton) ? Color.FromBrightness(1) : Color.FromBrightness(0);
-			adorner.PaintGlyph(graphics, rect, WidgetPaintState.Enabled, cb, shape, PaintTextStyle.Button);
+			bool hilited = (this.hilitedElement == ActiveElement.ExtendButton);
+			this.DrawRoundButton(graphics, center, ObjectBox.buttonRadius, shape, hilited);
 
 			//	Dessine les noms des champs.
 			Color hiliteColor = adorner.ColorCaption;
@@ -373,7 +409,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				{
 					rect = this.GetFieldBounds(i);
 
-					if (this.hilitedElement == ActiveElement.Field && this.hilitedFieldRank == i)
+					if (this.hilitedElement == ActiveElement.FieldSelect && this.hilitedFieldRank == i)
 					{
 						graphics.AddFilledRectangle(rect);
 						graphics.RenderSolid(hiliteColor);
@@ -388,6 +424,24 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					graphics.RenderSolid(color);
 
 					rect.Offset(0, -ObjectBox.fieldHeight);
+				}
+
+				if (this.hilitedElement == ActiveElement.FieldRemove)
+				{
+					rect = this.GetFieldRemoveBounds(this.hilitedFieldRank);
+					this.DrawRoundButton(graphics, rect.Center, rect.Width/2, GlyphShape.Minus, true);
+				}
+
+				if (this.hilitedElement == ActiveElement.FieldAdd)
+				{
+					rect = this.GetFieldBounds(this.hilitedFieldRank);
+					graphics.LineWidth = 3;
+					graphics.AddLine(rect.Left, rect.Bottom+0.5, rect.Right, rect.Bottom+0.5);
+					graphics.LineWidth = 1;
+					graphics.RenderSolid(adorner.ColorCaption);
+
+					rect = this.GetFieldAddBounds(this.hilitedFieldRank);
+					this.DrawRoundButton(graphics, rect.Center, rect.Width/2, GlyphShape.Plus, true);
 				}
 			}
 
