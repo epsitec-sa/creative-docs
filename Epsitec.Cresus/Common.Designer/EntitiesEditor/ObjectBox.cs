@@ -399,8 +399,10 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				rel = FieldRelation.None;  // ce n'est pas une vraie relation !
 			}
 
+			Caption caption = this.editor.Module.AccessEntities.DirectGetCaption(fieldCaptionId);
+
 			Field field = new Field();
-			field.Text = this.editor.Module.AccessEntities.DirectGetName(fieldCaptionId);
+			field.Text = caption == null ? "" : caption.Name;
 			field.Relation = rel;
 			field.Destination = typeId;
 			field.SrcBox = this;

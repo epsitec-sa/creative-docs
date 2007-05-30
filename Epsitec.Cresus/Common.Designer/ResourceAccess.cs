@@ -166,6 +166,14 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
+		public ResourceBundleCollection ResourceBundles
+		{
+			get
+			{
+				return this.bundles;
+			}
+		}
+
 
 		public ResourceManager ResourceManager
 		{
@@ -1787,6 +1795,12 @@ namespace Epsitec.Common.Designer
 			}
 
 			return caption.Icon;
+		}
+
+		public Caption DirectGetCaption(Druid druid)
+		{
+			Caption caption = this.resourceManager.GetCaption(druid);
+			return caption;
 		}
 
 		public string DirectDefaultParameter(Druid druid)
