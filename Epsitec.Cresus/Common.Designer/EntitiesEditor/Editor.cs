@@ -60,7 +60,11 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		public void AddBox(ObjectBox box)
 		{
-			box.Bounds = new Rectangle(20+(Editor.defaultWidth+40)*this.boxes.Count, this.areaSize.Height-20-30*this.boxes.Count-100, Editor.defaultWidth, 100);
+			//	Ajoute une nouvelle boîte dans l'éditeur. Elle est positionnée toujours au même endroit,
+			//	avec une hauteur arbitraire de 100. La hauteur sera de toute façon adaptée par UpdateBoxes().
+			//	La position initiale n'a d'importance que pour la première boîte ajoutée (la boîte racine).
+			//	Pour les autres, la position est de toute façon recalculée en fonction de la boîte parent.
+			box.Bounds = new Rectangle(100, this.areaSize.Height-20-100, Editor.defaultWidth, 100);
 			box.IsExtended = (this.boxes.Count == 0);
 
 			this.boxes.Add(box);
@@ -68,16 +72,19 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		public void RemoveBox(ObjectBox box)
 		{
+			//	Supprime une boîte de l'éditeur.
 			this.boxes.Remove(box);
 		}
 
 		public void AddConnection(ObjectConnection connection)
 		{
+			//	Ajoute une nouvelle liaison dans l'éditeur.
 			this.connections.Add(connection);
 		}
 
 		public void Clear()
 		{
+			//	Supprime toutes les boîtes et toutes les liaisons de l'éditeur.
 			this.boxes.Clear();
 			this.connections.Clear();
 		}
