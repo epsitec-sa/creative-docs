@@ -55,48 +55,54 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		public override void MouseUp(Point pos)
 		{
 			//	Le bouton de la souris est relâché.
-			if (this.hilitedElement == ActiveElement.Connection)
+			if (this.hilitedElement == ActiveElement.ConnectionOpenLeft ||
+				this.hilitedElement == ActiveElement.ConnectionOpenRight)
 			{
-				if (this.field.IsExplored)
-				{
-					this.field.IsExplored = false;
-					this.field.DstBox = null;
+				this.field.IsExplored = true;
 
-					ObjectBox dst = this.editor.SearchParent(this.field);
-					this.CloseBoxes(dst);
+				Module module = this.editor.Module.MainWindow.SearchModule(this.field.Destination);
+				CultureMap item = module.AccessEntities.Accessor.Collection[this.field.Destination];
+				if (item != null)
+				{
+					StructuredData data = item.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
+					IList<StructuredData> fields = data.GetValue(Support.Res.Fields.ResourceStructuredType.Fields) as IList<StructuredData>;
+
+					ObjectBox box = new ObjectBox(this.editor);
+					box.ParentField = this.field;
+					box.Title = item.Name;
+					box.SetContent(fields);
+
+					this.field.DstBox = box;
+					this.editor.AddBox(box);
+					this.editor.UpdateGeometry();
+
+					ObjectBox src = this.editor.SearchSource(this.field);
+					Rectangle bounds = box.Bounds;
+					if (this.hilitedElement == ActiveElement.ConnectionOpenLeft)
+					{
+						bounds.Location = new Point(src.Bounds.Left-50-box.Bounds.Width, src.Bounds.Top-box.Bounds.Height);
+					}
+					else
+					{
+						bounds.Location = new Point(src.Bounds.Right+50, src.Bounds.Top-box.Bounds.Height);
+					}
+					box.Bounds = bounds;
 
 					this.editor.CreateConnections();
-					this.editor.UpdateGeometry();
+					this.editor.UpdateAfterMoving(box);
 				}
-				else
-				{
-					this.field.IsExplored = true;
+			}
 
-					Module module = this.editor.Module.MainWindow.SearchModule(this.field.Destination);
-					CultureMap item = module.AccessEntities.Accessor.Collection[this.field.Destination];
-					if (item != null)
-					{
-						StructuredData data = item.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
-						IList<StructuredData> fields = data.GetValue(Support.Res.Fields.ResourceStructuredType.Fields) as IList<StructuredData>;
+			if (this.hilitedElement == ActiveElement.ConnectionClose)
+			{
+				this.field.IsExplored = false;
+				this.field.DstBox = null;
 
-						ObjectBox box = new ObjectBox(this.editor);
-						box.ParentField = this.field;
-						box.Title = item.Name;
-						box.SetContent(fields);
+				ObjectBox dst = this.editor.SearchParent(this.field);
+				this.CloseBoxes(dst);
 
-						this.field.DstBox = box;
-						this.editor.AddBox(box);
-						this.editor.UpdateGeometry();
-
-						ObjectBox src = this.editor.SearchSource(this.field);
-						Rectangle bounds = box.Bounds;
-						bounds.Location = new Point(src.Bounds.Right+50, src.Bounds.Top-box.Bounds.Height);
-						box.Bounds = bounds;
-
-						this.editor.CreateConnections();
-						this.editor.UpdateAfterMoving(box);
-					}
-				}
+				this.editor.CreateConnections();
+				this.editor.UpdateGeometry();
 			}
 		}
 
@@ -129,11 +135,27 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 
 			//	Souris dans la pastille ronde du départ de la connection ?
-			double d = Point.Distance(pos, this.points[0]);
-			if (d <= ObjectConnection.circleRadius+6)
+			if (this.field.IsExplored)
 			{
-				element = ActiveElement.Connection;
-				return true;
+				if (Point.Distance(pos, this.points[0]) <= ObjectConnection.circleRadius+6)
+				{
+					element = ActiveElement.ConnectionClose;
+					return true;
+				}
+			}
+			else
+			{
+				if (Point.Distance(pos, this.points[0]) <= ObjectConnection.circleRadius+6)
+				{
+					element = ActiveElement.ConnectionOpenLeft;
+					return true;
+				}
+
+				if (Point.Distance(pos, this.points[1]) <= ObjectConnection.circleRadius+6)
+				{
+					element = ActiveElement.ConnectionOpenRight;
+					return true;
+				}
 			}
 
 			return false;
@@ -145,7 +167,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			//	Dessine l'objet.
 			IAdorner adorner = Common.Widgets.Adorners.Factory.Active;
 
-			if (this.points.Count >= 2)
+			if (this.points.Count >= 2 && this.field.IsExplored)
 			{
 				Point start = this.points[0];
 				if (this.field.IsSourceExpanded)
@@ -177,29 +199,54 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 			if (this.points.Count != 0 && this.field.IsSourceExpanded)
 			{
-				//	Dessine le cercle au point de départ.
-				Point start = this.points[0];
-				if (this.hilitedElement == ActiveElement.Connection)
+				//	Dessine les cercles aux points de départ.
+				for (int i=0; i<this.points.Count; i++)
 				{
-					Color c = adorner.ColorCaption;
-					c.A = 0.2;
+					Point start = this.points[i];
+					GlyphShape shape = GlyphShape.None;
 
-					graphics.AddFilledCircle(start, ObjectConnection.circleRadius+4);
-					graphics.RenderSolid(Color.FromBrightness(1));
+					bool hilite = false;
+					if (this.hilitedElement == ActiveElement.ConnectionOpenLeft)
+					{
+						hilite = (i == 0);
+						shape = GlyphShape.ArrowLeft;
+					}
+					else if (this.hilitedElement == ActiveElement.ConnectionOpenRight)
+					{
+						hilite = (i == 1);
+						shape = GlyphShape.ArrowRight;
+					}
+					else if (this.hilitedElement == ActiveElement.ConnectionClose)
+					{
+						if (i != 0)  break;
+						hilite = true;
+						shape = GlyphShape.Close;
+					}
+					else
+					{
+						if (this.field.IsExplored && i != 0)  break;
+					}
 
-					graphics.AddFilledCircle(start, ObjectConnection.circleRadius+4);
-					graphics.RenderSolid(c);
+					if (hilite)
+					{
+						graphics.AddFilledCircle(start, ObjectConnection.circleRadius+4);
+						graphics.RenderSolid(adorner.ColorCaption);
 
-					graphics.AddCircle(start, ObjectConnection.circleRadius+4);
-					graphics.RenderSolid(Color.FromBrightness(0));
-				}
-				else
-				{
-					graphics.AddFilledCircle(start, ObjectConnection.circleRadius);
-					graphics.RenderSolid(Color.FromBrightness(1));
+						graphics.AddCircle(start, ObjectConnection.circleRadius+4);
+						graphics.RenderSolid(Color.FromBrightness(0));
 
-					graphics.AddCircle(start, ObjectConnection.circleRadius);
-					graphics.RenderSolid(Color.FromBrightness(0));
+						Rectangle rect = new Rectangle(start.X-ObjectConnection.circleRadius, start.Y-ObjectConnection.circleRadius, ObjectConnection.circleRadius*2, ObjectConnection.circleRadius*2);
+						rect.Inflate(4);
+						adorner.PaintGlyph(graphics, rect, WidgetPaintState.Enabled, Color.FromBrightness(1), shape, PaintTextStyle.Button);
+					}
+					else
+					{
+						graphics.AddFilledCircle(start, ObjectConnection.circleRadius);
+						graphics.RenderSolid(Color.FromBrightness(1));
+
+						graphics.AddCircle(start, ObjectConnection.circleRadius);
+						graphics.RenderSolid(Color.FromBrightness(0));
+					}
 				}
 			}
 		}

@@ -17,7 +17,9 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			ExtendButton,
 			Header,
 			Field,
-			Connection,
+			ConnectionOpenLeft,
+			ConnectionOpenRight,
+			ConnectionClose,
 		}
 
 
