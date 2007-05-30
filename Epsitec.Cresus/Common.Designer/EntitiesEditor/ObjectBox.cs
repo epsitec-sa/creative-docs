@@ -471,9 +471,6 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			this.DrawRoundButton(graphics, center, ObjectBox.buttonRadius, shape, hilited);
 
 			//	Dessine les noms des champs.
-			Color hiliteColor = adorner.ColorCaption;
-			hiliteColor.A = 0.1;
-
 			if (this.isExtended)
 			{
 				graphics.AddLine(this.bounds.Left+2, this.bounds.Top-ObjectBox.headerHeight-0.5, this.bounds.Right-2, this.bounds.Top-ObjectBox.headerHeight-0.5);
@@ -493,6 +490,18 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 					if (this.hilitedElement == ActiveElement.FieldSelect && this.hilitedFieldRank == i)
 					{
+						Color hiliteColor = adorner.ColorCaption;
+						hiliteColor.A = 0.1;
+
+						graphics.AddFilledRectangle(rect);
+						graphics.RenderSolid(hiliteColor);
+					}
+
+					if (this.hilitedElement == ActiveElement.FieldRemove && this.hilitedFieldRank == i)
+					{
+						Color hiliteColor = adorner.ColorCaption;
+						hiliteColor.A = 0.3;
+
 						graphics.AddFilledRectangle(rect);
 						graphics.RenderSolid(hiliteColor);
 					}
