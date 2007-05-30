@@ -216,8 +216,6 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		protected void UpdateConnection(ObjectConnection connection, ObjectBox src, int srcRank, ObjectBox dst)
 		{
 			//	Met à jour la géométrie d'une liaison.
-			connection.Bounds = this.Client.Bounds;
-
 			Rectangle srcBounds = src.Bounds;
 			Rectangle dstBounds = dst.Bounds;
 
@@ -666,13 +664,17 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		protected void MouseDraggingMove(Point pos)
 		{
 			//	Déplacement d'une boîte.
-			Rectangle bounds = this.draggingObject.Bounds;
+			ObjectBox box = this.draggingObject as ObjectBox;
+			if (box != null)
+			{
+				Rectangle bounds = box.Bounds;
 
-			bounds.Offset(pos-this.draggingPos);
-			this.draggingPos = pos;
+				bounds.Offset(pos-this.draggingPos);
+				this.draggingPos = pos;
 
-			this.draggingObject.Bounds = bounds;
-			this.UpdateConnections();
+				box.Bounds = bounds;
+				this.UpdateConnections();
+			}
 		}
 
 		protected void MouseUp(Point pos)

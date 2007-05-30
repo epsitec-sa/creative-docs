@@ -84,6 +84,20 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 		}
 
+		public Rectangle Bounds
+		{
+			//	Boîte de l'objet.
+			//	Attention: le dessin peut déborder, par exemple pour l'ombre.
+			get
+			{
+				return this.bounds;
+			}
+			set
+			{
+				this.bounds = value;
+			}
+		}
+
 		public List<Field> Fields
 		{
 			get
@@ -535,6 +549,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		protected static readonly double buttonRadius = 10;
 		protected static readonly double fieldHeight = 20;
 
+		protected Rectangle bounds;
 		protected bool isExtended;
 		protected TextLayout title;
 		protected List<Field> fields;

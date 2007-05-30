@@ -31,20 +31,6 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		}
 
 
-		public Rectangle Bounds
-		{
-			//	Boîte de l'objet.
-			//	Attention: le dessin peut déborder, par exemple pour l'ombre.
-			get
-			{
-				return this.bounds;
-			}
-			set
-			{
-				this.bounds = value;
-			}
-		}
-
 		public virtual void Draw(Graphics graphics)
 		{
 			//	Dessine l'objet.
@@ -185,7 +171,6 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 
 		protected Editor editor;
-		protected Rectangle bounds;
 		protected ActiveElement hilitedElement;
 		protected int hilitedFieldRank;
 	}
