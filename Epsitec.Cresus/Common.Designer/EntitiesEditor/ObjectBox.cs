@@ -33,6 +33,14 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		}
 
 
+		public CultureMap CultureMap
+		{
+			get
+			{
+				return this.cultureMap;
+			}
+		}
+
 		public string Title
 		{
 			//	Titre au sommet de la boîte.
@@ -51,13 +59,19 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 		}
 
-		public void SetContent(IList<StructuredData> fields)
+		public void SetContent(CultureMap cultureMap)
 		{
+			//	Initialise le contenu de la boîte.
+			this.cultureMap = cultureMap;
+
+			StructuredData data = this.cultureMap.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
+			IList<StructuredData> fields = data.GetValue(Support.Res.Fields.ResourceStructuredType.Fields) as IList<StructuredData>;
+
+			this.fields.Clear();
 			for (int i=0; i<fields.Count; i++)
 			{
-				StructuredData data = fields[i];
+				data = fields[i];
 
-				//?Caption s1 = data.GetValue(Support.Res.Fields.Field.Caption) as Caption; // pas implémenté, utiliser CaptionId à la place
 				Druid fieldCaptionId = (Druid) data.GetValue(Support.Res.Fields.Field.CaptionId);
 				FieldMembership membership = (FieldMembership) data.GetValue(Support.Res.Fields.Field.Membership);
 				FieldRelation rel = (FieldRelation) data.GetValue(Support.Res.Fields.Field.Relation);
@@ -71,10 +85,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					rel = FieldRelation.None;  // ce n'est pas une vraie relation !
 				}
 
-				string name = this.editor.Module.AccessEntities.DirectGetName(fieldCaptionId);
-
 				Field field = new Field();
-				field.Text = name;
+				field.Text = this.editor.Module.AccessEntities.DirectGetName(fieldCaptionId);
 				field.Relation = rel;
 				field.Destination = typeId;
 				field.Rank = i;
@@ -82,6 +94,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 				this.fields.Add(field);
 			}
+
+			this.UpdateFields();
 		}
 
 		public Rectangle Bounds
@@ -133,11 +147,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				{
 					this.isExtended = value;
 
-					foreach (Field field in this.fields)
-					{
-						field.IsSourceExpanded = this.isExtended;
-					}
-
+					this.UpdateFields();
 					this.editor.Invalidate();
 				}
 			}
@@ -232,6 +242,11 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			{
 				this.IsExtended = !this.IsExtended;
 				this.editor.UpdateAfterGeometryChanged(this);
+			}
+
+			if (this.hilitedElement == ActiveElement.FieldRemove)
+			{
+				this.RemoveField(this.hilitedFieldRank);
 			}
 		}
 
@@ -334,6 +349,34 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			return rect;
 		}
 
+		protected void RemoveField(int rank)
+		{
+			//	Supprime un champ.
+			this.CloseBoxes(this.fields[rank].DstBox);
+
+			StructuredData data = this.cultureMap.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
+			IList<StructuredData> fields = data.GetValue(Support.Res.Fields.ResourceStructuredType.Fields) as IList<StructuredData>;
+			fields.RemoveAt(rank);
+
+			this.fields.RemoveAt(rank);
+
+			for (int i=0; i<fields.Count; i++)
+			{
+				this.fields[i].Rank = i;
+			}
+
+			this.editor.UpdateAfterAddOrRemoveConnection();
+		}
+
+		protected void UpdateFields()
+		{
+			//	Met à jour les liaisons des champs.
+			foreach (Field field in this.fields)
+			{
+				field.IsSourceExpanded = this.isExtended;
+			}
+		}
+
 
 		public override void Draw(Graphics graphics)
 		{
@@ -398,6 +441,10 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 			if (this.isExtended)
 			{
+				graphics.AddLine(this.bounds.Left+2, this.bounds.Top-ObjectBox.headerHeight-0.5, this.bounds.Right-2, this.bounds.Top-ObjectBox.headerHeight-0.5);
+				graphics.AddLine(this.bounds.Left+2, this.bounds.Bottom+ObjectBox.footerHeight+0.5, this.bounds.Right-2, this.bounds.Bottom+ObjectBox.footerHeight+0.5);
+				graphics.RenderSolid(this.IsReadyForDragging ? adorner.ColorCaption : Color.FromBrightness(0));
+
 				Color color = Color.FromBrightness(0.9);
 				if (this.IsReadyForDragging)
 				{
@@ -447,11 +494,6 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 			//	Dessine le cadre en noir.
 			graphics.Rasterizer.AddOutline(path, 2);
-			if (this.isExtended)
-			{
-				graphics.AddLine(this.bounds.Left+2, this.bounds.Top-ObjectBox.headerHeight-0.5, this.bounds.Right-2, this.bounds.Top-ObjectBox.headerHeight-0.5);
-				graphics.AddLine(this.bounds.Left+2, this.bounds.Bottom+ObjectBox.footerHeight+0.5, this.bounds.Right-2, this.bounds.Bottom+ObjectBox.footerHeight+0.5);
-			}
 			graphics.RenderSolid(this.IsReadyForDragging ? adorner.ColorCaption : Color.FromBrightness(0));
 		}
 
@@ -603,6 +645,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		protected static readonly double buttonRadius = 10;
 		protected static readonly double fieldHeight = 20;
 
+		protected CultureMap cultureMap;
 		protected Rectangle bounds;
 		protected bool isExtended;
 		protected TextLayout title;

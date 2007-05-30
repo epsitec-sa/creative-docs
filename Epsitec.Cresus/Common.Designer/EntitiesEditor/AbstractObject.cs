@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 using Epsitec.Common.Widgets;
-using Epsitec.Common.Drawing;
 using Epsitec.Common.Support;
-using System.Runtime.Serialization;
+using Epsitec.Common.Types;
+using Epsitec.Common.Drawing;
 
 namespace Epsitec.Common.Designer.EntitiesEditor
 {
@@ -93,6 +93,26 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			return false;
 		}
 
+
+		protected void CloseBoxes(ObjectBox box)
+		{
+			//	Ferme récursivement toutes les boîtes liées.
+			if (box != null)
+			{
+				foreach (ObjectBox.Field field in box.Fields)
+				{
+					if (field.Relation != FieldRelation.None)
+					{
+						if (field.DstBox != null)
+						{
+							this.CloseBoxes(field.DstBox);
+						}
+					}
+				}
+
+				this.editor.RemoveBox(box);
+			}
+		}
 
 		protected void DrawRoundButton(Graphics graphics, Point center, double radius, GlyphShape shape, bool hilited)
 		{

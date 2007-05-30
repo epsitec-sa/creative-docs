@@ -170,6 +170,14 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			this.UpdateConnections();
 		}
 
+		public void UpdateAfterAddOrRemoveConnection()
+		{
+			//	Appelé lorsqu'une liaison a été ajoutée ou supprimée.
+			this.UpdateBoxes();
+			this.CreateConnections();
+			this.UpdateConnections();
+		}
+
 		protected void UpdateBoxes()
 		{
 			//	Met à jour la géométrie de toutes les boîtes.

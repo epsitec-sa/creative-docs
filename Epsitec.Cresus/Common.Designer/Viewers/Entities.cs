@@ -216,12 +216,9 @@ namespace Epsitec.Common.Designer.Viewers
 			CultureMap item = this.access.CollectionView.CurrentItem as CultureMap;
 			if (item != null)
 			{
-				StructuredData data = item.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
-				IList<StructuredData> fields = data.GetValue(Support.Res.Fields.ResourceStructuredType.Fields) as IList<StructuredData>;
-
 				EntitiesEditor.ObjectBox box = new EntitiesEditor.ObjectBox(this.editor);
 				box.Title = item.Name;
-				box.SetContent(fields);
+				box.SetContent(item);
 				this.editor.AddBox(box);
 			}
 

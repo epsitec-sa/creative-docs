@@ -64,13 +64,10 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				{
 					this.field.IsExplored = true;
 
-					StructuredData data = item.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
-					IList<StructuredData> fields = data.GetValue(Support.Res.Fields.ResourceStructuredType.Fields) as IList<StructuredData>;
-
 					ObjectBox box = new ObjectBox(this.editor);
 					box.ParentField = this.field;
 					box.Title = item.Name;
-					box.SetContent(fields);
+					box.SetContent(item);
 
 					this.field.DstBox = box;
 					this.editor.AddBox(box);
@@ -104,23 +101,6 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				this.editor.CreateConnections();
 				this.editor.UpdateGeometry();
 			}
-		}
-
-		protected void CloseBoxes(ObjectBox box)
-		{
-			//	Ferme récursivement toutes les boîtes liées.
-			foreach (ObjectBox.Field field in box.Fields)
-			{
-				if (field.Relation != FieldRelation.None)
-				{
-					if (field.DstBox != null)
-					{
-						this.CloseBoxes(field.DstBox);
-					}
-				}
-			}
-
-			this.editor.RemoveBox(box);
 		}
 
 		protected override bool MouseDetect(Point pos, out ActiveElement element, out int fieldRank)
@@ -229,7 +209,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 					if (hilite)
 					{
-						this.DrawRoundButton(graphics, start, ObjectConnection.circleRadius+4, shape, true);
+						this.DrawRoundButton(graphics, start, ObjectConnection.circleRadius+6, shape, true);
 					}
 					else
 					{
