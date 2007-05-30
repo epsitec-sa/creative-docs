@@ -358,18 +358,12 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		protected void AddField(int rank)
 		{
 			//	Ajoute un nouveau champ.
-			this.CloseBoxes(this.fields[rank].DstBox);
-
-			StructuredData newField = new StructuredData();
-			// TODO: ce n'est certainement pas ainsi qu'il faut créer un nouveau champ !
-			// PA: en effet... il fallait faire comme pour Commands2; cf. ci-après...
-
 			StructuredData data = this.cultureMap.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
 			IList<StructuredData> dataFields = data.GetValue(Support.Res.Fields.ResourceStructuredType.Fields) as IList<StructuredData>;
 
 			IResourceAccessor accessor = this.editor.Module.AccessEntities.Accessor;
-			IDataBroker broker = accessor.GetDataBroker (data, Support.Res.Fields.ResourceStructuredType.Fields.ToString ());
-			newField = broker.CreateData (this.cultureMap);
+			IDataBroker broker = accessor.GetDataBroker(data, Support.Res.Fields.ResourceStructuredType.Fields.ToString());
+			StructuredData newField = broker.CreateData(this.cultureMap);
 
 			dataFields.Insert(rank+1, newField);
 
