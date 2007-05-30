@@ -65,14 +65,12 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			this.cultureMap = cultureMap;
 
 			StructuredData data = this.cultureMap.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
-			IList<StructuredData> fields = data.GetValue(Support.Res.Fields.ResourceStructuredType.Fields) as IList<StructuredData>;
+			IList<StructuredData> dataFields = data.GetValue(Support.Res.Fields.ResourceStructuredType.Fields) as IList<StructuredData>;
 
 			this.fields.Clear();
-			for (int i=0; i<fields.Count; i++)
+			for (int i=0; i<dataFields.Count; i++)
 			{
-				Field field = this.CreateField(fields[i]);
-				field.Rank = i;
-
+				Field field = this.CreateField(dataFields[i]);
 				this.fields.Add(field);
 			}
 
@@ -341,16 +339,12 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			this.CloseBoxes(this.fields[rank].DstBox);
 
 			StructuredData data = this.cultureMap.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
-			IList<StructuredData> fields = data.GetValue(Support.Res.Fields.ResourceStructuredType.Fields) as IList<StructuredData>;
-			fields.RemoveAt(rank);
+			IList<StructuredData> dataFields = data.GetValue(Support.Res.Fields.ResourceStructuredType.Fields) as IList<StructuredData>;
+			dataFields.RemoveAt(rank);
 
 			this.fields.RemoveAt(rank);
 
-			for (int i=0; i<fields.Count; i++)
-			{
-				this.fields[i].Rank = i;
-			}
-
+			this.UpdateFields();
 			this.editor.UpdateAfterAddOrRemoveConnection();
 		}
 
@@ -363,17 +357,13 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			// TODO: ce n'est certainement pas ainsi qu'il faut créer un nouveau champ !
 
 			StructuredData data = this.cultureMap.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
-			IList<StructuredData> fields = data.GetValue(Support.Res.Fields.ResourceStructuredType.Fields) as IList<StructuredData>;
-			fields.Insert(rank+1, newField);
+			IList<StructuredData> dataFields = data.GetValue(Support.Res.Fields.ResourceStructuredType.Fields) as IList<StructuredData>;
+			dataFields.Insert(rank+1, newField);
 
 			Field field = this.CreateField(newField);
 			this.fields.Insert(rank+1, field);
 
-			for (int i=0; i<fields.Count; i++)
-			{
-				this.fields[i].Rank = i;
-			}
-
+			this.UpdateFields();
 			this.editor.UpdateAfterAddOrRemoveConnection();
 		}
 
@@ -407,9 +397,10 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		protected void UpdateFields()
 		{
 			//	Met à jour les liaisons des champs.
-			foreach (Field field in this.fields)
+			for (int i=0; i<this.fields.Count; i++)
 			{
-				field.IsSourceExpanded = this.isExtended;
+				this.fields[i].IsSourceExpanded = this.isExtended;
+				this.fields[i].Rank = i;
 			}
 		}
 
