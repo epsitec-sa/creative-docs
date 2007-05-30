@@ -336,6 +336,12 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		protected void RemoveField(int rank)
 		{
 			//	Supprime un champ.
+			string question = string.Format("Voulez-vous supprimer le champ <b>{0}</b> ?", this.fields[rank].Text);
+			if (this.editor.Module.MainWindow.DialogQuestion(question) != Epsitec.Common.Dialogs.DialogResult.Yes)
+			{
+				return;
+			}
+
 			this.CloseBoxes(this.fields[rank].DstBox);
 
 			StructuredData data = this.cultureMap.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
@@ -346,6 +352,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 			this.UpdateFields();
 			this.editor.UpdateAfterAddOrRemoveConnection();
+			this.hilitedElement = ActiveElement.None;
 		}
 
 		protected void AddField(int rank)
@@ -365,6 +372,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 			this.UpdateFields();
 			this.editor.UpdateAfterAddOrRemoveConnection();
+			this.hilitedElement = ActiveElement.None;
 		}
 
 		protected Field CreateField(StructuredData data)
