@@ -57,7 +57,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 		}
 
-		public virtual bool MouseHilite(Point pos)
+		public virtual bool MouseMove(Point pos)
 		{
 			//	Met en évidence la boîte selon la position de la souris.
 			//	Si la souris est dans cette boîte, retourne true.

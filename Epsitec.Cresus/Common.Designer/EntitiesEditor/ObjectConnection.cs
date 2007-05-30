@@ -38,15 +38,6 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		}
 
 
-		public override bool IsReadyForDragging
-		{
-			//	Est-ce que l'objet est dragable ?
-			get
-			{
-				return false;
-			}
-		}
-
 		public override void MouseDown(Point pos)
 		{
 			//	Le bouton de la souris est pressé.

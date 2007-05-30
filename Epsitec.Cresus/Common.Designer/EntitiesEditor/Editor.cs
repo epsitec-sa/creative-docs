@@ -192,7 +192,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 		}
 
-		protected void UpdateConnections()
+		public void UpdateConnections()
 		{
 			//	Met à jour la géométrie de toutes les liaisons.
 			foreach (ObjectBox box in this.boxes)
@@ -585,14 +585,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			switch (message.MessageType)
 			{
 				case MessageType.MouseMove:
-					if (this.isDragging)
-					{
-						this.MouseDraggingMove(pos);
-					}
-					else
-					{
-						this.MouseHilite(pos);
-					}
+					this.MouseMove(pos);
 					message.Consumer = this;
 					break;
 
@@ -631,7 +624,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			return pos;
 		}
 
-		protected void MouseHilite(Point pos)
+		protected void MouseMove(Point pos)
 		{
 			//	Met en évidence tous les widgets selon la position visée par la souris.
 			//	L'objet à l'avant-plan a la priorité.
@@ -639,7 +632,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			{
 				AbstractObject obj = this.connections[i];
 
-				if (obj.MouseHilite(pos))
+				if (obj.MouseMove(pos))
 				{
 					pos = Point.Zero;  // si on était dans cet objet -> plus aucun hilite pour les objets placés dessous
 				}
@@ -649,7 +642,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			{
 				AbstractObject obj = this.boxes[i];
 
-				if (obj.MouseHilite(pos))
+				if (obj.MouseMove(pos))
 				{
 					pos = Point.Zero;  // si on était dans cet objet -> plus aucun hilite pour les objets placés dessous
 				}
@@ -663,56 +656,17 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 			if (obj != null)
 			{
-				if (obj.IsReadyForDragging)
-				{
-					this.draggingObject = obj;
-					this.draggingPos = pos;
-					this.isDragging = true;
-				}
-				else
-				{
-					obj.MouseDown(pos);
-				}
-			}
-		}
-
-		protected void MouseDraggingMove(Point pos)
-		{
-			//	Déplacement d'une boîte.
-			ObjectBox box = this.draggingObject as ObjectBox;
-			if (box != null)
-			{
-				Rectangle bounds = box.Bounds;
-
-				bounds.Offset(pos-this.draggingPos);
-				this.draggingPos = pos;
-
-				box.Bounds = bounds;
-				this.UpdateConnections();
+				obj.MouseDown(pos);
 			}
 		}
 
 		protected void MouseUp(Point pos)
 		{
 			//	Fin du déplacement d'une boîte.
-			if (this.isDragging)
+			AbstractObject obj = this.DetectObject(pos);
+			if (obj != null)
 			{
-				ObjectBox box = this.draggingObject as ObjectBox;
-				if (box != null)
-				{
-					this.UpdateAfterMoving(box);
-				}
-
-				this.draggingObject = null;
-				this.isDragging = false;
-			}
-			else
-			{
-				AbstractObject obj = this.DetectObject(pos);
-				if (obj != null)
-				{
-					obj.MouseUp(pos);
-				}
+				obj.MouseUp(pos);
 			}
 		}
 
@@ -811,8 +765,5 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		protected Size areaSize;
 		protected double zoom;
 		protected Point areaOffset;
-		protected bool isDragging;
-		protected Point draggingPos;
-		protected AbstractObject draggingObject;
 	}
 }

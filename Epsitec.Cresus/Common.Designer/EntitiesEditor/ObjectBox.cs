@@ -198,39 +198,63 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		}
 
 
-		public override bool IsReadyForDragging
+		public override bool MouseMove(Point pos)
 		{
-			//	Est-ce que l'objet est dragable ?
-			//	Est-ce que la boîte est survolée par la souris ?
-			//	Si la boîte est survolée, on peut la déplacer globalement.
-			get
+			//	Met en évidence la boîte selon la position de la souris.
+			//	Si la souris est dans cette boîte, retourne true.
+			if (this.isDragging)
 			{
-				return this.hilitedElement == ActiveElement.HeaderDragging;
+				Rectangle bounds = this.Bounds;
+
+				bounds.Offset(pos-this.draggingPos);
+				this.draggingPos = pos;
+
+				this.Bounds = bounds;
+				this.editor.UpdateConnections();
+
+				return true;
+			}
+			else
+			{
+				return base.MouseMove(pos);
 			}
 		}
 
 		public override void MouseDown(Point pos)
 		{
 			//	Le bouton de la souris est pressé.
+			if (this.hilitedElement == ActiveElement.HeaderDragging)
+			{
+				this.isDragging = true;
+				this.draggingPos = pos;
+			}
 		}
 
 		public override void MouseUp(Point pos)
 		{
 			//	Le bouton de la souris est relâché.
-			if (this.hilitedElement == ActiveElement.ExtendButton)
+			if (this.isDragging)
 			{
-				this.IsExtended = !this.IsExtended;
-				this.editor.UpdateAfterGeometryChanged(this);
+				this.editor.UpdateAfterMoving(this);
+				this.isDragging = false;
 			}
-
-			if (this.hilitedElement == ActiveElement.FieldRemove)
+			else
 			{
-				this.RemoveField(this.hilitedFieldRank);
-			}
+				if (this.hilitedElement == ActiveElement.ExtendButton)
+				{
+					this.IsExtended = !this.IsExtended;
+					this.editor.UpdateAfterGeometryChanged(this);
+				}
 
-			if (this.hilitedElement == ActiveElement.FieldAdd)
-			{
-				this.AddField(this.hilitedFieldRank);
+				if (this.hilitedElement == ActiveElement.FieldRemove)
+				{
+					this.RemoveField(this.hilitedFieldRank);
+				}
+
+				if (this.hilitedElement == ActiveElement.FieldAdd)
+				{
+					this.AddField(this.hilitedFieldRank);
+				}
 			}
 		}
 
@@ -468,6 +492,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			IAdorner adorner = Common.Widgets.Adorners.Factory.Active;
 			Rectangle rect;
 
+			bool dragging = (this.hilitedElement == ActiveElement.HeaderDragging);
+
 			//	Dessine l'ombre.
 			rect = this.bounds;
 			rect.Offset(ObjectBox.shadowOffset, -(ObjectBox.shadowOffset));
@@ -486,8 +512,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			graphics.Rasterizer.AddSurface(path);
 			Color c1 = adorner.ColorCaption;
 			Color c2 = adorner.ColorCaption;
-			c1.A = this.IsReadyForDragging ? 0.6 : 0.4;
-			c2.A = this.IsReadyForDragging ? 0.2 : 0.1;
+			c1.A = dragging ? 0.6 : 0.4;
+			c2.A = dragging ? 0.2 : 0.1;
 			this.RenderHorizontalGradient(graphics, this.bounds, c1, c2);
 
 			//	Dessine en blanc la zone pour les champs.
@@ -499,7 +525,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				graphics.AddFilledRectangle(inside);
 				Color ci1 = adorner.ColorCaption;
 				Color ci2 = adorner.ColorCaption;
-				ci1.A = this.IsReadyForDragging ? 0.2 : 0.1;
+				ci1.A = dragging ? 0.2 : 0.1;
 				ci2.A = 0.0;
 				this.RenderHorizontalGradient(graphics, inside, ci1, ci2);
 
@@ -524,10 +550,10 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			{
 				graphics.AddLine(this.bounds.Left+2, this.bounds.Top-ObjectBox.headerHeight-0.5, this.bounds.Right-2, this.bounds.Top-ObjectBox.headerHeight-0.5);
 				graphics.AddLine(this.bounds.Left+2, this.bounds.Bottom+ObjectBox.footerHeight+0.5, this.bounds.Right-2, this.bounds.Bottom+ObjectBox.footerHeight+0.5);
-				graphics.RenderSolid(this.IsReadyForDragging ? adorner.ColorCaption : Color.FromBrightness(0));
+				graphics.RenderSolid(dragging ? adorner.ColorCaption : Color.FromBrightness(0));
 
 				Color color = Color.FromBrightness(0.9);
-				if (this.IsReadyForDragging)
+				if (dragging)
 				{
 					color = adorner.ColorCaption;
 					color.A = 0.3;
@@ -587,7 +613,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 			//	Dessine le cadre en noir.
 			graphics.Rasterizer.AddOutline(path, 2);
-			graphics.RenderSolid(this.IsReadyForDragging ? adorner.ColorCaption : Color.FromBrightness(0));
+			graphics.RenderSolid(dragging ? adorner.ColorCaption : Color.FromBrightness(0));
 		}
 
 
@@ -745,5 +771,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		protected TextLayout title;
 		protected List<Field> fields;
 		protected Field parentField;
+		protected bool isDragging;
+		protected Point draggingPos;
 	}
 }
