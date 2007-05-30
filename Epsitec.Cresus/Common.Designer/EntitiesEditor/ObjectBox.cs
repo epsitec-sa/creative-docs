@@ -214,6 +214,10 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 				return true;
 			}
+			else if (this.isFieldMoving)
+			{
+				return base.MouseMove(pos);
+			}
 			else
 			{
 				return base.MouseMove(pos);
@@ -228,6 +232,12 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				this.isDragging = true;
 				this.draggingPos = pos;
 			}
+
+			if (this.hilitedElement == ActiveElement.FieldSelect)
+			{
+				this.isFieldMoving = true;
+				this.fieldInitialRank = this.hilitedFieldRank;
+			}
 		}
 
 		public override void MouseUp(Point pos)
@@ -237,6 +247,14 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			{
 				this.editor.UpdateAfterMoving(this);
 				this.isDragging = false;
+			}
+			else if (this.isFieldMoving)
+			{
+				if (this.hilitedElement == ActiveElement.FieldMoving)
+				{
+					this.MoveField(this.fieldInitialRank, this.hilitedFieldRank);
+				}
+				this.isFieldMoving = false;
 			}
 			else
 			{
@@ -269,52 +287,69 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				return false;
 			}
 
-			//	Souris dans le bouton compact/étendu ?
-			Point center = new Point(this.bounds.Right-ObjectBox.buttonRadius-5, this.bounds.Top-ObjectBox.headerHeight/2);
-			double d = Point.Distance(center, pos);
-			if (d <= ObjectBox.buttonRadius+3)
+			if (this.isFieldMoving)
 			{
-				element = ActiveElement.ExtendButton;
-				return true;
+				//	Souris entre deux champs ?
+				for (int i=-1; i<this.fields.Count; i++)
+				{
+					Rectangle rect = this.GetFieldMovingBounds(i);
+					if (rect.Contains(pos))
+					{
+						element = ActiveElement.FieldMoving;
+						fieldRank = i;
+						return true;
+					}
+				}
 			}
+			else
+			{
+				//	Souris dans le bouton compact/étendu ?
+				Point center = new Point(this.bounds.Right-ObjectBox.buttonRadius-5, this.bounds.Top-ObjectBox.headerHeight/2);
+				double d = Point.Distance(center, pos);
+				if (d <= ObjectBox.buttonRadius+3)
+				{
+					element = ActiveElement.ExtendButton;
+					return true;
+				}
 
-			//	Souris dans l'en-tête ?
-			if (pos.Y >= this.bounds.Top-ObjectBox.headerHeight ||
+				//	Souris dans l'en-tête ?
+				if (pos.Y >= this.bounds.Top-ObjectBox.headerHeight ||
 				pos.Y <= this.bounds.Bottom+ObjectBox.footerHeight)
-			{
-				element = ActiveElement.HeaderDragging;
-				return true;
-			}
-
-			//	Souris entre deux champs ?
-			for (int i=-1; i<this.fields.Count; i++)
-			{
-				Rectangle rect = this.GetFieldAddBounds(i);
-				if (rect.Contains(pos))
 				{
-					element = ActiveElement.FieldAdd;
-					fieldRank = i;
-					return true;
-				}
-			}
-
-			//	Souris dans un champ ?
-			for (int i=0; i<this.fields.Count; i++)
-			{
-				Rectangle rect = this.GetFieldRemoveBounds(i);
-				if (rect.Contains(pos))
-				{
-					element = ActiveElement.FieldRemove;
-					fieldRank = i;
+					element = ActiveElement.HeaderDragging;
 					return true;
 				}
 
-				rect = this.GetFieldBounds(i);
-				if (rect.Contains(pos))
+				//	Souris entre deux champs ?
+				for (int i=-1; i<this.fields.Count; i++)
 				{
-					element = ActiveElement.FieldSelect;
-					fieldRank = i;
-					return true;
+					Rectangle rect = this.GetFieldAddBounds(i);
+					if (rect.Contains(pos))
+					{
+						element = ActiveElement.FieldAdd;
+						fieldRank = i;
+						return true;
+					}
+				}
+
+				//	Souris dans un champ ?
+				for (int i=0; i<this.fields.Count; i++)
+				{
+					Rectangle rect = this.GetFieldRemoveBounds(i);
+					if (rect.Contains(pos))
+					{
+						element = ActiveElement.FieldRemove;
+						fieldRank = i;
+						return true;
+					}
+
+					rect = this.GetFieldBounds(i);
+					if (rect.Contains(pos))
+					{
+						element = ActiveElement.FieldSelect;
+						fieldRank = i;
+						return true;
+					}
 				}
 			}
 
@@ -346,6 +381,17 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			return rect;
 		}
 
+		protected Rectangle GetFieldMovingBounds(int rank)
+		{
+			//	Retourne le rectangle occupé par la destination d'un déplacement de champ.
+			Rectangle rect = this.GetFieldBounds(rank);
+			
+			rect.Bottom -= 6;
+			rect.Height = 6*2;
+
+			return rect;
+		}
+
 		protected Rectangle GetFieldBounds(int rank)
 		{
 			//	Retourne le rectangle occupé par un champ.
@@ -358,6 +404,34 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			return rect;
 		}
 
+
+		protected void MoveField(int srcRank, int dstRank)
+		{
+			//	Déplace un champ.
+			if (dstRank != srcRank && dstRank != srcRank-1)
+			{
+				StructuredData data = this.cultureMap.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
+				IList<StructuredData> dataFields = data.GetValue(Support.Res.Fields.ResourceStructuredType.Fields) as IList<StructuredData>;
+
+				if (dstRank < srcRank)
+				{
+					dstRank++;
+				}
+
+				StructuredData movingfield = dataFields[srcRank];
+				dataFields.RemoveAt(srcRank);
+				dataFields.Insert(dstRank, movingfield);
+
+				Field movingFld = this.fields[srcRank];
+				this.fields.RemoveAt(srcRank);
+				this.fields.Insert(dstRank, movingFld);
+
+				this.UpdateFields();
+				this.editor.UpdateAfterAddOrRemoveConnection();
+			}
+
+			this.hilitedElement = ActiveElement.None;
+		}
 
 		protected void RemoveField(int rank)
 		{
@@ -376,6 +450,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				this.UpdateFields();
 				this.editor.UpdateAfterAddOrRemoveConnection();
 			}
+
 			this.hilitedElement = ActiveElement.None;
 		}
 
@@ -582,6 +657,15 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 						graphics.RenderSolid(hiliteColor);
 					}
 
+					if (this.isFieldMoving && this.fieldInitialRank == i)
+					{
+						Color hiliteColor = adorner.ColorCaption;
+						hiliteColor.A = 0.3;
+
+						graphics.AddFilledRectangle(rect);
+						graphics.RenderSolid(hiliteColor);
+					}
+
 					rect.Deflate(10, 0);
 					this.fields[i].TextLayout.LayoutSize = rect.Size;
 					this.fields[i].TextLayout.Paint(rect.BottomLeft, graphics);
@@ -593,8 +677,16 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					rect.Offset(0, -ObjectBox.fieldHeight);
 				}
 
-				if (this.hilitedElement != ActiveElement.None)
+				if (this.hilitedElement == ActiveElement.FieldMoving)
 				{
+					Point p1 = this.GetFieldBounds(this.fieldInitialRank).Center;
+					Point p2 = this.GetFieldMovingBounds(this.hilitedFieldRank).Center;
+					this.PaintMovingArrow(graphics, p1, p2);
+				}
+
+				if (this.hilitedElement != ActiveElement.None && !this.isFieldMoving)
+				{
+					//	Dessine le rectangle à droite pour suggérer les boutons Add/Remove des champs.
 					rect = Rectangle.Union(this.GetFieldAddBounds(-1), this.GetFieldAddBounds(this.fields.Count-1));
 					rect.Inflate(-0.5, 3.5);
 					Path pathButtons = this.PathRoundRectangle(rect, rect.Width/2);
@@ -633,11 +725,47 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					rect = this.GetFieldAddBounds(this.hilitedFieldRank);
 					this.DrawRoundButton(graphics, rect.Center, rect.Width/2, GlyphShape.Plus, true);
 				}
+
+				if (this.hilitedElement == ActiveElement.FieldMoving)
+				{
+					rect = this.GetFieldBounds(this.hilitedFieldRank);
+					graphics.LineWidth = 3;
+					graphics.AddLine(rect.Left, rect.Bottom+0.5, rect.Right, rect.Bottom+0.5);
+					graphics.LineWidth = 1;
+					graphics.RenderSolid(adorner.ColorCaption);
+				}
 			}
 
 			//	Dessine le cadre en noir.
 			graphics.Rasterizer.AddOutline(path, 2);
 			graphics.RenderSolid(dragging ? adorner.ColorCaption : Color.FromBrightness(0));
+		}
+
+		protected void PaintMovingArrow(Graphics graphics, Point p1, Point p2)
+		{
+			//	Dessine une flèche pendant le déplacement d'un champ.
+			if (System.Math.Abs(p1.Y-p2.Y) < ObjectBox.fieldHeight)
+			{
+				return;
+			}
+
+			IAdorner adorner = Common.Widgets.Adorners.Factory.Active;
+
+			p2 = Point.Move(p2, p1, 2);
+			double d = (p1.Y > p2.Y) ? -10 : 10;
+
+			Path path = new Path();
+			path.MoveTo(p2);
+			path.LineTo(p2.X-d*2, p2.Y-d*2);
+			path.LineTo(p2.X-d, p2.Y-d*2);
+			path.LineTo(p1.X-d, p1.Y);
+			path.LineTo(p1.X+d, p1.Y);
+			path.LineTo(p2.X+d, p2.Y-d*2);
+			path.LineTo(p2.X+d*2, p2.Y-d*2);
+			path.Close();
+
+			graphics.Rasterizer.AddSurface(path);
+			graphics.RenderSolid(adorner.ColorCaption);
 		}
 
 
@@ -797,5 +925,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		protected Field parentField;
 		protected bool isDragging;
 		protected Point draggingPos;
+		protected bool isFieldMoving;
+		protected int fieldInitialRank;
 	}
 }

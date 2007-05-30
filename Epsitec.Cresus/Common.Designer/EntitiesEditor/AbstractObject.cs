@@ -20,6 +20,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			FieldSelect,
 			FieldAdd,
 			FieldRemove,
+			FieldMoving,
 			ConnectionOpenLeft,
 			ConnectionOpenRight,
 			ConnectionClose,
