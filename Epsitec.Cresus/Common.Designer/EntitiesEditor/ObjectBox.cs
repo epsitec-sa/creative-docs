@@ -70,27 +70,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			this.fields.Clear();
 			for (int i=0; i<fields.Count; i++)
 			{
-				data = fields[i];
-
-				Druid fieldCaptionId = (Druid) data.GetValue(Support.Res.Fields.Field.CaptionId);
-				FieldMembership membership = (FieldMembership) data.GetValue(Support.Res.Fields.Field.Membership);
-				FieldRelation rel = (FieldRelation) data.GetValue(Support.Res.Fields.Field.Relation);
-				Druid sourceId = (Druid) data.GetValue(Support.Res.Fields.Field.SourceFieldId);
-				Druid typeId = (Druid) data.GetValue(Support.Res.Fields.Field.TypeId);
-				
-				Module dstModule = this.editor.Module.MainWindow.SearchModule(typeId);
-				CultureMap dstItem = dstModule.AccessEntities.Accessor.Collection[typeId];
-				if (dstItem == null)
-				{
-					rel = FieldRelation.None;  // ce n'est pas une vraie relation !
-				}
-
-				Field field = new Field();
-				field.Text = this.editor.Module.AccessEntities.DirectGetName(fieldCaptionId);
-				field.Relation = rel;
-				field.Destination = typeId;
+				Field field = this.CreateField(fields[i]);
 				field.Rank = i;
-				field.SrcBox = this;
 
 				this.fields.Add(field);
 			}
@@ -248,6 +229,11 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			{
 				this.RemoveField(this.hilitedFieldRank);
 			}
+
+			if (this.hilitedElement == ActiveElement.FieldAdd)
+			{
+				this.AddField(this.hilitedFieldRank);
+			}
 		}
 
 		protected override bool MouseDetect(Point pos, out ActiveElement element, out int fieldRank)
@@ -366,6 +352,56 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 
 			this.editor.UpdateAfterAddOrRemoveConnection();
+		}
+
+		protected void AddField(int rank)
+		{
+			//	Ajoute un nouveau champ.
+			this.CloseBoxes(this.fields[rank].DstBox);
+
+			StructuredData newField = new StructuredData();
+			// TODO: ce n'est certainement pas ainsi qu'il faut créer un nouveau champ !
+
+			StructuredData data = this.cultureMap.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
+			IList<StructuredData> fields = data.GetValue(Support.Res.Fields.ResourceStructuredType.Fields) as IList<StructuredData>;
+			fields.Insert(rank+1, newField);
+
+			Field field = this.CreateField(newField);
+			this.fields.Insert(rank+1, field);
+
+			for (int i=0; i<fields.Count; i++)
+			{
+				this.fields[i].Rank = i;
+			}
+
+			this.editor.UpdateAfterAddOrRemoveConnection();
+		}
+
+		protected Field CreateField(StructuredData data)
+		{
+			//	Crée un nouvelle instance de la classe Field, initialisée selon le StructuredData d'un champ.
+			System.Diagnostics.Debug.Assert(!data.IsEmpty);
+
+			Druid fieldCaptionId = (Druid) data.GetValue(Support.Res.Fields.Field.CaptionId);
+			FieldMembership membership = (FieldMembership) data.GetValue(Support.Res.Fields.Field.Membership);
+			FieldRelation rel = (FieldRelation) data.GetValue(Support.Res.Fields.Field.Relation);
+			Druid sourceId = (Druid) data.GetValue(Support.Res.Fields.Field.SourceFieldId);
+			Druid typeId = (Druid) data.GetValue(Support.Res.Fields.Field.TypeId);
+			
+			Module dstModule = this.editor.Module.MainWindow.SearchModule(typeId);
+			CultureMap dstItem = dstModule.AccessEntities.Accessor.Collection[typeId];
+			if (dstItem == null)
+			{
+				rel = FieldRelation.None;  // ce n'est pas une vraie relation !
+			}
+
+			Field field = new Field();
+			field.Text = this.editor.Module.AccessEntities.DirectGetName(fieldCaptionId);
+			field.Relation = rel;
+			field.Destination = typeId;
+			field.SrcBox = this;
+
+			return field;
 		}
 
 		protected void UpdateFields()
