@@ -386,8 +386,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			//	Retourne le rectangle occupé par la destination d'un déplacement de champ.
 			Rectangle rect = this.GetFieldBounds(rank);
 			
-			rect.Bottom -= 6;
-			rect.Height = 6*2;
+			rect.Bottom -= ObjectBox.fieldHeight/2;
+			rect.Height = ObjectBox.fieldHeight;
 
 			return rect;
 		}
@@ -729,7 +729,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				if (this.hilitedElement == ActiveElement.FieldMoving)
 				{
 					rect = this.GetFieldBounds(this.hilitedFieldRank);
-					graphics.LineWidth = 3;
+					graphics.LineWidth = 5;
 					graphics.AddLine(rect.Left, rect.Bottom+0.5, rect.Right, rect.Bottom+0.5);
 					graphics.LineWidth = 1;
 					graphics.RenderSolid(adorner.ColorCaption);
