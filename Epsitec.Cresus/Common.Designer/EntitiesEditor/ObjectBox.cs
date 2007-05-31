@@ -436,7 +436,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		protected void RemoveField(int rank)
 		{
 			//	Supprime un champ.
-			string question = string.Format("Voulez-vous supprimer le champ <b>{0}</b> ?", this.fields[rank].Text);
+			string question = string.Format("Voulez-vous supprimer le champ <b>{0}</b> ?", this.fields[rank].FieldName);
 			if (this.editor.Module.MainWindow.DialogQuestion(question) == Epsitec.Common.Dialogs.DialogResult.Yes)
 			{
 				this.CloseBoxes(this.fields[rank].DstBox);
@@ -495,10 +495,12 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				rel = FieldRelation.None;  // ce n'est pas une vraie relation !
 			}
 
-			Caption caption = this.editor.Module.AccessEntities.DirectGetCaption(fieldCaptionId);
+			Caption fieldCaption = this.editor.Module.AccessEntities.DirectGetCaption(fieldCaptionId);
+			Caption typeCaption = this.editor.Module.AccessEntities.DirectGetCaption(typeId);
 
 			Field field = new Field();
-			field.Text = caption == null ? "" : caption.Name;
+			field.FieldName = fieldCaption == null ? "" : fieldCaption.Name;
+			field.TypeName = typeCaption == null ? "" : typeCaption.Name;
 			field.Relation = rel;
 			field.Destination = typeId;
 			field.SrcBox = this;
@@ -552,7 +554,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			//	Indique si un nom existe.
 			for (int i=0; i<this.fields.Count; i++)
 			{
-				if (name == this.fields[i].Text)
+				if (name == this.fields[i].FieldName)
 				{
 					return true;
 				}
@@ -592,6 +594,13 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			c2.A = dragging ? 0.2 : 0.1;
 			this.RenderHorizontalGradient(graphics, this.bounds, c1, c2);
 
+			Color colorLine = Color.FromBrightness(0.9);
+			if (dragging)
+			{
+				colorLine = adorner.ColorCaption;
+				colorLine.A = 0.3;
+			}
+
 			//	Dessine en blanc la zone pour les champs.
 			if (this.isExtended)
 			{
@@ -605,6 +614,12 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				ci2.A = 0.0;
 				this.RenderHorizontalGradient(graphics, inside, ci1, ci2);
 
+				//	Trait vertical de séparation.
+				double posx = System.Math.Floor(this.bounds.Center.X)+0.5;
+				graphics.AddLine(posx, this.bounds.Bottom+ObjectBox.footerHeight+0.5, posx, this.bounds.Top-ObjectBox.headerHeight-0.5);
+				graphics.RenderSolid(colorLine);
+
+				//	Ombre supérieure.
 				Rectangle shadow = new Rectangle(this.bounds.Left+1, this.bounds.Top-ObjectBox.headerHeight-8, this.bounds.Width-2, 8);
 				graphics.AddFilledRectangle(shadow);
 				this.RenderVerticalGradient(graphics, shadow, Color.FromAlphaRgb(0.0, 0, 0, 0), Color.FromAlphaRgb(0.3, 0, 0, 0));
@@ -627,13 +642,6 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				graphics.AddLine(this.bounds.Left+2, this.bounds.Top-ObjectBox.headerHeight-0.5, this.bounds.Right-2, this.bounds.Top-ObjectBox.headerHeight-0.5);
 				graphics.AddLine(this.bounds.Left+2, this.bounds.Bottom+ObjectBox.footerHeight+0.5, this.bounds.Right-2, this.bounds.Bottom+ObjectBox.footerHeight+0.5);
 				graphics.RenderSolid(dragging ? adorner.ColorCaption : Color.FromBrightness(0));
-
-				Color color = Color.FromBrightness(0.9);
-				if (dragging)
-				{
-					color = adorner.ColorCaption;
-					color.A = 0.3;
-				}
 
 				for (int i=0; i<this.fields.Count; i++)
 				{
@@ -666,13 +674,17 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 						graphics.RenderSolid(hiliteColor);
 					}
 
-					rect.Deflate(10, 0);
-					this.fields[i].TextLayout.LayoutSize = rect.Size;
-					this.fields[i].TextLayout.Paint(rect.BottomLeft, graphics);
+					Rectangle part = rect;
+					part.Deflate(10, 0);
+					part.Width = (part.Width-4)/2;
+					this.fields[i].TextLayoutField.LayoutSize = part.Size;
+					this.fields[i].TextLayoutField.Paint(part.BottomLeft, graphics);
+					part.Offset(part.Width+4, 0);
+					this.fields[i].TextLayoutType.LayoutSize = part.Size;
+					this.fields[i].TextLayoutType.Paint(part.BottomLeft, graphics);
 
-					rect.Inflate(10, 0);
 					graphics.AddLine(rect.Left, rect.Bottom+0.5, rect.Right, rect.Bottom+0.5);
-					graphics.RenderSolid(color);
+					graphics.RenderSolid(colorLine);
 
 					rect.Offset(0, -ObjectBox.fieldHeight);
 				}
@@ -684,30 +696,9 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					this.PaintMovingArrow(graphics, p1, p2);
 				}
 
-				if (this.hilitedElement != ActiveElement.None && !this.isFieldMoving)
+				if (this.hilitedElement != ActiveElement.None && this.hilitedElement != ActiveElement.HeaderDragging && this.hilitedElement != ActiveElement.ExtendButton && !this.isFieldMoving)
 				{
 					//	Dessine le rectangle à droite pour suggérer les boutons Add/Remove des champs.
-#if false
-					rect = Rectangle.Union(this.GetFieldAddBounds(-1), this.GetFieldAddBounds(this.fields.Count-1));
-					rect.Inflate(-0.5, 3.5);
-					Path pathButtons = this.PathRoundRectangle(rect, rect.Width/2);
-
-					Color hiliteColor = Color.FromBrightness(1);
-					if (this.hilitedElement == ActiveElement.FieldAdd ||
-						this.hilitedElement == ActiveElement.FieldRemove)
-					{
-						hiliteColor = adorner.ColorCaption;
-						hiliteColor.R = 1-(1-hiliteColor.R)*0.2;
-						hiliteColor.G = 1-(1-hiliteColor.G)*0.2;
-						hiliteColor.B = 1-(1-hiliteColor.B)*0.2;
-					}
-
-					graphics.Rasterizer.AddSurface(pathButtons);
-					graphics.RenderSolid(hiliteColor);
-
-					graphics.Rasterizer.AddOutline(pathButtons);
-					graphics.RenderSolid(Color.FromBrightness(0));
-#else
 					Point p1 = this.GetFieldAddBounds(-1).Center;
 					Point p2 = this.GetFieldAddBounds(this.fields.Count-1).Center;
 					rect = new Rectangle(p1, p2);
@@ -731,7 +722,6 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 					graphics.Rasterizer.AddOutline(pathButtons);
 					graphics.RenderSolid(Color.FromBrightness(0));
-#endif
 				}
 
 				if (this.hilitedElement == ActiveElement.FieldRemove)
@@ -803,10 +793,15 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		{
 			public Field()
 			{
-				this.textLayout = new TextLayout();
-				this.textLayout.DefaultFontSize = 10;
-				this.textLayout.Alignment = ContentAlignment.MiddleLeft;
-				this.textLayout.BreakMode = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine;
+				this.textLayoutField = new TextLayout();
+				this.textLayoutField.DefaultFontSize = 10;
+				this.textLayoutField.Alignment = ContentAlignment.MiddleLeft;
+				this.textLayoutField.BreakMode = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine;
+
+				this.textLayoutType = new TextLayout();
+				this.textLayoutType.DefaultFontSize = 10;
+				this.textLayoutType.Alignment = ContentAlignment.MiddleLeft;
+				this.textLayoutType.BreakMode = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine;
 
 				this.relation = FieldRelation.None;
 				this.destination = Druid.Empty;
@@ -815,24 +810,45 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				this.isSourceExpanded = false;
 			}
 
-			public string Text
+			public string FieldName
 			{
 				//	Nom du champ.
 				get
 				{
-					return this.textLayout.Text;
+					return this.textLayoutField.Text;
 				}
 				set
 				{
-					this.textLayout.Text = value;
+					this.textLayoutField.Text = value;
 				}
 			}
 
-			public TextLayout TextLayout
+			public string TypeName
+			{
+				//	Nom du type.
+				get
+				{
+					return this.textLayoutType.Text;
+				}
+				set
+				{
+					this.textLayoutType.Text = value;
+				}
+			}
+
+			public TextLayout TextLayoutField
 			{
 				get
 				{
-					return this.textLayout;
+					return this.textLayoutField;
+				}
+			}
+
+			public TextLayout TextLayoutType
+			{
+				get
+				{
+					return this.textLayoutType;
 				}
 			}
 
@@ -924,7 +940,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				}
 			}
 
-			protected TextLayout textLayout;
+			protected TextLayout textLayoutField;
+			protected TextLayout textLayoutType;
 			protected FieldRelation relation;
 			protected Druid destination;
 			protected int rank;

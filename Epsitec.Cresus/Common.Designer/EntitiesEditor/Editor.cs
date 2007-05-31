@@ -755,7 +755,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 
 
-		protected static readonly double defaultWidth = 180;
+		protected static readonly double defaultWidth = 220;
 		protected static readonly double connectionDetour = 30;
 		protected static readonly double pushMargin = 10;
 
