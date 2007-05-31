@@ -481,8 +481,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			//	Retourne le rectangle occupé par le bouton (-) d'un champ.
 			Rectangle rect = this.GetFieldBounds(rank);
 
-			rect.Left = rect.Right-rect.Height;
-			//?rect.Offset(-3, 0);
+			rect.Width = rect.Height;
 			
 			return rect;
 		}
@@ -492,10 +491,9 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			//	Retourne le rectangle occupé par le bouton (+) d'un champ.
 			Rectangle rect = this.GetFieldBounds(rank);
 			
-			rect.Left = rect.Right-rect.Height;
+			rect.Width = rect.Height;
 			rect.Bottom -= 6;
 			rect.Height = 6*2;
-			//?rect.Offset(-3, 0);
 
 			return rect;
 		}
@@ -505,8 +503,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			//	Retourne le rectangle occupé par le bouton (|) d'un champ.
 			Rectangle rect = this.GetFieldBounds(rank);
 
-			rect.Width = rect.Height;
-			//?rect.Offset(3, 0);
+			rect.Left = rect.Right-rect.Height;
 			
 			return rect;
 		}
@@ -938,13 +935,13 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					this.hilitedElement != ActiveElement.MoveColumnsSeparator &&
 					!this.isFieldMoving && !this.isChangeWidth && !this.isMoveColumnsSeparator)
 				{
-					//	Dessine la glissière à droite pour suggérer les boutons Add/Remove des champs.
+					//	Dessine la glissière à gauche pour suggérer les boutons Add/Remove des champs.
 					Point p1 = this.GetFieldAddBounds(-1).Center;
 					Point p2 = this.GetFieldAddBounds(this.fields.Count-1).Center;
 					hilited = this.hilitedElement == ActiveElement.FieldAdd || this.hilitedElement == ActiveElement.FieldRemove;
 					this.DrawSlider(graphics, p1, p2, hilited);
 
-					//	Dessine la glissière à gauche pour suggérer les boutons Movable des champs.
+					//	Dessine la glissière à droite pour suggérer les boutons Movable des champs.
 					p1.X = p2.X = this.GetFieldMovableBounds(0).Center.X;
 					hilited = this.hilitedElement == ActiveElement.FieldMovable;
 					this.DrawSlider(graphics, p1, p2, hilited);
