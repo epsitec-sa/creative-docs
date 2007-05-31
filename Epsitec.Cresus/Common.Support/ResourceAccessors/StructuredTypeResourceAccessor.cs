@@ -58,6 +58,11 @@ namespace Epsitec.Common.Support.ResourceAccessors
 
 		private StructuredType GetTypeFromData(StructuredData data, Caption caption)
 		{
+			if (UndefinedValue.IsUndefinedValue (data.GetValue (Res.Fields.ResourceStructuredType.Class)))
+			{
+				return null;
+			}
+
 			StructuredTypeClass typeClass = (StructuredTypeClass) data.GetValue (Res.Fields.ResourceStructuredType.Class);
 			Druid               baseType  = StructuredTypeResourceAccessor.ToDruid (data.GetValue (Res.Fields.ResourceStructuredType.BaseType));
 			
