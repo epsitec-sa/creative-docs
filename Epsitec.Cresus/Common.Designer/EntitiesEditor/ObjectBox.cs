@@ -253,7 +253,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				this.editor.LockObject(this);
 			}
 
-			if (this.hilitedElement == ActiveElement.FieldSelect)
+			if (this.hilitedElement == ActiveElement.FieldMovable)
 			{
 				this.isFieldMoving = true;
 				this.fieldInitialRank = this.hilitedFieldRank;
@@ -419,10 +419,26 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 						return true;
 					}
 
-					rect = this.GetFieldBounds(i);
+					rect = this.GetFieldMovableBounds(i);
 					if (rect.Contains(pos))
 					{
-						element = ActiveElement.FieldSelect;
+						element = ActiveElement.FieldMovable;
+						fieldRank = i;
+						return true;
+					}
+
+					rect = this.GetFieldNameBounds(i);
+					if (rect.Contains(pos))
+					{
+						element = ActiveElement.FieldNameSelect;
+						fieldRank = i;
+						return true;
+					}
+
+					rect = this.GetFieldTypeBounds(i);
+					if (rect.Contains(pos))
+					{
+						element = ActiveElement.FieldTypeSelect;
 						fieldRank = i;
 						return true;
 					}
@@ -462,6 +478,17 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			return rect;
 		}
 
+		protected Rectangle GetFieldMovableBounds(int rank)
+		{
+			//	Retourne le rectangle occupé par le bouton (|) d'un champ.
+			Rectangle rect = this.GetFieldBounds(rank);
+
+			rect.Width = rect.Height;
+			rect.Offset(3, 0);
+			
+			return rect;
+		}
+
 		protected Rectangle GetFieldMovingBounds(int rank)
 		{
 			//	Retourne le rectangle occupé par la destination d'un déplacement de champ.
@@ -469,6 +496,28 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			
 			rect.Bottom -= ObjectBox.fieldHeight/2;
 			rect.Height = ObjectBox.fieldHeight;
+
+			return rect;
+		}
+
+		protected Rectangle GetFieldNameBounds(int rank)
+		{
+			//	Retourne le rectangle occupé par le nom d'un champ.
+			Rectangle rect = this.GetFieldBounds(rank);
+
+			rect.Deflate(ObjectBox.textMargin, 0);
+			rect.Right = this.ColumnsSeparator;
+
+			return rect;
+		}
+
+		protected Rectangle GetFieldTypeBounds(int rank)
+		{
+			//	Retourne le rectangle occupé par le type d'un champ.
+			Rectangle rect = this.GetFieldBounds(rank);
+			
+			rect.Deflate(ObjectBox.textMargin, 0);
+			rect.Left = this.ColumnsSeparator;
 
 			return rect;
 		}
@@ -730,10 +779,21 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 				for (int i=0; i<this.fields.Count; i++)
 				{
-					rect = this.GetFieldBounds(i);
-
-					if (this.hilitedElement == ActiveElement.FieldSelect && this.hilitedFieldRank == i)
+					if (this.hilitedElement == ActiveElement.FieldNameSelect && this.hilitedFieldRank == i)
 					{
+						rect = this.GetFieldNameBounds(i);
+
+						Color hiliteColor = this.ColorCaption;
+						hiliteColor.A = 0.1;
+
+						graphics.AddFilledRectangle(rect);
+						graphics.RenderSolid(hiliteColor);
+					}
+
+					if (this.hilitedElement == ActiveElement.FieldTypeSelect && this.hilitedFieldRank == i)
+					{
+						rect = this.GetFieldTypeBounds(i);
+
 						Color hiliteColor = this.ColorCaption;
 						hiliteColor.A = 0.1;
 
@@ -743,6 +803,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 					if (this.hilitedElement == ActiveElement.FieldRemove && this.hilitedFieldRank == i)
 					{
+						rect = this.GetFieldBounds(i);
+
 						Color hiliteColor = this.ColorCaption;
 						hiliteColor.A = 0.3;
 
@@ -752,6 +814,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 					if (this.isFieldMoving && this.fieldInitialRank == i)
 					{
+						rect = this.GetFieldBounds(i);
+
 						Color hiliteColor = this.ColorCaption;
 						hiliteColor.A = 0.3;
 
@@ -760,19 +824,18 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					}
 
 					//	Affiche le nom du champ.
-					rect.Deflate(ObjectBox.textMargin, 0);
-					Rectangle part = rect;
-					part.Right = this.ColumnsSeparator-2;
-					this.fields[i].TextLayoutField.LayoutSize = part.Size;
-					this.fields[i].TextLayoutField.Paint(part.BottomLeft, graphics, Rectangle.MaxValue, Color.FromBrightness(0), GlyphPaintStyle.Normal);
+					rect = this.GetFieldNameBounds(i);
+					rect.Right -= 2;
+					this.fields[i].TextLayoutField.LayoutSize = rect.Size;
+					this.fields[i].TextLayoutField.Paint(rect.BottomLeft, graphics, Rectangle.MaxValue, Color.FromBrightness(0), GlyphPaintStyle.Normal);
 
 					//	Affiche le type du champ.
-					part = rect;
-					part.Left = this.ColumnsSeparator+2;
-					if (part.Width > 10)
+					rect = this.GetFieldTypeBounds(i);
+					rect.Left += 2;
+					if (rect.Width > 10)
 					{
-						this.fields[i].TextLayoutType.LayoutSize = part.Size;
-						this.fields[i].TextLayoutType.Paint(part.BottomLeft, graphics, Rectangle.MaxValue, Color.FromBrightness(0), GlyphPaintStyle.Normal);
+						this.fields[i].TextLayoutType.LayoutSize = rect.Size;
+						this.fields[i].TextLayoutType.Paint(rect.BottomLeft, graphics, Rectangle.MaxValue, Color.FromBrightness(0), GlyphPaintStyle.Normal);
 					}
 
 					rect = this.GetFieldBounds(i);
@@ -784,6 +847,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				{
 					Point p1 = this.GetFieldBounds(this.fieldInitialRank).Center;
 					Point p2 = this.GetFieldMovingBounds(this.hilitedFieldRank).Center;
+					p1.X = p2.X = this.GetFieldMovableBounds(0).Center.X;
 					this.DrawMovingArrow(graphics, p1, p2);
 				}
 
@@ -794,30 +858,16 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					this.hilitedElement != ActiveElement.MoveColumnsSeparator &&
 					!this.isFieldMoving && !this.isChangeWidth && !this.isMoveColumnsSeparator)
 				{
-					//	Dessine le rectangle à droite pour suggérer les boutons Add/Remove des champs.
+					//	Dessine la glissière à droite pour suggérer les boutons Add/Remove des champs.
 					Point p1 = this.GetFieldAddBounds(-1).Center;
 					Point p2 = this.GetFieldAddBounds(this.fields.Count-1).Center;
-					rect = new Rectangle(p1, p2);
-					rect.Inflate(2.5+6);
-					this.DrawShadow(graphics, rect, rect.Width/2, 6, 0.2);
-					rect.Deflate(6);
-					Path pathButtons = this.PathRoundRectangle(rect, rect.Width/2);
+					hilited = this.hilitedElement == ActiveElement.FieldAdd || this.hilitedElement == ActiveElement.FieldRemove;
+					this.DrawSlider(graphics, p1, p2, hilited);
 
-					Color hiliteColor = Color.FromBrightness(1);
-					if (this.hilitedElement == ActiveElement.FieldAdd ||
-						this.hilitedElement == ActiveElement.FieldRemove)
-					{
-						hiliteColor = this.ColorCaption;
-						hiliteColor.R = 1-(1-hiliteColor.R)*0.2;
-						hiliteColor.G = 1-(1-hiliteColor.G)*0.2;
-						hiliteColor.B = 1-(1-hiliteColor.B)*0.2;
-					}
-
-					graphics.Rasterizer.AddSurface(pathButtons);
-					graphics.RenderSolid(hiliteColor);
-
-					graphics.Rasterizer.AddOutline(pathButtons);
-					graphics.RenderSolid(Color.FromBrightness(0));
+					//	Dessine la glissière à gauche pour suggérer les boutons Movable des champs.
+					p1.X = p2.X = this.GetFieldMovableBounds(0).Center.X;
+					hilited = this.hilitedElement == ActiveElement.FieldMovable;
+					this.DrawSlider(graphics, p1, p2, hilited);
 				}
 
 				if (this.hilitedElement == ActiveElement.FieldRemove)
@@ -838,10 +888,16 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					this.DrawRoundButton(graphics, rect.Center, rect.Width/2, GlyphShape.Plus, true, true);
 				}
 
+				if (this.hilitedElement == ActiveElement.FieldMovable)
+				{
+					rect = this.GetFieldMovableBounds(this.hilitedFieldRank);
+					this.DrawRoundButton(graphics, rect.Center, rect.Width/2, GlyphShape.VerticalMove, true, true);
+				}
+
 				if (this.hilitedElement == ActiveElement.FieldMoving)
 				{
 					rect = this.GetFieldBounds(this.hilitedFieldRank);
-					graphics.LineWidth = 5;
+					graphics.LineWidth = 3;
 					graphics.AddLine(rect.Left, rect.Bottom+0.5, rect.Right, rect.Bottom+0.5);
 					graphics.LineWidth = 1;
 					graphics.RenderSolid(this.ColorCaption);
@@ -878,6 +934,30 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 		}
 
+		protected void DrawSlider(Graphics graphics, Point p1, Point p2, bool hilited)
+		{
+			Rectangle rect = new Rectangle(p1, p2);
+			rect.Inflate(2.5+6);
+			this.DrawShadow(graphics, rect, rect.Width/2, 6, 0.2);
+			rect.Deflate(6);
+			Path path = this.PathRoundRectangle(rect, rect.Width/2);
+
+			Color hiliteColor = Color.FromBrightness(1);
+			if (hilited)
+			{
+				hiliteColor = this.ColorCaption;
+				hiliteColor.R = 1-(1-hiliteColor.R)*0.2;
+				hiliteColor.G = 1-(1-hiliteColor.G)*0.2;
+				hiliteColor.B = 1-(1-hiliteColor.B)*0.2;
+			}
+
+			graphics.Rasterizer.AddSurface(path);
+			graphics.RenderSolid(hiliteColor);
+
+			graphics.Rasterizer.AddOutline(path);
+			graphics.RenderSolid(Color.FromBrightness(0));
+		}
+
 		protected void DrawMovingArrow(Graphics graphics, Point p1, Point p2)
 		{
 			//	Dessine une flèche pendant le déplacement d'un champ.
@@ -886,17 +966,18 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				return;
 			}
 
-			p2 = Point.Move(p2, p1, 2);
-			double d = (p1.Y > p2.Y) ? -10 : 10;
+			p2 = Point.Move(p2, p1, 1);
+			double d = (p1.Y > p2.Y) ? -6 : 6;
+			double sx = 3;
 
 			Path path = new Path();
 			path.MoveTo(p2);
-			path.LineTo(p2.X-d*2, p2.Y-d*2);
-			path.LineTo(p2.X-d, p2.Y-d*2);
-			path.LineTo(p1.X-d, p1.Y);
-			path.LineTo(p1.X+d, p1.Y);
-			path.LineTo(p2.X+d, p2.Y-d*2);
-			path.LineTo(p2.X+d*2, p2.Y-d*2);
+			path.LineTo(p2.X-d*3/sx, p2.Y-d*2);
+			path.LineTo(p2.X-d/sx, p2.Y-d*2);
+			path.LineTo(p1.X-d/sx, p1.Y);
+			path.LineTo(p1.X+d/sx, p1.Y);
+			path.LineTo(p2.X+d/sx, p2.Y-d*2);
+			path.LineTo(p2.X+d*3/sx, p2.Y-d*2);
 			path.Close();
 
 			graphics.Rasterizer.AddSurface(path);
@@ -1085,7 +1166,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		protected static readonly double roundRectRadius = 12;
 		protected static readonly double shadowOffset = 6;
 		protected static readonly double headerHeight = 32;
-		protected static readonly double textMargin = 10;
+		protected static readonly double textMargin = 16;
 		protected static readonly double footerHeight = 13;
 		protected static readonly double buttonRadius = 10;
 		protected static readonly double fieldHeight = 20;
