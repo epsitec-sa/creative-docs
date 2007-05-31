@@ -25,6 +25,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			ConnectionOpenRight,
 			ConnectionClose,
 			ChangeWidth,
+			MoveColumnsSeparator,
 		}
 
 

@@ -154,14 +154,14 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 					if (i == 0)
 					{
-						this.PaintStartingArrow(graphics, p1, p2);
+						this.DrawStartingArrow(graphics, p1, p2);
 					}
 
 					graphics.AddLine(p1, p2);
 
 					if (i == this.points.Count-2)
 					{
-						this.PaintEndingArrow(graphics, p1, p2);
+						this.DrawEndingArrow(graphics, p1, p2);
 					}
 				}
 				graphics.LineWidth = 1;
@@ -210,28 +210,28 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 		}
 
-		protected void PaintStartingArrow(Graphics graphics, Point start, Point end)
+		protected void DrawStartingArrow(Graphics graphics, Point start, Point end)
 		{
 			//	Dessine une flèche selon le type de la relation.
 			if (this.field.Relation == FieldRelation.Inclusion)
 			{
-				this.PaintArrowBase(graphics, end, start);
+				this.DrawArrowBase(graphics, end, start);
 			}
 		}
 
-		protected void PaintEndingArrow(Graphics graphics, Point start, Point end)
+		protected void DrawEndingArrow(Graphics graphics, Point start, Point end)
 		{
 			//	Dessine une flèche selon le type de la relation.
-			this.PaintArrowBase(graphics, start, end);
+			this.DrawArrowBase(graphics, start, end);
 
 			if (this.field.Relation == FieldRelation.Collection)
 			{
 				end = Point.Move(end, start, ObjectConnection.arrowLength*0.75);
-				this.PaintArrowBase(graphics, start, end);
+				this.DrawArrowBase(graphics, start, end);
 			}
 		}
 
-		protected void PaintArrowBase(Graphics graphics, Point start, Point end)
+		protected void DrawArrowBase(Graphics graphics, Point start, Point end)
 		{
 			//	Dessine une flèche à l'extrémité 'end'.
 			Point p = Point.Move(end, start, ObjectConnection.arrowLength);

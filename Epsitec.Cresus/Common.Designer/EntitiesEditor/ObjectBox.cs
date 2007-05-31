@@ -29,6 +29,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 			this.fields = new List<Field>();
 
+			this.columnsSeparator = 0.5;
 			this.isExtended = false;
 		}
 
@@ -225,6 +226,16 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				this.editor.UpdateConnections();
 				return true;
 			}
+			else if (this.isMoveColumnsSeparator)
+			{
+				Rectangle rect = this.Bounds;
+				rect.Deflate(ObjectBox.textMargin, 0);
+				this.columnsSeparator = (pos.X-rect.Left)/rect.Width;
+				this.columnsSeparator = System.Math.Max(this.columnsSeparator, 0.2);
+				this.columnsSeparator = System.Math.Min(this.columnsSeparator, 0.8);
+				this.editor.Invalidate();
+				return true;
+			}
 			else
 			{
 				return base.MouseMove(pos);
@@ -255,6 +266,12 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				this.changeWidthInitial = this.bounds.Width;
 				this.editor.LockObject(this);
 			}
+
+			if (this.hilitedElement == ActiveElement.MoveColumnsSeparator)
+			{
+				this.isMoveColumnsSeparator = true;
+				this.editor.LockObject(this);
+			}
 		}
 
 		public override void MouseUp(Point pos)
@@ -279,6 +296,11 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			{
 				this.editor.UpdateAfterMoving(this);
 				this.isChangeWidth = false;
+				this.editor.LockObject(null);
+			}
+			else if (this.isMoveColumnsSeparator)
+			{
+				this.isMoveColumnsSeparator = false;
 				this.editor.LockObject(null);
 			}
 			else
@@ -340,10 +362,18 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				}
 
 				//	Souris dans le bouton pour changer la largeur ?
-				rect = new Rectangle(this.bounds.Right-ObjectBox.buttonRadius*2-10, this.bounds.Bottom, ObjectBox.buttonRadius*2+10, ObjectBox.footerHeight);
+				rect = new Rectangle(this.bounds.Right-ObjectBox.buttonRadius*2-8, this.bounds.Bottom, ObjectBox.buttonRadius*2+8, ObjectBox.footerHeight);
 				if (rect.Contains(pos))
 				{
 					element = ActiveElement.ChangeWidth;
+					return true;
+				}
+
+				//	Souris dans le bouton pour déplacer le séparateur des colonnes ?
+				rect = new Rectangle(this.ColumnsSeparator-ObjectBox.buttonRadius, this.bounds.Bottom, ObjectBox.buttonRadius*2, ObjectBox.footerHeight);
+				if (rect.Contains(pos))
+				{
+					element = ActiveElement.MoveColumnsSeparator;
 					return true;
 				}
 
@@ -652,7 +682,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				this.RenderHorizontalGradient(graphics, inside, ci1, ci2);
 
 				//	Trait vertical de séparation.
-				double posx = System.Math.Floor(this.bounds.Center.X)+0.5;
+				double posx = System.Math.Floor(this.ColumnsSeparator)+0.5;
 				graphics.AddLine(posx, this.bounds.Bottom+ObjectBox.footerHeight+0.5, posx, this.bounds.Top-ObjectBox.headerHeight-0.5);
 				graphics.RenderSolid(colorLine);
 
@@ -663,7 +693,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 
 			//	Dessine le titre.
-			rect = new Rectangle(this.bounds.Left+4, this.bounds.Top-ObjectBox.headerHeight+2, this.bounds.Width-ObjectBox.buttonRadius*2-5-2, ObjectBox.headerHeight-2);
+			rect = new Rectangle(this.bounds.Left+4, this.bounds.Top-ObjectBox.headerHeight+2, this.bounds.Width-ObjectBox.buttonRadius*2-5-5, ObjectBox.headerHeight-2);
 			this.title.LayoutSize = rect.Size;
 			this.title.Paint(rect.BottomLeft, graphics);
 
@@ -711,33 +741,37 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 						graphics.RenderSolid(hiliteColor);
 					}
 
+					//	Affiche le nom du champ.
+					rect.Deflate(ObjectBox.textMargin, 0);
 					Rectangle part = rect;
-					part.Deflate(10, 0);
-					part.Width = (part.Width-4)/2;
+					part.Right = this.ColumnsSeparator-2;
 					this.fields[i].TextLayoutField.LayoutSize = part.Size;
 					this.fields[i].TextLayoutField.Paint(part.BottomLeft, graphics);
-					part.Offset(part.Width+4, 0);
+
+					//	Affiche le type du champ.
+					part = rect;
+					part.Left = this.ColumnsSeparator+2;
 					this.fields[i].TextLayoutType.LayoutSize = part.Size;
 					this.fields[i].TextLayoutType.Paint(part.BottomLeft, graphics);
 
+					rect = this.GetFieldBounds(i);
 					graphics.AddLine(rect.Left, rect.Bottom+0.5, rect.Right, rect.Bottom+0.5);
 					graphics.RenderSolid(colorLine);
-
-					rect.Offset(0, -ObjectBox.fieldHeight);
 				}
 
 				if (this.hilitedElement == ActiveElement.FieldMoving)
 				{
 					Point p1 = this.GetFieldBounds(this.fieldInitialRank).Center;
 					Point p2 = this.GetFieldMovingBounds(this.hilitedFieldRank).Center;
-					this.PaintMovingArrow(graphics, p1, p2);
+					this.DrawMovingArrow(graphics, p1, p2);
 				}
 
 				if (this.hilitedElement != ActiveElement.None &&
 					this.hilitedElement != ActiveElement.HeaderDragging &&
 					this.hilitedElement != ActiveElement.ExtendButton &&
 					this.hilitedElement != ActiveElement.ChangeWidth &&
-					!this.isFieldMoving && !this.isChangeWidth)
+					this.hilitedElement != ActiveElement.MoveColumnsSeparator &&
+					!this.isFieldMoving && !this.isChangeWidth && !this.isMoveColumnsSeparator)
 				{
 					//	Dessine le rectangle à droite pour suggérer les boutons Add/Remove des champs.
 					Point p1 = this.GetFieldAddBounds(-1).Center;
@@ -797,24 +831,36 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			graphics.Rasterizer.AddOutline(path, 2);
 			graphics.RenderSolid(colorFrame);
 
-			//	Dessine le bouton pour changer la largeur.
 			if (this.isExtended)
 			{
-				//	Dessine le petit trait vertical.
-				double posx = this.bounds.Right-ObjectBox.buttonRadius*2-8.5;
+				//	Dessine les petits traits verticaux.
+				double posx;
+
+				posx = System.Math.Floor(this.ColumnsSeparator)+0.5;
 				graphics.AddLine(posx, this.bounds.Bottom+2, posx, this.bounds.Bottom+ObjectBox.footerHeight);
+
+				posx = this.bounds.Right-ObjectBox.buttonRadius*2-8.5;
+				graphics.AddLine(posx, this.bounds.Bottom+2, posx, this.bounds.Bottom+ObjectBox.footerHeight);
+
 				graphics.RenderSolid(colorFrame);
+
+				if (this.hilitedElement == ActiveElement.MoveColumnsSeparator)
+				{
+					//	Dessine le bouton pour déplacer le séparateur des colonnes.
+					center = new Point(this.ColumnsSeparator, this.bounds.Bottom+ObjectBox.footerHeight/2);
+					this.DrawRoundButton(graphics, center, ObjectBox.buttonRadius, GlyphShape.TriangleRight, true, false);
+				}
 
 				if (this.hilitedElement == ActiveElement.ChangeWidth)
 				{
-					//	Dessine le bouton lui-même.
+					//	Dessine le bouton pour changer la largeur.
 					center = new Point(this.bounds.Right-ObjectBox.buttonRadius-5, this.bounds.Bottom+ObjectBox.footerHeight/2);
 					this.DrawRoundButton(graphics, center, ObjectBox.buttonRadius, GlyphShape.TriangleRight, true, false);
 				}
 			}
 		}
 
-		protected void PaintMovingArrow(Graphics graphics, Point p1, Point p2)
+		protected void DrawMovingArrow(Graphics graphics, Point p1, Point p2)
 		{
 			//	Dessine une flèche pendant le déplacement d'un champ.
 			if (System.Math.Abs(p1.Y-p2.Y) < ObjectBox.fieldHeight)
@@ -839,6 +885,17 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 			graphics.Rasterizer.AddSurface(path);
 			graphics.RenderSolid(adorner.ColorCaption);
+		}
+
+		protected double ColumnsSeparator
+		{
+			//	Retourne la position absolue du séparateur des colonnes.
+			get
+			{
+				Rectangle rect = this.bounds;
+				rect.Deflate(ObjectBox.textMargin, 0);
+				return rect.Left + rect.Width*this.columnsSeparator;
+			}
 		}
 
 
@@ -1012,12 +1069,14 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		protected static readonly double roundRectRadius = 12;
 		protected static readonly double shadowOffset = 6;
 		protected static readonly double headerHeight = 32;
+		protected static readonly double textMargin = 10;
 		protected static readonly double footerHeight = 10;
 		protected static readonly double buttonRadius = 10;
 		protected static readonly double fieldHeight = 20;
 
 		protected CultureMap cultureMap;
 		protected Rectangle bounds;
+		protected double columnsSeparator;
 		protected bool isExtended;
 		protected string titleString;
 		protected TextLayout title;
@@ -1033,5 +1092,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		protected bool isChangeWidth;
 		protected double changeWidthPos;
 		protected double changeWidthInitial;
+
+		protected bool isMoveColumnsSeparator;
 	}
 }
