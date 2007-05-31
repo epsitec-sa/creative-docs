@@ -577,7 +577,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 
 			Caption fieldCaption = this.editor.Module.AccessEntities.DirectGetCaption(fieldCaptionId);
-			Caption typeCaption = this.editor.Module.AccessEntities.DirectGetCaption(typeId);
+			Caption typeCaption = typeId.IsEmpty ? null : this.editor.Module.AccessEntities.DirectGetCaption(typeId);
 
 			Field field = new Field();
 			field.FieldName = fieldCaption == null ? "" : fieldCaption.Name;
