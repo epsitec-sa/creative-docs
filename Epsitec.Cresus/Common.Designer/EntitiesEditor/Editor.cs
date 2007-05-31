@@ -628,23 +628,30 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		{
 			//	Met en évidence tous les widgets selon la position visée par la souris.
 			//	L'objet à l'avant-plan a la priorité.
-			for (int i=this.connections.Count-1; i>=0; i--)
+			if (this.lockObject != null)
 			{
-				AbstractObject obj = this.connections[i];
-
-				if (obj.MouseMove(pos))
-				{
-					pos = Point.Zero;  // si on était dans cet objet -> plus aucun hilite pour les objets placés dessous
-				}
+				this.lockObject.MouseMove(pos);
 			}
-
-			for (int i=this.boxes.Count-1; i>=0; i--)
+			else
 			{
-				AbstractObject obj = this.boxes[i];
-
-				if (obj.MouseMove(pos))
+				for (int i=this.connections.Count-1; i>=0; i--)
 				{
-					pos = Point.Zero;  // si on était dans cet objet -> plus aucun hilite pour les objets placés dessous
+					AbstractObject obj = this.connections[i];
+
+					if (obj.MouseMove(pos))
+					{
+						pos = Point.Zero;  // si on était dans cet objet -> plus aucun hilite pour les objets placés dessous
+					}
+				}
+
+				for (int i=this.boxes.Count-1; i>=0; i--)
+				{
+					AbstractObject obj = this.boxes[i];
+
+					if (obj.MouseMove(pos))
+					{
+						pos = Point.Zero;  // si on était dans cet objet -> plus aucun hilite pour les objets placés dessous
+					}
 				}
 			}
 		}
@@ -668,6 +675,11 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			{
 				obj.MouseUp(pos);
 			}
+		}
+
+		public void LockObject(AbstractObject obj)
+		{
+			this.lockObject = obj;
 		}
 
 		protected AbstractObject DetectObject(Point pos)
@@ -755,7 +767,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 
 
-		protected static readonly double defaultWidth = 220;
+		protected static readonly double defaultWidth = 200;
 		protected static readonly double connectionDetour = 30;
 		protected static readonly double pushMargin = 10;
 
@@ -765,5 +777,6 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		protected Size areaSize;
 		protected double zoom;
 		protected Point areaOffset;
+		protected AbstractObject lockObject;
 	}
 }

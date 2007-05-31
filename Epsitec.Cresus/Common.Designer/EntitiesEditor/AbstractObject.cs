@@ -24,6 +24,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			ConnectionOpenLeft,
 			ConnectionOpenRight,
 			ConnectionClose,
+			ChangeWidth,
 		}
 
 
