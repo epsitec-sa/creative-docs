@@ -350,7 +350,6 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 
 
-		protected static readonly double circleRadius = 4;
 		protected static readonly double arrowLength = 12;
 		protected static readonly double arrowAngle = 25;
 

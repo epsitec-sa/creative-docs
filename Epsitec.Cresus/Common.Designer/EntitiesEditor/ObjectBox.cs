@@ -69,11 +69,14 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			IList<StructuredData> dataFields = data.GetValue(Support.Res.Fields.ResourceStructuredType.Fields) as IList<StructuredData>;
 
 			this.fields.Clear();
-			for (int i=0; i<dataFields.Count; i++)
+			if (dataFields != null)
 			{
-				Field field = new Field();
-				this.UpdateField(dataFields[i], field);
-				this.fields.Add(field);
+				for (int i=0; i<dataFields.Count; i++)
+				{
+					Field field = new Field();
+					this.UpdateField(dataFields[i], field);
+					this.fields.Add(field);
+				}
 			}
 
 			this.UpdateFields();
@@ -170,7 +173,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			switch (anchor)
 			{
 				case ConnectionAnchor.Left:
-					if (posv >= bounds.Bottom+ObjectBox.roundRectRadius && posv <= bounds.Top-ObjectBox.roundRectRadius)
+					if (posv >= bounds.Bottom+ObjectBox.roundFrameRadius && posv <= bounds.Top-ObjectBox.roundFrameRadius)
 					{
 						return new Point(bounds.Left, posv);
 					}
@@ -180,7 +183,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					}
 
 				case ConnectionAnchor.Right:
-					if (posv >= bounds.Bottom+ObjectBox.roundRectRadius && posv <= bounds.Top-ObjectBox.roundRectRadius)
+					if (posv >= bounds.Bottom+ObjectBox.roundFrameRadius && posv <= bounds.Top-ObjectBox.roundFrameRadius)
 					{
 						return new Point(bounds.Right, posv);
 					}
@@ -782,12 +785,12 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			//	Dessine l'ombre.
 			rect = this.bounds;
 			rect.Offset(ObjectBox.shadowOffset, -(ObjectBox.shadowOffset));
-			this.DrawShadow(graphics, rect, ObjectBox.roundRectRadius+ObjectBox.shadowOffset, (int)ObjectBox.shadowOffset, 0.2);
+			this.DrawShadow(graphics, rect, ObjectBox.roundFrameRadius+ObjectBox.shadowOffset, (int)ObjectBox.shadowOffset, 0.2);
 
 			//	Construit le chemin du cadre arrondi.
 			rect = this.bounds;
 			rect.Deflate(1);
-			Path path = this.PathRoundRectangle(rect, ObjectBox.roundRectRadius);
+			Path path = this.PathRoundRectangle(rect, ObjectBox.roundFrameRadius);
 
 			//	Dessine l'intérieur en blanc.
 			graphics.Rasterizer.AddSurface(path);
@@ -1232,10 +1235,10 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		}
 
 
-		protected static readonly double roundRectRadius = 12;
+		protected static readonly double roundFrameRadius = 12;
 		protected static readonly double shadowOffset = 6;
 		protected static readonly double headerHeight = 32;
-		protected static readonly double textMargin = 14;
+		protected static readonly double textMargin = 13;
 		protected static readonly double footerHeight = 13;
 		protected static readonly double fieldHeight = 20;
 
