@@ -362,84 +362,95 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					return true;
 				}
 
-				//	Souris dans le bouton pour changer la largeur ?
-				//	Souris dans le bouton pour déplacer le séparateur des colonnes ?
-				center = new Point(this.bounds.Right-1, this.bounds.Bottom+ObjectBox.footerHeight/2+1);
-				double d1 = Point.Distance(center, pos);
-
-				center = new Point(this.ColumnsSeparator, this.bounds.Bottom+ObjectBox.footerHeight/2+1);
-				double d2 = Point.Distance(center, pos);
-
-				if (d1 < d2)
+				if (this.isExtended)
 				{
-					if (d1 <= AbstractObject.buttonRadius+3)
-					{
-						element = ActiveElement.ChangeWidth;
-						return true;
-					}
-				}
-				else
-				{
-					if (d2 <= AbstractObject.buttonRadius+3)
-					{
-						element = ActiveElement.MoveColumnsSeparator;
-						return true;
-					}
-				}
+					//	Souris dans le bouton pour changer la largeur ?
+					//	Souris dans le bouton pour déplacer le séparateur des colonnes ?
+					center = new Point(this.bounds.Right-1, this.bounds.Bottom+ObjectBox.footerHeight/2+1);
+					double d1 = Point.Distance(center, pos);
 
-				//	Souris dans l'en-tête ?
-				if (this.bounds.Contains(pos) && 
+					center = new Point(this.ColumnsSeparator, this.bounds.Bottom+ObjectBox.footerHeight/2+1);
+					double d2 = Point.Distance(center, pos);
+
+					if (d1 < d2)
+					{
+						if (d1 <= AbstractObject.buttonRadius+3)
+						{
+							element = ActiveElement.ChangeWidth;
+							return true;
+						}
+					}
+					else
+					{
+						if (d2 <= AbstractObject.buttonRadius+3)
+						{
+							element = ActiveElement.MoveColumnsSeparator;
+							return true;
+						}
+					}
+
+					//	Souris dans l'en-tête ?
+					if (this.bounds.Contains(pos) && 
 					(pos.Y >= this.bounds.Top-ObjectBox.headerHeight ||
 					 pos.Y <= this.bounds.Bottom+ObjectBox.footerHeight))
-				{
-					element = ActiveElement.HeaderDragging;
-					return true;
-				}
-
-				//	Souris entre deux champs ?
-				for (int i=-1; i<this.fields.Count; i++)
-				{
-					rect = this.GetFieldAddBounds(i);
-					if (rect.Contains(pos))
 					{
-						element = ActiveElement.FieldAdd;
-						fieldRank = i;
+						element = ActiveElement.HeaderDragging;
 						return true;
+					}
+
+					//	Souris entre deux champs ?
+					for (int i=-1; i<this.fields.Count; i++)
+					{
+						rect = this.GetFieldAddBounds(i);
+						if (rect.Contains(pos))
+						{
+							element = ActiveElement.FieldAdd;
+							fieldRank = i;
+							return true;
+						}
+					}
+
+					//	Souris dans un champ ?
+					for (int i=0; i<this.fields.Count; i++)
+					{
+						rect = this.GetFieldRemoveBounds(i);
+						if (rect.Contains(pos))
+						{
+							element = ActiveElement.FieldRemove;
+							fieldRank = i;
+							return true;
+						}
+
+						rect = this.GetFieldMovableBounds(i);
+						if (rect.Contains(pos))
+						{
+							element = ActiveElement.FieldMovable;
+							fieldRank = i;
+							return true;
+						}
+
+						rect = this.GetFieldNameBounds(i);
+						if (rect.Contains(pos))
+						{
+							element = ActiveElement.FieldNameSelect;
+							fieldRank = i;
+							return true;
+						}
+
+						rect = this.GetFieldTypeBounds(i);
+						if (rect.Contains(pos))
+						{
+							element = ActiveElement.FieldTypeSelect;
+							fieldRank = i;
+							return true;
+						}
 					}
 				}
-
-				//	Souris dans un champ ?
-				for (int i=0; i<this.fields.Count; i++)
+				else  // boîte compactée ?
 				{
-					rect = this.GetFieldRemoveBounds(i);
-					if (rect.Contains(pos))
+					if (this.bounds.Contains(pos))
 					{
-						element = ActiveElement.FieldRemove;
-						fieldRank = i;
-						return true;
-					}
-
-					rect = this.GetFieldMovableBounds(i);
-					if (rect.Contains(pos))
-					{
-						element = ActiveElement.FieldMovable;
-						fieldRank = i;
-						return true;
-					}
-
-					rect = this.GetFieldNameBounds(i);
-					if (rect.Contains(pos))
-					{
-						element = ActiveElement.FieldNameSelect;
-						fieldRank = i;
-						return true;
-					}
-
-					rect = this.GetFieldTypeBounds(i);
-					if (rect.Contains(pos))
-					{
-						element = ActiveElement.FieldTypeSelect;
-						fieldRank = i;
+						element = ActiveElement.HeaderDragging;
 						return true;
 					}
 				}
