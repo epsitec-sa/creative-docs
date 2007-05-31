@@ -210,8 +210,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 							if (field.IsExplored)
 							{
-								ObjectBox dst = this.SearchParent(field);
-								this.UpdateConnection(connection, box, field.Rank, dst);
+								this.UpdateConnection(connection, box, field.Rank, field.DstBox);
 							}
 							else
 							{
@@ -374,19 +373,6 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					{
 						return box;
 					}
-				}
-			}
-
-			return null;
-		}
-
-		public ObjectBox SearchParent(ObjectBox.Field field)
-		{
-			foreach (ObjectBox box in this.boxes)
-			{
-				if (box.ParentField == field)
-				{
-					return box;
 				}
 			}
 

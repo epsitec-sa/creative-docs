@@ -83,10 +83,9 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 			if (this.hilitedElement == ActiveElement.ConnectionClose)
 			{
+				ObjectBox dst = this.field.DstBox;
 				this.field.IsExplored = false;
 				this.field.DstBox = null;
-
-				ObjectBox dst = this.editor.SearchParent(this.field);
 				this.CloseBoxes(dst);
 
 				this.editor.CreateConnections();
@@ -163,7 +162,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 
 			//	Souris le long de la connection ?
-			if (DetectOver(pos, 5))
+			if (DetectOver(pos, 4))
 			{
 				element = ActiveElement.ConnectionHilited;
 				return true;

@@ -71,7 +71,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			this.fields.Clear();
 			for (int i=0; i<dataFields.Count; i++)
 			{
-				Field field = this.CreateField(dataFields[i]);
+				Field field = new Field();
+				this.UpdateField(dataFields[i], field);
 				this.fields.Add(field);
 			}
 
@@ -320,6 +321,16 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				if (this.hilitedElement == ActiveElement.FieldAdd)
 				{
 					this.AddField(this.hilitedFieldRank);
+				}
+
+				if (this.hilitedElement == ActiveElement.FieldNameSelect)
+				{
+					this.ChangeFieldName(this.hilitedFieldRank);
+				}
+
+				if (this.hilitedElement == ActiveElement.FieldTypeSelect)
+				{
+					this.ChangeFieldType(this.hilitedFieldRank);
 				}
 			}
 		}
@@ -610,7 +621,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 			dataFields.Insert(rank+1, newField);
 
-			Field field = this.CreateField(newField);
+			Field field = new Field();
+			this.UpdateField(newField, field);
 			this.fields.Insert(rank+1, field);
 
 			this.UpdateFields();
@@ -618,16 +630,76 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			this.hilitedElement = ActiveElement.None;
 		}
 
-		protected Field CreateField(StructuredData data)
+		protected void ChangeFieldName(int rank)
 		{
-			//	Crée un nouvelle instance de la classe Field, initialisée selon le StructuredData d'un champ.
-			System.Diagnostics.Debug.Assert(!data.IsEmpty);
+			//	Choix du nom pour un champ.
+			StructuredData data = this.cultureMap.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
+			IList<StructuredData> dataFields = data.GetValue(Support.Res.Fields.ResourceStructuredType.Fields) as IList<StructuredData>;
 
-			Druid fieldCaptionId = (Druid) data.GetValue(Support.Res.Fields.Field.CaptionId);
-			FieldMembership membership = (FieldMembership) data.GetValue(Support.Res.Fields.Field.Membership);
-			FieldRelation rel = (FieldRelation) data.GetValue(Support.Res.Fields.Field.Relation);
-			Druid sourceId = (Druid) data.GetValue(Support.Res.Fields.Field.SourceFieldId);
-			Druid typeId = (Druid) data.GetValue(Support.Res.Fields.Field.TypeId);
+			StructuredData dataField = dataFields[rank];
+			Druid druid = (Druid) dataField.GetValue(Support.Res.Fields.Field.CaptionId);
+
+			Module module = this.editor.Module;
+			druid = module.MainWindow.DlgResourceSelector(module, ResourceAccess.Type.Fields, ResourceAccess.TypeType.None, druid, null, null);
+			if (druid.IsEmpty)
+			{
+				return;
+			}
+
+			dataField.SetValue(Support.Res.Fields.Field.CaptionId, druid);
+			this.UpdateField(dataField, this.fields[rank]);
+		}
+
+		protected void ChangeFieldType(int rank)
+		{
+			//	Choix du type pour un champ.
+			StructuredData data = this.cultureMap.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
+			IList<StructuredData> dataFields = data.GetValue(Support.Res.Fields.ResourceStructuredType.Fields) as IList<StructuredData>;
+
+			StructuredData dataField = dataFields[rank];
+			Druid druid = (Druid) dataField.GetValue(Support.Res.Fields.Field.TypeId);
+
+			Module module = this.editor.Module;
+			druid = module.MainWindow.DlgResourceSelector(module, ResourceAccess.Type.Types, ResourceAccess.TypeType.None, druid, null, null);
+			if (druid.IsEmpty)
+			{
+				return;
+			}
+
+			if (this.fields[rank].Relation != FieldRelation.None)
+			{
+				ObjectBox dst = this.fields[rank].DstBox;
+				this.fields[rank].IsExplored = false;
+				this.fields[rank].DstBox = null;
+				this.CloseBoxes(dst);
+			}
+
+			dataField.SetValue(Support.Res.Fields.Field.TypeId, druid);
+
+			AbstractType type = TypeRosetta.GetTypeObject(module.ResourceManager.GetCaption(druid));
+			if (type is StructuredType)
+			{
+				dataField.SetValue(Support.Res.Fields.Field.Relation, FieldRelation.Reference);
+			}
+			else
+			{
+				dataField.SetValue(Support.Res.Fields.Field.Relation, FieldRelation.None);
+			}
+			
+			this.UpdateField(dataField, this.fields[rank]);
+			this.editor.UpdateAfterAddOrRemoveConnection();
+		}
+
+		protected void UpdateField(StructuredData dataField, Field field)
+		{
+			//	Met à jour une instance de la classe Field, selon le StructuredData d'un champ.
+			System.Diagnostics.Debug.Assert(!dataField.IsEmpty);
+
+			Druid fieldCaptionId = (Druid) dataField.GetValue(Support.Res.Fields.Field.CaptionId);
+			FieldMembership membership = (FieldMembership) dataField.GetValue(Support.Res.Fields.Field.Membership);
+			FieldRelation rel = (FieldRelation) dataField.GetValue(Support.Res.Fields.Field.Relation);
+			Druid sourceId = (Druid) dataField.GetValue(Support.Res.Fields.Field.SourceFieldId);
+			Druid typeId = (Druid) dataField.GetValue(Support.Res.Fields.Field.TypeId);
 			
 			Module dstModule = this.editor.Module.MainWindow.SearchModule(typeId);
 			CultureMap dstItem = (dstModule == null) ? null : dstModule.AccessEntities.Accessor.Collection[typeId];
@@ -639,19 +711,16 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			Caption fieldCaption = this.editor.Module.AccessEntities.DirectGetCaption(fieldCaptionId);
 			Caption typeCaption = typeId.IsEmpty ? null : this.editor.Module.AccessEntities.DirectGetCaption(typeId);
 
-			Field field = new Field();
 			field.FieldName = fieldCaption == null ? "" : fieldCaption.Name;
 			field.TypeName = typeCaption == null ? "" : typeCaption.Name;
 			field.Relation = rel;
 			field.Destination = typeId;
 			field.SrcBox = this;
-
-			return field;
 		}
 
 		protected void UpdateFields()
 		{
-			//	Met à jour les liaisons des champs.
+			//	Met à jour toutes les liaisons des champs.
 			for (int i=0; i<this.fields.Count; i++)
 			{
 				this.fields[i].IsSourceExpanded = this.isExtended;
