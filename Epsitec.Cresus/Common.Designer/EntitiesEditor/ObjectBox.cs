@@ -645,6 +645,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 			dataField.SetValue(Support.Res.Fields.Field.CaptionId, druid);
 			this.UpdateField(dataField, this.fields[rank]);
+			this.editor.Invalidate();
 		}
 
 		protected void ChangeFieldType(int rank)

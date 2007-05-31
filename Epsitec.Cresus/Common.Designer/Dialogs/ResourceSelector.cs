@@ -713,6 +713,8 @@ namespace Epsitec.Common.Designer.Dialogs
 			this.parentWindow.MakeActive();
 			this.window.Hide();
 			this.OnClosed();
+
+			this.resource = Druid.Empty;
 		}
 
 		private void HandleButtonClearClicked(object sender, MessageEventArgs e)
