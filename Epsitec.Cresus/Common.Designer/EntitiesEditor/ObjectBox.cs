@@ -801,7 +801,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 						graphics.RenderSolid(hiliteColor);
 					}
 
-					if (this.hilitedElement == ActiveElement.FieldRemove && this.hilitedFieldRank == i)
+					if ((this.hilitedElement == ActiveElement.FieldRemove || this.hilitedElement == ActiveElement.FieldMovable) && this.hilitedFieldRank == i)
 					{
 						rect = this.GetFieldBounds(i);
 
