@@ -92,6 +92,31 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				this.editor.CreateConnections();
 				this.editor.UpdateGeometry();
 			}
+
+			if (this.hilitedElement == ActiveElement.ConnectionChange)
+			{
+				ObjectBox box = this.field.SrcBox;
+
+				StructuredData data = box.CultureMap.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
+				IList<StructuredData> dataFields = data.GetValue(Support.Res.Fields.ResourceStructuredType.Fields) as IList<StructuredData>;
+
+				StructuredData dataField = dataFields[this.field.Rank];
+				FieldRelation rel = (FieldRelation) dataField.GetValue(Support.Res.Fields.Field.Relation);
+				if (rel == FieldRelation.Reference)
+				{
+					rel = FieldRelation.Collection;
+					dataField.SetValue(Support.Res.Fields.Field.Relation, rel);
+				}
+				else if (rel == FieldRelation.Collection)
+				{
+					rel = FieldRelation.Reference;
+					dataField.SetValue(Support.Res.Fields.Field.Relation, rel);
+				}
+
+				this.field.Relation = rel;
+				this.editor.Invalidate();
+				this.hilitedElement = ActiveElement.None;
+			}
 		}
 
 		protected override bool MouseDetect(Point pos, out ActiveElement element, out int fieldRank)
@@ -126,6 +151,48 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				{
 					element = ActiveElement.ConnectionOpenRight;
 					return true;
+				}
+			}
+
+			//	Souris dans le bouton pour changer la connection ?
+			Point p = this.PositionChange;
+			if (!p.IsZero && Point.Distance(pos, p) <= AbstractObject.buttonRadius)
+			{
+				element = ActiveElement.ConnectionChange;
+				return true;
+			}
+
+			//	Souris le long de la connection ?
+			if (DetectOver(pos, 5))
+			{
+				element = ActiveElement.ConnectionHilited;
+				return true;
+			}
+
+			return false;
+		}
+
+		protected bool DetectOver(Point pos, double margin)
+		{
+			//	Détecte si la souris est le long de la connection.
+			if (this.points.Count >= 2 && this.field.IsExplored)
+			{
+				for (int i=0; i<this.points.Count-1; i++)
+				{
+					Point p1 = this.points[i];
+					Point p2 = this.points[i+1];
+
+					if (Point.Distance(p1, pos) <= margin ||
+						Point.Distance(p2, pos) <= margin)
+					{
+						return true;
+					}
+
+					Point p = Point.Projection(p1, p2, pos);
+					if (Point.Distance(p, pos) <= margin && Geometry.IsInside(p1, p2, p))
+					{
+						return true;
+					}
 				}
 			}
 
@@ -165,7 +232,14 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					}
 				}
 				graphics.LineWidth = 1;
-				graphics.RenderSolid(Color.FromBrightness(0));
+
+				Color color = Color.FromBrightness(0);
+				if (this.hilitedElement == ActiveElement.ConnectionHilited ||
+					this.hilitedElement == ActiveElement.ConnectionChange )
+				{
+					color = this.ColorCaption;
+				}
+				graphics.RenderSolid(color);
 			}
 
 			if (this.points.Count != 0 && this.field.IsSourceExpanded)
@@ -207,6 +281,24 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 						this.DrawRoundButton(graphics, start, AbstractObject.bulletRadius, GlyphShape.None, false, false);
 					}
 				}
+
+				//	Dessine le bouton pour changer la connection.
+				if (this.hilitedElement == ActiveElement.ConnectionHilited ||
+					this.hilitedElement == ActiveElement.ConnectionChange)
+				{
+					Point p = this.PositionChange;
+					if (!p.IsZero)
+					{
+						if (this.hilitedElement == ActiveElement.ConnectionChange)
+						{
+							this.DrawRoundButton(graphics, p, AbstractObject.buttonRadius, GlyphShape.Dots, true, false);
+						}
+						else
+						{
+							this.DrawRoundButton(graphics, p, AbstractObject.bulletRadius, GlyphShape.None, false, false);
+						}
+					}
+				}
 			}
 		}
 
@@ -241,6 +333,20 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 			graphics.AddLine(end, e1);
 			graphics.AddLine(end, e2);
+		}
+
+		protected Point PositionChange
+		{
+			//	Retourne la position du bouton pour changer le type de la relation.
+			get
+			{
+				if (this.points.Count >= 2 && this.field.IsExplored)
+				{
+					return this.points[this.points.Count-1];
+				}
+
+				return Point.Zero;
+			}
 		}
 
 

@@ -23,11 +23,11 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			FieldRemove,
 			FieldMovable,
 			FieldMoving,
+			ChangeWidth,
+			MoveColumnsSeparator,
 			ConnectionOpenLeft,
 			ConnectionOpenRight,
 			ConnectionClose,
-			ChangeWidth,
-			MoveColumnsSeparator,
 			ConnectionHilited,
 			ConnectionChange,
 		}
