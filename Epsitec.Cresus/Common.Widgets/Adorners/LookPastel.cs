@@ -210,6 +210,26 @@ namespace Epsitec.Common.Widgets.Adorners
 					path.LineTo(center.X+rect.Width*0.30, center.Y+rect.Height*0.15);
 					break;
 
+				case GlyphShape.HorizontalMove:
+					path.MoveTo(center.X-rect.Width*0.3, center.Y);
+					path.LineTo(center.X-rect.Width*0.05, center.Y+rect.Height*0.3);
+					path.LineTo(center.X-rect.Width*0.05, center.Y-rect.Height*0.3);
+					path.Close();
+					path.MoveTo(center.X+rect.Width*0.3, center.Y);
+					path.LineTo(center.X+rect.Width*0.05, center.Y+rect.Height*0.3);
+					path.LineTo(center.X+rect.Width*0.05, center.Y-rect.Height*0.3);
+					break;
+
+				case GlyphShape.VerticalMove:
+					path.MoveTo(center.X, center.Y-rect.Height*0.3);
+					path.LineTo(center.X-rect.Width*0.3, center.Y-rect.Height*0.05);
+					path.LineTo(center.X+rect.Width*0.3, center.Y-rect.Height*0.05);
+					path.Close();
+					path.MoveTo(center.X, center.Y+rect.Height*0.3);
+					path.LineTo(center.X-rect.Width*0.3, center.Y+rect.Height*0.05);
+					path.LineTo(center.X+rect.Width*0.3, center.Y+rect.Height*0.05);
+					break;
+
 				case GlyphShape.Close:
 				case GlyphShape.Reject:
 					path.MoveTo(center.X-rect.Width*0.20, center.Y-rect.Height*0.30);

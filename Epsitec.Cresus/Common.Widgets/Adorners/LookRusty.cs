@@ -143,6 +143,26 @@ namespace Epsitec.Common.Widgets.Adorners
 					path.LineTo(center.X+rect.Width*baseShiftV, center.Y-rect.Height*baseShiftH);
 					break;
 
+				case GlyphShape.HorizontalMove:
+					path.MoveTo(center.X-rect.Width*0.3, center.Y);
+					path.LineTo(center.X-rect.Width*0.05, center.Y+rect.Height*0.3);
+					path.LineTo(center.X-rect.Width*0.05, center.Y-rect.Height*0.3);
+					path.Close();
+					path.MoveTo(center.X+rect.Width*0.3, center.Y);
+					path.LineTo(center.X+rect.Width*0.05, center.Y+rect.Height*0.3);
+					path.LineTo(center.X+rect.Width*0.05, center.Y-rect.Height*0.3);
+					break;
+
+				case GlyphShape.VerticalMove:
+					path.MoveTo(center.X, center.Y-rect.Height*0.3);
+					path.LineTo(center.X-rect.Width*0.3, center.Y-rect.Height*0.05);
+					path.LineTo(center.X+rect.Width*0.3, center.Y-rect.Height*0.05);
+					path.Close();
+					path.MoveTo(center.X, center.Y+rect.Height*0.3);
+					path.LineTo(center.X-rect.Width*0.3, center.Y+rect.Height*0.05);
+					path.LineTo(center.X+rect.Width*0.3, center.Y+rect.Height*0.05);
+					break;
+
 				case GlyphShape.Menu:
 					path.MoveTo(center.X+rect.Width*0.00*zoom, center.Y-rect.Height*0.25*zoom);
 					path.LineTo(center.X-rect.Width*0.30*zoom, center.Y+rect.Height*0.15*zoom);

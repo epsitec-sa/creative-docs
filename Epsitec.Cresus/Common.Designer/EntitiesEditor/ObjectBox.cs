@@ -848,14 +848,14 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				{
 					//	Dessine le bouton pour déplacer le séparateur des colonnes.
 					center = new Point(this.ColumnsSeparator, this.bounds.Bottom+ObjectBox.footerHeight/2);
-					this.DrawRoundButton(graphics, center, ObjectBox.buttonRadius, GlyphShape.TriangleRight, true, false);
+					this.DrawRoundButton(graphics, center, ObjectBox.buttonRadius, GlyphShape.HorizontalMove, true, false);
 				}
 
 				if (this.hilitedElement == ActiveElement.ChangeWidth)
 				{
 					//	Dessine le bouton pour changer la largeur.
 					center = new Point(this.bounds.Right-ObjectBox.buttonRadius-5, this.bounds.Bottom+ObjectBox.footerHeight/2);
-					this.DrawRoundButton(graphics, center, ObjectBox.buttonRadius, GlyphShape.TriangleRight, true, false);
+					this.DrawRoundButton(graphics, center, ObjectBox.buttonRadius, GlyphShape.HorizontalMove, true, false);
 				}
 			}
 		}

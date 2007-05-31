@@ -33,6 +33,8 @@ namespace Epsitec.Common.Widgets
 		ResizeKnob,
 		Plus,
 		Minus,
+		HorizontalMove,
+		VerticalMove,
 	}
 	
 	/// <summary>

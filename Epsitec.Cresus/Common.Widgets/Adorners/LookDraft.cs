@@ -120,6 +120,22 @@ namespace Epsitec.Common.Widgets.Adorners
 					this.PaintImageButton(graphics, rInside, enabled?70:71);
 					return;
 
+				case GlyphShape.HorizontalMove:
+					rInside.Deflate(rInside.Width*0.1);
+					rInside.Offset(-rInside.Width*0.4, 0);
+					this.PaintImageButton(graphics, rInside, enabled?70:71);
+					rInside.Offset(rInside.Width*0.8, 0);
+					this.PaintImageButton(graphics, rInside, enabled?68:69);
+					break;
+
+				case GlyphShape.VerticalMove:
+					rInside.Deflate(rInside.Width*0.1);
+					rInside.Offset(0, -rInside.Width*0.4);
+					this.PaintImageButton(graphics, rInside, enabled?66:67);
+					rInside.Offset(0, rInside.Width*0.8);
+					this.PaintImageButton(graphics, rInside, enabled?64:65);
+					break;
+
 				case GlyphShape.Menu:
 					this.PaintImageButton(graphics, rInside, enabled?66:67);
 					return;
