@@ -232,7 +232,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				rect.Deflate(ObjectBox.textMargin, 0);
 				this.columnsSeparator = (pos.X-rect.Left)/rect.Width;
 				this.columnsSeparator = System.Math.Max(this.columnsSeparator, 0.2);
-				this.columnsSeparator = System.Math.Min(this.columnsSeparator, 0.8);
+				this.columnsSeparator = System.Math.Min(this.columnsSeparator, 1.0);
 				this.editor.Invalidate();
 				return true;
 			}
@@ -249,6 +249,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			{
 				this.isDragging = true;
 				this.draggingPos = pos;
+				this.editor.Invalidate();
 				this.editor.LockObject(this);
 			}
 
@@ -329,12 +330,13 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			element = ActiveElement.None;
 			fieldRank = -1;
 
-			if (pos.IsZero || !this.bounds.Contains(pos))
+			if (pos.IsZero)
 			{
 				return false;
 			}
 
 			Rectangle rect;
+			Point center;
 
 			if (this.isFieldMoving)
 			{
@@ -353,33 +355,42 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			else
 			{
 				//	Souris dans le bouton compact/étendu ?
-				Point center = new Point(this.bounds.Right-ObjectBox.buttonRadius-5, this.bounds.Top-ObjectBox.headerHeight/2);
-				double d = Point.Distance(center, pos);
-				if (d <= ObjectBox.buttonRadius+3)
+				center = new Point(this.bounds.Right-ObjectBox.buttonRadius-5, this.bounds.Top-ObjectBox.headerHeight/2);
+				if (Point.Distance(center, pos) <= ObjectBox.buttonRadius+3)
 				{
 					element = ActiveElement.ExtendButton;
 					return true;
 				}
 
 				//	Souris dans le bouton pour changer la largeur ?
-				rect = new Rectangle(this.bounds.Right-ObjectBox.buttonRadius*2-8, this.bounds.Bottom, ObjectBox.buttonRadius*2+8, ObjectBox.footerHeight);
-				if (rect.Contains(pos))
-				{
-					element = ActiveElement.ChangeWidth;
-					return true;
-				}
-
 				//	Souris dans le bouton pour déplacer le séparateur des colonnes ?
-				rect = new Rectangle(this.ColumnsSeparator-ObjectBox.buttonRadius, this.bounds.Bottom, ObjectBox.buttonRadius*2, ObjectBox.footerHeight);
-				if (rect.Contains(pos))
+				center = new Point(this.bounds.Right-1, this.bounds.Bottom+ObjectBox.footerHeight/2+1);
+				double d1 = Point.Distance(center, pos);
+
+				center = new Point(this.ColumnsSeparator, this.bounds.Bottom+ObjectBox.footerHeight/2+1);
+				double d2 = Point.Distance(center, pos);
+
+				if (d1 < d2)
 				{
-					element = ActiveElement.MoveColumnsSeparator;
-					return true;
+					if (d1 <= ObjectBox.buttonRadius+3)
+					{
+						element = ActiveElement.ChangeWidth;
+						return true;
+					}
+				}
+				else
+				{
+					if (d2 <= ObjectBox.buttonRadius+3)
+					{
+						element = ActiveElement.MoveColumnsSeparator;
+						return true;
+					}
 				}
 
 				//	Souris dans l'en-tête ?
-				if (pos.Y >= this.bounds.Top-ObjectBox.headerHeight ||
-				pos.Y <= this.bounds.Bottom+ObjectBox.footerHeight)
+				if (this.bounds.Contains(pos) && 
+					(pos.Y >= this.bounds.Top-ObjectBox.headerHeight ||
+					 pos.Y <= this.bounds.Bottom+ObjectBox.footerHeight))
 				{
 					element = ActiveElement.HeaderDragging;
 					return true;
@@ -416,6 +427,11 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 						return true;
 					}
 				}
+			}
+
+			if (!this.bounds.Contains(pos))
+			{
+				return false;
 			}
 
 			element = ActiveElement.Inside;
@@ -681,9 +697,12 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				this.RenderHorizontalGradient(graphics, inside, ci1, ci2);
 
 				//	Trait vertical de séparation.
-				double posx = System.Math.Floor(this.ColumnsSeparator)+0.5;
-				graphics.AddLine(posx, this.bounds.Bottom+ObjectBox.footerHeight+0.5, posx, this.bounds.Top-ObjectBox.headerHeight-0.5);
-				graphics.RenderSolid(colorLine);
+				if (this.columnsSeparator < 1.0)
+				{
+					double posx = System.Math.Floor(this.ColumnsSeparator)+0.5;
+					graphics.AddLine(posx, this.bounds.Bottom+ObjectBox.footerHeight+0.5, posx, this.bounds.Top-ObjectBox.headerHeight-0.5);
+					graphics.RenderSolid(colorLine);
+				}
 
 				//	Ombre supérieure.
 				Rectangle shadow = new Rectangle(this.bounds.Left+1, this.bounds.Top-ObjectBox.headerHeight-8, this.bounds.Width-2, 8);
@@ -750,8 +769,11 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					//	Affiche le type du champ.
 					part = rect;
 					part.Left = this.ColumnsSeparator+2;
-					this.fields[i].TextLayoutType.LayoutSize = part.Size;
-					this.fields[i].TextLayoutType.Paint(part.BottomLeft, graphics, Rectangle.MaxValue, Color.FromBrightness(0), GlyphPaintStyle.Normal);
+					if (part.Width > 10)
+					{
+						this.fields[i].TextLayoutType.LayoutSize = part.Size;
+						this.fields[i].TextLayoutType.Paint(part.BottomLeft, graphics, Rectangle.MaxValue, Color.FromBrightness(0), GlyphPaintStyle.Normal);
+					}
 
 					rect = this.GetFieldBounds(i);
 					graphics.AddLine(rect.Left, rect.Bottom+0.5, rect.Right, rect.Bottom+0.5);
@@ -832,29 +854,26 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 			if (this.isExtended)
 			{
-				//	Dessine les petits traits verticaux dans le pied.
-				double posx;
-
-				posx = System.Math.Floor(this.ColumnsSeparator)+0.5;
-				graphics.AddLine(posx, this.bounds.Bottom+2, posx, this.bounds.Bottom+ObjectBox.footerHeight);
-
-				posx = System.Math.Floor(this.bounds.Right-ObjectBox.buttonRadius*2-8)-0.5;
-				graphics.AddLine(posx, this.bounds.Bottom+2, posx, this.bounds.Bottom+ObjectBox.footerHeight);
-
-				graphics.RenderSolid(colorFrame);
-
+				//	Dessine le bouton pour déplacer le séparateur des colonnes.
+				center = new Point(this.ColumnsSeparator, this.bounds.Bottom+ObjectBox.footerHeight/2+1);
 				if (this.hilitedElement == ActiveElement.MoveColumnsSeparator)
 				{
-					//	Dessine le bouton pour déplacer le séparateur des colonnes.
-					center = new Point(this.ColumnsSeparator, this.bounds.Bottom+ObjectBox.footerHeight/2);
 					this.DrawRoundButton(graphics, center, ObjectBox.buttonRadius, GlyphShape.HorizontalMove, true, false);
 				}
+				if (this.hilitedElement == ActiveElement.HeaderDragging && !this.isDragging)
+				{
+					this.DrawRoundButton(graphics, center, 4, GlyphShape.None, false, false);
+				}
 
+				//	Dessine le bouton pour changer la largeur.
+				center = new Point(this.bounds.Right-1, this.bounds.Bottom+ObjectBox.footerHeight/2+1);
 				if (this.hilitedElement == ActiveElement.ChangeWidth)
 				{
-					//	Dessine le bouton pour changer la largeur.
-					center = new Point(this.bounds.Right-ObjectBox.buttonRadius-5, this.bounds.Bottom+ObjectBox.footerHeight/2);
 					this.DrawRoundButton(graphics, center, ObjectBox.buttonRadius, GlyphShape.HorizontalMove, true, false);
+				}
+				if (this.hilitedElement == ActiveElement.HeaderDragging && !this.isDragging)
+				{
+					this.DrawRoundButton(graphics, center, 4, GlyphShape.None, false, false);
 				}
 			}
 		}
@@ -1067,7 +1086,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		protected static readonly double shadowOffset = 6;
 		protected static readonly double headerHeight = 32;
 		protected static readonly double textMargin = 10;
-		protected static readonly double footerHeight = 10;
+		protected static readonly double footerHeight = 13;
 		protected static readonly double buttonRadius = 10;
 		protected static readonly double fieldHeight = 20;
 
