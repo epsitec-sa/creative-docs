@@ -460,7 +460,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			Rectangle rect = this.GetFieldBounds(rank);
 
 			rect.Left = rect.Right-rect.Height;
-			rect.Offset(-3, 0);
+			//?rect.Offset(-3, 0);
 			
 			return rect;
 		}
@@ -473,7 +473,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			rect.Left = rect.Right-rect.Height;
 			rect.Bottom -= 6;
 			rect.Height = 6*2;
-			rect.Offset(-3, 0);
+			//?rect.Offset(-3, 0);
 
 			return rect;
 		}
@@ -484,7 +484,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			Rectangle rect = this.GetFieldBounds(rank);
 
 			rect.Width = rect.Height;
-			rect.Offset(3, 0);
+			//?rect.Offset(3, 0);
 			
 			return rect;
 		}
@@ -1166,7 +1166,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		protected static readonly double roundRectRadius = 12;
 		protected static readonly double shadowOffset = 6;
 		protected static readonly double headerHeight = 32;
-		protected static readonly double textMargin = 16;
+		protected static readonly double textMargin = 14;
 		protected static readonly double footerHeight = 13;
 		protected static readonly double buttonRadius = 10;
 		protected static readonly double fieldHeight = 20;
