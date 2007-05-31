@@ -632,7 +632,6 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		public override void Draw(Graphics graphics)
 		{
 			//	Dessine l'objet.
-			IAdorner adorner = Common.Widgets.Adorners.Factory.Active;
 			Rectangle rect;
 
 			bool dragging = (this.hilitedElement == ActiveElement.HeaderDragging);
@@ -653,8 +652,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 			//	Dessine l'intérieur en dégradé.
 			graphics.Rasterizer.AddSurface(path);
-			Color c1 = adorner.ColorCaption;
-			Color c2 = adorner.ColorCaption;
+			Color c1 = this.ColorCaption;
+			Color c2 = this.ColorCaption;
 			c1.A = dragging ? 0.6 : 0.4;
 			c2.A = dragging ? 0.2 : 0.1;
 			this.RenderHorizontalGradient(graphics, this.bounds, c1, c2);
@@ -662,11 +661,11 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			Color colorLine = Color.FromBrightness(0.9);
 			if (dragging)
 			{
-				colorLine = adorner.ColorCaption;
+				colorLine = this.ColorCaption;
 				colorLine.A = 0.3;
 			}
 
-			Color colorFrame = dragging ? adorner.ColorCaption : Color.FromBrightness(0);
+			Color colorFrame = dragging ? this.ColorCaption : Color.FromBrightness(0);
 
 			//	Dessine en blanc la zone pour les champs.
 			if (this.isExtended)
@@ -675,8 +674,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				graphics.AddFilledRectangle(inside);
 				graphics.RenderSolid(Color.FromBrightness(1));
 				graphics.AddFilledRectangle(inside);
-				Color ci1 = adorner.ColorCaption;
-				Color ci2 = adorner.ColorCaption;
+				Color ci1 = this.ColorCaption;
+				Color ci2 = this.ColorCaption;
 				ci1.A = dragging ? 0.2 : 0.1;
 				ci2.A = 0.0;
 				this.RenderHorizontalGradient(graphics, inside, ci1, ci2);
@@ -695,7 +694,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			//	Dessine le titre.
 			rect = new Rectangle(this.bounds.Left+4, this.bounds.Top-ObjectBox.headerHeight+2, this.bounds.Width-ObjectBox.buttonRadius*2-5-5, ObjectBox.headerHeight-2);
 			this.title.LayoutSize = rect.Size;
-			this.title.Paint(rect.BottomLeft, graphics);
+			this.title.Paint(rect.BottomLeft, graphics, Rectangle.MaxValue, Color.FromBrightness(0), GlyphPaintStyle.Normal);
 
 			//	Dessine le bouton compact/étendu.
 			Point center = new Point(this.bounds.Right-ObjectBox.buttonRadius-5, this.bounds.Top-ObjectBox.headerHeight/2);
@@ -716,7 +715,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 					if (this.hilitedElement == ActiveElement.FieldSelect && this.hilitedFieldRank == i)
 					{
-						Color hiliteColor = adorner.ColorCaption;
+						Color hiliteColor = this.ColorCaption;
 						hiliteColor.A = 0.1;
 
 						graphics.AddFilledRectangle(rect);
@@ -725,7 +724,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 					if (this.hilitedElement == ActiveElement.FieldRemove && this.hilitedFieldRank == i)
 					{
-						Color hiliteColor = adorner.ColorCaption;
+						Color hiliteColor = this.ColorCaption;
 						hiliteColor.A = 0.3;
 
 						graphics.AddFilledRectangle(rect);
@@ -734,7 +733,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 					if (this.isFieldMoving && this.fieldInitialRank == i)
 					{
-						Color hiliteColor = adorner.ColorCaption;
+						Color hiliteColor = this.ColorCaption;
 						hiliteColor.A = 0.3;
 
 						graphics.AddFilledRectangle(rect);
@@ -746,13 +745,13 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					Rectangle part = rect;
 					part.Right = this.ColumnsSeparator-2;
 					this.fields[i].TextLayoutField.LayoutSize = part.Size;
-					this.fields[i].TextLayoutField.Paint(part.BottomLeft, graphics);
+					this.fields[i].TextLayoutField.Paint(part.BottomLeft, graphics, Rectangle.MaxValue, Color.FromBrightness(0), GlyphPaintStyle.Normal);
 
 					//	Affiche le type du champ.
 					part = rect;
 					part.Left = this.ColumnsSeparator+2;
 					this.fields[i].TextLayoutType.LayoutSize = part.Size;
-					this.fields[i].TextLayoutType.Paint(part.BottomLeft, graphics);
+					this.fields[i].TextLayoutType.Paint(part.BottomLeft, graphics, Rectangle.MaxValue, Color.FromBrightness(0), GlyphPaintStyle.Normal);
 
 					rect = this.GetFieldBounds(i);
 					graphics.AddLine(rect.Left, rect.Bottom+0.5, rect.Right, rect.Bottom+0.5);
@@ -786,7 +785,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					if (this.hilitedElement == ActiveElement.FieldAdd ||
 						this.hilitedElement == ActiveElement.FieldRemove)
 					{
-						hiliteColor = adorner.ColorCaption;
+						hiliteColor = this.ColorCaption;
 						hiliteColor.R = 1-(1-hiliteColor.R)*0.2;
 						hiliteColor.G = 1-(1-hiliteColor.G)*0.2;
 						hiliteColor.B = 1-(1-hiliteColor.B)*0.2;
@@ -811,7 +810,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					graphics.LineWidth = 3;
 					graphics.AddLine(rect.Left, rect.Bottom+0.5, rect.Right, rect.Bottom+0.5);
 					graphics.LineWidth = 1;
-					graphics.RenderSolid(adorner.ColorCaption);
+					graphics.RenderSolid(this.ColorCaption);
 
 					rect = this.GetFieldAddBounds(this.hilitedFieldRank);
 					this.DrawRoundButton(graphics, rect.Center, rect.Width/2, GlyphShape.Plus, true, true);
@@ -823,7 +822,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					graphics.LineWidth = 5;
 					graphics.AddLine(rect.Left, rect.Bottom+0.5, rect.Right, rect.Bottom+0.5);
 					graphics.LineWidth = 1;
-					graphics.RenderSolid(adorner.ColorCaption);
+					graphics.RenderSolid(this.ColorCaption);
 				}
 			}
 
@@ -833,13 +832,13 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 			if (this.isExtended)
 			{
-				//	Dessine les petits traits verticaux.
+				//	Dessine les petits traits verticaux dans le pied.
 				double posx;
 
 				posx = System.Math.Floor(this.ColumnsSeparator)+0.5;
 				graphics.AddLine(posx, this.bounds.Bottom+2, posx, this.bounds.Bottom+ObjectBox.footerHeight);
 
-				posx = this.bounds.Right-ObjectBox.buttonRadius*2-8.5;
+				posx = System.Math.Floor(this.bounds.Right-ObjectBox.buttonRadius*2-8)-0.5;
 				graphics.AddLine(posx, this.bounds.Bottom+2, posx, this.bounds.Bottom+ObjectBox.footerHeight);
 
 				graphics.RenderSolid(colorFrame);
@@ -868,8 +867,6 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				return;
 			}
 
-			IAdorner adorner = Common.Widgets.Adorners.Factory.Active;
-
 			p2 = Point.Move(p2, p1, 2);
 			double d = (p1.Y > p2.Y) ? -10 : 10;
 
@@ -884,7 +881,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			path.Close();
 
 			graphics.Rasterizer.AddSurface(path);
-			graphics.RenderSolid(adorner.ColorCaption);
+			graphics.RenderSolid(this.ColorCaption);
 		}
 
 		protected double ColumnsSeparator
