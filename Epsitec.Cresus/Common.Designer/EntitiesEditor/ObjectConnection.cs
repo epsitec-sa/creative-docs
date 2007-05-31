@@ -236,7 +236,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				if (this.hilitedElement == ActiveElement.ConnectionHilited ||
 					this.hilitedElement == ActiveElement.ConnectionChange )
 				{
-					color = this.ColorCaption;
+					color = this.GetColorCaption();
 				}
 				graphics.RenderSolid(color);
 			}

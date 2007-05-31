@@ -794,20 +794,17 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 			//	Dessine l'intérieur en dégradé.
 			graphics.Rasterizer.AddSurface(path);
-			Color c1 = this.ColorCaption;
-			Color c2 = this.ColorCaption;
-			c1.A = dragging ? 0.6 : 0.4;
-			c2.A = dragging ? 0.2 : 0.1;
+			Color c1 = this.GetColorCaption(dragging ? 0.6 : 0.4);
+			Color c2 = this.GetColorCaption(dragging ? 0.2 : 0.1);
 			this.RenderHorizontalGradient(graphics, this.bounds, c1, c2);
 
 			Color colorLine = Color.FromBrightness(0.9);
 			if (dragging)
 			{
-				colorLine = this.ColorCaption;
-				colorLine.A = 0.3;
+				colorLine = this.GetColorCaption(0.3);
 			}
 
-			Color colorFrame = dragging ? this.ColorCaption : Color.FromBrightness(0);
+			Color colorFrame = dragging ? this.GetColorCaption() : Color.FromBrightness(0);
 
 			//	Dessine en blanc la zone pour les champs.
 			if (this.isExtended)
@@ -816,10 +813,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				graphics.AddFilledRectangle(inside);
 				graphics.RenderSolid(Color.FromBrightness(1));
 				graphics.AddFilledRectangle(inside);
-				Color ci1 = this.ColorCaption;
-				Color ci2 = this.ColorCaption;
-				ci1.A = dragging ? 0.2 : 0.1;
-				ci2.A = 0.0;
+				Color ci1 = this.GetColorCaption(dragging ? 0.2 : 0.1);
+				Color ci2 = this.GetColorCaption(0.0);
 				this.RenderHorizontalGradient(graphics, inside, ci1, ci2);
 
 				//	Trait vertical de séparation.
@@ -856,55 +851,50 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 				for (int i=0; i<this.fields.Count; i++)
 				{
+					Color colorName = Color.FromBrightness(0);
+					Color colorType = Color.FromBrightness(0);
+
 					if (this.hilitedElement == ActiveElement.FieldNameSelect && this.hilitedFieldRank == i)
 					{
 						rect = this.GetFieldNameBounds(i);
 
-						Color hiliteColor = this.ColorCaption;
-						hiliteColor.A = 0.1;
-
 						graphics.AddFilledRectangle(rect);
-						graphics.RenderSolid(hiliteColor);
+						graphics.RenderSolid(this.GetColorCaption());
+
+						colorName = Color.FromBrightness(1);
 					}
 
 					if (this.hilitedElement == ActiveElement.FieldTypeSelect && this.hilitedFieldRank == i)
 					{
 						rect = this.GetFieldTypeBounds(i);
 
-						Color hiliteColor = this.ColorCaption;
-						hiliteColor.A = 0.1;
-
 						graphics.AddFilledRectangle(rect);
-						graphics.RenderSolid(hiliteColor);
+						graphics.RenderSolid(this.GetColorCaption());
+
+						colorType = Color.FromBrightness(1);
 					}
 
 					if ((this.hilitedElement == ActiveElement.FieldRemove || this.hilitedElement == ActiveElement.FieldMovable) && this.hilitedFieldRank == i)
 					{
 						rect = this.GetFieldBounds(i);
 
-						Color hiliteColor = this.ColorCaption;
-						hiliteColor.A = 0.3;
-
 						graphics.AddFilledRectangle(rect);
-						graphics.RenderSolid(hiliteColor);
+						graphics.RenderSolid(this.GetColorCaption(0.3));
 					}
 
 					if (this.isFieldMoving && this.fieldInitialRank == i)
 					{
 						rect = this.GetFieldBounds(i);
 
-						Color hiliteColor = this.ColorCaption;
-						hiliteColor.A = 0.3;
-
 						graphics.AddFilledRectangle(rect);
-						graphics.RenderSolid(hiliteColor);
+						graphics.RenderSolid(this.GetColorCaption(0.3));
 					}
 
 					//	Affiche le nom du champ.
 					rect = this.GetFieldNameBounds(i);
 					rect.Right -= 2;
 					this.fields[i].TextLayoutField.LayoutSize = rect.Size;
-					this.fields[i].TextLayoutField.Paint(rect.BottomLeft, graphics, Rectangle.MaxValue, Color.FromBrightness(0), GlyphPaintStyle.Normal);
+					this.fields[i].TextLayoutField.Paint(rect.BottomLeft, graphics, Rectangle.MaxValue, colorName, GlyphPaintStyle.Normal);
 
 					//	Affiche le type du champ.
 					rect = this.GetFieldTypeBounds(i);
@@ -912,7 +902,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					if (rect.Width > 10)
 					{
 						this.fields[i].TextLayoutType.LayoutSize = rect.Size;
-						this.fields[i].TextLayoutType.Paint(rect.BottomLeft, graphics, Rectangle.MaxValue, Color.FromBrightness(0), GlyphPaintStyle.Normal);
+						this.fields[i].TextLayoutType.Paint(rect.BottomLeft, graphics, Rectangle.MaxValue, colorType, GlyphPaintStyle.Normal);
 					}
 
 					rect = this.GetFieldBounds(i);
@@ -939,12 +929,12 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					Point p1 = this.GetFieldAddBounds(-1).Center;
 					Point p2 = this.GetFieldAddBounds(this.fields.Count-1).Center;
 					hilited = this.hilitedElement == ActiveElement.FieldAdd || this.hilitedElement == ActiveElement.FieldRemove;
-					this.DrawSlider(graphics, p1, p2, hilited);
+					this.DrawEmptySlider(graphics, p1, p2, hilited);
 
 					//	Dessine la glissière à droite pour suggérer les boutons Movable des champs.
 					p1.X = p2.X = this.GetFieldMovableBounds(0).Center.X;
 					hilited = this.hilitedElement == ActiveElement.FieldMovable;
-					this.DrawSlider(graphics, p1, p2, hilited);
+					this.DrawEmptySlider(graphics, p1, p2, hilited);
 				}
 
 				if (this.hilitedElement == ActiveElement.FieldRemove)
@@ -959,7 +949,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					graphics.LineWidth = 3;
 					graphics.AddLine(rect.Left, rect.Bottom+0.5, rect.Right, rect.Bottom+0.5);
 					graphics.LineWidth = 1;
-					graphics.RenderSolid(this.ColorCaption);
+					graphics.RenderSolid(this.GetColorCaption());
 
 					rect = this.GetFieldAddBounds(this.hilitedFieldRank);
 					this.DrawRoundButton(graphics, rect.Center, AbstractObject.buttonRadius, GlyphShape.Plus, true, true);
@@ -977,7 +967,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					graphics.LineWidth = 3;
 					graphics.AddLine(rect.Left, rect.Bottom+0.5, rect.Right, rect.Bottom+0.5);
 					graphics.LineWidth = 1;
-					graphics.RenderSolid(this.ColorCaption);
+					graphics.RenderSolid(this.GetColorCaption());
 				}
 			}
 
@@ -1011,8 +1001,9 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 		}
 
-		protected void DrawSlider(Graphics graphics, Point p1, Point p2, bool hilited)
+		protected void DrawEmptySlider(Graphics graphics, Point p1, Point p2, bool hilited)
 		{
+			//	Dessine une glissère vide, pour suggérer les boutons qui peuvent y prendre place.
 			Rectangle rect = new Rectangle(p1, p2);
 			rect.Inflate(2.5+6);
 			this.DrawShadow(graphics, rect, rect.Width/2, 6, 0.2);
@@ -1022,7 +1013,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			Color hiliteColor = Color.FromBrightness(1);
 			if (hilited)
 			{
-				hiliteColor = this.ColorCaption;
+				hiliteColor = this.GetColorCaption();
 				hiliteColor.R = 1-(1-hiliteColor.R)*0.2;
 				hiliteColor.G = 1-(1-hiliteColor.G)*0.2;
 				hiliteColor.B = 1-(1-hiliteColor.B)*0.2;
@@ -1058,7 +1049,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			path.Close();
 
 			graphics.Rasterizer.AddSurface(path);
-			graphics.RenderSolid(this.ColorCaption);
+			graphics.RenderSolid(this.GetColorCaption());
 		}
 
 		protected double ColumnsSeparator

@@ -137,7 +137,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 
 			graphics.AddFilledCircle(center, radius);
-			graphics.RenderSolid(hilited ? this.ColorCaption : Color.FromBrightness(1));
+			graphics.RenderSolid(hilited ? this.GetColorCaption() : Color.FromBrightness(1));
 
 			graphics.AddCircle(center, radius);
 			graphics.RenderSolid(Color.FromBrightness(0));
@@ -166,25 +166,28 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 		}
 
-		protected Color ColorCaption
+		protected Color GetColorCaption()
 		{
 			//	Retourne la couleur pour les mises en évidence.
-			get
+			return this.GetColorCaption(1.0);
+		}
+
+		protected Color GetColorCaption(double alpha)
+		{
+			//	Retourne la couleur pour les mises en évidence.
+			IAdorner adorner = Common.Widgets.Adorners.Factory.Active;
+
+			Color color = adorner.ColorCaption;
+			color.A = alpha;
+
+			if (color.GetBrightness() > 0.7)  // couleur très claire ?
 			{
-				IAdorner adorner = Common.Widgets.Adorners.Factory.Active;
-
-				Color color = adorner.ColorCaption;
-				color.A = 1;
-
-				if (color.GetBrightness() > 0.7)  // couleur très claire ?
-				{
-					color.R *= 0.5;  // fonce la couleur
-					color.G *= 0.5;
-					color.B *= 0.5;
-				}
-
-				return color;
+				color.R *= 0.5;  // fonce la couleur
+				color.G *= 0.5;
+				color.B *= 0.5;
 			}
+
+			return color;
 		}
 
 		protected void RenderHorizontalGradient(Graphics graphics, Rectangle rect, Color leftColor, Color rightColor)
