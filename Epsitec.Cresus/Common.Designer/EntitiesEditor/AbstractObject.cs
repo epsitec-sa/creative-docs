@@ -28,6 +28,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			ConnectionClose,
 			ChangeWidth,
 			MoveColumnsSeparator,
+			ConnectionHilited,
+			ConnectionChange,
 		}
 
 
@@ -246,6 +248,9 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			return path;
 		}
 
+
+		protected static readonly double buttonRadius = 10;
+		protected static readonly double bulletRadius = 4;
 
 		protected Editor editor;
 		protected ActiveElement hilitedElement;

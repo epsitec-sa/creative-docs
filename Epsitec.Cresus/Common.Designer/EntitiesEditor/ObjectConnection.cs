@@ -108,7 +108,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			//	Souris dans la pastille ronde du départ de la connection ?
 			if (this.field.IsExplored)
 			{
-				if (Point.Distance(pos, this.points[0]) <= ObjectConnection.circleRadius+6)
+				if (Point.Distance(pos, this.points[0]) <= AbstractObject.buttonRadius)
 				{
 					element = ActiveElement.ConnectionClose;
 					return true;
@@ -116,13 +116,13 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 			else
 			{
-				if (Point.Distance(pos, this.points[0]) <= ObjectConnection.circleRadius+6)
+				if (Point.Distance(pos, this.points[0]) <= AbstractObject.buttonRadius)
 				{
 					element = ActiveElement.ConnectionOpenLeft;
 					return true;
 				}
 
-				if (Point.Distance(pos, this.points[1]) <= ObjectConnection.circleRadius+6)
+				if (Point.Distance(pos, this.points[1]) <= AbstractObject.buttonRadius)
 				{
 					element = ActiveElement.ConnectionOpenRight;
 					return true;
@@ -143,7 +143,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				Point start = this.points[0];
 				if (this.field.IsSourceExpanded)
 				{
-					start = Point.Move(start, this.points[1], ObjectConnection.circleRadius);
+					start = Point.Move(start, this.points[1], AbstractObject.bulletRadius);
 				}
 
 				graphics.LineWidth = 2;
@@ -200,11 +200,11 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 					if (hilite)
 					{
-						this.DrawRoundButton(graphics, start, ObjectConnection.circleRadius+6, shape, true, false);
+						this.DrawRoundButton(graphics, start, AbstractObject.buttonRadius, shape, true, false);
 					}
 					else
 					{
-						this.DrawRoundButton(graphics, start, ObjectConnection.circleRadius, GlyphShape.None, false, false);
+						this.DrawRoundButton(graphics, start, AbstractObject.bulletRadius, GlyphShape.None, false, false);
 					}
 				}
 			}

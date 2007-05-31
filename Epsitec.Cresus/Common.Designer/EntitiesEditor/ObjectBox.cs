@@ -355,8 +355,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			else
 			{
 				//	Souris dans le bouton compact/étendu ?
-				center = new Point(this.bounds.Right-ObjectBox.buttonRadius-5, this.bounds.Top-ObjectBox.headerHeight/2);
-				if (Point.Distance(center, pos) <= ObjectBox.buttonRadius+3)
+				center = new Point(this.bounds.Right-AbstractObject.buttonRadius-5, this.bounds.Top-ObjectBox.headerHeight/2);
+				if (Point.Distance(center, pos) <= AbstractObject.buttonRadius+3)
 				{
 					element = ActiveElement.ExtendButton;
 					return true;
@@ -372,7 +372,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 				if (d1 < d2)
 				{
-					if (d1 <= ObjectBox.buttonRadius+3)
+					if (d1 <= AbstractObject.buttonRadius+3)
 					{
 						element = ActiveElement.ChangeWidth;
 						return true;
@@ -380,7 +380,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				}
 				else
 				{
-					if (d2 <= ObjectBox.buttonRadius+3)
+					if (d2 <= AbstractObject.buttonRadius+3)
 					{
 						element = ActiveElement.MoveColumnsSeparator;
 						return true;
@@ -760,15 +760,15 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 
 			//	Dessine le titre.
-			rect = new Rectangle(this.bounds.Left+4, this.bounds.Top-ObjectBox.headerHeight+2, this.bounds.Width-ObjectBox.buttonRadius*2-5-5, ObjectBox.headerHeight-2);
+			rect = new Rectangle(this.bounds.Left+4, this.bounds.Top-ObjectBox.headerHeight+2, this.bounds.Width-AbstractObject.buttonRadius*2-5-5, ObjectBox.headerHeight-2);
 			this.title.LayoutSize = rect.Size;
 			this.title.Paint(rect.BottomLeft, graphics, Rectangle.MaxValue, Color.FromBrightness(0), GlyphPaintStyle.Normal);
 
 			//	Dessine le bouton compact/étendu.
-			Point center = new Point(this.bounds.Right-ObjectBox.buttonRadius-5, this.bounds.Top-ObjectBox.headerHeight/2);
+			Point center = new Point(this.bounds.Right-AbstractObject.buttonRadius-5, this.bounds.Top-ObjectBox.headerHeight/2);
 			GlyphShape shape = this.isExtended ? GlyphShape.ArrowUp : GlyphShape.ArrowDown;
 			bool hilited = (this.hilitedElement == ActiveElement.ExtendButton);
-			this.DrawRoundButton(graphics, center, ObjectBox.buttonRadius, shape, hilited, false);
+			this.DrawRoundButton(graphics, center, AbstractObject.buttonRadius, shape, hilited, false);
 
 			//	Dessine les noms des champs.
 			if (this.isExtended)
@@ -873,7 +873,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				if (this.hilitedElement == ActiveElement.FieldRemove)
 				{
 					rect = this.GetFieldRemoveBounds(this.hilitedFieldRank);
-					this.DrawRoundButton(graphics, rect.Center, rect.Width/2, GlyphShape.Minus, true, true);
+					this.DrawRoundButton(graphics, rect.Center, AbstractObject.buttonRadius, GlyphShape.Minus, true, true);
 				}
 
 				if (this.hilitedElement == ActiveElement.FieldAdd)
@@ -885,13 +885,13 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					graphics.RenderSolid(this.ColorCaption);
 
 					rect = this.GetFieldAddBounds(this.hilitedFieldRank);
-					this.DrawRoundButton(graphics, rect.Center, rect.Width/2, GlyphShape.Plus, true, true);
+					this.DrawRoundButton(graphics, rect.Center, AbstractObject.buttonRadius, GlyphShape.Plus, true, true);
 				}
 
 				if (this.hilitedElement == ActiveElement.FieldMovable)
 				{
 					rect = this.GetFieldMovableBounds(this.hilitedFieldRank);
-					this.DrawRoundButton(graphics, rect.Center, rect.Width/2, GlyphShape.VerticalMove, true, true);
+					this.DrawRoundButton(graphics, rect.Center, AbstractObject.buttonRadius, GlyphShape.VerticalMove, true, true);
 				}
 
 				if (this.hilitedElement == ActiveElement.FieldMoving)
@@ -914,22 +914,22 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				center = new Point(this.ColumnsSeparator, this.bounds.Bottom+ObjectBox.footerHeight/2+1);
 				if (this.hilitedElement == ActiveElement.MoveColumnsSeparator)
 				{
-					this.DrawRoundButton(graphics, center, ObjectBox.buttonRadius, GlyphShape.HorizontalMove, true, false);
+					this.DrawRoundButton(graphics, center, AbstractObject.buttonRadius, GlyphShape.HorizontalMove, true, false);
 				}
 				if (this.hilitedElement == ActiveElement.HeaderDragging && !this.isDragging)
 				{
-					this.DrawRoundButton(graphics, center, 4, GlyphShape.None, false, false);
+					this.DrawRoundButton(graphics, center, AbstractObject.bulletRadius, GlyphShape.None, false, false);
 				}
 
 				//	Dessine le bouton pour changer la largeur.
 				center = new Point(this.bounds.Right-1, this.bounds.Bottom+ObjectBox.footerHeight/2+1);
 				if (this.hilitedElement == ActiveElement.ChangeWidth)
 				{
-					this.DrawRoundButton(graphics, center, ObjectBox.buttonRadius, GlyphShape.HorizontalMove, true, false);
+					this.DrawRoundButton(graphics, center, AbstractObject.buttonRadius, GlyphShape.HorizontalMove, true, false);
 				}
 				if (this.hilitedElement == ActiveElement.HeaderDragging && !this.isDragging)
 				{
-					this.DrawRoundButton(graphics, center, 4, GlyphShape.None, false, false);
+					this.DrawRoundButton(graphics, center, AbstractObject.bulletRadius, GlyphShape.None, false, false);
 				}
 			}
 		}
@@ -1168,7 +1168,6 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		protected static readonly double headerHeight = 32;
 		protected static readonly double textMargin = 14;
 		protected static readonly double footerHeight = 13;
-		protected static readonly double buttonRadius = 10;
 		protected static readonly double fieldHeight = 20;
 
 		protected CultureMap cultureMap;
