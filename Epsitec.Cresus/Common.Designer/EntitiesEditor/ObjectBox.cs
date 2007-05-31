@@ -573,7 +573,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			//	Dessine l'ombre.
 			rect = this.bounds;
 			rect.Offset(ObjectBox.shadowOffset, -(ObjectBox.shadowOffset));
-			this.PaintShadow(graphics, rect, ObjectBox.roundRectRadius+ObjectBox.shadowOffset, (int)ObjectBox.shadowOffset, 0.2);
+			this.DrawShadow(graphics, rect, ObjectBox.roundRectRadius+ObjectBox.shadowOffset, (int)ObjectBox.shadowOffset, 0.2);
 
 			//	Construit le chemin du cadre arrondi.
 			rect = this.bounds;
@@ -619,7 +619,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			Point center = new Point(this.bounds.Right-ObjectBox.buttonRadius-5, this.bounds.Top-ObjectBox.headerHeight/2);
 			GlyphShape shape = this.isExtended ? GlyphShape.ArrowUp : GlyphShape.ArrowDown;
 			bool hilited = (this.hilitedElement == ActiveElement.ExtendButton);
-			this.DrawRoundButton(graphics, center, ObjectBox.buttonRadius, shape, hilited);
+			this.DrawRoundButton(graphics, center, ObjectBox.buttonRadius, shape, hilited, false);
 
 			//	Dessine les noms des champs.
 			if (this.isExtended)
@@ -708,12 +708,12 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					graphics.Rasterizer.AddOutline(pathButtons);
 					graphics.RenderSolid(Color.FromBrightness(0));
 #else
-					rect = Rectangle.Union(this.GetFieldAddBounds(-1), this.GetFieldAddBounds(this.fields.Count-1));
-					rect.Inflate(6.5, 10.0);
-					this.PaintShadow(graphics, rect, rect.Width/2, 8, 0.2);
-
-					rect = Rectangle.Union(this.GetFieldAddBounds(-1), this.GetFieldAddBounds(this.fields.Count-1));
-					rect.Inflate(-4.5, -0.5);
+					Point p1 = this.GetFieldAddBounds(-1).Center;
+					Point p2 = this.GetFieldAddBounds(this.fields.Count-1).Center;
+					rect = new Rectangle(p1, p2);
+					rect.Inflate(2.5+6);
+					this.DrawShadow(graphics, rect, rect.Width/2, 6, 0.2);
+					rect.Deflate(6);
 					Path pathButtons = this.PathRoundRectangle(rect, rect.Width/2);
 
 					Color hiliteColor = Color.FromBrightness(1);
@@ -737,7 +737,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				if (this.hilitedElement == ActiveElement.FieldRemove)
 				{
 					rect = this.GetFieldRemoveBounds(this.hilitedFieldRank);
-					this.DrawRoundButton(graphics, rect.Center, rect.Width/2, GlyphShape.Minus, true);
+					this.DrawRoundButton(graphics, rect.Center, rect.Width/2, GlyphShape.Minus, true, true);
 				}
 
 				if (this.hilitedElement == ActiveElement.FieldAdd)
@@ -749,7 +749,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					graphics.RenderSolid(adorner.ColorCaption);
 
 					rect = this.GetFieldAddBounds(this.hilitedFieldRank);
-					this.DrawRoundButton(graphics, rect.Center, rect.Width/2, GlyphShape.Plus, true);
+					this.DrawRoundButton(graphics, rect.Center, rect.Width/2, GlyphShape.Plus, true, true);
 				}
 
 				if (this.hilitedElement == ActiveElement.FieldMoving)

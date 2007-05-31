@@ -200,11 +200,11 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 					if (hilite)
 					{
-						this.DrawRoundButton(graphics, start, ObjectConnection.circleRadius+6, shape, true);
+						this.DrawRoundButton(graphics, start, ObjectConnection.circleRadius+6, shape, true, false);
 					}
 					else
 					{
-						this.DrawRoundButton(graphics, start, ObjectConnection.circleRadius, GlyphShape.None, false);
+						this.DrawRoundButton(graphics, start, ObjectConnection.circleRadius, GlyphShape.None, false, false);
 					}
 				}
 			}
