@@ -66,13 +66,14 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 					ObjectBox src = this.field.SrcBox;
 					Rectangle bounds = box.Bounds;
+					double ox = 50+20*src.ConnectionExploredCount;
 					if (this.hilitedElement == ActiveElement.ConnectionOpenLeft)
 					{
-						bounds.Location = new Point(src.Bounds.Left-50-box.Bounds.Width, src.Bounds.Top-box.Bounds.Height);
+						bounds.Location = new Point(src.Bounds.Left-ox-box.Bounds.Width, src.Bounds.Top-box.Bounds.Height);
 					}
 					else
 					{
-						bounds.Location = new Point(src.Bounds.Right+50, src.Bounds.Top-box.Bounds.Height);
+						bounds.Location = new Point(src.Bounds.Right+ox, src.Bounds.Top-box.Bounds.Height);
 					}
 					box.Bounds = bounds;
 

@@ -804,6 +804,10 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 			//	Dessine l'ombre.
 			rect = this.bounds;
+			if (this.isRoot)
+			{
+				rect.Inflate(2);
+			}
 			rect.Offset(ObjectBox.shadowOffset, -(ObjectBox.shadowOffset));
 			this.DrawShadow(graphics, rect, ObjectBox.roundFrameRadius+ObjectBox.shadowOffset, (int)ObjectBox.shadowOffset, 0.2);
 
@@ -1087,6 +1091,25 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				Rectangle rect = this.bounds;
 				rect.Deflate(ObjectBox.textMargin, 0);
 				return rect.Left + rect.Width*this.columnsSeparator;
+			}
+		}
+
+		public int ConnectionExploredCount
+		{
+			//	Retourne le nombre de connections ouvertes.
+			get
+			{
+				int count = 0;
+				
+				foreach (Field field in this.fields)
+				{
+					if (field.IsExplored)
+					{
+						count++;
+					}
+				}
+
+				return count;
 			}
 		}
 
