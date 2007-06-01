@@ -83,7 +83,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 
 				if (membership == FieldMembership.Local)
 				{
-					StructuredTypeField field = new StructuredTypeField (null, null, fieldCaption, rank++, relation, sourceFieldId.ToString (), membership);
+					StructuredTypeField field = new StructuredTypeField (null, null, fieldCaption, rank++, relation, sourceFieldId.IsEmpty ? null : sourceFieldId.ToString (), membership);
 					field.DefineTypeId (fieldType);
 					type.Fields.Add (field);
 				}
