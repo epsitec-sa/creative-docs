@@ -124,32 +124,35 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			element = ActiveElement.None;
 			fieldRank = -1;
 
-			if (pos.IsZero || this.points.Count == 0 || !this.field.IsSourceExpanded)
+			if (pos.IsZero || this.points.Count == 0)
 			{
 				return false;
 			}
 
 			//	Souris dans la pastille ronde du départ de la connection ?
-			if (this.field.IsExplored)
+			if (this.field.IsSourceExpanded)
 			{
-				if (Point.Distance(pos, this.points[0]) <= AbstractObject.buttonRadius)
+				if (this.field.IsExplored)
 				{
-					element = ActiveElement.ConnectionClose;
-					return true;
+					if (Point.Distance(pos, this.points[0]) <= AbstractObject.buttonRadius)
+					{
+						element = ActiveElement.ConnectionClose;
+						return true;
+					}
 				}
-			}
-			else
-			{
-				if (Point.Distance(pos, this.points[0]) <= AbstractObject.buttonRadius)
+				else
 				{
-					element = ActiveElement.ConnectionOpenLeft;
-					return true;
-				}
+					if (Point.Distance(pos, this.points[0]) <= AbstractObject.buttonRadius)
+					{
+						element = ActiveElement.ConnectionOpenLeft;
+						return true;
+					}
 
-				if (Point.Distance(pos, this.points[1]) <= AbstractObject.buttonRadius)
-				{
-					element = ActiveElement.ConnectionOpenRight;
-					return true;
+					if (Point.Distance(pos, this.points[1]) <= AbstractObject.buttonRadius)
+					{
+						element = ActiveElement.ConnectionOpenRight;
+						return true;
+					}
 				}
 			}
 
@@ -280,7 +283,10 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 						this.DrawRoundButton(graphics, start, AbstractObject.bulletRadius, GlyphShape.None, false, false);
 					}
 				}
+			}
 
+			if (this.points.Count != 0)
+			{
 				//	Dessine le bouton pour changer la connection.
 				if (this.hilitedElement == ActiveElement.ConnectionHilited ||
 					this.hilitedElement == ActiveElement.ConnectionChange)
