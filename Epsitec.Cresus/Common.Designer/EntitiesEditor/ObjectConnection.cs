@@ -64,7 +64,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					this.editor.AddBox(box);
 					this.editor.UpdateGeometry();
 
-					ObjectBox src = this.editor.SearchSource(this.field);
+					ObjectBox src = this.field.SrcBox;
 					Rectangle bounds = box.Bounds;
 					if (this.hilitedElement == ActiveElement.ConnectionOpenLeft)
 					{

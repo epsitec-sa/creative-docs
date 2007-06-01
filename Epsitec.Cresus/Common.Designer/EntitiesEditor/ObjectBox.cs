@@ -1197,6 +1197,18 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				}
 			}
 
+			public ObjectConnection Connection
+			{
+				get
+				{
+					return this.connection;
+				}
+				set
+				{
+					this.connection = value;
+				}
+			}
+
 			public bool IsExplored
 			{
 				//	Indique si une relation est explorée, c'est-à-dire si l'on voit l'entité destination.
@@ -1230,6 +1242,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			protected int rank;
 			protected ObjectBox srcBox;
 			protected ObjectBox dstBox;
+			protected ObjectConnection connection;
 			protected bool isExplored;
 			protected bool isSourceExpanded;
 		}

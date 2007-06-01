@@ -203,7 +203,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 					if (field.Relation != FieldRelation.None)
 					{
-						ObjectConnection connection = this.SearchConnection(field);
+						ObjectConnection connection = field.Connection;
 						if (connection != null)
 						{
 							connection.Points.Clear();
@@ -341,6 +341,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					if (field.Relation != FieldRelation.None)
 					{
 						ObjectConnection connection = new ObjectConnection(this);
+						field.Connection = connection;
 						connection.Field = field;
 						this.AddConnection(connection);
 					}
@@ -348,35 +349,6 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 
 			this.Invalidate();
-		}
-
-		protected ObjectConnection SearchConnection(ObjectBox.Field field)
-		{
-			foreach (ObjectConnection connection in this.connections)
-			{
-				if (connection.Field == field)
-				{
-					return connection;
-				}
-			}
-
-			return null;
-		}
-
-		public ObjectBox SearchSource(ObjectBox.Field field)
-		{
-			foreach (ObjectBox box in this.boxes)
-			{
-				foreach (ObjectBox.Field objField in box.Fields)
-				{
-					if (objField == field)
-					{
-						return box;
-					}
-				}
-			}
-
-			return null;
 		}
 
 
