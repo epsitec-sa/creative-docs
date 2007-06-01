@@ -17,13 +17,14 @@ namespace App.Designer
 
 			List<string> paths = new List<string> (new string[]
 			{
+				@"S:\Epsitec.Cresus\Demo\Resources",
 				@"S:\Epsitec.Cresus\Common.Dialogs\Resources",
 				@"S:\Epsitec.Cresus\Common.Designer\Resources",
 				@"S:\Epsitec.Cresus\Common.Document\Resources",
 				@"S:\Epsitec.Cresus\Common.Support\Resources",
 				@"S:\Epsitec.Cresus\Common.Types\Resources",
 				@"S:\Epsitec.Cresus\Common.Widgets\Resources",
-				@"S:\Epsitec.Cresus\App.DocumentEditor\Resources",
+				@"S:\Epsitec.Cresus\App.DocumentEditor\Resources"
 			});
 
 			List<string> addPaths = new List<string> ();
