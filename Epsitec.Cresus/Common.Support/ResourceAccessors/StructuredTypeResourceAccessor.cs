@@ -102,37 +102,36 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			base.FillDataFromCaption (item, data, caption);
 
 			StructuredType type = AbstractType.GetComplexType (caption) as StructuredType;
-
-			if (type != null)
-			{
-				this.FillDataFromType (item, data, type);
-			}
+			this.FillDataFromType (item, data, type);
 		}
 
 		private void FillDataFromType(CultureMap item, StructuredData data, StructuredType type)
 		{
 			ObservableList<StructuredData> fields = new ObservableList<StructuredData> ();
 
-			foreach (string fieldId in type.GetFieldIds ())
+			if (type != null)
 			{
-				StructuredTypeField field = type.Fields[fieldId];
-				StructuredData x = new StructuredData (Res.Types.Field);
-				
-				x.SetValue (Res.Fields.Field.TypeId, field.Type.CaptionId);
-				x.SetValue (Res.Fields.Field.CaptionId, field.CaptionId);
-				x.SetValue (Res.Fields.Field.Relation, field.Relation);
-				x.SetValue (Res.Fields.Field.Membership, field.Membership);
-				x.SetValue (Res.Fields.Field.SourceFieldId, string.IsNullOrEmpty (field.SourceFieldId) ? Druid.Empty : Druid.Parse (field.SourceFieldId));
-				fields.Add (x);
-				
-				item.NotifyDataAdded (x);
+				foreach (string fieldId in type.GetFieldIds ())
+				{
+					StructuredTypeField field = type.Fields[fieldId];
+					StructuredData x = new StructuredData (Res.Types.Field);
+
+					x.SetValue (Res.Fields.Field.TypeId, field.Type.CaptionId);
+					x.SetValue (Res.Fields.Field.CaptionId, field.CaptionId);
+					x.SetValue (Res.Fields.Field.Relation, field.Relation);
+					x.SetValue (Res.Fields.Field.Membership, field.Membership);
+					x.SetValue (Res.Fields.Field.SourceFieldId, string.IsNullOrEmpty (field.SourceFieldId) ? Druid.Empty : Druid.Parse (field.SourceFieldId));
+					fields.Add (x);
+
+					item.NotifyDataAdded (x);
+				}
 			}
 
 			data.SetValue (Res.Fields.ResourceStructuredType.Fields, fields);
 			data.LockValue (Res.Fields.ResourceStructuredType.Fields);
 
-			data.SetValue (Res.Fields.ResourceStructuredType.BaseType, type.BaseTypeId);
-			data.SetValue (Res.Fields.ResourceStructuredType.Class, type.Class);
+			data.SetValue (Res.Fields.ResourceStructuredType.BaseType, type == null ? Druid.Empty : type.BaseTypeId);
+			data.SetValue (Res.Fields.ResourceStructuredType.Class, type == null ? StructuredTypeClass.None : type.Class);
 			
 			fields.CollectionChanged += new Listener (this, item).HandleCollectionChanged;
 
