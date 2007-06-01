@@ -116,7 +116,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 					StructuredTypeField field = type.Fields[fieldId];
 					StructuredData x = new StructuredData (Res.Types.Field);
 
-					x.SetValue (Res.Fields.Field.TypeId, field.Type.CaptionId);
+					x.SetValue (Res.Fields.Field.TypeId, field.Type == null ? Druid.Empty : field.Type.CaptionId);
 					x.SetValue (Res.Fields.Field.CaptionId, field.CaptionId);
 					x.SetValue (Res.Fields.Field.Relation, field.Relation);
 					x.SetValue (Res.Fields.Field.Membership, field.Membership);
