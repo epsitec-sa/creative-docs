@@ -90,6 +90,7 @@ namespace Epsitec.Common.Designer
 				this.dlgResourceStructuredTypeField = new Dialogs.ResourceStructuredTypeField(this);
 				this.dlgBindingSelector             = new Dialogs.BindingSelector(this);
 				this.dlgTableConfiguration          = new Dialogs.TableConfiguration(this);
+				this.dlgFieldName                   = new Dialogs.FieldName(this);
 
 				this.dlgGlyphs.Closed += new EventHandler(this.HandleDlgClosed);
 				this.dlgFilter.Closed += new EventHandler(this.HandleDlgClosed);
@@ -1659,6 +1660,14 @@ namespace Epsitec.Common.Designer
 			stype = this.dlgResourceTypeType.SystemType;
 		}
 
+		public string DlgFieldName(string name)
+		{
+			//	Ouvre le dialogue pour choisir le nom d'un champ.
+			this.dlgFieldName.Initialise(name);
+			this.dlgFieldName.Show();  // choix dans le dialogue...
+			return this.dlgFieldName.SelectedName;
+		}
+
 		public Dialogs.Search DialogSearch
 		{
 			get
@@ -1834,6 +1843,7 @@ namespace Epsitec.Common.Designer
 		protected Dialogs.ResourceStructuredTypeField dlgResourceStructuredTypeField;
 		protected Dialogs.BindingSelector		dlgBindingSelector;
 		protected Dialogs.TableConfiguration	dlgTableConfiguration;
+		protected Dialogs.FieldName				dlgFieldName;
 		protected PanelsContext					context;
 
 		protected Support.ResourceManagerPool	resourceManagerPool;

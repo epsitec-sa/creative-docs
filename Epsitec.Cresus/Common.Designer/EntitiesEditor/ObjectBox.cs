@@ -631,6 +631,15 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		protected void AddField(int rank)
 		{
 			//	Ajoute un nouveau champ.
+			Module module = this.editor.Module;
+			string name = this.GetNewName();
+			name = module.MainWindow.DlgFieldName(name);
+			if (string.IsNullOrEmpty(name))
+			{
+				this.hilitedElement = ActiveElement.None;
+				return;
+			}
+			
 			StructuredData data = this.cultureMap.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
 			IList<StructuredData> dataFields = data.GetValue(Support.Res.Fields.ResourceStructuredType.Fields) as IList<StructuredData>;
 
@@ -638,7 +647,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			IDataBroker broker = accessor.GetDataBroker(data, Support.Res.Fields.ResourceStructuredType.Fields.ToString());
 			StructuredData newField = broker.CreateData(this.cultureMap);
 
-			Druid druid = this.CreateFieldCaption();
+			Druid druid = this.CreateFieldCaption(name);
 			newField.SetValue(Support.Res.Fields.Field.CaptionId, druid);
 
 			dataFields.Insert(rank+1, newField);
@@ -754,11 +763,10 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 		}
 
-		protected Druid CreateFieldCaption()
+		protected Druid CreateFieldCaption(string text)
 		{
 			//	Crée un nouveau Caption de type Field (dont le nom commence par "Fld.").
 			//	TODO: remplacer cette cuisine par les nouveaux mécanismes...
-			string text = this.GetNewName();
 			string name = string.Concat(this.Title, ".", text);
 
 			//	Crée un Caption de type Field (dont le nom commence par "Fld.").

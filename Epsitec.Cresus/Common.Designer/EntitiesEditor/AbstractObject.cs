@@ -112,6 +112,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		protected void SetDirty()
 		{
+			//	Active la commande d'enregistrement, lorsqu'une modification a été effectuée.
 			this.editor.Module.AccessEntities.IsDirty = true;
 		}
 

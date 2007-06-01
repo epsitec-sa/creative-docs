@@ -45,6 +45,7 @@
     <Compile Include="Controllers\StructuredController.cs" />
     <Compile Include="Controllers\DruidController.cs" />
     <Compile Include="Designer.cs" />
+    <Compile Include="Dialogs\FieldName.cs" />
     <Compile Include="Dialogs\ResourceStructuredTypeField.cs" />
     <Compile Include="Dialogs\TableConfiguration.cs" />
     <Compile Include="DimensionsList.cs" />
