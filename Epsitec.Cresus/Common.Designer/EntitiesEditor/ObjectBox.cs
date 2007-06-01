@@ -30,6 +30,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			this.fields = new List<Field>();
 
 			this.columnsSeparator = 0.5;
+			this.isRoot = false;
 			this.isExtended = false;
 		}
 
@@ -113,6 +114,25 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			set
 			{
 				this.parentField = value;
+			}
+		}
+
+		public bool IsRoot
+		{
+			//	Indique s'il s'agit de la boîte racine, c'est-à-dire de la boîte sélectionnée
+			//	dans la liste de gauche.
+			get
+			{
+				return this.isRoot;
+			}
+			set
+			{
+				if (this.isRoot != value)
+				{
+					this.isRoot = value;
+
+					this.editor.Invalidate();
+				}
 			}
 		}
 
@@ -369,7 +389,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			else
 			{
 				//	Souris dans le bouton compact/étendu ?
-				center = new Point(this.bounds.Right-AbstractObject.buttonRadius-5, this.bounds.Top-ObjectBox.headerHeight/2);
+				center = new Point(this.bounds.Right-AbstractObject.buttonRadius-6, this.bounds.Top-ObjectBox.headerHeight/2);
 				if (Point.Distance(center, pos) <= AbstractObject.buttonRadius+3)
 				{
 					element = ActiveElement.ExtendButton;
@@ -836,12 +856,12 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 
 			//	Dessine le titre.
-			rect = new Rectangle(this.bounds.Left+4, this.bounds.Top-ObjectBox.headerHeight+2, this.bounds.Width-AbstractObject.buttonRadius*2-5-5, ObjectBox.headerHeight-2);
+			rect = new Rectangle(this.bounds.Left+4, this.bounds.Top-ObjectBox.headerHeight+2, this.bounds.Width-AbstractObject.buttonRadius*2-6-5, ObjectBox.headerHeight-2);
 			this.title.LayoutSize = rect.Size;
 			this.title.Paint(rect.BottomLeft, graphics, Rectangle.MaxValue, Color.FromBrightness(0), GlyphPaintStyle.Normal);
 
 			//	Dessine le bouton compact/étendu.
-			Point center = new Point(this.bounds.Right-AbstractObject.buttonRadius-5, this.bounds.Top-ObjectBox.headerHeight/2);
+			Point center = new Point(this.bounds.Right-AbstractObject.buttonRadius-6, this.bounds.Top-ObjectBox.headerHeight/2);
 			GlyphShape shape = this.isExtended ? GlyphShape.ArrowUp : GlyphShape.ArrowDown;
 			bool hilited = (this.hilitedElement == ActiveElement.ExtendButton);
 			this.DrawRoundButton(graphics, center, AbstractObject.buttonRadius, shape, hilited, false);
@@ -979,7 +999,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 
 			//	Dessine le cadre en noir.
-			graphics.Rasterizer.AddOutline(path, 2);
+			graphics.Rasterizer.AddOutline(path, this.isRoot ? 6 : 2);
 			graphics.RenderSolid(colorFrame);
 
 			if (this.isExtended)
@@ -1261,6 +1281,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		protected CultureMap cultureMap;
 		protected Rectangle bounds;
 		protected double columnsSeparator;
+		protected bool isRoot;
 		protected bool isExtended;
 		protected string titleString;
 		protected TextLayout title;
