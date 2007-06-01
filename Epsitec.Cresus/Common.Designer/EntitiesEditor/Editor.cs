@@ -61,10 +61,11 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		public void AddBox(ObjectBox box)
 		{
 			//	Ajoute une nouvelle boîte dans l'éditeur. Elle est positionnée toujours au même endroit,
-			//	avec une hauteur arbitraire de 100. La hauteur sera de toute façon adaptée par UpdateBoxes().
-			//	La position initiale n'a d'importance que pour la première boîte ajoutée (la boîte racine).
-			//	Pour les autres, la position est de toute façon recalculée en fonction de la boîte parent.
-			box.Bounds = new Rectangle(20, this.areaSize.Height-20-100, Editor.defaultWidth, 100);
+			//	avec une hauteur nulle. La hauteur sera de toute façon adaptée par UpdateBoxes().
+			//	La position initiale n'a pas d'importance. La première boîte ajoutée (la boîte racine)
+			//	est positionnée par RedimArea(). La position des autres est de toute façon recalculée en
+			//	fonction de la boîte parent.
+			box.Bounds = new Rectangle(0, 0, Editor.defaultWidth, 0);
 			box.IsExtended = (this.boxes.Count == 0);
 
 			this.boxes.Add(box);
@@ -74,6 +75,15 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		{
 			//	Supprime une boîte de l'éditeur.
 			this.boxes.Remove(box);
+		}
+
+		public int BoxCount
+		{
+			//	Retourne le nombre de boîtes existantes.
+			get
+			{
+				return this.boxes.Count;
+			}
 		}
 
 		public void AddConnection(ObjectConnection connection)
@@ -153,27 +163,25 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		{
 			//	Appelé lorsque la géométrie d'une boîte a changé (changement compact/étendu).
 			this.UpdateBoxes();  // adapte la taille selon compact/étendu
-			
-			this.PushBoxesInside(Editor.pushMargin);
 			this.PushLayout(box, PushDirection.Automatic, Editor.pushMargin);
-			this.PushBoxesInside(Editor.pushMargin);
+			this.RedimArea();
 			this.UpdateConnections();
 		}
 
 		public void UpdateAfterMoving(ObjectBox box)
 		{
 			//	Appelé lorsqu'une boîte a été bougée.
-			this.PushBoxesInside(Editor.pushMargin);
 			this.PushLayout(box, PushDirection.Automatic, Editor.pushMargin);
-			this.RecenterBoxes(Editor.pushMargin);
-			this.PushBoxesInside(Editor.pushMargin);
+			this.RedimArea();
 			this.UpdateConnections();
 		}
 
-		public void UpdateAfterAddOrRemoveConnection()
+		public void UpdateAfterAddOrRemoveConnection(ObjectBox box)
 		{
 			//	Appelé lorsqu'une liaison a été ajoutée ou supprimée.
 			this.UpdateBoxes();
+			this.PushLayout(box, PushDirection.Automatic, Editor.pushMargin);
+			this.RedimArea();
 			this.CreateConnections();
 			this.UpdateConnections();
 		}
@@ -446,66 +454,15 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		}
 
 
-		protected void PushBoxesInside(double margin)
+		protected void RedimArea()
 		{
-			//	Remet les boîtes dans la surface de dessin.
-			for (int i=0; i<this.boxes.Count; i++)
-			{
-				ObjectBox box = this.boxes[i];
-				Rectangle bounds = box.Bounds;
+			//	Recalcule les dimensions de la surface de travail, en fonction du contenu.
+			Rectangle rect = this.ComputeBoxBounds();
+			rect.Inflate(Editor.frameMargin);
+			this.MoveBoxes(-rect.Left, -rect.Bottom);
 
-				if (bounds.Left < margin)
-				{
-					bounds.Offset(margin-bounds.Left, 0);
-				}
-
-				if (bounds.Right > this.areaSize.Width-margin)
-				{
-					bounds.Offset(this.areaSize.Width-margin-bounds.Right, 0);
-				}
-
-				if (bounds.Bottom < margin)
-				{
-					bounds.Offset(0, margin-bounds.Bottom);
-				}
-
-				if (bounds.Top > this.areaSize.Height-margin)
-				{
-					bounds.Offset(0, this.areaSize.Height-margin-bounds.Top);
-				}
-
-				if (bounds != box.Bounds)
-				{
-					box.Bounds = bounds;
-					this.PushLayout(box, PushDirection.Automatic, Editor.pushMargin);
-				}
-			}
-		}
-
-		protected void RecenterBoxes(double margin)
-		{
-			//	Si des boîtes dépassent de la surface de dessin, recentre le tout.
-			Rectangle bounds = this.ComputeBoxBounds();
-
-			if (bounds.Left < margin)
-			{
-				this.MoveBoxes(margin-bounds.Left, 0);
-			}
-
-			if (bounds.Right > this.areaSize.Width-margin)
-			{
-				this.MoveBoxes(this.areaSize.Width-margin-bounds.Right, 0);
-			}
-
-			if (bounds.Bottom < margin)
-			{
-				this.MoveBoxes(0, margin-bounds.Bottom);
-			}
-
-			if (bounds.Top > this.areaSize.Height-margin)
-			{
-				this.MoveBoxes(0, this.areaSize.Height-margin-bounds.Top);
-			}
+			this.AreaSize = rect.Size;
+			this.OnAreaSizeChanged();
 		}
 
 		protected Rectangle ComputeBoxBounds()
@@ -725,9 +682,35 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 
 
+		#region Events handler
+		protected virtual void OnAreaSizeChanged()
+		{
+			//	Génère un événement pour dire que les dimensions ont changé.
+			EventHandler handler = (EventHandler) this.GetUserEventHandler("AreaSizeChanged");
+			if (handler != null)
+			{
+				handler(this);
+			}
+		}
+
+		public event Support.EventHandler AreaSizeChanged
+		{
+			add
+			{
+				this.AddUserEventHandler ("AreaSizeChanged", value);
+			}
+			remove
+			{
+				this.RemoveUserEventHandler ("AreaSizeChanged", value);
+			}
+		}
+		#endregion
+
+
 		protected static readonly double defaultWidth = 200;
 		protected static readonly double connectionDetour = 30;
 		protected static readonly double pushMargin = 10;
+		protected static readonly double frameMargin = 40;
 
 		protected Module module;
 		protected List<ObjectBox> boxes;

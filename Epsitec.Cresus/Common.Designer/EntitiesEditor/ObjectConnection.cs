@@ -89,7 +89,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				this.CloseBoxes(dst);
 
 				this.editor.CreateConnections();
-				this.editor.UpdateGeometry();
+				this.editor.UpdateAfterMoving(null);
 			}
 
 			if (this.hilitedElement == ActiveElement.ConnectionChange)

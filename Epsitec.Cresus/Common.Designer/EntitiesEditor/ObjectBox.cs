@@ -249,7 +249,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		public override void MouseDown(Point pos)
 		{
 			//	Le bouton de la souris est pressé.
-			if (this.hilitedElement == ActiveElement.HeaderDragging)
+			if (this.hilitedElement == ActiveElement.HeaderDragging && this.editor.BoxCount > 1)
 			{
 				this.isDragging = true;
 				this.draggingPos = pos;
@@ -579,7 +579,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				this.fields.Insert(dstRank, movingFld);
 
 				this.UpdateFields();
-				this.editor.UpdateAfterAddOrRemoveConnection();
+				this.editor.UpdateAfterAddOrRemoveConnection(this);
 			}
 
 			this.hilitedElement = ActiveElement.None;
@@ -600,7 +600,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				this.fields.RemoveAt(rank);
 
 				this.UpdateFields();
-				this.editor.UpdateAfterAddOrRemoveConnection();
+				this.editor.UpdateAfterAddOrRemoveConnection(this);
 			}
 
 			this.hilitedElement = ActiveElement.None;
@@ -626,7 +626,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			this.fields.Insert(rank+1, field);
 
 			this.UpdateFields();
-			this.editor.UpdateAfterAddOrRemoveConnection();
+			this.editor.UpdateAfterAddOrRemoveConnection(this);
 			this.hilitedElement = ActiveElement.None;
 		}
 
@@ -688,7 +688,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 			
 			this.UpdateField(dataField, this.fields[rank]);
-			this.editor.UpdateAfterAddOrRemoveConnection();
+			this.editor.UpdateAfterAddOrRemoveConnection(this);
 		}
 
 		protected void UpdateField(StructuredData dataField, Field field)
@@ -936,9 +936,12 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					this.DrawEmptySlider(graphics, p1, p2, hilited);
 
 					//	Dessine la glissière à droite pour suggérer les boutons Movable des champs.
-					p1.X = p2.X = this.GetFieldMovableBounds(0).Center.X;
-					hilited = this.hilitedElement == ActiveElement.FieldMovable;
-					this.DrawEmptySlider(graphics, p1, p2, hilited);
+					if (this.fields.Count != 0)
+					{
+						p1.X = p2.X = this.GetFieldMovableBounds(0).Center.X;
+						hilited = this.hilitedElement == ActiveElement.FieldMovable;
+						this.DrawEmptySlider(graphics, p1, p2, hilited);
+					}
 				}
 
 				if (this.hilitedElement == ActiveElement.FieldRemove)

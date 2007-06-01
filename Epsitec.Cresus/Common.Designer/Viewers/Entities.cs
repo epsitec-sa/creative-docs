@@ -33,6 +33,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.editor.AreaSize = this.areaSize;
 			this.editor.Zoom = this.Zoom;
 			this.editor.SizeChanged += new EventHandler<DependencyPropertyChangedEventArgs>(this.HandleEditorSizeChanged);
+			this.editor.AreaSizeChanged += new EventHandler(this.HandleEditorAreaSizeChanged);
 
 			this.vscroller = new VScroller(band);
 			this.vscroller.IsInverted = true;
@@ -92,7 +93,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.sliderZoom.ValueChanged += new EventHandler(this.HandleSliderZoomValueChanged);
 			ToolTip.Default.SetToolTip(this.sliderZoom, "Choix du zoom");
 
-			this.AreaSize = new Size(1000, 1000);
+			this.AreaSize = new Size(100, 100);
 
 			this.editor.UpdateGeometry();
 			this.UpdateZoom();
@@ -103,6 +104,15 @@ namespace Epsitec.Common.Designer.Viewers
 		{
 			if (disposing)
 			{
+				this.editor.SizeChanged -= new EventHandler<DependencyPropertyChangedEventArgs>(this.HandleEditorSizeChanged);
+				this.editor.AreaSizeChanged -= new EventHandler(this.HandleEditorAreaSizeChanged);
+				this.vscroller.ValueChanged -= new EventHandler(this.HandleScrollerValueChanged);
+				this.hscroller.ValueChanged -= new EventHandler(this.HandleScrollerValueChanged);
+				this.buttonZoomMin.Clicked -= new MessageEventHandler(this.HandleButtonZoomClicked);
+				this.buttonZoomDefault.Clicked -= new MessageEventHandler(this.HandleButtonZoomClicked);
+				this.buttonZoomMax.Clicked -= new MessageEventHandler(this.HandleButtonZoomClicked);
+				this.fieldZoom.Clicked -= new MessageEventHandler(this.HandleFieldZoomClicked);
+				this.sliderZoom.ValueChanged -= new EventHandler(this.HandleSliderZoomValueChanged);
 			}
 
 			base.Dispose(disposing);
@@ -223,7 +233,7 @@ namespace Epsitec.Common.Designer.Viewers
 			}
 
 			this.editor.CreateConnections();
-			this.editor.UpdateGeometry();
+			this.editor.UpdateAfterGeometryChanged(null);
 		}
 
 
@@ -231,6 +241,12 @@ namespace Epsitec.Common.Designer.Viewers
 		{
 			//	Appelé lorsque la taille de la fenêtre de l'éditeur change.
 			this.UpdateScroller();
+		}
+
+		private void HandleEditorAreaSizeChanged(object sender)
+		{
+			//	Appelé lorsque les dimensions de la zone de travail ont changé.
+			this.AreaSize = this.editor.AreaSize;
 		}
 
 		private void HandleScrollerValueChanged(object sender)
