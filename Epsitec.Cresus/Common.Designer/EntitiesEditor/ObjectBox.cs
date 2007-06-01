@@ -998,11 +998,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				if (this.hilitedElement == ActiveElement.FieldAdd)
 				{
 					rect = this.GetFieldBounds(this.hilitedFieldRank);
-					rect.Deflate(this.isRoot ? 3.5 : 1.5, 0);
-					graphics.LineWidth = 3;
-					graphics.AddLine(rect.Left, rect.Bottom+0.5, rect.Right, rect.Bottom+0.5);
-					graphics.LineWidth = 1;
-					graphics.RenderSolid(this.GetColorCaption());
+					rect.Deflate(this.isRoot ? 3.5 : 1.5, 0.5);
+					this.DrawDashLine(graphics, rect.BottomRight, rect.BottomLeft, this.GetColorCaption());
 
 					rect = this.GetFieldAddBounds(this.hilitedFieldRank);
 					this.DrawRoundButton(graphics, rect.Center, AbstractObject.buttonRadius, GlyphShape.Plus, true, true);
@@ -1017,11 +1014,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				if (this.hilitedElement == ActiveElement.FieldMoving)
 				{
 					rect = this.GetFieldBounds(this.hilitedFieldRank);
-					rect.Deflate(this.isRoot ? 3.5 : 1.5, 0);
-					graphics.LineWidth = 3;
-					graphics.AddLine(rect.Left, rect.Bottom+0.5, rect.Right, rect.Bottom+0.5);
-					graphics.LineWidth = 1;
-					graphics.RenderSolid(this.GetColorCaption());
+					rect.Deflate(this.isRoot ? 3.5 : 1.5, 0.5);
+					this.DrawDashLine(graphics, rect.BottomRight, rect.BottomLeft, this.GetColorCaption());
 				}
 			}
 
@@ -1049,6 +1043,15 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					this.DrawRoundButton(graphics, center, AbstractObject.bulletRadius, GlyphShape.None, false, false);
 				}
 			}
+		}
+
+		protected void DrawDashLine(Graphics graphics, Point p1, Point p2, Color color)
+		{
+			//	Dessine un large traitillé.
+			Path path = new Path();
+			path.MoveTo(p1);
+			path.LineTo(p2);
+			Misc.DrawPathDash(graphics, path, 3, 5, 5, color);
 		}
 
 		protected void DrawEmptySlider(Graphics graphics, Point p1, Point p2, bool hilited)
