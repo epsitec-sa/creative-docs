@@ -110,6 +110,11 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		}
 
 
+		protected void SetDirty()
+		{
+			this.editor.Module.AccessEntities.IsDirty = true;
+		}
+
 		protected void CloseBoxes(ObjectBox box)
 		{
 			//	Ferme récursivement toutes les boîtes liées.

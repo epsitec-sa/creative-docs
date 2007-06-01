@@ -600,6 +600,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 				this.UpdateFields();
 				this.editor.UpdateAfterAddOrRemoveConnection(this);
+				this.SetDirty();
 			}
 
 			this.hilitedElement = ActiveElement.None;
@@ -621,6 +622,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 				this.UpdateFields();
 				this.editor.UpdateAfterAddOrRemoveConnection(this);
+				this.SetDirty();
 			}
 
 			this.hilitedElement = ActiveElement.None;
@@ -647,6 +649,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 			this.UpdateFields();
 			this.editor.UpdateAfterAddOrRemoveConnection(this);
+			this.SetDirty();
 			this.hilitedElement = ActiveElement.None;
 		}
 
@@ -668,6 +671,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 			dataField.SetValue(Support.Res.Fields.Field.CaptionId, druid);
 			this.UpdateField(dataField, this.fields[rank]);
+			this.SetDirty();
 			this.editor.Invalidate();
 		}
 
@@ -708,6 +712,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 			
 			this.UpdateField(dataField, this.fields[rank]);
+			this.SetDirty();
 			this.editor.UpdateAfterAddOrRemoveConnection(this);
 		}
 
