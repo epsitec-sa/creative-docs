@@ -234,7 +234,14 @@ namespace Epsitec.Common.Designer.Dialogs
 
 			if (this.module == null)  // module inconnu ?
 			{
-				this.module = this.baseModule;  // utilise le module de base
+				if (this.lastModule == null)
+				{
+					this.module = this.baseModule;  // utilise le module de base
+				}
+				else
+				{
+					this.module = this.lastModule;  // utilise le dernier module utilisé
+				}
 			}
 
 			if (type == ResourceAccess.Type.Panels)
@@ -266,6 +273,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			this.AccessClose();
 
 			this.module = module;
+			this.lastModule = module;
 
 			if (this.resourceType == ResourceAccess.Type.Panels)
 			{
@@ -858,6 +866,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 
 		protected Module						baseModule;
+		protected Module						lastModule;
 		protected Module						module;
 		protected ResourceAccess.Type			resourceType;
 		protected ResourceAccess.TypeType		resourceTypeType;
