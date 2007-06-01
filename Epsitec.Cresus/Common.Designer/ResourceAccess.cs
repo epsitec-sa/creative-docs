@@ -3027,7 +3027,7 @@ namespace Epsitec.Common.Designer
 						}
 
 						string name = caption.Name;
-						this.AdjustCaptionName(bundle, field, caption);
+						//?this.AdjustCaptionName(bundle, field, caption);
 						System.Diagnostics.Debug.Assert(caption.Name == name);
 
 						field.SetStringValue(caption.SerializeToString());
