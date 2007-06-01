@@ -326,7 +326,7 @@ namespace Epsitec.Common.Designer.Viewers
 			//	Appelé lorsque le champ du zoom a été cliqué.
 			StatusField sf = sender as StatusField;
 			if (sf == null)  return;
-			VMenu menu = EntitiesEditor.ZoomMenu.CreateZoomMenu(this.Zoom, this.ZoomPage, null);
+			VMenu menu = EntitiesEditor.ZoomMenu.CreateZoomMenu(Entities.zoomDefault, this.Zoom, this.ZoomPage, null);
 			menu.Host = sf.Window;
 			TextFieldCombo.AdjustComboSize(sf, menu, false);
 			menu.ShowAsComboList(sf, Point.Zero, sf);

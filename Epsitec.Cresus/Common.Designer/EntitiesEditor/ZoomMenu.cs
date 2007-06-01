@@ -49,14 +49,14 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			list.Add(new ZoomMenu(zoom, comment));
 		}
 
-		public static VMenu CreateZoomMenu(double currentZoom, double zoomPage, MessageEventHandler message)
+		public static VMenu CreateZoomMenu(double zoomDefault, double zoomCurrent, double zoomPage, MessageEventHandler message)
 		{
 			//	Construit le menu pour changer de zoom.
 			System.Collections.ArrayList list = new System.Collections.ArrayList();
 
-			ZoomMenu.Add(list, 1, "zoom 1:1");
-			ZoomMenu.Add(list, zoomPage, "pleine page");
-			ZoomMenu.Add(list, currentZoom, "zoom courant");
+			ZoomMenu.Add(list, zoomDefault, "zoom 1:1");
+			ZoomMenu.Add(list, zoomCurrent, "zoom courant");
+			ZoomMenu.Add(list, zoomPage,    "pleine page");
 
 			ZoomMenu.Add(list,   20);
 			ZoomMenu.Add(list,   50);
@@ -79,7 +79,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				string name = zm.text;
 
 				string icon = Misc.Icon("RadioNo");
-				if ( zm.Equal(currentZoom) )
+				if ( zm.Equal(zoomCurrent) )
 				{
 					icon = Misc.Icon("RadioYes");
 					name = Misc.Bold(name);
