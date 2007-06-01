@@ -212,7 +212,7 @@ namespace Epsitec.Common.Designer.Viewers
 		{
 			//	Met à jour les ascenseurs, en fonction du zoom courant et de la taille de l'éditeur.
 			double w = this.areaSize.Width*this.Zoom - this.editor.Client.Size.Width;
-			if (w <= 0)
+			if (w <= 0 || this.editor.Client.Size.Width <= 0)
 			{
 				this.hscroller.Enable = false;
 			}
@@ -227,7 +227,7 @@ namespace Epsitec.Common.Designer.Viewers
 			}
 
 			double h = this.areaSize.Height*this.Zoom - this.editor.Client.Size.Height;
-			if (h <= 0)
+			if (h <= 0 || this.editor.Client.Size.Height <= 0)
 			{
 				this.vscroller.Enable = false;
 			}
