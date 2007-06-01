@@ -23,7 +23,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.window = new Window();
 				this.window.MakeSecondaryWindow();
 				this.window.PreventAutoClose = true;
-				this.WindowInit("ResourceSelector", 400, 300, true);
+				this.WindowInit("ResourceSelector", 500, 300, true);
 				this.window.Text = Res.Strings.Dialog.ResourceSelector.Title;
 				this.window.Owner = this.parentWindow;
 				this.window.WindowCloseClicked += new EventHandler(this.HandleWindowCloseClicked);
@@ -44,12 +44,12 @@ namespace Epsitec.Common.Designer.Dialogs
 				header.Dock = DockStyle.Top;
 
 				this.title = new StaticText(header);
-				this.title.PreferredWidth = 180;
-				this.title.Dock = DockStyle.Left;
+				this.title.Dock = DockStyle.Fill;
 
 				this.fieldModule = new TextFieldCombo(header);
 				this.fieldModule.IsReadOnly = true;
-				this.fieldModule.Dock = DockStyle.Fill;
+				this.fieldModule.PreferredWidth = 180;
+				this.fieldModule.Dock = DockStyle.Right;
 				this.fieldModule.Margins = new Margins(0, 0, 5, 1);
 				this.fieldModule.ComboClosed += new EventHandler(this.HandleFieldModuleComboClosed);
 
@@ -505,8 +505,8 @@ namespace Epsitec.Common.Designer.Dialogs
 				}
 				else
 				{
-					this.array.SetColumnsRelativeWidth(0, 0.4);
-					this.array.SetColumnsRelativeWidth(1, 0.5);
+					this.array.SetColumnsRelativeWidth(0, 0.5);
+					this.array.SetColumnsRelativeWidth(1, 0.4);
 					this.array.SetColumnsRelativeWidth(2, 0.1);
 
 					this.array.SetColumnAlignment(0, ContentAlignment.MiddleLeft);
