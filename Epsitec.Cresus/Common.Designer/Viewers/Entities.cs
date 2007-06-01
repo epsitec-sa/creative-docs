@@ -34,6 +34,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.editor.Zoom = this.Zoom;
 			this.editor.SizeChanged += new EventHandler<DependencyPropertyChangedEventArgs>(this.HandleEditorSizeChanged);
 			this.editor.AreaSizeChanged += new EventHandler(this.HandleEditorAreaSizeChanged);
+			this.editor.AreaOffsetChanged += new EventHandler(this.HandleEditorAreaOffsetChanged);
 
 			this.vscroller = new VScroller(band);
 			this.vscroller.IsInverted = true;
@@ -114,6 +115,7 @@ namespace Epsitec.Common.Designer.Viewers
 			{
 				this.editor.SizeChanged -= new EventHandler<DependencyPropertyChangedEventArgs>(this.HandleEditorSizeChanged);
 				this.editor.AreaSizeChanged -= new EventHandler(this.HandleEditorAreaSizeChanged);
+				this.editor.AreaOffsetChanged -= new EventHandler(this.HandleEditorAreaOffsetChanged);
 				this.vscroller.ValueChanged -= new EventHandler(this.HandleScrollerValueChanged);
 				this.hscroller.ValueChanged -= new EventHandler(this.HandleScrollerValueChanged);
 				this.buttonZoomPage.Clicked -= new MessageEventHandler(this.HandleButtonZoomClicked);
@@ -239,6 +241,7 @@ namespace Epsitec.Common.Designer.Viewers
 				this.vscroller.VisibleRangeRatio = (decimal) (this.editor.Client.Size.Height / (this.areaSize.Height*this.Zoom));
 			}
 
+			this.editor.IsScrollerEnable = this.hscroller.Enable || this.vscroller.Enable;
 			this.HandleScrollerValueChanged(null);
 		}
 
@@ -277,6 +280,37 @@ namespace Epsitec.Common.Designer.Viewers
 			//	Appelé lorsque les dimensions de la zone de travail ont changé.
 			this.AreaSize = this.editor.AreaSize;
 			this.UpdateZoom();
+		}
+
+		private void HandleEditorAreaOffsetChanged(object sender)
+		{
+			//	Appelé lorsque l'offset de la zone de travail a changé.
+			Point offset = this.editor.AreaOffset;
+
+			if (this.hscroller.Enable)
+			{
+				offset.X = System.Math.Max(offset.X, (double) this.hscroller.MinValue/this.Zoom);
+				offset.X = System.Math.Min(offset.X, (double) this.hscroller.MaxValue/this.Zoom);
+			}
+			else
+			{
+				offset.X = 0;
+			}
+
+			if (this.vscroller.Enable)
+			{
+				offset.Y = System.Math.Max(offset.Y, (double) this.vscroller.MinValue/this.Zoom);
+				offset.Y = System.Math.Min(offset.Y, (double) this.vscroller.MaxValue/this.Zoom);
+			}
+			else
+			{
+				offset.Y = 0;
+			}
+
+			this.editor.AreaOffset = offset;
+
+			this.hscroller.Value = (decimal) (offset.X*this.Zoom);
+			this.vscroller.Value = (decimal) (offset.Y*this.Zoom);
 		}
 
 		private void HandleScrollerValueChanged(object sender)

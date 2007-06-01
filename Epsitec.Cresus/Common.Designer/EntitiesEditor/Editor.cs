@@ -11,6 +11,16 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 	/// </summary>
 	public class Editor : Widget
 	{
+		protected enum MouseCursorType
+		{
+			Unknown,
+			Arrow,
+			Finger,
+			Grid,
+			Move,
+			Hand,
+		}
+
 		protected enum PushDirection
 		{
 			Automatic,
@@ -151,6 +161,19 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 		}
 
+		public bool IsScrollerEnable
+		{
+			//	Indique si un (ou deux) ascenseurs sont actifs.
+			get
+			{
+				return this.isScrollerEnable;
+			}
+			set
+			{
+				this.isScrollerEnable = value;
+			}
+		}
+
 
 		public void UpdateGeometry()
 		{
@@ -254,7 +277,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			{
 				Point p = new Point(0, v);
 
-				if (dstBounds.Center.X > srcBounds.Right+Editor.connectionDetour)  // destination à droite ?
+				if (dstBounds.Center.X > srcBounds.Right+Editor.connectionDetour/3)  // destination à droite ?
 				{
 					Point start = new Point(srcBounds.Right-1, p.Y);
 					connection.Points.Add(start);
@@ -282,7 +305,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 						connection.Points.Add(end);
 					}
 				}
-				else if (dstBounds.Center.X < srcBounds.Left-Editor.connectionDetour)  // destination à gauche ?
+				else if (dstBounds.Center.X < srcBounds.Left-Editor.connectionDetour/3)  // destination à gauche ?
 				{
 					Point start = new Point(srcBounds.Left+1, p.Y);
 					connection.Points.Add(start);
@@ -495,6 +518,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		protected override void ProcessMessage(Message message, Point pos)
 		{
+			this.brutPos = pos;
 			pos = this.ConvWidgetToEditor(pos);
 
 			switch (message.MessageType)
@@ -543,18 +567,28 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		{
 			//	Met en évidence tous les widgets selon la position visée par la souris.
 			//	L'objet à l'avant-plan a la priorité.
-			if (this.lockObject != null)
+			if (this.isAreaMoving)
+			{
+				Point offset = new Point();
+				offset.X = this.areaMovingInitialOffset.X-(this.brutPos.X-this.areaMovingInitialPos.X)/this.zoom;
+				offset.Y = this.areaMovingInitialOffset.Y+(this.brutPos.Y-this.areaMovingInitialPos.Y)/this.zoom;
+				this.AreaOffset = offset;
+				this.OnAreaOffsetChanged();
+			}
+			else if (this.lockObject != null)
 			{
 				this.lockObject.MouseMove(pos);
 			}
 			else
 			{
+				AbstractObject fly = null;
+
 				for (int i=this.connections.Count-1; i>=0; i--)
 				{
 					AbstractObject obj = this.connections[i];
-
 					if (obj.MouseMove(pos))
 					{
+						fly = obj;
 						pos = Point.Zero;  // si on était dans cet objet -> plus aucun hilite pour les objets placés dessous
 					}
 				}
@@ -562,10 +596,45 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				for (int i=this.boxes.Count-1; i>=0; i--)
 				{
 					AbstractObject obj = this.boxes[i];
-
 					if (obj.MouseMove(pos))
 					{
+						fly = obj;
 						pos = Point.Zero;  // si on était dans cet objet -> plus aucun hilite pour les objets placés dessous
+					}
+				}
+
+				if (fly == null)
+				{
+					if (this.IsScrollerEnable)
+					{
+						this.ChangeMouseCursor(MouseCursorType.Hand);
+					}
+					else
+					{
+						this.ChangeMouseCursor(MouseCursorType.Arrow);
+					}
+				}
+				else
+				{
+					if (fly.HilitedElement == AbstractObject.ActiveElement.HeaderDragging && this.BoxCount > 1)
+					{
+						this.ChangeMouseCursor(MouseCursorType.Move);
+					}
+					else if (fly.HilitedElement == AbstractObject.ActiveElement.None ||
+							 fly.HilitedElement == AbstractObject.ActiveElement.Inside ||
+							 fly.HilitedElement == AbstractObject.ActiveElement.HeaderDragging ||
+							 fly.HilitedElement == AbstractObject.ActiveElement.ConnectionHilited)
+					{
+						this.ChangeMouseCursor(MouseCursorType.Arrow);
+					}
+					else if (fly.HilitedElement == AbstractObject.ActiveElement.FieldNameSelect ||
+							 fly.HilitedElement == AbstractObject.ActiveElement.FieldTypeSelect)
+					{
+						this.ChangeMouseCursor(MouseCursorType.Grid);
+					}
+					else
+					{
+						this.ChangeMouseCursor(MouseCursorType.Finger);
 					}
 				}
 			}
@@ -574,21 +643,36 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		protected void MouseDown(Point pos)
 		{
 			//	Début du déplacement d'une boîte.
-			AbstractObject obj = this.DetectObject(pos);
-
-			if (obj != null)
+			if (this.lastCursor == MouseCursorType.Hand)
 			{
-				obj.MouseDown(pos);
+				this.isAreaMoving = true;
+				this.areaMovingInitialPos = this.brutPos;
+				this.areaMovingInitialOffset = this.areaOffset;
+			}
+			else
+			{
+				AbstractObject obj = this.DetectObject(pos);
+				if (obj != null)
+				{
+					obj.MouseDown(pos);
+				}
 			}
 		}
 
 		protected void MouseUp(Point pos)
 		{
 			//	Fin du déplacement d'une boîte.
-			AbstractObject obj = this.DetectObject(pos);
-			if (obj != null)
+			if (this.isAreaMoving)
 			{
-				obj.MouseUp(pos);
+				this.isAreaMoving = false;
+			}
+			else
+			{
+				AbstractObject obj = this.DetectObject(pos);
+				if (obj != null)
+				{
+					obj.MouseUp(pos);
+				}
 			}
 		}
 
@@ -681,6 +765,54 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		}
 
 
+		#region MouseCursor
+		protected void ChangeMouseCursor(MouseCursorType cursor)
+		{
+			//	Change le sprite de la souris.
+			if (cursor == this.lastCursor)
+			{
+				return;
+			}
+
+			this.lastCursor = cursor;
+
+			switch ( cursor )
+			{
+				case MouseCursorType.Finger:
+					this.SetMouseCursorImage(ref this.mouseCursorFinger, Misc.Icon("CursorFinger"));
+					break;
+
+				case MouseCursorType.Grid:
+					this.SetMouseCursorImage(ref this.mouseCursorGrid, Misc.Icon("CursorGrid"));
+					break;
+
+				case MouseCursorType.Move:
+					this.MouseCursor = MouseCursor.AsSizeAll;
+					break;
+
+				case MouseCursorType.Hand:
+					this.SetMouseCursorImage(ref this.mouseCursorHand, Misc.Icon("CursorHand"));
+					break;
+
+				default:
+					this.MouseCursor = MouseCursor.AsArrow;
+					break;
+			}
+
+			this.Window.MouseCursor = this.MouseCursor;
+		}
+
+		protected void SetMouseCursorImage(ref Image image, string name)
+		{
+			//	Choix du sprite de la souris.
+			if (image == null)
+			{
+				image = ImageProvider.Default.GetImage(name, Resources.DefaultManager);
+			}
+			
+			this.MouseCursor = MouseCursor.FromImage(image);
+		}
+		#endregion
 
 		#region Events handler
 		protected virtual void OnAreaSizeChanged()
@@ -704,6 +836,28 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				this.RemoveUserEventHandler ("AreaSizeChanged", value);
 			}
 		}
+
+		protected virtual void OnAreaOffsetChanged()
+		{
+			//	Génère un événement pour dire que l'offset de la surface de travail a changé.
+			EventHandler handler = (EventHandler) this.GetUserEventHandler("AreaOffsetChanged");
+			if (handler != null)
+			{
+				handler(this);
+			}
+		}
+
+		public event Support.EventHandler AreaOffsetChanged
+		{
+			add
+			{
+				this.AddUserEventHandler ("AreaOffsetChanged", value);
+			}
+			remove
+			{
+				this.RemoveUserEventHandler ("AreaOffsetChanged", value);
+			}
+		}
 		#endregion
 
 
@@ -719,5 +873,14 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		protected double zoom;
 		protected Point areaOffset;
 		protected AbstractObject lockObject;
+		protected bool isScrollerEnable;
+		protected Point brutPos;
+		protected bool isAreaMoving;
+		protected Point areaMovingInitialPos;
+		protected Point areaMovingInitialOffset;
+		protected MouseCursorType lastCursor = MouseCursorType.Unknown;
+		protected Image mouseCursorFinger;
+		protected Image mouseCursorHand;
+		protected Image mouseCursorGrid;
 	}
 }

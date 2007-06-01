@@ -11,7 +11,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 	/// </summary>
 	public abstract class AbstractObject
 	{
-		protected enum ActiveElement
+		public enum ActiveElement
 		{
 			None,
 			Inside,
@@ -62,6 +62,14 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			get
 			{
 				return false;
+			}
+		}
+
+		public ActiveElement HilitedElement
+		{
+			get
+			{
+				return this.hilitedElement;
 			}
 		}
 

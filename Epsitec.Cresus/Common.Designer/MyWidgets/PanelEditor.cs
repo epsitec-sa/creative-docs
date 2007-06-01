@@ -32,7 +32,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		protected enum MouseCursorType
 		{
-			Unknow,
+			Unknown,
 			Arrow,
 			ArrowPlus,
 			Global,
@@ -4783,7 +4783,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			//	Choix du sprite de la souris.
 			if (image == null)
 			{
-				image = Support.ImageProvider.Default.GetImage (name, Support.Resources.DefaultManager);
+				image = Support.ImageProvider.Default.GetImage(name, Support.Resources.DefaultManager);
 			}
 
 			this.MouseCursor = MouseCursor.FromImage(image);
@@ -4932,7 +4932,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected int						griddingColumn;
 		protected int						griddingRow;
 		protected Point						startingPos;
-		protected MouseCursorType			lastCursor = MouseCursorType.Unknow;
+		protected MouseCursorType			lastCursor = MouseCursorType.Unknown;
 		protected Size						sizeMark;
 		protected bool						isSizeMarkDragging;
 		protected bool						isSizeMarkHorizontal;

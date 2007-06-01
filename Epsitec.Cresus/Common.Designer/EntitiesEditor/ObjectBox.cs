@@ -559,7 +559,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			Rectangle rect = this.GetFieldBounds(rank);
 			
 			rect.Deflate(ObjectBox.textMargin, 0);
-			rect.Left = this.ColumnsSeparator;
+			rect.Left = this.ColumnsSeparator+1;
 
 			return rect;
 		}
@@ -926,7 +926,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 					//	Affiche le type du champ.
 					rect = this.GetFieldTypeBounds(i);
-					rect.Left += 2;
+					rect.Left += 1;
 					if (rect.Width > 10)
 					{
 						this.fields[i].TextLayoutType.LayoutSize = rect.Size;
@@ -967,7 +967,15 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 						this.DrawEmptySlider(graphics, p1, p2, hilited);
 					}
 				}
+			}
 
+			//	Dessine le cadre en noir.
+			graphics.Rasterizer.AddOutline(path, this.isRoot ? 6 : 2);
+			graphics.RenderSolid(colorFrame);
+
+			//	Dessine les boutons sur les glissières.
+			if (this.isExtended)
+			{
 				if (this.hilitedElement == ActiveElement.FieldRemove)
 				{
 					rect = this.GetFieldRemoveBounds(this.hilitedFieldRank);
@@ -977,6 +985,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				if (this.hilitedElement == ActiveElement.FieldAdd)
 				{
 					rect = this.GetFieldBounds(this.hilitedFieldRank);
+					rect.Deflate(this.isRoot ? 3.5 : 1.5, 0);
 					graphics.LineWidth = 3;
 					graphics.AddLine(rect.Left, rect.Bottom+0.5, rect.Right, rect.Bottom+0.5);
 					graphics.LineWidth = 1;
@@ -995,16 +1004,13 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				if (this.hilitedElement == ActiveElement.FieldMoving)
 				{
 					rect = this.GetFieldBounds(this.hilitedFieldRank);
+					rect.Deflate(this.isRoot ? 3.5 : 1.5, 0);
 					graphics.LineWidth = 3;
 					graphics.AddLine(rect.Left, rect.Bottom+0.5, rect.Right, rect.Bottom+0.5);
 					graphics.LineWidth = 1;
 					graphics.RenderSolid(this.GetColorCaption());
 				}
 			}
-
-			//	Dessine le cadre en noir.
-			graphics.Rasterizer.AddOutline(path, this.isRoot ? 6 : 2);
-			graphics.RenderSolid(colorFrame);
 
 			if (this.isExtended)
 			{
