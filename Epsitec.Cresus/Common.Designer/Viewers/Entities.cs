@@ -50,6 +50,14 @@ namespace Epsitec.Common.Designer.Viewers
 			this.hscroller.ValueChanged += new EventHandler(this.HandleScrollerValueChanged);
 
 			//	Peuple la toolbar.
+			this.buttonZoomPage = new IconButton(this.toolbar);
+			this.buttonZoomPage.IconName = Misc.Icon("ZoomPage");
+			this.buttonZoomPage.ButtonStyle = ButtonStyle.ActivableIcon;
+			this.buttonZoomPage.AutoFocus = false;
+			this.buttonZoomPage.Dock = DockStyle.Left;
+			this.buttonZoomPage.Clicked += new MessageEventHandler(this.HandleButtonZoomClicked);
+			ToolTip.Default.SetToolTip(this.buttonZoomPage, "Zoom pleine page");
+
 			this.buttonZoomMin = new IconButton(this.toolbar);
 			this.buttonZoomMin.IconName = Misc.Icon("ZoomMin");
 			this.buttonZoomMin.ButtonStyle = ButtonStyle.ActivableIcon;
@@ -108,6 +116,7 @@ namespace Epsitec.Common.Designer.Viewers
 				this.editor.AreaSizeChanged -= new EventHandler(this.HandleEditorAreaSizeChanged);
 				this.vscroller.ValueChanged -= new EventHandler(this.HandleScrollerValueChanged);
 				this.hscroller.ValueChanged -= new EventHandler(this.HandleScrollerValueChanged);
+				this.buttonZoomPage.Clicked -= new MessageEventHandler(this.HandleButtonZoomClicked);
 				this.buttonZoomMin.Clicked -= new MessageEventHandler(this.HandleButtonZoomClicked);
 				this.buttonZoomDefault.Clicked -= new MessageEventHandler(this.HandleButtonZoomClicked);
 				this.buttonZoomMax.Clicked -= new MessageEventHandler(this.HandleButtonZoomClicked);
@@ -166,6 +175,23 @@ namespace Epsitec.Common.Designer.Viewers
 			}
 		}
 
+		protected double ZoomPage
+		{
+			//	Retourne le zoom permettant de voir toute la surface de travail.
+			get
+			{
+				double zx = this.editor.Client.Bounds.Width  / this.editor.AreaSize.Width;
+				double zy = this.editor.Client.Bounds.Height / this.editor.AreaSize.Height;
+				double zoom = System.Math.Min(zx, zy);
+
+				zoom = System.Math.Max(zoom, Entities.zoomMin);
+				zoom = System.Math.Min(zoom, Entities.zoomMax);
+				
+				zoom = System.Math.Floor(zoom*100)/100;  // 45.8% -> 46%
+				return zoom;
+			}
+		}
+
 		protected void UpdateZoom()
 		{
 			//	Met à jour tout ce qui dépend du zoom.
@@ -174,6 +200,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.fieldZoom.Text = string.Concat(System.Math.Floor(this.Zoom*100).ToString(), "%");
 			this.sliderZoom.Value = (decimal) this.Zoom;
 
+			this.buttonZoomPage.ActiveState    = (this.Zoom == this.ZoomPage       ) ? ActiveState.Yes : ActiveState.No;
 			this.buttonZoomMin.ActiveState     = (this.Zoom == Entities.zoomMin    ) ? ActiveState.Yes : ActiveState.No;
 			this.buttonZoomDefault.ActiveState = (this.Zoom == Entities.zoomDefault) ? ActiveState.Yes : ActiveState.No;
 			this.buttonZoomMax.ActiveState     = (this.Zoom == Entities.zoomMax    ) ? ActiveState.Yes : ActiveState.No;
@@ -242,12 +269,14 @@ namespace Epsitec.Common.Designer.Viewers
 		{
 			//	Appelé lorsque la taille de la fenêtre de l'éditeur change.
 			this.UpdateScroller();
+			this.UpdateZoom();
 		}
 
 		private void HandleEditorAreaSizeChanged(object sender)
 		{
 			//	Appelé lorsque les dimensions de la zone de travail ont changé.
 			this.AreaSize = this.editor.AreaSize;
+			this.UpdateZoom();
 		}
 
 		private void HandleScrollerValueChanged(object sender)
@@ -271,6 +300,11 @@ namespace Epsitec.Common.Designer.Viewers
 		private void HandleButtonZoomClicked(object sender, MessageEventArgs e)
 		{
 			//	Appelé lorsqu'un bouton de zoom prédéfini est cliqué.
+			if (sender == this.buttonZoomPage)
+			{
+				this.Zoom = this.ZoomPage;
+			}
+
 			if (sender == this.buttonZoomMin)
 			{
 				this.Zoom = Entities.zoomMin;
@@ -292,7 +326,7 @@ namespace Epsitec.Common.Designer.Viewers
 			//	Appelé lorsque le champ du zoom a été cliqué.
 			StatusField sf = sender as StatusField;
 			if (sf == null)  return;
-			VMenu menu = EntitiesEditor.ZoomMenu.CreateZoomMenu(this.Zoom, Entities.zoomDefault, null);
+			VMenu menu = EntitiesEditor.ZoomMenu.CreateZoomMenu(this.Zoom, this.ZoomPage, null);
 			menu.Host = sf.Window;
 			TextFieldCombo.AdjustComboSize(sf, menu, false);
 			menu.ShowAsComboList(sf, Point.Zero, sf);
@@ -318,6 +352,7 @@ namespace Epsitec.Common.Designer.Viewers
 		protected HScroller hscroller;
 		protected Size areaSize;
 		protected HToolBar toolbar;
+		protected IconButton buttonZoomPage;
 		protected IconButton buttonZoomMin;
 		protected IconButton buttonZoomDefault;
 		protected IconButton buttonZoomMax;
