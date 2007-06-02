@@ -340,6 +340,9 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 				if (this.hilitedElement == ActiveElement.CloseButton)
 				{
+					this.CloseBoxes(this.editor.RootBox, null, this);
+					this.editor.CreateConnections();
+					this.editor.UpdateAfterMoving(null);
 				}
 
 				if (this.hilitedElement == ActiveElement.FieldRemove)
