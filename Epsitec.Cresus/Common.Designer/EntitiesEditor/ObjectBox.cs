@@ -1420,7 +1420,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		protected static readonly double roundFrameRadius = 12;
 		protected static readonly double shadowOffset = 6;
-		protected static readonly double headerHeight = 32;
+		public static readonly double headerHeight = 32;
 		protected static readonly double textMargin = 13;
 		protected static readonly double footerHeight = 13;
 		protected static readonly double fieldHeight = 20;

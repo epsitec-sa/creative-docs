@@ -81,6 +81,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 						this.editor.UpdateGeometry();
 
 						ObjectBox src = this.field.SrcBox;
+#if false
 						Rectangle bounds = box.Bounds;
 						double ox = 50+20*src.ConnectionExploredCount;
 						if (this.hilitedElement == ActiveElement.ConnectionOpenLeft)
@@ -91,6 +92,44 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 						{
 							bounds.Location = new Point(src.Bounds.Right+ox, src.Bounds.Top-box.Bounds.Height);
 						}
+#else
+						//	Essaie de trouver une place libre, pour déplacer le moins possible d'éléments.
+						Rectangle bounds;
+						double posv = src.GetConnectionVerticalPosition(this.field.Rank) + ObjectBox.headerHeight/2;
+
+						if (this.hilitedElement == ActiveElement.ConnectionOpenLeft)
+						{
+							bounds = new Rectangle(src.Bounds.Left-50-box.Bounds.Width, posv-box.Bounds.Height, box.Bounds.Width, box.Bounds.Height);
+							bounds.Inflate(50, Editor.pushMargin);
+
+							for (int i=0; i<1000; i++)
+							{
+								if (this.editor.IsEmptyArea(bounds))
+								{
+									break;
+								}
+								bounds.Offset(-1, 0);
+							}
+
+							bounds.Deflate(50, Editor.pushMargin);
+						}
+						else
+						{
+							bounds = new Rectangle(src.Bounds.Right+50, posv-box.Bounds.Height, box.Bounds.Width, box.Bounds.Height);
+							bounds.Inflate(50, Editor.pushMargin);
+
+							for (int i=0; i<1000; i++)
+							{
+								if (this.editor.IsEmptyArea(bounds))
+								{
+									break;
+								}
+								bounds.Offset(1, 0);
+							}
+
+							bounds.Deflate(50, Editor.pushMargin);
+						}
+#endif
 						box.Bounds = bounds;
 					}
 					else
@@ -416,6 +455,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		protected static readonly double arrowLength = 12;
 		protected static readonly double arrowAngle = 25;
 		protected static readonly double lengthClose = 30;
+		protected static readonly double pushMargin = 10;
 
 		protected ObjectBox.Field field;
 		protected List<Point> points;

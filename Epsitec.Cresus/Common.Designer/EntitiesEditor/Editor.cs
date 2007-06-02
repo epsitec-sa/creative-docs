@@ -417,6 +417,20 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		}
 
 
+		public bool IsEmptyArea(Rectangle area)
+		{
+			//	Retourne true si une zone est entièrement vide (aucune boîte, on ignore les connections).
+			foreach (ObjectBox box in this.boxes)
+			{
+				if (box.Bounds.IntersectsWith(area))
+				{
+					return false;
+				}
+			}
+
+			return true;
+		}
+
 		public void CloseBox(ObjectBox box)
 		{
 			//	Ferme une boîte et toutes les boîtes liées, en essayant de fermer le moins possible de boîtes.
@@ -999,7 +1013,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		protected static readonly double defaultWidth = 200;
 		protected static readonly double connectionDetour = 30;
-		protected static readonly double pushMargin = 10;
+		public static readonly double pushMargin = 10;
 		protected static readonly double frameMargin = 40;
 
 		protected Module module;
