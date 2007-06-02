@@ -80,19 +80,15 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 							bounds.Location = new Point(src.Bounds.Right+ox, src.Bounds.Top-box.Bounds.Height);
 						}
 						box.Bounds = bounds;
-
-						this.editor.CreateConnections();
-						this.editor.UpdateAfterMoving(box);
 					}
 					else
 					{
 						//	Ouvre la connection sur une boîte existante.
 						this.field.DstBox = box;
-						this.editor.UpdateGeometry();
-
-						this.editor.CreateConnections();
-						this.editor.UpdateAfterMoving(box);
 					}
+
+					this.editor.CreateConnections();
+					this.editor.UpdateAfterMoving(box);
 				}
 			}
 

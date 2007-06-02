@@ -76,7 +76,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			//	est positionnée par RedimArea(). La position des autres est de toute façon recalculée en
 			//	fonction de la boîte parent.
 			box.Bounds = new Rectangle(0, 0, Editor.defaultWidth, 0);
-			box.IsExtended = (this.boxes.Count == 0);
+			//?box.IsExtended = (this.boxes.Count == 0);
+			box.IsExtended = true;
 
 			this.boxes.Add(box);
 		}
