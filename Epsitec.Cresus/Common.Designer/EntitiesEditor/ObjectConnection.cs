@@ -37,6 +37,18 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 		}
 
+		public bool IsDstHilied
+		{
+			get
+			{
+				return this.isDstHilied;
+			}
+			set
+			{
+				this.isDstHilied = value;
+			}
+		}
+
 
 		public override void MouseDown(Point pos)
 		{
@@ -156,13 +168,13 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				{
 					if (Point.Distance(pos, this.points[0]) <= AbstractObject.buttonRadius)
 					{
-						element = ActiveElement.ConnectionOpenLeft;
+						element = ActiveElement.ConnectionOpenRight;
 						return true;
 					}
 
 					if (Point.Distance(pos, this.points[1]) <= AbstractObject.buttonRadius)
 					{
-						element = ActiveElement.ConnectionOpenRight;
+						element = ActiveElement.ConnectionOpenLeft;
 						return true;
 					}
 				}
@@ -267,12 +279,12 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					bool hilite = false;
 					if (this.hilitedElement == ActiveElement.ConnectionOpenLeft)
 					{
-						hilite = (i == 0);
+						hilite = (i == 1);
 						shape = GlyphShape.ArrowLeft;
 					}
 					else if (this.hilitedElement == ActiveElement.ConnectionOpenRight)
 					{
-						hilite = (i == 1);
+						hilite = (i == 0);
 						shape = GlyphShape.ArrowRight;
 					}
 					else if (this.hilitedElement == ActiveElement.ConnectionClose)
@@ -284,6 +296,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					else
 					{
 						if (this.field.IsExplored && i != 0)  break;
+						if (!this.isDstHilied && i != 0)  break;
 					}
 
 					if (hilite)
@@ -373,5 +386,6 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		protected ObjectBox.Field field;
 		protected List<Point> points;
+		protected bool isDstHilied;
 	}
 }

@@ -372,9 +372,14 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			//	Détecte l'élément actif visé par la souris.
 			element = ActiveElement.None;
 			fieldRank = -1;
+			this.SetConnectionsHilited(false);
 
 			if (pos.IsZero)
 			{
+				if (this.IsConnectionReadyForOpen())
+				{
+					this.SetConnectionsHilited(true);
+				}
 				return false;
 			}
 
@@ -449,6 +454,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					 pos.Y <= this.bounds.Bottom+ObjectBox.footerHeight))
 					{
 						element = ActiveElement.HeaderDragging;
+						this.SetConnectionsHilited(true);
 						return true;
 					}
 
@@ -460,6 +466,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 						{
 							element = ActiveElement.FieldAdd;
 							fieldRank = i;
+							this.SetConnectionsHilited(true);
 							return true;
 						}
 					}
@@ -472,6 +479,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 						{
 							element = ActiveElement.FieldRemove;
 							fieldRank = i;
+							this.SetConnectionsHilited(true);
 							return true;
 						}
 
@@ -480,6 +488,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 						{
 							element = ActiveElement.FieldMovable;
 							fieldRank = i;
+							this.SetConnectionsHilited(true);
 							return true;
 						}
 
@@ -488,6 +497,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 						{
 							element = ActiveElement.FieldNameSelect;
 							fieldRank = i;
+							this.SetConnectionsHilited(true);
 							return true;
 						}
 
@@ -496,6 +506,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 						{
 							element = ActiveElement.FieldTypeSelect;
 							fieldRank = i;
+							this.SetConnectionsHilited(true);
 							return true;
 						}
 					}
@@ -516,7 +527,39 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 
 			element = ActiveElement.Inside;
+			this.SetConnectionsHilited(true);
 			return true;
+		}
+
+		protected void SetConnectionsHilited(bool isHilited)
+		{
+			//	Modifie l'état 'hilited' de toutes les connections qui partent de l'objet.
+			foreach (Field field in this.fields)
+			{
+				if (field.Connection != null)
+				{
+					field.Connection.IsDstHilied = isHilited;
+				}
+			}
+		}
+
+		protected bool IsConnectionReadyForOpen()
+		{
+			//	Indique si l'une des connections qui partent de l'objet est en mode ConnectionOpen*.
+			foreach (Field field in this.fields)
+			{
+				if (field.Connection != null)
+				{
+					ActiveElement ae = field.Connection.HilitedElement;
+					if (ae == ActiveElement.ConnectionOpenLeft ||
+						ae == ActiveElement.ConnectionOpenRight)
+					{
+						return true;
+					}
+				}
+			}
+
+			return false;
 		}
 
 		protected Rectangle GetFieldRemoveBounds(int rank)

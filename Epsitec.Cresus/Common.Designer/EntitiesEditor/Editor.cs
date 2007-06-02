@@ -271,8 +271,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 							{
 								double posv = box.GetConnectionVerticalPosition(i);
 
-								connection.Points.Add(new Point(box.Bounds.Left+1, posv));
 								connection.Points.Add(new Point(box.Bounds.Right-1, posv));
+								connection.Points.Add(new Point(box.Bounds.Left+1, posv));
 							}
 						}
 					}
