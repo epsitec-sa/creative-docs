@@ -907,7 +907,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 
 			//	Dessine le titre.
-			rect = new Rectangle(this.bounds.Left+4, this.bounds.Top-ObjectBox.headerHeight, this.bounds.Width-8, ObjectBox.headerHeight);
+			rect = new Rectangle(this.bounds.Left, this.bounds.Top-ObjectBox.headerHeight, this.bounds.Width, ObjectBox.headerHeight);
+			rect.Deflate(4, 2);
 			this.title.LayoutSize = rect.Size;
 			this.title.Paint(rect.BottomLeft, graphics, Rectangle.MaxValue, Color.FromBrightness(0), GlyphPaintStyle.Normal);
 
@@ -1084,7 +1085,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				}
 				if (this.hilitedElement == ActiveElement.HeaderDragging && !this.isDragging)
 				{
-					this.DrawRoundButton(graphics, center, AbstractObject.bulletRadius, GlyphShape.None, false, false);
+					this.DrawRoundButton(graphics, center, AbstractObject.buttonRadius, GlyphShape.HorizontalMove, false, false);
 				}
 
 				//	Dessine le bouton pour changer la largeur.
@@ -1095,7 +1096,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				}
 				if (this.hilitedElement == ActiveElement.HeaderDragging && !this.isDragging)
 				{
-					this.DrawRoundButton(graphics, center, AbstractObject.bulletRadius, GlyphShape.None, false, false);
+					this.DrawRoundButton(graphics, center, AbstractObject.buttonRadius, GlyphShape.HorizontalMove, false, false);
 				}
 			}
 		}
