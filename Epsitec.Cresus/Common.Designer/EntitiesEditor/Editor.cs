@@ -571,6 +571,10 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					this.MouseUp(pos);
 					message.Consumer = this;
 					break;
+
+				case MessageType.MouseLeave:
+					this.MouseMove(Point.Zero);
+					break;
 			}
 		}
 

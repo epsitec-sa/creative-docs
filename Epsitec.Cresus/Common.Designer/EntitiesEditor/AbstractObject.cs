@@ -122,12 +122,12 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		{
 			//	Ferme récursivement toutes les boîtes liées.
 			List<ObjectBox> toClose = new List<ObjectBox>();
-			toClose.Add(rootBox);
-			toClose.Add(master);
+			toClose.Add(rootBox);  // pour éviter les boucles
+			toClose.Add(master);  // pour éviter les boucles
 			this.CloseBoxes(toClose, box);
 
-			toClose.RemoveAt(0);
-			toClose.RemoveAt(0);
+			toClose.RemoveAt(0);  // enlève master
+			toClose.RemoveAt(0);  // enlève rootBox
 			foreach (ObjectBox boxToClose in toClose)
 			{
 				this.editor.RemoveBox(boxToClose);
@@ -136,7 +136,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		protected void CloseBoxes(List<ObjectBox> toClose, ObjectBox box)
 		{
-			//	Ferme récursivement toutes les boîtes liées.
+			//	Ajoute récursivement dans une liste toutes les boîtes liées à fermer.
 			if (box != null)
 			{
 				foreach (ObjectBox.Field field in box.Fields)
