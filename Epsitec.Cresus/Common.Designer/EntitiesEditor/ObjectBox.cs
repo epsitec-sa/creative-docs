@@ -174,6 +174,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		public double GetConnectionVerticalPosition(int rank)
 		{
 			//	Retourne la position verticale pour un trait de liaison.
+			//	Il s'agit toujours de la position de départ d'une liaison.
 			if (this.isExtended && rank < this.fields.Count)
 			{
 				Rectangle rect = this.GetFieldBounds(rank);
@@ -188,6 +189,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		public Point GetConnectionDestination(double posv, ConnectionAnchor anchor)
 		{
 			//	Retourne la position où accrocher la destination.
+			//	Il s'agit toujours de la position de d'arrivée d'une liaison.
 			Rectangle bounds = this.bounds;
 
 			switch (anchor)
@@ -199,7 +201,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					}
 					else
 					{
-						return new Point(bounds.Left, bounds.Center.Y);
+						return new Point(bounds.Left, bounds.Top-ObjectBox.headerHeight/2);
 					}
 
 				case ConnectionAnchor.Right:
@@ -209,7 +211,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					}
 					else
 					{
-						return new Point(bounds.Right, bounds.Center.Y);
+						return new Point(bounds.Right, bounds.Top-ObjectBox.headerHeight/2);
 					}
 
 				case ConnectionAnchor.Bottom:
