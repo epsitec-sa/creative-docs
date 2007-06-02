@@ -338,6 +338,10 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					this.editor.UpdateAfterGeometryChanged(this);
 				}
 
+				if (this.hilitedElement == ActiveElement.CloseButton)
+				{
+				}
+
 				if (this.hilitedElement == ActiveElement.FieldRemove)
 				{
 					this.RemoveField(this.hilitedFieldRank);
@@ -396,6 +400,17 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				{
 					element = ActiveElement.ExtendButton;
 					return true;
+				}
+
+				//	Souris dans le bouton de fermeture ?
+				if (!this.isRoot)
+				{
+					center = new Point(this.bounds.Right-AbstractObject.buttonRadius*3-8, this.bounds.Top-ObjectBox.headerHeight/2);
+					if (Point.Distance(center, pos) <= AbstractObject.buttonRadius+3)
+					{
+						element = ActiveElement.CloseButton;
+						return true;
+					}
 				}
 
 				if (this.isExtended)
@@ -898,6 +913,20 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			bool hilited = (this.hilitedElement == ActiveElement.ExtendButton);
 			this.DrawRoundButton(graphics, center, AbstractObject.buttonRadius, shape, hilited, false);
 
+			//	Dessine le bouton de fermeture.
+			if (!this.isRoot)
+			{
+				center = new Point(this.bounds.Right-AbstractObject.buttonRadius*3-8, this.bounds.Top-ObjectBox.headerHeight/2);
+				if (this.hilitedElement == ActiveElement.CloseButton)
+				{
+					this.DrawRoundButton(graphics, center, AbstractObject.buttonRadius, GlyphShape.Close, true, false);
+				}
+				if ((this.hilitedElement == ActiveElement.HeaderDragging || this.hilitedElement == ActiveElement.ExtendButton) && !this.isDragging)
+				{
+					this.DrawRoundButton(graphics, center, AbstractObject.buttonRadius, GlyphShape.Close, false, false);
+				}
+			}
+
 			//	Dessine les noms des champs.
 			if (this.isExtended)
 			{
@@ -977,6 +1006,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				if (this.hilitedElement != ActiveElement.None &&
 					this.hilitedElement != ActiveElement.HeaderDragging &&
 					this.hilitedElement != ActiveElement.ExtendButton &&
+					this.hilitedElement != ActiveElement.CloseButton &&
 					this.hilitedElement != ActiveElement.ChangeWidth &&
 					this.hilitedElement != ActiveElement.MoveColumnsSeparator &&
 					!this.isFieldMoving && !this.isChangeWidth && !this.isMoveColumnsSeparator)

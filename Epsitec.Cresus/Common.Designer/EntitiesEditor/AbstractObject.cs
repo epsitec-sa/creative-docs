@@ -16,6 +16,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			None,
 			Inside,
 			ExtendButton,
+			CloseButton,
 			HeaderDragging,
 			FieldNameSelect,
 			FieldTypeSelect,
