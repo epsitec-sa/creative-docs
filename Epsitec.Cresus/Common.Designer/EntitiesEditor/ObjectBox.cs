@@ -405,7 +405,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			else
 			{
 				//	Souris dans le bouton compact/étendu ?
-				center = new Point(this.bounds.Right-AbstractObject.buttonRadius-6, this.bounds.Top-ObjectBox.headerHeight/2);
+				center = new Point(this.bounds.Right-AbstractObject.buttonRadius*3-8, this.bounds.Top-ObjectBox.headerHeight/2);
 				if (Point.Distance(center, pos) <= AbstractObject.buttonRadius+3)
 				{
 					element = ActiveElement.ExtendButton;
@@ -415,7 +415,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				//	Souris dans le bouton de fermeture ?
 				if (!this.isRoot)
 				{
-					center = new Point(this.bounds.Right-AbstractObject.buttonRadius*3-8, this.bounds.Top-ObjectBox.headerHeight/2);
+					center = new Point(this.bounds.Right-AbstractObject.buttonRadius-6, this.bounds.Top-ObjectBox.headerHeight/2);
 					if (Point.Distance(center, pos) <= AbstractObject.buttonRadius+3)
 					{
 						element = ActiveElement.CloseButton;
@@ -959,7 +959,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			this.title.Paint(rect.BottomLeft, graphics, Rectangle.MaxValue, Color.FromBrightness(0), GlyphPaintStyle.Normal);
 
 			//	Dessine le bouton compact/étendu.
-			center = new Point(this.bounds.Right-AbstractObject.buttonRadius-6, this.bounds.Top-ObjectBox.headerHeight/2);
+			center = new Point(this.bounds.Right-AbstractObject.buttonRadius*3-8, this.bounds.Top-ObjectBox.headerHeight/2);
 			GlyphShape shape = this.isExtended ? GlyphShape.ArrowUp : GlyphShape.ArrowDown;
 			if (this.hilitedElement == ActiveElement.ExtendButton)
 			{
@@ -973,7 +973,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			//	Dessine le bouton de fermeture.
 			if (!this.isRoot)
 			{
-				center = new Point(this.bounds.Right-AbstractObject.buttonRadius*3-8, this.bounds.Top-ObjectBox.headerHeight/2);
+				center = new Point(this.bounds.Right-AbstractObject.buttonRadius-6, this.bounds.Top-ObjectBox.headerHeight/2);
 				if (this.hilitedElement == ActiveElement.CloseButton)
 				{
 					this.DrawRoundButton(graphics, center, AbstractObject.buttonRadius, GlyphShape.Close, true, false);
