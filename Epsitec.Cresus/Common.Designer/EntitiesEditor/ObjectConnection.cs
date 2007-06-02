@@ -182,7 +182,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 			//	Souris dans le bouton pour changer la connection ?
 			Point p = this.PositionChange;
-			if (!p.IsZero && Point.Distance(pos, p) <= AbstractObject.buttonRadius)
+			if (!p.IsZero && (this.field.IsExplored || this.field.IsSourceExpanded) && Point.Distance(pos, p) <= AbstractObject.buttonRadius)
 			{
 				element = ActiveElement.ConnectionChange;
 				return true;
@@ -324,7 +324,14 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					}
 					else
 					{
-						this.DrawRoundButton(graphics, start, AbstractObject.bulletRadius, GlyphShape.None, false, false);
+						if (this.hilitedElement == ActiveElement.ConnectionHilited)
+						{
+							this.DrawRoundButton(graphics, start, AbstractObject.buttonRadius, GlyphShape.Close, false, false);
+						}
+						else
+						{
+							this.DrawRoundButton(graphics, start, AbstractObject.bulletRadius, GlyphShape.None, false, false);
+						}
 					}
 				}
 			}
@@ -344,7 +351,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 						}
 						else
 						{
-							this.DrawRoundButton(graphics, p, AbstractObject.bulletRadius, GlyphShape.None, false, false);
+							this.DrawRoundButton(graphics, p, AbstractObject.buttonRadius, GlyphShape.Dots, false, false);
 						}
 					}
 				}
