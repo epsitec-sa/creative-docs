@@ -35,11 +35,13 @@ namespace Epsitec.Common.Designer.Viewers
 			this.editor.SizeChanged += new EventHandler<DependencyPropertyChangedEventArgs>(this.HandleEditorSizeChanged);
 			this.editor.AreaSizeChanged += new EventHandler(this.HandleEditorAreaSizeChanged);
 			this.editor.AreaOffsetChanged += new EventHandler(this.HandleEditorAreaOffsetChanged);
+			this.editor.ZoomChanged += new EventHandler(this.HandleEditorZoomChanged);
 
 			this.vscroller = new VScroller(band);
 			this.vscroller.IsInverted = true;
 			this.vscroller.Dock = DockStyle.Right;
 			this.vscroller.ValueChanged += new EventHandler(this.HandleScrollerValueChanged);
+			this.editor.VScroller = this.vscroller;
 
 			this.toolbar = new HToolBar(editorGroup);
 			this.toolbar.Dock = DockStyle.Bottom;
@@ -116,6 +118,7 @@ namespace Epsitec.Common.Designer.Viewers
 				this.editor.SizeChanged -= new EventHandler<DependencyPropertyChangedEventArgs>(this.HandleEditorSizeChanged);
 				this.editor.AreaSizeChanged -= new EventHandler(this.HandleEditorAreaSizeChanged);
 				this.editor.AreaOffsetChanged -= new EventHandler(this.HandleEditorAreaOffsetChanged);
+				this.editor.ZoomChanged -= new EventHandler(this.HandleEditorZoomChanged);
 				this.vscroller.ValueChanged -= new EventHandler(this.HandleScrollerValueChanged);
 				this.hscroller.ValueChanged -= new EventHandler(this.HandleScrollerValueChanged);
 				this.buttonZoomPage.Clicked -= new MessageEventHandler(this.HandleButtonZoomClicked);
@@ -313,6 +316,12 @@ namespace Epsitec.Common.Designer.Viewers
 			this.vscroller.Value = (decimal) (offset.Y*this.Zoom);
 		}
 
+		private void HandleEditorZoomChanged(object sender)
+		{
+			//	Appelé lorsque le zoom a changé.
+			this.Zoom = this.editor.Zoom;
+		}
+
 		private void HandleScrollerValueChanged(object sender)
 		{
 			//	Appelé lorsqu'un ascenseur a été bougé.
@@ -374,9 +383,9 @@ namespace Epsitec.Common.Designer.Viewers
 		}
 
 
-		protected static readonly double zoomMin     = 0.2;
+		public static readonly double zoomMin = 0.2;
+		public static readonly double zoomMax = 2.0;
 		protected static readonly double zoomDefault = 1.0;
-		protected static readonly double zoomMax     = 2.0;
 
 		protected static double zoom = Entities.zoomDefault;
 

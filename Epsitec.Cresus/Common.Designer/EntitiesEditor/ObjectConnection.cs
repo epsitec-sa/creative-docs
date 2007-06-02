@@ -37,15 +37,15 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 		}
 
-		public bool IsDstHilied
+		public bool IsDstHilited
 		{
 			get
 			{
-				return this.isDstHilied;
+				return this.isDstHilited;
 			}
 			set
 			{
-				this.isDstHilied = value;
+				this.isDstHilited = value;
 			}
 		}
 
@@ -355,7 +355,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					else
 					{
 						if (this.field.IsExplored && i != 0)  break;
-						if (!this.isDstHilied && i != 0)  break;
+						if (!this.isDstHilited && i != 0)  break;
 					}
 
 					if (hilite)
@@ -459,6 +459,6 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		protected ObjectBox.Field field;
 		protected List<Point> points;
-		protected bool isDstHilied;
+		protected bool isDstHilited;
 	}
 }

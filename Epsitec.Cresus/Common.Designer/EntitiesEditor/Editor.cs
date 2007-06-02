@@ -67,6 +67,18 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 		}
 
+		public VScroller VScroller
+		{
+			get
+			{
+				return this.vscroller;
+			}
+			set
+			{
+				this.vscroller = value;
+			}
+		}
+
 
 		public void AddBox(ObjectBox box)
 		{
@@ -687,6 +699,27 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				case MessageType.MouseLeave:
 					this.MouseMove(Point.Zero);
 					break;
+
+				case MessageType.MouseWheel:
+					if (message.IsControlPressed)
+					{
+						double zoom = this.zoom;
+						if (message.Wheel < 0)  zoom += 0.1;
+						if (message.Wheel > 0)  zoom -= 0.1;
+						zoom = System.Math.Max(zoom, Viewers.Entities.zoomMin);
+						zoom = System.Math.Min(zoom, Viewers.Entities.zoomMax);
+						if (this.zoom != zoom)
+						{
+							this.Zoom = zoom;
+							this.OnZoomChanged();
+						}
+					}
+					else
+					{
+						if (message.Wheel < 0)  this.vscroller.Value += this.vscroller.SmallChange;
+						if (message.Wheel > 0)  this.vscroller.Value -= this.vscroller.SmallChange;
+					}
+					break;
 			}
 		}
 
@@ -1008,6 +1041,28 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				this.RemoveUserEventHandler ("AreaOffsetChanged", value);
 			}
 		}
+
+		protected virtual void OnZoomChanged()
+		{
+			//	Génère un événement pour dire que l'offset de la surface de travail a changé.
+			EventHandler handler = (EventHandler) this.GetUserEventHandler("ZoomChanged");
+			if (handler != null)
+			{
+				handler(this);
+			}
+		}
+
+		public event Support.EventHandler ZoomChanged
+		{
+			add
+			{
+				this.AddUserEventHandler ("ZoomChanged", value);
+			}
+			remove
+			{
+				this.RemoveUserEventHandler ("ZoomChanged", value);
+			}
+		}
 		#endregion
 
 
@@ -1032,5 +1087,6 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		protected Image mouseCursorFinger;
 		protected Image mouseCursorHand;
 		protected Image mouseCursorGrid;
+		protected VScroller vscroller;
 	}
 }
