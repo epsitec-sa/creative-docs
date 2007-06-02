@@ -97,6 +97,29 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 		}
 
+		public ObjectBox RootBox
+		{
+			//	Retourne la boîte racine.
+			get
+			{
+				return this.boxes[0];
+			}
+		}
+
+		public ObjectBox SearchBox(string title)
+		{
+			//	Cherche une boîte d'après son titre.
+			foreach (ObjectBox box in this.boxes)
+			{
+				if (box.Title == title)
+				{
+					return box;
+				}
+			}
+
+			return null;
+		}
+
 		public void AddConnection(ObjectConnection connection)
 		{
 			//	Ajoute une nouvelle liaison dans l'éditeur.
@@ -372,6 +395,16 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 					if (field.Relation != FieldRelation.None)
 					{
+						//	Si la liaison est ouverte sur une boîte qui n'existe plus,
+						//	considère la liaison comme fermée !
+						if (field.IsExplored)
+						{
+							if (!this.boxes.Contains(field.DstBox))
+							{
+								field.IsExplored = false;
+							}
+						}
+
 						ObjectConnection connection = new ObjectConnection(this);
 						field.Connection = connection;
 						connection.Field = field;
@@ -709,20 +742,6 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			return null;
 		}
 
-
-		public ObjectBox SearchBox(string title)
-		{
-			//	Cherche une boîte d'après son titre.
-			foreach (ObjectBox box in this.boxes)
-			{
-				if (box.Title == title)
-				{
-					return box;
-				}
-			}
-
-			return null;
-		}
 
 
 		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)

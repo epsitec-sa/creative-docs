@@ -612,7 +612,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			string question = string.Format("Voulez-vous supprimer le champ <b>{0}</b> ?", this.fields[rank].FieldName);
 			if (this.editor.Module.MainWindow.DialogQuestion(question) == Epsitec.Common.Dialogs.DialogResult.Yes)
 			{
-				this.CloseBoxes(this.fields[rank].DstBox);
+				this.CloseBoxes(this.editor.RootBox, this, this.fields[rank].DstBox);
 
 				StructuredData data = this.cultureMap.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
 				IList<StructuredData> dataFields = data.GetValue(Support.Res.Fields.ResourceStructuredType.Fields) as IList<StructuredData>;
@@ -718,7 +718,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				ObjectBox dst = this.fields[rank].DstBox;
 				this.fields[rank].IsExplored = false;
 				this.fields[rank].DstBox = null;
-				this.CloseBoxes(dst);
+				this.CloseBoxes(this.editor.RootBox, this, dst);
 			}
 
 			dataField.SetValue(Support.Res.Fields.Field.TypeId, druid);

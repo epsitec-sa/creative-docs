@@ -117,25 +117,46 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			this.editor.Module.AccessEntities.Accessor.PersistChanges();
 		}
 
-		protected void CloseBoxes(ObjectBox box)
+
+		protected void CloseBoxes(ObjectBox rootBox, ObjectBox master, ObjectBox box)
+		{
+			//	Ferme récursivement toutes les boîtes liées.
+			List<ObjectBox> toClose = new List<ObjectBox>();
+			toClose.Add(rootBox);
+			toClose.Add(master);
+			this.CloseBoxes(toClose, box);
+
+			toClose.RemoveAt(0);
+			toClose.RemoveAt(0);
+			foreach (ObjectBox boxToClose in toClose)
+			{
+				this.editor.RemoveBox(boxToClose);
+			}
+		}
+
+		protected void CloseBoxes(List<ObjectBox> toClose, ObjectBox box)
 		{
 			//	Ferme récursivement toutes les boîtes liées.
 			if (box != null)
 			{
 				foreach (ObjectBox.Field field in box.Fields)
 				{
-					if (field.Relation != FieldRelation.None)
+					if (field.Relation != FieldRelation.None && field.DstBox != null)
 					{
-						if (field.DstBox != null)
+						if (!toClose.Contains(field.DstBox))
 						{
-							this.CloseBoxes(field.DstBox);
+							this.CloseBoxes(toClose, field.DstBox);
 						}
 					}
 				}
 
-				this.editor.RemoveBox(box);
+				if (!toClose.Contains(box))
+				{
+					toClose.Add(box);
+				}
 			}
 		}
+
 
 		protected void DrawRoundButton(Graphics graphics, Point center, double radius, GlyphShape shape, bool hilited, bool shadow)
 		{

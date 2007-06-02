@@ -97,7 +97,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				ObjectBox dst = this.field.DstBox;
 				this.field.IsExplored = false;
 				this.field.DstBox = null;
-				this.CloseBoxes(dst);
+				this.CloseBoxes(this.editor.RootBox, this.field.SrcBox, dst);
 
 				this.editor.CreateConnections();
 				this.editor.UpdateAfterMoving(null);
