@@ -340,7 +340,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 				if (this.hilitedElement == ActiveElement.CloseButton)
 				{
-					this.CloseBoxes(this.editor.RootBox, null, this);
+					this.editor.CloseBox(this);
 					this.editor.CreateConnections();
 					this.editor.UpdateAfterMoving(null);
 				}
@@ -376,6 +376,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 			if (pos.IsZero)
 			{
+				//	Si l'une des connection est dans l'état ConnectionOpen*, il faut afficher
+				//	aussi les petits cercles de gauche.
 				if (this.IsConnectionReadyForOpen())
 				{
 					this.SetConnectionsHilited(true);
@@ -534,6 +536,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		protected void SetConnectionsHilited(bool isHilited)
 		{
 			//	Modifie l'état 'hilited' de toutes les connections qui partent de l'objet.
+			//	Avec false, les petits cercles des liaisons fermées ne sont affichés qu'à droite.
 			foreach (Field field in this.fields)
 			{
 				if (field.Connection != null)
@@ -675,7 +678,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			string question = string.Format("Voulez-vous supprimer le champ <b>{0}</b> ?", this.fields[rank].FieldName);
 			if (this.editor.Module.MainWindow.DialogQuestion(question) == Epsitec.Common.Dialogs.DialogResult.Yes)
 			{
-				this.CloseBoxes(this.editor.RootBox, this, this.fields[rank].DstBox);
+				this.editor.CloseBox(this.fields[rank].DstBox);
 
 				StructuredData data = this.cultureMap.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
 				IList<StructuredData> dataFields = data.GetValue(Support.Res.Fields.ResourceStructuredType.Fields) as IList<StructuredData>;
@@ -781,7 +784,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				ObjectBox dst = this.fields[rank].DstBox;
 				this.fields[rank].IsExplored = false;
 				this.fields[rank].DstBox = null;
-				this.CloseBoxes(this.editor.RootBox, this, dst);
+				this.editor.CloseBox(dst);
 			}
 
 			dataField.SetValue(Support.Res.Fields.Field.TypeId, druid);

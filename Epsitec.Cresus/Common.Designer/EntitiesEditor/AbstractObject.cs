@@ -119,46 +119,6 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		}
 
 
-		protected void CloseBoxes(ObjectBox rootBox, ObjectBox master, ObjectBox box)
-		{
-			//	Ferme récursivement toutes les boîtes liées.
-			List<ObjectBox> toClose = new List<ObjectBox>();
-			toClose.Add(rootBox);  // pour éviter les boucles
-			toClose.Add(master);  // pour éviter les boucles
-			this.CloseBoxes(toClose, box);
-
-			toClose.RemoveAt(0);  // enlève master
-			toClose.RemoveAt(0);  // enlève rootBox
-			foreach (ObjectBox boxToClose in toClose)
-			{
-				this.editor.RemoveBox(boxToClose);
-			}
-		}
-
-		protected void CloseBoxes(List<ObjectBox> toClose, ObjectBox box)
-		{
-			//	Ajoute récursivement dans une liste toutes les boîtes liées à fermer.
-			if (box != null)
-			{
-				foreach (ObjectBox.Field field in box.Fields)
-				{
-					if (field.Relation != FieldRelation.None && field.DstBox != null)
-					{
-						if (!toClose.Contains(field.DstBox))
-						{
-							this.CloseBoxes(toClose, field.DstBox);
-						}
-					}
-				}
-
-				if (!toClose.Contains(box))
-				{
-					toClose.Add(box);
-				}
-			}
-		}
-
-
 		protected void DrawRoundButton(Graphics graphics, Point center, double radius, GlyphShape shape, bool hilited, bool shadow)
 		{
 			//	Dessine un bouton circulaire.

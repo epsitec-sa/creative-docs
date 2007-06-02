@@ -417,6 +417,101 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		}
 
 
+		public void CloseBox(ObjectBox box)
+		{
+			//	Ferme une boîte et toutes les boîtes liées, en essayant de fermer le moins possible de boîtes.
+			//	La stratégie utilisée est la suivante:
+			//	1. On ferme la boîte demandée.
+			//	2. Parmi toutes les boîtes restantes, on regarde si une boîte est isolée, c'est-à-dire si
+			//	   elle n'est plus reliée à la racine. Si oui, on la détruit.
+			//	3. Si on a détruit au moins une boîte, on recommence le point 2.
+			if (box.IsRoot)
+			{
+				return;
+			}
+
+			this.boxes.Remove(box);
+			this.CloseConnections(box);
+
+			bool removed;
+			do
+			{
+				removed = false;
+				int i = 1;
+				while (i < this.boxes.Count)
+				{
+					box = this.boxes[i];
+					if (this.IsConnectedToRoot(box))
+					{
+						i++;
+					}
+					else
+					{
+						this.boxes.RemoveAt(i);
+						this.CloseConnections(box);
+						removed = true;
+					}
+				}
+			}
+			while (removed);
+		}
+
+		protected bool IsConnectedToRoot(ObjectBox searchingBox)
+		{
+			//	Retourne true si une boîte est reliée à la racine.
+			//	On explore systématiquement tout depuis la racine, jusqu'à rencontrer éventuellement
+			//	l'objet cherché (searchingBox).
+			return this.IsConnectedToRoot(this.boxes[0], searchingBox, 0);
+		}
+
+		protected bool IsConnectedToRoot(ObjectBox root, ObjectBox searchingBox, int level)
+		{
+			//	Cherche récursivement depuis 'root' si on rencontre 'searchingBox'.
+			//	Pour éviter les boucles infinies, on suppose une profondeur maximale de 100 !
+			if (level > 100)
+			{
+				return false;
+			}
+
+			foreach (ObjectBox.Field field in root.Fields)
+			{
+				ObjectBox dstBox = field.DstBox;
+
+				if (dstBox == searchingBox)
+				{
+					return true;
+				}
+
+				if (dstBox != null)
+				{
+					if (this.IsConnectedToRoot(dstBox, searchingBox, level+1))
+					{
+						return true;
+					}
+				}
+			}
+
+			return false;
+		}
+
+		protected void CloseConnections(ObjectBox removedBox)
+		{
+			//	Parcourt toutes les connections de toutes les boîtes, pour fermer toutes
+			//	les connections sur la boîte supprimée.
+			foreach (ObjectBox box in this.boxes)
+			{
+				foreach (ObjectBox.Field field in box.Fields)
+				{
+					if (field.DstBox == removedBox)
+					{
+						field.DstBox = null;
+						field.IsExplored = false;
+					}
+				}
+			}
+		}
+
+
 		protected void PushLayout(ObjectBox exclude, PushDirection direction, double margin)
 		{
 			//	Pousse les boîtes pour éviter tout chevauchement.
