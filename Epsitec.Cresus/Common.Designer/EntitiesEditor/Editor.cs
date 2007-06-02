@@ -424,36 +424,36 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			//	1. On ferme la boîte demandée.
 			//	2. Parmi toutes les boîtes restantes, on regarde si une boîte est isolée, c'est-à-dire si
 			//	   elle n'est plus reliée à la racine. Si oui, on la détruit.
-			//	3. Si on a détruit au moins une boîte, on recommence le point 2.
+			//	3. Tant qu'on a détruit au moins une boîte, on recommence au point 2.
 			if (box.IsRoot)
 			{
-				return;
+				return;  // on ne détruit jamais la boîte racine
 			}
 
-			this.boxes.Remove(box);
-			this.CloseConnections(box);
+			this.boxes.Remove(box);  // supprime la boîte demandée
+			this.CloseConnections(box);  // supprime ses connections
 
 			bool removed;
 			do
 			{
 				removed = false;
-				int i = 1;
+				int i = 1;  // on saute toujours la boîte racine
 				while (i < this.boxes.Count)
 				{
 					box = this.boxes[i];
-					if (this.IsConnectedToRoot(box))
+					if (this.IsConnectedToRoot(box))  // boîte liée à la racine ?
 					{
 						i++;
 					}
-					else
+					else  // boîte isolée ?
 					{
-						this.boxes.RemoveAt(i);
-						this.CloseConnections(box);
+						this.boxes.RemoveAt(i);  // supprime la boîte isolée
+						this.CloseConnections(box);  // supprime ses connections
 						removed = true;
 					}
 				}
 			}
-			while (removed);
+			while (removed);  // recommence tant qu'on a détruit quelque chose
 		}
 
 		protected bool IsConnectedToRoot(ObjectBox searchingBox)
