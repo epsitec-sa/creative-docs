@@ -845,6 +845,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		{
 			//	Dessine l'objet.
 			Rectangle rect;
+			Point center;
 
 			bool dragging = (this.hilitedElement == ActiveElement.HeaderDragging);
 
@@ -906,15 +907,21 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 
 			//	Dessine le titre.
-			rect = new Rectangle(this.bounds.Left+4, this.bounds.Top-ObjectBox.headerHeight+2, this.bounds.Width-AbstractObject.buttonRadius*2-6-5, ObjectBox.headerHeight-2);
+			rect = new Rectangle(this.bounds.Left+4, this.bounds.Top-ObjectBox.headerHeight, this.bounds.Width-8, ObjectBox.headerHeight);
 			this.title.LayoutSize = rect.Size;
 			this.title.Paint(rect.BottomLeft, graphics, Rectangle.MaxValue, Color.FromBrightness(0), GlyphPaintStyle.Normal);
 
 			//	Dessine le bouton compact/étendu.
-			Point center = new Point(this.bounds.Right-AbstractObject.buttonRadius-6, this.bounds.Top-ObjectBox.headerHeight/2);
+			center = new Point(this.bounds.Right-AbstractObject.buttonRadius-6, this.bounds.Top-ObjectBox.headerHeight/2);
 			GlyphShape shape = this.isExtended ? GlyphShape.ArrowUp : GlyphShape.ArrowDown;
-			bool hilited = (this.hilitedElement == ActiveElement.ExtendButton);
-			this.DrawRoundButton(graphics, center, AbstractObject.buttonRadius, shape, hilited, false);
+			if (this.hilitedElement == ActiveElement.ExtendButton)
+			{
+				this.DrawRoundButton(graphics, center, AbstractObject.buttonRadius, shape, true, false);
+			}
+			if ((this.hilitedElement == ActiveElement.HeaderDragging || this.hilitedElement == ActiveElement.CloseButton) && !this.isDragging)
+			{
+				this.DrawRoundButton(graphics, center, AbstractObject.buttonRadius, shape, false, false);
+			}
 
 			//	Dessine le bouton de fermeture.
 			if (!this.isRoot)
@@ -1017,7 +1024,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					//	Dessine la glissière à gauche pour suggérer les boutons Add/Remove des champs.
 					Point p1 = this.GetFieldAddBounds(-1).Center;
 					Point p2 = this.GetFieldAddBounds(this.fields.Count-1).Center;
-					hilited = this.hilitedElement == ActiveElement.FieldAdd || this.hilitedElement == ActiveElement.FieldRemove;
+					bool hilited = this.hilitedElement == ActiveElement.FieldAdd || this.hilitedElement == ActiveElement.FieldRemove;
 					this.DrawEmptySlider(graphics, p1, p2, hilited);
 
 					//	Dessine la glissière à droite pour suggérer les boutons Movable des champs.
