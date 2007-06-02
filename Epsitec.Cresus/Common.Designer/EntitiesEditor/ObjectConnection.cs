@@ -268,6 +268,25 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				graphics.RenderSolid(color);
 			}
 
+			if (this.points.Count == 2 && !this.field.IsExplored)
+			{
+				Point start = this.points[0];
+				Point end = new Point(start.X+ObjectConnection.lengthClose, start.Y);
+
+				graphics.LineWidth = 2;
+				graphics.AddLine(start, end);
+				this.DrawEndingArrow(graphics, start, end);
+				graphics.LineWidth = 1;
+
+				Color color = Color.FromBrightness(0);
+				if (this.hilitedElement == ActiveElement.ConnectionHilited ||
+					this.hilitedElement == ActiveElement.ConnectionChange )
+				{
+					color = this.GetColorCaption();
+				}
+				graphics.RenderSolid(color);
+			}
+
 			if (this.points.Count != 0 && this.field.IsSourceExpanded)
 			{
 				//	Dessine les cercles aux points de départ.
@@ -375,6 +394,11 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					return this.points[this.points.Count-1];
 				}
 
+				if (this.points.Count == 2 && !this.field.IsExplored)
+				{
+					return new Point(this.points[0].X+ObjectConnection.lengthClose, this.points[0].Y);
+				}
+
 				return Point.Zero;
 			}
 		}
@@ -383,6 +407,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		protected static readonly double arrowLength = 12;
 		protected static readonly double arrowAngle = 25;
+		protected static readonly double lengthClose = 30;
 
 		protected ObjectBox.Field field;
 		protected List<Point> points;
