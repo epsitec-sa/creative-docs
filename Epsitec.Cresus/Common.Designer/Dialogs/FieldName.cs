@@ -25,7 +25,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.window.MakeFixedSizeWindow();
 				this.window.PreventAutoClose = true;
 				this.WindowInit("FieldName", 300, 100, true);
-				this.window.Text = "Création d'un champ";  // Res.Strings.Dialog.FieldName.Title;
+				this.window.Text = "Champ";  // Res.Strings.Dialog.FieldName.Title;
 				this.window.Owner = this.parentWindow;
 				this.window.WindowCloseClicked += new EventHandler(this.HandleWindowCloseClicked);
 				this.window.Root.Padding = new Margins(8, 8, 8, 8);
@@ -54,7 +54,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 				this.buttonOk = new Button(footer);
 				this.buttonOk.PreferredWidth = 75;
-				this.buttonOk.Text = "Créer";
+				this.buttonOk.Text = Res.Strings.Dialog.Button.OK;
 				this.buttonOk.ButtonStyle = ButtonStyle.DefaultAccept;
 				this.buttonOk.Dock = DockStyle.Left;
 				this.buttonOk.Margins = new Margins(0, 10, 0, 0);

@@ -114,6 +114,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		{
 			//	Active la commande d'enregistrement, lorsqu'une modification a été effectuée.
 			this.editor.Module.AccessEntities.IsDirty = true;
+			this.editor.Module.AccessEntities.Accessor.PersistChanges();
 		}
 
 		protected void CloseBoxes(ObjectBox box)
