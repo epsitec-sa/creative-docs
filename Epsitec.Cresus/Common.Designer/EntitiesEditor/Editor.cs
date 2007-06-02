@@ -709,6 +709,20 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		}
 
 
+		public ObjectBox SearchBox(string title)
+		{
+			//	Cherche une boîte d'après son titre.
+			foreach (ObjectBox box in this.boxes)
+			{
+				if (box.Title == title)
+				{
+					return box;
+				}
+			}
+
+			return null;
+		}
+
 
 		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
 		{
