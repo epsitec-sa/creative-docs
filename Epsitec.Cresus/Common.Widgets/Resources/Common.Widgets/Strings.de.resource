@@ -2,7 +2,7 @@
 <bundle name="Strings" type="String" culture="de">
   <data id="0A2">Farbe</data>
   <data id="0B">Farbpalette öffnen</data>
-  <data id="07">Bunte Palette</data>
+  <data id="07">Regenbogenpalette</data>
   <data id="0C">Farbpalette speichern...</data>
   <data id="01">Kopieren</data>
   <data id="0">Ausschneiden</data>
@@ -39,11 +39,11 @@
   <data id="0O">L</data>
   <data id="0E">G</data>
   <data id="0P">0h</data>
-  <data id="0H">H</data>
+  <data id="0H">F</data>
   <data id="0L">M</data>
   <data id="0D">R</data>
   <data id="0I">S</data>
-  <data id="0J">H</data>
+  <data id="0J">L</data>
   <data id="0M">G</data>
   <data id="091">RGB-Farben</data>
   <data id="0B1">Graustufen</data>
