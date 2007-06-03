@@ -340,9 +340,12 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 				if (this.hilitedElement == ActiveElement.CloseButton)
 				{
-					this.editor.CloseBox(this);
-					this.editor.CreateConnections();
-					this.editor.UpdateAfterMoving(null);
+					if (!this.isRoot)
+					{
+						this.editor.CloseBox(this);
+						this.editor.CreateConnections();
+						this.editor.UpdateAfterMoving(null);
+					}
 				}
 
 				if (this.hilitedElement == ActiveElement.FieldRemove)
@@ -413,14 +416,11 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				}
 
 				//	Souris dans le bouton de fermeture ?
-				if (!this.isRoot)
+				center = new Point(this.bounds.Right-AbstractObject.buttonRadius-6, this.bounds.Top-ObjectBox.headerHeight/2);
+				if (Point.Distance(center, pos) <= AbstractObject.buttonRadius+3)
 				{
-					center = new Point(this.bounds.Right-AbstractObject.buttonRadius-6, this.bounds.Top-ObjectBox.headerHeight/2);
-					if (Point.Distance(center, pos) <= AbstractObject.buttonRadius+3)
-					{
-						element = ActiveElement.CloseButton;
-						return true;
-					}
+					element = ActiveElement.CloseButton;
+					return true;
 				}
 
 				if (this.isExtended)
@@ -971,17 +971,14 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 
 			//	Dessine le bouton de fermeture.
-			if (!this.isRoot)
+			center = new Point(this.bounds.Right-AbstractObject.buttonRadius-6, this.bounds.Top-ObjectBox.headerHeight/2);
+			if (this.hilitedElement == ActiveElement.CloseButton)
 			{
-				center = new Point(this.bounds.Right-AbstractObject.buttonRadius-6, this.bounds.Top-ObjectBox.headerHeight/2);
-				if (this.hilitedElement == ActiveElement.CloseButton)
-				{
-					this.DrawRoundButton(graphics, center, AbstractObject.buttonRadius, GlyphShape.Close, true, false);
-				}
-				if ((this.hilitedElement == ActiveElement.HeaderDragging || this.hilitedElement == ActiveElement.ExtendButton) && !this.isDragging)
-				{
-					this.DrawRoundButton(graphics, center, AbstractObject.buttonRadius, GlyphShape.Close, false, false);
-				}
+				this.DrawRoundButton(graphics, center, AbstractObject.buttonRadius, GlyphShape.Close, true, false, !this.isRoot);
+			}
+			if ((this.hilitedElement == ActiveElement.HeaderDragging || this.hilitedElement == ActiveElement.ExtendButton) && !this.isDragging)
+			{
+				this.DrawRoundButton(graphics, center, AbstractObject.buttonRadius, GlyphShape.Close, false, false, !this.isRoot);
 			}
 
 			//	Dessine les noms des champs.

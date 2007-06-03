@@ -309,7 +309,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			connection.Points.Clear();
 
 			double v = src.GetConnectionVerticalPosition(srcRank);
-			if (src == dst)
+			if (src == dst)  // connection à soi-même ?
 			{
 				Point p = new Point(srcBounds.Right-1, v);
 				connection.Points.Add(p);
@@ -718,8 +718,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					if (message.IsControlPressed)
 					{
 						double zoom = this.zoom;
-						if (message.Wheel < 0)  zoom += 0.1;
-						if (message.Wheel > 0)  zoom -= 0.1;
+						if (message.Wheel < 0)  zoom -= 0.1;
+						if (message.Wheel > 0)  zoom += 0.1;
 						zoom = System.Math.Max(zoom, Viewers.Entities.zoomMin);
 						zoom = System.Math.Min(zoom, Viewers.Entities.zoomMax);
 						if (this.zoom != zoom)
