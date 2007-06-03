@@ -316,12 +316,6 @@ namespace Epsitec.Common.Designer.Viewers
 			this.vscroller.Value = (decimal) (offset.Y*this.Zoom);
 		}
 
-		private void HandleEditorZoomChanged(object sender)
-		{
-			//	Appelé lorsque le zoom a changé.
-			this.Zoom = this.editor.Zoom;
-		}
-
 		private void HandleScrollerValueChanged(object sender)
 		{
 			//	Appelé lorsqu'un ascenseur a été bougé.
@@ -380,6 +374,12 @@ namespace Epsitec.Common.Designer.Viewers
 			//	Appelé lorsque le slider du zoom a été bougé.
 			HSlider slider = sender as HSlider;
 			this.Zoom = (double) slider.Value;
+		}
+
+		private void HandleEditorZoomChanged(object sender)
+		{
+			//	Appelé lorsque le zoom a changé depuis l'éditeur.
+			this.Zoom = this.editor.Zoom;
 		}
 
 

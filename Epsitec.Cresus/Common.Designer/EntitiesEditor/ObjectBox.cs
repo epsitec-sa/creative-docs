@@ -541,7 +541,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			{
 				if (field.Connection != null)
 				{
-					field.Connection.IsDstHilited = isHilited;
+					field.Connection.IsSrcHilited = isHilited;
 				}
 			}
 		}

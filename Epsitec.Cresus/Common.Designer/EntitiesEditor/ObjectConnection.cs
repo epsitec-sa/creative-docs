@@ -31,21 +31,24 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		public List<Point> Points
 		{
+			//	Retourne la liste des points. Si la connection est fermée, il s'agit des points
+			//	droite et gauche. Aurement, il s'agit d'un nombre variable de points.
 			get
 			{
 				return this.points;
 			}
 		}
 
-		public bool IsDstHilited
+		public bool IsSrcHilited
 		{
+			//	Indique si la boîte source est survolée par la souris.
 			get
 			{
-				return this.isDstHilited;
+				return this.isSrcHilited;
 			}
 			set
 			{
-				this.isDstHilited = value;
+				this.isSrcHilited = value;
 			}
 		}
 
@@ -355,7 +358,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					else
 					{
 						if (this.field.IsExplored && i != 0)  break;
-						if (!this.isDstHilited && i != 0)  break;
+						if (!this.isSrcHilited && i != 0)  break;
 					}
 
 					if (hilite)
@@ -459,6 +462,6 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		protected ObjectBox.Field field;
 		protected List<Point> points;
-		protected bool isDstHilited;
+		protected bool isSrcHilited;
 	}
 }

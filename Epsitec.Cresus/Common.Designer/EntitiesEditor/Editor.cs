@@ -309,7 +309,21 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			connection.Points.Clear();
 
 			double v = src.GetConnectionVerticalPosition(srcRank);
-			if (!srcBounds.IntersectsWith(dstBounds))
+			if (src == dst)
+			{
+				Point p = new Point(srcBounds.Right-1, v);
+				connection.Points.Add(p);
+
+				p.X += 30;
+				connection.Points.Add(p);
+
+				p.Y -= 10;
+				connection.Points.Add(p);
+
+				p.X -= 30;
+				connection.Points.Add(p);
+			}
+			else if (!srcBounds.IntersectsWith(dstBounds))
 			{
 				Point p = new Point(0, v);
 
