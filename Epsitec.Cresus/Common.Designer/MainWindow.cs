@@ -17,6 +17,14 @@ namespace Epsitec.Common.Designer
 	/// </summary>
 	public class MainWindow : DependencyObject
 	{
+		public enum DisplayMode
+		{
+			Horizontal,
+			Vertical,
+			FullScreen,
+		}
+
+
 		static MainWindow()
 		{
 			Res.Initialize();
@@ -763,13 +771,19 @@ namespace Epsitec.Common.Designer
 		[Command("DisplayHorizontal")]
 		void CommandDisplayHorizontal(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			this.DisplayHorizontal = true;
+			this.DisplayModeState = DisplayMode.Horizontal;
 		}
 
 		[Command("DisplayVertical")]
 		void CommandDisplayVertical(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			this.DisplayHorizontal = false;
+			this.DisplayModeState = DisplayMode.Vertical;
+		}
+
+		[Command("DisplayFullScreen")]
+		void CommandDisplayFullScreen(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			this.DisplayModeState = DisplayMode.FullScreen;
 		}
 
 		[Command ("ZoomChange")]
@@ -892,6 +906,7 @@ namespace Epsitec.Common.Designer
 
 			this.displayHorizontalState = this.CreateCommandState("DisplayHorizontal");
 			this.displayVerticalState = this.CreateCommandState("DisplayVertical");
+			this.displayFullScreenState = this.CreateCommandState("DisplayFullScreen");
 			this.displayHorizontalState.ActiveState = ActiveState.Yes;
 		}
 
@@ -909,7 +924,13 @@ namespace Epsitec.Common.Designer
 
 				string iconName = commandName;
 				string description = Res.Strings.GetString("Action."+commandName);
-				bool statefull = (commandName == "FontBold" || commandName == "FontItalic" || commandName == "FontUnderline" || commandName.StartsWith("PanelShow") || commandName.StartsWith("DisplayHorizontal") || commandName.StartsWith("DisplayVertical"));
+				bool statefull = (commandName == "FontBold" || 
+								  commandName == "FontItalic" ||
+								  commandName == "FontUnderline" ||
+								  commandName.StartsWith("PanelShow") ||
+								  commandName == "DisplayHorizontal" ||
+								  commandName == "DisplayVertical" ||
+								  commandName == "DisplayFullScreen");
 
 				command.ManuallyDefineCommand(description, Misc.Icon(iconName), null, statefull);
 			}
@@ -919,19 +940,22 @@ namespace Epsitec.Common.Designer
 		#endregion
 
 
-		public bool DisplayHorizontal
+		public DisplayMode DisplayModeState
 		{
 			//	Disposition de l'affichage (horizontal ou vertical).
 			get
 			{
-				return this.displayHorizontalState.ActiveState == ActiveState.Yes;
+				if (this.displayHorizontalState.ActiveState == ActiveState.Yes)  return DisplayMode.Horizontal;
+				if (this.displayVerticalState.ActiveState == ActiveState.Yes)  return DisplayMode.Vertical;
+				return DisplayMode.FullScreen;
 			}
 			set
 			{
-				if (this.DisplayHorizontal != value)
+				if (this.DisplayModeState != value)
 				{
-					this.displayHorizontalState.ActiveState = value ? ActiveState.Yes : ActiveState.No;
-					this.displayVerticalState.ActiveState = value ? ActiveState.No : ActiveState.Yes;
+					this.displayHorizontalState.ActiveState = (value == DisplayMode.Horizontal) ? ActiveState.Yes : ActiveState.No;
+					this.displayVerticalState.ActiveState   = (value == DisplayMode.Vertical  ) ? ActiveState.Yes : ActiveState.No;
+					this.displayFullScreenState.ActiveState = (value == DisplayMode.FullScreen) ? ActiveState.Yes : ActiveState.No;
 					this.HandleTypeChanged(null);
 				}
 			}
@@ -1947,6 +1971,7 @@ namespace Epsitec.Common.Designer
 		protected CommandState					locatorNextState;
 		protected CommandState					displayHorizontalState;
 		protected CommandState					displayVerticalState;
+		protected CommandState					displayFullScreenState;
 
 		public static readonly DependencyProperty InstanceProperty = DependencyProperty.RegisterAttached("Instance", typeof(MainWindow), typeof(MainWindow));
 	}

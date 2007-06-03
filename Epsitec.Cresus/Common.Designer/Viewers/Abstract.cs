@@ -1288,7 +1288,7 @@ namespace Epsitec.Common.Designer.Viewers
 		protected double GetColumnWidth(int column)
 		{
 			//	Retourne la largeur à utiliser pour une colonne de la liste de gauche.
-			if (this.mainWindow.DisplayHorizontal)
+			if (this.mainWindow.DisplayModeState == MainWindow.DisplayMode.Horizontal)
 			{
 				return Abstract.columnWidthHorizontal[column];
 			}
@@ -1301,7 +1301,7 @@ namespace Epsitec.Common.Designer.Viewers
 		protected void SetColumnWidth(int column, double value)
 		{
 			//	Mémorise la largeur à utiliser pour une colonne de la liste de gauche.
-			if (this.mainWindow.DisplayHorizontal)
+			if (this.mainWindow.DisplayModeState == MainWindow.DisplayMode.Horizontal)
 			{
 				Abstract.columnWidthHorizontal[column] = value;
 			}

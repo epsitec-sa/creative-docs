@@ -15,9 +15,11 @@ namespace Epsitec.Common.Designer.Viewers
 		public Entities(Module module, PanelsContext context, ResourceAccess access, MainWindow mainWindow) : base(module, context, access, mainWindow)
 		{
 			this.lastGroup.Dock = DockStyle.Top;
+			this.lastGroup.Visibility = (this.mainWindow.DisplayModeState != MainWindow.DisplayMode.FullScreen);
 
 			this.hsplitter = new HSplitter(this.lastPane);
 			this.hsplitter.Dock = DockStyle.Top;
+			this.hsplitter.Visibility = (this.mainWindow.DisplayModeState != MainWindow.DisplayMode.FullScreen);
 
 			Widget editorGroup = new Widget(this.lastPane);
 			editorGroup.Padding = new Margins(10, 10, 10, 10);
