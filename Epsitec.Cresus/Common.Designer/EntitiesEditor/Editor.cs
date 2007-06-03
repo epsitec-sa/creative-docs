@@ -281,7 +281,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 							}
 							else
 							{
-								double posv = box.GetConnectionVerticalPosition(i);
+								double posv = box.GetConnectionSrcVerticalPosition(i);
 
 								connection.Points.Add(new Point(box.Bounds.Right-1, posv));
 								connection.Points.Add(new Point(box.Bounds.Left+1, posv));
@@ -308,7 +308,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 			connection.Points.Clear();
 
-			double v = src.GetConnectionVerticalPosition(srcRank);
+			double v = src.GetConnectionSrcVerticalPosition(srcRank);
 			if (src == dst)  // connection à soi-même ?
 			{
 				Point p = new Point(srcBounds.Right-1, v);
@@ -334,19 +334,19 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 					if (dstBounds.Top < start.Y-Editor.connectionDetour)  // destination plus basse ?
 					{
-						Point end = dst.GetConnectionDestination(start.Y, ObjectBox.ConnectionAnchor.Top);
+						Point end = dst.GetConnectionDstPosition(start.Y, ObjectBox.ConnectionAnchor.Top);
 						connection.Points.Add(new Point(end.X, start.Y));
 						connection.Points.Add(end);
 					}
 					else if (dstBounds.Bottom > start.Y+Editor.connectionDetour)  // destination plus haute ?
 					{
-						Point end = dst.GetConnectionDestination(start.Y, ObjectBox.ConnectionAnchor.Bottom);
+						Point end = dst.GetConnectionDstPosition(start.Y, ObjectBox.ConnectionAnchor.Bottom);
 						connection.Points.Add(new Point(end.X, start.Y));
 						connection.Points.Add(end);
 					}
 					else
 					{
-						Point end = dst.GetConnectionDestination(start.Y, ObjectBox.ConnectionAnchor.Left);
+						Point end = dst.GetConnectionDstPosition(start.Y, ObjectBox.ConnectionAnchor.Left);
 						if (start.Y != end.Y && end.X-start.X > Editor.connectionDetour)
 						{
 							connection.Points.Add(new Point((start.X+end.X)/2, start.Y));
@@ -362,19 +362,19 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 					if (dstBounds.Top < start.Y-Editor.connectionDetour)  // destination plus basse ?
 					{
-						Point end = dst.GetConnectionDestination(start.Y, ObjectBox.ConnectionAnchor.Top);
+						Point end = dst.GetConnectionDstPosition(start.Y, ObjectBox.ConnectionAnchor.Top);
 						connection.Points.Add(new Point(end.X, start.Y));
 						connection.Points.Add(end);
 					}
 					else if (dstBounds.Bottom > start.Y+Editor.connectionDetour)  // destination plus haute ?
 					{
-						Point end = dst.GetConnectionDestination(start.Y, ObjectBox.ConnectionAnchor.Bottom);
+						Point end = dst.GetConnectionDstPosition(start.Y, ObjectBox.ConnectionAnchor.Bottom);
 						connection.Points.Add(new Point(end.X, start.Y));
 						connection.Points.Add(end);
 					}
 					else
 					{
-						Point end = dst.GetConnectionDestination(start.Y, ObjectBox.ConnectionAnchor.Right);
+						Point end = dst.GetConnectionDstPosition(start.Y, ObjectBox.ConnectionAnchor.Right);
 						if (start.Y != end.Y && start.X-end.X > Editor.connectionDetour)
 						{
 							connection.Points.Add(new Point((start.X+end.X)/2, start.Y));
@@ -388,7 +388,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					Point start = new Point(srcBounds.Right-1, p.Y);
 					connection.Points.Add(start);
 
-					Point end = dst.GetConnectionDestination(start.Y, ObjectBox.ConnectionAnchor.Right);
+					Point end = dst.GetConnectionDstPosition(start.Y, ObjectBox.ConnectionAnchor.Right);
 					double posx = System.Math.Max(start.X, end.X)+Editor.connectionDetour;
 					connection.Points.Add(new Point(posx, start.Y));
 					connection.Points.Add(new Point(posx, end.Y));
@@ -399,7 +399,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					Point start = new Point(srcBounds.Left+1, p.Y);
 					connection.Points.Add(start);
 
-					Point end = dst.GetConnectionDestination(start.Y, ObjectBox.ConnectionAnchor.Left);
+					Point end = dst.GetConnectionDstPosition(start.Y, ObjectBox.ConnectionAnchor.Left);
 					double posx = System.Math.Min(start.X, end.X)-Editor.connectionDetour;
 					connection.Points.Add(new Point(posx, start.Y));
 					connection.Points.Add(new Point(posx, end.Y));

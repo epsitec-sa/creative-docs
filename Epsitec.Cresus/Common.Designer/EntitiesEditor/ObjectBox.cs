@@ -171,7 +171,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 		}
 
-		public double GetConnectionVerticalPosition(int rank)
+		public double GetConnectionSrcVerticalPosition(int rank)
 		{
 			//	Retourne la position verticale pour un trait de liaison.
 			//	Il s'agit toujours de la position de départ d'une liaison.
@@ -186,42 +186,78 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 		}
 
-		public Point GetConnectionDestination(double posv, ConnectionAnchor anchor)
+		public Point GetConnectionDstPosition(double posv, ConnectionAnchor anchor)
 		{
 			//	Retourne la position où accrocher la destination.
-			//	Il s'agit toujours de la position de d'arrivée d'une liaison.
-			Rectangle bounds = this.bounds;
-
+			//	Il s'agit toujours de la position d'arrivée d'une liaison.
 			switch (anchor)
 			{
 				case ConnectionAnchor.Left:
-					if (posv >= bounds.Bottom+ObjectBox.roundFrameRadius && posv <= bounds.Top-ObjectBox.roundFrameRadius)
+					if (posv >= this.bounds.Bottom+ObjectBox.roundFrameRadius &&
+						posv <= this.bounds.Top-ObjectBox.roundFrameRadius &&
+						this.IsVerticalPositionFree(posv, false))
 					{
-						return new Point(bounds.Left, posv);
+						return new Point(this.bounds.Left, posv);
 					}
-					else
-					{
-						return new Point(bounds.Left, bounds.Top-ObjectBox.headerHeight/2);
-					}
+
+					return new Point(this.bounds.Left, this.bounds.Top-ObjectBox.headerHeight/2);
+
 
 				case ConnectionAnchor.Right:
-					if (posv >= bounds.Bottom+ObjectBox.roundFrameRadius && posv <= bounds.Top-ObjectBox.roundFrameRadius)
+					if (posv >= this.bounds.Bottom+ObjectBox.roundFrameRadius &&
+						posv <= this.bounds.Top-ObjectBox.roundFrameRadius &&
+						this.IsVerticalPositionFree(posv, true))
 					{
-						return new Point(bounds.Right, posv);
+						return new Point(this.bounds.Right, posv);
 					}
-					else
-					{
-						return new Point(bounds.Right, bounds.Top-ObjectBox.headerHeight/2);
-					}
+
+					return new Point(this.bounds.Right, this.bounds.Top-ObjectBox.headerHeight/2);
 
 				case ConnectionAnchor.Bottom:
-					return new Point(bounds.Center.X, bounds.Bottom);
+					return new Point(this.bounds.Center.X, this.bounds.Bottom);
 
 				case ConnectionAnchor.Top:
-					return new Point(bounds.Center.X, bounds.Top);
+					return new Point(this.bounds.Center.X, this.bounds.Top);
 			}
 
 			return Point.Zero;
+		}
+
+		protected bool IsVerticalPositionFree(double posv, bool right)
+		{
+			//	Cherche si une position verticale n'est occupée par aucun départ de liaison.
+			for (int i=0; i<this.fields.Count; i++)
+			{
+				Field field = this.fields[i];
+				ObjectConnection connection = field.Connection;
+
+				if (field.Relation != FieldRelation.None && connection != null)
+				{
+					Rectangle rect = this.GetFieldBounds(i);
+					if (posv >= rect.Bottom && posv <= rect.Top)
+					{
+						if (field.IsExplored)
+						{
+							double dl = System.Math.Abs(connection.Points[0].X-this.bounds.Left);
+							double dr = System.Math.Abs(connection.Points[0].X-this.bounds.Right);
+							if (dl < dr)
+							{
+								if (!right)  return false;
+							}
+							else
+							{
+								if (right)  return false;
+							}
+						}
+						else
+						{
+							if (right)  return false;
+						}
+					}
+				}
+			}
+
+			return true;
 		}
 
 
