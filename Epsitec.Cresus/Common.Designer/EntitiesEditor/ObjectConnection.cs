@@ -14,7 +14,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		public ObjectConnection(Editor editor) : base(editor)
 		{
 			this.points = new List<Point>();
-			this.middleRelative = 0.5;
+			this.route = new RouteData(this);
 		}
 
 
@@ -37,6 +37,14 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			get
 			{
 				return this.points;
+			}
+		}
+
+		public RouteData Route
+		{
+			get
+			{
+				return this.route;
 			}
 		}
 
@@ -79,46 +87,6 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 		}
 
-		public bool IsMiddleRelative
-		{
-			//	Indique si la position intermédiaire est utilisée.
-			get
-			{
-				return this.isMiddleRelative;
-			}
-			set
-			{
-				if (this.isMiddleRelative != value)
-				{
-					this.isMiddleRelative = value;
-
-					this.UpdateMiddleRelative();
-				}
-			}
-		}
-
-		public double MiddleRelative
-		{
-			//	Position intermédiaire.
-			get
-			{
-				return this.middleRelative;
-			}
-			set
-			{
-				value = System.Math.Max(value, 0.1);
-				value = System.Math.Min(value, 0.9);
-
-				if (this.middleRelative != value)
-				{
-					this.middleRelative = value;
-
-					this.UpdateMiddleRelative();
-					this.editor.Invalidate();
-				}
-			}
-		}
-
 
 		public override bool MouseMove(Point pos)
 		{
@@ -127,7 +95,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			{
 				if (!pos.IsZero)
 				{
-					this.MiddleRelative = (pos.X-this.points[0].X)/(this.points[3].X-this.points[0].X);
+					this.route.MiddleRelative = (pos.X-this.points[0].X)/(this.points[3].X-this.points[0].X);
 				}
 				return true;
 			}
@@ -318,7 +286,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 
 			//	Souris dans le bouton pour déplacer le point milieu ?
-			if (this.isMiddleRelative)
+			if (this.route.IsMiddleRelative)
 			{
 				Point m = Point.Scale(this.points[1], this.points[2], 0.5);
 				if (Point.Distance(pos, m) <= AbstractObject.buttonRadius)
@@ -377,9 +345,9 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		protected void UpdateMiddleRelative()
 		{
 			//	Met à jour les points milieu de la connection.
-			if (this.isMiddleRelative)
+			if (this.route.IsMiddleRelative)
 			{
-				double px = this.points[0].X + (this.points[3].X-this.points[0].X)*this.middleRelative;
+				double px = this.points[0].X + (this.points[3].X-this.points[0].X)*this.route.MiddleRelative;
 				this.points[1] = new Point(px, this.points[0].Y);
 				this.points[2] = new Point(px, this.points[3].Y);
 			}
@@ -497,7 +465,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 
 			//	Dessine le bouton pour déplacer le point milieu.
-			if (this.isMiddleRelative)
+			if (this.route.IsMiddleRelative)
 			{
 				Point m = Point.Scale(this.points[1], this.points[2], 0.5);
 				if (this.hilitedElement == ActiveElement.ConnectionMove)
@@ -585,6 +553,71 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		}
 
 
+		/// <summary>
+		/// Cette classe contient toutes les informations sur le routage de la connection.
+		/// </summary>
+		public class RouteData
+		{
+			public RouteData(ObjectConnection connection)
+			{
+				this.connection = connection;
+				this.middleRelative = 0.5;
+			}
+
+			public bool IsMiddleRelative
+			{
+				//	Indique si la position intermédiaire est utilisée.
+				get
+				{
+					return this.isMiddleRelative;
+				}
+				set
+				{
+					if (this.isMiddleRelative != value)
+					{
+						this.isMiddleRelative = value;
+
+						this.connection.UpdateMiddleRelative();
+					}
+				}
+			}
+
+			public double MiddleRelative
+			{
+				//	Position intermédiaire.
+				get
+				{
+					return this.middleRelative;
+				}
+				set
+				{
+					value = System.Math.Max(value, 0.1);
+					value = System.Math.Min(value, 0.9);
+
+					if (this.middleRelative != value)
+					{
+						this.middleRelative = value;
+
+						this.connection.UpdateMiddleRelative();
+						this.connection.editor.Invalidate();
+					}
+				}
+			}
+
+			public void CopyTo(RouteData dst)
+			{
+				//	Copie toutes les informations de routage.
+				//	Il ne faut surtout pas copier le pointeur à la connection !
+				dst.isMiddleRelative = this.isMiddleRelative;
+				dst.middleRelative = this.middleRelative;
+			}
+
+			protected ObjectConnection connection;
+			protected bool isMiddleRelative;
+			protected double middleRelative;
+		}
+
+
 
 		protected static readonly double arrowLength = 12;
 		protected static readonly double arrowAngle = 25;
@@ -596,8 +629,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		protected bool isSrcHilited;
 		protected bool isAttachToLeft;
 		protected bool isAttachToRight;
-		protected bool isMiddleRelative;
-		protected double middleRelative;
+		protected RouteData route;
 		protected bool isDraggingMiddleRelative;
 	}
 }

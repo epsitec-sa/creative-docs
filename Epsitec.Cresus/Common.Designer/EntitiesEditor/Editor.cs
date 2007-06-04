@@ -283,7 +283,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 							{
 								connection.IsAttachToLeft = false;
 								connection.IsAttachToRight = false;
-								connection.IsMiddleRelative = false;
+								connection.Route.IsMiddleRelative = false;
 
 								double posv = box.GetConnectionSrcVerticalPosition(i);
 
@@ -314,7 +314,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			connection.Points.Clear();
 			connection.IsAttachToLeft = false;
 			connection.IsAttachToRight = false;
-			connection.IsMiddleRelative = false;
+			connection.Route.IsMiddleRelative = false;
 
 			double v = src.GetConnectionSrcVerticalPosition(srcRank);
 			if (src == dst)  // connection à soi-même ?
@@ -364,7 +364,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 							connection.Points.Add(Point.Zero);
 							connection.Points.Add(Point.Zero);
 							connection.Points.Add(end);
-							connection.IsMiddleRelative = true;
+							connection.Route.IsMiddleRelative = true;
 						}
 						else
 						{
@@ -399,7 +399,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 							connection.Points.Add(Point.Zero);
 							connection.Points.Add(Point.Zero);
 							connection.Points.Add(end);
-							connection.IsMiddleRelative = true;
+							connection.Route.IsMiddleRelative = true;
 						}
 						else
 						{
@@ -439,7 +439,13 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		public void CreateConnections()
 		{
 			//	Crée (ou recrée) toutes les liaisons nécessaires.
-			this.connections.Clear();
+			List<ObjectConnection> oldConnections = new List<ObjectConnection>();
+			foreach (ObjectConnection connection in this.connections)
+			{
+				oldConnections.Add(connection);  // copie des anciennes connections
+			}
+
+			this.connections.Clear();  // supprime toutes les connections existantes
 
 			foreach (ObjectBox box in this.boxes)
 			{
@@ -463,11 +469,32 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 						field.Connection = connection;
 						connection.Field = field;
 						this.AddConnection(connection);
+
+						//	Cherche les informations de routage dans la liste des anciennes connections.
+						ObjectConnection oldConnection = Editor.SearchConnection(oldConnections, field.SrcBox, field.DstBox);
+						if (oldConnection != null)
+						{
+							oldConnection.Route.CopyTo(connection.Route);  // reprend l'ancien routage
+						}
 					}
 				}
 			}
 
 			this.Invalidate();
+		}
+
+		protected static ObjectConnection SearchConnection(List<ObjectConnection> connections, ObjectBox srcBox, ObjectBox dstBox)
+		{
+			//	Cherche une connection à partir des objets source et destination.
+			foreach (ObjectConnection connection in connections)
+			{
+				if (connection.Field.SrcBox == srcBox && connection.Field.DstBox == dstBox)
+				{
+					return connection;
+				}
+			}
+
+			return null;
 		}
 
 
