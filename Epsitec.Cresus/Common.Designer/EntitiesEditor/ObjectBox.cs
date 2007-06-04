@@ -466,7 +466,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					center = new Point(this.bounds.Right-1, this.bounds.Bottom+ObjectBox.footerHeight/2+1);
 					double d1 = Point.Distance(center, pos);
 
-					center = new Point(this.ColumnsSeparator, this.bounds.Bottom+ObjectBox.footerHeight/2+1);
+					center = new Point(this.ColumnsSeparatorAbsolute, this.bounds.Bottom+ObjectBox.footerHeight/2+1);
 					double d2 = Point.Distance(center, pos);
 
 					if (d1 < d2)
@@ -507,6 +507,15 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 							this.SetConnectionsHilited(true);
 							return true;
 						}
+					}
+
+					//	Souris sur le séparateur des colonnes ?
+					double sep = this.ColumnsSeparatorAbsolute;
+					if (this.columnsSeparator < 1 && pos.X >= sep-4 && pos.X <= sep+4)
+					{
+						element = ActiveElement.MoveColumnsSeparator;
+						this.SetConnectionsHilited(true);
+						return true;
 					}
 
 					//	Souris dans un champ ?
@@ -650,7 +659,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			Rectangle rect = this.GetFieldBounds(rank);
 
 			rect.Deflate(ObjectBox.textMargin, 0);
-			rect.Right = this.ColumnsSeparator;
+			rect.Right = this.ColumnsSeparatorAbsolute;
 
 			return rect;
 		}
@@ -661,7 +670,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			Rectangle rect = this.GetFieldBounds(rank);
 			
 			rect.Deflate(ObjectBox.textMargin, 0);
-			rect.Left = this.ColumnsSeparator+1;
+			rect.Left = this.ColumnsSeparatorAbsolute+1;
 
 			return rect;
 		}
@@ -979,7 +988,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				//	Trait vertical de séparation.
 				if (this.columnsSeparator < 1.0)
 				{
-					double posx = System.Math.Floor(this.ColumnsSeparator)+0.5;
+					double posx = System.Math.Floor(this.ColumnsSeparatorAbsolute)+0.5;
 					graphics.AddLine(posx, this.bounds.Bottom+ObjectBox.footerHeight+0.5, posx, this.bounds.Top-ObjectBox.headerHeight-0.5);
 					graphics.RenderSolid(colorLine);
 				}
@@ -1159,9 +1168,15 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			if (this.isExtended)
 			{
 				//	Dessine le bouton pour déplacer le séparateur des colonnes.
-				center = new Point(this.ColumnsSeparator, this.bounds.Bottom+ObjectBox.footerHeight/2+1);
+				center = new Point(this.ColumnsSeparatorAbsolute, this.bounds.Bottom+ObjectBox.footerHeight/2+1);
 				if (this.hilitedElement == ActiveElement.MoveColumnsSeparator)
 				{
+					double sep = this.ColumnsSeparatorAbsolute;
+					graphics.LineWidth = 4;
+					graphics.AddLine(sep, this.bounds.Bottom+ObjectBox.footerHeight+3, sep, this.bounds.Top-ObjectBox.headerHeight-3);
+					graphics.LineWidth = 1;
+					graphics.RenderSolid(this.GetColorCaption());
+
 					this.DrawRoundButton(graphics, center, AbstractObject.buttonRadius, GlyphShape.HorizontalMove, true, false);
 				}
 				if (this.hilitedElement == ActiveElement.HeaderDragging && !this.isDragging)
@@ -1242,7 +1257,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			graphics.RenderSolid(this.GetColorCaption());
 		}
 
-		protected double ColumnsSeparator
+		protected double ColumnsSeparatorAbsolute
 		{
 			//	Retourne la position absolue du séparateur des colonnes.
 			get
@@ -1250,25 +1265,6 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				Rectangle rect = this.bounds;
 				rect.Deflate(ObjectBox.textMargin, 0);
 				return rect.Left + rect.Width*this.columnsSeparator;
-			}
-		}
-
-		public int ConnectionExploredCount
-		{
-			//	Retourne le nombre de connections ouvertes.
-			get
-			{
-				int count = 0;
-				
-				foreach (Field field in this.fields)
-				{
-					if (field.IsExplored)
-					{
-						count++;
-					}
-				}
-
-				return count;
 			}
 		}
 

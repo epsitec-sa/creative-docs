@@ -402,6 +402,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 			if (this.points.Count == 2 && !this.field.IsExplored && this.field.IsSourceExpanded)
 			{
+				//	Dessine le moignon de liaison.
 				Point start = this.points[0];
 				Point end = new Point(start.X+ObjectConnection.lengthClose, start.Y);
 
