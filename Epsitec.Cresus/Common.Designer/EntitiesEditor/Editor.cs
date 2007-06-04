@@ -520,37 +520,34 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			//	Retourne true si une boîte est reliée à la racine.
 			//	On explore systématiquement tout depuis la racine, jusqu'à rencontrer éventuellement
 			//	l'objet cherché (searchingBox).
-			return this.IsConnectedToRoot(this.boxes[0], searchingBox, 0);
-		}
+			List<ObjectBox> visited = new List<ObjectBox>();
+			this.ExploreConnectedToRoot(visited, this.boxes[0]);
 
-		protected bool IsConnectedToRoot(ObjectBox root, ObjectBox searchingBox, int level)
-		{
-			//	Cherche récursivement depuis 'root' si on rencontre 'searchingBox'.
-			//	Pour éviter les boucles infinies, on suppose une profondeur maximale de 100 !
-			if (level > 100)
+			foreach (ObjectBox box in visited)
 			{
-				return false;
-			}
-
-			foreach (ObjectBox.Field field in root.Fields)
-			{
-				ObjectBox dstBox = field.DstBox;
-
-				if (dstBox == searchingBox)
+				if (box == searchingBox)
 				{
 					return true;
 				}
+			}
+			return false;
+		}
 
+		protected void ExploreConnectedToRoot(List<ObjectBox> visited, ObjectBox root)
+		{
+			//	Cherche récursivement tous les objets depuis 'root'.
+			foreach (ObjectBox.Field field in root.Fields)
+			{
+				ObjectBox dstBox = field.DstBox;
 				if (dstBox != null)
 				{
-					if (this.IsConnectedToRoot(dstBox, searchingBox, level+1))
+					if (!visited.Contains(dstBox))
 					{
-						return true;
+						visited.Add(dstBox);
+						this.ExploreConnectedToRoot(visited, dstBox);
 					}
 				}
 			}
-
-			return false;
 		}
 
 		protected void CloseConnections(ObjectBox removedBox)
