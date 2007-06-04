@@ -87,7 +87,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			//	La position initiale n'a pas d'importance. La première boîte ajoutée (la boîte racine)
 			//	est positionnée par RedimArea(). La position des autres est de toute façon recalculée en
 			//	fonction de la boîte parent.
-			box.Bounds = new Rectangle(0, 0, Editor.defaultWidth, 0);
+			box.SetBounds(new Rectangle(0, 0, Editor.defaultWidth, 0));
 			//?box.IsExtended = (this.boxes.Count == 0);
 			box.IsExtended = true;
 
@@ -255,7 +255,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				double h = box.GetBestHeight();
 				bounds.Bottom = top-h;
 				bounds.Height = h;
-				box.Bounds = bounds;
+				box.SetBounds(bounds);
 			}
 		}
 
@@ -697,7 +697,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				rect.Offset(0, -db);
 			}
 
-			inter.Bounds = rect;
+			inter.SetBounds(rect);
 		}
 
 
@@ -717,10 +717,14 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			//	Retourne le rectangle englobant toutes les boîtes.
 			Rectangle bounds = Rectangle.Empty;
 
-			for (int i=0; i<this.boxes.Count; i++)
+			foreach (ObjectBox box in this.boxes)
 			{
-				ObjectBox box = this.boxes[i];
 				bounds = Rectangle.Union(bounds, box.Bounds);
+			}
+
+			foreach (ObjectConnection connection in this.connections)
+			{
+				bounds = Rectangle.Union(bounds, connection.Bounds);
 			}
 
 			return bounds;
@@ -735,7 +739,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 				Rectangle bounds = box.Bounds;
 				bounds.Offset(dx, dy);
-				box.Bounds = bounds;
+				box.SetBounds(bounds);
 			}
 		}
 
@@ -927,6 +931,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		public void LockObject(AbstractObject obj)
 		{
+			//	Indique l'objet en cours de drag.
 			this.lockObject = obj;
 		}
 

@@ -89,6 +89,26 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		}
 
 
+		public override Rectangle Bounds
+		{
+			//	Retourne la boîte de l'objet.
+			get
+			{
+				Rectangle bounds = Rectangle.Empty;
+
+				if (this.field.IsSourceExpanded)
+				{
+					foreach (Point p in this.points)
+					{
+						bounds = Rectangle.Union(bounds, new Rectangle(p, Size.Zero));
+					}
+				}
+
+				return bounds;
+			}
+		}
+
+
 		public override bool MouseMove(Point pos)
 		{
 			//	La souris est bougée.
@@ -119,6 +139,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			if (this.isDraggingMiddleRelative)
 			{
 				this.isDraggingMiddleRelative = false;
+				this.editor.UpdateAfterGeometryChanged(null);
 				this.editor.LockObject(null);
 			}
 
@@ -194,7 +215,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 							bounds.Deflate(50, Editor.pushMargin);
 						}
 #endif
-						box.Bounds = bounds;
+						box.SetBounds(bounds);
 					}
 					else
 					{

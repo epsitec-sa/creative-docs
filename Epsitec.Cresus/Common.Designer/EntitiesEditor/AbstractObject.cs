@@ -43,6 +43,15 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		}
 
 
+		public virtual Rectangle Bounds
+		{
+			//	Retourne la boîte de l'objet.
+			get
+			{
+				return Rectangle.Empty;
+			}
+		}
+
 		public virtual void Draw(Graphics graphics)
 		{
 			//	Dessine l'objet.

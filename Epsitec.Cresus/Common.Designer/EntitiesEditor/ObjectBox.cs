@@ -83,18 +83,20 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			this.UpdateFields();
 		}
 
-		public Rectangle Bounds
+		public override Rectangle Bounds
 		{
-			//	Boîte de l'objet.
+			//	Retourne la boîte de l'objet.
 			//	Attention: le dessin peut déborder, par exemple pour l'ombre.
 			get
 			{
 				return this.bounds;
 			}
-			set
-			{
-				this.bounds = value;
-			}
+		}
+
+		public void SetBounds(Rectangle bounds)
+		{
+			//	Modifie la boîte de l'objet.
+			this.bounds = bounds;
 		}
 
 		public List<Field> Fields
@@ -270,7 +272,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				bounds.Offset(pos-this.draggingPos);
 				this.draggingPos = pos;
 
-				this.Bounds = bounds;
+				this.SetBounds(bounds);
 				this.editor.UpdateConnections();
 				return true;
 			}
@@ -282,7 +284,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			{
 				Rectangle bounds = this.Bounds;
 				bounds.Width = System.Math.Max(pos.X-this.changeWidthPos+this.changeWidthInitial, 100);
-				this.Bounds = bounds;
+				this.SetBounds(bounds);
 				this.editor.UpdateConnections();
 				return true;
 			}
