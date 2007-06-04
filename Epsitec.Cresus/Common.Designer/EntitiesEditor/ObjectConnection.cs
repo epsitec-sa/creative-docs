@@ -515,9 +515,10 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			graphics.AddLine(end, e2);
 		}
 
+
 		protected Point PositionChangeRelation
 		{
-			//	Retourne la position du bouton pour changer le type de la relation.
+			//	Retourne la position du bouton pour changer le type de la relation (-> ou ->>).
 			get
 			{
 				if (this.points.Count >= 2 && this.field.IsExplored)
@@ -555,7 +556,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		protected void RouteMove(Point pos)
 		{
-			//	Modifie le routage.
+			//	Modifie le routage en fonction du choix de l'utilisateur.
 			if (pos.IsZero)
 			{
 				return;
@@ -583,7 +584,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		protected void UpdateRoute()
 		{
-			//	Met à jour le routage de la connection.
+			//	Met à jour le routage de la connection, dans les cas ou le routage dépend des choix de l'utilisateur.
 			if (this.route.RouteType == RouteData.Type.C)
 			{
 				//	Met à jour les points milieu de la connection.
