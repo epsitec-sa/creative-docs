@@ -74,7 +74,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			{
 				for (int i=0; i<dataFields.Count; i++)
 				{
-					Field field = new Field();
+					Field field = new Field(this.editor);
 					this.UpdateField(dataFields[i], field);
 					this.fields.Add(field);
 				}
@@ -767,7 +767,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 			dataFields.Insert(rank+1, newField);
 
-			Field field = new Field();
+			Field field = new Field(this.editor);
 			this.UpdateField(newField, field);
 			this.fields.Insert(rank+1, field);
 
@@ -1270,199 +1270,6 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 		}
 
-
-
-		/// <summary>
-		/// Cette classe contient toutes les informations relatives à une ligne, c'est-à-dire à un champ.
-		/// </summary>
-		public class Field
-		{
-			public Field()
-			{
-				this.textLayoutField = new TextLayout();
-				this.textLayoutField.DefaultFontSize = 10;
-				this.textLayoutField.Alignment = ContentAlignment.MiddleLeft;
-				this.textLayoutField.BreakMode = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine;
-
-				this.textLayoutType = new TextLayout();
-				this.textLayoutType.DefaultFontSize = 10;
-				this.textLayoutType.Alignment = ContentAlignment.MiddleLeft;
-				this.textLayoutType.BreakMode = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine;
-
-				this.relation = FieldRelation.None;
-				this.destination = Druid.Empty;
-				this.rank = -1;
-				this.isExplored = false;
-				this.isSourceExpanded = false;
-			}
-
-			public string FieldName
-			{
-				//	Nom du champ.
-				get
-				{
-					return this.textLayoutField.Text;
-				}
-				set
-				{
-					this.textLayoutField.Text = value;
-				}
-			}
-
-			public string TypeName
-			{
-				//	Nom du type.
-				get
-				{
-					return this.textLayoutType.Text;
-				}
-				set
-				{
-					this.textLayoutType.Text = value;
-				}
-			}
-
-			public TextLayout TextLayoutField
-			{
-				get
-				{
-					return this.textLayoutField;
-				}
-			}
-
-			public TextLayout TextLayoutType
-			{
-				get
-				{
-					return this.textLayoutType;
-				}
-			}
-
-			public FieldRelation Relation
-			{
-				//	Type de la relation éventuelle du champ.
-				get
-				{
-					return this.relation;
-				}
-				set
-				{
-					this.relation = value;
-				}
-			}
-
-			public Druid Destination
-			{
-				//	Destination de la relation éventuelle du champ.
-				get
-				{
-					return this.destination;
-				}
-				set
-				{
-					this.destination = value;
-				}
-			}
-
-			public int Rank
-			{
-				get
-				{
-					return this.rank;
-				}
-				set
-				{
-					this.rank = value;
-				}
-			}
-
-			public ObjectBox SrcBox
-			{
-				get
-				{
-					return this.srcBox;
-				}
-				set
-				{
-					this.srcBox = value;
-				}
-			}
-
-			public ObjectBox DstBox
-			{
-				get
-				{
-					return this.dstBox;
-				}
-				set
-				{
-					this.dstBox = value;
-				}
-			}
-
-			public ObjectConnection Connection
-			{
-				get
-				{
-					return this.connection;
-				}
-				set
-				{
-					this.connection = value;
-				}
-			}
-
-			public bool IsExplored
-			{
-				//	Indique si une relation est explorée, c'est-à-dire si l'on voit l'entité destination.
-				get
-				{
-					return this.isExplored;
-				}
-				set
-				{
-					this.isExplored = value;
-				}
-			}
-
-			public bool IsSourceExpanded
-			{
-				//	Indique si la boîte source d'une relation est étendue.
-				get
-				{
-					return this.isSourceExpanded;
-				}
-				set
-				{
-					this.isSourceExpanded = value;
-				}
-			}
-
-			public bool IsAttachToRight
-			{
-				//	Indique si la boîte source est attachée à droite ou à gauche.
-				get
-				{
-					return this.isAttachToRight;
-				}
-				set
-				{
-					this.isAttachToRight = value;
-				}
-			}
-
-			protected TextLayout textLayoutField;
-			protected TextLayout textLayoutType;
-			protected FieldRelation relation;
-			protected Druid destination;
-			protected int rank;
-			protected ObjectBox srcBox;
-			protected ObjectBox dstBox;
-			protected ObjectConnection connection;
-			protected bool isExplored;
-			protected bool isSourceExpanded;
-			protected bool isAttachToRight;
-		}
 
 
 		protected static readonly double roundFrameRadius = 12;

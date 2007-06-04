@@ -269,7 +269,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			{
 				for (int i=0; i<box.Fields.Count; i++)
 				{
-					ObjectBox.Field field = box.Fields[i];
+					Field field = box.Fields[i];
 
 					if (field.Relation != FieldRelation.None)
 					{
@@ -284,13 +284,13 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 							}
 							else
 							{
-								connection.Route.Clear();
+								field.RouteClear();
 
 								//	Important: toujours le point droite en premier !
 								double posv = box.GetConnectionSrcVerticalPosition(i);
 								connection.Points.Add(new Point(box.Bounds.Right-1, posv));
 								connection.Points.Add(new Point(box.Bounds.Left+1, posv));
-								connection.Route.RouteType = ObjectConnection.RouteData.Type.Close;
+								connection.Field.Route = Field.RouteType.Close;
 							}
 						}
 					}
@@ -313,7 +313,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			dstBoundsLittle.Deflate(2);
 
 			connection.Points.Clear();
-			connection.Route.Clear();
+			connection.Field.RouteClear();
 
 			double v = src.GetConnectionSrcVerticalPosition(srcRank);
 			if (src == dst)  // connection à soi-même ?
@@ -330,7 +330,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				p.X -= 30;
 				connection.Points.Add(p);
 
-				connection.Route.RouteType = ObjectConnection.RouteData.Type.Himself;
+				connection.Field.Route = Field.RouteType.Himself;
 			}
 			else if (!srcBounds.IntersectsWith(dstBounds))
 			{
@@ -346,14 +346,14 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 						Point end = dst.GetConnectionDstPosition(start.Y, ObjectBox.ConnectionAnchor.Top);
 						connection.Points.Add(new Point(end.X, start.Y));
 						connection.Points.Add(end);
-						connection.Route.RouteType = ObjectConnection.RouteData.Type.Bb;
+						connection.Field.Route = Field.RouteType.Bb;
 					}
 					else if (dstBounds.Bottom > start.Y+Editor.connectionDetour)  // destination plus haute ?
 					{
 						Point end = dst.GetConnectionDstPosition(start.Y, ObjectBox.ConnectionAnchor.Bottom);
 						connection.Points.Add(new Point(end.X, start.Y));
 						connection.Points.Add(end);
-						connection.Route.RouteType = ObjectConnection.RouteData.Type.Bt;
+						connection.Field.Route = Field.RouteType.Bt;
 					}
 					else
 					{
@@ -363,12 +363,12 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 							connection.Points.Add(Point.Zero);  // (*)
 							connection.Points.Add(Point.Zero);  // (*)
 							connection.Points.Add(end);
-							connection.Route.RouteType = ObjectConnection.RouteData.Type.C;
+							connection.Field.Route = Field.RouteType.C;
 						}
 						else
 						{
 							connection.Points.Add(end);
-							connection.Route.RouteType = ObjectConnection.RouteData.Type.A;
+							connection.Field.Route = Field.RouteType.A;
 						}
 					}
 				}
@@ -382,14 +382,14 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 						Point end = dst.GetConnectionDstPosition(start.Y, ObjectBox.ConnectionAnchor.Top);
 						connection.Points.Add(new Point(end.X, start.Y));
 						connection.Points.Add(end);
-						connection.Route.RouteType = ObjectConnection.RouteData.Type.Bb;
+						connection.Field.Route = Field.RouteType.Bb;
 					}
 					else if (dstBounds.Bottom > start.Y+Editor.connectionDetour)  // destination plus haute ?
 					{
 						Point end = dst.GetConnectionDstPosition(start.Y, ObjectBox.ConnectionAnchor.Bottom);
 						connection.Points.Add(new Point(end.X, start.Y));
 						connection.Points.Add(end);
-						connection.Route.RouteType = ObjectConnection.RouteData.Type.Bt;
+						connection.Field.Route = Field.RouteType.Bt;
 					}
 					else
 					{
@@ -399,12 +399,12 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 							connection.Points.Add(Point.Zero);  // (*)
 							connection.Points.Add(Point.Zero);  // (*)
 							connection.Points.Add(end);
-							connection.Route.RouteType = ObjectConnection.RouteData.Type.C;
+							connection.Field.Route = Field.RouteType.C;
 						}
 						else
 						{
 							connection.Points.Add(end);
-							connection.Route.RouteType = ObjectConnection.RouteData.Type.A;
+							connection.Field.Route = Field.RouteType.A;
 						}
 					}
 				}
@@ -417,7 +417,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					connection.Points.Add(Point.Zero);  // (*)
 					connection.Points.Add(Point.Zero);  // (*)
 					connection.Points.Add(end);
-					connection.Route.RouteType = ObjectConnection.RouteData.Type.D;
+					connection.Field.Route = Field.RouteType.D;
 				}
 				else  // destination à gauche à cheval ?
 				{
@@ -428,7 +428,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					connection.Points.Add(Point.Zero);  // (*)
 					connection.Points.Add(Point.Zero);  // (*)
 					connection.Points.Add(end);
-					connection.Route.RouteType = ObjectConnection.RouteData.Type.D;
+					connection.Field.Route = Field.RouteType.D;
 				}
 			}
 		}
@@ -438,19 +438,13 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		public void CreateConnections()
 		{
 			//	Crée (ou recrée) toutes les liaisons nécessaires.
-			List<ObjectConnection> oldConnections = new List<ObjectConnection>();
-			foreach (ObjectConnection connection in this.connections)
-			{
-				oldConnections.Add(connection);  // copie des anciennes connections
-			}
-
 			this.connections.Clear();  // supprime toutes les connections existantes
 
 			foreach (ObjectBox box in this.boxes)
 			{
 				for (int i=0; i<box.Fields.Count; i++)
 				{
-					ObjectBox.Field field = box.Fields[i];
+					Field field = box.Fields[i];
 
 					if (field.Relation != FieldRelation.None)
 					{
@@ -468,32 +462,11 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 						connection.Field = field;
 						field.Connection = connection;
 						this.AddConnection(connection);
-
-						//	Cherche les informations de routage dans la liste des anciennes connections.
-						ObjectConnection oldConnection = Editor.SearchConnection(oldConnections, field.SrcBox, field.DstBox);
-						if (oldConnection != null)
-						{
-							oldConnection.Route.CopyTo(connection.Route);  // reprend l'ancien routage
-						}
 					}
 				}
 			}
 
 			this.Invalidate();
-		}
-
-		protected static ObjectConnection SearchConnection(List<ObjectConnection> connections, ObjectBox srcBox, ObjectBox dstBox)
-		{
-			//	Cherche une connection à partir des objets source et destination.
-			foreach (ObjectConnection connection in connections)
-			{
-				if (connection.Field.SrcBox == srcBox && connection.Field.DstBox == dstBox)
-				{
-					return connection;
-				}
-			}
-
-			return null;
 		}
 
 
@@ -574,7 +547,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		protected void ExploreConnectedToRoot(List<ObjectBox> visited, ObjectBox root)
 		{
 			//	Cherche récursivement tous les objets depuis 'root'.
-			foreach (ObjectBox.Field field in root.Fields)
+			foreach (Field field in root.Fields)
 			{
 				ObjectBox dstBox = field.DstBox;
 				if (dstBox != null)
@@ -594,7 +567,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			//	les connections sur la boîte supprimée.
 			foreach (ObjectBox box in this.boxes)
 			{
-				foreach (ObjectBox.Field field in box.Fields)
+				foreach (Field field in box.Fields)
 				{
 					if (field.DstBox == removedBox)
 					{
