@@ -45,7 +45,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			Bt,			// connection de type B vers le haut
 			Bb,			// connection de type B vers le bas
 			C,			// connection de type C
-			D,			// connection de type C
+			D,			// connection de type D
 		}
 
 		
@@ -171,7 +171,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		public ObjectBox DstBox
 		{
-			//	Objet destination de la connection.
+			//	Objet destination de la connection (si la relation est explorée).
 			get
 			{
 				return this.dstBox;
@@ -224,6 +224,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		public bool IsAttachToRight
 		{
 			//	Indique si la boîte source est attachée à droite ou à gauche.
+			//	Direction dans laquelle part la connection.
 			get
 			{
 				return this.isAttachToRight;
