@@ -14,7 +14,7 @@ namespace App.Designer
 		{
 			Epsitec.Common.Widgets.Widget.Initialize ();
 			Epsitec.Common.Document.Engine.Initialize ();
-#if false
+
 			List<string> paths = new List<string> (new string[]
 			{
 				@"S:\Epsitec.Cresus\Demo\Resources",
@@ -67,10 +67,10 @@ namespace App.Designer
 
 				paths.AddRange (addPaths);
 			}
-#endif
+			
 			Epsitec.Common.Widgets.Adorners.Factory.SetActive ("LookRoyale");
 			//?Epsitec.Common.Widgets.Adorners.Factory.SetActive ("LookMetal");
-//			Epsitec.Common.Support.Implementation.FileProvider.DefineGlobalProbingPath (string.Join (";", paths.ToArray ()));
+			Epsitec.Common.Support.Implementation.FileProvider.DefineGlobalProbingPath (string.Join (";", paths.ToArray ()));
 			
 			MainWindow designerMainWindow;
 			
