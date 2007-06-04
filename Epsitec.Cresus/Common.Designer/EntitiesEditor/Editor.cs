@@ -283,6 +283,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 							{
 								connection.IsAttachToLeft = false;
 								connection.IsAttachToRight = false;
+								connection.IsMiddleRelative = false;
 
 								double posv = box.GetConnectionSrcVerticalPosition(i);
 
@@ -313,6 +314,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			connection.Points.Clear();
 			connection.IsAttachToLeft = false;
 			connection.IsAttachToRight = false;
+			connection.IsMiddleRelative = false;
 
 			double v = src.GetConnectionSrcVerticalPosition(srcRank);
 			if (src == dst)  // connection à soi-même ?
@@ -359,10 +361,15 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 						Point end = dst.GetConnectionDstPosition(start.Y, ObjectBox.ConnectionAnchor.Left);
 						if (start.Y != end.Y && end.X-start.X > Editor.connectionDetour)
 						{
-							connection.Points.Add(new Point((start.X+end.X)/2, start.Y));
-							connection.Points.Add(new Point((start.X+end.X)/2, end.Y));
+							connection.Points.Add(Point.Zero);
+							connection.Points.Add(Point.Zero);
+							connection.Points.Add(end);
+							connection.IsMiddleRelative = true;
 						}
-						connection.Points.Add(end);
+						else
+						{
+							connection.Points.Add(end);
+						}
 					}
 				}
 				else if (dstBounds.Center.X < srcBounds.Left-Editor.connectionDetour/3)  // destination à gauche ?
@@ -389,10 +396,15 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 						Point end = dst.GetConnectionDstPosition(start.Y, ObjectBox.ConnectionAnchor.Right);
 						if (start.Y != end.Y && start.X-end.X > Editor.connectionDetour)
 						{
-							connection.Points.Add(new Point((start.X+end.X)/2, start.Y));
-							connection.Points.Add(new Point((start.X+end.X)/2, end.Y));
+							connection.Points.Add(Point.Zero);
+							connection.Points.Add(Point.Zero);
+							connection.Points.Add(end);
+							connection.IsMiddleRelative = true;
 						}
-						connection.Points.Add(end);
+						else
+						{
+							connection.Points.Add(end);
+						}
 					}
 				}
 				else if (dstBounds.Center.X > srcBounds.Center.X)  // destination à droite à cheval ?

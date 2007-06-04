@@ -14,6 +14,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		public ObjectConnection(Editor editor) : base(editor)
 		{
 			this.points = new List<Point>();
+			this.middleRelative = 0.5;
 		}
 
 
@@ -78,15 +79,83 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 		}
 
+		public bool IsMiddleRelative
+		{
+			//	Indique si la position intermédiaire est utilisée.
+			get
+			{
+				return this.isMiddleRelative;
+			}
+			set
+			{
+				if (this.isMiddleRelative != value)
+				{
+					this.isMiddleRelative = value;
+
+					this.UpdateMiddleRelative();
+				}
+			}
+		}
+
+		public double MiddleRelative
+		{
+			//	Position intermédiaire.
+			get
+			{
+				return this.middleRelative;
+			}
+			set
+			{
+				value = System.Math.Max(value, 0.1);
+				value = System.Math.Min(value, 0.9);
+
+				if (this.middleRelative != value)
+				{
+					this.middleRelative = value;
+
+					this.UpdateMiddleRelative();
+					this.editor.Invalidate();
+				}
+			}
+		}
+
+
+		public override bool MouseMove(Point pos)
+		{
+			//	La souris est bougée.
+			if (this.isDraggingMiddleRelative)
+			{
+				if (!pos.IsZero)
+				{
+					this.MiddleRelative = (pos.X-this.points[0].X)/(this.points[3].X-this.points[0].X);
+				}
+				return true;
+			}
+			else
+			{
+				return base.MouseMove(pos);
+			}
+		}
 
 		public override void MouseDown(Point pos)
 		{
 			//	Le bouton de la souris est pressé.
+			if (this.hilitedElement == ActiveElement.ConnectionMove)
+			{
+				this.isDraggingMiddleRelative = true;
+				this.editor.LockObject(this);
+			}
 		}
 
 		public override void MouseUp(Point pos)
 		{
 			//	Le bouton de la souris est relâché.
+			if (this.isDraggingMiddleRelative)
+			{
+				this.isDraggingMiddleRelative = false;
+				this.editor.LockObject(null);
+			}
+
 			if (this.hilitedElement == ActiveElement.ConnectionOpenLeft ||
 				this.hilitedElement == ActiveElement.ConnectionOpenRight)
 			{
@@ -248,6 +317,17 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				}
 			}
 
+			//	Souris dans le bouton pour déplacer le point milieu ?
+			if (this.isMiddleRelative)
+			{
+				Point m = Point.Scale(this.points[1], this.points[2], 0.5);
+				if (Point.Distance(pos, m) <= AbstractObject.buttonRadius)
+				{
+					element = ActiveElement.ConnectionMove;
+					return true;
+				}
+			}
+
 			//	Souris dans le bouton pour changer la connection ?
 			Point p = this.PositionChange;
 			if (!p.IsZero && (this.field.IsExplored || this.field.IsSourceExpanded) && Point.Distance(pos, p) <= AbstractObject.buttonRadius)
@@ -291,6 +371,18 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 
 			return false;
+		}
+
+
+		protected void UpdateMiddleRelative()
+		{
+			//	Met à jour les points milieu de la connection.
+			if (this.isMiddleRelative)
+			{
+				double px = this.points[0].X + (this.points[3].X-this.points[0].X)*this.middleRelative;
+				this.points[1] = new Point(px, this.points[0].Y);
+				this.points[2] = new Point(px, this.points[3].Y);
+			}
 		}
 
 
@@ -404,6 +496,20 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				}
 			}
 
+			//	Dessine le bouton pour déplacer le point milieu.
+			if (this.isMiddleRelative)
+			{
+				Point m = Point.Scale(this.points[1], this.points[2], 0.5);
+				if (this.hilitedElement == ActiveElement.ConnectionMove)
+				{
+					this.DrawRoundButton(graphics, m, AbstractObject.buttonRadius, GlyphShape.HorizontalMove, true, false);
+				}
+				if (this.hilitedElement == ActiveElement.ConnectionHilited)
+				{
+					this.DrawRoundButton(graphics, m, AbstractObject.buttonRadius, GlyphShape.HorizontalMove, false, false);
+				}
+			}
+
 			if (this.points.Count != 0)
 			{
 				//	Dessine le bouton pour changer la connection.
@@ -490,5 +596,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		protected bool isSrcHilited;
 		protected bool isAttachToLeft;
 		protected bool isAttachToRight;
+		protected bool isMiddleRelative;
+		protected double middleRelative;
+		protected bool isDraggingMiddleRelative;
 	}
 }
