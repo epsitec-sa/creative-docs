@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <bundle name="Strings" type="String" culture="de">
-  <data id="05" mod="1" about="Not my decision but I would prefer F... ;-)">?</data>
+  <data id="05" mod="1">F</data>
   <data id="0" mod="1">CreativeDocs</data>
   <data id="01" mod="1">Creative Docs .NET</data>
   <data id="02" mod="1">Creative Pict .NET</data>

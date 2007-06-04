@@ -14,4 +14,5 @@
   <data name="Cmd.Dialog.File.Favorites.Big" id="0C" mod="1">&lt;s:type id="_1" s:name="Epsitec.Common.Widgets.Command" /&gt;&lt;s:data id="_0" f:Description="Grandes icônes" f:Icon="manifest:Epsitec.App.DocumentEditor.Images.FavoriteBig.icon" f:Name="Dialog.File.Favorites.Big" f:_1.Statefull="True" f:Labels="{Collection {Text 'Grandes icônes'}}" /&gt;</data>
   <data name="Typ.New" id="02">&lt;s:data id="_0" f:Name="New" /&gt;</data>
   <data name="Val.New" id="0D">&lt;s:data id="_0" f:Name="New" /&gt;</data>
+  <data name="Fld.New" id="0E">&lt;s:data id="_0" f:Name="New" /&gt;</data>
 </bundle>
