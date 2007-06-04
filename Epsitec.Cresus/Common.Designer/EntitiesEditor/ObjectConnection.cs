@@ -310,7 +310,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				graphics.RenderSolid(color);
 			}
 
-			if (this.points.Count == 2 && !this.field.IsExplored)
+			if (this.points.Count == 2 && !this.field.IsExplored && this.field.IsSourceExpanded)
 			{
 				Point start = this.points[0];
 				Point end = new Point(start.X+ObjectConnection.lengthClose, start.Y);
@@ -443,7 +443,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					return this.points[this.points.Count-1];
 				}
 
-				if (this.points.Count == 2 && !this.field.IsExplored)
+				if (this.points.Count == 2 && !this.field.IsExplored && this.field.IsSourceExpanded)
 				{
 					return new Point(this.points[0].X+ObjectConnection.lengthClose, this.points[0].Y);
 				}
