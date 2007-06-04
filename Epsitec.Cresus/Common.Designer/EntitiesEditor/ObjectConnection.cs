@@ -62,32 +62,6 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 		}
 
-		public bool IsAttachToLeft
-		{
-			//	Indique si la connection est attachée à gauche.
-			get
-			{
-				return this.isAttachToLeft;
-			}
-			set
-			{
-				this.isAttachToLeft = value;
-			}
-		}
-
-		public bool IsAttachToRight
-		{
-			//	Indique si la connection est attachée à droite.
-			get
-			{
-				return this.isAttachToRight;
-			}
-			set
-			{
-				this.isAttachToRight = value;
-			}
-		}
-
 
 		public override Rectangle Bounds
 		{
@@ -591,7 +565,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 			if (this.route.IsPositionAbsoluteB)
 			{
-				if (this.isAttachToRight)
+				if (this.field.IsAttachToRight)
 				{
 					double px = System.Math.Max(this.points[0].X, this.points[3].X) + Editor.connectionDetour;
 					this.route.PositionAbsoluteB = pos.X-px;
@@ -618,7 +592,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			if (this.route.IsPositionAbsoluteB)
 			{
 				double px;
-				if (this.isAttachToRight)
+				if (this.field.IsAttachToRight)
 				{
 					px = System.Math.Max(this.points[0].X, this.points[3].X) + Editor.connectionDetour;
 					px += this.route.PositionAbsoluteB;
@@ -639,11 +613,19 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		/// </summary>
 		public class RouteData
 		{
+			public enum FavouriteB
+			{
+				Automatic,
+				Right,
+				Left,
+			}
+
 			public RouteData(ObjectConnection connection)
 			{
 				this.connection = connection;
 				this.middleRelativeA = 0.5;
 				this.positionAbsoluteB = 0;
+				this.favouriteB = FavouriteB.Automatic;
 			}
 
 			public void Clear()
@@ -732,6 +714,19 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				}
 			}
 
+			public FavouriteB FavouriteDirectionB
+			{
+				//	Direction préférentielle(cas B).
+				get
+				{
+					return this.favouriteB;
+				}
+				set
+				{
+					this.favouriteB = value;
+				}
+			}
+
 			public void CopyTo(RouteData dst)
 			{
 				//	Copie toutes les informations de routage.
@@ -740,6 +735,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				dst.isPositionAbsoluteB = this.isPositionAbsoluteB;
 				dst.middleRelativeA = this.middleRelativeA;
 				dst.positionAbsoluteB = this.positionAbsoluteB;
+				dst.favouriteB = this.favouriteB;
 			}
 
 			protected ObjectConnection connection;
@@ -747,6 +743,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			protected bool isPositionAbsoluteB;
 			protected double middleRelativeA;
 			protected double positionAbsoluteB;
+			protected FavouriteB favouriteB;
 		}
 
 
@@ -759,8 +756,6 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		protected ObjectBox.Field field;
 		protected List<Point> points;
 		protected bool isSrcHilited;
-		protected bool isAttachToLeft;
-		protected bool isAttachToRight;
 		protected RouteData route;
 		protected bool isDraggingMiddleRelative;
 	}

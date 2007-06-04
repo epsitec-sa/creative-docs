@@ -281,8 +281,6 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 							}
 							else
 							{
-								connection.IsAttachToLeft = false;
-								connection.IsAttachToRight = false;
 								connection.Route.Clear();
 
 								double posv = box.GetConnectionSrcVerticalPosition(i);
@@ -312,14 +310,12 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			dstBoundsLittle.Deflate(2);
 
 			connection.Points.Clear();
-			connection.IsAttachToLeft = false;
-			connection.IsAttachToRight = false;
 			connection.Route.Clear();
 
 			double v = src.GetConnectionSrcVerticalPosition(srcRank);
 			if (src == dst)  // connection à soi-même ?
 			{
-				connection.IsAttachToRight = true;
+				connection.Field.IsAttachToRight = true;
 
 				Point p = new Point(srcBounds.Right-1, v);
 				connection.Points.Add(p);
@@ -339,7 +335,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 				if (dstBounds.Center.X > srcBounds.Right+Editor.connectionDetour/3)  // destination à droite ?
 				{
-					connection.IsAttachToRight = true;
+					connection.Field.IsAttachToRight = true;
 
 					Point start = new Point(srcBounds.Right-1, p.Y);
 					connection.Points.Add(start);
@@ -361,8 +357,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 						Point end = dst.GetConnectionDstPosition(start.Y, ObjectBox.ConnectionAnchor.Left);
 						if (start.Y != end.Y && end.X-start.X > Editor.connectionDetour)
 						{
-							connection.Points.Add(Point.Zero);
-							connection.Points.Add(Point.Zero);
+							connection.Points.Add(Point.Zero);  // (*)
+							connection.Points.Add(Point.Zero);  // (*)
 							connection.Points.Add(end);
 							connection.Route.IsMiddleRelativeA = true;
 						}
@@ -374,7 +370,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				}
 				else if (dstBounds.Center.X < srcBounds.Left-Editor.connectionDetour/3)  // destination à gauche ?
 				{
-					connection.IsAttachToLeft = true;
+					connection.Field.IsAttachToRight = false;
 
 					Point start = new Point(srcBounds.Left+1, p.Y);
 					connection.Points.Add(start);
@@ -396,8 +392,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 						Point end = dst.GetConnectionDstPosition(start.Y, ObjectBox.ConnectionAnchor.Right);
 						if (start.Y != end.Y && start.X-end.X > Editor.connectionDetour)
 						{
-							connection.Points.Add(Point.Zero);
-							connection.Points.Add(Point.Zero);
+							connection.Points.Add(Point.Zero);  // (*)
+							connection.Points.Add(Point.Zero);  // (*)
 							connection.Points.Add(end);
 							connection.Route.IsMiddleRelativeA = true;
 						}
@@ -409,32 +405,34 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				}
 				else if (dstBounds.Center.X > srcBounds.Center.X)  // destination à droite à cheval ?
 				{
-					connection.IsAttachToRight = true;
+					connection.Field.IsAttachToRight = true;
 
 					Point start = new Point(srcBounds.Right-1, p.Y);
 					Point end = dst.GetConnectionDstPosition(start.Y, ObjectBox.ConnectionAnchor.Right);
 
 					connection.Points.Add(start);
-					connection.Points.Add(Point.Zero);
-					connection.Points.Add(Point.Zero);
+					connection.Points.Add(Point.Zero);  // (*)
+					connection.Points.Add(Point.Zero);  // (*)
 					connection.Points.Add(end);
 					connection.Route.IsPositionAbsoluteB = true;
 				}
 				else  // destination à gauche à cheval ?
 				{
-					connection.IsAttachToLeft = true;
+					connection.Field.IsAttachToRight = false;
 
 					Point start = new Point(srcBounds.Left+1, p.Y);
 					Point end = dst.GetConnectionDstPosition(start.Y, ObjectBox.ConnectionAnchor.Left);
 
 					connection.Points.Add(start);
-					connection.Points.Add(Point.Zero);
-					connection.Points.Add(Point.Zero);
+					connection.Points.Add(Point.Zero);  // (*)
+					connection.Points.Add(Point.Zero);  // (*)
 					connection.Points.Add(end);
 					connection.Route.IsPositionAbsoluteB = true;
 				}
 			}
 		}
+
+		// (*)	Sera calculé par ObjectConnection.UpdateRoute !
 
 		public void CreateConnections()
 		{

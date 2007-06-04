@@ -29,7 +29,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 			this.fields = new List<Field>();
 
-			this.columnsSeparator = 0.5;
+			this.columnsSeparatorRelative = 0.5;
 			this.isRoot = false;
 			this.isExtended = false;
 		}
@@ -240,13 +240,13 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					{
 						if (field.IsExplored)
 						{
-							if (field.Connection.IsAttachToLeft)
-							{
-								if (!right)  return false;
-							}
-							if (field.Connection.IsAttachToRight)
+							if (field.IsAttachToRight)
 							{
 								if (right)  return false;
+							}
+							else
+							{
+								if (!right)  return false;
 							}
 						}
 						else
@@ -292,9 +292,9 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			{
 				Rectangle rect = this.Bounds;
 				rect.Deflate(ObjectBox.textMargin, 0);
-				this.columnsSeparator = (pos.X-rect.Left)/rect.Width;
-				this.columnsSeparator = System.Math.Max(this.columnsSeparator, 0.2);
-				this.columnsSeparator = System.Math.Min(this.columnsSeparator, 1.0);
+				this.columnsSeparatorRelative = (pos.X-rect.Left)/rect.Width;
+				this.columnsSeparatorRelative = System.Math.Max(this.columnsSeparatorRelative, 0.2);
+				this.columnsSeparatorRelative = System.Math.Min(this.columnsSeparatorRelative, 1.0);
 				this.editor.Invalidate();
 				return true;
 			}
@@ -511,7 +511,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 					//	Souris sur le séparateur des colonnes ?
 					double sep = this.ColumnsSeparatorAbsolute;
-					if (this.columnsSeparator < 1 && pos.X >= sep-4 && pos.X <= sep+4)
+					if (this.columnsSeparatorRelative < 1.0 && pos.X >= sep-4 && pos.X <= sep+4)
 					{
 						element = ActiveElement.MoveColumnsSeparator;
 						this.SetConnectionsHilited(true);
@@ -986,7 +986,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				this.RenderHorizontalGradient(graphics, inside, ci1, ci2);
 
 				//	Trait vertical de séparation.
-				if (this.columnsSeparator < 1.0)
+				if (this.columnsSeparatorRelative < 1.0)
 				{
 					double posx = System.Math.Floor(this.ColumnsSeparatorAbsolute)+0.5;
 					graphics.AddLine(posx, this.bounds.Bottom+ObjectBox.footerHeight+0.5, posx, this.bounds.Top-ObjectBox.headerHeight-0.5);
@@ -1264,7 +1264,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			{
 				Rectangle rect = this.bounds;
 				rect.Deflate(ObjectBox.textMargin, 0);
-				return rect.Left + rect.Width*this.columnsSeparator;
+				return rect.Left + rect.Width*this.columnsSeparatorRelative;
 			}
 		}
 
@@ -1436,6 +1436,19 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				}
 			}
 
+			public bool IsAttachToRight
+			{
+				//	Indique si la boîte source est attachée à droite ou à gauche.
+				get
+				{
+					return this.isAttachToRight;
+				}
+				set
+				{
+					this.isAttachToRight = value;
+				}
+			}
+
 			protected TextLayout textLayoutField;
 			protected TextLayout textLayoutType;
 			protected FieldRelation relation;
@@ -1446,6 +1459,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			protected ObjectConnection connection;
 			protected bool isExplored;
 			protected bool isSourceExpanded;
+			protected bool isAttachToRight;
 		}
 
 
@@ -1458,7 +1472,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		protected CultureMap cultureMap;
 		protected Rectangle bounds;
-		protected double columnsSeparator;
+		protected double columnsSeparatorRelative;
 		protected bool isRoot;
 		protected bool isExtended;
 		protected string titleString;
