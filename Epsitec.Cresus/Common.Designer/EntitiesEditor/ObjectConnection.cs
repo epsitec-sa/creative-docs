@@ -42,6 +42,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		public RouteData Route
 		{
+			//	Retourne les informations de routage.
 			get
 			{
 				return this.route;
@@ -93,10 +94,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			//	La souris est bougée.
 			if (this.isDraggingMiddleRelative)
 			{
-				if (!pos.IsZero)
-				{
-					this.route.MiddleRelative = (pos.X-this.points[0].X)/(this.points[3].X-this.points[0].X);
-				}
+				this.RouteMove(pos);
 				return true;
 			}
 			else
@@ -286,14 +284,11 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 
 			//	Souris dans le bouton pour déplacer le point milieu ?
-			if (this.route.IsMiddleRelative)
+			Point m = this.PositionRouteMove;
+			if (!m.IsZero && Point.Distance(pos, m) <= AbstractObject.buttonRadius)
 			{
-				Point m = Point.Scale(this.points[1], this.points[2], 0.5);
-				if (Point.Distance(pos, m) <= AbstractObject.buttonRadius)
-				{
-					element = ActiveElement.ConnectionMove;
-					return true;
-				}
+				element = ActiveElement.ConnectionMove;
+				return true;
 			}
 
 			//	Souris dans le bouton pour changer la connection ?
@@ -339,18 +334,6 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 
 			return false;
-		}
-
-
-		protected void UpdateMiddleRelative()
-		{
-			//	Met à jour les points milieu de la connection.
-			if (this.route.IsMiddleRelative)
-			{
-				double px = this.points[0].X + (this.points[3].X-this.points[0].X)*this.route.MiddleRelative;
-				this.points[1] = new Point(px, this.points[0].Y);
-				this.points[2] = new Point(px, this.points[3].Y);
-			}
 		}
 
 
@@ -465,9 +448,9 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 
 			//	Dessine le bouton pour déplacer le point milieu.
-			if (this.route.IsMiddleRelative)
+			Point m = this.PositionRouteMove;
+			if (!m.IsZero)
 			{
-				Point m = Point.Scale(this.points[1], this.points[2], 0.5);
 				if (this.hilitedElement == ActiveElement.ConnectionMove)
 				{
 					this.DrawRoundButton(graphics, m, AbstractObject.buttonRadius, GlyphShape.HorizontalMove, true, false);
@@ -552,6 +535,82 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 		}
 
+		protected Point PositionRouteMove
+		{
+			//	Retourne la position du bouton pour modifier le routage.
+			get
+			{
+				if (this.route.IsMiddleRelativeA)
+				{
+					return Point.Scale(this.points[1], this.points[2], 0.5);
+				}
+
+				if (this.route.IsPositionAbsoluteB)
+				{
+					return Point.Scale(this.points[1], this.points[2], 0.5);
+				}
+
+				return Point.Zero;
+			}
+		}
+
+		protected void RouteMove(Point pos)
+		{
+			//	Modifie le routage.
+			if (pos.IsZero)
+			{
+				return;
+			}
+
+			if (this.route.IsMiddleRelativeA)
+			{
+				this.route.MiddleRelativeA = (pos.X-this.points[0].X)/(this.points[3].X-this.points[0].X);
+			}
+
+			if (this.route.IsPositionAbsoluteB)
+			{
+				if (this.isAttachToRight)
+				{
+					double px = System.Math.Max(this.points[0].X, this.points[3].X) + Editor.connectionDetour;
+					this.route.PositionAbsoluteB = pos.X-px;
+				}
+				else
+				{
+					double px = System.Math.Min(this.points[0].X, this.points[3].X) - Editor.connectionDetour;
+					this.route.PositionAbsoluteB = px-pos.X;
+				}
+			}
+		}
+
+		protected void UpdateRoute()
+		{
+			//	Met à jour le routage de la connection.
+			if (this.route.IsMiddleRelativeA)
+			{
+				//	Met à jour les points milieu de la connection.
+				double px = this.points[0].X + (this.points[3].X-this.points[0].X)*this.route.MiddleRelativeA;
+				this.points[1] = new Point(px, this.points[0].Y);
+				this.points[2] = new Point(px, this.points[3].Y);
+			}
+
+			if (this.route.IsPositionAbsoluteB)
+			{
+				double px;
+				if (this.isAttachToRight)
+				{
+					px = System.Math.Max(this.points[0].X, this.points[3].X) + Editor.connectionDetour;
+					px += this.route.PositionAbsoluteB;
+				}
+				else
+				{
+					px = System.Math.Min(this.points[0].X, this.points[3].X) - Editor.connectionDetour;
+					px -= this.route.PositionAbsoluteB;
+				}
+				this.points[1] = new Point(px, this.points[0].Y);
+				this.points[2] = new Point(px, this.points[3].Y);
+			}
+		}
+
 
 		/// <summary>
 		/// Cette classe contient toutes les informations sur le routage de la connection.
@@ -561,44 +620,91 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			public RouteData(ObjectConnection connection)
 			{
 				this.connection = connection;
-				this.middleRelative = 0.5;
+				this.middleRelativeA = 0.5;
+				this.positionAbsoluteB = 0;
 			}
 
-			public bool IsMiddleRelative
+			public void Clear()
 			{
-				//	Indique si la position intermédiaire est utilisée.
+				//	Force un routage standard.
+				this.IsMiddleRelativeA = false;
+				this.IsPositionAbsoluteB = false;
+			}
+
+			public bool IsMiddleRelativeA
+			{
+				//	Indique si la position intermédiaire est utilisée (cas A).
 				get
 				{
-					return this.isMiddleRelative;
+					return this.isMiddleRelativeA;
 				}
 				set
 				{
-					if (this.isMiddleRelative != value)
+					if (this.isMiddleRelativeA != value)
 					{
-						this.isMiddleRelative = value;
+						this.isMiddleRelativeA = value;
 
-						this.connection.UpdateMiddleRelative();
+						this.connection.UpdateRoute();
 					}
 				}
 			}
 
-			public double MiddleRelative
+			public bool IsPositionAbsoluteB
 			{
-				//	Position intermédiaire.
+				//	Indique si la position intermédiaire est utilisée (cas B).
 				get
 				{
-					return this.middleRelative;
+					return this.isPositionAbsoluteB;
+				}
+				set
+				{
+					if (this.isPositionAbsoluteB != value)
+					{
+						this.isPositionAbsoluteB = value;
+
+						this.connection.UpdateRoute();
+					}
+				}
+			}
+
+			public double MiddleRelativeA
+			{
+				//	Position intermédiaire (cas A).
+				get
+				{
+					return this.middleRelativeA;
 				}
 				set
 				{
 					value = System.Math.Max(value, 0.1);
 					value = System.Math.Min(value, 0.9);
 
-					if (this.middleRelative != value)
+					if (this.middleRelativeA != value)
 					{
-						this.middleRelative = value;
+						this.middleRelativeA = value;
 
-						this.connection.UpdateMiddleRelative();
+						this.connection.UpdateRoute();
+						this.connection.editor.Invalidate();
+					}
+				}
+			}
+
+			public double PositionAbsoluteB
+			{
+				//	Position intermédiaire (cas B).
+				get
+				{
+					return this.positionAbsoluteB;
+				}
+				set
+				{
+					value = System.Math.Max(value, 0.0);
+
+					if (this.positionAbsoluteB != value)
+					{
+						this.positionAbsoluteB = value;
+
+						this.connection.UpdateRoute();
 						this.connection.editor.Invalidate();
 					}
 				}
@@ -608,13 +714,17 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			{
 				//	Copie toutes les informations de routage.
 				//	Il ne faut surtout pas copier le pointeur à la connection !
-				dst.isMiddleRelative = this.isMiddleRelative;
-				dst.middleRelative = this.middleRelative;
+				dst.isMiddleRelativeA = this.isMiddleRelativeA;
+				dst.isPositionAbsoluteB = this.isPositionAbsoluteB;
+				dst.middleRelativeA = this.middleRelativeA;
+				dst.positionAbsoluteB = this.positionAbsoluteB;
 			}
 
 			protected ObjectConnection connection;
-			protected bool isMiddleRelative;
-			protected double middleRelative;
+			protected bool isMiddleRelativeA;
+			protected bool isPositionAbsoluteB;
+			protected double middleRelativeA;
+			protected double positionAbsoluteB;
 		}
 
 

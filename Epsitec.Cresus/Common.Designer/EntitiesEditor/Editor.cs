@@ -283,7 +283,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 							{
 								connection.IsAttachToLeft = false;
 								connection.IsAttachToRight = false;
-								connection.Route.IsMiddleRelative = false;
+								connection.Route.Clear();
 
 								double posv = box.GetConnectionSrcVerticalPosition(i);
 
@@ -314,7 +314,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			connection.Points.Clear();
 			connection.IsAttachToLeft = false;
 			connection.IsAttachToRight = false;
-			connection.Route.IsMiddleRelative = false;
+			connection.Route.Clear();
 
 			double v = src.GetConnectionSrcVerticalPosition(srcRank);
 			if (src == dst)  // connection à soi-même ?
@@ -364,7 +364,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 							connection.Points.Add(Point.Zero);
 							connection.Points.Add(Point.Zero);
 							connection.Points.Add(end);
-							connection.Route.IsMiddleRelative = true;
+							connection.Route.IsMiddleRelativeA = true;
 						}
 						else
 						{
@@ -399,7 +399,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 							connection.Points.Add(Point.Zero);
 							connection.Points.Add(Point.Zero);
 							connection.Points.Add(end);
-							connection.Route.IsMiddleRelative = true;
+							connection.Route.IsMiddleRelativeA = true;
 						}
 						else
 						{
@@ -412,26 +412,26 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					connection.IsAttachToRight = true;
 
 					Point start = new Point(srcBounds.Right-1, p.Y);
-					connection.Points.Add(start);
-
 					Point end = dst.GetConnectionDstPosition(start.Y, ObjectBox.ConnectionAnchor.Right);
-					double posx = System.Math.Max(start.X, end.X)+Editor.connectionDetour;
-					connection.Points.Add(new Point(posx, start.Y));
-					connection.Points.Add(new Point(posx, end.Y));
+
+					connection.Points.Add(start);
+					connection.Points.Add(Point.Zero);
+					connection.Points.Add(Point.Zero);
 					connection.Points.Add(end);
+					connection.Route.IsPositionAbsoluteB = true;
 				}
 				else  // destination à gauche à cheval ?
 				{
 					connection.IsAttachToLeft = true;
 
 					Point start = new Point(srcBounds.Left+1, p.Y);
-					connection.Points.Add(start);
-
 					Point end = dst.GetConnectionDstPosition(start.Y, ObjectBox.ConnectionAnchor.Left);
-					double posx = System.Math.Min(start.X, end.X)-Editor.connectionDetour;
-					connection.Points.Add(new Point(posx, start.Y));
-					connection.Points.Add(new Point(posx, end.Y));
+
+					connection.Points.Add(start);
+					connection.Points.Add(Point.Zero);
+					connection.Points.Add(Point.Zero);
 					connection.Points.Add(end);
+					connection.Route.IsPositionAbsoluteB = true;
 				}
 			}
 		}
@@ -1133,7 +1133,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 
 		protected static readonly double defaultWidth = 200;
-		protected static readonly double connectionDetour = 30;
+		public static readonly double connectionDetour = 30;
 		public static readonly double pushMargin = 10;
 		protected static readonly double frameMargin = 40;
 
