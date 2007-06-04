@@ -225,6 +225,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			this.PushLayout(box, PushDirection.Automatic, Editor.pushMargin);
 			this.RedimArea();
 			this.UpdateConnections();
+			this.RedimArea();
 		}
 
 		public void UpdateAfterMoving(ObjectBox box)
@@ -233,6 +234,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			this.PushLayout(box, PushDirection.Automatic, Editor.pushMargin);
 			this.RedimArea();
 			this.UpdateConnections();
+			this.RedimArea();
 		}
 
 		public void UpdateAfterAddOrRemoveConnection(ObjectBox box)
@@ -243,6 +245,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			this.RedimArea();
 			this.CreateConnections();
 			this.UpdateConnections();
+			this.RedimArea();
 		}
 
 		protected void UpdateBoxes()
@@ -315,8 +318,6 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			double v = src.GetConnectionSrcVerticalPosition(srcRank);
 			if (src == dst)  // connection à soi-même ?
 			{
-				connection.Field.IsAttachToRight = true;
-
 				Point p = new Point(srcBounds.Right-1, v);
 				connection.Points.Add(p);
 
@@ -335,8 +336,6 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 				if (dstBounds.Center.X > srcBounds.Right+Editor.connectionDetour/3)  // destination à droite ?
 				{
-					connection.Field.IsAttachToRight = true;
-
 					Point start = new Point(srcBounds.Right-1, p.Y);
 					connection.Points.Add(start);
 
@@ -370,8 +369,6 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				}
 				else if (dstBounds.Center.X < srcBounds.Left-Editor.connectionDetour/3)  // destination à gauche ?
 				{
-					connection.Field.IsAttachToRight = false;
-
 					Point start = new Point(srcBounds.Left+1, p.Y);
 					connection.Points.Add(start);
 
@@ -403,10 +400,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 						}
 					}
 				}
-				else if (dstBounds.Center.X > srcBounds.Center.X)  // destination à droite à cheval ?
+				else if (connection.Field.IsAttachToRight)  // destination à droite à cheval ?
 				{
-					connection.Field.IsAttachToRight = true;
-
 					Point start = new Point(srcBounds.Right-1, p.Y);
 					Point end = dst.GetConnectionDstPosition(start.Y, ObjectBox.ConnectionAnchor.Right);
 
@@ -418,8 +413,6 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				}
 				else  // destination à gauche à cheval ?
 				{
-					connection.Field.IsAttachToRight = false;
-
 					Point start = new Point(srcBounds.Left+1, p.Y);
 					Point end = dst.GetConnectionDstPosition(start.Y, ObjectBox.ConnectionAnchor.Left);
 

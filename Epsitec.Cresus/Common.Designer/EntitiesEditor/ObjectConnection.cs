@@ -136,6 +136,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 						box.SetContent(item);
 
 						this.field.DstBox = box;
+						this.field.IsAttachToRight = (this.hilitedElement == ActiveElement.ConnectionOpenRight);
+
 						this.editor.AddBox(box);
 						this.editor.UpdateGeometry();
 
@@ -195,6 +197,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					{
 						//	Ouvre la connection sur une boîte existante.
 						this.field.DstBox = box;
+						this.field.IsAttachToRight = (this.hilitedElement == ActiveElement.ConnectionOpenRight);
 					}
 
 					this.editor.CreateConnections();

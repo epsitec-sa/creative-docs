@@ -488,8 +488,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 					//	Souris dans l'en-tête ?
 					if (this.bounds.Contains(pos) && 
-					(pos.Y >= this.bounds.Top-ObjectBox.headerHeight ||
-					 pos.Y <= this.bounds.Bottom+ObjectBox.footerHeight))
+						(pos.Y >= this.bounds.Top-ObjectBox.headerHeight ||
+						 pos.Y <= this.bounds.Bottom+ObjectBox.footerHeight))
 					{
 						element = ActiveElement.HeaderDragging;
 						this.SetConnectionsHilited(true);
@@ -511,7 +511,9 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 					//	Souris sur le séparateur des colonnes ?
 					double sep = this.ColumnsSeparatorAbsolute;
-					if (this.columnsSeparatorRelative < 1.0 && pos.X >= sep-4 && pos.X <= sep+4)
+					if (this.columnsSeparatorRelative < 1.0 && pos.X >= sep-4 && pos.X <= sep+4 &&
+						pos.Y >= this.bounds.Bottom+ObjectBox.footerHeight &&
+						pos.Y <= this.bounds.Top-ObjectBox.headerHeight)
 					{
 						element = ActiveElement.MoveColumnsSeparator;
 						this.SetConnectionsHilited(true);
