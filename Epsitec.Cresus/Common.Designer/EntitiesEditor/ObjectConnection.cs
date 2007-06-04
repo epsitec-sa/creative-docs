@@ -613,22 +613,33 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		/// <summary>
 		/// Cette classe contient toutes les informations sur le routage de la connection.
+		/// 
+		/// Cas simple (routage toujours automatique):
+		/// o----->
+		/// ou
+		/// o----|
+		///      |
+		///      V
+		/// 
+		/// Cas A:
+		/// o----|
+		///      x
+		///      |---->
+		/// 
+		/// Cas B:
+		/// o----|
+		///      x
+		///   <--|
+		/// 
+		/// x = poignée pour personnaliser le routage.
 		/// </summary>
 		public class RouteData
 		{
-			public enum FavouriteB
-			{
-				Automatic,
-				Right,
-				Left,
-			}
-
 			public RouteData(ObjectConnection connection)
 			{
 				this.connection = connection;
 				this.middleRelativeA = 0.5;
 				this.positionAbsoluteB = 0;
-				this.favouriteB = FavouriteB.Automatic;
 			}
 
 			public void Clear()
@@ -717,19 +728,6 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				}
 			}
 
-			public FavouriteB FavouriteDirectionB
-			{
-				//	Direction préférentielle(cas B).
-				get
-				{
-					return this.favouriteB;
-				}
-				set
-				{
-					this.favouriteB = value;
-				}
-			}
-
 			public void CopyTo(RouteData dst)
 			{
 				//	Copie toutes les informations de routage.
@@ -738,7 +736,6 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				dst.isPositionAbsoluteB = this.isPositionAbsoluteB;
 				dst.middleRelativeA = this.middleRelativeA;
 				dst.positionAbsoluteB = this.positionAbsoluteB;
-				dst.favouriteB = this.favouriteB;
 			}
 
 			protected ObjectConnection connection;
@@ -746,7 +743,6 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			protected bool isPositionAbsoluteB;
 			protected double middleRelativeA;
 			protected double positionAbsoluteB;
-			protected FavouriteB favouriteB;
 		}
 
 
