@@ -539,12 +539,12 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			//	Retourne la position du bouton pour modifier le routage.
 			get
 			{
-				if (this.route.IsMiddleRelativeA)
+				if (this.route.IsMiddleRelativeC)
 				{
 					return Point.Scale(this.points[1], this.points[2], 0.5);
 				}
 
-				if (this.route.IsPositionAbsoluteB)
+				if (this.route.IsPositionAbsoluteD)
 				{
 					return Point.Scale(this.points[1], this.points[2], 0.5);
 				}
@@ -561,22 +561,22 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				return;
 			}
 
-			if (this.route.IsMiddleRelativeA)
+			if (this.route.IsMiddleRelativeC)
 			{
-				this.route.MiddleRelativeA = (pos.X-this.points[0].X)/(this.points[3].X-this.points[0].X);
+				this.route.MiddleRelativeC = (pos.X-this.points[0].X)/(this.points[3].X-this.points[0].X);
 			}
 
-			if (this.route.IsPositionAbsoluteB)
+			if (this.route.IsPositionAbsoluteD)
 			{
 				if (this.field.IsAttachToRight)
 				{
 					double px = System.Math.Max(this.points[0].X, this.points[3].X) + Editor.connectionDetour;
-					this.route.PositionAbsoluteB = pos.X-px;
+					this.route.PositionAbsoluteD = pos.X-px;
 				}
 				else
 				{
 					double px = System.Math.Min(this.points[0].X, this.points[3].X) - Editor.connectionDetour;
-					this.route.PositionAbsoluteB = px-pos.X;
+					this.route.PositionAbsoluteD = px-pos.X;
 				}
 			}
 		}
@@ -584,26 +584,26 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		protected void UpdateRoute()
 		{
 			//	Met à jour le routage de la connection.
-			if (this.route.IsMiddleRelativeA)
+			if (this.route.IsMiddleRelativeC)
 			{
 				//	Met à jour les points milieu de la connection.
-				double px = this.points[0].X + (this.points[3].X-this.points[0].X)*this.route.MiddleRelativeA;
+				double px = this.points[0].X + (this.points[3].X-this.points[0].X)*this.route.MiddleRelativeC;
 				this.points[1] = new Point(px, this.points[0].Y);
 				this.points[2] = new Point(px, this.points[3].Y);
 			}
 
-			if (this.route.IsPositionAbsoluteB)
+			if (this.route.IsPositionAbsoluteD)
 			{
 				double px;
 				if (this.field.IsAttachToRight)
 				{
 					px = System.Math.Max(this.points[0].X, this.points[3].X) + Editor.connectionDetour;
-					px += this.route.PositionAbsoluteB;
+					px += this.route.PositionAbsoluteD;
 				}
 				else
 				{
 					px = System.Math.Min(this.points[0].X, this.points[3].X) - Editor.connectionDetour;
-					px -= this.route.PositionAbsoluteB;
+					px -= this.route.PositionAbsoluteD;
 				}
 				this.points[1] = new Point(px, this.points[0].Y);
 				this.points[2] = new Point(px, this.points[3].Y);
@@ -614,92 +614,125 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		/// <summary>
 		/// Cette classe contient toutes les informations sur le routage de la connection.
 		/// 
-		/// Cas simple (routage toujours automatique):
+		/// Cas A:
 		/// o----->
-		/// ou
+		/// 
+		/// Cas Bt:
+		///      ^
+		///      |
+		/// o----|
+		/// 
+		/// Cas Bb:
 		/// o----|
 		///      |
 		///      V
 		/// 
-		/// Cas A:
+		/// Cas C:
 		/// o----|
 		///      x
 		///      |---->
 		/// 
-		/// Cas B:
+		/// Cas D:
 		/// o----|
 		///      x
 		///   <--|
 		/// 
-		/// x = poignée pour personnaliser le routage.
+		/// Les cas A et B ont un routage toujours automatique.
+		/// Les cas C et D ont une poignée 'x' pour personnaliser le routage.
 		/// </summary>
 		public class RouteData
 		{
+			public enum Type
+			{
+				Close,		// connection fermée
+				Himself,	// connection sur soi-même
+				A,			// connection de type A
+				Bt,			// connection de type B vers le haut
+				Bb,			// connection de type B vers le bas
+				C,			// connection de type C
+				D,			// connection de type C
+			}
+
 			public RouteData(ObjectConnection connection)
 			{
 				this.connection = connection;
-				this.middleRelativeA = 0.5;
-				this.positionAbsoluteB = 0;
+				this.type = Type.Close;
+				this.middleRelativeC = 0.5;
+				this.positionAbsoluteD = 0;
 			}
 
 			public void Clear()
 			{
 				//	Force un routage standard.
-				this.IsMiddleRelativeA = false;
-				this.IsPositionAbsoluteB = false;
+				this.type = Type.Close;
+				this.IsMiddleRelativeC = false;
+				this.IsPositionAbsoluteD = false;
 			}
 
-			public bool IsMiddleRelativeA
+			public Type RouteType
 			{
-				//	Indique si la position intermédiaire est utilisée (cas A).
+				//	Type de la connection.
 				get
 				{
-					return this.isMiddleRelativeA;
+					return this.type;
 				}
 				set
 				{
-					if (this.isMiddleRelativeA != value)
+					this.type = value;
+				}
+			}
+
+			public bool IsMiddleRelativeC
+			{
+				//	Indique si la position intermédiaire est utilisée (cas C).
+				get
+				{
+					return this.isMiddleRelativeC;
+				}
+				set
+				{
+					if (this.isMiddleRelativeC != value)
 					{
-						this.isMiddleRelativeA = value;
+						this.isMiddleRelativeC = value;
 
 						this.connection.UpdateRoute();
 					}
 				}
 			}
 
-			public bool IsPositionAbsoluteB
+			public bool IsPositionAbsoluteD
 			{
-				//	Indique si la position intermédiaire est utilisée (cas B).
+				//	Indique si la position intermédiaire est utilisée (cas D).
 				get
 				{
-					return this.isPositionAbsoluteB;
+					return this.isPositionAbsoluteD;
 				}
 				set
 				{
-					if (this.isPositionAbsoluteB != value)
+					if (this.isPositionAbsoluteD != value)
 					{
-						this.isPositionAbsoluteB = value;
+						this.isPositionAbsoluteD = value;
 
 						this.connection.UpdateRoute();
 					}
 				}
 			}
 
-			public double MiddleRelativeA
+			public double MiddleRelativeC
 			{
-				//	Position intermédiaire (cas A).
+				//	Position intermédiaire (cas C).
 				get
 				{
-					return this.middleRelativeA;
+					return this.middleRelativeC;
 				}
 				set
 				{
 					value = System.Math.Max(value, 0.1);
 					value = System.Math.Min(value, 0.9);
 
-					if (this.middleRelativeA != value)
+					if (this.middleRelativeC != value)
 					{
-						this.middleRelativeA = value;
+						this.middleRelativeC = value;
 
 						this.connection.UpdateRoute();
 						this.connection.editor.Invalidate();
@@ -707,20 +740,20 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				}
 			}
 
-			public double PositionAbsoluteB
+			public double PositionAbsoluteD
 			{
-				//	Position intermédiaire (cas B).
+				//	Position intermédiaire (cas D).
 				get
 				{
-					return this.positionAbsoluteB;
+					return this.positionAbsoluteD;
 				}
 				set
 				{
 					value = System.Math.Max(value, 0.0);
 
-					if (this.positionAbsoluteB != value)
+					if (this.positionAbsoluteD != value)
 					{
-						this.positionAbsoluteB = value;
+						this.positionAbsoluteD = value;
 
 						this.connection.UpdateRoute();
 						this.connection.editor.Invalidate();
@@ -732,17 +765,19 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			{
 				//	Copie toutes les informations de routage.
 				//	Il ne faut surtout pas copier le pointeur à la connection !
-				dst.isMiddleRelativeA = this.isMiddleRelativeA;
-				dst.isPositionAbsoluteB = this.isPositionAbsoluteB;
-				dst.middleRelativeA = this.middleRelativeA;
-				dst.positionAbsoluteB = this.positionAbsoluteB;
+				dst.type = this.type;
+				dst.isMiddleRelativeC = this.isMiddleRelativeC;
+				dst.isPositionAbsoluteD = this.isPositionAbsoluteD;
+				dst.middleRelativeC = this.middleRelativeC;
+				dst.positionAbsoluteD = this.positionAbsoluteD;
 			}
 
 			protected ObjectConnection connection;
-			protected bool isMiddleRelativeA;
-			protected bool isPositionAbsoluteB;
-			protected double middleRelativeA;
-			protected double positionAbsoluteB;
+			protected Type type;
+			protected bool isMiddleRelativeC;
+			protected bool isPositionAbsoluteD;
+			protected double middleRelativeC;
+			protected double positionAbsoluteD;
 		}
 
 

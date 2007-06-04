@@ -286,11 +286,11 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 							{
 								connection.Route.Clear();
 
-								double posv = box.GetConnectionSrcVerticalPosition(i);
-
 								//	Important: toujours le point droite en premier !
+								double posv = box.GetConnectionSrcVerticalPosition(i);
 								connection.Points.Add(new Point(box.Bounds.Right-1, posv));
 								connection.Points.Add(new Point(box.Bounds.Left+1, posv));
+								connection.Route.RouteType = ObjectConnection.RouteData.Type.Close;
 							}
 						}
 					}
@@ -329,6 +329,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 				p.X -= 30;
 				connection.Points.Add(p);
+
+				connection.Route.RouteType = ObjectConnection.RouteData.Type.Himself;
 			}
 			else if (!srcBounds.IntersectsWith(dstBounds))
 			{
@@ -344,12 +346,14 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 						Point end = dst.GetConnectionDstPosition(start.Y, ObjectBox.ConnectionAnchor.Top);
 						connection.Points.Add(new Point(end.X, start.Y));
 						connection.Points.Add(end);
+						connection.Route.RouteType = ObjectConnection.RouteData.Type.Bb;
 					}
 					else if (dstBounds.Bottom > start.Y+Editor.connectionDetour)  // destination plus haute ?
 					{
 						Point end = dst.GetConnectionDstPosition(start.Y, ObjectBox.ConnectionAnchor.Bottom);
 						connection.Points.Add(new Point(end.X, start.Y));
 						connection.Points.Add(end);
+						connection.Route.RouteType = ObjectConnection.RouteData.Type.Bt;
 					}
 					else
 					{
@@ -359,11 +363,13 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 							connection.Points.Add(Point.Zero);  // (*)
 							connection.Points.Add(Point.Zero);  // (*)
 							connection.Points.Add(end);
-							connection.Route.IsMiddleRelativeA = true;
+							connection.Route.IsMiddleRelativeC = true;
+							connection.Route.RouteType = ObjectConnection.RouteData.Type.C;
 						}
 						else
 						{
 							connection.Points.Add(end);
+							connection.Route.RouteType = ObjectConnection.RouteData.Type.A;
 						}
 					}
 				}
@@ -377,12 +383,14 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 						Point end = dst.GetConnectionDstPosition(start.Y, ObjectBox.ConnectionAnchor.Top);
 						connection.Points.Add(new Point(end.X, start.Y));
 						connection.Points.Add(end);
+						connection.Route.RouteType = ObjectConnection.RouteData.Type.Bb;
 					}
 					else if (dstBounds.Bottom > start.Y+Editor.connectionDetour)  // destination plus haute ?
 					{
 						Point end = dst.GetConnectionDstPosition(start.Y, ObjectBox.ConnectionAnchor.Bottom);
 						connection.Points.Add(new Point(end.X, start.Y));
 						connection.Points.Add(end);
+						connection.Route.RouteType = ObjectConnection.RouteData.Type.Bt;
 					}
 					else
 					{
@@ -392,11 +400,13 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 							connection.Points.Add(Point.Zero);  // (*)
 							connection.Points.Add(Point.Zero);  // (*)
 							connection.Points.Add(end);
-							connection.Route.IsMiddleRelativeA = true;
+							connection.Route.IsMiddleRelativeC = true;
+							connection.Route.RouteType = ObjectConnection.RouteData.Type.C;
 						}
 						else
 						{
 							connection.Points.Add(end);
+							connection.Route.RouteType = ObjectConnection.RouteData.Type.A;
 						}
 					}
 				}
@@ -409,7 +419,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					connection.Points.Add(Point.Zero);  // (*)
 					connection.Points.Add(Point.Zero);  // (*)
 					connection.Points.Add(end);
-					connection.Route.IsPositionAbsoluteB = true;
+					connection.Route.IsPositionAbsoluteD = true;
+					connection.Route.RouteType = ObjectConnection.RouteData.Type.D;
 				}
 				else  // destination à gauche à cheval ?
 				{
@@ -420,7 +431,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					connection.Points.Add(Point.Zero);  // (*)
 					connection.Points.Add(Point.Zero);  // (*)
 					connection.Points.Add(end);
-					connection.Route.IsPositionAbsoluteB = true;
+					connection.Route.IsPositionAbsoluteD = true;
+					connection.Route.RouteType = ObjectConnection.RouteData.Type.D;
 				}
 			}
 		}
@@ -457,8 +469,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 						}
 
 						ObjectConnection connection = new ObjectConnection(this);
-						field.Connection = connection;
 						connection.Field = field;
+						field.Connection = connection;
 						this.AddConnection(connection);
 
 						//	Cherche les informations de routage dans la liste des anciennes connections.
