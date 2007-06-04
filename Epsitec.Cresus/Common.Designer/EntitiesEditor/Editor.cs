@@ -281,8 +281,12 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 							}
 							else
 							{
+								connection.IsAttachToLeft = false;
+								connection.IsAttachToRight = false;
+
 								double posv = box.GetConnectionSrcVerticalPosition(i);
 
+								//	Important: toujours le point droite en premier !
 								connection.Points.Add(new Point(box.Bounds.Right-1, posv));
 								connection.Points.Add(new Point(box.Bounds.Left+1, posv));
 							}
@@ -307,10 +311,14 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			dstBoundsLittle.Deflate(2);
 
 			connection.Points.Clear();
+			connection.IsAttachToLeft = false;
+			connection.IsAttachToRight = false;
 
 			double v = src.GetConnectionSrcVerticalPosition(srcRank);
 			if (src == dst)  // connection à soi-même ?
 			{
+				connection.IsAttachToRight = true;
+
 				Point p = new Point(srcBounds.Right-1, v);
 				connection.Points.Add(p);
 
@@ -329,6 +337,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 				if (dstBounds.Center.X > srcBounds.Right+Editor.connectionDetour/3)  // destination à droite ?
 				{
+					connection.IsAttachToRight = true;
+
 					Point start = new Point(srcBounds.Right-1, p.Y);
 					connection.Points.Add(start);
 
@@ -357,6 +367,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				}
 				else if (dstBounds.Center.X < srcBounds.Left-Editor.connectionDetour/3)  // destination à gauche ?
 				{
+					connection.IsAttachToLeft = true;
+
 					Point start = new Point(srcBounds.Left+1, p.Y);
 					connection.Points.Add(start);
 
@@ -385,6 +397,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				}
 				else if (dstBounds.Center.X > srcBounds.Center.X)  // destination à droite à cheval ?
 				{
+					connection.IsAttachToRight = true;
+
 					Point start = new Point(srcBounds.Right-1, p.Y);
 					connection.Points.Add(start);
 
@@ -396,6 +410,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				}
 				else  // destination à gauche à cheval ?
 				{
+					connection.IsAttachToLeft = true;
+
 					Point start = new Point(srcBounds.Left+1, p.Y);
 					connection.Points.Add(start);
 

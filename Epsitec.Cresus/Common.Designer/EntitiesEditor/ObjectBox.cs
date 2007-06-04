@@ -238,13 +238,11 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					{
 						if (field.IsExplored)
 						{
-							double dl = System.Math.Abs(connection.Points[0].X-this.bounds.Left);
-							double dr = System.Math.Abs(connection.Points[0].X-this.bounds.Right);
-							if (dl < dr)
+							if (field.Connection.IsAttachToLeft)
 							{
 								if (!right)  return false;
 							}
-							else
+							if (field.Connection.IsAttachToRight)
 							{
 								if (right)  return false;
 							}

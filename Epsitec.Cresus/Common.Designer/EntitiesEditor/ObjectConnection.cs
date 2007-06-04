@@ -52,6 +52,32 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 		}
 
+		public bool IsAttachToLeft
+		{
+			//	Indique si la connection est attachée à gauche.
+			get
+			{
+				return this.isAttachToLeft;
+			}
+			set
+			{
+				this.isAttachToLeft = value;
+			}
+		}
+
+		public bool IsAttachToRight
+		{
+			//	Indique si la connection est attachée à droite.
+			get
+			{
+				return this.isAttachToRight;
+			}
+			set
+			{
+				this.isAttachToRight = value;
+			}
+		}
+
 
 		public override void MouseDown(Point pos)
 		{
@@ -462,5 +488,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		protected ObjectBox.Field field;
 		protected List<Point> points;
 		protected bool isSrcHilited;
+		protected bool isAttachToLeft;
+		protected bool isAttachToRight;
 	}
 }
