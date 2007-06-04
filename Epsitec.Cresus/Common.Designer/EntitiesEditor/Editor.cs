@@ -363,7 +363,6 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 							connection.Points.Add(Point.Zero);  // (*)
 							connection.Points.Add(Point.Zero);  // (*)
 							connection.Points.Add(end);
-							connection.Route.IsMiddleRelativeC = true;
 							connection.Route.RouteType = ObjectConnection.RouteData.Type.C;
 						}
 						else
@@ -400,7 +399,6 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 							connection.Points.Add(Point.Zero);  // (*)
 							connection.Points.Add(Point.Zero);  // (*)
 							connection.Points.Add(end);
-							connection.Route.IsMiddleRelativeC = true;
 							connection.Route.RouteType = ObjectConnection.RouteData.Type.C;
 						}
 						else
@@ -419,7 +417,6 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					connection.Points.Add(Point.Zero);  // (*)
 					connection.Points.Add(Point.Zero);  // (*)
 					connection.Points.Add(end);
-					connection.Route.IsPositionAbsoluteD = true;
 					connection.Route.RouteType = ObjectConnection.RouteData.Type.D;
 				}
 				else  // destination à gauche à cheval ?
@@ -431,7 +428,6 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					connection.Points.Add(Point.Zero);  // (*)
 					connection.Points.Add(Point.Zero);  // (*)
 					connection.Points.Add(end);
-					connection.Route.IsPositionAbsoluteD = true;
 					connection.Route.RouteType = ObjectConnection.RouteData.Type.D;
 				}
 			}

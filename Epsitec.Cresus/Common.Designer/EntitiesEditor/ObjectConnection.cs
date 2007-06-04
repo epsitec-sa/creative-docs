@@ -216,7 +216,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				this.editor.UpdateAfterMoving(null);
 			}
 
-			if (this.hilitedElement == ActiveElement.ConnectionChange)
+			if (this.hilitedElement == ActiveElement.ConnectionChangeRelation)
 			{
 				ObjectBox box = this.field.SrcBox;
 
@@ -290,10 +290,10 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 
 			//	Souris dans le bouton pour changer la connection ?
-			Point p = this.PositionChange;
+			Point p = this.PositionChangeRelation;
 			if (!p.IsZero && (this.field.IsExplored || this.field.IsSourceExpanded) && Point.Distance(pos, p) <= AbstractObject.buttonRadius)
 			{
-				element = ActiveElement.ConnectionChange;
+				element = ActiveElement.ConnectionChangeRelation;
 				return true;
 			}
 
@@ -370,7 +370,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 				Color color = Color.FromBrightness(0);
 				if (this.hilitedElement == ActiveElement.ConnectionHilited ||
-					this.hilitedElement == ActiveElement.ConnectionChange )
+					this.hilitedElement == ActiveElement.ConnectionChangeRelation )
 				{
 					color = this.GetColorCaption();
 				}
@@ -390,7 +390,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 				Color color = Color.FromBrightness(0);
 				if (this.hilitedElement == ActiveElement.ConnectionHilited ||
-					this.hilitedElement == ActiveElement.ConnectionChange )
+					this.hilitedElement == ActiveElement.ConnectionChangeRelation )
 				{
 					color = this.GetColorCaption();
 				}
@@ -464,12 +464,12 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			{
 				//	Dessine le bouton pour changer la connection.
 				if (this.hilitedElement == ActiveElement.ConnectionHilited ||
-					this.hilitedElement == ActiveElement.ConnectionChange)
+					this.hilitedElement == ActiveElement.ConnectionChangeRelation)
 				{
-					Point p = this.PositionChange;
+					Point p = this.PositionChangeRelation;
 					if (!p.IsZero)
 					{
-						if (this.hilitedElement == ActiveElement.ConnectionChange)
+						if (this.hilitedElement == ActiveElement.ConnectionChangeRelation)
 						{
 							this.DrawRoundButton(graphics, p, AbstractObject.buttonRadius, GlyphShape.Dots, true, false);
 						}
@@ -515,7 +515,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			graphics.AddLine(end, e2);
 		}
 
-		protected Point PositionChange
+		protected Point PositionChangeRelation
 		{
 			//	Retourne la position du bouton pour changer le type de la relation.
 			get
@@ -539,12 +539,12 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			//	Retourne la position du bouton pour modifier le routage.
 			get
 			{
-				if (this.route.IsMiddleRelativeC)
+				if (this.route.RouteType == RouteData.Type.C)
 				{
 					return Point.Scale(this.points[1], this.points[2], 0.5);
 				}
 
-				if (this.route.IsPositionAbsoluteD)
+				if (this.route.RouteType == RouteData.Type.D)
 				{
 					return Point.Scale(this.points[1], this.points[2], 0.5);
 				}
@@ -561,12 +561,12 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				return;
 			}
 
-			if (this.route.IsMiddleRelativeC)
+			if (this.route.RouteType == RouteData.Type.C)
 			{
 				this.route.MiddleRelativeC = (pos.X-this.points[0].X)/(this.points[3].X-this.points[0].X);
 			}
 
-			if (this.route.IsPositionAbsoluteD)
+			if (this.route.RouteType == RouteData.Type.D)
 			{
 				if (this.field.IsAttachToRight)
 				{
@@ -584,7 +584,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		protected void UpdateRoute()
 		{
 			//	Met à jour le routage de la connection.
-			if (this.route.IsMiddleRelativeC)
+			if (this.route.RouteType == RouteData.Type.C)
 			{
 				//	Met à jour les points milieu de la connection.
 				double px = this.points[0].X + (this.points[3].X-this.points[0].X)*this.route.MiddleRelativeC;
@@ -592,7 +592,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				this.points[2] = new Point(px, this.points[3].Y);
 			}
 
-			if (this.route.IsPositionAbsoluteD)
+			if (this.route.RouteType == RouteData.Type.D)
 			{
 				double px;
 				if (this.field.IsAttachToRight)
@@ -658,15 +658,13 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				this.connection = connection;
 				this.type = Type.Close;
 				this.middleRelativeC = 0.5;
-				this.positionAbsoluteD = 0;
+				this.positionAbsoluteD = 0.0;
 			}
 
 			public void Clear()
 			{
 				//	Force un routage standard.
-				this.type = Type.Close;
-				this.IsMiddleRelativeC = false;
-				this.IsPositionAbsoluteD = false;
+				this.RouteType = Type.Close;
 			}
 
 			public Type RouteType
@@ -678,41 +676,9 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				}
 				set
 				{
-					this.type = value;
-				}
-			}
-
-			public bool IsMiddleRelativeC
-			{
-				//	Indique si la position intermédiaire est utilisée (cas C).
-				get
-				{
-					return this.isMiddleRelativeC;
-				}
-				set
-				{
-					if (this.isMiddleRelativeC != value)
+					if (this.type != value)
 					{
-						this.isMiddleRelativeC = value;
-
-						this.connection.UpdateRoute();
-					}
-				}
-			}
-
-			public bool IsPositionAbsoluteD
-			{
-				//	Indique si la position intermédiaire est utilisée (cas D).
-				get
-				{
-					return this.isPositionAbsoluteD;
-				}
-				set
-				{
-					if (this.isPositionAbsoluteD != value)
-					{
-						this.isPositionAbsoluteD = value;
-
+						this.type = value;
 						this.connection.UpdateRoute();
 					}
 				}
@@ -721,6 +687,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			public double MiddleRelativeC
 			{
 				//	Position intermédiaire (cas C).
+				//	0.5 correspond au milieu (valeur par défaut).
 				get
 				{
 					return this.middleRelativeC;
@@ -743,6 +710,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			public double PositionAbsoluteD
 			{
 				//	Position intermédiaire (cas D).
+				//	0.0 correspond à la boucle la plus serrée (valeur par défaut).
 				get
 				{
 					return this.positionAbsoluteD;
@@ -766,16 +734,12 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				//	Copie toutes les informations de routage.
 				//	Il ne faut surtout pas copier le pointeur à la connection !
 				dst.type = this.type;
-				dst.isMiddleRelativeC = this.isMiddleRelativeC;
-				dst.isPositionAbsoluteD = this.isPositionAbsoluteD;
 				dst.middleRelativeC = this.middleRelativeC;
 				dst.positionAbsoluteD = this.positionAbsoluteD;
 			}
 
 			protected ObjectConnection connection;
 			protected Type type;
-			protected bool isMiddleRelativeC;
-			protected bool isPositionAbsoluteD;
 			protected double middleRelativeC;
 			protected double positionAbsoluteD;
 		}
