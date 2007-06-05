@@ -69,8 +69,13 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			this.isExplored = false;
 			this.isSourceExpanded = false;
 			this.routeType = RouteType.Close;
-			this.middleRelativeC = 0.5;
-			this.positionAbsoluteD = 0.0;
+			this.routeRelativeAX1 = 0.2;
+			this.routeRelativeAX2 = 0.8;
+			this.routeAbsoluteAY = 0.0;
+			this.routeRelativeBX = 0.0;
+			this.routeRelativeBY = 0.0;
+			this.routeRelativeCX = 0.5;
+			this.routeAbsoluteDX = 0.0;
 		}
 
 		public string FieldName
@@ -259,22 +264,21 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 		}
 
-		public double MiddleRelativeC
+		public double RouteRelativeAX1
 		{
-			//	Position intermédiaire de la connection (cas C).
-			//	0.5 correspond au milieu (valeur par défaut).
+			//	Position intermédiaire de la connection (cas A).
 			get
 			{
-				return this.middleRelativeC;
+				return this.routeRelativeAX1;
 			}
 			set
 			{
 				value = System.Math.Max(value, 0.1);
-				value = System.Math.Min(value, 0.9);
+				value = System.Math.Min(value, 0.5);
 
-				if (this.middleRelativeC != value)
+				if (this.routeRelativeAX1 != value)
 				{
-					this.middleRelativeC = value;
+					this.routeRelativeAX1 = value;
 
 					this.connection.UpdateRoute();
 					this.editor.Invalidate();
@@ -282,21 +286,134 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 		}
 
-		public double PositionAbsoluteD
+		public double RouteRelativeAX2
+		{
+			//	Position intermédiaire de la connection (cas A).
+			get
+			{
+				return this.routeRelativeAX2;
+			}
+			set
+			{
+				value = System.Math.Max(value, 0.5);
+				value = System.Math.Min(value, 0.9);
+
+				if (this.routeRelativeAX2 != value)
+				{
+					this.routeRelativeAX2 = value;
+
+					this.connection.UpdateRoute();
+					this.editor.Invalidate();
+				}
+			}
+		}
+
+		public double RouteAbsoluteAY
+		{
+			//	Position intermédiaire de la connection (cas A).
+			get
+			{
+				return this.routeAbsoluteAY;
+			}
+			set
+			{
+				if (System.Math.Abs(value) <= 5)
+				{
+					value = 0;
+				}
+
+				if (this.routeAbsoluteAY != value)
+				{
+					this.routeAbsoluteAY = value;
+
+					this.connection.UpdateRoute();
+					this.editor.Invalidate();
+				}
+			}
+		}
+
+		public double RouteRelativeBX
+		{
+			//	Position intermédiaire de la connection (cas B).
+			get
+			{
+				return this.routeRelativeBX;
+			}
+			set
+			{
+				value = System.Math.Max(value, 0.0);
+				value = System.Math.Min(value, 0.9);
+
+				if (this.routeRelativeBX != value)
+				{
+					this.routeRelativeBX = value;
+
+					this.connection.UpdateRoute();
+					this.editor.Invalidate();
+				}
+			}
+		}
+
+		public double RouteRelativeBY
+		{
+			//	Position intermédiaire de la connection (cas B).
+			get
+			{
+				return this.routeRelativeBY;
+			}
+			set
+			{
+				value = System.Math.Max(value, 0.0);
+				value = System.Math.Min(value, 0.9);
+
+				if (this.routeRelativeBY != value)
+				{
+					this.routeRelativeBY = value;
+
+					this.connection.UpdateRoute();
+					this.editor.Invalidate();
+				}
+			}
+		}
+
+		public double RouteRelativeCX
+		{
+			//	Position intermédiaire de la connection (cas C).
+			//	0.5 correspond au milieu (valeur par défaut).
+			get
+			{
+				return this.routeRelativeCX;
+			}
+			set
+			{
+				value = System.Math.Max(value, 0.1);
+				value = System.Math.Min(value, 0.9);
+
+				if (this.routeRelativeCX != value)
+				{
+					this.routeRelativeCX = value;
+
+					this.connection.UpdateRoute();
+					this.editor.Invalidate();
+				}
+			}
+		}
+
+		public double RouteAbsoluteDX
 		{
 			//	Position intermédiaire de la connection (cas D).
 			//	0.0 correspond à la boucle la plus serrée (valeur par défaut).
 			get
 			{
-				return this.positionAbsoluteD;
+				return this.routeAbsoluteDX;
 			}
 			set
 			{
 				value = System.Math.Max(value, 0.0);
 
-				if (this.positionAbsoluteD != value)
+				if (this.routeAbsoluteDX != value)
 				{
-					this.positionAbsoluteD = value;
+					this.routeAbsoluteDX = value;
 
 					this.connection.UpdateRoute();
 					this.editor.Invalidate();
@@ -318,7 +435,12 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		protected bool isSourceExpanded;
 		protected bool isAttachToRight;
 		protected RouteType routeType;
-		protected double middleRelativeC;
-		protected double positionAbsoluteD;
+		protected double routeRelativeAX1;
+		protected double routeRelativeAX2;
+		protected double routeAbsoluteAY;
+		protected double routeRelativeBX;
+		protected double routeRelativeBY;
+		protected double routeRelativeCX;
+		protected double routeAbsoluteDX;
 	}
 }

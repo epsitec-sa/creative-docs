@@ -77,7 +77,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		public override bool MouseMove(Point pos)
 		{
 			//	La souris est bougée.
-			if (this.isDraggingMiddleRelative)
+			if (this.isDraggingRoute)
 			{
 				this.RouteMove(pos);
 				return true;
@@ -91,9 +91,10 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		public override void MouseDown(Point pos)
 		{
 			//	Le bouton de la souris est pressé.
-			if (this.hilitedElement == ActiveElement.ConnectionMove1)
+			if (this.hilitedElement == ActiveElement.ConnectionMove1 ||
+				this.hilitedElement == ActiveElement.ConnectionMove2)
 			{
-				this.isDraggingMiddleRelative = true;
+				this.isDraggingRoute = true;
 				this.editor.LockObject(this);
 			}
 		}
@@ -101,9 +102,9 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		public override void MouseUp(Point pos)
 		{
 			//	Le bouton de la souris est relâché.
-			if (this.isDraggingMiddleRelative)
+			if (this.isDraggingRoute)
 			{
-				this.isDraggingMiddleRelative = false;
+				this.isDraggingRoute = false;
 				this.editor.UpdateAfterGeometryChanged(null);
 				this.editor.LockObject(null);
 			}
@@ -280,6 +281,13 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				return true;
 			}
 
+			m = this.PositionRouteMove2;
+			if (!m.IsZero && Point.Distance(pos, m) <= AbstractObject.buttonRadius)
+			{
+				element = ActiveElement.ConnectionMove2;
+				return true;
+			}
+
 			//	Souris dans le bouton pour changer la connection ?
 			Point p = this.PositionChangeRelation;
 			if (!p.IsZero && (this.field.IsExplored || this.field.IsSourceExpanded) && Point.Distance(pos, p) <= AbstractObject.buttonRadius)
@@ -451,6 +459,19 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				}
 			}
 
+			m = this.PositionRouteMove2;
+			if (!m.IsZero)
+			{
+				if (this.hilitedElement == ActiveElement.ConnectionMove2)
+				{
+					this.DrawRoundButton(graphics, m, AbstractObject.buttonRadius, GlyphShape.HorizontalMove, true, false);
+				}
+				if (this.hilitedElement == ActiveElement.ConnectionHilited)
+				{
+					this.DrawRoundButton(graphics, m, AbstractObject.buttonRadius, GlyphShape.HorizontalMove, false, false);
+				}
+			}
+
 			if (this.points.Count != 0)
 			{
 				//	Dessine le bouton pour changer la connection.
@@ -531,6 +552,30 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			//	Retourne la position du bouton pour modifier le routage.
 			get
 			{
+				if (this.field.Route == Field.RouteType.A)
+				{
+					if (this.points.Count == 6)
+					{
+						return this.points[2];
+					}
+					else
+					{
+						return Point.Scale(this.points[0], this.points[1], this.field.RouteRelativeAX1);
+					}
+				}
+
+				if (this.field.Route == Field.RouteType.Bt || this.field.Route == Field.RouteType.Bb)
+				{
+					if (this.points.Count == 5)
+					{
+						return this.points[2];
+					}
+					else
+					{
+						return this.points[1];
+					}
+				}
+
 				if (this.field.Route == Field.RouteType.C)
 				{
 					return this.points[1];
@@ -545,6 +590,27 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 		}
 
+		protected Point PositionRouteMove2
+		{
+			//	Retourne la position du bouton pour modifier le routage.
+			get
+			{
+				if (this.field.Route == Field.RouteType.A)
+				{
+					if (this.points.Count == 6)
+					{
+						return this.points[3];
+					}
+					else
+					{
+						return Point.Scale(this.points[0], this.points[1], this.field.RouteRelativeAX2);
+					}
+				}
+
+				return Point.Zero;
+			}
+		}
+
 		protected void RouteMove(Point pos)
 		{
 			//	Modifie le routage en fonction du choix de l'utilisateur.
@@ -553,9 +619,29 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				return;
 			}
 
+			if (this.field.Route == Field.RouteType.A)
+			{
+				if (this.hilitedElement == ActiveElement.ConnectionMove1)
+				{
+					this.field.RouteRelativeAX1 = (pos.X-this.points[0].X)/(this.points[this.points.Count-1].X-this.points[0].X);
+				}
+				else
+				{
+					this.field.RouteRelativeAX2 = (pos.X-this.points[0].X)/(this.points[this.points.Count-1].X-this.points[0].X);
+				}
+
+				this.field.RouteAbsoluteAY = pos.Y-this.points[0].Y;
+			}
+
+			if (this.field.Route == Field.RouteType.Bt || this.field.Route == Field.RouteType.Bb)
+			{
+				this.field.RouteRelativeBX = (pos.X-this.points[this.points.Count-1].X)/(this.points[0].X-this.points[this.points.Count-1].X);
+				this.field.RouteRelativeBY = (pos.Y-this.points[0].Y)/(this.points[this.points.Count-1].Y-this.points[0].Y);
+			}
+
 			if (this.field.Route == Field.RouteType.C)
 			{
-				this.field.MiddleRelativeC = (pos.X-this.points[0].X)/(this.points[3].X-this.points[0].X);
+				this.field.RouteRelativeCX = (pos.X-this.points[0].X)/(this.points[3].X-this.points[0].X);
 			}
 
 			if (this.field.Route == Field.RouteType.D)
@@ -563,12 +649,12 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				if (this.field.IsAttachToRight)
 				{
 					double px = System.Math.Max(this.points[0].X, this.points[3].X) + Editor.connectionDetour;
-					this.field.PositionAbsoluteD = pos.X-px;
+					this.field.RouteAbsoluteDX = pos.X-px;
 				}
 				else
 				{
 					double px = System.Math.Min(this.points[0].X, this.points[3].X) - Editor.connectionDetour;
-					this.field.PositionAbsoluteD = px-pos.X;
+					this.field.RouteAbsoluteDX = px-pos.X;
 				}
 			}
 		}
@@ -576,10 +662,69 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		public void UpdateRoute()
 		{
 			//	Met à jour le routage de la connection, dans les cas ou le routage dépend des choix de l'utilisateur.
+			if (this.field.Route == Field.RouteType.A)
+			{
+				if (this.field.RouteAbsoluteAY == 0)
+				{
+					if (this.points.Count == 6)
+					{
+						this.points.RemoveAt(1);
+						this.points.RemoveAt(1);
+						this.points.RemoveAt(1);
+						this.points.RemoveAt(1);
+					}
+				}
+				else
+				{
+					if (this.points.Count == 2)
+					{
+						this.points.Insert(1, Point.Zero);
+						this.points.Insert(1, Point.Zero);
+						this.points.Insert(1, Point.Zero);
+						this.points.Insert(1, Point.Zero);
+					}
+
+					double px1 = this.points[0].X + (this.points[5].X-this.points[0].X)*this.field.RouteRelativeAX1;
+					double px2 = this.points[0].X + (this.points[5].X-this.points[0].X)*this.field.RouteRelativeAX2;
+					double py = this.points[0].Y + this.field.RouteAbsoluteAY;
+					this.points[1] = new Point(px1, this.points[0].Y);
+					this.points[2] = new Point(px1, py);
+					this.points[3] = new Point(px2, py);
+					this.points[4] = new Point(px2, this.points[0].Y);
+				}
+			}
+
+			if (this.field.Route == Field.RouteType.Bt || this.field.Route == Field.RouteType.Bb)
+			{
+				if (this.field.RouteRelativeBX == 0 || this.field.RouteRelativeBY == 0)
+				{
+					if (this.points.Count == 5)
+					{
+						this.points.RemoveAt(1);
+						this.points.RemoveAt(1);
+					}
+					this.points[1] = new Point(this.points[2].X, this.points[0].Y);
+				}
+				else
+				{
+					if (this.points.Count == 3)
+					{
+						this.points.Insert(1, Point.Zero);
+						this.points.Insert(1, Point.Zero);
+					}
+
+					double px = this.points[4].X + (this.points[0].X-this.points[4].X)*this.field.RouteRelativeBX;
+					double py = this.points[0].Y + (this.points[4].Y-this.points[0].Y)*this.field.RouteRelativeBY;
+					this.points[1] = new Point(px, this.points[0].Y);
+					this.points[2] = new Point(px, py);
+					this.points[3] = new Point(this.points[4].X, py);
+				}
+			}
+
 			if (this.field.Route == Field.RouteType.C)
 			{
 				//	Met à jour les points milieu de la connection.
-				double px = this.points[0].X + (this.points[3].X-this.points[0].X)*this.field.MiddleRelativeC;
+				double px = this.points[0].X + (this.points[3].X-this.points[0].X)*this.field.RouteRelativeCX;
 				this.points[1] = new Point(px, this.points[0].Y);
 				this.points[2] = new Point(px, this.points[3].Y);
 			}
@@ -590,12 +735,12 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				if (this.field.IsAttachToRight)
 				{
 					px = System.Math.Max(this.points[0].X, this.points[3].X) + Editor.connectionDetour;
-					px += this.field.PositionAbsoluteD;
+					px += this.field.RouteAbsoluteDX;
 				}
 				else
 				{
 					px = System.Math.Min(this.points[0].X, this.points[3].X) - Editor.connectionDetour;
-					px -= this.field.PositionAbsoluteD;
+					px -= this.field.RouteAbsoluteDX;
 				}
 				this.points[1] = new Point(px, this.points[0].Y);
 				this.points[2] = new Point(px, this.points[3].Y);
@@ -611,6 +756,6 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		protected Field field;
 		protected List<Point> points;
 		protected bool isSrcHilited;
-		protected bool isDraggingMiddleRelative;
+		protected bool isDraggingRoute;
 	}
 }
