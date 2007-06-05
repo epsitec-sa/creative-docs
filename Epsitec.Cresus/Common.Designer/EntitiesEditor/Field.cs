@@ -14,17 +14,37 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		public enum RouteType
 		{
 			// Cas A:
-			// o----->
+			// o--------->
+			//
+			// Cas A personnalisé:
+			//    x---x
+			//    |   |
+			// o--|   |-->
+			//
 			// 
 			// Cas Bt:
-			//      ^
-			//      |
-			// o----|
+			//       ^
+			//       |
+			// o-----|
+			// 
+			// Cas Bt personnalisé:
+			//       ^
+			//       |
+			//    x--|
+			//    |
+			// o--|
 			// 
 			// Cas Bb:
-			// o----|
-			//      |
-			//      V
+			// o-----|
+			//       |
+			//       V
+			// 
+			// Cas Bb personnalisé:
+			// o--|
+			//    |
+			//    x--|
+			//       |
+			//       V
 			// 
 			// Cas C:
 			// o----|
@@ -36,8 +56,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			//      x
 			//   <--|
 			// 
-			// Les cas A et B ont un routage toujours automatique.
-			// Les cas C et D ont une poignée 'x' pour personnaliser le routage.
+			// Les cas A et B ont un routage automatique ou personnalisé.
+			// 'x' = poignée pour personnaliser le routage.
 
 			Close,		// connection fermée
 			Himself,	// connection sur soi-même
