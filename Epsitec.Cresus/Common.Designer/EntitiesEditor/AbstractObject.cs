@@ -31,7 +31,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			ConnectionClose,
 			ConnectionHilited,
 			ConnectionChangeRelation,
-			ConnectionMove,
+			ConnectionMove1,
+			ConnectionMove2,
 		}
 
 

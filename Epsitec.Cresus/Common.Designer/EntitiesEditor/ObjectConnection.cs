@@ -91,7 +91,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		public override void MouseDown(Point pos)
 		{
 			//	Le bouton de la souris est pressé.
-			if (this.hilitedElement == ActiveElement.ConnectionMove)
+			if (this.hilitedElement == ActiveElement.ConnectionMove1)
 			{
 				this.isDraggingMiddleRelative = true;
 				this.editor.LockObject(this);
@@ -273,10 +273,10 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 
 			//	Souris dans le bouton pour déplacer le point milieu ?
-			Point m = this.PositionRouteMove;
+			Point m = this.PositionRouteMove1;
 			if (!m.IsZero && Point.Distance(pos, m) <= AbstractObject.buttonRadius)
 			{
-				element = ActiveElement.ConnectionMove;
+				element = ActiveElement.ConnectionMove1;
 				return true;
 			}
 
@@ -438,10 +438,10 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 
 			//	Dessine le bouton pour déplacer le point milieu.
-			Point m = this.PositionRouteMove;
+			Point m = this.PositionRouteMove1;
 			if (!m.IsZero)
 			{
-				if (this.hilitedElement == ActiveElement.ConnectionMove)
+				if (this.hilitedElement == ActiveElement.ConnectionMove1)
 				{
 					this.DrawRoundButton(graphics, m, AbstractObject.buttonRadius, GlyphShape.HorizontalMove, true, false);
 				}
@@ -526,19 +526,19 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 		}
 
-		protected Point PositionRouteMove
+		protected Point PositionRouteMove1
 		{
 			//	Retourne la position du bouton pour modifier le routage.
 			get
 			{
 				if (this.field.Route == Field.RouteType.C)
 				{
-					return Point.Scale(this.points[1], this.points[2], 0.5);
+					return this.points[1];
 				}
 
 				if (this.field.Route == Field.RouteType.D)
 				{
-					return Point.Scale(this.points[1], this.points[2], 0.5);
+					return this.points[1];
 				}
 
 				return Point.Zero;
