@@ -274,7 +274,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			set
 			{
 				value = System.Math.Max(value, 0.1);
-				value = System.Math.Min(value, 0.5);
+				value = System.Math.Min(value, this.routeRelativeAX2-0.1);
 
 				if (this.routeRelativeAX1 != value)
 				{
@@ -295,7 +295,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 			set
 			{
-				value = System.Math.Max(value, 0.5);
+				value = System.Math.Max(value, this.routeRelativeAX1+0.1);
 				value = System.Math.Min(value, 0.9);
 
 				if (this.routeRelativeAX2 != value)
