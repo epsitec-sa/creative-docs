@@ -339,7 +339,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			//	Dessine l'objet.
 			IAdorner adorner = Common.Widgets.Adorners.Factory.Active;
 
-			if (this.points.Count >= 2 && this.field.IsExplored)
+			if (this.points.Count >= 2 && this.field.IsExplored && (this.field.Route != Field.RouteType.Himself || this.field.IsSourceExpanded))
 			{
 				Point start = this.points[0];
 				if (this.field.IsSourceExpanded)
