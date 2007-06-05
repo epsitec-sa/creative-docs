@@ -684,8 +684,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 						this.points.Insert(1, Point.Zero);
 					}
 
-					double px1 = this.points[0].X + (this.points[5].X-this.points[0].X)*System.Math.Min(this.field.RouteRelativeAX1, this.field.RouteRelativeAX2);
-					double px2 = this.points[0].X + (this.points[5].X-this.points[0].X)*System.Math.Max(this.field.RouteRelativeAX1, this.field.RouteRelativeAX2);
+					double px1 = this.points[0].X + (this.points[5].X-this.points[0].X)*this.field.RouteRelativeAX1;
+					double px2 = this.points[0].X + (this.points[5].X-this.points[0].X)*this.field.RouteRelativeAX2;
 					double py = this.points[0].Y + this.field.RouteAbsoluteAY;
 					this.points[1] = new Point(px1, this.points[0].Y);
 					this.points[2] = new Point(px1, py);
