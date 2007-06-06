@@ -148,7 +148,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 #else
 						//	Essaie de trouver une place libre, pour déplacer le moins possible d'éléments.
 						Rectangle bounds;
-						double posv = src.GetConnectionSrcVerticalPosition(this.field.Rank) + ObjectBox.headerHeight/2;
+						double posv = src.GetConnectionSrcVerticalPosition(this.field.Rank) + AbstractObject.headerHeight/2;
 
 						if (this.hilitedElement == ActiveElement.ConnectionOpenLeft)
 						{
@@ -334,7 +334,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		}
 
 
-		public override void Draw(Graphics graphics)
+		public override void DrawBackground(Graphics graphics)
 		{
 			//	Dessine l'objet.
 			IAdorner adorner = Common.Widgets.Adorners.Factory.Active;
@@ -355,14 +355,14 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 					if (i == 0)
 					{
-						this.DrawStartingArrow(graphics, p1, p2);
+						this.DrawStartingArrow(graphics, p1, p2, this.field.Relation);
 					}
 
 					graphics.AddLine(p1, p2);
 
 					if (i == this.points.Count-2)
 					{
-						this.DrawEndingArrow(graphics, p1, p2);
+						this.DrawEndingArrow(graphics, p1, p2, this.field.Relation);
 					}
 				}
 				graphics.LineWidth = 1;
@@ -380,11 +380,11 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			{
 				//	Dessine le moignon de liaison.
 				Point start = this.points[0];
-				Point end = new Point(start.X+ObjectConnection.lengthClose, start.Y);
+				Point end = new Point(start.X+AbstractObject.lengthClose, start.Y);
 
 				graphics.LineWidth = 2;
 				graphics.AddLine(start, end);
-				this.DrawEndingArrow(graphics, start, end);
+				this.DrawEndingArrow(graphics, start, end, this.field.Relation);
 				graphics.LineWidth = 1;
 
 				Color color = Color.FromBrightness(0);
@@ -494,39 +494,6 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 		}
 
-		protected void DrawStartingArrow(Graphics graphics, Point start, Point end)
-		{
-			//	Dessine une flèche selon le type de la relation.
-			if (this.field.Relation == FieldRelation.Inclusion)
-			{
-				this.DrawArrowBase(graphics, end, start);
-			}
-		}
-
-		protected void DrawEndingArrow(Graphics graphics, Point start, Point end)
-		{
-			//	Dessine une flèche selon le type de la relation.
-			this.DrawArrowBase(graphics, start, end);
-
-			if (this.field.Relation == FieldRelation.Collection)
-			{
-				end = Point.Move(end, start, ObjectConnection.arrowLength*0.75);
-				this.DrawArrowBase(graphics, start, end);
-			}
-		}
-
-		protected void DrawArrowBase(Graphics graphics, Point start, Point end)
-		{
-			//	Dessine une flèche à l'extrémité 'end'.
-			Point p = Point.Move(end, start, ObjectConnection.arrowLength);
-
-			Point e1 = Transform.RotatePointDeg(end, ObjectConnection.arrowAngle, p);
-			Point e2 = Transform.RotatePointDeg(end, -ObjectConnection.arrowAngle, p);
-
-			graphics.AddLine(end, e1);
-			graphics.AddLine(end, e2);
-		}
-
 
 		protected Point PositionChangeRelation
 		{
@@ -540,7 +507,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 				if (this.points.Count == 2 && !this.field.IsExplored && this.field.IsSourceExpanded)
 				{
-					return new Point(this.points[0].X+ObjectConnection.lengthClose, this.points[0].Y);
+					return new Point(this.points[0].X+AbstractObject.lengthClose, this.points[0].Y);
 				}
 
 				return Point.Zero;
@@ -748,9 +715,6 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		}
 
 
-		protected static readonly double arrowLength = 12;
-		protected static readonly double arrowAngle = 25;
-		protected static readonly double lengthClose = 30;
 		protected static readonly double pushMargin = 10;
 
 		protected Field field;

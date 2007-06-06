@@ -88,16 +88,10 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			//	est positionnée par RedimArea(). La position des autres est de toute façon recalculée en
 			//	fonction de la boîte parent.
 			box.SetBounds(new Rectangle(0, 0, Editor.defaultWidth, 0));
-			//?box.IsExtended = (this.boxes.Count == 0);
 			box.IsExtended = true;
 
 			this.boxes.Add(box);
-		}
-
-		public void RemoveBox(ObjectBox box)
-		{
-			//	Supprime une boîte de l'éditeur.
-			this.boxes.Remove(box);
+			this.UpdateAfterOpenOrCloseBox();
 		}
 
 		public int BoxCount
@@ -106,6 +100,15 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			get
 			{
 				return this.boxes.Count;
+			}
+		}
+
+		public List<ObjectBox> Boxes
+		{
+			//	Retourne la liste des boîtes.
+			get
+			{
+				return this.boxes;
 			}
 		}
 
@@ -524,6 +527,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				}
 			}
 			while (removed);  // recommence tant qu'on a détruit quelque chose
+
+			this.UpdateAfterOpenOrCloseBox();
 		}
 
 		protected bool IsConnectedToRoot(ObjectBox searchingBox)
@@ -541,6 +546,20 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					return true;
 				}
 			}
+
+			//	On explore systématiquement depuis l'objet, jusqu'à rencontrer éventuellement
+			//	la racine.
+			visited.Clear();
+			this.ExploreConnectedToRoot(visited, searchingBox);
+
+			foreach (ObjectBox box in visited)
+			{
+				if (box == this.boxes[0])
+				{
+					return true;
+				}
+			}
+
 			return false;
 		}
 
@@ -575,6 +594,15 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 						field.IsExplored = false;
 					}
 				}
+			}
+		}
+
+		protected void UpdateAfterOpenOrCloseBox()
+		{
+			//	Appelé après avoir ajouté ou supprimé une boîte.
+			foreach (ObjectBox box in this.boxes)
+			{
+				box.UpdateAfterOpenOrCloseBox();
 			}
 		}
 
@@ -973,12 +1001,22 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			//	Dessine tous les objets.
 			foreach (AbstractObject obj in this.boxes)
 			{
-				obj.Draw(graphics);
+				obj.DrawBackground(graphics);
 			}
 
 			foreach (AbstractObject obj in this.connections)
 			{
-				obj.Draw(graphics);
+				obj.DrawBackground(graphics);
+			}
+
+			foreach (AbstractObject obj in this.boxes)
+			{
+				obj.DrawForeground(graphics);
+			}
+
+			foreach (AbstractObject obj in this.connections)
+			{
+				obj.DrawForeground(graphics);
 			}
 
 			graphics.Transform = initialTransform;

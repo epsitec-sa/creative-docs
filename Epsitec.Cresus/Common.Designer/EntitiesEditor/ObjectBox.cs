@@ -81,6 +81,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 
 			this.UpdateFields();
+			this.UpdateParents();
 		}
 
 		public override Rectangle Bounds
@@ -165,11 +166,11 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			//	Retourne la hauteur requise selon le nombre de champs définis.
 			if (this.isExtended)
 			{
-				return ObjectBox.headerHeight + ObjectBox.fieldHeight*this.fields.Count + ObjectBox.footerHeight + 20;
+				return AbstractObject.headerHeight + ObjectBox.fieldHeight*this.fields.Count + AbstractObject.footerHeight + 20;
 			}
 			else
 			{
-				return ObjectBox.headerHeight;
+				return AbstractObject.headerHeight;
 			}
 		}
 
@@ -202,7 +203,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 						return new Point(this.bounds.Left, posv);
 					}
 
-					return new Point(this.bounds.Left, this.bounds.Top-ObjectBox.headerHeight/2);
+					return new Point(this.bounds.Left, this.bounds.Top-AbstractObject.headerHeight/2);
 
 
 				case ConnectionAnchor.Right:
@@ -213,7 +214,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 						return new Point(this.bounds.Right, posv);
 					}
 
-					return new Point(this.bounds.Right, this.bounds.Top-ObjectBox.headerHeight/2);
+					return new Point(this.bounds.Right, this.bounds.Top-AbstractObject.headerHeight/2);
 
 				case ConnectionAnchor.Bottom:
 					return new Point(this.bounds.Center.X, this.bounds.Bottom);
@@ -298,6 +299,24 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				this.editor.Invalidate();
 				return true;
 			}
+			else if (this.isParentsMenu)
+			{
+				Rectangle rect = this.RectangleParentsMenu;
+				int sel = -1;
+				if (rect.Contains(pos))
+				{
+					sel = (int) ((pos.Y-rect.Bottom)/ObjectBox.parentsMenuHeight);
+					sel = this.parentsClosedCount-sel-1;
+				}
+
+				if (this.parentsMenuSelected != sel)
+				{
+					this.parentsMenuSelected = sel;
+					this.editor.Invalidate();
+				}
+
+				return true;
+			}
 			else
 			{
 				return base.MouseMove(pos);
@@ -335,6 +354,14 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				this.isMoveColumnsSeparator = true;
 				this.editor.LockObject(this);
 			}
+
+			if (this.hilitedElement == ActiveElement.ParentsButton)
+			{
+				this.isParentsMenu = true;
+				this.parentsMenuSelected = -1;
+				this.editor.Invalidate();
+				this.editor.LockObject(this);
+			}
 		}
 
 		public override void MouseUp(Point pos)
@@ -365,6 +392,18 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			{
 				this.isMoveColumnsSeparator = false;
 				this.editor.LockObject(null);
+			}
+			else if (this.isParentsMenu)
+			{
+				if (this.parentsMenuSelected != -1)
+				{
+					ParentInfo info = this.GetParentInfo(this.parentsMenuSelected);
+					this.OpenParent(info.CultureMap, info.Rank);
+				}
+
+				this.isParentsMenu = false;
+				this.editor.LockObject(null);
+				this.editor.Invalidate();
 			}
 			else
 			{
@@ -456,6 +495,23 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					return true;
 				}
 
+				//	Souris dans le bouton des parents ?
+				if (this.parentsClosedCount > 0)
+				{
+					if (this.DetectRoundButton(this.PositionParentsButton, pos))
+					{
+						element = ActiveElement.ParentsButton;
+						return true;
+					}
+				}
+
+				//	Souris dans le bouton des commentaires ?
+				if (this.DetectRoundButton(this.PositionCommentButton, pos))
+				{
+					element = ActiveElement.CommentButton;
+					return true;
+				}
+
 				if (this.isExtended)
 				{
 					//	Souris dans le bouton pour changer la largeur ?
@@ -482,8 +538,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 					//	Souris dans l'en-tête ?
 					if (this.bounds.Contains(pos) && 
-						(pos.Y >= this.bounds.Top-ObjectBox.headerHeight ||
-						 pos.Y <= this.bounds.Bottom+ObjectBox.footerHeight))
+						(pos.Y >= this.bounds.Top-AbstractObject.headerHeight ||
+						 pos.Y <= this.bounds.Bottom+AbstractObject.footerHeight))
 					{
 						element = ActiveElement.HeaderDragging;
 						this.SetConnectionsHilited(true);
@@ -506,8 +562,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					//	Souris sur le séparateur des colonnes ?
 					double sep = this.ColumnsSeparatorAbsolute;
 					if (this.columnsSeparatorRelative < 1.0 && pos.X >= sep-4 && pos.X <= sep+4 &&
-						pos.Y >= this.bounds.Bottom+ObjectBox.footerHeight &&
-						pos.Y <= this.bounds.Top-ObjectBox.headerHeight)
+						pos.Y >= this.bounds.Bottom+AbstractObject.footerHeight &&
+						pos.Y <= this.bounds.Top-AbstractObject.headerHeight)
 					{
 						element = ActiveElement.MoveColumnsSeparator;
 						this.SetConnectionsHilited(true);
@@ -677,7 +733,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			Rectangle rect = this.bounds;
 
 			rect.Deflate(2, 0);
-			rect.Bottom = rect.Top - ObjectBox.headerHeight - ObjectBox.fieldHeight*(rank+1) - 12;
+			rect.Bottom = rect.Top - AbstractObject.headerHeight - ObjectBox.fieldHeight*(rank+1) - 12;
 			rect.Height = ObjectBox.fieldHeight;
 
 			return rect;
@@ -868,8 +924,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			Caption fieldCaption = this.editor.Module.AccessEntities.DirectGetCaption(fieldCaptionId);
 			Caption typeCaption = typeId.IsEmpty ? null : this.editor.Module.AccessEntities.DirectGetCaption(typeId);
 
-			field.FieldName = fieldCaption == null ? "" : fieldCaption.Name;
-			field.TypeName = typeCaption == null ? "" : typeCaption.Name;
+			field.FieldName = (fieldCaption == null) ? "" : fieldCaption.Name;
+			field.TypeName = (typeCaption == null) ? "" : typeCaption.Name;
 			field.Relation = rel;
 			field.Destination = typeId;
 			field.SrcBox = this;
@@ -930,9 +986,154 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		}
 
 
-		public override void Draw(Graphics graphics)
+		protected class ParentInfo
 		{
-			//	Dessine l'objet.
+			public string ModuleName;
+			public string FieldName;
+			public CultureMap CultureMap;
+			public int Rank;
+			public bool Opened;
+		}
+
+		protected void UpdateParents()
+		{
+			//	Met à jour la liste de tous les parents potentiels de l'entité courante.
+			this.parentsList = new List<ParentInfo>();
+
+			List<Module> modules = this.editor.Module.MainWindow.Modules;
+			foreach (Module module in modules)
+			{
+				foreach (CultureMap cultureMap in module.AccessEntities.Accessor.Collection)
+				{
+					StructuredData data = cultureMap.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
+					IList<StructuredData> dataFields = data.GetValue(Support.Res.Fields.ResourceStructuredType.Fields) as IList<StructuredData>;
+
+					if (dataFields != null)
+					{
+						int i = 0;
+						foreach (StructuredData dataField in dataFields)
+						{
+							Druid typeId = (Druid) dataField.GetValue(Support.Res.Fields.Field.TypeId);
+							Module dstModule = this.editor.Module.MainWindow.SearchModule(typeId);
+							CultureMap fieldCultureMap = (dstModule == null) ? null : dstModule.AccessEntities.Accessor.Collection[typeId];
+							
+							if (fieldCultureMap == this.cultureMap && !this.IsExistingParentInfo(cultureMap))
+							{
+								ParentInfo info = new ParentInfo();
+								
+								info.CultureMap = cultureMap;
+								info.ModuleName = module.ModuleInfo.Name;
+								info.FieldName = cultureMap.Name;
+								info.Rank = i;
+								info.Opened = false;
+
+								this.parentsList.Add(info);
+							}
+
+							i++;
+						}
+					}
+				}
+			}
+
+			this.parentsClosedCount = this.parentsList.Count;
+		}
+
+		public void UpdateAfterOpenOrCloseBox()
+		{
+			//	Appelé après avoir ajouté ou supprimé une boîte.
+			this.parentsClosedCount = 0;
+			for (int i=0; i<this.parentsList.Count; i++)
+			{
+				ParentInfo info = this.parentsList[i];
+
+				info.Opened = false;
+				foreach (ObjectBox box in this.editor.Boxes)
+				{
+					if (box.cultureMap == info.CultureMap)
+					{
+						info.Opened = true;
+						break;
+					}
+				}
+
+				if (!info.Opened)
+				{
+					this.parentsClosedCount++;
+				}
+			}
+		}
+
+		protected bool IsExistingParentInfo(CultureMap cultureMap)
+		{
+			foreach (ParentInfo info in this.parentsList)
+			{
+				if (info.CultureMap == cultureMap)
+				{
+					return true;
+				}
+			}
+			return false;
+		}
+
+		protected ParentInfo GetParentInfo(int sel)
+		{
+			foreach (ParentInfo info in this.parentsList)
+			{
+				if (!info.Opened && sel-- == 0)
+				{
+					return info;
+				}
+			}
+			throw new System.Exception("Selection out of range.");
+		}
+
+		protected void OpenParent(CultureMap cultureMap, int rank)
+		{
+			//	Ouvre une entité parent.
+			ObjectBox box = this.editor.SearchBox(cultureMap.Name);
+			if (box == null)
+			{
+				//	Ouvre la connection sur une nouvelle boîte.
+				box = new ObjectBox(this.editor);
+				box.Title = cultureMap.Name;
+				box.SetContent(cultureMap);
+
+				Field field = box.Fields[rank];
+				field.DstBox = this;
+				field.IsAttachToRight = true;
+				field.IsExplored = true;
+
+				this.editor.AddBox(box);
+				this.editor.UpdateGeometry();
+
+				//	Essaie de trouver une place libre, pour déplacer le moins possible d'éléments.
+				double oy = box.bounds.Top - box.GetConnectionSrcVerticalPosition(rank) - AbstractObject.headerHeight/2;
+
+				Rectangle bounds = new Rectangle(this.bounds.Left-50-box.Bounds.Width, this.bounds.Top+oy-box.bounds.Height, box.Bounds.Width, box.Bounds.Height);
+				bounds.Inflate(50, Editor.pushMargin);
+
+				for (int i=0; i<1000; i++)
+				{
+					if (this.editor.IsEmptyArea(bounds))
+					{
+						break;
+					}
+					bounds.Offset(-1, 0);
+				}
+
+				bounds.Deflate(50, Editor.pushMargin);
+				box.SetBounds(bounds);
+			}
+
+			this.editor.CreateConnections();
+			this.editor.UpdateAfterMoving(box);
+		}
+
+
+		public override void DrawBackground(Graphics graphics)
+		{
+			//	Dessine le fond de l'objet.
 			Rectangle rect;
 
 			bool dragging = (this.hilitedElement == ActiveElement.HeaderDragging);
@@ -972,7 +1173,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			//	Dessine en blanc la zone pour les champs.
 			if (this.isExtended)
 			{
-				Rectangle inside = new Rectangle(this.bounds.Left+1, this.bounds.Bottom+ObjectBox.footerHeight, this.bounds.Width-2, this.bounds.Height-ObjectBox.footerHeight-ObjectBox.headerHeight);
+				Rectangle inside = new Rectangle(this.bounds.Left+1, this.bounds.Bottom+AbstractObject.footerHeight, this.bounds.Width-2, this.bounds.Height-AbstractObject.footerHeight-AbstractObject.headerHeight);
 				graphics.AddFilledRectangle(inside);
 				graphics.RenderSolid(Color.FromBrightness(1));
 				graphics.AddFilledRectangle(inside);
@@ -984,18 +1185,18 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				if (this.columnsSeparatorRelative < 1.0)
 				{
 					double posx = System.Math.Floor(this.ColumnsSeparatorAbsolute)+0.5;
-					graphics.AddLine(posx, this.bounds.Bottom+ObjectBox.footerHeight+0.5, posx, this.bounds.Top-ObjectBox.headerHeight-0.5);
+					graphics.AddLine(posx, this.bounds.Bottom+AbstractObject.footerHeight+0.5, posx, this.bounds.Top-AbstractObject.headerHeight-0.5);
 					graphics.RenderSolid(colorLine);
 				}
 
 				//	Ombre supérieure.
-				Rectangle shadow = new Rectangle(this.bounds.Left+1, this.bounds.Top-ObjectBox.headerHeight-8, this.bounds.Width-2, 8);
+				Rectangle shadow = new Rectangle(this.bounds.Left+1, this.bounds.Top-AbstractObject.headerHeight-8, this.bounds.Width-2, 8);
 				graphics.AddFilledRectangle(shadow);
 				this.RenderVerticalGradient(graphics, shadow, Color.FromAlphaRgb(0.0, 0, 0, 0), Color.FromAlphaRgb(0.3, 0, 0, 0));
 			}
 
 			//	Dessine le titre.
-			rect = new Rectangle(this.bounds.Left, this.bounds.Top-ObjectBox.headerHeight, this.bounds.Width, ObjectBox.headerHeight);
+			rect = new Rectangle(this.bounds.Left, this.bounds.Top-AbstractObject.headerHeight, this.bounds.Width, AbstractObject.headerHeight);
 			rect.Deflate(4, 2);
 			this.title.LayoutSize = rect.Size;
 			this.title.Paint(rect.BottomLeft, graphics, Rectangle.MaxValue, Color.FromBrightness(0), GlyphPaintStyle.Normal);
@@ -1006,7 +1207,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			{
 				this.DrawRoundButton(graphics, this.PositionExtendButton, AbstractObject.buttonRadius, shape, true, false);
 			}
-			if ((this.hilitedElement == ActiveElement.HeaderDragging || this.hilitedElement == ActiveElement.CloseButton) && !this.isDragging)
+			else if (this.IsHeaderHilite && !this.isDragging)
 			{
 				this.DrawRoundButton(graphics, this.PositionExtendButton, AbstractObject.buttonRadius, shape, false, false);
 			}
@@ -1016,16 +1217,50 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			{
 				this.DrawRoundButton(graphics, this.PositionCloseButton, AbstractObject.buttonRadius, GlyphShape.Close, true, false, !this.isRoot);
 			}
-			if ((this.hilitedElement == ActiveElement.HeaderDragging || this.hilitedElement == ActiveElement.ExtendButton) && !this.isDragging)
+			else if (this.IsHeaderHilite && !this.isDragging)
 			{
 				this.DrawRoundButton(graphics, this.PositionCloseButton, AbstractObject.buttonRadius, GlyphShape.Close, false, false, !this.isRoot);
+			}
+
+			//	Dessine le moignon pour les parents à gauche.
+			if (this.parentsClosedCount > 0)
+			{
+				Point p1 = this.PositionParentsButton;
+				Point p2 = p1;
+				p1.X = this.bounds.Left-1-AbstractObject.lengthClose;
+				p2.X = this.bounds.Left-1;
+				graphics.LineWidth = 2;
+				graphics.AddLine(p1, p2);
+				this.DrawEndingArrow(graphics, p1, p2, FieldRelation.Reference);
+				graphics.LineWidth = 1;
+				graphics.RenderSolid(colorFrame);
+			}
+
+			//	Dessine le bouton des parents.
+			if (this.hilitedElement == ActiveElement.ParentsButton)
+			{
+				this.DrawRoundButton(graphics, this.PositionParentsButton, AbstractObject.buttonRadius, GlyphShape.TriangleDown, true, false, this.parentsClosedCount > 0);
+			}
+			else if (this.IsHeaderHilite && !this.isDragging)
+			{
+				this.DrawRoundButton(graphics, this.PositionParentsButton, AbstractObject.buttonRadius, GlyphShape.TriangleDown, false, false, this.parentsClosedCount > 0);
+			}
+
+			//	Dessine le bouton des commentaires.
+			if (this.hilitedElement == ActiveElement.CommentButton)
+			{
+				this.DrawRoundButton(graphics, this.PositionCommentButton, AbstractObject.buttonRadius, GlyphShape.Dots, true, false);
+			}
+			else if (this.IsHeaderHilite && !this.isDragging)
+			{
+				this.DrawRoundButton(graphics, this.PositionCommentButton, AbstractObject.buttonRadius, GlyphShape.Dots, false, false);
 			}
 
 			//	Dessine les noms des champs.
 			if (this.isExtended)
 			{
-				graphics.AddLine(this.bounds.Left+2, this.bounds.Top-ObjectBox.headerHeight-0.5, this.bounds.Right-2, this.bounds.Top-ObjectBox.headerHeight-0.5);
-				graphics.AddLine(this.bounds.Left+2, this.bounds.Bottom+ObjectBox.footerHeight+0.5, this.bounds.Right-2, this.bounds.Bottom+ObjectBox.footerHeight+0.5);
+				graphics.AddLine(this.bounds.Left+2, this.bounds.Top-AbstractObject.headerHeight-0.5, this.bounds.Right-2, this.bounds.Top-AbstractObject.headerHeight-0.5);
+				graphics.AddLine(this.bounds.Left+2, this.bounds.Bottom+AbstractObject.footerHeight+0.5, this.bounds.Right-2, this.bounds.Bottom+AbstractObject.footerHeight+0.5);
 				graphics.RenderSolid(colorFrame);
 
 				for (int i=0; i<this.fields.Count; i++)
@@ -1099,6 +1334,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 				if (this.hilitedElement != ActiveElement.None &&
 					this.hilitedElement != ActiveElement.HeaderDragging &&
+					this.hilitedElement != ActiveElement.ParentsButton &&
+					this.hilitedElement != ActiveElement.CommentButton &&
 					this.hilitedElement != ActiveElement.ExtendButton &&
 					this.hilitedElement != ActiveElement.CloseButton &&
 					this.hilitedElement != ActiveElement.ChangeWidth &&
@@ -1165,7 +1402,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				{
 					double sep = this.ColumnsSeparatorAbsolute;
 					graphics.LineWidth = 4;
-					graphics.AddLine(sep, this.bounds.Bottom+ObjectBox.footerHeight+3, sep, this.bounds.Top-ObjectBox.headerHeight-3);
+					graphics.AddLine(sep, this.bounds.Bottom+AbstractObject.footerHeight+3, sep, this.bounds.Top-AbstractObject.headerHeight-3);
 					graphics.LineWidth = 1;
 					graphics.RenderSolid(this.GetColorCaption());
 
@@ -1186,6 +1423,86 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					this.DrawRoundButton(graphics, this.PositionChangeWidthButton, AbstractObject.buttonRadius, GlyphShape.HorizontalMove, false, false);
 				}
 			}
+		}
+
+		protected bool IsHeaderHilite
+		{
+			get
+			{
+				return (this.hilitedElement == ActiveElement.HeaderDragging ||
+						this.hilitedElement == ActiveElement.ParentsButton ||
+						this.hilitedElement == ActiveElement.CommentButton ||
+						this.hilitedElement == ActiveElement.ExtendButton ||
+						this.hilitedElement == ActiveElement.CloseButton);
+			}
+		}
+
+		public override void DrawForeground(Graphics graphics)
+		{
+			//	Dessine le dessus de l'objet.
+			if (this.isParentsMenu)
+			{
+				this.DrawParentsMenu(graphics, this.PositionParentsMenu);
+			}
+		}
+
+		protected void DrawParentsMenu(Graphics graphics, Point pos)
+		{
+			//	Dessine le menu pour choisir un parent.
+			IAdorner adorner = Common.Widgets.Adorners.Factory.Active;
+			double h = ObjectBox.parentsMenuHeight;
+			Rectangle box = this.RectangleParentsMenu;
+
+			//	Dessine la boîte vide ombrée.
+			Rectangle rs = box;
+			rs.Inflate(2);
+			rs.Offset(8, -8);
+			this.DrawShadow(graphics, rs, 10, 10, 0.6);
+
+			graphics.AddFilledRectangle(box);
+			graphics.RenderSolid(Color.FromBrightness(1));
+
+			//	Dessine l'en-tête.
+			Rectangle rect = box;
+			rect.Bottom = rect.Top-h-1;
+
+			graphics.AddFilledRectangle(rect);
+			graphics.RenderSolid(this.GetColorCaption());
+
+			Rectangle gr = new Rectangle(this.PositionParentsButton.X-AbstractObject.buttonRadius, this.PositionParentsButton.Y-AbstractObject.buttonRadius, AbstractObject.buttonRadius*2, AbstractObject.buttonRadius*2);
+			adorner.PaintGlyph(graphics, gr, WidgetPaintState.Enabled, Color.FromBrightness(1), GlyphShape.TriangleDown, PaintTextStyle.Button);
+			
+			graphics.AddText(rect.Left+AbstractObject.buttonRadius*2+5, rect.Bottom, rect.Width-(AbstractObject.buttonRadius*2+10), rect.Height, "Liste des entités parentes", Font.DefaultFont, 12, ContentAlignment.MiddleLeft);
+			graphics.RenderSolid(Color.FromBrightness(1));
+			
+			rect = box;
+			rect.Top = rect.Bottom+h;
+			rect.Offset(0, h*(this.parentsClosedCount-1));
+
+			//	Dessine les lignes du menu.
+			for (int i=0; i<this.parentsClosedCount; i++)
+			{
+				ParentInfo info = this.GetParentInfo(i);
+
+				if (i == this.parentsMenuSelected)
+				{
+					graphics.AddFilledRectangle(rect);
+					graphics.RenderSolid(this.GetColorCaption(0.2));
+				}
+
+				string text = string.Concat(info.ModuleName, ": ", info.FieldName);
+				graphics.AddText(rect.Left+5, rect.Bottom, rect.Width-10, rect.Height, text, Font.DefaultFont, 10, ContentAlignment.MiddleLeft);
+				graphics.RenderSolid(Color.FromBrightness(0));
+
+				graphics.AddLine(rect.TopLeft, rect.TopRight);
+				graphics.RenderSolid(Color.FromBrightness(0));
+
+				rect.Offset(0, -h);
+			}
+
+			//	Dessine le cadre du menu.
+			graphics.AddRectangle(box);
+			graphics.RenderSolid(Color.FromBrightness(0));
 		}
 
 		protected void DrawDashLine(Graphics graphics, Point p1, Point p2, Color color)
@@ -1253,7 +1570,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			//	Retourne la position du bouton pour fermer.
 			get
 			{
-				return new Point(this.bounds.Right-AbstractObject.buttonRadius-6, this.bounds.Top-ObjectBox.headerHeight/2);
+				return new Point(this.bounds.Right-AbstractObject.buttonRadius-6, this.bounds.Top-AbstractObject.headerHeight/2);
 			}
 		}
 
@@ -1262,7 +1579,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			//	Retourne la position du bouton pour étendre.
 			get
 			{
-				return new Point(this.bounds.Right-AbstractObject.buttonRadius*3-8, this.bounds.Top-ObjectBox.headerHeight/2);
+				return new Point(this.bounds.Right-AbstractObject.buttonRadius*3-8, this.bounds.Top-AbstractObject.headerHeight/2);
 			}
 		}
 
@@ -1271,7 +1588,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			//	Retourne la position du bouton pour changer la largeur.
 			get
 			{
-				return new Point(this.bounds.Right-1, this.bounds.Bottom+ObjectBox.footerHeight/2+1);
+				return new Point(this.bounds.Right-1, this.bounds.Bottom+AbstractObject.footerHeight/2+1);
 			}
 		}
 
@@ -1280,7 +1597,50 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			//	Retourne la position du bouton pour déplacer le séparateur des colonnes.
 			get
 			{
-				return new Point(this.ColumnsSeparatorAbsolute, this.bounds.Bottom+ObjectBox.footerHeight/2+1);
+				return new Point(this.ColumnsSeparatorAbsolute, this.bounds.Bottom+AbstractObject.footerHeight/2+1);
+			}
+		}
+
+		protected Point PositionParentsButton
+		{
+			//	Retourne la position du bouton pour montrer les parents.
+			get
+			{
+				return new Point(this.bounds.Left+AbstractObject.buttonRadius+6, this.bounds.Top-AbstractObject.headerHeight/2);
+			}
+		}
+
+		protected Point PositionCommentButton
+		{
+			//	Retourne la position du bouton pour montrer les parents.
+			get
+			{
+				return new Point(this.bounds.Left+AbstractObject.buttonRadius*3+8, this.bounds.Top-AbstractObject.headerHeight/2);
+			}
+		}
+
+		protected Point PositionParentsMenu
+		{
+			//	Retourne la position du menu pour montrer les parents.
+			get
+			{
+				Point pos = this.PositionParentsButton;
+				pos.X -= AbstractObject.buttonRadius;
+				pos.Y += AbstractObject.buttonRadius;
+				return pos;
+			}
+		}
+
+		protected Rectangle RectangleParentsMenu
+		{
+			//	Retourne le rectangle du menu pour montrer les parents.
+			get
+			{
+				Point pos = this.PositionParentsMenu;
+				double h = ObjectBox.parentsMenuHeight*(this.parentsClosedCount+1);
+				Rectangle rect = new Rectangle(pos.X, pos.Y-h, 200, h);
+				rect.Inflate(0.5);
+				return rect;
 			}
 		}
 
@@ -1299,10 +1659,9 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		protected static readonly double roundFrameRadius = 12;
 		protected static readonly double shadowOffset = 6;
-		public static readonly double headerHeight = 32;
 		protected static readonly double textMargin = 13;
-		protected static readonly double footerHeight = 13;
 		protected static readonly double fieldHeight = 20;
+		protected static readonly double parentsMenuHeight = 20;
 
 		protected CultureMap cultureMap;
 		protected Rectangle bounds;
@@ -1313,6 +1672,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		protected TextLayout title;
 		protected List<Field> fields;
 		protected Field parentField;
+		protected List<ParentInfo> parentsList;
+		protected int parentsClosedCount;
 
 		protected bool isDragging;
 		protected Point draggingPos;
@@ -1325,5 +1686,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		protected double changeWidthInitial;
 
 		protected bool isMoveColumnsSeparator;
+
+		protected bool isParentsMenu;
+		protected int parentsMenuSelected;
 	}
 }

@@ -17,7 +17,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			Inside,
 			ExtendButton,
 			CloseButton,
-			ParentButton,
+			ParentsButton,
+			CommentButton,
 			HeaderDragging,
 			FieldNameSelect,
 			FieldTypeSelect,
@@ -54,9 +55,14 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 		}
 
-		public virtual void Draw(Graphics graphics)
+		public virtual void DrawBackground(Graphics graphics)
 		{
-			//	Dessine l'objet.
+			//	Dessine le fond de l'objet.
+		}
+
+		public virtual void DrawForeground(Graphics graphics)
+		{
+			//	Dessine le dessus de l'objet.
 		}
 
 
@@ -203,6 +209,39 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 		}
 
+		protected void DrawStartingArrow(Graphics graphics, Point start, Point end, FieldRelation relation)
+		{
+			//	Dessine une flèche selon le type de la relation.
+			if (relation == FieldRelation.Inclusion)
+			{
+				this.DrawArrowBase(graphics, end, start);
+			}
+		}
+
+		protected void DrawEndingArrow(Graphics graphics, Point start, Point end, FieldRelation relation)
+		{
+			//	Dessine une flèche selon le type de la relation.
+			this.DrawArrowBase(graphics, start, end);
+
+			if (relation == FieldRelation.Collection)
+			{
+				end = Point.Move(end, start, AbstractObject.arrowLength*0.75);
+				this.DrawArrowBase(graphics, start, end);
+			}
+		}
+
+		protected void DrawArrowBase(Graphics graphics, Point start, Point end)
+		{
+			//	Dessine une flèche à l'extrémité 'end'.
+			Point p = Point.Move(end, start, AbstractObject.arrowLength);
+
+			Point e1 = Transform.RotatePointDeg(end, AbstractObject.arrowAngle, p);
+			Point e2 = Transform.RotatePointDeg(end, -AbstractObject.arrowAngle, p);
+
+			graphics.AddLine(end, e1);
+			graphics.AddLine(end, e2);
+		}
+
 		protected Color GetColorCaption()
 		{
 			//	Retourne la couleur pour les mises en évidence.
@@ -289,8 +328,13 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		}
 
 
+		protected static readonly double headerHeight = 32;
+		protected static readonly double footerHeight = 13;
 		protected static readonly double buttonRadius = 10;
 		protected static readonly double bulletRadius = 4;
+		protected static readonly double lengthClose = 30;
+		protected static readonly double arrowLength = 12;
+		protected static readonly double arrowAngle = 25;
 
 		protected Editor editor;
 		protected ActiveElement hilitedElement;

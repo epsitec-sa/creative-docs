@@ -1457,6 +1457,20 @@ namespace Epsitec.Common.Designer
 			return null;
 		}
 
+		public List<Module> Modules
+		{
+			//	Retourne la liste de tous les modules.
+			get
+			{
+				List<Module> list = new List<Module>();
+				foreach (ModuleInfo info in this.moduleInfoList)
+				{
+					list.Add(info.Module);
+				}
+				return list;
+			}
+		}
+
 		protected int SearchModuleRank(string moduleName)
 		{
 			//	Cherche le rang d'un module d'après son nom.
