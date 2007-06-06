@@ -986,6 +986,9 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		}
 
 
+		/// <summary>
+		/// Informations sur une entité parente, ouverte ou fermée.
+		/// </summary>
 		protected class ParentInfo
 		{
 			public string ModuleName;
@@ -993,6 +996,31 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			public CultureMap CultureMap;
 			public int Rank;
 			public bool Opened;
+		}
+
+		public void UpdateAfterOpenOrCloseBox()
+		{
+			//	Appelé après avoir ajouté ou supprimé une boîte.
+			this.parentsClosedCount = 0;
+			for (int i=0; i<this.parentsList.Count; i++)
+			{
+				ParentInfo info = this.parentsList[i];
+
+				info.Opened = false;
+				foreach (ObjectBox box in this.editor.Boxes)
+				{
+					if (box.cultureMap == info.CultureMap)
+					{
+						info.Opened = true;
+						break;
+					}
+				}
+
+				if (!info.Opened)
+				{
+					this.parentsClosedCount++;  // màj le nombre de parents fermés
+				}
+			}
 		}
 
 		protected void UpdateParents()
@@ -1039,31 +1067,6 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			this.parentsClosedCount = this.parentsList.Count;
 		}
 
-		public void UpdateAfterOpenOrCloseBox()
-		{
-			//	Appelé après avoir ajouté ou supprimé une boîte.
-			this.parentsClosedCount = 0;
-			for (int i=0; i<this.parentsList.Count; i++)
-			{
-				ParentInfo info = this.parentsList[i];
-
-				info.Opened = false;
-				foreach (ObjectBox box in this.editor.Boxes)
-				{
-					if (box.cultureMap == info.CultureMap)
-					{
-						info.Opened = true;
-						break;
-					}
-				}
-
-				if (!info.Opened)
-				{
-					this.parentsClosedCount++;
-				}
-			}
-		}
-
 		protected bool IsExistingParentInfo(CultureMap cultureMap)
 		{
 			foreach (ParentInfo info in this.parentsList)
@@ -1078,6 +1081,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		protected ParentInfo GetParentInfo(int sel)
 		{
+			//	Retourne une information sur un parent fermé.
 			foreach (ParentInfo info in this.parentsList)
 			{
 				if (!info.Opened && sel-- == 0)
@@ -1427,6 +1431,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		protected bool IsHeaderHilite
 		{
+			//	Indique si la souris est dans l'en-tête.
 			get
 			{
 				return (this.hilitedElement == ActiveElement.HeaderDragging ||
@@ -1454,10 +1459,22 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			Rectangle box = this.RectangleParentsMenu;
 
 			//	Dessine la boîte vide ombrée.
-			Rectangle rs = box;
+			Rectangle big = box;
+			big.Inflate(7);
+
+			Rectangle rs = big;
 			rs.Inflate(2);
 			rs.Offset(8, -8);
-			this.DrawShadow(graphics, rs, 10, 10, 0.6);
+			this.DrawShadow(graphics, rs, 18, 10, 0.6);
+
+			Path path = this.PathRoundRectangle(big, 10);
+			graphics.Rasterizer.AddSurface(path);
+			graphics.RenderSolid(Color.FromBrightness(1));
+			graphics.Rasterizer.AddSurface(path);
+			this.RenderHorizontalGradient(graphics, big, this.GetColorCaption(0.6), this.GetColorCaption(0.2));
+
+			graphics.Rasterizer.AddOutline(path);
+			graphics.RenderSolid(Color.FromBrightness(0));
 
 			graphics.AddFilledRectangle(box);
 			graphics.RenderSolid(Color.FromBrightness(1));
@@ -1472,7 +1489,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			Rectangle gr = new Rectangle(this.PositionParentsButton.X-AbstractObject.buttonRadius, this.PositionParentsButton.Y-AbstractObject.buttonRadius, AbstractObject.buttonRadius*2, AbstractObject.buttonRadius*2);
 			adorner.PaintGlyph(graphics, gr, WidgetPaintState.Enabled, Color.FromBrightness(1), GlyphShape.TriangleDown, PaintTextStyle.Button);
 			
-			graphics.AddText(rect.Left+AbstractObject.buttonRadius*2+5, rect.Bottom, rect.Width-(AbstractObject.buttonRadius*2+10), rect.Height, "Liste des entités parentes", Font.DefaultFont, 12, ContentAlignment.MiddleLeft);
+			graphics.AddText(rect.Left+AbstractObject.buttonRadius*2+5, rect.Bottom, rect.Width-(AbstractObject.buttonRadius*2+10), rect.Height, "Entités parentes", Font.GetFont(Font.DefaultFontFamily, "Bold"), 12, ContentAlignment.MiddleLeft);
 			graphics.RenderSolid(Color.FromBrightness(1));
 			
 			rect = box;
