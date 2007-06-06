@@ -425,7 +425,6 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 
 			Rectangle rect;
-			Point center;
 
 			if (this.isFieldMoving)
 			{
@@ -444,16 +443,14 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			else
 			{
 				//	Souris dans le bouton compact/étendu ?
-				center = new Point(this.bounds.Right-AbstractObject.buttonRadius*3-8, this.bounds.Top-ObjectBox.headerHeight/2);
-				if (Point.Distance(center, pos) <= AbstractObject.buttonRadius+3)
+				if (this.DetectRoundButton(this.PositionExtendButton, pos))
 				{
 					element = ActiveElement.ExtendButton;
 					return true;
 				}
 
 				//	Souris dans le bouton de fermeture ?
-				center = new Point(this.bounds.Right-AbstractObject.buttonRadius-6, this.bounds.Top-ObjectBox.headerHeight/2);
-				if (Point.Distance(center, pos) <= AbstractObject.buttonRadius+3)
+				if (this.DetectRoundButton(this.PositionCloseButton, pos))
 				{
 					element = ActiveElement.CloseButton;
 					return true;
@@ -463,15 +460,12 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				{
 					//	Souris dans le bouton pour changer la largeur ?
 					//	Souris dans le bouton pour déplacer le séparateur des colonnes ?
-					center = new Point(this.bounds.Right-1, this.bounds.Bottom+ObjectBox.footerHeight/2+1);
-					double d1 = Point.Distance(center, pos);
-
-					center = new Point(this.ColumnsSeparatorAbsolute, this.bounds.Bottom+ObjectBox.footerHeight/2+1);
-					double d2 = Point.Distance(center, pos);
+					double d1 = Point.Distance(this.PositionChangeWidthButton, pos);
+					double d2 = Point.Distance(this.PositionMoveColumnsButton, pos);
 
 					if (d1 < d2)
 					{
-						if (d1 <= AbstractObject.buttonRadius+3)
+						if (d1 <= AbstractObject.buttonRadius+1)
 						{
 							element = ActiveElement.ChangeWidth;
 							return true;
@@ -479,7 +473,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					}
 					else
 					{
-						if (d2 <= AbstractObject.buttonRadius+3)
+						if (d2 <= AbstractObject.buttonRadius+1)
 						{
 							element = ActiveElement.MoveColumnsSeparator;
 							return true;
@@ -940,7 +934,6 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		{
 			//	Dessine l'objet.
 			Rectangle rect;
-			Point center;
 
 			bool dragging = (this.hilitedElement == ActiveElement.HeaderDragging);
 
@@ -1008,26 +1001,24 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			this.title.Paint(rect.BottomLeft, graphics, Rectangle.MaxValue, Color.FromBrightness(0), GlyphPaintStyle.Normal);
 
 			//	Dessine le bouton compact/étendu.
-			center = new Point(this.bounds.Right-AbstractObject.buttonRadius*3-8, this.bounds.Top-ObjectBox.headerHeight/2);
 			GlyphShape shape = this.isExtended ? GlyphShape.ArrowUp : GlyphShape.ArrowDown;
 			if (this.hilitedElement == ActiveElement.ExtendButton)
 			{
-				this.DrawRoundButton(graphics, center, AbstractObject.buttonRadius, shape, true, false);
+				this.DrawRoundButton(graphics, this.PositionExtendButton, AbstractObject.buttonRadius, shape, true, false);
 			}
 			if ((this.hilitedElement == ActiveElement.HeaderDragging || this.hilitedElement == ActiveElement.CloseButton) && !this.isDragging)
 			{
-				this.DrawRoundButton(graphics, center, AbstractObject.buttonRadius, shape, false, false);
+				this.DrawRoundButton(graphics, this.PositionExtendButton, AbstractObject.buttonRadius, shape, false, false);
 			}
 
 			//	Dessine le bouton de fermeture.
-			center = new Point(this.bounds.Right-AbstractObject.buttonRadius-6, this.bounds.Top-ObjectBox.headerHeight/2);
 			if (this.hilitedElement == ActiveElement.CloseButton)
 			{
-				this.DrawRoundButton(graphics, center, AbstractObject.buttonRadius, GlyphShape.Close, true, false, !this.isRoot);
+				this.DrawRoundButton(graphics, this.PositionCloseButton, AbstractObject.buttonRadius, GlyphShape.Close, true, false, !this.isRoot);
 			}
 			if ((this.hilitedElement == ActiveElement.HeaderDragging || this.hilitedElement == ActiveElement.ExtendButton) && !this.isDragging)
 			{
-				this.DrawRoundButton(graphics, center, AbstractObject.buttonRadius, GlyphShape.Close, false, false, !this.isRoot);
+				this.DrawRoundButton(graphics, this.PositionCloseButton, AbstractObject.buttonRadius, GlyphShape.Close, false, false, !this.isRoot);
 			}
 
 			//	Dessine les noms des champs.
@@ -1170,7 +1161,6 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			if (this.isExtended)
 			{
 				//	Dessine le bouton pour déplacer le séparateur des colonnes.
-				center = new Point(this.ColumnsSeparatorAbsolute, this.bounds.Bottom+ObjectBox.footerHeight/2+1);
 				if (this.hilitedElement == ActiveElement.MoveColumnsSeparator)
 				{
 					double sep = this.ColumnsSeparatorAbsolute;
@@ -1179,22 +1169,21 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					graphics.LineWidth = 1;
 					graphics.RenderSolid(this.GetColorCaption());
 
-					this.DrawRoundButton(graphics, center, AbstractObject.buttonRadius, GlyphShape.HorizontalMove, true, false);
+					this.DrawRoundButton(graphics, this.PositionMoveColumnsButton, AbstractObject.buttonRadius, GlyphShape.HorizontalMove, true, false);
 				}
 				if (this.hilitedElement == ActiveElement.HeaderDragging && !this.isDragging)
 				{
-					this.DrawRoundButton(graphics, center, AbstractObject.buttonRadius, GlyphShape.HorizontalMove, false, false);
+					this.DrawRoundButton(graphics, this.PositionMoveColumnsButton, AbstractObject.buttonRadius, GlyphShape.HorizontalMove, false, false);
 				}
 
 				//	Dessine le bouton pour changer la largeur.
-				center = new Point(this.bounds.Right-1, this.bounds.Bottom+ObjectBox.footerHeight/2+1);
 				if (this.hilitedElement == ActiveElement.ChangeWidth)
 				{
-					this.DrawRoundButton(graphics, center, AbstractObject.buttonRadius, GlyphShape.HorizontalMove, true, false);
+					this.DrawRoundButton(graphics, this.PositionChangeWidthButton, AbstractObject.buttonRadius, GlyphShape.HorizontalMove, true, false);
 				}
 				if (this.hilitedElement == ActiveElement.HeaderDragging && !this.isDragging)
 				{
-					this.DrawRoundButton(graphics, center, AbstractObject.buttonRadius, GlyphShape.HorizontalMove, false, false);
+					this.DrawRoundButton(graphics, this.PositionChangeWidthButton, AbstractObject.buttonRadius, GlyphShape.HorizontalMove, false, false);
 				}
 			}
 		}
@@ -1257,6 +1246,42 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 			graphics.Rasterizer.AddSurface(path);
 			graphics.RenderSolid(this.GetColorCaption());
+		}
+
+		protected Point PositionCloseButton
+		{
+			//	Retourne la position du bouton pour fermer.
+			get
+			{
+				return new Point(this.bounds.Right-AbstractObject.buttonRadius-6, this.bounds.Top-ObjectBox.headerHeight/2);
+			}
+		}
+
+		protected Point PositionExtendButton
+		{
+			//	Retourne la position du bouton pour étendre.
+			get
+			{
+				return new Point(this.bounds.Right-AbstractObject.buttonRadius*3-8, this.bounds.Top-ObjectBox.headerHeight/2);
+			}
+		}
+
+		protected Point PositionChangeWidthButton
+		{
+			//	Retourne la position du bouton pour changer la largeur.
+			get
+			{
+				return new Point(this.bounds.Right-1, this.bounds.Bottom+ObjectBox.footerHeight/2+1);
+			}
+		}
+
+		protected Point PositionMoveColumnsButton
+		{
+			//	Retourne la position du bouton pour déplacer le séparateur des colonnes.
+			get
+			{
+				return new Point(this.ColumnsSeparatorAbsolute, this.bounds.Bottom+ObjectBox.footerHeight/2+1);
+			}
 		}
 
 		protected double ColumnsSeparatorAbsolute

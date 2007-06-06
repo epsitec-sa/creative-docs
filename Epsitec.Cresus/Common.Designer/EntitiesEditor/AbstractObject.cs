@@ -17,6 +17,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			Inside,
 			ExtendButton,
 			CloseButton,
+			ParentButton,
 			HeaderDragging,
 			FieldNameSelect,
 			FieldTypeSelect,
@@ -129,6 +130,12 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			this.editor.Module.AccessEntities.Accessor.PersistChanges();
 		}
 
+
+		protected bool DetectRoundButton(Point center, Point pos)
+		{
+			//	Détecte si la souris est dans un bouton circulaire.
+			return (Point.Distance(center, pos) <= AbstractObject.buttonRadius+1);
+		}
 
 		protected void DrawRoundButton(Graphics graphics, Point center, double radius, GlyphShape shape, bool hilited, bool shadow)
 		{

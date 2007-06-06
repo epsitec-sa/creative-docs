@@ -251,7 +251,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			{
 				if (this.field.IsExplored)
 				{
-					if (Point.Distance(pos, this.points[0]) <= AbstractObject.buttonRadius)
+					if (this.DetectRoundButton(pos, this.points[0]))
 					{
 						element = ActiveElement.ConnectionClose;
 						return true;
@@ -259,13 +259,13 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				}
 				else
 				{
-					if (Point.Distance(pos, this.points[0]) <= AbstractObject.buttonRadius)
+					if (this.DetectRoundButton(pos, this.points[0]))
 					{
 						element = ActiveElement.ConnectionOpenRight;
 						return true;
 					}
 
-					if (Point.Distance(pos, this.points[1]) <= AbstractObject.buttonRadius)
+					if (this.DetectRoundButton(pos, this.points[1]))
 					{
 						element = ActiveElement.ConnectionOpenLeft;
 						return true;
@@ -275,14 +275,14 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 			//	Souris dans le bouton pour déplacer le point milieu ?
 			Point m = this.PositionRouteMove1;
-			if (!m.IsZero && Point.Distance(pos, m) <= AbstractObject.buttonRadius)
+			if (!m.IsZero && this.DetectRoundButton(pos, m))
 			{
 				element = ActiveElement.ConnectionMove1;
 				return true;
 			}
 
 			m = this.PositionRouteMove2;
-			if (!m.IsZero && Point.Distance(pos, m) <= AbstractObject.buttonRadius)
+			if (!m.IsZero && this.DetectRoundButton(pos, m))
 			{
 				element = ActiveElement.ConnectionMove2;
 				return true;
@@ -290,7 +290,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 			//	Souris dans le bouton pour changer la connection ?
 			Point p = this.PositionChangeRelation;
-			if (!p.IsZero && (this.field.IsExplored || this.field.IsSourceExpanded) && Point.Distance(pos, p) <= AbstractObject.buttonRadius)
+			if (!p.IsZero && (this.field.IsExplored || this.field.IsSourceExpanded) && this.DetectRoundButton(pos, p))
 			{
 				element = ActiveElement.ConnectionChangeRelation;
 				return true;
