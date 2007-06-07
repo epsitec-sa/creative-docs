@@ -483,11 +483,11 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					{
 						if (this.hilitedElement == ActiveElement.ConnectionChangeRelation)
 						{
-							this.DrawRoundButton(graphics, p, AbstractObject.buttonRadius, GlyphShape.Dots, true, false);
+							this.DrawRoundButton(graphics, p, AbstractObject.buttonRadius, "R", true, false);
 						}
 						else
 						{
-							this.DrawRoundButton(graphics, p, AbstractObject.buttonRadius, GlyphShape.Dots, false, false);
+							this.DrawRoundButton(graphics, p, AbstractObject.buttonRadius, "R", false, false);
 						}
 					}
 				}

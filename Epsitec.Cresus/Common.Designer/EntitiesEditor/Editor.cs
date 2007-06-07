@@ -155,6 +155,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			this.boxes.Clear();
 			this.connections.Clear();
 			this.comments.Clear();
+			this.LockObject(null);
 		}
 
 

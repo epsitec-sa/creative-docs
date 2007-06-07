@@ -149,19 +149,68 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		protected void DrawRoundButton(Graphics graphics, Point center, double radius, GlyphShape shape, bool hilited, bool shadow)
 		{
-			//	Dessine un bouton circulaire.
+			//	Dessine un bouton circulaire avec un glyph.
 			this.DrawRoundButton(graphics, center, radius, shape, hilited, shadow, true);
 		}
 
 		protected void DrawRoundButton(Graphics graphics, Point center, double radius, GlyphShape shape, bool hilited, bool shadow, bool enable)
 		{
-			//	Dessine un bouton circulaire.
-			IAdorner adorner = Common.Widgets.Adorners.Factory.Active;
-			Rectangle rect;
+			//	Dessine un bouton circulaire avec un glyph.
+			this.DrawRoundButton(graphics, center, radius, hilited, shadow, enable);
 
+			if (shape != GlyphShape.None)
+			{
+				Color colorShape;
+				if (enable)
+				{
+					colorShape = hilited ? Color.FromBrightness(1) : Color.FromBrightness(0);
+				}
+				else
+				{
+					colorShape = Color.FromBrightness(0.7);
+				}
+
+				IAdorner adorner = Common.Widgets.Adorners.Factory.Active;
+				Rectangle rect = new Rectangle(center.X-radius, center.Y-radius, radius*2, radius*2);
+				adorner.PaintGlyph(graphics, rect, WidgetPaintState.Enabled, colorShape, shape, PaintTextStyle.Button);
+			}
+		}
+
+		protected void DrawRoundButton(Graphics graphics, Point center, double radius, string text, bool hilited, bool shadow)
+		{
+			//	Dessine un bouton circulaire avec un texte (généralement une seule lettre).
+			this.DrawRoundButton(graphics, center, radius, text, hilited, shadow, true);
+		}
+
+		protected void DrawRoundButton(Graphics graphics, Point center, double radius, string text, bool hilited, bool shadow, bool enable)
+		{
+			//	Dessine un bouton circulaire avec un texte (généralement une seule lettre).
+			this.DrawRoundButton(graphics, center, radius, hilited, shadow, enable);
+
+			if (!string.IsNullOrEmpty(text))
+			{
+				Color colorShape;
+				if (enable)
+				{
+					colorShape = hilited ? Color.FromBrightness(1) : Color.FromBrightness(0);
+				}
+				else
+				{
+					colorShape = Color.FromBrightness(0.7);
+				}
+
+				Rectangle rect = new Rectangle(center.X-radius, center.Y-radius, radius*2, radius*2);
+				graphics.AddText(rect.Left, rect.Bottom+1, rect.Width, rect.Height, text, Font.GetFont(Font.DefaultFontFamily, "Bold"), 14, ContentAlignment.MiddleCenter);
+				graphics.RenderSolid(colorShape);
+			}
+		}
+
+		protected void DrawRoundButton(Graphics graphics, Point center, double radius, bool hilited, bool shadow, bool enable)
+		{
+			//	Dessine un bouton circulaire vide.
 			if (shadow)
 			{
-				rect = new Rectangle(center.X-radius, center.Y-radius, radius*2, radius*2);
+				Rectangle rect = new Rectangle(center.X-radius, center.Y-radius, radius*2, radius*2);
 				rect.Inflate(radius*0.2);
 				rect.Offset(0, -radius*0.7);
 				this.DrawShadow(graphics, rect, rect.Width/2, (int) (radius*0.7), 0.5);
@@ -189,12 +238,6 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 			graphics.AddCircle(center, radius);
 			graphics.RenderSolid(colorFrame);
-
-			if (shape != GlyphShape.None)
-			{
-				rect = new Rectangle(center.X-radius, center.Y-radius, radius*2, radius*2);
-				adorner.PaintGlyph(graphics, rect, WidgetPaintState.Enabled, colorShape, shape, PaintTextStyle.Button);
-			}
 		}
 
 		protected void DrawShadow(Graphics graphics, Rectangle rect, double radius, int smooth, double alpha)

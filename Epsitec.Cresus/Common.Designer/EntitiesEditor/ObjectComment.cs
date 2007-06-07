@@ -245,11 +245,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				graphics.AddRectangle(rect);
 				graphics.RenderSolid(Color.FromBrightness(0));
 
-				if (!this.isDraggingMove && !this.isDraggingSize)
-				{
-					graphics.AddText(rect.Left, rect.Bottom, rect.Width-rect.Height, rect.Height, "Commentaire", Font.GetFont(Font.DefaultFontFamily, "Bold"), 12, ContentAlignment.MiddleCenter);
-					graphics.RenderSolid(Color.FromBrightness(1));
-				}
+				graphics.AddText(rect.Left, rect.Bottom+1, rect.Width-rect.Height, rect.Height, "Commentaire", Font.GetFont(Font.DefaultFontFamily, "Bold"), 14, ContentAlignment.MiddleCenter);
+				graphics.RenderSolid(Color.FromBrightness(1));
 
 				//	Dessine le bouton de fermeture.
 				if (this.hilitedElement == ActiveElement.CommentButton)

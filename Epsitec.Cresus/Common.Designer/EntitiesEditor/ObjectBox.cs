@@ -1318,11 +1318,11 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			//	Dessine le bouton des commentaires.
 			if (this.hilitedElement == ActiveElement.CommentButton)
 			{
-				this.DrawRoundButton(graphics, this.PositionCommentButton, AbstractObject.buttonRadius, GlyphShape.Dots, true, false);
+				this.DrawRoundButton(graphics, this.PositionCommentButton, AbstractObject.buttonRadius, "C", true, false);
 			}
 			else if (this.IsHeaderHilite && !this.isDragging)
 			{
-				this.DrawRoundButton(graphics, this.PositionCommentButton, AbstractObject.buttonRadius, GlyphShape.Dots, false, false);
+				this.DrawRoundButton(graphics, this.PositionCommentButton, AbstractObject.buttonRadius, "C", false, false);
 			}
 
 			//	Dessine les noms des champs.
@@ -1554,7 +1554,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			Rectangle gr = new Rectangle(this.PositionParentsButton.X-AbstractObject.buttonRadius, this.PositionParentsButton.Y-AbstractObject.buttonRadius, AbstractObject.buttonRadius*2, AbstractObject.buttonRadius*2);
 			adorner.PaintGlyph(graphics, gr, WidgetPaintState.Enabled, Color.FromBrightness(1), GlyphShape.TriangleDown, PaintTextStyle.Button);
 			
-			graphics.AddText(rect.Left+AbstractObject.buttonRadius*2+5, rect.Bottom, rect.Width-(AbstractObject.buttonRadius*2+10), rect.Height, "Entités parentes", Font.GetFont(Font.DefaultFontFamily, "Bold"), 12, ContentAlignment.MiddleLeft);
+			graphics.AddText(rect.Left+AbstractObject.buttonRadius*2+5, rect.Bottom+1, rect.Width-(AbstractObject.buttonRadius*2+10), rect.Height, "Entités parentes", Font.GetFont(Font.DefaultFontFamily, "Bold"), 14, ContentAlignment.MiddleLeft);
 			graphics.RenderSolid(Color.FromBrightness(1));
 			
 			rect = box;
