@@ -55,6 +55,7 @@
     <Compile Include="Dialogs\Open.cs" />
     <Compile Include="Dialogs\Icon.cs" />
     <Compile Include="EntitiesEditor\AbstractObject.cs" />
+    <Compile Include="EntitiesEditor\ObjectComment.cs" />
     <Compile Include="EntitiesEditor\Field.cs" />
     <Compile Include="EntitiesEditor\ObjectBox.cs" />
     <Compile Include="EntitiesEditor\ObjectConnection.cs" />

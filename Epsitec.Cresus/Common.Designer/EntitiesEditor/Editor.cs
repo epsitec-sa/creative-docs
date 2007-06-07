@@ -19,6 +19,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			Grid,
 			Move,
 			Hand,
+			IBeam,
 		}
 
 		protected enum PushDirection
@@ -35,6 +36,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		{
 			this.boxes = new List<ObjectBox>();
 			this.connections = new List<ObjectConnection>();
+			this.comments = new List<ObjectComment>();
 			this.zoom = 1;
 			this.areaOffset = Point.Zero;
 		}
@@ -141,11 +143,18 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			this.connections.Add(connection);
 		}
 
+		public void AddComment(ObjectComment comment)
+		{
+			//	Ajoute une nouvelle liaison dans l'éditeur.
+			this.comments.Add(comment);
+		}
+
 		public void Clear()
 		{
 			//	Supprime toutes les boîtes et toutes les liaisons de l'éditeur.
 			this.boxes.Clear();
 			this.connections.Clear();
+			this.comments.Clear();
 		}
 
 
@@ -219,6 +228,14 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			//	Met à jour la géométrie de toutes les boîtes et de toutes les liaisons.
 			this.UpdateBoxes();
 			this.UpdateConnections();
+		}
+
+		public void UpdateAfterCommentChanged()
+		{
+			//	Appelé lorsqu'un commentaire a changé.
+			this.RedimArea();
+			this.UpdateConnections();
+			this.RedimArea();
 		}
 
 		public void UpdateAfterGeometryChanged(ObjectBox box)
@@ -502,7 +519,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 			if (box != null)
 			{
-				this.boxes.Remove(box);  // supprime la boîte demandée
+				this.CloseOneBox(box);  // supprime la boîte demandée
 				this.CloseConnections(box);  // supprime ses connections
 			}
 
@@ -520,7 +537,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					}
 					else  // boîte isolée ?
 					{
-						this.boxes.RemoveAt(i);  // supprime la boîte isolée
+						this.CloseOneBox(box);  // supprime la boîte isolée
 						this.CloseConnections(box);  // supprime ses connections
 						removed = true;
 					}
@@ -529,6 +546,17 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			while (removed);  // recommence tant qu'on a détruit quelque chose
 
 			this.UpdateAfterOpenOrCloseBox();
+		}
+
+		protected void CloseOneBox(ObjectBox box)
+		{
+			if (box.Comment != null)
+			{
+				this.comments.Remove(box.Comment);
+				box.Comment = null;
+			}
+
+			this.boxes.Remove(box);  // supprime la boîte demandée
 		}
 
 		protected bool IsConnectedToRoot(ObjectBox searchingBox)
@@ -727,6 +755,11 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				bounds = Rectangle.Union(bounds, connection.Bounds);
 			}
 
+			foreach (ObjectComment comment in this.comments)
+			{
+				bounds = Rectangle.Union(bounds, comment.Bounds);
+			}
+
 			return bounds;
 		}
 
@@ -836,6 +869,16 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			{
 				AbstractObject fly = null;
 
+				for (int i=this.comments.Count-1; i>=0; i--)
+				{
+					AbstractObject obj = this.comments[i];
+					if (obj.MouseMove(pos))
+					{
+						fly = obj;
+						pos = Point.Zero;  // si on était dans cet objet -> plus aucun hilite pour les objets placés dessous
+					}
+				}
+
 				for (int i=this.connections.Count-1; i>=0; i--)
 				{
 					AbstractObject obj = this.connections[i];
@@ -884,6 +927,14 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 							 fly.HilitedElement == AbstractObject.ActiveElement.FieldTypeSelect)
 					{
 						this.ChangeMouseCursor(MouseCursorType.Grid);
+					}
+					else if (fly.HilitedElement == AbstractObject.ActiveElement.CommentEdit)
+					{
+						this.ChangeMouseCursor(MouseCursorType.IBeam);
+					}
+					else if (fly.HilitedElement == AbstractObject.ActiveElement.CommentMove)
+					{
+						this.ChangeMouseCursor(MouseCursorType.Move);
 					}
 					else
 					{
@@ -939,6 +990,16 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		{
 			//	Détecte l'objet visé par la souris.
 			//	L'objet à l'avant-plan a la priorité.
+			for (int i=this.comments.Count-1; i>=0; i--)
+			{
+				ObjectComment comment = this.comments[i];
+
+				if (comment.IsReadyForAction)
+				{
+					return comment;
+				}
+			}
+
 			for (int i=this.connections.Count-1; i>=0; i--)
 			{
 				ObjectConnection connection = this.connections[i];
@@ -998,7 +1059,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			colorOver.A = 0.3;
 			graphics.RenderSolid(colorOver);
 
-			//	Dessine tous les objets.
+			//	Dessine l'arrière-plan de tous les objets.
 			foreach (AbstractObject obj in this.boxes)
 			{
 				obj.DrawBackground(graphics);
@@ -1009,12 +1070,23 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				obj.DrawBackground(graphics);
 			}
 
+			foreach (AbstractObject obj in this.comments)
+			{
+				obj.DrawBackground(graphics);
+			}
+
+			//	Dessine l'avant plan tous les objets.
 			foreach (AbstractObject obj in this.boxes)
 			{
 				obj.DrawForeground(graphics);
 			}
 
 			foreach (AbstractObject obj in this.connections)
+			{
+				obj.DrawForeground(graphics);
+			}
+
+			foreach (AbstractObject obj in this.comments)
 			{
 				obj.DrawForeground(graphics);
 			}
@@ -1056,6 +1128,10 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 				case MouseCursorType.Hand:
 					this.SetMouseCursorImage(ref this.mouseCursorHand, Misc.Icon("CursorHand"));
+					break;
+
+				case MouseCursorType.IBeam:
+					this.MouseCursor = MouseCursor.AsIBeam;
 					break;
 
 				default:
@@ -1155,6 +1231,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		protected Module module;
 		protected List<ObjectBox> boxes;
 		protected List<ObjectConnection> connections;
+		protected List<ObjectComment> comments;
 		protected Size areaSize;
 		protected double zoom;
 		protected Point areaOffset;

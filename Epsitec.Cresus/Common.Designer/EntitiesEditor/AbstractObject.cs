@@ -35,6 +35,10 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			ConnectionChangeRelation,
 			ConnectionMove1,
 			ConnectionMove2,
+			CommentEdit,
+			CommentMove,
+			CommentSize,
+			CommentClose,
 		}
 
 
@@ -335,6 +339,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		protected static readonly double lengthClose = 30;
 		protected static readonly double arrowLength = 12;
 		protected static readonly double arrowAngle = 25;
+		protected static readonly double commentMinWidth = 120;
+		protected static readonly double commentMinHeight = 20;
 
 		protected Editor editor;
 		protected ActiveElement hilitedElement;

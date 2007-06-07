@@ -84,6 +84,19 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			this.UpdateParents();
 		}
 
+		public ObjectComment Comment
+		{
+			//	Commentaire lié.
+			get
+			{
+				return this.comment;
+			}
+			set
+			{
+				this.comment = value;
+			}
+		}
+
 		public override Rectangle Bounds
 		{
 			//	Retourne la boîte de l'objet.
@@ -97,7 +110,17 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		public void SetBounds(Rectangle bounds)
 		{
 			//	Modifie la boîte de l'objet.
+			Point p1 = this.bounds.TopLeft;
 			this.bounds = bounds;
+			Point p2 = this.bounds.TopLeft;
+
+			//	S'il existe un commentaire associé, il doit aussi être déplacé.
+			if (this.comment != null)
+			{
+				Rectangle rect = this.comment.InternalBounds;
+				rect.Offset(p2-p1);
+				this.comment.SetBounds(rect);
+			}
 		}
 
 		public List<Field> Fields
@@ -326,11 +349,11 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		public override void MouseDown(Point pos)
 		{
 			//	Le bouton de la souris est pressé.
-			if (this.isParentsMenu)
+			if (this.isParentsMenu)  // menu resté du clic précédent ?
 			{
-				if (this.parentsMenuSelected == -1)
+				if (this.parentsMenuSelected == -1)  // clic en dehors ?
 				{
-					this.isParentsMenu = false;
+					this.isParentsMenu = false;  // ferme le menu
 					this.editor.LockObject(null);
 					this.editor.Invalidate();
 				}
@@ -410,10 +433,13 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				{
 					ParentInfo info = this.GetParentInfo(this.parentsMenuSelected);
 					this.OpenParent(info.CultureMap, info.Rank);
-					this.isParentsMenu = false;
+
+					this.isParentsMenu = false;  // ferme le menu
 					this.editor.LockObject(null);
 					this.editor.Invalidate();
 				}
+				//	Si on est pas dans une case valide (par exemple si on a cliqué sans bouger
+				//	dans l'en-tête), le menu reste.
 			}
 			else
 			{
@@ -451,6 +477,11 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				if (this.hilitedElement == ActiveElement.FieldTypeSelect)
 				{
 					this.ChangeFieldType(this.hilitedFieldRank);
+				}
+
+				if (this.hilitedElement == ActiveElement.CommentButton)
+				{
+					this.AddComment();
 				}
 			}
 		}
@@ -993,6 +1024,30 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 
 			return false;
+		}
+
+
+		protected void AddComment()
+		{
+			//	Ajoute un commentaire à la boîte.
+			if (this.comment == null)
+			{
+				this.comment = new ObjectComment(this.editor);
+				this.comment.Box = this;
+
+				Rectangle rect = this.bounds;
+				rect.Width = System.Math.Max(rect.Width, AbstractObject.commentMinWidth);
+				rect.Bottom = rect.Top+20;
+				rect.Height = 50;
+				this.comment.SetBounds(rect);
+
+				this.editor.AddComment(comment);
+				this.editor.UpdateAfterCommentChanged();
+			}
+			else
+			{
+				this.comment.IsVisible = !this.comment.IsVisible;
+			}
 		}
 
 
@@ -1691,6 +1746,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		protected static readonly double parentsMenuHeight = 20;
 
 		protected CultureMap cultureMap;
+		protected ObjectComment comment;
 		protected Rectangle bounds;
 		protected double columnsSeparatorRelative;
 		protected bool isRoot;
