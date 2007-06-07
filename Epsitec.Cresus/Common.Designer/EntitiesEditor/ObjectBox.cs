@@ -326,6 +326,17 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		public override void MouseDown(Point pos)
 		{
 			//	Le bouton de la souris est pressé.
+			if (this.isParentsMenu)
+			{
+				if (this.parentsMenuSelected == -1)
+				{
+					this.isParentsMenu = false;
+					this.editor.LockObject(null);
+					this.editor.Invalidate();
+				}
+				return;
+			}
+
 			if (this.hilitedElement == ActiveElement.HeaderDragging && this.editor.BoxCount > 1)
 			{
 				this.isDragging = true;
@@ -399,11 +410,10 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				{
 					ParentInfo info = this.GetParentInfo(this.parentsMenuSelected);
 					this.OpenParent(info.CultureMap, info.Rank);
+					this.isParentsMenu = false;
+					this.editor.LockObject(null);
+					this.editor.Invalidate();
 				}
-
-				this.isParentsMenu = false;
-				this.editor.LockObject(null);
-				this.editor.Invalidate();
 			}
 			else
 			{
