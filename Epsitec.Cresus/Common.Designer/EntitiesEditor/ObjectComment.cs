@@ -210,15 +210,6 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 			
 			Rectangle rect;
-
-			//	Dessine la liaison.
-			Point p1, p2;
-			this.GetBoxAttach(out p1, out p2);
-			Path path = new Path();
-			path.MoveTo(p1);
-			path.LineTo(p2);
-			Misc.DrawPathDash(graphics, path, 2, 0, 4, Color.FromBrightness(0));
-
 			Rectangle rh = Rectangle.Empty;
 			if (this.hilitedElement != ActiveElement.None)
 			{
@@ -247,16 +238,6 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 				graphics.AddText(rect.Left, rect.Bottom+1, rect.Width-rect.Height, rect.Height, "Commentaire", Font.GetFont(Font.DefaultFontFamily, "Bold"), 14, ContentAlignment.MiddleCenter);
 				graphics.RenderSolid(Color.FromBrightness(1));
-
-				//	Dessine le bouton de fermeture.
-				if (this.hilitedElement == ActiveElement.CommentButton)
-				{
-					this.DrawRoundButton(graphics, this.PositionCloseButton, AbstractObject.buttonRadius, GlyphShape.Close, true, false);
-				}
-				else if (this.IsHeaderHilite && !this.isDraggingMove && !this.isDraggingSize)
-				{
-					this.DrawRoundButton(graphics, this.PositionCloseButton, AbstractObject.buttonRadius, GlyphShape.Close, false, false);
-				}
 			}
 
 			//	Dessine la boîte vide.
@@ -272,6 +253,34 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			rect.Deflate(5);
 			this.textLayout.LayoutSize = rect.Size;
 			this.textLayout.Paint(rect.BottomLeft, graphics, Rectangle.MaxValue, Color.FromBrightness(0), GlyphPaintStyle.Normal);
+
+			//	Dessine la liaison.
+			Point p1, p2;
+			this.GetBoxAttach(out p1, out p2);
+			if (!p1.IsZero)
+			{
+				Path path = new Path();
+				path.MoveTo(p1);
+				path.LineTo(p2);
+				Misc.DrawPathDash(graphics, path, 1, 4, 4, Color.FromBrightness(0));
+
+				graphics.AddFilledCircle(p1, 3);
+				graphics.AddFilledCircle(p2, 3);
+				graphics.RenderSolid(Color.FromBrightness(0));
+			}
+
+			//	Dessine le bouton de fermeture.
+			if (!rh.IsEmpty)
+			{
+				if (this.hilitedElement == ActiveElement.CommentButton)
+				{
+					this.DrawRoundButton(graphics, this.PositionCloseButton, AbstractObject.buttonRadius, GlyphShape.Close, true, false);
+				}
+				else if (this.IsHeaderHilite && !this.isDraggingMove && !this.isDraggingSize)
+				{
+					this.DrawRoundButton(graphics, this.PositionCloseButton, AbstractObject.buttonRadius, GlyphShape.Close, false, false);
+				}
+			}
 
 			//	Dessine le bouton pour modifier la taille.
 			if (this.hilitedElement == ActiveElement.CommentSize)
@@ -298,17 +307,28 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		protected void GetBoxAttach(out Point p1, out Point p2)
 		{
 			//	Retourne les points pour attacher le commentaire à sa boîte.
-			Point cc = Point.Scale(this.bounds.TopLeft, this.bounds.BottomRight, 0.25);
-			Point ct = new Point(cc.X, this.bounds.Top);
-			Point cb = new Point(cc.X, this.bounds.Bottom);
-			Point cl = new Point(this.bounds.Left, cc.Y);
-			Point cr = new Point(this.bounds.Right, cc.Y);
+			if (this.box.Bounds.IntersectsWith(this.bounds))
+			{
+				p1 = Point.Zero;
+				p2 = Point.Zero;
+				return;
+			}
 
-			Point bc = Point.Scale(this.box.Bounds.TopLeft, this.box.Bounds.BottomRight, 0.25);
-			Point bt = new Point(bc.X, this.box.Bounds.Top);
-			Point bb = new Point(bc.X, this.box.Bounds.Bottom);
-			Point bl = new Point(this.box.Bounds.Left, bc.Y);
-			Point br = new Point(this.box.Bounds.Right, bc.Y);
+			Point cx = Point.Move(this.bounds.TopLeft, this.bounds.TopRight, AbstractObject.headerHeight);
+			Point cy = Point.Move(this.bounds.TopLeft, this.bounds.BottomLeft, AbstractObject.headerHeight/2+6);
+			Point ct = new Point(cx.X, this.bounds.Top);
+			Point cb = new Point(cx.X, this.bounds.Bottom);
+			Point cl = new Point(this.bounds.Left, cy.Y);
+			Point cr = new Point(this.bounds.Right, cy.Y);
+
+			Rectangle bounds = this.box.Bounds;
+			bounds.Deflate(1);
+			Point bx = Point.Move(bounds.TopLeft, bounds.TopRight, AbstractObject.headerHeight);
+			Point by = Point.Move(bounds.TopLeft, bounds.BottomLeft, AbstractObject.headerHeight/2+6);
+			Point bt = new Point(bx.X, bounds.Top);
+			Point bb = new Point(bx.X, bounds.Bottom);
+			Point bl = new Point(bounds.Left, by.Y);
+			Point br = new Point(bounds.Right, by.Y);
 
 			double dt = Point.Distance(ct, bb);
 			double db = Point.Distance(cb, bt);
@@ -388,7 +408,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		}
 
 
-		protected static readonly double commentHeaderHeight = 26;
+		protected static readonly double commentHeaderHeight = 24;
 
 		protected Rectangle bounds;
 		protected ObjectBox box;
