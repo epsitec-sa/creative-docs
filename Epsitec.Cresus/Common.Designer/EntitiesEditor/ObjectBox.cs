@@ -1038,9 +1038,9 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				Rectangle rect = this.bounds;
 				rect.Width = System.Math.Max(rect.Width, AbstractObject.commentMinWidth);
 				rect.Bottom = rect.Top+20;
-				rect.Height = 50;
+				rect.Height = 50;  // hauteur arbitraire
 				this.comment.SetBounds(rect);
-				this.comment.UpdateHeight();
+				this.comment.UpdateHeight();  // adapte la hauteur en fonction du contenu
 
 				this.editor.AddComment(comment);
 				this.editor.UpdateAfterCommentChanged();

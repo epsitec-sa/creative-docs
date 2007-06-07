@@ -26,8 +26,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			this.isVisible = true;
 			this.textLayout = new TextLayout();
 			this.textLayout.DefaultFontSize = 10;
-			//?this.textLayout.Alignment = ContentAlignment.TopLeft;
-			this.textLayout.BreakMode = TextBreakMode.Ellipsis | TextBreakMode.Hyphenate;
+			this.textLayout.BreakMode = TextBreakMode.Hyphenate;
 			this.textLayout.Text = "Commentaire libre, que vous pouvez modifier à volonté.";
 		}
 
@@ -327,7 +326,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			//	Dessine le bouton de fermeture.
 			if (!rh.IsEmpty)
 			{
-				if (this.hilitedElement == ActiveElement.CommentButton)
+				if (this.hilitedElement == ActiveElement.CommentClose)
 				{
 					this.DrawRoundButton(graphics, this.PositionCloseButton, AbstractObject.buttonRadius, GlyphShape.Close, true, false);
 				}
