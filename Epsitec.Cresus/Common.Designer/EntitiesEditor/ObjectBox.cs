@@ -1040,6 +1040,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				rect.Bottom = rect.Top+20;
 				rect.Height = 50;
 				this.comment.SetBounds(rect);
+				this.comment.UpdateHeight();
 
 				this.editor.AddComment(comment);
 				this.editor.UpdateAfterCommentChanged();

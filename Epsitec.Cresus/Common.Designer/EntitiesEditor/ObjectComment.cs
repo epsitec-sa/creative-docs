@@ -11,12 +11,22 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 	/// </summary>
 	public class ObjectComment : AbstractObject
 	{
+		protected enum AttachMode
+		{
+			None,
+			Left,
+			Right,
+			Bottom,
+			Top,
+		}
+
+
 		public ObjectComment(Editor editor) : base(editor)
 		{
 			this.isVisible = true;
 			this.textLayout = new TextLayout();
 			this.textLayout.DefaultFontSize = 10;
-			this.textLayout.Alignment = ContentAlignment.MiddleLeft;
+			//?this.textLayout.Alignment = ContentAlignment.TopLeft;
 			this.textLayout.BreakMode = TextBreakMode.Ellipsis | TextBreakMode.Hyphenate;
 			this.textLayout.Text = "Commentaire libre, que vous pouvez modifier à volonté.";
 		}
@@ -98,11 +108,11 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			{
 				Rectangle bounds = this.bounds;
 
-				bounds.BottomRight = pos;
-				bounds.Right = System.Math.Max(bounds.Right, bounds.Left+AbstractObject.commentMinWidth);
-				bounds.Bottom = System.Math.Min(bounds.Bottom, bounds.Top-AbstractObject.commentMinHeight);
+				bounds.Right = pos.X;
+				bounds.Width = System.Math.Max(bounds.Width, AbstractObject.commentMinWidth);
 
 				this.SetBounds(bounds);
+				this.UpdateHeight();
 				this.editor.Invalidate();
 				return true;
 			}
@@ -210,9 +220,35 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			if (text != null)
 			{
 				this.textLayout.Text = text;
-				this.editor.Invalidate();
+				this.UpdateHeight();
+				this.editor.UpdateAfterCommentChanged();
 			}
 		}
+
+		public void UpdateHeight()
+		{
+			//	Adapte la hauteur du commentaire en fonction de sa largeur et du contenu.
+			Rectangle rect = this.bounds;
+			rect.Deflate(ObjectComment.textMargin);
+			this.textLayout.LayoutSize = rect.Size;
+
+			double h = System.Math.Floor(this.textLayout.FindTextHeight()+1);
+			h += ObjectComment.textMargin*2;
+
+			Point p1, p2;
+			AttachMode mode;
+			this.GetBoxAttach(out p1, out p2, out mode);
+
+			if (mode == AttachMode.Bottom)
+			{
+				this.bounds.Height = h;
+			}
+			else
+			{
+				this.bounds.Bottom = this.bounds.Top-h;
+			}
+		}
+
 
 		public override void DrawBackground(Graphics graphics)
 		{
@@ -268,13 +304,14 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 			//	Dessine le texte.
 			rect = this.bounds;
-			rect.Deflate(5);
+			rect.Deflate(ObjectComment.textMargin);
 			this.textLayout.LayoutSize = rect.Size;
 			this.textLayout.Paint(rect.BottomLeft, graphics, Rectangle.MaxValue, Color.FromBrightness(0), GlyphPaintStyle.Normal);
 
 			//	Dessine la liaison.
 			Point p1, p2;
-			this.GetBoxAttach(out p1, out p2);
+			AttachMode mode;
+			this.GetBoxAttach(out p1, out p2, out mode);
 			if (!p1.IsZero)
 			{
 				Path path = new Path();
@@ -322,27 +359,28 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 		}
 
-		protected void GetBoxAttach(out Point p1, out Point p2)
+		protected void GetBoxAttach(out Point p1, out Point p2, out AttachMode mode)
 		{
 			//	Retourne les points pour attacher le commentaire à sa boîte.
 			if (this.box.Bounds.IntersectsWith(this.bounds))
 			{
 				p1 = Point.Zero;
 				p2 = Point.Zero;
+				mode = AttachMode.None;
 				return;
 			}
 
 			Point cx = Point.Move(this.bounds.TopLeft, this.bounds.TopRight, AbstractObject.headerHeight);
-			Point cy = Point.Move(this.bounds.TopLeft, this.bounds.BottomLeft, AbstractObject.headerHeight/2+6);
+			Point cy = Point.Move(this.bounds.TopLeft, this.bounds.BottomLeft, ObjectComment.textMargin+8);
 			Point ct = new Point(cx.X, this.bounds.Top);
 			Point cb = new Point(cx.X, this.bounds.Bottom);
 			Point cl = new Point(this.bounds.Left, cy.Y);
 			Point cr = new Point(this.bounds.Right, cy.Y);
 
 			Rectangle bounds = this.box.Bounds;
-			bounds.Deflate(1);
 			Point bx = Point.Move(bounds.TopLeft, bounds.TopRight, AbstractObject.headerHeight);
-			Point by = Point.Move(bounds.TopLeft, bounds.BottomLeft, AbstractObject.headerHeight/2+6);
+			Point by = Point.Move(bounds.TopLeft, bounds.BottomLeft, AbstractObject.headerHeight/2+8);
+			bounds.Deflate(this.box.IsRoot ? -1 : 1);
 			Point bt = new Point(bx.X, bounds.Top);
 			Point bb = new Point(bx.X, bounds.Bottom);
 			Point bl = new Point(bounds.Left, by.Y);
@@ -359,21 +397,25 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			{
 				p1 = ct;
 				p2 = bb;
+				mode = AttachMode.Top;
 			}
 			else if (min == db)
 			{
 				p1 = cb;
 				p2 = bt;
+				mode = AttachMode.Bottom;
 			}
 			else if (min == dl)
 			{
 				p1 = cl;
 				p2 = br;
+				mode = AttachMode.Left;
 			}
 			else
 			{
 				p1 = cr;
 				p2 = bl;
+				mode = AttachMode.Right;
 			}
 		}
 
@@ -427,6 +469,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 
 		protected static readonly double commentHeaderHeight = 24;
+		protected static readonly double textMargin = 5;
 
 		protected Rectangle bounds;
 		protected ObjectBox box;

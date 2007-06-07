@@ -2404,6 +2404,21 @@ namespace Epsitec.Common.Widgets
 			return pos;
 		}
 		
+		public double FindTextHeight()
+		{
+			//	Retourne la hauteur nécessaire pour le texte.
+			this.UpdateLayout();
+
+			if ( this.blocks.Count == 0 )
+			{
+				return 0;
+			}
+
+			JustifBlock fb = (JustifBlock)this.blocks[0];
+			JustifBlock lb = (JustifBlock)this.blocks[this.blocks.Count-1];
+			return (fb.Pos.Y+fb.Font.Ascender*fb.FontSize) - (lb.Pos.Y+lb.Font.Descender*lb.FontSize);
+		}
+		
 		
 #if false
 		public int AdvanceTag(int offset)
