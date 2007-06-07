@@ -241,7 +241,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				rect = rh;
 				rect.Inflate(0.5);
 				graphics.AddFilledRectangle(rect);
-				graphics.RenderSolid(this.ColorCommentHeader(this.isDraggingMove || this.isDraggingSize));
+				graphics.RenderSolid(this.ColorCommentHeader(this.hilitedElement == ActiveElement.CommentMove, this.isDraggingMove || this.isDraggingSize));
 				graphics.AddRectangle(rect);
 				graphics.RenderSolid(Color.FromBrightness(0));
 
@@ -371,11 +371,15 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 		}
 
-		protected Color ColorCommentHeader(bool dragging)
+		protected Color ColorCommentHeader(bool hilited, bool dragging)
 		{
 			if (dragging)
 			{
-				return Color.FromAlphaRgb(0.4, 172.0/255.0, 146.0/255.0, 0.0/255.0);
+				return Color.FromAlphaRgb(0.4, 124.0/255.0, 105.0/255.0, 0.0/255.0);
+			}
+			else if (hilited)
+			{
+				return Color.FromRgb(124.0/255.0, 105.0/255.0, 0.0/255.0);
 			}
 			else
 			{
