@@ -527,7 +527,10 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					}
 					else
 					{
-						return Point.Scale(this.points[0], this.points[1], this.field.RouteRelativeAX1);
+						if (Point.Distance(this.points[0], this.points[1]) >= 60)
+						{
+							return Point.Scale(this.points[0], this.points[1], this.field.RouteRelativeAX1);
+						}
 					}
 				}
 
@@ -539,13 +542,19 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					}
 					else
 					{
-						return this.points[1];
+						if (Point.Distance(this.points[0], this.points[1]) >= 60 && Point.Distance(this.points[1], this.points[2]) >= 60)
+						{
+							return this.points[1];
+						}
 					}
 				}
 
 				if (this.field.Route == Field.RouteType.C)
 				{
-					return this.points[1];
+					if (Point.Distance(this.points[0], this.points[3]) >= 60)
+					{
+						return this.points[1];
+					}
 				}
 
 				if (this.field.Route == Field.RouteType.D)
@@ -570,7 +579,10 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					}
 					else
 					{
-						return Point.Scale(this.points[0], this.points[1], this.field.RouteRelativeAX2);
+						if (Point.Distance(this.points[0], this.points[1]) >= 60)
+						{
+							return Point.Scale(this.points[0], this.points[1], this.field.RouteRelativeAX2);
+						}
 					}
 				}
 
