@@ -208,6 +208,11 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				this.editor.UpdateAfterMoving(null);
 			}
 
+			if (this.hilitedElement == ActiveElement.ConnectionComment)
+			{
+				this.AddComment();
+			}
+
 			if (this.hilitedElement == ActiveElement.ConnectionChangeRelation)
 			{
 				ObjectBox box = this.field.SrcBox;
@@ -273,6 +278,14 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				}
 			}
 
+			//	Souris dans le bouton pour commenter la connection.
+			Point p = this.PositionConnectionComment;
+			if (!p.IsZero && this.DetectRoundButton(pos, p))
+			{
+				element = ActiveElement.ConnectionComment;
+				return true;
+			}
+
 			//	Souris dans le bouton pour déplacer le point milieu ?
 			Point m = this.PositionRouteMove1;
 			if (!m.IsZero && this.DetectRoundButton(pos, m))
@@ -289,7 +302,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 
 			//	Souris dans le bouton pour changer la connection ?
-			Point p = this.PositionChangeRelation;
+			p = this.PositionChangeRelation;
 			if (!p.IsZero && (this.field.IsExplored || this.field.IsSourceExpanded) && this.DetectRoundButton(pos, p))
 			{
 				element = ActiveElement.ConnectionChangeRelation;
@@ -334,6 +347,29 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		}
 
 
+		protected void AddComment()
+		{
+			//	Ajoute un commentaire à la connection.
+			if (this.field.Comment == null)
+			{
+				this.field.Comment = new ObjectComment(this.editor);
+				this.field.Comment.AttachObject = this;
+
+				Point attach = this.PositionConnectionComment;
+				Rectangle rect = new Rectangle(attach.X, attach.Y+20, Editor.defaultWidth, 50);  // hauteur arbitraire
+				this.field.Comment.SetBounds(rect);
+				this.field.Comment.UpdateHeight();  // adapte la hauteur en fonction du contenu
+
+				this.editor.AddComment(this.field.Comment);
+				this.editor.UpdateAfterCommentChanged();
+			}
+			else
+			{
+				this.field.Comment.IsVisible = !this.field.Comment.IsVisible;
+			}
+		}
+
+		
 		public override void DrawBackground(Graphics graphics)
 		{
 			//	Dessine l'objet.
@@ -445,6 +481,20 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				}
 			}
 
+			//	Dessine le bouton pour commenter la connection.
+			Point p = this.PositionConnectionComment;
+			if (!p.IsZero)
+			{
+				if (this.hilitedElement == ActiveElement.ConnectionComment)
+				{
+					this.DrawRoundButton(graphics, p, AbstractObject.buttonRadius, "C", true, false);
+				}
+				if (this.hilitedElement == ActiveElement.ConnectionHilited)
+				{
+					this.DrawRoundButton(graphics, p, AbstractObject.buttonRadius, "C", false, false);
+				}
+			}
+
 			//	Dessine le bouton pour déplacer le point milieu.
 			Point m = this.PositionRouteMove1;
 			if (!m.IsZero)
@@ -478,7 +528,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				if (this.hilitedElement == ActiveElement.ConnectionHilited ||
 					this.hilitedElement == ActiveElement.ConnectionChangeRelation)
 				{
-					Point p = this.PositionChangeRelation;
+					p = this.PositionChangeRelation;
 					if (!p.IsZero)
 					{
 						if (this.hilitedElement == ActiveElement.ConnectionChangeRelation)
@@ -494,6 +544,20 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 		}
 
+
+		public Point PositionConnectionComment
+		{
+			//	Retourne la position du bouton pour commenter la connection.
+			get
+			{
+				if (this.field.IsSourceExpanded && this.field.IsExplored && this.points.Count >= 2)
+				{
+					return Point.Move(this.points[0], this.points[1], AbstractObject.buttonRadius*2);
+				}
+
+				return Point.Zero;
+			}
+		}
 
 		protected Point PositionChangeRelation
 		{
@@ -527,7 +591,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					}
 					else
 					{
-						if (Point.Distance(this.points[0], this.points[1]) >= 60)
+						if (Point.Distance(this.points[0], this.points[1]) >= 75)
 						{
 							return Point.Scale(this.points[0], this.points[1], this.field.RouteRelativeAX1);
 						}
@@ -542,7 +606,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					}
 					else
 					{
-						if (Point.Distance(this.points[0], this.points[1]) >= 60 && Point.Distance(this.points[1], this.points[2]) >= 60)
+						if (Point.Distance(this.points[0], this.points[1]) >= 50 && Point.Distance(this.points[1], this.points[2]) >= 50)
 						{
 							return this.points[1];
 						}
@@ -551,7 +615,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 				if (this.field.Route == Field.RouteType.C)
 				{
-					if (Point.Distance(this.points[0], this.points[3]) >= 60)
+					if (Point.Distance(this.points[0], this.points[3]) >= 75)
 					{
 						return this.points[1];
 					}
@@ -579,7 +643,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					}
 					else
 					{
-						if (Point.Distance(this.points[0], this.points[1]) >= 60)
+						if (Point.Distance(this.points[0], this.points[1]) >= 75)
 						{
 							return Point.Scale(this.points[0], this.points[1], this.field.RouteRelativeAX2);
 						}

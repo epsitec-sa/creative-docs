@@ -286,6 +286,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		public void UpdateConnections()
 		{
 			//	Met à jour la géométrie de toutes les liaisons.
+			this.CommentsMemorise();
+
 			foreach (ObjectBox box in this.boxes)
 			{
 				for (int i=0; i<box.Fields.Count; i++)
@@ -315,6 +317,20 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 							}
 						}
 					}
+				}
+			}
+
+			//	Adapte toutes les connections.
+			foreach (ObjectComment comment in this.comments)
+			{
+				if (comment.AttachObject is ObjectConnection)
+				{
+					ObjectConnection connection = comment.AttachObject as ObjectConnection;
+					Point move = connection.PositionConnectionComment - connection.Field.CommentAttach;
+
+					Rectangle rect = comment.Bounds;
+					rect.Offset(move);
+					comment.SetBounds(rect);
 				}
 			}
 
@@ -459,6 +475,26 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		public void CreateConnections()
 		{
 			//	Crée (ou recrée) toutes les liaisons nécessaires.
+			this.CommentsMemorise();
+
+			//	Supprime tous les commentaires liés aux connections.
+			int j = 0;
+			while (j < this.comments.Count)
+			{
+				ObjectComment comment = this.comments[j];
+
+				if (comment.AttachObject is ObjectConnection)
+				{
+					ObjectConnection connection = comment.AttachObject as ObjectConnection;
+					connection.Field.Comment = null;
+					this.comments.RemoveAt(j);
+				}
+				else
+				{
+					j++;
+				}
+			}
+			
 			this.connections.Clear();  // supprime toutes les connections existantes
 
 			foreach (ObjectBox box in this.boxes)
@@ -487,7 +523,45 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				}
 			}
 
+			//	Recrée tous les commentaires liés aux connections.
+			foreach (ObjectConnection connection in this.connections)
+			{
+				if (!connection.Field.CommentAttach.IsZero)
+				{
+					ObjectComment comment = new ObjectComment(this);
+					comment.AttachObject = connection;
+					comment.Text = connection.Field.CommentText;
+
+					Rectangle bounds = connection.Field.CommentBounds;
+					bounds.Offset(-connection.Field.CommentAttach);
+					comment.SetBounds(bounds);
+
+					this.AddComment(comment);
+				}
+			}
+
 			this.Invalidate();
+		}
+
+		protected void CommentsMemorise()
+		{
+			//	Mémorise l'état de tous les commentaires liés à des connections.
+			foreach (ObjectConnection connection in this.connections)
+			{
+				connection.Field.CommentAttach = Point.Zero;
+			}
+
+			foreach (ObjectComment comment in this.comments)
+			{
+				if (comment.AttachObject is ObjectConnection)
+				{
+					ObjectConnection connection = comment.AttachObject as ObjectConnection;
+
+					connection.Field.CommentAttach = connection.PositionConnectionComment;
+					connection.Field.CommentBounds = comment.Bounds;
+					connection.Field.CommentText   = comment.Text;
+				}
+			}
 		}
 
 
@@ -1224,7 +1298,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		#endregion
 
 
-		protected static readonly double defaultWidth = 200;
+		public static readonly double defaultWidth = 200;
 		public static readonly double connectionDetour = 30;
 		public static readonly double pushMargin = 10;
 		protected static readonly double frameMargin = 40;

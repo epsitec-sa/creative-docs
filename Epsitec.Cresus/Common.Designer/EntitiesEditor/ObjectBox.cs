@@ -1033,7 +1033,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			if (this.comment == null)
 			{
 				this.comment = new ObjectComment(this.editor);
-				this.comment.Box = this;
+				this.comment.AttachObject = this;
 
 				Rectangle rect = this.bounds;
 				rect.Width = System.Math.Max(rect.Width, AbstractObject.commentMinWidth);
@@ -1042,7 +1042,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				this.comment.SetBounds(rect);
 				this.comment.UpdateHeight();  // adapte la hauteur en fonction du contenu
 
-				this.editor.AddComment(comment);
+				this.editor.AddComment(this.comment);
 				this.editor.UpdateAfterCommentChanged();
 			}
 			else

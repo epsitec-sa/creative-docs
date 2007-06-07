@@ -31,16 +31,29 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		}
 
 
-		public ObjectBox Box
+		public string Text
 		{
-			//	Boîte liée.
+			//	Texte du commentaire.
 			get
 			{
-				return this.box;
+				return this.textLayout.Text;
 			}
 			set
 			{
-				this.box = value;
+				this.textLayout.Text = value;
+			}
+		}
+
+		public AbstractObject AttachObject
+		{
+			//	Object liée (boîte ou connection).
+			get
+			{
+				return this.attachObject;
+			}
+			set
+			{
+				this.attachObject = value;
 			}
 		}
 
@@ -361,11 +374,12 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		protected void GetBoxAttach(out Point p1, out Point p2, out AttachMode mode)
 		{
 			//	Retourne les points pour attacher le commentaire à sa boîte.
-			if (this.box.Bounds.IntersectsWith(this.bounds))
+			p1 = Point.Zero;
+			p2 = Point.Zero;
+			mode = AttachMode.None;
+
+			if (this.attachObject is ObjectBox && this.attachObject.Bounds.IntersectsWith(this.bounds))
 			{
-				p1 = Point.Zero;
-				p2 = Point.Zero;
-				mode = AttachMode.None;
 				return;
 			}
 
@@ -376,14 +390,28 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			Point cl = new Point(this.bounds.Left, cy.Y);
 			Point cr = new Point(this.bounds.Right, cy.Y);
 
-			Rectangle bounds = this.box.Bounds;
-			Point bx = Point.Move(bounds.TopLeft, bounds.TopRight, AbstractObject.headerHeight);
-			Point by = Point.Move(bounds.TopLeft, bounds.BottomLeft, AbstractObject.headerHeight/2+8);
-			bounds.Deflate(this.box.IsRoot ? -1 : 1);
-			Point bt = new Point(bx.X, bounds.Top);
-			Point bb = new Point(bx.X, bounds.Bottom);
-			Point bl = new Point(bounds.Left, by.Y);
-			Point br = new Point(bounds.Right, by.Y);
+			Point bt, bb, bl, br;
+			if (this.attachObject is ObjectBox)
+			{
+				ObjectBox box = this.attachObject as ObjectBox;
+				Rectangle bounds = box.Bounds;
+				Point bx = Point.Move(bounds.TopLeft, bounds.TopRight, AbstractObject.headerHeight);
+				Point by = Point.Move(bounds.TopLeft, bounds.BottomLeft, AbstractObject.headerHeight/2+8);
+				bounds.Deflate(box.IsRoot ? -1 : 1);
+				bt = new Point(bx.X, bounds.Top);
+				bb = new Point(bx.X, bounds.Bottom);
+				bl = new Point(bounds.Left, by.Y);
+				br = new Point(bounds.Right, by.Y);
+			}
+			else
+			{
+				ObjectConnection connection = this.attachObject as ObjectConnection;
+				bt = bb = bl = br = connection.PositionConnectionComment;
+				if (bt.IsZero)
+				{
+					return;
+				}
+			}
 
 			double dt = Point.Distance(ct, bb);
 			double db = Point.Distance(cb, bt);
@@ -471,7 +499,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		protected static readonly double textMargin = 5;
 
 		protected Rectangle bounds;
-		protected ObjectBox box;
+		protected AbstractObject attachObject;
 		protected bool isVisible;
 		protected TextLayout textLayout;
 

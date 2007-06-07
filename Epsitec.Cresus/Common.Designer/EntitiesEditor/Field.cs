@@ -261,6 +261,59 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		}
 
 
+		public ObjectComment Comment
+		{
+			//	Commentaire lié.
+			get
+			{
+				return this.comment;
+			}
+			set
+			{
+				this.comment = value;
+			}
+		}
+
+		public Point CommentAttach
+		{
+			//	Position où est attaché le commentaire.
+			get
+			{
+				return this.commentAttach;
+			}
+			set
+			{
+				this.commentAttach = value;
+			}
+		}
+
+		public Rectangle CommentBounds
+		{
+			//	Boîte du commentaire.
+			get
+			{
+				return this.commentBounds;
+			}
+			set
+			{
+				this.commentBounds = value;
+			}
+		}
+
+		public string CommentText
+		{
+			//	Texte du commentaire.
+			get
+			{
+				return this.commentText;
+			}
+			set
+			{
+				this.commentText = value;
+			}
+		}
+
+
 		public void RouteClear()
 		{
 			//	Force un routage standard pour la connection.
@@ -462,5 +515,9 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		protected double routeRelativeBY;
 		protected double routeRelativeCX;
 		protected double routeAbsoluteDX;
+		protected ObjectComment comment;
+		protected Point commentAttach;
+		protected Rectangle commentBounds;
+		protected string commentText;
 	}
 }

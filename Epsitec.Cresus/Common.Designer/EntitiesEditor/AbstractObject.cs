@@ -35,6 +35,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			ConnectionChangeRelation,
 			ConnectionMove1,
 			ConnectionMove2,
+			ConnectionComment,
 			CommentEdit,
 			CommentMove,
 			CommentSize,
