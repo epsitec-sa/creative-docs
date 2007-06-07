@@ -7,11 +7,11 @@ using Epsitec.Common.Types;
 namespace Epsitec.Common.Designer.Dialogs
 {
 	/// <summary>
-	/// Dialogue permettant de choisir le nom d'un champ qui va être créé.
+	/// Dialogue permettant d'éditer le texte d'un commentaire dans l'éditeur d'entités.
 	/// </summary>
-	public class FieldName : Abstract
+	public class EntityComment : Abstract
 	{
-		public FieldName(MainWindow mainWindow) : base(mainWindow)
+		public EntityComment(MainWindow mainWindow) : base(mainWindow)
 		{
 		}
 
@@ -22,30 +22,23 @@ namespace Epsitec.Common.Designer.Dialogs
 			{
 				this.window = new Window();
 				this.window.MakeSecondaryWindow();
-				this.window.MakeFixedSizeWindow();
 				this.window.PreventAutoClose = true;
-				this.WindowInit("FieldName", 300, 100, true);
-				this.window.Text = "Champ";  // Res.Strings.Dialog.FieldName.Title;
+				this.WindowInit("EntityComment", 350, 250, true);
+				this.window.Text = "Commentaire";  // Res.Strings.Dialog.EntityComment.Title;
 				this.window.Owner = this.parentWindow;
 				this.window.WindowCloseClicked += new EventHandler(this.HandleWindowCloseClicked);
 				this.window.Root.Padding = new Margins(8, 8, 8, 8);
 
+				ResizeKnob resize = new ResizeKnob(this.window.Root);
+				resize.Anchor = AnchorStyles.BottomRight;
+				resize.Margins = new Margins(0, -8, 0, -8);
+				ToolTip.Default.SetToolTip(resize, Res.Strings.Dialog.Tooltip.Resize);
+
 				int tabIndex = 0;
 
-				Widget band = new Widget(this.window.Root);
-				band.Margins = new Margins(0, 0, 10, 0);
-				band.Dock = DockStyle.Top;
-
-				StaticText label = new StaticText(band);
-				label.Text = "Nom du champ";
-				label.ContentAlignment = ContentAlignment.MiddleRight;
-				label.PreferredWidth = 90;
-				label.Margins = new Margins(0, 5, 0, 0);
-				label.Dock = DockStyle.Left;
-
-				this.fieldName = new TextField(band);
-				this.fieldName.Dock = DockStyle.Fill;
-				this.fieldName.TabIndex = tabIndex++;
+				this.fieldText = new TextFieldMulti(this.window.Root);
+				this.fieldText.Dock = DockStyle.Fill;
+				this.fieldText.TabIndex = tabIndex++;
 
 				//	Boutons de fermeture.
 				Widget footer = new Widget(this.window.Root);
@@ -73,31 +66,31 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.buttonCancel.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			}
 
-			this.UpdateName();
+			this.UpdateText();
 
 			this.window.ShowDialog();
 		}
 
 		public void Initialise(string name)
 		{
-			this.initialName = name;
-			this.selectedName = null;
+			this.initialText = name;
+			this.selectedText = null;
 		}
 
-		public string SelectedName
+		public string SelectedText
 		{
 			get
 			{
-				return this.selectedName;
+				return this.selectedText;
 			}
 		}
 
 
-		protected void UpdateName()
+		protected void UpdateText()
 		{
-			this.fieldName.Text = this.initialName;
-			this.fieldName.SelectAll();
-			this.fieldName.Focus();
+			this.fieldText.Text = this.initialText;
+			this.fieldText.SelectAll();
+			this.fieldText.Focus();
 		}
 
 
@@ -121,13 +114,13 @@ namespace Epsitec.Common.Designer.Dialogs
 			this.window.Hide();
 			this.OnClosed();
 
-			this.selectedName = this.fieldName.Text;
+			this.selectedText = this.fieldText.Text;
 		}
 
 
-		protected string						initialName;
-		protected string						selectedName;
-		protected TextField						fieldName;
+		protected string						initialText;
+		protected string						selectedText;
+		protected TextFieldMulti				fieldText;
 		protected Button						buttonOk;
 		protected Button						buttonCancel;
 	}

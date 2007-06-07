@@ -17,7 +17,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			this.textLayout = new TextLayout();
 			this.textLayout.DefaultFontSize = 10;
 			this.textLayout.Alignment = ContentAlignment.MiddleLeft;
-			this.textLayout.BreakMode = TextBreakMode.Hyphenate;
+			this.textLayout.BreakMode = TextBreakMode.Ellipsis | TextBreakMode.Hyphenate;
 			this.textLayout.Text = "Commentaire libre, que vous pouvez modifier à volonté.";
 		}
 
@@ -150,6 +150,11 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				{
 					this.IsVisible = false;
 				}
+
+				if (this.hilitedElement == ActiveElement.CommentEdit)
+				{
+					this.EditComment();
+				}
 			}
 		}
 
@@ -195,6 +200,19 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			return false;
 		}
 
+
+		protected void EditComment()
+		{
+			//	Modifie le texte du commentaire.
+			Module module = this.editor.Module;
+			string text = this.textLayout.Text;
+			text = module.MainWindow.DlgEntityComment(text);
+			if (text != null)
+			{
+				this.textLayout.Text = text;
+				this.editor.Invalidate();
+			}
+		}
 
 		public override void DrawBackground(Graphics graphics)
 		{
