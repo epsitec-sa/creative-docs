@@ -241,7 +241,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		}
 
 
-		protected void EditComment()
+		public void EditComment()
 		{
 			//	Modifie le texte du commentaire.
 			Module module = this.editor.Module;

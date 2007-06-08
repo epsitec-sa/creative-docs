@@ -1120,6 +1120,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 				this.editor.AddComment(this.comment);
 				this.editor.UpdateAfterCommentChanged();
+
+				this.comment.EditComment();  // édite tout de suite le texte du commentaire
 			}
 			else
 			{
