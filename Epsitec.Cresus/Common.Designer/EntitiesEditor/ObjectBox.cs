@@ -326,9 +326,13 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					}
 
 				case AbstractObject.ActiveElement.CommentButton:
-					if (this.comment == null || !this.comment.IsVisible)
+					if (this.comment == null)
 					{
 						return "Montre le commentaire associé";
+					}
+					else if (!this.comment.IsVisible)
+					{
+						return string.Format("Montre le commentaire associé<br/><b>{0}</b>", this.comment.Text);
 					}
 					else
 					{

@@ -93,9 +93,13 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			switch (element)
 			{
 				case AbstractObject.ActiveElement.ConnectionComment:
-					if (this.comment == null || !this.comment.IsVisible)
+					if (this.comment == null)
 					{
 						return "Montre le commentaire associé";
+					}
+					else if (!this.comment.IsVisible)
+					{
+						return string.Format("Montre le commentaire associé<br/><b>{0}</b>", this.comment.Text);
 					}
 					else
 					{
