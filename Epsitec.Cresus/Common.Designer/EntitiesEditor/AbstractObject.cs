@@ -49,7 +49,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			CommentClose,
 		}
 
-		public enum BoxColor
+		public enum MainColor
 		{
 			Blue,
 			Green,
@@ -75,7 +75,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 		}
 
-		public virtual BoxColor MainColor
+		public virtual MainColor BackgroundMainColor
 		{
 			//	Couleur de fond de la boîte.
 			get
@@ -279,7 +279,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			return rect.Contains(pos);
 		}
 
-		protected void DrawSquareButton(Graphics graphics, Point center, BoxColor color, bool selected, bool hilited)
+		protected void DrawSquareButton(Graphics graphics, Point center, MainColor color, bool selected, bool hilited)
 		{
 			//	Dessine un bouton carré avec une couleur.
 			double radius = AbstractObject.buttonSquare;
@@ -301,9 +301,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 			if (hilited)
 			{
-				graphics.LineWidth = 2;
-				graphics.AddCircle(center, radius-0.5);
-				graphics.LineWidth = 1;
+				rect.Deflate(2);
+				graphics.AddRectangle(rect);
 				graphics.RenderSolid(Color.FromBrightness(1));
 			}
 		}
@@ -469,32 +468,32 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			return this.GetColorCaption(this.boxColor, alpha);
 		}
 
-		protected Color GetColorCaption(BoxColor boxColor)
+		protected Color GetColorCaption(MainColor boxColor)
 		{
 			//	Retourne la couleur pour les mises en évidence.
 			return this.GetColorCaption(boxColor, 1.0);
 		}
 
-		protected Color GetColorCaption(BoxColor boxColor, double alpha)
+		protected Color GetColorCaption(MainColor boxColor, double alpha)
 		{
 			//	Retourne la couleur pour les mises en évidence.
 			Color color = Color.FromBrightness(0.5);
 
 			switch (boxColor)
 			{
-				case BoxColor.Blue:
+				case MainColor.Blue:
 					color = Color.FromRgb(0.0/255.0, 90.0/255.0, 160.0/255.0);
 					break;
 
-				case BoxColor.Green:
+				case MainColor.Green:
 					color = Color.FromRgb(0.0/255.0, 130.0/255.0, 20.0/255.0);
 					break;
 
-				case BoxColor.Red:
+				case MainColor.Red:
 					color = Color.FromRgb(140.0/255.0, 30.0/255.0, 0.0/255.0);
 					break;
 
-				case BoxColor.Grey:
+				case MainColor.Grey:
 					color = Color.FromRgb(100.0/255.0, 100.0/255.0, 100.0/255.0);
 					break;
 			}
@@ -578,7 +577,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		protected Editor editor;
 		protected ActiveElement hilitedElement;
-		protected BoxColor boxColor = BoxColor.Blue;
+		protected MainColor boxColor = MainColor.Blue;
 		protected int hilitedFieldRank;
 	}
 }

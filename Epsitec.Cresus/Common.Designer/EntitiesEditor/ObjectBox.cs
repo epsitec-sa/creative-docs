@@ -123,7 +123,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 		}
 
-		public override BoxColor MainColor
+		public override MainColor BackgroundMainColor
 		{
 			//	Couleur de fond de la boîte.
 			get
@@ -140,7 +140,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					{
 						if (field.Connection != null)
 						{
-							field.Connection.MainColor = this.boxColor;
+							field.Connection.BackgroundMainColor = this.boxColor;
 						}
 					}
 
@@ -583,22 +583,22 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 				if (this.hilitedElement == ActiveElement.BoxColorButton1)
 				{
-					this.MainColor = BoxColor.Blue;
+					this.BackgroundMainColor = MainColor.Blue;
 				}
 
 				if (this.hilitedElement == ActiveElement.BoxColorButton2)
 				{
-					this.MainColor = BoxColor.Green;
+					this.BackgroundMainColor = MainColor.Green;
 				}
 
 				if (this.hilitedElement == ActiveElement.BoxColorButton3)
 				{
-					this.MainColor = BoxColor.Red;
+					this.BackgroundMainColor = MainColor.Red;
 				}
 
 				if (this.hilitedElement == ActiveElement.BoxColorButton4)
 				{
-					this.MainColor = BoxColor.Grey;
+					this.BackgroundMainColor = MainColor.Grey;
 				}
 			}
 		}
@@ -1303,7 +1303,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				//	Ouvre la connection sur une nouvelle boîte.
 				box = new ObjectBox(this.editor);
 				box.Title = cultureMap.Name;
-				box.MainColor = this.boxColor;
+				box.BackgroundMainColor = this.boxColor;
 				box.SetContent(cultureMap);
 
 				Field field = box.Fields[rank];
@@ -1600,38 +1600,38 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			//	Dessine le bouton des couleurs.
 			if (this.hilitedElement == ActiveElement.BoxColorButton1)
 			{
-				this.DrawSquareButton(graphics, this.PositionColorButton(0), BoxColor.Blue, this.boxColor == BoxColor.Blue, true);
+				this.DrawSquareButton(graphics, this.PositionColorButton(0), MainColor.Blue, this.boxColor == MainColor.Blue, true);
 			}
 			else if (this.IsHeaderHilite && !this.isDragging)
 			{
-				this.DrawSquareButton(graphics, this.PositionColorButton(0), BoxColor.Blue, this.boxColor == BoxColor.Blue, false);
+				this.DrawSquareButton(graphics, this.PositionColorButton(0), MainColor.Blue, this.boxColor == MainColor.Blue, false);
 			}
 
 			if (this.hilitedElement == ActiveElement.BoxColorButton2)
 			{
-				this.DrawSquareButton(graphics, this.PositionColorButton(1), BoxColor.Green, this.boxColor == BoxColor.Green, true);
+				this.DrawSquareButton(graphics, this.PositionColorButton(1), MainColor.Green, this.boxColor == MainColor.Green, true);
 			}
 			else if (this.IsHeaderHilite && !this.isDragging)
 			{
-				this.DrawSquareButton(graphics, this.PositionColorButton(1), BoxColor.Green, this.boxColor == BoxColor.Green, false);
+				this.DrawSquareButton(graphics, this.PositionColorButton(1), MainColor.Green, this.boxColor == MainColor.Green, false);
 			}
 
 			if (this.hilitedElement == ActiveElement.BoxColorButton3)
 			{
-				this.DrawSquareButton(graphics, this.PositionColorButton(2), BoxColor.Red, this.boxColor == BoxColor.Red, true);
+				this.DrawSquareButton(graphics, this.PositionColorButton(2), MainColor.Red, this.boxColor == MainColor.Red, true);
 			}
 			else if (this.IsHeaderHilite && !this.isDragging)
 			{
-				this.DrawSquareButton(graphics, this.PositionColorButton(2), BoxColor.Red, this.boxColor == BoxColor.Red, false);
+				this.DrawSquareButton(graphics, this.PositionColorButton(2), MainColor.Red, this.boxColor == MainColor.Red, false);
 			}
 
 			if (this.hilitedElement == ActiveElement.BoxColorButton4)
 			{
-				this.DrawSquareButton(graphics, this.PositionColorButton(3), BoxColor.Grey, this.boxColor == BoxColor.Grey, true);
+				this.DrawSquareButton(graphics, this.PositionColorButton(3), MainColor.Grey, this.boxColor == MainColor.Grey, true);
 			}
 			else if (this.IsHeaderHilite && !this.isDragging)
 			{
-				this.DrawSquareButton(graphics, this.PositionColorButton(3), BoxColor.Grey, this.boxColor == BoxColor.Grey, false);
+				this.DrawSquareButton(graphics, this.PositionColorButton(3), MainColor.Grey, this.boxColor == MainColor.Grey, false);
 			}
 
 			if (this.isExtended)

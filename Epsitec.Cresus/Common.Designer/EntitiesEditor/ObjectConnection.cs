@@ -166,7 +166,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 						box = new ObjectBox(this.editor);
 						box.ParentField = this.field;
 						box.Title = item.Name;
-						box.MainColor = this.boxColor;
+						box.BackgroundMainColor = this.boxColor;
 						box.SetContent(item);
 
 						this.field.DstBox = box;
