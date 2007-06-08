@@ -97,6 +97,90 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 		}
 
+		public string GetToolTipText(Point pos)
+		{
+			//	Retourne le texte pour le tooltip.
+			ActiveElement element;
+			int fieldRank;
+			this.MouseDetect(pos, out element, out fieldRank);
+			return this.GetToolTipText(element);
+		}
+
+		public virtual string GetToolTipText(ActiveElement element)
+		{
+			switch (element)
+			{
+				case AbstractObject.ActiveElement.HeaderDragging:
+					return "Déplace l'entité";
+
+				case AbstractObject.ActiveElement.ParentsButton:
+					return "Ouvre une entité parente";
+
+				case AbstractObject.ActiveElement.CommentButton:
+					return "Montre ou cache le commentaire associé";
+
+				case AbstractObject.ActiveElement.ExtendButton:
+					return "Compacte ou étend l'entité";
+
+				case AbstractObject.ActiveElement.CloseButton:
+					return "Ferme l'entité";
+
+				case AbstractObject.ActiveElement.FieldNameSelect:
+					return "Change le nom du champ";
+
+				case AbstractObject.ActiveElement.FieldTypeSelect:
+					return "Change le type du champ";
+
+				case AbstractObject.ActiveElement.FieldAdd:
+					return "Ajoute un nouveau champ";
+
+				case AbstractObject.ActiveElement.FieldRemove:
+					return "Supprime le champ";
+
+				case AbstractObject.ActiveElement.FieldMovable:
+					return "Change l'ordre du champ dans la liste";
+
+				case AbstractObject.ActiveElement.ChangeWidth:
+					return "Modifie la largeur de l'entité";
+
+				case AbstractObject.ActiveElement.MoveColumnsSeparator:
+					return "Déplace le séparateur des colonnes";
+
+				case AbstractObject.ActiveElement.ConnectionOpenLeft:
+					return "Ouvre l'entité liée sur la gauche";
+
+				case AbstractObject.ActiveElement.ConnectionOpenRight:
+					return "Ouvre l'entité liée sur la droite";
+
+				case AbstractObject.ActiveElement.ConnectionClose:
+					return "Ferme l'entité";
+
+				case AbstractObject.ActiveElement.ConnectionChangeRelation:
+					return "Change le type de la relation";
+
+				case AbstractObject.ActiveElement.ConnectionMove1:
+				case AbstractObject.ActiveElement.ConnectionMove2:
+					return "Modifie le routage de la relation";
+
+				case AbstractObject.ActiveElement.ConnectionComment:
+					return "Montre ou cache le commentaire associé";
+
+				case AbstractObject.ActiveElement.CommentEdit:
+					return "Modifie le texte du commentaire";
+
+				case AbstractObject.ActiveElement.CommentMove:
+					return "Déplace le commentaire";
+
+				case AbstractObject.ActiveElement.CommentWidth:
+					return "Modifie la largeur du commentaire";
+
+				case AbstractObject.ActiveElement.CommentClose:
+					return "Cache le commentaire";
+			}
+
+			return null;  // pas de tooltip
+		}
+
 		public virtual bool MouseMove(Point pos)
 		{
 			//	Met en évidence la boîte selon la position de la souris.

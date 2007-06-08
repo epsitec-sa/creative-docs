@@ -285,6 +285,70 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		}
 
 
+		public override string GetToolTipText(ActiveElement element)
+		{
+			//	Retourne le texte pour le tooltip.
+			if (this.isParentsMenu)
+			{
+				return null;  // pas de tooltip
+			}
+
+			switch (element)
+			{
+				case AbstractObject.ActiveElement.HeaderDragging:
+					if (this.isRoot)
+					{
+						return null;
+					}
+					else
+					{
+						return "Déplace l'entité";
+					}
+
+				case AbstractObject.ActiveElement.ParentsButton:
+					if (this.parentsClosedCount == 0)
+					{
+						return null;
+					}
+					else
+					{
+						return "Ouvre une entité parente à choix";
+					}
+
+				case AbstractObject.ActiveElement.ExtendButton:
+					if (this.isExtended)
+					{
+						return "Compactifie l'entité";
+					}
+					else
+					{
+						return "Etend l'entité";
+					}
+
+				case AbstractObject.ActiveElement.CommentButton:
+					if (this.comment == null || !this.comment.IsVisible)
+					{
+						return "Montre le commentaire associé";
+					}
+					else
+					{
+						return "Cache le commentaire associé";
+					}
+
+				case AbstractObject.ActiveElement.CloseButton:
+					if (this.isRoot)
+					{
+						return null;
+					}
+					else
+					{
+						return "Ferme l'entité";
+					}
+			}
+
+			return base.GetToolTipText(element);
+		}
+
 		public override bool MouseMove(Point pos)
 		{
 			//	Met en évidence la boîte selon la position de la souris.

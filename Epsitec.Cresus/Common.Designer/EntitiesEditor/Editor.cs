@@ -9,7 +9,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 	/// <summary>
 	/// Widget permettant d'éditer graphiquement des entités.
 	/// </summary>
-	public class Editor : Widget
+	public class Editor : Widget, Widgets.Helpers.IToolTipHost
 	{
 		protected enum MouseCursorType
 		{
@@ -993,7 +993,14 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				}
 				else
 				{
-					if (fly.HilitedElement == AbstractObject.ActiveElement.HeaderDragging && this.BoxCount > 1)
+					bool isRoot = false;
+					if (fly is ObjectBox)
+					{
+						ObjectBox box = fly as ObjectBox;
+						isRoot = box.IsRoot;
+					}
+
+					if (fly.HilitedElement == AbstractObject.ActiveElement.HeaderDragging && !isRoot)
 					{
 						this.ChangeMouseCursor(MouseCursorType.Move);
 					}
@@ -1022,6 +1029,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 						this.ChangeMouseCursor(MouseCursorType.Finger);
 					}
 				}
+
+				this.hilitedObject = fly;
 			}
 		}
 
@@ -1182,6 +1191,28 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		}
 
 
+		#region Helpers.IToolTipHost
+		public object GetToolTipCaption(Point pos)
+		{
+			//	Donne l'objet (string ou widget) pour le tooltip en fonction de la position.
+			return this.GetTooltipEditedText(pos);
+		}
+
+		protected string GetTooltipEditedText(Point pos)
+		{
+			//	Donne le texte du tooltip en fonction de la position.
+			if (this.hilitedObject == null)
+			{
+				return null;  // pas de tooltip
+			}
+			else
+			{
+				pos = this.ConvWidgetToEditor(pos);
+				return this.hilitedObject.GetToolTipText(pos);
+			}
+		}
+		#endregion
+
 		#region MouseCursor
 		protected void ChangeMouseCursor(MouseCursorType cursor)
 		{
@@ -1327,5 +1358,6 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		protected Image mouseCursorHand;
 		protected Image mouseCursorGrid;
 		protected VScroller vscroller;
+		protected AbstractObject hilitedObject;
 	}
 }

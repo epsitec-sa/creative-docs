@@ -38,6 +38,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.editor.AreaSizeChanged += new EventHandler(this.HandleEditorAreaSizeChanged);
 			this.editor.AreaOffsetChanged += new EventHandler(this.HandleEditorAreaOffsetChanged);
 			this.editor.ZoomChanged += new EventHandler(this.HandleEditorZoomChanged);
+			ToolTip.Default.SetToolTip(this.editor, "*");  // pour voir les tooltips dynamiques
 
 			this.vscroller = new VScroller(band);
 			this.vscroller.IsInverted = true;

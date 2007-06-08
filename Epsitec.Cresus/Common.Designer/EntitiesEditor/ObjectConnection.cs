@@ -87,6 +87,25 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		}
 
 
+		public override string GetToolTipText(ActiveElement element)
+		{
+			//	Retourne le texte pour le tooltip.
+			switch (element)
+			{
+				case AbstractObject.ActiveElement.ConnectionComment:
+					if (this.comment == null || !this.comment.IsVisible)
+					{
+						return "Montre le commentaire associé";
+					}
+					else
+					{
+						return "Cache le commentaire associé";
+					}
+			}
+
+			return base.GetToolTipText(element);
+		}
+
 		public override bool MouseMove(Point pos)
 		{
 			//	La souris est bougée.

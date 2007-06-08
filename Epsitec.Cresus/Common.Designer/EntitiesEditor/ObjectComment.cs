@@ -108,6 +108,12 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		}
 
 
+		public override string GetToolTipText(ActiveElement element)
+		{
+			//	Retourne le texte pour le tooltip.
+			return base.GetToolTipText(element);
+		}
+
 		public override bool MouseMove(Point pos)
 		{
 			//	Met en évidence la boîte selon la position de la souris.
