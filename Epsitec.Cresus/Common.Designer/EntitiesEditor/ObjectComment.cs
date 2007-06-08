@@ -24,10 +24,17 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		public ObjectComment(Editor editor) : base(editor)
 		{
 			this.isVisible = true;
-			this.textLayout = new TextLayout();
-			this.textLayout.DefaultFontSize = 10;
-			this.textLayout.BreakMode = TextBreakMode.Hyphenate;
-			this.textLayout.Text = "Commentaire libre, que vous pouvez modifier à volonté.";
+
+			this.textLayoutTitle = new TextLayout();
+			this.textLayoutTitle.DefaultFontSize = 14;
+			this.textLayoutTitle.BreakMode = TextBreakMode.SingleLine | TextBreakMode.Ellipsis;
+			this.textLayoutTitle.Alignment = ContentAlignment.MiddleCenter;
+			this.textLayoutTitle.Text = "<b>Commentaire</b>";
+
+			this.textLayoutComment = new TextLayout();
+			this.textLayoutComment.DefaultFontSize = 10;
+			this.textLayoutComment.BreakMode = TextBreakMode.Hyphenate | TextBreakMode.Split;
+			this.textLayoutComment.Text = "Commentaire libre, que vous pouvez modifier à volonté.";
 		}
 
 
@@ -36,11 +43,11 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			//	Texte du commentaire.
 			get
 			{
-				return this.textLayout.Text;
+				return this.textLayoutComment.Text;
 			}
 			set
 			{
-				this.textLayout.Text = value;
+				this.textLayoutComment.Text = value;
 			}
 		}
 
@@ -191,7 +198,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				return false;
 			}
 
-			//	Souris dans le bouton pour modifier la taille ?
+			//	Souris dans le bouton pour modifier la largeur ?
 			if (this.DetectRoundButton(this.PositionWidthButton, pos))
 			{
 				element = ActiveElement.CommentWidth;
@@ -227,11 +234,11 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		{
 			//	Modifie le texte du commentaire.
 			Module module = this.editor.Module;
-			string text = this.textLayout.Text;
+			string text = this.textLayoutComment.Text;
 			text = module.MainWindow.DlgEntityComment(text);
 			if (text != null)
 			{
-				this.textLayout.Text = text;
+				this.textLayoutComment.Text = text;
 				this.UpdateHeight();
 				this.editor.UpdateAfterCommentChanged();
 			}
@@ -242,9 +249,9 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			//	Adapte la hauteur du commentaire en fonction de sa largeur et du contenu.
 			Rectangle rect = this.bounds;
 			rect.Deflate(ObjectComment.textMargin);
-			this.textLayout.LayoutSize = rect.Size;
+			this.textLayoutComment.LayoutSize = rect.Size;
 
-			double h = System.Math.Floor(this.textLayout.FindTextHeight()+1);
+			double h = System.Math.Floor(this.textLayoutComment.FindTextHeight()+1);
 			h += ObjectComment.textMargin*2;
 
 			Point p1, p2;
@@ -302,8 +309,10 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				graphics.AddRectangle(rect);
 				graphics.RenderSolid(Color.FromBrightness(0));
 
-				graphics.AddText(rect.Left, rect.Bottom+1, rect.Width-rect.Height, rect.Height, "Commentaire", Font.GetFont(Font.DefaultFontFamily, "Bold"), 14, ContentAlignment.MiddleCenter);
-				graphics.RenderSolid(Color.FromBrightness(1));
+				rect.Width -= rect.Height;
+				rect.Offset(0, 1);
+				this.textLayoutTitle.LayoutSize = rect.Size;
+				this.textLayoutTitle.Paint(rect.BottomLeft, graphics, Rectangle.MaxValue, Color.FromBrightness(1), GlyphPaintStyle.Normal);
 			}
 
 			//	Dessine la boîte vide.
@@ -317,8 +326,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			//	Dessine le texte.
 			rect = this.bounds;
 			rect.Deflate(ObjectComment.textMargin);
-			this.textLayout.LayoutSize = rect.Size;
-			this.textLayout.Paint(rect.BottomLeft, graphics, Rectangle.MaxValue, Color.FromBrightness(0), GlyphPaintStyle.Normal);
+			this.textLayoutComment.LayoutSize = rect.Size;
+			this.textLayoutComment.Paint(rect.BottomLeft, graphics, Rectangle.MaxValue, Color.FromBrightness(0), GlyphPaintStyle.Normal);
 
 			//	Dessine la liaison.
 			Point p1, p2;
@@ -349,7 +358,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				}
 			}
 
-			//	Dessine le bouton pour modifier la taille.
+			//	Dessine le bouton pour modifier la largeur.
 			if (this.hilitedElement == ActiveElement.CommentWidth)
 			{
 				this.DrawRoundButton(graphics, this.PositionWidthButton, AbstractObject.buttonRadius, GlyphShape.HorizontalMove, true, false);
@@ -469,7 +478,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		protected Point PositionWidthButton
 		{
-			//	Retourne la position du bouton de largeur.
+			//	Retourne la position du bouton pour modifier la largeur.
 			get
 			{
 				return new Point(this.bounds.Right, this.bounds.Center.Y);
@@ -511,7 +520,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		protected Rectangle bounds;
 		protected AbstractObject attachObject;
 		protected bool isVisible;
-		protected TextLayout textLayout;
+		protected TextLayout textLayoutTitle;
+		protected TextLayout textLayoutComment;
 
 		protected bool isDraggingMove;
 		protected bool isDraggingSize;
