@@ -1000,19 +1000,19 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 						isRoot = box.IsRoot;
 					}
 
-					if (fly.HilitedElement == AbstractObject.ActiveElement.HeaderDragging && !isRoot)
+					if (fly.HilitedElement == AbstractObject.ActiveElement.BoxHeaderDragging && !isRoot)
 					{
 						this.ChangeMouseCursor(MouseCursorType.Move);
 					}
 					else if (fly.HilitedElement == AbstractObject.ActiveElement.None ||
-							 fly.HilitedElement == AbstractObject.ActiveElement.Inside ||
-							 fly.HilitedElement == AbstractObject.ActiveElement.HeaderDragging ||
+							 fly.HilitedElement == AbstractObject.ActiveElement.BoxInside ||
+							 fly.HilitedElement == AbstractObject.ActiveElement.BoxHeaderDragging ||
 							 fly.HilitedElement == AbstractObject.ActiveElement.ConnectionHilited)
 					{
 						this.ChangeMouseCursor(MouseCursorType.Arrow);
 					}
-					else if (fly.HilitedElement == AbstractObject.ActiveElement.FieldNameSelect ||
-							 fly.HilitedElement == AbstractObject.ActiveElement.FieldTypeSelect)
+					else if (fly.HilitedElement == AbstractObject.ActiveElement.BoxFieldNameSelect ||
+							 fly.HilitedElement == AbstractObject.ActiveElement.BoxFieldTypeSelect)
 					{
 						this.ChangeMouseCursor(MouseCursorType.Grid);
 					}

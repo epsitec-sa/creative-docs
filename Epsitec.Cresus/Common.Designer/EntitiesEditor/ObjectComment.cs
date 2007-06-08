@@ -108,9 +108,14 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		}
 
 
-		public override string GetToolTipText(ActiveElement element)
+		protected override string GetToolTipText(ActiveElement element)
 		{
 			//	Retourne le texte pour le tooltip.
+			if (this.isDraggingMove || this.isDraggingSize)
+			{
+				return null;  // pas de tooltip
+			}
+
 			return base.GetToolTipText(element);
 		}
 

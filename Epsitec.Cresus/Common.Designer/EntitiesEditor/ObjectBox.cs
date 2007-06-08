@@ -285,17 +285,17 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		}
 
 
-		public override string GetToolTipText(ActiveElement element)
+		protected override string GetToolTipText(ActiveElement element)
 		{
 			//	Retourne le texte pour le tooltip.
-			if (this.isSourcesMenu)
+			if (this.isDragging || this.isFieldMoving || this.isChangeWidth || this.isMoveColumnsSeparator || this.isSourcesMenu)
 			{
 				return null;  // pas de tooltip
 			}
 
 			switch (element)
 			{
-				case AbstractObject.ActiveElement.HeaderDragging:
+				case AbstractObject.ActiveElement.BoxHeaderDragging:
 					if (this.isRoot)
 					{
 						return null;
@@ -305,7 +305,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 						return "Déplace l'entité";
 					}
 
-				case AbstractObject.ActiveElement.SourcesButton:
+				case AbstractObject.ActiveElement.BoxSourcesButton:
 					if (this.sourcesList.Count == 0)
 					{
 						return null;
@@ -315,7 +315,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 						return "Ouvre une entité source à choix";
 					}
 
-				case AbstractObject.ActiveElement.ExtendButton:
+				case AbstractObject.ActiveElement.BoxExtendButton:
 					if (this.isExtended)
 					{
 						return "Compactifie l'entité";
@@ -325,7 +325,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 						return "Etend l'entité";
 					}
 
-				case AbstractObject.ActiveElement.CommentButton:
+				case AbstractObject.ActiveElement.BoxCommentButton:
 					if (this.comment == null)
 					{
 						return "Montre le commentaire associé";
@@ -339,7 +339,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 						return "Cache le commentaire associé";
 					}
 
-				case AbstractObject.ActiveElement.CloseButton:
+				case AbstractObject.ActiveElement.BoxCloseButton:
 					if (this.isRoot)
 					{
 						return null;
@@ -428,7 +428,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				return;
 			}
 
-			if (this.hilitedElement == ActiveElement.HeaderDragging && this.editor.BoxCount > 1)
+			if (this.hilitedElement == ActiveElement.BoxHeaderDragging && this.editor.BoxCount > 1)
 			{
 				this.isDragging = true;
 				this.draggingPos = pos;
@@ -436,14 +436,14 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				this.editor.LockObject(this);
 			}
 
-			if (this.hilitedElement == ActiveElement.FieldMovable)
+			if (this.hilitedElement == ActiveElement.BoxFieldMovable)
 			{
 				this.isFieldMoving = true;
 				this.fieldInitialRank = this.hilitedFieldRank;
 				this.editor.LockObject(this);
 			}
 
-			if (this.hilitedElement == ActiveElement.ChangeWidth)
+			if (this.hilitedElement == ActiveElement.BoxChangeWidth)
 			{
 				this.isChangeWidth = true;
 				this.changeWidthPos = pos.X;
@@ -451,13 +451,13 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				this.editor.LockObject(this);
 			}
 
-			if (this.hilitedElement == ActiveElement.MoveColumnsSeparator)
+			if (this.hilitedElement == ActiveElement.BoxMoveColumnsSeparator)
 			{
 				this.isMoveColumnsSeparator = true;
 				this.editor.LockObject(this);
 			}
 
-			if (this.hilitedElement == ActiveElement.SourcesButton)
+			if (this.hilitedElement == ActiveElement.BoxSourcesButton)
 			{
 				this.isSourcesMenu = true;
 				this.sourcesMenuSelected = -1;
@@ -477,7 +477,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 			else if (this.isFieldMoving)
 			{
-				if (this.hilitedElement == ActiveElement.FieldMoving)
+				if (this.hilitedElement == ActiveElement.BoxFieldMoving)
 				{
 					this.MoveField(this.fieldInitialRank, this.hilitedFieldRank);
 				}
@@ -514,13 +514,13 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 			else
 			{
-				if (this.hilitedElement == ActiveElement.ExtendButton)
+				if (this.hilitedElement == ActiveElement.BoxExtendButton)
 				{
 					this.IsExtended = !this.IsExtended;
 					this.editor.UpdateAfterGeometryChanged(this);
 				}
 
-				if (this.hilitedElement == ActiveElement.CloseButton)
+				if (this.hilitedElement == ActiveElement.BoxCloseButton)
 				{
 					if (!this.isRoot)
 					{
@@ -530,27 +530,27 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					}
 				}
 
-				if (this.hilitedElement == ActiveElement.FieldRemove)
+				if (this.hilitedElement == ActiveElement.BoxFieldRemove)
 				{
 					this.RemoveField(this.hilitedFieldRank);
 				}
 
-				if (this.hilitedElement == ActiveElement.FieldAdd)
+				if (this.hilitedElement == ActiveElement.BoxFieldAdd)
 				{
 					this.AddField(this.hilitedFieldRank);
 				}
 
-				if (this.hilitedElement == ActiveElement.FieldNameSelect)
+				if (this.hilitedElement == ActiveElement.BoxFieldNameSelect)
 				{
 					this.ChangeFieldName(this.hilitedFieldRank);
 				}
 
-				if (this.hilitedElement == ActiveElement.FieldTypeSelect)
+				if (this.hilitedElement == ActiveElement.BoxFieldTypeSelect)
 				{
 					this.ChangeFieldType(this.hilitedFieldRank);
 				}
 
-				if (this.hilitedElement == ActiveElement.CommentButton)
+				if (this.hilitedElement == ActiveElement.BoxCommentButton)
 				{
 					this.AddComment();
 				}
@@ -590,7 +590,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					rect = this.GetFieldMovingBounds(i);
 					if (rect.Contains(pos))
 					{
-						element = ActiveElement.FieldMoving;
+						element = ActiveElement.BoxFieldMoving;
 						fieldRank = i;
 						return true;
 					}
@@ -601,14 +601,14 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				//	Souris dans le bouton compact/étendu ?
 				if (this.DetectRoundButton(this.PositionExtendButton, pos))
 				{
-					element = ActiveElement.ExtendButton;
+					element = ActiveElement.BoxExtendButton;
 					return true;
 				}
 
 				//	Souris dans le bouton de fermeture ?
 				if (this.DetectRoundButton(this.PositionCloseButton, pos))
 				{
-					element = ActiveElement.CloseButton;
+					element = ActiveElement.BoxCloseButton;
 					return true;
 				}
 
@@ -617,7 +617,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				{
 					if (this.DetectRoundButton(this.PositionSourcesButton, pos))
 					{
-						element = ActiveElement.SourcesButton;
+						element = ActiveElement.BoxSourcesButton;
 						return true;
 					}
 				}
@@ -625,7 +625,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				//	Souris dans le bouton des commentaires ?
 				if (this.DetectRoundButton(this.PositionCommentButton, pos))
 				{
-					element = ActiveElement.CommentButton;
+					element = ActiveElement.BoxCommentButton;
 					return true;
 				}
 
@@ -640,7 +640,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					{
 						if (d1 <= AbstractObject.buttonRadius+1)
 						{
-							element = ActiveElement.ChangeWidth;
+							element = ActiveElement.BoxChangeWidth;
 							return true;
 						}
 					}
@@ -648,7 +648,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					{
 						if (d2 <= AbstractObject.buttonRadius+1)
 						{
-							element = ActiveElement.MoveColumnsSeparator;
+							element = ActiveElement.BoxMoveColumnsSeparator;
 							return true;
 						}
 					}
@@ -658,7 +658,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 						(pos.Y >= this.bounds.Top-AbstractObject.headerHeight ||
 						 pos.Y <= this.bounds.Bottom+AbstractObject.footerHeight))
 					{
-						element = ActiveElement.HeaderDragging;
+						element = ActiveElement.BoxHeaderDragging;
 						this.SetConnectionsHilited(true);
 						return true;
 					}
@@ -669,7 +669,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 						rect = this.GetFieldAddBounds(i);
 						if (rect.Contains(pos))
 						{
-							element = ActiveElement.FieldAdd;
+							element = ActiveElement.BoxFieldAdd;
 							fieldRank = i;
 							this.SetConnectionsHilited(true);
 							return true;
@@ -682,7 +682,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 						pos.Y >= this.bounds.Bottom+AbstractObject.footerHeight &&
 						pos.Y <= this.bounds.Top-AbstractObject.headerHeight)
 					{
-						element = ActiveElement.MoveColumnsSeparator;
+						element = ActiveElement.BoxMoveColumnsSeparator;
 						this.SetConnectionsHilited(true);
 						return true;
 					}
@@ -693,7 +693,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 						rect = this.GetFieldRemoveBounds(i);
 						if (rect.Contains(pos))
 						{
-							element = ActiveElement.FieldRemove;
+							element = ActiveElement.BoxFieldRemove;
 							fieldRank = i;
 							this.SetConnectionsHilited(true);
 							return true;
@@ -702,7 +702,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 						rect = this.GetFieldMovableBounds(i);
 						if (rect.Contains(pos))
 						{
-							element = ActiveElement.FieldMovable;
+							element = ActiveElement.BoxFieldMovable;
 							fieldRank = i;
 							this.SetConnectionsHilited(true);
 							return true;
@@ -711,7 +711,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 						rect = this.GetFieldNameBounds(i);
 						if (rect.Contains(pos))
 						{
-							element = ActiveElement.FieldNameSelect;
+							element = ActiveElement.BoxFieldNameSelect;
 							fieldRank = i;
 							this.SetConnectionsHilited(true);
 							return true;
@@ -720,7 +720,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 						rect = this.GetFieldTypeBounds(i);
 						if (rect.Contains(pos))
 						{
-							element = ActiveElement.FieldTypeSelect;
+							element = ActiveElement.BoxFieldTypeSelect;
 							fieldRank = i;
 							this.SetConnectionsHilited(true);
 							return true;
@@ -731,7 +731,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				{
 					if (this.bounds.Contains(pos))
 					{
-						element = ActiveElement.HeaderDragging;
+						element = ActiveElement.BoxHeaderDragging;
 						return true;
 					}
 				}
@@ -742,7 +742,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				return false;
 			}
 
-			element = ActiveElement.Inside;
+			element = ActiveElement.BoxInside;
 			this.SetConnectionsHilited(true);
 			return true;
 		}
@@ -1269,7 +1269,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			//	Dessine le fond de l'objet.
 			Rectangle rect;
 
-			bool dragging = (this.hilitedElement == ActiveElement.HeaderDragging);
+			bool dragging = (this.hilitedElement == ActiveElement.BoxHeaderDragging);
 
 			//	Dessine l'ombre.
 			rect = this.bounds;
@@ -1336,7 +1336,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 			//	Dessine le bouton compact/étendu.
 			GlyphShape shape = this.isExtended ? GlyphShape.ArrowUp : GlyphShape.ArrowDown;
-			if (this.hilitedElement == ActiveElement.ExtendButton)
+			if (this.hilitedElement == ActiveElement.BoxExtendButton)
 			{
 				this.DrawRoundButton(graphics, this.PositionExtendButton, AbstractObject.buttonRadius, shape, true, false);
 			}
@@ -1346,7 +1346,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 
 			//	Dessine le bouton de fermeture.
-			if (this.hilitedElement == ActiveElement.CloseButton)
+			if (this.hilitedElement == ActiveElement.BoxCloseButton)
 			{
 				this.DrawRoundButton(graphics, this.PositionCloseButton, AbstractObject.buttonRadius, GlyphShape.Close, true, false, !this.isRoot);
 			}
@@ -1370,7 +1370,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 
 			//	Dessine le bouton des sources.
-			if (this.hilitedElement == ActiveElement.SourcesButton)
+			if (this.hilitedElement == ActiveElement.BoxSourcesButton)
 			{
 				this.DrawRoundButton(graphics, this.PositionSourcesButton, AbstractObject.buttonRadius, GlyphShape.TriangleDown, true, false, this.sourcesList.Count > 0);
 			}
@@ -1380,7 +1380,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 
 			//	Dessine le bouton des commentaires.
-			if (this.hilitedElement == ActiveElement.CommentButton)
+			if (this.hilitedElement == ActiveElement.BoxCommentButton)
 			{
 				this.DrawRoundButton(graphics, this.PositionCommentButton, AbstractObject.buttonRadius, "C", true, false);
 			}
@@ -1401,7 +1401,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					Color colorName = Color.FromBrightness(0);
 					Color colorType = Color.FromBrightness(0);
 
-					if (this.hilitedElement == ActiveElement.FieldNameSelect && this.hilitedFieldRank == i)
+					if (this.hilitedElement == ActiveElement.BoxFieldNameSelect && this.hilitedFieldRank == i)
 					{
 						rect = this.GetFieldNameBounds(i);
 
@@ -1411,7 +1411,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 						colorName = Color.FromBrightness(1);
 					}
 
-					if (this.hilitedElement == ActiveElement.FieldTypeSelect && this.hilitedFieldRank == i)
+					if (this.hilitedElement == ActiveElement.BoxFieldTypeSelect && this.hilitedFieldRank == i)
 					{
 						rect = this.GetFieldTypeBounds(i);
 
@@ -1421,7 +1421,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 						colorType = Color.FromBrightness(1);
 					}
 
-					if ((this.hilitedElement == ActiveElement.FieldRemove || this.hilitedElement == ActiveElement.FieldMovable) && this.hilitedFieldRank == i)
+					if ((this.hilitedElement == ActiveElement.BoxFieldRemove || this.hilitedElement == ActiveElement.BoxFieldMovable) && this.hilitedFieldRank == i)
 					{
 						rect = this.GetFieldBounds(i);
 
@@ -1457,7 +1457,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					graphics.RenderSolid(colorLine);
 				}
 
-				if (this.hilitedElement == ActiveElement.FieldMoving)
+				if (this.hilitedElement == ActiveElement.BoxFieldMoving)
 				{
 					Point p1 = this.GetFieldBounds(this.fieldInitialRank).Center;
 					Point p2 = this.GetFieldMovingBounds(this.hilitedFieldRank).Center;
@@ -1466,26 +1466,26 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				}
 
 				if (this.hilitedElement != ActiveElement.None &&
-					this.hilitedElement != ActiveElement.HeaderDragging &&
-					this.hilitedElement != ActiveElement.SourcesButton &&
-					this.hilitedElement != ActiveElement.CommentButton &&
-					this.hilitedElement != ActiveElement.ExtendButton &&
-					this.hilitedElement != ActiveElement.CloseButton &&
-					this.hilitedElement != ActiveElement.ChangeWidth &&
-					this.hilitedElement != ActiveElement.MoveColumnsSeparator &&
+					this.hilitedElement != ActiveElement.BoxHeaderDragging &&
+					this.hilitedElement != ActiveElement.BoxSourcesButton &&
+					this.hilitedElement != ActiveElement.BoxCommentButton &&
+					this.hilitedElement != ActiveElement.BoxExtendButton &&
+					this.hilitedElement != ActiveElement.BoxCloseButton &&
+					this.hilitedElement != ActiveElement.BoxChangeWidth &&
+					this.hilitedElement != ActiveElement.BoxMoveColumnsSeparator &&
 					!this.isFieldMoving && !this.isChangeWidth && !this.isMoveColumnsSeparator)
 				{
 					//	Dessine la glissière à gauche pour suggérer les boutons Add/Remove des champs.
 					Point p1 = this.GetFieldAddBounds(-1).Center;
 					Point p2 = this.GetFieldAddBounds(this.fields.Count-1).Center;
-					bool hilited = this.hilitedElement == ActiveElement.FieldAdd || this.hilitedElement == ActiveElement.FieldRemove;
+					bool hilited = this.hilitedElement == ActiveElement.BoxFieldAdd || this.hilitedElement == ActiveElement.BoxFieldRemove;
 					this.DrawEmptySlider(graphics, p1, p2, hilited);
 
 					//	Dessine la glissière à droite pour suggérer les boutons Movable des champs.
 					if (this.fields.Count != 0)
 					{
 						p1.X = p2.X = this.GetFieldMovableBounds(0).Center.X;
-						hilited = this.hilitedElement == ActiveElement.FieldMovable;
+						hilited = this.hilitedElement == ActiveElement.BoxFieldMovable;
 						this.DrawEmptySlider(graphics, p1, p2, hilited);
 					}
 				}
@@ -1498,13 +1498,13 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			//	Dessine les boutons sur les glissières.
 			if (this.isExtended)
 			{
-				if (this.hilitedElement == ActiveElement.FieldRemove)
+				if (this.hilitedElement == ActiveElement.BoxFieldRemove)
 				{
 					rect = this.GetFieldRemoveBounds(this.hilitedFieldRank);
 					this.DrawRoundButton(graphics, rect.Center, AbstractObject.buttonRadius, GlyphShape.Minus, true, true);
 				}
 
-				if (this.hilitedElement == ActiveElement.FieldAdd)
+				if (this.hilitedElement == ActiveElement.BoxFieldAdd)
 				{
 					rect = this.GetFieldBounds(this.hilitedFieldRank);
 					rect.Deflate(this.isRoot ? 3.5 : 1.5, 0.5);
@@ -1514,13 +1514,13 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					this.DrawRoundButton(graphics, rect.Center, AbstractObject.buttonRadius, GlyphShape.Plus, true, true);
 				}
 
-				if (this.hilitedElement == ActiveElement.FieldMovable)
+				if (this.hilitedElement == ActiveElement.BoxFieldMovable)
 				{
 					rect = this.GetFieldMovableBounds(this.hilitedFieldRank);
 					this.DrawRoundButton(graphics, rect.Center, AbstractObject.buttonRadius, GlyphShape.VerticalMove, true, true);
 				}
 
-				if (this.hilitedElement == ActiveElement.FieldMoving)
+				if (this.hilitedElement == ActiveElement.BoxFieldMoving)
 				{
 					rect = this.GetFieldBounds(this.hilitedFieldRank);
 					rect.Deflate(this.isRoot ? 3.5 : 1.5, 0.5);
@@ -1531,7 +1531,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			if (this.isExtended)
 			{
 				//	Dessine le bouton pour déplacer le séparateur des colonnes.
-				if (this.hilitedElement == ActiveElement.MoveColumnsSeparator)
+				if (this.hilitedElement == ActiveElement.BoxMoveColumnsSeparator)
 				{
 					double sep = this.ColumnsSeparatorAbsolute;
 					graphics.LineWidth = 4;
@@ -1541,17 +1541,17 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 					this.DrawRoundButton(graphics, this.PositionMoveColumnsButton, AbstractObject.buttonRadius, GlyphShape.HorizontalMove, true, false);
 				}
-				if (this.hilitedElement == ActiveElement.HeaderDragging && !this.isDragging)
+				if (this.hilitedElement == ActiveElement.BoxHeaderDragging && !this.isDragging)
 				{
 					this.DrawRoundButton(graphics, this.PositionMoveColumnsButton, AbstractObject.buttonRadius, GlyphShape.HorizontalMove, false, false);
 				}
 
 				//	Dessine le bouton pour changer la largeur.
-				if (this.hilitedElement == ActiveElement.ChangeWidth)
+				if (this.hilitedElement == ActiveElement.BoxChangeWidth)
 				{
 					this.DrawRoundButton(graphics, this.PositionChangeWidthButton, AbstractObject.buttonRadius, GlyphShape.HorizontalMove, true, false);
 				}
-				if (this.hilitedElement == ActiveElement.HeaderDragging && !this.isDragging)
+				if (this.hilitedElement == ActiveElement.BoxHeaderDragging && !this.isDragging)
 				{
 					this.DrawRoundButton(graphics, this.PositionChangeWidthButton, AbstractObject.buttonRadius, GlyphShape.HorizontalMove, false, false);
 				}
@@ -1563,11 +1563,11 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			//	Indique si la souris est dans l'en-tête.
 			get
 			{
-				return (this.hilitedElement == ActiveElement.HeaderDragging ||
-						this.hilitedElement == ActiveElement.SourcesButton ||
-						this.hilitedElement == ActiveElement.CommentButton ||
-						this.hilitedElement == ActiveElement.ExtendButton ||
-						this.hilitedElement == ActiveElement.CloseButton);
+				return (this.hilitedElement == ActiveElement.BoxHeaderDragging ||
+						this.hilitedElement == ActiveElement.BoxSourcesButton ||
+						this.hilitedElement == ActiveElement.BoxCommentButton ||
+						this.hilitedElement == ActiveElement.BoxExtendButton ||
+						this.hilitedElement == ActiveElement.BoxCloseButton);
 			}
 		}
 

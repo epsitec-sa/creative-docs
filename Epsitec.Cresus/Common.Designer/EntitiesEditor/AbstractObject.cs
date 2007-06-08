@@ -14,20 +14,22 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		public enum ActiveElement
 		{
 			None,
-			Inside,
-			ExtendButton,
-			CloseButton,
-			SourcesButton,
-			CommentButton,
-			HeaderDragging,
-			FieldNameSelect,
-			FieldTypeSelect,
-			FieldAdd,
-			FieldRemove,
-			FieldMovable,
-			FieldMoving,
-			ChangeWidth,
-			MoveColumnsSeparator,
+
+			BoxInside,
+			BoxSourcesButton,
+			BoxCommentButton,
+			BoxExtendButton,
+			BoxCloseButton,
+			BoxHeaderDragging,
+			BoxFieldNameSelect,
+			BoxFieldTypeSelect,
+			BoxFieldAdd,
+			BoxFieldRemove,
+			BoxFieldMovable,
+			BoxFieldMoving,
+			BoxChangeWidth,
+			BoxMoveColumnsSeparator,
+
 			ConnectionOpenLeft,
 			ConnectionOpenRight,
 			ConnectionClose,
@@ -36,6 +38,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			ConnectionMove1,
 			ConnectionMove2,
 			ConnectionComment,
+
 			CommentEdit,
 			CommentMove,
 			CommentWidth,
@@ -106,44 +109,44 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			return this.GetToolTipText(element);
 		}
 
-		public virtual string GetToolTipText(ActiveElement element)
+		protected virtual string GetToolTipText(ActiveElement element)
 		{
 			switch (element)
 			{
-				case AbstractObject.ActiveElement.HeaderDragging:
+				case AbstractObject.ActiveElement.BoxHeaderDragging:
 					return "Déplace l'entité";
 
-				case AbstractObject.ActiveElement.SourcesButton:
+				case AbstractObject.ActiveElement.BoxSourcesButton:
 					return "Ouvre une entité source";
 
-				case AbstractObject.ActiveElement.CommentButton:
+				case AbstractObject.ActiveElement.BoxCommentButton:
 					return "Montre ou cache le commentaire associé";
 
-				case AbstractObject.ActiveElement.ExtendButton:
+				case AbstractObject.ActiveElement.BoxExtendButton:
 					return "Compacte ou étend l'entité";
 
-				case AbstractObject.ActiveElement.CloseButton:
+				case AbstractObject.ActiveElement.BoxCloseButton:
 					return "Ferme l'entité";
 
-				case AbstractObject.ActiveElement.FieldNameSelect:
+				case AbstractObject.ActiveElement.BoxFieldNameSelect:
 					return "Change le nom du champ";
 
-				case AbstractObject.ActiveElement.FieldTypeSelect:
+				case AbstractObject.ActiveElement.BoxFieldTypeSelect:
 					return "Change le type du champ";
 
-				case AbstractObject.ActiveElement.FieldAdd:
+				case AbstractObject.ActiveElement.BoxFieldAdd:
 					return "Ajoute un nouveau champ";
 
-				case AbstractObject.ActiveElement.FieldRemove:
+				case AbstractObject.ActiveElement.BoxFieldRemove:
 					return "Supprime le champ";
 
-				case AbstractObject.ActiveElement.FieldMovable:
+				case AbstractObject.ActiveElement.BoxFieldMovable:
 					return "Change l'ordre du champ dans la liste";
 
-				case AbstractObject.ActiveElement.ChangeWidth:
+				case AbstractObject.ActiveElement.BoxChangeWidth:
 					return "Modifie la largeur de l'entité";
 
-				case AbstractObject.ActiveElement.MoveColumnsSeparator:
+				case AbstractObject.ActiveElement.BoxMoveColumnsSeparator:
 					return "Déplace le séparateur des colonnes";
 
 				case AbstractObject.ActiveElement.ConnectionOpenLeft:

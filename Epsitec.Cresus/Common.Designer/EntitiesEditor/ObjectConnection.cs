@@ -87,9 +87,14 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		}
 
 
-		public override string GetToolTipText(ActiveElement element)
+		protected override string GetToolTipText(ActiveElement element)
 		{
 			//	Retourne le texte pour le tooltip.
+			if (this.isDraggingRoute)
+			{
+				return null;  // pas de tooltip
+			}
+
 			switch (element)
 			{
 				case AbstractObject.ActiveElement.ConnectionComment:
