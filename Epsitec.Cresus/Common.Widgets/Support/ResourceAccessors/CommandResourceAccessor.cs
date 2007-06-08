@@ -47,9 +47,9 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			return Res.Types.ResourceCommand;
 		}
 
-		protected override Caption GetCaptionFromData(ResourceBundle sourceBundle, Types.StructuredData data, string name)
+		protected override Caption GetCaptionFromData(ResourceBundle sourceBundle, Types.StructuredData data, string name, string twoLetterISOLanguageName)
 		{
-			Caption caption = base.GetCaptionFromData (sourceBundle, data, name);
+			Caption caption = base.GetCaptionFromData (sourceBundle, data, name, twoLetterISOLanguageName);
 
 			if (!Types.UndefinedValue.IsUndefinedValue (data.GetValue (Res.Fields.ResourceCommand.Statefull)))
 			{
