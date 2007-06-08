@@ -29,6 +29,10 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			BoxFieldMoving,
 			BoxChangeWidth,
 			BoxMoveColumnsSeparator,
+			BoxColorButton1,
+			BoxColorButton2,
+			BoxColorButton3,
+			BoxColorButton4,
 
 			ConnectionOpenLeft,
 			ConnectionOpenRight,
@@ -43,6 +47,14 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			CommentMove,
 			CommentWidth,
 			CommentClose,
+		}
+
+		public enum BoxColor
+		{
+			Blue,
+			Green,
+			Red,
+			Grey,
 		}
 
 
@@ -60,6 +72,23 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			get
 			{
 				return Rectangle.Empty;
+			}
+		}
+
+		public BoxColor MainColor
+		{
+			//	Couleur de fond de la boîte.
+			get
+			{
+				return this.boxColor;
+			}
+			set
+			{
+				if (this.boxColor != value)
+				{
+					this.boxColor = value;
+					this.editor.Invalidate();
+				}
 			}
 		}
 
@@ -121,6 +150,18 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 				case AbstractObject.ActiveElement.BoxCommentButton:
 					return "Montre ou cache le commentaire associé";
+
+				case AbstractObject.ActiveElement.BoxColorButton1:
+					return "Entité bleue";
+
+				case AbstractObject.ActiveElement.BoxColorButton2:
+					return "Entité verte";
+
+				case AbstractObject.ActiveElement.BoxColorButton3:
+					return "Entité rouge";
+
+				case AbstractObject.ActiveElement.BoxColorButton4:
+					return "Entité grise";
 
 				case AbstractObject.ActiveElement.BoxExtendButton:
 					return "Compacte ou étend l'entité";
@@ -226,6 +267,45 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			//	Active la commande d'enregistrement, lorsqu'une modification a été effectuée.
 			this.editor.Module.AccessEntities.IsDirty = true;
 			this.editor.Module.AccessEntities.Accessor.PersistChanges();
+		}
+
+
+		protected bool DetectSquareButton(Point center, Point pos)
+		{
+			//	Détecte si la souris est dans un bouton carré.
+			double radius = AbstractObject.buttonSquare;
+			Rectangle rect = new Rectangle(center.X-radius, center.Y-radius, radius*2, radius*2);
+			rect.Inflate(0.5);
+			return rect.Contains(pos);
+		}
+
+		protected void DrawSquareButton(Graphics graphics, Point center, BoxColor color, bool selected, bool hilited)
+		{
+			//	Dessine un bouton carré avec une couleur.
+			double radius = AbstractObject.buttonSquare;
+			Rectangle rect = new Rectangle(center.X-radius, center.Y-radius, radius*2, radius*2);
+			rect.Inflate(0.5);
+
+			graphics.AddFilledRectangle(rect);
+			graphics.RenderSolid(this.GetColorCaption(color, 0.8));
+
+			graphics.AddRectangle(rect);
+			graphics.RenderSolid(Color.FromBrightness(0));
+
+			if (selected)
+			{
+				rect.Deflate(1);
+				graphics.AddRectangle(rect);
+				graphics.RenderSolid(Color.FromBrightness(1));
+			}
+
+			if (hilited)
+			{
+				graphics.LineWidth = 2;
+				graphics.AddCircle(center, radius-0.5);
+				graphics.LineWidth = 1;
+				graphics.RenderSolid(Color.FromBrightness(1));
+			}
 		}
 
 
@@ -386,17 +466,40 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		protected Color GetColorCaption(double alpha)
 		{
 			//	Retourne la couleur pour les mises en évidence.
-			IAdorner adorner = Common.Widgets.Adorners.Factory.Active;
+			return this.GetColorCaption(this.boxColor, alpha);
+		}
 
-			Color color = adorner.ColorCaption;
-			color.A = alpha;
+		protected Color GetColorCaption(BoxColor boxColor)
+		{
+			//	Retourne la couleur pour les mises en évidence.
+			return this.GetColorCaption(boxColor, 1.0);
+		}
 
-			if (color.GetBrightness() > 0.7)  // couleur très claire ?
+		protected Color GetColorCaption(BoxColor boxColor, double alpha)
+		{
+			//	Retourne la couleur pour les mises en évidence.
+			Color color = Color.FromBrightness(0.5);
+
+			switch (boxColor)
 			{
-				color.R *= 0.5;  // fonce la couleur
-				color.G *= 0.5;
-				color.B *= 0.5;
+				case BoxColor.Blue:
+					color = Color.FromRgb(0.0/255.0, 90.0/255.0, 160.0/255.0);
+					break;
+
+				case BoxColor.Green:
+					color = Color.FromRgb(0.0/255.0, 130.0/255.0, 20.0/255.0);
+					break;
+
+				case BoxColor.Red:
+					color = Color.FromRgb(140.0/255.0, 30.0/255.0, 0.0/255.0);
+					break;
+
+				case BoxColor.Grey:
+					color = Color.FromRgb(100.0/255.0, 100.0/255.0, 100.0/255.0);
+					break;
 			}
+
+			color.A = alpha;
 
 			return color;
 		}
@@ -464,9 +567,10 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 
 		protected static readonly double headerHeight = 32;
-		protected static readonly double footerHeight = 13;
+		protected static readonly double footerHeight = 16;
 		protected static readonly double buttonRadius = 10;
 		protected static readonly double bulletRadius = 4;
+		protected static readonly double buttonSquare = 5;
 		protected static readonly double lengthClose = 30;
 		protected static readonly double arrowLength = 12;
 		protected static readonly double arrowAngle = 25;
@@ -474,6 +578,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		protected Editor editor;
 		protected ActiveElement hilitedElement;
+		protected BoxColor boxColor = BoxColor.Blue;
 		protected int hilitedFieldRank;
 	}
 }

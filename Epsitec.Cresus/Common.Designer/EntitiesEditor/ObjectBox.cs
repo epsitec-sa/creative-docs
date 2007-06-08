@@ -554,6 +554,26 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				{
 					this.AddComment();
 				}
+
+				if (this.hilitedElement == ActiveElement.BoxColorButton1)
+				{
+					this.MainColor = BoxColor.Blue;
+				}
+
+				if (this.hilitedElement == ActiveElement.BoxColorButton2)
+				{
+					this.MainColor = BoxColor.Green;
+				}
+
+				if (this.hilitedElement == ActiveElement.BoxColorButton3)
+				{
+					this.MainColor = BoxColor.Red;
+				}
+
+				if (this.hilitedElement == ActiveElement.BoxColorButton4)
+				{
+					this.MainColor = BoxColor.Grey;
+				}
 			}
 		}
 
@@ -626,6 +646,31 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				if (this.DetectRoundButton(this.PositionCommentButton, pos))
 				{
 					element = ActiveElement.BoxCommentButton;
+					return true;
+				}
+
+				//	Souris dans le bouton des couleurs ?
+				if (this.DetectSquareButton(this.PositionColorButton(0), pos))
+				{
+					element = ActiveElement.BoxColorButton1;
+					return true;
+				}
+
+				if (this.DetectSquareButton(this.PositionColorButton(1), pos))
+				{
+					element = ActiveElement.BoxColorButton2;
+					return true;
+				}
+
+				if (this.DetectSquareButton(this.PositionColorButton(2), pos))
+				{
+					element = ActiveElement.BoxColorButton3;
+					return true;
+				}
+
+				if (this.DetectSquareButton(this.PositionColorButton(3), pos))
+				{
+					element = ActiveElement.BoxColorButton4;
 					return true;
 				}
 
@@ -1468,14 +1513,9 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				}
 
 				if (this.hilitedElement != ActiveElement.None &&
-					this.hilitedElement != ActiveElement.BoxHeaderDragging &&
-					this.hilitedElement != ActiveElement.BoxSourcesButton &&
-					this.hilitedElement != ActiveElement.BoxCommentButton &&
-					this.hilitedElement != ActiveElement.BoxExtendButton &&
-					this.hilitedElement != ActiveElement.BoxCloseButton &&
 					this.hilitedElement != ActiveElement.BoxChangeWidth &&
 					this.hilitedElement != ActiveElement.BoxMoveColumnsSeparator &&
-					!this.isFieldMoving && !this.isChangeWidth && !this.isMoveColumnsSeparator)
+					!this.IsHeaderHilite && !this.isFieldMoving && !this.isChangeWidth && !this.isMoveColumnsSeparator)
 				{
 					//	Dessine la glissière à gauche pour suggérer les boutons Add/Remove des champs.
 					Point p1 = this.GetFieldAddBounds(-1).Center;
@@ -1530,6 +1570,43 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				}
 			}
 
+			//	Dessine le bouton des couleurs.
+			if (this.hilitedElement == ActiveElement.BoxColorButton1)
+			{
+				this.DrawSquareButton(graphics, this.PositionColorButton(0), BoxColor.Blue, this.boxColor == BoxColor.Blue, true);
+			}
+			else if (this.IsHeaderHilite && !this.isDragging)
+			{
+				this.DrawSquareButton(graphics, this.PositionColorButton(0), BoxColor.Blue, this.boxColor == BoxColor.Blue, false);
+			}
+
+			if (this.hilitedElement == ActiveElement.BoxColorButton2)
+			{
+				this.DrawSquareButton(graphics, this.PositionColorButton(1), BoxColor.Green, this.boxColor == BoxColor.Green, true);
+			}
+			else if (this.IsHeaderHilite && !this.isDragging)
+			{
+				this.DrawSquareButton(graphics, this.PositionColorButton(1), BoxColor.Green, this.boxColor == BoxColor.Green, false);
+			}
+
+			if (this.hilitedElement == ActiveElement.BoxColorButton3)
+			{
+				this.DrawSquareButton(graphics, this.PositionColorButton(2), BoxColor.Red, this.boxColor == BoxColor.Red, true);
+			}
+			else if (this.IsHeaderHilite && !this.isDragging)
+			{
+				this.DrawSquareButton(graphics, this.PositionColorButton(2), BoxColor.Red, this.boxColor == BoxColor.Red, false);
+			}
+
+			if (this.hilitedElement == ActiveElement.BoxColorButton4)
+			{
+				this.DrawSquareButton(graphics, this.PositionColorButton(3), BoxColor.Grey, this.boxColor == BoxColor.Grey, true);
+			}
+			else if (this.IsHeaderHilite && !this.isDragging)
+			{
+				this.DrawSquareButton(graphics, this.PositionColorButton(3), BoxColor.Grey, this.boxColor == BoxColor.Grey, false);
+			}
+
 			if (this.isExtended)
 			{
 				//	Dessine le bouton pour déplacer le séparateur des colonnes.
@@ -1568,6 +1645,10 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				return (this.hilitedElement == ActiveElement.BoxHeaderDragging ||
 						this.hilitedElement == ActiveElement.BoxSourcesButton ||
 						this.hilitedElement == ActiveElement.BoxCommentButton ||
+						this.hilitedElement == ActiveElement.BoxColorButton1 ||
+						this.hilitedElement == ActiveElement.BoxColorButton2 ||
+						this.hilitedElement == ActiveElement.BoxColorButton3 ||
+						this.hilitedElement == ActiveElement.BoxColorButton4 ||
 						this.hilitedElement == ActiveElement.BoxExtendButton ||
 						this.hilitedElement == ActiveElement.BoxCloseButton);
 			}
@@ -1770,6 +1851,12 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			{
 				return new Point(this.bounds.Left+AbstractObject.buttonRadius*3+8, this.bounds.Top-AbstractObject.headerHeight/2);
 			}
+		}
+
+		protected Point PositionColorButton(int rank)
+		{
+			//	Retourne la position du bouton pour choisir la couleur.
+			return new Point(this.bounds.Left-2+(AbstractObject.buttonSquare+0.5)*(rank+1)*2, this.bounds.Bottom+4+AbstractObject.buttonSquare);
 		}
 
 		protected Point PositionSourcesMenu
