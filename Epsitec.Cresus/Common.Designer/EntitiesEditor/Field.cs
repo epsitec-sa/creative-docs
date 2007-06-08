@@ -261,16 +261,16 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		}
 
 
-		public ObjectComment Comment
+		public bool AsComment
 		{
-			//	Commentaire lié.
+			//	Est-ce qu'un commentaire est attaché ?
 			get
 			{
-				return this.comment;
+				return this.asComment;
 			}
 			set
 			{
-				this.comment = value;
+				this.asComment = value;
 			}
 		}
 
@@ -515,7 +515,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		protected double routeRelativeBY;
 		protected double routeRelativeCX;
 		protected double routeAbsoluteDX;
-		protected ObjectComment comment;
+		protected bool asComment;
 		protected Point commentAttach;
 		protected Rectangle commentBounds;
 		protected string commentText;

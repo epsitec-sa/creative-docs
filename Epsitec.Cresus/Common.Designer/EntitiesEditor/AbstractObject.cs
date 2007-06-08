@@ -38,7 +38,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			ConnectionComment,
 			CommentEdit,
 			CommentMove,
-			CommentSize,
+			CommentWidth,
 			CommentClose,
 		}
 

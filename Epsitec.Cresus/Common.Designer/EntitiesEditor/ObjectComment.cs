@@ -144,7 +144,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				this.editor.LockObject(this);
 			}
 
-			if (this.hilitedElement == ActiveElement.CommentSize)
+			if (this.hilitedElement == ActiveElement.CommentWidth)
 			{
 				this.isDraggingSize = true;
 				this.editor.LockObject(this);
@@ -192,9 +192,9 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 
 			//	Souris dans le bouton pour modifier la taille ?
-			if (this.DetectRoundButton(this.bounds.BottomRight, pos))
+			if (this.DetectRoundButton(this.PositionWidthButton, pos))
 			{
-				element = ActiveElement.CommentSize;
+				element = ActiveElement.CommentWidth;
 				return true;
 			}
 
@@ -350,13 +350,13 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 
 			//	Dessine le bouton pour modifier la taille.
-			if (this.hilitedElement == ActiveElement.CommentSize)
+			if (this.hilitedElement == ActiveElement.CommentWidth)
 			{
-				this.DrawRoundButton(graphics, this.bounds.BottomRight, AbstractObject.buttonRadius, GlyphShape.HorizontalMove, true, false);
+				this.DrawRoundButton(graphics, this.PositionWidthButton, AbstractObject.buttonRadius, GlyphShape.HorizontalMove, true, false);
 			}
 			else if (this.IsHeaderHilite && !this.isDraggingMove && !this.isDraggingSize)
 			{
-				this.DrawRoundButton(graphics, this.bounds.BottomRight, AbstractObject.buttonRadius, GlyphShape.HorizontalMove, false, false);
+				this.DrawRoundButton(graphics, this.PositionWidthButton, AbstractObject.buttonRadius, GlyphShape.HorizontalMove, false, false);
 			}
 		}
 
@@ -459,10 +459,20 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		protected Point PositionCloseButton
 		{
+			//	Retourne la position du bouton de fermeture.
 			get
 			{
 				Rectangle rect = this.HeaderRectangle;
 				return new Point(rect.Right-rect.Height/2, rect.Center.Y);
+			}
+		}
+
+		protected Point PositionWidthButton
+		{
+			//	Retourne la position du bouton de largeur.
+			get
+			{
+				return new Point(this.bounds.Right, this.bounds.Center.Y);
 			}
 		}
 

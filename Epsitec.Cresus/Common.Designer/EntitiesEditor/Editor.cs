@@ -326,11 +326,16 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				if (comment.AttachObject is ObjectConnection)
 				{
 					ObjectConnection connection = comment.AttachObject as ObjectConnection;
-					Point move = connection.PositionConnectionComment - connection.Field.CommentAttach;
 
-					Rectangle rect = comment.Bounds;
-					rect.Offset(move);
-					comment.SetBounds(rect);
+					Point newPos = connection.PositionConnectionComment;
+					Point oldPos = connection.Field.CommentAttach;
+
+					if (!newPos.IsZero && !oldPos.IsZero)
+					{
+						Rectangle rect = comment.Bounds;
+						rect.Offset(newPos-oldPos);
+						comment.SetBounds(rect);
+					}
 				}
 			}
 
@@ -485,8 +490,6 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 				if (comment.AttachObject is ObjectConnection)
 				{
-					ObjectConnection connection = comment.AttachObject as ObjectConnection;
-					connection.Field.Comment = null;
 					this.comments.RemoveAt(j);
 				}
 				else
@@ -526,17 +529,14 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			//	Recrée tous les commentaires liés aux connections.
 			foreach (ObjectConnection connection in this.connections)
 			{
-				if (!connection.Field.CommentAttach.IsZero)
+				if (connection.Field.AsComment && connection.Field.IsExplored)
 				{
-					ObjectComment comment = new ObjectComment(this);
-					comment.AttachObject = connection;
-					comment.Text = connection.Field.CommentText;
+					connection.Comment = new ObjectComment(this);
+					connection.Comment.AttachObject = connection;
+					connection.Comment.Text = connection.Field.CommentText;
+					connection.Comment.SetBounds(connection.Field.CommentBounds);
 
-					Rectangle bounds = connection.Field.CommentBounds;
-					bounds.Offset(-connection.Field.CommentAttach);
-					comment.SetBounds(bounds);
-
-					this.AddComment(comment);
+					this.AddComment(connection.Comment);
 				}
 			}
 
@@ -548,7 +548,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			//	Mémorise l'état de tous les commentaires liés à des connections.
 			foreach (ObjectConnection connection in this.connections)
 			{
-				connection.Field.CommentAttach = Point.Zero;
+				connection.Field.AsComment = false;
 			}
 
 			foreach (ObjectComment comment in this.comments)
@@ -557,9 +557,15 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				{
 					ObjectConnection connection = comment.AttachObject as ObjectConnection;
 
-					connection.Field.CommentAttach = connection.PositionConnectionComment;
+					connection.Field.AsComment = true;
 					connection.Field.CommentBounds = comment.Bounds;
 					connection.Field.CommentText   = comment.Text;
+
+					Point pos = connection.PositionConnectionComment;
+					if (!pos.IsZero)
+					{
+						connection.Field.CommentAttach = pos;
+					}
 				}
 			}
 		}

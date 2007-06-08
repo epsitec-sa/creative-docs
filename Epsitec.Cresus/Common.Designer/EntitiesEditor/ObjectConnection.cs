@@ -30,6 +30,19 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 		}
 
+		public ObjectComment Comment
+		{
+			//	Commentaire lié.
+			get
+			{
+				return this.comment;
+			}
+			set
+			{
+				this.comment = value;
+			}
+		}
+
 		public List<Point> Points
 		{
 			//	Retourne la liste des points. Si la connection est fermée, il s'agit des points
@@ -350,22 +363,22 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		protected void AddComment()
 		{
 			//	Ajoute un commentaire à la connection.
-			if (this.field.Comment == null)
+			if (this.comment == null)
 			{
-				this.field.Comment = new ObjectComment(this.editor);
-				this.field.Comment.AttachObject = this;
+				this.comment = new ObjectComment(this.editor);
+				this.comment.AttachObject = this;
 
 				Point attach = this.PositionConnectionComment;
 				Rectangle rect = new Rectangle(attach.X, attach.Y+20, Editor.defaultWidth, 50);  // hauteur arbitraire
-				this.field.Comment.SetBounds(rect);
-				this.field.Comment.UpdateHeight();  // adapte la hauteur en fonction du contenu
+				this.comment.SetBounds(rect);
+				this.comment.UpdateHeight();  // adapte la hauteur en fonction du contenu
 
-				this.editor.AddComment(this.field.Comment);
+				this.editor.AddComment(this.comment);
 				this.editor.UpdateAfterCommentChanged();
 			}
 			else
 			{
-				this.field.Comment.IsVisible = !this.field.Comment.IsVisible;
+				this.comment.IsVisible = !this.comment.IsVisible;
 			}
 		}
 
@@ -797,5 +810,6 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		protected List<Point> points;
 		protected bool isSrcHilited;
 		protected bool isDraggingRoute;
+		protected ObjectComment comment;
 	}
 }
