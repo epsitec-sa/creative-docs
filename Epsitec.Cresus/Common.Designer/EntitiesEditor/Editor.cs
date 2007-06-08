@@ -332,7 +332,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 					if (!newPos.IsZero && !oldPos.IsZero)
 					{
-						Rectangle rect = comment.Bounds;
+						Rectangle rect = connection.Field.CommentBounds;
 						rect.Offset(newPos-oldPos);
 						comment.SetBounds(rect);
 					}
@@ -558,13 +558,17 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					ObjectConnection connection = comment.AttachObject as ObjectConnection;
 
 					connection.Field.AsComment = true;
-					connection.Field.CommentBounds = comment.Bounds;
-					connection.Field.CommentText   = comment.Text;
+					connection.Field.CommentText = comment.Text;
 
 					Point pos = connection.PositionConnectionComment;
 					if (!pos.IsZero)
 					{
 						connection.Field.CommentAttach = pos;
+					}
+
+					if (!comment.Bounds.IsEmpty)
+					{
+						connection.Field.CommentBounds = comment.Bounds;
 					}
 				}
 			}
