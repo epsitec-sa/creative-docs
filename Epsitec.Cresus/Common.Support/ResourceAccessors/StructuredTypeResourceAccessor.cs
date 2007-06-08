@@ -46,9 +46,9 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			return Res.Types.ResourceStructuredType;
 		}
 
-		protected override Caption GetCaptionFromData(Types.StructuredData data, string name)
+		protected override Caption GetCaptionFromData(ResourceBundle sourceBundle, Types.StructuredData data, string name)
 		{
-			Caption     caption = base.GetCaptionFromData (data, name);
+			Caption     caption = base.GetCaptionFromData (sourceBundle, data, name);
 			StructuredType type = this.GetTypeFromData (data, caption);
 
 			AbstractType.SetComplexType (caption, type);

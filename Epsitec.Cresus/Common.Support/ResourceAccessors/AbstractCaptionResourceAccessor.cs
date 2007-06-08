@@ -136,11 +136,11 @@ namespace Epsitec.Common.Support.ResourceAccessors
 
 			Types.StructuredData data = item.GetCultureData (Resources.DefaultTwoLetterISOLanguageName);
 
-			Caption caption = this.GetCaptionFromData (data, item.Name);
+			Caption caption = this.GetCaptionFromData (bundle, data, item.Name);
 			string  name    = this.GetFieldNameFromName (data, item.Name);
 			string  about   = data.GetValue (Res.Fields.ResourceBase.Comment) as string;
 			object  modId   = data.GetValue (Res.Fields.ResourceBase.ModificationId);
-			
+
 			field.SetName (name);
 			field.SetStringValue (caption.SerializeToString ());
 			field.SetAbout (about);
@@ -175,7 +175,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 				}
 
 				data    = item.GetCultureData (twoLetterISOLanguageName);
-				caption = this.GetCaptionFromData (data, null);
+				caption = this.GetCaptionFromData (bundle, data, null);
 				about   = data.GetValue (Res.Fields.ResourceBase.Comment) as string;
 				modId   = data.GetValue (Res.Fields.ResourceBase.ModificationId);
 				
@@ -197,7 +197,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 
 		protected abstract string GetFieldNameFromName(Types.StructuredData data, string name);
 
-		protected abstract Caption GetCaptionFromData(Types.StructuredData data, string name);
+		protected abstract Caption GetCaptionFromData(ResourceBundle sourceBundle, Types.StructuredData data, string name);
 
 		protected abstract void FillDataFromCaption(CultureMap item, Types.StructuredData data, Caption caption);
 

@@ -45,7 +45,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			return this.Prefix + name;
 		}
 
-		protected override Caption GetCaptionFromData(Types.StructuredData data, string name)
+		protected override Caption GetCaptionFromData(ResourceBundle sourceBundle, Types.StructuredData data, string name)
 		{
 			string description = data.GetValue (Res.Fields.ResourceCaption.Description) as string;
 			string icon = data.GetValue (Res.Fields.ResourceCaption.Icon) as string;
@@ -76,6 +76,8 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			{
 				caption.Icon = icon;
 			}
+
+			Support.ResourceManager.SetSourceBundle (caption, sourceBundle);
 
 			return caption;
 		}
