@@ -81,7 +81,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 
 			this.UpdateFields();
-			this.UpdateParents();
+			this.UpdateSources();
 		}
 
 		public ObjectComment Comment
@@ -288,7 +288,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		public override string GetToolTipText(ActiveElement element)
 		{
 			//	Retourne le texte pour le tooltip.
-			if (this.isParentsMenu)
+			if (this.isSourcesMenu)
 			{
 				return null;  // pas de tooltip
 			}
@@ -305,14 +305,14 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 						return "Déplace l'entité";
 					}
 
-				case AbstractObject.ActiveElement.ParentsButton:
-					if (this.parentsList.Count == 0)
+				case AbstractObject.ActiveElement.SourcesButton:
+					if (this.sourcesList.Count == 0)
 					{
 						return null;
 					}
 					else
 					{
-						return "Ouvre une entité parente à choix";
+						return "Ouvre une entité source à choix";
 					}
 
 				case AbstractObject.ActiveElement.ExtendButton:
@@ -390,19 +390,19 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				this.editor.Invalidate();
 				return true;
 			}
-			else if (this.isParentsMenu)
+			else if (this.isSourcesMenu)
 			{
-				Rectangle rect = this.RectangleParentsMenu;
+				Rectangle rect = this.RectangleSourcesMenu;
 				int sel = -1;
 				if (rect.Contains(pos))
 				{
-					sel = (int) ((pos.Y-rect.Bottom)/ObjectBox.parentsMenuHeight);
-					sel = this.parentsList.Count-sel-1;
+					sel = (int) ((pos.Y-rect.Bottom)/ObjectBox.sourcesMenuHeight);
+					sel = this.sourcesList.Count-sel-1;
 				}
 
-				if (this.parentsMenuSelected != sel)
+				if (this.sourcesMenuSelected != sel)
 				{
-					this.parentsMenuSelected = sel;
+					this.sourcesMenuSelected = sel;
 					this.editor.Invalidate();
 				}
 
@@ -417,11 +417,11 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		public override void MouseDown(Point pos)
 		{
 			//	Le bouton de la souris est pressé.
-			if (this.isParentsMenu)  // menu resté du clic précédent ?
+			if (this.isSourcesMenu)  // menu resté du clic précédent ?
 			{
-				if (this.parentsMenuSelected == -1)  // clic en dehors ?
+				if (this.sourcesMenuSelected == -1)  // clic en dehors ?
 				{
-					this.isParentsMenu = false;  // ferme le menu
+					this.isSourcesMenu = false;  // ferme le menu
 					this.editor.LockObject(null);
 					this.editor.Invalidate();
 				}
@@ -457,10 +457,10 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				this.editor.LockObject(this);
 			}
 
-			if (this.hilitedElement == ActiveElement.ParentsButton)
+			if (this.hilitedElement == ActiveElement.SourcesButton)
 			{
-				this.isParentsMenu = true;
-				this.parentsMenuSelected = -1;
+				this.isSourcesMenu = true;
+				this.sourcesMenuSelected = -1;
 				this.editor.Invalidate();
 				this.editor.LockObject(this);
 			}
@@ -495,17 +495,17 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				this.isMoveColumnsSeparator = false;
 				this.editor.LockObject(null);
 			}
-			else if (this.isParentsMenu)
+			else if (this.isSourcesMenu)
 			{
-				if (this.parentsMenuSelected != -1)
+				if (this.sourcesMenuSelected != -1)
 				{
-					ParentInfo info = this.parentsList[this.parentsMenuSelected];
+					SourceInfo info = this.sourcesList[this.sourcesMenuSelected];
 					if (!info.Opened)
 					{
-						this.OpenParent(info.CultureMap, info.Rank);
+						this.OpenSource(info.CultureMap, info.Rank);
 					}
 
-					this.isParentsMenu = false;  // ferme le menu
+					this.isSourcesMenu = false;  // ferme le menu
 					this.editor.LockObject(null);
 					this.editor.Invalidate();
 				}
@@ -564,6 +564,11 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			fieldRank = -1;
 			this.SetConnectionsHilited(false);
 
+			if (this.isSourcesMenu)
+			{
+				return false;
+			}
+
 			if (pos.IsZero)
 			{
 				//	Si l'une des connection est dans l'état ConnectionOpen*, il faut afficher
@@ -607,12 +612,12 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					return true;
 				}
 
-				//	Souris dans le bouton des parents ?
-				if (this.parentsList.Count > 0)
+				//	Souris dans le bouton des sources ?
+				if (this.sourcesList.Count > 0)
 				{
-					if (this.DetectRoundButton(this.PositionParentsButton, pos))
+					if (this.DetectRoundButton(this.PositionSourcesButton, pos))
 					{
-						element = ActiveElement.ParentsButton;
+						element = ActiveElement.SourcesButton;
 						return true;
 					}
 				}
@@ -1124,9 +1129,9 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 
 		/// <summary>
-		/// Informations sur une entité parente, ouverte ou fermée.
+		/// Informations sur une entité source, ouverte ou fermée.
 		/// </summary>
-		protected class ParentInfo
+		protected class SourceInfo
 		{
 			public string ModuleName;
 			public string FieldName;
@@ -1138,10 +1143,10 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		public void UpdateAfterOpenOrCloseBox()
 		{
 			//	Appelé après avoir ajouté ou supprimé une boîte.
-			this.parentsClosedCount = 0;
-			for (int i=0; i<this.parentsList.Count; i++)
+			this.sourcesClosedCount = 0;
+			for (int i=0; i<this.sourcesList.Count; i++)
 			{
-				ParentInfo info = this.parentsList[i];
+				SourceInfo info = this.sourcesList[i];
 
 				info.Opened = false;
 				foreach (ObjectBox box in this.editor.Boxes)
@@ -1155,15 +1160,15 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 				if (!info.Opened)
 				{
-					this.parentsClosedCount++;  // màj le nombre de parents fermés
+					this.sourcesClosedCount++;  // màj le nombre de sources fermées
 				}
 			}
 		}
 
-		protected void UpdateParents()
+		protected void UpdateSources()
 		{
-			//	Met à jour la liste de tous les parents potentiels de l'entité courante.
-			this.parentsList = new List<ParentInfo>();
+			//	Met à jour la liste de toutes les sources potentielles de l'entité courante.
+			this.sourcesList = new List<SourceInfo>();
 
 			List<Module> modules = this.editor.Module.MainWindow.Modules;
 			foreach (Module module in modules)
@@ -1182,9 +1187,9 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 							Module dstModule = this.editor.Module.MainWindow.SearchModule(typeId);
 							CultureMap fieldCultureMap = (dstModule == null) ? null : dstModule.AccessEntities.Accessor.Collection[typeId];
 							
-							if (fieldCultureMap == this.cultureMap && !this.IsExistingParentInfo(cultureMap))
+							if (fieldCultureMap == this.cultureMap && !this.IsExistingSourceInfo(cultureMap))
 							{
-								ParentInfo info = new ParentInfo();
+								SourceInfo info = new SourceInfo();
 								
 								info.CultureMap = cultureMap;
 								info.ModuleName = module.ModuleInfo.Name;
@@ -1192,7 +1197,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 								info.Rank = i;
 								info.Opened = false;
 
-								this.parentsList.Add(info);
+								this.sourcesList.Add(info);
 							}
 
 							i++;
@@ -1201,12 +1206,12 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				}
 			}
 
-			this.parentsClosedCount = this.parentsList.Count;
+			this.sourcesClosedCount = this.sourcesList.Count;
 		}
 
-		protected bool IsExistingParentInfo(CultureMap cultureMap)
+		protected bool IsExistingSourceInfo(CultureMap cultureMap)
 		{
-			foreach (ParentInfo info in this.parentsList)
+			foreach (SourceInfo info in this.sourcesList)
 			{
 				if (info.CultureMap == cultureMap)
 				{
@@ -1216,9 +1221,9 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			return false;
 		}
 
-		protected void OpenParent(CultureMap cultureMap, int rank)
+		protected void OpenSource(CultureMap cultureMap, int rank)
 		{
-			//	Ouvre une entité parent.
+			//	Ouvre une entité source.
 			ObjectBox box = this.editor.SearchBox(cultureMap.Name);
 			if (box == null)
 			{
@@ -1350,10 +1355,10 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				this.DrawRoundButton(graphics, this.PositionCloseButton, AbstractObject.buttonRadius, GlyphShape.Close, false, false, !this.isRoot);
 			}
 
-			//	Dessine le moignon pour les parents à gauche.
-			if (this.parentsClosedCount > 0)
+			//	Dessine le moignon pour les sources à gauche.
+			if (this.sourcesClosedCount > 0)
 			{
-				Point p1 = this.PositionParentsButton;
+				Point p1 = this.PositionSourcesButton;
 				Point p2 = p1;
 				p1.X = this.bounds.Left-1-AbstractObject.lengthClose;
 				p2.X = this.bounds.Left-1;
@@ -1364,14 +1369,14 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				graphics.RenderSolid(colorFrame);
 			}
 
-			//	Dessine le bouton des parents.
-			if (this.hilitedElement == ActiveElement.ParentsButton)
+			//	Dessine le bouton des sources.
+			if (this.hilitedElement == ActiveElement.SourcesButton)
 			{
-				this.DrawRoundButton(graphics, this.PositionParentsButton, AbstractObject.buttonRadius, GlyphShape.TriangleDown, true, false, this.parentsList.Count > 0);
+				this.DrawRoundButton(graphics, this.PositionSourcesButton, AbstractObject.buttonRadius, GlyphShape.TriangleDown, true, false, this.sourcesList.Count > 0);
 			}
 			else if (this.IsHeaderHilite && !this.isDragging)
 			{
-				this.DrawRoundButton(graphics, this.PositionParentsButton, AbstractObject.buttonRadius, GlyphShape.TriangleDown, false, false, this.parentsList.Count > 0);
+				this.DrawRoundButton(graphics, this.PositionSourcesButton, AbstractObject.buttonRadius, GlyphShape.TriangleDown, false, false, this.sourcesList.Count > 0);
 			}
 
 			//	Dessine le bouton des commentaires.
@@ -1462,7 +1467,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 				if (this.hilitedElement != ActiveElement.None &&
 					this.hilitedElement != ActiveElement.HeaderDragging &&
-					this.hilitedElement != ActiveElement.ParentsButton &&
+					this.hilitedElement != ActiveElement.SourcesButton &&
 					this.hilitedElement != ActiveElement.CommentButton &&
 					this.hilitedElement != ActiveElement.ExtendButton &&
 					this.hilitedElement != ActiveElement.CloseButton &&
@@ -1559,7 +1564,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			get
 			{
 				return (this.hilitedElement == ActiveElement.HeaderDragging ||
-						this.hilitedElement == ActiveElement.ParentsButton ||
+						this.hilitedElement == ActiveElement.SourcesButton ||
 						this.hilitedElement == ActiveElement.CommentButton ||
 						this.hilitedElement == ActiveElement.ExtendButton ||
 						this.hilitedElement == ActiveElement.CloseButton);
@@ -1569,18 +1574,18 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		public override void DrawForeground(Graphics graphics)
 		{
 			//	Dessine le dessus de l'objet.
-			if (this.isParentsMenu)
+			if (this.isSourcesMenu)
 			{
-				this.DrawParentsMenu(graphics, this.PositionParentsMenu);
+				this.DrawSourcesMenu(graphics, this.PositionSourcesMenu);
 			}
 		}
 
-		protected void DrawParentsMenu(Graphics graphics, Point pos)
+		protected void DrawSourcesMenu(Graphics graphics, Point pos)
 		{
-			//	Dessine le menu pour choisir un parent.
+			//	Dessine le menu pour choisir une entité source.
 			IAdorner adorner = Common.Widgets.Adorners.Factory.Active;
-			double h = ObjectBox.parentsMenuHeight;
-			Rectangle box = this.RectangleParentsMenu;
+			double h = ObjectBox.sourcesMenuHeight;
+			Rectangle box = this.RectangleSourcesMenu;
 
 			//	Dessine la boîte vide ombrée.
 			Rectangle big = box;
@@ -1610,27 +1615,27 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			graphics.AddFilledRectangle(rect);
 			graphics.RenderSolid(this.GetColorCaption());
 
-			Rectangle gr = new Rectangle(this.PositionParentsButton.X-AbstractObject.buttonRadius, this.PositionParentsButton.Y-AbstractObject.buttonRadius, AbstractObject.buttonRadius*2, AbstractObject.buttonRadius*2);
+			Rectangle gr = new Rectangle(this.PositionSourcesButton.X-AbstractObject.buttonRadius, this.PositionSourcesButton.Y-AbstractObject.buttonRadius, AbstractObject.buttonRadius*2, AbstractObject.buttonRadius*2);
 			adorner.PaintGlyph(graphics, gr, WidgetPaintState.Enabled, Color.FromBrightness(1), GlyphShape.TriangleDown, PaintTextStyle.Button);
 			
-			graphics.AddText(rect.Left+AbstractObject.buttonRadius*2+5, rect.Bottom+1, rect.Width-(AbstractObject.buttonRadius*2+10), rect.Height, "Entités parentes", Font.GetFont(Font.DefaultFontFamily, "Bold"), 14, ContentAlignment.MiddleLeft);
+			graphics.AddText(rect.Left+AbstractObject.buttonRadius*2+5, rect.Bottom+1, rect.Width-(AbstractObject.buttonRadius*2+10), rect.Height, "Entités sources", Font.GetFont(Font.DefaultFontFamily, "Bold"), 14, ContentAlignment.MiddleLeft);
 			graphics.RenderSolid(Color.FromBrightness(1));
 			
 			rect = box;
 			rect.Top = rect.Bottom+h;
-			rect.Offset(0, h*(this.parentsList.Count-1));
+			rect.Offset(0, h*(this.sourcesList.Count-1));
 
 			//	Dessine les lignes du menu.
-			for (int i=0; i<this.parentsList.Count; i++)
+			for (int i=0; i<this.sourcesList.Count; i++)
 			{
-				ParentInfo info = this.parentsList[i];
+				SourceInfo info = this.sourcesList[i];
 
 				if (info.Opened)
 				{
 					graphics.AddFilledRectangle(rect);
 					graphics.RenderSolid(Color.FromBrightness(0.9));
 				}
-				else if (i == this.parentsMenuSelected)
+				else if (i == this.sourcesMenuSelected)
 				{
 					graphics.AddFilledRectangle(rect);
 					graphics.RenderSolid(this.GetColorCaption(0.2));
@@ -1747,9 +1752,9 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 		}
 
-		protected Point PositionParentsButton
+		protected Point PositionSourcesButton
 		{
-			//	Retourne la position du bouton pour montrer les parents.
+			//	Retourne la position du bouton pour montrer les sources.
 			get
 			{
 				return new Point(this.bounds.Left+AbstractObject.buttonRadius+6, this.bounds.Top-AbstractObject.headerHeight/2);
@@ -1758,32 +1763,32 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		protected Point PositionCommentButton
 		{
-			//	Retourne la position du bouton pour montrer les parents.
+			//	Retourne la position du bouton pour montrer les sources.
 			get
 			{
 				return new Point(this.bounds.Left+AbstractObject.buttonRadius*3+8, this.bounds.Top-AbstractObject.headerHeight/2);
 			}
 		}
 
-		protected Point PositionParentsMenu
+		protected Point PositionSourcesMenu
 		{
-			//	Retourne la position du menu pour montrer les parents.
+			//	Retourne la position du menu pour montrer les sources.
 			get
 			{
-				Point pos = this.PositionParentsButton;
+				Point pos = this.PositionSourcesButton;
 				pos.X -= AbstractObject.buttonRadius;
 				pos.Y += AbstractObject.buttonRadius;
 				return pos;
 			}
 		}
 
-		protected Rectangle RectangleParentsMenu
+		protected Rectangle RectangleSourcesMenu
 		{
-			//	Retourne le rectangle du menu pour montrer les parents.
+			//	Retourne le rectangle du menu pour montrer les sources.
 			get
 			{
-				Point pos = this.PositionParentsMenu;
-				double h = ObjectBox.parentsMenuHeight*(this.parentsList.Count+1);
+				Point pos = this.PositionSourcesMenu;
+				double h = ObjectBox.sourcesMenuHeight*(this.sourcesList.Count+1);
 				Rectangle rect = new Rectangle(pos.X, pos.Y-h, 200, h);
 				rect.Inflate(0.5);
 				return rect;
@@ -1807,7 +1812,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		protected static readonly double shadowOffset = 6;
 		protected static readonly double textMargin = 13;
 		protected static readonly double fieldHeight = 20;
-		protected static readonly double parentsMenuHeight = 20;
+		protected static readonly double sourcesMenuHeight = 20;
 
 		protected CultureMap cultureMap;
 		protected ObjectComment comment;
@@ -1819,8 +1824,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		protected TextLayout title;
 		protected List<Field> fields;
 		protected Field parentField;
-		protected List<ParentInfo> parentsList;
-		protected int parentsClosedCount;
+		protected List<SourceInfo> sourcesList;
+		protected int sourcesClosedCount;
 
 		protected bool isDragging;
 		protected Point draggingPos;
@@ -1834,7 +1839,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		protected bool isMoveColumnsSeparator;
 
-		protected bool isParentsMenu;
-		protected int parentsMenuSelected;
+		protected bool isSourcesMenu;
+		protected int sourcesMenuSelected;
 	}
 }

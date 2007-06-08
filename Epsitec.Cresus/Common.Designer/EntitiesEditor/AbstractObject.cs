@@ -17,7 +17,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			Inside,
 			ExtendButton,
 			CloseButton,
-			ParentsButton,
+			SourcesButton,
 			CommentButton,
 			HeaderDragging,
 			FieldNameSelect,
@@ -113,8 +113,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				case AbstractObject.ActiveElement.HeaderDragging:
 					return "Déplace l'entité";
 
-				case AbstractObject.ActiveElement.ParentsButton:
-					return "Ouvre une entité parente";
+				case AbstractObject.ActiveElement.SourcesButton:
+					return "Ouvre une entité source";
 
 				case AbstractObject.ActiveElement.CommentButton:
 					return "Montre ou cache le commentaire associé";
