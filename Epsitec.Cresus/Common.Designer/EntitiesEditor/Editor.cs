@@ -520,6 +520,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 						ObjectConnection connection = new ObjectConnection(this);
 						connection.Field = field;
+						connection.MainColor = box.MainColor;
 						field.Connection = connection;
 						this.AddConnection(connection);
 					}

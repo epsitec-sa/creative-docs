@@ -75,7 +75,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 		}
 
-		public BoxColor MainColor
+		public virtual BoxColor MainColor
 		{
 			//	Couleur de fond de la boîte.
 			get

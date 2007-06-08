@@ -123,6 +123,32 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 		}
 
+		public override BoxColor MainColor
+		{
+			//	Couleur de fond de la boîte.
+			get
+			{
+				return this.boxColor;
+			}
+			set
+			{
+				if (this.boxColor != value)
+				{
+					this.boxColor = value;
+
+					foreach (Field field in this.fields)
+					{
+						if (field.Connection != null)
+						{
+							field.Connection.MainColor = this.boxColor;
+						}
+					}
+
+					this.editor.Invalidate();
+				}
+			}
+		}
+
 		public List<Field> Fields
 		{
 			get
@@ -1277,6 +1303,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				//	Ouvre la connection sur une nouvelle boîte.
 				box = new ObjectBox(this.editor);
 				box.Title = cultureMap.Name;
+				box.MainColor = this.boxColor;
 				box.SetContent(cultureMap);
 
 				Field field = box.Fields[rank];
