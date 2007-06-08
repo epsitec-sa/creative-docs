@@ -297,6 +297,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				rect.Deflate(1);
 				graphics.AddRectangle(rect);
 				graphics.RenderSolid(Color.FromBrightness(1));
+				rect.Inflate(1);
 			}
 
 			if (hilited)
