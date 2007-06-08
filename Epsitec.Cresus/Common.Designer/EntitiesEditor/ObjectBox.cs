@@ -306,7 +306,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					}
 
 				case AbstractObject.ActiveElement.ParentsButton:
-					if (this.parentsClosedCount == 0)
+					if (this.parentsList.Count == 0)
 					{
 						return null;
 					}
@@ -397,7 +397,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				if (rect.Contains(pos))
 				{
 					sel = (int) ((pos.Y-rect.Bottom)/ObjectBox.parentsMenuHeight);
-					sel = this.parentsClosedCount-sel-1;
+					sel = this.parentsList.Count-sel-1;
 				}
 
 				if (this.parentsMenuSelected != sel)
@@ -499,8 +499,11 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			{
 				if (this.parentsMenuSelected != -1)
 				{
-					ParentInfo info = this.GetParentInfo(this.parentsMenuSelected);
-					this.OpenParent(info.CultureMap, info.Rank);
+					ParentInfo info = this.parentsList[this.parentsMenuSelected];
+					if (!info.Opened)
+					{
+						this.OpenParent(info.CultureMap, info.Rank);
+					}
 
 					this.isParentsMenu = false;  // ferme le menu
 					this.editor.LockObject(null);
@@ -605,7 +608,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				}
 
 				//	Souris dans le bouton des parents ?
-				if (this.parentsClosedCount > 0)
+				if (this.parentsList.Count > 0)
 				{
 					if (this.DetectRoundButton(this.PositionParentsButton, pos))
 					{
@@ -1213,19 +1216,6 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			return false;
 		}
 
-		protected ParentInfo GetParentInfo(int sel)
-		{
-			//	Retourne une information sur un parent fermé.
-			foreach (ParentInfo info in this.parentsList)
-			{
-				if (!info.Opened && sel-- == 0)
-				{
-					return info;
-				}
-			}
-			throw new System.Exception("Selection out of range.");
-		}
-
 		protected void OpenParent(CultureMap cultureMap, int rank)
 		{
 			//	Ouvre une entité parent.
@@ -1377,11 +1367,11 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			//	Dessine le bouton des parents.
 			if (this.hilitedElement == ActiveElement.ParentsButton)
 			{
-				this.DrawRoundButton(graphics, this.PositionParentsButton, AbstractObject.buttonRadius, GlyphShape.TriangleDown, true, false, this.parentsClosedCount > 0);
+				this.DrawRoundButton(graphics, this.PositionParentsButton, AbstractObject.buttonRadius, GlyphShape.TriangleDown, true, false, this.parentsList.Count > 0);
 			}
 			else if (this.IsHeaderHilite && !this.isDragging)
 			{
-				this.DrawRoundButton(graphics, this.PositionParentsButton, AbstractObject.buttonRadius, GlyphShape.TriangleDown, false, false, this.parentsClosedCount > 0);
+				this.DrawRoundButton(graphics, this.PositionParentsButton, AbstractObject.buttonRadius, GlyphShape.TriangleDown, false, false, this.parentsList.Count > 0);
 			}
 
 			//	Dessine le bouton des commentaires.
@@ -1628,14 +1618,19 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			
 			rect = box;
 			rect.Top = rect.Bottom+h;
-			rect.Offset(0, h*(this.parentsClosedCount-1));
+			rect.Offset(0, h*(this.parentsList.Count-1));
 
 			//	Dessine les lignes du menu.
-			for (int i=0; i<this.parentsClosedCount; i++)
+			for (int i=0; i<this.parentsList.Count; i++)
 			{
-				ParentInfo info = this.GetParentInfo(i);
+				ParentInfo info = this.parentsList[i];
 
-				if (i == this.parentsMenuSelected)
+				if (info.Opened)
+				{
+					graphics.AddFilledRectangle(rect);
+					graphics.RenderSolid(Color.FromBrightness(0.9));
+				}
+				else if (i == this.parentsMenuSelected)
 				{
 					graphics.AddFilledRectangle(rect);
 					graphics.RenderSolid(this.GetColorCaption(0.2));
@@ -1643,7 +1638,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 				string text = string.Concat(info.ModuleName, ": ", info.FieldName);
 				graphics.AddText(rect.Left+5, rect.Bottom, rect.Width-10, rect.Height, text, Font.DefaultFont, 10, ContentAlignment.MiddleLeft);
-				graphics.RenderSolid(Color.FromBrightness(0));
+				graphics.RenderSolid(Color.FromBrightness(info.Opened ? 0.3 : 0));
 
 				graphics.AddLine(rect.TopLeft, rect.TopRight);
 				graphics.RenderSolid(Color.FromBrightness(0));
@@ -1788,7 +1783,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			get
 			{
 				Point pos = this.PositionParentsMenu;
-				double h = ObjectBox.parentsMenuHeight*(this.parentsClosedCount+1);
+				double h = ObjectBox.parentsMenuHeight*(this.parentsList.Count+1);
 				Rectangle rect = new Rectangle(pos.X, pos.Y-h, 200, h);
 				rect.Inflate(0.5);
 				return rect;
