@@ -598,7 +598,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		public Point PositionConnectionComment
 		{
-			//	Retourne la position du bouton pour commenter la connection.
+			//	Retourne la position du bouton pour commenter la connection, ou pour déplacer
+			//	le point d'attache lorsque le commentaire existe.
 			get
 			{
 				if (this.field.IsSourceExpanded && this.field.IsExplored && this.points.Count >= 2)
@@ -823,6 +824,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				return;
 			}
 
+			Point oldPos = this.PositionConnectionComment;
+
 			if (this.field.Route == Field.RouteType.A)
 			{
 				if (this.hilitedElement == ActiveElement.ConnectionMove1)
@@ -860,6 +863,15 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					double px = System.Math.Min(this.points[0].X, this.points[3].X) - Editor.connectionDetour;
 					this.field.RouteAbsoluteDX = px-pos.X;
 				}
+			}
+
+			Point newPos = this.PositionConnectionComment;
+
+			if (!this.IsConnectionCommentButton)
+			{
+				Rectangle bounds = this.comment.Bounds;
+				bounds.Offset(newPos-oldPos);
+				this.comment.SetBounds(bounds);
 			}
 		}
 

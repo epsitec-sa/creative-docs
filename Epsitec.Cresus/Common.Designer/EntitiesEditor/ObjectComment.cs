@@ -151,12 +151,12 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			{
 				ObjectConnection connection = this.attachObject as ObjectConnection;
 
-				Point p1 = connection.PositionConnectionComment;
+				Point oldPos = connection.PositionConnectionComment;
 				connection.Field.CommentAttach = connection.PointToAttach(pos);
-				Point p2 = connection.PositionConnectionComment;
+				Point newPos = connection.PositionConnectionComment;
 
 				Rectangle bounds = this.bounds;
-				bounds.Offset(p2-p1);
+				bounds.Offset(newPos-oldPos);
 				this.SetBounds(bounds);
 
 				this.editor.Invalidate();

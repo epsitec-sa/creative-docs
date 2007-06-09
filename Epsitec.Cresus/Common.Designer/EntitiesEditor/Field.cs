@@ -317,6 +317,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		public double CommentAttach
 		{
 			//	Distance d'attache du commentaire.
+			//	Une distance positive commence depuis le début de la connection.
+			//	Une distance négative commence depuis la fin de la connection.
 			get
 			{
 				return this.commentAttach;
