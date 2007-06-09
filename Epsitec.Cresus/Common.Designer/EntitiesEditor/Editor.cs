@@ -334,7 +334,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					{
 						Rectangle rect = connection.Field.CommentBounds;
 						rect.Offset(newPos-oldPos);
-						comment.SetBounds(rect);
+						comment.SetBounds(rect);  // déplace le commentaire
 					}
 				}
 			}

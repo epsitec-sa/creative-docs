@@ -157,7 +157,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 				Rectangle bounds = this.bounds;
 				bounds.Offset(newPos-oldPos);
-				this.SetBounds(bounds);
+				this.SetBounds(bounds);  // déplace le commentaire
 
 				this.editor.Invalidate();
 				return true;

@@ -712,9 +712,9 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			dj = System.Math.Max(dj, AbstractObject.minAttach);
 			dj = System.Math.Min(dj, total-AbstractObject.minAttach);
 
-			if (dj > total/2)
+			if (dj > total/2)  // plus proche de la fin ?
 			{
-				dj = dj-total;  // attaché depuis la fin
+				dj = dj-total;  // attaché depuis la fin (valeur négative)
 			}
 
 			return dj;
@@ -824,7 +824,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				return;
 			}
 
-			Point oldPos = this.PositionConnectionComment;
+			Point oldPos = this.PositionConnectionComment;  // point d'attache avant re-routage
 
 			if (this.field.Route == Field.RouteType.A)
 			{
@@ -865,13 +865,13 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				}
 			}
 
-			Point newPos = this.PositionConnectionComment;
+			Point newPos = this.PositionConnectionComment;  // point d'attache après re-routage
 
-			if (!this.IsConnectionCommentButton)
+			if (this.comment != null)
 			{
 				Rectangle bounds = this.comment.Bounds;
 				bounds.Offset(newPos-oldPos);
-				this.comment.SetBounds(bounds);
+				this.comment.SetBounds(bounds);  // déplace le commentaire
 			}
 		}
 
