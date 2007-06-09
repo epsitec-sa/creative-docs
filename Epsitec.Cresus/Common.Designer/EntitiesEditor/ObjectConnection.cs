@@ -392,6 +392,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			{
 				this.comment = new ObjectComment(this.editor);
 				this.comment.AttachObject = this;
+				this.comment.BackgroundMainColor = this.field.CommentMainColor;
+				this.comment.Text = this.field.CommentText;
 
 				Point attach = this.PositionConnectionComment;
 				Rectangle rect = new Rectangle(attach.X, attach.Y+20, Editor.defaultWidth, 50);  // hauteur arbitraire
@@ -678,7 +680,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			//	ou depuis la fin (si négatif).
 			if (this.points.Count < 2)
 			{
-				return AbstractObject.minAttach;
+				return 0;
 			}
 
 			double total = 0;
@@ -688,17 +690,20 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			{
 				total += Point.Distance(this.points[i], this.points[i+1]);
 				Point pi = Point.Projection(this.points[i], this.points[i+1], p);
-				double di = Point.Distance(pi, p);
-				if (di < min)
+				if (Geometry.IsInside(this.points[i], this.points[i+1], pi))
 				{
-					min = di;
-					j = i;
+					double di = Point.Distance(pi, p);
+					if (di < min)
+					{
+						min = di;
+						j = i;
+					}
 				}
 			}
 
 			if (j == -1)
 			{
-				return AbstractObject.minAttach;
+				return 0;
 			}
 
 			Point pj = Point.Projection(this.points[j], this.points[j+1], p);

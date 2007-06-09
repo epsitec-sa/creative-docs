@@ -151,15 +151,19 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			{
 				ObjectConnection connection = this.attachObject as ObjectConnection;
 
-				Point oldPos = connection.PositionConnectionComment;
-				connection.Field.CommentAttach = connection.PointToAttach(pos);
-				Point newPos = connection.PositionConnectionComment;
+				double attach = connection.PointToAttach(pos);
+				if (attach != 0)
+				{
+					Point oldPos = connection.PositionConnectionComment;
+					connection.Field.CommentAttach = attach;
+					Point newPos = connection.PositionConnectionComment;
 
-				Rectangle bounds = this.bounds;
-				bounds.Offset(newPos-oldPos);
-				this.SetBounds(bounds);  // déplace le commentaire
+					Rectangle bounds = this.bounds;
+					bounds.Offset(newPos-oldPos);
+					this.SetBounds(bounds);  // déplace le commentaire
 
-				this.editor.Invalidate();
+					this.editor.Invalidate();
+				}
 				return true;
 			}
 			else
@@ -497,13 +501,17 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 
 			//	Dessine le bouton pour déplacer l'attache.
-			if (this.hilitedElement == ActiveElement.CommentAttachToConnection)
+			Point p = this.PositionAttachToConnectionButton;
+			if (!p.IsZero)
 			{
-				this.DrawRoundButton(graphics, this.PositionAttachToConnectionButton, AbstractObject.buttonRadius, "C", true, false);
-			}
-			else if (this.IsHeaderHilite && !this.isDraggingMove && !this.isDraggingWidth && !this.isDraggingAttach)
-			{
-				this.DrawRoundButton(graphics, this.PositionAttachToConnectionButton, AbstractObject.buttonRadius, "C", false, false);
+				if (this.hilitedElement == ActiveElement.CommentAttachToConnection)
+				{
+					this.DrawRoundButton(graphics, p, AbstractObject.buttonRadius, "C", true, false);
+				}
+				else if (this.IsHeaderHilite && !this.isDraggingMove && !this.isDraggingWidth && !this.isDraggingAttach)
+				{
+					this.DrawRoundButton(graphics, p, AbstractObject.buttonRadius, "C", false, false);
+				}
 			}
 		}
 

@@ -535,6 +535,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					connection.Comment = new ObjectComment(this);
 					connection.Comment.AttachObject = connection;
 					connection.Comment.Text = connection.Field.CommentText;
+					connection.Comment.BackgroundMainColor = connection.Field.CommentMainColor;
 					connection.Comment.SetBounds(connection.Field.CommentBounds);
 
 					this.AddComment(connection.Comment);
@@ -560,6 +561,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 					connection.Field.AsComment = true;
 					connection.Field.CommentText = comment.Text;
+					connection.Field.CommentMainColor = comment.BackgroundMainColor;
 
 					Point pos = connection.PositionConnectionComment;
 					if (!pos.IsZero)

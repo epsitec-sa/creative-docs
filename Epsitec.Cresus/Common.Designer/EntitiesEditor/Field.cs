@@ -88,6 +88,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			this.rank = -1;
 			this.isExplored = false;
 			this.isSourceExpanded = false;
+			
 			this.routeType = RouteType.Close;
 			this.routeRelativeAX1 = 0.2;
 			this.routeRelativeAX2 = 0.8;
@@ -96,7 +97,10 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			this.routeRelativeBY = 0.0;
 			this.routeRelativeCX = 0.5;
 			this.routeAbsoluteDX = 0.0;
+
 			this.commentAttach = AbstractObject.minAttach;
+			this.commentMainColor = AbstractObject.MainColor.Yellow;
+			this.commentText = "Commentaire libre, que vous pouvez modifier à volonté.";
 		}
 
 		public string FieldName
@@ -329,6 +333,19 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 		}
 
+		public AbstractObject.MainColor CommentMainColor
+		{
+			//	Couleur du commentaire.
+			get
+			{
+				return this.commentMainColor;
+			}
+			set
+			{
+				this.commentMainColor = value;
+			}
+		}
+
 
 		public void RouteClear()
 		{
@@ -536,5 +553,6 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		protected Rectangle commentBounds;
 		protected string commentText;
 		protected double commentAttach;
+		protected AbstractObject.MainColor commentMainColor;
 	}
 }
