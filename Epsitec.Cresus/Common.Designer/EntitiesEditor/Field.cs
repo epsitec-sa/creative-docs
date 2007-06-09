@@ -96,7 +96,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			this.routeRelativeBY = 0.0;
 			this.routeRelativeCX = 0.5;
 			this.routeAbsoluteDX = 0.0;
-			this.commentAttach = AbstractObject.buttonRadius*2;
+			this.commentAttach = AbstractObject.minAttach;
 		}
 
 		public string FieldName

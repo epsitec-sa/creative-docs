@@ -612,53 +612,92 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		protected Point AttachToPoint(double d)
 		{
+			//	Conversion d'une distance le long de la connection en position.
+			//	Une distance positive commence depuis le début de la connection.
+			//	Une distance négative commence depuis la fin de la connection.
 			if (this.points.Count < 2)
 			{
 				return Point.Zero;
 			}
 
+			double total = 0;
 			for (int i=0; i<this.points.Count-1; i++)
 			{
-				double len = Point.Distance(this.points[i], this.points[i+1]);
-				if (d < len)
+				total += Point.Distance(this.points[i], this.points[i+1]);
+			}
+
+			bool fromBegin = true;
+			if (d < 0)  // attaché depuis la fin ?
+			{
+				d = d+total;
+				fromBegin = false;
+			}
+
+			d = System.Math.Min(d, total-AbstractObject.minAttach);
+			d = System.Math.Max(d, AbstractObject.minAttach);
+
+			if (fromBegin)  // attaché depuis le début ?
+			{
+				for (int i=0; i<this.points.Count-1; i++)
 				{
-					return Point.Move(this.points[i], this.points[i+1], d);
+					double len = Point.Distance(this.points[i], this.points[i+1]);
+					if (d < len)
+					{
+						return Point.Move(this.points[i], this.points[i+1], d);
+					}
+					else
+					{
+						d -= len;
+					}
 				}
-				else
+			}
+			else  // attaché depuis la fin ?
+			{
+				d = total-d;
+				for (int i=this.points.Count-2; i>=0; i--)
 				{
-					d -= len;
+					double len = Point.Distance(this.points[i], this.points[i+1]);
+					if (d < len)
+					{
+						return Point.Move(this.points[i+1], this.points[i], d);
+					}
+					else
+					{
+						d -= len;
+					}
 				}
 			}
 
-			return Point.Move(this.points[this.points.Count-1], this.points[this.points.Count-2], AbstractObject.buttonRadius*2);
+			return Point.Move(this.points[this.points.Count-1], this.points[this.points.Count-2], AbstractObject.minAttach);
 		}
 
 		public double PointToAttach(Point p)
 		{
+			//	Conversion d'une position le long de la connection en distance depuis le début (si positif)
+			//	ou depuis la fin (si négatif).
 			if (this.points.Count < 2)
 			{
-				return AbstractObject.buttonRadius*2;
+				return AbstractObject.minAttach;
 			}
 
+			double total = 0;
 			double min = double.MaxValue;
 			int j = -1;
 			for (int i=0; i<this.points.Count-1; i++)
 			{
+				total += Point.Distance(this.points[i], this.points[i+1]);
 				Point pi = Point.Projection(this.points[i], this.points[i+1], p);
-				if (Geometry.IsInside(this.points[i], this.points[i+1], pi))
+				double di = Point.Distance(pi, p);
+				if (di < min)
 				{
-					double di = Point.Distance(pi, p);
-					if (di < min)
-					{
-						min = di;
-						j = i;
-					}
+					min = di;
+					j = i;
 				}
 			}
 
 			if (j == -1)
 			{
-				return AbstractObject.buttonRadius*2;
+				return AbstractObject.minAttach;
 			}
 
 			Point pj = Point.Projection(this.points[j], this.points[j+1], p);
@@ -667,6 +706,14 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			for (int i=0; i<j; i++)
 			{
 				dj += Point.Distance(this.points[i], this.points[i+1]);
+			}
+
+			dj = System.Math.Max(dj, AbstractObject.minAttach);
+			dj = System.Math.Min(dj, total-AbstractObject.minAttach);
+
+			if (dj > total/2)
+			{
+				dj = dj-total;  // attaché depuis la fin
 			}
 
 			return dj;

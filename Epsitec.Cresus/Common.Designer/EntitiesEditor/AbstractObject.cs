@@ -625,9 +625,10 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		}
 
 
+		public static readonly double minAttach = 20;
 		protected static readonly double headerHeight = 32;
 		protected static readonly double footerHeight = 16;
-		public static readonly double buttonRadius = 10;
+		protected static readonly double buttonRadius = 10;
 		protected static readonly double bulletRadius = 4;
 		protected static readonly double buttonSquare = 5;
 		protected static readonly double lengthClose = 30;
