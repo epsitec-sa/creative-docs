@@ -51,6 +51,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			CommentColorButton2,
 			CommentColorButton3,
 			CommentColorButton4,
+			CommentAttachToConnection,
 		}
 
 		public enum MainColor
@@ -243,6 +244,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				case AbstractObject.ActiveElement.CommentColorButton4:
 					return "Commentaire bleu ciel";
 
+				case AbstractObject.ActiveElement.CommentAttachToConnection:
+					return "Déplace le point d'attache du commentaire";
 			}
 
 			return null;  // pas de tooltip
@@ -335,7 +338,14 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		protected bool DetectRoundButton(Point center, Point pos)
 		{
 			//	Détecte si la souris est dans un bouton circulaire.
-			return (Point.Distance(center, pos) <= AbstractObject.buttonRadius+1);
+			if (center.IsZero)
+			{
+				return false;
+			}
+			else
+			{
+				return (Point.Distance(center, pos) <= AbstractObject.buttonRadius+1);
+			}
 		}
 
 		protected void DrawRoundButton(Graphics graphics, Point center, double radius, GlyphShape shape, bool hilited, bool shadow)
@@ -617,7 +627,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		protected static readonly double headerHeight = 32;
 		protected static readonly double footerHeight = 16;
-		protected static readonly double buttonRadius = 10;
+		public static readonly double buttonRadius = 10;
 		protected static readonly double bulletRadius = 4;
 		protected static readonly double buttonSquare = 5;
 		protected static readonly double lengthClose = 30;

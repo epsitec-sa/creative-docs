@@ -96,6 +96,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			this.routeRelativeBY = 0.0;
 			this.routeRelativeCX = 0.5;
 			this.routeAbsoluteDX = 0.0;
+			this.commentAttach = AbstractObject.buttonRadius*2;
 		}
 
 		public string FieldName
@@ -274,16 +275,16 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 		}
 
-		public Point CommentAttach
+		public Point CommentPosition
 		{
-			//	Position où est attaché le commentaire.
+			//	Position du commentaire.
 			get
 			{
-				return this.commentAttach;
+				return this.commentPosition;
 			}
 			set
 			{
-				this.commentAttach = value;
+				this.commentPosition = value;
 			}
 		}
 
@@ -310,6 +311,19 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			set
 			{
 				this.commentText = value;
+			}
+		}
+
+		public double CommentAttach
+		{
+			//	Distance d'attache du commentaire.
+			get
+			{
+				return this.commentAttach;
+			}
+			set
+			{
+				this.commentAttach = value;
 			}
 		}
 
@@ -516,8 +530,9 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		protected double routeRelativeCX;
 		protected double routeAbsoluteDX;
 		protected bool asComment;
-		protected Point commentAttach;
+		protected Point commentPosition;
 		protected Rectangle commentBounds;
 		protected string commentText;
+		protected double commentAttach;
 	}
 }

@@ -321,31 +321,27 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 
 			//	Souris dans le bouton pour commenter la connection.
-			Point p = this.PositionConnectionComment;
-			if (!p.IsZero && this.DetectRoundButton(pos, p))
+			if (this.IsConnectionCommentButton && this.DetectRoundButton(pos, this.PositionConnectionComment))
 			{
 				element = ActiveElement.ConnectionComment;
 				return true;
 			}
 
 			//	Souris dans le bouton pour déplacer le point milieu ?
-			Point m = this.PositionRouteMove1;
-			if (!m.IsZero && this.DetectRoundButton(pos, m))
+			if (this.DetectRoundButton(pos, this.PositionRouteMove1))
 			{
 				element = ActiveElement.ConnectionMove1;
 				return true;
 			}
 
-			m = this.PositionRouteMove2;
-			if (!m.IsZero && this.DetectRoundButton(pos, m))
+			if (this.DetectRoundButton(pos, this.PositionRouteMove2))
 			{
 				element = ActiveElement.ConnectionMove2;
 				return true;
 			}
 
 			//	Souris dans le bouton pour changer la connection ?
-			p = this.PositionChangeRelation;
-			if (!p.IsZero && (this.field.IsExplored || this.field.IsSourceExpanded) && this.DetectRoundButton(pos, p))
+			if ((this.field.IsExplored || this.field.IsSourceExpanded) && this.DetectRoundButton(pos, this.PositionChangeRelation))
 			{
 				element = ActiveElement.ConnectionChangeRelation;
 				return true;
@@ -527,7 +523,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 			//	Dessine le bouton pour commenter la connection.
 			Point p = this.PositionConnectionComment;
-			if (!p.IsZero)
+			if (!p.IsZero && this.IsConnectionCommentButton)
 			{
 				if (this.hilitedElement == ActiveElement.ConnectionComment)
 				{
@@ -589,6 +585,17 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		}
 
 
+		protected bool IsConnectionCommentButton
+		{
+			//	Indique s'il faut affiche le bouton pour montrer le commentaire.
+			//	Si un commentaire est visible, il ne faut pas montrer le bouton, car il y a déjà
+			//	le bouton CommentAttachToConnection pour déplacer le point d'attache.
+			get
+			{
+				return (this.comment == null || !this.comment.IsVisible);
+			}
+		}
+
 		public Point PositionConnectionComment
 		{
 			//	Retourne la position du bouton pour commenter la connection.
@@ -596,12 +603,75 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			{
 				if (this.field.IsSourceExpanded && this.field.IsExplored && this.points.Count >= 2)
 				{
-					return Point.Move(this.points[0], this.points[1], AbstractObject.buttonRadius*2);
+					return this.AttachToPoint(this.field.CommentAttach);
 				}
 
 				return Point.Zero;
 			}
 		}
+
+		protected Point AttachToPoint(double d)
+		{
+			if (this.points.Count < 2)
+			{
+				return Point.Zero;
+			}
+
+			for (int i=0; i<this.points.Count-1; i++)
+			{
+				double len = Point.Distance(this.points[i], this.points[i+1]);
+				if (d < len)
+				{
+					return Point.Move(this.points[i], this.points[i+1], d);
+				}
+				else
+				{
+					d -= len;
+				}
+			}
+
+			return Point.Move(this.points[this.points.Count-1], this.points[this.points.Count-2], AbstractObject.buttonRadius*2);
+		}
+
+		public double PointToAttach(Point p)
+		{
+			if (this.points.Count < 2)
+			{
+				return AbstractObject.buttonRadius*2;
+			}
+
+			double min = double.MaxValue;
+			int j = -1;
+			for (int i=0; i<this.points.Count-1; i++)
+			{
+				Point pi = Point.Projection(this.points[i], this.points[i+1], p);
+				if (Geometry.IsInside(this.points[i], this.points[i+1], pi))
+				{
+					double di = Point.Distance(pi, p);
+					if (di < min)
+					{
+						min = di;
+						j = i;
+					}
+				}
+			}
+
+			if (j == -1)
+			{
+				return AbstractObject.buttonRadius*2;
+			}
+
+			Point pj = Point.Projection(this.points[j], this.points[j+1], p);
+			double dj = Point.Distance(this.points[j], pj);
+
+			for (int i=0; i<j; i++)
+			{
+				dj += Point.Distance(this.points[i], this.points[i+1]);
+			}
+
+			return dj;
+		}
+
 
 		protected Point PositionChangeRelation
 		{

@@ -112,7 +112,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		protected override string GetToolTipText(ActiveElement element)
 		{
 			//	Retourne le texte pour le tooltip.
-			if (this.isDraggingMove || this.isDraggingSize)
+			if (this.isDraggingMove || this.isDraggingWidth || this.isDraggingAttach)
 			{
 				return null;  // pas de tooltip
 			}
@@ -135,7 +135,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				this.editor.Invalidate();
 				return true;
 			}
-			else if (this.isDraggingSize)
+			else if (this.isDraggingWidth)
 			{
 				Rectangle bounds = this.bounds;
 
@@ -144,6 +144,21 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 				this.SetBounds(bounds);
 				this.UpdateHeight();
+				this.editor.Invalidate();
+				return true;
+			}
+			else if (this.isDraggingAttach)
+			{
+				ObjectConnection connection = this.attachObject as ObjectConnection;
+
+				Point p1 = connection.PositionConnectionComment;
+				connection.Field.CommentAttach = connection.PointToAttach(pos);
+				Point p2 = connection.PositionConnectionComment;
+
+				Rectangle bounds = this.bounds;
+				bounds.Offset(p2-p1);
+				this.SetBounds(bounds);
+
 				this.editor.Invalidate();
 				return true;
 			}
@@ -165,7 +180,13 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 			if (this.hilitedElement == ActiveElement.CommentWidth)
 			{
-				this.isDraggingSize = true;
+				this.isDraggingWidth = true;
+				this.editor.LockObject(this);
+			}
+
+			if (this.hilitedElement == ActiveElement.CommentAttachToConnection)
+			{
+				this.isDraggingAttach = true;
 				this.editor.LockObject(this);
 			}
 		}
@@ -179,9 +200,15 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				this.editor.LockObject(null);
 				this.editor.UpdateAfterCommentChanged();
 			}
-			else if (this.isDraggingSize)
+			else if (this.isDraggingWidth)
 			{
-				this.isDraggingSize = false;
+				this.isDraggingWidth = false;
+				this.editor.LockObject(null);
+				this.editor.UpdateAfterCommentChanged();
+			}
+			else if (this.isDraggingAttach)
+			{
+				this.isDraggingAttach = false;
 				this.editor.LockObject(null);
 				this.editor.UpdateAfterCommentChanged();
 			}
@@ -241,6 +268,13 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			if (this.DetectRoundButton(this.PositionCloseButton, pos))
 			{
 				element = ActiveElement.CommentClose;
+				return true;
+			}
+
+			//	Souris dans le bouton de déplacer l'attache ?
+			if (this.DetectRoundButton(this.PositionAttachToConnectionButton, pos))
+			{
+				element = ActiveElement.CommentAttachToConnection;
 				return true;
 			}
 
@@ -348,7 +382,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 			//	Dessine l'ombre.
 			rect = this.bounds;
-			if (!this.isDraggingMove && !this.isDraggingSize)
+			if (!this.isDraggingMove && !this.isDraggingWidth && !this.isDraggingAttach)
 			{
 				rect = Rectangle.Union(rect, rh);
 			}
@@ -362,7 +396,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				rect = rh;
 				rect.Inflate(0.5);
 				graphics.AddFilledRectangle(rect);
-				graphics.RenderSolid(this.ColorCommentHeader(this.hilitedElement == ActiveElement.CommentMove, this.isDraggingMove || this.isDraggingSize));
+				graphics.RenderSolid(this.ColorCommentHeader(this.hilitedElement == ActiveElement.CommentMove, this.isDraggingMove || this.isDraggingWidth));
 				graphics.AddRectangle(rect);
 				graphics.RenderSolid(Color.FromBrightness(0));
 
@@ -409,7 +443,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				{
 					this.DrawRoundButton(graphics, this.PositionCloseButton, AbstractObject.buttonRadius, GlyphShape.Close, true, false);
 				}
-				else if (this.IsHeaderHilite && !this.isDraggingMove && !this.isDraggingSize)
+				else if (this.IsHeaderHilite && !this.isDraggingMove && !this.isDraggingWidth && !this.isDraggingAttach)
 				{
 					this.DrawRoundButton(graphics, this.PositionCloseButton, AbstractObject.buttonRadius, GlyphShape.Close, false, false);
 				}
@@ -457,9 +491,19 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			{
 				this.DrawRoundButton(graphics, this.PositionWidthButton, AbstractObject.buttonRadius, GlyphShape.HorizontalMove, true, false);
 			}
-			else if (this.IsHeaderHilite && !this.isDraggingMove && !this.isDraggingSize)
+			else if (this.IsHeaderHilite && !this.isDraggingMove && !this.isDraggingWidth && !this.isDraggingAttach)
 			{
 				this.DrawRoundButton(graphics, this.PositionWidthButton, AbstractObject.buttonRadius, GlyphShape.HorizontalMove, false, false);
+			}
+
+			//	Dessine le bouton pour déplacer l'attache.
+			if (this.hilitedElement == ActiveElement.CommentAttachToConnection)
+			{
+				this.DrawRoundButton(graphics, this.PositionAttachToConnectionButton, AbstractObject.buttonRadius, "C", true, false);
+			}
+			else if (this.IsHeaderHilite && !this.isDraggingMove && !this.isDraggingWidth && !this.isDraggingAttach)
+			{
+				this.DrawRoundButton(graphics, this.PositionAttachToConnectionButton, AbstractObject.buttonRadius, "C", false, false);
 			}
 		}
 
@@ -474,7 +518,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 						this.hilitedElement == ActiveElement.CommentColorButton1 ||
 						this.hilitedElement == ActiveElement.CommentColorButton2 ||
 						this.hilitedElement == ActiveElement.CommentColorButton3 ||
-						this.hilitedElement == ActiveElement.CommentColorButton4);
+						this.hilitedElement == ActiveElement.CommentColorButton4 ||
+						this.hilitedElement == ActiveElement.CommentAttachToConnection);
 			}
 		}
 
@@ -583,6 +628,23 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 		}
 
+		protected Point PositionAttachToConnectionButton
+		{
+			//	Retourne la position du bouton pour modifier l'attache à la connection.
+			get
+			{
+				if (this.attachObject != null && this.attachObject is ObjectConnection)
+				{
+					ObjectConnection connection = this.attachObject as ObjectConnection;
+					return connection.PositionConnectionComment;
+				}
+				else
+				{
+					return Point.Zero;
+				}
+			}
+		}
+
 		protected Point PositionColorButton(int rank)
 		{
 			//	Retourne la position du bouton pour choisir la couleur.
@@ -628,7 +690,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		protected TextLayout textLayoutComment;
 
 		protected bool isDraggingMove;
-		protected bool isDraggingSize;
+		protected bool isDraggingWidth;
+		protected bool isDraggingAttach;
 		protected Point draggingPos;
 	}
 }

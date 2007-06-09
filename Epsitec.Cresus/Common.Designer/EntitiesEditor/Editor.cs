@@ -327,10 +327,10 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				{
 					ObjectConnection connection = comment.AttachObject as ObjectConnection;
 
+					Point oldPos = connection.Field.CommentPosition;
 					Point newPos = connection.PositionConnectionComment;
-					Point oldPos = connection.Field.CommentAttach;
 
-					if (!newPos.IsZero && !oldPos.IsZero)
+					if (!oldPos.IsZero && !newPos.IsZero)
 					{
 						Rectangle rect = connection.Field.CommentBounds;
 						rect.Offset(newPos-oldPos);
@@ -564,7 +564,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					Point pos = connection.PositionConnectionComment;
 					if (!pos.IsZero)
 					{
-						connection.Field.CommentAttach = pos;
+						connection.Field.CommentPosition = pos;
 					}
 
 					if (!comment.Bounds.IsEmpty)
