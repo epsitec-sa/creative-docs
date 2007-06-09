@@ -451,7 +451,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				if (this.hilitedElement == ActiveElement.ConnectionHilited ||
 					this.hilitedElement == ActiveElement.ConnectionChangeRelation )
 				{
-					color = this.GetColorCaption();
+					color = this.GetColorMain();
 				}
 				graphics.RenderSolid(color);
 			}
@@ -471,7 +471,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				if (this.hilitedElement == ActiveElement.ConnectionHilited ||
 					this.hilitedElement == ActiveElement.ConnectionChangeRelation )
 				{
-					color = this.GetColorCaption();
+					color = this.GetColorMain();
 				}
 				graphics.RenderSolid(color);
 			}

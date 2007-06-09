@@ -24,6 +24,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		public ObjectComment(Editor editor) : base(editor)
 		{
 			this.isVisible = true;
+			this.boxColor = MainColor.Yellow;
 
 			this.textLayoutTitle = new TextLayout();
 			this.textLayoutTitle.DefaultFontSize = 14;
@@ -195,6 +196,26 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				{
 					this.EditComment();
 				}
+
+				if (this.hilitedElement == ActiveElement.CommentColorButton1)
+				{
+					this.BackgroundMainColor = MainColor.Yellow;
+				}
+
+				if (this.hilitedElement == ActiveElement.CommentColorButton2)
+				{
+					this.BackgroundMainColor = MainColor.Pink;
+				}
+
+				if (this.hilitedElement == ActiveElement.CommentColorButton3)
+				{
+					this.BackgroundMainColor = MainColor.Purple;
+				}
+
+				if (this.hilitedElement == ActiveElement.CommentColorButton4)
+				{
+					this.BackgroundMainColor = MainColor.Cyan;
+				}
 			}
 		}
 
@@ -227,6 +248,31 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			if (this.HeaderRectangle.Contains(pos))
 			{
 				element = ActiveElement.CommentMove;
+				return true;
+			}
+
+			//	Souris dans le bouton des couleurs ?
+			if (this.DetectSquareButton(this.PositionColorButton(0), pos))
+			{
+				element = ActiveElement.CommentColorButton1;
+				return true;
+			}
+
+			if (this.DetectSquareButton(this.PositionColorButton(1), pos))
+			{
+				element = ActiveElement.CommentColorButton2;
+				return true;
+			}
+
+			if (this.DetectSquareButton(this.PositionColorButton(2), pos))
+			{
+				element = ActiveElement.CommentColorButton3;
+				return true;
+			}
+
+			if (this.DetectSquareButton(this.PositionColorButton(3), pos))
+			{
+				element = ActiveElement.CommentColorButton4;
 				return true;
 			}
 
@@ -369,6 +415,43 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				}
 			}
 
+			//	Dessine le bouton des couleurs.
+			if (this.hilitedElement == ActiveElement.CommentColorButton1)
+			{
+				this.DrawSquareButton(graphics, this.PositionColorButton(0), MainColor.Yellow, this.boxColor == MainColor.Yellow, true);
+			}
+			else if (this.IsHeaderHilite)
+			{
+				this.DrawSquareButton(graphics, this.PositionColorButton(0), MainColor.Yellow, this.boxColor == MainColor.Yellow, false);
+			}
+
+			if (this.hilitedElement == ActiveElement.CommentColorButton2)
+			{
+				this.DrawSquareButton(graphics, this.PositionColorButton(1), MainColor.Pink, this.boxColor == MainColor.Pink, true);
+			}
+			else if (this.IsHeaderHilite)
+			{
+				this.DrawSquareButton(graphics, this.PositionColorButton(1), MainColor.Pink, this.boxColor == MainColor.Pink, false);
+			}
+
+			if (this.hilitedElement == ActiveElement.CommentColorButton3)
+			{
+				this.DrawSquareButton(graphics, this.PositionColorButton(2), MainColor.Purple, this.boxColor == MainColor.Purple, true);
+			}
+			else if (this.IsHeaderHilite)
+			{
+				this.DrawSquareButton(graphics, this.PositionColorButton(2), MainColor.Purple, this.boxColor == MainColor.Purple, false);
+			}
+
+			if (this.hilitedElement == ActiveElement.CommentColorButton4)
+			{
+				this.DrawSquareButton(graphics, this.PositionColorButton(3), MainColor.Cyan, this.boxColor == MainColor.Cyan, true);
+			}
+			else if (this.IsHeaderHilite)
+			{
+				this.DrawSquareButton(graphics, this.PositionColorButton(3), MainColor.Cyan, this.boxColor == MainColor.Cyan, false);
+			}
+
 			//	Dessine le bouton pour modifier la largeur.
 			if (this.hilitedElement == ActiveElement.CommentWidth)
 			{
@@ -387,7 +470,11 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			{
 				return (this.hilitedElement == ActiveElement.CommentEdit ||
 						this.hilitedElement == ActiveElement.CommentMove ||
-						this.hilitedElement == ActiveElement.CommentClose);
+						this.hilitedElement == ActiveElement.CommentClose ||
+						this.hilitedElement == ActiveElement.CommentColorButton1 ||
+						this.hilitedElement == ActiveElement.CommentColorButton2 ||
+						this.hilitedElement == ActiveElement.CommentColorButton3 ||
+						this.hilitedElement == ActiveElement.CommentColorButton4);
 			}
 		}
 
@@ -496,15 +583,21 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 		}
 
+		protected Point PositionColorButton(int rank)
+		{
+			//	Retourne la position du bouton pour choisir la couleur.
+			return new Point(this.bounds.Left+AbstractObject.buttonSquare+(AbstractObject.buttonSquare+0.5)*rank*2, this.bounds.Bottom-1-AbstractObject.buttonSquare);
+		}
+
 		protected Color ColorComment(bool hilited)
 		{
 			if (hilited)
 			{
-				return Color.FromRgb(255.0/255.0, 240.0/255.0, 150.0/255.0);
+				return this.GetColorLighter(this.GetColorMain(), 0.3);
 			}
 			else
 			{
-				return Color.FromRgb(255.0/255.0, 248.0/255.0, 200.0/255.0);
+				return this.GetColorLighter(this.GetColorMain(), 0.2);
 			}
 		}
 
@@ -512,15 +605,15 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		{
 			if (dragging)
 			{
-				return Color.FromAlphaRgb(0.4, 124.0/255.0, 105.0/255.0, 0.0/255.0);
+				return this.GetColorMain(0.9);
 			}
 			else if (hilited)
 			{
-				return Color.FromRgb(124.0/255.0, 105.0/255.0, 0.0/255.0);
+				return this.GetColorLighter(this.GetColorMain(), 0.9);
 			}
 			else
 			{
-				return Color.FromRgb(172.0/255.0, 146.0/255.0, 0.0/255.0);
+				return this.GetColorLighter(this.GetColorMain(), 0.7);
 			}
 		}
 

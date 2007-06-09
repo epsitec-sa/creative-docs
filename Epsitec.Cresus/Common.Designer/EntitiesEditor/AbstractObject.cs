@@ -47,6 +47,10 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			CommentMove,
 			CommentWidth,
 			CommentClose,
+			CommentColorButton1,
+			CommentColorButton2,
+			CommentColorButton3,
+			CommentColorButton4,
 		}
 
 		public enum MainColor
@@ -55,6 +59,11 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			Green,
 			Red,
 			Grey,
+
+			Yellow,
+			Pink,
+			Purple,
+			Cyan,
 		}
 
 
@@ -62,6 +71,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		{
 			//	Constructeur.
 			this.editor = editor;
+			this.boxColor = MainColor.Blue;
 			this.hilitedElement = ActiveElement.None;
 		}
 
@@ -220,6 +230,19 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 				case AbstractObject.ActiveElement.CommentClose:
 					return "Cache le commentaire";
+
+				case AbstractObject.ActiveElement.CommentColorButton1:
+					return "Commentaire jaune";
+
+				case AbstractObject.ActiveElement.CommentColorButton2:
+					return "Commentaire rose";
+
+				case AbstractObject.ActiveElement.CommentColorButton3:
+					return "Commentaire violet";
+
+				case AbstractObject.ActiveElement.CommentColorButton4:
+					return "Commentaire bleu ciel";
+
 			}
 
 			return null;  // pas de tooltip
@@ -287,7 +310,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			rect.Inflate(0.5);
 
 			graphics.AddFilledRectangle(rect);
-			graphics.RenderSolid(this.GetColorCaption(color, 0.8));
+			graphics.RenderSolid(this.GetColorMain(color, 0.8));
 
 			graphics.AddRectangle(rect);
 			graphics.RenderSolid(Color.FromBrightness(0));
@@ -390,7 +413,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 			if (enable)
 			{
-				colorSurface = hilited ? this.GetColorCaption() : Color.FromBrightness(1);
+				colorSurface = hilited ? this.GetColorMain() : Color.FromBrightness(1);
 				colorFrame = Color.FromBrightness(0);
 				colorShape = hilited ? Color.FromBrightness(1) : Color.FromBrightness(0);
 			}
@@ -457,25 +480,25 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			graphics.AddLine(end, e2);
 		}
 
-		protected Color GetColorCaption()
+		protected Color GetColorMain()
 		{
 			//	Retourne la couleur pour les mises en évidence.
-			return this.GetColorCaption(1.0);
+			return this.GetColorMain(1.0);
 		}
 
-		protected Color GetColorCaption(double alpha)
+		protected Color GetColorMain(double alpha)
 		{
 			//	Retourne la couleur pour les mises en évidence.
-			return this.GetColorCaption(this.boxColor, alpha);
+			return this.GetColorMain(this.boxColor, alpha);
 		}
 
-		protected Color GetColorCaption(MainColor boxColor)
+		protected Color GetColorMain(MainColor boxColor)
 		{
 			//	Retourne la couleur pour les mises en évidence.
-			return this.GetColorCaption(boxColor, 1.0);
+			return this.GetColorMain(boxColor, 1.0);
 		}
 
-		protected Color GetColorCaption(MainColor boxColor, double alpha)
+		protected Color GetColorMain(MainColor boxColor, double alpha)
 		{
 			//	Retourne la couleur pour les mises en évidence.
 			Color color = Color.FromBrightness(0.5);
@@ -497,12 +520,38 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				case MainColor.Grey:
 					color = Color.FromRgb(100.0/255.0, 100.0/255.0, 100.0/255.0);
 					break;
+
+				case MainColor.Yellow:
+					color = Color.FromRgb(200.0/255.0, 200.0/255.0, 0.0/255.0);
+					break;
+
+				case MainColor.Pink:
+					color = Color.FromRgb(200.0/255.0, 0.0/255.0, 150.0/255.0);
+					break;
+
+				case MainColor.Purple:
+					color = Color.FromRgb(50.0/255.0, 0.0/255.0, 200.0/255.0);
+					break;
+
+				case MainColor.Cyan:
+					color = Color.FromRgb(0.0/255.0, 200.0/255.0, 200.0/255.0);
+					break;
 			}
 
 			color.A = alpha;
 
 			return color;
 		}
+
+		protected Color GetColorLighter(Color color, double factor)
+		{
+			//	Retourne une couleur éclaircie, sans changer la transparence.
+			color.R = 1-(1-color.R)*factor;
+			color.G = 1-(1-color.G)*factor;
+			color.B = 1-(1-color.B)*factor;
+			return color;
+		}
+
 
 		protected void RenderHorizontalGradient(Graphics graphics, Rectangle rect, Color leftColor, Color rightColor)
 		{
@@ -578,7 +627,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		protected Editor editor;
 		protected ActiveElement hilitedElement;
-		protected MainColor boxColor = MainColor.Blue;
+		protected MainColor boxColor;
 		protected int hilitedFieldRank;
 	}
 }

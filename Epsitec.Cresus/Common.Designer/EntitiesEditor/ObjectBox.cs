@@ -1365,17 +1365,17 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 			//	Dessine l'intérieur en dégradé.
 			graphics.Rasterizer.AddSurface(path);
-			Color c1 = this.GetColorCaption(dragging ? 0.6 : 0.4);
-			Color c2 = this.GetColorCaption(dragging ? 0.2 : 0.1);
+			Color c1 = this.GetColorMain(dragging ? 0.6 : 0.4);
+			Color c2 = this.GetColorMain(dragging ? 0.2 : 0.1);
 			this.RenderHorizontalGradient(graphics, this.bounds, c1, c2);
 
 			Color colorLine = Color.FromBrightness(0.9);
 			if (dragging)
 			{
-				colorLine = this.GetColorCaption(0.3);
+				colorLine = this.GetColorMain(0.3);
 			}
 
-			Color colorFrame = dragging ? this.GetColorCaption() : Color.FromBrightness(0);
+			Color colorFrame = dragging ? this.GetColorMain() : Color.FromBrightness(0);
 
 			//	Dessine en blanc la zone pour les champs.
 			if (this.isExtended)
@@ -1384,8 +1384,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				graphics.AddFilledRectangle(inside);
 				graphics.RenderSolid(Color.FromBrightness(1));
 				graphics.AddFilledRectangle(inside);
-				Color ci1 = this.GetColorCaption(dragging ? 0.2 : 0.1);
-				Color ci2 = this.GetColorCaption(0.0);
+				Color ci1 = this.GetColorMain(dragging ? 0.2 : 0.1);
+				Color ci2 = this.GetColorMain(0.0);
 				this.RenderHorizontalGradient(graphics, inside, ci1, ci2);
 
 				//	Trait vertical de séparation.
@@ -1480,7 +1480,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 						rect = this.GetFieldNameBounds(i);
 
 						graphics.AddFilledRectangle(rect);
-						graphics.RenderSolid(this.GetColorCaption());
+						graphics.RenderSolid(this.GetColorMain());
 
 						colorName = Color.FromBrightness(1);
 					}
@@ -1490,7 +1490,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 						rect = this.GetFieldTypeBounds(i);
 
 						graphics.AddFilledRectangle(rect);
-						graphics.RenderSolid(this.GetColorCaption());
+						graphics.RenderSolid(this.GetColorMain());
 
 						colorType = Color.FromBrightness(1);
 					}
@@ -1500,7 +1500,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 						rect = this.GetFieldBounds(i);
 
 						graphics.AddFilledRectangle(rect);
-						graphics.RenderSolid(this.GetColorCaption(0.3));
+						graphics.RenderSolid(this.GetColorMain(0.3));
 					}
 
 					if (this.isFieldMoving && this.fieldInitialRank == i)
@@ -1508,7 +1508,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 						rect = this.GetFieldBounds(i);
 
 						graphics.AddFilledRectangle(rect);
-						graphics.RenderSolid(this.GetColorCaption(0.3));
+						graphics.RenderSolid(this.GetColorMain(0.3));
 					}
 
 					//	Affiche le nom du champ.
@@ -1577,7 +1577,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				{
 					rect = this.GetFieldBounds(this.hilitedFieldRank);
 					rect.Deflate(this.isRoot ? 3.5 : 1.5, 0.5);
-					this.DrawDashLine(graphics, rect.BottomRight, rect.BottomLeft, this.GetColorCaption());
+					this.DrawDashLine(graphics, rect.BottomRight, rect.BottomLeft, this.GetColorMain());
 
 					rect = this.GetFieldAddBounds(this.hilitedFieldRank);
 					this.DrawRoundButton(graphics, rect.Center, AbstractObject.buttonRadius, GlyphShape.Plus, true, true);
@@ -1593,7 +1593,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				{
 					rect = this.GetFieldBounds(this.hilitedFieldRank);
 					rect.Deflate(this.isRoot ? 3.5 : 1.5, 0.5);
-					this.DrawDashLine(graphics, rect.BottomRight, rect.BottomLeft, this.GetColorCaption());
+					this.DrawDashLine(graphics, rect.BottomRight, rect.BottomLeft, this.GetColorMain());
 				}
 			}
 
@@ -1643,7 +1643,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					graphics.LineWidth = 4;
 					graphics.AddLine(sep, this.bounds.Bottom+AbstractObject.footerHeight+3, sep, this.bounds.Top-AbstractObject.headerHeight-3);
 					graphics.LineWidth = 1;
-					graphics.RenderSolid(this.GetColorCaption());
+					graphics.RenderSolid(this.GetColorMain());
 
 					this.DrawRoundButton(graphics, this.PositionMoveColumnsButton, AbstractObject.buttonRadius, GlyphShape.HorizontalMove, true, false);
 				}
@@ -1710,7 +1710,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			graphics.Rasterizer.AddSurface(path);
 			graphics.RenderSolid(Color.FromBrightness(1));
 			graphics.Rasterizer.AddSurface(path);
-			this.RenderHorizontalGradient(graphics, big, this.GetColorCaption(0.6), this.GetColorCaption(0.2));
+			this.RenderHorizontalGradient(graphics, big, this.GetColorMain(0.6), this.GetColorMain(0.2));
 
 			graphics.Rasterizer.AddOutline(path);
 			graphics.RenderSolid(Color.FromBrightness(0));
@@ -1723,7 +1723,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			rect.Bottom = rect.Top-h-1;
 
 			graphics.AddFilledRectangle(rect);
-			graphics.RenderSolid(this.GetColorCaption());
+			graphics.RenderSolid(this.GetColorMain());
 
 			Rectangle gr = new Rectangle(this.PositionSourcesButton.X-AbstractObject.buttonRadius, this.PositionSourcesButton.Y-AbstractObject.buttonRadius, AbstractObject.buttonRadius*2, AbstractObject.buttonRadius*2);
 			adorner.PaintGlyph(graphics, gr, WidgetPaintState.Enabled, Color.FromBrightness(1), GlyphShape.TriangleDown, PaintTextStyle.Button);
@@ -1748,7 +1748,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				else if (i == this.sourcesMenuSelected)
 				{
 					graphics.AddFilledRectangle(rect);
-					graphics.RenderSolid(this.GetColorCaption(0.2));
+					graphics.RenderSolid(this.GetColorMain(0.2));
 				}
 
 				string text = string.Concat(info.ModuleName, ": ", info.FieldName);
@@ -1787,7 +1787,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			Color hiliteColor = Color.FromBrightness(1);
 			if (hilited)
 			{
-				hiliteColor = this.GetColorCaption();
+				hiliteColor = this.GetColorMain();
 				hiliteColor.R = 1-(1-hiliteColor.R)*0.2;
 				hiliteColor.G = 1-(1-hiliteColor.G)*0.2;
 				hiliteColor.B = 1-(1-hiliteColor.B)*0.2;
@@ -1823,7 +1823,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			path.Close();
 
 			graphics.Rasterizer.AddSurface(path);
-			graphics.RenderSolid(this.GetColorCaption());
+			graphics.RenderSolid(this.GetColorMain());
 		}
 
 		protected Point PositionCloseButton
