@@ -18,6 +18,10 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			Right,
 			Bottom,
 			Top,
+			BottomLeft,
+			BottomRight,
+			TopLeft,
+			TopRight,
 		}
 
 
@@ -644,6 +648,70 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				path.LineTo(h2);
 				path.Close();
 			}
+			else if (mode == AttachMode.BottomLeft)
+			{
+				Point h1 = himself;
+				Point h2 = himself;
+
+				h1.Y += ObjectComment.queueThickness*System.Math.Sqrt(2);
+				h2.X += ObjectComment.queueThickness*System.Math.Sqrt(2);
+				
+				path.MoveTo(other);
+				path.LineTo(h1);
+				path.LineTo(bounds.TopLeft);
+				path.LineTo(bounds.TopRight);
+				path.LineTo(bounds.BottomRight);
+				path.LineTo(h2);
+				path.Close();
+			}
+			else if (mode == AttachMode.BottomRight)
+			{
+				Point h1 = himself;
+				Point h2 = himself;
+
+				h1.Y += ObjectComment.queueThickness*System.Math.Sqrt(2);
+				h2.X -= ObjectComment.queueThickness*System.Math.Sqrt(2);
+				
+				path.MoveTo(other);
+				path.LineTo(h1);
+				path.LineTo(bounds.TopRight);
+				path.LineTo(bounds.TopLeft);
+				path.LineTo(bounds.BottomLeft);
+				path.LineTo(h2);
+				path.Close();
+			}
+			else if (mode == AttachMode.TopLeft)
+			{
+				Point h1 = himself;
+				Point h2 = himself;
+
+				h1.Y -= ObjectComment.queueThickness*System.Math.Sqrt(2);
+				h2.X += ObjectComment.queueThickness*System.Math.Sqrt(2);
+				
+				path.MoveTo(other);
+				path.LineTo(h1);
+				path.LineTo(bounds.BottomLeft);
+				path.LineTo(bounds.BottomRight);
+				path.LineTo(bounds.TopRight);
+				path.LineTo(h2);
+				path.Close();
+			}
+			else if (mode == AttachMode.TopRight)
+			{
+				Point h1 = himself;
+				Point h2 = himself;
+
+				h1.Y -= ObjectComment.queueThickness*System.Math.Sqrt(2);
+				h2.X -= ObjectComment.queueThickness*System.Math.Sqrt(2);
+				
+				path.MoveTo(other);
+				path.LineTo(h1);
+				path.LineTo(bounds.BottomRight);
+				path.LineTo(bounds.BottomLeft);
+				path.LineTo(bounds.TopLeft);
+				path.LineTo(h2);
+				path.Close();
+			}
 
 			return path;
 		}
@@ -658,7 +726,27 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				Rectangle bounds = this.bounds;
 				bounds.Inflate(0.5);
 
-				if (this.attachObject is ObjectBox)
+				if (mode == AttachMode.BottomLeft)
+				{
+					pos = bounds.BottomLeft;
+				}
+
+				if (mode == AttachMode.BottomRight)
+				{
+					pos = bounds.BottomRight;
+				}
+
+				if (mode == AttachMode.TopLeft)
+				{
+					pos = bounds.TopLeft;
+				}
+
+				if (mode == AttachMode.TopRight)
+				{
+					pos = bounds.TopRight;
+				}
+
+				if (pos.IsZero && this.attachObject is ObjectBox)
 				{
 					ObjectBox box = this.attachObject as ObjectBox;
 
@@ -697,7 +785,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					}
 				}
 
-				if (this.attachObject is ObjectConnection)
+				if (pos.IsZero && this.attachObject is ObjectConnection)
 				{
 					ObjectConnection connection = this.attachObject as ObjectConnection;
 					Point attach = connection.PositionConnectionComment;
@@ -756,6 +844,27 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				if (this.attachObject is ObjectBox)
 				{
 					ObjectBox box = this.attachObject as ObjectBox;
+
+					if (mode == AttachMode.BottomLeft)
+					{
+						return box.Bounds.TopRight;
+					}
+
+					if (mode == AttachMode.BottomRight)
+					{
+						return box.Bounds.TopLeft;
+					}
+
+					if (mode == AttachMode.TopLeft)
+					{
+						return box.Bounds.BottomRight;
+					}
+
+					if (mode == AttachMode.TopRight)
+					{
+						return box.Bounds.BottomLeft;
+					}
+					
 					Point himself = this.GetAttachHimself(mode);
 
 					if (mode == AttachMode.Left || mode == AttachMode.Right)
@@ -814,6 +923,26 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 				if (!this.bounds.IntersectsWith(box.Bounds))
 				{
+					if (this.bounds.Bottom >= box.Bounds.Top && this.bounds.Right <= box.Bounds.Left)
+					{
+						return AttachMode.BottomRight;
+					}
+					
+					if (this.bounds.Top <= box.Bounds.Bottom && this.bounds.Right <= box.Bounds.Left)
+					{
+						return AttachMode.TopRight;
+					}
+					
+					if (this.bounds.Bottom >= box.Bounds.Top && this.bounds.Left >= box.Bounds.Right)
+					{
+						return AttachMode.BottomLeft;
+					}
+					
+					if (this.bounds.Top <= box.Bounds.Bottom && this.bounds.Left >= box.Bounds.Right)
+					{
+						return AttachMode.TopLeft;
+					}
+					
 					if (this.bounds.Bottom >= box.Bounds.Top)  // commentaire en dessus ?
 					{
 						return AttachMode.Bottom;
@@ -842,6 +971,26 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				Point attach = connection.PositionConnectionComment;
 				if (!attach.IsZero && !this.bounds.Contains(attach))
 				{
+					if (this.bounds.Top <= attach.Y && this.bounds.Right <= attach.X)
+					{
+						return AttachMode.TopRight;
+					}
+
+					if (this.bounds.Bottom >= attach.Y && this.bounds.Right <= attach.X)
+					{
+						return AttachMode.BottomRight;
+					}
+
+					if (this.bounds.Top <= attach.Y && this.bounds.Left >= attach.X)
+					{
+						return AttachMode.TopLeft;
+					}
+
+					if (this.bounds.Bottom >= attach.Y && this.bounds.Left >= attach.X)
+					{
+						return AttachMode.BottomLeft;
+					}
+
 					if (this.bounds.Bottom >= attach.Y)  // commentaire en dessus ?
 					{
 						return AttachMode.Bottom;
@@ -857,7 +1006,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 						return AttachMode.Left;
 					}
 
-					if (this.bounds.Right <= attach.Y)  // commentaire à gauche ?
+					if (this.bounds.Right <= attach.X)  // commentaire à gauche ?
 					{
 						return AttachMode.Right;
 					}
