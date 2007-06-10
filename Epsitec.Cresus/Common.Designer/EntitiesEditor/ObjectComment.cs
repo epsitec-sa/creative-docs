@@ -406,7 +406,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				this.textLayoutTitle.Paint(rect.BottomLeft, graphics, Rectangle.MaxValue, Color.FromBrightness(1), GlyphPaintStyle.Normal);
 			}
 
-			//	Dessine la boîte vide.
+			//	Dessine la boîte vide avec la queue (bulle de bd).
 			Path path = this.GetFramePath();
 			graphics.Rasterizer.AddSurface(path);
 			graphics.RenderSolid(this.ColorComment(this.hilitedElement != ActiveElement.None));
@@ -510,9 +510,11 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 		}
 
+
 		protected Path GetFramePath()
 		{
-			//	Retourne le chemin du cadre du commentaire (rectangle avec éventuellement une queue).
+			//	Retourne le chemin du cadre du commentaire (rectangle avec éventuellement une queue,
+			//	comme une bulle de bd).
 			Path path = new Path();
 
 			AttachMode mode = this.GetAttachMode();
@@ -521,8 +523,6 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			
 			Rectangle bounds = this.bounds;
 			bounds.Inflate(0.5);
-
-			double ql = 5;  // largeur de la queue
 
 			if (mode == AttachMode.None || himself.IsZero || other.IsZero)
 			{
@@ -533,8 +533,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				Point h1 = himself;
 				Point h2 = himself;
 
-				h1.Y -= ql;
-				h2.Y += ql;
+				h1.Y -= ObjectComment.queueThickness;
+				h2.Y += ObjectComment.queueThickness;
 				
 				if (h1.Y < bounds.Bottom)
 				{
@@ -562,8 +562,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				Point h1 = himself;
 				Point h2 = himself;
 
-				h1.Y -= ql;
-				h2.Y += ql;
+				h1.Y -= ObjectComment.queueThickness;
+				h2.Y += ObjectComment.queueThickness;
 				
 				if (h1.Y < bounds.Bottom)
 				{
@@ -591,8 +591,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				Point h1 = himself;
 				Point h2 = himself;
 
-				h1.X -= ql;
-				h2.X += ql;
+				h1.X -= ObjectComment.queueThickness;
+				h2.X += ObjectComment.queueThickness;
 				
 				if (h1.X < bounds.Left)
 				{
@@ -620,8 +620,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				Point h1 = himself;
 				Point h2 = himself;
 
-				h1.X -= ql;
-				h2.X += ql;
+				h1.X -= ObjectComment.queueThickness;
+				h2.X += ObjectComment.queueThickness;
 				
 				if (h1.X < bounds.Left)
 				{
@@ -807,7 +807,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		protected AttachMode GetAttachMode()
 		{
-			//	Cherche d'où doit partir la queue du commentaire.
+			//	Cherche d'où doit partir la queue du commentaire (de quel côté).
 			if (this.attachObject is ObjectBox)
 			{
 				ObjectBox box = this.attachObject as ObjectBox;
@@ -867,80 +867,6 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			return AttachMode.None;
 		}
 
-		protected void GetBoxAttach(out Point p1, out Point p2, out AttachMode mode)
-		{
-			//	Retourne les points pour attacher le commentaire à sa boîte.
-			p1 = Point.Zero;
-			p2 = Point.Zero;
-			mode = AttachMode.None;
-
-			if (this.attachObject is ObjectBox && this.attachObject.Bounds.IntersectsWith(this.bounds))
-			{
-				return;
-			}
-
-			Point cx = Point.Move(this.bounds.TopLeft, this.bounds.TopRight, AbstractObject.headerHeight);
-			Point cy = Point.Move(this.bounds.TopLeft, this.bounds.BottomLeft, ObjectComment.textMargin+8);
-			Point ct = new Point(cx.X, this.bounds.Top);
-			Point cb = new Point(cx.X, this.bounds.Bottom);
-			Point cl = new Point(this.bounds.Left, cy.Y);
-			Point cr = new Point(this.bounds.Right, cy.Y);
-
-			Point bt, bb, bl, br;
-			if (this.attachObject is ObjectBox)
-			{
-				ObjectBox box = this.attachObject as ObjectBox;
-				Rectangle bounds = box.Bounds;
-				Point bx = Point.Move(bounds.TopLeft, bounds.TopRight, AbstractObject.headerHeight);
-				Point by = Point.Move(bounds.TopLeft, bounds.BottomLeft, AbstractObject.headerHeight/2+8);
-				bounds.Deflate(box.IsRoot ? -1 : 1);
-				bt = new Point(bx.X, bounds.Top);
-				bb = new Point(bx.X, bounds.Bottom);
-				bl = new Point(bounds.Left, by.Y);
-				br = new Point(bounds.Right, by.Y);
-			}
-			else
-			{
-				ObjectConnection connection = this.attachObject as ObjectConnection;
-				bt = bb = bl = br = connection.PositionConnectionComment;
-				if (bt.IsZero)
-				{
-					return;
-				}
-			}
-
-			double dt = Point.Distance(ct, bb);
-			double db = Point.Distance(cb, bt);
-			double dl = Point.Distance(cl, br);
-			double dr = Point.Distance(cr, bl);
-
-			double min = System.Math.Min(System.Math.Min(dt, db), System.Math.Min(dl, dr));
-
-			if (min == dt)
-			{
-				p1 = ct;
-				p2 = bb;
-				mode = AttachMode.Top;
-			}
-			else if (min == db)
-			{
-				p1 = cb;
-				p2 = bt;
-				mode = AttachMode.Bottom;
-			}
-			else if (min == dl)
-			{
-				p1 = cl;
-				p2 = br;
-				mode = AttachMode.Left;
-			}
-			else
-			{
-				p1 = cr;
-				p2 = bl;
-				mode = AttachMode.Right;
-			}
-		}
 
 		protected Rectangle HeaderRectangle
 		{
@@ -1026,6 +952,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		protected static readonly double commentHeaderHeight = 24;
 		protected static readonly double textMargin = 5;
+		protected static readonly double queueThickness = 5;
 
 		protected Rectangle bounds;
 		protected AbstractObject attachObject;

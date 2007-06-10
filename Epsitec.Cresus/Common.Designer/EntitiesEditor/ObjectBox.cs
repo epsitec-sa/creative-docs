@@ -322,7 +322,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			switch (element)
 			{
 				case AbstractObject.ActiveElement.BoxHeaderDragging:
-					if (this.isRoot)
+					if (this.editor.BoxCount == 1)
 					{
 						return null;
 					}

@@ -1000,14 +1000,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				}
 				else
 				{
-					bool isRoot = false;
-					if (fly is ObjectBox)
-					{
-						ObjectBox box = fly as ObjectBox;
-						isRoot = box.IsRoot;
-					}
-
-					if (fly.HilitedElement == AbstractObject.ActiveElement.BoxHeaderDragging && !isRoot)
+					if (fly.HilitedElement == AbstractObject.ActiveElement.BoxHeaderDragging && this.BoxCount > 1)
 					{
 						this.ChangeMouseCursor(MouseCursorType.Move);
 					}
