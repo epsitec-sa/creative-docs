@@ -349,11 +349,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			double h = System.Math.Floor(this.textLayoutComment.FindTextHeight()+1);
 			h += ObjectComment.textMargin*2;
 
-			Point p1, p2;
-			AttachMode mode;
-			this.GetBoxAttach(out p1, out p2, out mode);
-
-			if (mode == AttachMode.Bottom)
+			if (this.GetAttachMode() == AttachMode.Bottom)
 			{
 				this.bounds.Height = h;
 			}
@@ -411,11 +407,10 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 
 			//	Dessine la boîte vide.
-			rect = this.bounds;
-			rect.Inflate(0.5);
-			graphics.AddFilledRectangle(rect);
+			Path path = this.GetFramePath();
+			graphics.Rasterizer.AddSurface(path);
 			graphics.RenderSolid(this.ColorComment(this.hilitedElement != ActiveElement.None));
-			graphics.AddRectangle(rect);
+			graphics.Rasterizer.AddOutline(path);
 			graphics.RenderSolid(Color.FromBrightness(0));
 
 			//	Dessine le texte.
@@ -423,22 +418,6 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			rect.Deflate(ObjectComment.textMargin);
 			this.textLayoutComment.LayoutSize = rect.Size;
 			this.textLayoutComment.Paint(rect.BottomLeft, graphics, Rectangle.MaxValue, Color.FromBrightness(0), GlyphPaintStyle.Normal);
-
-			//	Dessine la liaison.
-			Point p1, p2;
-			AttachMode mode;
-			this.GetBoxAttach(out p1, out p2, out mode);
-			if (!p1.IsZero)
-			{
-				Path path = new Path();
-				path.MoveTo(p1);
-				path.LineTo(p2);
-				Misc.DrawPathDash(graphics, path, 1, 4, 4, Color.FromBrightness(0));
-
-				graphics.AddFilledCircle(p1, 3);
-				graphics.AddFilledCircle(p2, 3);
-				graphics.RenderSolid(Color.FromBrightness(0));
-			}
 
 			//	Dessine le bouton de fermeture.
 			if (!rh.IsEmpty)
@@ -529,6 +508,363 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 						this.hilitedElement == ActiveElement.CommentColorButton4 ||
 						this.hilitedElement == ActiveElement.CommentAttachToConnection);
 			}
+		}
+
+		protected Path GetFramePath()
+		{
+			//	Retourne le chemin du cadre du commentaire (rectangle avec éventuellement une queue).
+			Path path = new Path();
+
+			AttachMode mode = this.GetAttachMode();
+			Point himself = this.GetAttachHimself(mode);
+			Point other = this.GetAttachOther(mode);
+			
+			Rectangle bounds = this.bounds;
+			bounds.Inflate(0.5);
+
+			double ql = 5;  // largeur de la queue
+
+			if (mode == AttachMode.None || himself.IsZero || other.IsZero)
+			{
+				path.AppendRectangle(bounds);
+			}
+			else if (mode == AttachMode.Left)
+			{
+				Point h1 = himself;
+				Point h2 = himself;
+
+				h1.Y -= ql;
+				h2.Y += ql;
+				
+				if (h1.Y < bounds.Bottom)
+				{
+					h2.Y += bounds.Bottom-h1.Y;
+					h1.Y = bounds.Bottom;
+				}
+				
+				if (h2.Y > bounds.Top)
+				{
+					h1.Y -= h2.Y-bounds.Top;
+					h2.Y = bounds.Top;
+				}
+
+				path.MoveTo(other);
+				path.LineTo(h1);
+				path.LineTo(bounds.BottomLeft);
+				path.LineTo(bounds.BottomRight);
+				path.LineTo(bounds.TopRight);
+				path.LineTo(bounds.TopLeft);
+				path.LineTo(h2);
+				path.Close();
+			}
+			else if (mode == AttachMode.Right)
+			{
+				Point h1 = himself;
+				Point h2 = himself;
+
+				h1.Y -= ql;
+				h2.Y += ql;
+				
+				if (h1.Y < bounds.Bottom)
+				{
+					h2.Y += bounds.Bottom-h1.Y;
+					h1.Y = bounds.Bottom;
+				}
+				
+				if (h2.Y > bounds.Top)
+				{
+					h1.Y -= h2.Y-bounds.Top;
+					h2.Y = bounds.Top;
+				}
+
+				path.MoveTo(other);
+				path.LineTo(h1);
+				path.LineTo(bounds.BottomRight);
+				path.LineTo(bounds.BottomLeft);
+				path.LineTo(bounds.TopLeft);
+				path.LineTo(bounds.TopRight);
+				path.LineTo(h2);
+				path.Close();
+			}
+			else if (mode == AttachMode.Bottom)
+			{
+				Point h1 = himself;
+				Point h2 = himself;
+
+				h1.X -= ql;
+				h2.X += ql;
+				
+				if (h1.X < bounds.Left)
+				{
+					h2.X += bounds.Left-h1.X;
+					h1.X = bounds.Left;
+				}
+				
+				if (h2.X > bounds.Right)
+				{
+					h1.X -= h2.X-bounds.Right;
+					h2.X = bounds.Right;
+				}
+
+				path.MoveTo(other);
+				path.LineTo(h1);
+				path.LineTo(bounds.BottomLeft);
+				path.LineTo(bounds.TopLeft);
+				path.LineTo(bounds.TopRight);
+				path.LineTo(bounds.BottomRight);
+				path.LineTo(h2);
+				path.Close();
+			}
+			else if (mode == AttachMode.Top)
+			{
+				Point h1 = himself;
+				Point h2 = himself;
+
+				h1.X -= ql;
+				h2.X += ql;
+				
+				if (h1.X < bounds.Left)
+				{
+					h2.X += bounds.Left-h1.X;
+					h1.X = bounds.Left;
+				}
+				
+				if (h2.X > bounds.Right)
+				{
+					h1.X -= h2.X-bounds.Right;
+					h2.X = bounds.Right;
+				}
+
+				path.MoveTo(other);
+				path.LineTo(h1);
+				path.LineTo(bounds.TopLeft);
+				path.LineTo(bounds.BottomLeft);
+				path.LineTo(bounds.BottomRight);
+				path.LineTo(bounds.TopRight);
+				path.LineTo(h2);
+				path.Close();
+			}
+
+			return path;
+		}
+
+		protected Point GetAttachHimself(AttachMode mode)
+		{
+			//	Retourne le point d'attache sur le commentaire.
+			Point pos = Point.Zero;
+
+			if (mode != AttachMode.None)
+			{
+				Rectangle bounds = this.bounds;
+				bounds.Inflate(0.5);
+
+				if (this.attachObject is ObjectBox)
+				{
+					ObjectBox box = this.attachObject as ObjectBox;
+
+					if (mode == AttachMode.Left || mode == AttachMode.Right)
+					{
+						pos.X = (mode == AttachMode.Left) ? bounds.Left : bounds.Right;
+
+						double miny = System.Math.Max(box.Bounds.Bottom, bounds.Bottom);
+						double maxy = System.Math.Min(box.Bounds.Top, bounds.Top);
+
+						if (miny <= maxy)
+						{
+							pos.Y = (miny+maxy)/2;
+						}
+						else
+						{
+							pos.Y = (bounds.Top < box.Bounds.Top) ? bounds.Top : bounds.Bottom;
+						}
+					}
+
+					if (mode == AttachMode.Bottom || mode == AttachMode.Top)
+					{
+						pos.Y = (mode == AttachMode.Bottom) ? bounds.Bottom : bounds.Top;
+
+						double minx = System.Math.Max(box.Bounds.Left, bounds.Left);
+						double maxx = System.Math.Min(box.Bounds.Right, bounds.Right);
+
+						if (minx <= maxx)
+						{
+							pos.X = (minx+maxx)/2;
+						}
+						else
+						{
+							pos.X = (bounds.Right < box.Bounds.Right) ? bounds.Right : bounds.Left;
+						}
+					}
+				}
+
+				if (this.attachObject is ObjectConnection)
+				{
+					ObjectConnection connection = this.attachObject as ObjectConnection;
+					Point attach = connection.PositionConnectionComment;
+
+					if (mode == AttachMode.Left || mode == AttachMode.Right)
+					{
+						pos.X = (mode == AttachMode.Left) ? bounds.Left : bounds.Right;
+
+						if (attach.Y < bounds.Bottom)
+						{
+							pos.Y = bounds.Bottom;
+						}
+						else if (attach.Y > bounds.Top)
+						{
+							pos.Y = bounds.Top;
+						}
+						else
+						{
+							pos.Y = attach.Y;
+						}
+					}
+
+					if (mode == AttachMode.Bottom || mode == AttachMode.Top)
+					{
+						pos.Y = (mode == AttachMode.Bottom) ? bounds.Bottom : bounds.Top;
+
+						if (attach.X < bounds.Left)
+						{
+							pos.X = bounds.Left;
+						}
+						else if (attach.X > bounds.Right)
+						{
+							pos.X = bounds.Right;
+						}
+						else
+						{
+							pos.X = attach.X;
+						}
+					}
+				}
+			}
+
+			return pos;
+		}
+
+		protected Point GetAttachOther(AttachMode mode)
+		{
+			//	Retourne le point d'attache sur l'objet lié (boîte ou commentaire).
+			Point pos = Point.Zero;
+
+			if (mode != AttachMode.None)
+			{
+				Rectangle bounds = this.bounds;
+				bounds.Inflate(0.5);
+
+				if (this.attachObject is ObjectBox)
+				{
+					ObjectBox box = this.attachObject as ObjectBox;
+					Point himself = this.GetAttachHimself(mode);
+
+					if (mode == AttachMode.Left || mode == AttachMode.Right)
+					{
+						pos.X = (mode == AttachMode.Left) ? box.Bounds.Right : box.Bounds.Left;
+
+						if (himself.Y < box.Bounds.Bottom)
+						{
+							pos.Y = box.Bounds.Bottom;
+						}
+						else if (himself.Y > box.Bounds.Top)
+						{
+							pos.Y = box.Bounds.Top;
+						}
+						else
+						{
+							pos.Y = himself.Y;
+						}
+					}
+
+					if (mode == AttachMode.Bottom || mode == AttachMode.Top)
+					{
+						pos.Y = (mode == AttachMode.Bottom) ? box.Bounds.Top : box.Bounds.Bottom;
+
+						if (himself.X < box.Bounds.Left)
+						{
+							pos.X = box.Bounds.Left;
+						}
+						else if (himself.X > box.Bounds.Right)
+						{
+							pos.X = box.Bounds.Right;
+						}
+						else
+						{
+							pos.X = himself.X;
+						}
+					}
+				}
+
+				if (this.attachObject is ObjectConnection)
+				{
+					ObjectConnection connection = this.attachObject as ObjectConnection;
+					pos = connection.PositionConnectionComment;
+				}
+			}
+
+			return pos;
+		}
+
+		protected AttachMode GetAttachMode()
+		{
+			//	Cherche d'où doit partir la queue du commentaire.
+			if (this.attachObject is ObjectBox)
+			{
+				ObjectBox box = this.attachObject as ObjectBox;
+
+				if (!this.bounds.IntersectsWith(box.Bounds))
+				{
+					if (this.bounds.Bottom >= box.Bounds.Top)  // commentaire en dessus ?
+					{
+						return AttachMode.Bottom;
+					}
+					
+					if (this.bounds.Top <= box.Bounds.Bottom)  // commentaire en dessous ?
+					{
+						return AttachMode.Top;
+					}
+
+					if (this.bounds.Left >= box.Bounds.Right)  // commentaire à droite ?
+					{
+						return AttachMode.Left;
+					}
+
+					if (this.bounds.Right <= box.Bounds.Left)  // commentaire à gauche ?
+					{
+						return AttachMode.Right;
+					}
+				}
+			}
+
+			if (this.attachObject is ObjectConnection)
+			{
+				ObjectConnection connection = this.attachObject as ObjectConnection;
+				Point attach = connection.PositionConnectionComment;
+				if (!attach.IsZero && !this.bounds.Contains(attach))
+				{
+					if (this.bounds.Bottom >= attach.Y)  // commentaire en dessus ?
+					{
+						return AttachMode.Bottom;
+					}
+					
+					if (this.bounds.Top <= attach.Y)  // commentaire en dessous ?
+					{
+						return AttachMode.Top;
+					}
+
+					if (this.bounds.Left >= attach.X)  // commentaire à droite ?
+					{
+						return AttachMode.Left;
+					}
+
+					if (this.bounds.Right <= attach.Y)  // commentaire à gauche ?
+					{
+						return AttachMode.Right;
+					}
+				}
+			}
+
+			return AttachMode.None;
 		}
 
 		protected void GetBoxAttach(out Point p1, out Point p2, out AttachMode mode)
