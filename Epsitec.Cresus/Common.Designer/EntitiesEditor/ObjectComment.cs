@@ -412,8 +412,10 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 			//	Dessine la boîte vide avec la queue (bulle de bd).
 			Path path = this.GetFramePath();
+
 			graphics.Rasterizer.AddSurface(path);
 			graphics.RenderSolid(this.ColorComment(this.hilitedElement != ActiveElement.None));
+
 			graphics.Rasterizer.AddOutline(path);
 			graphics.RenderSolid(Color.FromBrightness(0));
 
@@ -908,6 +910,26 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				{
 					ObjectConnection connection = this.attachObject as ObjectConnection;
 					pos = connection.PositionConnectionComment;
+
+					if (mode == AttachMode.Bottom || mode == AttachMode.BottomLeft || mode == AttachMode.BottomRight)
+					{
+						pos.Y += 2;
+					}
+
+					if (mode == AttachMode.Top || mode == AttachMode.TopLeft || mode == AttachMode.TopRight)
+					{
+						pos.Y -= 2;
+					}
+
+					if (mode == AttachMode.Left || mode == AttachMode.BottomLeft || mode == AttachMode.TopLeft)
+					{
+						pos.X += 2;
+					}
+
+					if (mode == AttachMode.Right || mode == AttachMode.BottomRight || mode == AttachMode.TopRight)
+					{
+						pos.X -= 2;
+					}
 				}
 			}
 
