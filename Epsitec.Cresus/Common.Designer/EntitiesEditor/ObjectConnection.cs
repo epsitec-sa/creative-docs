@@ -396,7 +396,17 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				this.comment.Text = this.field.CommentText;
 
 				Point attach = this.PositionConnectionComment;
-				Rectangle rect = new Rectangle(attach.X, attach.Y+20, Editor.defaultWidth, 50);  // hauteur arbitraire
+				Rectangle rect;
+
+				if (attach.X > this.field.SrcBox.Bounds.Right)
+				{
+					rect = new Rectangle(attach.X+20, attach.Y+20, Editor.defaultWidth, 50);  // hauteur arbitraire
+				}
+				else
+				{
+					rect = new Rectangle(attach.X-20-Editor.defaultWidth, attach.Y+20, Editor.defaultWidth, 50);  // hauteur arbitraire
+				}
+
 				this.comment.SetBounds(rect);
 				this.comment.UpdateHeight();  // adapte la hauteur en fonction du contenu
 
