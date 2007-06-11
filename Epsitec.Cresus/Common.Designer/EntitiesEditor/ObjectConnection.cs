@@ -398,11 +398,11 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				Point attach = this.PositionConnectionComment;
 				Rectangle rect;
 
-				if (attach.X > this.field.SrcBox.Bounds.Right)
+				if (attach.X > this.field.SrcBox.Bounds.Right)  // connection sur la droite ?
 				{
 					rect = new Rectangle(attach.X+20, attach.Y+20, Editor.defaultWidth, 50);  // hauteur arbitraire
 				}
-				else
+				else  // connection sur la gauche ?
 				{
 					rect = new Rectangle(attach.X-20-Editor.defaultWidth, attach.Y+20, Editor.defaultWidth, 50);  // hauteur arbitraire
 				}

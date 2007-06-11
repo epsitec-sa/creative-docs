@@ -1883,7 +1883,14 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		protected Point PositionColorButton(int rank)
 		{
 			//	Retourne la position du bouton pour choisir la couleur.
-			return new Point(this.bounds.Left-2+(AbstractObject.buttonSquare+0.5)*(rank+1)*2, this.bounds.Bottom+4+AbstractObject.buttonSquare);
+			if (this.IsExtended)
+			{
+				return new Point(this.bounds.Left-2+(AbstractObject.buttonSquare+0.5)*(rank+1)*2, this.bounds.Bottom+4+AbstractObject.buttonSquare);
+			}
+			else
+			{
+				return Point.Zero;
+			}
 		}
 
 		protected Point PositionSourcesMenu

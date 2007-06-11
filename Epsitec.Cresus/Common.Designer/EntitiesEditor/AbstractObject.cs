@@ -308,15 +308,27 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		protected bool DetectSquareButton(Point center, Point pos)
 		{
 			//	Détecte si la souris est dans un bouton carré.
-			double radius = AbstractObject.buttonSquare;
-			Rectangle rect = new Rectangle(center.X-radius, center.Y-radius, radius*2, radius*2);
-			rect.Inflate(0.5);
-			return rect.Contains(pos);
+			if (center.IsZero)
+			{
+				return false;
+			}
+			else
+			{
+				double radius = AbstractObject.buttonSquare;
+				Rectangle rect = new Rectangle(center.X-radius, center.Y-radius, radius*2, radius*2);
+				rect.Inflate(0.5);
+				return rect.Contains(pos);
+			}
 		}
 
 		protected void DrawSquareButton(Graphics graphics, Point center, MainColor color, bool selected, bool hilited)
 		{
 			//	Dessine un bouton carré avec une couleur.
+			if (center.IsZero)
+			{
+				return;
+			}
+
 			double radius = AbstractObject.buttonSquare;
 			Rectangle rect = new Rectangle(center.X-radius, center.Y-radius, radius*2, radius*2);
 			rect.Inflate(0.5);
@@ -366,6 +378,11 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		protected void DrawRoundButton(Graphics graphics, Point center, double radius, GlyphShape shape, bool hilited, bool shadow, bool enable)
 		{
 			//	Dessine un bouton circulaire avec un glyph.
+			if (center.IsZero)
+			{
+				return;
+			}
+
 			this.DrawRoundButton(graphics, center, radius, hilited, shadow, enable);
 
 			if (shape != GlyphShape.None)
@@ -395,6 +412,11 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		protected void DrawRoundButton(Graphics graphics, Point center, double radius, string text, bool hilited, bool shadow, bool enable)
 		{
 			//	Dessine un bouton circulaire avec un texte (généralement une seule lettre).
+			if (center.IsZero)
+			{
+				return;
+			}
+
 			this.DrawRoundButton(graphics, center, radius, hilited, shadow, enable);
 
 			if (!string.IsNullOrEmpty(text))
@@ -418,6 +440,11 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		protected void DrawRoundButton(Graphics graphics, Point center, double radius, bool hilited, bool shadow, bool enable)
 		{
 			//	Dessine un bouton circulaire vide.
+			if (center.IsZero)
+			{
+				return;
+			}
+
 			if (shadow)
 			{
 				Rectangle rect = new Rectangle(center.X-radius, center.Y-radius, radius*2, radius*2);
@@ -450,6 +477,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			graphics.RenderSolid(colorFrame);
 		}
 
+		
 		protected void DrawShadow(Graphics graphics, Rectangle rect, double radius, int smooth, double alpha)
 		{
 			//	Dessine une ombre douce.
