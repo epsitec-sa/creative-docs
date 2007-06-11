@@ -1214,24 +1214,51 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			using (System.IO.Stream stream = System.IO.File.Open(filename, System.IO.FileMode.Open, System.IO.FileAccess.Read, System.IO.FileShare.None))
 			{
 				BinaryFormatter formatter = new BinaryFormatter();
-				Editor readingEditor = null;
+				Editor rEditor = null;
 				string error = null;
 
 				try
 				{
-					readingEditor = (Editor) formatter.Deserialize(stream);
+					rEditor = (Editor) formatter.Deserialize(stream);
 				}
 				catch (System.Exception e)
 				{
 					error = e.Message;
-					readingEditor = null;
+					rEditor = null;
 				}
 
-				if (readingEditor != null)
+				if (rEditor != null)
 				{
-					int i=123;
+					this.DeserializeCreate(rEditor);
 				}
 			}
+		}
+
+		protected void DeserializeCreate(Editor rEditor)
+		{
+			this.Clear();
+
+			for (int b=0; b<rEditor.boxes.Count; b++)
+			{
+				ObjectBox rBox = rEditor.boxes[b];
+
+				CultureMap item = this.module.AccessEntities.Accessor.Collection[rBox.CultureMapDruid];
+
+				EntitiesEditor.ObjectBox box = new EntitiesEditor.ObjectBox(this);
+				box.IsRoot = (b == 0);
+				box.Title = item.Name;
+				box.SetContent(item);
+				this.AddBox(box);
+			}
+
+			for (int b=0; b<rEditor.boxes.Count; b++)
+			{
+				ObjectBox rBox = rEditor.boxes[b];
+				ObjectBox box = this.boxes[b];
+				box.Restore(rBox);
+			}
+
+			this.UpdateAfterAddOrRemoveConnection(null);
 		}
 
 		public virtual void GetObjectData(SerializationInfo info, StreamingContext context)

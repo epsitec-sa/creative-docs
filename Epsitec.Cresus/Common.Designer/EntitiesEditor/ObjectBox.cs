@@ -45,6 +45,14 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 		}
 
+		public Druid CultureMapDruid
+		{
+			get
+			{
+				return this.cultureMapDruid;
+			}
+		}
+
 		public string Title
 		{
 			//	Titre au sommet de la boîte.
@@ -1926,6 +1934,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			//	Sérialise l'objet.
 			base.GetObjectData(info, context);
 
+			info.AddValue("CultureMapDruid", this.cultureMap.Id.ToString());
 			info.AddValue("Bounds", this.bounds);
 			info.AddValue("IsExtended", this.isExtended);
 			info.AddValue("ColumnsSeparatorRelative", this.columnsSeparatorRelative);
@@ -1935,10 +1944,44 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		protected ObjectBox(SerializationInfo info, StreamingContext context) : base(info, context)
 		{
 			//	Constructeur qui désérialise l'objet.
+			this.cultureMapDruid = Druid.Parse(info.GetString("CultureMapDruid"));
 			this.bounds = (Rectangle) info.GetValue("Bounds", typeof(Rectangle));
 			this.isExtended = info.GetBoolean("IsExtended");
 			this.columnsSeparatorRelative = info.GetDouble("ColumnsSeparatorRelative");
 			this.fields = (List<Field>) info.GetValue("Fields", typeof(List<Field>));
+		}
+
+		public void Restore(ObjectBox rBox)
+		{
+			//	Restore un objet d'après un objet désérialisé (rBox).
+			this.bounds = rBox.bounds;
+			this.boxColor = rBox.boxColor;
+			this.isExtended = rBox.isExtended;
+			this.columnsSeparatorRelative = rBox.columnsSeparatorRelative;
+
+			for (int f=0; f<rBox.Fields.Count; f++)
+			{
+				Field rField = rBox.Fields[f];
+
+				Field field = this.RestoreSearchField(rField.Destination);
+				if (field != null)
+				{
+					field.Restore(rField);
+				}
+			}
+		}
+
+		protected Field RestoreSearchField(Druid druid)
+		{
+			foreach (Field field in this.fields)
+			{
+				if (field.Destination == druid)
+				{
+					return field;
+				}
+			}
+
+			return null;
 		}
 		#endregion
 
@@ -1950,6 +1993,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		protected static readonly double sourcesMenuHeight = 20;
 
 		protected CultureMap cultureMap;
+		protected Druid cultureMapDruid;
 		protected ObjectComment comment;
 		protected Rectangle bounds;
 		protected double columnsSeparatorRelative;

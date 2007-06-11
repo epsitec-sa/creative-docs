@@ -1183,6 +1183,11 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			this.attachObject = (AbstractObject) info.GetValue("AttachObject", typeof(AbstractObject));
 			this.isVisible = info.GetBoolean("IsVisible");
 		}
+
+		public void Restore(ObjectComment rComment)
+		{
+			//	Restore un objet d'après un objet désérialisé (rComment).
+		}
 		#endregion
 
 

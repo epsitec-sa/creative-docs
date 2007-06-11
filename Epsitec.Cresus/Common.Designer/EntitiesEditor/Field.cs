@@ -534,9 +534,13 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
 		{
 			//	Sérialise l'objet.
-			info.AddValue("Destination", this.destination.ToString());
-			info.AddValue("SrcBox", this.srcBox);
-			info.AddValue("DstBox", this.dstBox);
+			info.AddValue("DestinationDruid", this.destination.ToString());
+
+			info.AddValue("SrcBoxDruid", this.GetDruid(this.srcBox).ToString());
+			info.AddValue("DstBoxDruid", this.GetDruid(this.dstBox).ToString());
+
+			info.AddValue("IsExplored", this.isExplored);
+			info.AddValue("IsSourceExpanded", this.isSourceExpanded);
 			info.AddValue("IsAttachToRight", this.isAttachToRight);
 
 			info.AddValue("RouteType", this.routeType);
@@ -555,12 +559,27 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			info.AddValue("CommentMainColor", this.commentMainColor);
 		}
 
+		protected Druid GetDruid(ObjectBox box)
+		{
+			if (box == null)
+			{
+				return Druid.Empty;
+			}
+			else
+			{
+				return box.CultureMap.Id;
+			}
+		}
+
 		protected Field(SerializationInfo info, StreamingContext context)
 		{
 			//	Constructeur qui désérialise l'objet.
-			this.destination = Druid.Parse(info.GetString("Destination"));
-			this.srcBox = (ObjectBox) info.GetValue("SrcBox", typeof(ObjectBox));
-			this.dstBox = (ObjectBox) info.GetValue("DstBox", typeof(ObjectBox));
+			this.destination = Druid.Parse(info.GetString("DestinationDruid"));
+			this.srcBoxDruid = Druid.Parse(info.GetString("SrcBoxDruid"));
+			this.dstBoxDruid = Druid.Parse(info.GetString("DstBoxDruid"));
+
+			this.isExplored = info.GetBoolean("IsExplored");
+			this.isSourceExpanded = info.GetBoolean("IsSourceExpanded");
 			this.isAttachToRight = info.GetBoolean("IsAttachToRight");
 
 			this.routeType = (RouteType) info.GetValue("RouteType", typeof(RouteType));
@@ -578,6 +597,45 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			this.commentAttach = info.GetDouble("CommentAttach");
 			this.commentMainColor = (AbstractObject.MainColor) info.GetValue("CommentMainColor", typeof(AbstractObject.MainColor));
 		}
+
+		public void Restore(Field rField)
+		{
+			//	Restore un objet d'après un objet désérialisé (rField).
+			this.srcBox = this.RestoreSearchBox(this.srcBoxDruid);
+			this.dstBox = this.RestoreSearchBox(this.dstBoxDruid);
+
+			this.isExplored = rField.isExplored;
+			this.isSourceExpanded = rField.isSourceExpanded;
+			this.isAttachToRight = rField.isAttachToRight;
+
+			this.routeType = rField.routeType;
+			this.routeRelativeAX1 = rField.routeRelativeAX1;
+			this.routeRelativeAX2 = rField.routeRelativeAX2;
+			this.routeAbsoluteAY = rField.routeAbsoluteAY;
+			this.routeRelativeBX = rField.routeRelativeBX;
+			this.routeRelativeCX = rField.routeRelativeCX;
+			this.routeAbsoluteDX = rField.routeAbsoluteDX;
+
+			this.asComment = rField.asComment;
+			this.commentPosition = rField.commentPosition;
+			this.commentBounds = rField.commentBounds;
+			this.commentText = rField.commentText;
+			this.commentAttach = rField.commentAttach;
+			this.commentMainColor = rField.commentMainColor;
+		}
+
+		protected ObjectBox RestoreSearchBox(Druid druid)
+		{
+			foreach (ObjectBox box in this.editor.Boxes)
+			{
+				if (box.CultureMap.Id == druid)
+				{
+					return box;
+				}
+			}
+
+			return null;
+		}
 		#endregion
 
 
@@ -589,6 +647,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		protected int rank;
 		protected ObjectBox srcBox;
 		protected ObjectBox dstBox;
+		protected Druid srcBoxDruid;
+		protected Druid dstBoxDruid;
 		protected ObjectConnection connection;
 		protected bool isExplored;
 		protected bool isSourceExpanded;
