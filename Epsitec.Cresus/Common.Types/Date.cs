@@ -176,7 +176,14 @@ namespace Epsitec.Common.Types
 		
 		public override string ToString()
 		{
-			return this.InternalDate.ToString ("d", System.Globalization.CultureInfo.CurrentCulture);
+			if (this.IsNull)
+			{
+				return "<null>";
+			}
+			else
+			{
+				return this.InternalDate.ToString ("d", System.Globalization.CultureInfo.CurrentCulture);
+			}
 		}
 
 		public string ToString(System.IFormatProvider provider)

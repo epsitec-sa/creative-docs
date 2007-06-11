@@ -541,6 +541,19 @@ namespace Epsitec.Common.Types
 		/// </returns>
 		public static AbstractType CreateTypeObject(Caption caption)
 		{
+			return TypeRosetta.CreateTypeObject (caption, true);
+		}
+
+		/// <summary>
+		/// Creates the type object for the specified caption.
+		/// </summary>
+		/// <param name="caption">The caption used to store the type object definition.</param>
+		/// <param name="cache">If set to <c>true</c>, cache the resulting type object.</param>
+		/// <returns>
+		/// The type object or <c>null</c> if the type object cannot be created.
+		/// </returns>
+		public static AbstractType CreateTypeObject(Caption caption, bool cache)
+		{
 			TypeRosetta.InitializeKnownTypes ();
 
 			if (caption == null)
@@ -559,7 +572,7 @@ namespace Epsitec.Common.Types
 				{
 					TypeRosetta.creatingTypeObject++;
 					TypeRosetta.pendingTypes[caption.Id] = true;
-					return TypeRosetta.LockedCreateTypeObject (caption);
+					return TypeRosetta.LockedCreateTypeObject (caption, cache);
 				}
 				finally
 				{
@@ -594,7 +607,7 @@ namespace Epsitec.Common.Types
 
 		#region Low level type management code
 
-		private static AbstractType LockedCreateTypeObject(Caption caption)
+		private static AbstractType LockedCreateTypeObject(Caption caption, bool cache)
 		{
 			Support.Druid typeId = caption.Id;
 			AbstractType  type   = null;
@@ -675,7 +688,11 @@ namespace Epsitec.Common.Types
 				}
 			}
 
-			TypeRosetta.RecordType (typeId, type);
+			if (cache)
+			{
+				TypeRosetta.RecordType (typeId, type);
+			}
+
 			TypeRosetta.ExecuteFixUps ();
 			
 			return type;

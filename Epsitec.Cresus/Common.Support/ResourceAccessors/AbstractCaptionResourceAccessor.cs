@@ -237,9 +237,9 @@ namespace Epsitec.Common.Support.ResourceAccessors
 
 			Types.StructuredData data = new Types.StructuredData (this.GetStructuredType ());
 
-			Caption caption = new Caption ();
+			Caption caption = new Caption (id);
 			string  name    = string.IsNullOrEmpty (field.Name) ? null : this.GetNameFromFieldName (field.Name);
-			
+
 			caption.DeserializeFromString (field.AsString);
 
 			this.FillDataFromCaption (item, data, caption);

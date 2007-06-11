@@ -311,6 +311,11 @@ namespace Epsitec.Common.Types
 			return this.minimum.GetHashCode () ^ this.maximum.GetHashCode () ^ this.resolution.GetHashCode ();
 		}
 
+		public override string ToString()
+		{
+			return string.Format ("{0}..{1}:{2}", this.minimum, this.maximum, this.resolution);
+		}
+
 		#region IEquatable<DecimalRange> Members
 
 		public bool Equals(DecimalRange other)

@@ -148,6 +148,19 @@ namespace Epsitec.Common.Types
 			return data;
 		}
 
+		public void DefineStructuredType(IStructuredType type)
+		{
+			if ((this.type == null) ||
+				(this.type == type))
+			{
+				this.type = type;
+			}
+			else
+			{
+				throw new System.InvalidOperationException ("StructuredType cannot be redefined");
+			}
+		}
+
 		#region IStructuredTypeProvider Members
 
 		IStructuredType IStructuredTypeProvider.GetStructuredType()

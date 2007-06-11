@@ -108,6 +108,8 @@ namespace Epsitec.Common.Support.ResourceAccessors
 		{
 			base.FillDataFromCaption (item, data, caption);
 
+			//	TODO: find proper type instance, not the cached one !
+
 			StructuredType type = AbstractType.GetComplexType (caption) as StructuredType;
 			this.FillDataFromType (item, data, type);
 		}

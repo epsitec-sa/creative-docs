@@ -198,6 +198,33 @@ namespace Epsitec.Common.Support
 		}
 
 		[Test]
+		public void CheckAnyTypeAccessor()
+		{
+			ResourceAccessors.AnyTypeResourceAccessor accessor = new ResourceAccessors.AnyTypeResourceAccessor ();
+
+			Assert.IsFalse (accessor.ContainsChanges);
+
+			accessor.Load (Epsitec.Common.Types.Res.Manager);
+
+
+			System.Console.Out.WriteLine ("{0} resources found", accessor.Collection.Count);
+
+			foreach (CultureMap item in accessor.Collection)
+			{
+				Types.StructuredData data = item.GetCultureData (Resources.DefaultTwoLetterISOLanguageName);
+				string[] ids = Types.Collection.ToArray (data.GetValueIds ());
+				Types.TypeCode code = (Types.TypeCode) data.GetValue (Res.Fields.ResourceBaseType.TypeCode);
+
+				System.Console.Out.WriteLine ("  {2}, {0} --> {1}", item.Name, item.Id, code);
+
+				foreach (string id in ids)
+				{
+					System.Console.Out.WriteLine ("    {0}: {1}", id, data.GetValue (id));
+				}
+			}
+		}
+
+		[Test]
 		public void CheckMetadata()
 		{
 			ResourceAccessors.StringResourceAccessor  stringAccessor  = new ResourceAccessors.StringResourceAccessor ();

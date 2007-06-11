@@ -226,7 +226,14 @@ namespace Epsitec.Common.Types
 		
 		public override string ToString()
 		{
-			return string.Format ("{0:00}:{1:00}:{2:00}.{3:000}", this.Hour, this.Minute, this.Second, this.Millisecond);
+			if (this.IsNull)
+			{
+				return "<null>";
+			}
+			else
+			{
+				return string.Format ("{0:00}:{1:00}:{2:00}.{3:000}", this.Hour, this.Minute, this.Second, this.Millisecond);
+			}
 		}
 		
 		
