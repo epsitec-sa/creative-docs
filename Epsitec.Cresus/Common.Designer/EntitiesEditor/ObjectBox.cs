@@ -86,6 +86,72 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			this.UpdateSources();
 		}
 
+		public void UpdateContentAfterRead()
+		{
+			//	Initialise le contenu de la boîte après sa désérialisation.
+			this.Title = this.cultureMap.Name;
+
+			StructuredData data = this.cultureMap.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
+			IList<StructuredData> dataFields = data.GetValue(Support.Res.Fields.ResourceStructuredType.Fields) as IList<StructuredData>;
+
+			List<Field> newFields = new List<Field>();
+			if (dataFields != null)
+			{
+				for (int i=0; i<dataFields.Count; i++)
+				{
+					Field field = new Field(this.editor);
+					this.UpdateField(dataFields[i], field);
+
+					Druid fieldCaptionId = (Druid) dataFields[i].GetValue(Support.Res.Fields.Field.CaptionId);
+					Field rField = this.UpdateContentAfterReadSearchField(fieldCaptionId);
+					if (rField != null)
+					{
+						rField.DeserializeCopyTo(field);
+					}
+
+					field.SrcBox = this;
+
+					if (rField.IsExplored)
+					{
+						field.IsExplored = true;
+						field.DstBox = this.UpdateContentAfterReadSearchBox(rField.Destination);
+					}
+
+					newFields.Add(field);
+				}
+			}
+			this.fields = newFields;
+
+			this.UpdateFields();
+			this.UpdateSources();
+		}
+
+		protected Field UpdateContentAfterReadSearchField(Druid druid)
+		{
+			foreach (Field field in this.fields)
+			{
+				if (field.CaptionId == druid)
+				{
+					return field;
+				}
+			}
+
+			return null;
+		}
+
+		protected ObjectBox UpdateContentAfterReadSearchBox(Druid druid)
+		{
+			foreach (ObjectBox box in this.editor.Boxes)
+			{
+				if (box.CultureMap.Id == druid)
+				{
+					return box;
+				}
+			}
+
+			return null;
+		}
+
 		public ObjectComment Comment
 		{
 			//	Commentaire lié.
@@ -1102,6 +1168,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			Caption fieldCaption = this.editor.Module.AccessEntities.DirectGetCaption(fieldCaptionId);
 			Caption typeCaption = typeId.IsEmpty ? null : this.editor.Module.AccessEntities.DirectGetCaption(typeId);
 
+			field.CaptionId = fieldCaptionId;
 			field.FieldName = (fieldCaption == null) ? "" : fieldCaption.Name;
 			field.TypeName = (typeCaption == null) ? "" : typeCaption.Name;
 			field.Relation = rel;
@@ -1929,7 +1996,12 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			writer.WriteElementString("Druid", this.cultureMap.Id.ToString());
 			writer.WriteElementString("Bounds", this.bounds.ToString());
 			writer.WriteElementString("IsExtended", this.isExtended.ToString());
-			writer.WriteElementString("ColumnsSeparatorRelative", this.columnsSeparatorRelative.ToString());
+
+			if (this.columnsSeparatorRelative != 0.5)
+			{
+				writer.WriteElementString("ColumnsSeparatorRelative", this.columnsSeparatorRelative.ToString());
+			}
+			
 			writer.WriteElementString("Color", this.boxColor.ToString());
 
 			foreach (Field field in this.fields)
@@ -1947,45 +2019,59 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		public void ReadXml(XmlReader reader)
 		{
+			this.fields.Clear();
+
 			while (reader.Read())
 			{
 				if (reader.NodeType == XmlNodeType.Element)
 				{
-					if (reader.LocalName == "Box")
-					{
-						Druid druid = Druid.Parse(reader.GetAttribute("Druid"));
-						if (druid.IsValid)
-						{
-							this.cultureMap = this.editor.Module.AccessEntities.Accessor.Collection[druid];
-						}
+					string name = reader.LocalName;
 
-						string bounds = reader.GetAttribute("Bounds");
-						if (!string.IsNullOrEmpty(bounds))
-						{
-							this.bounds = Rectangle.Parse(bounds);
-						}
+					if (name == "Field")
+					{
+						Field field = new Field(this.editor);
+						field.ReadXml(reader);
+						this.fields.Add(field);
 					}
 					else
 					{
-						throw new System.FormatException(string.Format("Element <{0}> not expected here; expected <type>", reader.Name));
+						string element = reader.ReadElementString();
+
+						if (name == "Druid")
+						{
+							Druid druid = Druid.Parse(element);
+							if (druid.IsValid)
+							{
+								this.cultureMap = this.editor.Module.AccessEntities.Accessor.Collection[druid];
+							}
+						}
+
+						if (name == "Bounds")
+						{
+							this.bounds = Rectangle.Parse(element);
+						}
+
+						if (name == "IsExtended")
+						{
+							this.isExtended = bool.Parse(element);
+						}
+
+						if (name == "ColumnsSeparatorRelative")
+						{
+							this.columnsSeparatorRelative = double.Parse(element);
+						}
+
+						if (name == "Color")
+						{
+							this.boxColor = (MainColor) System.Enum.Parse(typeof(MainColor), element);
+						}
 					}
 				}
-			}
-
-			throw new System.FormatException("Unexpected end of XML; expected <type>");
-		}
-
-		protected Field RestoreSearchField(Druid druid)
-		{
-			foreach (Field field in this.fields)
-			{
-				if (field.Destination == druid)
+				else if (reader.NodeType == XmlNodeType.EndElement)
 				{
-					return field;
+					break;
 				}
 			}
-
-			return null;
 		}
 		#endregion
 

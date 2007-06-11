@@ -1231,7 +1231,20 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 			while (reader.ReadToFollowing("Box"))
 			{
+				ObjectBox box = new ObjectBox(this);
+				box.ReadXml(reader);
+				this.boxes.Add(box);
 			}
+
+			for (int i=0; i<this.boxes.Count; i++)
+			{
+				ObjectBox box = this.boxes[i];
+
+				box.IsRoot = (i==0);  // la première boîte est toujours la boîte racine
+				box.UpdateContentAfterRead();
+			}
+
+			this.UpdateAfterAddOrRemoveConnection(null);
 		}
 		#endregion
 

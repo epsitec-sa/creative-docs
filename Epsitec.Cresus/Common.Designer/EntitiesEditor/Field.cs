@@ -86,6 +86,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			this.textLayoutType.BreakMode = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine;
 
 			this.relation = FieldRelation.None;
+			this.captionId = Druid.Empty;
 			this.destination = Druid.Empty;
 			this.rank = -1;
 			this.isExplored = false;
@@ -159,6 +160,19 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			set
 			{
 				this.relation = value;
+			}
+		}
+
+		public Druid CaptionId
+		{
+			//	Druid du champ.
+			get
+			{
+				return this.captionId;
+			}
+			set
+			{
+				this.captionId = value;
 			}
 		}
 
@@ -536,7 +550,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			//	Sérialise toutes les informations du champ.
 			writer.WriteStartElement("Field");
 			
-			writer.WriteElementString("Druid", this.destination.ToString());
+			writer.WriteElementString("DruidCaptionId", this.captionId.ToString());
+			writer.WriteElementString("DruidDestination", this.destination.ToString());
 
 			if (this.isExplored)
 			{
@@ -592,6 +607,132 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			writer.WriteEndElement();
 		}
 
+		public void ReadXml(XmlReader reader)
+		{
+			while (reader.Read())
+			{
+				if (reader.NodeType == XmlNodeType.Element)
+				{
+					string name = reader.LocalName;
+					string element = reader.ReadElementString();
+
+					if (name == "DruidCaptionId")
+					{
+						Druid druid = Druid.Parse(element);
+						if (druid.IsValid)
+						{
+							this.captionId = druid;
+						}
+					}
+
+					if (name == "DruidDestination")
+					{
+						Druid druid = Druid.Parse(element);
+						if (druid.IsValid)
+						{
+							this.destination = druid;
+						}
+					}
+
+					if (name == "IsAttachToRight")
+					{
+						this.isExplored = true;
+						this.isAttachToRight = bool.Parse(element);
+					}
+
+					if (name == "RouteType")
+					{
+						this.routeType = (RouteType) System.Enum.Parse(typeof(RouteType), element);
+					}
+
+					if (name == "RouteRelativeAX1")
+					{
+						this.routeRelativeAX1 = double.Parse(element);
+					}
+
+					if (name == "routeRelativeAX2")
+					{
+						this.routeRelativeAX2 = double.Parse(element);
+					}
+
+					if (name == "routeAbsoluteAY")
+					{
+						this.routeAbsoluteAY = double.Parse(element);
+					}
+
+					if (name == "routeRelativeBX")
+					{
+						this.routeRelativeBX = double.Parse(element);
+					}
+
+					if (name == "routeRelativeBY")
+					{
+						this.routeRelativeBY = double.Parse(element);
+					}
+
+					if (name == "routeRelativeCX")
+					{
+						this.routeRelativeCX = double.Parse(element);
+					}
+
+					if (name == "routeAbsoluteDX")
+					{
+						this.routeAbsoluteDX = double.Parse(element);
+					}
+
+					if (name == "CommentPosition")
+					{
+						this.asComment = true;
+						this.commentPosition = Point.Parse(element);
+					}
+
+					if (name == "CommentBounds")
+					{
+						this.commentBounds = Rectangle.Parse(element);
+					}
+
+					if (name == "CommentText")
+					{
+						this.commentText = element;
+					}
+
+					if (name == "CommentAttach")
+					{
+						this.commentAttach = double.Parse(element);
+					}
+
+					if (name == "CommentColor")
+					{
+						this.commentMainColor = (AbstractObject.MainColor) System.Enum.Parse(typeof(AbstractObject.MainColor), element);
+					}
+				}
+				else if (reader.NodeType == XmlNodeType.EndElement)
+				{
+					break;
+				}
+			}
+		}
+
+		public void DeserializeCopyTo(Field dst)
+		{
+			dst.isAttachToRight = this.isAttachToRight;
+			dst.routeType = this.routeType;
+			dst.routeRelativeAX1 = this.routeRelativeAX1;
+			dst.routeRelativeAX2 = this.routeRelativeAX2;
+			dst.routeAbsoluteAY = this.routeAbsoluteAY;
+			dst.routeRelativeBX = this.routeRelativeBX;
+			dst.routeRelativeBY = this.routeRelativeBY;
+			dst.routeRelativeCX = this.routeRelativeCX;
+			dst.routeAbsoluteDX = this.routeAbsoluteDX;
+			dst.asComment = this.asComment;
+			dst.commentPosition = this.commentPosition;
+			dst.commentBounds = this.commentBounds;
+			dst.commentText = this.commentText;
+			dst.commentAttach = this.commentAttach;
+			dst.commentMainColor = this.commentMainColor;
+		}
+
+#if false
 		protected Druid GetDruid(ObjectBox box)
 		{
 			if (box == null)
@@ -616,6 +757,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 			return null;
 		}
+#endif
 		#endregion
 
 
@@ -623,6 +765,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		protected TextLayout textLayoutField;
 		protected TextLayout textLayoutType;
 		protected FieldRelation relation;
+		protected Druid captionId;
 		protected Druid destination;
 		protected int rank;
 		protected ObjectBox srcBox;
