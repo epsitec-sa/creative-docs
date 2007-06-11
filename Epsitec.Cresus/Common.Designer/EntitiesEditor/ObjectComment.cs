@@ -259,7 +259,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 				if (this.hilitedElement == ActiveElement.CommentColorButton6)
 				{
-					this.BackgroundMainColor = MainColor.Cyan;
+					this.BackgroundMainColor = MainColor.Blue;
 				}
 			}
 		}
@@ -508,11 +508,11 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 			if (this.hilitedElement == ActiveElement.CommentColorButton6)
 			{
-				this.DrawSquareButton(graphics, this.PositionColorButton(5), MainColor.Cyan, this.boxColor == MainColor.Cyan, true);
+				this.DrawSquareButton(graphics, this.PositionColorButton(5), MainColor.Blue, this.boxColor == MainColor.Blue, true);
 			}
 			else if (this.IsHeaderHilite)
 			{
-				this.DrawSquareButton(graphics, this.PositionColorButton(5), MainColor.Cyan, this.boxColor == MainColor.Cyan, false);
+				this.DrawSquareButton(graphics, this.PositionColorButton(5), MainColor.Blue, this.boxColor == MainColor.Blue, false);
 			}
 
 			//	Dessine le bouton pour modifier la largeur.

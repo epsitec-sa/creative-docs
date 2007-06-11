@@ -67,7 +67,6 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			Orange,
 			Lilac,
 			Purple,
-			Cyan,
 		}
 
 
@@ -251,7 +250,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					return "Commentaire violet";
 
 				case AbstractObject.ActiveElement.CommentColorButton6:
-					return "Commentaire bleu ciel";
+					return "Commentaire bleu";
 
 				case AbstractObject.ActiveElement.CommentAttachToConnection:
 					return "Déplace le point d'attache du commentaire";
@@ -582,10 +581,6 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 				case MainColor.Purple:
 					color = Color.FromRgb(30.0/255.0, 0.0/255.0, 200.0/255.0);
-					break;
-
-				case MainColor.Cyan:
-					color = Color.FromRgb(0.0/255.0, 120.0/255.0, 200.0/255.0);
 					break;
 			}
 
