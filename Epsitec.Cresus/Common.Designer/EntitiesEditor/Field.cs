@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Runtime.Serialization;
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Support;
 using Epsitec.Common.Drawing;
@@ -9,7 +10,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 	/// <summary>
 	/// Cette classe contient toutes les informations relatives à une ligne, c'est-à-dire à un champ.
 	/// </summary>
-	public class Field
+	[System.Serializable()]
+	public class Field : ISerializable
 	{
 		public enum RouteType
 		{
@@ -528,6 +530,57 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		}
 
 		
+		#region Serialization
+		public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
+		{
+			//	Sérialise l'objet.
+			info.AddValue("Destination", this.destination.ToString());
+			info.AddValue("SrcBox", this.srcBox);
+			info.AddValue("DstBox", this.dstBox);
+			info.AddValue("IsAttachToRight", this.isAttachToRight);
+
+			info.AddValue("RouteType", this.routeType);
+			info.AddValue("RouteRelativeAX1", this.routeRelativeAX1);
+			info.AddValue("RouteRelativeAX2", this.routeRelativeAX2);
+			info.AddValue("RouteAbsoluteAY", this.routeAbsoluteAY);
+			info.AddValue("RouteRelativeBX", this.routeRelativeBX);
+			info.AddValue("RouteRelativeCX", this.routeRelativeCX);
+			info.AddValue("RouteAbsoluteDX", this.routeAbsoluteDX);
+
+			info.AddValue("AsComment", this.asComment);
+			info.AddValue("CommentPosition", this.commentPosition);
+			info.AddValue("CommentBounds", this.commentBounds);
+			info.AddValue("CommentText", this.commentText);
+			info.AddValue("CommentAttach", this.commentAttach);
+			info.AddValue("CommentMainColor", this.commentMainColor);
+		}
+
+		protected Field(SerializationInfo info, StreamingContext context)
+		{
+			//	Constructeur qui désérialise l'objet.
+			this.destination = Druid.Parse(info.GetString("Destination"));
+			this.srcBox = (ObjectBox) info.GetValue("SrcBox", typeof(ObjectBox));
+			this.dstBox = (ObjectBox) info.GetValue("DstBox", typeof(ObjectBox));
+			this.isAttachToRight = info.GetBoolean("IsAttachToRight");
+
+			this.routeType = (RouteType) info.GetValue("RouteType", typeof(RouteType));
+			this.routeRelativeAX1 = info.GetDouble("RouteRelativeAX1");
+			this.routeRelativeAX2 = info.GetDouble("RouteRelativeAX2");
+			this.routeAbsoluteAY = info.GetDouble("RouteAbsoluteAY");
+			this.routeRelativeBX = info.GetDouble("RouteRelativeBX");
+			this.routeRelativeCX = info.GetDouble("RouteRelativeCX");
+			this.routeAbsoluteDX = info.GetDouble("RouteAbsoluteDX");
+
+			this.asComment = info.GetBoolean("AsComment");
+			this.commentPosition = (Point) info.GetValue("CommentPosition", typeof(Point));
+			this.commentBounds = (Rectangle) info.GetValue("CommentBounds", typeof(Rectangle));
+			this.commentText = info.GetString("CommentText");
+			this.commentAttach = info.GetDouble("CommentAttach");
+			this.commentMainColor = (AbstractObject.MainColor) info.GetValue("CommentMainColor", typeof(AbstractObject.MainColor));
+		}
+		#endregion
+
+
 		protected Editor editor;
 		protected TextLayout textLayoutField;
 		protected TextLayout textLayoutType;

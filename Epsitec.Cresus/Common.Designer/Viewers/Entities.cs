@@ -107,6 +107,20 @@ namespace Epsitec.Common.Designer.Viewers
 			this.sliderZoom.ValueChanged += new EventHandler(this.HandleSliderZoomValueChanged);
 			ToolTip.Default.SetToolTip(this.sliderZoom, "Choix du zoom");
 
+#if true
+			Button b1 = new Button(this.toolbar);
+			b1.Text = "Write";
+			b1.Margins = new Margins(10, 0, 0, 0);
+			b1.Dock = DockStyle.Left;
+			b1.Clicked += new MessageEventHandler(this.HandleWriteClicked);
+
+			Button b2 = new Button(this.toolbar);
+			b2.Text = "Read";
+			b2.Margins = new Margins(2, 0, 0, 0);
+			b2.Dock = DockStyle.Left;
+			b2.Clicked += new MessageEventHandler(this.HandleReadClicked);
+#endif
+
 			this.AreaSize = new Size(100, 100);
 
 			this.editor.UpdateGeometry();
@@ -384,6 +398,17 @@ namespace Epsitec.Common.Designer.Viewers
 			//	Appelé lorsque le zoom a changé depuis l'éditeur.
 			this.Zoom = this.editor.Zoom;
 		}
+
+		private void HandleWriteClicked(object sender, MessageEventArgs e)
+		{
+			this.editor.Serialize(@"D:\\Cresus\data_entity_1.bin");
+		}
+
+		private void HandleReadClicked(object sender, MessageEventArgs e)
+		{
+			this.editor.Deserialize(@"D:\\Cresus\data_entity_1.bin");
+		}
+
 
 
 		public static readonly double zoomMin = 0.2;

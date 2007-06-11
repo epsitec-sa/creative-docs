@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Runtime.Serialization;
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Support;
 using Epsitec.Common.Types;
@@ -9,6 +10,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 	/// <summary>
 	/// Boîte pour représenter une entité.
 	/// </summary>
+	[System.Serializable()]
 	public class ObjectBox : AbstractObject
 	{
 		public enum ConnectionAnchor
@@ -154,18 +156,6 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			get
 			{
 				return this.fields;
-			}
-		}
-
-		public Field ParentField
-		{
-			get
-			{
-				return this.parentField;
-			}
-			set
-			{
-				this.parentField = value;
 			}
 		}
 
@@ -1930,6 +1920,28 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		}
 
 
+		#region Serialization
+		public override void GetObjectData(SerializationInfo info, StreamingContext context)
+		{
+			//	Sérialise l'objet.
+			base.GetObjectData(info, context);
+
+			info.AddValue("Bounds", this.bounds);
+			info.AddValue("IsExtended", this.isExtended);
+			info.AddValue("ColumnsSeparatorRelative", this.columnsSeparatorRelative);
+			info.AddValue("Fields", this.fields);
+		}
+
+		protected ObjectBox(SerializationInfo info, StreamingContext context) : base(info, context)
+		{
+			//	Constructeur qui désérialise l'objet.
+			this.bounds = (Rectangle) info.GetValue("Bounds", typeof(Rectangle));
+			this.isExtended = info.GetBoolean("IsExtended");
+			this.columnsSeparatorRelative = info.GetDouble("ColumnsSeparatorRelative");
+			this.fields = (List<Field>) info.GetValue("Fields", typeof(List<Field>));
+		}
+		#endregion
+
 
 		protected static readonly double roundFrameRadius = 12;
 		protected static readonly double shadowOffset = 6;
@@ -1946,7 +1958,6 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		protected string titleString;
 		protected TextLayout title;
 		protected List<Field> fields;
-		protected Field parentField;
 		protected List<SourceInfo> sourcesList;
 		protected int sourcesClosedCount;
 

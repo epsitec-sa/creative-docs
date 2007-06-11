@@ -1,4 +1,6 @@
 using System.Collections.Generic;
+using System.Runtime.Serialization;
+using System.Runtime.Serialization.Formatters.Binary;
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Support;
 using Epsitec.Common.Drawing;
@@ -9,7 +11,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 	/// <summary>
 	/// Widget permettant d'éditer graphiquement des entités.
 	/// </summary>
-	public class Editor : Widget, Widgets.Helpers.IToolTipHost
+	[System.Serializable()]
+	public class Editor : Widget, Widgets.Helpers.IToolTipHost, ISerializable
 	{
 		protected enum MouseCursorType
 		{
@@ -1189,6 +1192,62 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			graphics.AddRectangle(rect);
 			graphics.RenderSolid(adorner.ColorBorder);
 		}
+
+
+		#region Serialization
+		public void Serialize(string filename)
+		{
+			if (System.IO.File.Exists(filename))
+			{
+				System.IO.File.Delete(filename);
+			}
+			
+			using (System.IO.Stream stream = System.IO.File.Open(filename, System.IO.FileMode.CreateNew, System.IO.FileAccess.ReadWrite, System.IO.FileShare.None))
+			{
+				BinaryFormatter formatter = new BinaryFormatter();
+				formatter.Serialize(stream, this);
+			}
+		}
+
+		public void Deserialize(string filename)
+		{
+			using (System.IO.Stream stream = System.IO.File.Open(filename, System.IO.FileMode.Open, System.IO.FileAccess.Read, System.IO.FileShare.None))
+			{
+				BinaryFormatter formatter = new BinaryFormatter();
+				Editor readingEditor = null;
+				string error = null;
+
+				try
+				{
+					readingEditor = (Editor) formatter.Deserialize(stream);
+				}
+				catch (System.Exception e)
+				{
+					error = e.Message;
+					readingEditor = null;
+				}
+
+				if (readingEditor != null)
+				{
+					int i=123;
+				}
+			}
+		}
+
+		public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
+		{
+			//	Sérialise l'objet.
+			info.AddValue("Boxes", this.boxes);
+			info.AddValue("Comments", this.comments);
+		}
+
+		protected Editor(SerializationInfo info, StreamingContext context)
+		{
+			//	Constructeur qui désérialise l'objet.
+			this.boxes = (List<ObjectBox>) info.GetValue("Boxes", typeof(List<ObjectBox>));
+			this.comments = (List<ObjectComment>) info.GetValue("Comments", typeof(List<ObjectComment>));
+		}
+		#endregion
 
 
 		#region Helpers.IToolTipHost
