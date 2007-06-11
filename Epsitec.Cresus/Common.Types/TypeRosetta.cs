@@ -649,10 +649,6 @@ namespace Epsitec.Common.Types
 						type = new StringType (caption);
 						break;
 
-					case "System.Void":
-						type = new VoidType (caption);
-						break;
-
 					case "System.Byte[]":
 						type = new BinaryType (caption);
 						break;
@@ -667,10 +663,6 @@ namespace Epsitec.Common.Types
 
 					case "Epsitec.Common.Types.Time, Common.Types":
 						type = new TimeType (caption);
-						break;
-
-					case "Epsitec.Common.Support.Druid, Common.Support":
-						type = new DruidType (caption);
 						break;
 
 					case "System.Collections.IEnumerable":
@@ -712,8 +704,8 @@ namespace Epsitec.Common.Types
 			{
 				return new EnumType (systemType, caption);
 			}
-			
-			return null;
+
+			return new OtherType (caption);
 		}
 
 		internal static void InitializeKnownTypes()

@@ -50,7 +50,6 @@ namespace Epsitec.Common.Designer
 		public enum TypeType
 		{
 			None,
-			Void,
 			Boolean,
 			Integer,
 			LongInteger,
@@ -247,7 +246,6 @@ namespace Epsitec.Common.Designer
 
 		public static TypeType AbstractTypeToTypeType(AbstractType type)
 		{
-			if (type is VoidType       )  return TypeType.Void;
 			if (type is BooleanType    )  return TypeType.Boolean;
 			if (type is IntegerType    )  return TypeType.Integer;
 			if (type is LongIntegerType)  return TypeType.LongInteger;
@@ -267,7 +265,6 @@ namespace Epsitec.Common.Designer
 
 		protected static string TypeTypeController(AbstractType type)
 		{
-			if (type is VoidType             )  return null;
 			if (type is BooleanType          )  return "Boolean";
 			if (type is IntegerType          )  return "Numeric";
 			if (type is LongIntegerType      )  return "Numeric";
@@ -285,7 +282,6 @@ namespace Epsitec.Common.Designer
 
 		protected static string TypeTypeControllerParameter(AbstractType type)
 		{
-			if (type is VoidType       )  return null;
 			if (type is BooleanType    )  return null;
 			if (type is IntegerType    )  return null;
 			if (type is LongIntegerType)  return null;
@@ -309,7 +305,6 @@ namespace Epsitec.Common.Designer
 
 			switch (type)
 			{
-				case TypeType.Void:         abstractType = new VoidType(); break;
 				case TypeType.Boolean:      abstractType = new BooleanType(); break;
 				case TypeType.Integer:      abstractType = new IntegerType(); break;
 				case TypeType.LongInteger:  abstractType = new LongIntegerType(); break;
@@ -341,7 +336,6 @@ namespace Epsitec.Common.Designer
 		{
 			switch (type)
 			{
-				case TypeType.Void:         return Res.Strings.Viewers.Types.Editor.Void;
 				case TypeType.Boolean:      return Res.Strings.Viewers.Types.Editor.Boolean;
 				case TypeType.Integer:      return Res.Strings.Viewers.Types.Editor.Integer;
 				case TypeType.LongInteger:  return Res.Strings.Viewers.Types.Editor.LongInteger;
@@ -363,7 +357,6 @@ namespace Epsitec.Common.Designer
 		{
 			switch (type)
 			{
-				case TypeType.Void:         return "Void";
 				case TypeType.Boolean:      return "Boolean";
 				case TypeType.Integer:      return "Integer";
 				case TypeType.LongInteger:  return "LongInteger";
@@ -386,7 +379,6 @@ namespace Epsitec.Common.Designer
 		{
 			switch (name)
 			{
-				case "Void":         return TypeType.Void;
 				case "Boolean":      return TypeType.Boolean;
 				case "Integer":      return TypeType.Integer;
 				case "LongInteger":  return TypeType.LongInteger;

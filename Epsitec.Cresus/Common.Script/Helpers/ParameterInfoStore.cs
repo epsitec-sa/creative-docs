@@ -33,7 +33,7 @@ namespace Epsitec.Common.Script.Helpers
 		
 		public void IncludeVoidType()
 		{
-			Types.VoidType type = Types.VoidType.Default;
+			Types.OtherType type = Types.VoidType.Default;
 			this.hash_type[type.Name] = type;
 			this.includes_void = true;
 		}

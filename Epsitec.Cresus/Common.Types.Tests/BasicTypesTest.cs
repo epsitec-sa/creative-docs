@@ -596,6 +596,19 @@ namespace Epsitec.Common.Types
 		}
 
 		[Test]
+		public void CheckOtherType()
+		{
+			OtherType type = new OtherType ();
+			Caption caption = new Caption ();
+			AbstractType.SetSystemType (caption, typeof (DecimalRange));
+			type.DefineCaption (caption);
+
+			Assert.IsTrue (type.IsValidValue (new DecimalRange ()));
+			Assert.IsFalse (type.IsValidValue (null));
+			Assert.IsFalse (type.IsValidValue (10));
+		}
+
+		[Test]
 		public void CheckSupportTypes()
 		{
 //-			Assert.AreSame (StringType.Default, Epsitec.Common.Support.Res.Types.StringCollection.ItemType);
@@ -625,23 +638,26 @@ namespace Epsitec.Common.Types
 			caption = new Caption ();
 			caption.Name = "Xxx";
 			
-			AbstractType.SetSystemType (caption, typeof (bool).FullName);
+			AbstractType.SetSystemType (caption, typeof (bool));
 			Assert.IsNotNull (TypeRosetta.CreateTypeObject (caption) as BooleanType);
 
-			AbstractType.SetSystemType (caption, typeof (decimal).FullName);
+			AbstractType.SetSystemType (caption, typeof (decimal));
 			Assert.IsNotNull (TypeRosetta.CreateTypeObject (caption) as DecimalType);
 
-			AbstractType.SetSystemType (caption, typeof (double).FullName);
+			AbstractType.SetSystemType (caption, typeof (double));
 			Assert.IsNotNull (TypeRosetta.CreateTypeObject (caption) as DoubleType);
 
-			AbstractType.SetSystemType (caption, typeof (int).FullName);
+			AbstractType.SetSystemType (caption, typeof (int));
 			Assert.IsNotNull (TypeRosetta.CreateTypeObject (caption) as IntegerType);
 
-			AbstractType.SetSystemType (caption, typeof (long).FullName);
+			AbstractType.SetSystemType (caption, typeof (long));
 			Assert.IsNotNull (TypeRosetta.CreateTypeObject (caption) as LongIntegerType);
 
-			AbstractType.SetSystemType (caption, typeof (void).FullName);
-			Assert.IsNotNull (TypeRosetta.CreateTypeObject (caption) as VoidType);
+			AbstractType.SetSystemType (caption, typeof (void));
+			Assert.IsNotNull (TypeRosetta.CreateTypeObject (caption) as OtherType);
+			
+			AbstractType.SetSystemType (caption, typeof (DecimalRange));
+			Assert.IsNotNull (TypeRosetta.CreateTypeObject (caption) as OtherType);
 		}
 
 		[Test]

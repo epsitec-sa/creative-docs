@@ -7,7 +7,8 @@ namespace Epsitec.Common.Types
 	/// The <c>TimeResolution</c> enumeration defines the resolution of a time
 	/// or a date (seconds, milliseconds, days, weeks, etc.)
 	/// </summary>
-	public enum TimeResolution
+	[DesignerVisible]
+	public enum TimeResolution : byte
 	{
 		Default,
 		
