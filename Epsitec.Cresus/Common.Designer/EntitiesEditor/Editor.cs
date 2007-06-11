@@ -1205,10 +1205,11 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		public void Deserialize(string filename)
 		{
 			XmlTextReader reader = new XmlTextReader(filename);
+			this.ReadXml(reader);
 			reader.Close();
 		}
 
-		public void WriteXml(XmlWriter writer)
+		protected void WriteXml(XmlWriter writer)
 		{
 			//	Sérialise toutes les boîtes.
 			writer.WriteStartDocument();
@@ -1221,6 +1222,16 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			writer.WriteEndElement();
 			
 			writer.WriteEndDocument();
+		}
+
+		protected void ReadXml(XmlReader reader)
+		{
+			//	Désérialise toutes les boîtes.
+			this.Clear();
+
+			while (reader.ReadToFollowing("Box"))
+			{
+			}
 		}
 		#endregion
 

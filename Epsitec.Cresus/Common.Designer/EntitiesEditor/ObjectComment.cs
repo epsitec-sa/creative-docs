@@ -237,31 +237,37 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				if (this.hilitedElement == ActiveElement.CommentColorButton1)
 				{
 					this.BackgroundMainColor = MainColor.Yellow;
+					this.UpdateFieldColor();
 				}
 
 				if (this.hilitedElement == ActiveElement.CommentColorButton2)
 				{
 					this.BackgroundMainColor = MainColor.Orange;
+					this.UpdateFieldColor();
 				}
 
 				if (this.hilitedElement == ActiveElement.CommentColorButton3)
 				{
 					this.BackgroundMainColor = MainColor.Red;
+					this.UpdateFieldColor();
 				}
 
 				if (this.hilitedElement == ActiveElement.CommentColorButton4)
 				{
 					this.BackgroundMainColor = MainColor.Lilac;
+					this.UpdateFieldColor();
 				}
 
 				if (this.hilitedElement == ActiveElement.CommentColorButton5)
 				{
 					this.BackgroundMainColor = MainColor.Purple;
+					this.UpdateFieldColor();
 				}
 
 				if (this.hilitedElement == ActiveElement.CommentColorButton6)
 				{
 					this.BackgroundMainColor = MainColor.Blue;
+					this.UpdateFieldColor();
 				}
 			}
 		}
@@ -1161,6 +1167,17 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			else
 			{
 				return this.GetColorLighter(this.GetColorMain(), 0.7);
+			}
+		}
+
+
+		protected void UpdateFieldColor()
+		{
+			//	Met à jour l'information de couleur dans le champ associé.
+			if (this.attachObject is ObjectConnection)
+			{
+				ObjectConnection connection = this.attachObject as ObjectConnection;
+				connection.Field.CommentMainColor = this.BackgroundMainColor;
 			}
 		}
 
