@@ -51,6 +51,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			CommentColorButton2,
 			CommentColorButton3,
 			CommentColorButton4,
+			CommentColorButton5,
+			CommentColorButton6,
 			CommentAttachToConnection,
 		}
 
@@ -62,7 +64,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			Grey,
 
 			Yellow,
-			Pink,
+			Orange,
+			Lilac,
 			Purple,
 			Cyan,
 		}
@@ -236,12 +239,18 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					return "Commentaire jaune";
 
 				case AbstractObject.ActiveElement.CommentColorButton2:
-					return "Commentaire rose";
+					return "Commentaire orange";
 
 				case AbstractObject.ActiveElement.CommentColorButton3:
-					return "Commentaire violet";
+					return "Commentaire rouge";
 
 				case AbstractObject.ActiveElement.CommentColorButton4:
+					return "Commentaire lilas";
+
+				case AbstractObject.ActiveElement.CommentColorButton5:
+					return "Commentaire violet";
+
+				case AbstractObject.ActiveElement.CommentColorButton6:
 					return "Commentaire bleu ciel";
 
 				case AbstractObject.ActiveElement.CommentAttachToConnection:
@@ -535,16 +544,20 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					color = Color.FromRgb(200.0/255.0, 200.0/255.0, 0.0/255.0);
 					break;
 
-				case MainColor.Pink:
-					color = Color.FromRgb(200.0/255.0, 0.0/255.0, 150.0/255.0);
+				case MainColor.Orange:
+					color = Color.FromRgb(200.0/255.0, 150.0/255.0, 0.0/255.0);
+					break;
+
+				case MainColor.Lilac:
+					color = Color.FromRgb(100.0/255.0, 0.0/255.0, 150.0/255.0);
 					break;
 
 				case MainColor.Purple:
-					color = Color.FromRgb(50.0/255.0, 0.0/255.0, 200.0/255.0);
+					color = Color.FromRgb(30.0/255.0, 0.0/255.0, 200.0/255.0);
 					break;
 
 				case MainColor.Cyan:
-					color = Color.FromRgb(0.0/255.0, 200.0/255.0, 200.0/255.0);
+					color = Color.FromRgb(0.0/255.0, 120.0/255.0, 200.0/255.0);
 					break;
 			}
 

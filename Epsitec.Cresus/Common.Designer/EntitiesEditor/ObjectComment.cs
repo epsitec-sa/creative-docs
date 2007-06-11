@@ -239,15 +239,25 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 				if (this.hilitedElement == ActiveElement.CommentColorButton2)
 				{
-					this.BackgroundMainColor = MainColor.Pink;
+					this.BackgroundMainColor = MainColor.Orange;
 				}
 
 				if (this.hilitedElement == ActiveElement.CommentColorButton3)
 				{
-					this.BackgroundMainColor = MainColor.Purple;
+					this.BackgroundMainColor = MainColor.Red;
 				}
 
 				if (this.hilitedElement == ActiveElement.CommentColorButton4)
+				{
+					this.BackgroundMainColor = MainColor.Lilac;
+				}
+
+				if (this.hilitedElement == ActiveElement.CommentColorButton5)
+				{
+					this.BackgroundMainColor = MainColor.Purple;
+				}
+
+				if (this.hilitedElement == ActiveElement.CommentColorButton6)
 				{
 					this.BackgroundMainColor = MainColor.Cyan;
 				}
@@ -315,6 +325,18 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			if (this.DetectSquareButton(this.PositionColorButton(3), pos))
 			{
 				element = ActiveElement.CommentColorButton4;
+				return true;
+			}
+
+			if (this.DetectSquareButton(this.PositionColorButton(4), pos))
+			{
+				element = ActiveElement.CommentColorButton5;
+				return true;
+			}
+
+			if (this.DetectSquareButton(this.PositionColorButton(5), pos))
+			{
+				element = ActiveElement.CommentColorButton6;
 				return true;
 			}
 
@@ -450,29 +472,47 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 			if (this.hilitedElement == ActiveElement.CommentColorButton2)
 			{
-				this.DrawSquareButton(graphics, this.PositionColorButton(1), MainColor.Pink, this.boxColor == MainColor.Pink, true);
+				this.DrawSquareButton(graphics, this.PositionColorButton(1), MainColor.Orange, this.boxColor == MainColor.Orange, true);
 			}
 			else if (this.IsHeaderHilite)
 			{
-				this.DrawSquareButton(graphics, this.PositionColorButton(1), MainColor.Pink, this.boxColor == MainColor.Pink, false);
+				this.DrawSquareButton(graphics, this.PositionColorButton(1), MainColor.Orange, this.boxColor == MainColor.Orange, false);
 			}
 
 			if (this.hilitedElement == ActiveElement.CommentColorButton3)
 			{
-				this.DrawSquareButton(graphics, this.PositionColorButton(2), MainColor.Purple, this.boxColor == MainColor.Purple, true);
+				this.DrawSquareButton(graphics, this.PositionColorButton(2), MainColor.Red, this.boxColor == MainColor.Red, true);
 			}
 			else if (this.IsHeaderHilite)
 			{
-				this.DrawSquareButton(graphics, this.PositionColorButton(2), MainColor.Purple, this.boxColor == MainColor.Purple, false);
+				this.DrawSquareButton(graphics, this.PositionColorButton(2), MainColor.Red, this.boxColor == MainColor.Red, false);
 			}
 
 			if (this.hilitedElement == ActiveElement.CommentColorButton4)
 			{
-				this.DrawSquareButton(graphics, this.PositionColorButton(3), MainColor.Cyan, this.boxColor == MainColor.Cyan, true);
+				this.DrawSquareButton(graphics, this.PositionColorButton(3), MainColor.Lilac, this.boxColor == MainColor.Lilac, true);
 			}
 			else if (this.IsHeaderHilite)
 			{
-				this.DrawSquareButton(graphics, this.PositionColorButton(3), MainColor.Cyan, this.boxColor == MainColor.Cyan, false);
+				this.DrawSquareButton(graphics, this.PositionColorButton(3), MainColor.Lilac, this.boxColor == MainColor.Lilac, false);
+			}
+
+			if (this.hilitedElement == ActiveElement.CommentColorButton5)
+			{
+				this.DrawSquareButton(graphics, this.PositionColorButton(4), MainColor.Purple, this.boxColor == MainColor.Purple, true);
+			}
+			else if (this.IsHeaderHilite)
+			{
+				this.DrawSquareButton(graphics, this.PositionColorButton(4), MainColor.Purple, this.boxColor == MainColor.Purple, false);
+			}
+
+			if (this.hilitedElement == ActiveElement.CommentColorButton6)
+			{
+				this.DrawSquareButton(graphics, this.PositionColorButton(5), MainColor.Cyan, this.boxColor == MainColor.Cyan, true);
+			}
+			else if (this.IsHeaderHilite)
+			{
+				this.DrawSquareButton(graphics, this.PositionColorButton(5), MainColor.Cyan, this.boxColor == MainColor.Cyan, false);
 			}
 
 			//	Dessine le bouton pour modifier la largeur.
@@ -512,6 +552,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 						this.hilitedElement == ActiveElement.CommentColorButton2 ||
 						this.hilitedElement == ActiveElement.CommentColorButton3 ||
 						this.hilitedElement == ActiveElement.CommentColorButton4 ||
+						this.hilitedElement == ActiveElement.CommentColorButton5 ||
+						this.hilitedElement == ActiveElement.CommentColorButton6 ||
 						this.hilitedElement == ActiveElement.CommentAttachToConnection);
 			}
 		}
