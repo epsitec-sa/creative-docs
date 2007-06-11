@@ -485,7 +485,7 @@ namespace Epsitec.Common.Types
 
 			type.DefineResolution (TimeResolution.Minutes);
 			type.DefineTimeStep (new System.TimeSpan (0, 0, 30));
-			type.DefineDateStep (new DateStep (7));
+			type.DefineDateStep (new DateSpan (7));
 
 			string xml = type.Caption.SerializeToString ();
 

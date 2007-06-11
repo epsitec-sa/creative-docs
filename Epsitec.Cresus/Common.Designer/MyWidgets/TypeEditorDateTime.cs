@@ -368,9 +368,9 @@ namespace Epsitec.Common.Designer.MyWidgets
 			return System.DateTime.MinValue;
 		}
 
-		protected static void DateStepToField(TextField field, DateStep ds)
+		protected static void DateStepToField(TextField field, DateSpan ds)
 		{
-			if (ds == new DateStep(0, 0, 0))
+			if (ds == new DateSpan(0, 0, 0))
 			{
 				field.Text = "";
 			}
@@ -380,14 +380,14 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 		}
 
-		protected static DateStep FieldToDateStep(TextField field)
+		protected static DateSpan FieldToDateStep(TextField field)
 		{
 			if (!string.IsNullOrEmpty(field.Text))
 			{
 				return TypeEditorDateTime.StringToDateStep(field.Text);
 			}
 
-			return new DateStep(0, 0, 0);
+			return new DateSpan(0, 0, 0);
 		}
 
 		protected static void TimeSpanToField(TextField field, System.TimeSpan ts)
@@ -447,20 +447,20 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 		}
 
-		protected static string DateStepToString(DateStep ds)
+		protected static string DateStepToString(DateSpan ds)
 		{
 			return ds.ToString();
 		}
 
-		protected static DateStep StringToDateStep(string text)
+		protected static DateSpan StringToDateStep(string text)
 		{
 			try
 			{
-				return DateStep.Parse(text);
+				return DateSpan.Parse(text);
 			}
 			catch
 			{
-				return new DateStep(0, 0, 0);
+				return new DateSpan(0, 0, 0);
 			}
 		}
 

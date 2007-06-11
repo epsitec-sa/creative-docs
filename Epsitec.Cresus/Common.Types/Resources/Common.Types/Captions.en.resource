@@ -38,4 +38,7 @@
   <data id="041">&lt;s:data id="_0" f:Labels="{Collection {Text 'Second'}}" /&gt;</data>
   <data id="081">&lt;s:data id="_0" f:Labels="{Collection {Text 'Week'}}" /&gt;</data>
   <data id="0A1">&lt;s:data id="_0" f:Labels="{Collection {Text 'Year'}}" /&gt;</data>
+  <data id="0C1">&lt;s:data id="_0" f:Labels="{Collection {Text 'DecimalRange Type'}}" /&gt;</data>
+  <data id="0D1">&lt;s:data id="_0" f:Labels="{Collection {Text 'TimeSpan Type'}}" /&gt;</data>
+  <data id="0E1">&lt;s:data id="_0" f:Labels="{Collection {Text 'DateSpan Type'}}" /&gt;</data>
 </bundle>

@@ -12,9 +12,13 @@ namespace Epsitec.Common.Support
 			public static readonly Epsitec.Common.Types.StructuredType Field = (Epsitec.Common.Types.StructuredType) Epsitec.Common.Types.TypeRosetta.CreateTypeObject (Epsitec.Common.Support.Druid.FromLong (_moduleId, 36));
 			public static readonly Epsitec.Common.Types.StructuredType ResourceBase = (Epsitec.Common.Types.StructuredType) Epsitec.Common.Types.TypeRosetta.CreateTypeObject (Epsitec.Common.Support.Druid.FromLong (_moduleId, 43));
 			public static readonly Epsitec.Common.Types.StructuredType ResourceBaseType = (Epsitec.Common.Types.StructuredType) Epsitec.Common.Types.TypeRosetta.CreateTypeObject (Epsitec.Common.Support.Druid.FromLong (_moduleId, 5));
+			public static readonly Epsitec.Common.Types.StructuredType ResourceBinaryType = (Epsitec.Common.Types.StructuredType) Epsitec.Common.Types.TypeRosetta.CreateTypeObject (Epsitec.Common.Support.Druid.FromLong (_moduleId, 64));
 			public static readonly Epsitec.Common.Types.StructuredType ResourceCaption = (Epsitec.Common.Types.StructuredType) Epsitec.Common.Types.TypeRosetta.CreateTypeObject (Epsitec.Common.Support.Druid.FromLong (_moduleId, 6));
 			public static readonly Epsitec.Common.Types.StructuredType ResourceCommand = (Epsitec.Common.Types.StructuredType) Epsitec.Common.Types.TypeRosetta.CreateTypeObject (Epsitec.Common.Support.Druid.FromLong (_moduleId, 16));
+			public static readonly Epsitec.Common.Types.StructuredType ResourceDateTimeType = (Epsitec.Common.Types.StructuredType) Epsitec.Common.Types.TypeRosetta.CreateTypeObject (Epsitec.Common.Support.Druid.FromLong (_moduleId, 48));
+			public static readonly Epsitec.Common.Types.StructuredType ResourceNumericType = (Epsitec.Common.Types.StructuredType) Epsitec.Common.Types.TypeRosetta.CreateTypeObject (Epsitec.Common.Support.Druid.FromLong (_moduleId, 47));
 			public static readonly Epsitec.Common.Types.StructuredType ResourceString = (Epsitec.Common.Types.StructuredType) Epsitec.Common.Types.TypeRosetta.CreateTypeObject (Epsitec.Common.Support.Druid.FromLong (_moduleId, 7));
+			public static readonly Epsitec.Common.Types.StructuredType ResourceStringType = (Epsitec.Common.Types.StructuredType) Epsitec.Common.Types.TypeRosetta.CreateTypeObject (Epsitec.Common.Support.Druid.FromLong (_moduleId, 49));
 			public static readonly Epsitec.Common.Types.StructuredType ResourceStructuredType = (Epsitec.Common.Types.StructuredType) Epsitec.Common.Types.TypeRosetta.CreateTypeObject (Epsitec.Common.Support.Druid.FromLong (_moduleId, 17));
 			public static readonly Epsitec.Common.Types.StructuredType Shortcut = (Epsitec.Common.Types.StructuredType) Epsitec.Common.Types.TypeRosetta.CreateTypeObject (Epsitec.Common.Support.Druid.FromLong (_moduleId, 26));
 		}
@@ -43,6 +47,11 @@ namespace Epsitec.Common.Support
 				public static readonly Epsitec.Common.Support.Druid Nullable = Epsitec.Common.Support.Druid.FromLong (_moduleId, 33);
 			}
 			
+			public static class ResourceBinaryType
+			{
+				public static readonly Epsitec.Common.Support.Druid MimeType = Epsitec.Common.Support.Druid.FromLong (_moduleId, 65);
+			}
+			
 			public static class ResourceCaption
 			{
 				public static readonly Epsitec.Common.Support.Druid Description = Epsitec.Common.Support.Druid.FromLong (_moduleId, 12);
@@ -58,9 +67,35 @@ namespace Epsitec.Common.Support
 				public static readonly Epsitec.Common.Support.Druid Statefull = Epsitec.Common.Support.Druid.FromLong (_moduleId, 23);
 			}
 			
+			public static class ResourceDateTimeType
+			{
+				public static readonly Epsitec.Common.Support.Druid DateStep = Epsitec.Common.Support.Druid.FromLong (_moduleId, 60);
+				public static readonly Epsitec.Common.Support.Druid MaximumDate = Epsitec.Common.Support.Druid.FromLong (_moduleId, 56);
+				public static readonly Epsitec.Common.Support.Druid MaximumTime = Epsitec.Common.Support.Druid.FromLong (_moduleId, 58);
+				public static readonly Epsitec.Common.Support.Druid MinimumDate = Epsitec.Common.Support.Druid.FromLong (_moduleId, 55);
+				public static readonly Epsitec.Common.Support.Druid MinimumTime = Epsitec.Common.Support.Druid.FromLong (_moduleId, 57);
+				public static readonly Epsitec.Common.Support.Druid Resolution = Epsitec.Common.Support.Druid.FromLong (_moduleId, 54);
+				public static readonly Epsitec.Common.Support.Druid TimeStep = Epsitec.Common.Support.Druid.FromLong (_moduleId, 59);
+			}
+			
+			public static class ResourceNumericType
+			{
+				public static readonly Epsitec.Common.Support.Druid LargeStep = Epsitec.Common.Support.Druid.FromLong (_moduleId, 53);
+				public static readonly Epsitec.Common.Support.Druid PreferredRange = Epsitec.Common.Support.Druid.FromLong (_moduleId, 51);
+				public static readonly Epsitec.Common.Support.Druid Range = Epsitec.Common.Support.Druid.FromLong (_moduleId, 50);
+				public static readonly Epsitec.Common.Support.Druid SmallStep = Epsitec.Common.Support.Druid.FromLong (_moduleId, 52);
+			}
+			
 			public static class ResourceString
 			{
 				public static readonly Epsitec.Common.Support.Druid Text = Epsitec.Common.Support.Druid.FromLong (_moduleId, 8);
+			}
+			
+			public static class ResourceStringType
+			{
+				public static readonly Epsitec.Common.Support.Druid MaximumLength = Epsitec.Common.Support.Druid.FromLong (_moduleId, 62);
+				public static readonly Epsitec.Common.Support.Druid MinimumLength = Epsitec.Common.Support.Druid.FromLong (_moduleId, 61);
+				public static readonly Epsitec.Common.Support.Druid UseMultilingualStorage = Epsitec.Common.Support.Druid.FromLong (_moduleId, 63);
 			}
 			
 			public static class ResourceStructuredType

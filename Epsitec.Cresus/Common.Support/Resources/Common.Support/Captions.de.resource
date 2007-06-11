@@ -8,4 +8,23 @@
   <data id="0E">&lt;s:data id="_0" f:Labels="{Collection {Text 'Kommentar'}}" /&gt;</data>
   <data id="0Q">&lt;s:data id="_0" f:Labels="{Collection {Text 'Tastenkürzel'}}" /&gt;</data>
   <data id="041">&lt;s:data id="_0" f:Labels="{Collection {Text 'Feld'}}" /&gt;</data>
+  <data id="0F1">&lt;s:data id="_0" /&gt;</data>
+  <data id="0G1">&lt;s:data id="_0" /&gt;</data>
+  <data id="0H1">&lt;s:data id="_0" /&gt;</data>
+  <data id="0I1">&lt;s:data id="_0" /&gt;</data>
+  <data id="0J1">&lt;s:data id="_0" /&gt;</data>
+  <data id="0K1">&lt;s:data id="_0" /&gt;</data>
+  <data id="0L1">&lt;s:data id="_0" /&gt;</data>
+  <data id="0M1">&lt;s:data id="_0" /&gt;</data>
+  <data id="0N1">&lt;s:data id="_0" /&gt;</data>
+  <data id="0O1">&lt;s:data id="_0" /&gt;</data>
+  <data id="0P1">&lt;s:data id="_0" /&gt;</data>
+  <data id="0Q1">&lt;s:data id="_0" /&gt;</data>
+  <data id="0R1">&lt;s:data id="_0" /&gt;</data>
+  <data id="0S1">&lt;s:data id="_0" /&gt;</data>
+  <data id="0T1">&lt;s:data id="_0" /&gt;</data>
+  <data id="0U1">&lt;s:data id="_0" /&gt;</data>
+  <data id="0V1">&lt;s:data id="_0" /&gt;</data>
+  <data id="002">&lt;s:data id="_0" /&gt;</data>
+  <data id="012">&lt;s:data id="_0" /&gt;</data>
 </bundle>

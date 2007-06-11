@@ -18,14 +18,17 @@ namespace Epsitec.Common.Types
 			{
 				public static readonly Epsitec.Common.Types.BooleanType Boolean = (Epsitec.Common.Types.BooleanType) Epsitec.Common.Types.TypeRosetta.CreateTypeObject (Epsitec.Common.Support.Druid.FromLong (_moduleId, 3));
 				public static readonly Epsitec.Common.Types.DateType Date = (Epsitec.Common.Types.DateType) Epsitec.Common.Types.TypeRosetta.CreateTypeObject (Epsitec.Common.Support.Druid.FromLong (_moduleId, 17));
+				public static readonly Epsitec.Common.Types.OtherType DateSpan = (Epsitec.Common.Types.OtherType) Epsitec.Common.Types.TypeRosetta.CreateTypeObject (Epsitec.Common.Support.Druid.FromLong (_moduleId, 46));
 				public static readonly Epsitec.Common.Types.DateTimeType DateTime = (Epsitec.Common.Types.DateTimeType) Epsitec.Common.Types.TypeRosetta.CreateTypeObject (Epsitec.Common.Support.Druid.FromLong (_moduleId, 19));
 				public static readonly Epsitec.Common.Types.DecimalType Decimal = (Epsitec.Common.Types.DecimalType) Epsitec.Common.Types.TypeRosetta.CreateTypeObject (Epsitec.Common.Support.Druid.FromLong (_moduleId, 4));
+				public static readonly Epsitec.Common.Types.OtherType DecimalRange = (Epsitec.Common.Types.OtherType) Epsitec.Common.Types.TypeRosetta.CreateTypeObject (Epsitec.Common.Support.Druid.FromLong (_moduleId, 44));
 				public static readonly Epsitec.Common.Types.DoubleType Double = (Epsitec.Common.Types.DoubleType) Epsitec.Common.Types.TypeRosetta.CreateTypeObject (Epsitec.Common.Support.Druid.FromLong (_moduleId, 5));
 				public static readonly Epsitec.Common.Types.OtherType Druid = (Epsitec.Common.Types.OtherType) Epsitec.Common.Types.TypeRosetta.CreateTypeObject (Epsitec.Common.Support.Druid.FromLong (_moduleId, 20));
 				public static readonly Epsitec.Common.Types.IntegerType Integer = (Epsitec.Common.Types.IntegerType) Epsitec.Common.Types.TypeRosetta.CreateTypeObject (Epsitec.Common.Support.Druid.FromLong (_moduleId, 6));
 				public static readonly Epsitec.Common.Types.LongIntegerType LongInteger = (Epsitec.Common.Types.LongIntegerType) Epsitec.Common.Types.TypeRosetta.CreateTypeObject (Epsitec.Common.Support.Druid.FromLong (_moduleId, 7));
 				public static readonly Epsitec.Common.Types.StringType String = (Epsitec.Common.Types.StringType) Epsitec.Common.Types.TypeRosetta.CreateTypeObject (Epsitec.Common.Support.Druid.FromLong (_moduleId, 8));
 				public static readonly Epsitec.Common.Types.TimeType Time = (Epsitec.Common.Types.TimeType) Epsitec.Common.Types.TypeRosetta.CreateTypeObject (Epsitec.Common.Support.Druid.FromLong (_moduleId, 18));
+				public static readonly Epsitec.Common.Types.OtherType TimeSpan = (Epsitec.Common.Types.OtherType) Epsitec.Common.Types.TypeRosetta.CreateTypeObject (Epsitec.Common.Support.Druid.FromLong (_moduleId, 45));
 				public static readonly Epsitec.Common.Types.OtherType Void = (Epsitec.Common.Types.OtherType) Epsitec.Common.Types.TypeRosetta.CreateTypeObject (Epsitec.Common.Support.Druid.FromLong (_moduleId, 9));
 			}
 		}

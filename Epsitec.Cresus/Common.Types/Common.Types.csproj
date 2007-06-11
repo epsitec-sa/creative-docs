@@ -115,7 +115,7 @@
     <Compile Include="Serialization\IDeserialization.cs" />
     <Compile Include="Support\ResourceModuleLayer.cs" />
     <Compile Include="TypedObject.cs" />
-    <Compile Include="DateStep.cs" />
+    <Compile Include="DateSpan.cs" />
     <Compile Include="DateTimeType.cs" />
     <Compile Include="TimeType.cs" />
     <Compile Include="DateType.cs" />
