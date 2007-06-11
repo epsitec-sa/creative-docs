@@ -12,9 +12,9 @@ namespace Epsitec.Common.Support.ResourceAccessors
 	using CultureInfo=System.Globalization.CultureInfo;
 	
 	/// <summary>
-	/// The <c>EntityResourceAccessor</c> is used to access entity resources,
-	/// stored in the <c>Captions</c> resource bundle and which have a field
-	/// name prefixed with <c>"Typ."</c>.
+	/// The <c>StructuredTypeResourceAccessor</c> is used to access entity
+	/// resources, stored in the <c>Captions</c> resource bundle and which
+	/// have a field name prefixed with <c>"Typ.StructuredType."</c>.
 	/// </summary>
 	public class StructuredTypeResourceAccessor : CaptionResourceAccessor
 	{

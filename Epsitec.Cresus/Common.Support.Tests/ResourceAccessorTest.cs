@@ -164,7 +164,7 @@ namespace Epsitec.Common.Support
 
 			accessor.Load (Res.Manager);
 
-			Assert.AreEqual (8, accessor.Collection.Count);
+			Assert.AreEqual (12, accessor.Collection.Count);
 
 			CultureMap map = accessor.Collection[Res.Types.ResourceStructuredType.CaptionId];
 

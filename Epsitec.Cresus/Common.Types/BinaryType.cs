@@ -29,6 +29,20 @@ namespace Epsitec.Common.Types
 
 
 		/// <summary>
+		/// Gets the type code for the type.
+		/// </summary>
+		/// <value>The type code.</value>
+		public override TypeCode TypeCode
+		{
+			get
+			{
+				return TypeCode.Binary;
+			}
+		}
+
+
+
+		/// <summary>
 		/// Gets the MIME type (or types) associated with this binary type.
 		/// </summary>
 		/// <value>The MIME types separated by <c>";"</c>.</value>

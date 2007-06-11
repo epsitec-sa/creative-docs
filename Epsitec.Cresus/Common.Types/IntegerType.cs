@@ -24,9 +24,21 @@ namespace Epsitec.Common.Types
 			: base (caption)
 		{
 		}
-		
-		
-		public override System.Type				SystemType
+
+
+		/// <summary>
+		/// Gets the type code for the type.
+		/// </summary>
+		/// <value>The type code.</value>
+		public override TypeCode TypeCode
+		{
+			get
+			{
+				return TypeCode.Integer;
+			}
+		}
+
+		public override System.Type SystemType
 		{
 			get
 			{

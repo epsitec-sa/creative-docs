@@ -304,6 +304,14 @@ namespace Epsitec.Common.Designer
 				}
 			}
 
+			public override TypeCode TypeCode
+			{
+				get
+				{
+					return TypeCode.Other;
+				}
+			}
+
 			public override bool IsValidValue(object value)
 			{
 				if (value == null)
@@ -324,6 +332,14 @@ namespace Epsitec.Common.Designer
 				get
 				{
 					return typeof(List<UI.ItemTableColumn>);
+				}
+			}
+			
+			public override TypeCode TypeCode
+			{
+				get
+				{
+					return TypeCode.Other;
 				}
 			}
 
@@ -347,6 +363,14 @@ namespace Epsitec.Common.Designer
 				get
 				{
 					return typeof(StructuredType);
+				}
+			}
+			
+			public override TypeCode TypeCode
+			{
+				get
+				{
+					return TypeCode.Other;
 				}
 			}
 

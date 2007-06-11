@@ -45,6 +45,7 @@ namespace Epsitec.Common.Support
 			{
 				public static readonly Epsitec.Common.Support.Druid DefaultController = Epsitec.Common.Support.Druid.FromLong (_moduleId, 32);
 				public static readonly Epsitec.Common.Support.Druid Nullable = Epsitec.Common.Support.Druid.FromLong (_moduleId, 33);
+				public static readonly Epsitec.Common.Support.Druid TypeCode = Epsitec.Common.Support.Druid.FromLong (_moduleId, 66);
 			}
 			
 			public static class ResourceBinaryType

@@ -18,6 +18,18 @@ namespace Epsitec.Common.Types
 			this.data = data;
 		}
 
+		/// <summary>
+		/// Gets the type code for the type.
+		/// </summary>
+		/// <value>The type code.</value>
+		public override TypeCode TypeCode
+		{
+			get
+			{
+				return TypeCode.Dynamic;
+			}
+		}
+
 		#region IStructuredType Members
 
 		public StructuredTypeField GetField(string fieldId)

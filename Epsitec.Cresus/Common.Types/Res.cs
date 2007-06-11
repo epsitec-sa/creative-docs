@@ -14,6 +14,7 @@ namespace Epsitec.Common.Types
 			public static readonly Epsitec.Common.Types.EnumType FieldRelation = (Epsitec.Common.Types.EnumType) Epsitec.Common.Types.TypeRosetta.CreateTypeObject (Epsitec.Common.Support.Druid.FromLong (_moduleId, 22));
 			public static readonly Epsitec.Common.Types.EnumType StructuredTypeClass = (Epsitec.Common.Types.EnumType) Epsitec.Common.Types.TypeRosetta.CreateTypeObject (Epsitec.Common.Support.Druid.FromLong (_moduleId, 33));
 			public static readonly Epsitec.Common.Types.EnumType TimeResolution = (Epsitec.Common.Types.EnumType) Epsitec.Common.Types.TypeRosetta.CreateTypeObject (Epsitec.Common.Support.Druid.FromLong (_moduleId, 43));
+			public static readonly Epsitec.Common.Types.EnumType TypeCode = (Epsitec.Common.Types.EnumType) Epsitec.Common.Types.TypeRosetta.CreateTypeObject (Epsitec.Common.Support.Druid.FromLong (_moduleId, 63));
 			public static class Default
 			{
 				public static readonly Epsitec.Common.Types.BooleanType Boolean = (Epsitec.Common.Types.BooleanType) Epsitec.Common.Types.TypeRosetta.CreateTypeObject (Epsitec.Common.Support.Druid.FromLong (_moduleId, 3));
@@ -76,6 +77,26 @@ namespace Epsitec.Common.Types
 				public static Epsitec.Common.Types.Caption Seconds { get { return Res._manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 36)); } }
 				public static Epsitec.Common.Types.Caption Weeks { get { return Res._manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 40)); } }
 				public static Epsitec.Common.Types.Caption Years { get { return Res._manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 42)); } }
+			}
+			
+			public static class TypeCode
+			{
+				public static Epsitec.Common.Types.Caption Binary { get { return Res._manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 56)); } }
+				public static Epsitec.Common.Types.Caption Boolean { get { return Res._manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 48)); } }
+				public static Epsitec.Common.Types.Caption Collection { get { return Res._manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 61)); } }
+				public static Epsitec.Common.Types.Caption Date { get { return Res._manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 54)); } }
+				public static Epsitec.Common.Types.Caption DateTime { get { return Res._manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 53)); } }
+				public static Epsitec.Common.Types.Caption Decimal { get { return Res._manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 51)); } }
+				public static Epsitec.Common.Types.Caption Double { get { return Res._manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 52)); } }
+				public static Epsitec.Common.Types.Caption Dynamic { get { return Res._manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 60)); } }
+				public static Epsitec.Common.Types.Caption Enum { get { return Res._manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 58)); } }
+				public static Epsitec.Common.Types.Caption Integer { get { return Res._manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 49)); } }
+				public static Epsitec.Common.Types.Caption Invalid { get { return Res._manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 47)); } }
+				public static Epsitec.Common.Types.Caption LongInteger { get { return Res._manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 50)); } }
+				public static Epsitec.Common.Types.Caption Other { get { return Res._manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 62)); } }
+				public static Epsitec.Common.Types.Caption String { get { return Res._manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 57)); } }
+				public static Epsitec.Common.Types.Caption Structured { get { return Res._manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 59)); } }
+				public static Epsitec.Common.Types.Caption Time { get { return Res._manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, 55)); } }
 			}
 		}
 		

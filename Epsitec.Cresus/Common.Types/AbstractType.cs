@@ -123,6 +123,15 @@ namespace Epsitec.Common.Types
 		#endregion
 
 		/// <summary>
+		/// Gets the type code for the type.
+		/// </summary>
+		/// <value>The type code.</value>
+		public abstract TypeCode TypeCode
+		{
+			get;
+		}
+
+		/// <summary>
 		/// Gets the default value for this type.
 		/// </summary>
 		/// <value>The default value or <c>null</c>.</value>

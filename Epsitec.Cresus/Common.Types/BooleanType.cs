@@ -30,6 +30,20 @@ namespace Epsitec.Common.Types
 		}
 
 
+		/// <summary>
+		/// Gets the type code for the type.
+		/// </summary>
+		/// <value>The type code.</value>
+		public override TypeCode TypeCode
+		{
+			get
+			{
+				return TypeCode.Boolean;
+			}
+		}
+
+
+
 		public override bool IsValidValue(object value)
 		{
 			if (this.IsNullValue (value))

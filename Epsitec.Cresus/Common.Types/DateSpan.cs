@@ -27,7 +27,6 @@ namespace Epsitec.Common.Types
 			this.years = years;
 		}
 
-
 		public int Days
 		{
 			get
@@ -51,6 +50,8 @@ namespace Epsitec.Common.Types
 				return this.years;
 			}
 		}
+
+		public static readonly DateSpan Zero = new DateSpan (0);
 
 		public override string ToString()
 		{

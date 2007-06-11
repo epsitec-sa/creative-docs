@@ -29,7 +29,21 @@ namespace Epsitec.Common.Types
 			: this (new DecimalRange (min, max, resolution))
 		{
 		}
-		
+
+
+		/// <summary>
+		/// Gets the type code for the type.
+		/// </summary>
+		/// <value>The type code.</value>
+		public override TypeCode TypeCode
+		{
+			get
+			{
+				return TypeCode.Double;
+			}
+		}
+
+
 		
 		public override System.Type				SystemType
 		{
