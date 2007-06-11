@@ -2033,6 +2033,14 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 						field.ReadXml(reader);
 						this.fields.Add(field);
 					}
+					else if (name == "Comment")
+					{
+						this.comment = new ObjectComment(this.editor);
+						this.comment.ReadXml(reader);
+						this.comment.AttachObject = this;
+						this.comment.UpdateHeight();  // adapte la hauteur en fonction du contenu
+						this.editor.AddComment(this.comment);
+					}
 					else
 					{
 						string element = reader.ReadElementString();
@@ -2045,23 +2053,19 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 								this.cultureMap = this.editor.Module.AccessEntities.Accessor.Collection[druid];
 							}
 						}
-
-						if (name == "Bounds")
+						else if (name == "Bounds")
 						{
 							this.bounds = Rectangle.Parse(element);
 						}
-
-						if (name == "IsExtended")
+						else if (name == "IsExtended")
 						{
 							this.isExtended = bool.Parse(element);
 						}
-
-						if (name == "ColumnsSeparatorRelative")
+						else if (name == "ColumnsSeparatorRelative")
 						{
 							this.columnsSeparatorRelative = double.Parse(element);
 						}
-
-						if (name == "Color")
+						else if (name == "Color")
 						{
 							this.boxColor = (MainColor) System.Enum.Parse(typeof(MainColor), element);
 						}

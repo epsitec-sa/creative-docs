@@ -1196,6 +1196,35 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 			writer.WriteEndElement();
 		}
+
+		public void ReadXml(XmlReader reader)
+		{
+			while (reader.Read())
+			{
+				if (reader.NodeType == XmlNodeType.Element)
+				{
+					string name = reader.LocalName;
+					string element = reader.ReadElementString();
+
+					if (name == "Bounds")
+					{
+						this.bounds = Rectangle.Parse(element);
+					}
+					else if (name == "Text")
+					{
+						this.textLayoutComment.Text = element;
+					}
+					else if (name == "Color")
+					{
+						this.boxColor = (MainColor) System.Enum.Parse(typeof(MainColor), element);
+					}
+				}
+				else if (reader.NodeType == XmlNodeType.EndElement)
+				{
+					break;
+				}
+			}
+		}
 		#endregion
 
 

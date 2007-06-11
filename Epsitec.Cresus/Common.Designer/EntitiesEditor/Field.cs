@@ -624,8 +624,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 							this.captionId = druid;
 						}
 					}
-
-					if (name == "DruidDestination")
+					else if (name == "DruidDestination")
 					{
 						Druid druid = Druid.Parse(element);
 						if (druid.IsValid)
@@ -633,75 +632,61 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 							this.destination = druid;
 						}
 					}
-
-					if (name == "IsAttachToRight")
+					else if (name == "IsAttachToRight")
 					{
 						this.isExplored = true;
 						this.isAttachToRight = bool.Parse(element);
 					}
-
-					if (name == "RouteType")
+					else if (name == "RouteType")
 					{
 						this.routeType = (RouteType) System.Enum.Parse(typeof(RouteType), element);
 					}
-
-					if (name == "RouteRelativeAX1")
+					else if (name == "RouteRelativeAX1")
 					{
 						this.routeRelativeAX1 = double.Parse(element);
 					}
-
-					if (name == "routeRelativeAX2")
+					else if (name == "RouteRelativeAX2")
 					{
 						this.routeRelativeAX2 = double.Parse(element);
 					}
-
-					if (name == "routeAbsoluteAY")
+					else if (name == "RouteAbsoluteAY")
 					{
 						this.routeAbsoluteAY = double.Parse(element);
 					}
-
-					if (name == "routeRelativeBX")
+					else if (name == "RouteRelativeBX")
 					{
 						this.routeRelativeBX = double.Parse(element);
 					}
-
-					if (name == "routeRelativeBY")
+					else if (name == "RouteRelativeBY")
 					{
 						this.routeRelativeBY = double.Parse(element);
 					}
-
-					if (name == "routeRelativeCX")
+					else if (name == "RouteRelativeCX")
 					{
 						this.routeRelativeCX = double.Parse(element);
 					}
-
-					if (name == "routeAbsoluteDX")
+					else if (name == "RouteAbsoluteDX")
 					{
 						this.routeAbsoluteDX = double.Parse(element);
 					}
-
-					if (name == "CommentPosition")
+					else if (name == "CommentPosition")
 					{
 						this.asComment = true;
 						this.commentPosition = Point.Parse(element);
 					}
-
-					if (name == "CommentBounds")
+					else if (name == "CommentBounds")
 					{
 						this.commentBounds = Rectangle.Parse(element);
 					}
-
-					if (name == "CommentText")
+					else if (name == "CommentText")
 					{
 						this.commentText = element;
 					}
-
-					if (name == "CommentAttach")
+					else if (name == "CommentAttach")
 					{
 						this.commentAttach = double.Parse(element);
 					}
-
-					if (name == "CommentColor")
+					else if (name == "CommentColor")
 					{
 						this.commentMainColor = (AbstractObject.MainColor) System.Enum.Parse(typeof(AbstractObject.MainColor), element);
 					}
