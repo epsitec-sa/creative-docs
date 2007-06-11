@@ -1,5 +1,6 @@
 using System.Collections.Generic;
-using System.Runtime.Serialization;
+using System.Xml;
+using System.Xml.Serialization;
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Support;
 using Epsitec.Common.Types;
@@ -10,8 +11,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 	/// <summary>
 	/// La classe AbstractObject est la classe de base des objets graphiques.
 	/// </summary>
-	[System.Serializable()]
-	public abstract class AbstractObject : ISerializable
+	public abstract class AbstractObject
 	{
 		public enum ActiveElement
 		{
@@ -663,19 +663,6 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		}
 
 
-		public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
-		{
-			//	Sérialise l'objet.
-			info.AddValue("MainColor", this.boxColor);
-		}
-
-		protected AbstractObject(SerializationInfo info, StreamingContext context)
-		{
-			//	Constructeur qui désérialise l'objet.
-			this.boxColor = (MainColor) info.GetValue("MainColor", typeof(MainColor));
-		}
-
-		
 		public static readonly double minAttach = 20;
 		protected static readonly double headerHeight = 32;
 		protected static readonly double footerHeight = 16;

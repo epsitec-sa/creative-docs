@@ -1,5 +1,6 @@
 using System.Collections.Generic;
-using System.Runtime.Serialization;
+using System.Xml;
+using System.Xml.Serialization;
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Support;
 using Epsitec.Common.Types;
@@ -10,7 +11,6 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 	/// <summary>
 	/// Boîte pour représenter une entité.
 	/// </summary>
-	[System.Serializable()]
 	public class ObjectBox : AbstractObject
 	{
 		public enum ConnectionAnchor
@@ -42,14 +42,6 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			get
 			{
 				return this.cultureMap;
-			}
-		}
-
-		public Druid CultureMapDruid
-		{
-			get
-			{
-				return this.cultureMapDruid;
 			}
 		}
 
@@ -1929,46 +1921,52 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 
 		#region Serialization
-		public override void GetObjectData(SerializationInfo info, StreamingContext context)
+		public void WriteXml(XmlWriter writer)
 		{
-			//	Sérialise l'objet.
-			base.GetObjectData(info, context);
+			writer.WriteStartElement("ObjectBox");
+			
+			writer.WriteElementString("Druid", this.cultureMap.Id.ToString());
+			writer.WriteElementString("Bounds", this.bounds.ToString());
+			writer.WriteElementString("IsExtended", this.isExtended.ToString());
+			writer.WriteElementString("ColumnsSeparatorRelative", this.columnsSeparatorRelative.ToString());
+			writer.WriteElementString("Color", this.boxColor.ToString());
 
-			info.AddValue("CultureMapDruid", this.cultureMap.Id.ToString());
-			info.AddValue("Bounds", this.bounds);
-			info.AddValue("IsExtended", this.isExtended);
-			info.AddValue("ColumnsSeparatorRelative", this.columnsSeparatorRelative);
-			info.AddValue("Fields", this.fields);
-		}
-
-		protected ObjectBox(SerializationInfo info, StreamingContext context) : base(info, context)
-		{
-			//	Constructeur qui désérialise l'objet.
-			this.cultureMapDruid = Druid.Parse(info.GetString("CultureMapDruid"));
-			this.bounds = (Rectangle) info.GetValue("Bounds", typeof(Rectangle));
-			this.isExtended = info.GetBoolean("IsExtended");
-			this.columnsSeparatorRelative = info.GetDouble("ColumnsSeparatorRelative");
-			this.fields = (List<Field>) info.GetValue("Fields", typeof(List<Field>));
-		}
-
-		public void Restore(ObjectBox rBox)
-		{
-			//	Restore un objet d'après un objet désérialisé (rBox).
-			this.bounds = rBox.bounds;
-			this.boxColor = rBox.boxColor;
-			this.isExtended = rBox.isExtended;
-			this.columnsSeparatorRelative = rBox.columnsSeparatorRelative;
-
-			for (int f=0; f<rBox.Fields.Count; f++)
+			foreach (Field field in this.fields)
 			{
-				Field rField = rBox.Fields[f];
+				field.WriteXml(writer);
+			}
+			
+			writer.WriteEndElement();
+		}
 
-				Field field = this.RestoreSearchField(rField.Destination);
-				if (field != null)
+		public void ReadXml(XmlReader reader)
+		{
+			while (reader.Read())
+			{
+				if (reader.NodeType == XmlNodeType.Element)
 				{
-					field.Restore(rField);
+					if (reader.LocalName == "ObjectBox")
+					{
+						Druid druid = Druid.Parse(reader.GetAttribute("Druid"));
+						if (druid.IsValid)
+						{
+							this.cultureMap = this.editor.Module.AccessEntities.Accessor.Collection[druid];
+						}
+
+						string bounds = reader.GetAttribute("Bounds");
+						if (!string.IsNullOrEmpty(bounds))
+						{
+							this.bounds = Rectangle.Parse(bounds);
+						}
+					}
+					else
+					{
+						throw new System.FormatException(string.Format("Element <{0}> not expected here; expected <type>", reader.Name));
+					}
 				}
 			}
+
+			throw new System.FormatException("Unexpected end of XML; expected <type>");
 		}
 
 		protected Field RestoreSearchField(Druid druid)
@@ -1993,7 +1991,6 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		protected static readonly double sourcesMenuHeight = 20;
 
 		protected CultureMap cultureMap;
-		protected Druid cultureMapDruid;
 		protected ObjectComment comment;
 		protected Rectangle bounds;
 		protected double columnsSeparatorRelative;

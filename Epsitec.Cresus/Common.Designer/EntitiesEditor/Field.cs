@@ -1,5 +1,6 @@
 using System.Collections.Generic;
-using System.Runtime.Serialization;
+using System.Xml;
+using System.Xml.Serialization;
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Support;
 using Epsitec.Common.Drawing;
@@ -10,8 +11,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 	/// <summary>
 	/// Cette classe contient toutes les informations relatives à une ligne, c'est-à-dire à un champ.
 	/// </summary>
-	[System.Serializable()]
-	public class Field : ISerializable
+	public class Field
 	{
 		public enum RouteType
 		{
@@ -531,32 +531,32 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		
 		#region Serialization
-		public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
+		public void WriteXml(XmlWriter writer)
 		{
-			//	Sérialise l'objet.
-			info.AddValue("DestinationDruid", this.destination.ToString());
+			writer.WriteStartElement("Field");
+			
+			writer.WriteElementString("Druid", this.destination.ToString());
 
-			info.AddValue("SrcBoxDruid", this.GetDruid(this.srcBox).ToString());
-			info.AddValue("DstBoxDruid", this.GetDruid(this.dstBox).ToString());
+			writer.WriteElementString("IsExplored", this.isExplored.ToString());
+			writer.WriteElementString("IsSourceExpanded", this.isSourceExpanded.ToString());
+			writer.WriteElementString("IsAttachToRight", this.isAttachToRight.ToString());
 
-			info.AddValue("IsExplored", this.isExplored);
-			info.AddValue("IsSourceExpanded", this.isSourceExpanded);
-			info.AddValue("IsAttachToRight", this.isAttachToRight);
+			writer.WriteElementString("RouteType", this.routeType.ToString());
+			writer.WriteElementString("RouteRelativeAX1", this.routeRelativeAX1.ToString());
+			writer.WriteElementString("RouteRelativeAX2", this.routeRelativeAX2.ToString());
+			writer.WriteElementString("RouteAbsoluteAY", this.routeAbsoluteAY.ToString());
+			writer.WriteElementString("RouteRelativeBX", this.routeRelativeBX.ToString());
+			writer.WriteElementString("RouteRelativeCX", this.routeRelativeCX.ToString());
+			writer.WriteElementString("RouteAbsoluteDX", this.routeAbsoluteDX.ToString());
 
-			info.AddValue("RouteType", this.routeType);
-			info.AddValue("RouteRelativeAX1", this.routeRelativeAX1);
-			info.AddValue("RouteRelativeAX2", this.routeRelativeAX2);
-			info.AddValue("RouteAbsoluteAY", this.routeAbsoluteAY);
-			info.AddValue("RouteRelativeBX", this.routeRelativeBX);
-			info.AddValue("RouteRelativeCX", this.routeRelativeCX);
-			info.AddValue("RouteAbsoluteDX", this.routeAbsoluteDX);
+			writer.WriteElementString("AsComment", this.asComment.ToString());
+			writer.WriteElementString("CommentPosition", this.commentPosition.ToString());
+			writer.WriteElementString("CommentBounds", this.commentBounds.ToString());
+			writer.WriteElementString("CommentText", this.commentText.ToString());
+			writer.WriteElementString("CommentAttach", this.commentAttach.ToString());
+			writer.WriteElementString("CommentMainColor", this.commentMainColor.ToString());
 
-			info.AddValue("AsComment", this.asComment);
-			info.AddValue("CommentPosition", this.commentPosition);
-			info.AddValue("CommentBounds", this.commentBounds);
-			info.AddValue("CommentText", this.commentText);
-			info.AddValue("CommentAttach", this.commentAttach);
-			info.AddValue("CommentMainColor", this.commentMainColor);
+			writer.WriteEndElement();
 		}
 
 		protected Druid GetDruid(ObjectBox box)
@@ -569,59 +569,6 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			{
 				return box.CultureMap.Id;
 			}
-		}
-
-		protected Field(SerializationInfo info, StreamingContext context)
-		{
-			//	Constructeur qui désérialise l'objet.
-			this.destination = Druid.Parse(info.GetString("DestinationDruid"));
-			this.srcBoxDruid = Druid.Parse(info.GetString("SrcBoxDruid"));
-			this.dstBoxDruid = Druid.Parse(info.GetString("DstBoxDruid"));
-
-			this.isExplored = info.GetBoolean("IsExplored");
-			this.isSourceExpanded = info.GetBoolean("IsSourceExpanded");
-			this.isAttachToRight = info.GetBoolean("IsAttachToRight");
-
-			this.routeType = (RouteType) info.GetValue("RouteType", typeof(RouteType));
-			this.routeRelativeAX1 = info.GetDouble("RouteRelativeAX1");
-			this.routeRelativeAX2 = info.GetDouble("RouteRelativeAX2");
-			this.routeAbsoluteAY = info.GetDouble("RouteAbsoluteAY");
-			this.routeRelativeBX = info.GetDouble("RouteRelativeBX");
-			this.routeRelativeCX = info.GetDouble("RouteRelativeCX");
-			this.routeAbsoluteDX = info.GetDouble("RouteAbsoluteDX");
-
-			this.asComment = info.GetBoolean("AsComment");
-			this.commentPosition = (Point) info.GetValue("CommentPosition", typeof(Point));
-			this.commentBounds = (Rectangle) info.GetValue("CommentBounds", typeof(Rectangle));
-			this.commentText = info.GetString("CommentText");
-			this.commentAttach = info.GetDouble("CommentAttach");
-			this.commentMainColor = (AbstractObject.MainColor) info.GetValue("CommentMainColor", typeof(AbstractObject.MainColor));
-		}
-
-		public void Restore(Field rField)
-		{
-			//	Restore un objet d'après un objet désérialisé (rField).
-			this.srcBox = this.RestoreSearchBox(this.srcBoxDruid);
-			this.dstBox = this.RestoreSearchBox(this.dstBoxDruid);
-
-			this.isExplored = rField.isExplored;
-			this.isSourceExpanded = rField.isSourceExpanded;
-			this.isAttachToRight = rField.isAttachToRight;
-
-			this.routeType = rField.routeType;
-			this.routeRelativeAX1 = rField.routeRelativeAX1;
-			this.routeRelativeAX2 = rField.routeRelativeAX2;
-			this.routeAbsoluteAY = rField.routeAbsoluteAY;
-			this.routeRelativeBX = rField.routeRelativeBX;
-			this.routeRelativeCX = rField.routeRelativeCX;
-			this.routeAbsoluteDX = rField.routeAbsoluteDX;
-
-			this.asComment = rField.asComment;
-			this.commentPosition = rField.commentPosition;
-			this.commentBounds = rField.commentBounds;
-			this.commentText = rField.commentText;
-			this.commentAttach = rField.commentAttach;
-			this.commentMainColor = rField.commentMainColor;
 		}
 
 		protected ObjectBox RestoreSearchBox(Druid druid)
@@ -647,8 +594,6 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		protected int rank;
 		protected ObjectBox srcBox;
 		protected ObjectBox dstBox;
-		protected Druid srcBoxDruid;
-		protected Druid dstBoxDruid;
 		protected ObjectConnection connection;
 		protected bool isExplored;
 		protected bool isSourceExpanded;

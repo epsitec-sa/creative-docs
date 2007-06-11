@@ -401,12 +401,12 @@ namespace Epsitec.Common.Designer.Viewers
 
 		private void HandleWriteClicked(object sender, MessageEventArgs e)
 		{
-			this.editor.Serialize(@"D:\\Cresus\data_entity_1.bin");
+			this.editor.Serialize(@"D:\\Cresus\data_entity_1.xml");
 		}
 
 		private void HandleReadClicked(object sender, MessageEventArgs e)
 		{
-			this.editor.Deserialize(@"D:\\Cresus\data_entity_1.bin");
+			this.editor.Deserialize(@"D:\\Cresus\data_entity_1.xml");
 		}
 
 

@@ -1,5 +1,6 @@
 using System.Collections.Generic;
-using System.Runtime.Serialization;
+using System.Xml;
+using System.Xml.Serialization;
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Support;
 using Epsitec.Common.Types;
@@ -10,7 +11,6 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 	/// <summary>
 	/// Boîte pour représenter une entité.
 	/// </summary>
-	[System.Serializable()]
 	public class ObjectComment : AbstractObject
 	{
 		protected enum AttachMode
@@ -1166,28 +1166,6 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 
 		#region Serialization
-		public override void GetObjectData(SerializationInfo info, StreamingContext context)
-		{
-			//	Sérialise l'objet.
-			base.GetObjectData(info, context);
-
-			info.AddValue("Bounds", this.bounds);
-			info.AddValue("AttachObject", this.attachObject);
-			info.AddValue("IsVisible", this.isVisible);
-		}
-
-		protected ObjectComment(SerializationInfo info, StreamingContext context) : base(info, context)
-		{
-			//	Constructeur qui désérialise l'objet.
-			this.bounds = (Rectangle) info.GetValue("Bounds", typeof(Rectangle));
-			this.attachObject = (AbstractObject) info.GetValue("AttachObject", typeof(AbstractObject));
-			this.isVisible = info.GetBoolean("IsVisible");
-		}
-
-		public void Restore(ObjectComment rComment)
-		{
-			//	Restore un objet d'après un objet désérialisé (rComment).
-		}
 		#endregion
 
 

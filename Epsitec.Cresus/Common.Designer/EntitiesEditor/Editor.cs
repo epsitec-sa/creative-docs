@@ -1,6 +1,6 @@
 using System.Collections.Generic;
-using System.Runtime.Serialization;
-using System.Runtime.Serialization.Formatters.Binary;
+using System.Xml;
+using System.Xml.Serialization;
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Support;
 using Epsitec.Common.Drawing;
@@ -11,8 +11,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 	/// <summary>
 	/// Widget permettant d'éditer graphiquement des entités.
 	/// </summary>
-	[System.Serializable()]
-	public class Editor : Widget, Widgets.Helpers.IToolTipHost, ISerializable
+	public class Editor : Widget, Widgets.Helpers.IToolTipHost
 	{
 		protected enum MouseCursorType
 		{
@@ -1197,82 +1196,30 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		#region Serialization
 		public void Serialize(string filename)
 		{
-			if (System.IO.File.Exists(filename))
-			{
-				System.IO.File.Delete(filename);
-			}
-			
-			using (System.IO.Stream stream = System.IO.File.Open(filename, System.IO.FileMode.CreateNew, System.IO.FileAccess.ReadWrite, System.IO.FileShare.None))
-			{
-				BinaryFormatter formatter = new BinaryFormatter();
-				formatter.Serialize(stream, this);
-			}
+			XmlTextWriter writer = new XmlTextWriter(filename, System.Text.Encoding.Unicode);
+			writer.Formatting = Formatting.Indented;
+			this.WriteXml(writer);
+			writer.Close();
 		}
 
 		public void Deserialize(string filename)
 		{
-			using (System.IO.Stream stream = System.IO.File.Open(filename, System.IO.FileMode.Open, System.IO.FileAccess.Read, System.IO.FileShare.None))
-			{
-				BinaryFormatter formatter = new BinaryFormatter();
-				Editor rEditor = null;
-				string error = null;
-
-				try
-				{
-					rEditor = (Editor) formatter.Deserialize(stream);
-				}
-				catch (System.Exception e)
-				{
-					error = e.Message;
-					rEditor = null;
-				}
-
-				if (rEditor != null)
-				{
-					this.DeserializeCreate(rEditor);
-				}
-			}
+			XmlTextReader reader = new XmlTextReader(filename);
+			reader.Close();
 		}
 
-		protected void DeserializeCreate(Editor rEditor)
+		public void WriteXml(XmlWriter writer)
 		{
-			this.Clear();
+			writer.WriteStartDocument();
 
-			for (int b=0; b<rEditor.boxes.Count; b++)
+			writer.WriteStartElement("Boxes");
+			foreach (ObjectBox box in this.boxes)
 			{
-				ObjectBox rBox = rEditor.boxes[b];
-
-				CultureMap item = this.module.AccessEntities.Accessor.Collection[rBox.CultureMapDruid];
-
-				EntitiesEditor.ObjectBox box = new EntitiesEditor.ObjectBox(this);
-				box.IsRoot = (b == 0);
-				box.Title = item.Name;
-				box.SetContent(item);
-				this.AddBox(box);
+				box.WriteXml(writer);
 			}
-
-			for (int b=0; b<rEditor.boxes.Count; b++)
-			{
-				ObjectBox rBox = rEditor.boxes[b];
-				ObjectBox box = this.boxes[b];
-				box.Restore(rBox);
-			}
-
-			this.UpdateAfterAddOrRemoveConnection(null);
-		}
-
-		public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
-		{
-			//	Sérialise l'objet.
-			info.AddValue("Boxes", this.boxes);
-			info.AddValue("Comments", this.comments);
-		}
-
-		protected Editor(SerializationInfo info, StreamingContext context)
-		{
-			//	Constructeur qui désérialise l'objet.
-			this.boxes = (List<ObjectBox>) info.GetValue("Boxes", typeof(List<ObjectBox>));
-			this.comments = (List<ObjectComment>) info.GetValue("Comments", typeof(List<ObjectComment>));
+			writer.WriteEndElement();
+			
+			writer.WriteEndDocument();
 		}
 		#endregion
 
