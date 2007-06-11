@@ -1923,7 +1923,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		#region Serialization
 		public void WriteXml(XmlWriter writer)
 		{
-			writer.WriteStartElement("ObjectBox");
+			//	Sérialise toutes les informations de la boîte et de ses champs.
+			writer.WriteStartElement("Box");
 			
 			writer.WriteElementString("Druid", this.cultureMap.Id.ToString());
 			writer.WriteElementString("Bounds", this.bounds.ToString());
@@ -1935,6 +1936,11 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			{
 				field.WriteXml(writer);
 			}
+
+			if (this.comment != null && this.comment.IsVisible)  // commentaire associé ?
+			{
+				this.comment.WriteXml(writer);
+			}
 			
 			writer.WriteEndElement();
 		}
@@ -1945,7 +1951,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			{
 				if (reader.NodeType == XmlNodeType.Element)
 				{
-					if (reader.LocalName == "ObjectBox")
+					if (reader.LocalName == "Box")
 					{
 						Druid druid = Druid.Parse(reader.GetAttribute("Druid"));
 						if (druid.IsValid)

@@ -1166,6 +1166,19 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 
 		#region Serialization
+		public void WriteXml(XmlWriter writer)
+		{
+			//	Sérialise toutes les informations du commentaire.
+			//	Utilisé seulement pour les commentaires associés à des boîtes.
+			//	Les commentaires associés à des connections sont sérialisés par Field.
+			writer.WriteStartElement("Comment");
+			
+			writer.WriteElementString("Bounds", this.bounds.ToString());
+			writer.WriteElementString("Text", this.textLayoutComment.Text);
+			writer.WriteElementString("Color", this.boxColor.ToString());
+
+			writer.WriteEndElement();
+		}
 		#endregion
 
 

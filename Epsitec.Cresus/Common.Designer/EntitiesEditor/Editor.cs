@@ -1210,6 +1210,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		public void WriteXml(XmlWriter writer)
 		{
+			//	Sérialise toutes les boîtes.
 			writer.WriteStartDocument();
 
 			writer.WriteStartElement("Boxes");

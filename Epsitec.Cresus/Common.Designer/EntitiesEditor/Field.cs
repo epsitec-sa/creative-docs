@@ -533,28 +533,61 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		#region Serialization
 		public void WriteXml(XmlWriter writer)
 		{
+			//	Sérialise toutes les informations du champ.
 			writer.WriteStartElement("Field");
 			
 			writer.WriteElementString("Druid", this.destination.ToString());
 
-			writer.WriteElementString("IsExplored", this.isExplored.ToString());
-			writer.WriteElementString("IsSourceExpanded", this.isSourceExpanded.ToString());
-			writer.WriteElementString("IsAttachToRight", this.isAttachToRight.ToString());
+			if (this.isExplored)
+			{
+				writer.WriteElementString("IsAttachToRight", this.isAttachToRight.ToString());
 
-			writer.WriteElementString("RouteType", this.routeType.ToString());
-			writer.WriteElementString("RouteRelativeAX1", this.routeRelativeAX1.ToString());
-			writer.WriteElementString("RouteRelativeAX2", this.routeRelativeAX2.ToString());
-			writer.WriteElementString("RouteAbsoluteAY", this.routeAbsoluteAY.ToString());
-			writer.WriteElementString("RouteRelativeBX", this.routeRelativeBX.ToString());
-			writer.WriteElementString("RouteRelativeCX", this.routeRelativeCX.ToString());
-			writer.WriteElementString("RouteAbsoluteDX", this.routeAbsoluteDX.ToString());
+				writer.WriteElementString("RouteType", this.routeType.ToString());
 
-			writer.WriteElementString("AsComment", this.asComment.ToString());
-			writer.WriteElementString("CommentPosition", this.commentPosition.ToString());
-			writer.WriteElementString("CommentBounds", this.commentBounds.ToString());
-			writer.WriteElementString("CommentText", this.commentText.ToString());
-			writer.WriteElementString("CommentAttach", this.commentAttach.ToString());
-			writer.WriteElementString("CommentMainColor", this.commentMainColor.ToString());
+				if (this.routeRelativeAX1 != 0.2)
+				{
+					writer.WriteElementString("RouteRelativeAX1", this.routeRelativeAX1.ToString());
+				}
+
+				if (this.routeRelativeAX2 != 0.8)
+				{
+					writer.WriteElementString("RouteRelativeAX2", this.routeRelativeAX2.ToString());
+				}
+
+				if (this.routeAbsoluteAY != 0.0)
+				{
+					writer.WriteElementString("RouteAbsoluteAY", this.routeAbsoluteAY.ToString());
+				}
+
+				if (this.routeRelativeBX != 0.0)
+				{
+					writer.WriteElementString("RouteRelativeBX", this.routeRelativeBX.ToString());
+				}
+
+				if (this.routeRelativeBY != 0.0)
+				{
+					writer.WriteElementString("RouteRelativeBY", this.routeRelativeBY.ToString());
+				}
+
+				if (this.routeRelativeCX != 0.5)
+				{
+					writer.WriteElementString("RouteRelativeCX", this.routeRelativeCX.ToString());
+				}
+
+				if (this.routeAbsoluteDX != 0.5)
+				{
+					writer.WriteElementString("RouteAbsoluteDX", this.routeAbsoluteDX.ToString());
+				}
+
+				if (this.asComment)
+				{
+					writer.WriteElementString("CommentPosition", this.commentPosition.ToString());
+					writer.WriteElementString("CommentBounds", this.commentBounds.ToString());
+					writer.WriteElementString("CommentText", this.commentText.ToString());
+					writer.WriteElementString("CommentAttach", this.commentAttach.ToString());
+					writer.WriteElementString("CommentColor", this.commentMainColor.ToString());
+				}
+			}
 
 			writer.WriteEndElement();
 		}
