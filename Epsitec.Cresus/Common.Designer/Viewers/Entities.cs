@@ -89,6 +89,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.buttonSubViewT.ButtonStyle = ButtonStyle.ActivableIcon;
 			this.buttonSubViewT.AutoFocus = false;
 			this.buttonSubViewT.Dock = DockStyle.Left;
+			this.buttonSubViewT.Margins = new Margins(2, 0, 0, 0);
 			this.buttonSubViewT.Clicked += new MessageEventHandler(this.HandleButtonSubViewClicked);
 			ToolTip.Default.SetToolTip(this.buttonSubViewT, "Vue temporaire");
 
@@ -233,6 +234,21 @@ namespace Epsitec.Common.Designer.Viewers
 			}
 		}
 
+		public string SubViewName
+		{
+			//	Retourne le nom de la sous-vue utilisée.
+			get
+			{
+				switch (Entities.subView)
+				{
+					case 0:   return "A";
+					case 1:   return "B";
+					case 2:   return "C";
+					default:  return "T";
+				}
+			}
+		}
+
 		public double Zoom
 		{
 			//	Zoom pour représenter les boîtes et les liaisons.
@@ -359,6 +375,16 @@ namespace Epsitec.Common.Designer.Viewers
 			if (this.editor.DirtySerialization)
 			{
 				this.editor.DirtySerialization = false;
+
+				if (this.SubView != 3)  // pas la sous-vue temporaire ?
+				{
+					string question = string.Format("Voulez-vous conserver les modifications de l'entité <b>{0}</b><br/>effectuées dans la vue <b>{1}</b> ?", this.nameToSerialize, this.SubViewName);
+					if (this.module.MainWindow.DialogQuestion(question) != Epsitec.Common.Dialogs.DialogResult.Yes)
+					{
+						return;
+					}
+				}
+
 				this.Serialize();
 			}
 		}
@@ -383,6 +409,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 		protected bool Deserialize()
 		{
+			this.nameToSerialize = this.CurrentName;
 			this.druidToSerialize = this.CurrentDruid;
 			Druid druid = this.druidToSerialize;
 			string key = string.Concat(this.SubView.ToString(System.Globalization.CultureInfo.InvariantCulture), ":", druid.ToString());
@@ -408,6 +435,22 @@ namespace Epsitec.Common.Designer.Viewers
 				else
 				{
 					return item.Id;
+				}
+			}
+		}
+
+		protected string CurrentName
+		{
+			get
+			{
+				CultureMap item = this.access.CollectionView.CurrentItem as CultureMap;
+				if (item == null)
+				{
+					return null;
+				}
+				else
+				{
+					return item.Name;
 				}
 			}
 		}
@@ -579,5 +622,6 @@ namespace Epsitec.Common.Designer.Viewers
 		protected StatusField fieldZoom;
 		protected HSlider sliderZoom;
 		protected Druid druidToSerialize;
+		protected string nameToSerialize;
 	}
 }
