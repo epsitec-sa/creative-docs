@@ -120,7 +120,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 					break;
 
 				case TypeCode.Enum:
-					//	TODO: ...
+					this.CreateType (new EnumType (caption), data);
 					break;
 				
 				case TypeCode.Integer:
@@ -314,6 +314,21 @@ namespace Epsitec.Common.Support.ResourceAccessors
 				{
 					type.DefineItemType (new DummyNamedType (id));
 				}
+			}
+		}
+
+		private void CreateType(EnumType type, StructuredData data)
+		{
+			this.SetupType (type, data);
+
+			IList<StructuredData> values = data.GetValue (Res.Fields.ResourceEnumType.Values) as IList<StructuredData>;
+			int rank = 0;
+
+			foreach (StructuredData value in values)
+			{
+				Druid id = (Druid) value.GetValue (Res.Fields.EnumValue.CaptionId);
+
+				type.EnumValues.Add (new EnumValue (rank++, id));
 			}
 		}
 
