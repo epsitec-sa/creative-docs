@@ -555,51 +555,51 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 			if (this.isExplored)
 			{
-				writer.WriteElementString("IsAttachToRight", this.isAttachToRight.ToString());
+				writer.WriteElementString("IsAttachToRight", this.isAttachToRight.ToString(System.Globalization.CultureInfo.InvariantCulture));
 
 				writer.WriteElementString("RouteType", this.routeType.ToString());
 
 				if (this.routeRelativeAX1 != 0.2)
 				{
-					writer.WriteElementString("RouteRelativeAX1", this.routeRelativeAX1.ToString());
+					writer.WriteElementString("RouteRelativeAX1", this.routeRelativeAX1.ToString(System.Globalization.CultureInfo.InvariantCulture));
 				}
 
 				if (this.routeRelativeAX2 != 0.8)
 				{
-					writer.WriteElementString("RouteRelativeAX2", this.routeRelativeAX2.ToString());
+					writer.WriteElementString("RouteRelativeAX2", this.routeRelativeAX2.ToString(System.Globalization.CultureInfo.InvariantCulture));
 				}
 
 				if (this.routeAbsoluteAY != 0.0)
 				{
-					writer.WriteElementString("RouteAbsoluteAY", this.routeAbsoluteAY.ToString());
+					writer.WriteElementString("RouteAbsoluteAY", this.routeAbsoluteAY.ToString(System.Globalization.CultureInfo.InvariantCulture));
 				}
 
 				if (this.routeRelativeBX != 0.0)
 				{
-					writer.WriteElementString("RouteRelativeBX", this.routeRelativeBX.ToString());
+					writer.WriteElementString("RouteRelativeBX", this.routeRelativeBX.ToString(System.Globalization.CultureInfo.InvariantCulture));
 				}
 
 				if (this.routeRelativeBY != 0.0)
 				{
-					writer.WriteElementString("RouteRelativeBY", this.routeRelativeBY.ToString());
+					writer.WriteElementString("RouteRelativeBY", this.routeRelativeBY.ToString(System.Globalization.CultureInfo.InvariantCulture));
 				}
 
 				if (this.routeRelativeCX != 0.5)
 				{
-					writer.WriteElementString("RouteRelativeCX", this.routeRelativeCX.ToString());
+					writer.WriteElementString("RouteRelativeCX", this.routeRelativeCX.ToString(System.Globalization.CultureInfo.InvariantCulture));
 				}
 
 				if (this.routeAbsoluteDX != 0.5)
 				{
-					writer.WriteElementString("RouteAbsoluteDX", this.routeAbsoluteDX.ToString());
+					writer.WriteElementString("RouteAbsoluteDX", this.routeAbsoluteDX.ToString(System.Globalization.CultureInfo.InvariantCulture));
 				}
 
 				if (this.asComment)
 				{
 					writer.WriteElementString("CommentPosition", this.commentPosition.ToString());
 					writer.WriteElementString("CommentBounds", this.commentBounds.ToString());
-					writer.WriteElementString("CommentText", this.commentText.ToString());
-					writer.WriteElementString("CommentAttach", this.commentAttach.ToString());
+					writer.WriteElementString("CommentText", this.commentText);
+					writer.WriteElementString("CommentAttach", this.commentAttach.ToString(System.Globalization.CultureInfo.InvariantCulture));
 					writer.WriteElementString("CommentColor", this.commentMainColor.ToString());
 				}
 			}

@@ -1194,18 +1194,29 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 
 		#region Serialization
-		public void Serialize(string filename)
+		public string Serialize()
 		{
-			XmlTextWriter writer = new XmlTextWriter(filename, System.Text.Encoding.Unicode);
+			//	Sérialise la vue éditée et retourne le résultat dans un string.
+			System.Text.StringBuilder buffer = new System.Text.StringBuilder();
+			System.IO.StringWriter stringWriter = new System.IO.StringWriter(buffer);
+			XmlTextWriter writer = new XmlTextWriter(stringWriter);
 			writer.Formatting = Formatting.Indented;
+
 			this.WriteXml(writer);
+
+			writer.Flush();
 			writer.Close();
+			return buffer.ToString();
 		}
 
-		public void Deserialize(string filename)
+		public void Deserialize(string data)
 		{
-			XmlTextReader reader = new XmlTextReader(filename);
+			//	Désérialise la vue à partir d'un string de données.
+			System.IO.StringReader stringReader = new System.IO.StringReader(data);
+			XmlTextReader reader = new XmlTextReader(stringReader);
+			
 			this.ReadXml(reader);
+
 			reader.Close();
 		}
 

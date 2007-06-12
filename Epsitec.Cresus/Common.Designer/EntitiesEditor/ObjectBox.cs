@@ -1930,11 +1930,11 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			
 			writer.WriteElementString("Druid", this.cultureMap.Id.ToString());
 			writer.WriteElementString("Bounds", this.bounds.ToString());
-			writer.WriteElementString("IsExtended", this.isExtended.ToString());
+			writer.WriteElementString("IsExtended", this.isExtended.ToString(System.Globalization.CultureInfo.InvariantCulture));
 
 			if (this.columnsSeparatorRelative != 0.5)
 			{
-				writer.WriteElementString("ColumnsSeparatorRelative", this.columnsSeparatorRelative.ToString());
+				writer.WriteElementString("ColumnsSeparatorRelative", this.columnsSeparatorRelative.ToString(System.Globalization.CultureInfo.InvariantCulture));
 			}
 			
 			writer.WriteElementString("Color", this.boxColor.ToString());

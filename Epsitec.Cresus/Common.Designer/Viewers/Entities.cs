@@ -286,6 +286,33 @@ namespace Epsitec.Common.Designer.Viewers
 			this.editor.UpdateAfterGeometryChanged(null);
 		}
 
+		protected void Serialize()
+		{
+			if (this.serial == null)
+			{
+				this.serial = new Dictionary<int,string>();
+			}
+
+			int rank = this.access.CollectionView.CurrentPosition;
+			string data = this.editor.Serialize();
+			this.serial.Add(rank, data);
+		}
+
+		protected void Deserialize()
+		{
+			if (this.serial == null)
+			{
+				this.serial = new Dictionary<int,string>();
+			}
+
+			int rank = this.access.CollectionView.CurrentPosition;
+			if (this.serial.ContainsKey(rank))
+			{
+				string data = this.serial[rank];
+				this.editor.Deserialize(data);
+			}
+		}
+
 
 		private void HandleEditorSizeChanged(object sender, DependencyPropertyChangedEventArgs e)
 		{
@@ -400,12 +427,12 @@ namespace Epsitec.Common.Designer.Viewers
 
 		private void HandleWriteClicked(object sender, MessageEventArgs e)
 		{
-			this.editor.Serialize(@"D:\\Cresus\data_entity_1.xml");
+			this.Serialize();
 		}
 
 		private void HandleReadClicked(object sender, MessageEventArgs e)
 		{
-			this.editor.Deserialize(@"D:\\Cresus\data_entity_1.xml");
+			this.Deserialize();
 		}
 
 
@@ -428,5 +455,6 @@ namespace Epsitec.Common.Designer.Viewers
 		protected IconButton buttonZoomMax;
 		protected StatusField fieldZoom;
 		protected HSlider sliderZoom;
+		protected Dictionary<int, string> serial;
 	}
 }
