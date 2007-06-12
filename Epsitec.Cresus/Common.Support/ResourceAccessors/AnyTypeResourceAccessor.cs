@@ -323,6 +323,8 @@ namespace Epsitec.Common.Support.ResourceAccessors
 
 			IList<StructuredData> values = data.GetValue (Res.Fields.ResourceEnumType.Values) as IList<StructuredData>;
 			int rank = 0;
+			
+			type.MakeEditable ();
 
 			foreach (StructuredData value in values)
 			{

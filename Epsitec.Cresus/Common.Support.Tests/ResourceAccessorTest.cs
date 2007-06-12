@@ -328,6 +328,36 @@ namespace Epsitec.Common.Support
 
 			Assert.IsNotNull (colType);
 			Assert.AreEqual (Types.IntegerType.Default.CaptionId, colType.ItemType.CaptionId);
+
+			//	Check Enumeration
+
+			CultureMap map = accessor.Collection[Types.Res.Types.BindingMode.CaptionId];
+
+			Assert.AreEqual ("BindingMode", map.Name);
+			Assert.AreEqual ("Typ.BindingMode", accessor.ResourceManager.GetBundle (Resources.CaptionsBundleName, ResourceLevel.Default)[Types.Res.Types.BindingMode.CaptionId].Name);
+			Assert.AreEqual ("Val.BindingMode.None", accessor.ResourceManager.GetBundle (Resources.CaptionsBundleName, ResourceLevel.Default)[Types.Res.Values.BindingMode.None.Id].Name);
+
+			Types.StructuredData enumData = map.GetCultureData (Resources.DefaultTwoLetterISOLanguageName);
+			IList<Types.StructuredData> enumValues = enumData.GetValue (Res.Fields.ResourceEnumType.Values) as IList<Types.StructuredData>;
+
+			Assert.AreEqual (5, enumValues.Count);
+
+			Assert.AreEqual (Types.Res.Values.BindingMode.None.Id, enumValues[0].GetValue (Res.Fields.EnumValue.CaptionId));
+			Assert.AreEqual (Types.Res.Values.BindingMode.TwoWay.Id, enumValues[4].GetValue (Res.Fields.EnumValue.CaptionId));
+
+			map.Name = "Foo";
+			accessor.PersistChanges ();
+
+			Assert.AreEqual ("Foo", map.Name);
+			Assert.AreEqual ("Typ.Foo", accessor.ResourceManager.GetBundle (Resources.CaptionsBundleName, ResourceLevel.Default)[Types.Res.Types.BindingMode.CaptionId].Name);
+			Assert.AreEqual ("Val.Foo.None", accessor.ResourceManager.GetBundle (Resources.CaptionsBundleName, ResourceLevel.Default)[Types.Res.Values.BindingMode.None.Id].Name);
+
+			map.Name = "BindingMode";
+			accessor.PersistChanges ();
+
+			Assert.AreEqual ("BindingMode", map.Name);
+			Assert.AreEqual ("Typ.BindingMode", accessor.ResourceManager.GetBundle (Resources.CaptionsBundleName, ResourceLevel.Default)[Types.Res.Types.BindingMode.CaptionId].Name);
+			Assert.AreEqual ("Val.BindingMode.None", accessor.ResourceManager.GetBundle (Resources.CaptionsBundleName, ResourceLevel.Default)[Types.Res.Values.BindingMode.None.Id].Name);
 		}
 
 		[Test]
