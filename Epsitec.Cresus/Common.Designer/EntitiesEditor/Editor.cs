@@ -1267,6 +1267,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 
 			this.UpdateAfterAddOrRemoveConnection(null);
+			this.UpdateAfterOpenOrCloseBox();
 		}
 		#endregion
 
