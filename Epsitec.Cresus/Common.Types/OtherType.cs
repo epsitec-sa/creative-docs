@@ -42,6 +42,12 @@ namespace Epsitec.Common.Types
 			get
 			{
 				string systemTypeName = AbstractType.GetSystemType (this.Caption);
+
+				if (string.IsNullOrEmpty (systemTypeName))
+				{
+					return null;
+				}
+
 				System.Type systemType = AbstractType.GetSystemTypeFromSystemTypeName (systemTypeName);
 
 				return systemType;

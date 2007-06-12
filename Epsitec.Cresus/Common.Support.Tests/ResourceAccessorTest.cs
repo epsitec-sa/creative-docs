@@ -223,6 +223,8 @@ namespace Epsitec.Common.Support
 				}
 			}
 
+			//	Check Integer
+			
 			CultureMap newItem = accessor.CreateItem ();
 			Types.StructuredData newData = newItem.GetCultureData (Resources.DefaultTwoLetterISOLanguageName);
 			newItem.Name = "AnyTypeAccessorInteger1";
@@ -242,6 +244,8 @@ namespace Epsitec.Common.Support
 			Assert.AreEqual (1M, intType.SmallStep);
 			Assert.AreEqual (10M, intType.LargeStep);
 			Assert.AreEqual (999M, intType.Range.Maximum);
+			
+			//	Check DateTime
 			
 			newItem = accessor.CreateItem ();
 			newData = newItem.GetCultureData (Resources.DefaultTwoLetterISOLanguageName);
@@ -267,6 +271,63 @@ namespace Epsitec.Common.Support
 			Assert.IsTrue (dtType.MinimumTime.IsNull);
 			Assert.IsTrue (dtType.MaximumTime.IsNull);
 			Assert.AreEqual (15, dtType.TimeStep.TotalMinutes);
+
+			//	Check Other
+			
+			newItem = accessor.CreateItem ();
+			newData = newItem.GetCultureData (Resources.DefaultTwoLetterISOLanguageName);
+			newItem.Name = "AnyTypeAccessorOther1";
+
+			newData.SetValue (Res.Fields.ResourceBaseType.TypeCode, Types.TypeCode.Other);
+			newData.SetValue (Res.Fields.ResourceOtherType.SystemType, typeof (char));
+
+			accessor.Collection.Add (newItem);
+			accessor.PersistChanges ();
+
+			caption = accessor.ResourceManager.GetCaption (newItem.Id, ResourceLevel.Default);
+			Types.OtherType otherType = Types.TypeRosetta.CreateTypeObject (caption, false) as Types.OtherType;
+
+			Assert.IsNotNull (otherType);
+			Assert.AreEqual (typeof (char).Name, otherType.SystemType.Name);
+
+			//	Check String
+
+			newItem = accessor.CreateItem ();
+			newData = newItem.GetCultureData (Resources.DefaultTwoLetterISOLanguageName);
+			newItem.Name = "AnyTypeAccessorString1";
+
+			newData.SetValue (Res.Fields.ResourceBaseType.TypeCode, Types.TypeCode.String);
+			newData.SetValue (Res.Fields.ResourceStringType.UseMultilingualStorage, true);
+			newData.SetValue (Res.Fields.ResourceStringType.MinimumLength, 1);
+
+			accessor.Collection.Add (newItem);
+			accessor.PersistChanges ();
+
+			caption = accessor.ResourceManager.GetCaption (newItem.Id, ResourceLevel.Default);
+			Types.StringType stringType = Types.TypeRosetta.CreateTypeObject (caption, false) as Types.StringType;
+
+			Assert.IsNotNull (stringType);
+			Assert.AreEqual (true, stringType.UseMultilingualStorage);
+			Assert.AreEqual (1, stringType.MinimumLength);
+			Assert.AreEqual (1000, stringType.MaximumLength);
+
+			//	Check Collection
+
+			newItem = accessor.CreateItem ();
+			newData = newItem.GetCultureData (Resources.DefaultTwoLetterISOLanguageName);
+			newItem.Name = "AnyTypeAccessorCollection1";
+
+			newData.SetValue (Res.Fields.ResourceBaseType.TypeCode, Types.TypeCode.Collection);
+			newData.SetValue (Res.Fields.ResourceCollectionType.ItemType, Types.IntegerType.Default.CaptionId);
+
+			accessor.Collection.Add (newItem);
+			accessor.PersistChanges ();
+
+			caption = accessor.ResourceManager.GetCaption (newItem.Id, ResourceLevel.Default);
+			Types.CollectionType colType = Types.TypeRosetta.CreateTypeObject (caption, false) as Types.CollectionType;
+
+			Assert.IsNotNull (colType);
+			Assert.AreEqual (Types.IntegerType.Default.CaptionId, colType.ItemType.CaptionId);
 		}
 
 		[Test]
