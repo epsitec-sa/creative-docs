@@ -149,6 +149,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					}
 
 					this.editor.Invalidate();
+					this.editor.DirtySerialization = true;
 				}
 			}
 		}
@@ -492,6 +493,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				this.editor.UpdateAfterMoving(this);
 				this.isDragging = false;
 				this.editor.LockObject(null);
+				this.editor.DirtySerialization = true;
 			}
 			else if (this.isFieldMoving)
 			{
@@ -501,17 +503,20 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				}
 				this.isFieldMoving = false;
 				this.editor.LockObject(null);
+				this.editor.DirtySerialization = true;
 			}
 			else if (this.isChangeWidth)
 			{
 				this.editor.UpdateAfterMoving(this);
 				this.isChangeWidth = false;
 				this.editor.LockObject(null);
+				this.editor.DirtySerialization = true;
 			}
 			else if (this.isMoveColumnsSeparator)
 			{
 				this.isMoveColumnsSeparator = false;
 				this.editor.LockObject(null);
+				this.editor.DirtySerialization = true;
 			}
 			else if (this.isSourcesMenu)
 			{
@@ -536,6 +541,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				{
 					this.IsExtended = !this.IsExtended;
 					this.editor.UpdateAfterGeometryChanged(this);
+					this.editor.DirtySerialization = true;
 				}
 
 				if (this.hilitedElement == ActiveElement.BoxCloseButton)
@@ -1191,6 +1197,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			{
 				this.comment.IsVisible = !this.comment.IsVisible;
 			}
+
+			this.editor.DirtySerialization = true;
 		}
 
 
@@ -1327,6 +1335,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 			this.editor.CreateConnections();
 			this.editor.UpdateAfterMoving(box);
+			this.editor.DirtySerialization = true;
 		}
 
 

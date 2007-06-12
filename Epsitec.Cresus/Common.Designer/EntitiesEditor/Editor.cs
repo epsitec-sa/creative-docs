@@ -636,6 +636,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			while (removed);  // recommence tant qu'on a détruit quelque chose
 
 			this.UpdateAfterOpenOrCloseBox();
+			this.DirtySerialization = true;
 		}
 
 		protected void CloseOneBox(ObjectBox box)
@@ -1194,6 +1195,19 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 
 		#region Serialization
+		public bool DirtySerialization
+		{
+			//	Indique si la sérialisation est nécessaire.
+			get
+			{
+				return this.dirtySerialization;
+			}
+			set
+			{
+				this.dirtySerialization = value;
+			}
+		}
+
 		public string Serialize()
 		{
 			//	Sérialise la vue éditée et retourne le résultat dans un string.
@@ -1425,5 +1439,6 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		protected Image mouseCursorGrid;
 		protected VScroller vscroller;
 		protected AbstractObject hilitedObject;
+		protected bool dirtySerialization;
 	}
 }

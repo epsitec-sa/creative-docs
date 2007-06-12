@@ -834,6 +834,7 @@ namespace Epsitec.Common.Designer.Viewers
 		{
 			//	La ligne sélectionnée a changé.
 			this.access.AccessIndex = this.array.SelectedRow;
+			this.mainWindow.Terminate();
 			this.mainWindow.LocatorFix();
 
 			this.UpdateTitle();

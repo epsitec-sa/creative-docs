@@ -1059,6 +1059,12 @@ namespace Epsitec.Common.Designer.Viewers
 		}
 
 
+		public virtual void Terminate()
+		{
+			//	Termine le travail sur une ressource, avant de passer à une autre.
+		}
+
+
 		protected void SetTextField(AbstractTextField textField, int index, string cultureName, ResourceAccess.FieldType fieldType)
 		{
 			if (fieldType == ResourceAccess.FieldType.None)

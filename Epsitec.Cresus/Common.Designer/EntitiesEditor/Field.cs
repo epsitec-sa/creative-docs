@@ -716,33 +716,6 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			dst.commentAttach = this.commentAttach;
 			dst.commentMainColor = this.commentMainColor;
 		}
-
-#if false
-		protected Druid GetDruid(ObjectBox box)
-		{
-			if (box == null)
-			{
-				return Druid.Empty;
-			}
-			else
-			{
-				return box.CultureMap.Id;
-			}
-		}
-
-		protected ObjectBox RestoreSearchBox(Druid druid)
-		{
-			foreach (ObjectBox box in this.editor.Boxes)
-			{
-				if (box.CultureMap.Id == druid)
-				{
-					return box;
-				}
-			}
-
-			return null;
-		}
-#endif
 		#endregion
 
 

@@ -494,6 +494,7 @@ namespace Epsitec.Common.Designer
 		[Command("Open")]
 		void CommandOpen(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
+			this.Terminate();
 			this.dlgOpen.SetResourcePrefix(this.resourceManagerPool.DefaultPrefix);
 			this.dlgOpen.Show();
 
@@ -514,18 +515,21 @@ namespace Epsitec.Common.Designer
 		[Command("Check")]
 		void CommandCheck(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
+			this.Terminate();
 			this.CurrentModule.Check();
 		}
 
 		[Command("Save")]
 		void CommandSave(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
+			this.Terminate();
 			this.CurrentModule.Save();
 		}
 
 		[Command("Close")]
 		void CommandClose(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
+			this.Terminate();
 			if ( !this.AutoSave(dispatcher) )  return;
 			this.CloseModule();
 		}
@@ -534,6 +538,7 @@ namespace Epsitec.Common.Designer
 		[Command("QuitApplication")]
 		void CommandQuitApplication(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
+			this.Terminate();
 			if ( !this.AutoSaveAll(dispatcher) )  return;
 
 			this.dlgGlyphs.Hide();
@@ -627,6 +632,7 @@ namespace Epsitec.Common.Designer
 		[Command("NewCulture")]
 		void CommandNewCulture(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
+			this.Terminate();
 			if ( !this.IsCurrentModule )  return;
 			this.CurrentModule.Modifier.ActiveViewer.DoNewCulture();
 		}
@@ -634,6 +640,7 @@ namespace Epsitec.Common.Designer
 		[Command("DeleteCulture")]
 		void CommandDeleteCulture(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
+			this.Terminate();
 			if ( !this.IsCurrentModule )  return;
 			this.CurrentModule.Modifier.ActiveViewer.DoDeleteCulture();
 		}
@@ -641,6 +648,7 @@ namespace Epsitec.Common.Designer
 		[Command("Delete")]
 		void CommandDelete(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
+			this.Terminate();
 			if ( !this.IsCurrentModule )  return;
 			this.CurrentModule.Modifier.ActiveViewer.DoDelete();
 		}
@@ -648,6 +656,7 @@ namespace Epsitec.Common.Designer
 		[Command("Create")]
 		void CommandCreate(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
+			this.Terminate();
 			if ( !this.IsCurrentModule )  return;
 			this.CurrentModule.Modifier.ActiveViewer.DoDuplicate(false);
 		}
@@ -655,6 +664,7 @@ namespace Epsitec.Common.Designer
 		[Command("Duplicate")]
 		void CommandDuplicate(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
+			this.Terminate();
 			if ( !this.IsCurrentModule )  return;
 			this.CurrentModule.Modifier.ActiveViewer.DoDuplicate(true);
 		}
@@ -662,6 +672,7 @@ namespace Epsitec.Common.Designer
 		[Command("CopyToModule")]
 		void CommandCopyToModule(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
+			this.Terminate();
 			if ( !this.IsCurrentModule )  return;
 			this.CurrentModule.Modifier.ActiveViewer.DoCopyToModule(this.LastModule);
 		}
@@ -772,18 +783,21 @@ namespace Epsitec.Common.Designer
 		[Command("DisplayHorizontal")]
 		void CommandDisplayHorizontal(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
+			this.Terminate();
 			this.DisplayModeState = DisplayMode.Horizontal;
 		}
 
 		[Command("DisplayVertical")]
 		void CommandDisplayVertical(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
+			this.Terminate();
 			this.DisplayModeState = DisplayMode.Vertical;
 		}
 
 		[Command("DisplayFullScreen")]
 		void CommandDisplayFullScreen(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
+			this.Terminate();
 			this.DisplayModeState = DisplayMode.FullScreen;
 		}
 
@@ -1221,6 +1235,7 @@ namespace Epsitec.Common.Designer
 		protected void LocatorGoto(Viewers.Locator locator)
 		{
 			//	Va sur une ressource définie par une localisation.
+			this.Terminate();
 			ModuleInfo mi = this.CurrentModuleInfo;
 
 			if (mi.Module.ModuleInfo.Name != locator.ModuleName)
@@ -1351,9 +1366,19 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
+		public void Terminate()
+		{
+			//	Termine le travail sur une ressource, avant de passer à une autre.
+			if (this.IsCurrentModule && this.CurrentModule.Modifier.ActiveViewer != null)
+			{
+				this.CurrentModule.Modifier.ActiveViewer.Terminate();
+			}
+		}
+
 		private void HandleTypeChanged(object sender)
 		{
 			//	Appelé lorsque le type de vue a changé.
+			this.Terminate();
 			this.CreateViewerLayout();
 			this.DialogSearchAdapt();
 			this.LocatorFix();

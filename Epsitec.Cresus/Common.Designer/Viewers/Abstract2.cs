@@ -628,6 +628,7 @@ namespace Epsitec.Common.Designer.Viewers
 		private void HandleTableSelectionChanged(object sender)
 		{
 			//	La ligne sélectionnée dans le tableau a changé.
+			this.mainWindow.Terminate();
 			this.mainWindow.LocatorFix();
 
 			this.UpdateTitle();

@@ -110,6 +110,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					this.isVisible = value;
 
 					this.editor.UpdateAfterCommentChanged();
+					this.editor.DirtySerialization = true;
 				}
 			}
 		}
@@ -209,18 +210,21 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				this.isDraggingMove = false;
 				this.editor.LockObject(null);
 				this.editor.UpdateAfterCommentChanged();
+				this.editor.DirtySerialization = true;
 			}
 			else if (this.isDraggingWidth)
 			{
 				this.isDraggingWidth = false;
 				this.editor.LockObject(null);
 				this.editor.UpdateAfterCommentChanged();
+				this.editor.DirtySerialization = true;
 			}
 			else if (this.isDraggingAttach)
 			{
 				this.isDraggingAttach = false;
 				this.editor.LockObject(null);
 				this.editor.UpdateAfterCommentChanged();
+				this.editor.DirtySerialization = true;
 			}
 			else
 			{
@@ -370,6 +374,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				this.textLayoutComment.Text = text;
 				this.UpdateHeight();
 				this.editor.UpdateAfterCommentChanged();
+				this.editor.DirtySerialization = true;
 			}
 		}
 

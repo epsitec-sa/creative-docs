@@ -107,20 +107,6 @@ namespace Epsitec.Common.Designer.Viewers
 			this.sliderZoom.ValueChanged += new EventHandler(this.HandleSliderZoomValueChanged);
 			ToolTip.Default.SetToolTip(this.sliderZoom, "Choix du zoom");
 
-#if true
-			Button b1 = new Button(this.toolbar);
-			b1.Text = "Write";
-			b1.Margins = new Margins(10, 0, 0, 0);
-			b1.Dock = DockStyle.Left;
-			b1.Clicked += new MessageEventHandler(this.HandleWriteClicked);
-
-			Button b2 = new Button(this.toolbar);
-			b2.Text = "Read";
-			b2.Margins = new Margins(2, 0, 0, 0);
-			b2.Dock = DockStyle.Left;
-			b2.Clicked += new MessageEventHandler(this.HandleReadClicked);
-#endif
-
 			this.AreaSize = new Size(100, 100);
 
 			this.editor.UpdateGeometry();
@@ -273,43 +259,76 @@ namespace Epsitec.Common.Designer.Viewers
 
 			this.editor.Clear();
 
-			CultureMap item = this.access.CollectionView.CurrentItem as CultureMap;
-			if (item != null)
+			if (!this.Deserialize())
 			{
-				EntitiesEditor.ObjectBox box = new EntitiesEditor.ObjectBox(this.editor);
-				box.IsRoot = true;  // la première boîte est toujours la boîte racine
-				box.SetContent(item);
-				this.editor.AddBox(box);
-			}
+				CultureMap item = this.access.CollectionView.CurrentItem as CultureMap;
+				if (item != null)
+				{
+					EntitiesEditor.ObjectBox box = new EntitiesEditor.ObjectBox(this.editor);
+					box.IsRoot = true;  // la première boîte est toujours la boîte racine
+					box.SetContent(item);
+					this.editor.AddBox(box);
+				}
 
-			this.editor.CreateConnections();
-			this.editor.UpdateAfterGeometryChanged(null);
+				this.editor.CreateConnections();
+				this.editor.UpdateAfterGeometryChanged(null);
+			}
+		}
+
+		public override void Terminate()
+		{
+			//	Termine le travail sur une ressource, avant de passer à une autre.
+			if (this.editor.DirtySerialization)
+			{
+				this.editor.DirtySerialization = false;
+				this.Serialize();
+			}
 		}
 
 		protected void Serialize()
 		{
-			if (this.serial == null)
+			Druid druid = this.druidToSerialize;
+			if (druid.IsValid)
 			{
-				this.serial = new Dictionary<int,string>();
+				string data = this.editor.Serialize();
+				if (Entities.serial.ContainsKey(druid))
+				{
+					Entities.serial[druid] = data;
+				}
+				else
+				{
+					Entities.serial.Add(druid, data);
+				}
 			}
-
-			int rank = this.access.CollectionView.CurrentPosition;
-			string data = this.editor.Serialize();
-			this.serial.Add(rank, data);
 		}
 
-		protected void Deserialize()
+		protected bool Deserialize()
 		{
-			if (this.serial == null)
+			this.druidToSerialize = this.CurrentDruid;
+			Druid druid = this.druidToSerialize;
+			if (Entities.serial.ContainsKey(druid))
 			{
-				this.serial = new Dictionary<int,string>();
+				string data = Entities.serial[druid];
+				this.editor.Deserialize(data);
+				return true;
 			}
 
-			int rank = this.access.CollectionView.CurrentPosition;
-			if (this.serial.ContainsKey(rank))
+			return false;
+		}
+
+		protected Druid CurrentDruid
+		{
+			get
 			{
-				string data = this.serial[rank];
-				this.editor.Deserialize(data);
+				CultureMap item = this.access.CollectionView.CurrentItem as CultureMap;
+				if (item == null)
+				{
+					return Druid.Empty;
+				}
+				else
+				{
+					return item.Id;
+				}
 			}
 		}
 
@@ -425,16 +444,6 @@ namespace Epsitec.Common.Designer.Viewers
 			this.Zoom = this.editor.Zoom;
 		}
 
-		private void HandleWriteClicked(object sender, MessageEventArgs e)
-		{
-			this.Serialize();
-		}
-
-		private void HandleReadClicked(object sender, MessageEventArgs e)
-		{
-			this.Deserialize();
-		}
-
 
 
 		public static readonly double zoomMin = 0.2;
@@ -442,6 +451,7 @@ namespace Epsitec.Common.Designer.Viewers
 		protected static readonly double zoomDefault = 1.0;
 
 		protected static double zoom = Entities.zoomDefault;
+		protected static Dictionary<Druid, string> serial = new Dictionary<Druid,string>();
 
 		protected HSplitter hsplitter;
 		protected EntitiesEditor.Editor editor;
@@ -455,6 +465,6 @@ namespace Epsitec.Common.Designer.Viewers
 		protected IconButton buttonZoomMax;
 		protected StatusField fieldZoom;
 		protected HSlider sliderZoom;
-		protected Dictionary<int, string> serial;
+		protected Druid druidToSerialize;
 	}
 }
