@@ -9,8 +9,6 @@ using System.Collections.Generic;
 
 namespace Epsitec.Common.Support.ResourceAccessors
 {
-	using CultureInfo=System.Globalization.CultureInfo;
-	
 	/// <summary>
 	/// The <c>StructuredTypeResourceAccessor</c> is used to access entity
 	/// resources, stored in the <c>Captions</c> resource bundle and which
@@ -23,6 +21,14 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			this.Collection.CollectionChanged += this.HandleCollectionChanged;
 		}
 
+		public override void Load(ResourceManager manager)
+		{
+			base.Load (manager);
+
+			this.fieldAccessor = new FieldResourceAccessor ();
+			this.fieldAccessor.Load (manager);
+		}
+		
 		public override IDataBroker GetDataBroker(StructuredData container, string fieldId)
 		{
 			if (fieldId == Res.Fields.ResourceStructuredType.Fields.ToString ())
@@ -31,6 +37,19 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			}
 
 			return base.GetDataBroker (container, fieldId);
+		}
+
+		public CultureMap CreateFieldItem(CultureMap item)
+		{
+			return this.fieldAccessor.CreateFieldItem (item.Name);
+		}
+
+		public IResourceAccessor FieldAccessor
+		{
+			get
+			{
+				return this.fieldAccessor;
+			}
 		}
 
 		protected override string Prefix
@@ -234,5 +253,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 		{
 			return UndefinedValue.IsUndefinedValue (value) ? Druid.Empty : (Druid) value;
 		}
+
+		private FieldResourceAccessor fieldAccessor;
 	}
 }

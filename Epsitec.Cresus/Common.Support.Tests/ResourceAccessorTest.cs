@@ -195,6 +195,27 @@ namespace Epsitec.Common.Support
 			Assert.AreEqual ("ResourceStructuredType", map.Name);
 			Assert.AreEqual ("Typ.StructuredType.ResourceStructuredType", Res.Manager.GetBundle (Resources.CaptionsBundleName, ResourceLevel.Default)[Res.Types.ResourceStructuredType.CaptionId].Name);
 			Assert.AreEqual ("Fld.ResourceStructuredType.Fields", Res.Manager.GetBundle (Resources.CaptionsBundleName, ResourceLevel.Default)[Res.Fields.ResourceStructuredType.Fields].Name);
+
+			CultureMap fieldItem;
+
+			fieldItem = accessor.FieldAccessor.Collection[Res.Fields.ResourceStructuredType.Fields];
+
+			Assert.AreEqual ("Fields", fieldItem.Name);
+			Assert.AreEqual ("ResourceStructuredType.Fields", fieldItem.ToString ());
+			
+			fieldItem = accessor.CreateFieldItem (map);
+
+			fieldItem.Name = "X";
+
+			accessor.FieldAccessor.Collection.Add (fieldItem);
+			accessor.FieldAccessor.PersistChanges ();
+			
+			Assert.AreEqual ("Fld.ResourceStructuredType.X", Res.Manager.GetBundle (Resources.CaptionsBundleName, ResourceLevel.Default)[fieldItem.Id].Name);
+
+			accessor.FieldAccessor.Collection.Remove (fieldItem);
+			accessor.FieldAccessor.PersistChanges ();
+			
+			Assert.IsTrue (Res.Manager.GetBundle (Resources.CaptionsBundleName, ResourceLevel.Default)[fieldItem.Id].IsEmpty);
 		}
 
 		[Test]

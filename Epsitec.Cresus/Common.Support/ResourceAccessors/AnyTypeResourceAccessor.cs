@@ -9,8 +9,6 @@ using System.Collections.Generic;
 
 namespace Epsitec.Common.Support.ResourceAccessors
 {
-	using CultureInfo=System.Globalization.CultureInfo;
-	
 	/// <summary>
 	/// The <c>AnyTypeResourceAccessor</c> is used to access standard type
 	/// resources, stored in the <c>Captions</c> resource bundle and which

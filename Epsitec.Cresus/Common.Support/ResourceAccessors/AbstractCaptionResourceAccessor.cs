@@ -30,6 +30,11 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			this.LoadFromBundle (bundle, Resources.DefaultTwoLetterISOLanguageName);
 		}
 
+		public override CultureMap CreateItem()
+		{
+			return this.CreateItem (null, this.CreateId ());
+		}
+
 		public override Types.StructuredData LoadCultureData(CultureMap item, string twoLetterISOLanguageName)
 		{
 			CultureInfo          culture = Resources.FindCultureInfo (twoLetterISOLanguageName);
@@ -137,7 +142,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			Types.StructuredData data = item.GetCultureData (Resources.DefaultTwoLetterISOLanguageName);
 
 			Caption caption = this.GetCaptionFromData (bundle, data, item.Name, Resources.DefaultTwoLetterISOLanguageName);
-			string  name    = this.GetFieldNameFromName (data, item.Name);
+			string  name    = this.GetFieldNameFromName (item, data);
 			string  about   = data.GetValue (Res.Fields.ResourceBase.Comment) as string;
 			object  modId   = data.GetValue (Res.Fields.ResourceBase.ModificationId);
 
@@ -195,13 +200,13 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			}
 		}
 
-		protected abstract string GetFieldNameFromName(Types.StructuredData data, string name);
+		protected abstract string GetFieldNameFromName(CultureMap item, Types.StructuredData data);
 
 		protected abstract Caption GetCaptionFromData(ResourceBundle sourceBundle, Types.StructuredData data, string name, string twoLetterISOLanguageName);
 
 		protected abstract void FillDataFromCaption(CultureMap item, Types.StructuredData data, Caption caption);
 
-		protected abstract string GetNameFromFieldName(string fieldName);
+		protected abstract string GetNameFromFieldName(CultureMap item, string fieldName);
 
 		protected abstract bool FilterField(ResourceBundle.Field field);
 		
@@ -231,14 +236,14 @@ namespace Epsitec.Common.Support.ResourceAccessors
 
 			if (item == null)
 			{
-				item   = new CultureMap (this, id);
+				item   = this.CreateItem (field, id);
 				insert = true;
 			}
 
 			Types.StructuredData data = new Types.StructuredData (this.GetStructuredType ());
 
 			Caption caption = new Caption (id);
-			string  name    = string.IsNullOrEmpty (field.Name) ? null : this.GetNameFromFieldName (field.Name);
+			string  name    = string.IsNullOrEmpty (field.Name) ? null : this.GetNameFromFieldName (item, field.Name);
 
 			caption.DeserializeFromString (field.AsString);
 
@@ -255,6 +260,11 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			}
 
 			return data;
+		}
+
+		protected virtual CultureMap CreateItem(ResourceBundle.Field field, Druid id)
+		{
+			return new CultureMap (this, id);
 		}
 	}
 }

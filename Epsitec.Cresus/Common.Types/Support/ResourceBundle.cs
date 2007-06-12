@@ -1383,6 +1383,11 @@ namespace Epsitec.Common.Support
 				this.type   = ResourceFieldType.Bundle;
 			}
 
+			public Field(string name)
+			{
+				this.name = name;
+			}
+
 			
 			public string					Name
 			{

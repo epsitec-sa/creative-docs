@@ -34,15 +34,16 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			return Res.Types.ResourceCaption;
 		}
 
-		protected override string GetNameFromFieldName(string fieldName)
+		protected override string GetNameFromFieldName(CultureMap item, string fieldName)
 		{
 			System.Diagnostics.Debug.Assert (fieldName.StartsWith (this.Prefix));
+			
 			return fieldName.Substring (this.Prefix.Length);
 		}
 
-		protected override string GetFieldNameFromName(Types.StructuredData data, string name)
+		protected override string GetFieldNameFromName(CultureMap item, Types.StructuredData data)
 		{
-			return this.Prefix + name;
+			return this.Prefix + item.Name;
 		}
 
 		protected override Caption GetCaptionFromData(ResourceBundle sourceBundle, Types.StructuredData data, string name, string twoLetterISOLanguageName)
