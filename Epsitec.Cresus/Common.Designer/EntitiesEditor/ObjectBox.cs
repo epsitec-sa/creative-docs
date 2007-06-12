@@ -2022,7 +2022,11 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			StructuredData data = this.cultureMap.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
 			IList<StructuredData> dataFields = data.GetValue(Support.Res.Fields.ResourceStructuredType.Fields) as IList<StructuredData>;
 
-			List<Field> newFields = new List<Field>();
+			//	La liste des champs (this.fields) désérialisée n'est pas utilisable telle quelle.
+			//	En effet, des champs peuvent avoir été ajoutés, supprimés ou permutés. Il faut donc
+			//	générer une liste propre, comme SetContent, puis repiquer les informations utiles
+			//	dans la liste désérialisée.
+			List<Field> newFields = new List<Field>();  // nouvelle liste propre
 			if (dataFields != null)
 			{
 				for (int i=0; i<dataFields.Count; i++)
@@ -2031,24 +2035,22 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					this.UpdateField(dataFields[i], field);
 
 					Druid fieldCaptionId = (Druid) dataFields[i].GetValue(Support.Res.Fields.Field.CaptionId);
-					Field rField = this.AdjustAfterReadSearchField(fieldCaptionId);
+					Field rField = this.AdjustAfterReadSearchField(fieldCaptionId);  // cherche le champ correspondant désérialisé
 					if (rField != null)
 					{
-						rField.DeserializeCopyTo(field);
+						rField.DeserializeCopyTo(field);  // repique les informations utiles
+
+						if (rField.IsExplored)  // champ avec connection explorée ?
+						{
+							field.IsExplored = true;  // ObjectConnection sera créé par Editor.CreateConnections
+							field.DstBox = this.AdjustAfterReadSearchBox(rField.Destination);
+						}
 					}
 
-					field.SrcBox = this;
-
-					if (rField.IsExplored)
-					{
-						field.IsExplored = true;
-						field.DstBox = this.AdjustAfterReadSearchBox(rField.Destination);
-					}
-
-					newFields.Add(field);
+					newFields.Add(field);  // ajoute le champ dans la nouvelle liste propre
 				}
 			}
-			this.fields = newFields;
+			this.fields = newFields;  // la nouvelle liste propre remplace la liste désérialisée
 
 			this.UpdateFields();
 			this.UpdateSources();

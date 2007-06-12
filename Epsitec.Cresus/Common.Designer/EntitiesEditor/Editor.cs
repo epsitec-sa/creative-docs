@@ -1236,9 +1236,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				this.boxes.Add(box);
 			}
 
-			for (int i=0; i<this.boxes.Count; i++)
+			foreach (ObjectBox box in this.boxes)
 			{
-				ObjectBox box = this.boxes[i];
 				box.AdjustAfterRead();
 			}
 
