@@ -222,6 +222,26 @@ namespace Epsitec.Common.Support
 					System.Console.Out.WriteLine ("    {0}: {1}", id, data.GetValue (id));
 				}
 			}
+
+			CultureMap newItem = accessor.CreateItem ();
+			Types.StructuredData newData = newItem.GetCultureData (Resources.DefaultTwoLetterISOLanguageName);
+			newItem.Name = "AnyTypeAccessorInteger1";
+
+			newData.SetValue (Res.Fields.ResourceBaseType.TypeCode, Types.TypeCode.Integer);
+			newData.SetValue (Res.Fields.ResourceNumericType.SmallStep, 1M);
+			newData.SetValue (Res.Fields.ResourceNumericType.LargeStep, 10M);
+			newData.SetValue (Res.Fields.ResourceNumericType.Range, new Types.DecimalRange (0, 999, 1));
+
+			accessor.Collection.Add (newItem);
+			accessor.PersistChanges ();
+
+			Types.Caption caption = accessor.ResourceManager.GetCaption (newItem.Id, ResourceLevel.Default);
+			Types.IntegerType intType = Types.TypeRosetta.CreateTypeObject (caption, false) as Types.IntegerType;
+
+			Assert.IsNotNull (intType);
+			Assert.AreEqual (1M, intType.SmallStep);
+			Assert.AreEqual (10M, intType.LargeStep);
+			Assert.AreEqual (999M, intType.Range.Maximum);
 		}
 
 		[Test]
