@@ -415,18 +415,18 @@ namespace Epsitec.Common.Designer.Viewers
 				return;
 			}
 
-			if (srcSubView == this.SubView)
+			if (srcSubView == this.SubView)  // drag de la sous-vue courante ?
 			{
 				string data = this.editor.Serialize();
 				this.SetSerializeData(this.CurrentDruid, dstSubView, data);
 			}
-			else if (dstSubView == this.SubView)
+			else if (dstSubView == this.SubView)  // drag dans la sous-vue courante ?
 			{
 				string data = this.GetSerializeData(this.CurrentDruid, srcSubView);
 				this.SetSerializeData(this.CurrentDruid, dstSubView, data);
 				this.UpdateEdit();
 			}
-			else
+			else  // drag d'une sous-vue cachée vers une autre cachée ?
 			{
 				string data = this.GetSerializeData(this.CurrentDruid, srcSubView);
 				this.SetSerializeData(this.CurrentDruid, dstSubView, data);
