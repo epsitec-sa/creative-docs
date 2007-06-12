@@ -94,8 +94,16 @@ namespace Epsitec.Common.Support.ResourceAccessors
 					break;
 
 				case TypeCode.Collection:
+					break;
+				
 				case TypeCode.Date:
+					this.CreateType (new DateType (caption), data);
+					break;
+				
 				case TypeCode.DateTime:
+					this.CreateType (new DateTimeType (caption), data);
+					break;
+				
 				case TypeCode.Decimal:
 					this.CreateType (new DecimalType (caption), data);
 					break;
@@ -105,6 +113,8 @@ namespace Epsitec.Common.Support.ResourceAccessors
 					break;
 
 				case TypeCode.Enum:
+					break;
+				
 				case TypeCode.Integer:
 					this.CreateType (new IntegerType (caption), data);
 					break;
@@ -114,8 +124,13 @@ namespace Epsitec.Common.Support.ResourceAccessors
 					break;
 
 				case TypeCode.Other:
+					break;
+				
 				case TypeCode.String:
+					break;
+				
 				case TypeCode.Time:
+					this.CreateType (new TimeType (caption), data);
 					break;
 			}
 		}
@@ -151,6 +166,92 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			if (mimeType != null)
 			{
 				type.DefineMimeType (mimeType);
+			}
+		}
+
+		private void CreateType(AbstractDateTimeType type, StructuredData data)
+		{
+			this.SetupType (type, data);
+
+			object value;
+
+			value = data.GetValue (Res.Fields.ResourceDateTimeType.Resolution);
+
+			if (!UndefinedValue.IsUndefinedValue (value))
+			{
+				type.DefineResolution ((TimeResolution) value);
+			}
+
+			value = data.GetValue (Res.Fields.ResourceDateTimeType.MinimumDate);
+
+			if (!UndefinedValue.IsUndefinedValue (value))
+			{
+				Date date = (Date) value;
+
+				if (!date.IsNull)
+				{
+					type.DefineMinimumDate (date);
+				}
+			}
+
+			value = data.GetValue (Res.Fields.ResourceDateTimeType.MaximumDate);
+
+			if (!UndefinedValue.IsUndefinedValue (value))
+			{
+				Date date = (Date) value;
+
+				if (!date.IsNull)
+				{
+					type.DefineMaximumDate (date);
+				}
+			}
+
+			value = data.GetValue (Res.Fields.ResourceDateTimeType.MinimumTime);
+
+			if (!UndefinedValue.IsUndefinedValue (value))
+			{
+				Time time = (Time) value;
+
+				if (!time.IsNull)
+				{
+					type.DefineMinimumTime (time);
+				}
+			}
+
+			value = data.GetValue (Res.Fields.ResourceDateTimeType.MaximumTime);
+
+			if (!UndefinedValue.IsUndefinedValue (value))
+			{
+				Time time = (Time) value;
+
+				if (!time.IsNull)
+				{
+					type.DefineMaximumTime (time);
+				}
+			}
+
+			value = data.GetValue (Res.Fields.ResourceDateTimeType.TimeStep);
+
+			if (!UndefinedValue.IsUndefinedValue (value))
+			{
+				System.TimeSpan span = (System.TimeSpan) value;
+
+				if (span != System.TimeSpan.Zero)
+				{
+					type.DefineTimeStep (span);
+				}
+			}
+
+			value = data.GetValue (Res.Fields.ResourceDateTimeType.DateStep);
+
+			if (!UndefinedValue.IsUndefinedValue (value))
+			{
+				DateSpan span = (DateSpan) value;
+
+				if (span != DateSpan.Zero)
+				{
+					type.DefineDateStep (span);
+				}
 			}
 		}
 

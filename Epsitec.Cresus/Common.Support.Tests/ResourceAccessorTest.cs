@@ -242,6 +242,31 @@ namespace Epsitec.Common.Support
 			Assert.AreEqual (1M, intType.SmallStep);
 			Assert.AreEqual (10M, intType.LargeStep);
 			Assert.AreEqual (999M, intType.Range.Maximum);
+			
+			newItem = accessor.CreateItem ();
+			newData = newItem.GetCultureData (Resources.DefaultTwoLetterISOLanguageName);
+			newItem.Name = "AnyTypeAccessorDateTime1";
+
+			newData.SetValue (Res.Fields.ResourceBaseType.TypeCode, Types.TypeCode.DateTime);
+			newData.SetValue (Res.Fields.ResourceDateTimeType.Resolution, Types.TimeResolution.Minutes);
+			newData.SetValue (Res.Fields.ResourceDateTimeType.MinimumDate, new Types.Date (2000, 06, 10));
+			newData.SetValue (Res.Fields.ResourceDateTimeType.TimeStep, new System.TimeSpan (0, 15, 0));
+			
+			accessor.Collection.Add (newItem);
+			accessor.PersistChanges ();
+
+			caption = accessor.ResourceManager.GetCaption (newItem.Id, ResourceLevel.Default);
+			Types.DateTimeType dtType = Types.TypeRosetta.CreateTypeObject (caption, false) as Types.DateTimeType;
+
+			Assert.IsNotNull (dtType);
+			Assert.AreEqual (Types.TimeResolution.Minutes, dtType.Resolution);
+			Assert.AreEqual (2000, dtType.MinimumDate.Year);
+			Assert.AreEqual (6, dtType.MinimumDate.Month);
+			Assert.AreEqual (10, dtType.MinimumDate.Day);
+			Assert.IsTrue (dtType.MaximumDate.IsNull);
+			Assert.IsTrue (dtType.MinimumTime.IsNull);
+			Assert.IsTrue (dtType.MaximumTime.IsNull);
+			Assert.AreEqual (15, dtType.TimeStep.TotalMinutes);
 		}
 
 		[Test]
