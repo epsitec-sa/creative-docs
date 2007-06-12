@@ -164,7 +164,6 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					{
 						//	Ouvre la connection sur une nouvelle boîte.
 						box = new ObjectBox(this.editor);
-						box.Title = item.Name;
 						box.BackgroundMainColor = this.boxColor;
 						box.SetContent(item);
 

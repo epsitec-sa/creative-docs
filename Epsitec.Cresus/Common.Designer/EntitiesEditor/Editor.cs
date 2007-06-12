@@ -1239,9 +1239,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			for (int i=0; i<this.boxes.Count; i++)
 			{
 				ObjectBox box = this.boxes[i];
-
-				box.IsRoot = (i==0);  // la première boîte est toujours la boîte racine
-				box.UpdateContentAfterRead();
+				box.AdjustAfterRead();
 			}
 
 			this.UpdateAfterAddOrRemoveConnection(null);

@@ -277,8 +277,7 @@ namespace Epsitec.Common.Designer.Viewers
 			if (item != null)
 			{
 				EntitiesEditor.ObjectBox box = new EntitiesEditor.ObjectBox(this.editor);
-				box.IsRoot = true;
-				box.Title = item.Name;
+				box.IsRoot = true;  // la première boîte est toujours la boîte racine
 				box.SetContent(item);
 				this.editor.AddBox(box);
 			}

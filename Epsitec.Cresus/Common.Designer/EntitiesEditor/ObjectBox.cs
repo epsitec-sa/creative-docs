@@ -68,6 +68,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			//	Initialise le contenu de la boîte.
 			this.cultureMap = cultureMap;
 
+			this.Title = this.cultureMap.Name;
+
 			StructuredData data = this.cultureMap.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
 			IList<StructuredData> dataFields = data.GetValue(Support.Res.Fields.ResourceStructuredType.Fields) as IList<StructuredData>;
 
@@ -84,72 +86,6 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 			this.UpdateFields();
 			this.UpdateSources();
-		}
-
-		public void UpdateContentAfterRead()
-		{
-			//	Initialise le contenu de la boîte après sa désérialisation.
-			this.Title = this.cultureMap.Name;
-
-			StructuredData data = this.cultureMap.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
-			IList<StructuredData> dataFields = data.GetValue(Support.Res.Fields.ResourceStructuredType.Fields) as IList<StructuredData>;
-
-			List<Field> newFields = new List<Field>();
-			if (dataFields != null)
-			{
-				for (int i=0; i<dataFields.Count; i++)
-				{
-					Field field = new Field(this.editor);
-					this.UpdateField(dataFields[i], field);
-
-					Druid fieldCaptionId = (Druid) dataFields[i].GetValue(Support.Res.Fields.Field.CaptionId);
-					Field rField = this.UpdateContentAfterReadSearchField(fieldCaptionId);
-					if (rField != null)
-					{
-						rField.DeserializeCopyTo(field);
-					}
-
-					field.SrcBox = this;
-
-					if (rField.IsExplored)
-					{
-						field.IsExplored = true;
-						field.DstBox = this.UpdateContentAfterReadSearchBox(rField.Destination);
-					}
-
-					newFields.Add(field);
-				}
-			}
-			this.fields = newFields;
-
-			this.UpdateFields();
-			this.UpdateSources();
-		}
-
-		protected Field UpdateContentAfterReadSearchField(Druid druid)
-		{
-			foreach (Field field in this.fields)
-			{
-				if (field.CaptionId == druid)
-				{
-					return field;
-				}
-			}
-
-			return null;
-		}
-
-		protected ObjectBox UpdateContentAfterReadSearchBox(Druid druid)
-		{
-			foreach (ObjectBox box in this.editor.Boxes)
-			{
-				if (box.CultureMap.Id == druid)
-				{
-					return box;
-				}
-			}
-
-			return null;
 		}
 
 		public ObjectComment Comment
@@ -1359,7 +1295,6 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			{
 				//	Ouvre la connection sur une nouvelle boîte.
 				box = new ObjectBox(this.editor);
-				box.Title = cultureMap.Name;
 				box.BackgroundMainColor = this.boxColor;
 				box.SetContent(cultureMap);
 
@@ -2076,6 +2011,73 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					break;
 				}
 			}
+		}
+
+		public void AdjustAfterRead()
+		{
+			//	Ajuste le contenu de la boîte après sa désérialisation.
+			this.Title = this.cultureMap.Name;
+			this.isRoot = (this == this.editor.Boxes[0]);  // la première boîte est toujours la boîte racine
+
+			StructuredData data = this.cultureMap.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
+			IList<StructuredData> dataFields = data.GetValue(Support.Res.Fields.ResourceStructuredType.Fields) as IList<StructuredData>;
+
+			List<Field> newFields = new List<Field>();
+			if (dataFields != null)
+			{
+				for (int i=0; i<dataFields.Count; i++)
+				{
+					Field field = new Field(this.editor);
+					this.UpdateField(dataFields[i], field);
+
+					Druid fieldCaptionId = (Druid) dataFields[i].GetValue(Support.Res.Fields.Field.CaptionId);
+					Field rField = this.AdjustAfterReadSearchField(fieldCaptionId);
+					if (rField != null)
+					{
+						rField.DeserializeCopyTo(field);
+					}
+
+					field.SrcBox = this;
+
+					if (rField.IsExplored)
+					{
+						field.IsExplored = true;
+						field.DstBox = this.AdjustAfterReadSearchBox(rField.Destination);
+					}
+
+					newFields.Add(field);
+				}
+			}
+			this.fields = newFields;
+
+			this.UpdateFields();
+			this.UpdateSources();
+		}
+
+		protected Field AdjustAfterReadSearchField(Druid druid)
+		{
+			foreach (Field field in this.fields)
+			{
+				if (field.CaptionId == druid)
+				{
+					return field;
+				}
+			}
+
+			return null;
+		}
+
+		protected ObjectBox AdjustAfterReadSearchBox(Druid druid)
+		{
+			foreach (ObjectBox box in this.editor.Boxes)
+			{
+				if (box.CultureMap.Id == druid)
+				{
+					return box;
+				}
+			}
+
+			return null;
 		}
 		#endregion
 
