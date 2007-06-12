@@ -143,7 +143,6 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			data.SetValue (Res.Fields.ResourceStructuredType.Class, type == null ? StructuredTypeClass.None : type.Class);
 			
 			fields.CollectionChanged += new Listener (this, item).HandleCollectionChanged;
-
 		}
 
 		private void HandleCollectionChanged(object sender, CollectionChangedEventArgs e)
@@ -156,12 +155,14 @@ namespace Epsitec.Common.Support.ResourceAccessors
 						this.HandleCultureMapAdded (item);
 					}
 					break;
+				
 				case CollectionChangedAction.Remove:
 					foreach (CultureMap item in e.OldItems)
 					{
 						this.HandleCultureMapRemoved (item);
 					}
 					break;
+				
 				case CollectionChangedAction.Replace:
 					foreach (CultureMap item in e.OldItems)
 					{

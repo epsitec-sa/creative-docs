@@ -486,7 +486,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 					break;
 
 				case TypeCode.Enum:
-					this.FillDataFromEnumType (data, type as EnumType);
+					this.FillDataFromEnumType (item, data, type as EnumType);
 					break;
 
 				case TypeCode.Other:
@@ -543,9 +543,26 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			data.SetValue (Res.Fields.ResourceDateTimeType.TimeStep, type.TimeStep);
 		}
 
-		private void FillDataFromEnumType(StructuredData data, EnumType type)
+		private void FillDataFromEnumType(CultureMap item, StructuredData data, EnumType type)
 		{
-			//	TODO: ...
+			data.DefineStructuredType (Res.Types.ResourceEnumType);
+			
+			ObservableList<StructuredData> values = new ObservableList<StructuredData> ();
+
+			foreach (EnumValue value in type.Values)
+			{
+				StructuredData x = new StructuredData (Res.Types.EnumValue);
+
+				x.SetValue (Res.Fields.EnumValue.CaptionId, value.CaptionId);
+				values.Add (x);
+
+				item.NotifyDataAdded (x);
+			}
+
+			data.SetValue (Res.Fields.ResourceEnumType.Values, values);
+			data.LockValue (Res.Fields.ResourceEnumType.Values);
+
+			values.CollectionChanged += new Listener (this, item).HandleCollectionChanged;
 		}
 
 		private void FillDataFromOtherType(StructuredData data, OtherType type)
@@ -574,12 +591,14 @@ namespace Epsitec.Common.Support.ResourceAccessors
 						this.HandleCultureMapAdded (item);
 					}
 					break;
+				
 				case CollectionChangedAction.Remove:
 					foreach (CultureMap item in e.OldItems)
 					{
 						this.HandleCultureMapRemoved (item);
 					}
 					break;
+				
 				case CollectionChangedAction.Replace:
 					foreach (CultureMap item in e.OldItems)
 					{
