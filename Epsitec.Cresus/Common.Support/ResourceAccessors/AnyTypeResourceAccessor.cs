@@ -15,6 +15,8 @@ namespace Epsitec.Common.Support.ResourceAccessors
 	/// The <c>AnyTypeResourceAccessor</c> is used to access standard type
 	/// resources, stored in the <c>Captions</c> resource bundle and which
 	/// have a field name prefixed with <c>"Typ."</c>.
+	/// For structured types, use <see cref="StructuredTypeResourceAccessor"/>
+	/// instead.
 	/// </summary>
 	public class AnyTypeResourceAccessor : CaptionResourceAccessor
 	{
@@ -78,6 +80,57 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			}
 			
 			return caption;
+		}
+
+		protected override void FillDataFromCaption(CultureMap item, Types.StructuredData data, Caption caption)
+		{
+			base.FillDataFromCaption (item, data, caption);
+
+			AbstractType type = TypeRosetta.CreateTypeObject (caption, false);
+			TypeCode code = type == null ? TypeCode.Invalid : type.TypeCode;
+
+			switch (code)
+			{
+				case TypeCode.Boolean:
+				case TypeCode.Decimal:
+				case TypeCode.Double:
+				case TypeCode.Integer:
+				case TypeCode.LongInteger:
+					this.FillDataFromNumericType (data, type as AbstractNumericType);
+					break;
+
+				case TypeCode.Binary:
+					this.FillDataFromBinaryType (data, type as BinaryType);
+					break;
+
+				case TypeCode.Collection:
+					this.FillDataFromCollectionType (data, type as CollectionType);
+					break;
+
+				case TypeCode.Date:
+				case TypeCode.DateTime:
+				case TypeCode.Time:
+					this.FillDataFromDateTimeType (data, type as AbstractDateTimeType);
+					break;
+
+				case TypeCode.Enum:
+					this.FillDataFromEnumType (item, data, type as EnumType);
+					break;
+
+				case TypeCode.Other:
+					this.FillDataFromOtherType (data, type as OtherType);
+					break;
+
+				case TypeCode.String:
+					this.FillDataFromStringType (data, type as StringType);
+					break;
+
+				default:
+					code = TypeCode.Invalid;
+					break;
+			}
+
+			data.SetValue (Res.Fields.ResourceBaseType.TypeCode, code);
 		}
 
 		private void FillCaptionWithData(Caption caption, StructuredData data)
@@ -334,72 +387,6 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			}
 		}
 
-		private class DummyNamedType : INamedType
-		{
-			public DummyNamedType(Druid id)
-			{
-				this.id = id;
-			}
-
-			#region INamedType Members
-
-			public string DefaultController
-			{
-				get
-				{
-					return null;
-				}
-			}
-
-			public string DefaultControllerParameter
-			{
-				get
-				{
-					return null;
-				}
-			}
-
-			#endregion
-
-			#region ICaption Members
-
-			public Druid CaptionId
-			{
-				get
-				{
-					return this.id;
-				}
-			}
-
-			#endregion
-
-			#region IName Members
-
-			public string Name
-			{
-				get
-				{
-					return null;
-				}
-			}
-
-			#endregion
-
-			#region ISystemType Members
-
-			public System.Type SystemType
-			{
-				get
-				{
-					return null;
-				}
-			}
-
-			#endregion
-
-			Druid id;
-		}
-
 		private void CreateType(OtherType type, StructuredData data)
 		{
 			this.SetupType (type, data);
@@ -450,62 +437,6 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			}
 		}
 
-
-		protected static TypeCode ToTypeCode(object value)
-		{
-			return UndefinedValue.IsUndefinedValue (value) ? TypeCode.Invalid : (TypeCode) value;
-		}
-
-		protected override void FillDataFromCaption(CultureMap item, Types.StructuredData data, Caption caption)
-		{
-			base.FillDataFromCaption (item, data, caption);
-
-			AbstractType type = TypeRosetta.CreateTypeObject (caption, false);
-			TypeCode     code = type == null ? TypeCode.Invalid : type.TypeCode;
-
-			switch (code)
-			{
-				case TypeCode.Boolean:
-				case TypeCode.Decimal:
-				case TypeCode.Double:
-				case TypeCode.Integer:
-				case TypeCode.LongInteger:
-					this.FillDataFromNumericType (data, type as AbstractNumericType);
-					break;
-
-				case TypeCode.Binary:
-					this.FillDataFromBinaryType (data, type as BinaryType);
-					break;
-
-				case TypeCode.Collection:
-					this.FillDataFromCollectionType (data, type as CollectionType);
-					break;
-
-				case TypeCode.Date:
-				case TypeCode.DateTime:
-				case TypeCode.Time:
-					this.FillDataFromDateTimeType (data, type as AbstractDateTimeType);
-					break;
-
-				case TypeCode.Enum:
-					this.FillDataFromEnumType (item, data, type as EnumType);
-					break;
-
-				case TypeCode.Other:
-					this.FillDataFromOtherType (data, type as OtherType);
-					break;
-
-				case TypeCode.String:
-					this.FillDataFromStringType (data, type as StringType);
-					break;
-
-				default:
-					code = TypeCode.Invalid;
-					break;
-			}
-
-			data.SetValue (Res.Fields.ResourceBaseType.TypeCode, code);
-		}
 
 		private void FillDataFromNumericType(StructuredData data, AbstractNumericType type)
 		{
@@ -646,7 +577,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			}
 		}
 
-		void HandleItemPropertyChanged(object sender, DependencyPropertyChangedEventArgs e)
+		private void HandleItemPropertyChanged(object sender, DependencyPropertyChangedEventArgs e)
 		{
 			if (e.PropertyName == "Name")
 			{
@@ -673,6 +604,83 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			}
 		}
 
+		#region DummyNamedType Class
+
+		/// <summary>
+		/// The <c>DummyNamedType</c> class is needed to define the <c>ItemType</c>
+		/// of a collection type description; without it, we really would have to
+		/// get access to the type described by the DRUID. I prefer not to.
+		/// </summary>
+		private class DummyNamedType : INamedType
+		{
+			public DummyNamedType(Druid id)
+			{
+				this.id = id;
+			}
+
+			#region INamedType Members
+
+			public string DefaultController
+			{
+				get
+				{
+					return null;
+				}
+			}
+
+			public string DefaultControllerParameter
+			{
+				get
+				{
+					return null;
+				}
+			}
+
+			#endregion
+
+			#region ICaption Members
+
+			public Druid CaptionId
+			{
+				get
+				{
+					return this.id;
+				}
+			}
+
+			#endregion
+
+			#region IName Members
+
+			public string Name
+			{
+				get
+				{
+					return null;
+				}
+			}
+
+			#endregion
+
+			#region ISystemType Members
+
+			public System.Type SystemType
+			{
+				get
+				{
+					return null;
+				}
+			}
+
+			#endregion
+
+			Druid id;
+		}
+
+		#endregion
+
+		#region EnumValueBroker Class
+
 		private class EnumValueBroker : IDataBroker
 		{
 			#region IDataBroker Members
@@ -687,6 +695,13 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			}
 
 			#endregion
+		}
+
+		#endregion
+
+		private static TypeCode ToTypeCode(object value)
+		{
+			return UndefinedValue.IsUndefinedValue (value) ? TypeCode.Invalid : (TypeCode) value;
 		}
 	}
 }

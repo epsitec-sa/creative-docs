@@ -63,6 +63,14 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			return caption;
 		}
 
+		protected override void FillDataFromCaption(CultureMap item, Types.StructuredData data, Caption caption)
+		{
+			base.FillDataFromCaption (item, data, caption);
+
+			StructuredType type = AbstractType.GetComplexType (caption) as StructuredType;
+			this.FillDataFromType (item, data, type);
+		}
+
 		private StructuredType GetTypeFromData(StructuredData data, Caption caption)
 		{
 			if (UndefinedValue.IsUndefinedValue (data.GetValue (Res.Fields.ResourceStructuredType.Class)))
@@ -71,8 +79,8 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			}
 
 			StructuredTypeClass typeClass = (StructuredTypeClass) data.GetValue (Res.Fields.ResourceStructuredType.Class);
-			Druid               baseType  = StructuredTypeResourceAccessor.ToDruid (data.GetValue (Res.Fields.ResourceStructuredType.BaseType));
-			
+			Druid baseType  = StructuredTypeResourceAccessor.ToDruid (data.GetValue (Res.Fields.ResourceStructuredType.BaseType));
+
 			StructuredType type = new StructuredType (typeClass, baseType);
 			type.DefineCaption (caption);
 
@@ -97,21 +105,6 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			}
 
 			return type;
-		}
-
-		private static Druid ToDruid(object value)
-		{
-			return UndefinedValue.IsUndefinedValue (value) ? Druid.Empty : (Druid) value;
-		}
-
-		protected override void FillDataFromCaption(CultureMap item, Types.StructuredData data, Caption caption)
-		{
-			base.FillDataFromCaption (item, data, caption);
-
-			//	TODO: find proper type instance, not the cached one !
-
-			StructuredType type = AbstractType.GetComplexType (caption) as StructuredType;
-			this.FillDataFromType (item, data, type);
 		}
 
 		private void FillDataFromType(CultureMap item, StructuredData data, StructuredType type)
@@ -186,7 +179,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			item.PropertyChanged -= this.HandleItemPropertyChanged;
 		}
 
-		void HandleItemPropertyChanged(object sender, DependencyPropertyChangedEventArgs e)
+		private void HandleItemPropertyChanged(object sender, DependencyPropertyChangedEventArgs e)
 		{
 			if (e.PropertyName == "Name")
 			{
@@ -213,7 +206,8 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			}
 		}
 
-		
+		#region FieldBroker Class
+
 		private class FieldBroker : IDataBroker
 		{
 			#region IDataBroker Members
@@ -232,6 +226,13 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			}
 
 			#endregion
+		}
+
+		#endregion
+
+		private static Druid ToDruid(object value)
+		{
+			return UndefinedValue.IsUndefinedValue (value) ? Druid.Empty : (Druid) value;
 		}
 	}
 }
