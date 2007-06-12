@@ -25,6 +25,11 @@ namespace Epsitec.Common.Support.ResourceAccessors
 
 		public override IDataBroker GetDataBroker(StructuredData container, string fieldId)
 		{
+			if (fieldId == Res.Fields.ResourceEnumType.Values.ToString ())
+			{
+				return new EnumValueBroker ();
+			}
+			
 			return base.GetDataBroker (container, fieldId);
 		}
 
@@ -630,6 +635,22 @@ namespace Epsitec.Common.Support.ResourceAccessors
 					field.SetName (newPrefix + field.Name.Substring (oldPrefix.Length));
 				}
 			}
+		}
+
+		private class EnumValueBroker : IDataBroker
+		{
+			#region IDataBroker Members
+
+			public StructuredData CreateData(CultureMap container)
+			{
+				StructuredData data = new StructuredData (Res.Types.EnumValue);
+
+				data.SetValue (Res.Fields.EnumValue.CaptionId, Druid.Empty);
+
+				return data;
+			}
+
+			#endregion
 		}
 	}
 }
