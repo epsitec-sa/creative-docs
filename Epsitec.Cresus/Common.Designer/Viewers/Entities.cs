@@ -56,6 +56,45 @@ namespace Epsitec.Common.Designer.Viewers
 			this.hscroller.ValueChanged += new EventHandler(this.HandleScrollerValueChanged);
 
 			//	Peuple la toolbar.
+			this.buttonSubViewA = new Button(this.toolbar);
+			this.buttonSubViewA.Text = "A";
+			this.buttonSubViewA.PreferredWidth = this.buttonSubViewA.PreferredHeight;
+			this.buttonSubViewA.ButtonStyle = ButtonStyle.ActivableIcon;
+			this.buttonSubViewA.AutoFocus = false;
+			this.buttonSubViewA.Dock = DockStyle.Left;
+			this.buttonSubViewA.Clicked += new MessageEventHandler(this.HandleButtonSubViewClicked);
+			ToolTip.Default.SetToolTip(this.buttonSubViewA, "Vue A");
+
+			this.buttonSubViewB = new Button(this.toolbar);
+			this.buttonSubViewB.Text = "B";
+			this.buttonSubViewB.PreferredWidth = this.buttonSubViewB.PreferredHeight;
+			this.buttonSubViewB.ButtonStyle = ButtonStyle.ActivableIcon;
+			this.buttonSubViewB.AutoFocus = false;
+			this.buttonSubViewB.Dock = DockStyle.Left;
+			this.buttonSubViewB.Clicked += new MessageEventHandler(this.HandleButtonSubViewClicked);
+			ToolTip.Default.SetToolTip(this.buttonSubViewB, "Vue B");
+
+			this.buttonSubViewC = new Button(this.toolbar);
+			this.buttonSubViewC.Text = "C";
+			this.buttonSubViewC.PreferredWidth = this.buttonSubViewC.PreferredHeight;
+			this.buttonSubViewC.ButtonStyle = ButtonStyle.ActivableIcon;
+			this.buttonSubViewC.AutoFocus = false;
+			this.buttonSubViewC.Dock = DockStyle.Left;
+			this.buttonSubViewC.Clicked += new MessageEventHandler(this.HandleButtonSubViewClicked);
+			ToolTip.Default.SetToolTip(this.buttonSubViewC, "Vue C");
+
+			this.buttonSubViewT = new Button(this.toolbar);
+			this.buttonSubViewT.Text = "T";
+			this.buttonSubViewT.PreferredWidth = this.buttonSubViewT.PreferredHeight;
+			this.buttonSubViewT.ButtonStyle = ButtonStyle.ActivableIcon;
+			this.buttonSubViewT.AutoFocus = false;
+			this.buttonSubViewT.Dock = DockStyle.Left;
+			this.buttonSubViewT.Clicked += new MessageEventHandler(this.HandleButtonSubViewClicked);
+			ToolTip.Default.SetToolTip(this.buttonSubViewT, "Vue temporaire");
+
+			IconSeparator sep = new IconSeparator(this.toolbar);
+			sep.Dock = DockStyle.Left;
+
 			this.buttonZoomPage = new IconButton(this.toolbar);
 			this.buttonZoomPage.IconName = Misc.Icon("ZoomPage");
 			this.buttonZoomPage.ButtonStyle = ButtonStyle.ActivableIcon;
@@ -112,6 +151,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.editor.UpdateGeometry();
 			this.UpdateZoom();
 			this.UpdateAll();
+			this.UpdateSubView();
 		}
 
 		protected override void Dispose(bool disposing)
@@ -124,6 +164,10 @@ namespace Epsitec.Common.Designer.Viewers
 				this.editor.ZoomChanged -= new EventHandler(this.HandleEditorZoomChanged);
 				this.vscroller.ValueChanged -= new EventHandler(this.HandleScrollerValueChanged);
 				this.hscroller.ValueChanged -= new EventHandler(this.HandleScrollerValueChanged);
+				this.buttonSubViewA.Clicked -= new MessageEventHandler(this.HandleButtonSubViewClicked);
+				this.buttonSubViewB.Clicked -= new MessageEventHandler(this.HandleButtonSubViewClicked);
+				this.buttonSubViewC.Clicked -= new MessageEventHandler(this.HandleButtonSubViewClicked);
+				this.buttonSubViewT.Clicked -= new MessageEventHandler(this.HandleButtonSubViewClicked);
 				this.buttonZoomPage.Clicked -= new MessageEventHandler(this.HandleButtonZoomClicked);
 				this.buttonZoomMin.Clicked -= new MessageEventHandler(this.HandleButtonZoomClicked);
 				this.buttonZoomDefault.Clicked -= new MessageEventHandler(this.HandleButtonZoomClicked);
@@ -160,6 +204,31 @@ namespace Epsitec.Common.Designer.Viewers
 
 					this.editor.AreaSize = this.areaSize;
 					this.UpdateScroller();
+				}
+			}
+		}
+
+		public int SubView
+		{
+			//	Sous-vue utilisée pour représenter les boîtes et les liaisons.
+			get
+			{
+				return Entities.subView;
+			}
+			set
+			{
+				if (Entities.subView != value)
+				{
+					this.mainWindow.Terminate();
+
+					Entities.subView = value;
+
+					this.UpdateSubView();
+					this.UpdateTitle();
+					this.UpdateEdit();
+					this.UpdateColor();
+					this.UpdateModificationsCulture();
+					this.UpdateCommands();
 				}
 			}
 		}
@@ -275,6 +344,15 @@ namespace Epsitec.Common.Designer.Viewers
 			}
 		}
 
+		protected void UpdateSubView()
+		{
+			//	Met à jour le bouton sélectionné pour la sous-vue.
+			this.buttonSubViewA.ActiveState = (this.SubView == 0) ? ActiveState.Yes : ActiveState.No;
+			this.buttonSubViewB.ActiveState = (this.SubView == 1) ? ActiveState.Yes : ActiveState.No;
+			this.buttonSubViewC.ActiveState = (this.SubView == 2) ? ActiveState.Yes : ActiveState.No;
+			this.buttonSubViewT.ActiveState = (this.SubView == 3) ? ActiveState.Yes : ActiveState.No;
+		}
+
 		public override void Terminate()
 		{
 			//	Termine le travail sur une ressource, avant de passer à une autre.
@@ -290,14 +368,15 @@ namespace Epsitec.Common.Designer.Viewers
 			Druid druid = this.druidToSerialize;
 			if (druid.IsValid)
 			{
+				string key = string.Concat(this.SubView.ToString(System.Globalization.CultureInfo.InvariantCulture), ":", druid.ToString());
 				string data = this.editor.Serialize();
-				if (Entities.serial.ContainsKey(druid))
+				if (Entities.serial.ContainsKey(key))
 				{
-					Entities.serial[druid] = data;
+					Entities.serial[key] = data;
 				}
 				else
 				{
-					Entities.serial.Add(druid, data);
+					Entities.serial.Add(key, data);
 				}
 			}
 		}
@@ -306,9 +385,10 @@ namespace Epsitec.Common.Designer.Viewers
 		{
 			this.druidToSerialize = this.CurrentDruid;
 			Druid druid = this.druidToSerialize;
-			if (Entities.serial.ContainsKey(druid))
+			string key = string.Concat(this.SubView.ToString(System.Globalization.CultureInfo.InvariantCulture), ":", druid.ToString());
+			if (Entities.serial.ContainsKey(key))
 			{
-				string data = Entities.serial[druid];
+				string data = Entities.serial[key];
 				this.editor.Deserialize(data);
 				return true;
 			}
@@ -396,6 +476,34 @@ namespace Epsitec.Common.Designer.Viewers
 			this.editor.AreaOffset = new Point(ox, oy);
 		}
 
+		private void HandleButtonSubViewClicked(object sender, MessageEventArgs e)
+		{
+			//	Appelé lorsqu'un bouton de vue (A, B, C ou T) est cliqué.
+			int subView = this.SubView;
+
+			if (sender == this.buttonSubViewA)
+			{
+				subView = 0;
+			}
+
+			if (sender == this.buttonSubViewB)
+			{
+				subView = 1;
+			}
+
+			if (sender == this.buttonSubViewC)
+			{
+				subView = 2;
+			}
+
+			if (sender == this.buttonSubViewT)
+			{
+				subView = 3;
+			}
+
+			this.SubView = subView;
+		}
+
 		private void HandleButtonZoomClicked(object sender, MessageEventArgs e)
 		{
 			//	Appelé lorsqu'un bouton de zoom prédéfini est cliqué.
@@ -450,8 +558,9 @@ namespace Epsitec.Common.Designer.Viewers
 		public static readonly double zoomMax = 2.0;
 		protected static readonly double zoomDefault = 1.0;
 
+		protected static int subView = 0;
 		protected static double zoom = Entities.zoomDefault;
-		protected static Dictionary<Druid, string> serial = new Dictionary<Druid,string>();
+		protected static Dictionary<string, string> serial = new Dictionary<string, string>();
 
 		protected HSplitter hsplitter;
 		protected EntitiesEditor.Editor editor;
@@ -459,6 +568,10 @@ namespace Epsitec.Common.Designer.Viewers
 		protected HScroller hscroller;
 		protected Size areaSize;
 		protected HToolBar toolbar;
+		protected Button buttonSubViewA;
+		protected Button buttonSubViewB;
+		protected Button buttonSubViewC;
+		protected Button buttonSubViewT;
 		protected IconButton buttonZoomPage;
 		protected IconButton buttonZoomMin;
 		protected IconButton buttonZoomDefault;
