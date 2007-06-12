@@ -20,6 +20,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 	{
 		public AnyTypeResourceAccessor()
 		{
+			this.Collection.CollectionChanged += this.HandleCollectionChanged;
 		}
 
 		public override IDataBroker GetDataBroker(StructuredData container, string fieldId)
@@ -543,5 +544,92 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			data.SetValue (Res.Fields.ResourceStringType.UseMultilingualStorage, type.UseMultilingualStorage);
 		}
 
+		private void HandleCollectionChanged(object sender, CollectionChangedEventArgs e)
+		{
+			switch (e.Action)
+			{
+				case CollectionChangedAction.Add:
+					foreach (CultureMap item in e.NewItems)
+					{
+						this.HandleCultureMapAdded (item);
+					}
+					break;
+				case CollectionChangedAction.Remove:
+					foreach (CultureMap item in e.OldItems)
+					{
+						this.HandleCultureMapRemoved (item);
+					}
+					break;
+				case CollectionChangedAction.Replace:
+					foreach (CultureMap item in e.OldItems)
+					{
+						this.HandleCultureMapRemoved (item);
+					}
+					foreach (CultureMap item in e.NewItems)
+					{
+						this.HandleCultureMapAdded (item);
+					}
+					break;
+			}
+		}
+
+		private void HandleCultureMapAdded(CultureMap item)
+		{
+			StructuredData data = item.GetCultureData (Resources.DefaultTwoLetterISOLanguageName);
+			TypeCode       code = AnyTypeResourceAccessor.ToTypeCode (data.GetValue (Res.Fields.ResourceBaseType.TypeCode));
+
+			if (code == TypeCode.Invalid)
+			{
+				throw new System.ArgumentException ("Item has no valid TypeCode defined");
+			}
+
+			if (code == TypeCode.Enum)
+			{
+				item.PropertyChanged += this.HandleItemPropertyChanged;
+			}
+		}
+
+		private void HandleCultureMapRemoved(CultureMap item)
+		{
+			StructuredData data = item.GetCultureData (Resources.DefaultTwoLetterISOLanguageName);
+			TypeCode code = AnyTypeResourceAccessor.ToTypeCode (data.GetValue (Res.Fields.ResourceBaseType.TypeCode));
+
+			if (code == TypeCode.Invalid)
+			{
+				throw new System.ArgumentException ("Item has no valid TypeCode defined");
+			}
+
+			if (code == TypeCode.Enum)
+			{
+				item.PropertyChanged -= this.HandleItemPropertyChanged;
+			}
+		}
+
+		void HandleItemPropertyChanged(object sender, DependencyPropertyChangedEventArgs e)
+		{
+			if (e.PropertyName == "Name")
+			{
+				string oldName = e.OldValue as string;
+				string newName = e.NewValue as string;
+
+				this.ChangeFieldPrefix (oldName, newName);
+			}
+		}
+		
+		private void ChangeFieldPrefix(string oldName, string newName)
+		{
+			ResourceBundle bundle = this.ResourceManager.GetBundle (Resources.CaptionsBundleName, ResourceLevel.Default);
+
+			string oldPrefix = string.Concat ("Val.", oldName, ".");
+			string newPrefix = string.Concat ("Val.", newName, ".");
+
+			foreach (ResourceBundle.Field field in bundle.Fields)
+			{
+				if (field.Name.StartsWith (oldPrefix))
+				{
+					field.SetName (newPrefix + field.Name.Substring (oldPrefix.Length));
+				}
+			}
+		}
 	}
 }
