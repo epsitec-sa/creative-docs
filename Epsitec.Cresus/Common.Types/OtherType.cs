@@ -68,5 +68,10 @@ namespace Epsitec.Common.Types
 				return expectedType.IsAssignableFrom (value.GetType ());
 			}
 		}
+
+		public void DefineSystemType(System.Type type)
+		{
+			AbstractType.SetSystemType (this.Caption, type);
+		}
 	}
 }

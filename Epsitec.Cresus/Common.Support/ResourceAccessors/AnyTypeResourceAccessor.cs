@@ -94,6 +94,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 					break;
 
 				case TypeCode.Collection:
+					this.CreateType (new CollectionType (caption), data);
 					break;
 				
 				case TypeCode.Date:
@@ -113,6 +114,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 					break;
 
 				case TypeCode.Enum:
+					//	TODO: ...
 					break;
 				
 				case TypeCode.Integer:
@@ -124,9 +126,11 @@ namespace Epsitec.Common.Support.ResourceAccessors
 					break;
 
 				case TypeCode.Other:
+					this.CreateType (new OtherType (caption), data);
 					break;
 				
 				case TypeCode.String:
+					this.CreateType (new StringType (caption), data);
 					break;
 				
 				case TypeCode.Time:
@@ -290,34 +294,143 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			}
 		}
 
+		private void CreateType(CollectionType type, StructuredData data)
+		{
+			this.SetupType (type, data);
+
+			object value = data.GetValue (Res.Fields.ResourceCollectionType.ItemType);
+
+			if (!UndefinedValue.IsUndefinedValue (value))
+			{
+				Druid id = (Druid) value;
+
+				if (id.IsValid)
+				{
+					type.DefineItemType (new DummyNamedType (id));
+				}
+			}
+		}
+
+		private class DummyNamedType : INamedType
+		{
+			public DummyNamedType(Druid id)
+			{
+				this.id = id;
+			}
+
+			#region INamedType Members
+
+			public string DefaultController
+			{
+				get
+				{
+					return null;
+				}
+			}
+
+			public string DefaultControllerParameter
+			{
+				get
+				{
+					return null;
+				}
+			}
+
+			#endregion
+
+			#region ICaption Members
+
+			public Druid CaptionId
+			{
+				get
+				{
+					return this.id;
+				}
+			}
+
+			#endregion
+
+			#region IName Members
+
+			public string Name
+			{
+				get
+				{
+					return null;
+				}
+			}
+
+			#endregion
+
+			#region ISystemType Members
+
+			public System.Type SystemType
+			{
+				get
+				{
+					return null;
+				}
+			}
+
+			#endregion
+
+			Druid id;
+		}
+
+		private void CreateType(OtherType type, StructuredData data)
+		{
+			this.SetupType (type, data);
+
+			System.Type sysType = data.GetValue (Res.Fields.ResourceOtherType.SystemType) as System.Type;
+
+			if (sysType != null)
+			{
+				type.DefineSystemType (sysType);
+			}
+		}
+
+		private void CreateType(StringType type, StructuredData data)
+		{
+			this.SetupType (type, data);
+
+			object value;
+			
+			value = data.GetValue (Res.Fields.ResourceStringType.UseMultilingualStorage);
+
+			if (!UndefinedValue.IsUndefinedValue (value))
+			{
+				type.DefineUseMultilingualStorage ((bool) value);
+			}
+
+			value = data.GetValue (Res.Fields.ResourceStringType.MinimumLength);
+
+			if (!UndefinedValue.IsUndefinedValue (value))
+			{
+				int min = (int) value;
+
+				if (min > 0)
+				{
+					type.DefineMinimumLength (min);
+				}
+			}
+
+			value = data.GetValue (Res.Fields.ResourceStringType.MaximumLength);
+
+			if (!UndefinedValue.IsUndefinedValue (value))
+			{
+				int max = (int) value;
+
+				if (max > 0)
+				{
+					type.DefineMaximumLength (max);
+				}
+			}
+		}
+
+
 		protected static TypeCode ToTypeCode(object value)
 		{
 			return UndefinedValue.IsUndefinedValue (value) ? TypeCode.Invalid : (TypeCode) value;
-		}
-
-		protected static DecimalRange ToDecimalRange(object value)
-		{
-			return UndefinedValue.IsUndefinedValue (value) ? DecimalRange.Empty : (DecimalRange) value;
-		}
-
-		protected static System.TimeSpan ToTimeSpan(object value)
-		{
-			return UndefinedValue.IsUndefinedValue (value) ? System.TimeSpan.Zero : (System.TimeSpan) value;
-		}
-
-		protected static DateSpan ToDateSpan(object value)
-		{
-			return UndefinedValue.IsUndefinedValue (value) ? DateSpan.Zero : (DateSpan) value;
-		}
-
-		protected static Date ToDate(object value)
-		{
-			return UndefinedValue.IsUndefinedValue (value) ? Date.Null : (Date) value;
-		}
-
-		protected static Time ToTime(object value)
-		{
-			return UndefinedValue.IsUndefinedValue (value) ? Time.Null : (Time) value;
 		}
 
 		protected override void FillDataFromCaption(CultureMap item, Types.StructuredData data, Caption caption)
