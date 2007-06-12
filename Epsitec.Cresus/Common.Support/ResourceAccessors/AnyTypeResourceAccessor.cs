@@ -76,9 +76,123 @@ namespace Epsitec.Common.Support.ResourceAccessors
 
 		private void FillCaptionWithData(Caption caption, StructuredData data)
 		{
-			//	TODO: ...
+			if (data == null)
+			{
+				return;
+			}
+
+			TypeCode code = AnyTypeResourceAccessor.ToTypeCode (data.GetValue (Res.Fields.ResourceBaseType.TypeCode));
+
+			switch (code)
+			{
+				case TypeCode.Binary:
+					this.CreateType (new BinaryType (caption), data);
+					break;
+
+				case TypeCode.Boolean:
+					this.CreateType (new BooleanType (caption), data);
+					break;
+
+				case TypeCode.Collection:
+				case TypeCode.Date:
+				case TypeCode.DateTime:
+				case TypeCode.Decimal:
+					this.CreateType (new DecimalType (caption), data);
+					break;
+
+				case TypeCode.Double:
+					this.CreateType (new DoubleType (caption), data);
+					break;
+
+				case TypeCode.Enum:
+				case TypeCode.Integer:
+					this.CreateType (new IntegerType (caption), data);
+					break;
+
+				case TypeCode.LongInteger:
+					this.CreateType (new LongIntegerType (caption), data);
+					break;
+
+				case TypeCode.Other:
+				case TypeCode.String:
+				case TypeCode.Time:
+					break;
+			}
 		}
 
+		private void SetupType(AbstractType type, StructuredData data)
+		{
+			System.Diagnostics.Debug.Assert (type.TypeCode == (TypeCode) data.GetValue (Res.Fields.ResourceBaseType.TypeCode));
+
+			object value;
+
+			value = data.GetValue (Res.Fields.ResourceBaseType.Nullable);
+
+			if (!UndefinedValue.IsUndefinedValue (value))
+			{
+				type.DefineIsNullable ((bool) value);
+			}
+
+			string controller = data.GetValue (Res.Fields.ResourceBaseType.DefaultController) as string;
+			string controllerParameter = data.GetValue (Res.Fields.ResourceBaseType.DefaultControllerParameter) as string;
+
+			if (controller != null)
+			{
+				type.DefineDefaultController (controller, controllerParameter);
+			}
+		}
+
+		private void CreateType(BinaryType type, StructuredData data)
+		{
+			this.SetupType (type, data);
+			
+			string mimeType = data.GetValue (Res.Fields.ResourceBinaryType.MimeType) as string;
+
+			if (mimeType != null)
+			{
+				type.DefineMimeType (mimeType);
+			}
+		}
+
+		private void CreateType(AbstractNumericType type, StructuredData data)
+		{
+			this.SetupType (type, data);
+
+			object value;
+
+			value = data.GetValue (Res.Fields.ResourceNumericType.Range);
+
+			if (!UndefinedValue.IsUndefinedValue (value))
+			{
+				type.DefineRange ((DecimalRange) value);
+			}
+
+			value = data.GetValue (Res.Fields.ResourceNumericType.PreferredRange);
+
+			if (!UndefinedValue.IsUndefinedValue (value))
+			{
+				type.DefinePreferredRange ((DecimalRange) value);
+			}
+
+			value = data.GetValue (Res.Fields.ResourceNumericType.SmallStep);
+
+			if (!UndefinedValue.IsUndefinedValue (value))
+			{
+				type.DefineSmallStep ((decimal) value);
+			}
+
+			value = data.GetValue (Res.Fields.ResourceNumericType.LargeStep);
+
+			if (!UndefinedValue.IsUndefinedValue (value))
+			{
+				type.DefineLargeStep ((decimal) value);
+			}
+		}
+
+		protected static TypeCode ToTypeCode(object value)
+		{
+			return UndefinedValue.IsUndefinedValue (value) ? TypeCode.Invalid : (TypeCode) value;
+		}
 
 		protected static DecimalRange ToDecimalRange(object value)
 		{
@@ -175,7 +289,9 @@ namespace Epsitec.Common.Support.ResourceAccessors
 
 		private void FillDataFromCollectionType(StructuredData data, CollectionType type)
 		{
-			//	TODO: ...
+			data.DefineStructuredType (Res.Types.ResourceCollectionType);
+
+			data.SetValue (Res.Fields.ResourceCollectionType.ItemType, type.ItemType.CaptionId);
 		}
 
 		private void FillDataFromDateTimeType(StructuredData data, AbstractDateTimeType type)
@@ -199,7 +315,9 @@ namespace Epsitec.Common.Support.ResourceAccessors
 
 		private void FillDataFromOtherType(StructuredData data, OtherType type)
 		{
-			//	TODO: ...
+			data.DefineStructuredType (Res.Types.ResourceOtherType);
+
+			data.SetValue (Res.Fields.ResourceOtherType.SystemType, type.SystemType);
 		}
 
 		private void FillDataFromStringType(StructuredData data, StringType type)
