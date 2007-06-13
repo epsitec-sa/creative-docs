@@ -396,9 +396,8 @@ namespace Epsitec.Common.Support.ResourceAccessors
 
 		private void CreateEnumType(Caption caption, StructuredData data)
 		{
-			//	TODO: gérer les types dérivés d'un type C#
-
-			EnumType type = new EnumType (null, caption);
+			System.Type sysType = data.GetValue (Res.Fields.ResourceEnumType.SystemType) as System.Type;
+			EnumType type = new EnumType (sysType, caption);
 			
 			this.SetupType (type, data);
 
@@ -524,6 +523,8 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			data.LockValue (Res.Fields.ResourceEnumType.Values);
 
 			values.CollectionChanged += new Listener (this, item).HandleCollectionChanged;
+
+			data.SetValue (Res.Fields.ResourceEnumType.SystemType, type.SystemType);
 		}
 
 		private void FillDataFromOtherType(StructuredData data, OtherType type)

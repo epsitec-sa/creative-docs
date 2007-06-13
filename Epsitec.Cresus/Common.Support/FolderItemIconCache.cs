@@ -50,7 +50,8 @@ namespace Epsitec.Common.Support
 				{
 					byte[] cacheData = item.image.BitmapImage.GetRawBitmapBytes ();
 
-					if (cacheData.Length == sourceData.Length)
+					if ((cacheData != null) &&
+						(cacheData.Length == sourceData.Length))
 					{
 						bool ok = true;
 						

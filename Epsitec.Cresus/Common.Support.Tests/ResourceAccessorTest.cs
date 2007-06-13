@@ -365,6 +365,7 @@ namespace Epsitec.Common.Support
 			IList<Types.StructuredData> enumValues = enumData.GetValue (Res.Fields.ResourceEnumType.Values) as IList<Types.StructuredData>;
 
 			Assert.AreEqual (5, enumValues.Count);
+			Assert.AreEqual (typeof (Types.BindingMode), enumData.GetValue (Res.Fields.ResourceEnumType.SystemType) as System.Type);
 
 			Assert.AreEqual (Types.Res.Values.BindingMode.None.Id, enumValues[0].GetValue (Res.Fields.EnumValue.CaptionId));
 			Assert.AreEqual (Types.Res.Values.BindingMode.TwoWay.Id, enumValues[4].GetValue (Res.Fields.EnumValue.CaptionId));
