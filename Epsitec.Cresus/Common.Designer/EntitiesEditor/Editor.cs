@@ -613,6 +613,36 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				this.CloseConnections(box);  // supprime ses connections
 			}
 
+			foreach (ObjectBox abox in this.boxes)
+			{
+				abox.IsConnectedToRoot = false;
+			}
+
+			foreach (ObjectBox abox in this.boxes)
+			{
+				List<ObjectBox> visited = new List<ObjectBox>();
+				visited.Add(abox);
+				this.ExploreConnectedToRoot(visited, abox);
+
+				bool toRoot = false;
+				foreach (ObjectBox vbox in visited)
+				{
+					if (vbox == this.boxes[0])
+					{
+						toRoot = true;
+						break;
+					}
+				}
+
+				if (toRoot)
+				{
+					foreach (ObjectBox vbox in visited)
+					{
+						vbox.IsConnectedToRoot = true;
+					}
+				}
+			}
+
 			bool removed;
 			do
 			{
@@ -621,7 +651,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				while (i < this.boxes.Count)
 				{
 					box = this.boxes[i];
-					if (this.IsConnectedToRoot(box))  // boîte liée à la racine ?
+					if (box.IsConnectedToRoot)  // boîte liée à la racine ?
 					{
 						i++;
 					}

@@ -202,6 +202,19 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 		}
 
+		public bool IsConnectedToRoot
+		{
+			//	Indique si cet objet est connecté à la racine (flag temporaire).
+			get
+			{
+				return this.isConnectedToRoot;
+			}
+			set
+			{
+				this.isConnectedToRoot = value;
+			}
+		}
+
 
 		public double GetBestHeight()
 		{
@@ -2105,6 +2118,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		protected double columnsSeparatorRelative;
 		protected bool isRoot;
 		protected bool isExtended;
+		protected bool isConnectedToRoot;
 		protected string titleString;
 		protected TextLayout title;
 		protected List<Field> fields;
