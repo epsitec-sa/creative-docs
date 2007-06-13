@@ -197,7 +197,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 					break;
 
 				case TypeCode.Enum:
-					this.CreateType (new EnumType (caption), data);
+					this.CreateEnumType (caption, data);
 					break;
 				
 				case TypeCode.Integer:
@@ -394,8 +394,12 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			}
 		}
 
-		private void CreateType(EnumType type, StructuredData data)
+		private void CreateEnumType(Caption caption, StructuredData data)
 		{
+			//	TODO: gérer les types dérivés d'un type C#
+
+			EnumType type = new EnumType (null, caption);
+			
 			this.SetupType (type, data);
 
 			IList<StructuredData> values = data.GetValue (Res.Fields.ResourceEnumType.Values) as IList<StructuredData>;

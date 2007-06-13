@@ -78,7 +78,7 @@ namespace Epsitec.Common.Types
 			caption.Name = "TestEnum";
 			caption.Description = "Enumeration used for tests only";
 
-			EnumType type = new EnumType (caption);
+			EnumType type = new EnumType (typeof (NotAnEnum), caption);
 
 			type.MakeEditable ();
 
@@ -114,7 +114,7 @@ namespace Epsitec.Common.Types
 			caption.Name = "TestEnum";
 			caption.Description = "Enumeration used for tests only";
 
-			EnumType type = new EnumType (caption);
+			EnumType type = new EnumType (typeof (NotAnEnum), caption);
 
 			string xml = type.Caption.SerializeToString ();
 

@@ -37,15 +37,6 @@ namespace Epsitec.Common.Types
 		/// <summary>
 		/// Initializes a new instance of the <see cref="EnumType"/> class.
 		/// </summary>
-		/// <param name="caption">The caption to use as model.</param>
-		public EnumType(Caption caption)
-			: this (null, caption)
-		{
-		}
-
-		/// <summary>
-		/// Initializes a new instance of the <see cref="EnumType"/> class.
-		/// </summary>
 		/// <param name="enumType">Type of the enum to use as model.</param>
 		/// <param name="caption">The caption to use as model.</param>
 		public EnumType(System.Type enumType, Caption caption)

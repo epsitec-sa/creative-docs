@@ -811,7 +811,7 @@ namespace Epsitec.Common.Types
 		public void CheckEnumSerialization2()
 		{
 			Caption caption = new Caption ();
-			EnumType et = new EnumType (caption);
+			EnumType et = new EnumType (typeof (NotAnEnum), caption);
 
 			string serial = et.Caption.SerializeToString ();
 
