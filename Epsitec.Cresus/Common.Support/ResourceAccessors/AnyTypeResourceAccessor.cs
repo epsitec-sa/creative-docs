@@ -67,6 +67,86 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			return this.valueAccessor.CreateValueItem (item.Name);
 		}
 
+		public bool CreateMissingValueItems(CultureMap item)
+		{
+			StructuredData data = item.GetCultureData (Resources.DefaultTwoLetterISOLanguageName);
+			
+			IList<StructuredData> values     = data.GetValue (Res.Fields.ResourceEnumType.Values) as IList<StructuredData>;
+			System.Type           systemType = data.GetValue (Res.Fields.ResourceEnumType.SystemType) as System.Type;
+
+			if ((systemType == null) ||
+				(systemType == typeof (NotAnEnum)))
+			{
+				//	There is no base .NET type
+
+				return false;
+			}
+			else
+			{
+				EnumType template = new EnumType (systemType, new Caption ());
+				string   typeName = item.Name;
+				bool     creation = false;
+				
+				foreach (EnumValue value in template.EnumValues)
+				{
+					if (!value.IsHidden)
+					{
+						string name  = value.Name;
+						bool   found = false;
+
+						foreach (PrefixedCultureMap valueItem in this.valueAccessor.Collection)
+						{
+							if ((valueItem.Prefix == typeName) &&
+								(valueItem.Name == name))
+							{
+								found = true;
+								break;
+							}
+						}
+						
+						if (!found)
+						{
+							CultureMap newValue = this.CreateValueItem (item);
+							StructuredData dataValue = this.GetDataBroker (data, Res.Fields.ResourceEnumType.Values.ToString ()).CreateData (item);
+
+							newValue.Name = name;
+							this.valueAccessor.Collection.Add (newValue);
+							creation = true;
+
+							dataValue.SetValue (Res.Fields.EnumValue.CaptionId, newValue.Id);
+							
+							values.Add (dataValue);
+						}
+					}
+				}
+
+				return creation;
+			}
+		}
+
+		public override void NotifyItemChanged(CultureMap item)
+		{
+			base.NotifyItemChanged (item);
+
+			StructuredData data = item.GetCultureData (Resources.DefaultTwoLetterISOLanguageName);
+			TypeCode code = AnyTypeResourceAccessor.ToTypeCode (data.GetValue (Res.Fields.ResourceBaseType.TypeCode));
+			
+			if (code == TypeCode.Enum)
+			{
+				object value = data.GetValue (Res.Fields.ResourceEnumType.Values);
+
+				if (UndefinedValue.IsUndefinedValue (value))
+				{
+					ObservableList<StructuredData> values = new ObservableList<StructuredData> ();
+					
+					data.SetValue (Res.Fields.ResourceEnumType.Values, values);
+					data.LockValue (Res.Fields.ResourceEnumType.Values);
+					
+					values.CollectionChanged += new Listener (this, item).HandleCollectionChanged;
+				}
+			}
+		}
+
 		protected override IStructuredType GetStructuredType()
 		{
 			return null;
@@ -576,6 +656,8 @@ namespace Epsitec.Common.Support.ResourceAccessors
 
 		private void HandleCultureMapAdded(CultureMap item)
 		{
+			System.Diagnostics.Debug.Assert (item.IsCultureDefined (Resources.DefaultTwoLetterISOLanguageName));
+
 			StructuredData data = item.GetCultureData (Resources.DefaultTwoLetterISOLanguageName);
 			TypeCode       code = AnyTypeResourceAccessor.ToTypeCode (data.GetValue (Res.Fields.ResourceBaseType.TypeCode));
 
@@ -592,6 +674,8 @@ namespace Epsitec.Common.Support.ResourceAccessors
 
 		private void HandleCultureMapRemoved(CultureMap item)
 		{
+			System.Diagnostics.Debug.Assert (item.IsCultureDefined (Resources.DefaultTwoLetterISOLanguageName));
+			
 			StructuredData data = item.GetCultureData (Resources.DefaultTwoLetterISOLanguageName);
 			TypeCode code = AnyTypeResourceAccessor.ToTypeCode (data.GetValue (Res.Fields.ResourceBaseType.TypeCode));
 

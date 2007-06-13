@@ -171,7 +171,12 @@ namespace Epsitec.Common.Support
 				}
 			}
 		}
-		
+
+		/// <summary>
+		/// Records the data associated with the specified culture.
+		/// </summary>
+		/// <param name="twoLetterISOLanguageName">The two letter ISO language name.</param>
+		/// <param name="data">The data to record.</param>
 		internal void RecordCultureData(string twoLetterISOLanguageName, Types.StructuredData data)
 		{
 			System.Diagnostics.Debug.Assert (data != null);
@@ -183,6 +188,8 @@ namespace Epsitec.Common.Support
 			}
 			else
 			{
+				this.CheckForDuplicates (twoLetterISOLanguageName);
+				
 				int pos = this.map.Length;
 
 				KeyValuePair<string, Types.StructuredData>[] temp = this.map;
@@ -195,6 +202,25 @@ namespace Epsitec.Common.Support
 			}
 
 			data.ValueChanged += this.HandleDataValueChanged;
+		}
+
+		/// <summary>
+		/// Checks for duplicates in the data map. If the caller tries to redefine
+		/// an already known set of data, this will throw an exception in debug
+		/// builds.
+		/// </summary>
+		/// <param name="twoLetterISOLanguageName">The two letter ISO language name.</param>
+		[System.Diagnostics.Conditional ("DEBUG")]
+		private void CheckForDuplicates(string twoLetterISOLanguageName)
+		{
+			for (int i = 0; i < this.map.Length; i++)
+			{
+				if (this.map[i].Key == twoLetterISOLanguageName)
+				{
+					throw new System.InvalidOperationException ("Duplicate insertion");
+				}
+			}
+
 		}
 
 		private void HandleDataValueChanged(object sender, Types.DependencyPropertyChangedEventArgs e)

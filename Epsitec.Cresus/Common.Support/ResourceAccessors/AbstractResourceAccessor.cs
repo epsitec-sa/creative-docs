@@ -87,7 +87,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			return list.Count;
 		}
 
-		public void NotifyItemChanged(CultureMap item)
+		public virtual void NotifyItemChanged(CultureMap item)
 		{
 			if (this.suspendNotifications == 0)
 			{

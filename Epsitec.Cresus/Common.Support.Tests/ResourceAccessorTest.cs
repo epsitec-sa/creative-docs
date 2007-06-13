@@ -361,6 +361,8 @@ namespace Epsitec.Common.Support
 			Assert.AreEqual ("Typ.BindingMode", accessor.ResourceManager.GetBundle (Resources.CaptionsBundleName, ResourceLevel.Default)[Types.Res.Types.BindingMode.CaptionId].Name);
 			Assert.AreEqual ("Val.BindingMode.None", accessor.ResourceManager.GetBundle (Resources.CaptionsBundleName, ResourceLevel.Default)[Types.Res.Values.BindingMode.None.Id].Name);
 
+			Assert.IsFalse (accessor.CreateMissingValueItems (map));
+
 			Types.StructuredData enumData = map.GetCultureData (Resources.DefaultTwoLetterISOLanguageName);
 			IList<Types.StructuredData> enumValues = enumData.GetValue (Res.Fields.ResourceEnumType.Values) as IList<Types.StructuredData>;
 
@@ -385,6 +387,33 @@ namespace Epsitec.Common.Support
 			Assert.AreEqual ("Typ.BindingMode", accessor.ResourceManager.GetBundle (Resources.CaptionsBundleName, ResourceLevel.Default)[Types.Res.Types.BindingMode.CaptionId].Name);
 			Assert.AreEqual ("Val.BindingMode.None", accessor.ResourceManager.GetBundle (Resources.CaptionsBundleName, ResourceLevel.Default)[Types.Res.Values.BindingMode.None.Id].Name);
 			Assert.AreEqual ("BindingMode.None", accessor.ValueAccessor.Collection[Types.Res.Values.BindingMode.None.Id].ToString ());
+
+			map = accessor.CreateItem ();
+			map.Name = "Test.MyTestEnum";
+			enumData = map.GetCultureData (Resources.DefaultTwoLetterISOLanguageName);
+			enumData.SetValue (Res.Fields.ResourceBaseType.TypeCode, Types.TypeCode.Enum);
+			enumData.SetValue (Res.Fields.ResourceEnumType.SystemType, typeof (MyTestEnum));
+
+			accessor.Collection.Add (map);
+
+			int count = accessor.ValueAccessor.Collection.Count;
+
+			Assert.IsTrue (accessor.CreateMissingValueItems (map));
+			Assert.AreEqual (count+3, accessor.ValueAccessor.Collection.Count);
+			
+			accessor.PersistChanges ();
+		}
+
+
+		public enum MyTestEnum
+		{
+			None,
+
+			Foo,
+			Bar,
+			
+			[Types.Hidden]
+			Other
 		}
 
 		[Test]

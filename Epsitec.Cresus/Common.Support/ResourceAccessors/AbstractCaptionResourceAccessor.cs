@@ -227,6 +227,13 @@ namespace Epsitec.Common.Support.ResourceAccessors
 		}
 
 
+		/// <summary>
+		/// Loads data from a resource bundle field.
+		/// </summary>
+		/// <param name="field">The resource bundle field.</param>
+		/// <param name="module">The source module id.</param>
+		/// <param name="twoLetterISOLanguageName">The two letter ISO language name.</param>
+		/// <returns>The data which describes the specified resource.</returns>
 		private Types.StructuredData LoadFromField(ResourceBundle.Field field, int module, string twoLetterISOLanguageName)
 		{
 			Druid id     = new Druid (field.Id, module);
@@ -251,8 +258,12 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			data.SetValue (Res.Fields.ResourceBase.Comment, field.About);
 			data.SetValue (Res.Fields.ResourceBase.ModificationId, field.ModificationId);
 
-			item.Name = name ?? item.Name;
+			//	It is important to first associate the culture data, then defining
+			//	the item name, since AnyTypeResourceAccessor listens for name changes
+			//	in order to update enumeration value names.
+			
 			item.RecordCultureData (twoLetterISOLanguageName, data);
+			item.Name = name ?? item.Name;
 
 			if (insert)
 			{
