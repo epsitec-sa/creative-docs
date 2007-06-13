@@ -1812,6 +1812,21 @@ namespace Epsitec.Common.Designer
 			return dialog.Result;
 		}
 
+		public Common.Dialogs.DialogResult DialogQuestion(string question, string yes, string no, string cancel)
+		{
+			//	Affiche le dialogue pour signaler une erreur.
+			if ( this.Window == null )  return Common.Dialogs.DialogResult.None;
+
+			string title = Res.Strings.Application.Title;
+			string icon = "manifest:Epsitec.Common.Dialogs.Images.Question.icon";
+			string message = question;
+
+			Common.Dialogs.IDialog dialog = Common.Dialogs.Message.CreateYesNoCancel(title, yes, no, cancel, icon, message, "", "", this.commandDispatcher);
+			dialog.Owner = this.Window;
+			dialog.OpenDialog();
+			return dialog.Result;
+		}
+
 		public Common.Dialogs.DialogResult DialogMessage(string message)
 		{
 			//	Affiche le dialogue pour signaler une erreur.

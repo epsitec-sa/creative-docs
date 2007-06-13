@@ -11,9 +11,11 @@ namespace Epsitec.Common.Dialogs
 	/// </summary>
 	public abstract class AbstractOkCancel : AbstractMessageDialog
 	{
-		public AbstractOkCancel(string dialog_title, string command_template, CommandDispatcher command_dispatcher)
+		public AbstractOkCancel(string dialog_title, string ok_text, string cancel_text, string command_template, CommandDispatcher command_dispatcher)
 		{
 			this.dialog_title       = dialog_title;
+			this.ok_text            = ok_text;
+			this.cancel_text        = cancel_text;
 			
 			this.command_template   = command_template;
 			this.command_dispatcher = command_dispatcher;
@@ -83,7 +85,7 @@ namespace Epsitec.Common.Dialogs
 			
 			button1               = new Button (this.window.Root);
 			button1.SetManualBounds(new Drawing.Rectangle(this.window.ClientSize.Width - 2*75 - 2*8, 16, 75, button1.PreferredHeight));
-			button1.Text          = Widgets.Res.Strings.Dialog.Button.OK;
+			button1.Text          = string.IsNullOrEmpty(this.ok_text) ? Widgets.Res.Strings.Dialog.Button.OK : this.ok_text;
 			button1.CommandObject = Dialog.ValidateDialogCommand;
 			button1.TabIndex      = 2;
 			button1.TabNavigationMode = TabNavigationMode.ActivateOnTab;
@@ -93,7 +95,7 @@ namespace Epsitec.Common.Dialogs
 			{
 				button2               = new Button (this.window.Root);
 				button2.SetManualBounds(new Drawing.Rectangle(this.window.ClientSize.Width - 1*75 - 1*8, 16, 75, button2.PreferredHeight));
-				button2.Text          = Widgets.Res.Strings.Dialog.Button.Cancel;
+				button2.Text          = string.IsNullOrEmpty(this.cancel_text) ? Widgets.Res.Strings.Dialog.Button.Cancel : this.cancel_text;
 				button2.Name          = "Cancel";
 				button2.CommandObject = Dialog.QuitDialogCommand;
 				button2.TabIndex      = 3;
@@ -128,6 +130,8 @@ namespace Epsitec.Common.Dialogs
 		
 		
 		protected string						dialog_title;
+		protected string						ok_text;
+		protected string						cancel_text;
 		protected string						command_template;
 		protected CommandDispatcher				command_dispatcher;
 		protected CommandDispatcher				private_dispatcher;

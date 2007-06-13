@@ -11,9 +11,12 @@ namespace Epsitec.Common.Dialogs
 	/// </summary>
 	public abstract class AbstractYesNoCancel : AbstractMessageDialog
 	{
-		public AbstractYesNoCancel(string dialog_title, string command_yes_template, string command_no_template, CommandDispatcher command_dispatcher)
+		public AbstractYesNoCancel(string dialog_title, string yes_text, string no_text, string cancel_text, string command_yes_template, string command_no_template, CommandDispatcher command_dispatcher)
 		{
 			this.dialog_title         = dialog_title;
+			this.yes_text             = yes_text;
+			this.no_text              = no_text;
+			this.cancel_text          = cancel_text;
 			this.command_yes_template = command_yes_template;
 			this.command_no_template  = command_no_template;
 			
@@ -68,7 +71,7 @@ namespace Epsitec.Common.Dialogs
 			
 			button1               = new Button (this.window.Root);
 			button1.SetManualBounds(new Drawing.Rectangle(this.window.ClientSize.Width - 3*75 - 3*8, 16, 75, button1.PreferredHeight));
-			button1.Text          = Widgets.Res.Strings.Dialog.Button.Yes;
+			button1.Text          = string.IsNullOrEmpty(this.yes_text) ? Widgets.Res.Strings.Dialog.Button.Yes : this.yes_text;
 			button1.CommandObject = Dialog.ValidateDialogYesCommand;
 			button1.TabIndex      = 2;
 			button1.TabNavigationMode = TabNavigationMode.ActivateOnTab;
@@ -76,7 +79,7 @@ namespace Epsitec.Common.Dialogs
 			
 			button2               = new Button (this.window.Root);
 			button2.SetManualBounds(new Drawing.Rectangle(this.window.ClientSize.Width - 2*75 - 2*8, 16, 75, button2.PreferredHeight));
-			button2.Text          = Widgets.Res.Strings.Dialog.Button.No;
+			button2.Text          = string.IsNullOrEmpty(this.no_text) ? Widgets.Res.Strings.Dialog.Button.No : this.no_text;
 			button2.CommandObject = Dialog.ValidateDialogNoCommand;
 			button2.TabIndex      = 3;
 			button2.TabNavigationMode = TabNavigationMode.ActivateOnTab;
@@ -85,7 +88,7 @@ namespace Epsitec.Common.Dialogs
 			{
 				button3               = new Button (this.window.Root);
 				button3.SetManualBounds(new Drawing.Rectangle(this.window.ClientSize.Width - 1*75 - 1*8, 16, 75, button3.PreferredHeight));
-				button3.Text          = Widgets.Res.Strings.Dialog.Button.Cancel;
+				button3.Text          = string.IsNullOrEmpty(this.cancel_text) ? Widgets.Res.Strings.Dialog.Button.Cancel : this.cancel_text;
 				button3.Name          = "Cancel";
 				button3.CommandObject = Dialog.QuitDialogCommand;
 				button3.TabIndex      = 4;
@@ -132,6 +135,9 @@ namespace Epsitec.Common.Dialogs
 		
 		
 		protected string						dialog_title;
+		protected string						yes_text;
+		protected string						no_text;
+		protected string						cancel_text;
 		protected string						command_yes_template;
 		protected string						command_no_template;
 		protected CommandDispatcher				command_dispatcher;
