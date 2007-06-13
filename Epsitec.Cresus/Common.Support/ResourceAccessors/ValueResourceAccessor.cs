@@ -6,22 +6,22 @@ using Epsitec.Common.Types;
 namespace Epsitec.Common.Support.ResourceAccessors
 {
 	/// <summary>
-	/// The <c>FieldResourceAccessor</c> is used to access entity
-	/// resources, stored in the <c>Captions</c> resource bundle and which
-	/// have a field name prefixed with <c>"Fld."</c>.
+	/// The <c>ValueResourceAccessor</c> is used to access enumeration values,
+	/// stored in the <c>Captions</c> resource bundle and which have a field
+	/// name prefixed with <c>"Val."</c>.
 	/// </summary>
-	internal class FieldResourceAccessor : CaptionResourceAccessor
+	internal class ValueResourceAccessor : CaptionResourceAccessor
 	{
-		public FieldResourceAccessor()
+		public ValueResourceAccessor()
 		{
 		}
 
 		public override CultureMap CreateItem()
 		{
-			throw new System.InvalidOperationException ("CreateItem may not be called directly; use CreateFieldItem instead");
+			throw new System.InvalidOperationException ("CreateItem may not be called directly; use CreateValueItem instead");
 		}
 
-		public PrefixedCultureMap CreateFieldItem(string prefix)
+		public PrefixedCultureMap CreateValueItem(string prefix)
 		{
 			System.Diagnostics.Debug.Assert (!string.IsNullOrEmpty (prefix));
 			System.Diagnostics.Debug.Assert (!prefix.EndsWith ("."));
@@ -36,7 +36,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 		{
 			get
 			{
-				return "Fld.";
+				return "Val.";
 			}
 		}
 
@@ -67,7 +67,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 
 			if (pos < 1)
 			{
-				throw new System.ArgumentException (string.Format ("Invalid field name '{0}'", name));
+				throw new System.ArgumentException (string.Format ("Invalid value name '{0}'", name));
 			}
 
 			prefix = prefix.Substring (0, pos);
