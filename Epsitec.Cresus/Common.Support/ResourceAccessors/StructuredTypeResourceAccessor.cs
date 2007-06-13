@@ -223,6 +223,14 @@ namespace Epsitec.Common.Support.ResourceAccessors
 					field.SetName (newPrefix + field.Name.Substring (oldPrefix.Length));
 				}
 			}
+
+			foreach (PrefixedCultureMap item in this.fieldAccessor.Collection)
+			{
+				if (item.Prefix == oldName)
+				{
+					item.Prefix = newName;
+				}
+			}
 		}
 
 		#region FieldBroker Class

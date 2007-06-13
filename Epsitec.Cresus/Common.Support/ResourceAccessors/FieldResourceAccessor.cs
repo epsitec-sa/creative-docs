@@ -16,11 +16,23 @@ namespace Epsitec.Common.Support.ResourceAccessors
 		{
 		}
 
+		/// <summary>
+		/// Creates the item; this overload may not be used.
+		/// Use <see cref="CreateFieldItem"/> instead.
+		/// </summary>
+		/// <returns>never</returns>
+		/// <exception cref="System.InvalidOperationException">Always throws an exception.</exception>
 		public override CultureMap CreateItem()
 		{
 			throw new System.InvalidOperationException ("CreateItem may not be called directly; use CreateFieldItem instead");
 		}
 
+		/// <summary>
+		/// Creates the field item, using the specified prefix. The prefix should
+		/// match the structured type to which this field belongs to.
+		/// </summary>
+		/// <param name="prefix">The prefix.</param>
+		/// <returns>An empty item.</returns>
 		public PrefixedCultureMap CreateFieldItem(string prefix)
 		{
 			System.Diagnostics.Debug.Assert (!string.IsNullOrEmpty (prefix));

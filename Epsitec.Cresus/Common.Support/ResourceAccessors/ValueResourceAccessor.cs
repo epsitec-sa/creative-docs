@@ -16,11 +16,23 @@ namespace Epsitec.Common.Support.ResourceAccessors
 		{
 		}
 
+		/// <summary>
+		/// Creates the item; this overload may not be used.
+		/// Use <see cref="CreateValueItem"/> instead.
+		/// </summary>
+		/// <returns>never</returns>
+		/// <exception cref="System.InvalidOperationException">Always throws an exception.</exception>
 		public override CultureMap CreateItem()
 		{
 			throw new System.InvalidOperationException ("CreateItem may not be called directly; use CreateValueItem instead");
 		}
 
+		/// <summary>
+		/// Creates the value item, using the specified prefix. The prefix should
+		/// match the enumeration to which this value belongs to.
+		/// </summary>
+		/// <param name="prefix">The prefix.</param>
+		/// <returns>An empty item.</returns>
 		public PrefixedCultureMap CreateValueItem(string prefix)
 		{
 			System.Diagnostics.Debug.Assert (!string.IsNullOrEmpty (prefix));

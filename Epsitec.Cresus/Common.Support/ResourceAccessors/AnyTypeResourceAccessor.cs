@@ -626,6 +626,14 @@ namespace Epsitec.Common.Support.ResourceAccessors
 					field.SetName (newPrefix + field.Name.Substring (oldPrefix.Length));
 				}
 			}
+
+			foreach (PrefixedCultureMap item in this.valueAccessor.Collection)
+			{
+				if (item.Prefix == oldName)
+				{
+					item.Prefix = newName;
+				}
+			}
 		}
 
 		#region DummyNamedType Class

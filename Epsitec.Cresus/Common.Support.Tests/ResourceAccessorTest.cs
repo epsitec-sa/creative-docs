@@ -188,6 +188,7 @@ namespace Epsitec.Common.Support
 			Assert.AreEqual ("ResourceEntityType", map.Name);
 			Assert.AreEqual ("Typ.StructuredType.ResourceEntityType", Res.Manager.GetBundle (Resources.CaptionsBundleName, ResourceLevel.Default)[Res.Types.ResourceStructuredType.CaptionId].Name);
 			Assert.AreEqual ("Fld.ResourceEntityType.Fields", Res.Manager.GetBundle (Resources.CaptionsBundleName, ResourceLevel.Default)[Res.Fields.ResourceStructuredType.Fields].Name);
+			Assert.AreEqual ("ResourceEntityType.Fields", accessor.FieldAccessor.Collection[Res.Fields.ResourceStructuredType.Fields].ToString ());
 			
 			map.Name = "ResourceStructuredType";
 			accessor.PersistChanges ();
@@ -195,6 +196,7 @@ namespace Epsitec.Common.Support
 			Assert.AreEqual ("ResourceStructuredType", map.Name);
 			Assert.AreEqual ("Typ.StructuredType.ResourceStructuredType", Res.Manager.GetBundle (Resources.CaptionsBundleName, ResourceLevel.Default)[Res.Types.ResourceStructuredType.CaptionId].Name);
 			Assert.AreEqual ("Fld.ResourceStructuredType.Fields", Res.Manager.GetBundle (Resources.CaptionsBundleName, ResourceLevel.Default)[Res.Fields.ResourceStructuredType.Fields].Name);
+			Assert.AreEqual ("ResourceStructuredType.Fields", accessor.FieldAccessor.Collection[Res.Fields.ResourceStructuredType.Fields].ToString ());
 
 			CultureMap fieldItem;
 
@@ -211,6 +213,7 @@ namespace Epsitec.Common.Support
 			accessor.FieldAccessor.PersistChanges ();
 			
 			Assert.AreEqual ("Fld.ResourceStructuredType.X", Res.Manager.GetBundle (Resources.CaptionsBundleName, ResourceLevel.Default)[fieldItem.Id].Name);
+			Assert.AreEqual ("ResourceStructuredType.X", accessor.FieldAccessor.Collection[fieldItem.Id].ToString ());
 
 			accessor.FieldAccessor.Collection.Remove (fieldItem);
 			accessor.FieldAccessor.PersistChanges ();
@@ -372,6 +375,7 @@ namespace Epsitec.Common.Support
 			Assert.AreEqual ("Foo", map.Name);
 			Assert.AreEqual ("Typ.Foo", accessor.ResourceManager.GetBundle (Resources.CaptionsBundleName, ResourceLevel.Default)[Types.Res.Types.BindingMode.CaptionId].Name);
 			Assert.AreEqual ("Val.Foo.None", accessor.ResourceManager.GetBundle (Resources.CaptionsBundleName, ResourceLevel.Default)[Types.Res.Values.BindingMode.None.Id].Name);
+			Assert.AreEqual ("Foo.None", accessor.ValueAccessor.Collection[Types.Res.Values.BindingMode.None.Id].ToString ());
 
 			map.Name = "BindingMode";
 			accessor.PersistChanges ();
@@ -379,6 +383,7 @@ namespace Epsitec.Common.Support
 			Assert.AreEqual ("BindingMode", map.Name);
 			Assert.AreEqual ("Typ.BindingMode", accessor.ResourceManager.GetBundle (Resources.CaptionsBundleName, ResourceLevel.Default)[Types.Res.Types.BindingMode.CaptionId].Name);
 			Assert.AreEqual ("Val.BindingMode.None", accessor.ResourceManager.GetBundle (Resources.CaptionsBundleName, ResourceLevel.Default)[Types.Res.Values.BindingMode.None.Id].Name);
+			Assert.AreEqual ("BindingMode.None", accessor.ValueAccessor.Collection[Types.Res.Values.BindingMode.None.Id].ToString ());
 		}
 
 		[Test]
