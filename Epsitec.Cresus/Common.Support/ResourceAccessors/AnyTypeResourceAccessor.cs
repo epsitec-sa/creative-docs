@@ -23,6 +23,30 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			this.Collection.CollectionChanged += this.HandleCollectionChanged;
 		}
 
+		public IResourceAccessor ValueAccessor
+		{
+			get
+			{
+				return this.valueAccessor;
+			}
+		}
+
+		protected override string Prefix
+		{
+			get
+			{
+				return "Typ.";
+			}
+		}
+
+		public override void Load(ResourceManager manager)
+		{
+			base.Load (manager);
+
+			this.valueAccessor = new ValueResourceAccessor ();
+			this.valueAccessor.Load (manager);
+		}
+
 		public override IDataBroker GetDataBroker(StructuredData container, string fieldId)
 		{
 			if (fieldId == Res.Fields.ResourceEnumType.Values.ToString ())
@@ -33,12 +57,14 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			return base.GetDataBroker (container, fieldId);
 		}
 
-		protected override string Prefix
+		public CultureMap CreateValueItem(CultureMap item)
 		{
-			get
-			{
-				return "Typ.";
-			}
+			StructuredData data = item.GetCultureData (Resources.DefaultTwoLetterISOLanguageName);
+
+			System.Diagnostics.Debug.Assert (data != null);
+			System.Diagnostics.Debug.Assert (AnyTypeResourceAccessor.ToTypeCode (data.GetValue (Res.Fields.ResourceBaseType.TypeCode)) == TypeCode.Enum);
+			
+			return this.valueAccessor.CreateValueItem (item.Name);
 		}
 
 		protected override IStructuredType GetStructuredType()
@@ -701,5 +727,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 		{
 			return UndefinedValue.IsUndefinedValue (value) ? TypeCode.Invalid : (TypeCode) value;
 		}
+
+		private ValueResourceAccessor valueAccessor;
 	}
 }

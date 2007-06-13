@@ -21,6 +21,22 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			this.Collection.CollectionChanged += this.HandleCollectionChanged;
 		}
 
+		public IResourceAccessor FieldAccessor
+		{
+			get
+			{
+				return this.fieldAccessor;
+			}
+		}
+
+		protected override string Prefix
+		{
+			get
+			{
+				return "Typ.StructuredType.";
+			}
+		}
+
 		public override void Load(ResourceManager manager)
 		{
 			base.Load (manager);
@@ -42,22 +58,6 @@ namespace Epsitec.Common.Support.ResourceAccessors
 		public CultureMap CreateFieldItem(CultureMap item)
 		{
 			return this.fieldAccessor.CreateFieldItem (item.Name);
-		}
-
-		public IResourceAccessor FieldAccessor
-		{
-			get
-			{
-				return this.fieldAccessor;
-			}
-		}
-
-		protected override string Prefix
-		{
-			get
-			{
-				return "Typ.StructuredType.";
-			}
 		}
 
 		protected override IStructuredType GetStructuredType()
