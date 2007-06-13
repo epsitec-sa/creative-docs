@@ -645,6 +645,14 @@ namespace Epsitec.Common.Types
 			AbstractType.SetSystemType (caption, this.enumType);
 		}
 
+		/// <summary>
+		/// When the <c>EnumType</c> is created based on a native enumeration and a
+		/// <c>Caption</c> object, all definitions from the caption are just stored
+		/// in the <c>pendingEnumValues</c> collection; <c>EnumValues</c> is populated
+		/// with automatically generated values taken from the <c>enum</c> itself.
+		/// <c>FinishCreation</c> merges this with the additional information found
+		/// in the <c>Caption</c> object.
+		/// </summary>
 		private void FinishCreation()
 		{
 			if (this.pendingEnumValues != null)

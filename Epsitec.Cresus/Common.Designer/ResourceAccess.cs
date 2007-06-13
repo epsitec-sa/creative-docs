@@ -2935,7 +2935,11 @@ namespace Epsitec.Common.Designer
 			if (this.IsCaptionsType)
 			{
 				this.CaptionsCountersUpdate();
-
+#if false
+				//	La logique qui crée les premiers champs et valeurs crée des informations
+				//	qui ont des noms incorrects; on ne peut donc plus les utiliser. Ca ne
+				//	devrait pas porter à conséquence, vu que ResourceAccess va être mis à
+				//	la retraite prochainement...
 				if (this.captionCounters[Type.Values] == 0)
 				{
 					Druid newDruid = this.CreateUniqueDruid();
@@ -2947,6 +2951,7 @@ namespace Epsitec.Common.Designer
 					Druid newDruid = this.CreateUniqueDruid();
 					this.CreateFirstField(this.primaryBundle, newDruid.Local, ResourceAccess.GetFixFilter(Type.Fields)+Res.Strings.Viewers.Panels.New);
 				}
+#endif
 			}
 		}
 

@@ -1,7 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <bundle name="Captions" type="Caption" culture="fr">
-  <data name="Cap.New" id="0">&lt;s:data id="_0" f:Name="New" /&gt;</data>
-  <data name="Cmd.New" id="01">&lt;s:data id="_0" f:Name="New" /&gt;</data>
   <data name="Typ.Num.KeyId" id="04">&lt;s:type id="_1" s:name="*aT" /&gt;&lt;s:type id="_2" s:name="*aNT" /&gt;&lt;s:data id="_0" f:_1.SystemType="V:System.Int64" f:Name="Num.KeyId" f:_2.Range="-9223372036854775808 9223372036854775807 1" f:Description="Clef utilisée comme identificateur de fiche (valeur 64-bit)" f:Labels="{Collection {Text 'Id de clef 64-bit'}}" /&gt;</data>
   <data name="Typ.Num.NullableKeyId" id="07">&lt;s:type id="_1" s:name="*aT" /&gt;&lt;s:type id="_2" s:name="*aNT" /&gt;&lt;s:data id="_0" f:_1.SystemType="V:System.Int64" f:Name="Num.NullableKeyId" f:_2.Range="-9223372036854775808 9223372036854775807 1" f:Description="Clef utilisée comme identificateur facultatif de fiche (valeur 64-bit)" f:_1.IsNullable="True" f:Labels="{Collection {Text 'Id de clef 64-bit (nullable)'}}" /&gt;</data>
   <data name="Typ.Num.KeyStatus" id="05">&lt;s:type id="_1" s:name="*aT" /&gt;&lt;s:type id="_2" s:name="*aNT" /&gt;&lt;s:data id="_0" f:_1.SystemType="V:System.Int32" f:Name="Num.KeyStatus" f:_2.Range="-32768 32767 1" f:Description="Etat de la clef associée à la fiche (valeur 16-bit)" f:_2.UseCompactStorage="True" f:Labels="{Collection {Text 'État de clef 16-bit'}}" /&gt;</data>
@@ -12,5 +10,4 @@
   <data name="Typ.Str.Dict.Value" id="0B">&lt;s:type id="_1" s:name="*aT" /&gt;&lt;s:type id="_2" s:name="Epsitec.Common.Types.StringType" /&gt;&lt;s:data id="_0" f:_1.SystemType="C:System.String" f:Name="Str.Dict.Value" f:_1.DefaultController="String" f:_2.MaxLength="1000" f:_1.IsNullable="True" f:Labels="{Collection {Text 'Valeur de dictionnaire'}}" /&gt;</data>
   <data name="Typ.Other.ReqData" id="0C">&lt;s:type id="_1" s:name="*aT" /&gt;&lt;s:data id="_0" f:_1.SystemType="C:System.Byte[]" f:Name="Other.ReqData" f:_1.DefaultController="Binary" f:Labels="{Collection {Text 'Données d&amp;amp;apos;une requête'}}" /&gt;</data>
   <data name="Typ.Other.DateTime" id="0D">&lt;s:type id="_1" s:name="*aT" /&gt;&lt;s:type id="_2" s:name="*aDTT" /&gt;&lt;s:data id="_0" f:_1.SystemType="V:System.DateTime" f:Name="Other.DateTime" f:_1.DefaultController="DateTime" f:_2.Resolution="Milliseconds" f:Labels="{Collection {Text 'Date et heure'}}" /&gt;</data>
-  <data name="Val.New" id="03">&lt;s:data id="_0" f:Name="New" /&gt;</data>
 </bundle>

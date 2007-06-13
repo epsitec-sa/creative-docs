@@ -1,7 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <bundle name="Captions" type="Caption" culture="fr">
-  <data name="Cmd.New" id="01">&lt;s:data id="_0" f:Name="New" /&gt;</data>
-  <data name="Cap.New" id="02">&lt;s:data id="_0" f:Name="New" /&gt;</data>
   <data name="Typ.Default.Boolean" id="03">&lt;s:type id="_1" s:name="*aT" /&gt;&lt;s:type id="_2" s:name="*aNT" /&gt;&lt;s:data id="_0" f:_1.SystemType="V:System.Boolean" f:Name="Default.Boolean" f:_2.Range="0 1 1" f:Labels="{Collection {Text 'Type Boolean de .NET'}}" /&gt;</data>
   <data name="Typ.Default.Date" id="0H">&lt;s:type id="_1" s:name="*aT" /&gt;&lt;s:data id="_0" f:_1.SystemType="V:Epsitec.Common.Types.Date, Common.Types" f:Name="Default.Date" f:_1.DefaultController="DateTime" f:_1.IsNullable="True" f:Labels="{Collection {Text 'Type Date'}}" /&gt;</data>
   <data name="Typ.Default.Time" id="0I">&lt;s:type id="_1" s:name="*aT" /&gt;&lt;s:data id="_0" f:_1.SystemType="V:Epsitec.Common.Types.Time, Common.Types" f:Name="Default.Time" f:_1.DefaultController="DateTime" f:_1.IsNullable="True" f:Labels="{Collection {Text 'Type Time'}}" /&gt;</data>
@@ -32,7 +30,6 @@
   <data name="Val.BindingMode.OneWay" id="0D">&lt;s:data id="_0" f:Name="OneWay" f:Description="Binding de la source vers la cible" f:Labels="{Collection {Text 'Binding unidirectionnel'}}" /&gt;</data>
   <data name="Val.BindingMode.OneWayToSource" id="0E">&lt;s:data id="_0" f:Name="OneWayToSource" f:Description="Binding de la cible vers la source" f:Labels="{Collection {Text 'Binding unidirectionnel inversé'}}" /&gt;</data>
   <data name="Val.BindingMode.TwoWay" id="0F">&lt;s:data id="_0" f:Name="TwoWay" f:Description="Binding bidirectionnel entre la source et la cible" f:Labels="{Collection {Text 'Binding bidirectionnel'}}" /&gt;</data>
-  <data name="Fld.New" id="0L">&lt;s:data id="_0" f:Name="New" /&gt;</data>
   <data name="Val.FieldMembership.Local" id="0R">&lt;s:type id="_1" s:name="*eT" /&gt;&lt;s:data id="_0" f:_1.IsNative="True" f:Name="Local" f:Labels="{Collection {Text 'Champ local'}}" /&gt;</data>
   <data name="Val.FieldMembership.Inherited" id="0S">&lt;s:type id="_1" s:name="*eT" /&gt;&lt;s:data id="_0" f:_1.IsNative="True" f:Name="Inherited" f:Labels="{Collection {Text 'Champ hérité'}}" /&gt;</data>
   <data name="Val.StructuredTypeClass.None" id="0U">&lt;s:type id="_1" s:name="*eT" /&gt;&lt;s:data id="_0" f:_1.IsNative="True" f:Name="None" f:Labels="{Collection {Text 'Classe non définie'}}" /&gt;</data>
