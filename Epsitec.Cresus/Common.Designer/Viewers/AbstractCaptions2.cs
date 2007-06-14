@@ -175,14 +175,17 @@ namespace Epsitec.Common.Designer.Viewers
 			this.ignoreChange = true;
 
 			CultureMap item = this.access.CollectionView.CurrentItem as CultureMap;
-			StructuredData data;
+			StructuredData data = null;
 
-			data = item.GetCultureData(this.GetTwoLetters(0));
-			this.SetTextField(this.primaryLabels, data.GetValue(Support.Res.Fields.ResourceCaption.Labels) as IList<string>);
-			this.primaryDescription.Text = data.GetValue(Support.Res.Fields.ResourceCaption.Description) as string;
-			this.primaryComment.Text = data.GetValue(Support.Res.Fields.ResourceBase.Comment) as string;
+			if (item != null)
+			{
+				data = item.GetCultureData(this.GetTwoLetters(0));
+				this.SetTextField(this.primaryLabels, data.GetValue(Support.Res.Fields.ResourceCaption.Labels) as IList<string>);
+				this.primaryDescription.Text = data.GetValue(Support.Res.Fields.ResourceCaption.Description) as string;
+				this.primaryComment.Text = data.GetValue(Support.Res.Fields.ResourceBase.Comment) as string;
+			}
 
-			if (this.GetTwoLetters(1) == null)
+			if (data == null || this.GetTwoLetters(1) == null)
 			{
 				this.secondaryLabels.Collection = null;
 				this.secondaryDescription.Text = "";
@@ -209,8 +212,13 @@ namespace Epsitec.Common.Designer.Viewers
 		protected void UpdateIcon()
 		{
 			CultureMap item = this.access.CollectionView.CurrentItem as CultureMap;
-			StructuredData data = item.GetCultureData("00");
-			string icon = data.GetValue(Support.Res.Fields.ResourceCaption.Icon) as string;
+			string icon = null;
+			if (item != null)
+			{
+				StructuredData data = item.GetCultureData("00");
+				icon = data.GetValue(Support.Res.Fields.ResourceCaption.Icon) as string;
+			}
+
 			if (string.IsNullOrEmpty(icon))
 			{
 				this.primaryIcon.Enable = false;
@@ -256,41 +264,48 @@ namespace Epsitec.Common.Designer.Viewers
 			else
 			{
 				CultureMap item = this.access.CollectionView.CurrentItem as CultureMap;
-				StructuredData data = item.GetCultureData(twoLettersCulture);
-
-				IList<string> list = data.GetValue(Support.Res.Fields.ResourceCaption.Labels) as IList<string>;
-				string desc = data.GetValue(Support.Res.Fields.ResourceCaption.Description) as string;
-
-				if ((list == null || list.Count == 0) && string.IsNullOrEmpty(desc))
+				if (item == null)
 				{
-					buffer.Append(Misc.Italic("(indéfini)"));
+					buffer.Append(Misc.Italic("(vide)"));
 				}
 				else
 				{
-					if (list != null && list.Count != 0)
+					StructuredData data = item.GetCultureData(twoLettersCulture);
+
+					IList<string> list = data.GetValue(Support.Res.Fields.ResourceCaption.Labels) as IList<string>;
+					string desc = data.GetValue(Support.Res.Fields.ResourceCaption.Description) as string;
+
+					if ((list == null || list.Count == 0) && string.IsNullOrEmpty(desc))
 					{
-						for (int i=0; i<list.Count; i++)
+						buffer.Append(Misc.Italic("(indéfini)"));
+					}
+					else
+					{
+						if (list != null && list.Count != 0)
 						{
-							buffer.Append(list[i]);
-							if (i < list.Count-1)
+							for (int i=0; i<list.Count; i++)
 							{
-								buffer.Append(", ");
+								buffer.Append(list[i]);
+								if (i < list.Count-1)
+								{
+									buffer.Append(", ");
+								}
 							}
+							buffer.Append("<br/>");
 						}
-						buffer.Append("<br/>");
+
+						if (!string.IsNullOrEmpty(desc))
+						{
+							buffer.Append(desc);
+						}
 					}
 
-					if (!string.IsNullOrEmpty(desc))
+					string comment = data.GetValue(Support.Res.Fields.ResourceBase.Comment) as string;
+					if (!string.IsNullOrEmpty(comment))
 					{
-						buffer.Append(desc);
+						buffer.Append("<br/>");
+						buffer.Append(Misc.Italic(comment));
 					}
-				}
-
-				string comment = data.GetValue(Support.Res.Fields.ResourceBase.Comment) as string;
-				if (!string.IsNullOrEmpty(comment))
-				{
-					buffer.Append("<br/>");
-					buffer.Append(Misc.Italic(comment));
 				}
 			}
 
@@ -588,7 +603,8 @@ namespace Epsitec.Common.Designer.Viewers
 		protected override UI.IItemViewFactory ItemViewFactoryGetter(UI.ItemView itemView)
 		{
 			//	Retourne le "factory" a utiliser pour les éléments représentés dans cet ItemTable/ItemPanel.
-			if (itemView.Item == null || itemView.Item.GetType() != typeof(CultureMap))
+			//?if (itemView.Item == null || itemView.Item.GetType() != typeof(CultureMap))  // TODO: pas compris !
+			if (itemView.Item == null)
 			{
 				return null;
 			}
