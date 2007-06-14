@@ -92,17 +92,10 @@ namespace Epsitec.Common.Types
 		internal StructuredTypeField(string id, INamedType type, Support.Druid captionId, int rank, FieldRelation relation, string sourceFieldId, FieldMembership membership)
 		{
 			this.id = id ?? (captionId.IsValid ? captionId.ToString () : null);
-			
-			if (relation == FieldRelation.Inclusion)
-			{
-				sourceFieldId = this.id;
-			}
-
 			this.captionId = captionId;
 			this.rank = rank;
 			this.relation = relation;
 			this.membership = membership;
-			this.sourceFieldId = string.IsNullOrEmpty (sourceFieldId) ? null : sourceFieldId;
 			this.DefineType (type);
 		}
 
@@ -122,12 +115,11 @@ namespace Epsitec.Common.Types
 			this.rank = rank;
 			this.relation = (FieldRelation) ((flags >> StructuredTypeField.RelationShift) & StructuredTypeField.RelationMask);
 			this.membership = (FieldMembership) ((flags >> StructuredTypeField.MembershipShift) & StructuredTypeField.MembershipMask);
-			this.sourceFieldId = string.IsNullOrEmpty (sourceFieldId) ? null : sourceFieldId;
 			this.DefineType (type);
 		}
 
 		internal StructuredTypeField(StructuredTypeField model, FieldMembership membership)
-			: this (model.id, model.type, model.captionId, model.rank, model.relation, model.sourceFieldId, membership)
+			: this (model.id, model.type, model.captionId, model.rank, model.relation, null, membership)
 		{
 		}
 
@@ -219,7 +211,7 @@ namespace Epsitec.Common.Types
 
 		public StructuredTypeField Clone()
 		{
-			StructuredTypeField copy = new StructuredTypeField (this.id, null, this.captionId, this.rank, this.relation, this.sourceFieldId, this.membership);
+			StructuredTypeField copy = new StructuredTypeField (this.id, null, this.captionId, this.rank, this.relation, null, this.membership);
 
 			copy.type   = this.type;
 			copy.typeId = this.typeId;
@@ -268,28 +260,25 @@ namespace Epsitec.Common.Types
 					throw new System.InvalidOperationException ("Field type is immutable");
 				}
 
-				bool isStructuredType = abstractType is IStructuredType;
-
+				IStructuredType structType = abstractType as IStructuredType;
+				
 				switch (this.relation)
 				{
 					case FieldRelation.Collection:
 						break;
 
 					case FieldRelation.Reference:
-						if (!isStructuredType)
+						if (structType == null)
 						{
 							throw new System.ArgumentException (string.Format ("Invalid type {0} in relation {1} for field {2}", abstractType.Name, this.relation, this.id));
 						}
 						break;
 
 					case FieldRelation.Inclusion:
-						if (!isStructuredType)
+						if ((structType == null) ||
+							(structType.GetClass () != StructuredTypeClass.Interface))
 						{
 							throw new System.ArgumentException (string.Format ("Invalid type {0} in relation {1} for field {2}", abstractType.Name, this.relation, this.id));
-						}
-						if (this.sourceFieldId == null)
-						{
-							throw new System.ArgumentException (string.Format ("Invalid relation {0} for field {1}, no source field id specified", this.relation, this.id));
 						}
 						break;
 				}
@@ -325,11 +314,7 @@ namespace Epsitec.Common.Types
 				string rank   = field.rank == -1 ? "" : field.rank.ToString (System.Globalization.CultureInfo.InvariantCulture);
 				string flags  = field.Flags == 0 ? "" : field.Flags.ToString (System.Globalization.CultureInfo.InvariantCulture);
 
-				if (field.sourceFieldId != null)
-				{
-					return string.Concat (field.id, ";", typeId, ";", rank, ";", field.captionId.ToString (), ";", flags, ";", field.sourceFieldId);
-				}
-				else if (!string.IsNullOrEmpty (flags))
+				if (!string.IsNullOrEmpty (flags))
 				{
 					return string.Concat (field.id, ";", typeId, ";", rank, ";", field.captionId.ToString (), ";", flags);
 				}
@@ -413,6 +398,5 @@ namespace Epsitec.Common.Types
 		private int								rank;
 		private readonly FieldRelation			relation;
 		private readonly FieldMembership		membership;
-		private readonly string					sourceFieldId;
 	}
 }

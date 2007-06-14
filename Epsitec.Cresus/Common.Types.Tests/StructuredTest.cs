@@ -420,7 +420,7 @@ namespace Epsitec.Common.Types
 		}
 
 		[Test]
-		[ExpectedException (typeof (System.ArgumentException))]
+		[ExpectedException (typeof (System.InvalidOperationException))]
 		public void CheckStructuredTypeEx2()
 		{
 			StructuredType type = new StructuredType (StructuredTypeClass.Entity);
