@@ -497,78 +497,15 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				}
 			}
 
-			//	Dessine le bouton des couleurs.
-			if (this.hilitedElement == ActiveElement.CommentColorButton1)
-			{
-				this.DrawSquareButton(graphics, this.PositionColorButton(0), MainColor.Yellow, this.boxColor == MainColor.Yellow, true);
-			}
-			else if (this.IsHeaderHilite)
-			{
-				this.DrawSquareButton(graphics, this.PositionColorButton(0), MainColor.Yellow, this.boxColor == MainColor.Yellow, false);
-			}
-
-			if (this.hilitedElement == ActiveElement.CommentColorButton2)
-			{
-				this.DrawSquareButton(graphics, this.PositionColorButton(1), MainColor.Orange, this.boxColor == MainColor.Orange, true);
-			}
-			else if (this.IsHeaderHilite)
-			{
-				this.DrawSquareButton(graphics, this.PositionColorButton(1), MainColor.Orange, this.boxColor == MainColor.Orange, false);
-			}
-
-			if (this.hilitedElement == ActiveElement.CommentColorButton3)
-			{
-				this.DrawSquareButton(graphics, this.PositionColorButton(2), MainColor.Red, this.boxColor == MainColor.Red, true);
-			}
-			else if (this.IsHeaderHilite)
-			{
-				this.DrawSquareButton(graphics, this.PositionColorButton(2), MainColor.Red, this.boxColor == MainColor.Red, false);
-			}
-
-			if (this.hilitedElement == ActiveElement.CommentColorButton4)
-			{
-				this.DrawSquareButton(graphics, this.PositionColorButton(3), MainColor.Lilac, this.boxColor == MainColor.Lilac, true);
-			}
-			else if (this.IsHeaderHilite)
-			{
-				this.DrawSquareButton(graphics, this.PositionColorButton(3), MainColor.Lilac, this.boxColor == MainColor.Lilac, false);
-			}
-
-			if (this.hilitedElement == ActiveElement.CommentColorButton5)
-			{
-				this.DrawSquareButton(graphics, this.PositionColorButton(4), MainColor.Purple, this.boxColor == MainColor.Purple, true);
-			}
-			else if (this.IsHeaderHilite)
-			{
-				this.DrawSquareButton(graphics, this.PositionColorButton(4), MainColor.Purple, this.boxColor == MainColor.Purple, false);
-			}
-
-			if (this.hilitedElement == ActiveElement.CommentColorButton6)
-			{
-				this.DrawSquareButton(graphics, this.PositionColorButton(5), MainColor.Blue, this.boxColor == MainColor.Blue, true);
-			}
-			else if (this.IsHeaderHilite)
-			{
-				this.DrawSquareButton(graphics, this.PositionColorButton(5), MainColor.Blue, this.boxColor == MainColor.Blue, false);
-			}
-
-			if (this.hilitedElement == ActiveElement.CommentColorButton7)
-			{
-				this.DrawSquareButton(graphics, this.PositionColorButton(6), MainColor.Green, this.boxColor == MainColor.Green, true);
-			}
-			else if (this.IsHeaderHilite)
-			{
-				this.DrawSquareButton(graphics, this.PositionColorButton(6), MainColor.Green, this.boxColor == MainColor.Green, false);
-			}
-
-			if (this.hilitedElement == ActiveElement.CommentColorButton8)
-			{
-				this.DrawSquareButton(graphics, this.PositionColorButton(7), MainColor.DarkGrey, this.boxColor == MainColor.DarkGrey, true);
-			}
-			else if (this.IsHeaderHilite)
-			{
-				this.DrawSquareButton(graphics, this.PositionColorButton(7), MainColor.DarkGrey, this.boxColor == MainColor.DarkGrey, false);
-			}
+			//	Dessine les boutons des couleurs.
+			this.DrawColorButton(graphics, ActiveElement.CommentColorButton1, 0, MainColor.Yellow);
+			this.DrawColorButton(graphics, ActiveElement.CommentColorButton2, 1, MainColor.Orange);
+			this.DrawColorButton(graphics, ActiveElement.CommentColorButton3, 2, MainColor.Red);
+			this.DrawColorButton(graphics, ActiveElement.CommentColorButton4, 3, MainColor.Lilac);
+			this.DrawColorButton(graphics, ActiveElement.CommentColorButton5, 4, MainColor.Purple);
+			this.DrawColorButton(graphics, ActiveElement.CommentColorButton6, 5, MainColor.Blue);
+			this.DrawColorButton(graphics, ActiveElement.CommentColorButton7, 6, MainColor.Green);
+			this.DrawColorButton(graphics, ActiveElement.CommentColorButton8, 7, MainColor.DarkGrey);
 
 			//	Dessine le bouton pour modifier la largeur.
 			if (this.hilitedElement == ActiveElement.CommentWidth)
@@ -591,6 +528,21 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				else if (this.IsHeaderHilite && !this.isDraggingMove && !this.isDraggingWidth && !this.isDraggingAttach)
 				{
 					this.DrawRoundButton(graphics, p, AbstractObject.buttonRadius, "C", false, false);
+				}
+			}
+		}
+
+		protected void DrawColorButton(Graphics graphics, ActiveElement activeElement, int rank, MainColor color)
+		{
+			if (!this.isDraggingMove && !this.isDraggingWidth && !this.isDraggingAttach)
+			{
+				if (this.hilitedElement == activeElement)
+				{
+					this.DrawSquareButton(graphics, this.PositionColorButton(rank), color, this.boxColor == color, true);
+				}
+				else if (this.IsHeaderHilite)
+				{
+					this.DrawSquareButton(graphics, this.PositionColorButton(rank), color, this.boxColor == color, false);
 				}
 			}
 		}
