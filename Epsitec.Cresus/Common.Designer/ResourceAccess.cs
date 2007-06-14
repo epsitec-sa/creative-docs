@@ -563,6 +563,23 @@ namespace Epsitec.Common.Designer
 			{
 				CultureMap newItem = this.accessor.CreateItem();
 				newItem.Name = newName;
+
+				if (this.type == Type.Types && !duplicateContent)
+				{
+					TypeType tt = this.lastTypeTypeCreatated;
+					this.mainWindow.DlgResourceTypeType(this, ref tt, out this.lastTypeTypeSystem);
+					if (tt == TypeType.None)  // annuler ?
+					{
+						return;
+					}
+					this.lastTypeTypeCreatated = tt;
+					AbstractType type = ResourceAccess.TypeTypeCreate(this.lastTypeTypeCreatated, this.primaryBundle);
+
+					//?CultureMap structItem = structAccessor.Collection[...];
+					//?CultureMap fieldItem = structAccessor.CreateFieldItem(structItem);
+					aucune idée comment finir...
+				}
+
 				this.accessor.Collection.Add(newItem);
 				this.collectionView.MoveCurrentTo(newItem);
 
