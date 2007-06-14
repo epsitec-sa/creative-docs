@@ -55,6 +55,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			CommentColorButton4,
 			CommentColorButton5,
 			CommentColorButton6,
+			CommentColorButton7,
+			CommentColorButton8,
 			CommentAttachToConnection,
 		}
 
@@ -64,7 +66,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			Green,
 			Red,
 			Grey,
-
+			DarkGrey,
 			Yellow,
 			Orange,
 			Lilac,
@@ -253,6 +255,12 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 				case AbstractObject.ActiveElement.CommentColorButton6:
 					return "Commentaire bleu";
+
+				case AbstractObject.ActiveElement.CommentColorButton7:
+					return "Commentaire vert";
+
+				case AbstractObject.ActiveElement.CommentColorButton8:
+					return "Commentaire gris foncé";
 
 				case AbstractObject.ActiveElement.CommentAttachToConnection:
 					return "Déplace le point d'attache du commentaire";
@@ -529,6 +537,15 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			graphics.AddLine(end, e2);
 		}
 
+		protected bool IsDarkColorMain
+		{
+			//	Indique si la couleur pour les mises en évidence est foncée.
+			get
+			{
+				return this.boxColor == MainColor.DarkGrey;
+			}
+		}
+
 		protected Color GetColorMain()
 		{
 			//	Retourne la couleur pour les mises en évidence.
@@ -570,6 +587,10 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					color = Color.FromRgb(100.0/255.0, 100.0/255.0, 100.0/255.0);
 					break;
 
+				case MainColor.DarkGrey:
+					color = Color.FromRgb(100.0/255.0, 100.0/255.0, 100.0/255.0);
+					break;
+
 				case MainColor.Yellow:
 					color = Color.FromRgb(200.0/255.0, 200.0/255.0, 0.0/255.0);
 					break;
@@ -595,9 +616,19 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		protected Color GetColorLighter(Color color, double factor)
 		{
 			//	Retourne une couleur éclaircie, sans changer la transparence.
-			color.R = 1-(1-color.R)*factor;
-			color.G = 1-(1-color.G)*factor;
-			color.B = 1-(1-color.B)*factor;
+			if (this.IsDarkColorMain)
+			{
+				factor = 0.5+(factor*0.5);
+				color.R = color.R*factor;
+				color.G = color.G*factor;
+				color.B = color.B*factor;
+			}
+			else
+			{
+				color.R = 1-(1-color.R)*factor;
+				color.G = 1-(1-color.G)*factor;
+				color.B = 1-(1-color.B)*factor;
+			}
 			return color;
 		}
 

@@ -273,6 +273,18 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					this.BackgroundMainColor = MainColor.Blue;
 					this.UpdateFieldColor();
 				}
+
+				if (this.hilitedElement == ActiveElement.CommentColorButton7)
+				{
+					this.BackgroundMainColor = MainColor.Green;
+					this.UpdateFieldColor();
+				}
+
+				if (this.hilitedElement == ActiveElement.CommentColorButton8)
+				{
+					this.BackgroundMainColor = MainColor.DarkGrey;
+					this.UpdateFieldColor();
+				}
 			}
 		}
 
@@ -349,6 +361,18 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			if (this.DetectSquareButton(this.PositionColorButton(5), pos))
 			{
 				element = ActiveElement.CommentColorButton6;
+				return true;
+			}
+
+			if (this.DetectSquareButton(this.PositionColorButton(6), pos))
+			{
+				element = ActiveElement.CommentColorButton7;
+				return true;
+			}
+
+			if (this.DetectSquareButton(this.PositionColorButton(7), pos))
+			{
+				element = ActiveElement.CommentColorButton8;
 				return true;
 			}
 
@@ -458,7 +482,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			rect = this.bounds;
 			rect.Deflate(ObjectComment.textMargin);
 			this.textLayoutComment.LayoutSize = rect.Size;
-			this.textLayoutComment.Paint(rect.BottomLeft, graphics, Rectangle.MaxValue, Color.FromBrightness(0), GlyphPaintStyle.Normal);
+			this.textLayoutComment.Paint(rect.BottomLeft, graphics, Rectangle.MaxValue, Color.FromBrightness(this.IsDarkColorMain ? 1:0), GlyphPaintStyle.Normal);
 
 			//	Dessine le bouton de fermeture.
 			if (!rh.IsEmpty)
@@ -528,6 +552,24 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				this.DrawSquareButton(graphics, this.PositionColorButton(5), MainColor.Blue, this.boxColor == MainColor.Blue, false);
 			}
 
+			if (this.hilitedElement == ActiveElement.CommentColorButton7)
+			{
+				this.DrawSquareButton(graphics, this.PositionColorButton(6), MainColor.Green, this.boxColor == MainColor.Green, true);
+			}
+			else if (this.IsHeaderHilite)
+			{
+				this.DrawSquareButton(graphics, this.PositionColorButton(6), MainColor.Green, this.boxColor == MainColor.Green, false);
+			}
+
+			if (this.hilitedElement == ActiveElement.CommentColorButton8)
+			{
+				this.DrawSquareButton(graphics, this.PositionColorButton(7), MainColor.DarkGrey, this.boxColor == MainColor.DarkGrey, true);
+			}
+			else if (this.IsHeaderHilite)
+			{
+				this.DrawSquareButton(graphics, this.PositionColorButton(7), MainColor.DarkGrey, this.boxColor == MainColor.DarkGrey, false);
+			}
+
 			//	Dessine le bouton pour modifier la largeur.
 			if (this.hilitedElement == ActiveElement.CommentWidth)
 			{
@@ -567,6 +609,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 						this.hilitedElement == ActiveElement.CommentColorButton4 ||
 						this.hilitedElement == ActiveElement.CommentColorButton5 ||
 						this.hilitedElement == ActiveElement.CommentColorButton6 ||
+						this.hilitedElement == ActiveElement.CommentColorButton7 ||
+						this.hilitedElement == ActiveElement.CommentColorButton8 ||
 						this.hilitedElement == ActiveElement.CommentAttachToConnection);
 			}
 		}
