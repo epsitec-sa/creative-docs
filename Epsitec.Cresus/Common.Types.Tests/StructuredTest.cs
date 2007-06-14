@@ -576,6 +576,28 @@ namespace Epsitec.Common.Types
 		}
 
 		[Test]
+		public void CheckStructuredTypeCreateInterface()
+		{
+			StructuredType i = this.CreateInterface ();
+
+			Assert.AreEqual (2, i.Fields.Count);
+			Assert.AreEqual ("[400I]", Types.Collection.ToArray (i.GetFieldIds ())[0]);
+			Assert.AreEqual ("[400J]", Types.Collection.ToArray (i.GetFieldIds ())[1]);
+
+			StructuredType e1;
+			StructuredType e2;
+			StructuredType e3;
+
+			this.CreateEntities (out e1, out e2, out e3);
+
+			e1.Fields.Add (new StructuredTypeField (null, i, Support.Druid.Parse ("[400I]"), 0, FieldRelation.Inclusion, "[400I]"));
+			e1.Fields.Add (new StructuredTypeField (null, i, Support.Druid.Parse ("[400J]"), 1, FieldRelation.Inclusion, "[400J]"));
+
+			Assert.AreEqual (1, e1.GetImportedInterfaces (false).Count);
+			Assert.AreEqual ("[400H]", e1.GetImportedInterfaces (false)[0].ToString ());
+		}
+
+		[Test]
 		public void CheckStructuredTypeMerge1()
 		{
 			StructuredType e1;
@@ -745,6 +767,24 @@ namespace Epsitec.Common.Types
 			Assert.AreEqual ("Z", this.manager.GetCaption (e2.GetField ("[400G]").CaptionId).Name);
 			Assert.AreEqual ("V", this.manager.GetCaption (e3.GetField ("[V002]").CaptionId).Name);
 			Assert.AreEqual ("W", this.manager.GetCaption (e3.GetField ("[V003]").CaptionId).Name);
+		}
+
+		private StructuredType CreateInterface()
+		{
+			StructuredType i = new StructuredType (StructuredTypeClass.Interface, Support.Druid.Empty);
+
+			i.DefineCaption (this.manager.GetCaption (Support.Druid.Parse ("[400H]")));	//	from Test, Application layer
+
+			Assert.AreEqual (Support.ResourceModuleLayer.Application, i.Module.Layer);
+
+			i.Fields.Add (new StructuredTypeField (null, StringType.Default, Support.Druid.Parse ("[400I]"), 0));
+			i.Fields.Add (new StructuredTypeField (null, StringType.Default, Support.Druid.Parse ("[400J]"), 1));
+
+			Assert.AreEqual ("I", i.Name);
+			Assert.AreEqual ("If1", this.manager.GetCaption (i.GetField ("[400I]").CaptionId).Name);
+			Assert.AreEqual ("If2", this.manager.GetCaption (i.GetField ("[400J]").CaptionId).Name);
+
+			return i;
 		}
 
 

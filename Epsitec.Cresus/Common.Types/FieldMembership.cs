@@ -20,10 +20,5 @@ namespace Epsitec.Common.Types
 		/// The field is inherited from some parent or base class.
 		/// </summary>
 		Inherited=1,
-
-		/// <summary>
-		/// Ths field is inherited through interface implementation.
-		/// </summary>
-		Interface=2,
 	}
 }

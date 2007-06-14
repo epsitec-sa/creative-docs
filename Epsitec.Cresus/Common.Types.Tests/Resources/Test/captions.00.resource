@@ -18,4 +18,7 @@
   <data id="0E">&lt;s:data id="_0" f:Name="X" f:Labels="{Collection {Text 'Field X'}}" /&gt;</data>
   <data id="0F">&lt;s:data id="_0" f:Name="Y" f:Labels="{Collection {Text 'Field Y'}}" /&gt;</data>
   <data id="0G">&lt;s:data id="_0" f:Name="Z" f:Labels="{Collection {Text 'Field Z'}}" /&gt;</data>
+  <data id="0H">&lt;s:data id="_0" f:Name="I" f:Description="Interface" f:Labels="{Collection {Text 'Interface'}}" /&gt;</data>
+  <data id="0I">&lt;s:data id="_0" f:Name="If1" f:Labels="{Collection {Text 'Field 1'}}" /&gt;</data>
+  <data id="0J">&lt;s:data id="_0" f:Name="If2" f:Labels="{Collection {Text 'Field 1'}}" /&gt;</data>
 </bundle>

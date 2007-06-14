@@ -2,6 +2,7 @@
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Types;
+using Epsitec.Common.Support;
 
 using System.Collections.Generic;
 
@@ -45,7 +46,7 @@ namespace Epsitec.Common.Types
 		/// </summary>
 		/// <param name="class">The structured type class.</param>
 		/// <param name="baseTypeId">The structured type this instance extends.</param>
-		public StructuredType(StructuredTypeClass @class, Support.Druid baseTypeId)
+		public StructuredType(StructuredTypeClass @class, Druid baseTypeId)
 			: this (@class)
 		{
 			if (baseTypeId.IsValid)
@@ -65,7 +66,6 @@ namespace Epsitec.Common.Types
 				return TypeCode.Structured;
 			}
 		}
-
 
 
 		/// <summary>
@@ -98,7 +98,7 @@ namespace Epsitec.Common.Types
 		/// its base type).
 		/// </summary>
 		/// <value>The structured type id this instance extends or <c>Druid.Empty</c>.</value>
-		public Support.Druid BaseTypeId
+		public Druid BaseTypeId
 		{
 			get
 			{
@@ -106,11 +106,11 @@ namespace Epsitec.Common.Types
 
 				if (UndefinedValue.IsUndefinedValue (value))
 				{
-					return Support.Druid.Empty;
+					return Druid.Empty;
 				}
 				else
 				{
-					return (Support.Druid) value;
+					return (Druid) value;
 				}
 			}
 		}
@@ -125,12 +125,12 @@ namespace Epsitec.Common.Types
 		{
 			get
 			{
-				Support.Druid baseTypeId = this.BaseTypeId;
+				Druid baseTypeId = this.BaseTypeId;
 
 				if (baseTypeId.IsValid)
 				{
-					Support.ResourceManager manager = this.FindAssociatedResourceManager ();
-					Caption                 caption = manager.GetCaption (baseTypeId);
+					ResourceManager manager = this.FindAssociatedResourceManager ();
+					Caption         caption = manager.GetCaption (baseTypeId);
 
 					if (caption != null)
 					{
@@ -176,6 +176,39 @@ namespace Epsitec.Common.Types
 			field = null;
 			return false;
 		}
+
+		/// <summary>
+		/// Gets the list of imported interfaces. An interface is represented by
+		/// a <see cref="Druid"/> which can be mapped to a <see cref="StructuredType"/>.
+		/// </summary>
+		/// <param name="inherit">If set to <c>true</c>, lists also the inherited interfaces.</param>
+		/// <returns>
+		/// The list of imported interfaces (or an empty list).
+		/// </returns>
+		public Collections.ReadOnlyList<Druid> GetImportedInterfaces(bool inherit)
+		{
+			List<Druid> interfaces = new List<Druid> ();
+
+			foreach (StructuredTypeField field in this.fields.Values)
+			{
+				if (field.Relation == FieldRelation.Inclusion)
+				{
+					if ((field.Membership == FieldMembership.Local) ||
+						(inherit))
+					{
+						if (interfaces.Contains (field.TypeId))
+						{
+							continue;
+						}
+
+						interfaces.Add (field.TypeId);
+					}
+				}
+			}
+
+			return new Collections.ReadOnlyList<Druid> (interfaces);
+		}
+
 
 		#region IStructuredType Members
 
@@ -397,8 +430,7 @@ namespace Epsitec.Common.Types
 
 				if (field.Membership == FieldMembership.Local)
 				{
-					merge.fields.Add (new StructuredTypeField (id, field.Type, field.CaptionId, rank++,
-															   field.Relation, field.SourceFieldId));
+					merge.fields.Add (new StructuredTypeField (id, field.Type, field.CaptionId, rank++, field.Relation, field.SourceFieldId));
 				}
 			}
 
@@ -414,8 +446,7 @@ namespace Epsitec.Common.Types
 					}
 					else
 					{
-						merge.fields.Add (new StructuredTypeField (id, field.Type, field.CaptionId, rank++,
-																   field.Relation, field.SourceFieldId));
+						merge.fields.Add (new StructuredTypeField (id, field.Type, field.CaptionId, rank++, field.Relation, field.SourceFieldId));
 					}
 				}
 			}
@@ -425,7 +456,7 @@ namespace Epsitec.Common.Types
 			//	Make the merged structure type belong to the same bundle/module
 			//	as the lower layer source structured type :
 			
-			Support.ResourceManager.SetSourceBundle (merge, Support.ResourceManager.GetSourceBundle (a));
+			ResourceManager.SetSourceBundle (merge, ResourceManager.GetSourceBundle (a));
 
 			return merge;
 		}
@@ -586,13 +617,13 @@ namespace Epsitec.Common.Types
 					throw new System.ArgumentException (string.Format ("View may not use field with {0} relation", field.Relation));
 				}
 
-				if (field.Type != null)
+				if (field.TypeId.IsValid)
 				{
 					foreach (StructuredTypeField item in this.fields.Values)
 					{
-						if (item.Type != null)
+						if (item.TypeId.IsValid)
 						{
-							if (field.Type != item.Type)
+							if (field.TypeId != item.TypeId)
 							{
 								throw new System.ArgumentException (string.Format ("View may not use mismatched fields ({0} and {1})", item.Id, field.Id));
 							}
@@ -610,8 +641,8 @@ namespace Epsitec.Common.Types
 					//	Ensure that the field ID matches the field's caption ID. This is
 					//	a strict requirement for entities and views.
 
-					Support.ResourceManager manager = this.FindAssociatedResourceManager ();
-					Caption                 caption = manager.GetCaption (field.CaptionId);
+					ResourceManager manager = this.FindAssociatedResourceManager ();
+					Caption         caption = manager.GetCaption (field.CaptionId);
 
 					if ((caption == null) ||
 						(string.IsNullOrEmpty (caption.Name)))
@@ -619,7 +650,7 @@ namespace Epsitec.Common.Types
 						throw new System.ArgumentException (string.Format ("Invalid caption specified for field in {0} {1}", typeClass.ToString ().ToLower (), this.Name));
 					}
 
-					if ((!Support.RegexFactory.PascalCaseSymbol.IsMatch (caption.Name)) ||
+					if ((!RegexFactory.PascalCaseSymbol.IsMatch (caption.Name)) ||
 						((caption.Name.Length > 1) && (caption.Name == caption.Name.ToUpper ())))
 					{
 						throw new System.ArgumentException (string.Format ("Field name {0} invalid in {1} {2}", caption.Name, typeClass.ToString ().ToLower (), this.Name));
@@ -633,10 +664,10 @@ namespace Epsitec.Common.Types
 			}
 		}
 
-		private Support.ResourceManager FindAssociatedResourceManager()
+		private ResourceManager FindAssociatedResourceManager()
 		{
-			Support.ResourceBundle  bundle  = Support.ResourceManager.GetSourceBundle (this.Caption);
-			Support.ResourceManager manager = bundle == null
+			ResourceBundle  bundle  = ResourceManager.GetSourceBundle (this.Caption);
+			ResourceManager manager = bundle == null
 						? (Serialization.Context.GetResourceManager (Storage.CurrentDeserializationContext) ?? Support.Resources.DefaultManager)
 						: bundle.ResourceManager;
 			
@@ -685,7 +716,7 @@ namespace Epsitec.Common.Types
 		public static readonly DependencyProperty DebugDisableChecksProperty = DependencyProperty.Register ("DebugDisableChecks", typeof (bool), typeof (StructuredType), new DependencyPropertyMetadata (false));
 		public static readonly DependencyProperty FieldsProperty = DependencyProperty.RegisterReadOnly ("Fields", typeof (Collections.StructuredTypeFieldCollection), typeof (StructuredType), new DependencyPropertyMetadata (StructuredType.GetFieldsValue).MakeReadOnlySerializable ());
 		public static readonly DependencyProperty ClassProperty = DependencyProperty.RegisterReadOnly ("Class", typeof (StructuredTypeClass), typeof (StructuredType), new DependencyPropertyMetadata (StructuredTypeClass.None).MakeReadOnlySerializable ());
-		public static readonly DependencyProperty BaseTypeIdProperty = DependencyProperty.RegisterReadOnly ("BaseTypeId", typeof (Support.Druid), typeof (StructuredType), new DependencyPropertyMetadata (Support.Druid.Empty).MakeReadOnlySerializable ());
+		public static readonly DependencyProperty BaseTypeIdProperty = DependencyProperty.RegisterReadOnly ("BaseTypeId", typeof (Druid), typeof (StructuredType), new DependencyPropertyMetadata (Druid.Empty).MakeReadOnlySerializable ());
 
 		private Collections.HostedStructuredTypeFieldDictionary fields;
 		private FieldInheritance fieldInheritance;

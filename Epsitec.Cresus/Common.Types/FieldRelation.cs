@@ -23,7 +23,7 @@ namespace Epsitec.Common.Types
 
 		/// <summary>
 		/// The field defines the inclusion of a field found in another
-		/// structure.
+		/// structure, i.e. through an interface.
 		/// </summary>
 		Inclusion=2,
 

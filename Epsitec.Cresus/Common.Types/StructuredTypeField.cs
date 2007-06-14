@@ -10,7 +10,7 @@ namespace Epsitec.Common.Types
 	/// pair, when serializing a <see cref="StructuredType"/>.
 	/// </summary>
 	[SerializationConverter (typeof (StructuredTypeField.SerializationConverter))]
-	public class StructuredTypeField
+	public sealed class StructuredTypeField
 	{
 		/// <summary>
 		/// Initializes a new instance of the <see cref="StructuredTypeField"/> class.
@@ -223,6 +223,17 @@ namespace Epsitec.Common.Types
 			{
 				return this.sourceFieldId;
 			}
+		}
+
+
+		public StructuredTypeField Clone()
+		{
+			StructuredTypeField copy = new StructuredTypeField (this.id, null, this.captionId, this.rank, this.relation, this.sourceFieldId, this.membership);
+
+			copy.type   = this.type;
+			copy.typeId = this.typeId;
+
+			return copy;
 		}
 
 		/// <summary>
