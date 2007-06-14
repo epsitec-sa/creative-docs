@@ -79,22 +79,6 @@ namespace Epsitec.Common.Types
 		{
 		}
 
-#if false
-		/// <summary>
-		/// Initializes a new instance of the <see cref="StructuredTypeField"/> class.
-		/// </summary>
-		/// <param name="id">The field id.</param>
-		/// <param name="type">The field type.</param>
-		/// <param name="captionId">The field caption DRUID.</param>
-		/// <param name="rank">The field rank when listed in a user interface.</param>
-		/// <param name="relation">The relation.</param>
-		/// <param name="sourceFieldId">The source field id.</param>
-		public StructuredTypeField(string id, INamedType type, Support.Druid captionId, int rank, FieldRelation relation, string sourceFieldId)
-			: this (id, type, captionId, rank, relation, sourceFieldId, FieldMembership.Local)
-		{
-		}
-#endif
-
 		/// <summary>
 		/// Initializes a new instance of the <see cref="StructuredTypeField"/> class.
 		/// </summary>
@@ -375,6 +359,8 @@ namespace Epsitec.Common.Types
 				Support.Druid captionId = args.Length < 4 ? Support.Druid.Empty : Support.Druid.Parse (args[3]);
 				string        flags     = args.Length < 5 ? "0" : args[4];
 				string        sourceId  = args.Length < 6 ? null : args[5];
+
+				System.Diagnostics.Debug.Assert (args.Length < 6);
 
 				int rankValue  = System.Int32.Parse (rank, System.Globalization.CultureInfo.InvariantCulture);
 				int flagsValue = System.Int32.Parse (flags, System.Globalization.CultureInfo.InvariantCulture);
