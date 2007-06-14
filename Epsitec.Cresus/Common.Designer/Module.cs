@@ -24,15 +24,16 @@ namespace Epsitec.Common.Designer
 
 			this.modifier = new Modifier(this);
 
-			this.accessStrings   = new ResourceAccess(ResourceAccess.Type.Strings,   this.resourceManager, this.moduleInfo, this.mainWindow);
-			this.accessStrings2  = new ResourceAccess(ResourceAccess.Type.Strings2,  this.resourceManager, this.moduleInfo, this.mainWindow);
-			this.accessCaptions  = new ResourceAccess(ResourceAccess.Type.Captions,  this.resourceManager, this.moduleInfo, this.mainWindow);
-			this.accessCaptions2 = new ResourceAccess(ResourceAccess.Type.Captions2, this.resourceManager, this.moduleInfo, this.mainWindow);
-			this.accessCommands2 = new ResourceAccess(ResourceAccess.Type.Commands2, this.resourceManager, this.moduleInfo, this.mainWindow);
-			this.accessPanels    = new ResourceAccess(ResourceAccess.Type.Panels,    this.resourceManager, this.moduleInfo, this.mainWindow);
-			this.accessScripts   = new ResourceAccess(ResourceAccess.Type.Scripts,   this.resourceManager, this.moduleInfo, this.mainWindow);
-			this.accessEntities  = new ResourceAccess(ResourceAccess.Type.Entities,  this.resourceManager, this.moduleInfo, this.mainWindow);
-			this.accessTypes2    = new ResourceAccess(ResourceAccess.Type.Types2,    this.resourceManager, this.moduleInfo, this.mainWindow);
+			this.accessStrings   = new ResourceAccess(ResourceAccess.Type.Strings,   this, this.moduleInfo, this.mainWindow);
+			this.accessStrings2  = new ResourceAccess(ResourceAccess.Type.Strings2,  this, this.moduleInfo, this.mainWindow);
+			this.accessCaptions  = new ResourceAccess(ResourceAccess.Type.Captions,  this, this.moduleInfo, this.mainWindow);
+			this.accessCaptions2 = new ResourceAccess(ResourceAccess.Type.Captions2, this, this.moduleInfo, this.mainWindow);
+			this.accessCommands2 = new ResourceAccess(ResourceAccess.Type.Commands2, this, this.moduleInfo, this.mainWindow);
+			this.accessPanels    = new ResourceAccess(ResourceAccess.Type.Panels,    this, this.moduleInfo, this.mainWindow);
+			this.accessScripts   = new ResourceAccess(ResourceAccess.Type.Scripts,   this, this.moduleInfo, this.mainWindow);
+			this.accessEntities  = new ResourceAccess(ResourceAccess.Type.Entities,  this, this.moduleInfo, this.mainWindow);
+			this.accessFields2   = new ResourceAccess(ResourceAccess.Type.Fields2,   this, this.moduleInfo, this.mainWindow);
+			this.accessTypes2    = new ResourceAccess(ResourceAccess.Type.Types2,    this, this.moduleInfo, this.mainWindow);
 
 			foreach (ResourceAccess access in Access)
 			{
@@ -152,6 +153,14 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
+		public ResourceAccess AccessFields2
+		{
+			get
+			{
+				return this.accessFields2;
+			}
+		}
+
 		public ResourceAccess AccessTypes2
 		{
 			get
@@ -192,6 +201,9 @@ namespace Epsitec.Common.Designer
 
 				case ResourceAccess.Type.Entities:
 					return this.accessEntities;
+
+				case ResourceAccess.Type.Fields2:
+					return this.accessFields2;
 
 				case ResourceAccess.Type.Types2:
 					return this.accessTypes2;
@@ -305,6 +317,7 @@ namespace Epsitec.Common.Designer
 				yield return accessPanels;
 				yield return accessScripts;
 				yield return accessEntities;
+				yield return accessFields2;
 				yield return accessTypes2;
 			}
 		}
@@ -345,6 +358,7 @@ namespace Epsitec.Common.Designer
 		protected ResourceAccess			accessPanels;
 		protected ResourceAccess			accessScripts;
 		protected ResourceAccess			accessEntities;
+		protected ResourceAccess			accessFields2;
 		protected ResourceAccess			accessTypes2;
 	}
 }

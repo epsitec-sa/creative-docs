@@ -17,7 +17,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			sep.Margins = new Margins(0, 0, 0, 0);
 			sep.Dock = DockStyle.Bottom;
 
-			double width = 80;
+			double width = 75;
 
 			this.buttonStrings = new IconButtonMark(this);
 			this.buttonStrings.Text = ResourceAccess.TypeDisplayName(ResourceAccess.Type.Strings);
@@ -110,6 +110,19 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.buttonTypes.Dock = DockStyle.Left;
 			this.buttonTypes.Clicked += new MessageEventHandler(this.HandleButtonClicked);
 
+			this.buttonTypes2 = new IconButtonMark(this);
+			this.buttonTypes2.Text = ResourceAccess.TypeDisplayName(ResourceAccess.Type.Types)+" 2";
+			this.buttonTypes2.Name = BundleType.Convert(ResourceAccess.Type.Types2);
+			this.buttonTypes2.ButtonStyle = ButtonStyle.ActivableIcon;
+			this.buttonTypes2.SiteMark = ButtonMarkDisposition.Below;
+			this.buttonTypes2.MarkDimension = 5;
+			this.buttonTypes2.PreferredWidth = width;
+			this.buttonTypes2.MinHeight = 20+5;
+			this.buttonTypes2.AutoFocus = false;
+			this.buttonTypes2.Margins = new Margins(2, 0, 10, 0);
+			this.buttonTypes2.Dock = DockStyle.Left;
+			this.buttonTypes2.Clicked += new MessageEventHandler(this.HandleButtonClicked);
+
 			this.buttonFields = new IconButtonMark(this);
 			this.buttonFields.Text = ResourceAccess.TypeDisplayName(ResourceAccess.Type.Fields);
 			this.buttonFields.Name = BundleType.Convert(ResourceAccess.Type.Fields);
@@ -122,6 +135,19 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.buttonFields.Margins = new Margins(2, 0, 10, 0);
 			this.buttonFields.Dock = DockStyle.Left;
 			this.buttonFields.Clicked += new MessageEventHandler(this.HandleButtonClicked);
+
+			this.buttonFields2 = new IconButtonMark(this);
+			this.buttonFields2.Text = ResourceAccess.TypeDisplayName(ResourceAccess.Type.Fields)+" 2";
+			this.buttonFields2.Name = BundleType.Convert(ResourceAccess.Type.Fields2);
+			this.buttonFields2.ButtonStyle = ButtonStyle.ActivableIcon;
+			this.buttonFields2.SiteMark = ButtonMarkDisposition.Below;
+			this.buttonFields2.MarkDimension = 5;
+			this.buttonFields2.PreferredWidth = width;
+			this.buttonFields2.MinHeight = 20+5;
+			this.buttonFields2.AutoFocus = false;
+			this.buttonFields2.Margins = new Margins(2, 0, 10, 0);
+			this.buttonFields2.Dock = DockStyle.Left;
+			this.buttonFields2.Clicked += new MessageEventHandler(this.HandleButtonClicked);
 
 			this.buttonValues = new IconButtonMark(this);
 			this.buttonValues.Text = ResourceAccess.TypeDisplayName(ResourceAccess.Type.Values);
@@ -211,9 +237,11 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.buttonCaptions2.ActiveState = (this.currentType == ResourceAccess.Type.Captions2) ? ActiveState.Yes : ActiveState.No;
 			this.buttonCaptions.ActiveState  = (this.currentType == ResourceAccess.Type.Captions ) ? ActiveState.Yes : ActiveState.No;
 			this.buttonFields.ActiveState    = (this.currentType == ResourceAccess.Type.Fields   ) ? ActiveState.Yes : ActiveState.No;
+			this.buttonFields2.ActiveState   = (this.currentType == ResourceAccess.Type.Fields2  ) ? ActiveState.Yes : ActiveState.No;
 			this.buttonCommands.ActiveState  = (this.currentType == ResourceAccess.Type.Commands ) ? ActiveState.Yes : ActiveState.No;
 			this.buttonCommands2.ActiveState = (this.currentType == ResourceAccess.Type.Commands2) ? ActiveState.Yes : ActiveState.No;
 			this.buttonTypes.ActiveState     = (this.currentType == ResourceAccess.Type.Types    ) ? ActiveState.Yes : ActiveState.No;
+			this.buttonTypes2.ActiveState    = (this.currentType == ResourceAccess.Type.Types2   ) ? ActiveState.Yes : ActiveState.No;
 			this.buttonValues.ActiveState    = (this.currentType == ResourceAccess.Type.Values   ) ? ActiveState.Yes : ActiveState.No;
 			this.buttonPanels.ActiveState    = (this.currentType == ResourceAccess.Type.Panels   ) ? ActiveState.Yes : ActiveState.No;
 			this.buttonScripts.ActiveState   = (this.currentType == ResourceAccess.Type.Scripts  ) ? ActiveState.Yes : ActiveState.No;
@@ -272,10 +300,12 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected IconButtonMark			buttonCaptions;
 		protected IconButtonMark			buttonCaptions2;
 		protected IconButtonMark			buttonFields;
+		protected IconButtonMark			buttonFields2;
 		protected IconButtonMark			buttonCommands;
 		protected IconButtonMark			buttonCommands2;
 		protected IconButtonMark			buttonPanels;
 		protected IconButtonMark			buttonTypes;
+		protected IconButtonMark			buttonTypes2;
 		protected IconButtonMark			buttonValues;
 	}
 }

@@ -137,6 +137,8 @@
     <Compile Include="Viewers\Captions2.cs" />
     <Compile Include="Viewers\Commands2.cs" />
     <Compile Include="Viewers\AbstractCaptions2.cs" />
+    <Compile Include="Viewers\Types2.cs" />
+    <Compile Include="Viewers\Fields2.cs" />
     <Compile Include="Viewers\Entities.cs" />
     <Compile Include="Viewers\Strings2.cs" />
     <Compile Include="Viewers\Locator.cs" />

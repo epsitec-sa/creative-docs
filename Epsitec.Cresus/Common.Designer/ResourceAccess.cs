@@ -20,6 +20,7 @@ namespace Epsitec.Common.Designer
 			Captions,
 			Captions2,
 			Fields,
+			Fields2,
 			Commands,
 			Commands2,
 			Types,
@@ -74,13 +75,13 @@ namespace Epsitec.Common.Designer
 		}
 
 
-		public ResourceAccess(Type type, ResourceManager resourceManager, ResourceModuleInfo moduleInfo, MainWindow mainWindow)
+		public ResourceAccess(Type type, Module module, ResourceModuleInfo moduleInfo, MainWindow mainWindow)
 		{
 			//	Constructeur unique pour accéder aux ressources d'un type donné.
 			//	Par la suite, l'instance créée accédera toujours aux ressources de ce type,
 			//	sauf pour les ressources Captions, Commands, Types et Values.
 			this.type = type;
-			this.resourceManager = resourceManager;
+			this.resourceManager = module.ResourceManager;
 			this.moduleInfo = moduleInfo;
 			this.mainWindow = mainWindow;
 
@@ -105,6 +106,11 @@ namespace Epsitec.Common.Designer
 				if (this.type == Type.Types2)
 				{
 					this.accessor = new Support.ResourceAccessors.AnyTypeResourceAccessor();
+				}
+				if (this.type == Type.Fields2)
+				{
+					Common.Support.ResourceAccessors.StructuredTypeResourceAccessor typeAccessor = module.AccessEntities.accessor as Common.Support.ResourceAccessors.StructuredTypeResourceAccessor;
+					this.accessor = typeAccessor.FieldAccessor;
 				}
 
 				this.collectionView = new CollectionView(this.accessor.Collection);
@@ -187,7 +193,8 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
-		public Support.ResourceAccessors.AbstractResourceAccessor Accessor
+		//?public Support.ResourceAccessors.AbstractResourceAccessor Accessor
+		public IResourceAccessor Accessor
 		{
 			get
 			{
@@ -223,6 +230,7 @@ namespace Epsitec.Common.Designer
 					return many ? Res.Strings.BundleType.Captions : Res.Strings.BundleType.Caption;
 
 				case Type.Fields:
+				case Type.Fields2:
 					return many ? Res.Strings.BundleType.Fields : Res.Strings.BundleType.Field;
 
 				case Type.Commands:
@@ -421,7 +429,9 @@ namespace Epsitec.Common.Designer
 			//	Charge les ressources.
 			if (this.IsAbstract2)
 			{
-				this.accessor.Load(this.resourceManager);
+				//?this.accessor.Load(this.resourceManager);
+				Support.ResourceAccessors.AbstractResourceAccessor a = this.accessor as Support.ResourceAccessors.AbstractResourceAccessor;
+				a.Load(this.resourceManager);
 				this.collectionView.MoveCurrentToFirst();
 			}
 
@@ -3773,7 +3783,7 @@ namespace Epsitec.Common.Designer
 			//	"un bundle par culture, plusieurs ressources par bundle".
 			get
 			{
-				return (this.type == Type.Strings || this.type == Type.Strings2 || this.type == Type.Captions2 || this.type == Type.Commands2 || this.type == Type.Entities || this.type == Type.Types2 || this.IsCaptionsType);
+				return (this.type == Type.Strings || this.type == Type.Strings2 || this.type == Type.Captions2 || this.type == Type.Commands2 || this.type == Type.Entities || this.type == Type.Types2 || this.type == Type.Fields2 || this.IsCaptionsType);
 			}
 		}
 
@@ -3791,7 +3801,7 @@ namespace Epsitec.Common.Designer
 			//	Retourne true si on accède à des ressources de type nouveau.
 			get
 			{
-				return (this.type == Type.Strings2 || this.type == Type.Captions2 || this.type == Type.Commands2 || this.type == Type.Entities || this.type == Type.Types2);
+				return (this.type == Type.Strings2 || this.type == Type.Captions2 || this.type == Type.Commands2 || this.type == Type.Entities || this.type == Type.Types2 || this.type == Type.Fields2);
 			}
 		}
 
@@ -4254,7 +4264,8 @@ namespace Epsitec.Common.Designer
 		protected bool										isDirty = false;
 		protected bool										isJustLoaded = false;
 
-		protected Support.ResourceAccessors.AbstractResourceAccessor accessor;
+		//?protected Support.ResourceAccessors.AbstractResourceAccessor accessor;
+		protected IResourceAccessor							accessor;
 		protected CollectionView							collectionView;
 		protected Searcher.SearchingMode					collectionViewMode;
 		protected string									collectionViewFilter;
