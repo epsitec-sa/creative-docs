@@ -603,7 +603,6 @@ namespace Epsitec.Common.Designer.Viewers
 		protected override UI.IItemViewFactory ItemViewFactoryGetter(UI.ItemView itemView)
 		{
 			//	Retourne le "factory" a utiliser pour les éléments représentés dans cet ItemTable/ItemPanel.
-			//?if (itemView.Item == null || itemView.Item.GetType() != typeof(CultureMap))  // TODO: pas compris !
 			if (itemView.Item == null)
 			{
 				return null;
@@ -647,8 +646,7 @@ namespace Epsitec.Common.Designer.Viewers
 				StaticText widget = new StaticText();
 
 				widget.Margins = new Margins(5, 5, 0, 0);
-				//?widget.Text = TextLayout.ConvertToTaggedText(item.Name);
-				widget.Text = item.Name;
+				widget.Text = TextLayout.ConvertToTaggedText(item.ToString());
 				widget.TextBreakMode = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine;
 				widget.PreferredSize = widget.GetBestFitSize();
 
