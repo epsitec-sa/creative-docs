@@ -43,7 +43,11 @@ namespace Epsitec.Common.Support.ResourceAccessors
 		{
 			base.Load (manager);
 
-			this.valueAccessor = new ValueResourceAccessor ();
+			if (this.valueAccessor == null)
+			{
+				this.valueAccessor = new ValueResourceAccessor ();
+			}
+
 			this.valueAccessor.Load (manager);
 		}
 

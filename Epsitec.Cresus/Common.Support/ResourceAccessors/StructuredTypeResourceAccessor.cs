@@ -41,7 +41,11 @@ namespace Epsitec.Common.Support.ResourceAccessors
 		{
 			base.Load (manager);
 
-			this.fieldAccessor = new FieldResourceAccessor ();
+			if (this.fieldAccessor == null)
+			{
+				this.fieldAccessor = new FieldResourceAccessor ();
+			}
+
 			this.fieldAccessor.Load (manager);
 		}
 		
