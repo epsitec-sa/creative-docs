@@ -1007,14 +1007,24 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			StructuredData data = this.cultureMap.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
 			IList<StructuredData> dataFields = data.GetValue(Support.Res.Fields.ResourceStructuredType.Fields) as IList<StructuredData>;
 
-			IResourceAccessor accessor = this.editor.Module.AccessEntities.Accessor;
+			Common.Support.ResourceAccessors.StructuredTypeResourceAccessor accessor = this.editor.Module.AccessEntities.Accessor as Common.Support.ResourceAccessors.StructuredTypeResourceAccessor;
+			CultureMap fieldCultureMap = accessor.CreateFieldItem(this.cultureMap);
+			fieldCultureMap.Name = name;
+			accessor.FieldAccessor.Collection.Add(fieldCultureMap);
+			accessor.FieldAccessor.PersistChanges();
+
+			//?IResourceAccessor fieldAccessor = accessor.FieldAccessor;
+			//?CultureMap fieldCultureMap = fieldAccessor.Collection[fieldCaptionId];
+			//?StructuredData fieldData = fieldCultureMap.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
+
 			IDataBroker broker = accessor.GetDataBroker(data, Support.Res.Fields.ResourceStructuredType.Fields.ToString());
 			StructuredData newField = broker.CreateData(this.cultureMap);
 
-			Druid druid = this.CreateFieldCaption(name);
+			Druid druid = fieldCultureMap.Id;  //?this.CreateFieldCaption(name);
 			newField.SetValue(Support.Res.Fields.Field.CaptionId, druid);
 
 			dataFields.Insert(rank+1, newField);
+			accessor.PersistChanges();
 
 			Field field = new Field(this.editor);
 			this.UpdateField(newField, field);
@@ -1120,12 +1130,25 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				rel = FieldRelation.None;  // ce n'est pas une vraie relation !
 			}
 
-			Caption fieldCaption = this.editor.Module.AccessEntities.DirectGetCaption(fieldCaptionId);
-			Caption typeCaption = typeId.IsEmpty ? null : this.editor.Module.AccessEntities.DirectGetCaption(typeId);
+			Common.Support.ResourceAccessors.StructuredTypeResourceAccessor accessor = this.editor.Module.AccessEntities.Accessor as Common.Support.ResourceAccessors.StructuredTypeResourceAccessor;
+			IResourceAccessor fieldAccessor = accessor.FieldAccessor;
+			CultureMap fieldCultureMap = fieldAccessor.Collection[fieldCaptionId];
+			//StructuredData fieldData = fieldCultureMap.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
+
+			//?Caption fieldCaption = this.editor.Module.AccessEntities.DirectGetCaption(fieldCaptionId);
+			//?Caption typeCaption = typeId.IsEmpty ? null : this.editor.Module.AccessEntities.DirectGetCaption(typeId);
+
+			CultureMap typeCultureMap = this.editor.Module.AccessTypes2.Accessor.Collection[typeId];
+			if (typeCultureMap == null)
+			{
+				typeCultureMap = this.editor.Module.AccessEntities.Accessor.Collection[typeId];
+			}
 
 			field.CaptionId = fieldCaptionId;
-			field.FieldName = (fieldCaption == null) ? "" : fieldCaption.Name;
-			field.TypeName = (typeCaption == null) ? "" : typeCaption.Name;
+			//?field.FieldName = (fieldCaption == null) ? "" : fieldCaption.Name;
+			//?field.TypeName = (typeCaption == null) ? "" : typeCaption.Name;
+			field.FieldName = (fieldCultureMap == null) ? "" : fieldCultureMap.Name;
+			field.TypeName = (typeCultureMap == null) ? "" : typeCultureMap.Name;
 			field.Relation = rel;
 			field.Destination = typeId;
 			field.SrcBox = this;
@@ -1141,6 +1164,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 		}
 
+#if false
 		protected Druid CreateFieldCaption(string text)
 		{
 			//	Crée un nouveau Caption de type Field (dont le nom commence par "Fld.").
@@ -1156,6 +1180,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 			return druid;
 		}
+#endif
 
 		protected string GetNewName()
 		{

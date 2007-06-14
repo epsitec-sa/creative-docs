@@ -32,6 +32,7 @@ namespace Epsitec.Common.Designer
 			this.accessPanels    = new ResourceAccess(ResourceAccess.Type.Panels,    this.resourceManager, this.moduleInfo, this.mainWindow);
 			this.accessScripts   = new ResourceAccess(ResourceAccess.Type.Scripts,   this.resourceManager, this.moduleInfo, this.mainWindow);
 			this.accessEntities  = new ResourceAccess(ResourceAccess.Type.Entities,  this.resourceManager, this.moduleInfo, this.mainWindow);
+			this.accessTypes2    = new ResourceAccess(ResourceAccess.Type.Types2,    this.resourceManager, this.moduleInfo, this.mainWindow);
 
 			foreach (ResourceAccess access in Access)
 			{
@@ -151,6 +152,14 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
+		public ResourceAccess AccessTypes2
+		{
+			get
+			{
+				return this.accessTypes2;
+			}
+		}
+
 		public ResourceAccess GetAccess(ResourceAccess.Type type)
 		{
 			//	Cherche un accès d'après son type.
@@ -183,6 +192,9 @@ namespace Epsitec.Common.Designer
 
 				case ResourceAccess.Type.Entities:
 					return this.accessEntities;
+
+				case ResourceAccess.Type.Types2:
+					return this.accessTypes2;
 			}
 
 			return null;
@@ -293,6 +305,7 @@ namespace Epsitec.Common.Designer
 				yield return accessPanels;
 				yield return accessScripts;
 				yield return accessEntities;
+				yield return accessTypes2;
 			}
 		}
 
@@ -332,5 +345,6 @@ namespace Epsitec.Common.Designer
 		protected ResourceAccess			accessPanels;
 		protected ResourceAccess			accessScripts;
 		protected ResourceAccess			accessEntities;
+		protected ResourceAccess			accessTypes2;
 	}
 }

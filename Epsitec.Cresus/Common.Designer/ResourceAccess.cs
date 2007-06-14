@@ -23,6 +23,7 @@ namespace Epsitec.Common.Designer
 			Commands,
 			Commands2,
 			Types,
+			Types2,
 			Values,
 			Panels,
 			Scripts,
@@ -100,6 +101,10 @@ namespace Epsitec.Common.Designer
 				if (this.type == Type.Entities)
 				{
 					this.accessor = new Support.ResourceAccessors.StructuredTypeResourceAccessor();
+				}
+				if (this.type == Type.Types2)
+				{
+					this.accessor = new Support.ResourceAccessors.AnyTypeResourceAccessor();
 				}
 
 				this.collectionView = new CollectionView(this.accessor.Collection);
@@ -225,6 +230,7 @@ namespace Epsitec.Common.Designer
 					return many ? Res.Strings.BundleType.Commands : Res.Strings.BundleType.Command;
 
 				case Type.Types:
+				case Type.Types2:
 					return many ? Res.Strings.BundleType.Types : Res.Strings.BundleType.Type;
 
 				case Type.Values:
@@ -3767,7 +3773,7 @@ namespace Epsitec.Common.Designer
 			//	"un bundle par culture, plusieurs ressources par bundle".
 			get
 			{
-				return (this.type == Type.Strings || this.type == Type.Strings2 || this.type == Type.Captions2 || this.type == Type.Commands2 || this.type == Type.Entities || this.IsCaptionsType);
+				return (this.type == Type.Strings || this.type == Type.Strings2 || this.type == Type.Captions2 || this.type == Type.Commands2 || this.type == Type.Entities || this.type == Type.Types2 || this.IsCaptionsType);
 			}
 		}
 
@@ -3785,7 +3791,7 @@ namespace Epsitec.Common.Designer
 			//	Retourne true si on accède à des ressources de type nouveau.
 			get
 			{
-				return (this.type == Type.Strings2 || this.type == Type.Captions2 || this.type == Type.Commands2 || this.type == Type.Entities);
+				return (this.type == Type.Strings2 || this.type == Type.Captions2 || this.type == Type.Commands2 || this.type == Type.Entities || this.type == Type.Types2);
 			}
 		}
 
