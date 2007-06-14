@@ -454,7 +454,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			this.DrawShadow(graphics, rect, 8, 8, 0.2);
 
 			//	Dessine l'en-tête.
-			if (!rh.IsEmpty)
+			if (!rh.IsEmpty && !this.isDraggingMove && !this.isDraggingWidth && !this.isDraggingAttach)
 			{
 				rect = rh;
 				rect.Inflate(0.5);
@@ -534,6 +534,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		protected void DrawColorButton(Graphics graphics, ActiveElement activeElement, int rank, MainColor color)
 		{
+			//	Dessine un bouton pour choisir une couleur.
 			if (!this.isDraggingMove && !this.isDraggingWidth && !this.isDraggingAttach)
 			{
 				if (this.hilitedElement == activeElement)
