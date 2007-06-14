@@ -1234,7 +1234,11 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 			set
 			{
-				this.dirtySerialization = value;
+				if (this.dirtySerialization != value)
+				{
+					this.dirtySerialization = value;
+					this.OnDirtySerializationChanged();
+				}
 			}
 		}
 
@@ -1441,6 +1445,28 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			remove
 			{
 				this.RemoveUserEventHandler ("ZoomChanged", value);
+			}
+		}
+
+		protected virtual void OnDirtySerializationChanged()
+		{
+			//	Génère un événement pour dire que l'état de la sérialisation a changé.
+			EventHandler handler = (EventHandler) this.GetUserEventHandler("DirtySerializationChanged");
+			if (handler != null)
+			{
+				handler(this);
+			}
+		}
+
+		public event Support.EventHandler DirtySerializationChanged
+		{
+			add
+			{
+				this.AddUserEventHandler ("DirtySerializationChanged", value);
+			}
+			remove
+			{
+				this.RemoveUserEventHandler ("DirtySerializationChanged", value);
 			}
 		}
 		#endregion
