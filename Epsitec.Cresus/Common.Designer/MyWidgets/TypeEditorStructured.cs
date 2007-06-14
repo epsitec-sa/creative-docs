@@ -352,7 +352,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 						}
 					}
 
-					string captionInc = field.SourceFieldId;
+					string captionInc = null; //?field.SourceFieldId;
 
 					this.array.SetLineString(0, first+i, captionText);
 					this.array.SetLineState(0, first+i, MyWidgets.StringList.CellState.Normal);
@@ -507,7 +507,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				System.Diagnostics.Debug.Assert(sourceField != null);
 			}
 
-			StructuredTypeField newField = new StructuredTypeField(null, actualField.Type, actualField.CaptionId, actualField.Rank, relation, sourceField);
+			StructuredTypeField newField = new StructuredTypeField(null, actualField.Type, actualField.CaptionId, actualField.Rank, relation/*, sourceField*/);
 			this.fields[sel] = newField;
 
 			this.FieldsOutput();
@@ -613,7 +613,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			type = TypeRosetta.GetTypeObject(this.module.ResourceManager.GetCaption(druid));
 			FieldRelation relation = actualField.Relation;
-			string sourceField = actualField.SourceFieldId;
+			string sourceField = null; //?actualField.SourceFieldId;
 			if (type is StructuredType)
 			{
 			}
@@ -623,7 +623,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				sourceField = null;
 			}
 			System.Diagnostics.Debug.Assert(type != null);
-			StructuredTypeField newField = new StructuredTypeField(null, type, actualField.CaptionId, actualField.Rank, relation, sourceField);
+			StructuredTypeField newField = new StructuredTypeField(null, type, actualField.CaptionId, actualField.Rank, relation/*, sourceField*/);
 			this.fields[sel] = newField;
 
 			this.FieldsOutput();
@@ -648,13 +648,13 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 
 			StructuredType st = actualField.Type as StructuredType;
-			string field = this.mainWindow.DlgResourceStructuredTypeField(st, actualField.SourceFieldId);
+			string field = this.mainWindow.DlgResourceStructuredTypeField(st, null/*//?actualField.SourceFieldId*/);
 			if (string.IsNullOrEmpty(field))
 			{
 				return;
 			}
 
-			StructuredTypeField newField = new StructuredTypeField(null, actualField.Type, actualField.CaptionId, actualField.Rank, actualField.Relation, field);
+			StructuredTypeField newField = new StructuredTypeField(null, actualField.Type, actualField.CaptionId, actualField.Rank, actualField.Relation/*, field*/);
 			this.fields[sel] = newField;
 
 			this.FieldsOutput();
@@ -729,7 +729,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			for (int i=0; i<this.fields.Count; i++)
 			{
 				StructuredTypeField actualField = this.fields[i];
-				StructuredTypeField newField = new StructuredTypeField(null, actualField.Type, actualField.CaptionId, i, actualField.Relation, actualField.SourceFieldId);
+				StructuredTypeField newField = new StructuredTypeField(null, actualField.Type, actualField.CaptionId, i, actualField.Relation/*, actualField.SourceFieldId*/);
 
 				type.Fields.Add(newField);
 			}

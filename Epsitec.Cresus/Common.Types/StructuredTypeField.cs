@@ -74,11 +74,26 @@ namespace Epsitec.Common.Types
 		/// <param name="captionId">The field caption DRUID.</param>
 		/// <param name="rank">The field rank when listed in a user interface.</param>
 		/// <param name="relation">The relation.</param>
+		public StructuredTypeField(string id, INamedType type, Support.Druid captionId, int rank, FieldRelation relation, FieldMembership membership)
+			: this (id, type, captionId, rank, relation, null, membership)
+		{
+		}
+
+#if false
+		/// <summary>
+		/// Initializes a new instance of the <see cref="StructuredTypeField"/> class.
+		/// </summary>
+		/// <param name="id">The field id.</param>
+		/// <param name="type">The field type.</param>
+		/// <param name="captionId">The field caption DRUID.</param>
+		/// <param name="rank">The field rank when listed in a user interface.</param>
+		/// <param name="relation">The relation.</param>
 		/// <param name="sourceFieldId">The source field id.</param>
 		public StructuredTypeField(string id, INamedType type, Support.Druid captionId, int rank, FieldRelation relation, string sourceFieldId)
 			: this (id, type, captionId, rank, relation, sourceFieldId, FieldMembership.Local)
 		{
 		}
+#endif
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="StructuredTypeField"/> class.
@@ -90,9 +105,15 @@ namespace Epsitec.Common.Types
 		/// <param name="relation">The relation.</param>
 		/// <param name="sourceFieldId">The source field id.</param>
 		/// <param name="membership">The field membership.</param>
-		public StructuredTypeField(string id, INamedType type, Support.Druid captionId, int rank, FieldRelation relation, string sourceFieldId, FieldMembership membership)
+		internal StructuredTypeField(string id, INamedType type, Support.Druid captionId, int rank, FieldRelation relation, string sourceFieldId, FieldMembership membership)
 		{
 			this.id = id ?? (captionId.IsValid ? captionId.ToString () : null);
+			
+			if (relation == FieldRelation.Inclusion)
+			{
+				sourceFieldId = this.id;
+			}
+
 			this.captionId = captionId;
 			this.rank = rank;
 			this.relation = relation;
@@ -211,20 +232,6 @@ namespace Epsitec.Common.Types
 				return this.membership;
 			}
 		}
-
-		/// <summary>
-		/// Gets the ID of the source field if this field defines an inclusion
-		/// relation (see <see cref="T:Relation.Inclusion"/>).
-		/// </summary>
-		/// <value>The source field id or <c>null</c>.</value>
-		public string							SourceFieldId
-		{
-			get
-			{
-				return this.sourceFieldId;
-			}
-		}
-
 
 		public StructuredTypeField Clone()
 		{

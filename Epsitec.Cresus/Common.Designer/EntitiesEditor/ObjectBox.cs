@@ -1120,7 +1120,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			Druid fieldCaptionId = (Druid) dataField.GetValue(Support.Res.Fields.Field.CaptionId);
 			FieldMembership membership = (FieldMembership) dataField.GetValue(Support.Res.Fields.Field.Membership);
 			FieldRelation rel = (FieldRelation) dataField.GetValue(Support.Res.Fields.Field.Relation);
-			Druid sourceId = (Druid) dataField.GetValue(Support.Res.Fields.Field.SourceFieldId);
+			//?Druid sourceId = (Druid) dataField.GetValue(Support.Res.Fields.Field.SourceFieldId);
 			Druid typeId = (Druid) dataField.GetValue(Support.Res.Fields.Field.TypeId);
 			
 			Module dstModule = this.editor.Module.MainWindow.SearchModule(typeId);

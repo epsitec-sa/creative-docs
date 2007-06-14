@@ -430,7 +430,7 @@ namespace Epsitec.Common.Types
 
 				if (field.Membership == FieldMembership.Local)
 				{
-					merge.fields.Add (new StructuredTypeField (id, field.Type, field.CaptionId, rank++, field.Relation, field.SourceFieldId));
+					merge.fields.Add (new StructuredTypeField (id, field.Type, field.CaptionId, rank++, field.Relation));
 				}
 			}
 
@@ -442,11 +442,11 @@ namespace Epsitec.Common.Types
 				{
 					if (merge.fields.ContainsKey (id))
 					{
-						merge.fields[id] = new StructuredTypeField (id, field.Type, field.CaptionId, merge.fields[id].Rank, field.Relation, field.SourceFieldId);
+						merge.fields[id] = new StructuredTypeField (id, field.Type, field.CaptionId, merge.fields[id].Rank, field.Relation);
 					}
 					else
 					{
-						merge.fields.Add (new StructuredTypeField (id, field.Type, field.CaptionId, rank++, field.Relation, field.SourceFieldId));
+						merge.fields.Add (new StructuredTypeField (id, field.Type, field.CaptionId, rank++, field.Relation));
 					}
 				}
 			}
@@ -607,6 +607,7 @@ namespace Epsitec.Common.Types
 		{
 			StructuredTypeClass typeClass = this.Class;
 
+#if false
 			if (typeClass == StructuredTypeClass.View)
 			{
 				//	A structured type used to represent a view may only contain fields
@@ -631,9 +632,10 @@ namespace Epsitec.Common.Types
 					}
 				}
 			}
+#endif
 
 			if ((typeClass == StructuredTypeClass.Entity) ||
-				(typeClass == StructuredTypeClass.View))
+				(typeClass == StructuredTypeClass.Interface))
 			{
 				if ((this.IsCaptionDefined) &&
 					(! (bool) this.GetValue (StructuredType.DebugDisableChecksProperty)))
@@ -659,6 +661,24 @@ namespace Epsitec.Common.Types
 					if (field.Id != field.CaptionId.ToString ())
 					{
 						throw new System.ArgumentException (string.Format ("Field {0} must specify {1} as ID in {2} {3}", caption.Name, field.CaptionId.ToString (), typeClass.ToString ().ToLower (), this.Name));
+					}
+				}
+				
+				if ((field.TypeId.IsValid) &&
+					(field.Relation == FieldRelation.Inclusion))
+				{
+					if (field.Type != null)
+					{
+						StructuredType sourceType = field.Type as StructuredType;
+
+						if (sourceType == null)
+						{
+							throw new System.ArgumentException (string.Format ("Field inclusion not possible ({0}); invalid source type", field.Id));
+						}
+						if (sourceType.Class != StructuredTypeClass.Interface)
+						{
+							throw new System.ArgumentException (string.Format ("Field inclusion not possible ({0}); invalid source type {1}", field.Id, sourceType.Class));
+						}
 					}
 				}
 			}

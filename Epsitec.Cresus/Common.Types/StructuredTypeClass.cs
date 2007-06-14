@@ -25,11 +25,6 @@ namespace Epsitec.Common.Types
 		Entity,
 
 		/// <summary>
-		/// The structured type defines a view of another structured type.
-		/// </summary>
-		View,
-
-		/// <summary>
 		/// The structured type defines an interface.
 		/// </summary>
 		Interface,

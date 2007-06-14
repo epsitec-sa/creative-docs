@@ -432,64 +432,53 @@ namespace Epsitec.Common.Types
 			type.DefineCaptionId (typeId);
 
 			type.Fields.Add (new StructuredTypeField ("Name", StringType.Default, Support.Druid.Empty, 0, FieldRelation.None));
-			type.Fields.Add (new StructuredTypeField ("SelfName", type, Support.Druid.Empty, 1, FieldRelation.Inclusion, null));
+			type.Fields.Add (new StructuredTypeField ("SelfName", type, Support.Druid.Empty, 1, FieldRelation.Inclusion));
 		}
 
 		[Test]
 		[ExpectedException (typeof (System.ArgumentException))]
 		public void CheckStructuredTypeEx3()
 		{
-			StructuredType type = new StructuredType (StructuredTypeClass.View);
-			type.SetValue (StructuredType.DebugDisableChecksProperty, true);
-
-			type.Fields.Add (new StructuredTypeField ("Name", StringType.Default, Support.Druid.Empty, 0, FieldRelation.None));
-		}
-
-		[Test]
-		[ExpectedException (typeof (System.ArgumentException))]
-		public void CheckStructuredTypeEx4()
-		{
-			StructuredType type = new StructuredType (StructuredTypeClass.Entity);
-			StructuredType view = new StructuredType (StructuredTypeClass.View);
-			type.SetValue (StructuredType.DebugDisableChecksProperty, true);
-			view.SetValue (StructuredType.DebugDisableChecksProperty, true);
+			StructuredType interf = new StructuredType (StructuredTypeClass.Interface);
+			StructuredType entity = new StructuredType (StructuredTypeClass.Entity);
+			interf.SetValue (StructuredType.DebugDisableChecksProperty, true);
+			entity.SetValue (StructuredType.DebugDisableChecksProperty, true);
 
 			Support.Druid typeId1 = Support.Druid.Parse ("[123456781]");
 			Support.Druid typeId2 = Support.Druid.Parse ("[123456782]");
 
-			TypeRosetta.RecordType (typeId1, type);
-			TypeRosetta.RecordType (typeId2, view);
+			TypeRosetta.RecordType (typeId1, interf);
+			TypeRosetta.RecordType (typeId2, entity);
 
-			type.DefineCaptionId (typeId1);
-			view.DefineCaptionId (typeId2);
+			interf.DefineCaptionId (typeId1);
+			entity.DefineCaptionId (typeId2);
 
-			type.Fields.Add (new StructuredTypeField ("Name", StringType.Default, Support.Druid.Empty, 0, FieldRelation.None));
+			interf.Fields.Add (new StructuredTypeField ("Name", StringType.Default, Support.Druid.Empty, 0, FieldRelation.None));
 
-			view.Fields.Add (new StructuredTypeField ("Name1", type, Support.Druid.Empty, 1, FieldRelation.Inclusion, "Name"));
-			view.Fields.Add (new StructuredTypeField ("Name2", view, Support.Druid.Empty, 2, FieldRelation.Inclusion, "Name"));
+			entity.Fields.Add (new StructuredTypeField ("Name", interf, Support.Druid.Empty, 1, FieldRelation.Inclusion));
+			entity.Fields.Add (new StructuredTypeField ("Name", interf, Support.Druid.Empty, 2, FieldRelation.Inclusion));
 		}
 
 		[Test]
 		public void CheckStructuredTypeRelations()
 		{
+			StructuredType interf = new StructuredType (StructuredTypeClass.Interface);
 			StructuredType entity = new StructuredType (StructuredTypeClass.Entity);
-			StructuredType view   = new StructuredType (StructuredTypeClass.View);
+			interf.SetValue (StructuredType.DebugDisableChecksProperty, true);
 			entity.SetValue (StructuredType.DebugDisableChecksProperty, true);
-			view.SetValue (StructuredType.DebugDisableChecksProperty, true);
 
 			Support.Druid typeId = Support.Druid.Parse ("[12345678A]");
 
-			TypeRosetta.RecordType (typeId, entity);
+			TypeRosetta.RecordType (typeId, interf);
 
-			entity.DefineCaptionId (typeId);
+			interf.DefineCaptionId (typeId);
 
-			entity.Fields.Add (new StructuredTypeField ("Name", StringType.Default, Support.Druid.Empty, 0, FieldRelation.None));
-			entity.Fields.Add (new StructuredTypeField ("SelfRef", entity, Support.Druid.Empty, 1, FieldRelation.Reference));
-			entity.Fields.Add (new StructuredTypeField ("SelfName", entity, Support.Druid.Empty, 2, FieldRelation.Inclusion, "Name"));
-			entity.Fields.Add (new StructuredTypeField ("SelfCollection", entity, Support.Druid.Empty, 3, FieldRelation.Collection));
+			interf.Fields.Add (new StructuredTypeField ("Name", StringType.Default, Support.Druid.Empty, 0, FieldRelation.None));
+			interf.Fields.Add (new StructuredTypeField ("SelfRef", interf, Support.Druid.Empty, 1, FieldRelation.Reference));
+			interf.Fields.Add (new StructuredTypeField ("SelfCollection", interf, Support.Druid.Empty, 2, FieldRelation.Collection));
 
-			view.Fields.Add (new StructuredTypeField ("Name", entity, Support.Druid.Empty, 0, FieldRelation.Inclusion, "Name"));
-			view.Fields.Add (new StructuredTypeField ("Ref", entity, Support.Druid.Empty, 0, FieldRelation.Inclusion, "SelfRef"));
+			entity.Fields.Add (new StructuredTypeField ("Name", interf, Support.Druid.Empty, 0, FieldRelation.Inclusion));
+			entity.Fields.Add (new StructuredTypeField ("SelfRef", interf, Support.Druid.Empty, 0, FieldRelation.Inclusion));
 		}
 
 		[Test]
@@ -506,8 +495,6 @@ namespace Epsitec.Common.Types
 			type.Fields.Add ("Age", IntegerType.Default);
 
 			type.Fields["Name"] = new StructuredTypeField ("Name", StringType.Default, Support.Druid.Empty, 1);
-
-			type.Fields.Add (new StructuredTypeField ("SelfName", type, Support.Druid.Empty, 2, FieldRelation.Inclusion, "Name"));
 
 			Assert.IsNull (type.SystemType);
 
@@ -547,10 +534,10 @@ namespace Epsitec.Common.Types
 			Assert.AreEqual ("Name", fieldIds[1]);
 
 			restoredType.Fields.Remove ("Age");
-			Assert.AreEqual (2, restoredType.Fields.Count);
+			Assert.AreEqual (1, restoredType.Fields.Count);
 
 			restoredType.Fields.Remove ("Xxx");
-			Assert.AreEqual (2, restoredType.Fields.Count);
+			Assert.AreEqual (1, restoredType.Fields.Count);
 		}
 
 		[Test]
@@ -590,8 +577,8 @@ namespace Epsitec.Common.Types
 
 			this.CreateEntities (out e1, out e2, out e3);
 
-			e1.Fields.Add (new StructuredTypeField (null, i, Support.Druid.Parse ("[400I]"), 0, FieldRelation.Inclusion, "[400I]"));
-			e1.Fields.Add (new StructuredTypeField (null, i, Support.Druid.Parse ("[400J]"), 1, FieldRelation.Inclusion, "[400J]"));
+			e1.Fields.Add (new StructuredTypeField (null, i, Support.Druid.Parse ("[400I]"), 0, FieldRelation.Inclusion));
+			e1.Fields.Add (new StructuredTypeField (null, i, Support.Druid.Parse ("[400J]"), 1, FieldRelation.Inclusion));
 
 			Assert.AreEqual (1, e1.GetImportedInterfaces (false).Count);
 			Assert.AreEqual ("[400H]", e1.GetImportedInterfaces (false)[0].ToString ());
@@ -728,7 +715,7 @@ namespace Epsitec.Common.Types
 			
 			this.CreateEntities (out e1, out e2, out e3);
 
-			e1.SetValue (StructuredType.ClassProperty, StructuredTypeClass.View);
+			e1.SetValue (StructuredType.ClassProperty, StructuredTypeClass.Interface);
 
 			//	We cannot merge two entities of different classes; verify
 			//	that this raises the ArgumentException exception :
