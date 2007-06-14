@@ -450,8 +450,14 @@ namespace Epsitec.Common.Designer.Viewers
 			}
 			else
 			{
-				ResourceAccess.Field field = this.access.GetField(this.access.AccessIndex, null, ResourceAccess.FieldType.Name);
-				string newName = this.access.GetDuplicateName(field.String);
+				string newName = "New";
+				if (this.access.TotalCount > 0)
+				{
+					ResourceAccess.Field field = this.access.GetField(this.access.AccessIndex, null, ResourceAccess.FieldType.Name);
+					newName = field.String;
+				}
+
+				newName = this.access.GetDuplicateName(newName);
 				this.access.Duplicate(newName, duplicate);
 
 				this.UpdateArray();
@@ -893,7 +899,7 @@ namespace Epsitec.Common.Designer.Viewers
 			if (!this.IsDeleteOrDuplicateForViewer)
 			{
 				this.GetCommandState("Delete").Enable = (sel != -1 && count > 1 && build);
-				this.GetCommandState("Create").Enable = (sel != -1 && build);
+				this.GetCommandState("Create").Enable = (build);
 				this.GetCommandState("Duplicate").Enable = (sel != -1 && build);
 				this.GetCommandState("CopyToModule").Enable = (sel != -1 && build);
 			}
