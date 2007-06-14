@@ -32,15 +32,17 @@ namespace Epsitec.Common.Designer
 			this.accessPanels    = new ResourceAccess(ResourceAccess.Type.Panels,    this, this.moduleInfo, this.mainWindow);
 			this.accessScripts   = new ResourceAccess(ResourceAccess.Type.Scripts,   this, this.moduleInfo, this.mainWindow);
 			this.accessEntities  = new ResourceAccess(ResourceAccess.Type.Entities,  this, this.moduleInfo, this.mainWindow);
-			this.accessFields2   = new ResourceAccess(ResourceAccess.Type.Fields2,   this, this.moduleInfo, this.mainWindow);
 			this.accessTypes2    = new ResourceAccess(ResourceAccess.Type.Types2,    this, this.moduleInfo, this.mainWindow);
+			this.Load();
+
+			//	Attention: il faut avoir fait le this.accessEntities.Load() avant de créer this.accessFields2 !
+			this.accessFields2   = new ResourceAccess(ResourceAccess.Type.Fields2,   this, this.moduleInfo, this.mainWindow);
+			this.accessTypes2.Load();
 
 			foreach (ResourceAccess access in Access)
 			{
 				access.DirtyChanged += new EventHandler(this.HandleAccessDirtyChanged);
 			}
-
-			this.Load();
 		}
 
 		public void Dispose()
@@ -218,7 +220,10 @@ namespace Epsitec.Common.Designer
 			//	Charge toutes les ressources.
 			foreach (ResourceAccess access in Access)
 			{
-				access.Load();
+				if (access != null)
+				{
+					access.Load();
+				}
 			}
 		}
 
