@@ -17,8 +17,13 @@ namespace Epsitec.Common.Types
 		Local=0,
 
 		/// <summary>
-		/// The field is inherited from some parent.
+		/// The field is inherited from some parent or base class.
 		/// </summary>
 		Inherited=1,
+
+		/// <summary>
+		/// Ths field is inherited through interface implementation.
+		/// </summary>
+		Interface=2,
 	}
 }
