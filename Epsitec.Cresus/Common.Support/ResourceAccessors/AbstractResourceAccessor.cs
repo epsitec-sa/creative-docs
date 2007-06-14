@@ -144,7 +144,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 		/// </summary>
 		/// <param name="sender">The sender.</param>
 		/// <param name="e">The <see cref="Epsitec.Common.Types.CollectionChangedEventArgs"/> instance containing the event data.</param>
-		private void HandleItemsCollectionChanged(object sender, Types.CollectionChangedEventArgs e)
+		protected virtual void HandleItemsCollectionChanged(object sender, Types.CollectionChangedEventArgs e)
 		{
 			if (this.suspendNotifications == 0)
 			{

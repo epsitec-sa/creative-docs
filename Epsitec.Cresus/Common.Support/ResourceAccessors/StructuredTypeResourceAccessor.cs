@@ -18,7 +18,6 @@ namespace Epsitec.Common.Support.ResourceAccessors
 	{
 		public StructuredTypeResourceAccessor()
 		{
-			this.Collection.CollectionChanged += this.HandleCollectionChanged;
 		}
 
 		public IResourceAccessor FieldAccessor
@@ -161,8 +160,10 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			fields.CollectionChanged += new Listener (this, item).HandleCollectionChanged;
 		}
 
-		private void HandleCollectionChanged(object sender, CollectionChangedEventArgs e)
+		protected override void HandleItemsCollectionChanged(object sender, CollectionChangedEventArgs e)
 		{
+			base.HandleItemsCollectionChanged (sender, e);
+			
 			switch (e.Action)
 			{
 				case CollectionChangedAction.Add:

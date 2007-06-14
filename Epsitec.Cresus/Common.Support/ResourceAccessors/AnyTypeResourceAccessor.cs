@@ -20,7 +20,6 @@ namespace Epsitec.Common.Support.ResourceAccessors
 	{
 		public AnyTypeResourceAccessor()
 		{
-			this.Collection.CollectionChanged += this.HandleCollectionChanged;
 		}
 
 		public IResourceAccessor ValueAccessor
@@ -627,8 +626,10 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			data.SetValue (Res.Fields.ResourceStringType.UseMultilingualStorage, type.UseMultilingualStorage);
 		}
 
-		private void HandleCollectionChanged(object sender, CollectionChangedEventArgs e)
+		protected override void HandleItemsCollectionChanged(object sender, CollectionChangedEventArgs e)
 		{
+			base.HandleItemsCollectionChanged (sender, e);
+
 			switch (e.Action)
 			{
 				case CollectionChangedAction.Add:

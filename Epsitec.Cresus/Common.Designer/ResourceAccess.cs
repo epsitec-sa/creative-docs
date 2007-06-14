@@ -561,27 +561,45 @@ namespace Epsitec.Common.Designer
 
 			if (this.IsAbstract2)
 			{
-				CultureMap newItem = this.accessor.CreateItem();
-				newItem.Name = newName;
+				CultureMap newItem;
 
-				if (this.type == Type.Types && !duplicateContent)
+				if (this.type == Type.Types2 && !duplicateContent)
 				{
+					TypeCode code;
 					TypeType tt = this.lastTypeTypeCreatated;
 					this.mainWindow.DlgResourceTypeType(this, ref tt, out this.lastTypeTypeSystem);
-					if (tt == TypeType.None)  // annuler ?
+					switch (tt)
 					{
-						return;
+						case TypeType.Binary:		code = TypeCode.Binary;			break;
+						case TypeType.Boolean:		code = TypeCode.Boolean;		break;
+						case TypeType.Collection:	code = TypeCode.Collection;		break;
+						case TypeType.Date:			code = TypeCode.Date;			break;
+						case TypeType.DateTime:		code = TypeCode.DateTime;		break;
+						case TypeType.Decimal:		code = TypeCode.Decimal;		break;
+						case TypeType.Double:		code = TypeCode.Double;			break;
+						case TypeType.Enum:			code = TypeCode.Enum;			break;
+						case TypeType.Integer:		code = TypeCode.Integer;		break;
+						case TypeType.LongInteger:	code = TypeCode.LongInteger;	break;
+						case TypeType.String:		code = TypeCode.String;			break;
+						case TypeType.Time:			code = TypeCode.Time;			break;
+						
+						default:	//	annuler, probablement...
+							return;
 					}
+					
+					newItem = this.accessor.CreateItem();
+					newItem.Name = newName;
+
+					StructuredData data = newItem.GetCultureData (Resources.DefaultTwoLetterISOLanguageName);
+
 					this.lastTypeTypeCreatated = tt;
-					AbstractType type = ResourceAccess.TypeTypeCreate(this.lastTypeTypeCreatated, this.primaryBundle);
-
-					//?CultureMap structItem = structAccessor.Collection[...];
-					//?CultureMap fieldItem = structAccessor.CreateFieldItem(structItem);
-					aucune idée comment finir...
+					data.SetValue (Support.Res.Fields.ResourceBaseType.TypeCode, code);
 				}
-
-				this.accessor.Collection.Add(newItem);
-				this.collectionView.MoveCurrentTo(newItem);
+				else
+				{
+					newItem = this.accessor.CreateItem();
+					newItem.Name = newName;
+				}
 
 				if (duplicateContent)
 				{
@@ -598,6 +616,13 @@ namespace Epsitec.Common.Designer
 						ResourceAccess.CopyData(this.accessor, newItem, data, newData);
 					}
 				}
+
+				//	Ici, si c'est un type, on a forcément TypeCode qui a été initialisé soit
+				//	explicitement avec un SetValue, soit par recopie de l'original via CopyData;
+				//	c'est indispensable que TypeCode soit défini avant de faire le Add :
+
+				this.accessor.Collection.Add (newItem);
+				this.collectionView.MoveCurrentTo (newItem);
 
 				this.accessor.PersistChanges();
 
@@ -1413,7 +1438,7 @@ namespace Epsitec.Common.Designer
 				}
 			}
 
-			int nextNumber = 2;
+			int nextNumber = 1;
 			if (numberLength > 0)
 			{
 				nextNumber = int.Parse(baseName.Substring(baseName.Length-numberLength))+1;
@@ -1421,6 +1446,11 @@ namespace Epsitec.Common.Designer
 			}
 
 			string newName = baseName;
+			if (this.IsCorrectNewName (ref newName, false))
+			{
+				return newName;
+			}
+
 			for (int i=nextNumber; i<nextNumber+100; i++)
 			{
 				newName = string.Concat(baseName, i.ToString(System.Globalization.CultureInfo.InvariantCulture));
