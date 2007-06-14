@@ -1138,10 +1138,11 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			//?Caption fieldCaption = this.editor.Module.AccessEntities.DirectGetCaption(fieldCaptionId);
 			//?Caption typeCaption = typeId.IsEmpty ? null : this.editor.Module.AccessEntities.DirectGetCaption(typeId);
 
-			CultureMap typeCultureMap = this.editor.Module.AccessTypes2.Accessor.Collection[typeId];
+			Module typeModule = this.editor.Module.MainWindow.SearchModule(typeId);
+			CultureMap typeCultureMap = typeModule.AccessTypes2.Accessor.Collection[typeId];
 			if (typeCultureMap == null)
 			{
-				typeCultureMap = this.editor.Module.AccessEntities.Accessor.Collection[typeId];
+				typeCultureMap = typeModule.AccessEntities.Accessor.Collection[typeId];
 			}
 
 			field.CaptionId = fieldCaptionId;

@@ -37,7 +37,7 @@ namespace Epsitec.Common.Designer
 
 			//	Attention: il faut avoir fait le this.accessEntities.Load() avant de créer this.accessFields2 !
 			this.accessFields2   = new ResourceAccess(ResourceAccess.Type.Fields2,   this, this.moduleInfo, this.mainWindow);
-			this.accessTypes2.Load();
+			this.accessFields2.Load();
 
 			foreach (ResourceAccess access in Access)
 			{

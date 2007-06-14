@@ -561,8 +561,6 @@ namespace Epsitec.Common.Designer
 
 			if (this.IsAbstract2)
 			{
-				CultureMap item = this.collectionView.CurrentItem as CultureMap;
-
 				CultureMap newItem = this.accessor.CreateItem();
 				newItem.Name = newName;
 				this.accessor.Collection.Add(newItem);
@@ -574,6 +572,8 @@ namespace Epsitec.Common.Designer
 					List<string> cultures = this.GetSecondaryCultureNames ();
 					cultures.Insert(0, Resources.DefaultTwoLetterISOLanguageName);
 					
+					CultureMap item = this.collectionView.CurrentItem as CultureMap;
+
 					foreach (string culture in cultures)
 					{
 						StructuredData data = item.GetCultureData(culture);
@@ -2427,7 +2427,7 @@ namespace Epsitec.Common.Designer
 					}
 				}
 
-				if (this.type == Type.Captions2 || this.type == Type.Commands2)
+				if (this.type == Type.Captions2 || this.type == Type.Commands2 || this.type == Type.Types2 || this.type == Type.Fields2)
 				{
 					IList<string> labels = data.GetValue(Support.Res.Fields.ResourceCaption.Labels) as IList<string>;
 					string text = data.GetValue(Support.Res.Fields.ResourceCaption.Description) as string;
@@ -2628,7 +2628,7 @@ namespace Epsitec.Common.Designer
 				}
 			}
 
-			if (this.IsCaptionsType || this.type == Type.Captions2 || this.type == Type.Commands2)
+			if (this.IsCaptionsType || this.type == Type.Captions2 || this.type == Type.Commands2 || this.type == Type.Types2 || this.type == Type.Fields2)
 			{
 				switch (field)
 				{
