@@ -258,6 +258,26 @@ namespace Epsitec.Common.Designer
 		}
 
 
+		protected static TypeCode TypeTypeToTypeCode(TypeType type)
+		{
+			switch (type)
+			{
+				case TypeType.Binary:		return TypeCode.Binary;
+				case TypeType.Boolean:		return TypeCode.Boolean;
+				case TypeType.Collection:	return TypeCode.Collection;
+				case TypeType.Date:			return TypeCode.Date;
+				case TypeType.DateTime:		return TypeCode.DateTime;
+				case TypeType.Decimal:		return TypeCode.Decimal;
+				case TypeType.Double:		return TypeCode.Double;
+				case TypeType.Enum:			return TypeCode.Enum;
+				case TypeType.Integer:		return TypeCode.Integer;
+				case TypeType.LongInteger:	return TypeCode.LongInteger;
+				case TypeType.String:		return TypeCode.String;
+				case TypeType.Time:			return TypeCode.Time;
+				default:                    return TypeCode.Invalid;
+			}
+		}
+
 		public static TypeType AbstractTypeToTypeType(AbstractType type)
 		{
 			if (type is BooleanType    )  return TypeType.Boolean;
@@ -565,26 +585,12 @@ namespace Epsitec.Common.Designer
 
 				if (this.type == Type.Types2 && !duplicateContent)
 				{
-					TypeCode code;
 					TypeType tt = this.lastTypeTypeCreatated;
 					this.mainWindow.DlgResourceTypeType(this, ref tt, out this.lastTypeTypeSystem);
-					switch (tt)
+					TypeCode code = ResourceAccess.TypeTypeToTypeCode(tt);
+					if (code == TypeCode.Invalid)  // annuler ?
 					{
-						case TypeType.Binary:		code = TypeCode.Binary;			break;
-						case TypeType.Boolean:		code = TypeCode.Boolean;		break;
-						case TypeType.Collection:	code = TypeCode.Collection;		break;
-						case TypeType.Date:			code = TypeCode.Date;			break;
-						case TypeType.DateTime:		code = TypeCode.DateTime;		break;
-						case TypeType.Decimal:		code = TypeCode.Decimal;		break;
-						case TypeType.Double:		code = TypeCode.Double;			break;
-						case TypeType.Enum:			code = TypeCode.Enum;			break;
-						case TypeType.Integer:		code = TypeCode.Integer;		break;
-						case TypeType.LongInteger:	code = TypeCode.LongInteger;	break;
-						case TypeType.String:		code = TypeCode.String;			break;
-						case TypeType.Time:			code = TypeCode.Time;			break;
-						
-						default:	//	annuler, probablement...
-							return;
+						return;
 					}
 					
 					newItem = this.accessor.CreateItem();

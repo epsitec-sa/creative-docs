@@ -652,10 +652,9 @@ namespace Epsitec.Common.Designer.Viewers
 				//	Si c'est un type que l'on veut représenter, alors on ajoute encore la
 				//	description du type de base (TypeCode) pour permettre à l'utilisateur
 				//	de s'y retrouver plus facilement :
-
-				if (!UndefinedValue.IsUndefinedValue (typeCodeValue))
+				if (!UndefinedValue.IsUndefinedValue(typeCodeValue))
 				{
-					text = string.Concat (text, " (", typeCodeValue, ")");
+					text = string.Concat(text, " (", typeCodeValue, ")");
 				}
 
 				widget.Margins = new Margins(5, 5, 0, 0);
