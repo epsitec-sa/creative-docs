@@ -543,7 +543,7 @@ namespace Epsitec.Common.Types
 				{
 					foreach (string id in baseType.GetFieldIds ())
 					{
-						this.fields.Add (id, new StructuredTypeField (baseType.Fields[id], FieldMembership.Inherited));
+						this.fields.Add (id, baseType.Fields[id].Clone (FieldMembership.Inherited));
 					}
 
 					StructuredTypeField[] fields = this.GetSortedFields ();
