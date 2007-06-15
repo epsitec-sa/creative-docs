@@ -49,5 +49,75 @@ namespace Epsitec.Common.Designer.Viewers
 				return ResourceAccess.Type.Types2;
 			}
 		}
+
+
+		protected override void InitializeTable()
+		{
+			//	Initialise la table.
+			StructuredType cultureMapType = new StructuredType();
+			cultureMapType.Fields.Add("Name", StringType.Default);
+			cultureMapType.Fields.Add("Type", StringType.Default);
+			cultureMapType.Fields.Add("Primary", StringType.Default);
+			cultureMapType.Fields.Add("Secondary", StringType.Default);
+
+			this.table.SourceType = cultureMapType;
+
+			this.table.Columns.Add(new UI.ItemTableColumn("Name", new Widgets.Layouts.GridLength(this.GetColumnWidth(0), Widgets.Layouts.GridUnitType.Proportional)));
+			this.table.Columns.Add(new UI.ItemTableColumn("Type", new Widgets.Layouts.GridLength(this.GetColumnWidth(1), Widgets.Layouts.GridUnitType.Proportional)));
+			this.table.Columns.Add(new UI.ItemTableColumn("Primary", new Widgets.Layouts.GridLength(this.GetColumnWidth(2), Widgets.Layouts.GridUnitType.Proportional)));
+			this.table.Columns.Add(new UI.ItemTableColumn("Secondary", new Widgets.Layouts.GridLength(this.GetColumnWidth(3), Widgets.Layouts.GridUnitType.Proportional)));
+
+			this.table.ColumnHeader.SetColumnText(0, "Nom");
+			this.table.ColumnHeader.SetColumnText(1, "Type");
+		}
+
+		protected override int PrimaryColumn
+		{
+			//	Retourne le rang de la colonne pour la culture principale.
+			get
+			{
+				return 2;
+			}
+		}
+
+		protected override int SecondaryColumn
+		{
+			//	Retourne le rang de la colonne pour la culture secondaire.
+			get
+			{
+				return 3;
+			}
+		}
+
+
+		protected override double GetColumnWidth(int column)
+		{
+			//	Retourne la largeur à utiliser pour une colonne de la liste de gauche.
+			if (this.mainWindow.DisplayModeState == MainWindow.DisplayMode.Horizontal)
+			{
+				return Types2.columnWidthHorizontal[column];
+			}
+			else
+			{
+				return Types2.columnWidthVertical[column];
+			}
+		}
+
+		protected override void SetColumnWidth(int column, double value)
+		{
+			//	Mémorise la largeur à utiliser pour une colonne de la liste de gauche.
+			if (this.mainWindow.DisplayModeState == MainWindow.DisplayMode.Horizontal)
+			{
+				Types2.columnWidthHorizontal[column] = value;
+			}
+			else
+			{
+				Types2.columnWidthVertical[column] = value;
+			}
+		}
+	
+	
+		private static double[]				columnWidthHorizontal = {140, 60, 100, 100};
+		private static double[]				columnWidthVertical = {250, 60, 270, 270};
 	}
 }

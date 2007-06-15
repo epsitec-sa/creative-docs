@@ -1301,57 +1301,29 @@ namespace Epsitec.Common.Designer.Viewers
 		}
 
 
-		protected double GetColumnWidth(int column)
+		protected virtual double GetColumnWidth(int column)
 		{
 			//	Retourne la largeur à utiliser pour une colonne de la liste de gauche.
 			if (this.mainWindow.DisplayModeState == MainWindow.DisplayMode.Horizontal)
 			{
-				if (this is Types2 || this is Fields2)
-				{
-					return Abstract.columnWidthHorizontalTypes2[column];
-				}
-				else
-				{
-					return Abstract.columnWidthHorizontal[column];
-				}
+				return Abstract.columnWidthHorizontal[column];
 			}
 			else
 			{
-				if (this is Types2 || this is Fields2)
-				{
-					return Abstract.columnWidthVerticalTypes2[column];
-				}
-				else
-				{
-					return Abstract.columnWidthVertical[column];
-				}
+				return Abstract.columnWidthVertical[column];
 			}
 		}
 
-		protected void SetColumnWidth(int column, double value)
+		protected virtual void SetColumnWidth(int column, double value)
 		{
 			//	Mémorise la largeur à utiliser pour une colonne de la liste de gauche.
 			if (this.mainWindow.DisplayModeState == MainWindow.DisplayMode.Horizontal)
 			{
-				if (this is Types2 || this is Fields2)
-				{
-					Abstract.columnWidthHorizontalTypes2[column] = value;
-				}
-				else
-				{
-					Abstract.columnWidthHorizontal[column] = value;
-				}
+				Abstract.columnWidthHorizontal[column] = value;
 			}
 			else
 			{
-				if (this is Types2 || this is Fields2)
-				{
-					Abstract.columnWidthVerticalTypes2[column] = value;
-				}
-				else
-				{
-					Abstract.columnWidthVertical[column] = value;
-				}
+				Abstract.columnWidthVertical[column] = value;
 			}
 		}
 
@@ -1382,10 +1354,8 @@ namespace Epsitec.Common.Designer.Viewers
 
 		protected static double				leftArrayWidth = 439;
 		protected static double				topArrayHeight = 220;
-		protected static double[]			columnWidthHorizontal = {200, 100, 100};
-		protected static double[]			columnWidthVertical = {250, 300, 300};
-		protected static double[]			columnWidthHorizontalTypes2 = {140, 60, 100, 100};
-		protected static double[]			columnWidthVerticalTypes2 = {250, 60, 270, 270};
+		private static double[]				columnWidthHorizontal = {200, 100, 100};
+		private static double[]				columnWidthVertical = {250, 300, 300};
 
 		protected Module					module;
 		protected PanelsContext				context;

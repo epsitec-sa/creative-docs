@@ -634,6 +634,9 @@ namespace Epsitec.Common.Designer.Viewers
 					case "Type":
 						return this.CreateType(item);
 
+					case "Entity":
+						return this.CreateEntity(item);
+
 					case "Primary":
 						return this.CreatePrimary(item);
 
@@ -648,7 +651,8 @@ namespace Epsitec.Common.Designer.Viewers
 			{
 				StaticText widget = new StaticText();
 				widget.Margins = new Margins(5, 5, 0, 0);
-				widget.Text = TextLayout.ConvertToTaggedText(item.FullName);
+				//?widget.Text = TextLayout.ConvertToTaggedText(item.FullName);
+				widget.Text = TextLayout.ConvertToTaggedText(item.Name);
 				widget.TextBreakMode = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine;
 				widget.PreferredSize = widget.GetBestFitSize();
 
@@ -663,17 +667,24 @@ namespace Epsitec.Common.Designer.Viewers
 				object typeCodeValue = data.GetValue(Support.Res.Fields.ResourceBaseType.TypeCode);
 
 				string text = "";
-				if (!UndefinedValue.IsUndefinedValue (typeCodeValue) && !UnknownValue.IsUnknownValue (typeCodeValue))
+				if (!UndefinedValue.IsUndefinedValue(typeCodeValue) && !UnknownValue.IsUnknownValue(typeCodeValue))
 				{
-					text = typeCodeValue.ToString ();
-				}
-				else
-				{
-					text = item.Prefix;
+					text = typeCodeValue.ToString();
 				}
 
 				widget.Margins = new Margins(5, 5, 0, 0);
 				widget.Text = TextLayout.ConvertToTaggedText(text);
+				widget.TextBreakMode = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine;
+				widget.PreferredSize = widget.GetBestFitSize();
+
+				return widget;
+			}
+
+			private Widget CreateEntity(CultureMap item)
+			{
+				StaticText widget = new StaticText();
+				widget.Margins = new Margins(5, 5, 0, 0);
+				widget.Text = TextLayout.ConvertToTaggedText(item.Prefix);
 				widget.TextBreakMode = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine;
 				widget.PreferredSize = widget.GetBestFitSize();
 

@@ -24,21 +24,6 @@ namespace Epsitec.Common.Designer.Viewers
 
 		public Abstract2(Module module, PanelsContext context, ResourceAccess access, MainWindow mainWindow) : base(module, context, access, mainWindow)
 		{
-			StructuredType cultureMapType = new StructuredType();
-			if (this is Types2 || this is Fields2)
-			{
-				cultureMapType.Fields.Add("Name", StringType.Default);
-				cultureMapType.Fields.Add("Type", StringType.Default);
-				cultureMapType.Fields.Add("Primary", StringType.Default);
-				cultureMapType.Fields.Add("Secondary", StringType.Default);
-			}
-			else
-			{
-				cultureMapType.Fields.Add("Name", StringType.Default);
-				cultureMapType.Fields.Add("Primary", StringType.Default);
-				cultureMapType.Fields.Add("Secondary", StringType.Default);
-			}
-
 			//	Crée les deux volets séparés d'un splitter.
 			this.firstPane = new Widget(this);
 			this.firstPane.Name = "FirstPane";
@@ -106,26 +91,8 @@ namespace Epsitec.Common.Designer.Viewers
 
 			this.table = new UI.ItemTable(this.firstPane);
 			this.table.ItemPanel.CustomItemViewFactoryGetter = this.ItemViewFactoryGetter;
-			this.table.SourceType = cultureMapType;
 			this.table.Items = this.access.CollectionView;
-
-			if (this is Types2 || this is Fields2)
-			{
-				this.table.Columns.Add(new UI.ItemTableColumn("Name", new Widgets.Layouts.GridLength(this.GetColumnWidth(0), Widgets.Layouts.GridUnitType.Proportional)));
-				this.table.Columns.Add(new UI.ItemTableColumn("Type", new Widgets.Layouts.GridLength(this.GetColumnWidth(1), Widgets.Layouts.GridUnitType.Proportional)));
-				this.table.Columns.Add(new UI.ItemTableColumn("Primary", new Widgets.Layouts.GridLength(this.GetColumnWidth(2), Widgets.Layouts.GridUnitType.Proportional)));
-				this.table.Columns.Add(new UI.ItemTableColumn("Secondary", new Widgets.Layouts.GridLength(this.GetColumnWidth(3), Widgets.Layouts.GridUnitType.Proportional)));
-				this.table.ColumnHeader.SetColumnText(0, "Nom");
-				this.table.ColumnHeader.SetColumnText(1, "Type");
-			}
-			else
-			{
-				this.table.Columns.Add(new UI.ItemTableColumn("Name", new Widgets.Layouts.GridLength(this.GetColumnWidth(0), Widgets.Layouts.GridUnitType.Proportional)));
-				this.table.Columns.Add(new UI.ItemTableColumn("Primary", new Widgets.Layouts.GridLength(this.GetColumnWidth(1), Widgets.Layouts.GridUnitType.Proportional)));
-				this.table.Columns.Add(new UI.ItemTableColumn("Secondary", new Widgets.Layouts.GridLength(this.GetColumnWidth(2), Widgets.Layouts.GridUnitType.Proportional)));
-				this.table.ColumnHeader.SetColumnText(0, "Nom");
-			}
-			
+			this.InitializeTable();
 			this.table.HorizontalScrollMode = (this.mainWindow.DisplayModeState == MainWindow.DisplayMode.Horizontal) ? UI.ItemTableScrollMode.Linear : UI.ItemTableScrollMode.None;
 			this.table.VerticalScrollMode = UI.ItemTableScrollMode.ItemBased;
 			this.table.HeaderVisibility = true;
@@ -231,6 +198,42 @@ namespace Epsitec.Common.Designer.Viewers
 			}
 
 			base.Dispose(disposing);
+		}
+
+
+		protected virtual void InitializeTable()
+		{
+			//	Initialise la table.
+			StructuredType cultureMapType = new StructuredType();
+			cultureMapType.Fields.Add("Name", StringType.Default);
+			cultureMapType.Fields.Add("Primary", StringType.Default);
+			cultureMapType.Fields.Add("Secondary", StringType.Default);
+
+			this.table.SourceType = cultureMapType;
+
+			this.table.Columns.Add(new UI.ItemTableColumn("Name", new Widgets.Layouts.GridLength(this.GetColumnWidth(0), Widgets.Layouts.GridUnitType.Proportional)));
+			this.table.Columns.Add(new UI.ItemTableColumn("Primary", new Widgets.Layouts.GridLength(this.GetColumnWidth(1), Widgets.Layouts.GridUnitType.Proportional)));
+			this.table.Columns.Add(new UI.ItemTableColumn("Secondary", new Widgets.Layouts.GridLength(this.GetColumnWidth(2), Widgets.Layouts.GridUnitType.Proportional)));
+
+			this.table.ColumnHeader.SetColumnText(0, "Nom");
+		}
+
+		protected virtual int PrimaryColumn
+		{
+			//	Retourne le rang de la colonne pour la culture principale.
+			get
+			{
+				return 1;
+			}
+		}
+
+		protected virtual int SecondaryColumn
+		{
+			//	Retourne le rang de la colonne pour la culture secondaire.
+			get
+			{
+				return 2;
+			}
 		}
 
 
@@ -393,9 +396,8 @@ namespace Epsitec.Common.Designer.Viewers
 		protected override void UpdateSelectedCulture()
 		{
 			//	Sélectionne le bouton correspondant à la culture secondaire.
-			int c = (this is Types2) ? 2 : 1;
-			this.table.ColumnHeader.SetColumnText(c+0, Misc.CultureName(this.access.GetBaseCultureName()));
-			this.table.ColumnHeader.SetColumnText(c+1, Misc.CultureName(this.GetTwoLetters(1)));
+			this.table.ColumnHeader.SetColumnText(this.PrimaryColumn, Misc.CultureName(this.access.GetBaseCultureName()));
+			this.table.ColumnHeader.SetColumnText(this.SecondaryColumn, Misc.CultureName(this.GetTwoLetters(1)));
 
 			if (this.secondaryButtonsCulture == null)
 			{

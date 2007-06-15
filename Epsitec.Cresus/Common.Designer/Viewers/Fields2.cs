@@ -14,7 +14,7 @@ namespace Epsitec.Common.Designer.Viewers
 	{
 		public Fields2(Module module, PanelsContext context, ResourceAccess access, MainWindow mainWindow) : base(module, context, access, mainWindow)
 		{
-			this.table.ColumnHeader.SetColumnComparer(1, Fields2.CompareTypeColumns);
+			this.table.ColumnHeader.SetColumnComparer(0, Fields2.CompareTypeColumns);
 			this.UpdateAll();
 		}
 
@@ -43,5 +43,75 @@ namespace Epsitec.Common.Designer.Viewers
 				return ResourceAccess.Type.Fields2;
 			}
 		}
+
+	
+		protected override void InitializeTable()
+		{
+			//	Initialise la table.
+			StructuredType cultureMapType = new StructuredType();
+			cultureMapType.Fields.Add("Entity", StringType.Default);
+			cultureMapType.Fields.Add("Name", StringType.Default);
+			cultureMapType.Fields.Add("Primary", StringType.Default);
+			cultureMapType.Fields.Add("Secondary", StringType.Default);
+
+			this.table.SourceType = cultureMapType;
+
+			this.table.Columns.Add(new UI.ItemTableColumn("Entity", new Widgets.Layouts.GridLength(this.GetColumnWidth(0), Widgets.Layouts.GridUnitType.Proportional)));
+			this.table.Columns.Add(new UI.ItemTableColumn("Name", new Widgets.Layouts.GridLength(this.GetColumnWidth(1), Widgets.Layouts.GridUnitType.Proportional)));
+			this.table.Columns.Add(new UI.ItemTableColumn("Primary", new Widgets.Layouts.GridLength(this.GetColumnWidth(2), Widgets.Layouts.GridUnitType.Proportional)));
+			this.table.Columns.Add(new UI.ItemTableColumn("Secondary", new Widgets.Layouts.GridLength(this.GetColumnWidth(3), Widgets.Layouts.GridUnitType.Proportional)));
+
+			this.table.ColumnHeader.SetColumnText(0, "Entité");
+			this.table.ColumnHeader.SetColumnText(1, "Nom");
+		}
+
+		protected override int PrimaryColumn
+		{
+			//	Retourne le rang de la colonne pour la culture principale.
+			get
+			{
+				return 2;
+			}
+		}
+
+		protected override int SecondaryColumn
+		{
+			//	Retourne le rang de la colonne pour la culture secondaire.
+			get
+			{
+				return 3;
+			}
+		}
+
+
+		protected override double GetColumnWidth(int column)
+		{
+			//	Retourne la largeur à utiliser pour une colonne de la liste de gauche.
+			if (this.mainWindow.DisplayModeState == MainWindow.DisplayMode.Horizontal)
+			{
+				return Fields2.columnWidthHorizontal[column];
+			}
+			else
+			{
+				return Fields2.columnWidthVertical[column];
+			}
+		}
+
+		protected override void SetColumnWidth(int column, double value)
+		{
+			//	Mémorise la largeur à utiliser pour une colonne de la liste de gauche.
+			if (this.mainWindow.DisplayModeState == MainWindow.DisplayMode.Horizontal)
+			{
+				Fields2.columnWidthHorizontal[column] = value;
+			}
+			else
+			{
+				Fields2.columnWidthVertical[column] = value;
+			}
+		}
+	
+	
+		private static double[]				columnWidthHorizontal = {80, 120, 100, 100};
+		private static double[]				columnWidthVertical = {100, 210, 270, 270};
 	}
 }
