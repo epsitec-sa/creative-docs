@@ -117,10 +117,11 @@ namespace Epsitec.Common.Support.ResourceAccessors
 				//?Druid sourceFieldId = StructuredTypeResourceAccessor.ToDruid (fieldData.GetValue (Res.Fields.Field.SourceFieldId));
 				FieldRelation relation = (FieldRelation) fieldData.GetValue (Res.Fields.Field.Relation);
 				FieldMembership membership = (FieldMembership) fieldData.GetValue (Res.Fields.Field.Membership);
+				FieldSource source = (FieldSource) fieldData.GetValue (Res.Fields.Field.Source);
 
 				if (membership == FieldMembership.Local)
 				{
-					StructuredTypeField field = new StructuredTypeField (null, null, fieldCaption, rank++, relation, membership);
+					StructuredTypeField field = new StructuredTypeField (null, null, fieldCaption, rank++, relation, membership, source);
 					field.DefineTypeId (fieldType);
 					type.Fields.Add (field);
 				}
@@ -144,6 +145,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 					x.SetValue (Res.Fields.Field.CaptionId, field.CaptionId);
 					x.SetValue (Res.Fields.Field.Relation, field.Relation);
 					x.SetValue (Res.Fields.Field.Membership, field.Membership);
+					x.SetValue (Res.Fields.Field.Source, field.Source);
 					//?x.SetValue (Res.Fields.Field.SourceFieldId, string.IsNullOrEmpty (field.SourceFieldId) ? Druid.Empty : Druid.Parse (field.SourceFieldId));
 					fields.Add (x);
 
@@ -252,6 +254,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 				data.SetValue (Res.Fields.Field.CaptionId, Druid.Empty);
 				data.SetValue (Res.Fields.Field.Relation, FieldRelation.None);
 				data.SetValue (Res.Fields.Field.Membership, FieldMembership.Local);
+				data.SetValue (Res.Fields.Field.Source, FieldSource.Value);
 				//?data.SetValue (Res.Fields.Field.SourceFieldId, Druid.Empty);
 				
 				return data;

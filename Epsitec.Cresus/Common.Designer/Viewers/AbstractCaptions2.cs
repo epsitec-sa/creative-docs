@@ -652,7 +652,8 @@ namespace Epsitec.Common.Designer.Viewers
 				//	Si c'est un type que l'on veut représenter, alors on ajoute encore la
 				//	description du type de base (TypeCode) pour permettre à l'utilisateur
 				//	de s'y retrouver plus facilement :
-				if (!UndefinedValue.IsUndefinedValue(typeCodeValue))
+				if ((!UndefinedValue.IsUndefinedValue(typeCodeValue)) &&
+					(!UnknownValue.IsUnknownValue(typeCodeValue)))
 				{
 					text = string.Concat(text, " (", typeCodeValue, ")");
 				}

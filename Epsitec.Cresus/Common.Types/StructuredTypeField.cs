@@ -90,6 +90,21 @@ namespace Epsitec.Common.Types
 		/// <param name="relation">The field relation.</param>
 		/// <param name="membership">The field membership.</param>
 		/// <param name="source">The field source.</param>
+		public StructuredTypeField(string id, INamedType type, Support.Druid captionId, int rank, FieldRelation relation, FieldMembership membership, FieldSource source)
+			: this (id, type, captionId, rank, relation, membership, source, null)
+		{
+		}
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="StructuredTypeField"/> class.
+		/// </summary>
+		/// <param name="id">The field id.</param>
+		/// <param name="type">The field type.</param>
+		/// <param name="captionId">The field caption DRUID.</param>
+		/// <param name="rank">The field rank when listed in a user interface.</param>
+		/// <param name="relation">The field relation.</param>
+		/// <param name="membership">The field membership.</param>
+		/// <param name="source">The field source.</param>
 		/// <param name="sourceFieldId">The source field id.</param>
 		internal StructuredTypeField(string id, INamedType type, Support.Druid captionId, int rank, FieldRelation relation, FieldMembership membership, FieldSource source, string sourceFieldId)
 		{
