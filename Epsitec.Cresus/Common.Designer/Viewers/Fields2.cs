@@ -14,6 +14,7 @@ namespace Epsitec.Common.Designer.Viewers
 	{
 		public Fields2(Module module, PanelsContext context, ResourceAccess access, MainWindow mainWindow) : base(module, context, access, mainWindow)
 		{
+			this.table.ColumnHeader.SetColumnComparer(1, Fields2.CompareTypeColumns);
 			this.UpdateAll();
 		}
 
@@ -24,6 +25,14 @@ namespace Epsitec.Common.Designer.Viewers
 			}
 
 			base.Dispose(disposing);
+		}
+
+		private static int CompareTypeColumns(object a, object b)
+		{
+			CultureMap itemA = a as CultureMap;
+			CultureMap itemB = b as CultureMap;
+
+			return itemA.Prefix.CompareTo(itemB.Prefix);
 		}
 
 
