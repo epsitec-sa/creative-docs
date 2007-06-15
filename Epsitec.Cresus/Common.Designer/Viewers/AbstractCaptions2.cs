@@ -631,6 +631,9 @@ namespace Epsitec.Common.Designer.Viewers
 					case "Name":
 						return this.CreateName(item);
 
+					case "Type":
+						return this.CreateType(item);
+
 					case "Primary":
 						return this.CreatePrimary(item);
 
@@ -644,7 +647,18 @@ namespace Epsitec.Common.Designer.Viewers
 			private Widget CreateName(CultureMap item)
 			{
 				StaticText widget = new StaticText();
-				string text = item.ToString();
+				widget.Margins = new Margins(5, 5, 0, 0);
+				widget.Text = TextLayout.ConvertToTaggedText(item.ToString());
+				widget.TextBreakMode = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine;
+				widget.PreferredSize = widget.GetBestFitSize();
+
+				return widget;
+			}
+
+			private Widget CreateType(CultureMap item)
+			{
+				StaticText widget = new StaticText();
+				string text = "";
 
 				StructuredData data = item.GetCultureData(Support.Resources.DefaultTwoLetterISOLanguageName);
 				object typeCodeValue = data.GetValue(Support.Res.Fields.ResourceBaseType.TypeCode);
@@ -652,10 +666,9 @@ namespace Epsitec.Common.Designer.Viewers
 				//	Si c'est un type que l'on veut représenter, alors on ajoute encore la
 				//	description du type de base (TypeCode) pour permettre à l'utilisateur
 				//	de s'y retrouver plus facilement :
-				if ((!UndefinedValue.IsUndefinedValue(typeCodeValue)) &&
-					(!UnknownValue.IsUnknownValue(typeCodeValue)))
+				if (!UndefinedValue.IsUndefinedValue(typeCodeValue) && !UnknownValue.IsUnknownValue(typeCodeValue))
 				{
-					text = string.Concat(text, " (", typeCodeValue, ")");
+					text = typeCodeValue.ToString();
 				}
 
 				widget.Margins = new Margins(5, 5, 0, 0);

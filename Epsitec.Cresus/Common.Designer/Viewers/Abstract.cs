@@ -1305,11 +1305,25 @@ namespace Epsitec.Common.Designer.Viewers
 			//	Retourne la largeur à utiliser pour une colonne de la liste de gauche.
 			if (this.mainWindow.DisplayModeState == MainWindow.DisplayMode.Horizontal)
 			{
-				return Abstract.columnWidthHorizontal[column];
+				if (this is Types2)
+				{
+					return Abstract.columnWidthHorizontalTypes2[column];
+				}
+				else
+				{
+					return Abstract.columnWidthHorizontal[column];
+				}
 			}
 			else
 			{
-				return Abstract.columnWidthVertical[column];
+				if (this is Types2)
+				{
+					return Abstract.columnWidthVerticalTypes2[column];
+				}
+				else
+				{
+					return Abstract.columnWidthVertical[column];
+				}
 			}
 		}
 
@@ -1318,11 +1332,25 @@ namespace Epsitec.Common.Designer.Viewers
 			//	Mémorise la largeur à utiliser pour une colonne de la liste de gauche.
 			if (this.mainWindow.DisplayModeState == MainWindow.DisplayMode.Horizontal)
 			{
-				Abstract.columnWidthHorizontal[column] = value;
+				if (this is Types2)
+				{
+					Abstract.columnWidthHorizontalTypes2[column] = value;
+				}
+				else
+				{
+					Abstract.columnWidthHorizontal[column] = value;
+				}
 			}
 			else
 			{
-				Abstract.columnWidthVertical[column] = value;
+				if (this is Types2)
+				{
+					Abstract.columnWidthVerticalTypes2[column] = value;
+				}
+				else
+				{
+					Abstract.columnWidthVertical[column] = value;
+				}
 			}
 		}
 
@@ -1355,6 +1383,8 @@ namespace Epsitec.Common.Designer.Viewers
 		protected static double				topArrayHeight = 220;
 		protected static double[]			columnWidthHorizontal = {200, 100, 100};
 		protected static double[]			columnWidthVertical = {250, 300, 300};
+		protected static double[]			columnWidthHorizontalTypes2 = {140, 60, 100, 100};
+		protected static double[]			columnWidthVerticalTypes2 = {250, 60, 270, 270};
 
 		protected Module					module;
 		protected PanelsContext				context;

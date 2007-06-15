@@ -25,9 +25,19 @@ namespace Epsitec.Common.Designer.Viewers
 		public Abstract2(Module module, PanelsContext context, ResourceAccess access, MainWindow mainWindow) : base(module, context, access, mainWindow)
 		{
 			StructuredType cultureMapType = new StructuredType();
-			cultureMapType.Fields.Add("Name", StringType.Default);
-			cultureMapType.Fields.Add("Primary", StringType.Default);
-			cultureMapType.Fields.Add("Secondary", StringType.Default);
+			if (this is Types2)
+			{
+				cultureMapType.Fields.Add("Name", StringType.Default);
+				cultureMapType.Fields.Add("Type", StringType.Default);
+				cultureMapType.Fields.Add("Primary", StringType.Default);
+				cultureMapType.Fields.Add("Secondary", StringType.Default);
+			}
+			else
+			{
+				cultureMapType.Fields.Add("Name", StringType.Default);
+				cultureMapType.Fields.Add("Primary", StringType.Default);
+				cultureMapType.Fields.Add("Secondary", StringType.Default);
+			}
 
 			//	Crée les deux volets séparés d'un splitter.
 			this.firstPane = new Widget(this);
@@ -98,10 +108,24 @@ namespace Epsitec.Common.Designer.Viewers
 			this.table.ItemPanel.CustomItemViewFactoryGetter = this.ItemViewFactoryGetter;
 			this.table.SourceType = cultureMapType;
 			this.table.Items = this.access.CollectionView;
-			this.table.Columns.Add(new UI.ItemTableColumn("Name", new Widgets.Layouts.GridLength(this.GetColumnWidth(0), Widgets.Layouts.GridUnitType.Proportional)));
-			this.table.Columns.Add(new UI.ItemTableColumn("Primary", new Widgets.Layouts.GridLength(this.GetColumnWidth(1), Widgets.Layouts.GridUnitType.Proportional)));
-			this.table.Columns.Add(new UI.ItemTableColumn("Secondary", new Widgets.Layouts.GridLength(this.GetColumnWidth(2), Widgets.Layouts.GridUnitType.Proportional)));
-			this.table.ColumnHeader.SetColumnText(0, "Nom");
+
+			if (this is Types2)
+			{
+				this.table.Columns.Add(new UI.ItemTableColumn("Name", new Widgets.Layouts.GridLength(this.GetColumnWidth(0), Widgets.Layouts.GridUnitType.Proportional)));
+				this.table.Columns.Add(new UI.ItemTableColumn("Type", new Widgets.Layouts.GridLength(this.GetColumnWidth(1), Widgets.Layouts.GridUnitType.Proportional)));
+				this.table.Columns.Add(new UI.ItemTableColumn("Primary", new Widgets.Layouts.GridLength(this.GetColumnWidth(2), Widgets.Layouts.GridUnitType.Proportional)));
+				this.table.Columns.Add(new UI.ItemTableColumn("Secondary", new Widgets.Layouts.GridLength(this.GetColumnWidth(3), Widgets.Layouts.GridUnitType.Proportional)));
+				this.table.ColumnHeader.SetColumnText(0, "Nom");
+				this.table.ColumnHeader.SetColumnText(1, "Type");
+			}
+			else
+			{
+				this.table.Columns.Add(new UI.ItemTableColumn("Name", new Widgets.Layouts.GridLength(this.GetColumnWidth(0), Widgets.Layouts.GridUnitType.Proportional)));
+				this.table.Columns.Add(new UI.ItemTableColumn("Primary", new Widgets.Layouts.GridLength(this.GetColumnWidth(1), Widgets.Layouts.GridUnitType.Proportional)));
+				this.table.Columns.Add(new UI.ItemTableColumn("Secondary", new Widgets.Layouts.GridLength(this.GetColumnWidth(2), Widgets.Layouts.GridUnitType.Proportional)));
+				this.table.ColumnHeader.SetColumnText(0, "Nom");
+			}
+			
 			this.table.HorizontalScrollMode = (this.mainWindow.DisplayModeState == MainWindow.DisplayMode.Horizontal) ? UI.ItemTableScrollMode.Linear : UI.ItemTableScrollMode.None;
 			this.table.VerticalScrollMode = UI.ItemTableScrollMode.ItemBased;
 			this.table.HeaderVisibility = true;
@@ -367,8 +391,9 @@ namespace Epsitec.Common.Designer.Viewers
 		protected override void UpdateSelectedCulture()
 		{
 			//	Sélectionne le bouton correspondant à la culture secondaire.
-			this.table.ColumnHeader.SetColumnText(1, Misc.CultureName(this.access.GetBaseCultureName()));
-			this.table.ColumnHeader.SetColumnText(2, Misc.CultureName(this.GetTwoLetters(1)));
+			int c = (this is Types2) ? 2 : 1;
+			this.table.ColumnHeader.SetColumnText(c+0, Misc.CultureName(this.access.GetBaseCultureName()));
+			this.table.ColumnHeader.SetColumnText(c+1, Misc.CultureName(this.GetTwoLetters(1)));
 
 			if (this.secondaryButtonsCulture == null)
 			{
