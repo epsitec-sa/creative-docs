@@ -22,6 +22,13 @@ namespace Epsitec.Common.Widgets
 		{
 			this.SetEmbedder(embedder);
 		}
+
+
+		public static string FormatContent(string subtitle, string main)
+		{
+			//	Formate un texte pour le bouton.
+			return string.Concat("<font size=\"150%\">", subtitle, "</font><br/>", main);
+		}
 		
 		
 		protected override Drawing.Size GetTextLayoutSize()
