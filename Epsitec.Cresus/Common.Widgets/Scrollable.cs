@@ -142,6 +142,22 @@ namespace Epsitec.Common.Widgets
 			set { this.foregroundFrameMargins = value; }
 		}
 
+		public HScroller						HorizontalScroller
+		{
+			get
+			{
+				return this.hScroller;
+			}
+		}
+
+		public VScroller						VerticalScroller
+		{
+			get
+			{
+				return this.vScroller;
+			}
+		}
+
 		
 		protected override void Dispose(bool disposing)
 		{

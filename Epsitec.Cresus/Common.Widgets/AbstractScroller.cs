@@ -177,6 +177,22 @@ namespace Epsitec.Common.Widgets
 		}
 
 
+		public void SimulateArrowEngaged(int direction)
+		{
+			if (direction == 0)
+			{
+				this.Window.EngagedWidget = null;
+			}
+			else if (direction < 0)
+			{
+				this.Window.EngagedWidget = this.ArrowDown;
+			}
+			else if (direction > 0)
+			{
+				this.Window.EngagedWidget = this.ArrowUp;
+			}
+		}
+		
 		protected override void SetBoundsOverride(Drawing.Rectangle oldRect, Drawing.Rectangle newRect)
 		{
 			base.SetBoundsOverride (oldRect, newRect);
