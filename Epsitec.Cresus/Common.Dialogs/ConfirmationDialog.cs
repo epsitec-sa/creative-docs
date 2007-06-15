@@ -8,15 +8,24 @@ using Epsitec.Common.Support;
 namespace Epsitec.Common.Dialogs
 {
 	/// <summary>
-	/// Summary description for ConfirmationDialog.
+	/// Dialogue pour demander confirmation avec plusieurs gros boutons. Chaque bouton peut contenir
+	/// un sous-titre et un long texte explicatif.
 	/// </summary>
 	public class ConfirmationDialog : AbstractMessageDialog
 	{
-		public ConfirmationDialog(string title, string header, List<string> questions)
+		/// <summary>
+		/// Constructeur du dialogue pour demander confirmation avec plusieurs gros boutons.
+		/// </summary>
+		/// <param name="title">Titre du dialogue, dans la barre de titre de la fenêtre.</param>
+		/// <param name="header">Question posée en haut du dialogue.</param>
+		/// <param name="questions">Liste de questions, formatées avec ConfirmationButton.FormatContent().</param>
+		/// <param name="asCancel">Présente optionnelle d'un bouton "Annuler" dans une bande grise en bas.</param>
+		public ConfirmationDialog(string title, string header, List<string> questions, bool asCancel)
 		{
 			this.title = title;
 			this.header = header;
 			this.questions = questions;
+			this.asCancel = asCancel;
 		}
 
 
@@ -26,6 +35,7 @@ namespace Epsitec.Common.Dialogs
 
 			StaticText container = new StaticText();
 			container.BackColor = adorner.ColorTextBackground;
+			container.Padding = new Drawing.Margins(ConfirmationDialog.margin);
 
 			ConfirmationStaticText header = new ConfirmationStaticText(container);
 			header.Text = this.header;
@@ -43,9 +53,32 @@ namespace Epsitec.Common.Dialogs
 				button.Clicked += new MessageEventHandler(this.HandleButtonClicked);
 			}
 
-			container.PreferredSize = new Drawing.Size(ConfirmationDialog.width, 250);
+			if (this.asCancel)  // bouton Cancel dans une bande grise en bas ?
+			{
+				Widget group = new Widget();
 
-			return container;
+				container.SetParent(group);
+				container.Dock = DockStyle.Fill;
+
+				Widget footer = new Widget(group);
+				footer.PreferredHeight = 38;
+				footer.Dock = DockStyle.Bottom;
+
+				Button button = new Button(footer);
+				button.Text = Widgets.Res.Strings.Dialog.Button.Cancel;
+				button.Name = "Cancel";
+				button.Dock = DockStyle.Right;
+				button.Margins = new Drawing.Margins(ConfirmationDialog.margin, ConfirmationDialog.margin, 8, 8);
+				button.Clicked += new MessageEventHandler(this.HandleButtonClicked);
+
+				group.PreferredSize = new Drawing.Size(ConfirmationDialog.width, 250);
+				return group;
+			}
+			else
+			{
+				container.PreferredSize = new Drawing.Size(ConfirmationDialog.width, 250);
+				return container;
+			}
 		}
 
 		protected override void CreateWindow()
@@ -67,7 +100,6 @@ namespace Epsitec.Common.Dialogs
 			
 			body.SetParent(this.window.Root);
 			body.Dock = DockStyle.Fill;
-			body.Padding = new Drawing.Margins(ConfirmationDialog.margin);
 			body.TabIndex = 1;
 			body.TabNavigationMode = TabNavigationMode.ForwardTabPassive;
 			
@@ -80,9 +112,17 @@ namespace Epsitec.Common.Dialogs
 		
 		private void HandleButtonClicked(object sender, MessageEventArgs e)
 		{
-			ConfirmationButton button = sender as ConfirmationButton;
-			int rank = int.Parse(button.Name);
-			this.result = (DialogResult) (DialogResult.Answer1+rank);
+			Widget button = sender as Widget;
+
+			if (button.Name == "Cancel")
+			{
+				this.result = DialogResult.Cancel;
+			}
+			else
+			{
+				int rank = int.Parse(button.Name);
+				this.result = (DialogResult) (DialogResult.Answer1+rank);
+			}
 			this.CloseDialog();
 		}
 
@@ -93,5 +133,6 @@ namespace Epsitec.Common.Dialogs
 		protected string						title;
 		protected string						header;
 		protected List<string>					questions;
+		protected bool							asCancel;
 	}
 }

@@ -107,9 +107,9 @@ namespace Epsitec.Common.Dialogs
 			return Message.CreateOk (dialog_title, message_icon, message_text, command_ok_template, command_dispatcher);
 		}
 
-		public static IDialog CreateConfirmation(string title, string header, List<string> questions)
+		public static IDialog CreateConfirmation(string title, string header, List<string> questions, bool asCancel)
 		{
-			ConfirmationDialog dialog = new ConfirmationDialog(title, header, questions);
+			ConfirmationDialog dialog = new ConfirmationDialog(title, header, questions, asCancel);
 			return dialog;
 		}
 
