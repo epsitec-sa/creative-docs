@@ -1305,7 +1305,7 @@ namespace Epsitec.Common.Designer.Viewers
 			//	Retourne la largeur à utiliser pour une colonne de la liste de gauche.
 			if (this.mainWindow.DisplayModeState == MainWindow.DisplayMode.Horizontal)
 			{
-				if (this is Types2)
+				if (this is Types2 || this is Fields2)
 				{
 					return Abstract.columnWidthHorizontalTypes2[column];
 				}
@@ -1316,7 +1316,7 @@ namespace Epsitec.Common.Designer.Viewers
 			}
 			else
 			{
-				if (this is Types2)
+				if (this is Types2 || this is Fields2)
 				{
 					return Abstract.columnWidthVerticalTypes2[column];
 				}
@@ -1332,7 +1332,7 @@ namespace Epsitec.Common.Designer.Viewers
 			//	Mémorise la largeur à utiliser pour une colonne de la liste de gauche.
 			if (this.mainWindow.DisplayModeState == MainWindow.DisplayMode.Horizontal)
 			{
-				if (this is Types2)
+				if (this is Types2 || this is Fields2)
 				{
 					Abstract.columnWidthHorizontalTypes2[column] = value;
 				}
@@ -1343,7 +1343,7 @@ namespace Epsitec.Common.Designer.Viewers
 			}
 			else
 			{
-				if (this is Types2)
+				if (this is Types2 || this is Fields2)
 				{
 					Abstract.columnWidthVerticalTypes2[column] = value;
 				}

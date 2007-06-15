@@ -25,7 +25,7 @@ namespace Epsitec.Common.Designer.Viewers
 		public Abstract2(Module module, PanelsContext context, ResourceAccess access, MainWindow mainWindow) : base(module, context, access, mainWindow)
 		{
 			StructuredType cultureMapType = new StructuredType();
-			if (this is Types2)
+			if (this is Types2 || this is Fields2)
 			{
 				cultureMapType.Fields.Add("Name", StringType.Default);
 				cultureMapType.Fields.Add("Type", StringType.Default);
@@ -109,7 +109,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.table.SourceType = cultureMapType;
 			this.table.Items = this.access.CollectionView;
 
-			if (this is Types2)
+			if (this is Types2 || this is Fields2)
 			{
 				this.table.Columns.Add(new UI.ItemTableColumn("Name", new Widgets.Layouts.GridLength(this.GetColumnWidth(0), Widgets.Layouts.GridUnitType.Proportional)));
 				this.table.Columns.Add(new UI.ItemTableColumn("Type", new Widgets.Layouts.GridLength(this.GetColumnWidth(1), Widgets.Layouts.GridUnitType.Proportional)));

@@ -26,7 +26,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 		/// Gets or sets the prefix for this item.
 		/// </summary>
 		/// <value>The prefix.</value>
-		public string Prefix
+		public override string Prefix
 		{
 			get
 			{

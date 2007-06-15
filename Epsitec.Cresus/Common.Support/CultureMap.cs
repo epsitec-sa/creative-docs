@@ -66,6 +66,35 @@ namespace Epsitec.Common.Support
 		}
 
 		/// <summary>
+		/// Gets or sets the prefix (this is always empty, unless <c>Prefix</c> is
+		/// overridden by a derived class).
+		/// </summary>
+		/// <value>The prefix.</value>
+		public virtual string Prefix
+		{
+			get
+			{
+				return "";
+			}
+			set
+			{
+				throw new System.NotImplementedException ();
+			}
+		}
+
+		/// <summary>
+		/// Gets the full name (same output as the <see cref="ToString"/> method.
+		/// </summary>
+		/// <value>The full name.</value>
+		public string FullName
+		{
+			get
+			{
+				return this.ToString ();
+			}
+		}
+
+		/// <summary>
 		/// Determines whether the culture for specified two letter ISO language name
 		/// is defined.
 		/// </summary>

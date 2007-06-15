@@ -648,7 +648,7 @@ namespace Epsitec.Common.Designer.Viewers
 			{
 				StaticText widget = new StaticText();
 				widget.Margins = new Margins(5, 5, 0, 0);
-				widget.Text = TextLayout.ConvertToTaggedText(item.ToString());
+				widget.Text = TextLayout.ConvertToTaggedText(item.FullName);
 				widget.TextBreakMode = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine;
 				widget.PreferredSize = widget.GetBestFitSize();
 
@@ -666,9 +666,13 @@ namespace Epsitec.Common.Designer.Viewers
 				//	Si c'est un type que l'on veut représenter, alors on ajoute encore la
 				//	description du type de base (TypeCode) pour permettre à l'utilisateur
 				//	de s'y retrouver plus facilement :
-				if (!UndefinedValue.IsUndefinedValue(typeCodeValue) && !UnknownValue.IsUnknownValue(typeCodeValue))
+				if (!UndefinedValue.IsUndefinedValue (typeCodeValue) && !UnknownValue.IsUnknownValue (typeCodeValue))
 				{
-					text = typeCodeValue.ToString();
+					text = typeCodeValue.ToString ();
+				}
+				else
+				{
+					text = item.Prefix;
 				}
 
 				widget.Margins = new Margins(5, 5, 0, 0);
