@@ -432,13 +432,17 @@ namespace Epsitec.Common.Types
 				{
 					if (merge.fields.ContainsKey (id))
 					{
+						//	There is a collision between two fields; the second structured type (b)
+						//	wins over (a); this can be used for a user layer to override something
+						//	defined in the application layer.
+
 						int fieldRank = merge.fields[id].Rank;
 
-						merge.fields[id] = new StructuredTypeField (id, field.Type, field.CaptionId, fieldRank, field.Relation, FieldMembership.Local, field.Source);
+						merge.fields[id] = new StructuredTypeField (id, field.Type, field.CaptionId, fieldRank, field.Relation, FieldMembership.Local, field.Source, field.Expression);
 					}
 					else
 					{
-						merge.fields.Add (new StructuredTypeField (id, field.Type, field.CaptionId, rank++, field.Relation, FieldMembership.Local, field.Source));
+						merge.fields.Add (new StructuredTypeField (id, field.Type, field.CaptionId, rank++, field.Relation, FieldMembership.Local, field.Source, field.Expression));
 					}
 				}
 			}
