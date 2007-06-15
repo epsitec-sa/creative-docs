@@ -379,29 +379,21 @@ namespace Epsitec.Common.Types
 		/// <returns>The merged structured type.</returns>
 		public static StructuredType Merge(StructuredType a, StructuredType b)
 		{
-			// modOK001 complété l'implémentation, par moment au pifomètre. Toutes les modifications y relatives
-			// désignées par modOK001. Remplacé TO_DO (sans underscore) par OKDONE?
-			// throw new System.NotImplementedException ();
-			
-			//	OKDONE? : implement structured type merge; swap a and b if needed, based on
-			//	their layer depth (a should belong to the lower level layer)
-
 			if (a.Module.Layer > b.Module.Layer)
 			{
-				StructuredType c;
-			
-				c = a; // il doit y avoir plus élégant, non?
+				StructuredType temp = a;
+				
 				a = b;
-				b = c;
+				b = temp;
 			}
 
 			System.Diagnostics.Debug.Assert (a.Module.Layer <= b.Module.Layer);
 
-			// est-ce qu'ici, par prudence, il faut tester si c'est null? Il y a une valeur par défaut (.None), mais au cas où ?
 			if (a.Class != b.Class)
 			{
 				throw new System.ArgumentException (string.Format ("Cannot merge StructuredType of Class {0} and {1}", a.Class, b.Class));
 			}
+			
 			if (a.BaseTypeId != b.BaseTypeId)
 			{
 				throw new System.ArgumentException ("Cannot merge StructuredType with different base types");
@@ -414,8 +406,6 @@ namespace Epsitec.Common.Types
 			{
 				merge.SetValue (StructuredType.DebugDisableChecksProperty, true);
 			}
-
-			// J'ai dû mettre ici, si on met après avoir peuplé les fields, il refuse de redéfinir la caption
 
 			Caption caption = Caption.Merge (a.Caption, b.Caption);
 
@@ -442,11 +432,13 @@ namespace Epsitec.Common.Types
 				{
 					if (merge.fields.ContainsKey (id))
 					{
-						merge.fields[id] = new StructuredTypeField (id, field.Type, field.CaptionId, merge.fields[id].Rank, field.Relation);
+						int fieldRank = merge.fields[id].Rank;
+
+						merge.fields[id] = new StructuredTypeField (id, field.Type, field.CaptionId, fieldRank, field.Relation, FieldMembership.Local, field.Source);
 					}
 					else
 					{
-						merge.fields.Add (new StructuredTypeField (id, field.Type, field.CaptionId, rank++, field.Relation));
+						merge.fields.Add (new StructuredTypeField (id, field.Type, field.CaptionId, rank++, field.Relation, FieldMembership.Local, field.Source));
 					}
 				}
 			}
