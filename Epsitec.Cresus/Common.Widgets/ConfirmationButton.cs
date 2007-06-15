@@ -9,7 +9,8 @@ namespace Epsitec.Common.Widgets
 	{
 		public ConfirmationButton()
 		{
-			this.ButtonStyle = ButtonStyle.ActivableIcon;
+			this.ButtonStyle = ButtonStyle.Confirmation;
+			this.ContentAlignment = Drawing.ContentAlignment.MiddleLeft;
 		}
 		
 		public ConfirmationButton(string text)
@@ -23,6 +24,19 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
+		protected override Drawing.Size GetTextLayoutSize()
+		{
+			Drawing.Size size = this.IsActualGeometryValid ? this.Client.Size : this.PreferredSize;
+			size.Width -= ConfirmationButton.marginX*2;
+			size.Height -= ConfirmationButton.marginY*2;
+			return size;
+		}
+
+		protected override Drawing.Point GetTextLayoutOffset()
+		{
+			return new Drawing.Point(ConfirmationButton.marginX, ConfirmationButton.marginY);
+		}
+
 		protected override void OnSizeChanged(Drawing.Size oldValue, Drawing.Size newValue)
 		{
 			base.OnSizeChanged(oldValue, newValue);
@@ -30,7 +44,7 @@ namespace Epsitec.Common.Widgets
 			if (oldValue.Width != newValue.Width)  // largeur changée ?
 			{
 				double h = this.TextLayout.FindTextHeight();
-				this.PreferredHeight = h+10;  // TOOD: +10 juste pour essayer
+				this.PreferredHeight = h+ConfirmationButton.marginY*2+2;  // TODO: pourquoi +2 ?
 			}
 		}
 
@@ -41,7 +55,7 @@ namespace Epsitec.Common.Widgets
 
 			Drawing.Rectangle rect  = this.Client.Bounds;
 			WidgetPaintState  state = this.PaintState;
-			Drawing.Point     pos   = this.GetTextLayoutOffset ();
+			Drawing.Point     pos   = this.GetTextLayoutOffset();
 			
 			if ( (state & WidgetPaintState.Enabled) == 0 )
 			{
@@ -67,5 +81,8 @@ namespace Epsitec.Common.Widgets
 			adorner.PaintButtonTextLayout(graphics, pos, this.TextLayout, state, this.ButtonStyle);
 		}
 
+
+		protected static readonly double marginX = 20;
+		protected static readonly double marginY = 10;
 	}
 }

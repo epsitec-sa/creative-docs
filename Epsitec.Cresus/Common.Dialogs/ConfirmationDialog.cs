@@ -24,7 +24,7 @@ namespace Epsitec.Common.Dialogs
 		{
 			Widget container = new Widget();
 
-			StaticText header = new StaticText(container);
+			ConfirmationStaticText header = new ConfirmationStaticText(container);
 			header.Text = this.header;
 			header.Dock = DockStyle.Top;
 			header.Margins = new Drawing.Margins(0, 0, 0, 10);
@@ -37,11 +37,10 @@ namespace Epsitec.Common.Dialogs
 				button.Name = index.ToString(System.Globalization.CultureInfo.InvariantCulture);
 				button.TabIndex = index++;
 				button.Dock = DockStyle.Top;
-				button.Margins = new Drawing.Margins(0, 0, 5, 5);
 				button.Clicked += new MessageEventHandler(this.HandleButtonClicked);
 			}
 
-			container.PreferredSize = new Drawing.Size(ConfirmationDialog.width, 100);
+			container.PreferredSize = new Drawing.Size(ConfirmationDialog.width, 200);
 
 			return container;
 		}

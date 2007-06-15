@@ -23,6 +23,7 @@ namespace Epsitec.Common.Widgets
 		ComboItem,						// bouton pour menu-combo
 		ListItem,						// bouton pour liste
 		HeaderSlider,					// bouton pour modifier une largeur de colonne
+		Confirmation,					// bouton pour confirmation (ConfirmationButton)
 		
 		DefaultAccept,					// bouton pour accepter un choix dans un dialogue (OK)
 		DefaultCancel,					// bouton pour refuser un choix dans un dialogue (Cancel)
