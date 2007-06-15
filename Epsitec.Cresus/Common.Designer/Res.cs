@@ -581,7 +581,7 @@ namespace Epsitec.Common.Designer
 					public static string Resize { get { return Epsitec.Common.Designer.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (116)); } }
 				}
 				
-				public static class TypeType
+				public static class TypeCode
 				{
 					public static string EnumAll { get { return Epsitec.Common.Designer.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (235)); } }
 					public static string EnumNative { get { return Epsitec.Common.Designer.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (233)); } }
@@ -871,6 +871,8 @@ namespace Epsitec.Common.Designer
 			private static Epsitec.Common.Support.ResourceBundle _stringsBundle = Res._manager.GetBundle ("Strings");
 			#endregion
 		}
+		
+		//	Code mapping for 'Panel' resources
 		
 		static Res()
 		{

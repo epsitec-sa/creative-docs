@@ -26,7 +26,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.window.MakeSecondaryWindow();
 				this.window.PreventAutoClose = true;
 				this.WindowInit("TypeCode", ResourceTypeCode.windowWidthExtended, ResourceTypeCode.windowHeight, true);
-				this.window.Text = Res.Strings.Dialog.TypeType.Title;
+				this.window.Text = Res.Strings.Dialog.TypeCode.Title;
 				this.window.Owner = this.parentWindow;
 				this.window.WindowCloseClicked += new EventHandler(this.HandleWindowCloseClicked);
 				this.window.Root.MinSize = new Size(ResourceTypeCode.windowWidthCompacted, ResourceTypeCode.windowHeight);
@@ -67,7 +67,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 				//	Partie droite.
 				this.checkNative = new CheckButton(this.rightPanel);
-				this.checkNative.Text = Res.Strings.Dialog.TypeType.EnumNative;
+				this.checkNative.Text = Res.Strings.Dialog.TypeCode.EnumNative;
 				this.checkNative.Margins = new Margins(0, 0, 0, 8);
 				this.checkNative.Dock = DockStyle.Top;
 				this.checkNative.ActiveStateChanged += new EventHandler(this.HandleCheckNativeActiveStateChanged);
@@ -117,7 +117,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.buttonExtend.Dock = DockStyle.Left;
 				this.buttonExtend.Margins = new Margins(6, 0, 3, 3);
 				this.buttonExtend.Clicked += new MessageEventHandler(this.HandleButtonExtendClicked);
-				ToolTip.Default.SetToolTip(this.buttonExtend, Res.Strings.Dialog.TypeType.Tooltip.Options);
+				ToolTip.Default.SetToolTip(this.buttonExtend, Res.Strings.Dialog.TypeCode.Tooltip.Options);
 
 				this.UpdateExtended();
 			}
@@ -258,10 +258,10 @@ namespace Epsitec.Common.Designer.Dialogs
 			}
 
 			this.fieldFilter.Items.Clear();
-			this.fieldFilter.Items.Add(Res.Strings.Dialog.TypeType.EnumAll);
+			this.fieldFilter.Items.Add(Res.Strings.Dialog.TypeCode.EnumAll);
 			foreach (string filter in this.filters)
 			{
-				this.fieldFilter.Items.Add(string.Format(Res.Strings.Dialog.TypeType.EnumOne, filter));
+				this.fieldFilter.Items.Add(string.Format(Res.Strings.Dialog.TypeCode.EnumOne, filter));
 			}
 		}
 

@@ -303,11 +303,11 @@
   <data name="Dialog.BindingSelector.Button.Readonly" id="0S9">Lecture seule</data>
   <data name="Dialog.BindingSelector.Button.Inherit" id="0T9">Hérité</data>
   <data name="Dialog.BindingSelector.Button.Use" id="0A9">Utiliser</data>
-  <data name="Dialog.TypeType.Title" id="067" mod="1">Choix du type à créer</data>
-  <data name="Dialog.TypeType.EnumNative" id="097">Enumération .NET (&lt;b&gt;enum&lt;/b&gt;) native</data>
-  <data name="Dialog.TypeType.Tooltip.Options" id="0A7">Montre ou cache les options des énumérations</data>
-  <data name="Dialog.TypeType.EnumAll" id="0B7">Tout montrer</data>
-  <data name="Dialog.TypeType.EnumOne" id="0C7">Seulement {0}</data>
+  <data name="Dialog.TypeCode.Title" id="067" mod="1">Choix du type à créer</data>
+  <data name="Dialog.TypeCode.EnumNative" id="097">Enumération .NET (&lt;b&gt;enum&lt;/b&gt;) native</data>
+  <data name="Dialog.TypeCode.Tooltip.Options" id="0A7">Montre ou cache les options des énumérations</data>
+  <data name="Dialog.TypeCode.EnumAll" id="0B7">Tout montrer</data>
+  <data name="Dialog.TypeCode.EnumOne" id="0C7">Seulement {0}</data>
   <data name="Dialog.TableDescription.Title" id="0R9">Choix des colonnes</data>
   <data name="Dialog.TableDescription.Name" id="0P9">Nom</data>
   <data name="Dialog.TableDescription.Caption" id="0Q9">Légende</data>

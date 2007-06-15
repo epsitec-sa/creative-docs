@@ -134,8 +134,6 @@ namespace Epsitec.Common.Types
 			#endregion
 		}
 		
-		//	Code mapping for 'Panel' resources
-		
 		static Res()
 		{
 			Res.Initialize (typeof (Res), "Common.Types");
