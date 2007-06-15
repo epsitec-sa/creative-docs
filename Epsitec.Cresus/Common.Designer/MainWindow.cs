@@ -783,21 +783,18 @@ namespace Epsitec.Common.Designer
 		[Command("DisplayHorizontal")]
 		void CommandDisplayHorizontal(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			this.Terminate();
 			this.DisplayModeState = DisplayMode.Horizontal;
 		}
 
 		[Command("DisplayVertical")]
 		void CommandDisplayVertical(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			this.Terminate();
 			this.DisplayModeState = DisplayMode.Vertical;
 		}
 
 		[Command("DisplayFullScreen")]
 		void CommandDisplayFullScreen(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			this.Terminate();
 			this.DisplayModeState = DisplayMode.FullScreen;
 		}
 
@@ -1369,16 +1366,23 @@ namespace Epsitec.Common.Designer
 		public void Terminate()
 		{
 			//	Termine le travail sur une ressource, avant de passer à une autre.
+			this.Terminate(false);
+		}
+
+		public void Terminate(bool soft)
+		{
+			//	Termine le travail sur une ressource, avant de passer à une autre.
+			//	Si soft = true, on sérialise temporairement sans poser de question.
 			if (this.IsCurrentModule && this.CurrentModule.Modifier.ActiveViewer != null)
 			{
-				this.CurrentModule.Modifier.ActiveViewer.Terminate();
+				this.CurrentModule.Modifier.ActiveViewer.Terminate(soft);
 			}
 		}
 
 		private void HandleTypeChanged(object sender)
 		{
 			//	Appelé lorsque le type de vue a changé.
-			this.Terminate();
+			this.Terminate(true);
 			this.CreateViewerLayout();
 			this.DialogSearchAdapt();
 			this.LocatorFix();

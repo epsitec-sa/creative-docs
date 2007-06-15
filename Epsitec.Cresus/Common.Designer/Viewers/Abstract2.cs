@@ -296,7 +296,9 @@ namespace Epsitec.Common.Designer.Viewers
 		protected override void UpdateArray()
 		{
 			//	Met à jour tout le contenu du tableau.
+			this.ignoreChange = true;
 			this.table.ItemPanel.Refresh();
+			this.ignoreChange = false;
 		}
 
 		public override void ShowSelectedRow()
@@ -653,6 +655,11 @@ namespace Epsitec.Common.Designer.Viewers
 		private void HandleTableSelectionChanged(object sender)
 		{
 			//	La ligne sélectionnée dans le tableau a changé.
+			if (this.ignoreChange)
+			{
+				return;
+			}
+
 			this.mainWindow.Terminate();
 			this.mainWindow.LocatorFix();
 

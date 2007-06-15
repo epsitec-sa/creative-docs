@@ -658,14 +658,11 @@ namespace Epsitec.Common.Designer.Viewers
 			private Widget CreateType(CultureMap item)
 			{
 				StaticText widget = new StaticText();
-				string text = "";
 
 				StructuredData data = item.GetCultureData(Support.Resources.DefaultTwoLetterISOLanguageName);
 				object typeCodeValue = data.GetValue(Support.Res.Fields.ResourceBaseType.TypeCode);
 
-				//	Si c'est un type que l'on veut représenter, alors on ajoute encore la
-				//	description du type de base (TypeCode) pour permettre à l'utilisateur
-				//	de s'y retrouver plus facilement :
+				string text = "";
 				if (!UndefinedValue.IsUndefinedValue (typeCodeValue) && !UnknownValue.IsUnknownValue (typeCodeValue))
 				{
 					text = typeCodeValue.ToString ();
