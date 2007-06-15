@@ -22,7 +22,10 @@ namespace Epsitec.Common.Dialogs
 
 		protected Widget CreateBodyWidget()
 		{
-			Widget container = new Widget();
+			IAdorner adorner = Widgets.Adorners.Factory.Active;
+
+			StaticText container = new StaticText();
+			container.BackColor = adorner.ColorTextBackground;
 
 			ConfirmationStaticText header = new ConfirmationStaticText(container);
 			header.Text = this.header;
@@ -64,7 +67,7 @@ namespace Epsitec.Common.Dialogs
 			
 			body.SetParent(this.window.Root);
 			body.Dock = DockStyle.Fill;
-			body.Margins = new Drawing.Margins(ConfirmationDialog.margin);
+			body.Padding = new Drawing.Margins(ConfirmationDialog.margin);
 			body.TabIndex = 1;
 			body.TabNavigationMode = TabNavigationMode.ForwardTabPassive;
 			

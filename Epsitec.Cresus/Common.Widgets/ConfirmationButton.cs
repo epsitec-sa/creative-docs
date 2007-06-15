@@ -81,7 +81,7 @@ namespace Epsitec.Common.Widgets
 
 			//	Dessine un petit ">" positionné de façon empyrique.
 			rect = new Drawing.Rectangle(rect.Left+2, rect.Top-20-13, 20, 20);
-			adorner.PaintGlyph(graphics, rect, state, GlyphShape.TriangleRight, PaintTextStyle.StaticText);
+			adorner.PaintGlyph(graphics, rect, state, adorner.ColorCaption, GlyphShape.TriangleRight, PaintTextStyle.StaticText);
 		}
 
 

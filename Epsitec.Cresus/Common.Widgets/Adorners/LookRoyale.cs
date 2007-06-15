@@ -840,10 +840,7 @@ namespace Epsitec.Common.Widgets.Adorners
 			{
 				if ( (state&WidgetPaintState.Entered) != 0 )  // bouton survolé ?
 				{
-					if ((state&WidgetPaintState.InheritedEnter) == 0)
-					{
-						this.PaintImageButton(graphics, rInside, 17);
-					}
+					this.PaintImageButton(graphics, rInside, 17);
 
 					rect.Deflate(0.5);
 					graphics.AddRectangle(rect);

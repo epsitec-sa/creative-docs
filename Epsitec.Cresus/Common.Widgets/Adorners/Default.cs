@@ -608,6 +608,25 @@ namespace Epsitec.Common.Widgets.Adorners
 					this.PaintL(graphics, rect, this.colorControlDarkDark, shadow);
 				}
 			}
+			else if ( style == ButtonStyle.Confirmation )
+			{
+				if ( (state&WidgetPaintState.Entered) != 0 )  // bouton survolé ?
+				{
+					//	Ombre claire en haut à gauche.
+					this.PaintL(graphics, rect, this.colorControlLight, this.Opposite(shadow));
+
+					//	Ombre foncée en bas à droite.
+					this.PaintL(graphics, rect, this.colorControlDarkDark, shadow);
+				}
+				if ( (state&WidgetPaintState.Engaged) != 0 )   // bouton pressé ?
+				{
+					//	Ombre claire en haut à gauche.
+					this.PaintL(graphics, rect, this.colorControlLight, this.Opposite(shadow));
+
+					//	Ombre foncée en bas à droite.
+					this.PaintL(graphics, rect, this.colorControlDarkDark, shadow);
+				}
+			}
 			else if ( style == ButtonStyle.ListItem )
 			{
 				if ( (state&WidgetPaintState.Selected) != 0 )

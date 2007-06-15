@@ -751,6 +751,18 @@ namespace Epsitec.Common.Widgets.Adorners
 					}
 				}
 			}
+			else if ( style == ButtonStyle.Confirmation )
+			{
+				if ( (state&WidgetPaintState.Entered) != 0 )  // bouton survolé ?
+				{
+					this.PaintImageButton(graphics, rInside, 0);
+				}
+				if ( (state&WidgetPaintState.Engaged) != 0 )   // bouton pressé ?
+				{
+					this.PaintImageButton(graphics, rInside, 2);
+				}
+				rFocus.Deflate(1.0);
+			}
 			else if ( style == ButtonStyle.ListItem )
 			{
 				this.PaintImageButton(graphics, rect, 8);

@@ -777,6 +777,17 @@ namespace Epsitec.Common.Widgets.Adorners
 					this.PaintImageButton(graphics, rect, 34);
 				}
 			}
+			else if ( style == ButtonStyle.Confirmation )
+			{
+				if ( (state&WidgetPaintState.Entered) != 0 )  // bouton survolé ?
+				{
+					this.PaintImageButton(graphics, rect, 46);
+				}
+				if ( (state&WidgetPaintState.Engaged) != 0 )   // bouton pressé ?
+				{
+					this.PaintImageButton(graphics, rect, 44);
+				}
+			}
 			else if ( style == ButtonStyle.ListItem )
 			{
 				this.PaintImageButton(graphics, rect, 0);

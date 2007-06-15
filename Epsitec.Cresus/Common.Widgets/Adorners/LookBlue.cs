@@ -689,6 +689,29 @@ namespace Epsitec.Common.Widgets.Adorners
 				rFocus.Inflate(1.0);
 				rFocus.Right ++;
 			}
+			else if ( style == ButtonStyle.Confirmation )
+			{
+				Drawing.Path path = this.PathRoundRectangle(rect, 0);
+
+				if ( (state&WidgetPaintState.Entered) != 0 )  // bouton survolé ?
+				{
+					graphics.Rasterizer.AddSurface(path);
+					graphics.RenderSolid(this.colorCaptionLight);
+
+					graphics.Rasterizer.AddOutline(path, 1);
+					graphics.RenderSolid(this.ColorBorder);
+				}
+				if ( (state&WidgetPaintState.Engaged) != 0 )   // bouton pressé ?
+				{
+					graphics.Rasterizer.AddSurface(path);
+					graphics.RenderSolid(this.colorCaption);
+
+					graphics.Rasterizer.AddOutline(path, 1);
+					graphics.RenderSolid(this.ColorBorder);
+				}
+
+				rFocus.Inflate(1.0);
+			}
 			else if ( style == ButtonStyle.ListItem )
 			{
 				if ( (state&WidgetPaintState.Selected) != 0 )

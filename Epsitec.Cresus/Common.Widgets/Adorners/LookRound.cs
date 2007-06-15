@@ -700,6 +700,30 @@ namespace Epsitec.Common.Widgets.Adorners
 				rFocus.Right ++;
 				radFocus = System.Math.Min(3, System.Math.Min(rect.Width, rect.Height));
 			}
+			else if ( style == ButtonStyle.Confirmation )
+			{
+				double radius = System.Math.Min(3, System.Math.Min(rect.Width, rect.Height));
+				Drawing.Path path = this.PathRoundRectangle(rect, radius);
+
+				if ( (state&WidgetPaintState.Entered) != 0 )  // bouton survolé ?
+				{
+					graphics.Rasterizer.AddSurface(path);
+					graphics.RenderSolid(this.colorCaptionLight);
+
+					graphics.Rasterizer.AddOutline(path, 1);
+					graphics.RenderSolid(this.ColorBorder);
+				}
+				if ( (state&WidgetPaintState.Engaged) != 0 )   // bouton pressé ?
+				{
+					graphics.Rasterizer.AddSurface(path);
+					graphics.RenderSolid(this.colorCaption);
+
+					graphics.Rasterizer.AddOutline(path, 1);
+					graphics.RenderSolid(this.ColorBorder);
+				}
+
+				radFocus = System.Math.Min(3, System.Math.Min(rect.Width, rect.Height));
+			}
 			else if ( style == ButtonStyle.ListItem )
 			{
 				if ( (state&WidgetPaintState.Selected) != 0 )
