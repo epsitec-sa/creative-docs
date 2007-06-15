@@ -38,6 +38,7 @@ namespace Epsitec.Common.Support
 			{
 				public static readonly Epsitec.Common.Support.Druid Caption = Epsitec.Common.Support.Druid.FromLong (_moduleId, 46);
 				public static readonly Epsitec.Common.Support.Druid CaptionId = Epsitec.Common.Support.Druid.FromLong (_moduleId, 38);
+				public static readonly Epsitec.Common.Support.Druid Expression = Epsitec.Common.Support.Druid.FromLong (_moduleId, 78);
 				public static readonly Epsitec.Common.Support.Druid Membership = Epsitec.Common.Support.Druid.FromLong (_moduleId, 3);
 				public static readonly Epsitec.Common.Support.Druid Relation = Epsitec.Common.Support.Druid.FromLong (_moduleId, 39);
 				public static readonly Epsitec.Common.Support.Druid Source = Epsitec.Common.Support.Druid.FromLong (_moduleId, 77);

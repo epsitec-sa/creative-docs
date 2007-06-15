@@ -114,14 +114,14 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			{
 				Druid fieldType = StructuredTypeResourceAccessor.ToDruid (fieldData.GetValue (Res.Fields.Field.TypeId));
 				Druid fieldCaption = StructuredTypeResourceAccessor.ToDruid (fieldData.GetValue (Res.Fields.Field.CaptionId));
-				//?Druid sourceFieldId = StructuredTypeResourceAccessor.ToDruid (fieldData.GetValue (Res.Fields.Field.SourceFieldId));
 				FieldRelation relation = (FieldRelation) fieldData.GetValue (Res.Fields.Field.Relation);
 				FieldMembership membership = (FieldMembership) fieldData.GetValue (Res.Fields.Field.Membership);
 				FieldSource source = (FieldSource) fieldData.GetValue (Res.Fields.Field.Source);
+				string expression = fieldData.GetValue (Res.Fields.Field.Expression) as string;
 
 				if (membership == FieldMembership.Local)
 				{
-					StructuredTypeField field = new StructuredTypeField (null, null, fieldCaption, rank++, relation, membership, source);
+					StructuredTypeField field = new StructuredTypeField (null, null, fieldCaption, rank++, relation, membership, source, expression);
 					field.DefineTypeId (fieldType);
 					type.Fields.Add (field);
 				}
@@ -146,7 +146,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 					x.SetValue (Res.Fields.Field.Relation, field.Relation);
 					x.SetValue (Res.Fields.Field.Membership, field.Membership);
 					x.SetValue (Res.Fields.Field.Source, field.Source);
-					//?x.SetValue (Res.Fields.Field.SourceFieldId, string.IsNullOrEmpty (field.SourceFieldId) ? Druid.Empty : Druid.Parse (field.SourceFieldId));
+					x.SetValue (Res.Fields.Field.Expression, field.Expression ?? "");
 					fields.Add (x);
 
 					item.NotifyDataAdded (x);
@@ -255,7 +255,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 				data.SetValue (Res.Fields.Field.Relation, FieldRelation.None);
 				data.SetValue (Res.Fields.Field.Membership, FieldMembership.Local);
 				data.SetValue (Res.Fields.Field.Source, FieldSource.Value);
-				//?data.SetValue (Res.Fields.Field.SourceFieldId, Druid.Empty);
+				data.SetValue (Res.Fields.Field.Expression, "");
 				
 				return data;
 			}
