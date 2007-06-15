@@ -12,8 +12,7 @@ namespace Epsitec.Common.Designer.Viewers
 	/// </summary>
 	public class Types2 : AbstractCaptions2
 	{
-		public Types2(Module module, PanelsContext context, ResourceAccess access, MainWindow mainWindow)
-			: base (module, context, access, mainWindow)
+		public Types2(Module module, PanelsContext context, ResourceAccess access, MainWindow mainWindow) : base (module, context, access, mainWindow)
 		{
 			this.table.ColumnHeader.SetColumnComparer(1, Types2.CompareTypeColumns);
 			this.UpdateAll ();
@@ -26,20 +25,6 @@ namespace Epsitec.Common.Designer.Viewers
 			}
 
 			base.Dispose(disposing);
-		}
-
-		private static int CompareTypeColumns(object a, object b)
-		{
-			CultureMap itemA = a as CultureMap;
-			CultureMap itemB = b as CultureMap;
-
-			StructuredData dataA = itemA.GetCultureData(Common.Support.Resources.DefaultTwoLetterISOLanguageName);
-			StructuredData dataB = itemB.GetCultureData(Common.Support.Resources.DefaultTwoLetterISOLanguageName);
-
-			string codeA = dataA.GetValue(Support.Res.Fields.ResourceBaseType.TypeCode).ToString();
-			string codeB = dataB.GetValue(Support.Res.Fields.ResourceBaseType.TypeCode).ToString();
-
-			return codeA.CompareTo(codeB);
 		}
 
 		public override ResourceAccess.Type ResourceType
@@ -69,6 +54,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 			this.table.ColumnHeader.SetColumnText(0, "Nom");
 			this.table.ColumnHeader.SetColumnText(1, "Type");
+			this.table.ColumnHeader.SetColumnSort(0, ListSortDirection.Ascending);
 		}
 
 		protected override int PrimaryColumn
@@ -117,6 +103,21 @@ namespace Epsitec.Common.Designer.Viewers
 		}
 	
 	
+		private static int CompareTypeColumns(object a, object b)
+		{
+			CultureMap itemA = a as CultureMap;
+			CultureMap itemB = b as CultureMap;
+
+			StructuredData dataA = itemA.GetCultureData(Common.Support.Resources.DefaultTwoLetterISOLanguageName);
+			StructuredData dataB = itemB.GetCultureData(Common.Support.Resources.DefaultTwoLetterISOLanguageName);
+
+			string codeA = dataA.GetValue(Support.Res.Fields.ResourceBaseType.TypeCode).ToString();
+			string codeB = dataB.GetValue(Support.Res.Fields.ResourceBaseType.TypeCode).ToString();
+
+			return codeA.CompareTo(codeB);
+		}
+
+
 		private static double[]				columnWidthHorizontal = {140, 60, 100, 100};
 		private static double[]				columnWidthVertical = {250, 60, 270, 270};
 	}

@@ -103,7 +103,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.table.ItemPanel.SelectionChanged += new EventHandler(this.HandleTableSelectionChanged);
 			this.table.SizeChanged += this.HandleTableSizeChanged;
 			this.table.ColumnHeader.ColumnWidthChanged += this.HandleColumnHeaderColumnWidthChanged;
-			this.table.ColumnHeader.SetColumnSort(0, ListSortDirection.Ascending);
+			//?this.table.ColumnHeader.SetColumnSort(0, ListSortDirection.Ascending);
 			this.table.Dock = Widgets.DockStyle.Fill;
 			this.table.Margins = Drawing.Margins.Zero;
 
@@ -216,6 +216,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.table.Columns.Add(new UI.ItemTableColumn("Secondary", new Widgets.Layouts.GridLength(this.GetColumnWidth(2), Widgets.Layouts.GridUnitType.Proportional)));
 
 			this.table.ColumnHeader.SetColumnText(0, "Nom");
+			this.table.ColumnHeader.SetColumnSort(0, ListSortDirection.Ascending);
 		}
 
 		protected virtual int PrimaryColumn

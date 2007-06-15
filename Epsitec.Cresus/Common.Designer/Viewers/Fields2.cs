@@ -27,14 +27,6 @@ namespace Epsitec.Common.Designer.Viewers
 			base.Dispose(disposing);
 		}
 
-		private static int CompareTypeColumns(object a, object b)
-		{
-			CultureMap itemA = a as CultureMap;
-			CultureMap itemB = b as CultureMap;
-
-			return itemA.Prefix.CompareTo(itemB.Prefix);
-		}
-
 
 		public override ResourceAccess.Type ResourceType
 		{
@@ -63,6 +55,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 			this.table.ColumnHeader.SetColumnText(0, "Entité");
 			this.table.ColumnHeader.SetColumnText(1, "Nom");
+			this.table.ColumnHeader.SetColumnSort(1, ListSortDirection.Ascending);
 		}
 
 		protected override int PrimaryColumn
@@ -111,6 +104,15 @@ namespace Epsitec.Common.Designer.Viewers
 		}
 	
 	
+		private static int CompareTypeColumns(object a, object b)
+		{
+			CultureMap itemA = a as CultureMap;
+			CultureMap itemB = b as CultureMap;
+
+			return itemA.Prefix.CompareTo(itemB.Prefix);
+		}
+
+
 		private static double[]				columnWidthHorizontal = {80, 120, 100, 100};
 		private static double[]				columnWidthVertical = {100, 210, 270, 270};
 	}
