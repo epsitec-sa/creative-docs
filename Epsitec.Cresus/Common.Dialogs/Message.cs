@@ -1,6 +1,7 @@
 //	Copyright © 2004-2007, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
+using System.Collections.Generic;
 using Epsitec.Common.Widgets;
 
 namespace Epsitec.Common.Dialogs
@@ -104,6 +105,12 @@ namespace Epsitec.Common.Dialogs
 			string message_icon = Message.GetIconName (icon);
 			
 			return Message.CreateOk (dialog_title, message_icon, message_text, command_ok_template, command_dispatcher);
+		}
+
+		public static IDialog CreateConfirmation(string title, string header, List<string> questions)
+		{
+			ConfirmationDialog dialog = new ConfirmationDialog(title, header, questions);
+			return dialog;
 		}
 
 		public static string FormatMessage(string text)

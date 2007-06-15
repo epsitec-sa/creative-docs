@@ -165,6 +165,7 @@
     </Compile>
     <Compile Include="Controllers\FileNavigationController.cs" />
     <Compile Include="Controllers\FolderBrowserController.cs" />
+    <Compile Include="ConfirmationDialog.cs" />
     <Compile Include="OperationResult.cs" />
     <Compile Include="FileDialogType.cs" />
     <Compile Include="IFileExtensionDescription.cs" />
