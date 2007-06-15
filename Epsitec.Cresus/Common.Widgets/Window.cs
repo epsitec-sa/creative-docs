@@ -378,7 +378,23 @@ namespace Epsitec.Common.Widgets
 			
 			this.window.Close ();
 		}
-		
+
+		public void AdjustWindowSize()
+		{
+			this.ForceLayout ();
+			Drawing.Size size = this.root.RealMinSize;
+
+			if (this.ClientSize.Width > size.Width)
+			{
+				size.Width = this.ClientSize.Width;
+			}
+			if (this.ClientSize.Height > size.Height)
+			{
+				size.Height = this.ClientSize.Height;
+			}
+
+			this.ClientSize = size;
+		}
 		
 		public void SynchronousRepaint()
 		{

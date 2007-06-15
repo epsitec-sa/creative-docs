@@ -70,6 +70,8 @@ namespace Epsitec.Common.Dialogs
 			
 			//?this.window.FocusedWidget = body.FindTabWidget(TabNavigationDir.Forwards, TabNavigationMode.ActivateOnTab);
 			Platform.Beep.MessageBeep(Platform.Beep.MessageType.Warning);
+
+			this.window.AdjustWindowSize ();
 		}
 
 		
