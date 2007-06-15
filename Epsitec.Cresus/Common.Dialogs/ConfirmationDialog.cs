@@ -40,7 +40,7 @@ namespace Epsitec.Common.Dialogs
 				button.Clicked += new MessageEventHandler(this.HandleButtonClicked);
 			}
 
-			container.PreferredSize = new Drawing.Size(ConfirmationDialog.width, 200);
+			container.PreferredSize = new Drawing.Size(ConfirmationDialog.width, 250);
 
 			return container;
 		}

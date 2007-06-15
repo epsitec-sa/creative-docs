@@ -27,14 +27,14 @@ namespace Epsitec.Common.Widgets
 		protected override Drawing.Size GetTextLayoutSize()
 		{
 			Drawing.Size size = this.IsActualGeometryValid ? this.Client.Size : this.PreferredSize;
-			size.Width -= ConfirmationButton.marginX*2;
+			size.Width -= ConfirmationButton.marginLeft+ConfirmationButton.marginRight;
 			size.Height -= ConfirmationButton.marginY*2;
 			return size;
 		}
 
 		protected override Drawing.Point GetTextLayoutOffset()
 		{
-			return new Drawing.Point(ConfirmationButton.marginX, ConfirmationButton.marginY);
+			return new Drawing.Point(ConfirmationButton.marginLeft, ConfirmationButton.marginY);
 		}
 
 		protected override void OnSizeChanged(Drawing.Size oldValue, Drawing.Size newValue)
@@ -72,17 +72,21 @@ namespace Epsitec.Common.Widgets
 			else
 			{
 				//	Ne reproduit pas l'état sélectionné si on peint nous-même le fond du bouton.
-				
 				state &= ~WidgetPaintState.Selected;
 				adorner.PaintButtonBackground(graphics, rect, state, Direction.Down, this.ButtonStyle);
 			}
 
 			pos.Y += this.GetBaseLineVerticalOffset ();
 			adorner.PaintButtonTextLayout(graphics, pos, this.TextLayout, state, this.ButtonStyle);
+
+			//	Dessine un petit ">" positionné de façon empyrique.
+			rect = new Drawing.Rectangle(rect.Left+2, rect.Top-20-13, 20, 20);
+			adorner.PaintGlyph(graphics, rect, state, GlyphShape.TriangleRight, PaintTextStyle.StaticText);
 		}
 
 
-		protected static readonly double marginX = 20;
+		protected static readonly double marginLeft = 30;
+		protected static readonly double marginRight = 10;
 		protected static readonly double marginY = 10;
 	}
 }
