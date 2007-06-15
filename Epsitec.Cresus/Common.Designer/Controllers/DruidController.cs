@@ -123,7 +123,7 @@ namespace Epsitec.Common.Designer.Controllers
 
 			if (this.parameter == "Caption")
 			{
-				druid = mainWindow.DlgResourceSelector(mainWindow.CurrentModule, ResourceAccess.Type.Unknow, ResourceAccess.TypeType.None, druid, null, null);
+				druid = mainWindow.DlgResourceSelector(mainWindow.CurrentModule, ResourceAccess.Type.Unknow, TypeCode.Invalid, druid, null, null);
 			}
 			else
 			{
@@ -161,7 +161,7 @@ namespace Epsitec.Common.Designer.Controllers
 					}
 				}
 
-				druid = mainWindow.DlgResourceSelector(mainWindow.CurrentModule, ResourceAccess.Type.Panels, ResourceAccess.TypeType.None, druid, exclude, null);
+				druid = mainWindow.DlgResourceSelector(mainWindow.CurrentModule, ResourceAccess.Type.Panels, TypeCode.Invalid, druid, exclude, null);
 			}
 
 			if (druid.IsEmpty)  // annuler ?

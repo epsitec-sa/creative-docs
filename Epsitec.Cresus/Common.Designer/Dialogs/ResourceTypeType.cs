@@ -141,14 +141,14 @@ namespace Epsitec.Common.Designer.Dialogs
 			}
 		}
 
-		public ResourceAccess.TypeType ContentType
+		public TypeCode ContentType
 		{
 			//	Set: spécifie le type initial.
 			//	Get: retourne le type choisi (None si le bouton Annuler est utilisé)
 			set
 			{
 				this.typeEdited = value;
-				this.typeAccepted = ResourceAccess.TypeType.None;
+				this.typeAccepted = TypeCode.Invalid;
 			}
 			get
 			{
@@ -161,7 +161,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			//	Retourne le Sytem.Type à utiliser, lors d'une énumération C# native.
 			get
 			{
-				if (this.typeAccepted == ResourceAccess.TypeType.Enum && this.checkNative.ActiveState == ActiveState.Yes && this.enumList.SelectedIndex != -1)
+				if (this.typeAccepted == TypeCode.Enum && this.checkNative.ActiveState == ActiveState.Yes && this.enumList.SelectedIndex != -1)
 				{
 					return this.systemTypes[this.enumList.SelectedIndex];
 				}
@@ -192,7 +192,7 @@ namespace Epsitec.Common.Designer.Dialogs
 		protected void UpdateRadios()
 		{
 			//	Met à jour le bouton radio enfoncé en fonction du type.
-			string actual = ResourceAccess.TypeTypeToName(this.typeEdited);
+			string actual = ResourceAccess.TypeCodeToName(this.typeEdited);
 
 			this.ignoreChanged = true;
 			foreach (RadioButton button in this.radioButtons)
@@ -209,9 +209,9 @@ namespace Epsitec.Common.Designer.Dialogs
 			}
 			this.ignoreChanged = false;
 
-			this.checkNative.Enable = (this.typeEdited == ResourceAccess.TypeType.Enum);
-			this.fieldFilter.Enable = (this.typeEdited == ResourceAccess.TypeType.Enum && this.checkNative.ActiveState == ActiveState.Yes);
-			this.enumList.Enable    = (this.typeEdited == ResourceAccess.TypeType.Enum && this.checkNative.ActiveState == ActiveState.Yes);
+			this.checkNative.Enable = (this.typeEdited == TypeCode.Enum);
+			this.fieldFilter.Enable = (this.typeEdited == TypeCode.Enum && this.checkNative.ActiveState == ActiveState.Yes);
+			this.enumList.Enable    = (this.typeEdited == TypeCode.Enum && this.checkNative.ActiveState == ActiveState.Yes);
 		}
 
 		protected void UpdateExtended()
@@ -230,7 +230,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			//	Met à jour le bouton D'accord.
 			bool enable = true;
 
-			if (this.typeEdited == ResourceAccess.TypeType.Enum && this.checkNative.ActiveState == ActiveState.Yes && this.enumList.SelectedIndex == -1)
+			if (this.typeEdited == TypeCode.Enum && this.checkNative.ActiveState == ActiveState.Yes && this.enumList.SelectedIndex == -1)
 			{
 				enable = false;
 			}
@@ -304,7 +304,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			{
 				string name = button.Name;
 				name = name.Substring(name.LastIndexOf('.')+1);  // enlève "Res.Captions.Types.Type."
-				this.typeEdited = ResourceAccess.NameToTypeType(name);
+				this.typeEdited = ResourceAccess.NameToTypeCode(name);
 				this.UpdateRadios();
 				this.UpdateButtons();
 			}
@@ -370,8 +370,8 @@ namespace Epsitec.Common.Designer.Dialogs
 		protected static readonly double		windowHeight = 260;
 
 		protected ResourceAccess				resourceAccess;
-		protected ResourceAccess.TypeType		typeEdited;
-		protected ResourceAccess.TypeType		typeAccepted;
+		protected TypeCode						typeEdited;
+		protected TypeCode						typeAccepted;
 		protected List<string>					filters;
 		protected List<System.Type>				systemTypes;
 		protected bool							isExtentended;

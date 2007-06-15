@@ -413,7 +413,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			string name = string.Concat(this.SelectedName, ".", text);
 
 			//	Crée un Caption de type Field (dont le nom commence par "Fld.").
-			this.resourceAccess.BypassFilterOpenAccess(ResourceAccess.Type.Fields, ResourceAccess.TypeType.None, null, null);
+			this.resourceAccess.BypassFilterOpenAccess(ResourceAccess.Type.Fields, TypeCode.Invalid, null, null);
 			Druid druid = this.resourceAccess.BypassFilterCreate(this.resourceAccess.GetCultureBundle(null), name, text);
 			this.resourceAccess.BypassFilterCloseAccess();
 
@@ -551,7 +551,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			Druid druid = actualField.CaptionId;
 			string includePrefix = string.Concat(this.AbstractType.Caption.Name, ".");
 
-			druid = this.mainWindow.DlgResourceSelector(this.module, ResourceAccess.Type.Fields, ResourceAccess.TypeType.None, druid, null, includePrefix);
+			druid = this.mainWindow.DlgResourceSelector(this.module, ResourceAccess.Type.Fields, TypeCode.Invalid, druid, null, includePrefix);
 			if (druid.IsEmpty)
 			{
 				return;
@@ -605,7 +605,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			AbstractType type = actualField.Type as AbstractType;
 			Druid druid = (type == null) ? Druid.Empty : type.Caption.Id;
 
-			druid = this.mainWindow.DlgResourceSelector(this.module, ResourceAccess.Type.Types, ResourceAccess.TypeType.None, druid, null, null);
+			druid = this.mainWindow.DlgResourceSelector(this.module, ResourceAccess.Type.Types, TypeCode.Invalid, druid, null, null);
 			if (druid.IsEmpty)
 			{
 				return;

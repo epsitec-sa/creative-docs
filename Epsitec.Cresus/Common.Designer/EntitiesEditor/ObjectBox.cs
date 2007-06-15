@@ -1047,7 +1047,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			Druid druid = (Druid) dataField.GetValue(Support.Res.Fields.Field.CaptionId);
 
 			Module module = this.editor.Module;
-			druid = module.MainWindow.DlgResourceSelector(module, ResourceAccess.Type.Fields, ResourceAccess.TypeType.None, druid, null, null);
+			druid = module.MainWindow.DlgResourceSelector(module, ResourceAccess.Type.Fields, TypeCode.Invalid, druid, null, null);
 			if (druid.IsEmpty)
 			{
 				return;
@@ -1081,7 +1081,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			Druid druid = (Druid) dataField.GetValue(Support.Res.Fields.Field.TypeId);
 
 			Module module = this.editor.Module;
-			druid = module.MainWindow.DlgResourceSelector(module, ResourceAccess.Type.Types, ResourceAccess.TypeType.None, druid, null, null);
+			druid = module.MainWindow.DlgResourceSelector(module, ResourceAccess.Type.Types, TypeCode.Invalid, druid, null, null);
 			if (druid.IsEmpty)
 			{
 				return;
@@ -1179,7 +1179,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			//	Crée un Caption de type Field (dont le nom commence par "Fld.").
 			ResourceAccess access = this.editor.Module.AccessCaptions;
 
-			access.BypassFilterOpenAccess(ResourceAccess.Type.Fields, ResourceAccess.TypeType.None, null, null);
+			access.BypassFilterOpenAccess(ResourceAccess.Type.Fields, TypeCode.Invalid, null, null);
 			Druid druid = access.BypassFilterCreate(access.GetCultureBundle(null), name, text);
 			access.BypassFilterCloseAccess();
 

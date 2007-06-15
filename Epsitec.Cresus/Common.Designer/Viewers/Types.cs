@@ -111,8 +111,8 @@ namespace Epsitec.Common.Designer.Viewers
 					if (field != null)
 					{
 						AbstractType type = field.AbstractType;
-						ResourceAccess.TypeType typeType = ResourceAccess.AbstractTypeToTypeType(type);
-						typeName = ResourceAccess.TypeTypeToDisplay(typeType);
+						TypeCode typeCode = ResourceAccess.AbstractTypeToTypeCode(type);
+						typeName = ResourceAccess.TypeCodeToDisplay(typeCode);
 
 						if (type is EnumType)
 						{
@@ -165,7 +165,7 @@ namespace Epsitec.Common.Designer.Viewers
 				sel = -1;
 			}
 
-			ResourceAccess.TypeType typeType = ResourceAccess.TypeType.None;
+			TypeCode typeCode = TypeCode.Invalid;
 			AbstractType type = null;
 
 			if (sel != -1)
@@ -174,13 +174,13 @@ namespace Epsitec.Common.Designer.Viewers
 				if (field != null)
 				{
 					type = field.AbstractType;
-					typeType = ResourceAccess.AbstractTypeToTypeType(type);
+					typeCode = ResourceAccess.AbstractTypeToTypeCode(type);
 				}
 			}
 
-			if (this.typeType != typeType)  // autre type ?
+			if (this.typeCode != typeCode)  // autre type ?
 			{
-				this.typeType = typeType;
+				this.typeCode = typeCode;
 
 				if (this.editor != null)
 				{
@@ -191,7 +191,7 @@ namespace Epsitec.Common.Designer.Viewers
 					this.editor = null;
 				}
 
-				this.editor = MyWidgets.AbstractTypeEditor.Create(this.typeType);
+				this.editor = MyWidgets.AbstractTypeEditor.Create(this.typeCode);
 
 				if (this.editor != null)
 				{
@@ -210,7 +210,7 @@ namespace Epsitec.Common.Designer.Viewers
 				this.editor.ResourceSelected = sel;
 			}
 
-			this.UpdateController(typeType);
+			this.UpdateController(typeCode);
 
 			if (sel == -1)
 			{
@@ -243,22 +243,22 @@ namespace Epsitec.Common.Designer.Viewers
 			base.UpdateEdit();  // met à jour le reste
 		}
 
-		protected void UpdateController(ResourceAccess.TypeType typeType)
+		protected void UpdateController(TypeCode typeCode)
 		{
 			this.fieldController.Items.Clear();
 			this.fieldController.Items.Add("Normal");
 
-			if (typeType == ResourceAccess.TypeType.Decimal    ||
-				typeType == ResourceAccess.TypeType.Double     ||
-				typeType == ResourceAccess.TypeType.Integer    ||
-				typeType == ResourceAccess.TypeType.LongInteger)
+			if (typeCode == TypeCode.Decimal    ||
+				typeCode == TypeCode.Double     ||
+				typeCode == TypeCode.Integer    ||
+				typeCode == TypeCode.LongInteger)
 			{
 				this.fieldController.Items.Add("Simply");
 				this.fieldController.Items.Add("Slider");
 				this.fieldController.Items.Add("UpDown");
 			}
 
-			if (typeType == ResourceAccess.TypeType.Enum)
+			if (typeCode == TypeCode.Enum)
 			{
 				this.fieldController.Items.Add("Icons");
 				this.fieldController.Items.Add("RadioButtons");
@@ -326,7 +326,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 
 		protected MyWidgets.StackedPanel		container;
-		protected ResourceAccess.TypeType		typeType = ResourceAccess.TypeType.None;
+		protected TypeCode						typeCode = TypeCode.Invalid;
 		protected CheckButton					primaryNullable;
 		protected MyWidgets.AbstractTypeEditor	editor;
 		protected TextFieldCombo				fieldController;

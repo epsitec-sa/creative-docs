@@ -93,7 +93,7 @@ namespace Epsitec.Common.Designer
 				this.dlgFilter                      = new Dialogs.Filter(this);
 				this.dlgSearch                      = new Dialogs.Search(this);
 				this.dlgNewCulture                  = new Dialogs.NewCulture(this);
-				this.dlgResourceTypeType            = new Dialogs.ResourceTypeType(this);
+				this.dlgResourceTypeCode            = new Dialogs.ResourceTypeType(this);
 				this.dlgResourceSelector            = new Dialogs.ResourceSelector(this);
 				this.dlgResourceStructuredTypeField = new Dialogs.ResourceStructuredTypeField(this);
 				this.dlgBindingSelector             = new Dialogs.BindingSelector(this);
@@ -1668,22 +1668,22 @@ namespace Epsitec.Common.Designer
 			return this.dlgBindingSelector.IsOk;
 		}
 
-		public Druid DlgResourceSelector(Module baseModule, ResourceAccess.Type type, ResourceAccess.TypeType typeType, Druid ressource, List<Druid> exclude, string includePrefix)
+		public Druid DlgResourceSelector(Module baseModule, ResourceAccess.Type type, TypeCode typeCode, Druid ressource, List<Druid> exclude, string includePrefix)
 		{
 			//	Ouvre le dialogue pour choisir une ressource (sous forme d'un Druid)
 			//	d'un type à choix.
 			//	Le type peut être inconnu ou la ressource inconnue, mais pas les deux.
-			this.dlgResourceSelector.AccessOpen(baseModule, type, typeType, ressource, exclude, includePrefix);
+			this.dlgResourceSelector.AccessOpen(baseModule, type, typeCode, ressource, exclude, includePrefix);
 			this.dlgResourceSelector.Show();  // choix dans le dialogue...
 			return this.dlgResourceSelector.AccessClose();
 		}
 
-		public List<Druid> DlgResourceSelector(Module baseModule, ResourceAccess.Type type, ResourceAccess.TypeType typeType, List<Druid> ressources, List<Druid> exclude, string includePrefix)
+		public List<Druid> DlgResourceSelector(Module baseModule, ResourceAccess.Type type, TypeCode typeCode, List<Druid> ressources, List<Druid> exclude, string includePrefix)
 		{
 			//	Ouvre le dialogue pour choisir des ressources (sous forme d'une liste
 			//	de Druids) d'un type à choix.
 			//	Le type doit être connu.
-			this.dlgResourceSelector.AccessOpenList(baseModule, type, typeType, ressources, exclude, includePrefix);
+			this.dlgResourceSelector.AccessOpenList(baseModule, type, typeCode, ressources, exclude, includePrefix);
 			this.dlgResourceSelector.Show();  // choix dans le dialogue...
 			return this.dlgResourceSelector.AccessCloseList();
 		}
@@ -1714,14 +1714,14 @@ namespace Epsitec.Common.Designer
 			return this.dlgNewCulture.Culture;
 		}
 
-		public void DlgResourceTypeType(ResourceAccess access, ref ResourceAccess.TypeType type, out System.Type stype)
+		public void DlgResourceTypeCode(ResourceAccess access, ref TypeCode type, out System.Type stype)
 		{
 			//	Ouvre le dialogue pour choisir le type d'un Caption.Type.
-			this.dlgResourceTypeType.ResourceAccess = access;
-			this.dlgResourceTypeType.ContentType = type;
-			this.dlgResourceTypeType.Show();
-			type = this.dlgResourceTypeType.ContentType;
-			stype = this.dlgResourceTypeType.SystemType;
+			this.dlgResourceTypeCode.ResourceAccess = access;
+			this.dlgResourceTypeCode.ContentType = type;
+			this.dlgResourceTypeCode.Show();
+			type = this.dlgResourceTypeCode.ContentType;
+			stype = this.dlgResourceTypeCode.SystemType;
 		}
 
 		public string DlgFieldName(string name)
@@ -1925,7 +1925,7 @@ namespace Epsitec.Common.Designer
 		protected Dialogs.Filter				dlgFilter;
 		protected Dialogs.Search				dlgSearch;
 		protected Dialogs.NewCulture			dlgNewCulture;
-		protected Dialogs.ResourceTypeType		dlgResourceTypeType;
+		protected Dialogs.ResourceTypeType		dlgResourceTypeCode;
 		protected Dialogs.ResourceSelector		dlgResourceSelector;
 		protected Dialogs.ResourceStructuredTypeField dlgResourceStructuredTypeField;
 		protected Dialogs.BindingSelector		dlgBindingSelector;

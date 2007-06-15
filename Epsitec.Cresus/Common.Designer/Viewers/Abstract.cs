@@ -3,6 +3,7 @@ using System.Text.RegularExpressions;
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Support;
 using Epsitec.Common.Drawing;
+using Epsitec.Common.Types;
 
 namespace Epsitec.Common.Designer.Viewers
 {
@@ -1164,8 +1165,8 @@ namespace Epsitec.Common.Designer.Viewers
 			if (field != null)
 			{
 				Common.Types.AbstractType type = field.AbstractType;
-				ResourceAccess.TypeType typeType = ResourceAccess.AbstractTypeToTypeType(type);
-				if (typeType == ResourceAccess.TypeType.Structured)
+				TypeCode typeCode = ResourceAccess.AbstractTypeToTypeCode(type);
+				if (typeCode == TypeCode.Structured)
 				{
 					this.RenameStructuredFields(initialName, editedName);
 				}
@@ -1181,7 +1182,7 @@ namespace Epsitec.Common.Designer.Viewers
 		{
 			//	Renomme tous les ResourceBundle.Field.Name des champs d'un StructuredType.
 			ResourceAccess access = this.module.AccessCaptions;
-			access.BypassFilterOpenAccess(ResourceAccess.Type.Fields, ResourceAccess.TypeType.None, null, null);
+			access.BypassFilterOpenAccess(ResourceAccess.Type.Fields, TypeCode.Invalid, null, null);
 			ResourceBundle bundle = access.GetCultureBundle(null);
 			int count = access.BypassFilterCount;
 			for (int i=0; i<count; i++)

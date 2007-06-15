@@ -1146,8 +1146,8 @@ namespace Epsitec.Common.Designer.Viewers
 					druid = type.CaptionId;
 				}
 
-				//	Choix d'une ressource type de type 'Types', mais uniquement parmi les TypeType.Structured.
-				druid = this.mainWindow.DlgResourceSelector(this.module, ResourceAccess.Type.Types, ResourceAccess.TypeType.Structured, druid, null, null);
+				//	Choix d'une ressource type de type 'Types', mais uniquement parmi les TypeCode.Structured.
+				druid = this.mainWindow.DlgResourceSelector(this.module, ResourceAccess.Type.Types, TypeCode.Structured, druid, null, null);
 				if (!druid.IsEmpty)  // d'accord ?
 				{
 					AbstractType at = this.module.AccessCaptions.DirectGetAbstractType(druid);

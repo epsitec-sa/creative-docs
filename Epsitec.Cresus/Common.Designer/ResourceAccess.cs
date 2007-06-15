@@ -49,24 +49,6 @@ namespace Epsitec.Common.Designer
 			Caption,
 		}
 
-		public enum TypeType
-		{
-			None,
-			Boolean,
-			Integer,
-			LongInteger,
-			Double,
-			Decimal,
-			String,
-			Enum,
-			Structured,
-			Collection,
-			Date,
-			Time,
-			DateTime,
-			Binary,
-		}
-
 		public enum ModificationState
 		{
 			Normal,			//	défini normalement
@@ -258,46 +240,26 @@ namespace Epsitec.Common.Designer
 		}
 
 
-		protected static TypeCode TypeTypeToTypeCode(TypeType type)
+		public static TypeCode AbstractTypeToTypeCode(AbstractType type)
 		{
-			switch (type)
-			{
-				case TypeType.Binary:		return TypeCode.Binary;
-				case TypeType.Boolean:		return TypeCode.Boolean;
-				case TypeType.Collection:	return TypeCode.Collection;
-				case TypeType.Date:			return TypeCode.Date;
-				case TypeType.DateTime:		return TypeCode.DateTime;
-				case TypeType.Decimal:		return TypeCode.Decimal;
-				case TypeType.Double:		return TypeCode.Double;
-				case TypeType.Enum:			return TypeCode.Enum;
-				case TypeType.Integer:		return TypeCode.Integer;
-				case TypeType.LongInteger:	return TypeCode.LongInteger;
-				case TypeType.String:		return TypeCode.String;
-				case TypeType.Time:			return TypeCode.Time;
-				default:                    return TypeCode.Invalid;
-			}
+			if (type is BooleanType    )  return TypeCode.Boolean;
+			if (type is IntegerType    )  return TypeCode.Integer;
+			if (type is LongIntegerType)  return TypeCode.LongInteger;
+			if (type is DoubleType     )  return TypeCode.Double;
+			if (type is DecimalType    )  return TypeCode.Decimal;
+			if (type is StringType     )  return TypeCode.String;
+			if (type is EnumType       )  return TypeCode.Enum;
+			if (type is StructuredType )  return TypeCode.Structured;
+			if (type is CollectionType )  return TypeCode.Collection;
+			if (type is DateType       )  return TypeCode.Date;
+			if (type is TimeType       )  return TypeCode.Time;
+			if (type is DateTimeType   )  return TypeCode.DateTime;
+			if (type is BinaryType     )  return TypeCode.Binary;
+
+			return TypeCode.Invalid;
 		}
 
-		public static TypeType AbstractTypeToTypeType(AbstractType type)
-		{
-			if (type is BooleanType    )  return TypeType.Boolean;
-			if (type is IntegerType    )  return TypeType.Integer;
-			if (type is LongIntegerType)  return TypeType.LongInteger;
-			if (type is DoubleType     )  return TypeType.Double;
-			if (type is DecimalType    )  return TypeType.Decimal;
-			if (type is StringType     )  return TypeType.String;
-			if (type is EnumType       )  return TypeType.Enum;
-			if (type is StructuredType )  return TypeType.Structured;
-			if (type is CollectionType )  return TypeType.Collection;
-			if (type is DateType       )  return TypeType.Date;
-			if (type is TimeType       )  return TypeType.Time;
-			if (type is DateTimeType   )  return TypeType.DateTime;
-			if (type is BinaryType     )  return TypeType.Binary;
-
-			return TypeType.None;
-		}
-
-		protected static string TypeTypeController(AbstractType type)
+		protected static string TypeCodeController(AbstractType type)
 		{
 			if (type is BooleanType          )  return "Boolean";
 			if (type is IntegerType          )  return "Numeric";
@@ -314,7 +276,7 @@ namespace Epsitec.Common.Designer
 			return null;
 		}
 
-		protected static string TypeTypeControllerParameter(AbstractType type)
+		protected static string TypeCodeControllerParameter(AbstractType type)
 		{
 			if (type is BooleanType    )  return null;
 			if (type is IntegerType    )  return null;
@@ -333,25 +295,25 @@ namespace Epsitec.Common.Designer
 			return null;
 		}
 
-		protected static AbstractType TypeTypeCreate(TypeType type, ResourceBundle bundle)
+		protected static AbstractType TypeCodeCreate(TypeCode type, ResourceBundle bundle)
 		{
 			AbstractType abstractType = null;
 
 			switch (type)
 			{
-				case TypeType.Boolean:      abstractType = new BooleanType(); break;
-				case TypeType.Integer:      abstractType = new IntegerType(); break;
-				case TypeType.LongInteger:  abstractType = new LongIntegerType(); break;
-				case TypeType.Double:       abstractType = new DoubleType(); break;
-				case TypeType.Decimal:      abstractType = new DecimalType(); break;
-				case TypeType.String:       abstractType = new StringType(); break;
-				case TypeType.Enum:         abstractType = new EnumType(); break;
-				case TypeType.Structured:	abstractType = new StructuredType(StructuredTypeClass.Entity, Druid.Empty); break;
-				case TypeType.Collection:   abstractType = new CollectionType(); break;
-				case TypeType.Date:         abstractType = new DateType(); break;
-				case TypeType.Time:         abstractType = new TimeType(); break;
-				case TypeType.DateTime:     abstractType = new DateTimeType(); break;
-				case TypeType.Binary:       abstractType = new BinaryType(); break;
+				case TypeCode.Boolean:      abstractType = new BooleanType(); break;
+				case TypeCode.Integer:      abstractType = new IntegerType(); break;
+				case TypeCode.LongInteger:  abstractType = new LongIntegerType(); break;
+				case TypeCode.Double:       abstractType = new DoubleType(); break;
+				case TypeCode.Decimal:      abstractType = new DecimalType(); break;
+				case TypeCode.String:       abstractType = new StringType(); break;
+				case TypeCode.Enum:         abstractType = new EnumType(); break;
+				case TypeCode.Structured:	abstractType = new StructuredType(StructuredTypeClass.Entity, Druid.Empty); break;
+				case TypeCode.Collection:   abstractType = new CollectionType(); break;
+				case TypeCode.Date:         abstractType = new DateType(); break;
+				case TypeCode.Time:         abstractType = new TimeType(); break;
+				case TypeCode.DateTime:     abstractType = new DateTimeType(); break;
+				case TypeCode.Binary:       abstractType = new BinaryType(); break;
 			}
 
 			if (abstractType != null)
@@ -366,69 +328,69 @@ namespace Epsitec.Common.Designer
 			return abstractType;
 		}
 
-		public static string TypeTypeToDisplay(TypeType type)
+		public static string TypeCodeToDisplay(TypeCode type)
 		{
 			switch (type)
 			{
-				case TypeType.Boolean:      return Res.Strings.Viewers.Types.Editor.Boolean;
-				case TypeType.Integer:      return Res.Strings.Viewers.Types.Editor.Integer;
-				case TypeType.LongInteger:  return Res.Strings.Viewers.Types.Editor.LongInteger;
-				case TypeType.Decimal:      return Res.Strings.Viewers.Types.Editor.Decimal;
-				case TypeType.String:       return Res.Strings.Viewers.Types.Editor.String;
-				case TypeType.Enum:         return Res.Strings.Viewers.Types.Editor.Enum;
-				case TypeType.Structured:   return Res.Strings.Viewers.Types.Editor.Structured;
-				case TypeType.Collection:   return Res.Strings.Viewers.Types.Editor.Collection;
-				case TypeType.Date:         return Res.Strings.Viewers.Types.Editor.Date;
-				case TypeType.Time:         return Res.Strings.Viewers.Types.Editor.Time;
-				case TypeType.DateTime:     return Res.Strings.Viewers.Types.Editor.DateTime;
-				case TypeType.Binary:       return Res.Strings.Viewers.Types.Editor.Binary;
+				case TypeCode.Boolean:      return Res.Strings.Viewers.Types.Editor.Boolean;
+				case TypeCode.Integer:      return Res.Strings.Viewers.Types.Editor.Integer;
+				case TypeCode.LongInteger:  return Res.Strings.Viewers.Types.Editor.LongInteger;
+				case TypeCode.Decimal:      return Res.Strings.Viewers.Types.Editor.Decimal;
+				case TypeCode.String:       return Res.Strings.Viewers.Types.Editor.String;
+				case TypeCode.Enum:         return Res.Strings.Viewers.Types.Editor.Enum;
+				case TypeCode.Structured:   return Res.Strings.Viewers.Types.Editor.Structured;
+				case TypeCode.Collection:   return Res.Strings.Viewers.Types.Editor.Collection;
+				case TypeCode.Date:         return Res.Strings.Viewers.Types.Editor.Date;
+				case TypeCode.Time:         return Res.Strings.Viewers.Types.Editor.Time;
+				case TypeCode.DateTime:     return Res.Strings.Viewers.Types.Editor.DateTime;
+				case TypeCode.Binary:       return Res.Strings.Viewers.Types.Editor.Binary;
 			}
 
 			return null;
 		}
 
-		public static string TypeTypeToName(TypeType type)
+		public static string TypeCodeToName(TypeCode type)
 		{
 			switch (type)
 			{
-				case TypeType.Boolean:      return "Boolean";
-				case TypeType.Integer:      return "Integer";
-				case TypeType.LongInteger:  return "LongInteger";
-				case TypeType.Double:       return "Double";
-				case TypeType.Decimal:      return "Decimal";
-				case TypeType.String:       return "String";
-				case TypeType.Enum:         return "Enum";
-				case TypeType.Structured:   return "Structured";
-				case TypeType.Collection:   return "Collection";
-				case TypeType.Date:         return "Date";
-				case TypeType.Time:         return "Time";
-				case TypeType.DateTime:     return "DateTime";
-				case TypeType.Binary:       return "Binary";
+				case TypeCode.Boolean:      return "Boolean";
+				case TypeCode.Integer:      return "Integer";
+				case TypeCode.LongInteger:  return "LongInteger";
+				case TypeCode.Double:       return "Double";
+				case TypeCode.Decimal:      return "Decimal";
+				case TypeCode.String:       return "String";
+				case TypeCode.Enum:         return "Enum";
+				case TypeCode.Structured:   return "Structured";
+				case TypeCode.Collection:   return "Collection";
+				case TypeCode.Date:         return "Date";
+				case TypeCode.Time:         return "Time";
+				case TypeCode.DateTime:     return "DateTime";
+				case TypeCode.Binary:       return "Binary";
 			}
 
 			return null;
 		}
 
-		public static TypeType NameToTypeType(string name)
+		public static TypeCode NameToTypeCode(string name)
 		{
 			switch (name)
 			{
-				case "Boolean":      return TypeType.Boolean;
-				case "Integer":      return TypeType.Integer;
-				case "LongInteger":  return TypeType.LongInteger;
-				case "Double":       return TypeType.Double;
-				case "Decimal":      return TypeType.Decimal;
-				case "String":       return TypeType.String;
-				case "Enum":         return TypeType.Enum;
-				case "Structured":   return TypeType.Structured;
-				case "Collection":   return TypeType.Collection;
-				case "Date":         return TypeType.Date;
-				case "Time":         return TypeType.Time;
-				case "DateTime":     return TypeType.DateTime;
-				case "Binary":       return TypeType.Binary;
+				case "Boolean":      return TypeCode.Boolean;
+				case "Integer":      return TypeCode.Integer;
+				case "LongInteger":  return TypeCode.LongInteger;
+				case "Double":       return TypeCode.Double;
+				case "Decimal":      return TypeCode.Decimal;
+				case "String":       return TypeCode.String;
+				case "Enum":         return TypeCode.Enum;
+				case "Structured":   return TypeCode.Structured;
+				case "Collection":   return TypeCode.Collection;
+				case "Date":         return TypeCode.Date;
+				case "Time":         return TypeCode.Time;
+				case "DateTime":     return TypeCode.DateTime;
+				case "Binary":       return TypeCode.Binary;
 			}
 
-			return TypeType.None;
+			return TypeCode.Invalid;
 		}
 
 
@@ -585,9 +547,8 @@ namespace Epsitec.Common.Designer
 
 				if (this.type == Type.Types2 && !duplicateContent)
 				{
-					TypeType tt = this.lastTypeTypeCreatated;
-					this.mainWindow.DlgResourceTypeType(this, ref tt, out this.lastTypeTypeSystem);
-					TypeCode code = ResourceAccess.TypeTypeToTypeCode(tt);
+					TypeCode code = this.lastTypeCodeCreatated;
+					this.mainWindow.DlgResourceTypeCode(this, ref code, out this.lastTypeCodeSystem);
 					if (code == TypeCode.Invalid)  // annuler ?
 					{
 						return;
@@ -598,7 +559,7 @@ namespace Epsitec.Common.Designer
 
 					StructuredData data = newItem.GetCultureData (Resources.DefaultTwoLetterISOLanguageName);
 
-					this.lastTypeTypeCreatated = tt;
+					this.lastTypeCodeCreatated = code;
 					data.SetValue (Support.Res.Fields.ResourceBaseType.TypeCode, code);
 				}
 				else
@@ -610,7 +571,7 @@ namespace Epsitec.Common.Designer
 				if (duplicateContent)
 				{
 					//	Construit la liste des cultures à copier
-					List<string> cultures = this.GetSecondaryCultureNames ();
+					List<string> cultures = this.GetSecondaryCultureNames();
 					cultures.Insert(0, Resources.DefaultTwoLetterISOLanguageName);
 					
 					CultureMap item = this.collectionView.CurrentItem as CultureMap;
@@ -638,26 +599,26 @@ namespace Epsitec.Common.Designer
 
 			if (this.type == Type.Types && !duplicateContent)
 			{
-				TypeType tt = this.lastTypeTypeCreatated;
-				this.mainWindow.DlgResourceTypeType(this, ref tt, out this.lastTypeTypeSystem);
-				if (tt == TypeType.None)  // annuler ?
+				TypeCode code = this.lastTypeCodeCreatated;
+				this.mainWindow.DlgResourceTypeCode(this, ref code, out this.lastTypeCodeSystem);
+				if (code == TypeCode.Invalid)  // annuler ?
 				{
 					return;
 				}
-				this.lastTypeTypeCreatated = tt;
+				this.lastTypeCodeCreatated = code;
 
-				if (this.lastTypeTypeCreatated == TypeType.Enum && this.lastTypeTypeSystem != null)
+				if (this.lastTypeCodeCreatated == TypeCode.Enum && this.lastTypeCodeSystem != null)
 				{
-					et = this.CreateEnumValues(this.lastTypeTypeSystem);
-					newName = this.GetEnumBaseName(this.lastTypeTypeSystem);
+					et = this.CreateEnumValues(this.lastTypeCodeSystem);
+					newName = this.GetEnumBaseName(this.lastTypeCodeSystem);
 				}
 			}
 
 			if (this.type == Type.Panels && !duplicateContent)
 			{
-				//	Choix d'une ressource type de type 'Types', mais uniquement parmi les TypeType.Structured.
+				//	Choix d'une ressource type de type 'Types', mais uniquement parmi les TypeCode.Structured.
 				Module module = this.mainWindow.CurrentModule;
-				Druid druid = this.mainWindow.DlgResourceSelector(module, ResourceAccess.Type.Types, ResourceAccess.TypeType.Structured, Druid.Empty, null, null);
+				Druid druid = this.mainWindow.DlgResourceSelector(module, ResourceAccess.Type.Types, TypeCode.Structured, Druid.Empty, null, null);
 				if (druid.IsEmpty)  // annuler ?
 				{
 					return;
@@ -712,14 +673,14 @@ namespace Epsitec.Common.Designer
 
 							if (et == null)
 							{
-								type = ResourceAccess.TypeTypeCreate(this.lastTypeTypeCreatated, bundle);
+								type = ResourceAccess.TypeCodeCreate(this.lastTypeCodeCreatated, bundle);
 							}
 							else
 							{
 								type = et;
 							}
 
-							type.DefineDefaultController(ResourceAccess.TypeTypeController(type), ResourceAccess.TypeTypeControllerParameter(type));
+							type.DefineDefaultController(ResourceAccess.TypeCodeController(type), ResourceAccess.TypeCodeControllerParameter(type));
 							newField.SetStringValue(type.Caption.SerializeToString());
 						}
 					}
@@ -1471,7 +1432,7 @@ namespace Epsitec.Common.Designer
 
 
 		#region ByPassFilter
-		public void BypassFilterOpenAccess(Type type, TypeType typeType, List<Druid> exclude, string includePrefix)
+		public void BypassFilterOpenAccess(Type type, TypeCode typeCode, List<Druid> exclude, string includePrefix)
 		{
 			//	Ouvre l'accès 'bypass'.
 			//	Ce type d'accès n'est possible que sur une ressource 'Caption' (Captions,
@@ -1502,11 +1463,11 @@ namespace Epsitec.Common.Designer
 
 						if (exclude == null || !exclude.Contains(fullDruid))
 						{
-							if (type == Type.Types && typeType != TypeType.None)
+							if (type == Type.Types && typeCode != TypeCode.Invalid)
 							{
 								AbstractType at = this.DirectGetAbstractType(fullDruid);
-								TypeType tt = ResourceAccess.AbstractTypeToTypeType(at);
-								if (tt != typeType)
+								TypeCode tc = ResourceAccess.AbstractTypeToTypeCode(at);
+								if (tc != typeCode)
 								{
 									continue;
 								}
@@ -2316,7 +2277,7 @@ namespace Epsitec.Common.Designer
 						return;
 					}
 
-					type.DefineDefaultController(ResourceAccess.TypeTypeController(type), field.String);
+					type.DefineDefaultController(ResourceAccess.TypeCodeController(type), field.String);
 					this.accessField.SetStringValue(this.accessCaption.SerializeToString());
 				}
 			}
@@ -4345,7 +4306,7 @@ namespace Epsitec.Common.Designer
 		protected Type										bypassType = Type.Unknow;
 		protected List<Druid>								bypassDruids;
 		protected List<Druid>								bypassExclude;
-		protected ResourceAccess.TypeType					lastTypeTypeCreatated = TypeType.String;
-		protected System.Type								lastTypeTypeSystem = null;
+		protected TypeCode									lastTypeCodeCreatated = TypeCode.String;
+		protected System.Type								lastTypeCodeSystem = null;
 	}
 }

@@ -198,7 +198,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			//	Cherche tous les Druids de type Values existants.
 			if (!this.IsNativeEnum)
 			{
-				this.resourceAccess.BypassFilterOpenAccess(ResourceAccess.Type.Values, ResourceAccess.TypeType.None, null, null);
+				this.resourceAccess.BypassFilterOpenAccess(ResourceAccess.Type.Values, TypeCode.Invalid, null, null);
 				int count = this.resourceAccess.BypassFilterCount;
 				for (int i=0; i<count; i++)
 				{

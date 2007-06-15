@@ -30,23 +30,23 @@ namespace Epsitec.Common.Designer.MyWidgets
 		}
 
 
-		public static AbstractTypeEditor Create(ResourceAccess.TypeType typeType)
+		public static AbstractTypeEditor Create(TypeCode typeCode)
 		{
 			//	Crée le bon widget AbstractTypeEditor pour éditer un type.
-			switch (typeType)
+			switch (typeCode)
 			{
-				case ResourceAccess.TypeType.Integer:      return new TypeEditorNumeric();
-				case ResourceAccess.TypeType.LongInteger:  return new TypeEditorNumeric();
-				case ResourceAccess.TypeType.Double:       return new TypeEditorNumeric();
-				case ResourceAccess.TypeType.Decimal:      return new TypeEditorNumeric();
-				case ResourceAccess.TypeType.String:       return new TypeEditorString();
-				case ResourceAccess.TypeType.Enum:         return new TypeEditorEnum();
-				case ResourceAccess.TypeType.Structured:   return new TypeEditorStructured();
-				//?case ResourceAccess.TypeType.Collection:   return new TypeEditorCollection();
-				case ResourceAccess.TypeType.Date:         return new TypeEditorDateTime();
-				case ResourceAccess.TypeType.Time:         return new TypeEditorDateTime();
-				case ResourceAccess.TypeType.DateTime:     return new TypeEditorDateTime();
-				case ResourceAccess.TypeType.Binary:       return new TypeEditorBinary();
+				case TypeCode.Integer:      return new TypeEditorNumeric();
+				case TypeCode.LongInteger:  return new TypeEditorNumeric();
+				case TypeCode.Double:       return new TypeEditorNumeric();
+				case TypeCode.Decimal:      return new TypeEditorNumeric();
+				case TypeCode.String:       return new TypeEditorString();
+				case TypeCode.Enum:         return new TypeEditorEnum();
+				case TypeCode.Structured:   return new TypeEditorStructured();
+				//?case TypeCode.Collection:   return new TypeEditorCollection();
+				case TypeCode.Date:         return new TypeEditorDateTime();
+				case TypeCode.Time:         return new TypeEditorDateTime();
+				case TypeCode.DateTime:     return new TypeEditorDateTime();
+				case TypeCode.Binary:       return new TypeEditorBinary();
 			}
 
 			return null;
