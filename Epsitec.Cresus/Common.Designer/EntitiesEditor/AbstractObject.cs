@@ -309,7 +309,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		protected void SetDirty()
 		{
 			//	Active la commande d'enregistrement, lorsqu'une modification a été effectuée.
-			this.editor.DirtySerialization = true;
+			//	Il ne faut pas appeler this.editor.DirtySerialization, car l'ajout d'un champ
+			//	(par exemple) n'a aucun rapport avec le layout.
 			this.editor.Module.AccessEntities.IsDirty = true;
 			this.editor.Module.AccessEntities.Accessor.PersistChanges();
 		}

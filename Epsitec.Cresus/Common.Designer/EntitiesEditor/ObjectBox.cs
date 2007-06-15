@@ -1139,10 +1139,14 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			//?Caption typeCaption = typeId.IsEmpty ? null : this.editor.Module.AccessEntities.DirectGetCaption(typeId);
 
 			Module typeModule = this.editor.Module.MainWindow.SearchModule(typeId);
-			CultureMap typeCultureMap = typeModule.AccessTypes2.Accessor.Collection[typeId];
-			if (typeCultureMap == null)
+			CultureMap typeCultureMap = null;
+			if (typeModule != null)
 			{
-				typeCultureMap = typeModule.AccessEntities.Accessor.Collection[typeId];
+				typeCultureMap = typeModule.AccessTypes2.Accessor.Collection[typeId];
+				if (typeCultureMap == null)
+				{
+					typeCultureMap = typeModule.AccessEntities.Accessor.Collection[typeId];
+				}
 			}
 
 			field.CaptionId = fieldCaptionId;
