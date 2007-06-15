@@ -11,9 +11,9 @@ namespace Epsitec.Common.Designer.Dialogs
 	/// Pour les énumérations natives, il est possible d'étendre le dialogue
 	/// et de choisir une énumération C# dans une liste.
 	/// </summary>
-	public class ResourceTypeType : Abstract
+	public class ResourceTypeCode : Abstract
 	{
-		public ResourceTypeType(MainWindow mainWindow) : base(mainWindow)
+		public ResourceTypeCode(MainWindow mainWindow) : base(mainWindow)
 		{
 		}
 
@@ -25,11 +25,11 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.window = new Window();
 				this.window.MakeSecondaryWindow();
 				this.window.PreventAutoClose = true;
-				this.WindowInit("TypeType", ResourceTypeType.windowWidthExtended, ResourceTypeType.windowHeight, true);
+				this.WindowInit("TypeCode", ResourceTypeCode.windowWidthExtended, ResourceTypeCode.windowHeight, true);
 				this.window.Text = Res.Strings.Dialog.TypeType.Title;
 				this.window.Owner = this.parentWindow;
 				this.window.WindowCloseClicked += new EventHandler(this.HandleWindowCloseClicked);
-				this.window.Root.MinSize = new Size(ResourceTypeType.windowWidthCompacted, ResourceTypeType.windowHeight);
+				this.window.Root.MinSize = new Size(ResourceTypeCode.windowWidthCompacted, ResourceTypeCode.windowHeight);
 				this.window.Root.Padding = new Margins(8, 8, 8, 8);
 
 				ResizeKnob resize = new ResizeKnob(this.window.Root);
@@ -221,7 +221,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			this.rightPanel.Visibility = this.isExtentended;
 
 			Size size = this.window.ClientSize;
-			size.Width = this.isExtentended ? ResourceTypeType.windowWidthExtended : ResourceTypeType.windowWidthCompacted;
+			size.Width = this.isExtentended ? ResourceTypeCode.windowWidthExtended : ResourceTypeCode.windowWidthCompacted;
 			this.window.ClientSize = size;
 		}
 

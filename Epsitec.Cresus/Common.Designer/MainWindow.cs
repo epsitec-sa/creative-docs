@@ -93,7 +93,7 @@ namespace Epsitec.Common.Designer
 				this.dlgFilter                      = new Dialogs.Filter(this);
 				this.dlgSearch                      = new Dialogs.Search(this);
 				this.dlgNewCulture                  = new Dialogs.NewCulture(this);
-				this.dlgResourceTypeCode            = new Dialogs.ResourceTypeType(this);
+				this.dlgResourceTypeCode            = new Dialogs.ResourceTypeCode(this);
 				this.dlgResourceSelector            = new Dialogs.ResourceSelector(this);
 				this.dlgResourceStructuredTypeField = new Dialogs.ResourceStructuredTypeField(this);
 				this.dlgBindingSelector             = new Dialogs.BindingSelector(this);
@@ -1925,7 +1925,7 @@ namespace Epsitec.Common.Designer
 		protected Dialogs.Filter				dlgFilter;
 		protected Dialogs.Search				dlgSearch;
 		protected Dialogs.NewCulture			dlgNewCulture;
-		protected Dialogs.ResourceTypeType		dlgResourceTypeCode;
+		protected Dialogs.ResourceTypeCode		dlgResourceTypeCode;
 		protected Dialogs.ResourceSelector		dlgResourceSelector;
 		protected Dialogs.ResourceStructuredTypeField dlgResourceStructuredTypeField;
 		protected Dialogs.BindingSelector		dlgBindingSelector;

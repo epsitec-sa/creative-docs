@@ -52,7 +52,7 @@
     <Compile Include="DimensionsList.cs" />
     <Compile Include="Dimension.cs" />
     <Compile Include="Dialogs\BindingSelector.cs" />
-    <Compile Include="Dialogs\ResourceTypeType.cs" />
+    <Compile Include="Dialogs\ResourceTypeCode.cs" />
     <Compile Include="Dialogs\Open.cs" />
     <Compile Include="Dialogs\Icon.cs" />
     <Compile Include="EntitiesEditor\AbstractObject.cs" />

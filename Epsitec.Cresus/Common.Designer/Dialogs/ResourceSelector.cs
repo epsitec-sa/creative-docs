@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Support;
 using Epsitec.Common.Drawing;
+using Epsitec.Common.Types;
 
 namespace Epsitec.Common.Designer.Dialogs
 {
@@ -194,7 +195,7 @@ namespace Epsitec.Common.Designer.Dialogs
 		}
 
 
-		public void AccessOpenList(Module baseModule, ResourceAccess.Type type, Common.Types.TypeCode typeCode, List<Druid> resources, List<Druid> exclude, string includePrefix)
+		public void AccessOpenList(Module baseModule, ResourceAccess.Type type, TypeCode typeCode, List<Druid> resources, List<Druid> exclude, string includePrefix)
 		{
 			//	Début de l'accès 'bypass' aux ressources pour le dialogue.
 			System.Diagnostics.Debug.Assert(type == ResourceAccess.Type.Captions || type == ResourceAccess.Type.Fields || type == ResourceAccess.Type.Commands || type == ResourceAccess.Type.Values);
@@ -215,12 +216,12 @@ namespace Epsitec.Common.Designer.Dialogs
 			this.access.BypassFilterOpenAccess(this.resourceType, this.resourceTypeCode, this.exclude, this.includePrefix);
 		}
 
-		public void AccessOpen(Module baseModule, ResourceAccess.Type type, Common.Types.TypeCode typeCode, Druid resource, List<Druid> exclude, string includePrefix)
+		public void AccessOpen(Module baseModule, ResourceAccess.Type type, TypeCode typeCode, Druid resource, List<Druid> exclude, string includePrefix)
 		{
 			//	Début de l'accès 'bypass' aux ressources pour le dialogue.
 			//	Le type peut être inconnu ou la ressource inconnue, mais pas les deux.
 			System.Diagnostics.Debug.Assert(type == ResourceAccess.Type.Unknow || type == ResourceAccess.Type.Captions || type == ResourceAccess.Type.Fields || type == ResourceAccess.Type.Commands || type == ResourceAccess.Type.Values || type == ResourceAccess.Type.Types || type == ResourceAccess.Type.Panels);
-			System.Diagnostics.Debug.Assert(resource.Type != DruidType.ModuleRelative);
+			System.Diagnostics.Debug.Assert(resource.Type != Common.Support.DruidType.ModuleRelative);
 
 			this.resourceTypeCode = typeCode;
 			this.resource = resource;
@@ -612,7 +613,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			}
 			else
 			{
-				if (this.resource.Type == DruidType.Full)
+				if (this.resource.Type == Common.Support.DruidType.Full)
 				{
 					for (int i=0; i<this.druidsIndex.Count; i++)
 					{
@@ -803,7 +804,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			this.array.ShowSelectedRow();
 		}
 
-		private void HandleFilterKeyboardFocusChanged(object sender, Epsitec.Common.Types.DependencyPropertyChangedEventArgs e)
+		private void HandleFilterKeyboardFocusChanged(object sender, DependencyPropertyChangedEventArgs e)
 		{
 			//	Appelé lorsqu'une ligne éditable voit son focus changer.
 			bool focused = (bool) e.NewValue;
@@ -869,7 +870,7 @@ namespace Epsitec.Common.Designer.Dialogs
 		protected Module						lastModule;
 		protected Module						module;
 		protected ResourceAccess.Type			resourceType;
-		protected Common.Types.TypeCode			resourceTypeCode;
+		protected TypeCode						resourceTypeCode;
 		protected ResourceAccess				access;
 		protected List<Druid>					exclude;
 		protected string						includePrefix;
