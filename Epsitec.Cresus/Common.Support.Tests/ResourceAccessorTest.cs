@@ -182,13 +182,26 @@ namespace Epsitec.Common.Support
 			Assert.AreEqual (Res.Fields.ResourceBase.ModificationId, fields[0].GetValue (Res.Fields.Field.CaptionId));
 			Assert.AreEqual (Res.Fields.ResourceBase.Comment,        fields[1].GetValue (Res.Fields.Field.CaptionId));
 
+			Assert.AreEqual (Types.FieldSource.Value, fields[0].GetValue (Res.Fields.Field.Source));
+			Assert.AreEqual ("", fields[0].GetValue (Res.Fields.Field.Expression));
+
 			map.Name = "ResourceEntityType";
+			fields[10].SetValue (Res.Fields.Field.Source, Types.FieldSource.Expression);
+			fields[10].SetValue (Res.Fields.Field.Expression, "foo");
+
 			accessor.PersistChanges ();
 
 			Assert.AreEqual ("ResourceEntityType", map.Name);
 			Assert.AreEqual ("Typ.StructuredType.ResourceEntityType", Res.Manager.GetBundle (Resources.CaptionsBundleName, ResourceLevel.Default)[Res.Types.ResourceStructuredType.CaptionId].Name);
 			Assert.AreEqual ("Fld.ResourceEntityType.Fields", Res.Manager.GetBundle (Resources.CaptionsBundleName, ResourceLevel.Default)[Res.Fields.ResourceStructuredType.Fields].Name);
 			Assert.AreEqual ("ResourceEntityType.Fields", accessor.FieldAccessor.Collection[Res.Fields.ResourceStructuredType.Fields].ToString ());
+
+			Types.Caption caption = Res.Manager.GetCaption (Res.Types.ResourceStructuredType.CaptionId, ResourceLevel.Default);
+			Types.StructuredType type = Types.TypeRosetta.CreateTypeObject (caption, false) as Types.StructuredType;
+
+			Assert.AreEqual ("ResourceEntityType", caption.Name);
+			Assert.AreEqual (Types.FieldSource.Expression, type.Fields[Res.Fields.ResourceStructuredType.Class.ToString ()].Source);
+			Assert.AreEqual ("foo", type.Fields[Res.Fields.ResourceStructuredType.Class.ToString ()].Expression);
 			
 			map.Name = "ResourceStructuredType";
 			accessor.PersistChanges ();

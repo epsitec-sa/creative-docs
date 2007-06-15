@@ -207,13 +207,21 @@ namespace Epsitec.Common.Drawing
 
 					lock (bitmapDataCache)
 					{
-						try
+						int  attempt = 0;
+						bool success = false;
+
+						while ((success == false) && (attempt++ < 10))
 						{
-							this.bitmap_data = this.bitmap.LockBits (new System.Drawing.Rectangle (0, 0, width, height), mode, format);
-						}
-						catch (System.Exception ex)
-						{
-							System.Diagnostics.Debugger.Break ();
+							try
+							{
+								this.bitmap_data = this.bitmap.LockBits (new System.Drawing.Rectangle (0, 0, width, height), mode, format);
+								success = true;
+							}
+							catch (System.Exception)
+							{
+								System.Diagnostics.Debug.WriteLine ("Attempted to lock bitmap and failed: " + attempt);
+								System.Threading.Thread.Sleep (1);
+							}
 						}
 
 						bitmapDataCache[this.bitmap] = this.bitmap_data;
