@@ -14,7 +14,6 @@ namespace Epsitec.Common.Designer.Viewers
 	{
 		public Fields2(Module module, PanelsContext context, ResourceAccess access, MainWindow mainWindow) : base(module, context, access, mainWindow)
 		{
-			this.table.ColumnHeader.SetColumnComparer(0, Fields2.CompareTypeColumns);
 			this.UpdateAll();
 		}
 
@@ -53,9 +52,13 @@ namespace Epsitec.Common.Designer.Viewers
 			this.table.Columns.Add(new UI.ItemTableColumn("Primary", new Widgets.Layouts.GridLength(this.GetColumnWidth(2), Widgets.Layouts.GridUnitType.Proportional)));
 			this.table.Columns.Add(new UI.ItemTableColumn("Secondary", new Widgets.Layouts.GridLength(this.GetColumnWidth(3), Widgets.Layouts.GridUnitType.Proportional)));
 
+			this.table.ColumnHeader.SetColumnComparer(0, Fields2.CompareTypeColumns);
+
 			this.table.ColumnHeader.SetColumnText(0, "Entité");
 			this.table.ColumnHeader.SetColumnText(1, "Nom");
+
 			this.table.ColumnHeader.SetColumnSort(1, ListSortDirection.Ascending);
+			this.table.ColumnHeader.SetColumnSort(0, ListSortDirection.Ascending);
 		}
 
 		protected override int PrimaryColumn
