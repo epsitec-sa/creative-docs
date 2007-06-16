@@ -833,8 +833,12 @@ namespace Epsitec.Common.Designer.Viewers
 		private void HandleArraySelectedRowChanged(object sender)
 		{
 			//	La ligne sélectionnée a changé.
+			if (!this.mainWindow.Terminate())
+			{
+				return;
+			}
+
 			this.access.AccessIndex = this.array.SelectedRow;
-			this.mainWindow.Terminate();
 			this.mainWindow.LocatorFix();
 
 			this.UpdateTitle();

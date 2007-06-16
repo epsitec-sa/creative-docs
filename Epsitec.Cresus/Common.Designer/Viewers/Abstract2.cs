@@ -663,7 +663,34 @@ namespace Epsitec.Common.Designer.Viewers
 				return;
 			}
 
-			this.mainWindow.Terminate();
+			if (!this.mainWindow.Terminate())
+			{
+				//	Revient à la sélection précédente.
+				//	TODO: cela ne fonctionne pas...
+				this.ignoreChange = true;
+				if (this.lastSelection == null)
+				{
+					this.table.ItemPanel.DeselectAllItemViews();
+				}
+				else
+				{
+					this.table.ItemPanel.SelectItemView(this.lastSelection);
+				}
+				this.ignoreChange = false;
+				return;
+			}
+
+			//	Mémorise la sélection courante.
+			IList<UI.ItemView> selection = this.table.ItemPanel.GetSelectedItemViews();
+			if (selection.Count == 0)
+			{
+				this.lastSelection = null;
+			}
+			else
+			{
+				this.lastSelection = selection[0];
+			}
+
 			this.mainWindow.LocatorFix();
 
 			this.UpdateTitle();
@@ -799,5 +826,7 @@ namespace Epsitec.Common.Designer.Viewers
 		protected GlyphButton					buttonMainCompact;
 		protected GlyphButton					buttonSuiteExtend;
 		protected GlyphButton					buttonSuiteCompact;
+
+		protected UI.ItemView					lastSelection;
 	}
 }

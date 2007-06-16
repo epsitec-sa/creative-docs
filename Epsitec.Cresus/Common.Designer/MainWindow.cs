@@ -494,7 +494,11 @@ namespace Epsitec.Common.Designer
 		[Command("Open")]
 		void CommandOpen(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			this.Terminate();
+			if (!this.Terminate())
+			{
+				return;
+			}
+
 			this.dlgOpen.SetResourcePrefix(this.resourceManagerPool.DefaultPrefix);
 			this.dlgOpen.Show();
 
@@ -515,22 +519,38 @@ namespace Epsitec.Common.Designer
 		[Command("Check")]
 		void CommandCheck(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			this.Terminate();
+			if (!this.Terminate())
+			{
+				return;
+			}
+
 			this.CurrentModule.Check();
 		}
 
 		[Command("Save")]
 		void CommandSave(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			this.Terminate();
+			if (!this.Terminate())
+			{
+				return;
+			}
+
 			this.CurrentModule.Save();
 		}
 
 		[Command("Close")]
 		void CommandClose(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			this.Terminate();
-			if ( !this.AutoSave(dispatcher) )  return;
+			if (!this.Terminate())
+			{
+				return;
+			}
+
+			if (!this.AutoSave(dispatcher))
+			{
+				return;
+			}
+
 			this.CloseModule();
 		}
 
@@ -538,8 +558,15 @@ namespace Epsitec.Common.Designer
 		[Command("QuitApplication")]
 		void CommandQuitApplication(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			this.Terminate();
-			if ( !this.AutoSaveAll(dispatcher) )  return;
+			if (!this.Terminate())
+			{
+				return;
+			}
+
+			if (!this.AutoSaveAll(dispatcher))
+			{
+				return;
+			}
 
 			this.dlgGlyphs.Hide();
 			this.dlgFilter.Hide();
@@ -632,48 +659,96 @@ namespace Epsitec.Common.Designer
 		[Command("NewCulture")]
 		void CommandNewCulture(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			this.Terminate();
-			if ( !this.IsCurrentModule )  return;
+			if (!this.Terminate())
+			{
+				return;
+			}
+
+			if (!this.IsCurrentModule)
+			{
+				return;
+			}
+
 			this.CurrentModule.Modifier.ActiveViewer.DoNewCulture();
 		}
 
 		[Command("DeleteCulture")]
 		void CommandDeleteCulture(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			this.Terminate();
-			if ( !this.IsCurrentModule )  return;
+			if (!this.Terminate())
+			{
+				return;
+			}
+
+			if (!this.IsCurrentModule)
+			{
+				return;
+			}
+
 			this.CurrentModule.Modifier.ActiveViewer.DoDeleteCulture();
 		}
 
 		[Command("Delete")]
 		void CommandDelete(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			this.Terminate();
-			if ( !this.IsCurrentModule )  return;
+			if (!this.Terminate())
+			{
+				return;
+			}
+
+			if (!this.IsCurrentModule)
+			{
+				return;
+			}
+
 			this.CurrentModule.Modifier.ActiveViewer.DoDelete();
 		}
 
 		[Command("Create")]
 		void CommandCreate(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			this.Terminate();
-			if ( !this.IsCurrentModule )  return;
+			if (!this.Terminate())
+			{
+				return;
+			}
+
+			if (!this.IsCurrentModule)
+			{
+				return;
+			}
+
 			this.CurrentModule.Modifier.ActiveViewer.DoDuplicate(false);
 		}
 
 		[Command("Duplicate")]
 		void CommandDuplicate(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			this.Terminate();
-			if ( !this.IsCurrentModule )  return;
+			if (!this.Terminate())
+			{
+				return;
+			}
+
+			if (!this.IsCurrentModule)
+			{
+				return;
+			}
+
 			this.CurrentModule.Modifier.ActiveViewer.DoDuplicate(true);
 		}
 
 		[Command("CopyToModule")]
 		void CommandCopyToModule(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			this.Terminate();
-			if ( !this.IsCurrentModule )  return;
+			if (!this.Terminate())
+			{
+				return;
+			}
+
+			if (!this.IsCurrentModule)
+			{
+				return;
+			}
+
 			this.CurrentModule.Modifier.ActiveViewer.DoCopyToModule(this.LastModule);
 		}
 
@@ -682,7 +757,11 @@ namespace Epsitec.Common.Designer
 		[Command("Paste")]
 		void CommandClipboard(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			if ( !this.IsCurrentModule )  return;
+			if (!this.IsCurrentModule)
+			{
+				return;
+			}
+
 			this.CurrentModule.Modifier.ActiveViewer.DoClipboard(e.Command.CommandId);
 		}
 
@@ -691,7 +770,11 @@ namespace Epsitec.Common.Designer
 		[Command("FontUnderline")]
 		void CommandFont(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			if ( !this.IsCurrentModule )  return;
+			if (!this.IsCurrentModule)
+			{
+				return;
+			}
+
 			this.CurrentModule.Modifier.ActiveViewer.DoFont(e.Command.CommandId);
 		}
 
@@ -714,7 +797,11 @@ namespace Epsitec.Common.Designer
 		[Command("ObjectPanel")]
 		void CommandTool(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			if ( !this.IsCurrentModule )  return;
+			if (!this.IsCurrentModule)
+			{
+				return;
+			}
+
 			this.CurrentModule.Modifier.ActiveViewer.DoTool(e.Command.CommandId);
 		}
 
@@ -756,7 +843,11 @@ namespace Epsitec.Common.Designer
 		[Command("TabIndexRenum")]
 		void CommandCommand(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			if ( !this.IsCurrentModule )  return;
+			if (!this.IsCurrentModule)
+			{
+				return;
+			}
+
 			this.CurrentModule.Modifier.ActiveViewer.DoCommand(e.Command.CommandId);
 		}
 
@@ -1232,7 +1323,11 @@ namespace Epsitec.Common.Designer
 		protected void LocatorGoto(Viewers.Locator locator)
 		{
 			//	Va sur une ressource définie par une localisation.
-			this.Terminate();
+			if (!this.Terminate())
+			{
+				return;
+			}
+
 			ModuleInfo mi = this.CurrentModuleInfo;
 
 			if (mi.Module.ModuleInfo.Name != locator.ModuleName)
@@ -1363,26 +1458,34 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
-		public void Terminate()
+		public bool Terminate()
 		{
 			//	Termine le travail sur une ressource, avant de passer à une autre.
-			this.Terminate(false);
+			//	Retourne false si l'utilisateur a choisi "annuler".
+			return this.Terminate(false);
 		}
 
-		public void Terminate(bool soft)
+		public bool Terminate(bool soft)
 		{
 			//	Termine le travail sur une ressource, avant de passer à une autre.
 			//	Si soft = true, on sérialise temporairement sans poser de question.
+			//	Retourne false si l'utilisateur a choisi "annuler".
 			if (this.IsCurrentModule && this.CurrentModule.Modifier.ActiveViewer != null)
 			{
-				this.CurrentModule.Modifier.ActiveViewer.Terminate(soft);
+				return this.CurrentModule.Modifier.ActiveViewer.Terminate(soft);
 			}
+
+			return true;
 		}
 
 		private void HandleTypeChanged(object sender)
 		{
 			//	Appelé lorsque le type de vue a changé.
-			this.Terminate(true);
+			if (!this.Terminate(true))
+			{
+				return;
+			}
+
 			this.CreateViewerLayout();
 			this.DialogSearchAdapt();
 			this.LocatorFix();

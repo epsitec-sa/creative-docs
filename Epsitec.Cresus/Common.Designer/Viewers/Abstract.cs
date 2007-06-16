@@ -1068,10 +1068,12 @@ namespace Epsitec.Common.Designer.Viewers
 		}
 
 
-		public virtual void Terminate(bool soft)
+		public virtual bool Terminate(bool soft)
 		{
 			//	Termine le travail sur une ressource, avant de passer à une autre.
 			//	Si soft = true, on sérialise temporairement sans poser de question.
+			//	Retourne false si l'utilisateur a choisi "annuler".
+			return true;
 		}
 
 
