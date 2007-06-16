@@ -106,6 +106,10 @@ namespace Epsitec.Common.Dialogs
 			AbstractMessageDialog.LayoutButtons (this.window.ClientSize.Width, button1, button2);
 			
 			this.window.FocusedWidget = body.FindTabWidget (TabNavigationDir.Forwards, TabNavigationMode.ActivateOnTab);
+			this.window.WindowCloseClicked += delegate
+			{
+				this.CommandQuitDialog ();
+			};
 		}
 		
 		

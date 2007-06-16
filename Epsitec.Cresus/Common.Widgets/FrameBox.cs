@@ -61,6 +61,12 @@ namespace Epsitec.Common.Widgets
 
 		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
 		{
+			if (this.BackColor.IsVisible)
+			{
+				graphics.AddFilledRectangle (this.Client.Bounds);
+				graphics.RenderSolid (this.BackColor);
+			}
+
 			if (this.DrawFullFrame)
 			{
 				IAdorner adorner = Widgets.Adorners.Factory.Active;

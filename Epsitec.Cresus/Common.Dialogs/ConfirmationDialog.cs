@@ -33,7 +33,7 @@ namespace Epsitec.Common.Dialogs
 		{
 			IAdorner adorner = Widgets.Adorners.Factory.Active;
 
-			StaticText container = new StaticText();
+			FrameBox container = new FrameBox ();
 			container.BackColor = adorner.ColorTextBackground;
 			container.Padding = new Drawing.Margins(ConfirmationDialog.margin);
 
@@ -42,7 +42,7 @@ namespace Epsitec.Common.Dialogs
 			header.Dock = DockStyle.Top;
 			header.Margins = new Drawing.Margins(0, 0, 0, 10);
 
-			int index = 0;
+			int index = 1;
 			foreach (string question in this.questions)
 			{
 				Button button = new ConfirmationButton(container);
@@ -55,30 +55,30 @@ namespace Epsitec.Common.Dialogs
 
 			if (this.hasCancel)  // bouton Cancel dans une bande grise en bas ?
 			{
-				Widget group = new Widget();
+				FrameBox buttons = container;
+				
+				container = new FrameBox ();
 
-				container.SetParent(group);
-				container.Dock = DockStyle.Fill;
+				buttons.SetParent(container);
+				buttons.Dock = DockStyle.Fill;
+				buttons.TabIndex = 1;
 
-				Widget footer = new Widget(group);
+				FrameBox footer = new FrameBox(container);
 				footer.PreferredHeight = 38;
 				footer.Dock = DockStyle.Bottom;
+				footer.TabIndex = 2;
 
 				Button button = new Button(footer);
 				button.Text = Widgets.Res.Strings.Dialog.Button.Cancel;
-				button.Name = "Cancel";
+				button.Name = ConfirmationDialog.cancelButtonName;
 				button.Dock = DockStyle.Right;
 				button.Margins = new Drawing.Margins(ConfirmationDialog.margin, ConfirmationDialog.margin, 8, 8);
 				button.Clicked += new MessageEventHandler(this.HandleButtonClicked);
-
-				group.PreferredSize = new Drawing.Size(ConfirmationDialog.width, 100);
-				return group;
+				button.TabIndex = 1;
 			}
-			else
-			{
-				container.PreferredSize = new Drawing.Size(ConfirmationDialog.width, 100);
-				return container;
-			}
+			
+			container.PreferredSize = new Drawing.Size(ConfirmationDialog.width, 100);
+			return container;
 		}
 
 		protected override void CreateWindow()
@@ -94,43 +94,39 @@ namespace Epsitec.Common.Dialogs
 			this.window.ClientSize = new Drawing.Size(dx+ConfirmationDialog.margin*2, dy+ConfirmationDialog.margin*2);
 			this.window.PreventAutoClose = true;
 
+			this.window.MakeFixedSizeWindow();
+			this.window.MakeSecondaryWindow();
+
+			CommandDispatcher.SetDispatcher (this.window, new CommandDispatcher ());
+
 			if (this.hasCancel)
 			{
-				this.window.MakeFixedSizeWindow();
-				this.window.MakeSecondaryWindow();
-				this.window.WindowCloseClicked += new EventHandler(this.HandleWindowCloseClicked);
+				this.window.WindowCloseClicked += delegate
+				{
+					this.result = DialogResult.Cancel;
+					this.CloseDialog ();
+				};
 			}
 			else
 			{
-				this.window.MakeFixedSizeWindow();
-				this.window.MakeButtonlessWindow();
-				this.window.MakeSecondaryWindow();
+				this.window.MakeButtonlessWindow ();
 			}
 			
 			body.SetParent(this.window.Root);
 			body.Dock = DockStyle.Fill;
-			body.TabIndex = 1;
-			body.TabNavigationMode = TabNavigationMode.ForwardTabPassive;
-			
-			//?this.window.FocusedWidget = body.FindTabWidget(TabNavigationDir.Forwards, TabNavigationMode.ActivateOnTab);
+
+			body.SetFocusOnTabWidget ();
 			Platform.Beep.MessageBeep(Platform.Beep.MessageType.Warning);
 
 			this.window.AdjustWindowSize ();
 		}
 
 		
-		private void HandleWindowCloseClicked(object sender)
-		{
-			//	Fenêtre fermée.
-			this.result = DialogResult.Cancel;
-			this.CloseDialog();
-		}
-
 		private void HandleButtonClicked(object sender, MessageEventArgs e)
 		{
 			Widget button = sender as Widget;
 
-			if (button.Name == "Cancel")
+			if (button.Name == ConfirmationDialog.cancelButtonName)
 			{
 				this.result = DialogResult.Cancel;
 			}
@@ -145,6 +141,7 @@ namespace Epsitec.Common.Dialogs
 
 		private const double width = 300;
 		private const double margin = 20;
+		private const string cancelButtonName = "Cancel";
 		
 		private string							title;
 		private string							header;
