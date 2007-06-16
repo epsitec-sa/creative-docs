@@ -19,13 +19,13 @@ namespace Epsitec.Common.Dialogs
 		/// <param name="title">Titre du dialogue, dans la barre de titre de la fenêtre.</param>
 		/// <param name="header">Question posée en haut du dialogue.</param>
 		/// <param name="questions">Liste de questions, formatées avec ConfirmationButton.FormatContent().</param>
-		/// <param name="asCancel">Présente optionnelle d'un bouton "Annuler" dans une bande grise en bas.</param>
-		public ConfirmationDialog(string title, string header, List<string> questions, bool asCancel)
+		/// <param name="hasCancelButton">Présente optionnelle d'un bouton "Annuler" dans une bande grise en bas.</param>
+		public ConfirmationDialog(string title, string header, List<string> questions, bool hasCancelButton)
 		{
 			this.title = title;
 			this.header = header;
 			this.questions = questions;
-			this.asCancel = asCancel;
+			this.hasCancel = hasCancelButton;
 		}
 
 
@@ -53,7 +53,7 @@ namespace Epsitec.Common.Dialogs
 				button.Clicked += new MessageEventHandler(this.HandleButtonClicked);
 			}
 
-			if (this.asCancel)  // bouton Cancel dans une bande grise en bas ?
+			if (this.hasCancel)  // bouton Cancel dans une bande grise en bas ?
 			{
 				Widget group = new Widget();
 
@@ -127,12 +127,12 @@ namespace Epsitec.Common.Dialogs
 		}
 
 
-		protected static readonly double width = 300;
-		protected static readonly double margin = 20;
+		private const double width = 300;
+		private const double margin = 20;
 		
-		protected string						title;
-		protected string						header;
-		protected List<string>					questions;
-		protected bool							asCancel;
+		private string							title;
+		private string							header;
+		private List<string>					questions;
+		private bool							hasCancel;
 	}
 }
