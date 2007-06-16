@@ -1861,13 +1861,13 @@ namespace Epsitec.Common.Designer
 			return dialog.Result;
 		}
 
-		public Common.Dialogs.DialogResult DialogConfirmation(string header, List<string> questions, bool asCancel)
+		public Common.Dialogs.DialogResult DialogConfirmation(string header, List<string> questions, bool hasCancelButton)
 		{
 			//	Affiche le dialogue pour demander une confirmation.
 			if ( this.Window == null )  return Common.Dialogs.DialogResult.None;
 
 			string title = Res.Strings.Application.Title;
-			Common.Dialogs.IDialog dialog = Common.Dialogs.Message.CreateConfirmation(title, header, questions, asCancel);
+			Common.Dialogs.IDialog dialog = Common.Dialogs.Message.CreateConfirmation(title, header, questions, hasCancelButton);
 			dialog.Owner = this.Window;
 			dialog.OpenDialog();
 			return dialog.Result;
