@@ -47,7 +47,7 @@ namespace Epsitec.Common.Dialogs
 			{
 				Button button = new ConfirmationButton(container);
 				button.Text = question;
-				button.Name = (index-1).ToString(System.Globalization.CultureInfo.InvariantCulture);
+				button.Index = index-1;
 				button.TabIndex = index++;
 				button.Dock = DockStyle.Top;
 				button.Clicked += new MessageEventHandler(this.HandleButtonClicked);
@@ -133,7 +133,7 @@ namespace Epsitec.Common.Dialogs
 			}
 			else
 			{
-				int rank = int.Parse(button.Name);
+				int rank = button.Index;
 				this.result = (DialogResult) (DialogResult.Answer1+rank);
 			}
 			this.CloseDialog();

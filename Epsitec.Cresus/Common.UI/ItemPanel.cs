@@ -841,6 +841,9 @@ namespace Epsitec.Common.UI
 
 			public void GenerateEvents()
 			{
+				List<ItemView> selected   = new List<ItemView> ();
+				List<ItemView> deselected = new List<ItemView> ();
+
 				foreach (ItemView itemView in this.panel.GetSelectedItemViews ())
 				{
 					object item = itemView.Item;
@@ -858,14 +861,16 @@ namespace Epsitec.Common.UI
 
 					if (!found)
 					{
-						this.panel.OnSelectionChanged ();
-						return;
+						selected.Add (itemView);
 					}
 				}
+				
+				deselected.AddRange (this.views);
 
-				if (this.views.Count > 0)
+				if ((selected.Count > 0) ||
+					(deselected.Count > 0))
 				{
-					this.panel.OnSelectionChanged ();
+					this.panel.OnSelectionChanged (selected, deselected);
 				}
 			}
 
@@ -1587,11 +1592,44 @@ namespace Epsitec.Common.UI
 			}
 		}
 
-		protected virtual void OnSelectionChanged()
+		protected virtual void OnSelectionChanged(IList<ItemView> selected, IList<ItemView> deselected)
 		{
-			if (this.SelectionChanged != null)
+			this.selectionChanged = true;
+			this.selectionSelected.AddRange (selected);
+			this.selectionDeselected.AddRange (deselected);
+			
+			if (Widgets.Message.CurrentState.Buttons == MouseButtons.None)
 			{
-				this.SelectionChanged (this);
+				this.NotifySelectionChanged ();
+			}
+			else
+			{
+				if (this.SelectionChanging != null)
+				{
+					this.SelectionChanging (this);
+				}
+			}
+		}
+
+		private void NotifySelectionChanged()
+		{
+			if (this.selectionChanged)
+			{
+				if (this.SelectionChanged != null)
+				{
+					ItemPanelSelectionChangedEventArgs e = new ItemPanelSelectionChangedEventArgs (this.selectionSelected, this.selectionDeselected);
+					
+					this.SelectionChanged (this, e);
+					
+					if (e.Cancel)
+					{
+						//	TODO: ...
+					}
+				}
+
+				this.selectionChanged = false;
+				this.selectionSelected.Clear ();
+				this.selectionDeselected.Clear ();
 			}
 		}
 		
@@ -1639,6 +1677,8 @@ namespace Epsitec.Common.UI
 		{
 			base.OnReleased (e);
 			e.Message.Consumer = this;
+
+			this.NotifySelectionChanged ();
 		}
 
 		private void HandleItemViewPressed(Widgets.Message message, ItemView view)
@@ -2783,9 +2823,15 @@ namespace Epsitec.Common.UI
 			{
 				if (message.Captured)
 				{
-					if (message.ButtonDownCount == 2)
+					switch (message.ButtonDownCount)
 					{
-						this.OnDoubleClicked (new Widgets.MessageEventArgs (message, pos));
+						case 1:
+							this.OnReleased (new Epsitec.Common.Widgets.MessageEventArgs (message, pos));
+							break;
+						
+						case 2:
+							this.OnDoubleClicked (new Widgets.MessageEventArgs (message, pos));
+							break;
 					}
 
 					message.Consumer = this;
@@ -3527,7 +3573,9 @@ namespace Epsitec.Common.UI
 
 		public event Support.EventHandler<DependencyPropertyChangedEventArgs> ContentsSizeChanged;
 
-		public event Support.EventHandler SelectionChanged;
+		public event Support.EventHandler<ItemPanelSelectionChangedEventArgs> SelectionChanged;
+
+		public event Support.EventHandler SelectionChanging;
 
 		public event Support.EventHandler CurrentChanged;
 
@@ -3589,5 +3637,9 @@ namespace Epsitec.Common.UI
 
 		int								totalRowCount;
 		int								totalColumnCount;
+
+		bool							selectionChanged;
+		List<ItemView>					selectionSelected = new List<ItemView> ();
+		List<ItemView>					selectionDeselected = new List<ItemView> ();
 	}
 }
