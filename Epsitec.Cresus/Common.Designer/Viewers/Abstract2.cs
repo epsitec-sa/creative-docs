@@ -666,17 +666,7 @@ namespace Epsitec.Common.Designer.Viewers
 			if (!this.mainWindow.Terminate())
 			{
 				//	Revient à la sélection précédente.
-				//	TODO: cela ne fonctionne pas...
-				this.ignoreChange = true;
-				if (this.lastSelection == null)
-				{
-					this.table.ItemPanel.DeselectAllItemViews();
-				}
-				else
-				{
-					this.table.ItemPanel.SelectItemView(this.lastSelection);
-				}
-				this.ignoreChange = false;
+				e.Cancel = true;
 				return;
 			}
 

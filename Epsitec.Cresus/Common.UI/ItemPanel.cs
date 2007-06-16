@@ -1623,7 +1623,17 @@ namespace Epsitec.Common.UI
 					
 					if (e.Cancel)
 					{
-						//	TODO: ...
+						//	Cancel the selection change; we should notify this, somehow,
+						//	but I've no idea how. Generating another SelectionChanged
+						//	event is not a solution, since this could again be cancelled.
+						//	For now, just cancel the selection silently...
+
+						this.InternalDeselectItemViews (this.selectionSelected);
+
+						foreach (ItemView item in this.selectionDeselected)
+						{
+							this.InternalSelectItemView (item);
+						}
 					}
 				}
 
