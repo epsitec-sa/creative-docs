@@ -94,9 +94,18 @@ namespace Epsitec.Common.Dialogs
 			this.window.ClientSize = new Drawing.Size(dx+ConfirmationDialog.margin*2, dy+ConfirmationDialog.margin*2);
 			this.window.PreventAutoClose = true;
 
-			this.window.MakeFixedSizeWindow();
-			this.window.MakeButtonlessWindow();
-			this.window.MakeSecondaryWindow();
+			if (this.hasCancel)
+			{
+				this.window.MakeFixedSizeWindow();
+				this.window.MakeSecondaryWindow();
+				this.window.WindowCloseClicked += new EventHandler(this.HandleWindowCloseClicked);
+			}
+			else
+			{
+				this.window.MakeFixedSizeWindow();
+				this.window.MakeButtonlessWindow();
+				this.window.MakeSecondaryWindow();
+			}
 			
 			body.SetParent(this.window.Root);
 			body.Dock = DockStyle.Fill;
@@ -110,6 +119,13 @@ namespace Epsitec.Common.Dialogs
 		}
 
 		
+		private void HandleWindowCloseClicked(object sender)
+		{
+			//	Fenêtre fermée.
+			this.result = DialogResult.Cancel;
+			this.CloseDialog();
+		}
+
 		private void HandleButtonClicked(object sender, MessageEventArgs e)
 		{
 			Widget button = sender as Widget;
