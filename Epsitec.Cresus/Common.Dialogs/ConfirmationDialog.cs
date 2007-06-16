@@ -75,6 +75,7 @@ namespace Epsitec.Common.Dialogs
 				button.Margins = new Drawing.Margins(ConfirmationDialog.margin, ConfirmationDialog.margin, 8, 8);
 				button.Clicked += new MessageEventHandler(this.HandleButtonClicked);
 				button.TabIndex = 1;
+				button.Shortcuts.Add (Common.Widgets.Feel.Factory.Active.CancelShortcut);
 			}
 			
 			container.PreferredSize = new Drawing.Size(ConfirmationDialog.width, 100);
