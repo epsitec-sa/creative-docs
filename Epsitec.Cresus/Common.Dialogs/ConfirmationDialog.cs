@@ -47,7 +47,7 @@ namespace Epsitec.Common.Dialogs
 			{
 				Button button = new ConfirmationButton(container);
 				button.Text = question;
-				button.Name = index.ToString(System.Globalization.CultureInfo.InvariantCulture);
+				button.Name = (index-1).ToString(System.Globalization.CultureInfo.InvariantCulture);
 				button.TabIndex = index++;
 				button.Dock = DockStyle.Top;
 				button.Clicked += new MessageEventHandler(this.HandleButtonClicked);
