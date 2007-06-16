@@ -71,12 +71,12 @@ namespace Epsitec.Common.Dialogs
 				button.Margins = new Drawing.Margins(ConfirmationDialog.margin, ConfirmationDialog.margin, 8, 8);
 				button.Clicked += new MessageEventHandler(this.HandleButtonClicked);
 
-				group.PreferredSize = new Drawing.Size(ConfirmationDialog.width, 250);
+				group.PreferredSize = new Drawing.Size(ConfirmationDialog.width, 100);
 				return group;
 			}
 			else
 			{
-				container.PreferredSize = new Drawing.Size(ConfirmationDialog.width, 250);
+				container.PreferredSize = new Drawing.Size(ConfirmationDialog.width, 100);
 				return container;
 			}
 		}
