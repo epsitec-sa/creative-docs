@@ -541,7 +541,7 @@ namespace Epsitec.Common.Widgets.Behaviors
 					if (MenuBehavior.menu_count == 0)
 					{
 						MenuBehavior.UnregisterFilter ();
-						MenuBehavior.GenerateDummyMouseMoveEvent ();
+						MenuBehavior.GenerateDummyMouseMoveEvents ();
 					}
 				}
 			}
@@ -1264,7 +1264,7 @@ namespace Epsitec.Common.Widgets.Behaviors
 			Window.MessageFilter          -= MenuBehavior.MessageFilter;
 		}
 		
-		private static void GenerateDummyMouseMoveEvent()
+		private static void GenerateDummyMouseMoveEvents()
 		{
 			Drawing.Point pos = Message.CurrentState.LastScreenPosition;
 			Window[]  windows = Window.FindFromPosition (pos);

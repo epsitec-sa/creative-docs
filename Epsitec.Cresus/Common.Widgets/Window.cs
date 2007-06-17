@@ -431,7 +431,12 @@ namespace Epsitec.Common.Widgets
 			}
 			this.window.AnimateHide (animation, this.WindowBounds);
 		}
-		
+
+		public void GenerateDummyMouseMoveEvent()
+		{
+			Drawing.Point pos = Message.CurrentState.LastScreenPosition;
+			this.DispatchMessage (Message.CreateDummyMouseMoveEvent (this.MapScreenToWindow (pos)));
+		}
 		
 		
 		public WindowRoot						Root
@@ -2412,6 +2417,7 @@ namespace Epsitec.Common.Widgets
 				if (this.engaged_widget.IsEngaged)
 				{
 					this.engaged_widget.FireStillEngaged ();
+					this.GenerateDummyMouseMoveEvent ();
 					return;
 				}
 			}
