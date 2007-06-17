@@ -100,7 +100,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.table.ItemPanel.Layout = UI.ItemPanelLayout.VerticalList;
 			this.table.ItemPanel.ItemSelectionMode = UI.ItemPanelSelectionMode.ExactlyOne;
 			this.table.ItemPanel.CurrentItemTrackingMode = UI.CurrentItemTrackingMode.AutoSelect;
-			this.table.ItemPanel.SelectionChanged += new EventHandler<UI.ItemPanelSelectionChangedEventArgs>(this.HandleTableSelectionChanged);
+			this.table.ItemPanel.SelectionChanged += new EventHandler<CancelEventArgs>(this.HandleTableSelectionChanged);
 			this.table.SizeChanged += this.HandleTableSizeChanged;
 			this.table.ColumnHeader.ColumnWidthChanged += this.HandleColumnHeaderColumnWidthChanged;
 			//?this.table.ColumnHeader.SetColumnSort(0, ListSortDirection.Ascending);
@@ -192,7 +192,7 @@ namespace Epsitec.Common.Designer.Viewers
 				this.labelEdit.CursorChanged -= new EventHandler(this.HandleCursorChanged);
 				this.labelEdit.KeyboardFocusChanged -= new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleLabelKeyboardFocusChanged);
 
-				this.table.ItemPanel.SelectionChanged -= new EventHandler<UI.ItemPanelSelectionChangedEventArgs>(this.HandleTableSelectionChanged);
+				this.table.ItemPanel.SelectionChanged -= new EventHandler<CancelEventArgs>(this.HandleTableSelectionChanged);
 				this.table.SizeChanged -= this.HandleTableSizeChanged;
 				this.table.ColumnHeader.ColumnWidthChanged -= this.HandleColumnHeaderColumnWidthChanged;
 			}
@@ -655,7 +655,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.UpdateCommands();
 		}
 
-		private void HandleTableSelectionChanged(object sender, UI.ItemPanelSelectionChangedEventArgs e)
+		private void HandleTableSelectionChanged(object sender, CancelEventArgs e)
 		{
 			//	La ligne sélectionnée dans le tableau a changé.
 			if (this.ignoreChange)

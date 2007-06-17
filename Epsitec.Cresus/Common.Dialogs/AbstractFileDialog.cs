@@ -607,7 +607,7 @@ namespace Epsitec.Common.Dialogs
 		}
 
 		
-		private void HandleFilesItemTableSelectionChanged(object sender, ItemPanelSelectionChangedEventArgs e)
+		private void HandleFilesItemTableSelectionChanged(object sender, CancelEventArgs e)
 		{
 			this.UpdateAfterSelectionChanged ();
 		}

@@ -1617,7 +1617,7 @@ namespace Epsitec.Common.UI
 			{
 				if (this.SelectionChanged != null)
 				{
-					ItemPanelSelectionChangedEventArgs e = new ItemPanelSelectionChangedEventArgs (this.selectionSelected, this.selectionDeselected);
+					Support.CancelEventArgs e = new Support.CancelEventArgs ();
 					
 					this.SelectionChanged (this, e);
 					
@@ -3583,7 +3583,7 @@ namespace Epsitec.Common.UI
 
 		public event Support.EventHandler<DependencyPropertyChangedEventArgs> ContentsSizeChanged;
 
-		public event Support.EventHandler<ItemPanelSelectionChangedEventArgs> SelectionChanged;
+		public event Support.EventHandler<Support.CancelEventArgs> SelectionChanged;
 
 		public event Support.EventHandler SelectionChanging;
 
