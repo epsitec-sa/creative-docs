@@ -222,9 +222,10 @@ namespace Epsitec.Common.Designer.MyWidgets
 			{
 				if (this.currentType != value)
 				{
+					ResourceAccess.Type oldType = this.currentType;
 					this.currentType = value;
 					this.UpdateButtons();
-					this.OnTypeChanged();
+					this.OnTypeChanged(oldType);
 				}
 			}
 		}
@@ -268,17 +269,24 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 
 		#region Events handler
-		protected virtual void OnTypeChanged()
+		protected virtual void OnTypeChanged(ResourceAccess.Type oldType)
 		{
 			//	Génère un événement pour dire que le type a été changé.
-			EventHandler handler = (EventHandler) this.GetUserEventHandler("TypeChanged");
+			EventHandler<CancelEventArgs> handler = (EventHandler<CancelEventArgs>) this.GetUserEventHandler("TypeChanged");
 			if (handler != null)
 			{
-				handler(this);
+				CancelEventArgs e = new CancelEventArgs();
+				handler(this, e);
+
+				if (e.Cancel)  // annule le changement de sélection ?
+				{
+					this.currentType = oldType;
+					this.UpdateButtons();
+				}
 			}
 		}
 
-		public event Support.EventHandler TypeChanged
+		public event EventHandler<CancelEventArgs> TypeChanged
 		{
 			add
 			{

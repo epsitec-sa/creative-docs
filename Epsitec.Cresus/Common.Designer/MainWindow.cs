@@ -1056,10 +1056,16 @@ namespace Epsitec.Common.Designer
 			{
 				if (this.DisplayModeState != value)
 				{
+					if (!this.Terminate(true))
+					{
+						return;
+					}
+
 					this.displayHorizontalState.ActiveState = (value == DisplayMode.Horizontal) ? ActiveState.Yes : ActiveState.No;
 					this.displayVerticalState.ActiveState   = (value == DisplayMode.Vertical  ) ? ActiveState.Yes : ActiveState.No;
 					this.displayFullScreenState.ActiveState = (value == DisplayMode.FullScreen) ? ActiveState.Yes : ActiveState.No;
-					this.HandleTypeChanged(null);
+
+					this.UpdateAfterTypeChanged();
 				}
 			}
 		}
@@ -1424,7 +1430,7 @@ namespace Epsitec.Common.Designer
 
 			mi.BundleTypeWidget = new MyWidgets.BundleType(mi.TabPage);
 			mi.BundleTypeWidget.Dock = DockStyle.Top;
-			mi.BundleTypeWidget.TypeChanged += new EventHandler(this.HandleTypeChanged);
+			mi.BundleTypeWidget.TypeChanged += new EventHandler<CancelEventArgs>(this.HandleTypeChanged);
 
 			this.CreateViewerLayout();
 		}
@@ -1478,20 +1484,26 @@ namespace Epsitec.Common.Designer
 			return true;
 		}
 
-		private void HandleTypeChanged(object sender)
+		protected void UpdateAfterTypeChanged()
 		{
-			//	Appelé lorsque le type de vue a changé.
-			if (!this.Terminate(true))
-			{
-				return;
-			}
-
+			//	Mise à jour après avoir changé le type de ressource.
 			this.CreateViewerLayout();
 			this.DialogSearchAdapt();
 			this.LocatorFix();
 			this.CurrentModule.Modifier.ActiveViewer.UpdateCommands();
 		}
 
+		private void HandleTypeChanged(object sender, CancelEventArgs e)
+		{
+			//	Appelé lorsque le type de vue a changé.
+			if (!this.Terminate())
+			{
+				e.Cancel = true;  // revient à la sélection précédente
+				return;
+			}
+
+			this.UpdateAfterTypeChanged();
+		}
 
 		private void HandleBookModulesActivePageChanged(object sender)
 		{
