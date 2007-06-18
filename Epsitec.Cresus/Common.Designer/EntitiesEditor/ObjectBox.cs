@@ -258,7 +258,15 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 						return new Point(this.bounds.Left, posv);
 					}
 
-					return new Point(this.bounds.Left, this.bounds.Top-AbstractObject.headerHeight/2);
+					if (this.isExtended && this.sourcesClosedCount > 0)
+					{
+						//	En dessous du moignon "source".
+						return new Point(this.bounds.Left, this.bounds.Top-AbstractObject.headerHeight);
+					}
+					else
+					{
+						return new Point(this.bounds.Left, this.bounds.Top-AbstractObject.headerHeight*0.5);
+					}
 
 
 				case ConnectionAnchor.Right:
@@ -269,7 +277,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 						return new Point(this.bounds.Right, posv);
 					}
 
-					return new Point(this.bounds.Right, this.bounds.Top-AbstractObject.headerHeight/2);
+					return new Point(this.bounds.Right, this.bounds.Top-AbstractObject.headerHeight*0.5);
 
 				case ConnectionAnchor.Bottom:
 					return new Point(this.bounds.Center.X, this.bounds.Bottom);
@@ -284,6 +292,15 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		protected bool IsVerticalPositionFree(double posv, bool right)
 		{
 			//	Cherche si une position verticale n'est occupée par aucun départ de liaison.
+			if (!right && this.isExtended && this.sourcesClosedCount > 0)
+			{
+				double y = this.bounds.Top-AbstractObject.headerHeight*0.5;
+				if (posv >= y-ObjectBox.fieldHeight/2 && posv <= y+ObjectBox.fieldHeight/2)  // sur le moignon "source" ?
+				{
+					return false;
+				}
+			}
+
 			for (int i=0; i<this.fields.Count; i++)
 			{
 				Field field = this.fields[i];

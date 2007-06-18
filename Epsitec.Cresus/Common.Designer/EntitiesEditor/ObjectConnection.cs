@@ -189,7 +189,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 #else
 						//	Essaie de trouver une place libre, pour déplacer le moins possible d'éléments.
 						Rectangle bounds;
-						double posv = src.GetConnectionSrcVerticalPosition(this.field.Rank) + AbstractObject.headerHeight/2;
+						double posv = src.GetConnectionSrcVerticalPosition(this.field.Rank) - (Editor.connectionDetour+2);
 
 						if (this.hilitedElement == ActiveElement.ConnectionOpenLeft)
 						{
