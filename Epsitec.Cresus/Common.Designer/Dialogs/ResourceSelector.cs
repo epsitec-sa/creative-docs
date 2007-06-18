@@ -148,15 +148,14 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		public void AccessOpen(Module baseModule, ResourceAccess.Type type, TypeCode typeCode, Druid resource, List<Druid> exclude, string includePrefix)
 		{
-			//	Début de l'accès 'bypass' aux ressources pour le dialogue.
+			//	Début de l'accès aux ressources pour le dialogue.
 			//	Le type peut être inconnu ou la ressource inconnue, mais pas les deux.
+			//	TODO: supprimer typeCode, exlude et includePrefix.
 			System.Diagnostics.Debug.Assert(type == ResourceAccess.Type.Unknow || type == ResourceAccess.Type.Captions2 || type == ResourceAccess.Type.Fields2 || type == ResourceAccess.Type.Commands2 || type == ResourceAccess.Type.Values || type == ResourceAccess.Type.Types2 || type == ResourceAccess.Type.Entities || type == ResourceAccess.Type.Panels);
 			System.Diagnostics.Debug.Assert(resource.Type != Common.Support.DruidType.ModuleRelative);
 
 			this.resourceType = type;
 			this.resource = resource;
-			this.exclude = exclude;
-			this.includePrefix = includePrefix;
 
 			//	Cherche le module contenant le Druid de la ressource.
 			this.baseModule = baseModule;
@@ -189,7 +188,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		protected void AccessChange(Module module)
 		{
-			//	Change l'accès 'bypass' aux ressources dans un autre module.
+			//	Change l'accès aux ressources dans un autre module.
 			this.module = module;
 			this.lastModule = module;
 
@@ -213,7 +212,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		public Druid AccessClose()
 		{
-			//	Fin de l'accès 'bypass' aux ressources pour le dialogue.
+			//	Fin de l'accès aux ressources pour le dialogue.
 			return this.resource;
 		}
 
@@ -253,7 +252,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		protected void UpdateArray()
 		{
-			//	Met à jour tout le contenu du tableau.
+			//	Met à jour tout le contenu du tableau et sélectionne la ressource actuelle.
 			this.listResources.Items.Clear();
 
 			int sel = -1;
@@ -276,11 +275,13 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		protected void UpdateButtons()
 		{
+			//	Met à jour le bouton "Utiliser".
 			this.buttonUse.Enable = (this.listResources.SelectedIndex != -1);
 		}
 
 		protected void UpdateRadios()
 		{
+			//	Met à jour les boutons radio pour changer le type.
 			if (this.resourceType == ResourceAccess.Type.Types2 || this.resourceType == ResourceAccess.Type.Entities)
 			{
 				this.radioTypes.Visibility = true;
@@ -298,6 +299,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		protected Druid SelectedResource
 		{
+			//	Retourne le Druid de la ressource actuellement sélectionnée.
 			get
 			{
 				if (this.listResources.SelectedIndex == -1)
@@ -312,6 +314,28 @@ namespace Epsitec.Common.Designer.Dialogs
 			}
 		}
 
+
+		private void HandleRadioClicked(object sender, MessageEventArgs e)
+		{
+			//	Changement du type des ressources par un bouton radio.
+			RadioButton button = sender as RadioButton;
+
+			if (button.Name == "Types")
+			{
+				this.resourceType = ResourceAccess.Type.Types2;
+			}
+
+			if (button.Name == "Entities")
+			{
+				this.resourceType = ResourceAccess.Type.Entities;
+			}
+
+			this.UpdateAccess();
+			this.UpdateTitle();
+			this.UpdateArray();
+			this.UpdateButtons();
+			this.UpdateRadios();
+		}
 
 		private void HandleListModulesSelected(object sender)
 		{
@@ -336,27 +360,6 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.UpdateArray();
 				return;
 			}
-		}
-
-		private void HandleRadioClicked(object sender, MessageEventArgs e)
-		{
-			RadioButton button = sender as RadioButton;
-
-			if (button.Name == "Types")
-			{
-				this.resourceType = ResourceAccess.Type.Types2;
-			}
-
-			if (button.Name == "Entities")
-			{
-				this.resourceType = ResourceAccess.Type.Entities;
-			}
-
-			this.UpdateAccess();
-			this.UpdateTitle();
-			this.UpdateArray();
-			this.UpdateButtons();
-			this.UpdateRadios();
 		}
 
 		private void HandleListResourcesSelected(object sender)
@@ -411,8 +414,6 @@ namespace Epsitec.Common.Designer.Dialogs
 		protected Module						module;
 		protected ResourceAccess.Type			resourceType;
 		protected ResourceAccess				access;
-		protected List<Druid>					exclude;
-		protected string						includePrefix;
 		protected Druid							resource;
 		protected CollectionView				collectionView;
 
