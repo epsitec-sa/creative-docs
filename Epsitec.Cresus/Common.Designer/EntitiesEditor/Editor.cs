@@ -1273,7 +1273,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			//	Sérialise toutes les boîtes.
 			writer.WriteStartDocument();
 
-			writer.WriteStartElement("Boxes");
+			writer.WriteStartElement(Xml.Boxes);
 			foreach (ObjectBox box in this.boxes)
 			{
 				box.WriteXml(writer);
@@ -1288,7 +1288,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			//	Désérialise toutes les boîtes.
 			this.Clear();
 
-			while (reader.ReadToFollowing("Box"))
+			while (reader.ReadToFollowing(Xml.Box))
 			{
 				ObjectBox box = new ObjectBox(this);
 				box.ReadXml(reader);

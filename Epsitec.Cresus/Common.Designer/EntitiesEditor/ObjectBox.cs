@@ -1978,18 +1978,18 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		public void WriteXml(XmlWriter writer)
 		{
 			//	Sérialise toutes les informations de la boîte et de ses champs.
-			writer.WriteStartElement("Box");
+			writer.WriteStartElement(Xml.Box);
 			
-			writer.WriteElementString("Druid", this.cultureMap.Id.ToString());
-			writer.WriteElementString("Bounds", this.bounds.ToString());
-			writer.WriteElementString("IsExtended", this.isExtended.ToString(System.Globalization.CultureInfo.InvariantCulture));
+			writer.WriteElementString(Xml.Druid, this.cultureMap.Id.ToString());
+			writer.WriteElementString(Xml.Bounds, this.bounds.ToString());
+			writer.WriteElementString(Xml.IsExtended, this.isExtended.ToString(System.Globalization.CultureInfo.InvariantCulture));
 
 			if (this.columnsSeparatorRelative != 0.5)
 			{
-				writer.WriteElementString("ColumnsSeparatorRelative", this.columnsSeparatorRelative.ToString(System.Globalization.CultureInfo.InvariantCulture));
+				writer.WriteElementString(Xml.ColumnsSeparatorRelative, this.columnsSeparatorRelative.ToString(System.Globalization.CultureInfo.InvariantCulture));
 			}
 			
-			writer.WriteElementString("Color", this.boxColor.ToString());
+			writer.WriteElementString(Xml.Color, this.boxColor.ToString());
 
 			foreach (Field field in this.fields)
 			{
@@ -2014,13 +2014,13 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				{
 					string name = reader.LocalName;
 
-					if (name == "Field")
+					if (name == Xml.Field)
 					{
 						Field field = new Field(this.editor);
 						field.ReadXml(reader);
 						this.fields.Add(field);
 					}
-					else if (name == "Comment")
+					else if (name == Xml.Comment)
 					{
 						this.comment = new ObjectComment(this.editor);
 						this.comment.ReadXml(reader);
@@ -2032,7 +2032,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					{
 						string element = reader.ReadElementString();
 
-						if (name == "Druid")
+						if (name == Xml.Druid)
 						{
 							Druid druid = Druid.Parse(element);
 							if (druid.IsValid)
@@ -2040,19 +2040,19 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 								this.cultureMap = this.editor.Module.AccessEntities.Accessor.Collection[druid];
 							}
 						}
-						else if (name == "Bounds")
+						else if (name == Xml.Bounds)
 						{
 							this.bounds = Rectangle.Parse(element);
 						}
-						else if (name == "IsExtended")
+						else if (name == Xml.IsExtended)
 						{
 							this.isExtended = bool.Parse(element);
 						}
-						else if (name == "ColumnsSeparatorRelative")
+						else if (name == Xml.ColumnsSeparatorRelative)
 						{
 							this.columnsSeparatorRelative = double.Parse(element);
 						}
-						else if (name == "Color")
+						else if (name == Xml.Color)
 						{
 							this.boxColor = (MainColor) System.Enum.Parse(typeof(MainColor), element);
 						}

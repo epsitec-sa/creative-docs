@@ -1190,11 +1190,11 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			//	Sérialise toutes les informations du commentaire.
 			//	Utilisé seulement pour les commentaires associés à des boîtes.
 			//	Les commentaires associés à des connections sont sérialisés par Field.
-			writer.WriteStartElement("Comment");
+			writer.WriteStartElement(Xml.Comment);
 			
-			writer.WriteElementString("Bounds", this.bounds.ToString());
-			writer.WriteElementString("Text", this.textLayoutComment.Text);
-			writer.WriteElementString("Color", this.boxColor.ToString());
+			writer.WriteElementString(Xml.Bounds, this.bounds.ToString());
+			writer.WriteElementString(Xml.Text, this.textLayoutComment.Text);
+			writer.WriteElementString(Xml.Color, this.boxColor.ToString());
 
 			writer.WriteEndElement();
 		}
@@ -1208,15 +1208,15 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					string name = reader.LocalName;
 					string element = reader.ReadElementString();
 
-					if (name == "Bounds")
+					if (name == Xml.Bounds)
 					{
 						this.bounds = Rectangle.Parse(element);
 					}
-					else if (name == "Text")
+					else if (name == Xml.Text)
 					{
 						this.textLayoutComment.Text = element;
 					}
-					else if (name == "Color")
+					else if (name == Xml.Color)
 					{
 						this.boxColor = (MainColor) System.Enum.Parse(typeof(MainColor), element);
 					}

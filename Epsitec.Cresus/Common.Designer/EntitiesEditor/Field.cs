@@ -548,59 +548,59 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		public void WriteXml(XmlWriter writer)
 		{
 			//	Sérialise toutes les informations du champ.
-			writer.WriteStartElement("Field");
+			writer.WriteStartElement(Xml.Field);
 			
-			writer.WriteElementString("DruidCaptionId", this.captionId.ToString());
-			writer.WriteElementString("DruidDestination", this.destination.ToString());
+			writer.WriteElementString(Xml.DruidCaptionId, this.captionId.ToString());
+			writer.WriteElementString(Xml.DruidDestination, this.destination.ToString());
 
 			if (this.isExplored)
 			{
-				writer.WriteElementString("IsAttachToRight", this.isAttachToRight.ToString(System.Globalization.CultureInfo.InvariantCulture));
+				writer.WriteElementString(Xml.IsAttachToRight, this.isAttachToRight.ToString(System.Globalization.CultureInfo.InvariantCulture));
 
-				writer.WriteElementString("RouteType", this.routeType.ToString());
+				writer.WriteElementString(Xml.RouteType, this.routeType.ToString());
 
 				if (this.routeRelativeAX1 != 0.2)
 				{
-					writer.WriteElementString("RouteRelativeAX1", this.routeRelativeAX1.ToString(System.Globalization.CultureInfo.InvariantCulture));
+					writer.WriteElementString(Xml.RouteRelativeAX1, this.routeRelativeAX1.ToString(System.Globalization.CultureInfo.InvariantCulture));
 				}
 
 				if (this.routeRelativeAX2 != 0.8)
 				{
-					writer.WriteElementString("RouteRelativeAX2", this.routeRelativeAX2.ToString(System.Globalization.CultureInfo.InvariantCulture));
+					writer.WriteElementString(Xml.RouteRelativeAX2, this.routeRelativeAX2.ToString(System.Globalization.CultureInfo.InvariantCulture));
 				}
 
 				if (this.routeAbsoluteAY != 0.0)
 				{
-					writer.WriteElementString("RouteAbsoluteAY", this.routeAbsoluteAY.ToString(System.Globalization.CultureInfo.InvariantCulture));
+					writer.WriteElementString(Xml.RouteAbsoluteAY, this.routeAbsoluteAY.ToString(System.Globalization.CultureInfo.InvariantCulture));
 				}
 
 				if (this.routeRelativeBX != 0.0)
 				{
-					writer.WriteElementString("RouteRelativeBX", this.routeRelativeBX.ToString(System.Globalization.CultureInfo.InvariantCulture));
+					writer.WriteElementString(Xml.RouteRelativeBX, this.routeRelativeBX.ToString(System.Globalization.CultureInfo.InvariantCulture));
 				}
 
 				if (this.routeRelativeBY != 0.0)
 				{
-					writer.WriteElementString("RouteRelativeBY", this.routeRelativeBY.ToString(System.Globalization.CultureInfo.InvariantCulture));
+					writer.WriteElementString(Xml.RouteRelativeBY, this.routeRelativeBY.ToString(System.Globalization.CultureInfo.InvariantCulture));
 				}
 
 				if (this.routeRelativeCX != 0.5)
 				{
-					writer.WriteElementString("RouteRelativeCX", this.routeRelativeCX.ToString(System.Globalization.CultureInfo.InvariantCulture));
+					writer.WriteElementString(Xml.RouteRelativeCX, this.routeRelativeCX.ToString(System.Globalization.CultureInfo.InvariantCulture));
 				}
 
 				if (this.routeAbsoluteDX != 0.5)
 				{
-					writer.WriteElementString("RouteAbsoluteDX", this.routeAbsoluteDX.ToString(System.Globalization.CultureInfo.InvariantCulture));
+					writer.WriteElementString(Xml.RouteAbsoluteDX, this.routeAbsoluteDX.ToString(System.Globalization.CultureInfo.InvariantCulture));
 				}
 
 				if (this.asComment)
 				{
-					writer.WriteElementString("CommentPosition", this.commentPosition.ToString());
-					writer.WriteElementString("CommentBounds", this.commentBounds.ToString());
-					writer.WriteElementString("CommentText", this.commentText);
-					writer.WriteElementString("CommentAttach", this.commentAttach.ToString(System.Globalization.CultureInfo.InvariantCulture));
-					writer.WriteElementString("CommentColor", this.commentMainColor.ToString());
+					writer.WriteElementString(Xml.CommentPosition, this.commentPosition.ToString());
+					writer.WriteElementString(Xml.CommentBounds, this.commentBounds.ToString());
+					writer.WriteElementString(Xml.CommentText, this.commentText);
+					writer.WriteElementString(Xml.CommentAttach, this.commentAttach.ToString(System.Globalization.CultureInfo.InvariantCulture));
+					writer.WriteElementString(Xml.CommentColor, this.commentMainColor.ToString());
 				}
 			}
 
@@ -616,7 +616,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					string name = reader.LocalName;
 					string element = reader.ReadElementString();
 
-					if (name == "DruidCaptionId")
+					if (name == Xml.DruidCaptionId)
 					{
 						Druid druid = Druid.Parse(element);
 						if (druid.IsValid)
@@ -624,7 +624,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 							this.captionId = druid;
 						}
 					}
-					else if (name == "DruidDestination")
+					else if (name == Xml.DruidDestination)
 					{
 						Druid druid = Druid.Parse(element);
 						if (druid.IsValid)
@@ -632,61 +632,61 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 							this.destination = druid;
 						}
 					}
-					else if (name == "IsAttachToRight")
+					else if (name == Xml.IsAttachToRight)
 					{
 						this.isExplored = true;
 						this.isAttachToRight = bool.Parse(element);
 					}
-					else if (name == "RouteType")
+					else if (name == Xml.RouteType)
 					{
 						this.routeType = (RouteType) System.Enum.Parse(typeof(RouteType), element);
 					}
-					else if (name == "RouteRelativeAX1")
+					else if (name == Xml.RouteRelativeAX1)
 					{
 						this.routeRelativeAX1 = double.Parse(element);
 					}
-					else if (name == "RouteRelativeAX2")
+					else if (name == Xml.RouteRelativeAX2)
 					{
 						this.routeRelativeAX2 = double.Parse(element);
 					}
-					else if (name == "RouteAbsoluteAY")
+					else if (name == Xml.RouteAbsoluteAY)
 					{
 						this.routeAbsoluteAY = double.Parse(element);
 					}
-					else if (name == "RouteRelativeBX")
+					else if (name == Xml.RouteRelativeBX)
 					{
 						this.routeRelativeBX = double.Parse(element);
 					}
-					else if (name == "RouteRelativeBY")
+					else if (name == Xml.RouteRelativeBY)
 					{
 						this.routeRelativeBY = double.Parse(element);
 					}
-					else if (name == "RouteRelativeCX")
+					else if (name == Xml.RouteRelativeCX)
 					{
 						this.routeRelativeCX = double.Parse(element);
 					}
-					else if (name == "RouteAbsoluteDX")
+					else if (name == Xml.RouteAbsoluteDX)
 					{
 						this.routeAbsoluteDX = double.Parse(element);
 					}
-					else if (name == "CommentPosition")
+					else if (name == Xml.CommentPosition)
 					{
 						this.asComment = true;
 						this.commentPosition = Point.Parse(element);
 					}
-					else if (name == "CommentBounds")
+					else if (name == Xml.CommentBounds)
 					{
 						this.commentBounds = Rectangle.Parse(element);
 					}
-					else if (name == "CommentText")
+					else if (name == Xml.CommentText)
 					{
 						this.commentText = element;
 					}
-					else if (name == "CommentAttach")
+					else if (name == Xml.CommentAttach)
 					{
 						this.commentAttach = double.Parse(element);
 					}
-					else if (name == "CommentColor")
+					else if (name == Xml.CommentColor)
 					{
 						this.commentMainColor = (AbstractObject.MainColor) System.Enum.Parse(typeof(AbstractObject.MainColor), element);
 					}
