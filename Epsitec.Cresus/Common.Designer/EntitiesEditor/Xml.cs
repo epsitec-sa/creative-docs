@@ -6,38 +6,36 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 {
 	internal static class Xml
 	{
-		public const string Boxes = "Boxes";
-		public const string Box = "Box";
-		public const string Field = "Field";
-		public const string Comment = "Comment";
+		public const string Boxes             = "Boxes";
+		public const string Box               = "Box";
+		public const string Field             = "Field";
+		public const string Comment           = "Comm";
 		
-		public const string Bounds = "Bounds";
-		public const string Color = "Color";
-		public const string ColumnsSeparatorRelative = "ColumnsSeparatorRelative";
-		public const string CommentAttach = "CommentAttach";
-		public const string CommentBounds = "CommentBounds";
-		public const string CommentColor = "CommentColor";
-		public const string CommentPosition = "CommentPosition";
-		public const string CommentText = "CommentText";
-		public const string Druid = "Druid";
-		public const string DruidCaptionId = "DruidCaptionId";
-		public const string DruidDestination = "DruidDestination";
+		public const string Bounds            = "Bds";
+		public const string Color             = "Clr";
+		public const string ColumnsSeparatorRelative = "CSepRel";
+		public const string CommentAttach     = "CAtt";
+		public const string CommentBounds     = "CBds";
+		public const string CommentColor      = "CClr";
+		public const string CommentPosition   = "CPos";
+		public const string CommentText       = "CTx";
+		public const string Druid             = "ID";
+		public const string DruidCaptionId    = "Cap";
+		public const string DruidDestination  = "Dst";
 		
-		public const string IsAttachedToRight = "IsAttachedToRight";
-		public const string IsExtended = "IsExtended";
+		public const string IsAttachedToRight = "AttR";
+		public const string IsExtended        = "Ext";
 
-		public const string RouteType = "RouteType";
-
-		public const string RouteAbsoluteAY = "RouteAbsoluteAY";
-		public const string RouteAbsoluteDX = "RouteAbsoluteDX";
+		public const string RouteType		  = "RtTyp";
+		public const string RouteAbsoluteAY   = "AbsAY";
+		public const string RouteAbsoluteDX   = "AbsDX";
+		public const string RouteRelativeAX1  = "RelAX1";
+		public const string RouteRelativeAX2  = "RelAX2";
+		public const string RouteRelativeBX   = "RelBX";
+		public const string RouteRelativeBY   = "RelBY";
+		public const string RouteRelativeCX   = "RelCX";
 		
-		public const string RouteRelativeAX1 = "RouteRelativeAX1";
-		public const string RouteRelativeAX2 = "RouteRelativeAX2";
-		public const string RouteRelativeBX = "RouteRelativeBX";
-		public const string RouteRelativeBY = "RouteRelativeBY";
-		public const string RouteRelativeCX = "RouteRelativeCX";
-		
-		public const string Text = "Text";
+		public const string Text              = "Tx";
 
 		public const string XmlHeader = @"<?xml version=""1.0"" encoding=""utf-16""?>";
 	}
