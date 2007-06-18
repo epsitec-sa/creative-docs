@@ -1081,13 +1081,13 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			Druid druid = (Druid) dataField.GetValue(Support.Res.Fields.Field.TypeId);
 
 			Module module = this.editor.Module;
-			druid = module.MainWindow.DlgResourceSelector(module, ResourceAccess.Type.Types, TypeCode.Invalid, druid, null, null);
+			druid = module.MainWindow.DlgResourceSelector(module, ResourceAccess.Type.Types2, TypeCode.Invalid, druid, null, null);
 			if (druid.IsEmpty)
 			{
 				return;
 			}
 
-			if (this.fields[rank].Relation != FieldRelation.None)
+			if (this.fields[rank].Relation != FieldRelation.None && this.fields[rank].IsExplored)
 			{
 				ObjectBox dst = this.fields[rank].DstBox;
 				this.fields[rank].IsExplored = false;

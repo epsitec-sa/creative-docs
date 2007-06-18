@@ -1578,6 +1578,20 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
+		public Module SearchModule(string name)
+		{
+			//	Cherche un module d'après son nom.
+			foreach (ModuleInfo info in this.moduleInfoList)
+			{
+				if (name == info.Module.ModuleInfo.Name)
+				{
+					return info.Module;
+				}
+			}
+
+			return null;
+		}
+
 		public Module SearchModule(Druid druid)
 		{
 			//	Cherche à quel module appartient un druid.
@@ -1795,16 +1809,6 @@ namespace Epsitec.Common.Designer
 			this.dlgResourceSelector.AccessOpen(baseModule, type, typeCode, ressource, exclude, includePrefix);
 			this.dlgResourceSelector.Show();  // choix dans le dialogue...
 			return this.dlgResourceSelector.AccessClose();
-		}
-
-		public List<Druid> DlgResourceSelector(Module baseModule, ResourceAccess.Type type, TypeCode typeCode, List<Druid> ressources, List<Druid> exclude, string includePrefix)
-		{
-			//	Ouvre le dialogue pour choisir des ressources (sous forme d'une liste
-			//	de Druids) d'un type à choix.
-			//	Le type doit être connu.
-			this.dlgResourceSelector.AccessOpenList(baseModule, type, typeCode, ressources, exclude, includePrefix);
-			this.dlgResourceSelector.Show();  // choix dans le dialogue...
-			return this.dlgResourceSelector.AccessCloseList();
 		}
 
 		public string DlgResourceStructuredTypeField(StructuredType st, string field)
