@@ -139,7 +139,6 @@ namespace Epsitec.Common.Designer.Dialogs
 
 			this.UpdateTitle();
 			this.UpdateArray();
-			this.SelectArray();
 			this.UpdateButtons();
 			this.UpdateRadios();
 
@@ -207,6 +206,9 @@ namespace Epsitec.Common.Designer.Dialogs
 			{
 				this.access = this.module.GetAccess(this.resourceType);
 			}
+
+			this.collectionView = new CollectionView(this.access.Accessor.Collection);
+			this.collectionView.SortDescriptions.Add(new SortDescription("Name"));
 		}
 
 		public Druid AccessClose()
@@ -254,28 +256,22 @@ namespace Epsitec.Common.Designer.Dialogs
 			//	Met à jour tout le contenu du tableau.
 			this.listResources.Items.Clear();
 
-			foreach (CultureMap cultureMap in this.access.Accessor.Collection)
+			int sel = -1;
+			for (int i=0; i<this.collectionView.Items.Count; i++)
 			{
-				this.listResources.Items.Add(cultureMap.Name);
-			}
-		}
+				CultureMap cultureMap = this.collectionView.Items[i] as CultureMap;
 
-		protected void SelectArray()
-		{
-			//	Sélectionne la bonne ressource dans le tableau.
-			if (this.resource.IsValid)
-			{
-				CultureMap cultureMap = this.access.Accessor.Collection[this.resource];
-				if (cultureMap != null)
+				this.listResources.Items.Add(cultureMap.Name);
+
+				if (cultureMap.Id == this.resource)
 				{
-					this.ignoreChanged = true;
-					this.listResources.SelectedItem = cultureMap.Name;
-					this.ignoreChanged = false;
-					return;
+					sel = i;
 				}
 			}
 
-			this.listResources.SelectedIndex = -1;
+			this.ignoreChanged = true;
+			this.listResources.SelectedIndex = sel;
+			this.ignoreChanged = false;
 		}
 
 		protected void UpdateButtons()
@@ -300,20 +296,18 @@ namespace Epsitec.Common.Designer.Dialogs
 			}
 		}
 
-		protected ResourceBundle CurrentBundle
+		protected Druid SelectedResource
 		{
-			//	Retourne le bundle de la culture active, correspondant au choix fait dans
-			//	l'onglet 'Cultures'.
 			get
 			{
-				if (this.resourceType == ResourceAccess.Type.Panels)
+				if (this.listResources.SelectedIndex == -1)
 				{
-					return null;
+					return Druid.Empty;
 				}
 				else
 				{
-					string culture = Misc.CultureBaseName(this.mainWindow.CurrentModule.ResourceManager.ActiveCulture);
-					return this.access.GetCultureBundle(culture);
+					CultureMap cultureMap = this.collectionView.Items[this.listResources.SelectedIndex] as CultureMap;
+					return cultureMap.Id;
 				}
 			}
 		}
@@ -340,7 +334,6 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.AccessChange(module);
 
 				this.UpdateArray();
-				this.SelectArray();
 				return;
 			}
 		}
@@ -362,7 +355,6 @@ namespace Epsitec.Common.Designer.Dialogs
 			this.UpdateAccess();
 			this.UpdateTitle();
 			this.UpdateArray();
-			this.SelectArray();
 			this.UpdateButtons();
 			this.UpdateRadios();
 		}
@@ -381,22 +373,11 @@ namespace Epsitec.Common.Designer.Dialogs
 		private void HandleListResourcesDoubleClicked(object sender, MessageEventArgs e)
 		{
 			//	La liste des ressources a été double-cliquée.
-			this.UpdateButtons();
-
 			this.parentWindow.MakeActive();
 			this.window.Hide();
 			this.OnClosed();
 
-			string name = this.listResources.SelectedItem;
-			if (string.IsNullOrEmpty(name))
-			{
-				this.resource = Druid.Empty;
-			}
-			else
-			{
-				CultureMap cultureMap = this.access.Accessor.Collection[name];
-				this.resource = cultureMap.Id;
-			}
+			this.resource = this.SelectedResource;
 		}
 
 		private void HandleWindowCloseClicked(object sender)
@@ -421,16 +402,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			this.window.Hide();
 			this.OnClosed();
 
-			string name = this.listResources.SelectedItem;
-			if (string.IsNullOrEmpty(name))
-			{
-				this.resource = Druid.Empty;
-			}
-			else
-			{
-				CultureMap cultureMap = this.access.Accessor.Collection[name];
-				this.resource = cultureMap.Id;
-			}
+			this.resource = this.SelectedResource;
 		}
 
 
@@ -442,6 +414,7 @@ namespace Epsitec.Common.Designer.Dialogs
 		protected List<Druid>					exclude;
 		protected string						includePrefix;
 		protected Druid							resource;
+		protected CollectionView				collectionView;
 
 		protected StaticText					title;
 		protected RadioButton					radioTypes;
