@@ -1201,7 +1201,9 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		public void ReadXml(XmlReader reader)
 		{
-			while (reader.Read())
+			reader.Read();
+			
+			while (true)
 			{
 				if (reader.NodeType == XmlNodeType.Element)
 				{
@@ -1218,12 +1220,21 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					}
 					else if (name == Xml.Color)
 					{
-						this.boxColor = (MainColor) System.Enum.Parse(typeof(MainColor), element);
+						this.boxColor = (MainColor) System.Enum.Parse (typeof (MainColor), element);
+					}
+					else
+					{
+						throw new System.NotSupportedException(string.Format("Unexpected XML node {0} found in comment", name));
 					}
 				}
 				else if (reader.NodeType == XmlNodeType.EndElement)
 				{
+					System.Diagnostics.Debug.Assert(reader.Name == Xml.Comment);
 					break;
+				}
+				else
+				{
+					reader.Read();
 				}
 			}
 		}

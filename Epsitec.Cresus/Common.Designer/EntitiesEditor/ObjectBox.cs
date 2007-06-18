@@ -2008,7 +2008,9 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		{
 			this.fields.Clear();
 
-			while (reader.Read())
+			reader.Read();
+
+			while (true)
 			{
 				if (reader.NodeType == XmlNodeType.Element)
 				{
@@ -2018,6 +2020,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					{
 						Field field = new Field(this.editor);
 						field.ReadXml(reader);
+						reader.Read();
 						this.fields.Add(field);
 					}
 					else if (name == Xml.Comment)
@@ -2027,6 +2030,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 						this.comment.AttachObject = this;
 						this.comment.UpdateHeight();  // adapte la hauteur en fonction du contenu
 						this.editor.AddComment(this.comment);
+						reader.Read();
 					}
 					else
 					{
@@ -2056,11 +2060,20 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 						{
 							this.boxColor = (MainColor) System.Enum.Parse(typeof(MainColor), element);
 						}
+						else
+						{
+							throw new System.NotSupportedException(string.Format("Unexpected XML node {0} found in box", name));
+						}
 					}
 				}
 				else if (reader.NodeType == XmlNodeType.EndElement)
 				{
+					System.Diagnostics.Debug.Assert(reader.Name == Xml.Box);
 					break;
+				}
+				else
+				{
+					reader.Read();
 				}
 			}
 		}

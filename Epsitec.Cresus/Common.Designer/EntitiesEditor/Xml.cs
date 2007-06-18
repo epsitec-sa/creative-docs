@@ -38,5 +38,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		public const string RouteRelativeCX = "RouteRelativeCX";
 		
 		public const string Text = "Text";
+
+		public const string XmlHeader = @"<?xml version=""1.0"" encoding=""utf-16""?>";
 	}
 }
