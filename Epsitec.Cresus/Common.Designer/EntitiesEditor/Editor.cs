@@ -1300,6 +1300,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				box.AdjustAfterRead();
 			}
 
+			this.CloseBox(null);  // voir ObjectBox.AdjustAfterRead, commentaire (*)
 			this.UpdateAfterAddOrRemoveConnection(null);
 			this.UpdateAfterOpenOrCloseBox();
 		}

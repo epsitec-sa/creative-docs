@@ -2107,8 +2107,11 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 						if (rField.IsExplored)  // champ avec connection explorée ?
 						{
-							field.IsExplored = true;  // ObjectConnection sera créé par Editor.CreateConnections
-							field.DstBox = this.AdjustAfterReadSearchBox(rField.Destination);
+							if (field.Destination == rField.Destination)  // (*)
+							{
+								field.IsExplored = true;  // ObjectConnection sera créé par Editor.CreateConnections
+								field.DstBox = this.AdjustAfterReadSearchBox(rField.Destination);
+							}
 						}
 					}
 
@@ -2120,6 +2123,10 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			this.UpdateFields();
 			this.UpdateSources();
 		}
+
+		// (*)	Si ce test n'est pas vrai, il s'agit d'un champ relation dont on a modifié l'entité
+		//		destination entre la sérialisation et la présente désérialisation. Le Editor.CloseBox()
+		//		fermera les entités que plus personne ne pointe (field.IsExplored = false dans ce cas).
 
 		protected Field AdjustAfterReadSearchField(Druid druid)
 		{
