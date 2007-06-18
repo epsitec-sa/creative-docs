@@ -126,6 +126,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.Drawing.Images", "Co
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "App.Designer", "App.Designer\App.Designer.csproj", "{2FAAC41D-B020-4BD3-BE37-48E8A7D850A9}"
 EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "X.Setup.Designer", "X.Setup.Designer\X.Setup.Designer.vdproj", "{8878C80C-5D62-4727-8B0F-337DE5676A34}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -684,6 +686,12 @@ Global
 		{2FAAC41D-B020-4BD3-BE37-48E8A7D850A9}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{2FAAC41D-B020-4BD3-BE37-48E8A7D850A9}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{2FAAC41D-B020-4BD3-BE37-48E8A7D850A9}.Release|Win32.ActiveCfg = Release|Any CPU
+		{8878C80C-5D62-4727-8B0F-337DE5676A34}.Debug|Any CPU.ActiveCfg = Debug
+		{8878C80C-5D62-4727-8B0F-337DE5676A34}.Debug|Mixed Platforms.ActiveCfg = Debug
+		{8878C80C-5D62-4727-8B0F-337DE5676A34}.Debug|Win32.ActiveCfg = Debug
+		{8878C80C-5D62-4727-8B0F-337DE5676A34}.Release|Any CPU.ActiveCfg = Release
+		{8878C80C-5D62-4727-8B0F-337DE5676A34}.Release|Mixed Platforms.ActiveCfg = Release
+		{8878C80C-5D62-4727-8B0F-337DE5676A34}.Release|Win32.ActiveCfg = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

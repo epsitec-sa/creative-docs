@@ -15,17 +15,28 @@ namespace App.Designer
 			Epsitec.Common.Widgets.Widget.Initialize ();
 			Epsitec.Common.Document.Engine.Initialize ();
 
-			List<string> paths = new List<string> (new string[]
+			string execPath = Epsitec.Common.Support.Globals.Directories.Executable;
+			List<string> paths;
+
+			if (execPath.EndsWith (@"\bin\Debug"))
 			{
-				@"S:\Epsitec.Cresus\Demo\Resources",
-				@"S:\Epsitec.Cresus\Common.Dialogs\Resources",
-				@"S:\Epsitec.Cresus\Common.Designer\Resources",
-				@"S:\Epsitec.Cresus\Common.Document\Resources",
-				@"S:\Epsitec.Cresus\Common.Support\Resources",
-				@"S:\Epsitec.Cresus\Common.Types\Resources",
-				@"S:\Epsitec.Cresus\Common.Widgets\Resources",
-				@"S:\Epsitec.Cresus\App.DocumentEditor\Resources"
-			});
+				paths = new List<string> (new string[]
+				{
+					@"S:\Epsitec.Cresus\Demo\Resources",
+					@"S:\Epsitec.Cresus\Common.Dialogs\Resources",
+					@"S:\Epsitec.Cresus\Common.Designer\Resources",
+					@"S:\Epsitec.Cresus\Common.Document\Resources",
+					@"S:\Epsitec.Cresus\Common.Support\Resources",
+					@"S:\Epsitec.Cresus\Common.Types\Resources",
+					@"S:\Epsitec.Cresus\Common.Widgets\Resources",
+					@"S:\Epsitec.Cresus\App.DocumentEditor\Resources"
+				});
+			}
+			else
+			{
+				paths = new List<string> ();
+				paths.Add (System.IO.Path.Combine (execPath, "Resources"));
+			}
 
 			List<string> addPaths = new List<string> ();
 			bool noDefaultPaths = false;
