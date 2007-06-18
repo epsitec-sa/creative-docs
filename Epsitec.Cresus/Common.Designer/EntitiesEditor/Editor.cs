@@ -1248,7 +1248,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			System.Text.StringBuilder buffer = new System.Text.StringBuilder();
 			System.IO.StringWriter stringWriter = new System.IO.StringWriter(buffer);
 			XmlTextWriter writer = new XmlTextWriter(stringWriter);
-			writer.Formatting = Formatting.Indented;
+			writer.Formatting = Formatting.None;
 
 			this.WriteXml(writer);
 
