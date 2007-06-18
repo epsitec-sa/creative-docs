@@ -101,10 +101,12 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			}
 
 			StructuredTypeClass typeClass = (StructuredTypeClass) data.GetValue (Res.Fields.ResourceStructuredType.Class);
-			Druid baseType  = StructuredTypeResourceAccessor.ToDruid (data.GetValue (Res.Fields.ResourceStructuredType.BaseType));
+			Druid               baseType  = StructuredTypeResourceAccessor.ToDruid (data.GetValue (Res.Fields.ResourceStructuredType.BaseType));
+			string              layouts   = data.GetValue (Res.Fields.ResourceStructuredType.SerializedDesignerLayouts) as string;
 
 			StructuredType type = new StructuredType (typeClass, baseType);
 			type.DefineCaption (caption);
+			type.SerializedDesignerLayouts = layouts;
 
 			IList<StructuredData> fieldsData = data.GetValue (Res.Fields.ResourceStructuredType.Fields) as IList<StructuredData>;
 
@@ -158,6 +160,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 
 			data.SetValue (Res.Fields.ResourceStructuredType.BaseType, type == null ? Druid.Empty : type.BaseTypeId);
 			data.SetValue (Res.Fields.ResourceStructuredType.Class, type == null ? StructuredTypeClass.None : type.Class);
+			data.SetValue (Res.Fields.ResourceStructuredType.SerializedDesignerLayouts, type == null ? "" : type.SerializedDesignerLayouts);
 			
 			fields.CollectionChanged += new Listener (this, item).HandleCollectionChanged;
 		}

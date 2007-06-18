@@ -532,7 +532,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			//	Recrée tous les commentaires liés aux connections.
 			foreach (ObjectConnection connection in this.connections)
 			{
-				if (connection.Field.AsComment && connection.Field.IsExplored)
+				if (connection.Field.HasComment && connection.Field.IsExplored)
 				{
 					connection.Comment = new ObjectComment(this);
 					connection.Comment.AttachObject = connection;
@@ -552,7 +552,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			//	Mémorise l'état de tous les commentaires liés à des connections.
 			foreach (ObjectConnection connection in this.connections)
 			{
-				connection.Field.AsComment = false;
+				connection.Field.HasComment = false;
 			}
 
 			foreach (ObjectComment comment in this.comments)
@@ -561,7 +561,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				{
 					ObjectConnection connection = comment.AttachObject as ObjectConnection;
 
-					connection.Field.AsComment = true;
+					connection.Field.HasComment = true;
 					connection.Field.CommentText = comment.Text;
 					connection.Field.CommentMainColor = comment.BackgroundMainColor;
 

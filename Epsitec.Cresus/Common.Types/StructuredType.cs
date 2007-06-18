@@ -143,6 +143,22 @@ namespace Epsitec.Common.Types
 		}
 
 		/// <summary>
+		/// Gets or sets the serialized designer layouts.
+		/// </summary>
+		/// <value>The serialized designer layouts.</value>
+		public string SerializedDesignerLayouts
+		{
+			get
+			{
+				return (string) this.GetValue (StructuredType.SerializedDesignerLayoutsProperty);
+			}
+			set
+			{
+				this.SetValue (StructuredType.SerializedDesignerLayoutsProperty, value);
+			}
+		}
+
+		/// <summary>
 		/// Gets a comparer which can be used to sort <see cref="StructuredTypeField"/>
 		/// entries by their rank.
 		/// </summary>
@@ -733,6 +749,7 @@ namespace Epsitec.Common.Types
 		public static readonly DependencyProperty FieldsProperty = DependencyProperty.RegisterReadOnly ("Fields", typeof (Collections.StructuredTypeFieldCollection), typeof (StructuredType), new DependencyPropertyMetadata (StructuredType.GetFieldsValue).MakeReadOnlySerializable ());
 		public static readonly DependencyProperty ClassProperty = DependencyProperty.RegisterReadOnly ("Class", typeof (StructuredTypeClass), typeof (StructuredType), new DependencyPropertyMetadata (StructuredTypeClass.None).MakeReadOnlySerializable ());
 		public static readonly DependencyProperty BaseTypeIdProperty = DependencyProperty.RegisterReadOnly ("BaseTypeId", typeof (Druid), typeof (StructuredType), new DependencyPropertyMetadata (Druid.Empty).MakeReadOnlySerializable ());
+		public static readonly DependencyProperty SerializedDesignerLayoutsProperty = DependencyProperty.RegisterReadOnly ("SerializedDesignerLayouts", typeof (string), typeof (StructuredType));
 
 		private Collections.HostedStructuredTypeFieldDictionary fields;
 		private FieldInheritance fieldInheritance;

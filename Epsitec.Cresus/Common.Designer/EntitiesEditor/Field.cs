@@ -282,16 +282,16 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		}
 
 
-		public bool AsComment
+		public bool HasComment
 		{
 			//	Est-ce qu'un commentaire est attaché ?
 			get
 			{
-				return this.asComment;
+				return this.hasComment;
 			}
 			set
 			{
-				this.asComment = value;
+				this.hasComment = value;
 			}
 		}
 
@@ -594,7 +594,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					writer.WriteElementString(Xml.RouteAbsoluteDX, this.routeAbsoluteDX.ToString(System.Globalization.CultureInfo.InvariantCulture));
 				}
 
-				if (this.asComment)
+				if (this.hasComment)
 				{
 					writer.WriteElementString(Xml.CommentPosition, this.commentPosition.ToString());
 					writer.WriteElementString(Xml.CommentBounds, this.commentBounds.ToString());
@@ -672,7 +672,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					}
 					else if (name == Xml.CommentPosition)
 					{
-						this.asComment = true;
+						this.hasComment = true;
 						this.commentPosition = Point.Parse(element);
 					}
 					else if (name == Xml.CommentBounds)
@@ -719,7 +719,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			dst.routeRelativeBY = this.routeRelativeBY;
 			dst.routeRelativeCX = this.routeRelativeCX;
 			dst.routeAbsoluteDX = this.routeAbsoluteDX;
-			dst.asComment = this.asComment;
+			dst.hasComment = this.hasComment;
 			dst.commentPosition = this.commentPosition;
 			dst.commentBounds = this.commentBounds;
 			dst.commentText = this.commentText;
@@ -750,7 +750,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		protected double routeRelativeBY;
 		protected double routeRelativeCX;
 		protected double routeAbsoluteDX;
-		protected bool asComment;
+		protected bool hasComment;
 		protected Point commentPosition;
 		protected Rectangle commentBounds;
 		protected string commentText;
