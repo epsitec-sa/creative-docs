@@ -23,7 +23,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		public const string DruidCaptionId = "DruidCaptionId";
 		public const string DruidDestination = "DruidDestination";
 		
-		public const string IsAttachToRight = "IsAttachToRight";
+		public const string IsAttachedToRight = "IsAttachedToRight";
 		public const string IsExtended = "IsExtended";
 
 		public const string RouteType = "RouteType";

@@ -555,7 +555,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 			if (this.isExplored)
 			{
-				writer.WriteElementString(Xml.IsAttachToRight, this.isAttachToRight.ToString(System.Globalization.CultureInfo.InvariantCulture));
+				writer.WriteElementString(Xml.IsAttachedToRight, this.isAttachToRight.ToString(System.Globalization.CultureInfo.InvariantCulture));
 
 				writer.WriteElementString(Xml.RouteType, this.routeType.ToString());
 
@@ -632,7 +632,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 							this.destination = druid;
 						}
 					}
-					else if (name == Xml.IsAttachToRight)
+					else if (name == Xml.IsAttachedToRight)
 					{
 						this.isExplored = true;
 						this.isAttachToRight = bool.Parse(element);
