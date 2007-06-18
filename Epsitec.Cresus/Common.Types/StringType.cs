@@ -191,7 +191,7 @@ namespace Epsitec.Common.Types
 		}
 
 		public static readonly DependencyProperty MinimumLengthProperty = DependencyProperty.RegisterAttached ("MinLength", typeof (int), typeof (StringType), new DependencyPropertyMetadata (0));
-		public static readonly DependencyProperty MaximumLengthProperty = DependencyProperty.RegisterAttached ("MaxLength", typeof (int), typeof (StringType), new DependencyPropertyMetadata (1000));
+		public static readonly DependencyProperty MaximumLengthProperty = DependencyProperty.RegisterAttached ("MaxLength", typeof (int), typeof (StringType), new DependencyPropertyMetadata (1000000));
 		
 		public static readonly DependencyProperty UseFixedLengthStorageProperty  = DependencyProperty.RegisterAttached ("UseFixedLengthStorage",  typeof (bool), typeof (StringType), new DependencyPropertyMetadata (false));
 		public static readonly DependencyProperty UseMultilingualStorageProperty = DependencyProperty.RegisterAttached ("UseMultilingualStorage", typeof (bool), typeof (StringType), new DependencyPropertyMetadata (false));

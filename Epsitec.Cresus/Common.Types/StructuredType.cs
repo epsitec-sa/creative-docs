@@ -749,7 +749,7 @@ namespace Epsitec.Common.Types
 		public static readonly DependencyProperty FieldsProperty = DependencyProperty.RegisterReadOnly ("Fields", typeof (Collections.StructuredTypeFieldCollection), typeof (StructuredType), new DependencyPropertyMetadata (StructuredType.GetFieldsValue).MakeReadOnlySerializable ());
 		public static readonly DependencyProperty ClassProperty = DependencyProperty.RegisterReadOnly ("Class", typeof (StructuredTypeClass), typeof (StructuredType), new DependencyPropertyMetadata (StructuredTypeClass.None).MakeReadOnlySerializable ());
 		public static readonly DependencyProperty BaseTypeIdProperty = DependencyProperty.RegisterReadOnly ("BaseTypeId", typeof (Druid), typeof (StructuredType), new DependencyPropertyMetadata (Druid.Empty).MakeReadOnlySerializable ());
-		public static readonly DependencyProperty SerializedDesignerLayoutsProperty = DependencyProperty.RegisterReadOnly ("SerializedDesignerLayouts", typeof (string), typeof (StructuredType));
+		public static readonly DependencyProperty SerializedDesignerLayoutsProperty = DependencyProperty.Register ("SerializedDesignerLayouts", typeof (string), typeof (StructuredType));
 
 		private Collections.HostedStructuredTypeFieldDictionary fields;
 		private FieldInheritance fieldInheritance;

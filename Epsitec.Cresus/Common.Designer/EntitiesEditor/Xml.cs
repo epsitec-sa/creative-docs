@@ -6,6 +6,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 {
 	internal static class Xml
 	{
+		public const string Layout			  = "Layout";
 		public const string Boxes             = "Boxes";
 		public const string Box               = "Box";
 		public const string Field             = "Field";
