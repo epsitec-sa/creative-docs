@@ -164,7 +164,9 @@ namespace Epsitec.Common.Designer.Viewers
 				}
 			}
 
+			this.ignoreChange = true;
 			this.array.SelectedRow = this.access.AccessIndex;
+			this.ignoreChange = false;
 		}
 
 		protected override void SelectEdit(bool secondary)
@@ -484,7 +486,7 @@ namespace Epsitec.Common.Designer.Viewers
 		private void HandleArraySelectedRowChanged(object sender)
 		{
 			//	La ligne sélectionnée a changé.
-			if (!this.mainWindow.Terminate())
+			if (this.ignoreChange || !this.mainWindow.Terminate())
 			{
 				return;
 			}
