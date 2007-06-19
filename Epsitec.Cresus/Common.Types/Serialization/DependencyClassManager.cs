@@ -30,15 +30,7 @@ namespace Epsitec.Common.Types.Serialization
 		{
 			get
 			{
-				if (DependencyClassManager.current == null)
-				{
-					System.Diagnostics.Debug.Assert (DependencyClassManager.isBooting == false);
-					
-					DependencyClassManager.isBooting = true;
-					DependencyClassManager.current   = new DependencyClassManager ();
-					DependencyClassManager.isBooting = false;
-				}
-				
+				DependencyClassManager.Setup ();
 				return DependencyClassManager.current;
 			}
 		}
@@ -53,6 +45,24 @@ namespace Epsitec.Common.Types.Serialization
 
 		public static void Setup()
 		{
+			if (DependencyClassManager.current == null)
+			{
+				System.Diagnostics.Debug.Assert (DependencyClassManager.isBooting == false);
+
+				DependencyClassManager.isBooting = true;
+				DependencyClassManager.current   = new DependencyClassManager ();
+				DependencyClassManager.isBooting = false;
+
+				if (DependencyClassManager.bootingActions != null)
+				{
+					while (DependencyClassManager.bootingActions.Count > 0)
+					{
+						DependencyClassManager.bootingActions.Dequeue () ();
+					}
+
+					DependencyClassManager.bootingActions = null;
+				}
+			}
 		}
 
 
@@ -102,7 +112,16 @@ namespace Epsitec.Common.Types.Serialization
 		/// <param name="callback">The initialization code callback.</param>
 		public static void ExecuteInitializationCode(Support.SimpleCallback callback)
 		{
-			if (DependencyObjectType.IsExecutingStaticConstructor)
+			if (DependencyClassManager.isBooting)
+			{
+				if (DependencyClassManager.bootingActions == null)
+				{
+					DependencyClassManager.bootingActions = new Queue<Support.SimpleCallback> ();
+				}
+
+				DependencyClassManager.bootingActions.Enqueue (callback);
+			}
+			else if (DependencyObjectType.IsExecutingStaticConstructor)
 			{
 				if (DependencyClassManager.pendingActions == null)
 				{
@@ -190,6 +209,7 @@ namespace Epsitec.Common.Types.Serialization
 
 		[System.ThreadStatic]
 		private static Queue<Support.SimpleCallback> pendingActions;
+		private static Queue<Support.SimpleCallback> bootingActions;
 
 		[System.ThreadStatic]
 		private static int analyseCount;
