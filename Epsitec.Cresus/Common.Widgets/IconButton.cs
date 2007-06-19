@@ -210,7 +210,25 @@ namespace Epsitec.Common.Widgets
 
 			if (command != null)
 			{
-				this.ButtonStyle = command.Statefull ? ButtonStyle.ActivableIcon : ButtonStyle.ToolItem;
+				if (command.Statefull)
+				{
+					this.ButtonStyle = ButtonStyle.ActivableIcon;
+				}
+				else
+				{
+					//	TODO: définir clairement quelles valeurs DefaultParameter peut prendre
+
+					switch (command.DefaultParameter)
+					{
+						case "GlyphButton":
+							this.ButtonStyle = ButtonStyle.Icon;
+							break;
+
+						default:
+							this.ButtonStyle = ButtonStyle.ToolItem;
+							break;
+					}
+				}
 			}
 		}
 
