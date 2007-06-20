@@ -107,7 +107,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				}
 				else
 				{
-					return this.points[0].X < this.points[this.points.Count-1].X;
+					return this.points[0].X < this.points[1].X;
 				}
 			}
 		}

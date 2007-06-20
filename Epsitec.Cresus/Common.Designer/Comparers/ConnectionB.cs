@@ -7,7 +7,7 @@ namespace Epsitec.Common.Designer.Comparers
 {
 	/// <summary>
 	///	Compare deux connections Bt ou Bb, afin de répartir astucieusement le point d'arrivé en haut
-	/// ou en bas d'une boîte, pour éviter que deux connections arrivent sur le même point.
+	/// ou en bas d'une boîte, pour éviter que deux connections n'arrivent sur le même point.
 	/// Les croisements sont minimisés.
 	/// L'ordre obtenu correspond aux points d'arrivées de gauche à droite.
 	/// </summary>
@@ -47,6 +47,16 @@ namespace Epsitec.Common.Designer.Comparers
 				{
 					return obj1.Points[0].Y.CompareTo(obj2.Points[0].Y);
 				}
+			}
+
+			if (obj1.Field.Route == EntitiesEditor.Field.RouteType.D)
+			{
+				if (obj1.IsRightDirection != obj2.IsRightDirection)
+				{
+					return obj1.IsRightDirection ? -1 : 1;
+				}
+
+				return obj1.Points[0].Y.CompareTo(obj2.Points[0].Y);
 			}
 
 			return 0;

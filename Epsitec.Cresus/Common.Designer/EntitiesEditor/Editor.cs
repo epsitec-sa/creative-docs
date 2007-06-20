@@ -329,12 +329,13 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 
 			//	Réparti astucieusement le point d'arrivé en haut ou en bas d'une boîte de toutes les
-			//	connections de type Bt ou Bb, pour éviter que deux connections arrivent sur le même point.
+			//	connections de type Bt ou Bb, pour éviter que deux connections n'arrivent sur le même point.
 			//	Les croisements sont minimisés.
 			foreach (ObjectBox box in this.boxes)
 			{
 				box.ConnectionListBt.Clear();
 				box.ConnectionListBb.Clear();
+				box.ConnectionListD.Clear();
 			}
 
 			foreach (ObjectConnection connection in this.connections)
@@ -348,12 +349,18 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				{
 					connection.Field.DstBox.ConnectionListBb.Add(connection);
 				}
+
+				if (connection.Field.DstBox != null && connection.Field.Route == Field.RouteType.D)
+				{
+					connection.Field.DstBox.ConnectionListD.Add(connection);
+				}
 			}
 
 			foreach (ObjectBox box in this.boxes)
 			{
-				this.ShiftConnections(box, box.ConnectionListBt);
-				this.ShiftConnections(box, box.ConnectionListBb);
+				this.ShiftConnectionsB(box, box.ConnectionListBt);
+				this.ShiftConnectionsB(box, box.ConnectionListBb);
+				this.ShiftConnectionsD(box, box.ConnectionListD);
 			}
 
 			//	Adapte toutes les commentaires.
@@ -513,10 +520,10 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		// (*)	Sera calculé par ObjectConnection.UpdateRoute !
 
-		protected void ShiftConnections(ObjectBox box, List<ObjectConnection> connections)
+		protected void ShiftConnectionsB(ObjectBox box, List<ObjectConnection> connections)
 		{
 			//	Met à jour une liste de connections de type Bt ou Bb, afin qu'aucune connection
-			//	ne parte du même endroit.
+			//	n'arrive au même endroit.
 			connections.Sort(new Comparers.ConnectionB());  // tri pour minimiser les croisements
 
 			double space = (box.Bounds.Width/(connections.Count+1.0))*0.75;
@@ -543,6 +550,31 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					connection.Points[count-1] = new Point(px, connection.Points[count-1].Y);
 					connection.Points[count-2] = new Point(px, connection.Points[count-2].Y);
 					connection.UpdateRoute();
+				}
+			}
+		}
+
+		protected void ShiftConnectionsD(ObjectBox box, List<ObjectConnection> connections)
+		{
+			//	Met à jour une liste de connections de type D, afin qu'aucune connection
+			//	n'arrive au même endroit.
+			connections.Sort(new Comparers.ConnectionB());  // tri pour minimiser les croisements
+
+			double spaceX = 5;
+			double spaceY = 12;
+
+			for (int i=0; i<connections.Count; i++)
+			{
+				ObjectConnection connection = connections[i];
+
+				if (connection.Points.Count == 4)
+				{
+					double dx = connection.IsRightDirection ? spaceX*i : -spaceX*i;
+					double dy = box.IsExtended ? spaceY*i : 0;
+					connection.Points[1] = new Point(connection.Points[1].X+dx, connection.Points[1].Y   );
+					connection.Points[2] = new Point(connection.Points[2].X+dx, connection.Points[2].Y-dy);
+					connection.Points[3] = new Point(connection.Points[3].X,    connection.Points[3].Y-dy);
+					//?connection.UpdateRoute();
 				}
 			}
 		}
