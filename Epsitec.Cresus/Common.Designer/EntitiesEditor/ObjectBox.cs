@@ -34,6 +34,9 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			this.columnsSeparatorRelative = 0.5;
 			this.isRoot = false;
 			this.isExtended = false;
+
+			this.connectionListBt = new List<ObjectConnection>();
+			this.connectionListBb = new List<ObjectConnection>();
 		}
 
 
@@ -212,6 +215,23 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			set
 			{
 				this.isConnectedToRoot = value;
+			}
+		}
+
+
+		public List<ObjectConnection> ConnectionListBt
+		{
+			get
+			{
+				return this.connectionListBt;
+			}
+		}
+
+		public List<ObjectConnection> ConnectionListBb
+		{
+			get
+			{
+				return this.connectionListBb;
 			}
 		}
 
@@ -2191,6 +2211,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		protected List<Field> fields;
 		protected List<SourceInfo> sourcesList;
 		protected int sourcesClosedCount;
+		protected List<ObjectConnection> connectionListBt;
+		protected List<ObjectConnection> connectionListBb;
 
 		protected bool isDragging;
 		protected Point draggingPos;

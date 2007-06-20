@@ -271,6 +271,9 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		{
 			//	Indique si la boîte source est attachée à droite ou à gauche.
 			//	Direction dans laquelle part la connection.
+			//	En fait, il s'agit du bouton ConnectionOpenLeft/Right utilisé pour ouvrir
+			//	la connection, et non de la direction effective dans laquelle part la
+			//	connection !
 			get
 			{
 				return this.isAttachToRight;

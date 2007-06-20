@@ -322,7 +322,34 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				}
 			}
 
-			//	Adapte toutes les connections.
+			//	Réparti astucieusement toutes les connections de type Bt ou Bb, afin d'éviter
+			//	les croisements au maximum.
+			foreach (ObjectBox box in this.boxes)
+			{
+				box.ConnectionListBt.Clear();
+				box.ConnectionListBb.Clear();
+			}
+
+			foreach (ObjectConnection connection in this.connections)
+			{
+				if (connection.Field.DstBox != null && connection.Field.Route == Field.RouteType.Bt)
+				{
+					connection.Field.DstBox.ConnectionListBt.Add(connection);
+				}
+
+				if (connection.Field.DstBox != null && connection.Field.Route == Field.RouteType.Bb)
+				{
+					connection.Field.DstBox.ConnectionListBb.Add(connection);
+				}
+			}
+
+			foreach (ObjectBox box in this.boxes)
+			{
+				this.ShiftConnections(box, box.ConnectionListBt);
+				this.ShiftConnections(box, box.ConnectionListBb);
+			}
+
+			//	Adapte toutes les commentaires.
 			foreach (ObjectComment comment in this.comments)
 			{
 				if (comment.AttachObject is ObjectConnection)
@@ -478,6 +505,27 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		}
 
 		// (*)	Sera calculé par ObjectConnection.UpdateRoute !
+
+		protected void ShiftConnections(ObjectBox box, List<ObjectConnection> connections)
+		{
+			//	Met à jour une liste de connections de type Bt ou Bb, afin qu'aucune connection
+			//	ne parte du même endroit.
+			connections.Sort(new Comparers.ConnectionB());
+
+			for (int i=0; i<connections.Count; i++)
+			{
+				ObjectConnection connection = connections[i];
+				double dx = (box.Bounds.Width/(connections.Count+1.0))*0.75 * (i-(connections.Count-1.0)/2);
+
+				int count = connection.Points.Count;
+				if (count > 2)
+				{
+					connection.Points[count-1] = new Point(connection.Points[count-1].X+dx, connection.Points[count-1].Y);
+					connection.Points[count-2] = new Point(connection.Points[count-2].X+dx, connection.Points[count-2].Y);
+					connection.UpdateRoute();
+				}
+			}
+		}
 
 		public void CreateConnections()
 		{
@@ -1305,7 +1353,6 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			this.UpdateAfterOpenOrCloseBox();
 		}
 		#endregion
-
 
 		#region Helpers.IToolTipHost
 		public object GetToolTipCaption(Point pos)

@@ -769,7 +769,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					{
 						return this.points[2];
 					}
-					else
+
+					if (this.points.Count == 2)
 					{
 						if (Point.Distance(this.points[0], this.points[1]) >= 75)
 						{
@@ -784,7 +785,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					{
 						return this.points[2];
 					}
-					else
+					
+					if (this.points.Count == 3)
 					{
 						if (Point.Distance(this.points[0], this.points[1]) >= 50 && Point.Distance(this.points[1], this.points[2]) >= 50)
 						{
@@ -821,7 +823,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					{
 						return this.points[3];
 					}
-					else
+					
+					if (this.points.Count == 2)
 					{
 						if (Point.Distance(this.points[0], this.points[1]) >= 75)
 						{
