@@ -92,6 +92,11 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 		}
 
+		public virtual void Move(double dx, double dy)
+		{
+			//	Déplace l'objet.
+		}
+
 		public virtual MainColor BackgroundMainColor
 		{
 			//	Couleur de fond de la boîte.

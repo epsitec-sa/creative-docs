@@ -86,6 +86,15 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 		}
 
+		public override void Move(double dx, double dy)
+		{
+			//	Déplace l'objet.
+			for (int i=0; i<this.points.Count; i++)
+			{
+				this.points[i] = new Point(this.points[i].X+dx, this.points[i].Y+dy);
+			}
+		}
+
 		public bool IsRightDirection
 		{
 			//	Retourne la direction effective dans laquelle part la connection.
@@ -250,8 +259,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 						this.field.IsAttachToRight = (this.hilitedElement == ActiveElement.ConnectionOpenRight);
 					}
 
-					this.editor.CreateConnections();
-					this.editor.UpdateAfterMoving(box);
+					this.editor.UpdateAfterAddOrRemoveConnection(box);
 					this.editor.DirtySerialization = true;
 				}
 			}
@@ -262,9 +270,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				this.field.IsExplored = false;
 				this.field.DstBox = null;
 				this.editor.CloseBox(null);
-
-				this.editor.CreateConnections();
-				this.editor.UpdateAfterMoving(null);
+				this.editor.UpdateAfterAddOrRemoveConnection(null);
 			}
 
 			if (this.hilitedElement == ActiveElement.ConnectionComment)

@@ -237,6 +237,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		{
 			//	Appelé lorsqu'un commentaire a changé.
 			this.RedimArea();
+
 			this.UpdateConnections();
 			this.RedimArea();
 		}
@@ -247,6 +248,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			this.UpdateBoxes();  // adapte la taille selon compact/étendu
 			this.PushLayout(box, PushDirection.Automatic, Editor.pushMargin);
 			this.RedimArea();
+
 			this.UpdateConnections();
 			this.RedimArea();
 		}
@@ -256,6 +258,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			//	Appelé lorsqu'une boîte a été bougée.
 			this.PushLayout(box, PushDirection.Automatic, Editor.pushMargin);
 			this.RedimArea();
+
 			this.UpdateConnections();
 			this.RedimArea();
 		}
@@ -266,7 +269,10 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			this.UpdateBoxes();
 			this.PushLayout(box, PushDirection.Automatic, Editor.pushMargin);
 			this.RedimArea();
+
 			this.CreateConnections();
+			this.RedimArea();
+
 			this.UpdateConnections();
 			this.RedimArea();
 		}
@@ -915,17 +921,17 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		protected void RedimArea()
 		{
 			//	Recalcule les dimensions de la surface de travail, en fonction du contenu.
-			Rectangle rect = this.ComputeBoxBounds();
+			Rectangle rect = this.ComputeObjectsBounds();
 			rect.Inflate(Editor.frameMargin);
-			this.MoveBoxes(-rect.Left, -rect.Bottom);
+			this.MoveObjects(-rect.Left, -rect.Bottom);
 
 			this.AreaSize = rect.Size;
 			this.OnAreaSizeChanged();
 		}
 
-		protected Rectangle ComputeBoxBounds()
+		protected Rectangle ComputeObjectsBounds()
 		{
-			//	Retourne le rectangle englobant toutes les boîtes.
+			//	Retourne le rectangle englobant tous les objets.
 			Rectangle bounds = Rectangle.Empty;
 
 			foreach (ObjectBox box in this.boxes)
@@ -946,9 +952,25 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			return bounds;
 		}
 
-		protected void MoveBoxes(double dx, double dy)
+		protected void MoveObjects(double dx, double dy)
 		{
-			//	Déplace toutes les boîtes.
+			//	Déplace tous les objets.
+			foreach (ObjectBox box in this.boxes)
+			{
+				box.Move(dx, dy);
+			}
+
+			foreach (ObjectConnection connection in this.connections)
+			{
+				connection.Move(dx, dy);
+			}
+
+			foreach (ObjectComment comment in this.comments)
+			{
+				comment.Move(dx, dy);
+			}
+		
+#if false
 			for (int i=0; i<this.boxes.Count; i++)
 			{
 				ObjectBox box = this.boxes[i];
@@ -957,6 +979,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				bounds.Offset(dx, dy);
 				box.SetBounds(bounds);
 			}
+#endif
 		}
 
 

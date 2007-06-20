@@ -114,6 +114,12 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 		}
 
+		public override void Move(double dx, double dy)
+		{
+			//	Déplace l'objet.
+			this.bounds.Offset(dx, dy);
+		}
+
 		public void SetBounds(Rectangle bounds)
 		{
 			//	Modifie la boîte de l'objet.
@@ -599,8 +605,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					if (!this.isRoot)
 					{
 						this.editor.CloseBox(this);
-						this.editor.CreateConnections();
-						this.editor.UpdateAfterMoving(null);
+						this.editor.UpdateAfterAddOrRemoveConnection(null);
 					}
 				}
 
@@ -1413,8 +1418,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				box.SetBounds(bounds);
 			}
 
-			this.editor.CreateConnections();
-			this.editor.UpdateAfterMoving(box);
+			this.editor.UpdateAfterAddOrRemoveConnection(box);
 			this.editor.DirtySerialization = true;
 		}
 

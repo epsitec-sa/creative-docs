@@ -81,6 +81,12 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 		}
 
+		public override void Move(double dx, double dy)
+		{
+			//	Déplace l'objet.
+			this.bounds.Offset(dx, dy);
+		}
+
 		public Rectangle InternalBounds
 		{
 			//	Retourne la boîte de l'objet.
