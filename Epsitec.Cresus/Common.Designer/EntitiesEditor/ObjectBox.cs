@@ -37,6 +37,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 			this.connectionListBt = new List<ObjectConnection>();
 			this.connectionListBb = new List<ObjectConnection>();
+			this.connectionListC = new List<ObjectConnection>();
 			this.connectionListD = new List<ObjectConnection>();
 		}
 
@@ -239,6 +240,14 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			get
 			{
 				return this.connectionListBb;
+			}
+		}
+
+		public List<ObjectConnection> ConnectionListC
+		{
+			get
+			{
+				return this.connectionListC;
 			}
 		}
 
@@ -2226,6 +2235,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		protected int sourcesClosedCount;
 		protected List<ObjectConnection> connectionListBt;
 		protected List<ObjectConnection> connectionListBb;
+		protected List<ObjectConnection> connectionListC;
 		protected List<ObjectConnection> connectionListD;
 
 		protected bool isDragging;

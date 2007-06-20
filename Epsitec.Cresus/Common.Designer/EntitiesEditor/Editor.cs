@@ -335,6 +335,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			{
 				box.ConnectionListBt.Clear();
 				box.ConnectionListBb.Clear();
+				box.ConnectionListC.Clear();
 				box.ConnectionListD.Clear();
 			}
 
@@ -350,6 +351,11 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					connection.Field.DstBox.ConnectionListBb.Add(connection);
 				}
 
+				if (connection.Field.DstBox != null && connection.Field.Route == Field.RouteType.C)
+				{
+					connection.Field.DstBox.ConnectionListC.Add(connection);
+				}
+
 				if (connection.Field.DstBox != null && connection.Field.Route == Field.RouteType.D)
 				{
 					connection.Field.DstBox.ConnectionListD.Add(connection);
@@ -360,6 +366,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			{
 				this.ShiftConnectionsB(box, box.ConnectionListBt);
 				this.ShiftConnectionsB(box, box.ConnectionListBb);
+				this.ShiftConnectionsC(box, box.ConnectionListC);
 				this.ShiftConnectionsD(box, box.ConnectionListD);
 			}
 
@@ -524,7 +531,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		{
 			//	Met à jour une liste de connections de type Bt ou Bb, afin qu'aucune connection
 			//	n'arrive au même endroit.
-			connections.Sort(new Comparers.ConnectionB());  // tri pour minimiser les croisements
+			connections.Sort(new Comparers.Connection());  // tri pour minimiser les croisements
 
 			double space = (box.Bounds.Width/(connections.Count+1.0))*0.75;
 
@@ -554,11 +561,35 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 		}
 
+		protected void ShiftConnectionsC(ObjectBox box, List<ObjectConnection> connections)
+		{
+			//	Met à jour une liste de connections de type C, afin qu'aucune connection
+			//	n'arrive au même endroit.
+			connections.Sort(new Comparers.Connection());  // tri pour minimiser les croisements
+
+			double spaceX = 5;
+			double spaceY = 12;
+
+			for (int i=0; i<connections.Count; i++)
+			{
+				ObjectConnection connection = connections[i];
+
+				if (connection.Points.Count == 4)
+				{
+					double dx = box.IsExtended ? (connection.IsRightDirection ^ connection.Points[0].Y > connection.Points[connection.Points.Count-1].Y ? spaceX*i : -spaceX*i) : 0;
+					double dy = box.IsExtended ? spaceY*i : 0;
+					connection.Points[1] = new Point(connection.Points[1].X+dx, connection.Points[1].Y   );
+					connection.Points[2] = new Point(connection.Points[2].X+dx, connection.Points[2].Y-dy);
+					connection.Points[3] = new Point(connection.Points[3].X,    connection.Points[3].Y-dy);
+				}
+			}
+		}
+
 		protected void ShiftConnectionsD(ObjectBox box, List<ObjectConnection> connections)
 		{
 			//	Met à jour une liste de connections de type D, afin qu'aucune connection
 			//	n'arrive au même endroit.
-			connections.Sort(new Comparers.ConnectionB());  // tri pour minimiser les croisements
+			connections.Sort(new Comparers.Connection());  // tri pour minimiser les croisements
 
 			double spaceX = 5;
 			double spaceY = 12;
@@ -574,7 +605,6 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					connection.Points[1] = new Point(connection.Points[1].X+dx, connection.Points[1].Y   );
 					connection.Points[2] = new Point(connection.Points[2].X+dx, connection.Points[2].Y-dy);
 					connection.Points[3] = new Point(connection.Points[3].X,    connection.Points[3].Y-dy);
-					//?connection.UpdateRoute();
 				}
 			}
 		}
