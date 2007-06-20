@@ -322,8 +322,9 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				}
 			}
 
-			//	Réparti astucieusement toutes les connections de type Bt ou Bb, afin d'éviter
-			//	les croisements au maximum.
+			//	Réparti astucieusement le point d'arrivé en haut ou en bas d'une boîte de toutes les
+			//	connections de type Bt ou Bb, pour éviter que deux connections arrivent sur le même point.
+			//	Les croisements sont minimisés.
 			foreach (ObjectBox box in this.boxes)
 			{
 				box.ConnectionListBt.Clear();
