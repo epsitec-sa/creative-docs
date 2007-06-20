@@ -31,7 +31,8 @@ namespace Epsitec.Common.Designer.Comparers
 					return obj2.Points[0].Y.CompareTo(obj1.Points[0].Y);
 				}
 			}
-			else
+
+			if (obj1.Field.Route == EntitiesEditor.Field.RouteType.Bt)
 			{
 				if (obj1.IsRightDirection != obj2.IsRightDirection)
 				{
@@ -47,6 +48,8 @@ namespace Epsitec.Common.Designer.Comparers
 					return obj1.Points[0].Y.CompareTo(obj2.Points[0].Y);
 				}
 			}
+
+			return 0;
 		}
 	}
 }

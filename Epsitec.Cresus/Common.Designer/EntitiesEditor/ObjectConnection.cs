@@ -814,15 +814,21 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 				if (this.field.Route == Field.RouteType.C)
 				{
-					if (Point.Distance(this.points[0], this.points[3]) >= 75)
+					if (this.points.Count == 4)
 					{
-						return this.points[1];
+						if (Point.Distance(this.points[0], this.points[3]) >= 75)
+						{
+							return this.points[1];
+						}
 					}
 				}
 
 				if (this.field.Route == Field.RouteType.D)
 				{
-					return this.points[1];
+					if (this.points.Count == 4)
+					{
+						return this.points[1];
+					}
 				}
 
 				return Point.Zero;

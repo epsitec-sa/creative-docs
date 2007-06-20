@@ -518,11 +518,11 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			for (int i=0; i<connections.Count; i++)
 			{
 				ObjectConnection connection = connections[i];
-				double dx = space * (i-(connections.Count-1.0)/2);
 
 				int count = connection.Points.Count;
 				if (count > 2)
 				{
+					double dx = space * (i-(connections.Count-1.0)/2);
 					double px = connection.Points[count-1].X+dx;
 
 					if (connection.IsRightDirection)
