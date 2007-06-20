@@ -511,18 +511,31 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		{
 			//	Met à jour une liste de connections de type Bt ou Bb, afin qu'aucune connection
 			//	ne parte du même endroit.
-			connections.Sort(new Comparers.ConnectionB());
+			connections.Sort(new Comparers.ConnectionB());  // tri pour minimiser les croisements
+
+			double space = (box.Bounds.Width/(connections.Count+1.0))*0.75;
 
 			for (int i=0; i<connections.Count; i++)
 			{
 				ObjectConnection connection = connections[i];
-				double dx = (box.Bounds.Width/(connections.Count+1.0))*0.75 * (i-(connections.Count-1.0)/2);
+				double dx = space * (i-(connections.Count-1.0)/2);
 
 				int count = connection.Points.Count;
 				if (count > 2)
 				{
-					connection.Points[count-1] = new Point(connection.Points[count-1].X+dx, connection.Points[count-1].Y);
-					connection.Points[count-2] = new Point(connection.Points[count-2].X+dx, connection.Points[count-2].Y);
+					double px = connection.Points[count-1].X+dx;
+
+					if (connection.IsRightDirection)
+					{
+						px = System.Math.Max(px, connection.Points[0].X+8);
+					}
+					else
+					{
+						px = System.Math.Min(px, connection.Points[0].X-8);
+					}
+
+					connection.Points[count-1] = new Point(px, connection.Points[count-1].Y);
+					connection.Points[count-2] = new Point(px, connection.Points[count-2].Y);
 					connection.UpdateRoute();
 				}
 			}

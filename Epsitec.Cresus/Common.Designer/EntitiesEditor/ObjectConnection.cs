@@ -86,6 +86,23 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 		}
 
+		public bool IsRightDirection
+		{
+			//	Retourne la direction effective dans laquelle part la connection.
+			//	A ne pas confondre avec Field.IsAttachToRight !
+			get
+			{
+				if (this.points.Count < 2)
+				{
+					return true;
+				}
+				else
+				{
+					return this.points[0].X < this.points[this.points.Count-1].X;
+				}
+			}
+		}
+
 
 		protected override string GetToolTipText(ActiveElement element)
 		{

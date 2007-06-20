@@ -17,12 +17,12 @@ namespace Epsitec.Common.Designer.Comparers
 		{
 			if (obj1.Field.Route == EntitiesEditor.Field.RouteType.Bb)
 			{
-				if (ConnectionB.IsAttachToRight(obj1) != ConnectionB.IsAttachToRight(obj2))
+				if (obj1.IsRightDirection != obj2.IsRightDirection)
 				{
-					return ConnectionB.IsAttachToRight(obj1) ? -1 : 1;
+					return obj1.IsRightDirection ? -1 : 1;
 				}
 
-				if (ConnectionB.IsAttachToRight(obj1))
+				if (obj1.IsRightDirection)
 				{
 					return obj1.Points[0].Y.CompareTo(obj2.Points[0].Y);
 				}
@@ -33,12 +33,12 @@ namespace Epsitec.Common.Designer.Comparers
 			}
 			else
 			{
-				if (ConnectionB.IsAttachToRight(obj1) != ConnectionB.IsAttachToRight(obj2))
+				if (obj1.IsRightDirection != obj2.IsRightDirection)
 				{
-					return ConnectionB.IsAttachToRight(obj1) ? -1 : 1;
+					return obj1.IsRightDirection ? -1 : 1;
 				}
 
-				if (ConnectionB.IsAttachToRight(obj1))
+				if (obj1.IsRightDirection)
 				{
 					return obj2.Points[0].Y.CompareTo(obj1.Points[0].Y);
 				}
@@ -47,13 +47,6 @@ namespace Epsitec.Common.Designer.Comparers
 					return obj1.Points[0].Y.CompareTo(obj2.Points[0].Y);
 				}
 			}
-		}
-
-		protected static bool IsAttachToRight(EntitiesEditor.ObjectConnection connection)
-		{
-			//	Retourne la direction effective dans laquelle part la connection.
-			//	A ne pas confondre avec Field.IsAttachToRight !
-			return connection.Points[0].X < connection.Points[connection.Points.Count-1].X;
 		}
 	}
 }
