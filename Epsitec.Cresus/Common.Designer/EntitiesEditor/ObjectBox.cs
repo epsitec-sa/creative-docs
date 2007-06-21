@@ -39,6 +39,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			this.connectionListBb = new List<ObjectConnection>();
 			this.connectionListC = new List<ObjectConnection>();
 			this.connectionListD = new List<ObjectConnection>();
+
+			this.parents = new List<ObjectBox>();
 		}
 
 
@@ -256,6 +258,14 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			get
 			{
 				return this.connectionListD;
+			}
+		}
+
+		public List<ObjectBox> Parents
+		{
+			get
+			{
+				return this.parents;
 			}
 		}
 
@@ -2237,6 +2247,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		protected List<ObjectConnection> connectionListBb;
 		protected List<ObjectConnection> connectionListC;
 		protected List<ObjectConnection> connectionListD;
+		protected List<ObjectBox> parents;
 
 		protected bool isDragging;
 		protected Point draggingPos;

@@ -746,6 +746,19 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			foreach (ObjectBox abox in this.boxes)
 			{
 				abox.IsConnectedToRoot = false;
+				abox.Parents.Clear();
+			}
+
+			foreach (ObjectBox abox in this.boxes)
+			{
+				foreach (Field field in abox.Fields)
+				{
+					ObjectBox dstBox = field.DstBox;
+					if (dstBox != null)
+					{
+						dstBox.Parents.Add(abox);
+					}
+				}
 			}
 
 			foreach (ObjectBox abox in this.boxes)
@@ -810,6 +823,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			this.boxes.Remove(box);  // supprime la boîte demandée
 		}
 
+#if false
 		protected bool IsConnectedToRoot(ObjectBox searchingBox)
 		{
 			//	Retourne true si une boîte est reliée à la racine.
@@ -841,6 +855,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 			return false;
 		}
+#endif
 
 		protected void ExploreConnectedToRoot(List<ObjectBox> visited, ObjectBox root)
 		{
@@ -855,6 +870,15 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 						visited.Add(dstBox);
 						this.ExploreConnectedToRoot(visited, dstBox);
 					}
+				}
+			}
+
+			foreach (ObjectBox srcBox in root.Parents)
+			{
+				if (!visited.Contains(srcBox))
+				{
+					visited.Add(srcBox);
+					this.ExploreConnectedToRoot(visited, srcBox);
 				}
 			}
 		}
