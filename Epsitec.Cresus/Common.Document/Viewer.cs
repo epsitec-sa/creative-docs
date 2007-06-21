@@ -4053,7 +4053,7 @@ namespace Epsitec.Common.Document
 			else
 			{
 				//	Dessine la grille.
-				if ( this.drawingContext.GridShow )
+				if ( this.drawingContext.GridShow && this.drawingContext.GridStep.X != 0 && this.drawingContext.GridStep.Y != 0 )
 				{
 					double s = System.Math.Min(this.drawingContext.GridStep.X*this.drawingContext.ScaleX,
 											   this.drawingContext.GridStep.Y*this.drawingContext.ScaleY);
