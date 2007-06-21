@@ -312,7 +312,10 @@ namespace Epsitec.Common.Support.Platform.Win32
 				if ((!string.IsNullOrEmpty (fullPath)) &&
 					(!((fullPath.Length == 3) && (fullPath[1] == ':'))))
 				{
-					return System.IO.File.GetAttributes (fullPath);
+					if (!fullPath.StartsWith ("::"))
+					{
+						return System.IO.File.GetAttributes (fullPath);
+					}
 				}
 			}
 			catch

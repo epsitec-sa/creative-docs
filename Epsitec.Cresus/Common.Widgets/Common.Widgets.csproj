@@ -795,6 +795,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Images\ActiveCurrent.icon" />
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Images\Cmd.Open.icon" />
+  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>
