@@ -417,6 +417,8 @@ namespace Epsitec.Common.Document.Objects
 		public override void CreateMouseDown(Point pos, DrawingContext drawingContext)
 		{
 			//	Début de la création d'un objet.
+			this.document.Notifier.NotifyArea(this.BoundingBox);  // pour effacer les résidus de l'ancienne flèche
+
 			drawingContext.SnapPos(ref pos);
 
 			if ( this.TotalHandle == 0 )
