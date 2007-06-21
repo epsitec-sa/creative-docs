@@ -175,13 +175,22 @@ namespace Epsitec.Common.Designer.Dialogs
 
 			this.UpdateAccess();
 
-			if (this.resource.IsValid && this.resourceType == ResourceAccess.Type.Types2)
+			//	Si on spécifie Types2, cela signifie en fait qu'on laissera le choix à l'utilisateur
+			//	entre Types2 et Entities (avec des boutons radio).
+			if (this.resourceType == ResourceAccess.Type.Types2)
 			{
-				CultureMap cultureMap = this.access.Accessor.Collection[this.resource];
-				if (cultureMap == null)
+				if (this.resource.IsValid)
 				{
-					this.resourceType = ResourceAccess.Type.Entities;
-					this.UpdateAccess();
+					CultureMap cultureMap = this.access.Accessor.Collection[this.resource];
+					if (cultureMap == null)
+					{
+						this.resourceType = ResourceAccess.Type.Entities;
+						this.UpdateAccess();
+					}
+				}
+				else
+				{
+					this.BestAccess();
 				}
 			}
 		}
@@ -193,6 +202,31 @@ namespace Epsitec.Common.Designer.Dialogs
 			this.lastModule = module;
 
 			this.UpdateAccess();
+		}
+
+		protected bool BestAccess()
+		{
+			//	Si le type courant ne contient aucune ressource, mais que l'autre type en contient,
+			//	bascule sur l'autre type (Types2 ou Entities). L'idée est d'anticiper sur l'utilisateur,
+			//	qui voudra vraissemblablement changer de type s'il voit une liste vide.
+			int totalTypes = this.module.AccessTypes2.Accessor.Collection.Count;
+			int totalEntities = this.module.AccessEntities.Accessor.Collection.Count;
+
+			if (this.resourceType == ResourceAccess.Type.Types2 && totalTypes == 0 && totalEntities > 0)
+			{
+				this.resourceType = ResourceAccess.Type.Entities;
+				this.UpdateAccess();
+				return true;
+			}
+			
+			if (this.resourceType == ResourceAccess.Type.Entities && totalEntities == 0 && totalTypes > 0)
+			{
+				this.resourceType = ResourceAccess.Type.Types2;
+				this.UpdateAccess();
+				return true;
+			}
+
+			return false;
 		}
 
 		protected void UpdateAccess()
@@ -356,6 +390,11 @@ namespace Epsitec.Common.Designer.Dialogs
 			if (module != null)
 			{
 				this.AccessChange(module);
+				if (this.BestAccess())
+				{
+					this.UpdateRadios();
+					this.UpdateTitle();
+				}
 
 				this.UpdateArray();
 				return;
