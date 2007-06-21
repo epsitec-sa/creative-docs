@@ -1204,19 +1204,19 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				}
 				else
 				{
-					if (fly.HilitedElement == AbstractObject.ActiveElement.BoxHeaderDragging && this.BoxCount > 1)
+					if (fly.HilitedElement == AbstractObject.ActiveElement.BoxHeader && this.BoxCount > 1)
 					{
 						this.ChangeMouseCursor(MouseCursorType.Move);
 					}
 					else if (fly.HilitedElement == AbstractObject.ActiveElement.None ||
 							 fly.HilitedElement == AbstractObject.ActiveElement.BoxInside ||
-							 fly.HilitedElement == AbstractObject.ActiveElement.BoxHeaderDragging ||
+							 fly.HilitedElement == AbstractObject.ActiveElement.BoxHeader ||
 							 fly.HilitedElement == AbstractObject.ActiveElement.ConnectionHilited)
 					{
 						this.ChangeMouseCursor(MouseCursorType.Arrow);
 					}
-					else if (fly.HilitedElement == AbstractObject.ActiveElement.BoxFieldNameSelect ||
-							 fly.HilitedElement == AbstractObject.ActiveElement.BoxFieldTypeSelect)
+					else if (fly.HilitedElement == AbstractObject.ActiveElement.BoxFieldName ||
+							 fly.HilitedElement == AbstractObject.ActiveElement.BoxFieldType)
 					{
 						this.ChangeMouseCursor(MouseCursorType.Grid);
 					}

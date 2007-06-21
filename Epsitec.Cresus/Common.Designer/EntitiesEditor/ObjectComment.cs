@@ -244,49 +244,49 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					this.EditComment();
 				}
 
-				if (this.hilitedElement == ActiveElement.CommentColorButton1)
+				if (this.hilitedElement == ActiveElement.CommentColor1)
 				{
 					this.BackgroundMainColor = MainColor.Yellow;
 					this.UpdateFieldColor();
 				}
 
-				if (this.hilitedElement == ActiveElement.CommentColorButton2)
+				if (this.hilitedElement == ActiveElement.CommentColor2)
 				{
 					this.BackgroundMainColor = MainColor.Orange;
 					this.UpdateFieldColor();
 				}
 
-				if (this.hilitedElement == ActiveElement.CommentColorButton3)
+				if (this.hilitedElement == ActiveElement.CommentColor3)
 				{
 					this.BackgroundMainColor = MainColor.Red;
 					this.UpdateFieldColor();
 				}
 
-				if (this.hilitedElement == ActiveElement.CommentColorButton4)
+				if (this.hilitedElement == ActiveElement.CommentColor4)
 				{
 					this.BackgroundMainColor = MainColor.Lilac;
 					this.UpdateFieldColor();
 				}
 
-				if (this.hilitedElement == ActiveElement.CommentColorButton5)
+				if (this.hilitedElement == ActiveElement.CommentColor5)
 				{
 					this.BackgroundMainColor = MainColor.Purple;
 					this.UpdateFieldColor();
 				}
 
-				if (this.hilitedElement == ActiveElement.CommentColorButton6)
+				if (this.hilitedElement == ActiveElement.CommentColor6)
 				{
 					this.BackgroundMainColor = MainColor.Blue;
 					this.UpdateFieldColor();
 				}
 
-				if (this.hilitedElement == ActiveElement.CommentColorButton7)
+				if (this.hilitedElement == ActiveElement.CommentColor7)
 				{
 					this.BackgroundMainColor = MainColor.Green;
 					this.UpdateFieldColor();
 				}
 
-				if (this.hilitedElement == ActiveElement.CommentColorButton8)
+				if (this.hilitedElement == ActiveElement.CommentColor8)
 				{
 					this.BackgroundMainColor = MainColor.DarkGrey;
 					this.UpdateFieldColor();
@@ -336,49 +336,49 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			//	Souris dans le bouton des couleurs ?
 			if (this.DetectSquareButton(this.PositionColorButton(0), pos))
 			{
-				element = ActiveElement.CommentColorButton1;
+				element = ActiveElement.CommentColor1;
 				return true;
 			}
 
 			if (this.DetectSquareButton(this.PositionColorButton(1), pos))
 			{
-				element = ActiveElement.CommentColorButton2;
+				element = ActiveElement.CommentColor2;
 				return true;
 			}
 
 			if (this.DetectSquareButton(this.PositionColorButton(2), pos))
 			{
-				element = ActiveElement.CommentColorButton3;
+				element = ActiveElement.CommentColor3;
 				return true;
 			}
 
 			if (this.DetectSquareButton(this.PositionColorButton(3), pos))
 			{
-				element = ActiveElement.CommentColorButton4;
+				element = ActiveElement.CommentColor4;
 				return true;
 			}
 
 			if (this.DetectSquareButton(this.PositionColorButton(4), pos))
 			{
-				element = ActiveElement.CommentColorButton5;
+				element = ActiveElement.CommentColor5;
 				return true;
 			}
 
 			if (this.DetectSquareButton(this.PositionColorButton(5), pos))
 			{
-				element = ActiveElement.CommentColorButton6;
+				element = ActiveElement.CommentColor6;
 				return true;
 			}
 
 			if (this.DetectSquareButton(this.PositionColorButton(6), pos))
 			{
-				element = ActiveElement.CommentColorButton7;
+				element = ActiveElement.CommentColor7;
 				return true;
 			}
 
 			if (this.DetectSquareButton(this.PositionColorButton(7), pos))
 			{
-				element = ActiveElement.CommentColorButton8;
+				element = ActiveElement.CommentColor8;
 				return true;
 			}
 
@@ -504,14 +504,14 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 
 			//	Dessine les boutons des couleurs.
-			this.DrawColorButton(graphics, ActiveElement.CommentColorButton1, 0, MainColor.Yellow);
-			this.DrawColorButton(graphics, ActiveElement.CommentColorButton2, 1, MainColor.Orange);
-			this.DrawColorButton(graphics, ActiveElement.CommentColorButton3, 2, MainColor.Red);
-			this.DrawColorButton(graphics, ActiveElement.CommentColorButton4, 3, MainColor.Lilac);
-			this.DrawColorButton(graphics, ActiveElement.CommentColorButton5, 4, MainColor.Purple);
-			this.DrawColorButton(graphics, ActiveElement.CommentColorButton6, 5, MainColor.Blue);
-			this.DrawColorButton(graphics, ActiveElement.CommentColorButton7, 6, MainColor.Green);
-			this.DrawColorButton(graphics, ActiveElement.CommentColorButton8, 7, MainColor.DarkGrey);
+			this.DrawColorButton(graphics, ActiveElement.CommentColor1, 0, MainColor.Yellow);
+			this.DrawColorButton(graphics, ActiveElement.CommentColor2, 1, MainColor.Orange);
+			this.DrawColorButton(graphics, ActiveElement.CommentColor3, 2, MainColor.Red);
+			this.DrawColorButton(graphics, ActiveElement.CommentColor4, 3, MainColor.Lilac);
+			this.DrawColorButton(graphics, ActiveElement.CommentColor5, 4, MainColor.Purple);
+			this.DrawColorButton(graphics, ActiveElement.CommentColor6, 5, MainColor.Blue);
+			this.DrawColorButton(graphics, ActiveElement.CommentColor7, 6, MainColor.Green);
+			this.DrawColorButton(graphics, ActiveElement.CommentColor8, 7, MainColor.DarkGrey);
 
 			//	Dessine le bouton pour modifier la largeur.
 			if (this.hilitedElement == ActiveElement.CommentWidth)
@@ -562,14 +562,14 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				return (this.hilitedElement == ActiveElement.CommentEdit ||
 						this.hilitedElement == ActiveElement.CommentMove ||
 						this.hilitedElement == ActiveElement.CommentClose ||
-						this.hilitedElement == ActiveElement.CommentColorButton1 ||
-						this.hilitedElement == ActiveElement.CommentColorButton2 ||
-						this.hilitedElement == ActiveElement.CommentColorButton3 ||
-						this.hilitedElement == ActiveElement.CommentColorButton4 ||
-						this.hilitedElement == ActiveElement.CommentColorButton5 ||
-						this.hilitedElement == ActiveElement.CommentColorButton6 ||
-						this.hilitedElement == ActiveElement.CommentColorButton7 ||
-						this.hilitedElement == ActiveElement.CommentColorButton8 ||
+						this.hilitedElement == ActiveElement.CommentColor1 ||
+						this.hilitedElement == ActiveElement.CommentColor2 ||
+						this.hilitedElement == ActiveElement.CommentColor3 ||
+						this.hilitedElement == ActiveElement.CommentColor4 ||
+						this.hilitedElement == ActiveElement.CommentColor5 ||
+						this.hilitedElement == ActiveElement.CommentColor6 ||
+						this.hilitedElement == ActiveElement.CommentColor7 ||
+						this.hilitedElement == ActiveElement.CommentColor8 ||
 						this.hilitedElement == ActiveElement.CommentAttachToConnection);
 			}
 		}

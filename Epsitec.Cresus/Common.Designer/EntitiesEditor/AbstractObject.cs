@@ -18,23 +18,23 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			None,
 
 			BoxInside,
-			BoxSourcesButton,
-			BoxCommentButton,
-			BoxExtendButton,
-			BoxCloseButton,
-			BoxHeaderDragging,
-			BoxFieldNameSelect,
-			BoxFieldTypeSelect,
+			BoxSources,
+			BoxComment,
+			BoxExtend,
+			BoxClose,
+			BoxHeader,
+			BoxFieldName,
+			BoxFieldType,
 			BoxFieldAdd,
 			BoxFieldRemove,
 			BoxFieldMovable,
 			BoxFieldMoving,
 			BoxChangeWidth,
 			BoxMoveColumnsSeparator,
-			BoxColorButton1,
-			BoxColorButton2,
-			BoxColorButton3,
-			BoxColorButton4,
+			BoxColor1,
+			BoxColor2,
+			BoxColor3,
+			BoxColor4,
 
 			ConnectionOpenLeft,
 			ConnectionOpenRight,
@@ -49,14 +49,14 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			CommentMove,
 			CommentWidth,
 			CommentClose,
-			CommentColorButton1,
-			CommentColorButton2,
-			CommentColorButton3,
-			CommentColorButton4,
-			CommentColorButton5,
-			CommentColorButton6,
-			CommentColorButton7,
-			CommentColorButton8,
+			CommentColor1,
+			CommentColor2,
+			CommentColor3,
+			CommentColor4,
+			CommentColor5,
+			CommentColor6,
+			CommentColor7,
+			CommentColor8,
 			CommentAttachToConnection,
 		}
 
@@ -164,37 +164,37 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		{
 			switch (element)
 			{
-				case AbstractObject.ActiveElement.BoxHeaderDragging:
+				case AbstractObject.ActiveElement.BoxHeader:
 					return "Déplace l'entité";
 
-				case AbstractObject.ActiveElement.BoxSourcesButton:
+				case AbstractObject.ActiveElement.BoxSources:
 					return "Ouvre une entité source";
 
-				case AbstractObject.ActiveElement.BoxCommentButton:
+				case AbstractObject.ActiveElement.BoxComment:
 					return "Montre ou cache le commentaire associé";
 
-				case AbstractObject.ActiveElement.BoxColorButton1:
+				case AbstractObject.ActiveElement.BoxColor1:
 					return "Entité bleue";
 
-				case AbstractObject.ActiveElement.BoxColorButton2:
+				case AbstractObject.ActiveElement.BoxColor2:
 					return "Entité verte";
 
-				case AbstractObject.ActiveElement.BoxColorButton3:
+				case AbstractObject.ActiveElement.BoxColor3:
 					return "Entité rouge";
 
-				case AbstractObject.ActiveElement.BoxColorButton4:
+				case AbstractObject.ActiveElement.BoxColor4:
 					return "Entité grise";
 
-				case AbstractObject.ActiveElement.BoxExtendButton:
+				case AbstractObject.ActiveElement.BoxExtend:
 					return "Compacte ou étend l'entité";
 
-				case AbstractObject.ActiveElement.BoxCloseButton:
+				case AbstractObject.ActiveElement.BoxClose:
 					return "Ferme l'entité";
 
-				case AbstractObject.ActiveElement.BoxFieldNameSelect:
+				case AbstractObject.ActiveElement.BoxFieldName:
 					return "Change le nom du champ";
 
-				case AbstractObject.ActiveElement.BoxFieldTypeSelect:
+				case AbstractObject.ActiveElement.BoxFieldType:
 					return "Change le type du champ";
 
 				case AbstractObject.ActiveElement.BoxFieldAdd:
@@ -243,28 +243,28 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				case AbstractObject.ActiveElement.CommentClose:
 					return "Cache le commentaire";
 
-				case AbstractObject.ActiveElement.CommentColorButton1:
+				case AbstractObject.ActiveElement.CommentColor1:
 					return "Commentaire jaune";
 
-				case AbstractObject.ActiveElement.CommentColorButton2:
+				case AbstractObject.ActiveElement.CommentColor2:
 					return "Commentaire orange";
 
-				case AbstractObject.ActiveElement.CommentColorButton3:
+				case AbstractObject.ActiveElement.CommentColor3:
 					return "Commentaire rouge";
 
-				case AbstractObject.ActiveElement.CommentColorButton4:
+				case AbstractObject.ActiveElement.CommentColor4:
 					return "Commentaire lilas";
 
-				case AbstractObject.ActiveElement.CommentColorButton5:
+				case AbstractObject.ActiveElement.CommentColor5:
 					return "Commentaire violet";
 
-				case AbstractObject.ActiveElement.CommentColorButton6:
+				case AbstractObject.ActiveElement.CommentColor6:
 					return "Commentaire bleu";
 
-				case AbstractObject.ActiveElement.CommentColorButton7:
+				case AbstractObject.ActiveElement.CommentColor7:
 					return "Commentaire vert";
 
-				case AbstractObject.ActiveElement.CommentColorButton8:
+				case AbstractObject.ActiveElement.CommentColor8:
 					return "Commentaire gris foncé";
 
 				case AbstractObject.ActiveElement.CommentAttachToConnection:
