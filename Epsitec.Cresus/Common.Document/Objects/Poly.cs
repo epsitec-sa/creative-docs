@@ -431,11 +431,11 @@ namespace Epsitec.Common.Document.Objects
 			}
 			else
 			{
-				double len = Point.Distance(pos, this.Handle(this.TotalHandle-1).Position);
+				double len = Point.Distance(pos, this.Handle(this.TotalMainHandle-1).Position);
 				if ( len > drawingContext.CloseMargin )
 				{
 					this.HandleAdd(pos, HandleType.Primary);
-					this.Handle(this.TotalHandle-1).IsVisible = true;
+					this.Handle(this.TotalMainHandle-1).IsVisible = true;
 				}
 			}
 
@@ -451,7 +451,7 @@ namespace Epsitec.Common.Document.Objects
 
 			this.isCreating = true;
 
-			int rank = this.TotalHandle-1;
+			int rank = this.TotalMainHandle-1;
 			if ( rank > 0 )
 			{
 				double len = Point.Distance(this.Handle(0).Position, pos);
@@ -479,7 +479,7 @@ namespace Epsitec.Common.Document.Objects
 		public override void CreateMouseUp(Point pos, DrawingContext drawingContext)
 		{
 			//	Fin de la création d'un objet.
-			if ( this.TotalHandle == 2 )
+			if ( this.TotalMainHandle == 2 )
 			{
 				double len = Point.Distance(this.Handle(0).Position, this.Handle(1).Position);
 				if ( len < drawingContext.MinimalSize )
@@ -490,7 +490,7 @@ namespace Epsitec.Common.Document.Objects
 
 			this.document.Notifier.NotifyArea(this.BoundingBox);
 			drawingContext.SnapPos(ref pos);
-			int rank = this.TotalHandle-1;
+			int rank = this.TotalMainHandle-1;
 			this.Handle(rank).Position = pos;
 			drawingContext.ConstrainDelStarting();
 			drawingContext.ConstrainClear();
@@ -504,9 +504,9 @@ namespace Epsitec.Common.Document.Objects
 		public override bool CreateIsEnding(DrawingContext drawingContext)
 		{
 			//	Indique si la création de l'objet est terminée.
-			if ( this.TotalHandle < 2 )  return false;
+			if ( this.TotalMainHandle < 3 )  return false;
 
-			int rank = this.TotalHandle-1;
+			int rank = this.TotalMainHandle-1;
 			double len = Point.Distance(this.Handle(0).Position, this.Handle(rank).Position);
 			if ( len > drawingContext.CloseMargin )  return false;  // pas fini
 
@@ -529,7 +529,7 @@ namespace Epsitec.Common.Document.Objects
 		{
 			//	Indique si l'objet doit exister. Retourne false si l'objet ne peut
 			//	pas exister et doit être détruit.
-			return ( this.TotalHandle >= 2 );
+			return ( this.TotalMainHandle >= 2 );
 		}
 
 		public override bool CreateEnding(DrawingContext drawingContext)
@@ -540,7 +540,7 @@ namespace Epsitec.Common.Document.Objects
 			this.isCreating = false;
 			this.document.Modifier.TextInfoModif = "";
 
-			if ( this.TotalHandle < 2 )  return false;
+			if ( this.TotalMainHandle < 2 )  return false;
 
 			this.AdditionalDelete();
 			this.Handle(0).Type = HandleType.Starting;
@@ -560,14 +560,14 @@ namespace Epsitec.Common.Document.Objects
 				Point p1, p2;
 				if ( this.mouseDown )
 				{
-					if ( this.TotalHandle < 2 )  return;
-					p1 = this.Handle(this.TotalHandle-2).Position;
-					p2 = this.Handle(this.TotalHandle-1).Position;
+					if ( this.TotalMainHandle < 2 )  return;
+					p1 = this.Handle(this.TotalMainHandle-2).Position;
+					p2 = this.Handle(this.TotalMainHandle-1).Position;
 				}
 				else
 				{
-					if ( this.TotalHandle < 1 )  return;
-					p1 = this.Handle(this.TotalHandle-1).Position;
+					if ( this.TotalMainHandle < 1 )  return;
+					p1 = this.Handle(this.TotalMainHandle-1).Position;
 					p2 = mouse;
 				}
 				double len = Point.Distance(p1, p2);

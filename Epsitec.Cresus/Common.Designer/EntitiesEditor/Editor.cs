@@ -1398,7 +1398,9 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		#region Serialization
 		public bool DirtySerialization
 		{
-			//	Indique si la sérialisation est nécessaire.
+			//	Indique si la sérialisation du layout est nécessaire. Si le layout est modifié,
+			//	il faut activer la commande Enregistrer du module, car le layout est sérialisé
+			//	avec le module.
 			get
 			{
 				return this.dirtySerialization;

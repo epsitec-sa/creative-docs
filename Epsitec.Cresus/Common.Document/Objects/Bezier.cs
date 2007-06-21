@@ -701,7 +701,7 @@ namespace Epsitec.Common.Document.Objects
 		{
 			//	Donne le nombre de poignées sélectionnées par le modeleur.
 			int count = 0;
-			int total = this.TotalHandle;
+			int total = this.TotalMainHandle;
 			for ( int i=0 ; i<total ; i+=3 )
 			{
 				Handle handle = this.Handle(i+1);
@@ -1123,7 +1123,7 @@ namespace Epsitec.Common.Document.Objects
 				double len = Point.Distance(pos, this.Handle(1).Position);
 				if ( len <= drawingContext.CloseMargin )
 				{
-					if ( this.TotalHandle == 3 )
+					if ( this.TotalMainHandle == 3 )
 					{
 						ignore = true;
 					}
@@ -1136,7 +1136,7 @@ namespace Epsitec.Common.Document.Objects
 				}
 				else
 				{
-					len = Point.Distance(pos, this.Handle(this.TotalHandle-2).Position);
+					len = Point.Distance(pos, this.Handle(this.TotalMainHandle-2).Position);
 					if ( len <= drawingContext.CloseMargin )
 					{
 						ignore = true;
@@ -1146,7 +1146,7 @@ namespace Epsitec.Common.Document.Objects
 
 			if ( !this.lastPoint && !ignore )
 			{
-				if ( this.TotalHandle == 0 )
+				if ( this.TotalMainHandle == 0 )
 				{
 					this.HandleAdd(pos, HandleType.Bezier);
 					this.HandleAdd(pos, HandleType.Starting, HandleConstrainType.Smooth);
@@ -1158,13 +1158,13 @@ namespace Epsitec.Common.Document.Objects
 					this.HandleAdd(pos, HandleType.Primary, HandleConstrainType.Smooth);
 					this.HandleAdd(pos, HandleType.Bezier);
 
-					int rank = this.TotalHandle-6;
+					int rank = this.TotalMainHandle-6;
 					if ( this.Handle(rank).Type == HandleType.Hide )
 					{
 						this.Handle(rank+2).Position = Point.Scale(this.Handle(rank+1).Position, pos, 0.5);
 					}
 				}
-				this.Handle(this.TotalHandle-2).IsVisible = true;
+				this.Handle(this.TotalMainHandle-2).IsVisible = true;
 			}
 
 			this.mouseDown = true;
@@ -1186,7 +1186,7 @@ namespace Epsitec.Common.Document.Objects
 				}
 				else
 				{
-					rank = this.TotalHandle-2;
+					rank = this.TotalMainHandle-2;
 				}
 				this.Handle(rank+1).Position = pos;
 				this.Handle(rank-1).Position = Point.Symmetry(this.Handle(rank).Position, pos);
@@ -1218,7 +1218,7 @@ namespace Epsitec.Common.Document.Objects
 			//	Fin de la création d'un objet.
 			this.document.Notifier.NotifyArea(this.BoundingBox);
 
-			int rank = this.TotalHandle;
+			int rank = this.TotalMainHandle;
 			double len = Point.Distance(this.Handle(rank-1).Position, this.Handle(rank-2).Position);
 			if ( rank <= 3 )
 			{
@@ -1279,7 +1279,7 @@ namespace Epsitec.Common.Document.Objects
 			this.isCreating = false;
 			this.document.Modifier.TextInfoModif = "";
 
-			int total = this.TotalHandle;
+			int total = this.TotalMainHandle;
 			if ( total <= 3 )  return false;
 
 			this.Handle(1).Type = HandleType.Starting;
@@ -1295,8 +1295,8 @@ namespace Epsitec.Common.Document.Objects
 			int r1, r2;
 			if ( this.isCreating )
 			{
-				r1 = this.TotalHandle-2;
-				r2 = this.TotalHandle-1;
+				r1 = this.TotalMainHandle-2;
+				r2 = this.TotalMainHandle-1;
 			}
 			else
 			{
