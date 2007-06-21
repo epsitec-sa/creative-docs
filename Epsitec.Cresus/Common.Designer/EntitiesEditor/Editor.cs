@@ -1408,6 +1408,12 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				if (this.dirtySerialization != value)
 				{
 					this.dirtySerialization = value;
+
+					if (this.dirtySerialization)
+					{
+						this.module.AccessEntities.IsDirty = true;
+					}
+
 					this.OnDirtySerializationChanged();
 				}
 			}
