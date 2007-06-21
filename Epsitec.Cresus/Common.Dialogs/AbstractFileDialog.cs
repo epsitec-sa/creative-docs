@@ -1962,25 +1962,53 @@ namespace Epsitec.Common.Dialogs
 					name = System.IO.Path.Combine (this.navigationController.ActiveDirectoryPath, name);
 				}
 
-				if (System.IO.Directory.Exists (name) && item != null)
-				{
-					FolderItem folderItem = FileManager.GetFolderItem (name, FolderQueryMode.NoIcons);
+				string nameWithExt = name;
 
-					if (folderItem.IsFolder)
+				//	When the user specifies a file name, try adding an extension, if the
+				//	specified name does not resolve to an existing file, and if it is not
+				//	a directory.
+
+				if ((!string.IsNullOrEmpty (this.fileExtension)) &&
+					(!name.ToLowerInvariant ().EndsWith (this.fileExtension)) &&
+					(!System.IO.File.Exists (name)) &&
+					(!(name.EndsWith (System.IO.Path.DirectorySeparatorChar.ToString ()) || name.EndsWith (System.IO.Path.AltDirectorySeparatorChar.ToString ()))))
+				{
+					nameWithExt = string.Concat (name, this.fileExtension);
+				}
+
+				//	If the name maps to a directory, we will have to determine whether we
+				//	enter it as a result of clicking "OK", or if we have to treat the name
+				//	as a document name :
+				
+				if (System.IO.Directory.Exists (name))
+				{
+					bool assumeFolderName = false;
+
+					switch (this.FileDialogType)
 					{
-						this.navigationController.ActiveDirectory = folderItem;
-						return false;
+						case FileDialogType.New:
+						case FileDialogType.Open:
+							assumeFolderName = !System.IO.File.Exists (nameWithExt);
+							break;
+						
+						case FileDialogType.Save:
+							assumeFolderName = name.EndsWith (System.IO.Path.DirectorySeparatorChar.ToString ()) || name.EndsWith (System.IO.Path.AltDirectorySeparatorChar.ToString ());
+							break;
+					}
+
+					if (assumeFolderName || item != null)
+					{
+						FolderItem folderItem = FileManager.GetFolderItem (name, FolderQueryMode.NoIcons);
+
+						if (folderItem.IsFolder)
+						{
+							this.navigationController.ActiveDirectory = folderItem;
+							return false;
+						}
 					}
 				}
 
-				if (this.fileExtension != null &&
-					!name.ToLowerInvariant ().EndsWith (this.fileExtension) &&
-					!System.IO.File.Exists (name))
-				{
-					name = string.Concat (name, this.fileExtension);
-				}
-
-				this.selectedFileName = name;
+				this.selectedFileName = nameWithExt;
 
 				return this.PromptForOverwriting ();
 			}
