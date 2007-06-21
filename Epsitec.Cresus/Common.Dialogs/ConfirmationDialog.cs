@@ -20,11 +20,11 @@ namespace Epsitec.Common.Dialogs
 		/// <param name="header">Question posée en haut du dialogue.</param>
 		/// <param name="questions">Liste de questions, formatées avec ConfirmationButton.FormatContent().</param>
 		/// <param name="hasCancelButton">Présente optionnelle d'un bouton "Annuler" dans une bande grise en bas.</param>
-		public ConfirmationDialog(string title, string header, List<string> questions, bool hasCancelButton)
+		public ConfirmationDialog(string title, string header, IEnumerable<string> questions, bool hasCancelButton)
 		{
 			this.title = title;
 			this.header = header;
-			this.questions = questions;
+			this.questions = new List<string> (questions);
 			this.hasCancel = hasCancelButton;
 		}
 
