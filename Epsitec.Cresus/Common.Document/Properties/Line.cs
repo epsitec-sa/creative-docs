@@ -190,14 +190,14 @@ namespace Epsitec.Common.Document.Properties
 						 this.dashGap[2] == 0.0 )  return StandardDashType.Line;
 
 					if ( this.dashPen[0] != 0.0 &&
-						 this.dashGap[0] == this.dashPen[0]*0.5 &&
+						 this.dashGap[0] == this.dashPen[0]/0.5 &&
 						 this.dashPen[1] == 0.0 &&
 						 this.dashGap[1] == 0.0 &&
 						 this.dashPen[2] == 0.0 &&
 						 this.dashGap[2] == 0.0 )  return StandardDashType.LineDense;
 
 					if ( this.dashPen[0] != 0.0 &&
-						 this.dashGap[0] == this.dashPen[0]*2.0 &&
+						 this.dashGap[0] == this.dashPen[0]/2.0 &&
 						 this.dashPen[1] == 0.0 &&
 						 this.dashGap[1] == 0.0 &&
 						 this.dashPen[2] == 0.0 &&
@@ -210,13 +210,13 @@ namespace Epsitec.Common.Document.Properties
 						 this.dashPen[2] == 0.0 &&
 						 this.dashGap[2] == 0.0 )  return StandardDashType.Dot;
 
-					if ( this.dashPen[0] == this.dashGap[0]*2.0 &&
+					if ( this.dashPen[0] == this.dashGap[0]/2.0 &&
 						 this.dashPen[1] == 0.0 &&
 						 this.dashGap[1] == this.dashGap[0] &&
 						 this.dashPen[2] == 0.0 &&
 						 this.dashGap[2] == 0.0 )  return StandardDashType.LineDot;
 
-					if ( this.dashPen[0] == this.dashGap[0]*2.0 &&
+					if ( this.dashPen[0] == this.dashGap[0]/2.0 &&
 						 this.dashPen[1] == 0.0 &&
 						 this.dashGap[1] == this.dashGap[0] &&
 						 this.dashPen[2] == 0.0 &&
