@@ -474,7 +474,7 @@ namespace Epsitec.Common.Support.Implementation
 
 		private static ResourceModuleInfo GetModuleId(string path)
 		{
-			return ResourceModule.Load (path);
+			return ResourceModule.LoadManifest (path);
 		}
 
 		private static string				globalProbingPath;

@@ -13,16 +13,17 @@ namespace Epsitec.Common.Support
 	public static class ResourceModule
 	{
 		/// <summary>
-		/// Loads the module information for a specified module path.
+		/// Loads the module information for a specified module path. The information
+		/// is loaded from a manifest file (<see cref="ResourceModule.ManifestFileName"/>).
 		/// </summary>
 		/// <param name="modulePath">The module path.</param>
 		/// <returns>The module information or <c>ResourceModuleInfo.Empty</c>.</returns>
-		public static ResourceModuleInfo Load(string modulePath)
+		public static ResourceModuleInfo LoadManifest(string modulePath)
 		{
 			if (System.IO.Directory.Exists (modulePath))
 			{
 				System.IO.TextReader textReader = null;
-				string           moduleInfoPath = System.IO.Path.Combine (modulePath, ResourceModule.ModuleInfoFileName);
+				string           moduleInfoPath = System.IO.Path.Combine (modulePath, ResourceModule.ManifestFileName);
 
 				if (System.IO.File.Exists (moduleInfoPath))
 				{
@@ -90,14 +91,14 @@ namespace Epsitec.Common.Support
 		}
 
 		/// <summary>
-		/// Saves the module definition information into the associated XML
-		/// information file.
+		/// Saves the module definition information into the associated manifest
+		/// file (<see cref="ResourceModule.ManifestFileName"/>).
 		/// </summary>
 		/// <param name="info">The module information.</param>
-		public static void Save(ResourceModuleInfo info)
+		public static void SaveManifest(ResourceModuleInfo info)
 		{
 			string modulePath     = info.Path;
-			string moduleInfoPath = System.IO.Path.Combine (modulePath, ResourceModule.ModuleInfoFileName);
+			string moduleInfoPath = System.IO.Path.Combine (modulePath, ResourceModule.ManifestFileName);
 	
 			System.Xml.XmlDocument xml = new System.Xml.XmlDocument ();
 			System.Xml.XmlElement root = xml.CreateElement (ResourceModule.XmlModuleInfo);
@@ -113,12 +114,16 @@ namespace Epsitec.Common.Support
 		}
 
 		
-		public const string ModuleInfoFileName = "module.info";
-		
-		public const string XmlModuleInfo = "ModuleInfo";
-		
-		public const string XmlAttributeId    = "id";
-		public const string XmlAttributeLayer = "layer";
-		public const string XmlAttributeName  = "name";
+		public const string ManifestFileName = "module.info";
+
+		#region Internal constants
+
+		internal const string XmlModuleInfo = "ModuleInfo";
+
+		internal const string XmlAttributeId    = "id";
+		internal const string XmlAttributeLayer = "layer";
+		internal const string XmlAttributeName  = "name";
+
+		#endregion
 	}
 }
