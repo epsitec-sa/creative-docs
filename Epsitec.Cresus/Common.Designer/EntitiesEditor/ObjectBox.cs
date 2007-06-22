@@ -1129,6 +1129,12 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				return;
 			}
 
+			if (!Misc.IsValidLabel(ref name))
+			{
+				module.MainWindow.DialogError(Res.Strings.Error.Name.Invalid);
+				return;
+			}
+
 			fieldCultureMap.Name = name;
 			fieldAccessor.PersistChanges();
 			this.UpdateField(dataField, this.fields[rank]);
