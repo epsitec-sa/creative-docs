@@ -7,10 +7,16 @@ using System.Globalization;
 namespace Epsitec.Common.Support
 {
 	/// <summary>
-	/// The <c>ResourceModule</c> class ...
+	/// The <c>ResourceModule</c> class is used to manipulate module related
+	/// information (see <see cref="ResourceModuleInfo"/>).
 	/// </summary>
 	public static class ResourceModule
 	{
+		/// <summary>
+		/// Loads the module information for a specified module path.
+		/// </summary>
+		/// <param name="modulePath">The module path.</param>
+		/// <returns>The module information or <c>ResourceModuleInfo.Empty</c>.</returns>
 		public static ResourceModuleInfo Load(string modulePath)
 		{
 			if (System.IO.Directory.Exists (modulePath))
@@ -47,6 +53,12 @@ namespace Epsitec.Common.Support
 							ResourceModuleLayer moduleLayer = ResourceModuleLayer.Undefined;
 							string              moduleName  = null;
 
+							//	The module.info file contains a root node <ModuleInfo>
+							//	which defines following attributes :
+							//	- id, the numeric identifier for the module
+							//	- name, the textual identifier for the module
+							//	- layer, the code for the resource module layer
+
 							string idAttribute    = root.GetAttribute (ResourceModule.XmlAttributeId);
 							string layerAttribute = root.GetAttribute (ResourceModule.XmlAttributeLayer);
 							string nameAttribute  = root.GetAttribute (ResourceModule.XmlAttributeName);
@@ -77,6 +89,30 @@ namespace Epsitec.Common.Support
 			return ResourceModuleInfo.Empty;
 		}
 
+		/// <summary>
+		/// Saves the module definition information into the associated XML
+		/// information file.
+		/// </summary>
+		/// <param name="info">The module information.</param>
+		public static void Save(ResourceModuleInfo info)
+		{
+			string modulePath     = info.Path;
+			string moduleInfoPath = System.IO.Path.Combine (modulePath, ResourceModule.ModuleInfoFileName);
+	
+			System.Xml.XmlDocument xml = new System.Xml.XmlDocument ();
+			System.Xml.XmlElement root = xml.CreateElement (ResourceModule.XmlModuleInfo);
+
+			root.SetAttribute (ResourceModule.XmlAttributeId, info.Id.ToString (System.Globalization.CultureInfo.InvariantCulture));
+			root.SetAttribute (ResourceModule.XmlAttributeName, info.Name);
+			root.SetAttribute (ResourceModule.XmlAttributeLayer, ResourceModuleInfo.ConvertLayerToPrefix (info.Layer));
+			
+			xml.InsertBefore (xml.CreateXmlDeclaration ("1.0", "utf-8", null), null);
+			xml.AppendChild (root);
+
+			xml.Save (moduleInfoPath);
+		}
+
+		
 		public const string ModuleInfoFileName = "module.info";
 		
 		public const string XmlModuleInfo = "ModuleInfo";
