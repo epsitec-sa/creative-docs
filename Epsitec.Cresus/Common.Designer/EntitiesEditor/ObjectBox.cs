@@ -1074,6 +1074,12 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				return;
 			}
 			
+			if (!Misc.IsValidLabel(ref name))
+			{
+				module.MainWindow.DialogError(Res.Strings.Error.Name.Invalid);
+				return;
+			}
+
 			StructuredData data = this.cultureMap.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
 			IList<StructuredData> dataFields = data.GetValue(Support.Res.Fields.ResourceStructuredType.Fields) as IList<StructuredData>;
 
