@@ -13,7 +13,10 @@ namespace Epsitec.Common.Support
 	public enum ResourceModuleLayer
 	{
 		Undefined,
+		
+		System,
 
+		
 		Application,
 		
 		Customization1,

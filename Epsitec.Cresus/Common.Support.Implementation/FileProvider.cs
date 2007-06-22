@@ -474,61 +474,7 @@ namespace Epsitec.Common.Support.Implementation
 
 		private static ResourceModuleInfo GetModuleId(string path)
 		{
-			string moduleName = System.IO.Path.GetFileName (path);
-			string fileName   = System.IO.Path.Combine (path, "module.info");
-
-			if (!System.IO.File.Exists (fileName))
-			{
-				return ResourceModuleInfo.Empty;
-			}
-
-			int                 moduleId    = -1;
-			ResourceModuleLayer moduleLayer = ResourceModuleLayer.Undefined;
-
-			try
-			{
-				//	Load the "module.info" file from the resource sub-folder
-				//	where all the module bundles are stored, then extract the
-				//	identifier :
-
-				System.Xml.XmlDocument xml = new System.Xml.XmlDocument ();
-				xml.Load (fileName);
-				System.Xml.XmlElement root = xml.DocumentElement;
-
-				if (root.Name == "ModuleInfo")
-				{
-					int idValue;
-					
-					string idAttribute    = root.GetAttribute ("id");
-					string layerAttribute = root.GetAttribute ("layer");
-
-					if ((!string.IsNullOrEmpty (idAttribute)) &&
-						(int.TryParse (idAttribute, NumberStyles.Integer, CultureInfo.InvariantCulture, out idValue)))
-					{
-						moduleId = idValue;
-					}
-
-					if (!string.IsNullOrEmpty (layerAttribute))
-					{
-						moduleLayer = ResourceModuleInfo.ConvertPrefixToLayer (layerAttribute);
-					}
-				}
-
-				if (moduleId < 0)
-				{
-					System.Diagnostics.Debug.WriteLine (string.Format ("Invalid XML file found in '{0}'", path));
-				}
-			}
-			catch (System.IO.FileNotFoundException)
-			{
-				System.Diagnostics.Debug.WriteLine (string.Format ("Could not find module.info file in '{0}'", path));
-			}
-			catch (System.IO.PathTooLongException)
-			{
-				System.Diagnostics.Debug.WriteLine (string.Format ("Path to module.info file for '{0}' is too long", path));
-			}
-
-			return new ResourceModuleInfo (moduleName, path, moduleId, moduleLayer);
+			return ResourceModule.Load (path);
 		}
 
 		private static string				globalProbingPath;

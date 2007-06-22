@@ -204,6 +204,9 @@ namespace Epsitec.Common.Support
 				
 				case ResourceModuleLayer.User:
 					return "U";
+
+				case ResourceModuleLayer.System:
+					return "s";
 			}
 
 			throw new System.ArgumentOutOfRangeException ("layer");
@@ -233,6 +236,9 @@ namespace Epsitec.Common.Support
 				
 				case "U":
 					return ResourceModuleLayer.User;
+
+				case "s":
+					return ResourceModuleLayer.System;
 			}
 
 			throw new System.ArgumentException ();
