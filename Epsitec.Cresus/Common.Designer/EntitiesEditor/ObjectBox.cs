@@ -1109,36 +1109,31 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		protected void ChangeFieldName(int rank)
 		{
 			//	Choix du nom pour un champ.
-#if true
 			StructuredData data = this.cultureMap.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
 			IList<StructuredData> dataFields = data.GetValue(Support.Res.Fields.ResourceStructuredType.Fields) as IList<StructuredData>;
 
 			StructuredData dataField = dataFields[rank];
-			Druid druid = (Druid) dataField.GetValue(Support.Res.Fields.Field.CaptionId);
+			Druid fieldCaptionId = (Druid) dataField.GetValue(Support.Res.Fields.Field.CaptionId);
 
+			Common.Support.ResourceAccessors.StructuredTypeResourceAccessor accessor = this.editor.Module.AccessEntities.Accessor as Common.Support.ResourceAccessors.StructuredTypeResourceAccessor;
+			IResourceAccessor fieldAccessor = accessor.FieldAccessor;
+			
+			CultureMap fieldCultureMap = fieldAccessor.Collection[fieldCaptionId];
+			string name = fieldCultureMap.Name;
+			
 			Module module = this.editor.Module;
-			druid = module.MainWindow.DlgResourceSelector(module, ResourceAccess.Type.Fields, TypeCode.Invalid, druid, null, null);
-			if (druid.IsEmpty)
-			{
-				return;
-			}
-
-			dataField.SetValue(Support.Res.Fields.Field.CaptionId, druid);
-			this.UpdateField(dataField, this.fields[rank]);
-			this.SetDirty();
-			this.editor.Invalidate();
-#else
-			Module module = this.editor.Module;
-			string name = this.fields[rank].FieldName;
 			name = module.MainWindow.DlgFieldName(name);
 			if (string.IsNullOrEmpty(name))
 			{
 				this.hilitedElement = ActiveElement.None;
 				return;
 			}
-			
-			// TODO: modifier le nom du type...
-#endif
+
+			fieldCultureMap.Name = name;
+			fieldAccessor.PersistChanges();
+			this.UpdateField(dataField, this.fields[rank]);
+			this.SetDirty();
+			this.editor.Invalidate();
 		}
 
 		protected void ChangeFieldType(int rank)
