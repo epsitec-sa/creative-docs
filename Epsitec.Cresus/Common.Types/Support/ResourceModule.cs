@@ -113,6 +113,36 @@ namespace Epsitec.Common.Support
 			xml.Save (moduleInfoPath);
 		}
 
+		/// <summary>
+		/// Finds all possible module paths given a root path. This will walk
+		/// through the full tree, attempting to locate directories with a
+		/// manifest file.
+		/// </summary>
+		/// <param name="rootPath">The root path.</param>
+		/// <returns>The enumeration of plausible module paths.</returns>
+		public static IEnumerable<string> FindModulePaths(string rootPath)
+		{
+			foreach (string path in System.IO.Directory.GetDirectories (rootPath, "*", System.IO.SearchOption.AllDirectories))
+			{
+				string probe = System.IO.Path.Combine (path, ResourceModule.ManifestFileName);
+				bool   found = false;
+
+				try
+				{
+					found = System.IO.File.Exists (probe);
+				}
+				catch (System.IO.IOException)
+				{
+					//	Ignore file related exceptions; we don't want to stop if
+					//	we try to analyze some protected directory: just skip it.
+				}
+
+				if (found)
+				{
+					yield return path;
+				}
+			}
+		}
 		
 		public const string ManifestFileName = "module.info";
 

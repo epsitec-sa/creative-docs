@@ -177,7 +177,7 @@ namespace Epsitec.Common.Support
 			Druid                       baseTypeId = (Druid) data.GetValue (Res.Fields.ResourceStructuredType.BaseType);
 			IList<Types.StructuredData> fields     = data.GetValue (Res.Fields.ResourceStructuredType.Fields) as IList<Types.StructuredData>;
 
-			Assert.AreEqual (12, fields.Count);
+			Assert.AreEqual (13, fields.Count);
 
 			Assert.AreEqual (Res.Fields.ResourceBase.ModificationId, fields[0].GetValue (Res.Fields.Field.CaptionId));
 			Assert.AreEqual (Res.Fields.ResourceBase.Comment,        fields[1].GetValue (Res.Fields.Field.CaptionId));
@@ -346,7 +346,7 @@ namespace Epsitec.Common.Support
 			Assert.IsNotNull (stringType);
 			Assert.AreEqual (true, stringType.UseMultilingualStorage);
 			Assert.AreEqual (1, stringType.MinimumLength);
-			Assert.AreEqual (1000, stringType.MaximumLength);
+			Assert.AreEqual (1000000, stringType.MaximumLength);
 
 			//	Check Collection
 
