@@ -2160,7 +2160,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 							Druid druid = Druid.Parse(element);
 							if (druid.IsValid)
 							{
-								this.cultureMap = this.editor.Module.AccessEntities.Accessor.Collection[druid];
+								Module module = this.editor.Module.MainWindow.SearchModule(druid);
+								this.cultureMap = module.AccessEntities.Accessor.Collection[druid];
 							}
 						}
 						else if (name == Xml.Bounds)
