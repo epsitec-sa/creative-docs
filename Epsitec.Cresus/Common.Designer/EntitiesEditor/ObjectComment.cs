@@ -467,12 +467,12 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				graphics.AddFilledRectangle(rect);
 				graphics.RenderSolid(this.ColorCommentHeader(this.hilitedElement == ActiveElement.CommentMove, this.isDraggingMove || this.isDraggingWidth));
 				graphics.AddRectangle(rect);
-				graphics.RenderSolid(Color.FromBrightness(0));
+				graphics.RenderSolid(this.GetColor(0));
 
 				rect.Width -= rect.Height;
 				rect.Offset(0, 1);
 				this.textLayoutTitle.LayoutSize = rect.Size;
-				this.textLayoutTitle.Paint(rect.BottomLeft, graphics, Rectangle.MaxValue, Color.FromBrightness(1), GlyphPaintStyle.Normal);
+				this.textLayoutTitle.Paint(rect.BottomLeft, graphics, Rectangle.MaxValue, this.GetColor(1), GlyphPaintStyle.Normal);
 			}
 
 			//	Dessine la boîte vide avec la queue (bulle de bd).
@@ -482,13 +482,13 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			graphics.RenderSolid(this.ColorComment(this.hilitedElement != ActiveElement.None));
 
 			graphics.Rasterizer.AddOutline(path);
-			graphics.RenderSolid(Color.FromBrightness(0));
+			graphics.RenderSolid(this.GetColor(0));
 
 			//	Dessine le texte.
 			rect = this.bounds;
 			rect.Deflate(ObjectComment.textMargin);
 			this.textLayoutComment.LayoutSize = rect.Size;
-			this.textLayoutComment.Paint(rect.BottomLeft, graphics, Rectangle.MaxValue, Color.FromBrightness(this.IsDarkColorMain ? 1:0), GlyphPaintStyle.Normal);
+			this.textLayoutComment.Paint(rect.BottomLeft, graphics, Rectangle.MaxValue, this.GetColor(this.IsDarkColorMain ? 1:0), GlyphPaintStyle.Normal);
 
 			//	Dessine le bouton de fermeture.
 			if (!rh.IsEmpty)

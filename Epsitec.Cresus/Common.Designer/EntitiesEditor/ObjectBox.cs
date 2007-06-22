@@ -1494,7 +1494,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 			//	Dessine l'intérieur en blanc.
 			graphics.Rasterizer.AddSurface(path);
-			graphics.RenderSolid(Color.FromBrightness(1));
+			graphics.RenderSolid(this.GetColor(1));
 
 			//	Dessine l'intérieur en dégradé.
 			graphics.Rasterizer.AddSurface(path);
@@ -1502,20 +1502,20 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			Color c2 = this.GetColorMain(dragging ? 0.2 : 0.1);
 			this.RenderHorizontalGradient(graphics, this.bounds, c1, c2);
 
-			Color colorLine = Color.FromBrightness(0.9);
+			Color colorLine = this.GetColor(0.9);
 			if (dragging)
 			{
 				colorLine = this.GetColorMain(0.3);
 			}
 
-			Color colorFrame = dragging ? this.GetColorMain() : Color.FromBrightness(0);
+			Color colorFrame = dragging ? this.GetColorMain() : this.GetColor(0);
 
 			//	Dessine en blanc la zone pour les champs.
 			if (this.isExtended)
 			{
 				Rectangle inside = new Rectangle(this.bounds.Left+1, this.bounds.Bottom+AbstractObject.footerHeight, this.bounds.Width-2, this.bounds.Height-AbstractObject.footerHeight-AbstractObject.headerHeight);
 				graphics.AddFilledRectangle(inside);
-				graphics.RenderSolid(Color.FromBrightness(1));
+				graphics.RenderSolid(this.GetColor(1));
 				graphics.AddFilledRectangle(inside);
 				Color ci1 = this.GetColorMain(dragging ? 0.2 : 0.1);
 				Color ci2 = this.GetColorMain(0.0);
@@ -1541,19 +1541,19 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				rect = new Rectangle(this.bounds.Left, this.bounds.Top-AbstractObject.headerHeight, this.bounds.Width, AbstractObject.headerHeight);
 				rect.Deflate(4, 2);
 				this.title.LayoutSize = rect.Size;
-				this.title.Paint(rect.BottomLeft, graphics, Rectangle.MaxValue, Color.FromBrightness(0), GlyphPaintStyle.Normal);
+				this.title.Paint(rect.BottomLeft, graphics, Rectangle.MaxValue, this.GetColor(0), GlyphPaintStyle.Normal);
 			}
 			else
 			{
 				rect = new Rectangle(this.bounds.Left, this.bounds.Top-AbstractObject.headerHeight+10, this.bounds.Width, AbstractObject.headerHeight-10);
 				rect.Deflate(4, 0);
 				this.title.LayoutSize = rect.Size;
-				this.title.Paint(rect.BottomLeft, graphics, Rectangle.MaxValue, Color.FromBrightness(0), GlyphPaintStyle.Normal);
+				this.title.Paint(rect.BottomLeft, graphics, Rectangle.MaxValue, this.GetColor(0), GlyphPaintStyle.Normal);
 				
 				rect = new Rectangle(this.bounds.Left, this.bounds.Top-AbstractObject.headerHeight+4, this.bounds.Width, 10);
 				rect.Deflate(4, 0);
 				this.subtitle.LayoutSize = rect.Size;
-				this.subtitle.Paint(rect.BottomLeft, graphics, Rectangle.MaxValue, Color.FromBrightness(0), GlyphPaintStyle.Normal);
+				this.subtitle.Paint(rect.BottomLeft, graphics, Rectangle.MaxValue, this.GetColor(0), GlyphPaintStyle.Normal);
 			}
 
 			//	Dessine le bouton compact/étendu.
@@ -1620,8 +1620,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 				for (int i=0; i<this.fields.Count; i++)
 				{
-					Color colorName = Color.FromBrightness(0);
-					Color colorType = Color.FromBrightness(0);
+					Color colorName = this.GetColor(0);
+					Color colorType = this.GetColor(0);
 
 					if (this.hilitedElement == ActiveElement.BoxFieldName && this.hilitedFieldRank == i)
 					{
@@ -1630,7 +1630,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 						graphics.AddFilledRectangle(rect);
 						graphics.RenderSolid(this.GetColorMain());
 
-						colorName = Color.FromBrightness(1);
+						colorName = this.GetColor(1);
 					}
 
 					if (this.hilitedElement == ActiveElement.BoxFieldType && this.hilitedFieldRank == i)
@@ -1640,7 +1640,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 						graphics.AddFilledRectangle(rect);
 						graphics.RenderSolid(this.GetColorMain());
 
-						colorType = Color.FromBrightness(1);
+						colorType = this.GetColor(1);
 					}
 
 					if ((this.hilitedElement == ActiveElement.BoxFieldRemove || this.hilitedElement == ActiveElement.BoxFieldMovable) && this.hilitedFieldRank == i)
@@ -1856,15 +1856,15 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 			Path path = this.PathRoundRectangle(big, 10);
 			graphics.Rasterizer.AddSurface(path);
-			graphics.RenderSolid(Color.FromBrightness(1));
+			graphics.RenderSolid(this.GetColor(1));
 			graphics.Rasterizer.AddSurface(path);
 			this.RenderHorizontalGradient(graphics, big, this.GetColorMain(0.6), this.GetColorMain(0.2));
 
 			graphics.Rasterizer.AddOutline(path);
-			graphics.RenderSolid(Color.FromBrightness(0));
+			graphics.RenderSolid(this.GetColor(0));
 
 			graphics.AddFilledRectangle(box);
-			graphics.RenderSolid(Color.FromBrightness(1));
+			graphics.RenderSolid(this.GetColor(1));
 
 			//	Dessine l'en-tête.
 			Rectangle rect = box;
@@ -1874,10 +1874,10 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			graphics.RenderSolid(this.GetColorMain());
 
 			Rectangle gr = new Rectangle(this.PositionSourcesButton.X-AbstractObject.buttonRadius, this.PositionSourcesButton.Y-AbstractObject.buttonRadius, AbstractObject.buttonRadius*2, AbstractObject.buttonRadius*2);
-			adorner.PaintGlyph(graphics, gr, WidgetPaintState.Enabled, Color.FromBrightness(1), GlyphShape.TriangleDown, PaintTextStyle.Button);
+			adorner.PaintGlyph(graphics, gr, WidgetPaintState.Enabled, this.GetColor(1), GlyphShape.TriangleDown, PaintTextStyle.Button);
 			
 			graphics.AddText(rect.Left+AbstractObject.buttonRadius*2+5, rect.Bottom+1, rect.Width-(AbstractObject.buttonRadius*2+10), rect.Height, "Entités sources", Font.GetFont(Font.DefaultFontFamily, "Bold"), 14, ContentAlignment.MiddleLeft);
-			graphics.RenderSolid(Color.FromBrightness(1));
+			graphics.RenderSolid(this.GetColor(1));
 			
 			rect = box;
 			rect.Top = rect.Bottom+h;
@@ -1891,7 +1891,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				if (info.Opened)
 				{
 					graphics.AddFilledRectangle(rect);
-					graphics.RenderSolid(Color.FromBrightness(0.9));
+					graphics.RenderSolid(this.GetColor(0.9));
 				}
 				else if (i == this.sourcesMenuSelected)
 				{
@@ -1901,17 +1901,17 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 				string text = string.Concat(info.ModuleName, ": ", info.FieldName);
 				graphics.AddText(rect.Left+5, rect.Bottom, rect.Width-10, rect.Height, text, Font.DefaultFont, 10, ContentAlignment.MiddleLeft);
-				graphics.RenderSolid(Color.FromBrightness(info.Opened ? 0.3 : 0));
+				graphics.RenderSolid(this.GetColor(info.Opened ? 0.3 : 0));
 
 				graphics.AddLine(rect.TopLeft, rect.TopRight);
-				graphics.RenderSolid(Color.FromBrightness(0));
+				graphics.RenderSolid(this.GetColor(0));
 
 				rect.Offset(0, -h);
 			}
 
 			//	Dessine le cadre du menu.
 			graphics.AddRectangle(box);
-			graphics.RenderSolid(Color.FromBrightness(0));
+			graphics.RenderSolid(this.GetColor(0));
 		}
 
 		protected void DrawDashLine(Graphics graphics, Point p1, Point p2, Color color)
@@ -1932,7 +1932,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			rect.Deflate(6);
 			Path path = this.PathRoundRectangle(rect, rect.Width/2);
 
-			Color hiliteColor = Color.FromBrightness(1);
+			Color hiliteColor = this.GetColor(1);
 			if (hilited)
 			{
 				hiliteColor = this.GetColorMain();
@@ -1945,7 +1945,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			graphics.RenderSolid(hiliteColor);
 
 			graphics.Rasterizer.AddOutline(path);
-			graphics.RenderSolid(Color.FromBrightness(0));
+			graphics.RenderSolid(this.GetColor(0));
 		}
 
 		protected void DrawMovingArrow(Graphics graphics, Point p1, Point p2)
@@ -2085,10 +2085,12 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			if (module == this.editor.Module.MainWindow.CurrentModule)
 			{
 				this.Subtitle = null;
+				this.isDimmed = false;
 			}
 			else
 			{
 				this.Subtitle = module.ModuleInfo.Name;
+				this.isDimmed = true;
 			}
 		}
 

@@ -79,6 +79,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			//	Constructeur.
 			this.editor = editor;
 			this.boxColor = MainColor.Blue;
+			this.isDimmed = false;
 			this.hilitedElement = ActiveElement.None;
 		}
 
@@ -353,13 +354,13 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			graphics.RenderSolid(this.GetColorMain(color, 0.8));
 
 			graphics.AddRectangle(rect);
-			graphics.RenderSolid(Color.FromBrightness(0));
+			graphics.RenderSolid(this.GetColor(0));
 
 			if (selected)
 			{
 				rect.Deflate(1);
 				graphics.AddRectangle(rect);
-				graphics.RenderSolid(Color.FromBrightness(1));
+				graphics.RenderSolid(this.GetColor(1));
 				rect.Inflate(1);
 			}
 
@@ -367,7 +368,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			{
 				rect.Deflate(2);
 				graphics.AddRectangle(rect);
-				graphics.RenderSolid(Color.FromBrightness(1));
+				graphics.RenderSolid(this.GetColor(1));
 			}
 		}
 
@@ -406,11 +407,11 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				Color colorShape;
 				if (enable)
 				{
-					colorShape = hilited ? Color.FromBrightness(1) : Color.FromBrightness(0);
+					colorShape = hilited ? this.GetColor(1) : this.GetColor(0);
 				}
 				else
 				{
-					colorShape = Color.FromBrightness(0.7);
+					colorShape = this.GetColor(0.7);
 				}
 
 				IAdorner adorner = Common.Widgets.Adorners.Factory.Active;
@@ -440,11 +441,11 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				Color colorShape;
 				if (enable)
 				{
-					colorShape = hilited ? Color.FromBrightness(1) : Color.FromBrightness(0);
+					colorShape = hilited ? this.GetColor(1) : this.GetColor(0);
 				}
 				else
 				{
-					colorShape = Color.FromBrightness(0.7);
+					colorShape = this.GetColor(0.7);
 				}
 
 				Rectangle rect = new Rectangle(center.X-radius, center.Y-radius, radius*2, radius*2);
@@ -475,15 +476,15 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 			if (enable)
 			{
-				colorSurface = hilited ? this.GetColorMain() : Color.FromBrightness(1);
-				colorFrame = Color.FromBrightness(0);
-				colorShape = hilited ? Color.FromBrightness(1) : Color.FromBrightness(0);
+				colorSurface = hilited ? this.GetColorMain() : this.GetColor(1);
+				colorFrame = this.GetColor(0);
+				colorShape = hilited ? this.GetColor(1) : this.GetColor(0);
 			}
 			else
 			{
-				colorSurface = Color.FromBrightness(0.9);
-				colorFrame = Color.FromBrightness(0.5);
-				colorShape = Color.FromBrightness(0.7);
+				colorSurface = this.GetColor(0.9);
+				colorFrame = this.GetColor(0.5);
+				colorShape = this.GetColor(0.7);
 			}
 
 			graphics.AddFilledCircle(center, radius);
@@ -616,6 +617,23 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 			color.A = alpha;
 
+			if (this.isDimmed)
+			{
+				color = this.GetColorLighter(color, 0.3);
+			}
+
+			return color;
+		}
+
+		protected Color GetColor(double brightness)
+		{
+			Color color = Color.FromBrightness(brightness);
+
+			if (this.isDimmed)
+			{
+				color = this.GetColorLighter(color, 0.3);
+			}
+
 			return color;
 		}
 
@@ -715,6 +733,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		protected Editor editor;
 		protected ActiveElement hilitedElement;
 		protected MainColor boxColor;
+		protected bool isDimmed;
 		protected int hilitedFieldRank;
 	}
 }

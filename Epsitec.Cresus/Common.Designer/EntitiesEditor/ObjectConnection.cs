@@ -481,7 +481,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				}
 				graphics.LineWidth = 1;
 
-				Color color = Color.FromBrightness(0);
+				Color color = this.GetColor(0);
 				if (this.hilitedElement == ActiveElement.ConnectionHilited ||
 					this.hilitedElement == ActiveElement.ConnectionChangeRelation )
 				{
@@ -501,7 +501,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				this.DrawEndingArrow(graphics, start, end, this.field.Relation);
 				graphics.LineWidth = 1;
 
-				Color color = Color.FromBrightness(0);
+				Color color = this.GetColor(0);
 				if (this.hilitedElement == ActiveElement.ConnectionHilited ||
 					this.hilitedElement == ActiveElement.ConnectionChangeRelation )
 				{
