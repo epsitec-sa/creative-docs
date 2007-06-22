@@ -315,8 +315,6 @@ namespace Epsitec.Common.Designer
 		static public bool IsValidLabel(ref string label)
 		{
 			//	Vérifie si un nom de label est correct.
-			label = Searcher.RemoveAccent(label);
-
 			string[] list = label.Split('.');
 			System.Text.StringBuilder builder = new System.Text.StringBuilder(label.Length);
 			for (int i=0; i<list.Length; i++)
@@ -349,12 +347,12 @@ namespace Epsitec.Common.Designer
 			{
 				if (first)
 				{
-					if (c >= 'A' && c <= 'Z')
+					if (Misc.IsUpperLetter(c))
 					{
 						builder.Append(c);
 						first = false;
 					}
-					else if (c >= 'a' && c <= 'z')
+					else if (Misc.IsLowerLetter(c))
 					{
 						builder.Append(System.Char.ToUpper(c));
 						first = false;
@@ -370,11 +368,11 @@ namespace Epsitec.Common.Designer
 					{
 						builder.Append(c);
 					}
-					else if (c >= 'A' && c <= 'Z')
+					else if (Misc.IsUpperLetter(c))
 					{
 						builder.Append(c);
 					}
-					else if (c >= 'a' && c <= 'z')
+					else if (Misc.IsLowerLetter(c))
 					{
 						builder.Append(c);
 					}
@@ -387,6 +385,90 @@ namespace Epsitec.Common.Designer
 
 			name = builder.ToString();
 			return true;
+		}
+
+		static protected bool IsLowerLetter(char c)
+		{
+			//	Indique si un caractère est une lettre.
+			//	TODO: traiter tous les accents unicode ?
+			switch (c)
+			{
+				case 'á':
+				case 'à':
+				case 'â':
+				case 'ä':
+				case 'ã':
+
+				case 'ç':
+
+				case 'é':
+				case 'è':
+				case 'ê':
+				case 'ë':
+
+				case 'í':
+				case 'ì':
+				case 'î':
+				case 'ï':
+
+				case 'ñ':
+
+				case 'ó':
+				case 'ò':
+				case 'ô':
+				case 'ö':
+				case 'õ':
+
+				case 'ú':
+				case 'ù':
+				case 'û':
+				case 'ü':
+					return true;
+			}
+
+			return (c >= 'a' && c <= 'z');
+		}
+
+		static protected bool IsUpperLetter(char c)
+		{
+			//	Indique si un caractère est une lettre.
+			//	TODO: traiter tous les accents unicode ?
+			switch (c)
+			{
+				case 'Á':
+				case 'À':
+				case 'Â':
+				case 'Ä':
+				case 'Ã':
+
+				case 'Ç':
+
+				case 'É':
+				case 'È':
+				case 'Ê':
+				case 'Ë':
+
+				case 'Í':
+				case 'Ì':
+				case 'Î':
+				case 'Ï':
+
+				case 'Ñ':
+
+				case 'Ó':
+				case 'Ò':
+				case 'Ô':
+				case 'Ö':
+				case 'Õ':
+
+				case 'Ú':
+				case 'Ù':
+				case 'Û':
+				case 'Ü':
+					return true;
+			}
+
+			return (c >= 'A' && c <= 'Z');
 		}
 
 
