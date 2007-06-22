@@ -29,6 +29,11 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			this.title.Alignment = ContentAlignment.MiddleCenter;
 			this.title.BreakMode = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine;
 
+			this.subtitle = new TextLayout();
+			this.subtitle.DefaultFontSize = 9;
+			this.subtitle.Alignment = ContentAlignment.MiddleCenter;
+			this.subtitle.BreakMode = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine;
+
 			this.fields = new List<Field>();
 
 			this.columnsSeparatorRelative = 0.5;
@@ -54,7 +59,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		public string Title
 		{
-			//	Titre au sommet de la boîte.
+			//	Titre au sommet de la boîte (nom de l'entité).
 			get
 			{
 				return this.titleString;
@@ -70,12 +75,38 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 		}
 
+		protected string Subtitle
+		{
+			//	Sous-titre au sommet de la boîte, juste sous le titre (nom du module).
+			get
+			{
+				return this.subtitleString;
+			}
+			set
+			{
+				if (this.subtitleString != value)
+				{
+					this.subtitleString = value;
+
+					if (string.IsNullOrEmpty(this.subtitleString))
+					{
+						this.subtitle.Text = null;
+					}
+					else
+					{
+						this.subtitle.Text = string.Concat("<i>", this.subtitleString, "</i>");
+					}
+				}
+			}
+		}
+
 		public void SetContent(CultureMap cultureMap)
 		{
 			//	Initialise le contenu de la boîte.
 			this.cultureMap = cultureMap;
 
 			this.Title = this.cultureMap.Name;
+			this.UpdateSubtitle();
 
 			StructuredData data = this.cultureMap.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
 			IList<StructuredData> dataFields = data.GetValue(Support.Res.Fields.ResourceStructuredType.Fields) as IList<StructuredData>;
@@ -1246,24 +1277,6 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 		}
 
-#if false
-		protected Druid CreateFieldCaption(string text)
-		{
-			//	Crée un nouveau Caption de type Field (dont le nom commence par "Fld.").
-			//	TODO: remplacer cette cuisine par les nouveaux mécanismes...
-			string name = string.Concat(this.Title, ".", text);
-
-			//	Crée un Caption de type Field (dont le nom commence par "Fld.").
-			ResourceAccess access = this.editor.Module.AccessCaptions;
-
-			access.BypassFilterOpenAccess(ResourceAccess.Type.Fields, TypeCode.Invalid, null, null);
-			Druid druid = access.BypassFilterCreate(access.GetCultureBundle(null), name, text);
-			access.BypassFilterCloseAccess();
-
-			return druid;
-		}
-#endif
-
 		protected string GetNewName()
 		{
 			//	Cherche un nouveau nom jamais utilisé.
@@ -1523,10 +1536,25 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 
 			//	Dessine le titre.
-			rect = new Rectangle(this.bounds.Left, this.bounds.Top-AbstractObject.headerHeight, this.bounds.Width, AbstractObject.headerHeight);
-			rect.Deflate(4, 2);
-			this.title.LayoutSize = rect.Size;
-			this.title.Paint(rect.BottomLeft, graphics, Rectangle.MaxValue, Color.FromBrightness(0), GlyphPaintStyle.Normal);
+			if (string.IsNullOrEmpty(this.subtitleString))
+			{
+				rect = new Rectangle(this.bounds.Left, this.bounds.Top-AbstractObject.headerHeight, this.bounds.Width, AbstractObject.headerHeight);
+				rect.Deflate(4, 2);
+				this.title.LayoutSize = rect.Size;
+				this.title.Paint(rect.BottomLeft, graphics, Rectangle.MaxValue, Color.FromBrightness(0), GlyphPaintStyle.Normal);
+			}
+			else
+			{
+				rect = new Rectangle(this.bounds.Left, this.bounds.Top-AbstractObject.headerHeight+10, this.bounds.Width, AbstractObject.headerHeight-10);
+				rect.Deflate(4, 0);
+				this.title.LayoutSize = rect.Size;
+				this.title.Paint(rect.BottomLeft, graphics, Rectangle.MaxValue, Color.FromBrightness(0), GlyphPaintStyle.Normal);
+				
+				rect = new Rectangle(this.bounds.Left, this.bounds.Top-AbstractObject.headerHeight+4, this.bounds.Width, 10);
+				rect.Deflate(4, 0);
+				this.subtitle.LayoutSize = rect.Size;
+				this.subtitle.Paint(rect.BottomLeft, graphics, Rectangle.MaxValue, Color.FromBrightness(0), GlyphPaintStyle.Normal);
+			}
 
 			//	Dessine le bouton compact/étendu.
 			GlyphShape shape = this.isExtended ? GlyphShape.ArrowUp : GlyphShape.ArrowDown;
@@ -2050,6 +2078,21 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		}
 
 
+		protected void UpdateSubtitle()
+		{
+			//	Met à jour le sous-titre de l'entité (nom du module).
+			Module module = this.editor.Module.MainWindow.SearchModule(this.cultureMap.Id);
+			if (module == this.editor.Module.MainWindow.CurrentModule)
+			{
+				this.Subtitle = null;
+			}
+			else
+			{
+				this.Subtitle = module.ModuleInfo.Name;
+			}
+		}
+
+
 		#region Serialization
 		public void WriteXml(XmlWriter writer)
 		{
@@ -2158,6 +2201,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		{
 			//	Ajuste le contenu de la boîte après sa désérialisation.
 			this.Title = this.cultureMap.Name;
+			this.UpdateSubtitle();
 			this.isRoot = (this == this.editor.Boxes[0]);  // la première boîte est toujours la boîte racine
 
 			StructuredData data = this.cultureMap.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
@@ -2246,7 +2290,9 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		protected bool isExtended;
 		protected bool isConnectedToRoot;
 		protected string titleString;
+		protected string subtitleString;
 		protected TextLayout title;
+		protected TextLayout subtitle;
 		protected List<Field> fields;
 		protected List<SourceInfo> sourcesList;
 		protected int sourcesClosedCount;
