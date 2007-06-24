@@ -1308,8 +1308,8 @@ namespace Epsitec.Common.Document
 
 			try
 			{
-				int q = (int) (quality*100.0);  // 0..100
-				data = bitmap.Save(format, depth, q, compression);
+				int q = (int) System.Math.Round(quality*100.0);  // 0..100
+				data = bitmap.Save(format, depth, q, compression, dpi);
 			}
 			catch (System.Exception e)
 			{

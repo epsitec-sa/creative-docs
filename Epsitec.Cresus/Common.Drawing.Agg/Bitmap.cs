@@ -347,6 +347,11 @@ namespace Epsitec.Common.Drawing
 		
 		public byte[] Save(ImageFormat format, int depth, int quality, ImageCompression compression)
 		{
+			return this.Save (format, depth, quality, compression, 72.0);
+		}
+		
+		public byte[] Save(ImageFormat format, int depth, int quality, ImageCompression compression, double dpi)
+		{
 			System.Collections.ArrayList list = new System.Collections.ArrayList ();
 			
 			if (format == ImageFormat.Jpeg)
@@ -412,7 +417,10 @@ namespace Epsitec.Common.Drawing
 			if (encoder_info != null)
 			{
 				System.IO.MemoryStream stream = new System.IO.MemoryStream ();
-				this.NativeBitmap.Save (stream, encoder_info, encoder_params);
+				System.Drawing.Bitmap  bitmap = this.NativeBitmap;
+				
+				bitmap.SetResolution ((float) dpi, (float) dpi);
+				bitmap.Save (stream, encoder_info, encoder_params);
 				stream.Close ();
 				
 				byte[] data = stream.ToArray ();
@@ -433,12 +441,14 @@ namespace Epsitec.Common.Drawing
 							case 24:
 								using (Opac.FreeImage.Image fi24 = fi.ConvertTo24Bits ())
 								{
+									fi24.SetDotsPerInch (dpi, dpi);
 									data = fi24.SaveToMemory (Opac.FreeImage.FileFormat.Png);
 								}
 								break;
 							case 32:
 								using (Opac.FreeImage.Image fi32 = fi.ConvertTo32Bits ())
 								{
+									fi32.SetDotsPerInch (dpi, dpi);
 									data = fi32.SaveToMemory (Opac.FreeImage.FileFormat.Png);
 								}
 								break;
