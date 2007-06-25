@@ -253,6 +253,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 			this.UpdateConnections();
 			this.RedimArea();
+
+			this.UpdateDimmed();
 		}
 
 		public void UpdateAfterMoving(ObjectBox box)
@@ -731,14 +733,23 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 			foreach (ObjectConnection connection in this.connections)
 			{
-				if (connection.Field.SrcBox != null && connection.Field.SrcBox.IsDimmed)
+				if (connection.Field.IsExplored)
 				{
-					connection.IsDimmed = true;
+					if (connection.Field.SrcBox != null && connection.Field.SrcBox.IsDimmed)
+					{
+						connection.IsDimmed = true;
+					}
+					else if (connection.Field.DstBox != null && connection.Field.DstBox.IsDimmed)
+					{
+						connection.IsDimmed = true;
+					}
 				}
-
-				if (connection.Field.DstBox != null && connection.Field.DstBox.IsDimmed)
+				else
 				{
-					connection.IsDimmed = true;
+					Module dstModule = this.module.MainWindow.SearchModule(connection.Field.Destination);
+					Module currentModule = this.module.MainWindow.CurrentModule;
+
+					connection.IsDimmed = (dstModule != currentModule);
 				}
 
 				if (connection.Comment != null)
