@@ -275,6 +275,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 			this.UpdateConnections();
 			this.RedimArea();
+
+			this.UpdateDimmed();
 		}
 
 		protected void UpdateBoxes()
@@ -713,6 +715,28 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					{
 						connection.Field.CommentBounds = comment.Bounds;
 					}
+				}
+			}
+		}
+
+		protected void UpdateDimmed()
+		{
+			//	Met en estompé toutes les connections qui partent ou qui arrivent sur une entité estompée.
+			foreach (ObjectConnection connection in this.connections)
+			{
+				connection.IsDimmed = false;
+			}
+
+			foreach (ObjectConnection connection in this.connections)
+			{
+				if (connection.Field.SrcBox != null && connection.Field.SrcBox.IsDimmed)
+				{
+					connection.IsDimmed = true;
+				}
+
+				if (connection.Field.DstBox != null && connection.Field.DstBox.IsDimmed)
+				{
+					connection.IsDimmed = true;
 				}
 			}
 		}

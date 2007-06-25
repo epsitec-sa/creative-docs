@@ -115,6 +115,23 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 		}
 
+		public bool IsDimmed
+		{
+			//	Détermine si l'objet apparaît en estompé (couleurs plus claires).
+			get
+			{
+				return this.isDimmed;
+			}
+			set
+			{
+				if (this.isDimmed != value)
+				{
+					this.isDimmed = value;
+					this.editor.Invalidate();
+				}
+			}
+		}
+
 		public virtual void DrawBackground(Graphics graphics)
 		{
 			//	Dessine le fond de l'objet.
@@ -574,48 +591,46 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		protected Color GetColorMain(MainColor boxColor, double alpha)
 		{
 			//	Retourne la couleur pour les mises en évidence.
-			Color color = Color.FromBrightness(0.5);
+			Color color = Color.FromAlphaRgb(alpha, 128.0/255.0, 128.0/255.0, 128.0/255.0);
 
 			switch (boxColor)
 			{
 				case MainColor.Blue:
-					color = Color.FromRgb(0.0/255.0, 90.0/255.0, 160.0/255.0);
+					color = Color.FromAlphaRgb(alpha, 0.0/255.0, 90.0/255.0, 160.0/255.0);
 					break;
 
 				case MainColor.Green:
-					color = Color.FromRgb(0.0/255.0, 130.0/255.0, 20.0/255.0);
+					color = Color.FromAlphaRgb(alpha, 0.0/255.0, 130.0/255.0, 20.0/255.0);
 					break;
 
 				case MainColor.Red:
-					color = Color.FromRgb(140.0/255.0, 30.0/255.0, 0.0/255.0);
+					color = Color.FromAlphaRgb(alpha, 140.0/255.0, 30.0/255.0, 0.0/255.0);
 					break;
 
 				case MainColor.Grey:
-					color = Color.FromRgb(100.0/255.0, 100.0/255.0, 100.0/255.0);
+					color = Color.FromAlphaRgb(alpha, 100.0/255.0, 100.0/255.0, 100.0/255.0);
 					break;
 
 				case MainColor.DarkGrey:
-					color = Color.FromRgb(100.0/255.0, 100.0/255.0, 100.0/255.0);
+					color = Color.FromAlphaRgb(alpha, 100.0/255.0, 100.0/255.0, 100.0/255.0);
 					break;
 
 				case MainColor.Yellow:
-					color = Color.FromRgb(200.0/255.0, 200.0/255.0, 0.0/255.0);
+					color = Color.FromAlphaRgb(alpha, 200.0/255.0, 200.0/255.0, 0.0/255.0);
 					break;
 
 				case MainColor.Orange:
-					color = Color.FromRgb(200.0/255.0, 150.0/255.0, 0.0/255.0);
+					color = Color.FromAlphaRgb(alpha, 200.0/255.0, 150.0/255.0, 0.0/255.0);
 					break;
 
 				case MainColor.Lilac:
-					color = Color.FromRgb(100.0/255.0, 0.0/255.0, 150.0/255.0);
+					color = Color.FromAlphaRgb(alpha, 100.0/255.0, 0.0/255.0, 150.0/255.0);
 					break;
 
 				case MainColor.Purple:
-					color = Color.FromRgb(30.0/255.0, 0.0/255.0, 200.0/255.0);
+					color = Color.FromAlphaRgb(alpha, 30.0/255.0, 0.0/255.0, 200.0/255.0);
 					break;
 			}
-
-			color.A = alpha;
 
 			if (this.isDimmed)
 			{
@@ -627,6 +642,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		protected Color GetColor(double brightness)
 		{
+			//	Retourne un niveau de gris.
 			Color color = Color.FromBrightness(brightness);
 
 			if (this.isDimmed)
