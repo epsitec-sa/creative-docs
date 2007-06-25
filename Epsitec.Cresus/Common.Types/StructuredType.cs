@@ -712,8 +712,13 @@ namespace Epsitec.Common.Types
 		{
 			ResourceBundle  bundle  = ResourceManager.GetSourceBundle (this.Caption);
 			ResourceManager manager = bundle == null
-						? (Serialization.Context.GetResourceManager (Storage.CurrentDeserializationContext) ?? Support.Resources.DefaultManager)
+						? Serialization.Context.GetResourceManager (Storage.CurrentDeserializationContext)
 						: bundle.ResourceManager;
+
+			if (manager == null)
+			{
+				manager = ResourceManager.GetResourceManager (this) ?? Support.Resources.DefaultManager;
+			}
 			
 			return manager;
 		}
