@@ -100,26 +100,49 @@ namespace Epsitec.Common.Support
 			}
 		}
 
+		/// <summary>
+		/// Gets the module roots.
+		/// </summary>
+		/// <value>The module roots, which consist of a symbolic name and an
+		/// absolute path.</value>
+		public IEnumerable<KeyValuePair <string, string>> ModuleRoots
+		{
+			get
+			{
+				return this.moduleRoots;
+			}
+		}
 
+
+		public void SetupDefaultRootPaths()
+		{
+			//	TODO: définir les chemins...
+
+			this.AddModuleRootPath (ResourceManagerPool.SymbolicNames.Application, "");
+			this.AddModuleRootPath (ResourceManagerPool.SymbolicNames.Library, "");
+			this.AddModuleRootPath (ResourceManagerPool.SymbolicNames.Patches, "");
+		}
+
+		
 		/// <summary>
 		/// Adds the named module root path: this records a link between a symbolic
 		/// name (such as <c>%app%</c>) and a file system path.
 		/// </summary>
-		/// <param name="name">The symbolic name.</param>
+		/// <param name="symbolicName">The symbolic name.</param>
 		/// <param name="path">The path.</param>
-		public void AddModuleRootPath(string name, string path)
+		public void AddModuleRootPath(string symbolicName, string path)
 		{
-			System.Diagnostics.Debug.Assert (!string.IsNullOrEmpty (name));
-			System.Diagnostics.Debug.Assert (name.StartsWith ("%"));
-			System.Diagnostics.Debug.Assert (name.EndsWith ("%"));
+			System.Diagnostics.Debug.Assert (!string.IsNullOrEmpty (symbolicName));
+			System.Diagnostics.Debug.Assert (symbolicName.StartsWith ("%"));
+			System.Diagnostics.Debug.Assert (symbolicName.EndsWith ("%"));
 
 			if (string.IsNullOrEmpty (path))
 			{
-				this.moduleRoots.Remove (name);
+				this.moduleRoots.Remove (symbolicName);
 			}
 			else
 			{
-				this.moduleRoots[name] = path;
+				this.moduleRoots[symbolicName] = path;
 			}
 		}
 
@@ -132,6 +155,11 @@ namespace Epsitec.Common.Support
 		/// <returns>The relative path, possibly with a symbolic path name prefix.</returns>
 		public string GetRootRelativePath(string path)
 		{
+			if (string.IsNullOrEmpty (path))
+			{
+				return path;
+			}
+
 			string root   = "";
 			string prefix = "";
 			string result = path;
@@ -159,6 +187,11 @@ namespace Epsitec.Common.Support
 		/// <returns>The absolute path.</returns>
 		public string GetRootAbsolutePath(string path)
 		{
+			if (string.IsNullOrEmpty (path))
+			{
+				return path;
+			}
+
 			string root   = "";
 			string prefix = "";
 			string result = path;
@@ -177,6 +210,7 @@ namespace Epsitec.Common.Support
 			return string.Concat (prefix, result);
 		}
 
+		
 		/// <summary>
 		/// Scans for modules in the specified path and all its subfolders.
 		/// </summary>
@@ -278,6 +312,42 @@ namespace Epsitec.Common.Support
 			}
 			
 			return infos;
+		}
+
+		/// <summary>
+		/// Finds the reference modules. This excludes all patch modules.
+		/// </summary>
+		/// <returns>The list of reference modules.</returns>
+		public IList<ResourceModuleInfo> FindReferenceModules()
+		{
+			return this.FindModuleInfos (delegate (ResourceModuleInfo info) { return string.IsNullOrEmpty (info.ReferenceModulePath); });
+		}
+
+		/// <summary>
+		/// Finds all the patch modules for the specified reference module. A patch
+		/// module specifies a <see cref="ResourceModuleInfo.ReferenceModulePath"/>
+		/// which points to the reference module and shares its name and id.
+		/// </summary>
+		/// <param name="referenceModule">The reference module.</param>
+		/// <returns>The (possibly empty) list of patch modules.</returns>
+		public IList<ResourceModuleInfo> FindPatchModuleInfos(ResourceModuleInfo referenceModule)
+		{
+			string path = this.GetRootRelativePath (referenceModule.FullId.Path);
+
+			if (string.IsNullOrEmpty (path))
+			{
+				return Types.Collections.EmptyList<ResourceModuleInfo>.Instance;
+			}
+			else
+			{
+				return this.FindModuleInfos (
+					delegate (ResourceModuleInfo info)
+					{
+						return (info.FullId.Id == referenceModule.FullId.Id)
+							&& (info.FullId.Name == referenceModule.FullId.Name)
+							&& (this.GetRootRelativePath (info.ReferenceModulePath) == path);
+					});
+			}
 		}
 
 
@@ -415,6 +485,14 @@ namespace Epsitec.Common.Support
 			}
 		}
 
+		
+		public static class SymbolicNames
+		{
+			public const string Application = "%app%";
+			public const string Library		= "%lib%";
+			public const string Patches		= "%patch%";
+		}
+		
 		string									name;
 		string									defaultPrefix;
 		Dictionary<string, ResourceBundle>		bundles = new Dictionary<string, ResourceBundle> ();

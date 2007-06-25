@@ -38,6 +38,11 @@ namespace Epsitec.Common.Support
 			Assert.IsNull (info2.ReferenceModulePath);
 
 			Assert.AreEqual (2, pool.FindModuleInfos (7).Count);
+
+			Assert.AreEqual (1, pool.FindPatchModuleInfos (info2).Count);
+			Assert.AreEqual (info1, pool.FindPatchModuleInfos (info2)[0]);
+
+			Assert.IsTrue (pool.FindReferenceModules ().Count < Types.Collection.Count (pool.Modules));
 		}
 
 		[Test]
