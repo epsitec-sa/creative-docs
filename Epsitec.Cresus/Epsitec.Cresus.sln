@@ -128,6 +128,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "App.Designer", "App.Designe
 EndProject
 Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "X.Setup.Designer", "X.Setup.Designer\X.Setup.Designer.vdproj", "{8878C80C-5D62-4727-8B0F-337DE5676A34}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.Identity", "Common.Identity\Common.Identity.csproj", "{3B21F4C6-9461-4751-9B23-9A9006743D68}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -692,6 +694,16 @@ Global
 		{8878C80C-5D62-4727-8B0F-337DE5676A34}.Release|Any CPU.ActiveCfg = Release
 		{8878C80C-5D62-4727-8B0F-337DE5676A34}.Release|Mixed Platforms.ActiveCfg = Release
 		{8878C80C-5D62-4727-8B0F-337DE5676A34}.Release|Win32.ActiveCfg = Release
+		{3B21F4C6-9461-4751-9B23-9A9006743D68}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3B21F4C6-9461-4751-9B23-9A9006743D68}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3B21F4C6-9461-4751-9B23-9A9006743D68}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{3B21F4C6-9461-4751-9B23-9A9006743D68}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{3B21F4C6-9461-4751-9B23-9A9006743D68}.Debug|Win32.ActiveCfg = Debug|Any CPU
+		{3B21F4C6-9461-4751-9B23-9A9006743D68}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3B21F4C6-9461-4751-9B23-9A9006743D68}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3B21F4C6-9461-4751-9B23-9A9006743D68}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{3B21F4C6-9461-4751-9B23-9A9006743D68}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{3B21F4C6-9461-4751-9B23-9A9006743D68}.Release|Win32.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

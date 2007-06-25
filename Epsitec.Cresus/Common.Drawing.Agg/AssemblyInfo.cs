@@ -11,7 +11,7 @@ using System.Security.Permissions;
 [assembly: AssemblyConfiguration ("")]
 [assembly: AssemblyCompany ("EPSITEC SA & OPaC bright ideas")]
 [assembly: AssemblyProduct ("Framework")]
-[assembly: AssemblyCopyright ("Copyright © 2003-2006, Pierre Arnaud, EPSITEC SA & OPaC bright ideas, Switzerland")]
+[assembly: AssemblyCopyright ("Copyright © 2003-2007, Pierre Arnaud, EPSITEC SA & OPaC bright ideas, Switzerland")]
 [assembly: AssemblyTrademark ("")]
 [assembly: AssemblyCulture ("")]
 
