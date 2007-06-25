@@ -124,7 +124,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					}
 					else
 					{
-						this.basename.Text = string.Concat("<i><b>", this.basenameString, "</b></i>");
+						this.basename.Text = string.Concat("<i>", this.basenameString, "</i>");
 					}
 				}
 			}
@@ -1668,34 +1668,14 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 				if (this.membershipCount > 0)
 				{
-					rect = Rectangle.Union(this.GetFieldBounds(-1), this.GetFieldBounds(this.membershipCount-1));
-					rect.Deflate(3.5, 0.5);
-					graphics.AddFilledRectangle(rect);
-					graphics.RenderSolid(this.GetColor(1));
-
-					rect = this.GetFieldBounds(-1);
-					rect.Deflate(3.5, 0);
-					graphics.AddFilledRectangle(rect);
-					Color cia1 = this.GetColorMain(dragging ? 1.0 : 0.8);
-					Color cia2 = this.GetColorMain(dragging ? 0.7 : 0.5);
-					this.RenderHorizontalGradient(graphics, rect, cia1, cia2);
-
-					rect = Rectangle.Union(this.GetFieldBounds(0), this.GetFieldBounds(this.membershipCount-1));
-					rect.Deflate(3.5, 0);
-					graphics.AddFilledRectangle(rect);
-					Color cib1 = this.GetColorMain(dragging ? 0.25 : 0.15);
-					Color cib2 = this.GetColorMain(0.05);
-					this.RenderHorizontalGradient(graphics, rect, cib1, cib2);
-
 					rect = this.GetFieldBounds(-1);
 					rect.Deflate(ObjectBox.textMargin, 2);
 					this.basename.LayoutSize = rect.Size;
-					this.basename.Paint(rect.BottomLeft, graphics, Rectangle.MaxValue, this.GetColor(1), GlyphPaintStyle.Normal);
+					this.basename.Paint(rect.BottomLeft, graphics, Rectangle.MaxValue, this.GetColor(0), GlyphPaintStyle.Normal);
 
-					rect = Rectangle.Union(this.GetFieldBounds(-1), this.GetFieldBounds(this.membershipCount-1));
-					rect.Deflate(3.5, 0.5);
-					graphics.AddRectangle(rect);
-					graphics.RenderSolid(colorFrame);
+					rect = this.GetFieldBounds(-1);
+					graphics.AddLine(rect.Left, rect.Bottom+0.5, rect.Right, rect.Bottom+0.5);
+					graphics.RenderSolid(colorLine);
 				}
 
 				for (int i=0; i<this.fields.Count; i++)
@@ -1754,12 +1734,25 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 						this.fields[i].TextLayoutType.Paint(rect.BottomLeft, graphics, Rectangle.MaxValue, colorType, GlyphPaintStyle.Normal);
 					}
 
-					if (i >= this.membershipCount)
-					{
-						rect = this.GetFieldBounds(i);
-						graphics.AddLine(rect.Left, rect.Bottom+0.5, rect.Right, rect.Bottom+0.5);
-						graphics.RenderSolid(colorLine);
-					}
+					rect = this.GetFieldBounds(i);
+					graphics.AddLine(rect.Left, rect.Bottom+0.5, rect.Right, rect.Bottom+0.5);
+					graphics.RenderSolid(colorLine);
+				}
+
+				if (this.membershipCount > 0)
+				{
+					Path dashedPath = new Path();
+
+					rect = Rectangle.Union(this.GetFieldBounds(-1), this.GetFieldBounds(this.membershipCount-1));
+					rect.Deflate(9.5, 0.5);
+					dashedPath.AppendRectangle(rect);
+
+					rect = this.GetFieldBounds(-1);
+					rect.Deflate(9.5, 0.5);
+					dashedPath.MoveTo(rect.Left, rect.Bottom);
+					dashedPath.LineTo(rect.Right, rect.Bottom);
+					
+					Misc.DrawPathDash(graphics, dashedPath, 1, 0, 2, this.GetColorMain(0.8));
 				}
 
 				if (this.hilitedElement == ActiveElement.BoxFieldMoving)
