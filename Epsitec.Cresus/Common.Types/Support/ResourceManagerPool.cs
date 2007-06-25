@@ -1,12 +1,19 @@
 //	Copyright © 2006-2007, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
-using System.Collections.Generic;
-
+using Epsitec.Common.Support;
 using Epsitec.Common.Types;
+
+using System.Collections.Generic;
 
 namespace Epsitec.Common.Support
 {
+	/// <summary>
+	/// The <c>ResourceManagerPool</c> class manages a pool of <see cref="ResourceManager"/>
+	/// instances which share the same cache. This ensures that if a resource
+	/// bundle is modified by one manager, that modification will be visible to
+	/// all other managers in the pool.
+	/// </summary>
 	public class ResourceManagerPool
 	{
 		public ResourceManagerPool()
@@ -20,7 +27,7 @@ namespace Epsitec.Common.Support
 			this.defaultPrefix = "file";
 		}
 
-		public string							Name
+		public string							PoolName
 		{
 			get
 			{
@@ -40,13 +47,13 @@ namespace Epsitec.Common.Support
 			}
 		}
 
-		public void Register(ResourceManager manager)
+		internal void Register(ResourceManager manager)
 		{
 			manager.SetPool (this);
 			this.managers.Add (new Weak<ResourceManager> (manager));
 		}
 
-		public ResourceBundle FindBundle(string key)
+		internal ResourceBundle FindBundle(string key)
 		{
 			ResourceBundle bundle;
 
@@ -61,7 +68,7 @@ namespace Epsitec.Common.Support
 			return null;
 		}
 
-		public void AddBundle(string key, ResourceBundle bundle)
+		internal void AddBundle(string key, ResourceBundle bundle)
 		{
 			lock (this.bundles)
 			{
@@ -74,7 +81,7 @@ namespace Epsitec.Common.Support
 			}
 		}
 
-		public void RemoveBundle(string key)
+		internal void RemoveBundle(string key)
 		{
 			lock (this.bundles)
 			{
@@ -84,7 +91,7 @@ namespace Epsitec.Common.Support
 			this.SyncBundleRelatedCaches ();
 		}
 
-		public void Clear()
+		internal void Clear()
 		{
 			lock (this.bundles)
 			{
@@ -95,7 +102,7 @@ namespace Epsitec.Common.Support
 			this.SyncBundleRelatedCaches ();
 		}
 
-		public void ClearMergedBundles()
+		internal void ClearMergedBundles()
 		{
 			if (this.mergedBundlesCount > 0)
 			{
@@ -126,7 +133,7 @@ namespace Epsitec.Common.Support
 			this.SyncBundleRelatedCaches ();
 		}
 
-		public void RefreshBundle(string key, ResourceBundle bundle)
+		internal void RefreshBundle(string key, ResourceBundle bundle)
 		{
 			this.AddBundle (key, bundle);
 			this.SyncBundleRelatedCaches ();
