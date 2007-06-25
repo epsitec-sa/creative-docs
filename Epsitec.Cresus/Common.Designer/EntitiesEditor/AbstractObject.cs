@@ -666,7 +666,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 		}
 
-		protected Color GetColorLighter(Color color, double factor)
+		private Color GetColorLighter(Color color, double factor)
 		{
 			//	Retourne une couleur éclaircie, sans changer la transparence.
 			color.R = 1-(1-color.R)*factor;
@@ -675,7 +675,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			return color;
 		}
 
-		protected Color GetColorDarker(Color color, double factor)
+		private Color GetColorDarker(Color color, double factor)
 		{
 			//	Retourne une couleur assombrie, sans changer la transparence.
 			factor = 0.5+(factor*0.5);
