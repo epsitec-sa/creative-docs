@@ -27,7 +27,11 @@ namespace Epsitec.Common.Support
 			this.defaultPrefix = "file";
 		}
 
-		
+
+		/// <summary>
+		/// Gets the name of the pool.
+		/// </summary>
+		/// <value>The name of the pool.</value>
 		public string							PoolName
 		{
 			get
@@ -36,6 +40,11 @@ namespace Epsitec.Common.Support
 			}
 		}
 
+		/// <summary>
+		/// Gets or sets the default prefix for the associated resource
+		/// managers.
+		/// </summary>
+		/// <value>The default prefix.</value>
 		public string							DefaultPrefix
 		{
 			get
@@ -44,10 +53,22 @@ namespace Epsitec.Common.Support
 			}
 			set
 			{
-				this.defaultPrefix = value;
+				if (this.defaultPrefix != value)
+				{
+					if (this.defaultPrefix != null)
+					{
+						throw System.InvalidOperationException ("The default prefix may not be changed");
+					}
+
+					this.defaultPrefix = value;
+				}
 			}
 		}
 
+		/// <summary>
+		/// Gets the managers.
+		/// </summary>
+		/// <value>The managers.</value>
 		public IEnumerable<ResourceManager>		Managers
 		{
 			get
@@ -66,6 +87,11 @@ namespace Epsitec.Common.Support
 			}
 		}
 
+		/// <summary>
+		/// Gets the known modules. Call <see cref="ScanForModules"/> to load
+		/// all accessible module informations.
+		/// </summary>
+		/// <value>The modules.</value>
 		public IEnumerable<ResourceModuleInfo>	Modules
 		{
 			get
@@ -75,6 +101,12 @@ namespace Epsitec.Common.Support
 		}
 
 
+		/// <summary>
+		/// Adds the named module root path: this records a link between a symbolic
+		/// name (such as <c>%app%</c>) and a file system path.
+		/// </summary>
+		/// <param name="name">The symbolic name.</param>
+		/// <param name="path">The path.</param>
 		public void AddModuleRootPath(string name, string path)
 		{
 			System.Diagnostics.Debug.Assert (!string.IsNullOrEmpty (name));
@@ -91,6 +123,13 @@ namespace Epsitec.Common.Support
 			}
 		}
 
+		/// <summary>
+		/// Gets the symbolic root relative path. If a part of the path maps to
+		/// one of the symbolic module root paths, then it is replaced with the
+		/// symbolic name (e.g. <c>%app%</c>).
+		/// </summary>
+		/// <param name="path">The absolute path.</param>
+		/// <returns>The relative path, possibly with a symbolic path name prefix.</returns>
 		public string GetRootRelativePath(string path)
 		{
 			string root   = "";
@@ -111,6 +150,13 @@ namespace Epsitec.Common.Support
 			return string.Concat (prefix, result);
 		}
 
+		/// <summary>
+		/// Gets the absolute path for a symbolic root relative path. If the path
+		/// starts with a symbolic module path name (such as <c>%app%</c>), it
+		/// will be expanded to the real file system path.
+		/// </summary>
+		/// <param name="path">The relative path.</param>
+		/// <returns>The absolute path.</returns>
 		public string GetRootAbsolutePath(string path)
 		{
 			string root   = "";
@@ -131,6 +177,10 @@ namespace Epsitec.Common.Support
 			return string.Concat (prefix, result);
 		}
 
+		/// <summary>
+		/// Scans for modules in the specified path and all its subfolders.
+		/// </summary>
+		/// <param name="rootPath">The path.</param>
 		public void ScanForModules(string rootPath)
 		{
 			foreach (string path in ResourceModule.FindModulePaths (this.GetRootAbsolutePath (rootPath)))
@@ -138,7 +188,16 @@ namespace Epsitec.Common.Support
 				this.GetModuleInfo (path);
 			}
 		}
-		
+
+
+		/// <summary>
+		/// Gets the module info for the specified path. The path can be absolute
+		/// or start with a symbolic module root path (such as <c>%app%</c>). If
+		/// the information is not in the cache, it will be loaded and the cache
+		/// will be updated.
+		/// </summary>
+		/// <param name="modulePath">The module path.</param>
+		/// <returns>The module information or <c>null</c>.</returns>
 		public ResourceModuleInfo GetModuleInfo(string modulePath)
 		{
 			ResourceModuleInfo info;
@@ -160,6 +219,13 @@ namespace Epsitec.Common.Support
 			return info;
 		}
 
+		/// <summary>
+		/// Finds the module info for the specified path. The path can be absolute
+		/// or start with a symbolic module root path (such as <c>%app%</c>). If
+		/// the information is not in the cache, returns <c>null</c>.
+		/// </summary>
+		/// <param name="modulePath">The module path.</param>
+		/// <returns>The module information or <c>null</c>.</returns>
 		public ResourceModuleInfo FindModuleInfo(string modulePath)
 		{
 			modulePath = this.GetRootRelativePath (modulePath);
@@ -169,17 +235,36 @@ namespace Epsitec.Common.Support
 			return info;
 		}
 
-		
+
+		/// <summary>
+		/// Finds the module infos for the specified module.
+		/// </summary>
+		/// <param name="name">The module name.</param>
+		/// <returns>A (possibly empty) list of <see cref="ResourceModuleInfo"/> instances.</returns>
 		public IList<ResourceModuleInfo> FindModuleInfos(string name)
 		{
 			return this.FindModuleInfos (delegate (ResourceModuleInfo info) { return info.FullId.Name == name; });
 		}
-		
+
+		/// <summary>
+		/// Finds the module infos for the specified module.
+		/// </summary>
+		/// <param name="id">The module id.</param>
+		/// <returns>
+		/// A (possibly empty) list of <see cref="ResourceModuleInfo"/> instances.
+		/// </returns>
 		public IList<ResourceModuleInfo> FindModuleInfos(int id)
 		{
 			return this.FindModuleInfos (delegate (ResourceModuleInfo info) { return info.FullId.Id == id; });
 		}
 
+		/// <summary>
+		/// Finds the module infos for the specified module.
+		/// </summary>
+		/// <param name="predicate">The search predicate.</param>
+		/// <returns>
+		/// A (possibly empty) list of <see cref="ResourceModuleInfo"/> instances.
+		/// </returns>
 		public IList<ResourceModuleInfo> FindModuleInfos(System.Predicate<ResourceModuleInfo> predicate)
 		{
 			List<ResourceModuleInfo> infos = new List<ResourceModuleInfo> ();
