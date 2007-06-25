@@ -66,15 +66,15 @@ namespace Epsitec.Common.Support
 
 							if (string.IsNullOrEmpty (idAttribute))
 							{
-								throw new System.FormatException (string.Format ("{0} specifies no {1} attribute", ResourceModule.XmlModuleInfo, ResourceModule.XmlAttributeId));
+								throw new System.FormatException (string.Format ("{0} specifies no {1} attribute in module {2}", ResourceModule.XmlModuleInfo, ResourceModule.XmlAttributeId, modulePath));
 							}
 							if (string.IsNullOrEmpty (layerAttribute))
 							{
-								throw new System.FormatException (string.Format ("{0} specifies no {1} attribute", ResourceModule.XmlModuleInfo, ResourceModule.XmlAttributeLayer));
+								throw new System.FormatException (string.Format ("{0} specifies no {1} attribute in module {2}", ResourceModule.XmlModuleInfo, ResourceModule.XmlAttributeLayer, modulePath));
 							}
 							if (string.IsNullOrEmpty (nameAttribute))
 							{
-								throw new System.FormatException (string.Format ("{0} specifies no {1} attribute", ResourceModule.XmlModuleInfo, ResourceModule.XmlAttributeName));
+								throw new System.FormatException (string.Format ("{0} specifies no {1} attribute in module {2}", ResourceModule.XmlModuleInfo, ResourceModule.XmlAttributeName, modulePath));
 							}
 
 							int.TryParse (idAttribute, NumberStyles.Integer, CultureInfo.InvariantCulture, out moduleId);
@@ -90,12 +90,12 @@ namespace Epsitec.Common.Support
 							{
 								if (!string.IsNullOrEmpty (node.InnerText))
 								{
-									info.ReferenceModulePath = node.Value;
+									info.ReferenceModulePath = node.InnerText;
 								}
 							}
 							else if (nodes.Count > 1)
 							{
-								throw new System.FormatException (string.Format ("{0} specifies more than 1 {1} element", ResourceModule.XmlModuleInfo, ResourceModule.XmlReferenceModulePath));
+								throw new System.FormatException (string.Format ("{0} specifies more than 1 {1} element in module {2}", ResourceModule.XmlModuleInfo, ResourceModule.XmlReferenceModulePath, modulePath));
 							}
 							
 							info.FullId = new ResourceModuleId (moduleName, modulePath, moduleId, moduleLayer);

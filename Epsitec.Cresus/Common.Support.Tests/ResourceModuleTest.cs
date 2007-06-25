@@ -11,25 +11,76 @@ namespace Epsitec.Common.Support
 		}
 
 		[Test]
-		public void CheckFindModulePaths()
-		{
-			foreach (string path in ResourceModule.FindModulePaths (@"S:\Epsitec.Cresus"))
-			{
-				System.Console.Out.WriteLine (path);
-			}
-		}
-
-		[Test]
 		public void CheckCreateModuleInfo()
 		{
+			string root = @"S:\Epsitec.Cresus\Common.Support.Tests\Resources";
+
 			ResourceModuleInfo info = new ResourceModuleInfo ();
 
-			info.FullId = new ResourceModuleId ("Common.Support", @"S:\Epsitec.Cresus\Common.Support.Tests\Resources\Customizations", 7, ResourceModuleLayer.System);
-			info.ReferenceModulePath = @"S:\Epsitec.Cresus\Common.Support\Resources\Common.Support";
+			info.FullId = new ResourceModuleId ("Common.Support", root + @"\Customizations", 7, ResourceModuleLayer.System);
+			info.ReferenceModulePath = @"%test%\Common.Support";
 
 			ResourceModule.SaveManifest (info);
 
 			System.Console.Out.WriteLine (System.IO.File.ReadAllText (System.IO.Path.Combine (info.FullId.Path, "module.info")));
+
+			ResourceManagerPool pool = new ResourceManagerPool ("Test");
+
+			pool.AddModuleRootPath ("%epsitec%", @"S:\Epsitec.Cresus");
+			pool.AddModuleRootPath ("%test%", root);
+
+			ResourceModuleInfo info1 = pool.GetModuleInfo (@"%test%\Customizations");
+			ResourceModuleInfo info2 = pool.GetModuleInfo (info1.ReferenceModulePath);
+
+			Assert.AreEqual (7, info1.FullId.Id);
+			Assert.AreEqual (7, info2.FullId.Id);
+			Assert.AreEqual (info.ReferenceModulePath, info1.ReferenceModulePath);
+			Assert.IsNull (info2.ReferenceModulePath);
+
+			Assert.AreEqual (2, pool.FindModuleInfos (7).Count);
+		}
+
+		[Test]
+		public void CheckFindModuleInfos()
+		{
+			ResourceManagerPool pool = new ResourceManagerPool ("Test");
+
+			pool.AddModuleRootPath ("%epsitec%", @"S:\Epsitec.Cresus");
+
+			pool.ScanForModules ("%epsitec%");
+
+			Assert.IsTrue (Types.Collection.Count (pool.Modules) > 80);
+			
+			Assert.IsTrue (pool.FindModuleInfos ("Common.Support").Count > 4);
+			Assert.AreEqual (pool.FindModuleInfos ("Common.Support").Count, pool.FindModuleInfos (7).Count);
+
+			foreach (ResourceModuleInfo info in pool.FindModuleInfos ("Common.Support"))
+			{
+				System.Console.Out.WriteLine ("{0}: {1} in {2}", info.FullId.Name, info.FullId.Id, info.FullId.Path);
+			}
+		}
+
+		[Test]
+		public void CheckModuleRootPaths()
+		{
+			ResourceManagerPool pool = new ResourceManagerPool ("Test");
+
+			pool.AddModuleRootPath ("%program files%", @"C:\Program Files");
+			pool.AddModuleRootPath ("%sys drive%", @"C:");
+			pool.AddModuleRootPath ("%app%", @"C:\Program Files\Epsitec\Foo");
+			pool.AddModuleRootPath ("%app%", @"C:\Program Files\Epsitec\Application");
+			pool.AddModuleRootPath ("%source drive%", @"S:");
+			pool.AddModuleRootPath ("%source drive%", @"");
+			
+			Assert.AreEqual (@"S:\abc", pool.GetRootRelativePath (@"S:\abc"));
+			Assert.AreEqual (@"%sys drive%\abc", pool.GetRootRelativePath (@"C:\abc"));
+			Assert.AreEqual (@"%program files%\abc", pool.GetRootRelativePath (@"C:\Program Files\abc"));
+			Assert.AreEqual (@"%app%\abc", pool.GetRootRelativePath (@"C:\Program Files\Epsitec\Application\abc"));
+			
+			Assert.AreEqual (@"S:\abc", pool.GetRootAbsolutePath (@"S:\abc"));
+			Assert.AreEqual (@"C:\abc", pool.GetRootAbsolutePath (@"%sys drive%\abc"));
+			Assert.AreEqual (@"C:\Program Files\abc", pool.GetRootAbsolutePath (@"%program files%\abc"));
+			Assert.AreEqual (@"C:\Program Files\Epsitec\Application\abc", pool.GetRootAbsolutePath (@"%app%\abc"));
 		}
 	}
 }
