@@ -375,6 +375,27 @@ namespace Epsitec.Common.Types
 		#endregion
 
 		/// <summary>
+		/// Determines whether the specified field name is valid or not.
+		/// </summary>
+		/// <param name="fieldName">Name of the field.</param>
+		/// <returns>
+		/// 	<c>true</c> if the specified field name is valid; otherwise, <c>false</c>.
+		/// </returns>
+		public static bool IsValidFieldName(string fieldName)
+		{
+			if ((string.IsNullOrEmpty (fieldName)) ||
+				(!RegexFactory.PascalCaseSymbol.IsMatch (fieldName)) ||
+				((fieldName.Length > 1) && (fieldName == fieldName.ToUpper ())))
+			{
+				return false;
+			}
+			else
+			{
+				return true;
+			}
+		}
+
+		/// <summary>
 		/// Merges two structured types and creates a new one.
 		/// </summary>
 		/// <param name="a">The first structured type.</param>
@@ -676,8 +697,7 @@ namespace Epsitec.Common.Types
 						throw new System.ArgumentException (string.Format ("Invalid caption specified for field in {0} {1}", typeClass.ToString ().ToLower (), this.Name));
 					}
 
-					if ((!RegexFactory.PascalCaseSymbol.IsMatch (caption.Name)) ||
-						((caption.Name.Length > 1) && (caption.Name == caption.Name.ToUpper ())))
+					if (StructuredType.IsValidFieldName (caption.Name))
 					{
 						throw new System.ArgumentException (string.Format ("Field name {0} invalid in {1} {2}", caption.Name, typeClass.ToString ().ToLower (), this.Name));
 					}
