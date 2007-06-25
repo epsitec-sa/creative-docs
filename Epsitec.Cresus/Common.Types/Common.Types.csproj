@@ -114,6 +114,7 @@
     <Compile Include="Internal\BindingHelper.cs" />
     <Compile Include="FieldRelation.cs" />
     <Compile Include="Serialization\IDeserialization.cs" />
+    <Compile Include="Support\ResourceModuleInfo.cs" />
     <Compile Include="Support\ResourceModule.cs" />
     <Compile Include="Support\ResourceModuleLayer.cs" />
     <Compile Include="TypeCode.cs" />
@@ -364,7 +365,7 @@
     <Compile Include="Support\ResourceLevel.cs" />
     <Compile Include="Support\ResourceManager.cs" />
     <Compile Include="Support\ResourceManagerPool.cs" />
-    <Compile Include="Support\ResourceModuleInfo.cs" />
+    <Compile Include="Support\ResourceModuleId.cs" />
     <Compile Include="Support\ResourceProviderFactory.cs" />
     <Compile Include="Support\Resources.cs" />
     <Compile Include="Support\ResourceSetMode.cs" />

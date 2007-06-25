@@ -35,7 +35,7 @@ namespace Epsitec.Common.Support.Implementation
 			get { return "file"; }
 		}
 		
-		public override bool SelectModule(ref ResourceModuleInfo module)
+		public override bool SelectModule(ref ResourceModuleId module)
 		{
 			string moduleName = null;
 			string modulePath = null;
@@ -49,7 +49,7 @@ namespace Epsitec.Common.Support.Implementation
 					//	is currently slow, as it requires a walk through all possible
 					//	modules, until we find the matching one.
 
-					foreach (ResourceModuleInfo item in this.GetModules ())
+					foreach (ResourceModuleId item in this.GetModules ())
 					{
 						if (item.Id == module.Id)
 						{
@@ -72,7 +72,7 @@ namespace Epsitec.Common.Support.Implementation
 
 				if (string.IsNullOrEmpty (modulePath))
 				{
-					foreach (ResourceModuleInfo item in this.GetModules ())
+					foreach (ResourceModuleId item in this.GetModules ())
 					{
 						if (item.Name == module.Name)
 						{
@@ -86,7 +86,7 @@ namespace Epsitec.Common.Support.Implementation
 				if ((!string.IsNullOrEmpty (modulePath)) &&
 					(System.IO.Directory.Exists (modulePath)))
 				{
-					ResourceModuleInfo info = FileProvider.GetModuleId (modulePath);
+					ResourceModuleId info = FileProvider.GetModuleId (modulePath);
 					
 					moduleId = info.Id;
 
@@ -171,9 +171,9 @@ namespace Epsitec.Common.Support.Implementation
 			return null;
 		}
 
-		public override ResourceModuleInfo[] GetModules()
+		public override ResourceModuleId[] GetModules()
 		{
-			List<ResourceModuleInfo> modules = new List<ResourceModuleInfo> ();
+			List<ResourceModuleId> modules = new List<ResourceModuleId> ();
 
 			foreach (string file in this.GetModuleProbingDirectories ())
 			{
@@ -184,11 +184,11 @@ namespace Epsitec.Common.Support.Implementation
 
 				if (this.ValidateId (moduleName))
 				{
-					ResourceModuleInfo info = FileProvider.GetModuleId (file);
+					ResourceModuleId info = FileProvider.GetModuleId (file);
 					
 					if (info.Id >= 0)
 					{
-						if (modules.FindIndex (delegate (ResourceModuleInfo item) { return item.Id == info.Id; }) == -1)
+						if (modules.FindIndex (delegate (ResourceModuleId item) { return item.Id == info.Id; }) == -1)
 						{
 							modules.Add (info);
 						}
@@ -197,7 +197,7 @@ namespace Epsitec.Common.Support.Implementation
 			}
 
 			modules.Sort (
-				delegate (ResourceModuleInfo a, ResourceModuleInfo b)
+				delegate (ResourceModuleId a, ResourceModuleId b)
 				{
 					if (a.Name == b.Name)
 					{
@@ -472,9 +472,11 @@ namespace Epsitec.Common.Support.Implementation
 			}
 		}
 
-		private static ResourceModuleInfo GetModuleId(string path)
+		private static ResourceModuleId GetModuleId(string path)
 		{
-			return ResourceModule.LoadManifest (path);
+			ResourceModuleInfo info = ResourceModule.LoadManifest (path);
+
+			return info == null ? ResourceModuleId.Empty : info.FullId;
 		}
 
 		private static string				globalProbingPath;
@@ -489,6 +491,6 @@ namespace Epsitec.Common.Support.Implementation
 		private string						customFileSuffix;
 		private string						genericFileSuffix;
 
-		private ResourceModuleInfo			module;
+		private ResourceModuleId			module;
 	}
 }

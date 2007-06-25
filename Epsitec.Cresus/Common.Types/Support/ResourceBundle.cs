@@ -49,10 +49,10 @@ namespace Epsitec.Common.Support
 
 		public static ResourceBundle Create(ResourceManager resource_manager, string prefix, string name, ResourceLevel level, CultureInfo culture, int recursion)
 		{
-			return ResourceBundle.Create (resource_manager, prefix, new ResourceModuleInfo (), name, level, culture, recursion);
+			return ResourceBundle.Create (resource_manager, prefix, new ResourceModuleId (), name, level, culture, recursion);
 		}
 
-		public static ResourceBundle Create(ResourceManager resource_manager, string prefix, ResourceModuleInfo module, string name, ResourceLevel level, CultureInfo culture, int recursion)
+		public static ResourceBundle Create(ResourceManager resource_manager, string prefix, ResourceModuleId module, string name, ResourceLevel level, CultureInfo culture, int recursion)
 		{
 			ResourceBundle bundle = new ResourceBundle (resource_manager, name);
 
@@ -111,7 +111,7 @@ namespace Epsitec.Common.Support
 			}
 		}
 
-		public ResourceModuleInfo			Module
+		public ResourceModuleId			Module
 		{
 			get
 			{
@@ -383,7 +383,7 @@ namespace Epsitec.Common.Support
 			this.prefix = prefix;
 		}
 
-		internal void DefineModule(ResourceModuleInfo module)
+		internal void DefineModule(ResourceModuleId module)
 		{
 			this.module = module;
 		}
@@ -1861,7 +1861,7 @@ namespace Epsitec.Common.Support
 		public event EventHandler		FieldsChanged;
 		
 		private string					prefix;
-		private ResourceModuleInfo		module;
+		private ResourceModuleId		module;
 		private string					name;
 		private Druid					druid;
 		private string					caption;

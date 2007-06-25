@@ -113,7 +113,7 @@ namespace Epsitec.Common.Designer
 			Resources.DefaultManager.RefreshModuleInfos(this.resourceManagerPool.DefaultPrefix);
 			if (this.moduleInfoList.Count == 0)
 			{
-				foreach (ResourceModuleInfo item in Resources.DefaultManager.GetModuleInfos(this.resourceManagerPool.DefaultPrefix))
+				foreach (ResourceModuleId item in Resources.DefaultManager.GetModuleInfos(this.resourceManagerPool.DefaultPrefix))
 				{
 					Module module = new Module(this, this.mode, this.resourceManagerPool.DefaultPrefix, item);
 
@@ -502,7 +502,7 @@ namespace Epsitec.Common.Designer
 			this.dlgOpen.SetResourcePrefix(this.resourceManagerPool.DefaultPrefix);
 			this.dlgOpen.Show();
 
-			ResourceModuleInfo item = this.dlgOpen.SelectedModule;
+			ResourceModuleId item = this.dlgOpen.SelectedModule;
 			if (item.Name != null)
 			{
 				Module module = new Module(this, this.mode, this.resourceManagerPool.DefaultPrefix, item);

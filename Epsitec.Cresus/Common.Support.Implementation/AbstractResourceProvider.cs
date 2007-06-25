@@ -23,7 +23,7 @@ namespace Epsitec.Common.Support.Implementation
 			get;
 		}
 		
-		public abstract bool SelectModule(ref ResourceModuleInfo module);
+		public abstract bool SelectModule(ref ResourceModuleId module);
 		
 		public virtual bool ValidateId(string id)
 		{
@@ -34,7 +34,7 @@ namespace Epsitec.Common.Support.Implementation
 		
 		public abstract byte[] GetData(string id, Epsitec.Common.Support.ResourceLevel level, System.Globalization.CultureInfo culture);
 		public abstract string[] GetIds(string nameFilter, string typeFilter, ResourceLevel level, System.Globalization.CultureInfo culture);
-		public abstract ResourceModuleInfo[] GetModules();
+		public abstract ResourceModuleId[] GetModules();
 
 		public abstract bool SetData(string id, Epsitec.Common.Support.ResourceLevel level, System.Globalization.CultureInfo culture, byte[] data, Epsitec.Common.Support.ResourceSetMode mode);
 		public abstract bool Remove(string id, Epsitec.Common.Support.ResourceLevel level, System.Globalization.CultureInfo culture);

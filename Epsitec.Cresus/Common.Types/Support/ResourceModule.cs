@@ -8,7 +8,7 @@ namespace Epsitec.Common.Support
 {
 	/// <summary>
 	/// The <c>ResourceModule</c> class is used to manipulate module related
-	/// information (see <see cref="ResourceModuleInfo"/>).
+	/// information (see <see cref="ResourceModuleId"/>).
 	/// </summary>
 	public static class ResourceModule
 	{
@@ -17,7 +17,7 @@ namespace Epsitec.Common.Support
 		/// is loaded from a manifest file (<see cref="ResourceModule.ManifestFileName"/>).
 		/// </summary>
 		/// <param name="modulePath">The module path.</param>
-		/// <returns>The module information or <c>ResourceModuleInfo.Empty</c>.</returns>
+		/// <returns>The module information or <c>null</c>.</returns>
 		public static ResourceModuleInfo LoadManifest(string modulePath)
 		{
 			if (System.IO.Directory.Exists (modulePath))
@@ -78,37 +78,65 @@ namespace Epsitec.Common.Support
 							}
 
 							int.TryParse (idAttribute, NumberStyles.Integer, CultureInfo.InvariantCulture, out moduleId);
-							moduleLayer = ResourceModuleInfo.ConvertPrefixToLayer (layerAttribute);
+							moduleLayer = ResourceModuleId.ConvertPrefixToLayer (layerAttribute);
 							moduleName  = nameAttribute;
 
-							return new ResourceModuleInfo (moduleName, modulePath, moduleId, moduleLayer);
+							ResourceModuleInfo info = new ResourceModuleInfo ();
+
+							System.Xml.XmlNodeList nodes = root.GetElementsByTagName (ResourceModule.XmlReferenceModulePath);
+							System.Xml.XmlElement  node  = nodes.Count == 1 ? (nodes[0] as System.Xml.XmlElement) : null;
+
+							if (node != null)
+							{
+								if (!string.IsNullOrEmpty (node.InnerText))
+								{
+									info.ReferenceModulePath = node.Value;
+								}
+							}
+							else if (nodes.Count > 1)
+							{
+								throw new System.FormatException (string.Format ("{0} specifies more than 1 {1} element", ResourceModule.XmlModuleInfo, ResourceModule.XmlReferenceModulePath));
+							}
+							
+							info.FullId = new ResourceModuleId (moduleName, modulePath, moduleId, moduleLayer);
+							info.Freeze ();
+
+							return info;
 						}
 					}
 				}
 			}
 
-			return ResourceModuleInfo.Empty;
+			return null;
 		}
 
 		/// <summary>
-		/// Saves the module definition information into the associated manifest
+		/// Saves the module definition identity into the associated manifest
 		/// file (<see cref="ResourceModule.ManifestFileName"/>).
 		/// </summary>
-		/// <param name="info">The module information.</param>
+		/// <param name="info">The module identity.</param>
 		public static void SaveManifest(ResourceModuleInfo info)
 		{
-			string modulePath     = info.Path;
+			string modulePath     = info.FullId.Path;
 			string moduleInfoPath = System.IO.Path.Combine (modulePath, ResourceModule.ManifestFileName);
 	
 			System.Xml.XmlDocument xml = new System.Xml.XmlDocument ();
 			System.Xml.XmlElement root = xml.CreateElement (ResourceModule.XmlModuleInfo);
 
-			root.SetAttribute (ResourceModule.XmlAttributeId, info.Id.ToString (System.Globalization.CultureInfo.InvariantCulture));
-			root.SetAttribute (ResourceModule.XmlAttributeName, info.Name);
-			root.SetAttribute (ResourceModule.XmlAttributeLayer, ResourceModuleInfo.ConvertLayerToPrefix (info.Layer));
+			root.SetAttribute (ResourceModule.XmlAttributeId, info.FullId.Id.ToString (CultureInfo.InvariantCulture));
+			root.SetAttribute (ResourceModule.XmlAttributeName, info.FullId.Name);
+			root.SetAttribute (ResourceModule.XmlAttributeLayer, ResourceModuleId.ConvertLayerToPrefix (info.FullId.Layer));
 			
 			xml.InsertBefore (xml.CreateXmlDeclaration ("1.0", "utf-8", null), null);
 			xml.AppendChild (root);
+
+			if (!string.IsNullOrEmpty (info.ReferenceModulePath))
+			{
+				System.Xml.XmlElement node = xml.CreateElement (ResourceModule.XmlReferenceModulePath);
+
+				node.InnerText = info.ReferenceModulePath;
+				root.AppendChild (node);
+			}
 
 			xml.Save (moduleInfoPath);
 		}
@@ -149,6 +177,7 @@ namespace Epsitec.Common.Support
 		#region Internal constants
 
 		internal const string XmlModuleInfo = "ModuleInfo";
+		internal const string XmlReferenceModulePath = "ReferenceModulePath";
 
 		internal const string XmlAttributeId    = "id";
 		internal const string XmlAttributeLayer = "layer";

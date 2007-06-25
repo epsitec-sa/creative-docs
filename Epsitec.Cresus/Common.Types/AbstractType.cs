@@ -158,8 +158,8 @@ namespace Epsitec.Common.Types
 		/// <summary>
 		/// Gets the module where this type is defined.
 		/// </summary>
-		/// <value>The module where this type is defined or <c>ResourceModuleInfo.Empty</c>.</value>
-		public Support.ResourceModuleInfo Module
+		/// <value>The module where this type is defined or <c>ResourceModuleId.Empty</c>.</value>
+		public Support.ResourceModuleId Module
 		{
 			get
 			{
@@ -169,7 +169,7 @@ namespace Epsitec.Common.Types
 				}
 				else
 				{
-					return Support.ResourceModuleInfo.Empty;
+					return Support.ResourceModuleId.Empty;
 				}
 			}
 		}

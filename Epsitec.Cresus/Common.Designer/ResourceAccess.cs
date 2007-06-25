@@ -57,7 +57,7 @@ namespace Epsitec.Common.Designer
 		}
 
 
-		public ResourceAccess(Type type, Module module, ResourceModuleInfo moduleInfo, MainWindow mainWindow)
+		public ResourceAccess(Type type, Module module, ResourceModuleId moduleInfo, MainWindow mainWindow)
 		{
 			//	Constructeur unique pour accéder aux ressources d'un type donné.
 			//	Par la suite, l'instance créée accédera toujours aux ressources de ce type,
@@ -4287,7 +4287,7 @@ namespace Epsitec.Common.Designer
 
 		protected Type										type;
 		protected ResourceManager							resourceManager;
-		protected ResourceModuleInfo						moduleInfo;
+		protected ResourceModuleId						moduleInfo;
 		protected MainWindow								mainWindow;
 		protected bool										isDirty = false;
 		protected bool										isJustLoaded = false;

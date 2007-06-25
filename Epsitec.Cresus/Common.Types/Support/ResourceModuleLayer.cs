@@ -7,7 +7,7 @@ namespace Epsitec.Common.Support
 {
 	/// <summary>
 	/// The <c>ResourceModuleLayer</c> enumeration defines the well-known layers
-	/// found in a multi-layered application. See <see cref="ResourceModuleInfo"/>
+	/// found in a multi-layered application. See <see cref="ResourceModuleId"/>
 	/// for support methods.
 	/// </summary>
 	public enum ResourceModuleLayer

@@ -29,7 +29,7 @@ namespace Epsitec.Common.Support
 		[Test]
 		public void CheckGetModuleInfos()
 		{
-			ResourceModuleInfo[] modules = Types.Collection.ToArray (this.manager.GetModuleInfos ("file"));
+			ResourceModuleId[] modules = Types.Collection.ToArray (this.manager.GetModuleInfos ("file"));
 			
 			Assert.AreEqual (7, modules.Length);
 			

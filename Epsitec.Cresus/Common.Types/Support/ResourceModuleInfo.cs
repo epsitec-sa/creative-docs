@@ -1,4 +1,4 @@
-//	Copyright © 2006-2007, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2007, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using System.Collections.Generic;
@@ -6,308 +6,78 @@ using System.Collections.Generic;
 namespace Epsitec.Common.Support
 {
 	/// <summary>
-	/// The <c>ResourceModuleInfo</c> structure stores the name and the identifier
-	/// of a resource module.
+	/// The <c>ResourceModuleInfo</c> class stores the module identity and
+	/// associated properties.
 	/// </summary>
-	public struct ResourceModuleInfo : System.IEquatable<ResourceModuleInfo>
+	public sealed class ResourceModuleInfo : Epsitec.Common.Types.IReadOnly
 	{
-		/// <summary>
-		/// Initializes a new instance of the <see cref="ResourceModuleInfo"/> structure.
-		/// </summary>
-		/// <param name="name">The name of the module.</param>
-		/// <param name="id">The id of the module.</param>
-		public ResourceModuleInfo(string name, int id)
+		public ResourceModuleInfo()
 		{
-			this.name = string.IsNullOrEmpty (name) ? null : name;
-			this.path = null;
-			this.id = id+1;
-			this.layer = ResourceModuleLayer.Undefined;
 		}
 
-		/// <summary>
-		/// Initializes a new instance of the <see cref="ResourceModuleInfo"/> structure.
-		/// </summary>
-		/// <param name="name">The name of the module.</param>
-		/// <param name="path">The path to the module.</param>
-		/// <param name="id">The id of the module.</param>
-		public ResourceModuleInfo(string name, string path, int id)
-		{
-			this.name = string.IsNullOrEmpty (name) ? null : name;
-			this.path = string.IsNullOrEmpty (path) ? null : path;
-			this.id = id+1;
-			this.layer = ResourceModuleLayer.Undefined;
-		}
-
-		/// <summary>
-		/// Initializes a new instance of the <see cref="ResourceModuleInfo"/> structure.
-		/// </summary>
-		/// <param name="name">The name of the module.</param>
-		/// <param name="path">The path to the module.</param>
-		/// <param name="id">The id of the module.</param>
-		/// <param name="layer">The application layer of the module.</param>
-		public ResourceModuleInfo(string name, string path, int id, ResourceModuleLayer layer)
-		{
-			this.name = string.IsNullOrEmpty (name) ? null : name;
-			this.path = string.IsNullOrEmpty (path) ? null : path;
-			this.id = id+1;
-			this.layer = layer;
-		}
-
-		/// <summary>
-		/// Initializes a new instance of the <see cref="ResourceModuleInfo"/> structure.
-		/// </summary>
-		/// <param name="name">The name of the module.</param>
-		public ResourceModuleInfo(string name)
-		{
-			this.name = string.IsNullOrEmpty (name) ? null : name;
-			this.path = null;
-			this.id = 0;
-			this.layer = ResourceModuleLayer.Undefined;
-		}
-
-		/// <summary>
-		/// Initializes a new instance of the <see cref="ResourceModuleInfo"/> structure.
-		/// </summary>
-		/// <param name="id">The id of the module.</param>
-		public ResourceModuleInfo(int id)
-		{
-			this.name = null;
-			this.path = null;
-			this.id = id+1;
-			this.layer = ResourceModuleLayer.Undefined;
-		}
-
-		/// <summary>
-		/// Gets the name of the module.
-		/// </summary>
-		/// <value>The name of the module.</value>
-		public string Name
+		public ResourceModuleId FullId
 		{
 			get
 			{
-				return this.name;
+				return this.id;
+			}
+			set
+			{
+				this.VerifyWritable ("FullId");
+				this.id = value;
 			}
 		}
 
-		/// <summary>
-		/// Gets the path of the module.
-		/// </summary>
-		/// <value>The path of the module.</value>
-		public string Path
+		public string ReferenceModulePath
 		{
 			get
 			{
-				return this.path;
+				return this.referenceModulePath;
+			}
+			set
+			{
+				this.VerifyWritable ("ReferenceModulePath");
+				this.referenceModulePath = value;
 			}
 		}
 
-		/// <summary>
-		/// Gets the id of the module.
-		/// </summary>
-		/// <value>The id of the module.</value>
-		public int Id
+		#region Interface IReadOnly
+
+		public bool IsReadOnly
 		{
 			get
 			{
-				return this.id-1;
+				return this.readOnly;
 			}
-		}
-
-		/// <summary>
-		/// Gets a value indicating whether this instance is empty.
-		/// </summary>
-		/// <value><c>true</c> if this instance is empty; otherwise, <c>false</c>.</value>
-		public bool IsEmpty
-		{
-			get
-			{
-				return this.id == -1;
-			}
-		}
-
-		/// <summary>
-		/// Gets the layer of the module.
-		/// </summary>
-		/// <value>The layer of the module.</value>
-		public ResourceModuleLayer Layer
-		{
-			get
-			{
-				return this.layer;
-			}
-		}
-
-
-		public static readonly ResourceModuleInfo Empty = new ResourceModuleInfo ();
-
-		/// <summary>
-		/// Returns the module id as a string representation.
-		/// </summary>
-		/// <returns>
-		/// The module id if it is valid; otherwise, <c>null</c>.
-		/// </returns>
-		public override string ToString()
-		{
-			int id = this.Id;
-
-			if (id < 0)
-			{
-				return null;
-			}
-			else
-			{
-				return string.Format (System.Globalization.CultureInfo.InvariantCulture, "{0}", id);
-			}
-		}
-
-		/// <summary>
-		/// Parses the specified string, which can be either the module name or a
-		/// module id.
-		/// </summary>
-		/// <param name="module">Name or id of the module.</param>
-		/// <returns>The module information structure.</returns>
-		public static ResourceModuleInfo Parse(string module)
-		{
-			int moduleId;
-
-			if (int.TryParse (module, System.Globalization.NumberStyles.Integer, System.Globalization.CultureInfo.InvariantCulture, out moduleId))
-			{
-				return new ResourceModuleInfo (moduleId);
-			}
-			else
-			{
-				return new ResourceModuleInfo (module);
-			}
-		}
-
-		/// <summary>
-		/// Converts the layer to a string prefix (e.g. maps <c>Application</c>
-		/// to <c>"A"</c>).
-		/// </summary>
-		/// <param name="layer">The layer.</param>
-		/// <returns>The string prefix.</returns>
-		public static string ConvertLayerToPrefix(ResourceModuleLayer layer)
-		{
-			switch (layer)
-			{
-				case ResourceModuleLayer.Application:
-					return "A";
-				
-				case ResourceModuleLayer.Customization1:
-					return "C";
-				
-				case ResourceModuleLayer.Customization2:
-					return "D";
-				
-				case ResourceModuleLayer.Customization3:
-					return "E";
-				
-				case ResourceModuleLayer.User:
-					return "U";
-
-				case ResourceModuleLayer.System:
-					return "s";
-			}
-
-			throw new System.ArgumentOutOfRangeException ("layer");
-		}
-
-		/// <summary>
-		/// Converts the string prefix  to a layer (e.g. maps <c>"A"</c> to
-		/// <c>Application</c>).
-		/// </summary>
-		/// <param name="prefix">The string prefix.</param>
-		/// <returns>The layer.</returns>
-		public static ResourceModuleLayer ConvertPrefixToLayer(string prefix)
-		{
-			switch (prefix)
-			{
-				case "A":
-					return ResourceModuleLayer.Application;
-				
-				case "C":
-					return ResourceModuleLayer.Customization1;
-				
-				case "D":
-					return ResourceModuleLayer.Customization2;
-				
-				case "E":
-					return ResourceModuleLayer.Customization3;
-				
-				case "U":
-					return ResourceModuleLayer.User;
-
-				case "s":
-					return ResourceModuleLayer.System;
-			}
-
-			throw new System.ArgumentException ();
-		}
-
-		#region IEquatable<ResourceModuleInfo> Members
-
-		/// <summary>
-		/// Indicates whether the current object is equal to another object of the same type.
-		/// </summary>
-		/// <param name="other">An object to compare with this object.</param>
-		/// <returns>
-		/// <c>true</c> if the current object is equal to the other parameter; otherwise, <c>false</c>.
-		/// </returns>
-		public bool Equals(ResourceModuleInfo other)
-		{
-			return (this.id == other.id) && (this.name == other.name) && (this.path == other.path);
 		}
 
 		#endregion
 
-		/// <summary>
-		/// Indicates whether this instance and a specified object are equal.
-		/// </summary>
-		/// <param name="obj">Another object to compare to.</param>
-		/// <returns>
-		/// <c>true</c> if obj and this instance are the same type and represent the same value; otherwise, <c>false</c>.
-		/// </returns>
-		public override bool Equals(object obj)
+		public void Freeze()
 		{
-			if (obj is ResourceModuleInfo)
+			this.readOnly = true;
+		}
+
+		public ResourceModuleInfo Clone()
+		{
+			ResourceModuleInfo copy = new ResourceModuleInfo ();
+
+			copy.id = this.id;
+			copy.referenceModulePath = this.referenceModulePath;
+
+			return copy;
+		}
+
+		private void VerifyWritable(string property)
+		{
+			if (this.readOnly)
 			{
-				return this.Equals ((ResourceModuleInfo) obj);
-			}
-			else
-			{
-				return false;
+				throw new System.InvalidOperationException (string.Format ("Property {0} is not writable", property));
 			}
 		}
 
-		/// <summary>
-		/// Returns the hash code for this instance.
-		/// </summary>
-		/// <returns>
-		/// A 32-bit signed integer that is the hash code for this instance.
-		/// </returns>
-		public override int GetHashCode()
-		{
-			if (this.name == null)
-			{
-				return this.id;
-			}
-			else if (this.id == 0)
-			{
-				return this.name.GetHashCode ();
-			}
-			else
-			{
-				return this.id;
-			}
-		}
-
-		#region Private Fields
-		
-		private string							name;			//	null or name
-		private string							path;			//	module path or null
-		private int								id;				//	0 or module id+1
-		private ResourceModuleLayer				layer;			//	module layer
-		
-		#endregion
+		bool readOnly;
+		ResourceModuleId id;
+		string referenceModulePath;
 	}
 }

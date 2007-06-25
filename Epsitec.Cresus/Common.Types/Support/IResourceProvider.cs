@@ -27,7 +27,7 @@ namespace Epsitec.Common.Support
 		/// is updated on success.</param>
 		/// <returns><c>true</c> if the module could be selected; otherwise,
 		/// <c>false</c>.</returns>
-		bool SelectModule(ref ResourceModuleInfo module);
+		bool SelectModule(ref ResourceModuleId module);
 
 		/// <summary>
 		/// Validates the resource bundle identifier.
@@ -51,7 +51,7 @@ namespace Epsitec.Common.Support
 		/// </summary>
 		/// <returns>An array of modules which can be accessed by this
 		/// resource provider.</returns>
-		ResourceModuleInfo[] GetModules();
+		ResourceModuleId[] GetModules();
 
 		/// <summary>
 		/// Gets the resource bundle identifiers matching several criteria.

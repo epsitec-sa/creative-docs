@@ -246,18 +246,18 @@ namespace Epsitec.Common.Support
 			return false;
 		}
 
-		public ResourceModuleInfo GetModuleFromFullId(string id)
+		public ResourceModuleId GetModuleFromFullId(string id)
 		{
 			string prefix;
 			string localId;
-			ResourceModuleInfo module;
+			ResourceModuleId module;
 
 			this.AnalyseFullId (id, out prefix, out localId, out module);
 
 			return module;
 		}
 
-		public void AnalyseFullId(string id, out string prefix, out string localId, out ResourceModuleInfo module)
+		public void AnalyseFullId(string id, out string prefix, out string localId, out ResourceModuleId module)
 		{
 			if (!string.IsNullOrEmpty (id))
 			{
@@ -274,18 +274,18 @@ namespace Epsitec.Common.Support
 				}
 				if (string.IsNullOrEmpty (moduleName))
 				{
-					module = new ResourceModuleInfo (this.defaultModuleName, this.defaultModuleId);
+					module = new ResourceModuleId (this.defaultModuleName, this.defaultModuleId);
 				}
 				else
 				{
-					module = ResourceModuleInfo.Parse (moduleName);
+					module = ResourceModuleId.Parse (moduleName);
 				}
 			}
 			else
 			{
 				prefix  = null;
 				localId = null;
-				module  = new ResourceModuleInfo ();
+				module  = new ResourceModuleId ();
 			}
 		}
 
@@ -322,7 +322,7 @@ namespace Epsitec.Common.Support
 				}
 			}
 
-			ResourceModuleInfo module = ResourceModuleInfo.Parse (moduleName);
+			ResourceModuleId module = ResourceModuleId.Parse (moduleName);
 
 			this.NormalizeModule (prefix, ref module);
 			prefix = Resources.JoinFullPrefix (prefix, module.ToString ());
@@ -330,7 +330,7 @@ namespace Epsitec.Common.Support
 			return Resources.JoinFullId (prefix, localId);
 		}
 
-		public void NormalizeModule(string prefix, ref ResourceModuleInfo module)
+		public void NormalizeModule(string prefix, ref ResourceModuleId module)
 		{
 			if (string.IsNullOrEmpty (prefix))
 			{
@@ -408,13 +408,13 @@ namespace Epsitec.Common.Support
 
 		public IEnumerable<string> GetModuleNames(string prefix)
 		{
-			foreach (ResourceModuleInfo info in this.GetModuleInfos (prefix))
+			foreach (ResourceModuleId info in this.GetModuleInfos (prefix))
 			{
 				yield return info.Name;
 			}
 		}
 
-		public IEnumerable<ResourceModuleInfo> GetModuleInfos(string prefix)
+		public IEnumerable<ResourceModuleId> GetModuleInfos(string prefix)
 		{
 			ProviderRecord provider;
 
@@ -424,7 +424,7 @@ namespace Epsitec.Common.Support
 			}
 			else
 			{
-				return new ResourceModuleInfo[0];
+				return new ResourceModuleId[0];
 			}
 		}
 		
@@ -537,7 +537,7 @@ namespace Epsitec.Common.Support
 			culture = culture ?? this.culture;
 			
 			string resourceId;
-			ResourceModuleInfo module;
+			ResourceModuleId module;
 			
 			IResourceProvider provider = this.FindProvider (id, out resourceId, out module);
 			ResourceBundle    bundle   = null;
@@ -1040,7 +1040,7 @@ namespace Epsitec.Common.Support
 				throw new ResourceException (string.Format ("Could not store bundle '{0}'.", id));
 			}
 			
-			ResourceModuleInfo module;
+			ResourceModuleId module;
 			IResourceProvider provider = this.FindProvider (id, out id, out module);
 
 			string prefix = provider.Prefix;
@@ -1106,7 +1106,7 @@ namespace Epsitec.Common.Support
 			}
 			
 			string resource_id;
-			ResourceModuleInfo module;
+			ResourceModuleId module;
 			
 			IResourceProvider provider = this.FindProvider (id, out resource_id, out module);
 			
@@ -1291,7 +1291,7 @@ namespace Epsitec.Common.Support
 				
 				string prefix;
 				string localId;
-				ResourceModuleInfo module;
+				ResourceModuleId module;
 
 				this.AnalyseFullId (name, out prefix, out localId, out module);
 
@@ -1322,7 +1322,7 @@ namespace Epsitec.Common.Support
 
 			string prefix;
 			string localId;
-			ResourceModuleInfo module;
+			ResourceModuleId module;
 
 			this.AnalyseFullId (bundleName, out prefix, out localId, out module);
 
@@ -1363,11 +1363,11 @@ namespace Epsitec.Common.Support
 
 		private IResourceProvider FindProvider(string fullId, out string localId)
 		{
-			ResourceModuleInfo module;
+			ResourceModuleId module;
 			return this.FindProvider (fullId, out localId, out module);
 		}
 		
-		private IResourceProvider FindProvider(string fullId, out string localId, out ResourceModuleInfo module)
+		private IResourceProvider FindProvider(string fullId, out string localId, out ResourceModuleId module)
 		{
 			string prefix;
 
@@ -1381,7 +1381,7 @@ namespace Epsitec.Common.Support
 			return this.FindProviderFromPrefix (prefix, ref module);
 		}
 
-		private IResourceProvider FindProviderFromPrefix(string prefix, ref ResourceModuleInfo module)
+		private IResourceProvider FindProviderFromPrefix(string prefix, ref ResourceModuleId module)
 		{
 			if (!string.IsNullOrEmpty (prefix))
 			{
@@ -1392,7 +1392,7 @@ namespace Epsitec.Common.Support
 					if ((string.IsNullOrEmpty (module.Name)) &&
 						(module.Id < 0))
 					{
-						module = new ResourceModuleInfo (this.defaultModuleName, this.defaultModuleId);
+						module = new ResourceModuleId (this.defaultModuleName, this.defaultModuleId);
 						return provider.ActiveProvider;
 					}
 
@@ -1617,7 +1617,7 @@ namespace Epsitec.Common.Support
 				}
 			}
 
-			public IEnumerable<ResourceModuleInfo> Modules
+			public IEnumerable<ResourceModuleId> Modules
 			{
 				get
 				{
@@ -1646,7 +1646,7 @@ namespace Epsitec.Common.Support
 					}
 				}
 
-				ResourceModuleInfo moduleInfo = new ResourceModuleInfo (moduleName);
+				ResourceModuleId moduleInfo = new ResourceModuleId (moduleName);
 
 				if (this.defaultProvider.SelectModule (ref moduleInfo))
 				{
@@ -1669,7 +1669,7 @@ namespace Epsitec.Common.Support
 					}
 				}
 
-				ResourceModuleInfo moduleInfo = new ResourceModuleInfo (moduleId);
+				ResourceModuleId moduleInfo = new ResourceModuleId (moduleId);
 
 				if (this.defaultProvider.SelectModule (ref moduleInfo))
 				{
@@ -1688,7 +1688,7 @@ namespace Epsitec.Common.Support
 			private IResourceProvider activeProvider;
 			private string prefix;
 			private List<ModuleRecord> modules;
-			private ResourceModuleInfo[] infos;
+			private ResourceModuleId[] infos;
 		}
 
 		#endregion
@@ -1697,7 +1697,7 @@ namespace Epsitec.Common.Support
 
 		private class ModuleRecord
 		{
-			public ModuleRecord(IResourceProvider provider, ResourceModuleInfo moduleInfo)
+			public ModuleRecord(IResourceProvider provider, ResourceModuleId moduleInfo)
 			{
 				this.provider = provider;
 				this.moduleInfo = moduleInfo;
@@ -1711,7 +1711,7 @@ namespace Epsitec.Common.Support
 				}
 			}
 
-			public ResourceModuleInfo ModuleInfo
+			public ResourceModuleId ModuleInfo
 			{
 				get
 				{
@@ -1720,7 +1720,7 @@ namespace Epsitec.Common.Support
 			}
 
 			private IResourceProvider provider;
-			private ResourceModuleInfo moduleInfo;
+			private ResourceModuleId moduleInfo;
 		}
 
 		#endregion
@@ -1770,14 +1770,14 @@ namespace Epsitec.Common.Support
 		/// Gets the source module associated with an object.
 		/// </summary>
 		/// <param name="obj">The object.</param>
-		/// <returns>The source module or <c>ResourceModuleInfo.Empty</c>.</returns>
-		public static ResourceModuleInfo GetSourceModule(DependencyObject obj)
+		/// <returns>The source module or <c>ResourceModuleId.Empty</c>.</returns>
+		public static ResourceModuleId GetSourceModule(DependencyObject obj)
 		{
 			ResourceBundle bundle = ResourceManager.GetSourceBundle (obj);
 			
 			if (bundle == null)
 			{
-				return ResourceModuleInfo.Empty;
+				return ResourceModuleId.Empty;
 			}
 			else
 			{

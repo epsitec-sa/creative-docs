@@ -109,14 +109,14 @@ namespace Epsitec.Common.Designer.Dialogs
 			this.resourcePrefix = prefix;
 		}
 
-		public ResourceModuleInfo SelectedModule
+		public ResourceModuleId SelectedModule
 		{
 			//	Retourne les informations sur le module à ouvrir.
 			get
 			{
 				if (this.indexToOpen == -1)
 				{
-					return new ResourceModuleInfo(null);
+					return new ResourceModuleId(null);
 				}
 				else
 				{
@@ -129,10 +129,10 @@ namespace Epsitec.Common.Designer.Dialogs
 		protected void UpdateModules()
 		{
 			//	Met à jour la liste des modules ouvrables/ouverts.
-			this.moduleInfos = new List<ResourceModuleInfo>();
+			this.moduleInfos = new List<ResourceModuleId>();
 
 			Resources.DefaultManager.RefreshModuleInfos(this.resourcePrefix);
-			foreach (ResourceModuleInfo item in Resources.DefaultManager.GetModuleInfos(this.resourcePrefix))
+			foreach (ResourceModuleId item in Resources.DefaultManager.GetModuleInfos(this.resourcePrefix))
 			{
 				this.moduleInfos.Add(item);
 			}
@@ -277,7 +277,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 
 		protected string						resourcePrefix;
-		protected List<ResourceModuleInfo>		moduleInfos;
+		protected List<ResourceModuleId>		moduleInfos;
 		protected Button						buttonOpen;
 		protected Button						buttonCancel;
 		protected MyWidgets.StringArray			array;
