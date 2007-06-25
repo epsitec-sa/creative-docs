@@ -370,6 +370,14 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				this.ShiftConnectionsD(box, box.ConnectionListD);
 			}
 
+			foreach (ObjectBox box in this.boxes)
+			{
+				box.ConnectionListBt.Clear();
+				box.ConnectionListBb.Clear();
+				box.ConnectionListC.Clear();
+				box.ConnectionListD.Clear();
+			}
+
 			//	Adapte toutes les commentaires.
 			foreach (ObjectComment comment in this.comments)
 			{
@@ -808,6 +816,12 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 			while (removed);  // recommence tant qu'on a détruit quelque chose
 
+			foreach (ObjectBox abox in this.boxes)
+			{
+				abox.IsConnectedToRoot = false;
+				abox.Parents.Clear();
+			}
+
 			this.UpdateAfterOpenOrCloseBox();
 			this.DirtySerialization = true;
 		}
@@ -822,40 +836,6 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 			this.boxes.Remove(box);  // supprime la boîte demandée
 		}
-
-#if false
-		protected bool IsConnectedToRoot(ObjectBox searchingBox)
-		{
-			//	Retourne true si une boîte est reliée à la racine.
-			//	On explore systématiquement tout depuis la racine, jusqu'à rencontrer éventuellement
-			//	l'objet cherché (searchingBox).
-			List<ObjectBox> visited = new List<ObjectBox>();
-			this.ExploreConnectedToRoot(visited, this.boxes[0]);
-
-			foreach (ObjectBox box in visited)
-			{
-				if (box == searchingBox)
-				{
-					return true;
-				}
-			}
-
-			//	On explore systématiquement depuis l'objet, jusqu'à rencontrer éventuellement
-			//	la racine.
-			visited.Clear();
-			this.ExploreConnectedToRoot(visited, searchingBox);
-
-			foreach (ObjectBox box in visited)
-			{
-				if (box == this.boxes[0])
-				{
-					return true;
-				}
-			}
-
-			return false;
-		}
-#endif
 
 		protected void ExploreConnectedToRoot(List<ObjectBox> visited, ObjectBox root)
 		{
