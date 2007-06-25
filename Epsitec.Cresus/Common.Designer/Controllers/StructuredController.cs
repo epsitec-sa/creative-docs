@@ -84,7 +84,7 @@ namespace Epsitec.Common.Designer.Controllers
 				druid = this.structuredType.CaptionId;
 			}
 
-			druid = mainWindow.DlgResourceSelector(module, ResourceAccess.Type.Types, TypeCode.Structured, druid, null, null);
+			druid = mainWindow.DlgResourceSelector(module, ResourceAccess.Type.Types, druid, null);
 			if (druid.IsEmpty)  // annuler ?
 			{
 				return;

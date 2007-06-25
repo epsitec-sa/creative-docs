@@ -605,7 +605,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			AbstractType type = actualField.Type as AbstractType;
 			Druid druid = (type == null) ? Druid.Empty : type.Caption.Id;
 
-			druid = this.mainWindow.DlgResourceSelector(this.module, ResourceAccess.Type.Types, TypeCode.Invalid, druid, null, null);
+			druid = this.mainWindow.DlgResourceSelector(this.module, ResourceAccess.Type.Types, druid, null);
 			if (druid.IsEmpty)
 			{
 				return;

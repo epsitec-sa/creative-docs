@@ -146,11 +146,10 @@ namespace Epsitec.Common.Designer.Dialogs
 		}
 
 
-		public void AccessOpen(Module baseModule, ResourceAccess.Type type, TypeCode typeCode, Druid resource, List<Druid> exclude, string includePrefix)
+		public void AccessOpen(Module baseModule, ResourceAccess.Type type, Druid resource, List<Druid> exclude)
 		{
 			//	Début de l'accès aux ressources pour le dialogue.
 			//	Le type peut être inconnu ou la ressource inconnue, mais pas les deux.
-			//	TODO: supprimer typeCode, exlude et includePrefix.
 			System.Diagnostics.Debug.Assert(type == ResourceAccess.Type.Unknow || type == ResourceAccess.Type.Captions2 || type == ResourceAccess.Type.Fields2 || type == ResourceAccess.Type.Commands2 || type == ResourceAccess.Type.Values || type == ResourceAccess.Type.Types2 || type == ResourceAccess.Type.Entities || type == ResourceAccess.Type.Panels);
 			System.Diagnostics.Debug.Assert(resource.Type != Common.Support.DruidType.ModuleRelative);
 
