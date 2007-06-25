@@ -15,19 +15,27 @@ namespace Epsitec.Common.Support
 		{
 		}
 
+		/// <summary>
+		/// Gets or sets the resource module id for this module.
+		/// </summary>
+		/// <value>The resource module id.</value>
 		public ResourceModuleId FullId
 		{
 			get
 			{
-				return this.id;
+				return this.fullId;
 			}
 			set
 			{
 				this.VerifyWritable ("FullId");
-				this.id = value;
+				this.fullId = value;
 			}
 		}
 
+		/// <summary>
+		/// Gets or sets the path of the reference module.
+		/// </summary>
+		/// <value>The path of the reference module.</value>
 		public string ReferenceModulePath
 		{
 			get
@@ -43,26 +51,41 @@ namespace Epsitec.Common.Support
 
 		#region Interface IReadOnly
 
+		/// <summary>
+		/// Gets a value indicating whether this instance is read only.
+		/// </summary>
+		/// <value>
+		/// 	<c>true</c> if this instance is read only; otherwise, <c>false</c>.
+		/// </value>
 		public bool IsReadOnly
 		{
 			get
 			{
-				return this.readOnly;
+				return this.isFrozen;
 			}
 		}
 
 		#endregion
 
+		/// <summary>
+		/// Freezes this instance. This makes the instance read only. No further
+		/// modification will be possible. Any attempt to modify the properties
+		/// will throw a <see cref="System.InvalidOperationException"/>.
+		/// </summary>
 		public void Freeze()
 		{
-			this.readOnly = true;
+			this.isFrozen = true;
 		}
 
+		/// <summary>
+		/// Returns a copy of this instance. The copy is modifiable.
+		/// </summary>
+		/// <returns>The copy of this instance.</returns>
 		public ResourceModuleInfo Clone()
 		{
 			ResourceModuleInfo copy = new ResourceModuleInfo ();
 
-			copy.id = this.id;
+			copy.fullId = this.fullId;
 			copy.referenceModulePath = this.referenceModulePath;
 
 			return copy;
@@ -70,14 +93,14 @@ namespace Epsitec.Common.Support
 
 		private void VerifyWritable(string property)
 		{
-			if (this.readOnly)
+			if (this.isFrozen)
 			{
 				throw new System.InvalidOperationException (string.Format ("Property {0} is not writable", property));
 			}
 		}
 
-		bool readOnly;
-		ResourceModuleId id;
+		bool isFrozen;
+		ResourceModuleId fullId;
 		string referenceModulePath;
 	}
 }
