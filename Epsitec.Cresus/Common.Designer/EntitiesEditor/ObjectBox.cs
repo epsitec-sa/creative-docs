@@ -34,6 +34,11 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			this.subtitle.Alignment = ContentAlignment.MiddleCenter;
 			this.subtitle.BreakMode = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine;
 
+			this.basename = new TextLayout();
+			this.basename.DefaultFontSize = 10;
+			this.basename.Alignment = ContentAlignment.MiddleLeft;
+			this.basename.BreakMode = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine;
+
 			this.fields = new List<Field>();
 
 			this.columnsSeparatorRelative = 0.5;
@@ -100,6 +105,31 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 		}
 
+		protected string Basename
+		{
+			//	Nom de la classe de base, affiché verticalement.
+			get
+			{
+				return this.basenameString;
+			}
+			set
+			{
+				if (this.basenameString != value)
+				{
+					this.basenameString = value;
+
+					if (string.IsNullOrEmpty(this.basenameString))
+					{
+						this.basename.Text = null;
+					}
+					else
+					{
+						this.basename.Text = string.Concat("<i><b>", this.basenameString, "</b></i>");
+					}
+				}
+			}
+		}
+
 		public void SetContent(CultureMap cultureMap)
 		{
 			//	Initialise le contenu de la boîte.
@@ -107,6 +137,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 			this.Title = this.cultureMap.Name;
 			this.UpdateSubtitle();
+			this.UpdateBasename();
 
 			StructuredData data = this.cultureMap.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
 			IList<StructuredData> dataFields = data.GetValue(Support.Res.Fields.ResourceStructuredType.Fields) as IList<StructuredData>;
@@ -306,7 +337,13 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			//	Retourne la hauteur requise selon le nombre de champs définis.
 			if (this.isExtended)
 			{
-				return AbstractObject.headerHeight + ObjectBox.fieldHeight*this.fields.Count + AbstractObject.footerHeight + 20;
+				int count = this.fields.Count;
+				if (this.membershipCount > 0)
+				{
+					count++;
+				}
+
+				return AbstractObject.headerHeight + ObjectBox.fieldHeight*count + AbstractObject.footerHeight + 20;
 			}
 			else
 			{
@@ -738,7 +775,6 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 
 			Rectangle rect;
-			int membershipCount = this.MembershipCount;
 
 			if (this.isFieldMoving)
 			{
@@ -746,7 +782,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				for (int i=-1; i<this.fields.Count; i++)
 				{
 					rect = this.GetFieldMovingBounds(i);
-					if (i >= membershipCount-1 && rect.Contains(pos))
+					if (i >= this.membershipCount-1 && rect.Contains(pos))
 					{
 						element = ActiveElement.BoxFieldMoving;
 						fieldRank = i;
@@ -850,7 +886,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					for (int i=-1; i<this.fields.Count; i++)
 					{
 						rect = this.GetFieldAddBounds(i);
-						if (i >= membershipCount-1 && rect.Contains(pos))
+						if (i >= this.membershipCount-1 && rect.Contains(pos))
 						{
 							element = ActiveElement.BoxFieldAdd;
 							fieldRank = i;
@@ -874,7 +910,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					for (int i=0; i<this.fields.Count; i++)
 					{
 						rect = this.GetFieldRemoveBounds(i);
-						if (i >= membershipCount && rect.Contains(pos))
+						if (i >= this.membershipCount && rect.Contains(pos))
 						{
 							element = ActiveElement.BoxFieldRemove;
 							fieldRank = i;
@@ -883,7 +919,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 						}
 
 						rect = this.GetFieldMovableBounds(i);
-						if (i >= membershipCount && rect.Contains(pos) && this.Fields.Count-membershipCount > 1)
+						if (i >= this.membershipCount && rect.Contains(pos) && this.Fields.Count-this.membershipCount > 1)
 						{
 							element = ActiveElement.BoxFieldMovable;
 							fieldRank = i;
@@ -892,7 +928,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 						}
 
 						rect = this.GetFieldNameBounds(i);
-						if (i >= membershipCount && rect.Contains(pos))
+						if (i >= this.membershipCount && rect.Contains(pos))
 						{
 							element = ActiveElement.BoxFieldName;
 							fieldRank = i;
@@ -901,7 +937,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 						}
 
 						rect = this.GetFieldTypeBounds(i);
-						if (i >= membershipCount && rect.Contains(pos))
+						if (i >= this.membershipCount && rect.Contains(pos))
 						{
 							element = ActiveElement.BoxFieldType;
 							fieldRank = i;
@@ -1032,32 +1068,16 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			//	Retourne le rectangle occupé par un champ.
 			Rectangle rect = this.bounds;
 
+			if (this.membershipCount > 0)
+			{
+				rank++;
+			}
+
 			rect.Deflate(2, 0);
 			rect.Bottom = rect.Top - AbstractObject.headerHeight - ObjectBox.fieldHeight*(rank+1) - 12;
 			rect.Height = ObjectBox.fieldHeight;
 
 			return rect;
-		}
-
-		protected int MembershipCount
-		{
-			//	Retourne le nombre de champs hérités, qui sont toujours au début.
-			get
-			{
-				int count = 0;
-				foreach (Field field in this.fields)
-				{
-					if (field.Membership == FieldMembership.Inherited)
-					{
-						count++;
-					}
-					else
-					{
-						break;  // un champ hérité est toujours au début de la liste !
-					}
-				}
-				return count;
-			}
 		}
 
 
@@ -1292,10 +1312,16 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		protected void UpdateFields()
 		{
 			//	Met à jour toutes les liaisons des champs.
+			this.membershipCount = 0;
 			for (int i=0; i<this.fields.Count; i++)
 			{
 				this.fields[i].IsSourceExpanded = this.isExtended;
 				this.fields[i].Rank = i;
+
+				if (this.fields[i].Membership == FieldMembership.Inherited)
+				{
+					this.membershipCount++;  // nombre de champs hérités au début de la liste
+				}
 			}
 		}
 
@@ -1499,7 +1525,6 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			Rectangle rect;
 
 			bool dragging = (this.hilitedElement == ActiveElement.BoxHeader);
-			int membershipCount = this.MembershipCount;
 
 			//	Dessine l'ombre.
 			rect = this.bounds;
@@ -1641,6 +1666,38 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				graphics.AddLine(this.bounds.Left+2, this.bounds.Bottom+AbstractObject.footerHeight+0.5, this.bounds.Right-2, this.bounds.Bottom+AbstractObject.footerHeight+0.5);
 				graphics.RenderSolid(colorFrame);
 
+				if (this.membershipCount > 0)
+				{
+					rect = Rectangle.Union(this.GetFieldBounds(-1), this.GetFieldBounds(this.membershipCount-1));
+					rect.Deflate(3.5, 0.5);
+					graphics.AddFilledRectangle(rect);
+					graphics.RenderSolid(this.GetColor(1));
+
+					rect = this.GetFieldBounds(-1);
+					rect.Deflate(3.5, 0);
+					graphics.AddFilledRectangle(rect);
+					Color cia1 = this.GetColorMain(dragging ? 1.0 : 0.8);
+					Color cia2 = this.GetColorMain(dragging ? 0.7 : 0.5);
+					this.RenderHorizontalGradient(graphics, rect, cia1, cia2);
+
+					rect = Rectangle.Union(this.GetFieldBounds(0), this.GetFieldBounds(this.membershipCount-1));
+					rect.Deflate(3.5, 0);
+					graphics.AddFilledRectangle(rect);
+					Color cib1 = this.GetColorMain(dragging ? 0.25 : 0.15);
+					Color cib2 = this.GetColorMain(0.05);
+					this.RenderHorizontalGradient(graphics, rect, cib1, cib2);
+
+					rect = this.GetFieldBounds(-1);
+					rect.Deflate(ObjectBox.textMargin, 2);
+					this.basename.LayoutSize = rect.Size;
+					this.basename.Paint(rect.BottomLeft, graphics, Rectangle.MaxValue, this.GetColor(1), GlyphPaintStyle.Normal);
+
+					rect = Rectangle.Union(this.GetFieldBounds(-1), this.GetFieldBounds(this.membershipCount-1));
+					rect.Deflate(3.5, 0.5);
+					graphics.AddRectangle(rect);
+					graphics.RenderSolid(colorFrame);
+				}
+
 				for (int i=0; i<this.fields.Count; i++)
 				{
 					Color colorName = this.GetColor(0);
@@ -1697,14 +1754,9 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 						this.fields[i].TextLayoutType.Paint(rect.BottomLeft, graphics, Rectangle.MaxValue, colorType, GlyphPaintStyle.Normal);
 					}
 
-					rect = this.GetFieldBounds(i);
-					if (i != 0 && i == membershipCount-1)
+					if (i >= this.membershipCount)
 					{
-						graphics.AddLine(rect.Left, rect.Bottom+0.5, rect.Right, rect.Bottom+0.5);
-						graphics.RenderSolid(colorFrame);
-					}
-					else
-					{
+						rect = this.GetFieldBounds(i);
 						graphics.AddLine(rect.Left, rect.Bottom+0.5, rect.Right, rect.Bottom+0.5);
 						graphics.RenderSolid(colorLine);
 					}
@@ -1724,7 +1776,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					!this.IsHeaderHilite && !this.isFieldMoving && !this.isChangeWidth && !this.isMoveColumnsSeparator)
 				{
 					//	Dessine la glissière à gauche pour suggérer les boutons Add/Remove des champs.
-					Point p1 = this.GetFieldAddBounds(membershipCount-1).Center;
+					Point p1 = this.GetFieldAddBounds(this.membershipCount-1).Center;
 					Point p2 = this.GetFieldAddBounds(this.fields.Count-1).Center;
 					bool hilited = this.hilitedElement == ActiveElement.BoxFieldAdd || this.hilitedElement == ActiveElement.BoxFieldRemove;
 					this.DrawEmptySlider(graphics, p1, p2, hilited);
@@ -2125,6 +2177,26 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 		}
 
+		protected void UpdateBasename()
+		{
+			//	Met à jour le nom de l'entité de base.
+			StructuredData data = this.cultureMap.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
+			Druid druid = (Druid) data.GetValue(Support.Res.Fields.ResourceStructuredType.BaseType);
+
+			if (druid.IsValid)
+			{
+				Module module = this.editor.Module.MainWindow.SearchModule(druid);
+				CultureMap cultureMap = this.editor.Module.AccessEntities.Accessor.Collection[druid];
+				if (cultureMap != null)
+				{
+					this.Basename = cultureMap.Name;
+					return;
+				}
+			}
+
+			this.Basename = null;
+		}
+
 
 		#region Serialization
 		public void WriteXml(XmlWriter writer)
@@ -2236,6 +2308,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			//	Ajuste le contenu de la boîte après sa désérialisation.
 			this.Title = this.cultureMap.Name;
 			this.UpdateSubtitle();
+			this.UpdateBasename();
 			this.isRoot = (this == this.editor.Boxes[0]);  // la première boîte est toujours la boîte racine
 
 			StructuredData data = this.cultureMap.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
@@ -2325,9 +2398,12 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		protected bool isConnectedToRoot;
 		protected string titleString;
 		protected string subtitleString;
+		protected string basenameString;
 		protected TextLayout title;
 		protected TextLayout subtitle;
+		protected TextLayout basename;
 		protected List<Field> fields;
+		protected int membershipCount;
 		protected List<SourceInfo> sourcesList;
 		protected int sourcesClosedCount;
 		protected List<ObjectConnection> connectionListBt;
