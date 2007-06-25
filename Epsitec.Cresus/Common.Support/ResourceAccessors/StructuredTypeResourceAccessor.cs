@@ -143,12 +143,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 					StructuredTypeField field = type.Fields[fieldId];
 					StructuredData x = new StructuredData (Res.Types.Field);
 
-					x.SetValue (Res.Fields.Field.TypeId, field.Type == null ? Druid.Empty : field.Type.CaptionId);
-					x.SetValue (Res.Fields.Field.CaptionId, field.CaptionId);
-					x.SetValue (Res.Fields.Field.Relation, field.Relation);
-					x.SetValue (Res.Fields.Field.Membership, field.Membership);
-					x.SetValue (Res.Fields.Field.Source, field.Source);
-					x.SetValue (Res.Fields.Field.Expression, field.Expression ?? "");
+					StructuredTypeResourceAccessor.FillDataFromField (x, field);
 					fields.Add (x);
 
 					item.NotifyDataAdded (x);
@@ -163,6 +158,16 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			data.SetValue (Res.Fields.ResourceStructuredType.SerializedDesignerLayouts, type == null ? "" : type.SerializedDesignerLayouts);
 			
 			fields.CollectionChanged += new Listener (this, item).HandleCollectionChanged;
+		}
+
+		private static void FillDataFromField(StructuredData data, StructuredTypeField field)
+		{
+			data.SetValue (Res.Fields.Field.TypeId, field.Type == null ? Druid.Empty : field.Type.CaptionId);
+			data.SetValue (Res.Fields.Field.CaptionId, field.CaptionId);
+			data.SetValue (Res.Fields.Field.Relation, field.Relation);
+			data.SetValue (Res.Fields.Field.Membership, field.Membership);
+			data.SetValue (Res.Fields.Field.Source, field.Source);
+			data.SetValue (Res.Fields.Field.Expression, field.Expression ?? "");
 		}
 
 		protected override void HandleItemsCollectionChanged(object sender, CollectionChangedEventArgs e)
@@ -247,28 +252,14 @@ namespace Epsitec.Common.Support.ResourceAccessors
 		{
 			IList<StructuredData> fields = data.GetValue (Res.Fields.ResourceStructuredType.Fields) as IList<StructuredData>;
 
-			int i = 0;
-
-			while (i < fields.Count)
-			{
-				StructuredData field = fields[i];
-
-				if ((FieldMembership) field.GetValue (Res.Fields.Field.Membership) == FieldMembership.Inherited)
-				{
-					fields.RemoveAt (i);
-				}
-				else
-				{
-					i++;
-				}
-			}
+			StructuredTypeResourceAccessor.RemoveInheritedFields (fields);
 
 			if (baseTypeId.IsValid)
 			{
 				StructuredType type = new StructuredType (StructuredTypeClass.Entity, baseTypeId);
 				ResourceManager.SetResourceManager (type, this.ResourceManager);
 
-				i = 0;
+				int i = 0;
 
 				foreach (string fieldId in type.GetFieldIds ())
 				{
@@ -276,16 +267,23 @@ namespace Epsitec.Common.Support.ResourceAccessors
 					if (field.Membership == FieldMembership.Inherited)
 					{
 						StructuredData x = new StructuredData (Res.Types.Field);
-
-						x.SetValue (Res.Fields.Field.TypeId, field.Type == null ? Druid.Empty : field.Type.CaptionId);
-						x.SetValue (Res.Fields.Field.CaptionId, field.CaptionId);
-						x.SetValue (Res.Fields.Field.Relation, field.Relation);
-						x.SetValue (Res.Fields.Field.Membership, field.Membership);
-						x.SetValue (Res.Fields.Field.Source, field.Source);
-						x.SetValue (Res.Fields.Field.Expression, field.Expression ?? "");
-
+						StructuredTypeResourceAccessor.FillDataFromField (x, field);
 						fields.Insert (i++, x);
 					}
+				}
+			}
+		}
+
+		private static void RemoveInheritedFields(IList<StructuredData> fields)
+		{
+			for (int i = 0; i < fields.Count; i++)
+			{
+				StructuredData field = fields[i];
+				FieldMembership membership = (FieldMembership) field.GetValue (Res.Fields.Field.Membership);
+
+				if (membership == FieldMembership.Inherited)
+				{
+					fields.RemoveAt (i--);
 				}
 			}
 		}
