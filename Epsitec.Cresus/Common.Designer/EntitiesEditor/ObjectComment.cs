@@ -1154,11 +1154,11 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		{
 			if (hilited)
 			{
-				return this.GetColorLighter(this.GetColorMain(), 0.3);
+				return this.GetColorAdjusted(this.GetColorMain(), 0.3);
 			}
 			else
 			{
-				return this.GetColorLighter(this.GetColorMain(), 0.2);
+				return this.GetColorAdjusted(this.GetColorMain(), 0.2);
 			}
 		}
 
@@ -1170,11 +1170,11 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 			else if (hilited)
 			{
-				return this.GetColorLighter(this.GetColorMain(), 0.9);
+				return this.GetColorAdjusted(this.GetColorMain(), 0.9);
 			}
 			else
 			{
-				return this.GetColorLighter(this.GetColorMain(), 0.7);
+				return this.GetColorAdjusted(this.GetColorMain(), 0.7);
 			}
 		}
 

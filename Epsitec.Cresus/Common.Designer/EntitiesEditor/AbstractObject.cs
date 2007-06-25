@@ -653,22 +653,35 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			return color;
 		}
 
-		protected Color GetColorLighter(Color color, double factor)
+		protected Color GetColorAdjusted(Color color, double factor)
 		{
-			//	Retourne une couleur éclaircie, sans changer la transparence.
+			//	Retourne une couleur ajustée, sans changer la transparence.
 			if (this.IsDarkColorMain)
 			{
-				factor = 0.5+(factor*0.5);
-				color.R = color.R*factor;
-				color.G = color.G*factor;
-				color.B = color.B*factor;
+				return this.GetColorDarker(color, factor);
 			}
 			else
 			{
-				color.R = 1-(1-color.R)*factor;
-				color.G = 1-(1-color.G)*factor;
-				color.B = 1-(1-color.B)*factor;
+				return this.GetColorLighter(color, factor);
 			}
+		}
+
+		protected Color GetColorLighter(Color color, double factor)
+		{
+			//	Retourne une couleur éclaircie, sans changer la transparence.
+			color.R = 1-(1-color.R)*factor;
+			color.G = 1-(1-color.G)*factor;
+			color.B = 1-(1-color.B)*factor;
+			return color;
+		}
+
+		protected Color GetColorDarker(Color color, double factor)
+		{
+			//	Retourne une couleur assombrie, sans changer la transparence.
+			factor = 0.5+(factor*0.5);
+			color.R = color.R*factor;
+			color.G = color.G*factor;
+			color.B = color.B*factor;
 			return color;
 		}
 

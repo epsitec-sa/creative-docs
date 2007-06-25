@@ -240,6 +240,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 			this.UpdateConnections();
 			this.RedimArea();
+
+			this.UpdateDimmed();
 		}
 
 		public void UpdateAfterGeometryChanged(ObjectBox box)
@@ -737,6 +739,19 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				if (connection.Field.DstBox != null && connection.Field.DstBox.IsDimmed)
 				{
 					connection.IsDimmed = true;
+				}
+
+				if (connection.Comment != null)
+				{
+					connection.Comment.IsDimmed = connection.IsDimmed;
+				}
+			}
+
+			foreach (ObjectBox box in this.boxes)
+			{
+				if (box.Comment != null)
+				{
+					box.Comment.IsDimmed = box.IsDimmed;
 				}
 			}
 		}
