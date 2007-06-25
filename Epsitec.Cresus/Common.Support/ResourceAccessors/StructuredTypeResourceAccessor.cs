@@ -235,11 +235,16 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			}
 		}
 
-		private void UpdateInheritedFields(StructuredData data, Druid newBaseType)
-		{
-			StructuredType type = new StructuredType (StructuredTypeClass.Entity, newBaseType);
-			ResourceManager.SetResourceManager (type, this.ResourceManager);
 
+		/// <summary>
+		/// Updates the inherited fields found in a structured type. This method
+		/// can be used when the <c>BaseType</c> property changes or when a new
+		/// <c>CultureMap</c> object is added.
+		/// </summary>
+		/// <param name="data">The data describing the structured type.</param>
+		/// <param name="newBaseType">The Druid of the base type.</param>
+		private void UpdateInheritedFields(StructuredData data, Druid baseTypeId)
+		{
 			IList<StructuredData> fields = data.GetValue (Res.Fields.ResourceStructuredType.Fields) as IList<StructuredData>;
 
 			int i = 0;
@@ -258,23 +263,29 @@ namespace Epsitec.Common.Support.ResourceAccessors
 				}
 			}
 
-			i = 0;
-
-			foreach (string fieldId in type.GetFieldIds ())
+			if (baseTypeId.IsValid)
 			{
-				StructuredTypeField field = type.Fields[fieldId];
-				if (field.Membership == FieldMembership.Inherited)
+				StructuredType type = new StructuredType (StructuredTypeClass.Entity, baseTypeId);
+				ResourceManager.SetResourceManager (type, this.ResourceManager);
+
+				i = 0;
+
+				foreach (string fieldId in type.GetFieldIds ())
 				{
-					StructuredData x = new StructuredData (Res.Types.Field);
+					StructuredTypeField field = type.Fields[fieldId];
+					if (field.Membership == FieldMembership.Inherited)
+					{
+						StructuredData x = new StructuredData (Res.Types.Field);
 
-					x.SetValue (Res.Fields.Field.TypeId, field.Type == null ? Druid.Empty : field.Type.CaptionId);
-					x.SetValue (Res.Fields.Field.CaptionId, field.CaptionId);
-					x.SetValue (Res.Fields.Field.Relation, field.Relation);
-					x.SetValue (Res.Fields.Field.Membership, field.Membership);
-					x.SetValue (Res.Fields.Field.Source, field.Source);
-					x.SetValue (Res.Fields.Field.Expression, field.Expression ?? "");
+						x.SetValue (Res.Fields.Field.TypeId, field.Type == null ? Druid.Empty : field.Type.CaptionId);
+						x.SetValue (Res.Fields.Field.CaptionId, field.CaptionId);
+						x.SetValue (Res.Fields.Field.Relation, field.Relation);
+						x.SetValue (Res.Fields.Field.Membership, field.Membership);
+						x.SetValue (Res.Fields.Field.Source, field.Source);
+						x.SetValue (Res.Fields.Field.Expression, field.Expression ?? "");
 
-					fields.Insert (i++, x);
+						fields.Insert (i++, x);
+					}
 				}
 			}
 		}
