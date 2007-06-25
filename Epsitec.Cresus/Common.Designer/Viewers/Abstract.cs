@@ -463,6 +463,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 				this.UpdateArray();
 				this.SelectedRow = this.access.AccessIndex;
+				this.UpdateEdit();
 				this.UpdateCommands();
 
 				if (this.currentTextField != null)
