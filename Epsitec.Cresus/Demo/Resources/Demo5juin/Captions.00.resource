@@ -102,7 +102,7 @@
   <data name="Fld.Adresse.Numéro" id="093" mod="1">&lt;s:data id="_0" f:Name="Numéro" f:Labels="{Collection {Text 'Numéro'}}" /&gt;</data>
   <data name="Fld.Adresse.Case" id="0A3" mod="1">&lt;s:data id="_0" f:Name="Case" f:Labels="{Collection {Text 'Case'}}" /&gt;</data>
   <data name="Fld.Adresse.Ville" id="0B3" mod="1">&lt;s:data id="_0" f:Name="Ville" f:Labels="{Collection {Text 'Ville'}}" /&gt;</data>
-  <data name="Fld.Adresse.NPA" id="0C3" mod="1">&lt;s:data id="_0" f:Name="NPA" f:Labels="{Collection {Text 'NPA'}}" /&gt;</data>
+  <data name="Fld.Adresse.Npa" id="0C3" mod="1">&lt;s:data id="_0" f:Name="Npa" f:Labels="{Collection {Text 'Npa'}}" /&gt;</data>
   <data name="Fld.Adresse.Etat" id="0D3" mod="1">&lt;s:data id="_0" f:Name="Etat" f:Labels="{Collection {Text 'Etat'}}" /&gt;</data>
   <data name="Fld.Adresse.Pays" id="0E3" mod="1">&lt;s:data id="_0" f:Name="Pays" f:Labels="{Collection {Text 'Pays'}}" /&gt;</data>
 </bundle>
