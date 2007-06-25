@@ -57,7 +57,7 @@ namespace Epsitec.Common.Support
 				{
 					if (this.defaultPrefix != null)
 					{
-						throw System.InvalidOperationException ("The default prefix may not be changed");
+						throw new System.InvalidOperationException ("The default prefix may not be changed");
 					}
 
 					this.defaultPrefix = value;
