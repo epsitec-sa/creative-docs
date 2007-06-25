@@ -554,13 +554,27 @@ namespace Epsitec.Common.Designer
 						return;
 					}
 					
+					this.lastTypeCodeCreatated = code;
+
 					newItem = this.accessor.CreateItem();
 					newItem.Name = newName;
 
-					StructuredData data = newItem.GetCultureData (Resources.DefaultTwoLetterISOLanguageName);
+					StructuredData data = newItem.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
+					data.SetValue(Support.Res.Fields.ResourceBaseType.TypeCode, code);
+				}
+				else if (this.type == Type.Entities && !duplicateContent)
+				{
+					Druid druid = this.mainWindow.DlgResourceSelector(this.mainWindow.CurrentModule, Type.Entities, TypeCode.Structured, Druid.Empty, null, null);
+					if (druid.IsEmpty)
+					{
+						return;
+					}
 
-					this.lastTypeCodeCreatated = code;
-					data.SetValue (Support.Res.Fields.ResourceBaseType.TypeCode, code);
+					newItem = this.accessor.CreateItem();
+					newItem.Name = newName;
+
+					StructuredData data = newItem.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
+					data.SetValue(Support.Res.Fields.ResourceStructuredType.BaseType, druid);
 				}
 				else
 				{
