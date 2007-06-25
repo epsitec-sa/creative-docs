@@ -697,7 +697,7 @@ namespace Epsitec.Common.Types
 						throw new System.ArgumentException (string.Format ("Invalid caption specified for field in {0} {1}", typeClass.ToString ().ToLower (), this.Name));
 					}
 
-					if (StructuredType.IsValidFieldName (caption.Name))
+					if (!StructuredType.IsValidFieldName (caption.Name))
 					{
 						throw new System.ArgumentException (string.Format ("Field name {0} invalid in {1} {2}", caption.Name, typeClass.ToString ().ToLower (), this.Name));
 					}
