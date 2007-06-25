@@ -86,6 +86,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			this.textLayoutType.BreakMode = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine;
 
 			this.relation = FieldRelation.None;
+			this.membership = FieldMembership.Local;
 			this.captionId = Druid.Empty;
 			this.destination = Druid.Empty;
 			this.rank = -1;
@@ -160,6 +161,19 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			set
 			{
 				this.relation = value;
+			}
+		}
+
+		public FieldMembership Membership
+		{
+			//	Type de l'héritage du champ.
+			get
+			{
+				return this.membership;
+			}
+			set
+			{
+				this.membership = value;
 			}
 		}
 
@@ -736,6 +750,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		protected TextLayout textLayoutField;
 		protected TextLayout textLayoutType;
 		protected FieldRelation relation;
+		protected FieldMembership membership;
 		protected Druid captionId;
 		protected Druid destination;
 		protected int rank;

@@ -618,7 +618,6 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				}
 				this.isFieldMoving = false;
 				this.editor.LockObject(null);
-				this.editor.DirtySerialization = true;
 			}
 			else if (this.isChangeWidth)
 			{
@@ -739,6 +738,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 
 			Rectangle rect;
+			int membershipCount = this.MembershipCount;
 
 			if (this.isFieldMoving)
 			{
@@ -746,7 +746,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				for (int i=-1; i<this.fields.Count; i++)
 				{
 					rect = this.GetFieldMovingBounds(i);
-					if (rect.Contains(pos))
+					if (i >= membershipCount-1 && rect.Contains(pos))
 					{
 						element = ActiveElement.BoxFieldMoving;
 						fieldRank = i;
@@ -850,7 +850,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					for (int i=-1; i<this.fields.Count; i++)
 					{
 						rect = this.GetFieldAddBounds(i);
-						if (rect.Contains(pos))
+						if (i >= membershipCount-1 && rect.Contains(pos))
 						{
 							element = ActiveElement.BoxFieldAdd;
 							fieldRank = i;
@@ -874,7 +874,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					for (int i=0; i<this.fields.Count; i++)
 					{
 						rect = this.GetFieldRemoveBounds(i);
-						if (rect.Contains(pos))
+						if (i >= membershipCount && rect.Contains(pos))
 						{
 							element = ActiveElement.BoxFieldRemove;
 							fieldRank = i;
@@ -883,7 +883,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 						}
 
 						rect = this.GetFieldMovableBounds(i);
-						if (rect.Contains(pos))
+						if (i >= membershipCount && rect.Contains(pos) && this.Fields.Count-membershipCount > 1)
 						{
 							element = ActiveElement.BoxFieldMovable;
 							fieldRank = i;
@@ -892,7 +892,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 						}
 
 						rect = this.GetFieldNameBounds(i);
-						if (rect.Contains(pos))
+						if (i >= membershipCount && rect.Contains(pos))
 						{
 							element = ActiveElement.BoxFieldName;
 							fieldRank = i;
@@ -901,7 +901,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 						}
 
 						rect = this.GetFieldTypeBounds(i);
-						if (rect.Contains(pos))
+						if (i >= membershipCount && rect.Contains(pos))
 						{
 							element = ActiveElement.BoxFieldType;
 							fieldRank = i;
@@ -1037,6 +1037,27 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			rect.Height = ObjectBox.fieldHeight;
 
 			return rect;
+		}
+
+		protected int MembershipCount
+		{
+			//	Retourne le nombre de champs hérités, qui sont toujours au début.
+			get
+			{
+				int count = 0;
+				foreach (Field field in this.fields)
+				{
+					if (field.Membership == FieldMembership.Inherited)
+					{
+						count++;
+					}
+					else
+					{
+						break;  // un champ hérité est toujours au début de la liste !
+					}
+				}
+				return count;
+			}
 		}
 
 
@@ -1263,6 +1284,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			field.FieldName = (fieldCultureMap == null) ? "" : fieldCultureMap.Name;
 			field.TypeName = (typeCultureMap == null) ? "" : typeCultureMap.Name;
 			field.Relation = rel;
+			field.Membership = membership;
 			field.Destination = typeId;
 			field.SrcBox = this;
 		}
@@ -1477,6 +1499,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			Rectangle rect;
 
 			bool dragging = (this.hilitedElement == ActiveElement.BoxHeader);
+			int membershipCount = this.MembershipCount;
 
 			//	Dessine l'ombre.
 			rect = this.bounds;
@@ -1675,8 +1698,16 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					}
 
 					rect = this.GetFieldBounds(i);
-					graphics.AddLine(rect.Left, rect.Bottom+0.5, rect.Right, rect.Bottom+0.5);
-					graphics.RenderSolid(colorLine);
+					if (i != 0 && i == membershipCount-1)
+					{
+						graphics.AddLine(rect.Left, rect.Bottom+0.5, rect.Right, rect.Bottom+0.5);
+						graphics.RenderSolid(colorFrame);
+					}
+					else
+					{
+						graphics.AddLine(rect.Left, rect.Bottom+0.5, rect.Right, rect.Bottom+0.5);
+						graphics.RenderSolid(colorLine);
+					}
 				}
 
 				if (this.hilitedElement == ActiveElement.BoxFieldMoving)
@@ -1693,7 +1724,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					!this.IsHeaderHilite && !this.isFieldMoving && !this.isChangeWidth && !this.isMoveColumnsSeparator)
 				{
 					//	Dessine la glissière à gauche pour suggérer les boutons Add/Remove des champs.
-					Point p1 = this.GetFieldAddBounds(-1).Center;
+					Point p1 = this.GetFieldAddBounds(membershipCount-1).Center;
 					Point p2 = this.GetFieldAddBounds(this.fields.Count-1).Center;
 					bool hilited = this.hilitedElement == ActiveElement.BoxFieldAdd || this.hilitedElement == ActiveElement.BoxFieldRemove;
 					this.DrawEmptySlider(graphics, p1, p2, hilited);
