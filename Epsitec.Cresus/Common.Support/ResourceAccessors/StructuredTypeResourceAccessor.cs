@@ -201,6 +201,15 @@ namespace Epsitec.Common.Support.ResourceAccessors
 		private void HandleCultureMapAdded(CultureMap item)
 		{
 			item.PropertyChanged += this.HandleItemPropertyChanged;
+
+			StructuredData data = item.GetCultureData (Resources.DefaultTwoLetterISOLanguageName);
+			object baseTypeIdValue = data.GetValue (Res.Fields.ResourceStructuredType.BaseType);
+
+			if ((!UndefinedValue.IsUndefinedValue (baseTypeIdValue)) &&
+				(((Druid) baseTypeIdValue).IsValid))
+			{
+				this.UpdateInheritedFields (data, (Druid) baseTypeIdValue);
+			}
 		}
 
 		private void HandleCultureMapRemoved(CultureMap item)
@@ -216,6 +225,57 @@ namespace Epsitec.Common.Support.ResourceAccessors
 				string newName = e.NewValue as string;
 
 				this.ChangeFieldPrefix (oldName, newName);
+			}
+			if (e.PropertyName == Res.Fields.ResourceStructuredType.BaseType.ToString ())
+			{
+				StructuredData data = sender as StructuredData;
+				Druid   newBaseType = (Druid) e.NewValue;
+				
+				this.UpdateInheritedFields (data, newBaseType);
+			}
+		}
+
+		private void UpdateInheritedFields(StructuredData data, Druid newBaseType)
+		{
+			StructuredType type = new StructuredType (StructuredTypeClass.Entity, newBaseType);
+			ResourceManager.SetResourceManager (type, this.ResourceManager);
+
+			IList<StructuredData> fields = data.GetValue (Res.Fields.ResourceStructuredType.Fields) as IList<StructuredData>;
+
+			int i = 0;
+
+			while (i < fields.Count)
+			{
+				StructuredData field = fields[i];
+
+				if ((FieldMembership) field.GetValue (Res.Fields.Field.Membership) == FieldMembership.Inherited)
+				{
+					fields.RemoveAt (i);
+				}
+				else
+				{
+					i++;
+				}
+			}
+
+			i = 0;
+
+			foreach (string fieldId in type.GetFieldIds ())
+			{
+				StructuredTypeField field = type.Fields[fieldId];
+				if (field.Membership == FieldMembership.Inherited)
+				{
+					StructuredData x = new StructuredData (Res.Types.Field);
+
+					x.SetValue (Res.Fields.Field.TypeId, field.Type == null ? Druid.Empty : field.Type.CaptionId);
+					x.SetValue (Res.Fields.Field.CaptionId, field.CaptionId);
+					x.SetValue (Res.Fields.Field.Relation, field.Relation);
+					x.SetValue (Res.Fields.Field.Membership, field.Membership);
+					x.SetValue (Res.Fields.Field.Source, field.Source);
+					x.SetValue (Res.Fields.Field.Expression, field.Expression ?? "");
+
+					fields.Insert (i++, x);
+				}
 			}
 		}
 

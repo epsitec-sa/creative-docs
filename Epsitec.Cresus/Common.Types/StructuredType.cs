@@ -125,20 +125,7 @@ namespace Epsitec.Common.Types
 		{
 			get
 			{
-				Druid baseTypeId = this.BaseTypeId;
-
-				if (baseTypeId.IsValid)
-				{
-					ResourceManager manager = this.FindAssociatedResourceManager ();
-					Caption         caption = manager.GetCaption (baseTypeId);
-
-					if (caption != null)
-					{
-						return TypeRosetta.GetTypeObject (caption) as StructuredType;
-					}
-				}
-
-				return null;
+				return this.GetBaseType (true);
 			}
 		}
 
@@ -549,7 +536,7 @@ namespace Epsitec.Common.Types
 		{
 			if (this.fieldInheritance == FieldInheritance.Undefined)
 			{
-				StructuredType baseType = this.BaseType;
+				StructuredType baseType = this.GetBaseType (false);
 				
 				if (baseType != null)
 				{
@@ -614,7 +601,32 @@ namespace Epsitec.Common.Types
 				AbstractType.SetComplexType (caption, this);
 			}
 		}
-		
+
+		private StructuredType GetBaseType(bool useTypeCache)
+		{
+			Druid baseTypeId = this.BaseTypeId;
+
+			if (baseTypeId.IsValid)
+			{
+				ResourceManager manager = this.FindAssociatedResourceManager ();
+				Caption caption = manager.GetCaption (baseTypeId);
+
+				if (caption != null)
+				{
+					if (useTypeCache)
+					{
+						return TypeRosetta.GetTypeObject (caption) as StructuredType;
+					}
+					else
+					{
+						return TypeRosetta.CreateTypeObject (caption, false) as StructuredType;
+					}
+				}
+			}
+
+			return null;
+		}
+
 		private void NotifyFieldInsertion(string name, StructuredTypeField field)
 		{
 			StructuredTypeClass typeClass = this.Class;

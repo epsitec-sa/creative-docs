@@ -48,8 +48,8 @@ namespace Epsitec.Common.Support
 			RegexFactory.r_full_name    = new Regex (@"^([a-zA-Z_][a-zA-Z0-9_]*)(\.([a-zA-Z0-9_]+))*" + @"(\#([a-zA-Z_][a-zA-Z0-9_]*)(\.([a-zA-Z0-9_]+))*)*" + @"(\[[0-9]{1,4}\])?" + @"$", options);
 			RegexFactory.r_bundle_name  = new Regex (@"^([a-zA-Z_][a-zA-Z0-9_]*)(\.([a-zA-Z0-9_]+))*$", options);
 			RegexFactory.r_field_name   = new Regex (@"^([a-zA-Z_][a-zA-Z0-9_]*)(\.([a-zA-Z0-9_]+))*$", options);
-
-			RegexFactory.pascal_case_symbol = new Regex (@"^[A-Z][a-zA-Z0-9]*$", options);
+			
+			RegexFactory.pascal_case_symbol = new Regex (@"^[A-ZÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÑÒÓÔÕÖŒÙÚÛÜİ][a-zßàáâãäåæçèéêëíîïñòóôõöœùúûüıÿA-ZÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÑÒÓÔÕÖŒÙÚÛÜİ0-9]*$", options);
 			
 			//	TODO: recalculer l'expression régulière en fonction de la culture
 			
