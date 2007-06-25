@@ -490,7 +490,8 @@ namespace Epsitec.Common.Support
 		{
 			public const string Application = "%app%";
 			public const string Library		= "%lib%";
-			public const string Patches		= "%patch%";
+			public const string Patches		= "%patches%";
+			public const string Custom		= "%custom%";
 		}
 		
 		string									name;
