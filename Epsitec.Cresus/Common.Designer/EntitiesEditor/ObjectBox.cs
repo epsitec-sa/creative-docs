@@ -1782,7 +1782,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					this.DrawEmptySlider(graphics, p1, p2, hilited);
 
 					//	Dessine la glissière à droite pour suggérer les boutons Movable des champs.
-					if (this.fields.Count != 0)
+					if (this.fields.Count-this.membershipCount > 1)
 					{
 						p1.X = p2.X = this.GetFieldMovableBounds(0).Center.X;
 						hilited = this.hilitedElement == ActiveElement.BoxFieldMovable;
