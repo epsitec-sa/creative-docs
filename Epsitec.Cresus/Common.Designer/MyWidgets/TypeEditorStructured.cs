@@ -551,7 +551,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			Druid druid = actualField.CaptionId;
 			string includePrefix = string.Concat(this.AbstractType.Caption.Name, ".");
 
-			druid = this.mainWindow.DlgResourceSelector(this.module, ResourceAccess.Type.Fields, TypeCode.Invalid, druid, null, includePrefix);
+			druid = this.mainWindow.DlgResourceSelector(Dialogs.ResourceSelector.Operation.Selection, this.module, ResourceAccess.Type.Fields, druid, null);
 			if (druid.IsEmpty)
 			{
 				return;
@@ -605,8 +605,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 			AbstractType type = actualField.Type as AbstractType;
 			Druid druid = (type == null) ? Druid.Empty : type.Caption.Id;
 
-			druid = this.mainWindow.DlgResourceSelector(this.module, ResourceAccess.Type.Types, druid, null);
-			if (druid.IsEmpty)
+			Common.Dialogs.DialogResult result = this.mainWindow.DlgResourceSelector(Dialogs.ResourceSelector.Operation.Selection, this.module, ResourceAccess.Type.Types, ref druid, null);
+			if (result != Common.Dialogs.DialogResult.Yes)
 			{
 				return;
 			}

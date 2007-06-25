@@ -120,10 +120,11 @@ namespace Epsitec.Common.Designer.Controllers
 			MainWindow mainWindow = this.MainWindow;
 
 			Druid druid = Druid.Parse(this.druid);
+			Common.Dialogs.DialogResult result;
 
 			if (this.parameter == "Caption")
 			{
-				druid = mainWindow.DlgResourceSelector(mainWindow.CurrentModule, ResourceAccess.Type.Unknow, druid, null);
+				result = mainWindow.DlgResourceSelector(Dialogs.ResourceSelector.Operation.Selection, mainWindow.CurrentModule, ResourceAccess.Type.Unknow, ref druid, null);
 			}
 			else
 			{
@@ -161,10 +162,10 @@ namespace Epsitec.Common.Designer.Controllers
 					}
 				}
 
-				druid = mainWindow.DlgResourceSelector(mainWindow.CurrentModule, ResourceAccess.Type.Panels, druid, exclude);
+				result = mainWindow.DlgResourceSelector(Dialogs.ResourceSelector.Operation.Selection, mainWindow.CurrentModule, ResourceAccess.Type.Panels, ref druid, exclude);
 			}
 
-			if (druid.IsEmpty)  // annuler ?
+			if (result != Common.Dialogs.DialogResult.Yes)  // annuler ?
 			{
 				return;
 			}

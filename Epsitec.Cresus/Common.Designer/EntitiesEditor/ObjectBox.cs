@@ -1189,8 +1189,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			Druid druid = (Druid) dataField.GetValue(Support.Res.Fields.Field.TypeId);
 
 			Module module = this.editor.Module;
-			druid = module.MainWindow.DlgResourceSelector(module, ResourceAccess.Type.Types2, druid, null);
-			if (druid.IsEmpty)
+			Common.Dialogs.DialogResult result = module.MainWindow.DlgResourceSelector(Dialogs.ResourceSelector.Operation.TypesOrEntities, module, ResourceAccess.Type.Types2, ref druid, null);
+			if (result != Common.Dialogs.DialogResult.Yes)
 			{
 				return;
 			}

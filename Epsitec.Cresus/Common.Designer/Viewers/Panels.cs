@@ -1147,8 +1147,8 @@ namespace Epsitec.Common.Designer.Viewers
 				}
 
 				//	Choix d'une ressource type de type 'Types', mais uniquement parmi les TypeCode.Structured.
-				druid = this.mainWindow.DlgResourceSelector(this.module, ResourceAccess.Type.Types, druid, null);
-				if (!druid.IsEmpty)  // d'accord ?
+				Common.Dialogs.DialogResult result = this.mainWindow.DlgResourceSelector(Dialogs.ResourceSelector.Operation.Selection, this.module, ResourceAccess.Type.Types, ref druid, null);
+				if (result == Common.Dialogs.DialogResult.Yes)  // d'accord ?
 				{
 					AbstractType at = this.module.AccessCaptions.DirectGetAbstractType(druid);
 					System.Diagnostics.Debug.Assert(at is StructuredType);

@@ -11,6 +11,14 @@ namespace Epsitec.Common.Designer.Dialogs
 	/// </summary>
 	public class ResourceSelector : Abstract
 	{
+		public enum Operation
+		{
+			Selection,
+			TypesOrEntities,
+			InheritEntity,
+		}
+
+
 		public ResourceSelector(MainWindow mainWindow) : base(mainWindow)
 		{
 		}
@@ -58,6 +66,20 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.radioTypes.PreferredWidth = 70;
 				this.radioTypes.Dock = DockStyle.Right;
 				this.radioTypes.Clicked += new MessageEventHandler(this.HandleRadioClicked);
+
+				this.radioAlone = new RadioButton(header);
+				this.radioAlone.Text = "<font size=\"130%\"><b>Pas d'héritage</b></font>";
+				this.radioAlone.Name = "Alone";
+				this.radioAlone.PreferredWidth = 140;
+				this.radioAlone.Dock = DockStyle.Left;
+				this.radioAlone.Clicked += new MessageEventHandler(this.HandleRadioClicked);
+
+				this.radioInherit = new RadioButton(header);
+				this.radioInherit.Text = "<font size=\"130%\"><b>Hérite de l'entité ci-dessous :</b></font>";
+				this.radioInherit.Name = "Inherit";
+				this.radioInherit.PreferredWidth = 240;
+				this.radioInherit.Dock = DockStyle.Left;
+				this.radioInherit.Clicked += new MessageEventHandler(this.HandleRadioClicked);
 
 				Separator sep = new Separator(this.window.Root);  // trait horizontal de séparation
 				sep.PreferredHeight = 1;
@@ -141,20 +163,23 @@ namespace Epsitec.Common.Designer.Dialogs
 			this.UpdateArray();
 			this.UpdateButtons();
 			this.UpdateRadios();
+			this.UpdateInherit();
 
 			this.window.ShowDialog();
 		}
 
 
-		public void AccessOpen(Module baseModule, ResourceAccess.Type type, Druid resource, List<Druid> exclude)
+		public void AccessOpen(Operation operation, Module baseModule, ResourceAccess.Type type, Druid resource, List<Druid> exclude)
 		{
 			//	Début de l'accès aux ressources pour le dialogue.
 			//	Le type peut être inconnu ou la ressource inconnue, mais pas les deux.
 			System.Diagnostics.Debug.Assert(type == ResourceAccess.Type.Unknow || type == ResourceAccess.Type.Captions2 || type == ResourceAccess.Type.Fields2 || type == ResourceAccess.Type.Commands2 || type == ResourceAccess.Type.Values || type == ResourceAccess.Type.Types2 || type == ResourceAccess.Type.Entities || type == ResourceAccess.Type.Panels);
 			System.Diagnostics.Debug.Assert(resource.Type != Common.Support.DruidType.ModuleRelative);
 
+			this.operation = operation;
 			this.resourceType = type;
 			this.resource = resource;
+			this.isInherit = false;
 
 			//	Cherche le module contenant le Druid de la ressource.
 			this.baseModule = baseModule;
@@ -174,9 +199,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 			this.UpdateAccess();
 
-			//	Si on spécifie Types2, cela signifie en fait qu'on laissera le choix à l'utilisateur
-			//	entre Types2 et Entities (avec des boutons radio).
-			if (this.resourceType == ResourceAccess.Type.Types2)
+			if (this.operation == Operation.TypesOrEntities)
 			{
 				if (this.resource.IsValid)
 				{
@@ -208,21 +231,24 @@ namespace Epsitec.Common.Designer.Dialogs
 			//	Si le type courant ne contient aucune ressource, mais que l'autre type en contient,
 			//	bascule sur l'autre type (Types2 ou Entities). L'idée est d'anticiper sur l'utilisateur,
 			//	qui voudra vraissemblablement changer de type s'il voit une liste vide.
-			int totalTypes = this.module.AccessTypes2.Accessor.Collection.Count;
-			int totalEntities = this.module.AccessEntities.Accessor.Collection.Count;
+			if (this.operation == Operation.TypesOrEntities)
+			{
+				int totalTypes = this.module.AccessTypes2.Accessor.Collection.Count;
+				int totalEntities = this.module.AccessEntities.Accessor.Collection.Count;
 
-			if (this.resourceType == ResourceAccess.Type.Types2 && totalTypes == 0 && totalEntities > 0)
-			{
-				this.resourceType = ResourceAccess.Type.Entities;
-				this.UpdateAccess();
-				return true;
-			}
-			
-			if (this.resourceType == ResourceAccess.Type.Entities && totalEntities == 0 && totalTypes > 0)
-			{
-				this.resourceType = ResourceAccess.Type.Types2;
-				this.UpdateAccess();
-				return true;
+				if (this.resourceType == ResourceAccess.Type.Types2 && totalTypes == 0 && totalEntities > 0)
+				{
+					this.resourceType = ResourceAccess.Type.Entities;
+					this.UpdateAccess();
+					return true;
+				}
+
+				if (this.resourceType == ResourceAccess.Type.Entities && totalEntities == 0 && totalTypes > 0)
+				{
+					this.resourceType = ResourceAccess.Type.Types2;
+					this.UpdateAccess();
+					return true;
+				}
 			}
 
 			return false;
@@ -243,10 +269,11 @@ namespace Epsitec.Common.Designer.Dialogs
 			this.collectionView.SortDescriptions.Add(new SortDescription("Name"));
 		}
 
-		public Druid AccessClose()
+		public Common.Dialogs.DialogResult AccessClose(out Druid resource)
 		{
 			//	Fin de l'accès aux ressources pour le dialogue.
-			return this.resource;
+			resource = this.resource;
+			return this.result;
 		}
 
 
@@ -309,24 +336,75 @@ namespace Epsitec.Common.Designer.Dialogs
 		protected void UpdateButtons()
 		{
 			//	Met à jour le bouton "Utiliser".
-			this.buttonUse.Enable = (this.listResources.SelectedIndex != -1);
+			if (this.operation == Operation.InheritEntity)
+			{
+				this.buttonUse.Enable = (this.listResources.SelectedIndex != -1 || !this.isInherit);
+			}
+			else
+			{
+				this.buttonUse.Enable = (this.listResources.SelectedIndex != -1);
+			}
 		}
 
 		protected void UpdateRadios()
 		{
 			//	Met à jour les boutons radio pour changer le type.
-			if (this.resourceType == ResourceAccess.Type.Types2 || this.resourceType == ResourceAccess.Type.Entities)
+			if (this.operation == Operation.TypesOrEntities)
 			{
+				this.title.Visibility = true;
 				this.radioTypes.Visibility = true;
 				this.radioEntities.Visibility = true;
+				this.radioAlone.Visibility = false;
+				this.radioInherit.Visibility = false;
+
+				this.buttonUse.Text = Res.Strings.Dialog.ResourceSelector.Button.Use;
 
 				this.radioTypes.ActiveState = (this.resourceType == ResourceAccess.Type.Types2) ? ActiveState.Yes : ActiveState.No;
 				this.radioEntities.ActiveState = (this.resourceType == ResourceAccess.Type.Entities) ? ActiveState.Yes : ActiveState.No;
 			}
-			else
+			else if (this.operation == Operation.InheritEntity)
 			{
+				this.title.Visibility = false;
 				this.radioTypes.Visibility = false;
 				this.radioEntities.Visibility = false;
+				this.radioAlone.Visibility = true;
+				this.radioInherit.Visibility = true;
+
+				this.buttonUse.Text = Res.Strings.Dialog.Button.OK;
+			}
+			else
+			{
+				this.title.Visibility = true;
+				this.radioTypes.Visibility = false;
+				this.radioEntities.Visibility = false;
+				this.radioAlone.Visibility = false;
+				this.radioInherit.Visibility = false;
+
+				this.buttonUse.Text = Res.Strings.Dialog.ResourceSelector.Button.Use;
+			}
+		}
+
+		protected void UpdateInherit()
+		{
+			//	Met à jour en fonction du bouton pour l'héritage.
+			if (this.operation == Operation.InheritEntity)
+			{
+				this.ignoreChanged = true;
+				this.radioAlone.ActiveState = this.isInherit ? ActiveState.No : ActiveState.Yes;
+				this.radioInherit.ActiveState = this.isInherit ? ActiveState.Yes : ActiveState.No;
+				this.ignoreChanged = false;
+
+				this.header1.Enable = this.isInherit;
+				this.header2.Enable = this.isInherit;
+				this.listModules.Enable = this.isInherit;
+				this.listResources.Enable = this.isInherit;
+			}
+			else
+			{
+				this.header1.Enable = true;
+				this.header2.Enable = true;
+				this.listModules.Enable = true;
+				this.listResources.Enable = true;
 			}
 		}
 
@@ -335,6 +413,11 @@ namespace Epsitec.Common.Designer.Dialogs
 			//	Retourne le Druid de la ressource actuellement sélectionnée.
 			get
 			{
+				if (this.operation == Operation.InheritEntity && !this.isInherit)
+				{
+					return Druid.Empty;
+				}
+
 				if (this.listResources.SelectedIndex == -1)
 				{
 					return Druid.Empty;
@@ -351,23 +434,47 @@ namespace Epsitec.Common.Designer.Dialogs
 		private void HandleRadioClicked(object sender, MessageEventArgs e)
 		{
 			//	Changement du type des ressources par un bouton radio.
+			if (this.ignoreChanged)
+			{
+				return;
+			}
+
 			RadioButton button = sender as RadioButton;
 
 			if (button.Name == "Types")
 			{
 				this.resourceType = ResourceAccess.Type.Types2;
+				this.UpdateAccess();
+				this.UpdateTitle();
+				this.UpdateArray();
+				this.UpdateButtons();
+				this.UpdateRadios();
 			}
 
 			if (button.Name == "Entities")
 			{
 				this.resourceType = ResourceAccess.Type.Entities;
+				this.UpdateAccess();
+				this.UpdateTitle();
+				this.UpdateArray();
+				this.UpdateButtons();
+				this.UpdateRadios();
 			}
 
-			this.UpdateAccess();
-			this.UpdateTitle();
-			this.UpdateArray();
-			this.UpdateButtons();
-			this.UpdateRadios();
+			if (button.Name == "Alone")
+			{
+				this.isInherit = false;
+				this.UpdateInherit();
+				this.UpdateButtons();
+			}
+
+			if (button.Name == "Inherit")
+			{
+				this.isInherit = true;
+				this.UpdateInherit();
+				this.UpdateButtons();
+			}
+
 		}
 
 		private void HandleListModulesSelected(object sender)
@@ -419,6 +526,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			this.OnClosed();
 
 			this.resource = this.SelectedResource;
+			this.result = Common.Dialogs.DialogResult.Yes;
 		}
 
 		private void HandleWindowCloseClicked(object sender)
@@ -435,6 +543,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			this.OnClosed();
 
 			this.resource = Druid.Empty;
+			this.result = Common.Dialogs.DialogResult.Cancel;
 		}
 
 		private void HandleButtonUseClicked(object sender, MessageEventArgs e)
@@ -444,20 +553,26 @@ namespace Epsitec.Common.Designer.Dialogs
 			this.OnClosed();
 
 			this.resource = this.SelectedResource;
+			this.result = Common.Dialogs.DialogResult.Yes;
 		}
 
 
 		protected Module						baseModule;
 		protected Module						lastModule;
 		protected Module						module;
+		protected Operation						operation;
 		protected ResourceAccess.Type			resourceType;
+		protected bool							isInherit;
 		protected ResourceAccess				access;
 		protected Druid							resource;
 		protected CollectionView				collectionView;
+		protected Common.Dialogs.DialogResult	result;
 
 		protected StaticText					title;
 		protected RadioButton					radioTypes;
 		protected RadioButton					radioEntities;
+		protected RadioButton					radioAlone;
+		protected RadioButton					radioInherit;
 		protected StaticText					header1;
 		protected ScrollList					listModules;
 		protected VSplitter						splitter;

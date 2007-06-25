@@ -1662,10 +1662,10 @@ namespace Epsitec.Common.Designer.MyWidgets
 				}
 
 				Druid druid = Druid.Parse(ObjectModifier.GetDruid(obj));
-				druid = this.module.MainWindow.DlgResourceSelector(this.module, type, druid, exclude);
+				Common.Dialogs.DialogResult result = this.module.MainWindow.DlgResourceSelector(Dialogs.ResourceSelector.Operation.Selection, this.module, type, ref druid, exclude);
 				ObjectModifier.SetDruid(obj, druid.ToString());
 
-				if (druid.IsEmpty)  // annuler ?
+				if (result != Common.Dialogs.DialogResult.Yes)  // annuler ?
 				{
 					return false;
 				}

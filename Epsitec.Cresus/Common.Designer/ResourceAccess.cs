@@ -564,8 +564,9 @@ namespace Epsitec.Common.Designer
 				}
 				else if (this.type == Type.Entities && !duplicateContent)
 				{
-					Druid druid = this.mainWindow.DlgResourceSelector(this.mainWindow.CurrentModule, Type.Entities, Druid.Empty, null);
-					if (druid.IsEmpty)
+					Druid druid = Druid.Empty;
+					Common.Dialogs.DialogResult result = this.mainWindow.DlgResourceSelector(Dialogs.ResourceSelector.Operation.InheritEntity, this.mainWindow.CurrentModule, Type.Entities, ref druid, null);
+					if (result != Common.Dialogs.DialogResult.Yes)
 					{
 						return;
 					}
@@ -632,8 +633,9 @@ namespace Epsitec.Common.Designer
 			{
 				//	Choix d'une ressource type de type 'Types', mais uniquement parmi les TypeCode.Structured.
 				Module module = this.mainWindow.CurrentModule;
-				Druid druid = this.mainWindow.DlgResourceSelector(module, ResourceAccess.Type.Types, Druid.Empty, null);
-				if (druid.IsEmpty)  // annuler ?
+				Druid druid = Druid.Empty;
+				Common.Dialogs.DialogResult result = this.mainWindow.DlgResourceSelector(Dialogs.ResourceSelector.Operation.Selection, module, ResourceAccess.Type.Types, ref druid, null);
+				if (result != Common.Dialogs.DialogResult.Yes)  // annuler ?
 				{
 					return;
 				}

@@ -84,8 +84,8 @@ namespace Epsitec.Common.Designer.Controllers
 				druid = this.structuredType.CaptionId;
 			}
 
-			druid = mainWindow.DlgResourceSelector(module, ResourceAccess.Type.Types, druid, null);
-			if (druid.IsEmpty)  // annuler ?
+			Common.Dialogs.DialogResult result = mainWindow.DlgResourceSelector(Dialogs.ResourceSelector.Operation.Selection, module, ResourceAccess.Type.Types, ref druid, null);
+			if (result != Common.Dialogs.DialogResult.Yes)  // annuler ?
 			{
 				return;
 			}
