@@ -1297,6 +1297,11 @@ namespace Epsitec.Common.Designer
 		{
 			//	Action de la commande "LocatorPrev".
 			System.Diagnostics.Debug.Assert(this.LocatorPrevIsEnable);
+			if (!this.Terminate())
+			{
+				return;
+			}
+
 			Viewers.Locator locator = this.locators[--this.locatorIndex];
 			this.LocatorGoto(locator);
 		}
@@ -1305,6 +1310,11 @@ namespace Epsitec.Common.Designer
 		{
 			//	Action de la commande "LocatorNext".
 			System.Diagnostics.Debug.Assert(this.LocatorNextIsEnable);
+			if (!this.Terminate())
+			{
+				return;
+			}
+
 			Viewers.Locator locator = this.locators[++this.locatorIndex];
 			this.LocatorGoto(locator);
 		}
@@ -1312,6 +1322,11 @@ namespace Epsitec.Common.Designer
 		protected void LocatorMenuGoto(int index)
 		{
 			//	Revient à une location choisie dans le menu.
+			if (!this.Terminate())
+			{
+				return;
+			}
+
 			this.locatorIndex = index;
 			Viewers.Locator locator = this.locators[this.locatorIndex];
 			this.LocatorGoto(locator);
@@ -1320,6 +1335,11 @@ namespace Epsitec.Common.Designer
 		public void LocatorGoto(string moduleName, ResourceAccess.Type viewerType, Druid resource, Widget widgetFocused)
 		{
 			//	Va sur une ressource d'une vue d'un module quelconque.
+			if (!this.Terminate())
+			{
+				return;
+			}
+
 			int lineSelected = -1;
 			this.LocatorAdjustWidgetFocused(ref widgetFocused, ref lineSelected);
 			Viewers.Locator locator = new Viewers.Locator(moduleName, viewerType, resource, widgetFocused, lineSelected);
@@ -1329,11 +1349,6 @@ namespace Epsitec.Common.Designer
 		protected void LocatorGoto(Viewers.Locator locator)
 		{
 			//	Va sur une ressource définie par une localisation.
-			if (!this.Terminate())
-			{
-				return;
-			}
-
 			ModuleInfo mi = this.CurrentModuleInfo;
 
 			if (mi.Module.ModuleInfo.Name != locator.ModuleName)
