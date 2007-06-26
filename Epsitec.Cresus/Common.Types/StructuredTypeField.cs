@@ -270,12 +270,7 @@ namespace Epsitec.Common.Types
 		/// <returns>A copy of this instance.</returns>
 		public StructuredTypeField Clone()
 		{
-			StructuredTypeField copy = new StructuredTypeField (this.id, null, this.captionId, this.rank, this.relation, this.membership, this.source, this.expression);
-
-			copy.type   = this.type;
-			copy.typeId = this.typeId;
-
-			return copy;
+			return this.Clone (this.membership);
 		}
 
 		/// <summary>
@@ -287,8 +282,9 @@ namespace Epsitec.Common.Types
 		{
 			StructuredTypeField copy = new StructuredTypeField (this.id, null, this.captionId, this.rank, this.relation, membership, this.source, this.expression);
 
-			copy.type   = this.type;
-			copy.typeId = this.typeId;
+			copy.type           = this.type;
+			copy.typeId         = this.typeId;
+			copy.definingTypeId = this.definingTypeId;
 
 			return copy;
 		}

@@ -184,6 +184,14 @@ namespace Epsitec.Common.Support
 
 			Assert.AreEqual (Types.FieldSource.Value, fields[0].GetValue (Res.Fields.Field.Source));
 			Assert.AreEqual ("", fields[0].GetValue (Res.Fields.Field.Expression));
+			
+			//	Check that defining type id properly defined (!) based on where the
+			//	field originates :
+			
+			Assert.AreEqual (Druid.Parse ("[700B1]"), fields[0].GetValue (Res.Fields.Field.DefiningTypeId));
+			Assert.AreEqual (Druid.Parse ("[7006]"),  fields[2].GetValue (Res.Fields.Field.DefiningTypeId));
+			Assert.AreEqual (Druid.Parse ("[7005]"),  fields[7].GetValue (Res.Fields.Field.DefiningTypeId));
+			Assert.AreEqual (Druid.Empty, fields[13].GetValue (Res.Fields.Field.DefiningTypeId));
 
 			map.Name = "ResourceEntityType";
 			fields[10].SetValue (Res.Fields.Field.Source, Types.FieldSource.Expression);
@@ -211,27 +219,31 @@ namespace Epsitec.Common.Support
 			Assert.AreEqual ("Fld.ResourceStructuredType.Fields", Res.Manager.GetBundle (Resources.CaptionsBundleName, ResourceLevel.Default)[Res.Fields.ResourceStructuredType.Fields].Name);
 			Assert.AreEqual ("ResourceStructuredType.Fields", accessor.FieldAccessor.Collection[Res.Fields.ResourceStructuredType.Fields].ToString ());
 
-			CultureMap fieldItem;
-
-			fieldItem = accessor.FieldAccessor.Collection[Res.Fields.ResourceStructuredType.Fields];
-
-			Assert.AreEqual ("Fields", fieldItem.Name);
-			Assert.AreEqual ("ResourceStructuredType.Fields", fieldItem.ToString ());
+			CultureMap fieldsItem;
 			
-			fieldItem = accessor.CreateFieldItem (map);
+			fieldsItem = accessor.FieldAccessor.Collection[Res.Fields.ResourceStructuredType.Fields];
 
-			fieldItem.Name = "X";
+			Assert.AreEqual ("Fields", fieldsItem.Name);
+			Assert.AreEqual ("ResourceStructuredType.Fields", fieldsItem.ToString ());
+			
+			fieldsItem = accessor.CreateFieldItem (map);
 
-			accessor.FieldAccessor.Collection.Add (fieldItem);
+			fieldsItem.Name = "X";
+
+			accessor.FieldAccessor.Collection.Add (fieldsItem);
 			accessor.FieldAccessor.PersistChanges ();
 			
-			Assert.AreEqual ("Fld.ResourceStructuredType.X", Res.Manager.GetBundle (Resources.CaptionsBundleName, ResourceLevel.Default)[fieldItem.Id].Name);
-			Assert.AreEqual ("ResourceStructuredType.X", accessor.FieldAccessor.Collection[fieldItem.Id].ToString ());
+			Assert.AreEqual ("Fld.ResourceStructuredType.X", Res.Manager.GetBundle (Resources.CaptionsBundleName, ResourceLevel.Default)[fieldsItem.Id].Name);
+			Assert.AreEqual ("ResourceStructuredType.X", accessor.FieldAccessor.Collection[fieldsItem.Id].ToString ());
 
-			accessor.FieldAccessor.Collection.Remove (fieldItem);
+			accessor.FieldAccessor.Collection.Remove (fieldsItem);
 			accessor.FieldAccessor.PersistChanges ();
 			
-			Assert.IsTrue (Res.Manager.GetBundle (Resources.CaptionsBundleName, ResourceLevel.Default)[fieldItem.Id].IsEmpty);
+			Assert.IsTrue (Res.Manager.GetBundle (Resources.CaptionsBundleName, ResourceLevel.Default)[fieldsItem.Id].IsEmpty);
+
+			IList<Druid> interfaceIds = data.GetValue (Res.Fields.ResourceStructuredType.InterfaceIds) as IList<Druid>;
+
+			Assert.IsNotNull (interfaceIds);
 		}
 
 		[Test]
