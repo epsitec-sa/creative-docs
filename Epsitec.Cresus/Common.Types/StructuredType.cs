@@ -679,6 +679,9 @@ namespace Epsitec.Common.Types
 		{
 			System.Diagnostics.Debug.Assert (interfaces != null);
 
+			//	If the caller is interested in the inherited interfaces, we will
+			//	first walk through the base type's interface id list :
+			
 			if (inherit)
 			{
 				StructuredType baseType = this.GetType (this.BaseTypeId, false);
@@ -690,6 +693,9 @@ namespace Epsitec.Common.Types
 					baseType.GetInterfaceIds (interfaces, inherit);
 				}
 			}
+
+			//	Now, for every interface not yet in our list, recursively add
+			//	it and its own interfaces :
 
 			foreach (Druid interfaceId in this.InterfaceIds)
 			{
@@ -709,6 +715,14 @@ namespace Epsitec.Common.Types
 			}
 		}
 
+		/// <summary>
+		/// Gets the structured type associated with a type id. This will try to
+		/// locate the type based on the same resource manager as the one which
+		/// was used to instanciate this instance.
+		/// </summary>
+		/// <param name="typeId">The type DRUID.</param>
+		/// <param name="useTypeCache">If set to <c>true</c>, uses a cache.</param>
+		/// <returns>The structured type or <c>null</c>.</returns>
 		private StructuredType GetType(Druid typeId, bool useTypeCache)
 		{
 			if (typeId.IsValid)

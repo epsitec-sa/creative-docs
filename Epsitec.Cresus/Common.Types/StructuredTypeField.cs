@@ -497,7 +497,7 @@ namespace Epsitec.Common.Types
 		private Support.Druid					typeId;
 		private readonly Support.Druid			captionId;
 		private int								rank;
-		private Support.Druid					definingTypeId;
+		private Support.Druid					definingTypeId;		//	not serialized
 		private readonly FieldRelation			relation;
 		private readonly FieldMembership		membership;
 		private readonly FieldSource			source;
