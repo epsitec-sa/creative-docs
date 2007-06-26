@@ -53,6 +53,15 @@ namespace Epsitec.Common.Types
 			{
 				this.SetValue (StructuredType.BaseTypeIdProperty, baseTypeId);
 			}
+
+			//	An interface may not inherit from a base type; just
+			//	make sure :
+
+			if ((this.Class == StructuredTypeClass.Interface) &&
+				(baseTypeId.IsValid))
+			{
+				throw new System.ArgumentException ("An interface may not inherit from a base type");
+			}
 		}
 
 		/// <summary>
