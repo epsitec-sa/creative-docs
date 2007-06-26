@@ -495,6 +495,8 @@ namespace Epsitec.Common.Types
 			type.Fields.Add ("Age", IntegerType.Default);
 
 			type.Fields["Name"] = new StructuredTypeField ("Name", StringType.Default, Support.Druid.Empty, 1);
+			type.InterfaceIds.Add (Support.Druid.Parse ("[12345678C]"));
+			type.InterfaceIds.Add (Support.Druid.Parse ("[12345678D]"));
 
 			Assert.IsNull (type.SystemType);
 
@@ -508,6 +510,10 @@ namespace Epsitec.Common.Types
 			caption.DeserializeFromString (xml);
 
 			StructuredType restoredType = TypeRosetta.CreateTypeObject (caption) as StructuredType;
+
+			Assert.AreEqual (2, type.InterfaceIds.Count);
+			Assert.AreEqual (Support.Druid.Parse ("[12345678C]"), type.InterfaceIds[0]);
+			Assert.AreEqual (Support.Druid.Parse ("[12345678D]"), type.InterfaceIds[1]);
 
 			Assert.AreEqual (type.Fields.Count, restoredType.Fields.Count);
 			Assert.AreEqual (type.GetField ("Name").Type.GetType ().Name, restoredType.GetField ("Name").Type.GetType ().Name);

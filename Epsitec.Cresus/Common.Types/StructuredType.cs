@@ -115,6 +115,19 @@ namespace Epsitec.Common.Types
 			}
 		}
 
+		public IList<Druid> InterfaceIds
+		{
+			get
+			{
+				if (this.interfaces == null)
+				{
+					this.interfaces = new Collections.HostedList<Druid> (this.HandleInterfaceInsertion, this.HandleInterfaceRemoval);
+				}
+
+				return this.interfaces;
+			}
+		}
+
 		/// <summary>
 		/// Gets the structured type extended by this instance (also known as
 		/// its base type). This uses the <c>BaseTypeId</c> and an access through
@@ -298,19 +311,24 @@ namespace Epsitec.Common.Types
 			//	Remove any inherited fields from the fields collection, so we don't serialize
 			//	inherited fields.
 
-			System.Diagnostics.Debug.Assert (this.fieldInheritance != FieldInheritance.Disabled);
+			System.Diagnostics.Debug.Assert (this.fieldInheritance != InheritanceMode.Disabled);
+			System.Diagnostics.Debug.Assert (this.interfaceInheritance != InheritanceMode.Disabled);
 			
 			this.RemoveInheritedFields ();
-			this.fieldInheritance = FieldInheritance.Disabled;
+
+			this.fieldInheritance = InheritanceMode.Disabled;
+			this.interfaceInheritance = InheritanceMode.Disabled;
 			
 			return true;
 		}
 
 		void Serialization.ISerialization.NotifySerializationCompleted(Serialization.Context context)
 		{
-			System.Diagnostics.Debug.Assert (this.fieldInheritance == FieldInheritance.Disabled);
+			System.Diagnostics.Debug.Assert (this.fieldInheritance == InheritanceMode.Disabled);
+			System.Diagnostics.Debug.Assert (this.interfaceInheritance == InheritanceMode.Disabled);
 			
-			this.fieldInheritance = FieldInheritance.Undefined;
+			this.fieldInheritance = InheritanceMode.Undefined;
+			this.interfaceInheritance = InheritanceMode.Undefined;
 		}
 
 		#endregion
@@ -320,15 +338,22 @@ namespace Epsitec.Common.Types
 
 		bool Serialization.IDeserialization.NotifyDeserializationStarted(Serialization.Context context)
 		{
-			System.Diagnostics.Debug.Assert (this.fieldInheritance == FieldInheritance.Undefined);
-			this.fieldInheritance = FieldInheritance.Disabled;
+			System.Diagnostics.Debug.Assert (this.fieldInheritance == InheritanceMode.Undefined);
+			System.Diagnostics.Debug.Assert (this.interfaceInheritance == InheritanceMode.Undefined);
+
+			this.fieldInheritance = InheritanceMode.Disabled;
+			this.interfaceInheritance = InheritanceMode.Disabled;
+			
 			return true;
 		}
 
 		void Serialization.IDeserialization.NotifyDeserializationCompleted(Serialization.Context context)
 		{
-			System.Diagnostics.Debug.Assert (this.fieldInheritance == FieldInheritance.Disabled);
-			this.fieldInheritance = FieldInheritance.Undefined;
+			System.Diagnostics.Debug.Assert (this.fieldInheritance == InheritanceMode.Disabled);
+			System.Diagnostics.Debug.Assert (this.interfaceInheritance == InheritanceMode.Disabled);
+
+			this.fieldInheritance = InheritanceMode.Undefined;
+			this.interfaceInheritance = InheritanceMode.Undefined;
 		}
 
 		#endregion
@@ -471,7 +496,8 @@ namespace Epsitec.Common.Types
 				}
 			}
 
-			System.Diagnostics.Debug.Assert (merge.fieldInheritance == FieldInheritance.Undefined);
+			System.Diagnostics.Debug.Assert (merge.fieldInheritance == InheritanceMode.Undefined);
+			System.Diagnostics.Debug.Assert (merge.interfaceInheritance == InheritanceMode.Undefined);
 
 			//	Make the merged structure type belong to the same bundle/module
 			//	as the lower layer source structured type :
@@ -555,7 +581,7 @@ namespace Epsitec.Common.Types
 		/// </summary>
 		protected virtual void IncludeInheritedFields()
 		{
-			if (this.fieldInheritance == FieldInheritance.Undefined)
+			if (this.fieldInheritance == InheritanceMode.Undefined)
 			{
 				StructuredType baseType = this.GetBaseType (false);
 				
@@ -576,7 +602,7 @@ namespace Epsitec.Common.Types
 						}
 					}
 					
-					this.fieldInheritance = FieldInheritance.Defined;
+					this.fieldInheritance = InheritanceMode.Defined;
 				}
 			}
 		}
@@ -587,7 +613,7 @@ namespace Epsitec.Common.Types
 		/// </summary>
 		protected virtual void RemoveInheritedFields()
 		{
-			if (this.fieldInheritance == FieldInheritance.Defined)
+			if (this.fieldInheritance == InheritanceMode.Defined)
 			{
 				List<string> ids = new List<string> ();
 				
@@ -604,8 +630,16 @@ namespace Epsitec.Common.Types
 					this.fields.Remove (id);
 				}
 				
-				this.fieldInheritance = FieldInheritance.Undefined;
+				this.fieldInheritance = InheritanceMode.Undefined;
 			}
+		}
+
+		private void HandleInterfaceInsertion(Druid interfaceId)
+		{
+		}
+
+		private void HandleInterfaceRemoval(Druid interfaceId)
+		{
 		}
 		
 		#region Private and Protected Methods
@@ -770,10 +804,17 @@ namespace Epsitec.Common.Types
 			
 			return data;
 		}
+		
+		private static object GetInterfaceIdsValue(DependencyObject o)
+		{
+			StructuredType that = (StructuredType) o;
+			return that.InterfaceIds;
+		}
 
-		#region FieldInheritance Enumeration
 
-		private enum FieldInheritance
+		#region InheritanceMode Enumeration
+
+		private enum InheritanceMode : byte
 		{
 			Undefined,
 			Defined,
@@ -787,8 +828,11 @@ namespace Epsitec.Common.Types
 		public static readonly DependencyProperty ClassProperty = DependencyProperty.RegisterReadOnly ("Class", typeof (StructuredTypeClass), typeof (StructuredType), new DependencyPropertyMetadata (StructuredTypeClass.None).MakeReadOnlySerializable ());
 		public static readonly DependencyProperty BaseTypeIdProperty = DependencyProperty.RegisterReadOnly ("BaseTypeId", typeof (Druid), typeof (StructuredType), new DependencyPropertyMetadata (Druid.Empty).MakeReadOnlySerializable ());
 		public static readonly DependencyProperty SerializedDesignerLayoutsProperty = DependencyProperty.Register ("SerializedDesignerLayouts", typeof (string), typeof (StructuredType));
+		public static readonly DependencyProperty InterfaceIdsProperty = DependencyProperty.RegisterReadOnly ("InterfaceIds", typeof (ICollection<Druid>), typeof (StructuredType), new DependencyPropertyMetadata (StructuredType.GetInterfaceIdsValue).MakeReadOnlySerializable ());
 
 		private Collections.HostedStructuredTypeFieldDictionary fields;
-		private FieldInheritance fieldInheritance;
+		private InheritanceMode fieldInheritance;
+		private InheritanceMode interfaceInheritance;
+		private Collections.HostedList<Druid> interfaces;
 	}
 }
