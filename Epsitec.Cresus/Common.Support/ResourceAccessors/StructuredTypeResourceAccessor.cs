@@ -108,8 +108,15 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			type.DefineCaption (caption);
 			type.SerializedDesignerLayouts = layouts;
 
-			IList<StructuredData> fieldsData = data.GetValue (Res.Fields.ResourceStructuredType.Fields) as IList<StructuredData>;
+			IList<Druid> interfaceIds = data.GetValue (Res.Fields.ResourceStructuredType.InterfaceIds) as IList<Druid>;
 
+			foreach (Druid interfaceId in interfaceIds)
+			{
+				type.InterfaceIds.Add (interfaceId);
+			}
+			
+			IList<StructuredData> fieldsData = data.GetValue (Res.Fields.ResourceStructuredType.Fields) as IList<StructuredData>;
+			
 			int rank = 0;
 
 			foreach (StructuredData fieldData in fieldsData)
@@ -152,11 +159,18 @@ namespace Epsitec.Common.Support.ResourceAccessors
 
 			data.SetValue (Res.Fields.ResourceStructuredType.Fields, fields);
 			data.LockValue (Res.Fields.ResourceStructuredType.Fields);
+			
+			ObservableList<Druid> interfaceIds = new ObservableList<Druid> ();
+			interfaceIds.AddRange (type.InterfaceIds);
+
+			data.SetValue (Res.Fields.ResourceStructuredType.InterfaceIds, interfaceIds);
+			data.LockValue (Res.Fields.ResourceStructuredType.InterfaceIds);
 
 			data.SetValue (Res.Fields.ResourceStructuredType.BaseType, type == null ? Druid.Empty : type.BaseTypeId);
 			data.SetValue (Res.Fields.ResourceStructuredType.Class, type == null ? StructuredTypeClass.None : type.Class);
 			data.SetValue (Res.Fields.ResourceStructuredType.SerializedDesignerLayouts, type == null ? "" : type.SerializedDesignerLayouts);
-			
+
+			interfaceIds.CollectionChanged += new Listener (this, item).HandleCollectionChanged;
 			fields.CollectionChanged += new Listener (this, item).HandleCollectionChanged;
 		}
 
@@ -168,6 +182,8 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			data.SetValue (Res.Fields.Field.Membership, field.Membership);
 			data.SetValue (Res.Fields.Field.Source, field.Source);
 			data.SetValue (Res.Fields.Field.Expression, field.Expression ?? "");
+			data.SetValue (Res.Fields.Field.DefiningTypeId, field.DefiningTypeId);
+			data.LockValue (Res.Fields.Field.DefiningTypeId);
 		}
 
 		protected override void HandleItemsCollectionChanged(object sender, CollectionChangedEventArgs e)
@@ -264,7 +280,9 @@ namespace Epsitec.Common.Support.ResourceAccessors
 				foreach (string fieldId in type.GetFieldIds ())
 				{
 					StructuredTypeField field = type.Fields[fieldId];
-					if (field.Membership == FieldMembership.Inherited)
+					
+					if ((field.Membership == FieldMembership.Inherited) ||
+						(field.DefiningTypeId.IsValid))
 					{
 						StructuredData x = new StructuredData (Res.Types.Field);
 						StructuredTypeResourceAccessor.FillDataFromField (x, field);
@@ -280,8 +298,10 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			{
 				StructuredData field = fields[i];
 				FieldMembership membership = (FieldMembership) field.GetValue (Res.Fields.Field.Membership);
+				Druid definingTypeId = (Druid) field.GetValue (Res.Fields.Field.DefiningTypeId);
 
-				if (membership == FieldMembership.Inherited)
+				if ((membership == FieldMembership.Inherited) ||
+					(definingTypeId.IsValid))
 				{
 					fields.RemoveAt (i--);
 				}
@@ -328,6 +348,8 @@ namespace Epsitec.Common.Support.ResourceAccessors
 				data.SetValue (Res.Fields.Field.Membership, FieldMembership.Local);
 				data.SetValue (Res.Fields.Field.Source, FieldSource.Value);
 				data.SetValue (Res.Fields.Field.Expression, "");
+				data.SetValue (Res.Fields.Field.DefiningTypeId, Druid.Empty);
+				data.LockValue (Res.Fields.Field.DefiningTypeId);
 				
 				return data;
 			}

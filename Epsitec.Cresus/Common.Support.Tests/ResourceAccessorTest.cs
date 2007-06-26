@@ -177,7 +177,7 @@ namespace Epsitec.Common.Support
 			Druid                       baseTypeId = (Druid) data.GetValue (Res.Fields.ResourceStructuredType.BaseType);
 			IList<Types.StructuredData> fields     = data.GetValue (Res.Fields.ResourceStructuredType.Fields) as IList<Types.StructuredData>;
 
-			Assert.AreEqual (13, fields.Count);
+			Assert.AreEqual (14, fields.Count);
 
 			Assert.AreEqual (Res.Fields.ResourceBase.ModificationId, fields[0].GetValue (Res.Fields.Field.CaptionId));
 			Assert.AreEqual (Res.Fields.ResourceBase.Comment,        fields[1].GetValue (Res.Fields.Field.CaptionId));
