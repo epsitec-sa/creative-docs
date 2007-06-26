@@ -91,7 +91,7 @@ namespace Epsitec.Common.Designer
 				}
 				if (this.type == Type.Fields2)
 				{
-					Common.Support.ResourceAccessors.StructuredTypeResourceAccessor typeAccessor = module.AccessEntities.accessor as Common.Support.ResourceAccessors.StructuredTypeResourceAccessor;
+					Support.ResourceAccessors.StructuredTypeResourceAccessor typeAccessor = module.AccessEntities.accessor as Support.ResourceAccessors.StructuredTypeResourceAccessor;
 					this.accessor = typeAccessor.FieldAccessor;
 				}
 
@@ -175,7 +175,6 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
-		//?public Support.ResourceAccessors.AbstractResourceAccessor Accessor
 		public IResourceAccessor Accessor
 		{
 			get

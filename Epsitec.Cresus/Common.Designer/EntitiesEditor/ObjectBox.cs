@@ -1155,11 +1155,13 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			StructuredData data = this.cultureMap.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
 			IList<StructuredData> dataFields = data.GetValue(Support.Res.Fields.ResourceStructuredType.Fields) as IList<StructuredData>;
 
-			Common.Support.ResourceAccessors.StructuredTypeResourceAccessor accessor = this.editor.Module.AccessEntities.Accessor as Common.Support.ResourceAccessors.StructuredTypeResourceAccessor;
+			Support.ResourceAccessors.StructuredTypeResourceAccessor accessor = this.editor.Module.AccessEntities.Accessor as Support.ResourceAccessors.StructuredTypeResourceAccessor;
 			CultureMap fieldCultureMap = accessor.CreateFieldItem(this.cultureMap);
 			fieldCultureMap.Name = name;
-			accessor.FieldAccessor.Collection.Add(fieldCultureMap);
-			accessor.FieldAccessor.PersistChanges();
+
+			IResourceAccessor fieldAccessor = this.editor.Module.AccessFields2.Accessor;
+			fieldAccessor.Collection.Add(fieldCultureMap);
+			fieldAccessor.PersistChanges();
 
 			//?IResourceAccessor fieldAccessor = accessor.FieldAccessor;
 			//?CultureMap fieldCultureMap = fieldAccessor.Collection[fieldCaptionId];
@@ -1193,9 +1195,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			StructuredData dataField = dataFields[rank];
 			Druid fieldCaptionId = (Druid) dataField.GetValue(Support.Res.Fields.Field.CaptionId);
 
-			Common.Support.ResourceAccessors.StructuredTypeResourceAccessor accessor = this.editor.Module.AccessEntities.Accessor as Common.Support.ResourceAccessors.StructuredTypeResourceAccessor;
-			IResourceAccessor fieldAccessor = accessor.FieldAccessor;
-			
+			IResourceAccessor fieldAccessor = this.editor.Module.AccessFields2.Accessor;
 			CultureMap fieldCultureMap = fieldAccessor.Collection[fieldCaptionId];
 			string name = fieldCultureMap.Name;
 			
@@ -1269,7 +1269,6 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			Druid fieldCaptionId = (Druid) dataField.GetValue(Support.Res.Fields.Field.CaptionId);
 			FieldMembership membership = (FieldMembership) dataField.GetValue(Support.Res.Fields.Field.Membership);
 			FieldRelation rel = (FieldRelation) dataField.GetValue(Support.Res.Fields.Field.Relation);
-			//?Druid sourceId = (Druid) dataField.GetValue(Support.Res.Fields.Field.SourceFieldId);
 			Druid typeId = (Druid) dataField.GetValue(Support.Res.Fields.Field.TypeId);
 			
 			Module dstModule = this.editor.Module.MainWindow.SearchModule(typeId);
@@ -1279,13 +1278,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				rel = FieldRelation.None;  // ce n'est pas une vraie relation !
 			}
 
-			Common.Support.ResourceAccessors.StructuredTypeResourceAccessor accessor = this.editor.Module.AccessEntities.Accessor as Common.Support.ResourceAccessors.StructuredTypeResourceAccessor;
-			IResourceAccessor fieldAccessor = accessor.FieldAccessor;
-			CultureMap fieldCultureMap = fieldAccessor.Collection[fieldCaptionId];
-			//StructuredData fieldData = fieldCultureMap.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
-
-			//?Caption fieldCaption = this.editor.Module.AccessEntities.DirectGetCaption(fieldCaptionId);
-			//?Caption typeCaption = typeId.IsEmpty ? null : this.editor.Module.AccessEntities.DirectGetCaption(typeId);
+			Module fieldModule = this.editor.Module.MainWindow.SearchModule(fieldCaptionId);
+			CultureMap fieldCultureMap = fieldModule.AccessFields2.Accessor.Collection[fieldCaptionId];
 
 			Module typeModule = this.editor.Module.MainWindow.SearchModule(typeId);
 			CultureMap typeCultureMap = null;
@@ -1299,8 +1293,6 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 
 			field.CaptionId = fieldCaptionId;
-			//?field.FieldName = (fieldCaption == null) ? "" : fieldCaption.Name;
-			//?field.TypeName = (typeCaption == null) ? "" : typeCaption.Name;
 			field.FieldName = (fieldCultureMap == null) ? "" : fieldCultureMap.Name;
 			field.TypeName = (typeCultureMap == null) ? "" : typeCultureMap.Name;
 			field.Relation = rel;
@@ -2179,7 +2171,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			if (druid.IsValid)
 			{
 				Module module = this.editor.Module.MainWindow.SearchModule(druid);
-				CultureMap cultureMap = this.editor.Module.AccessEntities.Accessor.Collection[druid];
+				CultureMap cultureMap = module.AccessEntities.Accessor.Collection[druid];
 				if (cultureMap != null)
 				{
 					this.Basename = cultureMap.Name;
