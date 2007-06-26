@@ -71,7 +71,7 @@ namespace Epsitec.Common.Script.Developer
 			this.method_book.Margins = new Drawing.Margins (4, 4, 4, 4);
 			this.method_book.Items.Add (page);
 			
-			this.method_book.ActivePageChanged += new EventHandler (this.HandleBookActivePageChanged);
+			this.method_book.ActivePageChanged += new EventHandler<CancelEventArgs> (this.HandleBookActivePageChanged);
 			this.method_book.CloseClicked      += new EventHandler (this.HandleBookCloseClicked);
 			
 			this.tool_tip.Behaviour = ToolTipBehaviour.Manual;
@@ -390,7 +390,7 @@ namespace Epsitec.Common.Script.Developer
 			this.UpdateErrorMessage ();
 		}
 		
-		private void HandleBookActivePageChanged(object sender)
+		private void HandleBookActivePageChanged(object sender, CancelEventArgs e)
 		{
 			if (this.is_changing_page)
 			{

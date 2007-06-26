@@ -201,11 +201,12 @@ namespace Epsitec.Common.Widgets
 			{
 				if ( this.activePage != value )
 				{
+					TabPage oldPage = this.activePage;
 					this.activePage = value;
 					this.UpdateVisiblePages();
 					this.ShowSelectedTabButton();
 					this.Invalidate();
-					this.OnActivePageChanged();
+					this.OnActivePageChanged(oldPage);
 				}
 				else
 				{
@@ -304,16 +305,20 @@ namespace Epsitec.Common.Widgets
 		private void HandleTabButton(object sender, MessageEventArgs e)
 		{
 			//	Gestion d'un événement lorsqu'un bouton d'onglet est pressé.
-			if ( !(sender is TabButton) )  return;
+			if (!(sender is TabButton))
+			{
+				return;
+			}
+
 			TabButton button = sender as TabButton;
 
-			foreach ( TabPage page in this.items )
+			foreach (TabPage page in this.items)
 			{
-				if ( page.TabButton == button )
+				if (page.TabButton == button)
 				{
 					this.ActivePage = page;
 					
-					if ( button.AutoFocus )
+					if (button.AutoFocus)
 					{
 						this.Focus();
 					}
@@ -678,12 +683,21 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		protected virtual void OnActivePageChanged()
+		protected virtual void OnActivePageChanged(TabPage oldPage)
 		{
-			EventHandler handler = (EventHandler) this.GetUserEventHandler("ActivePageChanged");
+			EventHandler<CancelEventArgs> handler = (EventHandler<CancelEventArgs>) this.GetUserEventHandler("ActivePageChanged");
 			if (handler != null)
 			{
-				handler(this);
+				CancelEventArgs e = new CancelEventArgs();
+				handler(this, e);
+
+				if (e.Cancel)  // annule le changement ?
+				{
+					this.activePage = oldPage;
+					this.UpdateVisiblePages();
+					this.ShowSelectedTabButton();
+					this.Invalidate();
+				}
 			}
 		}
 
@@ -824,7 +838,8 @@ namespace Epsitec.Common.Widgets
 			System.Diagnostics.Debug.Assert (oldBook == this);
 			
 			item.TabButton.SetParent (this);
-			item.TabButton.Pressed += new MessageEventHandler(this.HandleTabButton);
+			//?item.TabButton.Pressed += new MessageEventHandler(this.HandleTabButton);
+			item.TabButton.Clicked += new MessageEventHandler(this.HandleTabButton);  // voir (*)
 			item.RankChanged += new EventHandler(this.HandlePageRankChanged);
 			this.isRefreshNeeded = true;
 			
@@ -838,7 +853,8 @@ namespace Epsitec.Common.Widgets
 			TabPage item  = widget as TabPage;
 			int     index = item.Index;
 
-			item.TabButton.Pressed -= new MessageEventHandler(this.HandleTabButton);
+			//?item.TabButton.Pressed -= new MessageEventHandler(this.HandleTabButton);
+			item.TabButton.Clicked -= new MessageEventHandler(this.HandleTabButton);  // voir (*)
 			item.RankChanged -= new EventHandler(this.HandlePageRankChanged);
 			
 			this.Children.Remove(item);
@@ -857,6 +873,10 @@ namespace Epsitec.Common.Widgets
 				this.ActivePageIndex = index;
 			}
 		}
+
+		// (*)	Il faut se connecter sur Clicked (et non Pressed) pour éviter des boucles infinies
+		//		en cas d'annulation. L'événement Pressed est généré par je ne sais qui pendant la
+		//		phase d'annulation !
 		
 		public void NotifyPostRemoval(Widget widget)
 		{
@@ -940,7 +960,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		public event EventHandler			ActivePageChanged
+		public event EventHandler<CancelEventArgs> ActivePageChanged
 		{
 			add
 			{

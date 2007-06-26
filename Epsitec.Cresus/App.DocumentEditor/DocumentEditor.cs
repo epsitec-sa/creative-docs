@@ -538,7 +538,7 @@ namespace Epsitec.App.DocumentEditor
 			this.bookDocuments.Arrows = TabBookArrows.Right;
 			this.bookDocuments.HasCloseButton = true;
 			this.bookDocuments.CloseButton.CommandObject = Command.Get("Close");
-			this.bookDocuments.ActivePageChanged += new EventHandler(this.HandleBookDocumentsActivePageChanged);
+			this.bookDocuments.ActivePageChanged += new EventHandler<CancelEventArgs>(this.HandleBookDocumentsActivePageChanged);
 			ToolTip.Default.SetToolTip(this.bookDocuments.CloseButton, Res.Strings.Tooltip.TabBook.Close);
 
 			this.SetActiveRibbon(this.ribbonMain);
@@ -799,7 +799,7 @@ namespace Epsitec.App.DocumentEditor
 			di.bookPanels.Dock = DockStyle.Right;
 			di.bookPanels.Margins = new Margins(1, 1, 3, 1);
 			di.bookPanels.Arrows = TabBookArrows.Stretch;
-			di.bookPanels.ActivePageChanged += new EventHandler(this.HandleBookPanelsActivePageChanged);
+			di.bookPanels.ActivePageChanged += new EventHandler<CancelEventArgs>(this.HandleBookPanelsActivePageChanged);
 
 			TabPage bookPrincipal = new TabPage();
 			bookPrincipal.TabTitle = Res.Strings.TabPage.Principal;
@@ -1191,7 +1191,7 @@ namespace Epsitec.App.DocumentEditor
 			viewer.DrawingContext.OriginY = (double) -scroller.Value;
 		}
 
-		private void HandleBookPanelsActivePageChanged(object sender)
+		private void HandleBookPanelsActivePageChanged(object sender, CancelEventArgs e)
 		{
 			TabBook book = sender as TabBook;
 			TabPage page = book.ActivePage;
@@ -5188,7 +5188,7 @@ namespace Epsitec.App.DocumentEditor
 
 
 		#region TabBook
-		private void HandleBookDocumentsActivePageChanged(object sender)
+		private void HandleBookDocumentsActivePageChanged(object sender, CancelEventArgs e)
 		{
 			//	L'onglet pour le document courant a été cliqué.
 			if ( this.ignoreChange )  return;

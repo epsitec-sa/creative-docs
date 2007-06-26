@@ -1163,10 +1163,6 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			fieldAccessor.Collection.Add(fieldCultureMap);
 			fieldAccessor.PersistChanges();
 
-			//?IResourceAccessor fieldAccessor = accessor.FieldAccessor;
-			//?CultureMap fieldCultureMap = fieldAccessor.Collection[fieldCaptionId];
-			//?StructuredData fieldData = fieldCultureMap.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
-
 			IDataBroker broker = accessor.GetDataBroker(data, Support.Res.Fields.ResourceStructuredType.Fields.ToString());
 			StructuredData newField = broker.CreateData(this.cultureMap);
 

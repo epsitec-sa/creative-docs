@@ -52,7 +52,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				this.book = new TabBook(this.window.Root);
 				this.book.Arrows = TabBookArrows.Stretch;
 				this.book.Anchor = AnchorStyles.LeftAndRight | AnchorStyles.TopAndBottom;
-				this.book.ActivePageChanged += new EventHandler(this.HandleBookActivePageChanged);
+				this.book.ActivePageChanged += new EventHandler<CancelEventArgs>(this.HandleBookActivePageChanged);
 				this.book.Margins = new Margins(6, 6, 6, 34);
 
 				TabPage bookList = new TabPage();
@@ -651,7 +651,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			this.array.ShowSelectedCell();
 		}
 
-		private void HandleBookActivePageChanged(object sender)
+		private void HandleBookActivePageChanged(object sender, CancelEventArgs e)
 		{
 			//	L'onglet actif a changé.
 			this.UpdateAlternates();

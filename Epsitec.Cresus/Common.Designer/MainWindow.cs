@@ -334,7 +334,7 @@ namespace Epsitec.Common.Designer
 			this.bookModules.Arrows = TabBookArrows.Right;
 			this.bookModules.HasCloseButton = true;
 			this.bookModules.CloseButton.CommandObject = Command.Get("Close");
-			this.bookModules.ActivePageChanged += new EventHandler(this.HandleBookModulesActivePageChanged);
+			this.bookModules.ActivePageChanged += new EventHandler<CancelEventArgs>(this.HandleBookModulesActivePageChanged);
 			ToolTip.Default.SetToolTip(this.bookModules.CloseButton, Res.Strings.Action.Close);
 
 			this.ribbonActive = this.ribbonMain;
@@ -1505,16 +1505,25 @@ namespace Epsitec.Common.Designer
 			this.UpdateAfterTypeChanged();
 		}
 
-		private void HandleBookModulesActivePageChanged(object sender)
+		private void HandleBookModulesActivePageChanged(object sender, CancelEventArgs e)
 		{
 			//	L'onglet pour le module courant a été cliqué.
-			if ( this.ignoreChange )  return;
+			if (this.ignoreChange)
+			{
+				return;
+			}
+
+			if (!this.Terminate())
+			{
+				e.Cancel = true;  // revient à la sélection précédente
+				return;
+			}
 
 			int total = this.bookModules.PageCount;
 			for (int i=0; i<total; i++)
 			{
 				ModuleInfo di = this.moduleInfoList[i];
-				if ( di.TabPage == this.bookModules.ActivePage )
+				if (di.TabPage == this.bookModules.ActivePage)
 				{
 					this.UseModule(i);
 					return;

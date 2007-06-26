@@ -145,7 +145,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.tabBook.Arrows = TabBookArrows.Stretch;
 			this.tabBook.Dock = DockStyle.Fill;
 			this.tabBook.Padding = new Margins(1, 1, 1, 1);
-			this.tabBook.ActivePageChanged += new EventHandler(this.HandleTabBookActivePageChanged);
+			this.tabBook.ActivePageChanged += new EventHandler<CancelEventArgs>(this.HandleTabBookActivePageChanged);
 
 			//	Crée l'onglet 'propriétés'.
 			this.tabPageProperties = new TabPage();
@@ -233,7 +233,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 				this.objectsSlider.ValueChanged -= new EventHandler(this.HandleObjectsSliderChanged);
 
-				this.tabBook.ActivePageChanged -= new EventHandler(this.HandleTabBookActivePageChanged);
+				this.tabBook.ActivePageChanged -= new EventHandler<CancelEventArgs>(this.HandleTabBookActivePageChanged);
 
 				this.StatusBarDispose();
 				this.TreeDispose();
@@ -1166,7 +1166,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.UpdateEdit();
 		}
 
-		private void HandleTabBookActivePageChanged(object sender)
+		private void HandleTabBookActivePageChanged(object sender, CancelEventArgs e)
 		{
 			//	Changement de l'onglet visible.
 			if (this.tabPageObjects.Visibility)  // arbre des objets visible ?
