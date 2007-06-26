@@ -564,6 +564,11 @@ namespace Epsitec.Common.Designer
 				else if (this.type == Type.Entities && !duplicateContent)
 				{
 					Druid druid = Druid.Empty;
+					StructuredTypeClass typeClass = StructuredTypeClass.Entity;
+
+					//	TODO: il faudra que dans le dialogue on puisse choisir si on
+					//	veut créer une entité ou une interface, donc retourner soit
+					//	StructuredTypeClass.Entity, soit StructuredTypeClass.Interface
 					Common.Dialogs.DialogResult result = this.mainWindow.DlgResourceSelector(Dialogs.ResourceSelector.Operation.InheritEntity, this.mainWindow.CurrentModule, Type.Entities, ref druid, null);
 					if (result != Common.Dialogs.DialogResult.Yes)
 					{
@@ -575,6 +580,7 @@ namespace Epsitec.Common.Designer
 
 					StructuredData data = newItem.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
 					data.SetValue(Support.Res.Fields.ResourceStructuredType.BaseType, druid);
+					data.SetValue(Support.Res.Fields.ResourceStructuredType.Class, typeClass);
 				}
 				else
 				{
