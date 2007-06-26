@@ -115,6 +115,11 @@ namespace Epsitec.Common.Types
 			}
 		}
 
+		/// <summary>
+		/// Gets the list of interface ids. It is possible to add or remove
+		/// interfaces for the structured type by modifying this list.
+		/// </summary>
+		/// <value>The interface ids.</value>
 		public IList<Druid> InterfaceIds
 		{
 			get
@@ -194,34 +199,23 @@ namespace Epsitec.Common.Types
 		}
 
 		/// <summary>
-		/// Gets the list of imported interfaces. An interface is represented by
-		/// a <see cref="Druid"/> which can be mapped to a <see cref="StructuredType"/>.
+		/// Gets the list of interface ids. Every interface is represented by
+		/// a <see cref="Druid"/> which maps to a <see cref="StructuredType"/>.
+		/// An interface will appear at most once. Interfaces which are themselves
+		/// based on interfaces will be handled as a collection of interfaces,
+		/// meaning that they will all show up in the list, independently of
+		/// the <c>inherit</c> parameter.
 		/// </summary>
-		/// <param name="inherit">If set to <c>true</c>, lists also the inherited interfaces.</param>
+		/// <param name="inherit">
+		/// If set to <c>true</c>, lists also the interfaces inherited through
+		/// the base type.</param>
 		/// <returns>
-		/// The list of imported interfaces (or an empty list).
+		/// The list of interfaces (or an empty list).
 		/// </returns>
-		public Collections.ReadOnlyList<Druid> GetImportedInterfaces(bool inherit)
+		public IList<Druid> GetInterfaceIds(bool inherit)
 		{
 			List<Druid> interfaces = new List<Druid> ();
-
-			foreach (StructuredTypeField field in this.fields.Values)
-			{
-				if (field.Relation == FieldRelation.Inclusion)
-				{
-					if ((field.Membership == FieldMembership.Local) ||
-						(inherit))
-					{
-						if (interfaces.Contains (field.TypeId))
-						{
-							continue;
-						}
-
-						interfaces.Add (field.TypeId);
-					}
-				}
-			}
-
+			this.GetInterfaceIds (interfaces, inherit);
 			return new Collections.ReadOnlyList<Druid> (interfaces);
 		}
 
@@ -332,7 +326,6 @@ namespace Epsitec.Common.Types
 		}
 
 		#endregion
-
 
 		#region IDeserialization Members
 
@@ -575,16 +568,30 @@ namespace Epsitec.Common.Types
 			this.IncludeInheritedFields ();
 		}
 
+		#region Private and Protected Methods
+		
+		protected override void OnCaptionDefined()
+		{
+			base.OnCaptionDefined ();
+
+			Caption caption = this.Caption;
+
+			if (caption != null)
+			{
+				AbstractType.SetComplexType (caption, this);
+			}
+		}
+
 		/// <summary>
 		/// Includes the inherited fields; this is done automatically whenever
 		/// fields are accessed through the public methods and properties.
 		/// </summary>
-		protected virtual void IncludeInheritedFields()
+		private void IncludeInheritedFields()
 		{
 			if (this.fieldInheritance == InheritanceMode.Undefined)
 			{
 				StructuredType baseType = this.GetBaseType (false);
-				
+
 				if (baseType != null)
 				{
 					foreach (string id in baseType.GetFieldIds ())
@@ -601,7 +608,7 @@ namespace Epsitec.Common.Types
 							fields[i].ResetRank (i);
 						}
 					}
-					
+
 					this.fieldInheritance = InheritanceMode.Defined;
 				}
 			}
@@ -611,12 +618,12 @@ namespace Epsitec.Common.Types
 		/// Removes the inherited fields; this is used to clean up the fields
 		/// collection to keep only the locally defined fields.
 		/// </summary>
-		protected virtual void RemoveInheritedFields()
+		private void RemoveInheritedFields()
 		{
 			if (this.fieldInheritance == InheritanceMode.Defined)
 			{
 				List<string> ids = new List<string> ();
-				
+
 				foreach (KeyValuePair<string, StructuredTypeField> fieldEntry in this.fields)
 				{
 					if (fieldEntry.Value.Membership == FieldMembership.Inherited)
@@ -629,42 +636,66 @@ namespace Epsitec.Common.Types
 				{
 					this.fields.Remove (id);
 				}
-				
+
 				this.fieldInheritance = InheritanceMode.Undefined;
 			}
 		}
 
 		private void HandleInterfaceInsertion(Druid interfaceId)
 		{
+			this.RemoveInheritedFields ();
 		}
 
 		private void HandleInterfaceRemoval(Druid interfaceId)
 		{
+			this.RemoveInheritedFields ();
 		}
 		
-		#region Private and Protected Methods
-
-		protected override void OnCaptionDefined()
+		private StructuredType GetBaseType(bool useTypeCache)
 		{
-			base.OnCaptionDefined ();
+			return this.GetType (this.BaseTypeId, useTypeCache);
+		}
 
+		private void GetInterfaceIds(IList<Druid> interfaces, bool inherit)
+		{
+			System.Diagnostics.Debug.Assert (interfaces != null);
 
-			Caption caption = this.Caption;
-
-			if (caption != null)
+			if (inherit)
 			{
-				AbstractType.SetComplexType (caption, this);
+				StructuredType baseType = this.GetBaseType (false);
+
+				if (baseType != null)
+				{
+					System.Diagnostics.Debug.Assert (baseType.Class == StructuredTypeClass.Entity);
+					
+					baseType.GetInterfaceIds (interfaces, inherit);
+				}
+			}
+
+			foreach (Druid interfaceId in this.InterfaceIds)
+			{
+				if (interfaces.Contains (interfaceId))
+				{
+					continue;
+				}
+
+				StructuredType interfaceType = this.GetType (interfaceId, false);
+
+				System.Diagnostics.Debug.Assert (interfaceType != null);
+				System.Diagnostics.Debug.Assert (interfaceType.Class == StructuredTypeClass.Interface);
+				System.Diagnostics.Debug.Assert (interfaceType.BaseTypeId.IsEmpty);
+
+				interfaces.Add (interfaceId);
+				interfaceType.GetInterfaceIds (interfaces, inherit);
 			}
 		}
 
-		private StructuredType GetBaseType(bool useTypeCache)
+		private StructuredType GetType(Druid typeId, bool useTypeCache)
 		{
-			Druid baseTypeId = this.BaseTypeId;
-
-			if (baseTypeId.IsValid)
+			if (typeId.IsValid)
 			{
 				ResourceManager manager = this.FindAssociatedResourceManager ();
-				Caption caption = manager.GetCaption (baseTypeId);
+				Caption caption = manager.GetCaption (typeId);
 
 				if (caption != null)
 				{
@@ -783,6 +814,8 @@ namespace Epsitec.Common.Types
 
 		#endregion
 
+		#region Static Dependency Property Support Methods
+
 		private static object GetFieldsValue(DependencyObject obj)
 		{
 			//	The fields value is not serializable in its native HostedDictionary
@@ -811,6 +844,7 @@ namespace Epsitec.Common.Types
 			return that.InterfaceIds;
 		}
 
+		#endregion
 
 		#region InheritanceMode Enumeration
 

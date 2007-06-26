@@ -586,8 +586,8 @@ namespace Epsitec.Common.Types
 			e1.Fields.Add (new StructuredTypeField (null, i, Support.Druid.Parse ("[400I]"), 0, FieldRelation.Inclusion));
 			e1.Fields.Add (new StructuredTypeField (null, i, Support.Druid.Parse ("[400J]"), 1, FieldRelation.Inclusion));
 
-			Assert.AreEqual (1, e1.GetImportedInterfaces (false).Count);
-			Assert.AreEqual ("[400H]", e1.GetImportedInterfaces (false)[0].ToString ());
+			Assert.AreEqual (1, e1.GetInterfaceIds (false).Count);
+			Assert.AreEqual ("[400H]", e1.GetInterfaceIds (false)[0].ToString ());
 		}
 
 		[Test]
