@@ -128,7 +128,7 @@ namespace Epsitec.Common.Widgets
 		
 		public static Window[] FindFromPosition(Drawing.Point pos)
 		{
-			System.Collections.ArrayList list = new	System.Collections.ArrayList ();
+			List<Window> list = new List<Window> ();
 			
 			for (int i = 0; i < Window.windows.Count; )
 			{
@@ -151,8 +151,8 @@ namespace Epsitec.Common.Widgets
 					i++;
 				}
 			}
-			
-			return (Window[]) list.ToArray (typeof (Window));
+
+			return list.ToArray ();
 		}
 		
 		public static Window FindFromText(string text)
@@ -508,7 +508,7 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				System.Collections.ArrayList list = new System.Collections.ArrayList ();
+				List<Window> list = new List<Window> ();
 				
 				if ((this.window != null) &&
 					(this.window.IsDisposed == false))
@@ -522,8 +522,8 @@ namespace Epsitec.Common.Widgets
 						}
 					}
 				}
-				
-				return (Window[]) list.ToArray (typeof (Window));
+
+				return list.ToArray ();
 			}
 		}
 		
@@ -903,8 +903,6 @@ namespace Epsitec.Common.Widgets
 			get
 			{
 				List<Window> windows = new List<Window> ();
-				
-				int i = 0;
 				
 				foreach (Weak<Window> weak_ref in Window.windows)
 				{
