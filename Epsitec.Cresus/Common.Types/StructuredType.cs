@@ -116,8 +116,9 @@ namespace Epsitec.Common.Types
 		}
 
 		/// <summary>
-		/// Gets the list of interface ids. It is possible to add or remove
-		/// interfaces for the structured type by modifying this list.
+		/// Gets the list of interface ids defined locally for this structured
+		/// type. See <see cref="GetInterfaceIds"/> if you need to retrieve the
+		/// complete list of interfaces associated with this structured type.
 		/// </summary>
 		/// <value>The interface ids.</value>
 		public IList<Druid> InterfaceIds
@@ -143,7 +144,7 @@ namespace Epsitec.Common.Types
 		{
 			get
 			{
-				return this.GetBaseType (true);
+				return this.GetType (this.BaseTypeId, true);
 			}
 		}
 
@@ -590,26 +591,40 @@ namespace Epsitec.Common.Types
 		{
 			if (this.fieldInheritance == InheritanceMode.Undefined)
 			{
-				StructuredType baseType = this.GetBaseType (false);
+				this.IncludeInheritedFields (this.BaseTypeId, FieldMembership.Inherited);
 
-				if (baseType != null)
+				foreach (Druid interfaceId in this.GetInterfaceIds (false))
 				{
-					foreach (string id in baseType.GetFieldIds ())
+					this.IncludeInheritedFields (interfaceId, FieldMembership.Local);
+				}
+
+				StructuredTypeField[] fields = this.GetSortedFields ();
+
+				for (int i = 0; i < fields.Length; i++)
+				{
+					if (fields[i].Rank != -1)
 					{
-						this.fields.Add (id, baseType.Fields[id].Clone (FieldMembership.Inherited));
+						fields[i].ResetRank (i);
 					}
+				}
+				
+				this.fieldInheritance = InheritanceMode.Defined;
+			}
+		}
 
-					StructuredTypeField[] fields = this.GetSortedFields ();
+		private void IncludeInheritedFields(Druid typeId, FieldMembership membership)
+		{
+			StructuredType type = this.GetType (typeId, false);
 
-					for (int i = 0; i < fields.Length; i++)
+			if (type != null)
+			{
+				foreach (string id in type.GetFieldIds ())
+				{
+					if (!this.fields.ContainsKey (id))
 					{
-						if (fields[i].Rank != -1)
-						{
-							fields[i].ResetRank (i);
-						}
+						StructuredTypeField clone = type.Fields[id].Clone (membership, typeId);
+						this.fields.Add (id, clone);
 					}
-
-					this.fieldInheritance = InheritanceMode.Defined;
 				}
 			}
 		}
@@ -651,18 +666,13 @@ namespace Epsitec.Common.Types
 			this.RemoveInheritedFields ();
 		}
 		
-		private StructuredType GetBaseType(bool useTypeCache)
-		{
-			return this.GetType (this.BaseTypeId, useTypeCache);
-		}
-
 		private void GetInterfaceIds(IList<Druid> interfaces, bool inherit)
 		{
 			System.Diagnostics.Debug.Assert (interfaces != null);
 
 			if (inherit)
 			{
-				StructuredType baseType = this.GetBaseType (false);
+				StructuredType baseType = this.GetType (this.BaseTypeId, false);
 
 				if (baseType != null)
 				{

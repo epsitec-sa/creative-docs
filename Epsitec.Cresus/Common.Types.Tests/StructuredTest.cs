@@ -515,6 +515,13 @@ namespace Epsitec.Common.Types
 			Assert.AreEqual (Support.Druid.Parse ("[12345678C]"), type.InterfaceIds[0]);
 			Assert.AreEqual (Support.Druid.Parse ("[12345678D]"), type.InterfaceIds[1]);
 
+			//	-----------------------------------------------------------------
+			//	We need to clear the interface list since they don't really exist
+			//	and the access to the Fields property would crash :
+			type.InterfaceIds.Clear ();
+			restoredType.InterfaceIds.Clear ();
+			//	-----------------------------------------------------------------
+
 			Assert.AreEqual (type.Fields.Count, restoredType.Fields.Count);
 			Assert.AreEqual (type.GetField ("Name").Type.GetType ().Name, restoredType.GetField ("Name").Type.GetType ().Name);
 			Assert.AreEqual (type.GetField ("Age").Type.GetType ().Name, restoredType.GetField ("Age").Type.GetType ().Name);
@@ -583,8 +590,21 @@ namespace Epsitec.Common.Types
 
 			this.CreateEntities (out e1, out e2, out e3);
 
-			e1.Fields.Add (new StructuredTypeField (null, i, Support.Druid.Parse ("[400I]"), 0, FieldRelation.Inclusion));
-			e1.Fields.Add (new StructuredTypeField (null, i, Support.Druid.Parse ("[400J]"), 1, FieldRelation.Inclusion));
+			int n = e1.Fields.Count;
+
+			e1.InterfaceIds.Add (i.CaptionId);
+
+			Assert.AreEqual (n+2, e1.Fields.Count);
+			
+			Assert.AreEqual (FieldMembership.Local, e1.Fields["[400E]"].Membership);
+			Assert.AreEqual (FieldMembership.Local, e1.Fields["[400F]"].Membership);
+			Assert.AreEqual (FieldMembership.Local, e1.Fields["[400I]"].Membership);
+			Assert.AreEqual (FieldMembership.Local, e1.Fields["[400J]"].Membership);
+			
+			Assert.AreEqual (Support.Druid.Empty, e1.Fields["[400E]"].DefiningTypeId);
+			Assert.AreEqual (Support.Druid.Empty, e1.Fields["[400F]"].DefiningTypeId);
+			Assert.AreEqual (i.CaptionId, e1.Fields["[400I]"].DefiningTypeId);
+			Assert.AreEqual (i.CaptionId, e1.Fields["[400J]"].DefiningTypeId);
 
 			Assert.AreEqual (1, e1.GetInterfaceIds (false).Count);
 			Assert.AreEqual ("[400H]", e1.GetInterfaceIds (false)[0].ToString ());

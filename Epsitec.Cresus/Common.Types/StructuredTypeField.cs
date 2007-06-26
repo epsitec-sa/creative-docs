@@ -247,6 +247,24 @@ namespace Epsitec.Common.Types
 
 
 		/// <summary>
+		/// Gets or sets the defining type DRUID. This information is produced
+		/// and maintained automatically by the <see cref="StructuredType"/>
+		/// class.
+		/// </summary>
+		/// <value>
+		/// The defining type DRUID or <c>Druid.Empty</c> if this field is
+		/// locally defined in its containing structured type.
+		/// </value>
+		public Support.Druid					DefiningTypeId
+		{
+			get
+			{
+				return this.definingTypeId;
+			}
+		}
+
+
+		/// <summary>
 		/// Clones this instance.
 		/// </summary>
 		/// <returns>A copy of this instance.</returns>
@@ -271,6 +289,25 @@ namespace Epsitec.Common.Types
 
 			copy.type   = this.type;
 			copy.typeId = this.typeId;
+
+			return copy;
+		}
+
+		/// <summary>
+		/// Clones this instance.
+		/// </summary>
+		/// <param name="membership">The field membership to use.</param>
+		/// <param name="definingTypeId">The defining type DRUID if this field
+		/// does not yet define one.</param>
+		/// <returns>A copy of this instance.</returns>
+		public StructuredTypeField Clone(FieldMembership membership, Support.Druid definingTypeId)
+		{
+			StructuredTypeField copy = this.Clone (membership);
+
+			if (copy.definingTypeId.IsEmpty)
+			{
+				copy.definingTypeId = definingTypeId;
+			}
 
 			return copy;
 		}
@@ -464,6 +501,7 @@ namespace Epsitec.Common.Types
 		private Support.Druid					typeId;
 		private readonly Support.Druid			captionId;
 		private int								rank;
+		private Support.Druid					definingTypeId;
 		private readonly FieldRelation			relation;
 		private readonly FieldMembership		membership;
 		private readonly FieldSource			source;

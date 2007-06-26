@@ -633,7 +633,7 @@ namespace Epsitec.Common.Types
 			Assert.IsNotNull (strType);
 			Assert.AreEqual ("Nom", strType.Name);
 			Assert.AreEqual (0, strType.MinimumLength);
-			Assert.AreEqual (1000, strType.MaximumLength);
+			Assert.AreEqual (1000000, strType.MaximumLength);
 
 			caption = new Caption ();
 			caption.Name = "Xxx";
