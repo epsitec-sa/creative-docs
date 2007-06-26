@@ -63,6 +63,30 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			return this.fieldAccessor.CreateFieldItem (item.Name);
 		}
 
+		/// <summary>
+		/// Refreshes the automatically generated fields (inherited from a parent
+		/// or included through interfaces).
+		/// </summary>
+		public void RefreshFields()
+		{
+			foreach (CultureMap item in this.Collection)
+			{
+				this.RefreshFields (item);
+			}
+		}
+
+		public void RefreshFields(CultureMap item)
+		{
+			StructuredData data = item.GetCultureData (Resources.DefaultTwoLetterISOLanguageName);
+			object baseTypeIdValue = data.GetValue (Res.Fields.ResourceStructuredType.BaseType);
+
+			if ((!UndefinedValue.IsUndefinedValue (baseTypeIdValue)) &&
+				(((Druid) baseTypeIdValue).IsValid))
+			{
+				this.UpdateInheritedFields (data, (Druid) baseTypeIdValue);
+			}
+		}
+
 		protected override IStructuredType GetStructuredType()
 		{
 			return Res.Types.ResourceStructuredType;
@@ -190,18 +214,6 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			data.LockValue (Res.Fields.Field.DefiningTypeId);
 		}
 
-		private void NotifyInterfaceIdsChanged(CultureMap item)
-		{
-			StructuredData data = item.GetCultureData (Resources.DefaultTwoLetterISOLanguageName);
-			object baseTypeIdValue = data.GetValue (Res.Fields.ResourceStructuredType.BaseType);
-
-			if ((!UndefinedValue.IsUndefinedValue (baseTypeIdValue)) &&
-				(((Druid) baseTypeIdValue).IsValid))
-			{
-				this.UpdateInheritedFields (data, (Druid) baseTypeIdValue);
-			}
-		}
-
 		protected override void HandleItemsCollectionChanged(object sender, CollectionChangedEventArgs e)
 		{
 			base.HandleItemsCollectionChanged (sender, e);
@@ -238,15 +250,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 		private void HandleCultureMapAdded(CultureMap item)
 		{
 			item.PropertyChanged += this.HandleItemPropertyChanged;
-
-			StructuredData data = item.GetCultureData (Resources.DefaultTwoLetterISOLanguageName);
-			object baseTypeIdValue = data.GetValue (Res.Fields.ResourceStructuredType.BaseType);
-
-			if ((!UndefinedValue.IsUndefinedValue (baseTypeIdValue)) &&
-				(((Druid) baseTypeIdValue).IsValid))
-			{
-				this.UpdateInheritedFields (data, (Druid) baseTypeIdValue);
-			}
+			this.RefreshFields (item);
 		}
 
 		private void HandleCultureMapRemoved(CultureMap item)
@@ -366,7 +370,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 
 			public void HandleCollectionChanged(object sender, CollectionChangedEventArgs e)
 			{
-				this.accessor.NotifyInterfaceIdsChanged (this.item);
+				this.accessor.RefreshFields (this.item);
 				this.accessor.NotifyItemChanged (this.item);
 			}
 
