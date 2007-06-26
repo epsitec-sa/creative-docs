@@ -716,41 +716,9 @@ namespace Epsitec.Common.Designer.Viewers
 					text.Dock = DockStyle.Fill;
 				}
 
-				string value = "";
-				if (twoLettersCulture != null)
-				{
-					System.Text.StringBuilder buffer = new System.Text.StringBuilder();
-					StructuredData data = item.GetCultureData(twoLettersCulture);
-
-					IList<string> list = data.GetValue(Support.Res.Fields.ResourceCaption.Labels) as IList<string>;
-					if (list != null && list.Count != 0)
-					{
-						foreach(string s in list)
-						{
-							if (buffer.Length != 0)
-							{
-								buffer.Append(", ");
-							}
-							buffer.Append(s);
-						}
-					}
-
-					string desc = data.GetValue(Support.Res.Fields.ResourceCaption.Description) as string;
-					if (!string.IsNullOrEmpty(desc))
-					{
-						if (buffer.Length != 0)
-						{
-							buffer.Append(", ");
-						}
-						buffer.Append(desc);
-					}
-
-					value = buffer.ToString();
-				}
-
 				text.Margins = new Margins(5, 5, 0, 0);
-				//?text.Text = TextLayout.ConvertToTaggedText(value);
-				text.Text = value;
+				//?text.Text = TextLayout.ConvertToTaggedText(this.owner.GetColumnText(item, twoLettersCulture));
+				text.Text = this.owner.GetColumnText(item, twoLettersCulture);
 				text.TextBreakMode = TextBreakMode.Ellipsis | TextBreakMode.Split;
 				text.PreferredSize = text.GetBestFitSize();
 
@@ -761,7 +729,7 @@ namespace Epsitec.Common.Designer.Viewers
 			AbstractCaptions2 owner;
 		}
 
-
+		
 		private ItemViewFactory					itemViewFactory;
 
 		protected IconButton					primarySummaryIcon;

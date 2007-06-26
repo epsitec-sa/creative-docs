@@ -53,6 +53,8 @@ namespace Epsitec.Common.Designer.Viewers
 			this.table.Columns.Add(new UI.ItemTableColumn("Secondary", new Widgets.Layouts.GridLength(this.GetColumnWidth(3), Widgets.Layouts.GridUnitType.Proportional)));
 
 			this.table.ColumnHeader.SetColumnComparer(0, Fields2.CompareTypeColumns);
+			this.table.ColumnHeader.SetColumnComparer(2, this.ComparePrimary);
+			this.table.ColumnHeader.SetColumnComparer(3, this.CompareSecondary);
 
 			this.table.ColumnHeader.SetColumnText(0, "Entité");
 			this.table.ColumnHeader.SetColumnText(1, "Nom");

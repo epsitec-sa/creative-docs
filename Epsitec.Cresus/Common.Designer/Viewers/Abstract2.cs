@@ -215,6 +215,9 @@ namespace Epsitec.Common.Designer.Viewers
 			this.table.Columns.Add(new UI.ItemTableColumn("Primary", new Widgets.Layouts.GridLength(this.GetColumnWidth(1), Widgets.Layouts.GridUnitType.Proportional)));
 			this.table.Columns.Add(new UI.ItemTableColumn("Secondary", new Widgets.Layouts.GridLength(this.GetColumnWidth(2), Widgets.Layouts.GridUnitType.Proportional)));
 
+			this.table.ColumnHeader.SetColumnComparer(1, this.ComparePrimary);
+			this.table.ColumnHeader.SetColumnComparer(2, this.CompareSecondary);
+
 			this.table.ColumnHeader.SetColumnText(0, "Nom");
 			this.table.ColumnHeader.SetColumnSort(0, ListSortDirection.Ascending);
 		}
@@ -777,6 +780,67 @@ namespace Epsitec.Common.Designer.Viewers
 			this.lastActionIsReplace = false;
 		}
 
+
+		protected int ComparePrimary(object a, object b)
+		{
+			CultureMap itemA = a as CultureMap;
+			CultureMap itemB = b as CultureMap;
+
+			string sA = this.GetColumnText(itemA, this.GetTwoLetters(0));
+			string sB = this.GetColumnText(itemB, this.GetTwoLetters(0));
+
+			return sA.CompareTo(sB);
+		}
+
+		protected int CompareSecondary(object a, object b)
+		{
+			CultureMap itemA = a as CultureMap;
+			CultureMap itemB = b as CultureMap;
+
+			string sA = this.GetColumnText(itemA, this.GetTwoLetters(1));
+			string sB = this.GetColumnText(itemB, this.GetTwoLetters(1));
+
+			return sA.CompareTo(sB);
+		}
+
+		public string GetColumnText(CultureMap item, string twoLettersCulture)
+		{
+			//	Retourne le texte pour une colonne primaire ou secondaire.
+			if (twoLettersCulture == null)
+			{
+				return "";
+			}
+			else
+			{
+				System.Text.StringBuilder buffer = new System.Text.StringBuilder();
+				StructuredData data = item.GetCultureData(twoLettersCulture);
+
+				IList<string> list = data.GetValue(Support.Res.Fields.ResourceCaption.Labels) as IList<string>;
+				if (list != null && list.Count != 0)
+				{
+					foreach(string s in list)
+					{
+						if (buffer.Length != 0)
+						{
+							buffer.Append(", ");
+						}
+						buffer.Append(s);
+					}
+				}
+
+				string desc = data.GetValue(Support.Res.Fields.ResourceCaption.Description) as string;
+				if (!string.IsNullOrEmpty(desc))
+				{
+					if (buffer.Length != 0)
+					{
+						buffer.Append(", ");
+					}
+					buffer.Append(desc);
+				}
+
+				return buffer.ToString();
+			}
+		}
 
 		
 		protected static bool					mainExtended = false;
