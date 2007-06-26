@@ -455,7 +455,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				return;
 			}
 
-			this.mainWindow.LocatorGoto(module.ModuleInfo.Name, ResourceAccess.Type.Values, druid, this.Window.FocusedWidget);
+			this.mainWindow.LocatorGoto(module.ModuleInfo.Name, ResourceAccess.Type.Values, -1, druid, this.Window.FocusedWidget);
 		}
 
 		protected void ArraySearch(string searching, int direction)

@@ -1101,6 +1101,14 @@ namespace Epsitec.Common.Designer
 			string moduleName = mi.Module.ModuleInfo.Name;
 			ResourceAccess.Type viewerType = mi.BundleTypeWidget.CurrentType;
 
+			int subView = -1;
+			Viewers.Abstract viewer = mi.Module.Modifier.ActiveViewer;
+			if (viewer is Viewers.Entities)
+			{
+				Viewers.Entities ev = viewer as Viewers.Entities;
+				subView = ev.SubView;
+			}
+
 			Druid resource = Druid.Empty;
 			ResourceAccess access = mi.Module.GetAccess(viewerType);
 			int sel = access.AccessIndex;
@@ -1113,7 +1121,7 @@ namespace Epsitec.Common.Designer
 			int lineSelected = -1;
 			this.LocatorAdjustWidgetFocused(ref widgetFocused, ref lineSelected);
 
-			Viewers.Locator locator = new Viewers.Locator(moduleName, viewerType, resource, widgetFocused, lineSelected);
+			Viewers.Locator locator = new Viewers.Locator(moduleName, viewerType, subView, resource, widgetFocused, lineSelected);
 
 			if (this.locatorIndex >= 0 && this.locatorIndex < this.locators.Count)
 			{
@@ -1235,6 +1243,7 @@ namespace Epsitec.Common.Designer
 			//	Retourne le joli texte correspondant à une localisations.
 			string moduleName              = this.locators[index].ModuleName;
 			ResourceAccess.Type viewerType = this.locators[index].ViewerType;
+			int subView                    = this.locators[index].SubView;
 			Druid resource                 = this.locators[index].Resource;
 
 			string typeText = ResourceAccess.TypeDisplayName(viewerType);
@@ -1250,7 +1259,14 @@ namespace Epsitec.Common.Designer
 				}
 			}
 
-			return System.String.Format("{0}/{1}: {2}", moduleName, typeText, resourceText);
+			if (subView == -1)
+			{
+				return System.String.Format("{0}/{1}: {2}", moduleName, typeText, resourceText);
+			}
+			else
+			{
+				return System.String.Format("{0}/{1}/{2}: {3}", moduleName, typeText, Viewers.Entities.SubViewName(subView), resourceText);
+			}
 		}
 
 		protected void LocatorClose(string moduleName)
@@ -1332,7 +1348,7 @@ namespace Epsitec.Common.Designer
 			this.LocatorGoto(locator);
 		}
 
-		public void LocatorGoto(string moduleName, ResourceAccess.Type viewerType, Druid resource, Widget widgetFocused)
+		public void LocatorGoto(string moduleName, ResourceAccess.Type viewerType, int subView, Druid resource, Widget widgetFocused)
 		{
 			//	Va sur une ressource d'une vue d'un module quelconque.
 			if (!this.Terminate())
@@ -1342,7 +1358,7 @@ namespace Epsitec.Common.Designer
 
 			int lineSelected = -1;
 			this.LocatorAdjustWidgetFocused(ref widgetFocused, ref lineSelected);
-			Viewers.Locator locator = new Viewers.Locator(moduleName, viewerType, resource, widgetFocused, lineSelected);
+			Viewers.Locator locator = new Viewers.Locator(moduleName, viewerType, subView, resource, widgetFocused, lineSelected);
 			this.LocatorGoto(locator);
 		}
 
@@ -1370,6 +1386,13 @@ namespace Epsitec.Common.Designer
 			mi.BundleTypeWidget.CurrentType = locator.ViewerType;
 			this.locatorIgnore = false;
 
+			Viewers.Abstract viewer = mi.Module.Modifier.ActiveViewer;
+			if (locator.SubView != -1 && viewer is Viewers.Entities)
+			{
+				Viewers.Entities ev = viewer as Viewers.Entities;
+				ev.SubView = locator.SubView;
+			}
+
 			if (!locator.Resource.IsEmpty)
 			{
 				ResourceAccess access = mi.Module.GetAccess(locator.ViewerType);
@@ -1384,7 +1407,6 @@ namespace Epsitec.Common.Designer
 				if (sel != -1)
 				{
 					access.AccessIndex = sel;
-					Viewers.Abstract viewer = mi.Module.Modifier.ActiveViewer;
 					if (viewer != null)
 					{
 						this.locatorIgnore = true;

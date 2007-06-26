@@ -9,10 +9,11 @@ namespace Epsitec.Common.Designer.Viewers
 	/// </summary>
 	public class Locator : System.IEquatable<Locator>
 	{
-		public Locator(string moduleName, ResourceAccess.Type viewerType, Druid resource, Widget widgetFocused, int lineSelected)
+		public Locator(string moduleName, ResourceAccess.Type viewerType, int subView, Druid resource, Widget widgetFocused, int lineSelected)
 		{
 			this.moduleName = moduleName;
 			this.viewerType = viewerType;
+			this.subView = subView;
 			this.resource = resource;
 			this.widgetFocused = widgetFocused;
 			this.lineSelected = lineSelected;
@@ -31,6 +32,14 @@ namespace Epsitec.Common.Designer.Viewers
 			get
 			{
 				return this.viewerType;
+			}
+		}
+
+		public int SubView
+		{
+			get
+			{
+				return this.subView;
 			}
 		}
 
@@ -63,6 +72,7 @@ namespace Epsitec.Common.Designer.Viewers
 		{
 			return (a.moduleName == b.moduleName) &&
 				   (a.viewerType == b.viewerType) &&
+				   (a.subView == b.subView) &&
 				   (a.resource == b.resource);
 		}
 		
@@ -70,12 +80,13 @@ namespace Epsitec.Common.Designer.Viewers
 		{
 			return (a.moduleName != b.moduleName) ||
 				   (a.viewerType != b.viewerType) ||
+				   (a.subView != b.subView) ||
 				   (a.resource != b.resource);
 		}
 
 		public override string ToString()
 		{
-			return System.String.Format("Module={0}, Type={1}, Resource={2}", this.moduleName, this.viewerType, this.resource);
+			return System.String.Format("Module={0}, Type={1}, Sous-vue={2}, Resource={3}", this.moduleName, this.viewerType, this.subView, this.resource);
 		}
 		
 		public override bool Equals(object obj)
@@ -101,6 +112,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 		protected string							moduleName;
 		protected ResourceAccess.Type				viewerType;
+		protected int								subView;
 		protected Druid								resource;
 		protected Widget							widgetFocused;
 		protected int								lineSelected;
