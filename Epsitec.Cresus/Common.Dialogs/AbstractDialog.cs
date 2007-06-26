@@ -38,11 +38,20 @@ namespace Epsitec.Common.Dialogs
 					owner_bounds = Widgets.ScreenInfo.AllScreens[0].Bounds;
 				}
 
-				Widgets.Window capturingWindow = Widgets.Window.FindCapturing ();
+				//	Make sure we release the mouse capture and we don't process
+				//	the currently dispatched message (if any) so we don't activate
+				//	a capture after the dialog closes :
+				
+				Widgets.Window  capturingWindow = Widgets.Window.FindCapturing ();
+				Widgets.Message dispatchMessage = Widgets.Message.GetLastMessage ();
 
 				if (capturingWindow != null)
 				{
 					capturingWindow.ReleaseCapture ();
+				}
+				if (dispatchMessage != null)
+				{
+					dispatchMessage.Retired = true;
 				}
 				
 				Drawing.Rectangle dialog_bounds = this.Window.WindowBounds;

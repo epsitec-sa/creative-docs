@@ -2112,7 +2112,8 @@ namespace Epsitec.Common.Widgets
 
 				root.MessageHandler (message, pos);
 				
-				if (this.IsDisposed)
+				if ((this.IsDisposed) ||
+					(message.Retired))
 				{
 					return;
 				}
@@ -2148,8 +2149,12 @@ namespace Epsitec.Common.Widgets
 				
 				this.capturing_widget.MessageHandler (message);
 			}
-			
-			if (this.IsDisposed) return;
+
+			if ((this.IsDisposed) ||
+				(message.Retired))
+			{
+				return;
+			}
 			
 			this.PostProcessMessage (message);
 			

@@ -25,6 +25,8 @@ namespace Epsitec.Common.Widgets
 			
 			this.cursor = Message.state.window_cursor;
 			this.button = MouseButtons.None;
+
+			Message.last_message = this;
 		}
 
 		public bool							IsDummy
@@ -71,6 +73,23 @@ namespace Epsitec.Common.Widgets
 					this.is_handled = true;
 					this.is_swallowed = true;
 				}
+			}
+		}
+
+		/// <summary>
+		/// Gets or sets a value indicating whether this <see cref="Message"/> is retired.
+		/// A retired message won't be postprocessed in <see cref="Window.DispatchMessage"/>.
+		/// </summary>
+		/// <value><c>true</c> if retired; otherwise, <c>false</c>.</value>
+		public bool							Retired
+		{
+			get
+			{
+				return this.is_retired;
+			}
+			set
+			{
+				this.is_retired = value;
 			}
 		}
 		
@@ -339,6 +358,11 @@ namespace Epsitec.Common.Widgets
 			buffer.Append (Message.GetSimpleKeyName (code & KeyCode.KeyCodeMask));
 			
 			return buffer.ToString ();
+		}
+
+		public static Message GetLastMessage()
+		{
+			return Message.last_message;
 		}
 		
 		
@@ -1006,6 +1030,7 @@ namespace Epsitec.Common.Widgets
 		private bool						is_non_client;
 		private bool						is_swallowed;
 		private bool						is_dummy_message;
+		private bool						is_retired;
 		private bool						force_capture;
 		private WindowRoot					window_root;
 		private Widget						in_widget;
@@ -1024,7 +1049,8 @@ namespace Epsitec.Common.Widgets
 		private KeyCode						key_code;
 		private int							key_char;
 		
-		private static KeyCode				last_code = 0;
+		private static KeyCode				last_code;
+		private static Message				last_message;
 		private static Message.State		state;
 	}
 }
