@@ -50,7 +50,16 @@ namespace Epsitec.Common.UI
 		{
 			get
 			{
-				return this.GetField ("*").Type as IStructuredType;
+				StructuredTypeField field = this.GetField ("*");
+
+				if (field == null)
+				{
+					return null;
+				}
+				else
+				{
+					return field.Type as IStructuredType;
+				}
 			}
 			set
 			{

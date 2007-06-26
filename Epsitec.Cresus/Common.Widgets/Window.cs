@@ -47,7 +47,7 @@ namespace Epsitec.Common.Widgets
 			this.timer.TimeElapsed += this.HandleTimeElapsed;
 			this.timer.AutoRepeat = 0.050;
 			
-			Window.windows.Add (new System.WeakReference (this));
+			Window.windows.Add (new Weak<Window> (this));
 		}
 		
 		
@@ -66,9 +66,9 @@ namespace Epsitec.Common.Widgets
 		{
 			for (int i = 0; i < Window.windows.Count; )
 			{
-				System.WeakReference weak_ref = Window.windows[i] as System.WeakReference;
+				Weak<Window> weak_ref = Window.windows[i];
 				
-				Window target = weak_ref.Target as Window;
+				Window target = weak_ref.Target;
 				
 				if ((target == null) || (target.IsDisposed))
 				{
@@ -109,9 +109,9 @@ namespace Epsitec.Common.Widgets
 		{
 			for (int i = 0; i < Window.windows.Count; )
 			{
-				System.WeakReference weak_ref = Window.windows[i] as System.WeakReference;
+				Weak<Window> weak_ref = Window.windows[i];
 				
-				Window target = weak_ref.Target as Window;
+				Window target = weak_ref.Target;
 				
 				if ((target == null) || (target.IsDisposed))
 				{
@@ -132,9 +132,9 @@ namespace Epsitec.Common.Widgets
 			
 			for (int i = 0; i < Window.windows.Count; )
 			{
-				System.WeakReference weak_ref = Window.windows[i] as System.WeakReference;
+				Weak<Window> weak_ref = Window.windows[i];
 				
-				Window target = weak_ref.Target as Window;
+				Window target = weak_ref.Target;
 				
 				if ((target == null) || (target.IsDisposed))
 				{
@@ -159,9 +159,9 @@ namespace Epsitec.Common.Widgets
 		{
 			for (int i = 0; i < Window.windows.Count; )
 			{
-				System.WeakReference weak_ref = Window.windows[i] as System.WeakReference;
+				Weak<Window> weak_ref = Window.windows[i];
 				
-				Window target = weak_ref.Target as Window;
+				Window target = weak_ref.Target;
 				
 				if ((target == null) || (target.IsDisposed))
 				{
@@ -185,9 +185,9 @@ namespace Epsitec.Common.Widgets
 		{
 			for (int i = 0; i < Window.windows.Count; )
 			{
-				System.WeakReference weak_ref = Window.windows[i] as System.WeakReference;
+				Weak<Window> weak_ref = Window.windows[i];
 				
-				Window target = weak_ref.Target as Window;
+				Window target = weak_ref.Target;
 				
 				if ((target == null) || (target.IsDisposed))
 				{
@@ -211,9 +211,9 @@ namespace Epsitec.Common.Widgets
 		{
 			for (int i = 0; i < Window.windows.Count; )
 			{
-				System.WeakReference weak_ref = Window.windows[i] as System.WeakReference;
+				Weak<Window> weak_ref = Window.windows[i];
 				
-				Window target = weak_ref.Target as Window;
+				Window target = weak_ref.Target;
 				
 				if ((target == null) || (target.IsDisposed))
 				{
@@ -230,6 +230,32 @@ namespace Epsitec.Common.Widgets
 				}
 			}
 			
+			return null;
+		}
+
+		public static Window FindCapturing()
+		{
+			for (int i = 0; i < Window.windows.Count; )
+			{
+				Weak<Window> weak_ref = Window.windows[i];
+
+				Window target = weak_ref.Target;
+
+				if ((target == null) || (target.IsDisposed))
+				{
+					Window.windows.RemoveAt (i);
+				}
+				else
+				{
+					if (target.CapturingWidget != null)
+					{
+						return target;
+					}
+
+					i++;
+				}
+			}
+
 			return null;
 		}
 		
@@ -860,7 +886,7 @@ namespace Epsitec.Common.Widgets
 			{
 				int n = 0;
 				
-				foreach (System.WeakReference weak_ref in Window.windows)
+				foreach (Weak<Window> weak_ref in Window.windows)
 				{
 					if (weak_ref.IsAlive)
 					{
@@ -876,19 +902,19 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				Window[] windows = new Window[Window.DebugAliveWindowsCount];
+				List<Window> windows = new List<Window> ();
 				
 				int i = 0;
 				
-				foreach (System.WeakReference weak_ref in Window.windows)
+				foreach (Weak<Window> weak_ref in Window.windows)
 				{
 					if (weak_ref.IsAlive)
 					{
-						windows[i++] = weak_ref.Target as Window;
+						windows.Add (weak_ref.Target);
 					}
 				}
 				
-				return windows;
+				return windows.ToArray ();
 			}
 		}
 		
@@ -2129,8 +2155,7 @@ namespace Epsitec.Common.Widgets
 			
 			Application.ExecuteAsyncCallbacks ();
 		}
-		
-		
+
 		public void ReleaseCapture()
 		{
 			this.ReleaseCapturingWidget ();
@@ -2556,7 +2581,7 @@ namespace Epsitec.Common.Widgets
 		
 		private Support.Data.ComponentCollection components;
 		
-		static System.Collections.ArrayList		windows = new System.Collections.ArrayList ();
+		static List<Weak<Window>>				windows = new List<Weak<Window>> ();
 		static bool								is_running_in_automated_test_environment;
 	}
 }

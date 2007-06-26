@@ -38,6 +38,13 @@ namespace Epsitec.Common.Dialogs
 					owner_bounds = Widgets.ScreenInfo.AllScreens[0].Bounds;
 				}
 
+				Widgets.Window capturingWindow = Widgets.Window.FindCapturing ();
+
+				if (capturingWindow != null)
+				{
+					capturingWindow.ReleaseCapture ();
+				}
+				
 				Drawing.Rectangle dialog_bounds = this.Window.WindowBounds;
 				
 				double ox = System.Math.Floor (owner_bounds.Left + (owner_bounds.Width - dialog_bounds.Width) / 2);

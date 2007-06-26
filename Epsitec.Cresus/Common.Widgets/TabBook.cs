@@ -838,8 +838,7 @@ namespace Epsitec.Common.Widgets
 			System.Diagnostics.Debug.Assert (oldBook == this);
 			
 			item.TabButton.SetParent (this);
-			//?item.TabButton.Pressed += new MessageEventHandler(this.HandleTabButton);
-			item.TabButton.Clicked += new MessageEventHandler(this.HandleTabButton);  // voir (*)
+			item.TabButton.Pressed += new MessageEventHandler(this.HandleTabButton);
 			item.RankChanged += new EventHandler(this.HandlePageRankChanged);
 			this.isRefreshNeeded = true;
 			
@@ -853,8 +852,7 @@ namespace Epsitec.Common.Widgets
 			TabPage item  = widget as TabPage;
 			int     index = item.Index;
 
-			//?item.TabButton.Pressed -= new MessageEventHandler(this.HandleTabButton);
-			item.TabButton.Clicked -= new MessageEventHandler(this.HandleTabButton);  // voir (*)
+			item.TabButton.Pressed -= new MessageEventHandler(this.HandleTabButton);
 			item.RankChanged -= new EventHandler(this.HandlePageRankChanged);
 			
 			this.Children.Remove(item);
@@ -874,10 +872,6 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		// (*)	Il faut se connecter sur Clicked (et non Pressed) pour éviter des boucles infinies
-		//		en cas d'annulation. L'événement Pressed est généré par je ne sais qui pendant la
-		//		phase d'annulation !
-		
 		public void NotifyPostRemoval(Widget widget)
 		{
 			this.UpdateVisiblePages();
