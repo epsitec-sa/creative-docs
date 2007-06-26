@@ -1390,7 +1390,9 @@ namespace Epsitec.Common.Designer
 			if (locator.SubView != -1 && viewer is Viewers.Entities)
 			{
 				Viewers.Entities ev = viewer as Viewers.Entities;
+				this.locatorIgnore = true;
 				ev.SubView = locator.SubView;
+				this.locatorIgnore = false;
 			}
 
 			if (!locator.Resource.IsEmpty)
