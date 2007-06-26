@@ -765,7 +765,7 @@ namespace Epsitec.Common.Types.Serialization
 			{
 				ISerializationConverter converter = context.FindConverterForCollection (type);
 				
-				if (context != null)
+				if (converter != null)
 				{
 					return MarkupExtension.EnumerableFromString (context, args, converter);
 				}

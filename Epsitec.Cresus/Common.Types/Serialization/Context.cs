@@ -218,30 +218,52 @@ namespace Epsitec.Common.Types.Serialization
 
 		public ISerializationConverter FindConverterForCollection(System.Type collectionType)
 		{
-			System.Type countaleType;
-			return this.FindConverterForCollection (collectionType, out countaleType);
+			System.Type countableType;
+			return this.FindConverterForCollection (collectionType, out countableType);
 		}
 
 		public ISerializationConverter FindConverterForCollection(System.Type collectionType, out System.Type countableType)
 		{
-			System.Type[] types = collectionType.GetInterfaces ();
+			//	Maybe the provided type is already an ICollection<T> interface :
 
-			foreach (System.Type type in types)
+			ISerializationConverter converter = this.FindConverterForCollectionInterfaceType (collectionType, out countableType);
+
+			//	If not, then look up its interfaces and search for an ICollection<T>
+			//	which we could use...
+			
+			if (converter == null)
 			{
-				if ((type.Name == "ICollection`1") &&
-					(type.IsGenericType))
+				System.Type[] types = collectionType.GetInterfaces ();
+
+				foreach (System.Type type in types)
 				{
-					System.Type[] genericArgs = type.GetGenericArguments ();
+					converter = this.FindConverterForCollectionInterfaceType (type, out countableType);
 
-					if (genericArgs.Length == 1)
+					if (converter != null)
 					{
-						ISerializationConverter converter = this.FindConverter (genericArgs[0]);
+						break;
+					}
+				}
+			}
+			
+			return converter;
+		}
 
-						if (converter != null)
-						{
-							countableType = type;
-							return converter;
-						}
+		private ISerializationConverter FindConverterForCollectionInterfaceType(System.Type type, out System.Type countableType)
+		{
+			if ((type.Name == "ICollection`1") &&
+				(type.IsGenericType))
+			{
+				System.Type[] genericArgs = type.GetGenericArguments ();
+
+				if (genericArgs.Length == 1)
+				{
+					ISerializationConverter converter = this.FindConverter (genericArgs[0]);
+
+					if (converter != null)
+					{
+						countableType = type;
+						return converter;
 					}
 				}
 			}
