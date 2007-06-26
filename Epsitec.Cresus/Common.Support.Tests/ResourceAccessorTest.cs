@@ -164,7 +164,7 @@ namespace Epsitec.Common.Support
 
 			accessor.Load (Res.Manager);
 
-			Assert.AreEqual (16, accessor.Collection.Count);
+			Assert.AreEqual (17, accessor.Collection.Count);
 
 			CultureMap map = accessor.Collection[Res.Types.ResourceStructuredType.CaptionId];
 
@@ -244,6 +244,10 @@ namespace Epsitec.Common.Support
 			IList<Druid> interfaceIds = data.GetValue (Res.Fields.ResourceStructuredType.InterfaceIds) as IList<Druid>;
 
 			Assert.IsNotNull (interfaceIds);
+
+			interfaceIds.Add (Druid.Parse ("[700I2]"));
+
+			Assert.AreEqual (15, fields.Count);
 		}
 
 		[Test]

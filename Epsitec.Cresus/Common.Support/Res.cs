@@ -25,6 +25,7 @@ namespace Epsitec.Common.Support
 			public static readonly Epsitec.Common.Types.StructuredType ResourceStringType = (Epsitec.Common.Types.StructuredType) Epsitec.Common.Types.TypeRosetta.CreateTypeObject (Epsitec.Common.Support.Druid.FromLong (_moduleId, 49));
 			public static readonly Epsitec.Common.Types.StructuredType ResourceStructuredType = (Epsitec.Common.Types.StructuredType) Epsitec.Common.Types.TypeRosetta.CreateTypeObject (Epsitec.Common.Support.Druid.FromLong (_moduleId, 17));
 			public static readonly Epsitec.Common.Types.StructuredType Shortcut = (Epsitec.Common.Types.StructuredType) Epsitec.Common.Types.TypeRosetta.CreateTypeObject (Epsitec.Common.Support.Druid.FromLong (_moduleId, 26));
+			public static readonly Epsitec.Common.Types.StructuredType TestInterface = (Epsitec.Common.Types.StructuredType) Epsitec.Common.Types.TypeRosetta.CreateTypeObject (Epsitec.Common.Support.Druid.FromLong (_moduleId, 82));
 		}
 		
 		public static class Fields
@@ -139,6 +140,11 @@ namespace Epsitec.Common.Support
 			public static class Shortcut
 			{
 				public static readonly Epsitec.Common.Support.Druid KeyCode = Epsitec.Common.Support.Druid.FromLong (_moduleId, 27);
+			}
+			
+			public static class TestInterface
+			{
+				public static readonly Epsitec.Common.Support.Druid Name = Epsitec.Common.Support.Druid.FromLong (_moduleId, 83);
 			}
 		}
 		

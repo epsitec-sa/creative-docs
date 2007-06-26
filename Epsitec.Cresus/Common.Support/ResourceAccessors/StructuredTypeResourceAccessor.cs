@@ -161,7 +161,11 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			data.LockValue (Res.Fields.ResourceStructuredType.Fields);
 			
 			ObservableList<Druid> interfaceIds = new ObservableList<Druid> ();
-			interfaceIds.AddRange (type.InterfaceIds);
+
+			if (type != null)
+			{
+				interfaceIds.AddRange (type.InterfaceIds);
+			}
 
 			data.SetValue (Res.Fields.ResourceStructuredType.InterfaceIds, interfaceIds);
 			data.LockValue (Res.Fields.ResourceStructuredType.InterfaceIds);
@@ -170,7 +174,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			data.SetValue (Res.Fields.ResourceStructuredType.Class, type == null ? StructuredTypeClass.None : type.Class);
 			data.SetValue (Res.Fields.ResourceStructuredType.SerializedDesignerLayouts, type == null ? "" : type.SerializedDesignerLayouts);
 
-			interfaceIds.CollectionChanged += new Listener (this, item).HandleCollectionChanged;
+			interfaceIds.CollectionChanged += new InterfaceListener (this, item).HandleCollectionChanged;
 			fields.CollectionChanged += new Listener (this, item).HandleCollectionChanged;
 		}
 
@@ -184,6 +188,18 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			data.SetValue (Res.Fields.Field.Expression, field.Expression ?? "");
 			data.SetValue (Res.Fields.Field.DefiningTypeId, field.DefiningTypeId);
 			data.LockValue (Res.Fields.Field.DefiningTypeId);
+		}
+
+		private void NotifyInterfaceIdsChanged(CultureMap item)
+		{
+			StructuredData data = item.GetCultureData (Resources.DefaultTwoLetterISOLanguageName);
+			object baseTypeIdValue = data.GetValue (Res.Fields.ResourceStructuredType.BaseType);
+
+			if ((!UndefinedValue.IsUndefinedValue (baseTypeIdValue)) &&
+				(((Druid) baseTypeIdValue).IsValid))
+			{
+				this.UpdateInheritedFields (data, (Druid) baseTypeIdValue);
+			}
 		}
 
 		protected override void HandleItemsCollectionChanged(object sender, CollectionChangedEventArgs e)
@@ -267,6 +283,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 		private void UpdateInheritedFields(StructuredData data, Druid baseTypeId)
 		{
 			IList<StructuredData> fields = data.GetValue (Res.Fields.ResourceStructuredType.Fields) as IList<StructuredData>;
+			IList<Druid> interfaceIds = data.GetValue (Res.Fields.ResourceStructuredType.InterfaceIds) as IList<Druid>;
 
 			StructuredTypeResourceAccessor.RemoveInheritedFields (fields);
 
@@ -274,6 +291,11 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			{
 				StructuredType type = new StructuredType (StructuredTypeClass.Entity, baseTypeId);
 				ResourceManager.SetResourceManager (type, this.ResourceManager);
+
+				foreach (Druid interfaceId in interfaceIds)
+				{
+					type.InterfaceIds.Add (interfaceId);
+				}
 
 				int i = 0;
 
@@ -331,6 +353,29 @@ namespace Epsitec.Common.Support.ResourceAccessors
 				}
 			}
 		}
+
+		#region Listener Class
+
+		protected class InterfaceListener
+		{
+			public InterfaceListener(StructuredTypeResourceAccessor accessor, CultureMap item)
+			{
+				this.accessor = accessor;
+				this.item = item;
+			}
+
+			public void HandleCollectionChanged(object sender, CollectionChangedEventArgs e)
+			{
+				this.accessor.NotifyInterfaceIdsChanged (this.item);
+				this.accessor.NotifyItemChanged (this.item);
+			}
+
+
+			private StructuredTypeResourceAccessor accessor;
+			private CultureMap item;
+		}
+
+		#endregion
 
 		#region FieldBroker Class
 

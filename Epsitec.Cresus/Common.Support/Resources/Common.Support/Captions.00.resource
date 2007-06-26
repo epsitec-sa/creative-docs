@@ -64,4 +64,6 @@
   <data name="Fld.ResourceStructuredType.SerializedDesignerLayouts" id="0F2">&lt;s:data id="_0" f:Name="DesignerLayouts" /&gt;</data>
   <data name="Fld.Field.DefiningTypeId" id="0G2">&lt;s:data id="_0" f:Name="DefiningTypeId" /&gt;</data>
   <data name="Fld.ResourceStructuredType.InterfaceIds" id="0H2">&lt;s:data id="_0" f:Name="InterfaceIds" /&gt;</data>
+  <data name="Typ.StructuredType.TestInterface" id="0I2">&lt;objects xmlns:s="*1" xmlns:f="*1"&gt;&lt;s:storage s:root="_1" s:n_ext="0" s:n_typ="3" s:n_obj="2"&gt;&lt;s:type id="_1" s:name="*C" /&gt;&lt;s:type id="_2" s:name="*aT" /&gt;&lt;s:type id="_3" s:name="*S" /&gt;&lt;s:object id="_1" s:type="_1" /&gt;&lt;s:object id="_2" s:type="_3" /&gt;&lt;s:data id="_1" f:Name="TestInterface" f:_2.ComplexType="{ObjRef _2}" /&gt;&lt;s:data id="_2" f:SerializedDesignerLayouts="" f:Class="Interface" f:Fields="{Collection {Text '[700J2];[1008];0;[700J2]'}}" /&gt;&lt;/s:storage&gt;&lt;/objects&gt;</data>
+  <data name="Fld.TestInterface.Name" id="0J2">&lt;s:data id="_0" f:Name="Name" /&gt;</data>
 </bundle>
