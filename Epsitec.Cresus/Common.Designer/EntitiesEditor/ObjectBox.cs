@@ -36,7 +36,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 			this.basename = new TextLayout();
 			this.basename.DefaultFontSize = 10;
-			this.basename.Alignment = ContentAlignment.MiddleLeft;
+			this.basename.Alignment = ContentAlignment.MiddleCenter;
 			this.basename.BreakMode = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine;
 
 			this.fields = new List<Field>();
@@ -124,7 +124,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					}
 					else
 					{
-						this.basename.Text = string.Concat("<i>", this.basenameString, "</i>");
+						this.basename.Text = string.Concat("<b>", this.basenameString, "</b>");
 					}
 				}
 			}
@@ -1657,9 +1657,16 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				if (this.membershipCount > 0)
 				{
 					rect = this.GetFieldBounds(-1);
+					rect.Deflate(9.5, 0.5);
+					graphics.AddFilledRectangle(rect);
+					Color ci1 = this.GetColorMain(dragging ? 0.2 : 0.1);
+					Color ci2 = this.GetColorMain(dragging ? 0.1 : 0.0);
+					this.RenderVerticalGradient(graphics, rect, ci1, ci2);
+
+					rect = this.GetFieldBounds(-1);
 					rect.Deflate(ObjectBox.textMargin, 2);
 					this.basename.LayoutSize = rect.Size;
-					this.basename.Paint(rect.BottomLeft, graphics, Rectangle.MaxValue, this.GetColor(0), GlyphPaintStyle.Normal);
+					this.basename.Paint(rect.BottomLeft, graphics, Rectangle.MaxValue, this.GetColorMain(0.8), GlyphPaintStyle.Normal);
 
 					rect = this.GetFieldBounds(-1);
 					graphics.AddLine(rect.Left, rect.Bottom+0.5, rect.Right, rect.Bottom+0.5);
@@ -1729,11 +1736,9 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 				if (this.membershipCount > 0)
 				{
-					Path dashedPath = new Path();
-
 					rect = Rectangle.Union(this.GetFieldBounds(-1), this.GetFieldBounds(this.membershipCount-1));
 					rect.Deflate(9.5, 0.5);
-					dashedPath.AppendRectangle(rect);
+					Path dashedPath = this.PathRoundRectangle(rect, 8.0);
 
 					rect = this.GetFieldBounds(-1);
 					rect.Deflate(9.5, 0.5);
