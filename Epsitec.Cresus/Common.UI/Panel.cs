@@ -409,6 +409,8 @@ namespace Epsitec.Common.UI
 
 			Panel panel = Types.Storage.Deserialize (context) as Panel;
 
+			Support.ResourceManager.SetResourceManager (panel, manager);	// ?
+
 			System.Diagnostics.Debug.Assert (panel.DataSource == dataSource);
 			System.Diagnostics.Debug.Assert (panel.ResourceManager == manager);
 
