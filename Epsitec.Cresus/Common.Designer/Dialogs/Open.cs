@@ -92,6 +92,16 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.buttonCancel.Clicked += new MessageEventHandler(this.HandleButtonCloseClicked);
 				this.buttonCancel.TabIndex = tabIndex++;
 				this.buttonCancel.TabNavigationMode = TabNavigationMode.ActivateOnTab;
+
+				this.checkAll = new CheckButton(footer);
+				this.checkAll.AutoToggle = false;
+				this.checkAll.Text = "Tous les modules";
+				this.checkAll.PreferredWidth = 150;
+				this.checkAll.Dock = DockStyle.Left;
+				this.checkAll.Margins = new Margins(20, 0, 0, 0);
+				this.checkAll.Clicked += new MessageEventHandler(this.HandleCheckAllClicked);
+				this.checkAll.TabIndex = tabIndex++;
+				this.checkAll.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			}
 
 			this.UpdateModules();
@@ -121,7 +131,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				}
 				else
 				{
-					return this.moduleInfos[this.indexToOpen].FullId;
+					return this.moduleInfosShowed[this.indexToOpen].FullId;
 				}
 			}
 		}
@@ -131,19 +141,29 @@ namespace Epsitec.Common.Designer.Dialogs
 		{
 			//	Met à jour la liste des modules ouvrables/ouverts.
 			this.mainWindow.ResourceManagerPool.ScanForAllModules();
-			this.moduleInfos = this.mainWindow.ResourceManagerPool.FindReferenceModules();
+			this.moduleInfosAll = this.mainWindow.ResourceManagerPool.FindReferenceModules();
+
+			this.moduleInfosShowed = new List<ResourceModuleInfo>();
+			for (int i=0; i<this.moduleInfosAll.Count; i++)
+			{
+				ModuleState state = this.GetModuleState(i, this.moduleInfosAll);
+				if (state == ModuleState.Openable || this.isAll)
+				{
+					this.moduleInfosShowed.Add(this.moduleInfosAll[i]);
+				}
+			}
 		}
 
 		protected void UpdateArray()
 		{
 			//	Met à jour tout le contenu du tableau.
-			this.array.TotalRows = this.moduleInfos.Count;
+			this.array.TotalRows = this.moduleInfosShowed.Count;
 			ResourceManagerPool pool = this.mainWindow.ResourceManagerPool;
 
 			int first = this.array.FirstVisibleRow;
 			for (int i=0; i<this.array.LineCount; i++)
 			{
-				if (first+i < this.moduleInfos.Count)
+				if (first+i < this.moduleInfosShowed.Count)
 				{
 					ModuleState state = this.GetModuleState(first+i);
 
@@ -210,13 +230,15 @@ namespace Epsitec.Common.Designer.Dialogs
 				ModuleState state = this.GetModuleState(sel);
 				this.buttonOpen.Enable = (state == ModuleState.Openable);
 			}
+
+			this.checkAll.ActiveState = this.isAll ? ActiveState.Yes : ActiveState.No;
 		}
 
 		protected string GetModulePath(int index)
 		{
 			//	Retourne le nom du chemin d'un module.
 			ResourceManagerPool pool = this.mainWindow.ResourceManagerPool;
-			string path = pool.GetRootRelativePath(this.moduleInfos[index].FullId.Path);
+			string path = pool.GetRootRelativePath(this.moduleInfosShowed[index].FullId.Path);
 
 #if false
 			if (path.StartsWith("%app%\\"))
@@ -231,10 +253,16 @@ namespace Epsitec.Common.Designer.Dialogs
 		protected ModuleState GetModuleState(int index)
 		{
 			//	Retourne l'état d'un module.
-			Module module = this.mainWindow.SearchModuleId(this.moduleInfos[index].FullId);
+			return this.GetModuleState(index, this.moduleInfosShowed);
+		}
+
+		protected ModuleState GetModuleState(int index, IList<ResourceModuleInfo> list)
+		{
+			//	Retourne l'état d'un module.
+			Module module = this.mainWindow.SearchModuleId(list[index].FullId);
 			if (module == null)
 			{
-				return this.IsModuleAlreadyOpened(this.moduleInfos[index].FullId.Id) ? ModuleState.Locked : ModuleState.Openable;
+				return this.IsModuleAlreadyOpened(list[index].FullId.Id) ? ModuleState.Locked : ModuleState.Openable;
 			}
 			else
 			{
@@ -307,12 +335,26 @@ namespace Epsitec.Common.Designer.Dialogs
 			this.OnClosed();
 		}
 
+		private void HandleCheckAllClicked(object sender, MessageEventArgs e)
+		{
+			this.isAll = !this.isAll;
+
+			this.UpdateModules();
+			this.UpdateArray();
+			this.array.SelectedRow = -1;
+			this.indexToOpen = -1;
+			this.UpdateButtons();
+		}
+
 
 		protected string						resourcePrefix;
-		protected IList<ResourceModuleInfo>		moduleInfos;
+		protected IList<ResourceModuleInfo>		moduleInfosAll;
+		protected List<ResourceModuleInfo>		moduleInfosShowed;
 		protected Button						buttonOpen;
 		protected Button						buttonCancel;
+		protected CheckButton					checkAll;
 		protected MyWidgets.StringArray			array;
 		protected int							indexToOpen;
+		protected bool							isAll;
 	}
 }
