@@ -15,10 +15,10 @@ namespace App.Designer
 			Epsitec.Common.Widgets.Widget.Initialize ();
 			Epsitec.Common.Document.Engine.Initialize ();
 
-			string execPath = Epsitec.Common.Support.Globals.Directories.Executable;
+			string execPath = Epsitec.Common.Support.Globals.Directories.ExecutableRoot;
 			List<string> paths;
 
-			if (execPath.EndsWith (@"\bin\Debug"))
+			if (Epsitec.Common.Support.Globals.IsDebugBuild)
 			{
 				paths = new List<string> (new string[]
 				{
