@@ -222,7 +222,7 @@ namespace Epsitec.Common.Designer.Dialogs
 		protected ModuleState GetModuleState(int index)
 		{
 			//	Retourne l'état d'un module.
-			Module module = this.mainWindow.SearchModuleId(this.moduleInfos[index].FullId.Id);
+			Module module = this.mainWindow.SearchModuleId(this.moduleInfos[index].FullId);
 			if (module == null)
 			{
 				return ModuleState.Openable;

@@ -1652,12 +1652,25 @@ namespace Epsitec.Common.Designer
 			return this.SearchModuleId(druid.Module);
 		}
 
-		public Module SearchModuleId(int id)
+		protected Module SearchModuleId(int id)
 		{
 			//	Cherche un module d'après son identificateur.
 			foreach (ModuleInfo info in this.moduleInfoList)
 			{
 				if (info.Module.ModuleInfo.Id == id)
+				{
+					return info.Module;
+				}
+			}
+			return null;
+		}
+
+		public Module SearchModuleId(ResourceModuleId id)
+		{
+			//	Cherche un module d'après son identificateur.
+			foreach (ModuleInfo info in this.moduleInfoList)
+			{
+				if (info.Module.ModuleInfo.Equals(id))
 				{
 					return info.Module;
 				}
