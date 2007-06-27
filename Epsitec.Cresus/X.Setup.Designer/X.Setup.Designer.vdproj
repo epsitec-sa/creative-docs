@@ -303,6 +303,12 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_85928FD4342A42C5A53913C8E2CAEDBC"
+        "OwnerKey" = "8:_C712CF3A67B74F909AB799FD55925A08"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_86E096064A4D8AFA8327288EB47A80C2"
         "OwnerKey" = "8:_E5E8FD7F6033486CD8B3FA2E11C62FF7"
         "MsmSig" = "8:_UNDEFINED"
@@ -813,18 +819,6 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_FE45D7D7A4BA435B946B2905EA0E5F3E"
-        "OwnerKey" = "8:_C712CF3A67B74F909AB799FD55925A08"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_324E4919992347588F15C6CD90AAEA20"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_801BDE3B773B0BC3485E58B6C8412B34"
         "MsmSig" = "8:_UNDEFINED"
@@ -973,6 +967,12 @@
         "OwnerKey" = "8:_65BF191F4E4E99389F23BC3884F0D5FE"
         "MsmSig" = "8:_UNDEFINED"
         }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_324E4919992347588F15C6CD90AAEA20"
+        "MsmSig" = "8:_UNDEFINED"
+        }
     }
     "Configurations"
     {
@@ -991,6 +991,22 @@
         "PrivateKeyFile" = "8:"
         "TimeStampServer" = "8:"
         "InstallerBootstrapper" = "3:2"
+            "BootstrapperCfg:{63ACBE69-63AA-4F98-B2B6-99F9E24495F2}"
+            {
+            "Enabled" = "11:TRUE"
+            "PromptEnabled" = "11:TRUE"
+            "PrerequisitesLocation" = "2:1"
+            "Url" = "8:"
+            "ComponentsUrl" = "8:"
+                "Items"
+                {
+                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:Microsoft.Net.Framework.2.0"
+                    {
+                    "Name" = "8:Microsoft .NET Framework 2.0"
+                    "ProductCode" = "8:Microsoft.Net.Framework.2.0"
+                    }
+                }
+            }
         }
         "Release"
         {
@@ -1007,6 +1023,17 @@
         "PrivateKeyFile" = "8:"
         "TimeStampServer" = "8:"
         "InstallerBootstrapper" = "3:2"
+            "BootstrapperCfg:{63ACBE69-63AA-4F98-B2B6-99F9E24495F2}"
+            {
+            "Enabled" = "11:TRUE"
+            "PromptEnabled" = "11:TRUE"
+            "PrerequisitesLocation" = "2:1"
+            "Url" = "8:"
+            "ComponentsUrl" = "8:"
+                "Items"
+                {
+                }
+            }
         }
     }
     "Deployable"
@@ -1226,7 +1253,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:OPaC.FreeImage, Version=3.9.2.3, Culture=neutral, PublicKeyToken=d4b3a36d594a1874, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:OPaC.FreeImage, Version=3.9.2.4, Culture=neutral, PublicKeyToken=d4b3a36d594a1874, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                     "_3624542CE6B18A4D29ABC3EEF77DEC8E"
@@ -1908,6 +1935,72 @@
                 {
                 }
             }
+            "{1525181F-901A-416C-8A58-119130FE478E}:_E146B7DD6ABE48C5B0B930423FC885F4"
+            {
+            "Name" = "8:#1915"
+            "AlwaysCreate" = "11:FALSE"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Property" = "8:AppDataFolder"
+                "Folders"
+                {
+                    "{9EF0B969-E518-4E46-987F-47570745A589}:_1D46D5BB94064C0EBCC8A52F8B03E804"
+                    {
+                    "Name" = "8:Epsitec"
+                    "AlwaysCreate" = "11:FALSE"
+                    "Condition" = "8:"
+                    "Transitive" = "11:FALSE"
+                    "Property" = "8:_E0ADCACDEAAE4961B8FB8ADA8A68D091"
+                        "Folders"
+                        {
+                            "{9EF0B969-E518-4E46-987F-47570745A589}:_AC6A337239A24D95B43D55C0C6FE5616"
+                            {
+                            "Name" = "8:Crésus Designer"
+                            "AlwaysCreate" = "11:FALSE"
+                            "Condition" = "8:"
+                            "Transitive" = "11:FALSE"
+                            "Property" = "8:_433DA51D2B4E43AB8078BF6E3AA6CA0A"
+                                "Folders"
+                                {
+                                    "{9EF0B969-E518-4E46-987F-47570745A589}:_1A94A20F2B52421D8908233F8787EFFF"
+                                    {
+                                    "Name" = "8:Patch Modules"
+                                    "AlwaysCreate" = "11:TRUE"
+                                    "Condition" = "8:"
+                                    "Transitive" = "11:FALSE"
+                                    "Property" = "8:_BA5695EA2A9E460E83E811AE44036031"
+                                        "Folders"
+                                        {
+                                        }
+                                    }
+                                    "{9EF0B969-E518-4E46-987F-47570745A589}:_1FE72C3E14424B458ECFFD57CC184941"
+                                    {
+                                    "Name" = "8:Custom Modules"
+                                    "AlwaysCreate" = "11:TRUE"
+                                    "Condition" = "8:"
+                                    "Transitive" = "11:FALSE"
+                                    "Property" = "8:_4ACBD222EACD4792A44F753AAF62A8D5"
+                                        "Folders"
+                                        {
+                                        }
+                                    }
+                                    "{9EF0B969-E518-4E46-987F-47570745A589}:_46F4FDBD76C349BD896727CD34F70B94"
+                                    {
+                                    "Name" = "8:Library Modules"
+                                    "AlwaysCreate" = "11:TRUE"
+                                    "Condition" = "8:"
+                                    "Transitive" = "11:FALSE"
+                                    "Property" = "8:_2A672B2149E94BEF87C6F31433BDA4BD"
+                                        "Folders"
+                                        {
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
             "{3C67513D-01DD-4637-8A68-80971EB9504F}:_EB5211BDD2784E6AA54C3110DBF5A598"
             {
             "DefaultLocation" = "8:[ProgramFilesFolder][Manufacturer]\\[ProductName]"
@@ -1918,6 +2011,17 @@
             "Property" = "8:TARGETDIR"
                 "Folders"
                 {
+                    "{9EF0B969-E518-4E46-987F-47570745A589}:_D990F3E489A747188CD9D1E3AEAD62C0"
+                    {
+                    "Name" = "8:Modules"
+                    "AlwaysCreate" = "11:FALSE"
+                    "Condition" = "8:"
+                    "Transitive" = "11:FALSE"
+                    "Property" = "8:_3B33AE422B5042398161EE027143BD7D"
+                        "Folders"
+                        {
+                        }
+                    }
                 }
             }
             "{1525181F-901A-416C-8A58-119130FE478E}:_F11478123FA9477DB62F22B263C0F395"
@@ -1947,7 +2051,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Crésus Designer"
         "ProductCode" = "8:{A2326893-1DCE-49F7-B611-302007DA9108}"
-        "PackageCode" = "8:{5A6E6564-D6ED-4835-A044-B7DED3332650}"
+        "PackageCode" = "8:{D531DA86-D8A9-4134-8DFE-1C8278D7D2BA}"
         "UpgradeCode" = "8:{D70AE3F6-C02E-41DD-BC8D-2908DF99AA37}"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
@@ -2375,11 +2479,11 @@
         }
         "MergeModule"
         {
-            "{CEE29DC0-9FBA-4B99-8D47-5BC643D9B626}:_C712CF3A67B74F909AB799FD55925A08"
+            "{CEE29DC0-9FBA-4B99-8D47-5BC643D9B626}:_85928FD4342A42C5A53913C8E2CAEDBC"
             {
             "UseDynamicProperties" = "11:TRUE"
-            "IsDependency" = "11:FALSE"
-            "SourcePath" = "8:C:\\Program Files\\Common Files\\Merge Modules\\Microsoft_VC80_CRT_x86.msm"
+            "IsDependency" = "11:TRUE"
+            "SourcePath" = "8:policy_8_0_microsoft_vc80_crt_x86.msm"
                 "Properties"
                 {
                 }
@@ -2389,11 +2493,11 @@
             "Feature" = "8:"
             "IsolateTo" = "8:"
             }
-            "{CEE29DC0-9FBA-4B99-8D47-5BC643D9B626}:_FE45D7D7A4BA435B946B2905EA0E5F3E"
+            "{CEE29DC0-9FBA-4B99-8D47-5BC643D9B626}:_C712CF3A67B74F909AB799FD55925A08"
             {
             "UseDynamicProperties" = "11:TRUE"
-            "IsDependency" = "11:TRUE"
-            "SourcePath" = "8:policy_8_0_microsoft_vc80_crt_x86.msm"
+            "IsDependency" = "11:FALSE"
+            "SourcePath" = "8:C:\\Program Files\\Common Files\\Merge Modules\\Microsoft_VC80_CRT_x86.msm"
                 "Properties"
                 {
                 }

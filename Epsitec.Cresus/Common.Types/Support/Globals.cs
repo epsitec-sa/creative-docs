@@ -189,6 +189,28 @@ namespace Epsitec.Common.Support
 					return System.Windows.Forms.Application.StartupPath;
 				}
 			}
+
+			public static string				ExecutableRoot
+			{
+				get
+				{
+					string path = Directories.Executable;
+
+					string debugSuffix   = @"\bin\Debug";
+					string releaseSuffix = @"\bin\Release";
+
+					if (path.EndsWith (debugSuffix))
+					{
+						path = path.Substring (0, path.Length - debugSuffix.Length);
+					}
+					else if (path.EndsWith (releaseSuffix))
+					{
+						path = path.Substring (0, path.Length - releaseSuffix.Length);
+					}
+
+					return path;
+				}
+			}
 		}
 		
 		#endregion

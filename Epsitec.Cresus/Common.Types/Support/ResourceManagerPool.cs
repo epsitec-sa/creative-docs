@@ -118,34 +118,35 @@ namespace Epsitec.Common.Support
 		{
 			//	TODO: définir les chemins...
 
-			string execPath = Epsitec.Common.Support.Globals.Directories.Executable;
-			
-			string debugSuffix   = @"\bin\Debug";
-			string releaseSuffix = @"\bin\Release";
+			string appPath  = Globals.Directories.ExecutableRoot;
+			string userPath = Globals.Directories.UserAppData;
 
-			if (execPath.EndsWith (debugSuffix))
+			if (Globals.IsDebugBuild)
 			{
-				execPath = execPath.Substring (0, execPath.Length - debugSuffix.Length);
+				appPath = @"S:\Epsitec.Cresus";
 			}
-			else if (execPath.EndsWith (releaseSuffix))
+			else
 			{
-				execPath = execPath.Substring (0, execPath.Length - releaseSuffix.Length);
+				appPath = System.IO.Path.Combine (appPath, ResourceManagerPool.ModulesDirectory);
 			}
-			
-			this.AddModuleRootPath (ResourceManagerPool.SymbolicNames.Application, execPath);
-			this.AddModuleRootPath (ResourceManagerPool.SymbolicNames.Library, "");
-			this.AddModuleRootPath (ResourceManagerPool.SymbolicNames.Patches, "");
-			this.AddModuleRootPath (ResourceManagerPool.SymbolicNames.Custom, "");
+
+			this.AddModuleRootPath (ResourceManagerPool.SymbolicNames.Application, appPath);
+			this.AddModuleRootPath (ResourceManagerPool.SymbolicNames.Custom, System.IO.Path.Combine (userPath, ResourceManagerPool.CustomModulesDirectory));
+			this.AddModuleRootPath (ResourceManagerPool.SymbolicNames.Library, System.IO.Path.Combine (userPath, ResourceManagerPool.LibraryModulesDirectory));
+			this.AddModuleRootPath (ResourceManagerPool.SymbolicNames.Patches, System.IO.Path.Combine (userPath, ResourceManagerPool.PatchModulesDirectory));
 		}
 
-		
+
 		/// <summary>
 		/// Adds the named module root path: this records a link between a symbolic
-		/// name (such as <c>%app%</c>) and a file system path.
+		/// name (such as <c>%app%</c>) and a file system path. The directory must
+		/// exist for this method to succeed.
 		/// </summary>
 		/// <param name="symbolicName">The symbolic name.</param>
 		/// <param name="path">The path.</param>
-		public void AddModuleRootPath(string symbolicName, string path)
+		/// <returns>Returns <c>true</c> if the operation was successfull; <c>false</c>
+		/// otherwise.</returns>
+		public bool AddModuleRootPath(string symbolicName, string path)
 		{
 			System.Diagnostics.Debug.Assert (!string.IsNullOrEmpty (symbolicName));
 			System.Diagnostics.Debug.Assert (symbolicName.StartsWith ("%"));
@@ -155,10 +156,16 @@ namespace Epsitec.Common.Support
 			{
 				this.moduleRoots.Remove (symbolicName);
 			}
-			else
+			else if (System.IO.Directory.Exists (path))
 			{
 				this.moduleRoots[symbolicName] = path;
 			}
+			else
+			{
+				return false;
+			}
+
+			return true;
 		}
 
 		/// <summary>
@@ -526,6 +533,11 @@ namespace Epsitec.Common.Support
 			public const string Patches		= "%patches%";
 			public const string Custom		= "%custom%";
 		}
+
+		internal const string ModulesDirectory        = "Modules";
+		internal const string CustomModulesDirectory  = "Custom Modules";
+		internal const string PatchModulesDirectory   = "Patch Modules";
+		internal const string LibraryModulesDirectory = "Library Modules";
 		
 		string									name;
 		string									defaultPrefix;
