@@ -147,7 +147,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			for (int i=0; i<this.moduleInfosAll.Count; i++)
 			{
 				ModuleState state = this.GetModuleState(i, this.moduleInfosAll);
-				if (state == ModuleState.Openable || this.isAll)
+				if (state != ModuleState.Locked || this.isAll)
 				{
 					this.moduleInfosShowed.Add(this.moduleInfosAll[i]);
 				}
