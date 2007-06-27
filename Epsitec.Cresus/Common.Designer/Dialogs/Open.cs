@@ -129,8 +129,7 @@ namespace Epsitec.Common.Designer.Dialogs
 		protected void UpdateModules()
 		{
 			//	Met à jour la liste des modules ouvrables/ouverts.
-			this.mainWindow.ResourceManagerPool.SetupDefaultRootPaths();
-			this.mainWindow.ResourceManagerPool.ScanForModules("%app%");
+			this.mainWindow.ResourceManagerPool.ScanForAllModules();
 			IList<ResourceModuleInfo> modules = this.mainWindow.ResourceManagerPool.FindReferenceModules();
 
 			this.moduleInfos = new List<ResourceModuleId>();

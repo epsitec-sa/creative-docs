@@ -118,9 +118,24 @@ namespace Epsitec.Common.Support
 		{
 			//	TODO: définir les chemins...
 
-			this.AddModuleRootPath (ResourceManagerPool.SymbolicNames.Application, "");
+			string execPath = Epsitec.Common.Support.Globals.Directories.Executable;
+			
+			string debugSuffix   = @"\bin\Debug";
+			string releaseSuffix = @"\bin\Release";
+
+			if (execPath.EndsWith (debugSuffix))
+			{
+				execPath = execPath.Substring (0, execPath.Length - debugSuffix.Length);
+			}
+			else if (execPath.EndsWith (releaseSuffix))
+			{
+				execPath = execPath.Substring (0, execPath.Length - releaseSuffix.Length);
+			}
+			
+			this.AddModuleRootPath (ResourceManagerPool.SymbolicNames.Application, execPath);
 			this.AddModuleRootPath (ResourceManagerPool.SymbolicNames.Library, "");
 			this.AddModuleRootPath (ResourceManagerPool.SymbolicNames.Patches, "");
+			this.AddModuleRootPath (ResourceManagerPool.SymbolicNames.Custom, "");
 		}
 
 		
@@ -220,6 +235,24 @@ namespace Epsitec.Common.Support
 			foreach (string path in ResourceModule.FindModulePaths (this.GetRootAbsolutePath (rootPath)))
 			{
 				this.GetModuleInfo (path);
+			}
+		}
+
+		/// <summary>
+		/// Scans for all modules, using the module root paths as the starting
+		/// points for the recursive exploration.
+		/// </summary>
+		public void ScanForAllModules()
+		{
+			foreach (KeyValuePair<string, string> root in this.ModuleRoots)
+			{
+				if ((string.IsNullOrEmpty (root.Key)) ||
+					(string.IsNullOrEmpty (root.Value)))
+				{
+					continue;
+				}
+
+				this.ScanForModules (root.Key);
 			}
 		}
 

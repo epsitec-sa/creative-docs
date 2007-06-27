@@ -37,6 +37,7 @@ namespace Epsitec.Common.Designer
 			: this (new ResourceManagerPool("Common.Designer"))
 		{
 			this.resourceManagerPool.DefaultPrefix = "file";
+			this.resourceManagerPool.SetupDefaultRootPaths();
 		}
 
 		internal MainWindow(ResourceManagerPool pool)
