@@ -137,6 +137,7 @@ namespace Epsitec.Common.Designer.Dialogs
 		{
 			//	Met à jour tout le contenu du tableau.
 			this.array.TotalRows = this.moduleInfos.Count;
+			ResourceManagerPool pool = this.mainWindow.ResourceManagerPool;
 
 			int first = this.array.FirstVisibleRow;
 			for (int i=0; i<this.array.LineCount; i++)
@@ -151,7 +152,7 @@ namespace Epsitec.Common.Designer.Dialogs
 						this.array.SetLineState(1, first+i, MyWidgets.StringList.CellState.Normal);
 						this.array.SetLineState(2, first+i, MyWidgets.StringList.CellState.Normal);
 
-						this.array.SetLineString(0, first+i, this.moduleInfos[first+i].FullId.Path);
+						this.array.SetLineString(0, first+i, pool.GetRootRelativePath(this.moduleInfos[first+i].FullId.Path));
 						this.array.SetLineString(1, first+i, Res.Strings.Dialog.Open.State.Openable);
 						this.array.SetLineString(2, first+i, Misc.Image("Open"));
 					}
@@ -163,12 +164,12 @@ namespace Epsitec.Common.Designer.Dialogs
 
 						if (state == ModuleState.OpeningAndDirty)
 						{
-							this.array.SetLineString(0, first+i, Misc.Bold(this.moduleInfos[first+i].FullId.Path));
+							this.array.SetLineString(0, first+i, Misc.Bold(pool.GetRootRelativePath(this.moduleInfos[first+i].FullId.Path)));
 							this.array.SetLineString(2, first+i, Misc.Image("Save"));
 						}
 						else
 						{
-							this.array.SetLineString(0, first+i, Misc.Italic(this.moduleInfos[first+i].FullId.Path));
+							this.array.SetLineString(0, first+i, Misc.Italic(pool.GetRootRelativePath(this.moduleInfos[first+i].FullId.Path)));
 							this.array.SetLineString(2, first+i, "");
 						}
 
