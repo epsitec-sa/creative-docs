@@ -21,35 +21,43 @@ namespace Epsitec.Common.Support
 	public sealed class ResourceManager : DependencyObject, System.IComparable<ResourceManager>, System.IEquatable<ResourceManager>
 	{
 		public ResourceManager()
-			: this (Support.Globals.Directories.Executable, null)
+			: this (Support.Globals.Directories.ExecutableRoot, null, null)
 		{
 		}
 
 		public ResourceManager(System.Type type)
-			: this (System.IO.Path.GetDirectoryName (type.Assembly.Location), null)
+			: this (System.IO.Path.GetDirectoryName (type.Assembly.Location), null, null)
 		{
 		}
 
 		public ResourceManager(string path)
-			: this (path, null)
+			: this (path, null, null)
 		{
 		}
 
 		public ResourceManager(ResourceManagerPool pool)
-			: this (Support.Globals.Directories.Executable, pool)
+			: this (Support.Globals.Directories.ExecutableRoot, pool, null)
 		{
+		}
+
+		public ResourceManager(ResourceModuleId module, ResourceManagerPool pool)
+			: this (Support.Globals.Directories.ExecutableRoot, pool, module.Path)
+		{
+			this.defaultModuleId   = module.Id;
+			this.defaultModuleName = module.Name;
 		}
 
 		public ResourceManager(System.Type type, ResourceManagerPool pool)
-			: this (System.IO.Path.GetDirectoryName (type.Assembly.Location), pool)
+			: this (System.IO.Path.GetDirectoryName (type.Assembly.Location), pool, null)
 		{
 		}
 
-		public ResourceManager(string path, ResourceManagerPool pool)
+		public ResourceManager(string path, ResourceManagerPool pool, string modulePath)
 		{
 			this.pool = pool ?? new ResourceManagerPool ();
 			this.bundleRelatedCache = new Dictionary<string, BundleRelatedCache> ();
 			this.captionCache = new Dictionary<string, Weak<Caption>> ();
+			this.defaultModulePath = modulePath;
 
 			this.serialId = System.Threading.Interlocked.Increment (ref ResourceManager.nextSerialId);
 			this.providers = new Dictionary<string, ProviderRecord> ();
@@ -165,6 +173,14 @@ namespace Epsitec.Common.Support
 				return this.defaultModuleId;
 			}
 		}
+
+		public string							DefaultModulePath
+		{
+			get
+			{
+				return this.defaultModulePath;
+			}
+		}
 		
 		public bool								IsReady
 		{
@@ -274,7 +290,7 @@ namespace Epsitec.Common.Support
 				}
 				if (string.IsNullOrEmpty (moduleName))
 				{
-					module = new ResourceModuleId (this.defaultModuleName, this.defaultModuleId);
+					module = new ResourceModuleId (this.defaultModuleName, this.defaultModulePath, this.defaultModuleId);
 				}
 				else
 				{
@@ -1392,20 +1408,20 @@ namespace Epsitec.Common.Support
 					if ((string.IsNullOrEmpty (module.Name)) &&
 						(module.Id < 0))
 					{
-						module = new ResourceModuleId (this.defaultModuleName, this.defaultModuleId);
+						module = new ResourceModuleId (this.defaultModuleName, this.defaultModulePath, this.defaultModuleId);
 						return provider.ActiveProvider;
 					}
 
 					ModuleRecord record = null;
-					int moduleId = module.Id;
-
-					if (moduleId < 0)
+					
+					if ((module.Id < 0) &&
+						(string.IsNullOrEmpty (module.Path)))
 					{
 						record = provider.GetModuleRecord (module.Name);
 					}
 					else
 					{
-						record = provider.GetModuleRecord (moduleId);
+						record = provider.GetModuleRecord (module);
 					}
 
 					if (record != null)
@@ -1621,19 +1637,19 @@ namespace Epsitec.Common.Support
 			{
 				get
 				{
-					if (this.infos == null)
+					if (this.moduleIds == null)
 					{
-						this.infos = this.defaultProvider.GetModules ();
+						this.moduleIds = this.defaultProvider.GetModules ();
 					}
 					
-					return this.infos;
+					return this.moduleIds;
 				}
 			}
 
 			
 			public void ClearModuleCache()
 			{
-				this.infos = null;
+				this.moduleIds = null;
 			}
 
 			public ModuleRecord GetModuleRecord(string moduleName)
@@ -1659,21 +1675,19 @@ namespace Epsitec.Common.Support
 				return null;
 			}
 
-			public ModuleRecord GetModuleRecord(int moduleId)
+			public ModuleRecord GetModuleRecord(ResourceModuleId moduleId)
 			{
 				foreach (ModuleRecord item in this.modules)
 				{
-					if (item.ModuleInfo.Id == moduleId)
+					if (item.ModuleInfo.Equals (moduleId))
 					{
 						return item;
 					}
 				}
 
-				ResourceModuleId moduleInfo = new ResourceModuleId (moduleId);
-
-				if (this.defaultProvider.SelectModule (ref moduleInfo))
+				if (this.defaultProvider.SelectModule (ref moduleId))
 				{
-					ModuleRecord record = new ModuleRecord (this.defaultProvider, moduleInfo);
+					ModuleRecord record = new ModuleRecord (this.defaultProvider, moduleId);
 					this.modules.Add (record);
 					this.defaultProvider = this.allocator (this.manager);
 					return record;
@@ -1688,7 +1702,7 @@ namespace Epsitec.Common.Support
 			private IResourceProvider activeProvider;
 			private string prefix;
 			private List<ModuleRecord> modules;
-			private ResourceModuleId[] infos;
+			private ResourceModuleId[] moduleIds;
 		}
 
 		#endregion
@@ -1796,6 +1810,7 @@ namespace Epsitec.Common.Support
 		private CultureInfo						culture;
 		private string							defaultModuleName;
 		private int								defaultModuleId = -1;
+		private string							defaultModulePath;
 		private string							defaultPrefix = "file";
 		private string							defaultPath;
 		

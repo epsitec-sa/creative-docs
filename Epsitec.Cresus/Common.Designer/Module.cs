@@ -10,15 +10,15 @@ namespace Epsitec.Common.Designer
 	/// </summary>
 	public class Module
 	{
-		public Module(MainWindow mainWindow, DesignerMode mode, string resourcePrefix, ResourceModuleId moduleInfo)
+		public Module(MainWindow mainWindow, DesignerMode mode, string resourcePrefix, ResourceModuleId moduleId)
 		{
 			this.UniqueIDCreate();
 
 			this.mainWindow = mainWindow;
 			this.mode = mode;
-			this.moduleInfo = moduleInfo;
+			this.moduleInfo = moduleId;
 
-			this.resourceManager = new ResourceManager(this.mainWindow.ResourceManagerPool);
+			this.resourceManager = new ResourceManager(moduleId, this.mainWindow.ResourceManagerPool);
 			this.resourceManager.DefineDefaultModuleName(this.moduleInfo.Name);
 			this.resourceManager.ActivePrefix = resourcePrefix;
 
