@@ -152,7 +152,7 @@ namespace Epsitec.Common.Designer.Dialogs
 						this.array.SetLineState(1, first+i, MyWidgets.StringList.CellState.Normal);
 						this.array.SetLineState(2, first+i, MyWidgets.StringList.CellState.Normal);
 
-						this.array.SetLineString(0, first+i, pool.GetRootRelativePath(this.moduleInfos[first+i].FullId.Path));
+						this.array.SetLineString(0, first+i, GetModulePath(first+i));
 						this.array.SetLineString(1, first+i, Res.Strings.Dialog.Open.State.Openable);
 						this.array.SetLineString(2, first+i, Misc.Image("Open"));
 					}
@@ -164,12 +164,12 @@ namespace Epsitec.Common.Designer.Dialogs
 
 						if (state == ModuleState.OpeningAndDirty)
 						{
-							this.array.SetLineString(0, first+i, Misc.Bold(pool.GetRootRelativePath(this.moduleInfos[first+i].FullId.Path)));
+							this.array.SetLineString(0, first+i, Misc.Bold(GetModulePath(first+i)));
 							this.array.SetLineString(2, first+i, Misc.Image("Save"));
 						}
 						else
 						{
-							this.array.SetLineString(0, first+i, Misc.Italic(pool.GetRootRelativePath(this.moduleInfos[first+i].FullId.Path)));
+							this.array.SetLineString(0, first+i, Misc.Italic(GetModulePath(first+i)));
 							this.array.SetLineString(2, first+i, "");
 						}
 
@@ -203,6 +203,20 @@ namespace Epsitec.Common.Designer.Dialogs
 				ModuleState state = this.GetModuleState(sel);
 				this.buttonOpen.Enable = (state == ModuleState.Openable);
 			}
+		}
+
+		protected string GetModulePath(int index)
+		{
+			//	Retourne le nom du chemin d'un module.
+			ResourceManagerPool pool = this.mainWindow.ResourceManagerPool;
+			string path = pool.GetRootRelativePath(this.moduleInfos[index].FullId.Path);
+
+			if (path.StartsWith("%app%\\"))
+			{
+				path = path.Substring(6);
+			}
+
+			return path;
 		}
 
 		protected ModuleState GetModuleState(int index)
