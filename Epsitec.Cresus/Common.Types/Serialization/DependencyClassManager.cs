@@ -1,5 +1,5 @@
 //	Copyright © 2006-2007, EPSITEC SA, CH-1092 BELMONT, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using System.Collections.Generic;
 
@@ -178,6 +178,11 @@ namespace Epsitec.Common.Types.Serialization
 				}
 
 				foreach (DependencyClassAttribute attribute in DependencyClassAttribute.GetConverterAttributes (assembly))
+				{
+					this.converters[attribute.Type] = System.Activator.CreateInstance (attribute.Converter) as ISerializationConverter;
+				}
+				
+				foreach (DependencyConverterAttribute attribute in DependencyConverterAttribute.GetConverterAttributes (assembly))
 				{
 					this.converters[attribute.Type] = System.Activator.CreateInstance (attribute.Converter) as ISerializationConverter;
 				}

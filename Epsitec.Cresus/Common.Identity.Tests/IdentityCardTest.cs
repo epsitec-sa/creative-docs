@@ -9,6 +9,12 @@ namespace Epsitec.Common.Identity
 	[TestFixture]
 	public class IdentityCardTest
 	{
+		[SetUp]
+		public void Initialize()
+		{
+			Epsitec.Common.Widgets.Widget.Initialize ();
+		}
+
 		[Test]
 		public void CheckSerialization()
 		{

@@ -1,4 +1,4 @@
-//	Copyright © 2006-2007, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2007, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using System.Collections.Generic;
@@ -8,9 +8,9 @@ namespace Epsitec.Common.Types
 	[System.AttributeUsage (System.AttributeTargets.Assembly,
 		/* */				AllowMultiple=true)]
 	
-	public class DependencyClassAttribute : System.Attribute
+	public class DependencyConverterAttribute : System.Attribute
 	{
-		public DependencyClassAttribute(System.Type type)
+		public DependencyConverterAttribute(System.Type type)
 		{
 			this.type = type;
 		}
@@ -28,7 +28,7 @@ namespace Epsitec.Common.Types
 		}
 
 		/// <summary>
-		/// Gets or sets the converter associated with the class.
+		/// Gets or sets the converter associated with the type.
 		/// </summary>
 		/// <value>The type of the converter to use for serialization conversions.</value>
 		public System.Type						Converter
@@ -43,17 +43,9 @@ namespace Epsitec.Common.Types
 			}
 		}
 
-		public static IEnumerable<System.Type> GetRegisteredTypes(System.Reflection.Assembly assembly)
+		public static IEnumerable<DependencyConverterAttribute> GetConverterAttributes(System.Reflection.Assembly assembly)
 		{
-			foreach (DependencyClassAttribute attribute in assembly.GetCustomAttributes (typeof (DependencyClassAttribute), false))
-			{
-				yield return attribute.Type;
-			}
-		}
-
-		public static IEnumerable<DependencyClassAttribute> GetConverterAttributes(System.Reflection.Assembly assembly)
-		{
-			foreach (DependencyClassAttribute attribute in assembly.GetCustomAttributes (typeof (DependencyClassAttribute), false))
+			foreach (DependencyConverterAttribute attribute in assembly.GetCustomAttributes (typeof (DependencyConverterAttribute), false))
 			{
 				if (attribute.Converter != null)
 				{
