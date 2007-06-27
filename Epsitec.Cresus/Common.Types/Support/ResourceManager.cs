@@ -1679,7 +1679,7 @@ namespace Epsitec.Common.Support
 			{
 				foreach (ModuleRecord item in this.modules)
 				{
-					if (item.ModuleInfo.Equals (moduleId))
+					if (item.ModuleInfo.Id == moduleId.Id)
 					{
 						return item;
 					}
