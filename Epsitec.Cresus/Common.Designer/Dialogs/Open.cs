@@ -15,6 +15,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			Openable,
 			Opening,
 			OpeningAndDirty,
+			Locked,
 		}
 
 		public Open(MainWindow mainWindow) : base(mainWindow)
@@ -158,22 +159,28 @@ namespace Epsitec.Common.Designer.Dialogs
 					}
 					else
 					{
-						this.array.SetLineState(0, first+i, MyWidgets.StringList.CellState.Warning);
-						this.array.SetLineState(1, first+i, MyWidgets.StringList.CellState.Warning);
-						this.array.SetLineState(2, first+i, MyWidgets.StringList.CellState.Warning);
+						this.array.SetLineState(0, first+i, MyWidgets.StringList.CellState.Disabled);
+						this.array.SetLineState(1, first+i, MyWidgets.StringList.CellState.Disabled);
+						this.array.SetLineState(2, first+i, MyWidgets.StringList.CellState.Disabled);
 
 						if (state == ModuleState.OpeningAndDirty)
 						{
 							this.array.SetLineString(0, first+i, Misc.Bold(GetModulePath(first+i)));
+							this.array.SetLineString(1, first+i, Res.Strings.Dialog.Open.State.Opening);
 							this.array.SetLineString(2, first+i, Misc.Image("Save"));
+						}
+						else if (state == ModuleState.Locked)
+						{
+							this.array.SetLineString(0, first+i, Misc.Italic(GetModulePath(first+i)));
+							this.array.SetLineString(1, first+i, "Bloqué");
+							this.array.SetLineString(2, first+i, Misc.Image("Locked"));
 						}
 						else
 						{
 							this.array.SetLineString(0, first+i, Misc.Italic(GetModulePath(first+i)));
-							this.array.SetLineString(2, first+i, "");
+							this.array.SetLineString(1, first+i, Res.Strings.Dialog.Open.State.Opening);
+							this.array.SetLineString(2, first+i, Misc.Image("Opened"));
 						}
-
-						this.array.SetLineString(1, first+i, Res.Strings.Dialog.Open.State.Opening);
 					}
 				}
 				else
@@ -211,10 +218,12 @@ namespace Epsitec.Common.Designer.Dialogs
 			ResourceManagerPool pool = this.mainWindow.ResourceManagerPool;
 			string path = pool.GetRootRelativePath(this.moduleInfos[index].FullId.Path);
 
+#if false
 			if (path.StartsWith("%app%\\"))
 			{
 				path = path.Substring(6);
 			}
+#endif
 
 			return path;
 		}
@@ -225,12 +234,25 @@ namespace Epsitec.Common.Designer.Dialogs
 			Module module = this.mainWindow.SearchModuleId(this.moduleInfos[index].FullId);
 			if (module == null)
 			{
-				return ModuleState.Openable;
+				return this.IsModuleAlreadyOpened(this.moduleInfos[index].FullId.Id) ? ModuleState.Locked : ModuleState.Openable;
 			}
 			else
 			{
 				return module.IsDirty ? ModuleState.OpeningAndDirty : ModuleState.Opening;
 			}
+		}
+
+		protected bool IsModuleAlreadyOpened(int id)
+		{
+			List<Module> modules = this.mainWindow.Modules;
+			foreach (Module module in modules)
+			{
+				if (module.ModuleInfo.Id == id)
+				{
+					return true;
+				}
+			}
+			return false;
 		}
 
 
