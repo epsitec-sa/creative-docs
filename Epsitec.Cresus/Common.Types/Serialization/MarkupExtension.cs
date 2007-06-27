@@ -757,6 +757,11 @@ namespace Epsitec.Common.Types.Serialization
 			{
 				return MarkupExtension.CollectionFromString<DependencyObject> (context, args);
 			}
+			if (TypeRosetta.DoesTypeImplementCollectionOfCompatibleObjects (type, typeof (DependencyObject)))
+			{
+				return MarkupExtension.CollectionFromString<DependencyObject> (context, args);
+			}
+
 			if (TypeRosetta.DoesTypeImplementInterface (type, typeof (ICollection<string>)))
 			{
 				return MarkupExtension.CollectionFromString<string> (context, args);

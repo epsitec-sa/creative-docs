@@ -57,6 +57,8 @@ namespace Epsitec.Common.Identity
 			string xml = Epsitec.Common.Types.Serialization.SimpleSerialization.SerializeToString (repository);
 
 			System.IO.File.WriteAllText (System.IO.Path.Combine (path, "identities.xml"), xml);
+
+			IdentityRepository restoredRepository = Epsitec.Common.Types.Serialization.SimpleSerialization.DeserializeFromString (xml) as IdentityRepository;
 		}
 	}
 }

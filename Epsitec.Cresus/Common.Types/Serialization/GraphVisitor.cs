@@ -66,6 +66,17 @@ namespace Epsitec.Common.Types.Serialization
 
 						ICollection<DependencyObject> dependencyObjectCollection = entry.Value as ICollection<DependencyObject>;
 
+						if ((dependencyObjectCollection == null) &&
+							(TypeRosetta.DoesTypeImplementCollectionOfCompatibleObjects (entry.Value.GetType(), typeof (DependencyObject))))
+						{
+							dependencyObjectCollection = new List<DependencyObject> ();
+
+							foreach (DependencyObject node in entry.Value as System.Collections.IEnumerable)
+							{
+								dependencyObjectCollection.Add (node);
+							}
+						}
+
 						if ((dependencyObjectCollection != null) &&
 							(dependencyObjectCollection.Count > 0))
 						{
@@ -73,7 +84,10 @@ namespace Epsitec.Common.Types.Serialization
 							{
 								GraphVisitor.VisitSerializableNodes (node, context, visitor);
 							}
+
+							continue;
 						}
+
 					}
 				}
 

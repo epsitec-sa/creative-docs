@@ -952,7 +952,7 @@ namespace Epsitec.Common.Types
 				(systemType.IsGenericTypeDefinition == false) &&
 				(systemType.GetGenericTypeDefinition () == genericInterfaceType))
 			{
-				interfaceType = genericInterfaceType;
+				interfaceType = systemType;
 				return true;
 			}
 			else
@@ -970,6 +970,24 @@ namespace Epsitec.Common.Types
 			}
 			
 			interfaceType = null;
+			return false;
+		}
+
+		public static bool DoesTypeImplementCollectionOfCompatibleObjects(System.Type systemType, System.Type objectType)
+		{
+			System.Type interfaceType;
+
+			if (TypeRosetta.DoesTypeImplementGenericInterface (systemType, typeof (ICollection<>), out interfaceType))
+			{
+				System.Type[] typeArguments = interfaceType.GetGenericArguments ();
+
+				if ((typeArguments.Length == 1) &&
+					(objectType.IsAssignableFrom (typeArguments[0])))
+				{
+					return true;
+				}
+			}
+
 			return false;
 		}
 

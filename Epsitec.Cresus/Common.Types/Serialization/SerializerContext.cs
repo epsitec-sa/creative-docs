@@ -139,6 +139,17 @@ namespace Epsitec.Common.Types.Serialization
 		{
 			ICollection<DependencyObject> dependencyObjectCollection = entry.Value as ICollection<DependencyObject>;
 
+			if ((dependencyObjectCollection == null) &&
+				(TypeRosetta.DoesTypeImplementCollectionOfCompatibleObjects (entry.Value.GetType (), typeof (DependencyObject))))
+			{
+				dependencyObjectCollection = new List<DependencyObject> ();
+				
+				foreach (DependencyObject node in entry.Value as System.Collections.IEnumerable)
+				{
+					dependencyObjectCollection .Add (node);
+				}
+			}
+
 			if (dependencyObjectCollection != null)
 			{
 				//	This is a collection. Record it as {Collection xxx, xxx, xxx}
@@ -155,10 +166,8 @@ namespace Epsitec.Common.Types.Serialization
 
 				return true;
 			}
-			else
-			{
-				return false;
-			}
+			
+			return false;
 		}
 
 		private bool StoreFieldAsStringCollection(DependencyObject obj, PropertyValuePair entry, DependencyPropertyMetadata metadata)
