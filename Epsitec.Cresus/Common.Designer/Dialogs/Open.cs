@@ -29,7 +29,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.window = new Window();
 				this.window.MakeSecondaryWindow();
 				this.window.PreventAutoClose = true;
-				this.WindowInit("Open", 350, 250, true);
+				this.WindowInit("Open", 500, 300, true);
 				this.window.Text = Res.Strings.Dialog.Open.Title;
 				this.window.Owner = this.parentWindow;
 				this.window.WindowCloseClicked += new EventHandler(this.HandleWindowCloseClicked);
@@ -51,9 +51,9 @@ namespace Epsitec.Common.Designer.Dialogs
 				//	Tableau principal.
 				this.array = new MyWidgets.StringArray(this.window.Root);
 				this.array.Columns = 3;
-				this.array.SetColumnsRelativeWidth(0, 0.6);
-				this.array.SetColumnsRelativeWidth(1, 0.3);
-				this.array.SetColumnsRelativeWidth(2, 0.1);
+				this.array.SetColumnsRelativeWidth(0, 0.78);
+				this.array.SetColumnsRelativeWidth(1, 0.15);
+				this.array.SetColumnsRelativeWidth(2, 0.07);
 				this.array.SetColumnAlignment(0, ContentAlignment.MiddleLeft);
 				this.array.SetColumnAlignment(1, ContentAlignment.MiddleLeft);
 				this.array.SetColumnAlignment(2, ContentAlignment.MiddleCenter);
@@ -120,7 +120,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				}
 				else
 				{
-					return this.moduleInfos[this.indexToOpen];
+					return this.moduleInfos[this.indexToOpen].FullId;
 				}
 			}
 		}
@@ -130,15 +130,7 @@ namespace Epsitec.Common.Designer.Dialogs
 		{
 			//	Met à jour la liste des modules ouvrables/ouverts.
 			this.mainWindow.ResourceManagerPool.ScanForAllModules();
-			IList<ResourceModuleInfo> modules = this.mainWindow.ResourceManagerPool.FindReferenceModules();
-
-			this.moduleInfos = new List<ResourceModuleId>();
-
-			Resources.DefaultManager.RefreshModuleInfos(this.resourcePrefix);
-			foreach (ResourceModuleId item in Resources.DefaultManager.GetModuleInfos(this.resourcePrefix))
-			{
-				this.moduleInfos.Add(item);
-			}
+			this.moduleInfos = this.mainWindow.ResourceManagerPool.FindReferenceModules();
 		}
 
 		protected void UpdateArray()
@@ -159,7 +151,7 @@ namespace Epsitec.Common.Designer.Dialogs
 						this.array.SetLineState(1, first+i, MyWidgets.StringList.CellState.Normal);
 						this.array.SetLineState(2, first+i, MyWidgets.StringList.CellState.Normal);
 
-						this.array.SetLineString(0, first+i, this.moduleInfos[first+i].Name);
+						this.array.SetLineString(0, first+i, this.moduleInfos[first+i].FullId.Path);
 						this.array.SetLineString(1, first+i, Res.Strings.Dialog.Open.State.Openable);
 						this.array.SetLineString(2, first+i, Misc.Image("Open"));
 					}
@@ -171,12 +163,12 @@ namespace Epsitec.Common.Designer.Dialogs
 
 						if (state == ModuleState.OpeningAndDirty)
 						{
-							this.array.SetLineString(0, first+i, Misc.Bold(this.moduleInfos[first+i].Name));
+							this.array.SetLineString(0, first+i, Misc.Bold(this.moduleInfos[first+i].FullId.Path));
 							this.array.SetLineString(2, first+i, Misc.Image("Save"));
 						}
 						else
 						{
-							this.array.SetLineString(0, first+i, Misc.Italic(this.moduleInfos[first+i].Name));
+							this.array.SetLineString(0, first+i, Misc.Italic(this.moduleInfos[first+i].FullId.Path));
 							this.array.SetLineString(2, first+i, "");
 						}
 
@@ -215,7 +207,7 @@ namespace Epsitec.Common.Designer.Dialogs
 		protected ModuleState GetModuleState(int index)
 		{
 			//	Retourne l'état d'un module.
-			Module module = this.mainWindow.SearchModuleId(this.moduleInfos[index].Id);
+			Module module = this.mainWindow.SearchModuleId(this.moduleInfos[index].FullId.Id);
 			if (module == null)
 			{
 				return ModuleState.Openable;
@@ -280,7 +272,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 
 		protected string						resourcePrefix;
-		protected List<ResourceModuleId>		moduleInfos;
+		protected IList<ResourceModuleInfo>		moduleInfos;
 		protected Button						buttonOpen;
 		protected Button						buttonCancel;
 		protected MyWidgets.StringArray			array;
