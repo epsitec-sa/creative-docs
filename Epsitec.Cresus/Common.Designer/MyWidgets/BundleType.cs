@@ -18,6 +18,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			sep.Dock = DockStyle.Bottom;
 
 			double width = 75;
+			bool debug = Globals.IsDebugBuild;
 
 			this.buttonStrings = new IconButtonMark(this);
 			this.buttonStrings.Text = ResourceAccess.TypeDisplayName(ResourceAccess.Type.Strings);
@@ -30,6 +31,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.buttonStrings.AutoFocus = false;
 			this.buttonStrings.Margins = new Margins(10, 0, 10, 0);
 			this.buttonStrings.Dock = DockStyle.Left;
+			this.buttonStrings.Visibility = debug;
 			this.buttonStrings.Clicked += new MessageEventHandler(this.HandleButtonClicked);
 
 			this.buttonStrings2 = new IconButtonMark(this);
@@ -43,6 +45,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.buttonStrings2.AutoFocus = false;
 			this.buttonStrings2.Margins = new Margins(2, 0, 10, 0);
 			this.buttonStrings2.Dock = DockStyle.Left;
+			this.buttonStrings2.Visibility = debug;
 			this.buttonStrings2.Clicked += new MessageEventHandler(this.HandleButtonClicked);
 
 			this.buttonCaptions = new IconButtonMark(this);
@@ -56,6 +59,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.buttonCaptions.AutoFocus = false;
 			this.buttonCaptions.Margins = new Margins(2, 0, 10, 0);
 			this.buttonCaptions.Dock = DockStyle.Left;
+			this.buttonCaptions.Visibility = debug;
 			this.buttonCaptions.Clicked += new MessageEventHandler(this.HandleButtonClicked);
 
 			this.buttonCaptions2 = new IconButtonMark(this);
@@ -82,6 +86,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.buttonCommands.AutoFocus = false;
 			this.buttonCommands.Margins = new Margins(2, 0, 10, 0);
 			this.buttonCommands.Dock = DockStyle.Left;
+			this.buttonCommands.Visibility = debug;
 			this.buttonCommands.Clicked += new MessageEventHandler(this.HandleButtonClicked);
 
 			this.buttonCommands2 = new IconButtonMark(this);
@@ -95,6 +100,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.buttonCommands2.AutoFocus = false;
 			this.buttonCommands2.Margins = new Margins(2, 0, 10, 0);
 			this.buttonCommands2.Dock = DockStyle.Left;
+			this.buttonCommands2.Visibility = debug;
 			this.buttonCommands2.Clicked += new MessageEventHandler(this.HandleButtonClicked);
 
 			this.buttonTypes = new IconButtonMark(this);
@@ -108,6 +114,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.buttonTypes.AutoFocus = false;
 			this.buttonTypes.Margins = new Margins(2, 0, 10, 0);
 			this.buttonTypes.Dock = DockStyle.Left;
+			this.buttonTypes.Visibility = debug;
 			this.buttonTypes.Clicked += new MessageEventHandler(this.HandleButtonClicked);
 
 			this.buttonTypes2 = new IconButtonMark(this);
@@ -121,6 +128,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.buttonTypes2.AutoFocus = false;
 			this.buttonTypes2.Margins = new Margins(2, 0, 10, 0);
 			this.buttonTypes2.Dock = DockStyle.Left;
+			this.buttonTypes2.Visibility = debug;
 			this.buttonTypes2.Clicked += new MessageEventHandler(this.HandleButtonClicked);
 
 			this.buttonFields = new IconButtonMark(this);
@@ -134,6 +142,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.buttonFields.AutoFocus = false;
 			this.buttonFields.Margins = new Margins(2, 0, 10, 0);
 			this.buttonFields.Dock = DockStyle.Left;
+			this.buttonFields.Visibility = debug;
 			this.buttonFields.Clicked += new MessageEventHandler(this.HandleButtonClicked);
 
 			this.buttonFields2 = new IconButtonMark(this);
@@ -160,6 +169,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.buttonValues.AutoFocus = false;
 			this.buttonValues.Margins = new Margins(2, 0, 10, 0);
 			this.buttonValues.Dock = DockStyle.Left;
+			this.buttonValues.Visibility = debug;
 			this.buttonValues.Clicked += new MessageEventHandler(this.HandleButtonClicked);
 
 			this.buttonPanels = new IconButtonMark(this);
@@ -187,6 +197,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.buttonScripts.Margins = new Margins(2, 0, 10, 0);
 			this.buttonScripts.Dock = DockStyle.Left;
 			this.buttonScripts.Clicked += new MessageEventHandler(this.HandleButtonClicked);
+			this.buttonScripts.Visibility = debug;
 			this.buttonScripts.Visibility = false;
 
 			this.buttonEntities = new IconButtonMark(this);
