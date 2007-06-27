@@ -223,7 +223,7 @@ namespace Epsitec.Cresus.Database.Implementation
 			switch (this.engineType)
 			{
 				case EngineType.Embedded:
-					buffer.Append (Common.Support.Globals.Directories.UserAppData);
+					buffer.Append (Common.Support.Globals.Directories.UserAppDataRevision);
 					buffer.Append (System.IO.Path.DirectorySeparatorChar);
 					break;
 				

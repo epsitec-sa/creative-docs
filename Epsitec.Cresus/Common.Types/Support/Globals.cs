@@ -19,7 +19,6 @@ namespace Epsitec.Common.Support
 		static Globals()
 		{
 			Globals.properties  = new Globals ();
-			Globals.directories = new DirectoriesAccessor ();
 			Globals.abort_event = new System.Threading.ManualResetEvent (false);
 		}
 		
@@ -29,14 +28,6 @@ namespace Epsitec.Common.Support
 			get
 			{
 				return Globals.properties;
-			}
-		}
-		
-		public static DirectoriesAccessor		Directories
-		{
-			get
-			{
-				return Globals.directories;
 			}
 		}
 		
@@ -149,26 +140,45 @@ namespace Epsitec.Common.Support
 			}
 		}
 
-		#region DirectoriesAccessor class
-		public sealed class DirectoriesAccessor
+		#region Directories Class
+
+		public static class Directories
 		{
-			public string						CommonAppData
+			public static string				CommonAppDataRevision
 			{
 				get
 				{
 					return System.Windows.Forms.Application.CommonAppDataPath;
 				}
 			}
-			
-			public string						UserAppData
+
+			public static string				CommonAppData
+			{
+				get
+				{
+					string path = Directories.CommonAppDataRevision;
+					return System.IO.Path.GetDirectoryName (path);
+				}
+			}
+
+			public static string				UserAppDataRevision
 			{
 				get
 				{
 					return System.Windows.Forms.Application.UserAppDataPath;
 				}
 			}
+
+			public static string				UserAppData
+			{
+				get
+				{
+					string path = Directories.UserAppDataRevision;
+					return System.IO.Path.GetDirectoryName (path);
+				}
+			}
 			
-			public string						Executable
+			public static string				Executable
 			{
 				get
 				{
@@ -180,11 +190,11 @@ namespace Epsitec.Common.Support
 				}
 			}
 		}
+		
 		#endregion
 		
 		private System.Collections.Hashtable	property_hash;
 		private static Globals					properties;
-		private static DirectoriesAccessor		directories;
 		private static ManualResetEvent			abort_event;
 		private static bool						isDebugBuild;
 		private static bool						isDebugBuildInitialized;

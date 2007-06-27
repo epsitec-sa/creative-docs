@@ -5509,15 +5509,10 @@ namespace Epsitec.App.DocumentEditor
 		{
 			//	Retourne le nom du fichier des réglages de l'application.
 			//	Le dossier est qq chose du genre:
-			//	C:\Documents and Settings\Daniel Roux\Application Data\Epsitec\Crésus documents\1.0.0.0
+			//	C:\Documents and Settings\Daniel Roux\Application Data\Epsitec\Crésus documents
 			get
 			{
 				string dir = Common.Support.Globals.Directories.UserAppData;
-				int i = dir.LastIndexOf("\\");
-				if ( i > 0 )
-				{
-					dir = dir.Substring(0, i);  // supprime le dossier "1.0.0.0" à la fin
-				}
 
 				if ( this.documentType == DocumentType.Pictogram )
 				{
