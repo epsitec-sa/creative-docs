@@ -13,10 +13,11 @@ using System.Collections.Generic;
 
 namespace Epsitec.Common.Identity.UI
 {
-	public class IdentityCardWidget : Widget
+	public class IdentityCardWidget : AbstractButton
 	{
 		public IdentityCardWidget()
 		{
+			this.AutoEngage = true;
 		}
 
 		public IdentityCardWidget(Widget embedder)
@@ -57,10 +58,14 @@ namespace Epsitec.Common.Identity.UI
 
 			using (Path round = new Path ())
 			{
+				WidgetPaintState paintState = this.PaintState;
+
 				round.AppendRoundedRectangle (rect, radius);
 				graphics.Rasterizer.AddSurface (round);
-				graphics.RenderSolid (Color.FromHsv (baseColorH, baseColorS * ((this.PaintState & WidgetPaintState.Entered) == 0 ? 0.33 : 0.75), 1.0));
+				graphics.RenderSolid (Color.FromHsv (baseColorH, baseColorS * ((paintState & WidgetPaintState.Entered) == 0 ? 0.33 : 0.75), 1.0));
 
+				double lineWidth = ((paintState & WidgetPaintState.Engaged) == 0) ? 1.0 : 2.0;
+				
 				if (size > 8)
 				{
 					Graphics mask = graphics.CreateAlphaMask ();
@@ -71,6 +76,16 @@ namespace Epsitec.Common.Identity.UI
 					Image     image     = this.IdentityCard == null ? null : this.IdentityCard.GetImage ();
 					Rectangle imageRect = new Rectangle (2, 2, size, size);
 
+					if ((paintState & WidgetPaintState.Engaged) != 0)
+					{
+						double cx = imageRect.Center.X;
+						double cy = imageRect.Center.Y;
+						double dx = imageRect.Width * 1.05;
+						double dy = imageRect.Height * 1.05;
+
+						imageRect = new Rectangle (cx - dx/2, cy - dy/2, dx, dy);
+					}
+					
 					if (image != null)
 					{
 						graphics.ImageRenderer.SetAlphaMask (mask.Pixmap, MaskComponent.R);
@@ -86,9 +101,25 @@ namespace Epsitec.Common.Identity.UI
 					}
 
 					mask.Dispose ();
+
+					double textWidth = rect.Width - size - 4;
+					double textSize  = System.Math.Min (textWidth / 10, size / 4);
+					double x = rect.Right - textWidth;
+					double y = rect.Bottom;
+
+					if ((textWidth > 20) &&
+						(this.IdentityCard != null))
+					{
+						string textLine1 = this.IdentityCard.UserName;
+						string textLine2 = this.IdentityCard.DeveloperId == -1 ? "" : string.Format ("Dev #{0}", this.IdentityCard.DeveloperId);
+
+						graphics.Color = Color.FromName ("Black");
+						graphics.PaintText (x, y + textSize/2, textWidth, size - textSize, textLine1, Font.DefaultFont, textSize * 1.0, ContentAlignment.TopLeft);
+						graphics.PaintText (x, y - textSize/2, textWidth, size - textSize, textLine2, Font.DefaultFont, textSize * 0.8, ContentAlignment.TopLeft);
+					}
 				}
 
-				graphics.Rasterizer.AddOutline (round, 1, CapStyle.Butt, JoinStyle.Round);
+				graphics.Rasterizer.AddOutline (round, lineWidth, CapStyle.Butt, JoinStyle.Round);
 				graphics.RenderSolid (Color.FromHsv (baseColorH, 1.0, baseColorV * 0.8));
 			}
 		}
