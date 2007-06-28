@@ -93,15 +93,25 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.buttonCancel.TabIndex = tabIndex++;
 				this.buttonCancel.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 
-				this.checkAll = new CheckButton(footer);
-				this.checkAll.AutoToggle = false;
-				this.checkAll.Text = "Tous les modules";
-				this.checkAll.PreferredWidth = 150;
-				this.checkAll.Dock = DockStyle.Left;
-				this.checkAll.Margins = new Margins(20, 0, 0, 0);
-				this.checkAll.Clicked += new MessageEventHandler(this.HandleCheckAllClicked);
-				this.checkAll.TabIndex = tabIndex++;
-				this.checkAll.TabNavigationMode = TabNavigationMode.ActivateOnTab;
+				this.checkOpened = new CheckButton(footer);
+				this.checkOpened.AutoToggle = false;
+				this.checkOpened.Text = "Modules ouverts";
+				this.checkOpened.PreferredWidth = 110;
+				this.checkOpened.Dock = DockStyle.Left;
+				this.checkOpened.Margins = new Margins(20, 0, 0, 0);
+				this.checkOpened.Clicked += new MessageEventHandler(this.HandleCheckClicked);
+				this.checkOpened.TabIndex = tabIndex++;
+				this.checkOpened.TabNavigationMode = TabNavigationMode.ActivateOnTab;
+
+				this.checkLocked = new CheckButton(footer);
+				this.checkLocked.AutoToggle = false;
+				this.checkLocked.Text = "Modules bloqués";
+				this.checkLocked.PreferredWidth = 110;
+				this.checkLocked.Dock = DockStyle.Left;
+				this.checkLocked.Margins = new Margins(0, 0, 0, 0);
+				this.checkLocked.Clicked += new MessageEventHandler(this.HandleCheckClicked);
+				this.checkLocked.TabIndex = tabIndex++;
+				this.checkLocked.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			}
 
 			this.UpdateModules(true);
@@ -150,7 +160,16 @@ namespace Epsitec.Common.Designer.Dialogs
 			for (int i=0; i<this.moduleInfosAll.Count; i++)
 			{
 				ModuleState state = this.GetModuleState(i, this.moduleInfosAll);
-				if (state != ModuleState.Locked || this.isAll)
+
+				if (state == ModuleState.Openable)
+				{
+					this.moduleInfosShowed.Add(this.moduleInfosAll[i]);
+				}
+				else if ((state == ModuleState.Opening || state == ModuleState.OpeningAndDirty) && this.showOpened)
+				{
+					this.moduleInfosShowed.Add(this.moduleInfosAll[i]);
+				}
+				else if (state == ModuleState.Locked && this.showLocked)
 				{
 					this.moduleInfosShowed.Add(this.moduleInfosAll[i]);
 				}
@@ -234,7 +253,8 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.buttonOpen.Enable = (state == ModuleState.Openable);
 			}
 
-			this.checkAll.ActiveState = this.isAll ? ActiveState.Yes : ActiveState.No;
+			this.checkOpened.ActiveState = this.showOpened ? ActiveState.Yes : ActiveState.No;
+			this.checkLocked.ActiveState = this.showLocked ? ActiveState.Yes : ActiveState.No;
 		}
 
 		protected string GetModulePath(int index)
@@ -338,9 +358,17 @@ namespace Epsitec.Common.Designer.Dialogs
 			this.OnClosed();
 		}
 
-		private void HandleCheckAllClicked(object sender, MessageEventArgs e)
+		private void HandleCheckClicked(object sender, MessageEventArgs e)
 		{
-			this.isAll = !this.isAll;
+			if (sender == this.checkOpened)
+			{
+				this.showOpened = !this.showOpened;
+			}
+
+			if (sender == this.checkLocked)
+			{
+				this.showLocked = !this.showLocked;
+			}
 
 			this.UpdateModules(false);
 			this.UpdateArray();
@@ -355,9 +383,11 @@ namespace Epsitec.Common.Designer.Dialogs
 		protected List<ResourceModuleInfo>		moduleInfosShowed;
 		protected Button						buttonOpen;
 		protected Button						buttonCancel;
-		protected CheckButton					checkAll;
+		protected CheckButton					checkOpened;
+		protected CheckButton					checkLocked;
 		protected MyWidgets.StringArray			array;
 		protected int							indexToOpen;
-		protected bool							isAll;
+		protected bool							showOpened;
+		protected bool							showLocked;
 	}
 }
