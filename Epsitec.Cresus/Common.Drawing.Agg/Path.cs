@@ -390,7 +390,40 @@ namespace Epsitec.Common.Drawing
 		{
 			this.AppendRectangle (p.X, p.Y, s.Width, s.Height);
 		}
+
+		public void AppendRoundedRectangle(double x, double y, double width, double height, double r)
+		{
+			if (width < r)
+			{
+				r = width;
+			}
+			if (height < r)
+			{
+				r = height;
+			}
+
+			this.MoveTo (x, y+height-r);
+			this.LineTo (x, y+r);
+			this.ArcTo (x, y, x+r, y);
+			this.LineTo (x+width-r, y);
+			this.ArcTo (x+width, y, x+width, y+r);
+			this.LineTo (x+width, y+height-r);
+			this.ArcTo (x+width, y+height, x+width-r, y+height);
+			this.LineTo (x+r, y+height);
+			this.ArcTo (x, y+height, x, y+height-r);
+			this.Close ();
+		}
 		
+		public void AppendRoundedRectangle(Rectangle rect, double r)
+		{
+			this.AppendRoundedRectangle (rect.X, rect.Y, rect.Width, rect.Height, r);
+		}
+
+		public void AppendRoundedRectangle(Point p, Size s, double r)
+		{
+			this.AppendRoundedRectangle (p.X, p.Y, s.Width, s.Height, r);
+		}
+
 		public void AppendCircle(Point c, double r)
 		{
 			this.AppendCircle (c.X, c.Y, r, r);

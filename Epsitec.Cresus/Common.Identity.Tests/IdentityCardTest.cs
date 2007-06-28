@@ -14,14 +14,23 @@ namespace Epsitec.Common.Identity
 		{
 			Epsitec.Common.Widgets.Widget.Initialize ();
 		}
+		
+		[Test]
+		public void AutomatedTestEnvironment()
+		{
+			Epsitec.Common.Widgets.Window.RunningInAutomatedTestEnvironment = true;
+		}
+
 
 		[Test]
 		public void CheckSerialization()
 		{
+			string path = @"S:\Epsitec.Cresus\Common.Identity\Identities";
+
 			IdentityCard card = new IdentityCard ();
 
 			card.DeveloperId = 123;
-			card.RawImage = new byte[] { 1, 2, 3 };
+			card.RawImage = System.IO.File.ReadAllBytes (System.IO.Path.Combine (path, "PA.png"));
 			card.UserName = "Jean Dupont";
 
 			string xml = Epsitec.Common.Types.Serialization.SimpleSerialization.SerializeToString (card);
@@ -33,6 +42,18 @@ namespace Epsitec.Common.Identity
 			Assert.AreEqual (card.DeveloperId, restoredCard.DeveloperId);
 			Assert.AreEqual (card.RawImage, restoredCard.RawImage);
 			Assert.AreEqual (card.UserName, restoredCard.UserName);
+		}
+
+		[Test]
+		public void CheckUserInterface()
+		{
+			Widgets.Window window = new Epsitec.Common.Widgets.Window ();
+			UI.IdentityCardWidget widget = new UI.IdentityCardWidget (window.Root);
+			widget.IdentityCard = IdentityRepository.Default.FindIdentityCard ("Pierre Arnaud");
+			widget.Dock = Widgets.DockStyle.Fill;
+			widget.Margins = new Drawing.Margins (4, 4, 4, 4);
+			window.Show ();
+			Widgets.Window.RunInTestEnvironment (window);
 		}
 
 		[Test]
@@ -48,15 +69,15 @@ namespace Epsitec.Common.Identity
 			IdentityCard cardYves      = new IdentityCard ("Yves Raboud",      4, System.IO.File.ReadAllBytes (System.IO.Path.Combine (path, "YR.png")));
 			IdentityCard cardDaniel    = new IdentityCard ("Daniel Roux",      2, System.IO.File.ReadAllBytes (System.IO.Path.Combine (path, "DR.png")));
 
-			repository.Identities.Add (cardChristian);	//	Alleyn
-			repository.Identities.Add (cardPierre);		//	Arnaud
-			repository.Identities.Add (cardDavid);		//	Besuchet
-			repository.Identities.Add (cardYves);		//	Raboud
-			repository.Identities.Add (cardDaniel);		//	Roux
+			repository.IdentityCards.Add (cardChristian);	//	Alleyn
+			repository.IdentityCards.Add (cardPierre);		//	Arnaud
+			repository.IdentityCards.Add (cardDavid);		//	Besuchet
+			repository.IdentityCards.Add (cardYves);		//	Raboud
+			repository.IdentityCards.Add (cardDaniel);		//	Roux
 
 			string xml = Epsitec.Common.Types.Serialization.SimpleSerialization.SerializeToString (repository);
 
-			System.IO.File.WriteAllText (System.IO.Path.Combine (path, "identities.xml"), xml);
+			System.IO.File.WriteAllText (System.IO.Path.Combine (path, IdentityRepository.DefaultIdentitiesFileName), xml);
 
 			IdentityRepository restoredRepository = Epsitec.Common.Types.Serialization.SimpleSerialization.DeserializeFromString (xml) as IdentityRepository;
 		}

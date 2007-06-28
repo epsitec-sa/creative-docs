@@ -22,7 +22,9 @@ namespace Epsitec.Common.Support.Serialization.Converters
 				return "<null>";
 			}
 
-			return this.ascii85.Encode ((byte[]) value);
+			Epsitec.Common.IO.Ascii85 ascii85 = new Epsitec.Common.IO.Ascii85 ();
+
+			return ascii85.Encode ((byte[]) value);
 		}
 
 		public object ConvertFromString(string value, IContextResolver context)
@@ -32,11 +34,11 @@ namespace Epsitec.Common.Support.Serialization.Converters
 				return null;
 			}
 
-			return this.ascii85.Decode (value);
+			Epsitec.Common.IO.Ascii85 ascii85 = new Epsitec.Common.IO.Ascii85 ();
+			
+			return ascii85.Decode (value);
 		}
 
 		#endregion
-
-		Epsitec.Common.IO.Ascii85 ascii85 = new Epsitec.Common.IO.Ascii85 ();
 	}
 }

@@ -23,6 +23,11 @@ namespace Epsitec.Common.Identity
 			this.RawImage    = rawImage;
 		}
 
+		public IdentityCard(IdentityCard card)
+		{
+			this.MergeWithCard (card);
+		}
+
 		public int DeveloperId
 		{
 			get
@@ -114,6 +119,39 @@ namespace Epsitec.Common.Identity
 			return this.cachedImage;
 		}
 
+		public void MergeWithCard(IdentityCard card)
+		{
+			if (!string.IsNullOrEmpty (card.UserName))
+			{
+				this.UserName    = card.UserName;
+			}
+
+			if (card.DeveloperId != -1)
+			{
+				this.DeveloperId = card.DeveloperId;
+			}
+
+			if (card.RawImage != null)
+			{
+				this.RawImage = (byte[]) card.RawImage.Clone ();
+			}
+		}
+
+		internal void Attach(IdentityRepository repository)
+		{
+			if (this.repository != repository)
+			{
+				System.Diagnostics.Debug.Assert ((this.repository == null) && (repository != null));
+				this.repository = repository;
+			}
+		}
+
+		internal void Detach(IdentityRepository repository)
+		{
+			System.Diagnostics.Debug.Assert (this.repository == repository);
+			this.repository = null;
+		}
+
 		private static void NotifyRawImageChanged(DependencyObject obj, object oldValue, object newValue)
 		{
 			IdentityCard that = (IdentityCard) obj;
@@ -125,5 +163,6 @@ namespace Epsitec.Common.Identity
 		public static readonly DependencyProperty UserNameProperty = DependencyProperty.Register ("UserName", typeof (string), typeof (IdentityCard), new DependencyPropertyMetadata ());
 
 		private Drawing.Image cachedImage;
+		private IdentityRepository repository;
 	}
 }
