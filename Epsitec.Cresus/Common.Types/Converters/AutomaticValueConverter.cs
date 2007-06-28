@@ -48,6 +48,13 @@ namespace Epsitec.Common.Types.Converters
 					return value;
 				}
 
+				if ((expectedType == typeof (string)) &&
+					(sourceType == typeof (System.DateTime)) &&
+					(culture == System.Globalization.CultureInfo.InvariantCulture))
+				{
+					return InvariantConverter.ToString (value);
+				}
+
 				return System.Convert.ChangeType (value, expectedType, culture);
 			}
 			catch (System.InvalidCastException)
@@ -135,6 +142,13 @@ namespace Epsitec.Common.Types.Converters
 					{
 						return InvalidValue.Instance;
 					}
+				}
+				
+				if ((text != null) &&
+					(expectedType == typeof (System.DateTime)) &&
+					(culture == System.Globalization.CultureInfo.InvariantCulture))
+				{
+					return InvariantConverter.ToDateTime (text);
 				}
 
 				return System.Convert.ChangeType (value, expectedType, culture);

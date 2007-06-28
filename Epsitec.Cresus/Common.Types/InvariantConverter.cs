@@ -359,12 +359,7 @@ namespace Epsitec.Common.Types
 					case System.TypeCode.Int64:		value = ((System.Int64)   obj).ToString (System.Globalization.CultureInfo.InvariantCulture); return true;
 					
 					case System.TypeCode.DateTime:
-#if true
-						value = ((System.DateTime)obj).ToString ("yyyy-MM-ddTHH:mm:ss.fffffffZ", System.Globalization.CultureInfo.InvariantCulture);
-#else
-						num   = ((System.DateTime)obj).Ticks % 10000000;
-						value = string.Concat (((System.DateTime)obj).ToString ("s", System.Globalization.CultureInfo.InvariantCulture), "+", num.ToString (System.Globalization.CultureInfo.InvariantCulture));
-#endif
+						value = ((System.DateTime)obj).ToUniversalTime ().ToString ("yyyy-MM-ddTHH:mm:ss.fffffffZ", System.Globalization.CultureInfo.InvariantCulture);
 						return true;
 				}
 			}
@@ -550,27 +545,8 @@ namespace Epsitec.Common.Types
 					return false;
 				}
 				
-#if true
 				value = System.DateTime.Parse (text, System.Globalization.CultureInfo.InvariantCulture, System.Globalization.DateTimeStyles.AdjustToUniversal);
 				return true;
-#else
-				string[] args = text.Split ('+');
-				
-				if (args.Length == 1)
-				{
-					value = System.DateTime.Parse (text, System.Globalization.CultureInfo.InvariantCulture, System.Globalization.DateTimeStyles.AdjustToUniversal);
-					return true;
-				}
-				else if (args.Length == 2)
-				{
-					long ticks  = System.DateTime.Parse (args[0], System.Globalization.CultureInfo.InvariantCulture, System.Globalization.DateTimeStyles.AdjustToUniversal).Ticks;
-					long adjust = System.Int64.Parse (args[1], System.Globalization.CultureInfo.InvariantCulture);
-					
-					value = new System.DateTime (ticks + adjust);
-					
-					return true;
-				}
-#endif
 			}
 			
 			long num;
