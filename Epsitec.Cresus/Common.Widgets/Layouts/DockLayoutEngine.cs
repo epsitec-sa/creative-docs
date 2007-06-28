@@ -270,7 +270,7 @@ namespace Epsitec.Common.Widgets.Layouts
 				switch (dock)
 				{
 					case DockStyle.Top:
-						minDx  = System.Math.Max (minDx, min.Width + minOx);
+						minDx  = System.Math.Max (minDx, clientDx + minOx);
 						minDy  = System.Math.Max (minDy, clientDy + minOy);
 						minOy += clientDy;
 						maxDx  = System.Math.Min (maxDx, max.Width + maxOx);
@@ -279,7 +279,7 @@ namespace Epsitec.Common.Widgets.Layouts
 						break;
 					
 					case DockStyle.Bottom:
-						minDx  = System.Math.Max (minDx, min.Width + minOx);
+						minDx  = System.Math.Max (minDx, clientDx + minOx);
 						minDy  = System.Math.Max (minDy, clientDy + minOy);
 						minOy += clientDy;
 						maxDx  = System.Math.Min (maxDx, max.Width + maxOx);
@@ -289,7 +289,7 @@ namespace Epsitec.Common.Widgets.Layouts
 						
 					case DockStyle.Left:
 						minDx  = System.Math.Max (minDx, clientDx + minOx);
-						minDy  = System.Math.Max (minDy, min.Height + minOy);
+						minDy  = System.Math.Max (minDy, clientDy + minOy);
 						minOx += clientDx;
 //						maxDx  = System.Math.Min (maxDx, child.Width + maxOx);
 						maxDy  = System.Math.Min (maxDy, max.Height + maxOy);
@@ -298,7 +298,7 @@ namespace Epsitec.Common.Widgets.Layouts
 					
 					case DockStyle.Right:
 						minDx  = System.Math.Max (minDx, clientDx + minOx);
-						minDy  = System.Math.Max (minDy, min.Height + minOy);
+						minDy  = System.Math.Max (minDy, clientDy + minOy);
 						minOx += clientDx;
 //						maxDx  = System.Math.Min (maxDx, child.Width + maxOx);
 						maxDy  = System.Math.Min (maxDy, max.Height + maxOy);
