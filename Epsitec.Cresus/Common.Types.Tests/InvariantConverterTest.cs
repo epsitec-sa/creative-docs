@@ -244,6 +244,8 @@ namespace Epsitec.Common.Types
 			Assert.AreEqual ("Flag1, Flag2", Converters.AutomaticValueConverter.Instance.Convert (MyFlags.Flag1 | MyFlags.Flag2, typeof (string), null, culture));
 			Assert.AreEqual (MyFlags.Flag1 | MyFlags.Flag2, Converters.AutomaticValueConverter.Instance.Convert ("Flag2, Flag1", typeof (MyFlags), null, culture));
 			Assert.AreEqual (InvalidValue.Instance, Converters.AutomaticValueConverter.Instance.Convert (1025, typeof (MyFlags), null, culture));
+			Assert.AreEqual ("", Converters.AutomaticValueConverter.Instance.Convert ("", typeof (string), null, culture));
+			Assert.AreEqual (InvalidValue.Instance, Converters.AutomaticValueConverter.Instance.Convert ("", typeof (int), null, culture));
 		}
 
 		[Test]

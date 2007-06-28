@@ -1,15 +1,14 @@
 //	Copyright © 2006-2007, EPSITEC SA, CH-1092 BELMONT, Switzerland
-//	Responsable: Pierre ARNAUD
-
-using System.Collections.Generic;
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 namespace Epsitec.Common.Types.Converters
 {
 	/// <summary>
-	/// The <c>AutomaticValueConverter</c> converts between the CLR base types.
-	/// If the conversion is not possible, returns an <see cref="T:InvalidValue"/>.
+	/// The <c>AutomaticValueConverter</c> converts between any convertible
+	/// types. If the conversion is not possible, the conversion methods
+	/// return an <see cref="InvalidValue"/>.
 	/// </summary>
-	public class AutomaticValueConverter : IValueConverter
+	public sealed class AutomaticValueConverter : IValueConverter
 	{
 		private AutomaticValueConverter()
 		{
@@ -120,6 +119,20 @@ namespace Epsitec.Common.Types.Converters
 					return System.Convert.ChangeType (value, expectedType, culture);
 				}
 
+				//	If the caller provided an empty string as value, it cannot be
+				//	converted to any other simple type; don't even try, this saves
+				//	us an exception...
+				
+				if (sourceTypeCode == System.TypeCode.String)
+				{
+					string text = value as string;
+					
+					if (text.Length == 0)
+					{
+						return InvalidValue.Instance;
+					}
+				}
+
 				return AutomaticValueConverter.ConvertUsingTypeConverter (value, sourceType, expectedType, culture);
 			}
 			catch (System.InvalidCastException)
@@ -142,33 +155,6 @@ namespace Epsitec.Common.Types.Converters
 			}
 		}
 
-		private static object ConvertUsingTypeConverter(object value, System.Type sourceType, System.Type expectedType, System.Globalization.CultureInfo culture)
-		{
-			System.ComponentModel.TypeConverter converter;
-			
-			converter = System.ComponentModel.TypeDescriptor.GetConverter (sourceType);
-
-			if (converter != null)
-			{
-				if (converter.CanConvertTo (expectedType))
-				{
-					return converter.ConvertTo (null, culture, value, expectedType);
-				}
-			}
-
-			converter = System.ComponentModel.TypeDescriptor.GetConverter (expectedType);
-
-			if (converter != null)
-			{
-				if (converter.CanConvertFrom (sourceType))
-				{
-					return converter.ConvertFrom (null, culture, value);
-				}
-			}
-
-			return InvalidValue.Instance;
-		}
-
 		/// <summary>
 		/// Converts the specified value back to the expected type.
 		/// </summary>
@@ -180,114 +166,50 @@ namespace Epsitec.Common.Types.Converters
 		/// if the conversion was not possible.</returns>
 		public object ConvertBack(object value, System.Type expectedType, object parameter, System.Globalization.CultureInfo culture)
 		{
-			if (expectedType == null)
-			{
-				throw new System.ArgumentNullException ("expectedType", "Expected type is null");
-			}
-
-			System.Type sourceType = value == null ? null : value.GetType ();
-
-			try
-			{
-				if (sourceType != expectedType)
-				{
-					if (expectedType.IsEnum)
-					{
-						System.Diagnostics.Debug.WriteLine ("ConvertBack value " + value.ToString () + " to enum type " + expectedType.Name);
-
-						value = this.ConvertBack (value, typeof (string), null, System.Globalization.CultureInfo.InvariantCulture);
-
-						if (InvalidValue.IsInvalidValue (value))
-						{
-							return value;
-						}
-
-						System.Enum enumValue;
-
-						if (InvariantConverter.Convert (value, expectedType, out enumValue))
-						{
-							System.Diagnostics.Debug.WriteLine ("ConvertBack succeeded on enum value");
-							return enumValue;
-						}
-					}
-				}
-				else
-				{
-					return value;
-				}
-				
-				if (expectedType == typeof (object))
-				{
-					return value;
-				}
-
-				string text = value as string;
-
-				if ((text != null) &&
-					(text.Length == 0))
-				{
-					if ((expectedType == typeof (int)) ||
-						(expectedType == typeof (long)) ||
-						(expectedType == typeof (short)) ||
-						(expectedType == typeof (decimal)) ||
-						(expectedType == typeof (double)))
-					{
-						return InvalidValue.Instance;
-					}
-				}
-				
-				if ((text != null) &&
-					(expectedType == typeof (System.DateTime)) &&
-					(culture == System.Globalization.CultureInfo.InvariantCulture))
-				{
-					return InvariantConverter.ToDateTime (text);
-				}
-
-				if (true)
-				{
-					return AutomaticValueConverter.ConvertBackClassType (value, expectedType, culture, sourceType);
-				}
-				else
-				{
-					return System.Convert.ChangeType (value, expectedType, culture);
-				}
-			}
-			catch (System.InvalidCastException)
-			{
-				return ConvertBackClassType (value, expectedType, culture, sourceType);
-			}
-			catch (System.FormatException)
-			{
-				return InvalidValue.Instance;
-			}
-		}
-
-		private static object ConvertBackClassType(object value, System.Type expectedType, System.Globalization.CultureInfo culture, System.Type sourceType)
-		{
-			System.ComponentModel.TypeConverter converter = System.ComponentModel.TypeDescriptor.GetConverter (expectedType);
-
-			if (converter != null)
-			{
-				if (converter.CanConvertFrom (sourceType))
-				{
-					return converter.ConvertFrom (null, culture, value);
-				}
-			}
-
-			converter = System.ComponentModel.TypeDescriptor.GetConverter (sourceType);
-
-			if (converter != null)
-			{
-				if (converter.CanConvertTo (expectedType))
-				{
-					return converter.ConvertTo (null, culture, value, expectedType);
-				}
-			}
-
-			return InvalidValue.Instance;
+			return this.Convert (value, expectedType, parameter, culture);
 		}
 
 		#endregion
+
+		/// <summary>
+		/// Converts the value using using a type converter provided by the CLR.
+		/// </summary>
+		/// <param name="value">The value.</param>
+		/// <param name="sourceType">The source type.</param>
+		/// <param name="expectedType">The expected type.</param>
+		/// <param name="culture">The culture.</param>
+		/// <returns>The converted value or <see cref="InvalidValue.Instance"/>
+		/// if there is no available converter.</returns>
+		private static object ConvertUsingTypeConverter(object value, System.Type sourceType, System.Type expectedType, System.Globalization.CultureInfo culture)
+		{
+			System.ComponentModel.TypeConverter converter;
+
+			//	Try converting using the source type converter first :
+			
+			converter = System.ComponentModel.TypeDescriptor.GetConverter (sourceType);
+
+			if ((converter != null) &&
+				(converter.CanConvertTo (expectedType)))
+			{
+				return converter.ConvertTo (null, culture, value, expectedType);
+			}
+		
+			//	There was no converter between source type and expected type.
+			//	But maybe there is a reverse converter between the expected type
+			//	and the source type :
+			
+			converter = System.ComponentModel.TypeDescriptor.GetConverter (expectedType);
+
+			if ((converter != null) &&
+				(converter.CanConvertFrom (sourceType)))
+			{
+				return converter.ConvertFrom (null, culture, value);
+			}
+
+			//	No converter found -- give up
+
+			return InvalidValue.Instance;
+		}
 
 		public static readonly AutomaticValueConverter Instance = new AutomaticValueConverter ();
 	}
