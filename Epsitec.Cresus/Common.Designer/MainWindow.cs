@@ -1874,11 +1874,9 @@ namespace Epsitec.Common.Designer
 			}
 			else
 			{
-				foreach (string path in this.settings.Modules)
+				foreach (ResourceModuleId id in this.settings.Modules)
 				{
-					ResourceModuleInfo info = new ResourceModuleInfo();
-					info.ReferenceModulePath = path;
-					Module module = new Module(this, this.mode, this.resourceManagerPool.DefaultPrefix, info.FullId);
+					Module module = new Module(this, this.mode, this.resourceManagerPool.DefaultPrefix, id);
 
 					ModuleInfo mi = new ModuleInfo();
 					mi.Module = module;
@@ -1897,7 +1895,7 @@ namespace Epsitec.Common.Designer
 
 			foreach (ModuleInfo info in this.moduleInfoList)
 			{
-				this.settings.Modules.Add(info.Module.ModulePath);
+				this.settings.Modules.Add(info.Module.ModuleInfo);
 			}
 			
 			return this.settings.Write();  // enregistre les réglages globaux

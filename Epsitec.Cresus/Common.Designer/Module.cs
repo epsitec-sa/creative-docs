@@ -17,7 +17,6 @@ namespace Epsitec.Common.Designer
 			this.mainWindow = mainWindow;
 			this.mode = mode;
 			this.moduleInfo = moduleId;
-			this.modulePath = moduleId.Path;
 
 			this.resourceManager = new ResourceManager(moduleId, this.mainWindow.ResourceManagerPool);
 			this.resourceManager.DefineDefaultModuleName(this.moduleInfo.Name);
@@ -96,14 +95,6 @@ namespace Epsitec.Common.Designer
 			get
 			{
 				return this.moduleInfo;
-			}
-		}
-
-		public string ModulePath
-		{
-			get
-			{
-				return this.modulePath;
 			}
 		}
 
@@ -362,7 +353,6 @@ namespace Epsitec.Common.Designer
 		protected MainWindow				mainWindow;
 		protected DesignerMode				mode;
 		protected ResourceModuleId			moduleInfo;
-		protected string					modulePath;
 		protected Modifier					modifier;
 		protected ResourceManager			resourceManager;
 		protected ResourceAccess			accessStrings;

@@ -15,13 +15,13 @@ namespace Epsitec.Common.Designer
 	{
 		public Settings()
 		{
-			this.modules = new List<string>();
+			this.modules = new List<ResourceModuleId>();
 		}
 
 
-		public List<string> Modules
+		public List<ResourceModuleId> Modules
 		{
-			//	Liste des chemins complets (ResourceModuleInfo.ReferenceModulePath) des modules ouverts.
+			//	Liste des modules ouverts.
 			get
 			{
 				return this.modules;
@@ -90,10 +90,10 @@ namespace Epsitec.Common.Designer
 			writer.WriteStartDocument();
 
 			writer.WriteStartElement("Modules");
-			foreach (string module in this.modules)
+			foreach (ResourceModuleId module in this.modules)
 			{
 				writer.WriteStartElement("Module");
-				writer.WriteElementString("Path", module);
+				writer.WriteElementString("ResourceModuleId", Types.InvariantConverter.ConvertToString(module));
 				writer.WriteEndElement();
 			}
 			writer.WriteEndElement();
@@ -117,9 +117,10 @@ namespace Epsitec.Common.Designer
 						string name = reader.LocalName;
 						string element = reader.ReadElementString();
 
-						if (name == "Path")
+						if (name == "ResourceModuleId")
 						{
-							this.modules.Add(element);
+							ResourceModuleId module = Types.InvariantConverter.ConvertFromString<ResourceModuleId>(element);
+							this.modules.Add(module);
 						}
 					}
 					else if (reader.NodeType == XmlNodeType.EndElement)
@@ -144,11 +145,11 @@ namespace Epsitec.Common.Designer
 			//	C:\Users\Daniel Roux\AppData\Roaming\Epsitec\Crésus Designer (sous Vista)
 			get
 			{
-				return string.Concat(Common.Support.Globals.Directories.UserAppData, "\\Designer.data");
+				return string.Concat(Common.Support.Globals.Directories.UserAppData, "\\Designer.settings");
 			}
 		}
 
 
-		protected List<string> modules;
+		protected List<ResourceModuleId> modules;
 	}
 }
