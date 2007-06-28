@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <bundle name="Strings" type="String" culture="fr">
-  <data name="Application.Title" id="0">Editeur de ressources</data>
+  <data name="Application.Title" id="0">Crésus Designer Beta</data>
   <data name="Ribbon.Main" id="01">Principal</data>
   <data name="Ribbon.Oper" id="02">Opérations</data>
   <data name="Ribbon.Text" id="03">Texte</data>

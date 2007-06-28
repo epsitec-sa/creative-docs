@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <bundle name="Strings" type="String" culture="en">
-  <data id="0">Resource Editor</data>
+  <data id="0">Crésus Designer Beta</data>
   <data id="01">Documents</data>
   <data id="02">Operations</data>
   <data id="03">Text</data>

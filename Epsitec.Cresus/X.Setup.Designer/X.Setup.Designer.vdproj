@@ -237,6 +237,12 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_4B63ADF0570D438D8D4B1B6B56C93E8C"
+        "OwnerKey" = "8:_C712CF3A67B74F909AB799FD55925A08"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_65BF191F4E4E99389F23BC3884F0D5FE"
         "OwnerKey" = "8:_324E4919992347588F15C6CD90AAEA20"
         "MsmSig" = "8:_UNDEFINED"
@@ -299,12 +305,6 @@
         {
         "MsmKey" = "8:_801BDE3B773B0BC3485E58B6C8412B34"
         "OwnerKey" = "8:_324E4919992347588F15C6CD90AAEA20"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_85928FD4342A42C5A53913C8E2CAEDBC"
-        "OwnerKey" = "8:_C712CF3A67B74F909AB799FD55925A08"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -2484,7 +2484,7 @@
         }
         "MergeModule"
         {
-            "{CEE29DC0-9FBA-4B99-8D47-5BC643D9B626}:_85928FD4342A42C5A53913C8E2CAEDBC"
+            "{CEE29DC0-9FBA-4B99-8D47-5BC643D9B626}:_4B63ADF0570D438D8D4B1B6B56C93E8C"
             {
             "UseDynamicProperties" = "11:TRUE"
             "IsDependency" = "11:TRUE"

@@ -97,6 +97,8 @@ namespace Epsitec.Common.Identity.UI
 						graphics.SolidRenderer.SetAlphaMask (mask.Pixmap, MaskComponent.R);
 						graphics.AddFilledRectangle (imageRect);
 						graphics.RenderSolid (Color.FromHsv (0, 0, baseColorV * 0.8));
+						graphics.Color = Color.FromBrightness (1);
+						graphics.PaintText (imageRect.X, imageRect.Y, imageRect.Width, imageRect.Height, "?", Font.GetFont ("Tahoma", "Bold"), imageRect.Height, ContentAlignment.MiddleCenter);
 						graphics.SolidRenderer.SetAlphaMask (null, MaskComponent.None);
 					}
 
