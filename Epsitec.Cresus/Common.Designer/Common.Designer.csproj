@@ -46,6 +46,7 @@
     <Compile Include="Controllers\TableController.cs" />
     <Compile Include="Controllers\StructuredController.cs" />
     <Compile Include="Controllers\DruidController.cs" />
+    <Compile Include="Ribbons\Identity.cs" />
     <Compile Include="Settings.cs" />
     <Compile Include="Designer.cs" />
     <Compile Include="Dialogs\EntityComment.cs" />
@@ -169,6 +170,10 @@
     <ProjectReference Include="..\Common.Drawing\Common.Drawing.csproj">
       <Project>{35FFBEF6-6A7D-4FEA-A4C6-AAB784FA709B}</Project>
       <Name>Common.Drawing</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Common.Identity\Common.Identity.csproj">
+      <Project>{3B21F4C6-9461-4751-9B23-9A9006743D68}</Project>
+      <Name>Common.Identity</Name>
     </ProjectReference>
     <ProjectReference Include="..\Common.IO\Common.IO.csproj">
       <Project>{5A67ED63-98AC-4FC2-9E25-0AFA3229B9D0}</Project>

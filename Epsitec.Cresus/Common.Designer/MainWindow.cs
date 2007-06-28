@@ -106,6 +106,9 @@ namespace Epsitec.Common.Designer
 				this.dlgFilter.Closed += new EventHandler(this.HandleDlgClosed);
 				this.dlgSearch.Closed += new EventHandler(this.HandleDlgClosed);
 
+				//	Les réglages doivent être lus avant de créer l'interface graphique.
+				this.settings.Read();
+
 				this.InitCommands();
 				this.CreateLayout();
 			}
@@ -228,6 +231,14 @@ namespace Epsitec.Common.Designer
 				this.standalone = value;
 			}
 		}
+
+		public Settings Settings
+		{
+			get
+			{
+				return this.settings;
+			}
+		}
 		
 		public DesignerMode Mode
 		{
@@ -319,6 +330,7 @@ namespace Epsitec.Common.Designer
 			this.ribbonMain.Items.Add(new Ribbons.Character(this));
 			this.ribbonMain.Items.Add(new Ribbons.Display(this));
 			this.ribbonMain.Items.Add(new Ribbons.Locator(this));
+			this.ribbonMain.Items.Add(new Ribbons.Identity(this));
 
 			//	Crée le ruban des opérations.
 			this.ribbonOper = new RibbonPage();
