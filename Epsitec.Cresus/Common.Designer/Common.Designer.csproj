@@ -46,6 +46,7 @@
     <Compile Include="Controllers\TableController.cs" />
     <Compile Include="Controllers\StructuredController.cs" />
     <Compile Include="Controllers\DruidController.cs" />
+    <Compile Include="Settings.cs" />
     <Compile Include="Designer.cs" />
     <Compile Include="Dialogs\EntityComment.cs" />
     <Compile Include="Dialogs\FieldName.cs" />

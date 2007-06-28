@@ -149,13 +149,14 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		protected void UpdateModules(bool scan)
 		{
-			//	Met à jour la liste des modules ouvrables/ouverts.
+			//	Met à jour la liste des modules ouvrables/ouverts/bloqués.
 			if (scan)
 			{
 				this.mainWindow.ResourceManagerPool.ScanForAllModules();
 				this.moduleInfosAll = this.mainWindow.ResourceManagerPool.FindReferenceModules();
 			}
 
+			//	Construit une liste réduite contenant uniquement les modules visibles dans la liste.
 			this.moduleInfosShowed = new List<ResourceModuleInfo>();
 			for (int i=0; i<this.moduleInfosAll.Count; i++)
 			{
@@ -175,6 +176,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				}
 			}
 
+			//	Trie la liste des modules visibles.
 			this.moduleInfosShowed.Sort(new Comparers.ResourceModuleInfoToOpen());
 		}
 

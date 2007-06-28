@@ -33,8 +33,7 @@ namespace Epsitec.Common.Designer
 			ImageProvider.Default.PrefillManifestIconCache();
 		}
 
-		public MainWindow()
-			: this (new ResourceManagerPool("Common.Designer"))
+		public MainWindow() : this(new ResourceManagerPool("Common.Designer"))
 		{
 			this.resourceManagerPool.DefaultPrefix = "file";
 			this.resourceManagerPool.SetupDefaultRootPaths();
@@ -45,6 +44,7 @@ namespace Epsitec.Common.Designer
 			this.resourceManagerPool = pool;
 			this.LocatorInit();
 			this.moduleInfoList = new List<ModuleInfo>();
+			this.settings = new Settings();
 			this.context = new PanelsContext();
 		}
 
@@ -128,7 +128,7 @@ namespace Epsitec.Common.Designer
 				}
 			}
 #else
-			this.UseModule(-1);  // grise toutes les commandes puisqu'aucun module n'est ouvert
+			this.ReadSettings();
 #endif
 			
 			this.window.Show();
@@ -587,6 +587,8 @@ namespace Epsitec.Common.Designer
 			{
 				return;
 			}
+
+			this.WriteSettings();
 
 			this.dlgGlyphs.Hide();
 			this.dlgFilter.Hide();
@@ -1863,6 +1865,45 @@ namespace Epsitec.Common.Designer
 			return true;
 		}
 
+		protected void ReadSettings()
+		{
+			//	Reprend tous les réglages globaux.
+			if (!this.settings.Read() || this.settings.Modules.Count == 0)
+			{
+				this.UseModule(-1);  // grise toutes les commandes puisqu'aucun module n'est ouvert
+			}
+			else
+			{
+				foreach (string path in this.settings.Modules)
+				{
+					ResourceModuleInfo info = new ResourceModuleInfo();
+					info.ReferenceModulePath = path;
+					Module module = new Module(this, this.mode, this.resourceManagerPool.DefaultPrefix, info.FullId);
+
+					ModuleInfo mi = new ModuleInfo();
+					mi.Module = module;
+					this.moduleInfoList.Insert(++this.currentModule, mi);
+					this.CreateModuleLayout();
+
+					this.bookModules.ActivePage = mi.TabPage;
+				}
+			}
+		}
+
+		protected bool WriteSettings()
+		{
+			//	Sauve tous les réglages globaux.
+			this.settings.Modules.Clear();
+
+			foreach (ModuleInfo info in this.moduleInfoList)
+			{
+				this.settings.Modules.Add(info.Module.ModulePath);
+			}
+			
+			return this.settings.Write();  // enregistre les réglages globaux
+
+		}
+
 		public void UpdateBookModules()
 		{
 			//	Met à jour le nom de l'onglet des modules.
@@ -2162,6 +2203,7 @@ namespace Epsitec.Common.Designer
 
 		protected Support.ResourceManagerPool	resourceManagerPool;
 		protected List<ModuleInfo>				moduleInfoList;
+		protected Settings						settings;
 		protected int							lastModule = -1;
 		protected int							currentModule = -1;
 		protected double						ribbonHeight = 71;
