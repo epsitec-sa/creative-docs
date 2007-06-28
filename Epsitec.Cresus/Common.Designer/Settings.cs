@@ -34,7 +34,7 @@ namespace Epsitec.Common.Designer
 			//	Ecrit le fichier des réglages globaux.
 			try
 			{
-				File.WriteAllText(this.GlobalSettingsFilename, this.Serialize());
+				File.WriteAllBytes(this.GlobalSettingsFilename, this.Serialize());
 				return true;
 			}
 			catch
@@ -48,7 +48,7 @@ namespace Epsitec.Common.Designer
 			//	Lit le fichier des réglages globaux.
 			try
 			{
-				this.Deserialize(File.ReadAllText(this.GlobalSettingsFilename));
+				this.Deserialize(File.ReadAllBytes(this.GlobalSettingsFilename));
 				return true;
 			}
 			catch
@@ -57,26 +57,25 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
-		protected string Serialize()
+		protected byte[] Serialize()
 		{
 			//	Retourne les données à sérialiser (texte xml).
-			System.Text.StringBuilder buffer = new System.Text.StringBuilder();
-			StringWriter stringWriter = new StringWriter(buffer);
-			XmlTextWriter writer = new XmlTextWriter(stringWriter);
+			MemoryStream buffer = new MemoryStream();
+			XmlTextWriter writer = new XmlTextWriter(buffer, System.Text.Encoding.UTF8);
 			writer.Formatting = Formatting.Indented;
 
 			this.WriteXml(writer);
 
 			writer.Flush();
 			writer.Close();
-			return buffer.ToString();
+			return buffer.ToArray ();
 		}
 
-		protected void Deserialize(string data)
+		protected void Deserialize(byte[] data)
 		{
 			//	Désérialise le texte xml.
-			StringReader stringReader = new StringReader(data);
-			XmlTextReader reader = new XmlTextReader(stringReader);
+			MemoryStream buffer = new MemoryStream(data);
+			XmlTextReader reader = new XmlTextReader(buffer);
 			
 			this.ReadXml(reader);
 
