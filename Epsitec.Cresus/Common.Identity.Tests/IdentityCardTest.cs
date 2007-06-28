@@ -13,6 +13,7 @@ namespace Epsitec.Common.Identity
 		public void Initialize()
 		{
 			Epsitec.Common.Widgets.Widget.Initialize ();
+			Epsitec.Common.Widgets.Adorners.Factory.SetActive ("LookRoyale");
 		}
 		
 		[Test]
@@ -45,7 +46,16 @@ namespace Epsitec.Common.Identity
 		}
 
 		[Test]
-		public void CheckUserInterface()
+		public void CheckUserInterfaceDialog()
+		{
+			IList<IdentityCard> cards = IdentityRepository.Default.IdentityCards;
+			UI.IdentityCardSelectorDialog dialog = new UI.IdentityCardSelectorDialog (cards);
+
+			dialog.OpenDialog ();
+		}
+
+		[Test]
+		public void CheckUserInterfaceWidget()
 		{
 			Widgets.Window window = new Epsitec.Common.Widgets.Window ();
 			UI.IdentityCardWidget widget = new UI.IdentityCardWidget (window.Root);

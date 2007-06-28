@@ -116,7 +116,44 @@ namespace Epsitec.Common.UI
 			}
 			set
 			{
-				this.ItemPanel.Items = value;
+				if (this.Items != value)
+				{
+					this.ItemPanel.Items = value;
+
+					if ((value != null) &&
+						(value.SourceCollection != null) &&
+						(this.sourceType == null))
+					{
+						object firstItem;
+						IStructuredTypeProvider provider = null;
+
+						if (Collection.TryGetFirst (value.SourceCollection, out firstItem))
+						{
+							provider = firstItem as IStructuredTypeProvider;
+						}
+						else
+						{
+							System.Type collectionType = value.SourceCollection.GetType ();
+							System.Type itemType = TypeRosetta.GetEnumerableItemType (collectionType);
+
+							if ((itemType != null) &&
+								(typeof (DependencyObject).IsAssignableFrom (itemType)))
+							{
+								//	We have an empty collection of DependencyObject derived
+								//	items; use this information to derive the object type.
+
+								provider = DependencyObjectType.FromSystemType (itemType);
+							}
+						}
+
+
+						if (provider != null)
+						{
+							this.SourceType = provider.GetStructuredType ();
+						}
+						
+					}
+				}
 			}
 		}
 
@@ -148,6 +185,22 @@ namespace Epsitec.Common.UI
 				{
 					this.headerStripe.Visibility = value;
 					this.UpdateGeometry ();
+				}
+			}
+		}
+
+		public bool								SeparatorVisibility
+		{
+			get
+			{
+				return this.separatorVisibility;
+			}
+			set
+			{
+				if (this.separatorVisibility != value)
+				{
+					this.separatorVisibility = value;
+					this.Invalidate ();
 				}
 			}
 		}
@@ -188,7 +241,7 @@ namespace Epsitec.Common.UI
 			}
 		}
 
-		public StructuredType					SourceType
+		public IStructuredType					SourceType
 		{
 			get
 			{
@@ -217,7 +270,7 @@ namespace Epsitec.Common.UI
 			}
 		}
 
-		public void DefineDefaultColumns(StructuredType sourceType, double width)
+		public void DefineDefaultColumns(IStructuredType sourceType, double width)
 		{
 			System.Threading.Interlocked.Increment (ref this.suspendColumnUpdates);
 			
@@ -319,7 +372,8 @@ namespace Epsitec.Common.UI
 			{
 				adorner.PaintArrayBackground (graphics, bounds, this.PaintState);
 
-				if (this.GetItemTableLayout () == ItemPanelLayout.VerticalList)
+				if ((this.GetItemTableLayout () == ItemPanelLayout.VerticalList) &&
+					(this.SeparatorVisibility))
 				{
 					this.PaintColumnSeparators (graphics, adorner, bounds);
 				}
@@ -867,11 +921,12 @@ namespace Epsitec.Common.UI
 		private Widget									surface;
 		private Widget									headerStripe;
 		private ItemPanel								itemPanel;
-		private StructuredType							sourceType;
+		private IStructuredType							sourceType;
 		private int										suspendColumnUpdates;
 		private Size									defaultItemSize;
 		private Size									apertureSize;
 		private int										suspendScroll;
 		private double									horizontalOffset;
+		private bool									separatorVisibility = true;
 	}
 }

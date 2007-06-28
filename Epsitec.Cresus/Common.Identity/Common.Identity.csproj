@@ -38,9 +38,14 @@
     <Compile Include="IdentityCard.cs" />
     <Compile Include="AssemblyInfo.cs" />
     <Compile Include="IdentityRepository.cs" />
+    <Compile Include="UI\IdentityCardSelectorDialog.cs" />
     <Compile Include="UI\IdentityCardWidget.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Common.Dialogs\Common.Dialogs.csproj">
+      <Project>{560DFD49-3052-4F41-A4C3-6216E6135DC9}</Project>
+      <Name>Common.Dialogs</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Common.Drawing.Agg\Common.Drawing.Agg.csproj">
       <Project>{7D73AD35-D078-4B4C-AF30-434C6A377058}</Project>
       <Name>Common.Drawing.Agg</Name>
@@ -56,6 +61,10 @@
     <ProjectReference Include="..\Common.Types\Common.Types.csproj">
       <Project>{8960D1EA-3B82-49A1-9D44-F92F467209FF}</Project>
       <Name>Common.Types</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Common.UI\Common.UI.csproj">
+      <Project>{BDF75452-AAB1-4E62-82D5-AE23F35C6319}</Project>
+      <Name>Common.UI</Name>
     </ProjectReference>
     <ProjectReference Include="..\Common.Widgets\Common.Widgets.csproj">
       <Project>{C84C2E19-04B7-4244-86F6-E4CAFA3FDA7B}</Project>

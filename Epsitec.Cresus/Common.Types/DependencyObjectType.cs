@@ -9,7 +9,7 @@ namespace Epsitec.Common.Types
 	/// The <c>DependencyObjectType</c> is a higher level version of the
 	/// <see cref="T:System.Type"/> class.
 	/// </summary>
-	public sealed class DependencyObjectType : IStructuredType
+	public sealed class DependencyObjectType : IStructuredType, IStructuredTypeProvider
 	{
 		private DependencyObjectType(System.Type system_type, DependencyObjectType base_type)
 		{
@@ -231,6 +231,15 @@ namespace Epsitec.Common.Types
 		StructuredTypeClass IStructuredType.GetClass()
 		{
 			return StructuredTypeClass.None;
+		}
+
+		#endregion
+
+		#region IStructuredTypeProvider Members
+
+		IStructuredType IStructuredTypeProvider.GetStructuredType()
+		{
+			return this;
 		}
 
 		#endregion

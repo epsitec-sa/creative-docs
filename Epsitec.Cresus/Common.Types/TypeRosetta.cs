@@ -914,7 +914,7 @@ namespace Epsitec.Common.Types
 		/// <summary>
 		/// Verifies if the type implements the specified interface.
 		/// </summary>
-		/// <param name="systemType">Type to check.</param>
+		/// <param name="systemType">Type to analyze.</param>
 		/// <param name="interfaceType">Type of the interface to find.</param>
 		/// <returns><c>true</c> if the interface is found; otherwise, <c>false</c>.</returns>
 		public static bool DoesTypeImplementInterface(System.Type systemType, System.Type interfaceType)
@@ -940,7 +940,7 @@ namespace Epsitec.Common.Types
 		/// <summary>
 		/// Verifies if the type implements the specified generic interface.
 		/// </summary>
-		/// <param name="systemType">Type of the system.</param>
+		/// <param name="systemType">Type to analyze.</param>
 		/// <param name="genericInterfaceType">Type of the generic interface.</param>
 		/// <param name="interfaceType">Real type of the interface.</param>
 		/// <returns>
@@ -973,29 +973,33 @@ namespace Epsitec.Common.Types
 			return false;
 		}
 
+		/// <summary>
+		/// Verifies if the type implement a collection of compatible objects.
+		/// </summary>
+		/// <param name="systemType">Type of the collection (<c>ICollection&lt;T&gt;</c>).</param>
+		/// <param name="objectType">Type of the object.</param>
+		/// <returns>
+		/// <c>true</c> if the collection contains items which are assignable
+		/// to the <c>objectType</c>; otherwise, <c>false</c>.</returns>
 		public static bool DoesTypeImplementCollectionOfCompatibleObjects(System.Type systemType, System.Type objectType)
 		{
-			System.Type interfaceType;
+			System.Type itemType = TypeRosetta.GetCollectionItemType (systemType);
 
-			if (TypeRosetta.DoesTypeImplementGenericInterface (systemType, typeof (ICollection<>), out interfaceType))
+			if ((itemType != null) &&
+				(objectType.IsAssignableFrom (itemType)))
 			{
-				System.Type[] typeArguments = interfaceType.GetGenericArguments ();
-
-				if ((typeArguments.Length == 1) &&
-					(objectType.IsAssignableFrom (typeArguments[0])))
-				{
-					return true;
-				}
+				return true;
 			}
-
-			return false;
+			else
+			{
+				return false;
+			}
 		}
-
 
 		/// <summary>
 		/// Verifies if the type implements the specified generic interface.
 		/// </summary>
-		/// <param name="type">Type to check.</param>
+		/// <param name="type">Type to analyze.</param>
 		/// <param name="genericInterfaceType">Type of the generic interface.</param>
 		/// <returns>
 		/// 	<c>true</c> if the interface is found; otherwise, <c>false</c>.
@@ -1004,6 +1008,50 @@ namespace Epsitec.Common.Types
 		{
 			System.Type interfaceType;
 			return TypeRosetta.DoesTypeImplementGenericInterface (type, genericInterfaceType, out interfaceType);
+		}
+
+		/// <summary>
+		/// Gets the type of the collection items.
+		/// </summary>
+		/// <param name="systemType">Type of the collection (<c>ICollection&lt;T&gt;</c>).</param>
+		/// <returns>The system type of <c>T</c> in <c>ICollection&lt;T&gt;</c> or <c>null</c>.</returns>
+		public static System.Type GetCollectionItemType(System.Type systemType)
+		{
+			System.Type interfaceType;
+
+			if (TypeRosetta.DoesTypeImplementGenericInterface (systemType, typeof (ICollection<>), out interfaceType))
+			{
+				System.Type[] typeArguments = interfaceType.GetGenericArguments ();
+
+				if (typeArguments.Length == 1)
+				{
+					return typeArguments[0];
+				}
+			}
+
+			return null;
+		}
+
+		/// <summary>
+		/// Gets the type of the enumerable items.
+		/// </summary>
+		/// <param name="systemType">Type of the enumeration (<c>IEnumerable&lt;T&gt;</c>).</param>
+		/// <returns>The system type of <c>T</c> in <c>IEnumerable&lt;T&gt;</c> or <c>null</c>.</returns>
+		public static System.Type GetEnumerableItemType(System.Type systemType)
+		{
+			System.Type interfaceType;
+
+			if (TypeRosetta.DoesTypeImplementGenericInterface (systemType, typeof (IEnumerable<>), out interfaceType))
+			{
+				System.Type[] typeArguments = interfaceType.GetGenericArguments ();
+
+				if (typeArguments.Length == 1)
+				{
+					return typeArguments[0];
+				}
+			}
+
+			return null;
 		}
 
 		/// <summary>

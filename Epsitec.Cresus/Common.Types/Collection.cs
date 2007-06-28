@@ -52,6 +52,42 @@ namespace Epsitec.Common.Types
 			return list;
 		}
 
+		public static bool TryGetFirst(System.Collections.IEnumerable collection, out object firstItem)
+		{
+			foreach (object item in collection)
+			{
+				firstItem = item;
+				return true;
+			}
+
+			firstItem = null;
+			return false;
+		}
+
+		public static T GetFirst<T>(IEnumerable<T> collection)
+		{
+			T firstItem;
+			
+			if (Collection.TryGetFirst (collection, out firstItem))
+			{
+				return firstItem;
+			}
+
+			throw new System.ArgumentOutOfRangeException ();
+		}
+
+		public static bool TryGetFirst<T>(IEnumerable<T> collection, out T firstItem)
+		{
+			foreach (T item in collection)
+			{
+				firstItem = item;
+				return true;
+			}
+
+			firstItem = default (T);
+			return false;
+		}
+		
 		public static T GetLast<T>(IList<T> list)
 		{
 			if (list == null)

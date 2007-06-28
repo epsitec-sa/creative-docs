@@ -168,7 +168,10 @@ namespace Epsitec.Common.UI
 			tooltipContainer.PreferredWidth  = widthMeasure.Desired;
 			tooltipContainer.PreferredHeight = heightMeasure.Desired;
 
-			Widgets.ToolTip.Default.SetToolTip (viewContainer, tooltipContainer);
+			if (tooltipContainer.HasChildren)
+			{
+				Widgets.ToolTip.Default.SetToolTip (viewContainer, tooltipContainer);
+			}
 
 			return viewContainer;
 		}
