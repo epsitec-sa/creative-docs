@@ -174,6 +174,8 @@ namespace Epsitec.Common.Designer.Dialogs
 					this.moduleInfosShowed.Add(this.moduleInfosAll[i]);
 				}
 			}
+
+			this.moduleInfosShowed.Sort(new Comparers.ResourceModuleInfoToOpen());
 		}
 
 		protected void UpdateArray()
