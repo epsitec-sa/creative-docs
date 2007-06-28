@@ -81,15 +81,15 @@ namespace Epsitec.Common.Types.Converters
 		/// if the conversion was not possible.</returns>
 		public object ConvertBack(object value, System.Type expectedType, object parameter, System.Globalization.CultureInfo culture)
 		{
+			if (expectedType == null)
+			{
+				throw new System.ArgumentNullException ("expectedType", "Expected type is null");
+			}
+
+			System.Type sourceType = value == null ? null : value.GetType ();
+
 			try
 			{
-				if (expectedType == null)
-				{
-					throw new System.ArgumentNullException ("expectedType", "Expected type is null");
-				}
-
-				System.Type sourceType = value == null ? null : value.GetType ();
-
 				if (sourceType != expectedType)
 				{
 					if (expectedType.IsEnum)
@@ -141,6 +141,16 @@ namespace Epsitec.Common.Types.Converters
 			}
 			catch (System.InvalidCastException)
 			{
+				System.ComponentModel.TypeConverter converter = System.ComponentModel.TypeDescriptor.GetConverter (expectedType);
+
+				if (converter != null)
+				{
+					if (converter.CanConvertFrom (sourceType))
+					{
+						return converter.ConvertFrom (null, culture, value);
+					}
+				}
+
 				return InvalidValue.Instance;
 			}
 			catch (System.FormatException)

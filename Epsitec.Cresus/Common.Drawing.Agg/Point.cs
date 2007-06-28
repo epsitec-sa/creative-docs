@@ -431,14 +431,14 @@ namespace Epsitec.Common.Drawing
 		
 		
 		#region Converter Class
-		public class Converter : AbstractStringConverter
+		public class Converter : Types.AbstractStringConverter
 		{
-			public override object ParseString(string value)
+			public override object ParseString(string value, System.Globalization.CultureInfo culture)
 			{
 				return Point.Parse (value);
 			}
-			
-			public override string ToString(object value)
+
+			public override string ToString(object value, System.Globalization.CultureInfo culture)
 			{
 				Point point = (Point) value;
 				return point.ToString ();
