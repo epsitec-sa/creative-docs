@@ -110,6 +110,7 @@ namespace Epsitec.Common.Designer
 				this.CreateLayout();
 			}
 
+#if false
 			//	Liste les modules, puis ouvre tous ceux qui ont été trouvés.
 			Resources.DefaultManager.RefreshModuleInfos(this.resourceManagerPool.DefaultPrefix);
 			if (this.moduleInfoList.Count == 0)
@@ -126,6 +127,9 @@ namespace Epsitec.Common.Designer
 					this.bookModules.ActivePage = mi.TabPage;
 				}
 			}
+#else
+			this.UseModule(-1);  // grise toutes les commandes puisqu'aucun module n'est ouvert
+#endif
 			
 			this.window.Show();
 
@@ -1754,6 +1758,9 @@ namespace Epsitec.Common.Designer
 				this.fontItalicState.Enable = false;
 				this.fontUnderlineState.Enable = false;
 				this.glyphsState.Enable = false;
+				this.displayHorizontalState.Enable = false;
+				this.displayVerticalState.Enable = false;
+				this.displayFullScreenState.Enable = false;
 
 				this.UpdateInfoCurrentModule();
 				this.UpdateInfoAccess();

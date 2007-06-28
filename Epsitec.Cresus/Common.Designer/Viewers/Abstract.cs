@@ -898,6 +898,10 @@ namespace Epsitec.Common.Designer.Viewers
 			this.GetCommandState("AccessLast").Enable = (sel != -1 && sel < count-1);
 			this.GetCommandState("AccessNext").Enable = (sel != -1 && sel < count-1);
 
+			this.GetCommandState("DisplayHorizontal").Enable = true;
+			this.GetCommandState("DisplayVertical").Enable = true;
+			this.GetCommandState("DisplayFullScreen").Enable = true;
+
 			if (!this.IsDeleteOrDuplicateForViewer)
 			{
 				this.GetCommandState("Delete").Enable = (sel != -1 && count > 1 && build);
