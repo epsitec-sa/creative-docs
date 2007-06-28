@@ -252,7 +252,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			Caption caption = new Caption (id);
 			string  name    = string.IsNullOrEmpty (field.Name) ? null : this.GetNameFromFieldName (item, field.Name);
 
-			caption.DeserializeFromString (field.AsString);
+			caption.DeserializeFromString (field.AsString, this.ResourceManager);
 
 			this.FillDataFromCaption (item, data, caption);
 			data.SetValue (Res.Fields.ResourceBase.Comment, field.About);
