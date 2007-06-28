@@ -214,6 +214,21 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
+		public bool Standalone
+		{
+			//	Standalone = true signifie que Designer est une application à
+			//	part entière : quand on ferme la fenêtre, on doit réellement
+			//	quitter l'application.
+			get
+			{
+				return this.standalone;
+			}
+			set
+			{
+				this.standalone = value;
+			}
+		}
+		
 		public DesignerMode Mode
 		{
 			//	Retourne le mode de fonctionnement de l'application.
@@ -577,7 +592,14 @@ namespace Epsitec.Common.Designer
 			this.dlgFilter.Hide();
 			this.dlgSearch.Hide();
 
-			this.window.Hide();
+			if (this.standalone)
+			{
+				this.window.Quit();
+			}
+			else
+			{
+				this.window.Hide();
+			}
 	}
 
 		[Command("DesignerGlyphs")]
@@ -2112,6 +2134,7 @@ namespace Epsitec.Common.Designer
 
 
 		protected DesignerMode					mode;
+		protected bool							standalone;
 		protected Window						window;
 		protected CommandDispatcher				commandDispatcher;
 		protected CommandContext				commandContext;

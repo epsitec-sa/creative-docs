@@ -87,8 +87,8 @@ namespace App.Designer
 			
 			designerMainWindow = new MainWindow ();
 			designerMainWindow.Mode = DesignerMode.Build;
+			designerMainWindow.Standalone = true;
 			designerMainWindow.Show (null);
-			designerMainWindow.Window.WindowCloseClicked += delegate (object sender) { designerMainWindow.Window.Quit (); };
 			designerMainWindow.Window.Run ();
 		}
 	}
