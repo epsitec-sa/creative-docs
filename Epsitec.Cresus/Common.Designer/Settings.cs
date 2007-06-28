@@ -5,6 +5,7 @@ using System.IO;
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Support;
 using Epsitec.Common.Drawing;
+using Epsitec.Common.Identity;
 
 namespace Epsitec.Common.Designer
 {
@@ -25,6 +26,18 @@ namespace Epsitec.Common.Designer
 			get
 			{
 				return this.modules;
+			}
+		}
+
+		public IdentityCard IdentityCard
+		{
+			get
+			{
+				return this.identityCard;
+			}
+			set
+			{
+				this.identityCard = value;
 			}
 		}
 
@@ -88,6 +101,8 @@ namespace Epsitec.Common.Designer
 			//	Génère les données xml.
 			writer.WriteStartDocument();
 
+			writer.WriteStartElement("Settings");
+			
 			writer.WriteStartElement("Modules");
 			foreach (ResourceModuleId module in this.modules)
 			{
@@ -95,6 +110,12 @@ namespace Epsitec.Common.Designer
 				writer.WriteElementString("ResourceModuleId", Types.InvariantConverter.ConvertToString(module));
 				writer.WriteEndElement();
 			}
+			writer.WriteEndElement();
+
+			writer.WriteStartElement("Identity");
+			writer.WriteElementString("UserName", this.identityCard == null ? "" : this.identityCard.UserName);
+			writer.WriteEndElement();
+
 			writer.WriteEndElement();
 			
 			writer.WriteEndDocument();
@@ -105,7 +126,7 @@ namespace Epsitec.Common.Designer
 			//	Analyse les données xml.
 			this.modules.Clear();
 
-			while (reader.ReadToFollowing("Module"))
+			while (reader.ReadToFollowing("Settings"))
 			{
 				reader.Read();
 
@@ -114,17 +135,25 @@ namespace Epsitec.Common.Designer
 					if (reader.NodeType == XmlNodeType.Element)
 					{
 						string name = reader.LocalName;
-						string element = reader.ReadElementString();
 
-						if (name == "ResourceModuleId")
+						switch (name)
 						{
-							ResourceModuleId module = Types.InvariantConverter.ConvertFromString<ResourceModuleId>(element);
-							this.modules.Add(module);
+							case "Modules":
+								this.ReadXmlModules(reader);
+								break;
+
+							case "Identity":
+								this.ReadXmlIdentity(reader);
+								break;
+
+							default:
+								throw new System.FormatException();
 						}
 					}
 					else if (reader.NodeType == XmlNodeType.EndElement)
 					{
-						System.Diagnostics.Debug.Assert(reader.Name == "Module");
+						System.Diagnostics.Debug.Assert(reader.Name == "Settings");
+						reader.Read();
 						break;
 					}
 					else
@@ -135,6 +164,93 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
+		protected void ReadXmlModules(XmlReader reader)
+		{
+			reader.Read();
+
+			while (true)
+			{
+				if (reader.NodeType == XmlNodeType.Element)
+				{
+					string name = reader.LocalName;
+
+					if (name == "Module")
+					{
+						this.ReadXmlModule(reader);
+					}
+				}
+				else if (reader.NodeType == XmlNodeType.EndElement)
+				{
+					System.Diagnostics.Debug.Assert(reader.Name == "Modules");
+					reader.Read();
+					break;
+				}
+				else
+				{
+					reader.Read();
+				}
+			}
+		}
+
+		protected void ReadXmlIdentity(XmlReader reader)
+		{
+			reader.Read ();
+
+			while (true)
+			{
+				if (reader.NodeType == XmlNodeType.Element)
+				{
+					string name = reader.LocalName;
+					string element = reader.ReadElementString();
+
+					if (name == "UserName")
+					{
+						this.identityCard = IdentityRepository.Default.FindIdentityCard(element);
+					}
+				}
+				if (reader.NodeType == XmlNodeType.EndElement)
+				{
+					System.Diagnostics.Debug.Assert(reader.Name == "Identity");
+					reader.Read();
+					break;
+				}
+				else
+				{
+					reader.Read();
+				}
+			}
+		}
+
+
+		protected void ReadXmlModule(XmlReader reader)
+		{
+			reader.Read();
+
+			while (true)
+			{
+				if (reader.NodeType == XmlNodeType.Element)
+				{
+					string name = reader.LocalName;
+					string element = reader.ReadElementString();
+
+					if (name == "ResourceModuleId")
+					{
+						ResourceModuleId module = Types.InvariantConverter.ConvertFromString<ResourceModuleId>(element);
+						this.modules.Add(module);
+					}
+				}
+				else if (reader.NodeType == XmlNodeType.EndElement)
+				{
+					System.Diagnostics.Debug.Assert(reader.Name == "Module");
+					reader.Read();
+					break;
+				}
+				else
+				{
+					reader.Read();
+				}
+			}
+		}
 
 		protected string GlobalSettingsFilename
 		{
@@ -150,5 +266,6 @@ namespace Epsitec.Common.Designer
 
 
 		protected List<ResourceModuleId> modules;
+		protected IdentityCard identityCard;
 	}
 }
