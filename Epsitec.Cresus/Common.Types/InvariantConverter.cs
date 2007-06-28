@@ -484,8 +484,13 @@ namespace Epsitec.Common.Types
 				value = (System.Enum) obj;
 				return true;
 			}
-			
-			string name = string.Format (System.Globalization.CultureInfo.InvariantCulture, "{0}", obj);
+
+			string name = obj as string;
+
+			if (name == null)
+			{
+				string.Format (System.Globalization.CultureInfo.InvariantCulture, "{0}", obj);
+			}
 			
 			if (InvariantConverter.ParseEnum (type, name, out value))
 			{

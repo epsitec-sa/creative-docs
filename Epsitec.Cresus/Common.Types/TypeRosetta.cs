@@ -95,49 +95,57 @@ namespace Epsitec.Common.Types
 						}
 						else
 						{
-							if (systemType == typeof (bool))
-							{
-								namedType = BooleanType.Default;
-							}
-							else if (systemType == typeof (int))
-							{
-								namedType = IntegerType.Default;
-							}
-							else if (systemType == typeof (long))
-							{
-								namedType = LongIntegerType.Default;
-							}
-							else if (systemType == typeof (double))
-							{
-								namedType = DoubleType.Default;
-							}
-							else if (systemType == typeof (decimal))
-							{
-								namedType = DecimalType.Default;
-							}
-							else if (systemType == typeof (void))
-							{
-								namedType = VoidType.Default;
-							}
-							else if (systemType == typeof (string))
-							{
-								namedType = StringType.Default;
-							}
-							else if (systemType == typeof (Support.Druid))
-							{
-								namedType = DruidType.Default;
-							}
-							else
-							{
-								IStructuredType structuredType = typeObject as IStructuredType;
+							System.TypeCode typeCode = System.Type.GetTypeCode (systemType);
 
-								if (structuredType ==  null)
+							switch (typeCode)
+							{
+								case System.TypeCode.Boolean:
+									namedType = BooleanType.Default;
+									break;
+
+								case System.TypeCode.Int32:
+									namedType = IntegerType.Default;
+									break;
+
+								case System.TypeCode.Int64:
+									namedType = LongIntegerType.Default;
+									break;
+
+								case System.TypeCode.Double:
+									namedType = DoubleType.Default;
+									break;
+
+								case System.TypeCode.Decimal:
+									namedType = DecimalType.Default;
+									break;
+
+								case System.TypeCode.String:
+									namedType = StringType.Default;
+									break;
+							}
+
+							if (namedType == null)
+							{
+								if (systemType == typeof (void))
 								{
-									namedType = new AutomaticNamedType (systemType);
+									namedType = VoidType.Default;
+								}
+								else if (systemType == typeof (Support.Druid))
+								{
+									namedType = DruidType.Default;
 								}
 								else
 								{
-									namedType = new AutomaticStructuredNamedType (systemType, structuredType);
+									IStructuredType structuredType = typeObject as IStructuredType;
+
+									if (structuredType ==  null)
+									{
+										namedType = new AutomaticNamedType (systemType);
+									}
+									else
+									{
+										namedType = new AutomaticStructuredNamedType (systemType, structuredType);
+									}
 								}
 							}
 						}

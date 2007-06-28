@@ -126,7 +126,7 @@ namespace Epsitec.Common.Types
 
 		/// <summary>
 		/// Gets the list of interface ids defined locally for this structured
-		/// type. See <see cref="GetInterfaceIds"/> if you need to retrieve the
+		/// type. See <see cref="GetInterfaceIds(bool)"/> if you need to retrieve the
 		/// complete list of interfaces associated with this structured type.
 		/// </summary>
 		/// <value>The interface ids.</value>

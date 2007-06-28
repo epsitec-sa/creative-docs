@@ -29,52 +29,144 @@ namespace Epsitec.Common.Types.Converters
 		public object Convert(object value, System.Type expectedType, object parameter, System.Globalization.CultureInfo culture)
 		{
 			System.Type sourceType = value == null ? null : value.GetType ();
+
+			if (expectedType == null)
+			{
+				throw new System.ArgumentNullException ("expectedType", "Expected type is null");
+			}
+			if (culture == null)
+			{
+				throw new System.ArgumentNullException ("culture", "No culture was specified");
+			}
+
+			//	If the caller wants the value converted to object, there is nothing
+			//	to do (it is already boxed as an object), or if there is no change
+			//	between the source and type and expected type, there is nothing to
+			//	do, either.
 			
+			if ((expectedType == typeof (object)) ||
+				(expectedType == sourceType))
+			{
+				return value;
+			}
+
+			//	If the caller wants to convert a null value to a reference type,
+			//	then nothing needs to be done: null is always null. But converting
+			//	null to a value type is not possible.
+			
+			if (value == null)
+			{
+				if (expectedType.IsValueType)
+				{
+					return InvalidValue.Instance;
+				}
+				else
+				{
+					return null;
+				}
+			}
+
+			System.Diagnostics.Debug.Assert (sourceType != null);
+
+			System.TypeCode sourceTypeCode   = System.Type.GetTypeCode (sourceType);
+			System.TypeCode expectedTypeCode = System.Type.GetTypeCode (expectedType);
+
 			try
 			{
-				if (expectedType == null)
-				{
-					throw new System.ArgumentNullException ("expectedType", "Expected type is null");
-				}
+				//	We handle DateTime in a special way, since we do not want the
+				//	default .NET converter to be used here :
 
-				if ((sourceType != null) &&
-					(sourceType.IsEnum))
+				if ((sourceTypeCode == System.TypeCode.String) &&
+					(expectedTypeCode == System.TypeCode.DateTime) &&
+					(culture == System.Globalization.CultureInfo.InvariantCulture))
 				{
-					System.Diagnostics.Debug.WriteLine ("Convert enum value " + value.ToString () + " to type " + expectedType.Name);
+					return InvariantConverter.ToDateTime (value as string);
 				}
-
-				if (expectedType == typeof (object))
-				{
-					return value;
-				}
-
-				if ((expectedType == typeof (string)) &&
-					(sourceType == typeof (System.DateTime)) &&
+				
+				if ((sourceTypeCode == System.TypeCode.DateTime) &&
+					(expectedTypeCode == System.TypeCode.String) &&
 					(culture == System.Globalization.CultureInfo.InvariantCulture))
 				{
 					return InvariantConverter.ToString (value);
 				}
 
-				return System.Convert.ChangeType (value, expectedType, culture);
-			}
-			catch (System.InvalidCastException)
-			{
-				System.ComponentModel.TypeConverter converter = System.ComponentModel.TypeDescriptor.GetConverter (sourceType);
+				//	Handle enumerations by first converting the value to a string,
+				//	then converting the string to the enumeration :
 				
-				if (converter != null)
+				if (expectedType.IsEnum)
 				{
-					if (converter.CanConvertTo (expectedType))
+					value = this.Convert (value, typeof (string), null, culture);
+					
+					if (InvalidValue.IsInvalidValue (value))
 					{
-						return converter.ConvertTo (null, culture, value, expectedType);
+						return value;
+					}
+
+					System.Enum enumValue;
+
+					if (InvariantConverter.Convert (value, expectedType, out enumValue))
+					{
+						return enumValue;
+					}
+					else
+					{
+						return InvalidValue.Instance;
 					}
 				}
 
+				if ((sourceTypeCode != System.TypeCode.Object) &&
+					(expectedTypeCode != System.TypeCode.Object))
+				{
+					return System.Convert.ChangeType (value, expectedType, culture);
+				}
+
+				return AutomaticValueConverter.ConvertUsingTypeConverter (value, sourceType, expectedType, culture);
+			}
+			catch (System.InvalidCastException)
+			{
 				return InvalidValue.Instance;
 			}
 			catch (System.FormatException)
 			{
 				return InvalidValue.Instance;
 			}
+			catch (System.Exception ex)
+			{
+				if ((ex.InnerException != null) &&
+					(ex.InnerException is System.FormatException))
+				{
+					return InvalidValue.Instance;
+				}
+
+				throw;
+			}
+		}
+
+		private static object ConvertUsingTypeConverter(object value, System.Type sourceType, System.Type expectedType, System.Globalization.CultureInfo culture)
+		{
+			System.ComponentModel.TypeConverter converter;
+			
+			converter = System.ComponentModel.TypeDescriptor.GetConverter (sourceType);
+
+			if (converter != null)
+			{
+				if (converter.CanConvertTo (expectedType))
+				{
+					return converter.ConvertTo (null, culture, value, expectedType);
+				}
+			}
+
+			converter = System.ComponentModel.TypeDescriptor.GetConverter (expectedType);
+
+			if (converter != null)
+			{
+				if (converter.CanConvertFrom (sourceType))
+				{
+					return converter.ConvertFrom (null, culture, value);
+				}
+			}
+
+			return InvalidValue.Instance;
 		}
 
 		/// <summary>
@@ -151,26 +243,48 @@ namespace Epsitec.Common.Types.Converters
 					return InvariantConverter.ToDateTime (text);
 				}
 
-				return System.Convert.ChangeType (value, expectedType, culture);
+				if (true)
+				{
+					return AutomaticValueConverter.ConvertBackClassType (value, expectedType, culture, sourceType);
+				}
+				else
+				{
+					return System.Convert.ChangeType (value, expectedType, culture);
+				}
 			}
 			catch (System.InvalidCastException)
 			{
-				System.ComponentModel.TypeConverter converter = System.ComponentModel.TypeDescriptor.GetConverter (expectedType);
-
-				if (converter != null)
-				{
-					if (converter.CanConvertFrom (sourceType))
-					{
-						return converter.ConvertFrom (null, culture, value);
-					}
-				}
-
-				return InvalidValue.Instance;
+				return ConvertBackClassType (value, expectedType, culture, sourceType);
 			}
 			catch (System.FormatException)
 			{
 				return InvalidValue.Instance;
 			}
+		}
+
+		private static object ConvertBackClassType(object value, System.Type expectedType, System.Globalization.CultureInfo culture, System.Type sourceType)
+		{
+			System.ComponentModel.TypeConverter converter = System.ComponentModel.TypeDescriptor.GetConverter (expectedType);
+
+			if (converter != null)
+			{
+				if (converter.CanConvertFrom (sourceType))
+				{
+					return converter.ConvertFrom (null, culture, value);
+				}
+			}
+
+			converter = System.ComponentModel.TypeDescriptor.GetConverter (sourceType);
+
+			if (converter != null)
+			{
+				if (converter.CanConvertTo (expectedType))
+				{
+					return converter.ConvertTo (null, culture, value, expectedType);
+				}
+			}
+
+			return InvalidValue.Instance;
 		}
 
 		#endregion
