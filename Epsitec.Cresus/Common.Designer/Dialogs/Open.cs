@@ -104,7 +104,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.checkAll.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			}
 
-			this.UpdateModules();
+			this.UpdateModules(true);
 			this.UpdateArray();
 			this.array.SelectedRow = -1;
 			this.indexToOpen = -1;
@@ -137,11 +137,14 @@ namespace Epsitec.Common.Designer.Dialogs
 		}
 
 
-		protected void UpdateModules()
+		protected void UpdateModules(bool scan)
 		{
 			//	Met à jour la liste des modules ouvrables/ouverts.
-			this.mainWindow.ResourceManagerPool.ScanForAllModules();
-			this.moduleInfosAll = this.mainWindow.ResourceManagerPool.FindReferenceModules();
+			if (scan)
+			{
+				this.mainWindow.ResourceManagerPool.ScanForAllModules();
+				this.moduleInfosAll = this.mainWindow.ResourceManagerPool.FindReferenceModules();
+			}
 
 			this.moduleInfosShowed = new List<ResourceModuleInfo>();
 			for (int i=0; i<this.moduleInfosAll.Count; i++)
@@ -339,7 +342,7 @@ namespace Epsitec.Common.Designer.Dialogs
 		{
 			this.isAll = !this.isAll;
 
-			this.UpdateModules();
+			this.UpdateModules(false);
 			this.UpdateArray();
 			this.array.SelectedRow = -1;
 			this.indexToOpen = -1;
