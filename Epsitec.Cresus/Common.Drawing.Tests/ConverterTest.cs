@@ -27,8 +27,8 @@ namespace Epsitec.Common.Drawing
 			Assert.AreEqual (a, b);
 			Assert.AreEqual (sa, conv.ConvertToString (b));
 
-			Assert.AreEqual ("10;20", Types.Converter.ConvertToString (a));
-			Assert.AreEqual (a, Types.Converter.ConvertFromString<Size> ("10;20"));
+			Assert.AreEqual ("10;20", Types.InvariantConverter.ConvertToString (a));
+			Assert.AreEqual (a, Types.InvariantConverter.ConvertFromString<Size> ("10;20"));
 		}
 		
 		[Test] public void CheckRectangle()
