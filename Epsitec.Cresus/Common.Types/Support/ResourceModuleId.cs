@@ -9,6 +9,9 @@ namespace Epsitec.Common.Support
 	/// The <c>ResourceModuleId</c> structure stores the name and the identifier
 	/// of a resource module.
 	/// </summary>
+
+	[System.ComponentModel.TypeConverter (typeof (ResourceModuleId.Converter))]
+	
 	public struct ResourceModuleId : System.IEquatable<ResourceModuleId>
 	{
 		/// <summary>
@@ -309,5 +312,37 @@ namespace Epsitec.Common.Support
 		private ResourceModuleLayer				layer;			//	module layer
 		
 		#endregion
+		
+		#region Converter Class
+
+		public class Converter : Types.AbstractStringConverter
+		{
+			public override object ParseString(string value, System.Globalization.CultureInfo culture)
+			{
+				string[] args = value.Split (';');
+
+				string name = args[0];
+				int id = int.Parse (args[1], System.Globalization.NumberStyles.Integer, culture);
+				string path = args[2];
+				ResourceModuleLayer layer = ResourceModuleId.ConvertPrefixToLayer (args[3]);
+
+				return new ResourceModuleId (name, path, id, layer);
+			}
+
+			public override string ToString(object value, System.Globalization.CultureInfo culture)
+			{
+				ResourceModuleId moduleId = (ResourceModuleId) value;
+				string[] args = new string[4];
+
+				args[0] = moduleId.Name ?? "";
+				args[1] = moduleId.Id.ToString (System.Globalization.CultureInfo.InvariantCulture);
+				args[2] = moduleId.Path ?? "";
+				args[3] = ResourceModuleId.ConvertLayerToPrefix (moduleId.Layer);
+				
+				return string.Join (";", args);
+			}
+		}
+		#endregion
+
 	}
 }

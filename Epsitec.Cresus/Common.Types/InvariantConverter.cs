@@ -54,6 +54,15 @@ namespace Epsitec.Common.Types
 			InvariantConverter.typeConverters[type] = converter;
 		}
 
+		public static string ConvertToString<T>(T value)
+		{
+			return (string) Converters.AutomaticValueConverter.Instance.Convert (value, typeof (string), null, System.Globalization.CultureInfo.InvariantCulture);
+		}
+		public static T ConvertFromString<T>(string value)
+		{
+			return (T) Converters.AutomaticValueConverter.Instance.ConvertBack (value, typeof (T), null, System.Globalization.CultureInfo.InvariantCulture);
+		}
+
 		#region GenericSerializationConverter Class
 
 		/// <summary>
