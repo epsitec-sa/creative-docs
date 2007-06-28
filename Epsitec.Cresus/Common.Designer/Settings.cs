@@ -21,6 +21,7 @@ namespace Epsitec.Common.Designer
 
 		public List<string> Modules
 		{
+			//	Liste des chemins complets (ResourceModuleInfo.ReferenceModulePath) des modules ouverts.
 			get
 			{
 				return this.modules;
@@ -30,6 +31,7 @@ namespace Epsitec.Common.Designer
 
 		public bool Write()
 		{
+			//	Ecrit le fichier des réglages globaux.
 			try
 			{
 				File.WriteAllText(this.GlobalSettingsFilename, this.Serialize());
@@ -43,6 +45,7 @@ namespace Epsitec.Common.Designer
 
 		public bool Read()
 		{
+			//	Lit le fichier des réglages globaux.
 			try
 			{
 				this.Deserialize(File.ReadAllText(this.GlobalSettingsFilename));
@@ -56,6 +59,7 @@ namespace Epsitec.Common.Designer
 
 		protected string Serialize()
 		{
+			//	Retourne les données à sérialiser (texte xml).
 			System.Text.StringBuilder buffer = new System.Text.StringBuilder();
 			StringWriter stringWriter = new StringWriter(buffer);
 			XmlTextWriter writer = new XmlTextWriter(stringWriter);
@@ -70,6 +74,7 @@ namespace Epsitec.Common.Designer
 
 		protected void Deserialize(string data)
 		{
+			//	Désérialise le texte xml.
 			StringReader stringReader = new StringReader(data);
 			XmlTextReader reader = new XmlTextReader(stringReader);
 			
@@ -81,6 +86,7 @@ namespace Epsitec.Common.Designer
 
 		protected void WriteXml(XmlWriter writer)
 		{
+			//	Génère les données xml.
 			writer.WriteStartDocument();
 
 			writer.WriteStartElement("Modules");
@@ -97,6 +103,7 @@ namespace Epsitec.Common.Designer
 
 		protected void ReadXml(XmlReader reader)
 		{
+			//	Analyse les données xml.
 			this.modules.Clear();
 
 			while (reader.ReadToFollowing("Module"))
