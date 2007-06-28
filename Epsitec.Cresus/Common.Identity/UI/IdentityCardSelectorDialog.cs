@@ -14,10 +14,27 @@ namespace Epsitec.Common.Identity.UI
 {
 	public class IdentityCardSelectorDialog : Dialogs.AbstractMessageDialog
 	{
+		public IdentityCardSelectorDialog()
+			: this (IdentityRepository.Default.IdentityCards)
+		{
+		}
+
 		public IdentityCardSelectorDialog(IList<IdentityCard> identities)
 		{
 			this.collectionView = new CollectionView (identities as System.Collections.IList);
 			this.factory = new ItemViewFactory ();
+		}
+
+		public IdentityCard ActiveIdentityCard
+		{
+			get
+			{
+				return this.collectionView.CurrentItem as IdentityCard;
+			}
+			set
+			{
+				this.collectionView.MoveCurrentTo (value);
+			}
 		}
 
 		protected override void CreateWindow()
@@ -60,6 +77,7 @@ namespace Epsitec.Common.Identity.UI
 			table.Items = this.collectionView;
 			table.ItemPanel.ItemViewDefaultSize = new Size (100, 48);
 			table.ItemPanel.CustomItemViewFactoryGetter = delegate { return this.factory; };
+			table.ItemPanel.CurrentItemTrackingMode = CurrentItemTrackingMode.AutoSelect;
 			table.HeaderVisibility = false;
 			table.SeparatorVisibility = false;
 			table.HorizontalScrollMode = ItemTableScrollMode.None;

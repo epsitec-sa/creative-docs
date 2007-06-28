@@ -23,7 +23,7 @@ namespace Epsitec.Common.Designer.Ribbons
 			this.widget.Clicked +=
 				delegate
 				{
-					IdentityCardSelectorDialog dialog = new IdentityCardSelectorDialog (IdentityRepository.Default.IdentityCards);
+					IdentityCardSelectorDialog dialog = new IdentityCardSelectorDialog ();
 					dialog.Owner = this.mainWindow.Window;
 					dialog.ActiveIdentityCard = this.widget.IdentityCard;
 					dialog.OpenDialog ();

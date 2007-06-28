@@ -132,6 +132,6 @@ namespace Epsitec.Common.Identity.UI
 			return Color.FromRgb (1, 1, 0.5);
 		}
 
-		public static readonly DependencyProperty IdentityCardProperty = DependencyProperty.Register ("IdentityCard", typeof (IdentityCard), typeof (IdentityCard), new DependencyPropertyMetadata ());
+		public static readonly DependencyProperty IdentityCardProperty = DependencyProperty.Register ("IdentityCard", typeof (IdentityCard), typeof (IdentityCard), new Epsitec.Common.Widgets.Helpers.VisualPropertyMetadata (Epsitec.Common.Widgets.Helpers.VisualPropertyMetadataOptions.AffectsDisplay));
 	}
 }
