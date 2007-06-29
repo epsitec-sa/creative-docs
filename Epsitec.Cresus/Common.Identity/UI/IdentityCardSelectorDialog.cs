@@ -48,7 +48,6 @@ namespace Epsitec.Common.Identity.UI
 			this.window.PreventAutoClose = true;
 			this.window.ClientSize = new Size (100, 320);
 			this.window.MakeSecondaryWindow ();
-			this.window.Root.MinSize = new Size (100, 96);
 			this.window.Root.Padding = new Margins (8, 8, 8, 8);
 
 			ResizeKnob resize = new ResizeKnob( this.window.Root);
@@ -74,12 +73,17 @@ namespace Epsitec.Common.Identity.UI
 			FrameBox buttonContainer = new FrameBox (container);
 
 			container.Dock = DockStyle.Fill;
+			container.TabIndex = 1;
+
 			buttonContainer.Dock = DockStyle.Bottom;
+			buttonContainer.TabIndex = 2;
 
 			ItemTable table = new ItemTable (container);
 
 			table.Dock = DockStyle.Fill;
+			table.MinHeight = 64;
 			table.Margins = new Margins (0, 0, 0, 10);
+			table.TabIndex = 1;
 			table.Items = this.collectionView;
 			table.ItemPanel.ItemViewDefaultSize = new Size (100, 48);
 			table.ItemPanel.CustomItemViewFactoryGetter = delegate { return this.factory; };
