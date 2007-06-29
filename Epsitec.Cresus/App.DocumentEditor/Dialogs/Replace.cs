@@ -40,12 +40,12 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				labelFind.ContentAlignment = ContentAlignment.MiddleLeft;
 				labelFind.PreferredWidth = 80;
 				labelFind.Anchor = AnchorStyles.TopLeft;
-				labelFind.Margins = new Margins(10, 0, 10+3, 0);
+				labelFind.Margins = new Margins(6, 0, 6+3, 0);
 
 				this.fieldFind = new TextFieldCombo(this.window.Root);
 				this.fieldFind.PreferredWidth = 400-100;
 				this.fieldFind.Anchor = AnchorStyles.TopLeft;
-				this.fieldFind.Margins = new Margins(90, 0, 10, 0);
+				this.fieldFind.Margins = new Margins(90, 0, 6, 0);
 				this.fieldFind.TabIndex = this.tabIndex++;
 				this.fieldFind.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 				this.fieldFind.TextChanged += new EventHandler(this.HandleWidgetChanged);
@@ -55,7 +55,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				labelReplace.ContentAlignment = ContentAlignment.MiddleLeft;
 				labelReplace.PreferredWidth = 80;
 				labelReplace.Anchor = AnchorStyles.TopLeft;
-				labelReplace.Margins = new Margins(10, 0, 40+3, 0);
+				labelReplace.Margins = new Margins(6, 0, 40+3, 0);
 
 				this.fieldReplace = new TextFieldCombo(this.window.Root);
 				this.fieldReplace.PreferredWidth = 400-100;
@@ -69,7 +69,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				this.checkEqualMaj.Text = Res.Strings.Dialog.Replace.Button.EqualMaj;
 				this.checkEqualMaj.PreferredWidth = 150;
 				this.checkEqualMaj.Anchor = AnchorStyles.TopLeft;
-				this.checkEqualMaj.Margins = new Margins(10, 0, 72+18*0, 0);
+				this.checkEqualMaj.Margins = new Margins(6, 0, 72+18*0, 0);
 				this.checkEqualMaj.TabIndex = this.tabIndex++;
 				this.checkEqualMaj.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 				this.checkEqualMaj.ActiveStateChanged += new EventHandler(this.HandleWidgetChanged);
@@ -78,7 +78,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				this.checkEqualAccent.Text = Res.Strings.Dialog.Replace.Button.EqualAccent;
 				this.checkEqualAccent.PreferredWidth = 150;
 				this.checkEqualAccent.Anchor = AnchorStyles.TopLeft;
-				this.checkEqualAccent.Margins = new Margins(10, 0, 72+18*1, 0);
+				this.checkEqualAccent.Margins = new Margins(6, 0, 72+18*1, 0);
 				this.checkEqualAccent.TabIndex = this.tabIndex++;
 				this.checkEqualAccent.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 				this.checkEqualAccent.ActiveStateChanged += new EventHandler(this.HandleWidgetChanged);
@@ -87,7 +87,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				this.checkWholeWord.Text = Res.Strings.Dialog.Replace.Button.WholeWord;
 				this.checkWholeWord.PreferredWidth = 150;
 				this.checkWholeWord.Anchor = AnchorStyles.TopLeft;
-				this.checkWholeWord.Margins = new Margins(10, 0, 72+18*2, 0);
+				this.checkWholeWord.Margins = new Margins(6, 0, 72+18*2, 0);
 				this.checkWholeWord.TabIndex = this.tabIndex++;
 				this.checkWholeWord.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 				this.checkWholeWord.ActiveStateChanged += new EventHandler(this.HandleWidgetChanged);
@@ -116,7 +116,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				this.buttonFind.Text = Res.Strings.Dialog.Replace.Button.Find;
 				this.buttonFind.ButtonStyle = ButtonStyle.DefaultAccept;
 				this.buttonFind.Anchor = AnchorStyles.BottomRight;
-				this.buttonFind.Margins = new Margins(0, 10+75+6+75+6, 0, 10);
+				this.buttonFind.Margins = new Margins(0, 6+75+6+75+6, 0, 6);
 				this.buttonFind.Clicked += new MessageEventHandler(this.HandleButtonClicked);
 				this.buttonFind.TabIndex = this.tabIndex++;
 				this.buttonFind.TabNavigationMode = TabNavigationMode.ActivateOnTab;
@@ -127,7 +127,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				this.buttonReplace.PreferredWidth = 75;
 				this.buttonReplace.Text = Res.Strings.Dialog.Replace.Button.Replace;
 				this.buttonReplace.Anchor = AnchorStyles.BottomRight;
-				this.buttonReplace.Margins = new Margins(0, 10+75+6, 0, 10);
+				this.buttonReplace.Margins = new Margins(0, 6+75+6, 0, 6);
 				this.buttonReplace.Clicked += new MessageEventHandler(this.HandleButtonClicked);
 				this.buttonReplace.TabIndex = this.tabIndex++;
 				this.buttonReplace.TabNavigationMode = TabNavigationMode.ActivateOnTab;
@@ -138,7 +138,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				this.buttonClose.Text = Res.Strings.Dialog.Button.Close;
 				this.buttonClose.ButtonStyle = ButtonStyle.DefaultCancel;
 				this.buttonClose.Anchor = AnchorStyles.BottomRight;
-				this.buttonClose.Margins = new Margins(0, 10, 0, 10);
+				this.buttonClose.Margins = new Margins(0, 6, 0, 6);
 				this.buttonClose.Clicked += new MessageEventHandler(this.HandleButtonCloseClicked);
 				this.buttonClose.TabIndex = this.tabIndex++;
 				this.buttonClose.TabNavigationMode = TabNavigationMode.ActivateOnTab;
