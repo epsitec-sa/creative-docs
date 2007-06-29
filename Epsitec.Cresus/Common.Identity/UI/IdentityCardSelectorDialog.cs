@@ -47,8 +47,14 @@ namespace Epsitec.Common.Identity.UI
 			this.window.Name = "Dialog";
 			this.window.PreventAutoClose = true;
 			this.window.ClientSize = new Size (100, 320);
-
 			this.window.MakeSecondaryWindow ();
+			this.window.Root.MinSize = new Size (100, 96);
+			this.window.Root.Padding = new Margins (8, 8, 8, 8);
+
+			ResizeKnob resize = new ResizeKnob( this.window.Root);
+			resize.Anchor = AnchorStyles.BottomRight;
+			resize.Margins = new Margins (0, -8, 0, -8);
+			ToolTip.Default.SetToolTip (resize, "Redimensionner la fenêtre");
 
 			CommandDispatcher.SetDispatcher (this.window, new CommandDispatcher ());
 
@@ -73,7 +79,7 @@ namespace Epsitec.Common.Identity.UI
 			ItemTable table = new ItemTable (container);
 
 			table.Dock = DockStyle.Fill;
-			table.Margins = new Margins (8, 8, 8, 8);
+			table.Margins = new Margins (0, 0, 0, 10);
 			table.Items = this.collectionView;
 			table.ItemPanel.ItemViewDefaultSize = new Size (100, 48);
 			table.ItemPanel.CustomItemViewFactoryGetter = delegate { return this.factory; };
@@ -108,24 +114,9 @@ namespace Epsitec.Common.Identity.UI
 			
 			button = new Button (buttonContainer);
 			button.PreferredHeight = 20;
-			button.Text = Widgets.Res.Strings.Dialog.Button.Cancel;
-			button.Dock = DockStyle.Right;
-			button.Margins = new Drawing.Margins (10, 20, 8, 8);
-			button.TabIndex = 2;
-			button.Shortcuts.Add (Common.Widgets.Feel.Factory.Active.CancelShortcut);
-			button.Clicked +=
-				delegate
-				{
-					this.result = Dialogs.DialogResult.Cancel;
-					this.CloseDialog ();
-				};
-			
-
-			button = new Button (buttonContainer);
-			button.PreferredHeight = 20;
 			button.Text = Widgets.Res.Strings.Dialog.Button.OK;
-			button.Dock = DockStyle.Right;
-			button.Margins = new Drawing.Margins (20, 10, 8, 8);
+			button.Dock = DockStyle.Left;
+			button.Margins = new Drawing.Margins (0, 10, 0, 0);
 			button.TabIndex = 1;
 			button.Shortcuts.Add (Common.Widgets.Feel.Factory.Active.AcceptShortcut);
 			button.Clicked +=
@@ -135,6 +126,20 @@ namespace Epsitec.Common.Identity.UI
 					this.CloseDialog ();
 				};
 			
+			button = new Button (buttonContainer);
+			button.PreferredHeight = 20;
+			button.Text = Widgets.Res.Strings.Dialog.Button.Cancel;
+			button.Dock = DockStyle.Left;
+			button.Margins = new Drawing.Margins (0, 0, 0, 0);
+			button.TabIndex = 2;
+			button.Shortcuts.Add (Common.Widgets.Feel.Factory.Active.CancelShortcut);
+			button.Clicked +=
+				delegate
+				{
+					this.result = Dialogs.DialogResult.Cancel;
+					this.CloseDialog ();
+				};
+
 			return container;
 		}
 
