@@ -34,8 +34,6 @@ namespace Epsitec.Common.Designer.Dialogs
 				resize.Margins = new Margins(0, -8, 0, -8);
 				ToolTip.Default.SetToolTip(resize, Res.Strings.Dialog.Tooltip.Resize);
 
-				int tabIndex = 0;
-
 				//	Bande horizontale pour la recherche.
 				Widget header = new Widget(this.window.Root);
 				header.PreferredHeight = 20;
@@ -96,14 +94,14 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.arrayDetail.CellsContentChanged += new EventHandler(this.HandleArrayCellsContentChanged);
 				this.arrayDetail.SelectedRowChanged += new EventHandler(this.HandleArraySelectedRowChanged);
 				this.arrayDetail.SelectedRowDoubleClicked += new EventHandler(this.HandleArraySelectedRowDoubleClicked);
-				this.arrayDetail.TabIndex = tabIndex++;
+				this.arrayDetail.TabIndex = 1;
 				this.arrayDetail.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 
 				this.arrayCompact = new MyWidgets.IconArray(this.window.Root);
 				this.arrayCompact.CellSize = this.arrayDetail.LineHeight;
 				this.arrayCompact.Dock = DockStyle.Fill;
 				this.arrayCompact.ChangeSelected += new EventHandler(this.HandleArrayCompactChangeSelected);
-				this.arrayCompact.TabIndex = tabIndex++;
+				this.arrayCompact.TabIndex = 2;
 				this.arrayCompact.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 				ToolTip.Default.SetToolTip(this.arrayCompact, "*");
 
@@ -119,7 +117,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				buttonClose.ButtonStyle = ButtonStyle.DefaultCancel;
 				buttonClose.Dock = DockStyle.Right;
 				buttonClose.Clicked += new MessageEventHandler(this.HandleButtonCloseClicked);
-				buttonClose.TabIndex = tabIndex++;
+				buttonClose.TabIndex = 11;
 				buttonClose.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 
 				Button buttonOk = new Button(footer);
@@ -129,7 +127,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				buttonOk.Dock = DockStyle.Right;
 				buttonOk.Margins = new Margins(0, 6, 0, 0);
 				buttonOk.Clicked += new MessageEventHandler(this.HandleButtonInsertClicked);
-				buttonOk.TabIndex = tabIndex++;
+				buttonOk.TabIndex = 10;
 				buttonOk.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 
 				this.buttonMode = new IconButton(footer);
@@ -144,7 +142,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.slider.PreferredWidth = 80;
 				this.slider.Dock = DockStyle.Left;
 				this.slider.Margins = new Margins(0, 0, 4, 4);
-				this.slider.TabIndex = tabIndex++;
+				this.slider.TabIndex = 9;
 				this.slider.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 				this.slider.MinValue = 20.0M;
 				this.slider.MaxValue = 50.0M;

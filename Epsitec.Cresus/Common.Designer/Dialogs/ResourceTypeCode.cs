@@ -96,7 +96,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.buttonCancel.ButtonStyle = ButtonStyle.DefaultCancel;
 				this.buttonCancel.Dock = DockStyle.Right;
 				this.buttonCancel.Clicked += new MessageEventHandler(this.HandleButtonCancelClicked);
-				this.buttonCancel.TabIndex = this.tabIndex++;
+				this.buttonCancel.TabIndex = 101;
 				this.buttonCancel.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 
 				this.buttonOk = new Button(footer);
@@ -106,7 +106,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.buttonOk.Dock = DockStyle.Right;
 				this.buttonOk.Margins = new Margins(0, 6, 0, 0);
 				this.buttonOk.Clicked += new MessageEventHandler(this.HandleButtonOKClicked);
-				this.buttonOk.TabIndex = this.tabIndex++;
+				this.buttonOk.TabIndex = 100;
 				this.buttonOk.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 
 				this.buttonExtend = new GlyphButton(footer);

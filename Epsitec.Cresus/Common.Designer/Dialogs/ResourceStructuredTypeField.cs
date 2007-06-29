@@ -34,11 +34,9 @@ namespace Epsitec.Common.Designer.Dialogs
 				resize.Margins = new Margins(0, -8, 0, -8);
 				ToolTip.Default.SetToolTip(resize, Res.Strings.Dialog.Tooltip.Resize);
 
-				int tabIndex = 0;
-
 				//	Liste principale.
 				this.list = new ScrollList(this.window.Root);
-				this.list.TabIndex = tabIndex++;
+				this.list.TabIndex = 1;
 				this.list.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 				this.list.Dock = DockStyle.Fill;
 
@@ -54,7 +52,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.buttonCancel.ButtonStyle = ButtonStyle.DefaultCancel;
 				this.buttonCancel.Dock = DockStyle.Right;
 				this.buttonCancel.Clicked += new MessageEventHandler(this.HandleButtonCloseClicked);
-				this.buttonCancel.TabIndex = tabIndex++;
+				this.buttonCancel.TabIndex = 11;
 				this.buttonCancel.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 
 				this.buttonOk = new Button(footer);
@@ -63,7 +61,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.buttonOk.Dock = DockStyle.Right;
 				this.buttonOk.Margins = new Margins(0, 6, 0, 0);
 				this.buttonOk.Clicked += new MessageEventHandler(this.HandleButtonOkClicked);
-				this.buttonOk.TabIndex = tabIndex++;
+				this.buttonOk.TabIndex = 10;
 				this.buttonOk.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			}
 

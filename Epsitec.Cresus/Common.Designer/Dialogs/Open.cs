@@ -41,8 +41,6 @@ namespace Epsitec.Common.Designer.Dialogs
 				resize.Margins = new Margins(0, -8, 0, -8);
 				ToolTip.Default.SetToolTip(resize, Res.Strings.Dialog.Tooltip.Resize);
 
-				int tabIndex = 0;
-
 				StaticText label = new StaticText(this.window.Root);
 				label.Text = Res.Strings.Dialog.Open.Label;
 				label.ContentAlignment = ContentAlignment.MiddleLeft;
@@ -63,7 +61,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.array.CellsContentChanged += new EventHandler(this.HandleArrayCellsContentChanged);
 				this.array.SelectedRowChanged += new EventHandler(this.HandleArraySelectedRowChanged);
 				this.array.SelectedRowDoubleClicked += new EventHandler(this.HandleArraySelectedRowDoubleClicked);
-				this.array.TabIndex = tabIndex++;
+				this.array.TabIndex = 1;
 				this.array.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 				this.array.Dock = DockStyle.Fill;
 
@@ -80,7 +78,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.checkOpened.Dock = DockStyle.Left;
 				this.checkOpened.Margins = new Margins(0, 0, 0, 0);
 				this.checkOpened.Clicked += new MessageEventHandler(this.HandleCheckClicked);
-				this.checkOpened.TabIndex = tabIndex++;
+				this.checkOpened.TabIndex = 8;
 				this.checkOpened.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 
 				this.checkLocked = new CheckButton(footer);
@@ -90,7 +88,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.checkLocked.Dock = DockStyle.Left;
 				this.checkLocked.Margins = new Margins(0, 0, 0, 0);
 				this.checkLocked.Clicked += new MessageEventHandler(this.HandleCheckClicked);
-				this.checkLocked.TabIndex = tabIndex++;
+				this.checkLocked.TabIndex = 9;
 				this.checkLocked.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 
 				this.buttonCancel = new Button(footer);
@@ -99,7 +97,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.buttonCancel.ButtonStyle = ButtonStyle.DefaultCancel;
 				this.buttonCancel.Dock = DockStyle.Right;
 				this.buttonCancel.Clicked += new MessageEventHandler(this.HandleButtonCloseClicked);
-				this.buttonCancel.TabIndex = tabIndex++;
+				this.buttonCancel.TabIndex = 11;
 				this.buttonCancel.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 
 				this.buttonOpen = new Button(footer);
@@ -109,7 +107,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.buttonOpen.Dock = DockStyle.Right;
 				this.buttonOpen.Margins = new Margins(0, 6, 0, 0);
 				this.buttonOpen.Clicked += new MessageEventHandler(this.HandleButtonOpenClicked);
-				this.buttonOpen.TabIndex = tabIndex++;
+				this.buttonOpen.TabIndex = 10;
 				this.buttonOpen.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			}
 

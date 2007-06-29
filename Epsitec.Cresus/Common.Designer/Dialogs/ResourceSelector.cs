@@ -42,8 +42,6 @@ namespace Epsitec.Common.Designer.Dialogs
 				resize.Margins = new Margins(0, -8, 0, -8);
 				ToolTip.Default.SetToolTip(resize, Res.Strings.Dialog.Tooltip.Resize);
 
-				int tabIndex = 0;
-
 				//	Titre supérieur.
 				Widget header = new Widget(this.window.Root);
 				header.PreferredHeight = 34;
@@ -112,7 +110,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.listModules = new ScrollList(left);
 				this.listModules.Dock = DockStyle.Fill;
 				this.listModules.Margins = new Margins(0, 0, 0, 8);
-				this.listModules.TabIndex = tabIndex++;
+				this.listModules.TabIndex = 1;
 				this.listModules.SelectedIndexChanged += new EventHandler(this.HandleListModulesSelected);
 
 				//	Partie droite.
@@ -124,7 +122,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.listResources = new ScrollList(right);
 				this.listResources.Dock = DockStyle.Fill;
 				this.listResources.Margins = new Margins(0, 0, 0, 8);
-				this.listResources.TabIndex = tabIndex++;
+				this.listResources.TabIndex = 2;
 				this.listResources.SelectedIndexChanged += new EventHandler(this.HandleListResourcesSelected);
 				this.listResources.DoubleClicked += new MessageEventHandler(this.HandleListResourcesDoubleClicked);
 
@@ -140,7 +138,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.buttonCancel.ButtonStyle = ButtonStyle.DefaultCancel;
 				this.buttonCancel.Dock = DockStyle.Right;
 				this.buttonCancel.Clicked += new MessageEventHandler(this.HandleButtonCloseClicked);
-				this.buttonCancel.TabIndex = tabIndex++;
+				this.buttonCancel.TabIndex = 11;
 				this.buttonCancel.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 
 				this.buttonUse = new Button(footer);
@@ -150,7 +148,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.buttonUse.Dock = DockStyle.Right;
 				this.buttonUse.Margins = new Margins(0, 6, 0, 0);
 				this.buttonUse.Clicked += new MessageEventHandler(this.HandleButtonUseClicked);
-				this.buttonUse.TabIndex = tabIndex++;
+				this.buttonUse.TabIndex = 10;
 				this.buttonUse.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 
 				sep = new Separator(this.window.Root);  // trait horizontal de séparation

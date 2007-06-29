@@ -29,8 +29,6 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.window.Owner = this.parentWindow;
 				this.window.Root.Padding = new Margins(8, 8, 8, 8);
 
-				int tabIndex = 0;
-
 				StaticText label = new StaticText(this.window.Root);
 				label.Text = Res.Strings.Dialog.NewCulture.Label;
 				label.ContentAlignment = ContentAlignment.MiddleLeft;
@@ -40,7 +38,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.cultureWidget = new ScrollList(this.window.Root);
 				this.cultureWidget.PreferredHeight = 90;
 				this.cultureWidget.Dock = DockStyle.Fill;
-				this.cultureWidget.TabIndex = tabIndex++;
+				this.cultureWidget.TabIndex = 1;
 
 				//	Boutons de fermeture.
 				Widget footer = new Widget(this.window.Root);
@@ -54,7 +52,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				buttonClose.ButtonStyle = ButtonStyle.DefaultCancel;
 				buttonClose.Dock = DockStyle.Right;
 				buttonClose.Clicked += new MessageEventHandler(this.HandleButtonCloseClicked);
-				buttonClose.TabIndex = tabIndex++;
+				buttonClose.TabIndex = 11;
 				buttonClose.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 
 				Button buttonOk = new Button(footer);
@@ -64,7 +62,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				buttonOk.Dock = DockStyle.Right;
 				buttonOk.Margins = new Margins(0, 6, 0, 0);
 				buttonOk.Clicked += new MessageEventHandler(this.HandleButtonFilterClicked);
-				buttonOk.TabIndex = tabIndex++;
+				buttonOk.TabIndex = 10;
 				buttonOk.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			}
 

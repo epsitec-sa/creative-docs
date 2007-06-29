@@ -60,7 +60,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				this.fieldReplace = new TextFieldCombo(this.window.Root);
 				this.fieldReplace.PreferredWidth = 400-100;
 				this.fieldReplace.Anchor = AnchorStyles.TopLeft;
-				this.fieldReplace.Margins = new Margins(90, 0, 40, 0);
+				this.fieldReplace.Margins = new Margins(90, 0, 34, 0);
 				this.fieldReplace.TabIndex = this.tabIndex++;
 				this.fieldReplace.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 				this.fieldReplace.TextChanged += new EventHandler(this.HandleWidgetChanged);

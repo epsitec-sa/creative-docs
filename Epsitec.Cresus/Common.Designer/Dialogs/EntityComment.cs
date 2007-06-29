@@ -35,8 +35,6 @@ namespace Epsitec.Common.Designer.Dialogs
 				resize.Margins = new Margins(0, -8, 0, -8);
 				ToolTip.Default.SetToolTip(resize, Res.Strings.Dialog.Tooltip.Resize);
 
-				int tabIndex = 0;
-
 				//	Crée la toolbar et son contenu.
 				this.toolbar = new HToolBar(this.window.Root);
 				this.toolbar.Margins = new Margins(0, 0, 0, 3);
@@ -49,7 +47,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				//	Crée le grand pavé de texte éditable.
 				this.fieldText = new TextFieldMulti(this.window.Root);
 				this.fieldText.Dock = DockStyle.Fill;
-				this.fieldText.TabIndex = tabIndex++;
+				this.fieldText.TabIndex = 1;
 
 				//	Boutons de fermeture.
 				Widget footer = new Widget(this.window.Root);
@@ -63,7 +61,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.buttonCancel.ButtonStyle = ButtonStyle.DefaultCancel;
 				this.buttonCancel.Dock = DockStyle.Right;
 				this.buttonCancel.Clicked += new MessageEventHandler(this.HandleButtonCloseClicked);
-				this.buttonCancel.TabIndex = tabIndex++;
+				this.buttonCancel.TabIndex = 11;
 				this.buttonCancel.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 
 				this.buttonOk = new Button(footer);
@@ -73,7 +71,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.buttonOk.Dock = DockStyle.Right;
 				this.buttonOk.Margins = new Margins(0, 6, 0, 0);
 				this.buttonOk.Clicked += new MessageEventHandler(this.HandleButtonOkClicked);
-				this.buttonOk.TabIndex = tabIndex++;
+				this.buttonOk.TabIndex = 10;
 				this.buttonOk.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			}
 
