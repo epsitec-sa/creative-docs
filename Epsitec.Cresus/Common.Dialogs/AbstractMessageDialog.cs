@@ -66,11 +66,11 @@ namespace Epsitec.Common.Dialogs
 					}
 				}
 				
-				total_width += (buttons.Length-1) * 8;
+				total_width += buttons.Length * 8;
 				
 				if (total_width < width)
 				{
-					double x = System.Math.Floor ((width - total_width) / 2);
+					double x = width - total_width;
 					
 					for (int i = 0; i < buttons.Length; i++)
 					{
