@@ -211,7 +211,7 @@ namespace Epsitec.Common.Designer
 
 					if (name == "UserName")
 					{
-						this.identityCard = IdentityRepository.Default.FindIdentityCard(element);
+						this.IdentityCard = IdentityRepository.Default.FindIdentityCard(element);
 					}
 				}
 				if (reader.NodeType == XmlNodeType.EndElement)
