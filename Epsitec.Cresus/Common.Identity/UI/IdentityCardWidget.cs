@@ -48,9 +48,9 @@ namespace Epsitec.Common.Identity.UI
 
 		protected override void PaintBackgroundImplementation(Epsitec.Common.Drawing.Graphics graphics, Epsitec.Common.Drawing.Rectangle clipRect)
 		{
-			Rectangle rect   = Rectangle.Deflate (this.Client.Bounds, 2, 2);
+			Rectangle rect   = Rectangle.Deflate (this.Client.Bounds, 1.5, 1.5);
 			double    size   = System.Math.Min (rect.Width, rect.Height);
-			double    radius = size / 20;
+			double    radius = size / 12;
 
 			double baseColorH, baseColorS, baseColorV;
 			Color baseColor = this.GetCardColor ();
@@ -60,12 +60,27 @@ namespace Epsitec.Common.Identity.UI
 			{
 				WidgetPaintState paintState = this.PaintState;
 
+				Epsitec.Common.UI.ItemViewWidget item = this.Parent as Epsitec.Common.UI.ItemViewWidget;
+				bool isSelected = false;
+				if (item != null)
+				{
+					isSelected = item.ItemView.IsSelected;  // TODO: faire mieux !
+				}
+
+				double factor = 0.33;
+				if ((paintState & WidgetPaintState.Entered) != 0)
+				{
+					factor = 0.75;
+				}
+				if (isSelected)
+				{
+					factor = 0.50;
+				}
+
 				round.AppendRoundedRectangle (rect, radius);
 				graphics.Rasterizer.AddSurface (round);
-				graphics.RenderSolid (Color.FromHsv (baseColorH, baseColorS * ((paintState & WidgetPaintState.Entered) == 0 ? 0.33 : 0.75), 1.0));
+				graphics.RenderSolid (Color.FromHsv (baseColorH, baseColorS * factor, 1.0));
 
-				double lineWidth = ((paintState & WidgetPaintState.Engaged) == 0) ? 1.0 : 2.0;
-				
 				if (size > 8)
 				{
 					Graphics mask = graphics.CreateAlphaMask ();
@@ -96,7 +111,7 @@ namespace Epsitec.Common.Identity.UI
 					{
 						graphics.SolidRenderer.SetAlphaMask (mask.Pixmap, MaskComponent.R);
 						graphics.AddFilledRectangle (imageRect);
-						graphics.RenderSolid (Color.FromHsv (0, 0, baseColorV * 0.8));
+						graphics.RenderSolid (Color.FromHsv (0, 0, baseColorV * 0.7));
 						graphics.Color = Color.FromBrightness (1);
 						graphics.PaintText (imageRect.X, imageRect.Y, imageRect.Width, imageRect.Height, "?", Font.GetFont ("Tahoma", "Bold"), imageRect.Height, ContentAlignment.MiddleCenter);
 						graphics.SolidRenderer.SetAlphaMask (null, MaskComponent.None);
@@ -121,8 +136,19 @@ namespace Epsitec.Common.Identity.UI
 					}
 				}
 
-				graphics.Rasterizer.AddOutline (round, lineWidth, CapStyle.Butt, JoinStyle.Round);
-				graphics.RenderSolid (Color.FromHsv (baseColorH, 1.0, baseColorV * 0.8));
+				if (isSelected)
+				{
+					using (Path inside = new Path())
+					{
+						rect.Deflate(1);
+						inside.AppendRoundedRectangle (rect, radius-1);
+						graphics.Rasterizer.AddOutline (inside, 3.0, CapStyle.Butt, JoinStyle.Round);
+						graphics.RenderSolid (Color.FromHsv (baseColorH, 1.0, baseColorV * 0.9));
+					}
+				}
+
+				graphics.Rasterizer.AddOutline (round, 1.0, CapStyle.Butt, JoinStyle.Round);
+				graphics.RenderSolid (Color.FromHsv (baseColorH, 1.0, baseColorV * (isSelected ? 0.4 : 0.6)));
 			}
 		}
 

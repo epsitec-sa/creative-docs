@@ -85,6 +85,7 @@ namespace Epsitec.Common.UI
 				state &= ~Epsitec.Common.Widgets.WidgetPaintState.Engaged;
 				state &= ~Epsitec.Common.Widgets.WidgetPaintState.Entered;
 				state &= ~Epsitec.Common.Widgets.WidgetPaintState.Selected;
+				state &= ~Epsitec.Common.Widgets.WidgetPaintState.Focused;
 			}
 			else
 			{

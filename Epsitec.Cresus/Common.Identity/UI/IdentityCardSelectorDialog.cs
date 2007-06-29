@@ -46,7 +46,7 @@ namespace Epsitec.Common.Identity.UI
 			this.window.Text = "Sélection de l'identité";
 			this.window.Name = "Dialog";
 			this.window.PreventAutoClose = true;
-			this.window.ClientSize = new Size (100, 320);
+			this.window.ClientSize = new Size (100, 340);
 			this.window.MakeSecondaryWindow ();
 			this.window.Root.Padding = new Margins (8, 8, 8, 8);
 
@@ -131,22 +131,8 @@ namespace Epsitec.Common.Identity.UI
 			
 			button = new Button (buttonContainer);
 			button.PreferredHeight = 20;
-			button.Text = Widgets.Res.Strings.Dialog.Button.OK;
-			button.Dock = DockStyle.Left;
-			button.Margins = new Drawing.Margins (0, 10, 0, 0);
-			button.TabIndex = 1;
-			button.Shortcuts.Add (Common.Widgets.Feel.Factory.Active.AcceptShortcut);
-			button.Clicked +=
-				delegate
-				{
-					this.result = Dialogs.DialogResult.Accept;
-					this.CloseDialog ();
-				};
-			
-			button = new Button (buttonContainer);
-			button.PreferredHeight = 20;
 			button.Text = Widgets.Res.Strings.Dialog.Button.Cancel;
-			button.Dock = DockStyle.Left;
+			button.Dock = DockStyle.Right;
 			button.Margins = new Drawing.Margins (0, 0, 0, 0);
 			button.TabIndex = 2;
 			button.Shortcuts.Add (Common.Widgets.Feel.Factory.Active.CancelShortcut);
@@ -157,6 +143,20 @@ namespace Epsitec.Common.Identity.UI
 					this.CloseDialog ();
 				};
 
+			button = new Button (buttonContainer);
+			button.PreferredHeight = 20;
+			button.Text = Widgets.Res.Strings.Dialog.Button.OK;
+			button.Dock = DockStyle.Right;
+			button.Margins = new Drawing.Margins (0, 10, 0, 0);
+			button.TabIndex = 1;
+			button.Shortcuts.Add (Common.Widgets.Feel.Factory.Active.AcceptShortcut);
+			button.Clicked +=
+				delegate
+				{
+					this.result = Dialogs.DialogResult.Accept;
+					this.CloseDialog ();
+				};
+			
 			return container;
 		}
 
