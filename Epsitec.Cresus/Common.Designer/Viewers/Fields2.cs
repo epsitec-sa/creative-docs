@@ -117,6 +117,16 @@ namespace Epsitec.Common.Designer.Viewers
 			return itemA.Prefix.CompareTo(itemB.Prefix);
 		}
 
+		protected override bool HasCreateAndDeleteButtons
+		{
+			get
+			{
+				//	Il n'est pas possible de créer ou de supprimer une ressource, puisque cela
+				//	se fait depuis l'éditeur d'entités.
+				return false;
+			}
+		}
+
 
 		private static double[]				columnWidthHorizontal = {80, 120, 100, 100};
 		private static double[]				columnWidthVertical = {100, 210, 270, 270};

@@ -904,9 +904,18 @@ namespace Epsitec.Common.Designer.Viewers
 
 			if (!this.IsDeleteOrDuplicateForViewer)
 			{
-				this.GetCommandState("Delete").Enable = (sel != -1 && count > 1 && build);
-				this.GetCommandState("Create").Enable = (build);
-				this.GetCommandState("Duplicate").Enable = (sel != -1 && build);
+				if (this.HasCreateAndDeleteButtons)
+				{
+					this.GetCommandState("Delete").Enable = (sel != -1 && count > 1 && build);
+					this.GetCommandState("Create").Enable = (build);
+					this.GetCommandState("Duplicate").Enable = (sel != -1 && build);
+				}
+				else
+				{
+					this.GetCommandState("Delete").Enable = false;
+					this.GetCommandState("Create").Enable = false;
+					this.GetCommandState("Duplicate").Enable = false;
+				}
 				this.GetCommandState("CopyToModule").Enable = (sel != -1 && build);
 			}
 
@@ -1060,6 +1069,14 @@ namespace Epsitec.Common.Designer.Viewers
 			this.module.MainWindow.UpdateInfoCurrentModule();
 			this.module.MainWindow.UpdateInfoAccess();
 			this.module.MainWindow.UpdateInfoViewer();
+		}
+
+		protected virtual bool HasCreateAndDeleteButtons
+		{
+			get
+			{
+				return true;
+			}
 		}
 
 		protected void UpdateCommandTool(string name)

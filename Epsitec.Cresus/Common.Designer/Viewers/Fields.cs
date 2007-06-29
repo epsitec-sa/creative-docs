@@ -59,6 +59,16 @@ namespace Epsitec.Common.Designer.Viewers
 			return base.IndexToTextField(field, subfield);
 		}
 
+		protected override bool HasCreateAndDeleteButtons
+		{
+			get
+			{
+				//	Il n'est pas possible de créer ou de supprimer une ressource, puisque cela
+				//	se fait depuis l'éditeur d'entités.
+				return false;
+			}
+		}
+
 
 	}
 }
