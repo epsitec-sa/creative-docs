@@ -55,25 +55,24 @@ namespace Epsitec.Common.Designer.Dialogs
 				footer.Margins = new Margins(0, 0, 8, 0);
 				footer.Dock = DockStyle.Bottom;
 
-				Button buttonOk = new Button(footer);
-				buttonOk.PreferredWidth = 75;
-				buttonOk.Text = Res.Strings.Dialog.Glyphs.Button.Insert;
-				buttonOk.ButtonStyle = ButtonStyle.DefaultAccept;
-				buttonOk.Dock = DockStyle.Left;
-				buttonOk.Margins = new Margins(0, 6, 0, 0);
-				buttonOk.Clicked += new MessageEventHandler(this.HandleButtonInsertClicked);
-				buttonOk.TabIndex = tabIndex++;
-				buttonOk.TabNavigationMode = TabNavigationMode.ActivateOnTab;
-
 				Button buttonClose = new Button(footer);
 				buttonClose.PreferredWidth = 75;
 				buttonClose.Text = Res.Strings.Dialog.Button.Close;
 				buttonClose.ButtonStyle = ButtonStyle.DefaultCancel;
-				buttonClose.Dock = DockStyle.Left;
-				buttonClose.Margins = new Margins(0, 6, 0, 0);
+				buttonClose.Dock = DockStyle.Right;
 				buttonClose.Clicked += new MessageEventHandler(this.HandleButtonCloseClicked);
 				buttonClose.TabIndex = tabIndex++;
 				buttonClose.TabNavigationMode = TabNavigationMode.ActivateOnTab;
+
+				Button buttonOk = new Button(footer);
+				buttonOk.PreferredWidth = 75;
+				buttonOk.Text = Res.Strings.Dialog.Glyphs.Button.Insert;
+				buttonOk.ButtonStyle = ButtonStyle.DefaultAccept;
+				buttonOk.Dock = DockStyle.Right;
+				buttonOk.Margins = new Margins(0, 6, 0, 0);
+				buttonOk.Clicked += new MessageEventHandler(this.HandleButtonInsertClicked);
+				buttonOk.TabIndex = tabIndex++;
+				buttonOk.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 
 				//	Barre de statut.
 				Widget band = new Widget(this.window.Root);

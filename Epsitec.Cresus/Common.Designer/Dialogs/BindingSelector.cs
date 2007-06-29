@@ -101,27 +101,27 @@ namespace Epsitec.Common.Designer.Dialogs
 				footer.Margins = new Margins(0, 0, 8, 0);
 				footer.Dock = DockStyle.Bottom;
 
+				this.buttonCancel = new Button(footer);
+				this.buttonCancel.PreferredWidth = 75;
+				this.buttonCancel.Text = Res.Strings.Dialog.Button.Cancel;
+				this.buttonCancel.ButtonStyle = ButtonStyle.DefaultCancel;
+				this.buttonCancel.Dock = DockStyle.Right;
+				this.buttonCancel.Clicked += new MessageEventHandler(this.HandleButtonCloseClicked);
+				this.buttonCancel.TabIndex = tabIndex++;
+				this.buttonCancel.TabNavigationMode = TabNavigationMode.ActivateOnTab;
+
 				this.buttonUse = new Button(footer);
 				this.buttonUse.PreferredWidth = 75;
 				this.buttonUse.Text = Res.Strings.Dialog.BindingSelector.Button.Use;
-				this.buttonUse.Dock = DockStyle.Left;
+				this.buttonUse.Dock = DockStyle.Right;
 				this.buttonUse.Margins = new Margins(0, 6, 0, 0);
 				this.buttonUse.Clicked += new MessageEventHandler(this.HandleButtonUseClicked);
 				this.buttonUse.TabIndex = tabIndex++;
 				this.buttonUse.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 
-				this.buttonCancel = new Button(footer);
-				this.buttonCancel.PreferredWidth = 75;
-				this.buttonCancel.Text = Res.Strings.Dialog.Button.Cancel;
-				this.buttonCancel.ButtonStyle = ButtonStyle.DefaultCancel;
-				this.buttonCancel.Dock = DockStyle.Left;
-				this.buttonCancel.Clicked += new MessageEventHandler(this.HandleButtonCloseClicked);
-				this.buttonCancel.TabIndex = tabIndex++;
-				this.buttonCancel.TabNavigationMode = TabNavigationMode.ActivateOnTab;
-
 				this.slider = new HSlider(footer);
 				this.slider.PreferredWidth = 80;
-				this.slider.Dock = DockStyle.Right;
+				this.slider.Dock = DockStyle.Left;
 				this.slider.Margins = new Margins(0, 0, 4, 4);
 				this.slider.TabIndex = tabIndex++;
 				this.slider.TabNavigationMode = TabNavigationMode.ActivateOnTab;

@@ -134,24 +134,24 @@ namespace Epsitec.Common.Designer.Dialogs
 				footer.Margins = new Margins(0, 0, 8, 0);
 				footer.Dock = DockStyle.Bottom;
 
-				this.buttonUse = new Button(footer);
-				this.buttonUse.PreferredWidth = 75;
-				this.buttonUse.Text = Res.Strings.Dialog.ResourceSelector.Button.Use;
-				this.buttonUse.ButtonStyle = ButtonStyle.DefaultAccept;
-				this.buttonUse.Dock = DockStyle.Left;
-				this.buttonUse.Margins = new Margins(0, 6, 0, 0);
-				this.buttonUse.Clicked += new MessageEventHandler(this.HandleButtonUseClicked);
-				this.buttonUse.TabIndex = tabIndex++;
-				this.buttonUse.TabNavigationMode = TabNavigationMode.ActivateOnTab;
-
 				this.buttonCancel = new Button(footer);
 				this.buttonCancel.PreferredWidth = 75;
 				this.buttonCancel.Text = Res.Strings.Dialog.Button.Cancel;
 				this.buttonCancel.ButtonStyle = ButtonStyle.DefaultCancel;
-				this.buttonCancel.Dock = DockStyle.Left;
+				this.buttonCancel.Dock = DockStyle.Right;
 				this.buttonCancel.Clicked += new MessageEventHandler(this.HandleButtonCloseClicked);
 				this.buttonCancel.TabIndex = tabIndex++;
 				this.buttonCancel.TabNavigationMode = TabNavigationMode.ActivateOnTab;
+
+				this.buttonUse = new Button(footer);
+				this.buttonUse.PreferredWidth = 75;
+				this.buttonUse.Text = Res.Strings.Dialog.ResourceSelector.Button.Use;
+				this.buttonUse.ButtonStyle = ButtonStyle.DefaultAccept;
+				this.buttonUse.Dock = DockStyle.Right;
+				this.buttonUse.Margins = new Margins(0, 6, 0, 0);
+				this.buttonUse.Clicked += new MessageEventHandler(this.HandleButtonUseClicked);
+				this.buttonUse.TabIndex = tabIndex++;
+				this.buttonUse.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 
 				sep = new Separator(this.window.Root);  // trait horizontal de séparation
 				sep.PreferredHeight = 1;

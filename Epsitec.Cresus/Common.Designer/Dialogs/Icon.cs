@@ -113,29 +113,36 @@ namespace Epsitec.Common.Designer.Dialogs
 				footer.Margins = new Margins(0, 0, 8, 0);
 				footer.Dock = DockStyle.Bottom;
 
+				Button buttonClose = new Button(footer);
+				buttonClose.PreferredWidth = 75;
+				buttonClose.Text = Res.Strings.Dialog.Icon.Button.Cancel;
+				buttonClose.ButtonStyle = ButtonStyle.DefaultCancel;
+				buttonClose.Dock = DockStyle.Right;
+				buttonClose.Clicked += new MessageEventHandler(this.HandleButtonCloseClicked);
+				buttonClose.TabIndex = tabIndex++;
+				buttonClose.TabNavigationMode = TabNavigationMode.ActivateOnTab;
+
 				Button buttonOk = new Button(footer);
 				buttonOk.PreferredWidth = 75;
 				buttonOk.Text = Res.Strings.Dialog.Icon.Button.OK;
 				buttonOk.ButtonStyle = ButtonStyle.DefaultAccept;
-				buttonOk.Dock = DockStyle.Left;
+				buttonOk.Dock = DockStyle.Right;
 				buttonOk.Margins = new Margins(0, 6, 0, 0);
 				buttonOk.Clicked += new MessageEventHandler(this.HandleButtonInsertClicked);
 				buttonOk.TabIndex = tabIndex++;
 				buttonOk.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 
-				Button buttonClose = new Button(footer);
-				buttonClose.PreferredWidth = 75;
-				buttonClose.Text = Res.Strings.Dialog.Icon.Button.Cancel;
-				buttonClose.ButtonStyle = ButtonStyle.DefaultCancel;
-				buttonClose.Dock = DockStyle.Left;
-				buttonClose.Margins = new Margins(0, 6, 0, 0);
-				buttonClose.Clicked += new MessageEventHandler(this.HandleButtonCloseClicked);
-				buttonClose.TabIndex = tabIndex++;
-				buttonClose.TabNavigationMode = TabNavigationMode.ActivateOnTab;
+				this.buttonMode = new IconButton(footer);
+				this.buttonMode.IconName = Misc.Icon("DialogIconMode");
+				this.buttonMode.ButtonStyle = ButtonStyle.ActivableIcon;
+				this.buttonMode.Dock = DockStyle.Left;
+				this.buttonMode.Margins = new Margins(0, 6, 0, 0);
+				this.buttonMode.Clicked += new MessageEventHandler(this.HandleButtonModeClicked);
+				ToolTip.Default.SetToolTip(this.buttonMode, Res.Strings.Dialog.Icon.Tooltip.Mode);
 
 				this.slider = new HSlider(footer);
 				this.slider.PreferredWidth = 80;
-				this.slider.Dock = DockStyle.Right;
+				this.slider.Dock = DockStyle.Left;
 				this.slider.Margins = new Margins(0, 0, 4, 4);
 				this.slider.TabIndex = tabIndex++;
 				this.slider.TabNavigationMode = TabNavigationMode.ActivateOnTab;
@@ -147,14 +154,6 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.slider.Value = (decimal) this.arrayDetail.LineHeight;
 				this.slider.ValueChanged += new EventHandler(this.HandleSliderChanged);
 				ToolTip.Default.SetToolTip(this.slider, Res.Strings.Dialog.Icon.Tooltip.Size);
-
-				this.buttonMode = new IconButton(footer);
-				this.buttonMode.IconName = Misc.Icon("DialogIconMode");
-				this.buttonMode.ButtonStyle = ButtonStyle.ActivableIcon;
-				this.buttonMode.Dock = DockStyle.Right;
-				this.buttonMode.Margins = new Margins(0, 6, 0, 0);
-				this.buttonMode.Clicked += new MessageEventHandler(this.HandleButtonModeClicked);
-				ToolTip.Default.SetToolTip(this.buttonMode, Res.Strings.Dialog.Icon.Tooltip.Mode);
 			}
 
 			this.UpdateMode();

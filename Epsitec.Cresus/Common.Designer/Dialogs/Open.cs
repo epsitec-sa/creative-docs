@@ -73,32 +73,12 @@ namespace Epsitec.Common.Designer.Dialogs
 				footer.Margins = new Margins(0, 0, 8, 0);
 				footer.Dock = DockStyle.Bottom;
 
-				this.buttonOpen = new Button(footer);
-				this.buttonOpen.PreferredWidth = 75;
-				this.buttonOpen.Text = Res.Strings.Dialog.Open.Button.Open;
-				this.buttonOpen.ButtonStyle = ButtonStyle.DefaultAccept;
-				this.buttonOpen.Dock = DockStyle.Left;
-				this.buttonOpen.Margins = new Margins(0, 6, 0, 0);
-				this.buttonOpen.Clicked += new MessageEventHandler(this.HandleButtonOpenClicked);
-				this.buttonOpen.TabIndex = tabIndex++;
-				this.buttonOpen.TabNavigationMode = TabNavigationMode.ActivateOnTab;
-
-				this.buttonCancel = new Button(footer);
-				this.buttonCancel.PreferredWidth = 75;
-				this.buttonCancel.Text = Res.Strings.Dialog.Button.Cancel;
-				this.buttonCancel.ButtonStyle = ButtonStyle.DefaultCancel;
-				this.buttonCancel.Dock = DockStyle.Left;
-				this.buttonCancel.Margins = new Margins(0, 6, 0, 0);
-				this.buttonCancel.Clicked += new MessageEventHandler(this.HandleButtonCloseClicked);
-				this.buttonCancel.TabIndex = tabIndex++;
-				this.buttonCancel.TabNavigationMode = TabNavigationMode.ActivateOnTab;
-
 				this.checkOpened = new CheckButton(footer);
 				this.checkOpened.AutoToggle = false;
 				this.checkOpened.Text = "Modules ouverts";
 				this.checkOpened.PreferredWidth = 110;
 				this.checkOpened.Dock = DockStyle.Left;
-				this.checkOpened.Margins = new Margins(20, 0, 0, 0);
+				this.checkOpened.Margins = new Margins(0, 0, 0, 0);
 				this.checkOpened.Clicked += new MessageEventHandler(this.HandleCheckClicked);
 				this.checkOpened.TabIndex = tabIndex++;
 				this.checkOpened.TabNavigationMode = TabNavigationMode.ActivateOnTab;
@@ -112,6 +92,25 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.checkLocked.Clicked += new MessageEventHandler(this.HandleCheckClicked);
 				this.checkLocked.TabIndex = tabIndex++;
 				this.checkLocked.TabNavigationMode = TabNavigationMode.ActivateOnTab;
+
+				this.buttonCancel = new Button(footer);
+				this.buttonCancel.PreferredWidth = 75;
+				this.buttonCancel.Text = Res.Strings.Dialog.Button.Cancel;
+				this.buttonCancel.ButtonStyle = ButtonStyle.DefaultCancel;
+				this.buttonCancel.Dock = DockStyle.Right;
+				this.buttonCancel.Clicked += new MessageEventHandler(this.HandleButtonCloseClicked);
+				this.buttonCancel.TabIndex = tabIndex++;
+				this.buttonCancel.TabNavigationMode = TabNavigationMode.ActivateOnTab;
+
+				this.buttonOpen = new Button(footer);
+				this.buttonOpen.PreferredWidth = 75;
+				this.buttonOpen.Text = Res.Strings.Dialog.Open.Button.Open;
+				this.buttonOpen.ButtonStyle = ButtonStyle.DefaultAccept;
+				this.buttonOpen.Dock = DockStyle.Right;
+				this.buttonOpen.Margins = new Margins(0, 6, 0, 0);
+				this.buttonOpen.Clicked += new MessageEventHandler(this.HandleButtonOpenClicked);
+				this.buttonOpen.TabIndex = tabIndex++;
+				this.buttonOpen.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			}
 
 			this.UpdateModules(true);

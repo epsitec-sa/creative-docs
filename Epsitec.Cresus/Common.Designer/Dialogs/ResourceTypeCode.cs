@@ -90,24 +90,24 @@ namespace Epsitec.Common.Designer.Dialogs
 				footer.Margins = new Margins(0, 0, 8, 0);
 				footer.Dock = DockStyle.Bottom;
 
-				this.buttonOk = new Button(footer);
-				this.buttonOk.PreferredWidth = 75;
-				this.buttonOk.Text = Res.Strings.Dialog.Button.OK;
-				this.buttonOk.ButtonStyle = ButtonStyle.DefaultAccept;
-				this.buttonOk.Dock = DockStyle.Left;
-				this.buttonOk.Margins = new Margins(0, 6, 0, 0);
-				this.buttonOk.Clicked += new MessageEventHandler(this.HandleButtonOKClicked);
-				this.buttonOk.TabIndex = this.tabIndex++;
-				this.buttonOk.TabNavigationMode = TabNavigationMode.ActivateOnTab;
-
 				this.buttonCancel = new Button(footer);
 				this.buttonCancel.PreferredWidth = 75;
 				this.buttonCancel.Text = Res.Strings.Dialog.Button.Cancel;
 				this.buttonCancel.ButtonStyle = ButtonStyle.DefaultCancel;
-				this.buttonCancel.Dock = DockStyle.Left;
+				this.buttonCancel.Dock = DockStyle.Right;
 				this.buttonCancel.Clicked += new MessageEventHandler(this.HandleButtonCancelClicked);
 				this.buttonCancel.TabIndex = this.tabIndex++;
 				this.buttonCancel.TabNavigationMode = TabNavigationMode.ActivateOnTab;
+
+				this.buttonOk = new Button(footer);
+				this.buttonOk.PreferredWidth = 75;
+				this.buttonOk.Text = Res.Strings.Dialog.Button.OK;
+				this.buttonOk.ButtonStyle = ButtonStyle.DefaultAccept;
+				this.buttonOk.Dock = DockStyle.Right;
+				this.buttonOk.Margins = new Margins(0, 6, 0, 0);
+				this.buttonOk.Clicked += new MessageEventHandler(this.HandleButtonOKClicked);
+				this.buttonOk.TabIndex = this.tabIndex++;
+				this.buttonOk.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 
 				this.buttonExtend = new GlyphButton(footer);
 				this.buttonExtend.PreferredWidth = 16;
@@ -115,7 +115,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.buttonExtend.AutoFocus = false;
 				this.buttonExtend.TabNavigationMode = TabNavigationMode.None;
 				this.buttonExtend.Dock = DockStyle.Left;
-				this.buttonExtend.Margins = new Margins(6, 0, 3, 3);
+				this.buttonExtend.Margins = new Margins(0, 0, 3, 3);
 				this.buttonExtend.Clicked += new MessageEventHandler(this.HandleButtonExtendClicked);
 				ToolTip.Default.SetToolTip(this.buttonExtend, Res.Strings.Dialog.TypeCode.Tooltip.Options);
 

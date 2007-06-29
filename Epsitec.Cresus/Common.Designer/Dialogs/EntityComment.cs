@@ -57,24 +57,24 @@ namespace Epsitec.Common.Designer.Dialogs
 				footer.Margins = new Margins(0, 0, 8, 0);
 				footer.Dock = DockStyle.Bottom;
 
-				this.buttonOk = new Button(footer);
-				this.buttonOk.PreferredWidth = 75;
-				this.buttonOk.Text = Res.Strings.Dialog.Button.OK;
-				this.buttonOk.ButtonStyle = ButtonStyle.DefaultAccept;
-				this.buttonOk.Dock = DockStyle.Left;
-				this.buttonOk.Margins = new Margins(0, 10, 0, 0);
-				this.buttonOk.Clicked += new MessageEventHandler(this.HandleButtonOkClicked);
-				this.buttonOk.TabIndex = tabIndex++;
-				this.buttonOk.TabNavigationMode = TabNavigationMode.ActivateOnTab;
-
 				this.buttonCancel = new Button(footer);
 				this.buttonCancel.PreferredWidth = 75;
 				this.buttonCancel.Text = Res.Strings.Dialog.Button.Cancel;
 				this.buttonCancel.ButtonStyle = ButtonStyle.DefaultCancel;
-				this.buttonCancel.Dock = DockStyle.Left;
+				this.buttonCancel.Dock = DockStyle.Right;
 				this.buttonCancel.Clicked += new MessageEventHandler(this.HandleButtonCloseClicked);
 				this.buttonCancel.TabIndex = tabIndex++;
 				this.buttonCancel.TabNavigationMode = TabNavigationMode.ActivateOnTab;
+
+				this.buttonOk = new Button(footer);
+				this.buttonOk.PreferredWidth = 75;
+				this.buttonOk.Text = Res.Strings.Dialog.Button.OK;
+				this.buttonOk.ButtonStyle = ButtonStyle.DefaultAccept;
+				this.buttonOk.Dock = DockStyle.Right;
+				this.buttonOk.Margins = new Margins(0, 6, 0, 0);
+				this.buttonOk.Clicked += new MessageEventHandler(this.HandleButtonOkClicked);
+				this.buttonOk.TabIndex = tabIndex++;
+				this.buttonOk.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			}
 
 			this.UpdateText();
