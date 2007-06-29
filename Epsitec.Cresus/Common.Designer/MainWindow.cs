@@ -319,6 +319,7 @@ namespace Epsitec.Common.Designer
 			this.ribbonMain.RibbonTitle = Res.Strings.Ribbon.Main;
 			this.ribbonBook.Items.Add(this.ribbonMain);
 
+			this.ribbonMain.Items.Add(new Ribbons.Identity(this));
 			this.ribbonMain.Items.Add(new Ribbons.File(this));
 			this.ribbonMain.Items.Add(new Ribbons.Culture(this));
 			this.ribbonMain.Items.Add(new Ribbons.Clipboard(this));
@@ -330,7 +331,6 @@ namespace Epsitec.Common.Designer
 			this.ribbonMain.Items.Add(new Ribbons.Character(this));
 			this.ribbonMain.Items.Add(new Ribbons.Display(this));
 			this.ribbonMain.Items.Add(new Ribbons.Locator(this));
-			this.ribbonMain.Items.Add(new Ribbons.Identity(this));
 
 			//	Crée le ruban des opérations.
 			this.ribbonOper = new RibbonPage();
