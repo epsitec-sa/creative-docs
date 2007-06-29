@@ -105,7 +105,7 @@ namespace Epsitec.Common.Identity.UI
 					{
 						graphics.SolidRenderer.SetAlphaMask (mask.Pixmap, MaskComponent.R);
 						graphics.AddFilledRectangle (imageRect);
-						graphics.RenderSolid (Color.FromHsv (0, 0, baseColorV * 0.7));
+						graphics.RenderSolid (Color.FromRgb (1.0, 0.5, 0.0));  // orange
 						graphics.Color = Color.FromBrightness (1);
 						graphics.PaintText (imageRect.X, imageRect.Y, imageRect.Width, imageRect.Height, "?", Font.GetFont ("Tahoma", "Bold"), imageRect.Height, ContentAlignment.MiddleCenter);
 						graphics.SolidRenderer.SetAlphaMask (null, MaskComponent.None);
@@ -121,7 +121,7 @@ namespace Epsitec.Common.Identity.UI
 					if ((textWidth > 20) &&
 						(this.IdentityCard != null))
 					{
-						string textLine1 = this.IdentityCard.UserName;
+						string textLine1 = this.IdentityCard.UserName == "-" ? "Anonyme" : this.IdentityCard.UserName;
 						string textLine2 = this.IdentityCard.DeveloperId == -1 ? "" : string.Format ("Dev #{0}", this.IdentityCard.DeveloperId);
 
 						graphics.Color = Color.FromName ("Black");
