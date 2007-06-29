@@ -620,34 +620,38 @@ namespace Epsitec.Common.Widgets.Adorners
 			}
 			else if ( style == ButtonStyle.Slider )
 			{
-				int add = 1;
-				if ( dir == Direction.Up || dir == Direction.Down )  add = 0;
-
 				if ( (state&WidgetPaintState.Enabled) != 0 )
 				{
-					this.PaintImageButton(graphics, rect, 28+add);
-
-					if ( (state&WidgetPaintState.Entered) != 0 )  // bouton survolé ?
+					if ( (state&WidgetPaintState.Engaged) != 0 )  // bouton pressé ?
 					{
-						double radius = this.RetRadiusScroller(rect);
-						Drawing.Path pTitle = this.PathRoundRectangle(rect, radius);
-						graphics.Rasterizer.AddOutline(pTitle, 1.0);
+						this.PaintImageButton(graphics, rect, 33);
+					}
+					else
+					{
+						this.PaintImageButton(graphics, rect, 32);
+					}
+
+					if ((state&WidgetPaintState.Entered) != 0)  // bouton survolé ?
+					{
+						graphics.LineWidth = 3.0;
+						graphics.AddCircle(rect.Center, rect.Width/2-1.5, rect.Height/2-1.5);
+						graphics.LineWidth = 1.0;
+						graphics.RenderSolid(this.colorEntered);
+
+						graphics.AddCircle(rect.Center, rect.Width/2-0.5, rect.Height/2-0.5);
 						graphics.RenderSolid(this.colorBorderButton);
 					}
 					else
 					{
-						double radius = this.RetRadiusScroller(rect);
-						Drawing.Path pTitle = this.PathRoundRectangle(rect, radius);
-						graphics.Rasterizer.AddOutline(pTitle, 1.0);
+						graphics.AddCircle(rect.Center, rect.Width/2-0.5, rect.Height/2-0.5);
 						graphics.RenderSolid(this.colorBorder);
 					}
 				}
 				else
 				{
-					this.PaintImageButton(graphics, rect, 30+add);
+					this.PaintImageButton(graphics, rect, 34);
 
-					rect.Deflate(0.5);
-					graphics.AddRectangle(rect);
+					graphics.AddCircle(rect.Center, rect.Width/2-0.5, rect.Height/2-0.5);
 					graphics.RenderSolid(this.colorDisabled);
 				}
 
@@ -1168,10 +1172,12 @@ namespace Epsitec.Common.Widgets.Adorners
 									  Widgets.Direction dir)
 		{
 			//	Dessine la cabine d'un potentiomètre linéaire.
+			thumbRect.Inflate(1);
+
 			if ( dir == Widgets.Direction.Left )
 			{
 				state &= ~WidgetPaintState.Engaged;
-				this.PaintButtonBackground(graphics, thumbRect, state, dir, ButtonStyle.Slider);
+				this.PaintButtonBackground(graphics, thumbRect, state, dir, ButtonStyle.Scroller);
 
 				double d = thumbRect.Width/2+1;
 				graphics.AddLine(thumbRect.Center.X, thumbRect.Bottom+d, thumbRect.Center.X, thumbRect.Top-d);
@@ -1180,7 +1186,7 @@ namespace Epsitec.Common.Widgets.Adorners
 			else
 			{
 				state &= ~WidgetPaintState.Engaged;
-				this.PaintButtonBackground(graphics, thumbRect, state, dir, ButtonStyle.Slider);
+				this.PaintButtonBackground(graphics, thumbRect, state, dir, ButtonStyle.Scroller);
 
 				double d = thumbRect.Height/2+1;
 				graphics.AddLine(thumbRect.Left+d, thumbRect.Center.Y, thumbRect.Right-d, thumbRect.Center.Y);
@@ -2508,7 +2514,8 @@ namespace Epsitec.Common.Widgets.Adorners
 			icon.Bottom = icon.Top-32;
 
 			if ( rank ==  8 || rank ==  9 || rank == 10 || rank == 13 || rank == 14 ||
-				 rank == 16 || rank == 17 || rank == 21 || rank == 22 || rank == 23 )
+				 rank == 16 || rank == 17 || rank == 21 || rank == 22 || rank == 23 ||
+				 rank == 32 || rank == 33 || rank == 34 )
 			{
 				this.PaintImageButton1(graphics, rect, icon);
 			}
