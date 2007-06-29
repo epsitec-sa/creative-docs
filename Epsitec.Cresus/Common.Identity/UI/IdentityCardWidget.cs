@@ -59,13 +59,7 @@ namespace Epsitec.Common.Identity.UI
 			using (Path round = new Path ())
 			{
 				WidgetPaintState paintState = this.PaintState;
-
-				Epsitec.Common.UI.ItemViewWidget item = this.Parent as Epsitec.Common.UI.ItemViewWidget;
-				bool isSelected = false;
-				if (item != null)
-				{
-					isSelected = item.ItemView.IsSelected;  // TODO: faire mieux !
-				}
+				bool isSelected = (paintState & WidgetPaintState.Selected) != 0;
 
 				double factor = 0.33;
 				if ((paintState & WidgetPaintState.Entered) != 0)
