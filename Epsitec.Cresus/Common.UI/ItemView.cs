@@ -358,7 +358,7 @@ namespace Epsitec.Common.UI
 
 				if (this.widget != null)
 				{
-					this.widget.Invalidate ();
+					this.widget.NotifyItemViewIsSelectedChanged ();
 				}
 			}
 		}

@@ -149,6 +149,14 @@ namespace Epsitec.Common.UI
 			}
 		}
 
+		internal void NotifyItemViewIsSelectedChanged()
+		{
+			bool newValue = this.ItemView.IsSelected;
+			bool oldValue = !newValue;
+
+			this.InvalidateProperty (Widgets.Visual.SelectedProperty, oldValue, newValue);
+			this.Invalidate ();
+		}
 		
 		private void HandleKeyboardFocusChanged(object sender, DependencyPropertyChangedEventArgs e)
 		{
@@ -250,8 +258,8 @@ namespace Epsitec.Common.UI
 			return null;
 		}
 
-		
 		private ItemView view;
 		private bool isPassive;
+
 	}
 }
