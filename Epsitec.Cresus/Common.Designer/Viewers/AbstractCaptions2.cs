@@ -512,6 +512,10 @@ namespace Epsitec.Common.Designer.Viewers
 			string text = edit.Text;
 
 			CultureMap item = this.access.CollectionView.CurrentItem as CultureMap;
+			if (item == null)
+			{
+				return;
+			}
 
 			if (edit == this.primaryDescription)
 			{
@@ -550,6 +554,10 @@ namespace Epsitec.Common.Designer.Viewers
 
 			MyWidgets.StringCollection sc = sender as MyWidgets.StringCollection;
 			CultureMap item = this.access.CollectionView.CurrentItem as CultureMap;
+			if (item == null)
+			{
+				return;
+			}
 
 			if (sc == this.primaryLabels)
 			{
@@ -582,7 +590,17 @@ namespace Epsitec.Common.Designer.Viewers
 		{
 			//	Le boutons pour choisir l'icône a été cliqué.
 			CultureMap item = this.access.CollectionView.CurrentItem as CultureMap;
+			if (item == null)
+			{
+				return;
+			}
+
 			StructuredData data = item.GetCultureData("00");
+			if (data == null)
+			{
+				return;
+			}
+
 			string initialIcon = data.GetValue(Support.Res.Fields.ResourceCaption.Icon) as string;
 
 			string icon = this.module.MainWindow.DlgIcon(this.module.ResourceManager, initialIcon);

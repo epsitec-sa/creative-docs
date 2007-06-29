@@ -172,28 +172,42 @@ namespace Epsitec.Common.Designer.Viewers
 			this.ignoreChange = true;
 
 			CultureMap item = this.access.CollectionView.CurrentItem as CultureMap;
-			StructuredData data;
+			StructuredData data = null;
 			IList<StructuredData> shortcuts;
 
-			data = item.GetCultureData(this.GetTwoLetters(0));
-
-			string dp = data.GetValue(Support.Res.Fields.ResourceCommand.DefaultParameter) as string;
-			this.primaryAspectIcon.ActiveState = (dp == "IconButton" || string.IsNullOrEmpty(dp)) ? ActiveState.Yes : ActiveState.No;
-			this.primaryAspectDialog.ActiveState = (dp == "DialogButton") ? ActiveState.Yes : ActiveState.No;
-
-			bool statefull = false;
-			object value = data.GetValue(Support.Res.Fields.ResourceCommand.Statefull);
-			if (!UndefinedValue.IsUndefinedValue(value))
+			if (item != null)
 			{
-				statefull = (bool) value;
+				data = item.GetCultureData(this.GetTwoLetters(0));
 			}
-			this.primaryStatefull.ActiveState = statefull ? ActiveState.Yes : ActiveState.No;
-			
-			shortcuts = data.GetValue(Support.Res.Fields.ResourceCommand.Shortcuts) as IList<StructuredData>;
-			this.SetShortcut(this.primaryShortcut1, this.primaryShortcut2, shortcuts);
 
-			string group = data.GetValue(Support.Res.Fields.ResourceCommand.Group) as string;
-			this.primaryGroup.Text = group;
+			if (data == null)
+			{
+				this.primaryAspectIcon.ActiveState = ActiveState.No;
+				this.primaryAspectDialog.ActiveState = ActiveState.No;
+				this.primaryStatefull.ActiveState = ActiveState.No;
+				this.SetShortcut(this.primaryShortcut1, this.primaryShortcut2, null);
+				this.primaryGroup.Text = "";
+			}
+			else
+			{
+				string dp = data.GetValue(Support.Res.Fields.ResourceCommand.DefaultParameter) as string;
+				this.primaryAspectIcon.ActiveState = (dp == "IconButton" || string.IsNullOrEmpty(dp)) ? ActiveState.Yes : ActiveState.No;
+				this.primaryAspectDialog.ActiveState = (dp == "DialogButton") ? ActiveState.Yes : ActiveState.No;
+
+				bool statefull = false;
+				object value = data.GetValue(Support.Res.Fields.ResourceCommand.Statefull);
+				if (!UndefinedValue.IsUndefinedValue(value))
+				{
+					statefull = (bool) value;
+				}
+				this.primaryStatefull.ActiveState = statefull ? ActiveState.Yes : ActiveState.No;
+
+				shortcuts = data.GetValue(Support.Res.Fields.ResourceCommand.Shortcuts) as IList<StructuredData>;
+				this.SetShortcut(this.primaryShortcut1, this.primaryShortcut2, shortcuts);
+
+				string group = data.GetValue(Support.Res.Fields.ResourceCommand.Group) as string;
+				this.primaryGroup.Text = group;
+			}
 
 			if (this.GetTwoLetters(1) == null)
 			{
@@ -338,6 +352,11 @@ namespace Epsitec.Common.Designer.Viewers
 			}
 
 			CultureMap item = this.access.CollectionView.CurrentItem as CultureMap;
+			if (item == null)
+			{
+				return;
+			}
+
 			StructuredData data = item.GetCultureData(this.GetTwoLetters(0));
 			data.SetValue(Support.Res.Fields.ResourceCommand.DefaultParameter, defaultParameter);
 
@@ -356,6 +375,11 @@ namespace Epsitec.Common.Designer.Viewers
 			bool statefull = (this.primaryStatefull.ActiveState == ActiveState.No);
 
 			CultureMap item = this.access.CollectionView.CurrentItem as CultureMap;
+			if (item == null)
+			{
+				return;
+			}
+
 			StructuredData data = item.GetCultureData(this.GetTwoLetters(0));
 			data.SetValue(Support.Res.Fields.ResourceCommand.Statefull, statefull);
 
@@ -411,6 +435,11 @@ namespace Epsitec.Common.Designer.Viewers
 			System.Diagnostics.Debug.Assert(row != -1 && rank != -1);
 
 			CultureMap item = this.access.CollectionView.CurrentItem as CultureMap;
+			if (item == null)
+			{
+				return;
+			}
+
 			StructuredData data = item.GetCultureData(this.GetTwoLetters(row));
 			IList<StructuredData> shortcuts = data.GetValue(Support.Res.Fields.ResourceCommand.Shortcuts) as IList<StructuredData>;
 
@@ -501,6 +530,10 @@ namespace Epsitec.Common.Designer.Viewers
 			string text = edit.Text;
 
 			CultureMap item = this.access.CollectionView.CurrentItem as CultureMap;
+			if (item == null)
+			{
+				return;
+			}
 
 			if (edit == this.primaryGroup)
 			{
