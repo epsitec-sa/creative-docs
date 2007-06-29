@@ -246,8 +246,8 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				buttonOk.PreferredWidth = 75;
 				buttonOk.Text = Res.Strings.Dialog.Glyphs.Button.Insert;
 				buttonOk.ButtonStyle = ButtonStyle.DefaultAccept;
-				buttonOk.Anchor = AnchorStyles.BottomLeft;
-				buttonOk.Margins = new Margins(6, 0, 0, 6);
+				buttonOk.Anchor = AnchorStyles.BottomRight;
+				buttonOk.Margins = new Margins(0, 6+75+6, 0, 6);
 				buttonOk.Clicked += new MessageEventHandler(this.HandleButtonInsertClicked);
 				buttonOk.TabIndex = 1000;
 				buttonOk.TabNavigationMode = TabNavigationMode.ActivateOnTab;
@@ -257,8 +257,8 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				buttonClose.PreferredWidth = 75;
 				buttonClose.Text = Res.Strings.Dialog.Button.Close;
 				buttonClose.ButtonStyle = ButtonStyle.DefaultCancel;
-				buttonClose.Anchor = AnchorStyles.BottomLeft;
-				buttonClose.Margins = new Margins(6+75+10, 0, 0, 6);
+				buttonClose.Anchor = AnchorStyles.BottomRight;
+				buttonClose.Margins = new Margins(0, 6, 0, 6);
 				buttonClose.Clicked += new MessageEventHandler(this.HandleButtonCloseClicked);
 				buttonClose.TabIndex = 1001;
 				buttonClose.TabNavigationMode = TabNavigationMode.ActivateOnTab;

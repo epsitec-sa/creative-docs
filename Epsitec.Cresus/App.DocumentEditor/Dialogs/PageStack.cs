@@ -79,33 +79,31 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				this.table.Margins = new Margins (6, 6, 6, 34);
 
 				//	Bouton de fermeture.
-				double posx = 6;
 				Button buttonClose = new Button(this.window.Root);
 				buttonClose.PreferredWidth = 75;
 				buttonClose.Text = Res.Strings.Dialog.Button.Close;
 				buttonClose.ButtonStyle = ButtonStyle.DefaultAcceptAndCancel;
-				buttonClose.Anchor = AnchorStyles.BottomLeft;
-				buttonClose.Margins = new Margins(posx, 0, 0, 6);
+				buttonClose.Anchor = AnchorStyles.BottomRight;
+				buttonClose.Margins = new Margins(0, 6+75+6, 0, 6);
 				buttonClose.Clicked += new MessageEventHandler(this.HandleButtonCloseClicked);
 				buttonClose.TabIndex = this.tabIndex++;
 				buttonClose.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 				ToolTip.Default.SetToolTip(buttonClose, Res.Strings.Dialog.Tooltip.Close);
 
 				//	Bouton d'aide.
-				posx += buttonClose.PreferredWidth+6;
 				Button buttonHelp = new Button(this.window.Root);
 				buttonHelp.PreferredWidth = 75;
 				buttonHelp.Text = Res.Strings.Dialog.Button.Help;
-				buttonHelp.Anchor = AnchorStyles.BottomLeft;
-				buttonHelp.Margins = new Margins(posx, 0, 0, 6);
+				buttonHelp.Anchor = AnchorStyles.BottomRight;
+				buttonHelp.Margins = new Margins(0, 6, 0, 6);
 				buttonHelp.Clicked += new MessageEventHandler(this.HandleButtonHelpClicked);
 				buttonHelp.TabIndex = this.tabIndex++;
 				buttonHelp.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 				ToolTip.Default.SetToolTip(buttonHelp, Res.Strings.Dialog.Tooltip.Help);
 
+				double posx = 6;
 				double dim = buttonClose.PreferredHeight;
 
-				posx += buttonHelp.PreferredWidth+30;
 				this.pagePrev = new GlyphButton(this.window.Root);
 				this.pagePrev.GlyphShape = GlyphShape.ArrowLeft;
 				this.pagePrev.PreferredWidth = dim;

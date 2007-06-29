@@ -115,8 +115,8 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				this.buttonFind.PreferredWidth = 75;
 				this.buttonFind.Text = Res.Strings.Dialog.Replace.Button.Find;
 				this.buttonFind.ButtonStyle = ButtonStyle.DefaultAccept;
-				this.buttonFind.Anchor = AnchorStyles.BottomLeft;
-				this.buttonFind.Margins = new Margins(10, 0, 0, 10);
+				this.buttonFind.Anchor = AnchorStyles.BottomRight;
+				this.buttonFind.Margins = new Margins(0, 10+75+6+75+6, 0, 10);
 				this.buttonFind.Clicked += new MessageEventHandler(this.HandleButtonClicked);
 				this.buttonFind.TabIndex = this.tabIndex++;
 				this.buttonFind.TabNavigationMode = TabNavigationMode.ActivateOnTab;
@@ -126,8 +126,8 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				//?this.buttonReplace.Command = "GlyphsInsert";
 				this.buttonReplace.PreferredWidth = 75;
 				this.buttonReplace.Text = Res.Strings.Dialog.Replace.Button.Replace;
-				this.buttonReplace.Anchor = AnchorStyles.BottomLeft;
-				this.buttonReplace.Margins = new Margins(10+75+10, 0, 0, 10);
+				this.buttonReplace.Anchor = AnchorStyles.BottomRight;
+				this.buttonReplace.Margins = new Margins(0, 10+75+6, 0, 10);
 				this.buttonReplace.Clicked += new MessageEventHandler(this.HandleButtonClicked);
 				this.buttonReplace.TabIndex = this.tabIndex++;
 				this.buttonReplace.TabNavigationMode = TabNavigationMode.ActivateOnTab;
@@ -137,8 +137,8 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				this.buttonClose.PreferredWidth = 75;
 				this.buttonClose.Text = Res.Strings.Dialog.Button.Close;
 				this.buttonClose.ButtonStyle = ButtonStyle.DefaultCancel;
-				this.buttonClose.Anchor = AnchorStyles.BottomLeft;
-				this.buttonClose.Margins = new Margins(10+75+10+75+10, 0, 0, 10);
+				this.buttonClose.Anchor = AnchorStyles.BottomRight;
+				this.buttonClose.Margins = new Margins(0, 10, 0, 10);
 				this.buttonClose.Clicked += new MessageEventHandler(this.HandleButtonCloseClicked);
 				this.buttonClose.TabIndex = this.tabIndex++;
 				this.buttonClose.TabNavigationMode = TabNavigationMode.ActivateOnTab;

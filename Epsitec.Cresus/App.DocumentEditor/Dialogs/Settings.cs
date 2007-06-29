@@ -278,8 +278,8 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				buttonClose.PreferredWidth = 75;
 				buttonClose.Text = Res.Strings.Dialog.Button.Close;
 				buttonClose.ButtonStyle = ButtonStyle.DefaultAcceptAndCancel;
-				buttonClose.Anchor = AnchorStyles.BottomLeft;
-				buttonClose.Margins = new Margins(6, 0, 0, 6);
+				buttonClose.Anchor = AnchorStyles.BottomRight;
+				buttonClose.Margins = new Margins(0, 6, 0, 6);
 				buttonClose.Clicked += new MessageEventHandler(this.HandleSettingsButtonCloseClicked);
 				buttonClose.TabIndex = 1000;
 				buttonClose.TabNavigationMode = TabNavigationMode.ActivateOnTab;

@@ -122,8 +122,8 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				this.buttonOK.PreferredWidth = 75;
 				this.buttonOK.Text = Res.Strings.Dialog.Button.OK;
 				this.buttonOK.ButtonStyle = ButtonStyle.DefaultAccept;
-				this.buttonOK.Anchor = AnchorStyles.BottomLeft;
-				this.buttonOK.Margins = new Margins(10, 0, 0, 10);
+				this.buttonOK.Anchor = AnchorStyles.BottomRight;
+				this.buttonOK.Margins = new Margins(0, 10+75+6, 0, 10);
 				this.buttonOK.Clicked += new MessageEventHandler(this.HandleKeyButtonOKClicked);
 				this.buttonOK.TabIndex = this.tabIndex++;
 				this.buttonOK.TabNavigationMode = TabNavigationMode.ActivateOnTab;
@@ -133,8 +133,8 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				this.buttonCancel.PreferredWidth = 75;
 				this.buttonCancel.Text = Res.Strings.Dialog.Button.Cancel;
 				this.buttonCancel.ButtonStyle = ButtonStyle.DefaultCancel;
-				this.buttonCancel.Anchor = AnchorStyles.BottomLeft;
-				this.buttonCancel.Margins = new Margins(10+75+10, 0, 0, 10);
+				this.buttonCancel.Anchor = AnchorStyles.BottomRight;
+				this.buttonCancel.Margins = new Margins(0, 10, 0, 10);
 				this.buttonCancel.Clicked += new MessageEventHandler(this.HandleKeyButtonCancelClicked);
 				this.buttonCancel.TabIndex = this.tabIndex++;
 				this.buttonCancel.TabNavigationMode = TabNavigationMode.ActivateOnTab;

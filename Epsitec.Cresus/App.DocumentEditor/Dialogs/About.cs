@@ -37,8 +37,8 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				buttonClose.PreferredWidth = 75;
 				buttonClose.Text = Res.Strings.Dialog.Button.Close;
 				buttonClose.ButtonStyle = ButtonStyle.DefaultAcceptAndCancel;
-				buttonClose.Anchor = AnchorStyles.BottomLeft;
-				buttonClose.Margins = new Margins(10, 0, 0, 10);
+				buttonClose.Anchor = AnchorStyles.BottomRight;
+				buttonClose.Margins = new Margins(0, 10, 0, 10);
 				buttonClose.Clicked += new MessageEventHandler(this.HandleAboutButtonCloseClicked);
 				buttonClose.TabIndex = 1000;
 				buttonClose.TabNavigationMode = TabNavigationMode.ActivateOnTab;
@@ -49,8 +49,8 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				www.Text = string.Format("<a href=\"{0}\">{1}</a><br/>", Res.Strings.Dialog.About.Link, Res.Strings.Dialog.About.Web);
 				www.ContentAlignment = ContentAlignment.MiddleLeft;
 				www.HypertextClicked += new MessageEventHandler(HandleLinkHypertextClicked);
-				www.Anchor = AnchorStyles.BottomRight;
-				www.Margins = new Margins(0, 0, 0, 15);
+				www.Anchor = AnchorStyles.BottomLeft;
+				www.Margins = new Margins(10, 0, 0, 15);
 			}
 
 			this.window.ShowDialog();
