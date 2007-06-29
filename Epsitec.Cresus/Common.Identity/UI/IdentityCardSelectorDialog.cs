@@ -46,7 +46,7 @@ namespace Epsitec.Common.Identity.UI
 			this.window.Text = "Sélection de l'identité";
 			this.window.Name = "Dialog";
 			this.window.PreventAutoClose = true;
-			this.window.ClientSize = new Size (335, 300);
+			this.window.ClientSize = new Size (395, 300);
 			this.window.MakeSecondaryWindow ();
 			this.window.Root.Padding = new Margins (8, 8, 8, 8);
 
@@ -85,7 +85,7 @@ namespace Epsitec.Common.Identity.UI
 			table.Margins = new Margins (0, 0, 0, 10);
 			table.TabIndex = 1;
 			table.Items = this.collectionView;
-			table.ItemPanel.ItemViewDefaultSize = new Size (150, 48);
+			table.ItemPanel.ItemViewDefaultSize = new Size (180, 48);
 			table.ItemPanel.Layout = ItemPanelLayout.RowsOfTiles;
 			table.ItemPanel.CustomItemViewFactoryGetter = delegate { return this.factory; };
 			table.ItemPanel.CurrentItemTrackingMode = CurrentItemTrackingMode.AutoSelect;
