@@ -1200,7 +1200,7 @@ namespace Epsitec.Common.Document.PDF
 		public void PutASCII85(byte[] buffer)
 		{
 			//	Met un buffer binaire en codage ASCII85 (voir [*] page 45).
-			IO.Ascii85 converter = new IO.Ascii85();
+			IO.Ascii85.Engine converter = new IO.Ascii85.Engine();
 			converter.EnforceMarks = false;
 			converter.Encode(buffer, this.stringBuilder);
 		}
