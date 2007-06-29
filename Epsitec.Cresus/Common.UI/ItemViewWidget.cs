@@ -24,6 +24,10 @@ namespace Epsitec.Common.UI
 		}
 
 
+		/// <summary>
+		/// Gets the item view which is represented by this widget.
+		/// </summary>
+		/// <value>The item view.</value>
 		public ItemView ItemView
 		{
 			get
@@ -32,11 +36,39 @@ namespace Epsitec.Common.UI
 			}
 		}
 
+		/// <summary>
+		/// Gets the parent panel (the one which hosts the widget).
+		/// </summary>
+		/// <value>The parent panel.</value>
 		public ItemPanel ParentPanel
 		{
 			get
 			{
 				return this.view.Owner;
+			}
+		}
+
+		/// <summary>
+		/// Gets or sets a value indicating whether this widget is passive.
+		/// A passive widget won't display any visual feed-back when it is
+		/// entered, engaged or selected.
+		/// </summary>
+		/// <value>
+		/// 	<c>true</c> if this widget is passive; otherwise, <c>false</c>.
+		/// </value>
+		public bool IsPassive
+		{
+			get
+			{
+				return this.isPassive;
+			}
+			set
+			{
+				if (this.isPassive != value)
+				{
+					this.isPassive = value;
+					this.Invalidate ();
+				}
 			}
 		}
 
@@ -47,16 +79,25 @@ namespace Epsitec.Common.UI
 			
 			Widgets.WidgetPaintState state   = this.PaintState;
 			Widgets.IAdorner         adorner = Widgets.Adorners.Factory.Active;
-			
-			if (this.view.IsSelected)
+
+			if (this.IsPassive)
 			{
-				state |= Widgets.WidgetPaintState.Selected;
+				state &= ~Epsitec.Common.Widgets.WidgetPaintState.Engaged;
+				state &= ~Epsitec.Common.Widgets.WidgetPaintState.Entered;
+				state &= ~Epsitec.Common.Widgets.WidgetPaintState.Selected;
 			}
-			if (panel != null)
+			else
 			{
-				if (panel.RootPanel.ContainsKeyboardFocus)
+				if (this.view.IsSelected)
 				{
-					state |= Widgets.WidgetPaintState.InheritedFocus;
+					state |= Widgets.WidgetPaintState.Selected;
+				}
+				if (panel != null)
+				{
+					if (panel.RootPanel.ContainsKeyboardFocus)
+					{
+						state |= Widgets.WidgetPaintState.InheritedFocus;
+					}
 				}
 			}
 
@@ -210,5 +251,6 @@ namespace Epsitec.Common.UI
 
 		
 		private ItemView view;
+		private bool isPassive;
 	}
 }

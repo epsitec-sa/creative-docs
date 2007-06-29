@@ -101,6 +101,17 @@ namespace Epsitec.Common.Identity.UI
 					IdentityCard ca = (IdentityCard) a;
 					IdentityCard cb = (IdentityCard) b;
 
+					if ((ca.DeveloperId < 0) &&
+						(cb.DeveloperId > -1))
+					{
+						return -1;
+					}
+					if ((ca.DeveloperId > -1) &&
+						(cb.DeveloperId < 0))
+					{
+						return 1;
+					}
+
 					string nameA = ca.UserName;
 					string nameB = cb.UserName;
 
@@ -109,6 +120,8 @@ namespace Epsitec.Common.Identity.UI
 
 					return nameA.CompareTo (nameB);
 				});
+
+			table.ColumnHeader.SetColumnSort (0, ListSortDirection.Ascending);
 					
 			Button button;
 			
@@ -153,6 +166,8 @@ namespace Epsitec.Common.Identity.UI
 				IdentityCard card = itemView.Item as IdentityCard;
 				IdentityCardWidget widget = new IdentityCardWidget (container);
 
+				container.IsPassive = true;
+
 				widget.Dock = DockStyle.Fill;
 				widget.IdentityCard = card;
 				widget.Clicked +=
@@ -160,6 +175,12 @@ namespace Epsitec.Common.Identity.UI
 					{
 						itemView.Owner.SelectItemView (itemView);
 					};
+
+				container.AddEventHandler (Visual.SelectedProperty,
+					delegate (object sender, DependencyPropertyChangedEventArgs e)
+					{
+						widget.SetSelected ((bool) e.NewValue);
+					});
 
 				return container;
 			}
