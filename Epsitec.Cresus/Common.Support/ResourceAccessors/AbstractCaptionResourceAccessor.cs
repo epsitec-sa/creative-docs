@@ -66,23 +66,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 		protected override Druid CreateId()
 		{
 			ResourceBundle bundle = this.ResourceManager.GetBundle (Resources.CaptionsBundleName, ResourceLevel.Default);
-
-			int devId   = 0;
-			int localId = -1;
-
-			foreach (ResourceBundle.Field field in bundle.Fields)
-			{
-				Druid id = field.Id;
-
-				System.Diagnostics.Debug.Assert (id.IsValid);
-
-				if (id.Developer == devId)
-				{
-					localId = System.Math.Max (localId, id.Local);
-				}
-			}
-
-			return new Druid (bundle.Module.Id, devId, localId+1);
+			return AbstractResourceAccessor.CreateId (bundle);
 		}
 
 		protected override void DeleteItem(CultureMap item)

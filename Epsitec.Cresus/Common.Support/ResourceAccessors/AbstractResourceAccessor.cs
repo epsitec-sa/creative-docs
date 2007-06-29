@@ -99,6 +99,43 @@ namespace Epsitec.Common.Support.ResourceAccessors
 
 		#endregion
 
+		internal static Druid CreateId(ResourceBundle bundle)
+		{
+			object devIdValue = Support.Globals.Properties.GetProperty (AbstractResourceAccessor.DeveloperIdPropertyName);
+
+			int devId   = -1;
+			int localId = -1;
+
+			if (Types.UndefinedValue.IsUndefinedValue (devIdValue))
+			{
+				throw new System.InvalidOperationException ("Undefined developer id");
+			}
+
+			devId = (int) devIdValue;
+
+			if (devId < 0)
+			{
+				throw new System.InvalidOperationException ("Invalid developer id");
+			}
+
+			foreach (ResourceBundle.Field field in bundle.Fields)
+			{
+				Druid id = field.Id;
+
+				System.Diagnostics.Debug.Assert (id.IsValid);
+
+				if (id.Developer == devId)
+				{
+					localId = System.Math.Max (localId, id.Local);
+				}
+			}
+
+			return new Druid (bundle.Module.Id, devId, localId+1);
+		}
+
+
+		
+		
 		/// <summary>
 		/// Creates a new unique id.
 		/// </summary>
@@ -205,6 +242,8 @@ namespace Epsitec.Common.Support.ResourceAccessors
 
 		#endregion
 
+		public const string DeveloperIdPropertyName = "DeveloperId";
+		
 		private readonly CultureMapList items = new CultureMapList ();
 		private readonly Dictionary<CultureMap, bool> dirtyItems = new Dictionary<CultureMap, bool> ();
 

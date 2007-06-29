@@ -4,6 +4,7 @@ using System.Xml.Serialization;
 using System.IO;
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Support;
+using Epsitec.Common.Support.ResourceAccessors;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Identity;
 
@@ -37,7 +38,12 @@ namespace Epsitec.Common.Designer
 			}
 			set
 			{
-				this.identityCard = value;
+				if (this.identityCard != value)
+				{
+					this.identityCard = value;
+					int devId = (value == null) ? -1 : value.DeveloperId;
+					Globals.Properties.SetProperty (AbstractResourceAccessor.DeveloperIdPropertyName, devId);
+				}
 			}
 		}
 

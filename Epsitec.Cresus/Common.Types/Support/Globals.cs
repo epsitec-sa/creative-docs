@@ -1,6 +1,8 @@
 //	Copyright © 2004-2007, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
+using System.Collections.Generic;
+
 namespace Epsitec.Common.Support
 {
 	using WaitHandle = System.Threading.WaitHandle;
@@ -13,7 +15,7 @@ namespace Epsitec.Common.Support
 	{
 		private Globals()
 		{
-			this.property_hash = new System.Collections.Hashtable ();
+			this.property_hash = new Dictionary<string, object> ();
 		}
 		
 		static Globals()
@@ -96,11 +98,6 @@ namespace Epsitec.Common.Support
 		
 		public string[] GetPropertyNames()
 		{
-			if (this.property_hash == null)
-			{
-				return new string[0];
-			}
-			
 			string[] names = new string[this.property_hash.Count];
 			this.property_hash.Keys.CopyTo (names, 0);
 			System.Array.Sort (names);
@@ -112,7 +109,14 @@ namespace Epsitec.Common.Support
 		{
 			lock (this)
 			{
-				this.property_hash[key] = value;
+				if (Types.UndefinedValue.IsUndefinedValue (value))
+				{
+					this.property_hash.Remove (key);
+				}
+				else
+				{
+					this.property_hash[key] = value;
+				}
 			}
 		}
 		
@@ -120,15 +124,22 @@ namespace Epsitec.Common.Support
 		{
 			lock (this)
 			{
-				return this.property_hash[key];
+				object value;
+
+				if (this.property_hash.TryGetValue (key, out value))
+				{
+					return value;
+				}
 			}
+
+			return Types.UndefinedValue.Instance;
 		}
 		
 		public bool IsPropertyDefined(string key)
 		{
 			lock (this)
 			{
-				return this.property_hash.Contains (key);
+				return this.property_hash.ContainsKey (key);
 			}
 		}
 		
@@ -215,7 +226,7 @@ namespace Epsitec.Common.Support
 		
 		#endregion
 		
-		private System.Collections.Hashtable	property_hash;
+		private Dictionary<string, object>		property_hash;
 		private static Globals					properties;
 		private static ManualResetEvent			abort_event;
 		private static bool						isDebugBuild;
