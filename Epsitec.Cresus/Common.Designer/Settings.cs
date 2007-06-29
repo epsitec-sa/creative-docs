@@ -109,14 +109,17 @@ namespace Epsitec.Common.Designer
 
 			writer.WriteStartElement("Settings");
 			
-			writer.WriteStartElement("Modules");
-			foreach (ResourceModuleId module in this.modules)
+			if (this.modules.Count > 0)
 			{
-				writer.WriteStartElement("Module");
-				writer.WriteElementString("ResourceModuleId", Types.InvariantConverter.ConvertToString(module));
+				writer.WriteStartElement("Modules");
+				foreach (ResourceModuleId module in this.modules)
+				{
+					writer.WriteStartElement("Module");
+					writer.WriteElementString("ResourceModuleId", Types.InvariantConverter.ConvertToString(module));
+					writer.WriteEndElement();
+				}
 				writer.WriteEndElement();
 			}
-			writer.WriteEndElement();
 
 			writer.WriteStartElement("Identity");
 			writer.WriteElementString("UserName", this.identityCard == null ? "" : this.identityCard.UserName);

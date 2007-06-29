@@ -67,6 +67,7 @@ namespace Epsitec.Common.Types.Serialization
 						ICollection<DependencyObject> dependencyObjectCollection = entry.Value as ICollection<DependencyObject>;
 
 						if ((dependencyObjectCollection == null) &&
+							(entry.Value != null) &&
 							(TypeRosetta.DoesTypeImplementCollectionOfCompatibleObjects (entry.Value.GetType(), typeof (DependencyObject))))
 						{
 							dependencyObjectCollection = new List<DependencyObject> ();
