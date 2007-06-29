@@ -46,7 +46,7 @@ namespace Epsitec.Common.Identity.UI
 			this.window.Text = "Sélection de l'identité";
 			this.window.Name = "Dialog";
 			this.window.PreventAutoClose = true;
-			this.window.ClientSize = new Size (100, 340);
+			this.window.ClientSize = new Size (335, 300);
 			this.window.MakeSecondaryWindow ();
 			this.window.Root.Padding = new Margins (8, 8, 8, 8);
 
@@ -85,18 +85,21 @@ namespace Epsitec.Common.Identity.UI
 			table.Margins = new Margins (0, 0, 0, 10);
 			table.TabIndex = 1;
 			table.Items = this.collectionView;
-			table.ItemPanel.ItemViewDefaultSize = new Size (100, 48);
+			table.ItemPanel.ItemViewDefaultSize = new Size (150, 48);
+			table.ItemPanel.Layout = ItemPanelLayout.RowsOfTiles;
 			table.ItemPanel.CustomItemViewFactoryGetter = delegate { return this.factory; };
 			table.ItemPanel.CurrentItemTrackingMode = CurrentItemTrackingMode.AutoSelect;
 			table.HeaderVisibility = false;
 			table.SeparatorVisibility = false;
 			table.HorizontalScrollMode = ItemTableScrollMode.None;
+#if false
 			table.ItemPanel.ApertureChanged +=
 				delegate(object sender, DependencyPropertyChangedEventArgs e)
 				{
 					Rectangle newAperture = (Rectangle) e.NewValue;
 					table.ItemPanel.ItemViewDefaultSize = new Size (newAperture.Width, 48);
 				};
+#endif
 			
 			table.Columns.Add (new Epsitec.Common.UI.ItemTableColumn ("UserName", 72));
 			table.ColumnHeader.SetColumnComparer (0,
