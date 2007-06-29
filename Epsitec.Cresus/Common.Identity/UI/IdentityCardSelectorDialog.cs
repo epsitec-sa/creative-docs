@@ -81,6 +81,7 @@ namespace Epsitec.Common.Identity.UI
 			ItemTable table = new ItemTable (container);
 
 			table.Dock = DockStyle.Fill;
+			table.MinWidth = 180+18;
 			table.MinHeight = 64;
 			table.Margins = new Margins (0, 0, 0, 10);
 			table.TabIndex = 1;
@@ -89,6 +90,7 @@ namespace Epsitec.Common.Identity.UI
 			table.ItemPanel.Layout = ItemPanelLayout.RowsOfTiles;
 			table.ItemPanel.CustomItemViewFactoryGetter = delegate { return this.factory; };
 			table.ItemPanel.CurrentItemTrackingMode = CurrentItemTrackingMode.AutoSelect;
+			table.ItemPanel.DoubleClicked += this.HandleTableDoubleClicked;
 			table.HeaderVisibility = false;
 			table.SeparatorVisibility = false;
 			table.HorizontalScrollMode = ItemTableScrollMode.None;
@@ -161,6 +163,13 @@ namespace Epsitec.Common.Identity.UI
 				};
 			
 			return container;
+		}
+
+		private void HandleTableDoubleClicked(object sender, MessageEventArgs e)
+		{
+			//	Double-clic dans la liste.
+			this.result = Dialogs.DialogResult.Accept;
+			this.CloseDialog ();
 		}
 
 		private class ItemViewFactory : IItemViewFactory
