@@ -42,7 +42,7 @@ namespace Epsitec.Common.Designer
 				{
 					this.identityCard = value;
 					int devId = (value == null) ? -1 : value.DeveloperId;
-					Globals.Properties.SetProperty (AbstractResourceAccessor.DeveloperIdPropertyName, devId);
+					Globals.Properties.SetProperty(AbstractResourceAccessor.DeveloperIdPropertyName, devId);
 				}
 			}
 		}
@@ -87,7 +87,7 @@ namespace Epsitec.Common.Designer
 
 			writer.Flush();
 			writer.Close();
-			return buffer.ToArray ();
+			return buffer.ToArray();
 		}
 
 		protected void Deserialize(byte[] data)
@@ -203,7 +203,7 @@ namespace Epsitec.Common.Designer
 
 		protected void ReadXmlIdentity(XmlReader reader)
 		{
-			reader.Read ();
+			reader.Read();
 
 			while (true)
 			{
