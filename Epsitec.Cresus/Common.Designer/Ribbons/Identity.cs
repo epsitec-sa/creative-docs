@@ -38,7 +38,7 @@ namespace Epsitec.Common.Designer.Ribbons
 		private void HandleIdentityClicked(object sender, MessageEventArgs e)
 		{
 			//	Appelé lorsque le bouton pour changer d'identité a été cliqué.
-			IdentityCard nullCard = new IdentityCard("-", -1, null);
+			IdentityCard nullCard = new IdentityCard("Anonyme", -1, null);
 			List<IdentityCard> cards = new List<IdentityCard>(IdentityRepository.Default.IdentityCards);
 			cards.Add(nullCard);
 			
