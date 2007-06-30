@@ -171,6 +171,11 @@ namespace Epsitec.Common.Designer.Viewers
 			bool iic = this.ignoreChange;
 			this.ignoreChange = true;
 
+			this.primaryAspectIcon.Enable = !this.mainWindow.IsReadonly;
+			this.primaryAspectDialog.Enable = !this.mainWindow.IsReadonly;
+			this.primaryStatefull.Enable = !this.mainWindow.IsReadonly;
+			this.primaryGroup.Enable = !this.mainWindow.IsReadonly;
+
 			CultureMap item = this.access.CollectionView.CurrentItem as CultureMap;
 			StructuredData data = null;
 			IList<StructuredData> shortcuts;
@@ -180,7 +185,7 @@ namespace Epsitec.Common.Designer.Viewers
 				data = item.GetCultureData(this.GetTwoLetters(0));
 			}
 
-			if (data == null)
+			if (data == null || this.mainWindow.IsReadonly)
 			{
 				this.primaryAspectIcon.ActiveState = ActiveState.No;
 				this.primaryAspectDialog.ActiveState = ActiveState.No;
@@ -209,7 +214,7 @@ namespace Epsitec.Common.Designer.Viewers
 				this.primaryGroup.Text = group;
 			}
 
-			if (this.GetTwoLetters(1) == null)
+			if (this.GetTwoLetters(1) == null || this.mainWindow.IsReadonly)
 			{
 				this.SetShortcut(this.secondaryShortcut1, this.secondaryShortcut2, null);
 			}

@@ -174,6 +174,10 @@ namespace Epsitec.Common.Designer.Viewers
 			bool iic = this.ignoreChange;
 			this.ignoreChange = true;
 
+			this.primaryLabels.Enable = !this.mainWindow.IsReadonly;
+			this.primaryDescription.Enable = !this.mainWindow.IsReadonly;
+			this.primaryComment.Enable = !this.mainWindow.IsReadonly;
+
 			CultureMap item = this.access.CollectionView.CurrentItem as CultureMap;
 			StructuredData data = null;
 
@@ -185,7 +189,7 @@ namespace Epsitec.Common.Designer.Viewers
 				this.primaryComment.Text = data.GetValue(Support.Res.Fields.ResourceBase.Comment) as string;
 			}
 
-			if (data == null || this.GetTwoLetters(1) == null)
+			if (data == null || this.GetTwoLetters(1) == null || this.mainWindow.IsReadonly)
 			{
 				this.secondaryLabels.Collection = null;
 				this.secondaryDescription.Text = "";
@@ -211,6 +215,8 @@ namespace Epsitec.Common.Designer.Viewers
 
 		protected void UpdateIcon()
 		{
+			this.primaryIcon.Enable = !this.mainWindow.IsReadonly;
+
 			CultureMap item = this.access.CollectionView.CurrentItem as CultureMap;
 			string icon = null;
 			if (item != null)

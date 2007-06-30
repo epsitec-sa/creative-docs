@@ -124,6 +124,9 @@ namespace Epsitec.Common.Designer.Viewers
 			bool iic = this.ignoreChange;
 			this.ignoreChange = true;
 
+			this.primaryText.Enable = !this.mainWindow.IsReadonly;
+			this.primaryComment.Enable = !this.mainWindow.IsReadonly;
+
 			CultureMap item = this.access.CollectionView.CurrentItem as CultureMap;
 			StructuredData data;
 
@@ -131,7 +134,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.primaryText.Text = data.GetValue(Support.Res.Fields.ResourceString.Text) as string;
 			this.primaryComment.Text = data.GetValue(Support.Res.Fields.ResourceBase.Comment) as string;
 
-			if (this.GetTwoLetters(1) == null)
+			if (this.GetTwoLetters(1) == null || this.mainWindow.IsReadonly)
 			{
 				this.secondaryText.Text = "";
 				this.secondaryComment.Text = "";

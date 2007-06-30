@@ -478,6 +478,8 @@ namespace Epsitec.Common.Designer.Viewers
 				this.secondarySummary.Text = this.GetSummary(this.GetTwoLetters(1));
 			}
 
+			this.labelEdit.Enable = !this.mainWindow.IsReadonly;
+
 			CultureMap item = this.access.CollectionView.CurrentItem as CultureMap;
 			if (item != null)
 			{
