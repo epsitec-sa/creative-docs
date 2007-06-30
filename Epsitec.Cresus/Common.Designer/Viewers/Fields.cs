@@ -59,7 +59,7 @@ namespace Epsitec.Common.Designer.Viewers
 			return base.IndexToTextField(field, subfield);
 		}
 
-		protected override bool HasCreateAndDeleteButtons
+		protected override bool HasDeleteOrDuplicate
 		{
 			get
 			{

@@ -117,7 +117,7 @@ namespace Epsitec.Common.Designer.Viewers
 			return itemA.Prefix.CompareTo(itemB.Prefix);
 		}
 
-		protected override bool HasCreateAndDeleteButtons
+		protected override bool HasDeleteOrDuplicate
 		{
 			get
 			{

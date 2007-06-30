@@ -1914,6 +1914,15 @@ namespace Epsitec.Common.Designer
 
 		}
 
+		public bool IsReadonly
+		{
+			//	Indique si Designer est en mode "consultation", lorsque l'identificateur est anonyme.
+			get
+			{
+				return this.settings.IdentityCard == null;
+			}
+		}
+
 		public void UpdateBookModules()
 		{
 			//	Met à jour le nom de l'onglet des modules.

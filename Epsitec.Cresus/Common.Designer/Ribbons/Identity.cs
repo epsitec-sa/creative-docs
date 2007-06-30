@@ -57,6 +57,8 @@ namespace Epsitec.Common.Designer.Ribbons
 				
 				this.mainWindow.Settings.IdentityCard = card;
 				this.widget.IdentityCard = card;
+
+				this.mainWindow.CurrentModule.Modifier.ActiveViewer.UpdateCommands();
 			}
 		}
 		

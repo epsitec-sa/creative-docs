@@ -673,6 +673,14 @@ namespace Epsitec.Common.Designer.Viewers
 			}
 		}
 
+		protected virtual bool HasDeleteOrDuplicate
+		{
+			get
+			{
+				return true;
+			}
+		}
+
 		protected virtual void PrepareForDelete()
 		{
 			//	Préparation en vue d'une suppression.
@@ -875,7 +883,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.GetCommandState("Save").Enable = this.module.IsDirty;
 			this.GetCommandState("SaveAs").Enable = true;
 
-			if (this is Panels)
+			if (this.mainWindow.IsReadonly || this is Panels)
 			{
 				this.GetCommandState("NewCulture").Enable = false;
 				this.GetCommandState("DeleteCulture").Enable = false;
@@ -904,7 +912,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 			if (!this.IsDeleteOrDuplicateForViewer)
 			{
-				if (this.HasCreateAndDeleteButtons)
+				if (this.HasDeleteOrDuplicate && !this.mainWindow.IsReadonly)
 				{
 					this.GetCommandState("Delete").Enable = (sel != -1 && count > 1 && build);
 					this.GetCommandState("Create").Enable = (build);
@@ -916,7 +924,7 @@ namespace Epsitec.Common.Designer.Viewers
 					this.GetCommandState("Create").Enable = false;
 					this.GetCommandState("Duplicate").Enable = false;
 				}
-				this.GetCommandState("CopyToModule").Enable = (sel != -1 && build);
+				this.GetCommandState("CopyToModule").Enable = (sel != -1 && build && !this.mainWindow.IsReadonly);
 			}
 
 			if (this is Panels)
@@ -943,7 +951,7 @@ namespace Epsitec.Common.Designer.Viewers
 				this.GetCommandState("ModificationClear").Enable = modified;
 			}
 
-			if (this is Panels)
+			if (this.mainWindow.IsReadonly || this is Panels)
 			{
 				this.GetCommandState("FontBold").Enable = false;
 				this.GetCommandState("FontItalic").Enable = false;
@@ -1069,14 +1077,6 @@ namespace Epsitec.Common.Designer.Viewers
 			this.module.MainWindow.UpdateInfoCurrentModule();
 			this.module.MainWindow.UpdateInfoAccess();
 			this.module.MainWindow.UpdateInfoViewer();
-		}
-
-		protected virtual bool HasCreateAndDeleteButtons
-		{
-			get
-			{
-				return true;
-			}
 		}
 
 		protected void UpdateCommandTool(string name)
