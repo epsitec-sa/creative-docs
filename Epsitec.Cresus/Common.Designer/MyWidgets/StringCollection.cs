@@ -296,7 +296,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			//	Met à jour les boutons pour ajouter/supprimer/déplacer la ligne sélectionnée.
 			int sel = this.SelectedRow;
 			int count = this.textFields.Count;
-			bool enable = (this.strings != null);
+			bool enable = (this.strings != null && this.Enable);
 
 			this.buttonAdd.Enable = enable;
 			this.buttonDuplicate.Enable = (enable && sel != -1);
