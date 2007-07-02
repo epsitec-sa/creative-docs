@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Support;
 using Epsitec.Common.Drawing;
+using Epsitec.Common.Types;
 
 namespace Epsitec.Common.Designer.Dialogs
 {
@@ -48,25 +49,35 @@ namespace Epsitec.Common.Designer.Dialogs
 				label.Margins = new Margins(0, 0, 0, 6);
 
 				//	Tableau principal.
-				this.array = new MyWidgets.StringArray(this.window.Root);
-				this.array.Columns = 4;
-				this.array.SetColumnsRelativeWidth(0, 0.71);
-				this.array.SetColumnsRelativeWidth(1, 0.15);
-				this.array.SetColumnsRelativeWidth(2, 0.07);
-				this.array.SetColumnsRelativeWidth(3, 0.07);
-				this.array.SetColumnAlignment(0, ContentAlignment.MiddleLeft);
-				this.array.SetColumnAlignment(1, ContentAlignment.MiddleLeft);
-				this.array.SetColumnAlignment(2, ContentAlignment.MiddleRight);
-				this.array.SetColumnAlignment(3, ContentAlignment.MiddleCenter);
-				this.array.LineHeight = 25;
-				this.array.CellCountChanged += new EventHandler(this.HandleArrayCellCountChanged);
-				this.array.CellsContentChanged += new EventHandler(this.HandleArrayCellsContentChanged);
-				this.array.SelectedRowChanged += new EventHandler(this.HandleArraySelectedRowChanged);
-				this.array.SelectedRowDoubleClicked += new EventHandler(this.HandleArraySelectedRowDoubleClicked);
-				this.array.TabIndex = 1;
-				this.array.TabNavigationMode = TabNavigationMode.ActivateOnTab;
-				this.array.Dock = DockStyle.Fill;
+				StructuredType st = new StructuredType();
+				st.Fields.Add("Name",  StringType.Default);
+				st.Fields.Add("State", StringType.Default);
+				st.Fields.Add("Id",    StringType.Default);
+				st.Fields.Add("Icon",  StringType.Default);
 
+				this.table = new UI.ItemTable(this.window.Root);
+				this.table.ItemPanel.CustomItemViewFactoryGetter = this.ItemViewFactoryGetter;
+				this.table.SourceType = st;
+				this.table.Items = this.moduleInfosShowed;
+				this.table.Columns.Add("Name",  200);
+				this.table.Columns.Add("State", 100);
+				this.table.Columns.Add("Id",     30);
+				this.table.Columns.Add("Icon",   30);
+				this.table.ColumnHeader.SetColumnText(0, "Nom");
+				this.table.ColumnHeader.SetColumnText(1, "Etat");
+				this.table.ColumnHeader.SetColumnText(2, "No");
+				this.table.ColumnHeader.SetColumnText(3, "-");
+				//?this.table.ColumnHeader.SetColumnSort(0, ListSortDirection.Ascending);
+				//?this.table.HorizontalScrollMode = UI.ItemTableScrollMode.None;
+				//?this.table.VerticalScrollMode = UI.ItemTableScrollMode.ItemBased;
+				this.table.HeaderVisibility = true;
+				this.table.FrameVisibility = true;
+				this.table.ItemPanel.Layout = UI.ItemPanelLayout.VerticalList;
+				this.table.ItemPanel.ItemSelectionMode = UI.ItemPanelSelectionMode.ExactlyOne;
+				this.table.ItemPanel.CurrentItemTrackingMode = UI.CurrentItemTrackingMode.AutoSelect;
+				this.table.ItemPanel.SelectionChanged += new EventHandler<UI.ItemPanelSelectionChangedEventArgs>(this.HandleTableSelectionChanged);
+				this.table.Dock = Widgets.DockStyle.Fill;
+				
 				//	Boutons de fermeture.
 				Widget footer = new Widget(this.window.Root);
 				footer.PreferredHeight = 22;
@@ -115,7 +126,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 			this.UpdateModules(true);
 			this.UpdateArray();
-			this.array.SelectedRow = -1;
+			//?this.array.SelectedRow = -1;
 			this.indexToOpen = -1;
 			this.UpdateButtons();
 
@@ -140,7 +151,8 @@ namespace Epsitec.Common.Designer.Dialogs
 				}
 				else
 				{
-					return this.moduleInfosShowed[this.indexToOpen].FullId;
+					ResourceModuleInfo info = this.moduleInfosShowed.Items[this.indexToOpen] as ResourceModuleInfo;
+					return info.FullId;
 				}
 			}
 		}
@@ -156,100 +168,44 @@ namespace Epsitec.Common.Designer.Dialogs
 			}
 
 			//	Construit une liste réduite contenant uniquement les modules visibles dans la liste.
-			this.moduleInfosShowed = new List<ResourceModuleInfo>();
+			List<ResourceModuleInfo> list = new List<ResourceModuleInfo>();
 			for (int i=0; i<this.moduleInfosAll.Count; i++)
 			{
-				ModuleState state = this.GetModuleState(i, this.moduleInfosAll);
+				ModuleState state = this.GetModuleState(this.moduleInfosAll[i]);
 
 				if (state == ModuleState.Openable)
 				{
-					this.moduleInfosShowed.Add(this.moduleInfosAll[i]);
+					list.Add(this.moduleInfosAll[i]);
 				}
 				else if ((state == ModuleState.Opening || state == ModuleState.OpeningAndDirty) && this.showOpened)
 				{
-					this.moduleInfosShowed.Add(this.moduleInfosAll[i]);
+					list.Add(this.moduleInfosAll[i]);
 				}
 				else if (state == ModuleState.Locked && this.showLocked)
 				{
-					this.moduleInfosShowed.Add(this.moduleInfosAll[i]);
+					list.Add(this.moduleInfosAll[i]);
 				}
 			}
 
 			//	Trie la liste des modules visibles.
-			this.moduleInfosShowed.Sort(new Comparers.ResourceModuleInfoToOpen());
+			list.Sort(new Comparers.ResourceModuleInfoToOpen());
+
+			this.moduleInfosShowed = new CollectionView(list);
 		}
 
 		protected void UpdateArray()
 		{
 			//	Met à jour tout le contenu du tableau.
-			this.array.TotalRows = this.moduleInfosShowed.Count;
-			ResourceManagerPool pool = this.mainWindow.ResourceManagerPool;
-
-			int first = this.array.FirstVisibleRow;
-			for (int i=0; i<this.array.LineCount; i++)
-			{
-				if (first+i < this.moduleInfosShowed.Count)
-				{
-					ModuleState state = this.GetModuleState(first+i);
-
-					if (state == ModuleState.Openable)
-					{
-						this.array.SetLineState(0, first+i, MyWidgets.StringList.CellState.Normal);
-						this.array.SetLineState(1, first+i, MyWidgets.StringList.CellState.Normal);
-						this.array.SetLineState(2, first+i, MyWidgets.StringList.CellState.Normal);
-						this.array.SetLineState(3, first+i, MyWidgets.StringList.CellState.Normal);
-
-						this.array.SetLineString(0, first+i, GetModulePath(first+i));
-						this.array.SetLineString(1, first+i, Res.Strings.Dialog.Open.State.Openable);
-						this.array.SetLineString(3, first+i, Misc.Image("Open"));
-					}
-					else
-					{
-						this.array.SetLineState(0, first+i, MyWidgets.StringList.CellState.Disabled);
-						this.array.SetLineState(1, first+i, MyWidgets.StringList.CellState.Disabled);
-						this.array.SetLineState(3, first+i, MyWidgets.StringList.CellState.Disabled);
-
-						if (state == ModuleState.OpeningAndDirty)
-						{
-							this.array.SetLineString(0, first+i, Misc.Bold(GetModulePath(first+i)));
-							this.array.SetLineString(1, first+i, Res.Strings.Dialog.Open.State.Opening);
-							this.array.SetLineString(3, first+i, Misc.Image("Save"));
-						}
-						else if (state == ModuleState.Locked)
-						{
-							this.array.SetLineString(0, first+i, Misc.Italic(GetModulePath(first+i)));
-							this.array.SetLineString(1, first+i, "Bloqué");
-							this.array.SetLineString(3, first+i, Misc.Image("Locked"));
-						}
-						else
-						{
-							this.array.SetLineString(0, first+i, Misc.Italic(GetModulePath(first+i)));
-							this.array.SetLineString(1, first+i, Res.Strings.Dialog.Open.State.Opening);
-							this.array.SetLineString(3, first+i, Misc.Image("Opened"));
-						}
-					}
-
-					this.array.SetLineString(2, first+i, this.moduleInfosShowed[first+i].FullId.Id.ToString());
-				}
-				else
-				{
-					this.array.SetLineState(0, first+i, MyWidgets.StringList.CellState.Disabled);
-					this.array.SetLineState(1, first+i, MyWidgets.StringList.CellState.Disabled);
-					this.array.SetLineState(2, first+i, MyWidgets.StringList.CellState.Disabled);
-					this.array.SetLineState(3, first+i, MyWidgets.StringList.CellState.Disabled);
-
-					this.array.SetLineString(0, first+i, "");
-					this.array.SetLineString(1, first+i, "");
-					this.array.SetLineString(2, first+i, "");
-					this.array.SetLineString(3, first+i, "");
-				}
-			}
+			this.ignoreChange = true;
+			this.table.ItemPanel.Refresh();
+			this.ignoreChange = false;
 		}
 
 		protected void UpdateButtons()
 		{
 			//	Met à jour tous les boutons.
-			int sel = this.array.SelectedRow;
+			//?int sel = this.array.SelectedRow;
+			int sel = -1;
 
 			if (sel == -1)
 			{
@@ -265,11 +221,11 @@ namespace Epsitec.Common.Designer.Dialogs
 			this.checkLocked.ActiveState = this.showLocked ? ActiveState.Yes : ActiveState.No;
 		}
 
-		protected string GetModulePath(int index)
+		protected string GetModulePath(ResourceModuleInfo info)
 		{
 			//	Retourne le nom du chemin d'un module.
 			ResourceManagerPool pool = this.mainWindow.ResourceManagerPool;
-			string path = pool.GetRootRelativePath(this.moduleInfosShowed[index].FullId.Path);
+			string path = pool.GetRootRelativePath(info.FullId.Path);
 
 #if false
 			if (path.StartsWith("%app%\\"))
@@ -284,16 +240,16 @@ namespace Epsitec.Common.Designer.Dialogs
 		protected ModuleState GetModuleState(int index)
 		{
 			//	Retourne l'état d'un module.
-			return this.GetModuleState(index, this.moduleInfosShowed);
+			return this.GetModuleState(this.moduleInfosShowed.Items[index] as ResourceModuleInfo);
 		}
 
-		protected ModuleState GetModuleState(int index, IList<ResourceModuleInfo> list)
+		protected ModuleState GetModuleState(ResourceModuleInfo info)
 		{
 			//	Retourne l'état d'un module.
-			Module module = this.mainWindow.SearchModuleId(list[index].FullId);
+			Module module = this.mainWindow.SearchModuleId(info.FullId);
 			if (module == null)
 			{
-				return this.IsModuleAlreadyOpened(list[index].FullId.Id) ? ModuleState.Locked : ModuleState.Openable;
+				return this.IsModuleAlreadyOpened(info.FullId.Id) ? ModuleState.Locked : ModuleState.Openable;
 			}
 			else
 			{
@@ -314,6 +270,17 @@ namespace Epsitec.Common.Designer.Dialogs
 			return false;
 		}
 
+
+		private void HandleTableSelectionChanged(object sender, UI.ItemPanelSelectionChangedEventArgs e)
+		{
+			//	La ligne sélectionnée dans le tableau a changé.
+			if (this.ignoreChange)
+			{
+				return;
+			}
+
+			this.UpdateButtons();
+		}
 
 		private void HandleArrayCellCountChanged(object sender)
 		{
@@ -336,7 +303,7 @@ namespace Epsitec.Common.Designer.Dialogs
 		private void HandleArraySelectedRowDoubleClicked(object sender)
 		{
 			//	La ligne sélectionnée a été double cliquée.
-			this.indexToOpen = this.array.SelectedRow;
+			//?this.indexToOpen = this.array.SelectedRow;
 
 			this.parentWindow.MakeActive();
 			this.window.Hide();
@@ -359,7 +326,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		private void HandleButtonOpenClicked(object sender, MessageEventArgs e)
 		{
-			this.indexToOpen = this.array.SelectedRow;
+			//?this.indexToOpen = this.array.SelectedRow;
 
 			this.parentWindow.MakeActive();
 			this.window.Hide();
@@ -380,22 +347,165 @@ namespace Epsitec.Common.Designer.Dialogs
 
 			this.UpdateModules(false);
 			this.UpdateArray();
-			this.array.SelectedRow = -1;
+			//?this.array.SelectedRow = -1;
 			this.indexToOpen = -1;
 			this.UpdateButtons();
 		}
 
 
+		protected UI.IItemViewFactory ItemViewFactoryGetter(UI.ItemView itemView)
+		{
+			if (itemView == null)
+			{
+				return null;
+			}
+			else
+			{
+				return new ItemViewFactory(this);
+			}
+		}
+
+		private class ItemViewFactory : UI.AbstractItemViewFactory
+		{
+			//	Cette classe peuple les colonnes du tableau.
+			public ItemViewFactory(Open owner)
+			{
+				this.owner = owner;
+			}
+
+			protected override Widget CreateElement(string name, UI.ItemPanel panel, UI.ItemView view, UI.ItemViewShape shape)
+			{
+				ResourceModuleInfo item = view.Item as ResourceModuleInfo;
+
+				switch (name)
+				{
+					case "Name":
+						return this.CreateName(item);
+
+					case "State":
+						return this.CreateState(item);
+
+					case "Id":
+						return this.CreateId(item);
+
+					case "Icon":
+						return this.CreateIcon(item);
+				}
+
+				return null;
+			}
+
+			private Widget CreateName(ResourceModuleInfo item)
+			{
+				ModuleState state = this.owner.GetModuleState(item);
+				string path = TextLayout.ConvertToTaggedText((this.owner.GetModulePath(item)));
+
+				if (state == ModuleState.OpeningAndDirty)
+				{
+					path = Misc.Bold(path);
+				}
+
+				if (state == ModuleState.Locked || state == ModuleState.Opening)
+				{
+					path = Misc.Italic(path);
+				}
+
+				StaticText widget = new StaticText();
+				widget.Margins = new Margins(5, 5, 0, 0);
+				widget.Text = path;
+				widget.TextBreakMode = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine;
+				widget.PreferredSize = widget.GetBestFitSize();
+
+				return widget;
+			}
+
+			private Widget CreateState(ResourceModuleInfo item)
+			{
+				ModuleState state = this.owner.GetModuleState(item);
+
+				string text = Res.Strings.Dialog.Open.State.Opening;
+
+				if (state == ModuleState.Openable)
+				{
+					text = Res.Strings.Dialog.Open.State.Openable;
+				}
+
+				if (state == ModuleState.Locked)
+				{
+					text = "Bloqué";
+				}
+
+				StaticText widget = new StaticText();
+				widget.Margins = new Margins(5, 5, 0, 0);
+				widget.Text = text;
+				widget.TextBreakMode = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine;
+				widget.PreferredSize = widget.GetBestFitSize();
+
+				return widget;
+			}
+
+			private Widget CreateId(ResourceModuleInfo item)
+			{
+				string text = item.FullId.Id.ToString();
+
+				StaticText widget = new StaticText();
+				widget.Margins = new Margins(5, 5, 0, 0);
+				widget.Text = text;
+				widget.ContentAlignment = ContentAlignment.MiddleRight;
+				widget.TextBreakMode = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine;
+				widget.PreferredSize = widget.GetBestFitSize();
+
+				return widget;
+			}
+
+			private Widget CreateIcon(ResourceModuleInfo item)
+			{
+				ModuleState state = this.owner.GetModuleState(item);
+				string text;
+
+				if (state == ModuleState.Openable)
+				{
+					text = Misc.Image("Open");
+				}
+				else if (state == ModuleState.OpeningAndDirty)
+				{
+					text = Misc.Image("Save");
+				}
+				else if (state == ModuleState.Locked)
+				{
+					text = Misc.Image("Locked");
+				}
+				else
+				{
+					text = Misc.Image("Opened");
+				}
+
+				StaticText widget = new StaticText();
+				widget.Margins = new Margins(5, 5, 0, 0);
+				widget.Text = text;
+				widget.ContentAlignment = ContentAlignment.MiddleCenter;
+				widget.TextBreakMode = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine;
+				widget.PreferredSize = widget.GetBestFitSize();
+
+				return widget;
+			}
+
+
+			Open owner;
+		}
+
+		
 		protected string						resourcePrefix;
 		protected IList<ResourceModuleInfo>		moduleInfosAll;
-		protected List<ResourceModuleInfo>		moduleInfosShowed;
+		protected CollectionView				moduleInfosShowed;
 		protected Button						buttonOpen;
 		protected Button						buttonCancel;
 		protected CheckButton					checkOpened;
 		protected CheckButton					checkLocked;
-		protected MyWidgets.StringArray			array;
+		protected UI.ItemTable					table;
 		protected int							indexToOpen;
 		protected bool							showOpened;
 		protected bool							showLocked;
+		protected bool							ignoreChange;
 	}
 }
