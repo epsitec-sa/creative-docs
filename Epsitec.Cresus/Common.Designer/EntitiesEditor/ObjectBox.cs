@@ -1139,7 +1139,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			//	Ajoute un nouveau champ.
 			Module module = this.editor.Module;
 			string name = this.GetNewName();
-			name = module.MainWindow.DlgFieldName(name);
+			name = module.MainWindow.DlgResourceName(Dialogs.ResourceName.Operation.Create, Dialogs.ResourceName.Type.Field, name);
 			if (string.IsNullOrEmpty(name))
 			{
 				this.hilitedElement = ActiveElement.None;
@@ -1196,7 +1196,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			string name = fieldCultureMap.Name;
 			
 			Module module = this.editor.Module;
-			name = module.MainWindow.DlgFieldName(name);
+			name = module.MainWindow.DlgResourceName(Dialogs.ResourceName.Operation.Modify, Dialogs.ResourceName.Type.Field, name);
 			if (string.IsNullOrEmpty(name))
 			{
 				this.hilitedElement = ActiveElement.None;

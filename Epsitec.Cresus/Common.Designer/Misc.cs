@@ -332,7 +332,7 @@ namespace Epsitec.Common.Designer
 			return true;
 		}
 
-		static protected bool IsValidName(ref string name)
+		static public bool IsValidName(ref string name)
 		{
 			//	Vérifie si un nom commence par une lettre puis est suivi de lettres ou de chiffres.
 			//	Le nom retourné commence par une majuscule suivie de minuscules.

@@ -7,11 +7,24 @@ using Epsitec.Common.Types;
 namespace Epsitec.Common.Designer.Dialogs
 {
 	/// <summary>
-	/// Dialogue permettant de choisir le nom d'un champ qui va être créé.
+	/// Dialogue permettant de choisir le nom d'une ressource qui va être créée.
 	/// </summary>
-	public class FieldName : Abstract
+	public class ResourceName : Abstract
 	{
-		public FieldName(MainWindow mainWindow) : base(mainWindow)
+		public enum Operation
+		{
+			Create,
+			Modify,
+		}
+
+		public enum Type
+		{
+			Entity,
+			Field,
+		}
+
+
+		public ResourceName(MainWindow mainWindow) : base(mainWindow)
 		{
 		}
 
@@ -24,26 +37,37 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.window.MakeSecondaryWindow();
 				this.window.MakeFixedSizeWindow();
 				this.window.PreventAutoClose = true;
-				this.WindowInit("FieldName", 300, 100, true);
-				this.window.Text = "Champ";  // Res.Strings.Dialog.FieldName.Title;
+				this.WindowInit("ResourceName", 300, 150, true);
+				this.window.Text = "Choix d'un nom";  // Res.Strings.Dialog.ResourceName.Title;
 				this.window.Owner = this.parentWindow;
 				this.window.WindowCloseClicked += new EventHandler(this.HandleWindowCloseClicked);
 				this.window.Root.Padding = new Margins(8, 8, 8, 8);
 
+				//	Titre supérieur.
+				this.title = new StaticText(this.window.Root);
+				this.title.ContentAlignment = ContentAlignment.TopLeft;
+				this.title.PreferredHeight = 34;
+				this.title.Dock = DockStyle.Top;
+
+				Separator sep = new Separator(this.window.Root);  // trait horizontal de séparation
+				sep.PreferredHeight = 1;
+				sep.Dock = DockStyle.Top;
+
+				//	Partie principale.
 				Widget band = new Widget(this.window.Root);
-				band.Margins = new Margins(0, 0, 10, 0);
+				band.Margins = new Margins(0, 0, 20, 0);
 				band.Dock = DockStyle.Top;
 
 				StaticText label = new StaticText(band);
-				label.Text = "Nom du champ";
+				label.Text = "Nom";
 				label.ContentAlignment = ContentAlignment.MiddleRight;
-				label.PreferredWidth = 90;
-				label.Margins = new Margins(0, 5, 0, 0);
+				label.PreferredWidth = 40;
+				label.Margins = new Margins(0, 8, 0, 0);
 				label.Dock = DockStyle.Left;
 
-				this.fieldName = new TextField(band);
-				this.fieldName.Dock = DockStyle.Fill;
-				this.fieldName.TabIndex = 1;
+				this.resourceName = new TextField(band);
+				this.resourceName.Dock = DockStyle.Fill;
+				this.resourceName.TabIndex = 1;
 
 				//	Boutons de fermeture.
 				Widget footer = new Widget(this.window.Root);
@@ -71,13 +95,16 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.buttonOk.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			}
 
+			this.UpdateTitle();
 			this.UpdateName();
 
 			this.window.ShowDialog();
 		}
 
-		public void Initialise(string name)
+		public void Initialise(Operation operation, Type type, string name)
 		{
+			this.operation = operation;
+			this.type = type;
 			this.initialName = name;
 			this.selectedName = null;
 		}
@@ -91,11 +118,49 @@ namespace Epsitec.Common.Designer.Dialogs
 		}
 
 
+		protected void UpdateTitle()
+		{
+			string text;
+			switch (this.operation)
+			{
+				case Operation.Create:
+					text = "Création {0}";
+					break;
+
+				case Operation.Modify:
+					text = "Modification {0}";
+					break;
+
+				default:
+					text = "Nom {0}";
+					break;
+			}
+
+			string type;
+			switch (this.type)
+			{
+				case Type.Entity:
+					type = "d'une entité";
+					break;
+
+				case Type.Field:
+					type = "d'un champ";
+					break;
+
+				default:
+					type = "d'une ressource";
+					break;
+			}
+
+			text = string.Concat("<font size=\"200%\"><b>", string.Format(text, type), "</b></font>");
+			this.title.Text = text;
+		}
+
 		protected void UpdateName()
 		{
-			this.fieldName.Text = this.initialName;
-			this.fieldName.SelectAll();
-			this.fieldName.Focus();
+			this.resourceName.Text = this.initialName;
+			this.resourceName.SelectAll();
+			this.resourceName.Focus();
 		}
 
 
@@ -119,13 +184,16 @@ namespace Epsitec.Common.Designer.Dialogs
 			this.window.Hide();
 			this.OnClosed();
 
-			this.selectedName = this.fieldName.Text;
+			this.selectedName = this.resourceName.Text;
 		}
 
 
+		protected Operation						operation;
+		protected Type							type;
 		protected string						initialName;
 		protected string						selectedName;
-		protected TextField						fieldName;
+		protected StaticText					title;
+		protected TextField						resourceName;
 		protected Button						buttonOk;
 		protected Button						buttonCancel;
 	}

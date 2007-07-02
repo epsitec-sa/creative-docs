@@ -563,6 +563,18 @@ namespace Epsitec.Common.Designer
 				}
 				else if (this.type == Type.Entities && !duplicateContent)
 				{
+					newName = this.mainWindow.DlgResourceName(Dialogs.ResourceName.Operation.Create, Dialogs.ResourceName.Type.Entity, newName);
+					if (string.IsNullOrEmpty(newName))
+					{
+						return;
+					}
+
+					if (!Misc.IsValidName(ref newName))
+					{
+						this.mainWindow.DialogError(Res.Strings.Error.Name.Invalid);
+						return;
+					}
+
 					Druid druid = Druid.Empty;
 					StructuredTypeClass typeClass = StructuredTypeClass.Entity;
 
