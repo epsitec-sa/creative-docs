@@ -21,6 +21,8 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		public Open(MainWindow mainWindow) : base(mainWindow)
 		{
+			this.moduleInfosLive = new Epsitec.Common.Types.Collections.ObservableList<ResourceModuleInfo> ();
+			this.moduleInfosShowed = new CollectionView (this.moduleInfosLive);
 		}
 
 		public override void Show()
@@ -168,29 +170,30 @@ namespace Epsitec.Common.Designer.Dialogs
 			}
 
 			//	Construit une liste réduite contenant uniquement les modules visibles dans la liste.
-			List<ResourceModuleInfo> list = new List<ResourceModuleInfo>();
-			for (int i=0; i<this.moduleInfosAll.Count; i++)
+			using (this.moduleInfosShowed.DeferRefresh ())
 			{
-				ModuleState state = this.GetModuleState(this.moduleInfosAll[i]);
+				this.moduleInfosLive.Clear ();
+				for (int i=0; i<this.moduleInfosAll.Count; i++)
+				{
+					ModuleState state = this.GetModuleState (this.moduleInfosAll[i]);
 
-				if (state == ModuleState.Openable)
-				{
-					list.Add(this.moduleInfosAll[i]);
+					if (state == ModuleState.Openable)
+					{
+						this.moduleInfosLive.Add (this.moduleInfosAll[i]);
+					}
+					else if ((state == ModuleState.Opening || state == ModuleState.OpeningAndDirty) && this.showOpened)
+					{
+						this.moduleInfosLive.Add (this.moduleInfosAll[i]);
+					}
+					else if (state == ModuleState.Locked && this.showLocked)
+					{
+						this.moduleInfosLive.Add (this.moduleInfosAll[i]);
+					}
 				}
-				else if ((state == ModuleState.Opening || state == ModuleState.OpeningAndDirty) && this.showOpened)
-				{
-					list.Add(this.moduleInfosAll[i]);
-				}
-				else if (state == ModuleState.Locked && this.showLocked)
-				{
-					list.Add(this.moduleInfosAll[i]);
-				}
+
+				//	Trie la liste des modules visibles.
+				this.moduleInfosLive.Sort (new Comparers.ResourceModuleInfoToOpen ());
 			}
-
-			//	Trie la liste des modules visibles.
-			list.Sort(new Comparers.ResourceModuleInfoToOpen());
-
-			this.moduleInfosShowed = new CollectionView(list);
 		}
 
 		protected void UpdateArray()
@@ -498,6 +501,7 @@ namespace Epsitec.Common.Designer.Dialogs
 		protected string						resourcePrefix;
 		protected IList<ResourceModuleInfo>		moduleInfosAll;
 		protected CollectionView				moduleInfosShowed;
+		protected Epsitec.Common.Types.Collections.ObservableList<ResourceModuleInfo>		moduleInfosLive;
 		protected Button						buttonOpen;
 		protected Button						buttonCancel;
 		protected CheckButton					checkOpened;
