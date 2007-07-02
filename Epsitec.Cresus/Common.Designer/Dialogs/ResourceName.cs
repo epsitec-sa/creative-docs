@@ -120,19 +120,22 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		protected void UpdateTitle()
 		{
-			string text;
+			string text, ok;
 			switch (this.operation)
 			{
 				case Operation.Create:
 					text = "Création {0}";
+					ok = "Créer";
 					break;
 
 				case Operation.Modify:
 					text = "Modification {0}";
+					ok = "Modifier";
 					break;
 
 				default:
 					text = "Nom {0}";
+					ok = "Ok";
 					break;
 			}
 
@@ -154,6 +157,8 @@ namespace Epsitec.Common.Designer.Dialogs
 
 			text = string.Concat("<font size=\"200%\"><b>", string.Format(text, type), "</b></font>");
 			this.title.Text = text;
+
+			this.buttonOk.Text = ok;
 		}
 
 		protected void UpdateName()
