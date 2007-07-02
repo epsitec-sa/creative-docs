@@ -456,6 +456,7 @@ namespace Epsitec.Common.Designer.Viewers
 				//	N'utilise pas un IconSeparator, afin d'éviter les confusions
 				//	avec les objets HSeparator et VSeparator !
 				Widget sep = new Widget();
+				sep.PreferredWidth = 20;
 				sep.PreferredHeight = 20;
 				this.vToolBar.Items.Add(sep);
 				return sep;
@@ -463,6 +464,7 @@ namespace Epsitec.Common.Designer.Viewers
 			else
 			{
 				IconButton button = new IconButton(command);
+				button.PreferredWidth = 20;
 				this.vToolBar.Items.Add(button);
 				ToolTip.Default.SetToolTip(button, Misc.GetTextWithShortcut(command));
 				return button;
