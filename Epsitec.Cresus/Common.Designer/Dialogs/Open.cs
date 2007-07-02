@@ -21,8 +21,8 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		public Open(MainWindow mainWindow) : base(mainWindow)
 		{
-			this.moduleInfosLive = new Epsitec.Common.Types.Collections.ObservableList<ResourceModuleInfo> ();
-			this.moduleInfosShowed = new CollectionView (this.moduleInfosLive);
+			this.moduleInfosLive = new Types.Collections.ObservableList<ResourceModuleInfo>();
+			this.moduleInfosShowed = new CollectionView(this.moduleInfosLive);
 		}
 
 		public override void Show()
@@ -53,22 +53,26 @@ namespace Epsitec.Common.Designer.Dialogs
 				//	Tableau principal.
 				StructuredType st = new StructuredType();
 				st.Fields.Add("Name",  StringType.Default);
-				st.Fields.Add("State", StringType.Default);
 				st.Fields.Add("Id",    StringType.Default);
+				st.Fields.Add("State", StringType.Default);
 				st.Fields.Add("Icon",  StringType.Default);
 
 				this.table = new UI.ItemTable(this.window.Root);
 				this.table.ItemPanel.CustomItemViewFactoryGetter = this.ItemViewFactoryGetter;
 				this.table.SourceType = st;
 				this.table.Items = this.moduleInfosShowed;
-				this.table.Columns.Add("Name",  200);
-				this.table.Columns.Add("State", 100);
+				this.table.Columns.Add("Name",  335);
 				this.table.Columns.Add("Id",     30);
+				this.table.Columns.Add("State",  70);
 				this.table.Columns.Add("Icon",   30);
 				this.table.ColumnHeader.SetColumnText(0, "Nom");
-				this.table.ColumnHeader.SetColumnText(1, "Etat");
-				this.table.ColumnHeader.SetColumnText(2, "No");
-				this.table.ColumnHeader.SetColumnText(3, "-");
+				this.table.ColumnHeader.SetColumnText(1, "No");
+				this.table.ColumnHeader.SetColumnText(2, "Etat");
+				this.table.ColumnHeader.SetColumnText(3, "");
+				this.table.ColumnHeader.SetColumnComparer(0, this.CompareName);
+				this.table.ColumnHeader.SetColumnComparer(1, this.CompareId);
+				this.table.ColumnHeader.SetColumnComparer(2, this.CompareState);
+				this.table.ColumnHeader.SetColumnComparer(3, this.CompareIcon);
 				//?this.table.ColumnHeader.SetColumnSort(0, ListSortDirection.Ascending);
 				//?this.table.HorizontalScrollMode = UI.ItemTableScrollMode.None;
 				//?this.table.VerticalScrollMode = UI.ItemTableScrollMode.ItemBased;
@@ -128,8 +132,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 			this.UpdateModules(true);
 			this.UpdateArray();
-			//?this.array.SelectedRow = -1;
-			this.indexToOpen = -1;
+			this.moduleInfosShowed.MoveCurrentTo(null);  // TODO: pourquoi la désélection n'est pas visible ???
 			this.UpdateButtons();
 
 			this.window.ShowDialog();
@@ -147,13 +150,13 @@ namespace Epsitec.Common.Designer.Dialogs
 			//	Retourne les informations sur le module à ouvrir.
 			get
 			{
-				if (this.indexToOpen == -1)
+				if (this.moduleInfosShowed.CurrentPosition == -1)
 				{
 					return new ResourceModuleId(null);
 				}
 				else
 				{
-					ResourceModuleInfo info = this.moduleInfosShowed.Items[this.indexToOpen] as ResourceModuleInfo;
+					ResourceModuleInfo info = this.moduleInfosShowed.CurrentItem as ResourceModuleInfo;
 					return info.FullId;
 				}
 			}
@@ -170,58 +173,185 @@ namespace Epsitec.Common.Designer.Dialogs
 			}
 
 			//	Construit une liste réduite contenant uniquement les modules visibles dans la liste.
-			using (this.moduleInfosShowed.DeferRefresh ())
+			using (this.moduleInfosShowed.DeferRefresh())
 			{
-				this.moduleInfosLive.Clear ();
+				this.moduleInfosLive.Clear();
 				for (int i=0; i<this.moduleInfosAll.Count; i++)
 				{
-					ModuleState state = this.GetModuleState (this.moduleInfosAll[i]);
+					ModuleState state = this.GetModuleState(this.moduleInfosAll[i]);
 
 					if (state == ModuleState.Openable)
 					{
-						this.moduleInfosLive.Add (this.moduleInfosAll[i]);
+						this.moduleInfosLive.Add(this.moduleInfosAll[i]);
 					}
 					else if ((state == ModuleState.Opening || state == ModuleState.OpeningAndDirty) && this.showOpened)
 					{
-						this.moduleInfosLive.Add (this.moduleInfosAll[i]);
+						this.moduleInfosLive.Add(this.moduleInfosAll[i]);
 					}
 					else if (state == ModuleState.Locked && this.showLocked)
 					{
-						this.moduleInfosLive.Add (this.moduleInfosAll[i]);
+						this.moduleInfosLive.Add(this.moduleInfosAll[i]);
 					}
 				}
 
 				//	Trie la liste des modules visibles.
-				this.moduleInfosLive.Sort (new Comparers.ResourceModuleInfoToOpen ());
+				this.moduleInfosLive.Sort(new Comparers.ResourceModuleInfoToOpen());
 			}
 		}
 
 		protected void UpdateArray()
 		{
 			//	Met à jour tout le contenu du tableau.
-			this.ignoreChange = true;
-			this.table.ItemPanel.Refresh();
-			this.ignoreChange = false;
+			//?this.ignoreChange = true;
+			//?this.table.ItemPanel.Refresh();
+			//?this.ignoreChange = false;
 		}
 
 		protected void UpdateButtons()
 		{
 			//	Met à jour tous les boutons.
-			//?int sel = this.array.SelectedRow;
-			int sel = -1;
+			ResourceModuleInfo info = this.moduleInfosShowed.CurrentItem as ResourceModuleInfo;
 
-			if (sel == -1)
+			if (info == null)
 			{
 				this.buttonOpen.Enable = false;
 			}
 			else
 			{
-				ModuleState state = this.GetModuleState(sel);
+				ModuleState state = this.GetModuleState(info);
 				this.buttonOpen.Enable = (state == ModuleState.Openable);
 			}
 
 			this.checkOpened.ActiveState = this.showOpened ? ActiveState.Yes : ActiveState.No;
 			this.checkLocked.ActiveState = this.showLocked ? ActiveState.Yes : ActiveState.No;
+		}
+
+		protected int CompareName(object a, object b)
+		{
+			ResourceModuleInfo itemA = a as ResourceModuleInfo;
+			ResourceModuleInfo itemB = b as ResourceModuleInfo;
+
+			string sA = this.GetColumnText(itemA, "Name");
+			string sB = this.GetColumnText(itemB, "Name");
+
+			return sA.CompareTo(sB);
+		}
+
+		protected int CompareState(object a, object b)
+		{
+			ResourceModuleInfo itemA = a as ResourceModuleInfo;
+			ResourceModuleInfo itemB = b as ResourceModuleInfo;
+
+			string sA = this.GetColumnText(itemA, "State");
+			string sB = this.GetColumnText(itemB, "State");
+
+			return sA.CompareTo(sB);
+		}
+
+		protected int CompareId(object a, object b)
+		{
+			ResourceModuleInfo itemA = a as ResourceModuleInfo;
+			ResourceModuleInfo itemB = b as ResourceModuleInfo;
+
+			int idA = itemA.FullId.Id;
+			int idB = itemB.FullId.Id;
+
+			return idA.CompareTo(idB);
+		}
+
+		protected int CompareIcon(object a, object b)
+		{
+			ResourceModuleInfo itemA = a as ResourceModuleInfo;
+			ResourceModuleInfo itemB = b as ResourceModuleInfo;
+
+			string sA = this.GetColumnText(itemA, "SortedIcon");
+			string sB = this.GetColumnText(itemB, "SortedIcon");
+
+			return sA.CompareTo(sB);
+		}
+
+		protected string GetColumnText(ResourceModuleInfo item, string columnName)
+		{
+			//	Retourne le texte contenu dans une colonne.
+			ModuleState state = this.GetModuleState(item);
+			string text = null;
+
+			if (columnName == "Name")
+			{
+				text = TextLayout.ConvertToTaggedText((this.GetModulePath(item)));
+
+				if (state == ModuleState.OpeningAndDirty)
+				{
+					text = Misc.Bold(text);
+				}
+
+				if (state == ModuleState.Locked || state == ModuleState.Opening)
+				{
+					text = Misc.Italic(text);
+				}
+			}
+
+			if (columnName == "State")
+			{
+				text = Res.Strings.Dialog.Open.State.Opening;
+
+				if (state == ModuleState.Openable)
+				{
+					text = Res.Strings.Dialog.Open.State.Openable;
+				}
+
+				if (state == ModuleState.Locked)
+				{
+					text = "Bloqué";
+				}
+			}
+
+			if (columnName == "Id")
+			{
+				text = item.FullId.Id.ToString();
+			}
+
+			if (columnName == "Icon")
+			{
+				if (state == ModuleState.Openable)
+				{
+					text = Misc.Image("Open");  // dossier avec flèche
+				}
+				else if (state == ModuleState.OpeningAndDirty)
+				{
+					text = Misc.Image("Save");  // disquette violette
+				}
+				else if (state == ModuleState.Opening)
+				{
+					text = Misc.Image("Opened");  // vu bleu
+				}
+				else if (state == ModuleState.Locked)
+				{
+					text = Misc.Image("Locked");  // x bleu
+				}
+			}
+
+			if (columnName == "SortedIcon")
+			{
+				if (state == ModuleState.Openable)
+				{
+					text = "A";
+				}
+				else if (state == ModuleState.OpeningAndDirty)
+				{
+					text = "B";
+				}
+				else if (state == ModuleState.Opening)
+				{
+					text = "C";
+				}
+				else if (state == ModuleState.Locked)
+				{
+					text = "D";
+				}
+			}
+
+			return text;
 		}
 
 		protected string GetModulePath(ResourceModuleInfo info)
@@ -238,12 +368,6 @@ namespace Epsitec.Common.Designer.Dialogs
 #endif
 
 			return path;
-		}
-
-		protected ModuleState GetModuleState(int index)
-		{
-			//	Retourne l'état d'un module.
-			return this.GetModuleState(this.moduleInfosShowed.Items[index] as ResourceModuleInfo);
 		}
 
 		protected ModuleState GetModuleState(ResourceModuleInfo info)
@@ -285,52 +409,8 @@ namespace Epsitec.Common.Designer.Dialogs
 			this.UpdateButtons();
 		}
 
-		private void HandleArrayCellCountChanged(object sender)
-		{
-			//	Le nombre de lignes a changé.
-			this.UpdateArray();
-		}
-
-		private void HandleArrayCellsContentChanged(object sender)
-		{
-			//	Le contenu des cellules a changé.
-			this.UpdateArray();
-		}
-
-		private void HandleArraySelectedRowChanged(object sender)
-		{
-			//	La ligne sélectionnée a changé.
-			this.UpdateButtons();
-		}
-
-		private void HandleArraySelectedRowDoubleClicked(object sender)
-		{
-			//	La ligne sélectionnée a été double cliquée.
-			//?this.indexToOpen = this.array.SelectedRow;
-
-			this.parentWindow.MakeActive();
-			this.window.Hide();
-			this.OnClosed();
-		}
-
 		private void HandleWindowCloseClicked(object sender)
 		{
-			this.parentWindow.MakeActive();
-			this.window.Hide();
-			this.OnClosed();
-		}
-
-		private void HandleButtonCloseClicked(object sender, MessageEventArgs e)
-		{
-			this.parentWindow.MakeActive();
-			this.window.Hide();
-			this.OnClosed();
-		}
-
-		private void HandleButtonOpenClicked(object sender, MessageEventArgs e)
-		{
-			//?this.indexToOpen = this.array.SelectedRow;
-
 			this.parentWindow.MakeActive();
 			this.window.Hide();
 			this.OnClosed();
@@ -350,9 +430,23 @@ namespace Epsitec.Common.Designer.Dialogs
 
 			this.UpdateModules(false);
 			this.UpdateArray();
-			//?this.array.SelectedRow = -1;
-			this.indexToOpen = -1;
 			this.UpdateButtons();
+		}
+
+		private void HandleButtonCloseClicked(object sender, MessageEventArgs e)
+		{
+			this.moduleInfosShowed.MoveCurrentTo(null);
+
+			this.parentWindow.MakeActive();
+			this.window.Hide();
+			this.OnClosed();
+		}
+
+		private void HandleButtonOpenClicked(object sender, MessageEventArgs e)
+		{
+			this.parentWindow.MakeActive();
+			this.window.Hide();
+			this.OnClosed();
 		}
 
 
@@ -379,120 +473,43 @@ namespace Epsitec.Common.Designer.Dialogs
 			protected override Widget CreateElement(string name, UI.ItemPanel panel, UI.ItemView view, UI.ItemViewShape shape)
 			{
 				ResourceModuleInfo item = view.Item as ResourceModuleInfo;
-
-				switch (name)
-				{
-					case "Name":
-						return this.CreateName(item);
-
-					case "State":
-						return this.CreateState(item);
-
-					case "Id":
-						return this.CreateId(item);
-
-					case "Icon":
-						return this.CreateIcon(item);
-				}
-
-				return null;
-			}
-
-			private Widget CreateName(ResourceModuleInfo item)
-			{
-				ModuleState state = this.owner.GetModuleState(item);
-				string path = TextLayout.ConvertToTaggedText((this.owner.GetModulePath(item)));
-
-				if (state == ModuleState.OpeningAndDirty)
-				{
-					path = Misc.Bold(path);
-				}
-
-				if (state == ModuleState.Locked || state == ModuleState.Opening)
-				{
-					path = Misc.Italic(path);
-				}
-
-				StaticText widget = new StaticText();
-				widget.Margins = new Margins(5, 5, 0, 0);
-				widget.Text = path;
-				widget.TextBreakMode = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine;
-				widget.PreferredSize = widget.GetBestFitSize();
-
-				return widget;
-			}
-
-			private Widget CreateState(ResourceModuleInfo item)
-			{
 				ModuleState state = this.owner.GetModuleState(item);
 
-				string text = Res.Strings.Dialog.Open.State.Opening;
-
+				StaticText main, text;
 				if (state == ModuleState.Openable)
 				{
-					text = Res.Strings.Dialog.Open.State.Openable;
-				}
-
-				if (state == ModuleState.Locked)
-				{
-					text = "Bloqué";
-				}
-
-				StaticText widget = new StaticText();
-				widget.Margins = new Margins(5, 5, 0, 0);
-				widget.Text = text;
-				widget.TextBreakMode = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine;
-				widget.PreferredSize = widget.GetBestFitSize();
-
-				return widget;
-			}
-
-			private Widget CreateId(ResourceModuleInfo item)
-			{
-				string text = item.FullId.Id.ToString();
-
-				StaticText widget = new StaticText();
-				widget.Margins = new Margins(5, 5, 0, 0);
-				widget.Text = text;
-				widget.ContentAlignment = ContentAlignment.MiddleRight;
-				widget.TextBreakMode = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine;
-				widget.PreferredSize = widget.GetBestFitSize();
-
-				return widget;
-			}
-
-			private Widget CreateIcon(ResourceModuleInfo item)
-			{
-				ModuleState state = this.owner.GetModuleState(item);
-				string text;
-
-				if (state == ModuleState.Openable)
-				{
-					text = Misc.Image("Open");
-				}
-				else if (state == ModuleState.OpeningAndDirty)
-				{
-					text = Misc.Image("Save");
-				}
-				else if (state == ModuleState.Locked)
-				{
-					text = Misc.Image("Locked");
+					main = text = new StaticText();
 				}
 				else
 				{
-					text = Misc.Image("Opened");
+					main = new StaticText();
+					main.BackColor = Color.FromAlphaRgb(0.1, 0,0,0);
+
+					text = new StaticText(main);
+					text.Dock = DockStyle.Fill;
 				}
 
-				StaticText widget = new StaticText();
-				widget.Margins = new Margins(5, 5, 0, 0);
-				widget.Text = text;
-				widget.ContentAlignment = ContentAlignment.MiddleCenter;
-				widget.TextBreakMode = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine;
-				widget.PreferredSize = widget.GetBestFitSize();
+				text.Margins = new Margins(5, 5, 0, 0);
+				text.Text = this.owner.GetColumnText(item, name);
 
-				return widget;
+				if (name == "Id")
+				{
+					text.ContentAlignment = ContentAlignment.MiddleRight;
+				}
+				else if (name == "Icon")
+				{
+					text.ContentAlignment = ContentAlignment.MiddleCenter;
+				}
+				else
+				{
+					text.ContentAlignment = ContentAlignment.MiddleLeft;
+				}
+
+				text.TextBreakMode = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine;
+				text.PreferredSize = text.GetBestFitSize();
+
+				return main;
 			}
-
 
 			Open owner;
 		}
@@ -501,13 +518,12 @@ namespace Epsitec.Common.Designer.Dialogs
 		protected string						resourcePrefix;
 		protected IList<ResourceModuleInfo>		moduleInfosAll;
 		protected CollectionView				moduleInfosShowed;
-		protected Epsitec.Common.Types.Collections.ObservableList<ResourceModuleInfo>		moduleInfosLive;
+		protected Types.Collections.ObservableList<ResourceModuleInfo> moduleInfosLive;
+		protected UI.ItemTable					table;
 		protected Button						buttonOpen;
 		protected Button						buttonCancel;
 		protected CheckButton					checkOpened;
 		protected CheckButton					checkLocked;
-		protected UI.ItemTable					table;
-		protected int							indexToOpen;
 		protected bool							showOpened;
 		protected bool							showLocked;
 		protected bool							ignoreChange;
