@@ -184,8 +184,22 @@ namespace Epsitec.Common.Document
 				
 				this.metaNavigator.MoveTo(Text.TextNavigator.Target.TextEnd, 1, 1, false);
 				this.metaNavigator.DeleteSelection();
-				
-				this.textStory.InsertText(this.textNavigator.ActiveCursor, text);
+
+				if (text.Length == 0)
+				{
+					//	Cas particulier : la copie n'a rien copié, mais on veut
+					//	tout de même s'assurer que le caractère de fin de texte
+					//	a les bons attributs.
+
+					TextStyle[] srcStyles = src.textNavigator.TextStyles;
+					this.textNavigator.SetParagraphStyles (srcStyles);
+					this.textNavigator.SetTextStyles (srcStyles);
+					this.textNavigator.SetMetaProperties (Epsitec.Common.Text.Properties.ApplyMode.Set, srcStyles);
+				}
+				else
+				{
+					this.textStory.InsertText (this.textNavigator.ActiveCursor, text);
+				}
 			}
 			else
 			{
