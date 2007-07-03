@@ -292,7 +292,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			return null;  // pas de tooltip
 		}
 
-		public virtual bool MouseMove(Point pos)
+		public virtual bool MouseMove(Message message, Point pos)
 		{
 			//	Met en évidence la boîte selon la position de la souris.
 			//	Si la souris est dans cette boîte, retourne true.
@@ -310,12 +310,12 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			return (this.hilitedElement != ActiveElement.None);
 		}
 
-		public virtual void MouseDown(Point pos)
+		public virtual void MouseDown(Message message, Point pos)
 		{
 			//	Le bouton de la souris est pressé.
 		}
 
-		public virtual void MouseUp(Point pos)
+		public virtual void MouseUp(Message message, Point pos)
 		{
 			//	Le bouton de la souris est relâché.
 		}

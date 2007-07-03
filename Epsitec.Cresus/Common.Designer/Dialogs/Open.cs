@@ -130,6 +130,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			this.UpdateModules(true);
 			this.UpdateArray();
 			this.moduleInfosShowed.MoveCurrentTo(null);  // TODO: pourquoi la désélection n'est pas visible ???
+			this.moduleInfosShowed.MoveCurrentToPosition(-1);  // TODO: pas plus de succès ainsi !
 			this.UpdateButtons();
 
 			this.window.ShowDialog();

@@ -1107,22 +1107,22 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			switch (message.MessageType)
 			{
 				case MessageType.MouseMove:
-					this.MouseMove(pos);
+					this.MouseMove(message, pos);
 					message.Consumer = this;
 					break;
 
 				case MessageType.MouseDown:
-					this.MouseDown(pos);
+					this.MouseDown(message, pos);
 					message.Consumer = this;
 					break;
 
 				case MessageType.MouseUp:
-					this.MouseUp(pos);
+					this.MouseUp(message, pos);
 					message.Consumer = this;
 					break;
 
 				case MessageType.MouseLeave:
-					this.MouseMove(Point.Zero);
+					this.MouseMove(message, Point.Zero);
 					break;
 
 				case MessageType.MouseWheel:
@@ -1171,7 +1171,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			return pos;
 		}
 
-		protected void MouseMove(Point pos)
+		protected void MouseMove(Message message, Point pos)
 		{
 			//	Met en évidence tous les widgets selon la position visée par la souris.
 			//	L'objet à l'avant-plan a la priorité.
@@ -1185,7 +1185,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 			else if (this.lockObject != null)
 			{
-				this.lockObject.MouseMove(pos);
+				this.lockObject.MouseMove(message, pos);
 			}
 			else
 			{
@@ -1194,7 +1194,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				for (int i=this.comments.Count-1; i>=0; i--)
 				{
 					AbstractObject obj = this.comments[i];
-					if (obj.MouseMove(pos))
+					if (obj.MouseMove(message, pos))
 					{
 						fly = obj;
 						pos = Point.Zero;  // si on était dans cet objet -> plus aucun hilite pour les objets placés dessous
@@ -1204,7 +1204,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				for (int i=this.connections.Count-1; i>=0; i--)
 				{
 					AbstractObject obj = this.connections[i];
-					if (obj.MouseMove(pos))
+					if (obj.MouseMove(message, pos))
 					{
 						fly = obj;
 						pos = Point.Zero;  // si on était dans cet objet -> plus aucun hilite pour les objets placés dessous
@@ -1214,7 +1214,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				for (int i=this.boxes.Count-1; i>=0; i--)
 				{
 					AbstractObject obj = this.boxes[i];
-					if (obj.MouseMove(pos))
+					if (obj.MouseMove(message, pos))
 					{
 						fly = obj;
 						pos = Point.Zero;  // si on était dans cet objet -> plus aucun hilite pour les objets placés dessous
@@ -1268,7 +1268,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 		}
 
-		protected void MouseDown(Point pos)
+		protected void MouseDown(Message message, Point pos)
 		{
 			//	Début du déplacement d'une boîte.
 			if (this.lastCursor == MouseCursorType.Hand)
@@ -1282,12 +1282,12 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				AbstractObject obj = this.DetectObject(pos);
 				if (obj != null)
 				{
-					obj.MouseDown(pos);
+					obj.MouseDown(message, pos);
 				}
 			}
 		}
 
-		protected void MouseUp(Point pos)
+		protected void MouseUp(Message message, Point pos)
 		{
 			//	Fin du déplacement d'une boîte.
 			if (this.isAreaMoving)
@@ -1299,7 +1299,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				AbstractObject obj = this.DetectObject(pos);
 				if (obj != null)
 				{
-					obj.MouseUp(pos);
+					obj.MouseUp(message, pos);
 				}
 			}
 		}
@@ -1575,7 +1575,10 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					break;
 			}
 
-			this.Window.MouseCursor = this.MouseCursor;
+			if (this.Window != null)
+			{
+				this.Window.MouseCursor = this.MouseCursor;
+			}
 		}
 
 		protected void SetMouseCursorImage(ref Image image, string name)

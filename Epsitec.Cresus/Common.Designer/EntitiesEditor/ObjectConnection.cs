@@ -141,7 +141,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			return base.GetToolTipText(element);
 		}
 
-		public override bool MouseMove(Point pos)
+		public override bool MouseMove(Message message, Point pos)
 		{
 			//	La souris est bougée.
 			if (this.isDraggingRoute)
@@ -151,11 +151,11 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 			else
 			{
-				return base.MouseMove(pos);
+				return base.MouseMove(message, pos);
 			}
 		}
 
-		public override void MouseDown(Point pos)
+		public override void MouseDown(Message message, Point pos)
 		{
 			//	Le bouton de la souris est pressé.
 			if (this.hilitedElement == ActiveElement.ConnectionMove1 ||
@@ -166,7 +166,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 		}
 
-		public override void MouseUp(Point pos)
+		public override void MouseUp(Message message, Point pos)
 		{
 			//	Le bouton de la souris est relâché.
 			if (this.isDraggingRoute)

@@ -133,7 +133,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			return base.GetToolTipText(element);
 		}
 
-		public override bool MouseMove(Point pos)
+		public override bool MouseMove(Message message, Point pos)
 		{
 			//	Met en évidence la boîte selon la position de la souris.
 			//	Si la souris est dans cette boîte, retourne true.
@@ -181,11 +181,11 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 			else
 			{
-				return base.MouseMove(pos);
+				return base.MouseMove(message, pos);
 			}
 		}
 
-		public override void MouseDown(Point pos)
+		public override void MouseDown(Message message, Point pos)
 		{
 			//	Le bouton de la souris est pressé.
 			if (this.hilitedElement == ActiveElement.CommentMove)
@@ -208,7 +208,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 		}
 
-		public override void MouseUp(Point pos)
+		public override void MouseUp(Message message, Point pos)
 		{
 			//	Le bouton de la souris est relâché.
 			if (this.isDraggingMove)

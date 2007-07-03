@@ -524,7 +524,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			return base.GetToolTipText(element);
 		}
 
-		public override bool MouseMove(Point pos)
+		public override bool MouseMove(Message message, Point pos)
 		{
 			//	Met en évidence la boîte selon la position de la souris.
 			//	Si la souris est dans cette boîte, retourne true.
@@ -541,7 +541,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 			else if (this.isFieldMoving)
 			{
-				return base.MouseMove(pos);
+				return base.MouseMove(message, pos);
 			}
 			else if (this.isChangeWidth)
 			{
@@ -581,11 +581,11 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 			else
 			{
-				return base.MouseMove(pos);
+				return base.MouseMove(message, pos);
 			}
 		}
 
-		public override void MouseDown(Point pos)
+		public override void MouseDown(Message message, Point pos)
 		{
 			//	Le bouton de la souris est pressé.
 			if (this.isSourcesMenu)  // menu resté du clic précédent ?
@@ -637,7 +637,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 		}
 
-		public override void MouseUp(Point pos)
+		public override void MouseUp(Message message, Point pos)
 		{
 			//	Le bouton de la souris est relâché.
 			if (this.isDragging)
@@ -716,12 +716,26 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 				if (this.hilitedElement == ActiveElement.BoxFieldName)
 				{
-					this.ChangeFieldName(this.hilitedFieldRank);
+					if (message.IsRightButton)
+					{
+						this.LocateField(this.hilitedFieldRank);
+					}
+					else
+					{
+						this.ChangeFieldName(this.hilitedFieldRank);
+					}
 				}
 
 				if (this.hilitedElement == ActiveElement.BoxFieldType)
 				{
-					this.ChangeFieldType(this.hilitedFieldRank);
+					if (message.IsRightButton)
+					{
+						this.LocateField(this.hilitedFieldRank);
+					}
+					else
+					{
+						this.ChangeFieldType(this.hilitedFieldRank);
+					}
 				}
 
 				if (this.hilitedElement == ActiveElement.BoxComment)
@@ -1180,6 +1194,20 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			this.editor.UpdateAfterAddOrRemoveConnection(this);
 			this.SetDirty();
 			this.hilitedElement = ActiveElement.None;
+		}
+
+		protected void LocateField(int rank)
+		{
+			//	Montre le champ cliqué avec la bouton de droite.
+			StructuredData data = this.cultureMap.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
+			IList<StructuredData> dataFields = data.GetValue(Support.Res.Fields.ResourceStructuredType.Fields) as IList<StructuredData>;
+
+			StructuredData dataField = dataFields[rank];
+			Druid fieldCaptionId = (Druid) dataField.GetValue(Support.Res.Fields.Field.CaptionId);
+
+			Module module = this.editor.Module.MainWindow.SearchModule(fieldCaptionId);
+			
+			this.editor.Module.MainWindow.LocatorGoto(module.ModuleInfo.Name, ResourceAccess.Type.Fields2, -1, fieldCaptionId, null);
 		}
 
 		protected void ChangeFieldName(int rank)
@@ -1742,8 +1770,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 					rect = this.GetFieldBounds(-1);
 					rect.Deflate(9.5, 0.5);
-					dashedPath.MoveTo(rect.Left, rect.Bottom);
-					dashedPath.LineTo(rect.Right, rect.Bottom);
+					dashedPath.MoveTo(rect.Left+2, rect.Bottom);
+					dashedPath.LineTo(rect.Right-1, rect.Bottom);
 					
 					Misc.DrawPathDash(graphics, dashedPath, 1, 0, 2, this.GetColorMain(0.8));
 				}
