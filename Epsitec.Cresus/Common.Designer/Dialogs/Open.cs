@@ -432,7 +432,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		private void HandleButtonCloseClicked(object sender, MessageEventArgs e)
 		{
-			this.moduleInfosShowed.MoveCurrentTo(null);
+			this.moduleInfosShowed.MoveCurrentToPosition(-1);
 
 			this.parentWindow.MakeActive();
 			this.window.Hide();

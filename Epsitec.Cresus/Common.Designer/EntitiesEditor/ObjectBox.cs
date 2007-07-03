@@ -742,7 +742,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				{
 					if (message.IsRightButton)
 					{
-						this.LocateField(this.hilitedFieldRank);
+						this.LocateType(this.hilitedFieldRank);
 					}
 					else
 					{
@@ -1122,6 +1122,71 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		}
 
 
+		protected void LocateEntity()
+		{
+			//	Montre l'entité cliquée avec le bouton de droite.
+			Module module = this.editor.Module.MainWindow.SearchModule(this.cultureMap.Id);
+
+			if (module != null)
+			{
+				this.editor.Module.MainWindow.LocatorGoto(module.ModuleInfo.Name, ResourceAccess.Type.Entities, -1, this.cultureMap.Id, null);
+			}
+		}
+
+		protected void LocateMembership()
+		{
+			//	Montre l'entité de base cliquée avec le bouton de droite.
+			StructuredData data = this.cultureMap.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
+			Druid druid = (Druid) data.GetValue(Support.Res.Fields.ResourceStructuredType.BaseType);
+
+			if (druid.IsEmpty)
+			{
+				return;
+			}
+
+			Module module = this.editor.Module.MainWindow.SearchModule(druid);
+
+			if (module != null)
+			{
+				this.editor.Module.MainWindow.LocatorGoto(module.ModuleInfo.Name, ResourceAccess.Type.Entities, -1, druid, null);
+			}
+		}
+
+		protected void LocateField(int rank)
+		{
+			//	Montre le champ cliqué avec le bouton de droite.
+			StructuredData data = this.cultureMap.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
+			IList<StructuredData> dataFields = data.GetValue(Support.Res.Fields.ResourceStructuredType.Fields) as IList<StructuredData>;
+
+			StructuredData dataField = dataFields[rank];
+			Druid fieldCaptionId = (Druid) dataField.GetValue(Support.Res.Fields.Field.CaptionId);
+
+			Module module = this.editor.Module.MainWindow.SearchModule(fieldCaptionId);
+
+			if (module != null)
+			{
+				this.editor.Module.MainWindow.LocatorGoto(module.ModuleInfo.Name, ResourceAccess.Type.Fields2, -1, fieldCaptionId, null);
+			}
+		}
+
+		protected void LocateType(int rank)
+		{
+			//	Montre le type cliqué avec le bouton de droite.
+			StructuredData data = this.cultureMap.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
+			IList<StructuredData> dataFields = data.GetValue(Support.Res.Fields.ResourceStructuredType.Fields) as IList<StructuredData>;
+
+			StructuredData dataField = dataFields[rank];
+			Druid typeId = (Druid) dataField.GetValue(Support.Res.Fields.Field.TypeId);
+
+			Module module = this.editor.Module.MainWindow.SearchModule(typeId);
+
+			if (module != null)
+			{
+				this.editor.Module.MainWindow.LocatorGoto(module.ModuleInfo.Name, ResourceAccess.Type.Types2, -1, typeId, null);
+			}
+		}
+
+
 		protected void MoveField(int srcRank, int dstRank)
 		{
 			//	Déplace un champ.
@@ -1221,53 +1286,6 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			this.editor.UpdateAfterAddOrRemoveConnection(this);
 			this.SetDirty();
 			this.hilitedElement = ActiveElement.None;
-		}
-
-		protected void LocateEntity()
-		{
-			//	Montre l'entité cliquée avec le bouton de droite.
-			Module module = this.editor.Module.MainWindow.SearchModule(this.cultureMap.Id);
-
-			if (module != null)
-			{
-				this.editor.Module.MainWindow.LocatorGoto(module.ModuleInfo.Name, ResourceAccess.Type.Entities, -1, this.cultureMap.Id, null);
-			}
-		}
-
-		protected void LocateMembership()
-		{
-			//	Montre l'entité de base cliquée avec le bouton de droite.
-			StructuredData data = this.cultureMap.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
-			Druid druid = (Druid) data.GetValue(Support.Res.Fields.ResourceStructuredType.BaseType);
-
-			if (druid.IsEmpty)
-			{
-				return;
-			}
-
-			Module module = this.editor.Module.MainWindow.SearchModule(druid);
-
-			if (module != null)
-			{
-				this.editor.Module.MainWindow.LocatorGoto(module.ModuleInfo.Name, ResourceAccess.Type.Entities, -1, druid, null);
-			}
-		}
-
-		protected void LocateField(int rank)
-		{
-			//	Montre le champ cliqué avec le bouton de droite.
-			StructuredData data = this.cultureMap.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
-			IList<StructuredData> dataFields = data.GetValue(Support.Res.Fields.ResourceStructuredType.Fields) as IList<StructuredData>;
-
-			StructuredData dataField = dataFields[rank];
-			Druid fieldCaptionId = (Druid) dataField.GetValue(Support.Res.Fields.Field.CaptionId);
-
-			Module module = this.editor.Module.MainWindow.SearchModule(fieldCaptionId);
-
-			if (module != null)
-			{
-				this.editor.Module.MainWindow.LocatorGoto(module.ModuleInfo.Name, ResourceAccess.Type.Fields2, -1, fieldCaptionId, null);
-			}
 		}
 
 		protected void ChangeFieldName(int rank)
