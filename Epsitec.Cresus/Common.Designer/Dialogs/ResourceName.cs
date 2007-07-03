@@ -120,6 +120,8 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		protected void UpdateTitle()
 		{
+			//	Initialise le titre dans la partie supérieure du dialogue, qui explique
+			//	l'opération effectuée.
 			string text, ok;
 			switch (this.operation)
 			{

@@ -1104,6 +1104,14 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			this.brutPos = pos;
 			pos = this.ConvWidgetToEditor(pos);
 
+			if (this.lastType == message.MessageType && this.lastPos == pos)
+			{
+				return;
+			}
+
+			this.lastType = message.MessageType;
+			this.lastPos = pos;
+
 			switch (message.MessageType)
 			{
 				case MessageType.MouseMove:
@@ -1290,6 +1298,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		protected void MouseUp(Message message, Point pos)
 		{
 			//	Fin du déplacement d'une boîte.
+			//?System.Diagnostics.Debug.WriteLine("MouseUp");
 			if (this.isAreaMoving)
 			{
 				this.isAreaMoving = false;
@@ -1709,5 +1718,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		protected VScroller vscroller;
 		protected AbstractObject hilitedObject;
 		protected bool dirtySerialization;
+
+		protected MessageType lastType;
+		protected Point lastPos;
 	}
 }

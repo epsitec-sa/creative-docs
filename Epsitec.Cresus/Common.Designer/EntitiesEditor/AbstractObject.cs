@@ -210,13 +210,13 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					return "Ferme l'entité";
 
 				case AbstractObject.ActiveElement.BoxFieldName:
-					return "Change le nom du champ";
+					return "Change le nom du champ<br/>Clic droite: aller sur la définition du champ";
 
 				case AbstractObject.ActiveElement.BoxFieldType:
 					return "Change le type du champ";
 
 				case AbstractObject.ActiveElement.BoxFieldAdd:
-					return "Ajoute un nouveau champ";
+					return "Ajoute un nouveau champ<br/>Clic droite: aller sur la définition du champ";
 
 				case AbstractObject.ActiveElement.BoxFieldRemove:
 					return "Supprime le champ";

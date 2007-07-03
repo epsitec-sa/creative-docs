@@ -1450,6 +1450,7 @@ namespace Epsitec.Common.Designer
 				if (sel != -1)
 				{
 					access.AccessIndex = sel;
+
 					if (viewer != null)
 					{
 						this.locatorIgnore = true;

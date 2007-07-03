@@ -473,7 +473,14 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					}
 					else
 					{
-						return "Déplace l'entité";
+						if (this.isRoot)
+						{
+							return "Déplace l'entité";
+						}
+						else
+						{
+							return "Déplace l'entité<br/>Clic droite: aller sur la définition de l'entité";
+						}
 					}
 
 				case AbstractObject.ActiveElement.BoxSources:
@@ -599,7 +606,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				return;
 			}
 
-			if (this.hilitedElement == ActiveElement.BoxHeader && this.editor.BoxCount > 1)
+			if (this.hilitedElement == ActiveElement.BoxHeader && this.editor.BoxCount > 1 && !message.IsRightButton)
 			{
 				this.isDragging = true;
 				this.draggingPos = pos;
@@ -688,6 +695,11 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 			else
 			{
+				if (this.hilitedElement == ActiveElement.BoxHeader && message.IsRightButton && !this.isRoot)
+				{
+					this.LocateEntity();
+				}
+
 				if (this.hilitedElement == ActiveElement.BoxExtend)
 				{
 					this.IsExtended = !this.IsExtended;
@@ -1196,9 +1208,20 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			this.hilitedElement = ActiveElement.None;
 		}
 
+		protected void LocateEntity()
+		{
+			//	Montre l'entité cliquée avec le bouton de droite.
+			Module module = this.editor.Module.MainWindow.SearchModule(this.cultureMap.Id);
+
+			if (module != null)
+			{
+				this.editor.Module.MainWindow.LocatorGoto(module.ModuleInfo.Name, ResourceAccess.Type.Entities, -1, this.cultureMap.Id, null);
+			}
+		}
+
 		protected void LocateField(int rank)
 		{
-			//	Montre le champ cliqué avec la bouton de droite.
+			//	Montre le champ cliqué avec le bouton de droite.
 			StructuredData data = this.cultureMap.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
 			IList<StructuredData> dataFields = data.GetValue(Support.Res.Fields.ResourceStructuredType.Fields) as IList<StructuredData>;
 
@@ -1206,8 +1229,11 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			Druid fieldCaptionId = (Druid) dataField.GetValue(Support.Res.Fields.Field.CaptionId);
 
 			Module module = this.editor.Module.MainWindow.SearchModule(fieldCaptionId);
-			
-			this.editor.Module.MainWindow.LocatorGoto(module.ModuleInfo.Name, ResourceAccess.Type.Fields2, -1, fieldCaptionId, null);
+
+			if (module != null)
+			{
+				this.editor.Module.MainWindow.LocatorGoto(module.ModuleInfo.Name, ResourceAccess.Type.Fields2, -1, fieldCaptionId, null);
+			}
 		}
 
 		protected void ChangeFieldName(int rank)
