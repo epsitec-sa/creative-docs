@@ -105,6 +105,6 @@ namespace Epsitec.Common.Widgets
 		}
 
 
-		private PaintTextStyle					paintTextStyle = PaintTextStyle.StaticText;
+		protected PaintTextStyle					paintTextStyle = PaintTextStyle.StaticText;
 	}
 }

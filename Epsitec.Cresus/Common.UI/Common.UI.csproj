@@ -129,6 +129,7 @@
     <Compile Include="Controllers\StringController.cs" />
     <Compile Include="AbstractPlaceholder.cs" />
     <Compile Include="Panels\SearchPanel.cs" />
+    <Compile Include="ItemViewText.cs" />
     <Compile Include="TablePlaceholder.cs" />
     <Compile Include="ItemPanelColumnHeader.cs" />
     <Compile Include="ItemPanelGroup.cs" />

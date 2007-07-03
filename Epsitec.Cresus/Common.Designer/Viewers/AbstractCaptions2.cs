@@ -668,7 +668,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 			private Widget CreateName(CultureMap item)
 			{
-				StaticText widget = new StaticText();
+				UI.ItemViewText widget = new UI.ItemViewText();
 				widget.Margins = new Margins(5, 5, 0, 0);
 				//?widget.Text = TextLayout.ConvertToTaggedText(item.FullName);
 				widget.Text = TextLayout.ConvertToTaggedText(item.Name);
@@ -680,7 +680,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 			private Widget CreateType(CultureMap item)
 			{
-				StaticText widget = new StaticText();
+				UI.ItemViewText widget = new UI.ItemViewText();
 
 				StructuredData data = item.GetCultureData(Support.Resources.DefaultTwoLetterISOLanguageName);
 				object typeCodeValue = data.GetValue(Support.Res.Fields.ResourceBaseType.TypeCode);
@@ -701,7 +701,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 			private Widget CreateEntity(CultureMap item)
 			{
-				StaticText widget = new StaticText();
+				UI.ItemViewText widget = new UI.ItemViewText();
 				widget.Margins = new Margins(5, 5, 0, 0);
 				widget.Text = TextLayout.ConvertToTaggedText(item.Prefix);
 				widget.TextBreakMode = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine;
@@ -724,19 +724,19 @@ namespace Epsitec.Common.Designer.Viewers
 			{
 				//	Crée le contenu pour une colonne primaire ou secondaire.
 				//	Par optimisation, un seul widget est créé s'il n'y a pas de couleur de fond.
-				StaticText main, text;
+				UI.ItemViewText main, text;
 				ResourceAccess.ModificationState state = this.owner.access.GetModification(item, twoLettersCulture);
 
 				if (state == ResourceAccess.ModificationState.Normal)
 				{
-					main = text = new StaticText();
+					main = text = new UI.ItemViewText();
 				}
 				else
 				{
-					main = new StaticText();
+					main = new UI.ItemViewText();
 					main.BackColor = Abstract.GetBackgroundColor(state, 0.7);
 
-					text = new StaticText(main);
+					text = new UI.ItemViewText(main);
 					text.Dock = DockStyle.Fill;
 				}
 

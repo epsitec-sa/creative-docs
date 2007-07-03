@@ -477,17 +477,17 @@ namespace Epsitec.Common.Designer.Dialogs
 				ResourceModuleInfo item = view.Item as ResourceModuleInfo;
 				ModuleState state = this.owner.GetModuleState(item);
 
-				StaticText main, text;
+				UI.ItemViewText main, text;
 				if (state == ModuleState.Openable)
 				{
-					main = text = new StaticText();
+					main = text = new UI.ItemViewText();
 				}
 				else
 				{
-					main = new StaticText();
-					main.BackColor = Color.FromAlphaRgb(0.1, 0,0,0);
+					main = new UI.ItemViewText();
+					main.BackColor = Color.FromAlphaRgb(0.1, 0,0,0);  // fond gris clair
 
-					text = new StaticText(main);
+					text = new UI.ItemViewText(main);
 					text.Dock = DockStyle.Fill;
 				}
 
