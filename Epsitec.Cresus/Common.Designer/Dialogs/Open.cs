@@ -73,9 +73,6 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.table.ColumnHeader.SetColumnComparer(1, this.CompareId);
 				this.table.ColumnHeader.SetColumnComparer(2, this.CompareState);
 				this.table.ColumnHeader.SetColumnComparer(3, this.CompareIcon);
-				//?this.table.ColumnHeader.SetColumnSort(0, ListSortDirection.Ascending);
-				//?this.table.HorizontalScrollMode = UI.ItemTableScrollMode.None;
-				//?this.table.VerticalScrollMode = UI.ItemTableScrollMode.ItemBased;
 				this.table.HeaderVisibility = true;
 				this.table.FrameVisibility = true;
 				this.table.ItemPanel.Layout = UI.ItemPanelLayout.VerticalList;
@@ -472,6 +469,11 @@ namespace Epsitec.Common.Designer.Dialogs
 
 			protected override Widget CreateElement(string name, UI.ItemPanel panel, UI.ItemView view, UI.ItemViewShape shape)
 			{
+				if (shape == UI.ItemViewShape.ToolTip)
+				{
+					return null;
+				}
+
 				ResourceModuleInfo item = view.Item as ResourceModuleInfo;
 				ModuleState state = this.owner.GetModuleState(item);
 
