@@ -504,6 +504,46 @@ namespace Epsitec.Common.Designer.Viewers
 		}
 
 		
+		public override string GetColumnText(CultureMap item, string twoLettersCulture)
+		{
+			//	Retourne le texte pour une colonne primaire ou secondaire.
+			if (twoLettersCulture == null)
+			{
+				return "";
+			}
+			else
+			{
+				System.Text.StringBuilder buffer = new System.Text.StringBuilder();
+				StructuredData data = item.GetCultureData(twoLettersCulture);
+
+				IList<string> list = data.GetValue(Support.Res.Fields.ResourceCaption.Labels) as IList<string>;
+				if (list != null && list.Count != 0)
+				{
+					foreach(string s in list)
+					{
+						if (buffer.Length != 0)
+						{
+							buffer.Append(", ");
+						}
+						buffer.Append(s);
+					}
+				}
+
+				string desc = data.GetValue(Support.Res.Fields.ResourceCaption.Description) as string;
+				if (!string.IsNullOrEmpty(desc))
+				{
+					if (buffer.Length != 0)
+					{
+						buffer.Append(", ");
+					}
+					buffer.Append(desc);
+				}
+
+				return buffer.ToString();
+			}
+		}
+
+
 		private void HandleTextChanged(object sender)
 		{
 			//	Un texte éditable a changé.

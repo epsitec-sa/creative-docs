@@ -644,277 +644,6 @@ namespace Epsitec.Common.Designer.Viewers
 		#endregion
 
 
-		private void HandleSplitterDragged(object sender)
-		{
-			//	Le splitter a été bougé.
-			if (this.mainWindow.DisplayModeState == MainWindow.DisplayMode.Horizontal)
-			{
-				Abstract.leftArrayWidth = this.firstPane.ActualWidth;
-			}
-			else
-			{
-				Abstract.topArrayHeight = this.firstPane.ActualHeight;
-			}
-		}
-
-		private void HandleButtonSecondaryCultureClicked(object sender, MessageEventArgs e)
-		{
-			//	Un bouton pour changer de culture secondaire a été cliqué.
-			IconButtonMark button = sender as IconButtonMark;
-			this.TwoLettersSecondaryCulture = button.Name;
-
-			this.UpdateEdit();
-			this.UpdateColor();
-			this.UpdateCommands();
-		}
-
-		private void HandleTableSelectionChanged(object sender, UI.ItemPanelSelectionChangedEventArgs e)
-		{
-			//	La ligne sélectionnée dans le tableau a changé.
-			if (this.ignoreChange)
-			{
-				return;
-			}
-
-			if (!this.mainWindow.Terminate())
-			{
-				e.Cancel = true;  // revient à la sélection précédente
-				return;
-			}
-
-			this.mainWindow.LocatorFix();
-
-			this.UpdateTitle();
-			this.UpdateEdit();
-			this.UpdateColor();
-			this.UpdateModificationsCulture();
-			this.UpdateCommands();
-		}
-
-		private void HandleTableSizeChanged(object sender, Epsitec.Common.Types.DependencyPropertyChangedEventArgs e)
-		{
-			//	Les dimensions du tableau ont changé.
-#if false
-			UI.ItemTable table = (UI.ItemTable) sender;
-			Drawing.Size size = (Drawing.Size) e.NewValue;
-
-			double width = size.Width - table.GetPanelPadding().Width;
-			//?table.ColumnHeader.SetColumnWidth(0, width);
-
-			table.ItemPanel.ItemViewDefaultSize = new Size(width, 20);
-#endif
-		}
-
-		private void HandleColumnHeaderColumnWidthChanged(object sender, UI.ColumnWidthChangeEventArgs e)
-		{
-			//	La largeur d'une colonne du tableau a changé.
-			this.SetColumnWidth(e.Column, e.NewWidth);
-		}
-
-		protected void HandleButtonCompactOrExtendClicked(object sender, MessageEventArgs e)
-		{
-			//	Un bouton pour changer le mode d'affichage a été cliqué.
-			if (sender == this.buttonMainCompact)
-			{
-				Abstract2.mainExtended = false;
-			}
-
-			if (sender == this.buttonMainExtend)
-			{
-				Abstract2.mainExtended = true;
-			}
-
-			if (sender == this.buttonSuiteCompact)
-			{
-				Abstract2.suiteExtended = false;
-			}
-
-			if (sender == this.buttonSuiteExtend)
-			{
-				Abstract2.suiteExtended = true;
-			}
-
-			this.UpdateDisplayMode();
-			this.UpdateEdit();  // pour que le résumé prenne en compte les modifications
-		}
-
-		private void HandleTextChanged(object sender)
-		{
-			//	Un texte éditable a changé.
-			if (this.ignoreChange)
-			{
-				return;
-			}
-
-			AbstractTextField edit = sender as AbstractTextField;
-			string text = edit.Text;
-
-			CultureMap item = this.access.CollectionView.CurrentItem as CultureMap;
-
-			if (edit == this.labelEdit)
-			{
-				this.UpdateFieldName(edit, this.access.CollectionView.CurrentPosition);
-				this.access.Accessor.PersistChanges();
-				this.access.CollectionView.Refresh();
-			}
-
-			this.UpdateModificationsCulture();
-		}
-
-		private void HandleTextRejected(object sender)
-		{
-			TextFieldEx edit = sender as TextFieldEx;
-
-			if (edit != null)
-			{
-				edit.RejectEdition();  // TODO: devrait être inutile
-			}
-		}
-
-		protected void HandleLabelKeyboardFocusChanged(object sender, Epsitec.Common.Types.DependencyPropertyChangedEventArgs e)
-		{
-			//	Appelé lorsque la ligne éditable pour le label voit son focus changer.
-			TextFieldEx field = sender as TextFieldEx;
-			field.AcceptEdition();
-			this.HandleEditKeyboardFocusChanged(sender, e);
-		}
-
-		protected void HandleCursorChanged(object sender)
-		{
-			//	Le curseur a été déplacé dans un texte éditable.
-			if (this.ignoreChange)
-			{
-				return;
-			}
-
-			this.lastActionIsReplace = false;
-		}
-
-
-		protected int ComparePrimary(object a, object b)
-		{
-			CultureMap itemA = a as CultureMap;
-			CultureMap itemB = b as CultureMap;
-
-			string sA = this.GetColumnText(itemA, this.GetTwoLetters(0));
-			string sB = this.GetColumnText(itemB, this.GetTwoLetters(0));
-
-			return sA.CompareTo(sB);
-		}
-
-		protected int CompareSecondary(object a, object b)
-		{
-			CultureMap itemA = a as CultureMap;
-			CultureMap itemB = b as CultureMap;
-
-			string sA = this.GetColumnText(itemA, this.GetTwoLetters(1));
-			string sB = this.GetColumnText(itemB, this.GetTwoLetters(1));
-
-			return sA.CompareTo(sB);
-		}
-
-		protected int CompareDruid(object a, object b)
-		{
-			CultureMap itemA = a as CultureMap;
-			CultureMap itemB = b as CultureMap;
-
-			string dA = itemA.Id.ToString();
-			string dB = itemB.Id.ToString();
-
-			return dA.CompareTo(dB);
-		}
-
-		protected int CompareLocal(object a, object b)
-		{
-			CultureMap itemA = a as CultureMap;
-			CultureMap itemB = b as CultureMap;
-
-			int iA = itemA.Id.Local;
-			int iB = itemB.Id.Local;
-
-			return iA.CompareTo(iB);
-		}
-
-		protected int CompareIdentity(object a, object b)
-		{
-			CultureMap itemA = a as CultureMap;
-			CultureMap itemB = b as CultureMap;
-
-			int iA = itemA.Id.Developer;
-			int iB = itemB.Id.Developer;
-
-			return iA.CompareTo(iB);
-		}
-
-		public virtual string GetColumnText(CultureMap item, string twoLettersCulture)
-		{
-			//	Retourne le texte pour une colonne primaire ou secondaire.
-			if (twoLettersCulture == null)
-			{
-				return "";
-			}
-			else
-			{
-				System.Text.StringBuilder buffer = new System.Text.StringBuilder();
-				StructuredData data = item.GetCultureData(twoLettersCulture);
-
-				IList<string> list = data.GetValue(Support.Res.Fields.ResourceCaption.Labels) as IList<string>;
-				if (list != null && list.Count != 0)
-				{
-					foreach(string s in list)
-					{
-						if (buffer.Length != 0)
-						{
-							buffer.Append(", ");
-						}
-						buffer.Append(s);
-					}
-				}
-
-				string desc = data.GetValue(Support.Res.Fields.ResourceCaption.Description) as string;
-				if (!string.IsNullOrEmpty(desc))
-				{
-					if (buffer.Length != 0)
-					{
-						buffer.Append(", ");
-					}
-					buffer.Append(desc);
-				}
-
-				return buffer.ToString();
-			}
-		}
-
-		public string GetDruidText(CultureMap item)
-		{
-			return item.Id.ToString();
-		}
-
-		public string GetLocalText(CultureMap item)
-		{
-			return item.Id.Local.ToString();
-		}
-
-		public string GetIdentityText(CultureMap item)
-		{
-			if (item.Id.Developer == 0)
-			{
-				return "Anonyme";
-			}
-
-			IList<Identity.IdentityCard> list = Identity.IdentityRepository.Default.IdentityCards;
-			foreach (Identity.IdentityCard card in list)
-			{
-				if (card.DeveloperId == item.Id.Developer)
-				{
-					return card.UserName;
-				}
-			}
-
-			return string.Format("Dev {0}", item.Id.Developer.ToString());
-		}
-
-		
 		protected UI.IItemViewFactory ItemViewFactoryGetter(UI.ItemView itemView)
 		{
 			//	Retourne le "factory" a utiliser pour les éléments représentés dans cet ItemTable/ItemPanel.
@@ -928,9 +657,12 @@ namespace Epsitec.Common.Designer.Viewers
 			}
 		}
 
+		/// <summary>
+		/// Cette classe peuple les colonnes du tableau. Elle résoud tous les types de colonnes, afin
+		/// de pouvoir être utilisée par tous les Viewers.
+		/// </summary>
 		private class ItemViewFactory : UI.AbstractItemViewFactory
 		{
-			//	Cette classe peuple les colonnes du tableau.
 			public ItemViewFactory(Abstract2 owner)
 			{
 				this.owner = owner;
@@ -1089,6 +821,247 @@ namespace Epsitec.Common.Designer.Viewers
 
 
 			private Abstract2 owner;
+		}
+
+		
+		protected int ComparePrimary(object a, object b)
+		{
+			CultureMap itemA = a as CultureMap;
+			CultureMap itemB = b as CultureMap;
+
+			string sA = this.GetColumnText(itemA, this.GetTwoLetters(0));
+			string sB = this.GetColumnText(itemB, this.GetTwoLetters(0));
+
+			return sA.CompareTo(sB);
+		}
+
+		protected int CompareSecondary(object a, object b)
+		{
+			CultureMap itemA = a as CultureMap;
+			CultureMap itemB = b as CultureMap;
+
+			string sA = this.GetColumnText(itemA, this.GetTwoLetters(1));
+			string sB = this.GetColumnText(itemB, this.GetTwoLetters(1));
+
+			return sA.CompareTo(sB);
+		}
+
+		protected int CompareDruid(object a, object b)
+		{
+			CultureMap itemA = a as CultureMap;
+			CultureMap itemB = b as CultureMap;
+
+			string dA = itemA.Id.ToString();
+			string dB = itemB.Id.ToString();
+
+			return dA.CompareTo(dB);
+		}
+
+		protected int CompareLocal(object a, object b)
+		{
+			CultureMap itemA = a as CultureMap;
+			CultureMap itemB = b as CultureMap;
+
+			int iA = itemA.Id.Local;
+			int iB = itemB.Id.Local;
+
+			return iA.CompareTo(iB);
+		}
+
+		protected int CompareIdentity(object a, object b)
+		{
+			CultureMap itemA = a as CultureMap;
+			CultureMap itemB = b as CultureMap;
+
+			int iA = itemA.Id.Developer;
+			int iB = itemB.Id.Developer;
+
+			return iA.CompareTo(iB);
+		}
+
+		public virtual string GetColumnText(CultureMap item, string twoLettersCulture)
+		{
+			//	Retourne le texte pour une colonne primaire ou secondaire.
+			return "";
+		}
+
+		public string GetDruidText(CultureMap item)
+		{
+			//	Retourne le texte pour la colonne Druid.
+			return item.Id.ToString();
+		}
+
+		public string GetLocalText(CultureMap item)
+		{
+			//	Retourne le texte pour la colonne Local.
+			return item.Id.Local.ToString();
+		}
+
+		public string GetIdentityText(CultureMap item)
+		{
+			//	Retourne le texte pour la colonne Identity.
+			if (item.Id.Developer == 0)
+			{
+				return "Dieu";
+			}
+
+			IList<Identity.IdentityCard> list = Identity.IdentityRepository.Default.IdentityCards;
+			foreach (Identity.IdentityCard card in list)
+			{
+				if (card.DeveloperId == item.Id.Developer)
+				{
+					return card.UserName;
+				}
+			}
+
+			return string.Format("Dev {0}", item.Id.Developer.ToString());
+		}
+
+
+		private void HandleSplitterDragged(object sender)
+		{
+			//	Le splitter a été bougé.
+			if (this.mainWindow.DisplayModeState == MainWindow.DisplayMode.Horizontal)
+			{
+				Abstract.leftArrayWidth = this.firstPane.ActualWidth;
+			}
+			else
+			{
+				Abstract.topArrayHeight = this.firstPane.ActualHeight;
+			}
+		}
+
+		private void HandleButtonSecondaryCultureClicked(object sender, MessageEventArgs e)
+		{
+			//	Un bouton pour changer de culture secondaire a été cliqué.
+			IconButtonMark button = sender as IconButtonMark;
+			this.TwoLettersSecondaryCulture = button.Name;
+
+			this.UpdateEdit();
+			this.UpdateColor();
+			this.UpdateCommands();
+		}
+
+		private void HandleTableSelectionChanged(object sender, UI.ItemPanelSelectionChangedEventArgs e)
+		{
+			//	La ligne sélectionnée dans le tableau a changé.
+			if (this.ignoreChange)
+			{
+				return;
+			}
+
+			if (!this.mainWindow.Terminate())
+			{
+				e.Cancel = true;  // revient à la sélection précédente
+				return;
+			}
+
+			this.mainWindow.LocatorFix();
+
+			this.UpdateTitle();
+			this.UpdateEdit();
+			this.UpdateColor();
+			this.UpdateModificationsCulture();
+			this.UpdateCommands();
+		}
+
+		private void HandleTableSizeChanged(object sender, Epsitec.Common.Types.DependencyPropertyChangedEventArgs e)
+		{
+			//	Les dimensions du tableau ont changé.
+#if false
+			UI.ItemTable table = (UI.ItemTable) sender;
+			Drawing.Size size = (Drawing.Size) e.NewValue;
+
+			double width = size.Width - table.GetPanelPadding().Width;
+			//?table.ColumnHeader.SetColumnWidth(0, width);
+
+			table.ItemPanel.ItemViewDefaultSize = new Size(width, 20);
+#endif
+		}
+
+		private void HandleColumnHeaderColumnWidthChanged(object sender, UI.ColumnWidthChangeEventArgs e)
+		{
+			//	La largeur d'une colonne du tableau a changé.
+			this.SetColumnWidth(e.Column, e.NewWidth);
+		}
+
+		protected void HandleButtonCompactOrExtendClicked(object sender, MessageEventArgs e)
+		{
+			//	Un bouton pour changer le mode d'affichage a été cliqué.
+			if (sender == this.buttonMainCompact)
+			{
+				Abstract2.mainExtended = false;
+			}
+
+			if (sender == this.buttonMainExtend)
+			{
+				Abstract2.mainExtended = true;
+			}
+
+			if (sender == this.buttonSuiteCompact)
+			{
+				Abstract2.suiteExtended = false;
+			}
+
+			if (sender == this.buttonSuiteExtend)
+			{
+				Abstract2.suiteExtended = true;
+			}
+
+			this.UpdateDisplayMode();
+			this.UpdateEdit();  // pour que le résumé prenne en compte les modifications
+		}
+
+		private void HandleTextChanged(object sender)
+		{
+			//	Un texte éditable a changé.
+			if (this.ignoreChange)
+			{
+				return;
+			}
+
+			AbstractTextField edit = sender as AbstractTextField;
+			string text = edit.Text;
+
+			CultureMap item = this.access.CollectionView.CurrentItem as CultureMap;
+
+			if (edit == this.labelEdit)
+			{
+				this.UpdateFieldName(edit, this.access.CollectionView.CurrentPosition);
+				this.access.Accessor.PersistChanges();
+				this.access.CollectionView.Refresh();
+			}
+
+			this.UpdateModificationsCulture();
+		}
+
+		private void HandleTextRejected(object sender)
+		{
+			TextFieldEx edit = sender as TextFieldEx;
+
+			if (edit != null)
+			{
+				edit.RejectEdition();  // TODO: devrait être inutile
+			}
+		}
+
+		protected void HandleLabelKeyboardFocusChanged(object sender, Epsitec.Common.Types.DependencyPropertyChangedEventArgs e)
+		{
+			//	Appelé lorsque la ligne éditable pour le label voit son focus changer.
+			TextFieldEx field = sender as TextFieldEx;
+			field.AcceptEdition();
+			this.HandleEditKeyboardFocusChanged(sender, e);
+		}
+
+		protected void HandleCursorChanged(object sender)
+		{
+			//	Le curseur a été déplacé dans un texte éditable.
+			if (this.ignoreChange)
+			{
+				return;
+			}
+
+			this.lastActionIsReplace = false;
 		}
 
 
