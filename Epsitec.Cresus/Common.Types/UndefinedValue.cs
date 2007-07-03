@@ -1,5 +1,5 @@
 //	Copyright © 2005-2007, EPSITEC SA, CH-1092 BELMONT, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 namespace Epsitec.Common.Types
 {
@@ -32,6 +32,48 @@ namespace Epsitec.Common.Types
 		public override string ToString()
 		{
 			return "<UndefinedValue>";
+		}
+
+		/// <summary>
+		/// Casts the value to the specified type. If the value is undefined,
+		/// returns the default value instead.
+		/// </summary>
+		/// <param name="value">The value.</param>
+		/// <param name="defaultValue">The default value.</param>
+		/// <returns>Either the casted value or the default value.</returns>
+		public static T GetValue<T>(object value, T defaultValue)
+		{
+			if (value == UndefinedValue.Instance)
+			{
+				return defaultValue;
+			}
+			else
+			{
+				return (T) value;
+			}
+		}
+
+		/// <summary>
+		/// Casts the value to the specified type. If the value is undefined,
+		/// returns the default value instead.
+		/// </summary>
+		/// <param name="value">The value.</param>
+		/// <param name="defaultValue">The default value.</param>
+		/// <param name="isNullEqualToUndefined">if set to <c>true</c> treat <c>null</c> as an undefined value too.</param>
+		/// <returns>
+		/// Either the casted value or the default value.
+		/// </returns>
+		public static T GetValue<T>(object value, T defaultValue, bool isNullEqualToUndefined)
+		{
+			if ((value == UndefinedValue.Instance) ||
+				(isNullEqualToUndefined && (value == null)))
+			{
+				return defaultValue;
+			}
+			else
+			{
+				return (T) value;
+			}
 		}
 		
 		public static readonly UndefinedValue	Instance = new UndefinedValue();

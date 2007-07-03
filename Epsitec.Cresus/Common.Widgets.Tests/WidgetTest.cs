@@ -1938,33 +1938,50 @@ namespace Epsitec.Common.Widgets
 			Assert.AreEqual (w1, root.FindChild ("a"));
 			Assert.AreEqual (w3, root.FindChild ("b"));
 		}
-		
-		[Test] public void CheckColorSelector()
+
+		[Test]
+		public void CheckColorPalette()
+		{
+			Window window = new Window ();
+			window.Text = "CheckColorPalette";
+			window.ClientSize = new Drawing.Size (250, 250);
+
+			ColorPalette palette = new ColorPalette ();
+
+			palette.Dock = DockStyle.Fill;
+			palette.SetParent (window.Root);
+
+			window.Show ();
+			Window.RunInTestEnvironment (window);
+		}
+
+		[Test]
+		public void CheckColorSelector()
 		{
 			Window window = new Window ();
 			window.Text = "CheckColorSelector";
 			window.ClientSize = new Drawing.Size (250, 250);
-			
+
 			ColorSelector selector = new ColorSelector ();
-			
+
 			selector.Dock = DockStyle.Fill;
 			selector.SetParent (window.Root);
-			
+
 			Widget[] widgets = selector.Children.Widgets;
-			
+
 			foreach (Widget w in widgets)
 			{
 				System.Console.WriteLine ("Widget {0} :", w.ToString ());
-				
+
 				foreach (Types.PropertyValuePair entry in w.DefinedEntries)
 				{
 					System.Console.WriteLine ("  {0} --> {1}", entry.Property.Name, entry.Value);
 				}
-				
+
 				System.Console.WriteLine ();
 			}
-			
-			
+
+
 			window.Show ();
 			Window.RunInTestEnvironment (window);
 		}
@@ -1982,12 +1999,12 @@ namespace Epsitec.Common.Widgets
 			selector1 = new ColorSelector ();
 			selector1.SetManualBounds(new Drawing.Rectangle (100, 10, 200, 200));
 			selector1.SetParent (window.Root);
-			selector1.Changed += new EventHandler (this.HandleSelectorChangedForeground);
+			selector1.ColorChanged += this.HandleSelectorChangedForeground;
 			
 			selector2 = new ColorSelector ();
 			selector2.SetManualBounds(new Drawing.Rectangle (300, 10, 200, 200));
 			selector2.SetParent (window.Root);
-			selector2.Changed += new EventHandler (this.HandleSelectorChangedBackground);
+			selector2.ColorChanged += this.HandleSelectorChangedBackground;
 			
 			Tag tag;
 			
@@ -2040,7 +2057,7 @@ namespace Epsitec.Common.Widgets
 			e.Graphics.RenderSolid (Drawing.Color.FromRgb (1, 0, 0));
 		}
 		
-		private void HandleSelectorChangedForeground(object sender)
+		private void HandleSelectorChangedForeground(object sender, Types.DependencyPropertyChangedEventArgs e)
 		{
 			ColorSelector selector = sender as ColorSelector;
 			Drawing.Color color    = selector.Color.Basic;
@@ -2060,8 +2077,8 @@ namespace Epsitec.Common.Widgets
 			tag = parent.FindChild ("tag4", Widget.ChildFindMode.Deep) as Tag;
 			tag.Color = color;
 		}
-		
-		private void HandleSelectorChangedBackground(object sender)
+
+		private void HandleSelectorChangedBackground(object sender, Types.DependencyPropertyChangedEventArgs e)
 		{
 			ColorSelector selector = sender as ColorSelector;
 			Drawing.Color color    = selector.Color.Basic;

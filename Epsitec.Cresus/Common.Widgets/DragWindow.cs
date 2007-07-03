@@ -1,6 +1,11 @@
 //	Copyright © 2003-2007, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
+using Epsitec.Common.Types;
+using Epsitec.Common.Widgets;
+
+[assembly: DependencyClass (typeof (DragWindow))]
+
 namespace Epsitec.Common.Widgets
 {
 	/// <summary>
@@ -58,5 +63,25 @@ namespace Epsitec.Common.Widgets
 			this.Hide ();
 			this.Dispose ();
 		}
+
+
+		public static void SetDragWindow(DependencyObject obj, DragWindow value)
+		{
+			if (value == null)
+			{
+				obj.ClearValue (DragWindow.DragWindowProperty);
+			}
+			else
+			{
+				obj.SetValue (DragWindow.DragWindowProperty, value);
+			}
+		}
+
+		public static DragWindow GetDragWindow(DependencyObject obj)
+		{
+			return obj.GetValue (DragWindow.DragWindowProperty) as DragWindow;
+		}
+		
+		public static readonly DependencyProperty DragWindowProperty = DependencyProperty.RegisterAttached ("DragWindow", typeof (DragWindow), typeof (DragWindow));
 	}
 }

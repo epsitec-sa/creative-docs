@@ -131,6 +131,7 @@
     <Compile Include="ColorCollection.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="ColorCollectionType.cs" />
     <Compile Include="ITextBreakEngineFactory.cs" />
     <Compile Include="TextBreak.cs" />
     <Compile Include="ITextBreakEngine.cs" />

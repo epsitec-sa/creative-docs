@@ -12,7 +12,7 @@ namespace Epsitec.Common.Document.Panels
 		public Shadow(Document document) : base(document)
 		{
 			this.fieldColor = new ColorSample(this);
-			this.fieldColor.PossibleSource = true;
+			this.fieldColor.DragSourceEnable = true;
 			this.fieldColor.Clicked += new MessageEventHandler(this.HandleFieldColorClicked);
 			this.fieldColor.TabIndex = 1;
 			this.fieldColor.TabNavigationMode = TabNavigationMode.ActivateOnTab;

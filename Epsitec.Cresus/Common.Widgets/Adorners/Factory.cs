@@ -1,5 +1,7 @@
 //	Copyright © 2003-2007, EPSITEC SA, CH-1092 BELMONT, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
+
+using System.Collections.Generic;
 
 namespace Epsitec.Common.Widgets.Adorners
 {
@@ -8,17 +10,11 @@ namespace Epsitec.Common.Widgets.Adorners
 	/// active. De plus, elle liste et crée automatiquement des instances de chaque
 	/// classe implémentant IAdorner dans l'assembly actuelle...
 	/// </summary>
-	public class Factory
+	public static class Factory
 	{
-		Factory()
-		{
-			//	On ne peut pas instancier Factory !
-		}
-		
 		static Factory()
 		{
-			Factory.adorner_table = new System.Collections.Hashtable ();
-			Factory.adorner_list  = new System.Collections.ArrayList ();
+			Factory.adornerTable = new Dictionary<string, IAdorner> ();
 			
 			System.Reflection.Assembly assembly = System.Reflection.Assembly.GetAssembly (typeof (Factory));
 			
@@ -26,8 +22,8 @@ namespace Epsitec.Common.Widgets.Adorners
 			
 			Factory.SetActive ("Default");
 			
-			System.Diagnostics.Debug.Assert (Factory.adorner_table.ContainsKey ("Default"));
-			System.Diagnostics.Debug.Assert (Factory.active_adorner != null);
+			System.Diagnostics.Debug.Assert (Factory.adornerTable.ContainsKey ("Default"));
+			System.Diagnostics.Debug.Assert (Factory.activeAdorner != null);
 		}
 		
 		
@@ -49,10 +45,9 @@ namespace Epsitec.Common.Widgets.Adorners
 					
 					if (System.Array.IndexOf (interfaces, i_adorner_type) >= 0)
 					{
-						if (! Factory.adorner_list.Contains (type.Name))
+						if (! Factory.adornerTable.ContainsKey (type.Name))
 						{
-							Factory.adorner_list.Add (type.Name);
-							Factory.adorner_table[type.Name] = System.Activator.CreateInstance (type);
+							Factory.adornerTable[type.Name] = (IAdorner) System.Activator.CreateInstance (type);
 							n++;
 						}
 					}
@@ -61,14 +56,17 @@ namespace Epsitec.Common.Widgets.Adorners
 			
 			return n;
 		}
-		
-		
-		public static IAdorner			Active
+
+
+		public static IAdorner					Active
 		{
-			get { return Factory.active_adorner; }
+			get
+			{
+				return Factory.activeAdorner;
+			}
 		}
 		
-		public static string			ActiveName
+		public static string					ActiveName
 		{
 			get
 			{
@@ -76,40 +74,43 @@ namespace Epsitec.Common.Widgets.Adorners
 			}
 		}
 		
-		public static string[]			AdornerNames
+		public static string[]					AdornerNames
 		{
 			get
 			{
-				string[] names = new string[Factory.adorner_list.Count];
-				Factory.adorner_list.CopyTo (names);
+				string[] names = new string[Factory.adornerTable.Count];
+				Factory.adornerTable.Keys.CopyTo (names, 0);
 				System.Array.Sort (names);
 				return names;
 			}
 		}
-		
+
 
 		public static bool SetActive(string name)
 		{
-			IAdorner adorner = Factory.adorner_table[name] as IAdorner;
-			
-			if (adorner == null)
+			IAdorner adorner;
+
+			if (Factory.adornerTable.TryGetValue (name, out adorner))
+			{
+				if (Factory.activeAdorner != adorner)
+				{
+					Factory.activeAdorner = adorner;
+					
+					Drawing.Color.DefineCaptionColor (adorner.ColorCaption);
+
+					Window.InvalidateAll (Window.InvalidateReason.AdornerChanged);
+				}
+
+				return true;
+			}
+			else
 			{
 				return false;
 			}
-			
-			if (Factory.active_adorner != adorner)
-			{
-				Factory.active_adorner = adorner;
-				
-				Window.InvalidateAll (Window.InvalidateReason.AdornerChanged);
-			}
-			
-			return true;
 		}
 		
 		
-		private static IAdorner						active_adorner;
-		private static System.Collections.Hashtable	adorner_table;
-		private static System.Collections.ArrayList	adorner_list;
+		static IAdorner							activeAdorner;
+		static Dictionary<string, IAdorner>		adornerTable;
 	}
 }

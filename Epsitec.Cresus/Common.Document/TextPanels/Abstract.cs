@@ -597,10 +597,10 @@ namespace Epsitec.Common.Document.TextPanels
 			//	Crée un échantilon de couleur.
 			ColorSample sample = new ColorSample(this);
 
-			sample.PossibleSource = true;
+			sample.DragSourceEnable = true;
 			sample.AutoFocus = false;
 			sample.Clicked += handlerClicked;
-			sample.Changed += handlerChanged;
+			sample.ColorChanged += handlerChanged;
 			sample.TabIndex = this.tabIndex++;
 			sample.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(sample, tooltip);

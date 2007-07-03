@@ -1,6 +1,7 @@
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Support;
 using Epsitec.Common.Drawing;
+using Epsitec.Common.Types;
 
 namespace Epsitec.Common.Document.Containers
 {
@@ -41,10 +42,10 @@ namespace Epsitec.Common.Document.Containers
 			this.colorSelector = new ColorSelector();
 			Misc.AutoFocus(this.colorSelector, false);
 			this.colorSelector.ColorPalette.ColorCollection = this.document.GlobalSettings.ColorCollection;
-			this.colorSelector.HasCloseButton = true;
+			this.colorSelector.CloseButtonVisibility = true;
 			this.colorSelector.Dock = DockStyle.Bottom;
 			this.colorSelector.Margins = new Margins(0, 0, 10, 0);
-			this.colorSelector.Changed += new EventHandler(this.HandleColorSelectorChanged);
+			this.colorSelector.ColorChanged += new EventHandler<DependencyPropertyChangedEventArgs>(this.HandleColorSelectorChanged);
 			this.colorSelector.CloseClicked += new EventHandler(this.HandleColorSelectorClosed);
 			this.colorSelector.TabIndex = 100;
 			this.colorSelector.TabNavigationMode = TabNavigationMode.ActivateOnTab | TabNavigationMode.ForwardToChildren | TabNavigationMode.ForwardOnly;
@@ -740,7 +741,7 @@ namespace Epsitec.Common.Document.Containers
 			}
 		}
 
-		private void HandleColorSelectorChanged(object sender)
+		private void HandleColorSelectorChanged(object sender, DependencyPropertyChangedEventArgs e)
 		{
 			//	Couleur changée dans la roue.
 			if ( this.ignoreColorChanged )  return;

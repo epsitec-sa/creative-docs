@@ -89,7 +89,7 @@ namespace Epsitec.Common.Document.TextPanels
 				this.fontStyle.ComboClosed -= new EventHandler(this.HandleFontStyleTextChanged);
 				this.fontSize.ButtonUnit.Clicked += new MessageEventHandler(this.HandleButtonUnitClicked);
 				this.fontColor.Clicked -= new MessageEventHandler(this.HandleFieldColorClicked);
-				this.fontColor.Changed -= new EventHandler(this.HandleFieldColorChanged);
+				this.fontColor.ColorChanged -= new EventHandler(this.HandleFieldColorChanged);
 
 				this.TextWrapper.Active.Changed  -= new EventHandler(this.HandleWrapperChanged);
 				this.TextWrapper.Defined.Changed -= new EventHandler(this.HandleWrapperChanged);

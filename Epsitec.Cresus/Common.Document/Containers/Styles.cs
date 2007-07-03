@@ -2,6 +2,7 @@ using Epsitec.Common.Support;
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Text;
+using Epsitec.Common.Types;
 
 namespace Epsitec.Common.Document.Containers
 {
@@ -109,8 +110,8 @@ namespace Epsitec.Common.Document.Containers
 			//	Roue des couleurs.
 			this.colorSelector = new ColorSelector();
 			this.colorSelector.ColorPalette.ColorCollection = this.document.GlobalSettings.ColorCollection;
-			this.colorSelector.HasCloseButton = true;
-			this.colorSelector.Changed += new EventHandler(this.HandleColorSelectorChanged);
+			this.colorSelector.CloseButtonVisibility = true;
+			this.colorSelector.ColorChanged += new EventHandler<DependencyPropertyChangedEventArgs>(this.HandleColorSelectorChanged);
 			this.colorSelector.CloseClicked += new EventHandler(this.HandleColorSelectorClosed);
 			this.colorSelector.SetParent(this.bottomScrollable.Panel);
 			this.colorSelector.Dock = DockStyle.Top;
@@ -1401,7 +1402,7 @@ namespace Epsitec.Common.Document.Containers
 			this.HandleColorSelectorClosed(sender);
 		}
 
-		private void HandleColorSelectorChanged(object sender)
+		private void HandleColorSelectorChanged(object sender, DependencyPropertyChangedEventArgs e)
 		{
 			//	Couleur changée dans la roue.
 			if ( this.ignoreChanged )  return;

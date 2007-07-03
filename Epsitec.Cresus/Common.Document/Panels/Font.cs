@@ -42,9 +42,9 @@ namespace Epsitec.Common.Document.Panels
 			ToolTip.Default.SetToolTip(this.fontSize, Res.Strings.Panel.Font.Tooltip.Size);
 
 			this.fontColor = new ColorSample(this);
-			this.fontColor.PossibleSource = true;
+			this.fontColor.DragSourceEnable = true;
 			this.fontColor.Clicked += new MessageEventHandler(this.HandleFieldColorClicked);
-			this.fontColor.Changed += new EventHandler(this.HandleFieldColorChanged);
+			this.fontColor.ColorChanged += new EventHandler(this.HandleFieldColorChanged);
 			this.fontColor.TabIndex = 4;
 			this.fontColor.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.fontColor, Res.Strings.Panel.Font.Tooltip.Color);
@@ -63,7 +63,7 @@ namespace Epsitec.Common.Document.Panels
 				this.fontFace.ComboClosed -= new EventHandler(this.HandleFontFaceTextChanged);
 				this.fontSize.TextFieldReal.EditionAccepted -= new EventHandler(this.HandleFieldChanged);
 				this.fontColor.Clicked -= new MessageEventHandler(this.HandleFieldColorClicked);
-				this.fontColor.Changed -= new EventHandler(this.HandleFieldColorChanged);
+				this.fontColor.ColorChanged -= new EventHandler(this.HandleFieldColorChanged);
 
 				this.labelColor = null;
 				this.fontFace = null;

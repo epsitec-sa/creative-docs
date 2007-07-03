@@ -34,17 +34,17 @@ namespace Epsitec.Common.Document.Panels
 			ToolTip.Default.SetToolTip(this.nothingButton, Res.Strings.Panel.Gradient.Tooltip.Nothing);
 
 			this.fieldColor1 = new ColorSample(this);
-			this.fieldColor1.PossibleSource = true;
+			this.fieldColor1.DragSourceEnable = true;
 			this.fieldColor1.Clicked += new MessageEventHandler(this.HandleFieldColorClicked);
-			this.fieldColor1.Changed += new EventHandler(this.HandleFieldColorChanged);
+			this.fieldColor1.ColorChanged += new EventHandler(this.HandleFieldColorChanged);
 			this.fieldColor1.TabIndex = 3;
 			this.fieldColor1.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.fieldColor1, Res.Strings.Panel.Gradient.Tooltip.Color1);
 
 			this.fieldColor2 = new ColorSample(this);
-			this.fieldColor2.PossibleSource = true;
+			this.fieldColor2.DragSourceEnable = true;
 			this.fieldColor2.Clicked += new MessageEventHandler(this.HandleFieldColorClicked);
-			this.fieldColor2.Changed += new EventHandler(this.HandleFieldColorChanged);
+			this.fieldColor2.ColorChanged += new EventHandler(this.HandleFieldColorChanged);
 			this.fieldColor2.TabIndex = 4;
 			this.fieldColor2.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.fieldColor2, Res.Strings.Panel.Gradient.Tooltip.Color2);
@@ -172,9 +172,9 @@ namespace Epsitec.Common.Document.Panels
 				this.nothingButton.Clicked -= new MessageEventHandler(this.HandleNothingClicked);
 				this.reset.Clicked -= new MessageEventHandler(this.HandleReset);
 				this.fieldColor1.Clicked -= new MessageEventHandler(this.HandleFieldColorClicked);
-				this.fieldColor1.Changed -= new EventHandler(this.HandleFieldColorChanged);
+				this.fieldColor1.ColorChanged -= new EventHandler(this.HandleFieldColorChanged);
 				this.fieldColor2.Clicked -= new MessageEventHandler(this.HandleFieldColorClicked);
-				this.fieldColor2.Changed -= new EventHandler(this.HandleFieldColorChanged);
+				this.fieldColor2.ColorChanged -= new EventHandler(this.HandleFieldColorChanged);
 				this.fieldAngle.TextFieldReal.EditionAccepted -= new EventHandler(this.HandleValueChanged);
 				this.fieldRepeat.TextFieldReal.EditionAccepted -= new EventHandler(this.HandleValueChanged);
 				this.fieldMiddle.TextFieldReal.EditionAccepted -= new EventHandler(this.HandleValueChanged);

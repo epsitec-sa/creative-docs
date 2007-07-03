@@ -1,177 +1,123 @@
+//	Copyright © 2003-2007, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Author: Daniel ROUX, Maintainer: Pierre ARNAUD
+
 using Epsitec.Common.Support;
+using Epsitec.Common.Types;
 
 namespace Epsitec.Common.Widgets
 {
 	/// <summary>
-	/// La classe ColorPalette propose une palette de couleurs sous forme d'un tableau.
-	/// Pour l'instant, le tableau est fixe et contient 2x8 échantillons.
+	/// The <c>ColorPalette</c> class manages a color palette presented in a grid.
+	/// The default size of the grid is 4 columns of 8 rows.
 	/// </summary>
 	public class ColorPalette : Widget
 	{
 		public ColorPalette()
 		{
-			this.nbColumns = 4;
-			this.nbRows = 8;
-			this.nbTotal = this.nbColumns*this.nbRows;
+			this.CreateColorSamples (4, 8);
+			this.ColorCollection = new Drawing.ColorCollection (Drawing.ColorCollectionType.Default);
 
-			this.palette = new ColorSample[this.nbTotal];
-			for ( int i=0 ; i<this.nbTotal ; i++ )
-			{
-				this.palette[i] = new ColorSample(this);
-				this.palette[i].Clicked += new MessageEventHandler(this.HandleColorClicked);
-				this.palette[i].TabIndex = i;
-				this.palette[i].TabNavigationMode = TabNavigationMode.ActivateOnTab;
+			this.optionButton = new GlyphButton (this);
+			this.optionButton.GlyphShape  = GlyphShape.ArrowLeft;
+			this.optionButton.ButtonStyle = ButtonStyle.Normal;
+			this.optionButton.Clicked += this.HandleOptionButtonClicked;
 
-				int x = i/this.nbRows;
-				int y = i%this.nbRows;
-				this.palette[i].Column = x;
-				this.palette[i].Row    = y;
-				this.palette[i].Rank   = x+y*this.nbColumns;
-			}
-
-			this.palette[ 0].Color = Drawing.RichColor.FromAlphaRgb(0.0, 1.0, 1.0, 1.0);
-			this.palette[ 1].Color = Drawing.RichColor.FromAlphaRgb(1.0, 1.0, 0.0, 0.0);
-			this.palette[ 2].Color = Drawing.RichColor.FromAlphaRgb(1.0, 1.0, 1.0, 0.0);
-			this.palette[ 3].Color = Drawing.RichColor.FromAlphaRgb(1.0, 0.0, 1.0, 0.0);
-			this.palette[ 4].Color = Drawing.RichColor.FromAlphaRgb(1.0, 0.0, 1.0, 1.0);
-			this.palette[ 5].Color = Drawing.RichColor.FromAlphaRgb(1.0, 0.0, 0.0, 1.0);
-			this.palette[ 6].Color = Drawing.RichColor.FromAlphaRgb(1.0, 1.0, 0.0, 1.0);
-			this.palette[ 7].Color = Drawing.RichColor.FromAlphaRgb(0.5, 0.5, 0.5, 0.5);
-
-			this.palette[ 8].Color = Drawing.RichColor.FromAlphaRgb(1.0, 1.0, 1.0, 1.0);
-			this.palette[ 9].Color = Drawing.RichColor.FromAlphaRgb(1.0, 0.9, 0.9, 0.9);
-			this.palette[10].Color = Drawing.RichColor.FromAlphaRgb(1.0, 0.8, 0.8, 0.8);
-			this.palette[11].Color = Drawing.RichColor.FromAlphaRgb(1.0, 0.7, 0.7, 0.7);
-			this.palette[12].Color = Drawing.RichColor.FromAlphaRgb(1.0, 0.6, 0.6, 0.6);
-			this.palette[13].Color = Drawing.RichColor.FromAlphaRgb(1.0, 0.5, 0.5, 0.5);
-			this.palette[14].Color = Drawing.RichColor.FromAlphaRgb(1.0, 0.4, 0.4, 0.4);
-			this.palette[15].Color = Drawing.RichColor.FromAlphaRgb(1.0, 0.0, 0.0, 0.0);
-
-			this.selected = -1;
-
-			this.buttonOption = new GlyphButton(this);
-			this.buttonOption.GlyphShape = GlyphShape.ArrowLeft;
-			this.buttonOption.ButtonStyle = ButtonStyle.Normal;
-			this.buttonOption.Clicked += new MessageEventHandler(this.HandleButtonOptionClicked);
-			ToolTip.Default.SetToolTip(this.buttonOption, Res.Strings.ColorPalette.Options);
+			ToolTip.Default.SetToolTip (this.optionButton, Res.Strings.ColorPalette.Options);
 		}
-		
-		public ColorPalette(Widget embedder) : this()
+
+		public ColorPalette(Widget embedder)
+			: this ()
 		{
-			this.SetEmbedder(embedder);
-		}
-		
-		protected override void Dispose(bool disposing)
-		{
-			if ( disposing )
-			{
-				if ( this.palette != null )
-				{
-					foreach ( ColorSample cs in this.palette )
-					{
-						cs.Clicked -= new MessageEventHandler(this.HandleColorClicked);
-					}
-				}
-
-				if ( this.buttonOption != null )
-				{
-					this.buttonOption.Clicked += new MessageEventHandler(this.HandleButtonOptionClicked);
-				}
-			}
-			
-			base.Dispose(disposing);
+			this.SetEmbedder (embedder);
 		}
 
-		
-		static ColorPalette()
-		{
-			Types.DependencyPropertyMetadata metadataDx = Visual.PreferredWidthProperty.DefaultMetadata.Clone ();
-			Types.DependencyPropertyMetadata metadataDy = Visual.PreferredHeightProperty.DefaultMetadata.Clone ();
 
-			metadataDx.DefineDefaultValue (80.0-1);
-			metadataDy.DefineDefaultValue (160.0-1);
-			
-			Visual.PreferredWidthProperty.OverrideMetadata (typeof (ColorPalette), metadataDx);
-			Visual.PreferredHeightProperty.OverrideMetadata (typeof (ColorPalette), metadataDy);
-		}
-		
-		public int								Columns
+		public int								ColumnCount
 		{
 			get
 			{
-				return this.nbColumns;
+				return this.columnCount;
 			}
-
 			set
 			{
-				//	TODO
-				throw new System.InvalidOperationException("Not implemented !");
-			}
-		}
-
-		public int								Rows
-		{
-			get
-			{
-				return this.nbRows;
-			}
-
-			set
-			{
-				//	TODO
-				throw new System.InvalidOperationException("Not implemented !");
-			}
-		}
-
-		public bool								HasOptionButton
-		{
-			get
-			{
-				return this.hasOptionButton;
-			}
-
-			set
-			{
-				if ( this.hasOptionButton != value )
+				if (this.columnCount != value)
 				{
-					this.hasOptionButton = value;
-					this.UpdateGeometry();
+					this.CreateColorSamples (value, this.RowCount);
 				}
 			}
 		}
 
-		public int								ColorSelected
+		public int								RowCount
 		{
 			get
 			{
-				return this.selected;
+				return this.rowCount;
 			}
-
 			set
 			{
-				this.selected = value;
+				if (this.rowCount != value)
+				{
+					this.CreateColorSamples (this.ColumnCount, value);
+				}
 			}
 		}
 
-		public Drawing.RichColor				Color
+		public int								ColorCount
 		{
 			get
 			{
-				if ( this.selected >= 0 && this.selected < this.nbTotal )
+				return this.columnCount * this.rowCount;
+			}
+		}
+
+		public bool								OptionButtonVisibility
+		{
+			get
+			{
+				return this.optionButton.Visibility;
+			}
+			set
+			{
+				if (this.OptionButtonVisibility != value)
 				{
-					return this.palette[this.selected].Color;
+					this.optionButton.Visibility = value;
+					this.UpdateGeometry (this.Client.Bounds);
+				}
+			}
+		}
+
+		public int								SelectedColorIndex
+		{
+			get
+			{
+				return UndefinedValue.GetValue<int> (this.GetValue (ColorPalette.SelectedColorIndexProperty), -1, true);
+			}
+			set
+			{
+				if (value == -1)
+				{
+					this.ClearValue (ColorPalette.SelectedColorIndexProperty);
 				}
 				else
 				{
-					return Drawing.RichColor.Empty;
+					this.SetValue (ColorPalette.SelectedColorIndexProperty, value);
 				}
 			}
+		}
 
-			set
+		public Drawing.RichColor				SelectedColor
+		{
+			get
 			{
-				if ( this.selected >= 0 && this.selected < this.nbTotal )
+				ColorSample sample = this.SelectedColorSample;
+
+				if (sample == null)
 				{
-					this.palette[this.selected].Color = value;
+					return Drawing.RichColor.Empty;
+				}
+				else
+				{
+					return sample.Color;
 				}
 			}
 		}
@@ -180,11 +126,17 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				if ( this.selected == -1 )
+				int selected = this.SelectedColorIndex;
+
+				if ((selected >= 0) &&
+					(selected < this.palette.Length))
 				{
-					return this.palette[0];
+					return this.palette[selected];
 				}
-				return this.palette[this.selected];
+				else
+				{
+					return null;
+				}
 			}
 		}
 
@@ -198,296 +150,380 @@ namespace Epsitec.Common.Widgets
 
 			set
 			{
-				if ( this.colorCollection != value )
+				if (this.colorCollection != value)
 				{
-					if ( this.colorCollection != null )
+					if (this.colorCollection != null)
 					{
-						this.colorCollection.Changed -= new EventHandler(this.HandleColorCollectionChanged);
+						this.colorCollection.Changed -= new EventHandler (this.HandleColorCollectionChanged);
 					}
 
 					this.colorCollection = value;
 
-					if ( this.colorCollection != null )
+					if (this.colorCollection != null)
 					{
-						this.colorCollection.Changed += new EventHandler(this.HandleColorCollectionChanged);
-					}
-
-					for ( int i=0 ; i<this.nbTotal ; i++ )
-					{
-						if ( this.colorCollection == null )
-						{
-							this.palette[i].DetachColorCollection();
-						}
-						else
-						{
-							this.palette[i].AttachColorCollection(this.colorCollection, i);
-						}
+						this.colorCollection.Changed += new EventHandler (this.HandleColorCollectionChanged);
+						this.HandleColorCollectionChanged (this);
 					}
 				}
 			}
 		}
-		
+
+
+		public bool WriteSelectedColor(Drawing.RichColor color)
+		{
+			ColorSample sample = this.SelectedColorSample;
+
+			if (sample == null)
+			{
+				return false;
+			}
+			else
+			{
+				sample.Color = color;
+				return true;
+			}
+		}
 
 		public bool Navigate(ColorSample sample, KeyCode key)
 		{
-			//	Détermine quel widget il faut activer, en fonction de la
-			//	ligne et de la colonne où l'on se trouve.
-			ColorSample dest;
+			ColorSample dest = null;
 
-			switch ( key )
+			int sampleColumn = sample.Index / this.RowCount;
+			int sampleRow    = sample.Index % this.RowCount;
+
+			switch (key)
 			{
 				case KeyCode.ArrowUp:
-					dest = this.Search(sample.Column, sample.Row-1);
-					if ( dest != null )
-					{
-						this.SelectSample(dest, false);
-						dest.Focus();
-						return true;
-					}
-					return false;
+					dest = this.Find (sampleColumn, sampleRow-1);
+					break;
 
 				case KeyCode.ArrowDown:
-					dest = this.Search(sample.Column, sample.Row+1);
-					if ( dest != null )
-					{
-						this.SelectSample(dest, false);
-						dest.Focus();
-						return true;
-					}
-					return false;
+					dest = this.Find (sampleColumn, sampleRow+1);
+					break;
 
 				case KeyCode.ArrowLeft:
-					dest = this.Search(sample.Column-1, sample.Row);
-					if ( dest != null )
-					{
-						this.SelectSample(dest, false);
-						dest.Focus();
-						return true;
-					}
-					dest = this.Search(sample.Rank-1);
-					if ( dest != null )
-					{
-						this.SelectSample(dest, false);
-						dest.Focus();
-						return true;
-					}
-					return false;
+					dest = this.Find (sampleColumn-1, sampleRow) ?? this.Find (sample.Index-1);
+					break;
 
 				case KeyCode.ArrowRight:
-					dest = this.Search(sample.Column+1, sample.Row);
-					if ( dest != null )
-					{
-						this.SelectSample(dest, false);
-						dest.Focus();
-						return true;
-					}
-					dest = this.Search(sample.Rank+1);
-					if ( dest != null )
-					{
-						this.SelectSample(dest, false);
-						dest.Focus();
-						return true;
-					}
-					return false;
-				
+					dest = this.Find (sampleColumn+1, sampleRow) ?? this.Find (sample.Index+1);
+					break;
+
 				default:
 					return false;
 			}
-		}
 
-		protected ColorSample Search(int column, int row)
-		{
-			for ( int i=0 ; i<this.nbTotal ; i++ )
+			if (dest == null)
 			{
-				if ( this.palette[i].Column == column &&
-					 this.palette[i].Row    == row    )
-				{
-					return this.palette[i];
-				}
+				return false;
 			}
 
-			return null;
-		}
+			this.SelectSample (dest, Operation.Export);
+			dest.Focus ();
 
-		protected ColorSample Search(int rank)
-		{
-			for ( int i=0 ; i<this.nbTotal ; i++ )
-			{
-				if ( this.palette[i].Rank == rank )  return this.palette[i];
-			}
-
-			return null;
-		}
-
-		protected void SelectSample(ColorSample sample, bool import)
-		{
-			//	Sélectionne un échantillon.
-			for ( int i=0 ; i<this.nbTotal ; i++ )
-			{
-				if ( this.palette[i] == sample )
-				{
-					this.ColorSelected = i;
-
-					if ( import )
-					{
-						this.OnImport();
-					}
-					else
-					{
-						this.OnExport();
-					}
-				}
-			}
+			return true;
 		}
 
 
 		protected override void SetBoundsOverride(Drawing.Rectangle oldRect, Drawing.Rectangle newRect)
 		{
-			base.SetBoundsOverride(oldRect, newRect);
-			this.UpdateGeometry ();
+			base.SetBoundsOverride (oldRect, newRect);
+			this.UpdateGeometry (new Drawing.Rectangle (Drawing.Point.Zero, newRect.Size));
 		}
-		
-		protected void UpdateGeometry()
+
+		protected override void Dispose(bool disposing)
 		{
-			//	Met à jour la géométrie.
+			if (disposing)
+			{
+				this.DisposeColorSamples ();
 
-			if ( this.palette == null )  return;
+				if (this.optionButton != null)
+				{
+					this.optionButton.Clicked += this.HandleOptionButtonClicked;
+				}
+			}
 
-			Drawing.Rectangle rect = this.Client.Bounds;
+			base.Dispose (disposing);
+		}
 
-			double dx = (rect.Width+1.0)/this.nbColumns;
-			double dy = (rect.Height+1.0)/this.nbRows;
-			dx = dy = System.Math.Min(dx, dy);
+		protected override void PaintBackgroundImplementation(Drawing.Graphics graphics, Drawing.Rectangle clipRect)
+		{
+			if (!this.BackColor.IsEmpty)
+			{
+				graphics.AddFilledRectangle (this.Client.Bounds);
+				graphics.RenderSolid (this.BackColor);
+			}
+		}
 
-			Drawing.Point pos = new Drawing.Point();
-			pos.X = rect.Right-(dx-1.0)*this.nbColumns-1.0;
+
+		private void CreateColorSamples(int columns, int rows)
+		{
+			this.DisposeColorSamples ();
+
+			this.columnCount = columns;
+			this.rowCount    = rows;
+
+			int n = this.ColorCount;
+
+			this.palette = new ColorSample[n];
+
+			for (int i = 0; i < n; i++)
+			{
+				this.palette[i] = new ColorSample (this);
+				this.palette[i].Clicked += this.HandleColorClicked;
+				this.palette[i].TabIndex = i;
+				this.palette[i].TabNavigationMode = TabNavigationMode.ActivateOnTab;
+				this.palette[i].AddEventHandler (ColorSample.ColorProperty, this.HandleColorSampleColorChanged);
+				this.palette[i].Index = i;
+			}
+
+			this.SelectedColorIndex = -1;
+		}
+
+		private void DisposeColorSamples()
+		{
+			if (this.palette != null)
+			{
+				foreach (ColorSample sample in this.palette)
+				{
+					sample.Clicked -= this.HandleColorClicked;
+					sample.RemoveEventHandler (ColorSample.ColorProperty, this.HandleColorSampleColorChanged);
+					sample.Dispose ();
+				}
+
+				this.palette = null;
+			}
+		}
+
+		private ColorSample Find(int column, int row)
+		{
+			return this.Find (row + column * this.RowCount);
+		}
+
+		private ColorSample Find(int index)
+		{
+			if ((index < 0) ||
+				(index >= this.palette.Length))
+			{
+				return null;
+			}
+			else
+			{
+				return this.palette[index];
+			}
+		}
+
+		#region Operation Enumeration
+
+		private enum Operation
+		{
+			Export,
+			Import
+		}
+
+		#endregion
+
+		private void SelectSample(ColorSample sample, Operation operation)
+		{
+			int index = sample.Index;
+
+			if ((index < 0) ||
+				(index >= this.palette.Length))
+			{
+				return;
+			}
+
+			this.SelectedColorIndex = index;
+
+			switch (operation)
+			{
+				case Operation.Import:
+					this.OnImportSelectedColor ();
+					break;
+
+				case Operation.Export:
+					this.OnExportSelectedColor ();
+					break;
+			}
+		}
+
+		private void UpdateGeometry(Drawing.Rectangle rect)
+		{
+			if ((this.palette == null) ||
+				(this.optionButton == null))
+			{
+				return;
+			}
+
+			double dx = (rect.Width+1.0)/this.columnCount;
+			double dy = (rect.Height+1.0)/this.rowCount;
+			dx = dy = System.Math.Min (dx, dy);
+
+			Drawing.Point pos = new Drawing.Point (rect.Right-(dx-1.0)*this.columnCount-1.0, 0);
 			int i = 0;
-			for ( int x=0 ; x<this.nbColumns ; x++ )
+			for (int x = 0; x < this.columnCount; x++)
 			{
 				pos.Y = rect.Top-dy;
-				for ( int y=0 ; y<this.nbRows ; y++ )
+				for (int y = 0; y < this.rowCount; y++)
 				{
-					Drawing.Rectangle r = new Drawing.Rectangle(pos.X, pos.Y, dx, dy);
-					this.palette[i].SetManualBounds(r);
-					i ++;
+					Drawing.Rectangle r = new Drawing.Rectangle (pos.X, pos.Y, dx, dy);
+					this.palette[i++].SetManualBounds (r);
 					pos.Y -= dy-1.0;
 				}
 				pos.X += dx-1.0;
 			}
 
-			if ( this.hasOptionButton )
+			if (this.OptionButtonVisibility)
 			{
-				Drawing.Rectangle r = new Drawing.Rectangle(rect.Left, rect.Top-14, 14, 14);
-				this.buttonOption.SetManualBounds(r);
-				this.buttonOption.Visibility = true;
+				Drawing.Rectangle r = new Drawing.Rectangle (rect.Left, rect.Top-14, 14, 14);
+				this.optionButton.SetManualBounds (r);
+				this.optionButton.Visibility = true;
 			}
 			else
 			{
-				this.buttonOption.Visibility = false;
+				this.optionButton.Visibility = false;
 			}
 		}
-		
-		protected override void PaintBackgroundImplementation(Drawing.Graphics graphics, Drawing.Rectangle clipRect)
+
+		private void OnExportSelectedColor()
 		{
-			if ( !this.BackColor.IsEmpty )
+			//	Génère un événement pour dire qu'on exporte une couleur.
+			EventHandler handler = (EventHandler) this.GetUserEventHandler (ColorPalette.ExportEvent);
+
+			if (handler != null)
 			{
-				graphics.AddFilledRectangle(this.Client.Bounds);
-				graphics.RenderSolid(this.BackColor);
+				handler (this);
 			}
 		}
 
-		
-		private void HandleButtonOptionClicked(object sender, MessageEventArgs e)
+		private void OnImportSelectedColor()
 		{
-			//	Bouton des options cliqué.
-			GlyphButton button = sender as GlyphButton;
+			//	Génère un événement pour dire qu'on importe une couleur.
+			EventHandler handler = (EventHandler) this.GetUserEventHandler (ColorPalette.ImportEvent);
 
-			VMenu menu = new VMenu();
-			menu.Host = this;
-			menu.Items.Add(new MenuItem("NewPaletteDefault", "", Res.Strings.ColorPalette.PaletteDefault, ""));
-			menu.Items.Add(new MenuItem("NewPaletteRainbow", "", Res.Strings.ColorPalette.PaletteRainbow, ""));
-			menu.Items.Add(new MenuItem("NewPaletteLight",   "", Res.Strings.ColorPalette.PaletteLight,   ""));
-			menu.Items.Add(new MenuItem("NewPaletteDark",    "", Res.Strings.ColorPalette.PaletteDark,    ""));
-			menu.Items.Add(new MenuItem("NewPaletteGray",    "", Res.Strings.ColorPalette.PaletteGray,    ""));
-			menu.Items.Add(new MenuSeparator());
-			menu.Items.Add(new MenuItem("OpenPalette", "", Res.Strings.ColorPalette.OpenPalette, ""));
-			menu.Items.Add(new MenuItem("SavePalette", "", Res.Strings.ColorPalette.SavePalette, ""));
-			menu.AdjustSize();
-
-			Drawing.Point pos = button.MapClientToScreen(new Drawing.Point(0, button.ActualHeight));
-			pos.X -= menu.PreferredWidth;
-			menu.ShowAsContextMenu(this.Window, pos);
+			if (handler != null)
+			{
+				handler (this);
+			}
 		}
 
+
+
+		private void HandleOptionButtonClicked(object sender, MessageEventArgs e)
+		{
+			if (e.Message.Button == MouseButtons.Left)
+			{
+				GlyphButton button = sender as GlyphButton;
+
+				VMenu menu = new VMenu ();
+				menu.Host = this;
+				menu.Items.Add (new MenuItem ("NewPaletteDefault", "", Res.Strings.ColorPalette.PaletteDefault, ""));
+				menu.Items.Add (new MenuItem ("NewPaletteRainbow", "", Res.Strings.ColorPalette.PaletteRainbow, ""));
+				menu.Items.Add (new MenuItem ("NewPaletteLight", "", Res.Strings.ColorPalette.PaletteLight, ""));
+				menu.Items.Add (new MenuItem ("NewPaletteDark", "", Res.Strings.ColorPalette.PaletteDark, ""));
+				menu.Items.Add (new MenuItem ("NewPaletteGray", "", Res.Strings.ColorPalette.PaletteGray, ""));
+				menu.Items.Add (new MenuSeparator ());
+				menu.Items.Add (new MenuItem ("OpenPalette", "", Res.Strings.ColorPalette.OpenPalette, ""));
+				menu.Items.Add (new MenuItem ("SavePalette", "", Res.Strings.ColorPalette.SavePalette, ""));
+				menu.AdjustSize ();
+
+				Drawing.Point pos = button.MapClientToScreen (new Drawing.Point (0, button.ActualHeight));
+				pos.X -= menu.PreferredWidth;
+				menu.ShowAsContextMenu (this.Window, pos);
+			}
+		}
 
 		private void HandleColorClicked(object sender, MessageEventArgs e)
 		{
-			//	Couleur dans la palette cliquée.
 			ColorSample cs = sender as ColorSample;
-			bool import = ( e != null && (e.Message.IsShiftPressed || e.Message.IsControlPressed) );
-			this.SelectSample(cs, import);
+
+			if ((e.Message.IsShiftPressed) ||
+				(e.Message.IsControlPressed))
+			{
+				this.SelectSample (cs, Operation.Import);
+			}
+			else
+			{
+				this.SelectSample (cs, Operation.Export);
+			}
 		}
 
-		
 		private void HandleColorCollectionChanged(object sender)
 		{
-			//	La collection de couleurs a changé.
-			this.Invalidate();
+			if ((this.colorCollection != null) &&
+				(this.palette != null))
+			{
+				for (int i = 0; i < this.colorCollection.Count; i++)
+				{
+					if (i < this.palette.Length)
+					{
+						this.palette[i].Color = this.colorCollection[i];
+					}
+				}
+			}
 		}
 
-		protected virtual void OnExport()
+		private void HandleColorSampleColorChanged(object sender, DependencyPropertyChangedEventArgs e)
 		{
-			//	Génère un événement pour dire qu'on exporte une couleur.
-			EventHandler handler = (EventHandler) this.GetUserEventHandler("Export");
-			if (handler != null)
+			ColorSample sample = sender as ColorSample;
+			int index = sample.Index;
+
+			Drawing.RichColor oldColor = e.OldValue == null ? Drawing.RichColor.Empty : (Drawing.RichColor) e.OldValue;
+			Drawing.RichColor newColor = e.NewValue == null ? Drawing.RichColor.Empty : (Drawing.RichColor) e.NewValue;
+
+			if (this.colorCollection != null)
 			{
-				handler(this);
+				this.colorCollection[index] = newColor;
 			}
 		}
 
-		protected virtual void OnImport()
-		{
-			//	Génère un événement pour dire qu'on importe une couleur.
-			EventHandler handler = (EventHandler) this.GetUserEventHandler("Import");
-			if (handler != null)
-			{
-				handler(this);
-			}
-		}
 
-		
-		public event EventHandler				Export
-		{
-			add
-			{
-				this.AddUserEventHandler("Export", value);
-			}
-			remove
-			{
-				this.RemoveUserEventHandler("Export", value);
-			}
-		}
-
-		public event EventHandler				Import
+		public event EventHandler				ExportSelectedColor
 		{
 			add
 			{
-				this.AddUserEventHandler("Import", value);
+				this.AddUserEventHandler (ColorPalette.ExportEvent, value);
 			}
 			remove
 			{
-				this.RemoveUserEventHandler("Import", value);
+				this.RemoveUserEventHandler (ColorPalette.ExportEvent, value);
+			}
+		}
+
+		public event EventHandler				ImportSelectedColor
+		{
+			add
+			{
+				this.AddUserEventHandler (ColorPalette.ImportEvent, value);
+			}
+			remove
+			{
+				this.RemoveUserEventHandler (ColorPalette.ImportEvent, value);
 			}
 		}
 
 
-		protected int							nbColumns;
-		protected int							nbRows;
-		protected int							nbTotal;
-		protected ColorSample[]					palette;
-		protected int							selected;
-		protected bool							hasOptionButton = false;
-		protected GlyphButton					buttonOption;
-		protected Drawing.ColorCollection		colorCollection;
+		static ColorPalette()
+		{
+			Types.DependencyPropertyMetadata metadataDx = Visual.PreferredWidthProperty.DefaultMetadata.Clone ();
+			Types.DependencyPropertyMetadata metadataDy = Visual.PreferredHeightProperty.DefaultMetadata.Clone ();
+
+			metadataDx.DefineDefaultValue (80.0-1);
+			metadataDy.DefineDefaultValue (160.0-1);
+
+			Visual.PreferredWidthProperty.OverrideMetadata (typeof (ColorPalette), metadataDx);
+			Visual.PreferredHeightProperty.OverrideMetadata (typeof (ColorPalette), metadataDy);
+		}
+
+		public static readonly DependencyProperty SelectedColorIndexProperty = DependencyProperty.Register ("SelectedColorIndex", typeof (int), typeof (ColorPalette));
+
+		private const string					ExportEvent = "ExportSelectedColor";
+		private const string					ImportEvent = "ImportSelectedColor";
+
+		private int								columnCount;
+		private int								rowCount;
+		private ColorSample[]					palette;
+		private GlyphButton						optionButton;
+		private Drawing.ColorCollection			colorCollection;
 	}
 }
