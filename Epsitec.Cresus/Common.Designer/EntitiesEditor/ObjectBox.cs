@@ -750,6 +750,14 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					}
 				}
 
+				if (this.hilitedElement == ActiveElement.BoxMembership)
+				{
+					if (message.IsRightButton)
+					{
+						this.LocateMembership();
+					}
+				}
+
 				if (this.hilitedElement == ActiveElement.BoxComment)
 				{
 					this.AddComment();
@@ -905,6 +913,13 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					{
 						element = ActiveElement.BoxHeader;
 						this.SetConnectionsHilited(true);
+						return true;
+					}
+
+					//	Souris dans le titre de la classe de base ?
+					if (this.RectangleMembership.Contains(pos))
+					{
+						element = ActiveElement.BoxMembership;
 						return true;
 					}
 
@@ -1216,6 +1231,25 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			if (module != null)
 			{
 				this.editor.Module.MainWindow.LocatorGoto(module.ModuleInfo.Name, ResourceAccess.Type.Entities, -1, this.cultureMap.Id, null);
+			}
+		}
+
+		protected void LocateMembership()
+		{
+			//	Montre l'entité de base cliquée avec le bouton de droite.
+			StructuredData data = this.cultureMap.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
+			Druid druid = (Druid) data.GetValue(Support.Res.Fields.ResourceStructuredType.BaseType);
+
+			if (druid.IsEmpty)
+			{
+				return;
+			}
+
+			Module module = this.editor.Module.MainWindow.SearchModule(druid);
+
+			if (module != null)
+			{
+				this.editor.Module.MainWindow.LocatorGoto(module.ModuleInfo.Name, ResourceAccess.Type.Entities, -1, druid, null);
 			}
 		}
 
@@ -1710,11 +1744,10 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 				if (this.membershipCount > 0)
 				{
-					rect = this.GetFieldBounds(-1);
-					rect.Deflate(9.5, 0.5);
+					rect = this.RectangleMembership;
 					graphics.AddFilledRectangle(rect);
-					Color ci1 = this.GetColorMain(dragging ? 0.2 : 0.1);
-					Color ci2 = this.GetColorMain(dragging ? 0.1 : 0.0);
+					Color ci1 = this.GetColorMain(this.hilitedElement == ActiveElement.BoxMembership ? 0.5 : (dragging ? 0.2 : 0.1));
+					Color ci2 = this.GetColorMain(0.0);
 					this.RenderVerticalGradient(graphics, rect, ci1, ci2);
 
 					rect = this.GetFieldBounds(-1);
@@ -1794,8 +1827,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					rect.Deflate(9.5, 0.5);
 					Path dashedPath = this.PathRoundRectangle(rect, 8.0);
 
-					rect = this.GetFieldBounds(-1);
-					rect.Deflate(9.5, 0.5);
+					rect = this.RectangleMembership;
 					dashedPath.MoveTo(rect.Left+2, rect.Bottom);
 					dashedPath.LineTo(rect.Right-1, rect.Bottom);
 					
@@ -2173,6 +2205,23 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				pos.X -= AbstractObject.buttonRadius;
 				pos.Y += AbstractObject.buttonRadius;
 				return pos;
+			}
+		}
+
+		protected Rectangle RectangleMembership
+		{
+			//	Retourne le rectangle du titre de la classe de base.
+			get
+			{
+				Rectangle rect = Rectangle.Empty;
+
+				if (this.membershipCount > 0)
+				{
+					rect = this.GetFieldBounds(-1);
+					rect.Deflate(9.5, 0.5);
+				}
+
+				return rect;
 			}
 		}
 

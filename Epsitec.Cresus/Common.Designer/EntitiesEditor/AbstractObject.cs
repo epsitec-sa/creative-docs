@@ -29,6 +29,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			BoxFieldRemove,
 			BoxFieldMovable,
 			BoxFieldMoving,
+			BoxMembership,
 			BoxChangeWidth,
 			BoxMoveColumnsSeparator,
 			BoxColor1,
@@ -223,6 +224,9 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 				case AbstractObject.ActiveElement.BoxFieldMovable:
 					return "Change l'ordre du champ dans la liste";
+
+				case AbstractObject.ActiveElement.BoxMembership:
+					return "Clic droite: aller sur la définition de l'entité héritée";
 
 				case AbstractObject.ActiveElement.BoxChangeWidth:
 					return "Modifie la largeur de l'entité";
