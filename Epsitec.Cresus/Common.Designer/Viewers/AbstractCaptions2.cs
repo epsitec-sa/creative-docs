@@ -661,6 +661,15 @@ namespace Epsitec.Common.Designer.Viewers
 
 					case "Secondary":
 						return this.CreateSecondary(item);
+
+					case "Druid":
+						return this.CreateDruid(item);
+
+					case "Local":
+						return this.CreateLocal(item);
+
+					case "Identity":
+						return this.CreateIdentity(item);
 				}
 
 				return null;
@@ -749,6 +758,40 @@ namespace Epsitec.Common.Designer.Viewers
 				return main;
 			}
 			
+			private Widget CreateDruid(CultureMap item)
+			{
+				UI.ItemViewText widget = new UI.ItemViewText();
+				widget.Margins = new Margins(5, 5, 0, 0);
+				widget.Text = TextLayout.ConvertToTaggedText(this.owner.GetDruidText(item));
+				widget.TextBreakMode = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine;
+				widget.PreferredSize = widget.GetBestFitSize();
+
+				return widget;
+			}
+
+			private Widget CreateLocal(CultureMap item)
+			{
+				UI.ItemViewText widget = new UI.ItemViewText();
+				widget.Margins = new Margins(5, 5, 0, 0);
+				widget.Text = TextLayout.ConvertToTaggedText(this.owner.GetLocalText(item));
+				widget.TextBreakMode = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine;
+				widget.ContentAlignment = ContentAlignment.MiddleRight;
+				widget.PreferredSize = widget.GetBestFitSize();
+
+				return widget;
+			}
+
+			private Widget CreateIdentity(CultureMap item)
+			{
+				UI.ItemViewText widget = new UI.ItemViewText();
+				widget.Margins = new Margins(5, 5, 0, 0);
+				widget.Text = TextLayout.ConvertToTaggedText(this.owner.GetIdentityText(item));
+				widget.TextBreakMode = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine;
+				widget.PreferredSize = widget.GetBestFitSize();
+
+				return widget;
+			}
+
 
 			AbstractCaptions2 owner;
 		}

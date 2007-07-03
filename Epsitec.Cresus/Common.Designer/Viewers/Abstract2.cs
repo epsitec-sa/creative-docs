@@ -208,17 +208,30 @@ namespace Epsitec.Common.Designer.Viewers
 			cultureMapType.Fields.Add("Name", StringType.Default);
 			cultureMapType.Fields.Add("Primary", StringType.Default);
 			cultureMapType.Fields.Add("Secondary", StringType.Default);
+			cultureMapType.Fields.Add("Druid", StringType.Default);
+			cultureMapType.Fields.Add("Local", StringType.Default);
+			cultureMapType.Fields.Add("Identity", StringType.Default);
 
 			this.table.SourceType = cultureMapType;
 
 			this.table.Columns.Add(new UI.ItemTableColumn("Name", new Widgets.Layouts.GridLength(this.GetColumnWidth(0), Widgets.Layouts.GridUnitType.Proportional)));
 			this.table.Columns.Add(new UI.ItemTableColumn("Primary", new Widgets.Layouts.GridLength(this.GetColumnWidth(1), Widgets.Layouts.GridUnitType.Proportional)));
 			this.table.Columns.Add(new UI.ItemTableColumn("Secondary", new Widgets.Layouts.GridLength(this.GetColumnWidth(2), Widgets.Layouts.GridUnitType.Proportional)));
+			this.table.Columns.Add(new UI.ItemTableColumn("Druid", new Widgets.Layouts.GridLength(this.GetColumnWidth(3), Widgets.Layouts.GridUnitType.Proportional)));
+			this.table.Columns.Add(new UI.ItemTableColumn("Local", new Widgets.Layouts.GridLength(this.GetColumnWidth(4), Widgets.Layouts.GridUnitType.Proportional)));
+			this.table.Columns.Add(new UI.ItemTableColumn("Identity", new Widgets.Layouts.GridLength(this.GetColumnWidth(5), Widgets.Layouts.GridUnitType.Proportional)));
 
 			this.table.ColumnHeader.SetColumnComparer(1, this.ComparePrimary);
 			this.table.ColumnHeader.SetColumnComparer(2, this.CompareSecondary);
+			this.table.ColumnHeader.SetColumnComparer(3, this.CompareDruid);
+			this.table.ColumnHeader.SetColumnComparer(4, this.CompareLocal);
+			this.table.ColumnHeader.SetColumnComparer(5, this.CompareIdentity);
 
 			this.table.ColumnHeader.SetColumnText(0, "Nom");
+			this.table.ColumnHeader.SetColumnText(3, "Druid");
+			this.table.ColumnHeader.SetColumnText(4, "Local");
+			this.table.ColumnHeader.SetColumnText(5, "Identité");
+
 			this.table.ColumnHeader.SetColumnSort(0, ListSortDirection.Ascending);
 		}
 
@@ -805,6 +818,39 @@ namespace Epsitec.Common.Designer.Viewers
 			return sA.CompareTo(sB);
 		}
 
+		protected int CompareDruid(object a, object b)
+		{
+			CultureMap itemA = a as CultureMap;
+			CultureMap itemB = b as CultureMap;
+
+			string dA = itemA.Id.ToString();
+			string dB = itemB.Id.ToString();
+
+			return dA.CompareTo(dB);
+		}
+
+		protected int CompareLocal(object a, object b)
+		{
+			CultureMap itemA = a as CultureMap;
+			CultureMap itemB = b as CultureMap;
+
+			int iA = itemA.Id.Local;
+			int iB = itemB.Id.Local;
+
+			return iA.CompareTo(iB);
+		}
+
+		protected int CompareIdentity(object a, object b)
+		{
+			CultureMap itemA = a as CultureMap;
+			CultureMap itemB = b as CultureMap;
+
+			int iA = itemA.Id.Developer;
+			int iB = itemB.Id.Developer;
+
+			return iA.CompareTo(iB);
+		}
+
 		public string GetColumnText(CultureMap item, string twoLettersCulture)
 		{
 			//	Retourne le texte pour une colonne primaire ou secondaire.
@@ -842,6 +888,35 @@ namespace Epsitec.Common.Designer.Viewers
 
 				return buffer.ToString();
 			}
+		}
+
+		public string GetDruidText(CultureMap item)
+		{
+			return item.Id.ToString();
+		}
+
+		public string GetLocalText(CultureMap item)
+		{
+			return item.Id.Local.ToString();
+		}
+
+		public string GetIdentityText(CultureMap item)
+		{
+			if (item.Id.Developer == 0)
+			{
+				return "Anonyme";
+			}
+
+			IList<Identity.IdentityCard> list = Identity.IdentityRepository.Default.IdentityCards;
+			foreach (Identity.IdentityCard card in list)
+			{
+				if (card.DeveloperId == item.Id.Developer)
+				{
+					return card.UserName;
+				}
+			}
+
+			return string.Format("Dev {0}", item.Id.Developer.ToString());
 		}
 
 		

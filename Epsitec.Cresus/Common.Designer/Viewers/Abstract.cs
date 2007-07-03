@@ -1378,8 +1378,8 @@ namespace Epsitec.Common.Designer.Viewers
 
 		protected static double				leftArrayWidth = 439;
 		protected static double				topArrayHeight = 220;
-		private static double[]				columnWidthHorizontal = {200, 100, 100};
-		private static double[]				columnWidthVertical = {250, 300, 300};
+		private static double[]				columnWidthHorizontal = {200, 100, 100, 80, 50, 100};
+		private static double[]				columnWidthVertical = {250, 300, 300, 80, 50, 100};
 
 		protected Module					module;
 		protected PanelsContext				context;
