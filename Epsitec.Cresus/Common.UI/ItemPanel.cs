@@ -1476,7 +1476,9 @@ namespace Epsitec.Common.UI
 			
 			if (this.PanelDepth == 0)
 			{
-				object item = this.Items.CurrentItem;
+				object   item  = this.Items.CurrentItem;
+				ItemView view  = null;
+				bool     focus = this.ContainsKeyboardFocus;
 
 				if (item == null)
 				{
@@ -1484,9 +1486,8 @@ namespace Epsitec.Common.UI
 				}
 				else
 				{
-					ItemView view  = this.FindItemView (item);
-					bool     focus = this.ContainsKeyboardFocus;
-
+					view  = this.FindItemView (item);
+					
 					if (view == null)
 					{
 						//	The item does not belong to the panel as such, but it
@@ -1512,9 +1513,9 @@ namespace Epsitec.Common.UI
 							panel.TrackCurrentItem (view, focus, autoSelect);
 						}
 					}
-
-					this.TrackCurrentItem (view, focus, autoSelect);
 				}
+				
+				this.TrackCurrentItem (view, focus, autoSelect);
 			}
 			else
 			{
@@ -1524,38 +1525,44 @@ namespace Epsitec.Common.UI
 
 		private void TrackCurrentItem(ItemView view, bool focus, bool autoSelect)
 		{
+			CurrentItemTrackingMode mode = this.RootPanel.CurrentItemTrackingMode;
+
 			if (view == null)
 			{
 				this.ClearFocus ();
+				
+				focus      = false;
+				autoSelect = (mode == CurrentItemTrackingMode.AutoSelectAndDeselect) ? autoSelect : false;
 			}
 			else
 			{
 				this.Show (view);
+			}
+			
+			switch (mode)
+			{
+				case CurrentItemTrackingMode.AutoFocus:
+					break;
 
-				switch (this.RootPanel.CurrentItemTrackingMode)
-				{
-					case CurrentItemTrackingMode.AutoFocus:
-						break;
+				case CurrentItemTrackingMode.AutoSelectAndDeselect:
+				case CurrentItemTrackingMode.AutoSelect:
+					if (autoSelect)
+					{
+						IList<ItemView> list = this.GetSelectedItemViews ();
+						SelectionState state = new SelectionState (this);
 
-					case CurrentItemTrackingMode.AutoSelect:
-						if (autoSelect)
-						{
-							IList<ItemView> list = this.GetSelectedItemViews ();
-							SelectionState state = new SelectionState (this);
+						this.InternalDeselectItemViews (list);
+						this.InternalSelectItemView (view);
+						
+						state.GenerateEvents ();
+					}
+					break;
+			}
 
-							this.InternalDeselectItemViews (list);
-							this.InternalSelectItemView (view);
-							
-							state.GenerateEvents ();
-						}
-						break;
-				}
-
-				if ((focus) &&
-					(view.HasValidUserInterface))
-				{
-					view.Widget.Focus ();
-				}
+			if ((focus) &&
+				(view.HasValidUserInterface))
+			{
+				view.Widget.Focus ();
 			}
 
 			this.Invalidate ();
@@ -2862,6 +2869,11 @@ namespace Epsitec.Common.UI
 
 		private void InternalSelectItemView(ItemView view)
 		{
+			if (view == null)
+			{
+				return;
+			}
+
 			if (view.IsSelected)
 			{
 				this.SetItemViewSelection (view, true);

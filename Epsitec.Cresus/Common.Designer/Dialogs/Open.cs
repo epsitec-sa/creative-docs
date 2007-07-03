@@ -77,7 +77,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.table.FrameVisibility = true;
 				this.table.ItemPanel.Layout = UI.ItemPanelLayout.VerticalList;
 				this.table.ItemPanel.ItemSelectionMode = UI.ItemPanelSelectionMode.ExactlyOne;
-				this.table.ItemPanel.CurrentItemTrackingMode = UI.CurrentItemTrackingMode.AutoSelect;
+				this.table.ItemPanel.CurrentItemTrackingMode = UI.CurrentItemTrackingMode.AutoSelectAndDeselect;
 				this.table.ItemPanel.SelectionChanged += new EventHandler<UI.ItemPanelSelectionChangedEventArgs>(this.HandleTableSelectionChanged);
 				this.table.Dock = Widgets.DockStyle.Fill;
 				
@@ -129,8 +129,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 			this.UpdateModules(true);
 			this.UpdateArray();
-			this.moduleInfosShowed.MoveCurrentTo(null);  // TODO: pourquoi la désélection n'est pas visible ???
-			this.moduleInfosShowed.MoveCurrentToPosition(-1);  // TODO: pas plus de succès ainsi !
+			this.moduleInfosShowed.MoveCurrentToPosition(-1);
 			this.UpdateButtons();
 
 			this.window.ShowDialog();

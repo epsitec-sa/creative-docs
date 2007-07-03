@@ -24,5 +24,11 @@ namespace Epsitec.Common.UI
 		/// Automatically select the current item.
 		/// </summary>
 		AutoSelect,
+
+		/// <summary>
+		/// Automatically select the current item; when no current item is defined,
+		/// automatically deselect all items.
+		/// </summary>
+		AutoSelectAndDeselect,
 	}
 }
