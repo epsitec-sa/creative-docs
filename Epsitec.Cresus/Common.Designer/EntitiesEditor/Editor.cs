@@ -22,6 +22,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			Move,
 			Hand,
 			IBeam,
+			Locate,
 		}
 
 		protected enum PushDirection
@@ -36,6 +37,11 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		public Editor()
 		{
+			this.AutoEngage = false;
+			this.AutoFocus  = true;
+			this.InternalState |= InternalState.Focusable;
+			this.InternalState |= InternalState.Engageable;
+
 			this.boxes = new List<ObjectBox>();
 			this.connections = new List<ObjectConnection>();
 			this.comments = new List<ObjectComment>();
@@ -1104,17 +1110,23 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			this.brutPos = pos;
 			pos = this.ConvWidgetToEditor(pos);
 
-			if (this.lastType == message.MessageType && this.lastPos == pos)
+			//	On reçoit parfois deux fois de suite le même message MouseUp, ce qui
+			//	est une catastrophe pour Terminate(). Il faut donc les filtrer ici !
+			if (this.lastMessageType == message.MessageType && this.lastMessagePos == pos)
 			{
 				return;
 			}
 
-			this.lastType = message.MessageType;
-			this.lastPos = pos;
+			this.lastMessageType = message.MessageType;
+			this.lastMessagePos = pos;
+
+			System.Diagnostics.Debug.WriteLine(string.Format("Type={0}", message.MessageType));
 
 			switch (message.MessageType)
 			{
 				case MessageType.MouseMove:
+				case MessageType.KeyDown:
+				case MessageType.KeyUp:
 					this.MouseMove(message, pos);
 					message.Consumer = this;
 					break;
@@ -1229,49 +1241,74 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					}
 				}
 
+				MouseCursorType type = MouseCursorType.Unknown;
+
 				if (fly == null)
 				{
 					if (this.IsScrollerEnable)
 					{
-						this.ChangeMouseCursor(MouseCursorType.Hand);
+						type = MouseCursorType.Hand;
 					}
 					else
 					{
-						this.ChangeMouseCursor(MouseCursorType.Arrow);
+						type = MouseCursorType.Arrow;
 					}
 				}
 				else
 				{
-					if (fly.HilitedElement == AbstractObject.ActiveElement.BoxHeader && this.BoxCount > 1)
+					if (message.IsControlPressed)
 					{
-						this.ChangeMouseCursor(MouseCursorType.Move);
+						if (fly.HilitedElement == AbstractObject.ActiveElement.BoxHeader)
+						{
+							ObjectBox box = fly as ObjectBox;
+							if (box != null && !box.IsRoot)
+							{
+								type = MouseCursorType.Locate;
+							}
+						}
+						
+						if (fly.HilitedElement == AbstractObject.ActiveElement.BoxFieldName ||
+							fly.HilitedElement == AbstractObject.ActiveElement.BoxFieldType ||
+							fly.HilitedElement == AbstractObject.ActiveElement.BoxMembership)
+						{
+							type = MouseCursorType.Locate;
+						}
 					}
-					else if (fly.HilitedElement == AbstractObject.ActiveElement.None ||
-							 fly.HilitedElement == AbstractObject.ActiveElement.BoxInside ||
-							 fly.HilitedElement == AbstractObject.ActiveElement.BoxHeader ||
-							 fly.HilitedElement == AbstractObject.ActiveElement.ConnectionHilited)
+
+					if (type != MouseCursorType.Locate)
 					{
-						this.ChangeMouseCursor(MouseCursorType.Arrow);
-					}
-					else if (fly.HilitedElement == AbstractObject.ActiveElement.BoxFieldName ||
-							 fly.HilitedElement == AbstractObject.ActiveElement.BoxFieldType)
-					{
-						this.ChangeMouseCursor(MouseCursorType.Grid);
-					}
-					else if (fly.HilitedElement == AbstractObject.ActiveElement.CommentEdit)
-					{
-						this.ChangeMouseCursor(MouseCursorType.IBeam);
-					}
-					else if (fly.HilitedElement == AbstractObject.ActiveElement.CommentMove)
-					{
-						this.ChangeMouseCursor(MouseCursorType.Move);
-					}
-					else
-					{
-						this.ChangeMouseCursor(MouseCursorType.Finger);
+						if (fly.HilitedElement == AbstractObject.ActiveElement.BoxHeader && this.BoxCount > 1)
+						{
+							type = MouseCursorType.Move;
+						}
+						else if (fly.HilitedElement == AbstractObject.ActiveElement.None ||
+								 fly.HilitedElement == AbstractObject.ActiveElement.BoxInside ||
+								 fly.HilitedElement == AbstractObject.ActiveElement.BoxHeader ||
+								 fly.HilitedElement == AbstractObject.ActiveElement.ConnectionHilited)
+						{
+							type = MouseCursorType.Arrow;
+						}
+						else if (fly.HilitedElement == AbstractObject.ActiveElement.BoxFieldName ||
+								 fly.HilitedElement == AbstractObject.ActiveElement.BoxFieldType)
+						{
+							type = MouseCursorType.Grid;
+						}
+						else if (fly.HilitedElement == AbstractObject.ActiveElement.CommentEdit)
+						{
+							type = MouseCursorType.IBeam;
+						}
+						else if (fly.HilitedElement == AbstractObject.ActiveElement.CommentMove)
+						{
+							type = MouseCursorType.Move;
+						}
+						else
+						{
+							type = MouseCursorType.Finger;
+						}
 					}
 				}
 
+				this.ChangeMouseCursor(type);
 				this.hilitedObject = fly;
 			}
 		}
@@ -1579,6 +1616,10 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					this.MouseCursor = MouseCursor.AsIBeam;
 					break;
 
+				case MouseCursorType.Locate:
+					this.SetMouseCursorImage(ref this.mouseCursorLocate, Misc.Icon("CursorLocate"));
+					break;
+
 				default:
 					this.MouseCursor = MouseCursor.AsArrow;
 					break;
@@ -1708,6 +1749,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		protected AbstractObject lockObject;
 		protected bool isScrollerEnable;
 		protected Point brutPos;
+		protected MessageType lastMessageType;
+		protected Point lastMessagePos;
 		protected bool isAreaMoving;
 		protected Point areaMovingInitialPos;
 		protected Point areaMovingInitialOffset;
@@ -1715,11 +1758,9 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		protected Image mouseCursorFinger;
 		protected Image mouseCursorHand;
 		protected Image mouseCursorGrid;
+		protected Image mouseCursorLocate;
 		protected VScroller vscroller;
 		protected AbstractObject hilitedObject;
 		protected bool dirtySerialization;
-
-		protected MessageType lastType;
-		protected Point lastPos;
 	}
 }

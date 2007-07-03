@@ -479,7 +479,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 						}
 						else
 						{
-							return "Déplace l'entité<br/>Clic droite: aller sur la définition de l'entité";
+							return "Déplace l'entité<br/>Ctrl+clic: aller sur la définition de l'entité";
 						}
 					}
 
@@ -606,7 +606,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				return;
 			}
 
-			if (this.hilitedElement == ActiveElement.BoxHeader && this.editor.BoxCount > 1 && !message.IsRightButton)
+			if (this.hilitedElement == ActiveElement.BoxHeader && this.editor.BoxCount > 1 && !message.IsControlPressed)
 			{
 				this.isDragging = true;
 				this.draggingPos = pos;
@@ -695,7 +695,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 			else
 			{
-				if (this.hilitedElement == ActiveElement.BoxHeader && message.IsRightButton && !this.isRoot)
+				if (this.hilitedElement == ActiveElement.BoxHeader && message.IsControlPressed && !this.isRoot)
 				{
 					this.LocateEntity();
 				}
@@ -728,7 +728,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 				if (this.hilitedElement == ActiveElement.BoxFieldName)
 				{
-					if (message.IsRightButton)
+					if (message.IsControlPressed)
 					{
 						this.LocateField(this.hilitedFieldRank);
 					}
@@ -740,7 +740,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 				if (this.hilitedElement == ActiveElement.BoxFieldType)
 				{
-					if (message.IsRightButton)
+					if (message.IsControlPressed)
 					{
 						this.LocateType(this.hilitedFieldRank);
 					}
@@ -752,7 +752,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 				if (this.hilitedElement == ActiveElement.BoxMembership)
 				{
-					if (message.IsRightButton)
+					if (message.IsControlPressed)
 					{
 						this.LocateMembership();
 					}

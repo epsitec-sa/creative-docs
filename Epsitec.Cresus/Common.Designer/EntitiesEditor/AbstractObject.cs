@@ -211,10 +211,10 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					return "Ferme l'entité";
 
 				case AbstractObject.ActiveElement.BoxFieldName:
-					return "Change le nom du champ<br/>Clic droite: aller sur la définition du champ";
+					return "Change le nom du champ<br/>Ctrl+clic: aller sur la définition du champ";
 
 				case AbstractObject.ActiveElement.BoxFieldType:
-					return "Change le type du champ<br/>Clic droite: aller sur la définition du type";
+					return "Change le type du champ<br/>Ctrl+clic: aller sur la définition du type";
 
 				case AbstractObject.ActiveElement.BoxFieldAdd:
 					return "Ajoute un nouveau champ";
@@ -226,7 +226,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					return "Change l'ordre du champ dans la liste";
 
 				case AbstractObject.ActiveElement.BoxMembership:
-					return "Clic droite: aller sur la définition de l'entité héritée";
+					return "Ctrl+clic: aller sur la définition de l'entité héritée";
 
 				case AbstractObject.ActiveElement.BoxChangeWidth:
 					return "Modifie la largeur de l'entité";
