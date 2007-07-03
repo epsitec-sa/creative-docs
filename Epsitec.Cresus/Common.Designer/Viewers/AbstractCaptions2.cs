@@ -633,10 +633,10 @@ namespace Epsitec.Common.Designer.Viewers
 		}
 
 
-		private class ItemViewFactory : UI.AbstractItemViewFactory
+		public class ItemViewFactory : UI.AbstractItemViewFactory
 		{
-			//	Cette classe peuple les 3 colonnes du tableau.
-			public ItemViewFactory(AbstractCaptions2 owner)
+			//	Cette classe peuple les colonnes du tableau.
+			public ItemViewFactory(Abstract2 owner)
 			{
 				this.owner = owner;
 			}
@@ -675,7 +675,7 @@ namespace Epsitec.Common.Designer.Viewers
 				return null;
 			}
 
-			private Widget CreateName(CultureMap item)
+			protected Widget CreateName(CultureMap item)
 			{
 				UI.ItemViewText widget = new UI.ItemViewText();
 				widget.Margins = new Margins(5, 5, 0, 0);
@@ -687,7 +687,7 @@ namespace Epsitec.Common.Designer.Viewers
 				return widget;
 			}
 
-			private Widget CreateType(CultureMap item)
+			protected Widget CreateType(CultureMap item)
 			{
 				UI.ItemViewText widget = new UI.ItemViewText();
 
@@ -708,7 +708,7 @@ namespace Epsitec.Common.Designer.Viewers
 				return widget;
 			}
 
-			private Widget CreateEntity(CultureMap item)
+			protected Widget CreateEntity(CultureMap item)
 			{
 				UI.ItemViewText widget = new UI.ItemViewText();
 				widget.Margins = new Margins(5, 5, 0, 0);
@@ -719,22 +719,22 @@ namespace Epsitec.Common.Designer.Viewers
 				return widget;
 			}
 
-			private Widget CreatePrimary(CultureMap item)
+			protected Widget CreatePrimary(CultureMap item)
 			{
 				return this.CreateContent(item, this.owner.GetTwoLetters(0));
 			}
 
-			private Widget CreateSecondary(CultureMap item)
+			protected Widget CreateSecondary(CultureMap item)
 			{
 				return this.CreateContent(item, this.owner.GetTwoLetters(1));
 			}
 			
-			private Widget CreateContent(CultureMap item, string twoLettersCulture)
+			protected virtual Widget CreateContent(CultureMap item, string twoLettersCulture)
 			{
 				//	Crée le contenu pour une colonne primaire ou secondaire.
 				//	Par optimisation, un seul widget est créé s'il n'y a pas de couleur de fond.
 				UI.ItemViewText main, text;
-				ResourceAccess.ModificationState state = this.owner.access.GetModification(item, twoLettersCulture);
+				ResourceAccess.ModificationState state = this.owner.Access.GetModification(item, twoLettersCulture);
 
 				if (state == ResourceAccess.ModificationState.Normal)
 				{
@@ -758,7 +758,7 @@ namespace Epsitec.Common.Designer.Viewers
 				return main;
 			}
 			
-			private Widget CreateDruid(CultureMap item)
+			protected Widget CreateDruid(CultureMap item)
 			{
 				UI.ItemViewText widget = new UI.ItemViewText();
 				widget.Margins = new Margins(5, 5, 0, 0);
@@ -769,7 +769,7 @@ namespace Epsitec.Common.Designer.Viewers
 				return widget;
 			}
 
-			private Widget CreateLocal(CultureMap item)
+			protected Widget CreateLocal(CultureMap item)
 			{
 				UI.ItemViewText widget = new UI.ItemViewText();
 				widget.Margins = new Margins(5, 5, 0, 0);
@@ -781,7 +781,7 @@ namespace Epsitec.Common.Designer.Viewers
 				return widget;
 			}
 
-			private Widget CreateIdentity(CultureMap item)
+			protected Widget CreateIdentity(CultureMap item)
 			{
 				UI.ItemViewText widget = new UI.ItemViewText();
 				widget.Margins = new Margins(5, 5, 0, 0);
@@ -793,7 +793,7 @@ namespace Epsitec.Common.Designer.Viewers
 			}
 
 
-			AbstractCaptions2 owner;
+			protected Abstract2 owner;
 		}
 
 		

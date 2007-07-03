@@ -14,7 +14,7 @@ namespace Epsitec.Common.Designer.Viewers
 	{
 		public Strings2(Module module, PanelsContext context, ResourceAccess access, MainWindow mainWindow) : base(module, context, access, mainWindow)
 		{
-			this.itemViewFactory = new ItemViewFactory(this);
+			this.itemViewFactory = new ItemViewFactoryStrings(this);
 			
 			//	Résumé des captions.
 			MyWidgets.StackedPanel leftContainer, rightContainer;
@@ -385,71 +385,19 @@ namespace Epsitec.Common.Designer.Viewers
 		}
 
 
-		private class ItemViewFactory : UI.AbstractItemViewFactory
+		public class ItemViewFactoryStrings : AbstractCaptions2.ItemViewFactory
 		{
-			//	Cette classe peuple les 3 colonnes du tableau.
-			public ItemViewFactory(Strings2 owner)
+			//	Cette classe peuple les colonnes du tableau.
+			public ItemViewFactoryStrings(Abstract2 owner) : base(owner)
 			{
-				this.owner = owner;
 			}
 
-			protected override Widget CreateElement(string name, UI.ItemPanel panel, UI.ItemView view, UI.ItemViewShape shape)
-			{
-				CultureMap item = view.Item as CultureMap;
-
-				switch (name)
-				{
-					case "Name":
-						return this.CreateName(item);
-
-					case "Primary":
-						return this.CreatePrimary(item);
-
-					case "Secondary":
-						return this.CreateSecondary(item);
-
-					case "Druid":
-						return this.CreateDruid(item);
-
-					case "Local":
-						return this.CreateLocal(item);
-
-					case "Identity":
-						return this.CreateIdentity(item);
-				}
-
-				return null;
-			}
-
-			private Widget CreateName(CultureMap item)
-			{
-				UI.ItemViewText widget = new UI.ItemViewText();
-
-				widget.Margins = new Margins(5, 5, 0, 0);
-				//?widget.Text = TextLayout.ConvertToTaggedText(item.Name);
-				widget.Text = item.Name;
-				widget.TextBreakMode = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine;
-				widget.PreferredSize = widget.GetBestFitSize();
-
-				return widget;
-			}
-
-			private Widget CreatePrimary(CultureMap item)
-			{
-				return this.CreateContent(item, this.owner.GetTwoLetters(0));
-			}
-
-			private Widget CreateSecondary(CultureMap item)
-			{
-				return this.CreateContent(item, this.owner.GetTwoLetters(1));
-			}
-			
-			private Widget CreateContent(CultureMap item, string twoLettersCulture)
+			protected override Widget CreateContent(CultureMap item, string twoLettersCulture)
 			{
 				//	Crée le contenu pour une colonne primaire ou secondaire.
 				//	Par optimisation, un seul widget est créé s'il n'y a pas de couleur de fond.
 				UI.ItemViewText main, text;
-				ResourceAccess.ModificationState state = this.owner.access.GetModification(item, twoLettersCulture);
+				ResourceAccess.ModificationState state = this.owner.Access.GetModification(item, twoLettersCulture);
 
 				if (state == ResourceAccess.ModificationState.Normal)
 				{
@@ -479,47 +427,10 @@ namespace Epsitec.Common.Designer.Viewers
 
 				return main;
 			}
-			
-			private Widget CreateDruid(CultureMap item)
-			{
-				UI.ItemViewText widget = new UI.ItemViewText();
-				widget.Margins = new Margins(5, 5, 0, 0);
-				widget.Text = TextLayout.ConvertToTaggedText(this.owner.GetDruidText(item));
-				widget.TextBreakMode = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine;
-				widget.PreferredSize = widget.GetBestFitSize();
-
-				return widget;
-			}
-
-			private Widget CreateLocal(CultureMap item)
-			{
-				UI.ItemViewText widget = new UI.ItemViewText();
-				widget.Margins = new Margins(5, 5, 0, 0);
-				widget.Text = TextLayout.ConvertToTaggedText(this.owner.GetLocalText(item));
-				widget.TextBreakMode = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine;
-				widget.ContentAlignment = ContentAlignment.MiddleRight;
-				widget.PreferredSize = widget.GetBestFitSize();
-
-				return widget;
-			}
-
-			private Widget CreateIdentity(CultureMap item)
-			{
-				UI.ItemViewText widget = new UI.ItemViewText();
-				widget.Margins = new Margins(5, 5, 0, 0);
-				widget.Text = TextLayout.ConvertToTaggedText(this.owner.GetIdentityText(item));
-				widget.TextBreakMode = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine;
-				widget.PreferredSize = widget.GetBestFitSize();
-
-				return widget;
-			}
-
-
-			Strings2 owner;
 		}
 
 
-		private ItemViewFactory					itemViewFactory;
+		private ItemViewFactoryStrings				itemViewFactory;
 
 		protected TextFieldMulti				primaryText;
 		protected TextFieldMulti				secondaryText;

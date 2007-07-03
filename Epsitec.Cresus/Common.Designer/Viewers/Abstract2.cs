@@ -270,7 +270,7 @@ namespace Epsitec.Common.Designer.Viewers
 			}
 		}
 
-		protected string GetTwoLetters(int row)
+		public string GetTwoLetters(int row)
 		{
 			//	Retourne la culture primaire ou secondaire utilisée.
 			System.Diagnostics.Debug.Assert(row == 0 || row == 1);

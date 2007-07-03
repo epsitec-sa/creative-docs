@@ -65,6 +65,14 @@ namespace Epsitec.Common.Designer.Viewers
 			}
 		}
 
+		public ResourceAccess Access
+		{
+			get
+			{
+				return this.access;
+			}
+		}
+
 
 		public virtual AbstractTextField CurrentTextField
 		{
