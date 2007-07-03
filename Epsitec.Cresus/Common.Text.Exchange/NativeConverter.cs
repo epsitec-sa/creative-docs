@@ -102,7 +102,7 @@ namespace Epsitec.Common.Text.Exchange
 		/// </summary>
 		/// <param name="textwrapper"></param>
 		/// <returns></returns>
-		public string GetDefinedString(bool paragraphSep)
+		public string GetDefinedString(bool emitParagraphDefinitions, bool paragraphSep)
 		{
 			StringBuilder output = new StringBuilder();
 
@@ -112,7 +112,7 @@ namespace Epsitec.Common.Text.Exchange
 
 			foreach (TextStyle style in styles)
 			{
-				if (style.TextStyleClass == TextStyleClass.Paragraph && paragraphSep)
+				if (style.TextStyleClass == TextStyleClass.Paragraph && emitParagraphDefinitions)
 				{
 					string caption = story.TextContext.StyleList.StyleMap.GetCaption (style);
 					int styleident = GetStyleIdent (caption);
@@ -130,6 +130,10 @@ namespace Epsitec.Common.Text.Exchange
 			if (paragraphSep)
 			{
 				output.Append("par/") ;
+			}
+
+			if (emitParagraphDefinitions)
+			{
 				string definedPar = this.GetDefinedParString() ;
 
 				if (definedPar.Length != 0)

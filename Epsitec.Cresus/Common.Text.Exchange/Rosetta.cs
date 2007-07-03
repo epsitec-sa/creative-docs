@@ -202,6 +202,7 @@ namespace Epsitec.Common.Text.Exchange
 			cpContext.Navigator.MoveTo (selectionStart, 0);
 
 			NativeConverter converter = new NativeConverter (cpContext, PasteMode.KeepTextOnly);
+			bool isOnNewParagraph = true;
 
 			while (true)
 			{
@@ -211,7 +212,7 @@ namespace Epsitec.Common.Text.Exchange
 				if (currentPosition + runLength > selectionEnd)
 					runLength = selectionEnd - currentPosition ;
 
-				if (runLength <= 0)
+				if (runLength <= 0 && !isOnNewParagraph)
 				{
 					break;
 				}
@@ -227,7 +228,9 @@ namespace Epsitec.Common.Text.Exchange
 				}
 
 				//NativeConverter converter = new NativeConverter (cpContext, PasteMode.KeepTextOnly);
-				string runattributes = converter.GetDefinedString (paragraphSep);
+				string runattributes = converter.GetDefinedString (isOnNewParagraph, paragraphSep);
+
+				isOnNewParagraph = paragraphSep;
 
 				nativeText.AppendTextLine (runattributes);
 				
@@ -238,12 +241,12 @@ namespace Epsitec.Common.Text.Exchange
 				// avance au run suivant
 				cpContext.Navigator.MoveTo (TextNavigator.Target.CharacterNext, runLength);
 
+				if (cpContext.Navigator.GetRunLength (1) == 0)
+					break; // arrête si on est à la fin
+
 				// avance encore d'un seul caractère afin de se trouver véritablement dans
 				// le contexte du run
 				cpContext.Navigator.MoveTo (TextNavigator.Target.CharacterNext, 1);
-
-				if (cpContext.Navigator.GetRunLength (1) == 0)
-					break; // arrête si on est à la fin
 
 				// recule au début du run
 				cpContext.Navigator.MoveTo (TextNavigator.Target.CharacterPrevious, 1);
