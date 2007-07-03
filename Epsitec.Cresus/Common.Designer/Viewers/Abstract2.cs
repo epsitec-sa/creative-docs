@@ -24,6 +24,8 @@ namespace Epsitec.Common.Designer.Viewers
 
 		public Abstract2(Module module, PanelsContext context, ResourceAccess access, MainWindow mainWindow) : base(module, context, access, mainWindow)
 		{
+			this.itemViewFactory = new ItemViewFactory(this);
+			
 			//	Crée les deux volets séparés d'un splitter.
 			this.firstPane = new Widget(this);
 			this.firstPane.Name = "FirstPane";
@@ -538,14 +540,7 @@ namespace Epsitec.Common.Designer.Viewers
 				collection.Collection = new List<string>(list);
 			}
 		}
-
 		
-		protected virtual UI.IItemViewFactory ItemViewFactoryGetter(UI.ItemView itemView)
-		{
-			//	Retourne le "factory" a utiliser pour les éléments représentés dans cet ItemTable/ItemPanel.
-			return null;
-		}
-
 
 		#region Band
 		protected GlyphButton CreateBand(out MyWidgets.StackedPanel leftContainer, out MyWidgets.StackedPanel rightContainer, string title, BandMode mode, GlyphShape extendShape, bool isNewSection, double backgroundIntensity)
@@ -851,7 +846,7 @@ namespace Epsitec.Common.Designer.Viewers
 			return iA.CompareTo(iB);
 		}
 
-		public string GetColumnText(CultureMap item, string twoLettersCulture)
+		public virtual string GetColumnText(CultureMap item, string twoLettersCulture)
 		{
 			//	Retourne le texte pour une colonne primaire ou secondaire.
 			if (twoLettersCulture == null)
@@ -920,6 +915,185 @@ namespace Epsitec.Common.Designer.Viewers
 		}
 
 		
+		protected UI.IItemViewFactory ItemViewFactoryGetter(UI.ItemView itemView)
+		{
+			//	Retourne le "factory" a utiliser pour les éléments représentés dans cet ItemTable/ItemPanel.
+			if (itemView.Item == null)
+			{
+				return null;
+			}
+			else
+			{
+				return this.itemViewFactory;
+			}
+		}
+
+		private class ItemViewFactory : UI.AbstractItemViewFactory
+		{
+			//	Cette classe peuple les colonnes du tableau.
+			public ItemViewFactory(Abstract2 owner)
+			{
+				this.owner = owner;
+			}
+
+			protected override Widget CreateElement(string name, UI.ItemPanel panel, UI.ItemView view, UI.ItemViewShape shape)
+			{
+				CultureMap item = view.Item as CultureMap;
+
+				switch (name)
+				{
+					case "Name":
+						return this.CreateName(item);
+
+					case "Type":
+						return this.CreateType(item);
+
+					case "Entity":
+						return this.CreateEntity(item);
+
+					case "Primary":
+						return this.CreatePrimary(item);
+
+					case "Secondary":
+						return this.CreateSecondary(item);
+
+					case "Druid":
+						return this.CreateDruid(item);
+
+					case "Local":
+						return this.CreateLocal(item);
+
+					case "Identity":
+						return this.CreateIdentity(item);
+				}
+
+				return null;
+			}
+
+			private Widget CreateName(CultureMap item)
+			{
+				UI.ItemViewText widget = new UI.ItemViewText();
+				widget.Margins = new Margins(5, 5, 0, 0);
+				//?widget.Text = TextLayout.ConvertToTaggedText(item.FullName);
+				widget.Text = TextLayout.ConvertToTaggedText(item.Name);
+				widget.TextBreakMode = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine;
+				widget.PreferredSize = widget.GetBestFitSize();
+
+				return widget;
+			}
+
+			private Widget CreateType(CultureMap item)
+			{
+				UI.ItemViewText widget = new UI.ItemViewText();
+
+				StructuredData data = item.GetCultureData(Support.Resources.DefaultTwoLetterISOLanguageName);
+				object typeCodeValue = data.GetValue(Support.Res.Fields.ResourceBaseType.TypeCode);
+
+				string text = "";
+				if (!UndefinedValue.IsUndefinedValue(typeCodeValue) && !UnknownValue.IsUnknownValue(typeCodeValue))
+				{
+					text = typeCodeValue.ToString();
+				}
+
+				widget.Margins = new Margins(5, 5, 0, 0);
+				widget.Text = TextLayout.ConvertToTaggedText(text);
+				widget.TextBreakMode = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine;
+				widget.PreferredSize = widget.GetBestFitSize();
+
+				return widget;
+			}
+
+			private Widget CreateEntity(CultureMap item)
+			{
+				UI.ItemViewText widget = new UI.ItemViewText();
+				widget.Margins = new Margins(5, 5, 0, 0);
+				widget.Text = TextLayout.ConvertToTaggedText(item.Prefix);
+				widget.TextBreakMode = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine;
+				widget.PreferredSize = widget.GetBestFitSize();
+
+				return widget;
+			}
+
+			private Widget CreatePrimary(CultureMap item)
+			{
+				return this.CreateContent(item, this.owner.GetTwoLetters(0));
+			}
+
+			private Widget CreateSecondary(CultureMap item)
+			{
+				return this.CreateContent(item, this.owner.GetTwoLetters(1));
+			}
+			
+			private Widget CreateContent(CultureMap item, string twoLettersCulture)
+			{
+				//	Crée le contenu pour une colonne primaire ou secondaire.
+				//	Par optimisation, un seul widget est créé s'il n'y a pas de couleur de fond.
+				UI.ItemViewText main, text;
+				ResourceAccess.ModificationState state = this.owner.access.GetModification(item, twoLettersCulture);
+
+				if (state == ResourceAccess.ModificationState.Normal)
+				{
+					main = text = new UI.ItemViewText();
+				}
+				else
+				{
+					main = new UI.ItemViewText();
+					main.BackColor = Abstract.GetBackgroundColor(state, 0.7);
+
+					text = new UI.ItemViewText(main);
+					text.Dock = DockStyle.Fill;
+				}
+
+				text.Margins = new Margins(5, 5, 0, 0);
+				//?text.Text = TextLayout.ConvertToTaggedText(this.owner.GetColumnText(item, twoLettersCulture));
+				text.Text = this.owner.GetColumnText(item, twoLettersCulture);
+				text.TextBreakMode = TextBreakMode.Ellipsis | TextBreakMode.Split;
+				text.PreferredSize = text.GetBestFitSize();
+
+				return main;
+			}
+			
+			private Widget CreateDruid(CultureMap item)
+			{
+				UI.ItemViewText widget = new UI.ItemViewText();
+				widget.Margins = new Margins(5, 5, 0, 0);
+				widget.Text = TextLayout.ConvertToTaggedText(this.owner.GetDruidText(item));
+				widget.TextBreakMode = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine;
+				widget.PreferredSize = widget.GetBestFitSize();
+
+				return widget;
+			}
+
+			private Widget CreateLocal(CultureMap item)
+			{
+				UI.ItemViewText widget = new UI.ItemViewText();
+				widget.Margins = new Margins(5, 5, 0, 0);
+				widget.Text = TextLayout.ConvertToTaggedText(this.owner.GetLocalText(item));
+				widget.TextBreakMode = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine;
+				widget.ContentAlignment = ContentAlignment.MiddleRight;
+				widget.PreferredSize = widget.GetBestFitSize();
+
+				return widget;
+			}
+
+			private Widget CreateIdentity(CultureMap item)
+			{
+				UI.ItemViewText widget = new UI.ItemViewText();
+				widget.Margins = new Margins(5, 5, 0, 0);
+				widget.Text = TextLayout.ConvertToTaggedText(this.owner.GetIdentityText(item));
+				widget.TextBreakMode = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine;
+				widget.PreferredSize = widget.GetBestFitSize();
+
+				return widget;
+			}
+
+
+			private Abstract2 owner;
+		}
+
+
+		private ItemViewFactory					itemViewFactory;
+
 		protected static bool					mainExtended = false;
 		protected static bool					suiteExtended = false;
 

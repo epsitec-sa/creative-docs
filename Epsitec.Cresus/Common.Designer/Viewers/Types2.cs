@@ -14,7 +14,7 @@ namespace Epsitec.Common.Designer.Viewers
 	{
 		public Types2(Module module, PanelsContext context, ResourceAccess access, MainWindow mainWindow) : base (module, context, access, mainWindow)
 		{
-			this.UpdateAll ();
+			this.UpdateAll();
 		}
 
 		protected override void Dispose(bool disposing)

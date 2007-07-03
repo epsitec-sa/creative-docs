@@ -14,8 +14,6 @@ namespace Epsitec.Common.Designer.Viewers
 	{
 		public Strings2(Module module, PanelsContext context, ResourceAccess access, MainWindow mainWindow) : base(module, context, access, mainWindow)
 		{
-			this.itemViewFactory = new ItemViewFactoryStrings(this);
-			
 			//	Résumé des captions.
 			MyWidgets.StackedPanel leftContainer, rightContainer;
 
@@ -371,66 +369,20 @@ namespace Epsitec.Common.Designer.Viewers
 		}
 
 
-		protected override UI.IItemViewFactory ItemViewFactoryGetter(UI.ItemView itemView)
+		public override string GetColumnText(CultureMap item, string twoLettersCulture)
 		{
-			//	Retourne le "factory" a utiliser pour les éléments représentés dans cet ItemTable/ItemPanel.
-			if (itemView.Item == null || itemView.Item.GetType() != typeof(CultureMap))
+			//	Retourne le texte pour une colonne primaire ou secondaire.
+			if (twoLettersCulture == null)
 			{
-				return null;
+				return "";
 			}
 			else
 			{
-				return this.itemViewFactory;
+				StructuredData data = item.GetCultureData(twoLettersCulture);
+				return data.GetValue(Support.Res.Fields.ResourceString.Text) as string;
 			}
 		}
 
-
-		public class ItemViewFactoryStrings : AbstractCaptions2.ItemViewFactory
-		{
-			//	Cette classe peuple les colonnes du tableau.
-			public ItemViewFactoryStrings(Abstract2 owner) : base(owner)
-			{
-			}
-
-			protected override Widget CreateContent(CultureMap item, string twoLettersCulture)
-			{
-				//	Crée le contenu pour une colonne primaire ou secondaire.
-				//	Par optimisation, un seul widget est créé s'il n'y a pas de couleur de fond.
-				UI.ItemViewText main, text;
-				ResourceAccess.ModificationState state = this.owner.Access.GetModification(item, twoLettersCulture);
-
-				if (state == ResourceAccess.ModificationState.Normal)
-				{
-					main = text = new UI.ItemViewText();
-				}
-				else
-				{
-					main = new UI.ItemViewText();
-					main.BackColor = Abstract.GetBackgroundColor(state, 0.7);
-
-					text = new UI.ItemViewText(main);
-					text.Dock = DockStyle.Fill;
-				}
-
-				string value = "";
-				if (twoLettersCulture != null)
-				{
-					StructuredData data = item.GetCultureData(twoLettersCulture);
-					value = data.GetValue(Support.Res.Fields.ResourceString.Text) as string;
-				}
-
-				text.Margins = new Margins(5, 5, 0, 0);
-				//?text.Text = TextLayout.ConvertToTaggedText(value);
-				text.Text = value;
-				text.TextBreakMode = TextBreakMode.Ellipsis | TextBreakMode.Split;
-				text.PreferredSize = text.GetBestFitSize();
-
-				return main;
-			}
-		}
-
-
-		private ItemViewFactoryStrings				itemViewFactory;
 
 		protected TextFieldMulti				primaryText;
 		protected TextFieldMulti				secondaryText;
