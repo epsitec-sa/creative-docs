@@ -214,7 +214,7 @@ namespace Epsitec.Common.Designer.Viewers
 				this.primaryGroup.Text = group;
 			}
 
-			if (this.GetTwoLetters(1) == null || this.mainWindow.IsReadonly)
+			if (item == null || this.GetTwoLetters(1) == null || this.mainWindow.IsReadonly)
 			{
 				this.SetShortcut(this.secondaryShortcut1, this.secondaryShortcut2, null);
 			}
