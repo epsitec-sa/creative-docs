@@ -86,11 +86,23 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+		public bool								HiliteSelectedColor
+		{
+			get
+			{
+				return (bool) this.GetValue (ColorPalette.HiliteSelectedColorProperty);
+			}
+			set
+			{
+				this.SetValue (ColorPalette.HiliteSelectedColorProperty, value);
+			}
+		}
+
 		public int								SelectedColorIndex
 		{
 			get
 			{
-				return UndefinedValue.GetValue<int> (this.GetValue (ColorPalette.SelectedColorIndexProperty), -1, true);
+				return (int) this.GetValue (ColorPalette.SelectedColorIndexProperty);
 			}
 			set
 			{
@@ -126,17 +138,7 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				int selected = this.SelectedColorIndex;
-
-				if ((selected >= 0) &&
-					(selected < this.palette.Length))
-				{
-					return this.palette[selected];
-				}
-				else
-				{
-					return null;
-				}
+				return this.GetColorSample (this.SelectedColorIndex);
 			}
 		}
 
@@ -168,6 +170,19 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+
+		public ColorSample GetColorSample(int index)
+		{
+			if ((index >= 0) &&
+				(index < this.palette.Length))
+			{
+				return this.palette[index];
+			}
+			else
+			{
+				return null;
+			}
+		}
 
 		public bool WriteSelectedColor(Drawing.RichColor color)
 		{
@@ -515,7 +530,31 @@ namespace Epsitec.Common.Widgets
 			Visual.PreferredHeightProperty.OverrideMetadata (typeof (ColorPalette), metadataDy);
 		}
 
-		public static readonly DependencyProperty SelectedColorIndexProperty = DependencyProperty.Register ("SelectedColorIndex", typeof (int), typeof (ColorPalette));
+		internal static void NotifySelectedColorIndexChanged(DependencyObject obj, object oldValue, object newValue)
+		{
+			ColorPalette that = (ColorPalette) obj;
+
+			if (that.HiliteSelectedColor)
+			{
+				int oldIndex = (int) (oldValue ?? -1);
+				int newIndex = (int) (newValue ?? -1);
+
+				ColorSample oldSample = that.GetColorSample (oldIndex);
+				ColorSample newSample = that.GetColorSample (newIndex);
+
+				if (oldSample != null)
+				{
+					oldSample.SetSelected (false);
+				}
+				if (newSample != null)
+				{
+					newSample.SetSelected (true);
+				}
+			}
+		}
+
+		public static readonly DependencyProperty SelectedColorIndexProperty = DependencyProperty.Register ("SelectedColorIndex", typeof (int), typeof (ColorPalette), new DependencyPropertyMetadata (-1, ColorPalette.NotifySelectedColorIndexChanged));
+		public static readonly DependencyProperty HiliteSelectedColorProperty = DependencyProperty.Register ("HiliteSelectedColor", typeof (bool), typeof (ColorPalette), new DependencyPropertyMetadata (false));
 
 		private const string					ExportEvent = "ExportSelectedColor";
 		private const string					ImportEvent = "ImportSelectedColor";

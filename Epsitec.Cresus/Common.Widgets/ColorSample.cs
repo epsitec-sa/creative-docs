@@ -187,8 +187,11 @@ namespace Epsitec.Common.Widgets
 
 			if ((palette != null) &&
 				(sample != null) &&
+				(sample != this) &&
 				(mode == TabNavigationMode.ActivateOnTab))
 			{
+				//	Avoid recursive calls to self (sample != this)...
+
 				return sample.AboutToGetFocus (dir, mode, out focus);
 			}
 			else
@@ -300,11 +303,20 @@ namespace Epsitec.Common.Widgets
 				graphics.AddRectangle (rect);
 				graphics.RenderSolid (adorner.ColorBorder);
 
-				if ((this.PaintState & WidgetPaintState.Focused) != 0)
+				if (this.IsSelected)
 				{
 					rect.Deflate (1, 1);
 					graphics.AddRectangle (rect);
 					graphics.RenderSolid (this.Color.Basic.Opposite);
+				}
+
+				if ((this.IsFocused) &&
+					(this.DragHost == null) &&
+					(this.dragInfo == null))
+				{
+					graphics.AddRectangle (Drawing.Rectangle.Deflate (rect, 1, 1));
+					graphics.RenderSolid (Drawing.Color.FromBrightness (1));
+					adorner.PaintFocusBox (graphics, Drawing.Rectangle.Deflate (rect, 1, 1));
 				}
 
 				if ((this.dragInfo != null) &&
