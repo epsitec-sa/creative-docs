@@ -210,7 +210,7 @@
     </Compile>
     <Compile Include="IFavoritesSettings.cs" />
     <Compile Include="IWorkInProgressReport.cs" />
-    <Compile Include="Message.cs">
+    <Compile Include="MessageDialog.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Platform\Beep.cs">

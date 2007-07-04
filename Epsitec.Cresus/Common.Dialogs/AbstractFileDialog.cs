@@ -2141,9 +2141,9 @@ namespace Epsitec.Common.Dialogs
 				string question = Epsitec.Common.Dialogs.Res.Strings.Dialog.Question.Open.File;
 				string filePath = this.selectedFileName;
 				string fileName = FolderItem.GetShortFileName (filePath);
-				string message  = string.Format (question, Message.FormatMessage (fileName), Message.FormatMessage (filePath));
+				string message  = string.Format (question, MessageDialog.FormatMessage (fileName), MessageDialog.FormatMessage (filePath));
 
-				Common.Dialogs.DialogResult result = Message.ShowError (message, this.window);
+				Common.Dialogs.DialogResult result = MessageDialog.ShowError (message, this.window);
 
 				this.selectedFileName = null;
 				this.selectedFileNames = null;
@@ -2155,9 +2155,9 @@ namespace Epsitec.Common.Dialogs
 				string question = Epsitec.Common.Dialogs.Res.Strings.Dialog.Question.Save.File;
 				string filePath = this.selectedFileName;
 				string fileName = FolderItem.GetShortFileName (filePath);
-				string message  = string.Format (question, Message.FormatMessage (fileName), Message.FormatMessage (filePath));
+				string message  = string.Format (question, MessageDialog.FormatMessage (fileName), MessageDialog.FormatMessage (filePath));
 
-				Common.Dialogs.DialogResult result = Message.ShowQuestion (message, this.window);
+				Common.Dialogs.DialogResult result = MessageDialog.ShowQuestion (message, this.window);
 
 				if (result != Common.Dialogs.DialogResult.Yes)
 				{

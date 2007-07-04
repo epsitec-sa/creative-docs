@@ -22,28 +22,28 @@ namespace Epsitec.Common.Dialogs
 		
 		[Test] public void CheckYesNoCancel()
 		{
-			IDialog dialog = Message.CreateYesNoCancel ("Notepad", "manifest:Epsitec.Common.Dialogs.Images.Warning.icon", "The text in the <i>c:\\Documents and Settings\\Tester\\Desktop\\dummy file.txt</i> file has changed.<br/><br/>Do you want to save the changes ?", "ExecYes", "ExecNo", this.dispatcher);
+			IDialog dialog = MessageDialog.CreateYesNoCancel ("Notepad", "manifest:Epsitec.Common.Dialogs.Images.Warning.icon", "The text in the <i>c:\\Documents and Settings\\Tester\\Desktop\\dummy file.txt</i> file has changed.<br/><br/>Do you want to save the changes ?", "ExecYes", "ExecNo", this.dispatcher);
 			
 			dialog.OpenDialog ();
 		}
 
 		[Test] public void CheckYesNo()
 		{
-			IDialog dialog = Message.CreateYesNo ("Notepad", "manifest:Epsitec.Common.Dialogs.Images.Warning.icon", "The text in the <i>c:\\Documents and Settings\\Tester\\Desktop\\dummy file.txt</i> file has changed.<br/><br/>Do you want to save the changes ?", "ExecYes", "ExecNo", this.dispatcher);
+			IDialog dialog = MessageDialog.CreateYesNo ("Notepad", "manifest:Epsitec.Common.Dialogs.Images.Warning.icon", "The text in the <i>c:\\Documents and Settings\\Tester\\Desktop\\dummy file.txt</i> file has changed.<br/><br/>Do you want to save the changes ?", "ExecYes", "ExecNo", this.dispatcher);
 			
 			dialog.OpenDialog ();
 		}
 
 		[Test] public void CheckOkCancel()
 		{
-			IDialog dialog = Message.CreateOkCancel ("Notepad", "manifest:Epsitec.Common.Dialogs.Images.Warning.icon", "About to mogrify this document...", "ExecYes", this.dispatcher);
+			IDialog dialog = MessageDialog.CreateOkCancel ("Notepad", "manifest:Epsitec.Common.Dialogs.Images.Warning.icon", "About to mogrify this document...", "ExecYes", this.dispatcher);
 			
 			dialog.OpenDialog ();
 		}
 
 		[Test] public void CheckOk()
 		{
-			IDialog dialog = Message.CreateOk ("Notepad", "manifest:Epsitec.Common.Dialogs.Images.Warning.icon", "About to mogrify this document...", "ExecYes", this.dispatcher);
+			IDialog dialog = MessageDialog.CreateOk ("Notepad", "manifest:Epsitec.Common.Dialogs.Images.Warning.icon", "About to mogrify this document...", "ExecYes", this.dispatcher);
 			
 			dialog.OpenDialog ();
 		}

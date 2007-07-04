@@ -2065,7 +2065,7 @@ namespace Epsitec.Common.Designer
 				icon = "manifest:Epsitec.Common.Dialogs.Images.Warning.icon";
 			}
 
-			Common.Dialogs.IDialog dialog = Common.Dialogs.Message.CreateYesNoCancel(title, icon, message, null, null, this.commandDispatcher);
+			Common.Dialogs.IDialog dialog = Common.Dialogs.MessageDialog.CreateYesNoCancel(title, icon, message, null, null, this.commandDispatcher);
 			dialog.Owner = this.Window;
 			dialog.OpenDialog();
 			return dialog.Result;
@@ -2080,7 +2080,7 @@ namespace Epsitec.Common.Designer
 			string icon = "manifest:Epsitec.Common.Dialogs.Images.Question.icon";
 			string message = question;
 
-			Common.Dialogs.IDialog dialog = Common.Dialogs.Message.CreateYesNo(title, icon, message, "", "", this.commandDispatcher);
+			Common.Dialogs.IDialog dialog = Common.Dialogs.MessageDialog.CreateYesNo(title, icon, message, "", "", this.commandDispatcher);
 			dialog.Owner = this.Window;
 			dialog.OpenDialog();
 			return dialog.Result;
@@ -2095,7 +2095,7 @@ namespace Epsitec.Common.Designer
 			string icon = "manifest:Epsitec.Common.Dialogs.Images.Question.icon";
 			string message = question;
 
-			Common.Dialogs.IDialog dialog = Common.Dialogs.Message.CreateYesNoCancel(title, yes, no, cancel, icon, message, "", "", this.commandDispatcher);
+			Common.Dialogs.IDialog dialog = Common.Dialogs.MessageDialog.CreateYesNoCancel(title, yes, no, cancel, icon, message, "", "", this.commandDispatcher);
 			dialog.Owner = this.Window;
 			dialog.OpenDialog();
 			return dialog.Result;
@@ -2109,7 +2109,7 @@ namespace Epsitec.Common.Designer
 			string title = Res.Strings.Application.Title;
 			string icon = "manifest:Epsitec.Common.Dialogs.Images.Information.icon";
 
-			Common.Dialogs.IDialog dialog = Common.Dialogs.Message.CreateOk(title, icon, message, "", this.commandDispatcher);
+			Common.Dialogs.IDialog dialog = Common.Dialogs.MessageDialog.CreateOk(title, icon, message, "", this.commandDispatcher);
 			dialog.Owner = this.Window;
 			dialog.OpenDialog();
 			return dialog.Result;
@@ -2123,9 +2123,9 @@ namespace Epsitec.Common.Designer
 
 			string title = Res.Strings.Application.Title;
 			string icon = "manifest:Epsitec.Common.Dialogs.Images.Warning.icon";
-			string message = error;
+			string message = TextLayout.ConvertToTaggedText(error);
 
-			Common.Dialogs.IDialog dialog = Common.Dialogs.Message.CreateOk(title, icon, message, "", this.commandDispatcher);
+			Common.Dialogs.IDialog dialog = Common.Dialogs.MessageDialog.CreateOk(title, icon, message, "", this.commandDispatcher);
 			dialog.Owner = this.Window;
 			dialog.OpenDialog();
 			return dialog.Result;
@@ -2137,7 +2137,7 @@ namespace Epsitec.Common.Designer
 			if ( this.Window == null )  return Common.Dialogs.DialogResult.None;
 
 			string title = Res.Strings.Application.Title;
-			Common.Dialogs.IDialog dialog = Common.Dialogs.Message.CreateConfirmation(title, header, questions, hasCancelButton);
+			Common.Dialogs.IDialog dialog = Common.Dialogs.MessageDialog.CreateConfirmation(title, header, questions, hasCancelButton);
 			dialog.Owner = this.Window;
 			dialog.OpenDialog();
 			return dialog.Result;

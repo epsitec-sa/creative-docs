@@ -1277,7 +1277,7 @@ namespace Epsitec.App.DocumentEditor
 			string question1 = string.Format(Res.Strings.Dialog.Question.Save.Part1, shortFilename);
 			string question2 = Res.Strings.Dialog.Question.Save.Part2;
 			string message = string.Format("<font size=\"100%\">{0}</font><br/><br/>{1}{2}", question1, statistic, question2);
-			Common.Dialogs.IDialog dialog = Common.Dialogs.Message.CreateYesNoCancel(title, icon, message, null, null, this.commandDispatcher);
+			Common.Dialogs.IDialog dialog = Common.Dialogs.MessageDialog.CreateYesNoCancel(title, icon, message, null, null, this.commandDispatcher);
 			dialog.Owner = this.Window;
 			dialog.OpenDialog();
 			return dialog.Result;
@@ -1312,7 +1312,7 @@ namespace Epsitec.App.DocumentEditor
 			builder.Append("<br/>");
 			string message = builder.ToString();
 
-			Common.Dialogs.IDialog dialog = Common.Dialogs.Message.CreateOk(title, icon, message, "", this.commandDispatcher);
+			Common.Dialogs.IDialog dialog = Common.Dialogs.MessageDialog.CreateOk(title, icon, message, "", this.commandDispatcher);
 			dialog.Owner = this.Window;
 			dialog.OpenDialog();
 			return dialog.Result;
@@ -1341,14 +1341,8 @@ namespace Epsitec.App.DocumentEditor
 
 			this.dlgSplash.Hide();
 
-			string title = Res.Strings.Application.TitleShort;
-			string icon = "manifest:Epsitec.Common.Dialogs.Images.Warning.icon";
-			string message = error.Replace("\r\n", "<br/>");  // remplace les fins de lignes dans les erreurs Window
-
-			Common.Dialogs.IDialog dialog = Common.Dialogs.Message.CreateOk(title, icon, message, "", this.commandDispatcher);
-			dialog.Owner = this.Window;
-			dialog.OpenDialog();
-			return dialog.Result;
+			string message = Common.Dialogs.MessageDialog.FormatMessage(error);
+			return Common.Dialogs.MessageDialog.ShowError(message, this.Window);
 		}
 
 		public Common.Dialogs.DialogResult DialogQuestion(string message)
@@ -1361,7 +1355,7 @@ namespace Epsitec.App.DocumentEditor
 			string title = Res.Strings.Application.TitleShort;
 			string icon = "manifest:Epsitec.Common.Dialogs.Images.Question.icon";
 
-			Common.Dialogs.IDialog dialog = Common.Dialogs.Message.CreateYesNo(title, icon, message, "", "", this.commandDispatcher);
+			Common.Dialogs.IDialog dialog = Common.Dialogs.MessageDialog.CreateYesNo(title, icon, message, "", "", this.commandDispatcher);
 			dialog.Owner = this.Window;
 			dialog.OpenDialog();
 			return dialog.Result;
@@ -2125,7 +2119,7 @@ namespace Epsitec.App.DocumentEditor
 			dialog.FileName = this.CurrentDocument.GlobalSettings.ColorCollectionFilename;
 			dialog.Title = Res.Strings.Dialog.Open.TitleCol;
 			dialog.Filters.Add("crcolors", Res.Strings.Dialog.FileCol, "*.crcolors");
-			dialog.FilterIndex = this.CurrentDocument.ExportFilter;
+			dialog.FilterIndex = 0;
 			dialog.Owner = this.Window;
 			dialog.OpenDialog();
 			if ( dialog.Result != Common.Dialogs.DialogResult.Accept )  return;
@@ -2148,7 +2142,7 @@ namespace Epsitec.App.DocumentEditor
 			dialog.FileName = this.CurrentDocument.GlobalSettings.ColorCollectionFilename;
 			dialog.Title = Res.Strings.Dialog.Save.TitleCol;
 			dialog.Filters.Add("crcolors", Res.Strings.Dialog.FileCol, "*.crcolors");
-			dialog.FilterIndex = this.CurrentDocument.ExportFilter;
+			dialog.FilterIndex = 0;
 			dialog.PromptForOverwriting = true;
 			dialog.Owner = this.Window;
 			dialog.OpenDialog();

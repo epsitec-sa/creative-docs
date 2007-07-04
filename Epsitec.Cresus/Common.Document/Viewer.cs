@@ -3941,7 +3941,7 @@ namespace Epsitec.Common.Document
 			string icon = "manifest:Epsitec.Common.Dialogs.Images.Warning.icon";
 			string message = error;
 
-			Common.Dialogs.IDialog dialog = Common.Dialogs.Message.CreateOk(title, icon, message, "", this.GetCommandDispatcher());
+			Common.Dialogs.IDialog dialog = Common.Dialogs.MessageDialog.CreateOk(title, icon, message, "", this.GetCommandDispatcher());
 			dialog.Owner = this.Window;
 			dialog.OpenDialog();
 		}
@@ -3953,7 +3953,7 @@ namespace Epsitec.Common.Document
 			string icon = "manifest:Epsitec.Common.Dialogs.Images.Question.icon";
 			string message = question;
 
-			Common.Dialogs.IDialog dialog = Common.Dialogs.Message.CreateYesNo(title, icon, message, null, null, this.GetCommandDispatcher());
+			Common.Dialogs.IDialog dialog = Common.Dialogs.MessageDialog.CreateYesNo(title, icon, message, null, null, this.GetCommandDispatcher());
 			dialog.Owner = this.Window;
 			dialog.OpenDialog();
 			return (dialog.Result == Common.Dialogs.DialogResult.Yes);
