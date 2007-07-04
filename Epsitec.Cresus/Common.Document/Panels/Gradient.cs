@@ -34,7 +34,7 @@ namespace Epsitec.Common.Document.Panels
 			ToolTip.Default.SetToolTip(this.nothingButton, Res.Strings.Panel.Gradient.Tooltip.Nothing);
 
 			this.fieldColor1 = new ColorSample(this);
-			this.fieldColor1.DragSourceEnable = true;
+			this.fieldColor1.DragSourceFrame = true;
 			this.fieldColor1.Clicked += new MessageEventHandler(this.HandleFieldColorClicked);
 			this.fieldColor1.ColorChanged += new EventHandler(this.HandleFieldColorChanged);
 			this.fieldColor1.TabIndex = 3;
@@ -42,7 +42,7 @@ namespace Epsitec.Common.Document.Panels
 			ToolTip.Default.SetToolTip(this.fieldColor1, Res.Strings.Panel.Gradient.Tooltip.Color1);
 
 			this.fieldColor2 = new ColorSample(this);
-			this.fieldColor2.DragSourceEnable = true;
+			this.fieldColor2.DragSourceFrame = true;
 			this.fieldColor2.Clicked += new MessageEventHandler(this.HandleFieldColorClicked);
 			this.fieldColor2.ColorChanged += new EventHandler(this.HandleFieldColorChanged);
 			this.fieldColor2.TabIndex = 4;

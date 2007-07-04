@@ -170,6 +170,51 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+		public bool								DragSourceEnable
+		{
+			get
+			{
+				return (bool) this.GetValue (ColorPalette.DragSourceEnableProperty);
+			}
+			set
+			{
+				if (value)
+				{
+					this.ClearValue (ColorPalette.DragSourceEnableProperty);
+				}
+				else
+				{
+					this.SetValue (ColorPalette.DragSourceEnableProperty, value);
+				}
+			}
+		}
+
+
+		public int FindColorIndex(Drawing.RichColor color)
+		{
+			foreach (ColorSample sample in this.palette)
+			{
+				if (sample.Color == color)
+				{
+					return sample.Index;
+				}
+			}
+
+			return -1;
+		}
+
+		public int FindColorIndex(Drawing.Color color)
+		{
+			foreach (ColorSample sample in this.palette)
+			{
+				if (sample.Color.Basic == color)
+				{
+					return sample.Index;
+				}
+			}
+
+			return -1;
+		}
 
 		public ColorSample GetColorSample(int index)
 		{
@@ -290,6 +335,7 @@ namespace Epsitec.Common.Widgets
 				this.palette[i].TabNavigationMode = TabNavigationMode.ActivateOnTab;
 				this.palette[i].AddEventHandler (ColorSample.ColorProperty, this.HandleColorSampleColorChanged);
 				this.palette[i].Index = i;
+				this.palette[i].DragSourceEnable = this.DragSourceEnable;
 			}
 
 			this.SelectedColorIndex = -1;
@@ -553,8 +599,20 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+		internal static void NotifyDragSourceEnableChanged(DependencyObject obj, object oldValue, object newValue)
+		{
+			ColorPalette that = (ColorPalette) obj;
+			bool enable = (bool) newValue;
+
+			foreach (ColorSample sample in that.palette)
+			{
+				sample.DragSourceEnable = enable;
+			}
+		}
+
 		public static readonly DependencyProperty SelectedColorIndexProperty = DependencyProperty.Register ("SelectedColorIndex", typeof (int), typeof (ColorPalette), new DependencyPropertyMetadata (-1, ColorPalette.NotifySelectedColorIndexChanged));
 		public static readonly DependencyProperty HiliteSelectedColorProperty = DependencyProperty.Register ("HiliteSelectedColor", typeof (bool), typeof (ColorPalette), new DependencyPropertyMetadata (false));
+		public static readonly DependencyProperty DragSourceEnableProperty = DependencyProperty.Register ("DragSourceEnable", typeof (bool), typeof (ColorPalette), new DependencyPropertyMetadata (true, ColorPalette.NotifyDragSourceEnableChanged));
 
 		private const string					ExportEvent = "ExportSelectedColor";
 		private const string					ImportEvent = "ImportSelectedColor";

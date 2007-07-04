@@ -96,7 +96,11 @@ namespace Epsitec.Common.Widgets.Behaviors
 		{
 			if (this.is_relative)
 			{
-				this.host.OnDragBegin (pos);
+				if (this.host.OnDragBegin (pos) == false)
+				{
+					return;
+				}
+
 				this.drag_offset = pos - this.host.DragLocation;
 			}
 			else

@@ -42,7 +42,7 @@ namespace Epsitec.Common.Document.Panels
 			ToolTip.Default.SetToolTip(this.fontSize, Res.Strings.Panel.Font.Tooltip.Size);
 
 			this.fontColor = new ColorSample(this);
-			this.fontColor.DragSourceEnable = true;
+			this.fontColor.DragSourceFrame = true;
 			this.fontColor.Clicked += new MessageEventHandler(this.HandleFieldColorClicked);
 			this.fontColor.ColorChanged += new EventHandler(this.HandleFieldColorChanged);
 			this.fontColor.TabIndex = 4;

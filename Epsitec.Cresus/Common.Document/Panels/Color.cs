@@ -12,7 +12,7 @@ namespace Epsitec.Common.Document.Panels
 		public Color(Document document) : base(document)
 		{
 			this.field = new ColorSample(this);
-			this.field.DragSourceEnable = true;
+			this.field.DragSourceFrame = true;
 			this.field.Clicked += new MessageEventHandler(this.HandleFieldColorClicked);
 			this.field.ColorChanged += new EventHandler(this.HandleFieldColorChanged);
 			this.field.TabIndex = 1;

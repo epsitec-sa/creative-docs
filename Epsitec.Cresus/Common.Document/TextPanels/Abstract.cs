@@ -597,7 +597,7 @@ namespace Epsitec.Common.Document.TextPanels
 			//	Crée un échantilon de couleur.
 			ColorSample sample = new ColorSample(this);
 
-			sample.DragSourceEnable = true;
+			sample.DragSourceFrame = true;
 			sample.AutoFocus = false;
 			sample.Clicked += handlerClicked;
 			sample.ColorChanged += handlerChanged;

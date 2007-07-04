@@ -47,6 +47,18 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+		public bool								DragSourceFrame
+		{
+			get
+			{
+				return (bool) this.GetValue (ColorSample.DragSourceFrameProperty);
+			}
+			set
+			{
+				this.SetValue (ColorSample.DragSourceFrameProperty, value);
+			}
+		}
+
 		public bool								DragSourceEnable
 		{
 			get
@@ -55,9 +67,17 @@ namespace Epsitec.Common.Widgets
 			}
 			set
 			{
-				this.SetValue (ColorSample.DragSourceEnableProperty, value);
+				if (value)
+				{
+					this.ClearValue (ColorSample.DragSourceEnableProperty);
+				}
+				else
+				{
+					this.SetValue (ColorSample.DragSourceEnableProperty, value);
+				}
 			}
 		}
+
 
 		public ColorSample						DragHost
 		{
@@ -92,6 +112,11 @@ namespace Epsitec.Common.Widgets
 
 		public bool OnDragBegin(Drawing.Point cursor)
 		{
+			if (this.DragSourceEnable == false)
+			{
+				return false;
+			}
+
 			//	Crée un échantillon utilisable pour l'opération de drag & drop (il
 			//	va représenter visuellement l'échantillon de couleur). On le place
 			//	dans un DragWindow et hop.
@@ -162,7 +187,7 @@ namespace Epsitec.Common.Widgets
 		
 		public override Drawing.Margins GetShapeMargins()
 		{
-			if (this.DragSourceEnable)
+			if (this.DragSourceFrame)
 			{
 				return new Drawing.Margins (5, 5, 5, 5);
 			}
@@ -269,7 +294,8 @@ namespace Epsitec.Common.Widgets
 						break;
 				}
 
-				if (!this.dragBehavior.ProcessMessage (message, pos))
+				if ((this.DragSourceEnable == false) ||
+					(!this.dragBehavior.ProcessMessage (message, pos)))
 				{
 					base.ProcessMessage (message, pos);
 				}
@@ -281,7 +307,7 @@ namespace Epsitec.Common.Widgets
 			IAdorner adorner = Widgets.Adorners.Factory.Active;
 			Drawing.Rectangle rect = this.Client.Bounds;
 
-			if ((this.DragSourceEnable) &&
+			if ((this.DragSourceFrame) &&
 				(this.ActiveState == ActiveState.Yes))
 			{
 				Drawing.Rectangle r = rect;
@@ -563,7 +589,8 @@ namespace Epsitec.Common.Widgets
 		
 		public static readonly DependencyProperty DragHostProperty         = DependencyProperty.Register ("DragHost", typeof (ColorSample), typeof (ColorSample), new DependencyPropertyMetadata ().MakeNotSerializable ());
 		public static readonly DependencyProperty ColorProperty            = DependencyProperty.Register ("Color", typeof (Drawing.RichColor), typeof (ColorSample), new Helpers.VisualPropertyMetadata (Helpers.VisualPropertyMetadataOptions.AffectsDisplay));
-		public static readonly DependencyProperty DragSourceEnableProperty = DependencyProperty.Register ("DragSourceEnable", typeof (bool), typeof (ColorSample), new Helpers.VisualPropertyMetadata (false, Helpers.VisualPropertyMetadataOptions.AffectsDisplay));
+		public static readonly DependencyProperty DragSourceFrameProperty  = DependencyProperty.Register ("DragSourceFrame", typeof (bool), typeof (ColorSample), new Helpers.VisualPropertyMetadata (false, Helpers.VisualPropertyMetadataOptions.AffectsDisplay));
+		public static readonly DependencyProperty DragSourceEnableProperty = DependencyProperty.Register ("DragSourceEnable", typeof (bool), typeof (ColorSample), new DependencyPropertyMetadata (true));
 
 		private const string					ColorChangedEvent = "ColorChanged";
 		private const double					MarginSource = 4;
