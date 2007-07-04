@@ -18,6 +18,10 @@ namespace App.Designer
 			string execPath = Epsitec.Common.Support.Globals.Directories.ExecutableRoot;
 			List<string> paths;
 
+			Epsitec.Common.Support.ResourceManagerPool pool = new Epsitec.Common.Support.ResourceManagerPool("Common.Designer");
+			pool.DefaultPrefix = "file";
+			pool.SetupDefaultRootPaths();
+
 			if (Epsitec.Common.Support.Globals.IsDebugBuild)
 			{
 				paths = new List<string> (new string[]
@@ -64,6 +68,15 @@ namespace App.Designer
 						}
 						break;
 
+					case "-define-symbolic-root":
+						if (System.IO.Directory.Exists (args[i+2]))
+						{
+							pool.AddModuleRootPath(args[i+1], args[i+2]);
+							i+=2;
+						}
+						break;
+
+
 					default:
 						throw new System.NotSupportedException (string.Format ("Option {0} not supported", args[i]));
 				}
@@ -85,7 +98,7 @@ namespace App.Designer
 			
 			MainWindow designerMainWindow;
 			
-			designerMainWindow = new MainWindow ();
+			designerMainWindow = new MainWindow (pool);
 			designerMainWindow.Mode = DesignerMode.Build;
 			designerMainWindow.Standalone = true;
 			designerMainWindow.Show (null);

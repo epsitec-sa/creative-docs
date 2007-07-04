@@ -613,14 +613,14 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			type = TypeRosetta.GetTypeObject(this.module.ResourceManager.GetCaption(druid));
 			FieldRelation relation = actualField.Relation;
-			string sourceField = null; //?actualField.SourceFieldId;
+//-			string sourceField = null; //?actualField.SourceFieldId;
 			if (type is StructuredType)
 			{
 			}
 			else
 			{
 				relation = FieldRelation.None;
-				sourceField = null;
+//-				sourceField = null;
 			}
 			System.Diagnostics.Debug.Assert(type != null);
 			StructuredTypeField newField = new StructuredTypeField(null, type, actualField.CaptionId, actualField.Rank, relation/*, sourceField*/);

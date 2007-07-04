@@ -20,6 +20,7 @@ namespace Epsitec.Common.Widgets
 			this.resourceManagerPool = this.resourceManager.Pool;
 		}
 
+
 		/// <summary>
 		/// Gets the application window.
 		/// </summary>

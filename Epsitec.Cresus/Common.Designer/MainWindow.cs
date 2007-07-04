@@ -15,7 +15,7 @@ namespace Epsitec.Common.Designer
 	/// <summary>
 	/// Fenêtre principale de l'éditeur de ressources.
 	/// </summary>
-	public class MainWindow : DependencyObject
+	public class MainWindow : Application
 	{
 		public enum DisplayMode
 		{
@@ -39,7 +39,7 @@ namespace Epsitec.Common.Designer
 			this.resourceManagerPool.SetupDefaultRootPaths();
 		}
 
-		internal MainWindow(ResourceManagerPool pool)
+		public MainWindow(ResourceManagerPool pool)
 		{
 			this.resourceManagerPool = pool;
 			this.LocatorInit();
@@ -51,11 +51,13 @@ namespace Epsitec.Common.Designer
 		public void Show(Window parentWindow)
 		{
 			//	Crée et montre la fenêtre de l'éditeur.
-			if ( this.window == null )
+			if ( this.Window == null )
 			{
-				this.window = new Window();
+				Window window = new Window();
 
-				this.window.Root.WindowStyles = WindowStyles.DefaultDocumentWindow;
+				this.Window = window;
+
+				window.Root.WindowStyles = WindowStyles.DefaultDocumentWindow;
 
 				Point parentCenter;
 				Rectangle windowBounds;
@@ -73,20 +75,20 @@ namespace Epsitec.Common.Designer
 				windowBounds = new Rectangle (parentCenter.X-1000/2, parentCenter.Y-700/2, 1000, 700);
 				windowBounds = ScreenInfo.FitIntoWorkingArea (windowBounds);
 
-				this.window.WindowBounds = windowBounds;
-				this.window.Root.MinSize = new Size(500, 400);
-				this.window.Text = Res.Strings.Application.Title;
-				this.window.Name = "Application";  // utilisé pour générer "QuitApplication" !
-				this.window.PreventAutoClose = true;
+				window.WindowBounds = windowBounds;
+				window.Root.MinSize = new Size(500, 400);
+				window.Text = Res.Strings.Application.Title;
+				window.Name = "Application";  // utilisé pour générer "QuitApplication" !
+				window.PreventAutoClose = true;
 				
-				MainWindow.SetInstance(this.window, this);  // attache l'instance de MainWindow à la fenêtre
+				MainWindow.SetInstance(window, this);  // attache l'instance de MainWindow à la fenêtre
 
-				this.commandDispatcher = new CommandDispatcher("Common.Designer", CommandDispatcherLevel.Primary);
-				this.commandContext = new CommandContext();
-				this.commandDispatcher.RegisterController(this);
+//-				this.commandDispatcher = new CommandDispatcher("Common.Designer", CommandDispatcherLevel.Primary);
+//-				this.commandContext = new CommandContext();
+//-				this.commandDispatcher.RegisterController(this);
 				
-				CommandDispatcher.SetDispatcher(this.window, this.commandDispatcher);
-				CommandContext.SetContext(this.window, this.commandContext);
+//-				CommandDispatcher.SetDispatcher(this.window, this.commandDispatcher);
+//-				CommandContext.SetContext(this.window, this.commandContext);
 
 				this.dlgOpen                        = new Dialogs.Open(this);
 				this.dlgGlyphs                      = new Dialogs.Glyphs(this);
@@ -134,7 +136,7 @@ namespace Epsitec.Common.Designer
 			this.ReadSettings();
 #endif
 			
-			this.window.Show();
+			this.Window.Show();
 
 #if false
 			for (int i = 0; i < modules.Length; i++)
@@ -205,15 +207,14 @@ namespace Epsitec.Common.Designer
 
 		internal void Hide()
 		{
-			this.window.Hide ();
+			this.Window.Hide ();
 		}
 
-		public Window Window
+		public override string ShortWindowTitle
 		{
-			//	Retourne la fenêtre principale de l'application.
 			get
 			{
-				return this.window;
+				return Res.Strings.Application.Title;
 			}
 		}
 
@@ -253,30 +254,14 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
-		public ResourceManagerPool ResourceManagerPool
+		public new ResourceManagerPool ResourceManagerPool
 		{
 			get
 			{
 				return this.resourceManagerPool;
 			}
 		}
-
-		public CommandContext CommandContext
-		{
-			get
-			{
-				return this.commandContext;
-			}
-		}
-
-		public CommandDispatcher CommandDispatcher
-		{
-			get
-			{
-				return this.commandDispatcher;
-			}
-		}
-
+		
 		public CommandState GetCommandState(string command)
 		{
 			CommandContext context = this.CommandContext;
@@ -311,7 +296,7 @@ namespace Epsitec.Common.Designer
 
 		protected void CreateLayout()
 		{
-			this.ribbonBook = new RibbonBook(this.window.Root);
+			this.ribbonBook = new RibbonBook(this.Window.Root);
 			this.ribbonBook.Dock = DockStyle.Top;
 
 			//	Crée le ruban principal.
@@ -345,7 +330,7 @@ namespace Epsitec.Common.Designer
 			this.ribbonOper.Items.Add(new Ribbons.TabIndex(this));
 
 			//	Crée la barre de statuts.
-			this.info = new StatusBar(this.window.Root);
+			this.info = new StatusBar(this.Window.Root);
 			this.info.Dock = DockStyle.Bottom;
 			this.info.Margins = new Margins(0, 0, 0, 0);
 
@@ -360,7 +345,7 @@ namespace Epsitec.Common.Designer
 			ToolTip.Default.SetToolTip(this.resize, Res.Strings.Dialog.Tooltip.Resize);
 
 			//	Crée le TabBook principal pour les modules ouverts.
-			this.bookModules = new TabBook(this.window.Root);
+			this.bookModules = new TabBook(this.Window.Root);
 			this.bookModules.Dock = DockStyle.Fill;
 			this.bookModules.Margins = new Margins(0, 0, 3, 0);
 			this.bookModules.Arrows = TabBookArrows.Right;
@@ -608,11 +593,11 @@ namespace Epsitec.Common.Designer
 
 			if (this.standalone)
 			{
-				this.window.Quit();
+				this.Window.Quit();
 			}
 			else
 			{
-				this.window.Hide();
+				this.Window.Hide();
 			}
 	}
 
@@ -2065,7 +2050,7 @@ namespace Epsitec.Common.Designer
 				icon = "manifest:Epsitec.Common.Dialogs.Images.Warning.icon";
 			}
 
-			Common.Dialogs.IDialog dialog = Common.Dialogs.MessageDialog.CreateYesNoCancel(title, icon, message, null, null, this.commandDispatcher);
+			Common.Dialogs.IDialog dialog = Common.Dialogs.MessageDialog.CreateYesNoCancel(title, icon, message, null, null, this.CommandDispatcher);
 			dialog.Owner = this.Window;
 			dialog.OpenDialog();
 			return dialog.Result;
@@ -2080,7 +2065,7 @@ namespace Epsitec.Common.Designer
 			string icon = "manifest:Epsitec.Common.Dialogs.Images.Question.icon";
 			string message = question;
 
-			Common.Dialogs.IDialog dialog = Common.Dialogs.MessageDialog.CreateYesNo(title, icon, message, "", "", this.commandDispatcher);
+			Common.Dialogs.IDialog dialog = Common.Dialogs.MessageDialog.CreateYesNo(title, icon, message, "", "", this.CommandDispatcher);
 			dialog.Owner = this.Window;
 			dialog.OpenDialog();
 			return dialog.Result;
@@ -2095,7 +2080,7 @@ namespace Epsitec.Common.Designer
 			string icon = "manifest:Epsitec.Common.Dialogs.Images.Question.icon";
 			string message = question;
 
-			Common.Dialogs.IDialog dialog = Common.Dialogs.MessageDialog.CreateYesNoCancel(title, yes, no, cancel, icon, message, "", "", this.commandDispatcher);
+			Common.Dialogs.IDialog dialog = Common.Dialogs.MessageDialog.CreateYesNoCancel(title, yes, no, cancel, icon, message, "", "", this.CommandDispatcher);
 			dialog.Owner = this.Window;
 			dialog.OpenDialog();
 			return dialog.Result;
@@ -2109,7 +2094,7 @@ namespace Epsitec.Common.Designer
 			string title = Res.Strings.Application.Title;
 			string icon = "manifest:Epsitec.Common.Dialogs.Images.Information.icon";
 
-			Common.Dialogs.IDialog dialog = Common.Dialogs.MessageDialog.CreateOk(title, icon, message, "", this.commandDispatcher);
+			Common.Dialogs.IDialog dialog = Common.Dialogs.MessageDialog.CreateOk(title, icon, message, "", this.CommandDispatcher);
 			dialog.Owner = this.Window;
 			dialog.OpenDialog();
 			return dialog.Result;
@@ -2125,7 +2110,7 @@ namespace Epsitec.Common.Designer
 			string icon = "manifest:Epsitec.Common.Dialogs.Images.Warning.icon";
 			string message = TextLayout.ConvertToTaggedText(error);
 
-			Common.Dialogs.IDialog dialog = Common.Dialogs.MessageDialog.CreateOk(title, icon, message, "", this.commandDispatcher);
+			Common.Dialogs.IDialog dialog = Common.Dialogs.MessageDialog.CreateOk(title, icon, message, "", this.CommandDispatcher);
 			dialog.Owner = this.Window;
 			dialog.OpenDialog();
 			return dialog.Result;
@@ -2196,9 +2181,9 @@ namespace Epsitec.Common.Designer
 
 		protected DesignerMode					mode;
 		protected bool							standalone;
-		protected Window						window;
-		protected CommandDispatcher				commandDispatcher;
-		protected CommandContext				commandContext;
+//-		protected Window						window;
+//-		protected CommandDispatcher				commandDispatcher;
+//-		protected CommandContext				commandContext;
 		protected RibbonBook					ribbonBook;
 		protected RibbonPage					ribbonMain;
 		protected RibbonPage					ribbonOper;
@@ -2217,7 +2202,7 @@ namespace Epsitec.Common.Designer
 		protected Dialogs.ResourceStructuredTypeField dlgResourceStructuredTypeField;
 		protected Dialogs.BindingSelector		dlgBindingSelector;
 		protected Dialogs.TableConfiguration	dlgTableConfiguration;
-		protected Dialogs.ResourceName				dlgFieldName;
+		protected Dialogs.ResourceName			dlgFieldName;
 		protected Dialogs.EntityComment			dlgEntityComment;
 		protected PanelsContext					context;
 
