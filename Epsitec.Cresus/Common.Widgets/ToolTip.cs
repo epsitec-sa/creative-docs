@@ -542,9 +542,19 @@ namespace Epsitec.Common.Widgets
 			return obj.GetValue (ToolTip.ToolTipTextProperty) as string;
 		}
 
+		public static bool HasToolTipText(DependencyObject obj)
+		{
+			return obj.ContainsValue (ToolTip.ToolTipTextProperty);
+		}
+
 		public static Widget GetToolTipWidget(DependencyObject obj)
 		{
 			return obj.GetValue (ToolTip.ToolTipWidgetProperty) as Widget;
+		}
+
+		public static bool HasToolTipWidget(DependencyObject obj)
+		{
+			return obj.ContainsValue (ToolTip.ToolTipWidgetProperty);
 		}
 
 		public static void SetToolTipText(DependencyObject obj, string value)

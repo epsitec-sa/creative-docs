@@ -2837,7 +2837,7 @@ namespace Epsitec.Common.Document
 					button.SetParent(line);
 					button.Clicked += new MessageEventHandler(this.HandleMiniBarButtonClicked);
 
-					ToolTip.Default.SetToolTip(button, Misc.GetTextWithShortcut(c));
+					ToolTip.Default.SetToolTip(button, c.GetDescriptionWithShortcut());
 				}
 			}
 			this.miniBarCmds = null;

@@ -229,6 +229,17 @@ namespace Epsitec.Common.Widgets
 							break;
 					}
 				}
+				
+				if ((!ToolTip.HasToolTipText (this)) &&
+					(!ToolTip.HasToolTipWidget (this)))
+				{
+					string description = command.GetDescriptionWithShortcut ();
+
+					if (!string.IsNullOrEmpty (description))
+					{
+						this.DefineToolTipFromCaption (description);
+					}
+				}
 			}
 		}
 

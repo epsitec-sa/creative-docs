@@ -115,7 +115,7 @@ namespace Epsitec.Common.Document.Ribbons
 
 			button.TabIndex = this.tabIndex++;
 			button.TabNavigationMode = TabNavigationMode.ActivateOnTab;
-			ToolTip.Default.SetToolTip(button, Misc.GetTextWithShortcut(c));
+			ToolTip.Default.SetToolTip(button, c.GetDescriptionWithShortcut());
 			return button;
 		}
 
@@ -132,7 +132,7 @@ namespace Epsitec.Common.Document.Ribbons
 
 			button.TabIndex = this.tabIndex++;
 			button.TabNavigationMode = TabNavigationMode.ActivateOnTab;
-			ToolTip.Default.SetToolTip(button, Misc.GetTextWithShortcut(c));
+			ToolTip.Default.SetToolTip(button, c.GetDescriptionWithShortcut());
 			return button;
 		}
 
@@ -175,7 +175,7 @@ namespace Epsitec.Common.Document.Ribbons
 
 			button.TabIndex = this.tabIndex++;
 			button.TabNavigationMode = TabNavigationMode.ActivateOnTab;
-			ToolTip.Default.SetToolTip(button, Misc.GetTextWithShortcut(c));
+			ToolTip.Default.SetToolTip(button, c.GetDescriptionWithShortcut());
 			return button;
 		}
 

@@ -780,21 +780,6 @@ namespace Epsitec.Common.Document
 			return command.PreferredShortcut.ToString();
 		}
 
-		static public string GetTextWithShortcut(Command command)
-		{
-			//	Donne le nom d'une commande, avec le raccourci clavier éventuel entre parenthèses.
-			string shortcut = Misc.GetShortcut(command);
-
-			if ( shortcut == null )
-			{
-				return command.Description;
-			}
-			else
-			{
-				return string.Format("{0} ({1})", command.Description, shortcut);
-			}
-		}
-
 		static public Command CreateStructuredCommandWithName(string commandName)
 		{
 			Command command = Command.Find(commandName);

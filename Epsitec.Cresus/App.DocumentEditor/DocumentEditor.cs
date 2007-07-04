@@ -977,7 +977,7 @@ namespace Epsitec.App.DocumentEditor
 			{
 				IconButton button = new IconButton(command);
 				this.vToolBar.Items.Add(button);
-				ToolTip.Default.SetToolTip(button, Misc.GetTextWithShortcut(command));
+				ToolTip.Default.SetToolTip(button, command.GetDescriptionWithShortcut());
 				return button;
 			}
 		}
@@ -1002,7 +1002,7 @@ namespace Epsitec.App.DocumentEditor
 			double h = this.info.PreferredHeight-3;
 			button.PreferredSize = new Size(h, h);
 			this.info.Items.Add(button);
-			ToolTip.Default.SetToolTip(button, Misc.GetTextWithShortcut(command));
+			ToolTip.Default.SetToolTip(button, command.GetDescriptionWithShortcut());
 			return button;
 		}
 
@@ -1141,7 +1141,7 @@ namespace Epsitec.App.DocumentEditor
 			{
 				IconButton button = new IconButton(command);
 				this.ribbonBook.Items.Add(button);
-				ToolTip.Default.SetToolTip(button, Misc.GetTextWithShortcut(command));
+				ToolTip.Default.SetToolTip(button, command.GetDescriptionWithShortcut());
 				return button;
 			}
 		}

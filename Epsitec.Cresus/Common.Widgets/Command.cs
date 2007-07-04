@@ -124,7 +124,14 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				return this.caption.Description;
+				string value = this.caption.Description;
+
+				if (string.IsNullOrEmpty (value))
+				{
+					value = this.caption.DefaultLabel;
+				}
+
+				return value;
 			}
 		}
 
@@ -348,6 +355,11 @@ namespace Epsitec.Common.Widgets
 			}
 			
 			return null;
+		}
+
+		public string GetDescriptionWithShortcut()
+		{
+			return Shortcut.AppendShortcutText (this.Description, this.Shortcuts);
 		}
 
 		/// <summary>
