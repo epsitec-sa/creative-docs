@@ -23,4 +23,11 @@
   <data id="0C">&lt;s:data id="_0" f:Description="Schließen" f:Labels="{Collection {Text 'Schließen'}}" /&gt;</data>
   <data id="0Q">&lt;s:data id="_0" f:Description="Felder leeren" f:Labels="{Collection {Text 'Leeren'}}" /&gt;</data>
   <data id="0R">&lt;s:data id="_0" f:Description="Änderungen übernehmen" f:Labels="{Collection {Text 'Übernehmen'}}" /&gt;</data>
+  <data id="1">&lt;s:type id="_1" s:name="Epsitec.Common.Widgets.Command" /&gt;&lt;s:data id="_0" f:_1.Statefull="False" f:_1.DefaultParameter="{Null}" /&gt;</data>
+  <data id="11">&lt;s:type id="_1" s:name="Epsitec.Common.Widgets.Command" /&gt;&lt;s:data id="_0" f:_1.Statefull="False" f:_1.DefaultParameter="{Null}" /&gt;</data>
+  <data id="12">&lt;s:type id="_1" s:name="Epsitec.Common.Widgets.Command" /&gt;&lt;s:data id="_0" f:_1.Statefull="False" f:_1.DefaultParameter="{Null}" /&gt;</data>
+  <data id="13">&lt;s:type id="_1" s:name="Epsitec.Common.Widgets.Command" /&gt;&lt;s:data id="_0" f:_1.Statefull="False" f:_1.DefaultParameter="{Null}" /&gt;</data>
+  <data id="14">&lt;s:type id="_1" s:name="Epsitec.Common.Widgets.Command" /&gt;&lt;s:data id="_0" f:_1.Statefull="False" f:_1.DefaultParameter="{Null}" /&gt;</data>
+  <data id="15">&lt;s:type id="_1" s:name="Epsitec.Common.Widgets.Command" /&gt;&lt;s:data id="_0" f:_1.Statefull="False" f:_1.DefaultParameter="{Null}" /&gt;</data>
+  <data id="16">&lt;s:type id="_1" s:name="Epsitec.Common.Widgets.Command" /&gt;&lt;s:data id="_0" f:_1.Statefull="False" f:_1.DefaultParameter="{Null}" /&gt;</data>
 </bundle>

@@ -2084,37 +2084,37 @@ namespace Epsitec.App.DocumentEditor
 		}
 
 		#region PaletteIO
-		[Command ("NewPaletteDefault")]
+		[Command (Widgets.Res.CommandIds.ColorPalette.SelectDefaultColors)]
 		void CommandNewPaletteDefault()
 		{
 			this.CurrentDocument.GlobalSettings.ColorCollection.Initialize(ColorCollectionType.Default);
 		}
 
-		[Command ("NewPaletteRainbow")]
+		[Command (Widgets.Res.CommandIds.ColorPalette.SelectRainbowColors)]
 		void NewPaletteRainbow()
 		{
 			this.CurrentDocument.GlobalSettings.ColorCollection.Initialize(ColorCollectionType.Rainbow);
 		}
 
-		[Command ("NewPaletteLight")]
+		[Command (Widgets.Res.CommandIds.ColorPalette.SelectLightColors)]
 		void NewPaletteLight()
 		{
 			this.CurrentDocument.GlobalSettings.ColorCollection.Initialize(ColorCollectionType.Light);
 		}
 
-		[Command ("NewPaletteDark")]
+		[Command (Widgets.Res.CommandIds.ColorPalette.SelectDarkColors)]
 		void NewPaletteDark()
 		{
 			this.CurrentDocument.GlobalSettings.ColorCollection.Initialize(ColorCollectionType.Dark);
 		}
 
-		[Command ("NewPaletteGray")]
+		[Command (Widgets.Res.CommandIds.ColorPalette.SelectGrayColors)]
 		void CommandNewPaletteGray()
 		{
 			this.CurrentDocument.GlobalSettings.ColorCollection.Initialize(ColorCollectionType.Gray);
 		}
 
-		[Command ("OpenPalette")]
+		[Command (Widgets.Res.CommandIds.ColorPalette.Load)]
 		void CommandOpenPalette()
 		{
 			this.dlgSplash.Hide();
@@ -2137,7 +2137,7 @@ namespace Epsitec.App.DocumentEditor
 			this.DialogError(err);
 		}
 
-		[Command ("SavePalette")]
+		[Command (Widgets.Res.CommandIds.ColorPalette.Save)]
 		void CommandSavePalette()
 		{
 			this.dlgSplash.Hide();

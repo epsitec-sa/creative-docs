@@ -58,6 +58,12 @@ namespace Epsitec.Common.Widgets
 		{
 			this.SetEmbedder (embedder);
 		}
+
+		public MenuItem(Command command)
+			: this ()
+		{
+			this.CommandObject = command;
+		}
 		
 		public MenuItem(string command, string text) : this ()
 		{
@@ -94,12 +100,6 @@ namespace Epsitec.Common.Widgets
 			this.Name = name;
 		}
 
-		public MenuItem(Command commandObject)
-			: this ()
-		{
-			this.CommandObject = commandObject;
-		}
-		
 		
 		public virtual bool						IsSeparator
 		{

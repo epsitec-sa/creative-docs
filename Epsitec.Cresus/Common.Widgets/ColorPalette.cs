@@ -478,14 +478,14 @@ namespace Epsitec.Common.Widgets
 
 				VMenu menu = new VMenu ();
 				menu.Host = this;
-				menu.Items.Add (new MenuItem ("NewPaletteDefault", "", Res.Strings.ColorPalette.PaletteDefault, ""));
-				menu.Items.Add (new MenuItem ("NewPaletteRainbow", "", Res.Strings.ColorPalette.PaletteRainbow, ""));
-				menu.Items.Add (new MenuItem ("NewPaletteLight", "", Res.Strings.ColorPalette.PaletteLight, ""));
-				menu.Items.Add (new MenuItem ("NewPaletteDark", "", Res.Strings.ColorPalette.PaletteDark, ""));
-				menu.Items.Add (new MenuItem ("NewPaletteGray", "", Res.Strings.ColorPalette.PaletteGray, ""));
+				menu.Items.Add (new MenuItem (Res.Commands.ColorPalette.SelectDefaultColors));
+				menu.Items.Add (new MenuItem (Res.Commands.ColorPalette.SelectRainbowColors));
+				menu.Items.Add (new MenuItem (Res.Commands.ColorPalette.SelectLightColors));
+				menu.Items.Add (new MenuItem (Res.Commands.ColorPalette.SelectDarkColors));
+				menu.Items.Add (new MenuItem (Res.Commands.ColorPalette.SelectGrayColors));
 				menu.Items.Add (new MenuSeparator ());
-				menu.Items.Add (new MenuItem ("OpenPalette", "", Res.Strings.ColorPalette.OpenPalette, ""));
-				menu.Items.Add (new MenuItem ("SavePalette", "", Res.Strings.ColorPalette.SavePalette, ""));
+				menu.Items.Add (new MenuItem (Res.Commands.ColorPalette.Load));
+				menu.Items.Add (new MenuItem (Res.Commands.ColorPalette.Save));
 				menu.AdjustSize ();
 
 				Drawing.Point pos = button.MapClientToScreen (new Drawing.Point (0, button.ActualHeight));
