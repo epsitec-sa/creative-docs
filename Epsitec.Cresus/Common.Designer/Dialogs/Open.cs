@@ -128,7 +128,6 @@ namespace Epsitec.Common.Designer.Dialogs
 			}
 
 			this.UpdateModules(true);
-			this.UpdateArray();
 			this.moduleInfosShowed.MoveCurrentToPosition(-1);
 			this.UpdateButtons();
 
@@ -194,14 +193,6 @@ namespace Epsitec.Common.Designer.Dialogs
 				//	Trie la liste des modules visibles.
 				this.moduleInfosLive.Sort(new Comparers.ResourceModuleInfoToOpen());
 			}
-		}
-
-		protected void UpdateArray()
-		{
-			//	Met à jour tout le contenu du tableau.
-			//?this.ignoreChange = true;
-			//?this.table.ItemPanel.Refresh();
-			//?this.ignoreChange = false;
 		}
 
 		protected void UpdateButtons()
@@ -426,7 +417,6 @@ namespace Epsitec.Common.Designer.Dialogs
 			}
 
 			this.UpdateModules(false);
-			this.UpdateArray();
 			this.UpdateButtons();
 		}
 

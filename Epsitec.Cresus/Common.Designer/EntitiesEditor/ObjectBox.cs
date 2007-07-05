@@ -1183,13 +1183,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 			if (module != null)
 			{
-				ResourceAccess.Type access = ResourceAccess.Type.Types2;
-
-				if (rel != FieldRelation.None)
-				{
-					access = ResourceAccess.Type.Entities;
-				}
-
+				ResourceAccess.Type access = (rel == FieldRelation.None) ? ResourceAccess.Type.Types2 : ResourceAccess.Type.Entities;
 				this.editor.Module.MainWindow.LocatorGoto(module.ModuleInfo.Name, access, -1, typeId, null);
 			}
 		}
