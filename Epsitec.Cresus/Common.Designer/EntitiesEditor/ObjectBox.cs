@@ -1177,12 +1177,20 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 			StructuredData dataField = dataFields[rank];
 			Druid typeId = (Druid) dataField.GetValue(Support.Res.Fields.Field.TypeId);
+			FieldRelation rel = (FieldRelation) dataField.GetValue(Support.Res.Fields.Field.Relation);
 
 			Module module = this.editor.Module.MainWindow.SearchModule(typeId);
 
 			if (module != null)
 			{
-				this.editor.Module.MainWindow.LocatorGoto(module.ModuleInfo.Name, ResourceAccess.Type.Types2, -1, typeId, null);
+				ResourceAccess.Type access = ResourceAccess.Type.Types2;
+
+				if (rel != FieldRelation.None)
+				{
+					access = ResourceAccess.Type.Entities;
+				}
+
+				this.editor.Module.MainWindow.LocatorGoto(module.ModuleInfo.Name, access, -1, typeId, null);
 			}
 		}
 
