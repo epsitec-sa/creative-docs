@@ -52,6 +52,12 @@ namespace Epsitec.Common.Support
 		int PersistChanges();
 
 		/// <summary>
+		/// Reverts the changes applied to the accessor.
+		/// </summary>
+		/// <returns>The number of items which have been reverted.</returns>
+		int RevertChanges();
+
+		/// <summary>
 		/// Notifies the resource accessor that the specified item changed.
 		/// </summary>
 		/// <param name="item">The item which was modified.</param>

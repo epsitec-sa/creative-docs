@@ -48,6 +48,16 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			return n;
 		}
 
+		public override int RevertChanges()
+		{
+			int n = 0;
+
+			n += base.RevertChanges ();
+			n += this.ValueAccessor.RevertChanges ();
+
+			return n;
+		}
+
 		public override void Load(ResourceManager manager)
 		{
 			base.Load (manager);

@@ -87,6 +87,13 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			return list.Count;
 		}
 
+		public virtual int RevertChanges()
+		{
+			//	TODO: implement revert !
+			
+			return 0;
+		}
+
 		public virtual void NotifyItemChanged(CultureMap item)
 		{
 			if (this.suspendNotifications == 0)

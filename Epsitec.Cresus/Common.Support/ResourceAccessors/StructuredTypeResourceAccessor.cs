@@ -73,6 +73,16 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			return n;
 		}
 
+		public override int RevertChanges()
+		{
+			int n = 0;
+
+			n += base.RevertChanges ();
+			n += this.FieldAccessor.RevertChanges ();
+
+			return n;
+		}
+
 
 		/// <summary>
 		/// Refreshes the automatically generated fields (inherited from a parent
