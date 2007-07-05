@@ -22,7 +22,7 @@ namespace Epsitec.Common.Identity.UI
 		public IdentityCardSelectorDialog(IList<IdentityCard> identities)
 		{
 			this.collectionView = new CollectionView (identities as System.Collections.IList);
-			this.factory = new ItemViewFactory ();
+			this.factory = new ItemViewFactory (this);
 		}
 
 		public IdentityCard ActiveIdentityCard
@@ -90,7 +90,6 @@ namespace Epsitec.Common.Identity.UI
 			table.ItemPanel.Layout = ItemPanelLayout.RowsOfTiles;
 			table.ItemPanel.CustomItemViewFactoryGetter = delegate { return this.factory; };
 			table.ItemPanel.CurrentItemTrackingMode = CurrentItemTrackingMode.AutoSelect;
-			table.ItemPanel.DoubleClicked += this.HandleTableDoubleClicked;
 			table.HeaderVisibility = false;
 			table.SeparatorVisibility = false;
 			table.HorizontalScrollMode = ItemTableScrollMode.None;
@@ -166,15 +165,13 @@ namespace Epsitec.Common.Identity.UI
 			return container;
 		}
 
-		private void HandleTableDoubleClicked(object sender, MessageEventArgs e)
-		{
-			//	Double-clic dans la liste.
-			this.result = Dialogs.DialogResult.Accept;
-			this.CloseDialog ();
-		}
-
 		private class ItemViewFactory : IItemViewFactory
 		{
+			public ItemViewFactory(IdentityCardSelectorDialog dialog)
+			{
+				this.dialog = dialog;
+			}
+			
 			#region IItemViewFactory Members
 
 			public ItemViewWidget CreateUserInterface(ItemView itemView)
@@ -185,12 +182,19 @@ namespace Epsitec.Common.Identity.UI
 
 				container.IsPassive = true;
 
+				widget.AutoDoubleClick = true;
 				widget.Dock = DockStyle.Fill;
 				widget.IdentityCard = card;
 				widget.Clicked +=
 					delegate
 					{
 						itemView.Owner.SelectItemView (itemView);
+					};
+				widget.DoubleClicked +=
+					delegate
+					{
+						this.dialog.result = Dialogs.DialogResult.Accept;
+						this.dialog.CloseDialog ();
 					};
 
 				container.AddEventHandler (Visual.SelectedProperty,
@@ -213,6 +217,8 @@ namespace Epsitec.Common.Identity.UI
 			}
 
 			#endregion
+
+			private IdentityCardSelectorDialog dialog;
 		}
 
 		private CollectionView collectionView;
