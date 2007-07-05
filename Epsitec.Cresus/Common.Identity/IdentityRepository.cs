@@ -10,14 +10,29 @@ using System.Collections.Generic;
 
 namespace Epsitec.Common.Identity
 {
+	/// <summary>
+	/// The <c>IdentityRepository</c> class manages a collection of identites,
+	/// represented by <see cref="IdentityCard"/> instances.
+	/// </summary>
 	public class IdentityRepository : DependencyObject
 	{
+		/// <summary>
+		/// Initializes a new instance of the <see cref="IdentityRepository"/> class.
+		/// </summary>
 		public IdentityRepository()
 		{
 			this.identities = new Epsitec.Common.Types.Collections.HostedList<IdentityCard> (this.HandleIdentityCardInsertion, this.HandleIdentityCardRemoval);
+
+			this.developerIdToIdentityMap = new Dictionary<int, IdentityCard> ();
+			this.userNameToIdentityMap = new Dictionary<string, IdentityCard> ();
 		}
 
-		
+
+		/// <summary>
+		/// Gets the collection of identity cards. Items can be added or removed
+		/// from the collection.
+		/// </summary>
+		/// <value>The collection of identity cards.</value>
 		public IList<IdentityCard> IdentityCards
 		{
 			get
@@ -26,7 +41,10 @@ namespace Epsitec.Common.Identity
 			}
 		}
 
-
+		/// <summary>
+		/// Gets the default identity repository.
+		/// </summary>
+		/// <value>The default identity repository.</value>
 		public static IdentityRepository Default
 		{
 			get
@@ -42,19 +60,43 @@ namespace Epsitec.Common.Identity
 		}
 
 
+		/// <summary>
+		/// Finds the identity card which maps to the specified developer
+		/// id.
+		/// </summary>
+		/// <param name="developerId">The developer id.</param>
+		/// <returns>The identity card or <c>null</c>.</returns>
+		public IdentityCard FindIdentityCard(int developerId)
+		{
+			this.RefreshMaps ();
+			
+			IdentityCard identityCard;
+			this.developerIdToIdentityMap.TryGetValue (developerId, out identityCard);
+
+			return identityCard;
+		}
+
+		/// <summary>
+		/// Finds the identity card which maps to the specified user name.
+		/// </summary>
+		/// <param name="userName">The user name.</param>
+		/// <returns>The identity card or <c>null</c>.</returns>
 		public IdentityCard FindIdentityCard(string userName)
 		{
-			foreach (IdentityCard card in this.IdentityCards)
-			{
-				if (card.UserName == userName)
-				{
-					return card;
-				}
-			}
+			this.RefreshMaps ();
 
-			return null;
+			IdentityCard identityCard;
+			this.userNameToIdentityMap.TryGetValue (userName, out identityCard);
+
+			return identityCard;
 		}
-		
+
+		/// <summary>
+		/// Loads identities from the specified path. The identities will be
+		/// merged with the ones already stored in the repository.
+		/// </summary>
+		/// <param name="path">The identity file path.</param>
+		/// <returns><c>true</c> if the file exists, <c>false</c> otherwise.</returns>
 		public bool Load(string path)
 		{
 			if (System.IO.File.Exists (path))
@@ -70,6 +112,11 @@ namespace Epsitec.Common.Identity
 			}
 		}
 
+		/// <summary>
+		/// Merges the contents of this repository with the specified source
+		/// repository.
+		/// </summary>
+		/// <param name="source">The source repository.</param>
 		public void MergeWithRepository(IdentityRepository source)
 		{
 			if (source == null)
@@ -102,6 +149,7 @@ namespace Epsitec.Common.Identity
 			this.identities.AddRange (map.Values);
 		}
 
+		
 		private void LoadDefault()
 		{
 			this.Load (System.IO.Path.Combine (Epsitec.Common.Support.Globals.Directories.ExecutableRoot, IdentityRepository.DefaultIdentitiesFileName));
@@ -112,13 +160,42 @@ namespace Epsitec.Common.Identity
 		private void HandleIdentityCardInsertion(IdentityCard card)
 		{
 			card.Attach (this);
+
+			this.developerIdToIdentityMap[card.DeveloperId] = card;
+			this.userNameToIdentityMap[card.UserName] = card;
 		}
 
 		private void HandleIdentityCardRemoval(IdentityCard card)
 		{
 			card.Detach (this);
+			this.dirtyMaps = true;
 		}
-		
+
+		private void RefreshMaps()
+		{
+			if (this.dirtyMaps)
+			{
+				lock (this.exclusion)
+				{
+					if (this.dirtyMaps)
+					{
+						Dictionary<int, IdentityCard> mapDevId = this.developerIdToIdentityMap;
+						Dictionary<string, IdentityCard> mapUser  = this.userNameToIdentityMap;
+
+						foreach (IdentityCard card in this.IdentityCards)
+						{
+							mapDevId[card.DeveloperId] = card;
+							mapUser[card.UserName] = card;
+						}
+
+						this.developerIdToIdentityMap = mapDevId;
+						this.userNameToIdentityMap    = mapUser;
+						this.dirtyMaps = false;
+					}
+				}
+			}
+		}
+
 		private static object GetIdentityCardsValue(DependencyObject obj)
 		{
 			IdentityRepository that = (IdentityRepository) obj;
@@ -129,7 +206,12 @@ namespace Epsitec.Common.Identity
 
 		public const string DefaultIdentitiesFileName = "default.identities";
 
+		private readonly object	exclusion = new object ();
 		private Epsitec.Common.Types.Collections.HostedList<IdentityCard> identities;
+		private Dictionary<int, IdentityCard> developerIdToIdentityMap;
+		private Dictionary<string, IdentityCard> userNameToIdentityMap;
+		private bool dirtyMaps;
+		
 		private static IdentityRepository repository;
 	}
 }

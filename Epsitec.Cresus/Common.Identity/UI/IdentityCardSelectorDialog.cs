@@ -102,33 +102,34 @@ namespace Epsitec.Common.Identity.UI
 					table.ItemPanel.ItemViewDefaultSize = new Size (newAperture.Width, 48);
 				};
 #endif
-			
-			table.Columns.Add (new Epsitec.Common.UI.ItemTableColumn ("UserName", 72));
-			table.ColumnHeader.SetColumnComparer (0,
-				delegate (object a, object b)
-				{
-					IdentityCard ca = (IdentityCard) a;
-					IdentityCard cb = (IdentityCard) b;
 
-					if ((ca.DeveloperId < 0) &&
-						(cb.DeveloperId > -1))
+			table.Columns.Add (
+				new Epsitec.Common.UI.ItemTableColumn (
+					IdentityCard.UserNameProperty, 72,
+					delegate (object a, object b)
 					{
-						return -1;
-					}
-					if ((ca.DeveloperId > -1) &&
-						(cb.DeveloperId < 0))
-					{
-						return 1;
-					}
+						IdentityCard ca = (IdentityCard) a;
+						IdentityCard cb = (IdentityCard) b;
 
-					string nameA = ca.UserName;
-					string nameB = cb.UserName;
+						if ((ca.DeveloperId < 0) &&
+							(cb.DeveloperId > -1))
+						{
+							return -1;
+						}
+						if ((ca.DeveloperId > -1) &&
+							(cb.DeveloperId < 0))
+						{
+							return 1;
+						}
 
-					nameA = nameA.Substring (nameA.LastIndexOf (' ')+1);
-					nameB = nameB.Substring (nameB.LastIndexOf (' ')+1);
+						string nameA = ca.UserName;
+						string nameB = cb.UserName;
 
-					return nameA.CompareTo (nameB);
-				});
+						nameA = nameA.Substring (nameA.LastIndexOf (' ')+1);
+						nameB = nameB.Substring (nameB.LastIndexOf (' ')+1);
+
+						return nameA.CompareTo (nameB);
+					}));
 
 			table.ColumnHeader.SetColumnSort (0, ListSortDirection.Ascending);
 					

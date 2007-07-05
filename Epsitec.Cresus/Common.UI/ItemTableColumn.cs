@@ -30,16 +30,31 @@ namespace Epsitec.Common.UI
 		{
 		}
 
+		public ItemTableColumn(DependencyProperty property, double width)
+			: this (property.Name, width)
+		{
+		}
+
 		public ItemTableColumn(string fieldId, GridLength width)
 			: this (fieldId)
 		{
 			this.Width = width;
 		}
 
+		public ItemTableColumn(DependencyProperty property, GridLength width)
+			: this (property.Name, width)
+		{
+		}
+
 		public ItemTableColumn(string fieldId, double width, Support.PropertyComparer comparer)
 			: this (fieldId, new GridLength (width))
 		{
 			this.comparer = comparer;
+		}
+
+		public ItemTableColumn(DependencyProperty property, double width, Support.PropertyComparer comparer)
+			: this (property.Name, width, comparer)
+		{
 		}
 
 		
