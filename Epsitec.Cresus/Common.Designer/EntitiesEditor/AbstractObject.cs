@@ -333,6 +333,45 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		}
 
 
+		protected bool ModifyConfirm()
+		{
+			//	Demande éventuellement si une modification dans la vue est autorisée.
+			//	Retourne true si une modification est autorisée.
+			if (!this.editor.Module.MainWindow.IsEditLocked)
+			{
+				return true;
+			}
+
+			if (this.editor.Entities.SubView == 3)  // sous-vue temporaire ?
+			{
+				return true;
+			}
+
+			string header = "Voulez-vous autoriser les modifications ?";
+
+			List<string> questions = new List<string>();
+			questions.Add(ConfirmationButton.FormatContent("Modifier", "Designer est débloqué afin de permettre de modifier la vue."));
+			questions.Add(ConfirmationButton.FormatContent("Modifier temporairement", "Designer reste bloqué et les modifications sont effectuées dans la vue temporaire T."));
+			questions.Add(ConfirmationButton.FormatContent("Ne pas modifier", "Designer reste bloqué et les modifications sont impossibles."));
+			
+			Common.Dialogs.DialogResult result = this.editor.Module.MainWindow.DialogConfirmation(header, questions, true);
+
+			if (result == Common.Dialogs.DialogResult.Answer1)
+			{
+				this.editor.Module.MainWindow.IsEditLocked = false;
+				return true;
+			}
+
+			if (result == Common.Dialogs.DialogResult.Answer2)
+			{
+				this.editor.Entities.SubView = 3;
+				return true;
+			}
+
+			return false;
+		}
+
+
 		protected void SetDirty()
 		{
 			//	Active la commande d'enregistrement, lorsqu'une modification a été effectuée.

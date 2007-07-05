@@ -65,6 +65,18 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		}
 
 
+		public Viewers.Entities Entities
+		{
+			get
+			{
+				return this.entities;
+			}
+			set
+			{
+				this.entities = value;
+			}
+		}
+
 		public Module Module
 		{
 			get
@@ -1737,6 +1749,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		protected static readonly double frameMargin = 40;
 
 		protected Module module;
+		protected Viewers.Entities entities;
 		protected List<ObjectBox> boxes;
 		protected List<ObjectConnection> connections;
 		protected List<ObjectComment> comments;

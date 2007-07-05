@@ -595,6 +595,13 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		public override void MouseDown(Message message, Point pos)
 		{
 			//	Le bouton de la souris est pressé.
+			this.isModifyConfirmed = this.ModifyConfirm();
+
+			if (!this.isModifyConfirmed)
+			{
+				return;
+			}
+
 			if (this.isSourcesMenu)  // menu resté du clic précédent ?
 			{
 				if (this.sourcesMenuSelected == -1)  // clic en dehors ?
@@ -647,6 +654,11 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		public override void MouseUp(Message message, Point pos)
 		{
 			//	Le bouton de la souris est relâché.
+			if (!this.isModifyConfirmed)
+			{
+				return;
+			}
+
 			if (this.isDragging)
 			{
 				this.editor.UpdateAfterMoving(this);
@@ -2520,6 +2532,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		protected List<ObjectConnection> connectionListC;
 		protected List<ObjectConnection> connectionListD;
 		protected List<ObjectBox> parents;
+
+		protected bool isModifyConfirmed;
 
 		protected bool isDragging;
 		protected Point draggingPos;

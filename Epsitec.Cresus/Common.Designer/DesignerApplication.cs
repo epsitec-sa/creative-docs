@@ -300,6 +300,17 @@ namespace Epsitec.Common.Designer
 			{
 				return this.isEditLocked;
 			}
+			set
+			{
+				if (this.isEditLocked != value)
+				{
+					this.isEditLocked = value;
+
+					ModuleInfo mi = this.CurrentModuleInfo;
+					Viewers.Abstract viewer = mi.Module.Modifier.ActiveViewer;
+					viewer.Update();
+				}
+			}
 		}
 
 		protected void CreateLayout()
@@ -730,11 +741,7 @@ namespace Epsitec.Common.Designer
 				return;
 			}
 
-			this.isEditLocked = !this.isEditLocked;
-
-			ModuleInfo mi = this.CurrentModuleInfo;
-			Viewers.Abstract viewer = mi.Module.Modifier.ActiveViewer;
-			viewer.Update();
+			this.IsEditLocked = !this.IsEditLocked;
 		}
 
 		[Command("EditCancel")]
