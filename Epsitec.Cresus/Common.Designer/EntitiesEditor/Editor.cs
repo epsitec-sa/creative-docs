@@ -1110,13 +1110,6 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			this.brutPos = pos;
 			pos = this.ConvWidgetToEditor(pos);
 
-			//	On reçoit parfois deux fois de suite le même message MouseUp, ce qui
-			//	est une catastrophe pour Terminate(). Il faut donc les filtrer ici !
-			if (this.lastMessageType == message.MessageType && this.lastMessagePos == pos)
-			{
-				return;
-			}
-
 			this.lastMessageType = message.MessageType;
 			this.lastMessagePos = pos;
 
@@ -1124,9 +1117,13 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 			switch (message.MessageType)
 			{
-				case MessageType.MouseMove:
 				case MessageType.KeyDown:
 				case MessageType.KeyUp:
+					//	Ne consomme l'événement que si on l'a bel et bien reconnu ! Evite
+					//	qu'on ne mange les raccourcis clavier généraux (Alt-F4, CTRL-S, ...)
+					break;
+
+				case MessageType.MouseMove:
 					this.MouseMove(message, pos);
 					message.Consumer = this;
 					break;

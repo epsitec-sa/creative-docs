@@ -1984,11 +1984,8 @@ namespace Epsitec.Common.Widgets
 		{
 			Widget       widget = this.capturing_widget;
 			MouseButtons button = this.capturing_button;
-			
-			this.capturing_widget = null;
-			this.capturing_button = MouseButtons.None;
-			
-			this.window.Capture = false;
+
+			this.ClearCapture ();
 			
 			if ((widget != null) &&
 				(button != MouseButtons.None))
@@ -1996,7 +1993,14 @@ namespace Epsitec.Common.Widgets
 				widget.DispatchDummyMouseUpEvent (button, this.capturing_cursor);
 			}
 		}
-		
+
+		private void ClearCapture()
+		{
+			this.capturing_widget = null;
+			this.capturing_button = MouseButtons.None;
+			this.window.Capture = false;
+		}
+
 		internal void DispatchQueuedCommands()
 		{
 			while (this.cmd_queue.Count > 0)
@@ -2144,8 +2148,15 @@ namespace Epsitec.Common.Widgets
 			{
 				message.FilterNoChildren = true;
 				message.Captured         = true;
+
+				Widget widget = this.capturing_widget;
+
+				if (message.MessageType == MessageType.MouseUp)
+				{
+					this.ClearCapture ();
+				}
 				
-				this.capturing_widget.MessageHandler (message);
+				widget.MessageHandler (message);
 			}
 
 			if ((this.IsDisposed) ||
@@ -2163,7 +2174,7 @@ namespace Epsitec.Common.Widgets
 		{
 			this.ReleaseCapturingWidget ();
 		}
-		
+
 		internal void FocusWidget(Widget widget)
 		{
 			if ((widget != null) &&
@@ -2251,9 +2262,7 @@ namespace Epsitec.Common.Widgets
 						break;
 					
 					case MessageType.MouseUp:
-						this.capturing_widget = null;
-						this.capturing_button = MouseButtons.None;
-						this.window.Capture = false;
+						this.ClearCapture ();
 						
 						if (message.IsLeftButton)
 						{
@@ -2333,7 +2342,7 @@ namespace Epsitec.Common.Widgets
 				}
 			}
 		}
-		
+
 		internal void RefreshGraphics(Drawing.Graphics graphics, Drawing.Rectangle repaint, Drawing.Rectangle[] strips)
 		{
 			if (this.is_disposed)
