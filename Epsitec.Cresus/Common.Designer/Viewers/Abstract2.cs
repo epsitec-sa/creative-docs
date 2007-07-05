@@ -1033,6 +1033,11 @@ namespace Epsitec.Common.Designer.Viewers
 		protected void HandleButtonCompactOrExtendClicked(object sender, MessageEventArgs e)
 		{
 			//	Un bouton pour changer le mode d'affichage a été cliqué.
+			if (!this.mainWindow.Terminate(true))
+			{
+				return;
+			}
+
 			if (sender == this.buttonMainCompact)
 			{
 				Abstract2.mainExtended = false;
