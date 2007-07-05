@@ -277,7 +277,7 @@ namespace Epsitec.Cresus.DataLayer
 			
 			ResourceManager.SetResourceManager (window.Root, manager);
 			
-			ItemTableColumn column = new ItemTableColumn (null, Epsitec.Common.Widgets.Layouts.GridLength.Auto);
+			ItemTableColumn column = new ItemTableColumn ("", Epsitec.Common.Widgets.Layouts.GridLength.Auto);
 
 			column.CaptionId  = Res.Captions.Address1.Id;
 			column.TemplateId = Druid.Parse ("[KF]");

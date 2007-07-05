@@ -38,6 +38,16 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			}
 		}
 
+		public override int PersistChanges()
+		{
+			int n = 0;
+
+			n += this.ValueAccessor.PersistChanges ();
+			n += base.PersistChanges ();
+
+			return n;
+		}
+
 		public override void Load(ResourceManager manager)
 		{
 			base.Load (manager);

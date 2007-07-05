@@ -63,6 +63,17 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			return this.fieldAccessor.CreateFieldItem (item.Name);
 		}
 
+		public override int PersistChanges()
+		{
+			int n = 0;
+			
+			n += this.FieldAccessor.PersistChanges ();
+			n += base.PersistChanges ();
+			
+			return n;
+		}
+
+
 		/// <summary>
 		/// Refreshes the automatically generated fields (inherited from a parent
 		/// or included through interfaces).

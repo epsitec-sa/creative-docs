@@ -64,7 +64,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			return new CultureMap (this, this.CreateId ());
 		}
 
-		public int PersistChanges()
+		public virtual int PersistChanges()
 		{
 			List<CultureMap> list = new List<CultureMap> (this.dirtyItems.Keys);
 			
