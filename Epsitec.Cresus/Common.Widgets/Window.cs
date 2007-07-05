@@ -2212,6 +2212,28 @@ namespace Epsitec.Common.Widgets
 					this.EngagedWidget = null;
 				}
 			}
+
+			if (message.IsKeyType)
+			{
+				//	If the user pressed or released one of the super-shift keys,
+				//	we synthesize a mouse move event, so that the widget which
+				//	contains the cursor may update itself accordingly :
+
+				switch (message.KeyCodeOnly)
+				{
+					case KeyCode.ShiftKey:
+					case KeyCode.ShiftKeyLeft:
+					case KeyCode.ShiftKeyRight:
+					case KeyCode.ControlKey:
+					case KeyCode.ControlKeyLeft:
+					case KeyCode.ControlKeyRight:
+					case KeyCode.AltKey:
+					case KeyCode.AltKeyLeft:
+					case KeyCode.AltKeyRight:
+						this.GenerateDummyMouseMoveEvent ();
+						break;
+				}
+			}
 			
 			if (this.capturing_widget != null)
 			{
