@@ -547,6 +547,12 @@
   <ItemGroup>
     <EmbeddedResource Include="Images\CursorLocate.icon" />
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Images\EditLocked.icon" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Images\EditCancel.icon" />
+  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

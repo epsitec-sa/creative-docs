@@ -12,8 +12,10 @@ namespace Epsitec.Common.Designer.Ribbons
 		public Edit(DesignerApplication mainWindow) : base(mainWindow)
 		{
 			this.Title = Res.Strings.Ribbon.Section.Edit;
-			this.PreferredWidth = 8 + 22*1.5*3;
+			this.PreferredWidth = 8 + 22*1.5*5;
 
+			this.buttonLocked    = this.CreateIconButton("EditLocked", "Large");
+			this.buttonCancel    = this.CreateIconButton("EditCancel", "Large");
 			this.buttonDelete    = this.CreateIconButton("Delete", "Large");
 			this.buttonCreate    = this.CreateIconButton("Create", "Large");
 			this.buttonDuplicate = this.CreateIconButton("Duplicate", "Large");
@@ -45,6 +47,10 @@ namespace Epsitec.Common.Designer.Ribbons
 			rect.Width  = dx*1.5;
 			rect.Height = dy*1.5;
 			rect.Offset(0, dy*0.5);
+			this.buttonLocked.SetManualBounds(rect);
+			rect.Offset(dx*1.5, 0);
+			this.buttonCancel.SetManualBounds(rect);
+			rect.Offset(dx*1.5, 0);
 			this.buttonDelete.SetManualBounds(rect);
 			rect.Offset(dx*1.5, 0);
 			this.buttonCreate.SetManualBounds(rect);
@@ -53,6 +59,8 @@ namespace Epsitec.Common.Designer.Ribbons
 		}
 
 
+		protected IconButton				buttonLocked;
+		protected IconButton				buttonCancel;
 		protected IconButton				buttonDelete;
 		protected IconButton				buttonCreate;
 		protected IconButton				buttonDuplicate;

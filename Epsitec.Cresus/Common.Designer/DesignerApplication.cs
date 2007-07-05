@@ -294,6 +294,14 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
+		public bool IsEditLocked
+		{
+			get
+			{
+				return this.isEditLocked;
+			}
+		}
+
 		protected void CreateLayout()
 		{
 			this.ribbonBook = new RibbonBook(this.Window.Root);
@@ -714,6 +722,31 @@ namespace Epsitec.Common.Designer
 			this.CurrentModule.Modifier.ActiveViewer.DoDeleteCulture();
 		}
 
+		[Command("EditLocked")]
+		void CommandEditLocked(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			if (!this.Terminate())
+			{
+				return;
+			}
+
+			this.isEditLocked = !this.isEditLocked;
+
+			ModuleInfo mi = this.CurrentModuleInfo;
+			Viewers.Abstract viewer = mi.Module.Modifier.ActiveViewer;
+			viewer.Update();
+		}
+
+		[Command("EditCancel")]
+		void CommandEditCancel(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			if (!this.IsCurrentModule)
+			{
+				return;
+			}
+
+		}
+
 		[Command("Delete")]
 		void CommandDelete(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
@@ -940,6 +973,8 @@ namespace Epsitec.Common.Designer
 			this.cutState = this.CreateCommandState("Cut", KeyCode.ModifierControl|KeyCode.AlphaX);
 			this.copyState = this.CreateCommandState("Copy", KeyCode.ModifierControl|KeyCode.AlphaC);
 			this.pasteState = this.CreateCommandState("Paste", KeyCode.ModifierControl|KeyCode.AlphaV);
+			this.editLockedState = this.CreateCommandState("EditLocked");
+			this.editCancelState = this.CreateCommandState("EditCancel");
 			this.deleteState = this.CreateCommandState("Delete");
 			this.createState = this.CreateCommandState("Create");
 			this.duplicateState = this.CreateCommandState("Duplicate");
@@ -1053,7 +1088,8 @@ namespace Epsitec.Common.Designer
 
 				string iconName = commandName;
 				string description = Res.Strings.GetString("Action."+commandName);
-				bool statefull = (commandName == "FontBold" || 
+				bool statefull = (commandName == "EditLocked" || 
+								  commandName == "FontBold" || 
 								  commandName == "FontItalic" ||
 								  commandName == "FontUnderline" ||
 								  commandName.StartsWith("PanelShow") ||
@@ -1772,6 +1808,8 @@ namespace Epsitec.Common.Designer
 				this.modificationNextState.Enable = false;
 				this.modificationAllState.Enable = false;
 				this.modificationClearState.Enable = false;
+				this.editLockedState.Enable = false;
+				this.editCancelState.Enable = false;
 				this.deleteState.Enable = false;
 				this.createState.Enable = false;
 				this.duplicateState.Enable = false;
@@ -1902,10 +1940,11 @@ namespace Epsitec.Common.Designer
 
 		public bool IsReadonly
 		{
-			//	Indique si Designer est en mode "consultation", lorsque l'identificateur est anonyme.
+			//	Indique si Designer est en mode "consultation", lorsque l'identificateur est anonyme
+			//	ou lorsqu'on est en mode "bloqué".
 			get
 			{
-				return this.settings.IdentityCard == null;
+				return this.settings.IdentityCard == null || this.isEditLocked;
 			}
 		}
 
@@ -2215,6 +2254,7 @@ namespace Epsitec.Common.Designer
 		protected bool							ignoreChange = false;
 		protected double						moveHorizontal = 5;
 		protected double						moveVertical = 5;
+		protected bool							isEditLocked = true;
 
 		protected List<Viewers.Locator>			locators;
 		protected int							locatorIndex;
@@ -2229,6 +2269,8 @@ namespace Epsitec.Common.Designer
 		protected CommandState					cutState;
 		protected CommandState					copyState;
 		protected CommandState					pasteState;
+		protected CommandState					editLockedState;
+		protected CommandState					editCancelState;
 		protected CommandState					deleteState;
 		protected CommandState					createState;
 		protected CommandState					duplicateState;

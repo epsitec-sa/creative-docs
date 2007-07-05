@@ -910,16 +910,20 @@ namespace Epsitec.Common.Designer.Viewers
 			this.GetCommandState("DisplayVertical").Enable = true;
 			this.GetCommandState("DisplayFullScreen").Enable = true;
 
+			this.GetCommandState("EditLocked").ActiveState = this.mainWindow.IsEditLocked ? ActiveState.Yes : ActiveState.No;
+
 			if (!this.IsDeleteOrDuplicateForViewer)
 			{
 				if (this.HasDeleteOrDuplicate && !this.mainWindow.IsReadonly)
 				{
+					this.GetCommandState("EditCancel").Enable = (build);
 					this.GetCommandState("Delete").Enable = (sel != -1 && count > 1 && build);
 					this.GetCommandState("Create").Enable = (build);
 					this.GetCommandState("Duplicate").Enable = (sel != -1 && build);
 				}
 				else
 				{
+					this.GetCommandState("EditCancel").Enable = false;
 					this.GetCommandState("Delete").Enable = false;
 					this.GetCommandState("Create").Enable = false;
 					this.GetCommandState("Duplicate").Enable = false;
@@ -975,6 +979,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 				if (this.IsDeleteOrDuplicateForViewer)
 				{
+					this.GetCommandState("EditCancel").Enable = false;
 					this.GetCommandState("Delete").Enable = (objSelected != 0);
 					this.GetCommandState("Create").Enable = false;
 					this.GetCommandState("Duplicate").Enable = false;
