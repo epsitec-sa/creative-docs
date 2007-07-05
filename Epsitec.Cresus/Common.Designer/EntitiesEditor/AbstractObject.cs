@@ -16,6 +16,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		public enum ActiveElement
 		{
 			None,
+			FlyOver,
 
 			BoxInside,
 			BoxSources,
@@ -332,6 +333,14 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			return false;
 		}
 
+
+		protected bool IsModifyLocked
+		{
+			get
+			{
+				return !this.editor.Module.MainWindow.IsEditLocked || this.editor.Entities.SubView != 3;
+			}
+		}
 
 		protected bool ModifyConfirm()
 		{
@@ -807,5 +816,6 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		protected MainColor boxColor;
 		protected bool isDimmed;
 		protected int hilitedFieldRank;
+		protected bool isModifyConfirmed;
 	}
 }

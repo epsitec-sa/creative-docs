@@ -158,6 +158,13 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		public override void MouseDown(Message message, Point pos)
 		{
 			//	Le bouton de la souris est pressé.
+			this.isModifyConfirmed = this.ModifyConfirm();
+
+			if (!this.isModifyConfirmed)
+			{
+				return;
+			}
+
 			if (this.hilitedElement == ActiveElement.ConnectionMove1 ||
 				this.hilitedElement == ActiveElement.ConnectionMove2)
 			{
@@ -169,6 +176,11 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		public override void MouseUp(Message message, Point pos)
 		{
 			//	Le bouton de la souris est relâché.
+			if (!this.isModifyConfirmed)
+			{
+				return;
+			}
+
 			if (this.isDraggingRoute)
 			{
 				this.isDraggingRoute = false;
@@ -313,6 +325,18 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 			if (pos.IsZero || this.points.Count == 0)
 			{
+				return false;
+			}
+
+			if (this.IsModifyLocked)
+			{
+				if (DetectOver(pos, 4))
+				{
+					element = ActiveElement.FlyOver;
+					fieldRank = -1;
+					return true;
+				}
+
 				return false;
 			}
 
@@ -482,7 +506,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 				Color color = this.GetColor(0);
 				if (this.hilitedElement == ActiveElement.ConnectionHilited ||
-					this.hilitedElement == ActiveElement.ConnectionChangeRelation )
+					this.hilitedElement == ActiveElement.ConnectionChangeRelation ||
+					this.hilitedElement == ActiveElement.FlyOver )
 				{
 					color = this.GetColorMain();
 				}
@@ -502,7 +527,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 				Color color = this.GetColor(0);
 				if (this.hilitedElement == ActiveElement.ConnectionHilited ||
-					this.hilitedElement == ActiveElement.ConnectionChangeRelation )
+					this.hilitedElement == ActiveElement.ConnectionChangeRelation ||
+					this.hilitedElement == ActiveElement.FlyOver )
 				{
 					color = this.GetColorMain();
 				}

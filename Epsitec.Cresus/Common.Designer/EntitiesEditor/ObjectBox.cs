@@ -820,6 +820,18 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				return false;
 			}
 
+			if (this.IsModifyLocked)
+			{
+				if (this.bounds.Contains(pos))
+				{
+					element = ActiveElement.FlyOver;
+					fieldRank = -1;
+					return true;
+				}
+
+				return false;
+			}
+
 			Rectangle rect;
 
 			if (this.isFieldMoving)
@@ -1632,7 +1644,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			//	Dessine le fond de l'objet.
 			Rectangle rect;
 
-			bool dragging = (this.hilitedElement == ActiveElement.BoxHeader);
+			bool dragging = (this.hilitedElement == ActiveElement.BoxHeader || this.hilitedElement == ActiveElement.FlyOver);
 
 			//	Dessine l'ombre.
 			rect = this.bounds;
@@ -2532,8 +2544,6 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		protected List<ObjectConnection> connectionListC;
 		protected List<ObjectConnection> connectionListD;
 		protected List<ObjectBox> parents;
-
-		protected bool isModifyConfirmed;
 
 		protected bool isDragging;
 		protected Point draggingPos;
