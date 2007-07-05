@@ -318,6 +318,7 @@ namespace Epsitec.Common.Designer.Viewers
 		protected override void UpdateArray()
 		{
 			//	Met à jour tout le contenu du tableau.
+			//	TODO: à supprimer le jour où une modification dans la liste ObservableList se refraichit automatiquement !
 			this.ignoreChange = true;
 			this.table.ItemPanel.Refresh();
 			this.ignoreChange = false;
@@ -340,7 +341,7 @@ namespace Epsitec.Common.Designer.Viewers
 			CultureMap item = this.access.CollectionView.CurrentItem as CultureMap;
 			if (item != null)
 			{
-				string name = item.Name;
+				string name = item.FullName;
 				this.titleText.Text = string.Concat("<font size=\"150%\">", name, "</font>");
 			}
 		}

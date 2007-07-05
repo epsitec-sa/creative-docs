@@ -4306,8 +4306,8 @@ namespace Epsitec.Common.Designer
 
 		protected Type										type;
 		protected ResourceManager							resourceManager;
-		protected ResourceModuleId						moduleInfo;
-		protected DesignerApplication								mainWindow;
+		protected ResourceModuleId							moduleInfo;
+		protected DesignerApplication						mainWindow;
 		protected bool										isDirty = false;
 		protected bool										isJustLoaded = false;
 

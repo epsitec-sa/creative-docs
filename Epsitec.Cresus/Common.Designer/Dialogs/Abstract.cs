@@ -69,7 +69,7 @@ namespace Epsitec.Common.Designer.Dialogs
 		public event Support.EventHandler		Closed;
 
 
-		protected DesignerApplication					mainWindow;
+		protected DesignerApplication			mainWindow;
 		protected Window						parentWindow;
 		protected Window						window;
 		protected bool							ignoreChanged = false;

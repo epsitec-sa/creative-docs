@@ -408,7 +408,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected ResourceAccess				resourceAccess;
 		protected int							resourceSelected = -1;
 		protected Module						module;
-		protected DesignerApplication					mainWindow;
+		protected DesignerApplication			mainWindow;
 		protected int							tabIndex = 0;
 		protected bool							ignoreChange = false;
 		protected bool							summaryEmpty;

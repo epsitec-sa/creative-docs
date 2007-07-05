@@ -350,7 +350,7 @@ namespace Epsitec.Common.Designer
 		#endregion
 
 
-		protected DesignerApplication				mainWindow;
+		protected DesignerApplication		mainWindow;
 		protected DesignerMode				mode;
 		protected ResourceModuleId			moduleInfo;
 		protected Modifier					modifier;
