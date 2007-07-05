@@ -9,7 +9,7 @@ namespace Epsitec.Common.Designer.Ribbons
 	/// </summary>
 	public class Locator : Abstract
 	{
-		public Locator(MainWindow mainWindow) : base(mainWindow)
+		public Locator(DesignerApplication mainWindow) : base(mainWindow)
 		{
 			this.Title = Res.Strings.Ribbon.Section.Locator;
 			this.PreferredWidth = 8 + 22*1.5*2;

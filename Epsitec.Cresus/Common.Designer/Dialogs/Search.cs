@@ -10,7 +10,7 @@ namespace Epsitec.Common.Designer.Dialogs
 	/// </summary>
 	public class Search : Abstract
 	{
-		public Search(MainWindow mainWindow) : base(mainWindow)
+		public Search(DesignerApplication mainWindow) : base(mainWindow)
 		{
 		}
 

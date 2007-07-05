@@ -12,7 +12,7 @@ namespace Epsitec.Common.Designer.Viewers
 	/// </summary>
 	public abstract class Abstract : Widget
 	{
-		public Abstract(Module module, PanelsContext context, ResourceAccess access, MainWindow mainWindow)
+		public Abstract(Module module, PanelsContext context, ResourceAccess access, DesignerApplication mainWindow)
 		{
 			this.module = module;
 			this.context = context;
@@ -36,7 +36,7 @@ namespace Epsitec.Common.Designer.Viewers
 			get;
 		}
 
-		public static Abstract Create(ResourceAccess.Type type, Module module, PanelsContext context, ResourceAccess access, MainWindow mainWindow)
+		public static Abstract Create(ResourceAccess.Type type, Module module, PanelsContext context, ResourceAccess access, DesignerApplication mainWindow)
 		{
 			//	Crée un Viewer d'un type donné.
 			if (type == ResourceAccess.Type.Strings)  return new Strings(module, context, access, mainWindow);
@@ -1328,7 +1328,7 @@ namespace Epsitec.Common.Designer.Viewers
 		protected virtual double GetColumnWidth(int column)
 		{
 			//	Retourne la largeur à utiliser pour une colonne de la liste de gauche.
-			if (this.mainWindow.DisplayModeState == MainWindow.DisplayMode.Horizontal)
+			if (this.mainWindow.DisplayModeState == DesignerApplication.DisplayMode.Horizontal)
 			{
 				return Abstract.columnWidthHorizontal[column];
 			}
@@ -1341,7 +1341,7 @@ namespace Epsitec.Common.Designer.Viewers
 		protected virtual void SetColumnWidth(int column, double value)
 		{
 			//	Mémorise la largeur à utiliser pour une colonne de la liste de gauche.
-			if (this.mainWindow.DisplayModeState == MainWindow.DisplayMode.Horizontal)
+			if (this.mainWindow.DisplayModeState == DesignerApplication.DisplayMode.Horizontal)
 			{
 				Abstract.columnWidthHorizontal[column] = value;
 			}
@@ -1384,7 +1384,7 @@ namespace Epsitec.Common.Designer.Viewers
 		protected Module					module;
 		protected PanelsContext				context;
 		protected ResourceAccess			access;
-		protected MainWindow				mainWindow;
+		protected DesignerApplication				mainWindow;
 		protected string					secondaryCulture;  // two letters
 		protected bool						ignoreChange = false;
 		protected bool						lastActionIsReplace = false;

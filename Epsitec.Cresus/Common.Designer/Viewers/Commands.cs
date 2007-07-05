@@ -11,7 +11,7 @@ namespace Epsitec.Common.Designer.Viewers
 	/// </summary>
 	public class Commands : AbstractCaptions
 	{
-		public Commands(Module module, PanelsContext context, ResourceAccess access, MainWindow mainWindow) : base(module, context, access, mainWindow)
+		public Commands(Module module, PanelsContext context, ResourceAccess access, DesignerApplication mainWindow) : base(module, context, access, mainWindow)
 		{
 			MyWidgets.StackedPanel leftContainer, rightContainer;
 

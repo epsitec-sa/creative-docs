@@ -13,7 +13,7 @@ namespace Epsitec.Common.Designer.Ribbons
 	/// </summary>
 	public class Identity : Abstract
 	{
-		public Identity(MainWindow mainWindow) : base(mainWindow)
+		public Identity(DesignerApplication mainWindow) : base(mainWindow)
 		{
 			this.Title = "Identité";
 			this.PreferredWidth = 8 + 48;

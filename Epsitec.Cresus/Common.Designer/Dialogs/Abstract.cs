@@ -9,7 +9,7 @@ namespace Epsitec.Common.Designer.Dialogs
 	/// </summary>
 	public abstract class Abstract
 	{
-		public Abstract(MainWindow mainWindow)
+		public Abstract(DesignerApplication mainWindow)
 		{
 			this.mainWindow = mainWindow;
 			this.parentWindow = mainWindow.Window;
@@ -69,7 +69,7 @@ namespace Epsitec.Common.Designer.Dialogs
 		public event Support.EventHandler		Closed;
 
 
-		protected MainWindow					mainWindow;
+		protected DesignerApplication					mainWindow;
 		protected Window						parentWindow;
 		protected Window						window;
 		protected bool							ignoreChanged = false;

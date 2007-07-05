@@ -12,7 +12,7 @@ namespace Epsitec.Common.Designer.Dialogs
 	/// </summary>
 	public class BindingSelector : Abstract
 	{
-		public BindingSelector(MainWindow mainWindow) : base(mainWindow)
+		public BindingSelector(DesignerApplication mainWindow) : base(mainWindow)
 		{
 		}
 

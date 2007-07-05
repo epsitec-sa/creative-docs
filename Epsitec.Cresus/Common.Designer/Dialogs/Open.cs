@@ -19,7 +19,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			Locked,
 		}
 
-		public Open(MainWindow mainWindow) : base(mainWindow)
+		public Open(DesignerApplication mainWindow) : base(mainWindow)
 		{
 			this.moduleInfosLive = new Types.Collections.ObservableList<ResourceModuleInfo>();
 			this.moduleInfosShowed = new CollectionView(this.moduleInfosLive);

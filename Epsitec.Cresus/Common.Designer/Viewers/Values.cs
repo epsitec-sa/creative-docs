@@ -11,7 +11,7 @@ namespace Epsitec.Common.Designer.Viewers
 	/// </summary>
 	public class Values : AbstractCaptions
 	{
-		public Values(Module module, PanelsContext context, ResourceAccess access, MainWindow mainWindow) : base(module, context, access, mainWindow)
+		public Values(Module module, PanelsContext context, ResourceAccess access, DesignerApplication mainWindow) : base(module, context, access, mainWindow)
 		{
 		}
 

@@ -9,7 +9,7 @@ namespace Epsitec.Common.Designer.Ribbons
 	/// </summary>
 	public class Display : Abstract
 	{
-		public Display(MainWindow mainWindow) : base(mainWindow)
+		public Display(DesignerApplication mainWindow) : base(mainWindow)
 		{
 			this.Title = Res.Strings.Ribbon.Section.Display;
 			this.PreferredWidth = 8 + 22*1.5*3;

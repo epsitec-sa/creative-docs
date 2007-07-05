@@ -73,7 +73,7 @@ namespace Epsitec.Common.Designer.Controllers
 				this.druid = this.ConvertFromValue(newValue);
 
 				Druid d = Druid.Parse(this.druid);
-				MainWindow mainWindow = this.MainWindow;
+				DesignerApplication mainWindow = this.MainWindow;
 				Module module = mainWindow.SearchModule(d);
 
 				if (module == null)
@@ -117,7 +117,7 @@ namespace Epsitec.Common.Designer.Controllers
 
 		private void HandleButtonClicked(object sender, MessageEventArgs e)
 		{
-			MainWindow mainWindow = this.MainWindow;
+			DesignerApplication mainWindow = this.MainWindow;
 
 			Druid druid = Druid.Parse(this.druid);
 			Common.Dialogs.DialogResult result;
@@ -180,11 +180,11 @@ namespace Epsitec.Common.Designer.Controllers
 			return newValue.ToString();
 		}
 
-		private MainWindow MainWindow
+		private DesignerApplication MainWindow
 		{
 			get
 			{
-				MainWindow mainWindow = MainWindow.GetInstance(this.Placeholder.Window);
+				DesignerApplication mainWindow = DesignerApplication.GetInstance(this.Placeholder.Window);
 				System.Diagnostics.Debug.Assert(mainWindow != null);
 				return mainWindow;
 			}

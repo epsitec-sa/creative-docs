@@ -14,7 +14,7 @@ namespace Epsitec.Common.Designer
 
 		public Designer(Widgets.Application hostApplication, Support.ResourceManagerPool pool)
 		{
-			this.main = new MainWindow (pool);
+			this.main = new DesignerApplication (pool);
 			this.hostApplication = hostApplication;
 		}
 
@@ -63,7 +63,7 @@ namespace Epsitec.Common.Designer
 			this.main.Hide ();
 		}
 
-		private MainWindow main;
+		private DesignerApplication main;
 		private Widgets.Application hostApplication;
 	}
 }

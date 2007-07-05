@@ -10,7 +10,7 @@ namespace Epsitec.Common.Designer.Dialogs
 	/// </summary>
 	public class Icon : Abstract
 	{
-		public Icon(MainWindow mainWindow) : base(mainWindow)
+		public Icon(DesignerApplication mainWindow) : base(mainWindow)
 		{
 		}
 

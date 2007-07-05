@@ -12,7 +12,7 @@ namespace Epsitec.Common.Designer.Viewers
 	/// </summary>
 	public abstract class AbstractCaptions2 : Abstract2
 	{
-		public AbstractCaptions2(Module module, PanelsContext context, ResourceAccess access, MainWindow mainWindow) : base(module, context, access, mainWindow)
+		public AbstractCaptions2(Module module, PanelsContext context, ResourceAccess access, DesignerApplication mainWindow) : base(module, context, access, mainWindow)
 		{
 			//	Résumé des captions.
 			MyWidgets.StackedPanel leftContainer, rightContainer;

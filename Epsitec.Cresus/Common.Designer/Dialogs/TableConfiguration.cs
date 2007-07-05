@@ -11,7 +11,7 @@ namespace Epsitec.Common.Designer.Dialogs
 	/// </summary>
 	public class TableConfiguration : Abstract
 	{
-		public TableConfiguration(MainWindow mainWindow) : base(mainWindow)
+		public TableConfiguration(DesignerApplication mainWindow) : base(mainWindow)
 		{
 		}
 

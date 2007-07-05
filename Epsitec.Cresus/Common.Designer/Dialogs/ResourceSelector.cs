@@ -19,7 +19,7 @@ namespace Epsitec.Common.Designer.Dialogs
 		}
 
 
-		public ResourceSelector(MainWindow mainWindow) : base(mainWindow)
+		public ResourceSelector(DesignerApplication mainWindow) : base(mainWindow)
 		{
 		}
 

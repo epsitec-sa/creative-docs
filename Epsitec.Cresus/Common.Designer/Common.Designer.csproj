@@ -99,7 +99,7 @@
     <Compile Include="Dialogs\Search.cs" />
     <Compile Include="Dialogs\Filter.cs" />
     <Compile Include="Dialogs\Glyphs.cs" />
-    <Compile Include="MainWindow.cs" />
+    <Compile Include="DesignerApplication.cs" />
     <Compile Include="Misc.cs" />
     <Compile Include="Modifier.cs" />
     <Compile Include="Module.cs" />

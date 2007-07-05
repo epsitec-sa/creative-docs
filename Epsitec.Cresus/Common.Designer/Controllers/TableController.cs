@@ -70,7 +70,7 @@ namespace Epsitec.Common.Designer.Controllers
 
 		private void HandleButtonClicked(object sender, MessageEventArgs e)
 		{
-			MainWindow mainWindow = this.MainWindow;
+			DesignerApplication mainWindow = this.MainWindow;
 
 			IProxy sourceProxy = this.Placeholder.ValueBinding.Source as IProxy;
 			IEnumerable<Widget> sourceWidgets = sourceProxy.Widgets;  // liste des objets sélectionnés
@@ -91,11 +91,11 @@ namespace Epsitec.Common.Designer.Controllers
 			}
 		}
 
-		private MainWindow MainWindow
+		private DesignerApplication MainWindow
 		{
 			get
 			{
-				MainWindow mainWindow = MainWindow.GetInstance(this.Placeholder.Window);
+				DesignerApplication mainWindow = DesignerApplication.GetInstance(this.Placeholder.Window);
 				System.Diagnostics.Debug.Assert(mainWindow != null);
 				return mainWindow;
 			}

@@ -20,7 +20,7 @@ namespace Epsitec.Common.Designer.Viewers
 			SuiteView,
 		}
 
-		public AbstractCaptions(Module module, PanelsContext context, ResourceAccess access, MainWindow mainWindow) : base(module, context, access, mainWindow)
+		public AbstractCaptions(Module module, PanelsContext context, ResourceAccess access, DesignerApplication mainWindow) : base(module, context, access, mainWindow)
 		{
 			//	Crée les 2 parties gauche/droite séparées par un splitter.
 			this.left = new Widget(this);

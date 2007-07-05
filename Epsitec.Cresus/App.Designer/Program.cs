@@ -96,9 +96,9 @@ namespace App.Designer
 			//?Epsitec.Common.Widgets.Adorners.Factory.SetActive ("LookMetal");
 			Epsitec.Common.Support.Implementation.FileProvider.DefineGlobalProbingPath (string.Join (";", paths.ToArray ()));
 			
-			MainWindow designerMainWindow;
+			DesignerApplication designerMainWindow;
 			
-			designerMainWindow = new MainWindow (pool);
+			designerMainWindow = new DesignerApplication (pool);
 			designerMainWindow.Mode = DesignerMode.Build;
 			designerMainWindow.Standalone = true;
 			designerMainWindow.Show (null);

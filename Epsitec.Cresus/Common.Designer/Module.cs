@@ -10,7 +10,7 @@ namespace Epsitec.Common.Designer
 	/// </summary>
 	public class Module
 	{
-		public Module(MainWindow mainWindow, DesignerMode mode, string resourcePrefix, ResourceModuleId moduleId)
+		public Module(DesignerApplication mainWindow, DesignerMode mode, string resourcePrefix, ResourceModuleId moduleId)
 		{
 			this.UniqueIDCreate();
 
@@ -56,7 +56,7 @@ namespace Epsitec.Common.Designer
 		}
 
 
-		public MainWindow MainWindow
+		public DesignerApplication MainWindow
 		{
 			get
 			{
@@ -350,7 +350,7 @@ namespace Epsitec.Common.Designer
 		#endregion
 
 
-		protected MainWindow				mainWindow;
+		protected DesignerApplication				mainWindow;
 		protected DesignerMode				mode;
 		protected ResourceModuleId			moduleInfo;
 		protected Modifier					modifier;

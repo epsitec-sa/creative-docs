@@ -10,7 +10,7 @@ namespace Epsitec.Common.Designer.Dialogs
 	/// </summary>
 	public class Glyphs : Abstract
 	{
-		public Glyphs(MainWindow mainWindow) : base(mainWindow)
+		public Glyphs(DesignerApplication mainWindow) : base(mainWindow)
 		{
 			Font font = Font.DefaultFont;
 			this.fontFace  = font.FaceName;   // "Tahoma"

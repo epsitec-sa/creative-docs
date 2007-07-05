@@ -9,7 +9,7 @@ namespace Epsitec.Common.Designer.Ribbons
 	/// </summary>
 	public class Move : Abstract
 	{
-		public Move(MainWindow mainWindow) : base(mainWindow)
+		public Move(DesignerApplication mainWindow) : base(mainWindow)
 		{
 			this.Title = Res.Strings.Ribbon.Section.Move;
 			this.PreferredWidth = 8 + 22*2 + 50;

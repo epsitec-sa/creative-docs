@@ -22,14 +22,14 @@ namespace Epsitec.Common.Designer.Viewers
 		}
 
 
-		public Abstract2(Module module, PanelsContext context, ResourceAccess access, MainWindow mainWindow) : base(module, context, access, mainWindow)
+		public Abstract2(Module module, PanelsContext context, ResourceAccess access, DesignerApplication mainWindow) : base(module, context, access, mainWindow)
 		{
 			this.itemViewFactory = new ItemViewFactory(this);
 			
 			//	Crée les deux volets séparés d'un splitter.
 			this.firstPane = new Widget(this);
 			this.firstPane.Name = "FirstPane";
-			if (this.mainWindow.DisplayModeState == MainWindow.DisplayMode.Horizontal)
+			if (this.mainWindow.DisplayModeState == DesignerApplication.DisplayMode.Horizontal)
 			{
 				this.firstPane.MinWidth = 80;
 				this.firstPane.MaxWidth = 600;
@@ -41,13 +41,13 @@ namespace Epsitec.Common.Designer.Viewers
 				this.firstPane.MaxHeight = 600;
 				this.firstPane.PreferredHeight = Abstract.topArrayHeight;
 			}
-			this.firstPane.Dock = (this.mainWindow.DisplayModeState == MainWindow.DisplayMode.Horizontal) ? DockStyle.Left : DockStyle.Top;
+			this.firstPane.Dock = (this.mainWindow.DisplayModeState == DesignerApplication.DisplayMode.Horizontal) ? DockStyle.Left : DockStyle.Top;
 			this.firstPane.Padding = new Margins(10, 10, 10, 10);
 			this.firstPane.TabIndex = this.tabIndex++;
 			this.firstPane.TabNavigationMode = TabNavigationMode.ForwardTabPassive;
-			this.firstPane.Visibility = (this.mainWindow.DisplayModeState != MainWindow.DisplayMode.FullScreen);
+			this.firstPane.Visibility = (this.mainWindow.DisplayModeState != DesignerApplication.DisplayMode.FullScreen);
 
-			if (this.mainWindow.DisplayModeState == MainWindow.DisplayMode.Horizontal)
+			if (this.mainWindow.DisplayModeState == DesignerApplication.DisplayMode.Horizontal)
 			{
 				this.splitter = new VSplitter(this);
 				this.splitter.Dock = DockStyle.Left;
@@ -58,12 +58,12 @@ namespace Epsitec.Common.Designer.Viewers
 				this.splitter.Dock = DockStyle.Top;
 			}
 			this.splitter.SplitterDragged += new EventHandler(this.HandleSplitterDragged);
-			this.splitter.Visibility = (this.mainWindow.DisplayModeState != MainWindow.DisplayMode.FullScreen);
+			this.splitter.Visibility = (this.mainWindow.DisplayModeState != DesignerApplication.DisplayMode.FullScreen);
 			AbstractSplitter.SetAutoCollapseEnable(this.firstPane, true);
 
 			this.lastPane = new Widget(this);
 			this.lastPane.Name = "LastPane";
-			if (this.mainWindow.DisplayModeState == MainWindow.DisplayMode.Horizontal)
+			if (this.mainWindow.DisplayModeState == DesignerApplication.DisplayMode.Horizontal)
 			{
 				this.lastPane.MinWidth = 200;
 			}
@@ -95,7 +95,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.table.ItemPanel.CustomItemViewFactoryGetter = this.ItemViewFactoryGetter;
 			this.table.Items = this.access.CollectionView;
 			this.InitializeTable();
-			this.table.HorizontalScrollMode = (this.mainWindow.DisplayModeState == MainWindow.DisplayMode.Horizontal) ? UI.ItemTableScrollMode.Linear : UI.ItemTableScrollMode.None;
+			this.table.HorizontalScrollMode = (this.mainWindow.DisplayModeState == DesignerApplication.DisplayMode.Horizontal) ? UI.ItemTableScrollMode.Linear : UI.ItemTableScrollMode.None;
 			this.table.VerticalScrollMode = UI.ItemTableScrollMode.ItemBased;
 			this.table.HeaderVisibility = true;
 			this.table.FrameVisibility = true;
@@ -921,7 +921,7 @@ namespace Epsitec.Common.Designer.Viewers
 		private void HandleSplitterDragged(object sender)
 		{
 			//	Le splitter a été bougé.
-			if (this.mainWindow.DisplayModeState == MainWindow.DisplayMode.Horizontal)
+			if (this.mainWindow.DisplayModeState == DesignerApplication.DisplayMode.Horizontal)
 			{
 				Abstract.leftArrayWidth = this.firstPane.ActualWidth;
 			}

@@ -9,7 +9,7 @@ namespace Epsitec.Common.Designer.Ribbons
 	/// </summary>
 	public abstract class Abstract : RibbonSection
 	{
-		public Abstract(MainWindow mainWindow)
+		public Abstract(DesignerApplication mainWindow)
 		{
 			this.mainWindow = mainWindow;
 		}
@@ -186,7 +186,7 @@ namespace Epsitec.Common.Designer.Ribbons
 		}
 
 
-		protected MainWindow				mainWindow;
+		protected DesignerApplication				mainWindow;
 		protected int						tabIndex = 0;
 		protected bool						ignoreChange = false;
 		protected double					separatorWidth = 8;

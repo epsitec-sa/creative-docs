@@ -9,7 +9,7 @@ namespace Epsitec.Common.Designer.Dialogs
 	/// </summary>
 	public class Filter : Abstract
 	{
-		public Filter(MainWindow mainWindow) : base(mainWindow)
+		public Filter(DesignerApplication mainWindow) : base(mainWindow)
 		{
 		}
 

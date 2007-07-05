@@ -24,7 +24,7 @@ namespace Epsitec.Common.Designer.Dialogs
 		}
 
 
-		public ResourceName(MainWindow mainWindow) : base(mainWindow)
+		public ResourceName(DesignerApplication mainWindow) : base(mainWindow)
 		{
 		}
 

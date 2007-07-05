@@ -3448,7 +3448,7 @@ namespace Epsitec.App.DocumentEditor
 		void CommandResDesignerBuild(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
 			this.dlgSplash.Hide();
-			this.resDesignerMainWindow = new Epsitec.Common.Designer.MainWindow();
+			this.resDesignerMainWindow = new Epsitec.Common.Designer.DesignerApplication();
 			this.resDesignerMainWindow.Mode = Epsitec.Common.Designer.DesignerMode.Build;
 			this.resDesignerMainWindow.Show(this.Window);
 		}
@@ -3457,7 +3457,7 @@ namespace Epsitec.App.DocumentEditor
 		void CommandResDesignerTranslate(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
 			this.dlgSplash.Hide();
-			this.resDesignerMainWindow = new Epsitec.Common.Designer.MainWindow();
+			this.resDesignerMainWindow = new Epsitec.Common.Designer.DesignerApplication();
 			this.resDesignerMainWindow.Mode = Epsitec.Common.Designer.DesignerMode.Translate;
 			this.resDesignerMainWindow.Show(this.Window);
 		}
@@ -5613,7 +5613,7 @@ namespace Epsitec.App.DocumentEditor
 		protected bool							askKey = false;
 		protected MouseCursor					lastMouseCursor = MouseCursor.AsArrow;
 		protected VersionChecker				checker;
-		protected Common.Designer.MainWindow	resDesignerMainWindow;
+		protected Common.Designer.DesignerApplication	resDesignerMainWindow;
 
 		protected CommandDispatcher				commandDispatcher;
 		protected CommandContext				commandContext;

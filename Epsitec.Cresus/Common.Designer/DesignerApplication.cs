@@ -15,7 +15,7 @@ namespace Epsitec.Common.Designer
 	/// <summary>
 	/// Fenêtre principale de l'éditeur de ressources.
 	/// </summary>
-	public class MainWindow : Application
+	public class DesignerApplication : Application
 	{
 		public enum DisplayMode
 		{
@@ -25,7 +25,7 @@ namespace Epsitec.Common.Designer
 		}
 
 
-		static MainWindow()
+		static DesignerApplication()
 		{
 			Res.Initialize();
 
@@ -33,13 +33,13 @@ namespace Epsitec.Common.Designer
 			ImageProvider.Default.PrefillManifestIconCache();
 		}
 
-		public MainWindow() : this(new ResourceManagerPool("Common.Designer"))
+		public DesignerApplication() : this(new ResourceManagerPool("Common.Designer"))
 		{
 			this.resourceManagerPool.DefaultPrefix = "file";
 			this.resourceManagerPool.SetupDefaultRootPaths();
 		}
 
-		public MainWindow(ResourceManagerPool pool)
+		public DesignerApplication(ResourceManagerPool pool)
 		{
 			this.resourceManagerPool = pool;
 			this.LocatorInit();
@@ -81,7 +81,7 @@ namespace Epsitec.Common.Designer
 				window.Name = "Application";  // utilisé pour générer "QuitApplication" !
 				window.PreventAutoClose = true;
 				
-				MainWindow.SetInstance(window, this);  // attache l'instance de MainWindow à la fenêtre
+				DesignerApplication.SetInstance(window, this);  // attache l'instance de MainWindow à la fenêtre
 
 //-				this.commandDispatcher = new CommandDispatcher("Common.Designer", CommandDispatcherLevel.Primary);
 //-				this.commandContext = new CommandContext();
@@ -2167,14 +2167,14 @@ namespace Epsitec.Common.Designer
 
 
 		#region Instance
-		public static MainWindow GetInstance(DependencyObject obj)
+		public static DesignerApplication GetInstance(DependencyObject obj)
 		{
-			return (MainWindow) obj.GetValue(MainWindow.InstanceProperty);
+			return (DesignerApplication) obj.GetValue(DesignerApplication.InstanceProperty);
 		}
 
-		public static void SetInstance(DependencyObject obj, MainWindow value)
+		public static void SetInstance(DependencyObject obj, DesignerApplication value)
 		{
-			obj.SetValue(MainWindow.InstanceProperty, value);
+			obj.SetValue(DesignerApplication.InstanceProperty, value);
 		}
 		#endregion
 
@@ -2310,6 +2310,6 @@ namespace Epsitec.Common.Designer
 		protected CommandState					displayVerticalState;
 		protected CommandState					displayFullScreenState;
 
-		public static readonly DependencyProperty InstanceProperty = DependencyProperty.RegisterAttached("Instance", typeof(MainWindow), typeof(MainWindow));
+		public static readonly DependencyProperty InstanceProperty = DependencyProperty.RegisterAttached("Instance", typeof(DesignerApplication), typeof(DesignerApplication));
 	}
 }

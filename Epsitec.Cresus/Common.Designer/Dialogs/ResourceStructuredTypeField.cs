@@ -11,7 +11,7 @@ namespace Epsitec.Common.Designer.Dialogs
 	/// </summary>
 	public class ResourceStructuredTypeField : Abstract
 	{
-		public ResourceStructuredTypeField(MainWindow mainWindow) : base(mainWindow)
+		public ResourceStructuredTypeField(DesignerApplication mainWindow) : base(mainWindow)
 		{
 		}
 
