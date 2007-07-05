@@ -953,13 +953,10 @@ namespace Epsitec.Common.Designer.Viewers
 				return "Dieu";
 			}
 
-			IList<Identity.IdentityCard> list = Identity.IdentityRepository.Default.IdentityCards;
-			foreach (Identity.IdentityCard card in list)
+			Identity.IdentityCard card = Identity.IdentityRepository.Default.FindIdentityCard(item.Id.Developer);
+			if (card != null)
 			{
-				if (card.DeveloperId == item.Id.Developer)
-				{
-					return card.UserName;
-				}
+				return card.UserName;
 			}
 
 			return string.Format("Dev {0}", item.Id.Developer.ToString());
