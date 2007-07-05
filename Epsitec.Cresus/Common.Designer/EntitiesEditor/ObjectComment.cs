@@ -237,6 +237,12 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				if (this.hilitedElement == ActiveElement.CommentClose)
 				{
 					this.IsVisible = false;
+
+					ObjectConnection connection = this.attachObject as ObjectConnection;
+					if (connection != null)
+					{
+						connection.Field.HasComment = false;
+					}
 				}
 
 				if (this.hilitedElement == ActiveElement.CommentEdit)
