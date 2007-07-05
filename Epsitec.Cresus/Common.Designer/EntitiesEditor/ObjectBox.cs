@@ -496,7 +496,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				case AbstractObject.ActiveElement.BoxExtend:
 					if (this.isExtended)
 					{
-						return "Compactifie l'entité";
+						return "Compacte l'entité";
 					}
 					else
 					{

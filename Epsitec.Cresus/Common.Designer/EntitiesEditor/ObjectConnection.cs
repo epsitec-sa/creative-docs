@@ -301,7 +301,6 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				this.field.Relation = rel;
 				this.SetDirty();
 				this.editor.Invalidate();
-				this.editor.DirtySerialization = true;
 				this.hilitedElement = ActiveElement.None;
 			}
 		}
