@@ -64,6 +64,15 @@ namespace Epsitec.Common.Support
 		void NotifyItemChanged(CultureMap item);
 
 		/// <summary>
+		/// Notifies the resource accessor that the specified culture data was
+		/// just cleared.
+		/// </summary>
+		/// <param name="item">The item.</param>
+		/// <param name="twoLetterISOLanguageName">The two letter ISO language name.</param>
+		/// <param name="data">The data which is cleared.</param>
+		void NotifyCultureDataCleared(CultureMap item, string twoLetterISOLanguageName, Types.StructuredData data);
+
+		/// <summary>
 		/// Loads the data for the specified culture into an existing item.
 		/// </summary>
 		/// <param name="item">The item to update.</param>

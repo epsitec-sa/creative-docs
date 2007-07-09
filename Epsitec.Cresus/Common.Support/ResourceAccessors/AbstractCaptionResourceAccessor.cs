@@ -32,7 +32,9 @@ namespace Epsitec.Common.Support.ResourceAccessors
 
 		public override CultureMap CreateItem()
 		{
-			return this.CreateItem (null, this.CreateId ());
+			CultureMap item = this.CreateItem (null, this.CreateId ());
+			item.IsNewItem = true;
+			return item;
 		}
 
 		public override Types.StructuredData LoadCultureData(CultureMap item, string twoLetterISOLanguageName)

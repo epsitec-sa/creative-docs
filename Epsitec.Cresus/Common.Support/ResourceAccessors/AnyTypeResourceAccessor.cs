@@ -650,6 +650,9 @@ namespace Epsitec.Common.Support.ResourceAccessors
 		{
 			base.HandleItemsCollectionChanged (sender, e);
 
+			//	Always handle the changes, even if the base class suspended the
+			//	notifications, as we need to keep our event handlers up to date:
+
 			switch (e.Action)
 			{
 				case CollectionChangedAction.Add:
@@ -658,14 +661,14 @@ namespace Epsitec.Common.Support.ResourceAccessors
 						this.HandleCultureMapAdded (item);
 					}
 					break;
-				
+
 				case CollectionChangedAction.Remove:
 					foreach (CultureMap item in e.OldItems)
 					{
 						this.HandleCultureMapRemoved (item);
 					}
 					break;
-				
+
 				case CollectionChangedAction.Replace:
 					foreach (CultureMap item in e.OldItems)
 					{

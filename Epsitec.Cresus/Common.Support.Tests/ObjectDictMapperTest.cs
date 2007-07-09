@@ -32,7 +32,7 @@ namespace Epsitec.Common.Support
 			data.NumValue      = 15;
 			data.StringValue   = "Hello";
 			data.DecimalValue  = 123.456M;
-			data.DateTimeValue = System.DateTime.Now;
+			data.DateTimeValue = System.DateTime.Now.ToUniversalTime ();
 			
 			ObjectDictMapper.CopyToDict (data, dict);
 			

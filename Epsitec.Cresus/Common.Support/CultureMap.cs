@@ -95,6 +95,25 @@ namespace Epsitec.Common.Support
 		}
 
 		/// <summary>
+		/// Gets a value indicating whether this instance is a new item which
+		/// has been created but not yet persisted by the resource accessor.
+		/// </summary>
+		/// <value>
+		/// 	<c>true</c> if this instance is a new item; otherwise, <c>false</c>.
+		/// </value>
+		public bool IsNewItem
+		{
+			get
+			{
+				return this.isNewItem;
+			}
+			internal set
+			{
+				this.isNewItem = value;
+			}
+		}
+
+		/// <summary>
 		/// Determines whether the culture for specified two letter ISO language name
 		/// is defined.
 		/// </summary>
@@ -234,6 +253,22 @@ namespace Epsitec.Common.Support
 		}
 
 		/// <summary>
+		/// Clears all culture data associated with this item.
+		/// </summary>
+		internal void ClearCultureData()
+		{
+			if (this.map != null)
+			{
+				for (int i = 0; i < this.map.Length; i++)
+				{
+					this.owner.NotifyCultureDataCleared (this, this.map[i].Key, this.map[i].Value);
+				}
+				
+				this.map = null;
+			}
+		}
+
+		/// <summary>
 		/// Checks for duplicates in the data map. If the caller tries to redefine
 		/// an already known set of data, this will throw an exception in debug
 		/// builds.
@@ -242,14 +277,16 @@ namespace Epsitec.Common.Support
 		[System.Diagnostics.Conditional ("DEBUG")]
 		private void CheckForDuplicates(string twoLetterISOLanguageName)
 		{
-			for (int i = 0; i < this.map.Length; i++)
+			if (this.map != null)
 			{
-				if (this.map[i].Key == twoLetterISOLanguageName)
+				for (int i = 0; i < this.map.Length; i++)
 				{
-					throw new System.InvalidOperationException ("Duplicate insertion");
+					if (this.map[i].Key == twoLetterISOLanguageName)
+					{
+						throw new System.InvalidOperationException ("Duplicate insertion");
+					}
 				}
 			}
-
 		}
 
 		private void HandleDataValueChanged(object sender, Types.DependencyPropertyChangedEventArgs e)
@@ -261,5 +298,6 @@ namespace Epsitec.Common.Support
 		private readonly Druid id;
 		private string name;
 		private KeyValuePair<string, Types.StructuredData>[] map;
+		private bool isNewItem;
 	}
 }

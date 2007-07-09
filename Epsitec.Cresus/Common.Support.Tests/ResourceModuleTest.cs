@@ -72,20 +72,20 @@ namespace Epsitec.Common.Support
 
 			pool.AddModuleRootPath ("%program files%", @"C:\Program Files");
 			pool.AddModuleRootPath ("%sys drive%", @"C:");
-			pool.AddModuleRootPath ("%app%", @"C:\Program Files\Epsitec\Foo");
-			pool.AddModuleRootPath ("%app%", @"C:\Program Files\Epsitec\Application");
+			pool.AddModuleRootPath ("%app%", @"C:\Program Files\Internet Explorer");
+			pool.AddModuleRootPath ("%app%", @"C:\Program Files\Epsitec");
 			pool.AddModuleRootPath ("%source drive%", @"S:");
 			pool.AddModuleRootPath ("%source drive%", @"");
 			
 			Assert.AreEqual (@"S:\abc", pool.GetRootRelativePath (@"S:\abc"));
 			Assert.AreEqual (@"%sys drive%\abc", pool.GetRootRelativePath (@"C:\abc"));
 			Assert.AreEqual (@"%program files%\abc", pool.GetRootRelativePath (@"C:\Program Files\abc"));
-			Assert.AreEqual (@"%app%\abc", pool.GetRootRelativePath (@"C:\Program Files\Epsitec\Application\abc"));
+			Assert.AreEqual (@"%app%\abc", pool.GetRootRelativePath (@"C:\Program Files\Epsitec\abc"));
 			
 			Assert.AreEqual (@"S:\abc", pool.GetRootAbsolutePath (@"S:\abc"));
 			Assert.AreEqual (@"C:\abc", pool.GetRootAbsolutePath (@"%sys drive%\abc"));
 			Assert.AreEqual (@"C:\Program Files\abc", pool.GetRootAbsolutePath (@"%program files%\abc"));
-			Assert.AreEqual (@"C:\Program Files\Epsitec\Application\abc", pool.GetRootAbsolutePath (@"%app%\abc"));
+			Assert.AreEqual (@"C:\Program Files\Epsitec\abc", pool.GetRootAbsolutePath (@"%app%\abc"));
 		}
 	}
 }

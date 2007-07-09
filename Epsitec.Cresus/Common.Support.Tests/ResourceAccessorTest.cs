@@ -13,6 +13,8 @@ namespace Epsitec.Common.Support
 
 			this.manager = new ResourceManager (typeof (ResourceAccessorTest));
 			this.manager.DefineDefaultModuleName ("Test");
+
+			Globals.Properties.SetProperty (ResourceAccessors.AbstractResourceAccessor.DeveloperIdPropertyName, 0);
 		}
 		
 		[Test]
@@ -141,6 +143,74 @@ namespace Epsitec.Common.Support
 
 			Assert.IsNull (this.manager.GetCaption (Druid.Parse ("[400C]"), ResourceLevel.Default));
 			Assert.IsNull (this.manager.GetCaption (Druid.Parse ("[400C]"), ResourceLevel.Merged, Resources.FindCultureInfo ("fr")));
+		}
+
+		[Test]
+		public void CheckCaptionAccessorRevert()
+		{
+			ResourceAccessors.CaptionResourceAccessor accessor = new ResourceAccessors.CaptionResourceAccessor ();
+			
+			accessor.Load (this.manager);
+
+			Assert.AreEqual (2, accessor.Collection.Count);
+
+			Assert.AreEqual (Druid.Parse ("[4002]"), accessor.Collection[Druid.Parse ("[4002]")].Id);
+			Assert.AreEqual ("PatternAngle", accessor.Collection[Druid.Parse ("[4002]")].Name);
+			Assert.AreEqual ("Pattern angle expressed in degrees.", accessor.Collection[Druid.Parse ("[4002]")].GetCultureData ("00").GetValue (Res.Fields.ResourceCaption.Description));
+
+			Types.StructuredData data1;
+			Types.StructuredData data2;
+
+			data1 = accessor.Collection["PatternAngle"].GetCultureData ("fr");
+			data2 = accessor.Collection["PatternAngle"].GetCultureData ("de");
+			
+			data1.SetValue (Res.Fields.ResourceCaption.Description, "Angle de la hachure");
+			data2.SetValue (Res.Fields.ResourceCaption.Description, "Schraffurwinkel");
+
+			Assert.IsTrue (accessor.ContainsChanges);
+			Assert.AreEqual (1, accessor.RevertChanges ());
+			Assert.IsFalse (accessor.ContainsChanges);
+
+			Assert.AreEqual ("Angle de rotation de la trame, exprimé en degrés.", this.manager.GetCaption (Druid.Parse ("[4002]"), ResourceLevel.Merged, Resources.FindCultureInfo ("fr")).Description);
+			Assert.AreEqual ("Pattern angle expressed in degrees.", this.manager.GetCaption (Druid.Parse ("[4002]"), ResourceLevel.Merged, Resources.FindCultureInfo ("de")).Description);
+
+			IList<string> labels;
+
+			labels = data1.GetValue (Res.Fields.ResourceCaption.Labels) as IList<string>;
+			labels.RemoveAt (2);
+
+			Assert.IsTrue (accessor.ContainsChanges);
+			Assert.AreEqual (1, accessor.RevertChanges ());
+			Assert.IsFalse (accessor.ContainsChanges);
+			data1 = accessor.Collection["PatternAngle"].GetCultureData ("fr");
+			labels = data1.GetValue (Res.Fields.ResourceCaption.Labels) as IList<string>;
+			Assert.AreEqual (3, (data1.GetValue (Res.Fields.ResourceCaption.Labels) as IList<string>).Count);
+			
+			labels[0] = "A.";
+
+			Assert.IsTrue (accessor.ContainsChanges);
+			Assert.AreEqual (1, accessor.RevertChanges ());
+			Assert.IsFalse (accessor.ContainsChanges);
+			data1 = accessor.Collection["PatternAngle"].GetCultureData ("fr");
+			labels = data1.GetValue (Res.Fields.ResourceCaption.Labels) as IList<string>;
+			Assert.AreEqual ("A", (data1.GetValue (Res.Fields.ResourceCaption.Labels) as IList<string>)[0]);
+			
+			CultureMap map = accessor.CreateItem ();
+
+			Assert.IsNotNull (map);
+			Assert.AreEqual (Druid.Parse ("[400C]"), map.Id);
+			Assert.IsNull (accessor.Collection[map.Id]);
+
+			accessor.Collection.Add (map);
+			Assert.IsTrue (accessor.ContainsChanges);
+
+			map.Name = "NewItem";
+			map.GetCultureData ("00").SetValue (Res.Fields.ResourceCaption.Description, "New value");
+			map.GetCultureData ("fr").SetValue (Res.Fields.ResourceCaption.Description, "Nouvelle valeur");
+
+			Assert.AreEqual (1, accessor.RevertChanges ());
+			Assert.IsFalse (accessor.ContainsChanges);
+			Assert.IsNull (accessor.Collection[map.Id]);
 		}
 
 		[Test]

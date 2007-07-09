@@ -29,6 +29,14 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			}
 		}
 
+		protected bool AreNotificationsEnabled
+		{
+			get
+			{
+				return (this.suspendNotifications == 0);
+			}
+		}
+
 		/// <summary>
 		/// Loads resources from the specified resource manager. The resource
 		/// manager will be used for all upcoming accesses.
@@ -75,6 +83,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 				if (this.Collection.Contains (item))
 				{
 					this.PersistItem (item);
+					item.IsNewItem = false;
 				}
 				else
 				{
@@ -89,9 +98,34 @@ namespace Epsitec.Common.Support.ResourceAccessors
 
 		public virtual int RevertChanges()
 		{
-			//	TODO: implement revert !
-			
-			return 0;
+			List<CultureMap> list = new List<CultureMap> (this.dirtyItems.Keys);
+
+			this.dirtyItems.Clear ();
+
+			using (this.SuspendNotifications ())
+			{
+				foreach (CultureMap item in list)
+				{
+					item.ClearCultureData ();
+					
+					if (this.Collection.Contains (item))
+					{
+						if (item.IsNewItem)
+						{
+							this.Collection.Remove (item);
+						}
+					}
+					else
+					{
+						if (!item.IsNewItem)
+						{
+							this.Collection.Add (item);
+						}
+					}
+				}
+			}
+
+			return list.Count;
 		}
 
 		public virtual void NotifyItemChanged(CultureMap item)
@@ -100,6 +134,10 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			{
 				this.dirtyItems[item] = true;
 			}
+		}
+
+		public virtual void NotifyCultureDataCleared(CultureMap item, string twoLetterISOLanguageName, Types.StructuredData data)
+		{
 		}
 
 		public abstract Types.StructuredData LoadCultureData(CultureMap item, string twoLetterISOLanguageName);
