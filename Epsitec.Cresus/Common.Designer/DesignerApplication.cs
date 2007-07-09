@@ -305,6 +305,7 @@ namespace Epsitec.Common.Designer
 				if (this.isEditLocked != value)
 				{
 					this.isEditLocked = value;
+					this.StyleButton("EditLocked", this.isEditLocked ? null : "Unlock");
 
 					ModuleInfo mi = this.CurrentModuleInfo;
 					Viewers.Abstract viewer = mi.Module.Modifier.ActiveViewer;
@@ -386,6 +387,16 @@ namespace Epsitec.Common.Designer
 			{
 				//this.GetCommandState(command).ActiveState = active ? ActiveState.Yes : ActiveState.No;
 				button.PreferredIconStyle = active ? "Active" : null;
+			}
+		}
+
+		protected void StyleButton(string command, string style)
+		{
+			//	Modifie le style d'un bouton dans un ruban.
+			IconButton button = this.SearchIconButton(command);
+			if (button != null)
+			{
+				button.PreferredIconStyle = style;
 			}
 		}
 

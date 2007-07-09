@@ -1391,12 +1391,13 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		public bool IsLocateActionHeader(Message message)
 		{
-			//	Indique si l'action débouche sur une opération de navigation.
+			//	Indique si l'action débouche sur une opération de navigation (pour BoxHeader).
 			return (message.IsControlPressed || this.CurrentModifyMode == ModifyMode.Locked);
 		}
 
 		public ModifyMode CurrentModifyMode
 		{
+			//	Retourne le mode de travail courant.
 			get
 			{
 				if (this.module.DesignerApplication.IsEditLocked)
