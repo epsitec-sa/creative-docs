@@ -15,7 +15,7 @@ namespace Epsitec.Common.Widgets
 			this.isVertical   = vertical;
 			this.dragBehavior = this.CreateDragBehavior();
 
-			this.ContainerLayoutMode = isVertical ? ContainerLayoutMode.VerticalFlow : ContainerLayoutMode.HorizontalFlow;
+			this.ContainerLayoutMode = this.isVertical ? ContainerLayoutMode.VerticalFlow : ContainerLayoutMode.HorizontalFlow;
 			
 			this.AutoEngage = true;
 			this.AutoRepeat = true;
@@ -30,12 +30,12 @@ namespace Epsitec.Common.Widgets
 				this.arrowMax = new GlyphButton (this);
 				this.arrowMax.ButtonStyle = ButtonStyle.Icon;
 				this.arrowMax.Clicked += new MessageEventHandler (this.HandleButtonClicked);
-				this.arrowMax.Dock = isVertical ? DockStyle.Top : DockStyle.Right;
+				this.arrowMax.Dock = this.isVertical ? DockStyle.Top : DockStyle.Right;
 
 				this.arrowMin = new GlyphButton (this);
 				this.arrowMin.ButtonStyle = ButtonStyle.Icon;
 				this.arrowMin.Clicked += new MessageEventHandler (this.HandleButtonClicked);
-				this.arrowMin.Dock = isVertical ? DockStyle.Bottom : DockStyle.Left;
+				this.arrowMin.Dock = this.isVertical ? DockStyle.Bottom : DockStyle.Left;
 				
 				this.arrowUp = new GlyphButton (this);
 				this.arrowUp.GlyphShape = GlyphShape.Plus;
@@ -43,7 +43,7 @@ namespace Epsitec.Common.Widgets
 				this.arrowUp.Engaged += new EventHandler(this.HandleButton);
 				this.arrowUp.StillEngaged += new EventHandler(this.HandleButton);
 				this.arrowUp.AutoRepeat = true;
-				this.arrowUp.Dock = isVertical ? DockStyle.Top : DockStyle.Right;
+				this.arrowUp.Dock = this.isVertical ? DockStyle.Top : DockStyle.Right;
 
 				this.arrowDown = new GlyphButton(this);
 				this.arrowDown.GlyphShape = GlyphShape.Minus;
@@ -51,7 +51,7 @@ namespace Epsitec.Common.Widgets
 				this.arrowDown.Engaged += new EventHandler(this.HandleButton);
 				this.arrowDown.StillEngaged += new EventHandler(this.HandleButton);
 				this.arrowDown.AutoRepeat = true;
-				this.arrowDown.Dock = isVertical ? DockStyle.Bottom : DockStyle.Left;
+				this.arrowDown.Dock = this.isVertical ? DockStyle.Bottom : DockStyle.Left;
 			}
 		}
 
@@ -279,8 +279,8 @@ namespace Epsitec.Common.Widgets
 
 				double arrowLength1 = this.showMinMaxButtons ? arrowLength : 0;
 				double arrowLength2 = this.showScrollButtons ? arrowLength : 0;
-				
-				Drawing.Size buttonSize = new Size (arrowLength, arrowLength);
+
+				Drawing.Size buttonSize = this.isVertical ? new Size (0, arrowLength) : new Size (arrowLength, 0);
 
 				this.arrowMax.Visibility  = arrowLength1 > 0;
 				this.arrowMin.Visibility  = arrowLength1 > 0;
