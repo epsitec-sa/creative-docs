@@ -10,33 +10,33 @@ namespace Epsitec.Common.Designer
 	/// </summary>
 	public class Module
 	{
-		public Module(DesignerApplication mainWindow, DesignerMode mode, string resourcePrefix, ResourceModuleId moduleId)
+		public Module(DesignerApplication designerApplication, DesignerMode mode, string resourcePrefix, ResourceModuleId moduleId)
 		{
 			this.UniqueIDCreate();
 
-			this.mainWindow = mainWindow;
+			this.designerApplication = designerApplication;
 			this.mode = mode;
 			this.moduleInfo = moduleId;
 
-			this.resourceManager = new ResourceManager(moduleId, this.mainWindow.ResourceManagerPool);
+			this.resourceManager = new ResourceManager(moduleId, this.designerApplication.ResourceManagerPool);
 			this.resourceManager.DefineDefaultModuleName(this.moduleInfo.Name);
 			this.resourceManager.ActivePrefix = resourcePrefix;
 
 			this.modifier = new Modifier(this);
 
-			this.accessStrings   = new ResourceAccess(ResourceAccess.Type.Strings,   this, this.moduleInfo, this.mainWindow);
-			this.accessStrings2  = new ResourceAccess(ResourceAccess.Type.Strings2,  this, this.moduleInfo, this.mainWindow);
-			this.accessCaptions  = new ResourceAccess(ResourceAccess.Type.Captions,  this, this.moduleInfo, this.mainWindow);
-			this.accessCaptions2 = new ResourceAccess(ResourceAccess.Type.Captions2, this, this.moduleInfo, this.mainWindow);
-			this.accessCommands2 = new ResourceAccess(ResourceAccess.Type.Commands2, this, this.moduleInfo, this.mainWindow);
-			this.accessPanels    = new ResourceAccess(ResourceAccess.Type.Panels,    this, this.moduleInfo, this.mainWindow);
-			this.accessScripts   = new ResourceAccess(ResourceAccess.Type.Scripts,   this, this.moduleInfo, this.mainWindow);
-			this.accessEntities  = new ResourceAccess(ResourceAccess.Type.Entities,  this, this.moduleInfo, this.mainWindow);
-			this.accessTypes2    = new ResourceAccess(ResourceAccess.Type.Types2,    this, this.moduleInfo, this.mainWindow);
+			this.accessStrings   = new ResourceAccess(ResourceAccess.Type.Strings,   this, this.moduleInfo, this.designerApplication);
+			this.accessStrings2  = new ResourceAccess(ResourceAccess.Type.Strings2,  this, this.moduleInfo, this.designerApplication);
+			this.accessCaptions  = new ResourceAccess(ResourceAccess.Type.Captions,  this, this.moduleInfo, this.designerApplication);
+			this.accessCaptions2 = new ResourceAccess(ResourceAccess.Type.Captions2, this, this.moduleInfo, this.designerApplication);
+			this.accessCommands2 = new ResourceAccess(ResourceAccess.Type.Commands2, this, this.moduleInfo, this.designerApplication);
+			this.accessPanels    = new ResourceAccess(ResourceAccess.Type.Panels,    this, this.moduleInfo, this.designerApplication);
+			this.accessScripts   = new ResourceAccess(ResourceAccess.Type.Scripts,   this, this.moduleInfo, this.designerApplication);
+			this.accessEntities  = new ResourceAccess(ResourceAccess.Type.Entities,  this, this.moduleInfo, this.designerApplication);
+			this.accessTypes2    = new ResourceAccess(ResourceAccess.Type.Types2,    this, this.moduleInfo, this.designerApplication);
 			this.Load();
 
 			//	Attention: il faut avoir fait le this.accessEntities.Load() avant de créer this.accessFields2 !
-			this.accessFields2   = new ResourceAccess(ResourceAccess.Type.Fields2,   this, this.moduleInfo, this.mainWindow);
+			this.accessFields2   = new ResourceAccess(ResourceAccess.Type.Fields2,   this, this.moduleInfo, this.designerApplication);
 			this.accessFields2.Load();
 
 			foreach (ResourceAccess access in Access)
@@ -56,11 +56,11 @@ namespace Epsitec.Common.Designer
 		}
 
 
-		public DesignerApplication MainWindow
+		public DesignerApplication DesignerApplication
 		{
 			get
 			{
-				return this.mainWindow;
+				return this.designerApplication;
 			}
 		}
 
@@ -261,11 +261,11 @@ namespace Epsitec.Common.Designer
 
 			if (string.IsNullOrEmpty(message))  // aucune anomalie ?
 			{
-				this.mainWindow.DialogMessage(Res.Strings.Error.CheckOK);
+				this.designerApplication.DialogMessage(Res.Strings.Error.CheckOK);
 			}
 			else
 			{
-				this.mainWindow.DialogError(message);
+				this.designerApplication.DialogError(message);
 			}
 		}
 
@@ -279,7 +279,7 @@ namespace Epsitec.Common.Designer
 
 			if (panel != null)
 			{
-				UserInterface.RunPanel(panel, this.resourceManager, this.mainWindow.Window, name);
+				UserInterface.RunPanel(panel, this.resourceManager, this.designerApplication.Window, name);
 			}
 		}
 
@@ -304,8 +304,8 @@ namespace Epsitec.Common.Designer
 		private void HandleAccessDirtyChanged(object sender)
 		{
 			//	Appelé lorsque l'état IsDirty d'un accès a changé.
-			this.mainWindow.GetCommandState("Save").Enable = this.IsDirty;
-			this.mainWindow.UpdateBookModules();
+			this.designerApplication.GetCommandState("Save").Enable = this.IsDirty;
+			this.designerApplication.UpdateBookModules();
 		}
 
 
@@ -350,7 +350,7 @@ namespace Epsitec.Common.Designer
 		#endregion
 
 
-		protected DesignerApplication		mainWindow;
+		protected DesignerApplication		designerApplication;
 		protected DesignerMode				mode;
 		protected ResourceModuleId			moduleInfo;
 		protected Modifier					modifier;

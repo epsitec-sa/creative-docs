@@ -188,13 +188,6 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		public override void MouseDown(Message message, Point pos)
 		{
 			//	Le bouton de la souris est pressé.
-			this.isModifyConfirmed = this.ModifyConfirm();
-
-			if (!this.isModifyConfirmed)
-			{
-				return;
-			}
-
 			if (this.hilitedElement == ActiveElement.CommentMove)
 			{
 				this.isDraggingMove = true;
@@ -218,11 +211,6 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		public override void MouseUp(Message message, Point pos)
 		{
 			//	Le bouton de la souris est relâché.
-			if (!this.isModifyConfirmed)
-			{
-				return;
-			}
-
 			if (this.isDraggingMove)
 			{
 				this.isDraggingMove = false;
@@ -318,20 +306,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			element = ActiveElement.None;
 			fieldRank = -1;
 
-			if (pos.IsZero || !this.isVisible)
+			if (pos.IsZero || !this.isVisible || this.editor.CurrentModifyMode == Editor.ModifyMode.Locked)
 			{
-				return false;
-			}
-
-			if (this.IsModifyLocked)
-			{
-				if (this.bounds.Contains(pos))
-				{
-					element = ActiveElement.FlyOver;
-					fieldRank = -1;
-					return true;
-				}
-
 				return false;
 			}
 
@@ -428,7 +404,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			//	Modifie le texte du commentaire.
 			Module module = this.editor.Module;
 			string text = this.textLayoutComment.Text;
-			text = module.MainWindow.DlgEntityComment(text);
+			text = module.DesignerApplication.DlgEntityComment(text);
 			if (text != null)
 			{
 				this.textLayoutComment.Text = text;

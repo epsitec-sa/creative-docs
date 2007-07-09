@@ -12,7 +12,7 @@ namespace Epsitec.Common.Designer.Viewers
 	/// </summary>
 	public class Panels : Abstract
 	{
-		public Panels(Module module, PanelsContext context, ResourceAccess access, DesignerApplication mainWindow) : base(module, context, access, mainWindow)
+		public Panels(Module module, PanelsContext context, ResourceAccess access, DesignerApplication designerApplication) : base(module, context, access, designerApplication)
 		{
 			int tabIndex = 0;
 
@@ -285,9 +285,9 @@ namespace Epsitec.Common.Designer.Viewers
 			//	Exécute une commande.
 			if (name == "PanelRun")
 			{
-				this.module.MainWindow.ActiveButton("PanelRun", true);
+				this.module.DesignerApplication.ActiveButton("PanelRun", true);
 				this.module.RunPanel(this.access.AccessIndex);
-				this.module.MainWindow.ActiveButton("PanelRun", false);
+				this.module.DesignerApplication.ActiveButton("PanelRun", false);
 				return;
 			}
 
@@ -1149,7 +1149,7 @@ namespace Epsitec.Common.Designer.Viewers
 				}
 
 				//	Choix d'une ressource type de type 'Types', mais uniquement parmi les TypeCode.Structured.
-				Common.Dialogs.DialogResult result = this.mainWindow.DlgResourceSelector(Dialogs.ResourceSelector.Operation.Selection, this.module, ResourceAccess.Type.Types, ref druid, null);
+				Common.Dialogs.DialogResult result = this.designerApplication.DlgResourceSelector(Dialogs.ResourceSelector.Operation.Selection, this.module, ResourceAccess.Type.Types, ref druid, null);
 				if (result == Common.Dialogs.DialogResult.Yes)  // d'accord ?
 				{
 					AbstractType at = this.module.AccessCaptions.DirectGetAbstractType(druid);

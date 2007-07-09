@@ -65,15 +65,15 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 		}
 
-		public DesignerApplication MainWindow
+		public DesignerApplication DesignerApplication
 		{
 			get
 			{
-				return this.mainWindow;
+				return this.designerApplication;
 			}
 			set
 			{
-				this.mainWindow = value;
+				this.designerApplication = value;
 			}
 		}
 
@@ -408,7 +408,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected ResourceAccess				resourceAccess;
 		protected int							resourceSelected = -1;
 		protected Module						module;
-		protected DesignerApplication			mainWindow;
+		protected DesignerApplication			designerApplication;
 		protected int							tabIndex = 0;
 		protected bool							ignoreChange = false;
 		protected bool							summaryEmpty;

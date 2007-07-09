@@ -9,7 +9,7 @@ namespace Epsitec.Common.Designer.Ribbons
 	/// </summary>
 	public class Move : Abstract
 	{
-		public Move(DesignerApplication mainWindow) : base(mainWindow)
+		public Move(DesignerApplication designerApplication) : base(designerApplication)
 		{
 			this.Title = Res.Strings.Ribbon.Section.Move;
 			this.PreferredWidth = 8 + 22*2 + 50;
@@ -90,11 +90,11 @@ namespace Epsitec.Common.Designer.Ribbons
 
 			if ( field == this.fieldMoveH )
 			{
-				this.mainWindow.MoveHorizontal= (double) field.InternalValue;
+				this.designerApplication.MoveHorizontal= (double) field.InternalValue;
 			}
 			if ( field == this.fieldMoveV )
 			{
-				this.mainWindow.MoveVertical = (double) field.InternalValue;
+				this.designerApplication.MoveVertical = (double) field.InternalValue;
 			}
 		}
 

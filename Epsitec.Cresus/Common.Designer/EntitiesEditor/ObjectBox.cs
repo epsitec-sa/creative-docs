@@ -477,6 +477,10 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 						{
 							return "Déplace l'entité";
 						}
+						else if (this.editor.CurrentModifyMode == Editor.ModifyMode.Locked)
+						{
+							return "Aller sur la définition de l'entité";
+						}
 						else
 						{
 							return "Déplace l'entité<br/>Ctrl+clic: aller sur la définition de l'entité";
@@ -595,13 +599,6 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		public override void MouseDown(Message message, Point pos)
 		{
 			//	Le bouton de la souris est pressé.
-			this.isModifyConfirmed = this.ModifyConfirm();
-
-			if (!this.isModifyConfirmed)
-			{
-				return;
-			}
-
 			if (this.isSourcesMenu)  // menu resté du clic précédent ?
 			{
 				if (this.sourcesMenuSelected == -1)  // clic en dehors ?
@@ -613,7 +610,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				return;
 			}
 
-			if (this.hilitedElement == ActiveElement.BoxHeader && this.editor.BoxCount > 1 && !message.IsControlPressed)
+			if (this.hilitedElement == ActiveElement.BoxHeader && this.editor.BoxCount > 1 && !this.editor.IsLocateActionHeader(message))
 			{
 				this.isDragging = true;
 				this.draggingPos = pos;
@@ -654,11 +651,6 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		public override void MouseUp(Message message, Point pos)
 		{
 			//	Le bouton de la souris est relâché.
-			if (!this.isModifyConfirmed)
-			{
-				return;
-			}
-
 			if (this.isDragging)
 			{
 				this.editor.UpdateAfterMoving(this);
@@ -707,7 +699,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 			else
 			{
-				if (this.hilitedElement == ActiveElement.BoxHeader && message.IsControlPressed && !this.isRoot)
+				if (this.hilitedElement == ActiveElement.BoxHeader && this.editor.IsLocateActionHeader(message) && !this.isRoot)
 				{
 					this.LocateEntity();
 				}
@@ -740,7 +732,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 				if (this.hilitedElement == ActiveElement.BoxFieldName)
 				{
-					if (message.IsControlPressed)
+					if (this.editor.IsLocateAction(message))
 					{
 						this.LocateField(this.hilitedFieldRank);
 					}
@@ -752,7 +744,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 				if (this.hilitedElement == ActiveElement.BoxFieldType)
 				{
-					if (message.IsControlPressed)
+					if (this.editor.IsLocateAction(message))
 					{
 						this.LocateType(this.hilitedFieldRank);
 					}
@@ -764,7 +756,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 				if (this.hilitedElement == ActiveElement.BoxMembership)
 				{
-					if (message.IsControlPressed)
+					if (this.editor.IsLocateAction(message))
 					{
 						this.LocateMembership();
 					}
@@ -820,18 +812,6 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				return false;
 			}
 
-			if (this.IsModifyLocked)
-			{
-				if (this.bounds.Contains(pos))
-				{
-					element = ActiveElement.FlyOver;
-					fieldRank = -1;
-					return true;
-				}
-
-				return false;
-			}
-
 			Rectangle rect;
 
 			if (this.isFieldMoving)
@@ -851,21 +831,21 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			else
 			{
 				//	Souris dans le bouton compact/étendu ?
-				if (this.DetectRoundButton(this.PositionExtendButton, pos))
+				if (this.editor.CurrentModifyMode != Editor.ModifyMode.Locked && this.DetectRoundButton(this.PositionExtendButton, pos))
 				{
 					element = ActiveElement.BoxExtend;
 					return true;
 				}
 
 				//	Souris dans le bouton de fermeture ?
-				if (this.DetectRoundButton(this.PositionCloseButton, pos))
+				if (this.editor.CurrentModifyMode != Editor.ModifyMode.Locked && this.DetectRoundButton(this.PositionCloseButton, pos))
 				{
 					element = ActiveElement.BoxClose;
 					return true;
 				}
 
 				//	Souris dans le bouton des sources ?
-				if (this.sourcesList.Count > 0)
+				if (this.editor.CurrentModifyMode != Editor.ModifyMode.Locked && this.sourcesList.Count > 0)
 				{
 					if (this.DetectRoundButton(this.PositionSourcesButton, pos))
 					{
@@ -875,32 +855,32 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				}
 
 				//	Souris dans le bouton des commentaires ?
-				if (this.DetectRoundButton(this.PositionCommentButton, pos))
+				if (this.editor.CurrentModifyMode != Editor.ModifyMode.Locked && this.DetectRoundButton(this.PositionCommentButton, pos))
 				{
 					element = ActiveElement.BoxComment;
 					return true;
 				}
 
 				//	Souris dans le bouton des couleurs ?
-				if (this.DetectSquareButton(this.PositionColorButton(0), pos))
+				if (this.editor.CurrentModifyMode != Editor.ModifyMode.Locked && this.DetectSquareButton(this.PositionColorButton(0), pos))
 				{
 					element = ActiveElement.BoxColor1;
 					return true;
 				}
 
-				if (this.DetectSquareButton(this.PositionColorButton(1), pos))
+				if (this.editor.CurrentModifyMode != Editor.ModifyMode.Locked && this.DetectSquareButton(this.PositionColorButton(1), pos))
 				{
 					element = ActiveElement.BoxColor2;
 					return true;
 				}
 
-				if (this.DetectSquareButton(this.PositionColorButton(2), pos))
+				if (this.editor.CurrentModifyMode != Editor.ModifyMode.Locked && this.DetectSquareButton(this.PositionColorButton(2), pos))
 				{
 					element = ActiveElement.BoxColor3;
 					return true;
 				}
 
-				if (this.DetectSquareButton(this.PositionColorButton(3), pos))
+				if (this.editor.CurrentModifyMode != Editor.ModifyMode.Locked && this.DetectSquareButton(this.PositionColorButton(3), pos))
 				{
 					element = ActiveElement.BoxColor4;
 					return true;
@@ -915,7 +895,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 					if (d1 < d2)
 					{
-						if (d1 <= AbstractObject.buttonRadius+1)
+						if (this.editor.CurrentModifyMode != Editor.ModifyMode.Locked && d1 <= AbstractObject.buttonRadius+1)
 						{
 							element = ActiveElement.BoxChangeWidth;
 							return true;
@@ -923,7 +903,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					}
 					else
 					{
-						if (d2 <= AbstractObject.buttonRadius+1)
+						if (this.editor.CurrentModifyMode != Editor.ModifyMode.Locked && d2 <= AbstractObject.buttonRadius+1)
 						{
 							element = ActiveElement.BoxMoveColumnsSeparator;
 							return true;
@@ -948,21 +928,25 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					}
 
 					//	Souris entre deux champs ?
-					for (int i=-1; i<this.fields.Count; i++)
+					if (this.editor.CurrentModifyMode == Editor.ModifyMode.Unlocked)
 					{
-						rect = this.GetFieldAddBounds(i);
-						if (i >= this.membershipCount-1 && rect.Contains(pos))
+						for (int i=-1; i<this.fields.Count; i++)
 						{
-							element = ActiveElement.BoxFieldAdd;
-							fieldRank = i;
-							this.SetConnectionsHilited(true);
-							return true;
+							rect = this.GetFieldAddBounds(i);
+							if (i >= this.membershipCount-1 && rect.Contains(pos))
+							{
+								element = ActiveElement.BoxFieldAdd;
+								fieldRank = i;
+								this.SetConnectionsHilited(true);
+								return true;
+							}
 						}
 					}
 
 					//	Souris sur le séparateur des colonnes ?
 					double sep = this.ColumnsSeparatorAbsolute;
-					if (this.columnsSeparatorRelative < 1.0 && pos.X >= sep-4 && pos.X <= sep+4 &&
+					if (this.editor.CurrentModifyMode != Editor.ModifyMode.Locked &&
+						this.columnsSeparatorRelative < 1.0 && pos.X >= sep-4 && pos.X <= sep+4 &&
 						pos.Y >= this.bounds.Bottom+AbstractObject.footerHeight &&
 						pos.Y <= this.bounds.Top-AbstractObject.headerHeight)
 					{
@@ -975,7 +959,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					for (int i=0; i<this.fields.Count; i++)
 					{
 						rect = this.GetFieldRemoveBounds(i);
-						if (i >= this.membershipCount && rect.Contains(pos))
+						if (this.editor.CurrentModifyMode == Editor.ModifyMode.Unlocked && i >= this.membershipCount && rect.Contains(pos))
 						{
 							element = ActiveElement.BoxFieldRemove;
 							fieldRank = i;
@@ -984,7 +968,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 						}
 
 						rect = this.GetFieldMovableBounds(i);
-						if (i >= this.membershipCount && rect.Contains(pos) && this.Fields.Count-this.membershipCount > 1)
+						if (this.editor.CurrentModifyMode == Editor.ModifyMode.Unlocked && i >= this.membershipCount && rect.Contains(pos) && this.Fields.Count-this.membershipCount > 1)
 						{
 							element = ActiveElement.BoxFieldMovable;
 							fieldRank = i;
@@ -1035,6 +1019,11 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		{
 			//	Modifie l'état 'hilited' de toutes les connections qui partent de l'objet.
 			//	Avec false, les petits cercles des liaisons fermées ne sont affichés qu'à droite.
+			if (this.editor.CurrentModifyMode == Editor.ModifyMode.Locked)
+			{
+				isHilited = false;
+			}
+
 			foreach (Field field in this.fields)
 			{
 				if (field.Connection != null)
@@ -1149,11 +1138,11 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		protected void LocateEntity()
 		{
 			//	Montre l'entité cliquée avec le bouton de droite.
-			Module module = this.editor.Module.MainWindow.SearchModule(this.cultureMap.Id);
+			Module module = this.editor.Module.DesignerApplication.SearchModule(this.cultureMap.Id);
 
 			if (module != null)
 			{
-				this.editor.Module.MainWindow.LocatorGoto(module.ModuleInfo.Name, ResourceAccess.Type.Entities, -1, this.cultureMap.Id, null);
+				this.editor.Module.DesignerApplication.LocatorGoto(module.ModuleInfo.Name, ResourceAccess.Type.Entities, -1, this.cultureMap.Id, null);
 			}
 		}
 
@@ -1168,11 +1157,11 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				return;
 			}
 
-			Module module = this.editor.Module.MainWindow.SearchModule(druid);
+			Module module = this.editor.Module.DesignerApplication.SearchModule(druid);
 
 			if (module != null)
 			{
-				this.editor.Module.MainWindow.LocatorGoto(module.ModuleInfo.Name, ResourceAccess.Type.Entities, -1, druid, null);
+				this.editor.Module.DesignerApplication.LocatorGoto(module.ModuleInfo.Name, ResourceAccess.Type.Entities, -1, druid, null);
 			}
 		}
 
@@ -1185,11 +1174,11 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			StructuredData dataField = dataFields[rank];
 			Druid fieldCaptionId = (Druid) dataField.GetValue(Support.Res.Fields.Field.CaptionId);
 
-			Module module = this.editor.Module.MainWindow.SearchModule(fieldCaptionId);
+			Module module = this.editor.Module.DesignerApplication.SearchModule(fieldCaptionId);
 
 			if (module != null)
 			{
-				this.editor.Module.MainWindow.LocatorGoto(module.ModuleInfo.Name, ResourceAccess.Type.Fields2, -1, fieldCaptionId, null);
+				this.editor.Module.DesignerApplication.LocatorGoto(module.ModuleInfo.Name, ResourceAccess.Type.Fields2, -1, fieldCaptionId, null);
 			}
 		}
 
@@ -1203,12 +1192,12 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			Druid typeId = (Druid) dataField.GetValue(Support.Res.Fields.Field.TypeId);
 			FieldRelation rel = (FieldRelation) dataField.GetValue(Support.Res.Fields.Field.Relation);
 
-			Module module = this.editor.Module.MainWindow.SearchModule(typeId);
+			Module module = this.editor.Module.DesignerApplication.SearchModule(typeId);
 
 			if (module != null)
 			{
 				ResourceAccess.Type access = (rel == FieldRelation.None) ? ResourceAccess.Type.Types2 : ResourceAccess.Type.Entities;
-				this.editor.Module.MainWindow.LocatorGoto(module.ModuleInfo.Name, access, -1, typeId, null);
+				this.editor.Module.DesignerApplication.LocatorGoto(module.ModuleInfo.Name, access, -1, typeId, null);
 			}
 		}
 
@@ -1246,7 +1235,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		{
 			//	Supprime un champ.
 			string question = string.Format("Voulez-vous supprimer le champ <b>{0}</b> ?", this.fields[rank].FieldName);
-			if (this.editor.Module.MainWindow.DialogQuestion(question) == Epsitec.Common.Dialogs.DialogResult.Yes)
+			if (this.editor.Module.DesignerApplication.DialogQuestion(question) == Epsitec.Common.Dialogs.DialogResult.Yes)
 			{
 				this.fields[rank].IsExplored = false;
 				this.fields[rank].DstBox = null;
@@ -1271,7 +1260,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			//	Ajoute un nouveau champ.
 			Module module = this.editor.Module;
 			string name = this.GetNewName();
-			name = module.MainWindow.DlgResourceName(Dialogs.ResourceName.Operation.Create, Dialogs.ResourceName.Type.Field, name);
+			name = module.DesignerApplication.DlgResourceName(Dialogs.ResourceName.Operation.Create, Dialogs.ResourceName.Type.Field, name);
 			if (string.IsNullOrEmpty(name))
 			{
 				this.hilitedElement = ActiveElement.None;
@@ -1280,7 +1269,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			
 			if (!Misc.IsValidLabel(ref name))
 			{
-				module.MainWindow.DialogError(Res.Strings.Error.Name.Invalid);
+				module.DesignerApplication.DialogError(Res.Strings.Error.Name.Invalid);
 				return;
 			}
 
@@ -1328,7 +1317,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			string name = fieldCultureMap.Name;
 			
 			Module module = this.editor.Module;
-			name = module.MainWindow.DlgResourceName(Dialogs.ResourceName.Operation.Modify, Dialogs.ResourceName.Type.Field, name);
+			name = module.DesignerApplication.DlgResourceName(Dialogs.ResourceName.Operation.Modify, Dialogs.ResourceName.Type.Field, name);
 			if (string.IsNullOrEmpty(name))
 			{
 				this.hilitedElement = ActiveElement.None;
@@ -1337,7 +1326,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 			if (!Misc.IsValidLabel(ref name))
 			{
-				module.MainWindow.DialogError(Res.Strings.Error.Name.Invalid);
+				module.DesignerApplication.DialogError(Res.Strings.Error.Name.Invalid);
 				return;
 			}
 
@@ -1358,7 +1347,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			Druid druid = (Druid) dataField.GetValue(Support.Res.Fields.Field.TypeId);
 
 			Module module = this.editor.Module;
-			Common.Dialogs.DialogResult result = module.MainWindow.DlgResourceSelector(Dialogs.ResourceSelector.Operation.TypesOrEntities, module, ResourceAccess.Type.Types2, ref druid, null);
+			Common.Dialogs.DialogResult result = module.DesignerApplication.DlgResourceSelector(Dialogs.ResourceSelector.Operation.TypesOrEntities, module, ResourceAccess.Type.Types2, ref druid, null);
 			if (result != Common.Dialogs.DialogResult.Yes)
 			{
 				return;
@@ -1399,17 +1388,17 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			FieldRelation rel = (FieldRelation) dataField.GetValue(Support.Res.Fields.Field.Relation);
 			Druid typeId = (Druid) dataField.GetValue(Support.Res.Fields.Field.TypeId);
 			
-			Module dstModule = this.editor.Module.MainWindow.SearchModule(typeId);
+			Module dstModule = this.editor.Module.DesignerApplication.SearchModule(typeId);
 			CultureMap dstItem = (dstModule == null) ? null : dstModule.AccessEntities.Accessor.Collection[typeId];
 			if (dstItem == null)
 			{
 				rel = FieldRelation.None;  // ce n'est pas une vraie relation !
 			}
 
-			Module fieldModule = this.editor.Module.MainWindow.SearchModule(fieldCaptionId);
+			Module fieldModule = this.editor.Module.DesignerApplication.SearchModule(fieldCaptionId);
 			CultureMap fieldCultureMap = fieldModule.AccessFields2.Accessor.Collection[fieldCaptionId];
 
-			Module typeModule = this.editor.Module.MainWindow.SearchModule(typeId);
+			Module typeModule = this.editor.Module.DesignerApplication.SearchModule(typeId);
 			CultureMap typeCultureMap = null;
 			if (typeModule != null)
 			{
@@ -1545,7 +1534,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			//	Met à jour la liste de toutes les sources potentielles de l'entité courante.
 			this.sourcesList = new List<SourceInfo>();
 
-			List<Module> modules = this.editor.Module.MainWindow.Modules;
+			List<Module> modules = this.editor.Module.DesignerApplication.Modules;
 			foreach (Module module in modules)
 			{
 				foreach (CultureMap cultureMap in module.AccessEntities.Accessor.Collection)
@@ -1559,7 +1548,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 						foreach (StructuredData dataField in dataFields)
 						{
 							Druid typeId = (Druid) dataField.GetValue(Support.Res.Fields.Field.TypeId);
-							Module dstModule = this.editor.Module.MainWindow.SearchModule(typeId);
+							Module dstModule = this.editor.Module.DesignerApplication.SearchModule(typeId);
 							CultureMap fieldCultureMap = (dstModule == null) ? null : dstModule.AccessEntities.Accessor.Collection[typeId];
 							
 							if (fieldCultureMap == this.cultureMap && !this.IsExistingSourceInfo(cultureMap))
@@ -1644,7 +1633,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			//	Dessine le fond de l'objet.
 			Rectangle rect;
 
-			bool dragging = (this.hilitedElement == ActiveElement.BoxHeader || this.hilitedElement == ActiveElement.FlyOver);
+			bool dragging = (this.hilitedElement == ActiveElement.BoxHeader);
 
 			//	Dessine l'ombre.
 			rect = this.bounds;
@@ -1889,6 +1878,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				if (this.hilitedElement != ActiveElement.None &&
 					this.hilitedElement != ActiveElement.BoxChangeWidth &&
 					this.hilitedElement != ActiveElement.BoxMoveColumnsSeparator &&
+					this.editor.CurrentModifyMode == Editor.ModifyMode.Unlocked &&
 					!this.IsHeaderHilite && !this.isFieldMoving && !this.isChangeWidth && !this.isMoveColumnsSeparator)
 				{
 					//	Dessine la glissière à gauche pour suggérer les boutons Add/Remove des champs.
@@ -1994,7 +1984,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 					this.DrawRoundButton(graphics, this.PositionMoveColumnsButton, AbstractObject.buttonRadius, GlyphShape.HorizontalMove, true, false);
 				}
-				if (this.hilitedElement == ActiveElement.BoxHeader && !this.isDragging)
+				if (this.editor.CurrentModifyMode != Editor.ModifyMode.Locked && this.hilitedElement == ActiveElement.BoxHeader && !this.isDragging)
 				{
 					this.DrawRoundButton(graphics, this.PositionMoveColumnsButton, AbstractObject.buttonRadius, GlyphShape.HorizontalMove, false, false);
 				}
@@ -2004,7 +1994,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				{
 					this.DrawRoundButton(graphics, this.PositionChangeWidthButton, AbstractObject.buttonRadius, GlyphShape.HorizontalMove, true, false);
 				}
-				if (this.hilitedElement == ActiveElement.BoxHeader && !this.isDragging)
+				if (this.editor.CurrentModifyMode != Editor.ModifyMode.Locked && this.hilitedElement == ActiveElement.BoxHeader && !this.isDragging)
 				{
 					this.DrawRoundButton(graphics, this.PositionChangeWidthButton, AbstractObject.buttonRadius, GlyphShape.HorizontalMove, false, false);
 				}
@@ -2016,6 +2006,11 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			//	Indique si la souris est dans l'en-tête.
 			get
 			{
+				if (this.editor.CurrentModifyMode == Editor.ModifyMode.Locked)
+				{
+					return false;
+				}
+
 				return (this.hilitedElement == ActiveElement.BoxHeader ||
 						this.hilitedElement == ActiveElement.BoxSources ||
 						this.hilitedElement == ActiveElement.BoxComment ||
@@ -2297,8 +2292,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		protected void UpdateSubtitle()
 		{
 			//	Met à jour le sous-titre de l'entité (nom du module).
-			Module module = this.editor.Module.MainWindow.SearchModule(this.cultureMap.Id);
-			if (module == this.editor.Module.MainWindow.CurrentModule)
+			Module module = this.editor.Module.DesignerApplication.SearchModule(this.cultureMap.Id);
+			if (module == this.editor.Module.DesignerApplication.CurrentModule)
 			{
 				this.Subtitle = null;
 				this.isDimmed = false;
@@ -2318,7 +2313,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 			if (druid.IsValid)
 			{
-				Module module = this.editor.Module.MainWindow.SearchModule(druid);
+				Module module = this.editor.Module.DesignerApplication.SearchModule(druid);
 				CultureMap cultureMap = module.AccessEntities.Accessor.Collection[druid];
 				if (cultureMap != null)
 				{
@@ -2398,7 +2393,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 							Druid druid = Druid.Parse(element);
 							if (druid.IsValid)
 							{
-								Module module = this.editor.Module.MainWindow.SearchModule(druid);
+								Module module = this.editor.Module.DesignerApplication.SearchModule(druid);
 								this.cultureMap = module.AccessEntities.Accessor.Collection[druid];
 							}
 						}

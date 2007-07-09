@@ -9,7 +9,7 @@ namespace Epsitec.Common.Designer.Ribbons
 	/// </summary>
 	public class Edit : Abstract
 	{
-		public Edit(DesignerApplication mainWindow) : base(mainWindow)
+		public Edit(DesignerApplication designerApplication) : base(designerApplication)
 		{
 			this.Title = Res.Strings.Ribbon.Section.Edit;
 			this.PreferredWidth = 8 + 22*1.5*5;

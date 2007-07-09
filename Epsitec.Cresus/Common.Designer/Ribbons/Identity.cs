@@ -13,14 +13,14 @@ namespace Epsitec.Common.Designer.Ribbons
 	/// </summary>
 	public class Identity : Abstract
 	{
-		public Identity(DesignerApplication mainWindow) : base(mainWindow)
+		public Identity(DesignerApplication designerApplication) : base(designerApplication)
 		{
 			this.Title = "Identité";
 			this.PreferredWidth = 8 + 48;
 
 			this.widget = new IdentityCardWidget(this);
 			this.widget.Dock = DockStyle.Fill;
-			this.widget.IdentityCard = this.mainWindow.Settings.IdentityCard;
+			this.widget.IdentityCard = this.designerApplication.Settings.IdentityCard;
 			this.widget.Clicked += new MessageEventHandler(this.HandleIdentityClicked);
 		}
 
@@ -43,7 +43,7 @@ namespace Epsitec.Common.Designer.Ribbons
 			cards.Add(nullCard);
 			
 			IdentityCardSelectorDialog dialog = new IdentityCardSelectorDialog(cards);
-			dialog.Owner = this.mainWindow.Window;
+			dialog.Owner = this.designerApplication.Window;
 			dialog.ActiveIdentityCard = this.widget.IdentityCard ?? nullCard;
 			dialog.OpenDialog();
 			if (dialog.Result == Common.Dialogs.DialogResult.Accept)
@@ -55,11 +55,11 @@ namespace Epsitec.Common.Designer.Ribbons
 					card = null;
 				}
 				
-				this.mainWindow.Settings.IdentityCard = card;
+				this.designerApplication.Settings.IdentityCard = card;
 				this.widget.IdentityCard = card;
 
-				this.mainWindow.CurrentModule.Modifier.ActiveViewer.UpdateCommands();
-				this.mainWindow.CurrentModule.Modifier.ActiveViewer.Update();
+				this.designerApplication.CurrentModule.Modifier.ActiveViewer.UpdateCommands();
+				this.designerApplication.CurrentModule.Modifier.ActiveViewer.Update();
 			}
 		}
 		

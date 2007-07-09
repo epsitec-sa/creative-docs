@@ -528,13 +528,13 @@ namespace Epsitec.Common.Designer.MyWidgets
 			StructuredTypeField actualField = this.fields[sel];
 			Druid druid = actualField.CaptionId;
 
-			Module module = this.mainWindow.SearchModule(druid);
+			Module module = this.designerApplication.SearchModule(druid);
 			if (module == null)
 			{
 				return;
 			}
 
-			this.mainWindow.LocatorGoto(module.ModuleInfo.Name, ResourceAccess.Type.Fields, -1, druid, this.Window.FocusedWidget);
+			this.designerApplication.LocatorGoto(module.ModuleInfo.Name, ResourceAccess.Type.Fields, -1, druid, this.Window.FocusedWidget);
 		}
 
 #if false
@@ -551,7 +551,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			Druid druid = actualField.CaptionId;
 			string includePrefix = string.Concat(this.AbstractType.Caption.Name, ".");
 
-			druid = this.mainWindow.DlgResourceSelector(Dialogs.ResourceSelector.Operation.Selection, this.module, ResourceAccess.Type.Fields, druid, null);
+			druid = this.designerApplication.DlgResourceSelector(Dialogs.ResourceSelector.Operation.Selection, this.module, ResourceAccess.Type.Fields, druid, null);
 			if (druid.IsEmpty)
 			{
 				return;
@@ -583,13 +583,13 @@ namespace Epsitec.Common.Designer.MyWidgets
 				return;
 			}
 
-			Module module = this.mainWindow.SearchModule(druid);
+			Module module = this.designerApplication.SearchModule(druid);
 			if (module == null)
 			{
 				return;
 			}
 
-			this.mainWindow.LocatorGoto(module.ModuleInfo.Name, ResourceAccess.Type.Types, -1, druid, this.Window.FocusedWidget);
+			this.designerApplication.LocatorGoto(module.ModuleInfo.Name, ResourceAccess.Type.Types, -1, druid, this.Window.FocusedWidget);
 		}
 
 		protected void ChangeType()
@@ -605,7 +605,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			AbstractType type = actualField.Type as AbstractType;
 			Druid druid = (type == null) ? Druid.Empty : type.Caption.Id;
 
-			Common.Dialogs.DialogResult result = this.mainWindow.DlgResourceSelector(Dialogs.ResourceSelector.Operation.Selection, this.module, ResourceAccess.Type.Types, ref druid, null);
+			Common.Dialogs.DialogResult result = this.designerApplication.DlgResourceSelector(Dialogs.ResourceSelector.Operation.Selection, this.module, ResourceAccess.Type.Types, ref druid, null);
 			if (result != Common.Dialogs.DialogResult.Yes)
 			{
 				return;
@@ -648,7 +648,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 
 			StructuredType st = actualField.Type as StructuredType;
-			string field = this.mainWindow.DlgResourceStructuredTypeField(st, null/*//?actualField.SourceFieldId*/);
+			string field = this.designerApplication.DlgResourceStructuredTypeField(st, null/*//?actualField.SourceFieldId*/);
 			if (string.IsNullOrEmpty(field))
 			{
 				return;

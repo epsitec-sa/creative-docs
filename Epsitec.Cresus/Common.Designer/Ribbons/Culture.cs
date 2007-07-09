@@ -9,7 +9,7 @@ namespace Epsitec.Common.Designer.Ribbons
 	/// </summary>
 	public class Culture : Abstract
 	{
-		public Culture(DesignerApplication mainWindow) : base(mainWindow)
+		public Culture(DesignerApplication designerApplication) : base(designerApplication)
 		{
 			this.Title = Res.Strings.Ribbon.Section.Culture;
 			this.PreferredWidth = 8 + 22*2;

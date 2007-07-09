@@ -10,7 +10,7 @@ namespace Epsitec.Common.Designer.Dialogs
 	/// </summary>
 	public class Glyphs : Abstract
 	{
-		public Glyphs(DesignerApplication mainWindow) : base(mainWindow)
+		public Glyphs(DesignerApplication designerApplication) : base(designerApplication)
 		{
 			Font font = Font.DefaultFont;
 			this.fontFace  = font.FaceName;   // "Tahoma"
@@ -113,7 +113,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			char c = (char) code;
 			string insert = c.ToString();
 
-			Module module = this.mainWindow.CurrentModule;
+			Module module = this.designerApplication.CurrentModule;
 			if ( module == null )  return;
 
 			AbstractTextField edit = module.Modifier.ActiveViewer.CurrentTextField;

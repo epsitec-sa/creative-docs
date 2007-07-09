@@ -19,7 +19,7 @@ namespace Epsitec.Common.Designer.Dialogs
 		}
 
 
-		public ResourceSelector(DesignerApplication mainWindow) : base(mainWindow)
+		public ResourceSelector(DesignerApplication designerApplication) : base(designerApplication)
 		{
 		}
 
@@ -181,7 +181,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 			//	Cherche le module contenant le Druid de la ressource.
 			this.baseModule = baseModule;
-			this.module = this.mainWindow.SearchModule(this.resource);
+			this.module = this.designerApplication.SearchModule(this.resource);
 
 			if (this.module == null)  // module inconnu ?
 			{
@@ -283,7 +283,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 			this.listModules.Items.Clear();
 
-			List<Module> list = this.mainWindow.OpeningListModule;
+			List<Module> list = this.designerApplication.OpeningListModule;
 			foreach (Module module in list)
 			{
 				text = module.ModuleInfo.Name;
@@ -490,7 +490,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			}
 
 			name = Misc.RemoveTags(name);  // nom sans les tags <b> ou <i>
-			Module module = this.mainWindow.SearchModule(name);
+			Module module = this.designerApplication.SearchModule(name);
 			if (module != null)
 			{
 				this.AccessChange(module);

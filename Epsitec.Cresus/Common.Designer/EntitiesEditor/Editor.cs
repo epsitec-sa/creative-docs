@@ -13,6 +13,13 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 	/// </summary>
 	public class Editor : Widget, Widgets.Helpers.IToolTipHost
 	{
+		public enum ModifyMode
+		{
+			Locked,
+			Partial,
+			Unlocked,
+		}
+
 		protected enum MouseCursorType
 		{
 			Unknown,
@@ -764,8 +771,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				}
 				else
 				{
-					Module dstModule = this.module.MainWindow.SearchModule(connection.Field.Destination);
-					Module currentModule = this.module.MainWindow.CurrentModule;
+					Module dstModule = this.module.DesignerApplication.SearchModule(connection.Field.Destination);
+					Module currentModule = this.module.DesignerApplication.CurrentModule;
 
 					connection.IsDimmed = (dstModule != currentModule);
 				}
@@ -1265,55 +1272,72 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				}
 				else
 				{
-					if (message.IsControlPressed)
+					if (fly.HilitedElement == AbstractObject.ActiveElement.BoxHeader)
 					{
-						if (fly.HilitedElement == AbstractObject.ActiveElement.BoxHeader)
+						if (this.IsLocateActionHeader(message))
 						{
 							ObjectBox box = fly as ObjectBox;
 							if (box != null && !box.IsRoot)
 							{
 								type = MouseCursorType.Locate;
 							}
-						}
-						
-						if (fly.HilitedElement == AbstractObject.ActiveElement.BoxFieldName ||
-							fly.HilitedElement == AbstractObject.ActiveElement.BoxFieldType ||
-							fly.HilitedElement == AbstractObject.ActiveElement.BoxMembership)
-						{
-							type = MouseCursorType.Locate;
-						}
-					}
-
-					if (type != MouseCursorType.Locate)
-					{
-						if (fly.HilitedElement == AbstractObject.ActiveElement.BoxHeader && this.BoxCount > 1)
-						{
-							type = MouseCursorType.Move;
-						}
-						else if (fly.HilitedElement == AbstractObject.ActiveElement.None ||
-								 fly.HilitedElement == AbstractObject.ActiveElement.BoxInside ||
-								 fly.HilitedElement == AbstractObject.ActiveElement.BoxHeader ||
-								 fly.HilitedElement == AbstractObject.ActiveElement.ConnectionHilited)
-						{
-							type = MouseCursorType.Arrow;
-						}
-						else if (fly.HilitedElement == AbstractObject.ActiveElement.BoxFieldName ||
-								 fly.HilitedElement == AbstractObject.ActiveElement.BoxFieldType)
-						{
-							type = MouseCursorType.Grid;
-						}
-						else if (fly.HilitedElement == AbstractObject.ActiveElement.CommentEdit)
-						{
-							type = MouseCursorType.IBeam;
-						}
-						else if (fly.HilitedElement == AbstractObject.ActiveElement.CommentMove)
-						{
-							type = MouseCursorType.Move;
+							else
+							{
+								type = MouseCursorType.Arrow;
+							}
 						}
 						else
 						{
-							type = MouseCursorType.Finger;
+							if (this.BoxCount > 1)
+							{
+								type = MouseCursorType.Move;
+							}
+							else
+							{
+								type = MouseCursorType.Arrow;
+							}
 						}
+					}
+					else if (fly.HilitedElement == AbstractObject.ActiveElement.None ||
+							 fly.HilitedElement == AbstractObject.ActiveElement.BoxInside ||
+							 fly.HilitedElement == AbstractObject.ActiveElement.ConnectionHilited)
+					{
+						type = MouseCursorType.Arrow;
+					}
+					else if (fly.HilitedElement == AbstractObject.ActiveElement.BoxFieldName ||
+							 fly.HilitedElement == AbstractObject.ActiveElement.BoxFieldType)
+					{
+						if (this.IsLocateAction(message))
+						{
+							type = MouseCursorType.Locate;
+						}
+						else
+						{
+							type = MouseCursorType.Grid;
+						}
+					}
+					else if (fly.HilitedElement == AbstractObject.ActiveElement.BoxMembership)
+					{
+						if (this.IsLocateAction(message))
+						{
+							type = MouseCursorType.Locate;
+						}
+						else
+						{
+							type = MouseCursorType.Arrow;
+						}
+					}
+					else if (fly.HilitedElement == AbstractObject.ActiveElement.CommentEdit)
+					{
+						type = MouseCursorType.IBeam;
+					}
+					else if (fly.HilitedElement == AbstractObject.ActiveElement.CommentMove)
+					{
+						type = MouseCursorType.Move;
+					}
+					else
+					{
+						type = MouseCursorType.Finger;
 					}
 				}
 
@@ -1344,7 +1368,6 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		protected void MouseUp(Message message, Point pos)
 		{
 			//	Fin du déplacement d'une boîte.
-			//?System.Diagnostics.Debug.WriteLine("MouseUp");
 			if (this.isAreaMoving)
 			{
 				this.isAreaMoving = false;
@@ -1358,6 +1381,42 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				}
 			}
 		}
+
+
+		public bool IsLocateAction(Message message)
+		{
+			//	Indique si l'action débouche sur une opération de navigation.
+			return (message.IsControlPressed || this.CurrentModifyMode != ModifyMode.Unlocked);
+		}
+
+		public bool IsLocateActionHeader(Message message)
+		{
+			//	Indique si l'action débouche sur une opération de navigation.
+			return (message.IsControlPressed || this.CurrentModifyMode == ModifyMode.Locked);
+		}
+
+		public ModifyMode CurrentModifyMode
+		{
+			get
+			{
+				if (this.module.DesignerApplication.IsEditLocked)
+				{
+					if (this.entities.SubView == 3)
+					{
+						return ModifyMode.Partial;
+					}
+					else
+					{
+						return ModifyMode.Locked;
+					}
+				}
+				else
+				{
+					return ModifyMode.Unlocked;
+				}
+			}
+		}
+
 
 		public void LockObject(AbstractObject obj)
 		{

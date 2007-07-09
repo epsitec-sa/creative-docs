@@ -9,7 +9,7 @@ namespace Epsitec.Common.Designer.Ribbons
 	/// </summary>
 	public class Locator : Abstract
 	{
-		public Locator(DesignerApplication mainWindow) : base(mainWindow)
+		public Locator(DesignerApplication designerApplication) : base(designerApplication)
 		{
 			this.Title = Res.Strings.Ribbon.Section.Locator;
 			this.PreferredWidth = 8 + 22*1.5*2;
@@ -72,7 +72,7 @@ namespace Epsitec.Common.Designer.Ribbons
 		private void HandleListPressed(object sender, MessageEventArgs e)
 		{
 			//	Bouton pour ouvrir la liste cliqué.
-			if (!this.mainWindow.IsCurrentModule)
+			if (!this.designerApplication.IsCurrentModule)
 			{
 				return;
 			}
@@ -83,7 +83,7 @@ namespace Epsitec.Common.Designer.Ribbons
 				return;
 			}
 
-			VMenu menu = this.mainWindow.LocatorCreateMenu(null);
+			VMenu menu = this.designerApplication.LocatorCreateMenu(null);
 			menu.Host = this;
 			menu.MinWidth = button.ActualWidth;
 			TextFieldCombo.AdjustComboSize(button, menu, false);

@@ -74,8 +74,8 @@ namespace Epsitec.Common.Designer.Controllers
 
 		private void HandleButtonClicked(object sender, MessageEventArgs e)
 		{
-			DesignerApplication mainWindow = this.MainWindow;
-			Module module = mainWindow.CurrentModule;
+			DesignerApplication designerApplication = this.DesignerApplication;
+			Module module = designerApplication.CurrentModule;
 
 			Druid druid = Druid.Empty;
 
@@ -84,7 +84,7 @@ namespace Epsitec.Common.Designer.Controllers
 				druid = this.structuredType.CaptionId;
 			}
 
-			Common.Dialogs.DialogResult result = mainWindow.DlgResourceSelector(Dialogs.ResourceSelector.Operation.Selection, module, ResourceAccess.Type.Types, ref druid, null);
+			Common.Dialogs.DialogResult result = designerApplication.DlgResourceSelector(Dialogs.ResourceSelector.Operation.Selection, module, ResourceAccess.Type.Types, ref druid, null);
 			if (result != Common.Dialogs.DialogResult.Yes)  // annuler ?
 			{
 				return;
@@ -111,13 +111,13 @@ namespace Epsitec.Common.Designer.Controllers
 			}
 		}
 
-		private DesignerApplication MainWindow
+		private DesignerApplication DesignerApplication
 		{
 			get
 			{
-				DesignerApplication mainWindow = DesignerApplication.GetInstance(this.Placeholder.Window);
-				System.Diagnostics.Debug.Assert(mainWindow != null);
-				return mainWindow;
+				DesignerApplication designerApplication = DesignerApplication.GetInstance(this.Placeholder.Window);
+				System.Diagnostics.Debug.Assert(designerApplication != null);
+				return designerApplication;
 			}
 		}
 		

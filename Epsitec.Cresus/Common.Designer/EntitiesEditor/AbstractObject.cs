@@ -16,7 +16,6 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		public enum ActiveElement
 		{
 			None,
-			FlyOver,
 
 			BoxInside,
 			BoxSources,
@@ -212,10 +211,24 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					return "Ferme l'entité";
 
 				case AbstractObject.ActiveElement.BoxFieldName:
-					return "Change le nom du champ<br/>Ctrl+clic: aller sur la définition du champ";
+					if (this.editor.CurrentModifyMode == Editor.ModifyMode.Unlocked)
+					{
+						return "Change le nom du champ<br/>Ctrl+clic: aller sur la définition du champ";
+					}
+					else
+					{
+						return "Aller sur la définition du champ";
+					}
 
 				case AbstractObject.ActiveElement.BoxFieldType:
-					return "Change le type du champ<br/>Ctrl+clic: aller sur la définition du type";
+					if (this.editor.CurrentModifyMode == Editor.ModifyMode.Unlocked)
+					{
+						return "Change le type du champ<br/>Ctrl+clic: aller sur la définition du type";
+					}
+					else
+					{
+						return "Aller sur la définition du type";
+					}
 
 				case AbstractObject.ActiveElement.BoxFieldAdd:
 					return "Ajoute un nouveau champ";
@@ -227,7 +240,14 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					return "Change l'ordre du champ dans la liste";
 
 				case AbstractObject.ActiveElement.BoxMembership:
-					return "Ctrl+clic: aller sur la définition de l'entité héritée";
+					if (this.editor.CurrentModifyMode == Editor.ModifyMode.Unlocked)
+					{
+						return "Ctrl+clic: aller sur la définition de l'entité héritée";
+					}
+					else
+					{
+						return "Aller sur la définition de l'entité héritée";
+					}
 
 				case AbstractObject.ActiveElement.BoxChangeWidth:
 					return "Modifie la largeur de l'entité";
@@ -334,19 +354,12 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		}
 
 
-		protected bool IsModifyLocked
-		{
-			get
-			{
-				return !this.editor.Module.MainWindow.IsEditLocked || this.editor.Entities.SubView != 3;
-			}
-		}
-
+#if false
 		protected bool ModifyConfirm()
 		{
 			//	Demande éventuellement si une modification dans la vue est autorisée.
 			//	Retourne true si une modification est autorisée.
-			if (!this.editor.Module.MainWindow.IsEditLocked)
+			if (!this.editor.Module.DesignerApplication.IsEditLocked)
 			{
 				return true;
 			}
@@ -363,11 +376,11 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			questions.Add(ConfirmationButton.FormatContent("Modifier temporairement", "Designer reste bloqué et les modifications sont effectuées dans la vue temporaire T."));
 			questions.Add(ConfirmationButton.FormatContent("Ne pas modifier", "Designer reste bloqué et les modifications sont impossibles."));
 			
-			Common.Dialogs.DialogResult result = this.editor.Module.MainWindow.DialogConfirmation(header, questions, true);
+			Common.Dialogs.DialogResult result = this.editor.Module.DesignerApplication.DialogConfirmation(header, questions, true);
 
 			if (result == Common.Dialogs.DialogResult.Answer1)
 			{
-				this.editor.Module.MainWindow.IsEditLocked = false;
+				this.editor.Module.DesignerApplication.IsEditLocked = false;
 				return true;
 			}
 
@@ -379,6 +392,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 			return false;
 		}
+#endif
 
 
 		protected void SetDirty()
@@ -816,6 +830,5 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		protected MainColor boxColor;
 		protected bool isDimmed;
 		protected int hilitedFieldRank;
-		protected bool isModifyConfirmed;
 	}
 }

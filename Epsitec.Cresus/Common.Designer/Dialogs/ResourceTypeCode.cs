@@ -13,7 +13,7 @@ namespace Epsitec.Common.Designer.Dialogs
 	/// </summary>
 	public class ResourceTypeCode : Abstract
 	{
-		public ResourceTypeCode(DesignerApplication mainWindow) : base(mainWindow)
+		public ResourceTypeCode(DesignerApplication designerApplication) : base(designerApplication)
 		{
 		}
 

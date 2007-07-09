@@ -12,7 +12,7 @@ namespace Epsitec.Common.Designer.Viewers
 	/// </summary>
 	public class Strings2 : Abstract2
 	{
-		public Strings2(Module module, PanelsContext context, ResourceAccess access, DesignerApplication mainWindow) : base(module, context, access, mainWindow)
+		public Strings2(Module module, PanelsContext context, ResourceAccess access, DesignerApplication designerApplication) : base(module, context, access, designerApplication)
 		{
 			//	Résumé des captions.
 			MyWidgets.StackedPanel leftContainer, rightContainer;
@@ -122,8 +122,8 @@ namespace Epsitec.Common.Designer.Viewers
 			bool iic = this.ignoreChange;
 			this.ignoreChange = true;
 
-			this.primaryText.Enable = !this.mainWindow.IsReadonly;
-			this.primaryComment.Enable = !this.mainWindow.IsReadonly;
+			this.primaryText.Enable = !this.designerApplication.IsReadonly;
+			this.primaryComment.Enable = !this.designerApplication.IsReadonly;
 
 			CultureMap item = this.access.CollectionView.CurrentItem as CultureMap;
 			StructuredData data;
@@ -132,7 +132,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.primaryText.Text = data.GetValue(Support.Res.Fields.ResourceString.Text) as string;
 			this.primaryComment.Text = data.GetValue(Support.Res.Fields.ResourceBase.Comment) as string;
 
-			if (this.GetTwoLetters(1) == null || this.mainWindow.IsReadonly)
+			if (this.GetTwoLetters(1) == null || this.designerApplication.IsReadonly)
 			{
 				this.secondaryText.Text = "";
 				this.secondaryComment.Text = "";

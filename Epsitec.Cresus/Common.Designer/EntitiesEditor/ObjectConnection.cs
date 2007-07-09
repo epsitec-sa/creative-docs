@@ -158,13 +158,6 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		public override void MouseDown(Message message, Point pos)
 		{
 			//	Le bouton de la souris est pressé.
-			this.isModifyConfirmed = this.ModifyConfirm();
-
-			if (!this.isModifyConfirmed)
-			{
-				return;
-			}
-
 			if (this.hilitedElement == ActiveElement.ConnectionMove1 ||
 				this.hilitedElement == ActiveElement.ConnectionMove2)
 			{
@@ -176,11 +169,6 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		public override void MouseUp(Message message, Point pos)
 		{
 			//	Le bouton de la souris est relâché.
-			if (!this.isModifyConfirmed)
-			{
-				return;
-			}
-
 			if (this.isDraggingRoute)
 			{
 				this.isDraggingRoute = false;
@@ -192,7 +180,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			if (this.hilitedElement == ActiveElement.ConnectionOpenLeft ||
 				this.hilitedElement == ActiveElement.ConnectionOpenRight)
 			{
-				Module module = this.editor.Module.MainWindow.SearchModule(this.field.Destination);
+				Module module = this.editor.Module.DesignerApplication.SearchModule(this.field.Destination);
 				CultureMap item = module.AccessEntities.Accessor.Collection[this.field.Destination];
 				if (item != null)
 				{
@@ -323,20 +311,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			element = ActiveElement.None;
 			fieldRank = -1;
 
-			if (pos.IsZero || this.points.Count == 0)
+			if (pos.IsZero || this.points.Count == 0 || this.editor.CurrentModifyMode == Editor.ModifyMode.Locked)
 			{
-				return false;
-			}
-
-			if (this.IsModifyLocked)
-			{
-				if (DetectOver(pos, 4))
-				{
-					element = ActiveElement.FlyOver;
-					fieldRank = -1;
-					return true;
-				}
-
 				return false;
 			}
 
@@ -506,8 +482,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 				Color color = this.GetColor(0);
 				if (this.hilitedElement == ActiveElement.ConnectionHilited ||
-					this.hilitedElement == ActiveElement.ConnectionChangeRelation ||
-					this.hilitedElement == ActiveElement.FlyOver )
+					this.hilitedElement == ActiveElement.ConnectionChangeRelation)
 				{
 					color = this.GetColorMain();
 				}
@@ -527,8 +502,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 				Color color = this.GetColor(0);
 				if (this.hilitedElement == ActiveElement.ConnectionHilited ||
-					this.hilitedElement == ActiveElement.ConnectionChangeRelation ||
-					this.hilitedElement == ActiveElement.FlyOver )
+					this.hilitedElement == ActiveElement.ConnectionChangeRelation)
 				{
 					color = this.GetColorMain();
 				}

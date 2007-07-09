@@ -20,7 +20,7 @@ namespace Epsitec.Common.Designer.Viewers
 			SuiteView,
 		}
 
-		public AbstractCaptions(Module module, PanelsContext context, ResourceAccess access, DesignerApplication mainWindow) : base(module, context, access, mainWindow)
+		public AbstractCaptions(Module module, PanelsContext context, ResourceAccess access, DesignerApplication designerApplication) : base(module, context, access, designerApplication)
 		{
 			//	Crée les 2 parties gauche/droite séparées par un splitter.
 			this.left = new Widget(this);
@@ -833,13 +833,13 @@ namespace Epsitec.Common.Designer.Viewers
 		private void HandleArraySelectedRowChanged(object sender)
 		{
 			//	La ligne sélectionnée a changé.
-			if (!this.mainWindow.Terminate())
+			if (!this.designerApplication.Terminate())
 			{
 				return;
 			}
 
 			this.access.AccessIndex = this.array.SelectedRow;
-			this.mainWindow.LocatorFix();
+			this.designerApplication.LocatorFix();
 
 			this.UpdateTitle();
 			this.UpdateEdit();
@@ -952,7 +952,7 @@ namespace Epsitec.Common.Designer.Viewers
 			ResourceAccess.Field field = this.access.GetField(this.access.AccessIndex, null, ResourceAccess.FieldType.Icon);
 			string initialIcon = field.String;
 
-			string icon = this.module.MainWindow.DlgIcon(this.module.ResourceManager, initialIcon);
+			string icon = this.module.DesignerApplication.DlgIcon(this.module.ResourceManager, initialIcon);
 
 			if (icon != initialIcon)
 			{

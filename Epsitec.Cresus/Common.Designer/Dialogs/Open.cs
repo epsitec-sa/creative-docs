@@ -19,7 +19,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			Locked,
 		}
 
-		public Open(DesignerApplication mainWindow) : base(mainWindow)
+		public Open(DesignerApplication designerApplication) : base(designerApplication)
 		{
 			this.moduleInfosLive = new Types.Collections.ObservableList<ResourceModuleInfo>();
 			this.moduleInfosShowed = new CollectionView(this.moduleInfosLive);
@@ -164,8 +164,8 @@ namespace Epsitec.Common.Designer.Dialogs
 			//	Met à jour la liste des modules ouvrables/ouverts/bloqués.
 			if (scan)
 			{
-				this.mainWindow.ResourceManagerPool.ScanForAllModules();
-				this.moduleInfosAll = this.mainWindow.ResourceManagerPool.FindReferenceModules();
+				this.designerApplication.ResourceManagerPool.ScanForAllModules();
+				this.moduleInfosAll = this.designerApplication.ResourceManagerPool.FindReferenceModules();
 			}
 
 			//	Construit une liste réduite contenant uniquement les modules visibles dans la liste.
@@ -345,7 +345,7 @@ namespace Epsitec.Common.Designer.Dialogs
 		protected string GetModulePath(ResourceModuleInfo info)
 		{
 			//	Retourne le nom du chemin d'un module.
-			ResourceManagerPool pool = this.mainWindow.ResourceManagerPool;
+			ResourceManagerPool pool = this.designerApplication.ResourceManagerPool;
 			string path = pool.GetRootRelativePath(info.FullId.Path);
 
 #if false
@@ -361,7 +361,7 @@ namespace Epsitec.Common.Designer.Dialogs
 		protected ModuleState GetModuleState(ResourceModuleInfo info)
 		{
 			//	Retourne l'état d'un module.
-			Module module = this.mainWindow.SearchModuleId(info.FullId);
+			Module module = this.designerApplication.SearchModuleId(info.FullId);
 			if (module == null)
 			{
 				return this.IsModuleAlreadyOpened(info.FullId.Id) ? ModuleState.Locked : ModuleState.Openable;
@@ -374,7 +374,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		protected bool IsModuleAlreadyOpened(int id)
 		{
-			List<Module> modules = this.mainWindow.Modules;
+			List<Module> modules = this.designerApplication.Modules;
 			foreach (Module module in modules)
 			{
 				if (module.ModuleInfo.Id == id)

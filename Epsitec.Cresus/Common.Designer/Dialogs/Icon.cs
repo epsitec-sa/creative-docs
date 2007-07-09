@@ -10,7 +10,7 @@ namespace Epsitec.Common.Designer.Dialogs
 	/// </summary>
 	public class Icon : Abstract
 	{
-		public Icon(DesignerApplication mainWindow) : base(mainWindow)
+		public Icon(DesignerApplication designerApplication) : base(designerApplication)
 		{
 		}
 
@@ -355,7 +355,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				}
 			}
 
-			this.mainWindow.DialogMessage(Res.Strings.Dialog.Search.Message.Error);
+			this.designerApplication.DialogMessage(Res.Strings.Dialog.Search.Message.Error);
 		}
 
 		protected int Selected

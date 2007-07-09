@@ -449,13 +449,13 @@ namespace Epsitec.Common.Designer.MyWidgets
 			int sel = this.array.SelectedRow;
 			Druid druid = (sel == -1) ? Druid.Empty : this.listDruids[sel];
 
-			Module module = this.mainWindow.SearchModule(druid);
+			Module module = this.designerApplication.SearchModule(druid);
 			if (module == null)
 			{
 				return;
 			}
 
-			this.mainWindow.LocatorGoto(module.ModuleInfo.Name, ResourceAccess.Type.Values, -1, druid, this.Window.FocusedWidget);
+			this.designerApplication.LocatorGoto(module.ModuleInfo.Name, ResourceAccess.Type.Values, -1, druid, this.Window.FocusedWidget);
 		}
 
 		protected void ArraySearch(string searching, int direction)
@@ -490,7 +490,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				}
 			}
 
-			this.mainWindow.DialogMessage(Res.Strings.Dialog.Search.Message.Error);
+			this.designerApplication.DialogMessage(Res.Strings.Dialog.Search.Message.Error);
 		}
 
 		protected void BuildCollection()

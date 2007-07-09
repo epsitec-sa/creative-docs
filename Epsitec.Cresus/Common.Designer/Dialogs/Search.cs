@@ -10,7 +10,7 @@ namespace Epsitec.Common.Designer.Dialogs
 	/// </summary>
 	public class Search : Abstract
 	{
-		public Search(DesignerApplication mainWindow) : base(mainWindow)
+		public Search(DesignerApplication designerApplication) : base(designerApplication)
 		{
 		}
 
@@ -326,7 +326,7 @@ namespace Epsitec.Common.Designer.Dialogs
 		{
 			if (this.window == null)  return;
 
-			Module module = this.mainWindow.CurrentModule;
+			Module module = this.designerApplication.CurrentModule;
 			if (module == null)  return;
 
 			bool enable = this.IsActionsEnabled;
@@ -338,8 +338,8 @@ namespace Epsitec.Common.Designer.Dialogs
 			this.buttonReplacePrev.Enable = enable;
 			this.buttonReplaceNext.Enable = enable;
 
-			this.mainWindow.GetCommandState("SearchPrev").Enable = enable;
-			this.mainWindow.GetCommandState("SearchNext").Enable = enable;
+			this.designerApplication.GetCommandState("SearchPrev").Enable = enable;
+			this.designerApplication.GetCommandState("SearchNext").Enable = enable;
 		}
 
 		protected void UpdateBundleType()
@@ -385,7 +385,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			//	Rechercher en avant ou en arrière.
 			Button button = sender as Button;
 
-			Module module = this.mainWindow.CurrentModule;
+			Module module = this.designerApplication.CurrentModule;
 			if ( module == null )  return;
 
 			Searcher.SearchingMode mode = this.Mode;
@@ -402,7 +402,7 @@ namespace Epsitec.Common.Designer.Dialogs
 		private void HandleButtonCountClicked(object sender, MessageEventArgs e)
 		{
 			//	Compter.
-			Module module = this.mainWindow.CurrentModule;
+			Module module = this.designerApplication.CurrentModule;
 			if ( module == null )  return;
 
 			module.Modifier.ActiveViewer.DoCount(this.fieldSearch.Text, this.Mode, this.FilterList);
@@ -415,7 +415,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			//	Remplacer en avant ou en arrière.
 			Button button = sender as Button;
 
-			Module module = this.mainWindow.CurrentModule;
+			Module module = this.designerApplication.CurrentModule;
 			if ( module == null )  return;
 
 			Searcher.SearchingMode mode = this.Mode;
@@ -433,7 +433,7 @@ namespace Epsitec.Common.Designer.Dialogs
 		private void HandleButtonReplaceAllClicked(object sender, MessageEventArgs e)
 		{
 			//	Rechercher tout.
-			Module module = this.mainWindow.CurrentModule;
+			Module module = this.designerApplication.CurrentModule;
 			if ( module == null )  return;
 
 		module.Modifier.ActiveViewer.DoReplaceAll(this.fieldSearch.Text, this.fieldReplace.Text, this.Mode, this.FilterList);

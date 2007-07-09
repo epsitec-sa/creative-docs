@@ -12,7 +12,7 @@ namespace Epsitec.Common.Designer.Viewers
 	/// </summary>
 	public abstract class AbstractCaptions2 : Abstract2
 	{
-		public AbstractCaptions2(Module module, PanelsContext context, ResourceAccess access, DesignerApplication mainWindow) : base(module, context, access, mainWindow)
+		public AbstractCaptions2(Module module, PanelsContext context, ResourceAccess access, DesignerApplication designerApplication) : base(module, context, access, designerApplication)
 		{
 			//	Résumé des captions.
 			MyWidgets.StackedPanel leftContainer, rightContainer;
@@ -183,11 +183,11 @@ namespace Epsitec.Common.Designer.Viewers
 				this.primaryComment.Text = data.GetValue(Support.Res.Fields.ResourceBase.Comment) as string;
 			}
 
-			this.primaryLabels.Enable = !this.mainWindow.IsReadonly;
-			this.primaryDescription.Enable = !this.mainWindow.IsReadonly;
-			this.primaryComment.Enable = !this.mainWindow.IsReadonly;
+			this.primaryLabels.Enable = !this.designerApplication.IsReadonly;
+			this.primaryDescription.Enable = !this.designerApplication.IsReadonly;
+			this.primaryComment.Enable = !this.designerApplication.IsReadonly;
 
-			if (data == null || this.GetTwoLetters(1) == null || this.mainWindow.IsReadonly)
+			if (data == null || this.GetTwoLetters(1) == null || this.designerApplication.IsReadonly)
 			{
 				this.secondaryLabels.Collection = null;
 				this.secondaryDescription.Text = "";
@@ -213,7 +213,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 		protected void UpdateIcon()
 		{
-			this.primaryIcon.Enable = !this.mainWindow.IsReadonly;
+			this.primaryIcon.Enable = !this.designerApplication.IsReadonly;
 
 			CultureMap item = this.access.CollectionView.CurrentItem as CultureMap;
 			string icon = null;
@@ -647,7 +647,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 			string initialIcon = data.GetValue(Support.Res.Fields.ResourceCaption.Icon) as string;
 
-			string icon = this.module.MainWindow.DlgIcon(this.module.ResourceManager, initialIcon);
+			string icon = this.module.DesignerApplication.DlgIcon(this.module.ResourceManager, initialIcon);
 
 			if (icon != initialIcon)
 			{

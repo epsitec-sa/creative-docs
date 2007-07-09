@@ -11,7 +11,7 @@ namespace Epsitec.Common.Designer.Dialogs
 	/// </summary>
 	public class TableConfiguration : Abstract
 	{
-		public TableConfiguration(DesignerApplication mainWindow) : base(mainWindow)
+		public TableConfiguration(DesignerApplication designerApplication) : base(designerApplication)
 		{
 		}
 
@@ -408,7 +408,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			}
 
 			Druid druid = Druid.Empty;
-			Common.Dialogs.DialogResult result = this.mainWindow.DlgResourceSelector(Dialogs.ResourceSelector.Operation.Selection, this.module, ResourceAccess.Type.Panels, ref druid, null);
+			Common.Dialogs.DialogResult result = this.designerApplication.DlgResourceSelector(Dialogs.ResourceSelector.Operation.Selection, this.module, ResourceAccess.Type.Panels, ref druid, null);
 			if (result != Common.Dialogs.DialogResult.Yes)  // annuler ?
 			{
 				return;
@@ -594,7 +594,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			}
 
 			Druid druid = this.items[sel].Column.TemplateId;
-			Common.Dialogs.DialogResult result = this.mainWindow.DlgResourceSelector(Dialogs.ResourceSelector.Operation.Selection, this.module, ResourceAccess.Type.Panels, ref druid, null);
+			Common.Dialogs.DialogResult result = this.designerApplication.DlgResourceSelector(Dialogs.ResourceSelector.Operation.Selection, this.module, ResourceAccess.Type.Panels, ref druid, null);
 			if (result != Common.Dialogs.DialogResult.Yes)  // annuler ?
 			{
 				return;
@@ -613,7 +613,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			}
 
 			Druid druid = this.items[sel].Column.CaptionId;
-			Common.Dialogs.DialogResult result = this.mainWindow.DlgResourceSelector(Dialogs.ResourceSelector.Operation.Selection, this.module, ResourceAccess.Type.Captions, ref druid, null);
+			Common.Dialogs.DialogResult result = this.designerApplication.DlgResourceSelector(Dialogs.ResourceSelector.Operation.Selection, this.module, ResourceAccess.Type.Captions, ref druid, null);
 			if (result != Common.Dialogs.DialogResult.Yes)  // annuler ?
 			{
 				return;

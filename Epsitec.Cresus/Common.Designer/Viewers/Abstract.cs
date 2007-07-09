@@ -12,12 +12,12 @@ namespace Epsitec.Common.Designer.Viewers
 	/// </summary>
 	public abstract class Abstract : Widget
 	{
-		public Abstract(Module module, PanelsContext context, ResourceAccess access, DesignerApplication mainWindow)
+		public Abstract(Module module, PanelsContext context, ResourceAccess access, DesignerApplication designerApplication)
 		{
 			this.module = module;
 			this.context = context;
 			this.access = access;
-			this.mainWindow = mainWindow;
+			this.designerApplication = designerApplication;
 			this.access.ResourceType = this.ResourceType;
 		}
 
@@ -36,23 +36,23 @@ namespace Epsitec.Common.Designer.Viewers
 			get;
 		}
 
-		public static Abstract Create(ResourceAccess.Type type, Module module, PanelsContext context, ResourceAccess access, DesignerApplication mainWindow)
+		public static Abstract Create(ResourceAccess.Type type, Module module, PanelsContext context, ResourceAccess access, DesignerApplication designerApplication)
 		{
 			//	Crée un Viewer d'un type donné.
-			if (type == ResourceAccess.Type.Strings)  return new Strings(module, context, access, mainWindow);
-			if (type == ResourceAccess.Type.Strings2)  return new Strings2(module, context, access, mainWindow);
-			if (type == ResourceAccess.Type.Captions)  return new Captions(module, context, access, mainWindow);
-			if (type == ResourceAccess.Type.Captions2)  return new Captions2(module, context, access, mainWindow);
-			if (type == ResourceAccess.Type.Fields)  return new Fields(module, context, access, mainWindow);
-			if (type == ResourceAccess.Type.Fields2)  return new Fields2(module, context, access, mainWindow);
-			if (type == ResourceAccess.Type.Commands)  return new Commands(module, context, access, mainWindow);
-			if (type == ResourceAccess.Type.Commands2)  return new Commands2(module, context, access, mainWindow);
-			if (type == ResourceAccess.Type.Types)  return new Types(module, context, access, mainWindow);
-			if (type == ResourceAccess.Type.Types2)  return new Types2(module, context, access, mainWindow);
-			if (type == ResourceAccess.Type.Values)  return new Values(module, context, access, mainWindow);
-			if (type == ResourceAccess.Type.Panels)  return new Panels(module, context, access, mainWindow);
-			if (type == ResourceAccess.Type.Scripts)  return new Scripts(module, context, access, mainWindow);
-			if (type == ResourceAccess.Type.Entities)  return new Entities(module, context, access, mainWindow);
+			if (type == ResourceAccess.Type.Strings)  return new Strings(module, context, access, designerApplication);
+			if (type == ResourceAccess.Type.Strings2)  return new Strings2(module, context, access, designerApplication);
+			if (type == ResourceAccess.Type.Captions)  return new Captions(module, context, access, designerApplication);
+			if (type == ResourceAccess.Type.Captions2)  return new Captions2(module, context, access, designerApplication);
+			if (type == ResourceAccess.Type.Fields)  return new Fields(module, context, access, designerApplication);
+			if (type == ResourceAccess.Type.Fields2)  return new Fields2(module, context, access, designerApplication);
+			if (type == ResourceAccess.Type.Commands)  return new Commands(module, context, access, designerApplication);
+			if (type == ResourceAccess.Type.Commands2)  return new Commands2(module, context, access, designerApplication);
+			if (type == ResourceAccess.Type.Types)  return new Types(module, context, access, designerApplication);
+			if (type == ResourceAccess.Type.Types2)  return new Types2(module, context, access, designerApplication);
+			if (type == ResourceAccess.Type.Values)  return new Values(module, context, access, designerApplication);
+			if (type == ResourceAccess.Type.Panels)  return new Panels(module, context, access, designerApplication);
+			if (type == ResourceAccess.Type.Scripts)  return new Scripts(module, context, access, designerApplication);
+			if (type == ResourceAccess.Type.Entities)  return new Entities(module, context, access, designerApplication);
 			return null;
 		}
 
@@ -107,7 +107,7 @@ namespace Epsitec.Common.Designer.Viewers
 			}
 			else
 			{
-				this.module.MainWindow.DialogError(Res.Strings.Dialog.Search.Message.Error);
+				this.module.DesignerApplication.DialogError(Res.Strings.Dialog.Search.Message.Error);
 			}
 		}
 
@@ -123,12 +123,12 @@ namespace Epsitec.Common.Designer.Viewers
 			int count = searcher.Count(search);
 			if (count == 0)
 			{
-				this.module.MainWindow.DialogError(Res.Strings.Dialog.Search.Message.Error);
+				this.module.DesignerApplication.DialogError(Res.Strings.Dialog.Search.Message.Error);
 			}
 			else
 			{
 				string message = string.Format(Res.Strings.Dialog.Search.Message.Count, count.ToString());
-				this.module.MainWindow.DialogMessage(message);
+				this.module.DesignerApplication.DialogMessage(message);
 			}
 		}
 
@@ -178,7 +178,7 @@ namespace Epsitec.Common.Designer.Viewers
 			}
 			else
 			{
-				this.module.MainWindow.DialogError(Res.Strings.Dialog.Search.Message.Error);
+				this.module.DesignerApplication.DialogError(Res.Strings.Dialog.Search.Message.Error);
 			}
 		}
 
@@ -212,7 +212,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 			if (count == 0)
 			{
-				this.module.MainWindow.DialogError(Res.Strings.Dialog.Search.Message.Error);
+				this.module.DesignerApplication.DialogError(Res.Strings.Dialog.Search.Message.Error);
 			}
 			else
 			{
@@ -223,7 +223,7 @@ namespace Epsitec.Common.Designer.Viewers
 				this.UpdateCommands();
 
 				string text = string.Format(Res.Strings.Dialog.Search.Message.Replace, count.ToString());
-				this.module.MainWindow.DialogMessage(text);
+				this.module.DesignerApplication.DialogMessage(text);
 			}
 		}
 
@@ -286,7 +286,7 @@ namespace Epsitec.Common.Designer.Viewers
 					{
 						this.access.SetField(searcher.Row, cultureName, fieldType, new ResourceAccess.Field(initialName));
 
-						this.module.MainWindow.DialogError(err);
+						this.module.DesignerApplication.DialogError(err);
 						return null;
 					}
 				}
@@ -423,7 +423,7 @@ namespace Epsitec.Common.Designer.Viewers
 			{
 				ResourceAccess.Field field = this.access.GetField(this.access.AccessIndex, null, ResourceAccess.FieldType.Name);
 				string question = string.Format(Res.Strings.Dialog.Delete.Question, field.String);
-				if (this.mainWindow.DialogQuestion(question) == Epsitec.Common.Dialogs.DialogResult.Yes)
+				if (this.designerApplication.DialogQuestion(question) == Epsitec.Common.Dialogs.DialogResult.Yes)
 				{
 					this.PrepareForDelete();
 					this.access.Delete();
@@ -500,7 +500,7 @@ namespace Epsitec.Common.Designer.Viewers
 		public void DoNewCulture()
 		{
 			//	Crée une nouvelle culture.
-			string name = this.module.MainWindow.DlgNewCulture(this.access);
+			string name = this.module.DesignerApplication.DlgNewCulture(this.access);
 			if (name == null)  return;
 			this.access.CreateCulture(name);
 
@@ -516,7 +516,7 @@ namespace Epsitec.Common.Designer.Viewers
 			//	Supprime la culture courante.
 			ResourceBundle bundle = this.access.GetCultureBundle(this.secondaryCulture);
 			string question = string.Format(Res.Strings.Dialog.DeleteCulture.Question, Misc.CultureName(bundle.Culture));
-			Common.Dialogs.DialogResult result = this.module.MainWindow.DialogQuestion(question);
+			Common.Dialogs.DialogResult result = this.module.DesignerApplication.DialogQuestion(question);
 			if (result != Epsitec.Common.Dialogs.DialogResult.Yes)  return;
 
 			this.access.DeleteCulture(this.secondaryCulture);
@@ -883,7 +883,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.GetCommandState("Save").Enable = this.module.IsDirty;
 			this.GetCommandState("SaveAs").Enable = true;
 
-			if (this.mainWindow.IsReadonly || this is Panels)
+			if (this.designerApplication.IsReadonly || this is Panels)
 			{
 				this.GetCommandState("NewCulture").Enable = false;
 				this.GetCommandState("DeleteCulture").Enable = false;
@@ -894,7 +894,7 @@ namespace Epsitec.Common.Designer.Viewers
 				this.GetCommandState("DeleteCulture").Enable = (this.access.CultureCount > 1);
 			}
 
-			bool search = this.module.MainWindow.DialogSearch.IsActionsEnabled;
+			bool search = this.module.DesignerApplication.DialogSearch.IsActionsEnabled;
 			this.GetCommandState("Search").Enable = true;
 			this.GetCommandState("SearchPrev").Enable = search;
 			this.GetCommandState("SearchNext").Enable = search;
@@ -910,11 +910,11 @@ namespace Epsitec.Common.Designer.Viewers
 			this.GetCommandState("DisplayVertical").Enable = true;
 			this.GetCommandState("DisplayFullScreen").Enable = true;
 
-			this.GetCommandState("EditLocked").ActiveState = this.mainWindow.IsEditLocked ? ActiveState.Yes : ActiveState.No;
+			this.GetCommandState("EditLocked").ActiveState = this.designerApplication.IsEditLocked ? ActiveState.Yes : ActiveState.No;
 
 			if (!this.IsDeleteOrDuplicateForViewer)
 			{
-				if (this.HasDeleteOrDuplicate && !this.mainWindow.IsReadonly)
+				if (this.HasDeleteOrDuplicate && !this.designerApplication.IsReadonly)
 				{
 					this.GetCommandState("EditCancel").Enable = (build);
 					this.GetCommandState("Delete").Enable = (sel != -1 && count > 1 && build);
@@ -928,7 +928,7 @@ namespace Epsitec.Common.Designer.Viewers
 					this.GetCommandState("Create").Enable = false;
 					this.GetCommandState("Duplicate").Enable = false;
 				}
-				this.GetCommandState("CopyToModule").Enable = (sel != -1 && build && !this.mainWindow.IsReadonly);
+				this.GetCommandState("CopyToModule").Enable = (sel != -1 && build && !this.designerApplication.IsReadonly);
 			}
 
 			if (this is Panels)
@@ -955,7 +955,7 @@ namespace Epsitec.Common.Designer.Viewers
 				this.GetCommandState("ModificationClear").Enable = modified;
 			}
 
-			if (this.mainWindow.IsReadonly || this is Panels)
+			if (this.designerApplication.IsReadonly || this is Panels)
 			{
 				this.GetCommandState("FontBold").Enable = false;
 				this.GetCommandState("FontItalic").Enable = false;
@@ -1079,9 +1079,9 @@ namespace Epsitec.Common.Designer.Viewers
 				this.GetCommandState("TabIndexFirst").Enable = false;
 			}
 
-			this.module.MainWindow.UpdateInfoCurrentModule();
-			this.module.MainWindow.UpdateInfoAccess();
-			this.module.MainWindow.UpdateInfoViewer();
+			this.module.DesignerApplication.UpdateInfoCurrentModule();
+			this.module.DesignerApplication.UpdateInfoAccess();
+			this.module.DesignerApplication.UpdateInfoViewer();
 		}
 
 		protected void UpdateCommandTool(string name)
@@ -1091,7 +1091,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 		protected CommandState GetCommandState(string command)
 		{
-			return this.module.MainWindow.GetCommandState(command);
+			return this.module.DesignerApplication.GetCommandState(command);
 		}
 
 
@@ -1180,7 +1180,7 @@ namespace Epsitec.Common.Designer.Viewers
 				edit.SelectAll();
 				this.ignoreChange = false;
 
-				this.module.MainWindow.DialogError(err);
+				this.module.DesignerApplication.DialogError(err);
 				return;
 			}
 
@@ -1333,7 +1333,7 @@ namespace Epsitec.Common.Designer.Viewers
 		protected virtual double GetColumnWidth(int column)
 		{
 			//	Retourne la largeur à utiliser pour une colonne de la liste de gauche.
-			if (this.mainWindow.DisplayModeState == DesignerApplication.DisplayMode.Horizontal)
+			if (this.designerApplication.DisplayModeState == DesignerApplication.DisplayMode.Horizontal)
 			{
 				return Abstract.columnWidthHorizontal[column];
 			}
@@ -1346,7 +1346,7 @@ namespace Epsitec.Common.Designer.Viewers
 		protected virtual void SetColumnWidth(int column, double value)
 		{
 			//	Mémorise la largeur à utiliser pour une colonne de la liste de gauche.
-			if (this.mainWindow.DisplayModeState == DesignerApplication.DisplayMode.Horizontal)
+			if (this.designerApplication.DisplayModeState == DesignerApplication.DisplayMode.Horizontal)
 			{
 				Abstract.columnWidthHorizontal[column] = value;
 			}
@@ -1389,7 +1389,7 @@ namespace Epsitec.Common.Designer.Viewers
 		protected Module					module;
 		protected PanelsContext				context;
 		protected ResourceAccess			access;
-		protected DesignerApplication		mainWindow;
+		protected DesignerApplication		designerApplication;
 		protected string					secondaryCulture;  // two letters
 		protected bool						ignoreChange = false;
 		protected bool						lastActionIsReplace = false;

@@ -97,7 +97,7 @@ namespace Epsitec.Common.Designer.Controllers
 
 		private void HandleButtonClicked(object sender, MessageEventArgs e)
 		{
-			DesignerApplication mainWindow = this.MainWindow;
+			DesignerApplication designerApplication = this.DesignerApplication;
 			StructuredType type = this.StructuredType;
 			Binding binding = this.binding;
 			ObjectModifier.ObjectType oType = ObjectModifier.ObjectType.Unknow;
@@ -109,7 +109,7 @@ namespace Epsitec.Common.Designer.Controllers
 				oType = ObjectModifier.GetObjectType(obj);
 			}
 
-			if (!mainWindow.DlgBindingSelector(mainWindow.CurrentModule, type, oType, ref binding))
+			if (!designerApplication.DlgBindingSelector(designerApplication.CurrentModule, type, oType, ref binding))
 			{
 				return;
 			}
@@ -133,13 +133,13 @@ namespace Epsitec.Common.Designer.Controllers
 			}
 		}
 
-		private DesignerApplication MainWindow
+		private DesignerApplication DesignerApplication
 		{
 			get
 			{
-				DesignerApplication mainWindow = DesignerApplication.GetInstance(this.Placeholder.Window);
-				System.Diagnostics.Debug.Assert(mainWindow != null);
-				return mainWindow;
+				DesignerApplication designerApplication = DesignerApplication.GetInstance(this.Placeholder.Window);
+				System.Diagnostics.Debug.Assert(designerApplication != null);
+				return designerApplication;
 			}
 		}
 		

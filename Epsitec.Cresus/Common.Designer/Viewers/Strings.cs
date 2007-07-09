@@ -11,7 +11,7 @@ namespace Epsitec.Common.Designer.Viewers
 	/// </summary>
 	public class Strings : Abstract
 	{
-		public Strings(Module module, PanelsContext context, ResourceAccess access, DesignerApplication mainWindow) : base(module, context, access, mainWindow)
+		public Strings(Module module, PanelsContext context, ResourceAccess access, DesignerApplication designerApplication) : base(module, context, access, designerApplication)
 		{
 			this.primaryCulture = new IconButtonMark(this);
 			this.primaryCulture.ButtonStyle = ButtonStyle.ActivableIcon;
@@ -486,13 +486,13 @@ namespace Epsitec.Common.Designer.Viewers
 		private void HandleArraySelectedRowChanged(object sender)
 		{
 			//	La ligne sélectionnée a changé.
-			if (this.ignoreChange || !this.mainWindow.Terminate())
+			if (this.ignoreChange || !this.designerApplication.Terminate())
 			{
 				return;
 			}
 
 			this.access.AccessIndex = this.array.SelectedRow;
-			this.mainWindow.LocatorFix();
+			this.designerApplication.LocatorFix();
 
 			this.UpdateEdit();
 			this.UpdateModificationsCulture();

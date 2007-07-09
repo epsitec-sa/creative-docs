@@ -10,7 +10,7 @@ namespace Epsitec.Common.Designer.Dialogs
 	/// </summary>
 	public class NewCulture : Abstract
 	{
-		public NewCulture(DesignerApplication mainWindow) : base(mainWindow)
+		public NewCulture(DesignerApplication designerApplication) : base(designerApplication)
 		{
 		}
 

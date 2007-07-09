@@ -11,7 +11,7 @@ namespace Epsitec.Common.Designer.Dialogs
 	/// </summary>
 	public class EntityComment : Abstract
 	{
-		public EntityComment(DesignerApplication mainWindow) : base(mainWindow)
+		public EntityComment(DesignerApplication designerApplication) : base(designerApplication)
 		{
 		}
 

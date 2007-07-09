@@ -9,7 +9,7 @@ namespace Epsitec.Common.Designer.Dialogs
 	/// </summary>
 	public class Filter : Abstract
 	{
-		public Filter(DesignerApplication mainWindow) : base(mainWindow)
+		public Filter(DesignerApplication designerApplication) : base(designerApplication)
 		{
 		}
 
@@ -168,7 +168,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		private void HandleButtonFilterClicked(object sender, MessageEventArgs e)
 		{
-			Module module = this.mainWindow.CurrentModule;
+			Module module = this.designerApplication.CurrentModule;
 			if ( module == null )  return;
 
 			Searcher.SearchingMode mode = Searcher.SearchingMode.None;
@@ -183,7 +183,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		private void HandleButtonAllClicked(object sender, MessageEventArgs e)
 		{
-			Module module = this.mainWindow.CurrentModule;
+			Module module = this.designerApplication.CurrentModule;
 			if ( module == null )  return;
 
 			module.Modifier.ActiveViewer.DoFilter("", Searcher.SearchingMode.None);

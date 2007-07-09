@@ -57,7 +57,7 @@ namespace Epsitec.Common.Designer
 		}
 
 
-		public ResourceAccess(Type type, Module module, ResourceModuleId moduleInfo, DesignerApplication mainWindow)
+		public ResourceAccess(Type type, Module module, ResourceModuleId moduleInfo, DesignerApplication designerApplication)
 		{
 			//	Constructeur unique pour accéder aux ressources d'un type donné.
 			//	Par la suite, l'instance créée accédera toujours aux ressources de ce type,
@@ -65,7 +65,7 @@ namespace Epsitec.Common.Designer
 			this.type = type;
 			this.resourceManager = module.ResourceManager;
 			this.moduleInfo = moduleInfo;
-			this.mainWindow = mainWindow;
+			this.designerApplication = designerApplication;
 
 			if (this.IsAbstract2)
 			{
@@ -547,7 +547,7 @@ namespace Epsitec.Common.Designer
 				if (this.type == Type.Types2 && !duplicateContent)
 				{
 					TypeCode code = this.lastTypeCodeCreatated;
-					this.mainWindow.DlgResourceTypeCode(this, ref code, out this.lastTypeCodeSystem);
+					this.designerApplication.DlgResourceTypeCode(this, ref code, out this.lastTypeCodeSystem);
 					if (code == TypeCode.Invalid)  // annuler ?
 					{
 						return;
@@ -563,7 +563,7 @@ namespace Epsitec.Common.Designer
 				}
 				else if (this.type == Type.Entities && !duplicateContent)
 				{
-					newName = this.mainWindow.DlgResourceName(Dialogs.ResourceName.Operation.Create, Dialogs.ResourceName.Type.Entity, newName);
+					newName = this.designerApplication.DlgResourceName(Dialogs.ResourceName.Operation.Create, Dialogs.ResourceName.Type.Entity, newName);
 					if (string.IsNullOrEmpty(newName))
 					{
 						return;
@@ -571,7 +571,7 @@ namespace Epsitec.Common.Designer
 
 					if (!Misc.IsValidName(ref newName))
 					{
-						this.mainWindow.DialogError(Res.Strings.Error.Name.Invalid);
+						this.designerApplication.DialogError(Res.Strings.Error.Name.Invalid);
 						return;
 					}
 
@@ -581,7 +581,7 @@ namespace Epsitec.Common.Designer
 					//	TODO: il faudra que dans le dialogue on puisse choisir si on
 					//	veut créer une entité ou une interface, donc retourner soit
 					//	StructuredTypeClass.Entity, soit StructuredTypeClass.Interface
-					Common.Dialogs.DialogResult result = this.mainWindow.DlgResourceSelector(Dialogs.ResourceSelector.Operation.InheritEntity, this.mainWindow.CurrentModule, Type.Entities, ref druid, null);
+					Common.Dialogs.DialogResult result = this.designerApplication.DlgResourceSelector(Dialogs.ResourceSelector.Operation.InheritEntity, this.designerApplication.CurrentModule, Type.Entities, ref druid, null);
 					if (result != Common.Dialogs.DialogResult.Yes)
 					{
 						return;
@@ -632,7 +632,7 @@ namespace Epsitec.Common.Designer
 			if (this.type == Type.Types && !duplicateContent)
 			{
 				TypeCode code = this.lastTypeCodeCreatated;
-				this.mainWindow.DlgResourceTypeCode(this, ref code, out this.lastTypeCodeSystem);
+				this.designerApplication.DlgResourceTypeCode(this, ref code, out this.lastTypeCodeSystem);
 				if (code == TypeCode.Invalid)  // annuler ?
 				{
 					return;
@@ -649,9 +649,9 @@ namespace Epsitec.Common.Designer
 			if (this.type == Type.Panels && !duplicateContent)
 			{
 				//	Choix d'une ressource type de type 'Types', mais uniquement parmi les TypeCode.Structured.
-				Module module = this.mainWindow.CurrentModule;
+				Module module = this.designerApplication.CurrentModule;
 				Druid druid = Druid.Empty;
-				Common.Dialogs.DialogResult result = this.mainWindow.DlgResourceSelector(Dialogs.ResourceSelector.Operation.Selection, module, ResourceAccess.Type.Types, ref druid, null);
+				Common.Dialogs.DialogResult result = this.designerApplication.DlgResourceSelector(Dialogs.ResourceSelector.Operation.Selection, module, ResourceAccess.Type.Types, ref druid, null);
 				if (result != Common.Dialogs.DialogResult.Yes)  // annuler ?
 				{
 					return;
@@ -4307,7 +4307,7 @@ namespace Epsitec.Common.Designer
 		protected Type										type;
 		protected ResourceManager							resourceManager;
 		protected ResourceModuleId							moduleInfo;
-		protected DesignerApplication						mainWindow;
+		protected DesignerApplication						designerApplication;
 		protected bool										isDirty = false;
 		protected bool										isJustLoaded = false;
 

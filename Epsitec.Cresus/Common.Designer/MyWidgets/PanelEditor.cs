@@ -436,7 +436,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 					if (this.dimensionsList.Wheel(message.Wheel))
 					{
 						this.OnChildrenGeometryChanged();  // met à jour les proxies
-						this.module.MainWindow.UpdateInfoViewer();
+						this.module.DesignerApplication.UpdateInfoViewer();
 					}
 					message.Consumer = this;
 					break;
@@ -797,7 +797,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				this.dimensionsList.DraggingEnd();
 				this.isDraggingDimension = false;
 				this.OnChildrenGeometryChanged();  // met à jour les proxies
-				this.module.MainWindow.UpdateInfoViewer();
+				this.module.DesignerApplication.UpdateInfoViewer();
 			}
 
 			this.SizeMarkDraggingStop(pos);
@@ -1329,7 +1329,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.GridDetect(initialPos, parent, out column, out row);
 			this.SetHilitedParent(parent, column, row, 1, 1);  // met en évidence le futur parent survolé par la souris
 
-			this.module.MainWindow.UpdateInfoViewer();
+			this.module.DesignerApplication.UpdateInfoViewer();
 		}
 
 		protected void CreateObjectMove(Point pos, bool isRightButton, bool isControlPressed, bool isShiftPressed)
@@ -1396,7 +1396,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 					this.SetHilitedParent(null, GridSelection.Invalid, GridSelection.Invalid, 0, 0);
 				}
 
-				this.module.MainWindow.UpdateInfoViewer();
+				this.module.DesignerApplication.UpdateInfoViewer();
 			}
 		}
 
@@ -1485,7 +1485,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 					this.Invalidate();
 				}
 
-				this.module.MainWindow.UpdateInfoViewer();
+				this.module.DesignerApplication.UpdateInfoViewer();
 				this.UpdateAfterChanging(Changing.Create);
 				this.OnUpdateCommands();
 			}
@@ -1662,7 +1662,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				}
 
 				Druid druid = Druid.Parse(ObjectModifier.GetDruid(obj));
-				Common.Dialogs.DialogResult result = this.module.MainWindow.DlgResourceSelector(Dialogs.ResourceSelector.Operation.Selection, this.module, type, ref druid, exclude);
+				Common.Dialogs.DialogResult result = this.module.DesignerApplication.DlgResourceSelector(Dialogs.ResourceSelector.Operation.Selection, this.module, type, ref druid, exclude);
 				ObjectModifier.SetDruid(obj, druid.ToString());
 
 				if (result != Common.Dialogs.DialogResult.Yes)  // annuler ?
@@ -1713,7 +1713,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 				Binding binding = ObjectModifier.GetBinding(obj);
 				ObjectModifier.ObjectType oType = ObjectModifier.GetObjectType(obj);
-				if (!this.module.MainWindow.DlgBindingSelector(this.module, type, oType, ref binding))
+				if (!this.module.DesignerApplication.DlgBindingSelector(this.module, type, oType, ref binding))
 				{
 					return false;
 				}
@@ -1821,7 +1821,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			{
 				this.handlingRectangle = this.handlesList.DraggingMove(pos);
 				this.handlingWindow.WindowBounds = this.MapClientToScreen(this.ConvPanelToEditor(this.handlingRectangle));
-				this.module.MainWindow.UpdateInfoViewer();
+				this.module.DesignerApplication.UpdateInfoViewer();
 			}
 		}
 
@@ -1837,7 +1837,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				this.handlesList.DraggingStop(pos);
 				this.isHandling = false;
 				this.OnChildrenGeometryChanged();  // met à jour les proxies
-				this.module.MainWindow.UpdateInfoViewer();
+				this.module.DesignerApplication.UpdateInfoViewer();
 			}
 		}
 		#endregion
@@ -1984,7 +1984,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.ChangeSeparatorAlpha(this.draggingWindow);
 
 			this.SetHilitedParent(parent, column, row, this.draggingSpanColumnCount, this.draggingSpanRowCount);  // met en évidence le futur parent survolé par la souris
-			this.module.MainWindow.UpdateInfoViewer();
+			this.module.DesignerApplication.UpdateInfoViewer();
 		}
 
 		protected void DraggingEnd(Point pos)
@@ -2402,7 +2402,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		{
 			//	Mise à jour après un changement de sélection, ou après un changement dans
 			//	l'arbre des objets (création, changement de parenté, etc.).
-			this.module.MainWindow.UpdateViewer(oper);
+			this.module.DesignerApplication.UpdateViewer(oper);
 			this.handlesList.UpdateSelection();
 			this.dimensionsList.UpdateSelection();
 			GeometryCache.Clear(this.panel);
@@ -2491,8 +2491,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected void MoveRibbonSelection(Point direction)
 		{
 			//	Déplace tous les objets sélectionnés selon le ruban 'Move'.
-			direction.X *= this.module.MainWindow.MoveHorizontal;
-			direction.Y *= this.module.MainWindow.MoveVertical;
+			direction.X *= this.module.DesignerApplication.MoveHorizontal;
+			direction.Y *= this.module.DesignerApplication.MoveVertical;
 			this.MoveSelection(direction, null);
 			this.handlesList.UpdateGeometry();
 			this.SetDirty();

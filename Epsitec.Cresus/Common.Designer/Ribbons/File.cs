@@ -9,7 +9,7 @@ namespace Epsitec.Common.Designer.Ribbons
 	/// </summary>
 	public class File : Abstract
 	{
-		public File(DesignerApplication mainWindow) : base(mainWindow)
+		public File(DesignerApplication designerApplication) : base(designerApplication)
 		{
 			this.Title = Res.Strings.Ribbon.Section.File;
 			//this.PreferredWidth = 8 + 22*1.5*3 + 4 + 22*1;

@@ -70,7 +70,7 @@ namespace Epsitec.Common.Designer.Controllers
 
 		private void HandleButtonClicked(object sender, MessageEventArgs e)
 		{
-			DesignerApplication mainWindow = this.MainWindow;
+			DesignerApplication designerApplication = this.DesignerApplication;
 
 			IProxy sourceProxy = this.Placeholder.ValueBinding.Source as IProxy;
 			IEnumerable<Widget> sourceWidgets = sourceProxy.Widgets;  // liste des objets sélectionnés
@@ -80,7 +80,7 @@ namespace Epsitec.Common.Designer.Controllers
 				if (type == ObjectModifier.ObjectType.Table)
 				{
 					StructuredType structuredType = ObjectModifier.GetTableStructuredType(obj);
-					List<UI.ItemTableColumn> columns = mainWindow.DlgTableConfiguration(mainWindow.CurrentModule, structuredType, this.columns);
+					List<UI.ItemTableColumn> columns = designerApplication.DlgTableConfiguration(designerApplication.CurrentModule, structuredType, this.columns);
 					if (columns != null)
 					{
 						this.columns = columns;
@@ -91,13 +91,13 @@ namespace Epsitec.Common.Designer.Controllers
 			}
 		}
 
-		private DesignerApplication MainWindow
+		private DesignerApplication DesignerApplication
 		{
 			get
 			{
-				DesignerApplication mainWindow = DesignerApplication.GetInstance(this.Placeholder.Window);
-				System.Diagnostics.Debug.Assert(mainWindow != null);
-				return mainWindow;
+				DesignerApplication designerApplication = DesignerApplication.GetInstance(this.Placeholder.Window);
+				System.Diagnostics.Debug.Assert(designerApplication != null);
+				return designerApplication;
 			}
 		}
 		

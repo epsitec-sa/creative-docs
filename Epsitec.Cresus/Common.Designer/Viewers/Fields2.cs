@@ -12,7 +12,7 @@ namespace Epsitec.Common.Designer.Viewers
 	/// </summary>
 	public class Fields2 : AbstractCaptions2
 	{
-		public Fields2(Module module, PanelsContext context, ResourceAccess access, DesignerApplication mainWindow) : base(module, context, access, mainWindow)
+		public Fields2(Module module, PanelsContext context, ResourceAccess access, DesignerApplication designerApplication) : base(module, context, access, designerApplication)
 		{
 			this.UpdateAll();
 		}
@@ -97,7 +97,7 @@ namespace Epsitec.Common.Designer.Viewers
 		protected override double GetColumnWidth(int column)
 		{
 			//	Retourne la largeur à utiliser pour une colonne de la liste de gauche.
-			if (this.mainWindow.DisplayModeState == DesignerApplication.DisplayMode.Horizontal)
+			if (this.designerApplication.DisplayModeState == DesignerApplication.DisplayMode.Horizontal)
 			{
 				return Fields2.columnWidthHorizontal[column];
 			}
@@ -110,7 +110,7 @@ namespace Epsitec.Common.Designer.Viewers
 		protected override void SetColumnWidth(int column, double value)
 		{
 			//	Mémorise la largeur à utiliser pour une colonne de la liste de gauche.
-			if (this.mainWindow.DisplayModeState == DesignerApplication.DisplayMode.Horizontal)
+			if (this.designerApplication.DisplayModeState == DesignerApplication.DisplayMode.Horizontal)
 			{
 				Fields2.columnWidthHorizontal[column] = value;
 			}

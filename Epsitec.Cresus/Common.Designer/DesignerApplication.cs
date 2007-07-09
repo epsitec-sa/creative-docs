@@ -81,7 +81,7 @@ namespace Epsitec.Common.Designer
 				window.Name = "Application";  // utilisé pour générer "QuitApplication" !
 				window.PreventAutoClose = true;
 				
-				DesignerApplication.SetInstance(window, this);  // attache l'instance de MainWindow à la fenêtre
+				DesignerApplication.SetInstance(window, this);  // attache l'instance de DesignerApplication à la fenêtre
 
 //-				this.commandDispatcher = new CommandDispatcher("Common.Designer", CommandDispatcherLevel.Primary);
 //-				this.commandContext = new CommandContext();

@@ -12,7 +12,7 @@ namespace Epsitec.Common.Designer.Viewers
 	/// </summary>
 	public class Commands2 : AbstractCaptions2
 	{
-		public Commands2(Module module, PanelsContext context, ResourceAccess access, DesignerApplication mainWindow) : base(module, context, access, mainWindow)
+		public Commands2(Module module, PanelsContext context, ResourceAccess access, DesignerApplication designerApplication) : base(module, context, access, designerApplication)
 		{
 			MyWidgets.StackedPanel leftContainer, rightContainer;
 
@@ -171,10 +171,10 @@ namespace Epsitec.Common.Designer.Viewers
 			bool iic = this.ignoreChange;
 			this.ignoreChange = true;
 
-			this.primaryAspectIcon.Enable = !this.mainWindow.IsReadonly;
-			this.primaryAspectDialog.Enable = !this.mainWindow.IsReadonly;
-			this.primaryStatefull.Enable = !this.mainWindow.IsReadonly;
-			this.primaryGroup.Enable = !this.mainWindow.IsReadonly;
+			this.primaryAspectIcon.Enable = !this.designerApplication.IsReadonly;
+			this.primaryAspectDialog.Enable = !this.designerApplication.IsReadonly;
+			this.primaryStatefull.Enable = !this.designerApplication.IsReadonly;
+			this.primaryGroup.Enable = !this.designerApplication.IsReadonly;
 
 			CultureMap item = this.access.CollectionView.CurrentItem as CultureMap;
 			StructuredData data = null;
@@ -185,7 +185,7 @@ namespace Epsitec.Common.Designer.Viewers
 				data = item.GetCultureData(this.GetTwoLetters(0));
 			}
 
-			if (data == null || this.mainWindow.IsReadonly)
+			if (data == null || this.designerApplication.IsReadonly)
 			{
 				this.primaryAspectIcon.ActiveState = ActiveState.No;
 				this.primaryAspectDialog.ActiveState = ActiveState.No;
@@ -214,7 +214,7 @@ namespace Epsitec.Common.Designer.Viewers
 				this.primaryGroup.Text = group;
 			}
 
-			if (item == null || this.GetTwoLetters(1) == null || this.mainWindow.IsReadonly)
+			if (item == null || this.GetTwoLetters(1) == null || this.designerApplication.IsReadonly)
 			{
 				this.SetShortcut(this.secondaryShortcut1, this.secondaryShortcut2, null);
 			}

@@ -73,8 +73,8 @@ namespace Epsitec.Common.Designer.Controllers
 				this.druid = this.ConvertFromValue(newValue);
 
 				Druid d = Druid.Parse(this.druid);
-				DesignerApplication mainWindow = this.MainWindow;
-				Module module = mainWindow.SearchModule(d);
+				DesignerApplication designerApplication = this.DesignerApplication;
+				Module module = designerApplication.SearchModule(d);
 
 				if (module == null)
 				{
@@ -98,7 +98,7 @@ namespace Epsitec.Common.Designer.Controllers
 					string text = ResourceAccess.TypeDisplayName(access.DirectGetType(d), false);
 					this.title.Text = string.Concat("<font size=\"150%\"><b>", text, "</b></font>");
 
-					if (module == mainWindow.CurrentModule)
+					if (module == designerApplication.CurrentModule)
 					{
 						string part2 = access.DirectGetDisplayName(d);
 						this.button.Text = part2;
@@ -117,14 +117,14 @@ namespace Epsitec.Common.Designer.Controllers
 
 		private void HandleButtonClicked(object sender, MessageEventArgs e)
 		{
-			DesignerApplication mainWindow = this.MainWindow;
+			DesignerApplication designerApplication = this.DesignerApplication;
 
 			Druid druid = Druid.Parse(this.druid);
 			Common.Dialogs.DialogResult result;
 
 			if (this.parameter == "Caption")
 			{
-				result = mainWindow.DlgResourceSelector(Dialogs.ResourceSelector.Operation.Selection, mainWindow.CurrentModule, ResourceAccess.Type.Unknow, ref druid, null);
+				result = designerApplication.DlgResourceSelector(Dialogs.ResourceSelector.Operation.Selection, designerApplication.CurrentModule, ResourceAccess.Type.Unknow, ref druid, null);
 			}
 			else
 			{
@@ -162,7 +162,7 @@ namespace Epsitec.Common.Designer.Controllers
 					}
 				}
 
-				result = mainWindow.DlgResourceSelector(Dialogs.ResourceSelector.Operation.Selection, mainWindow.CurrentModule, ResourceAccess.Type.Panels, ref druid, exclude);
+				result = designerApplication.DlgResourceSelector(Dialogs.ResourceSelector.Operation.Selection, designerApplication.CurrentModule, ResourceAccess.Type.Panels, ref druid, exclude);
 			}
 
 			if (result != Common.Dialogs.DialogResult.Yes)  // annuler ?
@@ -180,13 +180,13 @@ namespace Epsitec.Common.Designer.Controllers
 			return newValue.ToString();
 		}
 
-		private DesignerApplication MainWindow
+		private DesignerApplication DesignerApplication
 		{
 			get
 			{
-				DesignerApplication mainWindow = DesignerApplication.GetInstance(this.Placeholder.Window);
-				System.Diagnostics.Debug.Assert(mainWindow != null);
-				return mainWindow;
+				DesignerApplication designerApplication = DesignerApplication.GetInstance(this.Placeholder.Window);
+				System.Diagnostics.Debug.Assert(designerApplication != null);
+				return designerApplication;
 			}
 		}
 		

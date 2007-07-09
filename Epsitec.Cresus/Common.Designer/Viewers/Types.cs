@@ -12,7 +12,7 @@ namespace Epsitec.Common.Designer.Viewers
 	/// </summary>
 	public class Types : AbstractCaptions
 	{
-		public Types(Module module, PanelsContext context, ResourceAccess access, DesignerApplication mainWindow) : base(module, context, access, mainWindow)
+		public Types(Module module, PanelsContext context, ResourceAccess access, DesignerApplication designerApplication) : base(module, context, access, designerApplication)
 		{
 			//	Editeur contenant toutes les définitions.
 			MyWidgets.StackedPanel leftContainer;
@@ -198,7 +198,7 @@ namespace Epsitec.Common.Designer.Viewers
 					//	Crée le nouvel éditeur.
 					this.editor.SetParent(this.container.Container);
 					this.editor.Module = this.module;
-					this.editor.MainWindow = this.mainWindow;
+					this.editor.DesignerApplication = this.designerApplication;
 					this.editor.ResourceAccess = this.access;
 					this.editor.Dock = DockStyle.StackBegin;
 					this.editor.ContentChanged += new EventHandler(this.HandleEditorContentChanged);
