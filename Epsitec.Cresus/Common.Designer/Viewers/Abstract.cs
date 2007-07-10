@@ -911,6 +911,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.GetCommandState("DisplayFullScreen").Enable = true;
 
 			this.GetCommandState("EditLocked").ActiveState = this.designerApplication.IsEditLocked ? ActiveState.Yes : ActiveState.No;
+			this.GetCommandState("EditOk").Enable = this.module.IsLocalDirty;
 			this.GetCommandState("EditCancel").Enable = this.module.IsLocalDirty;
 
 			if (!this.IsDeleteOrDuplicateForViewer)
@@ -1105,6 +1106,17 @@ namespace Epsitec.Common.Designer.Viewers
 			}
 			
 			return true;
+		}
+
+		public void PersistChanges()
+		{
+			//	Accepte les changements effectués dans les ressources.
+			if (this.access.IsLocalDirty)
+			{
+				this.access.PersistChanges();
+				this.access.ClearLocalDirty();
+				this.Update();
+			}
 		}
 
 		public void RevertChanges()

@@ -287,6 +287,7 @@ namespace Epsitec.Common.Designer
 				public static string Duplicate { get { return Epsitec.Common.Designer.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (43)); } }
 				public static string EditCancel { get { return Epsitec.Common.Designer.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (33554434)); } }
 				public static string EditLocked { get { return Epsitec.Common.Designer.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (33554433)); } }
+				public static string EditOk { get { return Epsitec.Common.Designer.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (33554435)); } }
 				public static string Filter { get { return Epsitec.Common.Designer.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (52)); } }
 				public static string FontBold { get { return Epsitec.Common.Designer.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (48)); } }
 				public static string FontItalic { get { return Epsitec.Common.Designer.Res.Strings.GetText (Epsitec.Common.Support.Druid.FromFieldId (49)); } }

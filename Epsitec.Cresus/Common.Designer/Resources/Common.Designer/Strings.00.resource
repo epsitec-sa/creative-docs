@@ -332,4 +332,5 @@
   <data name="Action.DisplayFullScreen" id="2">Plein écran</data>
   <data name="Action.EditLocked" id="21">Mode bloqué ou débloqué</data>
   <data name="Action.EditCancel" id="22">Annuler l&amp;apos;édition de la ressource en cours</data>
+  <data name="Action.EditOk" id="23">Valider l&amp;apos;édition de la ressource en cours</data>
 </bundle>

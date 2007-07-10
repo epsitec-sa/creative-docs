@@ -756,6 +756,17 @@ namespace Epsitec.Common.Designer
 			this.IsEditLocked = !this.IsEditLocked;
 		}
 
+		[Command("EditOk")]
+		void CommandEditOk(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			if (!this.IsCurrentModule)
+			{
+				return;
+			}
+
+			this.CurrentModule.Modifier.ActiveViewer.PersistChanges();
+		}
+
 		[Command("EditCancel")]
 		void CommandEditCancel(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
@@ -994,6 +1005,7 @@ namespace Epsitec.Common.Designer
 			this.copyState = this.CreateCommandState("Copy", KeyCode.ModifierControl|KeyCode.AlphaC);
 			this.pasteState = this.CreateCommandState("Paste", KeyCode.ModifierControl|KeyCode.AlphaV);
 			this.editLockedState = this.CreateCommandState("EditLocked");
+			this.editOkState = this.CreateCommandState("EditOk");
 			this.editCancelState = this.CreateCommandState("EditCancel");
 			this.deleteState = this.CreateCommandState("Delete");
 			this.createState = this.CreateCommandState("Create");
@@ -1829,6 +1841,7 @@ namespace Epsitec.Common.Designer
 				this.modificationAllState.Enable = false;
 				this.modificationClearState.Enable = false;
 				this.editLockedState.Enable = false;
+				this.editOkState.Enable = false;
 				this.editCancelState.Enable = false;
 				this.deleteState.Enable = false;
 				this.createState.Enable = false;
@@ -2290,6 +2303,7 @@ namespace Epsitec.Common.Designer
 		protected CommandState					copyState;
 		protected CommandState					pasteState;
 		protected CommandState					editLockedState;
+		protected CommandState					editOkState;
 		protected CommandState					editCancelState;
 		protected CommandState					deleteState;
 		protected CommandState					createState;

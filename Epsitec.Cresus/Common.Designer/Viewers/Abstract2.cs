@@ -524,7 +524,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 			if (update)
 			{
-				this.access.CollectionView.Refresh();  // TODO: ne mettre à jour que la ligne modifiée
+				//?this.access.CollectionView.Refresh();  // TODO: ne mettre à jour que la ligne modifiée
 			}
 		}
 

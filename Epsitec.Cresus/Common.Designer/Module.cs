@@ -321,6 +321,7 @@ namespace Epsitec.Common.Designer
 		{
 			//	Appelé lorsque l'état IsDirty d'un accès a changé.
 			this.designerApplication.GetCommandState("Save").Enable = this.IsGlobalDirty;
+			this.designerApplication.GetCommandState("EditOk").Enable = this.IsLocalDirty;
 			this.designerApplication.GetCommandState("EditCancel").Enable = this.IsLocalDirty;
 			this.designerApplication.UpdateBookModules();
 		}
