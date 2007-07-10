@@ -128,6 +128,7 @@
     <Compile Include="Clipboard.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="CodeGenerators\EntityCodeGenerator.cs" />
     <Compile Include="CommandAttribute.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -241,7 +242,6 @@
     <Compile Include="VersionChecker.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Content Include="TODO.txt" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Resources\Common.Support\Captions.00.resource" />

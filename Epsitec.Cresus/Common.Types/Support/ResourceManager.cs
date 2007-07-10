@@ -181,6 +181,14 @@ namespace Epsitec.Common.Support
 				return this.defaultModulePath;
 			}
 		}
+
+		public string							DefaultModuleName
+		{
+			get
+			{
+				return this.defaultModuleName;
+			}
+		}
 		
 		public bool								IsReady
 		{
