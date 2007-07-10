@@ -329,4 +329,7 @@
   <data name="Error.Name.SamePrefix" id="087" mod="1">Racine utilisée à double !</data>
   <data name="Error.ShortcutMany" id="0V5" mod="1">Raccourci clavier &lt;i&gt;{0}&lt;/i&gt; utilisés plusieurs fois :</data>
   <data name="Error.CheckOK" id="006" mod="1">Aucune anomalie détectée.</data>
+  <data name="Action.DisplayFullScreen" id="2">Plein écran</data>
+  <data name="Action.EditLocked" id="21">Mode bloqué ou débloqué</data>
+  <data name="Action.EditCancel" id="22">Annuler l&amp;apos;édition de la ressource en cours</data>
 </bundle>
