@@ -31,8 +31,18 @@ namespace Epsitec.Common.Support.ResourceAccessors
 
 		public override Types.StructuredData LoadCultureData(CultureMap item, string twoLetterISOLanguageName)
 		{
-			CultureInfo          culture = Resources.FindCultureInfo (twoLetterISOLanguageName);
-			ResourceBundle       bundle  = this.ResourceManager.GetBundle (Resources.StringsBundleName, ResourceLevel.Localized, culture);
+			ResourceBundle bundle;
+
+			if (twoLetterISOLanguageName == Resources.DefaultTwoLetterISOLanguageName)
+			{
+				bundle = this.ResourceManager.GetBundle (Resources.StringsBundleName, ResourceLevel.Default);
+			}
+			else
+			{
+				CultureInfo culture = Resources.FindCultureInfo (twoLetterISOLanguageName);
+				bundle = this.ResourceManager.GetBundle (Resources.StringsBundleName, ResourceLevel.Localized, culture);
+			}
+
 			ResourceBundle.Field field   = bundle == null ? ResourceBundle.Field.Empty : bundle[item.Id];
 			Types.StructuredData data    = null;
 
