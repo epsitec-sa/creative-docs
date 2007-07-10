@@ -128,7 +128,9 @@
     <Compile Include="Clipboard.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="CodeGenerators\CodeFormatter.cs" />
     <Compile Include="CodeGenerators\EntityCodeGenerator.cs" />
+    <Compile Include="CodeGenerators\Sample.cs" />
     <Compile Include="CommandAttribute.cs">
       <SubType>Code</SubType>
     </Compile>
