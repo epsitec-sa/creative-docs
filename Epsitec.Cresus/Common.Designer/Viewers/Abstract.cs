@@ -1119,8 +1119,7 @@ namespace Epsitec.Common.Designer.Viewers
 			{
 				this.access.PersistChanges();
 				this.access.ClearLocalDirty();
-				this.UpdateList();
-				//?this.Update();
+				this.UpdateList();  // met à jour la liste de gauche avec les données modifiées
 			}
 		}
 
@@ -1131,8 +1130,7 @@ namespace Epsitec.Common.Designer.Viewers
 			{
 				this.access.RevertChanges();
 				this.access.ClearLocalDirty();
-				//?this.UpdateList();
-				this.Update();
+				this.Update();  // met à jour la partie éditable centrale avec les données initiales
 			}
 		}
 

@@ -789,6 +789,8 @@ namespace Epsitec.Common.Designer.Viewers
 					return null;
 				}
 
+				text = text.Replace("<br/>", ", ");
+
 				UI.ItemViewText main, st;
 				ResourceAccess.ModificationState state = this.owner.access.GetModification(item, twoLettersCulture);
 
@@ -807,7 +809,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 				st.Margins = new Margins(5, 5, 0, 0);
 				st.Text = text;
-				st.TextBreakMode = TextBreakMode.Ellipsis | TextBreakMode.Split;
+				st.TextBreakMode = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine;
 				st.PreferredSize = st.GetBestFitSize();
 
 				return main;
