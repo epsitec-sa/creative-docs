@@ -295,6 +295,12 @@ namespace Epsitec.Common.Designer.Viewers
 		}
 
 
+		public override void UpdateList()
+		{
+			//	Met à jour le contenu de la liste de gauche.
+			this.access.CollectionView.Refresh();
+		}
+
 		public override void Update()
 		{
 			//	Met à jour le contenu du Viewer.
@@ -318,7 +324,7 @@ namespace Epsitec.Common.Designer.Viewers
 		protected override void UpdateArray()
 		{
 			//	Met à jour tout le contenu du tableau.
-			//	TODO: à supprimer le jour où une modification dans la liste ObservableList se refraichit automatiquement !
+			//	TODO: à supprimer le jour où une modification dans la liste ObservableList se rafraichit automatiquement !
 			this.ignoreChange = true;
 			this.table.ItemPanel.Refresh();
 			this.ignoreChange = false;
@@ -519,7 +525,6 @@ namespace Epsitec.Common.Designer.Viewers
 			this.access.SetGlobalDirty();
 			
 			this.UpdateColor();
-			//?this.access.Accessor.PersistChanges();
 			this.access.SetLocalDirty();
 
 			if (update)
@@ -1079,9 +1084,7 @@ namespace Epsitec.Common.Designer.Viewers
 			if (edit == this.labelEdit)
 			{
 				this.UpdateFieldName(edit, this.access.CollectionView.CurrentPosition);
-				//?this.access.Accessor.PersistChanges();
 				this.access.SetLocalDirty();
-				this.access.CollectionView.Refresh();
 			}
 
 			this.UpdateModificationsCulture();

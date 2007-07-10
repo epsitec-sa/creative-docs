@@ -676,7 +676,6 @@ namespace Epsitec.Common.Designer
 				this.accessor.Collection.Add (newItem);
 				this.collectionView.MoveCurrentTo (newItem);
 
-				//?this.accessor.PersistChanges();
 				this.SetLocalDirty();
 				return;
 			}
@@ -994,7 +993,6 @@ namespace Epsitec.Common.Designer
 			{
 				CultureMap item = this.collectionView.CurrentItem as CultureMap;
 				this.accessor.Collection.Remove(item);
-				//?this.accessor.PersistChanges();
 				this.SetLocalDirty();
 				return;
 			}
@@ -2168,7 +2166,6 @@ namespace Epsitec.Common.Designer
 				if (fieldType == FieldType.Name)
 				{
 					item.Name = field.String;
-					//?this.accessor.PersistChanges();
 					this.SetLocalDirty();
 					this.collectionView.Refresh();
 				}
@@ -2176,7 +2173,6 @@ namespace Epsitec.Common.Designer
 				if (fieldType == FieldType.String)
 				{
 					data.SetValue(Support.Res.Fields.ResourceString.Text, field.String);
-					//?this.accessor.PersistChanges();
 					this.SetLocalDirty();
 					this.collectionView.Refresh();
 				}
@@ -2184,7 +2180,6 @@ namespace Epsitec.Common.Designer
 				if (fieldType == FieldType.Description)
 				{
 					data.SetValue(Support.Res.Fields.ResourceCaption.Description, field.String);
-					//?this.accessor.PersistChanges();
 					this.SetLocalDirty();
 					this.collectionView.Refresh();
 				}
@@ -2197,7 +2192,6 @@ namespace Epsitec.Common.Designer
 					{
 						list.Add(text);
 					}
-					//?this.accessor.PersistChanges();
 					this.SetLocalDirty();
 					this.collectionView.Refresh();
 				}
@@ -2205,7 +2199,6 @@ namespace Epsitec.Common.Designer
 				if (fieldType == FieldType.About)
 				{
 					data.SetValue(Support.Res.Fields.ResourceBase.Comment, field.String);
-					//?this.accessor.PersistChanges();
 					this.SetLocalDirty();
 					this.collectionView.Refresh();
 				}

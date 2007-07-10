@@ -1331,7 +1331,6 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 
 			fieldCultureMap.Name = name;
-			//?fieldAccessor.PersistChanges();
 			this.UpdateField(dataField, this.fields[rank]);
 			this.editor.Module.AccessEntities.SetLocalDirty();
 			this.editor.Invalidate();

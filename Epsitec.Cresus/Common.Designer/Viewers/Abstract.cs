@@ -850,6 +850,11 @@ namespace Epsitec.Common.Designer.Viewers
 		{
 		}
 
+		public virtual void UpdateList()
+		{
+			//	Met à jour le contenu de la liste de gauche.
+		}
+
 		public virtual void Update()
 		{
 			//	Met à jour le contenu du Viewer.
@@ -1101,8 +1106,7 @@ namespace Epsitec.Common.Designer.Viewers
 			//	Retourne false si l'utilisateur a choisi "annuler".
 			if (!soft && this.access.IsLocalDirty)
 			{
-				this.access.PersistChanges();
-				this.access.ClearLocalDirty();
+				this.PersistChanges();
 			}
 			
 			return true;
@@ -1115,7 +1119,8 @@ namespace Epsitec.Common.Designer.Viewers
 			{
 				this.access.PersistChanges();
 				this.access.ClearLocalDirty();
-				this.Update();
+				this.UpdateList();
+				//?this.Update();
 			}
 		}
 
@@ -1126,6 +1131,7 @@ namespace Epsitec.Common.Designer.Viewers
 			{
 				this.access.RevertChanges();
 				this.access.ClearLocalDirty();
+				//?this.UpdateList();
 				this.Update();
 			}
 		}
