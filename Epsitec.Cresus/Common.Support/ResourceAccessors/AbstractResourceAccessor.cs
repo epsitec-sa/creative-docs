@@ -69,7 +69,9 @@ namespace Epsitec.Common.Support.ResourceAccessors
 
 		public virtual CultureMap CreateItem()
 		{
-			return new CultureMap (this, this.CreateId ());
+			CultureMap item = new CultureMap (this, this.CreateId ());
+			item.IsNewItem = true;
+			return item;
 		}
 
 		public virtual int PersistChanges()
