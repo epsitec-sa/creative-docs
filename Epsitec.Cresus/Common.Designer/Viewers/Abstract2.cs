@@ -522,15 +522,8 @@ namespace Epsitec.Common.Designer.Viewers
 		{
 			//	Méthode appelée pour modifier un champ.
 			ResourceAccess.SetStructuredDataValue(this.access.Accessor, item, data, id.ToString(), value);
-			this.access.SetGlobalDirty();
-			
-			this.UpdateColor();
 			this.access.SetLocalDirty();
-
-			if (update)
-			{
-				//?this.access.CollectionView.Refresh();  // TODO: ne mettre à jour que la ligne modifiée
-			}
+			this.UpdateColor();
 		}
 
 
@@ -789,7 +782,7 @@ namespace Epsitec.Common.Designer.Viewers
 					return null;
 				}
 
-				text = text.Replace("<br/>", ", ");
+				text = text.Replace("<br/>", ", ");  // pour afficher un texte multi-lignes sur une seule
 
 				UI.ItemViewText main, st;
 				ResourceAccess.ModificationState state = this.owner.access.GetModification(item, twoLettersCulture);

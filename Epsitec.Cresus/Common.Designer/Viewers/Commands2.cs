@@ -365,6 +365,7 @@ namespace Epsitec.Common.Designer.Viewers
 			StructuredData data = item.GetCultureData(this.GetTwoLetters(0));
 			data.SetValue(Support.Res.Fields.ResourceCommand.DefaultParameter, defaultParameter);
 
+			this.access.SetLocalDirty();
 			this.UpdateEdit();
 			this.UpdateColor();
 		}
@@ -388,6 +389,7 @@ namespace Epsitec.Common.Designer.Viewers
 			StructuredData data = item.GetCultureData(this.GetTwoLetters(0));
 			data.SetValue(Support.Res.Fields.ResourceCommand.Statefull, statefull);
 
+			this.access.SetLocalDirty();
 			this.UpdateColor();
 		}
 
@@ -514,6 +516,7 @@ namespace Epsitec.Common.Designer.Viewers
 				this.ignoreChange = false;
 			}
 
+			this.access.SetLocalDirty();
 			this.UpdateColor();
 		}
 
@@ -546,6 +549,7 @@ namespace Epsitec.Common.Designer.Viewers
 				this.SetValue(item, data, Support.Res.Fields.ResourceCommand.Group, text, true);
 			}
 
+			this.access.SetLocalDirty();
 			this.UpdateColor();
 		}
 
