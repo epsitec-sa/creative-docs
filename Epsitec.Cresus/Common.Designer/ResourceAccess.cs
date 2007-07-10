@@ -429,7 +429,7 @@ namespace Epsitec.Common.Designer
 
 			this.SetFilter("", Searcher.SearchingMode.None);
 
-			this.IsDirty = false;
+			this.ClearGlobalDirty();
 			this.isJustLoaded = true;
 		}
 
@@ -447,7 +447,7 @@ namespace Epsitec.Common.Designer
 				this.SavePanels();
 			}
 
-			this.IsDirty = false;
+			this.ClearGlobalDirty();
 		}
 
 
@@ -516,21 +516,74 @@ namespace Epsitec.Common.Designer
 		}
 
 
-		public bool IsDirty
+		public void ClearGlobalDirty()
 		{
-			//	Est-ce que les ressources ont été modifiées.
+			//	Met les ressources dans l'état "propre", c'est-à-dire "non modifiées".
+			if (this.isGlobalDirty || this.isLocalDirty)
+			{
+				this.isGlobalDirty = false;
+				this.isLocalDirty = false;
+				this.OnDirtyChanged();
+			}
+		}
+
+		public void SetGlobalDirty()
+		{
+			//	Met les ressources dans l'état "sale", c'est-à-dire "modifiées".
+			if (!this.isGlobalDirty)
+			{
+				this.isGlobalDirty = true;
+				this.OnDirtyChanged();
+			}
+		}
+
+		public bool IsGlobalDirty
+		{
+			//	Est-ce que les ressources ont été modifiées ?
 			get
 			{
-				return this.isDirty;
+				return this.isGlobalDirty;
 			}
-			set
+		}
+
+		public void ClearLocalDirty()
+		{
+			//	Met les ressources dans l'état "propre", c'est-à-dire "non modifiées".
+			if (this.isLocalDirty)
 			{
-				if (this.isDirty != value)
-				{
-					this.isDirty = value;
-					this.OnDirtyChanged();
-				}
+				this.isLocalDirty = false;
+				this.OnDirtyChanged();
 			}
+		}
+
+		public void SetLocalDirty()
+		{
+			//	Met les ressources dans l'état "sale", c'est-à-dire "modifiées".
+			if (!this.isLocalDirty || !this.isGlobalDirty)
+			{
+				this.isLocalDirty = true;
+				this.isGlobalDirty = true;
+				this.OnDirtyChanged();
+			}
+		}
+
+		public bool IsLocalDirty
+		{
+			//	Est-ce que les ressources ont été modifiées ?
+			get
+			{
+				return this.isLocalDirty;
+			}
+		}
+
+		public void PersistChanges()
+		{
+			this.accessor.PersistChanges();
+		}
+
+		public void RevertChanges()
+		{
+			this.accessor.RevertChanges();
 		}
 
 
@@ -623,9 +676,8 @@ namespace Epsitec.Common.Designer
 				this.accessor.Collection.Add (newItem);
 				this.collectionView.MoveCurrentTo (newItem);
 
-				this.accessor.PersistChanges();
-
-				this.IsDirty = true;
+				//?this.accessor.PersistChanges();
+				this.SetLocalDirty();
 				return;
 			}
 
@@ -802,7 +854,7 @@ namespace Epsitec.Common.Designer
 			this.CacheClear();
 #endif
 
-			this.IsDirty = true;
+			this.SetGlobalDirty();
 		}
 
 		private static void CopyData(IResourceAccessor accessor, CultureMap dstItem, StructuredData src, StructuredData dst)
@@ -942,9 +994,8 @@ namespace Epsitec.Common.Designer
 			{
 				CultureMap item = this.collectionView.CurrentItem as CultureMap;
 				this.accessor.Collection.Remove(item);
-				this.accessor.PersistChanges();
-
-				this.IsDirty = true;
+				//?this.accessor.PersistChanges();
+				this.SetLocalDirty();
 				return;
 			}
 
@@ -994,7 +1045,7 @@ namespace Epsitec.Common.Designer
 
 			this.CacheClear();
 
-			this.IsDirty = true;
+			this.SetGlobalDirty();
 		}
 
 #if false
@@ -2117,21 +2168,24 @@ namespace Epsitec.Common.Designer
 				if (fieldType == FieldType.Name)
 				{
 					item.Name = field.String;
-					this.accessor.PersistChanges();
+					//?this.accessor.PersistChanges();
+					this.SetLocalDirty();
 					this.collectionView.Refresh();
 				}
 
 				if (fieldType == FieldType.String)
 				{
 					data.SetValue(Support.Res.Fields.ResourceString.Text, field.String);
-					this.accessor.PersistChanges();
+					//?this.accessor.PersistChanges();
+					this.SetLocalDirty();
 					this.collectionView.Refresh();
 				}
 
 				if (fieldType == FieldType.Description)
 				{
 					data.SetValue(Support.Res.Fields.ResourceCaption.Description, field.String);
-					this.accessor.PersistChanges();
+					//?this.accessor.PersistChanges();
+					this.SetLocalDirty();
 					this.collectionView.Refresh();
 				}
 
@@ -2143,18 +2197,20 @@ namespace Epsitec.Common.Designer
 					{
 						list.Add(text);
 					}
-					this.accessor.PersistChanges();
+					//?this.accessor.PersistChanges();
+					this.SetLocalDirty();
 					this.collectionView.Refresh();
 				}
 
 				if (fieldType == FieldType.About)
 				{
 					data.SetValue(Support.Res.Fields.ResourceBase.Comment, field.String);
-					this.accessor.PersistChanges();
+					//?this.accessor.PersistChanges();
+					this.SetLocalDirty();
 					this.collectionView.Refresh();
 				}
 
-				this.IsDirty = true;
+				this.SetGlobalDirty();
 				return;
 			}
 
@@ -2335,7 +2391,7 @@ namespace Epsitec.Common.Designer
 				}
 			}
 
-			this.IsDirty = true;
+			this.SetGlobalDirty();
 		}
 
 		protected AbstractType CachedAbstractType
@@ -2543,7 +2599,7 @@ namespace Epsitec.Common.Designer
 				}
 			}
 
-			this.IsDirty = true;
+			this.SetGlobalDirty();
 		}
 
 		public void ModificationSetAll(int index)
@@ -2566,7 +2622,7 @@ namespace Epsitec.Common.Designer
 				this.CacheClear();
 			}
 
-			this.IsDirty = true;
+			this.SetGlobalDirty();
 		}
 
 		public bool IsModificationAll(int index)
@@ -2933,7 +2989,7 @@ namespace Epsitec.Common.Designer
 				this.resourceManager.SetBundle(bundle, ResourceSetMode.CreateOnly);
 
 				this.LoadBundles();
-				this.IsDirty = true;
+				this.SetGlobalDirty();
 			}
 		}
 
@@ -2948,7 +3004,7 @@ namespace Epsitec.Common.Designer
 				{
 					this.resourceManager.RemoveBundle(this.BundleName(true), ResourceLevel.Localized, bundle.Culture);
 					this.LoadBundles();
-					this.IsDirty = true;
+					this.SetGlobalDirty();
 				}
 			}
 		}
@@ -4308,7 +4364,8 @@ namespace Epsitec.Common.Designer
 		protected ResourceManager							resourceManager;
 		protected ResourceModuleId							moduleInfo;
 		protected DesignerApplication						designerApplication;
-		protected bool										isDirty = false;
+		protected bool										isGlobalDirty = false;
+		protected bool										isLocalDirty = false;
 		protected bool										isJustLoaded = false;
 
 		//?protected Support.ResourceAccessors.AbstractResourceAccessor accessor;

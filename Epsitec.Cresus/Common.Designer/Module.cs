@@ -284,13 +284,29 @@ namespace Epsitec.Common.Designer
 		}
 
 
-		public bool IsDirty
+		public bool IsGlobalDirty
 		{
 			get
 			{
 				foreach (ResourceAccess access in Access)
 				{
-					if (access.IsDirty)
+					if (access.IsGlobalDirty)
+					{
+						return true;
+					}
+				}
+
+				return false;
+			}
+		}
+
+		public bool IsLocalDirty
+		{
+			get
+			{
+				foreach (ResourceAccess access in Access)
+				{
+					if (access.IsLocalDirty)
 					{
 						return true;
 					}
@@ -304,7 +320,8 @@ namespace Epsitec.Common.Designer
 		private void HandleAccessDirtyChanged(object sender)
 		{
 			//	Appelé lorsque l'état IsDirty d'un accès a changé.
-			this.designerApplication.GetCommandState("Save").Enable = this.IsDirty;
+			this.designerApplication.GetCommandState("Save").Enable = this.IsGlobalDirty;
+			this.designerApplication.GetCommandState("EditCancel").Enable = this.IsLocalDirty;
 			this.designerApplication.UpdateBookModules();
 		}
 

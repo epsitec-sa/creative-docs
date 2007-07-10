@@ -880,7 +880,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.UpdateCommandTool("ObjectGroupBox");
 			this.UpdateCommandTool("ObjectPanel");
 
-			this.GetCommandState("Save").Enable = this.module.IsDirty;
+			this.GetCommandState("Save").Enable = this.module.IsGlobalDirty;
 			this.GetCommandState("SaveAs").Enable = true;
 
 			if (this.designerApplication.IsReadonly || this is Panels)
@@ -911,19 +911,18 @@ namespace Epsitec.Common.Designer.Viewers
 			this.GetCommandState("DisplayFullScreen").Enable = true;
 
 			this.GetCommandState("EditLocked").ActiveState = this.designerApplication.IsEditLocked ? ActiveState.Yes : ActiveState.No;
+			this.GetCommandState("EditCancel").Enable = this.module.IsLocalDirty;
 
 			if (!this.IsDeleteOrDuplicateForViewer)
 			{
 				if (this.HasDeleteOrDuplicate && !this.designerApplication.IsReadonly)
 				{
-					this.GetCommandState("EditCancel").Enable = (build);
 					this.GetCommandState("Delete").Enable = (sel != -1 && count > 1 && build);
 					this.GetCommandState("Create").Enable = (build);
 					this.GetCommandState("Duplicate").Enable = (sel != -1 && build);
 				}
 				else
 				{
-					this.GetCommandState("EditCancel").Enable = false;
 					this.GetCommandState("Delete").Enable = false;
 					this.GetCommandState("Create").Enable = false;
 					this.GetCommandState("Duplicate").Enable = false;
@@ -979,7 +978,6 @@ namespace Epsitec.Common.Designer.Viewers
 
 				if (this.IsDeleteOrDuplicateForViewer)
 				{
-					this.GetCommandState("EditCancel").Enable = false;
 					this.GetCommandState("Delete").Enable = (objSelected != 0);
 					this.GetCommandState("Create").Enable = false;
 					this.GetCommandState("Duplicate").Enable = false;
@@ -1100,7 +1098,24 @@ namespace Epsitec.Common.Designer.Viewers
 			//	Termine le travail sur une ressource, avant de passer à une autre.
 			//	Si soft = true, on sérialise temporairement sans poser de question.
 			//	Retourne false si l'utilisateur a choisi "annuler".
+			if (!soft && this.access.IsLocalDirty)
+			{
+				this.access.PersistChanges();
+				this.access.ClearLocalDirty();
+			}
+			
 			return true;
+		}
+
+		public void RevertChanges()
+		{
+			//	Annule les changements effectués dans les ressources.
+			if (this.access.IsLocalDirty)
+			{
+				this.access.RevertChanges();
+				this.access.ClearLocalDirty();
+				this.Update();
+			}
 		}
 
 

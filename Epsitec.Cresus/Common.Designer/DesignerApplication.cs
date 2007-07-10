@@ -305,7 +305,7 @@ namespace Epsitec.Common.Designer
 				if (this.isEditLocked != value)
 				{
 					this.isEditLocked = value;
-					this.StyleButton("EditLocked", this.isEditLocked ? null : "Unlock");
+					this.StyleButton("EditLocked", this.isEditLocked ? null : "Unlock");  // ouvre ou ferme le cadenas
 
 					ModuleInfo mi = this.CurrentModuleInfo;
 					Viewers.Abstract viewer = mi.Module.Modifier.ActiveViewer;
@@ -392,7 +392,8 @@ namespace Epsitec.Common.Designer
 
 		protected void StyleButton(string command, string style)
 		{
-			//	Modifie le style d'un bouton dans un ruban.
+			//	Modifie le style d'un bouton dans un ruban. L'icône affichée change en fonction des noms
+			//	de style dans les "pages" définis depuis CrPicto.
 			IconButton button = this.SearchIconButton(command);
 			if (button != null)
 			{
@@ -763,6 +764,7 @@ namespace Epsitec.Common.Designer
 				return;
 			}
 
+			this.CurrentModule.Modifier.ActiveViewer.RevertChanges();
 		}
 
 		[Command("Delete")]
@@ -1971,7 +1973,7 @@ namespace Epsitec.Common.Designer
 			//	Met à jour le nom de l'onglet des modules.
 			if ( !this.IsCurrentModule )  return;
 			TabPage tab = this.bookModules.Items[this.currentModule] as TabPage;
-			tab.TabTitle = Misc.ExtractName(this.CurrentModule.ModuleInfo.Name, this.CurrentModule.IsDirty);
+			tab.TabTitle = Misc.ExtractName(this.CurrentModule.ModuleInfo.Name, this.CurrentModule.IsGlobalDirty);
 			this.bookModules.UpdateAfterChanges();
 		}
 		#endregion
@@ -2082,7 +2084,7 @@ namespace Epsitec.Common.Designer
 		{
 			//	Affiche le dialogue pour demander s'il faut enregistrer les
 			//	ressources modifiées, avant de passer à d'autres ressources.
-			if (!this.CurrentModule.IsDirty)
+			if (!this.CurrentModule.IsGlobalDirty)
 			{
 				return Common.Dialogs.DialogResult.None;
 			}

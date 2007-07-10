@@ -516,10 +516,11 @@ namespace Epsitec.Common.Designer.Viewers
 		{
 			//	Méthode appelée pour modifier un champ.
 			ResourceAccess.SetStructuredDataValue(this.access.Accessor, item, data, id.ToString(), value);
-			this.access.IsDirty = true;
+			this.access.SetGlobalDirty();
 			
 			this.UpdateColor();
-			this.access.Accessor.PersistChanges();
+			//?this.access.Accessor.PersistChanges();
+			this.access.SetLocalDirty();
 
 			if (update)
 			{
@@ -1078,7 +1079,8 @@ namespace Epsitec.Common.Designer.Viewers
 			if (edit == this.labelEdit)
 			{
 				this.UpdateFieldName(edit, this.access.CollectionView.CurrentPosition);
-				this.access.Accessor.PersistChanges();
+				//?this.access.Accessor.PersistChanges();
+				this.access.SetLocalDirty();
 				this.access.CollectionView.Refresh();
 			}
 

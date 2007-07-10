@@ -174,7 +174,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				this.isDraggingRoute = false;
 				this.editor.UpdateAfterGeometryChanged(null);
 				this.editor.LockObject(null);
-				this.editor.DirtySerialization = true;
+				this.editor.Module.AccessEntities.SetLocalDirty();
 			}
 
 			if (this.hilitedElement == ActiveElement.ConnectionOpenLeft ||
@@ -260,7 +260,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					}
 
 					this.editor.UpdateAfterAddOrRemoveConnection(box);
-					this.editor.DirtySerialization = true;
+					this.editor.Module.AccessEntities.SetLocalDirty();
 				}
 			}
 
@@ -299,7 +299,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				}
 
 				this.field.Relation = rel;
-				this.SetDirty();
+				this.editor.Module.AccessEntities.SetGlobalDirty();
 				this.editor.Invalidate();
 				this.hilitedElement = ActiveElement.None;
 			}
@@ -443,7 +443,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				this.comment.IsVisible = !this.comment.IsVisible;
 			}
 
-			this.editor.DirtySerialization = true;
+			this.editor.Module.AccessEntities.SetLocalDirty();
 		}
 
 		

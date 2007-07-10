@@ -368,7 +368,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			}
 			else
 			{
-				return module.IsDirty ? ModuleState.OpeningAndDirty : ModuleState.Opening;
+				return module.IsGlobalDirty ? ModuleState.OpeningAndDirty : ModuleState.Opening;
 			}
 		}
 

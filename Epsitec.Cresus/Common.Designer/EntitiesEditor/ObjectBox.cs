@@ -224,7 +224,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					}
 
 					this.editor.Invalidate();
-					this.editor.DirtySerialization = true;
+					this.editor.Module.AccessEntities.SetLocalDirty();
 				}
 			}
 		}
@@ -656,7 +656,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				this.editor.UpdateAfterMoving(this);
 				this.isDragging = false;
 				this.editor.LockObject(null);
-				this.editor.DirtySerialization = true;
+				this.editor.Module.AccessEntities.SetLocalDirty();
 			}
 			else if (this.isFieldMoving)
 			{
@@ -672,13 +672,13 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				this.editor.UpdateAfterMoving(this);
 				this.isChangeWidth = false;
 				this.editor.LockObject(null);
-				this.editor.DirtySerialization = true;
+				this.editor.Module.AccessEntities.SetLocalDirty();
 			}
 			else if (this.isMoveColumnsSeparator)
 			{
 				this.isMoveColumnsSeparator = false;
 				this.editor.LockObject(null);
-				this.editor.DirtySerialization = true;
+				this.editor.Module.AccessEntities.SetLocalDirty();
 			}
 			else if (this.isSourcesMenu)
 			{
@@ -708,7 +708,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				{
 					this.IsExtended = !this.IsExtended;
 					this.editor.UpdateAfterGeometryChanged(this);
-					this.editor.DirtySerialization = true;
+					this.editor.Module.AccessEntities.SetLocalDirty();
 				}
 
 				if (this.hilitedElement == ActiveElement.BoxClose)
@@ -1225,7 +1225,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 				this.UpdateFields();
 				this.editor.UpdateAfterAddOrRemoveConnection(this);
-				this.SetDirty();
+				this.editor.Module.AccessEntities.SetGlobalDirty();
 			}
 
 			this.hilitedElement = ActiveElement.None;
@@ -1249,7 +1249,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 				this.UpdateFields();
 				this.editor.UpdateAfterAddOrRemoveConnection(this);
-				this.SetDirty();
+				this.editor.Module.AccessEntities.SetGlobalDirty();
 			}
 
 			this.hilitedElement = ActiveElement.None;
@@ -1282,7 +1282,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 			IResourceAccessor fieldAccessor = this.editor.Module.AccessFields2.Accessor;
 			fieldAccessor.Collection.Add(fieldCultureMap);
-			fieldAccessor.PersistChanges();
+			//?fieldAccessor.PersistChanges();
 
 			IDataBroker broker = accessor.GetDataBroker(data, Support.Res.Fields.ResourceStructuredType.Fields.ToString());
 			StructuredData newField = broker.CreateData(this.cultureMap);
@@ -1291,7 +1291,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			newField.SetValue(Support.Res.Fields.Field.CaptionId, druid);
 
 			dataFields.Insert(rank+1, newField);
-			accessor.PersistChanges();
+			//?accessor.PersistChanges();
 
 			Field field = new Field(this.editor);
 			this.UpdateField(newField, field);
@@ -1299,7 +1299,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 			this.UpdateFields();
 			this.editor.UpdateAfterAddOrRemoveConnection(this);
-			this.SetDirty();
+			this.editor.Module.AccessEntities.SetLocalDirty();
 			this.hilitedElement = ActiveElement.None;
 		}
 
@@ -1331,9 +1331,9 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 
 			fieldCultureMap.Name = name;
-			fieldAccessor.PersistChanges();
+			//?fieldAccessor.PersistChanges();
 			this.UpdateField(dataField, this.fields[rank]);
-			this.SetDirty();
+			this.editor.Module.AccessEntities.SetLocalDirty();
 			this.editor.Invalidate();
 		}
 
@@ -1374,7 +1374,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 			
 			this.UpdateField(dataField, this.fields[rank]);
-			this.SetDirty();
+			this.editor.Module.AccessEntities.SetGlobalDirty();
 			this.editor.UpdateAfterAddOrRemoveConnection(this);
 		}
 
@@ -1488,7 +1488,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				this.comment.IsVisible = !this.comment.IsVisible;
 			}
 
-			this.editor.DirtySerialization = true;
+			this.editor.Module.AccessEntities.SetLocalDirty();
 		}
 
 
@@ -1624,7 +1624,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 
 			this.editor.UpdateAfterAddOrRemoveConnection(box);
-			this.editor.DirtySerialization = true;
+			this.editor.Module.AccessEntities.SetLocalDirty();
 		}
 
 

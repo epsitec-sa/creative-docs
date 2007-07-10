@@ -898,7 +898,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 
 			this.UpdateAfterOpenOrCloseBox();
-			this.DirtySerialization = true;
+			this.module.AccessEntities.SetLocalDirty();
 		}
 
 		protected void CloseOneBox(ObjectBox box)
@@ -1541,31 +1541,6 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 
 		#region Serialization
-		public bool DirtySerialization
-		{
-			//	Indique si la sérialisation du layout est nécessaire. Si le layout est modifié,
-			//	il faut activer la commande Enregistrer du module, car le layout est sérialisé
-			//	avec le module.
-			get
-			{
-				return this.dirtySerialization;
-			}
-			set
-			{
-				if (this.dirtySerialization != value)
-				{
-					this.dirtySerialization = value;
-
-					if (this.dirtySerialization)
-					{
-						this.module.AccessEntities.IsDirty = true;
-					}
-
-					this.OnDirtySerializationChanged();
-				}
-			}
-		}
-
 		public string Serialize()
 		{
 			//	Sérialise la vue éditée et retourne le résultat dans un string.
@@ -1727,11 +1702,11 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		{
 			add
 			{
-				this.AddUserEventHandler ("AreaSizeChanged", value);
+				this.AddUserEventHandler("AreaSizeChanged", value);
 			}
 			remove
 			{
-				this.RemoveUserEventHandler ("AreaSizeChanged", value);
+				this.RemoveUserEventHandler("AreaSizeChanged", value);
 			}
 		}
 
@@ -1749,11 +1724,11 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		{
 			add
 			{
-				this.AddUserEventHandler ("AreaOffsetChanged", value);
+				this.AddUserEventHandler("AreaOffsetChanged", value);
 			}
 			remove
 			{
-				this.RemoveUserEventHandler ("AreaOffsetChanged", value);
+				this.RemoveUserEventHandler("AreaOffsetChanged", value);
 			}
 		}
 
@@ -1771,33 +1746,11 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		{
 			add
 			{
-				this.AddUserEventHandler ("ZoomChanged", value);
+				this.AddUserEventHandler("ZoomChanged", value);
 			}
 			remove
 			{
-				this.RemoveUserEventHandler ("ZoomChanged", value);
-			}
-		}
-
-		protected virtual void OnDirtySerializationChanged()
-		{
-			//	Génère un événement pour dire que l'état de la sérialisation a changé.
-			EventHandler handler = (EventHandler) this.GetUserEventHandler("DirtySerializationChanged");
-			if (handler != null)
-			{
-				handler(this);
-			}
-		}
-
-		public event Support.EventHandler DirtySerializationChanged
-		{
-			add
-			{
-				this.AddUserEventHandler ("DirtySerializationChanged", value);
-			}
-			remove
-			{
-				this.RemoveUserEventHandler ("DirtySerializationChanged", value);
+				this.RemoveUserEventHandler("ZoomChanged", value);
 			}
 		}
 		#endregion
