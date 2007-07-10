@@ -14,6 +14,55 @@ namespace Epsitec.Common.Designer.Viewers
 	{
 		public Types2(Module module, PanelsContext context, ResourceAccess access, DesignerApplication designerApplication) : base (module, context, access, designerApplication)
 		{
+			MyWidgets.StackedPanel leftContainer, rightContainer;
+
+			//	Séparateur.
+			this.CreateBand(out leftContainer, "", BandMode.Separator, GlyphShape.None, false, 0.0);
+
+			//	Choix du contrôleur.
+			this.buttonSuiteCompact = this.CreateBand(out leftContainer, Res.Strings.Viewers.Types.Controller.Title, BandMode.SuiteView, GlyphShape.ArrowUp, true, 0.6);
+			this.buttonSuiteCompact.Clicked += new MessageEventHandler(this.HandleButtonCompactOrExtendClicked);
+
+			StaticText label = new StaticText(leftContainer.Container);
+			label.Text = Res.Strings.Viewers.Types.Controller.Title;
+			label.MinHeight = 20;  // attention, très important !
+			label.PreferredHeight = 20;
+			label.PreferredWidth = 60;
+			label.ContentAlignment = ContentAlignment.MiddleRight;
+			label.Margins = new Margins(0, 5, 0, 0);
+			label.Dock = DockStyle.Left;
+
+			this.fieldController = new TextFieldCombo(leftContainer.Container);
+			this.fieldController.IsReadOnly = true;
+			this.fieldController.MinHeight = 20;  // attention, très important !
+			this.fieldController.PreferredWidth = 200;
+			this.fieldController.HorizontalAlignment = HorizontalAlignment.Left;
+			this.fieldController.Dock = DockStyle.Left;
+			this.fieldController.TextChanged += new EventHandler(this.HandleControllerTextChanged);
+			this.fieldController.TabIndex = this.tabIndex++;
+			this.fieldController.TabNavigationMode = TabNavigationMode.ActivateOnTab;
+
+			//	Zone 'nullable'.
+			this.CreateBand(out leftContainer, Res.Strings.Viewers.Types.Nullable.Title, BandMode.SuiteView, GlyphShape.None, false, 0.6);
+
+			this.primaryNullable = new CheckButton(leftContainer.Container);
+			this.primaryNullable.Text = Res.Strings.Viewers.Types.Nullable.CheckButton;
+			this.primaryNullable.Dock = DockStyle.StackBegin;
+			this.primaryNullable.Pressed += new MessageEventHandler(this.HandleNullablePressed);
+			this.primaryNullable.TabIndex = this.tabIndex++;
+			this.primaryNullable.TabNavigationMode = TabNavigationMode.ActivateOnTab;
+
+			//	Editeur du type.
+			this.CreateBand(out this.container, Res.Strings.Viewers.Types.Editor.Title, BandMode.SuiteView, GlyphShape.None, false, 0.6);
+
+			//	Résumé des paramètres.
+			this.buttonSuiteExtend = this.CreateBand(out leftContainer, "Résumé", BandMode.SuiteSummary, GlyphShape.ArrowDown, true, 0.6);
+			this.buttonSuiteExtend.Clicked += new MessageEventHandler(this.HandleButtonCompactOrExtendClicked);
+
+			this.primarySuiteSummary = new StaticText(leftContainer.Container);
+			this.primarySuiteSummary.MinHeight = 30;
+			this.primarySuiteSummary.Dock = DockStyle.Fill;
+
 			this.UpdateAll();
 		}
 
@@ -21,6 +70,8 @@ namespace Epsitec.Common.Designer.Viewers
 		{
 			if (disposing)
 			{
+				this.fieldController.TextChanged -= new EventHandler(this.HandleControllerTextChanged);
+				this.primaryNullable.Pressed -= new MessageEventHandler(this.HandleNullablePressed);
 			}
 
 			base.Dispose(disposing);
@@ -35,6 +86,115 @@ namespace Epsitec.Common.Designer.Viewers
 		}
 
 
+		protected override void UpdateEdit()
+		{
+			//	Met à jour les lignes éditables en fonction de la sélection dans le tableau.
+			base.UpdateEdit();
+
+			bool iic = this.ignoreChange;
+			this.ignoreChange = true;
+
+			this.fieldController.Enable = !this.designerApplication.IsReadonly;
+			this.primaryNullable.Enable = !this.designerApplication.IsReadonly;
+
+			CultureMap item = this.access.CollectionView.CurrentItem as CultureMap;
+			StructuredData data = null;
+			object value;
+			
+			if (item != null)
+			{
+				data = item.GetCultureData(this.GetTwoLetters(0));
+			}
+
+			TypeCode typeCode = TypeCode.Invalid;
+			string controller = null;
+			string controllerParameter = null;
+			bool nullable = false;
+
+			if (data != null)
+			{
+				value = data.GetValue(Support.Res.Fields.ResourceBaseType.TypeCode);
+				if (!UndefinedValue.IsUndefinedValue(value))
+				{
+					typeCode = (TypeCode) value;
+				}
+
+				controller = data.GetValue(Support.Res.Fields.ResourceBaseType.DefaultController) as string;
+				controllerParameter = data.GetValue(Support.Res.Fields.ResourceBaseType.DefaultControllerParameter) as string;
+
+				value = data.GetValue(Support.Res.Fields.ResourceBaseType.Nullable);
+				if (!UndefinedValue.IsUndefinedValue(value))
+				{
+					nullable = (bool) value;
+				}
+			}
+
+			this.UpdateController(typeCode);
+			this.fieldController.Text = controller;
+
+			this.primaryNullable.ActiveState = nullable ? ActiveState.Yes : ActiveState.No;
+
+			if (this.typeCode != typeCode)  // autre type ?
+			{
+				this.typeCode = typeCode;
+
+				if (this.editor != null)
+				{
+					//	Supprime l'éditeur actuel.
+					this.container.Container.Children.Clear();
+
+					this.editor.ContentChanged -= new EventHandler(this.HandleEditorContentChanged);
+					this.editor = null;
+				}
+
+				this.editor = MyWidgets.AbstractTypeEditor.Create(this.typeCode);
+
+				if (this.editor != null)
+				{
+					//	Crée le nouvel éditeur.
+					this.editor.SetParent(this.container.Container);
+					this.editor.Module = this.module;
+					this.editor.DesignerApplication = this.designerApplication;
+					this.editor.ResourceAccess = this.access;
+					this.editor.Dock = DockStyle.StackBegin;
+					this.editor.ContentChanged += new EventHandler(this.HandleEditorContentChanged);
+				}
+			}
+
+			if (this.editor != null)
+			{
+				this.editor.Enable = !this.designerApplication.IsReadonly;
+				//?this.editor.ResourceSelected = sel;
+			}
+
+			this.ignoreChange = iic;
+		}
+
+		protected void UpdateController(TypeCode typeCode)
+		{
+			this.fieldController.Items.Clear();
+			this.fieldController.Items.Add("Normal");
+
+			if (typeCode == TypeCode.Decimal    ||
+				typeCode == TypeCode.Double     ||
+				typeCode == TypeCode.Integer    ||
+				typeCode == TypeCode.LongInteger)
+			{
+				this.fieldController.Items.Add("Simply");
+				this.fieldController.Items.Add("Slider");
+				this.fieldController.Items.Add("UpDown");
+			}
+
+			if (typeCode == TypeCode.Enum)
+			{
+				this.fieldController.Items.Add("Icons");
+				this.fieldController.Items.Add("RadioButtons");
+				this.fieldController.Items.Add("ScrollList");
+				this.fieldController.Items.Add("Combo");
+			}
+		}
+
+		
 		protected override void InitializeTable()
 		{
 			//	Initialise la table.
@@ -135,7 +295,41 @@ namespace Epsitec.Common.Designer.Viewers
 		}
 
 
-		private static double[]				columnWidthHorizontal = {140, 60, 100, 100, 80, 50, 100};
-		private static double[]				columnWidthVertical = {250, 60, 270, 270, 80, 50, 100};
+		private void HandleControllerTextChanged(object sender)
+		{
+			//	Le texte éditable pour le contrôleur a changé.
+			if (this.ignoreChange)
+			{
+				return;
+			}
+
+			string controller = this.fieldController.Text;
+		}
+
+		private void HandleNullablePressed(object sender, MessageEventArgs e)
+		{
+			//	Bouton à cocher 'Nullable' pressé.
+			if (this.ignoreChange)
+			{
+				return;
+			}
+
+		}
+
+		private void HandleEditorContentChanged(object sender)
+		{
+			//	Le contenu de l'éditeur de type a changé.
+		}
+
+
+		private static double[]					columnWidthHorizontal = {140, 60, 100, 100, 80, 50, 100};
+		private static double[]					columnWidthVertical = {250, 60, 270, 270, 80, 50, 100};
+
+		protected MyWidgets.StackedPanel		container;
+		protected TypeCode						typeCode = TypeCode.Invalid;
+		protected TextFieldCombo				fieldController;
+		protected CheckButton					primaryNullable;
+		protected MyWidgets.AbstractTypeEditor	editor;
+		protected StaticText					primarySuiteSummary;
 	}
 }
