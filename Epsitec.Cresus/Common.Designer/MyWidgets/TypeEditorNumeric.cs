@@ -433,6 +433,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 			
 			this.OnContentChanged();
+			this.UpdateContent();
 			this.module.AccessTypes2.SetLocalDirty();
 #else
 			//	[Note1] On demande le type avec un ResourceAccess.GetField.
