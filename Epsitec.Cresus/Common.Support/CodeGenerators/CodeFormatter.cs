@@ -8,21 +8,36 @@ using System.Collections.Generic;
 
 namespace Epsitec.Common.Support.CodeGenerators
 {
+	/// <summary>
+	/// The <c>CodeFormatter</c> class is used to generate formatted source
+	/// code. The caller provides the structure and the pieces of code and
+	/// the formatter manages the indentation, blocks, etc. and checks for
+	/// common mistakes which would lead to broken code.
+	/// </summary>
 	public class CodeFormatter
 	{
+		/// <summary>
+		/// Initializes a new instance of the <see cref="CodeFormatter"/> class.
+		/// </summary>
+		/// <param name="buffer">The buffer used to store the formatted source.</param>
 		public CodeFormatter(System.Text.StringBuilder buffer)
 		{
 			this.output = buffer;
 		}
 
-		
-		public int IndentationLevel
+
+		/// <summary>
+		/// Gets (or sets) the indentation level. Zero means no indentation at
+		/// all.
+		/// </summary>
+		/// <value>The indentation level.</value>
+		public int								IndentationLevel
 		{
 			get
 			{
 				return this.indentationLevel;
 			}
-			set
+			private set
 			{
 				if (this.indentationLevel != value)
 				{
@@ -32,7 +47,12 @@ namespace Epsitec.Common.Support.CodeGenerators
 			}
 		}
 
-		public string IndentationString
+		/// <summary>
+		/// Gets the indentation string. This is the text that gets inserted
+		/// at the beginning of an empty line at the current indentation level.
+		/// </summary>
+		/// <value>The indentation string.</value>
+		public string							IndentationString
 		{
 			get
 			{
@@ -40,7 +60,14 @@ namespace Epsitec.Common.Support.CodeGenerators
 			}
 		}
 
-		public bool IsInClass
+		/// <summary>
+		/// Gets a value indicating whether the formatter is outputting code
+		/// within in a class definition.
+		/// </summary>
+		/// <value>
+		/// 	<c>true</c> if within a class definition; otherwise, <c>false</c>.
+		/// </value>
+		public bool								IsInClass
 		{
 			get
 			{
@@ -48,7 +75,14 @@ namespace Epsitec.Common.Support.CodeGenerators
 			}
 		}
 
-		public bool IsInInterface
+		/// <summary>
+		/// Gets a value indicating whether the formatter is output code within
+		/// an interface definition.
+		/// </summary>
+		/// <value>
+		/// 	<c>true</c> if within an interface; otherwise, <c>false</c>.
+		/// </value>
+		public bool								IsInInterface
 		{
 			get
 			{
@@ -56,50 +90,7 @@ namespace Epsitec.Common.Support.CodeGenerators
 			}
 		}
 
-		public void IncreaseIndentation()
-		{
-			this.IndentationLevel++;
-		}
 
-		public void DecreaseIndentation()
-		{
-			this.IndentationLevel--;
-		}
-
-		public void WriteBeginBlock()
-		{
-			this.WriteBeginLine ();
-			this.output.Append (Strings.BlockBegin);
-			this.WriteEndLine ();
-			this.IncreaseIndentation ();
-		}
-
-		public void WriteEndBlock()
-		{
-			this.DecreaseIndentation ();
-			this.WriteBeginLine ();
-			this.output.Append (Strings.BlockEnd);
-			this.WriteEndLine ();
-		}
-
-		public void WriteBeginLine()
-		{
-			if (this.lineState != LineState.EmptyLineWithIndentation)
-			{
-				this.WriteEndLine ();
-				this.output.Append (this.IndentationString);
-				this.lineState = LineState.EmptyLineWithIndentation;
-			}
-		}
-
-		public void WriteEndLine()
-		{
-			if (this.lineState != LineState.EmptyLine)
-			{
-				this.output.Append (Strings.LineSeparator);
-				this.lineState = LineState.EmptyLine;
-			}
-		}
 
 		public void WriteBeginNamespace(string code)
 		{
@@ -260,7 +251,42 @@ namespace Epsitec.Common.Support.CodeGenerators
 			this.PopElementState (ElementState.InstanceVariable);
 		}
 
-		public void WriteCodeLine(string code)
+		public void WriteBeginLine()
+		{
+			if (this.lineState != LineState.EmptyLineWithIndentation)
+			{
+				this.WriteEndLine ();
+				this.output.Append (this.IndentationString);
+				this.lineState = LineState.EmptyLineWithIndentation;
+			}
+		}
+
+		public void WriteEndLine()
+		{
+			if (this.lineState != LineState.EmptyLine)
+			{
+				this.output.Append (Strings.LineSeparator);
+				this.lineState = LineState.EmptyLine;
+			}
+		}
+
+		public void WriteBeginBlock()
+		{
+			this.WriteBeginLine ();
+			this.output.Append (Strings.BlockBegin);
+			this.WriteEndLine ();
+			this.IncreaseIndentation ();
+		}
+
+		public void WriteEndBlock()
+		{
+			this.DecreaseIndentation ();
+			this.WriteBeginLine ();
+			this.output.Append (Strings.BlockEnd);
+			this.WriteEndLine ();
+		}
+
+		public void WriteCodeLine(string line)
 		{
 			if (this.isAbstract)
 			{
@@ -268,7 +294,7 @@ namespace Epsitec.Common.Support.CodeGenerators
 			}
 			
 			this.WriteBeginLine ();
-			this.WriteCode (code);
+			this.WriteCode (line);
 			this.WriteEndLine ();
 		}
 		
@@ -320,6 +346,16 @@ namespace Epsitec.Common.Support.CodeGenerators
 
 			this.output.Append (text);
 			this.lineState = LineState.PartialLine;
+		}
+
+		private void IncreaseIndentation()
+		{
+			this.IndentationLevel++;
+		}
+
+		private void DecreaseIndentation()
+		{
+			this.IndentationLevel--;
 		}
 
 		private void UpdateIsAbstract(CodeAttributes attributes)
