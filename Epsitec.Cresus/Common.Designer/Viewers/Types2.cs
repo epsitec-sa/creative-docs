@@ -20,7 +20,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.CreateBand(out leftContainer, "", BandMode.Separator, GlyphShape.None, false, 0.0);
 
 			//	Choix du contrôleur.
-			this.buttonSuiteCompact = this.CreateBand(out leftContainer, Res.Strings.Viewers.Types.Controller.Title, BandMode.SuiteView, GlyphShape.ArrowUp, true, 0.6);
+			this.buttonSuiteCompact = this.CreateBand(out leftContainer, Res.Strings.Viewers.Types.Controller.Title, BandMode.SuiteView, GlyphShape.ArrowUp, true, 0.1);
 			this.buttonSuiteCompact.Clicked += new MessageEventHandler(this.HandleButtonCompactOrExtendClicked);
 
 			StaticText label = new StaticText(leftContainer.Container);
@@ -43,7 +43,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.fieldController.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 
 			//	Zone 'nullable'.
-			this.CreateBand(out leftContainer, Res.Strings.Viewers.Types.Nullable.Title, BandMode.SuiteView, GlyphShape.None, false, 0.6);
+			this.CreateBand(out leftContainer, Res.Strings.Viewers.Types.Nullable.Title, BandMode.SuiteView, GlyphShape.None, false, 0.1);
 
 			this.primaryNullable = new CheckButton(leftContainer.Container);
 			this.primaryNullable.Text = Res.Strings.Viewers.Types.Nullable.CheckButton;
@@ -56,7 +56,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.CreateBand(out this.container, Res.Strings.Viewers.Types.Editor.Title, BandMode.SuiteView, GlyphShape.None, false, 0.1);
 
 			//	Résumé des paramètres.
-			this.buttonSuiteExtend = this.CreateBand(out leftContainer, "Résumé", BandMode.SuiteSummary, GlyphShape.ArrowDown, true, 0.6);
+			this.buttonSuiteExtend = this.CreateBand(out leftContainer, "Résumé", BandMode.SuiteSummary, GlyphShape.ArrowDown, true, 0.1);
 			this.buttonSuiteExtend.Clicked += new MessageEventHandler(this.HandleButtonCompactOrExtendClicked);
 
 			this.primarySuiteSummary = new StaticText(leftContainer.Container);

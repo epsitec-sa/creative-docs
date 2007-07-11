@@ -360,6 +360,10 @@ namespace Epsitec.Common.Designer.MyWidgets
 			if (!UndefinedValue.IsUndefinedValue(value))
 			{
 				range = (DecimalRange) value;
+				if (range.IsEmpty)
+				{
+					range = new DecimalRange(0M, 999M, 1M);
+				}
 			}
 
 			DecimalRange preferredRange = new DecimalRange(0M, 999M, 1M);
@@ -367,6 +371,10 @@ namespace Epsitec.Common.Designer.MyWidgets
 			if (!UndefinedValue.IsUndefinedValue(value))
 			{
 				preferredRange = (DecimalRange) value;
+				if (preferredRange.IsEmpty)
+				{
+					preferredRange = new DecimalRange(0M, 999M, 1M);
+				}
 			}
 
 			decimal smallStep = 1M;
@@ -374,6 +382,10 @@ namespace Epsitec.Common.Designer.MyWidgets
 			if (!UndefinedValue.IsUndefinedValue(value))
 			{
 				smallStep = (decimal) value;
+				if (smallStep == 0M)
+				{
+					smallStep = 1M;
+				}
 			}
 
 			decimal largeStep = 10M;
@@ -381,6 +393,10 @@ namespace Epsitec.Common.Designer.MyWidgets
 			if (!UndefinedValue.IsUndefinedValue(value))
 			{
 				largeStep = (decimal) value;
+				if (largeStep == 0M)
+				{
+					largeStep = 10M;
+				}
 			}
 
 			//	Range.
@@ -442,6 +458,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.structuredData.SetValue(Support.Res.Fields.ResourceNumericType.LargeStep, largeStep);
 			
 			this.OnContentChanged();
+			this.module.AccessTypes2.SetLocalDirty();
 #else
 			//	[Note1] On demande le type avec un ResourceAccess.GetField.
 			AbstractNumericType type = this.AbstractType as AbstractNumericType;

@@ -17,7 +17,7 @@ namespace Epsitec.Common.Designer.Viewers
 			//	Résumé des captions.
 			MyWidgets.StackedPanel leftContainer, rightContainer;
 
-			this.buttonMainExtend = this.CreateBand(out leftContainer, out rightContainer, "Résumé", BandMode.MainSummary, GlyphShape.ArrowDown, false, 0.2);
+			this.buttonMainExtend = this.CreateBand(out leftContainer, out rightContainer, "Résumé", BandMode.MainSummary, GlyphShape.ArrowDown, false, 0.3);
 			this.buttonMainExtend.Clicked += new MessageEventHandler(this.HandleButtonCompactOrExtendClicked);
 
 			this.primarySummary = new StaticText(leftContainer.Container);
@@ -29,7 +29,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.secondarySummary.Dock = DockStyle.Fill;
 
 			//	Textes.
-			this.buttonMainCompact = this.CreateBand(out leftContainer, out rightContainer, Res.Strings.Viewers.Captions.Labels.Title, BandMode.MainView, GlyphShape.ArrowUp, false, 0.2);
+			this.buttonMainCompact = this.CreateBand(out leftContainer, out rightContainer, Res.Strings.Viewers.Captions.Labels.Title, BandMode.MainView, GlyphShape.ArrowUp, false, 0.3);
 			this.buttonMainCompact.Clicked += new MessageEventHandler(this.HandleButtonCompactOrExtendClicked);
 
 			this.primaryText = new TextFieldMulti(leftContainer.Container);
@@ -51,7 +51,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.secondaryText.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 
 			//	Commentaires.
-			this.CreateBand(out leftContainer, out rightContainer, Res.Strings.Viewers.Captions.About.Title, BandMode.MainView, GlyphShape.None, false, 0.2);
+			this.CreateBand(out leftContainer, out rightContainer, Res.Strings.Viewers.Captions.About.Title, BandMode.MainView, GlyphShape.None, false, 0.3);
 
 			this.primaryComment = new TextFieldMulti(leftContainer.Container);
 			this.primaryComment.PreferredHeight = 10+14*4;

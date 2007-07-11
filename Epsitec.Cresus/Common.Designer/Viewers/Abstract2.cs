@@ -782,7 +782,10 @@ namespace Epsitec.Common.Designer.Viewers
 					return null;
 				}
 
-				text = text.Replace("<br/>", ", ");  // pour afficher un texte multi-lignes sur une seule
+				if (!string.IsNullOrEmpty(text))
+				{
+					text = text.Replace("<br/>", ", ");  // pour afficher un texte multi-lignes sur une seule
+				}
 
 				UI.ItemViewText main, st;
 				ResourceAccess.ModificationState state = this.owner.access.GetModification(item, twoLettersCulture);

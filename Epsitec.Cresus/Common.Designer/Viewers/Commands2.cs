@@ -20,7 +20,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.CreateBand(out leftContainer, "", BandMode.Separator, GlyphShape.None, false, 0.0);
 
 			//	Aspect (pour DefaultParameter) et Statefull.
-			this.buttonSuiteCompact = this.CreateBand(out leftContainer, Res.Strings.Viewers.Commands.Statefull.Title, BandMode.SuiteView, GlyphShape.ArrowUp, true, 0.6);
+			this.buttonSuiteCompact = this.CreateBand(out leftContainer, Res.Strings.Viewers.Commands.Statefull.Title, BandMode.SuiteView, GlyphShape.ArrowUp, true, 0.1);
 			this.buttonSuiteCompact.Clicked += new MessageEventHandler(this.HandleButtonCompactOrExtendClicked);
 
 			StaticText label = new StaticText(leftContainer.Container);
@@ -54,7 +54,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.primaryStatefull.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 
 			//	Shortcuts.
-			this.CreateBand(out leftContainer, out rightContainer, Res.Strings.Viewers.Commands.Shortcut.Title, BandMode.SuiteView, GlyphShape.None, false, 0.6);
+			this.CreateBand(out leftContainer, out rightContainer, Res.Strings.Viewers.Commands.Shortcut.Title, BandMode.SuiteView, GlyphShape.None, false, 0.1);
 
 			this.primaryShortcut1 = new ShortcutEditor(leftContainer.Container);
 			this.primaryShortcut1.Title = Res.Strings.Viewers.Commands.Shortcut.Main;
@@ -87,7 +87,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.secondaryShortcut2.TabNavigationMode = TabNavigationMode.ForwardTabPassive;
 
 			//	Group.
-			this.CreateBand(out leftContainer, Res.Strings.Viewers.Commands.Group.Title, BandMode.SuiteView, GlyphShape.None, false, 0.6);
+			this.CreateBand(out leftContainer, Res.Strings.Viewers.Commands.Group.Title, BandMode.SuiteView, GlyphShape.None, false, 0.1);
 
 			label = new StaticText(leftContainer.Container);
 			label.Text = Res.Strings.Viewers.Commands.Group.Title;
@@ -110,7 +110,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.primaryGroup.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 
 			//	Résumé des paramètres.
-			this.buttonSuiteExtend = this.CreateBand(out leftContainer, out rightContainer, "Résumé", BandMode.SuiteSummary, GlyphShape.ArrowDown, true, 0.6);
+			this.buttonSuiteExtend = this.CreateBand(out leftContainer, out rightContainer, "Résumé", BandMode.SuiteSummary, GlyphShape.ArrowDown, true, 0.1);
 			this.buttonSuiteExtend.Clicked += new MessageEventHandler(this.HandleButtonCompactOrExtendClicked);
 
 			this.primarySuiteSummary = new StaticText(leftContainer.Container);
