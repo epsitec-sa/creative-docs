@@ -345,93 +345,81 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 
 #if true
-			object value;
-
-			DecimalRange range = new DecimalRange(0M, 999M, 1M);
-			value = this.structuredData.GetValue(Support.Res.Fields.ResourceNumericType.Range);
-			if (!UndefinedValue.IsUndefinedValue(value))
-			{
-				range = (DecimalRange) value;
-				if (range.IsEmpty)
-				{
-					range = new DecimalRange(0M, 999M, 1M);
-				}
-			}
-
-			DecimalRange preferredRange = new DecimalRange(0M, 999M, 1M);
-			value = this.structuredData.GetValue(Support.Res.Fields.ResourceNumericType.PreferredRange);
-			if (!UndefinedValue.IsUndefinedValue(value))
-			{
-				preferredRange = (DecimalRange) value;
-				if (preferredRange.IsEmpty)
-				{
-					preferredRange = new DecimalRange(0M, 999M, 1M);
-				}
-			}
-
-			decimal smallStep = 1M;
-			value = this.structuredData.GetValue(Support.Res.Fields.ResourceNumericType.SmallStep);
-			if (!UndefinedValue.IsUndefinedValue(value))
-			{
-				smallStep = (decimal) value;
-				if (smallStep == 0M)
-				{
-					smallStep = 1M;
-				}
-			}
-
-			decimal largeStep = 10M;
-			value = this.structuredData.GetValue(Support.Res.Fields.ResourceNumericType.LargeStep);
-			if (!UndefinedValue.IsUndefinedValue(value))
-			{
-				largeStep = (decimal) value;
-				if (largeStep == 0M)
-				{
-					largeStep = 10M;
-				}
-			}
-
 			//	Range.
-			if (sender == this.fieldMin)
+			if (sender == this.fieldMin || sender == this.fieldMax || sender == this.fieldRes)
 			{
-				range = new DecimalRange(this.GetDecimal(this.fieldMin), range.Maximum, range.Resolution);
-			}
+				DecimalRange range = new DecimalRange(0M, 999M, 1M);
+				object value = this.structuredData.GetValue(Support.Res.Fields.ResourceNumericType.Range);
+				if (!UndefinedValue.IsUndefinedValue(value))
+				{
+					range = (DecimalRange) value;
+					if (range.IsEmpty)
+					{
+						range = new DecimalRange(0M, 999M, 1M);
+					}
+				}
 
-			if (sender == this.fieldMax)
-			{
-				range = new DecimalRange(range.Minimum, this.GetDecimal(this.fieldMax), range.Resolution);
-			}
+				if (sender == this.fieldMin)
+				{
+					range = new DecimalRange(this.GetDecimal(this.fieldMin), range.Maximum, range.Resolution);
+				}
 
-			if (sender == this.fieldRes)
-			{
-				range = new DecimalRange(range.Minimum, range.Maximum, this.GetDecimal(this.fieldRes));
+				if (sender == this.fieldMax)
+				{
+					range = new DecimalRange(range.Minimum, this.GetDecimal(this.fieldMax), range.Resolution);
+				}
+
+				if (sender == this.fieldRes)
+				{
+					range = new DecimalRange(range.Minimum, range.Maximum, this.GetDecimal(this.fieldRes));
+				}
+
+				this.structuredData.SetValue(Support.Res.Fields.ResourceNumericType.Range, range);
 			}
 
 			//	PreferredRange.
-			if (sender == this.fieldPreferredMin)
+			if (sender == this.fieldPreferredMin || sender == this.fieldPreferredMax || sender == this.fieldPreferredRes)
 			{
-				preferredRange = new DecimalRange(this.GetDecimal(this.fieldPreferredMin), preferredRange.Maximum, preferredRange.Resolution);
-			}
+				DecimalRange preferredRange = new DecimalRange(0M, 999M, 1M);
+				object value = this.structuredData.GetValue(Support.Res.Fields.ResourceNumericType.PreferredRange);
+				if (!UndefinedValue.IsUndefinedValue(value))
+				{
+					preferredRange = (DecimalRange) value;
+					if (preferredRange.IsEmpty)
+					{
+						preferredRange = new DecimalRange(0M, 999M, 1M);
+					}
+				}
 
-			if (sender == this.fieldPreferredMax)
-			{
-				preferredRange = new DecimalRange(preferredRange.Minimum, this.GetDecimal(this.fieldPreferredMax), preferredRange.Resolution);
-			}
+				if (sender == this.fieldPreferredMin)
+				{
+					preferredRange = new DecimalRange(this.GetDecimal(this.fieldPreferredMin), preferredRange.Maximum, preferredRange.Resolution);
+				}
 
-			if (sender == this.fieldPreferredRes)
-			{
-				preferredRange = new DecimalRange(preferredRange.Minimum, preferredRange.Maximum, this.GetDecimal(this.fieldPreferredRes));
+				if (sender == this.fieldPreferredMax)
+				{
+					preferredRange = new DecimalRange(preferredRange.Minimum, this.GetDecimal(this.fieldPreferredMax), preferredRange.Resolution);
+				}
+
+				if (sender == this.fieldPreferredRes)
+				{
+					preferredRange = new DecimalRange(preferredRange.Minimum, preferredRange.Maximum, this.GetDecimal(this.fieldPreferredRes));
+				}
+
+				this.structuredData.SetValue(Support.Res.Fields.ResourceNumericType.PreferredRange, preferredRange);
 			}
 
 			//	Steps.
 			if (sender == this.fieldSmallStep)
 			{
-				smallStep = this.GetDecimal(this.fieldSmallStep);
+				decimal smallStep = this.GetDecimal(this.fieldSmallStep);
+				this.structuredData.SetValue(Support.Res.Fields.ResourceNumericType.SmallStep, smallStep);
 			}
 
 			if (sender == this.fieldLargeStep)
 			{
-				largeStep = this.GetDecimal(this.fieldLargeStep);
+				decimal largeStep = this.GetDecimal(this.fieldLargeStep);
+				this.structuredData.SetValue(Support.Res.Fields.ResourceNumericType.LargeStep, largeStep);
 			}
 
 			if (sender == this.fieldDefault)
@@ -443,11 +431,6 @@ namespace Epsitec.Common.Designer.MyWidgets
 			{
 				//	TODO:
 			}
-
-			this.structuredData.SetValue(Support.Res.Fields.ResourceNumericType.Range, range);
-			this.structuredData.SetValue(Support.Res.Fields.ResourceNumericType.PreferredRange, preferredRange);
-			this.structuredData.SetValue(Support.Res.Fields.ResourceNumericType.SmallStep, smallStep);
-			this.structuredData.SetValue(Support.Res.Fields.ResourceNumericType.LargeStep, largeStep);
 			
 			this.OnContentChanged();
 			this.module.AccessTypes2.SetLocalDirty();
