@@ -83,12 +83,6 @@ namespace Epsitec.Common.Designer.MyWidgets
 			group.Dock = DockStyle.StackBegin;
 			group.Margins = new Margins(0, 0, 0, 0);
 			this.fieldSample.TextChanged += new EventHandler(this.HandleTextFieldChanged);
-
-			this.checkCompactStorage = new CheckButton(right);
-			this.checkCompactStorage.Text = Res.Strings.Viewers.Types.Numeric.CompactStorage;
-			this.checkCompactStorage.Dock = DockStyle.StackBegin;
-			this.checkCompactStorage.Margins = new Margins(20, 0, 10+20, 0);
-			this.checkCompactStorage.Clicked += new MessageEventHandler(this.HandleCheckClicked);
 		}
 		
 		public TypeEditorNumeric(Widget embedder) : this()
@@ -114,8 +108,6 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 				this.fieldDefault.TextChanged -= new EventHandler(this.HandleTextFieldChanged);
 				this.fieldSample.TextChanged -= new EventHandler(this.HandleTextFieldChanged);
-
-				this.checkCompactStorage.Clicked -= new MessageEventHandler(this.HandleCheckClicked);
 			}
 			
 			base.Dispose(disposing);
@@ -547,27 +539,6 @@ namespace Epsitec.Common.Designer.MyWidgets
 #endif
 		}
 
-		private void HandleCheckClicked(object sender, MessageEventArgs e)
-		{
-			if (this.ignoreChange)
-			{
-				return;
-			}
-
-#if false
-			//	[Note1] On demande le type avec un ResourceAccess.GetField.
-			AbstractNumericType type = this.AbstractType as AbstractNumericType;
-
-			if (sender == this.checkCompactStorage)
-			{
-				type.DefineUseCompactStorage(!type.UseCompactStorage);
-			}
-
-			//	[Note1] Cet appel va provoquer le ResourceAccess.SetField.
-			this.OnContentChanged();
-#endif
-		}
-
 
 		protected TextField						fieldMin;
 		protected TextField						fieldMax;
@@ -579,6 +550,5 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected TextField						fieldLargeStep;
 		protected TextField						fieldDefault;
 		protected TextField						fieldSample;
-		protected CheckButton					checkCompactStorage;
 	}
 }
