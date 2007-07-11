@@ -1834,6 +1834,18 @@ namespace Epsitec.Common.Designer
 			return caption.Description;
 		}
 
+		public static string GetCaptionShortDescription(StructuredData data)
+		{
+			//	Construit un texte très court d'après les labels et la description.
+			IList<string> labels = data.GetValue(Support.Res.Fields.ResourceCaption.Labels) as IList<string>;
+			if (labels != null && labels.Count != 0)
+			{
+				return labels[0];
+			}
+
+			return data.GetValue(Support.Res.Fields.ResourceCaption.Description) as string;
+		}
+
 
 		#region Direct
 		public Type DirectGetType(Druid druid)

@@ -158,6 +158,35 @@ namespace Epsitec.Common.Designer.MyWidgets
 			//	Retourne le texte du résumé.
 			System.Text.StringBuilder builder = new System.Text.StringBuilder();
 
+#if true
+			object value = this.structuredData.GetValue(Support.Res.Fields.ResourceEnumType.Values);
+			if (!UndefinedValue.IsUndefinedValue(value))
+			{
+				IList<StructuredData> list = value as IList<StructuredData>;
+				builder.Append(list.Count.ToString());
+				builder.Append("×: ");
+
+				for (int i=0; i<list.Count; i++)
+				{
+					StructuredData data = list[i];
+
+					string icon = data.GetValue(Support.Res.Fields.ResourceCaption.Icon) as string;
+					if (string.IsNullOrEmpty(icon))
+					{
+						builder.Append(ResourceAccess.GetCaptionShortDescription(data));
+					}
+					else
+					{
+						builder.Append(Misc.ImageFull(icon, -5));
+					}
+
+					if (i < list.Count-1)
+					{
+						builder.Append(", ");
+					}
+				}
+			}
+#else
 			builder.Append(this.selDruids.Count.ToString());
 			builder.Append("×: ");
 
@@ -181,6 +210,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 					builder.Append(", ");
 				}
 			}
+#endif
 			
 			return builder.ToString();
 		}
@@ -189,6 +219,11 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected override void UpdateContent()
 		{
 			//	Met à jour le contenu de l'éditeur.
+#if true
+			this.allDruids = new List<Druid>();
+			this.selDruids = new List<Druid>();
+			this.listDruids = new List<Druid>();
+#else
 			Types.Collections.EnumValueCollection collection = this.Collection;
 
 			this.allDruids = new List<Druid>();
@@ -242,6 +277,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.UpdateArray();
 			this.UpdateButtons();
 			this.ignoreChange = false;
+#endif
 		}
 
 		protected void UpdateButtons()
