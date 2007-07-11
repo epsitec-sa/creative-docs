@@ -121,6 +121,7 @@ namespace Epsitec.Common.Support.CodeGenerators
 			this.PushElementState (ElementState.Class);
 			this.WriteBeginLine ();
 			this.WriteCode (attributes.ToString ());
+			this.WriteCode (Strings.Keywords.Class);
 			this.WriteCode (code);
 			this.WriteBeginBlock ();
 		}
@@ -136,6 +137,7 @@ namespace Epsitec.Common.Support.CodeGenerators
 			this.PushElementState (ElementState.Interface);
 			this.WriteBeginLine ();
 			this.WriteCode (attributes.ToString ());
+			this.WriteCode (Strings.Keywords.Interface);
 			this.WriteCode (code);
 			this.WriteBeginBlock ();
 		}
@@ -161,13 +163,27 @@ namespace Epsitec.Common.Support.CodeGenerators
 		public void WriteBeginProperty(CodeAttributes attributes, string code)
 		{
 			this.PushElementState (ElementState.Property);
-			this.WriteBeginBlockOrSemicolumnIfAbstract (attributes, code);
+			this.UpdateIsAbstract (attributes);
+
+			if (this.IsInInterface)
+			{
+				this.WriteBeginLine ();
+				this.WriteCode (code);
+				this.WriteBeginBlock ();
+			}
+			else
+			{
+				this.WriteBeginLine ();
+				this.WriteCode (attributes.ToString ());
+				this.WriteCode (code);
+				this.WriteBeginBlock ();
+			}
 		}
 
 		public void WriteEndProperty()
 		{
 			this.PopElementState (ElementState.Property);
-			this.WriteEndBlockOrNothingIfAbstract ();
+			this.WriteEndBlock ();
 		}
 
 		public void WriteBeginSetter(CodeAttributes attributes)
@@ -244,8 +260,13 @@ namespace Epsitec.Common.Support.CodeGenerators
 			this.PopElementState (ElementState.InstanceVariable);
 		}
 
-		public void WriteLine(string code)
+		public void WriteCodeLine(string code)
 		{
+			if (this.isAbstract)
+			{
+				throw new System.InvalidOperationException ("Trying to generate code for an abstract item");
+			}
+			
 			this.WriteBeginLine ();
 			this.WriteCode (code);
 			this.WriteEndLine ();
@@ -363,20 +384,67 @@ namespace Epsitec.Common.Support.CodeGenerators
 			{
 				case ElementState.Method:
 				case ElementState.Property:
-					System.Diagnostics.Debug.Assert ((previousState == ElementState.Class) || (previousState == ElementState.Interface));
+					if ((previousState == ElementState.Class) ||
+						(previousState == ElementState.Interface))
+					{
+						//	OK.
+					}
+					else
+					{
+						throw new System.InvalidOperationException (string.Format ("{0} not defined in a class or an interface", state));
+					}
 					break;
 
 				case ElementState.PropertyGetter:
 				case ElementState.PropertySetter:
-					System.Diagnostics.Debug.Assert (previousState == ElementState.Property);
+					if (previousState != ElementState.Property)
+					{
+						throw new System.InvalidOperationException (string.Format ("{0} not defined in a property", state));
+					}
+					break;
+
+				case ElementState.Namespace:
+					if (previousState != ElementState.None)
+					{
+						throw new System.InvalidOperationException (string.Format ("Namespace cannot be defined in {0}", previousState));
+					}
 					break;
 
 				case ElementState.Interface:
+					if ((previousState == ElementState.Class) ||
+						(previousState == ElementState.Namespace))
+					{
+						//	OK.
+					}
+					else
+					{
+						throw new System.InvalidOperationException (string.Format ("Trying to define an interface in {0}, not a class or a namespace", previousState));
+					}
 					this.isInInterface = true;
 					break;
 
 				case ElementState.Class:
+					if ((previousState == ElementState.Class) ||
+						(previousState == ElementState.Namespace))
+					{
+						//	OK.
+					}
+					else
+					{
+						throw new System.InvalidOperationException (string.Format ("Trying to define a class in {0}, not a class or a namespace", previousState));
+					}
 					this.isInClassCount++;
+					break;
+
+				case ElementState.InstanceVariable:
+					if (previousState == ElementState.Class)
+					{
+						//	OK.
+					}
+					else
+					{
+						throw new System.InvalidOperationException (string.Format ("Trying to define an instance variable in {0}, not a class", previousState));
+					}
 					break;
 			}
 			
@@ -461,7 +529,7 @@ namespace Epsitec.Common.Support.CodeGenerators
 		}
 
 
-		static class Strings
+		internal static class Strings
 		{
 			public const string LineSeparator = "\n";
 			public const string BlockBegin = "{";
@@ -470,9 +538,24 @@ namespace Epsitec.Common.Support.CodeGenerators
 
 			public static class Keywords
 			{
-				public const string Namespace = "namespace";
+				public const string Abstract = "abstract";
+				public const string Class = "class";
+				public const string Const = "const";
 				public const string Get = "get";
+				public const string Interface = "interface";
+				public const string Internal = "internal";
+				public const string Namespace = "namespace";
+				public const string New = "new";
+				public const string Override = "override";
+				public const string Partial = "partial";
+				public const string Private = "private";
+				public const string Protected = "protected";
+				public const string Public = "public";
+				public const string Readonly = "readonly";
+				public const string Sealed = "sealed";
 				public const string Set = "set";
+				public const string Static = "static";
+				public const string Virtual = "virtual";
 			}
 		}
 		

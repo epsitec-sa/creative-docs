@@ -19,8 +19,9 @@ namespace Epsitec.Common.Support.CodeGenerators
 		{
 			this.accessibility = attributes.accessibility;
 			this.visibility = attributes.visibility;
-			this.readOnly = attributes.readOnly;
-			this.newDefinition = false;
+			this.isReadonly = attributes.isReadonly;
+			this.isNew = attributes.isNew;
+			this.isPartial = attributes.isPartial;
 		}
 
 		/// <summary>
@@ -31,8 +32,9 @@ namespace Epsitec.Common.Support.CodeGenerators
 		{
 			this.accessibility = accessibility;
 			this.visibility = CodeVisibility.Public;
-			this.readOnly = false;
-			this.newDefinition = false;
+			this.isReadonly = false;
+			this.isNew = false;
+			this.isPartial = false;
 		}
 
 		/// <summary>
@@ -43,8 +45,9 @@ namespace Epsitec.Common.Support.CodeGenerators
 		{
 			this.accessibility = CodeAccessibility.Final;
 			this.visibility = visibility;
-			this.readOnly = false;
-			this.newDefinition = false;
+			this.isReadonly = false;
+			this.isNew = false;
+			this.isPartial = false;
 		}
 
 		/// <summary>
@@ -56,8 +59,9 @@ namespace Epsitec.Common.Support.CodeGenerators
 		{
 			this.accessibility = accessibility;
 			this.visibility = visibility;
-			this.readOnly = false;
-			this.newDefinition = false;
+			this.isReadonly = false;
+			this.isNew = false;
+			this.isPartial = false;
 		}
 
 		/// <summary>
@@ -70,18 +74,23 @@ namespace Epsitec.Common.Support.CodeGenerators
 		{
 			this.accessibility = accessibility;
 			this.visibility = visibility;
-			this.readOnly = false;
-			this.newDefinition = false;
+			this.isReadonly = false;
+			this.isNew = false;
+			this.isPartial = false;
 
 			foreach (object attribute in attributes)
 			{
 				if (attribute == CodeAttributes.ReadOnlyAttribute)
 				{
-					this.readOnly = true;
+					this.isReadonly = true;
 				}
 				else if (attribute == CodeAttributes.NewAttribute)
 				{
-					this.newDefinition = false;
+					this.isNew = true;
+				}
+				else if (attribute == CodeAttributes.PartialAttribute)
+				{
+					this.isPartial = true;
 				}
 			}
 		}
@@ -111,42 +120,63 @@ namespace Epsitec.Common.Support.CodeGenerators
 		}
 
 		/// <summary>
-		/// Gets a value indicating whether the access is read only.
+		/// Gets a value indicating whether the access is read only and should specify
+		/// the <c>readonly</c> keyword.
 		/// </summary>
 		/// <value><c>true</c> if the access is read only; otherwise, <c>false</c>.</value>
-		public bool								ReadOnly
+		public bool								IsReadonly
 		{
 			get
 			{
-				return this.readOnly;
+				return this.isReadonly;
 			}
 		}
 
 		/// <summary>
-		/// Gets a value indicating whether the attribute should specify the new
+		/// Gets a value indicating whether the attribute should specify the <c>new</c>
 		/// keyword.
 		/// </summary>
-		/// <value><c>true</c> if the attribute should specify the new keyword;
+		/// <value><c>true</c> if the attribute should specify the <c>new</c> keyword;
 		/// otherwise, <c>false</c>.</value>
-		public bool								New
+		public bool								IsNew
 		{
 			get
 			{
-				return this.newDefinition;
+				return this.isNew;
 			}
 		}
 
 		/// <summary>
-		/// Gets the read only attribute constant which can be passed to the
+		/// Gets a value indicating whether the attribute should specify the <c>partial</c>
+		/// keyword.
+		/// </summary>
+		/// <value><c>true</c> if the attribute should specify the <c>partial</c> keyword;
+		/// otherwise, <c>false</c>.</value>
+		public bool								IsPartial
+		{
+			get
+			{
+				return this.isPartial;
+			}
+		}
+
+		/// <summary>
+		/// Gets the <c>readonly</c> attribute constant which can be passed to the
 		/// <see cref="CodeAttributes"/> constructor.
 		/// </summary>
 		public static readonly object			ReadOnlyAttribute = new object ();
 
 		/// <summary>
-		/// Gets the new attribute constant which can be passed to the
+		/// Gets the <c>new</c> attribute constant which can be passed to the
 		/// <see cref="CodeAttributes"/> constructor.
 		/// </summary>
-		public static readonly object NewAttribute = new object ();
+		public static readonly object			NewAttribute = new object ();
+
+		/// <summary>
+		/// Gets the <c>partial</c> attribute constant which can be passed to the
+		/// <see cref="CodeAttributes"/> constructor.
+		/// </summary>
+		public static readonly object			PartialAttribute = new object ();
 
 		/// <summary>
 		/// Gets the default <see cref="CodeAttributes"/> instance.
@@ -188,19 +218,19 @@ namespace Epsitec.Common.Support.CodeGenerators
 			switch (this.visibility)
 			{
 				case CodeVisibility.Internal:
-					tokens.Add ("internal");
+					tokens.Add (CodeFormatter.Strings.Keywords.Internal);
 					break;
 				
 				case CodeVisibility.Private:
-					tokens.Add ("private");
+					tokens.Add (CodeFormatter.Strings.Keywords.Private);
 					break;
 
 				case CodeVisibility.Protected:
-					tokens.Add ("protected");
+					tokens.Add (CodeFormatter.Strings.Keywords.Protected);
 					break;
 				
 				case CodeVisibility.Public:
-					tokens.Add ("public");
+					tokens.Add (CodeFormatter.Strings.Keywords.Public);
 					break;
 
 				default:
@@ -210,44 +240,49 @@ namespace Epsitec.Common.Support.CodeGenerators
 			switch (this.accessibility)
 			{
 				case CodeAccessibility.Abstract:
-					tokens.Add ("abstract");
+					tokens.Add (CodeFormatter.Strings.Keywords.Abstract);
 					break;
 				
 				case CodeAccessibility.Constant:
-					tokens.Add ("const");
+					tokens.Add (CodeFormatter.Strings.Keywords.Const);
 					break;
 
 				case CodeAccessibility.Final:
 					break;
 				
 				case CodeAccessibility.Override:
-					tokens.Add ("override");
-					break;
-
-				case CodeAccessibility.Static:
-					tokens.Add ("static");
-					break;
-				
-				case CodeAccessibility.Virtual:
-					tokens.Add ("virtual");
+					tokens.Add (CodeFormatter.Strings.Keywords.Override);
 					break;
 
 				case CodeAccessibility.Sealed:
-					tokens.Add ("sealed");
+					tokens.Add (CodeFormatter.Strings.Keywords.Sealed);
+					break;
+
+				case CodeAccessibility.Static:
+					tokens.Add (CodeFormatter.Strings.Keywords.Static);
+					break;
+				
+				case CodeAccessibility.Virtual:
+					tokens.Add (CodeFormatter.Strings.Keywords.Virtual);
 					break;
 
 				default:
 					throw new System.NotSupportedException (string.Format ("CodeAccess.{0} not supported here", this.accessibility));
 			}
 
-			if (this.readOnly)
+			if (this.isReadonly)
 			{
-				tokens.Add ("readonly");
+				tokens.Add (CodeFormatter.Strings.Keywords.Readonly);
 			}
 
-			if (this.newDefinition)
+			if (this.isNew)
 			{
-				tokens.Add ("new");
+				tokens.Add (CodeFormatter.Strings.Keywords.New);
+			}
+
+			if (this.isPartial)
+			{
+				tokens.Add (CodeFormatter.Strings.Keywords.Partial);
 			}
 
 			return string.Join (" ", tokens.ToArray ());
@@ -255,7 +290,9 @@ namespace Epsitec.Common.Support.CodeGenerators
 
 		private CodeAccessibility				accessibility;
 		private CodeVisibility					visibility;
-		private bool							readOnly;
-		private bool							newDefinition;
+		
+		private bool							isReadonly;
+		private bool							isNew;
+		private bool							isPartial;
 	}
 }
