@@ -8,7 +8,7 @@ using System.Collections.Generic;
 
 namespace Epsitec.Common.Support.CodeGenerators
 {
-	public class CodeFormatter
+	class CodeFormatter
 	{
 		public CodeFormatter(System.Text.StringBuilder buffer)
 		{
@@ -51,39 +51,125 @@ namespace Epsitec.Common.Support.CodeGenerators
 			this.IndentationLevel--;
 		}
 
-		public void BeginBlock()
+		public void WriteBeginBlock()
 		{
-			this.BeginLine ();
+			this.WriteBeginLine ();
 			this.output.Append (Strings.BlockBegin);
-			this.EndLine ();
+			this.WriteEndLine ();
 			this.IncreaseIndentation ();
 		}
 
-		public void EndBlock()
+		public void WriteEndBlock()
 		{
 			this.DecreaseIndentation ();
-			this.BeginLine ();
+			this.WriteBeginLine ();
 			this.output.Append (Strings.BlockEnd);
-			this.EndLine ();
+			this.WriteEndLine ();
 		}
 
-		public void BeginLine()
+		public void WriteBeginLine()
 		{
 			if (this.outputState != State.EmptyLineWithIndentation)
 			{
-				this.EndLine ();
+				this.WriteEndLine ();
 				this.output.Append (this.IndentationString);
 				this.outputState = State.EmptyLineWithIndentation;
 			}
 		}
 
-		public void EndLine()
+		public void WriteEndLine()
 		{
 			if (this.outputState != State.EmptyLine)
 			{
 				this.output.Append (Strings.LineSeparator);
 				this.outputState = State.EmptyLine;
 			}
+		}
+
+		public void WriteBeginProperty(string code)
+		{
+			this.WriteBeginLine ();
+			this.WriteCode (code);
+			this.WriteBeginBlock ();
+		}
+
+		public void WriteEndProperty()
+		{
+			this.WriteEndBlock ();
+		}
+
+		public void WriteBeginSetter(CodeAttributes attributes)
+		{
+			this.WriteBeginLine ();
+
+			if (attributes.Visibility != CodeVisibility.Public)
+			{
+				this.WriteCode (attributes.ToString ());
+			}
+
+			this.WriteCode ("set");
+			this.WriteBeginBlock ();
+		}
+		
+		public void WriteEndSetter()
+		{
+			this.WriteEndBlock ();
+		}
+
+		public void WriteBeginGetter(CodeAttributes attributes)
+		{
+			this.WriteBeginLine ();
+			
+			if (attributes.Visibility != CodeVisibility.Public)
+			{
+				this.WriteCode (attributes.ToString ());
+			}
+			
+			this.WriteCode ("get");
+			this.WriteBeginBlock ();
+		}
+
+		public void WriteEndGetter()
+		{
+			this.WriteEndBlock ();
+		}
+		
+		public void WriteCode(string code)
+		{
+			if (string.IsNullOrEmpty (code))
+			{
+				return;
+			}
+
+			char codeStart = code[0];
+
+			if (char.IsLetterOrDigit (codeStart))
+			{
+				//	When inserting symbols or numbers, we want to make sure there is
+				//	a space before the current text :
+
+				if (this.output.Length > 0)
+				{
+					char lastChar = this.output[this.output.Length-1];
+
+					switch (lastChar)
+					{
+						case ' ':
+						case '\t':
+						case '\n':
+						case '\r':
+						case '(':
+							//	No need to insert a space character...
+							break;
+						
+						default:
+							this.output.Append (" ");
+							break;
+					}
+				}
+			}
+
+			this.output.Append (code);
 		}
 
 		
