@@ -326,7 +326,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 			else
 			{
-				TypeEditorDateTime.TimeToField(this.fieldMinDate, (Time) value);
+				TypeEditorDateTime.TimeToField(this.fieldMinTime, (Time) value);
 			}
 
 			value = this.structuredData.GetValue(Support.Res.Fields.ResourceDateTimeType.MaximumTime);
@@ -336,7 +336,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 			else
 			{
-				TypeEditorDateTime.TimeToField(this.fieldMaxDate, (Time) value);
+				TypeEditorDateTime.TimeToField(this.fieldMaxTime, (Time) value);
 			}
 
 			value = this.structuredData.GetValue(Support.Res.Fields.ResourceDateTimeType.DateStep);
@@ -674,6 +674,60 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 
 #if true
+			if (sender == this.fieldResol)
+			{
+				TimeResolution res = TypeEditorDateTime.StringToTimeResolution(this.fieldResol.Text);
+				this.structuredData.SetValue(Support.Res.Fields.ResourceDateTimeType.Resolution, res);
+			}
+
+			if (sender == this.fieldMinDate)
+			{
+				Date minDate = TypeEditorDateTime.FieldToDate(this.fieldMinDate);
+				this.structuredData.SetValue(Support.Res.Fields.ResourceDateTimeType.MinimumDate, minDate);
+			}
+
+			if (sender == this.fieldMaxDate)
+			{
+				Date maxDate = TypeEditorDateTime.FieldToDate(this.fieldMaxDate);
+				this.structuredData.SetValue(Support.Res.Fields.ResourceDateTimeType.MaximumDate, maxDate);
+			}
+
+			if (sender == this.fieldMinTime)
+			{
+				Time minTime = TypeEditorDateTime.FieldToTime(this.fieldMinTime);
+				this.structuredData.SetValue(Support.Res.Fields.ResourceDateTimeType.MinimumTime, minTime);
+			}
+
+			if (sender == this.fieldMaxTime)
+			{
+				Time maxTime = TypeEditorDateTime.FieldToTime(this.fieldMaxTime);
+				this.structuredData.SetValue(Support.Res.Fields.ResourceDateTimeType.MaximumTime, maxTime);
+			}
+
+			if (sender == this.fieldDateStep)
+			{
+				DateSpan dateSpan = TypeEditorDateTime.FieldToDateStep(this.fieldDateStep);
+				this.structuredData.SetValue(Support.Res.Fields.ResourceDateTimeType.DateStep, dateSpan);
+			}
+
+			if (sender == this.fieldTimeStep)
+			{
+				System.TimeSpan timeSpan = TypeEditorDateTime.FieldToTimeSpan(this.fieldTimeStep);
+				this.structuredData.SetValue(Support.Res.Fields.ResourceDateTimeType.TimeStep, timeSpan);
+			}
+
+			if (sender == this.fieldDefault)
+			{
+				//	TODO:
+			}
+
+			if (sender == this.fieldSample)
+			{
+				//	TODO:
+			}
+			
+			this.OnContentChanged();
+			this.module.AccessTypes2.SetLocalDirty();
 #else
 			//	[Note1] On demande le type avec un ResourceAccess.GetField.
 			AbstractDateTimeType type = this.AbstractType as AbstractDateTimeType;
