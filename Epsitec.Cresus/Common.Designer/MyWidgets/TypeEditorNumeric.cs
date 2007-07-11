@@ -348,14 +348,14 @@ namespace Epsitec.Common.Designer.MyWidgets
 			//	Range.
 			if (sender == this.fieldMin || sender == this.fieldMax || sender == this.fieldRes)
 			{
-				DecimalRange range = new DecimalRange(0M, 999M, 1M);
+				DecimalRange range = this.DefaultRange;
 				object value = this.structuredData.GetValue(Support.Res.Fields.ResourceNumericType.Range);
 				if (!UndefinedValue.IsUndefinedValue(value))
 				{
 					range = (DecimalRange) value;
 					if (range.IsEmpty)
 					{
-						range = new DecimalRange(0M, 999M, 1M);
+						range = this.DefaultRange;
 					}
 				}
 
@@ -380,14 +380,14 @@ namespace Epsitec.Common.Designer.MyWidgets
 			//	PreferredRange.
 			if (sender == this.fieldPreferredMin || sender == this.fieldPreferredMax || sender == this.fieldPreferredRes)
 			{
-				DecimalRange preferredRange = new DecimalRange(0M, 999M, 1M);
+				DecimalRange preferredRange = this.DefaultRange;
 				object value = this.structuredData.GetValue(Support.Res.Fields.ResourceNumericType.PreferredRange);
 				if (!UndefinedValue.IsUndefinedValue(value))
 				{
 					preferredRange = (DecimalRange) value;
 					if (preferredRange.IsEmpty)
 					{
-						preferredRange = new DecimalRange(0M, 999M, 1M);
+						preferredRange = this.DefaultRange;
 					}
 				}
 
@@ -520,6 +520,30 @@ namespace Epsitec.Common.Designer.MyWidgets
 			//	[Note1] Cet appel va provoquer le ResourceAccess.SetField.
 			this.OnContentChanged();
 #endif
+		}
+
+		protected DecimalRange DefaultRange
+		{
+			//	Retourne le range par défaut avec les valeurs min/max les plus grandes possibles.
+			get
+			{
+				decimal min = decimal.MinValue;
+				decimal max = decimal.MaxValue;
+
+				if (this.typeCode == TypeCode.Integer)
+				{
+					min = (decimal) int.MinValue;
+					max = (decimal) int.MaxValue;
+				}
+
+				if (this.typeCode == TypeCode.LongInteger)
+				{
+					min = (decimal) System.Int64.MinValue;
+					max = (decimal) System.Int64.MaxValue;
+				}
+
+				return new DecimalRange(min, max, 1M);
+			}
 		}
 
 
