@@ -53,6 +53,18 @@ namespace Epsitec.Common.Designer.MyWidgets
 		}
 
 
+		public TypeCode TypeCode
+		{
+			get
+			{
+				return this.typeCode;
+			}
+			set
+			{
+				this.typeCode = value;
+			}
+		}
+
 		public StructuredData StructuredData
 		{
 			get
@@ -427,6 +439,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		#endregion
 
 
+		protected TypeCode						typeCode;
 		protected StructuredData				structuredData;
 		protected ResourceAccess				resourceAccess;
 		protected int							resourceSelected = -1;

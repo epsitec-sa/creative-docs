@@ -14,7 +14,7 @@ namespace Epsitec.Common.Designer.Viewers
 	{
 		public Types2(Module module, PanelsContext context, ResourceAccess access, DesignerApplication designerApplication) : base (module, context, access, designerApplication)
 		{
-			MyWidgets.StackedPanel leftContainer, rightContainer;
+			MyWidgets.StackedPanel leftContainer;
 
 			//	Séparateur.
 			this.CreateBand(out leftContainer, "", BandMode.Separator, GlyphShape.None, false, 0.0);
@@ -153,6 +153,7 @@ namespace Epsitec.Common.Designer.Viewers
 				{
 					//	Crée le nouvel éditeur.
 					this.editor.SetParent(this.container.Container);
+					this.editor.TypeCode = this.typeCode;
 					this.editor.Module = this.module;
 					this.editor.DesignerApplication = this.designerApplication;
 					this.editor.ResourceAccess = this.access;

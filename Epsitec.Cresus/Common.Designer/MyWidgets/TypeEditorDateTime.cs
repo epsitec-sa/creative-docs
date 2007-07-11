@@ -120,7 +120,83 @@ namespace Epsitec.Common.Designer.MyWidgets
 			//	Retourne le texte du résumé.
 			System.Text.StringBuilder builder = new System.Text.StringBuilder();
 			this.PutSummaryInitialise();
+#if true
+			object value;
 
+			value = this.structuredData.GetValue(Support.Res.Fields.ResourceDateTimeType.Resolution);
+			if (!UndefinedValue.IsUndefinedValue(value))
+			{
+				TimeResolution res = (TimeResolution) value;
+				if (res != TimeResolution.Default)
+				{
+					this.PutSummaryValue(builder, Res.Strings.Viewers.Types.Summary.Resolution, TypeEditorDateTime.TimeResolutionToString(res));
+				}
+			}
+
+			value = this.structuredData.GetValue(Support.Res.Fields.ResourceDateTimeType.MinimumDate);
+			if (!UndefinedValue.IsUndefinedValue(value))
+			{
+				Date date = (Date) value;
+				if (date != Date.Null)
+				{
+					this.PutSummaryValue(builder, Res.Strings.Viewers.Types.Summary.DateMin, TypeEditorDateTime.DateTimeToDateString(date.ToDateTime()));
+				}
+			}
+
+			value = this.structuredData.GetValue(Support.Res.Fields.ResourceDateTimeType.MaximumDate);
+			if (!UndefinedValue.IsUndefinedValue(value))
+			{
+				Date date = (Date) value;
+				if (date != Date.Null)
+				{
+					this.PutSummaryValue(builder, Res.Strings.Viewers.Types.Summary.DateMax, TypeEditorDateTime.DateTimeToDateString(date.ToDateTime()));
+				}
+			}
+
+			value = this.structuredData.GetValue(Support.Res.Fields.ResourceDateTimeType.MinimumTime);
+			if (!UndefinedValue.IsUndefinedValue(value))
+			{
+				Time time = (Time) value;
+				if (time != Time.Null)
+				{
+					this.PutSummaryValue(builder, Res.Strings.Viewers.Types.Summary.TimeMin, TypeEditorDateTime.DateTimeToTimeString(time.ToDateTime()));
+				}
+			}
+
+			value = this.structuredData.GetValue(Support.Res.Fields.ResourceDateTimeType.MaximumTime);
+			if (!UndefinedValue.IsUndefinedValue(value))
+			{
+				Time time = (Time) value;
+				if (time != Time.Null)
+				{
+					this.PutSummaryValue(builder, Res.Strings.Viewers.Types.Summary.TimeMax, TypeEditorDateTime.DateTimeToTimeString(time.ToDateTime()));
+				}
+			}
+
+			value = this.structuredData.GetValue(Support.Res.Fields.ResourceDateTimeType.DateStep);
+			if (!UndefinedValue.IsUndefinedValue(value))
+			{
+				DateSpan step = (DateSpan) value;
+				if (step != DateSpan.Zero)
+				{
+					this.PutSummaryValue(builder, Res.Strings.Viewers.Types.Summary.DateStep, TypeEditorDateTime.DateStepToString(step));
+				}
+			}
+
+			value = this.structuredData.GetValue(Support.Res.Fields.ResourceDateTimeType.TimeStep);
+			if (!UndefinedValue.IsUndefinedValue(value))
+			{
+				System.TimeSpan step = (System.TimeSpan) value;
+				if (step != System.TimeSpan.Zero)
+				{
+					this.PutSummaryValue(builder, Res.Strings.Viewers.Types.Summary.TimeStep, TypeEditorDateTime.TimeSpanToString(step));
+				}
+			}
+
+			this.PutSummaryDefaultAndSample(builder);
+
+			return builder.ToString();
+#else
 			AbstractDateTimeType type = this.AbstractType as AbstractDateTimeType;
 
 			if (type.Resolution != TimeResolution.Default)
@@ -154,6 +230,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.PutSummaryDefaultAndSample(builder, type);
 
 			return builder.ToString();
+#endif
 		}
 
 		protected override string TypeToString(object value)
@@ -179,6 +256,111 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected override void UpdateContent()
 		{
 			//	Met à jour le contenu de l'éditeur.
+#if true
+			this.ignoreChange = true;
+			object value;
+
+			bool showDate = true;
+			bool showTime = true;
+
+			if (this.typeCode == TypeCode.Date)
+			{
+				showTime = false;
+			}
+
+			if (this.typeCode == TypeCode.Time)
+			{
+				showDate = false;
+			}
+
+			this.groupMinDate.Visibility = showDate;
+			this.groupMaxDate.Visibility = showDate;
+			this.groupDateStep.Visibility = showDate;
+
+			this.groupMinTime.Visibility = showTime;
+			this.groupMaxTime.Visibility = showTime;
+			this.groupTimeStep.Visibility = showTime;
+
+			value = this.structuredData.GetValue(Support.Res.Fields.ResourceDateTimeType.Resolution);
+			if (UndefinedValue.IsUndefinedValue(value))
+			{
+				this.fieldResol.Text = "";
+			}
+			else
+			{
+				TimeResolution res = (TimeResolution) value;
+				if (res == TimeResolution.Default)
+				{
+					this.fieldResol.Text = "";
+				}
+				else
+				{
+					this.fieldResol.Text = TypeEditorDateTime.TimeResolutionToString(res);
+				}
+			}
+
+			value = this.structuredData.GetValue(Support.Res.Fields.ResourceDateTimeType.MinimumDate);
+			if (UndefinedValue.IsUndefinedValue(value))
+			{
+				this.fieldMinDate.Text = "";
+			}
+			else
+			{
+				TypeEditorDateTime.DateToField(this.fieldMinDate, (Date) value);
+			}
+
+			value = this.structuredData.GetValue(Support.Res.Fields.ResourceDateTimeType.MaximumDate);
+			if (UndefinedValue.IsUndefinedValue(value))
+			{
+				this.fieldMaxDate.Text = "";
+			}
+			else
+			{
+				TypeEditorDateTime.DateToField(this.fieldMaxDate, (Date) value);
+			}
+
+			value = this.structuredData.GetValue(Support.Res.Fields.ResourceDateTimeType.MinimumTime);
+			if (UndefinedValue.IsUndefinedValue(value))
+			{
+				this.fieldMinTime.Text = "";
+			}
+			else
+			{
+				TypeEditorDateTime.TimeToField(this.fieldMinDate, (Time) value);
+			}
+
+			value = this.structuredData.GetValue(Support.Res.Fields.ResourceDateTimeType.MaximumTime);
+			if (UndefinedValue.IsUndefinedValue(value))
+			{
+				this.fieldMaxTime.Text = "";
+			}
+			else
+			{
+				TypeEditorDateTime.TimeToField(this.fieldMaxDate, (Time) value);
+			}
+
+			value = this.structuredData.GetValue(Support.Res.Fields.ResourceDateTimeType.DateStep);
+			if (UndefinedValue.IsUndefinedValue(value))
+			{
+				this.fieldDateStep.Text = "";
+			}
+			else
+			{
+				TypeEditorDateTime.DateStepToField(this.fieldDateStep, (DateSpan) value);
+			}
+
+			value = this.structuredData.GetValue(Support.Res.Fields.ResourceDateTimeType.TimeStep);
+			if (UndefinedValue.IsUndefinedValue(value))
+			{
+				this.fieldTimeStep.Text = "";
+			}
+			else
+			{
+				TypeEditorDateTime.TimeSpanToField(this.fieldTimeStep, (System.TimeSpan) value);
+			}
+
+			this.ignoreChange = false;
+#else
 			AbstractDateTimeType type = this.AbstractType as AbstractDateTimeType;
 
 			bool showDate = true;
@@ -218,6 +400,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.ObjectToField(this.fieldSample, type.SampleValue);
 
 			this.ignoreChange = false;
+#endif
 		}
 
 
@@ -370,7 +553,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		protected static void DateStepToField(TextField field, DateSpan ds)
 		{
-			if (ds == new DateSpan(0, 0, 0))
+			if (ds == DateSpan.Zero)
 			{
 				field.Text = "";
 			}
@@ -387,7 +570,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				return TypeEditorDateTime.StringToDateStep(field.Text);
 			}
 
-			return new DateSpan(0, 0, 0);
+			return DateSpan.Zero;
 		}
 
 		protected static void TimeSpanToField(TextField field, System.TimeSpan ts)
@@ -460,7 +643,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 			catch
 			{
-				return new DateSpan(0, 0, 0);
+				return DateSpan.Zero;
 			}
 		}
 
@@ -490,6 +673,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 				return;
 			}
 
+#if true
+#else
 			//	[Note1] On demande le type avec un ResourceAccess.GetField.
 			AbstractDateTimeType type = this.AbstractType as AbstractDateTimeType;
 
@@ -540,6 +725,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			//	[Note1] Cet appel va provoquer le ResourceAccess.SetField.
 			this.OnContentChanged();
+#endif
 		}
 
 
