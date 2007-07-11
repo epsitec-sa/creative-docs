@@ -131,7 +131,7 @@
     <Compile Include="CodeGenerators\CodeAttributes.cs" />
     <Compile Include="CodeGenerators\CodeFormatter.cs" />
     <Compile Include="CodeGenerators\CodeVisibility.cs" />
-    <Compile Include="CodeGenerators\CodeAccess.cs" />
+    <Compile Include="CodeGenerators\CodeAccessibility.cs" />
     <Compile Include="CodeGenerators\EntityCodeGenerator.cs" />
     <Compile Include="CodeGenerators\Sample.cs" />
     <Compile Include="CommandAttribute.cs">

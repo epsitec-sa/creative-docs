@@ -164,6 +164,7 @@
     <Compile Include="ClipboardTest.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="CodeFormatterTest.cs" />
     <Compile Include="CommandDispatcherTest.cs">
       <SubType>Code</SubType>
     </Compile>

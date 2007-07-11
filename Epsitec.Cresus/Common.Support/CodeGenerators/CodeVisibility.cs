@@ -3,11 +3,30 @@
 
 namespace Epsitec.Common.Support.CodeGenerators
 {
-	enum CodeVisibility : byte
+	/// <summary>
+	/// The <c>CodeVisibility</c> enumeration lists all possible code access
+	/// visibilities defined by the C# language.
+	/// </summary>
+	public enum CodeVisibility : byte
 	{
+		/// <summary>
+		/// The code item is declared <c>public</c>.
+		/// </summary>
 		Public,
+		
+		/// <summary>
+		/// The code item is declared <c>internal</c>.
+		/// </summary>
 		Internal,
+		
+		/// <summary>
+		/// The code item is declared <c>protected</c>.
+		/// </summary>
 		Protected,
-		Private,
+		
+		/// <summary>
+		/// The code item is declared <c>private</c>.
+		/// </summary>
+		Private
 	}
 }
