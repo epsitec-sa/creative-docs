@@ -53,6 +53,22 @@ namespace Epsitec.Common.Designer.MyWidgets
 		}
 
 
+		public StructuredData StructuredData
+		{
+			get
+			{
+				return this.structuredData;
+			}
+			set
+			{
+				if (this.structuredData != value)
+				{
+					this.structuredData = value;
+					this.UpdateContent();
+				}
+			}
+		}
+
 		public Module Module
 		{
 			get
@@ -115,6 +131,12 @@ namespace Epsitec.Common.Designer.MyWidgets
 		{
 			this.summaryEmpty = true;
 			this.summarySeparator = false;
+		}
+
+		protected void PutSummaryDefaultAndSample(System.Text.StringBuilder builder)
+		{
+			//	Met les informations DefaultValue et SampleValue dans le résumé, si elles existent.
+			//	TODO:
 		}
 
 		protected void PutSummaryDefaultAndSample(System.Text.StringBuilder builder, AbstractType type)
@@ -405,6 +427,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		#endregion
 
 
+		protected StructuredData				structuredData;
 		protected ResourceAccess				resourceAccess;
 		protected int							resourceSelected = -1;
 		protected Module						module;

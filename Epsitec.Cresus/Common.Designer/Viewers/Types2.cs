@@ -161,10 +161,15 @@ namespace Epsitec.Common.Designer.Viewers
 				}
 			}
 
-			if (this.editor != null)
+			if (this.editor == null)
+			{
+				this.primarySuiteSummary.Text = "";
+			}
+			else
 			{
 				this.editor.Enable = !this.designerApplication.IsReadonly;
-				//?this.editor.ResourceSelected = sel;
+				this.editor.StructuredData = data;
+				this.primarySuiteSummary.Text = this.editor.GetSummary();
 			}
 
 			this.ignoreChange = iic;

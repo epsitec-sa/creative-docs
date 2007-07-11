@@ -127,8 +127,45 @@ namespace Epsitec.Common.Designer.MyWidgets
 			//	Retourne le texte du résumé.
 			System.Text.StringBuilder builder = new System.Text.StringBuilder();
 			this.PutSummaryInitialise();
+#if true
+			object value;
 
+			value = this.structuredData.GetValue(Support.Res.Fields.ResourceNumericType.Range);
+			if (!UndefinedValue.IsUndefinedValue(value))
+			{
+				DecimalRange range = (DecimalRange) value;
+				this.PutSummaryValue(builder, Res.Strings.Viewers.Types.Summary.Min, range.Minimum.ToString());
+				this.PutSummaryValue(builder, Res.Strings.Viewers.Types.Summary.Max, range.Maximum.ToString());
+				this.PutSummaryValue(builder, Res.Strings.Viewers.Types.Summary.Resolution, range.Resolution.ToString());
+			}
+
+			value = this.structuredData.GetValue(Support.Res.Fields.ResourceNumericType.PreferredRange);
+			if (!UndefinedValue.IsUndefinedValue(value))
+			{
+				DecimalRange range = (DecimalRange) value;
+				this.PutSummaryValue(builder, Res.Strings.Viewers.Types.Summary.Min, range.Minimum.ToString());
+				this.PutSummaryValue(builder, Res.Strings.Viewers.Types.Summary.Max, range.Maximum.ToString());
+				this.PutSummaryValue(builder, Res.Strings.Viewers.Types.Summary.Resolution, range.Resolution.ToString());
+			}
+
+			value = this.structuredData.GetValue(Support.Res.Fields.ResourceNumericType.SmallStep);
+			if (!UndefinedValue.IsUndefinedValue(value))
+			{
+				decimal step = (decimal) value;
+				this.PutSummaryValue(builder, Res.Strings.Viewers.Types.Summary.SmallStep, step.ToString());
+			}
+
+			value = this.structuredData.GetValue(Support.Res.Fields.ResourceNumericType.LargeStep);
+			if (!UndefinedValue.IsUndefinedValue(value))
+			{
+				decimal step = (decimal) value;
+				this.PutSummaryValue(builder, Res.Strings.Viewers.Types.Summary.BigStep, step.ToString());
+			}
+
+			this.PutSummaryDefaultAndSample(builder);
+#else
 			AbstractNumericType type = this.AbstractType as AbstractNumericType;
+			string text;
 
 			if (!type.Range.IsEmpty)
 			{
@@ -154,6 +191,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				this.PutSummarySeparator(builder, 2);
 				this.PutSummaryValue(builder, Res.Strings.Viewers.Types.Summary.Compact);
 			}
+#endif
 
 			return builder.ToString();
 		}
@@ -162,6 +200,62 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected override void UpdateContent()
 		{
 			//	Met à jour le contenu de l'éditeur.
+#if true
+			this.ignoreChange = true;
+			object value;
+
+			value = this.structuredData.GetValue(Support.Res.Fields.ResourceNumericType.Range);
+			if (UndefinedValue.IsUndefinedValue(value))
+			{
+				this.fieldMin.Text = "";
+				this.fieldMax.Text = "";
+				this.fieldRes.Text = "";
+			}
+			else
+			{
+				DecimalRange range = (DecimalRange) value;
+				this.SetDecimal(this.fieldMin, range.Minimum);
+				this.SetDecimal(this.fieldMax, range.Maximum);
+				this.SetDecimal(this.fieldRes, range.Resolution);
+			}
+
+			value = this.structuredData.GetValue(Support.Res.Fields.ResourceNumericType.PreferredRange);
+			if (UndefinedValue.IsUndefinedValue(value))
+			{
+				this.fieldPreferredMin.Text = "";
+				this.fieldPreferredMax.Text = "";
+				this.fieldPreferredRes.Text = "";
+			}
+			else
+			{
+				DecimalRange range = (DecimalRange) value;
+				this.SetDecimal(this.fieldPreferredMin, range.Minimum);
+				this.SetDecimal(this.fieldPreferredMax, range.Maximum);
+				this.SetDecimal(this.fieldPreferredRes, range.Resolution);
+			}
+
+			value = this.structuredData.GetValue(Support.Res.Fields.ResourceNumericType.SmallStep);
+			if (UndefinedValue.IsUndefinedValue(value))
+			{
+				this.fieldSmallStep.Text = "";
+			}
+			else
+			{
+				this.SetDecimal(this.fieldSmallStep, (decimal) value);
+			}
+
+			value = this.structuredData.GetValue(Support.Res.Fields.ResourceNumericType.LargeStep);
+			if (UndefinedValue.IsUndefinedValue(value))
+			{
+				this.fieldLargeStep.Text = "";
+			}
+			else
+			{
+				this.SetDecimal(this.fieldLargeStep, (decimal) value);
+			}
+			
+			this.ignoreChange = false;
+#else
 			AbstractNumericType type = this.AbstractType as AbstractNumericType;
 
 			this.ignoreChange = true;
@@ -201,6 +295,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.checkCompactStorage.ActiveState = type.UseCompactStorage ? ActiveState.Yes : ActiveState.No;
 
 			this.ignoreChange = false;
+#endif
 		}
 
 
@@ -211,6 +306,97 @@ namespace Epsitec.Common.Designer.MyWidgets
 				return;
 			}
 
+#if true
+			object value;
+
+			DecimalRange range = new DecimalRange();
+			value = this.structuredData.GetValue(Support.Res.Fields.ResourceNumericType.Range);
+			if (!UndefinedValue.IsUndefinedValue(value))
+			{
+				range = (DecimalRange) value;
+			}
+
+			DecimalRange preferredRange = new DecimalRange();
+			value = this.structuredData.GetValue(Support.Res.Fields.ResourceNumericType.PreferredRange);
+			if (!UndefinedValue.IsUndefinedValue(value))
+			{
+				preferredRange = (DecimalRange) value;
+			}
+
+			decimal smallStep = 0;
+			value = this.structuredData.GetValue(Support.Res.Fields.ResourceNumericType.SmallStep);
+			if (!UndefinedValue.IsUndefinedValue(value))
+			{
+				smallStep = (decimal) value;
+			}
+
+			decimal largeStep = 0;
+			value = this.structuredData.GetValue(Support.Res.Fields.ResourceNumericType.LargeStep);
+			if (!UndefinedValue.IsUndefinedValue(value))
+			{
+				largeStep = (decimal) value;
+			}
+
+			//	Range.
+			if (sender == this.fieldMin)
+			{
+				range = new DecimalRange(this.GetDecimal(this.fieldMin), range.Maximum, range.Resolution);
+			}
+
+			if (sender == this.fieldMax)
+			{
+				range = new DecimalRange(range.Minimum, this.GetDecimal(this.fieldMax), range.Resolution);
+			}
+
+			if (sender == this.fieldRes)
+			{
+				range = new DecimalRange(range.Minimum, range.Maximum, this.GetDecimal(this.fieldRes));
+			}
+
+			//	PreferredRange.
+			if (sender == this.fieldPreferredMin)
+			{
+				preferredRange = new DecimalRange(this.GetDecimal(this.fieldPreferredMin), preferredRange.Maximum, preferredRange.Resolution);
+			}
+
+			if (sender == this.fieldPreferredMax)
+			{
+				preferredRange = new DecimalRange(preferredRange.Minimum, this.GetDecimal(this.fieldPreferredMax), preferredRange.Resolution);
+			}
+
+			if (sender == this.fieldPreferredRes)
+			{
+				preferredRange = new DecimalRange(preferredRange.Minimum, preferredRange.Maximum, this.GetDecimal(this.fieldPreferredRes));
+			}
+
+			//	Steps.
+			if (sender == this.fieldSmallStep)
+			{
+				smallStep = this.GetDecimal(this.fieldSmallStep);
+			}
+
+			if (sender == this.fieldLargeStep)
+			{
+				largeStep = this.GetDecimal(this.fieldLargeStep);
+			}
+
+			if (sender == this.fieldDefault)
+			{
+				//	TODO:
+			}
+
+			if (sender == this.fieldSample)
+			{
+				//	TODO:
+			}
+
+			this.structuredData.SetValue(Support.Res.Fields.ResourceNumericType.Range, range);
+			this.structuredData.SetValue(Support.Res.Fields.ResourceNumericType.PreferredRange, preferredRange);
+			this.structuredData.SetValue(Support.Res.Fields.ResourceNumericType.SmallStep, smallStep);
+			this.structuredData.SetValue(Support.Res.Fields.ResourceNumericType.LargeStep, largeStep);
+			
+			this.OnContentChanged();
+#else
 			//	[Note1] On demande le type avec un ResourceAccess.GetField.
 			AbstractNumericType type = this.AbstractType as AbstractNumericType;
 
@@ -295,6 +481,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			//	[Note1] Cet appel va provoquer le ResourceAccess.SetField.
 			this.OnContentChanged();
+#endif
 		}
 
 		private void HandleCheckClicked(object sender, MessageEventArgs e)
@@ -304,6 +491,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				return;
 			}
 
+#if false
 			//	[Note1] On demande le type avec un ResourceAccess.GetField.
 			AbstractNumericType type = this.AbstractType as AbstractNumericType;
 
@@ -314,6 +502,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			//	[Note1] Cet appel va provoquer le ResourceAccess.SetField.
 			this.OnContentChanged();
+#endif
 		}
 
 
