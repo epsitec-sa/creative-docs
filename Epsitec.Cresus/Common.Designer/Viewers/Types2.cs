@@ -53,7 +53,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.primaryNullable.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 
 			//	Editeur du type.
-			this.CreateBand(out this.container, Res.Strings.Viewers.Types.Editor.Title, BandMode.SuiteView, GlyphShape.None, false, 0.6);
+			this.CreateBand(out this.container, Res.Strings.Viewers.Types.Editor.Title, BandMode.SuiteView, GlyphShape.None, false, 0.1);
 
 			//	Résumé des paramètres.
 			this.buttonSuiteExtend = this.CreateBand(out leftContainer, "Résumé", BandMode.SuiteSummary, GlyphShape.ArrowDown, true, 0.6);

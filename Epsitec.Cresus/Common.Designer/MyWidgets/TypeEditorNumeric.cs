@@ -158,7 +158,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			if (!UndefinedValue.IsUndefinedValue(value))
 			{
 				decimal step = (decimal) value;
-				if (step != 0)
+				if (step != 0M)
 				{
 					this.PutSummaryValue(builder, Res.Strings.Viewers.Types.Summary.SmallStep, step.ToString());
 				}
@@ -168,7 +168,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			if (!UndefinedValue.IsUndefinedValue(value))
 			{
 				decimal step = (decimal) value;
-				if (step != 0)
+				if (step != 0M)
 				{
 					this.PutSummaryValue(builder, Res.Strings.Viewers.Types.Summary.BigStep, step.ToString());
 				}
@@ -272,7 +272,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			else
 			{
 				decimal step = (decimal) value;
-				if (step == 0)
+				if (step == 0M)
 				{
 					this.fieldSmallStep.Text = "";
 				}
@@ -290,7 +290,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			else
 			{
 				decimal step = (decimal) value;
-				if (step == 0)
+				if (step == 0M)
 				{
 					this.fieldLargeStep.Text = "";
 				}
@@ -355,28 +355,28 @@ namespace Epsitec.Common.Designer.MyWidgets
 #if true
 			object value;
 
-			DecimalRange range = new DecimalRange();
+			DecimalRange range = new DecimalRange(0M, 999M, 1M);
 			value = this.structuredData.GetValue(Support.Res.Fields.ResourceNumericType.Range);
 			if (!UndefinedValue.IsUndefinedValue(value))
 			{
 				range = (DecimalRange) value;
 			}
 
-			DecimalRange preferredRange = new DecimalRange();
+			DecimalRange preferredRange = new DecimalRange(0M, 999M, 1M);
 			value = this.structuredData.GetValue(Support.Res.Fields.ResourceNumericType.PreferredRange);
 			if (!UndefinedValue.IsUndefinedValue(value))
 			{
 				preferredRange = (DecimalRange) value;
 			}
 
-			decimal smallStep = 0;
+			decimal smallStep = 1M;
 			value = this.structuredData.GetValue(Support.Res.Fields.ResourceNumericType.SmallStep);
 			if (!UndefinedValue.IsUndefinedValue(value))
 			{
 				smallStep = (decimal) value;
 			}
 
-			decimal largeStep = 0;
+			decimal largeStep = 10M;
 			value = this.structuredData.GetValue(Support.Res.Fields.ResourceNumericType.LargeStep);
 			if (!UndefinedValue.IsUndefinedValue(value))
 			{
