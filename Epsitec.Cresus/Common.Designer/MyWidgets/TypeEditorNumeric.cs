@@ -530,20 +530,30 @@ namespace Epsitec.Common.Designer.MyWidgets
 			{
 				decimal min = decimal.MinValue;
 				decimal max = decimal.MaxValue;
+				decimal res = 0.01M;  // TODO: mettre une résolution plus grande ?
 
 				if (this.typeCode == TypeCode.Integer)
 				{
 					min = (decimal) int.MinValue;
 					max = (decimal) int.MaxValue;
+					res = 1M;
 				}
 
 				if (this.typeCode == TypeCode.LongInteger)
 				{
 					min = (decimal) System.Int64.MinValue;
 					max = (decimal) System.Int64.MaxValue;
+					res = 1M;
 				}
 
-				return new DecimalRange(min, max, 1M);
+				if (this.typeCode == TypeCode.Double)
+				{
+					//min = (decimal) double.MinValue;  // trop grand !
+					//max = (decimal) double.MaxValue;
+					res = 0.01M;  // TODO: mettre une résolution plus grande ?
+				}
+
+				return new DecimalRange(min, max, res);
 			}
 		}
 
