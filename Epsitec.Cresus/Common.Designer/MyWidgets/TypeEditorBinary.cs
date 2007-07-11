@@ -44,8 +44,18 @@ namespace Epsitec.Common.Designer.MyWidgets
 			System.Text.StringBuilder builder = new System.Text.StringBuilder();
 			this.PutSummaryInitialise();
 
+#if true
+			object value;
+
+			value = this.structuredData.GetValue(Support.Res.Fields.ResourceBinaryType.MimeType);
+			if (!UndefinedValue.IsUndefinedValue(value))
+			{
+				this.PutSummaryValue(builder, Res.Strings.Viewers.Types.Summary.Mime, (string) value);
+			}
+#else
 			BinaryType type = this.AbstractType as BinaryType;
 			this.PutSummaryValue(builder, Res.Strings.Viewers.Types.Summary.Mime, type.MimeType);
+#endif
 
 			return builder.ToString();
 		}
@@ -54,11 +64,27 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected override void UpdateContent()
 		{
 			//	Met à jour le contenu de l'éditeur.
+#if true
+			this.ignoreChange = true;
+
+			object value = this.structuredData.GetValue(Support.Res.Fields.ResourceBinaryType.MimeType);
+			if (UndefinedValue.IsUndefinedValue(value))
+			{
+				this.fieldMime.Text = "";
+			}
+			else
+			{
+				this.fieldMime.Text = (string) value;
+			}
+			
+			this.ignoreChange = false;
+#else
 			BinaryType type = this.AbstractType as BinaryType;
 
 			this.ignoreChange = true;
 			this.fieldMime.Text = type.MimeType;
 			this.ignoreChange = false;
+#endif
 		}
 
 
@@ -69,6 +95,16 @@ namespace Epsitec.Common.Designer.MyWidgets
 				return;
 			}
 
+#if true
+			if (sender == this.fieldMime)
+			{
+				this.structuredData.SetValue(Support.Res.Fields.ResourceBinaryType.MimeType, this.fieldMime.Text);
+			}
+
+			this.OnContentChanged();
+			this.UpdateContent();
+			this.module.AccessTypes2.SetLocalDirty();
+#else
 			//	[Note1] On demande le type avec un ResourceAccess.GetField.
 			BinaryType type = this.AbstractType as BinaryType;
 
@@ -79,6 +115,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			//	[Note1] Cet appel va provoquer le ResourceAccess.SetField.
 			this.OnContentChanged();
+#endif
 		}
 
 
