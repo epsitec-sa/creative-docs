@@ -170,14 +170,13 @@ namespace Epsitec.Common.Designer.MyWidgets
 				{
 					StructuredData data = list[i];
 
-					string icon = data.GetValue(Support.Res.Fields.ResourceCaption.Icon) as string;
-					if (string.IsNullOrEmpty(icon))
+					Druid druid = (Druid) data.GetValue(Support.Res.Fields.EnumValue.CaptionId);
+					Module module = this.designerApplication.SearchModule(druid);
+					if (module != null)
 					{
-						builder.Append(ResourceAccess.GetCaptionShortDescription(data));
-					}
-					else
-					{
-						builder.Append(Misc.ImageFull(icon, -5));
+						CultureMap cultureMap = module.AccessValues2.Accessor.Collection[druid];
+						string name = (cultureMap == null) ? "" : cultureMap.Name;
+						builder.Append(name);
 					}
 
 					if (i < list.Count-1)

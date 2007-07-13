@@ -26,6 +26,7 @@ namespace Epsitec.Common.Designer
 			Types,
 			Types2,
 			Values,
+			Values2,
 			Panels,
 			Scripts,
 			Entities,
@@ -93,6 +94,11 @@ namespace Epsitec.Common.Designer
 				{
 					Support.ResourceAccessors.StructuredTypeResourceAccessor typeAccessor = module.AccessEntities.accessor as Support.ResourceAccessors.StructuredTypeResourceAccessor;
 					this.accessor = typeAccessor.FieldAccessor;
+				}
+				if (this.type == Type.Values2)
+				{
+					Support.ResourceAccessors.AnyTypeResourceAccessor typeAccessor = module.AccessTypes2.accessor as Support.ResourceAccessors.AnyTypeResourceAccessor;
+					this.accessor = typeAccessor.ValueAccessor;
 				}
 
 				this.collectionView = new CollectionView(this.accessor.Collection);
@@ -223,6 +229,7 @@ namespace Epsitec.Common.Designer
 					return many ? Res.Strings.BundleType.Types : Res.Strings.BundleType.Type;
 
 				case Type.Values:
+				case Type.Values2:
 					return many ? Res.Strings.BundleType.Values : Res.Strings.BundleType.Value;
 
 				case Type.Panels:
@@ -1834,18 +1841,6 @@ namespace Epsitec.Common.Designer
 			return caption.Description;
 		}
 
-		public static string GetCaptionShortDescription(StructuredData data)
-		{
-			//	Construit un texte très court d'après les labels et la description.
-			IList<string> labels = data.GetValue(Support.Res.Fields.ResourceCaption.Labels) as IList<string>;
-			if (labels != null && labels.Count != 0)
-			{
-				return labels[0];
-			}
-
-			return data.GetValue(Support.Res.Fields.ResourceCaption.Description) as string;
-		}
-
 
 		#region Direct
 		public Type DirectGetType(Druid druid)
@@ -2535,7 +2530,7 @@ namespace Epsitec.Common.Designer
 					}
 				}
 
-				if (this.type == Type.Captions2 || this.type == Type.Commands2 || this.type == Type.Types2 || this.type == Type.Fields2)
+				if (this.type == Type.Captions2 || this.type == Type.Commands2 || this.type == Type.Types2 || this.type == Type.Fields2 || this.type == Type.Values2)
 				{
 					IList<string> labels = data.GetValue(Support.Res.Fields.ResourceCaption.Labels) as IList<string>;
 					string text = data.GetValue(Support.Res.Fields.ResourceCaption.Description) as string;
@@ -2736,7 +2731,7 @@ namespace Epsitec.Common.Designer
 				}
 			}
 
-			if (this.IsCaptionsType || this.type == Type.Captions2 || this.type == Type.Commands2 || this.type == Type.Types2 || this.type == Type.Fields2)
+			if (this.IsCaptionsType || this.type == Type.Captions2 || this.type == Type.Commands2 || this.type == Type.Types2 || this.type == Type.Fields2 || this.type == Type.Values2)
 			{
 				switch (field)
 				{
@@ -3891,7 +3886,7 @@ namespace Epsitec.Common.Designer
 			//	"un bundle par culture, plusieurs ressources par bundle".
 			get
 			{
-				return (this.type == Type.Strings || this.type == Type.Strings2 || this.type == Type.Captions2 || this.type == Type.Commands2 || this.type == Type.Entities || this.type == Type.Types2 || this.type == Type.Fields2 || this.IsCaptionsType);
+				return (this.type == Type.Strings || this.type == Type.Strings2 || this.type == Type.Captions2 || this.type == Type.Commands2 || this.type == Type.Entities || this.type == Type.Types2 || this.type == Type.Fields2 || this.type == Type.Values2 || this.IsCaptionsType);
 			}
 		}
 
@@ -3909,7 +3904,7 @@ namespace Epsitec.Common.Designer
 			//	Retourne true si on accède à des ressources de type nouveau.
 			get
 			{
-				return (this.type == Type.Strings2 || this.type == Type.Captions2 || this.type == Type.Commands2 || this.type == Type.Entities || this.type == Type.Types2 || this.type == Type.Fields2);
+				return (this.type == Type.Strings2 || this.type == Type.Captions2 || this.type == Type.Commands2 || this.type == Type.Entities || this.type == Type.Types2 || this.type == Type.Fields2 || this.type == Type.Values2);
 			}
 		}
 

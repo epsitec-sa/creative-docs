@@ -39,6 +39,10 @@ namespace Epsitec.Common.Designer
 			this.accessFields2   = new ResourceAccess(ResourceAccess.Type.Fields2,   this, this.moduleInfo, this.designerApplication);
 			this.accessFields2.Load();
 
+			//	Attention: il faut avoir fait le this.accessTypes2.Load() avant de créer this.accessValues2 !
+			this.accessValues2   = new ResourceAccess(ResourceAccess.Type.Values2,   this, this.moduleInfo, this.designerApplication);
+			this.accessValues2.Load();
+
 			foreach (ResourceAccess access in Access)
 			{
 				access.DirtyChanged += new EventHandler(this.HandleAccessDirtyChanged);
@@ -163,6 +167,14 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
+		public ResourceAccess AccessValues2
+		{
+			get
+			{
+				return this.accessValues2;
+			}
+		}
+
 		public ResourceAccess AccessTypes2
 		{
 			get
@@ -206,6 +218,9 @@ namespace Epsitec.Common.Designer
 
 				case ResourceAccess.Type.Fields2:
 					return this.accessFields2;
+
+				case ResourceAccess.Type.Values2:
+					return this.accessValues2;
 
 				case ResourceAccess.Type.Types2:
 					return this.accessTypes2;
@@ -341,6 +356,7 @@ namespace Epsitec.Common.Designer
 				yield return accessScripts;
 				yield return accessEntities;
 				yield return accessFields2;
+				yield return accessValues2;
 				yield return accessTypes2;
 			}
 		}
@@ -382,6 +398,7 @@ namespace Epsitec.Common.Designer
 		protected ResourceAccess			accessScripts;
 		protected ResourceAccess			accessEntities;
 		protected ResourceAccess			accessFields2;
+		protected ResourceAccess			accessValues2;
 		protected ResourceAccess			accessTypes2;
 	}
 }
