@@ -358,8 +358,6 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected void UpdateArray()
 		{
 			//	Met à jour tout le contenu du tableau.
-			Types.Collections.EnumValueCollection collection = this.Collection;
-
 			int first = this.array.FirstVisibleRow;
 			for (int i=0; i<this.array.LineCount; i++)
 			{
@@ -422,8 +420,6 @@ namespace Epsitec.Common.Designer.MyWidgets
 				return;
 			}
 
-			Types.Collections.EnumValueCollection collection = this.Collection;
-
 			int sel = this.array.SelectedRow;
 			if (sel == -1)
 			{
@@ -449,8 +445,6 @@ namespace Epsitec.Common.Designer.MyWidgets
 				return;
 			}
 
-			Types.Collections.EnumValueCollection collection = this.Collection;
-
 			int sel = this.array.SelectedRow;
 			if (sel == -1)
 			{
@@ -471,8 +465,6 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected void ArrayMove(int direction)
 		{
 			//	Déplace une valeur dans l'énumération.
-			Types.Collections.EnumValueCollection collection = this.Collection;
-
 			int sel = this.array.SelectedRow;
 			if (sel == -1)
 			{
@@ -498,8 +490,6 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected void ArraySort()
 		{
 			//	Met les valeurs de l'énumération en tête de liste.
-			Types.Collections.EnumValueCollection collection = this.Collection;
-
 			int sel = this.array.SelectedRow;
 			Druid druid = (sel == -1) ? Druid.Empty : this.listDruids[sel];
 
@@ -571,6 +561,22 @@ namespace Epsitec.Common.Designer.MyWidgets
 		{
 			//	Construit toute la collection en fonction des ressources sélectionnées
 			//	dans la liste puis renumérote toute la collection.
+#if true
+			object value = this.structuredData.GetValue(Support.Res.Fields.ResourceEnumType.Values);
+			if (!UndefinedValue.IsUndefinedValue(value))
+			{
+				IList<StructuredData> list = value as IList<StructuredData>;
+				list.Clear();
+
+				foreach (Druid druid in this.selDruids)
+				{
+					Support.ResourceAccessors.AnyTypeResourceAccessor accessor = this.module.AccessValues2.Accessor as Support.ResourceAccessors.AnyTypeResourceAccessor;
+					//?accessor.CreateValueItem();
+
+					//?list.Add(???);
+				}
+			}
+#else
 			Types.Collections.EnumValueCollection collection = this.Collection;
 			collection.Clear();
 
@@ -583,9 +589,11 @@ namespace Epsitec.Common.Designer.MyWidgets
 				EnumValue item = new EnumValue(rank++, caption);
 				collection.Add(item);
 			}
+#endif
 		}
 
 
+#if false
 		protected Types.Collections.EnumValueCollection Collection
 		{
 			//	Retourne la collection de l'énumération.
@@ -601,6 +609,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				return type.EnumValues;
 			}
 		}
+#endif
 
 		protected bool IsNativeEnum
 		{
