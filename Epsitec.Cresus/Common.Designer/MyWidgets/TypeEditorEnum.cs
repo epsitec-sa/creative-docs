@@ -222,6 +222,45 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.allDruids = new List<Druid>();
 			this.selDruids = new List<Druid>();
 			this.listDruids = new List<Druid>();
+
+			CollectionView collection = this.module.AccessValues2.CollectionView;
+
+			for (int i=0; i<collection.Count; i++)
+			{
+				CultureMap item = collection.Items[i] as CultureMap;
+				this.allDruids.Add(item.Id);
+			}
+
+			object value = this.structuredData.GetValue(Support.Res.Fields.ResourceEnumType.Values);
+			if (!UndefinedValue.IsUndefinedValue(value))
+			{
+				IList<StructuredData> list = value as IList<StructuredData>;
+				for (int i=0; i<list.Count; i++)
+				{
+					StructuredData data = list[i];
+
+					Druid druid = (Druid) data.GetValue(Support.Res.Fields.EnumValue.CaptionId);
+					this.selDruids.Add(druid);
+					this.listDruids.Add(druid);
+				}
+			}
+
+			foreach (Druid druid in this.allDruids)
+			{
+				if (!this.listDruids.Contains(druid))
+				{
+					this.listDruids.Add(druid);
+				}
+			}
+
+			this.array.TotalRows = this.listDruids.Count;
+			this.array.FirstVisibleRow = 0;
+			this.array.SelectedRow = -1;
+
+			this.ignoreChange = true;
+			this.UpdateArray();
+			this.UpdateButtons();
+			this.ignoreChange = false;
 #else
 			Types.Collections.EnumValueCollection collection = this.Collection;
 
@@ -568,8 +607,12 @@ namespace Epsitec.Common.Designer.MyWidgets
 			//	Indique s'il s'agit d'une énumération native.
 			get
 			{
+#if true
+				return false;
+#else
 				EnumType type = this.AbstractType as EnumType;
 				return type.IsNativeEnum;
+#endif
 			}
 		}
 

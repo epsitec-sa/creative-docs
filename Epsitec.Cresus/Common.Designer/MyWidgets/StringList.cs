@@ -421,7 +421,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				graphics.Align(ref cell);
 
 				WidgetPaintState state = this.PaintState;
-				if (this.cells[i].Selected)
+				if ((state & WidgetPaintState.Enabled) != 0 && this.cells[i].Selected)
 				{
 					state |= WidgetPaintState.Selected;
 				}
@@ -458,8 +458,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 				if (this.cells[i].TextLayout.Text != null)
 				{
-					state = WidgetPaintState.Enabled;
-					if (this.cells[i].Selected)
+					//?state = WidgetPaintState.Enabled;
+					if ((state & WidgetPaintState.Enabled) != 0 && this.cells[i].Selected)
 					{
 						state |= WidgetPaintState.Selected;
 					}
