@@ -169,7 +169,7 @@ namespace Epsitec.Common.Designer.Viewers
 			else
 			{
 				this.editor.Enable = !this.designerApplication.IsReadonly;
-				this.editor.StructuredData = data;
+				this.editor.CultureMap = item;
 				this.primarySuiteSummary.Text = this.editor.GetSummary();
 			}
 

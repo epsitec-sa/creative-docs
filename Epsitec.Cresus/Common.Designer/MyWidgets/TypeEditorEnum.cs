@@ -568,12 +568,13 @@ namespace Epsitec.Common.Designer.MyWidgets
 				IList<StructuredData> list = value as IList<StructuredData>;
 				list.Clear();
 
+				Support.ResourceAccessors.AnyTypeResourceAccessor accessor = this.module.AccessTypes2.Accessor as Support.ResourceAccessors.AnyTypeResourceAccessor;
 				foreach (Druid druid in this.selDruids)
 				{
-					Support.ResourceAccessors.AnyTypeResourceAccessor accessor = this.module.AccessValues2.Accessor as Support.ResourceAccessors.AnyTypeResourceAccessor;
-					//?accessor.CreateValueItem();
+					CultureMap newValue = accessor.CreateValueItem(this.cultureMap);
+					StructuredData dataValue = accessor.GetDataBroker(this.structuredData, Support.Res.Fields.ResourceEnumType.Values.ToString()).CreateData(this.cultureMap);
 
-					//?list.Add(???);
+					list.Add(dataValue);
 				}
 			}
 #else

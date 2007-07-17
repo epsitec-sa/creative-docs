@@ -65,19 +65,28 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 		}
 
+		public CultureMap CultureMap
+		{
+			get
+			{
+				return this.cultureMap;
+			}
+			set
+			{
+				if (this.cultureMap != value)
+				{
+					this.cultureMap = value;
+					this.structuredData = (this.cultureMap == null) ? null : this.cultureMap.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
+					this.UpdateContent();
+				}
+			}
+		}
+
 		public StructuredData StructuredData
 		{
 			get
 			{
 				return this.structuredData;
-			}
-			set
-			{
-				if (this.structuredData != value)
-				{
-					this.structuredData = value;
-					this.UpdateContent();
-				}
 			}
 		}
 
@@ -440,6 +449,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 
 		protected TypeCode						typeCode;
+		protected CultureMap					cultureMap;
 		protected StructuredData				structuredData;
 		protected ResourceAccess				resourceAccess;
 		protected int							resourceSelected = -1;
