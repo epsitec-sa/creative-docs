@@ -562,22 +562,18 @@ namespace Epsitec.Common.Designer.MyWidgets
 			//	Construit toute la collection en fonction des ressources sélectionnées
 			//	dans la liste puis renumérote toute la collection.
 #if true
-			object value = this.structuredData.GetValue(Support.Res.Fields.ResourceEnumType.Values);
-			if (!UndefinedValue.IsUndefinedValue(value))
+			IList<StructuredData> list = this.structuredData.GetValue (Support.Res.Fields.ResourceEnumType.Values) as IList<StructuredData>;
+			if (list != null)
 			{
-				IList<StructuredData> list = value as IList<StructuredData>;
 				list.Clear();
 
 				Support.ResourceAccessors.AnyTypeResourceAccessor accessor = this.module.AccessTypes2.Accessor as Support.ResourceAccessors.AnyTypeResourceAccessor;
 				foreach (Druid druid in this.selDruids)
 				{
-					Module module = this.designerApplication.SearchModule(druid);
-					if (module != null)
-					{
-						CultureMap cultureMap = module.AccessValues2.Accessor.Collection[druid];
-						StructuredData dataValue = cultureMap.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
-						list.Add(dataValue);
-					}
+					IDataBroker dataBroker = accessor.GetDataBroker (this.structuredData, Support.Res.Fields.ResourceEnumType.Values.ToString ());
+					StructuredData dataValue = dataBroker.CreateData (this.cultureMap);
+					dataValue.SetValue (Support.Res.Fields.EnumValue.CaptionId, druid);
+					list.Add (dataValue);
 				}
 			}
 
