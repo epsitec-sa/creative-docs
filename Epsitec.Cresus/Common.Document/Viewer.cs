@@ -2862,9 +2862,9 @@ namespace Epsitec.Common.Document
 					button.Name == "OrderDownOne" ||
 					button.Name == "OrderDownAll" ||
 
-					button.Name == Commands.FontBold ||
-					button.Name == Commands.FontItalic ||
-					button.Name == Commands.FontUnderline ||
+					button.Name == Res.Commands.FontBold.CommandId ||
+					button.Name == Res.Commands.FontItalic.CommandId ||
+					button.Name == Res.Commands.FontUnderline.CommandId ||
 					button.Name == Commands.FontOverline ||
 					button.Name == Commands.FontStrikeout ||
 					button.Name == Commands.FontSubscript ||

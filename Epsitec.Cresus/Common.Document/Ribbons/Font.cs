@@ -25,12 +25,12 @@ namespace Epsitec.Common.Document.Ribbons
 			this.comboFont.SelectedIndexChanged += new EventHandler(this.HandleSelectedIndexChanged);
 			this.comboFont.FirstIconChanged += new EventHandler(this.HandleFirstIconChanged);
 
-			this.buttonBold          = this.CreateIconButton(Commands.FontBold);
-			this.buttonItalic        = this.CreateIconButton(Commands.FontItalic);
+			this.buttonBold          = this.CreateIconButton(Res.Commands.FontBold.CommandId);
+			this.buttonItalic        = this.CreateIconButton(Res.Commands.FontItalic.CommandId);
 			this.buttonFontSizeMinus = this.CreateIconButton(Commands.FontSizeMinus);
 			this.buttonFontSizePlus  = this.CreateIconButton(Commands.FontSizePlus);
 			this.buttonShowControl   = this.CreateIconButton("TextShowControlCharacters");
-			this.buttonUnderline     = this.CreateIconButton(Commands.FontUnderline);
+			this.buttonUnderline     = this.CreateIconButton(Res.Commands.FontUnderline.CommandId);
 			this.buttonOverline      = this.CreateIconButton(Commands.FontOverline);
 			this.buttonStrikeout     = this.CreateIconButton(Commands.FontStrikeout);
 			this.buttonSubscript     = this.CreateIconButton(Commands.FontSubscript);

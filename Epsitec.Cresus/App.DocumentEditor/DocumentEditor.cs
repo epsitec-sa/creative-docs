@@ -2233,9 +2233,9 @@ namespace Epsitec.App.DocumentEditor
 			this.CurrentDocument.Modifier.Paste();
 		}
 
-		[Command (Commands.FontBold)]
-		[Command (Commands.FontItalic)]
-		[Command (Commands.FontUnderline)]
+		[Command (Common.Document.Res.CommandIds.FontBold)]
+		[Command (Common.Document.Res.CommandIds.FontItalic)]
+		[Command (Common.Document.Res.CommandIds.FontUnderline)]
 		[Command (Commands.FontOverline)]
 		[Command (Commands.FontStrikeout)]
 		[Command (Commands.FontSubscript)]
@@ -3593,9 +3593,9 @@ namespace Epsitec.App.DocumentEditor
 			this.copyState = this.CreateCommandState("Copy", "Copy", KeyCode.ModifierControl|KeyCode.AlphaC);
 			this.pasteState = this.CreateCommandState("Paste", "Paste", KeyCode.ModifierControl|KeyCode.AlphaV);
 
-			this.fontBoldState = this.CreateCommandState(Commands.FontBold, "FontBold", true, KeyCode.ModifierControl|KeyCode.AlphaB);
-			this.fontItalicState = this.CreateCommandState(Commands.FontItalic, "FontItalic", true, KeyCode.ModifierControl|KeyCode.AlphaI);
-			this.fontUnderlineState = this.CreateCommandState(Commands.FontUnderline, "FontUnderline", true, KeyCode.ModifierControl|KeyCode.AlphaU);
+			this.fontBoldState = this.CreateCommandState(Common.Document.Res.Commands.FontBold.CommandId, "FontBold", true, KeyCode.ModifierControl|KeyCode.AlphaB);
+			this.fontItalicState = this.CreateCommandState (Common.Document.Res.Commands.FontItalic.CommandId, "FontItalic", true, KeyCode.ModifierControl|KeyCode.AlphaI);
+			this.fontUnderlineState = this.CreateCommandState (Common.Document.Res.Commands.FontUnderline.CommandId, "FontUnderline", true, KeyCode.ModifierControl|KeyCode.AlphaU);
 			this.fontOverlineState = this.CreateCommandState(Commands.FontOverline, "FontOverline", true);
 			this.fontStrikeoutState = this.CreateCommandState(Commands.FontStrikeout, "FontStrikeout", true);
 			this.fontSubscriptState = this.CreateCommandState(Commands.FontSubscript, "FontSubscript", true, KeyCode.ModifierControl|KeyCode.AlphaG);

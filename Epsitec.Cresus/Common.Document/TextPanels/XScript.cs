@@ -95,6 +95,9 @@ namespace Epsitec.Common.Document.TextPanels
 
 			Rectangle rect = this.UsefulZone;
 
+			this.fieldScale.Visibility = true;
+			this.fieldOffset.Visibility = true;
+
 			if ( this.isExtendedSize )
 			{
 				Rectangle r = rect;
@@ -152,6 +155,15 @@ namespace Epsitec.Common.Document.TextPanels
 				this.fieldScale.SetManualBounds(r);
 				r.Offset(60, 0);
 				this.fieldOffset.SetManualBounds(r);
+
+				if (r.Right>rect.Right-20)
+				{
+					this.fieldOffset.Visibility = false;
+				}
+				if (r.Right-60>rect.Right-20)
+				{
+					this.fieldScale.Visibility = false;
+				}
 			
 				r.Left = rect.Right-20;
 				r.Width = 20;

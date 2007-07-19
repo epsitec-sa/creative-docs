@@ -94,6 +94,8 @@ namespace Epsitec.Common.Document.TextPanels
 			r.Offset(25, 0);
 			this.buttonHyphen.SetManualBounds(r);
 
+			this.buttonHyphen.Visibility = (r.Right<rect.Right-22);
+
 			r.Left = rect.Right-20;
 			r.Width = 20;
 			this.buttonClear.SetManualBounds(r);

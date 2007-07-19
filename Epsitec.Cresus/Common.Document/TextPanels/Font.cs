@@ -757,7 +757,7 @@ namespace Epsitec.Common.Document.TextPanels
 			{
 				this.TextWrapper.SuspendSynchronizations();
 				this.TextWrapper.Defined.InvertBold = value;
-				this.TextWrapper.DefineOperationName(Commands.FontBold, Res.Strings.Action.FontBold);
+				this.TextWrapper.DefineOperationName(Res.Commands.FontBold.CommandId, Res.Strings.Action.FontBold);
 				this.TextWrapper.ResumeSynchronizations();
 				this.ActionMade();
 			}
@@ -775,7 +775,7 @@ namespace Epsitec.Common.Document.TextPanels
 			{
 				this.TextWrapper.SuspendSynchronizations();
 				this.TextWrapper.Defined.InvertItalic = value;
-				this.TextWrapper.DefineOperationName(Commands.FontItalic, Res.Strings.Action.FontItalic);
+				this.TextWrapper.DefineOperationName(Res.Commands.FontItalic.CommandId, Res.Strings.Action.FontItalic);
 				this.TextWrapper.ResumeSynchronizations();
 				this.ActionMade();
 			}

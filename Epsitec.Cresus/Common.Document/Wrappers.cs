@@ -207,9 +207,9 @@ namespace Epsitec.Common.Document
 			this.CommandActiveState("TextInsertNewFrame", enabled);
 			this.CommandActiveState("TextInsertNewPage", enabled);
 
-			this.CommandActiveState(Commands.FontBold,        enabled, bold       );
-			this.CommandActiveState(Commands.FontItalic,      enabled, italic     );
-			this.CommandActiveState(Commands.FontUnderline,   enabled, underline  );
+			this.CommandActiveState(Res.Commands.FontBold.CommandId,        enabled, bold       );
+			this.CommandActiveState(Res.Commands.FontItalic.CommandId,      enabled, italic     );
+			this.CommandActiveState(Res.Commands.FontUnderline.CommandId,   enabled, underline  );
 			this.CommandActiveState(Commands.FontOverline,    enabled, overline   );
 			this.CommandActiveState(Commands.FontStrikeout,   enabled, strikeout  );
 			this.CommandActiveState(Commands.FontSubscript,   enabled, subscript  );
