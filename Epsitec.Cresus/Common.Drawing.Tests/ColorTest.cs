@@ -6,6 +6,12 @@ namespace Epsitec.Common.Drawing
 	[TestFixture]
 	public class ColorTest
 	{
+		[SetUp]
+		public void Initialize()
+		{
+			Widget.Initialize ();
+		}
+
 		[Test] public void AutomatedTestEnvironment()
 		{
 			Epsitec.Common.Widgets.Window.RunningInAutomatedTestEnvironment = true;

@@ -115,6 +115,16 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+		protected override void DefineIconFromCaption(string icon)
+		{
+			base.DefineIconFromCaption (icon);
+
+			if ((string.IsNullOrEmpty (this.Text)) &&
+				(!string.IsNullOrEmpty (icon)))
+			{
+				this.Text = string.Concat (@"<img src=""", icon, @"""/>");
+			}
+		}
 		
 		protected override bool ProcessShortcut(Shortcut shortcut)
 		{

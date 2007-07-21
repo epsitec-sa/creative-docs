@@ -43,17 +43,17 @@ namespace Epsitec.Common.OpenType
 		}
 		
 		
-		protected int ReadInt8(int offset)
+		public int ReadInt8(int offset)
 		{
 			return (int) this.data[this.offset + offset];
 		}
-		
-		protected int ReadInt16(int offset)
+
+		public int ReadInt16(int offset)
 		{
 			return (int) Support.ReadInt16 (this.data, this.offset + offset);
 		}
-		
-		protected int ReadInt32(int offset)
+
+		public int ReadInt32(int offset)
 		{
 			return (int) Support.ReadInt32 (this.data, this.offset + offset);
 		}
@@ -1709,7 +1709,85 @@ namespace Epsitec.Common.OpenType
 			}
 		}
 	}
-	
+
+	public class Table_OS2 : Tables
+	{
+		public Table_OS2(byte[] data, int offset)
+			: base (data, offset)
+		{
+			//	http://www.microsoft.com/typography/otspec/os2.htm
+		}
+
+		public Table_OS2(TableEntry entry)
+			: base (entry.BaseData, entry.Offset)
+		{
+		}
+
+
+		public int TableVersion
+		{
+			get
+			{
+				return this.ReadInt16 (0);
+			}
+		}
+
+		public int XHeight
+		{
+			get
+			{
+				return this.TableVersion < 3 ? 0 : this.ReadInt16 (86);
+			}
+		}
+
+		public int CapHeight
+		{
+			get
+			{
+				return this.TableVersion < 3 ? 0 : this.ReadInt16 (88);
+			}
+		}
+
+		/*
+SHORT xAvgCharWidth			2
+USHORT usWeightClass		4
+USHORT usWidthClass			6
+USHORT fsType				8
+SHORT ySubscriptXSize		10
+SHORT ySubscriptYSize		12
+SHORT ySubscriptXOffset		14
+SHORT ySubscriptYOffset		16
+SHORT ySuperscriptXSize		18
+SHORT ySuperscriptYSize		20
+SHORT ySuperscriptXOffset	22
+SHORT ySuperscriptYOffset	24
+SHORT yStrikeoutSize		26
+SHORT yStrikeoutPosition	28
+SHORT sFamilyClass			30
+BYTE panose[10]				32
+ULONG ulUnicodeRange1 Bits 0-31		42
+ULONG ulUnicodeRange2 Bits 32-63	46
+ULONG ulUnicodeRange3 Bits 64-95	50
+ULONG ulUnicodeRange4 Bits 96-127	54
+CHAR achVendID[4]			58
+USHORT fsSelection			62
+USHORT usFirstCharIndex		64
+USHORT usLastCharIndex		66
+SHORT sTypoAscender			68
+SHORT sTypoDescender		70
+SHORT sTypoLineGap			72
+USHORT usWinAscent			74
+USHORT usWinDescent			76
+ULONG ulCodePageRange1 Bits 0-31	78
+ULONG ulCodePageRange2 Bits 32-63	82
+SHORT sxHeight				86
+SHORT sCapHeight			88
+USHORT usDefaultChar		90
+USHORT usBreakChar			92
+USHORT usMaxContext			94
+		*/
+	}
+
 	public class Table_hmtx : Tables
 	{
 		public Table_hmtx(byte[] data, int offset) : base (data, offset)

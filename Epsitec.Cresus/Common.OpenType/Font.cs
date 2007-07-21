@@ -1662,6 +1662,50 @@ namespace Epsitec.Common.OpenType
 		}
 
 
+		public double GetXHeight(double size)
+		{
+			double scale = size / this.ot_head.UnitsPerEm;
+			Table_OS2 os2 = this.GetTable_OS2 ();
+			double xHeight = scale * os2.XHeight;
+
+			if (xHeight == 0)
+			{
+				double xMin, xMax, yMin, yMax;
+				ushort glyph = this.GetGlyphIndex ('o');
+
+				this.GetGlyphBounds (glyph, size, out xMin, out xMax, out yMin, out yMax);
+
+				xHeight = yMax - yMin;
+			}
+
+			return xHeight;
+		}
+
+		public double GetCapHeight(double size)
+		{
+			double scale = size / this.ot_head.UnitsPerEm;
+			Table_OS2 os2 = this.GetTable_OS2 ();
+			double capHeight = scale * os2.CapHeight;
+
+			if (capHeight == 0)
+			{
+				double xMin, xMax, yMin, yMax;
+				ushort glyph = this.GetGlyphIndex ('O');
+
+				this.GetGlyphBounds (glyph, size, out xMin, out xMax, out yMin, out yMax);
+
+				capHeight = yMax - yMin;
+			}
+
+			return capHeight;
+		}
+
+		private Table_OS2 GetTable_OS2()
+		{
+			return new Table_OS2 (this.fontData["OS/2"]);
+		}
+
+
 		/// <summary>
 		/// Gets the font maximum box.
 		/// </summary>

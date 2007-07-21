@@ -5,8 +5,10 @@ namespace Epsitec.Common.Drawing
 	[TestFixture]
 	public class FontTest
 	{
-		public FontTest()
+		[SetUp]
+		public void Initialize()
 		{
+			Widgets.Widget.Initialize ();
 		}
 
 		[Test]
@@ -875,6 +877,52 @@ namespace Epsitec.Common.Drawing
 					Assert.AreEqual (font.Handle, find.Handle);
 				}
 			}
+		}
+
+		[Test]
+		public void CheckXHeightAdjustment()
+		{
+			Font font = Font.GetFont ("Tahoma", "Regular");
+
+			OpenType.Font otFont = font.OpenTypeFont;
+
+			System.Console.Out.WriteLine ("font name: {0}", otFont.FontIdentity.FullName);
+			System.Console.Out.WriteLine ("x height: {0}", otFont.GetXHeight (1.0));
+			System.Console.Out.WriteLine ("cap height: {0}", otFont.GetCapHeight (1.0));
+
+			double size = 12.0;
+			double xh = otFont.GetXHeight (size);
+			double scale = size * System.Math.Round (xh) / xh;
+
+			font = Font.GetFont ("Candara", "Regular");
+			otFont = font.OpenTypeFont;
+			xh = otFont.GetXHeight (size);
+			double scale2 = size * System.Math.Round (xh) / xh;
+
+			Widgets.Window window = new Epsitec.Common.Widgets.Window ();
+
+			Widgets.Widget widget = new Epsitec.Common.Widgets.Widget (window.Root);
+			widget.Dock = Widgets.DockStyle.Fill;
+
+			widget.PaintBackground +=
+				delegate (object sender, Epsitec.Common.Widgets.PaintEventArgs e)
+				{
+					Graphics g = e.Graphics;
+
+					g.AddFilledRectangle (0, 0, 1000, 1000);
+					g.RenderSolid (Color.FromBrightness (1));
+
+					g.AddText (10, 100, "Hello, world. Tahoma non x-adjusted FONT attempt.", Font.GetFont ("Tahoma", "Regular"), size);
+					g.AddText (10,  80, "Hello, world. Tahoma x-adjusted FONT attempt.", Font.GetFont ("Tahoma", "Regular"), scale);
+
+					g.AddText (10, 160, "Hello, world. Candara non x-adjusted FONT attempt.", Font.GetFont ("Candara", "Regular"), size);
+					g.AddText (10, 140, "Hello, world. Candara x-adjusted FONT attempt.", Font.GetFont ("Candara", "Regular"), scale2);
+
+					g.RenderSolid (Color.FromBrightness (0));
+				};
+
+			window.Show ();
+			Widgets.Window.RunInTestEnvironment (window);
 		}
 
 
