@@ -891,13 +891,28 @@ namespace Epsitec.Common.Drawing
 			System.Console.Out.WriteLine ("cap height: {0}", otFont.GetCapHeight (1.0));
 
 			double size = 12.0;
-			double xh = otFont.GetXHeight (size);
-			double scale = size * System.Math.Round (xh) / xh;
+			double xh, ch;
+			
+			xh = otFont.GetXHeight (size);
+			ch = otFont.GetCapHeight (size);
+			double scale1x = size * System.Math.Round (xh) / xh;
+			double scale1c = size * System.Math.Round (ch) / ch;
 
 			font = Font.GetFont ("Candara", "Regular");
 			otFont = font.OpenTypeFont;
+			
 			xh = otFont.GetXHeight (size);
-			double scale2 = size * System.Math.Round (xh) / xh;
+			ch = otFont.GetCapHeight (size);
+			double scale2x = size * System.Math.Round (xh) / xh;
+			double scale2c = size * System.Math.Round (ch) / ch;
+
+			font = Font.GetFont ("Verdana", "Regular");
+			otFont = font.OpenTypeFont;
+
+			xh = otFont.GetXHeight (size);
+			ch = otFont.GetCapHeight (size);
+			double scale3x = size * System.Math.Round (xh) / xh;
+			double scale3c = size * System.Math.Round (ch) / ch;
 
 			Widgets.Window window = new Epsitec.Common.Widgets.Window ();
 
@@ -912,11 +927,17 @@ namespace Epsitec.Common.Drawing
 					g.AddFilledRectangle (0, 0, 1000, 1000);
 					g.RenderSolid (Color.FromBrightness (1));
 
-					g.AddText (10, 100, "Hello, world. Tahoma non x-adjusted FONT attempt.", Font.GetFont ("Tahoma", "Regular"), size);
-					g.AddText (10,  80, "Hello, world. Tahoma x-adjusted FONT attempt.", Font.GetFont ("Tahoma", "Regular"), scale);
+					g.AddText (10, 190, "1. Hello, world. Candara non-adjusted FONT attempt.", Font.GetFont ("Candara", "Regular"), size);
+					g.AddText (10, 170, "2. Hello, world. Candara x-adjusted FONT attempt.",   Font.GetFont ("Candara", "Regular"), scale2x);
+					g.AddText (10, 150, "3. Hello, world. Candara cap-adjusted FONT attempt.", Font.GetFont ("Candara", "Regular"), scale2c);
 
-					g.AddText (10, 160, "Hello, world. Candara non x-adjusted FONT attempt.", Font.GetFont ("Candara", "Regular"), size);
-					g.AddText (10, 140, "Hello, world. Candara x-adjusted FONT attempt.", Font.GetFont ("Candara", "Regular"), scale2);
+					g.AddText (10, 120, "4. Hello, world. Tahoma non-adjusted FONT attempt.", Font.GetFont ("Tahoma", "Regular"), size);
+					g.AddText (10, 100, "5. Hello, world. Tahoma x-adjusted FONT attempt.",   Font.GetFont ("Tahoma", "Regular"), scale1x);
+					g.AddText (10,  80, "6. Hello, world. Tahoma cap-adjusted FONT attempt.", Font.GetFont ("Tahoma", "Regular"), scale1c);
+
+					g.AddText (10,  50, "7. Hello, world. Verdana non-adjusted FONT attempt.", Font.GetFont ("Verdana", "Regular"), size);
+					g.AddText (10,  30, "8. Hello, world. Verdana x-adjusted FONT attempt.",   Font.GetFont ("Verdana", "Regular"), scale3x);
+					g.AddText (10,  10, "9. Hello, world. Verdana cap-adjusted FONT attempt.", Font.GetFont ("Verdana", "Regular"), scale3c);
 
 					g.RenderSolid (Color.FromBrightness (0));
 				};

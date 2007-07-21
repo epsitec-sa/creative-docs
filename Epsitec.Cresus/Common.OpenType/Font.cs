@@ -1675,7 +1675,7 @@ namespace Epsitec.Common.OpenType
 
 				this.GetGlyphBounds (glyph, size, out xMin, out xMax, out yMin, out yMax);
 
-				xHeight = yMax - yMin;
+				xHeight = yMax + yMin;
 			}
 
 			return xHeight;
@@ -1694,7 +1694,7 @@ namespace Epsitec.Common.OpenType
 
 				this.GetGlyphBounds (glyph, size, out xMin, out xMax, out yMin, out yMax);
 
-				capHeight = yMax - yMin;
+				capHeight = yMax + yMin;
 			}
 
 			return capHeight;
