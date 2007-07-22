@@ -721,9 +721,9 @@ namespace Epsitec.Common.Document.Settings
 			list.Add("00:ParagraphIndentMinus");
 			list.Add("00:ParagraphClear");
 			
-			list.Add("00:FontBold");
-			list.Add("00:FontItalic");
-			list.Add("00:FontUnderline");
+			list.Add("00:" + Res.Commands.FontBold.CommandId);
+			list.Add("00:" + Res.Commands.FontItalic.CommandId);
+			list.Add("00:" + Res.Commands.FontUnderline.CommandId);
 			list.Add("00:FontOverline");
 			list.Add("00:FontStrikeout");
 			list.Add("00:FontSizePlus");
