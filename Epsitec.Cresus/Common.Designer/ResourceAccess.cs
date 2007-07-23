@@ -1208,6 +1208,7 @@ namespace Epsitec.Common.Designer
 			{
 				if (this.IsAbstract2)
 				{
+					return this.collectionView.Count;
 				}
 				else
 				{
