@@ -42,7 +42,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				this.window.WindowCloseClicked += new EventHandler(this.HandleWindowDownloadCloseClicked);
 
 				StaticText title = new StaticText(this.window.Root);
-				if ( this.url == "" )
+				if (string.IsNullOrEmpty (this.url))
 				{
 					title.Text = Res.Strings.Dialog.Download.UpToDate;
 				}
@@ -52,6 +52,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				}
 				title.Dock = DockStyle.Top;
 				title.Margins = new Margins (6, 6, 6, 0);
+				title.HypertextClicked += new MessageEventHandler (HandleLinkHypertextClicked);
 
 				string chip = "<list type=\"fix\" width=\"1.5\"/>";
 
@@ -62,7 +63,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				actual.Margins = new Margins (6, 6, 8, 0);
 
 				string text;
-				if ( this.url == "" )
+				if (string.IsNullOrEmpty (this.url))
 				{
 					text = Res.Strings.Dialog.Download.Nothing;
 				}

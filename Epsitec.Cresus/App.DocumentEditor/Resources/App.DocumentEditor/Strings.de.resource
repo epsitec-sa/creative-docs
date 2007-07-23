@@ -20,7 +20,7 @@
   <data id="061">Hilfe</data>
   <data id="041">OK</data>
   <data id="092">Version: {0}</data>
-  <data id="082">Eine neuere Version ist verfügbar:</data>
+  <data id="082">Eine neuere Version ist verfügbar (&lt;a href=&quot;http://www.creativedocs.net/donate&quot;&gt;spenden&lt;/a&gt;):</data>
   <data id="0A2">Neue Version: {0}</data>
   <data id="0B2">Zur Zeit ist keine neue Version verfügbar.</data>
   <data id="062">Update suchen</data>

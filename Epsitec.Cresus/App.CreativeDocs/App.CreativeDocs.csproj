@@ -187,7 +187,7 @@ xcopy "$(SolutionDir)Common.Support\Resources\*" "$(ProjectDir)Resources\" /S/Y 
 xcopy "$(SolutionDir)Common.Types\Resources\*" "$(ProjectDir)Resources\" /S/Y /EXCLUDE:..\..\..\excludesvn.ini
 xcopy "$(SolutionDir)Common.Widgets\Resources\*" "$(ProjectDir)Resources\" /S/Y /EXCLUDE:..\..\..\excludesvn.ini
 xcopy "$(SolutionDir)App.DocumentEditor\Resources\*" "$(ProjectDir)Resources\" /S/Y /EXCLUDE:..\..\..\excludesvn.ini
-</PreBuildEvent>
+"$(SolutionDir)App.CreativeDocs\compile-rc.bat" "$(SolutionDir)App.CreativeDocs\App"</PreBuildEvent>
     <PostBuildEvent>del "$(SolutionDir)X.Setup.CreativeDocs\SignedDlls\*.dll" /F/Q
 del "$(SolutionDir)X.Setup.CreativeDocs\SignedDlls\*.exe" /F/Q
 
