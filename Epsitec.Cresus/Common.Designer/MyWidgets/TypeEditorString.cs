@@ -24,6 +24,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			group.Margins = new Margins(0, 0, 0, 10);
 			this.fieldMax.TextChanged += new EventHandler(this.HandleTextFieldChanged);
 
+#if false
 			this.CreateStringLabeled(Res.Strings.Viewers.Types.String.Default, this, out group, out this.fieldDefault);
 			group.Dock = DockStyle.StackBegin;
 			group.Margins = new Margins(0, 0, 0, 2);
@@ -36,7 +37,6 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.fieldSample.PreferredWidth = 400;
 			this.fieldSample.TextChanged += new EventHandler(this.HandleTextFieldChanged);
 			
-#if false
 			this.checkFixedLength = new CheckButton(this);
 			this.checkFixedLength.AutoToggle = false;
 			this.checkFixedLength.Text = Res.Strings.Viewers.Types.String.FixedLength;
@@ -65,9 +65,10 @@ namespace Epsitec.Common.Designer.MyWidgets
 			{
 				this.fieldMin.TextChanged -= new EventHandler(this.HandleTextFieldChanged);
 				this.fieldMax.TextChanged -= new EventHandler(this.HandleTextFieldChanged);
+#if false
+
 				this.fieldDefault.TextChanged -= new EventHandler(this.HandleTextFieldChanged);
 				this.fieldSample.TextChanged -= new EventHandler(this.HandleTextFieldChanged);
-#if false
 				this.checkFixedLength.Clicked -= new MessageEventHandler(this.HandleCheckClicked);
 #endif
 				this.checkMultilingual.Clicked -= new MessageEventHandler(this.HandleCheckClicked);
