@@ -113,6 +113,8 @@ namespace Epsitec.Common.Designer.Viewers
 			this.lastGroup = new Widget(this.lastPane);
 			this.lastGroup.Padding = new Margins(10, 10, 10, 10);
 			this.lastGroup.Dock = DockStyle.Fill;
+			this.lastGroup.TabIndex = this.tabIndex++;
+			this.lastGroup.TabNavigationMode = TabNavigationMode.ForwardTabPassive;
 
 			Widget sup = new Widget(this.lastGroup);
 			sup.Name = "Sup";
