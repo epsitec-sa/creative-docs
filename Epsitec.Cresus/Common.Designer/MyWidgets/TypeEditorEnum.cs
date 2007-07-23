@@ -762,7 +762,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected IconButton					buttonSearchNext;
 		protected HSlider						slider;
 
-		protected Widget						header;
+		protected FrameBox						header;
 		protected HeaderButton					headerUse;
 		protected HeaderButton					headerName;
 		protected HeaderButton					headerDescription;

@@ -269,6 +269,6 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected string					title;
 		protected TextLayout				titleLayout;
 		protected GlyphButton				extendButton;
-		protected Widget					container;
+		protected FrameBox					container;
 	}
 }

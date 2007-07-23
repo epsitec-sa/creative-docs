@@ -1186,7 +1186,7 @@ namespace Epsitec.Common.Designer.Viewers
 		protected static double					treeBranchesHeight = 30;
 
 		protected ProxyManager					proxyManager;
-		protected Widget						left;
+		protected FrameBox						left;
 		protected VSplitter						splitter1;
 		protected VSplitter						splitter2;
 		protected MyWidgets.TextFieldExName		labelEdit;
@@ -1194,10 +1194,10 @@ namespace Epsitec.Common.Designer.Viewers
 		protected VToolBar						vToolBar;
 		protected HToolBar						statusBar;
 		protected Scrollable					scrollable;
-		protected Widget						panelContainerParent;
+		protected FrameBox						panelContainerParent;
 		protected UI.Panel						panelContainer;
 		protected MyWidgets.PanelEditor			panelEditor;
-		protected Widget						right;
+		protected FrameBox						right;
 		protected HToolBar						hToolBar;
 		protected IconButton					hButtonDefault;
 		protected IconButton					hButtonEdition;

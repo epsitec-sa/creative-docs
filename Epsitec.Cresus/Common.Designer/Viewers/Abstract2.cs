@@ -1118,20 +1118,20 @@ namespace Epsitec.Common.Designer.Viewers
 		protected static bool					mainExtended = false;
 		protected static bool					suiteExtended = false;
 
-		protected Widget						firstPane;
-		protected Widget						lastPane;
+		protected FrameBox						firstPane;
+		protected FrameBox						lastPane;
 		protected AbstractSplitter				splitter;
 		protected UI.ItemTable					table;
 		protected MyWidgets.TextFieldExName		labelEdit;
 
-		protected Widget						lastGroup;
+		protected FrameBox						lastGroup;
 		protected FrameBox						titleBox;
 		protected StaticText					titleText;
 		protected Scrollable					scrollable;
 		protected List<Band>					bands;
 
 		protected IconButtonMark				primaryButtonCulture;
-		protected Widget						secondaryButtonsCultureGroup;
+		protected FrameBox						secondaryButtonsCultureGroup;
 		protected IconButtonMark[]				secondaryButtonsCulture;
 
 		protected StaticText					primarySummary;

@@ -980,10 +980,10 @@ namespace Epsitec.Common.Designer.Viewers
 		protected static bool					captionExtended = false;
 		protected static bool					suiteExtended = false;
 
-		protected Widget						left;
-		protected Widget						right;
+		protected FrameBox						left;
+		protected FrameBox						right;
 		protected VSplitter						splitter;
-		protected Widget						secondaryCultureGroup;
+		protected FrameBox						secondaryCultureGroup;
 		protected MyWidgets.TextFieldExName		labelEdit;
 		protected FrameBox						titleBox;
 		protected StaticText					titleText;

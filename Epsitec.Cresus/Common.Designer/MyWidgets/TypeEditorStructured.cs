@@ -873,15 +873,15 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected IconButton					buttonRelationInc;
 		protected HSlider						slider;
 
-		protected Widget						header;
+		protected FrameBox						header;
 		protected HeaderButton					headerCaption;
 		protected HeaderButton					headerType;
 		protected HeaderButton					headerInc;
 		protected MyWidgets.StringArray			array;
 
-		protected Widget						footer;
+		protected FrameBox						footer;
 		protected IconButton					buttonCaptionGoto;
-		protected Widget						blankCaption;
+		protected FrameBox						blankCaption;
 		protected IconButton					buttonTypeGoto;
 		protected Button						buttonType;
 		protected Button						buttonInc;

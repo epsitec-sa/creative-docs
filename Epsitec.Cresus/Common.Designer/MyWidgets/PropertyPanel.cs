@@ -249,7 +249,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected StaticText				label;
 		protected StaticText				fixIcon;
 		protected GlyphButton				extendedButton;
-		protected Widget					container;
+		protected FrameBox					container;
 		protected GridLayoutEngine			grid;
 		protected double					rowsSpacing = -1;
 		protected bool						isExtendedSize = false;
