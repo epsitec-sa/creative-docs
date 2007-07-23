@@ -55,6 +55,19 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 		
+		public override int CreationLastHandle
+		{
+			//	Retourne le rang de la dernière poignée créée.
+			//	A la création, une ligne de texte est toujours une droite, mais chacune des deux poignées
+			//	créée est en fait constituée de 3 poignées (secondaire-primaire-secondaire). Il faut donc
+			//	retourner le rang de la dernière poignée principale.
+			get
+			{
+				return this.TotalMainHandle-2;
+			}
+		}
+
+
 		public override bool Detect(Drawing.Rectangle rect, bool all)
 		{
 			//	Détecte si l'objet est dans un rectangle.

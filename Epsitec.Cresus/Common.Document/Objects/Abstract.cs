@@ -256,19 +256,37 @@ namespace Epsitec.Common.Document.Objects
 		public int TotalHandle
 		{
 			//	Nombre total de poignées, avec celles des propriétés.
-			get { return this.handles.Count; }
+			get
+			{
+				return this.handles.Count;
+			}
 		}
 
 		public int TotalMainHandle
 		{
 			//	Nombre total de poignées, sans celles des propriétés.
-			get { return this.handles.Count-this.totalPropertyHandle; }
+			get
+			{
+				return this.handles.Count-this.totalPropertyHandle;
+			}
+		}
+
+		public virtual int CreationLastHandle
+		{
+			//	Retourne le rang de la dernière poignée créée.
+			get
+			{
+				return this.TotalMainHandle-1;
+			}
 		}
 
 		public int TotalPropertyHandle
 		{
 			//	Nombre total de poignées des propriétés.
-			get { return this.totalPropertyHandle; }
+			get
+			{
+				return this.totalPropertyHandle;
+			}
 		}
 
 		protected void HandlePropertiesCreate()

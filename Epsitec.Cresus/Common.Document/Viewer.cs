@@ -412,7 +412,7 @@ namespace Epsitec.Common.Document
 								{
 									Objects.Abstract layer = this.drawingContext.RootObject();
 									obj = layer.Objects[this.createRank] as Objects.Abstract;
-									rank = obj.TotalMainHandle-1;
+									rank = obj.CreationLastHandle;
 								}
 
 								if (this.drawingContext.ConstrainSpacePressed(pos, obj, rank))
