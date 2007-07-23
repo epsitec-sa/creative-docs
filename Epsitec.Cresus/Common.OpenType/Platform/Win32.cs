@@ -300,6 +300,19 @@ namespace Epsitec.Common.OpenType.Platform
 			{
 				this.style_name = style_name;
 			}
+
+
+			public string						FullHash
+			{
+				get
+				{
+					return this.full_hash;
+				}
+				set
+				{
+					this.full_hash = value;
+				}
+			}
 			
 			
 			public string[]						Names
@@ -371,7 +384,18 @@ namespace Epsitec.Common.OpenType.Platform
 			
 			public int ProcessFindLogFont(EnumLogFontEx log_font_ex, NewTextMetricEx text_metrics, int font_type, IntPtr lParam)
 			{
-				if (log_font_ex.elfStyle == style_name)
+				bool ok = false;
+
+				if (this.full_hash != null)
+				{
+					ok = (this.full_hash == FontName.GetFullHash (log_font_ex.lfFaceName));
+				}
+				else if (log_font_ex.elfStyle == style_name)
+				{
+					ok = true;
+				}
+
+				if (ok)
 				{
 					this.log_font = new LogFont ();
 					
@@ -399,6 +423,7 @@ namespace Epsitec.Common.OpenType.Platform
 			
 			System.Collections.Hashtable		names;
 			string								style_name;
+			string								full_hash;
 			LogFont								log_font;
 		}
 		#endregion
@@ -449,8 +474,18 @@ namespace Epsitec.Common.OpenType.Platform
 			
 			using (TempDC dc = new TempDC ())
 			{
-				FontEnumerator enumerator = new FontEnumerator (style);
-				
+				FontEnumerator enumerator;
+
+				if (family == null)
+				{
+					enumerator = new FontEnumerator ();
+					enumerator.FullHash = style;
+				}
+				else
+				{
+					enumerator = new FontEnumerator (style);
+				}
+
 				Win32.EnumFontFamExProc proc = new EnumFontFamExProc (enumerator.ProcessFindLogFont);
 				Win32.EnumFontFamiliesEx (dc.Handle, log_font, proc, System.IntPtr.Zero, 0);
 				

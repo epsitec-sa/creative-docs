@@ -655,7 +655,14 @@ namespace Epsitec.Common.OpenType
 					{
 						if (this.record == null)
 						{
-							this.record = Platform.Neutral.GetFontSystemDescription (this.systemFontFamily, this.systemFontStyle);
+							if (string.IsNullOrEmpty (this.systemFontFamily))
+							{
+								this.record = Platform.Neutral.GetFontSystemDescription (null, this.FullHash);
+							}
+							else
+							{
+								this.record = Platform.Neutral.GetFontSystemDescription (this.systemFontFamily, this.systemFontStyle);
+							}
 						}
 						if (this.record == null)
 						{

@@ -60,6 +60,12 @@ namespace Epsitec.Common.Drawing
 			System.GC.SuppressFinalize (this);
 		}
 		#endregion
+
+		[System.Runtime.InteropServices.DllImport ("Gdi32.dll")]
+		private static extern int AddFontResourceEx(string fontPath, int fontFlags, System.IntPtr reserved);
+		
+		[System.Runtime.InteropServices.DllImport ("Gdi32.dll")]
+		private static extern int RemoveFontResourceEx(string fontPath, int fontFlags, System.IntPtr reserved);
 		
 		public System.IntPtr					Handle
 		{
@@ -78,7 +84,27 @@ namespace Epsitec.Common.Drawing
 					int    size   = data.Length;
 					int    offset = segment.Offset;
 
-					System.IntPtr osHandle = this.open_type_FontIdentity.IsDynamicFont ? System.IntPtr.Zero : this.OpenTypeFont.GetFontHandleAtEmSize ();
+					if (this.open_type_FontIdentity.IsDynamicFont)
+					{
+						string fontHash = this.OpenTypeFont.FontIdentity.FullHash;
+						string fontPath;
+
+						if (Font.registered_fonts.TryGetValue (fontHash, out fontPath))
+						{
+							//	Font already registered...
+						}
+						else
+						{
+							fontPath = System.IO.Path.Combine (System.IO.Path.GetTempPath (), System.IO.Path.GetRandomFileName () + ".otf");
+
+							System.IO.File.WriteAllBytes (fontPath, data);
+							Font.AddFontResourceEx (fontPath, 0x10, System.IntPtr.Zero);
+							Font.registered_fonts[fontHash] = fontPath;
+							Font.shutdown_cleanup.Add (fontPath);
+						}
+					}
+
+					System.IntPtr osHandle = this.OpenTypeFont.GetFontHandleAtEmSize ();
 					
 					this.handle = AntiGrain.Font.CreateFaceHandle (data, size, offset, osHandle);
 				}
@@ -928,16 +954,64 @@ namespace Epsitec.Common.Drawing
 		{
 			this.face_info = info;
 		}
-		
-		
-		
+
+		#region ShutdownCleanup Class
+
+		/// <summary>
+		/// The <c>ShutdownCleanup</c> class is used to delete any font files
+		/// created on disk and temporarily registered with Windows.
+		/// </summary>
+		private class ShutdownCleanup
+		{
+			public ShutdownCleanup()
+			{
+			}
+
+			~ShutdownCleanup()
+			{
+				foreach (string path in temp_files)
+				{
+					try
+					{
+						//	Remove the font file; we must first unregister it
+						//	or else we could not delete it...
+
+						Font.RemoveFontResourceEx (path, 0x10, System.IntPtr.Zero);
+						System.IO.File.Delete (path);
+					}
+					catch
+					{
+					}
+				}
+			}
+
+			public void Add(string path)
+			{
+				this.temp_files.Add (path);
+			}
+
+			List<string> temp_files = new List<string> ();
+		}
+
+		#endregion
+
+		#region NameId Enumeration
+
+		enum NameId
+		{
+			None,
+			Face=1,
+			Style=2,
+			StyleUserLocale=3,
+			Optical=4,
+			Unique=5
+		}
+
+		#endregion
+
 		System.IntPtr							handle;
 		string									synthetic_style;
 		SyntheticFontMode						synthetic_mode;
-#if false
-		System.Drawing.Font						os_font;
-		System.Collections.Hashtable			os_font_cache;
-#endif
 		FontFaceInfo							face_info;
 		OpenType.FontIdentity					open_type_FontIdentity;
 		OpenType.Font							open_type_font;
@@ -949,21 +1023,8 @@ namespace Epsitec.Common.Drawing
 		static Dictionary<string, FontFaceInfo>	face_hash;
 		static Font								default_font;
 		static bool								useSegoe;
-		
-		enum NameId
-		{
-			None,
-			Face			= 1,
-			Style			= 2,
-			StyleUserLocale	= 3,
-			Optical			= 4,
-			Unique			= 5
-		}
-	}
-	
-	public enum SyntheticFontMode
-	{
-		None,
-		Oblique
+
+		static Dictionary<string, string>		registered_fonts = new Dictionary<string,string> ();
+		static ShutdownCleanup					shutdown_cleanup = new ShutdownCleanup ();
 	}
 }
