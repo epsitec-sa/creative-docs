@@ -12,22 +12,19 @@ namespace Epsitec.Common.Designer.MyWidgets
 	{
 		public TypeEditorNumeric()
 		{
-			Widget group;
+			FrameBox group;
 
-			Widget band = new Widget(this);
+			FrameBox band = new FrameBox(this);
 			band.TabIndex = this.tabIndex++;
-			band.TabNavigationMode = TabNavigationMode.ForwardTabPassive;
 			band.Dock = DockStyle.StackBegin;
 			band.ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow;
 
-			Widget left = new Widget(band);
+			FrameBox left = new FrameBox(band);
 			left.TabIndex = this.tabIndex++;
-			left.TabNavigationMode = TabNavigationMode.ForwardTabPassive;
 			left.Dock = DockStyle.Fill;
 
-			Widget right = new Widget(band);
+			FrameBox right = new FrameBox(band);
 			right.TabIndex = this.tabIndex++;
-			right.TabNavigationMode = TabNavigationMode.ForwardTabPassive;
 			right.Dock = DockStyle.Fill;
 
 			//	Range.

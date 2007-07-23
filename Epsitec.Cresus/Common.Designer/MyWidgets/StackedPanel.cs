@@ -14,9 +14,9 @@ namespace Epsitec.Common.Designer.MyWidgets
 		{
 			this.Padding = new Margins(StackedPanel.leftMargin+10, 10, 5-1, 5);
 
-			this.container = new Widget(this);
+			this.container = new FrameBox(this);
 			this.container.Dock = DockStyle.Fill;
-			this.container.TabIndex = 0;
+			this.container.TabIndex = 1;
 			this.container.TabNavigationMode = TabNavigationMode.ForwardTabPassive;
 
 			this.Entered += new MessageEventHandler(this.HandleMouseEntered);

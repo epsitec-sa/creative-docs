@@ -187,7 +187,7 @@ namespace Epsitec.Common.Designer.Ribbons
 
 
 		protected DesignerApplication		designerApplication;
-		protected int						tabIndex = 0;
+		protected int						tabIndex = 1;
 		protected bool						ignoreChange = false;
 		protected double					separatorWidth = 8;
 	}

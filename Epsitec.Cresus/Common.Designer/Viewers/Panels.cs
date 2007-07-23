@@ -14,9 +14,9 @@ namespace Epsitec.Common.Designer.Viewers
 	{
 		public Panels(Module module, PanelsContext context, ResourceAccess access, DesignerApplication designerApplication) : base(module, context, access, designerApplication)
 		{
-			int tabIndex = 0;
+			int tabIndex = 1;
 
-			this.left = new Widget(this);
+			this.left = new FrameBox(this);
 			this.left.MinWidth = 80;
 			this.left.MaxWidth = 400;
 			this.left.PreferredWidth = Abstract.leftArrayWidth;
@@ -49,13 +49,13 @@ namespace Epsitec.Common.Designer.Viewers
 			VSplitter.SetAutoCollapseEnable(this.left, true);
 
 			//	Crée le groupe central.
-			this.middle = new Widget(this);
+			this.middle = new FrameBox(this);
 			this.middle.Dock = DockStyle.Fill;
 
 			this.statusBar = new HToolBar(this.middle);
 			this.statusBar.Dock = DockStyle.Top;
 
-			Widget drawing = new Widget(this.middle);  // conteneur pour vToolBar et scrollable
+			FrameBox drawing = new FrameBox(this.middle);  // conteneur pour vToolBar et scrollable
 			drawing.Dock = DockStyle.Fill;
 
 			this.vToolBar = new VToolBar(drawing);
@@ -90,13 +90,13 @@ namespace Epsitec.Common.Designer.Viewers
 			this.scrollable.PaintForegroundFrame = true;
 			//?this.scrollable.ForegroundFrameMargins = new Margins(0, 1, 0, 1);
 
-			Widget container = new Widget(this.scrollable.Panel);
+			FrameBox container = new FrameBox(this.scrollable.Panel);
 			container.MinWidth = 100;
 			container.Dock = DockStyle.Fill;
 
 			//	Sous-conteneur qui a des marges, pour permettre de voir les cotes (Dimension*)
 			//	du PanelEditor qui s'affiche par-dessus.
-			this.panelContainerParent = new Widget(container);
+			this.panelContainerParent = new FrameBox(container);
 			this.panelContainerParent.Margins = new Margins(Dimension.margin, Dimension.margin, Dimension.margin, Dimension.margin);
 			this.panelContainerParent.Dock = DockStyle.Fill;
 
@@ -118,7 +118,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.panelEditor.UpdateCommands += new EventHandler(this.HandlePanelEditorUpdateCommands);
 
 			//	Crée le groupe droite.
-			this.right = new Widget(this);
+			this.right = new FrameBox(this);
 			this.right.MinWidth = 150;
 			this.right.PreferredWidth = 240;
 			this.right.MaxWidth = 400;
@@ -170,7 +170,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.tabPageObjects.Padding = new Margins(4, 4, 4, 4);
 			this.tabBook.Items.Add(this.tabPageObjects);
 
-			Widget header = new Widget(this.tabPageObjects);
+			FrameBox header = new FrameBox(this.tabPageObjects);
 			header.PreferredHeight = 14;
 			header.Dock = DockStyle.Top;
 			header.Margins = new Margins(0, 0, 4, 8);
@@ -405,7 +405,7 @@ namespace Epsitec.Common.Designer.Viewers
 			//	Crée tous les boutons pour les cultures.
 			this.cultureButtonList = new List<IconButton>();
 
-			int tabIndex = 0;
+			int tabIndex = 1;
 			foreach (string name in Misc.Cultures)
 			{
 				System.Globalization.CultureInfo culture = Resources.FindSpecificCultureInfo(name);
@@ -814,7 +814,7 @@ namespace Epsitec.Common.Designer.Viewers
 			if (deep >= bands.Count)
 			{
 				//	Crée le conteneur horizonal pour les boutons.
-				Widget band = new Widget(this.objectsScrollable.Panel);
+				FrameBox band = new FrameBox(this.objectsScrollable.Panel);
 				band.Dock = DockStyle.Top;
 				bands.Add(band);
 

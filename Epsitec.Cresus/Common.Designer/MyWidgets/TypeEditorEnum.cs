@@ -79,7 +79,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.slider.Dock = DockStyle.Right;
 
 			//	Crée l'en-tête du tableau.
-			this.header = new Widget(this);
+			this.header = new FrameBox(this);
 			this.header.Dock = DockStyle.StackBegin;
 			this.header.Margins = new Margins(0, 0, 4, 0);
 

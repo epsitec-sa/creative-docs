@@ -27,7 +27,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.itemViewFactory = new ItemViewFactory(this);
 			
 			//	Crée les deux volets séparés d'un splitter.
-			this.firstPane = new Widget(this);
+			this.firstPane = new FrameBox(this);
 			this.firstPane.Name = "FirstPane";
 			if (this.designerApplication.DisplayModeState == DesignerApplication.DisplayMode.Horizontal)
 			{
@@ -44,7 +44,6 @@ namespace Epsitec.Common.Designer.Viewers
 			this.firstPane.Dock = (this.designerApplication.DisplayModeState == DesignerApplication.DisplayMode.Horizontal) ? DockStyle.Left : DockStyle.Top;
 			this.firstPane.Padding = new Margins(10, 10, 10, 10);
 			this.firstPane.TabIndex = this.tabIndex++;
-			this.firstPane.TabNavigationMode = TabNavigationMode.ForwardTabPassive;
 			this.firstPane.Visibility = (this.designerApplication.DisplayModeState != DesignerApplication.DisplayMode.FullScreen);
 
 			if (this.designerApplication.DisplayModeState == DesignerApplication.DisplayMode.Horizontal)
@@ -61,7 +60,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.splitter.Visibility = (this.designerApplication.DisplayModeState != DesignerApplication.DisplayMode.FullScreen);
 			AbstractSplitter.SetAutoCollapseEnable(this.firstPane, true);
 
-			this.lastPane = new Widget(this);
+			this.lastPane = new FrameBox(this);
 			this.lastPane.Name = "LastPane";
 			if (this.designerApplication.DisplayModeState == DesignerApplication.DisplayMode.Horizontal)
 			{
@@ -73,7 +72,6 @@ namespace Epsitec.Common.Designer.Viewers
 			}
 			this.lastPane.Dock = DockStyle.Fill;
 			this.lastPane.TabIndex = this.tabIndex++;
-			this.lastPane.TabNavigationMode = TabNavigationMode.ForwardTabPassive;
 			
 			//	Crée la première partie (gauche ou supérieure).
 			this.labelEdit = new MyWidgets.TextFieldExName(this.firstPane);
@@ -110,20 +108,18 @@ namespace Epsitec.Common.Designer.Viewers
 			this.table.Margins = Drawing.Margins.Zero;
 
 			//	Crée la dernière partie (droite ou inférieure), bande supérieure pour les boutons des cultures.
-			this.lastGroup = new Widget(this.lastPane);
+			this.lastGroup = new FrameBox(this.lastPane);
 			this.lastGroup.Padding = new Margins(10, 10, 10, 10);
 			this.lastGroup.Dock = DockStyle.Fill;
 			this.lastGroup.TabIndex = this.tabIndex++;
-			this.lastGroup.TabNavigationMode = TabNavigationMode.ForwardTabPassive;
 
-			Widget sup = new Widget(this.lastGroup);
+			Widget sup = new FrameBox(this.lastGroup);
 			sup.Name = "Sup";
 			sup.PreferredHeight = 26;
 			sup.Padding = new Margins(0, 17, 1, 0);
 			sup.ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow;
 			sup.Dock = DockStyle.Top;
 			sup.TabIndex = this.tabIndex++;
-			sup.TabNavigationMode = TabNavigationMode.ForwardTabPassive;
 			
 			this.primaryButtonCulture = new IconButtonMark(sup);
 			this.primaryButtonCulture.ButtonStyle = ButtonStyle.ActivableIcon;
@@ -135,12 +131,11 @@ namespace Epsitec.Common.Designer.Viewers
 			this.primaryButtonCulture.Margins = new Margins(0, 1, 0, 0);
 			this.primaryButtonCulture.Dock = DockStyle.Fill;
 
-			this.secondaryButtonsCultureGroup = new Widget(sup);
+			this.secondaryButtonsCultureGroup = new FrameBox(sup);
 			this.secondaryButtonsCultureGroup.Margins = new Margins(1, 0, 0, 0);
 			this.secondaryButtonsCultureGroup.ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow;
 			this.secondaryButtonsCultureGroup.Dock = DockStyle.Fill;
 			this.secondaryButtonsCultureGroup.TabIndex = this.tabIndex++;
-			this.secondaryButtonsCultureGroup.TabNavigationMode = TabNavigationMode.ForwardTabPassive;
 
 			//	Crée le titre.
 			this.titleBox = new FrameBox(this.lastGroup);
@@ -549,12 +544,11 @@ namespace Epsitec.Common.Designer.Viewers
 		{
 			//	Crée une bande horizontale avec deux containers gauche/droite pour les
 			//	ressources primaire/secondaire.
-			Widget band = new Widget(this.scrollable.Panel);
+			FrameBox band = new FrameBox(this.scrollable.Panel);
 			band.Name = "BandForLeftAndRight";
 			band.Dock = DockStyle.StackBegin;
 			band.ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow;
 			band.TabIndex = this.tabIndex++;
-			band.TabNavigationMode = TabNavigationMode.ForwardTabPassive;
 
 			leftContainer = new MyWidgets.StackedPanel(band);
 			leftContainer.Name = "LeftContainer";
@@ -585,12 +579,11 @@ namespace Epsitec.Common.Designer.Viewers
 		{
 			//	Crée une bande horizontale avec un seul container gauche pour la
 			//	ressource primaire.
-			Widget band = new Widget(this.scrollable.Panel);
+			FrameBox band = new FrameBox(this.scrollable.Panel);
 			band.Name = "BandForLeft";
 			band.Dock = DockStyle.StackBegin;
 			band.ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow;
 			band.TabIndex = this.tabIndex++;
-			band.TabNavigationMode = TabNavigationMode.ForwardTabPassive;
 
 			leftContainer = new MyWidgets.StackedPanel(band);
 			leftContainer.Name = "LeftContainer";

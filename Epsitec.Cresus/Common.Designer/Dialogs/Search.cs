@@ -30,7 +30,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.window.WindowCloseClicked += new EventHandler(this.HandleWindowCloseClicked);
 				this.window.Root.Padding = new Margins(8, 8, 8, 8);
 
-				int tabIndex = 0;
+				int tabIndex = 1;
 
 				//	Partie supérieure.
 				Widget header1 = new Widget(this.window.Root);

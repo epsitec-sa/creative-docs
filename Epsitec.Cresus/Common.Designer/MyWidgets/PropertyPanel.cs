@@ -16,7 +16,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.Margins = new Margins(0, 0, 0, 4);
 			this.Padding = new Margins(1, 1, 1, 1);
 
-			Widget header = new Widget(this);
+			FrameBox header = new FrameBox(this);
 			header.PreferredHeight = this.extendedZoneWidth;
 			header.Dock = DockStyle.Top;
 
@@ -34,14 +34,14 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.extendedButton.GlyphShape = GlyphShape.ArrowDown;
 			this.extendedButton.AutoFocus = false;
 			this.extendedButton.Clicked += new MessageEventHandler(this.ExtendedButtonClicked);
-			this.extendedButton.TabIndex = 0;
+			this.extendedButton.TabIndex = 1;
 			this.extendedButton.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			this.extendedButton.PreferredSize = new Size(this.extendedZoneWidth-4, this.extendedZoneWidth-4);
 			this.extendedButton.Margins = new Margins(2, 1, 2, 2);
 			this.extendedButton.Dock = DockStyle.Right;
 			//?ToolTip.Default.SetToolTip(this.extendedButton, Res.Strings.Panel.Abstract.Extend);
 
-			this.container = new Widget(this);
+			this.container = new FrameBox(this);
 			this.container.Dock = DockStyle.Fill;
 			this.container.Padding = new Margins(this.extendedZoneWidth+4, this.extendedZoneWidth+4, 4, 4);
 			this.container.Visibility = this.isExtendedSize;

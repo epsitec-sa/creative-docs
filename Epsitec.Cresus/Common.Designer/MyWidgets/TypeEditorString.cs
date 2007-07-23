@@ -12,7 +12,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 	{
 		public TypeEditorString()
 		{
-			Widget group;
+			FrameBox group;
 
 			this.CreateDecimalLabeled(Res.Strings.Viewers.Types.String.Min, this, out group, out this.fieldMin);
 			group.Dock = DockStyle.StackBegin;

@@ -131,7 +131,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected void CreateToolbar()
 		{
 			//	Crée la barre d'outils dans la première ligne du tableau.
-			Widget toolbar = new Widget();
+			FrameBox toolbar = new FrameBox();
 			GridLayoutEngine.SetColumn(toolbar, 2);
 			GridLayoutEngine.SetRow(toolbar, 0);
 			this.Children.Add(toolbar);

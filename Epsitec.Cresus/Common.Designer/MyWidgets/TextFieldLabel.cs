@@ -23,7 +23,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.textFieldReal = new TextFieldReal(this);
 			this.textFieldReal.PreferredWidth = TextFieldLabel.DefaultTextWidth;
 			this.textFieldReal.Dock = DockStyle.Right;
-			this.textFieldReal.TabIndex = 0;
+			this.textFieldReal.TabIndex = 1;
 			this.textFieldReal.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			this.textFieldReal.DefocusAction = DefocusAction.AutoAcceptOrRejectEdition;
 			this.textFieldReal.AutoSelectOnFocus = true;

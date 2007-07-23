@@ -49,7 +49,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.rightPanel.Dock = DockStyle.Fill;
 
 				//	Partie gauche.
-				this.tabIndex = 0;
+				this.tabIndex = 1;
 				this.index = 0;
 				this.radioButtons = new List<RadioButton>();
 				this.CreateRadio(Res.Captions.Types.Type.Boolean);

@@ -1429,6 +1429,6 @@ namespace Epsitec.Common.Designer.Viewers
 		protected IconButtonMark[]			secondaryCultures;
 		protected MyWidgets.StringArray		array;
 		protected AbstractTextField			currentTextField;
-		protected int						tabIndex = 0;
+		protected int						tabIndex = 1;
 	}
 }

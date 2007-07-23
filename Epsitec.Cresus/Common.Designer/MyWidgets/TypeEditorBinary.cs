@@ -12,7 +12,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 	{
 		public TypeEditorBinary()
 		{
-			Widget group;
+			FrameBox group;
 
 			this.CreateStringLabeled(Res.Strings.Viewers.Types.Binary.Mime, this, out group, out this.fieldMime);
 			group.Dock = DockStyle.StackBegin;

@@ -23,7 +23,7 @@ namespace Epsitec.Common.Designer.Viewers
 		public AbstractCaptions(Module module, PanelsContext context, ResourceAccess access, DesignerApplication designerApplication) : base(module, context, access, designerApplication)
 		{
 			//	Crée les 2 parties gauche/droite séparées par un splitter.
-			this.left = new Widget(this);
+			this.left = new FrameBox(this);
 			this.left.Name = "Left";
 			this.left.MinWidth = 80;
 			this.left.MaxWidth = 400;
@@ -31,20 +31,18 @@ namespace Epsitec.Common.Designer.Viewers
 			this.left.Dock = DockStyle.Left;
 			this.left.Padding = new Margins(10, 10, 10, 10);
 			this.left.TabIndex = this.tabIndex++;
-			this.left.TabNavigationMode = TabNavigationMode.ForwardTabPassive;
 
 			this.splitter = new VSplitter(this);
 			this.splitter.Dock = DockStyle.Left;
 			this.splitter.SplitterDragged += new EventHandler(this.HandleSplitterDragged);
 			VSplitter.SetAutoCollapseEnable(this.left, true);
 
-			this.right = new Widget(this);
+			this.right = new FrameBox(this);
 			this.right.Name = "Right";
 			this.right.MinWidth = 200;
 			this.right.Dock = DockStyle.Fill;
 			this.right.Padding = new Margins(1, 1, 1, 1);
 			this.right.TabIndex = this.tabIndex++;
-			this.right.TabNavigationMode = TabNavigationMode.ForwardTabPassive;
 			
 			//	Crée la partie gauche.			
 			this.labelEdit = new MyWidgets.TextFieldExName(this.left);
@@ -72,14 +70,13 @@ namespace Epsitec.Common.Designer.Viewers
 			this.array.SelectedRowChanged += new EventHandler(this.HandleArraySelectedRowChanged);
 
 			//	Crée la partie droite, bande supérieure pour les boutons des cultures.
-			Widget sup = new Widget(this.right);
+			FrameBox sup = new FrameBox(this.right);
 			sup.Name = "Sup";
 			sup.PreferredHeight = 35;
 			sup.Padding = new Margins(1, 18, 10, 0);
 			sup.ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow;
 			sup.Dock = DockStyle.Top;
 			sup.TabIndex = this.tabIndex++;
-			sup.TabNavigationMode = TabNavigationMode.ForwardTabPassive;
 
 			this.primaryCulture = new IconButtonMark(sup);
 			this.primaryCulture.ButtonStyle = ButtonStyle.ActivableIcon;
@@ -91,13 +88,12 @@ namespace Epsitec.Common.Designer.Viewers
 			this.primaryCulture.Margins = new Margins(0, 1, 0, 0);
 			this.primaryCulture.Dock = DockStyle.Fill;
 
-			this.secondaryCultureGroup = new Widget(sup);
+			this.secondaryCultureGroup = new FrameBox(sup);
 			this.secondaryCultureGroup.Name = "SecondaryCultureGroup";
 			this.secondaryCultureGroup.Margins = new Margins(1, 0, 0, 0);
 			this.secondaryCultureGroup.ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow;
 			this.secondaryCultureGroup.Dock = DockStyle.Fill;
 			this.secondaryCultureGroup.TabIndex = this.tabIndex++;
-			this.secondaryCultureGroup.TabNavigationMode = TabNavigationMode.ForwardTabPassive;
 
 			//	Crée le titre.
 			this.titleBox = new FrameBox(this.right);
@@ -514,12 +510,11 @@ namespace Epsitec.Common.Designer.Viewers
 		{
 			//	Crée une bande horizontale avec deux containers gauche/droite pour les
 			//	ressources primaire/secondaire.
-			Widget band = new Widget(this.scrollable.Panel);
+			FrameBox band = new FrameBox(this.scrollable.Panel);
 			band.Name = "BandForLeftAndRight";
 			band.Dock = DockStyle.StackBegin;
 			band.ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow;
 			band.TabIndex = this.tabIndex++;
-			band.TabNavigationMode = TabNavigationMode.ForwardTabPassive;
 
 			leftContainer = new MyWidgets.StackedPanel(band);
 			leftContainer.Name = "LeftContainer";
@@ -550,12 +545,11 @@ namespace Epsitec.Common.Designer.Viewers
 		{
 			//	Crée une bande horizontale avec un seul container gauche pour la
 			//	ressource primaire.
-			Widget band = new Widget(this.scrollable.Panel);
+			FrameBox band = new FrameBox(this.scrollable.Panel);
 			band.Name = "BandForLeft";
 			band.Dock = DockStyle.StackBegin;
 			band.ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow;
 			band.TabIndex = this.tabIndex++;
-			band.TabNavigationMode = TabNavigationMode.ForwardTabPassive;
 
 			leftContainer = new MyWidgets.StackedPanel(band);
 			leftContainer.Name = "LeftContainer";

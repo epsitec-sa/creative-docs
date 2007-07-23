@@ -41,7 +41,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.buttonRemove.Clicked += new MessageEventHandler(this.HandleButtonClicked);
 			this.toolbar.Items.Add(this.buttonRemove);
 
-			Widget sep = new Widget();
+			FrameBox sep = new FrameBox();
 			sep.PreferredWidth = 50;
 			this.toolbar.Items.Add(sep);
 
@@ -76,7 +76,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.slider.Dock = DockStyle.Right;
 
 			//	Crée l'en-tête du tableau.
-			this.header = new Widget(this);
+			this.header = new FrameBox(this);
 			this.header.Dock = DockStyle.StackBegin;
 			this.header.Margins = new Margins(0, 0, 4, 0);
 
@@ -128,7 +128,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.array.SelectedRowDoubleClicked += new EventHandler(this.HandleArraySelectedRowDoubleClicked);
 
 			//	Crée le pied pour éditer la ligne sélectionnée.
-			this.footer = new Widget(this);
+			this.footer = new FrameBox(this);
 			this.footer.Dock = DockStyle.StackBegin;
 			this.footer.Margins = new Margins(0, 0, 5, 0);
 
@@ -137,7 +137,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.buttonCaptionGoto.Dock = DockStyle.Left;
 			this.buttonCaptionGoto.Clicked += new MessageEventHandler(this.HandleButtonClicked);
 
-			this.blankCaption = new Widget(this.footer);
+			this.blankCaption = new FrameBox(this.footer);
 			this.blankCaption.Margins = new Margins(1, 0, 0, 0);
 			this.blankCaption.Dock = DockStyle.Left;
 

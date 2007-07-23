@@ -278,12 +278,11 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 
 		#region Super widgets
-		protected void CreateStringLabeled(string label, Widget parent, out Widget group, out TextField field)
+		protected void CreateStringLabeled(string label, Widget parent, out FrameBox group, out TextField field)
 		{
 			//	Crée un super-widget permettant d'éditer une chaîne, avec une étiquette à gauche.
-			group = new Widget(parent);
+			group = new FrameBox(parent);
 			group.TabIndex = this.tabIndex++;
-			group.TabNavigationMode = TabNavigationMode.ForwardTabPassive;
 
 			StaticText text = new StaticText(group);
 			text.Text = label;
@@ -295,16 +294,15 @@ namespace Epsitec.Common.Designer.MyWidgets
 			field = new TextField(group);
 			field.PreferredWidth = 130;
 			field.Dock = DockStyle.Left;
-			field.TabIndex = 0;
+			field.TabIndex = 1;
 			field.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 		}
 
-		protected void CreateComboLabeled(string label, Widget parent, out Widget group, out TextFieldCombo field)
+		protected void CreateComboLabeled(string label, Widget parent, out FrameBox group, out TextFieldCombo field)
 		{
 			//	Crée un super-widget permettant d'éditer une chaîne, avec une étiquette à gauche.
-			group = new Widget(parent);
+			group = new FrameBox(parent);
 			group.TabIndex = this.tabIndex++;
-			group.TabNavigationMode = TabNavigationMode.ForwardTabPassive;
 
 			StaticText text = new StaticText(group);
 			text.Text = label;
@@ -317,16 +315,15 @@ namespace Epsitec.Common.Designer.MyWidgets
 			field.IsReadOnly = true;
 			field.PreferredWidth = 130;
 			field.Dock = DockStyle.Left;
-			field.TabIndex = 0;
+			field.TabIndex = 1;
 			field.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 		}
 
-		protected void CreateDecimalLabeled(string label, Widget parent, out Widget group, out TextField field)
+		protected void CreateDecimalLabeled(string label, Widget parent, out FrameBox group, out TextField field)
 		{
 			//	Crée un super-widget permettant d'éditer une valeur décimale, avec une étiquette à gauche.
-			group = new Widget(parent);
+			group = new FrameBox(parent);
 			group.TabIndex = this.tabIndex++;
-			group.TabNavigationMode = TabNavigationMode.ForwardTabPassive;
 
 			StaticText text = new StaticText(group);
 			text.Text = label;
@@ -338,7 +335,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			field = new TextField(group);
 			field.PreferredWidth = 130;
 			field.Dock = DockStyle.Left;
-			field.TabIndex = 0;
+			field.TabIndex = 1;
 			field.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 		}
 
@@ -457,7 +454,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected int							resourceSelected = -1;
 		protected Module						module;
 		protected DesignerApplication			designerApplication;
-		protected int							tabIndex = 0;
+		protected int							tabIndex = 1;
 		protected bool							ignoreChange = false;
 		protected bool							summaryEmpty;
 		protected bool							summarySeparator;

@@ -1891,7 +1891,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			this.SetHilitedParent(parent, column, row, this.draggingSpanColumnCount, this.draggingSpanRowCount);  // met en évidence le futur parent survolé par la souris
 
-			Widget container = new Widget();
+			FrameBox container = new FrameBox();
 			container.PreferredSize = this.draggingRectangle.Size;
 
 			foreach (Widget obj in this.selectedObjects)

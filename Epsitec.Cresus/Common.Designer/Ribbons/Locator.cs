@@ -17,7 +17,7 @@ namespace Epsitec.Common.Designer.Ribbons
 			double dx = 22;
 			double dy = 22;
 
-			this.group = new Widget(this);
+			this.group = new FrameBox(this);
 
 			this.buttonList = this.CreateMenuButton("UndoRedoList", Res.Strings.Action.LocatorList, new MessageEventHandler(this.HandleListPressed));
 			this.buttonList.ContentAlignment = ContentAlignment.BottomCenter;

@@ -13,9 +13,9 @@ namespace Epsitec.Common.Designer.Viewers
 	{
 		public Scripts(Module module, PanelsContext context, ResourceAccess access, DesignerApplication designerApplication) : base(module, context, access, designerApplication)
 		{
-			int tabIndex = 0;
+			int tabIndex = 1;
 
-			Widget left = new Widget(this);
+			FrameBox left = new FrameBox(this);
 			left.MinWidth = 80;
 			left.MaxWidth = 400;
 			left.PreferredWidth = 200;

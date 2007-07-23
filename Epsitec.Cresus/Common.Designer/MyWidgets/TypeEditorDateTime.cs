@@ -12,22 +12,19 @@ namespace Epsitec.Common.Designer.MyWidgets
 	{
 		public TypeEditorDateTime()
 		{
-			Widget group;
+			FrameBox group;
 
-			Widget band = new Widget(this);
+			FrameBox band = new FrameBox(this);
 			band.TabIndex = this.tabIndex++;
-			band.TabNavigationMode = TabNavigationMode.ForwardTabPassive;
 			band.Dock = DockStyle.StackBegin;
 			band.ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow;
 
-			Widget left = new Widget(band);
+			FrameBox left = new FrameBox(band);
 			left.TabIndex = this.tabIndex++;
-			left.TabNavigationMode = TabNavigationMode.ForwardTabPassive;
 			left.Dock = DockStyle.Fill;
 
-			Widget right = new Widget(band);
+			FrameBox right = new FrameBox(band);
 			right.TabIndex = this.tabIndex++;
-			right.TabNavigationMode = TabNavigationMode.ForwardTabPassive;
 			right.Dock = DockStyle.Fill;
 
 			this.CreateComboLabeled(Res.Strings.Viewers.Types.DateTime.Resolution, left, out group, out this.fieldResol);
@@ -786,23 +783,23 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		protected TextFieldCombo				fieldResol;
 
-		protected Widget						groupMinDate;
+		protected FrameBox						groupMinDate;
 		protected TextField						fieldMinDate;
-		protected Widget						groupMaxDate;
+		protected FrameBox						groupMaxDate;
 		protected TextField						fieldMaxDate;
-		protected Widget						groupDateStep;
+		protected FrameBox						groupDateStep;
 		protected TextField						fieldDateStep;
 
-		protected Widget						groupMinTime;
+		protected FrameBox						groupMinTime;
 		protected TextField						fieldMinTime;
-		protected Widget						groupMaxTime;
+		protected FrameBox						groupMaxTime;
 		protected TextField						fieldMaxTime;
-		protected Widget						groupTimeStep;
+		protected FrameBox						groupTimeStep;
 		protected TextField						fieldTimeStep;
 
-		protected Widget						groupDefault;
+		protected FrameBox						groupDefault;
 		protected TextField						fieldDefault;
-		protected Widget						groupSample;
+		protected FrameBox						groupSample;
 		protected TextField						fieldSample;
 	}
 }
