@@ -469,6 +469,7 @@ namespace Epsitec.Common.Designer.Viewers
 				if (this.currentTextField != null)
 				{
 					this.currentTextField.SelectAll();
+					this.currentTextField.Focus();
 				}
 			}
 		}
