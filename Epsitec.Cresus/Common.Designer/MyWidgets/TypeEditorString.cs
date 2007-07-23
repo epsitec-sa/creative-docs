@@ -36,12 +36,14 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.fieldSample.PreferredWidth = 400;
 			this.fieldSample.TextChanged += new EventHandler(this.HandleTextFieldChanged);
 			
+#if false
 			this.checkFixedLength = new CheckButton(this);
 			this.checkFixedLength.AutoToggle = false;
 			this.checkFixedLength.Text = Res.Strings.Viewers.Types.String.FixedLength;
 			this.checkFixedLength.Dock = DockStyle.StackBegin;
 			this.checkFixedLength.Margins = new Margins(0, 0, 0, 3);
 			this.checkFixedLength.Clicked += new MessageEventHandler(this.HandleCheckClicked);
+#endif
 
 			this.checkMultilingual = new CheckButton(this);
 			this.checkMultilingual.AutoToggle = false;
@@ -65,7 +67,9 @@ namespace Epsitec.Common.Designer.MyWidgets
 				this.fieldMax.TextChanged -= new EventHandler(this.HandleTextFieldChanged);
 				this.fieldDefault.TextChanged -= new EventHandler(this.HandleTextFieldChanged);
 				this.fieldSample.TextChanged -= new EventHandler(this.HandleTextFieldChanged);
+#if false
 				this.checkFixedLength.Clicked -= new MessageEventHandler(this.HandleCheckClicked);
+#endif
 				this.checkMultilingual.Clicked -= new MessageEventHandler(this.HandleCheckClicked);
 			}
 			

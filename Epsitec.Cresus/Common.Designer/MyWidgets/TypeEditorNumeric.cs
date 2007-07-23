@@ -71,6 +71,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.fieldLargeStep.TextChanged += new EventHandler(this.HandleTextFieldChanged);
 
 			//	Default et Sample.
+#if false
 			this.CreateDecimalLabeled(Res.Strings.Viewers.Types.Numeric.Default, left, out group, out this.fieldDefault);
 			group.Dock = DockStyle.StackBegin;
 			group.Margins = new Margins(0, 0, 10, 2);
@@ -80,6 +81,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			group.Dock = DockStyle.StackBegin;
 			group.Margins = new Margins(0, 0, 0, 0);
 			this.fieldSample.TextChanged += new EventHandler(this.HandleTextFieldChanged);
+#endif
 		}
 		
 		public TypeEditorNumeric(Widget embedder) : this()
@@ -103,8 +105,10 @@ namespace Epsitec.Common.Designer.MyWidgets
 				this.fieldSmallStep.TextChanged -= new EventHandler(this.HandleTextFieldChanged);
 				this.fieldLargeStep.TextChanged -= new EventHandler(this.HandleTextFieldChanged);
 
+#if false
 				this.fieldDefault.TextChanged -= new EventHandler(this.HandleTextFieldChanged);
 				this.fieldSample.TextChanged -= new EventHandler(this.HandleTextFieldChanged);
+#endif
 			}
 			
 			base.Dispose(disposing);
