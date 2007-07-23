@@ -73,10 +73,12 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 			set
 			{
-				if (this.cultureMap != value)
+				StructuredData data = (value == null) ? null : value.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
+
+				if (this.cultureMap != value || this.structuredData != data)
 				{
 					this.cultureMap = value;
-					this.structuredData = (this.cultureMap == null) ? null : this.cultureMap.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
+					this.structuredData = data;
 					this.UpdateContent();
 				}
 			}
