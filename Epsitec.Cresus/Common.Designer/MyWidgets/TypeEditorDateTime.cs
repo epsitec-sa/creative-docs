@@ -59,7 +59,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			//	Heure, à droite.
 			this.CreateStringLabeled(Res.Strings.Viewers.Types.DateTime.TimeMin, right, out this.groupMinTime, out this.fieldMinTime);
 			this.groupMinTime.Dock = DockStyle.StackBegin;
-			this.groupMinTime.Margins = new Margins(0, 0, 20+10, 2);
+			this.groupMinTime.Margins = new Margins(0, 0, 22+10, 2);
 			this.fieldMinTime.TextChanged += new EventHandler(this.HandleTextFieldChanged);
 
 			this.CreateStringLabeled(Res.Strings.Viewers.Types.DateTime.TimeMax, right, out this.groupMaxTime, out this.fieldMaxTime);
@@ -69,10 +69,11 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			this.CreateStringLabeled(Res.Strings.Viewers.Types.DateTime.TimeStep, right, out this.groupTimeStep, out this.fieldTimeStep);
 			this.groupTimeStep.Dock = DockStyle.StackBegin;
-			this.groupTimeStep.Margins = new Margins(0, 0, 0, 0);
+			this.groupTimeStep.Margins = new Margins(0, 0, 0, 10);
 			this.fieldTimeStep.TextChanged += new EventHandler(this.HandleTextFieldChanged);
 
 			//	Default et Sample, à gauche.
+#if false
 			this.CreateStringLabeled(Res.Strings.Viewers.Types.DateTime.Default, left, out this.groupDefault, out this.fieldDefault);
 			this.groupDefault.Dock = DockStyle.StackBegin;
 			this.groupDefault.Margins = new Margins(0, 0, 0, 2);
@@ -82,6 +83,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.groupSample.Dock = DockStyle.StackBegin;
 			this.groupSample.Margins = new Margins(0, 0, 0, 0);
 			this.fieldSample.TextChanged += new EventHandler(this.HandleTextFieldChanged);
+#endif
 		}
 
 		public TypeEditorDateTime(Widget embedder) : this()
@@ -104,8 +106,10 @@ namespace Epsitec.Common.Designer.MyWidgets
 				this.fieldMaxTime.TextChanged -= new EventHandler(this.HandleTextFieldChanged);
 				this.fieldTimeStep.TextChanged -= new EventHandler(this.HandleTextFieldChanged);
 
+#if false
 				this.fieldDefault.TextChanged -= new EventHandler(this.HandleTextFieldChanged);
 				this.fieldSample.TextChanged -= new EventHandler(this.HandleTextFieldChanged);
+#endif
 			}
 			
 			base.Dispose(disposing);
@@ -274,9 +278,14 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.groupMaxDate.Visibility = showDate;
 			this.groupDateStep.Visibility = showDate;
 
-			this.groupMinTime.Visibility = showTime;
-			this.groupMaxTime.Visibility = showTime;
-			this.groupTimeStep.Visibility = showTime;
+			//	Pour une raison mystérieuse (probablement un bug de layout), la groupe de gauche est
+			//	tronqué lorsque tous les objets du groupe de droite sont invisibles. En revanche,
+			//	cacher le groupe de droite (au lieu de cacher les différents objets contenus) semble
+			//	contourner le bug.
+			//?this.groupMinTime.Visibility = showTime;
+			//?this.groupMaxTime.Visibility = showTime;
+			//?this.groupTimeStep.Visibility = showTime;
+			this.groupMinDate.Parent.Visibility = showTime;
 
 			value = this.structuredData.GetValue(Support.Res.Fields.ResourceDateTimeType.Resolution);
 			if (UndefinedValue.IsUndefinedValue(value))
