@@ -325,6 +325,8 @@ namespace Epsitec.Common.Designer.Viewers
 			this.ignoreChange = true;
 			this.table.ItemPanel.Refresh();
 			this.ignoreChange = false;
+
+			this.UpdateTitle();
 		}
 
 		public override void ShowSelectedRow()
@@ -1081,6 +1083,7 @@ namespace Epsitec.Common.Designer.Viewers
 			}
 
 			this.UpdateModificationsCulture();
+			this.UpdateTitle();
 		}
 
 		private void HandleTextRejected(object sender)
