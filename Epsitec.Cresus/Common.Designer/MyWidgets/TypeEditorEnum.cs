@@ -371,19 +371,18 @@ namespace Epsitec.Common.Designer.MyWidgets
 					Caption caption = this.module.ResourceManager.GetCaption(druid);
 
 					bool active = this.selDruids.Contains(druid);
-					StringList.CellState cs = active ? StringList.CellState.Normal : StringList.CellState.Unused;
 
 					this.array.SetLineString(0, first+i, active ? Misc.Image("TypeEnumYes") : "");
-					this.array.SetLineState(0, first+i, cs);
+					this.array.SetLineState(0, first+i, StringList.CellState.Normal);
 
 					string name = caption.Name;
 					string text = ResourceAccess.GetCaptionNiceDescription(caption, this.array.LineHeight);
 
 					this.array.SetLineString(1, first+i, name);
-					this.array.SetLineState(1, first+i, cs);
+					this.array.SetLineState(1, first+i, StringList.CellState.Normal);
 
 					this.array.SetLineString(2, first+i, text);
-					this.array.SetLineState(2, first+i, cs);
+					this.array.SetLineState(2, first+i, StringList.CellState.Normal);
 
 					string icon = caption.Icon;
 					if (string.IsNullOrEmpty(icon))
@@ -394,7 +393,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 					{
 						this.array.SetLineString(3, first+i, Misc.ImageFull(icon));
 					}
-					this.array.SetLineState(3, first+i, cs);
+					this.array.SetLineState(3, first+i, StringList.CellState.Normal);
 				}
 				else
 				{
