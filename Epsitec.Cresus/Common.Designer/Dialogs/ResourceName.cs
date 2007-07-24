@@ -21,6 +21,7 @@ namespace Epsitec.Common.Designer.Dialogs
 		{
 			Entity,
 			Field,
+			Value,
 		}
 
 
@@ -150,6 +151,10 @@ namespace Epsitec.Common.Designer.Dialogs
 
 				case Type.Field:
 					type = "d'un champ";
+					break;
+
+				case Type.Value:
+					type = "d'une valeur";
 					break;
 
 				default:

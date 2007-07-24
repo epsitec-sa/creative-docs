@@ -17,6 +17,13 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.toolbar = new HToolBar(this);
 			this.toolbar.Dock = DockStyle.StackBegin;
 
+			this.buttonCreate = new IconButton();
+			this.buttonCreate.CaptionId = Res.Captions.Editor.Type.Create.Id;
+			this.buttonCreate.Clicked += new MessageEventHandler(this.HandleButtonClicked);
+			this.toolbar.Items.Add(this.buttonCreate);
+
+			this.toolbar.Items.Add(new IconSeparator());
+
 			this.buttonAdd = new IconButton();
 			this.buttonAdd.CaptionId = Res.Captions.Editor.Type.Add.Id;
 			this.buttonAdd.Clicked += new MessageEventHandler(this.HandleButtonClicked);
@@ -134,6 +141,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		{
 			if ( disposing )
 			{
+				this.buttonCreate.Clicked -= new MessageEventHandler(this.HandleButtonClicked);
 				this.buttonAdd.Clicked -= new MessageEventHandler(this.HandleButtonClicked);
 				this.buttonPrev.Clicked -= new MessageEventHandler(this.HandleButtonClicked);
 				this.buttonNext.Clicked -= new MessageEventHandler(this.HandleButtonClicked);
@@ -412,6 +420,55 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 		}
 
+		protected void ArrayCreate()
+		{
+			//	Crée une nouvelle valeur dans l'énumération.
+			Module module = this.module;
+			string name = this.GetNewName();
+			name = module.DesignerApplication.DlgResourceName(Dialogs.ResourceName.Operation.Create, Dialogs.ResourceName.Type.Value, name);
+			if (string.IsNullOrEmpty(name))
+			{
+				return;
+			}
+			
+			if (!Misc.IsValidLabel(ref name))
+			{
+				module.DesignerApplication.DialogError(Res.Strings.Error.Name.Invalid);
+				return;
+			}
+
+			int sel = this.array.SelectedRow;
+			if (sel == -1)
+			{
+				sel = this.array.TotalRows-1;
+			}
+
+			//	TODO: à partir d'ici, le code écrit est vraissemblablement tout faux, car je n'y comprends rien.
+			//	Il s'agit de créer une nouvelle valeur pour une énumération...
+			IList<StructuredData> list = this.structuredData.GetValue(Support.Res.Fields.ResourceEnumType.Values) as IList<StructuredData>;
+
+			Support.ResourceAccessors.AnyTypeResourceAccessor accessor = module.AccessTypes2.Accessor as Support.ResourceAccessors.AnyTypeResourceAccessor;
+			CultureMap valueCultureMap = accessor.CreateItem();
+			valueCultureMap.Name = name;
+
+			IResourceAccessor valueAccessor = module.AccessValues2.Accessor;
+			valueAccessor.Collection.Add(valueCultureMap);
+
+			IDataBroker broker = accessor.GetDataBroker(this.structuredData, Support.Res.Fields.ResourceEnumType.Values.ToString());
+			StructuredData newValue = broker.CreateData(this.cultureMap);
+
+			Druid druid = valueCultureMap.Id;
+			newValue.SetValue(Support.Res.Fields.Field.CaptionId, druid);
+
+			list.Insert(sel+1, newValue);
+
+			this.BuildCollection();
+			this.UpdateArray();
+			this.UpdateButtons();
+
+			this.OnContentChanged();
+		}
+
 		protected void ArrayAdd()
 		{
 			//	Ajoute une nouvelle valeur dans l'énumération.
@@ -613,6 +670,43 @@ namespace Epsitec.Common.Designer.MyWidgets
 		}
 #endif
 
+
+		protected string GetNewName()
+		{
+			//	Cherche un nouveau nom jamais utilisé.
+			for (int i=1; i<10000; i++)
+			{
+				string name = string.Format("Value", i.ToString(System.Globalization.CultureInfo.InvariantCulture));
+				if (!this.IsExistingName(name))
+				{
+					return name;
+				}
+			}
+			return null;
+		}
+
+		protected bool IsExistingName(string name)
+		{
+			//	Indique si un nom existe.
+			CollectionView collection = this.module.AccessValues2.CollectionView;
+
+			for (int i=0; i<collection.Count; i++)
+			{
+				CultureMap item = collection.Items[i] as CultureMap;
+
+				if (item.Prefix == this.cultureMap.Name)
+				{
+					if (name == item.Name)
+					{
+						return true;
+					}
+				}
+			}
+
+			return false;
+		}
+
+		
 		protected bool IsNativeEnum
 		{
 			//	Indique s'il s'agit d'une énumération native.
@@ -652,6 +746,11 @@ namespace Epsitec.Common.Designer.MyWidgets
 		
 		private void HandleButtonClicked(object sender, MessageEventArgs e)
 		{
+			if (sender == this.buttonCreate)
+			{
+				this.ArrayCreate();
+			}
+
 			if (sender == this.buttonAdd)
 			{
 				this.ArrayAdd();
@@ -751,6 +850,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected static List<string>			fieldSearchList = new List<string>();
 
 		protected HToolBar						toolbar;
+		protected IconButton					buttonCreate;
 		protected IconButton					buttonAdd;
 		protected IconButton					buttonRemove;
 		protected IconButton					buttonPrev;
