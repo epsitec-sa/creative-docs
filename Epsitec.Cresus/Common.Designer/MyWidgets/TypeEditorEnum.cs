@@ -107,9 +107,9 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.array = new StringArray(this);
 			this.array.Columns = 4;
 			this.array.SetColumnsRelativeWidth(0, 0.05);
-			this.array.SetColumnsRelativeWidth(1, 0.45);
-			this.array.SetColumnsRelativeWidth(2, 0.43);
-			this.array.SetColumnsRelativeWidth(3, 0.07);
+			this.array.SetColumnsRelativeWidth(1, 0.35);
+			this.array.SetColumnsRelativeWidth(2, 0.50);
+			this.array.SetColumnsRelativeWidth(3, 0.10);
 			this.array.SetColumnAlignment(0, ContentAlignment.MiddleCenter);
 			this.array.SetColumnAlignment(1, ContentAlignment.MiddleLeft);
 			this.array.SetColumnAlignment(2, ContentAlignment.MiddleLeft);
@@ -229,7 +229,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			{
 				CultureMap item = collection.Items[i] as CultureMap;
 
-				if (item.Prefix == this.cultureMap.Prefix)
+				if (item.Prefix == this.cultureMap.Name)
 				{
 					this.allDruids.Add(item.Id);
 				}
@@ -376,10 +376,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 					this.array.SetLineString(0, first+i, active ? Misc.Image("TypeEnumYes") : "");
 					this.array.SetLineState(0, first+i, cs);
 
-					//	Ne surtout pas utiliser caption.Name ou value.Name, car ce texte
-					//	ne contient que la dernière partie du nom (voir dans
-					//	ResourceAccess.AdjustCaptionName).
-					string name = this.resourceAccess.DirectGetDisplayName(druid);
+					string name = caption.Name;
 					string text = ResourceAccess.GetCaptionNiceDescription(caption, this.array.LineHeight);
 
 					this.array.SetLineString(1, first+i, name);
