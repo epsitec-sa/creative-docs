@@ -40,7 +40,7 @@ namespace Epsitec.Common.Designer.Viewers
 		{
 			//	Initialise la table.
 			StructuredType cultureMapType = new StructuredType();
-			cultureMapType.Fields.Add("Entity", StringType.Default);
+			cultureMapType.Fields.Add("Prefix", StringType.Default);
 			cultureMapType.Fields.Add("Name", StringType.Default);
 			cultureMapType.Fields.Add("Primary", StringType.Default);
 			cultureMapType.Fields.Add("Secondary", StringType.Default);
@@ -50,7 +50,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 			this.table.SourceType = cultureMapType;
 
-			this.table.Columns.Add(new UI.ItemTableColumn("Entity", new Widgets.Layouts.GridLength(this.GetColumnWidth(0), Widgets.Layouts.GridUnitType.Proportional)));
+			this.table.Columns.Add(new UI.ItemTableColumn("Prefix", new Widgets.Layouts.GridLength(this.GetColumnWidth(0), Widgets.Layouts.GridUnitType.Proportional)));
 			this.table.Columns.Add(new UI.ItemTableColumn("Name", new Widgets.Layouts.GridLength(this.GetColumnWidth(1), Widgets.Layouts.GridUnitType.Proportional)));
 			this.table.Columns.Add(new UI.ItemTableColumn("Primary", new Widgets.Layouts.GridLength(this.GetColumnWidth(2), Widgets.Layouts.GridUnitType.Proportional)));
 			this.table.Columns.Add(new UI.ItemTableColumn("Secondary", new Widgets.Layouts.GridLength(this.GetColumnWidth(3), Widgets.Layouts.GridUnitType.Proportional)));
