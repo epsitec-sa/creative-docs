@@ -680,6 +680,9 @@ namespace Epsitec.Common.Designer.Viewers
 					case "Entity":
 						return this.CreateEntity(item, shape);
 
+					case "Enum":
+						return this.CreateEnum(item, shape);
+
 					case "Primary":
 						return this.CreatePrimary(item, shape);
 
@@ -742,6 +745,24 @@ namespace Epsitec.Common.Designer.Viewers
 			}
 
 			private Widget CreateEntity(CultureMap item, UI.ItemViewShape shape)
+			{
+				if (shape == UI.ItemViewShape.ToolTip)
+				{
+					return null;
+				}
+
+				string text = item.Prefix;
+
+				UI.ItemViewText widget = new UI.ItemViewText();
+				widget.Margins = new Margins(5, 5, 0, 0);
+				widget.Text = TextLayout.ConvertToTaggedText(text);
+				widget.TextBreakMode = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine;
+				widget.PreferredSize = widget.GetBestFitSize();
+
+				return widget;
+			}
+
+			private Widget CreateEnum(CultureMap item, UI.ItemViewShape shape)
 			{
 				if (shape == UI.ItemViewShape.ToolTip)
 				{

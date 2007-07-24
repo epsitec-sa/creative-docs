@@ -146,6 +146,20 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.buttonValues.Visibility = debug;
 			this.buttonValues.Clicked += new MessageEventHandler(this.HandleButtonClicked);
 
+			this.buttonValues2 = new IconButtonMark(this);
+			this.buttonValues2.Text = ResourceAccess.TypeDisplayName(ResourceAccess.Type.Values)+bis;
+			this.buttonValues2.Name = BundleType.Convert(ResourceAccess.Type.Values2);
+			this.buttonValues2.ButtonStyle = ButtonStyle.ActivableIcon;
+			this.buttonValues2.SiteMark = ButtonMarkDisposition.Below;
+			this.buttonValues2.MarkDimension = 5;
+			this.buttonValues2.PreferredWidth = width;
+			this.buttonValues2.MinHeight = 20+5;
+			this.buttonValues2.AutoFocus = false;
+			this.buttonValues2.Margins = new Margins(2, 0, 10, 0);
+			this.buttonValues2.Dock = DockStyle.Left;
+			this.buttonValues2.Visibility = debug;
+			this.buttonValues2.Clicked += new MessageEventHandler(this.HandleButtonClicked);
+
 			this.buttonScripts = new IconButtonMark(this);
 			this.buttonScripts.Text = ResourceAccess.TypeDisplayName(ResourceAccess.Type.Scripts);
 			this.buttonScripts.Name = BundleType.Convert(ResourceAccess.Type.Scripts);
@@ -255,6 +269,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.buttonTypes.ActiveState     = (this.currentType == ResourceAccess.Type.Types    ) ? ActiveState.Yes : ActiveState.No;
 			this.buttonTypes2.ActiveState    = (this.currentType == ResourceAccess.Type.Types2   ) ? ActiveState.Yes : ActiveState.No;
 			this.buttonValues.ActiveState    = (this.currentType == ResourceAccess.Type.Values   ) ? ActiveState.Yes : ActiveState.No;
+			this.buttonValues2.ActiveState   = (this.currentType == ResourceAccess.Type.Values2  ) ? ActiveState.Yes : ActiveState.No;
 			this.buttonPanels.ActiveState    = (this.currentType == ResourceAccess.Type.Panels   ) ? ActiveState.Yes : ActiveState.No;
 			this.buttonScripts.ActiveState   = (this.currentType == ResourceAccess.Type.Scripts  ) ? ActiveState.Yes : ActiveState.No;
 			this.buttonEntities.ActiveState  = (this.currentType == ResourceAccess.Type.Entities ) ? ActiveState.Yes : ActiveState.No;
@@ -326,5 +341,6 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected IconButtonMark			buttonTypes;
 		protected IconButtonMark			buttonTypes2;
 		protected IconButtonMark			buttonValues;
+		protected IconButtonMark			buttonValues2;
 	}
 }

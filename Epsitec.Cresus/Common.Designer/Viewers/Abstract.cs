@@ -50,6 +50,7 @@ namespace Epsitec.Common.Designer.Viewers
 			if (type == ResourceAccess.Type.Types)  return new Types(module, context, access, designerApplication);
 			if (type == ResourceAccess.Type.Types2)  return new Types2(module, context, access, designerApplication);
 			if (type == ResourceAccess.Type.Values)  return new Values(module, context, access, designerApplication);
+			if (type == ResourceAccess.Type.Values2)  return new Values2(module, context, access, designerApplication);
 			if (type == ResourceAccess.Type.Panels)  return new Panels(module, context, access, designerApplication);
 			if (type == ResourceAccess.Type.Scripts)  return new Scripts(module, context, access, designerApplication);
 			if (type == ResourceAccess.Type.Entities)  return new Entities(module, context, access, designerApplication);
