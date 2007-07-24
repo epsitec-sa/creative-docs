@@ -228,7 +228,11 @@ namespace Epsitec.Common.Designer.MyWidgets
 			for (int i=0; i<collection.Count; i++)
 			{
 				CultureMap item = collection.Items[i] as CultureMap;
-				this.allDruids.Add(item.Id);
+
+				if (item.Prefix == this.cultureMap.Prefix)
+				{
+					this.allDruids.Add(item.Id);
+				}
 			}
 
 			object value = this.structuredData.GetValue(Support.Res.Fields.ResourceEnumType.Values);
@@ -562,7 +566,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			//	Construit toute la collection en fonction des ressources sélectionnées
 			//	dans la liste puis renumérote toute la collection.
 #if true
-			IList<StructuredData> list = this.structuredData.GetValue (Support.Res.Fields.ResourceEnumType.Values) as IList<StructuredData>;
+			IList<StructuredData> list = this.structuredData.GetValue(Support.Res.Fields.ResourceEnumType.Values) as IList<StructuredData>;
 			if (list != null)
 			{
 				list.Clear();
@@ -570,10 +574,10 @@ namespace Epsitec.Common.Designer.MyWidgets
 				Support.ResourceAccessors.AnyTypeResourceAccessor accessor = this.module.AccessTypes2.Accessor as Support.ResourceAccessors.AnyTypeResourceAccessor;
 				foreach (Druid druid in this.selDruids)
 				{
-					IDataBroker dataBroker = accessor.GetDataBroker (this.structuredData, Support.Res.Fields.ResourceEnumType.Values.ToString ());
-					StructuredData dataValue = dataBroker.CreateData (this.cultureMap);
-					dataValue.SetValue (Support.Res.Fields.EnumValue.CaptionId, druid);
-					list.Add (dataValue);
+					IDataBroker dataBroker = accessor.GetDataBroker(this.structuredData, Support.Res.Fields.ResourceEnumType.Values.ToString());
+					StructuredData dataValue = dataBroker.CreateData(this.cultureMap);
+					dataValue.SetValue(Support.Res.Fields.EnumValue.CaptionId, druid);
+					list.Add(dataValue);
 				}
 			}
 
