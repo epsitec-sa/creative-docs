@@ -279,9 +279,9 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.groupDateStep.Visibility = showDate;
 
 			//	Pour une raison mystérieuse (probablement un bug de layout), la groupe de gauche est
-			//	tronqué lorsque tous les objets du groupe de droite sont invisibles. En revanche,
-			//	cacher le groupe de droite (au lieu de cacher les différents objets contenus) semble
-			//	contourner le bug.
+			//	tronqué lorsque tous les objets du groupe de droite sont invisibles et que la largeur
+			//	est trop étroite. En revanche, cacher le groupe de droite (au lieu de cacher les différents
+			//	objets contenus) semble contourner le bug.
 			//?this.groupMinTime.Visibility = showTime;
 			//?this.groupMaxTime.Visibility = showTime;
 			//?this.groupTimeStep.Visibility = showTime;
