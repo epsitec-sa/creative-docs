@@ -332,6 +332,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		protected void UpdateButtons()
 		{
+			bool native = this.IsNativeEnum;
 			bool add    = false;
 			bool remove = false;
 			bool prev   = false;
@@ -359,11 +360,12 @@ namespace Epsitec.Common.Designer.MyWidgets
 				lgoto = druid.IsValid;
 			}
 
+			this.buttonCreate.Enable = !native;
 			this.buttonAdd.Enable    = add;
 			this.buttonRemove.Enable = remove;
 			this.buttonPrev.Enable   = prev;
 			this.buttonNext.Enable   = next;
-			this.buttonSort.Enable   = !this.IsNativeEnum;
+			this.buttonSort.Enable   = !native;
 			this.buttonGoto.Enable   = lgoto;
 		}
 
@@ -715,7 +717,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 			get
 			{
 #if true
-				return false;
+				//	TODO: j'aurais imaginé l'inverse !!!
+				return !(this.structuredData.GetValue(Support.Res.Fields.ResourceEnumType.SystemType) is System.Type);
 #else
 				EnumType type = this.AbstractType as EnumType;
 				return type.IsNativeEnum;
