@@ -464,6 +464,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			accessor.CreateMissingValueItems(this.cultureMap);
 
 			this.BuildCollection();
+			this.UpdateContent();
 			this.UpdateArray();
 			this.UpdateButtons();
 
