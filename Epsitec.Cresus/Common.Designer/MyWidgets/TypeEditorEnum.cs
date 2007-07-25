@@ -346,7 +346,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 				if (this.selDruids.Contains(druid))  // fait partie de l'énumération ?
 				{
-					remove = !this.IsNativeEnum;
+					remove = !native;
 
 					int index = this.selDruids.IndexOf(druid);
 					prev = index > 0;
@@ -354,7 +354,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				}
 				else  // pas dans l'énumération ?
 				{
-					add = !this.IsNativeEnum;
+					add = !native;
 				}
 
 				lgoto = druid.IsValid;
@@ -717,8 +717,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 			get
 			{
 #if true
-				//	TODO: j'aurais imaginé l'inverse !!!
-				return !(this.structuredData.GetValue(Support.Res.Fields.ResourceEnumType.SystemType) is System.Type);
+				//	TODO: le résultat rendu avec les énumérations existantes de Common.Types est faux !!!
+				return this.structuredData.GetValue(Support.Res.Fields.ResourceEnumType.SystemType) is System.Type;
 #else
 				EnumType type = this.AbstractType as EnumType;
 				return type.IsNativeEnum;

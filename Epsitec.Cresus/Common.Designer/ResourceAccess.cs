@@ -620,6 +620,11 @@ namespace Epsitec.Common.Designer
 
 					StructuredData data = newItem.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
 					data.SetValue(Support.Res.Fields.ResourceBaseType.TypeCode, code);
+
+					if (this.lastTypeCodeSystem != null)
+					{
+						data.SetValue(Support.Res.Fields.ResourceEnumType.SystemType, this.lastTypeCodeSystem);
+					}
 				}
 				else if (this.type == Type.Entities && !duplicateContent)
 				{
