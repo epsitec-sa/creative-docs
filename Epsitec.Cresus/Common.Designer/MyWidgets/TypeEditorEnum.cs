@@ -448,7 +448,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			IList<StructuredData> list = this.structuredData.GetValue(Support.Res.Fields.ResourceEnumType.Values) as IList<StructuredData>;
 
 			Support.ResourceAccessors.AnyTypeResourceAccessor accessor = module.AccessTypes2.Accessor as Support.ResourceAccessors.AnyTypeResourceAccessor;
-			CultureMap valueCultureMap = accessor.CreateItem();
+			CultureMap valueCultureMap = accessor.CreateValueItem(this.cultureMap);
 			valueCultureMap.Name = name;
 
 			IResourceAccessor valueAccessor = module.AccessValues2.Accessor;
@@ -458,7 +458,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			StructuredData newValue = broker.CreateData(this.cultureMap);
 
 			Druid druid = valueCultureMap.Id;
-			newValue.SetValue(Support.Res.Fields.Field.CaptionId, druid);
+			newValue.SetValue(Support.Res.Fields.EnumValue.CaptionId, druid);
 
 			list.Insert(sel+1, newValue);
 
