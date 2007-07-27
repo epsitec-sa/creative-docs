@@ -99,7 +99,8 @@ namespace App.Designer
 			DesignerApplication designerMainWindow;
 			
 			designerMainWindow = new DesignerApplication (pool);
-			designerMainWindow.Mode = DesignerMode.Build;
+			//?designerMainWindow.Mode = DesignerMode.Build;
+			designerMainWindow.Mode = DesignerMode.Dolphin;
 			designerMainWindow.Standalone = true;
 			designerMainWindow.Show (null);
 			designerMainWindow.Window.Run ();

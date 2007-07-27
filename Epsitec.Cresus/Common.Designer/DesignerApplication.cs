@@ -10,6 +10,7 @@ namespace Epsitec.Common.Designer
 	{
 		Build,
 		Translate,
+		Dolphin,
 	}
 
 	/// <summary>
@@ -51,12 +52,16 @@ namespace Epsitec.Common.Designer
 		public void Show(Window parentWindow)
 		{
 			//	Crée et montre la fenêtre de l'éditeur.
-			if ( this.Window == null )
+			if (this.mode == DesignerMode.Dolphin)
+			{
+				this.DolphinShow(parentWindow);
+				return;
+			}
+
+			if (this.Window == null)
 			{
 				Window window = new Window();
-
 				this.Window = window;
-
 				window.Root.WindowStyles = WindowStyles.DefaultDocumentWindow;
 
 				Point parentCenter;
@@ -83,13 +88,6 @@ namespace Epsitec.Common.Designer
 				
 				DesignerApplication.SetInstance(window, this);  // attache l'instance de DesignerApplication à la fenêtre
 
-//-				this.commandDispatcher = new CommandDispatcher("Common.Designer", CommandDispatcherLevel.Primary);
-//-				this.commandContext = new CommandContext();
-//-				this.commandDispatcher.RegisterController(this);
-				
-//-				CommandDispatcher.SetDispatcher(this.window, this.commandDispatcher);
-//-				CommandContext.SetContext(this.window, this.commandContext);
-
 				this.dlgOpen                        = new Dialogs.Open(this);
 				this.dlgGlyphs                      = new Dialogs.Glyphs(this);
 				this.dlgIcon                        = new Dialogs.Icon(this);
@@ -115,99 +113,13 @@ namespace Epsitec.Common.Designer
 				this.CreateLayout();
 			}
 
-#if false
-			//	Liste les modules, puis ouvre tous ceux qui ont été trouvés.
-			Resources.DefaultManager.RefreshModuleInfos(this.resourceManagerPool.DefaultPrefix);
-			if (this.moduleInfoList.Count == 0)
-			{
-				foreach (ResourceModuleId item in Resources.DefaultManager.GetModuleInfos(this.resourceManagerPool.DefaultPrefix))
-				{
-					Module module = new Module(this, this.mode, this.resourceManagerPool.DefaultPrefix, item);
-
-					ModuleInfo mi = new ModuleInfo();
-					mi.Module = module;
-					this.moduleInfoList.Insert(++this.currentModule, mi);
-					this.CreateModuleLayout();
-
-					this.bookModules.ActivePage = mi.TabPage;
-				}
-			}
-#else
 			this.ReadSettings();
-#endif
-			
 			this.Window.Show();
-
-#if false
-			for (int i = 0; i < modules.Length; i++)
-			{
-				System.Diagnostics.Debug.WriteLine (string.Format ("Module {0}: {1}", i, modules[i]));
-				
-				ResourceManager resourceManager = new ResourceManager ();
-
-				resourceManager.SetupApplication (modules[i]);
-				resourceManager.ActivePrefix = this.resourceManagerPool.DefaultPrefix;
-
-				string[] ids = resourceManager.GetBundleIds ("*", ResourceLevel.Default);
-
-				for (int j = 0; j < ids.Length; j++)
-				{
-					System.Diagnostics.Debug.WriteLine (string.Format ("  Bundle {0}: {1}", j, ids[j]));
-
-					ResourceBundleCollection bundles = new ResourceBundleCollection (resourceManager);
-					bundles.LoadBundles (resourceManager.ActivePrefix, resourceManager.GetBundleIds (ids[j], ResourceLevel.All));
-
-					for (int k = 0; k < bundles.Count; k++)
-					{
-						ResourceBundle bundle = bundles[k];
-						bool needsSave = false;
-						
-						System.Diagnostics.Debug.WriteLine (string.Format ("  Culture {0}, name '{1}'", bundle.Culture.Name, bundle.Name ?? "<null>"));
-						System.Diagnostics.Debug.WriteLine (string.Format ("    About: '{0}'", bundle.About ?? "<null>"));
-						System.Diagnostics.Debug.WriteLine (string.Format ("    {0} fields", bundle.FieldCount));
-
-						foreach (ResourceBundle.Field field in bundle.Fields)
-						{
-							if (field.ModificationId > 0)
-							{
-								System.Diagnostics.Debug.WriteLine (string.Format ("      {0}: modif. id {1}, about: {2}", field.Name, field.ModificationId, field.About ?? "<null>"));
-
-								field.SetModificationId (field.ModificationId+1);
-								needsSave = true;
-							}
-						}
-						
-						if (needsSave)
-						{
-							resourceManager.SetBundle (bundle, ResourceSetMode.UpdateOnly);
-						}
-					}
-				}
-			}
-
-			this.window.ShowDialog();
-#endif
-
-#if false
-			ResourceManager resourceManager = new ResourceManager();
-			resourceManager.SetupApplication(modules[0]);
-			resourceManager.ActivePrefix = this.resourceManagerPool.DefaultPrefix;
-			string[] ids = resourceManager.GetBundleIds("*", ResourceLevel.Default);
-
-			ResourceBundleCollection bundles = new ResourceBundleCollection(resourceManager);
-			bundles.LoadBundles(resourceManager.ActivePrefix, resourceManager.GetBundleIds(ids[0], ResourceLevel.All));
-
-			this.bundle0 = bundles[0];
-			this.bundle1 = bundles[1];
-
-			this.window.ShowDialog();
-			this.UpdateFields();
-#endif
 		}
 
 		internal void Hide()
 		{
-			this.Window.Hide ();
+			this.Window.Hide();
 		}
 
 		public override string ShortWindowTitle
@@ -606,6 +518,12 @@ namespace Epsitec.Common.Designer
 		[Command("QuitApplication")]
 		void CommandQuitApplication(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
+			if (this.mode == DesignerMode.Dolphin)
+			{
+				this.Window.Quit();
+				return;
+			}
+
 			if (!this.Terminate())
 			{
 				return;
@@ -2251,6 +2169,52 @@ namespace Epsitec.Common.Designer
 		#endregion
 
 
+		#region Dolphin
+		public void DolphinShow(Window parentWindow)
+		{
+			//	Crée et montre la fenêtre de l'éditeur.
+			if (this.Window == null)
+			{
+				Window window = new Window();
+				this.Window = window;
+				window.Root.WindowStyles = WindowStyles.DefaultDocumentWindow;
+
+				Point parentCenter;
+				Rectangle windowBounds;
+
+				if (parentWindow == null)
+				{
+					Rectangle area = ScreenInfo.GlobalArea;
+					parentCenter = area.Center;
+				}
+				else
+				{
+					parentCenter = parentWindow.WindowBounds.Center;
+				}
+
+				double w = Dolphin.DolphinApplication.MainWidth+50;
+				double h = Dolphin.DolphinApplication.MainHeight+100;
+
+				windowBounds = new Rectangle(parentCenter.X-w/2, parentCenter.Y-h/2, w, h);
+				windowBounds = ScreenInfo.FitIntoWorkingArea(windowBounds);
+
+				window.WindowBounds = windowBounds;
+				window.Root.MinSize = new Size(w, h);
+				window.Text = "Dolphin";
+				window.Name = "Application";  // utilisé pour générer "QuitApplication" !
+				window.PreventAutoClose = true;
+				
+				DesignerApplication.SetInstance(window, this);  // attache l'instance de DesignerApplication à la fenêtre
+
+				this.dolphinApplication = new Dolphin.DolphinApplication(this.Window);
+				this.dolphinApplication.CreateLayout();
+			}
+
+			this.Window.Show();
+		}
+		#endregion
+
+
 		protected DesignerMode					mode;
 		protected bool							standalone;
 //-		protected Window						window;
@@ -2385,6 +2349,8 @@ namespace Epsitec.Common.Designer
 		protected CommandState					displayHorizontalState;
 		protected CommandState					displayVerticalState;
 		protected CommandState					displayFullScreenState;
+
+		protected Dolphin.DolphinApplication	dolphinApplication;
 
 		public static readonly DependencyProperty InstanceProperty = DependencyProperty.RegisterAttached("Instance", typeof(DesignerApplication), typeof(DesignerApplication));
 	}
