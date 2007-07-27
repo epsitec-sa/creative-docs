@@ -192,27 +192,27 @@ namespace Epsitec.Common.Designer.Dolphin
 
 				case DigitSegment.Top:
 					path = new Path();
-					path.MoveTo(this.GetSegmentPoint(0.45, 0.90));
+					path.MoveTo(this.GetSegmentPoint(0.48, 0.90));
 					path.LineTo(this.GetSegmentPoint(0.45, 0.80));
-					path.LineTo(this.GetSegmentPoint(0.75, 0.80));
+					path.LineTo(this.GetSegmentPoint(0.72, 0.80));
 					path.LineTo(this.GetSegmentPoint(0.75, 0.90));
 					path.Close();
 					break;
 
 				case DigitSegment.Middle:
 					path = new Path();
-					path.MoveTo(this.GetSegmentPoint(0.35, 0.55));
+					path.MoveTo(this.GetSegmentPoint(0.38, 0.55));
 					path.LineTo(this.GetSegmentPoint(0.35, 0.45));
-					path.LineTo(this.GetSegmentPoint(0.65, 0.45));
+					path.LineTo(this.GetSegmentPoint(0.62, 0.45));
 					path.LineTo(this.GetSegmentPoint(0.65, 0.55));
 					path.Close();
 					break;
 
 				case DigitSegment.Bottom:
 					path = new Path();
-					path.MoveTo(this.GetSegmentPoint(0.25, 0.20));
+					path.MoveTo(this.GetSegmentPoint(0.28, 0.20));
 					path.LineTo(this.GetSegmentPoint(0.25, 0.10));
-					path.LineTo(this.GetSegmentPoint(0.55, 0.10));
+					path.LineTo(this.GetSegmentPoint(0.52, 0.10));
 					path.LineTo(this.GetSegmentPoint(0.55, 0.20));
 					path.Close();
 					break;

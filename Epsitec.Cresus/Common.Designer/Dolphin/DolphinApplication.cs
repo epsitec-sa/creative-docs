@@ -45,7 +45,7 @@ namespace Epsitec.Common.Designer.Dolphin
 			panelTitle.Dock = DockStyle.Top;
 
 			StaticText title = new StaticText(panelTitle);
-			title.Text = "<font size=\"200%\"><b>Dolphin emulator </b></font>by EPSITEC";
+			title.Text = "<font size=\"200%\"><b>Dolphin microprocessor emulator </b></font>by EPSITEC";
 			title.ContentAlignment = ContentAlignment.MiddleCenter;
 			title.Dock = DockStyle.Fill;
 
@@ -67,6 +67,7 @@ namespace Epsitec.Common.Designer.Dolphin
 			this.rightPanel.Dock = DockStyle.Fill;
 
 			this.CreateBusPanel(this.leftPanel);
+			this.CreateKeyboard(this.rightPanel);
 		}
 
 
@@ -333,12 +334,72 @@ namespace Epsitec.Common.Designer.Dolphin
 		}
 
 
+		protected void CreateKeyboard(Panel parent)
+		{
+			List<Panel> lines = new List<Panel>();
+
+			for (int y=0; y<4; y++)
+			{
+				Panel keyboard = new Panel(parent);
+				keyboard.PreferredHeight = 50;
+				keyboard.Margins = new Margins(0, 0, 2, 2);
+				keyboard.Dock = DockStyle.Bottom;
+
+				lines.Add(keyboard);
+			}
+
+			Panel display = new Panel(parent);
+			display.PreferredHeight = 80;
+			display.Margins = new Margins(0, 0, 0, 20);
+			display.Dock = DockStyle.Bottom;
+
+			this.displayDigits = new List<Digit>();
+			for (int i=0; i<4; i++)
+			{
+				Digit digit = new Digit(display);
+				digit.PreferredWidth = 48;
+				digit.Margins = new Margins(1, 1, 0, 0);
+				digit.Dock = DockStyle.Left;
+
+				this.displayDigits.Add(digit);
+			}
+
+			this.keyboardButtons = new List<PushButton>();
+			int t=0;
+			for (int y=0; y<4; y++)
+			{
+				for (int x=0; x<5; x++)
+				{
+					PushButton button = new PushButton(lines[y]);
+					button.Text = DolphinApplication.KeyboardText[t++];
+					button.PreferredWidth = 50;
+					button.Margins = new Margins(2, 2, 0, 0);
+					button.Dock = DockStyle.Left;
+
+					this.keyboardButtons.Add(button);
+				}
+			}
+		}
+
+		protected static string[] KeyboardText =
+		{
+			"<b>Shift</b>", "<font size=\"200%\"><b>0</b></font>", "<font size=\"200%\"><b>1</b></font>", "<font size=\"200%\"><b>2</b></font>", "<font size=\"200%\"><b>3</b></font>",
+			"<b>Ctrl</b>",  "<font size=\"200%\"><b>4</b></font>", "<font size=\"200%\"><b>5</b></font>", "<font size=\"200%\"><b>6</b></font>", "<font size=\"200%\"><b>7</b></font>",
+			"<b>Alt</b>",   "<font size=\"200%\"><b>8</b></font>", "<font size=\"200%\"><b>9</b></font>", "<font size=\"200%\"><b>A</b></font>", "<font size=\"200%\"><b>B</b></font>",
+			"<b>Menu</b>",  "<font size=\"200%\"><b>C</b></font>", "<font size=\"200%\"><b>D</b></font>", "<font size=\"200%\"><b>E</b></font>", "<font size=\"200%\"><b>F</b></font>",
+		};
+
+
+
 		protected void UpdateButtons()
 		{
 			//	Met à jour le mode enable/disable de tous les boutons.
 			this.buttonStep.Enable = (this.ledRun.ActiveState == ActiveState.Yes) && (this.switchStep.ActiveState == ActiveState.Yes);
 
 			bool run = (this.ledRun.ActiveState == ActiveState.Yes);
+
+			this.switchDataReadWrite.Enable = !run;
+			this.buttonMemory.Enable = !run;
 
 			foreach (Switch button in this.addressSwitchs)
 			{
@@ -407,6 +468,40 @@ namespace Epsitec.Common.Designer.Dolphin
 		}
 
 
+		#region Memory
+		protected int MemoryRead(int address)
+		{
+			//	Lit une valeur en mémoire.
+			if (address >= 0 && address < this.memory.Length)
+			{
+				return this.memory[address];
+			}
+			else
+			{
+				return 0xff;
+			}
+		}
+
+		protected void MemoryWrite(int address, int data)
+		{
+			//	Ecrit une valeur en mémoire et/ou dans un périphérique.
+			if (address >= 0 && address < this.memory.Length)
+			{
+				this.memory[address] = (byte) data;
+			}
+
+			if ((address & (1 << (DolphinApplication.TotalAddress-1))) != 0)  // périphérique ?
+			{
+				int periph = address & ~(1 << (DolphinApplication.TotalAddress-1));
+
+				if (periph >= 0 && periph <= 3)  // 4 digits ?
+				{
+					this.displayDigits[3-periph].SegmentValue = (Digit.DigitSegment) this.memory[address];
+				}
+			}
+		}
+		#endregion
+
 		#region Processor
 		protected enum Instructions
 		{
@@ -441,7 +536,7 @@ namespace Epsitec.Common.Designer.Dolphin
 			else  // step ?
 			{
 				this.AddressBits = this.registerPC;
-				this.DataBits = this.memory[this.registerPC];
+				this.DataBits = this.MemoryRead(this.registerPC);
 			}
 		}
 
@@ -466,17 +561,17 @@ namespace Epsitec.Common.Designer.Dolphin
 			}
 
 			this.AddressBits = this.registerPC;
-			this.DataBits = this.memory[this.registerPC];
-			Instructions op = (Instructions) this.memory[this.registerPC++];
+			this.DataBits = this.MemoryRead(this.registerPC);
+			Instructions op = (Instructions) this.MemoryRead(this.registerPC++);
 
 			switch (op)
 			{
 				case Instructions.JumpAbs:
-					this.registerPC = (this.memory[this.registerPC++] << 8) | (this.memory[this.registerPC++]);
+					this.registerPC = (this.MemoryRead(this.registerPC++) << 8) | (this.MemoryRead(this.registerPC++));
 					break;
 
 				case Instructions.JumpRel:
-					this.registerPC += this.memory[this.registerPC++];
+					this.registerPC += this.MemoryRead(this.registerPC++);
 					break;
 			}
 		}
@@ -518,7 +613,7 @@ namespace Epsitec.Common.Designer.Dolphin
 			this.ProcessorClock();
 
 			this.AddressBits = this.registerPC;
-			this.DataBits = this.memory[this.registerPC];
+			this.DataBits = this.MemoryRead(this.registerPC);
 		}
 
 		private void HandleSwitchStepClicked(object sender, MessageEventArgs e)
@@ -538,7 +633,7 @@ namespace Epsitec.Common.Designer.Dolphin
 					this.ProcessorStop();
 
 					this.AddressBits = this.registerPC;
-					this.DataBits = this.memory[this.registerPC];
+					this.DataBits = this.MemoryRead(this.registerPC);
 				}
 			}
 		}
@@ -559,12 +654,12 @@ namespace Epsitec.Common.Designer.Dolphin
 
 			if (this.switchDataReadWrite.ActiveState == ActiveState.No)  // read ?
 			{
-				this.DataBits = this.memory[this.AddressBits];
+				this.DataBits = this.MemoryRead(this.AddressBits);
 			}
 			else  // write ?
 			{
-				this.memory[this.AddressBits] = (byte) this.DataBits;
-				this.DataBits = this.memory[this.AddressBits];
+				this.MemoryWrite(this.AddressBits, this.DataBits);
+				this.DataBits = this.MemoryRead(this.AddressBits);
 			}
 		}
 
@@ -622,7 +717,7 @@ namespace Epsitec.Common.Designer.Dolphin
 		}
 
 
-		public static readonly double MainWidth = 800;
+		public static readonly double MainWidth = 830;
 		public static readonly double MainHeight = 600;
 		public static readonly int TotalAddress = 12;
 		public static readonly int TotalData = 8;
@@ -643,6 +738,8 @@ namespace Epsitec.Common.Designer.Dolphin
 		protected List<Digit> dataDigits;
 		protected List<Led> dataLeds;
 		protected List<Switch> dataSwitchs;
+		protected List<Digit> displayDigits;
+		protected List<PushButton> keyboardButtons;
 
 		protected byte[] memory;
 		protected Timer clock;
