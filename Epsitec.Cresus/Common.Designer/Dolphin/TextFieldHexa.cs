@@ -99,14 +99,17 @@ namespace Epsitec.Common.Designer.Dolphin
 			//	Valeur courante.
 			get
 			{
-				return this.baseValue;
+				return TextFieldHexa.ParseHexa(this.textField.Text);
 			}
 			set
 			{
 				if (this.baseValue != value)
 				{
 					this.baseValue = value;
-					this.textField.Text = this.baseValue.ToString();
+
+					string format = string.Format("X{0}", (this.bitCount+3)/4);  // "X2" si 8 bits, "X3" si 12 bits, etc.
+					this.textField.Text = this.baseValue.ToString(format);
+					
 					this.UpdateLeds();
 				}
 			}
@@ -126,6 +129,20 @@ namespace Epsitec.Common.Designer.Dolphin
 		{
 			//	Retourne la largeur nécessaire pour représenter un certain nombre de bits en hexa.
 			return 10 + ((bitCount+3)/4)*10;
+		}
+
+		protected static int ParseHexa(string hexa)
+		{
+			int result;
+
+			if (System.Int32.TryParse(hexa, System.Globalization.NumberStyles.AllowHexSpecifier, System.Globalization.CultureInfo.CurrentCulture, out result))
+			{
+				return result;
+			}
+			else
+			{
+				return 0;
+			}
 		}
 
 
