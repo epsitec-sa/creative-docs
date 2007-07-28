@@ -12,6 +12,16 @@ namespace Epsitec.Common.Designer.Dolphin
 			Nop = 0x00,
 			JumpAbs = 0x01,
 			JumpRel = 0x02,
+			LoadAi = 0x03,
+			LoadBi = 0x04,
+			LoadHLi = 0x05,
+			LoadAB = 0x06,
+			LoadBA = 0x07,
+			LoadAm = 0x08,
+			LoadmA = 0x09,
+			IncA = 0x10,
+			IncB = 0x11,
+			IncHL = 0x12,
 		}
 
 
@@ -33,11 +43,11 @@ namespace Epsitec.Common.Designer.Dolphin
 		{
 			//	Reset du processeur pour démarrer à l'adresse 0.
 			this.registerPC = 0;
-			this.registerSP = this.memory.Length;
+			this.registerSP = this.memory.Length-1;
 			this.registerF = 0;
 			this.registerA = 0;
 			this.registerB = 0;
-			this.registerC = 0;
+			this.registerHL = 0;
 		}
 
 		public override void Clock()
@@ -49,6 +59,7 @@ namespace Epsitec.Common.Designer.Dolphin
 			}
 
 			Instructions op = (Instructions) this.memory.Read(this.registerPC++);
+			int address;
 
 			switch (op)
 			{
@@ -58,6 +69,48 @@ namespace Epsitec.Common.Designer.Dolphin
 
 				case Instructions.JumpRel:
 					this.registerPC += this.memory.Read(this.registerPC++);
+					break;
+
+				case Instructions.LoadAi:
+					this.registerA = this.memory.Read(this.registerPC++);
+					break;
+
+				case Instructions.LoadBi:
+					this.registerB = this.memory.Read(this.registerPC++);
+					break;
+
+				case Instructions.LoadHLi:
+					this.registerHL = (this.memory.Read(this.registerPC++) << 8) | (this.memory.Read(this.registerPC++));
+					break;
+
+				case Instructions.LoadAB:
+					this.registerA = this.registerB;
+					break;
+
+				case Instructions.LoadBA:
+					this.registerB = this.registerA;
+					break;
+
+				case Instructions.LoadAm:
+					address = (this.memory.Read(this.registerPC++) << 8) | (this.memory.Read(this.registerPC++));
+					this.registerA = this.memory.Read(address);
+					break;
+
+				case Instructions.LoadmA:
+					address = (this.memory.Read(this.registerPC++) << 8) | (this.memory.Read(this.registerPC++));
+					this.memory.Write(address, this.registerA);
+					break;
+
+				case Instructions.IncA:
+					this.registerA++;
+					break;
+
+				case Instructions.IncB:
+					this.registerB++;
+					break;
+
+				case Instructions.IncHL:
+					this.registerHL++;
 					break;
 			}
 		}
@@ -73,7 +126,7 @@ namespace Epsitec.Common.Designer.Dolphin
 				yield return "F";
 				yield return "A";
 				yield return "B";
-				yield return "C";
+				yield return "HL";
 			}
 		}
 
@@ -84,12 +137,12 @@ namespace Epsitec.Common.Designer.Dolphin
 			{
 				case "PC":
 				case "SP":
+				case "HL":
 					return DolphinApplication.TotalAddress;
 
 				case "F":
 				case "A":
 				case "B":
-				case "C":
 					return DolphinApplication.TotalData;
 			}
 
@@ -116,8 +169,8 @@ namespace Epsitec.Common.Designer.Dolphin
 				case "B":
 					return this.registerB;
 
-				case "C":
-					return this.registerC;
+				case "HL":
+					return this.registerHL;
 			}
 
 			return base.GetRegisterValue(name);
@@ -148,8 +201,8 @@ namespace Epsitec.Common.Designer.Dolphin
 					this.registerB = value;
 					break;
 
-				case "C":
-					this.registerC = value;
+				case "HL":
+					this.registerHL = value;
 					break;
 			}
 		}
@@ -157,9 +210,9 @@ namespace Epsitec.Common.Designer.Dolphin
 		
 		protected int registerPC;  // program counter
 		protected int registerSP;  // stack pointer
-		protected int registerF;  // flags
-		protected int registerA;  // accumulator
-		protected int registerB;
-		protected int registerC;
+		protected int registerF;   // flags
+		protected int registerA;   // accumulator 8 bits
+		protected int registerB;   // registre auxiliaire 8 bits
+		protected int registerHL;  // registre 12 bits
 	}
 }

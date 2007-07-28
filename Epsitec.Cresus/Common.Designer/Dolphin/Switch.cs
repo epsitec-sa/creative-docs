@@ -25,30 +25,43 @@ namespace Epsitec.Common.Designer.Dolphin
 			Rectangle rectExt = this.Client.Bounds;
 			rectExt.Deflate(0.5);
 
+			bool little = rectExt.Width <= 10;
+
 			Rectangle rectInt = rectExt;
-			rectInt.Deflate(3);
+			rectInt.Deflate(little ? 2:3);
 
 			Rectangle activator = rectInt;
-			activator.Deflate(1);
+			activator.Deflate(little ? 0:1);
 			
 			Rectangle rectShadow = rectInt;
 			Path pathExt = new Path();
+
+			double addH      = little ? 2:4;
+			double shadowYes = little ? 4:10;
+			double shadowNo  = little ? 3:6;
+			double rr        = little ? 2:4;
+
+			Color activatorColor = this.FromBrightness(0.9);
+			if (little && this.ActiveState == ActiveState.Yes)
+			{
+				activatorColor = Color.FromRgb(1, 0, 0);  // rouge
+			}
 
 			if (rectExt.Width < rectExt.Height)  // bouton vertical ?
 			{
 				if (this.ActiveState == ActiveState.Yes)
 				{
-					activator.Bottom = activator.Top-activator.Width-4;
+					activator.Bottom = activator.Top-activator.Width-addH;
 					rectShadow.Top = activator.Bottom;
-					rectShadow.Bottom = rectShadow.Top-10;
+					rectShadow.Bottom = rectShadow.Top-shadowYes;
 				}
 				else
 				{
-					activator.Top = activator.Bottom+activator.Width+4;
-					rectShadow.Bottom = rectShadow.Top-6;
+					activator.Top = activator.Bottom+activator.Width+addH;
+					rectShadow.Bottom = rectShadow.Top-shadowNo;
 				}
 
-				pathExt.AppendRoundedRectangle(rectExt, 4);
+				pathExt.AppendRoundedRectangle(rectExt, rr);
 				graphics.Rasterizer.AddSurface(pathExt);
 				Geometry.RenderVerticalGradient(graphics, rectExt, this.FromBrightness(0.7, true), this.FromBrightness(1.0, true));
 
@@ -58,15 +71,18 @@ namespace Epsitec.Common.Designer.Dolphin
 				Geometry.RenderVerticalGradient(graphics, rectShadow, this.FromBrightness(0.3), this.FromBrightness(0.1));
 
 				graphics.AddFilledRectangle(activator);
-				graphics.RenderSolid(this.FromBrightness(0.9));
+				graphics.RenderSolid(activatorColor);
 
 				graphics.Rasterizer.AddOutline(pathExt);
 				graphics.AddRectangle(rectInt);
 				graphics.AddRectangle(activator);
 
-				for (double y=activator.Bottom+4; y<activator.Top-4; y+=2)
+				if (!little)
 				{
-					graphics.AddLine(activator.Left, y, activator.Right, y);
+					for (double y=activator.Bottom+4; y<activator.Top-4; y+=2)
+					{
+						graphics.AddLine(activator.Left, y, activator.Right, y);
+					}
 				}
 
 				graphics.RenderSolid(this.FromBrightness(0));
@@ -75,17 +91,17 @@ namespace Epsitec.Common.Designer.Dolphin
 			{
 				if (this.ActiveState == ActiveState.Yes)
 				{
-					activator.Left = activator.Right-activator.Height-4;
-					rectShadow.Right = rectShadow.Left+6;
+					activator.Left = activator.Right-activator.Height-addH;
+					rectShadow.Right = rectShadow.Left+shadowNo;
 				}
 				else
 				{
-					activator.Right = activator.Left+activator.Height+4;
+					activator.Right = activator.Left+activator.Height+addH;
 					rectShadow.Left = activator.Right;
-					rectShadow.Right = rectShadow.Left+10;
+					rectShadow.Right = rectShadow.Left+shadowYes;
 				}
 
-				pathExt.AppendRoundedRectangle(rectExt, 4);
+				pathExt.AppendRoundedRectangle(rectExt, rr);
 				graphics.Rasterizer.AddSurface(pathExt);
 				Geometry.RenderHorizontalGradient(graphics, rectExt, this.FromBrightness(1.0, true), this.FromBrightness(0.7, true));
 
@@ -95,15 +111,18 @@ namespace Epsitec.Common.Designer.Dolphin
 				Geometry.RenderHorizontalGradient(graphics, rectShadow, this.FromBrightness(0.1), this.FromBrightness(0.3));
 
 				graphics.AddFilledRectangle(activator);
-				graphics.RenderSolid(this.FromBrightness(0.9));
+				graphics.RenderSolid(activatorColor);
 
 				graphics.Rasterizer.AddOutline(pathExt);
 				graphics.AddRectangle(rectInt);
 				graphics.AddRectangle(activator);
 
-				for (double x=activator.Left+4; x<activator.Right-4; x+=2)
+				if (!little)
 				{
-					graphics.AddLine(x, activator.Bottom, x, activator.Top);
+					for (double x=activator.Left+4; x<activator.Right-4; x+=2)
+					{
+						graphics.AddLine(x, activator.Bottom, x, activator.Top);
+					}
 				}
 
 				graphics.RenderSolid(this.FromBrightness(0));

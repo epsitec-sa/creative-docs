@@ -99,20 +99,20 @@ namespace Epsitec.Common.Designer.Dolphin
 			RadioButton radio;
 
 			radio = new RadioButton(parent);
-			radio.Text = "Bus";
+			radio.Text = "Panneau de contrôle";
 			radio.Name = "Bus";
 			radio.Group = "Option";
 			radio.ActiveState = ActiveState.Yes;
 			radio.Margins = new Margins(60+10, 0, 0, 0);
-			radio.PreferredWidth = 70;
+			radio.PreferredWidth = 150;
 			radio.Dock = DockStyle.Left;
 			radio.Clicked += new MessageEventHandler(this.HandleOptionRadioClicked);
 
 			radio = new RadioButton(parent);
-			radio.Text = "Détails";
+			radio.Text = "Intérieur des circuits";
 			radio.Name = "Detail";
 			radio.Group = "Option";
-			radio.PreferredWidth = 70;
+			radio.PreferredWidth = 150;
 			radio.Dock = DockStyle.Left;
 			radio.Clicked += new MessageEventHandler(this.HandleOptionRadioClicked);
 		}
@@ -121,7 +121,7 @@ namespace Epsitec.Common.Designer.Dolphin
 		{
 			//	Crée le panneau de gauche complet avec les bus.
 			Panel top, bottom;
-			this.CreateBitsPanel(parent, out top, out bottom, "<font size=\"150%\"><b>Data bus</b></font>");
+			this.CreateBitsPanel(parent, out top, out bottom, "Data bus");
 
 			this.dataDigits = new List<Digit>();
 			for (int i=0; i<DolphinApplication.TotalData/4; i++)
@@ -138,7 +138,7 @@ namespace Epsitec.Common.Designer.Dolphin
 			}
 
 			//	Panneau des adresses.
-			this.CreateBitsPanel(parent, out top, out bottom, "<font size=\"150%\"><b>Address bus</b></font>");
+			this.CreateBitsPanel(parent, out top, out bottom, "Address bus");
 
 			this.addressDigits = new List<Digit>();
 			for (int i=0; i<DolphinApplication.TotalAddress/4; i++)
@@ -162,34 +162,44 @@ namespace Epsitec.Common.Designer.Dolphin
 		protected void CreateDetailPanel(Panel parent)
 		{
 			//	Crée le panneau de gauche détaillé complet.
-			Panel registerPanel = new Panel(parent);
-			registerPanel.PreferredWidth = 400;
-			registerPanel.Margins = new Margins(10, 10, 10, 10);
-			registerPanel.Dock = DockStyle.Top;
+			Panel memoryPanel = this.CreatePanelWithTitle(parent, "Memory");
+			memoryPanel.PreferredHeight = 220;  // place pour 8 adresses
+			memoryPanel.Dock = DockStyle.Bottom;
+
+			this.memoryAccessor = new MemoryAccessor(memoryPanel);
+			this.memoryAccessor.Memory = this.memory;
+			this.memoryAccessor.Dock = DockStyle.Fill;
+
+			//	Partie pour le processeur.
+			Panel processorPanel = this.CreatePanelWithTitle(parent, "Microprocessor register");
+			processorPanel.PreferredHeight = 10;  // minuscule (sera étendu)
+			processorPanel.Padding = new Margins(10, 10, 4, 6);
+			processorPanel.Dock = DockStyle.Bottom;
 
 			this.registerFields = new List<TextFieldHexa>();
+			int index = 1;
 			foreach (string name in this.processor.RegisterNames)
 			{
-				TextFieldHexa field = this.CreateProcessorRegister(registerPanel, name);
+				TextFieldHexa field = this.CreateProcessorRegister(processorPanel, name);
+				field.Name = name;
+				field.SetTabIndex(index++);
+				field.Margins = new Margins(17, 0, 0, 1);  // laisse la largeur d'un Scroller
 				field.Dock = DockStyle.Top;
+				field.HexaValueChanged += new EventHandler(this.HandleProcessorHexaValueChanged);
 
 				this.registerFields.Add(field);
 			}
-
-			MemoryAccessor ma = new MemoryAccessor(parent);
-			ma.PreferredWidth = 200;
-			ma.Dock = DockStyle.Fill;
 		}
 
 		protected TextFieldHexa CreateProcessorRegister(Panel parent, string name)
 		{
-			//	Crée les widgets pour représenter un registre du processeur.
+			//	Crée le widget complexe pour représenter un registre du processeur.
 			TextFieldHexa field = new TextFieldHexa(parent);
 
 			field.BitCount = this.processor.GetRegisterSize(name);
 			field.Label = name;
 			field.PreferredHeight = 20;
-			field.Margins = new Margins(0, 0, 0, 2);
+			field.Margins = new Margins(0, 0, 0, 1);
 
 			return field;
 		}
@@ -258,7 +268,6 @@ namespace Epsitec.Common.Designer.Dolphin
 
 			panel.BackColor = Color.FromBrightness(0.8);
 			panel.DrawFullFrame = true;
-			//?panel.DrawScrew = true;
 			panel.PreferredWidth = parent.PreferredWidth;
 			panel.PreferredHeight = 60;
 			panel.Padding = new Margins(0, 0, 10, 5);
@@ -281,27 +290,8 @@ namespace Epsitec.Common.Designer.Dolphin
 		protected void CreateBitsPanel(Panel parent, out Panel top, out Panel bottom, string title)
 		{
 			//	Crée un panneau recevant des boutons (led + switch) pour des bits.
-			Panel panel = new Panel(parent);
-
-			panel.BackColor = Color.FromBrightness(0.8);
-			panel.DrawFullFrame = true;
-			panel.DrawScrew = true;
-			panel.PreferredHeight = 195;
-			panel.Padding = new Margins(10, 10, 2, 12);
-			panel.Margins = new Margins(10, 10, 10, 10);
+			Panel panel = this.CreatePanelWithTitle(parent, title);
 			panel.Dock = DockStyle.Bottom;
-
-			StaticText label = new StaticText(panel);
-			label.Text = title;
-			label.ContentAlignment = ContentAlignment.TopCenter;
-			label.PreferredHeight = 30;
-			label.Margins = new Margins(0, 0, 0, 0);
-			label.Dock = DockStyle.Top;
-
-			Line sep = new Line(panel);
-			sep.PreferredHeight = 1;
-			sep.Margins = new Margins(0, 0, 0, 5);
-			sep.Dock = DockStyle.Top;
 			
 			top = new Panel(panel);
 			top.PreferredHeight = 50;
@@ -312,6 +302,34 @@ namespace Epsitec.Common.Designer.Dolphin
 			bottom.Dock = DockStyle.Fill;
 
 			this.CreateSwitchVerticalLabels(bottom, "<b>0</b>", "<b>1</b>");
+		}
+
+		protected Panel CreatePanelWithTitle(Panel parent, string title)
+		{
+			//	Crée un panneau avec un titre en haut.
+			Panel panel = new Panel(parent);
+			panel.MinWidth = 410;
+			panel.MaxWidth = 410;
+			panel.BackColor = Color.FromBrightness(0.8);
+			panel.DrawFullFrame = true;
+			panel.DrawScrew = true;
+			panel.PreferredHeight = 195;
+			panel.Padding = new Margins(10, 10, 4, 12);
+			panel.Margins = new Margins(10, 10, 10, 10);
+
+			StaticText label = new StaticText(panel);
+			label.Text = string.Concat("<font size=\"150%\"><b>", title, "</b></font>");
+			label.ContentAlignment = ContentAlignment.TopCenter;
+			label.PreferredHeight = 25;
+			label.Margins = new Margins(0, 0, 0, 0);
+			label.Dock = DockStyle.Top;
+
+			Line sep = new Line(panel);
+			sep.PreferredHeight = 1;
+			sep.Margins = new Margins(0, 0, 0, 5);
+			sep.Dock = DockStyle.Top;
+
+			return panel;
 		}
 
 		protected void CreateBitDigit(Panel parent, int rank, List<Digit> digits)
@@ -439,7 +457,6 @@ namespace Epsitec.Common.Designer.Dolphin
 			{
 				Digit digit = new Digit(display);
 				digit.PreferredWidth = 40;
-				digit.Margins = new Margins(1, 1, 0, 0);
 				digit.Dock = DockStyle.Left;
 
 				this.displayDigits.Add(digit);
@@ -726,8 +743,12 @@ namespace Epsitec.Common.Designer.Dolphin
 
 			foreach (TextFieldHexa field in this.registerFields)
 			{
+				this.ignoreChange = true;
 				field.HexaValue = this.processor.GetRegisterValue(field.Label);
+				this.ignoreChange = false;
 			}
+
+			this.memoryAccessor.MarkPC = pc;
 		}
 		#endregion
 
@@ -877,6 +898,13 @@ namespace Epsitec.Common.Designer.Dolphin
 			}
 		}
 
+		private void HandleProcessorHexaValueChanged(object sender)
+		{
+			//	La valeur d'un registre du processeur a été changée.
+			TextFieldHexa field = sender as TextFieldHexa;
+			this.processor.SetRegisterValue(field.Name, field.HexaValue);
+		}
+
 		private void HandleKeyboardButtonPressed(object sender, MessageEventArgs e)
 		{
 			//	Touche du clavier simulé pressée.
@@ -924,9 +952,11 @@ namespace Epsitec.Common.Designer.Dolphin
 		protected List<Digit> displayDigits;
 		protected List<PushButton> keyboardButtons;
 		protected List<TextFieldHexa> registerFields;
+		protected MemoryAccessor memoryAccessor;
 
 		protected Memory memory;
 		protected AbstractProcessor processor;
 		protected Timer clock;
+		protected bool ignoreChange;
 	}
 }
