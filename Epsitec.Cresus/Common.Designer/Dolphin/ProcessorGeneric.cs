@@ -63,6 +63,20 @@ namespace Epsitec.Common.Designer.Dolphin
 		}
 
 
+		public override IEnumerable<string> RegisterNames
+		{
+			//	Enumère tous les noms de registres.
+			get
+			{
+				yield return "PC";
+				yield return "SP";
+				yield return "F";
+				yield return "A";
+				yield return "B";
+				yield return "C";
+			}
+		}
+
 		public override int GetRegisterSize(string name)
 		{
 			//	Retourne la taille (nombre de bits) d'un registre.

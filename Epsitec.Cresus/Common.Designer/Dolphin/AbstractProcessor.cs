@@ -34,10 +34,13 @@ namespace Epsitec.Common.Designer.Dolphin
 		}
 
 
-		public virtual string GetRegisterName(string name)
+		public virtual IEnumerable<string> RegisterNames
 		{
-			//	Retourne le nom d'un registre.
-			return name;
+			//	Enumère tous les noms de registres.
+			get
+			{
+				yield return null;
+			}
 		}
 
 		public virtual int GetRegisterSize(string name)

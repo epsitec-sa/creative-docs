@@ -45,88 +45,83 @@ namespace Epsitec.Common.Designer.Dolphin
 			Panel all = new Panel(this.mainPanel);
 			all.Dock = DockStyle.Fill;
 
-			this.leftPanel = new Panel(all);
-			this.leftPanel.BackColor = Color.FromBrightness(0.9);
-			this.leftPanel.DrawFullFrame = true;
-			this.leftPanel.PreferredWidth = 500;
-			this.leftPanel.Padding = new Margins(10, 10, 10, 10);
-			this.leftPanel.Dock = DockStyle.Left;
+			//	Crée les deux grandes parties gauche/droite.
+			Panel leftPanel = new Panel(all);
+			leftPanel.BackColor = Color.FromBrightness(0.9);
+			leftPanel.DrawFullFrame = true;
+			leftPanel.PreferredWidth = 510;
+			leftPanel.Padding = new Margins(10, 10, 10, 10);
+			leftPanel.Dock = DockStyle.Left;
 
-			this.rightPanel = new Panel(all);
-			this.rightPanel.BackColor = Color.FromBrightness(0.9);
-			this.rightPanel.DrawFullFrame = true;
-			this.rightPanel.Margins = new Margins(10, 0, 0, 0);
-			this.rightPanel.Padding = new Margins(10, 10, 10, 10);
-			this.rightPanel.Dock = DockStyle.Fill;
+			Panel rightPanel = new Panel(all);
+			rightPanel.BackColor = Color.FromBrightness(0.9);
+			rightPanel.DrawFullFrame = true;
+			rightPanel.Margins = new Margins(10, 0, 0, 0);
+			rightPanel.Padding = new Margins(10, 10, 10, 10);
+			rightPanel.Dock = DockStyle.Fill;
 
-			this.CreateBusPanel(this.leftPanel);
-			this.CreateKeyboardDisplay(this.rightPanel);
+			//	Crée les 3 parties de gauche.
+			Panel leftHeader = new Panel(leftPanel);
+			leftHeader.Margins = new Margins(0, 0, 0, 5);
+			leftHeader.Dock = DockStyle.Top;
+
+			Line sep = new Line(leftPanel);
+			sep.PreferredHeight = 1;
+			sep.Margins = new Margins(0, 0, 0, 3);
+			sep.Dock = DockStyle.Top;
+
+			Panel leftClock = new Panel(leftPanel);
+			leftClock.PreferredWidth = 50-10;
+			leftClock.Margins = new Margins(0, 10, 0, 0);
+			leftClock.Dock = DockStyle.Left;
+
+			this.leftPanelBus = new Panel(leftPanel);
+			this.leftPanelBus.Dock = DockStyle.Fill;
+
+			this.leftPanelDetail = new Panel(leftPanel);
+			this.leftPanelDetail.Dock = DockStyle.Fill;
+			this.leftPanelDetail.Visibility = false;
+
+			//	Crée le contenu des différentes parties.
+			this.CreateOptions(leftHeader);
+			this.CreateClockControl(leftClock);
+			this.CreateBusPanel(this.leftPanelBus);
+			this.CreateDetailPanel(this.leftPanelDetail);
+			this.CreateKeyboardDisplay(rightPanel);
+
+			this.ProcessorFeedback();
 		}
 
 
+		protected void CreateOptions(Panel parent)
+		{
+			//	Crée la partie supérieure de panneau de gauche.
+			RadioButton radio;
+
+			radio = new RadioButton(parent);
+			radio.Text = "Bus";
+			radio.Name = "Bus";
+			radio.Group = "Option";
+			radio.ActiveState = ActiveState.Yes;
+			radio.Margins = new Margins(60+10, 0, 0, 0);
+			radio.PreferredWidth = 70;
+			radio.Dock = DockStyle.Left;
+			radio.Clicked += new MessageEventHandler(this.HandleOptionRadioClicked);
+
+			radio = new RadioButton(parent);
+			radio.Text = "Détails";
+			radio.Name = "Detail";
+			radio.Group = "Option";
+			radio.PreferredWidth = 70;
+			radio.Dock = DockStyle.Left;
+			radio.Clicked += new MessageEventHandler(this.HandleOptionRadioClicked);
+		}
+
 		protected void CreateBusPanel(Panel parent)
 		{
-			Panel left = new Panel(parent);
-			left.PreferredWidth = 50-10;
-			left.Margins = new Margins(0, 10, 0, 0);
-			left.Dock = DockStyle.Left;
-
-			Panel right = new Panel(parent);
-			right.Dock = DockStyle.Fill;
-
-			//	Partie supérieure gauche pour le contrôle des bus.
-			this.buttonReset = new PushButton(left);
-			this.buttonReset.Text = "<font size=\"200%\"><b>R/S</b></font>";
-			this.buttonReset.PreferredSize = new Size(50, 50);
-			this.buttonReset.Margins = new Margins(0, 0, 10, 5);
-			this.buttonReset.Dock = DockStyle.Top;
-			this.buttonReset.Clicked += new MessageEventHandler(this.HandleButtonResetClicked);
-			ToolTip.Default.SetToolTip(this.buttonReset, "Run/Stop");
-
-			this.ledRun = this.CreateLabeledLed(left, "Run");
-
-			Panel stepLabels = this.CreateSwitchHorizonalLabels(left, "C", "S");
-			stepLabels.Margins = new Margins(0, 0, 10, 0);
-			stepLabels.Dock = DockStyle.Top;
-
-			this.switchStep = new Switch(left);
-			this.switchStep.PreferredSize = new Size(50, 20);
-			this.switchStep.Margins = new Margins(0, 0, 0, 5);
-			this.switchStep.Dock = DockStyle.Top;
-			this.switchStep.Clicked += new MessageEventHandler(this.HandleSwitchStepClicked);
-			ToolTip.Default.SetToolTip(this.switchStep, "Mode Continus ou Step");
-
-			this.buttonStep = new PushButton(left);
-			this.buttonStep.Text = "<font size=\"200%\"><b>S</b></font>";
-			this.buttonStep.PreferredSize = new Size(50, 50);
-			this.buttonStep.Margins = new Margins(0, 0, 0, 10);
-			this.buttonStep.Dock = DockStyle.Top;
-			this.buttonStep.Clicked += new MessageEventHandler(this.HandleButtonStepClicked);
-			ToolTip.Default.SetToolTip(this.buttonStep, "Step");
-
-			//	Partie inférieure gauche pour le contrôle des bus.
-			this.buttonMemory = new PushButton(left);
-			this.buttonMemory.Text = "<font size=\"200%\"><b>M</b></font>";
-			this.buttonMemory.PreferredSize = new Size(50, 50);
-			this.buttonMemory.Margins = new Margins(0, 0, 0, 10);
-			this.buttonMemory.Dock = DockStyle.Bottom;
-			this.buttonMemory.Pressed += new MessageEventHandler(this.HandleButtonMemoryPressed);
-			this.buttonMemory.Released += new MessageEventHandler(this.HandleButtonMemoryReleased);
-			ToolTip.Default.SetToolTip(this.buttonMemory, "Memory access");
-
-			this.switchDataReadWrite = new Switch(left);
-			this.switchDataReadWrite.PreferredSize = new Size(50, 20);
-			this.switchDataReadWrite.Margins = new Margins(0, 0, 0, 5);
-			this.switchDataReadWrite.Dock = DockStyle.Bottom;
-			this.switchDataReadWrite.Clicked += new MessageEventHandler(this.HandleSwitchDataReadWriteClicked);
-			ToolTip.Default.SetToolTip(this.switchDataReadWrite, "Mode Read ou Write");
-
-			Panel rwLabels = this.CreateSwitchHorizonalLabels(left, "R", "W");
-			rwLabels.Dock = DockStyle.Bottom;
-
-			//	Partie de droite pour les bus.
+			//	Crée le panneau de gauche complet avec les bus.
 			Panel top, bottom;
-			this.CreateBitsPanel(right, out top, out bottom, "<font size=\"150%\"><b>Data bus</b></font>");
+			this.CreateBitsPanel(parent, out top, out bottom, "<font size=\"150%\"><b>Data bus</b></font>");
 
 			this.dataDigits = new List<Digit>();
 			for (int i=0; i<DolphinApplication.TotalData/4; i++)
@@ -143,7 +138,7 @@ namespace Epsitec.Common.Designer.Dolphin
 			}
 
 			//	Panneau des adresses.
-			this.CreateBitsPanel(right, out top, out bottom, "<font size=\"150%\"><b>Address bus</b></font>");
+			this.CreateBitsPanel(parent, out top, out bottom, "<font size=\"150%\"><b>Address bus</b></font>");
 
 			this.addressDigits = new List<Digit>();
 			for (int i=0; i<DolphinApplication.TotalAddress/4; i++)
@@ -162,6 +157,98 @@ namespace Epsitec.Common.Designer.Dolphin
 			this.AddressBits = 0;
 			this.DataBits = 0;
 			this.UpdateButtons();
+		}
+
+		protected void CreateDetailPanel(Panel parent)
+		{
+			//	Crée le panneau de gauche détaillé complet.
+			Panel registerPanel = new Panel(parent);
+			registerPanel.PreferredWidth = 400;
+			registerPanel.Margins = new Margins(10, 10, 10, 10);
+			registerPanel.Dock = DockStyle.Top;
+
+			this.registerFields = new List<TextFieldHexa>();
+			foreach (string name in this.processor.RegisterNames)
+			{
+				TextFieldHexa field = this.CreateProcessorRegister(registerPanel, name);
+				field.Dock = DockStyle.Top;
+
+				this.registerFields.Add(field);
+			}
+
+			MemoryAccessor ma = new MemoryAccessor(parent);
+			ma.PreferredWidth = 200;
+			ma.Dock = DockStyle.Fill;
+		}
+
+		protected TextFieldHexa CreateProcessorRegister(Panel parent, string name)
+		{
+			//	Crée les widgets pour représenter un registre du processeur.
+			TextFieldHexa field = new TextFieldHexa(parent);
+
+			field.BitCount = this.processor.GetRegisterSize(name);
+			field.Label = name;
+			field.PreferredHeight = 20;
+			field.Margins = new Margins(0, 0, 0, 2);
+
+			return field;
+		}
+
+		protected void CreateClockControl(Panel parent)
+		{
+			//	Crée les widgets pour le contrôle de l'horloge du processeur (bouton R/S, etc.).
+			this.buttonReset = new PushButton(parent);
+			this.buttonReset.Text = "<font size=\"200%\"><b>R/S</b></font>";
+			this.buttonReset.PreferredSize = new Size(50, 50);
+			this.buttonReset.Margins = new Margins(0, 0, 10, 5);
+			this.buttonReset.Dock = DockStyle.Top;
+			this.buttonReset.Clicked += new MessageEventHandler(this.HandleButtonResetClicked);
+			ToolTip.Default.SetToolTip(this.buttonReset, "Run/Stop");
+
+			this.ledRun = this.CreateLabeledLed(parent, "Run");
+
+			Panel stepLabels = this.CreateSwitchHorizonalLabels(parent, "C", "S");
+			stepLabels.Margins = new Margins(0, 0, 10, 0);
+			stepLabels.Dock = DockStyle.Top;
+
+			this.switchStep = new Switch(parent);
+			this.switchStep.PreferredSize = new Size(50, 20);
+			this.switchStep.Margins = new Margins(0, 0, 0, 5);
+			this.switchStep.Dock = DockStyle.Top;
+			this.switchStep.Clicked += new MessageEventHandler(this.HandleSwitchStepClicked);
+			ToolTip.Default.SetToolTip(this.switchStep, "Mode Continus ou Step");
+
+			this.buttonStep = new PushButton(parent);
+			this.buttonStep.Text = "<font size=\"200%\"><b>S</b></font>";
+			this.buttonStep.PreferredSize = new Size(50, 50);
+			this.buttonStep.Margins = new Margins(0, 0, 0, 10);
+			this.buttonStep.Dock = DockStyle.Top;
+			this.buttonStep.Clicked += new MessageEventHandler(this.HandleButtonStepClicked);
+			ToolTip.Default.SetToolTip(this.buttonStep, "Step");
+
+			//	Partie inférieure gauche pour le contrôle des bus.
+			this.clockBusPanel = new Panel(parent);
+			this.clockBusPanel.PreferredWidth = 40;
+			this.clockBusPanel.Dock = DockStyle.Bottom;
+
+			Panel rwLabels = this.CreateSwitchHorizonalLabels(this.clockBusPanel, "R", "W");
+			rwLabels.Dock = DockStyle.Top;
+
+			this.switchDataReadWrite = new Switch(this.clockBusPanel);
+			this.switchDataReadWrite.PreferredSize = new Size(50, 20);
+			this.switchDataReadWrite.Margins = new Margins(0, 0, 0, 5);
+			this.switchDataReadWrite.Dock = DockStyle.Top;
+			this.switchDataReadWrite.Clicked += new MessageEventHandler(this.HandleSwitchDataReadWriteClicked);
+			ToolTip.Default.SetToolTip(this.switchDataReadWrite, "Mode Read ou Write");
+
+			this.buttonMemory = new PushButton(this.clockBusPanel);
+			this.buttonMemory.Text = "<font size=\"200%\"><b>M</b></font>";
+			this.buttonMemory.PreferredSize = new Size(50, 50);
+			this.buttonMemory.Margins = new Margins(0, 0, 0, 10);
+			this.buttonMemory.Dock = DockStyle.Top;
+			this.buttonMemory.Pressed += new MessageEventHandler(this.HandleButtonMemoryPressed);
+			this.buttonMemory.Released += new MessageEventHandler(this.HandleButtonMemoryReleased);
+			ToolTip.Default.SetToolTip(this.buttonMemory, "Memory access");
 		}
 
 		protected Led CreateLabeledLed(Panel parent, string text)
@@ -335,7 +422,7 @@ namespace Epsitec.Common.Designer.Dolphin
 			{
 				Panel keyboard = new Panel(parent);
 				keyboard.PreferredHeight = 50;
-				keyboard.Margins = new Margins(0, 0, 2, 2);
+				keyboard.Margins = new Margins(0, 0, 2, (y==0) ? 10:2);
 				keyboard.Dock = DockStyle.Bottom;
 
 				lines.Add(keyboard);
@@ -481,7 +568,7 @@ namespace Epsitec.Common.Designer.Dolphin
 
 
 		/// <summary>
-		/// Gestion de la mémoire du système emulé.
+		/// Gestion de la mémoire du système émulé.
 		/// </summary>
 		public class Memory
 		{
@@ -519,7 +606,7 @@ namespace Epsitec.Common.Designer.Dolphin
 					{
 						if ((value & 0x80) != 0)  // bit full ?
 						{
-							this.memory[address] = (byte) (value & ~0x87);
+							this.memory[address] = (byte) (value & ~0x87);  // clear le bit full et les touches 0..7
 						}
 					}
 
@@ -564,9 +651,9 @@ namespace Epsitec.Common.Designer.Dolphin
 			{
 				if (pressed)
 				{
-					keys &= ~0x87;
+					keys &= ~0x07;
 					keys |= button.Index;
-					keys |= 0x80;  // bit full
+					keys |= 0x80;  // met le bit full
 				}
 			}
 			else
@@ -636,9 +723,25 @@ namespace Epsitec.Common.Designer.Dolphin
 			int pc = this.processor.GetRegisterValue("PC");
 			this.AddressBits = pc;
 			this.DataBits = this.memory.Read(pc);
+
+			foreach (TextFieldHexa field in this.registerFields)
+			{
+				field.HexaValue = this.processor.GetRegisterValue(field.Label);
+			}
 		}
 		#endregion
 
+
+		#region Event handler
+		private void HandleOptionRadioClicked(object sender, MessageEventArgs e)
+		{
+			//	Bouton pour une option cliqué.
+			RadioButton button = sender as RadioButton;
+
+			this.leftPanelBus.Visibility = (button.Name == "Bus");
+			this.clockBusPanel.Visibility = (button.Name == "Bus");
+			this.leftPanelDetail.Visibility = (button.Name == "Detail");
+		}
 
 		private void HandleClockTimeElapsed(object sender)
 		{
@@ -787,6 +890,7 @@ namespace Epsitec.Common.Designer.Dolphin
 			PushButton button = sender as PushButton;
 			this.KeyboardChanged(button, false);
 		}
+		#endregion
 
 
 		public static readonly double MainWidth = 830;
@@ -802,8 +906,9 @@ namespace Epsitec.Common.Designer.Dolphin
 
 		protected Window parentWindow;
 		protected Panel mainPanel;
-		protected Panel leftPanel;
-		protected Panel rightPanel;
+		protected Panel leftPanelBus;
+		protected Panel leftPanelDetail;
+		protected Panel clockBusPanel;
 		protected PushButton buttonReset;
 		protected PushButton buttonStep;
 		protected PushButton buttonMemory;
@@ -818,6 +923,7 @@ namespace Epsitec.Common.Designer.Dolphin
 		protected List<Switch> dataSwitchs;
 		protected List<Digit> displayDigits;
 		protected List<PushButton> keyboardButtons;
+		protected List<TextFieldHexa> registerFields;
 
 		protected Memory memory;
 		protected AbstractProcessor processor;

@@ -15,14 +15,14 @@ namespace Epsitec.Common.Designer.Dolphin
 	{
 		[System.Flags] public enum DigitSegment
 		{
-			TopRight    = 0x01,
-			BottomRight = 0x02,
-			Bottom      = 0x04,
-			BottomLeft  = 0x08,
-			TopLeft     = 0x10,
-			Top         = 0x20,
-			Middle      = 0x40,
-			Dot         = 0x80,
+			TopRight    = 0x01,  // segment vertical
+			BottomRight = 0x02,  // segment vertical
+			Bottom      = 0x04,  // segment horizontal
+			BottomLeft  = 0x08,  // segment vertical
+			TopLeft     = 0x10,  // segment vertical
+			Top         = 0x20,  // segment horizontal
+			Middle      = 0x40,  // segment horizontal
+			Dot         = 0x80,  // point décimal en bas à droite
 		}
 
 
@@ -71,7 +71,7 @@ namespace Epsitec.Common.Designer.Dolphin
 		protected static DigitSegment HexToSegment(int value)
 		{
 			//	Conversion d'une valeur [0..15] dans les segments correspondants.
-			if (value >= 0 && value <= 15)
+			if (value >= 0 && value < Digit.HexTable.Length)
 			{
 				return Digit.HexTable[value];
 			}
@@ -85,7 +85,7 @@ namespace Epsitec.Common.Designer.Dolphin
 		{
 			//	Retourne la valeur [0..15] correspondant aux segments allumés.
 			//	Retourne -1 si les segments correspondent à autre chose.
-			for (int i=0; i<16; i++)
+			for (int i=0; i<Digit.HexTable.Length; i++)
 			{
 				if (segment == Digit.HexTable[i])
 				{
@@ -95,38 +95,6 @@ namespace Epsitec.Common.Designer.Dolphin
 			return -1;
 		}
 
-		protected static DigitSegment[] HexTable =
-		{
-			DigitSegment.TopLeft | DigitSegment.BottomLeft | DigitSegment.TopRight | DigitSegment.BottomRight | DigitSegment.Top | DigitSegment.Bottom,  // 0
-			DigitSegment.TopRight | DigitSegment.BottomRight,  // 1
-			DigitSegment.BottomLeft | DigitSegment.TopRight | DigitSegment.Top | DigitSegment.Middle | DigitSegment.Bottom,  // 2
-			DigitSegment.TopRight | DigitSegment.BottomRight | DigitSegment.Top | DigitSegment.Middle | DigitSegment.Bottom,  // 3
-			DigitSegment.TopLeft | DigitSegment.TopRight | DigitSegment.BottomRight | DigitSegment.Middle,  // 4
-			DigitSegment.TopLeft | DigitSegment.BottomRight | DigitSegment.Top | DigitSegment.Middle | DigitSegment.Bottom,  // 5
-			DigitSegment.TopLeft | DigitSegment.BottomLeft | DigitSegment.BottomRight | DigitSegment.Top | DigitSegment.Middle | DigitSegment.Bottom,  // 6
-			DigitSegment.TopRight | DigitSegment.BottomRight | DigitSegment.Top,  // 7
-			DigitSegment.TopLeft | DigitSegment.BottomLeft | DigitSegment.TopRight | DigitSegment.BottomRight | DigitSegment.Top | DigitSegment.Middle | DigitSegment.Bottom,  // 8
-			DigitSegment.TopLeft | DigitSegment.TopRight | DigitSegment.BottomRight | DigitSegment.Top | DigitSegment.Middle | DigitSegment.Bottom,  // 9
-			DigitSegment.TopLeft | DigitSegment.BottomLeft | DigitSegment.TopRight | DigitSegment.BottomRight | DigitSegment.Top | DigitSegment.Middle,  // A
-			DigitSegment.TopLeft | DigitSegment.BottomLeft | DigitSegment.BottomRight | DigitSegment.Middle | DigitSegment.Bottom,  // B
-			DigitSegment.TopLeft | DigitSegment.BottomLeft | DigitSegment.Top | DigitSegment.Bottom,  // C
-			DigitSegment.BottomLeft | DigitSegment.TopRight | DigitSegment.BottomRight | DigitSegment.Middle | DigitSegment.Bottom,  // D
-			DigitSegment.TopLeft | DigitSegment.BottomLeft | DigitSegment.Top | DigitSegment.Middle | DigitSegment.Bottom,  // E
-			DigitSegment.TopLeft | DigitSegment.BottomLeft | DigitSegment.Top | DigitSegment.Middle,  // F
-		};
-
-		protected static DigitSegment[] EnumTable =
-		{
-			DigitSegment.TopRight,
-			DigitSegment.BottomRight,
-			DigitSegment.Bottom,
-			DigitSegment.BottomLeft,
-			DigitSegment.TopLeft,
-			DigitSegment.Top,
-			DigitSegment.Middle,
-			DigitSegment.Dot,
-		};
-
 
 		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
 		{
@@ -135,7 +103,7 @@ namespace Epsitec.Common.Designer.Dolphin
 			graphics.AddFilledRectangle(rect);
 			graphics.RenderSolid(Color.FromBrightness(0));
 
-			for (int i=0; i<8; i++)  // TODO: on peut faire mieux, mais je ne trouve plus...
+			for (int i=0; i<Digit.EnumTable.Length; i++)  // TODO: on peut faire mieux, mais je ne trouve plus...
 			{
 				DigitSegment segment = Digit.EnumTable[i];
 
@@ -241,6 +209,39 @@ namespace Epsitec.Common.Designer.Dolphin
 		}
 
 
+		protected static DigitSegment[] HexTable =
+		{
+			DigitSegment.TopLeft | DigitSegment.BottomLeft | DigitSegment.TopRight | DigitSegment.BottomRight | DigitSegment.Top | DigitSegment.Bottom,  // 0
+			DigitSegment.TopRight | DigitSegment.BottomRight,  // 1
+			DigitSegment.BottomLeft | DigitSegment.TopRight | DigitSegment.Top | DigitSegment.Middle | DigitSegment.Bottom,  // 2
+			DigitSegment.TopRight | DigitSegment.BottomRight | DigitSegment.Top | DigitSegment.Middle | DigitSegment.Bottom,  // 3
+			DigitSegment.TopLeft | DigitSegment.TopRight | DigitSegment.BottomRight | DigitSegment.Middle,  // 4
+			DigitSegment.TopLeft | DigitSegment.BottomRight | DigitSegment.Top | DigitSegment.Middle | DigitSegment.Bottom,  // 5
+			DigitSegment.TopLeft | DigitSegment.BottomLeft | DigitSegment.BottomRight | DigitSegment.Top | DigitSegment.Middle | DigitSegment.Bottom,  // 6
+			DigitSegment.TopRight | DigitSegment.BottomRight | DigitSegment.Top,  // 7
+			DigitSegment.TopLeft | DigitSegment.BottomLeft | DigitSegment.TopRight | DigitSegment.BottomRight | DigitSegment.Top | DigitSegment.Middle | DigitSegment.Bottom,  // 8
+			DigitSegment.TopLeft | DigitSegment.TopRight | DigitSegment.BottomRight | DigitSegment.Top | DigitSegment.Middle | DigitSegment.Bottom,  // 9
+			DigitSegment.TopLeft | DigitSegment.BottomLeft | DigitSegment.TopRight | DigitSegment.BottomRight | DigitSegment.Top | DigitSegment.Middle,  // A
+			DigitSegment.TopLeft | DigitSegment.BottomLeft | DigitSegment.BottomRight | DigitSegment.Middle | DigitSegment.Bottom,  // B
+			DigitSegment.TopLeft | DigitSegment.BottomLeft | DigitSegment.Top | DigitSegment.Bottom,  // C
+			DigitSegment.BottomLeft | DigitSegment.TopRight | DigitSegment.BottomRight | DigitSegment.Middle | DigitSegment.Bottom,  // D
+			DigitSegment.TopLeft | DigitSegment.BottomLeft | DigitSegment.Top | DigitSegment.Middle | DigitSegment.Bottom,  // E
+			DigitSegment.TopLeft | DigitSegment.BottomLeft | DigitSegment.Top | DigitSegment.Middle,  // F
+		};
+
+		protected static DigitSegment[] EnumTable =
+		{
+			DigitSegment.TopRight,
+			DigitSegment.BottomRight,
+			DigitSegment.Bottom,
+			DigitSegment.BottomLeft,
+			DigitSegment.TopLeft,
+			DigitSegment.Top,
+			DigitSegment.Middle,
+			DigitSegment.Dot,
+		};
+
+		
 		protected DigitSegment segmentValue;
 	}
 }
