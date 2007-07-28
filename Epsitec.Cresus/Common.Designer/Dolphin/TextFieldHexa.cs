@@ -125,10 +125,11 @@ namespace Epsitec.Common.Designer.Dolphin
 			//	Valeur courante.
 			get
 			{
-				return TextFieldHexa.ParseHexa(this.textField.Text);
+				return TextFieldHexa.ParseHexa(this.textField.Text, 0);
 			}
 			set
 			{
+#if false
 				string text = this.GetHexaText(value);
 				if (this.textField.Text != text)
 				{
@@ -136,6 +137,15 @@ namespace Epsitec.Common.Designer.Dolphin
 					this.UpdateButtons();
 					this.OnHexaValueChanged();
 				}
+#else
+				int current = TextFieldHexa.ParseHexa(this.textField.Text, -1);
+				if (current != value)
+				{
+					this.textField.Text = this.GetHexaText(value);
+					this.UpdateButtons();
+					this.OnHexaValueChanged();
+				}
+#endif
 			}
 		}
 
@@ -164,7 +174,7 @@ namespace Epsitec.Common.Designer.Dolphin
 			return 10 + ((bitCount+3)/4)*10;
 		}
 
-		protected static int ParseHexa(string hexa)
+		protected static int ParseHexa(string hexa, int valueIfError)
 		{
 			int result;
 			if (System.Int32.TryParse(hexa, System.Globalization.NumberStyles.AllowHexSpecifier, System.Globalization.CultureInfo.CurrentCulture, out result))
@@ -173,7 +183,7 @@ namespace Epsitec.Common.Designer.Dolphin
 			}
 			else
 			{
-				return 0;
+				return valueIfError;
 			}
 		}
 
@@ -198,9 +208,9 @@ namespace Epsitec.Common.Designer.Dolphin
 
 		private void HandleFieldIsFocusedChanged(object sender, Types.DependencyPropertyChangedEventArgs e)
 		{
-			//	La ligne éditable a perdu le focus.
+			//	La ligne éditable a pris ou perdu le focus.
 			bool focused = (bool) e.NewValue;
-			if (!focused)
+			if (!focused)  // focus perdu ?
 			{
 				this.textField.Text = this.GetHexaText(this.HexaValue);  // remet un nombre propre ("a" devient "0A" par exemple)
 			}

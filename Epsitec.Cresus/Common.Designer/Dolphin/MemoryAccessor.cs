@@ -55,10 +55,31 @@ namespace Epsitec.Common.Designer.Dolphin
 			set
 			{
 				this.memory = value;
-				this.offset = 0;
+				this.firstAddress = 0;
 				this.markPC = -1;
+
+				this.UpdateScroller();
 				this.UpdateData();
 				this.UpdateMarkPC();
+			}
+		}
+
+		public int FirstAddress
+		{
+			//	Indique la première adresse affichée.
+			get
+			{
+				return this.firstAddress;
+			}
+			set
+			{
+				if (this.firstAddress != value)
+				{
+					this.firstAddress = value;
+
+					this.UpdateData();
+					this.UpdateMarkPC();
+				}
 			}
 		}
 
@@ -74,6 +95,7 @@ namespace Epsitec.Common.Designer.Dolphin
 				if (this.markPC != value)
 				{
 					this.markPC = value;
+
 					this.UpdateMarkPC();
 				}
 			}
@@ -90,6 +112,8 @@ namespace Epsitec.Common.Designer.Dolphin
 			if (this.fields.Count != total)
 			{
 				this.CreateFields(total);
+
+				this.UpdateScroller();
 				this.UpdateData();
 				this.UpdateMarkPC();
 			}
@@ -116,7 +140,22 @@ namespace Epsitec.Common.Designer.Dolphin
 		}
 
 
-		protected void UpdateData()
+		protected void UpdateScroller()
+		{
+			if (this.fields.Count == 0)
+			{
+				return;
+			}
+
+			this.scroller.MinValue = (decimal) 0;
+			this.scroller.MaxValue = (decimal) (this.memory.Length - this.fields.Count);
+			this.scroller.Value = (decimal) this.firstAddress;
+			this.scroller.VisibleRangeRatio = (decimal) this.fields.Count / (decimal) this.memory.Length;
+			this.scroller.LargeChange = (decimal) this.fields.Count;
+			this.scroller.SmallChange = (decimal) 1;
+		}
+
+		public void UpdateData()
 		{
 			if (this.memory == null)
 			{
@@ -125,11 +164,11 @@ namespace Epsitec.Common.Designer.Dolphin
 
 			for (int i=0; i<this.fields.Count; i++)
 			{
-				int address = this.offset+i;
+				int address = this.firstAddress+i;
 
 				TextFieldHexa field = this.fields[i];
 				field.Label = address.ToString("X3");
-				field.HexaValue = this.memory.Read(address);
+				field.HexaValue = this.memory.ReadForDebug(address);
 			}
 		}
 
@@ -144,7 +183,7 @@ namespace Epsitec.Common.Designer.Dolphin
 			{
 				Color color = Color.Empty;
 
-				if (this.offset+i == this.markPC)
+				if (this.firstAddress+i == this.markPC)
 				{
 					color = Color.FromRgb(1, 0, 0);
 				}
@@ -157,13 +196,14 @@ namespace Epsitec.Common.Designer.Dolphin
 
 		private void HandleScrollerValueChanged(object sender)
 		{
+			this.FirstAddress = (int) System.Math.Floor(this.scroller.Value+0.5M);
 		}
 
 		private void HandleFieldHexaValueChanged(object sender)
 		{
 			TextFieldHexa field = sender as TextFieldHexa;
 
-			int address = this.offset+field.Index;
+			int address = this.firstAddress+field.Index;
 			this.memory.Write(address, field.HexaValue);
 		}
 
@@ -174,7 +214,7 @@ namespace Epsitec.Common.Designer.Dolphin
 		protected VScroller scroller;
 		protected Panel panel;
 		protected List<TextFieldHexa> fields;
-		protected int offset;
+		protected int firstAddress;
 		protected int markPC;
 	}
 }

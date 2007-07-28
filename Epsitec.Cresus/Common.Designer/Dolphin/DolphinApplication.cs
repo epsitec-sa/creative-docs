@@ -635,12 +635,30 @@ namespace Epsitec.Common.Designer.Dolphin
 				}
 			}
 
+			public int ReadForDebug(int address)
+			{
+				//	Lit une valeur en mémoire et/ou dans un périphérique, pour de debug.
+				//	Le bit full du clavier (par exemple) n'est pas clearé.
+				if (address >= 0 && address < this.memory.Length)  // adresse valide ?
+				{
+					return this.memory[address];
+				}
+				else  // hors de l'espace d'adressage ?
+				{
+					return 0xff;
+				}
+			}
+
 			public void Write(int address, int data)
 			{
 				//	Ecrit une valeur en mémoire et/ou dans un périphérique.
 				if (address >= 0 && address < this.memory.Length)  // adresse valide ?
 				{
-					this.memory[address] = (byte) data;
+					if (this.memory[address] != (byte) data)
+					{
+						this.memory[address] = (byte) data;
+						this.application.memoryAccessor.UpdateData();
+					}
 				}
 
 				if ((address & DolphinApplication.PeriphBase) != 0)  // périphérique ?
