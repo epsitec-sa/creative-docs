@@ -9,18 +9,20 @@ namespace Epsitec.Common.Designer.Dolphin
 	/// Simule une affichage à 7 segments pour afficher un digit.
 	/// Il est possible de représenter une valeur hexadécimale (propriété HexValue)
 	/// ou d'allumer n'importes quels segments (propriété SegmentValue).
+	/// Les proportions idéales sont une hauteur 1.5x plus grande que la largeur.
 	/// </summary>
 	public class Digit : Widget
 	{
-		[System.Flags] public enum DigitSegment : uint
+		[System.Flags] public enum DigitSegment
 		{
-			TopLeft     = 0x01,
-			BottomLeft  = 0x02,
-			TopRight    = 0x04,
-			BottomRight = 0x08,
-			Top         = 0x10,
-			Middle      = 0x20,
-			Bottom      = 0x40,
+			TopRight    = 0x01,
+			BottomRight = 0x02,
+			Bottom      = 0x04,
+			BottomLeft  = 0x08,
+			TopLeft     = 0x10,
+			Top         = 0x20,
+			Middle      = 0x40,
+			Dot         = 0x80,
 		}
 
 
@@ -115,13 +117,14 @@ namespace Epsitec.Common.Designer.Dolphin
 
 		protected static DigitSegment[] EnumTable =
 		{
-			DigitSegment.TopLeft,
-			DigitSegment.BottomLeft,
 			DigitSegment.TopRight,
 			DigitSegment.BottomRight,
+			DigitSegment.Bottom,
+			DigitSegment.BottomLeft,
+			DigitSegment.TopLeft,
 			DigitSegment.Top,
 			DigitSegment.Middle,
-			DigitSegment.Bottom,
+			DigitSegment.Dot,
 		};
 
 
@@ -132,7 +135,7 @@ namespace Epsitec.Common.Designer.Dolphin
 			graphics.AddFilledRectangle(rect);
 			graphics.RenderSolid(Color.FromBrightness(0));
 
-			for (int i=0; i<7; i++)  // TODO: on peut faire mieux, mais je ne trouve plus...
+			for (int i=0; i<8; i++)  // TODO: on peut faire mieux, mais je ne trouve plus...
 			{
 				DigitSegment segment = Digit.EnumTable[i];
 
@@ -214,6 +217,15 @@ namespace Epsitec.Common.Designer.Dolphin
 					path.LineTo(this.GetSegmentPoint(0.25, 0.10));
 					path.LineTo(this.GetSegmentPoint(0.52, 0.10));
 					path.LineTo(this.GetSegmentPoint(0.55, 0.20));
+					path.Close();
+					break;
+
+				case DigitSegment.Dot:
+					path = new Path();
+					path.MoveTo(this.GetSegmentPoint(0.80, 0.20));
+					path.LineTo(this.GetSegmentPoint(0.80, 0.10));
+					path.LineTo(this.GetSegmentPoint(0.93, 0.10));
+					path.LineTo(this.GetSegmentPoint(0.93, 0.20));
 					path.Close();
 					break;
 			}

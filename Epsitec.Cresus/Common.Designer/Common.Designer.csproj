@@ -46,6 +46,8 @@
     <Compile Include="Controllers\TableController.cs" />
     <Compile Include="Controllers\StructuredController.cs" />
     <Compile Include="Controllers\DruidController.cs" />
+    <Compile Include="Dolphin\AbstractProcessor.cs" />
+    <Compile Include="Dolphin\ProcessorGeneric.cs" />
     <Compile Include="Dolphin\PushButton.cs" />
     <Compile Include="Dolphin\Line.cs" />
     <Compile Include="Dolphin\Digit.cs" />

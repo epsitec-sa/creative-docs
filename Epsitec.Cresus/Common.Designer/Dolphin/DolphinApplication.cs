@@ -15,15 +15,8 @@ namespace Epsitec.Common.Designer.Dolphin
 		{
 			this.parentWindow = parentWindow;
 
-			//	Alloue la mémoire du dauphin.
-			int size = 1 << DolphinApplication.TotalAddress;
-			this.memory = new byte[size];
-			for (int i=0; i<size; i++)
-			{
-				this.memory[i] = (byte) Instructions.Nop;
-			}
-
-			this.ProcessorReset();
+			this.memory = new Memory(this);
+			this.processor = new ProcessorGeneric(this.memory);
 		}
 
 		public void CreateLayout()
@@ -67,7 +60,7 @@ namespace Epsitec.Common.Designer.Dolphin
 			this.rightPanel.Dock = DockStyle.Fill;
 
 			this.CreateBusPanel(this.leftPanel);
-			this.CreateKeyboard(this.rightPanel);
+			this.CreateKeyboardDisplay(this.rightPanel);
 		}
 
 
@@ -334,11 +327,11 @@ namespace Epsitec.Common.Designer.Dolphin
 		}
 
 
-		protected void CreateKeyboard(Panel parent)
+		protected void CreateKeyboardDisplay(Panel parent)
 		{
+			//	Crée le clavier et l'affichage simulé, dans la partie de droite.
 			List<Panel> lines = new List<Panel>();
-
-			for (int y=0; y<4; y++)
+			for (int y=0; y<2; y++)
 			{
 				Panel keyboard = new Panel(parent);
 				keyboard.PreferredHeight = 50;
@@ -349,44 +342,63 @@ namespace Epsitec.Common.Designer.Dolphin
 			}
 
 			Panel display = new Panel(parent);
-			display.PreferredHeight = 80;
+			display.PreferredHeight = 60;
 			display.Margins = new Margins(0, 0, 0, 20);
 			display.Dock = DockStyle.Bottom;
 
+			//	Crée les digits de l'affichage.
 			this.displayDigits = new List<Digit>();
 			for (int i=0; i<4; i++)
 			{
 				Digit digit = new Digit(display);
-				digit.PreferredWidth = 48;
+				digit.PreferredWidth = 40;
 				digit.Margins = new Margins(1, 1, 0, 0);
 				digit.Dock = DockStyle.Left;
 
 				this.displayDigits.Add(digit);
 			}
 
+			//	Crée les touches du clavier.
 			this.keyboardButtons = new List<PushButton>();
 			int t=0;
-			for (int y=0; y<4; y++)
+			for (int y=0; y<2; y++)
 			{
 				for (int x=0; x<5; x++)
 				{
+					int index = DolphinApplication.KeyboardIndex[t++];
+
+					string xmlText = null;
+					if (index < 0x08)  // touche 0..7 ?
+					{
+						xmlText = string.Concat("<font size=\"200%\"><b>", index.ToString(), "</b></font>");
+					}
+					else if (index == 0x08)
+					{
+						xmlText = "<b>Shift</b>";
+					}
+					else if (index == 0x10)
+					{
+						xmlText = "<b>Ctrl</b>";
+					}
+
 					PushButton button = new PushButton(lines[y]);
-					button.Text = DolphinApplication.KeyboardText[t++];
+					button.Text = xmlText;
+					button.Index = index;
 					button.PreferredWidth = 50;
 					button.Margins = new Margins(2, 2, 0, 0);
 					button.Dock = DockStyle.Left;
+					button.Pressed += new MessageEventHandler(this.HandleKeyboardButtonPressed);
+					button.Released += new MessageEventHandler(this.HandleKeyboardButtonReleased);
 
 					this.keyboardButtons.Add(button);
 				}
 			}
 		}
 
-		protected static string[] KeyboardText =
+		protected static int[] KeyboardIndex =
 		{
-			"<b>Shift</b>", "<font size=\"200%\"><b>0</b></font>", "<font size=\"200%\"><b>1</b></font>", "<font size=\"200%\"><b>2</b></font>", "<font size=\"200%\"><b>3</b></font>",
-			"<b>Ctrl</b>",  "<font size=\"200%\"><b>4</b></font>", "<font size=\"200%\"><b>5</b></font>", "<font size=\"200%\"><b>6</b></font>", "<font size=\"200%\"><b>7</b></font>",
-			"<b>Alt</b>",   "<font size=\"200%\"><b>8</b></font>", "<font size=\"200%\"><b>9</b></font>", "<font size=\"200%\"><b>A</b></font>", "<font size=\"200%\"><b>B</b></font>",
-			"<b>Menu</b>",  "<font size=\"200%\"><b>C</b></font>", "<font size=\"200%\"><b>D</b></font>", "<font size=\"200%\"><b>E</b></font>", "<font size=\"200%\"><b>F</b></font>",
+			0x08, 0x00, 0x01, 0x02, 0x03,  // Shift, 0..3
+			0x10, 0x04, 0x05, 0x06, 0x07,  // Ctrl,  4..7
 		};
 
 
@@ -468,56 +480,116 @@ namespace Epsitec.Common.Designer.Dolphin
 		}
 
 
-		#region Memory
-		protected int MemoryRead(int address)
+		/// <summary>
+		/// Gestion de la mémoire du système emulé.
+		/// </summary>
+		public class Memory
 		{
-			//	Lit une valeur en mémoire.
-			if (address >= 0 && address < this.memory.Length)
+			public Memory(DolphinApplication application)
 			{
-				return this.memory[address];
+				//	Alloue et initialise la mémoire du dauphin.
+				this.application = application;
+
+				int size = 1 << DolphinApplication.TotalAddress;
+				this.memory = new byte[size];
+
+				for (int i=0; i<size; i++)
+				{
+					this.memory[i] = 0;
+				}
+			}
+
+			public int Length
+			{
+				//	Retourne la longueur de la mémoire.
+				get
+				{
+					return this.memory.Length;
+				}
+			}
+
+			public int Read(int address)
+			{
+				//	Lit une valeur en mémoire et/ou dans un périphérique.
+				if (address >= 0 && address < this.memory.Length)  // adresse valide ?
+				{
+					int value = this.memory[address];
+
+					if (address == DolphinApplication.PeriphBase+DolphinApplication.PeriphKeyboard)  // lecture du clavier ?
+					{
+						if ((value & 0x80) != 0)  // bit full ?
+						{
+							this.memory[address] = (byte) (value & ~0x87);
+						}
+					}
+
+					return value;
+				}
+				else  // hors de l'espace d'adressage ?
+				{
+					return 0xff;
+				}
+			}
+
+			public void Write(int address, int data)
+			{
+				//	Ecrit une valeur en mémoire et/ou dans un périphérique.
+				if (address >= 0 && address < this.memory.Length)  // adresse valide ?
+				{
+					this.memory[address] = (byte) data;
+				}
+
+				if ((address & DolphinApplication.PeriphBase) != 0)  // périphérique ?
+				{
+					int periph = address & ~DolphinApplication.PeriphBase;
+
+					if (periph >= DolphinApplication.PeriphFirstDigit && periph <= DolphinApplication.PeriphLastDigit)  // l'un des 4 digits ?
+					{
+						int t = DolphinApplication.PeriphLastDigit-DolphinApplication.PeriphFirstDigit;
+						this.application.displayDigits[t-periph].SegmentValue = (Digit.DigitSegment) this.memory[address];
+					}
+				}
+			}
+
+			protected DolphinApplication application;
+			protected byte[] memory;
+		}
+
+		public void KeyboardChanged(PushButton button, bool pressed)
+		{
+			//	Appelé lorsqu'une touche du clavier simulé a été pressée ou relâchée.
+			int keys = this.memory.Read(DolphinApplication.PeriphBase+DolphinApplication.PeriphKeyboard);
+
+			if (button.Index < 0x08)
+			{
+				if (pressed)
+				{
+					keys &= ~0x87;
+					keys |= button.Index;
+					keys |= 0x80;  // bit full
+				}
 			}
 			else
 			{
-				return 0xff;
-			}
-		}
-
-		protected void MemoryWrite(int address, int data)
-		{
-			//	Ecrit une valeur en mémoire et/ou dans un périphérique.
-			if (address >= 0 && address < this.memory.Length)
-			{
-				this.memory[address] = (byte) data;
-			}
-
-			if ((address & (1 << (DolphinApplication.TotalAddress-1))) != 0)  // périphérique ?
-			{
-				int periph = address & ~(1 << (DolphinApplication.TotalAddress-1));
-
-				if (periph >= 0 && periph <= 3)  // 4 digits ?
+				if (pressed)
 				{
-					this.displayDigits[3-periph].SegmentValue = (Digit.DigitSegment) this.memory[address];
+					keys |= button.Index;
+				}
+				else
+				{
+					keys &= ~button.Index;
 				}
 			}
+
+			this.memory.Write(DolphinApplication.PeriphBase+DolphinApplication.PeriphKeyboard, keys);
 		}
-		#endregion
+
 
 		#region Processor
-		protected enum Instructions
-		{
-			Nop = 0x00,
-			JumpAbs = 0x01,
-			JumpRel = 0x02,
-		}
-
 		protected void ProcessorReset()
 		{
 			//	Reset du processeur pour démarrer à l'adresse 0.
-			this.registerPC = 0;
-			this.registerSP = this.memory.Length;
-			this.registerF = 0;
-			this.registerA = 0;
-			this.registerB = 0;
+			this.processor.Reset();
 		}
 
 		protected void ProcessorStart()
@@ -535,8 +607,7 @@ namespace Epsitec.Common.Designer.Dolphin
 			}
 			else  // step ?
 			{
-				this.AddressBits = this.registerPC;
-				this.DataBits = this.MemoryRead(this.registerPC);
+				this.ProcessorFeedback();
 			}
 		}
 
@@ -555,25 +626,16 @@ namespace Epsitec.Common.Designer.Dolphin
 		protected void ProcessorClock()
 		{
 			//	Exécute une instruction du processeur.
-			if (this.registerPC < 0 || this.registerPC >= this.memory.Length)
-			{
-				this.ProcessorReset();
-			}
+			this.ProcessorFeedback();
+			this.processor.Clock();
+		}
 
-			this.AddressBits = this.registerPC;
-			this.DataBits = this.MemoryRead(this.registerPC);
-			Instructions op = (Instructions) this.MemoryRead(this.registerPC++);
-
-			switch (op)
-			{
-				case Instructions.JumpAbs:
-					this.registerPC = (this.MemoryRead(this.registerPC++) << 8) | (this.MemoryRead(this.registerPC++));
-					break;
-
-				case Instructions.JumpRel:
-					this.registerPC += this.MemoryRead(this.registerPC++);
-					break;
-			}
+		protected void ProcessorFeedback()
+		{
+			//	Feedback visuel du processeur sur les bus.
+			int pc = this.processor.GetRegisterValue("PC");
+			this.AddressBits = pc;
+			this.DataBits = this.memory.Read(pc);
 		}
 		#endregion
 
@@ -611,9 +673,7 @@ namespace Epsitec.Common.Designer.Dolphin
 		{
 			//	Bouton [S] cliqué.
 			this.ProcessorClock();
-
-			this.AddressBits = this.registerPC;
-			this.DataBits = this.MemoryRead(this.registerPC);
+			this.ProcessorFeedback();
 		}
 
 		private void HandleSwitchStepClicked(object sender, MessageEventArgs e)
@@ -631,9 +691,7 @@ namespace Epsitec.Common.Designer.Dolphin
 				else  // step ?
 				{
 					this.ProcessorStop();
-
-					this.AddressBits = this.registerPC;
-					this.DataBits = this.MemoryRead(this.registerPC);
+					this.ProcessorFeedback();
 				}
 			}
 		}
@@ -654,12 +712,12 @@ namespace Epsitec.Common.Designer.Dolphin
 
 			if (this.switchDataReadWrite.ActiveState == ActiveState.No)  // read ?
 			{
-				this.DataBits = this.MemoryRead(this.AddressBits);
+				this.DataBits = this.memory.Read(this.AddressBits);
 			}
 			else  // write ?
 			{
-				this.MemoryWrite(this.AddressBits, this.DataBits);
-				this.DataBits = this.MemoryRead(this.AddressBits);
+				this.memory.Write(this.AddressBits, this.DataBits);
+				this.DataBits = this.memory.Read(this.AddressBits);
 			}
 		}
 
@@ -716,11 +774,31 @@ namespace Epsitec.Common.Designer.Dolphin
 			}
 		}
 
+		private void HandleKeyboardButtonPressed(object sender, MessageEventArgs e)
+		{
+			//	Touche du clavier simulé pressée.
+			PushButton button = sender as PushButton;
+			this.KeyboardChanged(button, true);
+		}
+
+		private void HandleKeyboardButtonReleased(object sender, MessageEventArgs e)
+		{
+			//	Touche du clavier simulé relâchée.
+			PushButton button = sender as PushButton;
+			this.KeyboardChanged(button, false);
+		}
+
 
 		public static readonly double MainWidth = 830;
 		public static readonly double MainHeight = 600;
+
 		public static readonly int TotalAddress = 12;
 		public static readonly int TotalData = 8;
+
+		protected static readonly int PeriphBase = (1 << (DolphinApplication.TotalAddress-1));
+		protected static readonly int PeriphFirstDigit = 0;
+		protected static readonly int PeriphLastDigit = 3;
+		protected static readonly int PeriphKeyboard = 7;
 
 		protected Window parentWindow;
 		protected Panel mainPanel;
@@ -741,12 +819,8 @@ namespace Epsitec.Common.Designer.Dolphin
 		protected List<Digit> displayDigits;
 		protected List<PushButton> keyboardButtons;
 
-		protected byte[] memory;
+		protected Memory memory;
+		protected AbstractProcessor processor;
 		protected Timer clock;
-		protected int registerPC;
-		protected int registerSP;
-		protected int registerF;
-		protected int registerA;
-		protected int registerB;
 	}
 }
