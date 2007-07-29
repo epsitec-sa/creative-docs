@@ -554,11 +554,11 @@ namespace Epsitec.Common.Designer.Dolphin
 					{
 						xmlText = string.Concat("<font size=\"200%\"><b>", index.ToString(), "</b></font>");
 					}
-					else if (index == 0x08)
+					else if (index == 0x10)
 					{
 						xmlText = "<b>Shift</b>";
 					}
-					else if (index == 0x10)
+					else if (index == 0x20)
 					{
 						xmlText = "<b>Ctrl</b>";
 					}
@@ -579,8 +579,8 @@ namespace Epsitec.Common.Designer.Dolphin
 
 		protected static int[] KeyboardIndex =
 		{
-			0x08, 0x00, 0x01, 0x02, 0x03,  // Shift, 0..3
-			0x10, 0x04, 0x05, 0x06, 0x07,  // Ctrl,  4..7
+			0x10, 0x00, 0x01, 0x02, 0x03,  // Shift, 0..3
+			0x20, 0x04, 0x05, 0x06, 0x07,  // Ctrl,  4..7
 		};
 
 
@@ -1029,7 +1029,7 @@ namespace Epsitec.Common.Designer.Dolphin
 			//	Touche du clavier simulé pressée.
 			PushButton button = sender as PushButton;
 
-			if (button.Index == 0x08 || button.Index == 0x10)  // shift ou ctrl ?
+			if (button.Index == 0x10 || button.Index == 0x20)  // shift ou ctrl ?
 			{
 				button.ActiveState = (button.ActiveState == ActiveState.Yes) ? ActiveState.No : ActiveState.Yes;
 			}
