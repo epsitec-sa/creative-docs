@@ -151,7 +151,7 @@ namespace Epsitec.Common.Designer.Dolphin
 
 		public override string GetRegisterBitNames(string name)
 		{
-			//	Retourne les noms des bits du registre.
+			//	Retourne les noms des bits d'un registre.
 			if (name == "F")
 			{
 				return "CWLG    ";  // bits 0..7 !

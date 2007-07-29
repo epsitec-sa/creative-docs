@@ -1,4 +1,6 @@
 using System.Collections.Generic;
+using System.Xml;
+using System.Xml.Serialization;
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Support;
 using Epsitec.Common.Types;
@@ -51,7 +53,7 @@ namespace Epsitec.Common.Designer.Dolphin
 			buttonSave.IconName = Misc.Icon("Save");
 			buttonSave.Margins = new Margins(0, 0, 8, 8);
 			buttonSave.Dock = DockStyle.Left;
-			buttonOpen.Clicked += new MessageEventHandler(this.HandleButtonSaveClicked);
+			buttonSave.Clicked += new MessageEventHandler(this.HandleButtonSaveClicked);
 			ToolTip.Default.SetToolTip(buttonSave, "Enregistre le programme");
 
 			StaticText title = new StaticText(panelTitle);
@@ -193,7 +195,7 @@ namespace Epsitec.Common.Designer.Dolphin
 			//	Crée le panneau de gauche détaillé complet.
 			Panel header;
 			Panel memoryPanel = this.CreatePanelWithTitle(parent, "Memory", out header);
-			memoryPanel.PreferredHeight = 213;  // place pour 8 adresses
+			memoryPanel.PreferredHeight = 47+21*8;  // place pour 8 adresses
 			memoryPanel.Dock = DockStyle.Bottom;
 
 			this.memoryButtonM = new PushButton(header);
@@ -368,7 +370,6 @@ namespace Epsitec.Common.Designer.Dolphin
 		{
 			//	Crée un panneau recevant des boutons (led + switch) pour des bits.
 			Panel panel = this.CreatePanelWithTitle(parent, title);
-			panel.Padding = new Margins(0, 0, 4, 12);
 			panel.Dock = DockStyle.Bottom;
 			
 			top = new Panel(panel);
@@ -398,7 +399,7 @@ namespace Epsitec.Common.Designer.Dolphin
 			panel.DrawFullFrame = true;
 			panel.DrawScrew = true;
 			panel.PreferredHeight = 195;
-			panel.Padding = new Margins(0, 0, 4, 10);
+			panel.Padding = new Margins(0, 0, 4, 12);
 			panel.Margins = new Margins(10, 10, 10, 10);
 
 			header = new Panel(panel);
@@ -750,6 +751,53 @@ namespace Epsitec.Common.Designer.Dolphin
 				}
 			}
 
+			public void Clear()
+			{
+				//	Vide toute le mémoire.
+				for (int i=0; i<this.memory.Length; i++)
+				{
+					this.memory[i] = 0;
+				}
+			}
+
+			public string GetContent()
+			{
+				//	Retourne tout le contenu de la mémoire dans une chaîne.
+				System.Text.StringBuilder builder = new System.Text.StringBuilder();
+
+				//	Cherche la dernière adresse non nulle.
+				int last = 0;
+				for (int i=DolphinApplication.PeriphBase-1; i>=0; i--)
+				{
+					if (this.memory[i] != 0)
+					{
+						last = i+1;
+						break;
+					}
+				}
+
+				for (int i=0; i<last; i++)
+				{
+					builder.Append(this.memory[i].ToString("X2"));
+				}
+
+				return builder.ToString();
+			}
+
+			public void PutContent(string data)
+			{
+				//	Initialise tout le contenu de la mémoire d'après une chaîne.
+				this.Clear();
+
+				int i = 0;
+				while (i < data.Length)
+				{
+					string hexa = data.Substring(i, 2);
+					this.memory[i/2] = (byte) Memory.ParseHexa(hexa);
+					i += 2;
+				}
+			}
+
 			public int Read(int address)
 			{
 				//	Lit une valeur en mémoire et/ou dans un périphérique.
@@ -808,6 +856,19 @@ namespace Epsitec.Common.Designer.Dolphin
 						int t = DolphinApplication.PeriphLastDigit-DolphinApplication.PeriphFirstDigit;
 						this.application.displayDigits[t-periph].SegmentValue = (Digit.DigitSegment) this.memory[address];
 					}
+				}
+			}
+
+			protected static int ParseHexa(string hexa)
+			{
+				int result;
+				if (System.Int32.TryParse(hexa, System.Globalization.NumberStyles.AllowHexSpecifier, System.Globalization.CultureInfo.CurrentCulture, out result))
+				{
+					return result;
+				}
+				else
+				{
+					return 0;
 				}
 			}
 
@@ -901,7 +962,7 @@ namespace Epsitec.Common.Designer.Dolphin
 
 		protected void ProcessorFeedback()
 		{
-			//	Feedback visuel du processeur sur les bus.
+			//	Feedback visuel du processeur dans les widgets des différents panneaux.
 			int pc = this.processor.GetRegisterValue("PC");
 			this.AddressBits = pc;
 			this.DataBits = this.memory.Read(pc);
@@ -918,16 +979,155 @@ namespace Epsitec.Common.Designer.Dolphin
 		}
 		#endregion
 
+		#region Serialization
+		public string Serialize()
+		{
+			//	Sérialise la vue éditée et retourne le résultat dans un string.
+			System.Text.StringBuilder buffer = new System.Text.StringBuilder();
+			System.IO.StringWriter stringWriter = new System.IO.StringWriter(buffer);
+			XmlTextWriter writer = new XmlTextWriter(stringWriter);
+			writer.Formatting = Formatting.Indented;
+
+			this.WriteXml(writer);
+
+			writer.Flush();
+			writer.Close();
+			return buffer.ToString();
+		}
+
+		public void Deserialize(string data)
+		{
+			//	Désérialise la vue à partir d'un string de données.
+			System.IO.StringReader stringReader = new System.IO.StringReader(data);
+			XmlTextReader reader = new XmlTextReader(stringReader);
+			
+			this.ReadXml(reader);
+
+			reader.Close();
+		}
+
+		protected void WriteXml(XmlWriter writer)
+		{
+			//	Sérialise tout le programme.
+			writer.WriteStartDocument();
+
+			writer.WriteStartElement("Dolphin");
+			writer.WriteElementString("ProcessorName", this.processor.Name);
+			writer.WriteElementString("ProcessorIPS", this.ips.ToString(System.Globalization.CultureInfo.InvariantCulture));
+			writer.WriteElementString("MemoryData", this.memory.GetContent());
+			writer.WriteEndElement();
+			
+			writer.WriteEndDocument();
+		}
+
+		protected void ReadXml(XmlReader reader)
+		{
+			//	Désérialise tout le programme.
+			this.memory.Clear();
+
+			reader.Read();
+			while (true)
+			{
+				if (reader.NodeType == XmlNodeType.Element)
+				{
+					string name = reader.LocalName;
+					//?string element = reader.ReadElementString();
+
+					if (name == "ProcessorName")
+					{
+						string element = reader.ReadElementString();
+						reader.Read();
+					}
+					else if (name == "ProcessorIPS")
+					{
+						string element = reader.ReadElementString();
+						this.ips = double.Parse(element, System.Globalization.CultureInfo.InvariantCulture);
+						reader.Read();
+					}
+					else if (name == "MemoryData")
+					{
+						string element = reader.ReadElementString();
+						this.memory.PutContent(element);
+						reader.Read();
+					}
+					else
+					{
+						reader.Read();
+					}
+				}
+				else if (reader.NodeType == XmlNodeType.EndElement)
+				{
+					System.Diagnostics.Debug.Assert(reader.Name == "Dolphin");
+					break;
+				}
+				else
+				{
+					reader.Read();
+				}
+			}
+
+		}
+		#endregion
 
 		#region Event handler
 		private void HandleButtonOpenClicked(object sender, MessageEventArgs e)
 		{
 			//	Bouton ouvrir cliqué.
+			Common.Dialogs.FileOpen dlg = new Common.Dialogs.FileOpen();
+			dlg.Title = "Ouverture d'un programme";
+			dlg.Filters.Add("dolphin", "Programmes", "*.dolphin");
+			dlg.Owner = this.parentWindow;
+			dlg.OpenDialog();  // affiche le dialogue...
+			if (dlg.Result != Epsitec.Common.Dialogs.DialogResult.Accept)
+			{
+				return;
+			}
+
+			this.ProcessorStop();
+			this.ProcessorReset();
+			this.ledRun.ActiveState = ActiveState.No;
+
+			string data = null;
+			try
+			{
+				data = System.IO.File.ReadAllText(dlg.FileName);
+			}
+			catch
+			{
+				data = null;
+			}
+
+			if (data != null)
+			{
+				this.Deserialize(data);
+			}
+
+			this.ProcessorFeedback();
+			this.UpdateButtons();
+			this.UpdateClockButtons();
 		}
 
 		private void HandleButtonSaveClicked(object sender, MessageEventArgs e)
 		{
 			//	Bouton enregistrer cliqué.
+			Common.Dialogs.FileSave dlg = new Common.Dialogs.FileSave();
+			dlg.Title = "Enregistrement d'un programme";
+			dlg.Filters.Add("dolphin", "Programmes", "*.dolphin");
+			dlg.Owner = this.parentWindow;
+			dlg.OpenDialog();  // affiche le dialogue...
+			if (dlg.Result != Epsitec.Common.Dialogs.DialogResult.Accept)
+			{
+				return;
+			}
+
+			string data = this.Serialize();
+			try
+			{
+				System.IO.File.WriteAllText(dlg.FileName, data);
+			}
+			catch
+			{
+			}
 		}
 
 		private void HandleOptionRadioClicked(object sender, MessageEventArgs e)

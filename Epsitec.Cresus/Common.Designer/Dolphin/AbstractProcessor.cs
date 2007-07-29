@@ -51,7 +51,7 @@ namespace Epsitec.Common.Designer.Dolphin
 
 		public virtual string GetRegisterBitNames(string name)
 		{
-			//	Retourne les noms des bits du registre.
+			//	Retourne les noms des bits d'un registre.
 			return null;
 		}
 

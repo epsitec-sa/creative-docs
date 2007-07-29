@@ -243,8 +243,8 @@ namespace Epsitec.Common.Designer.Dolphin
 
 		protected static double GetHexaWidth(int bitCount)
 		{
-			//	Retourne la largeur nécessaire pour représenter un certain nombre de bits en hexa.
-			return 10 + ((bitCount+3)/4)*10;
+			//	Retourne la largeur nécessaire pour représenter un certain nombre de bits en hexa dans un TextField.
+			return 8 + ((bitCount+3)/4)*6;
 		}
 
 		protected static int ParseHexa(string hexa, int valueIfError)
