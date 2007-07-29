@@ -209,6 +209,7 @@ namespace Epsitec.Common.Designer.Dolphin
 			this.memoryButtonM.Margins = new Margins(10+17, 2, 0, 3);
 			this.memoryButtonM.Dock = DockStyle.Left;
 			this.memoryButtonM.Clicked += new MessageEventHandler(this.HandleMemoryButtonClicked);
+			ToolTip.Default.SetToolTip(this.memoryButtonM, "Montre le début de la zone mémoire");
 
 			this.memoryButtonP = new PushButton(header);
 			this.memoryButtonP.Text = "P";
@@ -216,6 +217,7 @@ namespace Epsitec.Common.Designer.Dolphin
 			this.memoryButtonP.Margins = new Margins(0, 2, 0, 3);
 			this.memoryButtonP.Dock = DockStyle.Left;
 			this.memoryButtonP.Clicked += new MessageEventHandler(this.HandleMemoryButtonClicked);
+			ToolTip.Default.SetToolTip(this.memoryButtonP, "Montre le début de la zone des périphériques");
 
 			this.memoryAccessor = new MemoryAccessor(memoryPanel);
 			this.memoryAccessor.Memory = this.memory;
@@ -1115,6 +1117,7 @@ namespace Epsitec.Common.Designer.Dolphin
 			dlg.Filters.Add("dolphin", "Programmes", "*.dolphin");
 			dlg.Owner = this.parentWindow;
 			dlg.OpenDialog();  // affiche le dialogue...
+
 			if (dlg.Result != Epsitec.Common.Dialogs.DialogResult.Accept)
 			{
 				return;
@@ -1157,11 +1160,13 @@ namespace Epsitec.Common.Designer.Dolphin
 		{
 			//	Bouton enregistrer cliqué.
 			Common.Dialogs.FileSave dlg = new Common.Dialogs.FileSave();
+			dlg.PromptForOverwriting = true;
 			dlg.Title = "Enregistrement d'un programme";
 			dlg.FileName = this.filename;
 			dlg.Filters.Add("dolphin", "Programmes", "*.dolphin");
 			dlg.Owner = this.parentWindow;
 			dlg.OpenDialog();  // affiche le dialogue...
+
 			if (dlg.Result != Epsitec.Common.Dialogs.DialogResult.Accept)
 			{
 				return;
