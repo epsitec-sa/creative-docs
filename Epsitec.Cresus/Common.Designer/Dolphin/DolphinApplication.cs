@@ -40,6 +40,20 @@ namespace Epsitec.Common.Designer.Dolphin
 			panelTitle.Margins = new Margins(0, 0, 0, 10);
 			panelTitle.Dock = DockStyle.Top;
 
+			IconButton buttonOpen = new IconButton(panelTitle);
+			buttonOpen.IconName = Misc.Icon("Open");
+			buttonOpen.Margins = new Margins(10, 0, 8, 8);
+			buttonOpen.Dock = DockStyle.Left;
+			buttonOpen.Clicked += new MessageEventHandler(this.HandleButtonOpenClicked);
+			ToolTip.Default.SetToolTip(buttonOpen, "Ouvre un programme");
+
+			IconButton buttonSave = new IconButton(panelTitle);
+			buttonSave.IconName = Misc.Icon("Save");
+			buttonSave.Margins = new Margins(0, 0, 8, 8);
+			buttonSave.Dock = DockStyle.Left;
+			buttonOpen.Clicked += new MessageEventHandler(this.HandleButtonSaveClicked);
+			ToolTip.Default.SetToolTip(buttonSave, "Enregistre le programme");
+
 			StaticText title = new StaticText(panelTitle);
 			title.Text = "<font size=\"200%\"><b>Dolphin microprocessor emulator </b></font>by EPSITEC";
 			title.ContentAlignment = ContentAlignment.MiddleCenter;
@@ -84,10 +98,7 @@ namespace Epsitec.Common.Designer.Dolphin
 
 			//	Crée les 2 parties de droite.
 			this.helpPanel = new Panel(rightPanel);
-			//?this.helpPanel.BackColor = Color.FromBrightness(0.9);
-			//?this.helpPanel.DrawFullFrame = true;
 			this.helpPanel.Margins = new Margins(0, 0, 0, 10);
-			//?this.helpPanel.Padding = new Margins(10, 10, 10, 10);
 			this.helpPanel.Dock = DockStyle.Fill;
 
 			Panel kdPanel = new Panel(rightPanel);
@@ -96,7 +107,7 @@ namespace Epsitec.Common.Designer.Dolphin
 			kdPanel.DrawScrew = true;
 			kdPanel.PreferredHeight = 100;  // minimum qui sera étendu
 			kdPanel.Margins = new Margins(0, 0, 0, 0);
-			kdPanel.Padding = new Margins(10, 10, 10, 10);
+			kdPanel.Padding = new Margins(12, 0, 10, 10);
 			kdPanel.Dock = DockStyle.Bottom;
 
 			//	Crée le contenu des différentes parties.
@@ -552,7 +563,7 @@ namespace Epsitec.Common.Designer.Dolphin
 			{
 				Panel keyboard = new Panel(parent);
 				keyboard.PreferredHeight = 50;
-				keyboard.Margins = new Margins(0, 0, 2, (y==0) ? 10:2);
+				keyboard.Margins = new Margins(0, 0, 0, (y==0) ? 10:2);
 				keyboard.Dock = DockStyle.Bottom;
 
 				lines.Add(keyboard);
@@ -569,7 +580,6 @@ namespace Epsitec.Common.Designer.Dolphin
 			{
 				Digit digit = new Digit(display);
 				digit.PreferredWidth = 40;
-				digit.Margins = new Margins((i==0)?2:0, 0, 0, 0);
 				digit.Dock = DockStyle.Left;
 
 				this.displayDigits.Add(digit);
@@ -602,7 +612,7 @@ namespace Epsitec.Common.Designer.Dolphin
 					button.Text = xmlText;
 					button.Index = index;
 					button.PreferredWidth = 50;
-					button.Margins = new Margins(2, 2, 0, 0);
+					button.Margins = new Margins(0, 2, 0, 0);
 					button.Dock = DockStyle.Left;
 					button.Pressed += new MessageEventHandler(this.HandleKeyboardButtonPressed);
 					button.Released += new MessageEventHandler(this.HandleKeyboardButtonReleased);
@@ -910,6 +920,16 @@ namespace Epsitec.Common.Designer.Dolphin
 
 
 		#region Event handler
+		private void HandleButtonOpenClicked(object sender, MessageEventArgs e)
+		{
+			//	Bouton ouvrir cliqué.
+		}
+
+		private void HandleButtonSaveClicked(object sender, MessageEventArgs e)
+		{
+			//	Bouton enregistrer cliqué.
+		}
+
 		private void HandleOptionRadioClicked(object sender, MessageEventArgs e)
 		{
 			//	Bouton pour une option cliqué.
