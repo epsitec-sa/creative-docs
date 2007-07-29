@@ -154,7 +154,7 @@ namespace Epsitec.Common.Designer.Dolphin
 			//	Retourne les noms des bits du registre.
 			if (name == "F")
 			{
-				return "CW    GL";  // bits 0..7 !
+				return "CWLG    ";  // bits 0..7 !
 			}
 
 			return null;

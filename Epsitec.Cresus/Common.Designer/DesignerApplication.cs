@@ -2177,7 +2177,7 @@ namespace Epsitec.Common.Designer
 			{
 				Window window = new Window();
 				this.Window = window;
-				window.Root.WindowStyles = WindowStyles.DefaultDocumentWindow;
+				window.Root.WindowStyles = WindowStyles.CanMinimize|WindowStyles.HasCloseButton;
 
 				Point parentCenter;
 				Rectangle windowBounds;
@@ -2192,14 +2192,14 @@ namespace Epsitec.Common.Designer
 					parentCenter = parentWindow.WindowBounds.Center;
 				}
 
-				double w = Dolphin.DolphinApplication.MainWidth+50;
-				double h = Dolphin.DolphinApplication.MainHeight+100;
+				double w = Dolphin.DolphinApplication.MainWidth+20;
+				double h = Dolphin.DolphinApplication.MainHeight+20;
 
 				windowBounds = new Rectangle(parentCenter.X-w/2, parentCenter.Y-h/2, w, h);
 				windowBounds = ScreenInfo.FitIntoWorkingArea(windowBounds);
 
 				window.WindowBounds = windowBounds;
-				window.Root.MinSize = new Size(w, h);
+				window.ClientSize = windowBounds.Size;
 				window.Text = "Dolphin";
 				window.Name = "Application";  // utilisé pour générer "QuitApplication" !
 				window.PreventAutoClose = true;

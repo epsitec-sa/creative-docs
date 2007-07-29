@@ -25,10 +25,12 @@ namespace Epsitec.Common.Designer.Dolphin
 			this.mainPanel.BackColor = Color.FromBrightness(0.7);
 			this.mainPanel.DrawFullFrame = true;
 			this.mainPanel.DrawScrew = true;
+			this.mainPanel.MinSize = new Size(DolphinApplication.MainWidth, DolphinApplication.MainHeight);
+			this.mainPanel.MaxSize = new Size(DolphinApplication.MainWidth, DolphinApplication.MainHeight);
 			this.mainPanel.PreferredSize = new Size(DolphinApplication.MainWidth, DolphinApplication.MainHeight);
 			this.mainPanel.Margins = new Margins(10, 10, 10, 10);
 			this.mainPanel.Padding = new Margins(14, 14, 14, 14);
-			this.mainPanel.Anchor = AnchorStyles.TopLeft;
+			this.mainPanel.Dock = DockStyle.Fill;
 
 			Panel panelTitle = new Panel(this.mainPanel);
 			panelTitle.BackColor = Color.FromBrightness(0.9);
@@ -50,7 +52,7 @@ namespace Epsitec.Common.Designer.Dolphin
 			leftPanel.BackColor = Color.FromBrightness(0.9);
 			leftPanel.DrawFullFrame = true;
 			leftPanel.PreferredWidth = 510;
-			leftPanel.Padding = new Margins(10, 10, 10, 10);
+			leftPanel.Padding = new Margins(10, 0, 10, 10);
 			leftPanel.Dock = DockStyle.Left;
 
 			Panel rightPanel = new Panel(all);
@@ -69,7 +71,7 @@ namespace Epsitec.Common.Designer.Dolphin
 
 			Panel leftClock = new Panel(leftPanel);
 			leftClock.PreferredWidth = 50-10;
-			leftClock.Margins = new Margins(0, 10, 0, 0);
+			leftClock.Margins = new Margins(0, 0, 0, 0);
 			leftClock.Dock = DockStyle.Left;
 
 			this.leftPanelBus = new Panel(leftPanel);
@@ -325,6 +327,7 @@ namespace Epsitec.Common.Designer.Dolphin
 		{
 			//	Crée un panneau recevant des boutons (led + switch) pour des bits.
 			Panel panel = this.CreatePanelWithTitle(parent, title);
+			panel.Padding = new Margins(0, 10, 4, 12);
 			panel.Dock = DockStyle.Bottom;
 			
 			top = new Panel(panel);
@@ -348,8 +351,8 @@ namespace Epsitec.Common.Designer.Dolphin
 		{
 			//	Crée un panneau avec un titre en haut.
 			Panel panel = new Panel(parent);
-			panel.MinWidth = 410;
-			panel.MaxWidth = 410;
+			panel.MinWidth = 400;
+			panel.MaxWidth = 400;
 			panel.BackColor = Color.FromBrightness(0.8);
 			panel.DrawFullFrame = true;
 			panel.DrawScrew = true;
@@ -535,6 +538,7 @@ namespace Epsitec.Common.Designer.Dolphin
 			{
 				Digit digit = new Digit(display);
 				digit.PreferredWidth = 40;
+				digit.Margins = new Margins((i==0)?2:0, 0, 0, 0);
 				digit.Dock = DockStyle.Left;
 
 				this.displayDigits.Add(digit);
@@ -1046,7 +1050,7 @@ namespace Epsitec.Common.Designer.Dolphin
 		#endregion
 
 
-		public static readonly double MainWidth = 830;
+		public static readonly double MainWidth = 808;
 		public static readonly double MainHeight = 600;
 
 		public static readonly int TotalAddress = 12;
