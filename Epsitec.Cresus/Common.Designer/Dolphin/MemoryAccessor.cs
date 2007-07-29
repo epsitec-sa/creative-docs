@@ -66,7 +66,7 @@ namespace Epsitec.Common.Designer.Dolphin
 
 		public int FirstAddress
 		{
-			//	Indique la première adresse affichée.
+			//	Indique la première adresse affichée (relative dans la banque).
 			get
 			{
 				return this.firstAddress;
@@ -77,6 +77,27 @@ namespace Epsitec.Common.Designer.Dolphin
 				{
 					this.firstAddress = value;
 
+					this.UpdateData();
+					this.UpdateMarkPC();
+				}
+			}
+		}
+
+		public string Bank
+		{
+			//	Choix de la banque affichée.
+			get
+			{
+				return this.bank;
+			}
+			set
+			{
+				if (this.bank != value)
+				{
+					this.bank = value;
+					this.firstAddress = 0;
+
+					this.UpdateScroller();
 					this.UpdateData();
 					this.UpdateMarkPC();
 				}
@@ -148,9 +169,10 @@ namespace Epsitec.Common.Designer.Dolphin
 			}
 
 			this.scroller.MinValue = (decimal) 0;
-			this.scroller.MaxValue = (decimal) (this.memory.Length - this.fields.Count);
+			this.scroller.MaxValue = (decimal) (this.MemoryLength - this.fields.Count);
 			this.scroller.Value = (decimal) this.firstAddress;
-			this.scroller.VisibleRangeRatio = (decimal) this.fields.Count / (decimal) this.memory.Length;
+			//?this.scroller.VisibleRangeRatio = (decimal) this.fields.Count / (decimal) this.MemoryLength;
+			this.scroller.VisibleRangeRatio = 0.2M;  // pour éviter une cabine trop petite !
 			this.scroller.LargeChange = (decimal) this.fields.Count;
 			this.scroller.SmallChange = (decimal) 1;
 		}
@@ -164,7 +186,7 @@ namespace Epsitec.Common.Designer.Dolphin
 
 			for (int i=0; i<this.fields.Count; i++)
 			{
-				int address = this.firstAddress+i;
+				int address = this.MemoryStart+this.firstAddress+i;
 
 				TextFieldHexa field = this.fields[i];
 				field.Label = address.ToString("X3");
@@ -183,13 +205,48 @@ namespace Epsitec.Common.Designer.Dolphin
 			{
 				Color color = Color.Empty;
 
-				if (this.firstAddress+i == this.markPC)
+				if (this.MemoryStart+this.firstAddress+i == this.markPC)
 				{
 					color = Color.FromRgb(1, 0, 0);
 				}
 
 				TextFieldHexa field = this.fields[i];
 				field.BackColor = color;
+			}
+		}
+
+
+		protected int MemoryLength
+		{
+			get
+			{
+				if (this.bank == null)
+				{
+					return this.memory.Length;
+				}
+				else
+				{
+					return this.memory.Length/2;
+				}
+			}
+		}
+
+		protected int MemoryStart
+		{
+			get
+			{
+				if (this.bank == "M")
+				{
+					return 0;
+				}
+				else if (this.bank == "P")
+				{
+					return this.memory.Length/2;
+				}
+				else
+				{
+					return 0;
+				}
 			}
 		}
 
@@ -203,7 +260,7 @@ namespace Epsitec.Common.Designer.Dolphin
 		{
 			TextFieldHexa field = sender as TextFieldHexa;
 
-			int address = this.firstAddress+field.Index;
+			int address = this.MemoryStart+this.firstAddress+field.Index;
 			this.memory.Write(address, field.HexaValue);
 		}
 
@@ -211,6 +268,7 @@ namespace Epsitec.Common.Designer.Dolphin
 		static protected readonly double LineHeight = 20;
 
 		protected DolphinApplication.Memory memory;
+		protected string bank;
 		protected VScroller scroller;
 		protected Panel panel;
 		protected List<TextFieldHexa> fields;

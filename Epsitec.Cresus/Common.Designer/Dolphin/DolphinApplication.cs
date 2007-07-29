@@ -54,10 +54,7 @@ namespace Epsitec.Common.Designer.Dolphin
 			leftPanel.Dock = DockStyle.Left;
 
 			Panel rightPanel = new Panel(all);
-			rightPanel.BackColor = Color.FromBrightness(0.9);
-			rightPanel.DrawFullFrame = true;
 			rightPanel.Margins = new Margins(10, 0, 0, 0);
-			rightPanel.Padding = new Margins(10, 10, 10, 10);
 			rightPanel.Dock = DockStyle.Fill;
 
 			//	Crée les 3 parties de gauche.
@@ -82,12 +79,30 @@ namespace Epsitec.Common.Designer.Dolphin
 			this.leftPanelDetail.Dock = DockStyle.Fill;
 			this.leftPanelDetail.Visibility = false;
 
+			//	Crée les 2 parties de droite.
+			this.helpPanel = new Panel(rightPanel);
+			//?this.helpPanel.BackColor = Color.FromBrightness(0.9);
+			//?this.helpPanel.DrawFullFrame = true;
+			this.helpPanel.Margins = new Margins(0, 0, 0, 10);
+			//?this.helpPanel.Padding = new Margins(10, 10, 10, 10);
+			this.helpPanel.Dock = DockStyle.Fill;
+
+			Panel kdPanel = new Panel(rightPanel);
+			kdPanel.BackColor = Color.FromBrightness(0.9);
+			kdPanel.DrawFullFrame = true;
+			kdPanel.DrawScrew = true;
+			kdPanel.PreferredHeight = 100;  // minimum qui sera étendu
+			kdPanel.Margins = new Margins(0, 0, 0, 0);
+			kdPanel.Padding = new Margins(10, 10, 10, 10);
+			kdPanel.Dock = DockStyle.Bottom;
+
 			//	Crée le contenu des différentes parties.
 			this.CreateOptions(leftHeader);
 			this.CreateClockControl(leftClock);
 			this.CreateBusPanel(this.leftPanelBus);
 			this.CreateDetailPanel(this.leftPanelDetail);
-			this.CreateKeyboardDisplay(rightPanel);
+			this.CreateHelp(this.helpPanel);
+			this.CreateKeyboardDisplay(kdPanel);
 
 			this.ProcessorFeedback();
 		}
@@ -162,12 +177,28 @@ namespace Epsitec.Common.Designer.Dolphin
 		protected void CreateDetailPanel(Panel parent)
 		{
 			//	Crée le panneau de gauche détaillé complet.
-			Panel memoryPanel = this.CreatePanelWithTitle(parent, "Memory");
+			Panel header;
+			Panel memoryPanel = this.CreatePanelWithTitle(parent, "Memory", out header);
 			memoryPanel.PreferredHeight = 220;  // place pour 8 adresses
 			memoryPanel.Dock = DockStyle.Bottom;
 
+			this.memoryButtonM = new PushButton(header);
+			this.memoryButtonM.Text = "M";
+			this.memoryButtonM.PreferredSize = new Size(22, 22);
+			this.memoryButtonM.Margins = new Margins(17, 2, 0, 3);
+			this.memoryButtonM.Dock = DockStyle.Left;
+			this.memoryButtonM.Clicked += new MessageEventHandler(this.HandleMemoryButtonClicked);
+
+			this.memoryButtonP = new PushButton(header);
+			this.memoryButtonP.Text = "P";
+			this.memoryButtonP.PreferredSize = new Size(22, 22);
+			this.memoryButtonP.Margins = new Margins(0, 2, 0, 3);
+			this.memoryButtonP.Dock = DockStyle.Left;
+			this.memoryButtonP.Clicked += new MessageEventHandler(this.HandleMemoryButtonClicked);
+
 			this.memoryAccessor = new MemoryAccessor(memoryPanel);
 			this.memoryAccessor.Memory = this.memory;
+			this.memoryAccessor.Bank = "M";
 			this.memoryAccessor.Dock = DockStyle.Fill;
 
 			//	Partie pour le processeur.
@@ -182,6 +213,7 @@ namespace Epsitec.Common.Designer.Dolphin
 			{
 				TextFieldHexa field = this.CreateProcessorRegister(processorPanel, name);
 				field.Name = name;
+				field.BitNames = this.processor.GetRegisterBitNames(name);
 				field.SetTabIndex(index++);
 				field.Margins = new Margins(17, 0, 0, 1);  // laisse la largeur d'un Scroller
 				field.Dock = DockStyle.Top;
@@ -189,6 +221,8 @@ namespace Epsitec.Common.Designer.Dolphin
 
 				this.registerFields.Add(field);
 			}
+
+			this.UpdateMemoryBank();
 		}
 
 		protected TextFieldHexa CreateProcessorRegister(Panel parent, string name)
@@ -306,6 +340,12 @@ namespace Epsitec.Common.Designer.Dolphin
 
 		protected Panel CreatePanelWithTitle(Panel parent, string title)
 		{
+			Panel header;
+			return this.CreatePanelWithTitle(parent, title, out header);
+		}
+
+		protected Panel CreatePanelWithTitle(Panel parent, string title, out Panel header)
+		{
 			//	Crée un panneau avec un titre en haut.
 			Panel panel = new Panel(parent);
 			panel.MinWidth = 410;
@@ -317,12 +357,17 @@ namespace Epsitec.Common.Designer.Dolphin
 			panel.Padding = new Margins(10, 10, 4, 12);
 			panel.Margins = new Margins(10, 10, 10, 10);
 
-			StaticText label = new StaticText(panel);
+			header = new Panel(panel);
+			header.PreferredHeight = 25;
+			header.Margins = new Margins(0, 0, 0, 0);
+			header.Dock = DockStyle.Top;
+
+			StaticText label = new StaticText(header);
 			label.Text = string.Concat("<font size=\"150%\"><b>", title, "</b></font>");
 			label.ContentAlignment = ContentAlignment.TopCenter;
 			label.PreferredHeight = 25;
 			label.Margins = new Margins(0, 0, 0, 0);
-			label.Dock = DockStyle.Top;
+			label.Dock = DockStyle.Fill;
 
 			Line sep = new Line(panel);
 			sep.PreferredHeight = 1;
@@ -432,6 +477,39 @@ namespace Epsitec.Common.Designer.Dolphin
 		}
 
 
+		protected void CreateHelp(Panel parent)
+		{
+			//	Crée le panneau pour l'aide.
+			TabBook book = new TabBook(parent);
+			book.Arrows = TabBookArrows.Stretch;
+			book.Dock = DockStyle.Fill;
+
+			List<string> chapters = this.processor.HelpChapters;
+			TabPage firstPage = null;
+			foreach (string chapter in chapters)
+			{
+				TabPage page = new TabPage();
+				page.TabTitle = chapter;
+
+				string text = this.processor.HelpChapter(chapter);
+
+				TextFieldMulti field = new TextFieldMulti(page);
+				field.IsReadOnly = true;
+				field.MaxChar = text.Length+10;
+				field.Text = text;
+				field.Dock = DockStyle.Fill;
+
+				if (firstPage == null)
+				{
+					firstPage = page;
+				}
+
+				book.Items.Add(page);
+			}
+
+			book.ActivePage = firstPage;
+		}
+
 		protected void CreateKeyboardDisplay(Panel parent)
 		{
 			//	Crée le clavier et l'affichage simulé, dans la partie de droite.
@@ -448,7 +526,7 @@ namespace Epsitec.Common.Designer.Dolphin
 
 			Panel display = new Panel(parent);
 			display.PreferredHeight = 60;
-			display.Margins = new Margins(0, 0, 0, 20);
+			display.Margins = new Margins(0, 0, 10, 10);
 			display.Dock = DockStyle.Bottom;
 
 			//	Crée les digits de l'affichage.
@@ -526,6 +604,13 @@ namespace Epsitec.Common.Designer.Dolphin
 			{
 				button.Enable = !run;
 			}
+		}
+
+		protected void UpdateMemoryBank()
+		{
+			//	Met à jour la banque mémoire utilisée.
+			this.memoryButtonM.ActiveState = (this.memoryAccessor.Bank == "M") ? ActiveState.Yes : ActiveState.No;
+			this.memoryButtonP.ActiveState = (this.memoryAccessor.Bank == "P") ? ActiveState.Yes : ActiveState.No;
 		}
 
 
@@ -767,6 +852,7 @@ namespace Epsitec.Common.Designer.Dolphin
 			}
 
 			this.memoryAccessor.MarkPC = pc;
+			this.memoryAccessor.UpdateData();
 		}
 		#endregion
 
@@ -921,6 +1007,18 @@ namespace Epsitec.Common.Designer.Dolphin
 			//	La valeur d'un registre du processeur a été changée.
 			TextFieldHexa field = sender as TextFieldHexa;
 			this.processor.SetRegisterValue(field.Name, field.HexaValue);
+
+			if (field.Name == "PC")
+			{
+				this.memoryAccessor.MarkPC = this.processor.GetRegisterValue("PC");
+			}
+		}
+
+		private void HandleMemoryButtonClicked(object sender, MessageEventArgs e)
+		{
+			//	Bouton [M] ou [P] cliqué.
+			this.memoryAccessor.Bank = (sender == this.memoryButtonM) ? "M" : "P";
+			this.UpdateMemoryBank();
 		}
 
 		private void HandleKeyboardButtonPressed(object sender, MessageEventArgs e)
@@ -955,6 +1053,7 @@ namespace Epsitec.Common.Designer.Dolphin
 		protected Panel leftPanelBus;
 		protected Panel leftPanelDetail;
 		protected Panel clockBusPanel;
+		protected Panel helpPanel;
 		protected PushButton buttonReset;
 		protected PushButton buttonStep;
 		protected PushButton buttonMemory;
@@ -971,6 +1070,8 @@ namespace Epsitec.Common.Designer.Dolphin
 		protected List<PushButton> keyboardButtons;
 		protected List<TextFieldHexa> registerFields;
 		protected MemoryAccessor memoryAccessor;
+		protected PushButton memoryButtonM;
+		protected PushButton memoryButtonP;
 
 		protected Memory memory;
 		protected AbstractProcessor processor;

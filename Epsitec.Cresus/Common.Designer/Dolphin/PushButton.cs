@@ -27,6 +27,7 @@ namespace Epsitec.Common.Designer.Dolphin
 			Drawing.Rectangle rect  = this.Client.Bounds;
 			WidgetPaintState  state = this.PaintState;
 			Drawing.Point     pos   = this.GetTextLayoutOffset();
+			bool little = rect.Width <= 30;
 			
 			if ( (state & WidgetPaintState.Enabled) == 0 )
 			{
@@ -46,18 +47,26 @@ namespace Epsitec.Common.Designer.Dolphin
 				Rectangle rectExt = rect;
 				rectExt.Deflate(0.5);
 				Path pathExt = new Path();
-				pathExt.AppendRoundedRectangle(rectExt, 5);
+				pathExt.AppendRoundedRectangle(rectExt, little?3:5);
 
 				Rectangle rectInt = rect;
-				rectInt.Deflate(3.5);
+				rectInt.Deflate(little?2.5:3.5);
 				Path pathInt = new Path();
-				pathInt.AppendRoundedRectangle(rectInt, 3);
+				pathInt.AppendRoundedRectangle(rectInt, little?2:3);
 
 				graphics.Rasterizer.AddSurface(pathExt);
 				Geometry.RenderVerticalGradient(graphics, rectExt, this.FromBrightness(0.3, true), this.FromBrightness(0.9, true));
 
-				graphics.Rasterizer.AddSurface(pathInt);
-				Geometry.RenderVerticalGradient(graphics, rectInt, this.FromBrightness(0.9), this.FromBrightness(0.7));
+				if (this.ActiveState == ActiveState.Yes)
+				{
+					graphics.Rasterizer.AddSurface(pathInt);
+					graphics.RenderSolid(Color.FromRgb(1, 0, 0));  // rouge
+				}
+				else
+				{
+					graphics.Rasterizer.AddSurface(pathInt);
+					Geometry.RenderVerticalGradient(graphics, rectInt, this.FromBrightness(0.9), this.FromBrightness(0.7));
+				}
 
 				graphics.Rasterizer.AddOutline(pathExt);
 				graphics.Rasterizer.AddOutline(pathInt);

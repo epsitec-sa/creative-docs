@@ -149,6 +149,17 @@ namespace Epsitec.Common.Designer.Dolphin
 			return base.GetRegisterSize(name);
 		}
 
+		public override string GetRegisterBitNames(string name)
+		{
+			//	Retourne les noms des bits du registre.
+			if (name == "F")
+			{
+				return "CW    GL";  // bits 0..7 !
+			}
+
+			return null;
+		}
+
 		public override int GetRegisterValue(string name)
 		{
 			//	Retourne la valeur d'un registre.
@@ -205,6 +216,92 @@ namespace Epsitec.Common.Designer.Dolphin
 					this.registerHL = value;
 					break;
 			}
+		}
+
+		
+		public override List<string> HelpChapters
+		{
+			//	Retourne la liste des chapitres.
+			get
+			{
+				List<string> chapters = new List<string>();
+				
+				chapters.Add("Généralités");
+				chapters.Add("Transferts");
+				chapters.Add("Opérations");
+				chapters.Add("Tests");
+				chapters.Add("Sauts");
+				
+				return chapters;
+			}
+		}
+
+		public override string HelpChapter(string chapter)
+		{
+			//	Retourne le texte d'un chapitre.
+			System.Text.StringBuilder builder = new System.Text.StringBuilder();
+
+			switch (chapter)
+			{
+				case "Généralités":
+					AbstractProcessor.HelpPutTitle(builder, "Binaire et hexadécimal");
+					AbstractProcessor.HelpPutLine(builder, "(<i>décimal: binaire = hexa</i>)");
+					AbstractProcessor.HelpPutLine(builder, "  0: 0000 = 0");
+					AbstractProcessor.HelpPutLine(builder, "  1: 0001 = 1");
+					AbstractProcessor.HelpPutLine(builder, "  2: 0010 = 2");
+					AbstractProcessor.HelpPutLine(builder, "  3: 0011 = 3");
+					AbstractProcessor.HelpPutLine(builder, "  4: 0100 = 4");
+					AbstractProcessor.HelpPutLine(builder, "  5: 0101 = 5");
+					AbstractProcessor.HelpPutLine(builder, "  6: 0110 = 6");
+					AbstractProcessor.HelpPutLine(builder, "  7: 0111 = 7");
+					AbstractProcessor.HelpPutLine(builder, "  8: 1000 = 8");
+					AbstractProcessor.HelpPutLine(builder, "  9: 1001 = 9");
+					AbstractProcessor.HelpPutLine(builder, "10: 1010 = A");
+					AbstractProcessor.HelpPutLine(builder, "11: 1011 = B");
+					AbstractProcessor.HelpPutLine(builder, "12: 1100 = C");
+					AbstractProcessor.HelpPutLine(builder, "13: 1101 = D");
+					AbstractProcessor.HelpPutLine(builder, "14: 1110 = E");
+					AbstractProcessor.HelpPutLine(builder, "15: 1111 = F");
+					break;
+
+				case "Transferts":
+					AbstractProcessor.HelpPutTitle(builder, "Valeur immédiate");
+					AbstractProcessor.HelpPutLine(builder, "[03] [xx] :  LOAD A, #xx");
+					AbstractProcessor.HelpPutLine(builder, "[04] [xx] :  LOAD B, #xx");
+					AbstractProcessor.HelpPutLine(builder, "[05] [xx] [yy] :  LOAD HL, #xxyy");
+
+					AbstractProcessor.HelpPutTitle(builder, "Registre à registre");
+					AbstractProcessor.HelpPutLine(builder, "[06] : LOAD A, B");
+					AbstractProcessor.HelpPutLine(builder, "[07] : LOAD B, A");
+
+					AbstractProcessor.HelpPutTitle(builder, "Registre à mémoire");
+					AbstractProcessor.HelpPutLine(builder, "[08] [hh] [ll] :  LOAD A, hhll");
+					AbstractProcessor.HelpPutLine(builder, "[09] [hh] [ll] :  LOAD hhll, A");
+					break;
+
+				case "Opérations":
+					AbstractProcessor.HelpPutTitle(builder, "Compteurs");
+					AbstractProcessor.HelpPutLine(builder, "[10] :  INC A");
+					AbstractProcessor.HelpPutLine(builder, "[11] :  INC B");
+					AbstractProcessor.HelpPutLine(builder, "[12] :  INC HL");
+					break;
+
+				case "Tests":
+					AbstractProcessor.HelpPutTitle(builder, "");
+					AbstractProcessor.HelpPutLine(builder, "");
+					break;
+
+				case "Sauts":
+					AbstractProcessor.HelpPutTitle(builder, "Absolu");
+					AbstractProcessor.HelpPutLine(builder, "[01] [hh] [ll] :  JUMP hhll");
+					AbstractProcessor.HelpPutLine(builder, "[02] [dd] :  JUMP' +dd");
+
+					AbstractProcessor.HelpPutTitle(builder, "Conditionnel");
+					AbstractProcessor.HelpPutLine(builder, "[20] [hh] [ll] :  JUMP,EQ hhll");
+					break;
+			}
+
+			return builder.ToString();
 		}
 
 		

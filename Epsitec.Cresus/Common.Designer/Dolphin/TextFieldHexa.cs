@@ -12,31 +12,65 @@ namespace Epsitec.Common.Designer.Dolphin
 	{
 		public TextFieldHexa() : base()
 		{
+			this.PreferredHeight = 20;
+
 			this.label = new StaticText(this);
 			this.label.ContentAlignment = ContentAlignment.MiddleLeft;
-			this.label.PreferredWidth = 30;
-			this.label.Margins = new Margins(5, 5, 0, 0);
+			this.label.PreferredHeight = 20;
+			this.label.PreferredWidth = 25;
+			this.label.Margins = new Margins(5, 3, 0, 0);
 			this.label.Dock = DockStyle.Left;
 
 			this.textField = new TextField(this);
+			this.textField.PreferredHeight = 20;
 			this.textField.Dock = DockStyle.Left;
 			this.textField.TextChanged += new EventHandler(this.HandleFieldTextChanged);
 			this.textField.IsFocusedChanged += new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleFieldIsFocusedChanged);
 
+			Panel pm = new Panel(this);
+			pm.PreferredSize = new Size(14, 20);
+			pm.Margins = new Margins(-1, 0, 0, 0);
+			pm.Dock = DockStyle.Left;
+
+			this.buttonPlus = new GlyphButton(pm);
+			this.buttonPlus.GlyphShape = GlyphShape.TriangleUp;
+			this.buttonPlus.ButtonStyle = ButtonStyle.UpDown;
+			this.buttonPlus.PreferredSize = new Size(14, 11);
+			this.buttonPlus.Margins = new Margins(0, 0, 0, -1);
+			this.buttonPlus.Dock = DockStyle.Top;
+			this.buttonPlus.Clicked += new MessageEventHandler(this.HandleButtonClicked);
+
+			this.buttonMinus = new GlyphButton(pm);
+			this.buttonMinus.GlyphShape = GlyphShape.TriangleDown;
+			this.buttonMinus.ButtonStyle = ButtonStyle.UpDown;
+			this.buttonMinus.PreferredSize = new Size(14, 11);
+			this.buttonMinus.Margins = new Margins(0, 0, -1, 0);
+			this.buttonMinus.Dock = DockStyle.Bottom;
+			this.buttonMinus.Clicked += new MessageEventHandler(this.HandleButtonClicked);
+
+			this.buttonClear = new GlyphButton(this);
+			this.buttonClear.GlyphShape = GlyphShape.Close;
+			this.buttonClear.ButtonStyle = ButtonStyle.UpDown;
+			this.buttonClear.PreferredSize = new Size(18, 20);
+			this.buttonClear.Margins = new Margins(-1, 0, 0, 0);
+			this.buttonClear.Dock = DockStyle.Left;
+			this.buttonClear.Clicked += new MessageEventHandler(this.HandleButtonClicked);
+
 			Panel buttons = new Panel(this);
-			buttons.PreferredWidth = 170;
+			buttons.PreferredHeight = 20;
+			buttons.PreferredWidth = 256;
 			buttons.Dock = DockStyle.Left;
 
-			this.buttons = new List<Switch>();
+			this.buttons = new List<PushButton>();
 			for (int i=0; i<12; i++)
 			{
-				Switch button = new Switch(buttons);
+				PushButton button = new PushButton(buttons);
 				button.Index = i;
-				button.PreferredWidth = 10;
+				button.PreferredWidth = 18;
 				button.PreferredHeight = 20;
-				button.Margins = new Margins((i+1)%4 == 0 ? 10:1, 1, 1, 1);
+				button.Margins = new Margins((i+1)%4 == 0 ? 10:1, 0, 0, 0);
 				button.Dock = DockStyle.Right;
-				button.Clicked += new MessageEventHandler(this.HandleButtonClicked);
+				button.Clicked += new MessageEventHandler(this.HandleSwitchClicked);
 
 				this.buttons.Add(button);
 			}
@@ -55,11 +89,14 @@ namespace Epsitec.Common.Designer.Dolphin
 
 				this.textField.TextChanged -= new EventHandler(this.HandleFieldTextChanged);
 				this.textField.IsFocusedChanged -= new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleFieldIsFocusedChanged);
-				this.textField.Dispose();
+
+				this.buttonPlus.Clicked -= new MessageEventHandler(this.HandleButtonClicked);
+				this.buttonMinus.Clicked -= new MessageEventHandler(this.HandleButtonClicked);
+				this.buttonClear.Clicked -= new MessageEventHandler(this.HandleButtonClicked);
 
 				for (int i=0; i<12; i++)
 				{
-					this.buttons[i].Clicked -= new MessageEventHandler(this.HandleButtonClicked);
+					this.buttons[i].Clicked -= new MessageEventHandler(this.HandleSwitchClicked);
 					this.buttons[i].Dispose();
 				}
 			}
@@ -92,12 +129,40 @@ namespace Epsitec.Common.Designer.Dolphin
 					double width = TextFieldHexa.GetHexaWidth(this.bitCount);
 
 					this.textField.PreferredWidth = width;
-					this.textField.Margins = new Margins(max-width, 20, 0, 0);
+					this.textField.Margins = new Margins(max-width, 0, 0, 0);
 					this.textField.MaxChar = (this.bitCount+3)/4;
 
 					for (int i=0; i<this.buttons.Count; i++)
 					{
 						this.buttons[i].Visibility = (i < this.bitCount);
+					}
+				}
+			}
+		}
+
+		public string BitNames
+		{
+			//	Noms des bits représentés.
+			get
+			{
+				return this.bitNames;
+			}
+			set
+			{
+				if (this.bitNames != value)
+				{
+					this.bitNames = value;
+
+					if (this.bitNames != null)
+					{
+						for (int i=0; i<this.buttons.Count; i++)
+						{
+							if (i < this.bitNames.Length)
+							{
+								string letter = this.bitNames.Substring(i, 1);
+								this.buttons[i].Text = string.Concat("<font size=\"90%\">", letter, "</font>");
+							}
+						}
 					}
 				}
 			}
@@ -138,6 +203,8 @@ namespace Epsitec.Common.Designer.Dolphin
 					this.OnHexaValueChanged();
 				}
 #else
+				value &= (1 << this.bitCount)-1;
+
 				int current = TextFieldHexa.ParseHexa(this.textField.Text, -1);
 				if (current != value)
 				{
@@ -218,8 +285,27 @@ namespace Epsitec.Common.Designer.Dolphin
 
 		private void HandleButtonClicked(object sender, MessageEventArgs e)
 		{
+			//	Bouton "+/-/0" cliqué.
+			if (sender == this.buttonPlus)
+			{
+				this.HexaValue = this.HexaValue+1;
+			}
+
+			if (sender == this.buttonMinus)
+			{
+				this.HexaValue = this.HexaValue-1;
+			}
+
+			if (sender == this.buttonClear)
+			{
+				this.HexaValue = 0;
+			}
+		}
+
+		private void HandleSwitchClicked(object sender, MessageEventArgs e)
+		{
 			//	Switch binaire basculé.
-			Switch button = sender as Switch;
+			PushButton button = sender as PushButton;
 
 			if (button.ActiveState == ActiveState.No)
 			{
@@ -269,9 +355,13 @@ namespace Epsitec.Common.Designer.Dolphin
 
 		protected int						bitCount = -1;
 		protected string					baseName;
+		protected string					bitNames;
 
 		protected StaticText				label;
 		protected TextField					textField;
-		protected List<Switch>				buttons;
+		protected GlyphButton				buttonPlus;
+		protected GlyphButton				buttonMinus;
+		protected GlyphButton				buttonClear;
+		protected List<PushButton>			buttons;
 	}
 }
