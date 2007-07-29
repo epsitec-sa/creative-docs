@@ -526,12 +526,22 @@ namespace Epsitec.Common.Designer.Dolphin
 		protected void CreateHelp(Panel parent)
 		{
 			//	Crée le panneau pour l'aide.
-			TabBook book = new TabBook(parent);
-			book.Arrows = TabBookArrows.Stretch;
-			book.Dock = DockStyle.Fill;
+			this.book = new TabBook(parent);
+			this.book.Arrows = TabBookArrows.Stretch;
+			this.book.Dock = DockStyle.Fill;
 
+			//	Crée l'onglet pour les commentaires sur le programme.
+			this.pageProgramm = new TabPage();
+			this.pageProgramm.TabTitle = "Programme";
+
+			this.fieldProgrammRem = new TextFieldMulti(this.pageProgramm);
+			this.fieldProgrammRem.Text = DolphinApplication.ProgrammEmptyRem;
+			this.fieldProgrammRem.Dock = DockStyle.Fill;
+
+			this.book.Items.Add(this.pageProgramm);
+
+			//	Crée les onglets d'aide sur le processeur.
 			List<string> chapters = this.processor.HelpChapters;
-			TabPage firstPage = null;
 			foreach (string chapter in chapters)
 			{
 				TabPage page = new TabPage();
@@ -545,15 +555,10 @@ namespace Epsitec.Common.Designer.Dolphin
 				field.Text = text;
 				field.Dock = DockStyle.Fill;
 
-				if (firstPage == null)
-				{
-					firstPage = page;
-				}
-
-				book.Items.Add(page);
+				this.book.Items.Add(page);
 			}
 
-			book.ActivePage = firstPage;
+			this.book.ActivePage = this.pageProgramm;
 		}
 
 		protected void CreateKeyboardDisplay(Panel parent)
@@ -1010,13 +1015,19 @@ namespace Epsitec.Common.Designer.Dolphin
 		{
 			//	Sérialise tout le programme.
 			writer.WriteStartDocument();
-
 			writer.WriteStartElement("Dolphin");
+			
 			writer.WriteElementString("ProcessorName", this.processor.Name);
 			writer.WriteElementString("ProcessorIPS", this.ips.ToString(System.Globalization.CultureInfo.InvariantCulture));
+
+			if (this.fieldProgrammRem.Text != DolphinApplication.ProgrammEmptyRem)
+			{
+				writer.WriteElementString("Rem", this.fieldProgrammRem.Text);
+			}
+
 			writer.WriteElementString("MemoryData", this.memory.GetContent());
+
 			writer.WriteEndElement();
-			
 			writer.WriteEndDocument();
 		}
 
@@ -1024,6 +1035,7 @@ namespace Epsitec.Common.Designer.Dolphin
 		{
 			//	Désérialise tout le programme.
 			this.memory.Clear();
+			this.fieldProgrammRem.Text = DolphinApplication.ProgrammEmptyRem;
 
 			reader.Read();
 			while (true)
@@ -1048,6 +1060,12 @@ namespace Epsitec.Common.Designer.Dolphin
 					{
 						string element = reader.ReadElementString();
 						this.memory.PutContent(element);
+						reader.Read();
+					}
+					else if (name == "Rem")
+					{
+						string element = reader.ReadElementString();
+						this.fieldProgrammRem.Text = element;
 						reader.Read();
 					}
 					else
@@ -1100,6 +1118,11 @@ namespace Epsitec.Common.Designer.Dolphin
 			if (data != null)
 			{
 				this.Deserialize(data);
+			}
+
+			if (this.fieldProgrammRem.Text != DolphinApplication.ProgrammEmptyRem)
+			{
+				this.book.ActivePage = this.pageProgramm;
 			}
 
 			this.ProcessorFeedback();
@@ -1340,6 +1363,8 @@ namespace Epsitec.Common.Designer.Dolphin
 		protected static readonly int PeriphLastDigit = 3;
 		protected static readonly int PeriphKeyboard = 7;
 
+		protected static readonly string ProgrammEmptyRem = "<br/><i>Tapez ici les commentaires sur le programme...</i>";
+
 		protected Window parentWindow;
 		protected Panel mainPanel;
 		protected Panel leftPanelBus;
@@ -1367,6 +1392,9 @@ namespace Epsitec.Common.Designer.Dolphin
 		protected MemoryAccessor memoryAccessor;
 		protected PushButton memoryButtonM;
 		protected PushButton memoryButtonP;
+		protected TabBook book;
+		protected TabPage pageProgramm;
+		protected TextFieldMulti fieldProgrammRem;
 
 		protected Memory memory;
 		protected AbstractProcessor processor;

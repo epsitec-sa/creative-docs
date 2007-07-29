@@ -226,11 +226,11 @@ namespace Epsitec.Common.Designer.Dolphin
 			{
 				List<string> chapters = new List<string>();
 				
-				chapters.Add("Généralités");
-				chapters.Add("Transferts");
-				chapters.Add("Opérations");
-				chapters.Add("Tests");
-				chapters.Add("Sauts");
+				chapters.Add("Hexa");
+				chapters.Add("Load");
+				chapters.Add("Op");
+				chapters.Add("Test");
+				chapters.Add("Jump");
 				
 				return chapters;
 			}
@@ -243,7 +243,7 @@ namespace Epsitec.Common.Designer.Dolphin
 
 			switch (chapter)
 			{
-				case "Généralités":
+				case "Hexa":
 					AbstractProcessor.HelpPutTitle(builder, "Binaire et hexadécimal");
 					AbstractProcessor.HelpPutLine(builder, "(<i>décimal: binaire = hexa</i>)");
 					AbstractProcessor.HelpPutLine(builder, "  0: 0000 = 0");
@@ -264,7 +264,7 @@ namespace Epsitec.Common.Designer.Dolphin
 					AbstractProcessor.HelpPutLine(builder, "15: 1111 = F");
 					break;
 
-				case "Transferts":
+				case "Load":
 					AbstractProcessor.HelpPutTitle(builder, "Valeur immédiate");
 					AbstractProcessor.HelpPutLine(builder, "[03] [xx] :  LOAD A, #xx");
 					AbstractProcessor.HelpPutLine(builder, "[04] [xx] :  LOAD B, #xx");
@@ -279,19 +279,19 @@ namespace Epsitec.Common.Designer.Dolphin
 					AbstractProcessor.HelpPutLine(builder, "[09] [hh] [ll] :  LOAD hhll, A");
 					break;
 
-				case "Opérations":
+				case "Op":
 					AbstractProcessor.HelpPutTitle(builder, "Compteurs");
 					AbstractProcessor.HelpPutLine(builder, "[10] :  INC A");
 					AbstractProcessor.HelpPutLine(builder, "[11] :  INC B");
 					AbstractProcessor.HelpPutLine(builder, "[12] :  INC HL");
 					break;
 
-				case "Tests":
+				case "Test":
 					AbstractProcessor.HelpPutTitle(builder, "");
 					AbstractProcessor.HelpPutLine(builder, "");
 					break;
 
-				case "Sauts":
+				case "Jump":
 					AbstractProcessor.HelpPutTitle(builder, "Absolu");
 					AbstractProcessor.HelpPutLine(builder, "[01] [hh] [ll] :  JUMP hhll");
 					AbstractProcessor.HelpPutLine(builder, "[02] [dd] :  JUMP' +dd");
