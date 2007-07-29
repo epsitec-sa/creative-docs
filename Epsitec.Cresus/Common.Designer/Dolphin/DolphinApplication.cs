@@ -56,6 +56,11 @@ namespace Epsitec.Common.Designer.Dolphin
 			buttonSave.Clicked += new MessageEventHandler(this.HandleButtonSaveClicked);
 			ToolTip.Default.SetToolTip(buttonSave, "Enregistre le programme");
 
+			this.programmFilename = new StaticText(panelTitle);
+			this.programmFilename.PreferredWidth = 100;
+			this.programmFilename.Margins = new Margins(10, 0, 0, 0);
+			this.programmFilename.Dock = DockStyle.Left;
+
 			StaticText title = new StaticText(panelTitle);
 			title.Text = "<font size=\"200%\"><b>Dolphin microprocessor emulator </b></font>by EPSITEC";
 			title.ContentAlignment = ContentAlignment.MiddleCenter;
@@ -665,6 +670,19 @@ namespace Epsitec.Common.Designer.Dolphin
 			this.buttonClock0.ActiveState = (this.ips ==   1) ? ActiveState.Yes : ActiveState.No;
 		}
 
+		protected void UpdateFilename()
+		{
+			//	Met à jour le nom du programme ouvert.
+			if (string.IsNullOrEmpty(this.filename))
+			{
+				this.programmFilename.Text = null;
+			}
+			else
+			{
+				this.programmFilename.Text = System.IO.Path.GetFileNameWithoutExtension(this.filename);
+			}
+		}
+
 		protected void UpdateMemoryBank()
 		{
 			//	Met à jour la banque mémoire utilisée.
@@ -1093,6 +1111,7 @@ namespace Epsitec.Common.Designer.Dolphin
 			//	Bouton ouvrir cliqué.
 			Common.Dialogs.FileOpen dlg = new Common.Dialogs.FileOpen();
 			dlg.Title = "Ouverture d'un programme";
+			dlg.FileName = "";
 			dlg.Filters.Add("dolphin", "Programmes", "*.dolphin");
 			dlg.Owner = this.parentWindow;
 			dlg.OpenDialog();  // affiche le dialogue...
@@ -1101,6 +1120,8 @@ namespace Epsitec.Common.Designer.Dolphin
 				return;
 			}
 
+			this.filename = dlg.FileName;
+
 			this.ProcessorStop();
 			this.ProcessorReset();
 			this.ledRun.ActiveState = ActiveState.No;
@@ -1108,7 +1129,7 @@ namespace Epsitec.Common.Designer.Dolphin
 			string data = null;
 			try
 			{
-				data = System.IO.File.ReadAllText(dlg.FileName);
+				data = System.IO.File.ReadAllText(this.filename);
 			}
 			catch
 			{
@@ -1125,9 +1146,11 @@ namespace Epsitec.Common.Designer.Dolphin
 				this.book.ActivePage = this.pageProgramm;
 			}
 
+
 			this.ProcessorFeedback();
 			this.UpdateButtons();
 			this.UpdateClockButtons();
+			this.UpdateFilename();
 		}
 
 		private void HandleButtonSaveClicked(object sender, MessageEventArgs e)
@@ -1135,6 +1158,7 @@ namespace Epsitec.Common.Designer.Dolphin
 			//	Bouton enregistrer cliqué.
 			Common.Dialogs.FileSave dlg = new Common.Dialogs.FileSave();
 			dlg.Title = "Enregistrement d'un programme";
+			dlg.FileName = this.filename;
 			dlg.Filters.Add("dolphin", "Programmes", "*.dolphin");
 			dlg.Owner = this.parentWindow;
 			dlg.OpenDialog();  // affiche le dialogue...
@@ -1143,14 +1167,18 @@ namespace Epsitec.Common.Designer.Dolphin
 				return;
 			}
 
+			this.filename = dlg.FileName;
+
 			string data = this.Serialize();
 			try
 			{
-				System.IO.File.WriteAllText(dlg.FileName, data);
+				System.IO.File.WriteAllText(this.filename, data);
 			}
 			catch
 			{
 			}
+
+			this.UpdateFilename();
 		}
 
 		private void HandleOptionRadioClicked(object sender, MessageEventArgs e)
@@ -1371,6 +1399,7 @@ namespace Epsitec.Common.Designer.Dolphin
 		protected Panel leftPanelDetail;
 		protected Panel clockBusPanel;
 		protected Panel helpPanel;
+		protected StaticText programmFilename;
 		protected PushButton buttonReset;
 		protected PushButton buttonStep;
 		protected PushButton buttonMemory;
@@ -1400,6 +1429,7 @@ namespace Epsitec.Common.Designer.Dolphin
 		protected AbstractProcessor processor;
 		protected Timer clock;
 		protected double ips;
+		protected string filename;
 		protected bool ignoreChange;
 	}
 }
