@@ -17,6 +17,7 @@ namespace Epsitec.Common.Designer.Dolphin
 
 			this.memory = new Memory(this);
 			this.processor = new ProcessorGeneric(this.memory);
+			this.ips = 100;
 		}
 
 		public void CreateLayout()
@@ -28,7 +29,7 @@ namespace Epsitec.Common.Designer.Dolphin
 			this.mainPanel.MinSize = new Size(DolphinApplication.MainWidth, DolphinApplication.MainHeight);
 			this.mainPanel.MaxSize = new Size(DolphinApplication.MainWidth, DolphinApplication.MainHeight);
 			this.mainPanel.PreferredSize = new Size(DolphinApplication.MainWidth, DolphinApplication.MainHeight);
-			this.mainPanel.Margins = new Margins(10, 10, 10, 10);
+			this.mainPanel.Margins = new Margins(DolphinApplication.MainMargin, DolphinApplication.MainMargin, DolphinApplication.MainMargin, DolphinApplication.MainMargin);
 			this.mainPanel.Padding = new Margins(14, 14, 14, 14);
 			this.mainPanel.Dock = DockStyle.Fill;
 
@@ -52,7 +53,7 @@ namespace Epsitec.Common.Designer.Dolphin
 			leftPanel.BackColor = Color.FromBrightness(0.9);
 			leftPanel.DrawFullFrame = true;
 			leftPanel.PreferredWidth = 510;
-			leftPanel.Padding = new Margins(10, 0, 10, 10);
+			leftPanel.Padding = new Margins(0, 0, 10, 10);
 			leftPanel.Dock = DockStyle.Left;
 
 			Panel rightPanel = new Panel(all);
@@ -71,7 +72,7 @@ namespace Epsitec.Common.Designer.Dolphin
 
 			Panel leftClock = new Panel(leftPanel);
 			leftClock.PreferredWidth = 50-10;
-			leftClock.Margins = new Margins(0, 0, 0, 0);
+			leftClock.Margins = new Margins(10, 0, 0, 0);
 			leftClock.Dock = DockStyle.Left;
 
 			this.leftPanelBus = new Panel(leftPanel);
@@ -181,13 +182,13 @@ namespace Epsitec.Common.Designer.Dolphin
 			//	Crée le panneau de gauche détaillé complet.
 			Panel header;
 			Panel memoryPanel = this.CreatePanelWithTitle(parent, "Memory", out header);
-			memoryPanel.PreferredHeight = 220;  // place pour 8 adresses
+			memoryPanel.PreferredHeight = 213;  // place pour 8 adresses
 			memoryPanel.Dock = DockStyle.Bottom;
 
 			this.memoryButtonM = new PushButton(header);
 			this.memoryButtonM.Text = "M";
 			this.memoryButtonM.PreferredSize = new Size(22, 22);
-			this.memoryButtonM.Margins = new Margins(17, 2, 0, 3);
+			this.memoryButtonM.Margins = new Margins(10+17, 2, 0, 3);
 			this.memoryButtonM.Dock = DockStyle.Left;
 			this.memoryButtonM.Clicked += new MessageEventHandler(this.HandleMemoryButtonClicked);
 
@@ -201,12 +202,12 @@ namespace Epsitec.Common.Designer.Dolphin
 			this.memoryAccessor = new MemoryAccessor(memoryPanel);
 			this.memoryAccessor.Memory = this.memory;
 			this.memoryAccessor.Bank = "M";
+			this.memoryAccessor.Margins = new Margins(10, 10, 0, 0);
 			this.memoryAccessor.Dock = DockStyle.Fill;
 
 			//	Partie pour le processeur.
 			Panel processorPanel = this.CreatePanelWithTitle(parent, "Microprocessor register");
 			processorPanel.PreferredHeight = 10;  // minuscule (sera étendu)
-			processorPanel.Padding = new Margins(10, 10, 4, 6);
 			processorPanel.Dock = DockStyle.Bottom;
 
 			this.registerFields = new List<TextFieldHexa>();
@@ -217,7 +218,7 @@ namespace Epsitec.Common.Designer.Dolphin
 				field.Name = name;
 				field.BitNames = this.processor.GetRegisterBitNames(name);
 				field.SetTabIndex(index++);
-				field.Margins = new Margins(17, 0, 0, 1);  // laisse la largeur d'un Scroller
+				field.Margins = new Margins(10+17, 0, 0, 1);  // laisse la largeur d'un Scroller
 				field.Dock = DockStyle.Top;
 				field.HexaValueChanged += new EventHandler(this.HandleProcessorHexaValueChanged);
 
@@ -253,8 +254,35 @@ namespace Epsitec.Common.Designer.Dolphin
 
 			this.ledRun = this.CreateLabeledLed(parent, "Run");
 
+			this.buttonClock2 = new PushButton(parent);
+			this.buttonClock2.Index = 100;
+			this.buttonClock2.Text = "100 IPS";
+			this.buttonClock2.PreferredSize = new Size(50, 24);
+			this.buttonClock2.Margins = new Margins(0, 0, 10, 0);
+			this.buttonClock2.Dock = DockStyle.Top;
+			this.buttonClock2.Clicked += new MessageEventHandler(this.HandleButtonClockClicked);
+			ToolTip.Default.SetToolTip(this.buttonClock2, "100 instructions/seconde");
+
+			this.buttonClock1 = new PushButton(parent);
+			this.buttonClock1.Index = 10;
+			this.buttonClock1.Text = "10 IPS";
+			this.buttonClock1.PreferredSize = new Size(50, 24);
+			this.buttonClock1.Margins = new Margins(0, 0, 2, 0);
+			this.buttonClock1.Dock = DockStyle.Top;
+			this.buttonClock1.Clicked += new MessageEventHandler(this.HandleButtonClockClicked);
+			ToolTip.Default.SetToolTip(this.buttonClock1, "10 instructions/seconde");
+
+			this.buttonClock0 = new PushButton(parent);
+			this.buttonClock0.Index = 1;
+			this.buttonClock0.Text = "1 IPS";
+			this.buttonClock0.PreferredSize = new Size(50, 24);
+			this.buttonClock0.Margins = new Margins(0, 0, 2, 0);
+			this.buttonClock0.Dock = DockStyle.Top;
+			this.buttonClock0.Clicked += new MessageEventHandler(this.HandleButtonClockClicked);
+			ToolTip.Default.SetToolTip(this.buttonClock0, "1 instruction/seconde");
+
 			Panel stepLabels = this.CreateSwitchHorizonalLabels(parent, "C", "S");
-			stepLabels.Margins = new Margins(0, 0, 10, 0);
+			stepLabels.Margins = new Margins(0, 0, 6, 0);
 			stepLabels.Dock = DockStyle.Top;
 
 			this.switchStep = new Switch(parent);
@@ -295,6 +323,8 @@ namespace Epsitec.Common.Designer.Dolphin
 			this.buttonMemory.Pressed += new MessageEventHandler(this.HandleButtonMemoryPressed);
 			this.buttonMemory.Released += new MessageEventHandler(this.HandleButtonMemoryReleased);
 			ToolTip.Default.SetToolTip(this.buttonMemory, "Memory access");
+
+			this.UpdateClockButtons();
 		}
 
 		protected Led CreateLabeledLed(Panel parent, string text)
@@ -327,7 +357,7 @@ namespace Epsitec.Common.Designer.Dolphin
 		{
 			//	Crée un panneau recevant des boutons (led + switch) pour des bits.
 			Panel panel = this.CreatePanelWithTitle(parent, title);
-			panel.Padding = new Margins(0, 10, 4, 12);
+			panel.Padding = new Margins(0, 0, 4, 12);
 			panel.Dock = DockStyle.Bottom;
 			
 			top = new Panel(panel);
@@ -357,7 +387,7 @@ namespace Epsitec.Common.Designer.Dolphin
 			panel.DrawFullFrame = true;
 			panel.DrawScrew = true;
 			panel.PreferredHeight = 195;
-			panel.Padding = new Margins(10, 10, 4, 12);
+			panel.Padding = new Margins(0, 0, 4, 10);
 			panel.Margins = new Margins(10, 10, 10, 10);
 
 			header = new Panel(panel);
@@ -433,6 +463,7 @@ namespace Epsitec.Common.Designer.Dolphin
 		{
 			Panel labels = new Panel(parent);
 			labels.PreferredWidth = 20;
+			labels.Margins = new Margins(0, 10, 0, 0);
 			labels.Dock = DockStyle.Right;
 
 			StaticText label;
@@ -608,6 +639,14 @@ namespace Epsitec.Common.Designer.Dolphin
 			{
 				button.Enable = !run;
 			}
+		}
+
+		protected void UpdateClockButtons()
+		{
+			//	Met à jour les boutons pour la fréquence de l'horloge.
+			this.buttonClock2.ActiveState = (this.ips == 100) ? ActiveState.Yes : ActiveState.No;
+			this.buttonClock1.ActiveState = (this.ips ==  10) ? ActiveState.Yes : ActiveState.No;
+			this.buttonClock0.ActiveState = (this.ips ==   1) ? ActiveState.Yes : ActiveState.No;
 		}
 
 		protected void UpdateMemoryBank()
@@ -811,7 +850,7 @@ namespace Epsitec.Common.Designer.Dolphin
 				if (this.clock == null)
 				{
 					this.clock = new Timer();
-					this.clock.AutoRepeat = 0.001;  // 1000 instructions/seconde
+					this.clock.AutoRepeat = 1.0/this.ips;
 					this.clock.TimeElapsed += new EventHandler(this.HandleClockTimeElapsed);
 					this.clock.Start();
 				}
@@ -819,6 +858,15 @@ namespace Epsitec.Common.Designer.Dolphin
 			else  // step ?
 			{
 				this.ProcessorFeedback();
+			}
+		}
+
+		protected void ProcessorClockAdjust()
+		{
+			//	Ajuste l'horloge du processeur.
+			if (this.clock != null)
+			{
+				this.clock.AutoRepeat = 1.0/this.ips;
 			}
 		}
 
@@ -906,6 +954,16 @@ namespace Epsitec.Common.Designer.Dolphin
 			//	Bouton [S] cliqué.
 			this.ProcessorClock();
 			this.ProcessorFeedback();
+		}
+
+		private void HandleButtonClockClicked(object sender, MessageEventArgs e)
+		{
+			//	Bouton pour choisir la fréquence d'horloge cliqué.
+			PushButton button = sender as PushButton;
+
+			this.ips = button.Index;
+			this.UpdateClockButtons();
+			this.ProcessorClockAdjust();
 		}
 
 		private void HandleSwitchStepClicked(object sender, MessageEventArgs e)
@@ -1050,8 +1108,9 @@ namespace Epsitec.Common.Designer.Dolphin
 		#endregion
 
 
-		public static readonly double MainWidth = 808;
+		public static readonly double MainWidth = 800;
 		public static readonly double MainHeight = 600;
+		public static readonly double MainMargin = 6;
 
 		public static readonly int TotalAddress = 12;
 		public static readonly int TotalData = 8;
@@ -1071,6 +1130,9 @@ namespace Epsitec.Common.Designer.Dolphin
 		protected PushButton buttonStep;
 		protected PushButton buttonMemory;
 		protected Led ledRun;
+		protected PushButton buttonClock2;
+		protected PushButton buttonClock1;
+		protected PushButton buttonClock0;
 		protected Switch switchStep;
 		protected Switch switchDataReadWrite;
 		protected List<Digit> addressDigits;
@@ -1089,6 +1151,7 @@ namespace Epsitec.Common.Designer.Dolphin
 		protected Memory memory;
 		protected AbstractProcessor processor;
 		protected Timer clock;
+		protected double ips;
 		protected bool ignoreChange;
 	}
 }

@@ -2192,8 +2192,8 @@ namespace Epsitec.Common.Designer
 					parentCenter = parentWindow.WindowBounds.Center;
 				}
 
-				double w = Dolphin.DolphinApplication.MainWidth+20;
-				double h = Dolphin.DolphinApplication.MainHeight+20;
+				double w = Dolphin.DolphinApplication.MainWidth + Dolphin.DolphinApplication.MainMargin*2;
+				double h = Dolphin.DolphinApplication.MainHeight + Dolphin.DolphinApplication.MainMargin*2;
 
 				windowBounds = new Rectangle(parentCenter.X-w/2, parentCenter.Y-h/2, w, h);
 				windowBounds = ScreenInfo.FitIntoWorkingArea(windowBounds);
