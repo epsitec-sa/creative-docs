@@ -151,6 +151,7 @@ namespace Epsitec.Common.Designer.Dolphin
 				field.Index = i;
 				field.SetTabIndex(i+1);
 				field.BitCount = DolphinApplication.TotalData;
+				field.BitNames = null;
 				field.PreferredHeight = MemoryAccessor.LineHeight;
 				field.Margins = new Margins(0, 0, 0, 1);
 				field.Dock = DockStyle.Top;

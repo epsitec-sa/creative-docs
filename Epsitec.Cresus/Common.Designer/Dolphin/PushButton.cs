@@ -23,13 +23,34 @@ namespace Epsitec.Common.Designer.Dolphin
 		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
 		{
 			IAdorner adorner = Widgets.Adorners.Factory.Active;
+			WidgetPaintState state = this.PaintState;
 
-			Drawing.Rectangle rect  = this.Client.Bounds;
-			WidgetPaintState  state = this.PaintState;
-			Drawing.Point     pos   = this.GetTextLayoutOffset();
+			Rectangle rect = this.Client.Bounds;
+			rect.Deflate(0.5);
 			bool little = rect.Width <= 30;
-			
-			if ( (state & WidgetPaintState.Enabled) == 0 )
+
+			Point pos = this.GetTextLayoutOffset();
+			pos.Y += this.GetBaseLineVerticalOffset();
+
+			if ((state & WidgetPaintState.Engaged) != 0)
+			{
+				Path pathExt = new Path();
+				pathExt.AppendRoundedRectangle(rect, little?3:5);
+
+				graphics.Rasterizer.AddSurface(pathExt);
+				Geometry.RenderVerticalGradient(graphics, rect, this.FromBrightness(0.5), this.FromBrightness(0.2));
+
+				graphics.Rasterizer.AddOutline(pathExt);
+				graphics.RenderSolid(this.FromBrightness(0));
+
+				double offset = little?1:2;
+				rect.Deflate(offset);
+
+				pos.X += offset/2;
+				pos.Y -= offset/2;
+			}
+
+			if ((state & WidgetPaintState.Enabled) == 0)
 			{
 				state &= ~WidgetPaintState.Focused;
 				state &= ~WidgetPaintState.Entered;
@@ -45,12 +66,11 @@ namespace Epsitec.Common.Designer.Dolphin
 			{
 				//	Ne reproduit pas l'état sélectionné si on peint nous-même le fond du bouton.
 				Rectangle rectExt = rect;
-				rectExt.Deflate(0.5);
 				Path pathExt = new Path();
 				pathExt.AppendRoundedRectangle(rectExt, little?3:5);
 
 				Rectangle rectInt = rect;
-				rectInt.Deflate(little?2.5:3.5);
+				rectInt.Deflate(little?2:3);
 				Path pathInt = new Path();
 				pathInt.AppendRoundedRectangle(rectInt, little?2:3);
 
@@ -76,11 +96,9 @@ namespace Epsitec.Common.Designer.Dolphin
 				pathInt.Dispose();
 			}
 
-			pos.Y += this.GetBaseLineVerticalOffset();
-			
 			if ( this.innerZoom != 1.0 )
 			{
-				Drawing.Transform transform = graphics.Transform;
+				Transform transform = graphics.Transform;
 				graphics.ScaleTransform(this.innerZoom, this.innerZoom, this.Client.Size.Width/2, this.Client.Size.Height/2);
 				adorner.PaintButtonTextLayout(graphics, pos, this.TextLayout, state, this.ButtonStyle);
 				graphics.Transform = transform;

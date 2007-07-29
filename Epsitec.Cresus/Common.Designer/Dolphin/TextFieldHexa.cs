@@ -149,19 +149,25 @@ namespace Epsitec.Common.Designer.Dolphin
 			}
 			set
 			{
-				if (this.bitNames != value)
-				{
-					this.bitNames = value;
+				this.bitNames = value;
 
-					if (this.bitNames != null)
+				if (string.IsNullOrEmpty(this.bitNames))
+				{
+					//	Numérote les bits 0..n.
+					for (int i=0; i<this.buttons.Count; i++)
 					{
-						for (int i=0; i<this.buttons.Count; i++)
+						this.buttons[i].Text = string.Concat("<font size=\"70%\">", i.ToString(), "</font>");
+					}
+				}
+				else
+				{
+					//	Met une lettre dans chaque bouton.
+					for (int i=0; i<this.buttons.Count; i++)
+					{
+						if (i < this.bitNames.Length)
 						{
-							if (i < this.bitNames.Length)
-							{
-								string letter = this.bitNames.Substring(i, 1);
-								this.buttons[i].Text = string.Concat("<font size=\"90%\">", letter, "</font>");
-							}
+							string letter = this.bitNames.Substring(i, 1);
+							this.buttons[i].Text = string.Concat("<font size=\"90%\"><b>", letter, "</b></font>");
 						}
 					}
 				}

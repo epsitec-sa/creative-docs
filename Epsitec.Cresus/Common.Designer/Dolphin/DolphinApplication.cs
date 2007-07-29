@@ -778,7 +778,7 @@ namespace Epsitec.Common.Designer.Dolphin
 			}
 			else
 			{
-				if (pressed)
+				if (button.ActiveState == ActiveState.Yes)
 				{
 					keys |= button.Index;
 				}
@@ -958,6 +958,9 @@ namespace Epsitec.Common.Designer.Dolphin
 			}
 
 			this.DataBits = 0;
+
+			//	Nécessaire même en lecture, car la lecture du clavier clear le bit full !
+			this.memoryAccessor.UpdateData();
 		}
 
 		private void HandleAddressSwitchClicked(object sender, MessageEventArgs e)
@@ -1025,6 +1028,12 @@ namespace Epsitec.Common.Designer.Dolphin
 		{
 			//	Touche du clavier simulé pressée.
 			PushButton button = sender as PushButton;
+
+			if (button.Index == 0x08 || button.Index == 0x10)  // shift ou ctrl ?
+			{
+				button.ActiveState = (button.ActiveState == ActiveState.Yes) ? ActiveState.No : ActiveState.Yes;
+			}
+
 			this.KeyboardChanged(button, true);
 		}
 
