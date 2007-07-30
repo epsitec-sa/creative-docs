@@ -262,7 +262,7 @@ namespace Epsitec.Common.Designer.Dolphin
 			TextFieldHexa field = sender as TextFieldHexa;
 
 			int address = this.MemoryStart+this.firstAddress+field.Index;
-			this.memory.Write(address, field.HexaValue);
+			this.memory.WriteWithDirty(address, field.HexaValue);
 		}
 
 

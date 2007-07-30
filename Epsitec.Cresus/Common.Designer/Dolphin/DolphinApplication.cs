@@ -42,19 +42,26 @@ namespace Epsitec.Common.Designer.Dolphin
 			panelTitle.Margins = new Margins(0, 0, 0, 10);
 			panelTitle.Dock = DockStyle.Top;
 
-			IconButton buttonOpen = new IconButton(panelTitle);
-			buttonOpen.IconName = Misc.Icon("Open");
-			buttonOpen.Margins = new Margins(10, 0, 8, 8);
-			buttonOpen.Dock = DockStyle.Left;
-			buttonOpen.Clicked += new MessageEventHandler(this.HandleButtonOpenClicked);
-			ToolTip.Default.SetToolTip(buttonOpen, "Ouvre un programme");
+			this.buttonNew = new IconButton(panelTitle);
+			this.buttonNew.IconName = Misc.Icon("New");
+			this.buttonNew.Margins = new Margins(10, 0, 8, 8);
+			this.buttonNew.Dock = DockStyle.Left;
+			this.buttonNew.Clicked += new MessageEventHandler(this.HandleButtonNewClicked);
+			ToolTip.Default.SetToolTip(this.buttonNew, "Nouveau programme");
 
-			IconButton buttonSave = new IconButton(panelTitle);
-			buttonSave.IconName = Misc.Icon("Save");
-			buttonSave.Margins = new Margins(0, 0, 8, 8);
-			buttonSave.Dock = DockStyle.Left;
-			buttonSave.Clicked += new MessageEventHandler(this.HandleButtonSaveClicked);
-			ToolTip.Default.SetToolTip(buttonSave, "Enregistre le programme");
+			this.buttonOpen = new IconButton(panelTitle);
+			this.buttonOpen.IconName = Misc.Icon("Open");
+			this.buttonOpen.Margins = new Margins(0, 0, 8, 8);
+			this.buttonOpen.Dock = DockStyle.Left;
+			this.buttonOpen.Clicked += new MessageEventHandler(this.HandleButtonOpenClicked);
+			ToolTip.Default.SetToolTip(this.buttonOpen, "Ouvre un programme");
+
+			this.buttonSave = new IconButton(panelTitle);
+			this.buttonSave.IconName = Misc.Icon("Save");
+			this.buttonSave.Margins = new Margins(0, 0, 8, 8);
+			this.buttonSave.Dock = DockStyle.Left;
+			this.buttonSave.Clicked += new MessageEventHandler(this.HandleButtonSaveClicked);
+			ToolTip.Default.SetToolTip(this.buttonSave, "Enregistre le programme");
 
 			this.programmFilename = new StaticText(panelTitle);
 			this.programmFilename.PreferredWidth = 100;
@@ -64,6 +71,7 @@ namespace Epsitec.Common.Designer.Dolphin
 			StaticText title = new StaticText(panelTitle);
 			title.Text = "<font size=\"200%\"><b>Dolphin microprocessor emulator </b></font>by EPSITEC";
 			title.ContentAlignment = ContentAlignment.MiddleCenter;
+			title.Margins = new Margins(0, 100, 0, 0);
 			title.Dock = DockStyle.Fill;
 
 			Panel all = new Panel(this.mainPanel);
@@ -126,6 +134,7 @@ namespace Epsitec.Common.Designer.Dolphin
 			this.CreateKeyboardDisplay(kdPanel);
 
 			this.ProcessorFeedback();
+			this.UpdateSave();
 		}
 
 
@@ -672,6 +681,12 @@ namespace Epsitec.Common.Designer.Dolphin
 			this.buttonClock0.ActiveState = (this.ips ==   1) ? ActiveState.Yes : ActiveState.No;
 		}
 
+		protected void UpdateSave()
+		{
+			//	Met à jour le bouton d'enregistrement.
+			this.buttonSave.Enable = this.dirty;
+		}
+
 		protected void UpdateFilename()
 		{
 			//	Met à jour le nom du programme ouvert.
@@ -783,6 +798,11 @@ namespace Epsitec.Common.Designer.Dolphin
 				{
 					this.memory[i] = 0;
 				}
+
+				foreach (Digit digit in this.application.displayDigits)
+				{
+					digit.SegmentValue = (Digit.DigitSegment) 0;
+				}
 			}
 
 			public string GetContent()
@@ -857,6 +877,17 @@ namespace Epsitec.Common.Designer.Dolphin
 				else  // hors de l'espace d'adressage ?
 				{
 					return 0xff;
+				}
+			}
+
+			public void WriteWithDirty(int address, int data)
+			{
+				//	Ecrit une valeur en mémoire et/ou dans un périphérique et
+				//	gère le bit dirty.
+				if (data != this.ReadForDebug(address))
+				{
+					this.Write(address, data);
+					this.application.Dirty = true;
 				}
 			}
 
@@ -994,9 +1025,7 @@ namespace Epsitec.Common.Designer.Dolphin
 
 			foreach (TextFieldHexa field in this.registerFields)
 			{
-				this.ignoreChange = true;
 				field.HexaValue = this.processor.GetRegisterValue(field.Label);
-				this.ignoreChange = false;
 			}
 
 			this.memoryAccessor.MarkPC = pc;
@@ -1005,7 +1034,191 @@ namespace Epsitec.Common.Designer.Dolphin
 		#endregion
 
 		#region Serialization
-		public string Serialize()
+		protected bool DlgOpenFilename()
+		{
+			//	Demande le nom du fichier à ouvrir.
+			Common.Dialogs.FileOpen dlg = new Common.Dialogs.FileOpen();
+			dlg.Title = "Ouverture d'un programme";
+			dlg.FileName = "";
+			dlg.Filters.Add("dolphin", "Programmes", "*.dolphin");
+			dlg.Owner = this.parentWindow;
+			dlg.OpenDialog();  // affiche le dialogue...
+
+			if (dlg.Result != Common.Dialogs.DialogResult.Accept)
+			{
+				return false;
+			}
+
+			this.filename = dlg.FileName;
+			return true;
+		}
+
+		protected bool DlgSaveFilename()
+		{
+			//	Demande le nom du fichier à enregistrer.
+			Common.Dialogs.FileSave dlg = new Common.Dialogs.FileSave();
+			dlg.PromptForOverwriting = true;
+			dlg.Title = "Enregistrement d'un programme";
+			dlg.FileName = this.filename;
+			dlg.Filters.Add("dolphin", "Programmes", "*.dolphin");
+			dlg.Owner = this.parentWindow;
+			dlg.OpenDialog();  // affiche le dialogue...
+
+			if (dlg.Result != Common.Dialogs.DialogResult.Accept)
+			{
+				return false;
+			}
+
+			this.filename = dlg.FileName;
+			return true;
+		}
+
+		protected Common.Dialogs.DialogResult DlgAutoSave()
+		{
+			//	Demande s'il faut enregistrer le programme en cours.
+			if (!this.dirty)
+			{
+				return Common.Dialogs.DialogResult.No;
+			}
+
+			string title = "Dolphin";
+			string icon = "manifest:Epsitec.Common.Dialogs.Images.Question.icon";
+
+			string message = "Voulez-vous enregistrer le programme ?";
+
+			if (!string.IsNullOrEmpty(this.filename))
+			{
+				message = string.Format("Voulez-vous enregistrer <b>{0}</b> ?", System.IO.Path.GetFileNameWithoutExtension(this.filename));
+			}
+
+			Common.Dialogs.IDialog dialog = Common.Dialogs.MessageDialog.CreateYesNoCancel(title, icon, message, null, null, null);
+			dialog.Owner = this.parentWindow;
+			dialog.OpenDialog();
+			return dialog.Result;
+
+		}
+
+		protected void New()
+		{
+			//	Efface le programme en cours.
+			if (this.AutoSave())
+			{
+				this.fieldProgrammRem.Text = DolphinApplication.ProgrammEmptyRem;
+				this.Stop();
+				this.memory.Clear();
+				this.filename = "";
+				this.Dirty = false;
+				this.ProcessorReset();
+				this.AddressBits = 0;
+				this.DataBits = 0;
+				this.UpdateButtons();
+				this.UpdateFilename();
+			}
+		}
+
+		protected bool AutoSave()
+		{
+			//	Demande s'il faut enregistrer le programme en cours avant de passer à un autre programme.
+			//	Retourne true si on peut continuer (et donc effacer le programme en cours ou en ouvrir un autre).
+			Common.Dialogs.DialogResult result = this.DlgAutoSave();
+
+			if (result == Common.Dialogs.DialogResult.Cancel)
+			{
+				return false;
+			}
+			
+			if (result == Common.Dialogs.DialogResult.Yes)
+			{
+				if (string.IsNullOrEmpty(this.filename))
+				{
+					if (!this.DlgSaveFilename())
+					{
+						return false;
+					}
+				}
+
+				this.Save();
+			}
+
+			return true;
+		}
+
+		protected void Open()
+		{
+			//	Ouvre un nouveau programme.
+			this.Stop();
+
+			string data = null;
+			try
+			{
+				data = System.IO.File.ReadAllText(this.filename);
+			}
+			catch
+			{
+				data = null;
+			}
+
+			if (data != null)
+			{
+				this.Deserialize(data);
+			}
+
+			if (this.fieldProgrammRem.Text != DolphinApplication.ProgrammEmptyRem)
+			{
+				this.book.ActivePage = this.pageProgramm;
+			}
+
+			this.Dirty = false;
+			this.ProcessorReset();
+			this.AddressBits = 0;
+			this.DataBits = 0;
+			this.UpdateButtons();
+			this.UpdateClockButtons();
+			this.UpdateFilename();
+		}
+
+		protected void Save()
+		{
+			//	Enregistre le programme en cours.
+			string data = this.Serialize();
+			try
+			{
+				System.IO.File.WriteAllText(this.filename, data);
+			}
+			catch
+			{
+			}
+
+			this.Dirty = false;
+			this.UpdateFilename();
+		}
+
+		protected void Stop()
+		{
+			//	Sroppe le programme en cours.
+			this.ProcessorStop();
+			this.ProcessorReset();
+			this.ledRun.ActiveState = ActiveState.No;
+		}
+
+		protected bool Dirty
+		{
+			//	Indique si le programme en cours doit être enregistré.
+			get
+			{
+				return this.dirty;
+			}
+			set
+			{
+				if (this.dirty != value)
+				{
+					this.dirty = value;
+					this.UpdateSave();
+				}
+			}
+		}
+
+		protected string Serialize()
 		{
 			//	Sérialise la vue éditée et retourne le résultat dans un string.
 			System.Text.StringBuilder buffer = new System.Text.StringBuilder();
@@ -1020,7 +1233,7 @@ namespace Epsitec.Common.Designer.Dolphin
 			return buffer.ToString();
 		}
 
-		public void Deserialize(string data)
+		protected void Deserialize(string data)
 		{
 			//	Désérialise la vue à partir d'un string de données.
 			System.IO.StringReader stringReader = new System.IO.StringReader(data);
@@ -1108,82 +1321,28 @@ namespace Epsitec.Common.Designer.Dolphin
 		#endregion
 
 		#region Event handler
+		private void HandleButtonNewClicked(object sender, MessageEventArgs e)
+		{
+			//	Bouton ouvrir cliqué.
+			this.New();
+		}
+
 		private void HandleButtonOpenClicked(object sender, MessageEventArgs e)
 		{
 			//	Bouton ouvrir cliqué.
-			Common.Dialogs.FileOpen dlg = new Common.Dialogs.FileOpen();
-			dlg.Title = "Ouverture d'un programme";
-			dlg.FileName = "";
-			dlg.Filters.Add("dolphin", "Programmes", "*.dolphin");
-			dlg.Owner = this.parentWindow;
-			dlg.OpenDialog();  // affiche le dialogue...
-
-			if (dlg.Result != Epsitec.Common.Dialogs.DialogResult.Accept)
+			if (this.AutoSave() && this.DlgOpenFilename())
 			{
-				return;
+				this.Open();
 			}
-
-			this.filename = dlg.FileName;
-
-			this.ProcessorStop();
-			this.ProcessorReset();
-			this.ledRun.ActiveState = ActiveState.No;
-
-			string data = null;
-			try
-			{
-				data = System.IO.File.ReadAllText(this.filename);
-			}
-			catch
-			{
-				data = null;
-			}
-
-			if (data != null)
-			{
-				this.Deserialize(data);
-			}
-
-			if (this.fieldProgrammRem.Text != DolphinApplication.ProgrammEmptyRem)
-			{
-				this.book.ActivePage = this.pageProgramm;
-			}
-
-
-			this.ProcessorFeedback();
-			this.UpdateButtons();
-			this.UpdateClockButtons();
-			this.UpdateFilename();
 		}
 
 		private void HandleButtonSaveClicked(object sender, MessageEventArgs e)
 		{
 			//	Bouton enregistrer cliqué.
-			Common.Dialogs.FileSave dlg = new Common.Dialogs.FileSave();
-			dlg.PromptForOverwriting = true;
-			dlg.Title = "Enregistrement d'un programme";
-			dlg.FileName = this.filename;
-			dlg.Filters.Add("dolphin", "Programmes", "*.dolphin");
-			dlg.Owner = this.parentWindow;
-			dlg.OpenDialog();  // affiche le dialogue...
-
-			if (dlg.Result != Epsitec.Common.Dialogs.DialogResult.Accept)
+			if (this.DlgSaveFilename())
 			{
-				return;
+				this.Save();
 			}
-
-			this.filename = dlg.FileName;
-
-			string data = this.Serialize();
-			try
-			{
-				System.IO.File.WriteAllText(this.filename, data);
-			}
-			catch
-			{
-			}
-
-			this.UpdateFilename();
 		}
 
 		private void HandleOptionRadioClicked(object sender, MessageEventArgs e)
@@ -1282,7 +1441,7 @@ namespace Epsitec.Common.Designer.Dolphin
 			}
 			else  // write ?
 			{
-				this.memory.Write(this.AddressBits, this.DataBits);
+				this.memory.WriteWithDirty(this.AddressBits, this.DataBits);
 				this.DataBits = this.memory.Read(this.AddressBits);
 			}
 		}
@@ -1404,6 +1563,9 @@ namespace Epsitec.Common.Designer.Dolphin
 		protected Panel leftPanelDetail;
 		protected Panel clockBusPanel;
 		protected Panel helpPanel;
+		protected IconButton buttonNew;
+		protected IconButton buttonOpen;
+		protected IconButton buttonSave;
 		protected StaticText programmFilename;
 		protected PushButton buttonReset;
 		protected PushButton buttonStep;
@@ -1435,6 +1597,6 @@ namespace Epsitec.Common.Designer.Dolphin
 		protected Timer clock;
 		protected double ips;
 		protected string filename;
-		protected bool ignoreChange;
+		protected bool dirty;
 	}
 }
