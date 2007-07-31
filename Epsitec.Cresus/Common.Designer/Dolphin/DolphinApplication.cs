@@ -894,7 +894,11 @@ namespace Epsitec.Common.Designer.Dolphin
 				if (data != this.ReadForDebug(address))
 				{
 					this.Write(address, data);
-					this.application.Dirty = true;
+
+					if ((address & DolphinApplication.PeriphBase) == 0)  // mémoire ?
+					{
+						this.application.Dirty = true;
+					}
 				}
 			}
 
@@ -1118,6 +1122,7 @@ namespace Epsitec.Common.Designer.Dolphin
 				this.ProcessorReset();
 				this.AddressBits = 0;
 				this.DataBits = 0;
+				this.memoryAccessor.UpdateData();
 				this.UpdateButtons();
 				this.UpdateFilename();
 			}
@@ -1179,6 +1184,7 @@ namespace Epsitec.Common.Designer.Dolphin
 			this.ProcessorReset();
 			this.AddressBits = 0;
 			this.DataBits = 0;
+			this.memoryAccessor.UpdateData();
 			this.UpdateButtons();
 			this.UpdateClockButtons();
 			this.UpdateFilename();
