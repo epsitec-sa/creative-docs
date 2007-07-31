@@ -312,11 +312,11 @@ namespace Epsitec.Common.Designer.Dolphin
 					break;
 
 				case Instructions.AddAHL:
-					this.registerHL = this.SetFlagsOper8(this.registerHL + this.BypeSignExtend(this.registerA));
+					this.registerHL = this.SetFlagsOper16(this.registerHL + this.BypeSignExtend(this.registerA));
 					break;
 
 				case Instructions.AddBHL:
-					this.registerHL = this.SetFlagsOper8(this.registerHL + this.BypeSignExtend(this.registerB));
+					this.registerHL = this.SetFlagsOper16(this.registerHL + this.BypeSignExtend(this.registerB));
 					break;
 
 				case Instructions.SubiHL:
@@ -324,11 +324,11 @@ namespace Epsitec.Common.Designer.Dolphin
 					break;
 
 				case Instructions.SubAHL:
-					this.registerHL = this.SetFlagsOper8(this.registerHL - this.BypeSignExtend(this.registerA));
+					this.registerHL = this.SetFlagsOper16(this.registerHL - this.BypeSignExtend(this.registerA));
 					break;
 
 				case Instructions.SubBHL:
-					this.registerHL = this.SetFlagsOper8(this.registerHL - this.BypeSignExtend(this.registerB));
+					this.registerHL = this.SetFlagsOper16(this.registerHL - this.BypeSignExtend(this.registerB));
 					break;
 
 				case Instructions.CompiA:
@@ -789,6 +789,67 @@ namespace Epsitec.Common.Designer.Dolphin
 					break;
 			}
 		}
+		#endregion
+
+
+		#region Rom
+		public override void RomInitialise(int address)
+		{
+			//	Rempli la Rom.
+			int indirect = address;
+			address += 3*64;  // place pour 64 appels
+			this.RomWrite(ref indirect, ref address, ProcessorGeneric.GetChar);
+			this.RomWrite(ref indirect, ref address, ProcessorGeneric.DisplayHexa);
+		}
+
+		protected void RomWrite(ref int indirect, ref int address, byte[] code)
+		{
+			this.memory.WriteRom(indirect++, (byte) Instructions.JumpAbs);
+			this.memory.WriteRom(indirect++, (address >> 8) & 0xff);
+			this.memory.WriteRom(indirect++, address & 0xff);
+
+			foreach (byte data in code)
+			{
+				this.memory.WriteRom(address++, data);
+			}
+		}
+
+		//	Attend la pression d'une touche du clavier simulé.
+		//	in	-
+		//	out	A touche pressée
+		//	mod	A
+		protected static byte[] GetChar =
+		{
+			(byte) Instructions.PushF,				// PUSH F
+													// LOOP:
+			(byte) Instructions.MovemA, 0x08, 0x07,	// MOVE 807,A		; lit le clavier
+			(byte) Instructions.TestiA, 0x07,		// TEST A:#7		; bit full ?
+			(byte) Instructions.JumpRelEQ, 0xF9,	// JUMP,EQ R8^-7	; non, jump loop
+			(byte) Instructions.PopF,				// POP F
+			(byte) Instructions.Ret,				// RET
+		};
+
+		//	Affiche un digit hexadécimal.
+		//	in	A valeur 0..15
+		//	out	-
+		//	mod	-
+		protected static byte[] DisplayHexa =
+		{
+			(byte) Instructions.PushF,				// PUSH F
+			(byte) Instructions.PushA,				// PUSH A
+			(byte) Instructions.PushHL,				// PUSH HL
+			(byte) Instructions.AndiA, 0x0F,		// AND #0F,A
+			(byte) Instructions.MoverHL, 9,			// MOVE #R8^+9		; adresse de la table
+			(byte) Instructions.AddAHL,				// ADD A,HL			; HL pointe le bon digit
+			(byte) Instructions.MovecHLA,			// MOVE {HL},A
+			(byte) Instructions.MoveAm, 0x08, 0x00,	// MODE A,800		; affiche le digit
+			(byte) Instructions.PopHL,				// POP HL
+			(byte) Instructions.PopA,				// POP A
+			(byte) Instructions.PopF,				// POP F
+			(byte) Instructions.Ret,				// RET
+													// TABLE:
+			0x3F, 0x03, 0x6D, 0x67, 0x53, 0x76, 0x7E, 0x23, 0x7F, 0x77, 0x7B, 0x5E, 0x3C, 0x4F, 0x7C, 0x78,
+		};
 		#endregion
 
 

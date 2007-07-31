@@ -67,6 +67,12 @@ namespace Epsitec.Common.Designer.Dolphin
 		}
 
 
+		public virtual void RomInitialise(int address)
+		{
+			//	Rempli la Rom.
+		}
+
+
 		public virtual List<string> HelpChapters
 		{
 			//	Retourne la liste des chapitres.

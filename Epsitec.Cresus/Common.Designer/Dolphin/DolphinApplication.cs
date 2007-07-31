@@ -19,6 +19,7 @@ namespace Epsitec.Common.Designer.Dolphin
 
 			this.memory = new Memory(this);
 			this.processor = new ProcessorGeneric(this.memory);
+			this.memory.RomInitialise(this.processor);
 			this.ips = 100;
 		}
 
@@ -801,7 +802,7 @@ namespace Epsitec.Common.Designer.Dolphin
 			public void Clear()
 			{
 				//	Vide toute le mémoire.
-				for (int i=0; i<this.memory.Length; i++)
+				for (int i=0; i<DolphinApplication.RomBase; i++)
 				{
 					this.memory[i] = 0;
 				}
@@ -891,6 +892,11 @@ namespace Epsitec.Common.Designer.Dolphin
 			{
 				//	Ecrit une valeur en mémoire et/ou dans un périphérique et
 				//	gère le bit dirty.
+				if (address >= DolphinApplication.RomBase)
+				{
+					return;
+				}
+
 				if (data != this.ReadForDebug(address))
 				{
 					this.Write(address, data);
@@ -905,6 +911,11 @@ namespace Epsitec.Common.Designer.Dolphin
 			public void Write(int address, int data)
 			{
 				//	Ecrit une valeur en mémoire et/ou dans un périphérique.
+				if (address >= DolphinApplication.RomBase)
+				{
+					return;
+				}
+
 				if (address >= 0 && address < this.memory.Length)  // adresse valide ?
 				{
 					if (this.memory[address] != (byte) data)
@@ -924,6 +935,18 @@ namespace Epsitec.Common.Designer.Dolphin
 						this.application.displayDigits[t-periph].SegmentValue = (Digit.DigitSegment) this.memory[address];
 					}
 				}
+			}
+
+			public void RomInitialise(AbstractProcessor processor)
+			{
+				//	Initialise la Rom.
+				processor.RomInitialise(DolphinApplication.RomBase);
+			}
+
+			public void WriteRom(int address, int data)
+			{
+				//	Ecrit une valeur en mémoire morte (initialisation).
+				this.memory[address] = (byte) data;
 			}
 
 			protected static int ParseHexa(string hexa)
@@ -1563,10 +1586,11 @@ namespace Epsitec.Common.Designer.Dolphin
 		public static readonly int TotalAddress = 12;
 		public static readonly int TotalData = 8;
 
-		protected static readonly int PeriphBase = (1 << (DolphinApplication.TotalAddress-1));
+		protected static readonly int PeriphBase = 0x800;
 		protected static readonly int PeriphFirstDigit = 0;
 		protected static readonly int PeriphLastDigit = 3;
 		protected static readonly int PeriphKeyboard = 7;
+		protected static readonly int RomBase = 0xB00;
 
 		protected static readonly string ProgrammEmptyRem = "<br/><i>Tapez ici les commentaires sur le programme...</i>";
 
