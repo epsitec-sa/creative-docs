@@ -490,9 +490,10 @@ namespace Epsitec.Common.Widgets
 			}
 			else
 			{
+				this.OnCommandDispatched ();
+				
 				if (e.Executed)
 				{
-					this.OnCommandDispatched ();
 					return true;
 				}
 				else
