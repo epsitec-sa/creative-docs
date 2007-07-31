@@ -80,7 +80,7 @@ namespace Epsitec.Common.Designer.Dolphin
 				if (this.ActiveState == ActiveState.Yes)
 				{
 					graphics.Rasterizer.AddSurface(pathInt);
-					graphics.RenderSolid(Color.FromRgb(1, 0, 0));  // rouge
+					graphics.RenderSolid((state & WidgetPaintState.Enabled) != 0 ? Color.FromRgb(1, 0, 0) : Color.FromBrightness(0.7));
 				}
 				else
 				{
@@ -116,7 +116,7 @@ namespace Epsitec.Common.Designer.Dolphin
 
 		protected Color FromBrightness(double brightness, bool entered)
 		{
-			if (!this.Enable)
+			if ((this.PaintState & WidgetPaintState.Enabled) == 0)
 			{
 				brightness = 0.7 + brightness*0.2;  // plus clair
 			}

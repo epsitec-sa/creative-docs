@@ -112,6 +112,10 @@ namespace Epsitec.Common.Designer.Dolphin
 			this.leftPanelDetail.Dock = DockStyle.Fill;
 			this.leftPanelDetail.Visibility = false;
 
+			this.leftPanelQuick = new Panel(leftPanel);
+			this.leftPanelQuick.Dock = DockStyle.Fill;
+			this.leftPanelQuick.Visibility = false;
+
 			//	Crée les 2 parties de droite.
 			this.helpPanel = new Panel(rightPanel);
 			this.helpPanel.Margins = new Margins(0, 0, 0, 10);
@@ -131,6 +135,7 @@ namespace Epsitec.Common.Designer.Dolphin
 			this.CreateClockControl(leftClock);
 			this.CreateBusPanel(this.leftPanelBus);
 			this.CreateDetailPanel(this.leftPanelDetail);
+			this.CreateQuickPanel(this.leftPanelQuick);
 			this.CreateHelp(this.helpPanel);
 			this.CreateKeyboardDisplay(kdPanel);
 
@@ -157,15 +162,24 @@ namespace Epsitec.Common.Designer.Dolphin
 			radio.Group = "Option";
 			radio.ActiveState = ActiveState.Yes;
 			radio.Margins = new Margins(60+10, 0, 0, 0);
-			radio.PreferredWidth = 150;
+			radio.PreferredWidth = 140;
 			radio.Dock = DockStyle.Left;
 			radio.Clicked += new MessageEventHandler(this.HandleOptionRadioClicked);
+			this.panelMode = radio.Name;
 
 			radio = new RadioButton(parent);
 			radio.Text = "Intérieur des circuits";
 			radio.Name = "Detail";
 			radio.Group = "Option";
-			radio.PreferredWidth = 150;
+			radio.PreferredWidth = 140;
+			radio.Dock = DockStyle.Left;
+			radio.Clicked += new MessageEventHandler(this.HandleOptionRadioClicked);
+
+			radio = new RadioButton(parent);
+			radio.Text = "Rien (rapide)";
+			radio.Name = "Quick";
+			radio.Group = "Option";
+			radio.PreferredWidth = 100;
 			radio.Dock = DockStyle.Left;
 			radio.Clicked += new MessageEventHandler(this.HandleOptionRadioClicked);
 		}
@@ -212,6 +226,19 @@ namespace Epsitec.Common.Designer.Dolphin
 			this.UpdateButtons();
 		}
 
+		protected void CreateQuickPanel(Panel parent)
+		{
+			//	Crée le panneau de gauche vide, pour le mode rapide.
+			Panel panel = this.CreatePanelWithTitle(parent, "Rapide");
+			panel.PreferredHeight = 400;
+			panel.Dock = DockStyle.Bottom;
+
+			StaticText label = new StaticText(panel);
+			label.Text = "<i>Vide</i>";
+			label.ContentAlignment = ContentAlignment.MiddleCenter;
+			label.Dock = DockStyle.Fill;
+		}
+
 		protected void CreateDetailPanel(Panel parent)
 		{
 			//	Crée le panneau de gauche détaillé complet.
@@ -221,27 +248,27 @@ namespace Epsitec.Common.Designer.Dolphin
 			memoryPanel.Dock = DockStyle.Bottom;
 
 			this.memoryButtonM = new PushButton(header);
-			this.memoryButtonM.Text = "M";
+			this.memoryButtonM.Text = "RAM";
 			this.memoryButtonM.Name = "M";
-			this.memoryButtonM.PreferredSize = new Size(22, 22);
+			this.memoryButtonM.PreferredSize = new Size(36, 22);
 			this.memoryButtonM.Margins = new Margins(10+17, 2, 0, 3);
 			this.memoryButtonM.Dock = DockStyle.Left;
 			this.memoryButtonM.Clicked += new MessageEventHandler(this.HandleMemoryButtonClicked);
 			ToolTip.Default.SetToolTip(this.memoryButtonM, "Montre le début de la mémoire vive (RAM)");
 
 			this.memoryButtonR = new PushButton(header);
-			this.memoryButtonR.Text = "R";
+			this.memoryButtonR.Text = "ROM";
 			this.memoryButtonR.Name = "R";
-			this.memoryButtonR.PreferredSize = new Size(22, 22);
+			this.memoryButtonR.PreferredSize = new Size(36, 22);
 			this.memoryButtonR.Margins = new Margins(0, 2, 0, 3);
 			this.memoryButtonR.Dock = DockStyle.Left;
 			this.memoryButtonR.Clicked += new MessageEventHandler(this.HandleMemoryButtonClicked);
 			ToolTip.Default.SetToolTip(this.memoryButtonR, "Montre le début de la mémoire morte (ROM)");
 
 			this.memoryButtonP = new PushButton(header);
-			this.memoryButtonP.Text = "P";
+			this.memoryButtonP.Text = "PER";
 			this.memoryButtonP.Name = "P";
-			this.memoryButtonP.PreferredSize = new Size(22, 22);
+			this.memoryButtonP.PreferredSize = new Size(36, 22);
 			this.memoryButtonP.Margins = new Margins(0, 2, 0, 3);
 			this.memoryButtonP.Dock = DockStyle.Left;
 			this.memoryButtonP.Clicked += new MessageEventHandler(this.HandleMemoryButtonClicked);
@@ -302,11 +329,20 @@ namespace Epsitec.Common.Designer.Dolphin
 
 			this.ledRun = this.CreateLabeledLed(parent, "Run");
 
+			this.buttonClock3 = new PushButton(parent);
+			this.buttonClock3.Index = 1000;
+			this.buttonClock3.Text = "1000 IPS";
+			this.buttonClock3.PreferredSize = new Size(50, 24);
+			this.buttonClock3.Margins = new Margins(0, 0, 10, 0);
+			this.buttonClock3.Dock = DockStyle.Top;
+			this.buttonClock3.Clicked += new MessageEventHandler(this.HandleButtonClockClicked);
+			ToolTip.Default.SetToolTip(this.buttonClock3, "1000 instructions/seconde");
+
 			this.buttonClock2 = new PushButton(parent);
 			this.buttonClock2.Index = 100;
 			this.buttonClock2.Text = "100 IPS";
 			this.buttonClock2.PreferredSize = new Size(50, 24);
-			this.buttonClock2.Margins = new Margins(0, 0, 10, 0);
+			this.buttonClock2.Margins = new Margins(0, 0, 2, 0);
 			this.buttonClock2.Dock = DockStyle.Top;
 			this.buttonClock2.Clicked += new MessageEventHandler(this.HandleButtonClockClicked);
 			ToolTip.Default.SetToolTip(this.buttonClock2, "100 instructions/seconde");
@@ -695,9 +731,10 @@ namespace Epsitec.Common.Designer.Dolphin
 		protected void UpdateClockButtons()
 		{
 			//	Met à jour les boutons pour la fréquence de l'horloge.
-			this.buttonClock2.ActiveState = (this.ips == 100) ? ActiveState.Yes : ActiveState.No;
-			this.buttonClock1.ActiveState = (this.ips ==  10) ? ActiveState.Yes : ActiveState.No;
-			this.buttonClock0.ActiveState = (this.ips ==   1) ? ActiveState.Yes : ActiveState.No;
+			this.buttonClock3.ActiveState = (this.ips == 1000) ? ActiveState.Yes : ActiveState.No;
+			this.buttonClock2.ActiveState = (this.ips ==  100) ? ActiveState.Yes : ActiveState.No;
+			this.buttonClock1.ActiveState = (this.ips ==   10) ? ActiveState.Yes : ActiveState.No;
+			this.buttonClock0.ActiveState = (this.ips ==    1) ? ActiveState.Yes : ActiveState.No;
 		}
 
 		protected void UpdateSave()
@@ -723,10 +760,19 @@ namespace Epsitec.Common.Designer.Dolphin
 		{
 			//	Met à jour la banque mémoire utilisée.
 			this.memoryButtonM.ActiveState = (this.memoryAccessor.Bank == "M") ? ActiveState.Yes : ActiveState.No;
-			this.memoryButtonP.ActiveState = (this.memoryAccessor.Bank == "P") ? ActiveState.Yes : ActiveState.No;
 			this.memoryButtonR.ActiveState = (this.memoryAccessor.Bank == "R") ? ActiveState.Yes : ActiveState.No;
+			this.memoryButtonP.ActiveState = (this.memoryAccessor.Bank == "P") ? ActiveState.Yes : ActiveState.No;
 		}
 
+
+		protected bool IsEmptyPanel
+		{
+			//	Est-on en mode sans panneau d'affichage ?
+			get
+			{
+				return this.panelMode == "Quick";
+			}
+		}
 
 		protected int AddressBits
 		{
@@ -755,6 +801,11 @@ namespace Epsitec.Common.Designer.Dolphin
 		protected void SetBits(List<Digit> digits, List<Led> leds, int value)
 		{
 			//	Initialise une rangée de leds.
+			if (this.IsEmptyPanel)
+			{
+				return;
+			}
+
 			for (int i=0; i<digits.Count; i++)
 			{
 				digits[i].HexValue = (value >> i*4) & 0x0f;
@@ -827,7 +878,7 @@ namespace Epsitec.Common.Designer.Dolphin
 
 			public string GetContent()
 			{
-				//	Retourne tout le contenu de la mémoire dans une chaîne.
+				//	Retourne tout le contenu de la mémoire dans une chaîne (pour la sérialisation).
 				System.Text.StringBuilder builder = new System.Text.StringBuilder();
 
 				//	Cherche la dernière adresse non nulle.
@@ -851,7 +902,7 @@ namespace Epsitec.Common.Designer.Dolphin
 
 			public void PutContent(string data)
 			{
-				//	Initialise tout le contenu de la mémoire d'après une chaîne.
+				//	Initialise tout le contenu de la mémoire d'après une chaîne (pour la désérialisation).
 				this.Clear();
 
 				int i = 0;
@@ -863,14 +914,44 @@ namespace Epsitec.Common.Designer.Dolphin
 				}
 			}
 
+			public bool IsReadOnly(int address)
+			{
+				//	Indique si l'adresse ne permet pas l'écriture.
+				return !this.IsRam(address) && !this.IsPeriph(address);
+			}
+
+			public bool IsValid(int address)
+			{
+				//	Indique si l'adresse est valide.
+				return this.IsRam(address) || this.IsRom(address) || this.IsPeriph(address);
+			}
+
+			public bool IsRam(int address)
+			{
+				//	Indique si l'adresse est en Ram.
+				return (address >= DolphinApplication.RamBase && address < DolphinApplication.RamBase+DolphinApplication.RamLength);
+			}
+
+			public bool IsRom(int address)
+			{
+				//	Indique si l'adresse est en Rom.
+				return (address >= DolphinApplication.RomBase && address < DolphinApplication.RomBase+DolphinApplication.RomLength);
+			}
+
+			public bool IsPeriph(int address)
+			{
+				//	Indique si l'adresse est un périphérique.
+				return (address >= DolphinApplication.PeriphBase && address < DolphinApplication.PeriphBase+DolphinApplication.PeriphLength);
+			}
+
 			public int Read(int address)
 			{
 				//	Lit une valeur en mémoire et/ou dans un périphérique.
-				if (address >= 0 && address < this.memory.Length)  // adresse valide ?
+				if (this.IsValid(address))  // adresse valide ?
 				{
 					int value = this.memory[address];
 
-					if (address == DolphinApplication.PeriphBase+DolphinApplication.PeriphKeyboard)  // lecture du clavier ?
+					if (address == DolphinApplication.PeriphKeyboard)  // lecture du clavier ?
 					{
 						if ((value & 0x80) != 0)  // bit full ?
 						{
@@ -890,7 +971,7 @@ namespace Epsitec.Common.Designer.Dolphin
 			{
 				//	Lit une valeur en mémoire et/ou dans un périphérique, pour de debug.
 				//	Le bit full du clavier (par exemple) n'est pas clearé.
-				if (address >= 0 && address < this.memory.Length)  // adresse valide ?
+				if (this.IsValid(address))  // adresse valide ?
 				{
 					return this.memory[address];
 				}
@@ -900,26 +981,15 @@ namespace Epsitec.Common.Designer.Dolphin
 				}
 			}
 
-			public bool IsReadOnly(int address)
-			{
-				//	Indique si l'adresse est en ROM.
-				return (address < 0 || address >= DolphinApplication.RomBase);
-			}
-
 			public void WriteWithDirty(int address, int data)
 			{
 				//	Ecrit une valeur en mémoire et/ou dans un périphérique et
 				//	gère le bit dirty.
-				if (address >= DolphinApplication.RomBase)
-				{
-					return;
-				}
-
-				if (data != this.ReadForDebug(address))
+				if (!this.IsReadOnly(address) && data != this.ReadForDebug(address))
 				{
 					this.Write(address, data);
 
-					if ((address & DolphinApplication.PeriphBase) == 0)  // mémoire ?
+					if (this.IsRam(address))  // mémoire ?
 					{
 						this.application.Dirty = true;
 					}
@@ -929,35 +999,33 @@ namespace Epsitec.Common.Designer.Dolphin
 			public void Write(int address, int data)
 			{
 				//	Ecrit une valeur en mémoire et/ou dans un périphérique.
-				if (address >= DolphinApplication.RomBase)
-				{
-					return;
-				}
-
-				if (address >= 0 && address < this.memory.Length)  // adresse valide ?
+				if (!this.IsReadOnly(address))  // adresse valide ?
 				{
 					if (this.memory[address] != (byte) data)
 					{
 						this.memory[address] = (byte) data;
-						this.application.memoryAccessor.UpdateData();
+
+						if (!this.application.IsEmptyPanel)
+						{
+							this.application.memoryAccessor.UpdateData();
+						}
 					}
 				}
 
-				if ((address & DolphinApplication.PeriphBase) != 0)  // périphérique ?
+				if (this.IsPeriph(address))  // périphérique ?
 				{
-					int periph = address & ~DolphinApplication.PeriphBase;
-
-					if (periph >= DolphinApplication.PeriphFirstDigit && periph <= DolphinApplication.PeriphLastDigit)  // l'un des 4 digits ?
+					if (address >= DolphinApplication.PeriphFirstDigit && address <= DolphinApplication.PeriphLastDigit)  // l'un des 4 digits ?
 					{
+						int a = address - DolphinApplication.PeriphFirstDigit;
 						int t = DolphinApplication.PeriphLastDigit-DolphinApplication.PeriphFirstDigit;
-						this.application.displayDigits[t-periph].SegmentValue = (Digit.DigitSegment) this.memory[address];
+						this.application.displayDigits[t-a].SegmentValue = (Digit.DigitSegment) this.memory[address];
 					}
 				}
 			}
 
 			public void RomInitialise(AbstractProcessor processor)
 			{
-				//	Initialise la ROM.
+				//	Initialise la Rom.
 				processor.RomInitialise(DolphinApplication.RomBase);
 			}
 
@@ -987,7 +1055,7 @@ namespace Epsitec.Common.Designer.Dolphin
 		public void KeyboardChanged(PushButton button, bool pressed)
 		{
 			//	Appelé lorsqu'une touche du clavier simulé a été pressée ou relâchée.
-			int keys = this.memory.Read(DolphinApplication.PeriphBase+DolphinApplication.PeriphKeyboard);
+			int keys = this.memory.Read(DolphinApplication.PeriphKeyboard);
 
 			if (button.Index < 0x08)
 			{
@@ -1010,7 +1078,7 @@ namespace Epsitec.Common.Designer.Dolphin
 				}
 			}
 
-			this.memory.Write(DolphinApplication.PeriphBase+DolphinApplication.PeriphKeyboard, keys);
+			this.memory.Write(DolphinApplication.PeriphKeyboard, keys);
 		}
 
 
@@ -1029,7 +1097,7 @@ namespace Epsitec.Common.Designer.Dolphin
 				if (this.clock == null)
 				{
 					this.clock = new Timer();
-					this.clock.AutoRepeat = 1.0/this.ips;
+					this.ProcessorClockAdjust();
 					this.clock.TimeElapsed += new EventHandler(this.HandleClockTimeElapsed);
 					this.clock.Start();
 				}
@@ -1045,7 +1113,7 @@ namespace Epsitec.Common.Designer.Dolphin
 			//	Ajuste l'horloge du processeur.
 			if (this.clock != null)
 			{
-				this.clock.AutoRepeat = 1.0/this.ips;
+				this.clock.AutoRepeat = 1.0/System.Math.Min(this.ips, 100);
 			}
 		}
 
@@ -1071,6 +1139,11 @@ namespace Epsitec.Common.Designer.Dolphin
 		protected void ProcessorFeedback()
 		{
 			//	Feedback visuel du processeur dans les widgets des différents panneaux.
+			if (this.IsEmptyPanel)
+			{
+				return;
+			}
+
 			int pc = this.processor.GetRegisterValue("PC");
 			this.AddressBits = pc;
 			this.DataBits = this.memory.Read(pc);
@@ -1081,7 +1154,7 @@ namespace Epsitec.Common.Designer.Dolphin
 			}
 
 			this.memoryAccessor.MarkPC = pc;
-			this.memoryAccessor.UpdateData();
+			this.UpdateMemoryBank();
 		}
 		#endregion
 
@@ -1403,16 +1476,29 @@ namespace Epsitec.Common.Designer.Dolphin
 		{
 			//	Bouton pour une option cliqué.
 			RadioButton button = sender as RadioButton;
+			this.panelMode = button.Name;
 
-			this.leftPanelBus.Visibility = (button.Name == "Bus");
-			this.clockBusPanel.Visibility = (button.Name == "Bus");
-			this.leftPanelDetail.Visibility = (button.Name == "Detail");
+			this.leftPanelBus.Visibility    = (this.panelMode == "Bus");
+			this.clockBusPanel.Visibility   = (this.panelMode == "Bus");
+			this.leftPanelDetail.Visibility = (this.panelMode == "Detail");
+			this.leftPanelQuick.Visibility  = (this.panelMode == "Quick");
 		}
 
 		private void HandleClockTimeElapsed(object sender)
 		{
 			//	Le timer demande d'exécuter l'instruction suivante.
-			this.ProcessorClock();
+			if (this.ips > 100)
+			{
+				int count = (int) (this.ips/100);
+				for (int i=0; i<count; i++)
+				{
+					this.ProcessorClock();
+				}
+			}
+			else
+			{
+				this.ProcessorClock();
+			}
 		}
 
 		private void HandleButtonResetClicked(object sender, MessageEventArgs e)
@@ -1565,12 +1651,13 @@ namespace Epsitec.Common.Designer.Dolphin
 			if (field.Name == "PC")
 			{
 				this.memoryAccessor.MarkPC = this.processor.GetRegisterValue("PC");
+				this.UpdateMemoryBank();
 			}
 		}
 
 		private void HandleMemoryButtonClicked(object sender, MessageEventArgs e)
 		{
-			//	Bouton [M] ou [P] cliqué.
+			//	Bouton [RAM], [ROM] ou [PER] cliqué.
 			PushButton button = sender as PushButton;
 			this.memoryAccessor.Bank = button.Name;
 			this.UpdateMemoryBank();
@@ -1607,13 +1694,14 @@ namespace Epsitec.Common.Designer.Dolphin
 
 		public static readonly int RamBase = 0x000;
 		public static readonly int RamLength = 0x800;
-		public static readonly int PeriphBase = 0x800;
-		public static readonly int PeriphLength = 0x10;
-		public static readonly int PeriphFirstDigit = 0;
-		public static readonly int PeriphLastDigit = 3;
-		public static readonly int PeriphKeyboard = 7;
-		public static readonly int RomBase = 0xC00;
+		public static readonly int StackBase = 0x800;
+		public static readonly int RomBase = 0x800;
 		public static readonly int RomLength = 0x400;
+		public static readonly int PeriphBase = 0xC00;
+		public static readonly int PeriphLength = 0x10;
+		public static readonly int PeriphFirstDigit = 0xC00;
+		public static readonly int PeriphLastDigit = 0xC03;
+		public static readonly int PeriphKeyboard = 0xC07;
 
 		protected static readonly string ProgrammEmptyRem = "<br/><i>Tapez ici les commentaires sur le programme...</i>";
 
@@ -1621,6 +1709,7 @@ namespace Epsitec.Common.Designer.Dolphin
 		protected Panel mainPanel;
 		protected Panel leftPanelBus;
 		protected Panel leftPanelDetail;
+		protected Panel leftPanelQuick;
 		protected Panel clockBusPanel;
 		protected Panel helpPanel;
 		protected IconButton buttonNew;
@@ -1631,6 +1720,7 @@ namespace Epsitec.Common.Designer.Dolphin
 		protected PushButton buttonStep;
 		protected PushButton buttonMemory;
 		protected Led ledRun;
+		protected PushButton buttonClock3;
 		protected PushButton buttonClock2;
 		protected PushButton buttonClock1;
 		protected PushButton buttonClock0;
@@ -1647,8 +1737,8 @@ namespace Epsitec.Common.Designer.Dolphin
 		protected List<TextFieldHexa> registerFields;
 		protected MemoryAccessor memoryAccessor;
 		protected PushButton memoryButtonM;
-		protected PushButton memoryButtonP;
 		protected PushButton memoryButtonR;
+		protected PushButton memoryButtonP;
 		protected TabBook book;
 		protected TabPage pageProgramm;
 		protected TextFieldMulti fieldProgrammRem;
@@ -1657,6 +1747,7 @@ namespace Epsitec.Common.Designer.Dolphin
 		protected AbstractProcessor processor;
 		protected Timer clock;
 		protected double ips;
+		protected string panelMode;
 		protected string filename;
 		protected bool dirty;
 	}

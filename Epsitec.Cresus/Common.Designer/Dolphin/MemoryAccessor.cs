@@ -79,6 +79,7 @@ namespace Epsitec.Common.Designer.Dolphin
 
 					this.UpdateData();
 					this.UpdateMarkPC();
+					this.scroller.Value = (decimal) this.firstAddress;
 				}
 			}
 		}
@@ -117,7 +118,36 @@ namespace Epsitec.Common.Designer.Dolphin
 				{
 					this.markPC = value;
 
-					this.UpdateMarkPC();
+					if (this.markPC < this.MemoryStart+this.firstAddress || this.markPC >= this.MemoryStart+this.firstAddress+this.fields.Count)
+					{
+						string newBank = this.MemoryBank(this.markPC);
+						if (this.bank == newBank)
+						{
+							this.FirstAddress = this.markPC - this.MemoryStart;
+						}
+						else
+						{
+							this.bank = newBank;
+
+							this.firstAddress = this.markPC - this.MemoryStart;
+							if (this.firstAddress > this.MemoryLength-this.fields.Count)
+							{
+								this.firstAddress = this.MemoryLength-this.fields.Count;
+							}
+
+							this.ignoreChange = true;
+							this.UpdateScroller();
+							this.ignoreChange = false;
+
+							this.UpdateData();
+							this.UpdateMarkPC();
+						}
+					}
+					else
+					{
+						this.UpdateData();
+						this.UpdateMarkPC();
+					}
 				}
 			}
 		}
@@ -172,8 +202,7 @@ namespace Epsitec.Common.Designer.Dolphin
 			this.scroller.MinValue = (decimal) 0;
 			this.scroller.MaxValue = (decimal) (this.MemoryLength - this.fields.Count);
 			this.scroller.Value = (decimal) this.firstAddress;
-			//?this.scroller.VisibleRangeRatio = (decimal) this.fields.Count / (decimal) this.MemoryLength;
-			this.scroller.VisibleRangeRatio = 0.2M;  // pour éviter une cabine trop petite !
+			this.scroller.VisibleRangeRatio = (decimal) System.Math.Max((double) this.fields.Count/this.MemoryLength, 0.2);  // évite cabine trop petite
 			this.scroller.LargeChange = (decimal) this.fields.Count;
 			this.scroller.SmallChange = (decimal) 1;
 		}
@@ -217,6 +246,27 @@ namespace Epsitec.Common.Designer.Dolphin
 			}
 		}
 
+
+		protected string MemoryBank(int address)
+		{
+			//	Retourne la banque à utiliser pour une adresse donnée.
+			if (address >= DolphinApplication.RamBase && address < DolphinApplication.RamBase+DolphinApplication.RamLength)
+			{
+				return "M";
+			}
+
+			if (address >= DolphinApplication.PeriphBase && address < DolphinApplication.PeriphBase+DolphinApplication.PeriphLength)
+			{
+				return "P";
+			}
+			
+			if (address >= DolphinApplication.RomBase && address < DolphinApplication.RomBase+DolphinApplication.RomLength)
+			{
+				return "R";
+			}
+
+			return null;
+		}
 
 		protected int MemoryLength
 		{
@@ -267,6 +317,11 @@ namespace Epsitec.Common.Designer.Dolphin
 
 		private void HandleScrollerValueChanged(object sender)
 		{
+			if (this.ignoreChange)
+			{
+				return;
+			}
+
 			this.FirstAddress = (int) System.Math.Floor(this.scroller.Value+0.5M);
 		}
 
@@ -286,7 +341,8 @@ namespace Epsitec.Common.Designer.Dolphin
 		protected VScroller scroller;
 		protected Panel panel;
 		protected List<TextFieldHexa> fields;
-		protected int firstAddress;
+		protected int firstAddress;  // relatif dans la banque
 		protected int markPC;
+		protected bool ignoreChange;
 	}
 }

@@ -124,6 +124,22 @@ namespace Epsitec.Common.Designer.Dolphin
 			PopB   = 0x85,
 			PopHL  = 0x86,
 			PopF   = 0x87,
+
+			MuliA  = 0x90,
+			MulBA  = 0x91,
+			MuliHL = 0x92,
+			MulAHL = 0x93,
+			MulBHL = 0x94,
+			DiviA  = 0x95,
+			DivBA  = 0x96,
+			DiviHL = 0x97,
+			DivAHL = 0x98,
+			DivBHL = 0x99,
+			ModiA  = 0x9A,
+			ModBA  = 0x9B,
+			ModiHL = 0x9C,
+			ModAHL = 0x9D,
+			ModBHL = 0x9E,
 		}
 
 
@@ -145,8 +161,7 @@ namespace Epsitec.Common.Designer.Dolphin
 		{
 			//	Reset du processeur pour démarrer à l'adresse 0.
 			this.registerPC = 0;
-			//?this.registerSP = this.memory.Length-1;
-			this.registerSP = 0;
+			this.registerSP = DolphinApplication.StackBase;
 			this.registerF = 0;
 			this.registerA = 0;
 			this.registerB = 0;
@@ -460,6 +475,147 @@ namespace Epsitec.Common.Designer.Dolphin
 				case Instructions.PopF:
 					this.registerF = this.StackPopByte();
 					break;
+
+				case Instructions.MuliA:
+					this.registerA = this.SetFlagsOper8(this.BypeSignExtend(this.registerA) * this.ReadByte(this.registerPC++));
+					break;
+
+				case Instructions.MulBA:
+					this.registerA = this.SetFlagsOper8(this.BypeSignExtend(this.registerA) * this.BypeSignExtend(this.registerB));
+					break;
+
+				case Instructions.MuliHL:
+					this.registerHL = this.SetFlagsOper16(this.registerHL * this.ReadByte(this.registerPC++));
+					break;
+
+				case Instructions.MulAHL:
+					this.registerHL = this.SetFlagsOper16(this.registerHL * this.BypeSignExtend(this.registerA));
+					break;
+
+				case Instructions.MulBHL:
+					this.registerHL = this.SetFlagsOper16(this.registerHL * this.BypeSignExtend(this.registerB));
+					break;
+
+				case Instructions.DiviA:
+					data = this.ReadByte(this.registerPC++);
+					if (data == 0)
+					{
+						this.SetFlag(ProcessorGeneric.FlagOverflow, true);
+					}
+					else
+					{
+						this.registerA = this.SetFlagsOper8(this.BypeSignExtend(this.registerA) / data);
+					}
+					break;
+
+				case Instructions.DivBA:
+					data = this.BypeSignExtend(this.registerB);
+					if (data == 0)
+					{
+						this.SetFlag(ProcessorGeneric.FlagOverflow, true);
+					}
+					else
+					{
+						this.registerA = this.SetFlagsOper8(this.BypeSignExtend(this.registerA) / data);
+					}
+					break;
+
+				case Instructions.DiviHL:
+					data = this.ReadByte(this.registerPC++);
+					if (data == 0)
+					{
+						this.SetFlag(ProcessorGeneric.FlagOverflow, true);
+					}
+					else
+					{
+						this.registerHL = this.SetFlagsOper16(this.registerHL / data);
+					}
+					break;
+
+				case Instructions.DivAHL:
+					data = this.BypeSignExtend(this.registerA);
+					if (data == 0)
+					{
+						this.SetFlag(ProcessorGeneric.FlagOverflow, true);
+					}
+					else
+					{
+						this.registerHL = this.SetFlagsOper16(this.registerHL / data);
+					}
+					break;
+
+				case Instructions.DivBHL:
+					data = this.BypeSignExtend(this.registerB);
+					if (data == 0)
+					{
+						this.SetFlag(ProcessorGeneric.FlagOverflow, true);
+					}
+					else
+					{
+						this.registerHL = this.SetFlagsOper16(this.registerHL / data);
+					}
+					break;
+
+				case Instructions.ModiA:
+					data = this.ReadByte(this.registerPC++);
+					if (data == 0)
+					{
+						this.SetFlag(ProcessorGeneric.FlagOverflow, true);
+					}
+					else
+					{
+						this.registerA = this.SetFlagsOper8(this.BypeSignExtend(this.registerA) % data);
+					}
+					break;
+
+				case Instructions.ModBA:
+					data = this.BypeSignExtend(this.registerB);
+					if (data == 0)
+					{
+						this.SetFlag(ProcessorGeneric.FlagOverflow, true);
+					}
+					else
+					{
+						this.registerA = this.SetFlagsOper8(this.BypeSignExtend(this.registerA) % data);
+					}
+					break;
+
+				case Instructions.ModiHL:
+					data = this.ReadByte(this.registerPC++);
+					if (data == 0)
+					{
+						this.SetFlag(ProcessorGeneric.FlagOverflow, true);
+					}
+					else
+					{
+						this.registerHL = this.SetFlagsOper16(this.registerHL % data);
+					}
+					break;
+
+				case Instructions.ModAHL:
+					data = this.BypeSignExtend(this.registerA);
+					if (data == 0)
+					{
+						this.SetFlag(ProcessorGeneric.FlagOverflow, true);
+					}
+					else
+					{
+						this.registerHL = this.SetFlagsOper16(this.registerHL % data);
+					}
+					break;
+
+				case Instructions.ModBHL:
+					data = this.BypeSignExtend(this.registerB);
+					if (data == 0)
+					{
+						this.SetFlag(ProcessorGeneric.FlagOverflow, true);
+					}
+					else
+					{
+						this.registerHL = this.SetFlagsOper16(this.registerHL % data);
+					}
+					break;
+
 			}
 		}
 
@@ -799,7 +955,9 @@ namespace Epsitec.Common.Designer.Dolphin
 			int indirect = address;
 			address += 3*64;  // place pour 64 appels
 			this.RomWrite(ref indirect, ref address, ProcessorGeneric.GetChar);
-			this.RomWrite(ref indirect, ref address, ProcessorGeneric.DisplayHexa);
+			this.RomWrite(ref indirect, ref address, ProcessorGeneric.DisplayHexaDigit);
+			this.RomWrite(ref indirect, ref address, ProcessorGeneric.DisplayHexaByte);
+			this.RomWrite(ref indirect, ref address, ProcessorGeneric.DisplayDecimal);
 		}
 
 		protected void RomWrite(ref int indirect, ref int address, byte[] code)
@@ -822,39 +980,96 @@ namespace Epsitec.Common.Designer.Dolphin
 		{
 			(byte) Instructions.PushF,				// PUSH F
 													// LOOP:
-			(byte) Instructions.MovemA, 0x08, 0x07,	// MOVE 807,A		; lit le clavier
+			(byte) Instructions.MovemA, 0x0C, 0x07,	// MOVE C07,A		; lit le clavier
 			(byte) Instructions.TestiA, 0x07,		// TEST A:#7		; bit full ?
-			(byte) Instructions.JumpRelEQ, 0xF9,	// JUMP,EQ R8^-7	; non, jump loop
+			(byte) Instructions.JumpRelEQ, 0xF9,	// JUMP,EQ R8^LOOP	; non, jump loop
 			(byte) Instructions.PopF,				// POP F
 			(byte) Instructions.Ret,				// RET
 		};
 
 		//	Affiche un digit hexadécimal.
 		//	in	A valeur 0..15
-		//		B digit (0..3)
+		//		B digit 0..3
 		//	out	-
 		//	mod	-
-		protected static byte[] DisplayHexa =
+		protected static byte[] DisplayHexaDigit =
 		{
 			(byte) Instructions.PushF,				// PUSH F
 			(byte) Instructions.PushA,				// PUSH A
 			(byte) Instructions.PushHL,				// PUSH HL
+
 			(byte) Instructions.AndiA, 0x0F,		// AND #0F,A
 			(byte) Instructions.SwapAB,				// SWAP A,B
 			(byte) Instructions.AndiA, 0x03,		// AND #03,A
 			(byte) Instructions.SwapAB,				// SWAP A,B
+
 			(byte) Instructions.MoverHL, 11,		// MOVE #R8^+11		; adresse de la table
 			(byte) Instructions.AddAHL,				// ADD A,HL			; HL pointe le bon digit
 			(byte) Instructions.MovecHLA,			// MOVE {HL},A		; A = segments
-			(byte) Instructions.MoveiHL, 0x08, 0x00,// MOVE #800,HL
+
+			(byte) Instructions.MoveiHL, 0x0C, 0x00,// MOVE #C00,HL
 			(byte) Instructions.AddBHL,				// ADD B,HL
 			(byte) Instructions.MoveAcHL,			// MODE A,{HL}		; affiche le digit
+
 			(byte) Instructions.PopHL,				// POP HL
 			(byte) Instructions.PopA,				// POP A
 			(byte) Instructions.PopF,				// POP F
 			(byte) Instructions.Ret,				// RET
 													// TABLE:
 			0x3F, 0x03, 0x6D, 0x67, 0x53, 0x76, 0x7E, 0x23, 0x7F, 0x77, 0x7B, 0x5E, 0x3C, 0x4F, 0x7C, 0x78,
+		};
+
+		//	Affiche un byte hexadécimal sur deux digits.
+		//	in	A valeur 0..255
+		//	out	-
+		//	mod	-
+		protected static byte[] DisplayHexaByte =
+		{
+			(byte) Instructions.PushF,				// PUSH F
+			(byte) Instructions.PushA,				// PUSH A
+
+			(byte) Instructions.MoveiB, 0x00,		// MOVE #0,B
+			(byte) Instructions.CallAbs, 0x08, 0x03,// CALL DisplayHexaDigit
+
+			(byte) Instructions.RRA,				// RR A
+			(byte) Instructions.RRA,				// RR A
+			(byte) Instructions.RRA,				// RR A
+			(byte) Instructions.RRA,				// RR A
+			(byte) Instructions.IncB,				// INC B
+			(byte) Instructions.CallAbs, 0x08, 0x03,// CALL DisplayHexaDigit
+
+			(byte) Instructions.PopA,				// POP A
+			(byte) Instructions.PopF,				// POP F
+			(byte) Instructions.Ret,				// RET
+		};
+
+		//	Affiche une valeur décimale.
+		//	in	A valeur 0..255
+		//	out	-
+		//	mod	-
+		protected static byte[] DisplayDecimal =
+		{
+			(byte) Instructions.PushF,				// PUSH F
+			(byte) Instructions.PushA,				// PUSH A
+			(byte) Instructions.PushHL,				// POP HL
+
+			(byte) Instructions.MoveiB, 0x00,		// MOVE #0,B
+
+													// LOOP:
+			(byte) Instructions.PushA,				// POP A
+			(byte) Instructions.ModiA, 0x0A,		// MOD #10.,A
+			(byte) Instructions.CallAbs, 0x08, 0x03,// CALL DisplayHexaDigit
+			(byte) Instructions.PopA,				// POP A
+
+			(byte) Instructions.IncB,				// INC B
+			(byte) Instructions.DiviA, 0x0A,		// DIV #10.,A
+			(byte) Instructions.CompiA, 0x00,		// COMP #0,A
+			(byte) Instructions.JumpRelNE, 0xF2,	// JUMP,NE R8^LOOP
+
+			(byte) Instructions.PopHL,				// POP HL
+			(byte) Instructions.PopA,				// POP A
+			(byte) Instructions.PopF,				// POP F
+			(byte) Instructions.Ret,				// RET
 		};
 		#endregion
 
@@ -870,7 +1085,7 @@ namespace Epsitec.Common.Designer.Dolphin
 				chapters.Add("Hexa");
 				chapters.Add("Data");
 				chapters.Add("Op");
-				chapters.Add("Jump");
+				chapters.Add("Branch");
 				
 				return chapters;
 			}
@@ -942,6 +1157,12 @@ namespace Epsitec.Common.Designer.Dolphin
 					AbstractProcessor.HelpPutLine(builder, "[51] :<tab/><tab/>ADD B,A");
 					AbstractProcessor.HelpPutLine(builder, "[52] [xx] :<tab/>SUB #xx,A");
 					AbstractProcessor.HelpPutLine(builder, "[53] :<tab/><tab/>SUB B,A");
+					AbstractProcessor.HelpPutLine(builder, "[90] [xx] :<tab/>MUL #xx,A");
+					AbstractProcessor.HelpPutLine(builder, "[91] :<tab/><tab/>MUL B,A");
+					AbstractProcessor.HelpPutLine(builder, "[95] [xx] :<tab/>DIV #xx,A");
+					AbstractProcessor.HelpPutLine(builder, "[96] :<tab/><tab/>DIV B,A");
+					AbstractProcessor.HelpPutLine(builder, "[9A] [xx] :<tab/>MOD #xx,A");
+					AbstractProcessor.HelpPutLine(builder, "[9B] :<tab/><tab/>MOD B,A");
 					AbstractProcessor.HelpPutLine(builder, "");
 					AbstractProcessor.HelpPutLine(builder, "[5A] [xx] :<tab/>ADD #xx,HL");
 					AbstractProcessor.HelpPutLine(builder, "[5B] :<tab/><tab/>ADD A,HL");
@@ -949,6 +1170,15 @@ namespace Epsitec.Common.Designer.Dolphin
 					AbstractProcessor.HelpPutLine(builder, "[5D] [xx] :<tab/>SUB #xx,HL");
 					AbstractProcessor.HelpPutLine(builder, "[5E] :<tab/><tab/>SUB A,HL");
 					AbstractProcessor.HelpPutLine(builder, "[5F] :<tab/><tab/>SUB B,HL");
+					AbstractProcessor.HelpPutLine(builder, "[92] [xx] :<tab/>MUL #xx,HL");
+					AbstractProcessor.HelpPutLine(builder, "[93] :<tab/><tab/>MUL A,HL");
+					AbstractProcessor.HelpPutLine(builder, "[94] :<tab/><tab/>MUL B,HL");
+					AbstractProcessor.HelpPutLine(builder, "[97] [xx] :<tab/>DIV #xx,HL");
+					AbstractProcessor.HelpPutLine(builder, "[98] :<tab/><tab/>DIV A,HL");
+					AbstractProcessor.HelpPutLine(builder, "[99] :<tab/><tab/>DIV B,HL");
+					AbstractProcessor.HelpPutLine(builder, "[9C] [xx] :<tab/>MOD #xx,HL");
+					AbstractProcessor.HelpPutLine(builder, "[9D] :<tab/><tab/>MOD A,HL");
+					AbstractProcessor.HelpPutLine(builder, "[9E] :<tab/><tab/>MOD B,HL");
 
 					AbstractProcessor.HelpPutTitle(builder, "Opérations logiques");
 					AbstractProcessor.HelpPutLine(builder, "[54] [xx] :<tab/>AND #xx,A");
@@ -997,7 +1227,7 @@ namespace Epsitec.Common.Designer.Dolphin
 					AbstractProcessor.HelpPutLine(builder, "[00] :<tab/><tab/>NOP");
 					break;
 
-				case "Jump":
+				case "Branch":
 					AbstractProcessor.HelpPutTitle(builder, "Sauts");
 					AbstractProcessor.HelpPutLine(builder, "[01] [hh] [ll] :<tab/>JUMP hhll");
 					AbstractProcessor.HelpPutLine(builder, "[02] [hh] [ll] :<tab/>JUMP,EQ hhll");
