@@ -190,6 +190,7 @@ namespace Epsitec.Common.Designer.Dolphin
 				int address = this.MemoryStart+this.firstAddress+i;
 
 				TextFieldHexa field = this.fields[i];
+				field.Enable = !this.memory.IsReadOnly(address);
 				field.Label = address.ToString("X3");
 				field.HexaValue = this.memory.ReadForDebug(address);
 			}
@@ -221,13 +222,21 @@ namespace Epsitec.Common.Designer.Dolphin
 		{
 			get
 			{
-				if (this.bank == null)
+				if (this.bank == "M")
 				{
-					return this.memory.Length;
+					return DolphinApplication.RamLength;
+				}
+				else if (this.bank == "P")
+				{
+					return DolphinApplication.PeriphLength;
+				}
+				else if (this.bank == "R")
+				{
+					return DolphinApplication.RomLength;
 				}
 				else
 				{
-					return this.memory.Length/2;
+					return this.memory.Length;
 				}
 			}
 		}
@@ -238,11 +247,15 @@ namespace Epsitec.Common.Designer.Dolphin
 			{
 				if (this.bank == "M")
 				{
-					return 0;
+					return DolphinApplication.RamBase;
 				}
 				else if (this.bank == "P")
 				{
-					return this.memory.Length/2;
+					return DolphinApplication.PeriphBase;
+				}
+				else if (this.bank == "R")
+				{
+					return DolphinApplication.RomBase;
 				}
 				else
 				{

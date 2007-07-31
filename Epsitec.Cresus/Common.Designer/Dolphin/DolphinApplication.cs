@@ -222,14 +222,25 @@ namespace Epsitec.Common.Designer.Dolphin
 
 			this.memoryButtonM = new PushButton(header);
 			this.memoryButtonM.Text = "M";
+			this.memoryButtonM.Name = "M";
 			this.memoryButtonM.PreferredSize = new Size(22, 22);
 			this.memoryButtonM.Margins = new Margins(10+17, 2, 0, 3);
 			this.memoryButtonM.Dock = DockStyle.Left;
 			this.memoryButtonM.Clicked += new MessageEventHandler(this.HandleMemoryButtonClicked);
-			ToolTip.Default.SetToolTip(this.memoryButtonM, "Montre le début de la zone mémoire");
+			ToolTip.Default.SetToolTip(this.memoryButtonM, "Montre le début de la mémoire vive (RAM)");
+
+			this.memoryButtonR = new PushButton(header);
+			this.memoryButtonR.Text = "R";
+			this.memoryButtonR.Name = "R";
+			this.memoryButtonR.PreferredSize = new Size(22, 22);
+			this.memoryButtonR.Margins = new Margins(0, 2, 0, 3);
+			this.memoryButtonR.Dock = DockStyle.Left;
+			this.memoryButtonR.Clicked += new MessageEventHandler(this.HandleMemoryButtonClicked);
+			ToolTip.Default.SetToolTip(this.memoryButtonR, "Montre le début de la mémoire morte (ROM)");
 
 			this.memoryButtonP = new PushButton(header);
 			this.memoryButtonP.Text = "P";
+			this.memoryButtonP.Name = "P";
 			this.memoryButtonP.PreferredSize = new Size(22, 22);
 			this.memoryButtonP.Margins = new Margins(0, 2, 0, 3);
 			this.memoryButtonP.Dock = DockStyle.Left;
@@ -713,6 +724,7 @@ namespace Epsitec.Common.Designer.Dolphin
 			//	Met à jour la banque mémoire utilisée.
 			this.memoryButtonM.ActiveState = (this.memoryAccessor.Bank == "M") ? ActiveState.Yes : ActiveState.No;
 			this.memoryButtonP.ActiveState = (this.memoryAccessor.Bank == "P") ? ActiveState.Yes : ActiveState.No;
+			this.memoryButtonR.ActiveState = (this.memoryAccessor.Bank == "R") ? ActiveState.Yes : ActiveState.No;
 		}
 
 
@@ -888,6 +900,12 @@ namespace Epsitec.Common.Designer.Dolphin
 				}
 			}
 
+			public bool IsReadOnly(int address)
+			{
+				//	Indique si l'adresse est en ROM.
+				return (address < 0 || address >= DolphinApplication.RomBase);
+			}
+
 			public void WriteWithDirty(int address, int data)
 			{
 				//	Ecrit une valeur en mémoire et/ou dans un périphérique et
@@ -939,7 +957,7 @@ namespace Epsitec.Common.Designer.Dolphin
 
 			public void RomInitialise(AbstractProcessor processor)
 			{
-				//	Initialise la Rom.
+				//	Initialise la ROM.
 				processor.RomInitialise(DolphinApplication.RomBase);
 			}
 
@@ -1553,7 +1571,8 @@ namespace Epsitec.Common.Designer.Dolphin
 		private void HandleMemoryButtonClicked(object sender, MessageEventArgs e)
 		{
 			//	Bouton [M] ou [P] cliqué.
-			this.memoryAccessor.Bank = (sender == this.memoryButtonM) ? "M" : "P";
+			PushButton button = sender as PushButton;
+			this.memoryAccessor.Bank = button.Name;
 			this.UpdateMemoryBank();
 		}
 
@@ -1586,11 +1605,15 @@ namespace Epsitec.Common.Designer.Dolphin
 		public static readonly int TotalAddress = 12;
 		public static readonly int TotalData = 8;
 
-		protected static readonly int PeriphBase = 0x800;
-		protected static readonly int PeriphFirstDigit = 0;
-		protected static readonly int PeriphLastDigit = 3;
-		protected static readonly int PeriphKeyboard = 7;
-		protected static readonly int RomBase = 0xB00;
+		public static readonly int RamBase = 0x000;
+		public static readonly int RamLength = 0x800;
+		public static readonly int PeriphBase = 0x800;
+		public static readonly int PeriphLength = 0x10;
+		public static readonly int PeriphFirstDigit = 0;
+		public static readonly int PeriphLastDigit = 3;
+		public static readonly int PeriphKeyboard = 7;
+		public static readonly int RomBase = 0xC00;
+		public static readonly int RomLength = 0x400;
 
 		protected static readonly string ProgrammEmptyRem = "<br/><i>Tapez ici les commentaires sur le programme...</i>";
 
@@ -1625,6 +1648,7 @@ namespace Epsitec.Common.Designer.Dolphin
 		protected MemoryAccessor memoryAccessor;
 		protected PushButton memoryButtonM;
 		protected PushButton memoryButtonP;
+		protected PushButton memoryButtonR;
 		protected TabBook book;
 		protected TabPage pageProgramm;
 		protected TextFieldMulti fieldProgrammRem;

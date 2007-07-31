@@ -831,6 +831,7 @@ namespace Epsitec.Common.Designer.Dolphin
 
 		//	Affiche un digit hexadécimal.
 		//	in	A valeur 0..15
+		//		B digit (0..3)
 		//	out	-
 		//	mod	-
 		protected static byte[] DisplayHexa =
@@ -839,10 +840,15 @@ namespace Epsitec.Common.Designer.Dolphin
 			(byte) Instructions.PushA,				// PUSH A
 			(byte) Instructions.PushHL,				// PUSH HL
 			(byte) Instructions.AndiA, 0x0F,		// AND #0F,A
-			(byte) Instructions.MoverHL, 9,			// MOVE #R8^+9		; adresse de la table
+			(byte) Instructions.SwapAB,				// SWAP A,B
+			(byte) Instructions.AndiA, 0x03,		// AND #03,A
+			(byte) Instructions.SwapAB,				// SWAP A,B
+			(byte) Instructions.MoverHL, 11,		// MOVE #R8^+11		; adresse de la table
 			(byte) Instructions.AddAHL,				// ADD A,HL			; HL pointe le bon digit
-			(byte) Instructions.MovecHLA,			// MOVE {HL},A
-			(byte) Instructions.MoveAm, 0x08, 0x00,	// MODE A,800		; affiche le digit
+			(byte) Instructions.MovecHLA,			// MOVE {HL},A		; A = segments
+			(byte) Instructions.MoveiHL, 0x08, 0x00,// MOVE #800,HL
+			(byte) Instructions.AddBHL,				// ADD B,HL
+			(byte) Instructions.MoveAcHL,			// MODE A,{HL}		; affiche le digit
 			(byte) Instructions.PopHL,				// POP HL
 			(byte) Instructions.PopA,				// POP A
 			(byte) Instructions.PopF,				// POP F
