@@ -290,6 +290,12 @@ namespace Epsitec.Common.Designer
 			this.ribbonBook.ActivePage = this.ribbonMain;
 		}
 
+		protected override void ExecuteQuit(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			//	Evite que cette commande ne soit exécutée par Widgets.Application,
+			//	car cela provoquerait la fin du programme, quelle que soit la
+			//	réponse donnée par l'utilisateur au dialogue affiché par DocumentEditor.
+		}
 
 		public void ActiveButton(string command, bool active)
 		{
