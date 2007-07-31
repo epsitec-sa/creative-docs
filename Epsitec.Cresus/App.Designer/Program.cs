@@ -92,16 +92,13 @@ namespace App.Designer
 				paths.AddRange (addPaths);
 			}
 			
-			//?Epsitec.Common.Widgets.Adorners.Factory.SetActive ("LookRoyale");
-			Epsitec.Common.Widgets.Adorners.Factory.SetActive ("LookSimply");  // pour Dolphin !
-			//?Epsitec.Common.Widgets.Adorners.Factory.SetActive ("LookMetal");
+			Epsitec.Common.Widgets.Adorners.Factory.SetActive ("LookRoyale");
 			Epsitec.Common.Support.Implementation.FileProvider.DefineGlobalProbingPath (string.Join (";", paths.ToArray ()));
 			
 			DesignerApplication designerMainWindow;
 			
 			designerMainWindow = new DesignerApplication (pool);
-			//?designerMainWindow.Mode = DesignerMode.Build;
-			designerMainWindow.Mode = DesignerMode.Dolphin;
+			designerMainWindow.Mode = DesignerMode.Build;
 			designerMainWindow.Standalone = true;
 			designerMainWindow.Show (null);
 			designerMainWindow.Window.Run ();

@@ -1,3 +1,4 @@
+using Epsitec.Common.Designer;
 using System.Collections.Generic;
 
 namespace App.Dolphin
@@ -19,29 +20,15 @@ namespace App.Dolphin
 			pool.DefaultPrefix = "file";
 			pool.SetupDefaultRootPaths();
 
-			if (Epsitec.Common.Support.Globals.IsDebugBuild)
-			{
-				paths = new List<string> (new string[]
-				{
-					@"S:\Epsitec.Cresus\Common.Dialogs\Resources",
-					@"S:\Epsitec.Cresus\Common.Support\Resources",
-					@"S:\Epsitec.Cresus\Common.Types\Resources",
-					@"S:\Epsitec.Cresus\Common.Widgets\Resources",
-				});
-			}
-			else
-			{
-				paths = new List<string>();
-				paths.Add(System.IO.Path.Combine(execPath, "Resources"));
-			}
-			
-			Epsitec.Common.Widgets.Adorners.Factory.SetActive("LookMetal");
-			Epsitec.Common.Support.Implementation.FileProvider.DefineGlobalProbingPath(string.Join(";", paths.ToArray()));
-			
-			Epsitec.App.Dolphin.DolphinApplication mainWindow;
-			mainWindow = new Epsitec.App.Dolphin.DolphinApplication(pool);
-			mainWindow.Show(null);
-			mainWindow.Window.Run();
+			Epsitec.Common.Widgets.Adorners.Factory.SetActive ("LookSimply");  // pour Dolphin !
+
+			DesignerApplication designerMainWindow;
+
+			designerMainWindow = new DesignerApplication (pool);
+			designerMainWindow.Mode = DesignerMode.Dolphin;
+			designerMainWindow.Standalone = true;
+			designerMainWindow.Show (null);
+			designerMainWindow.Window.Run ();
 		}
 	}
 }
