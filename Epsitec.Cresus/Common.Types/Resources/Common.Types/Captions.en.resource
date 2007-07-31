@@ -27,7 +27,7 @@
   <data id="011">&lt;s:type id="_1" s:name="*aT" /&gt;&lt;s:type id="_2" s:name="*eT" /&gt;&lt;s:data id="_0" f:_1.SystemType="E:Epsitec.Common.Types.StructuredTypeClass, Common.Types" f:_2.EnumValues="{Collection {Text '0 [100U]'}, {Text '1 [100V]'}, {Text '2 [10001]'}}" f:_1.DefaultController="Enum" f:_1.DefaultControllerParameter="Icons" /&gt;</data>
   <data id="0U">&lt;s:data id="_0" f:Labels="{Collection {Text 'Undefined class'}}" /&gt;</data>
   <data id="0V">&lt;s:data id="_0" f:Labels="{Collection {Text 'Entity'}}" /&gt;</data>
-  <data id="001">&lt;s:data id="_0" f:Labels="{Collection {Text 'Entity view'}}" /&gt;</data>
+  <data id="001">&lt;s:data id="_0" f:Labels="{Collection {Text 'Interface'}}" /&gt;</data>
   <data id="0B1">&lt;s:type id="_1" s:name="*aT" /&gt;&lt;s:type id="_2" s:name="*eT" /&gt;&lt;s:data id="_0" f:_1.SystemType="E:Epsitec.Common.Types.TimeResolution, Common.Types" f:_2.EnumValues="{Collection {Text '0 [10021]'}, {Text '1 [10031]'}, {Text '2 [10041]'}, {Text '3 [10051]'}, {Text '4 [10061]'}, {Text '5 [10071]'}, {Text '6 [10081]'}, {Text '7 [10091]'}, {Text '8 [100A1]'}}" f:_1.DefaultController="Enum" f:_1.DefaultControllerParameter="Icons" /&gt;</data>
   <data id="071">&lt;s:data id="_0" f:Labels="{Collection {Text 'Day'}}" /&gt;</data>
   <data id="021">&lt;s:data id="_0" f:Labels="{Collection {Text 'Default'}}" /&gt;</data>

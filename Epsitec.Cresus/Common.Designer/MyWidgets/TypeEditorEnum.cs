@@ -718,7 +718,15 @@ namespace Epsitec.Common.Designer.MyWidgets
 			{
 #if true
 				//	TODO: le résultat rendu avec les énumérations existantes de Common.Types est faux !!!
-				return this.structuredData.GetValue(Support.Res.Fields.ResourceEnumType.SystemType) is System.Type;
+				object value = this.structuredData.GetValue(Support.Res.Fields.ResourceEnumType.SystemType);
+				if (value is System.Type)
+				{
+					return true;
+				}
+				else
+				{
+					return false;
+				}
 #else
 				EnumType type = this.AbstractType as EnumType;
 				return type.IsNativeEnum;

@@ -157,6 +157,21 @@ namespace Epsitec.Common.Dialogs
 			return dialog.Result;
 		}
 
+		public static DialogResult ShowMessage(string formattedMessage, Window owner)
+		{
+			if (string.IsNullOrEmpty (formattedMessage))
+			{
+				return DialogResult.None;
+			}
+
+			IDialog dialog = MessageDialog.CreateOk (MessageDialog.GetDialogTitle (owner), DialogIcon.None, formattedMessage);
+
+			dialog.Owner = owner;
+			dialog.OpenDialog ();
+
+			return dialog.Result;
+		}
+
 		public static DialogResult ShowQuestion(string formattedQuestion, Window owner)
 		{
 			if (string.IsNullOrEmpty (formattedQuestion))

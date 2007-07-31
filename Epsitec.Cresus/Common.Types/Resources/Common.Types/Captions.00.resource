@@ -35,7 +35,7 @@
   <data name="Val.FieldMembership.Inherited" id="0S">&lt;s:type id="_1" s:name="*eT" /&gt;&lt;s:data id="_0" f:_1.IsNative="True" f:Name="Inherited" f:Labels="{Collection {Text 'Champ hérité'}}" /&gt;</data>
   <data name="Val.StructuredTypeClass.None" id="0U">&lt;s:type id="_1" s:name="*eT" /&gt;&lt;s:data id="_0" f:_1.IsNative="True" f:Name="None" f:Labels="{Collection {Text 'Classe non définie'}}" /&gt;</data>
   <data name="Val.StructuredTypeClass.Entity" id="0V">&lt;s:type id="_1" s:name="*eT" /&gt;&lt;s:data id="_0" f:_1.IsNative="True" f:Name="Entity" f:Labels="{Collection {Text 'Entité'}}" /&gt;</data>
-  <data name="Val.StructuredTypeClass.View" id="001">&lt;s:type id="_1" s:name="*eT" /&gt;&lt;s:data id="_0" f:_1.IsNative="True" f:Name="View" f:Labels="{Collection {Text 'Vue d&amp;amp;apos;entité'}}" /&gt;</data>
+  <data name="Val.StructuredTypeClass.Interface" id="001">&lt;s:type id="_1" s:name="*eT" /&gt;&lt;s:data id="_0" f:_1.IsNative="True" f:Name="Interface" f:Labels="{Collection {Text 'Interface'}}" /&gt;</data>
   <data name="Val.TimeResolution.Default" id="021">&lt;s:type id="_1" s:name="*eT" /&gt;&lt;s:data id="_0" f:_1.IsNative="True" f:Name="Default" f:Labels="{Collection {Text 'Par défaut'}}" /&gt;</data>
   <data name="Val.TimeResolution.Milliseconds" id="031">&lt;s:type id="_1" s:name="*eT" /&gt;&lt;s:data id="_0" f:_1.IsNative="True" f:Name="Milliseconds" f:Labels="{Collection {Text 'Milliseconde'}}" /&gt;</data>
   <data name="Val.TimeResolution.Seconds" id="041">&lt;s:type id="_1" s:name="*eT" /&gt;&lt;s:data id="_0" f:_1.IsNative="True" f:Name="Seconds" f:Labels="{Collection {Text 'Seconde'}}" /&gt;</data>
