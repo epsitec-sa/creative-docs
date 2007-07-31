@@ -1113,7 +1113,7 @@ namespace Epsitec.Common.Designer.Dolphin
 			//	Ajuste l'horloge du processeur.
 			if (this.clock != null)
 			{
-				this.clock.AutoRepeat = 1.0/System.Math.Min(this.ips, 100);
+				this.clock.AutoRepeat = 1.0/System.Math.Min(this.ips, DolphinApplication.RealMaxIps);
 			}
 		}
 
@@ -1487,9 +1487,9 @@ namespace Epsitec.Common.Designer.Dolphin
 		private void HandleClockTimeElapsed(object sender)
 		{
 			//	Le timer demande d'exécuter l'instruction suivante.
-			if (this.ips > 100)
+			if (this.ips > DolphinApplication.RealMaxIps)
 			{
-				int count = (int) (this.ips/100);
+				int count = (int) (this.ips/DolphinApplication.RealMaxIps);
 				for (int i=0; i<count; i++)
 				{
 					this.ProcessorClock();
@@ -1704,6 +1704,8 @@ namespace Epsitec.Common.Designer.Dolphin
 		public static readonly int PeriphKeyboard = 0xC07;
 
 		protected static readonly string ProgrammEmptyRem = "<br/><i>Tapez ici les commentaires sur le programme...</i>";
+
+		public static readonly double RealMaxIps = 50;
 
 		protected Window parentWindow;
 		protected Panel mainPanel;
