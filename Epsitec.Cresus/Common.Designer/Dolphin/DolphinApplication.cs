@@ -137,6 +137,13 @@ namespace Epsitec.Common.Designer.Dolphin
 			this.UpdateSave();
 		}
 
+		public bool Quit()
+		{
+			//	Appelé avant de quitter l'application.
+			//	Retourne true s'il est possible de quitter.
+			return this.AutoSave();
+		}
+
 
 		protected void CreateOptions(Panel parent)
 		{

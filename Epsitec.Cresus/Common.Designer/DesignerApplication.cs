@@ -518,9 +518,15 @@ namespace Epsitec.Common.Designer
 		[Command("QuitApplication")]
 		void CommandQuitApplication(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
+			e.Executed = true;
+
 			if (this.mode == DesignerMode.Dolphin)
 			{
-				this.Window.Quit();
+				if (this.dolphinApplication.Quit())
+				{
+					this.Window.Quit();
+				}
+				//	TODO: je ne comprends pas pourquoi on quitte même si Window.Quit() n'est pas appelé !
 				return;
 			}
 
@@ -548,7 +554,7 @@ namespace Epsitec.Common.Designer
 			{
 				this.Window.Hide();
 			}
-	}
+		}
 
 		[Command("DesignerGlyphs")]
 		void CommandGlyphs(CommandDispatcher dispatcher, CommandEventArgs e)
@@ -2202,7 +2208,8 @@ namespace Epsitec.Common.Designer
 				window.ClientSize = windowBounds.Size;
 				window.Text = "Dolphin";
 				window.Name = "Application";  // utilisé pour générer "QuitApplication" !
-				window.PreventAutoClose = true;
+				//?window.PreventAutoClose = true;
+				//?window.PreventAutoQuit = false;
 				
 				DesignerApplication.SetInstance(window, this);  // attache l'instance de DesignerApplication à la fenêtre
 
