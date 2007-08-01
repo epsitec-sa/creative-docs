@@ -28,6 +28,10 @@ namespace Epsitec.Common.Designer.Dolphin
 
 		protected override void ProcessMessage(Message message, Point pos)
 		{
+			//	Gestion des touches Tab et Return. On cherche le widget suivant (ou précédent si Shift)
+			//	dans la parenté, d'après les propriétés TabIndex (les trous ne sont pas admis).
+			//	Si le widget est un TextFieldHexa utilisé dans un MemoryAccessor, on fait défiler
+			//	la mémoire lorsqu'on bute au début ou à la fin.
 			if (message.MessageType == MessageType.KeyDown)
 			{
 				if (message.KeyCode == KeyCode.Tab || message.KeyCode == KeyCode.Return)
@@ -38,19 +42,43 @@ namespace Epsitec.Common.Designer.Dolphin
 					{
 						int offset = message.IsShiftPressed ? -1 : 1;
 						Widget newWidget = this.SearchTabIndex(widget, widget.TabIndex+offset);
-						if (newWidget != null)
+						if (newWidget == null)  // on bute sur une extrémité ?
 						{
-							this.SetDolphinFocusedWidget(newWidget);
-							newWidget.Focus();
-
-							TextField newField = newWidget as TextField;
-							if (newField != null)
+							TextFieldHexa hexa = field.Parent as TextFieldHexa;
+							if (hexa != null)
 							{
-								newField.SelectAll();
+								MemoryAccessor ma = hexa.MemoryAccessor;
+								if (ma != null)
+								{
+									ma.FirstAddress = ma.FirstAddress+offset;
+
+									newWidget = this.SearchTabIndex(widget, widget.TabIndex);
+									if (newWidget != null)
+									{
+										this.SetDolphinFocus(newWidget);
+									}
+								}
 							}
+						}
+						else  // widget suivant/précédent trouvé ?
+						{
+							this.SetDolphinFocus(newWidget);
 						}
 					}
 				}
+			}
+		}
+
+		protected void SetDolphinFocus(Widget widget)
+		{
+			//	Met le focus dans un widget.
+			this.SetDolphinFocusedWidget(widget);
+			widget.Focus();
+
+			TextField field = widget as TextField;
+			if (field != null)
+			{
+				field.SelectAll();
 			}
 		}
 

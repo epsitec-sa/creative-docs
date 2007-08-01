@@ -73,6 +73,9 @@ namespace Epsitec.Common.Designer.Dolphin
 			}
 			set
 			{
+				value = System.Math.Max(value, 0);
+				value = System.Math.Min(value, this.MemoryLength-this.fields.Count);
+
 				if (this.firstAddress != value)
 				{
 					this.firstAddress = value;
@@ -178,6 +181,7 @@ namespace Epsitec.Common.Designer.Dolphin
 				TextFieldHexa field = new TextFieldHexa(this.panel);
 				field.Index = i;
 				field.SetTabIndex(index++);
+				field.MemoryAccessor = this;
 				field.BitCount = DolphinApplication.TotalData;
 				field.BitNames = null;
 				field.PreferredHeight = MemoryAccessor.LineHeight;

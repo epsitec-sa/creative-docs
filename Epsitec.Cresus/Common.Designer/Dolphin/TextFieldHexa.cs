@@ -112,6 +112,19 @@ namespace Epsitec.Common.Designer.Dolphin
 			this.textField.TabNavigationMode = TabNavigationMode.None;  // gestion maison !
 		}
 
+		public MemoryAccessor MemoryAccessor
+		{
+			//	MemoryAccessor associé au widget, facultatif.
+			get
+			{
+				return this.memoryAccessor;
+			}
+			set
+			{
+				this.memoryAccessor = value;
+			}
+		}
+
 		public int BitCount
 		{
 			//	Nombre de bits de la valeur (à priori 8 ou 12).
@@ -393,6 +406,7 @@ namespace Epsitec.Common.Designer.Dolphin
 		protected int						bitCount = -1;
 		protected string					baseName;
 		protected string					bitNames;
+		protected MemoryAccessor			memoryAccessor;
 
 		protected StaticText				label;
 		protected TextField					textField;
