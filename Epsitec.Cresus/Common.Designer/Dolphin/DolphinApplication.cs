@@ -327,8 +327,6 @@ namespace Epsitec.Common.Designer.Dolphin
 			this.buttonReset.Clicked += new MessageEventHandler(this.HandleButtonResetClicked);
 			ToolTip.Default.SetToolTip(this.buttonReset, "Run/Stop");
 
-			this.ledRun = this.CreateLabeledLed(parent, "Run");
-
 			this.buttonClock3 = new PushButton(parent);
 			this.buttonClock3.Index = 1000;
 			this.buttonClock3.Text = "1000 IPS";
@@ -710,9 +708,9 @@ namespace Epsitec.Common.Designer.Dolphin
 		protected void UpdateButtons()
 		{
 			//	Met à jour le mode enable/disable de tous les boutons.
-			this.buttonStep.Enable = (this.ledRun.ActiveState == ActiveState.Yes) && (this.switchStep.ActiveState == ActiveState.Yes);
+			this.buttonStep.Enable = (this.buttonReset.ActiveState == ActiveState.Yes) && (this.switchStep.ActiveState == ActiveState.Yes);
 
-			bool run = (this.ledRun.ActiveState == ActiveState.Yes);
+			bool run = (this.buttonReset.ActiveState == ActiveState.Yes);
 
 			this.switchDataReadWrite.Enable = !run;
 			this.buttonMemory.Enable = !run;
@@ -1132,7 +1130,6 @@ namespace Epsitec.Common.Designer.Dolphin
 		protected void ProcessorClock()
 		{
 			//	Exécute une instruction du processeur.
-			this.ProcessorFeedback();
 			this.processor.Clock();
 		}
 
@@ -1325,7 +1322,7 @@ namespace Epsitec.Common.Designer.Dolphin
 			//	Sroppe le programme en cours.
 			this.ProcessorStop();
 			this.ProcessorReset();
-			this.ledRun.ActiveState = ActiveState.No;
+			this.buttonReset.ActiveState = ActiveState.No;
 		}
 
 		protected bool Dirty
@@ -1499,17 +1496,19 @@ namespace Epsitec.Common.Designer.Dolphin
 			{
 				this.ProcessorClock();
 			}
+
+			this.ProcessorFeedback();
 		}
 
 		private void HandleButtonResetClicked(object sender, MessageEventArgs e)
 		{
 			//	Bouton [R/S] cliqué.
-			if (this.ledRun.ActiveState == ActiveState.No)
+			if (this.buttonReset.ActiveState == ActiveState.No)
 			{
 				this.ProcessorReset();
 				this.ProcessorStart();
 				
-				this.ledRun.ActiveState = ActiveState.Yes;
+				this.buttonReset.ActiveState = ActiveState.Yes;
 			}
 			else
 			{
@@ -1518,7 +1517,7 @@ namespace Epsitec.Common.Designer.Dolphin
 				this.AddressBits = this.AddressBits;
 				this.DataBits = 0;
 				
-				this.ledRun.ActiveState = ActiveState.No;
+				this.buttonReset.ActiveState = ActiveState.No;
 			}
 
 			this.UpdateButtons();
@@ -1547,7 +1546,7 @@ namespace Epsitec.Common.Designer.Dolphin
 			this.switchStep.ActiveState = (this.switchStep.ActiveState == ActiveState.No) ? ActiveState.Yes : ActiveState.No;
 			this.UpdateButtons();
 
-			if (this.ledRun.ActiveState == ActiveState.Yes)
+			if (this.buttonReset.ActiveState == ActiveState.Yes)
 			{
 				if (this.switchStep.ActiveState == ActiveState.No)  // continue ?
 				{
@@ -1570,7 +1569,7 @@ namespace Epsitec.Common.Designer.Dolphin
 		private void HandleButtonMemoryPressed(object sender, MessageEventArgs e)
 		{
 			//	Bouton [M] pressé.
-			if (this.ledRun.ActiveState == ActiveState.Yes)
+			if (this.buttonReset.ActiveState == ActiveState.Yes)
 			{
 				return;
 			}
@@ -1589,7 +1588,7 @@ namespace Epsitec.Common.Designer.Dolphin
 		private void HandleButtonMemoryReleased(object sender, MessageEventArgs e)
 		{
 			//	Bouton [M] relâché.
-			if (this.ledRun.ActiveState == ActiveState.Yes)
+			if (this.buttonReset.ActiveState == ActiveState.Yes)
 			{
 				return;
 			}
@@ -1603,7 +1602,7 @@ namespace Epsitec.Common.Designer.Dolphin
 		private void HandleAddressSwitchClicked(object sender, MessageEventArgs e)
 		{
 			//	Switch d'adresse basculé.
-			if (this.ledRun.ActiveState == ActiveState.Yes)
+			if (this.buttonReset.ActiveState == ActiveState.Yes)
 			{
 				return;
 			}
@@ -1625,7 +1624,7 @@ namespace Epsitec.Common.Designer.Dolphin
 		private void HandleDataSwitchClicked(object sender, MessageEventArgs e)
 		{
 			//	Switch de data basculé.
-			if (this.ledRun.ActiveState == ActiveState.Yes)
+			if (this.buttonReset.ActiveState == ActiveState.Yes)
 			{
 				return;
 			}
@@ -1721,7 +1720,6 @@ namespace Epsitec.Common.Designer.Dolphin
 		protected PushButton buttonReset;
 		protected PushButton buttonStep;
 		protected PushButton buttonMemory;
-		protected Led ledRun;
 		protected PushButton buttonClock3;
 		protected PushButton buttonClock2;
 		protected PushButton buttonClock1;
