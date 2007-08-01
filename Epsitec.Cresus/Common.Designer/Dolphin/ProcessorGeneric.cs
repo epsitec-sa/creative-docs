@@ -160,8 +160,8 @@ namespace Epsitec.Common.Designer.Dolphin
 		public override void Reset()
 		{
 			//	Reset du processeur pour démarrer à l'adresse 0.
-			this.registerPC = 0;
-			this.registerSP = DolphinApplication.StackBase;
+			this.registerPC = Memory.RamBase;
+			this.registerSP = Memory.StackBase;
 			this.registerF = 0;
 			this.registerA = 0;
 			this.registerB = 0;
@@ -866,12 +866,12 @@ namespace Epsitec.Common.Designer.Dolphin
 				case "PC":
 				case "SP":
 				case "HL":
-					return DolphinApplication.TotalAddress;
+					return Memory.TotalAddress;
 
 				case "F":
 				case "A":
 				case "B":
-					return DolphinApplication.TotalData;
+					return Memory.TotalData;
 			}
 
 			return base.GetRegisterSize(name);

@@ -15,7 +15,7 @@ namespace Epsitec.Common.Designer.Dolphin
 			//	Alloue et initialise la mémoire du dauphin.
 			this.application = application;
 
-			int size = 1 << DolphinApplication.TotalAddress;
+			int size = 1 << Memory.TotalAddress;
 			this.memory = new byte[size];
 
 			for (int i=0; i<size; i++)
@@ -26,7 +26,8 @@ namespace Epsitec.Common.Designer.Dolphin
 
 		public int Length
 		{
-			//	Retourne la longueur de la mémoire.
+			//	Retourne la longueur totale de la mémoire (en fait, il serait plus juste
+			//	de parler de la longueur de l'espace d'adressage).
 			get
 			{
 				return this.memory.Length;
@@ -36,7 +37,7 @@ namespace Epsitec.Common.Designer.Dolphin
 		public void Clear()
 		{
 			//	Vide toute le mémoire.
-			for (int i=0; i<DolphinApplication.RomBase; i++)
+			for (int i=0; i<Memory.RomBase; i++)
 			{
 				this.memory[i] = 0;
 			}
@@ -54,7 +55,7 @@ namespace Epsitec.Common.Designer.Dolphin
 
 			//	Cherche la dernière adresse non nulle.
 			int last = 0;
-			for (int i=DolphinApplication.PeriphBase-1; i>=0; i--)
+			for (int i=Memory.PeriphBase-1; i>=0; i--)
 			{
 				if (this.memory[i] != 0)
 				{
@@ -100,19 +101,19 @@ namespace Epsitec.Common.Designer.Dolphin
 		public bool IsRam(int address)
 		{
 			//	Indique si l'adresse est en Ram.
-			return (address >= DolphinApplication.RamBase && address < DolphinApplication.RamBase+DolphinApplication.RamLength);
+			return (address >= Memory.RamBase && address < Memory.RamBase+Memory.RamLength);
 		}
 
 		public bool IsRom(int address)
 		{
 			//	Indique si l'adresse est en Rom.
-			return (address >= DolphinApplication.RomBase && address < DolphinApplication.RomBase+DolphinApplication.RomLength);
+			return (address >= Memory.RomBase && address < Memory.RomBase+Memory.RomLength);
 		}
 
 		public bool IsPeriph(int address)
 		{
 			//	Indique si l'adresse est un périphérique.
-			return (address >= DolphinApplication.PeriphBase && address < DolphinApplication.PeriphBase+DolphinApplication.PeriphLength);
+			return (address >= Memory.PeriphBase && address < Memory.PeriphBase+Memory.PeriphLength);
 		}
 
 		public int Read(int address)
@@ -122,7 +123,7 @@ namespace Epsitec.Common.Designer.Dolphin
 			{
 				int value = this.memory[address];
 
-				if (address == DolphinApplication.PeriphKeyboard)  // lecture du clavier ?
+				if (address == Memory.PeriphKeyboard)  // lecture du clavier ?
 				{
 					if ((value & 0x80) != 0)  // bit full ?
 					{
@@ -185,10 +186,10 @@ namespace Epsitec.Common.Designer.Dolphin
 
 			if (this.IsPeriph(address))  // périphérique ?
 			{
-				if (address >= DolphinApplication.PeriphFirstDigit && address <= DolphinApplication.PeriphLastDigit)  // l'un des 4 digits ?
+				if (address >= Memory.PeriphFirstDigit && address <= Memory.PeriphLastDigit)  // l'un des 4 digits ?
 				{
-					int a = address - DolphinApplication.PeriphFirstDigit;
-					int t = DolphinApplication.PeriphLastDigit-DolphinApplication.PeriphFirstDigit;
+					int a = address - Memory.PeriphFirstDigit;
+					int t = Memory.PeriphLastDigit-Memory.PeriphFirstDigit;
 					this.application.DisplayDigits[t-a].SegmentValue = (Digit.DigitSegment) this.memory[address];
 				}
 			}
@@ -197,7 +198,7 @@ namespace Epsitec.Common.Designer.Dolphin
 		public void RomInitialise(AbstractProcessor processor)
 		{
 			//	Initialise la Rom.
-			processor.RomInitialise(DolphinApplication.RomBase);
+			processor.RomInitialise(Memory.RomBase);
 		}
 
 		public void WriteRom(int address, int data)
@@ -218,6 +219,22 @@ namespace Epsitec.Common.Designer.Dolphin
 				return 0;
 			}
 		}
+
+
+		public static readonly int TotalAddress = 12;
+		public static readonly int TotalData = 8;
+
+		public static readonly int RamBase = 0x000;
+		public static readonly int RamLength = 0x800;
+		public static readonly int StackBase = 0x800;
+		public static readonly int RomBase = 0x800;
+		public static readonly int RomLength = 0x400;
+		public static readonly int PeriphBase = 0xC00;
+		public static readonly int PeriphLength = 0x10;
+		public static readonly int PeriphFirstDigit = 0xC00;
+		public static readonly int PeriphLastDigit = 0xC03;
+		public static readonly int PeriphKeyboard = 0xC07;
+
 
 		protected DolphinApplication application;
 		protected byte[] memory;

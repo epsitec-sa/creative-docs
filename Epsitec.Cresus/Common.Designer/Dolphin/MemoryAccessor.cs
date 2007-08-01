@@ -182,7 +182,7 @@ namespace Epsitec.Common.Designer.Dolphin
 				field.Index = i;
 				field.SetTabIndex(index++);
 				field.MemoryAccessor = this;
-				field.BitCount = DolphinApplication.TotalData;
+				field.BitCount = Memory.TotalData;
 				field.BitNames = null;
 				field.PreferredHeight = MemoryAccessor.LineHeight;
 				field.Margins = new Margins(0, 0, 0, 1);
@@ -252,17 +252,17 @@ namespace Epsitec.Common.Designer.Dolphin
 		protected string MemoryBank(int address)
 		{
 			//	Retourne la banque à utiliser pour une adresse donnée.
-			if (address >= DolphinApplication.RamBase && address < DolphinApplication.RamBase+DolphinApplication.RamLength)
+			if (address >= Memory.RamBase && address < Memory.RamBase+Memory.RamLength)
 			{
 				return "M";
 			}
 
-			if (address >= DolphinApplication.PeriphBase && address < DolphinApplication.PeriphBase+DolphinApplication.PeriphLength)
+			if (address >= Memory.PeriphBase && address < Memory.PeriphBase+Memory.PeriphLength)
 			{
 				return "P";
 			}
 			
-			if (address >= DolphinApplication.RomBase && address < DolphinApplication.RomBase+DolphinApplication.RomLength)
+			if (address >= Memory.RomBase && address < Memory.RomBase+Memory.RomLength)
 			{
 				return "R";
 			}
@@ -276,15 +276,15 @@ namespace Epsitec.Common.Designer.Dolphin
 			{
 				if (this.bank == "M")
 				{
-					return DolphinApplication.RamLength;
+					return Memory.RamLength;
 				}
 				else if (this.bank == "P")
 				{
-					return DolphinApplication.PeriphLength;
+					return Memory.PeriphLength;
 				}
 				else if (this.bank == "R")
 				{
-					return DolphinApplication.RomLength;
+					return Memory.RomLength;
 				}
 				else
 				{
@@ -299,15 +299,15 @@ namespace Epsitec.Common.Designer.Dolphin
 			{
 				if (this.bank == "M")
 				{
-					return DolphinApplication.RamBase;
+					return Memory.RamBase;
 				}
 				else if (this.bank == "P")
 				{
-					return DolphinApplication.PeriphBase;
+					return Memory.PeriphBase;
 				}
 				else if (this.bank == "R")
 				{
-					return DolphinApplication.RomBase;
+					return Memory.RomBase;
 				}
 				else
 				{

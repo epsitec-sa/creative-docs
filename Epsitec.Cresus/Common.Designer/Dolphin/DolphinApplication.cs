@@ -210,16 +210,16 @@ namespace Epsitec.Common.Designer.Dolphin
 			this.CreateBitsPanel(parent, out top, out bottom, "Data bus");
 
 			this.dataDigits = new List<Digit>();
-			for (int i=0; i<DolphinApplication.TotalData/4; i++)
+			for (int i=0; i<Memory.TotalData/4; i++)
 			{
 				this.CreateBitDigit(top, i, this.dataDigits);
 			}
 
 			this.dataLeds = new List<Led>();
 			this.dataSwitchs = new List<Switch>();
-			for (int i=0; i<DolphinApplication.TotalData; i++)
+			for (int i=0; i<Memory.TotalData; i++)
 			{
-				this.CreateBitButton(bottom, i, DolphinApplication.TotalData, this.dataLeds, this.dataSwitchs);
+				this.CreateBitButton(bottom, i, Memory.TotalData, this.dataLeds, this.dataSwitchs);
 				this.dataSwitchs[i].Clicked += new MessageEventHandler(this.HandleDataSwitchClicked);
 			}
 
@@ -227,16 +227,16 @@ namespace Epsitec.Common.Designer.Dolphin
 			this.CreateBitsPanel(parent, out top, out bottom, "Address bus");
 
 			this.addressDigits = new List<Digit>();
-			for (int i=0; i<DolphinApplication.TotalAddress/4; i++)
+			for (int i=0; i<Memory.TotalAddress/4; i++)
 			{
 				this.CreateBitDigit(top, i, this.addressDigits);
 			}
 			
 			this.addressLeds = new List<Led>();
 			this.addressSwitchs = new List<Switch>();
-			for (int i=0; i<DolphinApplication.TotalAddress; i++)
+			for (int i=0; i<Memory.TotalAddress; i++)
 			{
-				this.CreateBitButton(bottom, i, DolphinApplication.TotalAddress, this.addressLeds, this.addressSwitchs);
+				this.CreateBitButton(bottom, i, Memory.TotalAddress, this.addressLeds, this.addressSwitchs);
 				this.addressSwitchs[i].Clicked += new MessageEventHandler(this.HandleAddressSwitchClicked);
 			}
 
@@ -854,7 +854,7 @@ namespace Epsitec.Common.Designer.Dolphin
 		public void KeyboardChanged(PushButton button, bool pressed)
 		{
 			//	Appelé lorsqu'une touche du clavier simulé a été pressée ou relâchée.
-			int keys = this.memory.Read(DolphinApplication.PeriphKeyboard);
+			int keys = this.memory.Read(Memory.PeriphKeyboard);
 
 			if (button.Index < 0x08)
 			{
@@ -877,7 +877,7 @@ namespace Epsitec.Common.Designer.Dolphin
 				}
 			}
 
-			this.memory.Write(DolphinApplication.PeriphKeyboard, keys);
+			this.memory.Write(Memory.PeriphKeyboard, keys);
 		}
 
 
@@ -1489,23 +1489,9 @@ namespace Epsitec.Common.Designer.Dolphin
 		public static readonly double MainHeight = 600;
 		public static readonly double MainMargin = 6;
 
-		public static readonly int TotalAddress = 12;
-		public static readonly int TotalData = 8;
-
-		public static readonly int RamBase = 0x000;
-		public static readonly int RamLength = 0x800;
-		public static readonly int StackBase = 0x800;
-		public static readonly int RomBase = 0x800;
-		public static readonly int RomLength = 0x400;
-		public static readonly int PeriphBase = 0xC00;
-		public static readonly int PeriphLength = 0x10;
-		public static readonly int PeriphFirstDigit = 0xC00;
-		public static readonly int PeriphLastDigit = 0xC03;
-		public static readonly int PeriphKeyboard = 0xC07;
-
+		protected static readonly double RealMaxIps = 20;
 		protected static readonly string ProgrammEmptyRem = "<br/><i>Tapez ici les commentaires sur le programme...</i>";
 
-		public static readonly double RealMaxIps = 20;
 
 		protected Window parentWindow;
 		protected MainPanel mainPanel;
