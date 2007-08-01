@@ -93,15 +93,12 @@ namespace Epsitec.Common.Designer.Dolphin
 			}
 			set
 			{
-				if (this.bank != value)
-				{
-					this.bank = value;
-					this.firstAddress = 0;
+				this.bank = value;
+				this.firstAddress = 0;
 
-					this.UpdateScroller();
-					this.UpdateData();
-					this.UpdateMarkPC();
-				}
+				this.UpdateScroller();
+				this.UpdateData();
+				this.UpdateMarkPC();
 			}
 		}
 
@@ -175,11 +172,12 @@ namespace Epsitec.Common.Designer.Dolphin
 			this.fields.Clear();
 			this.panel.Children.Clear();
 
+			int index = 200;
 			for (int i=0; i<total; i++)
 			{
 				TextFieldHexa field = new TextFieldHexa(this.panel);
 				field.Index = i;
-				field.SetTabIndex(i+1);
+				field.SetTabIndex(index++);
 				field.BitCount = DolphinApplication.TotalData;
 				field.BitNames = null;
 				field.PreferredHeight = MemoryAccessor.LineHeight;

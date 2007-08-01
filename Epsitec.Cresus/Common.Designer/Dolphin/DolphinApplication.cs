@@ -20,12 +20,12 @@ namespace Epsitec.Common.Designer.Dolphin
 			this.memory = new Memory(this);
 			this.processor = new ProcessorGeneric(this.memory);
 			this.memory.RomInitialise(this.processor);
-			this.ips = 100;
+			this.ips = 1000;
 		}
 
 		public void CreateLayout()
 		{
-			this.mainPanel = new Panel(this.parentWindow.Root);
+			this.mainPanel = new MainPanel(this.parentWindow.Root);
 			this.mainPanel.BackColor = Color.FromBrightness(0.7);
 			this.mainPanel.DrawFullFrame = true;
 			this.mainPanel.DrawScrew = true;
@@ -44,6 +44,7 @@ namespace Epsitec.Common.Designer.Dolphin
 			panelTitle.Dock = DockStyle.Top;
 
 			this.buttonNew = new IconButton(panelTitle);
+			this.buttonNew.AutoFocus = false;
 			this.buttonNew.IconName = Misc.Icon("New");
 			this.buttonNew.Margins = new Margins(10, 0, 8, 8);
 			this.buttonNew.Dock = DockStyle.Left;
@@ -51,18 +52,20 @@ namespace Epsitec.Common.Designer.Dolphin
 			ToolTip.Default.SetToolTip(this.buttonNew, "Nouveau programme");
 
 			this.buttonOpen = new IconButton(panelTitle);
+			this.buttonOpen.AutoFocus = false;
 			this.buttonOpen.IconName = Misc.Icon("Open");
 			this.buttonOpen.Margins = new Margins(0, 0, 8, 8);
 			this.buttonOpen.Dock = DockStyle.Left;
 			this.buttonOpen.Clicked += new MessageEventHandler(this.HandleButtonOpenClicked);
-			ToolTip.Default.SetToolTip(this.buttonOpen, "Ouvre un programme");
+			ToolTip.Default.SetToolTip(this.buttonOpen, "Ouvrir un programme");
 
 			this.buttonSave = new IconButton(panelTitle);
+			this.buttonSave.AutoFocus = false;
 			this.buttonSave.IconName = Misc.Icon("Save");
 			this.buttonSave.Margins = new Margins(0, 0, 8, 8);
 			this.buttonSave.Dock = DockStyle.Left;
 			this.buttonSave.Clicked += new MessageEventHandler(this.HandleButtonSaveClicked);
-			ToolTip.Default.SetToolTip(this.buttonSave, "Enregistre le programme");
+			ToolTip.Default.SetToolTip(this.buttonSave, "Enregistrer le programme");
 
 			this.programmFilename = new StaticText(panelTitle);
 			this.programmFilename.PreferredWidth = 100;
@@ -286,7 +289,7 @@ namespace Epsitec.Common.Designer.Dolphin
 			processorPanel.Dock = DockStyle.Bottom;
 
 			this.registerFields = new List<TextFieldHexa>();
-			int index = 1;
+			int index = 100;
 			foreach (string name in this.processor.RegisterNames)
 			{
 				TextFieldHexa field = this.CreateProcessorRegister(processorPanel, name);
@@ -1704,10 +1707,10 @@ namespace Epsitec.Common.Designer.Dolphin
 
 		protected static readonly string ProgrammEmptyRem = "<br/><i>Tapez ici les commentaires sur le programme...</i>";
 
-		public static readonly double RealMaxIps = 50;
+		public static readonly double RealMaxIps = 20;
 
 		protected Window parentWindow;
-		protected Panel mainPanel;
+		protected MainPanel mainPanel;
 		protected Panel leftPanelBus;
 		protected Panel leftPanelDetail;
 		protected Panel leftPanelQuick;

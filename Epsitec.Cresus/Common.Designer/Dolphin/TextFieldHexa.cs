@@ -109,7 +109,7 @@ namespace Epsitec.Common.Designer.Dolphin
 		{
 			//	Spécifie l'ordre pour la navigation avec Tab.
 			this.textField.TabIndex = index;
-			this.textField.TabNavigationMode = TabNavigationMode.ActivateOnTab;
+			this.textField.TabNavigationMode = TabNavigationMode.None;  // gestion maison !
 		}
 
 		public int BitCount
@@ -261,6 +261,27 @@ namespace Epsitec.Common.Designer.Dolphin
 		}
 
 
+		protected MainPanel MainPanel
+		{
+			//	Retourne le premier parent de type MainPanel.
+			get
+			{
+				Widget my = this;
+
+				while (my.Parent != null)
+				{
+					my = my.Parent;
+					if (my is MainPanel)
+					{
+						return my as MainPanel;
+					}
+				}
+
+				return null;
+			}
+		}
+
+
 		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
 		{
 			Color color = this.BackColor;
@@ -282,8 +303,18 @@ namespace Epsitec.Common.Designer.Dolphin
 		private void HandleFieldIsFocusedChanged(object sender, Types.DependencyPropertyChangedEventArgs e)
 		{
 			//	La ligne éditable a pris ou perdu le focus.
+			Widget widget = sender as Widget;
 			bool focused = (bool) e.NewValue;
-			if (!focused)  // focus perdu ?
+
+			if (focused)  // focus pris ?
+			{
+				MainPanel mp = this.MainPanel;
+				if (mp != null)
+				{
+					mp.SetDolphinFocusedWidget(widget);
+				}
+			}
+			else  // focus perdu ?
 			{
 				this.textField.Text = this.GetHexaText(this.HexaValue);  // remet un nombre propre ("a" devient "0A" par exemple)
 			}
