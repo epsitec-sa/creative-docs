@@ -7,7 +7,7 @@ namespace Epsitec.Common.Designer.Dolphin
 	/// </summary>
 	public abstract class AbstractProcessor
 	{
-		public AbstractProcessor(DolphinApplication.Memory memory)
+		public AbstractProcessor(Memory memory)
 		{
 			//	Constructeur du processeur.
 			this.memory = memory;
@@ -107,6 +107,6 @@ namespace Epsitec.Common.Designer.Dolphin
 		}
 
 
-		protected DolphinApplication.Memory memory;
+		protected Memory memory;
 	}
 }

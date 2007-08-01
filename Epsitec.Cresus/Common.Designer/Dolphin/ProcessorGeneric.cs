@@ -143,7 +143,7 @@ namespace Epsitec.Common.Designer.Dolphin
 		}
 
 
-		public ProcessorGeneric(DolphinApplication.Memory memory) : base(memory)
+		public ProcessorGeneric(Memory memory) : base(memory)
 		{
 			//	Constructeur du processeur.
 		}

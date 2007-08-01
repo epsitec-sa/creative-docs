@@ -45,7 +45,7 @@ namespace Epsitec.Common.Designer.Dolphin
 
 
 
-		public DolphinApplication.Memory Memory
+		public Memory Memory
 		{
 			//	Mémoire émulée affichée/modifée par ce widget.
 			get
@@ -338,7 +338,7 @@ namespace Epsitec.Common.Designer.Dolphin
 
 		static protected readonly double LineHeight = 20;
 
-		protected DolphinApplication.Memory memory;
+		protected Memory memory;
 		protected string bank;
 		protected VScroller scroller;
 		protected Panel panel;

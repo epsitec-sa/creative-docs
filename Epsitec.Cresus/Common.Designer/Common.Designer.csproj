@@ -47,6 +47,7 @@
     <Compile Include="Controllers\StructuredController.cs" />
     <Compile Include="Controllers\DruidController.cs" />
     <Compile Include="Dolphin\AbstractProcessor.cs" />
+    <Compile Include="Dolphin\Memory.cs" />
     <Compile Include="Dolphin\MainPanel.cs" />
     <Compile Include="Dolphin\TextFieldHexa.cs" />
     <Compile Include="Dolphin\MemoryAccessor.cs" />

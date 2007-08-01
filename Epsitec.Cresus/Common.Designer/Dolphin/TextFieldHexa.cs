@@ -108,8 +108,9 @@ namespace Epsitec.Common.Designer.Dolphin
 		public void SetTabIndex(int index)
 		{
 			//	Spécifie l'ordre pour la navigation avec Tab.
+			//	Attention, il ne doit pas y avoir 2x les mêmes numéros, même dans des widgets de parents différents !
 			this.textField.TabIndex = index;
-			this.textField.TabNavigationMode = TabNavigationMode.None;  // gestion maison !
+			this.textField.TabNavigationMode = TabNavigationMode.None;  // gestion maison, dans MainPanel
 		}
 
 		public MemoryAccessor MemoryAccessor
