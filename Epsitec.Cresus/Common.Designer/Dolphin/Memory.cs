@@ -36,8 +36,13 @@ namespace Epsitec.Common.Designer.Dolphin
 
 		public void Clear()
 		{
-			//	Vide toute le mémoire.
-			for (int i=0; i<Memory.RomBase; i++)
+			//	Vide toute le mémoire Ram et périphérique.
+			for (int i=Memory.RamBase; i<Memory.RamBase+Memory.RamLength; i++)
+			{
+				this.memory[i] = 0;
+			}
+
+			for (int i=Memory.PeriphBase; i<Memory.PeriphBase+Memory.PeriphLength; i++)
 			{
 				this.memory[i] = 0;
 			}
@@ -48,14 +53,15 @@ namespace Epsitec.Common.Designer.Dolphin
 			}
 		}
 
+
 		public string GetContent()
 		{
-			//	Retourne tout le contenu de la mémoire dans une chaîne (pour la sérialisation).
+			//	Retourne tout le contenu de la mémoire Ram dans une chaîne (pour la sérialisation).
 			System.Text.StringBuilder builder = new System.Text.StringBuilder();
 
 			//	Cherche la dernière adresse non nulle.
 			int last = 0;
-			for (int i=Memory.PeriphBase-1; i>=0; i--)
+			for (int i=Memory.RamBase+Memory.RamLength-1; i>=Memory.RamBase; i--)
 			{
 				if (this.memory[i] != 0)
 				{
@@ -74,17 +80,18 @@ namespace Epsitec.Common.Designer.Dolphin
 
 		public void PutContent(string data)
 		{
-			//	Initialise tout le contenu de la mémoire d'après une chaîne (pour la désérialisation).
+			//	Initialise tout le contenu de la mémoire Ram d'après une chaîne (pour la désérialisation).
 			this.Clear();
 
 			int i = 0;
 			while (i < data.Length)
 			{
 				string hexa = data.Substring(i, 2);
-				this.memory[i/2] = (byte) Memory.ParseHexa(hexa);
+				this.memory[Memory.RamBase+i/2] = (byte) Memory.ParseHexa(hexa);
 				i += 2;
 			}
 		}
+
 
 		public bool IsReadOnly(int address)
 		{
@@ -115,6 +122,7 @@ namespace Epsitec.Common.Designer.Dolphin
 			//	Indique si l'adresse est un périphérique.
 			return (address >= Memory.PeriphBase && address < Memory.PeriphBase+Memory.PeriphLength);
 		}
+
 
 		public int Read(int address)
 		{
@@ -152,6 +160,7 @@ namespace Epsitec.Common.Designer.Dolphin
 				return 0xff;
 			}
 		}
+
 
 		public void WriteWithDirty(int address, int data)
 		{
@@ -195,6 +204,7 @@ namespace Epsitec.Common.Designer.Dolphin
 			}
 		}
 
+
 		public void RomInitialise(AbstractProcessor processor)
 		{
 			//	Initialise la Rom.
@@ -203,9 +213,10 @@ namespace Epsitec.Common.Designer.Dolphin
 
 		public void WriteRom(int address, int data)
 		{
-			//	Ecrit une valeur en mémoire morte (initialisation).
+			//	Ecrit une valeur en mémoire morte (pour l'initialisation de la Rom).
 			this.memory[address] = (byte) data;
 		}
+
 
 		protected static int ParseHexa(string hexa)
 		{
