@@ -184,6 +184,10 @@ namespace Epsitec.Common.Document.Objects
 			shapes[i] = new Shape();
 			shapes[i].Path = pathOutline;
 			shapes[i].Type = Type.Stroke;
+			if (drawingContext != null && drawingContext.FillEmptyPlaceholders)
+			{
+				shapes[i].Aspect = Aspect.InvisibleBox;  // n'affiche pas le pourtour pointillé
+			}
 			i ++;
 
 			//	Image bitmap.
@@ -563,10 +567,23 @@ namespace Epsitec.Common.Document.Objects
 			{
 				if (!drawingContext.PreviewActive)
 				{
-					Path path = this.PathBuildOutline ();
-					port.Color = Color.FromBrightness (0.5);
-					port.LineWidth = 1.0/drawingContext.ScaleX;
-					port.PaintOutline (path);  // dessine un rectangle avec une croix
+					if (drawingContext.FillEmptyPlaceholders)
+					{
+						using (Path path = this.PathBuildSurface ())
+						{
+							port.Color = Color.FromAlphaRgb (0.5, 0, 0, 1);
+							port.PaintSurface (path);  // dessine une surface bleue
+						}
+					}
+					else
+					{
+						using (Path path = this.PathBuildOutline ())
+						{
+							port.Color = Color.FromBrightness (0.5);
+							port.LineWidth = 1.0/drawingContext.ScaleX;
+							port.PaintOutline (path);  // dessine un rectangle avec une croix
+						}
+					}
 				}
 			}
 			else

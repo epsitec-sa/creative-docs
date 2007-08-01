@@ -570,6 +570,27 @@ namespace Epsitec.Common.Document
 			}
 		}
 
+		public bool FillEmptyPlaceholders
+		{
+			get
+			{
+				return this.fillEmptyPlaceholders;
+			}
+			set
+			{
+				if (this.fillEmptyPlaceholders != value)
+				{
+					this.fillEmptyPlaceholders = value;
+					
+					if (this.document.Notifier != null)
+					{
+						this.document.Notifier.NotifyArea (this.viewer);
+						this.document.Notifier.NotifyPreviewChanged ();
+					}
+				}
+			}
+		}
+
 
 		#region Grid
 		public bool GridActive
@@ -2731,6 +2752,7 @@ namespace Epsitec.Common.Document
 		protected double						originY;
 		protected LayerDrawingMode				layerDrawingMode = LayerDrawingMode.DimmedInactive;
 		protected bool							previewActive;
+		protected bool							fillEmptyPlaceholders;
 		protected bool							gridActive;
 		protected bool							gridShow;
 		protected Point							gridStep = new Point(1, 1);

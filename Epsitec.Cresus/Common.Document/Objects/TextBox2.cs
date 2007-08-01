@@ -278,6 +278,7 @@ namespace Epsitec.Common.Document.Objects
 			Path path = this.PathBuild();
 
 			bool flowHandles = this.edited && drawingContext != null && drawingContext.VisibleHandles;
+			bool fillEmpty   = drawingContext != null && drawingContext.FillEmptyPlaceholders;
 
 			int totalShapes = 4;
 			if ( flowHandles )  totalShapes += 2;
@@ -288,13 +289,24 @@ namespace Epsitec.Common.Document.Objects
 			//	Forme de la surface.
 			shapes[i] = new Shape();
 			shapes[i].Path = path;
-			shapes[i].SetPropertySurface(port, this.PropertyFillGradient);
+			if (fillEmpty)
+			{
+				shapes[i].Aspect = Aspect.InvisibleBox;
+			}
+			else
+			{
+				shapes[i].SetPropertySurface (port, this.PropertyFillGradient);
+			}
 			i ++;
 
 			//	Traits du rectangle.
 			shapes[i] = new Shape();
 			shapes[i].Path = path;
 			shapes[i].SetPropertyStroke(port, this.PropertyLineMode, this.PropertyLineColor);
+			if (fillEmpty)
+			{
+				shapes[i].Aspect = Aspect.InvisibleBox;
+			}
 			i ++;
 
 			//	Caractères du texte.
@@ -490,6 +502,15 @@ namespace Epsitec.Common.Document.Objects
 			{
 				this.cursorBox = Drawing.Rectangle.Empty;
 				this.selectBox = Drawing.Rectangle.Empty;
+
+				if (drawingContext != null && drawingContext.FillEmptyPlaceholders)
+				{
+					using (Path path = this.PathBuild ())
+					{
+						port.Color = Color.FromAlphaRgb (0.5, 1, 0, 0);
+						port.PaintSurface (path);  // dessine une surface rouge
+					}
+				}
 			}
 
 			Point p1, p2, p3, p4;
