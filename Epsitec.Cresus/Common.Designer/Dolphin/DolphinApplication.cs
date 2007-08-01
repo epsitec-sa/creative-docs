@@ -886,6 +886,7 @@ namespace Epsitec.Common.Designer.Dolphin
 		{
 			//	Reset du processeur pour démarrer à l'adresse 0.
 			this.processor.Reset();
+			this.ProcessorFeedback();
 		}
 
 		protected void ProcessorStart()

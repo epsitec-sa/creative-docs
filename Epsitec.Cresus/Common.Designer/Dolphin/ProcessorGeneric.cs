@@ -69,11 +69,15 @@ namespace Epsitec.Common.Designer.Dolphin
 			MoverHL  = 0x43,
 			MoveBA   = 0x44,
 			MoveAB   = 0x45,
-			SwapAB   = 0x46,
-			MovemA   = 0x47,
-			MoveAm   = 0x48,
-			MovecHLA = 0x49,
-			MoveAcHL = 0x4A,
+			MovemA   = 0x46,
+			MoveAm   = 0x47,
+			MovecHLA = 0x48,
+			MoveAcHL = 0x49,
+			MoveHA   = 0x4A,
+			MoveLA   = 0x4B,
+			MoveAH   = 0x4C,
+			MoveAL   = 0x4D,
+			SwapAB   = 0x4E,
 
 			AddiA  = 0x50,
 			AddBA  = 0x51,
@@ -280,6 +284,22 @@ namespace Epsitec.Common.Designer.Dolphin
 
 				case Instructions.MoveAcHL:
 					this.memory.Write(this.registerHL, this.registerA);
+					break;
+
+				case Instructions.MoveHA:
+					this.registerA = (this.registerHL >> 8) & 0xff;
+					break;
+
+				case Instructions.MoveLA:
+					this.registerA = this.registerHL & 0xff;
+					break;
+
+				case Instructions.MoveAH:
+					this.registerHL = (this.registerA >> 8) | (this.registerHL & 0xff);
+					break;
+
+				case Instructions.MoveAL:
+					this.registerHL = (this.registerA & 0xff) | ((this.registerHL >> 8) & 0xff);
 					break;
 
 				case Instructions.AddiA:
@@ -1044,29 +1064,36 @@ namespace Epsitec.Common.Designer.Dolphin
 		};
 
 		//	Affiche une valeur décimale.
-		//	in	A valeur 0..255
+		//	in	HL valeur
 		//	out	-
 		//	mod	-
 		protected static byte[] DisplayDecimal =
 		{
 			(byte) Instructions.PushF,				// PUSH F
 			(byte) Instructions.PushA,				// PUSH A
+			(byte) Instructions.PushB,				// PUSH B
 			(byte) Instructions.PushHL,				// POP HL
 
 			(byte) Instructions.MoveiB, 0x00,		// MOVE #0,B
 
 													// LOOP:
-			(byte) Instructions.PushA,				// POP A
-			(byte) Instructions.ModiA, 0x0A,		// MOD #10.,A
+			(byte) Instructions.PushHL,				// PUSH HL
+			(byte) Instructions.ModiHL, 0x0A,		// MOD #10.,HL
+			(byte) Instructions.MoveLA,				// MOVE L,A
 			(byte) Instructions.CallAbs, 0x08, 0x03,// CALL DisplayHexaDigit
-			(byte) Instructions.PopA,				// POP A
+			(byte) Instructions.PopHL,				// POP HL
 
 			(byte) Instructions.IncB,				// INC B
-			(byte) Instructions.DiviA, 0x0A,		// DIV #10.,A
+			(byte) Instructions.DiviHL, 0x0A,		// DIV #10.,HL
+			(byte) Instructions.MoveLA,				// MOVE L,A
 			(byte) Instructions.CompiA, 0x00,		// COMP #0,A
-			(byte) Instructions.JumpRelNE, 0xF2,	// JUMP,NE R8^LOOP
+			(byte) Instructions.JumpRelNE, 0xF0,	// JUMP,NE R8^LOOP
+			(byte) Instructions.MoveHA,				// MOVE H,A
+			(byte) Instructions.CompiA, 0x00,		// COMP #0,A
+			(byte) Instructions.JumpRelNE, 0xEB,	// JUMP,NE R8^LOOP
 
 			(byte) Instructions.PopHL,				// POP HL
+			(byte) Instructions.PopB,				// POP B
 			(byte) Instructions.PopA,				// POP A
 			(byte) Instructions.PopF,				// POP F
 			(byte) Instructions.Ret,				// RET
@@ -1129,15 +1156,19 @@ namespace Epsitec.Common.Designer.Dolphin
 					AbstractProcessor.HelpPutTitle(builder, "Registre à registre");
 					AbstractProcessor.HelpPutLine(builder, "[44] :<tab/><tab/>MOVE B,A");
 					AbstractProcessor.HelpPutLine(builder, "[45] :<tab/><tab/>MOVE A,B");
-					AbstractProcessor.HelpPutLine(builder, "[46] :<tab/><tab/>SWAP A,B");
+					AbstractProcessor.HelpPutLine(builder, "[4A] :<tab/><tab/>MOVE H,A");
+					AbstractProcessor.HelpPutLine(builder, "[4B] :<tab/><tab/>MOVE L,A");
+					AbstractProcessor.HelpPutLine(builder, "[4C] :<tab/><tab/>MOVE A,H");
+					AbstractProcessor.HelpPutLine(builder, "[4D] :<tab/><tab/>MOVE A,L");
+					AbstractProcessor.HelpPutLine(builder, "[4E] :<tab/><tab/>SWAP A,B");
 
 					AbstractProcessor.HelpPutTitle(builder, "Registre à mémoire");
-					AbstractProcessor.HelpPutLine(builder, "[47] [hh] [ll] :<tab/>MOVE hhll,A");
-					AbstractProcessor.HelpPutLine(builder, "[48] [hh] [ll] :<tab/>MOVE A,hhll");
+					AbstractProcessor.HelpPutLine(builder, "[46] [hh] [ll] :<tab/>MOVE hhll,A");
+					AbstractProcessor.HelpPutLine(builder, "[47] [hh] [ll] :<tab/>MOVE A,hhll");
 
 					AbstractProcessor.HelpPutTitle(builder, "Indexé indirect");
-					AbstractProcessor.HelpPutLine(builder, "[49] :<tab/><tab/>MOVE {HL},A");
-					AbstractProcessor.HelpPutLine(builder, "[4A] :<tab/><tab/>MOVE A,{HL}");
+					AbstractProcessor.HelpPutLine(builder, "[48] :<tab/><tab/>MOVE {HL},A");
+					AbstractProcessor.HelpPutLine(builder, "[49] :<tab/><tab/>MOVE A,{HL}");
 
 					AbstractProcessor.HelpPutTitle(builder, "Stack");
 					AbstractProcessor.HelpPutLine(builder, "[80] :<tab/><tab/>PUSH A");
