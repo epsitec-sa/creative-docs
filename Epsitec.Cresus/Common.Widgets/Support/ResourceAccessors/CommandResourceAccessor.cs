@@ -69,11 +69,13 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			if (shortcuts != null)
 			{
 				IList<Widgets.Shortcut> target = Widgets.Shortcut.GetShortcuts (caption);
+				target.Clear ();
 
 				foreach (StructuredData item in shortcuts)
 				{
 					Widgets.Shortcut shortcut = new Widgets.Shortcut ();
 					shortcut.SetValue (Widgets.Shortcut.KeyCodeProperty, item.GetValue (Res.Fields.Shortcut.KeyCode) as string);
+					target.Add (shortcut);
 				}
 			}
 			
