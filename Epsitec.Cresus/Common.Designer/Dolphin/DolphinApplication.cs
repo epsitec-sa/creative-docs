@@ -956,6 +956,17 @@ namespace Epsitec.Common.Designer.Dolphin
 		{
 			//	Exécute une instruction du processeur.
 			this.processor.Clock();
+
+			if (this.processor.IsHalted)
+			{
+				this.ProcessorStop();
+
+				this.AddressBits = this.AddressBits;
+				this.DataBits = 0;
+				
+				this.buttonReset.ActiveState = ActiveState.No;
+				this.UpdateButtons();
+			}
 		}
 
 		protected void ProcessorFeedback()

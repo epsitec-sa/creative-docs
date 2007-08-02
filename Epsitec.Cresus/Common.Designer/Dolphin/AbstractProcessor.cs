@@ -26,6 +26,7 @@ namespace Epsitec.Common.Designer.Dolphin
 		public virtual void Reset()
 		{
 			//	Reset du processeur.
+			this.isHalted = false;
 		}
 
 		public virtual void Clock()
@@ -33,6 +34,14 @@ namespace Epsitec.Common.Designer.Dolphin
 			//	Exécute une instruction du processeur.
 		}
 
+		public virtual bool IsHalted
+		{
+			//	Indique si le processeur est stoppé par l'instruction Halt.
+			get
+			{
+				return this.isHalted;
+			}
+		}
 
 		public virtual IEnumerable<string> RegisterNames
 		{
@@ -108,5 +117,6 @@ namespace Epsitec.Common.Designer.Dolphin
 
 
 		protected Memory memory;
+		protected bool isHalted;
 	}
 }

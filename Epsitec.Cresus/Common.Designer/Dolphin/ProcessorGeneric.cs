@@ -36,6 +36,8 @@ namespace Epsitec.Common.Designer.Dolphin
 			JumpRelNC = 0x1A,
 			JumpRelNS = 0x1B,
 
+			Halt = 0x1F,
+
 			CallAbs   = 0x21,
 			CallAbsEQ = 0x22,
 			CallAbsNE = 0x23,
@@ -166,6 +168,7 @@ namespace Epsitec.Common.Designer.Dolphin
 		public override void Reset()
 		{
 			//	Reset du processeur pour démarrer à l'adresse 0.
+			base.Reset();
 			this.registerPC = Memory.RamBase;
 			this.registerSP = Memory.StackBase;
 			this.registerF = 0;
@@ -177,6 +180,11 @@ namespace Epsitec.Common.Designer.Dolphin
 		public override void Clock()
 		{
 			//	Exécute une instruction du processeur.
+			if (this.isHalted)
+			{
+				return;
+			}
+
 			if (this.registerPC < 0 || this.registerPC >= this.memory.Length)
 			{
 				this.Reset();
@@ -231,6 +239,11 @@ namespace Epsitec.Common.Designer.Dolphin
 			{
 				case Instructions.JumpHL:
 					this.registerPC = this.registerHL;
+					break;
+
+				case Instructions.Halt:
+					this.registerPC--;
+					this.isHalted = true;
 					break;
 
 				case Instructions.CallHL:
@@ -1329,6 +1342,7 @@ namespace Epsitec.Common.Designer.Dolphin
 
 					AbstractProcessor.HelpPutTitle(builder, "Spécial");
 					AbstractProcessor.HelpPutLine(builder, "[00] :<tab/><tab/>NOP");
+					AbstractProcessor.HelpPutLine(builder, "[1F] :<tab/><tab/>HALT");
 					break;
 
 				case "Branch":
