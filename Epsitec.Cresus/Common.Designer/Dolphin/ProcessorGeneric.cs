@@ -1124,7 +1124,7 @@ namespace Epsitec.Common.Designer.Dolphin
 			(byte) Instructions.JumpRelNE, 0xF0,	// JUMP,NE R8^LOOP
 
 													// CLEAR:
-			(byte) Instructions.CompiB, 0x00,		// COMP #0,B
+			(byte) Instructions.CompiB, 0xFF,		// COMP #0,B
 			(byte) Instructions.JumpRelEQ, 0x08,	// JUMP,EQ R8^END
 			(byte) Instructions.MoveiA, 0x00,		// MOVE #0,A
 			(byte) Instructions.CallAbs, 0x08, 0x03,// CALL DisplayBinaryDigit
