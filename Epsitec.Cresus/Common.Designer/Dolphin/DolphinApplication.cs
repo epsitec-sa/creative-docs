@@ -756,6 +756,12 @@ namespace Epsitec.Common.Designer.Dolphin
 			{
 				button.Enable = !run;
 			}
+			
+			bool enable = (this.switchStep.ActiveState == ActiveState.No);
+			this.buttonClock3.Enable = enable;
+			this.buttonClock2.Enable = enable;
+			this.buttonClock1.Enable = enable;
+			this.buttonClock0.Enable = enable;
 		}
 
 		protected void UpdateClockButtons()

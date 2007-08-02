@@ -1400,7 +1400,7 @@ namespace Epsitec.Common.Designer.Dolphin
 					AbstractProcessor.HelpPutTitle(builder, "DisplayBinaryDigit");
 					AbstractProcessor.HelpPutLine(builder, "Affiche des segments à choix.");
 					AbstractProcessor.HelpPutLine(builder, "[21] [08] [03] :<tab/>CALL DisplayBinaryDigit");
-					AbstractProcessor.HelpPutLine(builder, "in :<tab/>A segments à allumer");
+					AbstractProcessor.HelpPutLine(builder, "in :<tab/>A bits des segments à allumer");
 					AbstractProcessor.HelpPutLine(builder, "<tab/>B digit 0..3 (de gauche à droite)");
 					AbstractProcessor.HelpPutLine(builder, "out :<tab/>-");
 					AbstractProcessor.HelpPutLine(builder, "mod :<tab/>-");
@@ -1422,7 +1422,7 @@ namespace Epsitec.Common.Designer.Dolphin
 					AbstractProcessor.HelpPutLine(builder, "mod :<tab/>-");
 
 					AbstractProcessor.HelpPutTitle(builder, "DisplayDecimal");
-					AbstractProcessor.HelpPutLine(builder, "Affiche une valeur décimale.");
+					AbstractProcessor.HelpPutLine(builder, "Affiche une valeur décimale sur quatre digits.");
 					AbstractProcessor.HelpPutLine(builder, "[21] [08] [0C] :<tab/>CALL DisplayDecimal");
 					AbstractProcessor.HelpPutLine(builder, "in :<tab/>HL valeur");
 					AbstractProcessor.HelpPutLine(builder, "out :<tab/>-");
