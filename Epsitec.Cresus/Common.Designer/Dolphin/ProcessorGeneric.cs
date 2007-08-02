@@ -1039,7 +1039,7 @@ namespace Epsitec.Common.Designer.Dolphin
 			0x3F, 0x03, 0x6D, 0x67, 0x53, 0x76, 0x7E, 0x23, 0x7F, 0x77, 0x7B, 0x5E, 0x3C, 0x4F, 0x7C, 0x78,
 		};
 
-		//	Affiche un byte hexadécimal sur deux digits.
+		//	Affiche un byte hexadécimal sur les deux digits de droite.
 		//	in	A valeur 0..255
 		//	out	-
 		//	mod	-
@@ -1109,10 +1109,11 @@ namespace Epsitec.Common.Designer.Dolphin
 			{
 				List<string> chapters = new List<string>();
 				
-				chapters.Add("Hexa");
+				chapters.Add("Intro");
 				chapters.Add("Data");
 				chapters.Add("Op");
 				chapters.Add("Branch");
+				chapters.Add("ROM");
 				
 				return chapters;
 			}
@@ -1125,7 +1126,7 @@ namespace Epsitec.Common.Designer.Dolphin
 
 			switch (chapter)
 			{
-				case "Hexa":
+				case "Intro":
 					AbstractProcessor.HelpPutTitle(builder, "Binaire et hexadécimal");
 					AbstractProcessor.HelpPutLine(builder, "(<i>décimal: binaire = hexa</i>)");
 					AbstractProcessor.HelpPutLine(builder, "  0: 0000 = 0");
@@ -1144,6 +1145,36 @@ namespace Epsitec.Common.Designer.Dolphin
 					AbstractProcessor.HelpPutLine(builder, "13: 1101 = D");
 					AbstractProcessor.HelpPutLine(builder, "14: 1110 = E");
 					AbstractProcessor.HelpPutLine(builder, "15: 1111 = F");
+
+					AbstractProcessor.HelpPutTitle(builder, "Espace d'adressage");
+					AbstractProcessor.HelpPutLine(builder, "[000]..[7FF] :<tab/>RAM");
+					AbstractProcessor.HelpPutLine(builder, "[800]..[BFF] :<tab/>ROM");
+					AbstractProcessor.HelpPutLine(builder, "[C00]..[C10] :<tab/>Périphériques");
+
+					AbstractProcessor.HelpPutTitle(builder, "Affichage");
+					AbstractProcessor.HelpPutLine(builder, "L'affichage est constitué de 4 afficheurs à 7 segments (plus un point décimal), numérotés de droite à gauche. On peut écrire une valeur pour mémoriser les digits à allumer, ou relire cette valeur.");
+					AbstractProcessor.HelpPutLine(builder, "[C00] :<tab/>Premier digit (celui de droite).");
+					AbstractProcessor.HelpPutLine(builder, "[C01] :<tab/>Deuxième digit.");
+					AbstractProcessor.HelpPutLine(builder, "[C02] :<tab/>Troisième digit.");
+					AbstractProcessor.HelpPutLine(builder, "[C03] :<tab/>Quatrième digit (celui de gauche).");
+					AbstractProcessor.HelpPutLine(builder, "");
+					AbstractProcessor.HelpPutLine(builder, "bit 0<tab/>Segment vertical supérieur droite.");
+					AbstractProcessor.HelpPutLine(builder, "bit 1<tab/>Segment vertical inférieur droite.");
+					AbstractProcessor.HelpPutLine(builder, "bit 2<tab/>Segment horizontal inférieur.");
+					AbstractProcessor.HelpPutLine(builder, "bit 3<tab/>Segment vertical inférieur gauche.");
+					AbstractProcessor.HelpPutLine(builder, "bit 4<tab/>Segment vertical supérieur gauche.");
+					AbstractProcessor.HelpPutLine(builder, "bit 5<tab/>Segment horizontal supérieur.");
+					AbstractProcessor.HelpPutLine(builder, "bit 6<tab/>Segment horizontal du milieu.");
+					AbstractProcessor.HelpPutLine(builder, "bit 7<tab/>Point décimal.");
+
+					AbstractProcessor.HelpPutTitle(builder, "Clavier");
+					AbstractProcessor.HelpPutLine(builder, "Le clavier est constitué de 8 touches nommées 0..7, plus 2 touches super-shift.");
+					AbstractProcessor.HelpPutLine(builder, "[C07] :<tab/>Clavier.");
+					AbstractProcessor.HelpPutLine(builder, "");
+					AbstractProcessor.HelpPutLine(builder, "bits 0..2<tab/>Touches 0..7.");
+					AbstractProcessor.HelpPutLine(builder, "bit 4<tab/>Touche Shift");
+					AbstractProcessor.HelpPutLine(builder, "bit 5<tab/>Touche Ctrl");
+					AbstractProcessor.HelpPutLine(builder, "bit 7<tab/>Prend la valeur 1 lorsqu'une touche 0..7 est pressée. Est automatiquement remis à zéro lorsque l'adresse [C07] est lue.");
 					break;
 
 				case "Data":
@@ -1184,75 +1215,75 @@ namespace Epsitec.Common.Designer.Dolphin
 
 				case "Op":
 					AbstractProcessor.HelpPutTitle(builder, "Opérations arithmétiques");
-					AbstractProcessor.HelpPutLine(builder, "[50] [xx] :<tab/>ADD #xx,A");
-					AbstractProcessor.HelpPutLine(builder, "[51] :<tab/><tab/>ADD B,A");
-					AbstractProcessor.HelpPutLine(builder, "[52] [xx] :<tab/>SUB #xx,A");
-					AbstractProcessor.HelpPutLine(builder, "[53] :<tab/><tab/>SUB B,A");
-					AbstractProcessor.HelpPutLine(builder, "[90] [xx] :<tab/>MUL #xx,A");
-					AbstractProcessor.HelpPutLine(builder, "[91] :<tab/><tab/>MUL B,A");
-					AbstractProcessor.HelpPutLine(builder, "[95] [xx] :<tab/>DIV #xx,A");
-					AbstractProcessor.HelpPutLine(builder, "[96] :<tab/><tab/>DIV B,A");
-					AbstractProcessor.HelpPutLine(builder, "[9A] [xx] :<tab/>MOD #xx,A");
-					AbstractProcessor.HelpPutLine(builder, "[9B] :<tab/><tab/>MOD B,A");
+					AbstractProcessor.HelpPutLine(builder, "[50] [xx] :<tab/>ADD #xx,A  <tab/>(Z, N, V)");
+					AbstractProcessor.HelpPutLine(builder, "[51] :<tab/><tab/>ADD B,A   <tab/>(Z, N, V)");
+					AbstractProcessor.HelpPutLine(builder, "[52] [xx] :<tab/>SUB #xx,A  <tab/>(Z, N, V)");
+					AbstractProcessor.HelpPutLine(builder, "[53] :<tab/><tab/>SUB B,A   <tab/>(Z, N, V)");
+					AbstractProcessor.HelpPutLine(builder, "[90] [xx] :<tab/>MUL #xx,A  <tab/>(Z, N, V)");
+					AbstractProcessor.HelpPutLine(builder, "[91] :<tab/><tab/>MUL B,A   <tab/>(Z, N, V)");
+					AbstractProcessor.HelpPutLine(builder, "[95] [xx] :<tab/>DIV #xx,A  <tab/>(Z, N, V)");
+					AbstractProcessor.HelpPutLine(builder, "[96] :<tab/><tab/>DIV B,A   <tab/>(Z, N, V)");
+					AbstractProcessor.HelpPutLine(builder, "[9A] [xx] :<tab/>MOD #xx,A  <tab/>(Z, N, V)");
+					AbstractProcessor.HelpPutLine(builder, "[9B] :<tab/><tab/>MOD B,A   <tab/>(Z, N, V)");
 					AbstractProcessor.HelpPutLine(builder, "");
-					AbstractProcessor.HelpPutLine(builder, "[5A] [xx] :<tab/>ADD #xx,HL");
-					AbstractProcessor.HelpPutLine(builder, "[5B] :<tab/><tab/>ADD A,HL");
-					AbstractProcessor.HelpPutLine(builder, "[5C] :<tab/><tab/>ADD B,HL");
-					AbstractProcessor.HelpPutLine(builder, "[5D] [xx] :<tab/>SUB #xx,HL");
-					AbstractProcessor.HelpPutLine(builder, "[5E] :<tab/><tab/>SUB A,HL");
-					AbstractProcessor.HelpPutLine(builder, "[5F] :<tab/><tab/>SUB B,HL");
-					AbstractProcessor.HelpPutLine(builder, "[92] [xx] :<tab/>MUL #xx,HL");
-					AbstractProcessor.HelpPutLine(builder, "[93] :<tab/><tab/>MUL A,HL");
-					AbstractProcessor.HelpPutLine(builder, "[94] :<tab/><tab/>MUL B,HL");
-					AbstractProcessor.HelpPutLine(builder, "[97] [xx] :<tab/>DIV #xx,HL");
-					AbstractProcessor.HelpPutLine(builder, "[98] :<tab/><tab/>DIV A,HL");
-					AbstractProcessor.HelpPutLine(builder, "[99] :<tab/><tab/>DIV B,HL");
-					AbstractProcessor.HelpPutLine(builder, "[9C] [xx] :<tab/>MOD #xx,HL");
-					AbstractProcessor.HelpPutLine(builder, "[9D] :<tab/><tab/>MOD A,HL");
-					AbstractProcessor.HelpPutLine(builder, "[9E] :<tab/><tab/>MOD B,HL");
+					AbstractProcessor.HelpPutLine(builder, "[5A] [xx] :<tab/>ADD #xx,HL  <tab/>(Z, N, V)");
+					AbstractProcessor.HelpPutLine(builder, "[5B] :<tab/><tab/>ADD A,HL   <tab/>(Z, N, V)");
+					AbstractProcessor.HelpPutLine(builder, "[5C] :<tab/><tab/>ADD B,HL   <tab/>(Z, N, V)");
+					AbstractProcessor.HelpPutLine(builder, "[5D] [xx] :<tab/>SUB #xx,HL  <tab/>(Z, N, V)");
+					AbstractProcessor.HelpPutLine(builder, "[5E] :<tab/><tab/>SUB A,HL   <tab/>(Z, N, V)");
+					AbstractProcessor.HelpPutLine(builder, "[5F] :<tab/><tab/>SUB B,HL   <tab/>(Z, N, V)");
+					AbstractProcessor.HelpPutLine(builder, "[92] [xx] :<tab/>MUL #xx,HL  <tab/>(Z, N, V)");
+					AbstractProcessor.HelpPutLine(builder, "[93] :<tab/><tab/>MUL A,HL   <tab/>(Z, N, V)");
+					AbstractProcessor.HelpPutLine(builder, "[94] :<tab/><tab/>MUL B,HL   <tab/>(Z, N, V)");
+					AbstractProcessor.HelpPutLine(builder, "[97] [xx] :<tab/>DIV #xx,HL  <tab/>(Z, N, V)");
+					AbstractProcessor.HelpPutLine(builder, "[98] :<tab/><tab/>DIV A,HL   <tab/>(Z, N, V)");
+					AbstractProcessor.HelpPutLine(builder, "[99] :<tab/><tab/>DIV B,HL   <tab/>(Z, N, V)");
+					AbstractProcessor.HelpPutLine(builder, "[9C] [xx] :<tab/>MOD #xx,HL  <tab/>(Z, N, V)");
+					AbstractProcessor.HelpPutLine(builder, "[9D] :<tab/><tab/>MOD A,HL   <tab/>(Z, N, V)");
+					AbstractProcessor.HelpPutLine(builder, "[9E] :<tab/><tab/>MOD B,HL   <tab/>(Z, N, V)");
 
 					AbstractProcessor.HelpPutTitle(builder, "Opérations logiques");
-					AbstractProcessor.HelpPutLine(builder, "[54] [xx] :<tab/>AND #xx,A");
-					AbstractProcessor.HelpPutLine(builder, "[56] [xx] :<tab/>OR #xx,A");
-					AbstractProcessor.HelpPutLine(builder, "[58] [xx] :<tab/>XOR #xx,A");
+					AbstractProcessor.HelpPutLine(builder, "[54] [xx] :<tab/>AND #xx,A   <tab/>(Z, N, V)");
+					AbstractProcessor.HelpPutLine(builder, "[56] [xx] :<tab/>OR #xx,A    <tab/>(Z, N, V)");
+					AbstractProcessor.HelpPutLine(builder, "[58] [xx] :<tab/>XOR #xx,A   <tab/>(Z, N, V)");
 					AbstractProcessor.HelpPutLine(builder, "");
-					AbstractProcessor.HelpPutLine(builder, "[55] :<tab/><tab/>AND B,A");
-					AbstractProcessor.HelpPutLine(builder, "[57] :<tab/><tab/>OR B,A");
-					AbstractProcessor.HelpPutLine(builder, "[59] :<tab/><tab/>XOR B,A");
+					AbstractProcessor.HelpPutLine(builder, "[55] :<tab/><tab/>AND B,A    <tab/>(Z, N, V)");
+					AbstractProcessor.HelpPutLine(builder, "[57] :<tab/><tab/>OR B,A     <tab/>(Z, N, V)");
+					AbstractProcessor.HelpPutLine(builder, "[59] :<tab/><tab/>XOR B,A    <tab/>(Z, N, V)");
 					AbstractProcessor.HelpPutLine(builder, "");
-					AbstractProcessor.HelpPutLine(builder, "[68] :<tab/><tab/>RR A");
-					AbstractProcessor.HelpPutLine(builder, "[69] :<tab/><tab/>RR B");
-					AbstractProcessor.HelpPutLine(builder, "[6A] :<tab/><tab/>RL A");
-					AbstractProcessor.HelpPutLine(builder, "[6B] :<tab/><tab/>RL B");
+					AbstractProcessor.HelpPutLine(builder, "[68] :<tab/><tab/>RR A       <tab/>(Z, N, V)");
+					AbstractProcessor.HelpPutLine(builder, "[69] :<tab/><tab/>RR B       <tab/>(Z, N, V)");
+					AbstractProcessor.HelpPutLine(builder, "[6A] :<tab/><tab/>RL A       <tab/>(Z, N, V)");
+					AbstractProcessor.HelpPutLine(builder, "[6B] :<tab/><tab/>RL B       <tab/>(Z, N, V)");
 
 					AbstractProcessor.HelpPutTitle(builder, "Comparaisons");
-					AbstractProcessor.HelpPutLine(builder, "[70] [xx] :<tab/>COMP #xx,A");
-					AbstractProcessor.HelpPutLine(builder, "[71] :<tab/><tab/>COMP B,A");
+					AbstractProcessor.HelpPutLine(builder, "[70] [xx] :<tab/>COMP #xx,A  <tab/>(C, Z)");
+					AbstractProcessor.HelpPutLine(builder, "[71] :<tab/><tab/>COMP B,A   <tab/>(C, Z)");
 
 					AbstractProcessor.HelpPutTitle(builder, "Compteurs");
-					AbstractProcessor.HelpPutLine(builder, "[60] :<tab/><tab/>INC A");
-					AbstractProcessor.HelpPutLine(builder, "[61] :<tab/><tab/>INC B");
-					AbstractProcessor.HelpPutLine(builder, "[62] :<tab/><tab/>INC HL");
+					AbstractProcessor.HelpPutLine(builder, "[60] :<tab/><tab/>INC A      <tab/>(Z, N, V)");
+					AbstractProcessor.HelpPutLine(builder, "[61] :<tab/><tab/>INC B      <tab/>(Z, N, V)");
+					AbstractProcessor.HelpPutLine(builder, "[62] :<tab/><tab/>INC HL     <tab/>(Z, N, V)");
 					AbstractProcessor.HelpPutLine(builder, "");
-					AbstractProcessor.HelpPutLine(builder, "[64] :<tab/><tab/>DEC A");
-					AbstractProcessor.HelpPutLine(builder, "[65] :<tab/><tab/>DEC B");
-					AbstractProcessor.HelpPutLine(builder, "[66] :<tab/><tab/>DEC HL");
+					AbstractProcessor.HelpPutLine(builder, "[64] :<tab/><tab/>DEC A      <tab/>(Z, N, V)");
+					AbstractProcessor.HelpPutLine(builder, "[65] :<tab/><tab/>DEC B      <tab/>(Z, N, V)");
+					AbstractProcessor.HelpPutLine(builder, "[66] :<tab/><tab/>DEC HL     <tab/>(Z, N, V)");
 
 					AbstractProcessor.HelpPutTitle(builder, "Opérations sur des bits");
-					AbstractProcessor.HelpPutLine(builder, "[72] [0b] :<tab/>TEST A:#b");
-					AbstractProcessor.HelpPutLine(builder, "[74] [0b] :<tab/>TCLR A:#b");
-					AbstractProcessor.HelpPutLine(builder, "[76] [0b] :<tab/>TSET A:#b");
+					AbstractProcessor.HelpPutLine(builder, "[72] [0b] :<tab/>TEST A:#b   <tab/>(Z)");
+					AbstractProcessor.HelpPutLine(builder, "[74] [0b] :<tab/>TCLR A:#b   <tab/>(Z)");
+					AbstractProcessor.HelpPutLine(builder, "[76] [0b] :<tab/>TSET A:#b   <tab/>(Z)");
 					AbstractProcessor.HelpPutLine(builder, "");
-					AbstractProcessor.HelpPutLine(builder, "[73] :<tab/><tab/>TEST A:B");
-					AbstractProcessor.HelpPutLine(builder, "[75] :<tab/><tab/>TCLR A:B");
-					AbstractProcessor.HelpPutLine(builder, "[77] :<tab/><tab/>TSET A:B");
+					AbstractProcessor.HelpPutLine(builder, "[73] :<tab/><tab/>TEST A:B   <tab/>(Z)");
+					AbstractProcessor.HelpPutLine(builder, "[75] :<tab/><tab/>TCLR A:B   <tab/>(Z)");
+					AbstractProcessor.HelpPutLine(builder, "[77] :<tab/><tab/>TSET A:B   <tab/>(Z)");
 
 					AbstractProcessor.HelpPutTitle(builder, "Flags");
-					AbstractProcessor.HelpPutLine(builder, "[78] :<tab/><tab/>SETC");
-					AbstractProcessor.HelpPutLine(builder, "[79] :<tab/><tab/>CLRC");
+					AbstractProcessor.HelpPutLine(builder, "[78] :<tab/><tab/>SETC       <tab/>(C=1)");
+					AbstractProcessor.HelpPutLine(builder, "[79] :<tab/><tab/>CLRC       <tab/>(C=0)");
 					AbstractProcessor.HelpPutLine(builder, "");
-					AbstractProcessor.HelpPutLine(builder, "[7A] :<tab/><tab/>SETV");
-					AbstractProcessor.HelpPutLine(builder, "[7B] :<tab/><tab/>CLRV");
+					AbstractProcessor.HelpPutLine(builder, "[7A] :<tab/><tab/>SETV       <tab/>(V=1)");
+					AbstractProcessor.HelpPutLine(builder, "[7B] :<tab/><tab/>CLRV       <tab/>(V=0)");
 
 					AbstractProcessor.HelpPutTitle(builder, "Spécial");
 					AbstractProcessor.HelpPutLine(builder, "[00] :<tab/><tab/>NOP");
@@ -1314,6 +1345,37 @@ namespace Epsitec.Common.Designer.Dolphin
 					AbstractProcessor.HelpPutLine(builder, "[30] :<tab/><tab/>CALL {HL}");
 					AbstractProcessor.HelpPutLine(builder, "");
 					AbstractProcessor.HelpPutLine(builder, "[3F] :<tab/><tab/>Ret");
+					break;
+
+				case "ROM":
+					AbstractProcessor.HelpPutTitle(builder, "GetChar");
+					AbstractProcessor.HelpPutLine(builder, "Attend la pression d'une touche du clavier.");
+					AbstractProcessor.HelpPutLine(builder, "[21] [08] [00]");
+					AbstractProcessor.HelpPutLine(builder, "in :<tab/>-");
+					AbstractProcessor.HelpPutLine(builder, "out :<tab/>A touche pressée");
+					AbstractProcessor.HelpPutLine(builder, "mod :<tab/>A");
+
+					AbstractProcessor.HelpPutTitle(builder, "DisplayHexaDigit");
+					AbstractProcessor.HelpPutLine(builder, "Affiche un digit hexadécimal.");
+					AbstractProcessor.HelpPutLine(builder, "[21] [08] [03]");
+					AbstractProcessor.HelpPutLine(builder, "in :<tab/>A valeur 0..15");
+					AbstractProcessor.HelpPutLine(builder, "<tab/>B digit 0..3 (de droite à gauche)");
+					AbstractProcessor.HelpPutLine(builder, "out :<tab/>-");
+					AbstractProcessor.HelpPutLine(builder, "mod :<tab/>-");
+
+					AbstractProcessor.HelpPutTitle(builder, "DisplayHexaByte");
+					AbstractProcessor.HelpPutLine(builder, "Affiche un byte hexadécimal sur les deux digits de droite.");
+					AbstractProcessor.HelpPutLine(builder, "[21] [08] [06]");
+					AbstractProcessor.HelpPutLine(builder, "in :<tab/>A valeur 0..255");
+					AbstractProcessor.HelpPutLine(builder, "out :<tab/>-");
+					AbstractProcessor.HelpPutLine(builder, "mod :<tab/>-");
+
+					AbstractProcessor.HelpPutTitle(builder, "DisplayDecimal");
+					AbstractProcessor.HelpPutLine(builder, "Affiche une valeur décimale.");
+					AbstractProcessor.HelpPutLine(builder, "[21] [08] [09]");
+					AbstractProcessor.HelpPutLine(builder, "in :<tab/>HL valeur");
+					AbstractProcessor.HelpPutLine(builder, "out :<tab/>-");
+					AbstractProcessor.HelpPutLine(builder, "mod :<tab/>-");
 					break;
 			}
 
