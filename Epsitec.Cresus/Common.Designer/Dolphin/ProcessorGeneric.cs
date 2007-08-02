@@ -985,6 +985,7 @@ namespace Epsitec.Common.Designer.Dolphin
 			int indirect = address;
 			address += 3*64;  // place pour 64 appels
 			this.RomWrite(ref indirect, ref address, ProcessorGeneric.GetChar);
+			this.RomWrite(ref indirect, ref address, ProcessorGeneric.DisplayBinaryDigit);
 			this.RomWrite(ref indirect, ref address, ProcessorGeneric.DisplayHexaDigit);
 			this.RomWrite(ref indirect, ref address, ProcessorGeneric.DisplayHexaByte);
 			this.RomWrite(ref indirect, ref address, ProcessorGeneric.DisplayDecimal);
@@ -1017,6 +1018,29 @@ namespace Epsitec.Common.Designer.Dolphin
 			(byte) Instructions.Ret,				// RET
 		};
 
+		//	Affiche des segments à choix.
+		//	in	A segments à allumer
+		//		B digit 0..3
+		//	out	-
+		//	mod	-
+		protected static byte[] DisplayBinaryDigit =
+		{
+			(byte) Instructions.PushF,				// PUSH F
+			(byte) Instructions.PushHL,				// PUSH HL
+
+			(byte) Instructions.SwapAB,				// SWAP A,B
+			(byte) Instructions.AndiA, 0x03,		// AND #03,A
+			(byte) Instructions.SwapAB,				// SWAP A,B
+
+			(byte) Instructions.MoveiHL, 0x0C, 0x00,// MOVE #C00,HL
+			(byte) Instructions.AddBHL,				// ADD B,HL
+			(byte) Instructions.MoveAcHL,			// MOVE A,{HL}		; affiche les segments
+
+			(byte) Instructions.PopHL,				// POP HL
+			(byte) Instructions.PopF,				// POP F
+			(byte) Instructions.Ret,				// RET
+		};
+
 		//	Affiche un digit hexadécimal.
 		//	in	A valeur 0..15
 		//		B digit 0..3
@@ -1039,7 +1063,7 @@ namespace Epsitec.Common.Designer.Dolphin
 
 			(byte) Instructions.MoveiHL, 0x0C, 0x00,// MOVE #C00,HL
 			(byte) Instructions.AddBHL,				// ADD B,HL
-			(byte) Instructions.MoveAcHL,			// MODE A,{HL}		; affiche le digit
+			(byte) Instructions.MoveAcHL,			// MOVE A,{HL}		; affiche le digit
 
 			(byte) Instructions.PopHL,				// POP HL
 			(byte) Instructions.PopA,				// POP A
@@ -1059,14 +1083,14 @@ namespace Epsitec.Common.Designer.Dolphin
 			(byte) Instructions.PushA,				// PUSH A
 
 			(byte) Instructions.MoveiB, 0x00,		// MOVE #0,B
-			(byte) Instructions.CallAbs, 0x08, 0x03,// CALL DisplayHexaDigit
+			(byte) Instructions.CallAbs, 0x08, 0x06,// CALL DisplayHexaDigit
 
 			(byte) Instructions.RRA,				// RR A
 			(byte) Instructions.RRA,				// RR A
 			(byte) Instructions.RRA,				// RR A
 			(byte) Instructions.RRA,				// RR A
 			(byte) Instructions.IncB,				// INC B
-			(byte) Instructions.CallAbs, 0x08, 0x03,// CALL DisplayHexaDigit
+			(byte) Instructions.CallAbs, 0x08, 0x06,// CALL DisplayHexaDigit
 
 			(byte) Instructions.PopA,				// POP A
 			(byte) Instructions.PopF,				// POP F
@@ -1090,7 +1114,7 @@ namespace Epsitec.Common.Designer.Dolphin
 			(byte) Instructions.PushHL,				// PUSH HL
 			(byte) Instructions.ModiHL, 0x0A,		// MOD #10.,HL
 			(byte) Instructions.MoveLA,				// MOVE L,A
-			(byte) Instructions.CallAbs, 0x08, 0x03,// CALL DisplayHexaDigit
+			(byte) Instructions.CallAbs, 0x08, 0x06,// CALL DisplayHexaDigit
 			(byte) Instructions.PopHL,				// POP HL
 
 			(byte) Instructions.IncB,				// INC B
@@ -1098,6 +1122,15 @@ namespace Epsitec.Common.Designer.Dolphin
 			(byte) Instructions.CompiHL, 0x00, 0x00,// COMP #0,HL
 			(byte) Instructions.JumpRelNE, 0xF0,	// JUMP,NE R8^LOOP
 
+													// CLEAR:
+			(byte) Instructions.CompiB, 0x04,		// COMP #4,B
+			(byte) Instructions.JumpRelEQ, 0x08,	// JUMP,EQ R8^END
+			(byte) Instructions.MoveiA, 0x00,		// MOVE #0,A
+			(byte) Instructions.CallAbs, 0x08, 0x03,// CALL DisplayBinaryDigit
+			(byte) Instructions.IncB,				// INC B
+			(byte) Instructions.JumpRel, 0xF4,		// JUMP R8^CLEAR
+
+													// END:
 			(byte) Instructions.PopHL,				// POP HL
 			(byte) Instructions.PopB,				// POP B
 			(byte) Instructions.PopA,				// POP A
@@ -1363,9 +1396,17 @@ namespace Epsitec.Common.Designer.Dolphin
 					AbstractProcessor.HelpPutLine(builder, "out :<tab/>A touche pressée");
 					AbstractProcessor.HelpPutLine(builder, "mod :<tab/>A");
 
+					AbstractProcessor.HelpPutTitle(builder, "DisplayBinaryDigit");
+					AbstractProcessor.HelpPutLine(builder, "Affiche des segments à choix.");
+					AbstractProcessor.HelpPutLine(builder, "[21] [08] [03] :<tab/>CALL DisplayBinaryDigit");
+					AbstractProcessor.HelpPutLine(builder, "in :<tab/>A segments à allumer");
+					AbstractProcessor.HelpPutLine(builder, "<tab/>B digit 0..3 (de droite à gauche)");
+					AbstractProcessor.HelpPutLine(builder, "out :<tab/>-");
+					AbstractProcessor.HelpPutLine(builder, "mod :<tab/>-");
+
 					AbstractProcessor.HelpPutTitle(builder, "DisplayHexaDigit");
 					AbstractProcessor.HelpPutLine(builder, "Affiche un digit hexadécimal.");
-					AbstractProcessor.HelpPutLine(builder, "[21] [08] [03] :<tab/>CALL DisplayHexaDigit");
+					AbstractProcessor.HelpPutLine(builder, "[21] [08] [06] :<tab/>CALL DisplayHexaDigit");
 					AbstractProcessor.HelpPutLine(builder, "in :<tab/>A valeur 0..15");
 					AbstractProcessor.HelpPutLine(builder, "<tab/>B digit 0..3 (de droite à gauche)");
 					AbstractProcessor.HelpPutLine(builder, "out :<tab/>-");
@@ -1373,14 +1414,14 @@ namespace Epsitec.Common.Designer.Dolphin
 
 					AbstractProcessor.HelpPutTitle(builder, "DisplayHexaByte");
 					AbstractProcessor.HelpPutLine(builder, "Affiche un byte hexadécimal sur les deux digits de droite.");
-					AbstractProcessor.HelpPutLine(builder, "[21] [08] [06] :<tab/>CALL DisplayHexaByte");
+					AbstractProcessor.HelpPutLine(builder, "[21] [08] [09] :<tab/>CALL DisplayHexaByte");
 					AbstractProcessor.HelpPutLine(builder, "in :<tab/>A valeur 0..255");
 					AbstractProcessor.HelpPutLine(builder, "out :<tab/>-");
 					AbstractProcessor.HelpPutLine(builder, "mod :<tab/>-");
 
 					AbstractProcessor.HelpPutTitle(builder, "DisplayDecimal");
 					AbstractProcessor.HelpPutLine(builder, "Affiche une valeur décimale.");
-					AbstractProcessor.HelpPutLine(builder, "[21] [08] [09] :<tab/>CALL DisplayDecimal");
+					AbstractProcessor.HelpPutLine(builder, "[21] [08] [0C] :<tab/>CALL DisplayDecimal");
 					AbstractProcessor.HelpPutLine(builder, "in :<tab/>HL valeur");
 					AbstractProcessor.HelpPutLine(builder, "out :<tab/>-");
 					AbstractProcessor.HelpPutLine(builder, "mod :<tab/>-");
