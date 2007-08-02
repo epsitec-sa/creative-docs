@@ -1073,8 +1073,9 @@ namespace Epsitec.Common.Designer.Dolphin
 			0x3F, 0x03, 0x6D, 0x67, 0x53, 0x76, 0x7E, 0x23, 0x7F, 0x77, 0x7B, 0x5E, 0x3C, 0x4F, 0x7C, 0x78,
 		};
 
-		//	Affiche un byte hexadécimal sur les deux digits de droite.
+		//	Affiche un byte hexadécimal sur deux digits.
 		//	in	A valeur 0..255
+		//		B premier digit 0..2
 		//	out	-
 		//	mod	-
 		protected static byte[] DisplayHexaByte =
@@ -1082,14 +1083,14 @@ namespace Epsitec.Common.Designer.Dolphin
 			(byte) Instructions.PushF,				// PUSH F
 			(byte) Instructions.PushA,				// PUSH A
 
-			(byte) Instructions.MoveiB, 0x00,		// MOVE #0,B
+			(byte) Instructions.IncB,				// INC B
 			(byte) Instructions.CallAbs, 0x08, 0x06,// CALL DisplayHexaDigit
 
 			(byte) Instructions.RRA,				// RR A
 			(byte) Instructions.RRA,				// RR A
 			(byte) Instructions.RRA,				// RR A
 			(byte) Instructions.RRA,				// RR A
-			(byte) Instructions.IncB,				// INC B
+			(byte) Instructions.DecB,				// DEC B
 			(byte) Instructions.CallAbs, 0x08, 0x06,// CALL DisplayHexaDigit
 
 			(byte) Instructions.PopA,				// POP A
@@ -1108,7 +1109,7 @@ namespace Epsitec.Common.Designer.Dolphin
 			(byte) Instructions.PushB,				// PUSH B
 			(byte) Instructions.PushHL,				// POP HL
 
-			(byte) Instructions.MoveiB, 0x00,		// MOVE #0,B
+			(byte) Instructions.MoveiB, 0x03,		// MOVE #3,B
 
 													// LOOP:
 			(byte) Instructions.PushHL,				// PUSH HL
@@ -1117,17 +1118,17 @@ namespace Epsitec.Common.Designer.Dolphin
 			(byte) Instructions.CallAbs, 0x08, 0x06,// CALL DisplayHexaDigit
 			(byte) Instructions.PopHL,				// POP HL
 
-			(byte) Instructions.IncB,				// INC B
+			(byte) Instructions.DecB,				// DEC B
 			(byte) Instructions.DiviHL, 0x0A,		// DIV #10.,HL
 			(byte) Instructions.CompiHL, 0x00, 0x00,// COMP #0,HL
 			(byte) Instructions.JumpRelNE, 0xF0,	// JUMP,NE R8^LOOP
 
 													// CLEAR:
-			(byte) Instructions.CompiB, 0x04,		// COMP #4,B
+			(byte) Instructions.CompiB, 0x00,		// COMP #0,B
 			(byte) Instructions.JumpRelEQ, 0x08,	// JUMP,EQ R8^END
 			(byte) Instructions.MoveiA, 0x00,		// MOVE #0,A
 			(byte) Instructions.CallAbs, 0x08, 0x03,// CALL DisplayBinaryDigit
-			(byte) Instructions.IncB,				// INC B
+			(byte) Instructions.DecB,				// DEC B
 			(byte) Instructions.JumpRel, 0xF4,		// JUMP R8^CLEAR
 
 													// END:
@@ -1192,10 +1193,10 @@ namespace Epsitec.Common.Designer.Dolphin
 
 					AbstractProcessor.HelpPutTitle(builder, "Affichage");
 					AbstractProcessor.HelpPutLine(builder, "L'affichage est constitué de 4 afficheurs à 7 segments (plus un point décimal), numérotés de droite à gauche. On peut écrire une valeur pour mémoriser les digits à allumer, ou relire cette valeur.");
-					AbstractProcessor.HelpPutLine(builder, "[C00] :<tab/>Premier digit (celui de droite).");
+					AbstractProcessor.HelpPutLine(builder, "[C00] :<tab/>Premier digit (celui de gauche).");
 					AbstractProcessor.HelpPutLine(builder, "[C01] :<tab/>Deuxième digit.");
 					AbstractProcessor.HelpPutLine(builder, "[C02] :<tab/>Troisième digit.");
-					AbstractProcessor.HelpPutLine(builder, "[C03] :<tab/>Quatrième digit (celui de gauche).");
+					AbstractProcessor.HelpPutLine(builder, "[C03] :<tab/>Quatrième digit (celui de droite).");
 					AbstractProcessor.HelpPutLine(builder, "");
 					AbstractProcessor.HelpPutLine(builder, "bit 0<tab/>Segment vertical supérieur droite.");
 					AbstractProcessor.HelpPutLine(builder, "bit 1<tab/>Segment vertical inférieur droite.");
@@ -1400,7 +1401,7 @@ namespace Epsitec.Common.Designer.Dolphin
 					AbstractProcessor.HelpPutLine(builder, "Affiche des segments à choix.");
 					AbstractProcessor.HelpPutLine(builder, "[21] [08] [03] :<tab/>CALL DisplayBinaryDigit");
 					AbstractProcessor.HelpPutLine(builder, "in :<tab/>A segments à allumer");
-					AbstractProcessor.HelpPutLine(builder, "<tab/>B digit 0..3 (de droite à gauche)");
+					AbstractProcessor.HelpPutLine(builder, "<tab/>B digit 0..3 (de gauche à droite)");
 					AbstractProcessor.HelpPutLine(builder, "out :<tab/>-");
 					AbstractProcessor.HelpPutLine(builder, "mod :<tab/>-");
 
@@ -1413,9 +1414,10 @@ namespace Epsitec.Common.Designer.Dolphin
 					AbstractProcessor.HelpPutLine(builder, "mod :<tab/>-");
 
 					AbstractProcessor.HelpPutTitle(builder, "DisplayHexaByte");
-					AbstractProcessor.HelpPutLine(builder, "Affiche un byte hexadécimal sur les deux digits de droite.");
+					AbstractProcessor.HelpPutLine(builder, "Affiche un byte hexadécimal sur deux digits.");
 					AbstractProcessor.HelpPutLine(builder, "[21] [08] [09] :<tab/>CALL DisplayHexaByte");
 					AbstractProcessor.HelpPutLine(builder, "in :<tab/>A valeur 0..255");
+					AbstractProcessor.HelpPutLine(builder, "<tab/>B premier digit 0..2 (de gauche à droite)");
 					AbstractProcessor.HelpPutLine(builder, "out :<tab/>-");
 					AbstractProcessor.HelpPutLine(builder, "mod :<tab/>-");
 

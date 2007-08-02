@@ -202,8 +202,7 @@ namespace Epsitec.Common.Designer.Dolphin
 				if (address >= Memory.PeriphFirstDigit && address <= Memory.PeriphLastDigit)  // l'un des 4 digits ?
 				{
 					int a = address - Memory.PeriphFirstDigit;
-					int t = Memory.PeriphLastDigit-Memory.PeriphFirstDigit;
-					this.application.DisplayDigits[t-a].SegmentValue = (Digit.DigitSegment) this.memory[address];
+					this.application.DisplayDigits[a].SegmentValue = (Digit.DigitSegment) this.memory[address];
 				}
 			}
 		}
@@ -237,18 +236,20 @@ namespace Epsitec.Common.Designer.Dolphin
 
 
 		public static readonly int TotalAddress = 12;
-		public static readonly int TotalData = 8;
+		public static readonly int TotalData    = 8;
 
-		public static readonly int RamBase = 0x000;
-		public static readonly int RamLength = 0x800;
-		public static readonly int StackBase = 0x800;
-		public static readonly int RomBase = 0x800;
-		public static readonly int RomLength = 0x400;
-		public static readonly int PeriphBase = 0xC00;
-		public static readonly int PeriphLength = 0x10;
-		public static readonly int PeriphFirstDigit = 0xC00;
-		public static readonly int PeriphLastDigit = 0xC03;
-		public static readonly int PeriphKeyboard = 0xC07;
+		public static readonly int RamBase          = 0x000;
+		public static readonly int RamLength        = 0x800;
+		public static readonly int StackBase        = 0x800;
+
+		public static readonly int RomBase          = 0x800;
+		public static readonly int RomLength        = 0x400;
+
+		public static readonly int PeriphBase       = 0xC00;
+		public static readonly int PeriphLength     = 0x010;
+		public static readonly int PeriphFirstDigit = 0xC00;  // digit de gauche
+		public static readonly int PeriphLastDigit  = 0xC03;  // digit de droite
+		public static readonly int PeriphKeyboard   = 0xC07;
 
 
 		protected DolphinApplication application;
