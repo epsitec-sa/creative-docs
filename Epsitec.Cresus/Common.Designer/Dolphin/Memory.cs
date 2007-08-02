@@ -34,14 +34,18 @@ namespace Epsitec.Common.Designer.Dolphin
 			}
 		}
 
-		public void Clear()
+		public void ClearRam()
 		{
-			//	Vide toute le mémoire Ram et périphérique.
+			//	Vide toute le mémoire Ram.
 			for (int i=Memory.RamBase; i<Memory.RamBase+Memory.RamLength; i++)
 			{
 				this.memory[i] = 0;
 			}
+		}
 
+		public void ClearPeriph()
+		{
+			//	Vide toute le mémoire périphérique.
 			for (int i=Memory.PeriphBase; i<Memory.PeriphBase+Memory.PeriphLength; i++)
 			{
 				this.memory[i] = 0;
@@ -81,7 +85,7 @@ namespace Epsitec.Common.Designer.Dolphin
 		public void PutContent(string data)
 		{
 			//	Initialise tout le contenu de la mémoire Ram d'après une chaîne (pour la désérialisation).
-			this.Clear();
+			this.ClearRam();
 
 			int i = 0;
 			while (i < data.Length)

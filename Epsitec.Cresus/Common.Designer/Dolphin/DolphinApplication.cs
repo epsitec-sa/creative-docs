@@ -722,6 +722,19 @@ namespace Epsitec.Common.Designer.Dolphin
 			0x20, 0x04, 0x05, 0x06, 0x07,  // Ctrl,  4..7
 		};
 
+		protected PushButton SearchKey(int index)
+		{
+			//	Cherche une touche du clavier émulé.
+			foreach (PushButton button in this.keyboardButtons)
+			{
+				if (button.Index == index)
+				{
+					return button;
+				}
+			}
+
+			return null;
+		}
 
 
 		protected void UpdateButtons()
@@ -887,6 +900,10 @@ namespace Epsitec.Common.Designer.Dolphin
 			//	Reset du processeur pour démarrer à l'adresse 0.
 			this.processor.Reset();
 			this.ProcessorFeedback();
+
+			this.memory.ClearPeriph();
+			this.SearchKey(0x10).ActiveState = ActiveState.No;  // relâche Shift
+			this.SearchKey(0x20).ActiveState = ActiveState.No;  // relâche Ctrl
 		}
 
 		protected void ProcessorStart()
@@ -1029,7 +1046,7 @@ namespace Epsitec.Common.Designer.Dolphin
 			{
 				this.fieldProgrammRem.Text = DolphinApplication.ProgrammEmptyRem;
 				this.Stop();
-				this.memory.Clear();
+				this.memory.ClearRam();
 				this.filename = "";
 				this.Dirty = false;
 				this.ProcessorReset();
@@ -1193,7 +1210,7 @@ namespace Epsitec.Common.Designer.Dolphin
 		protected void ReadXml(XmlReader reader)
 		{
 			//	Désérialise tout le programme.
-			this.memory.Clear();
+			this.memory.ClearRam();
 			this.fieldProgrammRem.Text = DolphinApplication.ProgrammEmptyRem;
 
 			reader.Read();
