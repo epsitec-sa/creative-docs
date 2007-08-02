@@ -107,18 +107,20 @@ namespace Epsitec.Common.Designer.Dolphin
 			RLA    = 0x6A,
 			RLB    = 0x6B,
 
-			CompiA = 0x70,
-			CompBA = 0x71,
-			TestiA = 0x72,
-			TestBA = 0x73,
-			TClriA = 0x74,
-			TClrBA = 0x75,
-			TSetiA = 0x76,
-			TSetBA = 0x77,
-			SetC   = 0x78,
-			ClrC   = 0x79,
-			SetV   = 0x7A,
-			ClrV   = 0x7B,
+			CompiA  = 0x70,
+			CompiB  = 0x71,
+			CompiHL = 0x72,
+			CompBA  = 0x73,
+			TestiA  = 0x74,
+			TestBA  = 0x75,
+			TClriA  = 0x76,
+			TClrBA  = 0x77,
+			TSetiA  = 0x78,
+			TSetBA  = 0x79,
+			SetC    = 0x7A,
+			ClrC    = 0x7B,
+			SetV    = 0x7C,
+			ClrV    = 0x7D,
 
 			PushA  = 0x80,
 			PushB  = 0x81,
@@ -368,6 +370,14 @@ namespace Epsitec.Common.Designer.Dolphin
 
 				case Instructions.CompiA:
 					this.SetFlagsCompare(this.registerA, this.memory.Read(this.registerPC++));
+					break;
+
+				case Instructions.CompiB:
+					this.SetFlagsCompare(this.registerB, this.memory.Read(this.registerPC++));
+					break;
+
+				case Instructions.CompiHL:
+					this.SetFlagsCompare(this.registerHL, this.AddressAbs);
 					break;
 
 				case Instructions.CompBA:
@@ -1085,12 +1095,8 @@ namespace Epsitec.Common.Designer.Dolphin
 
 			(byte) Instructions.IncB,				// INC B
 			(byte) Instructions.DiviHL, 0x0A,		// DIV #10.,HL
-			(byte) Instructions.MoveLA,				// MOVE L,A
-			(byte) Instructions.CompiA, 0x00,		// COMP #0,A
+			(byte) Instructions.CompiHL, 0x00, 0x00,// COMP #0,HL
 			(byte) Instructions.JumpRelNE, 0xF0,	// JUMP,NE R8^LOOP
-			(byte) Instructions.MoveHA,				// MOVE H,A
-			(byte) Instructions.CompiA, 0x00,		// COMP #0,A
-			(byte) Instructions.JumpRelNE, 0xEB,	// JUMP,NE R8^LOOP
 
 			(byte) Instructions.PopHL,				// POP HL
 			(byte) Instructions.PopB,				// POP B
@@ -1258,7 +1264,9 @@ namespace Epsitec.Common.Designer.Dolphin
 
 					AbstractProcessor.HelpPutTitle(builder, "Comparaisons");
 					AbstractProcessor.HelpPutLine(builder, "[70] [xx] :<tab/>COMP #xx,A  <tab/>(C, Z)");
-					AbstractProcessor.HelpPutLine(builder, "[71] :<tab/><tab/>COMP B,A   <tab/>(C, Z)");
+					AbstractProcessor.HelpPutLine(builder, "[71] [xx] :<tab/>COMP #xx,B  <tab/>(C, Z)");
+					AbstractProcessor.HelpPutLine(builder, "[72] [xx] [yy] :<tab/>COMP #xxyy,HL<tab/>(C, Z)");
+					AbstractProcessor.HelpPutLine(builder, "[73] :<tab/><tab/>COMP B,A   <tab/>(C, Z)");
 
 					AbstractProcessor.HelpPutTitle(builder, "Compteurs");
 					AbstractProcessor.HelpPutLine(builder, "[60] :<tab/><tab/>INC A      <tab/>(Z, N, V)");
@@ -1270,20 +1278,20 @@ namespace Epsitec.Common.Designer.Dolphin
 					AbstractProcessor.HelpPutLine(builder, "[66] :<tab/><tab/>DEC HL     <tab/>(Z, N, V)");
 
 					AbstractProcessor.HelpPutTitle(builder, "Opérations sur des bits");
-					AbstractProcessor.HelpPutLine(builder, "[72] [0b] :<tab/>TEST A:#b   <tab/>(Z)");
-					AbstractProcessor.HelpPutLine(builder, "[74] [0b] :<tab/>TCLR A:#b   <tab/>(Z)");
-					AbstractProcessor.HelpPutLine(builder, "[76] [0b] :<tab/>TSET A:#b   <tab/>(Z)");
+					AbstractProcessor.HelpPutLine(builder, "[74] [0b] :<tab/>TEST A:#b   <tab/>(Z)");
+					AbstractProcessor.HelpPutLine(builder, "[76] [0b] :<tab/>TCLR A:#b   <tab/>(Z)");
+					AbstractProcessor.HelpPutLine(builder, "[78] [0b] :<tab/>TSET A:#b   <tab/>(Z)");
 					AbstractProcessor.HelpPutLine(builder, "");
-					AbstractProcessor.HelpPutLine(builder, "[73] :<tab/><tab/>TEST A:B   <tab/>(Z)");
-					AbstractProcessor.HelpPutLine(builder, "[75] :<tab/><tab/>TCLR A:B   <tab/>(Z)");
-					AbstractProcessor.HelpPutLine(builder, "[77] :<tab/><tab/>TSET A:B   <tab/>(Z)");
+					AbstractProcessor.HelpPutLine(builder, "[75] :<tab/><tab/>TEST A:B   <tab/>(Z)");
+					AbstractProcessor.HelpPutLine(builder, "[77] :<tab/><tab/>TCLR A:B   <tab/>(Z)");
+					AbstractProcessor.HelpPutLine(builder, "[79] :<tab/><tab/>TSET A:B   <tab/>(Z)");
 
 					AbstractProcessor.HelpPutTitle(builder, "Flags");
-					AbstractProcessor.HelpPutLine(builder, "[78] :<tab/><tab/>SETC       <tab/>(C=1)");
-					AbstractProcessor.HelpPutLine(builder, "[79] :<tab/><tab/>CLRC       <tab/>(C=0)");
+					AbstractProcessor.HelpPutLine(builder, "[7A] :<tab/><tab/>SETC       <tab/>(C=1)");
+					AbstractProcessor.HelpPutLine(builder, "[7B] :<tab/><tab/>CLRC       <tab/>(C=0)");
 					AbstractProcessor.HelpPutLine(builder, "");
-					AbstractProcessor.HelpPutLine(builder, "[7A] :<tab/><tab/>SETV       <tab/>(V=1)");
-					AbstractProcessor.HelpPutLine(builder, "[7B] :<tab/><tab/>CLRV       <tab/>(V=0)");
+					AbstractProcessor.HelpPutLine(builder, "[7C] :<tab/><tab/>SETV       <tab/>(V=1)");
+					AbstractProcessor.HelpPutLine(builder, "[7D] :<tab/><tab/>CLRV       <tab/>(V=0)");
 
 					AbstractProcessor.HelpPutTitle(builder, "Spécial");
 					AbstractProcessor.HelpPutLine(builder, "[00] :<tab/><tab/>NOP");
@@ -1350,14 +1358,14 @@ namespace Epsitec.Common.Designer.Dolphin
 				case "ROM":
 					AbstractProcessor.HelpPutTitle(builder, "GetChar");
 					AbstractProcessor.HelpPutLine(builder, "Attend la pression d'une touche du clavier.");
-					AbstractProcessor.HelpPutLine(builder, "[21] [08] [00]");
+					AbstractProcessor.HelpPutLine(builder, "[21] [08] [00] :<tab/>CALL GetChar");
 					AbstractProcessor.HelpPutLine(builder, "in :<tab/>-");
 					AbstractProcessor.HelpPutLine(builder, "out :<tab/>A touche pressée");
 					AbstractProcessor.HelpPutLine(builder, "mod :<tab/>A");
 
 					AbstractProcessor.HelpPutTitle(builder, "DisplayHexaDigit");
 					AbstractProcessor.HelpPutLine(builder, "Affiche un digit hexadécimal.");
-					AbstractProcessor.HelpPutLine(builder, "[21] [08] [03]");
+					AbstractProcessor.HelpPutLine(builder, "[21] [08] [03] :<tab/>CALL DisplayHexaDigit");
 					AbstractProcessor.HelpPutLine(builder, "in :<tab/>A valeur 0..15");
 					AbstractProcessor.HelpPutLine(builder, "<tab/>B digit 0..3 (de droite à gauche)");
 					AbstractProcessor.HelpPutLine(builder, "out :<tab/>-");
@@ -1365,14 +1373,14 @@ namespace Epsitec.Common.Designer.Dolphin
 
 					AbstractProcessor.HelpPutTitle(builder, "DisplayHexaByte");
 					AbstractProcessor.HelpPutLine(builder, "Affiche un byte hexadécimal sur les deux digits de droite.");
-					AbstractProcessor.HelpPutLine(builder, "[21] [08] [06]");
+					AbstractProcessor.HelpPutLine(builder, "[21] [08] [06] :<tab/>CALL DisplayHexaByte");
 					AbstractProcessor.HelpPutLine(builder, "in :<tab/>A valeur 0..255");
 					AbstractProcessor.HelpPutLine(builder, "out :<tab/>-");
 					AbstractProcessor.HelpPutLine(builder, "mod :<tab/>-");
 
 					AbstractProcessor.HelpPutTitle(builder, "DisplayDecimal");
 					AbstractProcessor.HelpPutLine(builder, "Affiche une valeur décimale.");
-					AbstractProcessor.HelpPutLine(builder, "[21] [08] [09]");
+					AbstractProcessor.HelpPutLine(builder, "[21] [08] [09] :<tab/>CALL DisplayDecimal");
 					AbstractProcessor.HelpPutLine(builder, "in :<tab/>HL valeur");
 					AbstractProcessor.HelpPutLine(builder, "out :<tab/>-");
 					AbstractProcessor.HelpPutLine(builder, "mod :<tab/>-");
