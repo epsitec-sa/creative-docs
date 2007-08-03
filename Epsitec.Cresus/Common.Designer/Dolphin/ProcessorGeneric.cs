@@ -997,7 +997,7 @@ namespace Epsitec.Common.Designer.Dolphin
 			//	Rempli la Rom.
 			int indirect = address;
 			address += 3*64;  // place pour 64 appels
-			this.RomWrite(ref indirect, ref address, ProcessorGeneric.GetChar);
+			this.RomWrite(ref indirect, ref address, ProcessorGeneric.WaitKey);
 			this.RomWrite(ref indirect, ref address, ProcessorGeneric.DisplayBinaryDigit);
 			this.RomWrite(ref indirect, ref address, ProcessorGeneric.DisplayHexaDigit);
 			this.RomWrite(ref indirect, ref address, ProcessorGeneric.DisplayHexaByte);
@@ -1020,7 +1020,7 @@ namespace Epsitec.Common.Designer.Dolphin
 		//	in	-
 		//	out	A touche pressée
 		//	mod	A
-		protected static byte[] GetChar =
+		protected static byte[] WaitKey =
 		{
 			(byte) Instructions.PushF,				// PUSH F
 													// LOOP:
@@ -1404,9 +1404,9 @@ namespace Epsitec.Common.Designer.Dolphin
 					break;
 
 				case "ROM":
-					AbstractProcessor.HelpPutTitle(builder, "GetChar");
+					AbstractProcessor.HelpPutTitle(builder, "WaitKey");
 					AbstractProcessor.HelpPutLine(builder, "Attend la pression d'une touche du clavier.");
-					AbstractProcessor.HelpPutLine(builder, "[21] [08] [00] :<tab/>CALL GetChar");
+					AbstractProcessor.HelpPutLine(builder, "[21] [08] [00] :<tab/>CALL WaitKey");
 					AbstractProcessor.HelpPutLine(builder, "in :<tab/>-");
 					AbstractProcessor.HelpPutLine(builder, "out :<tab/>A touche pressée");
 					AbstractProcessor.HelpPutLine(builder, "mod :<tab/>A");

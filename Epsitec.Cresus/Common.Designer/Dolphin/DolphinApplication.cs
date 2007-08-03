@@ -622,9 +622,37 @@ namespace Epsitec.Common.Designer.Dolphin
 			this.pageProgramm = new TabPage();
 			this.pageProgramm.TabTitle = "Programme";
 
+			HToolBar toolbar = new HToolBar(this.pageProgramm);
+			toolbar.Margins = new Margins(0, 0, 0, -1);
+			toolbar.Dock = DockStyle.Top;
+
+			IconButton button;
+
+			button = new IconButton();
+			button.Name = "FontBold";
+			button.IconName = Misc.Icon("FontBold");
+			button.ButtonStyle = ButtonStyle.ActivableIcon;
+			button.Clicked += new MessageEventHandler(this.HandleButtonStyleClicked);
+			toolbar.Items.Add(button);
+
+			button = new IconButton();
+			button.Name = "FontItalic";
+			button.IconName = Misc.Icon("FontItalic");
+			button.ButtonStyle = ButtonStyle.ActivableIcon;
+			button.Clicked += new MessageEventHandler(this.HandleButtonStyleClicked);
+			toolbar.Items.Add(button);
+
+			button = new IconButton();
+			button.Name = "FontUnderline";
+			button.IconName = Misc.Icon("FontUnderline");
+			button.ButtonStyle = ButtonStyle.ActivableIcon;
+			button.Clicked += new MessageEventHandler(this.HandleButtonStyleClicked);
+			toolbar.Items.Add(button);
+
 			this.fieldProgrammRem = new TextFieldMulti(this.pageProgramm);
 			this.fieldProgrammRem.Text = DolphinApplication.ProgrammEmptyRem;
 			this.fieldProgrammRem.Dock = DockStyle.Fill;
+			this.fieldProgrammRem.TextChanged += new EventHandler(this.HandleFieldProgrammRemTextChanged);
 
 			this.book.Items.Add(this.pageProgramm);
 
@@ -1516,6 +1544,34 @@ namespace Epsitec.Common.Designer.Dolphin
 			//	Touche du clavier simulé relâchée.
 			PushButton button = sender as PushButton;
 			this.KeyboardChanged(button, false);
+		}
+
+		private void HandleButtonStyleClicked(object sender, MessageEventArgs e)
+		{
+			//	Bouton pour modifier le style du commentaire cliqué.
+			IconButton button = sender as IconButton;
+
+			if (button.Name == "FontBold")
+			{
+				this.fieldProgrammRem.TextNavigator.SelectionBold = !this.fieldProgrammRem.TextNavigator.SelectionBold;
+			}
+
+			if (button.Name == "FontItalic")
+			{
+				this.fieldProgrammRem.TextNavigator.SelectionItalic = !this.fieldProgrammRem.TextNavigator.SelectionItalic;
+			}
+
+			if (button.Name == "FontUnderline")
+			{
+				this.fieldProgrammRem.TextNavigator.SelectionUnderline = !this.fieldProgrammRem.TextNavigator.SelectionUnderline;
+			}
+
+			this.Dirty = true;
+		}
+
+		private void HandleFieldProgrammRemTextChanged(object sender)
+		{
+			this.Dirty = true;
 		}
 		#endregion
 
