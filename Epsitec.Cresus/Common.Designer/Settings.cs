@@ -245,7 +245,11 @@ namespace Epsitec.Common.Designer
 					if (name == "ResourceModuleId")
 					{
 						ResourceModuleId module = Types.InvariantConverter.ConvertFromString<ResourceModuleId>(element);
-						this.modules.Add(module);
+
+						if (System.IO.Directory.Exists (module.Path))
+						{
+							this.modules.Add (module);
+						}
 					}
 				}
 				else if (reader.NodeType == XmlNodeType.EndElement)

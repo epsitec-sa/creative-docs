@@ -1875,12 +1875,12 @@ namespace Epsitec.Common.Designer
 			{
 				foreach (ResourceModuleId id in this.settings.Modules)
 				{
-					Module module = new Module(this, this.mode, this.resourceManagerPool.DefaultPrefix, id);
+					Module module = new Module (this, this.mode, this.resourceManagerPool.DefaultPrefix, id);
 
-					ModuleInfo mi = new ModuleInfo();
+					ModuleInfo mi = new ModuleInfo ();
 					mi.Module = module;
-					this.moduleInfoList.Insert(++this.currentModule, mi);
-					this.CreateModuleLayout();
+					this.moduleInfoList.Insert (++this.currentModule, mi);
+					this.CreateModuleLayout ();
 
 					this.bookModules.ActivePage = mi.TabPage;
 				}
