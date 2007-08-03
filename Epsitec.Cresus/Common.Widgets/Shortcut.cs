@@ -257,6 +257,14 @@ namespace Epsitec.Common.Widgets
 						case KeyCode.Digit9:
 							break;
 
+						case KeyCode.Add:
+						case KeyCode.Substract:
+						case KeyCode.Multiply:
+						case KeyCode.Divide:
+						case KeyCode.Decimal:
+						case KeyCode.NumLock:
+							break;
+
 						default:
 							keyCode = KeyCode.None;
 							break;
