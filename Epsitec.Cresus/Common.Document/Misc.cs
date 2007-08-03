@@ -763,7 +763,7 @@ namespace Epsitec.Common.Document
 			System.Diagnostics.Debug.Assert(icon.StartsWith("manifest:") == false);
 			System.Diagnostics.Debug.Assert(icon.EndsWith(".icon") == false);
 
-			return string.Format("manifest:Epsitec.App.DocumentEditor.Images.{0}.icon", icon);
+			return string.Format ("manifest:Epsitec.Common.DocumentEditor.Images.{0}.icon", icon);
 		}
 
 		static public string IconDyn(string name, string parameter)

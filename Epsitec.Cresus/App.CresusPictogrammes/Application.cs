@@ -5,7 +5,7 @@ namespace Epsitec.App.Pictogram
 		[System.STAThread]
 		public static void Main() 
 		{
-			Epsitec.App.DocumentEditor.Application.Start ("Np");
+			Epsitec.Common.DocumentEditor.Application.Start ("Np");
 		}
 	}
 }

@@ -19,7 +19,7 @@ namespace Epsitec.Common.Tool.ResGenerator
 				@"S:\Epsitec.Cresus\Common.Support\Resources",
 				@"S:\Epsitec.Cresus\Common.Types\Resources",
 				@"S:\Epsitec.Cresus\Common.Widgets\Resources",
-				@"S:\Epsitec.Cresus\App.DocumentEditor\Resources",
+				@"S:\Epsitec.Cresus\Common.DocumentEditor\Resources",
 			};
 
 			Epsitec.Common.Support.Implementation.FileProvider.DefineGlobalProbingPath (string.Join (";", paths));

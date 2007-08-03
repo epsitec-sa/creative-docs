@@ -52,7 +52,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.Script.Developer", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.Support.Events", "Common.Support.Events\Common.Support.Events.csproj", "{EAF258A4-E107-4466-A3E1-9FC072557940}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "App.DocumentEditor", "App.DocumentEditor\App.DocumentEditor.csproj", "{B3B20AC3-680D-41E0-94C2-8113577CE703}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.DocumentEditor", "Common.DocumentEditor\Common.DocumentEditor.csproj", "{B3B20AC3-680D-41E0-94C2-8113577CE703}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.Document", "Common.Document\Common.Document.csproj", "{B324896E-2CDE-45B8-91CE-B476687EA384}"
 EndProject

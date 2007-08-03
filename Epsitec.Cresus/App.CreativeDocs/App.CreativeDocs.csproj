@@ -79,8 +79,8 @@
     <Reference Include="System">
       <Name>System</Name>
     </Reference>
-    <ProjectReference Include="..\App.DocumentEditor\App.DocumentEditor.csproj">
-      <Name>App.DocumentEditor</Name>
+    <ProjectReference Include="..\Common.DocumentEditor\Common.DocumentEditor.csproj">
+      <Name>Common.DocumentEditor</Name>
       <Project>{B3B20AC3-680D-41E0-94C2-8113577CE703}</Project>
       <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
     </ProjectReference>
@@ -110,13 +110,13 @@
     <Content Include="Resources\Common.Document\Strings.de.resource" />
     <Content Include="Resources\Common.Dialogs\Captions.de.resource" />
     <Content Include="Original Samples\objects.crdoc" />
-    <Content Include="Resources\App.DocumentEditor\Captions.00.resource" />
-    <Content Include="Resources\App.DocumentEditor\Captions.de.resource" />
-    <Content Include="Resources\App.DocumentEditor\Captions.en.resource" />
-    <Content Include="Resources\App.DocumentEditor\module.info" />
-    <Content Include="Resources\App.DocumentEditor\Strings.00.resource" />
-    <Content Include="Resources\App.DocumentEditor\Strings.de.resource" />
-    <Content Include="Resources\App.DocumentEditor\Strings.en.resource" />
+    <Content Include="Resources\Common.DocumentEditor\Captions.00.resource" />
+    <Content Include="Resources\Common.DocumentEditor\Captions.de.resource" />
+    <Content Include="Resources\Common.DocumentEditor\Captions.en.resource" />
+    <Content Include="Resources\Common.DocumentEditor\module.info" />
+    <Content Include="Resources\Common.DocumentEditor\Strings.00.resource" />
+    <Content Include="Resources\Common.DocumentEditor\Strings.de.resource" />
+    <Content Include="Resources\Common.DocumentEditor\Strings.en.resource" />
     <Content Include="Resources\Common.Widgets\module.info" />
     <Content Include="Resources\Common.Widgets\Captions.00.resource" />
     <Content Include="Resources\Common.Widgets\Captions.en.resource" />
@@ -186,7 +186,7 @@ xcopy "$(SolutionDir)Common.Document\Resources\*" "$(ProjectDir)Resources\" /S/Y
 xcopy "$(SolutionDir)Common.Support\Resources\*" "$(ProjectDir)Resources\" /S/Y /EXCLUDE:..\..\..\excludesvn.ini
 xcopy "$(SolutionDir)Common.Types\Resources\*" "$(ProjectDir)Resources\" /S/Y /EXCLUDE:..\..\..\excludesvn.ini
 xcopy "$(SolutionDir)Common.Widgets\Resources\*" "$(ProjectDir)Resources\" /S/Y /EXCLUDE:..\..\..\excludesvn.ini
-xcopy "$(SolutionDir)App.DocumentEditor\Resources\*" "$(ProjectDir)Resources\" /S/Y /EXCLUDE:..\..\..\excludesvn.ini
+xcopy "$(SolutionDir)Common.DocumentEditor\Resources\*" "$(ProjectDir)Resources\" /S/Y /EXCLUDE:..\..\..\excludesvn.ini
 "$(SolutionDir)App.CreativeDocs\compile-rc.bat" "$(SolutionDir)App.CreativeDocs\App"</PreBuildEvent>
     <PostBuildEvent>del "$(SolutionDir)X.Setup.CreativeDocs\SignedDlls\*.dll" /F/Q
 del "$(SolutionDir)X.Setup.CreativeDocs\SignedDlls\*.exe" /F/Q

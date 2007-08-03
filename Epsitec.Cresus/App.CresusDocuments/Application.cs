@@ -5,7 +5,7 @@ namespace Epsitec.App.CresusDocuments
 		[System.STAThread]
 		public static void Main() 
 		{
-			Epsitec.App.DocumentEditor.Application.Start ("N");
+			Epsitec.Common.DocumentEditor.Application.Start ("N");
 		}
 	}
 }

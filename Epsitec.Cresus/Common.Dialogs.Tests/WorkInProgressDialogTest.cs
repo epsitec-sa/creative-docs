@@ -19,7 +19,7 @@ namespace Epsitec.Common.Dialogs
 				@"S:\Epsitec.Cresus\Common.Document\Resources",
 				@"S:\Epsitec.Cresus\Common.Dialogs\Resources",
 				@"S:\Epsitec.Cresus\Common.Designer\Resources",
-				@"S:\Epsitec.Cresus\App.DocumentEditor\Resources",
+				@"S:\Epsitec.Cresus\Common.DocumentEditor\Resources",
 			};
 
 			Epsitec.Common.Support.Implementation.FileProvider.DefineGlobalProbingPath (string.Join (";", paths));
