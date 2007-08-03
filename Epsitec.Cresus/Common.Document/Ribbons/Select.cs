@@ -21,8 +21,8 @@ namespace Epsitec.Common.Document.Ribbons
 			this.separatorH = new IconSeparator(this);
 			this.separatorH.IsHorizontal = false;
 			
-			this.buttonDeselectAll  = this.CreateIconButton("DeselectAll");
-			this.buttonSelectAll    = this.CreateIconButton("SelectAll");
+			this.buttonDeselectAll  = this.CreateIconButton(Common.Widgets.Res.Commands.DeselectAll.CommandId);
+			this.buttonSelectAll    = this.CreateIconButton(Common.Widgets.Res.Commands.SelectAll.CommandId);
 			this.buttonSelectInvert = this.CreateIconButton("SelectInvert");
 			this.buttonHideSel      = this.CreateIconButton("HideSel");
 			this.buttonHideRest     = this.CreateIconButton("HideRest");

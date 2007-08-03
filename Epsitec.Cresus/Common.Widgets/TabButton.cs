@@ -16,6 +16,12 @@ namespace Epsitec.Common.Widgets
 			this.SetEmbedder(embedder);
 		}
 
+		public TabButton(Command command)
+			: this ()
+		{
+			this.CommandObject = command;
+		}
+
 		public override Drawing.Margins GetShapeMargins()
 		{
 			return new Drawing.Margins(2, 2, 2, 2);
@@ -30,11 +36,21 @@ namespace Epsitec.Common.Widgets
 			WidgetPaintState  state = this.PaintState;
 			Drawing.Point     pos   = new Drawing.Point();
 
+			Drawing.Rectangle saveClip  = graphics.SaveClippingRectangle ();
+			
 			TabBook tabBook = this.Parent as TabBook;
-			Drawing.Rectangle frameRect = tabBook.TabClipRectangle;
-			Drawing.Rectangle localClip = tabBook.MapClientToRoot(frameRect);
-			Drawing.Rectangle saveClip  = graphics.SaveClippingRectangle();
-			graphics.SetClippingRectangle(localClip);
+			Drawing.Rectangle frameRect;
+
+			if (tabBook != null)
+			{
+				frameRect = tabBook.TabClipRectangle;
+				Drawing.Rectangle localClip = tabBook.MapClientToRoot (frameRect);
+				graphics.SetClippingRectangle (localClip);
+			}
+			else
+			{
+				frameRect = this.Parent.Client.Bounds;
+			}
 			
 			if ( this.ActiveState == ActiveState.Yes )
 			{

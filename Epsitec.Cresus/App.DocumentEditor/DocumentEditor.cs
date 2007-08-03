@@ -427,8 +427,8 @@ namespace Epsitec.App.DocumentEditor
 			this.info = new StatusBar(this);
 			this.info.Dock = DockStyle.Bottom;
 
-			this.InfoAdd("DeselectAll");
-			this.InfoAdd("SelectAll");
+			this.InfoAdd(Common.Widgets.Res.Commands.DeselectAll.CommandId);
+			this.InfoAdd(Common.Widgets.Res.Commands.SelectAll.CommandId);
 			this.InfoAdd("SelectInvert");
 			this.InfoAdd("HideSel");
 			this.InfoAdd("HideRest");
@@ -2827,13 +2827,15 @@ namespace Epsitec.App.DocumentEditor
 			context.PreviewActive = !context.PreviewActive;
 		}
 
-		[Command ("DeselectAll")]
+//		[Command ("DeselectAll")]
+		[Command (Widgets.Res.CommandIds.DeselectAll)]
 		void CommandDeselectAll(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
 			this.CurrentDocument.Modifier.DeselectAllCmd();
 		}
 
-		[Command ("SelectAll")]
+//		[Command ("SelectAll")]
+		[Command (Widgets.Res.CommandIds.SelectAll)]
 		void CommandSelectAll(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
 			this.CurrentDocument.Modifier.SelectAll();
@@ -3703,8 +3705,8 @@ namespace Epsitec.App.DocumentEditor
 			this.redoState = this.CreateCommandState("Redo", "Redo", KeyCode.ModifierControl|KeyCode.AlphaY);
 			this.undoRedoListState = this.CreateCommandState("UndoRedoList");
 
-			this.deselectAllState = this.CreateCommandState("DeselectAll", "DeselectAll", KeyCode.Escape);
-			this.selectAllState = this.CreateCommandState("SelectAll", "SelectAll", KeyCode.ModifierControl|KeyCode.AlphaA);
+			this.deselectAllState = this.CreateCommandState(Common.Widgets.Res.Commands.DeselectAll.CommandId, "DeselectAll", KeyCode.Escape);
+			this.selectAllState = this.CreateCommandState(Common.Widgets.Res.Commands.SelectAll.CommandId, "SelectAll", KeyCode.ModifierControl|KeyCode.AlphaA);
 			this.selectInvertState = this.CreateCommandState("SelectInvert", "SelectInvert");
 			this.selectorAutoState = this.CreateCommandState("SelectorAuto", "SelectorAuto");
 			this.selectorIndividualState = this.CreateCommandState("SelectorIndividual", "SelectorIndividual");

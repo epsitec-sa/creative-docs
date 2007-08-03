@@ -2946,7 +2946,7 @@ namespace Epsitec.Common.Document
 			{
 				if ( noSelected )
 				{
-					this.MiniBarAdd(list, "SelectAll");
+					this.MiniBarAdd(list, Common.Widgets.Res.Commands.SelectAll.CommandId);
 					this.MiniBarAdd(list, "");
 					this.MiniBarAdd(list, "Paste");
 					this.MiniBarAdd(list, "");
@@ -3326,8 +3326,8 @@ namespace Epsitec.Common.Document
 			if ( globalMenu || nbSel == 0 )
 			{
 				exist = false;
-				exist |= Menus.ContextMenuItem.MenuAddItem(this.document.CommandContext, list, "DeselectAll");
-				exist |= Menus.ContextMenuItem.MenuAddItem(this.document.CommandContext, list, "SelectAll");
+				exist |= Menus.ContextMenuItem.MenuAddItem(this.document.CommandContext, list, Common.Widgets.Res.Commands.DeselectAll.CommandId);
+				exist |= Menus.ContextMenuItem.MenuAddItem(this.document.CommandContext, list, Common.Widgets.Res.Commands.SelectAll.CommandId);
 				exist |= Menus.ContextMenuItem.MenuAddItem(this.document.CommandContext, list, "SelectInvert");
 				if ( exist )  Menus.ContextMenuItem.MenuAddSep(list);
 
