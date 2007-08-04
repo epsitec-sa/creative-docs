@@ -318,7 +318,7 @@ namespace Epsitec.Common.Text
 		
 		private static string Escape(string value)
 		{
-			if (value.IndexOfAny (new char[] { '\\', '[', ']', '{', '}', '/', '|', ':', '<', '>' }) == -1)
+			if (value.IndexOfAny (new char[] { '\\', '[', ']', '{', '}', '/', '|', ':', '<', '>', ';' }) == -1)
 			{
 				return value;
 			}
@@ -333,6 +333,7 @@ namespace Epsitec.Common.Text
 			value = value.Replace (":",  "\\7");
 			value = value.Replace ("<",  "\\8");
 			value = value.Replace (">",  "\\9");
+			value = value.Replace (";",  "\\A");
 			
 			return value;
 		}
@@ -369,6 +370,7 @@ namespace Epsitec.Common.Text
 						case '7':		c = ':';	break;
 						case '8':		c = '<';	break;
 						case '9':		c = '>';	break;
+						case 'A':		c = ';';	break;
 						
 						default:
 							throw new System.ArgumentException ("Invalid escape sequence.");
