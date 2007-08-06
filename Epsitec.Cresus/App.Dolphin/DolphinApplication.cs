@@ -68,7 +68,7 @@ namespace Epsitec.App.Dolphin
 				window.ClientSize = windowBounds.Size;
 				window.Text = "Dolphin";
 				window.Name = "Application";  // utilisé pour générer "QuitApplication" !
-				//?window.PreventAutoClose = true;
+				window.PreventAutoClose = true;
 				//?window.PreventAutoQuit = false;
 				
 				this.CreateLayout();
@@ -105,6 +105,20 @@ namespace Epsitec.App.Dolphin
 
 			return state;
 		}
+
+
+		[Command(ApplicationCommands.Id.Quit)]
+		[Command("QuitApplication")]
+		void CommandQuitApplication(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			e.Executed = true;
+
+			if (this.Quit())
+			{
+				this.Window.Quit();
+			}
+		}
+
 
 		protected void CreateLayout()
 		{

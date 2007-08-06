@@ -11,6 +11,7 @@ namespace Epsitec.App.Dolphin
 		static void Main(string[] args)
 		{
 			Epsitec.Common.Widgets.Widget.Initialize();
+			Epsitec.Common.Document.Engine.Initialize ();
 
 			string execPath = Epsitec.Common.Support.Globals.Directories.ExecutableRoot;
 
