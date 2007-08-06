@@ -1,3 +1,6 @@
+//	Copyright © 2003-2007, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Author: Daniel ROUX, Maintainer: Daniel ROUX
+
 using System.Collections.Generic;
 using Epsitec.Common.Types;
 using Epsitec.Common.Drawing;
@@ -9,7 +12,7 @@ using Epsitec.Common.Widgets.Helpers;
 namespace Epsitec.App.Dolphin.MyWidgets
 {
 	/// <summary>
-	/// Simule un panneau conteneur.
+	/// Simule un panneau conteneur, avec cadre visible ou non, et avec d'éventuelles vis aux quatre coins.
 	/// </summary>
 	public class Panel : FrameBox
 	{

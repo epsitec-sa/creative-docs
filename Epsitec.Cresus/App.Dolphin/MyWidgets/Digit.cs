@@ -1,3 +1,6 @@
+//	Copyright © 2003-2007, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Author: Daniel ROUX, Maintainer: Daniel ROUX
+
 using System.Collections.Generic;
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Support;
@@ -6,7 +9,7 @@ using Epsitec.Common.Drawing;
 namespace Epsitec.App.Dolphin.MyWidgets
 {
 	/// <summary>
-	/// Simule une affichage à 7 segments pour afficher un digit.
+	/// Simule un affichage à 7 segments et un point décimal pour afficher un digit.
 	/// Il est possible de représenter une valeur hexadécimale (propriété HexValue)
 	/// ou d'allumer n'importes quels segments (propriété SegmentValue).
 	/// Les proportions idéales sont une hauteur 1.5x plus grande que la largeur.

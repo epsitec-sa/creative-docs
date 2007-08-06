@@ -1,3 +1,6 @@
+//	Copyright © 2003-2007, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Author: Daniel ROUX, Maintainer: Daniel ROUX
+
 using System.Collections.Generic;
 
 namespace Epsitec.App.Dolphin
@@ -19,6 +22,8 @@ namespace Epsitec.App.Dolphin
 			pool.DefaultPrefix = "file";
 			pool.SetupDefaultRootPaths();
 
+			//	A cause des différents widgets de MyWidgets, il est important de ne pas changer
+			//	de look. LookSimply affiche des choses simples avec des cadres noirs.
 			Epsitec.Common.Widgets.Adorners.Factory.SetActive("LookSimply");
 
 			DolphinApplication mainWindow = new DolphinApplication(pool);

@@ -1,3 +1,6 @@
+//	Copyright © 2003-2007, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Author: Daniel ROUX, Maintainer: Daniel ROUX
+
 using System.Collections.Generic;
 using System.Xml;
 using System.Xml.Serialization;
@@ -1317,7 +1320,7 @@ namespace Epsitec.App.Dolphin
 
 		protected void Stop()
 		{
-			//	Sroppe le programme en cours.
+			//	Stoppe le programme en cours.
 			this.ProcessorStop();
 			this.ProcessorReset();
 			this.buttonReset.ActiveState = ActiveState.No;
@@ -1706,6 +1709,7 @@ namespace Epsitec.App.Dolphin
 
 		private void HandleFieldProgrammRemTextChanged(object sender)
 		{
+			//	Le commentaire lié au programme est changé.
 			this.Dirty = true;
 		}
 		#endregion
@@ -1719,50 +1723,49 @@ namespace Epsitec.App.Dolphin
 		protected static readonly string ProgrammEmptyRem = "<br/><i>Tapez ici les commentaires sur le programme...</i>";
 
 
-		protected Common.Support.ResourceManagerPool resourceManagerPool;
-		protected Window parentWindow;
-		protected MyWidgets.MainPanel mainPanel;
-		protected MyWidgets.Panel leftPanelBus;
-		protected MyWidgets.Panel leftPanelDetail;
-		protected MyWidgets.Panel leftPanelQuick;
-		protected MyWidgets.Panel clockBusPanel;
-		protected MyWidgets.Panel helpPanel;
-		protected IconButton buttonNew;
-		protected IconButton buttonOpen;
-		protected IconButton buttonSave;
-		protected StaticText programmFilename;
-		protected MyWidgets.PushButton buttonReset;
-		protected MyWidgets.PushButton buttonStep;
-		protected MyWidgets.PushButton buttonMemory;
-		protected MyWidgets.PushButton buttonClock3;
-		protected MyWidgets.PushButton buttonClock2;
-		protected MyWidgets.PushButton buttonClock1;
-		protected MyWidgets.PushButton buttonClock0;
-		protected MyWidgets.Switch switchStep;
-		protected MyWidgets.Switch switchDataReadWrite;
-		protected List<MyWidgets.Digit> addressDigits;
-		protected List<MyWidgets.Led> addressLeds;
-		protected List<MyWidgets.Switch> addressSwitchs;
-		protected List<MyWidgets.Digit> dataDigits;
-		protected List<MyWidgets.Led> dataLeds;
-		protected List<MyWidgets.Switch> dataSwitchs;
-		protected List<MyWidgets.Digit> displayDigits;
-		protected List<MyWidgets.PushButton> keyboardButtons;
-		protected List<MyWidgets.TextFieldHexa> registerFields;
-		protected MyWidgets.MemoryAccessor memoryAccessor;
-		protected MyWidgets.PushButton memoryButtonM;
-		protected MyWidgets.PushButton memoryButtonR;
-		protected MyWidgets.PushButton memoryButtonP;
-		protected TabBook book;
-		protected TabPage pageProgramm;
-		protected TextFieldMulti fieldProgrammRem;
+		protected Common.Support.ResourceManagerPool	resourceManagerPool;
+		protected MyWidgets.MainPanel					mainPanel;
+		protected MyWidgets.Panel						leftPanelBus;
+		protected MyWidgets.Panel						leftPanelDetail;
+		protected MyWidgets.Panel						leftPanelQuick;
+		protected MyWidgets.Panel						clockBusPanel;
+		protected MyWidgets.Panel						helpPanel;
+		protected IconButton							buttonNew;
+		protected IconButton							buttonOpen;
+		protected IconButton							buttonSave;
+		protected StaticText							programmFilename;
+		protected MyWidgets.PushButton					buttonReset;
+		protected MyWidgets.PushButton					buttonStep;
+		protected MyWidgets.PushButton					buttonMemory;
+		protected MyWidgets.PushButton					buttonClock3;
+		protected MyWidgets.PushButton					buttonClock2;
+		protected MyWidgets.PushButton					buttonClock1;
+		protected MyWidgets.PushButton					buttonClock0;
+		protected MyWidgets.Switch						switchStep;
+		protected MyWidgets.Switch						switchDataReadWrite;
+		protected List<MyWidgets.Digit>					addressDigits;
+		protected List<MyWidgets.Led>					addressLeds;
+		protected List<MyWidgets.Switch>				addressSwitchs;
+		protected List<MyWidgets.Digit>					dataDigits;
+		protected List<MyWidgets.Led>					dataLeds;
+		protected List<MyWidgets.Switch>				dataSwitchs;
+		protected List<MyWidgets.Digit>					displayDigits;
+		protected List<MyWidgets.PushButton>			keyboardButtons;
+		protected List<MyWidgets.TextFieldHexa>			registerFields;
+		protected MyWidgets.MemoryAccessor				memoryAccessor;
+		protected MyWidgets.PushButton					memoryButtonM;
+		protected MyWidgets.PushButton					memoryButtonR;
+		protected MyWidgets.PushButton					memoryButtonP;
+		protected TabBook								book;
+		protected TabPage								pageProgramm;
+		protected TextFieldMulti						fieldProgrammRem;
 
-		protected Components.Memory memory;
-		protected Components.AbstractProcessor processor;
-		protected Timer clock;
-		protected double ips;
-		protected string panelMode;
-		protected string filename;
-		protected bool dirty;
+		protected Components.Memory						memory;
+		protected Components.AbstractProcessor			processor;
+		protected Timer									clock;
+		protected double								ips;
+		protected string								panelMode;
+		protected string								filename;
+		protected bool									dirty;
 	}
 }

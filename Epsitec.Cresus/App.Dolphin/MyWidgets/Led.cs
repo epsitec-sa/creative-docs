@@ -1,3 +1,6 @@
+//	Copyright © 2003-2007, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Author: Daniel ROUX, Maintainer: Daniel ROUX
+
 using System.Collections.Generic;
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Support;
@@ -6,7 +9,7 @@ using Epsitec.Common.Drawing;
 namespace Epsitec.App.Dolphin.MyWidgets
 {
 	/// <summary>
-	/// Simule un diode LED.
+	/// Simule une diode LED rouge.
 	/// </summary>
 	public class Led : Widget
 	{
