@@ -75,8 +75,14 @@ namespace Epsitec.Common.Designer.Dolphin
 			StaticText title = new StaticText(panelTitle);
 			title.Text = "<font size=\"200%\"><b>Dolphin microprocessor emulator </b></font>by EPSITEC";
 			title.ContentAlignment = ContentAlignment.MiddleCenter;
-			title.Margins = new Margins(0, 100, 0, 0);
+			title.Margins = new Margins(0, 10, 0, 0);
 			title.Dock = DockStyle.Fill;
+
+			StaticText version = new StaticText(panelTitle);
+			version.Text = "<font size=\"80%\">Version 0.0.1</font>";
+			version.ContentAlignment = ContentAlignment.MiddleRight;
+			version.Margins = new Margins(0, 10, 0, 0);
+			version.Dock = DockStyle.Right;
 
 			Panel all = new Panel(this.mainPanel);
 			all.Dock = DockStyle.Fill;
@@ -716,22 +722,7 @@ namespace Epsitec.Common.Designer.Dolphin
 				{
 					int index = DolphinApplication.KeyboardIndex[t++];
 
-					string xmlText = null;
-					if (index < 0x08)  // touche 0..7 ?
-					{
-						xmlText = string.Concat("<font size=\"200%\"><b>", index.ToString(), "</b></font>");
-					}
-					else if (index == 0x10)
-					{
-						xmlText = "<b>Shift</b>";
-					}
-					else if (index == 0x20)
-					{
-						xmlText = "<b>Ctrl</b>";
-					}
-
 					PushButton button = new PushButton(lines[y]);
-					button.Text = xmlText;
 					button.Index = index;
 					button.PreferredWidth = 50;
 					button.Margins = new Margins(0, 2, 0, 0);
@@ -739,15 +730,26 @@ namespace Epsitec.Common.Designer.Dolphin
 					button.Pressed += new MessageEventHandler(this.HandleKeyboardButtonPressed);
 					button.Released += new MessageEventHandler(this.HandleKeyboardButtonReleased);
 
+					if (index == 0x08)
+					{
+						button.Text = "<b>Shift</b>";
+					}
+					else if (index == 0x10)
+					{
+						button.Text = "<b>Ctrl</b>";
+					}
+
 					this.keyboardButtons.Add(button);
 				}
 			}
+
+			this.UpdateKeyboard();
 		}
 
 		protected static int[] KeyboardIndex =
 		{
-			0x10, 0x00, 0x01, 0x02, 0x03,  // Shift, 0..3
-			0x20, 0x04, 0x05, 0x06, 0x07,  // Ctrl,  4..7
+			0x08, 0x00, 0x01, 0x02, 0x03,  // Shift, 0..3
+			0x10, 0x04, 0x05, 0x06, 0x07,  // Ctrl,  4..7
 		};
 
 		protected PushButton SearchKey(int index)
@@ -826,6 +828,46 @@ namespace Epsitec.Common.Designer.Dolphin
 			this.memoryButtonM.ActiveState = (this.memoryAccessor.Bank == "M") ? ActiveState.Yes : ActiveState.No;
 			this.memoryButtonR.ActiveState = (this.memoryAccessor.Bank == "R") ? ActiveState.Yes : ActiveState.No;
 			this.memoryButtonP.ActiveState = (this.memoryAccessor.Bank == "P") ? ActiveState.Yes : ActiveState.No;
+		}
+
+		protected void UpdateKeyboard()
+		{
+			//	Met à jour les inscriptions sur le clavier émulé.
+			bool shift = this.SearchKey(0x08).ActiveState == ActiveState.Yes;
+			bool ctrl  = this.SearchKey(0x10).ActiveState == ActiveState.Yes;
+
+			foreach (PushButton button in this.keyboardButtons)
+			{
+				if (button.Index >= 0 && button.Index <= 7)
+				{
+					int i = button.Index;
+
+					if (shift)
+					{
+						i += 0x08;
+					}
+
+					if (ctrl)
+					{
+						i += 0x10;
+					}
+
+					string label = i.ToString("X2");
+					if (label[0] == '0')
+					{
+						label = label.Substring(1);
+					}
+
+					if (i <= 7)
+					{
+						button.Text = string.Concat("<font size=\"200%\"><b>", label, "</b></font>");
+					}
+					else
+					{
+						button.Text = string.Concat("(", label, ")<br/><font size=\"200%\"><b>", button.Index.ToString(), "</b></font>");
+					}
+				}
+			}
 		}
 
 
@@ -936,8 +978,9 @@ namespace Epsitec.Common.Designer.Dolphin
 			this.ProcessorFeedback();
 
 			this.memory.ClearPeriph();
-			this.SearchKey(0x10).ActiveState = ActiveState.No;  // relâche Shift
-			this.SearchKey(0x20).ActiveState = ActiveState.No;  // relâche Ctrl
+			this.SearchKey(0x08).ActiveState = ActiveState.No;  // relâche Shift
+			this.SearchKey(0x10).ActiveState = ActiveState.No;  // relâche Ctrl
+			this.UpdateKeyboard();
 		}
 
 		protected void ProcessorStart()
@@ -1531,9 +1574,10 @@ namespace Epsitec.Common.Designer.Dolphin
 			//	Touche du clavier simulé pressée.
 			PushButton button = sender as PushButton;
 
-			if (button.Index == 0x10 || button.Index == 0x20)  // shift ou ctrl ?
+			if (button.Index == 0x08 || button.Index == 0x10)  // shift ou ctrl ?
 			{
 				button.ActiveState = (button.ActiveState == ActiveState.Yes) ? ActiveState.No : ActiveState.Yes;
+				this.UpdateKeyboard();
 			}
 
 			this.KeyboardChanged(button, true);
