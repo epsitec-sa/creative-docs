@@ -852,19 +852,13 @@ namespace Epsitec.Common.Designer.Dolphin
 						i += 0x10;
 					}
 
-					string label = i.ToString("X2");
-					if (label[0] == '0')
-					{
-						label = label.Substring(1);
-					}
-
 					if (i <= 7)
 					{
-						button.Text = string.Concat("<font size=\"200%\"><b>", label, "</b></font>");
+						button.Text = string.Concat("<font size=\"200%\"><b>", button.Index.ToString(), "</b></font>");
 					}
 					else
 					{
-						button.Text = string.Concat("(", label, ")<br/><font size=\"200%\"><b>", button.Index.ToString(), "</b></font>");
+						button.Text = string.Concat("(", i.ToString("X2"), ")<br/><font size=\"190%\"><b>", button.Index.ToString(), "</b></font>");
 					}
 				}
 			}

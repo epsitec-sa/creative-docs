@@ -1025,7 +1025,7 @@ namespace Epsitec.Common.Designer.Dolphin
 			(byte) Instructions.PushF,				// PUSH F
 													// LOOP:
 			(byte) Instructions.MovemA, 0x0C, 0x07,	// MOVE C07,A		; lit le clavier
-			(byte) Instructions.TestiA, 0x07,		// TEST A:#7		; bit full ?
+			(byte) Instructions.TClriA, 0x07,		// TCLR A:#7		; bit full ?
 			(byte) Instructions.JumpRelEQ, 0xF9,	// JUMP,EQ R8^LOOP	; non, jump loop
 			(byte) Instructions.PopF,				// POP F
 			(byte) Instructions.Ret,				// RET
