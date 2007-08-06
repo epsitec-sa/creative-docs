@@ -3,7 +3,7 @@ using Epsitec.Common.Widgets;
 using Epsitec.Common.Support;
 using Epsitec.Common.Drawing;
 
-namespace Epsitec.App.Dolphin
+namespace Epsitec.App.Dolphin.Components
 {
 	/// <summary>
 	/// Memoire émulée du dauphin.

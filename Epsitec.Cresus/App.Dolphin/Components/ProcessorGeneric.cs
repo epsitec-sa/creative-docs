@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace Epsitec.App.Dolphin
+namespace Epsitec.App.Dolphin.Components
 {
 	/// <summary>
 	/// Processeur générique tout simple.

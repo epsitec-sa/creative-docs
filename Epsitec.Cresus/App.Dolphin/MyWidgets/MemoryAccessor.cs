@@ -3,7 +3,7 @@ using Epsitec.Common.Widgets;
 using Epsitec.Common.Support;
 using Epsitec.Common.Drawing;
 
-namespace Epsitec.App.Dolphin
+namespace Epsitec.App.Dolphin.MyWidgets
 {
 	/// <summary>
 	/// Permet d'afficher et de modifier de la mémoire émulée.
@@ -45,7 +45,7 @@ namespace Epsitec.App.Dolphin
 
 
 
-		public Memory Memory
+		public Components.Memory Memory
 		{
 			//	Mémoire émulée affichée/modifée par ce widget.
 			get
@@ -182,7 +182,7 @@ namespace Epsitec.App.Dolphin
 				field.Index = i;
 				field.SetTabIndex(index++);
 				field.MemoryAccessor = this;
-				field.BitCount = Memory.TotalData;
+				field.BitCount = Components.Memory.TotalData;
 				field.BitNames = null;
 				field.PreferredHeight = MemoryAccessor.LineHeight;
 				field.Margins = new Margins(0, 0, 0, 1);
@@ -252,17 +252,17 @@ namespace Epsitec.App.Dolphin
 		protected string MemoryBank(int address)
 		{
 			//	Retourne la banque à utiliser pour une adresse donnée.
-			if (address >= Memory.RamBase && address < Memory.RamBase+Memory.RamLength)
+			if (address >= Components.Memory.RamBase && address < Components.Memory.RamBase+Components.Memory.RamLength)
 			{
 				return "M";
 			}
 
-			if (address >= Memory.PeriphBase && address < Memory.PeriphBase+Memory.PeriphLength)
+			if (address >= Components.Memory.PeriphBase && address < Components.Memory.PeriphBase+Components.Memory.PeriphLength)
 			{
 				return "P";
 			}
 			
-			if (address >= Memory.RomBase && address < Memory.RomBase+Memory.RomLength)
+			if (address >= Components.Memory.RomBase && address < Components.Memory.RomBase+Components.Memory.RomLength)
 			{
 				return "R";
 			}
@@ -276,15 +276,15 @@ namespace Epsitec.App.Dolphin
 			{
 				if (this.bank == "M")
 				{
-					return Memory.RamLength;
+					return Components.Memory.RamLength;
 				}
 				else if (this.bank == "P")
 				{
-					return Memory.PeriphLength;
+					return Components.Memory.PeriphLength;
 				}
 				else if (this.bank == "R")
 				{
-					return Memory.RomLength;
+					return Components.Memory.RomLength;
 				}
 				else
 				{
@@ -299,15 +299,15 @@ namespace Epsitec.App.Dolphin
 			{
 				if (this.bank == "M")
 				{
-					return Memory.RamBase;
+					return Components.Memory.RamBase;
 				}
 				else if (this.bank == "P")
 				{
-					return Memory.PeriphBase;
+					return Components.Memory.PeriphBase;
 				}
 				else if (this.bank == "R")
 				{
-					return Memory.RomBase;
+					return Components.Memory.RomBase;
 				}
 				else
 				{
@@ -338,7 +338,7 @@ namespace Epsitec.App.Dolphin
 
 		static protected readonly double LineHeight = 20;
 
-		protected Memory memory;
+		protected Components.Memory memory;
 		protected string bank;
 		protected VScroller scroller;
 		protected MyWidgets.Panel panel;

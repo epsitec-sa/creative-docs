@@ -29,8 +29,8 @@ namespace Epsitec.App.Dolphin
 		{
 			this.resourceManagerPool = pool;
 
-			this.memory = new Memory(this);
-			this.processor = new ProcessorGeneric(this.memory);
+			this.memory = new Components.Memory(this);
+			this.processor = new Components.ProcessorGeneric(this.memory);
 			this.memory.RomInitialise(this.processor);
 			this.ips = 1000;
 		}
@@ -256,7 +256,7 @@ namespace Epsitec.App.Dolphin
 			return this.AutoSave();
 		}
 
-		public MemoryAccessor MemoryAccessor
+		public MyWidgets.MemoryAccessor MemoryAccessor
 		{
 			get
 			{
@@ -313,16 +313,16 @@ namespace Epsitec.App.Dolphin
 			this.CreateBitsPanel(parent, out top, out bottom, "Data bus");
 
 			this.dataDigits = new List<MyWidgets.Digit>();
-			for (int i=0; i<Memory.TotalData/4; i++)
+			for (int i=0; i<Components.Memory.TotalData/4; i++)
 			{
 				this.CreateBitDigit(top, i, this.dataDigits);
 			}
 
 			this.dataLeds = new List<MyWidgets.Led>();
 			this.dataSwitchs = new List<MyWidgets.Switch>();
-			for (int i=0; i<Memory.TotalData; i++)
+			for (int i=0; i<Components.Memory.TotalData; i++)
 			{
-				this.CreateBitButton(bottom, i, Memory.TotalData, this.dataLeds, this.dataSwitchs);
+				this.CreateBitButton(bottom, i, Components.Memory.TotalData, this.dataLeds, this.dataSwitchs);
 				this.dataSwitchs[i].Clicked += new MessageEventHandler(this.HandleDataSwitchClicked);
 			}
 
@@ -330,16 +330,16 @@ namespace Epsitec.App.Dolphin
 			this.CreateBitsPanel(parent, out top, out bottom, "Address bus");
 
 			this.addressDigits = new List<MyWidgets.Digit>();
-			for (int i=0; i<Memory.TotalAddress/4; i++)
+			for (int i=0; i<Components.Memory.TotalAddress/4; i++)
 			{
 				this.CreateBitDigit(top, i, this.addressDigits);
 			}
 			
 			this.addressLeds = new List<MyWidgets.Led>();
 			this.addressSwitchs = new List<MyWidgets.Switch>();
-			for (int i=0; i<Memory.TotalAddress; i++)
+			for (int i=0; i<Components.Memory.TotalAddress; i++)
 			{
-				this.CreateBitButton(bottom, i, Memory.TotalAddress, this.addressLeds, this.addressSwitchs);
+				this.CreateBitButton(bottom, i, Components.Memory.TotalAddress, this.addressLeds, this.addressSwitchs);
 				this.addressSwitchs[i].Clicked += new MessageEventHandler(this.HandleAddressSwitchClicked);
 			}
 
@@ -396,7 +396,7 @@ namespace Epsitec.App.Dolphin
 			this.memoryButtonP.Clicked += new MessageEventHandler(this.HandleMemoryButtonClicked);
 			ToolTip.Default.SetToolTip(this.memoryButtonP, "Montre le début de la zone des périphériques");
 
-			this.memoryAccessor = new MemoryAccessor(memoryPanel);
+			this.memoryAccessor = new MyWidgets.MemoryAccessor(memoryPanel);
 			this.memoryAccessor.Memory = this.memory;
 			this.memoryAccessor.Bank = "M";
 			this.memoryAccessor.Margins = new Margins(10, 10, 0, 0);
@@ -1034,7 +1034,7 @@ namespace Epsitec.App.Dolphin
 		public void KeyboardChanged(MyWidgets.PushButton button, bool pressed)
 		{
 			//	Appelé lorsqu'une touche du clavier simulé a été pressée ou relâchée.
-			int keys = this.memory.Read(Memory.PeriphKeyboard);
+			int keys = this.memory.Read(Components.Memory.PeriphKeyboard);
 
 			if (button.Index < 0x08)
 			{
@@ -1057,7 +1057,7 @@ namespace Epsitec.App.Dolphin
 				}
 			}
 
-			this.memory.Write(Memory.PeriphKeyboard, keys);
+			this.memory.Write(Components.Memory.PeriphKeyboard, keys);
 		}
 
 
@@ -1749,7 +1749,7 @@ namespace Epsitec.App.Dolphin
 		protected List<MyWidgets.Digit> displayDigits;
 		protected List<MyWidgets.PushButton> keyboardButtons;
 		protected List<MyWidgets.TextFieldHexa> registerFields;
-		protected MemoryAccessor memoryAccessor;
+		protected MyWidgets.MemoryAccessor memoryAccessor;
 		protected MyWidgets.PushButton memoryButtonM;
 		protected MyWidgets.PushButton memoryButtonR;
 		protected MyWidgets.PushButton memoryButtonP;
@@ -1757,8 +1757,8 @@ namespace Epsitec.App.Dolphin
 		protected TabPage pageProgramm;
 		protected TextFieldMulti fieldProgrammRem;
 
-		protected Memory memory;
-		protected AbstractProcessor processor;
+		protected Components.Memory memory;
+		protected Components.AbstractProcessor processor;
 		protected Timer clock;
 		protected double ips;
 		protected string panelMode;

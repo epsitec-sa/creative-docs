@@ -38,11 +38,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AbstractProcessor.cs" />
+    <Compile Include="Components\AbstractProcessor.cs" />
     <Compile Include="DolphinApplication.cs" />
     <Compile Include="Geometry.cs" />
-    <Compile Include="Memory.cs" />
-    <Compile Include="MemoryAccessor.cs" />
+    <Compile Include="Components\Memory.cs" />
+    <Compile Include="MyWidgets\MemoryAccessor.cs" />
     <Compile Include="Misc.cs" />
     <Compile Include="MyWidgets\Digit.cs" />
     <Compile Include="MyWidgets\Led.cs" />
@@ -52,7 +52,7 @@
     <Compile Include="MyWidgets\PushButton.cs" />
     <Compile Include="MyWidgets\Switch.cs" />
     <Compile Include="MyWidgets\TextFieldHexa.cs" />
-    <Compile Include="ProcessorGeneric.cs" />
+    <Compile Include="Components\ProcessorGeneric.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
