@@ -176,7 +176,7 @@ namespace Epsitec.App.Dolphin
 			title.Dock = DockStyle.Fill;
 
 			StaticText version = new StaticText(panelTitle);
-			version.Text = "<font size=\"80%\">Version 0.0.1</font>";
+			version.Text = string.Concat("<font size=\"80%\">", Misc.GetVersion(), "</font>");
 			version.ContentAlignment = ContentAlignment.MiddleRight;
 			version.Margins = new Margins(0, 10, 0, 0);
 			version.Dock = DockStyle.Right;

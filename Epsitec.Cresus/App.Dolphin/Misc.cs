@@ -9,6 +9,18 @@ namespace Epsitec.App.Dolphin
 	/// </summary>
 	public class Misc
 	{
+		static public string GetVersion()
+		{
+			//	Donne le numéro de version.
+			string version = typeof(DolphinApplication).Assembly.FullName.Split(',')[1].Split('=')[1];
+			if ( version.EndsWith(".0") )
+			{
+				version = version.Substring(0, version.Length-2);
+			}
+			return version;
+		}
+
+
 		static public Path GetHatchPath(Rectangle rect, double distance, Point reference)
 		{
 			//	Retourne des hachures à 45 degrés remplissant sans déborder un rectangle.
