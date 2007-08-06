@@ -6,7 +6,7 @@ using Epsitec.Common.Widgets.Helpers;
 
 [assembly: DependencyClass (typeof(Panel))]
 
-namespace Epsitec.Common.Designer.Dolphin
+namespace Epsitec.App.Dolphin.MyWidgets
 {
 	/// <summary>
 	/// Simule un panneau conteneur.

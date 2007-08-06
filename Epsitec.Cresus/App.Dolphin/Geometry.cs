@@ -1,6 +1,6 @@
 using Epsitec.Common.Drawing;
 
-namespace Epsitec.Common.Designer.Dolphin
+namespace Epsitec.App.Dolphin
 {
 	/// <summary>
 	/// La classe Geometry contient quelques routines générales.

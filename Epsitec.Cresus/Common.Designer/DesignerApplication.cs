@@ -10,7 +10,6 @@ namespace Epsitec.Common.Designer
 	{
 		Build,
 		Translate,
-		Dolphin,
 	}
 
 	/// <summary>
@@ -52,12 +51,6 @@ namespace Epsitec.Common.Designer
 		public void Show(Window parentWindow)
 		{
 			//	Crée et montre la fenêtre de l'éditeur.
-			if (this.mode == DesignerMode.Dolphin)
-			{
-				this.DolphinShow(parentWindow);
-				return;
-			}
-
 			if (this.Window == null)
 			{
 				Window window = new Window();
@@ -525,16 +518,6 @@ namespace Epsitec.Common.Designer
 		void CommandQuitApplication(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
 			e.Executed = true;
-
-			if (this.mode == DesignerMode.Dolphin)
-			{
-				if (this.dolphinApplication.Quit())
-				{
-					this.Window.Quit();
-				}
-				//	TODO: je ne comprends pas pourquoi on quitte même si Window.Quit() n'est pas appelé !
-				return;
-			}
 
 			if (!this.Terminate())
 			{
@@ -2181,53 +2164,6 @@ namespace Epsitec.Common.Designer
 		#endregion
 
 
-		#region Dolphin
-		public void DolphinShow(Window parentWindow)
-		{
-			//	Crée et montre la fenêtre de l'éditeur.
-			if (this.Window == null)
-			{
-				Window window = new Window();
-				this.Window = window;
-				window.Root.WindowStyles = WindowStyles.CanMinimize|WindowStyles.HasCloseButton;
-
-				Point parentCenter;
-				Rectangle windowBounds;
-
-				if (parentWindow == null)
-				{
-					Rectangle area = ScreenInfo.GlobalArea;
-					parentCenter = area.Center;
-				}
-				else
-				{
-					parentCenter = parentWindow.WindowBounds.Center;
-				}
-
-				double w = Dolphin.DolphinApplication.MainWidth + Dolphin.DolphinApplication.MainMargin*2;
-				double h = Dolphin.DolphinApplication.MainHeight + Dolphin.DolphinApplication.MainMargin*2;
-
-				windowBounds = new Rectangle(parentCenter.X-w/2, parentCenter.Y-h/2, w, h);
-				windowBounds = ScreenInfo.FitIntoWorkingArea(windowBounds);
-
-				window.WindowBounds = windowBounds;
-				window.ClientSize = windowBounds.Size;
-				window.Text = "Dolphin";
-				window.Name = "Application";  // utilisé pour générer "QuitApplication" !
-				//?window.PreventAutoClose = true;
-				//?window.PreventAutoQuit = false;
-				
-				DesignerApplication.SetInstance(window, this);  // attache l'instance de DesignerApplication à la fenêtre
-
-				this.dolphinApplication = new Dolphin.DolphinApplication(this.Window);
-				this.dolphinApplication.CreateLayout();
-			}
-
-			this.Window.Show();
-		}
-		#endregion
-
-
 		protected DesignerMode					mode;
 		protected bool							standalone;
 //-		protected Window						window;
@@ -2362,8 +2298,6 @@ namespace Epsitec.Common.Designer
 		protected CommandState					displayHorizontalState;
 		protected CommandState					displayVerticalState;
 		protected CommandState					displayFullScreenState;
-
-		protected Dolphin.DolphinApplication	dolphinApplication;
 
 		public static readonly DependencyProperty InstanceProperty = DependencyProperty.RegisterAttached("Instance", typeof(DesignerApplication), typeof(DesignerApplication));
 	}

@@ -1,7 +1,6 @@
-using Epsitec.Common.Designer;
 using System.Collections.Generic;
 
-namespace App.Dolphin
+namespace Epsitec.App.Dolphin
 {
 	static class Program
 	{
@@ -14,21 +13,16 @@ namespace App.Dolphin
 			Epsitec.Common.Widgets.Widget.Initialize();
 
 			string execPath = Epsitec.Common.Support.Globals.Directories.ExecutableRoot;
-			List<string> paths;
 
 			Epsitec.Common.Support.ResourceManagerPool pool = new Epsitec.Common.Support.ResourceManagerPool("App.Dolphin");
 			pool.DefaultPrefix = "file";
 			pool.SetupDefaultRootPaths();
 
-			Epsitec.Common.Widgets.Adorners.Factory.SetActive ("LookSimply");  // pour Dolphin !
+			Epsitec.Common.Widgets.Adorners.Factory.SetActive("LookSimply");
 
-			DesignerApplication designerMainWindow;
-
-			designerMainWindow = new DesignerApplication (pool);
-			designerMainWindow.Mode = DesignerMode.Dolphin;
-			designerMainWindow.Standalone = true;
-			designerMainWindow.Show (null);
-			designerMainWindow.Window.Run ();
+			DolphinApplication mainWindow = new DolphinApplication(pool);
+			mainWindow.Show(null);
+			mainWindow.Window.Run();
 		}
 	}
 }

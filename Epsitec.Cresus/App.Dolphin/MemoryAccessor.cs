@@ -3,7 +3,7 @@ using Epsitec.Common.Widgets;
 using Epsitec.Common.Support;
 using Epsitec.Common.Drawing;
 
-namespace Epsitec.Common.Designer.Dolphin
+namespace Epsitec.App.Dolphin
 {
 	/// <summary>
 	/// Permet d'afficher et de modifier de la mémoire émulée.
@@ -17,10 +17,10 @@ namespace Epsitec.Common.Designer.Dolphin
 			this.scroller.Dock = DockStyle.Left;
 			this.scroller.ValueChanged += new EventHandler(this.HandleScrollerValueChanged);
 
-			this.panel = new Panel(this);
+			this.panel = new MyWidgets.Panel(this);
 			this.panel.Dock = DockStyle.Fill;
 
-			this.fields = new List<TextFieldHexa>();
+			this.fields = new List<MyWidgets.TextFieldHexa>();
 		}
 
 		public MemoryAccessor(Widget embedder) : this()
@@ -34,7 +34,7 @@ namespace Epsitec.Common.Designer.Dolphin
 			{
 				this.scroller.ValueChanged -= new EventHandler(this.HandleScrollerValueChanged);
 
-				foreach (TextFieldHexa field in this.fields)
+				foreach (MyWidgets.TextFieldHexa field in this.fields)
 				{
 					field.HexaValueChanged -= new EventHandler(this.HandleFieldHexaValueChanged);
 				}
@@ -178,7 +178,7 @@ namespace Epsitec.Common.Designer.Dolphin
 			int index = 200;
 			for (int i=0; i<total; i++)
 			{
-				TextFieldHexa field = new TextFieldHexa(this.panel);
+				MyWidgets.TextFieldHexa field = new MyWidgets.TextFieldHexa(this.panel);
 				field.Index = i;
 				field.SetTabIndex(index++);
 				field.MemoryAccessor = this;
@@ -220,7 +220,7 @@ namespace Epsitec.Common.Designer.Dolphin
 			{
 				int address = this.MemoryStart+this.firstAddress+i;
 
-				TextFieldHexa field = this.fields[i];
+				MyWidgets.TextFieldHexa field = this.fields[i];
 				field.Enable = !this.memory.IsReadOnly(address);
 				field.Label = address.ToString("X3");
 				field.HexaValue = this.memory.ReadForDebug(address);
@@ -243,7 +243,7 @@ namespace Epsitec.Common.Designer.Dolphin
 					color = Color.FromRgb(1, 0, 0);
 				}
 
-				TextFieldHexa field = this.fields[i];
+				MyWidgets.TextFieldHexa field = this.fields[i];
 				field.BackColor = color;
 			}
 		}
@@ -329,7 +329,7 @@ namespace Epsitec.Common.Designer.Dolphin
 
 		private void HandleFieldHexaValueChanged(object sender)
 		{
-			TextFieldHexa field = sender as TextFieldHexa;
+			MyWidgets.TextFieldHexa field = sender as MyWidgets.TextFieldHexa;
 
 			int address = this.MemoryStart+this.firstAddress+field.Index;
 			this.memory.WriteWithDirty(address, field.HexaValue);
@@ -341,8 +341,8 @@ namespace Epsitec.Common.Designer.Dolphin
 		protected Memory memory;
 		protected string bank;
 		protected VScroller scroller;
-		protected Panel panel;
-		protected List<TextFieldHexa> fields;
+		protected MyWidgets.Panel panel;
+		protected List<MyWidgets.TextFieldHexa> fields;
 		protected int firstAddress;  // relatif dans la banque
 		protected int markPC;
 		protected bool ignoreChange;

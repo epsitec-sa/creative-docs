@@ -3,7 +3,7 @@ using Epsitec.Common.Widgets;
 using Epsitec.Common.Support;
 using Epsitec.Common.Drawing;
 
-namespace Epsitec.Common.Designer.Dolphin
+namespace Epsitec.App.Dolphin.MyWidgets
 {
 	/// <summary>
 	/// Dessine un trait noir.

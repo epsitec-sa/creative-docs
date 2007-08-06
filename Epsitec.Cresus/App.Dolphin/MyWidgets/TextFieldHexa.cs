@@ -3,7 +3,7 @@ using Epsitec.Common.Widgets;
 using Epsitec.Common.Support;
 using Epsitec.Common.Drawing;
 
-namespace Epsitec.Common.Designer.Dolphin
+namespace Epsitec.App.Dolphin.MyWidgets
 {
 	/// <summary>
 	/// Permet d'éditer une valeur hexadécimale.
@@ -314,7 +314,7 @@ namespace Epsitec.Common.Designer.Dolphin
 			this.OnHexaValueChanged();
 		}
 
-		private void HandleFieldIsFocusedChanged(object sender, Types.DependencyPropertyChangedEventArgs e)
+		private void HandleFieldIsFocusedChanged(object sender, Common.Types.DependencyPropertyChangedEventArgs e)
 		{
 			//	La ligne éditable a pris ou perdu le focus.
 			Widget widget = sender as Widget;
@@ -390,7 +390,7 @@ namespace Epsitec.Common.Designer.Dolphin
 			}
 		}
 
-		public event Support.EventHandler HexaValueChanged
+		public event Common.Support.EventHandler HexaValueChanged
 		{
 			add
 			{

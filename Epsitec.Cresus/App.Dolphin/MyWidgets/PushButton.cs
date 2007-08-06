@@ -3,7 +3,7 @@ using Epsitec.Common.Widgets;
 using Epsitec.Common.Support;
 using Epsitec.Common.Drawing;
 
-namespace Epsitec.Common.Designer.Dolphin
+namespace Epsitec.App.Dolphin.MyWidgets
 {
 	/// <summary>
 	/// Simule un bouton poussoir généralement carré.
@@ -22,7 +22,7 @@ namespace Epsitec.Common.Designer.Dolphin
 
 		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
 		{
-			IAdorner adorner = Widgets.Adorners.Factory.Active;
+			IAdorner adorner = Common.Widgets.Adorners.Factory.Active;
 			WidgetPaintState state = this.PaintState;
 
 			Rectangle rect = this.Client.Bounds;

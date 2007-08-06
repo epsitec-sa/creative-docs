@@ -3,7 +3,7 @@ using Epsitec.Common.Widgets;
 using Epsitec.Common.Support;
 using Epsitec.Common.Drawing;
 
-namespace Epsitec.Common.Designer.Dolphin
+namespace Epsitec.App.Dolphin
 {
 	/// <summary>
 	/// Memoire émulée du dauphin.
@@ -51,9 +51,9 @@ namespace Epsitec.Common.Designer.Dolphin
 				this.memory[i] = 0;
 			}
 
-			foreach (Digit digit in this.application.DisplayDigits)
+			foreach (MyWidgets.Digit digit in this.application.DisplayDigits)
 			{
-				digit.SegmentValue = (Digit.DigitSegment) 0;
+				digit.SegmentValue = (MyWidgets.Digit.DigitSegment) 0;
 			}
 		}
 
@@ -202,7 +202,7 @@ namespace Epsitec.Common.Designer.Dolphin
 				if (address >= Memory.PeriphFirstDigit && address <= Memory.PeriphLastDigit)  // l'un des 4 digits ?
 				{
 					int a = address - Memory.PeriphFirstDigit;
-					this.application.DisplayDigits[a].SegmentValue = (Digit.DigitSegment) this.memory[address];
+					this.application.DisplayDigits[a].SegmentValue = (MyWidgets.Digit.DigitSegment) this.memory[address];
 				}
 			}
 		}

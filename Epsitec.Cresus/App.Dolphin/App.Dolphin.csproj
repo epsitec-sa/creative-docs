@@ -38,17 +38,37 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AbstractProcessor.cs" />
     <Compile Include="DolphinApplication.cs" />
+    <Compile Include="Geometry.cs" />
+    <Compile Include="Memory.cs" />
+    <Compile Include="MemoryAccessor.cs" />
+    <Compile Include="Misc.cs" />
+    <Compile Include="MyWidgets\Digit.cs" />
+    <Compile Include="MyWidgets\Led.cs" />
+    <Compile Include="MyWidgets\Line.cs" />
+    <Compile Include="MyWidgets\MainPanel.cs" />
+    <Compile Include="MyWidgets\Panel.cs" />
+    <Compile Include="MyWidgets\PushButton.cs" />
+    <Compile Include="MyWidgets\Switch.cs" />
+    <Compile Include="MyWidgets\TextFieldHexa.cs" />
+    <Compile Include="ProcessorGeneric.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.ico" />
+    <EmbeddedResource Include="Images\FontUnderline.icon" />
+    <EmbeddedResource Include="Images\FontItalic.icon" />
+    <EmbeddedResource Include="Images\FontBold.icon" />
+    <EmbeddedResource Include="Images\Save.icon" />
+    <EmbeddedResource Include="Images\Open.icon" />
+    <EmbeddedResource Include="Images\New.icon" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Common.Designer\Common.Designer.csproj">
-      <Project>{A70AD57E-0E80-48D7-8583-836C4758669D}</Project>
-      <Name>Common.Designer</Name>
+    <ProjectReference Include="..\Common.Dialogs\Common.Dialogs.csproj">
+      <Project>{560DFD49-3052-4F41-A4C3-6216E6135DC9}</Project>
+      <Name>Common.Dialogs</Name>
     </ProjectReference>
     <ProjectReference Include="..\Common.Drawing.Agg\Common.Drawing.Agg.csproj">
       <Project>{7D73AD35-D078-4B4C-AF30-434C6A377058}</Project>
