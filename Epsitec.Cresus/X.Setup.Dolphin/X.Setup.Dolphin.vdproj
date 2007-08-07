@@ -153,6 +153,12 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_170D98789BC04CCDB563061349B31586"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_1B0047C1776732573FBA85518AEB14D7"
         "OwnerKey" = "8:_668DB15D007B366C45D217CAF6C05FDC"
         "MsmSig" = "8:_UNDEFINED"
@@ -293,6 +299,12 @@
         {
         "MsmKey" = "8:_49DF676ECE7D954FA95E1BCB62857041"
         "OwnerKey" = "8:_0E3778656E9EE8A4A1A2CB9B37FF4696"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_5C624A57638448AC97AADE1268557B21"
+        "OwnerKey" = "8:_99A1ECCB35B241B391BC9274DB770594"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -501,12 +513,6 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_A340CF8BB5AC469B82591699B881984D"
-        "OwnerKey" = "8:_99A1ECCB35B241B391BC9274DB770594"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_A34BDE605BB2667DD8C3430FEC5D4C23"
         "OwnerKey" = "8:_DBBCE4CC4660607B51A1AA19544ED70F"
         "MsmSig" = "8:_UNDEFINED"
@@ -634,6 +640,12 @@
         "Entry"
         {
         "MsmKey" = "8:_F3D0A065778D409480EA07CA51D62CE1"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_F705023D38BA4A1B9C4F6EA73E7C9B63"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -866,6 +878,17 @@
         "PrivateKeyFile" = "8:"
         "TimeStampServer" = "8:"
         "InstallerBootstrapper" = "3:2"
+            "BootstrapperCfg:{63ACBE69-63AA-4F98-B2B6-99F9E24495F2}"
+            {
+            "Enabled" = "11:TRUE"
+            "PromptEnabled" = "11:TRUE"
+            "PrerequisitesLocation" = "2:1"
+            "Url" = "8:"
+            "ComponentsUrl" = "8:"
+                "Items"
+                {
+                }
+            }
         }
     }
     "Deployable"
@@ -986,6 +1009,26 @@
             "Register" = "3:1"
             "Exclude" = "11:FALSE"
             "IsDependency" = "11:TRUE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_170D98789BC04CCDB563061349B31586"
+            {
+            "SourcePath" = "8:D:\\Cresus\\Epsitec.Cresus\\X.Setup.Dolphin\\Dolphin.ico"
+            "TargetName" = "8:Dolphin.ico"
+            "Tag" = "8:"
+            "Folder" = "8:_EE585F4A4E9341C0834D01A0F2F0DCF6"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
             "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_1B0047C1776732573FBA85518AEB14D7"
@@ -1637,6 +1680,26 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_F705023D38BA4A1B9C4F6EA73E7C9B63"
+            {
+            "SourcePath" = "8:D:\\Cresus\\Epsitec.Cresus\\X.Setup.Dolphin\\install1.bmp"
+            "TargetName" = "8:install1.bmp"
+            "Tag" = "8:"
+            "Folder" = "8:_EE585F4A4E9341C0834D01A0F2F0DCF6"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
             "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_FCCF3FFDD0AF3BEC39605D992C8B3A58"
             {
             "AssemblyRegister" = "3:1"
@@ -1724,7 +1787,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Simulateur de Dauphin"
         "ProductCode" = "8:{AF1751C3-076C-4554-8614-B17CA336CEF6}"
-        "PackageCode" = "8:{C070A2B2-506D-42C4-9CA7-1BC44DA9DE8C}"
+        "PackageCode" = "8:{4C455150-05AE-44DC-930F-F910AD1482B2}"
         "UpgradeCode" = "8:{3E07DF4F-1854-45A8-86B8-F494ADA98964}"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
@@ -1740,7 +1803,7 @@
         "Keywords" = "8:"
         "ARPCOMMENTS" = "8:Simulateur de Dauphin"
         "ARPURLINFOABOUT" = "8:"
-        "ARPPRODUCTICON" = "8:"
+        "ARPPRODUCTICON" = "8:_170D98789BC04CCDB563061349B31586"
         "ARPIconIndex" = "3:0"
         "SearchPath" = "8:"
         "UseSystemSearchPath" = "11:TRUE"
@@ -1884,7 +1947,8 @@
                             "Type" = "3:8"
                             "ContextData" = "8:Bitmap"
                             "Attributes" = "3:4"
-                            "Setting" = "3:1"
+                            "Setting" = "3:2"
+                            "Value" = "8:_F705023D38BA4A1B9C4F6EA73E7C9B63"
                             "UsePlugInResources" = "11:TRUE"
                             }
                         }
@@ -1906,7 +1970,8 @@
                             "Type" = "3:8"
                             "ContextData" = "8:Bitmap"
                             "Attributes" = "3:4"
-                            "Setting" = "3:1"
+                            "Setting" = "3:2"
+                            "Value" = "8:_F705023D38BA4A1B9C4F6EA73E7C9B63"
                             "UsePlugInResources" = "11:TRUE"
                             }
                             "CopyrightWarning"
@@ -1954,7 +2019,8 @@
                             "Type" = "3:8"
                             "ContextData" = "8:Bitmap"
                             "Attributes" = "3:4"
-                            "Setting" = "3:1"
+                            "Setting" = "3:2"
+                            "Value" = "8:_F705023D38BA4A1B9C4F6EA73E7C9B63"
                             "UsePlugInResources" = "11:TRUE"
                             }
                             "InstallAllUsersVisible"
@@ -2004,7 +2070,8 @@
                             "Type" = "3:8"
                             "ContextData" = "8:Bitmap"
                             "Attributes" = "3:4"
-                            "Setting" = "3:1"
+                            "Setting" = "3:2"
+                            "Value" = "8:_F705023D38BA4A1B9C4F6EA73E7C9B63"
                             "UsePlugInResources" = "11:TRUE"
                             }
                             "ShowProgress"
@@ -2048,7 +2115,8 @@
                             "Type" = "3:8"
                             "ContextData" = "8:Bitmap"
                             "Attributes" = "3:4"
-                            "Setting" = "3:1"
+                            "Setting" = "3:2"
+                            "Value" = "8:_F705023D38BA4A1B9C4F6EA73E7C9B63"
                             "UsePlugInResources" = "11:TRUE"
                             }
                             "UpdateText"
@@ -2098,7 +2166,8 @@
                             "Type" = "3:8"
                             "ContextData" = "8:Bitmap"
                             "Attributes" = "3:4"
-                            "Setting" = "3:1"
+                            "Setting" = "3:2"
+                            "Value" = "8:_F705023D38BA4A1B9C4F6EA73E7C9B63"
                             "UsePlugInResources" = "11:TRUE"
                             }
                         }
@@ -2129,7 +2198,8 @@
                             "Type" = "3:8"
                             "ContextData" = "8:Bitmap"
                             "Attributes" = "3:4"
-                            "Setting" = "3:1"
+                            "Setting" = "3:2"
+                            "Value" = "8:_F705023D38BA4A1B9C4F6EA73E7C9B63"
                             "UsePlugInResources" = "11:TRUE"
                             }
                             "ShowProgress"
@@ -2173,7 +2243,8 @@
                             "Type" = "3:8"
                             "ContextData" = "8:Bitmap"
                             "Attributes" = "3:4"
-                            "Setting" = "3:1"
+                            "Setting" = "3:2"
+                            "Value" = "8:_F705023D38BA4A1B9C4F6EA73E7C9B63"
                             "UsePlugInResources" = "11:TRUE"
                             }
                             "CopyrightWarning"
@@ -2221,7 +2292,8 @@
                             "Type" = "3:8"
                             "ContextData" = "8:Bitmap"
                             "Attributes" = "3:4"
-                            "Setting" = "3:1"
+                            "Setting" = "3:2"
+                            "Value" = "8:_F705023D38BA4A1B9C4F6EA73E7C9B63"
                             "UsePlugInResources" = "11:TRUE"
                             }
                         }
@@ -2243,7 +2315,8 @@
                             "Type" = "3:8"
                             "ContextData" = "8:Bitmap"
                             "Attributes" = "3:4"
-                            "Setting" = "3:1"
+                            "Setting" = "3:2"
+                            "Value" = "8:_F705023D38BA4A1B9C4F6EA73E7C9B63"
                             "UsePlugInResources" = "11:TRUE"
                             }
                         }
@@ -2253,11 +2326,11 @@
         }
         "MergeModule"
         {
-            "{CEE29DC0-9FBA-4B99-8D47-5BC643D9B626}:_99A1ECCB35B241B391BC9274DB770594"
+            "{CEE29DC0-9FBA-4B99-8D47-5BC643D9B626}:_5C624A57638448AC97AADE1268557B21"
             {
             "UseDynamicProperties" = "11:TRUE"
-            "IsDependency" = "11:FALSE"
-            "SourcePath" = "8:C:\\Program Files (x86)\\Common Files\\Merge Modules\\Microsoft_VC80_CRT_x86.msm"
+            "IsDependency" = "11:TRUE"
+            "SourcePath" = "8:policy_8_0_microsoft_vc80_crt_x86.msm"
                 "Properties"
                 {
                 }
@@ -2267,11 +2340,11 @@
             "Feature" = "8:"
             "IsolateTo" = "8:"
             }
-            "{CEE29DC0-9FBA-4B99-8D47-5BC643D9B626}:_A340CF8BB5AC469B82591699B881984D"
+            "{CEE29DC0-9FBA-4B99-8D47-5BC643D9B626}:_99A1ECCB35B241B391BC9274DB770594"
             {
             "UseDynamicProperties" = "11:TRUE"
-            "IsDependency" = "11:TRUE"
-            "SourcePath" = "8:policy_8_0_microsoft_vc80_crt_x86.msm"
+            "IsDependency" = "11:FALSE"
+            "SourcePath" = "8:C:\\Program Files (x86)\\Common Files\\Merge Modules\\Microsoft_VC80_CRT_x86.msm"
                 "Properties"
                 {
                 }
