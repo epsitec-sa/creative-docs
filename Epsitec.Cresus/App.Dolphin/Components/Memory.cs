@@ -37,6 +37,23 @@ namespace Epsitec.App.Dolphin.Components
 			}
 		}
 
+		public bool IsEmptyRam
+		{
+			//	Retourne true si la Ram est entièrement vide.
+			get
+			{
+				for (int i=Memory.RamBase; i<Memory.RamBase+Memory.RamLength; i++)
+				{
+					if (this.memory[i] != 0)
+					{
+						return false;
+					}
+				}
+
+				return true;
+			}
+		}
+
 		public void ClearRam()
 		{
 			//	Vide toute le mémoire Ram.
@@ -172,7 +189,7 @@ namespace Epsitec.App.Dolphin.Components
 		public void WriteWithDirty(int address, int data)
 		{
 			//	Ecrit une valeur en mémoire et/ou dans un périphérique et
-			//	gère le bit dirty.
+			//	gère l'état dirty.
 			if (!this.IsReadOnly(address) && data != this.ReadForDebug(address))
 			{
 				this.Write(address, data);

@@ -1342,6 +1342,14 @@ namespace Epsitec.App.Dolphin
 			}
 			set
 			{
+				//	Si on veut considérer le programme comme devant être enregistré et que
+				//	la Ram est entièrement vide, ce n'est pas nécessaire, car la sérialisation
+				//	n'aura aucun programme à sauvegarder !
+				if (value == true && this.memory.IsEmptyRam)
+				{
+					return;
+				}
+
 				if (this.dirty != value)
 				{
 					this.dirty = value;
@@ -1554,6 +1562,8 @@ namespace Epsitec.App.Dolphin
 			this.ips = button.Index;
 			this.UpdateClockButtons();
 			this.ProcessorClockAdjust();
+
+			this.Dirty = true;
 		}
 
 		private void HandleSwitchStepClicked(object sender, MessageEventArgs e)
@@ -1574,6 +1584,8 @@ namespace Epsitec.App.Dolphin
 					this.ProcessorFeedback();
 				}
 			}
+
+			this.Dirty = true;
 		}
 
 		private void HandleSwitchDataReadWriteClicked(object sender, MessageEventArgs e)
