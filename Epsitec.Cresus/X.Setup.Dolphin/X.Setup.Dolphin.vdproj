@@ -627,6 +627,12 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_8F86B6354C6440E9B0751E7EC7CC3AB1"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_A34BDE605BB2667DD8C3430FEC5D4C23"
         "OwnerKey" = "8:_DBBCE4CC4660607B51A1AA19544ED70F"
         "MsmSig" = "8:_UNDEFINED"
@@ -659,6 +665,12 @@
         {
         "MsmKey" = "8:_A83D1CD25B6534F1EC9F72B962C28929"
         "OwnerKey" = "8:_3E380C0810E8469DA841F5F16CFB4733"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_C087D5ABEB59407084606F0DEB10C571"
+        "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -1015,6 +1027,27 @@
         "PrivateKeyFile" = "8:"
         "TimeStampServer" = "8:"
         "InstallerBootstrapper" = "3:2"
+            "BootstrapperCfg:{63ACBE69-63AA-4F98-B2B6-99F9E24495F2}"
+            {
+            "Enabled" = "11:TRUE"
+            "PromptEnabled" = "11:TRUE"
+            "PrerequisitesLocation" = "2:1"
+            "Url" = "8:"
+            "ComponentsUrl" = "8:"
+                "Items"
+                {
+                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:Microsoft.Net.Framework.2.0"
+                    {
+                    "Name" = "8:.NET Framework 2.0"
+                    "ProductCode" = "8:Microsoft.Net.Framework.2.0"
+                    }
+                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:Microsoft.Windows.Installer.3.1"
+                    {
+                    "Name" = "8:Windows Installer 3.1"
+                    "ProductCode" = "8:Microsoft.Windows.Installer.3.1"
+                    }
+                }
+            }
         }
         "Release"
         {
@@ -1607,6 +1640,26 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_8F86B6354C6440E9B0751E7EC7CC3AB1"
+            {
+            "SourcePath" = "8:C:\\Program Files (x86)\\Common Files\\Merge Modules\\Microsoft_VC80_CRT_x86.msm"
+            "TargetName" = "8:Microsoft_VC80_CRT_x86.msm"
+            "Tag" = "8:"
+            "Folder" = "8:_EE585F4A4E9341C0834D01A0F2F0DCF6"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
             "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_A34BDE605BB2667DD8C3430FEC5D4C23"
             {
             "AssemblyRegister" = "3:1"
@@ -1667,6 +1720,26 @@
             "Register" = "3:1"
             "Exclude" = "11:FALSE"
             "IsDependency" = "11:TRUE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_C087D5ABEB59407084606F0DEB10C571"
+            {
+            "SourcePath" = "8:..\\External\\FreeImage.dll"
+            "TargetName" = "8:FreeImage.dll"
+            "Tag" = "8:"
+            "Folder" = "8:_EE585F4A4E9341C0834D01A0F2F0DCF6"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
             "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_C32B9432DEF4437DA1EB90F4F0D599CA"
@@ -1962,7 +2035,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Simulateur de Dauphin"
         "ProductCode" = "8:{AF1751C3-076C-4554-8614-B17CA336CEF6}"
-        "PackageCode" = "8:{1E0F0098-5AA3-4D01-9BB9-42B8547E8D0B}"
+        "PackageCode" = "8:{7FC7A2F6-F7B1-4B28-8C8E-811B16E76B54}"
         "UpgradeCode" = "8:{3E07DF4F-1854-45A8-86B8-F494ADA98964}"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
