@@ -45,7 +45,7 @@ namespace Epsitec.Common.Support.CodeGenerators
 		/// <param name="visibility">The code visibility.</param>
 		public CodeAttributes(CodeVisibility visibility)
 		{
-			this.accessibility = CodeAccessibility.Final;
+			this.accessibility = CodeAccessibility.Default;
 			this.visibility = visibility;
 			this.isReadonly = false;
 			this.isNew = false;
@@ -74,7 +74,7 @@ namespace Epsitec.Common.Support.CodeGenerators
 		/// <param name="visibility">The code visibility.</param>
 		/// <param name="attributes">One or more attributes (such as <see cref="CodeAttributes.ReadOnlyAttribute"/> or <see cref="CodeAttributes.NewAttribute"/>).</param>
 		public CodeAttributes(CodeVisibility visibility, params object[] attributes)
-			: this (visibility, CodeAccessibility.Final, attributes)
+			: this (visibility, CodeAccessibility.Default, attributes)
 		{
 		}
 
@@ -322,6 +322,7 @@ namespace Epsitec.Common.Support.CodeGenerators
 					tokens.Add (CodeFormatter.Strings.Keywords.Const);
 					break;
 
+				case CodeAccessibility.Default:
 				case CodeAccessibility.Final:
 					break;
 				

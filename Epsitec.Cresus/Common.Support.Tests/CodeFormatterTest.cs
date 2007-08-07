@@ -19,7 +19,7 @@ namespace Epsitec.Common.Support
 
 			formatter.WriteBeginNamespace ("Test");
 
-			formatter.WriteBeginClass (new CodeAttributes (CodeVisibility.Public, CodeAccessibility.Sealed, CodeAttributes.PartialAttribute), "Class1");
+			formatter.WriteBeginClass (new CodeAttributes (CodeVisibility.Public, CodeAccessibility.Default, CodeAttributes.PartialAttribute), "Class1");
 
 			formatter.WriteBeginMethod (new CodeAttributes (CodeVisibility.Public), "Class1(int value)");
 			formatter.WriteCodeLine ("this.value = value;");

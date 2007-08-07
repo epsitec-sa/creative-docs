@@ -231,6 +231,10 @@ namespace Epsitec.Common.Support
 
 				if (module != null)
 				{
+					if (this.defaultModulePath == null)
+					{
+						this.defaultModulePath = module.ModuleInfo.Path;
+					}
 					if (this.defaultModuleId == -1)
 					{
 						this.defaultModuleId = module.ModuleInfo.Id;

@@ -15,38 +15,83 @@ namespace Epsitec.Common.Support.CodeGenerators
 			this.resourceManager = resourceManager;
 			this.resourceManagerPool = this.resourceManager.Pool;
 			this.resourceModuleInfo = this.resourceManagerPool.GetModuleInfo (this.resourceManager.DefaultModulePath);
+			this.sourceNamespace = this.resourceModuleInfo.SourceNamespace;
 		}
 
 
-		public string RootNamespace
+		public string SourceNamespace
 		{
 			get
 			{
-				//	TODO: the root namespace should be stored in the module information
-
-				return "Epsitec";
-			}
-		}
-
-		private string ModuleNamespace
-		{
-			get
-			{
-				return this.resourceModuleInfo.FullId.Name;
+				return this.sourceNamespace;
 			}
 		}
 
 		
-		public void EmitEntity(System.Text.StringBuilder buffer, StructuredType type)
+		public void EmitEntity(CodeFormatter formatter, StructuredType type)
 		{
+			string className = EntityCodeGenerator.CreateEntityIdentifier (type.Caption.Name);
+			List<string> classSpecifiers = new List<string> ();
+
+			//	Define the base type :
+
+			if (type.BaseTypeId.IsValid)
+			{
+				classSpecifiers.Add (this.CreateEntityFullName (type.BaseTypeId));
+			}
+			else
+			{
+				classSpecifiers.Add (string.Concat (Keywords.Global, "::", Keywords.AbstractEntity));
+			}
+
+			foreach (Druid interfaceId in type.InterfaceIds)
+			{
+				classSpecifiers.Add (this.CreateEntityFullName (interfaceId));
+			}
 			
+			formatter.WriteBeginNamespace (EntityCodeGenerator.CreateEntityNamespace (this.SourceNamespace));
+			formatter.WriteBeginClass (EntityCodeGenerator.ClassAttributes, className, classSpecifiers);
+			formatter.WriteEndClass ();
+			formatter.WriteEndNamespace ();
+		}
+
+		private static string CreateEntityIdentifier(string name)
+		{
+			return string.Concat (name, Keywords.EntitySuffix);
+		}
+
+		private static string CreateEntityNamespace(string name)
+		{
+			return string.Concat (name, ".", Keywords.Entities);
+		}
+
+		private string CreateEntityFullName(Druid id)
+		{
+			Caption caption = this.resourceManager.GetCaption (id);
+			IList<ResourceModuleInfo> infos = this.resourceManagerPool.FindModuleInfos (id.Module);
+			
+			System.Diagnostics.Debug.Assert (infos.Count > 0);
+			System.Diagnostics.Debug.Assert (caption != null);
+			System.Diagnostics.Debug.Assert (!string.IsNullOrEmpty (infos[0].SourceNamespace));
+
+			return string.Concat (Keywords.Global, "::", EntityCodeGenerator.CreateEntityNamespace (infos[0].SourceNamespace), ".", EntityCodeGenerator.CreateEntityIdentifier (caption.Name));
 		}
 
 
 
+		private static readonly CodeAttributes ClassAttributes = new CodeAttributes (CodeVisibility.Public, CodeAccessibility.Default, CodeAttributes.PartialAttribute);
+
+		private static class Keywords
+		{
+			public const string Global = "global";
+			public const string Entities = "Entities";
+			public const string EntitySuffix = "Entity";
+			public const string AbstractEntity = "Epsitec.Common.Support.AbstractEntity";
+		}
 
 		private ResourceManager resourceManager;
 		private ResourceManagerPool resourceManagerPool;
 		private ResourceModuleInfo resourceModuleInfo;
+		private string sourceNamespace;
 	}
 }

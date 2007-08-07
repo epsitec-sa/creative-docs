@@ -11,6 +11,11 @@ namespace Epsitec.Common.Support.CodeGenerators
 	public enum CodeAccessibility : byte
 	{
 		/// <summary>
+		/// The code item has its default accessibility.
+		/// </summary>
+		Default,
+
+		/// <summary>
 		/// The code item is declared final, which means it cannot be overridden
 		/// by any other method or property.
 		/// </summary>

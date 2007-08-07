@@ -274,6 +274,11 @@ namespace Epsitec.Common.Support
 		/// <returns>The module information or <c>null</c>.</returns>
 		public ResourceModuleInfo GetModuleInfo(string modulePath)
 		{
+			if (string.IsNullOrEmpty (modulePath))
+			{
+				return null;
+			}
+
 			ResourceModuleInfo info;
 
 			modulePath = this.GetRootRelativePath (modulePath);

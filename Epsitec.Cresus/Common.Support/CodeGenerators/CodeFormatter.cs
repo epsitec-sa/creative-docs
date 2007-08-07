@@ -117,6 +117,43 @@ namespace Epsitec.Common.Support.CodeGenerators
 			this.WriteBeginBlock ();
 		}
 
+		public void WriteBeginClass(CodeAttributes attributes, string code, string specifiers)
+		{
+			if (specifiers != null)
+			{
+				specifiers = specifiers.Trim ();
+
+				if (specifiers.Length > 0)
+				{
+					code = string.Concat (code, " : ", specifiers);
+				}
+			}
+
+			this.WriteBeginClass (attributes, code);
+		}
+
+		public void WriteBeginClass(CodeAttributes attributes, string code, IEnumerable<string> specifiers)
+		{
+			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
+
+			foreach (string item in specifiers)
+			{
+				string specifier = item == null ? "" : item.Trim ();
+				
+				if (specifier.Length > 0)
+				{
+					if (buffer.Length > 0)
+					{
+						buffer.Append (", ");
+					}
+
+					buffer.Append (specifier);
+				}
+			}
+
+			this.WriteBeginClass (attributes, code, buffer.ToString ());
+		}
+
 		public void WriteEndClass()
 		{
 			this.PopElementState (ElementState.Class);
