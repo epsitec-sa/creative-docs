@@ -108,33 +108,6 @@ namespace Epsitec.Common.Drawing
 			}
 		}
 
-		public Color							Opposite
-		{
-			get
-			{
-				//	Calcule la couleur opposée pour la mise en évidence.
-				double h, s, v;
-				Color color = new Color ();
-				this.GetHsv (out h, out s, out v);
-				
-				if ((s < 0.2) &&  // gris ou presque ?
-					(Color.captionColor.IsValid))
-
-				{
-					color = Color.captionColor;
-				}
-				else
-				{
-					color.R = 1.0-color.R;
-					color.G = 1.0-color.G;
-					color.B = 1.0-color.B;  // couleur opposée
-				}
-				color.A = 1.0;
-				return color;
-			}
-		}
-		
-		
 		public static Color						Empty
 		{
 			get

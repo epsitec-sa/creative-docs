@@ -333,7 +333,7 @@ namespace Epsitec.Common.Widgets
 				{
 					rect.Deflate (1, 1);
 					graphics.AddRectangle (rect);
-					graphics.RenderSolid (this.Color.Basic.Opposite);
+					graphics.RenderSolid (ColorSample.GetHiliteColor (this.Color.Basic));
 				}
 
 				if ((this.IsFocused) &&
@@ -363,7 +363,7 @@ namespace Epsitec.Common.Widgets
 					graphics.RenderSolid (this.dragInfo.Color.Basic);
 
 					graphics.AddCircle (rect.Center, radius);
-					graphics.RenderSolid (this.dragInfo.Color.Basic.Opposite);
+					graphics.RenderSolid (ColorSample.GetHiliteColor (this.dragInfo.Color.Basic));
 				}
 			}
 			else
@@ -372,6 +372,33 @@ namespace Epsitec.Common.Widgets
 				graphics.AddRectangle (rect);
 				graphics.RenderSolid (adorner.ColorBorder);
 			}
+		}
+
+		private static Drawing.Color GetHiliteColor(Drawing.Color color)
+		{
+			//	Trouve une couleur qui contraste avec la couleur spécifiée,
+			//	pour faire une mise en évidence.
+
+			double h, s, v;
+			color.GetHsv (out h, out s, out v);
+
+			if ((s * color.A < 0.2) &&
+				(v > 0.8 * color.A))
+			{
+				//	Very near to white; we can't use a white border
+				//	for the hilite :
+
+				color = Adorners.Factory.Active.ColorCaption;
+			}
+			else
+			{
+				color.R = 1.0;
+				color.G = 1.0;
+				color.B = 1.0;
+			}
+			
+			color.A = 1.0;
+			return color;
 		}
 		
 		private bool ProcessKeyDown(KeyCode key)
