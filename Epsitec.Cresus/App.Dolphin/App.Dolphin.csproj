@@ -7,7 +7,7 @@
     <ProjectGuid>{C7F4F507-E056-46CB-B403-9EC194A0AF0F}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>App.Dolphin</RootNamespace>
+    <RootNamespace>Epsitec.App.Dolphin</RootNamespace>
     <AssemblyName>App.Dolphin</AssemblyName>
     <ApplicationIcon>App.ico</ApplicationIcon>
   </PropertyGroup>

@@ -18,6 +18,9 @@ namespace Epsitec.App.Dolphin
 
 			string execPath = Epsitec.Common.Support.Globals.Directories.ExecutableRoot;
 
+			List<string> paths = new List<string>();
+			paths.Add(System.IO.Path.Combine(execPath, "Resources"));
+
 			Epsitec.Common.Support.ResourceManagerPool pool = new Epsitec.Common.Support.ResourceManagerPool("App.Dolphin");
 			pool.DefaultPrefix = "file";
 			pool.SetupDefaultRootPaths();
@@ -25,6 +28,7 @@ namespace Epsitec.App.Dolphin
 			//	A cause des différents widgets de MyWidgets, il est important de ne pas changer
 			//	de look. LookSimply affiche des choses simples avec des cadres noirs.
 			Epsitec.Common.Widgets.Adorners.Factory.SetActive("LookSimply");
+			Epsitec.Common.Support.Implementation.FileProvider.DefineGlobalProbingPath(string.Join(";", paths.ToArray()));
 
 			DolphinApplication mainWindow = new DolphinApplication(pool);
 			mainWindow.Show(null);
