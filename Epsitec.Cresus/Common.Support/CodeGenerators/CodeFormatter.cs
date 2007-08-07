@@ -366,7 +366,7 @@ namespace Epsitec.Common.Support.CodeGenerators
 			}
 			else if (this.IsInClass)
 			{
-				this.isAbstract = (attributes.Accessibility == CodeAccessibility.Abstract);
+				this.isAbstract = (attributes.Accessibility == CodeAccessibility.Abstract) || (attributes.IsPartialDefinition);
 			}
 			else
 			{
@@ -377,6 +377,30 @@ namespace Epsitec.Common.Support.CodeGenerators
 		private void WriteBeginBlockOrSemicolumnIfAbstract(CodeAttributes attributes, string code)
 		{
 			this.UpdateIsAbstract (attributes);
+
+			if ((this.elementStates.Count > 0) &&
+				(this.elementStates.Peek () == ElementState.Method) &&
+				(attributes.IsPartial))
+			{
+				if (attributes.Visibility == CodeVisibility.Private)
+				{
+					//	OK
+				}
+				else
+				{
+					throw new System.InvalidOperationException (string.Format ("Partial method defined with {0} visibility", attributes.Visibility));
+				}
+				
+				if ((attributes.Accessibility == CodeAccessibility.Final) ||
+					(attributes.Accessibility == CodeAccessibility.Static))
+				{
+					//	OK
+				}
+				else
+				{
+					throw new System.InvalidOperationException (string.Format ("Partial method defined with {0} accessibility", attributes.Accessibility));
+				}
+			}
 
 			if (this.IsInInterface)
 			{

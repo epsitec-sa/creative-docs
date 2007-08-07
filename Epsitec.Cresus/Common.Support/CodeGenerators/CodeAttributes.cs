@@ -22,6 +22,7 @@ namespace Epsitec.Common.Support.CodeGenerators
 			this.isReadonly = attributes.isReadonly;
 			this.isNew = attributes.isNew;
 			this.isPartial = attributes.isPartial;
+			this.isPartialDefinition = attributes.isPartialDefinition;
 		}
 
 		/// <summary>
@@ -35,6 +36,7 @@ namespace Epsitec.Common.Support.CodeGenerators
 			this.isReadonly = false;
 			this.isNew = false;
 			this.isPartial = false;
+			this.isPartialDefinition = false;
 		}
 
 		/// <summary>
@@ -48,13 +50,14 @@ namespace Epsitec.Common.Support.CodeGenerators
 			this.isReadonly = false;
 			this.isNew = false;
 			this.isPartial = false;
+			this.isPartialDefinition = false;
 		}
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="CodeAttributes"/> struct.
 		/// </summary>
-		/// <param name="accessibility">The code accessibility.</param>
 		/// <param name="visibility">The code visibility.</param>
+		/// <param name="accessibility">The code accessibility.</param>
 		public CodeAttributes(CodeVisibility visibility, CodeAccessibility accessibility)
 		{
 			this.accessibility = accessibility;
@@ -62,13 +65,24 @@ namespace Epsitec.Common.Support.CodeGenerators
 			this.isReadonly = false;
 			this.isNew = false;
 			this.isPartial = false;
+			this.isPartialDefinition = false;
 		}
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="CodeAttributes"/> struct.
 		/// </summary>
-		/// <param name="accessibility">The code accessibility.</param>
 		/// <param name="visibility">The code visibility.</param>
+		/// <param name="attributes">One or more attributes (such as <see cref="CodeAttributes.ReadOnlyAttribute"/> or <see cref="CodeAttributes.NewAttribute"/>).</param>
+		public CodeAttributes(CodeVisibility visibility, params object[] attributes)
+			: this (visibility, CodeAccessibility.Final, attributes)
+		{
+		}
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="CodeAttributes"/> struct.
+		/// </summary>
+		/// <param name="visibility">The code visibility.</param>
+		/// <param name="accessibility">The code accessibility.</param>
 		/// <param name="attributes">One or more attributes (such as <see cref="CodeAttributes.ReadOnlyAttribute"/> or <see cref="CodeAttributes.NewAttribute"/>).</param>
 		public CodeAttributes(CodeVisibility visibility, CodeAccessibility accessibility, params object[] attributes)
 		{
@@ -77,6 +91,7 @@ namespace Epsitec.Common.Support.CodeGenerators
 			this.isReadonly = false;
 			this.isNew = false;
 			this.isPartial = false;
+			this.isPartialDefinition = false;
 
 			foreach (object attribute in attributes)
 			{
@@ -91,6 +106,11 @@ namespace Epsitec.Common.Support.CodeGenerators
 				else if (attribute == CodeAttributes.PartialAttribute)
 				{
 					this.isPartial = true;
+				}
+				else if (attribute == CodeAttributes.PartialDefinitionAttribute)
+				{
+					this.isPartial = true;
+					this.isPartialDefinition = true;
 				}
 			}
 		}
@@ -161,6 +181,53 @@ namespace Epsitec.Common.Support.CodeGenerators
 		}
 
 		/// <summary>
+		/// Gets a value indicating whether the attribute should .
+		/// </summary>
+		/// <value>
+		/// 	<c>true</c> if this instance is partial definition; otherwise, <c>false</c>.
+		/// </value>
+		public bool								IsPartialDefinition
+		{
+			get
+			{
+				return this.isPartialDefinition;
+			}
+		}
+
+		/// <summary>
+		/// Gets the attributes used to initialize this instance.
+		/// </summary>
+		/// <value>The attributes.</value>
+		public object[]							Attributes
+		{
+			get
+			{
+				List<object> attributes = new List<object> ();
+
+				if (this.IsReadonly)
+				{
+					attributes.Add (CodeAttributes.ReadOnlyAttribute);
+				}
+				if (this.IsNew)
+				{
+					attributes.Add (CodeAttributes.NewAttribute);
+				}
+				
+				if (this.IsPartialDefinition)
+				{
+					attributes.Add (CodeAttributes.PartialDefinitionAttribute);
+				}
+				else if (this.IsPartial)
+				{
+					attributes.Add (CodeAttributes.PartialAttribute);
+				}
+
+				return attributes.ToArray ();
+			}
+		}
+
+
+		/// <summary>
 		/// Gets the <c>readonly</c> attribute constant which can be passed to the
 		/// <see cref="CodeAttributes"/> constructor.
 		/// </summary>
@@ -177,6 +244,14 @@ namespace Epsitec.Common.Support.CodeGenerators
 		/// <see cref="CodeAttributes"/> constructor.
 		/// </summary>
 		public static readonly object			PartialAttribute = new object ();
+
+		/// <summary>
+		/// Gets the <c>partial</c> attribute constant which can be passed to the
+		/// <see cref="CodeAttributes"/> constructor. This is similar to the
+		/// <see cref="PartialAttribute"/> constant and can be used with methods
+		/// which have no body.
+		/// </summary>
+		public static readonly object			PartialDefinitionAttribute = new object ();
 
 		/// <summary>
 		/// Gets the default <see cref="CodeAttributes"/> instance.
@@ -294,5 +369,6 @@ namespace Epsitec.Common.Support.CodeGenerators
 		private bool							isReadonly;
 		private bool							isNew;
 		private bool							isPartial;
+		private bool							isPartialDefinition;
 	}
 }

@@ -19,20 +19,32 @@ namespace Epsitec.Common.Support
 
 			formatter.WriteBeginNamespace ("Test");
 
-			formatter.WriteBeginClass (new CodeAttributes (CodeVisibility.Public, CodeAccessibility.Sealed), "Class1");
+			formatter.WriteBeginClass (new CodeAttributes (CodeVisibility.Public, CodeAccessibility.Sealed, CodeAttributes.PartialAttribute), "Class1");
 
 			formatter.WriteBeginMethod (new CodeAttributes (CodeVisibility.Public), "Class1(int value)");
 			formatter.WriteCodeLine ("this.value = value;");
 			formatter.WriteEndMethod ();
 
-			formatter.WriteBeginProperty (new CodeAttributes (CodeVisibility.Public), "int Value");
+			formatter.WriteBeginMethod (new CodeAttributes (CodeVisibility.Private, CodeAttributes.PartialDefinitionAttribute), "void OnFooChanged(int value)");
+			formatter.WriteEndMethod ();
+
+			formatter.WriteBeginMethod (new CodeAttributes (CodeVisibility.Private, CodeAttributes.PartialAttribute), "void OnFooChanged(int value)");
+			formatter.WriteEndMethod ();
+
+			formatter.WriteBeginProperty (new CodeAttributes (CodeVisibility.Public), "int Foo");
 			formatter.WriteBeginSetter (new CodeAttributes (CodeVisibility.Internal));
+			formatter.WriteCodeLine ("if (this.foo != value)");
+			formatter.WriteBeginBlock ();
+			formatter.WriteCodeLine ("this.foo = value;");
+			formatter.WriteCodeLine ("this.OnFooChanged (value);");
+			formatter.WriteEndBlock ();
 			formatter.WriteEndSetter ();
 			formatter.WriteBeginGetter (CodeAttributes.Default);
-			formatter.WriteCodeLine ("return this.value;");
+			formatter.WriteCodeLine ("return this.foo;");
 			formatter.WriteEndGetter ();
 			formatter.WriteEndProperty ();
 
+			formatter.WriteInstanceVariable (new CodeAttributes (CodeVisibility.Private), "int foo");
 			formatter.WriteInstanceVariable (new CodeAttributes (CodeVisibility.Private, CodeAccessibility.Final, CodeAttributes.ReadOnlyAttribute), "int value");
 
 			formatter.WriteEndClass ();
