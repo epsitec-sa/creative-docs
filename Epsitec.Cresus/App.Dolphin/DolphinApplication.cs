@@ -122,6 +122,13 @@ namespace Epsitec.App.Dolphin
 			}
 		}
 
+		protected override void ExecuteQuit(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			//	Evite que cette commande ne soit exécutée par Widgets.Application,
+			//	car cela provoquerait la fin du programme, quelle que soit la
+			//	réponse donnée par l'utilisateur au dialogue affiché par DocumentEditor.
+		}
+
 
 		protected void CreateLayout()
 		{
