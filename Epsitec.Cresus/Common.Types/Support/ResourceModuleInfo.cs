@@ -11,6 +11,9 @@ namespace Epsitec.Common.Support
 	/// </summary>
 	public sealed class ResourceModuleInfo : Epsitec.Common.Types.IReadOnly
 	{
+		/// <summary>
+		/// Initializes a new instance of the <see cref="ResourceModuleInfo"/> class.
+		/// </summary>
 		public ResourceModuleInfo()
 		{
 		}
@@ -46,6 +49,24 @@ namespace Epsitec.Common.Support
 			{
 				this.VerifyWritable ("ReferenceModulePath");
 				this.referenceModulePath = value;
+			}
+		}
+
+		/// <summary>
+		/// Gets or sets the source namespace used when generating associated
+		/// code.
+		/// </summary>
+		/// <value>The source namespace.</value>
+		public string SourceNamespace
+		{
+			get
+			{
+				return this.sourceNamespace;
+			}
+			set
+			{
+				this.VerifyWritable ("SourceNamespace");
+				this.sourceNamespace = value;
 			}
 		}
 
@@ -87,6 +108,7 @@ namespace Epsitec.Common.Support
 
 			copy.fullId = this.fullId;
 			copy.referenceModulePath = this.referenceModulePath;
+			copy.sourceNamespace = this.sourceNamespace;
 
 			return copy;
 		}
@@ -102,5 +124,6 @@ namespace Epsitec.Common.Support
 		bool isFrozen;
 		ResourceModuleId fullId;
 		string referenceModulePath;
+		string sourceNamespace;
 	}
 }

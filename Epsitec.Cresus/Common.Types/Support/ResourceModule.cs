@@ -59,10 +59,13 @@ namespace Epsitec.Common.Support
 							//	- id, the numeric identifier for the module
 							//	- name, the textual identifier for the module
 							//	- layer, the code for the resource module layer
+							//	Optionally :
+							//	- namespace, the namespace used when generating associated code
 
-							string idAttribute    = root.GetAttribute (ResourceModule.XmlAttributeId);
-							string layerAttribute = root.GetAttribute (ResourceModule.XmlAttributeLayer);
-							string nameAttribute  = root.GetAttribute (ResourceModule.XmlAttributeName);
+							string idAttribute        = root.GetAttribute (ResourceModule.XmlAttributeId);
+							string layerAttribute     = root.GetAttribute (ResourceModule.XmlAttributeLayer);
+							string nameAttribute      = root.GetAttribute (ResourceModule.XmlAttributeName);
+							string namespaceAttribute = root.GetAttribute (ResourceModule.XmlAttributeNamespace);
 
 							if (string.IsNullOrEmpty (idAttribute))
 							{
@@ -99,6 +102,7 @@ namespace Epsitec.Common.Support
 							}
 							
 							info.FullId = new ResourceModuleId (moduleName, modulePath, moduleId, moduleLayer);
+							info.SourceNamespace = namespaceAttribute ?? "";
 							info.Freeze ();
 
 							return info;
@@ -126,6 +130,11 @@ namespace Epsitec.Common.Support
 			root.SetAttribute (ResourceModule.XmlAttributeId, info.FullId.Id.ToString (CultureInfo.InvariantCulture));
 			root.SetAttribute (ResourceModule.XmlAttributeName, info.FullId.Name);
 			root.SetAttribute (ResourceModule.XmlAttributeLayer, ResourceModuleId.ConvertLayerToPrefix (info.FullId.Layer));
+
+			if (!string.IsNullOrEmpty (info.SourceNamespace))
+			{
+				root.SetAttribute (ResourceModule.XmlAttributeNamespace, info.SourceNamespace);
+			}
 			
 			xml.InsertBefore (xml.CreateXmlDeclaration ("1.0", "utf-8", null), null);
 			xml.AppendChild (root);
@@ -176,12 +185,13 @@ namespace Epsitec.Common.Support
 
 		#region Internal constants
 
-		internal const string XmlModuleInfo = "ModuleInfo";
+		internal const string XmlModuleInfo          = "ModuleInfo";
 		internal const string XmlReferenceModulePath = "ReferenceModulePath";
-
-		internal const string XmlAttributeId    = "id";
-		internal const string XmlAttributeLayer = "layer";
-		internal const string XmlAttributeName  = "name";
+		
+		internal const string XmlAttributeId		= "id";
+		internal const string XmlAttributeLayer		= "layer";
+		internal const string XmlAttributeName		= "name";
+		internal const string XmlAttributeNamespace = "namespace";
 
 		#endregion
 	}
