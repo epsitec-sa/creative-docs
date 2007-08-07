@@ -1384,6 +1384,7 @@ namespace Epsitec.App.Dolphin
 			
 			writer.WriteElementString("ProcessorName", this.processor.Name);
 			writer.WriteElementString("ProcessorIPS", this.ips.ToString(System.Globalization.CultureInfo.InvariantCulture));
+			writer.WriteElementString("ProcessorStep", (this.switchStep.ActiveState == ActiveState.Yes) ? "S" : "C");
 
 			if (this.fieldProgrammRem.Text != DolphinApplication.ProgrammEmptyRem)
 			{
@@ -1419,6 +1420,13 @@ namespace Epsitec.App.Dolphin
 					{
 						string element = reader.ReadElementString();
 						this.ips = double.Parse(element, System.Globalization.CultureInfo.InvariantCulture);
+						reader.Read();
+					}
+					else if (name == "ProcessorStep")
+					{
+						string element = reader.ReadElementString();
+						this.switchStep.ActiveState = (element == "S") ? ActiveState.Yes : ActiveState.No;
+						this.UpdateButtons();
 						reader.Read();
 					}
 					else if (name == "MemoryData")
@@ -1722,7 +1730,7 @@ namespace Epsitec.App.Dolphin
 		#endregion
 
 
-		public static readonly double MainWidth = 800;
+		public static readonly double MainWidth  = 800;
 		public static readonly double MainHeight = 600;
 		public static readonly double MainMargin = 6;
 
