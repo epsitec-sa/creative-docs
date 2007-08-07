@@ -61,7 +61,7 @@ namespace Epsitec.Common.Support
 
 			foreach (ResourceModuleInfo info in pool.FindModuleInfos ("Common.Support"))
 			{
-				System.Console.Out.WriteLine ("{0}: {1} in {2}", info.FullId.Name, info.FullId.Id, info.FullId.Path);
+				System.Console.Out.WriteLine ("{0}: {1} in {2}  {3}", info.FullId.Name, info.FullId.Id, info.FullId.Path, info.SourceNamespace);
 			}
 		}
 
