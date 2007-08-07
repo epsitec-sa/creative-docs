@@ -247,7 +247,7 @@ namespace Epsitec.Common.Types
 
 
 		/// <summary>
-		/// Gets or sets the defining type DRUID. This information is produced
+		/// Gets the defining type DRUID. This information is produced
 		/// and maintained automatically by the <see cref="StructuredType"/>
 		/// class.
 		/// </summary>

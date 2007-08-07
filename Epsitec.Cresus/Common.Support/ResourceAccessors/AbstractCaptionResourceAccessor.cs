@@ -54,7 +54,8 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			ResourceBundle.Field field   = bundle == null ? ResourceBundle.Field.Empty : bundle[item.Id];
 			Types.StructuredData data    = null;
 
-			if (field.IsEmpty)
+			if ((field.IsEmpty) ||
+				(string.IsNullOrEmpty (field.AsString)))
 			{
 				data = new Types.StructuredData (this.GetStructuredType ());
 				this.FillDataFromCaption (item, data, new Caption ());
