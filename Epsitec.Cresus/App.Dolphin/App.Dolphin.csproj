@@ -96,6 +96,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.ico" />
+    <EmbeddedResource Include="Images\Application.icon" />
     <Content Include="Dolphin.ico" />
     <Content Include="Resources\Common.Widgets\Captions.de.resource" />
     <Content Include="Resources\Common.Support\Captions.de.resource" />

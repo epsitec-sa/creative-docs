@@ -47,6 +47,7 @@ namespace Epsitec.App.Dolphin
 				this.Window = window;
 
 				window.Root.WindowStyles = WindowStyles.DefaultDocumentWindow;
+				window.Icon = Bitmap.FromManifestResource("Epsitec.App.Dolphin.Images.Application.icon", typeof(DolphinApplication).Assembly);
 
 				Point parentCenter;
 				Rectangle windowBounds;
