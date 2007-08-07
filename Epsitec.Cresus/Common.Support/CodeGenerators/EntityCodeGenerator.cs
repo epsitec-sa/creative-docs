@@ -28,30 +28,53 @@ namespace Epsitec.Common.Support.CodeGenerators
 		}
 
 		
-		public void EmitEntity(CodeFormatter formatter, StructuredType type)
+		public void Emit(CodeFormatter formatter, StructuredType type)
 		{
-			string className = EntityCodeGenerator.CreateEntityIdentifier (type.Caption.Name);
-			List<string> classSpecifiers = new List<string> ();
+			StructuredTypeClass typeClass = type.Class;
+			
+			string       entityName = EntityCodeGenerator.CreateEntityIdentifier (type.Caption.Name);
+			List<string> specifiers = new List<string> ();
 
-			//	Define the base type :
+			System.Diagnostics.Debug.Assert ((typeClass == StructuredTypeClass.Entity) || (typeClass == StructuredTypeClass.Interface));
 
-			if (type.BaseTypeId.IsValid)
+			//	Define the base type from which the entity class will inherit from;
+			//	it is either the defined base type entity or the root AbstractEntity
+			//	class :
+
+			if (typeClass == StructuredTypeClass.Entity)
 			{
-				classSpecifiers.Add (this.CreateEntityFullName (type.BaseTypeId));
+				if (type.BaseTypeId.IsValid)
+				{
+					specifiers.Add (this.CreateEntityFullName (type.BaseTypeId));
+				}
+				else
+				{
+					specifiers.Add (string.Concat (Keywords.Global, "::", Keywords.AbstractEntity));
+				}
 			}
-			else
-			{
-				classSpecifiers.Add (string.Concat (Keywords.Global, "::", Keywords.AbstractEntity));
-			}
+
+			//	Include all locally imported interfaces, if any :
 
 			foreach (Druid interfaceId in type.InterfaceIds)
 			{
-				classSpecifiers.Add (this.CreateEntityFullName (interfaceId));
+				specifiers.Add (this.CreateEntityFullName (interfaceId));
 			}
 			
 			formatter.WriteBeginNamespace (EntityCodeGenerator.CreateEntityNamespace (this.SourceNamespace));
-			formatter.WriteBeginClass (EntityCodeGenerator.ClassAttributes, className, classSpecifiers);
-			formatter.WriteEndClass ();
+
+			switch (typeClass)
+			{
+				case StructuredTypeClass.Entity:
+					formatter.WriteBeginClass (EntityCodeGenerator.ClassAttributes, entityName, specifiers);
+					formatter.WriteEndClass ();
+					break;
+
+				case StructuredTypeClass.Interface:
+					formatter.WriteBeginInterface (EntityCodeGenerator.InterfaceAttributes, entityName, specifiers);
+					formatter.WriteEndInterface ();
+					break;
+			}
+			
 			formatter.WriteEndNamespace ();
 		}
 
@@ -80,6 +103,7 @@ namespace Epsitec.Common.Support.CodeGenerators
 
 
 		private static readonly CodeAttributes ClassAttributes = new CodeAttributes (CodeVisibility.Public, CodeAccessibility.Default, CodeAttributes.PartialAttribute);
+		private static readonly CodeAttributes InterfaceAttributes = new CodeAttributes (CodeVisibility.Public, CodeAccessibility.Default);
 
 		private static class Keywords
 		{

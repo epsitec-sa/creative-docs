@@ -28,10 +28,15 @@ namespace Epsitec.Common.Support
 			
 			Assert.AreEqual ("Epsitec.Common.Support", generator.SourceNamespace);
 
-			generator.EmitEntity (formatter, Epsitec.Common.Support.Res.Types.ResourceDateTimeType);
-			generator.EmitEntity (formatter, Epsitec.Common.Support.Res.Types.ResourceBaseType);
-			generator.EmitEntity (formatter, Epsitec.Common.Support.Res.Types.ResourceCaption);
-			generator.EmitEntity (formatter, Epsitec.Common.Support.Res.Types.ResourceBase);
+			generator.Emit (formatter, Epsitec.Common.Support.Res.Types.ResourceDateTimeType);
+			generator.Emit (formatter, Epsitec.Common.Support.Res.Types.ResourceBaseType);
+			generator.Emit (formatter, Epsitec.Common.Support.Res.Types.ResourceCaption);
+			generator.Emit (formatter, Epsitec.Common.Support.Res.Types.ResourceBase);
+
+			StructuredType i1 = new StructuredType (StructuredTypeClass.Interface);
+			i1.Caption.Name = "IFoo";
+
+			generator.Emit (formatter, i1);
 
 			System.Console.Out.Write (buffer);
 		}
