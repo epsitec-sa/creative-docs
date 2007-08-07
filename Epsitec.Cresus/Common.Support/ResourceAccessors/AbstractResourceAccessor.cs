@@ -146,7 +146,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 
 		#endregion
 
-		internal static Druid CreateId(ResourceBundle bundle)
+		internal static Druid CreateId(ResourceBundle bundle, IEnumerable<CultureMap> collection)
 		{
 			object devIdValue = Support.Globals.Properties.GetProperty (AbstractResourceAccessor.DeveloperIdPropertyName);
 
@@ -174,6 +174,21 @@ namespace Epsitec.Common.Support.ResourceAccessors
 				if (id.Developer == devId)
 				{
 					localId = System.Math.Max (localId, id.Local);
+				}
+			}
+
+			if (collection != null)
+			{
+				foreach (CultureMap item in collection)
+				{
+					Druid id = item.Id;
+
+					System.Diagnostics.Debug.Assert (id.IsValid);
+
+					if (id.Developer == devId)
+					{
+						localId = System.Math.Max (localId, id.Local);
+					}
 				}
 			}
 
