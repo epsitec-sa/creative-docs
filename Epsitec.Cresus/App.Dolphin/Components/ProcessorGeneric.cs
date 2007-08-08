@@ -1005,6 +1005,8 @@ namespace Epsitec.App.Dolphin.Components
 			this.RomWrite(ref indirect, ref address, ProcessorGeneric.DisplayHexaDigit);
 			this.RomWrite(ref indirect, ref address, ProcessorGeneric.DisplayHexaByte);
 			this.RomWrite(ref indirect, ref address, ProcessorGeneric.DisplayDecimal);
+			this.RomWrite(ref indirect, ref address, ProcessorGeneric.SetPixel);
+			this.RomWrite(ref indirect, ref address, ProcessorGeneric.ClrPixel);
 		}
 
 		protected void RomWrite(ref int indirect, ref int address, byte[] code)
@@ -1148,6 +1150,94 @@ namespace Epsitec.App.Dolphin.Components
 			(byte) Instructions.JumpRel, 0xF4,		// JUMP R8^CLEAR
 
 													// END:
+			(byte) Instructions.PopHL,				// POP HL
+			(byte) Instructions.PopB,				// POP B
+			(byte) Instructions.PopA,				// POP A
+			(byte) Instructions.PopF,				// POP F
+			(byte) Instructions.Ret,				// RET
+		};
+
+		//	Allume un pixel dans l'écran bitmap.
+		//	in	A coordonnée X 0..31
+		//		B coordonnée Y 0..23
+		//	out	-
+		//	mod	-
+		protected static byte[] SetPixel =
+		{
+			(byte) Instructions.PushF,				// PUSH F
+			(byte) Instructions.PushA,				// PUSH A
+			(byte) Instructions.PushB,				// PUSH B
+			(byte) Instructions.PushHL,				// POP HL
+
+			(byte) Instructions.MoveiHL, 0x0C, 0x80,// MOVE #C80,HL
+
+			(byte) Instructions.SwapAB,				// SWAP A,B
+			(byte) Instructions.AndiA, 0x1F,		// AND #1F,A
+			(byte) Instructions.SwapAB,				// SWAP A,B
+			(byte) Instructions.RLB,				// RL B
+			(byte) Instructions.RLB,				// RL B
+			(byte) Instructions.AddBHL,				// ADD B,HL
+
+			(byte) Instructions.PushA,				// PUSH A
+			(byte) Instructions.RRA,				// RR A
+			(byte) Instructions.RRA,				// RR A
+			(byte) Instructions.RRA,				// RR A
+			(byte) Instructions.AndiA, 0x03,		// AND #03,A
+			(byte) Instructions.AddAHL,				// ADD A,HL
+			(byte) Instructions.PopA,				// POP A
+
+			(byte) Instructions.AndiA, 0x07,		// AND #07,A
+			(byte) Instructions.XoriA, 0x07,		// XOR #07,A
+			(byte) Instructions.MoveAB,				// MOVE A,B
+
+			(byte) Instructions.MovecHLA,			// MOVE {HL},A
+			(byte) Instructions.TSetBA,				// TSET B:A
+			(byte) Instructions.MoveAcHL,			// MOVE A,{HL}
+
+			(byte) Instructions.PopHL,				// POP HL
+			(byte) Instructions.PopB,				// POP B
+			(byte) Instructions.PopA,				// POP A
+			(byte) Instructions.PopF,				// POP F
+			(byte) Instructions.Ret,				// RET
+		};
+
+		//	Eteint un pixel dans l'écran bitmap.
+		//	in	A coordonnée X 0..31
+		//		B coordonnée Y 0..23
+		//	out	-
+		//	mod	-
+		protected static byte[] ClrPixel =
+		{
+			(byte) Instructions.PushF,				// PUSH F
+			(byte) Instructions.PushA,				// PUSH A
+			(byte) Instructions.PushB,				// PUSH B
+			(byte) Instructions.PushHL,				// POP HL
+
+			(byte) Instructions.MoveiHL, 0x0C, 0x80,// MOVE #C80,HL
+
+			(byte) Instructions.SwapAB,				// SWAP A,B
+			(byte) Instructions.AndiA, 0x1F,		// AND #1F,A
+			(byte) Instructions.SwapAB,				// SWAP A,B
+			(byte) Instructions.RLB,				// RL B
+			(byte) Instructions.RLB,				// RL B
+			(byte) Instructions.AddBHL,				// ADD B,HL
+
+			(byte) Instructions.PushA,				// PUSH A
+			(byte) Instructions.RRA,				// RR A
+			(byte) Instructions.RRA,				// RR A
+			(byte) Instructions.RRA,				// RR A
+			(byte) Instructions.AndiA, 0x03,		// AND #03,A
+			(byte) Instructions.AddAHL,				// ADD A,HL
+			(byte) Instructions.PopA,				// POP A
+
+			(byte) Instructions.AndiA, 0x07,		// AND #07,A
+			(byte) Instructions.XoriA, 0x07,		// XOR #07,A
+			(byte) Instructions.MoveAB,				// MOVE A,B
+
+			(byte) Instructions.MovecHLA,			// MOVE {HL},A
+			(byte) Instructions.TClrBA,				// TCLR B:A
+			(byte) Instructions.MoveAcHL,			// MOVE A,{HL}
+
 			(byte) Instructions.PopHL,				// POP HL
 			(byte) Instructions.PopB,				// POP B
 			(byte) Instructions.PopA,				// POP A

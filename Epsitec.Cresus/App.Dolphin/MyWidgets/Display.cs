@@ -10,6 +10,7 @@ namespace Epsitec.App.Dolphin.MyWidgets
 {
 	/// <summary>
 	/// Simule un petit écran bitmap monochrome.
+	/// Optimisé pour 32x24 pixels, avec une taille physique de 260x204.
 	/// </summary>
 	public class Display : Widget
 	{
@@ -69,32 +70,26 @@ namespace Epsitec.App.Dolphin.MyWidgets
 			path.Dispose();
 
 			rect.Deflate(4.0);
-
 			double px = rect.Width/this.dx;
 			double py = rect.Height/this.dy;
-			
-			int address = this.firstAddress;
-			for (int y=0; y<this.dy; y++)
-			{
-				for (int x=0; x<this.dx; x+=8)
-				{
-					int value = this.memory.ReadForDebug(address++);
-					for (int b=0; b<8; b++)
-					{
-#if true
-						if ((value & (1 << (7-b))) != 0)
-						{
-							Rectangle pixel = new Rectangle(rect.Left+px*(x+b), rect.Top-py*(y+1), px-1, py-1);
-							graphics.AddFilledRectangle(pixel);
-							graphics.RenderSolid(Display.ColorSet);
-						}
-#else
-						Rectangle pixel = new Rectangle(rect.Left+px*(x+b), rect.Top-py*(y+1), px-1, py-1);
-						Color color = (value & (1 << (7-b))) == 0 ? Display.ColorClr : Display.ColorSet;
 
-						graphics.AddFilledRectangle(pixel);
-						graphics.RenderSolid(color);
-#endif
+			if (this.memory != null)
+			{
+				int address = this.firstAddress;
+				for (int y=0; y<this.dy; y++)
+				{
+					for (int x=0; x<this.dx; x+=8)
+					{
+						int value = this.memory.ReadForDebug(address++);
+						for (int b=0; b<8; b++)
+						{
+							if ((value & (1 << (7-b))) != 0)  // bit allumé ?
+							{
+								Rectangle pixel = new Rectangle(rect.Left+px*(x+b), rect.Top-py*(y+1), px-1, py-1);
+								graphics.AddFilledRectangle(pixel);
+								graphics.RenderSolid(Display.ColorSet);
+							}
+						}
 					}
 				}
 			}
