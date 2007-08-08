@@ -537,24 +537,23 @@ namespace Epsitec.App.Dolphin
 			this.clockBusPanel.PreferredWidth = 40;
 			this.clockBusPanel.Dock = DockStyle.Bottom;
 
-			MyWidgets.Panel rwLabels = this.CreateSwitchHorizonalLabels(this.clockBusPanel, "R", "W");
-			rwLabels.Dock = DockStyle.Top;
+			this.buttonMemoryRead = new MyWidgets.PushButton(this.clockBusPanel);
+			this.buttonMemoryRead.Text = "<font size=\"200%\"><b>R</b></font>";
+			this.buttonMemoryRead.PreferredSize = new Size(50, 50);
+			this.buttonMemoryRead.Margins = new Margins(0, 0, 0, 3);
+			this.buttonMemoryRead.Dock = DockStyle.Top;
+			this.buttonMemoryRead.Pressed += new MessageEventHandler(this.HandleButtonMemoryPressed);
+			this.buttonMemoryRead.Released += new MessageEventHandler(this.HandleButtonMemoryReleased);
+			ToolTip.Default.SetToolTip(this.buttonMemoryRead, "Memory read");
 
-			this.switchDataReadWrite = new MyWidgets.Switch(this.clockBusPanel);
-			this.switchDataReadWrite.PreferredSize = new Size(50, 20);
-			this.switchDataReadWrite.Margins = new Margins(0, 0, 0, 5);
-			this.switchDataReadWrite.Dock = DockStyle.Top;
-			this.switchDataReadWrite.Clicked += new MessageEventHandler(this.HandleSwitchDataReadWriteClicked);
-			ToolTip.Default.SetToolTip(this.switchDataReadWrite, "Mode Read ou Write");
-
-			this.buttonMemory = new MyWidgets.PushButton(this.clockBusPanel);
-			this.buttonMemory.Text = "<font size=\"200%\"><b>M</b></font>";
-			this.buttonMemory.PreferredSize = new Size(50, 50);
-			this.buttonMemory.Margins = new Margins(0, 0, 0, 10);
-			this.buttonMemory.Dock = DockStyle.Top;
-			this.buttonMemory.Pressed += new MessageEventHandler(this.HandleButtonMemoryPressed);
-			this.buttonMemory.Released += new MessageEventHandler(this.HandleButtonMemoryReleased);
-			ToolTip.Default.SetToolTip(this.buttonMemory, "Memory access");
+			this.buttonMemoryWrite = new MyWidgets.PushButton(this.clockBusPanel);
+			this.buttonMemoryWrite.Text = "<font size=\"200%\"><b>W</b></font>";
+			this.buttonMemoryWrite.PreferredSize = new Size(50, 50);
+			this.buttonMemoryWrite.Margins = new Margins(0, 0, 0, 10);
+			this.buttonMemoryWrite.Dock = DockStyle.Top;
+			this.buttonMemoryWrite.Pressed += new MessageEventHandler(this.HandleButtonMemoryPressed);
+			this.buttonMemoryWrite.Released += new MessageEventHandler(this.HandleButtonMemoryReleased);
+			ToolTip.Default.SetToolTip(this.buttonMemoryWrite, "Memory write");
 
 			this.UpdateClockButtons();
 		}
@@ -899,8 +898,8 @@ namespace Epsitec.App.Dolphin
 
 			bool run = (this.buttonReset.ActiveState == ActiveState.Yes);
 
-			this.switchDataReadWrite.Enable = !run;
-			this.buttonMemory.Enable = !run;
+			this.buttonMemoryRead.Enable = !run;
+			this.buttonMemoryWrite.Enable = !run;
 
 			foreach (MyWidgets.Switch button in this.addressSwitchs)
 			{
@@ -1651,25 +1650,20 @@ namespace Epsitec.App.Dolphin
 			this.Dirty = true;
 		}
 
-		private void HandleSwitchDataReadWriteClicked(object sender, MessageEventArgs e)
-		{
-			//	Switch R/W basculé.
-			this.switchDataReadWrite.ActiveState = (this.switchDataReadWrite.ActiveState == ActiveState.No) ? ActiveState.Yes : ActiveState.No;
-		}
-
 		private void HandleButtonMemoryPressed(object sender, MessageEventArgs e)
 		{
-			//	Bouton [M] pressé.
+			//	Bouton [R]/[W] d'accès à la mémoire pressé.
 			if (this.buttonReset.ActiveState == ActiveState.Yes)
 			{
 				return;
 			}
 
-			if (this.switchDataReadWrite.ActiveState == ActiveState.No)  // read ?
+			if (sender == this.buttonMemoryRead)  // read ?
 			{
 				this.DataBits = this.memory.Read(this.AddressBits);
 			}
-			else  // write ?
+
+			if (sender == this.buttonMemoryWrite)  // write ?
 			{
 				this.memory.WriteWithDirty(this.AddressBits, this.DataBits);
 				this.DataBits = this.memory.Read(this.AddressBits);
@@ -1826,13 +1820,13 @@ namespace Epsitec.App.Dolphin
 		protected StaticText							programmFilename;
 		protected MyWidgets.PushButton					buttonReset;
 		protected MyWidgets.PushButton					buttonStep;
-		protected MyWidgets.PushButton					buttonMemory;
+		protected MyWidgets.PushButton					buttonMemoryRead;
+		protected MyWidgets.PushButton					buttonMemoryWrite;
 		protected MyWidgets.PushButton					buttonClock3;
 		protected MyWidgets.PushButton					buttonClock2;
 		protected MyWidgets.PushButton					buttonClock1;
 		protected MyWidgets.PushButton					buttonClock0;
 		protected MyWidgets.Switch						switchStep;
-		protected MyWidgets.Switch						switchDataReadWrite;
 		protected List<MyWidgets.Digit>					addressDigits;
 		protected List<MyWidgets.Led>					addressLeds;
 		protected List<MyWidgets.Switch>				addressSwitchs;
