@@ -22,13 +22,13 @@ namespace Epsitec.App.Dolphin
 			ImageProvider.Default.PrefillManifestIconCache();
 		}
 
-		public DolphinApplication() : this(new ResourceManagerPool("App.Dolphin"))
+		public DolphinApplication() : this(new ResourceManagerPool("App.Dolphin"), null)
 		{
 			this.resourceManagerPool.DefaultPrefix = "file";
 			this.resourceManagerPool.SetupDefaultRootPaths();
 		}
 
-		public DolphinApplication(ResourceManagerPool pool)
+		public DolphinApplication(ResourceManagerPool pool, string[] args)
 		{
 			this.resourceManagerPool = pool;
 
@@ -36,6 +36,18 @@ namespace Epsitec.App.Dolphin
 			this.processor = new Components.ProcessorGeneric(this.memory);
 			this.memory.RomInitialise(this.processor);
 			this.ips = 1000;
+			this.firstOpenSaveDialog = true;
+
+			if (args != null)
+			{
+				foreach (string arg in args)
+				{
+					if (arg.EndsWith(".dolphin"))  // programme.dolphin sur la ligne de commande ?
+					{
+						this.filename = arg;  // il faudra l'ouvrir
+					}
+				}
+			}
 		}
 
 		public void Show(Window parentWindow)
@@ -76,6 +88,11 @@ namespace Epsitec.App.Dolphin
 				//?window.PreventAutoQuit = false;
 				
 				this.CreateLayout();
+
+				if (!string.IsNullOrEmpty(this.filename))  // programme sur la ligne de commande à ouvrir ?
+				{
+					this.Open();
+				}
 			}
 
 			this.Window.Show();
@@ -1170,7 +1187,17 @@ namespace Epsitec.App.Dolphin
 			//	Demande le nom du fichier à ouvrir.
 			Common.Dialogs.FileOpen dlg = new Common.Dialogs.FileOpen();
 			dlg.Title = "Ouverture d'un programme";
-			dlg.FileName = "";
+
+			if (this.firstOpenSaveDialog)
+			{
+				dlg.InitialDirectory = this.OriginalSamplesPath;
+				dlg.FileName = "";
+			}
+			else
+			{
+				dlg.FileName = "";
+			}
+
 			dlg.Filters.Add("dolphin", "Programmes", "*.dolphin");
 			dlg.Owner = this.Window;
 			dlg.OpenDialog();  // affiche le dialogue...
@@ -1190,7 +1217,16 @@ namespace Epsitec.App.Dolphin
 			Common.Dialogs.FileSave dlg = new Common.Dialogs.FileSave();
 			dlg.PromptForOverwriting = true;
 			dlg.Title = "Enregistrement d'un programme";
-			dlg.FileName = this.filename;
+
+			if (this.firstOpenSaveDialog && string.IsNullOrEmpty(this.filename))
+			{
+				dlg.InitialDirectory = this.OriginalSamplesPath;
+			}
+			else
+			{
+				dlg.FileName = this.filename;
+			}
+
 			dlg.Filters.Add("dolphin", "Programmes", "*.dolphin");
 			dlg.Owner = this.Window;
 			dlg.OpenDialog();  // affiche le dialogue...
@@ -1269,15 +1305,28 @@ namespace Epsitec.App.Dolphin
 					}
 				}
 
-				this.Save();
+				if (this.Save())
+				{
+					this.firstOpenSaveDialog = false;
+				}
 			}
 
 			return true;
 		}
 
-		protected void Open()
+		protected string OriginalSamplesPath
+		{
+			//	Retourne le nom du dossier contenant les exemples originaux.
+			get
+			{
+				return string.Concat(Common.Support.Globals.Directories.Executable, "\\", "Samples");
+			}
+		}
+
+		protected bool Open()
 		{
 			//	Ouvre un nouveau programme.
+			//	Retourne false en cas d'erreur.
 			this.Stop();
 
 			string data = null;
@@ -1288,6 +1337,7 @@ namespace Epsitec.App.Dolphin
 			catch
 			{
 				data = null;
+				this.filename = null;
 			}
 
 			if (data != null)
@@ -1308,11 +1358,14 @@ namespace Epsitec.App.Dolphin
 			this.UpdateButtons();
 			this.UpdateClockButtons();
 			this.UpdateFilename();
+
+			return !string.IsNullOrEmpty(this.filename);
 		}
 
-		protected void Save()
+		protected bool Save()
 		{
 			//	Enregistre le programme en cours.
+			//	Retourne false en cas d'erreur.
 			string data = this.Serialize();
 			try
 			{
@@ -1320,10 +1373,13 @@ namespace Epsitec.App.Dolphin
 			}
 			catch
 			{
+				this.filename = null;
 			}
 
 			this.Dirty = false;
 			this.UpdateFilename();
+
+			return !string.IsNullOrEmpty(this.filename);
 		}
 
 		protected void Stop()
@@ -1481,7 +1537,10 @@ namespace Epsitec.App.Dolphin
 			//	Bouton ouvrir cliqué.
 			if (this.AutoSave() && this.DlgOpenFilename())
 			{
-				this.Open();
+				if (this.Open())
+				{
+					this.firstOpenSaveDialog = false;
+				}
 			}
 		}
 
@@ -1490,7 +1549,10 @@ namespace Epsitec.App.Dolphin
 			//	Bouton enregistrer cliqué.
 			if (this.DlgSaveFilename())
 			{
-				this.Save();
+				if (this.Save())
+				{
+					this.firstOpenSaveDialog = false;
+				}
 			}
 		}
 
@@ -1794,6 +1856,7 @@ namespace Epsitec.App.Dolphin
 		protected double								ips;
 		protected string								panelMode;
 		protected string								filename;
+		protected bool									firstOpenSaveDialog;
 		protected bool									dirty;
 	}
 }

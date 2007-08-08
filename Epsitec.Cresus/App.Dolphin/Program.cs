@@ -24,7 +24,7 @@ namespace Epsitec.App.Dolphin
 			//	de look. LookSimply affiche des choses simples avec des cadres noirs.
 			Epsitec.Common.Widgets.Adorners.Factory.SetActive("LookSimply");
 
-			DolphinApplication mainWindow = new DolphinApplication(pool);
+			DolphinApplication mainWindow = new DolphinApplication(pool, args);
 			mainWindow.Show(null);
 			mainWindow.Window.Run();
 		}
