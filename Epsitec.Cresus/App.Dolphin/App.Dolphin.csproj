@@ -9,7 +9,8 @@
     <RootNamespace>Epsitec.App.Dolphin</RootNamespace>
     <AssemblyName>App.Dolphin</AssemblyName>
     <AssemblyOriginatorKeyFile>..\Epsitec.Cresus.snk</AssemblyOriginatorKeyFile>
-    <ApplicationIcon>Dolphin.ico</ApplicationIcon>
+    <ApplicationIcon>
+    </ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -98,7 +99,7 @@
   <ItemGroup>
     <None Include="App.ico" />
     <EmbeddedResource Include="Images\Application.icon" />
-    <Content Include="Dolphin.ico" />
+    <None Include="Dolphin.ico" />
     <Content Include="Resources\Common.Widgets\Captions.de.resource" />
     <Content Include="Resources\Common.Support\Captions.de.resource" />
     <Content Include="Resources\Common.Support\Strings.de.resource" />
