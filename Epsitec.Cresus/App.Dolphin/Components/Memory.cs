@@ -75,6 +75,8 @@ namespace Epsitec.App.Dolphin.Components
 			{
 				digit.SegmentValue = (MyWidgets.Digit.DigitSegment) 0;
 			}
+
+			this.application.DisplayBitmap.Invalidate();
 		}
 
 
@@ -224,6 +226,11 @@ namespace Epsitec.App.Dolphin.Components
 					int a = address - Memory.PeriphFirstDigit;
 					this.application.DisplayDigits[a].SegmentValue = (MyWidgets.Digit.DigitSegment) this.memory[address];
 				}
+
+				if (address >= Memory.PeriphDisplay && address <= Memory.PeriphDisplay*Memory.PeriphDisplayDx/8*Memory.PeriphDisplayDy)  // écran bitmap ?
+				{
+					this.application.DisplayBitmap.Invalidate();
+				}
 			}
 		}
 
@@ -266,10 +273,13 @@ namespace Epsitec.App.Dolphin.Components
 		public static readonly int RomLength        = 0x400;
 
 		public static readonly int PeriphBase       = 0xC00;
-		public static readonly int PeriphLength     = 0x010;
+		public static readonly int PeriphLength     = 0x400;
 		public static readonly int PeriphFirstDigit = 0xC00;  // digit de gauche
 		public static readonly int PeriphLastDigit  = 0xC03;  // digit de droite
 		public static readonly int PeriphKeyboard   = 0xC07;
+		public static readonly int PeriphDisplay    = 0xC80;
+		public static readonly int PeriphDisplayDx  = 32;
+		public static readonly int PeriphDisplayDy  = 24;
 
 
 		protected DolphinApplication application;

@@ -42,6 +42,7 @@
     <Compile Include="DolphinApplication.cs" />
     <Compile Include="Geometry.cs" />
     <Compile Include="Components\Memory.cs" />
+    <Compile Include="MyWidgets\Display.cs" />
     <Compile Include="MyWidgets\MemoryAccessor.cs" />
     <Compile Include="Misc.cs" />
     <Compile Include="MyWidgets\Digit.cs" />

@@ -300,6 +300,14 @@ namespace Epsitec.App.Dolphin
 			}
 		}
 
+		public MyWidgets.Display DisplayBitmap
+		{
+			get
+			{
+				return this.displayBitmap;
+			}
+		}
+
 
 		protected void CreateOptions(MyWidgets.Panel parent)
 		{
@@ -540,7 +548,7 @@ namespace Epsitec.App.Dolphin
 			this.buttonMemoryRead = new MyWidgets.PushButton(this.clockBusPanel);
 			this.buttonMemoryRead.Text = "<font size=\"200%\"><b>R</b></font>";
 			this.buttonMemoryRead.PreferredSize = new Size(50, 50);
-			this.buttonMemoryRead.Margins = new Margins(0, 0, 0, 3);
+			this.buttonMemoryRead.Margins = new Margins(0, 0, 0, 2);
 			this.buttonMemoryRead.Dock = DockStyle.Top;
 			this.buttonMemoryRead.Pressed += new MessageEventHandler(this.HandleButtonMemoryPressed);
 			this.buttonMemoryRead.Released += new MessageEventHandler(this.HandleButtonMemoryReleased);
@@ -837,6 +845,28 @@ namespace Epsitec.App.Dolphin
 				this.displayDigits.Add(digit);
 			}
 
+			MyWidgets.Panel mode = new MyWidgets.Panel(display);
+			mode.PreferredWidth = 50;
+			mode.Margins = new Margins(0, 10, 0, 0);
+			mode.Dock = DockStyle.Right;
+
+			this.displayButtonMode = new MyWidgets.PushButton(mode);
+			this.displayButtonMode.Text = "VIDEO";
+			this.displayButtonMode.PreferredSize = new Size(50, 24);
+			this.displayButtonMode.Dock = DockStyle.Top;
+			this.displayButtonMode.Clicked += new MessageEventHandler(this.HandleDisplayButtonModeClicked);
+
+			//	Crée l'affichage bitmap.
+			MyWidgets.Panel bitmap = new MyWidgets.Panel(parent);
+			bitmap.PreferredHeight = 0;
+			bitmap.Margins = new Margins(0, 10, 0, 0);
+			bitmap.Dock = DockStyle.Bottom;
+
+			this.displayBitmap = new MyWidgets.Display(bitmap);
+			this.displayBitmap.SetMemory(this.memory, Components.Memory.PeriphDisplay, Components.Memory.PeriphDisplayDx, Components.Memory.PeriphDisplayDy);
+			this.displayBitmap.PreferredSize = new Size(260, 204);
+			this.displayBitmap.Dock = DockStyle.Bottom;
+
 			//	Crée les touches du clavier.
 			this.keyboardButtons = new List<MyWidgets.PushButton>();
 			int t=0;
@@ -867,6 +897,7 @@ namespace Epsitec.App.Dolphin
 				}
 			}
 
+			this.UpdateDisplayMode();
 			this.UpdateKeyboard();
 		}
 
@@ -952,6 +983,13 @@ namespace Epsitec.App.Dolphin
 			this.memoryButtonM.ActiveState = (this.memoryAccessor.Bank == "M") ? ActiveState.Yes : ActiveState.No;
 			this.memoryButtonR.ActiveState = (this.memoryAccessor.Bank == "R") ? ActiveState.Yes : ActiveState.No;
 			this.memoryButtonP.ActiveState = (this.memoryAccessor.Bank == "P") ? ActiveState.Yes : ActiveState.No;
+		}
+
+		protected void UpdateDisplayMode()
+		{
+			//	Met à jour en fonction du mode [VIDEO].
+			bool video = (this.displayButtonMode.ActiveState == ActiveState.Yes);
+			this.displayBitmap.Visibility = video;
 		}
 
 		protected void UpdateKeyboard()
@@ -1747,6 +1785,21 @@ namespace Epsitec.App.Dolphin
 			this.UpdateMemoryBank();
 		}
 
+		private void HandleDisplayButtonModeClicked(object sender, MessageEventArgs e)
+		{
+			//	Bouton [VIDEO] cliqué.
+			if (this.displayButtonMode.ActiveState == ActiveState.No)
+			{
+				this.displayButtonMode.ActiveState = ActiveState.Yes;
+			}
+			else
+			{
+				this.displayButtonMode.ActiveState = ActiveState.No;
+			}
+
+			this.UpdateDisplayMode();
+		}
+
 		private void HandleKeyboardButtonPressed(object sender, MessageEventArgs e)
 		{
 			//	Touche du clavier simulé pressée.
@@ -1833,7 +1886,9 @@ namespace Epsitec.App.Dolphin
 		protected List<MyWidgets.Digit>					dataDigits;
 		protected List<MyWidgets.Led>					dataLeds;
 		protected List<MyWidgets.Switch>				dataSwitchs;
+		protected MyWidgets.PushButton					displayButtonMode;
 		protected List<MyWidgets.Digit>					displayDigits;
+		protected MyWidgets.Display						displayBitmap;
 		protected List<MyWidgets.PushButton>			keyboardButtons;
 		protected List<MyWidgets.TextFieldHexa>			registerFields;
 		protected MyWidgets.MemoryAccessor				memoryAccessor;
