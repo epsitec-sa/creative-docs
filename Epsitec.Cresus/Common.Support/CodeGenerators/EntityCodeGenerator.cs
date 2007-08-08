@@ -125,10 +125,15 @@ namespace Epsitec.Common.Support.CodeGenerators
 			this.formatter.WriteEndNamespace ();
 		}
 
-		
+
 		private static string CreateEntityIdentifier(string name)
 		{
 			return string.Concat (name, Keywords.EntitySuffix);
+		}
+
+		private static string CreatePropertyIdentifier(string name)
+		{
+			return name;
 		}
 
 		private static string CreateInterfaceIdentifier(string name)
@@ -161,7 +166,7 @@ namespace Epsitec.Common.Support.CodeGenerators
 		private string CreatePropertyName(Druid id)
 		{
 			Caption caption = this.resourceManager.GetCaption (id);
-			return EntityCodeGenerator.CreateEntityIdentifier (caption.Name);
+			return EntityCodeGenerator.CreatePropertyIdentifier (caption.Name);
 		}
 
 		private string CreateTypeFullName(Druid typeId)
@@ -170,7 +175,8 @@ namespace Epsitec.Common.Support.CodeGenerators
 			AbstractType type = TypeRosetta.GetTypeObject (caption);
 			System.Type sysType = type.SystemType;
 
-			if (sysType == typeof (StructuredType))
+			if ((sysType == typeof (StructuredType)) ||
+				(sysType == null))
 			{
 				return this.CreateEntityFullName (typeId);
 			}

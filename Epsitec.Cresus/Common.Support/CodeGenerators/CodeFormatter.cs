@@ -23,6 +23,7 @@ namespace Epsitec.Common.Support.CodeGenerators
 		public CodeFormatter(System.Text.StringBuilder buffer)
 		{
 			this.output = buffer;
+			this.indentationChars = "\t";
 		}
 
 
@@ -42,7 +43,15 @@ namespace Epsitec.Common.Support.CodeGenerators
 				if (this.indentationLevel != value)
 				{
 					this.indentationLevel  = value;
-					this.indentationString = new string ('\t', this.indentationLevel);
+					
+					System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
+
+					for (int i = 0; i < this.indentationLevel; i++)
+					{
+						buffer.Append (this.indentationChars);
+					}
+
+					this.indentationString = buffer.ToString ();
 				}
 			}
 		}
@@ -57,6 +66,31 @@ namespace Epsitec.Common.Support.CodeGenerators
 			get
 			{
 				return this.indentationString;
+			}
+		}
+
+		/// <summary>
+		/// Gets or sets the indentation character(s). The default is just one
+		/// tab character <c>"\t"</c>.
+		/// </summary>
+		/// <value>The indentation character(s).</value>
+		public string							IndentationChars
+		{
+			get
+			{
+				return this.indentationChars;
+			}
+			set
+			{
+				if (this.indentationChars != value)
+				{
+					if (this.indentationLevel > 0)
+					{
+						throw new System.InvalidOperationException ("Cannot change IndentationChars while outputting code");
+					}
+
+					this.indentationChars = value;
+				}
 			}
 		}
 
@@ -695,6 +729,7 @@ namespace Epsitec.Common.Support.CodeGenerators
 		
 		System.Text.StringBuilder output;
 		int indentationLevel;
+		string indentationChars;
 		string indentationString;
 		LineState lineState;
 		Stack<ElementState> elementStates = new Stack<ElementState> ();

@@ -24,8 +24,9 @@ namespace Epsitec.Common.Support
 			ResourceManager manager = Epsitec.Common.Support.Res.Manager;
 			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
 			CodeFormatter formatter = new CodeFormatter (buffer);
+			formatter.IndentationChars = "  ";
 			EntityCodeGenerator generator = new EntityCodeGenerator (formatter, manager);
-			
+
 			Assert.AreEqual ("Epsitec.Common.Support", generator.SourceNamespace);
 
 			generator.Emit (Epsitec.Common.Support.Res.Types.ResourceDateTimeType);
@@ -33,6 +34,12 @@ namespace Epsitec.Common.Support
 			generator.Emit (Epsitec.Common.Support.Res.Types.ResourceCaption);
 			generator.Emit (Epsitec.Common.Support.Res.Types.ResourceBase);
 
+			buffer.AppendLine ();
+
+			generator.Emit (Epsitec.Common.Support.Res.Types.ResourceCommand);
+
+			buffer.AppendLine ();
+			
 			StructuredType i1 = new StructuredType (StructuredTypeClass.Interface);
 			i1.Caption.Name = "IFoo";
 
