@@ -1390,7 +1390,10 @@ namespace Epsitec.App.Dolphin
 
 			if (data != null)
 			{
-				this.Deserialize(data);
+				if (!this.Deserialize(data))
+				{
+					this.filename = null;
+				}
 			}
 
 			if (this.fieldProgrammRem.Text != DolphinApplication.ProgrammEmptyRem)
@@ -1478,15 +1481,17 @@ namespace Epsitec.App.Dolphin
 			return buffer.ToString();
 		}
 
-		protected void Deserialize(string data)
+		protected bool Deserialize(string data)
 		{
 			//	Désérialise la vue à partir d'un string de données.
+			//	Retourne false en cas de format incorrect.
 			System.IO.StringReader stringReader = new System.IO.StringReader(data);
 			XmlTextReader reader = new XmlTextReader(stringReader);
 			
-			this.ReadXml(reader);
+			bool ok = this.ReadXml(reader);
 
 			reader.Close();
+			return ok;
 		}
 
 		protected void WriteXml(XmlWriter writer)
@@ -1512,9 +1517,10 @@ namespace Epsitec.App.Dolphin
 			writer.WriteEndDocument();
 		}
 
-		protected void ReadXml(XmlReader reader)
+		protected bool ReadXml(XmlReader reader)
 		{
 			//	Désérialise tout le programme.
+			//	Retourne false en cas de format incorrect.
 			this.memory.ClearRam();
 			this.fieldProgrammRem.Text = DolphinApplication.ProgrammEmptyRem;
 
@@ -1524,7 +1530,6 @@ namespace Epsitec.App.Dolphin
 				if (reader.NodeType == XmlNodeType.Element)
 				{
 					string name = reader.LocalName;
-					//?string element = reader.ReadElementString();
 
 					if (name == "ProcessorName")
 					{
@@ -1577,15 +1582,13 @@ namespace Epsitec.App.Dolphin
 				}
 				else if (reader.NodeType == XmlNodeType.EndElement)
 				{
-					System.Diagnostics.Debug.Assert(reader.Name == "Dolphin");
-					break;
+					return reader.Name == "Dolphin";
 				}
 				else
 				{
 					reader.Read();
 				}
 			}
-
 		}
 		#endregion
 
@@ -1604,6 +1607,15 @@ namespace Epsitec.App.Dolphin
 				if (this.Open())
 				{
 					this.firstOpenSaveDialog = false;
+				}
+				else
+				{
+					string title = "Dolphin";
+					string icon = "manifest:Epsitec.Common.Dialogs.Images.Warning.icon";
+					string message = "Le format du programme est incorrect.<br/>Il s'agit probablement d'un programme réalisé avec une version plus récente.";
+					Common.Dialogs.IDialog dialog = Common.Dialogs.MessageDialog.CreateOk(title, icon, message, null, null);
+					dialog.Owner = this.Window;
+					dialog.OpenDialog();
 				}
 			}
 		}
