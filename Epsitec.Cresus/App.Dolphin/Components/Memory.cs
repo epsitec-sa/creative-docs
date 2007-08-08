@@ -40,9 +40,10 @@ namespace Epsitec.App.Dolphin.Components
 		public bool IsEmptyRam
 		{
 			//	Retourne true si la Ram est entièrement vide.
+			//	On ignore quelques bytes à la fin de la mémoire pour le stack.
 			get
 			{
-				for (int i=Memory.RamBase; i<Memory.RamBase+Memory.RamLength; i++)
+				for (int i=Memory.RamBase; i<Memory.RamBase+Memory.RamLength-Memory.StackMax; i++)
 				{
 					if (this.memory[i] != 0)
 					{
@@ -87,7 +88,7 @@ namespace Epsitec.App.Dolphin.Components
 
 			//	Cherche la dernière adresse non nulle.
 			int last = 0;
-			for (int i=Memory.RamBase+Memory.RamLength-1; i>=Memory.RamBase; i--)
+			for (int i=Memory.RamBase+Memory.RamLength-Memory.StackMax-1; i>=Memory.RamBase; i--)
 			{
 				if (this.memory[i] != 0)
 				{
@@ -268,6 +269,7 @@ namespace Epsitec.App.Dolphin.Components
 		public static readonly int RamBase          = 0x000;
 		public static readonly int RamLength        = 0x800;
 		public static readonly int StackBase        = 0x800;
+		public static readonly int StackMax         = 0x080;
 
 		public static readonly int RomBase          = 0x800;
 		public static readonly int RomLength        = 0x400;
