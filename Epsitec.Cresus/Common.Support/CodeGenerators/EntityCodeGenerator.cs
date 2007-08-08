@@ -32,7 +32,7 @@ namespace Epsitec.Common.Support.CodeGenerators
 		{
 			StructuredTypeClass typeClass = type.Class;
 			
-			string       entityName = EntityCodeGenerator.CreateEntityIdentifier (type.Caption.Name);
+			string       name       = type.Caption.Name;
 			List<string> specifiers = new List<string> ();
 
 			System.Diagnostics.Debug.Assert ((typeClass == StructuredTypeClass.Entity) || (typeClass == StructuredTypeClass.Interface));
@@ -65,12 +65,12 @@ namespace Epsitec.Common.Support.CodeGenerators
 			switch (typeClass)
 			{
 				case StructuredTypeClass.Entity:
-					formatter.WriteBeginClass (EntityCodeGenerator.ClassAttributes, entityName, specifiers);
+					formatter.WriteBeginClass (EntityCodeGenerator.ClassAttributes, EntityCodeGenerator.CreateEntityIdentifier (name), specifiers);
 					formatter.WriteEndClass ();
 					break;
 
 				case StructuredTypeClass.Interface:
-					formatter.WriteBeginInterface (EntityCodeGenerator.InterfaceAttributes, entityName, specifiers);
+					formatter.WriteBeginInterface (EntityCodeGenerator.InterfaceAttributes, EntityCodeGenerator.CreateInterfaceIdentifier (name), specifiers);
 					formatter.WriteEndInterface ();
 					break;
 			}
@@ -81,6 +81,11 @@ namespace Epsitec.Common.Support.CodeGenerators
 		private static string CreateEntityIdentifier(string name)
 		{
 			return string.Concat (name, Keywords.EntitySuffix);
+		}
+
+		private static string CreateInterfaceIdentifier(string name)
+		{
+			return name;
 		}
 
 		private static string CreateEntityNamespace(string name)
