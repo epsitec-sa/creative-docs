@@ -107,6 +107,7 @@ namespace Epsitec.Common.Support.CodeGenerators
 					
 					this.formatter.WriteBeginClass (EntityCodeGenerator.EntityClassAttributes, EntityCodeGenerator.CreateEntityIdentifier (name), specifiers);
 					type.ForEachField (emitter.EmitLocalProperty);
+					type.ForEachField (emitter.EmitLocalPropertyHandlers);
 					this.formatter.WriteEndClass ();
 					break;
 
@@ -216,7 +217,76 @@ namespace Epsitec.Common.Support.CodeGenerators
 				this.type = type;
 			}
 
-			public abstract void EmitLocalProperty(StructuredTypeField field);
+			public void EmitLocalProperty(StructuredTypeField field)
+			{
+				if (field.Membership == FieldMembership.Local)
+				{
+					string typeName = this.generator.CreateTypeFullName (field.TypeId);
+					string propName = this.generator.CreatePropertyName (field.CaptionId);
+					string code;
+
+					switch (field.Relation)
+					{
+						case FieldRelation.None:
+						case FieldRelation.Reference:
+							code = string.Concat (typeName, " ", propName);
+							break;
+
+						case FieldRelation.Collection:
+							code = string.Concat (Keywords.Global, "::", Keywords.GenericIList, "<", typeName, ">", " ", propName);
+							break;
+
+						default:
+							throw new System.NotSupportedException (string.Format ("Relation {0} not supported", field.Relation));
+					}
+
+					this.generator.formatter.WriteBeginProperty (EntityCodeGenerator.PropertyAttributes, code);
+					this.EmitPropertyGetter (field, typeName, propName);
+					this.EmitPropertySetter (field, typeName, propName);
+					this.generator.formatter.WriteEndProperty ();
+				}
+			}
+
+			public void EmitLocalPropertyHandlers(StructuredTypeField field)
+			{
+				if (field.Membership == FieldMembership.Local)
+				{
+					string typeName = this.generator.CreateTypeFullName (field.TypeId);
+					string propName = this.generator.CreatePropertyName (field.CaptionId);
+					string code;
+
+					switch (field.Relation)
+					{
+						case FieldRelation.None:
+						case FieldRelation.Reference:
+							this.EmitPropertyOnChanging (field, typeName, propName);
+							this.EmitPropertyOnChanged (field, typeName, propName);
+							break;
+
+						case FieldRelation.Collection:
+							break;
+
+						default:
+							throw new System.NotSupportedException (string.Format ("Relation {0} not supported", field.Relation));
+					}
+				}
+			}
+
+			protected virtual void EmitPropertyOnChanging(StructuredTypeField field, string typeName, string propName)
+			{
+			}
+
+			protected virtual void EmitPropertyOnChanged(StructuredTypeField field, string typeName, string propName)
+			{
+			}
+
+			protected virtual void EmitPropertyGetter(StructuredTypeField field, string typeName, string propName)
+			{
+			}
+
+			protected virtual void EmitPropertySetter(StructuredTypeField field, string typeName, string propName)
+			{
+			}
 
 			protected EntityCodeGenerator generator;
 			protected StructuredType type;
@@ -229,14 +299,59 @@ namespace Epsitec.Common.Support.CodeGenerators
 			{
 			}
 
-			public override void EmitLocalProperty(StructuredTypeField field)
+			protected override void EmitPropertyGetter(StructuredTypeField field, string typeName, string propName)
 			{
-				if (field.Membership == FieldMembership.Local)
+				this.generator.formatter.WriteBeginGetter (new CodeAttributes (CodeVisibility.Public));
+
+				if (field.Relation == FieldRelation.Collection)
 				{
-					string code = string.Concat (this.generator.CreateTypeFullName (field.TypeId), " ", this.generator.CreatePropertyName (field.CaptionId));
-					this.generator.formatter.WriteBeginProperty (EntityCodeGenerator.PropertyAttributes, code);
-					this.generator.formatter.WriteEndProperty ();
+					this.generator.formatter.WriteCodeLine (Keywords.Return, " ", Keywords.This, ".", Keywords.GetFieldCollectionMethod, "<", typeName, "> (", Keywords.Quote, field.Id, Keywords.Quote,");");
 				}
+				else
+				{
+					this.generator.formatter.WriteCodeLine (Keywords.Return, " ", Keywords.This, ".", Keywords.GetFieldMethod, "<", typeName, "> (", Keywords.Quote, field.Id, Keywords.Quote, ");");
+				}
+				
+				this.generator.formatter.WriteEndGetter ();
+			}
+
+			protected override void EmitPropertySetter(StructuredTypeField field, string typeName, string propName)
+			{
+				if (field.Relation == FieldRelation.Collection)
+				{
+				}
+				else
+				{
+					this.generator.formatter.WriteBeginSetter (new CodeAttributes (CodeVisibility.Public));
+					this.generator.formatter.WriteCodeLine (typeName, " ", Keywords.OldValueVariable, " = ", Keywords.This, ".", propName, ";");
+					this.generator.formatter.WriteCodeLine (Keywords.If, " (", Keywords.OldValueVariable, " != ", Keywords.ValueVariable, ")");
+					this.generator.formatter.WriteBeginBlock ();
+					this.generator.formatter.WriteCodeLine (Keywords.This, ".", Keywords.OnPrefix, propName, Keywords.ChangingSuffix, " (", Keywords.OldValueVariable, ", ", Keywords.ValueVariable, ");");
+					this.generator.formatter.WriteCodeLine (Keywords.This, ".", Keywords.SetFieldMethod, "<", typeName, "> (", Keywords.Quote, field.Id, Keywords.Quote, ", ", Keywords.OldValueVariable, ", ", Keywords.ValueVariable, ");");
+					this.generator.formatter.WriteCodeLine (Keywords.This, ".", Keywords.OnPrefix, propName, Keywords.ChangedSuffix, " (", Keywords.OldValueVariable, ", ", Keywords.ValueVariable, ");");
+					this.generator.formatter.WriteEndBlock ();
+					this.generator.formatter.WriteEndSetter ();
+				}
+			}
+
+			protected override void EmitPropertyOnChanged(StructuredTypeField field, string typeName, string propName)
+			{
+				string code = string.Concat (Keywords.Void, " ", Keywords.OnPrefix, propName, Keywords.ChangedSuffix, "(",
+					/**/					 Keywords.String, " ", Keywords.FieldNameVariable, ", ",
+					/**/					 typeName, " ", Keywords.OldValueVariable, ", ",
+					/**/				     typeName, " ", Keywords.NewValueVariable, ")");
+				this.generator.formatter.WriteBeginMethod (EntityCodeGenerator.PartialMethodAttributes, code);
+				this.generator.formatter.WriteEndMethod ();
+			}
+
+			protected override void EmitPropertyOnChanging(StructuredTypeField field, string typeName, string propName)
+			{
+				string code = string.Concat (Keywords.Void, " ", Keywords.OnPrefix, propName, Keywords.ChangingSuffix, "(",
+					/**/					 Keywords.String, " ", Keywords.FieldNameVariable, ", ",
+					/**/					 typeName, " ", Keywords.OldValueVariable, ", ",
+					/**/				     typeName, " ", Keywords.NewValueVariable, ")");
+				this.generator.formatter.WriteBeginMethod (EntityCodeGenerator.PartialMethodAttributes, code);
+				this.generator.formatter.WriteEndMethod ();
 			}
 		}
 
@@ -246,13 +361,6 @@ namespace Epsitec.Common.Support.CodeGenerators
 				: base (generator, type)
 			{
 			}
-			
-			public override void EmitLocalProperty(StructuredTypeField field)
-			{
-				if (field.Membership == FieldMembership.Local)
-				{
-				}
-			}
 		}
 
 
@@ -260,14 +368,36 @@ namespace Epsitec.Common.Support.CodeGenerators
 		private static readonly CodeAttributes StaticClassAttributes = new CodeAttributes (CodeVisibility.Public, CodeAccessibility.Static);
 		private static readonly CodeAttributes InterfaceAttributes = new CodeAttributes (CodeVisibility.Public, CodeAccessibility.Default);
 		private static readonly CodeAttributes PropertyAttributes = new CodeAttributes (CodeVisibility.Public);
+		private static readonly CodeAttributes PartialMethodAttributes = new CodeAttributes (CodeVisibility.Private, CodeAccessibility.Default, CodeAttributes.PartialDefinitionAttribute);
 
 		private static class Keywords
 		{
 			public const string Global = "global";
+			public const string Return = "return";
+			public const string This   = "this";
+			public const string If     = "if";
+			public const string Quote  = "\"";
+
+			public const string Void   = "void";
+			public const string String = "string";
+
+			public const string ValueVariable = "value";
+			public const string OldValueVariable = "oldValue";
+			public const string NewValueVariable = "newValue";
+			public const string FieldNameVariable = "fieldName";
+
+			public const string GenericIList = "System.Collections.Generic.IList";
 			public const string Entities = "Entities";
 			public const string EntitySuffix = "Entity";
 			public const string InterfaceImplementationSuffix = "InterfaceImplementation";
 			public const string AbstractEntity = "Epsitec.Common.Support.AbstractEntity";
+
+			public const string SetFieldMethod = "SetField";
+			public const string GetFieldMethod = "GetField";
+			public const string GetFieldCollectionMethod = "GetFieldCollection";
+			public const string OnPrefix = "On";
+			public const string ChangedSuffix = "Changed";
+			public const string ChangingSuffix = "Changing";
 		}
 
 		private CodeFormatter formatter;

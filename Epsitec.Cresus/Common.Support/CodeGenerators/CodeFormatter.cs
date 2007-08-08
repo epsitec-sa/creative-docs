@@ -405,6 +405,11 @@ namespace Epsitec.Common.Support.CodeGenerators
 			this.WriteCode (line);
 			this.WriteEndLine ();
 		}
+
+		public void WriteCodeLine(params string[] fragments)
+		{
+			this.WriteCodeLine (string.Concat (fragments));
+		}
 		
 		public void WriteCode(string code)
 		{
@@ -500,6 +505,7 @@ namespace Epsitec.Common.Support.CodeGenerators
 				}
 				
 				if ((attributes.Accessibility == CodeAccessibility.Final) ||
+					(attributes.Accessibility == CodeAccessibility.Default) ||
 					(attributes.Accessibility == CodeAccessibility.Static))
 				{
 					//	OK
