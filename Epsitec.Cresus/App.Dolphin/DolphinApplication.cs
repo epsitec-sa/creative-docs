@@ -1371,11 +1371,12 @@ namespace Epsitec.App.Dolphin
 			}
 		}
 
-		protected bool Open()
+		protected string Open()
 		{
 			//	Ouvre un nouveau programme.
-			//	Retourne false en cas d'erreur.
+			//	Retourne une éventuelle erreur.
 			this.Stop();
+			string err = null;
 
 			string data = null;
 			try
@@ -1386,11 +1387,13 @@ namespace Epsitec.App.Dolphin
 			{
 				data = null;
 				this.filename = null;
+				err = "Impossible de lire le fichier.";
 			}
 
 			if (data != null)
 			{
-				if (!this.Deserialize(data))
+				err = this.Deserialize(data);
+				if (!string.IsNullOrEmpty(err))
 				{
 					this.filename = null;
 				}
@@ -1410,7 +1413,7 @@ namespace Epsitec.App.Dolphin
 			this.UpdateClockButtons();
 			this.UpdateFilename();
 
-			return !string.IsNullOrEmpty(this.filename);
+			return err;
 		}
 
 		protected bool Save()
@@ -1481,17 +1484,17 @@ namespace Epsitec.App.Dolphin
 			return buffer.ToString();
 		}
 
-		protected bool Deserialize(string data)
+		protected string Deserialize(string data)
 		{
 			//	Désérialise la vue à partir d'un string de données.
-			//	Retourne false en cas de format incorrect.
+			//	Retourne une éventuelle erreur.
 			System.IO.StringReader stringReader = new System.IO.StringReader(data);
 			XmlTextReader reader = new XmlTextReader(stringReader);
 			
-			bool ok = this.ReadXml(reader);
+			string err = this.ReadXml(reader);
 
 			reader.Close();
-			return ok;
+			return err;
 		}
 
 		protected void WriteXml(XmlWriter writer)
@@ -1500,6 +1503,7 @@ namespace Epsitec.App.Dolphin
 			writer.WriteStartDocument();
 			writer.WriteStartElement("Dolphin");
 			
+			writer.WriteElementString("Version", Misc.GetVersion());
 			writer.WriteElementString("ProcessorName", this.processor.Name);
 			writer.WriteElementString("ProcessorIPS", this.ips.ToString(System.Globalization.CultureInfo.InvariantCulture));
 			writer.WriteElementString("ProcessorStep", (this.switchStep.ActiveState == ActiveState.Yes) ? "S" : "C");
@@ -1517,10 +1521,10 @@ namespace Epsitec.App.Dolphin
 			writer.WriteEndDocument();
 		}
 
-		protected bool ReadXml(XmlReader reader)
+		protected string ReadXml(XmlReader reader)
 		{
 			//	Désérialise tout le programme.
-			//	Retourne false en cas de format incorrect.
+			//	Retourne une éventuelle erreur.
 			this.memory.ClearRam();
 			this.fieldProgrammRem.Text = DolphinApplication.ProgrammEmptyRem;
 
@@ -1531,7 +1535,16 @@ namespace Epsitec.App.Dolphin
 				{
 					string name = reader.LocalName;
 
-					if (name == "ProcessorName")
+					if (name == "Version")
+					{
+						string element = reader.ReadElementString();
+						if (Misc.CompareVersions(element, Misc.GetVersion()) > 0)
+						{
+							return "Ce fichier a été réalisé avec une version plus récente.";
+						}
+						reader.Read();
+					}
+					else if (name == "ProcessorName")
 					{
 						string element = reader.ReadElementString();
 						reader.Read();
@@ -1582,7 +1595,14 @@ namespace Epsitec.App.Dolphin
 				}
 				else if (reader.NodeType == XmlNodeType.EndElement)
 				{
-					return reader.Name == "Dolphin";
+					if (reader.Name == "Dolphin")
+					{
+						return null;  // ok
+					}
+					else
+					{
+						return "Le format du fichier est incorrect.";
+					}
 				}
 				else
 				{
@@ -1604,7 +1624,8 @@ namespace Epsitec.App.Dolphin
 			//	Bouton ouvrir cliqué.
 			if (this.AutoSave() && this.DlgOpenFilename())
 			{
-				if (this.Open())
+				string err = this.Open();
+				if (string.IsNullOrEmpty(err))
 				{
 					this.firstOpenSaveDialog = false;
 				}
@@ -1612,8 +1633,7 @@ namespace Epsitec.App.Dolphin
 				{
 					string title = "Dolphin";
 					string icon = "manifest:Epsitec.Common.Dialogs.Images.Warning.icon";
-					string message = "Le format du programme est incorrect.<br/>Il s'agit probablement d'un programme réalisé avec une version plus récente.";
-					Common.Dialogs.IDialog dialog = Common.Dialogs.MessageDialog.CreateOk(title, icon, message, null, null);
+					Common.Dialogs.IDialog dialog = Common.Dialogs.MessageDialog.CreateOk(title, icon, err, null, null);
 					dialog.Owner = this.Window;
 					dialog.OpenDialog();
 				}

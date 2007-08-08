@@ -23,6 +23,30 @@ namespace Epsitec.App.Dolphin
 			return version;
 		}
 
+		static public int CompareVersions(string v1, string v2)
+		{
+			//	Compare deux numéros de version.
+			if (v1 == v2)
+			{
+				return 0;
+			}
+
+			string[] sv1 = v1.Split('.');
+			string[] sv2 = v2.Split('.');
+
+			int count = System.Math.Min(sv1.Length, sv2.Length);
+			for (int i=0; i<count; i++)
+			{
+				int c = sv1[i].CompareTo(sv2[i]);
+				if (c != 0)
+				{
+					return c;
+				}
+			}
+
+			return 0;
+		}
+
 
 		static public Path GetHatchPath(Rectangle rect, double distance, Point reference)
 		{
