@@ -65,13 +65,16 @@ namespace Epsitec.Common.Support.CodeGenerators
 			switch (typeClass)
 			{
 				case StructuredTypeClass.Entity:
-					formatter.WriteBeginClass (EntityCodeGenerator.ClassAttributes, EntityCodeGenerator.CreateEntityIdentifier (name), specifiers);
+					formatter.WriteBeginClass (EntityCodeGenerator.EntityClassAttributes, EntityCodeGenerator.CreateEntityIdentifier (name), specifiers);
 					formatter.WriteEndClass ();
 					break;
 
 				case StructuredTypeClass.Interface:
 					formatter.WriteBeginInterface (EntityCodeGenerator.InterfaceAttributes, EntityCodeGenerator.CreateInterfaceIdentifier (name), specifiers);
 					formatter.WriteEndInterface ();
+					
+					formatter.WriteBeginClass (EntityCodeGenerator.StaticClassAttributes, EntityCodeGenerator.CreateInterfaceImplementationIdentifier (name), specifiers);
+					formatter.WriteEndClass ();
 					break;
 			}
 			
@@ -86,6 +89,11 @@ namespace Epsitec.Common.Support.CodeGenerators
 		private static string CreateInterfaceIdentifier(string name)
 		{
 			return name;
+		}
+
+		private static string CreateInterfaceImplementationIdentifier(string name)
+		{
+			return string.Concat (name.Substring (1), Keywords.InterfaceImplementationSuffix);
 		}
 
 		private static string CreateEntityNamespace(string name)
@@ -107,7 +115,8 @@ namespace Epsitec.Common.Support.CodeGenerators
 
 
 
-		private static readonly CodeAttributes ClassAttributes = new CodeAttributes (CodeVisibility.Public, CodeAccessibility.Default, CodeAttributes.PartialAttribute);
+		private static readonly CodeAttributes EntityClassAttributes = new CodeAttributes (CodeVisibility.Public, CodeAccessibility.Default, CodeAttributes.PartialAttribute);
+		private static readonly CodeAttributes StaticClassAttributes = new CodeAttributes (CodeVisibility.Public, CodeAccessibility.Static);
 		private static readonly CodeAttributes InterfaceAttributes = new CodeAttributes (CodeVisibility.Public, CodeAccessibility.Default);
 
 		private static class Keywords
@@ -115,6 +124,7 @@ namespace Epsitec.Common.Support.CodeGenerators
 			public const string Global = "global";
 			public const string Entities = "Entities";
 			public const string EntitySuffix = "Entity";
+			public const string InterfaceImplementationSuffix = "InterfaceImplementation";
 			public const string AbstractEntity = "Epsitec.Common.Support.AbstractEntity";
 		}
 
