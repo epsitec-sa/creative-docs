@@ -46,6 +46,14 @@ namespace Epsitec.App.Dolphin.Components
 			}
 		}
 
+		public virtual bool IsCall(out int retAddress)
+		{
+			//	Indique si le processeur est sur une instruction CALL.
+			//	Retourne l'adresse après le CALL.
+			retAddress = 0;
+			return false;
+		}
+
 		public virtual IEnumerable<string> RegisterNames
 		{
 			//	Enumère tous les noms de registres.

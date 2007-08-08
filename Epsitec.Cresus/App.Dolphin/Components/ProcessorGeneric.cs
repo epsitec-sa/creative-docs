@@ -180,6 +180,29 @@ namespace Epsitec.App.Dolphin.Components
 			this.registerHL = 0;
 		}
 
+		public override bool IsCall(out int retAddress)
+		{
+			//	Indique si le processeur est sur une instruction CALL.
+			//	Retourne l'adresse après le CALL.
+			Instructions op = (Instructions) this.memory.Read(this.registerPC);
+
+			if (op >= Instructions.CallAbs && op <= Instructions.CallAbsNS)
+			{
+				retAddress = this.registerPC+3;
+				return true;
+			}
+			else if (op >= Instructions.CallRel && op <= Instructions.CallRelNS)
+			{
+				retAddress = this.registerPC+2;
+				return true;
+			}
+			else
+			{
+				retAddress = 0;
+				return false;
+			}
+		}
+
 		public override void Clock()
 		{
 			//	Exécute une instruction du processeur.

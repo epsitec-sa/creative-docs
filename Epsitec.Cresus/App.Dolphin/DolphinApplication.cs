@@ -34,6 +34,7 @@ namespace Epsitec.App.Dolphin
 
 			this.memory = new Components.Memory(this);
 			this.processor = new Components.ProcessorGeneric(this.memory);
+			this.breakAddress = -1;
 			this.memory.RomInitialise(this.processor);
 			this.ips = 1000;
 			this.panelMode = "Bus";
@@ -236,7 +237,7 @@ namespace Epsitec.App.Dolphin
 			sep.Dock = DockStyle.Top;
 
 			MyWidgets.Panel leftClock = new MyWidgets.Panel(leftPanel);
-			leftClock.PreferredWidth = 50-10;
+			leftClock.PreferredWidth = 50;
 			leftClock.Margins = new Margins(10, 0, 0, 0);
 			leftClock.Dock = DockStyle.Left;
 
@@ -519,7 +520,7 @@ namespace Epsitec.App.Dolphin
 			this.buttonClock0.Clicked += new MessageEventHandler(this.HandleButtonClockClicked);
 			ToolTip.Default.SetToolTip(this.buttonClock0, "1 instruction/seconde");
 
-			MyWidgets.Panel stepLabels = this.CreateSwitchHorizonalLabels(parent, "C", "S");
+			MyWidgets.Panel stepLabels = this.CreateSwitchHorizonalLabels(parent, "CONT", "STEP");
 			stepLabels.Margins = new Margins(0, 0, 6, 0);
 			stepLabels.Dock = DockStyle.Top;
 
@@ -533,10 +534,21 @@ namespace Epsitec.App.Dolphin
 			this.buttonStep = new MyWidgets.PushButton(parent);
 			this.buttonStep.Text = "<font size=\"200%\"><b>S</b></font>";
 			this.buttonStep.PreferredSize = new Size(50, 50);
-			this.buttonStep.Margins = new Margins(0, 0, 0, 10);
+			this.buttonStep.Margins = new Margins(0, 0, 0, 0);
 			this.buttonStep.Dock = DockStyle.Top;
 			this.buttonStep.Clicked += new MessageEventHandler(this.HandleButtonStepClicked);
 			ToolTip.Default.SetToolTip(this.buttonStep, "Step");
+
+			MyWidgets.Panel deepLabels = this.CreateSwitchHorizonalLabels(parent, "SURF", "DEEP");
+			deepLabels.Margins = new Margins(0, 0, 6, 0);
+			deepLabels.Dock = DockStyle.Top;
+
+			this.switchDeep = new MyWidgets.Switch(parent);
+			this.switchDeep.PreferredSize = new Size(50, 20);
+			this.switchDeep.Margins = new Margins(0, 0, 0, 5);
+			this.switchDeep.Dock = DockStyle.Top;
+			this.switchDeep.Clicked += new MessageEventHandler(this.HandleSwitchDeepClicked);
+			ToolTip.Default.SetToolTip(this.switchDeep, "Mode Surface ou Deep lors d'un CALL");
 
 			//	Partie inférieure gauche pour le contrôle des bus.
 			this.clockBusPanel = new MyWidgets.Panel(parent);
@@ -728,19 +740,19 @@ namespace Epsitec.App.Dolphin
 			StaticText label;
 
 			label = new StaticText(labels);
-			label.Text = no;
+			label.Text = string.Concat("<font size=\"80%\">", no, "</font>");
 			label.ContentAlignment = ContentAlignment.MiddleLeft;
 			label.PreferredHeight = 20;
 			label.PreferredWidth = parent.PreferredWidth/2;
-			label.Margins = new Margins(5, 0, 0, 0);
+			label.Margins = new Margins(0, 0, 0, 0);
 			label.Dock = DockStyle.Left;
 
 			label = new StaticText(labels);
-			label.Text = yes;
+			label.Text = string.Concat("<font size=\"80%\">", yes, "</font>");
 			label.ContentAlignment = ContentAlignment.MiddleRight;
 			label.PreferredHeight = 20;
 			label.PreferredWidth = parent.PreferredWidth/2;
-			label.Margins = new Margins(0, 5, 0, 0);
+			label.Margins = new Margins(0, 0, 0, 0);
 			label.Dock = DockStyle.Right;
 
 			return labels;
@@ -924,6 +936,7 @@ namespace Epsitec.App.Dolphin
 		{
 			//	Met à jour le mode enable/disable de tous les boutons.
 			this.buttonStep.Enable = (this.buttonReset.ActiveState == ActiveState.Yes) && (this.switchStep.ActiveState == ActiveState.Yes);
+			this.switchDeep.Enable = (this.buttonReset.ActiveState == ActiveState.Yes) && (this.switchStep.ActiveState == ActiveState.Yes);
 
 			bool run = (this.buttonReset.ActiveState == ActiveState.Yes);
 
@@ -1188,11 +1201,35 @@ namespace Epsitec.App.Dolphin
 				this.clock.Dispose();
 				this.clock = null;
 			}
+
+			this.breakAddress = -1;
 		}
 
-		protected void ProcessorClock()
+		protected void ProcessorBreakIn(int retAddress)
+		{
+			//	Part jusqu'à un break.
+			this.breakAddress = retAddress;
+
+			this.switchStep.ActiveState = ActiveState.No;  // continus
+			this.UpdateButtons();
+
+			this.ProcessorStart();
+		}
+
+		protected void ProcessorBreakOut()
+		{
+			//	Stoppe une fois le break rencontré.
+			this.switchStep.ActiveState = ActiveState.Yes;  // step
+			this.UpdateButtons();
+			
+			this.ProcessorStop();
+			this.ProcessorFeedback();
+		}
+
+		protected bool ProcessorClock()
 		{
 			//	Exécute une instruction du processeur.
+			//	Retourne true si le processeur est arrivé sur un break.
 			this.processor.Clock();
 
 			if (this.processor.IsHalted)
@@ -1205,6 +1242,14 @@ namespace Epsitec.App.Dolphin
 				this.buttonReset.ActiveState = ActiveState.No;
 				this.UpdateButtons();
 			}
+
+			if (this.breakAddress != -1)
+			{
+				int address = this.processor.GetRegisterValue("PC");
+				return address == this.breakAddress;
+			}
+
+			return false;
 		}
 
 		protected void ProcessorFeedback()
@@ -1670,12 +1715,20 @@ namespace Epsitec.App.Dolphin
 				int count = (int) (this.ips/DolphinApplication.RealMaxIps);
 				for (int i=0; i<count; i++)
 				{
-					this.ProcessorClock();
+					if (this.ProcessorClock())
+					{
+						this.ProcessorBreakOut();
+						return;
+					}
 				}
 			}
 			else
 			{
-				this.ProcessorClock();
+				if (this.ProcessorClock())
+				{
+					this.ProcessorBreakOut();
+					return;
+				}
 			}
 
 			this.ProcessorFeedback();
@@ -1707,7 +1760,23 @@ namespace Epsitec.App.Dolphin
 		private void HandleButtonStepClicked(object sender, MessageEventArgs e)
 		{
 			//	Bouton [S] cliqué.
-			this.ProcessorClock();
+			if (this.switchDeep.ActiveState == ActiveState.Yes)  // deep ?
+			{
+				this.ProcessorClock();
+			}
+			else  // surf ?
+			{
+				int retAddress;
+				if (this.processor.IsCall(out retAddress))
+				{
+					this.ProcessorBreakIn(retAddress);
+				}
+				else
+				{
+					this.ProcessorClock();
+				}
+			}
+
 			this.ProcessorFeedback();
 		}
 
@@ -1725,7 +1794,7 @@ namespace Epsitec.App.Dolphin
 
 		private void HandleSwitchStepClicked(object sender, MessageEventArgs e)
 		{
-			//	Switch C/S basculé.
+			//	Switch CONT/STEP basculé.
 			this.switchStep.ActiveState = (this.switchStep.ActiveState == ActiveState.No) ? ActiveState.Yes : ActiveState.No;
 			this.UpdateButtons();
 
@@ -1742,6 +1811,13 @@ namespace Epsitec.App.Dolphin
 				}
 			}
 
+			this.Dirty = true;
+		}
+
+		private void HandleSwitchDeepClicked(object sender, MessageEventArgs e)
+		{
+			//	Switch SURF/DEEP basculé.
+			this.switchDeep.ActiveState = (this.switchDeep.ActiveState == ActiveState.No) ? ActiveState.Yes : ActiveState.No;
 			this.Dirty = true;
 		}
 
@@ -1941,6 +2017,7 @@ namespace Epsitec.App.Dolphin
 		protected MyWidgets.PushButton					buttonClock1;
 		protected MyWidgets.PushButton					buttonClock0;
 		protected MyWidgets.Switch						switchStep;
+		protected MyWidgets.Switch						switchDeep;
 		protected List<MyWidgets.Digit>					addressDigits;
 		protected List<MyWidgets.Led>					addressLeds;
 		protected List<MyWidgets.Switch>				addressSwitchs;
@@ -1962,6 +2039,7 @@ namespace Epsitec.App.Dolphin
 
 		protected Components.Memory						memory;
 		protected Components.AbstractProcessor			processor;
+		protected int									breakAddress;
 		protected Timer									clock;
 		protected double								ips;
 		protected string								panelMode;
