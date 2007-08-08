@@ -1,4 +1,4 @@
-﻿"DeployProject"
+"DeployProject"
 {
 "VSVersion" = "3:800"
 "ProjectType" = "8:{978C614F-708E-4E1A-B201-565925725DBA}"
@@ -1013,7 +1013,7 @@
             }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_170D98789BC04CCDB563061349B31586"
             {
-            "SourcePath" = "8:D:\\Cresus\\Epsitec.Cresus\\X.Setup.Dolphin\\Dolphin.ico"
+            "SourcePath" = "8:Dolphin.ico"
             "TargetName" = "8:Dolphin.ico"
             "Tag" = "8:"
             "Folder" = "8:_EE585F4A4E9341C0834D01A0F2F0DCF6"
@@ -1734,6 +1734,29 @@
         }
         "FileType"
         {
+            "{5EB83D71-FA18-4901-BE56-DE22E13CC478}:_9EACC975672444F294DCD88343A9481C"
+            {
+            "Name" = "8:Simulateur de Dauphin"
+            "Description" = "8:Programme Dauphin"
+            "Extensions" = "8:dolphin"
+            "MIME" = "8:application/dolphin"
+            "Icon" = "8:_170D98789BC04CCDB563061349B31586"
+            "IconIndex" = "3:0"
+                "Command"
+                {
+                "Command" = "8:_3E380C0810E8469DA841F5F16CFB4733"
+                }
+                "Verbs"
+                {
+                    "{95C0C507-CBF0-42B8-B119-07219E384A4A}:_5BC3F0D26E3742F98F03C83127B8AEEA"
+                    {
+                    "Command" = "8:&Open"
+                    "Verb" = "8:open"
+                    "Arguments" = "8:\"%1\""
+                    "Order" = "3:0"
+                    }
+                }
+            }
         }
         "Folder"
         {
@@ -1787,7 +1810,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Simulateur de Dauphin"
         "ProductCode" = "8:{AF1751C3-076C-4554-8614-B17CA336CEF6}"
-        "PackageCode" = "8:{4C455150-05AE-44DC-930F-F910AD1482B2}"
+        "PackageCode" = "8:{0B500CCD-F4FD-48AC-BB03-40BAD10671AE}"
         "UpgradeCode" = "8:{3E07DF4F-1854-45A8-86B8-F494ADA98964}"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
@@ -1801,8 +1824,8 @@
         "Subject" = "8:"
         "ARPCONTACT" = "8:EPSITEC"
         "Keywords" = "8:"
-        "ARPCOMMENTS" = "8:Simulateur de Dauphin"
-        "ARPURLINFOABOUT" = "8:"
+        "ARPCOMMENTS" = "8:Installe le Simulateur de Dauphin"
+        "ARPURLINFOABOUT" = "8:www.epsitec.ch"
         "ARPPRODUCTICON" = "8:_170D98789BC04CCDB563061349B31586"
         "ARPIconIndex" = "3:0"
         "SearchPath" = "8:"
@@ -1917,7 +1940,7 @@
             "Target" = "8:_3E380C0810E8469DA841F5F16CFB4733"
             "Folder" = "8:_2CF27F40AD094C30B47B39F33E37E225"
             "WorkingFolder" = "8:_EE585F4A4E9341C0834D01A0F2F0DCF6"
-            "Icon" = "8:"
+            "Icon" = "8:_170D98789BC04CCDB563061349B31586"
             "Feature" = "8:"
             }
         }
