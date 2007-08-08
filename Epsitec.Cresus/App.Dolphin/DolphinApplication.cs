@@ -36,6 +36,7 @@ namespace Epsitec.App.Dolphin
 			this.processor = new Components.ProcessorGeneric(this.memory);
 			this.memory.RomInitialise(this.processor);
 			this.ips = 1000;
+			this.panelMode = "Bus";
 			this.firstOpenSaveDialog = true;
 
 			if (args != null)
@@ -275,6 +276,7 @@ namespace Epsitec.App.Dolphin
 
 			this.ProcessorFeedback();
 			this.UpdateSave();
+			this.UpdatePanelMode();
 		}
 
 		public bool Quit()
@@ -312,34 +314,30 @@ namespace Epsitec.App.Dolphin
 		protected void CreateOptions(MyWidgets.Panel parent)
 		{
 			//	Crée la partie supérieure de panneau de gauche.
-			RadioButton radio;
+			this.radioModeBus = new RadioButton(parent);
+			this.radioModeBus.Text = "Panneau de contrôle";
+			this.radioModeBus.Name = "Bus";
+			this.radioModeBus.Group = "Option";
+			this.radioModeBus.Margins = new Margins(60+10, 0, 0, 0);
+			this.radioModeBus.PreferredWidth = 140;
+			this.radioModeBus.Dock = DockStyle.Left;
+			this.radioModeBus.Clicked += new MessageEventHandler(this.HandleOptionRadioClicked);
 
-			radio = new RadioButton(parent);
-			radio.Text = "Panneau de contrôle";
-			radio.Name = "Bus";
-			radio.Group = "Option";
-			radio.ActiveState = ActiveState.Yes;
-			radio.Margins = new Margins(60+10, 0, 0, 0);
-			radio.PreferredWidth = 140;
-			radio.Dock = DockStyle.Left;
-			radio.Clicked += new MessageEventHandler(this.HandleOptionRadioClicked);
-			this.panelMode = radio.Name;
+			this.radioModeDetail = new RadioButton(parent);
+			this.radioModeDetail.Text = "Intérieur des circuits";
+			this.radioModeDetail.Name = "Detail";
+			this.radioModeDetail.Group = "Option";
+			this.radioModeDetail.PreferredWidth = 140;
+			this.radioModeDetail.Dock = DockStyle.Left;
+			this.radioModeDetail.Clicked += new MessageEventHandler(this.HandleOptionRadioClicked);
 
-			radio = new RadioButton(parent);
-			radio.Text = "Intérieur des circuits";
-			radio.Name = "Detail";
-			radio.Group = "Option";
-			radio.PreferredWidth = 140;
-			radio.Dock = DockStyle.Left;
-			radio.Clicked += new MessageEventHandler(this.HandleOptionRadioClicked);
-
-			radio = new RadioButton(parent);
-			radio.Text = "Rien (rapide)";
-			radio.Name = "Quick";
-			radio.Group = "Option";
-			radio.PreferredWidth = 100;
-			radio.Dock = DockStyle.Left;
-			radio.Clicked += new MessageEventHandler(this.HandleOptionRadioClicked);
+			this.radioModeQuick = new RadioButton(parent);
+			this.radioModeQuick.Text = "Rien (rapide)";
+			this.radioModeQuick.Name = "Quick";
+			this.radioModeQuick.Group = "Option";
+			this.radioModeQuick.PreferredWidth = 100;
+			this.radioModeQuick.Dock = DockStyle.Left;
+			this.radioModeQuick.Clicked += new MessageEventHandler(this.HandleOptionRadioClicked);
 		}
 
 		protected void CreateBusPanel(MyWidgets.Panel parent)
@@ -847,7 +845,7 @@ namespace Epsitec.App.Dolphin
 
 			MyWidgets.Panel mode = new MyWidgets.Panel(display);
 			mode.PreferredWidth = 50;
-			mode.Margins = new Margins(0, 10, 0, 0);
+			mode.Margins = new Margins(0, 12, 0, 0);
 			mode.Dock = DockStyle.Right;
 
 			this.displayButtonMode = new MyWidgets.PushButton(mode);
@@ -859,12 +857,12 @@ namespace Epsitec.App.Dolphin
 			//	Crée l'affichage bitmap.
 			MyWidgets.Panel bitmap = new MyWidgets.Panel(parent);
 			bitmap.PreferredHeight = 0;
-			bitmap.Margins = new Margins(0, 10, 0, 0);
+			bitmap.Margins = new Margins(0, 12, 0, 0);
 			bitmap.Dock = DockStyle.Bottom;
 
 			this.displayBitmap = new MyWidgets.Display(bitmap);
 			this.displayBitmap.SetMemory(this.memory, Components.Memory.PeriphDisplay, Components.Memory.PeriphDisplayDx, Components.Memory.PeriphDisplayDy);
-			this.displayBitmap.PreferredSize = new Size(260, 204);
+			this.displayBitmap.PreferredSize = new Size(258, 202);
 			this.displayBitmap.Dock = DockStyle.Bottom;
 
 			//	Crée les touches du clavier.
@@ -983,6 +981,19 @@ namespace Epsitec.App.Dolphin
 			this.memoryButtonM.ActiveState = (this.memoryAccessor.Bank == "M") ? ActiveState.Yes : ActiveState.No;
 			this.memoryButtonR.ActiveState = (this.memoryAccessor.Bank == "R") ? ActiveState.Yes : ActiveState.No;
 			this.memoryButtonP.ActiveState = (this.memoryAccessor.Bank == "P") ? ActiveState.Yes : ActiveState.No;
+		}
+
+		protected void UpdatePanelMode()
+		{
+			//	Met à jour le panneau choisi.
+			this.radioModeBus.ActiveState    = (this.panelMode == "Bus"   ) ? ActiveState.Yes : ActiveState.No;
+			this.radioModeDetail.ActiveState = (this.panelMode == "Detail") ? ActiveState.Yes : ActiveState.No;
+			this.radioModeQuick.ActiveState  = (this.panelMode == "Quick" ) ? ActiveState.Yes : ActiveState.No;
+
+			this.leftPanelBus.Visibility    = (this.panelMode == "Bus");
+			this.clockBusPanel.Visibility   = (this.panelMode == "Bus");
+			this.leftPanelDetail.Visibility = (this.panelMode == "Detail");
+			this.leftPanelQuick.Visibility  = (this.panelMode == "Quick");
 		}
 
 		protected void UpdateDisplayMode()
@@ -1487,6 +1498,8 @@ namespace Epsitec.App.Dolphin
 			writer.WriteElementString("ProcessorName", this.processor.Name);
 			writer.WriteElementString("ProcessorIPS", this.ips.ToString(System.Globalization.CultureInfo.InvariantCulture));
 			writer.WriteElementString("ProcessorStep", (this.switchStep.ActiveState == ActiveState.Yes) ? "S" : "C");
+			writer.WriteElementString("PanelMode", this.panelMode);
+			writer.WriteElementString("DisplayBitmap", (this.displayButtonMode.ActiveState == ActiveState.Yes) ? "Y" : "N");
 
 			if (this.fieldProgrammRem.Text != DolphinApplication.ProgrammEmptyRem)
 			{
@@ -1529,6 +1542,20 @@ namespace Epsitec.App.Dolphin
 						string element = reader.ReadElementString();
 						this.switchStep.ActiveState = (element == "S") ? ActiveState.Yes : ActiveState.No;
 						this.UpdateButtons();
+						reader.Read();
+					}
+					else if (name == "PanelMode")
+					{
+						string element = reader.ReadElementString();
+						this.panelMode = element;
+						this.UpdatePanelMode();
+						reader.Read();
+					}
+					else if (name == "DisplayBitmap")
+					{
+						string element = reader.ReadElementString();
+						this.displayButtonMode.ActiveState = (element == "Y") ? ActiveState.Yes : ActiveState.No;
+						this.UpdateDisplayMode();
 						reader.Read();
 					}
 					else if (name == "MemoryData")
@@ -1599,10 +1626,8 @@ namespace Epsitec.App.Dolphin
 			RadioButton button = sender as RadioButton;
 			this.panelMode = button.Name;
 
-			this.leftPanelBus.Visibility    = (this.panelMode == "Bus");
-			this.clockBusPanel.Visibility   = (this.panelMode == "Bus");
-			this.leftPanelDetail.Visibility = (this.panelMode == "Detail");
-			this.leftPanelQuick.Visibility  = (this.panelMode == "Quick");
+			this.UpdatePanelMode();
+			this.Dirty = true;
 		}
 
 		private void HandleClockTimeElapsed(object sender)
@@ -1798,6 +1823,7 @@ namespace Epsitec.App.Dolphin
 			}
 
 			this.UpdateDisplayMode();
+			this.Dirty = true;
 		}
 
 		private void HandleKeyboardButtonPressed(object sender, MessageEventArgs e)
@@ -1871,6 +1897,9 @@ namespace Epsitec.App.Dolphin
 		protected IconButton							buttonOpen;
 		protected IconButton							buttonSave;
 		protected StaticText							programmFilename;
+		protected RadioButton							radioModeBus;
+		protected RadioButton							radioModeDetail;
+		protected RadioButton							radioModeQuick;
 		protected MyWidgets.PushButton					buttonReset;
 		protected MyWidgets.PushButton					buttonStep;
 		protected MyWidgets.PushButton					buttonMemoryRead;

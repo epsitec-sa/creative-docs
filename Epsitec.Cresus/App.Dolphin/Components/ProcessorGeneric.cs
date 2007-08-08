@@ -1125,7 +1125,7 @@ namespace Epsitec.App.Dolphin.Components
 			(byte) Instructions.PushF,				// PUSH F
 			(byte) Instructions.PushA,				// PUSH A
 			(byte) Instructions.PushB,				// PUSH B
-			(byte) Instructions.PushHL,				// POP HL
+			(byte) Instructions.PushHL,				// PUSH HL
 
 			(byte) Instructions.MoveiB, 0x03,		// MOVE #3,B
 
@@ -1167,7 +1167,7 @@ namespace Epsitec.App.Dolphin.Components
 			(byte) Instructions.PushF,				// PUSH F
 			(byte) Instructions.PushA,				// PUSH A
 			(byte) Instructions.PushB,				// PUSH B
-			(byte) Instructions.PushHL,				// POP HL
+			(byte) Instructions.PushHL,				// PUSH HL
 
 			(byte) Instructions.MoveiHL, 0x0C, 0x80,// MOVE #C80,HL
 
@@ -1211,7 +1211,7 @@ namespace Epsitec.App.Dolphin.Components
 			(byte) Instructions.PushF,				// PUSH F
 			(byte) Instructions.PushA,				// PUSH A
 			(byte) Instructions.PushB,				// PUSH B
-			(byte) Instructions.PushHL,				// POP HL
+			(byte) Instructions.PushHL,				// PUSH HL
 
 			(byte) Instructions.MoveiHL, 0x0C, 0x80,// MOVE #C80,HL
 
@@ -1532,6 +1532,22 @@ namespace Epsitec.App.Dolphin.Components
 					AbstractProcessor.HelpPutLine(builder, "Affiche une valeur décimale sur quatre digits.");
 					AbstractProcessor.HelpPutLine(builder, "[21] [08] [0C] :<tab/>CALL DisplayDecimal");
 					AbstractProcessor.HelpPutLine(builder, "in :<tab/>HL valeur");
+					AbstractProcessor.HelpPutLine(builder, "out :<tab/>-");
+					AbstractProcessor.HelpPutLine(builder, "mod :<tab/>-");
+
+					AbstractProcessor.HelpPutTitle(builder, "SetPixel");
+					AbstractProcessor.HelpPutLine(builder, "Allume un pixel dans l'écran bitmap.");
+					AbstractProcessor.HelpPutLine(builder, "[21] [08] [0F] :<tab/>CALL SetPixel");
+					AbstractProcessor.HelpPutLine(builder, "in :<tab/>A coordonnée X 0..31");
+					AbstractProcessor.HelpPutLine(builder, "<tab/>B coordonnée Y 0..23");
+					AbstractProcessor.HelpPutLine(builder, "out :<tab/>-");
+					AbstractProcessor.HelpPutLine(builder, "mod :<tab/>-");
+
+					AbstractProcessor.HelpPutTitle(builder, "ClrPixel");
+					AbstractProcessor.HelpPutLine(builder, "Eteint un pixel dans l'écran bitmap.");
+					AbstractProcessor.HelpPutLine(builder, "[21] [08] [12] :<tab/>CALL ClrPixel");
+					AbstractProcessor.HelpPutLine(builder, "in :<tab/>A coordonnée X 0..31");
+					AbstractProcessor.HelpPutLine(builder, "<tab/>B coordonnée Y 0..23");
 					AbstractProcessor.HelpPutLine(builder, "out :<tab/>-");
 					AbstractProcessor.HelpPutLine(builder, "mod :<tab/>-");
 					break;

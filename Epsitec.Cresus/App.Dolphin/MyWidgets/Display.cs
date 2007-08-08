@@ -10,7 +10,7 @@ namespace Epsitec.App.Dolphin.MyWidgets
 {
 	/// <summary>
 	/// Simule un petit écran bitmap monochrome.
-	/// Optimisé pour 32x24 pixels, avec une taille physique de 260x204.
+	/// Optimisé pour 32x24 pixels, avec une taille physique de 258x202.
 	/// </summary>
 	public class Display : Widget
 	{
@@ -60,13 +60,11 @@ namespace Epsitec.App.Dolphin.MyWidgets
 			graphics.RenderSolid(this.FromBrightness(0));
 			path.Dispose();
 
-			rect.Deflate(10.5);
+			rect.Deflate(9.5);
 			path = new Path();
 			path.AppendRoundedRectangle(rect, 5);
 			graphics.Rasterizer.AddSurface(path);
 			Geometry.RenderVerticalGradient(graphics, rect, this.FromBrightness(0.2), this.FromBrightness(0.0));
-			//?graphics.Rasterizer.AddOutline(path);
-			//?graphics.RenderSolid(this.FromBrightness(0));
 			path.Dispose();
 
 			rect.Deflate(4.0);
@@ -87,6 +85,7 @@ namespace Epsitec.App.Dolphin.MyWidgets
 							{
 								Rectangle pixel = new Rectangle(rect.Left+px*(x+b), rect.Top-py*(y+1), px-1, py-1);
 								graphics.AddFilledRectangle(pixel);
+								//?graphics.AddFilledCircle(pixel.Center, pixel.Width*0.7);
 								graphics.RenderSolid(Display.ColorSet);
 							}
 						}
