@@ -337,7 +337,6 @@ namespace Epsitec.Common.Support.CodeGenerators
 			protected override void EmitPropertyOnChanged(StructuredTypeField field, string typeName, string propName)
 			{
 				string code = string.Concat (Keywords.Void, " ", Keywords.OnPrefix, propName, Keywords.ChangedSuffix, "(",
-					/**/					 Keywords.String, " ", Keywords.FieldNameVariable, ", ",
 					/**/					 typeName, " ", Keywords.OldValueVariable, ", ",
 					/**/				     typeName, " ", Keywords.NewValueVariable, ")");
 				this.generator.formatter.WriteBeginMethod (EntityCodeGenerator.PartialMethodAttributes, code);
@@ -347,7 +346,6 @@ namespace Epsitec.Common.Support.CodeGenerators
 			protected override void EmitPropertyOnChanging(StructuredTypeField field, string typeName, string propName)
 			{
 				string code = string.Concat (Keywords.Void, " ", Keywords.OnPrefix, propName, Keywords.ChangingSuffix, "(",
-					/**/					 Keywords.String, " ", Keywords.FieldNameVariable, ", ",
 					/**/					 typeName, " ", Keywords.OldValueVariable, ", ",
 					/**/				     typeName, " ", Keywords.NewValueVariable, ")");
 				this.generator.formatter.WriteBeginMethod (EntityCodeGenerator.PartialMethodAttributes, code);
@@ -368,7 +366,7 @@ namespace Epsitec.Common.Support.CodeGenerators
 		private static readonly CodeAttributes StaticClassAttributes = new CodeAttributes (CodeVisibility.Public, CodeAccessibility.Static);
 		private static readonly CodeAttributes InterfaceAttributes = new CodeAttributes (CodeVisibility.Public, CodeAccessibility.Default);
 		private static readonly CodeAttributes PropertyAttributes = new CodeAttributes (CodeVisibility.Public);
-		private static readonly CodeAttributes PartialMethodAttributes = new CodeAttributes (CodeVisibility.Private, CodeAccessibility.Default, CodeAttributes.PartialDefinitionAttribute);
+		private static readonly CodeAttributes PartialMethodAttributes = new CodeAttributes (CodeVisibility.None, CodeAccessibility.Default, CodeAttributes.PartialDefinitionAttribute);
 
 		private static class Keywords
 		{

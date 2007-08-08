@@ -495,7 +495,10 @@ namespace Epsitec.Common.Support.CodeGenerators
 				(this.elementStates.Peek () == ElementState.Method) &&
 				(attributes.IsPartial))
 			{
-				if (attributes.Visibility == CodeVisibility.Private)
+				//	This is a partial method definition or implementation. Check that
+				//	the attributes are properly specified :
+
+				if (attributes.Visibility == CodeVisibility.None)
 				{
 					//	OK
 				}

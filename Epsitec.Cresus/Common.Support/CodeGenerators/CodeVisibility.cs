@@ -10,6 +10,11 @@ namespace Epsitec.Common.Support.CodeGenerators
 	public enum CodeVisibility : byte
 	{
 		/// <summary>
+		/// The code has no specific access visibility.
+		/// </summary>
+		None,
+
+		/// <summary>
 		/// The code item is declared <c>public</c>.
 		/// </summary>
 		Public,

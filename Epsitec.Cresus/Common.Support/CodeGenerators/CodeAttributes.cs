@@ -292,6 +292,9 @@ namespace Epsitec.Common.Support.CodeGenerators
 
 			switch (this.visibility)
 			{
+				case CodeVisibility.None:
+					break;
+
 				case CodeVisibility.Internal:
 					tokens.Add (CodeFormatter.Strings.Keywords.Internal);
 					break;

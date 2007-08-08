@@ -37,6 +37,7 @@ namespace Epsitec.Common.Support
 			buffer.AppendLine ();
 
 			generator.Emit (Epsitec.Common.Support.Res.Types.ResourceCommand);
+			generator.Emit (Epsitec.Common.Support.Res.Types.Shortcut);
 
 			buffer.AppendLine ();
 			
