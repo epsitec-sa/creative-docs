@@ -271,6 +271,42 @@ namespace Epsitec.Common.Types
 			}
 		}
 
+		/// <summary>
+		/// Executes the specified action for each field. The fields are sorted
+		/// before they are processed.
+		/// </summary>
+		/// <param name="action">The action for the <see cref="StructuredTypeField"/>.</param>
+		public void ForEachField(System.Action<StructuredTypeField> action)
+		{
+			foreach (StructuredTypeField field in this.GetSortedFields ())
+			{
+				action (field);
+			}
+		}
+
+		/// <summary>
+		/// Finds the field which matches the predicate. The fields are sorted
+		/// before they are processed.
+		/// </summary>
+		/// <param name="predicate">The predicate used to find the matching <see cref="StructuredTypeField"/>.</param>
+		/// <returns>The first matching <see cref="StructuredTypeField"/> or <c>null</c>.</returns>
+		public StructuredTypeField FindField(System.Predicate<StructuredTypeField> predicate)
+		{
+			foreach (StructuredTypeField field in this.GetSortedFields ())
+			{
+				if (predicate (field))
+				{
+					return field;
+				}
+			}
+
+			return null;
+		}
+
+		/// <summary>
+		/// Gets an array containing the sorted fields.
+		/// </summary>
+		/// <returns></returns>
 		private StructuredTypeField[] GetSortedFields()
 		{
 			StructuredTypeField[] fields = new StructuredTypeField[this.fields.Values.Count];

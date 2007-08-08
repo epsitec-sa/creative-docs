@@ -10,8 +10,9 @@ namespace Epsitec.Common.Support.CodeGenerators
 {
 	public class EntityCodeGenerator
 	{
-		public EntityCodeGenerator(ResourceManager resourceManager)
+		public EntityCodeGenerator(CodeFormatter formatter, ResourceManager resourceManager)
 		{
+			this.formatter = formatter;
 			this.resourceManager = resourceManager;
 			this.resourceManagerPool = this.resourceManager.Pool;
 			this.resourceModuleInfo = this.resourceManagerPool.GetModuleInfo (this.resourceManager.DefaultModulePath);
@@ -19,6 +20,38 @@ namespace Epsitec.Common.Support.CodeGenerators
 		}
 
 
+		public CodeFormatter Formatter
+		{
+			get
+			{
+				return this.formatter;
+			}
+		}
+		
+		public ResourceManager ResourceManager
+		{
+			get
+			{
+				return this.resourceManager;
+			}
+		}
+
+		public ResourceManagerPool ResourceManagerPool
+		{
+			get
+			{
+				return this.resourceManagerPool;
+			}
+		}
+
+		public ResourceModuleInfo ResourceModuleInfo
+		{
+			get
+			{
+				return this.resourceModuleInfo;
+			}
+		}
+		
 		public string SourceNamespace
 		{
 			get
@@ -27,8 +60,11 @@ namespace Epsitec.Common.Support.CodeGenerators
 			}
 		}
 
+
+
+
 		
-		public void Emit(CodeFormatter formatter, StructuredType type)
+		public void Emit(StructuredType type)
 		{
 			StructuredTypeClass typeClass = type.Class;
 			
@@ -59,28 +95,37 @@ namespace Epsitec.Common.Support.CodeGenerators
 			{
 				specifiers.Add (this.CreateEntityFullName (interfaceId));
 			}
+
+			Emitter emitter;
 			
-			formatter.WriteBeginNamespace (EntityCodeGenerator.CreateEntityNamespace (this.SourceNamespace));
+			this.formatter.WriteBeginNamespace (EntityCodeGenerator.CreateEntityNamespace (this.SourceNamespace));
 
 			switch (typeClass)
 			{
 				case StructuredTypeClass.Entity:
-					formatter.WriteBeginClass (EntityCodeGenerator.EntityClassAttributes, EntityCodeGenerator.CreateEntityIdentifier (name), specifiers);
-					formatter.WriteEndClass ();
+					emitter = new EntityEmitter (this, type);
+					
+					this.formatter.WriteBeginClass (EntityCodeGenerator.EntityClassAttributes, EntityCodeGenerator.CreateEntityIdentifier (name), specifiers);
+					type.ForEachField (emitter.EmitLocalProperty);
+					this.formatter.WriteEndClass ();
 					break;
 
 				case StructuredTypeClass.Interface:
-					formatter.WriteBeginInterface (EntityCodeGenerator.InterfaceAttributes, EntityCodeGenerator.CreateInterfaceIdentifier (name), specifiers);
-					formatter.WriteEndInterface ();
+					emitter = new InterfaceEmitter (this, type);
 					
-					formatter.WriteBeginClass (EntityCodeGenerator.StaticClassAttributes, EntityCodeGenerator.CreateInterfaceImplementationIdentifier (name), specifiers);
-					formatter.WriteEndClass ();
+					this.formatter.WriteBeginInterface (EntityCodeGenerator.InterfaceAttributes, EntityCodeGenerator.CreateInterfaceIdentifier (name), specifiers);
+					type.ForEachField (emitter.EmitLocalProperty);
+					this.formatter.WriteEndInterface ();
+
+					this.formatter.WriteBeginClass (EntityCodeGenerator.StaticClassAttributes, EntityCodeGenerator.CreateInterfaceImplementationIdentifier (name), specifiers);
+					this.formatter.WriteEndClass ();
 					break;
 			}
-			
-			formatter.WriteEndNamespace ();
+
+			this.formatter.WriteEndNamespace ();
 		}
 
+		
 		private static string CreateEntityIdentifier(string name)
 		{
 			return string.Concat (name, Keywords.EntitySuffix);
@@ -113,11 +158,102 @@ namespace Epsitec.Common.Support.CodeGenerators
 			return string.Concat (Keywords.Global, "::", EntityCodeGenerator.CreateEntityNamespace (infos[0].SourceNamespace), ".", EntityCodeGenerator.CreateEntityIdentifier (caption.Name));
 		}
 
+		private string CreatePropertyName(Druid id)
+		{
+			Caption caption = this.resourceManager.GetCaption (id);
+			return EntityCodeGenerator.CreateEntityIdentifier (caption.Name);
+		}
+
+		private string CreateTypeFullName(Druid typeId)
+		{
+			Caption caption = this.resourceManager.GetCaption (typeId);
+			AbstractType type = TypeRosetta.GetTypeObject (caption);
+			System.Type sysType = type.SystemType;
+
+			if (sysType == typeof (StructuredType))
+			{
+				return this.CreateEntityFullName (typeId);
+			}
+			else
+			{
+				return EntityCodeGenerator.GetTypeName (sysType);
+			}
+		}
+
+		private static string GetTypeName(System.Type systemType)
+		{
+			string systemTypeName = systemType.FullName;
+
+			switch (systemTypeName)
+			{
+				case "System.Boolean":
+					return "bool";
+				case "System.Int16":
+					return "short";
+				case "System.Int32":
+					return "int";
+				case "System.Int64":
+					return "long";
+				case "System.String":
+					return "string";
+			}
+
+			return string.Concat (Keywords.Global, "::", systemTypeName);
+		}
+
+
+		private abstract class Emitter
+		{
+			public Emitter(EntityCodeGenerator generator, StructuredType type)
+			{
+				this.generator = generator;
+				this.type = type;
+			}
+
+			public abstract void EmitLocalProperty(StructuredTypeField field);
+
+			protected EntityCodeGenerator generator;
+			protected StructuredType type;
+		}
+
+		private sealed class EntityEmitter : Emitter
+		{
+			public EntityEmitter(EntityCodeGenerator generator, StructuredType type)
+				: base (generator, type)
+			{
+			}
+
+			public override void EmitLocalProperty(StructuredTypeField field)
+			{
+				if (field.Membership == FieldMembership.Local)
+				{
+					string code = string.Concat (this.generator.CreateTypeFullName (field.TypeId), " ", this.generator.CreatePropertyName (field.CaptionId));
+					this.generator.formatter.WriteBeginProperty (EntityCodeGenerator.PropertyAttributes, code);
+					this.generator.formatter.WriteEndProperty ();
+				}
+			}
+		}
+
+		private sealed class InterfaceEmitter : Emitter
+		{
+			public InterfaceEmitter(EntityCodeGenerator generator, StructuredType type)
+				: base (generator, type)
+			{
+			}
+			
+			public override void EmitLocalProperty(StructuredTypeField field)
+			{
+				if (field.Membership == FieldMembership.Local)
+				{
+				}
+			}
+		}
 
 
 		private static readonly CodeAttributes EntityClassAttributes = new CodeAttributes (CodeVisibility.Public, CodeAccessibility.Default, CodeAttributes.PartialAttribute);
 		private static readonly CodeAttributes StaticClassAttributes = new CodeAttributes (CodeVisibility.Public, CodeAccessibility.Static);
 		private static readonly CodeAttributes InterfaceAttributes = new CodeAttributes (CodeVisibility.Public, CodeAccessibility.Default);
+		private static readonly CodeAttributes PropertyAttributes = new CodeAttributes (CodeVisibility.Public);
 
 		private static class Keywords
 		{
@@ -128,6 +264,7 @@ namespace Epsitec.Common.Support.CodeGenerators
 			public const string AbstractEntity = "Epsitec.Common.Support.AbstractEntity";
 		}
 
+		private CodeFormatter formatter;
 		private ResourceManager resourceManager;
 		private ResourceManagerPool resourceManagerPool;
 		private ResourceModuleInfo resourceModuleInfo;
