@@ -183,7 +183,7 @@ namespace Epsitec.App.Dolphin.Components
 		public override bool IsCall(out int retAddress)
 		{
 			//	Indique si le processeur est sur une instruction CALL.
-			//	Retourne l'adresse après le CALL.
+			//	Si oui, retourne l'adresse après le CALL.
 			Instructions op = (Instructions) this.memory.Read(this.registerPC);
 
 			if (op >= Instructions.CallAbs && op <= Instructions.CallAbsNS)

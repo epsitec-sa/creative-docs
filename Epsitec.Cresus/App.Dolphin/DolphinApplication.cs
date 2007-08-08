@@ -1552,6 +1552,7 @@ namespace Epsitec.App.Dolphin
 			writer.WriteElementString("ProcessorName", this.processor.Name);
 			writer.WriteElementString("ProcessorIPS", this.ips.ToString(System.Globalization.CultureInfo.InvariantCulture));
 			writer.WriteElementString("ProcessorStep", (this.switchStep.ActiveState == ActiveState.Yes) ? "S" : "C");
+			writer.WriteElementString("ProcessorDeep", (this.switchDeep.ActiveState == ActiveState.Yes) ? "D" : "S");
 			writer.WriteElementString("PanelMode", this.panelMode);
 			writer.WriteElementString("DisplayBitmap", (this.displayButtonMode.ActiveState == ActiveState.Yes) ? "Y" : "N");
 
@@ -1605,6 +1606,12 @@ namespace Epsitec.App.Dolphin
 						string element = reader.ReadElementString();
 						this.switchStep.ActiveState = (element == "S") ? ActiveState.Yes : ActiveState.No;
 						this.UpdateButtons();
+						reader.Read();
+					}
+					else if (name == "ProcessorDeep")
+					{
+						string element = reader.ReadElementString();
+						this.switchDeep.ActiveState = (element == "D") ? ActiveState.Yes : ActiveState.No;
 						reader.Read();
 					}
 					else if (name == "PanelMode")
