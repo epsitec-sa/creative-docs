@@ -10,7 +10,7 @@ using System.Collections.Generic;
 
 namespace Epsitec.Common.Support.EntityEngine
 {
-	public abstract class AbstractEntity : IStructuredTypeProvider
+	public abstract class AbstractEntity
 	{
 		protected AbstractEntity()
 		{
@@ -20,15 +20,13 @@ namespace Epsitec.Common.Support.EntityEngine
 
 		public abstract Druid GetStructuredTypeId();
 
-		#region IStructuredTypeProvider Members
-
-		IStructuredType IStructuredTypeProvider.GetStructuredType()
+		internal IValueStore ValueStore
 		{
-			return this.context.GetStructuredType (this.GetStructuredTypeId ());
+			get
+			{
+				return this.values;
+			}
 		}
-
-		#endregion
-
 
 		protected T GetField<T>(string id)
 		{
@@ -74,7 +72,25 @@ namespace Epsitec.Common.Support.EntityEngine
 
 		protected void SetField<T>(string id, T oldValue, T newValue)
 		{
-			this.values.SetValue (id, newValue);
+			StructuredTypeField field = this.context.GetStructuredType (this).GetField (id);
+
+			System.Diagnostics.Debug.Assert (field != null);
+			System.Diagnostics.Debug.Assert (field.Relation != FieldRelation.Collection);
+
+			//	TODO: check nullability of references
+
+			IDataConstraint constraint = field.Type as IDataConstraint;
+
+			System.Diagnostics.Debug.Assert (constraint != null);
+
+			if (constraint.IsValidValue (newValue))
+			{
+				this.values.SetValue (id, newValue);
+			}
+			else
+			{
+				throw new System.ArgumentException (string.Format ("Invalid value '{0}' specified for field {1}", newValue, id));
+			}
 		}
 
 		private EntityContext context;

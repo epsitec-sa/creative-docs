@@ -18,7 +18,6 @@ namespace Epsitec.Common.Support.EntityEngine
 			this.resourceManagerPool = this.resourceManager.Pool;
 			this.associatedThread    = System.Threading.Thread.CurrentThread;
 			this.structuredTypeMap   = new Dictionary<Druid, IStructuredType> ();
-			this.systemTypeMap       = new Dictionary<Druid, System.Type> ();
 		}
 		
 		
@@ -38,23 +37,18 @@ namespace Epsitec.Common.Support.EntityEngine
 		public IValueStore CreateValueStore(AbstractEntity entity)
 		{
 			Druid typeId = entity.GetStructuredTypeId ();
-			IStructuredType type = this.GetStructuredType (typeId, delegate { this.systemTypeMap[typeId] = entity.GetType (); });
+			IStructuredType type = this.GetStructuredType (typeId);
 
 			if (type == null)
 			{
 				throw new System.NotSupportedException (string.Format ("Type {0} is not supported", typeId));
 			}
 			
-			return new StructuredData (type);
+			return new Data (type);
 		}
 
 
 		public IStructuredType GetStructuredType(Druid id)
-		{
-			return this.GetStructuredType (id, delegate { });
-		}
-
-		private IStructuredType GetStructuredType(Druid id, System.Action<IStructuredType> setupAction)
 		{
 			this.EnsureCorrectThread ();
 
@@ -64,19 +58,26 @@ namespace Epsitec.Common.Support.EntityEngine
 			{
 				Caption caption = this.resourceManager.GetCaption (id);
 				type = TypeRosetta.GetTypeObject (caption) as IStructuredType;
-				
 				this.structuredTypeMap[id] = type;
-				setupAction (type);
 			}
 			
 			return type;
 		}
 
-		public System.Type FindEntityType(Druid id)
+		public IStructuredType GetStructuredType(AbstractEntity entity)
 		{
-			System.Type value;
-			this.systemTypeMap.TryGetValue (id, out value);
-			return value;
+			this.EnsureCorrectThread ();
+
+			IStructuredTypeProvider provider = entity.ValueStore as IStructuredTypeProvider;
+
+			if (provider == null)
+			{
+				return this.GetStructuredType (entity.GetStructuredTypeId ());
+			}
+			else
+			{
+				return provider.GetStructuredType ();
+			}
 		}
 
 
@@ -90,40 +91,59 @@ namespace Epsitec.Common.Support.EntityEngine
 			throw new System.InvalidOperationException ("Invalid thread calling into EntityContext");
 		}
 
-		private class Data : StructuredData
+		private class Data : IValueStore, IStructuredTypeProvider
 		{
 			public Data(IStructuredType type)
-				: base (type)
 			{
+				this.type  = type;
+				this.store = new Dictionary<string, object> ();
 			}
 
-			protected override bool CheckValueValidity(StructuredTypeField field, object value)
+			#region IValueStore Members
+
+			public object GetValue(string id)
 			{
-				if (field.Type is IStructuredType)
+				object value;
+				
+				if (this.store.TryGetValue (id, out value))
 				{
-					System.Type type = EntityContext.current.FindEntityType (field.Type.CaptionId);
-					
-					switch (field.Relation)
-					{
-						case FieldRelation.None:
-						case FieldRelation.Reference:
-							return TypeRosetta.IsValidValue (value, type);
-
-						case FieldRelation.Collection:
-							return TypeRosetta.IsValidValueForCollectionOfType (value, type);
-
-						case FieldRelation.Inclusion:
-						//	TODO: handle inclusion
-
-						default:
-							throw new System.NotImplementedException (string.Format ("Support for Relation.{0} not implemented", field.Relation));
-					}
+					return value;
+				}
+				else if (this.type.GetField (id) == null)
+				{
+					return UnknownValue.Instance;
 				}
 				else
 				{
-					return base.CheckValueValidity (field, value);
+					return UndefinedValue.Instance;
 				}
 			}
+
+			public void SetValue(string id, object value)
+			{
+				if (UndefinedValue.IsUndefinedValue (value))
+				{
+					this.store.Remove (id);
+				}
+				else
+				{
+					this.store[id] = value;
+				}
+			}
+
+			#endregion
+
+			#region IStructuredTypeProvider Members
+
+			public IStructuredType GetStructuredType()
+			{
+				return this.type;
+			}
+
+			#endregion
+
+			IStructuredType type;
+			Dictionary<string, object> store;
 		}
 
 		[System.ThreadStatic]
@@ -133,6 +153,5 @@ namespace Epsitec.Common.Support.EntityEngine
 		private readonly ResourceManager resourceManager;
 		private readonly System.Threading.Thread associatedThread;
 		private readonly Dictionary<Druid, IStructuredType> structuredTypeMap;
-		private readonly Dictionary<Druid, System.Type> systemTypeMap;
 	}
 }
