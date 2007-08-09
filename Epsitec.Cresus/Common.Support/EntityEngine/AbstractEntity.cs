@@ -10,7 +10,7 @@ using System.Collections.Generic;
 
 namespace Epsitec.Common.Support.EntityEngine
 {
-	public abstract class AbstractEntity
+	public abstract class AbstractEntity : IStructuredTypeProvider
 	{
 		protected AbstractEntity()
 		{
@@ -19,6 +19,16 @@ namespace Epsitec.Common.Support.EntityEngine
 		}
 
 		public abstract Druid GetStructuredTypeId();
+
+		#region IStructuredTypeProvider Members
+
+		IStructuredType IStructuredTypeProvider.GetStructuredType()
+		{
+			return this.context.GetStructuredType (this.GetStructuredTypeId ());
+		}
+
+		#endregion
+
 
 		protected T GetField<T>(string id)
 		{

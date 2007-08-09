@@ -269,7 +269,6 @@ namespace Epsitec.Common.Support.EntityEngine
 				{
 					string typeName = this.generator.CreateTypeFullName (field.TypeId);
 					string propName = this.generator.CreatePropertyName (field.CaptionId);
-					string code;
 
 					switch (field.Relation)
 					{

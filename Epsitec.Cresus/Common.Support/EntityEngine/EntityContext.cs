@@ -18,6 +18,7 @@ namespace Epsitec.Common.Support.EntityEngine
 			this.resourceManagerPool = this.resourceManager.Pool;
 			this.associatedThread    = System.Threading.Thread.CurrentThread;
 			this.structuredTypeMap   = new Dictionary<Druid, IStructuredType> ();
+			this.systemTypeMap       = new Dictionary<Druid, System.Type> ();
 		}
 		
 		
@@ -37,7 +38,7 @@ namespace Epsitec.Common.Support.EntityEngine
 		public IValueStore CreateValueStore(AbstractEntity entity)
 		{
 			Druid typeId = entity.GetStructuredTypeId ();
-			IStructuredType type = this.GetStructuredType (typeId);
+			IStructuredType type = this.GetStructuredType (typeId, delegate { this.systemTypeMap[typeId] = entity.GetType (); });
 
 			if (type == null)
 			{
@@ -47,8 +48,13 @@ namespace Epsitec.Common.Support.EntityEngine
 			return new StructuredData (type);
 		}
 
-		
+
 		public IStructuredType GetStructuredType(Druid id)
+		{
+			return this.GetStructuredType (id, delegate { });
+		}
+
+		private IStructuredType GetStructuredType(Druid id, System.Action<IStructuredType> setupAction)
 		{
 			this.EnsureCorrectThread ();
 
@@ -58,10 +64,19 @@ namespace Epsitec.Common.Support.EntityEngine
 			{
 				Caption caption = this.resourceManager.GetCaption (id);
 				type = TypeRosetta.GetTypeObject (caption) as IStructuredType;
+				
 				this.structuredTypeMap[id] = type;
+				setupAction (type);
 			}
 			
 			return type;
+		}
+
+		public System.Type FindEntityType(Druid id)
+		{
+			System.Type value;
+			this.systemTypeMap.TryGetValue (id, out value);
+			return value;
 		}
 
 
@@ -75,6 +90,42 @@ namespace Epsitec.Common.Support.EntityEngine
 			throw new System.InvalidOperationException ("Invalid thread calling into EntityContext");
 		}
 
+		private class Data : StructuredData
+		{
+			public Data(IStructuredType type)
+				: base (type)
+			{
+			}
+
+			protected override bool CheckValueValidity(StructuredTypeField field, object value)
+			{
+				if (field.Type is IStructuredType)
+				{
+					System.Type type = EntityContext.current.FindEntityType (field.Type.CaptionId);
+					
+					switch (field.Relation)
+					{
+						case FieldRelation.None:
+						case FieldRelation.Reference:
+							return TypeRosetta.IsValidValue (value, type);
+
+						case FieldRelation.Collection:
+							return TypeRosetta.IsValidValueForCollectionOfType (value, type);
+
+						case FieldRelation.Inclusion:
+						//	TODO: handle inclusion
+
+						default:
+							throw new System.NotImplementedException (string.Format ("Support for Relation.{0} not implemented", field.Relation));
+					}
+				}
+				else
+				{
+					return base.CheckValueValidity (field, value);
+				}
+			}
+		}
+
 		[System.ThreadStatic]
 		private static EntityContext current;
 
@@ -82,5 +133,6 @@ namespace Epsitec.Common.Support.EntityEngine
 		private readonly ResourceManager resourceManager;
 		private readonly System.Threading.Thread associatedThread;
 		private readonly Dictionary<Druid, IStructuredType> structuredTypeMap;
+		private readonly Dictionary<Druid, System.Type> systemTypeMap;
 	}
 }

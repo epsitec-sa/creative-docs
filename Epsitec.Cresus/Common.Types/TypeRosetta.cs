@@ -415,7 +415,16 @@ namespace Epsitec.Common.Types
 				return true;
 			}
 		}
-		
+
+		/// <summary>
+		/// Determines whether the specified value is a collection using the
+		/// type of the expected items.
+		/// </summary>
+		/// <param name="value">The value.</param>
+		/// <param name="typeOfItems">The type of the expected items.</param>
+		/// <returns>
+		/// 	<c>true</c> if the value is valid; otherwise, <c>false</c>.
+		/// </returns>
 		public static bool IsValidValueForCollectionOfType(object value, System.Type typeOfItems)
 		{
 			if (value == null)
@@ -424,15 +433,11 @@ namespace Epsitec.Common.Types
 			}
 
 			System.Type typeOfValue = value.GetType ();
-			System.Type interfaceType;
+			System.Type itemType = TypeRosetta.GetCollectionItemType (typeOfValue);
 
-			if ((TypeRosetta.DoesTypeImplementGenericInterface (typeOfValue, typeof (IList<>), out interfaceType)) ||
-				(TypeRosetta.DoesTypeImplementGenericInterface (typeOfValue, typeof (ICollection<>), out interfaceType)))
+			if (itemType != null)
 			{
-				System.Type[] genericArguments = interfaceType.GetGenericArguments ();
-				System.Diagnostics.Debug.Assert (genericArguments.Length == 1);
-
-				return typeOfItems.IsAssignableFrom (genericArguments[0]);
+				return typeOfItems.IsAssignableFrom (itemType);
 			}
 
 			if (TypeRosetta.DoesTypeImplementInterface (typeOfValue, typeof (System.Collections.IList)))

@@ -460,6 +460,29 @@ namespace Epsitec.Common.Types
 		}
 
 		/// <summary>
+		/// Checks if the two types are equal.
+		/// </summary>
+		/// <param name="a">The first structured type.</param>
+		/// <param name="b">The second structured type.</param>
+		/// <returns><c>true</c> if both types are equal; otherwise, <c>false</c>.</returns>
+		public static bool EqualTypes(IStructuredType a, IStructuredType b)
+		{
+			if (a == b)
+			{
+				return true;
+			}
+			if ((a == null) ||
+				(b == null))
+			{
+				return false;
+			}
+
+			//	TODO: really compare contents of types...
+
+			return false;
+		}
+
+		/// <summary>
 		/// Merges two structured types and creates a new one.
 		/// </summary>
 		/// <param name="a">The first structured type.</param>
@@ -599,9 +622,16 @@ namespace Epsitec.Common.Types
 				return this.IsNullable;
 			}
 
-			StructuredData data = value as StructuredData;
+			IStructuredTypeProvider provider = value as IStructuredTypeProvider;
 
-			return (data != null) && (data.StructuredType == this);
+			if (provider == null)
+			{
+				return false;
+			}
+			else
+			{
+				return StructuredType.EqualTypes (this, provider.GetStructuredType ());
+			}
 		}
 
 		/// <summary>

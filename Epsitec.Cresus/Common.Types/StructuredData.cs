@@ -554,14 +554,14 @@ namespace Epsitec.Common.Types
 			return true;
 		}
 
-		protected virtual bool CheckValueValidity(StructuredTypeField type, object value)
+		protected virtual bool CheckValueValidity(StructuredTypeField field, object value)
 		{
-			if (type == null)
+			if (field == null)
 			{
 				return true;
 			}
 
-			return TypeRosetta.IsValidValue (value, type);
+			return TypeRosetta.IsValidValue (value, field);
 		}
 		
 		protected virtual void AllocateValues()
