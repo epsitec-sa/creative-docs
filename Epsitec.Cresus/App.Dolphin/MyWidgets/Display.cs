@@ -203,7 +203,7 @@ namespace Epsitec.App.Dolphin.MyWidgets
 								{
 									Rectangle pixel = new Rectangle(rect.Left+px*(x+b), rect.Top-py*(y+1), px-1, py-1);
 									graphics.AddFilledRectangle(pixel);  // dessine un pixel carré
-									graphics.RenderSolid(Color.FromBrightness(0.9));  // gris très clair
+									graphics.RenderSolid(Color.FromRgb(1.0, 0.9, 0.6));  // ambre (jaune-orange pâle)
 								}
 							}
 						}
