@@ -70,12 +70,12 @@ namespace Epsitec.Common.Widgets
 				return this.data.GetValueIds ();
 			}
 
-			object IStructuredData.GetValue(string id)
+			object IValueStore.GetValue(string id)
 			{
 				return this.data.GetValue (id);
 			}
 
-			void IStructuredData.SetValue(string id, object value)
+			void IValueStore.SetValue(string id, object value)
 			{
 				this.data.SetValue (id, value);
 			}

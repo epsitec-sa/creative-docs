@@ -924,7 +924,7 @@ namespace Epsitec.Common.Dialogs
 			yield return "size";
 		}
 
-		object Epsitec.Common.Types.IStructuredData.GetValue(string id)
+		object Epsitec.Common.Types.IValueStore.GetValue(string id)
 		{
 			//	Retourne la valeur du champ spécifié.
 			switch (id)
@@ -965,7 +965,7 @@ namespace Epsitec.Common.Dialogs
 			}
 		}
 
-		void Epsitec.Common.Types.IStructuredData.SetValue(string id, object value)
+		void Epsitec.Common.Types.IValueStore.SetValue(string id, object value)
 		{
 			throw new System.InvalidOperationException ();
 		}
