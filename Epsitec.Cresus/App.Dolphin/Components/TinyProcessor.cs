@@ -12,114 +12,115 @@ namespace Epsitec.App.Dolphin.Components
 	{
 		protected enum Instructions
 		{
-			//	r     =  A,B,X,Y
-			//	r'    =  A,B
-			//	ADDR  =  adresse 16 bits, 4 bits de mode (abs/rel, +{XY}) et 12 bits valeur
-			//	#val  =  valeur absolue 8 bits
+			//	r    (R)  =  A,B,X,Y
+			//	r'   (S)  =  A,B
+			//	ADDR (A)  =  adresse 16 bits, 12 bits valeur, bit 12 = +{X}, bit 13 = +{Y}, bit 15 = relatif
+			//	#val (V)  =  valeur absolue positive 8 bits
 
-			Nop     = 0x00,
-			Ret     = 0x01,
-			Halt    = 0x02,
-			SetC    = 0x04,
-			ClrC    = 0x05,
-			SetV    = 0x06,
-			ClrV    = 0x07,
+			Nop    = 0x00,
+			Ret    = 0x01,
+			Halt   = 0x02,
+			SetC   = 0x04,
+			ClrC   = 0x05,
+			SetV   = 0x06,
+			ClrV   = 0x07,
 
-			PushR   = 0x08,		// PUSH r
-			PopR    = 0x0C,		// POP r
+			PushR  = 0x08,		// PUSH r
+			PopR   = 0x0C,		// POP r
 
-			Jump    = 0x10,
-			JumpEQ  = 0x12,
-			JumpNE  = 0x13,
-			JumpLO  = 0x14,
-			JumpLS  = 0x15,
-			JumpHI  = 0x16,
-			JumpHS  = 0x17,
-			JumpVC  = 0x18,
-			JumpVS  = 0x19,
-			JumpNC  = 0x1A,
-			JumpNS  = 0x1B,
+			Jump   = 0x10,
+			JumpEQ = 0x12,
+			JumpNE = 0x13,
+			JumpLO = 0x14,
+			JumpLS = 0x15,
+			JumpHI = 0x16,
+			JumpHS = 0x17,
+			JumpVC = 0x18,
+			JumpVS = 0x19,
+			JumpNC = 0x1A,
+			JumpNS = 0x1B,
 
 			//	0x1C..0x1F libre
 
-			Call    = 0x20,
-			CallEQ  = 0x22,
-			CallNE  = 0x23,
-			CallLO  = 0x24,
-			CallLS  = 0x25,
-			CallHI  = 0x26,
-			CallHS  = 0x27,
-			CallVC  = 0x28,
-			CallVS  = 0x29,
-			CallNC  = 0x2A,
-			CallNS  = 0x2B,
+			Call   = 0x20,
+			CallEQ = 0x22,
+			CallNE = 0x23,
+			CallLO = 0x24,
+			CallLS = 0x25,
+			CallHI = 0x26,
+			CallHS = 0x27,
+			CallVC = 0x28,
+			CallVS = 0x29,
+			CallNC = 0x2A,
+			CallNS = 0x2B,
 
-			// 0x2C..02F libre
-			// 0x30..03F libre
+			ClrR   = 0x30,		// op r
+			NotR   = 0x34,
+			IncR   = 0x38,
+			DecR   = 0x3C,
 
-			ClrR    = 0x40,		// op r
-			IncR    = 0x48,
-			DecR    = 0x4C,
+			RlS    = 0x40,		// op r'
+			RrS    = 0x42,
+			RlcS   = 0x44,
+			RrcS   = 0x46,
 
-			RlRR    = 0x50,		// op r'
-			RrRR    = 0x52,
-			RlcRR   = 0x54,
-			RrcRR   = 0x56,
-			NotRR   = 0x58,
+			ClrA   = 0x48,		// op ADDR
+			NotA   = 0x49,
+			IncA   = 0x4A,
+			DecA   = 0x4B,
+			RlA    = 0x4C,
+			RrA    = 0x4D,
+			RlcA   = 0x4E,
+			RrcA   = 0x4F,
 
-			ClrA    = 0x60,		// op ADDR
-			IncA    = 0x61,
-			DecA    = 0x62,
-			RlA     = 0x64,
-			RrA     = 0x65,
-			RlcA    = 0x66,
-			RrcA    = 0x67,
-			NotA    = 0x68,
+			MoveRR = 0x50,		// MOVE r,r
+			MoveVR = 0x60,		// MOVE #val,r
+			MoveAR = 0x64,		// MOVE ADDR,r
+			MoveRA = 0x68,		// MOVE r,ADDR
 
-			//	0x70..0x7F libre
+			CompRR = 0x70,		// COMP r,r
 
-			MoveAR  = 0x80,		// op ADDR,r
-			CompAR  = 0x84,
-			AddAR   = 0x88,
-			SubAR   = 0x8C,
+			AddRR  = 0x80,		// op r,r
+			SubRR  = 0x90,
+			AddVR  = 0xA0,		// op #val,r
+			SubVR  = 0xA4,
+			AddAR  = 0xB0,		// op ADDR,r
+			SubAR  = 0xB4,
+			AddRA  = 0xB8,		// op r,ADDR
+			SubRA  = 0xBC,
 
-			AndARR  = 0x90,		// op ADDR,r'
-			OrARR   = 0x92,
-			XorARR  = 0x94,
-			TestARR = 0x98,
-			TClrARR = 0x9A,
-			TSetARR = 0x9C,
-			TInvARR = 0x9D,
+			AndVS  = 0xC0,		// op #val,r'
+			OrVS   = 0xC2,
+			XorVS  = 0xC4,
+			AndSS  = 0xC8,		// op r',r'
+			OrSS   = 0xCA,
+			XorSS  = 0xCC,
+			AndAS  = 0xD0,		// op ADDR,r'
+			OrAS   = 0xD2,
+			XorAS  = 0xD4,
+			AndSA  = 0xD8,		// op r',ADDR
+			OrSA   = 0xDA,
+			XorSA  = 0xDC,
 
-			MoveRA  = 0xA0,		// op r,ADDR
-			CompRA  = 0xA4,
-			AddRA   = 0xA8,
-			SubRA   = 0xAC,
+			TestSS = 0xE0,		// op r',r'
+			TSetSS = 0xE2,
+			TClrSS = 0xE4,
+			TInvSS = 0xE6,
+			TestSA = 0xE8,		// op r',ADDR
+			TSetSA = 0xEA,
+			TClrSA = 0xEC,
+			TInvSA = 0xEE,
 
-			AndRRA  = 0xB0,		// op r',ADDR
-			OrRRA   = 0xB2,
-			XorRRA  = 0xB4,
-			TestRRA = 0xB8,
-			TClrRRA = 0xBA,
-			TSetRRA = 0xBC,
-			TInvRRA = 0xBD,
+			TestVS = 0xF0,		// op #val,r'
+			TSetVS = 0xF2,
+			TClrVS = 0xF4,
+			TInvVS = 0xF6,
+			TestVA = 0xF8,		// op #val,ADDR
+			TSetVA = 0xF9,
+			TClrVA = 0xFA,
+			TInvVA = 0xFB,
 
-			MoveVR  = 0xC0,		// op #val,r
-			CompVR  = 0xC4,
-			AddVR   = 0xC8,
-			SubVR   = 0xCC,
-
-			AndVRR  = 0xD0,		// op #val,r'
-			OrVRR   = 0xD2,
-			XorVRR  = 0xD4,
-			TestVRR = 0xD8,
-			TClrVRR = 0xDA,
-			TSetVRR = 0xDC,
-			TInvVRR = 0xDD,
-
-			MoveRR  = 0xE0,		// MOVE r,r
-
-			//	0xF0..0xFF libre
+			CompVR = 0xFC,		// COMP #val,r
 		}
 
 
@@ -263,6 +264,12 @@ namespace Epsitec.App.Dolphin.Components
 						this.SetFlagsOper(data);
 						return;
 
+					case Instructions.NotR:
+						data = this.GetRegister(n) ^ 0xFF;
+						this.SetRegister(n, data);
+						this.SetFlagsOper(data);
+						return;
+
 					case Instructions.IncR:
 						data = this.GetRegister(n) + 1;
 						this.SetRegister(n, data);
@@ -277,46 +284,40 @@ namespace Epsitec.App.Dolphin.Components
 				}
 			}
 
-			if (op >= (int) Instructions.RlRR && op <= (int) Instructions.RlRR + 0x0F)  // op r'
+			if (op >= (int) Instructions.RlS && op <= (int) Instructions.RlS + 0x07)  // op r'
 			{
 				int n = op & 0x01;
 				Instructions i = (Instructions) (op & 0xFE);
 
 				switch (i)
 				{
-					case Instructions.RlRR:
+					case Instructions.RlS:
 						data = this.RotateLeft(this.GetRegister(n), false);
 						this.SetRegister(n, data);
 						this.SetFlagsOper(data);
 						return;
 
-					case Instructions.RrRR:
+					case Instructions.RrS:
 						data = this.RotateRight(this.GetRegister(n), false);
 						this.SetRegister(n, data);
 						this.SetFlagsOper(data);
 						return;
 
-					case Instructions.RlcRR:
+					case Instructions.RlcS:
 						data = this.RotateLeft(this.GetRegister(n), true);
 						this.SetRegister(n, data);
 						this.SetFlagsOper(data);
 						return;
 
-					case Instructions.RrcRR:
+					case Instructions.RrcS:
 						data = this.RotateRight(this.GetRegister(n), true);
-						this.SetRegister(n, data);
-						this.SetFlagsOper(data);
-						return;
-
-					case Instructions.NotRR:
-						data = this.GetRegister(n) ^ 0xFF;
 						this.SetRegister(n, data);
 						this.SetFlagsOper(data);
 						return;
 				}
 			}
 
-			if (op >= (int) Instructions.ClrA && op <= (int) Instructions.ClrA + 0x0F)  // op ADDR
+			if (op >= (int) Instructions.ClrA && op <= (int) Instructions.ClrA + 0x07)  // op ADDR
 			{
 				Instructions i = (Instructions) op;
 				address = this.AddressAbs;
@@ -325,6 +326,12 @@ namespace Epsitec.App.Dolphin.Components
 				{
 					case Instructions.ClrA:
 						data = 0;
+						this.memory.Write(address, data);
+						this.SetFlagsOper(data);
+						return;
+
+					case Instructions.NotA:
+						data = this.memory.Read(address) ^ 0xFF;
 						this.memory.Write(address, data);
 						this.SetFlagsOper(data);
 						return;
@@ -364,182 +371,85 @@ namespace Epsitec.App.Dolphin.Components
 						this.memory.Write(address, data);
 						this.SetFlagsOper(data);
 						return;
-
-					case Instructions.NotA:
-						data = this.memory.Read(address) ^ 0xFF;
-						this.memory.Write(address, data);
-						this.SetFlagsOper(data);
-						return;
 				}
 			}
 
-			if (op >= (int) Instructions.MoveAR && op <= (int) Instructions.MoveAR + 0x0F)  // op ADDR,r
+			if (op >= (int) Instructions.MoveRR && op <= (int) Instructions.MoveRR + 0x0F)  // MOVE r,r
+			{
+				int src = (op>>2) & 0x03;
+				int dst = op & 0x03;
+
+				data = this.GetRegister(src);
+				this.SetRegister(dst, data);
+				this.SetFlagsOper(data);
+				return;
+			}
+
+			if (op >= (int) Instructions.MoveVR && op <= (int) Instructions.MoveVR + 0x03)  // MOVE #val,r
 			{
 				int n = op & 0x03;
-				Instructions i = (Instructions) (op & 0xFC);
-				address = this.AddressAbs;
 
-				switch (i)
-				{
-					case Instructions.MoveAR:
-						data = this.memory.Read(address);
-						this.SetRegister(n, data);
-						this.SetFlagsOper(data);
-						return;
-
-					case Instructions.CompAR:
-						this.SetFlagsCompare(this.GetRegister(n), this.memory.Read(address));
-						return;
-
-					case Instructions.AddAR:
-						data = this.GetRegister(n) + this.memory.Read(address);
-						this.SetRegister(n, data);
-						this.SetFlagsOper(data);
-						return;
-
-					case Instructions.SubAR:
-						data = this.GetRegister(n) - this.memory.Read(address);
-						this.SetRegister(n, data);
-						this.SetFlagsOper(data);
-						return;
-				}
+				data = this.memory.Read(this.registerPC++);
+				this.SetRegister(n, data);
+				this.SetFlagsOper(data);
+				return;
 			}
 
-			if (op >= (int) Instructions.AndARR && op <= (int) Instructions.AndARR + 0x0F)  // op ADDR,r'
-			{
-				int n = op & 0x01;
-				Instructions i = (Instructions) (op & 0xFE);
-				address = this.AddressAbs;
-
-				switch (i)
-				{
-					case Instructions.AndARR:
-						data = this.GetRegister(n) & this.memory.Read(address);
-						this.SetRegister(n, data);
-						this.SetFlagsOper(data);
-						return;
-
-					case Instructions.OrARR:
-						data = this.GetRegister(n) | this.memory.Read(address);
-						this.SetRegister(n, data);
-						this.SetFlagsOper(data);
-						return;
-
-					case Instructions.XorARR:
-						data = this.GetRegister(n) ^ this.memory.Read(address);
-						this.SetRegister(n, data);
-						this.SetFlagsOper(data);
-						return;
-
-					case Instructions.TestARR:
-						data = (1 << (this.memory.Read(address) & 0x07));
-						this.SetFlag(TinyProcessor.FlagZero, (this.GetRegister(n) & data) == 0);
-						return;
-
-					case Instructions.TClrARR:
-						data = (1 << (this.memory.Read(address) & 0x07));
-						this.SetFlag(TinyProcessor.FlagZero, (this.GetRegister(n) & data) == 0);
-						this.SetRegister(n, this.GetRegister(n) & ~data);
-						return;
-
-					case Instructions.TSetARR:
-						data = (1 << (this.memory.Read(address) & 0x07));
-						this.SetFlag(TinyProcessor.FlagZero, (this.GetRegister(n) & data) == 0);
-						this.SetRegister(n, this.GetRegister(n) | data);
-						return;
-
-					case Instructions.TInvARR:
-						data = (1 << (this.memory.Read(address) & 0x07));
-						this.SetFlag(TinyProcessor.FlagZero, (this.GetRegister(n) & data) == 0);
-						this.SetRegister(n, this.GetRegister(n) ^ data);
-						return;
-				}
-			}
-
-			if (op >= (int) Instructions.MoveRA && op <= (int) Instructions.MoveRA + 0x0F)  // op r,ADDR
+			if (op >= (int) Instructions.MoveAR && op <= (int) Instructions.MoveAR + 0x03)  // MOVE ADDR,r
 			{
 				int n = op & 0x03;
-				Instructions i = (Instructions) (op & 0xFC);
 				address = this.AddressAbs;
 
-				switch (i)
-				{
-					case Instructions.MoveRA:
-						data = this.GetRegister(n);
-						this.memory.Write(address, data);
-						this.SetFlagsOper(data);
-						return;
-
-					case Instructions.CompRA:
-						this.SetFlagsCompare(this.memory.Read(address), this.GetRegister(n));
-						return;
-
-					case Instructions.AddRA:
-						data = this.memory.Read(address) + this.GetRegister(n);
-						this.memory.Write(address, data);
-						this.SetFlagsOper(data);
-						return;
-
-					case Instructions.SubRA:
-						data = this.memory.Read(address) - this.GetRegister(n);
-						this.memory.Write(address, data);
-						this.SetFlagsOper(data);
-						return;
-				}
+				data = this.memory.Read(address);
+				this.SetRegister(n, data);
+				this.SetFlagsOper(data);
+				return;
 			}
 
-			if (op >= (int) Instructions.AndRRA && op <= (int) Instructions.AndRRA + 0x0F)  // op r',ADDR
+			if (op >= (int) Instructions.MoveRA && op <= (int) Instructions.MoveRA + 0x03)  // MOVE r,ADDR
 			{
-				int n = op & 0x01;
-				Instructions i = (Instructions) (op & 0xFE);
+				int n = op & 0x03;
 				address = this.AddressAbs;
+
+				data = this.GetRegister(n);
+				this.memory.Write(address, data);
+				this.SetFlagsOper(data);
+				return;
+			}
+
+			if (op >= (int) Instructions.CompRR && op <= (int) Instructions.CompRR + 0x0F)  // COMP r,r
+			{
+				int src = (op>>2) & 0x03;
+				int dst = op & 0x03;
+
+				this.SetFlagsCompare(this.GetRegister(dst), this.GetRegister(src));
+				return;
+			}
+
+			if (op >= (int) Instructions.AddRR && op <= (int) Instructions.AddRR + 0x1F)  // op r,r
+			{
+				int src = (op>>2) & 0x03;
+				int dst = op & 0x03;
+				Instructions i = (Instructions) (op & 0xF0);
+				data = this.GetRegister(src);
 
 				switch (i)
 				{
-					case Instructions.AndRRA:
-						data = this.memory.Read(address) & this.GetRegister(n);
-						this.memory.Write(address, data);
+					case Instructions.AddRR:
+						data = this.GetRegister(dst) + data;
+						this.SetRegister(dst, data);
 						this.SetFlagsOper(data);
 						return;
 
-					case Instructions.OrRRA:
-						data = this.memory.Read(address) | this.GetRegister(n);
-						this.memory.Write(address, data);
+					case Instructions.SubRR:
+						data = this.GetRegister(dst) - data;
+						this.SetRegister(dst, data);
 						this.SetFlagsOper(data);
-						return;
-
-					case Instructions.XorRRA:
-						data = this.memory.Read(address) ^ this.GetRegister(n);
-						this.memory.Write(address, data);
-						this.SetFlagsOper(data);
-						return;
-
-					case Instructions.TestRRA:
-						data = (1 << (this.GetRegister(n) & 0x07));
-						this.SetFlag(TinyProcessor.FlagZero, (this.memory.Read(address) & data) == 0);
-						return;
-
-					case Instructions.TClrRRA:
-						data = (1 << (this.GetRegister(n) & 0x07));
-						this.SetFlag(TinyProcessor.FlagZero, (this.memory.Read(address) & data) == 0);
-						this.memory.Write(address, this.memory.Read(address) & ~data);
-						return;
-
-					case Instructions.TSetRRA:
-						data = (1 << (this.GetRegister(n) & 0x07));
-						this.SetFlag(TinyProcessor.FlagZero, (this.memory.Read(address) & data) == 0);
-						this.memory.Write(address, this.memory.Read(address) | data);
-						return;
-
-					case Instructions.TInvRRA:
-						data = (1 << (this.GetRegister(n) & 0x07));
-						this.SetFlag(TinyProcessor.FlagZero, (this.memory.Read(address) & data) == 0);
-						this.memory.Write(address, this.memory.Read(address) ^ data);
 						return;
 				}
 			}
 
-			if (op >= (int) Instructions.MoveVR && op <= (int) Instructions.MoveVR + 0x0F)  // op #val,r
+			if (op >= (int) Instructions.AddVR && op <= (int) Instructions.AddVR + 0x07)  // op #val,r
 			{
 				int n = op & 0x03;
 				Instructions i = (Instructions) (op & 0xFC);
@@ -547,15 +457,6 @@ namespace Epsitec.App.Dolphin.Components
 
 				switch (i)
 				{
-					case Instructions.MoveVR:
-						this.SetRegister(n, data);
-						this.SetFlagsOper(data);
-						return;
-
-					case Instructions.CompVR:
-						this.SetFlagsCompare(this.GetRegister(n), data);
-						return;
-
 					case Instructions.AddVR:
 						data = this.GetRegister(n) + data;
 						this.SetRegister(n, data);
@@ -570,7 +471,51 @@ namespace Epsitec.App.Dolphin.Components
 				}
 			}
 
-			if (op >= (int) Instructions.AndVRR && op <= (int) Instructions.AndVRR + 0x0F)  // op #val,r'
+			if (op >= (int) Instructions.AddAR && op <= (int) Instructions.AddAR + 0x07)  // op ADDR,r
+			{
+				int n = op & 0x03;
+				Instructions i = (Instructions) (op & 0xFC);
+				address = this.AddressAbs;
+
+				switch (i)
+				{
+					case Instructions.AddAR:
+						data = this.GetRegister(n) + this.memory.Read(address);
+						this.SetRegister(n, data);
+						this.SetFlagsOper(data);
+						return;
+
+					case Instructions.SubAR:
+						data = this.GetRegister(n) - this.memory.Read(address);
+						this.SetRegister(n, data);
+						this.SetFlagsOper(data);
+						return;
+				}
+			}
+
+			if (op >= (int) Instructions.AddRA && op <= (int) Instructions.AddRA + 0x07)  // op r,ADDR
+			{
+				int n = op & 0x03;
+				Instructions i = (Instructions) (op & 0xFC);
+				address = this.AddressAbs;
+
+				switch (i)
+				{
+					case Instructions.AddRA:
+						data = this.memory.Read(address) + this.GetRegister(n);
+						this.memory.Write(address, data);
+						this.SetFlagsOper(data);
+						return;
+
+					case Instructions.SubRA:
+						data = this.memory.Read(address) - this.GetRegister(n);
+						this.memory.Write(address, data);
+						this.SetFlagsOper(data);
+						return;
+				}
+			}
+
+			if (op >= (int) Instructions.AndVS && op <= (int) Instructions.AndVS + 0x07)  // op #val,r
 			{
 				int n = op & 0x01;
 				Instructions i = (Instructions) (op & 0xFE);
@@ -578,42 +523,204 @@ namespace Epsitec.App.Dolphin.Components
 
 				switch (i)
 				{
-					case Instructions.AndVRR:
+					case Instructions.AndVS:
 						data = this.GetRegister(n) & data;
 						this.SetRegister(n, data);
 						this.SetFlagsOper(data);
 						return;
 
-					case Instructions.OrVRR:
+					case Instructions.OrVS:
 						data = this.GetRegister(n) | data;
 						this.SetRegister(n, data);
 						this.SetFlagsOper(data);
 						return;
 
-					case Instructions.XorVRR:
+					case Instructions.XorVS:
 						data = this.GetRegister(n) ^ data;
 						this.SetRegister(n, data);
 						this.SetFlagsOper(data);
 						return;
+				}
+			}
 
-					case Instructions.TestVRR:
+			if (op >= (int) Instructions.AndSS && op <= (int) Instructions.AndSS + 0x07)  // op #r',r'
+			{
+				int src = (op & 0x01) != 0 ? 0:1;
+				int dst = (op & 0x01) == 0 ? 0:1;
+				Instructions i = (Instructions) (op & 0xFE);
+				data = this.GetRegister(src);
+
+				switch (i)
+				{
+					case Instructions.AndSS:
+						data = this.GetRegister(dst) & data;
+						this.SetRegister(dst, data);
+						this.SetFlagsOper(data);
+						return;
+
+					case Instructions.OrSS:
+						data = this.GetRegister(dst) | data;
+						this.SetRegister(dst, data);
+						this.SetFlagsOper(data);
+						return;
+
+					case Instructions.XorSS:
+						data = this.GetRegister(dst) ^ data;
+						this.SetRegister(dst, data);
+						this.SetFlagsOper(data);
+						return;
+				}
+			}
+
+			if (op >= (int) Instructions.AndAS && op <= (int) Instructions.AndAS + 0x07)  // op ADDR,r'
+			{
+				int n = op & 0x01;
+				Instructions i = (Instructions) (op & 0xFE);
+				address = this.AddressAbs;
+
+				switch (i)
+				{
+					case Instructions.AndAS:
+						data = this.GetRegister(n) & this.memory.Read(address);
+						this.SetRegister(n, data);
+						this.SetFlagsOper(data);
+						return;
+
+					case Instructions.OrAS:
+						data = this.GetRegister(n) | this.memory.Read(address);
+						this.SetRegister(n, data);
+						this.SetFlagsOper(data);
+						return;
+
+					case Instructions.XorAS:
+						data = this.GetRegister(n) ^ this.memory.Read(address);
+						this.SetRegister(n, data);
+						this.SetFlagsOper(data);
+						return;
+				}
+			}
+
+			if (op >= (int) Instructions.AndSA && op <= (int) Instructions.AndSA + 0x0F)  // op r',ADDR
+			{
+				int n = op & 0x01;
+				Instructions i = (Instructions) (op & 0xFE);
+				address = this.AddressAbs;
+
+				switch (i)
+				{
+					case Instructions.AndSA:
+						data = this.memory.Read(address) & this.GetRegister(n);
+						this.memory.Write(address, data);
+						this.SetFlagsOper(data);
+						return;
+
+					case Instructions.OrSA:
+						data = this.memory.Read(address) | this.GetRegister(n);
+						this.memory.Write(address, data);
+						this.SetFlagsOper(data);
+						return;
+
+					case Instructions.XorSA:
+						data = this.memory.Read(address) ^ this.GetRegister(n);
+						this.memory.Write(address, data);
+						this.SetFlagsOper(data);
+						return;
+				}
+			}
+
+			if (op >= (int) Instructions.TestSS && op <= (int) Instructions.TestSS + 0x07)  // op #r',r'
+			{
+				int src = (op & 0x01) != 0 ? 0:1;
+				int dst = (op & 0x01) == 0 ? 0:1;
+				Instructions i = (Instructions) (op & 0xFE);
+				data = this.GetRegister(src);
+
+				switch (i)
+				{
+					case Instructions.TestSS:
+						data = (1 << (data & 0x07));
+						this.SetFlag(TinyProcessor.FlagZero, (this.GetRegister(dst) & data) == 0);
+						return;
+
+					case Instructions.TSetSS:
+						data = (1 << (data & 0x07));
+						this.SetFlag(TinyProcessor.FlagZero, (this.GetRegister(dst) & data) == 0);
+						this.SetRegister(dst, this.GetRegister(dst) | data);
+						return;
+
+					case Instructions.TClrSS:
+						data = (1 << (data & 0x07));
+						this.SetFlag(TinyProcessor.FlagZero, (this.GetRegister(dst) & data) == 0);
+						this.SetRegister(dst, this.GetRegister(dst) & ~data);
+						return;
+
+					case Instructions.TInvSS:
+						data = (1 << (data & 0x07));
+						this.SetFlag(TinyProcessor.FlagZero, (this.GetRegister(dst) & data) == 0);
+						this.SetRegister(dst, this.GetRegister(dst) ^ data);
+						return;
+				}
+			}
+
+			if (op >= (int) Instructions.TestSA && op <= (int) Instructions.TestSA + 0x07)  // op r',ADDR
+			{
+				int n = op & 0x01;
+				Instructions i = (Instructions) (op & 0xFE);
+				address = this.AddressAbs;
+
+				switch (i)
+				{
+					case Instructions.TestSA:
+						data = (1 << (this.GetRegister(n) & 0x07));
+						this.SetFlag(TinyProcessor.FlagZero, (this.memory.Read(address) & data) == 0);
+						return;
+
+					case Instructions.TClrSA:
+						data = (1 << (this.GetRegister(n) & 0x07));
+						this.SetFlag(TinyProcessor.FlagZero, (this.memory.Read(address) & data) == 0);
+						this.memory.Write(address, this.memory.Read(address) & ~data);
+						return;
+
+					case Instructions.TSetSA:
+						data = (1 << (this.GetRegister(n) & 0x07));
+						this.SetFlag(TinyProcessor.FlagZero, (this.memory.Read(address) & data) == 0);
+						this.memory.Write(address, this.memory.Read(address) | data);
+						return;
+
+					case Instructions.TInvSA:
+						data = (1 << (this.GetRegister(n) & 0x07));
+						this.SetFlag(TinyProcessor.FlagZero, (this.memory.Read(address) & data) == 0);
+						this.memory.Write(address, this.memory.Read(address) ^ data);
+						return;
+				}
+			}
+
+			if (op >= (int) Instructions.TestVS && op <= (int) Instructions.TestVS + 0x07)  // op #val,r'
+			{
+				int n = op & 0x01;
+				Instructions i = (Instructions) (op & 0xFE);
+				data = this.memory.Read(this.registerPC++);
+
+				switch (i)
+				{
+					case Instructions.TestVS:
 						data = (1 << (data & 0x07));
 						this.SetFlag(TinyProcessor.FlagZero, (this.GetRegister(n) & data) == 0);
 						return;
 
-					case Instructions.TClrVRR:
+					case Instructions.TClrVS:
 						data = (1 << (data & 0x07));
 						this.SetFlag(TinyProcessor.FlagZero, (this.GetRegister(n) & data) == 0);
 						this.SetRegister(n, this.GetRegister(n) & ~data);
 						return;
 
-					case Instructions.TSetVRR:
+					case Instructions.TSetVS:
 						data = (1 << (data & 0x07));
 						this.SetFlag(TinyProcessor.FlagZero, (this.GetRegister(n) & data) == 0);
 						this.SetRegister(n, this.GetRegister(n) | data);
 						return;
 
-					case Instructions.TInvVRR:
+					case Instructions.TInvVS:
 						data = (1 << (data & 0x07));
 						this.SetFlag(TinyProcessor.FlagZero, (this.GetRegister(n) & data) == 0);
 						this.SetRegister(n, this.GetRegister(n) ^ data);
@@ -621,14 +728,45 @@ namespace Epsitec.App.Dolphin.Components
 				}
 			}
 
-			if (op >= (int) Instructions.MoveRR && op <= (int) Instructions.MoveRR + 0x0F)  // MOVE r,r
+			if (op >= (int) Instructions.TestVA && op <= (int) Instructions.TestVA + 0x03)  // op #val,ADDR
 			{
-				int src = (op>>2) & 0x03;
-				int dst = op & 0x03;
+				Instructions i = (Instructions) (op & 0xFF);
+				data = this.memory.Read(this.registerPC++);
+				address = this.AddressAbs;
 
-				data = this.GetRegister(src);
-				this.SetRegister(dst, data);
-				this.SetFlagsOper(data);
+				switch (i)
+				{
+					case Instructions.TestVA:
+						data = (1 << (data & 0x07));
+						this.SetFlag(TinyProcessor.FlagZero, (this.memory.Read(address) & data) == 0);
+						return;
+
+					case Instructions.TClrVA:
+						data = (1 << (data & 0x07));
+						this.SetFlag(TinyProcessor.FlagZero, (this.memory.Read(address) & data) == 0);
+						this.memory.Write(address, this.memory.Read(address) & ~data);
+						return;
+
+					case Instructions.TSetVA:
+						data = (1 << (data & 0x07));
+						this.SetFlag(TinyProcessor.FlagZero, (this.memory.Read(address) & data) == 0);
+						this.memory.Write(address, this.memory.Read(address) | data);
+						return;
+
+					case Instructions.TInvVA:
+						data = (1 << (data & 0x07));
+						this.SetFlag(TinyProcessor.FlagZero, (this.memory.Read(address) & data) == 0);
+						this.memory.Write(address, this.memory.Read(address) ^ data);
+						return;
+				}
+			}
+
+			if (op >= (int) Instructions.CompVR && op <= (int) Instructions.CompVR + 0x03)  // COMP #val,r
+			{
+				int n = op & 0x03;
+
+				data = this.memory.Read(this.registerPC++);
+				this.SetFlagsCompare(this.GetRegister(n), data);
 				return;
 			}
 		}
@@ -798,16 +936,14 @@ namespace Epsitec.App.Dolphin.Components
 					address = this.registerPC + address;
 				}
 
-				if ((mode & 0x4000) != 0)  // +{X} ou +{Y} ?
+				if ((mode & 0x1000) != 0)  // +{X} ?
 				{
-					if ((mode & 0x1000) == 0)
-					{
-						address += this.registerX;
-					}
-					else
-					{
-						address += this.registerY;
-					}
+					address += this.registerX;
+				}
+
+				if ((mode & 0x2000) != 0)  // +{Y} ?
+				{
+					address += this.registerY;
 				}
 
 				return address;
@@ -1038,11 +1174,11 @@ namespace Epsitec.App.Dolphin.Components
 		//	Attend la pression d'une touche du clavier simulé.
 		//	in	-
 		//	out	A touche pressée
-		//	mod	A
+		//	mod	A, F
 		protected static byte[] WaitKey =
 		{
 			(byte) Instructions.MoveAR+0, 0x0C, 0x07,	// MOVE C07,A		; lit le clavier
-			(byte) Instructions.TClrVRR+0, 0x07,		// TCLR A:#7		; bit full ?
+			(byte) Instructions.TClrVS+0, 0x07,			// TCLR A:#7		; bit full ?
 			(byte) Instructions.JumpEQ, 0x8F, 0xF8,		// JUMP,EQ R8^LOOP	; non, jump loop
 			(byte) Instructions.Ret,					// RET
 		};
@@ -1051,15 +1187,15 @@ namespace Epsitec.App.Dolphin.Components
 		//	in	A segments à allumer
 		//		B digit 0..3
 		//	out	-
-		//	mod	-
+		//	mod	F
 		protected static byte[] DisplayBinaryDigit =
 		{
 			(byte) Instructions.PushR+1,				// PUSH B
 			(byte) Instructions.PushR+2,				// PUSH X
 
-			(byte) Instructions.AndVRR+1, 0x03,			// AND #03,B
+			(byte) Instructions.AndVS+1, 0x03,			// AND #03,B
 			(byte) Instructions.MoveRR+0x6,				// MOVE B,X
-			(byte) Instructions.MoveRA+0, 0x4C, 0x00,	// MOVE A,C00+{X}
+			(byte) Instructions.MoveRA+0, 0x1C, 0x00,	// MOVE A,C00+{X}
 
 			(byte) Instructions.PopR+2,					// POP X
 			(byte) Instructions.PopR+1,					// POP B
@@ -1070,19 +1206,20 @@ namespace Epsitec.App.Dolphin.Components
 		//	in	A valeur 0..15
 		//		B digit 0..3
 		//	out	-
-		//	mod	-
+		//	mod	F
 		protected static byte[] DisplayHexaDigit =
 		{
 			(byte) Instructions.PushR+0,				// PUSH A
 			(byte) Instructions.PushR+1,				// PUSH B
 			(byte) Instructions.PushR+2,				// PUSH X
 
+			(byte) Instructions.AndVS+0, 0x0F,			// AND #0F,A
 			(byte) Instructions.MoveRR+0x2,				// MOVE A,X
-			(byte) Instructions.MoveAR+0, 0xC0, 0x0A,	// MOVE R8^TABLE+{X},A
+			(byte) Instructions.MoveAR+0, 0x90, 0x0A,	// MOVE R8^TABLE+{X},A
 
-			(byte) Instructions.AndVRR+1, 0x03,			// AND #03,B
+			(byte) Instructions.AndVS+1, 0x03,			// AND #03,B
 			(byte) Instructions.MoveRR+0x6,				// MOVE B,X
-			(byte) Instructions.MoveRA+0, 0x4C, 0x00,	// MOVE A,C00+{X}
+			(byte) Instructions.MoveRA+0, 0x1C, 0x00,	// MOVE A,C00+{X}
 
 			(byte) Instructions.PopR+2,					// POP X
 			(byte) Instructions.PopR+1,					// POP B
@@ -1096,39 +1233,80 @@ namespace Epsitec.App.Dolphin.Components
 		//	in	A valeur 0..255
 		//		B premier digit 0..2
 		//	out	-
-		//	mod	-
+		//	mod	F
 		protected static byte[] DisplayHexaByte =
 		{
-			(byte) Instructions.Ret,				// RET
+			(byte) Instructions.PushR+0,				// PUSH A
+			(byte) Instructions.PushR+1,				// PUSH B
+
+			(byte) Instructions.IncR+1,					// INC B
+			(byte) Instructions.Call, 0x80, 0x06,		// CALL DisplayHexaDigit
+
+			(byte) Instructions.RrS+0,					// RR A
+			(byte) Instructions.RrS+0,					// RR A
+			(byte) Instructions.RrS+0,					// RR A
+			(byte) Instructions.RrS+0,					// RR A
+			(byte) Instructions.DecR+1,					// DEC B
+			(byte) Instructions.Call, 0x80, 0x06,		// CALL DisplayHexaDigit
+
+			(byte) Instructions.PopR+1,					// POP B
+			(byte) Instructions.PopR+0,					// POP A
+			(byte) Instructions.Ret,					// RET
 		};
 
 		//	Affiche une valeur décimale.
-		//	in	HL valeur
+		//	in	A valeur 0..255
+		//		B premier digit 0..2
 		//	out	-
-		//	mod	-
+		//	mod	F
 		protected static byte[] DisplayDecimal =
 		{
-			(byte) Instructions.Ret,				// RET
+			(byte) Instructions.Ret,					// RET
 		};
 
 		//	Allume un pixel dans l'écran bitmap.
 		//	in	A coordonnée X 0..31
 		//		B coordonnée Y 0..23
 		//	out	-
-		//	mod	-
+		//	mod	F
 		protected static byte[] SetPixel =
 		{
-			(byte) Instructions.Ret,				// RET
+			(byte) Instructions.PushR+0,				// PUSH A
+			(byte) Instructions.PushR+1,				// PUSH B
+			(byte) Instructions.PushR+2,				// PUSH X
+			(byte) Instructions.PushR+3,				// PUSH Y
+
+			(byte) Instructions.AndVS+1, 0x1F,			// AND #1F,B
+			(byte) Instructions.RlS+1,					// RL B
+			(byte) Instructions.RlS+1,					// RL B
+			(byte) Instructions.MoveRR+0x7,				// MOVE B,Y
+
+			(byte) Instructions.PushR+0,				// PUSH A
+			(byte) Instructions.RrS+0,					// RR A
+			(byte) Instructions.RrS+0,					// RR A
+			(byte) Instructions.RrS+0,					// RR A
+			(byte) Instructions.AndVS+0, 0x03,			// AND #03,A
+			(byte) Instructions.MoveRR+0x2,				// MOVE A,X
+			(byte) Instructions.PopR+0,					// POP A
+
+			(byte) Instructions.XorVS+0, 0x07,			// XOR #07,A
+			(byte) Instructions.TSetSA+0, 0x3C, 0x80,	// TSET C80+{X}+{Y},A
+
+			(byte) Instructions.PopR+3,					// POP Y
+			(byte) Instructions.PopR+2,					// POP X
+			(byte) Instructions.PopR+1,					// POP B
+			(byte) Instructions.PopR+0,					// POP A
+			(byte) Instructions.Ret,					// RET
 		};
 
 		//	Eteint un pixel dans l'écran bitmap.
 		//	in	A coordonnée X 0..31
 		//		B coordonnée Y 0..23
 		//	out	-
-		//	mod	-
+		//	mod	F
 		protected static byte[] ClrPixel =
 		{
-			(byte) Instructions.Ret,				// RET
+			(byte) Instructions.Ret,					// RET
 		};
 		#endregion
 
