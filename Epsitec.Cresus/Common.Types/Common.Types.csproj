@@ -105,6 +105,7 @@
     <Compile Include="CollectionType.cs" />
     <Compile Include="AbstractDateTimeType.cs" />
     <Compile Include="BinaryType.cs" />
+    <Compile Include="IValueStore.cs" />
     <Compile Include="DependencyConverterAttribute.cs" />
     <Compile Include="FieldSource.cs" />
     <Compile Include="OtherType.cs" />

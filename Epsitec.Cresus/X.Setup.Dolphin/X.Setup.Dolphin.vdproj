@@ -1873,7 +1873,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Simulateur de Dauphin"
         "ProductCode" = "8:{AF1751C3-076C-4554-8614-B17CA336CEF6}"
-        "PackageCode" = "8:{AD0A78C8-AEE7-4EC6-9E0D-F28DCA03C49B}"
+        "PackageCode" = "8:{2E7F9EB4-8EFC-41E8-8464-D0CD389E6A17}"
         "UpgradeCode" = "8:{3E07DF4F-1854-45A8-86B8-F494ADA98964}"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
@@ -2016,29 +2016,6 @@
             "Attributes" = "3:1"
                 "Dialogs"
                 {
-                    "{688940B3-5CA9-4162-8DEE-2993FA9D8CBC}:_40BF263894DE4FF4A2EB8E70C1821322"
-                    {
-                    "Sequence" = "3:300"
-                    "DisplayName" = "8:Confirm Installation"
-                    "UseDynamicProperties" = "11:TRUE"
-                    "IsDependency" = "11:FALSE"
-                    "SourcePath" = "8:<VsdDialogDir>\\VsdConfirmDlg.wid"
-                        "Properties"
-                        {
-                            "BannerBitmap"
-                            {
-                            "Name" = "8:BannerBitmap"
-                            "DisplayName" = "8:#1001"
-                            "Description" = "8:#1101"
-                            "Type" = "3:8"
-                            "ContextData" = "8:Bitmap"
-                            "Attributes" = "3:4"
-                            "Setting" = "3:2"
-                            "Value" = "8:_59C2CADB4BAF4200AB5061BE85415427"
-                            "UsePlugInResources" = "11:TRUE"
-                            }
-                        }
-                    }
                     "{688940B3-5CA9-4162-8DEE-2993FA9D8CBC}:_7145238801AD43DCB9B67A0319333A71"
                     {
                     "Sequence" = "3:100"

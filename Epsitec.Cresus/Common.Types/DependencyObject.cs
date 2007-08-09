@@ -1284,7 +1284,7 @@ namespace Epsitec.Common.Types
 			return ids;
 		}
 
-		object IStructuredData.GetValue(string id)
+		object IValueStore.GetValue(string id)
 		{
 			DependencyProperty property = this.ObjectType.GetProperty (id);
 
@@ -1298,7 +1298,7 @@ namespace Epsitec.Common.Types
 			}
 		}
 
-		void IStructuredData.SetValue(string id, object value)
+		void IValueStore.SetValue(string id, object value)
 		{
 			DependencyProperty property = this.ObjectType.GetProperty (id);
 
