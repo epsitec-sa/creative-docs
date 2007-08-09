@@ -1319,6 +1319,7 @@ namespace Epsitec.App.Dolphin.Components
 					AbstractProcessor.HelpPutLine(builder, "[000]..[7FF] :<tab/>RAM");
 					AbstractProcessor.HelpPutLine(builder, "[800]..[BFF] :<tab/>ROM");
 					AbstractProcessor.HelpPutLine(builder, "[C00]..[C10] :<tab/>Périphériques");
+					AbstractProcessor.HelpPutLine(builder, "[C80]..[CDF] :<tab/>Ecran bitmap");
 
 					AbstractProcessor.HelpPutTitle(builder, "Affichage");
 					AbstractProcessor.HelpPutLine(builder, "L'affichage est constitué de 4 afficheurs à 7 segments (plus un point décimal), numérotés de droite à gauche. On peut écrire une valeur pour mémoriser les digits à allumer, ou relire cette valeur.");
@@ -1341,9 +1342,17 @@ namespace Epsitec.App.Dolphin.Components
 					AbstractProcessor.HelpPutLine(builder, "[C07] :<tab/>Clavier.");
 					AbstractProcessor.HelpPutLine(builder, "");
 					AbstractProcessor.HelpPutLine(builder, "bits 0..2<tab/>Touches 0..7.");
-					AbstractProcessor.HelpPutLine(builder, "bit 4<tab/>Touche Shift");
-					AbstractProcessor.HelpPutLine(builder, "bit 5<tab/>Touche Ctrl");
+					AbstractProcessor.HelpPutLine(builder, "bit 3<tab/>Touche Shift.");
+					AbstractProcessor.HelpPutLine(builder, "bit 4<tab/>Touche Ctrl.");
 					AbstractProcessor.HelpPutLine(builder, "bit 7<tab/>Prend la valeur 1 lorsqu'une touche 0..7 est pressée. Est automatiquement remis à zéro lorsque l'adresse [C07] est lue.");
+
+					AbstractProcessor.HelpPutTitle(builder, "Ecran bitmap");
+					AbstractProcessor.HelpPutLine(builder, "L'écran bitmap est un écran vidéo monochrome de 32 x 24 pixels. Chaque byte représente 8 pixels horizontaux, avec le bit 7 à gauche.");
+					AbstractProcessor.HelpPutLine(builder, "");
+					AbstractProcessor.HelpPutLine(builder, "[C80]..[C83] :<tab/>1ère ligne de 32 pixels.");
+					AbstractProcessor.HelpPutLine(builder, "[C84]..[C87] :<tab/>2ème ligne de 32 pixels.");
+					AbstractProcessor.HelpPutLine(builder, "...");
+					AbstractProcessor.HelpPutLine(builder, "[CDC]..[CDF] :<tab/>24ème ligne de 32 pixels.");
 					break;
 
 				case "Data":

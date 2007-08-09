@@ -72,6 +72,11 @@ namespace Epsitec.App.Dolphin.Components
 				this.memory[i] = 0;
 			}
 
+			for (int i=Memory.DisplayBase; i<Memory.DisplayBase+Memory.DisplayLength; i++)
+			{
+				this.memory[i] = 0;
+			}
+
 			foreach (MyWidgets.Digit digit in this.application.DisplayDigits)
 			{
 				digit.SegmentValue = (MyWidgets.Digit.DigitSegment) 0;
@@ -123,13 +128,13 @@ namespace Epsitec.App.Dolphin.Components
 		public bool IsReadOnly(int address)
 		{
 			//	Indique si l'adresse ne permet pas l'écriture.
-			return !this.IsRam(address) && !this.IsPeriph(address);
+			return !this.IsRam(address) && !this.IsPeriph(address) && !this.IsDisplay(address);
 		}
 
 		public bool IsValid(int address)
 		{
 			//	Indique si l'adresse est valide.
-			return this.IsRam(address) || this.IsRom(address) || this.IsPeriph(address);
+			return this.IsRam(address) || this.IsRom(address) || this.IsPeriph(address) || this.IsDisplay(address);
 		}
 
 		public bool IsRam(int address)
@@ -148,6 +153,12 @@ namespace Epsitec.App.Dolphin.Components
 		{
 			//	Indique si l'adresse est un périphérique.
 			return (address >= Memory.PeriphBase && address < Memory.PeriphBase+Memory.PeriphLength);
+		}
+
+		public bool IsDisplay(int address)
+		{
+			//	Indique si l'adresse est un périphérique.
+			return (address >= Memory.DisplayBase && address < Memory.DisplayBase+Memory.DisplayLength);
 		}
 
 
@@ -227,11 +238,11 @@ namespace Epsitec.App.Dolphin.Components
 					int a = address - Memory.PeriphFirstDigit;
 					this.application.DisplayDigits[a].SegmentValue = (MyWidgets.Digit.DigitSegment) this.memory[address];
 				}
+			}
 
-				if (address >= Memory.PeriphDisplay && address <= Memory.PeriphDisplay*Memory.PeriphDisplayDx/8*Memory.PeriphDisplayDy)  // écran bitmap ?
-				{
-					this.application.DisplayBitmap.Invalidate();
-				}
+			if (this.IsDisplay(address))  // écran bitmap ?
+			{
+				this.application.DisplayBitmap.Invalidate();
 			}
 		}
 
@@ -275,13 +286,15 @@ namespace Epsitec.App.Dolphin.Components
 		public static readonly int RomLength        = 0x400;
 
 		public static readonly int PeriphBase       = 0xC00;
-		public static readonly int PeriphLength     = 0x400;
+		public static readonly int PeriphLength     = 0x010;
 		public static readonly int PeriphFirstDigit = 0xC00;  // digit de gauche
 		public static readonly int PeriphLastDigit  = 0xC03;  // digit de droite
 		public static readonly int PeriphKeyboard   = 0xC07;
-		public static readonly int PeriphDisplay    = 0xC80;
-		public static readonly int PeriphDisplayDx  = 32;
-		public static readonly int PeriphDisplayDy  = 24;
+
+		public static readonly int DisplayBase      = 0xC80;
+		public static readonly int DisplayDx        = 32;
+		public static readonly int DisplayDy        = 24;
+		public static readonly int DisplayLength    = Memory.DisplayDx*Memory.DisplayDy/8;
 
 
 		protected DolphinApplication application;

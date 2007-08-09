@@ -260,16 +260,21 @@ namespace Epsitec.App.Dolphin.MyWidgets
 				return "M";
 			}
 
-			if (address >= Components.Memory.PeriphBase && address < Components.Memory.PeriphBase+Components.Memory.PeriphLength)
-			{
-				return "P";
-			}
-			
 			if (address >= Components.Memory.RomBase && address < Components.Memory.RomBase+Components.Memory.RomLength)
 			{
 				return "R";
 			}
 
+			if (address >= Components.Memory.PeriphBase && address < Components.Memory.PeriphBase+Components.Memory.PeriphLength)
+			{
+				return "P";
+			}
+			
+			if (address >= Components.Memory.DisplayBase && address < Components.Memory.DisplayBase+Components.Memory.DisplayLength)
+			{
+				return "D";
+			}
+			
 			return null;
 		}
 
@@ -281,13 +286,17 @@ namespace Epsitec.App.Dolphin.MyWidgets
 				{
 					return Components.Memory.RamLength;
 				}
+				else if (this.bank == "R")
+				{
+					return Components.Memory.RomLength;
+				}
 				else if (this.bank == "P")
 				{
 					return Components.Memory.PeriphLength;
 				}
-				else if (this.bank == "R")
+				else if (this.bank == "D")
 				{
-					return Components.Memory.RomLength;
+					return Components.Memory.DisplayLength;
 				}
 				else
 				{
@@ -304,13 +313,17 @@ namespace Epsitec.App.Dolphin.MyWidgets
 				{
 					return Components.Memory.RamBase;
 				}
+				else if (this.bank == "R")
+				{
+					return Components.Memory.RomBase;
+				}
 				else if (this.bank == "P")
 				{
 					return Components.Memory.PeriphBase;
 				}
-				else if (this.bank == "R")
+				else if (this.bank == "D")
 				{
-					return Components.Memory.RomBase;
+					return Components.Memory.DisplayBase;
 				}
 				else
 				{
