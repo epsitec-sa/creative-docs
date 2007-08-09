@@ -14,10 +14,11 @@ namespace Epsitec.Common.Support.EntityEngine
 	{
 		protected AbstractEntity()
 		{
-			this.values = new StructuredData (this.GetStructuredType ());
+			this.context = EntityContext.Current;
+			this.values = this.context.CreateValueStore (this);
 		}
 
-		protected abstract IStructuredType GetStructuredType();
+		public abstract Druid GetStructuredTypeId();
 
 		protected T GetField<T>(string id)
 		{
@@ -66,6 +67,7 @@ namespace Epsitec.Common.Support.EntityEngine
 			this.values.SetValue (id, newValue);
 		}
 
+		private EntityContext context;
 		private IValueStore values;
 	}
 }

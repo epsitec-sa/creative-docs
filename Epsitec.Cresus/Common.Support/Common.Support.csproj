@@ -138,6 +138,7 @@
     <Compile Include="CommandAttribute.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="EntityEngine\EntityContext.cs" />
     <Compile Include="Serialization\Converters\BinaryArrayConverter.cs" />
     <Compile Include="CultureMap.cs" />
     <Compile Include="CultureMapList.cs" />

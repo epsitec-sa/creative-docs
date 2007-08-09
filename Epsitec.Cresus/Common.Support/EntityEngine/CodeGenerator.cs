@@ -110,6 +110,7 @@ namespace Epsitec.Common.Support.EntityEngine
 					this.formatter.WriteBeginClass (CodeGenerator.EntityClassAttributes, CodeGenerator.CreateEntityIdentifier (name), specifiers);
 					type.ForEachField (emitter.EmitLocalProperty);
 					type.ForEachField (emitter.EmitLocalPropertyHandlers);
+					this.EmitMethods (type);
 					this.formatter.WriteEndClass ();
 					break;
 
@@ -126,6 +127,19 @@ namespace Epsitec.Common.Support.EntityEngine
 			}
 
 			this.formatter.WriteEndNamespace ();
+		}
+
+		private void EmitMethods(StructuredType type)
+		{
+			Druid id = type.CaptionId;
+
+			string code = string.Concat (Keywords.Druid, " ", Keywords.GetStructuredTypeIdMethod, "()");
+			this.formatter.WriteBeginMethod (new CodeAttributes (CodeVisibility.Public, CodeAccessibility.Override), code);
+			this.formatter.WriteCodeLine (Keywords.Return, " ", Keywords.New, " ", Keywords.Druid, " (",
+				/**/					  id.Module.ToString (System.Globalization.CultureInfo.InvariantCulture), ", ",
+				/**/					  id.Developer.ToString (System.Globalization.CultureInfo.InvariantCulture), ", ",
+				/**/					  id.Local.ToString (System.Globalization.CultureInfo.InvariantCulture), ");");
+			this.formatter.WriteEndMethod ();
 		}
 
 
@@ -374,12 +388,15 @@ namespace Epsitec.Common.Support.EntityEngine
 		{
 			public const string Global = "global";
 			public const string Return = "return";
+			public const string New    = "new";
 			public const string This   = "this";
 			public const string If     = "if";
 			public const string Quote  = "\"";
+			public const string Override = "override";
 
 			public const string Void   = "void";
 			public const string String = "string";
+			public const string Druid  = "global::Epsitec.Common.Support.Druid";
 
 			public const string ValueVariable = "value";
 			public const string OldValueVariable = "oldValue";
@@ -390,11 +407,12 @@ namespace Epsitec.Common.Support.EntityEngine
 			public const string Entities = "Entities";
 			public const string EntitySuffix = "Entity";
 			public const string InterfaceImplementationSuffix = "InterfaceImplementation";
-			public const string AbstractEntity = "Epsitec.Common.Support.AbstractEntity";
+			public const string AbstractEntity = "Epsitec.Common.Support.EntityEngine.AbstractEntity";
 
 			public const string SetFieldMethod = "SetField";
 			public const string GetFieldMethod = "GetField";
 			public const string GetFieldCollectionMethod = "GetFieldCollection";
+			public const string GetStructuredTypeIdMethod = "GetStructuredTypeId";
 			public const string OnPrefix = "On";
 			public const string ChangedSuffix = "Changed";
 			public const string ChangingSuffix = "Changing";
