@@ -44,7 +44,7 @@ namespace Epsitec.App.Dolphin.MyWidgets
 			
 			rect.Deflate(0.5);
 			path = new Path();
-			path.AppendRoundedRectangle(rect, 15);
+			path.AppendRoundedRectangle(rect, 23);
 			graphics.Rasterizer.AddSurface(path);
 			Geometry.RenderVerticalGradient(graphics, rect, this.FromBrightness(0.5), this.FromBrightness(0.8));
 			graphics.Rasterizer.AddOutline(path);
@@ -53,23 +53,38 @@ namespace Epsitec.App.Dolphin.MyWidgets
 
 			rect.Deflate(3.0);
 			path = new Path();
-			path.AppendRoundedRectangle(rect, 12);
+			path.AppendRoundedRectangle(rect, 20);
 			graphics.Rasterizer.AddSurface(path);
-			Geometry.RenderVerticalGradient(graphics, rect, this.FromBrightness(0.2), this.FromBrightness(0.4));
+			Geometry.RenderVerticalGradient(graphics, rect, this.FromBrightness(0.1), this.FromBrightness(0.3));
 			graphics.Rasterizer.AddOutline(path);
 			graphics.RenderSolid(this.FromBrightness(0));
 			path.Dispose();
 
 			rect.Deflate(9.5);
 			path = new Path();
-			path.AppendRoundedRectangle(rect, 5);
+			path.AppendRoundedRectangle(rect, 10);
 			graphics.Rasterizer.AddSurface(path);
-			Geometry.RenderVerticalGradient(graphics, rect, this.FromBrightness(0.2), this.FromBrightness(0.0));
+			Geometry.RenderVerticalGradient(graphics, rect, this.FromBrightness(0.0), this.FromBrightness(0.2));
 			path.Dispose();
 
 			rect.Deflate(4.0);
 			double px = rect.Width/this.dx;
 			double py = rect.Height/this.dy;
+
+			//	Dessine quelques reflets.
+			Rectangle reflect = rect;
+			reflect.Width *= 0.8;
+			reflect.Bottom = reflect.Top-reflect.Width;
+			reflect.Offset(-reflect.Width*0.2, reflect.Width*0.2);
+			graphics.AddFilledRectangle(reflect);
+			Geometry.RenderCircularGradient(graphics, reflect.Center, reflect.Width/2, Color.FromAlphaRgb(0.0, 0.2, 0.2, 0.2), Color.FromBrightness(0.2));
+
+			reflect = rect;
+			reflect.Width *= 0.2;
+			reflect.Bottom = reflect.Top-reflect.Width;
+			reflect.Offset(-reflect.Width*0.2, reflect.Width*0.2);
+			graphics.AddFilledRectangle(reflect);
+			Geometry.RenderCircularGradient(graphics, reflect.Center, reflect.Width/2, Color.FromAlphaRgb(0.0, 0.3, 0.3, 0.3), Color.FromBrightness(0.3));
 
 			if (this.memory != null)
 			{
@@ -84,8 +99,8 @@ namespace Epsitec.App.Dolphin.MyWidgets
 							if ((value & (1 << (7-b))) != 0)  // bit allumé ?
 							{
 								Rectangle pixel = new Rectangle(rect.Left+px*(x+b), rect.Top-py*(y+1), px-1, py-1);
-								graphics.AddFilledRectangle(pixel);
-								//?graphics.AddFilledCircle(pixel.Center, pixel.Width*0.7);
+								//?graphics.AddFilledRectangle(pixel);
+								graphics.AddFilledCircle(pixel.Center, pixel.Width*0.7);
 								graphics.RenderSolid(Display.ColorSet);
 							}
 						}
