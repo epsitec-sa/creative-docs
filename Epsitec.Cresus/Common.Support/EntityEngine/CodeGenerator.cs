@@ -2,15 +2,16 @@
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support;
+using Epsitec.Common.Support.CodeGenerators;
 using Epsitec.Common.Types;
 
 using System.Collections.Generic;
 
-namespace Epsitec.Common.Support.CodeGenerators
+namespace Epsitec.Common.Support.EntityEngine
 {
-	public class EntityCodeGenerator
+	public class CodeGenerator
 	{
-		public EntityCodeGenerator(CodeFormatter formatter, ResourceManager resourceManager)
+		public CodeGenerator(CodeFormatter formatter, ResourceManager resourceManager)
 		{
 			this.formatter = formatter;
 			this.resourceManager = resourceManager;
@@ -98,14 +99,14 @@ namespace Epsitec.Common.Support.CodeGenerators
 
 			Emitter emitter;
 			
-			this.formatter.WriteBeginNamespace (EntityCodeGenerator.CreateEntityNamespace (this.SourceNamespace));
+			this.formatter.WriteBeginNamespace (CodeGenerator.CreateEntityNamespace (this.SourceNamespace));
 
 			switch (typeClass)
 			{
 				case StructuredTypeClass.Entity:
 					emitter = new EntityEmitter (this, type);
 					
-					this.formatter.WriteBeginClass (EntityCodeGenerator.EntityClassAttributes, EntityCodeGenerator.CreateEntityIdentifier (name), specifiers);
+					this.formatter.WriteBeginClass (CodeGenerator.EntityClassAttributes, CodeGenerator.CreateEntityIdentifier (name), specifiers);
 					type.ForEachField (emitter.EmitLocalProperty);
 					type.ForEachField (emitter.EmitLocalPropertyHandlers);
 					this.formatter.WriteEndClass ();
@@ -114,11 +115,11 @@ namespace Epsitec.Common.Support.CodeGenerators
 				case StructuredTypeClass.Interface:
 					emitter = new InterfaceEmitter (this, type);
 					
-					this.formatter.WriteBeginInterface (EntityCodeGenerator.InterfaceAttributes, EntityCodeGenerator.CreateInterfaceIdentifier (name), specifiers);
+					this.formatter.WriteBeginInterface (CodeGenerator.InterfaceAttributes, CodeGenerator.CreateInterfaceIdentifier (name), specifiers);
 					type.ForEachField (emitter.EmitLocalProperty);
 					this.formatter.WriteEndInterface ();
 
-					this.formatter.WriteBeginClass (EntityCodeGenerator.StaticClassAttributes, EntityCodeGenerator.CreateInterfaceImplementationIdentifier (name), specifiers);
+					this.formatter.WriteBeginClass (CodeGenerator.StaticClassAttributes, CodeGenerator.CreateInterfaceImplementationIdentifier (name), specifiers);
 					this.formatter.WriteEndClass ();
 					break;
 			}
@@ -161,13 +162,13 @@ namespace Epsitec.Common.Support.CodeGenerators
 			System.Diagnostics.Debug.Assert (caption != null);
 			System.Diagnostics.Debug.Assert (!string.IsNullOrEmpty (infos[0].SourceNamespace));
 
-			return string.Concat (Keywords.Global, "::", EntityCodeGenerator.CreateEntityNamespace (infos[0].SourceNamespace), ".", EntityCodeGenerator.CreateEntityIdentifier (caption.Name));
+			return string.Concat (Keywords.Global, "::", CodeGenerator.CreateEntityNamespace (infos[0].SourceNamespace), ".", CodeGenerator.CreateEntityIdentifier (caption.Name));
 		}
 
 		private string CreatePropertyName(Druid id)
 		{
 			Caption caption = this.resourceManager.GetCaption (id);
-			return EntityCodeGenerator.CreatePropertyIdentifier (caption.Name);
+			return CodeGenerator.CreatePropertyIdentifier (caption.Name);
 		}
 
 		private string CreateTypeFullName(Druid typeId)
@@ -183,7 +184,7 @@ namespace Epsitec.Common.Support.CodeGenerators
 			}
 			else
 			{
-				return EntityCodeGenerator.GetTypeName (sysType);
+				return CodeGenerator.GetTypeName (sysType);
 			}
 		}
 
@@ -211,7 +212,7 @@ namespace Epsitec.Common.Support.CodeGenerators
 
 		private abstract class Emitter
 		{
-			public Emitter(EntityCodeGenerator generator, StructuredType type)
+			public Emitter(CodeGenerator generator, StructuredType type)
 			{
 				this.generator = generator;
 				this.type = type;
@@ -240,7 +241,7 @@ namespace Epsitec.Common.Support.CodeGenerators
 							throw new System.NotSupportedException (string.Format ("Relation {0} not supported", field.Relation));
 					}
 
-					this.generator.formatter.WriteBeginProperty (EntityCodeGenerator.PropertyAttributes, code);
+					this.generator.formatter.WriteBeginProperty (CodeGenerator.PropertyAttributes, code);
 					this.EmitPropertyGetter (field, typeName, propName);
 					this.EmitPropertySetter (field, typeName, propName);
 					this.generator.formatter.WriteEndProperty ();
@@ -288,13 +289,13 @@ namespace Epsitec.Common.Support.CodeGenerators
 			{
 			}
 
-			protected EntityCodeGenerator generator;
+			protected CodeGenerator generator;
 			protected StructuredType type;
 		}
 
 		private sealed class EntityEmitter : Emitter
 		{
-			public EntityEmitter(EntityCodeGenerator generator, StructuredType type)
+			public EntityEmitter(CodeGenerator generator, StructuredType type)
 				: base (generator, type)
 			{
 			}
@@ -339,7 +340,7 @@ namespace Epsitec.Common.Support.CodeGenerators
 				string code = string.Concat (Keywords.Void, " ", Keywords.OnPrefix, propName, Keywords.ChangedSuffix, "(",
 					/**/					 typeName, " ", Keywords.OldValueVariable, ", ",
 					/**/				     typeName, " ", Keywords.NewValueVariable, ")");
-				this.generator.formatter.WriteBeginMethod (EntityCodeGenerator.PartialMethodAttributes, code);
+				this.generator.formatter.WriteBeginMethod (CodeGenerator.PartialMethodAttributes, code);
 				this.generator.formatter.WriteEndMethod ();
 			}
 
@@ -348,14 +349,14 @@ namespace Epsitec.Common.Support.CodeGenerators
 				string code = string.Concat (Keywords.Void, " ", Keywords.OnPrefix, propName, Keywords.ChangingSuffix, "(",
 					/**/					 typeName, " ", Keywords.OldValueVariable, ", ",
 					/**/				     typeName, " ", Keywords.NewValueVariable, ")");
-				this.generator.formatter.WriteBeginMethod (EntityCodeGenerator.PartialMethodAttributes, code);
+				this.generator.formatter.WriteBeginMethod (CodeGenerator.PartialMethodAttributes, code);
 				this.generator.formatter.WriteEndMethod ();
 			}
 		}
 
 		private sealed class InterfaceEmitter : Emitter
 		{
-			public InterfaceEmitter(EntityCodeGenerator generator, StructuredType type)
+			public InterfaceEmitter(CodeGenerator generator, StructuredType type)
 				: base (generator, type)
 			{
 			}

@@ -1,6 +1,7 @@
 
 using Epsitec.Common.Support;
 using Epsitec.Common.Support.CodeGenerators;
+using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Types;
 
 using NUnit.Framework;
@@ -25,7 +26,7 @@ namespace Epsitec.Common.Support
 			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
 			CodeFormatter formatter = new CodeFormatter (buffer);
 			formatter.IndentationChars = "  ";
-			EntityCodeGenerator generator = new EntityCodeGenerator (formatter, manager);
+			CodeGenerator generator = new CodeGenerator (formatter, manager);
 
 			Assert.AreEqual ("Epsitec.Common.Support", generator.SourceNamespace);
 
