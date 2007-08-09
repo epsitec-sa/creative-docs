@@ -40,6 +40,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Components\AbstractProcessor.cs" />
+    <Compile Include="Dialogs\Abstract.cs" />
+    <Compile Include="Dialogs\About.cs" />
     <Compile Include="DolphinApplication.cs" />
     <Compile Include="Geometry.cs" />
     <Compile Include="Components\Memory.cs" />
@@ -100,6 +102,7 @@
     <None Include="App.ico" />
     <EmbeddedResource Include="Images\Application.icon" />
     <None Include="Dolphin.ico" />
+    <EmbeddedResource Include="Images\About.icon" />
     <Content Include="Resources\Common.Widgets\Captions.de.resource" />
     <Content Include="Resources\Common.Support\Captions.de.resource" />
     <Content Include="Resources\Common.Support\Strings.de.resource" />
