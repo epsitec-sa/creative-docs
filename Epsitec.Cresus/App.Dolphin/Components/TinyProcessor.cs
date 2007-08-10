@@ -601,7 +601,7 @@ namespace Epsitec.App.Dolphin.Components
 				}
 			}
 
-			if (op >= (int) Instructions.AndSA && op <= (int) Instructions.AndSA + 0x0F)  // op r',ADDR
+			if (op >= (int) Instructions.AndSA && op <= (int) Instructions.AndSA + 0x07)  // op r',ADDR
 			{
 				int n = op & 0x01;
 				Instructions i = (Instructions) (op & 0xFE);
