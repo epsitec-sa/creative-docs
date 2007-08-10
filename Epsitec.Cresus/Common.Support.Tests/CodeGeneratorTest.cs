@@ -41,11 +41,9 @@ namespace Epsitec.Common.Support
 			generator.Emit (Epsitec.Common.Support.Res.Types.Shortcut);
 
 			buffer.AppendLine ();
-			
-			StructuredType i1 = new StructuredType (StructuredTypeClass.Interface);
-			i1.Caption.Name = "IFoo";
 
-			generator.Emit (i1);
+			generator.Emit (Epsitec.Common.Support.Res.Types.ResourceString);
+			generator.Emit (Epsitec.Common.Support.Res.Types.TestInterface);
 
 			System.Console.Out.Write (buffer);
 		}

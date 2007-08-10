@@ -6,6 +6,8 @@ using Epsitec.Common.Types;
 
 using System.Collections.Generic;
 
+[assembly: Epsitec.Common.Types.DependencyClass (typeof (Epsitec.Common.Support.ResourceAccessors.AbstractCaptionResourceAccessor))]
+
 namespace Epsitec.Common.Support.ResourceAccessors
 {
 	using CultureInfo=System.Globalization.CultureInfo;
@@ -26,6 +28,15 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			this.Initialize (manager);
 
 			ResourceBundle bundle = this.ResourceManager.GetBundle (Resources.CaptionsBundleName, ResourceLevel.Default);
+			AccessorsCollection accessors = AbstractCaptionResourceAccessor.GetAccessors (bundle);
+
+			if (accessors == null)
+			{
+				accessors = new AccessorsCollection ();
+				AbstractCaptionResourceAccessor.SetAccessors (bundle, accessors);
+			}
+
+			accessors.Add (this);
 
 			this.LoadFromBundle (bundle, Resources.DefaultTwoLetterISOLanguageName);
 		}
@@ -79,7 +90,8 @@ namespace Epsitec.Common.Support.ResourceAccessors
 		protected override Druid CreateId()
 		{
 			ResourceBundle bundle = this.ResourceManager.GetBundle (Resources.CaptionsBundleName, ResourceLevel.Default);
-			return AbstractResourceAccessor.CreateId (bundle, this.Collection);
+			AccessorsCollection accessors = AbstractCaptionResourceAccessor.GetAccessors (bundle);
+			return AbstractResourceAccessor.CreateId (bundle, accessors.AllCollections);
 		}
 
 		protected override void DeleteItem(CultureMap item)
@@ -274,5 +286,59 @@ namespace Epsitec.Common.Support.ResourceAccessors
 		{
 			return new CultureMap (this, id);
 		}
+
+		private class AccessorsCollection
+		{
+			public AccessorsCollection()
+			{
+				this.list = new List<AbstractCaptionResourceAccessor> ();
+			}
+
+			public void Add(AbstractCaptionResourceAccessor item)
+			{
+				this.list.Add (item);
+			}
+
+			public void Remove(AbstractCaptionResourceAccessor item)
+			{
+				this.list.Remove (item);
+			}
+
+			public IEnumerable<CultureMap> AllCollections
+			{
+				get
+				{
+					foreach (AbstractCaptionResourceAccessor accessor in this.list)
+					{
+						foreach (CultureMap item in accessor.Collection)
+						{
+							yield return item;
+						}
+					}
+				}
+			}
+
+			List<AbstractCaptionResourceAccessor> list;
+		}
+
+		private static void SetAccessors(DependencyObject obj, AccessorsCollection collection)
+		{
+			if (collection == null)
+			{
+				obj.ClearValue (AbstractCaptionResourceAccessor.AccessorsProperty);
+			}
+			else
+			{
+				obj.SetValue (AbstractCaptionResourceAccessor.AccessorsProperty, collection);
+			}
+		}
+
+		private static AccessorsCollection GetAccessors(DependencyObject obj)
+		{
+			return obj.GetValue (AbstractCaptionResourceAccessor.AccessorsProperty) as AccessorsCollection;
+		}
+
+
+		private static readonly DependencyProperty AccessorsProperty = DependencyProperty.RegisterAttached ("Accessors", typeof (AccessorsCollection), typeof (AbstractCaptionResourceAccessor), new DependencyPropertyMetadata ().MakeNotSerializable ());
 	}
 }

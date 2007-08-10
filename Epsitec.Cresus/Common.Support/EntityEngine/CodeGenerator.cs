@@ -160,7 +160,7 @@ namespace Epsitec.Common.Support.EntityEngine
 
 		private static string CreateInterfaceImplementationIdentifier(string name)
 		{
-			return string.Concat (name.Substring (1), Keywords.InterfaceImplementationSuffix);
+			return string.Concat (name, Keywords.InterfaceImplementationSuffix);
 		}
 
 		private static string CreateEntityNamespace(string name)
