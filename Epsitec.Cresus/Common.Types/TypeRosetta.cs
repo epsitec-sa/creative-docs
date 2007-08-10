@@ -358,9 +358,6 @@ namespace Epsitec.Common.Types
 				case FieldRelation.Collection:
 					return TypeRosetta.IsValidValueForCollectionOfType (value, field.Type);
 
-				case FieldRelation.Inclusion:
-					//	TODO: handle inclusion
-
 				default:
 					throw new System.NotImplementedException (string.Format ("Support for Relation.{0} not implemented", field.Relation));
 			}

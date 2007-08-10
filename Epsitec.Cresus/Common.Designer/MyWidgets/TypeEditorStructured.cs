@@ -4,6 +4,7 @@ using Epsitec.Common.Support;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Types;
 
+#if false
 namespace Epsitec.Common.Designer.MyWidgets
 {
 	/// <summary>
@@ -890,3 +891,4 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected List<StructuredTypeField>		fields;
 	}
 }
+#endif

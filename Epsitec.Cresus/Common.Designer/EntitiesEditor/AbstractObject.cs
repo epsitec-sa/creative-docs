@@ -546,10 +546,10 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		protected void DrawStartingArrow(Graphics graphics, Point start, Point end, FieldRelation relation)
 		{
 			//	Dessine une flèche selon le type de la relation.
-			if (relation == FieldRelation.Inclusion)
-			{
-				this.DrawArrowBase(graphics, end, start);
-			}
+//-			if (relation == FieldRelation.Inclusion)
+//-			{
+//-				this.DrawArrowBase(graphics, end, start);
+//-			}
 		}
 
 		protected void DrawEndingArrow(Graphics graphics, Point start, Point end, FieldRelation relation)

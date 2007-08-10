@@ -41,7 +41,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				case TypeCode.Decimal:      return new TypeEditorNumeric();
 				case TypeCode.String:       return new TypeEditorString();
 				case TypeCode.Enum:         return new TypeEditorEnum();
-				case TypeCode.Structured:   return new TypeEditorStructured();
+				//-case TypeCode.Structured:   return new TypeEditorStructured();
 				//?case TypeCode.Collection:   return new TypeEditorCollection();
 				case TypeCode.Date:         return new TypeEditorDateTime();
 				case TypeCode.Time:         return new TypeEditorDateTime();
