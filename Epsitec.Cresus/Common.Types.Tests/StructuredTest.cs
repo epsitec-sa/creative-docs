@@ -432,7 +432,7 @@ namespace Epsitec.Common.Types
 			type.DefineCaptionId (typeId);
 
 			type.Fields.Add (new StructuredTypeField ("Name", StringType.Default, Support.Druid.Empty, 0, FieldRelation.None));
-			type.Fields.Add (new StructuredTypeField ("SelfName", type, Support.Druid.Empty, 1, FieldRelation.Inclusion));
+//-			type.Fields.Add (new StructuredTypeField ("SelfName", type, Support.Druid.Empty, 1, FieldRelation.Inclusion));
 		}
 
 		[Test]
@@ -455,8 +455,8 @@ namespace Epsitec.Common.Types
 
 			interf.Fields.Add (new StructuredTypeField ("Name", StringType.Default, Support.Druid.Empty, 0, FieldRelation.None));
 
-			entity.Fields.Add (new StructuredTypeField ("Name", interf, Support.Druid.Empty, 1, FieldRelation.Inclusion));
-			entity.Fields.Add (new StructuredTypeField ("Name", interf, Support.Druid.Empty, 2, FieldRelation.Inclusion));
+//-			entity.Fields.Add (new StructuredTypeField ("Name", interf, Support.Druid.Empty, 1, FieldRelation.Inclusion));
+//-			entity.Fields.Add (new StructuredTypeField ("Name", interf, Support.Druid.Empty, 2, FieldRelation.Inclusion));
 		}
 
 		[Test]
@@ -477,8 +477,8 @@ namespace Epsitec.Common.Types
 			interf.Fields.Add (new StructuredTypeField ("SelfRef", interf, Support.Druid.Empty, 1, FieldRelation.Reference));
 			interf.Fields.Add (new StructuredTypeField ("SelfCollection", interf, Support.Druid.Empty, 2, FieldRelation.Collection));
 
-			entity.Fields.Add (new StructuredTypeField ("Name", interf, Support.Druid.Empty, 0, FieldRelation.Inclusion));
-			entity.Fields.Add (new StructuredTypeField ("SelfRef", interf, Support.Druid.Empty, 0, FieldRelation.Inclusion));
+//-			entity.Fields.Add (new StructuredTypeField ("Name", interf, Support.Druid.Empty, 0, FieldRelation.Inclusion));
+//-			entity.Fields.Add (new StructuredTypeField ("SelfRef", interf, Support.Druid.Empty, 0, FieldRelation.Inclusion));
 		}
 
 		[Test]

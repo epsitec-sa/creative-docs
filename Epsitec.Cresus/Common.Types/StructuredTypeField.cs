@@ -354,6 +354,7 @@ namespace Epsitec.Common.Types
 				
 				switch (this.relation)
 				{
+					case FieldRelation.None:
 					case FieldRelation.Collection:
 						break;
 
@@ -364,13 +365,8 @@ namespace Epsitec.Common.Types
 						}
 						break;
 
-					case FieldRelation.Inclusion:
-						if ((structType == null) ||
-							(structType.GetClass () != StructuredTypeClass.Interface))
-						{
-							throw new System.ArgumentException (string.Format ("Invalid type {0} in relation {1} for field {2}", abstractType.Name, this.relation, this.id));
-						}
-						break;
+					default:
+						throw new System.ArgumentException (string.Format ("Invalid relation {0} for field {1}", this.relation, this.id));
 				}
 
 				this.type   = abstractType;

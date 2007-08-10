@@ -872,6 +872,7 @@ namespace Epsitec.Common.Types
 					}
 				}
 				
+#if false
 				if ((field.TypeId.IsValid) &&
 					(field.Relation == FieldRelation.Inclusion))
 				{
@@ -889,6 +890,7 @@ namespace Epsitec.Common.Types
 						}
 					}
 				}
+#endif
 			}
 		}
 
