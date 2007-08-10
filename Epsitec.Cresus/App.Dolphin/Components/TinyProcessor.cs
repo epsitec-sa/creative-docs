@@ -1403,8 +1403,8 @@ namespace Epsitec.App.Dolphin.Components
 					AbstractProcessor.HelpPutLine(builder, "<b>[xx+r]      <tab/>r</b>");
 					AbstractProcessor.HelpPutLine(builder, "r=0            <tab/>A");
 					AbstractProcessor.HelpPutLine(builder, "r=1            <tab/>B");
-					AbstractProcessor.HelpPutLine(builder, "r=2            <tab/>C");
-					AbstractProcessor.HelpPutLine(builder, "r=3            <tab/>D");
+					AbstractProcessor.HelpPutLine(builder, "r=2            <tab/>X");
+					AbstractProcessor.HelpPutLine(builder, "r=3            <tab/>Y");
 					AbstractProcessor.HelpPutLine(builder, "");
 					AbstractProcessor.HelpPutLine(builder, "<b>[xx+r']     <tab/>r'</b>");
 					AbstractProcessor.HelpPutLine(builder, "r'=0           <tab/>A");
@@ -1451,22 +1451,22 @@ namespace Epsitec.App.Dolphin.Components
 					AbstractProcessor.HelpPutLine(builder, "[BC+r] [mh] [ll]<tab/>SUB r,ADDR");
 
 					AbstractProcessor.HelpPutTitle(builder, "ET logique");
-					AbstractProcessor.HelpPutLine(builder, "[C8]             <tab/>AND A,B'");
-					AbstractProcessor.HelpPutLine(builder, "[C9]             <tab/>AND B,A'");
+					AbstractProcessor.HelpPutLine(builder, "[C8]             <tab/>AND A,B");
+					AbstractProcessor.HelpPutLine(builder, "[C9]             <tab/>AND B,A");
 					AbstractProcessor.HelpPutLine(builder, "[C0+r'] [vv]     <tab/>AND #val,r'");
 					AbstractProcessor.HelpPutLine(builder, "[D0+r'] [mh] [ll]<tab/>AND ADDR,r'");
 					AbstractProcessor.HelpPutLine(builder, "[D8+r'] [mh] [ll]<tab/>AND r',ADDR");
 
 					AbstractProcessor.HelpPutTitle(builder, "OU logique");
-					AbstractProcessor.HelpPutLine(builder, "[CA]             <tab/>OR A,B'");
-					AbstractProcessor.HelpPutLine(builder, "[CB]             <tab/>OR B,A'");
+					AbstractProcessor.HelpPutLine(builder, "[CA]             <tab/>OR A,B");
+					AbstractProcessor.HelpPutLine(builder, "[CB]             <tab/>OR B,A");
 					AbstractProcessor.HelpPutLine(builder, "[C2+r'] [vv]     <tab/>OR #val,r'");
 					AbstractProcessor.HelpPutLine(builder, "[D2+r'] [mh] [ll]<tab/>OR ADDR,r'");
 					AbstractProcessor.HelpPutLine(builder, "[DA+r'] [mh] [ll]<tab/>OR r',ADDR");
 
 					AbstractProcessor.HelpPutTitle(builder, "OU exclusif logique");
-					AbstractProcessor.HelpPutLine(builder, "[CC]             <tab/>XOR A,B'");
-					AbstractProcessor.HelpPutLine(builder, "[CD]             <tab/>XOR B,A'");
+					AbstractProcessor.HelpPutLine(builder, "[CC]             <tab/>XOR A,B");
+					AbstractProcessor.HelpPutLine(builder, "[CD]             <tab/>XOR B,A");
 					AbstractProcessor.HelpPutLine(builder, "[C4+r'] [vv]     <tab/>XOR #val,r'");
 					AbstractProcessor.HelpPutLine(builder, "[D4+r'] [mh] [ll]<tab/>XOR ADDR,r'");
 					AbstractProcessor.HelpPutLine(builder, "[DC+r'] [mh] [ll]<tab/>XOR r',ADDR");
