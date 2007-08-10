@@ -1018,7 +1018,7 @@ namespace Epsitec.App.Dolphin.Components
 
 
 		#region Rom
-		public override void RomInitialise(int address)
+		public override void RomInitialise(int address, int length)
 		{
 			//	Rempli la Rom.
 			int indirect = address;

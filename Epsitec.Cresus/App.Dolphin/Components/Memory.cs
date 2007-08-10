@@ -250,7 +250,7 @@ namespace Epsitec.App.Dolphin.Components
 		public void RomInitialise(AbstractProcessor processor)
 		{
 			//	Initialise la Rom.
-			processor.RomInitialise(Memory.RomBase);
+			processor.RomInitialise(Memory.RomBase, Memory.RomLength);
 		}
 
 		public void WriteRom(int address, int data)

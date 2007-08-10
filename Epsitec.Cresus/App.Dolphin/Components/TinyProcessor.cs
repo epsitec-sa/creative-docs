@@ -1147,18 +1147,21 @@ namespace Epsitec.App.Dolphin.Components
 
 
 		#region Rom
-		public override void RomInitialise(int address)
+		public override void RomInitialise(int address, int length)
 		{
 			//	Rempli la Rom.
+			this.RomWrite(0xB00, TinyProcessor.CharTable);
+
 			int indirect = address;
 			address += 3*64;  // place pour 64 appels
-			this.RomWrite(ref indirect, ref address, TinyProcessor.WaitKey);
-			this.RomWrite(ref indirect, ref address, TinyProcessor.DisplayBinaryDigit);
-			this.RomWrite(ref indirect, ref address, TinyProcessor.DisplayHexaDigit);
-			this.RomWrite(ref indirect, ref address, TinyProcessor.DisplayHexaByte);
-			this.RomWrite(ref indirect, ref address, TinyProcessor.DisplayDecimal);
-			this.RomWrite(ref indirect, ref address, TinyProcessor.SetPixel);
-			this.RomWrite(ref indirect, ref address, TinyProcessor.ClrPixel);
+			this.RomWrite(ref indirect, ref address, TinyProcessor.WaitKey);			// 0x00
+			this.RomWrite(ref indirect, ref address, TinyProcessor.DisplayBinaryDigit);	// 0x03
+			this.RomWrite(ref indirect, ref address, TinyProcessor.DisplayHexaDigit);	// 0x06
+			this.RomWrite(ref indirect, ref address, TinyProcessor.DisplayHexaByte);	// 0x09
+			this.RomWrite(ref indirect, ref address, TinyProcessor.DisplayDecimal);		// 0x0C
+			this.RomWrite(ref indirect, ref address, TinyProcessor.SetPixel);			// 0x0F
+			this.RomWrite(ref indirect, ref address, TinyProcessor.ClrPixel);			// 0x12
+			this.RomWrite(ref indirect, ref address, TinyProcessor.DrawChar);			// 0x15
 		}
 
 		protected void RomWrite(ref int indirect, ref int address, byte[] code)
@@ -1167,6 +1170,14 @@ namespace Epsitec.App.Dolphin.Components
 			this.memory.WriteRom(indirect++, (address >> 8) & 0xff);
 			this.memory.WriteRom(indirect++, address & 0xff);
 
+			foreach (byte data in code)
+			{
+				this.memory.WriteRom(address++, data);
+			}
+		}
+
+		protected void RomWrite(int address, byte[] code)
+		{
 			foreach (byte data in code)
 			{
 				this.memory.WriteRom(address++, data);
@@ -1267,8 +1278,8 @@ namespace Epsitec.App.Dolphin.Components
 		};
 
 		//	Allume un pixel dans l'écran bitmap.
-		//	in	A coordonnée X 0..31
-		//		B coordonnée Y 0..23
+		//	in	X coordonnée X 0..31
+		//		Y coordonnée Y 0..23
 		//	out	-
 		//	mod	F
 		protected static byte[] SetPixel =
@@ -1278,21 +1289,22 @@ namespace Epsitec.App.Dolphin.Components
 			(byte) Instructions.PushR+2,				// PUSH X
 			(byte) Instructions.PushR+3,				// PUSH Y
 
-			(byte) Instructions.AndVS+1, 0x1F,			// AND #1F,B
-			(byte) Instructions.RlS+1,					// RL B
-			(byte) Instructions.RlS+1,					// RL B
-			(byte) Instructions.MoveRR+0x7,				// MOVE B,Y
+			(byte) Instructions.MoveRR+0xC,				// MOVE Y,A
+			(byte) Instructions.AndVS+0, 0x1F,			// AND #1F,A
+			(byte) Instructions.RlS+0,					// RL A
+			(byte) Instructions.RlS+0,					// RL A
+			(byte) Instructions.MoveRR+0x3,				// MOVE A,Y
 
-			(byte) Instructions.PushR+0,				// PUSH A
+			(byte) Instructions.MoveRR+0x9,				// MOVE X,B
+			(byte) Instructions.MoveRR+0x8,				// MOVE X,A
 			(byte) Instructions.RrS+0,					// RR A
 			(byte) Instructions.RrS+0,					// RR A
 			(byte) Instructions.RrS+0,					// RR A
 			(byte) Instructions.AndVS+0, 0x03,			// AND #03,A
 			(byte) Instructions.MoveRR+0x2,				// MOVE A,X
-			(byte) Instructions.PopR+0,					// POP A
 
-			(byte) Instructions.XorVS+0, 0x07,			// XOR #07,A
-			(byte) Instructions.TSetSA+0, 0x3C, 0x80,	// TSET C80+{X}+{Y},A
+			(byte) Instructions.XorVS+1, 0x07,			// XOR #07,B
+			(byte) Instructions.TSetSA+1, 0x3C, 0x80,	// TSET C80+{X}+{Y},B
 
 			(byte) Instructions.PopR+3,					// POP Y
 			(byte) Instructions.PopR+2,					// POP X
@@ -1309,6 +1321,43 @@ namespace Epsitec.App.Dolphin.Components
 		protected static byte[] ClrPixel =
 		{
 			(byte) Instructions.Ret,					// RET
+		};
+
+		//	Dessine un chiffre dans l'écran bitmap.
+		//	in	A chiffre 0..9
+		//		X coordonnée X 0..7
+		//		Y coordonnée Y 0..3
+		//	out	-
+		//	mod	F
+		protected static byte[] DrawChar =
+		{
+			(byte) Instructions.PushR+0,				// PUSH A
+			(byte) Instructions.PushR+1,				// PUSH B
+			(byte) Instructions.PushR+2,				// PUSH X
+			(byte) Instructions.PushR+3,				// PUSH Y
+
+			(byte) Instructions.ClrR+2,					// CLR X
+			(byte) Instructions.ClrR+3,					// CLR Y
+
+			(byte) Instructions.MoveVR+1, 0x5,			// MOVE #5,B
+														// LOOP:
+			(byte) Instructions.MoveAR+0, 0x1B, 0x00,	// MOVE CharTable+{X},A
+			(byte) Instructions.IncR+2,					// INC X
+			(byte) Instructions.XorSA+0, 0x2C, 0x80,	// MOVE A,C80+{Y}
+			(byte) Instructions.AddVR+3, 0x04,			// ADD #4,Y
+			(byte) Instructions.DecR+1,					// DEC B
+			(byte) Instructions.JumpNE, 0x8F, 0xF3,		// JUMP,NE R8^LOOP
+
+			(byte) Instructions.PopR+3,					// POP Y
+			(byte) Instructions.PopR+2,					// POP X
+			(byte) Instructions.PopR+1,					// POP B
+			(byte) Instructions.PopR+0,					// POP A
+			(byte) Instructions.Ret,					// RET
+		};
+
+		protected static byte[] CharTable =
+		{
+			0x40, 0xA0, 0xE0, 0xA0, 0xA0,	// A
 		};
 		#endregion
 

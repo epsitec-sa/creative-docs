@@ -87,7 +87,7 @@ namespace Epsitec.App.Dolphin.Components
 		}
 
 
-		public virtual void RomInitialise(int address)
+		public virtual void RomInitialise(int address, int length)
 		{
 			//	Rempli la Rom.
 		}
