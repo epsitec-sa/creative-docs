@@ -22,8 +22,6 @@ namespace Epsitec.App.Dolphin.Components
 			Halt   = 0x02,
 			SetC   = 0x04,
 			ClrC   = 0x05,
-			SetV   = 0x06,
-			ClrV   = 0x07,
 
 			PushR  = 0x08,		// PUSH r
 			PopR   = 0x0C,		// POP r
@@ -35,8 +33,8 @@ namespace Epsitec.App.Dolphin.Components
 			JumpLS = 0x15,
 			JumpHI = 0x16,
 			JumpHS = 0x17,
-			JumpVC = 0x18,
-			JumpVS = 0x19,
+			JumpCC = 0x18,
+			JumpCS = 0x19,
 			JumpNC = 0x1A,
 			JumpNS = 0x1B,
 
@@ -49,8 +47,8 @@ namespace Epsitec.App.Dolphin.Components
 			CallLS = 0x25,
 			CallHI = 0x26,
 			CallHS = 0x27,
-			CallVC = 0x28,
-			CallVS = 0x29,
+			CallCC = 0x28,
+			CallCS = 0x29,
 			CallNC = 0x2A,
 			CallNS = 0x2B,
 
@@ -105,20 +103,20 @@ namespace Epsitec.App.Dolphin.Components
 			TestSS = 0xE0,		// op r',r'
 			TSetSS = 0xE2,
 			TClrSS = 0xE4,
-			TInvSS = 0xE6,
+			TNotSS = 0xE6,
 			TestSA = 0xE8,		// op r',ADDR
 			TSetSA = 0xEA,
 			TClrSA = 0xEC,
-			TInvSA = 0xEE,
+			TNotSA = 0xEE,
 
 			TestVS = 0xF0,		// op #val,r'
 			TSetVS = 0xF2,
 			TClrVS = 0xF4,
-			TInvVS = 0xF6,
+			TNotVS = 0xF6,
 			TestVA = 0xF8,		// op #val,ADDR
 			TSetVA = 0xF9,
 			TClrVA = 0xFA,
-			TInvVA = 0xFB,
+			TNotVA = 0xFB,
 
 			CompVR = 0xFC,		// COMP #val,r
 		}
@@ -206,14 +204,6 @@ namespace Epsitec.App.Dolphin.Components
 				case Instructions.ClrC:
 					this.SetFlag(TinyProcessor.FlagCarry, false);
 					return;
-
-				case Instructions.SetV:
-					this.SetFlag(TinyProcessor.FlagOverflow, true);
-					return;
-
-				case Instructions.ClrV:
-					this.SetFlag(TinyProcessor.FlagOverflow, false);
-					return;
 			}
 
 			if (op >= (int) Instructions.PushR && op <= (int) Instructions.PushR + 0x03)  // PUSH r
@@ -294,25 +284,21 @@ namespace Epsitec.App.Dolphin.Components
 					case Instructions.RlS:
 						data = this.RotateLeft(this.GetRegister(n), false);
 						this.SetRegister(n, data);
-						this.SetFlagsOper(data);
 						return;
 
 					case Instructions.RrS:
 						data = this.RotateRight(this.GetRegister(n), false);
 						this.SetRegister(n, data);
-						this.SetFlagsOper(data);
 						return;
 
 					case Instructions.RlcS:
 						data = this.RotateLeft(this.GetRegister(n), true);
 						this.SetRegister(n, data);
-						this.SetFlagsOper(data);
 						return;
 
 					case Instructions.RrcS:
 						data = this.RotateRight(this.GetRegister(n), true);
 						this.SetRegister(n, data);
-						this.SetFlagsOper(data);
 						return;
 				}
 			}
@@ -351,25 +337,21 @@ namespace Epsitec.App.Dolphin.Components
 					case Instructions.RlA:
 						data = this.RotateLeft(this.memory.Read(address), false);
 						this.memory.Write(address, data);
-						this.SetFlagsOper(data);
 						return;
 
 					case Instructions.RrA:
 						data = this.RotateRight(this.memory.Read(address), false);
 						this.memory.Write(address, data);
-						this.SetFlagsOper(data);
 						return;
 
 					case Instructions.RlcA:
 						data = this.RotateLeft(this.memory.Read(address), true);
 						this.memory.Write(address, data);
-						this.SetFlagsOper(data);
 						return;
 
 					case Instructions.RrcA:
 						data = this.RotateRight(this.memory.Read(address), true);
 						this.memory.Write(address, data);
-						this.SetFlagsOper(data);
 						return;
 				}
 			}
@@ -656,7 +638,7 @@ namespace Epsitec.App.Dolphin.Components
 						this.SetRegister(dst, this.GetRegister(dst) & ~data);
 						return;
 
-					case Instructions.TInvSS:
+					case Instructions.TNotSS:
 						data = (1 << (data & 0x07));
 						this.SetFlag(TinyProcessor.FlagZero, (this.GetRegister(dst) & data) == 0);
 						this.SetRegister(dst, this.GetRegister(dst) ^ data);
@@ -689,7 +671,7 @@ namespace Epsitec.App.Dolphin.Components
 						this.memory.Write(address, this.memory.Read(address) | data);
 						return;
 
-					case Instructions.TInvSA:
+					case Instructions.TNotSA:
 						data = (1 << (this.GetRegister(n) & 0x07));
 						this.SetFlag(TinyProcessor.FlagZero, (this.memory.Read(address) & data) == 0);
 						this.memory.Write(address, this.memory.Read(address) ^ data);
@@ -722,7 +704,7 @@ namespace Epsitec.App.Dolphin.Components
 						this.SetRegister(n, this.GetRegister(n) | data);
 						return;
 
-					case Instructions.TInvVS:
+					case Instructions.TNotVS:
 						data = (1 << (data & 0x07));
 						this.SetFlag(TinyProcessor.FlagZero, (this.GetRegister(n) & data) == 0);
 						this.SetRegister(n, this.GetRegister(n) ^ data);
@@ -755,7 +737,7 @@ namespace Epsitec.App.Dolphin.Components
 						this.memory.Write(address, this.memory.Read(address) | data);
 						return;
 
-					case Instructions.TInvVA:
+					case Instructions.TNotVA:
 						data = (1 << (data & 0x07));
 						this.SetFlag(TinyProcessor.FlagZero, (this.memory.Read(address) & data) == 0);
 						this.memory.Write(address, this.memory.Read(address) ^ data);
@@ -846,6 +828,9 @@ namespace Epsitec.App.Dolphin.Components
 			}
 
 			this.SetFlag(TinyProcessor.FlagCarry, bit);
+			this.SetFlag(TinyProcessor.FlagZero, value == 0);
+			this.SetFlag(TinyProcessor.FlagNeg, (value & 0x80) != 0);
+
 			return value;
 		}
 
@@ -871,6 +856,9 @@ namespace Epsitec.App.Dolphin.Components
 			}
 
 			this.SetFlag(TinyProcessor.FlagCarry, bit);
+			this.SetFlag(TinyProcessor.FlagZero, value == 0);
+			this.SetFlag(TinyProcessor.FlagNeg, (value & 0x80) != 0);
+
 			return value;
 		}
 
@@ -966,11 +954,11 @@ namespace Epsitec.App.Dolphin.Components
 
 			if ((value & 0x80) == 0)  // valeur positive ?
 			{
-				this.SetFlag(TinyProcessor.FlagOverflow, (value & 0xffffff00) != 0);
+				this.SetFlag(TinyProcessor.FlagCarry, (value & 0xffffff00) != 0);
 			}
 			else  // valeur négative ?
 			{
-				this.SetFlag(TinyProcessor.FlagOverflow, (value & 0xffffff00) == 0);
+				this.SetFlag(TinyProcessor.FlagCarry, (value & 0xffffff00) == 0);
 			}
 
 			return value & 0xff;
@@ -1000,11 +988,11 @@ namespace Epsitec.App.Dolphin.Components
 				case Instructions.JumpHS:
 					return this.TestFlag(TinyProcessor.FlagZero) || this.TestFlag(TinyProcessor.FlagCarry);
 
-				case Instructions.JumpVC:
-					return !this.TestFlag(TinyProcessor.FlagOverflow);
+				case Instructions.JumpCC:
+					return !this.TestFlag(TinyProcessor.FlagCarry);
 
-				case Instructions.JumpVS:
-					return this.TestFlag(TinyProcessor.FlagOverflow);
+				case Instructions.JumpCS:
+					return this.TestFlag(TinyProcessor.FlagCarry);
 
 				case Instructions.JumpNC:
 					return !this.TestFlag(TinyProcessor.FlagNeg);
@@ -1073,7 +1061,7 @@ namespace Epsitec.App.Dolphin.Components
 			//	Retourne les noms des bits d'un registre.
 			if (name == "F")
 			{
-				return "CZNV";  // bits 0..7 !
+				return "CZN";  // bits 0..7 !
 			}
 
 			return null;
@@ -1325,8 +1313,8 @@ namespace Epsitec.App.Dolphin.Components
 
 		//	Dessine un chiffre dans l'écran bitmap.
 		//	in	A chiffre 0..9
-		//		X coordonnée X 0..7
-		//		Y coordonnée Y 0..3
+		//		X colonne 0..7
+		//		Y ligne 0..3
 		//	out	-
 		//	mod	F
 		protected static byte[] DrawChar =
@@ -1336,18 +1324,55 @@ namespace Epsitec.App.Dolphin.Components
 			(byte) Instructions.PushR+2,				// PUSH X
 			(byte) Instructions.PushR+3,				// PUSH Y
 
-			(byte) Instructions.ClrR+2,					// CLR X
-			(byte) Instructions.ClrR+3,					// CLR Y
+			(byte) Instructions.MoveRR+0x1,				// MOVE A,B
+			(byte) Instructions.RlS+0,					// RL A
+			(byte) Instructions.RlS+0,					// RL A
+			(byte) Instructions.AddRR+0x1,				// ADD A,B		// B = A*5
 
+			(byte) Instructions.MoveRR+0xC,				// MOVE Y,A
+			(byte) Instructions.AndVS+0, 0x03,			// AND #3,A
+			(byte) Instructions.MoveRR+0x3,				// MOVE A,Y
+			(byte) Instructions.AddRR+0xC,				// ADD Y,A
+			(byte) Instructions.AddRR+0xC,				// ADD Y,A
+			(byte) Instructions.RlS+0,					// RL A			// *6
+			(byte) Instructions.RlS+0,					// RL A
+			(byte) Instructions.RlS+0,					// RL A			// *4
+			(byte) Instructions.MoveRR+0x3,				// MOVE A,Y
+
+			(byte) Instructions.MoveRR+0x8,				// MOVE X,A
+			(byte) Instructions.MoveRR+0x6,				// MOVE B,X
 			(byte) Instructions.MoveVR+1, 0x5,			// MOVE #5,B
-														// LOOP:
+
+			(byte) Instructions.AndVS+0, 0x07,			// AND #7,A
+			(byte) Instructions.ClrC,					// CLRC
+			(byte) Instructions.RrcS+0,					// RRC A
+			(byte) Instructions.JumpCS,	0x80, 0x11,		// JUMP,CS R8^RIGHT
+			(byte) Instructions.AddRR+0x3,				// ADD A,Y
+
+														// LOOP1:
 			(byte) Instructions.MoveAR+0, 0x1B, 0x00,	// MOVE CharTable+{X},A
 			(byte) Instructions.IncR+2,					// INC X
 			(byte) Instructions.XorSA+0, 0x2C, 0x80,	// MOVE A,C80+{Y}
 			(byte) Instructions.AddVR+3, 0x04,			// ADD #4,Y
 			(byte) Instructions.DecR+1,					// DEC B
-			(byte) Instructions.JumpNE, 0x8F, 0xF3,		// JUMP,NE R8^LOOP
+			(byte) Instructions.JumpNE, 0x8F, 0xF3,		// JUMP,NE R8^LOOP1
+			(byte) Instructions.Jump, 0x80, 0x12,		// JUMP R8^END
 
+														// RIGHT:
+			(byte) Instructions.AddRR+0x3,				// ADD A,Y
+														// LOOP2:
+			(byte) Instructions.MoveAR+0, 0x1B, 0x00,	// MOVE CharTable+{X},A
+			(byte) Instructions.IncR+2,					// INC X
+			(byte) Instructions.RrS+0,					// RR A
+			(byte) Instructions.RrS+0,					// RR A
+			(byte) Instructions.RrS+0,					// RR A
+			(byte) Instructions.RrS+0,					// RR A
+			(byte) Instructions.XorSA+0, 0x2C, 0x80,	// MOVE A,C80+{Y}
+			(byte) Instructions.AddVR+3, 0x04,			// ADD #4,Y
+			(byte) Instructions.DecR+1,					// DEC B
+			(byte) Instructions.JumpNE, 0x8F, 0xEF,		// JUMP,NE R8^LOOP2
+
+														// END:
 			(byte) Instructions.PopR+3,					// POP Y
 			(byte) Instructions.PopR+2,					// POP X
 			(byte) Instructions.PopR+1,					// POP B
@@ -1358,6 +1383,7 @@ namespace Epsitec.App.Dolphin.Components
 		protected static byte[] CharTable =
 		{
 			0x40, 0xA0, 0xE0, 0xA0, 0xA0,	// A
+			0xC0, 0xA0, 0xC0, 0xA0, 0xC0,	// B
 		};
 		#endregion
 
@@ -1539,10 +1565,10 @@ namespace Epsitec.App.Dolphin.Components
 					AbstractProcessor.HelpPutLine(builder, "[EC+r'] [mh] [ll]<tab/>TCLR ADDR:r'");
 
 					AbstractProcessor.HelpPutTitle(builder, "Tester puis inverser un bit");
-					AbstractProcessor.HelpPutLine(builder, "[E6]             <tab/>TINV B:A");
-					AbstractProcessor.HelpPutLine(builder, "[E7]             <tab/>TINV A:B");
-					AbstractProcessor.HelpPutLine(builder, "[F6+r'] [vv]     <tab/>TINV r':#val");
-					AbstractProcessor.HelpPutLine(builder, "[EE+r'] [mh] [ll]<tab/>TINV ADDR:r'");
+					AbstractProcessor.HelpPutLine(builder, "[E6]             <tab/>TNOT B:A");
+					AbstractProcessor.HelpPutLine(builder, "[E7]             <tab/>TNOT A:B");
+					AbstractProcessor.HelpPutLine(builder, "[F6+r'] [vv]     <tab/>TNOT r':#val");
+					AbstractProcessor.HelpPutLine(builder, "[EE+r'] [mh] [ll]<tab/>TNOT ADDR:r'");
 
 					AbstractProcessor.HelpPutTitle(builder, "Comparaisons");
 					AbstractProcessor.HelpPutLine(builder, "[FC+r] [vv]<tab/>COMP #val,r");
@@ -1581,8 +1607,8 @@ namespace Epsitec.App.Dolphin.Components
 					AbstractProcessor.HelpPutLine(builder, "[15] [mh] [ll]<tab/>JUMP,LS ADDR");
 					AbstractProcessor.HelpPutLine(builder, "[16] [mh] [ll]<tab/>JUMP,HI ADDR");
 					AbstractProcessor.HelpPutLine(builder, "[17] [mh] [ll]<tab/>JUMP,HS ADDR");
-					AbstractProcessor.HelpPutLine(builder, "[18] [mh] [ll]<tab/>JUMP,VC ADDR");
-					AbstractProcessor.HelpPutLine(builder, "[19] [mh] [ll]<tab/>JUMP,VS ADDR");
+					AbstractProcessor.HelpPutLine(builder, "[18] [mh] [ll]<tab/>JUMP,CC ADDR");
+					AbstractProcessor.HelpPutLine(builder, "[19] [mh] [ll]<tab/>JUMP,CS ADDR");
 					AbstractProcessor.HelpPutLine(builder, "[1A] [mh] [ll]<tab/>JUMP,NC ADDR");
 					AbstractProcessor.HelpPutLine(builder, "[1B] [mh] [ll]<tab/>JUMP,NS ADDR");
 
@@ -1594,8 +1620,8 @@ namespace Epsitec.App.Dolphin.Components
 					AbstractProcessor.HelpPutLine(builder, "[25] [mh] [ll]<tab/>CALL,LS ADDR");
 					AbstractProcessor.HelpPutLine(builder, "[26] [mh] [ll]<tab/>CALL,HI ADDR");
 					AbstractProcessor.HelpPutLine(builder, "[27] [mh] [ll]<tab/>CALL,HS ADDR");
-					AbstractProcessor.HelpPutLine(builder, "[28] [mh] [ll]<tab/>CALL,VC ADDR");
-					AbstractProcessor.HelpPutLine(builder, "[29] [mh] [ll]<tab/>CALL,VS ADDR");
+					AbstractProcessor.HelpPutLine(builder, "[28] [mh] [ll]<tab/>CALL,CC ADDR");
+					AbstractProcessor.HelpPutLine(builder, "[29] [mh] [ll]<tab/>CALL,CS ADDR");
 					AbstractProcessor.HelpPutLine(builder, "[2A] [mh] [ll]<tab/>CALL,NC ADDR");
 					AbstractProcessor.HelpPutLine(builder, "[2B] [mh] [ll]<tab/>CALL,NS ADDR");
 					AbstractProcessor.HelpPutLine(builder, "");
@@ -1608,8 +1634,6 @@ namespace Epsitec.App.Dolphin.Components
 					AbstractProcessor.HelpPutTitle(builder, "Gestion des fanions");
 					AbstractProcessor.HelpPutLine(builder, "[04]             <tab/>SETC");
 					AbstractProcessor.HelpPutLine(builder, "[05]             <tab/>CLRC");
-					AbstractProcessor.HelpPutLine(builder, "[06]             <tab/>SETV");
-					AbstractProcessor.HelpPutLine(builder, "[07]             <tab/>CLRV");
 					break;
 
 				case "ROM":
@@ -1627,7 +1651,6 @@ namespace Epsitec.App.Dolphin.Components
 		protected static readonly int FlagCarry    = 0;
 		protected static readonly int FlagZero     = 1;
 		protected static readonly int FlagNeg      = 2;
-		protected static readonly int FlagOverflow = 3;
 
 		
 		protected int registerPC;  // program counter
