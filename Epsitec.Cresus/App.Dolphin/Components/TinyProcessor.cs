@@ -543,10 +543,11 @@ namespace Epsitec.App.Dolphin.Components
 				}
 			}
 
-			if (op >= (int) Instructions.AndSS && op <= (int) Instructions.AndSS + 0x07)  // op #r',r'
+			if (op >= (int) Instructions.AndSS && op <= (int) Instructions.AndSS + 0x07)  // op r',r'
 			{
-				int src = (op & 0x01) != 0 ? 0:1;
-				int dst = (op & 0x01) == 0 ? 0:1;
+				int n = op & 0x01;
+				int src = n;
+				int dst = n ^0x01;
 				Instructions i = (Instructions) (op & 0xFE);
 				data = this.GetRegister(src);
 
@@ -628,10 +629,11 @@ namespace Epsitec.App.Dolphin.Components
 				}
 			}
 
-			if (op >= (int) Instructions.TestSS && op <= (int) Instructions.TestSS + 0x07)  // op #r',r'
+			if (op >= (int) Instructions.TestSS && op <= (int) Instructions.TestSS + 0x07)  // op r',r'
 			{
-				int src = (op & 0x01) != 0 ? 0:1;
-				int dst = (op & 0x01) == 0 ? 0:1;
+				int n = op & 0x01;
+				int src = n;
+				int dst = n ^0x01;
 				Instructions i = (Instructions) (op & 0xFE);
 				data = this.GetRegister(src);
 
@@ -1320,7 +1322,7 @@ namespace Epsitec.App.Dolphin.Components
 				List<string> chapters = new List<string>();
 				
 				chapters.Add("Intro");
-				chapters.Add("Data");
+				chapters.Add("Notation");
 				chapters.Add("Op");
 				chapters.Add("Branch");
 				chapters.Add("ROM");
@@ -1396,20 +1398,175 @@ namespace Epsitec.App.Dolphin.Components
 					AbstractProcessor.HelpPutLine(builder, "[CDC]..[CDF] :<tab/>24ème ligne de 32 pixels.");
 					break;
 
-				case "Data":
+				case "Notation":
+					AbstractProcessor.HelpPutTitle(builder, "Registre");
+					AbstractProcessor.HelpPutLine(builder, "<b>[xx+r]      <tab/>r</b>");
+					AbstractProcessor.HelpPutLine(builder, "r=0            <tab/>A");
+					AbstractProcessor.HelpPutLine(builder, "r=1            <tab/>B");
+					AbstractProcessor.HelpPutLine(builder, "r=2            <tab/>C");
+					AbstractProcessor.HelpPutLine(builder, "r=3            <tab/>D");
+					AbstractProcessor.HelpPutLine(builder, "");
+					AbstractProcessor.HelpPutLine(builder, "<b>[xx+r']     <tab/>r'</b>");
+					AbstractProcessor.HelpPutLine(builder, "r'=0           <tab/>A");
+					AbstractProcessor.HelpPutLine(builder, "r'=1           <tab/>B");
+
 					AbstractProcessor.HelpPutTitle(builder, "Valeur immédiate");
+					AbstractProcessor.HelpPutLine(builder, "<b>[vv]         <tab/>#val</b>");
+					AbstractProcessor.HelpPutLine(builder, "vv              <tab/>Valeur positive 8 bits.");
+
+					AbstractProcessor.HelpPutTitle(builder, "Adresse");
+					AbstractProcessor.HelpPutLine(builder, "<b>[mh] [ll]    <tab/>ADDR</b>");
+					AbstractProcessor.HelpPutLine(builder, "m=0             <tab/>Adresse absolue 12 bits");
+					AbstractProcessor.HelpPutLine(builder, "m=1             <tab/>+{X}");
+					AbstractProcessor.HelpPutLine(builder, "m=2             <tab/>+{Y}");
+					AbstractProcessor.HelpPutLine(builder, "m=8             <tab/>Adresse relative 12 bits signés");
 					break;
 
 				case "Op":
-					AbstractProcessor.HelpPutTitle(builder, "Opérations arithmétiques");
+					AbstractProcessor.HelpPutTitle(builder, "Transferts");
+					AbstractProcessor.HelpPutLine(builder, "[50+r] [vv]     <tab/>MOVE A,r");
+					AbstractProcessor.HelpPutLine(builder, "[54+r] [vv]     <tab/>MOVE B,r");
+					AbstractProcessor.HelpPutLine(builder, "[58+r] [vv]     <tab/>MOVE X,r");
+					AbstractProcessor.HelpPutLine(builder, "[5C+r] [vv]     <tab/>MOVE Y,r");
+					AbstractProcessor.HelpPutLine(builder, "[60+r] [vv]     <tab/>MOVE #val,r");
+					AbstractProcessor.HelpPutLine(builder, "[64+r] [mh] [ll]<tab/>MOVE ADDR,r");
+					AbstractProcessor.HelpPutLine(builder, "[68+r] [mh] [ll]<tab/>MOVE r,ADDR");
+
+					AbstractProcessor.HelpPutTitle(builder, "Additions");
+					AbstractProcessor.HelpPutLine(builder, "[80+r]          <tab/>ADD A,r");
+					AbstractProcessor.HelpPutLine(builder, "[84+r]          <tab/>ADD B,r");
+					AbstractProcessor.HelpPutLine(builder, "[88+r]          <tab/>ADD X,r");
+					AbstractProcessor.HelpPutLine(builder, "[8C+r]          <tab/>ADD Y,r");
+					AbstractProcessor.HelpPutLine(builder, "[A0+r] [vv]     <tab/>ADD #val,r");
+					AbstractProcessor.HelpPutLine(builder, "[B0+r] [mh] [ll]<tab/>ADD ADDR,r");
+					AbstractProcessor.HelpPutLine(builder, "[B8+r] [mh] [ll]<tab/>ADD r,ADDR");
+
+					AbstractProcessor.HelpPutTitle(builder, "Soustractions");
+					AbstractProcessor.HelpPutLine(builder, "[90+r]          <tab/>SUB A,r");
+					AbstractProcessor.HelpPutLine(builder, "[94+r]          <tab/>SUB B,r");
+					AbstractProcessor.HelpPutLine(builder, "[98+r]          <tab/>SUB X,r");
+					AbstractProcessor.HelpPutLine(builder, "[9C+r]          <tab/>SUB Y,r");
+					AbstractProcessor.HelpPutLine(builder, "[A4+r] [vv]     <tab/>SUB #val,r");
+					AbstractProcessor.HelpPutLine(builder, "[B4+r] [mh] [ll]<tab/>SUB ADDR,r");
+					AbstractProcessor.HelpPutLine(builder, "[BC+r] [mh] [ll]<tab/>SUB r,ADDR");
+
+					AbstractProcessor.HelpPutTitle(builder, "ET logique");
+					AbstractProcessor.HelpPutLine(builder, "[C8]             <tab/>AND A,B'");
+					AbstractProcessor.HelpPutLine(builder, "[C9]             <tab/>AND B,A'");
+					AbstractProcessor.HelpPutLine(builder, "[C0+r'] [vv]     <tab/>AND #val,r'");
+					AbstractProcessor.HelpPutLine(builder, "[D0+r'] [mh] [ll]<tab/>AND ADDR,r'");
+					AbstractProcessor.HelpPutLine(builder, "[D8+r'] [mh] [ll]<tab/>AND r',ADDR");
+
+					AbstractProcessor.HelpPutTitle(builder, "OU logique");
+					AbstractProcessor.HelpPutLine(builder, "[CA]             <tab/>OR A,B'");
+					AbstractProcessor.HelpPutLine(builder, "[CB]             <tab/>OR B,A'");
+					AbstractProcessor.HelpPutLine(builder, "[C2+r'] [vv]     <tab/>OR #val,r'");
+					AbstractProcessor.HelpPutLine(builder, "[D2+r'] [mh] [ll]<tab/>OR ADDR,r'");
+					AbstractProcessor.HelpPutLine(builder, "[DA+r'] [mh] [ll]<tab/>OR r',ADDR");
+
+					AbstractProcessor.HelpPutTitle(builder, "OU exclusif logique");
+					AbstractProcessor.HelpPutLine(builder, "[CC]             <tab/>XOR A,B'");
+					AbstractProcessor.HelpPutLine(builder, "[CD]             <tab/>XOR B,A'");
+					AbstractProcessor.HelpPutLine(builder, "[C4+r'] [vv]     <tab/>XOR #val,r'");
+					AbstractProcessor.HelpPutLine(builder, "[D4+r'] [mh] [ll]<tab/>XOR ADDR,r'");
+					AbstractProcessor.HelpPutLine(builder, "[DC+r'] [mh] [ll]<tab/>XOR r',ADDR");
+
+					AbstractProcessor.HelpPutTitle(builder, "Tester un bit");
+					AbstractProcessor.HelpPutLine(builder, "[E0]             <tab/>TEST B:A");
+					AbstractProcessor.HelpPutLine(builder, "[E1]             <tab/>TEST A:B");
+					AbstractProcessor.HelpPutLine(builder, "[F0+r'] [vv]     <tab/>TEST r':#val");
+					AbstractProcessor.HelpPutLine(builder, "[E8+r'] [mh] [ll]<tab/>TEST ADDR:r'");
+
+					AbstractProcessor.HelpPutTitle(builder, "Tester puis mettre un bit à un");
+					AbstractProcessor.HelpPutLine(builder, "[E2]             <tab/>TSET B:A");
+					AbstractProcessor.HelpPutLine(builder, "[E3]             <tab/>TSET A:B");
+					AbstractProcessor.HelpPutLine(builder, "[F2+r'] [vv]     <tab/>TSET r':#val");
+					AbstractProcessor.HelpPutLine(builder, "[EA+r'] [mh] [ll]<tab/>TSET ADDR:r'");
+
+					AbstractProcessor.HelpPutTitle(builder, "Tester puis mettre un bit à zéro");
+					AbstractProcessor.HelpPutLine(builder, "[E4]             <tab/>TCLR B:A");
+					AbstractProcessor.HelpPutLine(builder, "[E5]             <tab/>TCLR A:B");
+					AbstractProcessor.HelpPutLine(builder, "[F4+r'] [vv]     <tab/>TCLR r':#val");
+					AbstractProcessor.HelpPutLine(builder, "[EC+r'] [mh] [ll]<tab/>TCLR ADDR:r'");
+
+					AbstractProcessor.HelpPutTitle(builder, "Tester puis inverser un bit");
+					AbstractProcessor.HelpPutLine(builder, "[E6]             <tab/>TINV B:A");
+					AbstractProcessor.HelpPutLine(builder, "[E7]             <tab/>TINV A:B");
+					AbstractProcessor.HelpPutLine(builder, "[F6+r'] [vv]     <tab/>TINV r':#val");
+					AbstractProcessor.HelpPutLine(builder, "[EE+r'] [mh] [ll]<tab/>TINV ADDR:r'");
+
+					AbstractProcessor.HelpPutTitle(builder, "Comparaisons");
+					AbstractProcessor.HelpPutLine(builder, "[FC+r] [vv]<tab/>COMP #val,r");
+
+					AbstractProcessor.HelpPutTitle(builder, "Opérations unaires");
+					AbstractProcessor.HelpPutLine(builder, "[30+r]          <tab/>CLR r");
+					AbstractProcessor.HelpPutLine(builder, "[34+r]          <tab/>NOT r");
+					AbstractProcessor.HelpPutLine(builder, "[38+r]          <tab/>INC r");
+					AbstractProcessor.HelpPutLine(builder, "[3C+r]          <tab/>DEC r");
+					AbstractProcessor.HelpPutLine(builder, "[48] [mh] [ll]  <tab/>CLR ADDR");
+					AbstractProcessor.HelpPutLine(builder, "[49] [mh] [ll]  <tab/>NOT ADDR");
+					AbstractProcessor.HelpPutLine(builder, "[4A] [mh] [ll]  <tab/>INC ADDR");
+					AbstractProcessor.HelpPutLine(builder, "[4B] [mh] [ll]  <tab/>DEC ADDR");
+
+					AbstractProcessor.HelpPutTitle(builder, "Rotations");
+					AbstractProcessor.HelpPutLine(builder, "[40+r']         <tab/>RL r'");
+					AbstractProcessor.HelpPutLine(builder, "[42+r']         <tab/>RR r'");
+					AbstractProcessor.HelpPutLine(builder, "[44+r']         <tab/>RLC r'");
+					AbstractProcessor.HelpPutLine(builder, "[46+r']         <tab/>RRC r'");
+					AbstractProcessor.HelpPutLine(builder, "[4C] [mh] [ll]  <tab/>RL ADDR");
+					AbstractProcessor.HelpPutLine(builder, "[4D] [mh] [ll]  <tab/>RR ADDR");
+					AbstractProcessor.HelpPutLine(builder, "[4E] [mh] [ll]  <tab/>RLC ADDR");
+					AbstractProcessor.HelpPutLine(builder, "[4F] [mh] [ll]  <tab/>RRC ADDR");
+
+					AbstractProcessor.HelpPutTitle(builder, "Divers");
+					AbstractProcessor.HelpPutLine(builder, "[00]            <tab/>NOP");
+					AbstractProcessor.HelpPutLine(builder, "[02]            <tab/>HALT");
 					break;
 
 				case "Branch":
 					AbstractProcessor.HelpPutTitle(builder, "Sauts");
+					AbstractProcessor.HelpPutLine(builder, "[10] [mh] [ll]<tab/>JUMP ADDR");
+					AbstractProcessor.HelpPutLine(builder, "[12] [mh] [ll]<tab/>JUMP,EQ ADDR");
+					AbstractProcessor.HelpPutLine(builder, "[13] [mh] [ll]<tab/>JUMP,NE ADDR");
+					AbstractProcessor.HelpPutLine(builder, "[14] [mh] [ll]<tab/>JUMP,LO ADDR");
+					AbstractProcessor.HelpPutLine(builder, "[15] [mh] [ll]<tab/>JUMP,LS ADDR");
+					AbstractProcessor.HelpPutLine(builder, "[16] [mh] [ll]<tab/>JUMP,HI ADDR");
+					AbstractProcessor.HelpPutLine(builder, "[17] [mh] [ll]<tab/>JUMP,HS ADDR");
+					AbstractProcessor.HelpPutLine(builder, "[18] [mh] [ll]<tab/>JUMP,VC ADDR");
+					AbstractProcessor.HelpPutLine(builder, "[19] [mh] [ll]<tab/>JUMP,VS ADDR");
+					AbstractProcessor.HelpPutLine(builder, "[1A] [mh] [ll]<tab/>JUMP,NC ADDR");
+					AbstractProcessor.HelpPutLine(builder, "[1B] [mh] [ll]<tab/>JUMP,NS ADDR");
+
+					AbstractProcessor.HelpPutTitle(builder, "Appels de routines");
+					AbstractProcessor.HelpPutLine(builder, "[20] [mh] [ll]<tab/>CALL ADDR");
+					AbstractProcessor.HelpPutLine(builder, "[22] [mh] [ll]<tab/>CALL,EQ ADDR");
+					AbstractProcessor.HelpPutLine(builder, "[23] [mh] [ll]<tab/>CALL,NE ADDR");
+					AbstractProcessor.HelpPutLine(builder, "[24] [mh] [ll]<tab/>CALL,LO ADDR");
+					AbstractProcessor.HelpPutLine(builder, "[25] [mh] [ll]<tab/>CALL,LS ADDR");
+					AbstractProcessor.HelpPutLine(builder, "[26] [mh] [ll]<tab/>CALL,HI ADDR");
+					AbstractProcessor.HelpPutLine(builder, "[27] [mh] [ll]<tab/>CALL,HS ADDR");
+					AbstractProcessor.HelpPutLine(builder, "[28] [mh] [ll]<tab/>CALL,VC ADDR");
+					AbstractProcessor.HelpPutLine(builder, "[29] [mh] [ll]<tab/>CALL,VS ADDR");
+					AbstractProcessor.HelpPutLine(builder, "[2A] [mh] [ll]<tab/>CALL,NC ADDR");
+					AbstractProcessor.HelpPutLine(builder, "[2B] [mh] [ll]<tab/>CALL,NS ADDR");
+					AbstractProcessor.HelpPutLine(builder, "");
+					AbstractProcessor.HelpPutLine(builder, "[01]<tab/><tab/>RET");
+
+					AbstractProcessor.HelpPutTitle(builder, "Utilisation de la pile");
+					AbstractProcessor.HelpPutLine(builder, "[08+r]           <tab/>PUSH r");
+					AbstractProcessor.HelpPutLine(builder, "[0C+r]           <tab/>POP r");
+
+					AbstractProcessor.HelpPutTitle(builder, "Gestion des fanions");
+					AbstractProcessor.HelpPutLine(builder, "[04]             <tab/>SETC");
+					AbstractProcessor.HelpPutLine(builder, "[05]             <tab/>CLRC");
+					AbstractProcessor.HelpPutLine(builder, "[06]             <tab/>SETV");
+					AbstractProcessor.HelpPutLine(builder, "[07]             <tab/>CLRV");
 					break;
 
 				case "ROM":
 					AbstractProcessor.HelpPutTitle(builder, "ROM");
+					AbstractProcessor.HelpPutLine(builder, "");
+					AbstractProcessor.HelpPutLine(builder, "");
 					break;
 			}
 
