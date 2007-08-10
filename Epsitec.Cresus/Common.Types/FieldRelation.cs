@@ -22,13 +22,7 @@ namespace Epsitec.Common.Types
 		Reference=1,
 
 		/// <summary>
-		/// The field defines the inclusion of a field found in another
-		/// structure, i.e. through an interface.
-		/// </summary>
-//-		Inclusion=2,
-
-		/// <summary>
-		/// The field defines a collection of structures.
+		/// The field defines a collection of items.
 		/// </summary>
 		Collection=3,
 	}

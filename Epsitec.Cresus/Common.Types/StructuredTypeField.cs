@@ -37,7 +37,7 @@ namespace Epsitec.Common.Types
 		/// <param name="type">The field type.</param>
 		/// <param name="captionId">The field caption DRUID.</param>
 		public StructuredTypeField(string id, INamedType type, Support.Druid captionId)
-			: this (id, type, captionId, -1, FieldRelation.None, FieldMembership.Local, FieldSource.Value, null)
+			: this (id, type, captionId, -1, FieldRelation.None, FieldMembership.Local, FieldSource.Value, FieldOptions.None, null)
 		{
 		}
 
@@ -49,7 +49,7 @@ namespace Epsitec.Common.Types
 		/// <param name="captionId">The field caption DRUID.</param>
 		/// <param name="rank">The field rank when listed in a user interface.</param>
 		public StructuredTypeField(string id, INamedType type, Support.Druid captionId, int rank)
-			: this (id, type, captionId, rank, FieldRelation.None, FieldMembership.Local, FieldSource.Value, null)
+			: this (id, type, captionId, rank, FieldRelation.None, FieldMembership.Local, FieldSource.Value, FieldOptions.None, null)
 		{
 		}
 
@@ -62,7 +62,7 @@ namespace Epsitec.Common.Types
 		/// <param name="rank">The field rank when listed in a user interface.</param>
 		/// <param name="relation">The relation.</param>
 		public StructuredTypeField(string id, INamedType type, Support.Druid captionId, int rank, FieldRelation relation)
-			: this (id, type, captionId, rank, relation, FieldMembership.Local, FieldSource.Value, null)
+			: this (id, type, captionId, rank, relation, FieldMembership.Local, FieldSource.Value, FieldOptions.None, null)
 		{
 		}
 
@@ -76,7 +76,7 @@ namespace Epsitec.Common.Types
 		/// <param name="relation">The field relation.</param>
 		/// <param name="membership">The field membership.</param>
 		public StructuredTypeField(string id, INamedType type, Support.Druid captionId, int rank, FieldRelation relation, FieldMembership membership)
-			: this (id, type, captionId, rank, relation, membership, FieldSource.Value, null)
+			: this (id, type, captionId, rank, relation, membership, FieldSource.Value, FieldOptions.None, null)
 		{
 		}
 
@@ -91,10 +91,10 @@ namespace Epsitec.Common.Types
 		/// <param name="membership">The field membership.</param>
 		/// <param name="source">The field source.</param>
 		public StructuredTypeField(string id, INamedType type, Support.Druid captionId, int rank, FieldRelation relation, FieldMembership membership, FieldSource source)
-			: this (id, type, captionId, rank, relation, membership, source, null)
+			: this (id, type, captionId, rank, relation, membership, source, FieldOptions.None, null)
 		{
 		}
-		
+
 		/// <summary>
 		/// Initializes a new instance of the <see cref="StructuredTypeField"/> class.
 		/// </summary>
@@ -105,8 +105,9 @@ namespace Epsitec.Common.Types
 		/// <param name="relation">The field relation.</param>
 		/// <param name="membership">The field membership.</param>
 		/// <param name="source">The field source.</param>
+		/// <param name="options">The field options.</param>
 		/// <param name="expression">The expression.</param>
-		public StructuredTypeField(string id, INamedType type, Support.Druid captionId, int rank, FieldRelation relation, FieldMembership membership, FieldSource source, string expression)
+		public StructuredTypeField(string id, INamedType type, Support.Druid captionId, int rank, FieldRelation relation, FieldMembership membership, FieldSource source, FieldOptions options, string expression)
 		{
 			this.id = id ?? (captionId.IsValid ? captionId.ToString () : null);
 			this.captionId = captionId;
@@ -114,6 +115,7 @@ namespace Epsitec.Common.Types
 			this.relation = relation;
 			this.membership = membership;
 			this.source = source;
+			this.options = options;
 			this.expression = expression;
 			this.DefineType (type);
 		}
@@ -131,7 +133,8 @@ namespace Epsitec.Common.Types
 			: this (id, type, captionId, rank,
 					(FieldRelation) ((flags >> StructuredTypeField.RelationShift) & StructuredTypeField.RelationMask),
 					(FieldMembership) ((flags >> StructuredTypeField.MembershipShift) & StructuredTypeField.MembershipMask),
-					(FieldSource) ((flags >> StructuredTypeField.SourceShift) & StructuredTypeField.SourceMask), expression)
+					(FieldSource) ((flags >> StructuredTypeField.SourceShift) & StructuredTypeField.SourceMask),
+					(FieldOptions) ((flags >> StructuredTypeField.OptionsShift) & StructuredTypeField.OptionsMask), expression)
 		{
 		}
 
@@ -234,6 +237,18 @@ namespace Epsitec.Common.Types
 		}
 
 		/// <summary>
+		/// Gets the field options.
+		/// </summary>
+		/// <value>The field options.</value>
+		public FieldOptions						Options
+		{
+			get
+			{
+				return this.options;
+			}
+		}
+
+		/// <summary>
 		/// Gets the expression.
 		/// </summary>
 		/// <value>The expression.</value>
@@ -280,7 +295,7 @@ namespace Epsitec.Common.Types
 		/// <returns>A copy of this instance.</returns>
 		public StructuredTypeField Clone(FieldMembership membership)
 		{
-			StructuredTypeField copy = new StructuredTypeField (this.id, null, this.captionId, this.rank, this.relation, membership, this.source, this.expression);
+			StructuredTypeField copy = new StructuredTypeField (this.id, null, this.captionId, this.rank, this.relation, membership, this.source, this.options, this.expression);
 
 			copy.type           = this.type;
 			copy.typeId         = this.typeId;
@@ -333,6 +348,7 @@ namespace Epsitec.Common.Types
 				flags |= (StructuredTypeField.RelationMask & (int) this.relation) << StructuredTypeField.RelationShift;
 				flags |= (StructuredTypeField.MembershipMask & (int) this.membership) << StructuredTypeField.MembershipShift;
 				flags |= (StructuredTypeField.SourceMask & (int) this.source) << StructuredTypeField.SourceShift;
+				flags |= (StructuredTypeField.OptionsMask & (int) this.options) << StructuredTypeField.OptionsShift;
 
 				return flags;
 			}
@@ -487,6 +503,8 @@ namespace Epsitec.Common.Types
 		const int								MembershipMask	= 0x03;
 		const int								SourceShift		= 6;
 		const int								SourceMask		= 0x0f;
+		const int								OptionsShift	= 10;
+		const int								OptionsMask		= 0x3f;
 		
 		private readonly string					id;
 		private INamedType						type;
@@ -497,6 +515,7 @@ namespace Epsitec.Common.Types
 		private readonly FieldRelation			relation;
 		private readonly FieldMembership		membership;
 		private readonly FieldSource			source;
+		private readonly FieldOptions			options;
 		private string							expression;
 	}
 }

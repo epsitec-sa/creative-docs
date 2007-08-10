@@ -16,15 +16,14 @@
   <data id="0H">&lt;s:type id="_1" s:name="*aT" /&gt;&lt;s:data id="_0" f:_1.SystemType="V:Epsitec.Common.Types.Date, Common.Types" f:_1.DefaultController="DateTime" f:Labels="{Collection {Text 'Date Type'}}" /&gt;</data>
   <data id="0I">&lt;s:type id="_1" s:name="*aT" /&gt;&lt;s:data id="_0" f:_1.SystemType="V:Epsitec.Common.Types.Time, Common.Types" f:_1.DefaultController="DateTime" f:Labels="{Collection {Text 'Time Type'}}" /&gt;</data>
   <data id="0J">&lt;s:type id="_1" s:name="*aT" /&gt;&lt;s:data id="_0" f:_1.SystemType="V:System.DateTime" f:_1.DefaultController="DateTime" f:Labels="{Collection {Text 'DateTime Type'}}" /&gt;</data>
-  <data id="0M">&lt;s:type id="_1" s:name="*aT" /&gt;&lt;s:data id="_0" f:_1.SystemType="*NaE" f:_1.DefaultController="Enum" f:_1.DefaultControllerParameter="Icons" /&gt;</data>
+  <data id="0M">&lt;s:data id="_0" f:Description="Field relation" f:Labels="{Collection {Text 'Relation'}}" /&gt;</data>
   <data id="0N">&lt;s:data id="_0" f:Labels="{Collection {Text 'No relation'}}" /&gt;</data>
   <data id="0O">&lt;s:data id="_0" f:Labels="{Collection {Text 'Reference relation'}}" /&gt;</data>
-  <data id="0P">&lt;s:data id="_0" f:Labels="{Collection {Text 'Inclusion relation'}}" /&gt;</data>
   <data id="0Q">&lt;s:data id="_0" f:Labels="{Collection {Text 'Collection relation'}}" /&gt;</data>
-  <data id="0T">&lt;s:type id="_1" s:name="*aT" /&gt;&lt;s:type id="_2" s:name="*eT" /&gt;&lt;s:data id="_0" f:_1.SystemType="E:Epsitec.Common.Types.FieldMembership, Common.Types" f:_2.EnumValues="{Collection {Text '0 [100R]'}, {Text '1 [100S]'}}" f:_1.DefaultController="Enum" f:_1.DefaultControllerParameter="Icons" /&gt;</data>
+  <data id="0T">&lt;s:data id="_0" f:Description="Field membership" f:Labels="{Collection {Text 'Membership'}}" /&gt;</data>
   <data id="0S">&lt;s:data id="_0" f:Labels="{Collection {Text 'Inherited field'}}" /&gt;</data>
   <data id="0R">&lt;s:data id="_0" f:Labels="{Collection {Text 'Local field'}}" /&gt;</data>
-  <data id="011">&lt;s:type id="_1" s:name="*aT" /&gt;&lt;s:type id="_2" s:name="*eT" /&gt;&lt;s:data id="_0" f:_1.SystemType="E:Epsitec.Common.Types.StructuredTypeClass, Common.Types" f:_2.EnumValues="{Collection {Text '0 [100U]'}, {Text '1 [100V]'}, {Text '2 [10001]'}}" f:_1.DefaultController="Enum" f:_1.DefaultControllerParameter="Icons" /&gt;</data>
+  <data id="011">&lt;s:data id="_0" f:Description="Structure class" f:Labels="{Collection {Text 'Class'}}" /&gt;</data>
   <data id="0U">&lt;s:data id="_0" f:Labels="{Collection {Text 'Undefined class'}}" /&gt;</data>
   <data id="0V">&lt;s:data id="_0" f:Labels="{Collection {Text 'Entity'}}" /&gt;</data>
   <data id="001">&lt;s:data id="_0" f:Labels="{Collection {Text 'Interface'}}" /&gt;</data>
@@ -43,7 +42,9 @@
   <data id="0E1">&lt;s:data id="_0" f:Labels="{Collection {Text 'DateSpan Type'}}" /&gt;</data>
   <data id="0V1">&lt;s:type id="_1" s:name="*aT" /&gt;&lt;s:type id="_2" s:name="*eT" /&gt;&lt;s:data id="_0" f:_1.SystemType="E:Epsitec.Common.Types.TypeCode, Common.Types" f:_2.EnumValues="{Collection {Text '0 [100F1]'}, {Text '10 [100G1]'}, {Text '11 [100H1]'}, {Text '12 [100I1]'}, {Text '13 [100J1]'}, {Text '14 [100K1]'}, {Text '20 [100L1]'}, {Text '21 [100M1]'}, {Text '22 [100N1]'}, {Text '30 [100O1]'}, {Text '31 [100P1]'}, {Text '32 [100Q1]'}, {Text '33 [100R1]'}, {Text '34 [100S1]'}, {Text '40 [100T1]'}, {Text '100 [100U1]'}}" f:_1.DefaultController="Enum" f:_1.DefaultControllerParameter="Icons" /&gt;</data>
   <data id="002">&lt;s:data id="_0" f:Labels="{Collection {Text 'System.Type Type (.NET)'}}" /&gt;</data>
-  <data id="032">&lt;s:type id="_1" s:name="*aT" /&gt;&lt;s:type id="_2" s:name="*eT" /&gt;&lt;s:data id="_0" f:_1.SystemType="E:Epsitec.Common.Types.FieldSource, Common.Types" f:_2.EnumValues="{Collection {Text '0 [10012]'}, {Text '1 [10022]'}}" f:_1.DefaultController="Enum" f:_1.DefaultControllerParameter="Icons" /&gt;</data>
+  <data id="032">&lt;s:data id="_0" f:Description="Field source" f:Labels="{Collection {Text 'Source'}}" /&gt;</data>
   <data id="022">&lt;s:data id="_0" f:Description="Value computed by an expression" f:Labels="{Collection {Text 'Expression'}}" /&gt;</data>
   <data id="012">&lt;s:data id="_0" f:Description="Stored value" f:Labels="{Collection {Text 'Value'}}" /&gt;</data>
+  <data id="1">&lt;s:data id="_0" f:Description="Field options" f:Labels="{Collection {Text 'Options'}}" /&gt;</data>
+  <data id="0P">&lt;s:data id="_0" f:Labels="{Collection {Text 'No options'}}" /&gt;</data>
 </bundle>

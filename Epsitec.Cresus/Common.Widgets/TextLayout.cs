@@ -107,7 +107,7 @@ namespace Epsitec.Common.Widgets
 					}
 					else
 					{
-						throw new System.FormatException(string.Format ("Syntax error at char {0}.", offsetError.ToString()));
+						throw new System.FormatException(string.Format ("Syntax error at char {0}.\nText: '{1}^{2}'", offsetError.ToString(), value.Substring (0, offsetError), value.Substring (offsetError)));
 					}
 				}
 			}

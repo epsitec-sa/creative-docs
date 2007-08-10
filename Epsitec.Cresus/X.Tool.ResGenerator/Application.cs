@@ -199,7 +199,7 @@ namespace Epsitec.Common.Tool.ResGenerator
 
 			generator.BeginBlock ("private static void", "Initialize(System.Type type, string name)");
 			buffer.Append (generator.Tabs);
-			buffer.Append (@"Res._manager = new Epsitec.Common.Support.ResourceManager (type);");
+			buffer.Append (@"Res._manager = new global::Epsitec.Common.Support.ResourceManager (type);");
 			buffer.Append ("\n");
 			buffer.Append (generator.Tabs);
 			buffer.Append (@"Res._manager.DefineDefaultModuleName (name);");
@@ -215,7 +215,7 @@ namespace Epsitec.Common.Tool.ResGenerator
 			buffer.Append (generator.Tabs);
 			buffer.Append ("\n");
 
-			generator.BeginBlock ("public static Epsitec.Common.Support.ResourceManager", "Manager");
+			generator.BeginBlock ("public static global::Epsitec.Common.Support.ResourceManager", "Manager");
 			buffer.Append (generator.Tabs);
 			buffer.Append (@"get { return Res._manager; }");
 			buffer.Append ("\n");
@@ -234,7 +234,7 @@ namespace Epsitec.Common.Tool.ResGenerator
 			buffer.Append ("\n");
 
 			buffer.Append (generator.Tabs);
-			buffer.Append ("private static Epsitec.Common.Support.ResourceManager _manager = Epsitec.Common.Support.Resources.DefaultManager;");
+			buffer.Append ("private static global::Epsitec.Common.Support.ResourceManager _manager = global::Epsitec.Common.Support.Resources.DefaultManager;");
 			buffer.Append ("\n");
 			buffer.Append (generator.Tabs);
 			buffer.Append ("private const int _moduleId = ");
@@ -432,10 +432,12 @@ namespace Epsitec.Common.Tool.ResGenerator
 				Support.Druid druid = bundle[fields[i]].Id;
 				
 				buffer.Append (generator.Tabs);
-				buffer.Append ("public static readonly Epsitec.Common.Widgets.Command ");
+				buffer.Append ("public static readonly global::Epsitec.Common.Widgets.Command ");
 				buffer.Append (delta);
-				buffer.Append (@" = Epsitec.Common.Widgets.Command.Get (Epsitec.Common.Support.Druid.FromLong (_moduleId, ");
-				buffer.Append (druid.ToFieldId ());
+				buffer.Append (@" = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, ");
+				buffer.Append (druid.Developer.ToString (System.Globalization.CultureInfo.InvariantCulture));
+				buffer.Append (", ");
+				buffer.Append (druid.Local.ToString (System.Globalization.CultureInfo.InvariantCulture));
 				buffer.Append ("));\n");
 			}
 
@@ -648,10 +650,12 @@ namespace Epsitec.Common.Tool.ResGenerator
 
 				Support.Druid druid = bundle[fields[i]].Id;
 
-				buffer.Append ("public static Epsitec.Common.Types.Caption ");
+				buffer.Append ("public static global::Epsitec.Common.Types.Caption ");
 				buffer.Append (delta);
-				buffer.Append (@" { get { return Res._manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, ");
-				buffer.Append (druid.ToFieldId ());
+				buffer.Append (@" { get { return Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, ");
+				buffer.Append (druid.Developer.ToString (System.Globalization.CultureInfo.InvariantCulture));
+				buffer.Append (", ");
+				buffer.Append (druid.Local.ToString (System.Globalization.CultureInfo.InvariantCulture));
 				buffer.Append (")); } }\n");
 			}
 
@@ -748,10 +752,12 @@ namespace Epsitec.Common.Tool.ResGenerator
 
 				Support.Druid druid = bundle[fields[i]].Id;
 
-				buffer.Append ("public static Epsitec.Common.Types.Caption ");
+				buffer.Append ("public static global::Epsitec.Common.Types.Caption ");
 				buffer.Append (delta);
-				buffer.Append (@" { get { return Res._manager.GetCaption (Epsitec.Common.Support.Druid.FromLong (_moduleId, ");
-				buffer.Append (druid.ToFieldId ());
+				buffer.Append (@" { get { return Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, ");
+				buffer.Append (druid.Developer.ToString (System.Globalization.CultureInfo.InvariantCulture));
+				buffer.Append (", ");
+				buffer.Append (druid.Local.ToString (System.Globalization.CultureInfo.InvariantCulture));
 				buffer.Append (")); } }\n");
 			}
 
@@ -846,10 +852,12 @@ namespace Epsitec.Common.Tool.ResGenerator
 
 				Support.Druid druid = bundle[fields[i]].Id;
 
-				buffer.Append ("public static readonly Epsitec.Common.Support.Druid ");
+				buffer.Append ("public static readonly global::Epsitec.Common.Support.Druid ");
 				buffer.Append (delta);
-				buffer.Append (@" = Epsitec.Common.Support.Druid.FromLong (_moduleId, ");
-				buffer.Append (druid.ToFieldId ());
+				buffer.Append (@" = new global::Epsitec.Common.Support.Druid (_moduleId, ");
+				buffer.Append (druid.Developer.ToString (System.Globalization.CultureInfo.InvariantCulture));
+				buffer.Append (", ");
+				buffer.Append (druid.Local.ToString (System.Globalization.CultureInfo.InvariantCulture));
 				buffer.Append (");\n");
 			}
 
@@ -975,14 +983,17 @@ namespace Epsitec.Common.Tool.ResGenerator
 				string typeName = type.ToString ();
 
 				buffer.Append (generator.Tabs);
-				buffer.Append ("public static readonly ");
+				buffer.Append ("public static readonly global::");
 				buffer.Append (typeName);
 				buffer.Append (" ");
 				buffer.Append (delta);
-				buffer.Append (" = (");
+				buffer.Append (" = (global::");
 				buffer.Append (typeName);
-				buffer.Append (") Epsitec.Common.Types.TypeRosetta.CreateTypeObject (Epsitec.Common.Support.Druid.FromLong (_moduleId, ");
-				buffer.Append (druid.ToFieldId ());
+				buffer.Append (") global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (");
+				buffer.Append ("new global::Epsitec.Common.Support.Druid (_moduleId, ");
+				buffer.Append (druid.Developer.ToString (System.Globalization.CultureInfo.InvariantCulture));
+				buffer.Append (", ");
+				buffer.Append (druid.Local.ToString (System.Globalization.CultureInfo.InvariantCulture));
 				buffer.Append ("));\n");
 			}
 
@@ -1084,7 +1095,7 @@ namespace Epsitec.Common.Tool.ResGenerator
 
 				buffer.Append ("public static string ");
 				buffer.Append (delta);
-				buffer.Append (@" { get { return ");
+				buffer.Append (@" { get { return global::");
 				buffer.Append (defaultNamespace);
 				buffer.Append (@".Res.");
 				buffer.Append (bundleId);
@@ -1092,7 +1103,7 @@ namespace Epsitec.Common.Tool.ResGenerator
 
 				if (druid.Type == Support.DruidType.ModuleRelative)
 				{
-					buffer.Append (@"Epsitec.Common.Support.Druid.FromFieldId (");
+					buffer.Append (@"global::Epsitec.Common.Support.Druid.FromFieldId (");
 					buffer.Append (druid.ToFieldId ());
 					buffer.Append (@")");
 				}
@@ -1157,7 +1168,7 @@ namespace Epsitec.Common.Tool.ResGenerator
 
 			generator.EndBlock ();
 
-			generator.BeginBlock ("private static string", "GetText(Epsitec.Common.Support.Druid druid)");
+			generator.BeginBlock ("private static string", "GetText(global::Epsitec.Common.Support.Druid druid)");
 
 			buffer.Append (generator.Tabs);
 			buffer.Append (@"return _stringsBundle[druid].AsString;");
@@ -1166,7 +1177,7 @@ namespace Epsitec.Common.Tool.ResGenerator
 			generator.EndBlock ();
 
 			buffer.Append (generator.Tabs);
-			buffer.Append (@"private static Epsitec.Common.Support.ResourceBundle _stringsBundle = Res._manager.GetBundle (""");
+			buffer.Append (@"private static global::Epsitec.Common.Support.ResourceBundle _stringsBundle = Res._manager.GetBundle (""");
 			buffer.Append (bundleId);
 			buffer.Append (@""");");
 			buffer.Append ("\n");

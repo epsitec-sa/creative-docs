@@ -549,11 +549,11 @@ namespace Epsitec.Common.Types
 
 						int fieldRank = merge.fields[id].Rank;
 
-						merge.fields[id] = new StructuredTypeField (id, field.Type, field.CaptionId, fieldRank, field.Relation, FieldMembership.Local, field.Source, field.Expression);
+						merge.fields[id] = new StructuredTypeField (id, field.Type, field.CaptionId, fieldRank, field.Relation, FieldMembership.Local, field.Source, field.Options, field.Expression);
 					}
 					else
 					{
-						merge.fields.Add (new StructuredTypeField (id, field.Type, field.CaptionId, rank++, field.Relation, FieldMembership.Local, field.Source, field.Expression));
+						merge.fields.Add (new StructuredTypeField (id, field.Type, field.CaptionId, rank++, field.Relation, FieldMembership.Local, field.Source, field.Options, field.Expression));
 					}
 				}
 			}

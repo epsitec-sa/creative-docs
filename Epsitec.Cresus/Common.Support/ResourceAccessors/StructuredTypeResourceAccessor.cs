@@ -171,11 +171,12 @@ namespace Epsitec.Common.Support.ResourceAccessors
 				FieldRelation relation = (FieldRelation) fieldData.GetValue (Res.Fields.Field.Relation);
 				FieldMembership membership = (FieldMembership) fieldData.GetValue (Res.Fields.Field.Membership);
 				FieldSource source = (FieldSource) fieldData.GetValue (Res.Fields.Field.Source);
+				FieldOptions options = (FieldOptions) fieldData.GetValue (Res.Fields.Field.Options);
 				string expression = fieldData.GetValue (Res.Fields.Field.Expression) as string;
 
 				if (membership == FieldMembership.Local)
 				{
-					StructuredTypeField field = new StructuredTypeField (null, null, fieldCaption, rank++, relation, membership, source, expression);
+					StructuredTypeField field = new StructuredTypeField (null, null, fieldCaption, rank++, relation, membership, source, options, expression);
 					field.DefineTypeId (fieldType);
 					type.Fields.Add (field);
 				}
@@ -230,6 +231,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			data.SetValue (Res.Fields.Field.Relation, field.Relation);
 			data.SetValue (Res.Fields.Field.Membership, field.Membership);
 			data.SetValue (Res.Fields.Field.Source, field.Source);
+			data.SetValue (Res.Fields.Field.Options, field.Options);
 			data.SetValue (Res.Fields.Field.Expression, field.Expression ?? "");
 			data.SetValue (Res.Fields.Field.DefiningTypeId, field.DefiningTypeId);
 			data.LockValue (Res.Fields.Field.DefiningTypeId);
@@ -420,6 +422,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 				data.SetValue (Res.Fields.Field.Relation, FieldRelation.None);
 				data.SetValue (Res.Fields.Field.Membership, FieldMembership.Local);
 				data.SetValue (Res.Fields.Field.Source, FieldSource.Value);
+				data.SetValue (Res.Fields.Field.Options, FieldOptions.None);
 				data.SetValue (Res.Fields.Field.Expression, "");
 				data.SetValue (Res.Fields.Field.DefiningTypeId, Druid.Empty);
 				data.LockValue (Res.Fields.Field.DefiningTypeId);
