@@ -109,10 +109,6 @@ namespace Epsitec.Common.Support.EntityEngine
 				{
 					return value;
 				}
-				else if (this.type.GetField (id) == null)
-				{
-					return UnknownValue.Instance;
-				}
 				else
 				{
 					return UndefinedValue.Instance;

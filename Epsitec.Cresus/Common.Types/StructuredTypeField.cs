@@ -280,6 +280,21 @@ namespace Epsitec.Common.Types
 
 
 		/// <summary>
+		/// Gets a value indicating whether this field is nullable.
+		/// </summary>
+		/// <value>
+		/// 	<c>true</c> if this field is nullable; otherwise, <c>false</c>.
+		/// </value>
+		public bool								IsNullable
+		{
+			get
+			{
+				return (this.Options & FieldOptions.Nullable) != 0;
+			}
+		}
+
+
+		/// <summary>
 		/// Clones this instance.
 		/// </summary>
 		/// <returns>A copy of this instance.</returns>

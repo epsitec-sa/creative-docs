@@ -9,7 +9,7 @@ namespace Epsitec.Common.Types
 	/// See <see cref="StructuredTypeField"/>.
 	/// </summary>
 	[DesignerVisible]
-	public enum FieldMembership
+	public enum FieldMembership : byte
 	{
 		/// <summary>
 		/// The field is defined locally.

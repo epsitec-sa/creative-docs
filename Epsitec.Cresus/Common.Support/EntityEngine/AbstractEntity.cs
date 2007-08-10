@@ -30,6 +30,11 @@ namespace Epsitec.Common.Support.EntityEngine
 
 		protected T GetField<T>(string id)
 		{
+			StructuredTypeField field = this.context.GetStructuredType (this).GetField (id);
+
+			System.Diagnostics.Debug.Assert (field != null);
+			System.Diagnostics.Debug.Assert (field.Relation != FieldRelation.Collection);
+			
 			object value = this.values.GetValue (id);
 
 			if ((UndefinedValue.IsUndefinedValue (value)) ||
@@ -77,15 +82,23 @@ namespace Epsitec.Common.Support.EntityEngine
 			System.Diagnostics.Debug.Assert (field != null);
 			System.Diagnostics.Debug.Assert (field.Relation != FieldRelation.Collection);
 
-			//	TODO: check nullability of references
+			if ((field.IsNullable) &&
+				(newValue == null))
+			{
+				//	The value is null and the field is nullable; this is operation
+				//	is valid and it will clear the field.
 
+				this.values.SetValue (id, UndefinedValue.Instance);
+				return;
+			}
+			
 			IDataConstraint constraint = field.Type as IDataConstraint;
 
 			System.Diagnostics.Debug.Assert (constraint != null);
 
 			if (constraint.IsValidValue (newValue))
 			{
-				this.values.SetValue (id, newValue);
+				this.values.SetValue (id, newValue == null ? UndefinedValue.Instance : (object) newValue);
 			}
 			else
 			{

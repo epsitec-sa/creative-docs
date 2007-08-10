@@ -9,7 +9,7 @@ namespace Epsitec.Common.Types
 	/// See <see cref="StructuredTypeField"/>.
 	/// </summary>
 	[DesignerVisible]
-	public enum FieldRelation
+	public enum FieldRelation : byte
 	{
 		/// <summary>
 		/// There is no relation defined for this field.

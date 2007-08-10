@@ -9,7 +9,7 @@ namespace Epsitec.Common.Types
 	/// See <see cref="StructuredTypeField"/>.
 	/// </summary>
 	[DesignerVisible]
-	public enum FieldSource
+	public enum FieldSource : byte
 	{
 		/// <summary>
 		/// The field holds a value.
