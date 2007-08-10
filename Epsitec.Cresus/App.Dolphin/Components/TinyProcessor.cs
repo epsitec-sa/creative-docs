@@ -18,10 +18,13 @@ namespace Epsitec.App.Dolphin.Components
 			//	#val (V)  =  valeur absolue positive 8 bits
 
 			Nop    = 0x00,
-			Ret    = 0x01,
-			Halt   = 0x02,
+			Call   = 0x01,
+			Ret    = 0x02,
+			Halt   = 0x03,
 			SetC   = 0x04,
 			ClrC   = 0x05,
+			AddVSP = 0x06,		// ADD #val,SP
+			SubVSP = 0x07,		// SUB #val,SP
 
 			PushR  = 0x08,		// PUSH r
 			PopR   = 0x0C,		// POP r
@@ -38,19 +41,7 @@ namespace Epsitec.App.Dolphin.Components
 			JumpNC = 0x1A,
 			JumpNS = 0x1B,
 
-			//	0x1C..0x1F libre
-
-			Call   = 0x20,
-			CallEQ = 0x22,
-			CallNE = 0x23,
-			CallLO = 0x24,
-			CallLS = 0x25,
-			CallHI = 0x26,
-			CallHS = 0x27,
-			CallCC = 0x28,
-			CallCS = 0x29,
-			CallNC = 0x2A,
-			CallNS = 0x2B,
+			//	0x20..0x2F libre
 
 			ClrR   = 0x30,		// op r
 			NotR   = 0x34,
@@ -113,7 +104,7 @@ namespace Epsitec.App.Dolphin.Components
 			TSetVS = 0xF2,
 			TClrVS = 0xF4,
 			TNotVS = 0xF6,
-			TestVA = 0xF8,		// op #val,ADDR
+			TestVA = 0xF8,		// op #val,ADDR (instructions à 4 bytes non documentées)
 			TSetVA = 0xF9,
 			TClrVA = 0xFA,
 			TNotVA = 0xFB,
@@ -155,7 +146,7 @@ namespace Epsitec.App.Dolphin.Components
 			//	Si oui, retourne l'adresse après le CALL.
 			Instructions op = (Instructions) this.memory.Read(this.registerPC);
 
-			if (op >= Instructions.Call && op <= Instructions.CallNS)
+			if (op == Instructions.Call)
 			{
 				retAddress = this.registerPC+3;
 				return true;
@@ -188,6 +179,12 @@ namespace Epsitec.App.Dolphin.Components
 				case Instructions.Nop:
 					return;
 
+				case Instructions.Call:
+					address = this.AddressAbs;
+					this.StackPushWord(this.registerPC);
+					this.registerPC = address;
+					return;
+
 				case Instructions.Ret:
 					this.registerPC = this.StackPopWord();
 					return;
@@ -203,6 +200,14 @@ namespace Epsitec.App.Dolphin.Components
 
 				case Instructions.ClrC:
 					this.SetFlag(TinyProcessor.FlagCarry, false);
+					return;
+
+				case Instructions.AddVSP:
+					this.registerSP += this.memory.Read(this.registerPC++);
+					return;
+
+				case Instructions.SubVSP:
+					this.registerSP -= this.memory.Read(this.registerPC++);
 					return;
 			}
 
@@ -225,17 +230,6 @@ namespace Epsitec.App.Dolphin.Components
 				address = this.AddressAbs;
 				if (this.IsTestTrue(op))
 				{
-					this.registerPC = address;
-				}
-				return;
-			}
-
-			if (op >= (int) Instructions.Call && op <= (int) Instructions.CallNS)
-			{
-				address = this.AddressAbs;
-				if (this.IsTestTrue(op))
-				{
-					this.StackPushWord(this.registerPC);
 					this.registerPC = address;
 				}
 				return;
@@ -1382,8 +1376,60 @@ namespace Epsitec.App.Dolphin.Components
 
 		protected static byte[] CharTable =
 		{
+			0x40, 0xA0, 0xA0, 0xA0, 0x40,	// 0
+			0x40, 0xC0, 0x40, 0x40, 0xE0,	// 1
+			0x40, 0xA0, 0x20, 0x40, 0xE0,	// 2
+			0xC0, 0x20, 0x60, 0x20, 0xC0,	// 3
+			0x20, 0x60, 0xA0, 0xE0, 0x20,	// 4
+			0xE0, 0x80, 0xC0, 0x20, 0xC0,	// 5
+			0x40, 0x80, 0xC0, 0xA0, 0x40,	// 6
+			0xE0, 0x20, 0x20, 0x40, 0x40,	// 7
+			0x40, 0xA0, 0x40, 0xA0, 0x40,	// 8
+			0x40, 0xA0, 0x60, 0x20, 0x40,	// 9
 			0x40, 0xA0, 0xE0, 0xA0, 0xA0,	// A
 			0xC0, 0xA0, 0xC0, 0xA0, 0xC0,	// B
+			0x60, 0x80, 0x80, 0x80, 0x60,	// C
+			0xC0, 0xA0, 0xA0, 0xA0, 0xC0,	// D
+			0xE0, 0x80, 0xC0, 0x80, 0xE0,	// E
+			0xE0, 0x80, 0xC0, 0x80, 0x80,	// F
+			0x60, 0x80, 0xA0, 0xA0, 0x60,	// G
+			0xA0, 0xA0, 0xE0, 0xA0, 0xA0,	// H
+			0xE0, 0x40, 0x40, 0x40, 0xE0,	// I
+			0xE0, 0x20, 0x20, 0x20, 0xC0,	// J
+			0xA0, 0xA0, 0xC0, 0xA0, 0xA0,	// K
+			0x80, 0x80, 0x80, 0x80, 0xE0,	// L
+			0xA0, 0xE0, 0xA0, 0xA0, 0xA0,	// M
+			0xA0, 0xE0, 0xE0, 0xE0, 0xA0,	// N
+			0x40, 0xA0, 0xA0, 0xA0, 0x40,	// O
+			0xC0, 0xA0, 0xC0, 0x80, 0x80,	// P
+			0x40, 0xA0, 0xA0, 0xE0, 0x60,	// Q
+			0xC0, 0xA0, 0xC0, 0xA0, 0xA0,	// R
+			0x60, 0x80, 0x40, 0x20, 0xC0,	// S
+			0xE0, 0x40, 0x40, 0x40, 0x40,	// T
+			0xA0, 0xA0, 0xA0, 0xA0, 0x40,	// U
+			0xA0, 0xA0, 0xA0, 0x40, 0x40,	// V
+			0xA0, 0xA0, 0xE0, 0xE0, 0x40,	// W
+			0xA0, 0xA0, 0x40, 0xA0, 0xA0,	// X
+			0xA0, 0xA0, 0x40, 0x40, 0x40,	// Y
+			0xE0, 0x20, 0x40, 0x80, 0xE0,	// Z
+			0x00, 0x00, 0xE0, 0x00, 0x00,	// -
+			0x00, 0x40, 0xE0, 0x40, 0x00,	// +
+			0x00, 0x00, 0x00, 0x00, 0x40,	// .
+			0x00, 0x00, 0x00, 0x40, 0x80,	// ,
+			0x40, 0x80, 0x80, 0x80, 0x40,	// (
+			0x40, 0x20, 0x20, 0x20, 0x40,	// )
+			0x40, 0xE0, 0x40, 0xE0, 0x40,	// *
+			0x20, 0x20, 0x40, 0x80, 0x80,	// /
+			0x40, 0xA0, 0x20, 0x00, 0x40,	// ?
+			0x40, 0x40, 0x40, 0x00, 0x40,	// !
+			0x40, 0x40, 0x00, 0x00, 0x00,	// '
+			0xA0, 0xA0, 0x00, 0x00, 0x00,	// "
+			0x00, 0xE0, 0x00, 0xE0, 0x00,	// =
+			0xA0, 0x20, 0x40, 0x80, 0xA0,	// %
+			0x00, 0x40, 0x00, 0x00, 0x40,	// :
+			0x00, 0x40, 0x00, 0x40, 0x80,	// ;
+			0x20, 0x40, 0x80, 0x40, 0x20,	// <
+			0x80, 0x40, 0x20, 0x40, 0x80,	// >
 		};
 		#endregion
 
@@ -1499,10 +1545,10 @@ namespace Epsitec.App.Dolphin.Components
 
 				case "Op":
 					AbstractProcessor.HelpPutTitle(builder, "Transferts");
-					AbstractProcessor.HelpPutLine(builder, "[50+r] [vv]     <tab/>MOVE A,r");
-					AbstractProcessor.HelpPutLine(builder, "[54+r] [vv]     <tab/>MOVE B,r");
-					AbstractProcessor.HelpPutLine(builder, "[58+r] [vv]     <tab/>MOVE X,r");
-					AbstractProcessor.HelpPutLine(builder, "[5C+r] [vv]     <tab/>MOVE Y,r");
+					AbstractProcessor.HelpPutLine(builder, "[50+r]          <tab/>MOVE A,r");
+					AbstractProcessor.HelpPutLine(builder, "[54+r]          <tab/>MOVE B,r");
+					AbstractProcessor.HelpPutLine(builder, "[58+r]          <tab/>MOVE X,r");
+					AbstractProcessor.HelpPutLine(builder, "[5C+r]          <tab/>MOVE Y,r");
 					AbstractProcessor.HelpPutLine(builder, "[60+r] [vv]     <tab/>MOVE #val,r");
 					AbstractProcessor.HelpPutLine(builder, "[64+r] [mh] [ll]<tab/>MOVE ADDR,r");
 					AbstractProcessor.HelpPutLine(builder, "[68+r] [mh] [ll]<tab/>MOVE r,ADDR");
@@ -1571,7 +1617,11 @@ namespace Epsitec.App.Dolphin.Components
 					AbstractProcessor.HelpPutLine(builder, "[EE+r'] [mh] [ll]<tab/>TNOT ADDR:r'");
 
 					AbstractProcessor.HelpPutTitle(builder, "Comparaisons");
-					AbstractProcessor.HelpPutLine(builder, "[FC+r] [vv]<tab/>COMP #val,r");
+					AbstractProcessor.HelpPutLine(builder, "[70+r]          <tab/>COMP A,r");
+					AbstractProcessor.HelpPutLine(builder, "[74+r]          <tab/>COMP B,r");
+					AbstractProcessor.HelpPutLine(builder, "[78+r]          <tab/>COMP X,r");
+					AbstractProcessor.HelpPutLine(builder, "[7C+r]          <tab/>COMP Y,r");
+					AbstractProcessor.HelpPutLine(builder, "[FC+r] [vv]     <tab/>COMP #val,r");
 
 					AbstractProcessor.HelpPutTitle(builder, "Opérations unaires");
 					AbstractProcessor.HelpPutLine(builder, "[30+r]          <tab/>CLR r");
@@ -1595,7 +1645,7 @@ namespace Epsitec.App.Dolphin.Components
 
 					AbstractProcessor.HelpPutTitle(builder, "Divers");
 					AbstractProcessor.HelpPutLine(builder, "[00]            <tab/>NOP");
-					AbstractProcessor.HelpPutLine(builder, "[02]            <tab/>HALT");
+					AbstractProcessor.HelpPutLine(builder, "[03]            <tab/>HALT");
 					break;
 
 				case "Branch":
@@ -1613,19 +1663,8 @@ namespace Epsitec.App.Dolphin.Components
 					AbstractProcessor.HelpPutLine(builder, "[1B] [mh] [ll]<tab/>JUMP,NS ADDR");
 
 					AbstractProcessor.HelpPutTitle(builder, "Appels de routines");
-					AbstractProcessor.HelpPutLine(builder, "[20] [mh] [ll]<tab/>CALL ADDR");
-					AbstractProcessor.HelpPutLine(builder, "[22] [mh] [ll]<tab/>CALL,EQ ADDR");
-					AbstractProcessor.HelpPutLine(builder, "[23] [mh] [ll]<tab/>CALL,NE ADDR");
-					AbstractProcessor.HelpPutLine(builder, "[24] [mh] [ll]<tab/>CALL,LO ADDR");
-					AbstractProcessor.HelpPutLine(builder, "[25] [mh] [ll]<tab/>CALL,LS ADDR");
-					AbstractProcessor.HelpPutLine(builder, "[26] [mh] [ll]<tab/>CALL,HI ADDR");
-					AbstractProcessor.HelpPutLine(builder, "[27] [mh] [ll]<tab/>CALL,HS ADDR");
-					AbstractProcessor.HelpPutLine(builder, "[28] [mh] [ll]<tab/>CALL,CC ADDR");
-					AbstractProcessor.HelpPutLine(builder, "[29] [mh] [ll]<tab/>CALL,CS ADDR");
-					AbstractProcessor.HelpPutLine(builder, "[2A] [mh] [ll]<tab/>CALL,NC ADDR");
-					AbstractProcessor.HelpPutLine(builder, "[2B] [mh] [ll]<tab/>CALL,NS ADDR");
-					AbstractProcessor.HelpPutLine(builder, "");
-					AbstractProcessor.HelpPutLine(builder, "[01]<tab/><tab/>RET");
+					AbstractProcessor.HelpPutLine(builder, "[01] [mh] [ll]   <tab/>CALL ADDR");
+					AbstractProcessor.HelpPutLine(builder, "[02]             <tab/>RET");
 
 					AbstractProcessor.HelpPutTitle(builder, "Utilisation de la pile");
 					AbstractProcessor.HelpPutLine(builder, "[08+r]           <tab/>PUSH r");
