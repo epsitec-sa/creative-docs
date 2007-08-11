@@ -41,76 +41,80 @@ namespace Epsitec.App.Dolphin.Components
 			JumpNC = 0x1A,
 			JumpNS = 0x1B,
 
-			//	0x20..0x2F libre
+			ClrR   = 0x20,		// op r
+			NotR   = 0x24,
+			IncR   = 0x28,
+			DecR   = 0x2C,
 
-			ClrR   = 0x30,		// op r
-			NotR   = 0x34,
-			IncR   = 0x38,
-			DecR   = 0x3C,
+			RlR    = 0x30,		// op r
+			RrR    = 0x34,
+			RlcR   = 0x38,
+			RrcR   = 0x3C,
 
-			RlS    = 0x40,		// op r'
-			RrS    = 0x42,
-			RlcS   = 0x44,
-			RrcS   = 0x46,
+			MoveRR = 0x40,		// MOVE r,r
+			MoveVR = 0x50,		// MOVE #val,r
+			MoveAR = 0x54,		// MOVE ADDR,r
+			MoveRA = 0x58,		// MOVE r,ADDR
+			ExAB   = 0x5C,		// EX A,B
+			ExXY   = 0x5D,		// EX X,Y
+			SwapA  = 0x5E,		// SWAP A
+			SwapB  = 0x5F,		// SWAP B
 
-			ClrA   = 0x48,		// op ADDR
-			NotA   = 0x49,
-			IncA   = 0x4A,
-			DecA   = 0x4B,
-			RlA    = 0x4C,
-			RrA    = 0x4D,
-			RlcA   = 0x4E,
-			RrcA   = 0x4F,
+			CompRR = 0x60,		// COMP r,r
 
-			MoveRR = 0x50,		// MOVE r,r
-			MoveVR = 0x60,		// MOVE #val,r
-			MoveAR = 0x64,		// MOVE ADDR,r
-			MoveRA = 0x68,		// MOVE r,ADDR
-
-			CompRR = 0x70,		// COMP r,r
+			CompVR = 0x70,		// COMP #val,r
+			AndVR  = 0x74,		// op #val,r
+			OrVR   = 0x78,
+			XorVR  = 0x7C,
 
 			AddRR  = 0x80,		// op r,r
 			SubRR  = 0x90,
 			AddVR  = 0xA0,		// op #val,r
 			SubVR  = 0xA4,
+
+			ClrA   = 0xA8,		// op ADDR
+			NotA   = 0xA9,
+			IncA   = 0xAA,
+			DecA   = 0xAB,
+			RlA    = 0xAC,
+			RrA    = 0xAD,
+			RlcA   = 0xAE,
+			RrcA   = 0xAF,
+
 			AddAR  = 0xB0,		// op ADDR,r
 			SubAR  = 0xB4,
 			AddRA  = 0xB8,		// op r,ADDR
 			SubRA  = 0xBC,
 
-			AndVS  = 0xC0,		// op #val,r'
-			OrVS   = 0xC2,
-			XorVS  = 0xC4,
-			AndSS  = 0xC8,		// op r',r'
-			OrSS   = 0xCA,
-			XorSS  = 0xCC,
-			AndAS  = 0xD0,		// op ADDR,r'
-			OrAS   = 0xD2,
-			XorAS  = 0xD4,
-			AndSA  = 0xD8,		// op r',ADDR
-			OrSA   = 0xDA,
-			XorSA  = 0xDC,
+			TestSS = 0xC0,		// op r',r'
+			TSetSS = 0xC2,
+			TClrSS = 0xC4,
+			TNotSS = 0xC6,
+			TestSA = 0xC8,		// op r',ADDR
+			TSetSA = 0xCA,
+			TClrSA = 0xCC,
+			TNotSA = 0xCE,
 
-			TestSS = 0xE0,		// op r',r'
-			TSetSS = 0xE2,
-			TClrSS = 0xE4,
-			TNotSS = 0xE6,
-			TestSA = 0xE8,		// op r',ADDR
-			TSetSA = 0xEA,
-			TClrSA = 0xEC,
-			TNotSA = 0xEE,
-
-			TestVS = 0xF0,		// op #val,r'
-			TSetVS = 0xF2,
-			TClrVS = 0xF4,
-			TNotVS = 0xF6,
-			TestVA = 0xF8,		// op #val,ADDR (instructions à 4 bytes non documentées)
-			TSetVA = 0xF9,
-			TClrVA = 0xFA,
-			TNotVA = 0xFB,
-
-			CompVR = 0xFC,		// COMP #val,r
+			TestVS = 0xD0,		// op #val,r'
+			TSetVS = 0xD2,
+			TClrVS = 0xD4,
+			TNotVS = 0xD6,
+			TestVA = 0xD8,		// op #val,ADDR (instructions à 4 bytes non documentées)
+			TSetVA = 0xD9,
+			TClrVA = 0xDA,
+			TNotVA = 0xDB,
+			
+			AndSS  = 0xE0,		// op r',r'
+			OrSS   = 0xE2,
+			XorSS  = 0xE4,
+			AndAS  = 0xE8,		// op ADDR,r'
+			OrAS   = 0xEA,
+			XorAS  = 0xEC,
+			AndSA  = 0xF0,		// op r',ADDR
+			OrSA   = 0xF2,
+			XorSA  = 0xF4,
 		}
+
 
 
 		public TinyProcessor(Memory memory) : base(memory)
@@ -209,6 +213,26 @@ namespace Epsitec.App.Dolphin.Components
 				case Instructions.SubVSP:
 					this.registerSP -= this.memory.Read(this.registerPC++);
 					return;
+
+				case Instructions.ExAB:
+					data = this.registerA;
+					this.registerA = this.registerB;
+					this.registerB = data;
+					return;
+
+				case Instructions.ExXY:
+					data = this.registerX;
+					this.registerX = this.registerY;
+					this.registerY = data;
+					return;
+
+				case Instructions.SwapA:
+					this.registerA = ((this.registerA << 4) & 0xF0) | ((this.registerA >> 4) & 0x0F);
+					return;
+
+				case Instructions.SwapB:
+					this.registerB = ((this.registerB << 4) & 0xF0) | ((this.registerB >> 4) & 0x0F);
+					return;
 			}
 
 			if (op >= (int) Instructions.PushR && op <= (int) Instructions.PushR + 0x03)  // PUSH r
@@ -268,29 +292,29 @@ namespace Epsitec.App.Dolphin.Components
 				}
 			}
 
-			if (op >= (int) Instructions.RlS && op <= (int) Instructions.RlS + 0x07)  // op r'
+			if (op >= (int) Instructions.RlR && op <= (int) Instructions.RlR + 0x0F)  // op r
 			{
-				int n = op & 0x01;
-				Instructions i = (Instructions) (op & 0xFE);
+				int n = op & 0x03;
+				Instructions i = (Instructions) (op & 0xFC);
 
 				switch (i)
 				{
-					case Instructions.RlS:
+					case Instructions.RlR:
 						data = this.RotateLeft(this.GetRegister(n), false);
 						this.SetRegister(n, data);
 						return;
 
-					case Instructions.RrS:
+					case Instructions.RrR:
 						data = this.RotateRight(this.GetRegister(n), false);
 						this.SetRegister(n, data);
 						return;
 
-					case Instructions.RlcS:
+					case Instructions.RlcR:
 						data = this.RotateLeft(this.GetRegister(n), true);
 						this.SetRegister(n, data);
 						return;
 
-					case Instructions.RrcS:
+					case Instructions.RrcR:
 						data = this.RotateRight(this.GetRegister(n), true);
 						this.SetRegister(n, data);
 						return;
@@ -491,27 +515,27 @@ namespace Epsitec.App.Dolphin.Components
 				}
 			}
 
-			if (op >= (int) Instructions.AndVS && op <= (int) Instructions.AndVS + 0x07)  // op #val,r
+			if (op >= (int) Instructions.AndVR && op <= (int) Instructions.AndVR + 0x0F)  // op #val,r
 			{
-				int n = op & 0x01;
-				Instructions i = (Instructions) (op & 0xFE);
+				int n = op & 0x03;
+				Instructions i = (Instructions) (op & 0xFC);
 				data = this.memory.Read(this.registerPC++);
 
 				switch (i)
 				{
-					case Instructions.AndVS:
+					case Instructions.AndVR:
 						data = this.GetRegister(n) & data;
 						this.SetRegister(n, data);
 						this.SetFlagsOper(data);
 						return;
 
-					case Instructions.OrVS:
+					case Instructions.OrVR:
 						data = this.GetRegister(n) | data;
 						this.SetRegister(n, data);
 						this.SetFlagsOper(data);
 						return;
 
-					case Instructions.XorVS:
+					case Instructions.XorVR:
 						data = this.GetRegister(n) ^ data;
 						this.SetRegister(n, data);
 						this.SetFlagsOper(data);
@@ -1194,7 +1218,7 @@ namespace Epsitec.App.Dolphin.Components
 			(byte) Instructions.PushR+1,				// PUSH B
 			(byte) Instructions.PushR+2,				// PUSH X
 
-			(byte) Instructions.AndVS+1, 0x03,			// AND #03,B
+			(byte) Instructions.AndVR+1, 0x03,			// AND #03,B
 			(byte) Instructions.MoveRR+0x6,				// MOVE B,X
 			(byte) Instructions.MoveRA+0, 0x1C, 0x00,	// MOVE A,C00+{X}
 
@@ -1214,11 +1238,11 @@ namespace Epsitec.App.Dolphin.Components
 			(byte) Instructions.PushR+1,				// PUSH B
 			(byte) Instructions.PushR+2,				// PUSH X
 
-			(byte) Instructions.AndVS+0, 0x0F,			// AND #0F,A
+			(byte) Instructions.AndVR+0, 0x0F,			// AND #0F,A
 			(byte) Instructions.MoveRR+0x2,				// MOVE A,X
 			(byte) Instructions.MoveAR+0, 0x90, 0x0A,	// MOVE R8^TABLE+{X},A
 
-			(byte) Instructions.AndVS+1, 0x03,			// AND #03,B
+			(byte) Instructions.AndVR+1, 0x03,			// AND #03,B
 			(byte) Instructions.MoveRR+0x6,				// MOVE B,X
 			(byte) Instructions.MoveRA+0, 0x1C, 0x00,	// MOVE A,C00+{X}
 
@@ -1243,10 +1267,10 @@ namespace Epsitec.App.Dolphin.Components
 			(byte) Instructions.IncR+1,					// INC B
 			(byte) Instructions.Call, 0x80, 0x06,		// CALL DisplayHexaDigit
 
-			(byte) Instructions.RrS+0,					// RR A
-			(byte) Instructions.RrS+0,					// RR A
-			(byte) Instructions.RrS+0,					// RR A
-			(byte) Instructions.RrS+0,					// RR A
+			(byte) Instructions.RrR+0,					// RR A
+			(byte) Instructions.RrR+0,					// RR A
+			(byte) Instructions.RrR+0,					// RR A
+			(byte) Instructions.RrR+0,					// RR A
 			(byte) Instructions.DecR+1,					// DEC B
 			(byte) Instructions.Call, 0x80, 0x06,		// CALL DisplayHexaDigit
 
@@ -1272,32 +1296,27 @@ namespace Epsitec.App.Dolphin.Components
 		//	mod	F
 		protected static byte[] SetPixel =
 		{
-			(byte) Instructions.PushR+0,				// PUSH A
 			(byte) Instructions.PushR+1,				// PUSH B
 			(byte) Instructions.PushR+2,				// PUSH X
 			(byte) Instructions.PushR+3,				// PUSH Y
 
-			(byte) Instructions.MoveRR+0xC,				// MOVE Y,A
-			(byte) Instructions.AndVS+0, 0x1F,			// AND #1F,A
-			(byte) Instructions.RlS+0,					// RL A
-			(byte) Instructions.RlS+0,					// RL A
-			(byte) Instructions.MoveRR+0x3,				// MOVE A,Y
+			(byte) Instructions.AndVR+3, 0x1F,			// AND #1F,Y
+			(byte) Instructions.RlR+3,					// RL Y
+			(byte) Instructions.RlR+3,					// RL Y
 
 			(byte) Instructions.MoveRR+0x9,				// MOVE X,B
-			(byte) Instructions.MoveRR+0x8,				// MOVE X,A
-			(byte) Instructions.RrS+0,					// RR A
-			(byte) Instructions.RrS+0,					// RR A
-			(byte) Instructions.RrS+0,					// RR A
-			(byte) Instructions.AndVS+0, 0x03,			// AND #03,A
-			(byte) Instructions.MoveRR+0x2,				// MOVE A,X
+			(byte) Instructions.XorVR+1, 0x07,			// XOR #07,B
 
-			(byte) Instructions.XorVS+1, 0x07,			// XOR #07,B
+			(byte) Instructions.RrR+2,					// RR X
+			(byte) Instructions.RrR+2,					// RR X
+			(byte) Instructions.RrR+2,					// RR X
+			(byte) Instructions.AndVR+2, 0x03,			// AND #03,X
+
 			(byte) Instructions.TSetSA+1, 0x3C, 0x80,	// TSET C80+{X}+{Y},B
 
 			(byte) Instructions.PopR+3,					// POP Y
 			(byte) Instructions.PopR+2,					// POP X
 			(byte) Instructions.PopR+1,					// POP B
-			(byte) Instructions.PopR+0,					// POP A
 			(byte) Instructions.Ret,					// RET
 		};
 
@@ -1308,32 +1327,27 @@ namespace Epsitec.App.Dolphin.Components
 		//	mod	F
 		protected static byte[] ClrPixel =
 		{
-			(byte) Instructions.PushR+0,				// PUSH A
 			(byte) Instructions.PushR+1,				// PUSH B
 			(byte) Instructions.PushR+2,				// PUSH X
 			(byte) Instructions.PushR+3,				// PUSH Y
 
-			(byte) Instructions.MoveRR+0xC,				// MOVE Y,A
-			(byte) Instructions.AndVS+0, 0x1F,			// AND #1F,A
-			(byte) Instructions.RlS+0,					// RL A
-			(byte) Instructions.RlS+0,					// RL A
-			(byte) Instructions.MoveRR+0x3,				// MOVE A,Y
+			(byte) Instructions.AndVR+3, 0x1F,			// AND #1F,Y
+			(byte) Instructions.RlR+3,					// RL Y
+			(byte) Instructions.RlR+3,					// RL Y
 
 			(byte) Instructions.MoveRR+0x9,				// MOVE X,B
-			(byte) Instructions.MoveRR+0x8,				// MOVE X,A
-			(byte) Instructions.RrS+0,					// RR A
-			(byte) Instructions.RrS+0,					// RR A
-			(byte) Instructions.RrS+0,					// RR A
-			(byte) Instructions.AndVS+0, 0x03,			// AND #03,A
-			(byte) Instructions.MoveRR+0x2,				// MOVE A,X
+			(byte) Instructions.XorVR+1, 0x07,			// XOR #07,B
 
-			(byte) Instructions.XorVS+1, 0x07,			// XOR #07,B
+			(byte) Instructions.RrR+2,					// RR X
+			(byte) Instructions.RrR+2,					// RR X
+			(byte) Instructions.RrR+2,					// RR X
+			(byte) Instructions.AndVR+2, 0x03,			// AND #03,X
+
 			(byte) Instructions.TClrSA+1, 0x3C, 0x80,	// TCLR C80+{X}+{Y},B
 
 			(byte) Instructions.PopR+3,					// POP Y
 			(byte) Instructions.PopR+2,					// POP X
 			(byte) Instructions.PopR+1,					// POP B
-			(byte) Instructions.PopR+0,					// POP A
 			(byte) Instructions.Ret,					// RET
 		};
 
@@ -1344,32 +1358,27 @@ namespace Epsitec.App.Dolphin.Components
 		//	mod	F
 		protected static byte[] NotPixel =
 		{
-			(byte) Instructions.PushR+0,				// PUSH A
 			(byte) Instructions.PushR+1,				// PUSH B
 			(byte) Instructions.PushR+2,				// PUSH X
 			(byte) Instructions.PushR+3,				// PUSH Y
 
-			(byte) Instructions.MoveRR+0xC,				// MOVE Y,A
-			(byte) Instructions.AndVS+0, 0x1F,			// AND #1F,A
-			(byte) Instructions.RlS+0,					// RL A
-			(byte) Instructions.RlS+0,					// RL A
-			(byte) Instructions.MoveRR+0x3,				// MOVE A,Y
+			(byte) Instructions.AndVR+3, 0x1F,			// AND #1F,Y
+			(byte) Instructions.RlR+3,					// RL Y
+			(byte) Instructions.RlR+3,					// RL Y
 
 			(byte) Instructions.MoveRR+0x9,				// MOVE X,B
-			(byte) Instructions.MoveRR+0x8,				// MOVE X,A
-			(byte) Instructions.RrS+0,					// RR A
-			(byte) Instructions.RrS+0,					// RR A
-			(byte) Instructions.RrS+0,					// RR A
-			(byte) Instructions.AndVS+0, 0x03,			// AND #03,A
-			(byte) Instructions.MoveRR+0x2,				// MOVE A,X
+			(byte) Instructions.XorVR+1, 0x07,			// XOR #07,B
 
-			(byte) Instructions.XorVS+1, 0x07,			// XOR #07,B
+			(byte) Instructions.RrR+2,					// RR X
+			(byte) Instructions.RrR+2,					// RR X
+			(byte) Instructions.RrR+2,					// RR X
+			(byte) Instructions.AndVR+2, 0x03,			// AND #03,X
+
 			(byte) Instructions.TNotSA+1, 0x3C, 0x80,	// TNOT C80+{X}+{Y},B
 
 			(byte) Instructions.PopR+3,					// POP Y
 			(byte) Instructions.PopR+2,					// POP X
 			(byte) Instructions.PopR+1,					// POP B
-			(byte) Instructions.PopR+0,					// POP A
 			(byte) Instructions.Ret,					// RET
 		};
 
@@ -1387,27 +1396,27 @@ namespace Epsitec.App.Dolphin.Components
 			(byte) Instructions.PushR+3,				// PUSH Y
 
 			(byte) Instructions.MoveRR+0x1,				// MOVE A,B
-			(byte) Instructions.RlS+0,					// RL A
-			(byte) Instructions.RlS+0,					// RL A
+			(byte) Instructions.RlR+0,					// RL A
+			(byte) Instructions.RlR+0,					// RL A
 			(byte) Instructions.AddRR+0x1,				// ADD A,B		// B = A*5
 
 			(byte) Instructions.MoveRR+0xC,				// MOVE Y,A
-			(byte) Instructions.AndVS+0, 0x03,			// AND #3,A
+			(byte) Instructions.AndVR+0, 0x03,			// AND #3,A
 			(byte) Instructions.MoveRR+0x3,				// MOVE A,Y
 			(byte) Instructions.AddRR+0xC,				// ADD Y,A
 			(byte) Instructions.AddRR+0xC,				// ADD Y,A
-			(byte) Instructions.RlS+0,					// RL A			// *6
-			(byte) Instructions.RlS+0,					// RL A
-			(byte) Instructions.RlS+0,					// RL A			// *4
+			(byte) Instructions.RlR+0,					// RL A			// *6
+			(byte) Instructions.RlR+0,					// RL A
+			(byte) Instructions.RlR+0,					// RL A			// *4
 			(byte) Instructions.MoveRR+0x3,				// MOVE A,Y
 
 			(byte) Instructions.MoveRR+0x8,				// MOVE X,A
 			(byte) Instructions.MoveRR+0x6,				// MOVE B,X
 			(byte) Instructions.MoveVR+1, 0x5,			// MOVE #5,B
 
-			(byte) Instructions.AndVS+0, 0x07,			// AND #7,A
+			(byte) Instructions.AndVR+0, 0x07,			// AND #7,A
 			(byte) Instructions.ClrC,					// CLRC
-			(byte) Instructions.RrcS+0,					// RRC A
+			(byte) Instructions.RrcR+0,					// RRC A
 			(byte) Instructions.JumpCS,	0x80, 0x11,		// JUMP,CS R8^RIGHT
 			(byte) Instructions.AddRR+0x3,				// ADD A,Y
 
@@ -1425,10 +1434,10 @@ namespace Epsitec.App.Dolphin.Components
 														// LOOP2:
 			(byte) Instructions.MoveAR+0, 0x1B, 0x00,	// MOVE CharTable+{X},A
 			(byte) Instructions.IncR+2,					// INC X
-			(byte) Instructions.RrS+0,					// RR A
-			(byte) Instructions.RrS+0,					// RR A
-			(byte) Instructions.RrS+0,					// RR A
-			(byte) Instructions.RrS+0,					// RR A
+			(byte) Instructions.RrR+0,					// RR A
+			(byte) Instructions.RrR+0,					// RR A
+			(byte) Instructions.RrR+0,					// RR A
+			(byte) Instructions.RrR+0,					// RR A
 			(byte) Instructions.XorSA+0, 0x2C, 0x80,	// MOVE A,C80+{Y}
 			(byte) Instructions.AddVR+3, 0x04,			// ADD #4,Y
 			(byte) Instructions.DecR+1,					// DEC B
@@ -1444,71 +1453,38 @@ namespace Epsitec.App.Dolphin.Components
 
 		protected static byte[] CharTable =
 		{
-			0x00, 0x00, 0x00, 0x00, 0x00,	//   (20)
-			0x40, 0x40, 0x40, 0x00, 0x40,	// !
-			0xA0, 0xA0, 0x00, 0x00, 0x00,	// "
-			0x40, 0xE0, 0x40, 0xE0, 0x40,	// #
-			0x60, 0xC0, 0x40, 0x60, 0xC0,	// $
-			0xA0, 0x20, 0x40, 0x80, 0xA0,	// %
-			0x40, 0xA0, 0x40, 0xA0, 0x50,	// &
-			0x40, 0x40, 0x00, 0x00, 0x00,	// '
-			0x40, 0x80, 0x80, 0x80, 0x40,	// (
-			0x40, 0x20, 0x20, 0x20, 0x40,	// )
-			0x40, 0xE0, 0x40, 0xE0, 0x40,	// *
-			0x00, 0x40, 0xE0, 0x40, 0x00,	// +
-			0x00, 0x00, 0x00, 0x40, 0x80,	// ,
-			0x00, 0x00, 0xE0, 0x00, 0x00,	// -
-			0x00, 0x00, 0x00, 0x00, 0x40,	// .
-			0x20, 0x20, 0x40, 0x80, 0x80,	// /
-			0x40, 0xA0, 0xA0, 0xA0, 0x40,	// 0
-			0x40, 0xC0, 0x40, 0x40, 0xE0,	// 1
-			0x40, 0xA0, 0x20, 0x40, 0xE0,	// 2
-			0xC0, 0x20, 0x60, 0x20, 0xC0,	// 3
-			0x20, 0x60, 0xA0, 0xE0, 0x20,	// 4
-			0xE0, 0x80, 0xC0, 0x20, 0xC0,	// 5
-			0x40, 0x80, 0xC0, 0xA0, 0x40,	// 6
-			0xE0, 0x20, 0x20, 0x40, 0x40,	// 7
-			0x40, 0xA0, 0x40, 0xA0, 0x40,	// 8
-			0x40, 0xA0, 0x60, 0x20, 0x40,	// 9
-			0x00, 0x40, 0x00, 0x00, 0x40,	// :
-			0x00, 0x40, 0x00, 0x40, 0x80,	// ;
-			0x20, 0x40, 0x80, 0x40, 0x20,	// <
-			0x00, 0xE0, 0x00, 0xE0, 0x00,	// =
-			0x80, 0x40, 0x20, 0x40, 0x80,	// >
-			0x40, 0xA0, 0x20, 0x00, 0x40,	// ? (3F)
-
-			0x40, 0xA0, 0xA0, 0x80, 0x60,	// @ (40)
-			0x40, 0xA0, 0xE0, 0xA0, 0xA0,	// A
-			0xC0, 0xA0, 0xC0, 0xA0, 0xC0,	// B
-			0x60, 0x80, 0x80, 0x80, 0x60,	// C
-			0xC0, 0xA0, 0xA0, 0xA0, 0xC0,	// D
-			0xE0, 0x80, 0xC0, 0x80, 0xE0,	// E
-			0xE0, 0x80, 0xC0, 0x80, 0x80,	// F
-			0x60, 0x80, 0xA0, 0xA0, 0x60,	// G
-			0xA0, 0xA0, 0xE0, 0xA0, 0xA0,	// H
-			0xE0, 0x40, 0x40, 0x40, 0xE0,	// I
-			0xE0, 0x20, 0x20, 0x20, 0xC0,	// J
-			0xA0, 0xA0, 0xC0, 0xA0, 0xA0,	// K
-			0x80, 0x80, 0x80, 0x80, 0xE0,	// L
-			0xA0, 0xE0, 0xA0, 0xA0, 0xA0,	// M
-			0xA0, 0xE0, 0xE0, 0xE0, 0xA0,	// N
-			0x40, 0xA0, 0xA0, 0xA0, 0x40,	// O
-			0xC0, 0xA0, 0xC0, 0x80, 0x80,	// P
-			0x40, 0xA0, 0xA0, 0xE0, 0x60,	// Q
-			0xC0, 0xA0, 0xC0, 0xA0, 0xA0,	// R
-			0x60, 0x80, 0x40, 0x20, 0xC0,	// S
-			0xE0, 0x40, 0x40, 0x40, 0x40,	// T
-			0xA0, 0xA0, 0xA0, 0xA0, 0x40,	// U
-			0xA0, 0xA0, 0xA0, 0x40, 0x40,	// V
-			0xA0, 0xA0, 0xE0, 0xE0, 0x40,	// W
-			0xA0, 0xA0, 0x40, 0xA0, 0xA0,	// X
-			0xA0, 0xA0, 0x40, 0x40, 0x40,	// Y
-			0xE0, 0x20, 0x40, 0x80, 0xE0,	// Z
-			0xC0, 0x80, 0x80, 0x80, 0xC0,	// [
-			0x80, 0x80, 0x40, 0x20, 0x20,	// \
-			0x60, 0x20, 0x20, 0x20, 0x60,	// ]
-			0x40, 0xA0, 0x00, 0x00, 0x00,	// ^
-			0x00, 0x00, 0x00, 0x00, 0xE0,	// _ (5F)
+			0x04, 0x04, 0x04, 0x00, 0x04,	//  !
+			0xA4, 0xAE, 0x04, 0x0E, 0x04,	// "#
+			0x6A, 0xC2, 0x44, 0x68, 0xCA,	// $%
+			0x44, 0xA4, 0x40, 0xA0, 0x50,	// &'
+			0x44, 0x82, 0x82, 0x82, 0x44,	// ()
+			0x40, 0xE4, 0x4E, 0xE4, 0x40,	// *+
+			0x00, 0x00, 0x0E, 0x40, 0x80,	// ,-
+			0x02, 0x02, 0x04, 0x08, 0x48,	// ./
+			0x44, 0xAC, 0xA4, 0xA4, 0x4E,	// 01
+			0x4C, 0xA2, 0x26, 0x42, 0xEC,	// 23
+			0x2E, 0x68, 0xAC, 0xE2, 0x2C,	// 45
+			0x4E, 0x82, 0xC2, 0xA4, 0x44,	// 67
+			0x44, 0xAA, 0x46, 0xA2, 0x44,	// 89
+			0x00, 0x44, 0x00, 0x04, 0x48,	// :;
+			0x20, 0x4E, 0x80, 0x4E, 0x20,	// <=
+			0x84, 0x4A, 0x22, 0x40, 0x84,	// >?
+			0x44, 0xAA, 0xAE, 0x8A, 0x6A,	// @A
+			0xC6, 0xA8, 0xC8, 0xA8, 0xC6,	// BC
+			0xCE, 0xA8, 0xAC, 0xA8, 0xCE,	// DE
+			0xE6, 0x88, 0xCA, 0x8A, 0x86,	// FG
+			0xAE, 0xA4, 0xE4, 0xA4, 0xAE,	// HI
+			0xEA, 0x2A, 0x2C, 0x2A, 0xCA,	// JK
+			0x8A, 0x8E, 0x8A, 0x8A, 0xEA,	// LM
+			0xA4, 0xEA, 0xEA, 0xEA, 0xA4,	// NO
+			0xC4, 0xAA, 0xCA, 0x8E, 0x86,	// PQ
+			0xC6, 0xA8, 0xC4, 0xA2, 0xAC,	// RS
+			0xEA, 0x4A, 0x4A, 0x4A, 0x44,	// TU
+			0xAA, 0xAA, 0xAE, 0x4E, 0x44,	// VW
+			0xAA, 0xAA, 0x44, 0xA4, 0xA4,	// XY
+			0xEC, 0x28, 0x48, 0x88, 0xEC,	// Z[
+			0x86, 0x82, 0x42, 0x22, 0x26,	// \]
+			0x40, 0xA0, 0x00, 0x00, 0x0E,	// ^_
 		};
 		#endregion
 
@@ -1632,13 +1608,13 @@ namespace Epsitec.App.Dolphin.Components
 
 				case "Op":
 					AbstractProcessor.HelpPutTitle(builder, "Transferts");
-					AbstractProcessor.HelpPutLine(builder, "[50+r]          <tab/>MOVE A,r");
-					AbstractProcessor.HelpPutLine(builder, "[54+r]          <tab/>MOVE B,r");
-					AbstractProcessor.HelpPutLine(builder, "[58+r]          <tab/>MOVE X,r");
-					AbstractProcessor.HelpPutLine(builder, "[5C+r]          <tab/>MOVE Y,r");
-					AbstractProcessor.HelpPutLine(builder, "[60+r] [vv]     <tab/>MOVE #val,r");
-					AbstractProcessor.HelpPutLine(builder, "[64+r] [mh] [ll]<tab/>MOVE ADDR,r");
-					AbstractProcessor.HelpPutLine(builder, "[68+r] [mh] [ll]<tab/>MOVE r,ADDR");
+					AbstractProcessor.HelpPutLine(builder, "[40+r]          <tab/>MOVE A,r");
+					AbstractProcessor.HelpPutLine(builder, "[44+r]          <tab/>MOVE B,r");
+					AbstractProcessor.HelpPutLine(builder, "[48+r]          <tab/>MOVE X,r");
+					AbstractProcessor.HelpPutLine(builder, "[4C+r]          <tab/>MOVE Y,r");
+					AbstractProcessor.HelpPutLine(builder, "[50+r] [vv]     <tab/>MOVE #val,r");
+					AbstractProcessor.HelpPutLine(builder, "[54+r] [mh] [ll]<tab/>MOVE ADDR,r");
+					AbstractProcessor.HelpPutLine(builder, "[58+r] [mh] [ll]<tab/>MOVE r,ADDR");
 
 					AbstractProcessor.HelpPutTitle(builder, "Additions");
 					AbstractProcessor.HelpPutLine(builder, "[80+r]          <tab/>ADD A,r");
@@ -1659,80 +1635,84 @@ namespace Epsitec.App.Dolphin.Components
 					AbstractProcessor.HelpPutLine(builder, "[BC+r] [mh] [ll]<tab/>SUB r,ADDR");
 
 					AbstractProcessor.HelpPutTitle(builder, "ET logique");
-					AbstractProcessor.HelpPutLine(builder, "[C8]             <tab/>AND A,B");
-					AbstractProcessor.HelpPutLine(builder, "[C9]             <tab/>AND B,A");
-					AbstractProcessor.HelpPutLine(builder, "[C0+r'] [vv]     <tab/>AND #val,r'");
-					AbstractProcessor.HelpPutLine(builder, "[D0+r'] [mh] [ll]<tab/>AND ADDR,r'");
-					AbstractProcessor.HelpPutLine(builder, "[D8+r'] [mh] [ll]<tab/>AND r',ADDR");
+					AbstractProcessor.HelpPutLine(builder, "[E0]             <tab/>AND A,B");
+					AbstractProcessor.HelpPutLine(builder, "[E1]             <tab/>AND B,A");
+					AbstractProcessor.HelpPutLine(builder, "[74+r] [vv]      <tab/>AND #val,r");
+					AbstractProcessor.HelpPutLine(builder, "[E8+r'] [mh] [ll]<tab/>AND ADDR,r'");
+					AbstractProcessor.HelpPutLine(builder, "[F0+r'] [mh] [ll]<tab/>AND r',ADDR");
 
 					AbstractProcessor.HelpPutTitle(builder, "OU logique");
-					AbstractProcessor.HelpPutLine(builder, "[CA]             <tab/>OR A,B");
-					AbstractProcessor.HelpPutLine(builder, "[CB]             <tab/>OR B,A");
-					AbstractProcessor.HelpPutLine(builder, "[C2+r'] [vv]     <tab/>OR #val,r'");
-					AbstractProcessor.HelpPutLine(builder, "[D2+r'] [mh] [ll]<tab/>OR ADDR,r'");
-					AbstractProcessor.HelpPutLine(builder, "[DA+r'] [mh] [ll]<tab/>OR r',ADDR");
+					AbstractProcessor.HelpPutLine(builder, "[E2]             <tab/>OR A,B");
+					AbstractProcessor.HelpPutLine(builder, "[E3]             <tab/>OR B,A");
+					AbstractProcessor.HelpPutLine(builder, "[78+r] [vv]      <tab/>OR #val,r");
+					AbstractProcessor.HelpPutLine(builder, "[EA+r'] [mh] [ll]<tab/>OR ADDR,r'");
+					AbstractProcessor.HelpPutLine(builder, "[F2+r'] [mh] [ll]<tab/>OR r',ADDR");
 
 					AbstractProcessor.HelpPutTitle(builder, "OU exclusif logique");
-					AbstractProcessor.HelpPutLine(builder, "[CC]             <tab/>XOR A,B");
-					AbstractProcessor.HelpPutLine(builder, "[CD]             <tab/>XOR B,A");
-					AbstractProcessor.HelpPutLine(builder, "[C4+r'] [vv]     <tab/>XOR #val,r'");
-					AbstractProcessor.HelpPutLine(builder, "[D4+r'] [mh] [ll]<tab/>XOR ADDR,r'");
-					AbstractProcessor.HelpPutLine(builder, "[DC+r'] [mh] [ll]<tab/>XOR r',ADDR");
+					AbstractProcessor.HelpPutLine(builder, "[E4]             <tab/>XOR A,B");
+					AbstractProcessor.HelpPutLine(builder, "[E5]             <tab/>XOR B,A");
+					AbstractProcessor.HelpPutLine(builder, "[7C+r] [vv]      <tab/>XOR #val,r");
+					AbstractProcessor.HelpPutLine(builder, "[EC+r'] [mh] [ll]<tab/>XOR ADDR,r'");
+					AbstractProcessor.HelpPutLine(builder, "[F4+r'] [mh] [ll]<tab/>XOR r',ADDR");
 
 					AbstractProcessor.HelpPutTitle(builder, "Tester un bit");
-					AbstractProcessor.HelpPutLine(builder, "[E0]             <tab/>TEST B:A");
-					AbstractProcessor.HelpPutLine(builder, "[E1]             <tab/>TEST A:B");
-					AbstractProcessor.HelpPutLine(builder, "[F0+r'] [vv]     <tab/>TEST r':#val");
-					AbstractProcessor.HelpPutLine(builder, "[E8+r'] [mh] [ll]<tab/>TEST ADDR:r'");
+					AbstractProcessor.HelpPutLine(builder, "[C0]             <tab/>TEST B:A");
+					AbstractProcessor.HelpPutLine(builder, "[C1]             <tab/>TEST A:B");
+					AbstractProcessor.HelpPutLine(builder, "[D0+r'] [vv]     <tab/>TEST r':#val");
+					AbstractProcessor.HelpPutLine(builder, "[C8+r'] [mh] [ll]<tab/>TEST ADDR:r'");
 
 					AbstractProcessor.HelpPutTitle(builder, "Tester puis mettre un bit à un");
-					AbstractProcessor.HelpPutLine(builder, "[E2]             <tab/>TSET B:A");
-					AbstractProcessor.HelpPutLine(builder, "[E3]             <tab/>TSET A:B");
-					AbstractProcessor.HelpPutLine(builder, "[F2+r'] [vv]     <tab/>TSET r':#val");
-					AbstractProcessor.HelpPutLine(builder, "[EA+r'] [mh] [ll]<tab/>TSET ADDR:r'");
+					AbstractProcessor.HelpPutLine(builder, "[C2]             <tab/>TSET B:A");
+					AbstractProcessor.HelpPutLine(builder, "[C3]             <tab/>TSET A:B");
+					AbstractProcessor.HelpPutLine(builder, "[D2+r'] [vv]     <tab/>TSET r':#val");
+					AbstractProcessor.HelpPutLine(builder, "[CA+r'] [mh] [ll]<tab/>TSET ADDR:r'");
 
 					AbstractProcessor.HelpPutTitle(builder, "Tester puis mettre un bit à zéro");
-					AbstractProcessor.HelpPutLine(builder, "[E4]             <tab/>TCLR B:A");
-					AbstractProcessor.HelpPutLine(builder, "[E5]             <tab/>TCLR A:B");
-					AbstractProcessor.HelpPutLine(builder, "[F4+r'] [vv]     <tab/>TCLR r':#val");
-					AbstractProcessor.HelpPutLine(builder, "[EC+r'] [mh] [ll]<tab/>TCLR ADDR:r'");
+					AbstractProcessor.HelpPutLine(builder, "[C4]             <tab/>TCLR B:A");
+					AbstractProcessor.HelpPutLine(builder, "[C5]             <tab/>TCLR A:B");
+					AbstractProcessor.HelpPutLine(builder, "[D4+r'] [vv]     <tab/>TCLR r':#val");
+					AbstractProcessor.HelpPutLine(builder, "[CC+r'] [mh] [ll]<tab/>TCLR ADDR:r'");
 
 					AbstractProcessor.HelpPutTitle(builder, "Tester puis inverser un bit");
-					AbstractProcessor.HelpPutLine(builder, "[E6]             <tab/>TNOT B:A");
-					AbstractProcessor.HelpPutLine(builder, "[E7]             <tab/>TNOT A:B");
-					AbstractProcessor.HelpPutLine(builder, "[F6+r'] [vv]     <tab/>TNOT r':#val");
-					AbstractProcessor.HelpPutLine(builder, "[EE+r'] [mh] [ll]<tab/>TNOT ADDR:r'");
+					AbstractProcessor.HelpPutLine(builder, "[C6]             <tab/>TNOT B:A");
+					AbstractProcessor.HelpPutLine(builder, "[C7]             <tab/>TNOT A:B");
+					AbstractProcessor.HelpPutLine(builder, "[D6+r'] [vv]     <tab/>TNOT r':#val");
+					AbstractProcessor.HelpPutLine(builder, "[CE+r'] [mh] [ll]<tab/>TNOT ADDR:r'");
 
 					AbstractProcessor.HelpPutTitle(builder, "Comparaisons");
-					AbstractProcessor.HelpPutLine(builder, "[70+r]          <tab/>COMP A,r");
-					AbstractProcessor.HelpPutLine(builder, "[74+r]          <tab/>COMP B,r");
-					AbstractProcessor.HelpPutLine(builder, "[78+r]          <tab/>COMP X,r");
-					AbstractProcessor.HelpPutLine(builder, "[7C+r]          <tab/>COMP Y,r");
-					AbstractProcessor.HelpPutLine(builder, "[FC+r] [vv]     <tab/>COMP #val,r");
+					AbstractProcessor.HelpPutLine(builder, "[60+r]          <tab/>COMP A,r");
+					AbstractProcessor.HelpPutLine(builder, "[64+r]          <tab/>COMP B,r");
+					AbstractProcessor.HelpPutLine(builder, "[68+r]          <tab/>COMP X,r");
+					AbstractProcessor.HelpPutLine(builder, "[6C+r]          <tab/>COMP Y,r");
+					AbstractProcessor.HelpPutLine(builder, "[70+r] [vv]     <tab/>COMP #val,r");
 
 					AbstractProcessor.HelpPutTitle(builder, "Opérations unaires");
-					AbstractProcessor.HelpPutLine(builder, "[30+r]          <tab/>CLR r");
-					AbstractProcessor.HelpPutLine(builder, "[34+r]          <tab/>NOT r");
-					AbstractProcessor.HelpPutLine(builder, "[38+r]          <tab/>INC r");
-					AbstractProcessor.HelpPutLine(builder, "[3C+r]          <tab/>DEC r");
-					AbstractProcessor.HelpPutLine(builder, "[48] [mh] [ll]  <tab/>CLR ADDR");
-					AbstractProcessor.HelpPutLine(builder, "[49] [mh] [ll]  <tab/>NOT ADDR");
-					AbstractProcessor.HelpPutLine(builder, "[4A] [mh] [ll]  <tab/>INC ADDR");
-					AbstractProcessor.HelpPutLine(builder, "[4B] [mh] [ll]  <tab/>DEC ADDR");
+					AbstractProcessor.HelpPutLine(builder, "[20+r]          <tab/>CLR r");
+					AbstractProcessor.HelpPutLine(builder, "[24+r]          <tab/>NOT r");
+					AbstractProcessor.HelpPutLine(builder, "[28+r]          <tab/>INC r");
+					AbstractProcessor.HelpPutLine(builder, "[2C+r]          <tab/>DEC r");
+					AbstractProcessor.HelpPutLine(builder, "[A8] [mh] [ll]  <tab/>CLR ADDR");
+					AbstractProcessor.HelpPutLine(builder, "[A9] [mh] [ll]  <tab/>NOT ADDR");
+					AbstractProcessor.HelpPutLine(builder, "[AA] [mh] [ll]  <tab/>INC ADDR");
+					AbstractProcessor.HelpPutLine(builder, "[AB] [mh] [ll]  <tab/>DEC ADDR");
 
 					AbstractProcessor.HelpPutTitle(builder, "Rotations");
-					AbstractProcessor.HelpPutLine(builder, "[40+r']         <tab/>RL r'");
-					AbstractProcessor.HelpPutLine(builder, "[42+r']         <tab/>RR r'");
-					AbstractProcessor.HelpPutLine(builder, "[44+r']         <tab/>RLC r'");
-					AbstractProcessor.HelpPutLine(builder, "[46+r']         <tab/>RRC r'");
-					AbstractProcessor.HelpPutLine(builder, "[4C] [mh] [ll]  <tab/>RL ADDR");
-					AbstractProcessor.HelpPutLine(builder, "[4D] [mh] [ll]  <tab/>RR ADDR");
-					AbstractProcessor.HelpPutLine(builder, "[4E] [mh] [ll]  <tab/>RLC ADDR");
-					AbstractProcessor.HelpPutLine(builder, "[4F] [mh] [ll]  <tab/>RRC ADDR");
+					AbstractProcessor.HelpPutLine(builder, "[30+r]          <tab/>RL r");
+					AbstractProcessor.HelpPutLine(builder, "[34+r]          <tab/>RR r");
+					AbstractProcessor.HelpPutLine(builder, "[38+r]          <tab/>RLC r");
+					AbstractProcessor.HelpPutLine(builder, "[3C+r]          <tab/>RRC r");
+					AbstractProcessor.HelpPutLine(builder, "[AC] [mh] [ll]  <tab/>RL ADDR");
+					AbstractProcessor.HelpPutLine(builder, "[AD] [mh] [ll]  <tab/>RR ADDR");
+					AbstractProcessor.HelpPutLine(builder, "[AE] [mh] [ll]  <tab/>RLC ADDR");
+					AbstractProcessor.HelpPutLine(builder, "[AF] [mh] [ll]  <tab/>RRC ADDR");
 
 					AbstractProcessor.HelpPutTitle(builder, "Divers");
 					AbstractProcessor.HelpPutLine(builder, "[00]            <tab/>NOP");
 					AbstractProcessor.HelpPutLine(builder, "[03]            <tab/>HALT");
+					AbstractProcessor.HelpPutLine(builder, "[5C]            <tab/>EX A,B");
+					AbstractProcessor.HelpPutLine(builder, "[5D]            <tab/>EX X,Y");
+					AbstractProcessor.HelpPutLine(builder, "[5E]            <tab/>SWAP A");
+					AbstractProcessor.HelpPutLine(builder, "[5F]            <tab/>SWAP B");
 					break;
 
 				case "Branch":
