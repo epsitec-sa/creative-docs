@@ -177,6 +177,7 @@ namespace Epsitec.App.Dolphin.Components
 
 			int op = this.memory.Read(this.registerPC++);
 			int data, address;
+			System.Diagnostics.Debug.WriteLine(string.Format("PC={0} i={1} F={2} A={3} B={4} X={5} Y={6}", this.registerPC.ToString("X4"), op.ToString("X2"), this.registerF.ToString("X2"), this.registerA.ToString("X2"), this.registerB.ToString("X2"), this.registerX.ToString("X2"), this.registerY.ToString("X2")));
 
 			switch ((Instructions) op)
 			{
@@ -279,13 +280,13 @@ namespace Epsitec.App.Dolphin.Components
 						return;
 
 					case Instructions.IncR:
-						data = this.GetRegister(n) + 1;
+						data = (this.GetRegister(n) + 1) & 0xFF;
 						this.SetRegister(n, data);
 						this.SetFlagsOper(data);
 						return;
 
 					case Instructions.DecR:
-						data = this.GetRegister(n) - 1;
+						data = (this.GetRegister(n) - 1) & 0xFF;
 						this.SetRegister(n, data);
 						this.SetFlagsOper(data);
 						return;
@@ -341,13 +342,13 @@ namespace Epsitec.App.Dolphin.Components
 						return;
 
 					case Instructions.IncA:
-						data = this.memory.Read(address) + 1;
+						data = (this.memory.Read(address) + 1) & 0xFF;
 						this.memory.Write(address, data);
 						this.SetFlagsOper(data);
 						return;
 
 					case Instructions.DecA:
-						data = this.memory.Read(address) - 1;
+						data = (this.memory.Read(address) - 1) & 0xFF;
 						this.memory.Write(address, data);
 						this.SetFlagsOper(data);
 						return;
@@ -436,13 +437,13 @@ namespace Epsitec.App.Dolphin.Components
 				switch (i)
 				{
 					case Instructions.AddRR:
-						data = this.GetRegister(dst) + data;
+						data = (this.GetRegister(dst) + data) & 0xFF;
 						this.SetRegister(dst, data);
 						this.SetFlagsOper(data);
 						return;
 
 					case Instructions.SubRR:
-						data = this.GetRegister(dst) - data;
+						data = (this.GetRegister(dst) - data) & 0xFF;
 						this.SetRegister(dst, data);
 						this.SetFlagsOper(data);
 						return;
@@ -458,13 +459,13 @@ namespace Epsitec.App.Dolphin.Components
 				switch (i)
 				{
 					case Instructions.AddVR:
-						data = this.GetRegister(n) + data;
+						data = (this.GetRegister(n) + data) & 0xFF;
 						this.SetRegister(n, data);
 						this.SetFlagsOper(data);
 						return;
 
 					case Instructions.SubVR:
-						data = this.GetRegister(n) - data;
+						data = (this.GetRegister(n) - data) & 0xFF;
 						this.SetRegister(n, data);
 						this.SetFlagsOper(data);
 						return;
@@ -480,13 +481,13 @@ namespace Epsitec.App.Dolphin.Components
 				switch (i)
 				{
 					case Instructions.AddAR:
-						data = this.GetRegister(n) + this.memory.Read(address);
+						data = (this.GetRegister(n) + this.memory.Read(address)) & 0xFF;
 						this.SetRegister(n, data);
 						this.SetFlagsOper(data);
 						return;
 
 					case Instructions.SubAR:
-						data = this.GetRegister(n) - this.memory.Read(address);
+						data = (this.GetRegister(n) - this.memory.Read(address)) & 0xFF;
 						this.SetRegister(n, data);
 						this.SetFlagsOper(data);
 						return;
@@ -502,13 +503,13 @@ namespace Epsitec.App.Dolphin.Components
 				switch (i)
 				{
 					case Instructions.AddRA:
-						data = this.memory.Read(address) + this.GetRegister(n);
+						data = (this.memory.Read(address) + this.GetRegister(n)) & 0xFF;
 						this.memory.Write(address, data);
 						this.SetFlagsOper(data);
 						return;
 
 					case Instructions.SubRA:
-						data = this.memory.Read(address) - this.GetRegister(n);
+						data = (this.memory.Read(address) - this.GetRegister(n)) & 0xFF;
 						this.memory.Write(address, data);
 						this.SetFlagsOper(data);
 						return;
@@ -1164,9 +1165,9 @@ namespace Epsitec.App.Dolphin.Components
 			this.RomWrite(0xB00, TinyProcessor.CharTable);
 
 			int indirect = address;
-			address += 3*64;  // place pour 64 appels
+			address += 3*32;  // place pour 32 appels
 			this.RomWrite(ref indirect, ref address, TinyProcessor.WaitKey);			// 0x00
-			this.RomWrite(ref indirect, ref address, TinyProcessor.Wait);				// 0x03
+			this.RomWrite(ref indirect, ref address, TinyProcessor.WaitSec);			// 0x03
 			this.RomWrite(ref indirect, ref address, TinyProcessor.DisplayBinaryDigit);	// 0x06
 			this.RomWrite(ref indirect, ref address, TinyProcessor.DisplayHexaDigit);	// 0x09
 			this.RomWrite(ref indirect, ref address, TinyProcessor.DisplayHexaByte);	// 0x0C
@@ -1385,7 +1386,7 @@ namespace Epsitec.App.Dolphin.Components
 		//	in	A nombre de secondes à attendre (à 1000 IPS)
 		//	out	-
 		//	mod	F
-		protected static byte[] Wait =
+		protected static byte[] WaitSec =
 		{
 			(byte) Instructions.PushR+0,				// PUSH A
 			(byte) Instructions.PushR+1,				// PUSH B
