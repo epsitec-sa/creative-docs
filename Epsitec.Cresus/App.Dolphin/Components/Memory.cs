@@ -85,6 +85,17 @@ namespace Epsitec.App.Dolphin.Components
 			this.application.DisplayBitmap.Invalidate();
 		}
 
+		public void ClearDisplay()
+		{
+			//	Efface l'écran bitmap.
+			for (int i=Memory.DisplayBase; i<Memory.DisplayBase+Memory.DisplayLength; i++)
+			{
+				this.memory[i] = 0;
+			}
+
+			this.application.DisplayBitmap.Invalidate();
+		}
+
 
 		public string GetContent()
 		{
