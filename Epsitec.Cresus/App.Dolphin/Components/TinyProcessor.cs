@@ -1173,7 +1173,7 @@ namespace Epsitec.App.Dolphin.Components
 			this.RomWrite(ref indirect, ref address, TinyProcessor.SetPixel);			// 0x0F
 			this.RomWrite(ref indirect, ref address, TinyProcessor.ClrPixel);			// 0x12
 			this.RomWrite(ref indirect, ref address, TinyProcessor.NotPixel);			// 0x15
-			this.RomWrite(ref indirect, ref address, TinyProcessor.InvChar);			// 0x18
+			this.RomWrite(ref indirect, ref address, TinyProcessor.DrawChar);			// 0x18
 		}
 
 		protected void RomWrite(ref int indirect, ref int address, byte[] code)
@@ -1267,10 +1267,7 @@ namespace Epsitec.App.Dolphin.Components
 			(byte) Instructions.IncR+1,					// INC B
 			(byte) Instructions.Call, 0x80, 0x06,		// CALL DisplayHexaDigit
 
-			(byte) Instructions.RrR+0,					// RR A
-			(byte) Instructions.RrR+0,					// RR A
-			(byte) Instructions.RrR+0,					// RR A
-			(byte) Instructions.RrR+0,					// RR A
+			(byte) Instructions.SwapA,					// SWAP A
 			(byte) Instructions.DecR+1,					// DEC B
 			(byte) Instructions.Call, 0x80, 0x06,		// CALL DisplayHexaDigit
 
@@ -1382,19 +1379,40 @@ namespace Epsitec.App.Dolphin.Components
 			(byte) Instructions.Ret,					// RET
 		};
 
-		//	Inverse un caractère dans l'écran bitmap.
+		//	Dessine un caractère dans l'écran bitmap.
 		//	in	A caractère ascii
 		//		X colonne 0..7
 		//		Y ligne 0..3
 		//	out	-
 		//	mod	F
-		protected static byte[] InvChar =
+		protected static byte[] DrawChar =
 		{
 			(byte) Instructions.PushR+0,				// PUSH A
 			(byte) Instructions.PushR+1,				// PUSH B
 			(byte) Instructions.PushR+2,				// PUSH X
 			(byte) Instructions.PushR+3,				// PUSH Y
 
+			(byte) Instructions.CompVR+0, 0x20,			// COMP #20,A
+			(byte) Instructions.JumpHS, 0x80, 2,		// JUMP,HS +2
+			(byte) Instructions.MoveVR+0, 0x20,			// MOVE #20,A
+
+			(byte) Instructions.CompVR+0, 0x60,			// COMP #60,A
+			(byte) Instructions.JumpLS, 0x80, 2,		// JUMP,LS +2
+			(byte) Instructions.MoveVR+0, 0x60,			// MOVE #60,A
+
+			(byte) Instructions.SubVR+0, 0x20,			// SUB #20,A
+
+			(byte) Instructions.SubVSP, 3,				// SUB #3,SP
+			(byte) Instructions.MoveVR+1, 0xF0,			// MOVE #F0,B
+			(byte) Instructions.MoveRA+1, 0x40, 0,		// MOVE B,{SP}+0
+			(byte) Instructions.NotR+1,					// NOT B
+			(byte) Instructions.MoveRA+1, 0x40, 1,		// MOVE B,{SP}+1
+			(byte) Instructions.ClrA, 0x40, 2,			// CLR {SP}+2
+
+			(byte) Instructions.ClrC,					// CLRC
+			(byte) Instructions.RrcR+0,					// RRC A
+			(byte) Instructions.JumpCC, 0x80, 3,		// JUMP,CC +3
+			(byte) Instructions.NotA, 0x40, 0,			// NOT {SP}+0
 			(byte) Instructions.MoveRR+0x1,				// MOVE A,B
 			(byte) Instructions.RlR+0,					// RL A
 			(byte) Instructions.RlR+0,					// RL A
@@ -1412,38 +1430,37 @@ namespace Epsitec.App.Dolphin.Components
 
 			(byte) Instructions.MoveRR+0x8,				// MOVE X,A
 			(byte) Instructions.MoveRR+0x6,				// MOVE B,X
-			(byte) Instructions.MoveVR+1, 0x5,			// MOVE #5,B
 
 			(byte) Instructions.AndVR+0, 0x07,			// AND #7,A
 			(byte) Instructions.ClrC,					// CLRC
 			(byte) Instructions.RrcR+0,					// RRC A
-			(byte) Instructions.JumpCS,	0x80, 0x11,		// JUMP,CS R8^RIGHT
+			(byte) Instructions.JumpCC,	0x80, 3,		// JUMP,CC +3
+			(byte) Instructions.NotA, 0x40, 1,			// NOT {SP}+1
 			(byte) Instructions.AddRR+0x3,				// ADD A,Y
 
-														// LOOP1:
+			(byte) Instructions.MoveAR, 0x40, 0,		// MOVE {SP}+0,A
+			(byte) Instructions.OrAS+0, 0x40, 1,		// OR {SP}+1,A
+			(byte) Instructions.CompVR+0, 0xFF,			// COMP #FF,A
+			(byte) Instructions.JumpNE, 0x80, 3,		// JUMP,NE +3
+			(byte) Instructions.NotA, 0x40, 2,			// NOT {SP}+2
+
+			(byte) Instructions.MoveVR+1, 0x5,			// MOVE #5,B
+														// LOOP:
+			(byte) Instructions.MoveAR+0, 0x40, 1,		// MOVE {SP}+1,A
+			(byte) Instructions.AndSA+0, 0x2C, 0x80,	// AND A,C80+{Y}
 			(byte) Instructions.MoveAR+0, 0x1B, 0x00,	// MOVE CharTable+{X},A
+			(byte) Instructions.AndAS+0, 0x40, 0,		// AND {SP}+0,A
+			(byte) Instructions.TestVA, 0, 0x40, 2,		// TEST {SP}+2:#0
+			(byte) Instructions.JumpNE, 0x80, 1,		// JUMP,NE +1
+			(byte) Instructions.SwapA,					// SWAP A
+			(byte) Instructions.OrSA+0, 0x2C, 0x80,		// OR A,C80+{Y}
 			(byte) Instructions.IncR+2,					// INC X
-			(byte) Instructions.XorSA+0, 0x2C, 0x80,	// MOVE A,C80+{Y}
 			(byte) Instructions.AddVR+3, 0x04,			// ADD #4,Y
 			(byte) Instructions.DecR+1,					// DEC B
-			(byte) Instructions.JumpNE, 0x8F, 0xF3,		// JUMP,NE R8^LOOP1
-			(byte) Instructions.Jump, 0x80, 0x12,		// JUMP R8^END
+			(byte) Instructions.JumpNE, 0x8F, 0xE2,		// JUMP,NE R8^LOOP
 
-														// RIGHT:
-			(byte) Instructions.AddRR+0x3,				// ADD A,Y
-														// LOOP2:
-			(byte) Instructions.MoveAR+0, 0x1B, 0x00,	// MOVE CharTable+{X},A
-			(byte) Instructions.IncR+2,					// INC X
-			(byte) Instructions.RrR+0,					// RR A
-			(byte) Instructions.RrR+0,					// RR A
-			(byte) Instructions.RrR+0,					// RR A
-			(byte) Instructions.RrR+0,					// RR A
-			(byte) Instructions.XorSA+0, 0x2C, 0x80,	// MOVE A,C80+{Y}
-			(byte) Instructions.AddVR+3, 0x04,			// ADD #4,Y
-			(byte) Instructions.DecR+1,					// DEC B
-			(byte) Instructions.JumpNE, 0x8F, 0xEF,		// JUMP,NE R8^LOOP2
+			(byte) Instructions.AddVSP, 3,				// ADD #3,SP
 
-														// END:
 			(byte) Instructions.PopR+3,					// POP Y
 			(byte) Instructions.PopR+2,					// POP X
 			(byte) Instructions.PopR+1,					// POP B
