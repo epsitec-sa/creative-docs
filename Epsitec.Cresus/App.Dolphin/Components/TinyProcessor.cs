@@ -177,7 +177,7 @@ namespace Epsitec.App.Dolphin.Components
 
 			int op = this.memory.Read(this.registerPC++);
 			int data, address;
-			System.Diagnostics.Debug.WriteLine(string.Format("PC={0} i={1} F={2} A={3} B={4} X={5} Y={6}", this.registerPC.ToString("X4"), op.ToString("X2"), this.registerF.ToString("X2"), this.registerA.ToString("X2"), this.registerB.ToString("X2"), this.registerX.ToString("X2"), this.registerY.ToString("X2")));
+			//?System.Diagnostics.Debug.WriteLine(string.Format("PC={0} i={1} F={2} A={3} B={4} X={5} Y={6}", this.registerPC.ToString("X4"), op.ToString("X2"), this.registerF.ToString("X2"), this.registerA.ToString("X2"), this.registerB.ToString("X2"), this.registerX.ToString("X2"), this.registerY.ToString("X2")));
 
 			switch ((Instructions) op)
 			{
