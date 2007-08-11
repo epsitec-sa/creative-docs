@@ -1166,14 +1166,16 @@ namespace Epsitec.App.Dolphin.Components
 			int indirect = address;
 			address += 3*64;  // place pour 64 appels
 			this.RomWrite(ref indirect, ref address, TinyProcessor.WaitKey);			// 0x00
-			this.RomWrite(ref indirect, ref address, TinyProcessor.DisplayBinaryDigit);	// 0x03
-			this.RomWrite(ref indirect, ref address, TinyProcessor.DisplayHexaDigit);	// 0x06
-			this.RomWrite(ref indirect, ref address, TinyProcessor.DisplayHexaByte);	// 0x09
-			this.RomWrite(ref indirect, ref address, TinyProcessor.DisplayDecimal);		// 0x0C
-			this.RomWrite(ref indirect, ref address, TinyProcessor.SetPixel);			// 0x0F
-			this.RomWrite(ref indirect, ref address, TinyProcessor.ClrPixel);			// 0x12
-			this.RomWrite(ref indirect, ref address, TinyProcessor.NotPixel);			// 0x15
-			this.RomWrite(ref indirect, ref address, TinyProcessor.DrawChar);			// 0x18
+			this.RomWrite(ref indirect, ref address, TinyProcessor.Wait);				// 0x03
+			this.RomWrite(ref indirect, ref address, TinyProcessor.DisplayBinaryDigit);	// 0x06
+			this.RomWrite(ref indirect, ref address, TinyProcessor.DisplayHexaDigit);	// 0x09
+			this.RomWrite(ref indirect, ref address, TinyProcessor.DisplayHexaByte);	// 0x0C
+			this.RomWrite(ref indirect, ref address, TinyProcessor.DisplayDecimal);		// 0x0F
+			this.RomWrite(ref indirect, ref address, TinyProcessor.SetPixel);			// 0x12
+			this.RomWrite(ref indirect, ref address, TinyProcessor.ClrPixel);			// 0x15
+			this.RomWrite(ref indirect, ref address, TinyProcessor.NotPixel);			// 0x18
+			this.RomWrite(ref indirect, ref address, TinyProcessor.ClearScreen);		// 0x1B
+			this.RomWrite(ref indirect, ref address, TinyProcessor.DrawChar);			// 0x1E
 		}
 
 		protected void RomWrite(ref int indirect, ref int address, byte[] code)
@@ -1376,6 +1378,62 @@ namespace Epsitec.App.Dolphin.Components
 			(byte) Instructions.PopR+3,					// POP Y
 			(byte) Instructions.PopR+2,					// POP X
 			(byte) Instructions.PopR+1,					// POP B
+			(byte) Instructions.Ret,					// RET
+		};
+
+		//	Attend quelques secondes.
+		//	in	A nombre de secondes à attendre (à 1000 IPS)
+		//	out	-
+		//	mod	F
+		protected static byte[] Wait =
+		{
+			(byte) Instructions.PushR+0,				// PUSH A
+			(byte) Instructions.PushR+1,				// PUSH B
+														// LOOP:
+#if false
+			(byte) Instructions.ClrR+1,					// CLR B
+			(byte) Instructions.DecR+1,					// DEC B
+			(byte) Instructions.JumpNE, 0x8F, 0xFC,		// JUMP,NE -4
+
+			(byte) Instructions.DecR+0,					// DEC A
+			(byte) Instructions.JumpNE, 0x8F, 0xF7,		// JUMP,NE R8^LOOP
+#else
+			(byte) Instructions.ClrR+1,					// CLR B
+//?			(byte) Instructions.DecA, 0x0C, 0x80,		// écho
+			(byte) Instructions.DecA, 0x0C, 0x00,		// écho
+			(byte) Instructions.DecR+1,					// DEC B
+			(byte) Instructions.JumpNE, 0x8F, 0xF9,		// JUMP,NE -4
+
+//?			(byte) Instructions.IncA, 0x0C, 0x88,		// écho
+			(byte) Instructions.IncA, 0x0C, 0x01,		// écho
+			(byte) Instructions.DecR+0,					// DEC A
+			(byte) Instructions.JumpNE, 0x8F, 0xF1,		// JUMP,NE R8^LOOP
+#endif
+
+			(byte) Instructions.PopR+1,					// POP B
+			(byte) Instructions.PopR+0,					// POP A
+			(byte) Instructions.Ret,					// RET
+		};
+
+		//	Efface tout l'écran bitmap.
+		//	in	-
+		//	out	-
+		//	mod	F
+		protected static byte[] ClearScreen =
+		{
+			(byte) Instructions.PushR+0,				// PUSH A
+			(byte) Instructions.PushR+2,				// PUSH X
+
+			(byte) Instructions.MoveVR+0, 0x60,			// MOVE #60,A
+			(byte) Instructions.ClrR+2,					// CLR X:
+														// LOOP:
+			(byte) Instructions.ClrA, 0x1C, 0x80,		// CLR C80+{X}
+			(byte) Instructions.IncR+2,					// INC X
+			(byte) Instructions.DecR+0,					// DEC A
+			(byte) Instructions.JumpNE, 0x8F, 0xF8,		// JUMP,NE R8^LOOP
+
+			(byte) Instructions.PopR+2,					// POP X
+			(byte) Instructions.PopR+0,					// POP A
 			(byte) Instructions.Ret,					// RET
 		};
 
