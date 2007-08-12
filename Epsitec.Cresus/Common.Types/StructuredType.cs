@@ -564,7 +564,7 @@ namespace Epsitec.Common.Types
 			//	Make the merged structure type belong to the same bundle/module
 			//	as the lower layer source structured type :
 			
-			ResourceManager.SetSourceBundle (merge, ResourceManager.GetSourceBundle (a));
+			ResourceManager.SetSourceBundle (merge.Caption, ResourceManager.GetSourceBundle (a.Caption));
 
 			return merge;
 		}

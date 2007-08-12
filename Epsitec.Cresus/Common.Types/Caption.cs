@@ -367,6 +367,8 @@ namespace Epsitec.Common.Types
 
 				context.RestoreObjectData (0, this);
 			}
+
+			AbstractType.BindComplexTypeToCaption (this);
 		}
 
 		/// <summary>

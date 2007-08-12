@@ -525,6 +525,24 @@ namespace Epsitec.Common.Types
 			}
 		}
 
+		/// <summary>
+		/// Binds the complex type to the caption, if the complex type has no
+		/// associated caption yet.
+		/// </summary>
+		/// <param name="caption">The caption.</param>
+		public static void BindComplexTypeToCaption(Caption caption)
+		{
+			AbstractType type = AbstractType.GetComplexType (caption);
+
+			if ((type != null) &&
+				(type.IsCaptionDefined == false) &&
+				(caption.Id.IsValid))
+			{
+				type.DefineCaption (caption);
+			}
+		}
+
+		
 		public static readonly DependencyProperty DefaultControllerProperty = DependencyProperty.RegisterAttached ("DefaultController", typeof (string), typeof (AbstractType), new DependencyPropertyMetadata ("Numeric"));
 		public static readonly DependencyProperty DefaultControllerParameterProperty = DependencyProperty.RegisterAttached ("DefaultControllerParameter", typeof (string), typeof (AbstractType), new DependencyPropertyMetadata ());
 		public static readonly DependencyProperty SytemTypeProperty = DependencyProperty.RegisterAttached ("SystemType", typeof (string), typeof (AbstractType));
