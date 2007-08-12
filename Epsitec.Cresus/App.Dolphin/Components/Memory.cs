@@ -130,7 +130,7 @@ namespace Epsitec.App.Dolphin.Components
 			while (i < data.Length)
 			{
 				string hexa = data.Substring(i, 2);
-				this.memory[Memory.RamBase+i/2] = (byte) Memory.ParseHexa(hexa);
+				this.memory[Memory.RamBase+i/2] = (byte) Misc.ParseHexa(hexa);
 				i += 2;
 			}
 		}
@@ -268,20 +268,6 @@ namespace Epsitec.App.Dolphin.Components
 		{
 			//	Ecrit une valeur en mémoire morte (pour l'initialisation de la Rom).
 			this.memory[address] = (byte) data;
-		}
-
-
-		protected static int ParseHexa(string hexa)
-		{
-			int result;
-			if (System.Int32.TryParse(hexa, System.Globalization.NumberStyles.AllowHexSpecifier, System.Globalization.CultureInfo.CurrentCulture, out result))
-			{
-				return result;
-			}
-			else
-			{
-				return 0;
-			}
 		}
 
 

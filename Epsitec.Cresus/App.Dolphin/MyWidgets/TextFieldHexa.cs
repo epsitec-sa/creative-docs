@@ -25,6 +25,7 @@ namespace Epsitec.App.Dolphin.MyWidgets
 			this.label.Dock = DockStyle.Left;
 
 			this.textField = new TextField(this);
+			this.textField.Text = TextFieldHexa.initValue;
 			this.textField.PreferredHeight = 20;
 			this.textField.Dock = DockStyle.Left;
 			this.textField.TextChanged += new EventHandler(this.HandleFieldTextChanged);
@@ -213,7 +214,7 @@ namespace Epsitec.App.Dolphin.MyWidgets
 			//	Valeur courante.
 			get
 			{
-				return TextFieldHexa.ParseHexa(this.textField.Text, 0);
+				return Misc.ParseHexa(this.textField.Text);
 			}
 			set
 			{
@@ -228,8 +229,8 @@ namespace Epsitec.App.Dolphin.MyWidgets
 #else
 				value &= (1 << this.bitCount)-1;
 
-				int current = TextFieldHexa.ParseHexa(this.textField.Text, -1);
-				if (current != value)
+				int current = Misc.ParseHexa(this.textField.Text);
+				if (current != value || this.textField.Text == TextFieldHexa.initValue)
 				{
 					this.textField.Text = this.GetHexaText(value);
 					this.UpdateButtons();
@@ -262,19 +263,6 @@ namespace Epsitec.App.Dolphin.MyWidgets
 		{
 			//	Retourne la largeur nécessaire pour représenter un certain nombre de bits en hexa dans un TextField.
 			return 8 + ((bitCount+3)/4)*6;
-		}
-
-		protected static int ParseHexa(string hexa, int valueIfError)
-		{
-			int result;
-			if (System.Int32.TryParse(hexa, System.Globalization.NumberStyles.AllowHexSpecifier, System.Globalization.CultureInfo.CurrentCulture, out result))
-			{
-				return result;
-			}
-			else
-			{
-				return valueIfError;
-			}
 		}
 
 
@@ -406,6 +394,9 @@ namespace Epsitec.App.Dolphin.MyWidgets
 		}
 		#endregion
 
+
+		// Pour forcer l'initialisation la première fois qu'une valeur est donnée.
+		protected static readonly string	initValue = "??";
 
 		protected int						bitCount = -1;
 		protected string					baseName;

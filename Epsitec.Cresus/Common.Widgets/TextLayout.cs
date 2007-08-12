@@ -1251,7 +1251,10 @@ namespace Epsitec.Common.Widgets
 				context.CursorTo   = from;
 				context.CursorFrom = from;
 
-				if ( this.MaxTextOffset+ins.Length > context.MaxChar )  return false;
+				if (!this.IsPlaceForInsertion(context, ins))
+				{
+					return false;
+				}
 
 				string text = this.InternalText;
 				text = text.Insert(cursor, ins);
@@ -1268,7 +1271,10 @@ namespace Epsitec.Common.Widgets
 			}
 			else
 			{
-				if ( this.MaxTextOffset+ins.Length > context.MaxChar )  return false;
+				if (!this.IsPlaceForInsertion(context, ins))
+				{
+					return false;
+				}
 			
 				string text = this.InternalText;
 				int cursor = this.FindOffsetFromIndex(context.CursorTo, context.CursorAfter);
@@ -1292,6 +1298,27 @@ namespace Epsitec.Common.Widgets
 
 			this.DefineCursorPosX(context);
 			return true;
+		}
+
+		private bool IsPlaceForInsertion(TextLayout.Context context, string ins)
+		{
+			//	Indique s'il reste assez de place pour insérer une chaîne.
+			//	Si le texte contient des commandes <put>, elles ne doivent pas être comptées !
+			int length = 0;
+
+			if (this.text != null)
+			{
+				if (this.isPrepareDirty)  // contient des commandes <put> ?
+				{
+					length = this.GetSimplify().Length;
+				}
+				else
+				{
+					length = this.text.Length;
+				}
+			}
+
+			return (length+ins.Length <= context.MaxChar);
 		}
 
 		public bool InsertCharacter(TextLayout.Context context, char character)
@@ -3284,7 +3311,7 @@ namespace Epsitec.Common.Widgets
 		{
 			//	Simplifie et met à plat toutes les commandes HTML du texte.
 			//	Les commandes <put..>..</put> sont intégrées puis supprimées.
-			Stack<FontDefinition>				fontStack;
+			Stack<FontDefinition>			fontStack;
 			FontDefinition					fontDefault;
 			FontDefinition					fontItem;
 			FontDefinition					fontCurrent;

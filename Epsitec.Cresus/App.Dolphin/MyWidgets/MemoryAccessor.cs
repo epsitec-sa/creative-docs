@@ -354,13 +354,13 @@ namespace Epsitec.App.Dolphin.MyWidgets
 
 		static protected readonly double LineHeight = 20;
 
-		protected Components.Memory memory;
-		protected string bank;
-		protected VScroller scroller;
-		protected MyWidgets.Panel panel;
-		protected List<MyWidgets.TextFieldHexa> fields;
-		protected int firstAddress;  // relatif dans la banque
-		protected int markPC;
-		protected bool ignoreChange;
+		protected Components.Memory					memory;
+		protected string							bank;
+		protected VScroller							scroller;
+		protected MyWidgets.Panel					panel;
+		protected List<MyWidgets.TextFieldHexa>		fields;
+		protected int								firstAddress;  // relatif dans la banque
+		protected int								markPC;
+		protected bool								ignoreChange;
 	}
 }

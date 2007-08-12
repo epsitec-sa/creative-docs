@@ -12,6 +12,26 @@ namespace Epsitec.App.Dolphin
 	/// </summary>
 	public class Misc
 	{
+		static public int ParseHexa(string hexa)
+		{
+			//	Analyse une chaîne hexadécimale et retourne sa valeur.
+			if (string.IsNullOrEmpty(hexa))
+			{
+				return 0;
+			}
+
+			int result;
+			if (System.Int32.TryParse(hexa, System.Globalization.NumberStyles.AllowHexSpecifier, System.Globalization.CultureInfo.CurrentCulture, out result))
+			{
+				return result;
+			}
+			else
+			{
+				return 0;
+			}
+		}
+
+
 		static public string GetVersion()
 		{
 			//	Donne le numéro de version.
