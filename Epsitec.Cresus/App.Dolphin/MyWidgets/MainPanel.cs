@@ -37,13 +37,29 @@ namespace Epsitec.App.Dolphin.MyWidgets
 			//	la mémoire lorsqu'on bute au début ou à la fin.
 			if (message.MessageType == MessageType.KeyDown)
 			{
+				int offset = 0;
+
 				if (message.KeyCode == KeyCode.Tab || message.KeyCode == KeyCode.Return)
+				{
+					offset = message.IsShiftPressed ? -1 : 1;
+				}
+
+				if (message.KeyCode == KeyCode.ArrowDown)
+				{
+					offset = 1;
+				}
+
+				if (message.KeyCode == KeyCode.ArrowUp)
+				{
+					offset = -1;
+				}
+
+				if (offset != 0)
 				{
 					Widget widget = this.dolphinFocusedWidget;
 					TextField field = widget as TextField;
 					if (field != null)
 					{
-						int offset = message.IsShiftPressed ? -1 : 1;
 						Widget newWidget = this.SearchTabIndex(widget, widget.TabIndex+offset);
 						if (newWidget == null)  // on bute sur une extrémité ?
 						{

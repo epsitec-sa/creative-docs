@@ -1162,6 +1162,8 @@ namespace Epsitec.App.Dolphin.Components
 		public override void RomInitialise(int address, int length)
 		{
 			//	Rempli la Rom.
+			int start = address;
+			System.Diagnostics.Debug.Assert(TinyProcessor.CharTable.Length <= 0x100);
 			this.RomWrite(0xB00, TinyProcessor.CharTable);
 
 			int indirect = address;
@@ -1177,6 +1179,7 @@ namespace Epsitec.App.Dolphin.Components
 			this.RomWrite(ref indirect, ref address, TinyProcessor.NotPixel);			// 0x18
 			this.RomWrite(ref indirect, ref address, TinyProcessor.ClearScreen);		// 0x1B
 			this.RomWrite(ref indirect, ref address, TinyProcessor.DrawChar);			// 0x1E
+			System.Diagnostics.Debug.Assert(address < 0xB00);
 		}
 
 		protected void RomWrite(ref int indirect, ref int address, byte[] code)
