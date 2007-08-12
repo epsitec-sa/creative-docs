@@ -113,6 +113,8 @@ namespace Epsitec.App.Dolphin.Components
 			AndSA  = 0xF0,		// op r',ADDR
 			OrSA   = 0xF2,
 			XorSA  = 0xF4,
+
+			CompAR = 0xF8,		// comp ADDR,r
 		}
 
 
@@ -769,6 +771,16 @@ namespace Epsitec.App.Dolphin.Components
 				int n = op & 0x03;
 
 				data = this.memory.Read(this.registerPC++);
+				this.SetFlagsCompare(this.GetRegister(n), data);
+				return;
+			}
+
+			if (op >= (int) Instructions.CompAR && op <= (int) Instructions.CompAR + 0x03)  // COMP ADDR,r
+			{
+				int n = op & 0x03;
+				address = this.AddressAbs;
+
+				data = this.memory.Read(address);
 				this.SetFlagsCompare(this.GetRegister(n), data);
 				return;
 			}
@@ -1751,6 +1763,7 @@ namespace Epsitec.App.Dolphin.Components
 					AbstractProcessor.HelpPutLine(builder, "[68+r]          <tab/>COMP X,r      <tab/><tab/>(N, Z, C)");
 					AbstractProcessor.HelpPutLine(builder, "[6C+r]          <tab/>COMP Y,r      <tab/><tab/>(N, Z, C)");
 					AbstractProcessor.HelpPutLine(builder, "[70+r] [vv]     <tab/>COMP #val,r   <tab/><tab/>(N, Z, C)");
+					AbstractProcessor.HelpPutLine(builder, "[F8+r] [mh] [ll]<tab/>COMP ADDR,r   <tab/><tab/>(N, Z, C)");
 
 					AbstractProcessor.HelpPutTitle(builder, "Opérations unaires");
 					AbstractProcessor.HelpPutLine(builder, "[20+r]          <tab/>CLR r");
@@ -1802,10 +1815,10 @@ namespace Epsitec.App.Dolphin.Components
 					AbstractProcessor.HelpPutTitle(builder, "Utilisation de la pile");
 					AbstractProcessor.HelpPutLine(builder, "[08+r]           <tab/>PUSH r");
 					AbstractProcessor.HelpPutLine(builder, "[0C+r]           <tab/>POP r");
-					AbstractProcessor.HelpPutLine(builder, "[06] [vv]        <tab/>ADD #val,SP");
 					AbstractProcessor.HelpPutLine(builder, "[07] [vv]        <tab/>SUB #val,SP");
-					AbstractProcessor.HelpPutLine(builder, "[64+r] [40] [dd] <tab/>MOVE {SP}+depl,r <tab/>(N, Z, C)");
-					AbstractProcessor.HelpPutLine(builder, "[68+r] [40] [dd] <tab/>MOVE r,{SP}+depl <tab/>(N, Z, C)");
+					AbstractProcessor.HelpPutLine(builder, "[06] [vv]        <tab/>ADD #val,SP");
+					AbstractProcessor.HelpPutLine(builder, "[54+r] [40] [dd] <tab/>MOVE {SP}+depl,r <tab/>(N, Z, C)");
+					AbstractProcessor.HelpPutLine(builder, "[58+r] [40] [dd] <tab/>MOVE r,{SP}+depl <tab/>(N, Z, C)");
 
 					AbstractProcessor.HelpPutTitle(builder, "Gestion des fanions");
 					AbstractProcessor.HelpPutLine(builder, "[04]             <tab/>SETC           <tab/><tab/>(C=1)");
