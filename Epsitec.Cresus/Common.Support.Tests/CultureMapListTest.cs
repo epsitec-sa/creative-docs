@@ -8,7 +8,7 @@ namespace Epsitec.Common.Support
 		[SetUp]
 		public void Initialize()
 		{
-			this.list = new CultureMapList ();
+			this.list = new CultureMapList (null);
 
 			this.list.Add (Internal.Test.CreateCultureMap (null, Druid.Parse ("[0001]")));
 			this.list.Add (Internal.Test.CreateCultureMap (null, Druid.Parse ("[0002]")));

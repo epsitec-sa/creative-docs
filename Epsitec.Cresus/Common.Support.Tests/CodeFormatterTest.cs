@@ -25,10 +25,10 @@ namespace Epsitec.Common.Support
 			formatter.WriteCodeLine ("this.value = value;");
 			formatter.WriteEndMethod ();
 
-			formatter.WriteBeginMethod (new CodeAttributes (CodeVisibility.Private, CodeAttributes.PartialDefinitionAttribute), "void OnFooChanged(int value)");
+			formatter.WriteBeginMethod (new CodeAttributes (CodeVisibility.None, CodeAttributes.PartialDefinitionAttribute), "void OnFooChanged(int value)");
 			formatter.WriteEndMethod ();
 
-			formatter.WriteBeginMethod (new CodeAttributes (CodeVisibility.Private, CodeAttributes.PartialAttribute), "void OnFooChanged(int value)");
+			formatter.WriteBeginMethod (new CodeAttributes (CodeVisibility.None, CodeAttributes.PartialAttribute), "void OnFooChanged(int value)");
 			formatter.WriteEndMethod ();
 
 			formatter.WriteBeginProperty (new CodeAttributes (CodeVisibility.Public), "int Foo");

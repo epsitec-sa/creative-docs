@@ -114,6 +114,25 @@ namespace Epsitec.Common.Support
 		}
 
 		/// <summary>
+		/// Gets or sets a value indicating whether this instance is is no longer
+		/// up-to-date, which means that a refresh is needed.
+		/// </summary>
+		/// <value>
+		/// 	<c>true</c> if this instance needs refreshing; otherwise, <c>false</c>.
+		/// </value>
+		internal bool IsRefreshNeeded
+		{
+			get
+			{
+				return this.isRefreshNeeded;
+			}
+			set
+			{
+				this.isRefreshNeeded = value;
+			}
+		}
+
+		/// <summary>
 		/// Determines whether the culture for specified two letter ISO language name
 		/// is defined.
 		/// </summary>
@@ -299,5 +318,6 @@ namespace Epsitec.Common.Support
 		private string name;
 		private KeyValuePair<string, Types.StructuredData>[] map;
 		private bool isNewItem;
+		private bool isRefreshNeeded;
 	}
 }

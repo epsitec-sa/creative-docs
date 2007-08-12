@@ -11,6 +11,11 @@ namespace Epsitec.Common.Support
 	/// </summary>
 	public sealed class CultureMapList : Types.Collections.ObservableList<CultureMap>
 	{
+		public CultureMapList(ResourceAccessors.AbstractResourceAccessor accessor)
+		{
+			this.accessor = accessor;
+		}
+
 		/// <summary>
 		/// Gets the <see cref="CultureMap"/> with the specified name.
 		/// </summary>
@@ -23,6 +28,7 @@ namespace Epsitec.Common.Support
 				{
 					if (item.Name == name)
 					{
+						this.RefreshItemIfNeeded (item);
 						return item;
 					}
 				}
@@ -43,6 +49,7 @@ namespace Epsitec.Common.Support
 				{
 					if (item.Id == id)
 					{
+						this.RefreshItemIfNeeded (item);
 						return item;
 					}
 				}
@@ -60,7 +67,11 @@ namespace Epsitec.Common.Support
 		{
 			get
 			{
-				return base[index];
+				CultureMap item = base[index];
+
+				this.RefreshItemIfNeeded (item);
+
+				return item;
 			}
 		}
 
@@ -72,5 +83,16 @@ namespace Epsitec.Common.Support
 
 			throw new System.InvalidOperationException (string.Format ("Class {0} Item operator is read-only", this.GetType ().Name));
 		}
+
+		protected void RefreshItemIfNeeded(CultureMap item)
+		{
+			if ((item.IsRefreshNeeded) &&
+				(this.accessor != null))
+			{
+				this.accessor.InternalRefreshItem (item);
+			}
+		}
+
+		ResourceAccessors.AbstractResourceAccessor accessor;
 	}
 }
