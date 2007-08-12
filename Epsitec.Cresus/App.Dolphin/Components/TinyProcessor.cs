@@ -1671,83 +1671,83 @@ namespace Epsitec.App.Dolphin.Components
 
 				case "Op":
 					AbstractProcessor.HelpPutTitle(builder, "Transferts");
-					AbstractProcessor.HelpPutLine(builder, "[40+r]          <tab/>MOVE A,r");
-					AbstractProcessor.HelpPutLine(builder, "[44+r]          <tab/>MOVE B,r");
-					AbstractProcessor.HelpPutLine(builder, "[48+r]          <tab/>MOVE X,r");
-					AbstractProcessor.HelpPutLine(builder, "[4C+r]          <tab/>MOVE Y,r");
-					AbstractProcessor.HelpPutLine(builder, "[50+r] [vv]     <tab/>MOVE #val,r");
-					AbstractProcessor.HelpPutLine(builder, "[54+r] [mh] [ll]<tab/>MOVE ADDR,r");
-					AbstractProcessor.HelpPutLine(builder, "[58+r] [mh] [ll]<tab/>MOVE r,ADDR");
+					AbstractProcessor.HelpPutLine(builder, "[40+r]          <tab/>MOVE A,r      <tab/><tab/>(N, Z, C)");
+					AbstractProcessor.HelpPutLine(builder, "[44+r]          <tab/>MOVE B,r      <tab/><tab/>(N, Z, C)");
+					AbstractProcessor.HelpPutLine(builder, "[48+r]          <tab/>MOVE X,r      <tab/><tab/>(N, Z, C)");
+					AbstractProcessor.HelpPutLine(builder, "[4C+r]          <tab/>MOVE Y,r      <tab/><tab/>(N, Z, C)");
+					AbstractProcessor.HelpPutLine(builder, "[50+r] [vv]     <tab/>MOVE #val,r   <tab/><tab/>(N, Z, C)");
+					AbstractProcessor.HelpPutLine(builder, "[54+r] [mh] [ll]<tab/>MOVE ADDR,r   <tab/><tab/>(N, Z, C)");
+					AbstractProcessor.HelpPutLine(builder, "[58+r] [mh] [ll]<tab/>MOVE r,ADDR   <tab/><tab/>(N, Z, C)");
 
 					AbstractProcessor.HelpPutTitle(builder, "Additions");
-					AbstractProcessor.HelpPutLine(builder, "[80+r]          <tab/>ADD A,r");
-					AbstractProcessor.HelpPutLine(builder, "[84+r]          <tab/>ADD B,r");
-					AbstractProcessor.HelpPutLine(builder, "[88+r]          <tab/>ADD X,r");
-					AbstractProcessor.HelpPutLine(builder, "[8C+r]          <tab/>ADD Y,r");
-					AbstractProcessor.HelpPutLine(builder, "[A0+r] [vv]     <tab/>ADD #val,r");
-					AbstractProcessor.HelpPutLine(builder, "[B0+r] [mh] [ll]<tab/>ADD ADDR,r");
-					AbstractProcessor.HelpPutLine(builder, "[B8+r] [mh] [ll]<tab/>ADD r,ADDR");
+					AbstractProcessor.HelpPutLine(builder, "[80+r]          <tab/>ADD A,r      <tab/><tab/>(N, Z, C)");
+					AbstractProcessor.HelpPutLine(builder, "[84+r]          <tab/>ADD B,r      <tab/><tab/>(N, Z, C)");
+					AbstractProcessor.HelpPutLine(builder, "[88+r]          <tab/>ADD X,r      <tab/><tab/>(N, Z, C)");
+					AbstractProcessor.HelpPutLine(builder, "[8C+r]          <tab/>ADD Y,r      <tab/><tab/>(N, Z, C)");
+					AbstractProcessor.HelpPutLine(builder, "[A0+r] [vv]     <tab/>ADD #val,r   <tab/><tab/>(N, Z, C)");
+					AbstractProcessor.HelpPutLine(builder, "[B0+r] [mh] [ll]<tab/>ADD ADDR,r   <tab/><tab/>(N, Z, C)");
+					AbstractProcessor.HelpPutLine(builder, "[B8+r] [mh] [ll]<tab/>ADD r,ADDR   <tab/><tab/>(N, Z, C)");
 
 					AbstractProcessor.HelpPutTitle(builder, "Soustractions");
-					AbstractProcessor.HelpPutLine(builder, "[90+r]          <tab/>SUB A,r");
-					AbstractProcessor.HelpPutLine(builder, "[94+r]          <tab/>SUB B,r");
-					AbstractProcessor.HelpPutLine(builder, "[98+r]          <tab/>SUB X,r");
-					AbstractProcessor.HelpPutLine(builder, "[9C+r]          <tab/>SUB Y,r");
-					AbstractProcessor.HelpPutLine(builder, "[A4+r] [vv]     <tab/>SUB #val,r");
-					AbstractProcessor.HelpPutLine(builder, "[B4+r] [mh] [ll]<tab/>SUB ADDR,r");
-					AbstractProcessor.HelpPutLine(builder, "[BC+r] [mh] [ll]<tab/>SUB r,ADDR");
+					AbstractProcessor.HelpPutLine(builder, "[90+r]          <tab/>SUB A,r      <tab/><tab/>(N, Z, C)");
+					AbstractProcessor.HelpPutLine(builder, "[94+r]          <tab/>SUB B,r      <tab/><tab/>(N, Z, C)");
+					AbstractProcessor.HelpPutLine(builder, "[98+r]          <tab/>SUB X,r      <tab/><tab/>(N, Z, C)");
+					AbstractProcessor.HelpPutLine(builder, "[9C+r]          <tab/>SUB Y,r      <tab/><tab/>(N, Z, C)");
+					AbstractProcessor.HelpPutLine(builder, "[A4+r] [vv]     <tab/>SUB #val,r   <tab/><tab/>(N, Z, C)");
+					AbstractProcessor.HelpPutLine(builder, "[B4+r] [mh] [ll]<tab/>SUB ADDR,r   <tab/><tab/>(N, Z, C)");
+					AbstractProcessor.HelpPutLine(builder, "[BC+r] [mh] [ll]<tab/>SUB r,ADDR   <tab/><tab/>(N, Z, C)");
 
 					AbstractProcessor.HelpPutTitle(builder, "ET logique");
-					AbstractProcessor.HelpPutLine(builder, "[E0]             <tab/>AND A,B");
-					AbstractProcessor.HelpPutLine(builder, "[E1]             <tab/>AND B,A");
-					AbstractProcessor.HelpPutLine(builder, "[74+r] [vv]      <tab/>AND #val,r");
-					AbstractProcessor.HelpPutLine(builder, "[E8+r'] [mh] [ll]<tab/>AND ADDR,r'");
-					AbstractProcessor.HelpPutLine(builder, "[F0+r'] [mh] [ll]<tab/>AND r',ADDR");
+					AbstractProcessor.HelpPutLine(builder, "[E0]             <tab/>AND A,B      <tab/><tab/>(N, Z, C)");
+					AbstractProcessor.HelpPutLine(builder, "[E1]             <tab/>AND B,A      <tab/><tab/>(N, Z, C)");
+					AbstractProcessor.HelpPutLine(builder, "[74+r] [vv]      <tab/>AND #val,r   <tab/><tab/>(N, Z, C)");
+					AbstractProcessor.HelpPutLine(builder, "[E8+r'] [mh] [ll]<tab/>AND ADDR,r'  <tab/><tab/>(N, Z, C)");
+					AbstractProcessor.HelpPutLine(builder, "[F0+r'] [mh] [ll]<tab/>AND r',ADDR  <tab/><tab/>(N, Z, C)");
 
 					AbstractProcessor.HelpPutTitle(builder, "OU logique");
-					AbstractProcessor.HelpPutLine(builder, "[E2]             <tab/>OR A,B");
-					AbstractProcessor.HelpPutLine(builder, "[E3]             <tab/>OR B,A");
-					AbstractProcessor.HelpPutLine(builder, "[78+r] [vv]      <tab/>OR #val,r");
-					AbstractProcessor.HelpPutLine(builder, "[EA+r'] [mh] [ll]<tab/>OR ADDR,r'");
-					AbstractProcessor.HelpPutLine(builder, "[F2+r'] [mh] [ll]<tab/>OR r',ADDR");
+					AbstractProcessor.HelpPutLine(builder, "[E2]             <tab/>OR A,B      <tab/><tab/>(N, Z, C)");
+					AbstractProcessor.HelpPutLine(builder, "[E3]             <tab/>OR B,A      <tab/><tab/>(N, Z, C)");
+					AbstractProcessor.HelpPutLine(builder, "[78+r] [vv]      <tab/>OR #val,r   <tab/><tab/>(N, Z, C)");
+					AbstractProcessor.HelpPutLine(builder, "[EA+r'] [mh] [ll]<tab/>OR ADDR,r'  <tab/><tab/>(N, Z, C)");
+					AbstractProcessor.HelpPutLine(builder, "[F2+r'] [mh] [ll]<tab/>OR r',ADDR  <tab/><tab/>(N, Z, C)");
 
 					AbstractProcessor.HelpPutTitle(builder, "OU exclusif logique");
-					AbstractProcessor.HelpPutLine(builder, "[E4]             <tab/>XOR A,B");
-					AbstractProcessor.HelpPutLine(builder, "[E5]             <tab/>XOR B,A");
-					AbstractProcessor.HelpPutLine(builder, "[7C+r] [vv]      <tab/>XOR #val,r");
-					AbstractProcessor.HelpPutLine(builder, "[EC+r'] [mh] [ll]<tab/>XOR ADDR,r'");
-					AbstractProcessor.HelpPutLine(builder, "[F4+r'] [mh] [ll]<tab/>XOR r',ADDR");
+					AbstractProcessor.HelpPutLine(builder, "[E4]             <tab/>XOR A,B      <tab/><tab/>(N, Z, C)");
+					AbstractProcessor.HelpPutLine(builder, "[E5]             <tab/>XOR B,A      <tab/><tab/>(N, Z, C)");
+					AbstractProcessor.HelpPutLine(builder, "[7C+r] [vv]      <tab/>XOR #val,r   <tab/><tab/>(N, Z, C)");
+					AbstractProcessor.HelpPutLine(builder, "[EC+r'] [mh] [ll]<tab/>XOR ADDR,r'  <tab/><tab/>(N, Z, C)");
+					AbstractProcessor.HelpPutLine(builder, "[F4+r'] [mh] [ll]<tab/>XOR r',ADDR  <tab/><tab/>(N, Z, C)");
 
 					AbstractProcessor.HelpPutTitle(builder, "Tester un bit");
-					AbstractProcessor.HelpPutLine(builder, "[C0]             <tab/>TEST B:A");
-					AbstractProcessor.HelpPutLine(builder, "[C1]             <tab/>TEST A:B");
-					AbstractProcessor.HelpPutLine(builder, "[D0+r'] [vv]     <tab/>TEST r':#val");
-					AbstractProcessor.HelpPutLine(builder, "[C8+r'] [mh] [ll]<tab/>TEST ADDR:r'");
+					AbstractProcessor.HelpPutLine(builder, "[C0]             <tab/>TEST B:A      <tab/><tab/>(Z)");
+					AbstractProcessor.HelpPutLine(builder, "[C1]             <tab/>TEST A:B      <tab/><tab/>(Z)");
+					AbstractProcessor.HelpPutLine(builder, "[D0+r'] [vv]     <tab/>TEST r':#val  <tab/><tab/>(Z)");
+					AbstractProcessor.HelpPutLine(builder, "[C8+r'] [mh] [ll]<tab/>TEST ADDR:r'  <tab/><tab/>(Z)");
 
 					AbstractProcessor.HelpPutTitle(builder, "Tester puis mettre un bit à un");
-					AbstractProcessor.HelpPutLine(builder, "[C2]             <tab/>TSET B:A");
-					AbstractProcessor.HelpPutLine(builder, "[C3]             <tab/>TSET A:B");
-					AbstractProcessor.HelpPutLine(builder, "[D2+r'] [vv]     <tab/>TSET r':#val");
-					AbstractProcessor.HelpPutLine(builder, "[CA+r'] [mh] [ll]<tab/>TSET ADDR:r'");
+					AbstractProcessor.HelpPutLine(builder, "[C2]             <tab/>TSET B:A      <tab/><tab/>(Z)");
+					AbstractProcessor.HelpPutLine(builder, "[C3]             <tab/>TSET A:B      <tab/><tab/>(Z)");
+					AbstractProcessor.HelpPutLine(builder, "[D2+r'] [vv]     <tab/>TSET r':#val  <tab/><tab/>(Z)");
+					AbstractProcessor.HelpPutLine(builder, "[CA+r'] [mh] [ll]<tab/>TSET ADDR:r'  <tab/><tab/>(Z)");
 
 					AbstractProcessor.HelpPutTitle(builder, "Tester puis mettre un bit à zéro");
-					AbstractProcessor.HelpPutLine(builder, "[C4]             <tab/>TCLR B:A");
-					AbstractProcessor.HelpPutLine(builder, "[C5]             <tab/>TCLR A:B");
-					AbstractProcessor.HelpPutLine(builder, "[D4+r'] [vv]     <tab/>TCLR r':#val");
-					AbstractProcessor.HelpPutLine(builder, "[CC+r'] [mh] [ll]<tab/>TCLR ADDR:r'");
+					AbstractProcessor.HelpPutLine(builder, "[C4]             <tab/>TCLR B:A      <tab/><tab/>(Z)");
+					AbstractProcessor.HelpPutLine(builder, "[C5]             <tab/>TCLR A:B      <tab/><tab/>(Z)");
+					AbstractProcessor.HelpPutLine(builder, "[D4+r'] [vv]     <tab/>TCLR r':#val  <tab/><tab/>(Z)");
+					AbstractProcessor.HelpPutLine(builder, "[CC+r'] [mh] [ll]<tab/>TCLR ADDR:r'  <tab/><tab/>(Z)");
 
 					AbstractProcessor.HelpPutTitle(builder, "Tester puis inverser un bit");
-					AbstractProcessor.HelpPutLine(builder, "[C6]             <tab/>TNOT B:A");
-					AbstractProcessor.HelpPutLine(builder, "[C7]             <tab/>TNOT A:B");
-					AbstractProcessor.HelpPutLine(builder, "[D6+r'] [vv]     <tab/>TNOT r':#val");
-					AbstractProcessor.HelpPutLine(builder, "[CE+r'] [mh] [ll]<tab/>TNOT ADDR:r'");
+					AbstractProcessor.HelpPutLine(builder, "[C6]             <tab/>TNOT B:A      <tab/><tab/>(Z)");
+					AbstractProcessor.HelpPutLine(builder, "[C7]             <tab/>TNOT A:B      <tab/><tab/>(Z)");
+					AbstractProcessor.HelpPutLine(builder, "[D6+r'] [vv]     <tab/>TNOT r':#val  <tab/><tab/>(Z)");
+					AbstractProcessor.HelpPutLine(builder, "[CE+r'] [mh] [ll]<tab/>TNOT ADDR:r'  <tab/><tab/>(Z)");
 
 					AbstractProcessor.HelpPutTitle(builder, "Comparaisons");
-					AbstractProcessor.HelpPutLine(builder, "[60+r]          <tab/>COMP A,r");
-					AbstractProcessor.HelpPutLine(builder, "[64+r]          <tab/>COMP B,r");
-					AbstractProcessor.HelpPutLine(builder, "[68+r]          <tab/>COMP X,r");
-					AbstractProcessor.HelpPutLine(builder, "[6C+r]          <tab/>COMP Y,r");
-					AbstractProcessor.HelpPutLine(builder, "[70+r] [vv]     <tab/>COMP #val,r");
+					AbstractProcessor.HelpPutLine(builder, "[60+r]          <tab/>COMP A,r      <tab/><tab/>(N, Z, C)");
+					AbstractProcessor.HelpPutLine(builder, "[64+r]          <tab/>COMP B,r      <tab/><tab/>(N, Z, C)");
+					AbstractProcessor.HelpPutLine(builder, "[68+r]          <tab/>COMP X,r      <tab/><tab/>(N, Z, C)");
+					AbstractProcessor.HelpPutLine(builder, "[6C+r]          <tab/>COMP Y,r      <tab/><tab/>(N, Z, C)");
+					AbstractProcessor.HelpPutLine(builder, "[70+r] [vv]     <tab/>COMP #val,r   <tab/><tab/>(N, Z, C)");
 
 					AbstractProcessor.HelpPutTitle(builder, "Opérations unaires");
 					AbstractProcessor.HelpPutLine(builder, "[20+r]          <tab/>CLR r");
@@ -1760,14 +1760,14 @@ namespace Epsitec.App.Dolphin.Components
 					AbstractProcessor.HelpPutLine(builder, "[AB] [mh] [ll]  <tab/>DEC ADDR");
 
 					AbstractProcessor.HelpPutTitle(builder, "Rotations");
-					AbstractProcessor.HelpPutLine(builder, "[30+r]          <tab/>RL r");
-					AbstractProcessor.HelpPutLine(builder, "[34+r]          <tab/>RR r");
-					AbstractProcessor.HelpPutLine(builder, "[38+r]          <tab/>RLC r");
-					AbstractProcessor.HelpPutLine(builder, "[3C+r]          <tab/>RRC r");
-					AbstractProcessor.HelpPutLine(builder, "[AC] [mh] [ll]  <tab/>RL ADDR");
-					AbstractProcessor.HelpPutLine(builder, "[AD] [mh] [ll]  <tab/>RR ADDR");
-					AbstractProcessor.HelpPutLine(builder, "[AE] [mh] [ll]  <tab/>RLC ADDR");
-					AbstractProcessor.HelpPutLine(builder, "[AF] [mh] [ll]  <tab/>RRC ADDR");
+					AbstractProcessor.HelpPutLine(builder, "[30+r]          <tab/>RL r          <tab/><tab/>(N, Z, C)");
+					AbstractProcessor.HelpPutLine(builder, "[34+r]          <tab/>RR r          <tab/><tab/>(N, Z, C)");
+					AbstractProcessor.HelpPutLine(builder, "[38+r]          <tab/>RLC r         <tab/><tab/>(N, Z, C)");
+					AbstractProcessor.HelpPutLine(builder, "[3C+r]          <tab/>RRC r         <tab/><tab/>(N, Z, C)");
+					AbstractProcessor.HelpPutLine(builder, "[AC] [mh] [ll]  <tab/>RL ADDR       <tab/><tab/>(N, Z, C)");
+					AbstractProcessor.HelpPutLine(builder, "[AD] [mh] [ll]  <tab/>RR ADDR       <tab/><tab/>(N, Z, C)");
+					AbstractProcessor.HelpPutLine(builder, "[AE] [mh] [ll]  <tab/>RLC ADDR      <tab/><tab/>(N, Z, C)");
+					AbstractProcessor.HelpPutLine(builder, "[AF] [mh] [ll]  <tab/>RRC ADDR      <tab/><tab/>(N, Z, C)");
 
 					AbstractProcessor.HelpPutTitle(builder, "Divers");
 					AbstractProcessor.HelpPutLine(builder, "[00]            <tab/>NOP");
@@ -1801,12 +1801,12 @@ namespace Epsitec.App.Dolphin.Components
 					AbstractProcessor.HelpPutLine(builder, "[0C+r]           <tab/>POP r");
 					AbstractProcessor.HelpPutLine(builder, "[06] [vv]        <tab/>ADD #val,SP");
 					AbstractProcessor.HelpPutLine(builder, "[07] [vv]        <tab/>SUB #val,SP");
-					AbstractProcessor.HelpPutLine(builder, "[64+r] [40] [dd] <tab/>MOVE {SP}+depl,r");
-					AbstractProcessor.HelpPutLine(builder, "[68+r] [40] [dd] <tab/>MOVE r,{SP}+depl");
+					AbstractProcessor.HelpPutLine(builder, "[64+r] [40] [dd] <tab/>MOVE {SP}+depl,r <tab/>(N, Z, C)");
+					AbstractProcessor.HelpPutLine(builder, "[68+r] [40] [dd] <tab/>MOVE r,{SP}+depl <tab/>(N, Z, C)");
 
 					AbstractProcessor.HelpPutTitle(builder, "Gestion des fanions");
-					AbstractProcessor.HelpPutLine(builder, "[04]             <tab/>SETC");
-					AbstractProcessor.HelpPutLine(builder, "[05]             <tab/>CLRC");
+					AbstractProcessor.HelpPutLine(builder, "[04]             <tab/>SETC           <tab/><tab/>(C=1)");
+					AbstractProcessor.HelpPutLine(builder, "[05]             <tab/>CLRC           <tab/><tab/>(C=0)");
 					break;
 
 				case "ROM":
@@ -1818,7 +1818,7 @@ namespace Epsitec.App.Dolphin.Components
 					AbstractProcessor.HelpPutLine(builder, "mod<tab/>A, F");
 
 					AbstractProcessor.HelpPutTitle(builder, "WaitSec");
-					AbstractProcessor.HelpPutLine(builder, "Attend un nombre approximatif de secondes (à 1'000 IPS) à choix.");
+					AbstractProcessor.HelpPutLine(builder, "Attend un nombre de secondes. L'attente est approximativement calibrée à 1'000 IPS.");
 					AbstractProcessor.HelpPutLine(builder, "[01] [08] [03]<tab/>CALL WaitSec");
 					AbstractProcessor.HelpPutLine(builder, "in<tab/>A nombre de secondes");
 					AbstractProcessor.HelpPutLine(builder, "out<tab/>-");
@@ -1855,6 +1855,13 @@ namespace Epsitec.App.Dolphin.Components
 					AbstractProcessor.HelpPutLine(builder, "out<tab/>-");
 					AbstractProcessor.HelpPutLine(builder, "mod<tab/>F");
 
+					AbstractProcessor.HelpPutTitle(builder, "ClearScreen");
+					AbstractProcessor.HelpPutLine(builder, "Efface tout l'écran bitmap.");
+					AbstractProcessor.HelpPutLine(builder, "[01] [08] [1B]<tab/>CALL ClearScreen");
+					AbstractProcessor.HelpPutLine(builder, "in<tab/>-");
+					AbstractProcessor.HelpPutLine(builder, "out<tab/>-");
+					AbstractProcessor.HelpPutLine(builder, "mod<tab/>F");
+
 					AbstractProcessor.HelpPutTitle(builder, "SetPixel");
 					AbstractProcessor.HelpPutLine(builder, "Allume un pixel dans l'écran bitmap.");
 					AbstractProcessor.HelpPutLine(builder, "[01] [08] [12]<tab/>CALL SetPixel");
@@ -1876,13 +1883,6 @@ namespace Epsitec.App.Dolphin.Components
 					AbstractProcessor.HelpPutLine(builder, "[01] [08] [18]<tab/>CALL NotPixel");
 					AbstractProcessor.HelpPutLine(builder, "in<tab/>X coordonnée colonne 0..31");
 					AbstractProcessor.HelpPutLine(builder, "<tab/>Y coordonnée ligne 0..23");
-					AbstractProcessor.HelpPutLine(builder, "out<tab/>-");
-					AbstractProcessor.HelpPutLine(builder, "mod<tab/>F");
-
-					AbstractProcessor.HelpPutTitle(builder, "ClearScreen");
-					AbstractProcessor.HelpPutLine(builder, "Efface tout l'écran bitmap.");
-					AbstractProcessor.HelpPutLine(builder, "[01] [08] [1B]<tab/>CALL ClearScreen");
-					AbstractProcessor.HelpPutLine(builder, "in<tab/>-");
 					AbstractProcessor.HelpPutLine(builder, "out<tab/>-");
 					AbstractProcessor.HelpPutLine(builder, "mod<tab/>F");
 
