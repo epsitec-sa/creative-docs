@@ -118,28 +118,6 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			return n;
 		}
 
-#if false
-		/// <summary>
-		/// Refreshes the automatically generated fields (inherited from a parent
-		/// or included through interfaces).
-		/// </summary>
-		public void RefreshFields()
-		{
-			foreach (CultureMap item in this.Collection)
-			{
-				this.RefreshFields (item);
-			}
-		}
-#endif
-
-		private void RefreshFields(CultureMap item)
-		{
-			StructuredData data = item.GetCultureData (Resources.DefaultTwoLetterISOLanguageName);
-			object baseTypeIdValue = data.GetValue (Res.Fields.ResourceStructuredType.BaseType);
-			Druid baseTypeId = UndefinedValue.IsUndefinedValue (baseTypeIdValue) ? Druid.Empty : (Druid) baseTypeIdValue;
-			this.UpdateInheritedFields (data, baseTypeId);
-		}
-
 		protected override IStructuredType GetStructuredType()
 		{
 			return Res.Types.ResourceStructuredType;
@@ -265,43 +243,6 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			fields.CollectionChanged += new Listener (this, item).HandleCollectionChanged;
 		}
 
-#if false
-		private void RefreshDataFromType(CultureMap item, StructuredData data, StructuredType type)
-		{
-			System.Diagnostics.Debug.Assert (type.CaptionId.IsValid);
-			
-			ObservableList<StructuredData> fields = data.GetValue (Res.Fields.ResourceStructuredType.Fields) as ObservableList<StructuredData>;
-			ObservableList<Druid> interfaceIds = data.GetValue (Res.Fields.ResourceStructuredType.InterfaceIds) as ObservableList<Druid>;
-
-			using (fields.DisableNotifications ())
-			{
-				foreach (StructuredData x in fields)
-				{
-					item.NotifyDataRemoved (x);
-				}
-
-				fields.Clear ();
-
-				foreach (string fieldId in type.GetFieldIds ())
-				{
-					StructuredTypeField field = type.Fields[fieldId];
-					StructuredData x = new StructuredData (Res.Types.Field);
-
-					StructuredTypeResourceAccessor.FillDataFromField (x, field);
-					fields.Add (x);
-
-					item.NotifyDataAdded (x);
-				}
-			}
-
-			using (interfaceIds.DisableNotifications ())
-			{
-				interfaceIds.Clear ();
-				interfaceIds.AddRange (type.InterfaceIds);
-			}
-		}
-#endif
-
 		private static void FillDataFromField(StructuredData data, StructuredTypeField field)
 		{
 			data.SetValue (Res.Fields.Field.TypeId, field.Type == null ? Druid.Empty : field.Type.CaptionId);
@@ -353,30 +294,17 @@ namespace Epsitec.Common.Support.ResourceAccessors
 
 		protected override void RefreshItem(CultureMap item)
 		{
-#if true
-			this.RefreshFields (item);
-#else
-			ResourceBundle bundle = this.ResourceManager.GetBundle (Resources.CaptionsBundleName, ResourceLevel.Default);
-			ResourceBundle.Field field = bundle[item.Id];
 			StructuredData data = item.GetCultureData (Resources.DefaultTwoLetterISOLanguageName);
-			Caption caption = new Caption (item.Id);
-			ResourceManager.SetSourceBundle (caption, bundle);
-			caption.DeserializeFromString (field.AsString, this.ResourceManager);
-			StructuredType type = AbstractType.GetComplexType (caption) as StructuredType;
-			if (type.CaptionId.IsEmpty)
-			{
-				//	BUG: this should never happen !
-				type.DefineCaption (caption);
-			}
-			this.RefreshDataFromType (item, data, type);
+			object baseTypeIdValue = data.GetValue (Res.Fields.ResourceStructuredType.BaseType);
+			Druid baseTypeId = UndefinedValue.IsUndefinedValue (baseTypeIdValue) ? Druid.Empty : (Druid) baseTypeIdValue;
+			this.UpdateInheritedFields (data, baseTypeId);
 			base.RefreshItem (item);
-#endif
 		}
 
 		private void HandleCultureMapAdded(CultureMap item)
 		{
 			item.PropertyChanged += this.HandleItemPropertyChanged;
-			this.RefreshFields (item);
+			this.RefreshItem (item);
 		}
 
 		private void HandleCultureMapRemoved(CultureMap item)
@@ -406,15 +334,20 @@ namespace Epsitec.Common.Support.ResourceAccessors
 		/// <summary>
 		/// Updates the inherited fields found in a structured type. This method
 		/// can be used when the <c>BaseType</c> property changes or when a new
-		/// <c>CultureMap</c> object is added.
+		/// <c>CultureMap</c> object is added, or when an interface is added or
+		/// removed.
 		/// </summary>
 		/// <param name="data">The data describing the structured type.</param>
 		/// <param name="newBaseType">The Druid of the base type.</param>
 		private void UpdateInheritedFields(StructuredData data, Druid baseTypeId)
 		{
 			ObservableList<StructuredData> fields = data.GetValue (Res.Fields.ResourceStructuredType.Fields) as ObservableList<StructuredData>;
-			ObservableList<Druid>    interfaceIds = data.GetValue (Res.Fields.ResourceStructuredType.InterfaceIds) as ObservableList<Druid>;
+			IList<Druid>             interfaceIds = data.GetValue (Res.Fields.ResourceStructuredType.InterfaceIds) as IList<Druid>;
 
+			//	We temporarily disable notifications, in order to avoid generating
+			//	circular update events when just refreshing fields that are in fact
+			//	read only for the user :
+			
 			using (fields.DisableNotifications ())
 			{
 				StructuredTypeResourceAccessor.RemoveInheritedFields (fields);
@@ -422,6 +355,9 @@ namespace Epsitec.Common.Support.ResourceAccessors
 				if ((baseTypeId.IsValid) ||
 					(interfaceIds.Count > 0))
 				{
+					//	Create an empty type which will be used to extract the inherited
+					//	fields and those imported throught interfaces :
+					
 					StructuredType type = new StructuredType (StructuredTypeClass.Entity, baseTypeId);
 					ResourceManager.SetResourceManager (type, this.ResourceManager);
 
@@ -448,6 +384,10 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			}
 		}
 
+		/// <summary>
+		/// Removes the inherited and included fields.
+		/// </summary>
+		/// <param name="fields">The field collection.</param>
 		private static void RemoveInheritedFields(IList<StructuredData> fields)
 		{
 			for (int i = 0; i < fields.Count; i++)
@@ -456,6 +396,9 @@ namespace Epsitec.Common.Support.ResourceAccessors
 				FieldMembership membership = (FieldMembership) field.GetValue (Res.Fields.Field.Membership);
 				Druid definingTypeId = (Druid) field.GetValue (Res.Fields.Field.DefiningTypeId);
 
+				//	If the field is inherited from a base entity or imported through
+				//	an interface, then we remove it from the collection :
+				
 				if ((membership == FieldMembership.Inherited) ||
 					(definingTypeId.IsValid))
 				{
@@ -500,7 +443,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 
 			public void HandleCollectionChanged(object sender, CollectionChangedEventArgs e)
 			{
-				this.accessor.RefreshFields (this.item);
+				this.accessor.RefreshItem (this.item);
 				this.accessor.NotifyItemChanged (this.item);
 			}
 
@@ -539,11 +482,12 @@ namespace Epsitec.Common.Support.ResourceAccessors
 
 		#endregion
 
-		private static Druid ToDruid(object value)
-		{
-			return UndefinedValue.IsUndefinedValue (value) ? Druid.Empty : (Druid) value;
-		}
+		#region AccessorsCollection Class
 
+		/// <summary>
+		/// The <c>AccessorsCollection</c> maintains a collection of <see cref="StructuredTypeReourceAccessor"/>
+		/// instances.
+		/// </summary>
 		private class AccessorsCollection
 		{
 			public AccessorsCollection()
@@ -590,8 +534,15 @@ namespace Epsitec.Common.Support.ResourceAccessors
 
 			List<Weak<StructuredTypeResourceAccessor>> list;
 		}
-		
-		
+
+		#endregion
+
+		private static Druid ToDruid(object value)
+		{
+			return UndefinedValue.IsUndefinedValue (value) ? Druid.Empty : (Druid) value;
+		}
+
+
 		private static void SetAccessors(DependencyObject obj, AccessorsCollection collection)
 		{
 			if (collection == null)

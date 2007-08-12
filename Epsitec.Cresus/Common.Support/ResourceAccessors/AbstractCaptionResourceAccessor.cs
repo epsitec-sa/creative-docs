@@ -30,6 +30,10 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			ResourceBundle bundle = this.ResourceManager.GetBundle (Resources.CaptionsBundleName, ResourceLevel.Default);
 			AccessorsCollection accessors = AbstractCaptionResourceAccessor.GetAccessors (bundle);
 
+			//	Associate a collection of caption accessors to the bundle, so we
+			//	can later on iterate over all caption items, managed by different,
+			//	separate accessors :
+			
 			if (accessors == null)
 			{
 				accessors = new AccessorsCollection ();
@@ -294,6 +298,14 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			return new CultureMap (this, id);
 		}
 
+		#region AccessorsCollection Class
+
+		/// <summary>
+		/// The <c>AccessorsCollection</c> class maintains a collection of
+		/// <see cref="AbstractCaptionResourceAccessor"/> instances. This is
+		/// used to iterate over all caption items associated to the same
+		/// resource manager.
+		/// </summary>
 		private class AccessorsCollection
 		{
 			public AccessorsCollection()
@@ -327,6 +339,8 @@ namespace Epsitec.Common.Support.ResourceAccessors
 
 			List<AbstractCaptionResourceAccessor> list;
 		}
+
+		#endregion
 
 		private static void SetAccessors(DependencyObject obj, AccessorsCollection collection)
 		{
