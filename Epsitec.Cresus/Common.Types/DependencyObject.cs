@@ -275,8 +275,10 @@ namespace Epsitec.Common.Types
 			try
 			{
 				this.BeginMultiplePropertyChange ();
+
+				List<DependencyProperty> properties = new List<DependencyProperty> (this.DefinedProperties);
 				
-				foreach (DependencyProperty property in this.DefinedProperties)
+				foreach (DependencyProperty property in properties)
 				{
 					this.ClearValue (property);
 				}

@@ -1590,6 +1590,14 @@ namespace Epsitec.Common.Support
 					throw new ResourceException (string.Format ("Cannot convert field '{0}' to list. XML: {1}.", this.Name, this.xml == null ? "-" : this.xml.OuterXml));
 				}
 			}
+
+			public ResourceBundle			ParentBundle
+			{
+				get
+				{
+					return this.parent;
+				}
+			}
 			
 			
 			public static readonly Field	Empty = new Field ();

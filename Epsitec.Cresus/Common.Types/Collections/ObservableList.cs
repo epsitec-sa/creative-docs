@@ -66,6 +66,19 @@ namespace Epsitec.Common.Types.Collections
 
 			this.OnCollectionChanged (new CollectionChangedEventArgs (CollectionChangedAction.Replace, 0, newItems, 0, oldItems));
 		}
+
+		/// <summary>
+		/// Temporarily disables all change notifications. Any changes which
+		/// happen until <c>Dispose</c> is called on the returned object will
+		/// not generate events.
+		/// </summary>
+		/// <returns>An object you will have to <c>Dispose</c> in order to re-enable
+		/// the notifications.</returns>
+		public System.IDisposable DisableNotifications()
+		{
+			System.Threading.Interlocked.Increment (ref this.silent);
+			return new ReEnabler (this);
+		}
 		
 		#region IList<T> Members
 
@@ -307,16 +320,19 @@ namespace Epsitec.Common.Types.Collections
 		
 		protected virtual void OnCollectionChanged(CollectionChangedEventArgs e)
 		{
-			Epsitec.Common.Support.EventHandler<CollectionChangedEventArgs> handler;
-
-			lock (this.list)
+			if (this.silent == 0)
 			{
-				handler = this.collectionChangedEvent;
-			}
+				Epsitec.Common.Support.EventHandler<CollectionChangedEventArgs> handler;
 
-			if (handler != null)
-			{
-				handler (this, e);
+				lock (this.list)
+				{
+					handler = this.collectionChangedEvent;
+				}
+
+				if (handler != null)
+				{
+					handler (this, e);
+				}
 			}
 		}
 
@@ -346,8 +362,28 @@ namespace Epsitec.Common.Types.Collections
 
 		#endregion
 
+		private class ReEnabler : System.IDisposable
+		{
+			public ReEnabler(ObservableList<T> list)
+			{
+				this.list = list;
+			}
+
+			#region IDisposable Members
+
+			public void Dispose()
+			{
+				System.Threading.Interlocked.Decrement (ref this.list.silent);
+			}
+
+			#endregion
+
+			ObservableList<T> list;
+		}
+
 		private event Epsitec.Common.Support.EventHandler<CollectionChangedEventArgs> collectionChangedEvent;
 
 		private List<T> list = new List<T> ();
+		private int silent;
 	}
 }

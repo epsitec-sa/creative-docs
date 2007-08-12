@@ -6,6 +6,8 @@ using Epsitec.Common.Types;
 
 using System.Collections.Generic;
 
+[assembly: Epsitec.Common.Types.DependencyClass (typeof (Epsitec.Common.Support.ResourceManagerPool))]
+
 namespace Epsitec.Common.Support
 {
 	/// <summary>
@@ -14,7 +16,7 @@ namespace Epsitec.Common.Support
 	/// bundle is modified by one manager, that modification will be visible to
 	/// all other managers in the pool.
 	/// </summary>
-	public sealed class ResourceManagerPool
+	public sealed class ResourceManagerPool : DependencyObject
 	{
 		public ResourceManagerPool()
 			: this (null)
