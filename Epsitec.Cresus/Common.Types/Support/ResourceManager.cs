@@ -986,18 +986,14 @@ namespace Epsitec.Common.Support
 				}
 
 				Caption temp = new Caption ();
+				temp.DefineId (druid);
 				temp.DeserializeFromString (source, this);
 				
 				caption = (caption == null) ? temp : Caption.Merge (caption, temp);
 
-				if (caption.Id.IsEmpty)
-				{
-					caption.DefineId (druid);
-				}
-
-				AbstractType.BindComplexTypeToCaption (caption);
-
-
+				System.Diagnostics.Debug.Assert (caption.Id.IsValid);
+				System.Diagnostics.Debug.Assert (AbstractType.CheckComplexTypeBindingToCaption (caption));
+				
 				if (caption.ContainsLocalValue (ResourceManager.SourceBundleProperty) == false)
 				{
 					ResourceManager.SetSourceBundle (caption, bundle);

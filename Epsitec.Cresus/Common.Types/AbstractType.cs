@@ -542,6 +542,26 @@ namespace Epsitec.Common.Types
 			}
 		}
 
+		/// <summary>
+		/// Checks that the complex type is properly bound to the caption.
+		/// </summary>
+		/// <param name="caption">The caption.</param>
+		/// <returns><c>true</c> if the complex type is properly bound to the
+		/// caption or if there is no complex type; otherwise, <c>false</c>.</returns>
+		public static bool CheckComplexTypeBindingToCaption(Caption caption)
+		{
+			AbstractType type = AbstractType.GetComplexType (caption);
+
+			if (type == null)
+			{
+				return true;
+			}
+			else
+			{
+				return type.IsCaptionDefined;
+			}
+		}
+
 		
 		public static readonly DependencyProperty DefaultControllerProperty = DependencyProperty.RegisterAttached ("DefaultController", typeof (string), typeof (AbstractType), new DependencyPropertyMetadata ("Numeric"));
 		public static readonly DependencyProperty DefaultControllerParameterProperty = DependencyProperty.RegisterAttached ("DefaultControllerParameter", typeof (string), typeof (AbstractType), new DependencyPropertyMetadata ());
