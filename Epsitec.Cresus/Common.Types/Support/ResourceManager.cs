@@ -840,8 +840,31 @@ namespace Epsitec.Common.Support
 
 			if (Resources.SplitFieldIdWithoutDruidResolution (resource, out bundleName, out fieldName))
 			{
-				string key = Resources.CreateCaptionKey (druid, level, culture);
-				return this.captionCache.Remove (key);
+				bool removed = false;
+
+				switch (level)
+				{
+					case ResourceLevel.Localized:
+					case ResourceLevel.Customized:
+					case ResourceLevel.Default:
+						removed |= this.captionCache.Remove (Resources.CreateCaptionKey (druid, ResourceLevel.Merged, culture));
+						removed |= this.captionCache.Remove (Resources.CreateCaptionKey (druid, level, culture));
+						break;
+
+					case ResourceLevel.All:
+						removed |= this.captionCache.Remove (Resources.CreateCaptionKey (druid, ResourceLevel.Default, culture));
+						removed |= this.captionCache.Remove (Resources.CreateCaptionKey (druid, ResourceLevel.Localized, culture));
+						removed |= this.captionCache.Remove (Resources.CreateCaptionKey (druid, ResourceLevel.Customized, culture));
+						removed |= this.captionCache.Remove (Resources.CreateCaptionKey (druid, ResourceLevel.Merged, culture));
+						break;
+
+					default:
+						removed |= this.captionCache.Remove (Resources.CreateCaptionKey (druid, level, culture));
+						break;
+				}
+				
+
+				return removed;
 			}
 			else
 			{
@@ -966,7 +989,14 @@ namespace Epsitec.Common.Support
 				temp.DeserializeFromString (source, this);
 				
 				caption = (caption == null) ? temp : Caption.Merge (caption, temp);
-//-				caption.DefineId (druid);
+
+				if (caption.Id.IsEmpty)
+				{
+					caption.DefineId (druid);
+				}
+
+				AbstractType.BindComplexTypeToCaption (caption);
+
 
 				if (caption.ContainsLocalValue (ResourceManager.SourceBundleProperty) == false)
 				{
