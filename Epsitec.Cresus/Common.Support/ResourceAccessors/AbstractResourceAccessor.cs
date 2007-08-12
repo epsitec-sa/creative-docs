@@ -14,7 +14,9 @@ namespace Epsitec.Common.Support.ResourceAccessors
 	{
 		protected AbstractResourceAccessor()
 		{
+			this.items = new CultureMapList (this);
 			this.items.CollectionChanged += this.HandleItemsCollectionChanged;
+			this.dirtyItems = new Dictionary<CultureMap, bool> ();
 		}
 
 		/// <summary>
@@ -195,7 +197,15 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			return new Druid (bundle.Module.Id, devId, localId+1);
 		}
 
+		internal void InternalRefreshItem(CultureMap item)
+		{
+			this.RefreshItem (item);
+		}
 
+		protected virtual void RefreshItem(CultureMap item)
+		{
+			item.IsRefreshNeeded = false;
+		}
 		
 		
 		/// <summary>
@@ -306,8 +316,8 @@ namespace Epsitec.Common.Support.ResourceAccessors
 
 		public const string DeveloperIdPropertyName = "DeveloperId";
 		
-		private readonly CultureMapList items = new CultureMapList ();
-		private readonly Dictionary<CultureMap, bool> dirtyItems = new Dictionary<CultureMap, bool> ();
+		private readonly CultureMapList items;
+		private readonly Dictionary<CultureMap, bool> dirtyItems;
 
 		private ResourceManager resourceManager;
 		private int suspendNotifications;

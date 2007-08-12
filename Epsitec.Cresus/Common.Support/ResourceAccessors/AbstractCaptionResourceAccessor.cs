@@ -35,6 +35,10 @@ namespace Epsitec.Common.Support.ResourceAccessors
 				accessors = new AccessorsCollection ();
 				AbstractCaptionResourceAccessor.SetAccessors (bundle, accessors);
 			}
+			else
+			{
+				accessors.Remove (this);
+			}
 
 			accessors.Add (this);
 
@@ -68,8 +72,10 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			if ((field.IsEmpty) ||
 				(string.IsNullOrEmpty (field.AsString)))
 			{
+				Caption caption = new Caption ();
+				ResourceManager.SetSourceBundle (caption, bundle);
 				data = new Types.StructuredData (this.GetStructuredType ());
-				this.FillDataFromCaption (item, data, new Caption ());
+				this.FillDataFromCaption (item, data, caption);
 				item.RecordCultureData (twoLetterISOLanguageName, data);
 			}
 			else
@@ -261,6 +267,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			Caption caption = new Caption (id);
 			string  name    = string.IsNullOrEmpty (field.Name) ? null : this.GetNameFromFieldName (item, field.Name);
 
+			ResourceManager.SetSourceBundle (caption, field.ParentBundle);
 			caption.DeserializeFromString (field.AsString, this.ResourceManager);
 
 			this.FillDataFromCaption (item, data, caption);

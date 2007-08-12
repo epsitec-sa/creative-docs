@@ -7,6 +7,8 @@ using Epsitec.Common.Types.Collections;
 
 using System.Collections.Generic;
 
+[assembly: Epsitec.Common.Types.DependencyClass (typeof (Epsitec.Common.Support.ResourceAccessors.StructuredTypeResourceAccessor))]
+
 namespace Epsitec.Common.Support.ResourceAccessors
 {
 	/// <summary>
@@ -46,6 +48,20 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			}
 
 			this.fieldAccessor.Load (manager);
+			
+			AccessorsCollection accessors = StructuredTypeResourceAccessor.GetAccessors (manager.Pool);
+
+			if (accessors == null)
+			{
+				accessors = new AccessorsCollection ();
+				StructuredTypeResourceAccessor.SetAccessors (manager.Pool, accessors);
+			}
+			else
+			{
+				accessors.Remove (this);
+			}
+
+			accessors.Add (this);
 		}
 		
 		public override IDataBroker GetDataBroker(StructuredData container, string fieldId)
@@ -69,6 +85,19 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			
 			n += this.FieldAccessor.PersistChanges ();
 			n += base.PersistChanges ();
+
+			if (n > 0)
+			{
+				AccessorsCollection accessors = StructuredTypeResourceAccessor.GetAccessors (this.ResourceManager.Pool);
+
+				foreach (StructuredTypeResourceAccessor accessor in accessors.Collection)
+				{
+					foreach (CultureMap item in accessor.Collection)
+					{
+						item.IsRefreshNeeded = true;
+					}
+				}
+			}
 			
 			return n;
 		}
@@ -120,10 +149,13 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			if (twoLetterISOLanguageName == Resources.DefaultTwoLetterISOLanguageName)
 			{
 				StructuredType type = this.GetTypeFromData (data, caption);
+
+				System.Diagnostics.Debug.Assert (AbstractType.GetComplexType (caption) == type);
 				AbstractType.SetComplexType (caption, type);
 			}
 			else
 			{
+				System.Diagnostics.Debug.Assert (AbstractType.GetComplexType (caption) == null);
 				AbstractType.SetComplexType (caption, null);
 			}
 			
@@ -135,7 +167,16 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			base.FillDataFromCaption (item, data, caption);
 
 			StructuredType type = AbstractType.GetComplexType (caption) as StructuredType;
-			this.FillDataFromType (item, data, type);
+
+			if (type != null)
+			{
+				if (type.CaptionId.IsEmpty)
+				{
+					//	BUG: this should never happen !
+					type.DefineCaption (caption);
+				}
+				this.FillDataFromType (item, data, type);
+			}
 		}
 
 		private StructuredType GetTypeFromData(StructuredData data, Caption caption)
@@ -187,6 +228,8 @@ namespace Epsitec.Common.Support.ResourceAccessors
 
 		private void FillDataFromType(CultureMap item, StructuredData data, StructuredType type)
 		{
+			System.Diagnostics.Debug.Assert (type.CaptionId.IsValid);
+
 			ObservableList<StructuredData> fields = new ObservableList<StructuredData> ();
 
 			if (type != null)
@@ -222,6 +265,41 @@ namespace Epsitec.Common.Support.ResourceAccessors
 
 			interfaceIds.CollectionChanged += new InterfaceListener (this, item).HandleCollectionChanged;
 			fields.CollectionChanged += new Listener (this, item).HandleCollectionChanged;
+		}
+
+		private void RefreshDataFromType(CultureMap item, StructuredData data, StructuredType type)
+		{
+			System.Diagnostics.Debug.Assert (type.CaptionId.IsValid);
+			
+			ObservableList<StructuredData> fields = data.GetValue (Res.Fields.ResourceStructuredType.Fields) as ObservableList<StructuredData>;
+			ObservableList<Druid> interfaceIds = data.GetValue (Res.Fields.ResourceStructuredType.InterfaceIds) as ObservableList<Druid>;
+
+			using (fields.DisableNotifications ())
+			{
+				foreach (StructuredData x in fields)
+				{
+					item.NotifyDataRemoved (x);
+				}
+
+				fields.Clear ();
+
+				foreach (string fieldId in type.GetFieldIds ())
+				{
+					StructuredTypeField field = type.Fields[fieldId];
+					StructuredData x = new StructuredData (Res.Types.Field);
+
+					StructuredTypeResourceAccessor.FillDataFromField (x, field);
+					fields.Add (x);
+
+					item.NotifyDataAdded (x);
+				}
+			}
+
+			using (interfaceIds.DisableNotifications ())
+			{
+				interfaceIds.Clear ();
+				interfaceIds.AddRange (type.InterfaceIds);
+			}
 		}
 
 		private static void FillDataFromField(StructuredData data, StructuredTypeField field)
@@ -271,6 +349,24 @@ namespace Epsitec.Common.Support.ResourceAccessors
 					}
 					break;
 			}
+		}
+
+		protected override void RefreshItem(CultureMap item)
+		{
+			ResourceBundle bundle = this.ResourceManager.GetBundle (Resources.CaptionsBundleName, ResourceLevel.Default);
+			ResourceBundle.Field field = bundle[item.Id];
+			StructuredData data = item.GetCultureData (Resources.DefaultTwoLetterISOLanguageName);
+			Caption caption = new Caption (item.Id);
+			ResourceManager.SetSourceBundle (caption, bundle);
+			caption.DeserializeFromString (field.AsString, this.ResourceManager);
+			StructuredType type = AbstractType.GetComplexType (caption) as StructuredType;
+			if (type.CaptionId.IsEmpty)
+			{
+				//	BUG: this should never happen !
+				type.DefineCaption (caption);
+			}
+			this.RefreshDataFromType (item, data, type);
+			base.RefreshItem (item);
 		}
 
 		private void HandleCultureMapAdded(CultureMap item)
@@ -439,6 +535,73 @@ namespace Epsitec.Common.Support.ResourceAccessors
 		{
 			return UndefinedValue.IsUndefinedValue (value) ? Druid.Empty : (Druid) value;
 		}
+
+		private class AccessorsCollection
+		{
+			public AccessorsCollection()
+			{
+				this.list = new List<Weak<StructuredTypeResourceAccessor>> ();
+			}
+
+			public void Add(StructuredTypeResourceAccessor item)
+			{
+				this.list.Add (new Weak<StructuredTypeResourceAccessor> (item));
+			}
+
+			public void Remove(StructuredTypeResourceAccessor item)
+			{
+				this.list.RemoveAll (
+					delegate (Weak<StructuredTypeResourceAccessor> probe)
+					{
+						if (probe.IsAlive)
+						{
+							return probe.Target == item;
+						}
+						else
+						{
+							return true;
+						}
+					});
+			}
+
+			public IEnumerable<StructuredTypeResourceAccessor> Collection
+			{
+				get
+				{
+					foreach (Weak<StructuredTypeResourceAccessor> item in this.list)
+					{
+						StructuredTypeResourceAccessor accessor = item.Target;
+
+						if (accessor != null)
+						{
+							yield return accessor;
+						}
+					}
+				}
+			}
+
+			List<Weak<StructuredTypeResourceAccessor>> list;
+		}
+		
+		
+		private static void SetAccessors(DependencyObject obj, AccessorsCollection collection)
+		{
+			if (collection == null)
+			{
+				obj.ClearValue (StructuredTypeResourceAccessor.AccessorsProperty);
+			}
+			else
+			{
+				obj.SetValue (StructuredTypeResourceAccessor.AccessorsProperty, collection);
+			}
+		}
+
+		private static AccessorsCollection GetAccessors(DependencyObject obj)
+		{
+			return obj.GetValue (StructuredTypeResourceAccessor.AccessorsProperty) as AccessorsCollection;
+		}
+
+		private static DependencyProperty AccessorsProperty = DependencyProperty.RegisterAttached ("Accessors", typeof (AccessorsCollection), typeof (StructuredTypeResourceAccessor), new DependencyPropertyMetadata ().MakeNotSerializable ());
 
 		private FieldResourceAccessor fieldAccessor;
 	}
