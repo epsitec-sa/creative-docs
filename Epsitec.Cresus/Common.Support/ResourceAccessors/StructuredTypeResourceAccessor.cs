@@ -48,6 +48,10 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			}
 
 			this.fieldAccessor.Load (manager);
+
+			//	We maintain a list of structured type resource accessors associated
+			//	with the resource manager pool. This is required since we must mark
+			//	all entities as dirty if any entity is modified in the pool...
 			
 			AccessorsCollection accessors = StructuredTypeResourceAccessor.GetAccessors (manager.Pool);
 
@@ -81,14 +85,16 @@ namespace Epsitec.Common.Support.ResourceAccessors
 
 		public override int PersistChanges()
 		{
-			int n = 0;
-			
-			n += this.FieldAccessor.PersistChanges ();
-			n += base.PersistChanges ();
+			int n = this.FieldAccessor.PersistChanges ();
+			int m = base.PersistChanges ();
 
-			if (n > 0)
+			if (m > 0)
 			{
 				AccessorsCollection accessors = StructuredTypeResourceAccessor.GetAccessors (this.ResourceManager.Pool);
+
+				//	Mark all items describing entities in the same pool as dirty,
+				//	since the changes which have just been persisted may induce
+				//	modifications to inherited fields or interfaces.
 
 				foreach (StructuredTypeResourceAccessor accessor in accessors.Collection)
 				{
@@ -99,7 +105,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 				}
 			}
 			
-			return n;
+			return n+m;
 		}
 
 		public override int RevertChanges()
@@ -112,7 +118,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			return n;
 		}
 
-
+#if false
 		/// <summary>
 		/// Refreshes the automatically generated fields (inherited from a parent
 		/// or included through interfaces).
@@ -124,17 +130,14 @@ namespace Epsitec.Common.Support.ResourceAccessors
 				this.RefreshFields (item);
 			}
 		}
+#endif
 
-		public void RefreshFields(CultureMap item)
+		private void RefreshFields(CultureMap item)
 		{
 			StructuredData data = item.GetCultureData (Resources.DefaultTwoLetterISOLanguageName);
 			object baseTypeIdValue = data.GetValue (Res.Fields.ResourceStructuredType.BaseType);
-
-			if ((!UndefinedValue.IsUndefinedValue (baseTypeIdValue)) &&
-				(((Druid) baseTypeIdValue).IsValid))
-			{
-				this.UpdateInheritedFields (data, (Druid) baseTypeIdValue);
-			}
+			Druid baseTypeId = UndefinedValue.IsUndefinedValue (baseTypeIdValue) ? Druid.Empty : (Druid) baseTypeIdValue;
+			this.UpdateInheritedFields (data, baseTypeId);
 		}
 
 		protected override IStructuredType GetStructuredType()
@@ -170,11 +173,6 @@ namespace Epsitec.Common.Support.ResourceAccessors
 
 			if (type != null)
 			{
-				if (type.CaptionId.IsEmpty)
-				{
-					//	BUG: this should never happen !
-					type.DefineCaption (caption);
-				}
 				this.FillDataFromType (item, data, type);
 			}
 		}
@@ -267,6 +265,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			fields.CollectionChanged += new Listener (this, item).HandleCollectionChanged;
 		}
 
+#if false
 		private void RefreshDataFromType(CultureMap item, StructuredData data, StructuredType type)
 		{
 			System.Diagnostics.Debug.Assert (type.CaptionId.IsValid);
@@ -301,6 +300,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 				interfaceIds.AddRange (type.InterfaceIds);
 			}
 		}
+#endif
 
 		private static void FillDataFromField(StructuredData data, StructuredTypeField field)
 		{
@@ -353,6 +353,9 @@ namespace Epsitec.Common.Support.ResourceAccessors
 
 		protected override void RefreshItem(CultureMap item)
 		{
+#if true
+			this.RefreshFields (item);
+#else
 			ResourceBundle bundle = this.ResourceManager.GetBundle (Resources.CaptionsBundleName, ResourceLevel.Default);
 			ResourceBundle.Field field = bundle[item.Id];
 			StructuredData data = item.GetCultureData (Resources.DefaultTwoLetterISOLanguageName);
@@ -367,6 +370,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			}
 			this.RefreshDataFromType (item, data, type);
 			base.RefreshItem (item);
+#endif
 		}
 
 		private void HandleCultureMapAdded(CultureMap item)
@@ -408,33 +412,37 @@ namespace Epsitec.Common.Support.ResourceAccessors
 		/// <param name="newBaseType">The Druid of the base type.</param>
 		private void UpdateInheritedFields(StructuredData data, Druid baseTypeId)
 		{
-			IList<StructuredData> fields = data.GetValue (Res.Fields.ResourceStructuredType.Fields) as IList<StructuredData>;
-			IList<Druid> interfaceIds = data.GetValue (Res.Fields.ResourceStructuredType.InterfaceIds) as IList<Druid>;
+			ObservableList<StructuredData> fields = data.GetValue (Res.Fields.ResourceStructuredType.Fields) as ObservableList<StructuredData>;
+			ObservableList<Druid>    interfaceIds = data.GetValue (Res.Fields.ResourceStructuredType.InterfaceIds) as ObservableList<Druid>;
 
-			StructuredTypeResourceAccessor.RemoveInheritedFields (fields);
-
-			if (baseTypeId.IsValid)
+			using (fields.DisableNotifications ())
 			{
-				StructuredType type = new StructuredType (StructuredTypeClass.Entity, baseTypeId);
-				ResourceManager.SetResourceManager (type, this.ResourceManager);
+				StructuredTypeResourceAccessor.RemoveInheritedFields (fields);
 
-				foreach (Druid interfaceId in interfaceIds)
+				if ((baseTypeId.IsValid) ||
+					(interfaceIds.Count > 0))
 				{
-					type.InterfaceIds.Add (interfaceId);
-				}
+					StructuredType type = new StructuredType (StructuredTypeClass.Entity, baseTypeId);
+					ResourceManager.SetResourceManager (type, this.ResourceManager);
 
-				int i = 0;
-
-				foreach (string fieldId in type.GetFieldIds ())
-				{
-					StructuredTypeField field = type.Fields[fieldId];
-					
-					if ((field.Membership == FieldMembership.Inherited) ||
-						(field.DefiningTypeId.IsValid))
+					foreach (Druid interfaceId in interfaceIds)
 					{
-						StructuredData x = new StructuredData (Res.Types.Field);
-						StructuredTypeResourceAccessor.FillDataFromField (x, field);
-						fields.Insert (i++, x);
+						type.InterfaceIds.Add (interfaceId);
+					}
+
+					int i = 0;
+
+					foreach (string fieldId in type.GetFieldIds ())
+					{
+						StructuredTypeField field = type.Fields[fieldId];
+
+						if ((field.Membership == FieldMembership.Inherited) ||
+							(field.DefiningTypeId.IsValid))
+						{
+							StructuredData x = new StructuredData (Res.Types.Field);
+							StructuredTypeResourceAccessor.FillDataFromField (x, field);
+							fields.Insert (i++, x);
+						}
 					}
 				}
 			}
