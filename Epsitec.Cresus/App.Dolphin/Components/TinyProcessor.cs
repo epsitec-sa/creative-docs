@@ -114,7 +114,7 @@ namespace Epsitec.App.Dolphin.Components
 			OrSA   = 0xF2,
 			XorSA  = 0xF4,
 
-			CompAR = 0xF8,		// comp ADDR,r
+			CompAR = 0xF8,		// COMP ADDR,r
 		}
 
 
@@ -1166,6 +1166,208 @@ namespace Epsitec.App.Dolphin.Components
 					this.registerY = value;
 					break;
 			}
+		}
+		#endregion
+
+
+		#region Code
+		public override int GetCodeLength(int code)
+		{
+			//	Retourne le nombre de bytes d'une instruction.
+			switch ((Instructions) code)
+			{
+				case Instructions.AddVSP:
+				case Instructions.SubVSP:
+					return 2;
+			}
+
+			if (code >= (int) Instructions.Jump && code <= (int) Instructions.JumpNS)  // JUMP
+			{
+				return 3;
+			}
+
+			if (code >= (int) Instructions.ClrR && code <= (int) Instructions.ClrR+0x0F)  // op r
+			{
+				return 2;
+			}
+
+			if (code >= (int) Instructions.MoveVR && code <= (int) Instructions.MoveVR+0x03)  // MOVE #val,r
+			{
+				return 2;
+			}
+
+			if (code >= (int) Instructions.MoveAR && code <= (int) Instructions.MoveAR+0x03)  // MOVE ADDR,r
+			{
+				return 3;
+			}
+
+			if (code >= (int) Instructions.MoveRA && code <= (int) Instructions.MoveRA+0x03)  // MOVE r,ADDR
+			{
+				return 3;
+			}
+
+			if (code >= (int) Instructions.CompVR && code <= (int) Instructions.CompVR+0x0F)  // op #val,r
+			{
+				return 2;
+			}
+
+			if (code >= (int) Instructions.AddVR && code <= (int) Instructions.AddVR+0x07)  // op #val,r
+			{
+				return 2;
+			}
+
+			if (code >= (int) Instructions.ClrA && code <= (int) Instructions.ClrA+0x07)  // op ADDR
+			{
+				return 3;
+			}
+
+			if (code >= (int) Instructions.AddAR && code <= (int) Instructions.AddAR+0x0F)  // op ADDR,r / r,ADDR
+			{
+				return 3;
+			}
+
+			if (code >= (int) Instructions.TestSA && code <= (int) Instructions.TestSA+0x07)  // op r',ADDR
+			{
+				return 3;
+			}
+
+			if (code >= (int) Instructions.TestVS && code <= (int) Instructions.TestVS+0x07)  // op #val,r'
+			{
+				return 2;
+			}
+
+			if (code >= (int) Instructions.TestVA && code <= (int) Instructions.TestVA+0x07)  // op #val,ADDR
+			{
+				return 4;
+			}
+
+			if (code >= (int) Instructions.AndAS && code <= (int) Instructions.AndAS+5)  // op ADDR,r' / r',ADDR
+			{
+				return 3;
+			}
+
+			if (code >= (int) Instructions.AndSA && code <= (int) Instructions.AndSA+5)  // op ADDR,r' / r',ADDR
+			{
+				return 3;
+			}
+
+			if (code >= (int) Instructions.CompAR && code <= (int) Instructions.CompAR+0x03)  // COMP ADDR,r
+			{
+				return 3;
+			}
+
+			return 1;
+		}
+
+		public override string GetCodesInstruction(List<int> codes)
+		{
+			//	Retourne le nom d'une instruction.
+			if (codes == null || codes.Count == 0)
+			{
+				return null;
+			}
+
+			System.Text.StringBuilder builder = new System.Text.StringBuilder();
+			int op = codes[0];
+
+			if (op >= (int) Instructions.Jump && op <= (int) Instructions.JumpNS)  // JUMP
+			{
+				builder.Append("JUMP ");
+				TinyProcessor.PutCodeAddress(builder, codes[1], codes[2]);
+				return builder.ToString();
+			}
+
+			if (op >= (int) Instructions.MoveVR && op <= (int) Instructions.MoveVR+0x03)  // MOVE #val,r
+			{
+				int n = op & 0x03;
+				builder.Append("MOVE ");
+				TinyProcessor.PutCodeValue(builder, codes[1]);
+				builder.Append(",");
+				TinyProcessor.PutCodeRegister(builder, n);
+				return builder.ToString();
+			}
+
+			return "NOP";
+		}
+
+		protected static void PutCodeRegister(System.Text.StringBuilder builder, int n)
+		{
+			switch (n)
+			{
+				case 0:
+					builder.Append("A");
+					break;
+
+				case 1:
+					builder.Append("B");
+					break;
+
+				case 2:
+					builder.Append("X");
+					break;
+
+				case 3:
+					builder.Append("Y");
+					break;
+			}
+		}
+
+		protected static void PutCodeValue(System.Text.StringBuilder builder, int val)
+		{
+			builder.Append("#");
+			builder.Append(val.ToString("X2"));
+			builder.Append("h");
+		}
+
+		protected static void PutCodeAddress(System.Text.StringBuilder builder, int mh, int ll)
+		{
+			int mode = (mh << 8) | ll;
+			int address = mode & 0x0FFF;
+
+			if ((mode & 0x4000) != 0)  // {SP}+depl ?
+			{
+				builder.Append("{SP}+");
+				builder.Append(address.ToString("X2"));
+			}
+			else
+			{
+				if ((mode & 0x8000) != 0)  // relatif ?
+				{
+					builder.Append("R8^");
+					if ((address & 0x0800) != 0)  // offset négatif ?
+					{
+						address = address-0x1000;
+						builder.Append("-");
+						builder.Append(address.ToString("X3"));
+					}
+					else
+					{
+						builder.Append(address.ToString("X3"));
+					}
+				}
+				else
+				{
+					builder.Append(address.ToString("X3"));
+				}
+			}
+
+			if ((mode & 0x1000) != 0)  // +{X} ?
+			{
+				builder.Append("+{X}");
+			}
+
+			if ((mode & 0x2000) != 0)  // +{Y} ?
+			{
+				builder.Append("+{Y}");
+			}
+		}
+
+		public override List<int> SetCodesInstruction(string instruction)
+		{
+			//	Retourne les codes d'une instruction.
+			List<int> codes = new List<int>();
+			codes.Add(0);
+			return codes;
 		}
 		#endregion
 

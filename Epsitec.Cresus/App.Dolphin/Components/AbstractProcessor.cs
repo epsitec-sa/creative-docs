@@ -54,6 +54,7 @@ namespace Epsitec.App.Dolphin.Components
 			return false;
 		}
 
+
 		public virtual IEnumerable<string> RegisterNames
 		{
 			//	Enumère tous les noms de registres.
@@ -87,6 +88,27 @@ namespace Epsitec.App.Dolphin.Components
 		}
 
 
+		public virtual int GetCodeLength(int code)
+		{
+			//	Retourne le nombre de bytes d'une instruction.
+			return 1;
+		}
+
+		public virtual string GetCodesInstruction(List<int> codes)
+		{
+			//	Retourne le nom d'une instruction.
+			return "NOP";
+		}
+
+		public virtual List<int> SetCodesInstruction(string instruction)
+		{
+			//	Retourne les codes d'une instruction.
+			List<int> codes = new List<int>();
+			codes.Add(0);
+			return codes;
+		}
+
+		
 		public virtual void RomInitialise(int address, int length)
 		{
 			//	Rempli la Rom.
