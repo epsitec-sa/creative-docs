@@ -27,7 +27,7 @@ namespace Epsitec.App.Dolphin.MyWidgets
 			this.widgetAddress.Dock = DockStyle.Left;
 
 			MyWidgets.Panel groupCodes = new Panel(this);
-			groupCodes.PreferredSize = new Size(60, 20);
+			groupCodes.PreferredSize = new Size(20*Code.maxCodes, 20);
 			groupCodes.Margins = new Margins(0, 0, 0, 0);
 			groupCodes.Dock = DockStyle.Left;
 
@@ -45,8 +45,8 @@ namespace Epsitec.App.Dolphin.MyWidgets
 
 			this.widgetInstruction = new TextField(this);
 			this.widgetInstruction.PreferredHeight = 20;
-			this.widgetInstruction.PreferredWidth = 200;
-			this.widgetInstruction.Margins = new Margins(10, 0, 0, 0);
+			this.widgetInstruction.PreferredWidth = 150;
+			this.widgetInstruction.Margins = new Margins(0, 0, 0, 0);
 			this.widgetInstruction.Dock = DockStyle.Left;
 			this.widgetInstruction.TextChanged += new EventHandler(this.HandleFieldTextChanged);
 			this.widgetInstruction.IsFocusedChanged += new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleFieldIsFocusedChanged);
@@ -230,7 +230,7 @@ namespace Epsitec.App.Dolphin.MyWidgets
 		#endregion
 
 
-		protected static readonly int			maxCodes = 3;
+		protected static readonly int			maxCodes = 4;
 
 		protected Components.AbstractProcessor	processor;
 		protected CodeAccessor					codeAccessor;

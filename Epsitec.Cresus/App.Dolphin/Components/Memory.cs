@@ -238,7 +238,10 @@ namespace Epsitec.App.Dolphin.Components
 					if (!this.application.IsEmptyPanel)
 					{
 						this.application.MemoryAccessor.UpdateData();
-						this.application.CodeAccessor.UpdateData();
+
+						//	Supprimé, car un programme n'est pas sensé modifier le code (quoique)...
+						//	Enorme ralentissement !
+						//?this.application.CodeAccessor.UpdateData();
 					}
 				}
 			}

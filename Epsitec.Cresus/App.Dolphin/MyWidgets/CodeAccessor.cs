@@ -24,6 +24,7 @@ namespace Epsitec.App.Dolphin.MyWidgets
 			this.panel.Dock = DockStyle.Fill;
 
 			this.fields = new List<MyWidgets.Code>();
+			this.instructionAddresses = new List<int>();
 		}
 
 		public CodeAccessor(Widget embedder) : this()
@@ -74,8 +75,8 @@ namespace Epsitec.App.Dolphin.MyWidgets
 				this.firstAddress = 0;
 				this.markPC = -1;
 
-				this.UpdateScroller();
 				this.UpdateData();
+				this.UpdateScroller();
 				this.UpdateMarkPC();
 			}
 		}
@@ -91,14 +92,15 @@ namespace Epsitec.App.Dolphin.MyWidgets
 			{
 				value = System.Math.Max(value, 0);
 				value = System.Math.Min(value, this.MemoryLength-this.fields.Count);
+				value = this.AdjustAddress(value);
 
 				if (this.firstAddress != value)
 				{
 					this.firstAddress = value;
 
-					this.UpdateData();
+					this.UpdateTable();
 					this.UpdateMarkPC();
-					this.scroller.Value = (decimal) this.firstAddress;
+					this.scroller.Value = (decimal) this.GetInstructionIndex(this.firstAddress);
 				}
 			}
 		}
@@ -115,8 +117,8 @@ namespace Epsitec.App.Dolphin.MyWidgets
 				this.bank = value;
 				this.firstAddress = 0;
 
-				this.UpdateScroller();
 				this.UpdateData();
+				this.UpdateScroller();
 				this.UpdateMarkPC();
 			}
 		}
@@ -134,7 +136,18 @@ namespace Epsitec.App.Dolphin.MyWidgets
 				{
 					this.markPC = value;
 
-					if (this.markPC < this.MemoryStart+this.firstAddress || this.markPC >= this.MemoryStart+this.firstAddress+this.fields.Count)
+					int firstIndex = this.GetInstructionIndex(this.firstAddress);
+					int lastAddress = 0;
+					if (firstIndex+this.fields.Count < this.instructionAddresses.Count)
+					{
+						lastAddress = this.instructionAddresses[firstIndex+this.fields.Count];
+					}
+					else
+					{
+						lastAddress = this.MemoryLength;
+					}
+
+					if (this.markPC < this.MemoryStart+this.firstAddress || this.markPC >= this.MemoryStart+lastAddress)
 					{
 						string newBank = this.MemoryBank(this.markPC);
 						if (this.bank == newBank)
@@ -151,17 +164,18 @@ namespace Epsitec.App.Dolphin.MyWidgets
 								this.firstAddress = this.MemoryLength-this.fields.Count;
 							}
 
+							this.UpdateData();
+
 							this.ignoreChange = true;
 							this.UpdateScroller();
 							this.ignoreChange = false;
 
-							this.UpdateData();
 							this.UpdateMarkPC();
 						}
 					}
 					else
 					{
-						this.UpdateData();
+						this.UpdateTable();
 						this.UpdateMarkPC();
 					}
 				}
@@ -180,14 +194,15 @@ namespace Epsitec.App.Dolphin.MyWidgets
 			{
 				this.CreateFields(total);
 
+				this.UpdateTable();
 				this.UpdateScroller();
-				this.UpdateData();
 				this.UpdateMarkPC();
 			}
 		}
 
 		private void CreateFields(int total)
 		{
+			//	Crée tous les champs éditables, en fonction de la hauteur du widget.
 			this.fields.Clear();
 			this.panel.Children.Clear();
 
@@ -211,21 +226,30 @@ namespace Epsitec.App.Dolphin.MyWidgets
 
 		protected void UpdateScroller()
 		{
+			//	Met à jour l'ascenseur.
 			if (this.fields.Count == 0)
 			{
 				return;
 			}
 
 			this.scroller.MinValue = (decimal) 0;
-			this.scroller.MaxValue = (decimal) (this.MemoryLength - this.fields.Count);
-			this.scroller.Value = (decimal) this.firstAddress;
-			this.scroller.VisibleRangeRatio = (decimal) System.Math.Max((double) this.fields.Count/this.MemoryLength, 0.2);  // évite cabine trop petite
+			this.scroller.MaxValue = (decimal) (this.instructionAddresses.Count - this.fields.Count);
+			this.scroller.Value = (decimal) this.GetInstructionIndex(this.firstAddress);
+			this.scroller.VisibleRangeRatio = (decimal) System.Math.Max((double) this.fields.Count/this.instructionAddresses.Count, 0.1);  // évite cabine trop petite
 			this.scroller.LargeChange = (decimal) this.fields.Count;
 			this.scroller.SmallChange = (decimal) 1;
 		}
 
 		public void UpdateData()
 		{
+			//	Met à jour la table des instructions.
+			this.UpdateInstructionAddresses();
+			this.UpdateTable();
+		}
+
+		protected void UpdateTable()
+		{
+			//	Met à jour la table des instructions.
 			if (this.processor == null || this.memory == null)
 			{
 				return;
@@ -237,7 +261,7 @@ namespace Epsitec.App.Dolphin.MyWidgets
 				MyWidgets.Code field = this.fields[i];
 
 				int code = this.memory.ReadForDebug(address);
-				int length = this.processor.GetCodeLength(code);
+				int length = this.processor.GetInstructionLength(code);
 
 				List<int> codes = new List<int>();
 				for (int c=0; c<length; c++)
@@ -251,6 +275,54 @@ namespace Epsitec.App.Dolphin.MyWidgets
 			}
 		}
 
+		protected void UpdateInstructionAddresses()
+		{
+			//	Met à jour la table des adresses des instructions.
+			if (this.processor == null || this.memory == null)
+			{
+				return;
+			}
+
+			this.instructionAddresses.Clear();
+
+			int address = this.MemoryStart;
+			while (address < this.MemoryStart+this.MemoryLength)
+			{
+				this.instructionAddresses.Add(address-this.MemoryStart);
+
+				int code = this.memory.ReadForDebug(address);
+				address += this.processor.GetInstructionLength(code);
+			}
+		}
+
+		protected int AdjustAddress(int address)
+		{
+			//	Retourne une adresse (relative dans la banque) ajustée pour commencer sur un début d'instruction.
+			for (int i=1; i<this.instructionAddresses.Count; i++)
+			{
+				if (address < this.instructionAddresses[i])
+				{
+					return this.instructionAddresses[i-1];
+				}
+			}
+
+			return address;
+		}
+
+		protected int GetInstructionIndex(int address)
+		{
+			//	Retourne l'index de l'instruction en fonction de son adresse (relative dans la banque).
+			for (int i=1; i<this.instructionAddresses.Count; i++)
+			{
+				if (address < this.instructionAddresses[i])
+				{
+					return i-1;
+				}
+			}
+
+			return 0;
+		}
+
 		protected void UpdateMarkPC()
 		{
 			if (this.memory == null)
@@ -258,17 +330,23 @@ namespace Epsitec.App.Dolphin.MyWidgets
 				return;
 			}
 
+			int address = this.MemoryStart+this.firstAddress;
 			for (int i=0; i<this.fields.Count; i++)
 			{
+				int code = this.memory.ReadForDebug(address);
+				int length = this.processor.GetInstructionLength(code);
+
 				Color color = Color.Empty;
 
-				if (this.MemoryStart+this.firstAddress+i == this.markPC)
+				if (address == this.markPC)
 				{
 					color = Color.FromRgb(1, 0, 0);
 				}
 
 				MyWidgets.Code field = this.fields[i];
 				field.BackColor = color;
+
+				address += length;
 			}
 		}
 
@@ -361,7 +439,14 @@ namespace Epsitec.App.Dolphin.MyWidgets
 				return;
 			}
 
-			this.FirstAddress = (int) System.Math.Floor(this.scroller.Value+0.5M);
+			int v = (int) System.Math.Floor(this.scroller.Value+0.5M);
+			int address = 0;
+			if (v >= 0 && v < this.instructionAddresses.Count)
+			{
+				address = this.instructionAddresses[v];
+			}
+
+			this.FirstAddress = address;
 		}
 
 		private void HandleFieldInstructionChanged(object sender)
@@ -383,6 +468,7 @@ namespace Epsitec.App.Dolphin.MyWidgets
 		protected List<MyWidgets.Code>				fields;
 		protected int								firstAddress;  // relatif dans la banque
 		protected int								markPC;
+		protected List<int>							instructionAddresses;
 		protected bool								ignoreChange;
 	}
 }

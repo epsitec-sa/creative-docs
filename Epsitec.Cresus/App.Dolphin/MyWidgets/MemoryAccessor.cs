@@ -175,6 +175,7 @@ namespace Epsitec.App.Dolphin.MyWidgets
 
 		private void CreateFields(int total)
 		{
+			//	Crée tous les champs éditables, en fonction de la hauteur du widget.
 			this.fields.Clear();
 			this.panel.Children.Clear();
 
@@ -199,6 +200,7 @@ namespace Epsitec.App.Dolphin.MyWidgets
 
 		protected void UpdateScroller()
 		{
+			//	Met à jour l'ascenseur.
 			if (this.fields.Count == 0)
 			{
 				return;

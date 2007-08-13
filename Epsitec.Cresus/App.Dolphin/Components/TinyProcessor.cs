@@ -238,14 +238,14 @@ namespace Epsitec.App.Dolphin.Components
 					return;
 			}
 
-			if (op >= (int) Instructions.PushR && op <= (int) Instructions.PushR + 0x03)  // PUSH r
+			if (op >= (int) Instructions.PushR && op < (int) Instructions.PushR+4)  // PUSH r
 			{
 				int n = op & 0x03;
 				this.StackPushByte(this.GetRegister(n));
 				return;
 			}
 
-			if (op >= (int) Instructions.PopR && op <= (int) Instructions.PopR + 0x03)  // POP r
+			if (op >= (int) Instructions.PopR && op < (int) Instructions.PopR+4)  // POP r
 			{
 				int n = op & 0x03;
 				this.SetRegister(n, this.StackPopByte());
@@ -262,7 +262,7 @@ namespace Epsitec.App.Dolphin.Components
 				return;
 			}
 
-			if (op >= (int) Instructions.ClrR && op <= (int) Instructions.ClrR + 0x0F)  // op r
+			if (op >= (int) Instructions.ClrR && op < (int) Instructions.ClrR+16)  // op r
 			{
 				int n = op & 0x03;
 				Instructions i = (Instructions) (op & 0xFC);
@@ -295,7 +295,7 @@ namespace Epsitec.App.Dolphin.Components
 				}
 			}
 
-			if (op >= (int) Instructions.RlR && op <= (int) Instructions.RlR + 0x0F)  // op r
+			if (op >= (int) Instructions.RlR && op < (int) Instructions.RlR+16)  // op r
 			{
 				int n = op & 0x03;
 				Instructions i = (Instructions) (op & 0xFC);
@@ -324,7 +324,7 @@ namespace Epsitec.App.Dolphin.Components
 				}
 			}
 
-			if (op >= (int) Instructions.ClrA && op <= (int) Instructions.ClrA + 0x07)  // op ADDR
+			if (op >= (int) Instructions.ClrA && op < (int) Instructions.ClrA+8)  // op ADDR
 			{
 				Instructions i = (Instructions) op;
 				address = this.AddressAbs;
@@ -377,7 +377,7 @@ namespace Epsitec.App.Dolphin.Components
 				}
 			}
 
-			if (op >= (int) Instructions.MoveRR && op <= (int) Instructions.MoveRR + 0x0F)  // MOVE r,r
+			if (op >= (int) Instructions.MoveRR && op < (int) Instructions.MoveRR+16)  // MOVE r,r
 			{
 				int src = (op>>2) & 0x03;
 				int dst = op & 0x03;
@@ -388,7 +388,7 @@ namespace Epsitec.App.Dolphin.Components
 				return;
 			}
 
-			if (op >= (int) Instructions.MoveVR && op <= (int) Instructions.MoveVR + 0x03)  // MOVE #val,r
+			if (op >= (int) Instructions.MoveVR && op < (int) Instructions.MoveVR+4)  // MOVE #val,r
 			{
 				int n = op & 0x03;
 
@@ -398,7 +398,7 @@ namespace Epsitec.App.Dolphin.Components
 				return;
 			}
 
-			if (op >= (int) Instructions.MoveAR && op <= (int) Instructions.MoveAR + 0x03)  // MOVE ADDR,r
+			if (op >= (int) Instructions.MoveAR && op < (int) Instructions.MoveAR+4)  // MOVE ADDR,r
 			{
 				int n = op & 0x03;
 				address = this.AddressAbs;
@@ -409,7 +409,7 @@ namespace Epsitec.App.Dolphin.Components
 				return;
 			}
 
-			if (op >= (int) Instructions.MoveRA && op <= (int) Instructions.MoveRA + 0x03)  // MOVE r,ADDR
+			if (op >= (int) Instructions.MoveRA && op < (int) Instructions.MoveRA+4)  // MOVE r,ADDR
 			{
 				int n = op & 0x03;
 				address = this.AddressAbs;
@@ -420,7 +420,7 @@ namespace Epsitec.App.Dolphin.Components
 				return;
 			}
 
-			if (op >= (int) Instructions.CompRR && op <= (int) Instructions.CompRR + 0x0F)  // COMP r,r
+			if (op >= (int) Instructions.CompRR && op < (int) Instructions.CompRR+16)  // COMP r,r
 			{
 				int src = (op>>2) & 0x03;
 				int dst = op & 0x03;
@@ -429,7 +429,7 @@ namespace Epsitec.App.Dolphin.Components
 				return;
 			}
 
-			if (op >= (int) Instructions.AddRR && op <= (int) Instructions.AddRR + 0x1F)  // op r,r
+			if (op >= (int) Instructions.AddRR && op < (int) Instructions.AddRR+32)  // op r,r
 			{
 				int src = (op>>2) & 0x03;
 				int dst = op & 0x03;
@@ -452,7 +452,7 @@ namespace Epsitec.App.Dolphin.Components
 				}
 			}
 
-			if (op >= (int) Instructions.AddVR && op <= (int) Instructions.AddVR + 0x07)  // op #val,r
+			if (op >= (int) Instructions.AddVR && op < (int) Instructions.AddVR+8)  // op #val,r
 			{
 				int n = op & 0x03;
 				Instructions i = (Instructions) (op & 0xFC);
@@ -474,7 +474,7 @@ namespace Epsitec.App.Dolphin.Components
 				}
 			}
 
-			if (op >= (int) Instructions.AddAR && op <= (int) Instructions.AddAR + 0x07)  // op ADDR,r
+			if (op >= (int) Instructions.AddAR && op < (int) Instructions.AddAR+8)  // op ADDR,r
 			{
 				int n = op & 0x03;
 				Instructions i = (Instructions) (op & 0xFC);
@@ -496,7 +496,7 @@ namespace Epsitec.App.Dolphin.Components
 				}
 			}
 
-			if (op >= (int) Instructions.AddRA && op <= (int) Instructions.AddRA + 0x07)  // op r,ADDR
+			if (op >= (int) Instructions.AddRA && op < (int) Instructions.AddRA+8)  // op r,ADDR
 			{
 				int n = op & 0x03;
 				Instructions i = (Instructions) (op & 0xFC);
@@ -518,7 +518,7 @@ namespace Epsitec.App.Dolphin.Components
 				}
 			}
 
-			if (op >= (int) Instructions.AndVR && op <= (int) Instructions.AndVR + 0x0F)  // op #val,r
+			if (op >= (int) Instructions.AndVR && op < (int) Instructions.AndVR+12)  // op #val,r
 			{
 				int n = op & 0x03;
 				Instructions i = (Instructions) (op & 0xFC);
@@ -546,7 +546,7 @@ namespace Epsitec.App.Dolphin.Components
 				}
 			}
 
-			if (op >= (int) Instructions.AndSS && op <= (int) Instructions.AndSS + 0x07)  // op r',r'
+			if (op >= (int) Instructions.AndSS && op < (int) Instructions.AndSS+8)  // op r',r'
 			{
 				int n = op & 0x01;
 				int src = n;
@@ -576,7 +576,7 @@ namespace Epsitec.App.Dolphin.Components
 				}
 			}
 
-			if (op >= (int) Instructions.AndAS && op <= (int) Instructions.AndAS + 0x07)  // op ADDR,r'
+			if (op >= (int) Instructions.AndAS && op < (int) Instructions.AndAS+6)  // op ADDR,r'
 			{
 				int n = op & 0x01;
 				Instructions i = (Instructions) (op & 0xFE);
@@ -604,7 +604,7 @@ namespace Epsitec.App.Dolphin.Components
 				}
 			}
 
-			if (op >= (int) Instructions.AndSA && op <= (int) Instructions.AndSA + 0x07)  // op r',ADDR
+			if (op >= (int) Instructions.AndSA && op < (int) Instructions.AndSA+6)  // op r',ADDR
 			{
 				int n = op & 0x01;
 				Instructions i = (Instructions) (op & 0xFE);
@@ -632,7 +632,7 @@ namespace Epsitec.App.Dolphin.Components
 				}
 			}
 
-			if (op >= (int) Instructions.TestSS && op <= (int) Instructions.TestSS + 0x07)  // op r',r'
+			if (op >= (int) Instructions.TestSS && op < (int) Instructions.TestSS+8)  // op r',r'
 			{
 				int n = op & 0x01;
 				int src = n;
@@ -667,7 +667,7 @@ namespace Epsitec.App.Dolphin.Components
 				}
 			}
 
-			if (op >= (int) Instructions.TestSA && op <= (int) Instructions.TestSA + 0x07)  // op r',ADDR
+			if (op >= (int) Instructions.TestSA && op < (int) Instructions.TestSA+8)  // op r',ADDR
 			{
 				int n = op & 0x01;
 				Instructions i = (Instructions) (op & 0xFE);
@@ -700,7 +700,7 @@ namespace Epsitec.App.Dolphin.Components
 				}
 			}
 
-			if (op >= (int) Instructions.TestVS && op <= (int) Instructions.TestVS + 0x07)  // op #val,r'
+			if (op >= (int) Instructions.TestVS && op < (int) Instructions.TestVS+8)  // op #val,r'
 			{
 				int n = op & 0x01;
 				Instructions i = (Instructions) (op & 0xFE);
@@ -733,7 +733,7 @@ namespace Epsitec.App.Dolphin.Components
 				}
 			}
 
-			if (op >= (int) Instructions.TestVA && op <= (int) Instructions.TestVA + 0x03)  // op #val,ADDR
+			if (op >= (int) Instructions.TestVA && op < (int) Instructions.TestVA+4)  // op #val,ADDR
 			{
 				Instructions i = (Instructions) (op & 0xFF);
 				data = this.memory.Read(this.registerPC++);
@@ -766,7 +766,7 @@ namespace Epsitec.App.Dolphin.Components
 				}
 			}
 
-			if (op >= (int) Instructions.CompVR && op <= (int) Instructions.CompVR + 0x03)  // COMP #val,r
+			if (op >= (int) Instructions.CompVR && op < (int) Instructions.CompVR+4)  // COMP #val,r
 			{
 				int n = op & 0x03;
 
@@ -775,7 +775,7 @@ namespace Epsitec.App.Dolphin.Components
 				return;
 			}
 
-			if (op >= (int) Instructions.CompAR && op <= (int) Instructions.CompAR + 0x03)  // COMP ADDR,r
+			if (op >= (int) Instructions.CompAR && op < (int) Instructions.CompAR+4)  // COMP ADDR,r
 			{
 				int n = op & 0x03;
 				address = this.AddressAbs;
@@ -1176,7 +1176,7 @@ namespace Epsitec.App.Dolphin.Components
 
 
 		#region Code
-		public override int GetCodeLength(int code)
+		public override int GetInstructionLength(int code)
 		{
 			//	Retourne le nombre de bytes d'une instruction.
 			switch ((Instructions) code)
@@ -1194,67 +1194,67 @@ namespace Epsitec.App.Dolphin.Components
 				return 3;
 			}
 
-			if (code >= (int) Instructions.MoveVR && code <= (int) Instructions.MoveVR+0x03)  // MOVE #val,r
+			if (code >= (int) Instructions.MoveVR && code < (int) Instructions.MoveVR+4)  // MOVE #val,r
 			{
 				return 2;
 			}
 
-			if (code >= (int) Instructions.MoveAR && code <= (int) Instructions.MoveAR+0x03)  // MOVE ADDR,r
+			if (code >= (int) Instructions.MoveAR && code < (int) Instructions.MoveAR+4)  // MOVE ADDR,r
 			{
 				return 3;
 			}
 
-			if (code >= (int) Instructions.MoveRA && code <= (int) Instructions.MoveRA+0x03)  // MOVE r,ADDR
+			if (code >= (int) Instructions.MoveRA && code < (int) Instructions.MoveRA+4)  // MOVE r,ADDR
 			{
 				return 3;
 			}
 
-			if (code >= (int) Instructions.CompVR && code <= (int) Instructions.CompVR+0x0F)  // op #val,r
+			if (code >= (int) Instructions.CompVR && code < (int) Instructions.CompVR+16)  // op #val,r
 			{
 				return 2;
 			}
 
-			if (code >= (int) Instructions.AddVR && code <= (int) Instructions.AddVR+0x07)  // op #val,r
+			if (code >= (int) Instructions.AddVR && code < (int) Instructions.AddVR+8)  // op #val,r
 			{
 				return 2;
 			}
 
-			if (code >= (int) Instructions.ClrA && code <= (int) Instructions.ClrA+0x07)  // op ADDR
+			if (code >= (int) Instructions.ClrA && code < (int) Instructions.ClrA+8)  // op ADDR
 			{
 				return 3;
 			}
 
-			if (code >= (int) Instructions.AddAR && code <= (int) Instructions.AddAR+0x0F)  // op ADDR,r / r,ADDR
+			if (code >= (int) Instructions.AddAR && code < (int) Instructions.AddAR+16)  // op ADDR,r / r,ADDR
 			{
 				return 3;
 			}
 
-			if (code >= (int) Instructions.TestSA && code <= (int) Instructions.TestSA+0x07)  // op r',ADDR
+			if (code >= (int) Instructions.TestSA && code < (int) Instructions.TestSA+8)  // op r',ADDR
 			{
 				return 3;
 			}
 
-			if (code >= (int) Instructions.TestVS && code <= (int) Instructions.TestVS+0x07)  // op #val,r'
+			if (code >= (int) Instructions.TestVS && code < (int) Instructions.TestVS+8)  // op #val,r'
 			{
 				return 2;
 			}
 
-			if (code >= (int) Instructions.TestVA && code <= (int) Instructions.TestVA+0x07)  // op #val,ADDR
+			if (code >= (int) Instructions.TestVA && code < (int) Instructions.TestVA+8)  // op #val,ADDR
 			{
 				return 4;
 			}
 
-			if (code >= (int) Instructions.AndAS && code <= (int) Instructions.AndAS+5)  // op ADDR,r' / r',ADDR
+			if (code >= (int) Instructions.AndAS && code < (int) Instructions.AndAS+6)  // op ADDR,r' / r',ADDR
 			{
 				return 3;
 			}
 
-			if (code >= (int) Instructions.AndSA && code <= (int) Instructions.AndSA+5)  // op ADDR,r' / r',ADDR
+			if (code >= (int) Instructions.AndSA && code < (int) Instructions.AndSA+6)  // op ADDR,r' / r',ADDR
 			{
 				return 3;
 			}
 
-			if (code >= (int) Instructions.CompAR && code <= (int) Instructions.CompAR+0x03)  // COMP ADDR,r
+			if (code >= (int) Instructions.CompAR && code < (int) Instructions.CompAR+4)  // COMP ADDR,r
 			{
 				return 3;
 			}
@@ -1272,6 +1272,7 @@ namespace Epsitec.App.Dolphin.Components
 
 			System.Text.StringBuilder builder = new System.Text.StringBuilder();
 			int op = codes[0];
+			System.Diagnostics.Debug.WriteLine(string.Format("i={0}", op.ToString("X2")));
 
 			switch ((Instructions) op)
 			{
@@ -1298,11 +1299,13 @@ namespace Epsitec.App.Dolphin.Components
 				case Instructions.AddVSP:
 					builder.Append("ADD ");
 					TinyProcessor.PutCodeValue(builder, codes[1]);
+					builder.Append(",SP");
 					return builder.ToString();
 
 				case Instructions.SubVSP:
 					builder.Append("SUB ");
 					TinyProcessor.PutCodeValue(builder, codes[1]);
+					builder.Append(",SP");
 					return builder.ToString();
 
 				case Instructions.ExAB:
@@ -1318,7 +1321,7 @@ namespace Epsitec.App.Dolphin.Components
 					return "SWAP B";
 			}
 
-			if (op >= (int) Instructions.PushR && op <= (int) Instructions.PushR+0x03)  // PUSH
+			if (op >= (int) Instructions.PushR && op < (int) Instructions.PushR+4)  // PUSH
 			{
 				builder.Append("PUSH ");
 				int n = op & 0x03;
@@ -1326,7 +1329,7 @@ namespace Epsitec.App.Dolphin.Components
 				return builder.ToString();
 			}
 
-			if (op >= (int) Instructions.PopR && op <= (int) Instructions.PopR+0x03)  // POP
+			if (op >= (int) Instructions.PopR && op < (int) Instructions.PopR+4)  // POP
 			{
 				builder.Append("POP ");
 				int n = op & 0x03;
@@ -1391,7 +1394,7 @@ namespace Epsitec.App.Dolphin.Components
 				return builder.ToString();
 			}
 
-			if (op >= (int) Instructions.ClrR && op <= (int) Instructions.ClrR+0x0F)  // op r
+			if (op >= (int) Instructions.ClrR && op < (int) Instructions.ClrR+16)  // op r
 			{
 				int n = op & 0x03;
 				Instructions i = (Instructions) (op & 0xFC);
@@ -1423,7 +1426,7 @@ namespace Epsitec.App.Dolphin.Components
 				return builder.ToString();
 			}
 
-			if (op >= (int) Instructions.RlR && op <= (int) Instructions.RlR+0x0F)  // op r
+			if (op >= (int) Instructions.RlR && op < (int) Instructions.RlR+16)  // op r
 			{
 				int n = op & 0x03;
 				Instructions i = (Instructions) (op & 0xFC);
@@ -1455,7 +1458,7 @@ namespace Epsitec.App.Dolphin.Components
 				return builder.ToString();
 			}
 
-			if (op >= (int) Instructions.MoveRR && op <= (int) Instructions.MoveRR+0x0F)  // MOVE r,r
+			if (op >= (int) Instructions.MoveRR && op < (int) Instructions.MoveRR+16)  // MOVE r,r
 			{
 				int src = (op>>2) & 0x03;
 				int dst = op & 0x03;
@@ -1466,7 +1469,7 @@ namespace Epsitec.App.Dolphin.Components
 				return builder.ToString();
 			}
 
-			if (op >= (int) Instructions.MoveVR && op <= (int) Instructions.MoveVR+0x03)  // MOVE #val,r
+			if (op >= (int) Instructions.MoveVR && op < (int) Instructions.MoveVR+4)  // MOVE #val,r
 			{
 				int n = op & 0x03;
 				builder.Append("MOVE ");
@@ -1476,7 +1479,7 @@ namespace Epsitec.App.Dolphin.Components
 				return builder.ToString();
 			}
 
-			if (op >= (int) Instructions.MoveAR && op <= (int) Instructions.MoveAR+0x03)  // MOVE ADDR,r
+			if (op >= (int) Instructions.MoveAR && op < (int) Instructions.MoveAR+4)  // MOVE ADDR,r
 			{
 				int n = op & 0x03;
 				builder.Append("MOVE ");
@@ -1486,7 +1489,7 @@ namespace Epsitec.App.Dolphin.Components
 				return builder.ToString();
 			}
 
-			if (op >= (int) Instructions.MoveRA && op <= (int) Instructions.MoveRA+0x03)  // MOVE r,ADDR
+			if (op >= (int) Instructions.MoveRA && op < (int) Instructions.MoveRA+4)  // MOVE r,ADDR
 			{
 				int n = op & 0x03;
 				builder.Append("MOVE ");
@@ -1496,7 +1499,7 @@ namespace Epsitec.App.Dolphin.Components
 				return builder.ToString();
 			}
 
-			if (op >= (int) Instructions.CompRR && op <= (int) Instructions.CompRR+0x0F)  // COMP r,r
+			if (op >= (int) Instructions.CompRR && op < (int) Instructions.CompRR+16)  // COMP r,r
 			{
 				int src = (op>>2) & 0x03;
 				int dst = op & 0x03;
@@ -1507,7 +1510,7 @@ namespace Epsitec.App.Dolphin.Components
 				return builder.ToString();
 			}
 
-			if (op >= (int) Instructions.CompVR && op <= (int) Instructions.CompVR+0x03)  // COMP #val,r
+			if (op >= (int) Instructions.CompVR && op < (int) Instructions.CompVR+4)  // COMP #val,r
 			{
 				int n = op & 0x03;
 				builder.Append("COMP ");
@@ -1517,7 +1520,7 @@ namespace Epsitec.App.Dolphin.Components
 				return builder.ToString();
 			}
 
-			if (op >= (int) Instructions.AndVR && op <= (int) Instructions.AndVR+0x0F)  // op #val,r
+			if (op >= (int) Instructions.AndVR && op <= (int) Instructions.AndVR + 11)  // op #val,r
 			{
 				int n = op & 0x03;
 				Instructions i = (Instructions) (op & 0xFC);
@@ -1547,7 +1550,34 @@ namespace Epsitec.App.Dolphin.Components
 				return builder.ToString();
 			}
 
-			if (op >= (int) Instructions.AddVR && op <= (int) Instructions.AddVR+0x03)  // ADD #val,r
+			if (op >= (int) Instructions.AddRR && op < (int) Instructions.AddRR+32)  // op r,r
+			{
+				int src = (op>>2) & 0x03;
+				int dst = op & 0x03;
+				Instructions i = (Instructions) (op & 0xF0);
+
+				switch (i)
+				{
+					case Instructions.AddRR:
+						builder.Append("ADD ");
+						break;
+
+					case Instructions.SubRR:
+						builder.Append("SUB ");
+						break;
+
+					default:
+						builder.Append("? ");
+						break;
+				}
+
+				TinyProcessor.PutCodeRegister(builder, src);
+				builder.Append(",");
+				TinyProcessor.PutCodeRegister(builder, dst);
+				return builder.ToString();
+			}
+
+			if (op >= (int) Instructions.AddVR && op < (int) Instructions.AddVR+4)  // ADD #val,r
 			{
 				int n = op & 0x03;
 				builder.Append("ADD ");
@@ -1557,7 +1587,7 @@ namespace Epsitec.App.Dolphin.Components
 				return builder.ToString();
 			}
 
-			if (op >= (int) Instructions.SubVR && op <= (int) Instructions.SubVR+0x03)  // SUB #val,r
+			if (op >= (int) Instructions.SubVR && op < (int) Instructions.SubVR+4)  // SUB #val,r
 			{
 				int n = op & 0x03;
 				builder.Append("SUB ");
@@ -1567,7 +1597,7 @@ namespace Epsitec.App.Dolphin.Components
 				return builder.ToString();
 			}
 
-			if (op >= (int) Instructions.ClrA && op <= (int) Instructions.ClrA+0x07)  // op ADDR
+			if (op >= (int) Instructions.ClrA && op < (int) Instructions.ClrA+8)  // op ADDR
 			{
 				Instructions i = (Instructions) op;
 
@@ -1614,7 +1644,7 @@ namespace Epsitec.App.Dolphin.Components
 				return builder.ToString();
 			}
 
-			if (op >= (int) Instructions.AddAR && op <= (int) Instructions.AddAR+0x07)  // op ADDR,r
+			if (op >= (int) Instructions.AddAR && op < (int) Instructions.AddAR+8)  // op ADDR,r
 			{
 				int n = op & 0x03;
 				Instructions i = (Instructions) (op & 0xFC);
@@ -1640,7 +1670,7 @@ namespace Epsitec.App.Dolphin.Components
 				return builder.ToString();
 			}
 
-			if (op >= (int) Instructions.AddRA && op <= (int) Instructions.AddRA+0x07)  // op r,ADDR
+			if (op >= (int) Instructions.AddRA && op < (int) Instructions.AddRA+8)  // op r,ADDR
 			{
 				int n = op & 0x03;
 				Instructions i = (Instructions) (op & 0xFC);
@@ -1667,7 +1697,7 @@ namespace Epsitec.App.Dolphin.Components
 				return builder.ToString();
 			}
 
-			if (op >= (int) Instructions.TestSS && op <= (int) Instructions.TestSS + 0x07)  // op r',r'
+			if (op >= (int) Instructions.TestSS && op < (int) Instructions.TestSS+8)  // op r',r'
 			{
 				int n = op & 0x01;
 				int src = n;
@@ -1703,7 +1733,41 @@ namespace Epsitec.App.Dolphin.Components
 				return builder.ToString();
 			}
 
-			if (op >= (int) Instructions.TestVS && op <= (int) Instructions.TestVS+0x07)  // op #val,r'
+			if (op >= (int) Instructions.TestSA && op < (int) Instructions.TestSA+8)  // op r',ADDR
+			{
+				int n = op & 0x01;
+				Instructions i = (Instructions) (op & 0xFE);
+
+				switch (i)
+				{
+					case Instructions.TestSA:
+						builder.Append("TEST ");
+						break;
+
+					case Instructions.TSetSA:
+						builder.Append("TSET ");
+						break;
+
+					case Instructions.TClrSA:
+						builder.Append("TCLR ");
+						break;
+
+					case Instructions.TNotSA:
+						builder.Append("TNOT ");
+						break;
+
+					default:
+						builder.Append("? ");
+						break;
+				}
+
+				TinyProcessor.PutCodeAddress(builder, codes[1], codes[2]);
+				builder.Append(":");
+				TinyProcessor.PutCodeRegister(builder, n);
+				return builder.ToString();
+			}
+
+			if (op >= (int) Instructions.TestVS && op < (int) Instructions.TestVS+8)  // op #val,r'
 			{
 				int n = op & 0x01;
 				Instructions i = (Instructions) (op & 0xFE);
@@ -1737,7 +1801,41 @@ namespace Epsitec.App.Dolphin.Components
 				return builder.ToString();
 			}
 
-			if (op >= (int) Instructions.AndSS && op <= (int) Instructions.AndSS + 0x07)  // op r',r'
+			if (op >= (int) Instructions.TestVA && op < (int) Instructions.TestVA+8)  // op #val,ADDR
+			{
+				int n = op & 0x01;
+				Instructions i = (Instructions) (op & 0xFE);
+
+				switch (i)
+				{
+					case Instructions.TestVA:
+						builder.Append("TEST ");
+						break;
+
+					case Instructions.TSetVA:
+						builder.Append("TSET ");
+						break;
+
+					case Instructions.TClrVA:
+						builder.Append("TCLR ");
+						break;
+
+					case Instructions.TNotVA:
+						builder.Append("TNOT ");
+						break;
+
+					default:
+						builder.Append("? ");
+						break;
+				}
+
+				TinyProcessor.PutCodeAddress(builder, codes[2], codes[3]);
+				builder.Append(":");
+				TinyProcessor.PutCodeValue(builder, codes[1]);
+				return builder.ToString();
+			}
+
+			if (op >= (int) Instructions.AndSS && op < (int) Instructions.AndSS+8)  // op r',r'
 			{
 				int n = op & 0x01;
 				int src = n;
@@ -1769,7 +1867,7 @@ namespace Epsitec.App.Dolphin.Components
 				return builder.ToString();
 			}
 
-			if (op >= (int) Instructions.AndAS && op <= (int) Instructions.AndAS + 0x07)  // op ADDR,r'
+			if (op >= (int) Instructions.AndAS && op < (int) Instructions.AndAS+6)  // op ADDR,r'
 			{
 				int n = op & 0x01;
 				Instructions i = (Instructions) (op & 0xFE);
@@ -1799,7 +1897,7 @@ namespace Epsitec.App.Dolphin.Components
 				return builder.ToString();
 			}
 
-			if (op >= (int) Instructions.AndSA && op <= (int) Instructions.AndSA + 0x07)  // op ADDR,r'
+			if (op >= (int) Instructions.AndSA && op < (int) Instructions.AndSA+6)  // op ADDR,r'
 			{
 				int n = op & 0x01;
 				Instructions i = (Instructions) (op & 0xFE);
@@ -1829,7 +1927,7 @@ namespace Epsitec.App.Dolphin.Components
 				return builder.ToString();
 			}
 
-			if (op >= (int) Instructions.CompAR && op <= (int) Instructions.CompAR+0x03)  // COMP ADDR,r
+			if (op >= (int) Instructions.CompAR && op < (int) Instructions.CompAR+4)  // COMP ADDR,r
 			{
 				int n = op & 0x03;
 				builder.Append("COMP ");
@@ -2053,11 +2151,11 @@ namespace Epsitec.App.Dolphin.Components
 			(byte) Instructions.PushR+1,				// PUSH B
 
 			(byte) Instructions.IncR+1,					// INC B
-			(byte) Instructions.Call, 0x80, 0x06,		// CALL DisplayHexaDigit
+			(byte) Instructions.Call, 0x08, 0x0C,		// CALL DisplayHexaDigit
 
 			(byte) Instructions.SwapA,					// SWAP A
 			(byte) Instructions.DecR+1,					// DEC B
-			(byte) Instructions.Call, 0x80, 0x06,		// CALL DisplayHexaDigit
+			(byte) Instructions.Call, 0x08, 0x0C,		// CALL DisplayHexaDigit
 
 			(byte) Instructions.PopR+1,					// POP B
 			(byte) Instructions.PopR+0,					// POP A

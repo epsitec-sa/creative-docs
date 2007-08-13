@@ -88,7 +88,7 @@ namespace Epsitec.App.Dolphin.Components
 		}
 
 
-		public virtual int GetCodeLength(int code)
+		public virtual int GetInstructionLength(int code)
 		{
 			//	Retourne le nombre de bytes d'une instruction.
 			return 1;
