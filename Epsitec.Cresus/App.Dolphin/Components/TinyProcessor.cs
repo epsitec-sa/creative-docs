@@ -947,7 +947,7 @@ namespace Epsitec.App.Dolphin.Components
 				int mode = (this.memory.Read(this.registerPC++) << 8) | (this.memory.Read(this.registerPC++));
 				int address = mode & 0x0FFF;
 
-				if ((mode & 0x8000) != 0)  // relatif ?
+				if ((mode & 0x8000) != 0)  // {PC}+depl (relatif) ?
 				{
 					if ((address & 0x0800) != 0)  // offset négatif ?
 					{
@@ -959,7 +959,12 @@ namespace Epsitec.App.Dolphin.Components
 
 				if ((mode & 0x4000) != 0)  // {SP}+depl ?
 				{
-					address += this.registerSP;
+					if ((address & 0x0800) != 0)  // offset négatif ?
+					{
+						address = address-0x1000;
+					}
+
+					address = this.registerSP + address;
 				}
 
 				if ((mode & 0x1000) != 0)  // +{X} ?
@@ -1179,16 +1184,14 @@ namespace Epsitec.App.Dolphin.Components
 				case Instructions.AddVSP:
 				case Instructions.SubVSP:
 					return 2;
+
+				case Instructions.Call:
+					return 3;
 			}
 
 			if (code >= (int) Instructions.Jump && code <= (int) Instructions.JumpNS)  // JUMP
 			{
 				return 3;
-			}
-
-			if (code >= (int) Instructions.ClrR && code <= (int) Instructions.ClrR+0x0F)  // op r
-			{
-				return 2;
 			}
 
 			if (code >= (int) Instructions.MoveVR && code <= (int) Instructions.MoveVR+0x03)  // MOVE #val,r
@@ -1259,7 +1262,7 @@ namespace Epsitec.App.Dolphin.Components
 			return 1;
 		}
 
-		public override string GetCodesInstruction(List<int> codes)
+		public override string DessassemblyInstruction(List<int> codes)
 		{
 			//	Retourne le nom d'une instruction.
 			if (codes == null || codes.Count == 0)
@@ -1270,10 +1273,196 @@ namespace Epsitec.App.Dolphin.Components
 			System.Text.StringBuilder builder = new System.Text.StringBuilder();
 			int op = codes[0];
 
+			switch ((Instructions) op)
+			{
+				case Instructions.Nop:
+					return "NOP";
+
+				case Instructions.Call:
+					builder.Append("CALL ");
+					TinyProcessor.PutCodeAddress(builder, codes[1], codes[2]);
+					return builder.ToString();
+
+				case Instructions.Ret:
+					return "RET";
+
+				case Instructions.Halt:
+					return "HALT";
+
+				case Instructions.SetC:
+					return "SETC";
+
+				case Instructions.ClrC:
+					return "CLRC";
+
+				case Instructions.AddVSP:
+					builder.Append("ADD ");
+					TinyProcessor.PutCodeValue(builder, codes[1]);
+					return builder.ToString();
+
+				case Instructions.SubVSP:
+					builder.Append("SUB ");
+					TinyProcessor.PutCodeValue(builder, codes[1]);
+					return builder.ToString();
+
+				case Instructions.ExAB:
+					return "EX A,B";
+
+				case Instructions.ExXY:
+					return "EX X,Y";
+
+				case Instructions.SwapA:
+					return "SWAP A";
+
+				case Instructions.SwapB:
+					return "SWAP B";
+			}
+
+			if (op >= (int) Instructions.PushR && op <= (int) Instructions.PushR+0x03)  // PUSH
+			{
+				builder.Append("PUSH ");
+				int n = op & 0x03;
+				TinyProcessor.PutCodeRegister(builder, n);
+				return builder.ToString();
+			}
+
+			if (op >= (int) Instructions.PopR && op <= (int) Instructions.PopR+0x03)  // POP
+			{
+				builder.Append("POP ");
+				int n = op & 0x03;
+				TinyProcessor.PutCodeRegister(builder, n);
+				return builder.ToString();
+			}
+
 			if (op >= (int) Instructions.Jump && op <= (int) Instructions.JumpNS)  // JUMP
 			{
-				builder.Append("JUMP ");
+				switch ((Instructions) op)
+				{
+					case Instructions.Jump:
+						builder.Append("JUMP ");
+						break;
+
+					case Instructions.JumpEQ:
+						builder.Append("JUMP,EQ ");
+						break;
+
+					case Instructions.JumpNE:
+						builder.Append("JUMP,NE ");
+						break;
+
+					case Instructions.JumpLO:
+						builder.Append("JUMP,LO ");
+						break;
+
+					case Instructions.JumpLS:
+						builder.Append("JUMP,LS ");
+						break;
+
+					case Instructions.JumpHI:
+						builder.Append("JUMP,HI ");
+						break;
+
+					case Instructions.JumpHS:
+						builder.Append("JUMP,HS ");
+						break;
+
+					case Instructions.JumpCC:
+						builder.Append("JUMP,CC ");
+						break;
+
+					case Instructions.JumpCS:
+						builder.Append("JUMP,CS ");
+						break;
+
+					case Instructions.JumpNC:
+						builder.Append("JUMP,NC ");
+						break;
+
+					case Instructions.JumpNS:
+						builder.Append("JUMP,NS ");
+						break;
+
+					default:
+						builder.Append("JUMP ");
+						break;
+				}
+
 				TinyProcessor.PutCodeAddress(builder, codes[1], codes[2]);
+				return builder.ToString();
+			}
+
+			if (op >= (int) Instructions.ClrR && op <= (int) Instructions.ClrR+0x0F)  // op r
+			{
+				int n = op & 0x03;
+				Instructions i = (Instructions) (op & 0xFC);
+
+				switch (i)
+				{
+					case Instructions.ClrR:
+						builder.Append("CLR ");
+						break;
+
+					case Instructions.NotR:
+						builder.Append("NOT ");
+						break;
+
+					case Instructions.IncR:
+						builder.Append("INC ");
+						break;
+
+					case Instructions.DecR:
+						builder.Append("DEC ");
+						break;
+
+					default:
+						builder.Append("? ");
+						break;
+				}
+
+				TinyProcessor.PutCodeRegister(builder, n);
+				return builder.ToString();
+			}
+
+			if (op >= (int) Instructions.RlR && op <= (int) Instructions.RlR+0x0F)  // op r
+			{
+				int n = op & 0x03;
+				Instructions i = (Instructions) (op & 0xFC);
+
+				switch (i)
+				{
+					case Instructions.RlR:
+						builder.Append("RL ");
+						break;
+
+					case Instructions.RrR:
+						builder.Append("RR ");
+						break;
+
+					case Instructions.RlcR:
+						builder.Append("RLC ");
+						break;
+
+					case Instructions.RrcR:
+						builder.Append("RRC ");
+						break;
+
+					default:
+						builder.Append("? ");
+						break;
+				}
+
+				TinyProcessor.PutCodeRegister(builder, n);
+				return builder.ToString();
+			}
+
+			if (op >= (int) Instructions.MoveRR && op <= (int) Instructions.MoveRR+0x0F)  // MOVE r,r
+			{
+				int src = (op>>2) & 0x03;
+				int dst = op & 0x03;
+				builder.Append("MOVE ");
+				TinyProcessor.PutCodeRegister(builder, src);
+				builder.Append(",");
+				TinyProcessor.PutCodeRegister(builder, dst);
 				return builder.ToString();
 			}
 
@@ -1287,11 +1476,375 @@ namespace Epsitec.App.Dolphin.Components
 				return builder.ToString();
 			}
 
-			return "NOP";
+			if (op >= (int) Instructions.MoveAR && op <= (int) Instructions.MoveAR+0x03)  // MOVE ADDR,r
+			{
+				int n = op & 0x03;
+				builder.Append("MOVE ");
+				TinyProcessor.PutCodeAddress(builder, codes[1], codes[2]);
+				builder.Append(",");
+				TinyProcessor.PutCodeRegister(builder, n);
+				return builder.ToString();
+			}
+
+			if (op >= (int) Instructions.MoveRA && op <= (int) Instructions.MoveRA+0x03)  // MOVE r,ADDR
+			{
+				int n = op & 0x03;
+				builder.Append("MOVE ");
+				TinyProcessor.PutCodeRegister(builder, n);
+				builder.Append(",");
+				TinyProcessor.PutCodeAddress(builder, codes[1], codes[2]);
+				return builder.ToString();
+			}
+
+			if (op >= (int) Instructions.CompRR && op <= (int) Instructions.CompRR+0x0F)  // COMP r,r
+			{
+				int src = (op>>2) & 0x03;
+				int dst = op & 0x03;
+				builder.Append("COMP ");
+				TinyProcessor.PutCodeRegister(builder, src);
+				builder.Append(",");
+				TinyProcessor.PutCodeRegister(builder, dst);
+				return builder.ToString();
+			}
+
+			if (op >= (int) Instructions.CompVR && op <= (int) Instructions.CompVR+0x03)  // COMP #val,r
+			{
+				int n = op & 0x03;
+				builder.Append("COMP ");
+				TinyProcessor.PutCodeValue(builder, codes[1]);
+				builder.Append(",");
+				TinyProcessor.PutCodeRegister(builder, n);
+				return builder.ToString();
+			}
+
+			if (op >= (int) Instructions.AndVR && op <= (int) Instructions.AndVR+0x0F)  // op #val,r
+			{
+				int n = op & 0x03;
+				Instructions i = (Instructions) (op & 0xFC);
+
+				switch (i)
+				{
+					case Instructions.AndVR:
+						builder.Append("AND ");
+						break;
+
+					case Instructions.OrVR:
+						builder.Append("OR ");
+						break;
+
+					case Instructions.XorVR:
+						builder.Append("XOR ");
+						break;
+
+					default:
+						builder.Append("? ");
+						break;
+				}
+
+				TinyProcessor.PutCodeValue(builder, codes[1]);
+				builder.Append(",");
+				TinyProcessor.PutCodeRegister(builder, n);
+				return builder.ToString();
+			}
+
+			if (op >= (int) Instructions.AddVR && op <= (int) Instructions.AddVR+0x03)  // ADD #val,r
+			{
+				int n = op & 0x03;
+				builder.Append("ADD ");
+				TinyProcessor.PutCodeValue(builder, codes[1]);
+				builder.Append(",");
+				TinyProcessor.PutCodeRegister(builder, n);
+				return builder.ToString();
+			}
+
+			if (op >= (int) Instructions.SubVR && op <= (int) Instructions.SubVR+0x03)  // SUB #val,r
+			{
+				int n = op & 0x03;
+				builder.Append("SUB ");
+				TinyProcessor.PutCodeValue(builder, codes[1]);
+				builder.Append(",");
+				TinyProcessor.PutCodeRegister(builder, n);
+				return builder.ToString();
+			}
+
+			if (op >= (int) Instructions.ClrA && op <= (int) Instructions.ClrA+0x07)  // op ADDR
+			{
+				Instructions i = (Instructions) op;
+
+				switch (i)
+				{
+					case Instructions.ClrA:
+						builder.Append("CLR ");
+						break;
+
+					case Instructions.NotA:
+						builder.Append("NOT ");
+						break;
+
+					case Instructions.IncA:
+						builder.Append("INC ");
+						break;
+
+					case Instructions.DecA:
+						builder.Append("DEC ");
+						break;
+
+					case Instructions.RlA:
+						builder.Append("RL ");
+						break;
+
+					case Instructions.RrA:
+						builder.Append("RR ");
+						break;
+
+					case Instructions.RlcA:
+						builder.Append("RLC ");
+						break;
+
+					case Instructions.RrcA:
+						builder.Append("RRC ");
+						break;
+
+					default:
+						builder.Append("? ");
+						break;
+				}
+
+				TinyProcessor.PutCodeAddress(builder, codes[1], codes[2]);
+				return builder.ToString();
+			}
+
+			if (op >= (int) Instructions.AddAR && op <= (int) Instructions.AddAR+0x07)  // op ADDR,r
+			{
+				int n = op & 0x03;
+				Instructions i = (Instructions) (op & 0xFC);
+
+				switch (i)
+				{
+					case Instructions.AddAR:
+						builder.Append("ADD ");
+						break;
+
+					case Instructions.SubAR:
+						builder.Append("SUB ");
+						break;
+
+					default:
+						builder.Append("? ");
+						break;
+				}
+
+				TinyProcessor.PutCodeAddress(builder, codes[1], codes[2]);
+				builder.Append(",");
+				TinyProcessor.PutCodeRegister(builder, n);
+				return builder.ToString();
+			}
+
+			if (op >= (int) Instructions.AddRA && op <= (int) Instructions.AddRA+0x07)  // op r,ADDR
+			{
+				int n = op & 0x03;
+				Instructions i = (Instructions) (op & 0xFC);
+
+				switch (i)
+				{
+					case Instructions.AddRA:
+						builder.Append("ADD ");
+						break;
+
+					case Instructions.SubRA:
+						builder.Append("SUB ");
+						break;
+
+					default:
+						builder.Append("? ");
+						break;
+				}
+
+				builder.Append("MOVE ");
+				TinyProcessor.PutCodeRegister(builder, n);
+				builder.Append(",");
+				TinyProcessor.PutCodeAddress(builder, codes[1], codes[2]);
+				return builder.ToString();
+			}
+
+			if (op >= (int) Instructions.TestSS && op <= (int) Instructions.TestSS + 0x07)  // op r',r'
+			{
+				int n = op & 0x01;
+				int src = n;
+				int dst = n ^0x01;
+				Instructions i = (Instructions) (op & 0xFE);
+
+				switch (i)
+				{
+					case Instructions.TestSS:
+						builder.Append("TEST ");
+						break;
+
+					case Instructions.TSetSS:
+						builder.Append("TSET ");
+						break;
+
+					case Instructions.TClrSS:
+						builder.Append("TCLR ");
+						break;
+
+					case Instructions.TNotSS:
+						builder.Append("TNOT ");
+						break;
+
+					default:
+						builder.Append("? ");
+						break;
+				}
+
+				TinyProcessor.PutCodeRegister(builder, dst);
+				builder.Append(":");
+				TinyProcessor.PutCodeRegister(builder, src);
+				return builder.ToString();
+			}
+
+			if (op >= (int) Instructions.TestVS && op <= (int) Instructions.TestVS+0x07)  // op #val,r'
+			{
+				int n = op & 0x01;
+				Instructions i = (Instructions) (op & 0xFE);
+
+				switch (i)
+				{
+					case Instructions.TestVS:
+						builder.Append("TEST ");
+						break;
+
+					case Instructions.TSetVS:
+						builder.Append("TSET ");
+						break;
+
+					case Instructions.TClrVS:
+						builder.Append("TCLR ");
+						break;
+
+					case Instructions.TNotVS:
+						builder.Append("TNOT ");
+						break;
+
+					default:
+						builder.Append("? ");
+						break;
+				}
+
+				TinyProcessor.PutCodeRegister(builder, n);
+				builder.Append(":");
+				TinyProcessor.PutCodeValue(builder, codes[1]);
+				return builder.ToString();
+			}
+
+			if (op >= (int) Instructions.AndSS && op <= (int) Instructions.AndSS + 0x07)  // op r',r'
+			{
+				int n = op & 0x01;
+				int src = n;
+				int dst = n ^0x01;
+				Instructions i = (Instructions) (op & 0xFE);
+
+				switch (i)
+				{
+					case Instructions.AndSS:
+						builder.Append("TEST ");
+						break;
+
+					case Instructions.OrSS:
+						builder.Append("OR ");
+						break;
+
+					case Instructions.XorSS:
+						builder.Append("XOR ");
+						break;
+
+					default:
+						builder.Append("? ");
+						break;
+				}
+
+				TinyProcessor.PutCodeRegister(builder, dst);
+				builder.Append(":");
+				TinyProcessor.PutCodeRegister(builder, src);
+				return builder.ToString();
+			}
+
+			if (op >= (int) Instructions.AndAS && op <= (int) Instructions.AndAS + 0x07)  // op ADDR,r'
+			{
+				int n = op & 0x01;
+				Instructions i = (Instructions) (op & 0xFE);
+
+				switch (i)
+				{
+					case Instructions.AndAS:
+						builder.Append("TEST ");
+						break;
+
+					case Instructions.OrAS:
+						builder.Append("OR ");
+						break;
+
+					case Instructions.XorAS:
+						builder.Append("XOR ");
+						break;
+
+					default:
+						builder.Append("? ");
+						break;
+				}
+
+				TinyProcessor.PutCodeAddress(builder, codes[1], codes[2]);
+				builder.Append(",");
+				TinyProcessor.PutCodeRegister(builder, n);
+				return builder.ToString();
+			}
+
+			if (op >= (int) Instructions.AndSA && op <= (int) Instructions.AndSA + 0x07)  // op ADDR,r'
+			{
+				int n = op & 0x01;
+				Instructions i = (Instructions) (op & 0xFE);
+
+				switch (i)
+				{
+					case Instructions.AndSA:
+						builder.Append("TEST ");
+						break;
+
+					case Instructions.OrSA:
+						builder.Append("OR ");
+						break;
+
+					case Instructions.XorSA:
+						builder.Append("XOR ");
+						break;
+
+					default:
+						builder.Append("? ");
+						break;
+				}
+
+				TinyProcessor.PutCodeRegister(builder, n);
+				builder.Append(",");
+				TinyProcessor.PutCodeAddress(builder, codes[1], codes[2]);
+				return builder.ToString();
+			}
+
+			if (op >= (int) Instructions.CompAR && op <= (int) Instructions.CompAR+0x03)  // COMP ADDR,r
+			{
+				int n = op & 0x03;
+				builder.Append("COMP ");
+				TinyProcessor.PutCodeValue(builder, codes[1]);
+				builder.Append(",");
+				TinyProcessor.PutCodeRegister(builder, n);
+				return builder.ToString();
+			}
+
+			return "?";
 		}
 
 		protected static void PutCodeRegister(System.Text.StringBuilder builder, int n)
 		{
+			//	Met le nom d'un registre.
 			switch (n)
 			{
 				case 0:
@@ -1314,6 +1867,7 @@ namespace Epsitec.App.Dolphin.Components
 
 		protected static void PutCodeValue(System.Text.StringBuilder builder, int val)
 		{
+			//	Met une valeur immédiate hexadécimale.
 			builder.Append("#");
 			builder.Append(val.ToString("X2"));
 			builder.Append("h");
@@ -1321,34 +1875,48 @@ namespace Epsitec.App.Dolphin.Components
 
 		protected static void PutCodeAddress(System.Text.StringBuilder builder, int mh, int ll)
 		{
+			//	Met une adresse hexadécimale.
 			int mode = (mh << 8) | ll;
 			int address = mode & 0x0FFF;
 
-			if ((mode & 0x4000) != 0)  // {SP}+depl ?
+			if ((mode & 0x8000) != 0)  // {PC}+depl (relatif) ?
 			{
-				builder.Append("{SP}+");
-				builder.Append(address.ToString("X2"));
-			}
-			else
-			{
-				if ((mode & 0x8000) != 0)  // relatif ?
+				builder.Append("{PC}");
+				if ((address & 0x0800) != 0)  // offset négatif ?
 				{
-					builder.Append("R8^");
-					if ((address & 0x0800) != 0)  // offset négatif ?
-					{
-						address = address-0x1000;
-						builder.Append("-");
-						builder.Append(address.ToString("X3"));
-					}
-					else
-					{
-						builder.Append(address.ToString("X3"));
-					}
+					address = 0x1000-address;
+					builder.Append("-");
+					builder.Append(address.ToString("X3"));
+					builder.Append("h");
 				}
 				else
 				{
+					builder.Append("+");
 					builder.Append(address.ToString("X3"));
+					builder.Append("h");
 				}
+			}
+			else if ((mode & 0x4000) != 0)  // {SP}+depl ?
+			{
+				builder.Append("{SP}");
+				if ((address & 0x0800) != 0)  // offset négatif ?
+				{
+					address = 0x1000-address;
+					builder.Append("-");
+					builder.Append(address.ToString("X3"));
+					builder.Append("h");
+				}
+				else
+				{
+					builder.Append("+");
+					builder.Append(address.ToString("X3"));
+					builder.Append("h");
+				}
+			}
+			else
+			{
+				builder.Append(address.ToString("X3"));
+				builder.Append("h");
 			}
 
 			if ((mode & 0x1000) != 0)  // +{X} ?
@@ -1362,7 +1930,7 @@ namespace Epsitec.App.Dolphin.Components
 			}
 		}
 
-		public override List<int> SetCodesInstruction(string instruction)
+		public override List<int> AssemblyInstruction(string instruction)
 		{
 			//	Retourne les codes d'une instruction.
 			List<int> codes = new List<int>();
@@ -1876,13 +2444,13 @@ namespace Epsitec.App.Dolphin.Components
 					AbstractProcessor.HelpPutLine(builder, "m=1             <tab/>+{X}");
 					AbstractProcessor.HelpPutLine(builder, "m=2             <tab/>+{Y}");
 					AbstractProcessor.HelpPutLine(builder, "m=4             <tab/>{SP}+depl");
-					AbstractProcessor.HelpPutLine(builder, "m=8             <tab/>Adresse relative 12 bits signés");
+					AbstractProcessor.HelpPutLine(builder, "m=8             <tab/>{PC}+depl");
 					AbstractProcessor.HelpPutLine(builder, "");
 					AbstractProcessor.HelpPutLine(builder, "<b>Exemples</b>");
 					AbstractProcessor.HelpPutLine(builder, "[64] [0C] [07]  <tab/>MOVE C07,A");
 					AbstractProcessor.HelpPutLine(builder, "[68] [1C] [00]  <tab/>MOVE A,C00+{X}");
-					AbstractProcessor.HelpPutLine(builder, "[10] [80] [10]  <tab/>JUMP +10 (saute 10 bytes)");
-					AbstractProcessor.HelpPutLine(builder, "[10] [8F] [FD]  <tab/>JUMP -3 (boucle infinie)");
+					AbstractProcessor.HelpPutLine(builder, "[10] [80] [10]  <tab/>JUMP {PC}+10 (saute 10 bytes)");
+					AbstractProcessor.HelpPutLine(builder, "[10] [8F] [FD]  <tab/>JUMP {PC}-3 (boucle infinie)");
 					AbstractProcessor.HelpPutLine(builder, "[64] [40] [02]  <tab/>MOVE {SP}+2,A");
 					break;
 

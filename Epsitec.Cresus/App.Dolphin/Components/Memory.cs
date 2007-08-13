@@ -238,6 +238,7 @@ namespace Epsitec.App.Dolphin.Components
 					if (!this.application.IsEmptyPanel)
 					{
 						this.application.MemoryAccessor.UpdateData();
+						this.application.CodeAccessor.UpdateData();
 					}
 				}
 			}

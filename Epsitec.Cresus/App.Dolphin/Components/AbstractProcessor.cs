@@ -94,13 +94,13 @@ namespace Epsitec.App.Dolphin.Components
 			return 1;
 		}
 
-		public virtual string GetCodesInstruction(List<int> codes)
+		public virtual string DessassemblyInstruction(List<int> codes)
 		{
 			//	Retourne le nom d'une instruction.
 			return "NOP";
 		}
 
-		public virtual List<int> SetCodesInstruction(string instruction)
+		public virtual List<int> AssemblyInstruction(string instruction)
 		{
 			//	Retourne les codes d'une instruction.
 			List<int> codes = new List<int>();

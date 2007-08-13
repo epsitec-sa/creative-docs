@@ -131,7 +131,7 @@ namespace Epsitec.App.Dolphin.MyWidgets
 				}
 			}
 
-			this.widgetInstruction.Text = this.processor.GetCodesInstruction(this.valueCodes);
+			this.widgetInstruction.Text = this.processor.DessassemblyInstruction(this.valueCodes);
 		}
 
 		public void GetCode(out int address, List<int> codes)
