@@ -2691,8 +2691,6 @@ namespace Epsitec.App.Dolphin.Components
 				}
 				return;
 			}
-
-			value =  -1;
 		}
 
 		protected static void GetCodeAddress(string word, out int mh, out int ll)

@@ -476,9 +476,18 @@ namespace Epsitec.App.Dolphin.MyWidgets
 			List<int> codes = new List<int>();
 			widget.GetCode(out address, codes);
 
+			int index = this.GetInstructionIndex(address);
+			int oldLength = this.instructionAddresses[index+1] - this.instructionAddresses[index];
+
 			foreach (int code in codes)
 			{
 				this.memory.WriteWithDirty(address++, code);
+			}
+
+			while (oldLength > codes.Count)
+			{
+				this.memory.WriteWithDirty(address++, 0);  // NOP
+				oldLength--;
 			}
 
 			this.UpdateData();
