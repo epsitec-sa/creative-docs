@@ -108,7 +108,7 @@ namespace Epsitec.App.Dolphin.MyWidgets
 			}
 		}
 
-		public void SetCode(int address, List<int> codes)
+		public void SetCode(int address, List<int> codes, bool isRom)
 		{
 			//	Spécifie les codes de l'instruction représenté par ce widget.
 			if (this.valueAddress != address)
@@ -135,6 +135,12 @@ namespace Epsitec.App.Dolphin.MyWidgets
 			}
 
 			this.widgetInstruction.Text = this.processor.DessassemblyInstruction(this.valueCodes);
+
+			if (this.widgetInstruction.IsReadOnly != isRom)  // TODO: devrait être inutile (bug à corriger pour Pierre)
+			{
+				this.widgetInstruction.IsReadOnly = isRom;
+				this.widgetInstruction.Invalidate();
+			}
 		}
 
 		public void GetCode(out int address, List<int> codes)

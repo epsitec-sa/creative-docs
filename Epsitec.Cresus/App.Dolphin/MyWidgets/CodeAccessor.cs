@@ -288,7 +288,8 @@ namespace Epsitec.App.Dolphin.MyWidgets
 					codes.Add(this.memory.ReadForDebug(address+c));
 				}
 
-				field.SetCode(address, codes);
+				bool isRom = this.memory.IsReadOnly(this.MemoryStart+address);
+				field.SetCode(address, codes, isRom);
 
 				address += length;
 			}

@@ -2048,7 +2048,7 @@ namespace Epsitec.App.Dolphin.Components
 			instruction = instruction.ToUpper().Trim();
 
 			char[] seps = {' ', ',', ':'};
-			string[] words = instruction.Split(seps);
+			string[] words = instruction.Split(seps, System.StringSplitOptions.RemoveEmptyEntries);
 
 			if (words.Length == 1)
 			{
