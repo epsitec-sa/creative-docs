@@ -2218,7 +2218,7 @@ namespace Epsitec.App.Dolphin.Components
 								break;
 
 							default:
-								return "<b>La condition est fausse.</b><br/><br/>Les conditions possibles sont:<br/>EQ, NE, LO, LS, HI, HS, CC, CS, NC, NS.<br/> ";
+								return "<b>La condition est fausse.</b><br/><br/>Les conditions possibles sont :<br/><list type=\"fix\"/>EQ, NE<br/><list type=\"fix\"/>LO, LS, HI, HS<br/><list type=\"fix\"/>CC, CS, NC, NS<br/> ";
 						}
 
 						codes.Add(mh2);
@@ -2737,7 +2737,7 @@ namespace Epsitec.App.Dolphin.Components
 					break;
 
 				default:
-					return "<b>Instruction inconnue.</b><br/><br/>Les instructions connues sont:<br/>ADD, AND, CALL, CLR, CLRC, COMP, DEC, EX, HALT, JUMP, MOVE, NOT, OR, PUSH, RL, RLC, RR, RRC, SETC, SWAP, TCLR, TEST, TNOT, TSET, XOR.<br/> ";
+					return "<b>Instruction inconnue.</b><br/><br/>Les instructions connues sont :<br/><list type=\"fix\"/>JUMP, CALL, RET, PUSH, POP<br/><list type=\"fix\"/>MOVE, COMP, ADD, SUB, AND, OR, XOR<br/><list type=\"fix\"/>CLR, NOT, INC, DEC, RL, RR, RLC, RRC<br/><list type=\"fix\"/>TEST, TSET, TCLR, TNOT<br/><list type=\"fix\"/>NOP, CLRC, SETC, EX, SWAP, HALT<br/> ";
 			}
 
 			return null;  // ok
@@ -2915,7 +2915,7 @@ namespace Epsitec.App.Dolphin.Components
 
 			if (!string.IsNullOrEmpty(types))
 			{
-				builder.Append("<br/><br/>Les combinaisons suivantes sont possible:<br/>");
+				builder.Append("<br/><br/>Les combinaisons suivantes sont possibles :<br/>");
 
 				bool r = false;
 				bool s = false;
@@ -2927,107 +2927,123 @@ namespace Epsitec.App.Dolphin.Components
 					switch (type)
 					{
 						case "r":
+							builder.Append("<list type=\"fix\"/>");
 							builder.Append(instruction);
-							builder.Append(" r<br/>");
+							builder.Append(" <i>r</i><br/>");
 							r = true;
 							break;
 
 						case "s":
+							builder.Append("<list type=\"fix\"/>");
 							builder.Append(instruction);
-							builder.Append(" r'<br/>");
+							builder.Append(" <i>r'</i><br/>");
 							s = true;
 							break;
 
 						case "a":
+							builder.Append("<list type=\"fix\"/>");
 							builder.Append(instruction);
-							builder.Append(" ADDR<br/>");
+							builder.Append(" <i>ADDR</i><br/>");
 							a = true;
 							break;
 
 						case "rr":
+							builder.Append("<list type=\"fix\"/>");
 							builder.Append(instruction);
-							builder.Append(" r,r<br/>");
+							builder.Append(" <i>r</i>, <i>r</i><br/>");
 							r = true;
 							break;
 
 						case "ss":
+							builder.Append("<list type=\"fix\"/>");
 							builder.Append(instruction);
-							builder.Append(" r',r'<br/>");
+							builder.Append(" <i>r'</i>, <i>r'</i><br/>");
 							s = true;
 							break;
 
 						case "vr":
+							builder.Append("<list type=\"fix\"/>");
 							builder.Append(instruction);
-							builder.Append(" #val,r<br/>");
+							builder.Append(" <i>#val</i>, <i>r</i><br/>");
 							r = true;
 							v = true;
 							break;
 
 						case "ar":
+							builder.Append("<list type=\"fix\"/>");
 							builder.Append(instruction);
-							builder.Append(" ADDR,r<br/>");
+							builder.Append(" <i>ADDR</i>, <i>r</i><br/>");
 							a = true;
 							r = true;
 							break;
 
 						case "ra":
+							builder.Append("<list type=\"fix\"/>");
 							builder.Append(instruction);
-							builder.Append(" r,ADDR<br/>");
+							builder.Append(" <i>r</i>, <i>ADDR</i><br/>");
 							r = true;
 							a = true;
 							break;
 
 						case "as":
+							builder.Append("<list type=\"fix\"/>");
 							builder.Append(instruction);
-							builder.Append(" ADDR,r'<br/>");
+							builder.Append(" <i>ADDR</i>, <i>r'</i><br/>");
 							a = true;
 							s = true;
 							break;
 
 						case "sa":
+							builder.Append("<list type=\"fix\"/>");
 							builder.Append(instruction);
-							builder.Append(" r',ADDR<br/>");
+							builder.Append(" <i>r'</i>, <i>ADDR</i><br/>");
 							s = true;
 							a = true;
 							break;
 
 						case "va":
+							builder.Append("<list type=\"fix\"/>");
 							builder.Append(instruction);
-							builder.Append(" #val,ADDR<br/>");
+							builder.Append(" <i>#val</i>, <i>ADDR</i><br/>");
 							v = true;
 							a = true;
 							break;
 
 						case "tss":
+							builder.Append("<list type=\"fix\"/>");
 							builder.Append(instruction);
-							builder.Append(" r':r'<br/>");
+							builder.Append(" <i>r'</i>:<i>r'</i><br/>");
 							s = true;
 							break;
 
 						case "tvs":
+							builder.Append("<list type=\"fix\"/>");
 							builder.Append(instruction);
-							builder.Append(" r':#val<br/>");
+							builder.Append(" <i>r'</i>:<i>#val</i><br/>");
 							v = true;
 							s = true;
 							break;
 
 						case "tsa":
+							builder.Append("<list type=\"fix\"/>");
 							builder.Append(instruction);
-							builder.Append(" ADDR:r'<br/>");
+							builder.Append(" <i>ADDR</i>:<i>r'</i><br/>");
 							s = true;
 							a = true;
 							break;
 
 						case "tva":
+							builder.Append("<list type=\"fix\"/>");
 							builder.Append(instruction);
-							builder.Append(" ADDR:#val<br/>");
+							builder.Append(" <i>ADDR</i>:<i>#val</i><br/>");
 							v = true;
 							a = true;
 							break;
 
 						case "ex":
+							builder.Append("<list type=\"fix\"/>");
 							builder.Append(instruction);
-							builder.Append(" A,B ou X,Y<br/>");
+							builder.Append(" <i>A</i>, <i>B</i> ou <i>X</i>, <i>Y</i><br/>");
 							break;
 					}
 				}
@@ -3039,22 +3055,22 @@ namespace Epsitec.App.Dolphin.Components
 
 				if (r)
 				{
-					builder.Append("r = registre (A, B, X, Y)<br/>");
+					builder.Append("<i>r</i> = registre A, B, X, Y<br/>");
 				}
 
 				if (s)
 				{
-					builder.Append("r' = registre (A, B)<br/>");
+					builder.Append("<i>r'</i> = registre A, B<br/>");
 				}
 
 				if (v)
 				{
-					builder.Append("#val = valeur immédiate (#12h, #C0h, #99d)<br/>");
+					builder.Append("<i>#val</i> = valeur immédiate #12h, #C0h, #99d<br/>");
 				}
 
 				if (a)
 				{
-					builder.Append("ADDR = adresse (C00h, {PC}+DAh, {PC}-3h, {SP}+2h, C80h+{X})<br/>");
+					builder.Append("<i>ADDR</i> = adresse C00h, {PC}+DAh, {PC}-3h, {SP}+2h, C80h+{X}<br/>");
 				}
 			}
 
