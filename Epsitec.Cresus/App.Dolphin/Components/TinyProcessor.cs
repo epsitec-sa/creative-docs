@@ -553,7 +553,7 @@ namespace Epsitec.App.Dolphin.Components
 			{
 				int n = op & 0x01;
 				int src = n;
-				int dst = n ^0x01;
+				int dst = n ^ 0x01;
 				Instructions i = (Instructions) (op & 0xFE);
 				data = this.GetRegister(src);
 
@@ -639,7 +639,7 @@ namespace Epsitec.App.Dolphin.Components
 			{
 				int n = op & 0x01;
 				int src = n;
-				int dst = n ^0x01;
+				int dst = n ^ 0x01;
 				Instructions i = (Instructions) (op & 0xFE);
 				data = this.GetRegister(src);
 
@@ -1679,7 +1679,7 @@ namespace Epsitec.App.Dolphin.Components
 			{
 				int n = op & 0x01;
 				int src = n;
-				int dst = n ^0x01;
+				int dst = n ^ 0x01;
 				Instructions i = (Instructions) (op & 0xFE);
 
 				switch (i)
@@ -1851,7 +1851,7 @@ namespace Epsitec.App.Dolphin.Components
 			{
 				int n = op & 0x01;
 				int src = n;
-				int dst = n ^0x01;
+				int dst = n ^ 0x01;
 				Instructions i = (Instructions) (op & 0xFE);
 
 				switch (i)
@@ -2044,9 +2044,750 @@ namespace Epsitec.App.Dolphin.Components
 		{
 			//	Retourne les codes d'une instruction.
 			List<int> codes = new List<int>();
-			codes.Add(0);
+
+			instruction = instruction.ToUpper().Trim();
+
+			char[] seps = {' ', ',', ':'};
+			string[] words = instruction.Split(seps);
+
+			if (words.Length == 1)
+			{
+				switch (words[0])
+				{
+					case "NOP":
+						codes.Add((int) Instructions.Nop);
+						break;
+
+					case "RET":
+						codes.Add((int) Instructions.Ret);
+						break;
+
+					case "HALT":
+						codes.Add((int) Instructions.Halt);
+						break;
+
+					case "SETC":
+						codes.Add((int) Instructions.SetC);
+						break;
+
+					case "CLRC":
+						codes.Add((int) Instructions.ClrC);
+						break;
+				}
+			}
+
+			if (words.Length == 2)
+			{
+				int r, mh, ll;
+
+				TinyProcessor.GetCodeRegister(words[1], out r);
+				TinyProcessor.GetCodeAddress(words[1], out mh, out ll);
+
+				switch (words[0])
+				{
+					case "CALL":
+						if (mh != -1 && ll != -1)
+						{
+							codes.Add((int) Instructions.Call);
+							codes.Add(mh);
+							codes.Add(ll);
+						}
+						break;
+
+					case "PUSH":
+						if (r != -1)
+						{
+							codes.Add((int) Instructions.PushR | r);
+						}
+						break;
+
+					case "POP":
+						if (r != -1)
+						{
+							codes.Add((int) Instructions.PopR | r);
+						}
+						break;
+
+					case "JUMP":
+						if (mh != -1 && ll != -1)
+						{
+							codes.Add((int) Instructions.Jump);
+							codes.Add(mh);
+							codes.Add(ll);
+						}
+						break;
+
+					case "CLR":
+						if (r != -1)
+						{
+							codes.Add((int) Instructions.ClrR | r);
+						}
+						else if (mh != -1 && ll != -1)
+						{
+							codes.Add((int) Instructions.ClrA);
+							codes.Add(mh);
+							codes.Add(ll);
+						}
+						break;
+
+					case "NOT":
+						if (r != -1)
+						{
+							codes.Add((int) Instructions.NotR | r);
+						}
+						else if (mh != -1 && ll != -1)
+						{
+							codes.Add((int) Instructions.NotA);
+							codes.Add(mh);
+							codes.Add(ll);
+						}
+						break;
+
+					case "INC":
+						if (r != -1)
+						{
+							codes.Add((int) Instructions.IncR | r);
+						}
+						else if (mh != -1 && ll != -1)
+						{
+							codes.Add((int) Instructions.IncA);
+							codes.Add(mh);
+							codes.Add(ll);
+						}
+						break;
+
+					case "DEC":
+						if (r != -1)
+						{
+							codes.Add((int) Instructions.DecR | r);
+						}
+						else if (mh != -1 && ll != -1)
+						{
+							codes.Add((int) Instructions.DecA);
+							codes.Add(mh);
+							codes.Add(ll);
+						}
+						break;
+
+					case "RL":
+						if (r != -1)
+						{
+							codes.Add((int) Instructions.RlR | r);
+						}
+						else if (mh != -1 && ll != -1)
+						{
+							codes.Add((int) Instructions.RlA);
+							codes.Add(mh);
+							codes.Add(ll);
+						}
+						break;
+
+					case "RR":
+						if (r != -1)
+						{
+							codes.Add((int) Instructions.RrR | r);
+						}
+						else if (mh != -1 && ll != -1)
+						{
+							codes.Add((int) Instructions.RrA);
+							codes.Add(mh);
+							codes.Add(ll);
+						}
+						break;
+
+					case "RLC":
+						if (r != -1)
+						{
+							codes.Add((int) Instructions.RlcR | r);
+						}
+						else if (mh != -1 && ll != -1)
+						{
+							codes.Add((int) Instructions.RlcA);
+							codes.Add(mh);
+							codes.Add(ll);
+						}
+						break;
+
+					case "RRC":
+						if (r != -1)
+						{
+							codes.Add((int) Instructions.RrcR | r);
+						}
+						else if (mh != -1 && ll != -1)
+						{
+							codes.Add((int) Instructions.RrcA);
+							codes.Add(mh);
+							codes.Add(ll);
+						}
+						break;
+
+					case "SWAP":
+						if (r != -1 && r < 2)
+						{
+							codes.Add((int) Instructions.SwapA | r);
+						}
+						break;
+
+				}
+			}
+
+			if (words.Length == 3)
+			{
+				int r1, r2, v1, v2, mh1, ll1, mh2, ll2;
+
+				TinyProcessor.GetCodeRegister(words[1], out r1);
+				TinyProcessor.GetCodeRegister(words[2], out r2);
+
+				TinyProcessor.GetCodeValue(words[1], out v1);
+				TinyProcessor.GetCodeValue(words[2], out v2);
+
+				TinyProcessor.GetCodeAddress(words[1], out mh1, out ll1);
+				TinyProcessor.GetCodeAddress(words[2], out mh2, out ll2);
+
+				if (instruction.IndexOf(":") != -1)  // instruction de bit (TODO: faire mieux) ?
+				{
+					Misc.Swap(ref r1, ref r2);
+					Misc.Swap(ref v1, ref v2);
+					Misc.Swap(ref mh1, ref mh2);
+					Misc.Swap(ref ll1, ref ll2);
+				}
+
+				switch (words[0])
+				{
+					case "JUMP":
+						if (mh2 != -1 && ll2 != -1)
+						{
+							switch (words[1])
+							{
+								case "EQ":
+									codes.Add((int) Instructions.JumpEQ);
+									break;
+
+								case "NE":
+									codes.Add((int) Instructions.JumpNE);
+									break;
+
+								case "LO":
+									codes.Add((int) Instructions.JumpLO);
+									break;
+
+								case "LS":
+									codes.Add((int) Instructions.JumpLS);
+									break;
+
+								case "HI":
+									codes.Add((int) Instructions.JumpHI);
+									break;
+
+								case "HS":
+									codes.Add((int) Instructions.JumpHS);
+									break;
+
+								case "CC":
+									codes.Add((int) Instructions.JumpCC);
+									break;
+
+								case "CS":
+									codes.Add((int) Instructions.JumpCS);
+									break;
+
+								case "NC":
+									codes.Add((int) Instructions.JumpNC);
+									break;
+
+								case "NS":
+									codes.Add((int) Instructions.JumpNS);
+									break;
+
+								default:
+									return null;
+							}
+
+							codes.Add(mh2);
+							codes.Add(ll2);
+						}
+						break;
+
+					case "MOVE":
+						if (r1 != -1 && r2 != -1)
+						{
+							codes.Add((int) Instructions.MoveRR | (r1<<2) | r2);
+						}
+						else if (v1 != -1 && r2 != -1)
+						{
+							codes.Add((int) Instructions.MoveVR | r2);
+							codes.Add(v1);
+						}
+						else if (mh1 != -1 && ll1 != -1 && r2 != -1)
+						{
+							codes.Add((int) Instructions.MoveAR | r2);
+							codes.Add(mh1);
+							codes.Add(ll1);
+						}
+						else if (r1 != -1 && mh2 != -1 && ll2 != -1)
+						{
+							codes.Add((int) Instructions.MoveRA | r1);
+							codes.Add(mh2);
+							codes.Add(ll2);
+						}
+						else if (v1 != -1 && mh2 != -1 && ll2 != -1)
+						{
+							codes.Add((int) Instructions.MoveVA);
+							codes.Add(v1);
+							codes.Add(mh2);
+							codes.Add(ll2);
+						}
+						break;
+
+					case "ADD":
+						if (r1 != -1 && r2 != -1)
+						{
+							codes.Add((int) Instructions.AddRR | (r1<<2) | r2);
+						}
+						else if (v1 != -1 && r2 != -1)
+						{
+							codes.Add((int) Instructions.AddVR | r2);
+							codes.Add(v1);
+						}
+						else if (mh1 != -1 && ll1 != -1 && r2 != -1)
+						{
+							codes.Add((int) Instructions.AddAR | r2);
+							codes.Add(mh1);
+							codes.Add(ll1);
+						}
+						else if (r1 != -1 && mh2 != -1 && ll2 != -1)
+						{
+							codes.Add((int) Instructions.AddRA | r1);
+							codes.Add(mh2);
+							codes.Add(ll2);
+						}
+						else if (v1 != -1 && mh2 != -1 && ll2 != -1)
+						{
+							codes.Add((int) Instructions.AddVA);
+							codes.Add(v1);
+							codes.Add(mh2);
+							codes.Add(ll2);
+						}
+						else if (v1 != -1 && words[2] == "SP")
+						{
+							codes.Add((int) Instructions.AddVSP);
+							codes.Add(v1);
+						}
+						break;
+
+					case "SUB":
+						if (r1 != -1 && r2 != -1)
+						{
+							codes.Add((int) Instructions.SubRR | (r1<<2) | r2);
+						}
+						else if (v1 != -1 && r2 != -1)
+						{
+							codes.Add((int) Instructions.SubVR | r2);
+							codes.Add(v1);
+						}
+						else if (mh1 != -1 && ll1 != -1 && r2 != -1)
+						{
+							codes.Add((int) Instructions.SubAR | r2);
+							codes.Add(mh1);
+							codes.Add(ll1);
+						}
+						else if (r1 != -1 && mh2 != -1 && ll2 != -1)
+						{
+							codes.Add((int) Instructions.SubRA | r1);
+							codes.Add(mh2);
+							codes.Add(ll2);
+						}
+						else if (v1 != -1 && mh2 != -1 && ll2 != -1)
+						{
+							codes.Add((int) Instructions.SubVA);
+							codes.Add(v1);
+							codes.Add(mh2);
+							codes.Add(ll2);
+						}
+						else if (v1 != -1 && words[2] == "SP")
+						{
+							codes.Add((int) Instructions.SubVSP);
+							codes.Add(v1);
+						}
+						break;
+
+					case "COMP":
+						if (r1 != -1 && r2 != -1)
+						{
+							codes.Add((int) Instructions.CompRR | (r1<<2) | r2);
+						}
+						else if (v1 != -1 && r2 != -1)
+						{
+							codes.Add((int) Instructions.CompVR | r2);
+							codes.Add(v1);
+						}
+						else if (mh1 != -1 && ll1 != -1 && r2 != -1)
+						{
+							codes.Add((int) Instructions.CompAR | r2);
+							codes.Add(mh1);
+							codes.Add(ll1);
+						}
+						else if (v1 != -1 && mh2 != -1 && ll2 != -1)
+						{
+							codes.Add((int) Instructions.CompVA);
+							codes.Add(v1);
+							codes.Add(mh2);
+							codes.Add(ll2);
+						}
+						break;
+
+					case "AND":
+						if (r1 != -1 && r1 < 2 && r2 != -1 && r2 < 2 && r1 != r2)
+						{
+							codes.Add((int) Instructions.AndSS | r1);
+						}
+						else if (v1 != -1 && r2 != -1)
+						{
+							codes.Add((int) Instructions.AndVR | r2);
+							codes.Add(v1);
+						}
+						else if (mh1 != -1 && ll1 != -1 && r2 != -1 && r2 < 2)
+						{
+							codes.Add((int) Instructions.AndAS | r2);
+							codes.Add(mh1);
+							codes.Add(ll1);
+						}
+						else if (r1 != -1 && r1 < 2 && mh2 != -1 && ll2 != -1)
+						{
+							codes.Add((int) Instructions.AndSA | r1);
+							codes.Add(mh2);
+							codes.Add(ll2);
+						}
+						break;
+
+					case "OR":
+						if (r1 != -1 && r1 < 2 && r2 != -1 && r2 < 2 && r1 != r2)
+						{
+							codes.Add((int) Instructions.OrSS | r1);
+						}
+						else if (v1 != -1 && r2 != -1)
+						{
+							codes.Add((int) Instructions.OrVR | r2);
+							codes.Add(v1);
+						}
+						else if (mh1 != -1 && ll1 != -1 && r2 != -1 && r2 < 2)
+						{
+							codes.Add((int) Instructions.OrAS | r2);
+							codes.Add(mh1);
+							codes.Add(ll1);
+						}
+						else if (r1 != -1 && r1 < 2 && mh2 != -1 && ll2 != -1)
+						{
+							codes.Add((int) Instructions.OrSA | r1);
+							codes.Add(mh2);
+							codes.Add(ll2);
+						}
+						break;
+
+					case "XOR":
+						if (r1 != -1 && r1 < 2 && r2 != -1 && r2 < 2 && r1 != r2)
+						{
+							codes.Add((int) Instructions.XorSS | r1);
+						}
+						else if (v1 != -1 && r2 != -1)
+						{
+							codes.Add((int) Instructions.XorVR | r2);
+							codes.Add(v1);
+						}
+						else if (mh1 != -1 && ll1 != -1 && r2 != -1 && r2 < 2)
+						{
+							codes.Add((int) Instructions.XorAS | r2);
+							codes.Add(mh1);
+							codes.Add(ll1);
+						}
+						else if (r1 != -1 && r1 < 2 && mh2 != -1 && ll2 != -1)
+						{
+							codes.Add((int) Instructions.XorSA | r1);
+							codes.Add(mh2);
+							codes.Add(ll2);
+						}
+						break;
+
+					case "TEST":
+						if (r1 != -1 && r1 < 2 && r2 != -1 && r2 < 2 && r1 != r2)
+						{
+							codes.Add((int) Instructions.TestSS | r1);
+						}
+						else if (v1 != -1 && r2 != -1 && r2 < 2)
+						{
+							codes.Add((int) Instructions.TestVS | r2);
+							codes.Add(v1);
+						}
+						else if (r1 != -1 && r1 < 2 && mh2 != -1 && ll2 != -1)
+						{
+							codes.Add((int) Instructions.TestSA | r1);
+							codes.Add(mh2);
+							codes.Add(ll2);
+						}
+						else if (v1 != -1 && mh2 != -1 && ll2 != -1)
+						{
+							codes.Add((int) Instructions.TestVA);
+							codes.Add(v1);
+							codes.Add(mh2);
+							codes.Add(ll2);
+						}
+						break;
+
+					case "TSET":
+						if (r1 != -1 && r1 < 2 && r2 != -1 && r2 < 2 && r1 != r2)
+						{
+							codes.Add((int) Instructions.TSetSS | r1);
+						}
+						else if (v1 != -1 && r2 != -1 && r2 < 2)
+						{
+							codes.Add((int) Instructions.TSetVS | r2);
+							codes.Add(v1);
+						}
+						else if (r1 != -1 && r1 < 2 && mh2 != -1 && ll2 != -1)
+						{
+							codes.Add((int) Instructions.TSetSA | r1);
+							codes.Add(mh2);
+							codes.Add(ll2);
+						}
+						else if (v1 != -1 && mh2 != -1 && ll2 != -1)
+						{
+							codes.Add((int) Instructions.TSetVA);
+							codes.Add(v1);
+							codes.Add(mh2);
+							codes.Add(ll2);
+						}
+						break;
+
+					case "TCLR":
+						if (r1 != -1 && r1 < 2 && r2 != -1 && r2 < 2 && r1 != r2)
+						{
+							codes.Add((int) Instructions.TClrSS | r1);
+						}
+						else if (v1 != -1 && r2 != -1 && r2 < 2)
+						{
+							codes.Add((int) Instructions.TClrVS | r2);
+							codes.Add(v1);
+						}
+						else if (r1 != -1 && r1 < 2 && mh2 != -1 && ll2 != -1)
+						{
+							codes.Add((int) Instructions.TClrSA | r1);
+							codes.Add(mh2);
+							codes.Add(ll2);
+						}
+						else if (v1 != -1 && mh2 != -1 && ll2 != -1)
+						{
+							codes.Add((int) Instructions.TClrVA);
+							codes.Add(v1);
+							codes.Add(mh2);
+							codes.Add(ll2);
+						}
+						break;
+
+					case "TNOT":
+						if (r1 != -1 && r1 < 2 && r2 != -1 && r2 < 2 && r1 != r2)
+						{
+							codes.Add((int) Instructions.TNotSS | r1);
+						}
+						else if (v1 != -1 && r2 != -1 && r2 < 2)
+						{
+							codes.Add((int) Instructions.TNotVS | r2);
+							codes.Add(v1);
+						}
+						else if (r1 != -1 && r1 < 2 && mh2 != -1 && ll2 != -1)
+						{
+							codes.Add((int) Instructions.TNotSA | r1);
+							codes.Add(mh2);
+							codes.Add(ll2);
+						}
+						else if (v1 != -1 && mh2 != -1 && ll2 != -1)
+						{
+							codes.Add((int) Instructions.TNotVA);
+							codes.Add(v1);
+							codes.Add(mh2);
+							codes.Add(ll2);
+						}
+						break;
+
+					case "EX":
+						if (r1 >= 0 && r1 <= 1 && r2 >= 0 && r2 <= 1 && r1 != r2)
+						{
+							codes.Add((int) Instructions.ExAB);
+						}
+						else if (r1 >= 2 && r1 <= 3 && r2 >= 2 && r2 <= 3 && r1 != r2)
+						{
+							codes.Add((int) Instructions.ExXY);
+						}
+						break;
+				}
+			}
+
+			if (words.Length == 4)
+			{
+				int v1, mh2, ll2;
+
+				TinyProcessor.GetCodeValue(words[1], out v1);
+				TinyProcessor.GetCodeAddress(words[2], out mh2, out ll2);
+			}
+
 			return codes;
 		}
+
+		protected static void GetCodeRegister(string word, out int n)
+		{
+			//	Analyse un registre.
+			n = -1;
+
+			switch (word)
+			{
+				case "A":
+					n = 0;
+					break;
+
+				case "B":
+					n = 1;
+					break;
+
+				case "X":
+					n = 2;
+					break;
+
+				case "Y":
+					n = 3;
+					break;
+			}
+		}
+
+		protected static void GetCodeValue(string word, out int value)
+		{
+			//	Analyse une valeur immédiate.
+			if (string.IsNullOrEmpty(word) || word[0] != '#')
+			{
+				value = -1;
+				return;
+			}
+
+			word = word.Substring(1);  // enlève le '#' au début
+
+			if (word.EndsWith("H"))
+			{
+				word = word.Substring(0, word.Length-1);  // enlève le 'H' à la fin
+				value =  Misc.ParseHexa(word, -1, -1);
+				return;
+			}
+			else if (word.EndsWith("D"))
+			{
+				word = word.Substring(0, word.Length-1);  // enlève le 'D' à la fin
+				if (!int.TryParse(word, out value))
+				{
+					value = -1;
+				}
+				return;
+			}
+			else
+			{
+				if (!int.TryParse(word, out value))
+				{
+					value = -1;
+				}
+				return;
+			}
+
+			value =  -1;
+		}
+
+		protected static void GetCodeAddress(string word, out int mh, out int ll)
+		{
+			//	Analyse une adresse.
+			int mode = 0;
+			int address = -1;
+			int rel = 0;
+
+			mh = -1;
+			ll = -1;
+
+			if (word.StartsWith("{PC}") || word.StartsWith("{SP}"))
+			{
+				if (word.StartsWith("{PC}"))
+				{
+					mode |= 8;
+				}
+				else
+				{
+					mode |= 4;
+				}
+
+				word = word.Substring(4);  // enlève {xx}
+
+				if (word.Length == 0)
+				{
+					return;
+				}
+
+				if (word[0] == '+')
+				{
+					word = word.Substring(1);  // enlève +
+					rel = 1;
+				}
+				else if (word[0] == '-')
+				{
+					word = word.Substring(1);  // enlève -
+					rel = -1;
+				}
+				else
+				{
+					return;
+				}
+			}
+
+			if (word.EndsWith("+{X}") || word.EndsWith("+{Y}"))
+			{
+				if (word.EndsWith("+{X}"))
+				{
+					mode |= 1;
+				}
+				else
+				{
+					mode |= 2;
+				}
+
+				word = word.Substring(0, word.Length-4);  // enlève +{x}
+			}
+
+			if (word.EndsWith("H"))
+			{
+				word = word.Substring(0, word.Length-1);  // enlève H
+				address = Misc.ParseHexa(word, -1, -1);
+			}
+			else if (word.EndsWith("D"))
+			{
+				word = word.Substring(0, word.Length-1);  // enlève D
+				if (!int.TryParse(word, out address))
+				{
+					address = -1;
+				}
+			}
+			else
+			{
+				if (!int.TryParse(word, out address))
+				{
+					address = -1;
+				}
+			}
+
+			if (address == -1)
+			{
+				return;
+			}
+
+			if (rel == -1)  // adresse relative négative ?
+			{
+				address = 0x1000000-address;
+			}
+
+			mh = ((mode << 4) & 0xF0) | ((address >> 8) & 0x0F);
+			ll = (address & 0xFF);
+		}
+
 		#endregion
 
 

@@ -470,10 +470,18 @@ namespace Epsitec.App.Dolphin.MyWidgets
 
 		private void HandleFieldInstructionChanged(object sender)
 		{
-			MyWidgets.Code field = sender as MyWidgets.Code;
+			MyWidgets.Code widget = sender as MyWidgets.Code;
 
-			int address = this.MemoryStart+this.firstAddress+field.Index;
-			//?this.memory.WriteWithDirty(address, field.HexaValue);
+			int address;
+			List<int> codes = new List<int>();
+			widget.GetCode(out address, codes);
+
+			foreach (int code in codes)
+			{
+				this.memory.WriteWithDirty(address++, code);
+			}
+
+			this.UpdateData();
 		}
 
 

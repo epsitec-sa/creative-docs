@@ -15,9 +15,15 @@ namespace Epsitec.App.Dolphin
 		static public int ParseHexa(string hexa)
 		{
 			//	Analyse une chaîne hexadécimale et retourne sa valeur.
+			return Misc.ParseHexa(hexa, 0, 0);
+		}
+
+		static public int ParseHexa(string hexa, int defaultValue, int errorValue)
+		{
+			//	Analyse une chaîne hexadécimale et retourne sa valeur.
 			if (string.IsNullOrEmpty(hexa))
 			{
-				return 0;
+				return defaultValue;
 			}
 
 			int result;
@@ -27,7 +33,7 @@ namespace Epsitec.App.Dolphin
 			}
 			else
 			{
-				return 0;
+				return errorValue;
 			}
 		}
 
@@ -202,6 +208,43 @@ namespace Epsitec.App.Dolphin
 		{
 			//	Retourne le nom complet d'une icône dynamique.
 			return string.Format("dyn:{0}/{1}", name, parameter);
+		}
+
+
+		static public void Swap(ref bool a, ref bool b)
+		{
+			//	Permute deux variables.
+			bool t = a;
+			a = b;
+			b = t;
+		}
+
+		static public void Swap(ref int a, ref int b)
+		{
+			int t = a;
+			a = b;
+			b = t;
+		}
+
+		static public void Swap(ref double a, ref double b)
+		{
+			double t = a;
+			a = b;
+			b = t;
+		}
+
+		static public void Swap(ref Point a, ref Point b)
+		{
+			Point t = a;
+			a = b;
+			b = t;
+		}
+
+		static public void Swap(ref Size a, ref Size b)
+		{
+			Size t = a;
+			a = b;
+			b = t;
 		}
 	}
 }
