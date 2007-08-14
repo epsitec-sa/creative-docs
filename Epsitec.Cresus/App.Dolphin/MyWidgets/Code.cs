@@ -194,7 +194,7 @@ namespace Epsitec.App.Dolphin.MyWidgets
 			List<int> codes = new List<int>();
 			string err = this.processor.AssemblyInstruction(this.widgetInstruction.Text, codes);
 
-			if (codes == null || codes.Count == 0)
+			if (codes == null || codes.Count == 0 || !string.IsNullOrEmpty(err))
 			{
 				string title = "Dauphin";
 				string icon = "manifest:Epsitec.Common.Dialogs.Images.Warning.icon";

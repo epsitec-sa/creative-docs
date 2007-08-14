@@ -2050,198 +2050,19 @@ namespace Epsitec.App.Dolphin.Components
 			char[] seps = {' ', ',', ':'};
 			string[] words = instruction.Split(seps, System.StringSplitOptions.RemoveEmptyEntries);
 
-			if (words.Length == 1)
+			int r1=-1, r2=-1, v1=-1, v2=-1, mh1=-1, ll1=-1, mh2=-1, ll2=-1;
+
+			if (words.Length >= 2)  // un argument ?
 			{
-				switch (words[0])
-				{
-					case "NOP":
-						codes.Add((int) Instructions.Nop);
-						break;
-
-					case "RET":
-						codes.Add((int) Instructions.Ret);
-						break;
-
-					case "HALT":
-						codes.Add((int) Instructions.Halt);
-						break;
-
-					case "SETC":
-						codes.Add((int) Instructions.SetC);
-						break;
-
-					case "CLRC":
-						codes.Add((int) Instructions.ClrC);
-						break;
-				}
-			}
-
-			if (words.Length == 2)
-			{
-				int r, mh, ll;
-
-				TinyProcessor.GetCodeRegister(words[1], out r);
-				TinyProcessor.GetCodeAddress(words[1], out mh, out ll);
-
-				switch (words[0])
-				{
-					case "CALL":
-						if (mh != -1 && ll != -1)
-						{
-							codes.Add((int) Instructions.Call);
-							codes.Add(mh);
-							codes.Add(ll);
-						}
-						break;
-
-					case "PUSH":
-						if (r != -1)
-						{
-							codes.Add((int) Instructions.PushR | r);
-						}
-						break;
-
-					case "POP":
-						if (r != -1)
-						{
-							codes.Add((int) Instructions.PopR | r);
-						}
-						break;
-
-					case "JUMP":
-						if (mh != -1 && ll != -1)
-						{
-							codes.Add((int) Instructions.Jump);
-							codes.Add(mh);
-							codes.Add(ll);
-						}
-						break;
-
-					case "CLR":
-						if (r != -1)
-						{
-							codes.Add((int) Instructions.ClrR | r);
-						}
-						else if (mh != -1 && ll != -1)
-						{
-							codes.Add((int) Instructions.ClrA);
-							codes.Add(mh);
-							codes.Add(ll);
-						}
-						break;
-
-					case "NOT":
-						if (r != -1)
-						{
-							codes.Add((int) Instructions.NotR | r);
-						}
-						else if (mh != -1 && ll != -1)
-						{
-							codes.Add((int) Instructions.NotA);
-							codes.Add(mh);
-							codes.Add(ll);
-						}
-						break;
-
-					case "INC":
-						if (r != -1)
-						{
-							codes.Add((int) Instructions.IncR | r);
-						}
-						else if (mh != -1 && ll != -1)
-						{
-							codes.Add((int) Instructions.IncA);
-							codes.Add(mh);
-							codes.Add(ll);
-						}
-						break;
-
-					case "DEC":
-						if (r != -1)
-						{
-							codes.Add((int) Instructions.DecR | r);
-						}
-						else if (mh != -1 && ll != -1)
-						{
-							codes.Add((int) Instructions.DecA);
-							codes.Add(mh);
-							codes.Add(ll);
-						}
-						break;
-
-					case "RL":
-						if (r != -1)
-						{
-							codes.Add((int) Instructions.RlR | r);
-						}
-						else if (mh != -1 && ll != -1)
-						{
-							codes.Add((int) Instructions.RlA);
-							codes.Add(mh);
-							codes.Add(ll);
-						}
-						break;
-
-					case "RR":
-						if (r != -1)
-						{
-							codes.Add((int) Instructions.RrR | r);
-						}
-						else if (mh != -1 && ll != -1)
-						{
-							codes.Add((int) Instructions.RrA);
-							codes.Add(mh);
-							codes.Add(ll);
-						}
-						break;
-
-					case "RLC":
-						if (r != -1)
-						{
-							codes.Add((int) Instructions.RlcR | r);
-						}
-						else if (mh != -1 && ll != -1)
-						{
-							codes.Add((int) Instructions.RlcA);
-							codes.Add(mh);
-							codes.Add(ll);
-						}
-						break;
-
-					case "RRC":
-						if (r != -1)
-						{
-							codes.Add((int) Instructions.RrcR | r);
-						}
-						else if (mh != -1 && ll != -1)
-						{
-							codes.Add((int) Instructions.RrcA);
-							codes.Add(mh);
-							codes.Add(ll);
-						}
-						break;
-
-					case "SWAP":
-						if (r != -1 && r < 2)
-						{
-							codes.Add((int) Instructions.SwapA | r);
-						}
-						break;
-
-				}
-			}
-
-			if (words.Length == 3)
-			{
-				int r1, r2, v1, v2, mh1, ll1, mh2, ll2;
-
 				TinyProcessor.GetCodeRegister(words[1], out r1);
-				TinyProcessor.GetCodeRegister(words[2], out r2);
-
 				TinyProcessor.GetCodeValue(words[1], out v1);
-				TinyProcessor.GetCodeValue(words[2], out v2);
-
 				TinyProcessor.GetCodeAddress(words[1], out mh1, out ll1);
+			}
+
+			if (words.Length >= 3)  // deux arguments ?
+			{
+				TinyProcessor.GetCodeRegister(words[2], out r2);
+				TinyProcessor.GetCodeValue(words[2], out v2);
 				TinyProcessor.GetCodeAddress(words[2], out mh2, out ll2);
 
 				if (instruction.IndexOf(":") != -1)  // instruction de bit (TODO: faire mieux) ?
@@ -2251,387 +2072,672 @@ namespace Epsitec.App.Dolphin.Components
 					Misc.Swap(ref mh1, ref mh2);
 					Misc.Swap(ref ll1, ref ll2);
 				}
-
-				switch (words[0])
-				{
-					case "JUMP":
-						if (mh2 != -1 && ll2 != -1)
-						{
-							switch (words[1])
-							{
-								case "EQ":
-									codes.Add((int) Instructions.JumpEQ);
-									break;
-
-								case "NE":
-									codes.Add((int) Instructions.JumpNE);
-									break;
-
-								case "LO":
-									codes.Add((int) Instructions.JumpLO);
-									break;
-
-								case "LS":
-									codes.Add((int) Instructions.JumpLS);
-									break;
-
-								case "HI":
-									codes.Add((int) Instructions.JumpHI);
-									break;
-
-								case "HS":
-									codes.Add((int) Instructions.JumpHS);
-									break;
-
-								case "CC":
-									codes.Add((int) Instructions.JumpCC);
-									break;
-
-								case "CS":
-									codes.Add((int) Instructions.JumpCS);
-									break;
-
-								case "NC":
-									codes.Add((int) Instructions.JumpNC);
-									break;
-
-								case "NS":
-									codes.Add((int) Instructions.JumpNS);
-									break;
-
-								default:
-									return "La condition est fausse.";
-							}
-
-							codes.Add(mh2);
-							codes.Add(ll2);
-						}
-						break;
-
-					case "MOVE":
-						if (r1 != -1 && r2 != -1)
-						{
-							codes.Add((int) Instructions.MoveRR | (r1<<2) | r2);
-						}
-						else if (v1 != -1 && r2 != -1)
-						{
-							codes.Add((int) Instructions.MoveVR | r2);
-							codes.Add(v1);
-						}
-						else if (mh1 != -1 && ll1 != -1 && r2 != -1)
-						{
-							codes.Add((int) Instructions.MoveAR | r2);
-							codes.Add(mh1);
-							codes.Add(ll1);
-						}
-						else if (r1 != -1 && mh2 != -1 && ll2 != -1)
-						{
-							codes.Add((int) Instructions.MoveRA | r1);
-							codes.Add(mh2);
-							codes.Add(ll2);
-						}
-						else if (v1 != -1 && mh2 != -1 && ll2 != -1)
-						{
-							codes.Add((int) Instructions.MoveVA);
-							codes.Add(v1);
-							codes.Add(mh2);
-							codes.Add(ll2);
-						}
-						break;
-
-					case "ADD":
-						if (r1 != -1 && r2 != -1)
-						{
-							codes.Add((int) Instructions.AddRR | (r1<<2) | r2);
-						}
-						else if (v1 != -1 && r2 != -1)
-						{
-							codes.Add((int) Instructions.AddVR | r2);
-							codes.Add(v1);
-						}
-						else if (mh1 != -1 && ll1 != -1 && r2 != -1)
-						{
-							codes.Add((int) Instructions.AddAR | r2);
-							codes.Add(mh1);
-							codes.Add(ll1);
-						}
-						else if (r1 != -1 && mh2 != -1 && ll2 != -1)
-						{
-							codes.Add((int) Instructions.AddRA | r1);
-							codes.Add(mh2);
-							codes.Add(ll2);
-						}
-						else if (v1 != -1 && mh2 != -1 && ll2 != -1)
-						{
-							codes.Add((int) Instructions.AddVA);
-							codes.Add(v1);
-							codes.Add(mh2);
-							codes.Add(ll2);
-						}
-						else if (v1 != -1 && words[2] == "SP")
-						{
-							codes.Add((int) Instructions.AddVSP);
-							codes.Add(v1);
-						}
-						break;
-
-					case "SUB":
-						if (r1 != -1 && r2 != -1)
-						{
-							codes.Add((int) Instructions.SubRR | (r1<<2) | r2);
-						}
-						else if (v1 != -1 && r2 != -1)
-						{
-							codes.Add((int) Instructions.SubVR | r2);
-							codes.Add(v1);
-						}
-						else if (mh1 != -1 && ll1 != -1 && r2 != -1)
-						{
-							codes.Add((int) Instructions.SubAR | r2);
-							codes.Add(mh1);
-							codes.Add(ll1);
-						}
-						else if (r1 != -1 && mh2 != -1 && ll2 != -1)
-						{
-							codes.Add((int) Instructions.SubRA | r1);
-							codes.Add(mh2);
-							codes.Add(ll2);
-						}
-						else if (v1 != -1 && mh2 != -1 && ll2 != -1)
-						{
-							codes.Add((int) Instructions.SubVA);
-							codes.Add(v1);
-							codes.Add(mh2);
-							codes.Add(ll2);
-						}
-						else if (v1 != -1 && words[2] == "SP")
-						{
-							codes.Add((int) Instructions.SubVSP);
-							codes.Add(v1);
-						}
-						break;
-
-					case "COMP":
-						if (r1 != -1 && r2 != -1)
-						{
-							codes.Add((int) Instructions.CompRR | (r1<<2) | r2);
-						}
-						else if (v1 != -1 && r2 != -1)
-						{
-							codes.Add((int) Instructions.CompVR | r2);
-							codes.Add(v1);
-						}
-						else if (mh1 != -1 && ll1 != -1 && r2 != -1)
-						{
-							codes.Add((int) Instructions.CompAR | r2);
-							codes.Add(mh1);
-							codes.Add(ll1);
-						}
-						else if (v1 != -1 && mh2 != -1 && ll2 != -1)
-						{
-							codes.Add((int) Instructions.CompVA);
-							codes.Add(v1);
-							codes.Add(mh2);
-							codes.Add(ll2);
-						}
-						break;
-
-					case "AND":
-						if (r1 != -1 && r1 < 2 && r2 != -1 && r2 < 2 && r1 != r2)
-						{
-							codes.Add((int) Instructions.AndSS | r1);
-						}
-						else if (v1 != -1 && r2 != -1)
-						{
-							codes.Add((int) Instructions.AndVR | r2);
-							codes.Add(v1);
-						}
-						else if (mh1 != -1 && ll1 != -1 && r2 != -1 && r2 < 2)
-						{
-							codes.Add((int) Instructions.AndAS | r2);
-							codes.Add(mh1);
-							codes.Add(ll1);
-						}
-						else if (r1 != -1 && r1 < 2 && mh2 != -1 && ll2 != -1)
-						{
-							codes.Add((int) Instructions.AndSA | r1);
-							codes.Add(mh2);
-							codes.Add(ll2);
-						}
-						break;
-
-					case "OR":
-						if (r1 != -1 && r1 < 2 && r2 != -1 && r2 < 2 && r1 != r2)
-						{
-							codes.Add((int) Instructions.OrSS | r1);
-						}
-						else if (v1 != -1 && r2 != -1)
-						{
-							codes.Add((int) Instructions.OrVR | r2);
-							codes.Add(v1);
-						}
-						else if (mh1 != -1 && ll1 != -1 && r2 != -1 && r2 < 2)
-						{
-							codes.Add((int) Instructions.OrAS | r2);
-							codes.Add(mh1);
-							codes.Add(ll1);
-						}
-						else if (r1 != -1 && r1 < 2 && mh2 != -1 && ll2 != -1)
-						{
-							codes.Add((int) Instructions.OrSA | r1);
-							codes.Add(mh2);
-							codes.Add(ll2);
-						}
-						break;
-
-					case "XOR":
-						if (r1 != -1 && r1 < 2 && r2 != -1 && r2 < 2 && r1 != r2)
-						{
-							codes.Add((int) Instructions.XorSS | r1);
-						}
-						else if (v1 != -1 && r2 != -1)
-						{
-							codes.Add((int) Instructions.XorVR | r2);
-							codes.Add(v1);
-						}
-						else if (mh1 != -1 && ll1 != -1 && r2 != -1 && r2 < 2)
-						{
-							codes.Add((int) Instructions.XorAS | r2);
-							codes.Add(mh1);
-							codes.Add(ll1);
-						}
-						else if (r1 != -1 && r1 < 2 && mh2 != -1 && ll2 != -1)
-						{
-							codes.Add((int) Instructions.XorSA | r1);
-							codes.Add(mh2);
-							codes.Add(ll2);
-						}
-						break;
-
-					case "TEST":
-						if (r1 != -1 && r1 < 2 && r2 != -1 && r2 < 2 && r1 != r2)
-						{
-							codes.Add((int) Instructions.TestSS | r1);
-						}
-						else if (v1 != -1 && r2 != -1 && r2 < 2)
-						{
-							codes.Add((int) Instructions.TestVS | r2);
-							codes.Add(v1);
-						}
-						else if (r1 != -1 && r1 < 2 && mh2 != -1 && ll2 != -1)
-						{
-							codes.Add((int) Instructions.TestSA | r1);
-							codes.Add(mh2);
-							codes.Add(ll2);
-						}
-						else if (v1 != -1 && mh2 != -1 && ll2 != -1)
-						{
-							codes.Add((int) Instructions.TestVA);
-							codes.Add(v1);
-							codes.Add(mh2);
-							codes.Add(ll2);
-						}
-						break;
-
-					case "TSET":
-						if (r1 != -1 && r1 < 2 && r2 != -1 && r2 < 2 && r1 != r2)
-						{
-							codes.Add((int) Instructions.TSetSS | r1);
-						}
-						else if (v1 != -1 && r2 != -1 && r2 < 2)
-						{
-							codes.Add((int) Instructions.TSetVS | r2);
-							codes.Add(v1);
-						}
-						else if (r1 != -1 && r1 < 2 && mh2 != -1 && ll2 != -1)
-						{
-							codes.Add((int) Instructions.TSetSA | r1);
-							codes.Add(mh2);
-							codes.Add(ll2);
-						}
-						else if (v1 != -1 && mh2 != -1 && ll2 != -1)
-						{
-							codes.Add((int) Instructions.TSetVA);
-							codes.Add(v1);
-							codes.Add(mh2);
-							codes.Add(ll2);
-						}
-						break;
-
-					case "TCLR":
-						if (r1 != -1 && r1 < 2 && r2 != -1 && r2 < 2 && r1 != r2)
-						{
-							codes.Add((int) Instructions.TClrSS | r1);
-						}
-						else if (v1 != -1 && r2 != -1 && r2 < 2)
-						{
-							codes.Add((int) Instructions.TClrVS | r2);
-							codes.Add(v1);
-						}
-						else if (r1 != -1 && r1 < 2 && mh2 != -1 && ll2 != -1)
-						{
-							codes.Add((int) Instructions.TClrSA | r1);
-							codes.Add(mh2);
-							codes.Add(ll2);
-						}
-						else if (v1 != -1 && mh2 != -1 && ll2 != -1)
-						{
-							codes.Add((int) Instructions.TClrVA);
-							codes.Add(v1);
-							codes.Add(mh2);
-							codes.Add(ll2);
-						}
-						break;
-
-					case "TNOT":
-						if (r1 != -1 && r1 < 2 && r2 != -1 && r2 < 2 && r1 != r2)
-						{
-							codes.Add((int) Instructions.TNotSS | r1);
-						}
-						else if (v1 != -1 && r2 != -1 && r2 < 2)
-						{
-							codes.Add((int) Instructions.TNotVS | r2);
-							codes.Add(v1);
-						}
-						else if (r1 != -1 && r1 < 2 && mh2 != -1 && ll2 != -1)
-						{
-							codes.Add((int) Instructions.TNotSA | r1);
-							codes.Add(mh2);
-							codes.Add(ll2);
-						}
-						else if (v1 != -1 && mh2 != -1 && ll2 != -1)
-						{
-							codes.Add((int) Instructions.TNotVA);
-							codes.Add(v1);
-							codes.Add(mh2);
-							codes.Add(ll2);
-						}
-						break;
-
-					case "EX":
-						if (r1 >= 0 && r1 <= 1 && r2 >= 0 && r2 <= 1 && r1 != r2)
-						{
-							codes.Add((int) Instructions.ExAB);
-						}
-						else if (r1 >= 2 && r1 <= 3 && r2 >= 2 && r2 <= 3 && r1 != r2)
-						{
-							codes.Add((int) Instructions.ExXY);
-						}
-						break;
-				}
 			}
 
-			if (words.Length == 4)
+			switch (words[0])
 			{
-				int v1, mh2, ll2;
+				case "NOP":
+					if (words.Length == 1)
+					{
+						codes.Add((int) Instructions.Nop);
+					}
+					else
+					{
+						return "<b>L'instuction NOP n'a aucun argument.</b>";
+					}
+					break;
 
-				TinyProcessor.GetCodeValue(words[1], out v1);
-				TinyProcessor.GetCodeAddress(words[2], out mh2, out ll2);
-			}
+				case "RET":
+					if (words.Length == 1)
+					{
+						codes.Add((int) Instructions.Ret);
+					}
+					else
+					{
+						return "<b>L'instuction NOP n'a aucun argument.</b>";
+					}
+					break;
 
-			if (codes.Count == 0)
-			{
-				return "Instruction inconnue.";
+				case "HALT":
+					if (words.Length == 1)
+					{
+						codes.Add((int) Instructions.Halt);
+					}
+					else
+					{
+						return "<b>L'instuction HALT n'a aucun argument.</b>";
+					}
+					break;
+
+				case "SETC":
+					if (words.Length == 1)
+					{
+						codes.Add((int) Instructions.SetC);
+					}
+					else
+					{
+						return "<b>L'instuction SETC n'a aucun argument.</b>";
+					}
+					break;
+
+				case "CLRC":
+					if (words.Length == 1)
+					{
+						codes.Add((int) Instructions.ClrC);
+					}
+					else
+					{
+						return "<b>L'instuction CLRC n'a aucun argument.</b>";
+					}
+					break;
+
+				case "CALL":
+					if (words.Length == 2 && mh1 != -1 && ll1 != -1)
+					{
+						codes.Add((int) Instructions.Call);
+						codes.Add(mh1);
+						codes.Add(ll1);
+					}
+					else
+					{
+						return TinyProcessor.GetCodeError("CALL doit être suivi d'une adresse.", "CALL", "a");
+					}
+					break;
+
+				case "PUSH":
+					if (words.Length == 2 && r1 != -1)
+					{
+						codes.Add((int) Instructions.PushR | r1);
+					}
+					else
+					{
+						return TinyProcessor.GetCodeError("PUSH doit être suivi d'un nom de registre.", "PUSH", "r");
+					}
+					break;
+
+				case "POP":
+					if (words.Length == 2 && r1 != -1)
+					{
+						codes.Add((int) Instructions.PopR | r1);
+					}
+					else
+					{
+						return TinyProcessor.GetCodeError("POP doit être suivi d'un nom de registre.", "POP", "r");
+					}
+					break;
+
+				case "JUMP":
+					if (words.Length == 2 && mh1 != -1 && ll1 != -1)
+					{
+						codes.Add((int) Instructions.Jump);
+						codes.Add(mh1);
+						codes.Add(ll1);
+					}
+					else if (words.Length == 3 && mh2 != -1 && ll2 != -1)
+					{
+						switch (words[1])
+						{
+							case "EQ":
+								codes.Add((int) Instructions.JumpEQ);
+								break;
+
+							case "NE":
+								codes.Add((int) Instructions.JumpNE);
+								break;
+
+							case "LO":
+								codes.Add((int) Instructions.JumpLO);
+								break;
+
+							case "LS":
+								codes.Add((int) Instructions.JumpLS);
+								break;
+
+							case "HI":
+								codes.Add((int) Instructions.JumpHI);
+								break;
+
+							case "HS":
+								codes.Add((int) Instructions.JumpHS);
+								break;
+
+							case "CC":
+								codes.Add((int) Instructions.JumpCC);
+								break;
+
+							case "CS":
+								codes.Add((int) Instructions.JumpCS);
+								break;
+
+							case "NC":
+								codes.Add((int) Instructions.JumpNC);
+								break;
+
+							case "NS":
+								codes.Add((int) Instructions.JumpNS);
+								break;
+
+							default:
+								return "<b>La condition est fausse.</b><br/><br/>Les conditions possibles sont:<br/>EQ, NE, LO, LS, HI, HS, CC, CS, NC, NS.<br/> ";
+						}
+
+						codes.Add(mh2);
+						codes.Add(ll2);
+					}
+					else
+					{
+						return TinyProcessor.GetCodeError("JUMP doit être suivi d'une adresse.", "JUMP", "a");
+					}
+					break;
+
+				case "CLR":
+					if (words.Length == 2 && r1 != -1)
+					{
+						codes.Add((int) Instructions.ClrR | r1);
+					}
+					else if (words.Length == 2 && mh1 != -1 && ll1 != -1)
+					{
+						codes.Add((int) Instructions.ClrA);
+						codes.Add(mh1);
+						codes.Add(ll1);
+					}
+					else
+					{
+						return TinyProcessor.GetCodeError("CLR doit être suivi d'un nom de registre ou d'une adresse.", "CLR", "r,a");
+					}
+					break;
+
+				case "NOT":
+					if (words.Length == 2 && r1 != -1)
+					{
+						codes.Add((int) Instructions.NotR | r1);
+					}
+					else if (words.Length == 2 && mh1 != -1 && ll1 != -1)
+					{
+						codes.Add((int) Instructions.NotA);
+						codes.Add(mh1);
+						codes.Add(ll1);
+					}
+					else
+					{
+						return TinyProcessor.GetCodeError("NOT doit être suivi d'un nom de registre ou d'une adresse.", "NOT", "r,a");
+					}
+					break;
+
+				case "INC":
+					if (words.Length == 2 && r1 != -1)
+					{
+						codes.Add((int) Instructions.IncR | r1);
+					}
+					else if (words.Length == 2 && mh1 != -1 && ll1 != -1)
+					{
+						codes.Add((int) Instructions.IncA);
+						codes.Add(mh1);
+						codes.Add(ll1);
+					}
+					else
+					{
+						return TinyProcessor.GetCodeError("INC doit être suivi d'un nom de registre ou d'une adresse.", "INC", "r,a");
+					}
+					break;
+
+				case "DEC":
+					if (words.Length == 2 && r1 != -1)
+					{
+						codes.Add((int) Instructions.DecR | r1);
+					}
+					else if (words.Length == 2 && mh1 != -1 && ll1 != -1)
+					{
+						codes.Add((int) Instructions.DecA);
+						codes.Add(mh1);
+						codes.Add(ll1);
+					}
+					else
+					{
+						return TinyProcessor.GetCodeError("DEC doit être suivi d'un nom de registre ou d'une adresse.", "DEC", "r,a");
+					}
+					break;
+
+				case "RL":
+					if (words.Length == 2 && r1 != -1)
+					{
+						codes.Add((int) Instructions.RlR | r1);
+					}
+					else if (words.Length == 2 && mh1 != -1 && ll1 != -1)
+					{
+						codes.Add((int) Instructions.RlA);
+						codes.Add(mh1);
+						codes.Add(ll1);
+					}
+					else
+					{
+						return TinyProcessor.GetCodeError("RL doit être suivi d'un nom de registre ou d'une adresse.", "RL", "r,a");
+					}
+					break;
+
+				case "RR":
+					if (words.Length == 2 && r1 != -1)
+					{
+						codes.Add((int) Instructions.RrR | r1);
+					}
+					else if (words.Length == 2 && mh1 != -1 && ll1 != -1)
+					{
+						codes.Add((int) Instructions.RrA);
+						codes.Add(mh1);
+						codes.Add(ll1);
+					}
+					else
+					{
+						return TinyProcessor.GetCodeError("RR doit être suivi d'un nom de registre ou d'une adresse.", "RR", "r,a");
+					}
+					break;
+
+				case "RLC":
+					if (words.Length == 2 && r1 != -1)
+					{
+						codes.Add((int) Instructions.RlcR | r1);
+					}
+					else if (words.Length == 2 && mh1 != -1 && ll1 != -1)
+					{
+						codes.Add((int) Instructions.RlcA);
+						codes.Add(mh1);
+						codes.Add(ll1);
+					}
+					else
+					{
+						return TinyProcessor.GetCodeError("RLC doit être suivi d'un nom de registre ou d'une adresse.", "RLC", "r,a");
+					}
+					break;
+
+				case "RRC":
+					if (words.Length == 2 && r1 != -1)
+					{
+						codes.Add((int) Instructions.RrcR | r1);
+					}
+					else if (words.Length == 2 && mh1 != -1 && ll1 != -1)
+					{
+						codes.Add((int) Instructions.RrcA);
+						codes.Add(mh1);
+						codes.Add(ll1);
+					}
+					else
+					{
+						return TinyProcessor.GetCodeError("RRC doit être suivi d'un nom de registre ou d'une adresse.", "RRC", "r,a");
+					}
+					break;
+
+				case "SWAP":
+					if (words.Length == 2 && r1 != -1 && r1 < 2)
+					{
+						codes.Add((int) Instructions.SwapA | r1);
+					}
+					else
+					{
+						return TinyProcessor.GetCodeError("SWAP doit être suivi d'un nom de registre (A ou B).", "SWAP", "s");
+					}
+					break;
+
+				case "MOVE":
+					if (words.Length == 3 && r1 != -1 && r2 != -1)
+					{
+						codes.Add((int) Instructions.MoveRR | (r1<<2) | r2);
+					}
+					else if (words.Length == 3 && v1 != -1 && r2 != -1)
+					{
+						codes.Add((int) Instructions.MoveVR | r2);
+						codes.Add(v1);
+					}
+					else if (words.Length == 3 && mh1 != -1 && ll1 != -1 && r2 != -1)
+					{
+						codes.Add((int) Instructions.MoveAR | r2);
+						codes.Add(mh1);
+						codes.Add(ll1);
+					}
+					else if (words.Length == 3 && r1 != -1 && mh2 != -1 && ll2 != -1)
+					{
+						codes.Add((int) Instructions.MoveRA | r1);
+						codes.Add(mh2);
+						codes.Add(ll2);
+					}
+					else if (words.Length == 3 && v1 != -1 && mh2 != -1 && ll2 != -1)
+					{
+						codes.Add((int) Instructions.MoveVA);
+						codes.Add(v1);
+						codes.Add(mh2);
+						codes.Add(ll2);
+					}
+					else
+					{
+						return TinyProcessor.GetCodeError("Les arguments de l'instruction MOVE sont incorrects.", "MOVE", "rr,vr,ar,ra,va");
+					}
+					break;
+
+				case "ADD":
+					if (words.Length == 3 && r1 != -1 && r2 != -1)
+					{
+						codes.Add((int) Instructions.AddRR | (r1<<2) | r2);
+					}
+					else if (words.Length == 3 && v1 != -1 && r2 != -1)
+					{
+						codes.Add((int) Instructions.AddVR | r2);
+						codes.Add(v1);
+					}
+					else if (words.Length == 3 && mh1 != -1 && ll1 != -1 && r2 != -1)
+					{
+						codes.Add((int) Instructions.AddAR | r2);
+						codes.Add(mh1);
+						codes.Add(ll1);
+					}
+					else if (words.Length == 3 && r1 != -1 && mh2 != -1 && ll2 != -1)
+					{
+						codes.Add((int) Instructions.AddRA | r1);
+						codes.Add(mh2);
+						codes.Add(ll2);
+					}
+					else if (words.Length == 3 && v1 != -1 && mh2 != -1 && ll2 != -1)
+					{
+						codes.Add((int) Instructions.AddVA);
+						codes.Add(v1);
+						codes.Add(mh2);
+						codes.Add(ll2);
+					}
+					else if (words.Length == 3 && v1 != -1 && words[2] == "SP")
+					{
+						codes.Add((int) Instructions.AddVSP);
+						codes.Add(v1);
+					}
+					else
+					{
+						return TinyProcessor.GetCodeError("Les arguments de l'instruction ADD sont incorrects.", "ADD", "rr,vr,ar,ra,va");
+					}
+					break;
+
+				case "SUB":
+					if (words.Length == 3 && r1 != -1 && r2 != -1)
+					{
+						codes.Add((int) Instructions.SubRR | (r1<<2) | r2);
+					}
+					else if (words.Length == 3 && v1 != -1 && r2 != -1)
+					{
+						codes.Add((int) Instructions.SubVR | r2);
+						codes.Add(v1);
+					}
+					else if (words.Length == 3 && mh1 != -1 && ll1 != -1 && r2 != -1)
+					{
+						codes.Add((int) Instructions.SubAR | r2);
+						codes.Add(mh1);
+						codes.Add(ll1);
+					}
+					else if (words.Length == 3 && r1 != -1 && mh2 != -1 && ll2 != -1)
+					{
+						codes.Add((int) Instructions.SubRA | r1);
+						codes.Add(mh2);
+						codes.Add(ll2);
+					}
+					else if (words.Length == 3 && v1 != -1 && mh2 != -1 && ll2 != -1)
+					{
+						codes.Add((int) Instructions.SubVA);
+						codes.Add(v1);
+						codes.Add(mh2);
+						codes.Add(ll2);
+					}
+					else if (words.Length == 3 && v1 != -1 && words[2] == "SP")
+					{
+						codes.Add((int) Instructions.SubVSP);
+						codes.Add(v1);
+					}
+					else
+					{
+						return TinyProcessor.GetCodeError("Les arguments de l'instruction SUB sont incorrects.", "SUB", "rr,vr,ar,ra,va");
+					}
+					break;
+
+				case "COMP":
+					if (words.Length == 3 && r1 != -1 && r2 != -1)
+					{
+						codes.Add((int) Instructions.CompRR | (r1<<2) | r2);
+					}
+					else if (words.Length == 3 && v1 != -1 && r2 != -1)
+					{
+						codes.Add((int) Instructions.CompVR | r2);
+						codes.Add(v1);
+					}
+					else if (words.Length == 3 && mh1 != -1 && ll1 != -1 && r2 != -1)
+					{
+						codes.Add((int) Instructions.CompAR | r2);
+						codes.Add(mh1);
+						codes.Add(ll1);
+					}
+					else if (words.Length == 3 && v1 != -1 && mh2 != -1 && ll2 != -1)
+					{
+						codes.Add((int) Instructions.CompVA);
+						codes.Add(v1);
+						codes.Add(mh2);
+						codes.Add(ll2);
+					}
+					else
+					{
+						return TinyProcessor.GetCodeError("Les arguments de l'instruction COMP sont incorrects.", "COMP", "rr,vr,ar,va");
+					}
+					break;
+
+				case "AND":
+					if (words.Length == 3 && r1 != -1 && r1 < 2 && r2 != -1 && r2 < 2 && r1 != r2)
+					{
+						codes.Add((int) Instructions.AndSS | r1);
+					}
+					else if (words.Length == 3 && v1 != -1 && r2 != -1)
+					{
+						codes.Add((int) Instructions.AndVR | r2);
+						codes.Add(v1);
+					}
+					else if (words.Length == 3 && mh1 != -1 && ll1 != -1 && r2 != -1 && r2 < 2)
+					{
+						codes.Add((int) Instructions.AndAS | r2);
+						codes.Add(mh1);
+						codes.Add(ll1);
+					}
+					else if (words.Length == 3 && r1 != -1 && r1 < 2 && mh2 != -1 && ll2 != -1)
+					{
+						codes.Add((int) Instructions.AndSA | r1);
+						codes.Add(mh2);
+						codes.Add(ll2);
+					}
+					else
+					{
+						return TinyProcessor.GetCodeError("Les arguments de l'instruction AND sont incorrects.", "AND", "ss,vr,as,sa");
+					}
+					break;
+
+				case "OR":
+					if (words.Length == 3 && r1 != -1 && r1 < 2 && r2 != -1 && r2 < 2 && r1 != r2)
+					{
+						codes.Add((int) Instructions.OrSS | r1);
+					}
+					else if (words.Length == 3 && v1 != -1 && r2 != -1)
+					{
+						codes.Add((int) Instructions.OrVR | r2);
+						codes.Add(v1);
+					}
+					else if (words.Length == 3 && mh1 != -1 && ll1 != -1 && r2 != -1 && r2 < 2)
+					{
+						codes.Add((int) Instructions.OrAS | r2);
+						codes.Add(mh1);
+						codes.Add(ll1);
+					}
+					else if (words.Length == 3 && r1 != -1 && r1 < 2 && mh2 != -1 && ll2 != -1)
+					{
+						codes.Add((int) Instructions.OrSA | r1);
+						codes.Add(mh2);
+						codes.Add(ll2);
+					}
+					else
+					{
+						return TinyProcessor.GetCodeError("Les arguments de l'instruction OR sont incorrects.", "OR", "ss,vr,as,sa");
+					}
+					break;
+
+				case "XOR":
+					if (words.Length == 3 && r1 != -1 && r1 < 2 && r2 != -1 && r2 < 2 && r1 != r2)
+					{
+						codes.Add((int) Instructions.XorSS | r1);
+					}
+					else if (words.Length == 3 && v1 != -1 && r2 != -1)
+					{
+						codes.Add((int) Instructions.XorVR | r2);
+						codes.Add(v1);
+					}
+					else if (words.Length == 3 && mh1 != -1 && ll1 != -1 && r2 != -1 && r2 < 2)
+					{
+						codes.Add((int) Instructions.XorAS | r2);
+						codes.Add(mh1);
+						codes.Add(ll1);
+					}
+					else if (words.Length == 3 && r1 != -1 && r1 < 2 && mh2 != -1 && ll2 != -1)
+					{
+						codes.Add((int) Instructions.XorSA | r1);
+						codes.Add(mh2);
+						codes.Add(ll2);
+					}
+					else
+					{
+						return TinyProcessor.GetCodeError("Les arguments de l'instruction XOR sont incorrects.", "XOR", "ss,vr,as,sa");
+					}
+					break;
+
+				case "TEST":
+					if (words.Length == 3 && r1 != -1 && r1 < 2 && r2 != -1 && r2 < 2 && r1 != r2)
+					{
+						codes.Add((int) Instructions.TestSS | r1);
+					}
+					else if (words.Length == 3 && v1 != -1 && r2 != -1 && r2 < 2)
+					{
+						codes.Add((int) Instructions.TestVS | r2);
+						codes.Add(v1);
+					}
+					else if (words.Length == 3 && r1 != -1 && r1 < 2 && mh2 != -1 && ll2 != -1)
+					{
+						codes.Add((int) Instructions.TestSA | r1);
+						codes.Add(mh2);
+						codes.Add(ll2);
+					}
+					else if (words.Length == 3 && v1 != -1 && mh2 != -1 && ll2 != -1)
+					{
+						codes.Add((int) Instructions.TestVA);
+						codes.Add(v1);
+						codes.Add(mh2);
+						codes.Add(ll2);
+					}
+					else
+					{
+						return TinyProcessor.GetCodeError("Les arguments de l'instruction TEST sont incorrects.", "TEST", "tss,tvs,tsa,tva");
+					}
+					break;
+
+				case "TSET":
+					if (words.Length == 3 && r1 != -1 && r1 < 2 && r2 != -1 && r2 < 2 && r1 != r2)
+					{
+						codes.Add((int) Instructions.TSetSS | r1);
+					}
+					else if (words.Length == 3 && v1 != -1 && r2 != -1 && r2 < 2)
+					{
+						codes.Add((int) Instructions.TSetVS | r2);
+						codes.Add(v1);
+					}
+					else if (words.Length == 3 && r1 != -1 && r1 < 2 && mh2 != -1 && ll2 != -1)
+					{
+						codes.Add((int) Instructions.TSetSA | r1);
+						codes.Add(mh2);
+						codes.Add(ll2);
+					}
+					else if (words.Length == 3 && v1 != -1 && mh2 != -1 && ll2 != -1)
+					{
+						codes.Add((int) Instructions.TSetVA);
+						codes.Add(v1);
+						codes.Add(mh2);
+						codes.Add(ll2);
+					}
+					else
+					{
+						return TinyProcessor.GetCodeError("Les arguments de l'instruction TSET sont incorrects.", "TSET", "tss,tvs,tsa,tva");
+					}
+					break;
+
+				case "TCLR":
+					if (words.Length == 3 && r1 != -1 && r1 < 2 && r2 != -1 && r2 < 2 && r1 != r2)
+					{
+						codes.Add((int) Instructions.TClrSS | r1);
+					}
+					else if (words.Length == 3 && v1 != -1 && r2 != -1 && r2 < 2)
+					{
+						codes.Add((int) Instructions.TClrVS | r2);
+						codes.Add(v1);
+					}
+					else if (words.Length == 3 && r1 != -1 && r1 < 2 && mh2 != -1 && ll2 != -1)
+					{
+						codes.Add((int) Instructions.TClrSA | r1);
+						codes.Add(mh2);
+						codes.Add(ll2);
+					}
+					else if (words.Length == 3 && v1 != -1 && mh2 != -1 && ll2 != -1)
+					{
+						codes.Add((int) Instructions.TClrVA);
+						codes.Add(v1);
+						codes.Add(mh2);
+						codes.Add(ll2);
+					}
+					else
+					{
+						return TinyProcessor.GetCodeError("Les arguments de l'instruction TCLR sont incorrects.", "TCLR", "tss,tvs,tsa,tva");
+					}
+					break;
+
+				case "TNOT":
+					if (words.Length == 3 && r1 != -1 && r1 < 2 && r2 != -1 && r2 < 2 && r1 != r2)
+					{
+						codes.Add((int) Instructions.TNotSS | r1);
+					}
+					else if (words.Length == 3 && v1 != -1 && r2 != -1 && r2 < 2)
+					{
+						codes.Add((int) Instructions.TNotVS | r2);
+						codes.Add(v1);
+					}
+					else if (words.Length == 3 && r1 != -1 && r1 < 2 && mh2 != -1 && ll2 != -1)
+					{
+						codes.Add((int) Instructions.TNotSA | r1);
+						codes.Add(mh2);
+						codes.Add(ll2);
+					}
+					else if (words.Length == 3 && v1 != -1 && mh2 != -1 && ll2 != -1)
+					{
+						codes.Add((int) Instructions.TNotVA);
+						codes.Add(v1);
+						codes.Add(mh2);
+						codes.Add(ll2);
+					}
+					else
+					{
+						return TinyProcessor.GetCodeError("Les arguments de l'instruction TNOT sont incorrects.", "TNOT", "tss,tvs,tsa,tva");
+					}
+					break;
+
+				case "EX":
+					if (words.Length == 3 && r1 >= 0 && r1 <= 1 && r2 >= 0 && r2 <= 1 && r1 != r2)
+					{
+						codes.Add((int) Instructions.ExAB);
+					}
+					else if (words.Length == 3 && r1 >= 2 && r1 <= 3 && r2 >= 2 && r2 <= 3 && r1 != r2)
+					{
+						codes.Add((int) Instructions.ExXY);
+					}
+					else
+					{
+						return TinyProcessor.GetCodeError("Les arguments de l'instruction EX sont incorrects.", "EX", "ex");
+					}
+					break;
+
+				default:
+					return "<b>Instruction inconnue.</b><br/><br/>Les instructions connues sont:<br/>ADD, AND, CALL, CLR, CLRC, COMP, DEC, EX, HALT, JUMP, MOVE, NOT, OR, PUSH, RL, RLC, RR, RRC, SETC, SWAP, TCLR, TEST, TNOT, TSET, XOR.<br/> ";
 			}
 
 			return null;  // ok
@@ -2791,6 +2897,164 @@ namespace Epsitec.App.Dolphin.Components
 			ll = (address & 0xFF);
 		}
 
+		protected static string GetCodeError(string message, string instruction, string types)
+		{
+			//	Génère un message d'erreur clair avec des exemples.
+			System.Text.StringBuilder builder = new System.Text.StringBuilder();
+
+			builder.Append("<b>");
+			builder.Append(message);
+			builder.Append("</b>");
+
+			if (!string.IsNullOrEmpty(types))
+			{
+				builder.Append("<br/><br/>Les combinaisons suivantes sont possible:<br/>");
+
+				bool r = false;
+				bool s = false;
+				bool v = false;
+				bool a = false;
+				string[] list = types.Split(',');
+				foreach(string type in list)
+				{
+					switch (type)
+					{
+						case "r":
+							builder.Append(instruction);
+							builder.Append(" r<br/>");
+							r = true;
+							break;
+
+						case "s":
+							builder.Append(instruction);
+							builder.Append(" r'<br/>");
+							s = true;
+							break;
+
+						case "a":
+							builder.Append(instruction);
+							builder.Append(" ADDR<br/>");
+							a = true;
+							break;
+
+						case "rr":
+							builder.Append(instruction);
+							builder.Append(" r,r<br/>");
+							r = true;
+							break;
+
+						case "ss":
+							builder.Append(instruction);
+							builder.Append(" r',r'<br/>");
+							s = true;
+							break;
+
+						case "vr":
+							builder.Append(instruction);
+							builder.Append(" #val,r<br/>");
+							r = true;
+							v = true;
+							break;
+
+						case "ar":
+							builder.Append(instruction);
+							builder.Append(" ADDR,r<br/>");
+							a = true;
+							r = true;
+							break;
+
+						case "ra":
+							builder.Append(instruction);
+							builder.Append(" r,ADDR<br/>");
+							r = true;
+							a = true;
+							break;
+
+						case "as":
+							builder.Append(instruction);
+							builder.Append(" ADDR,r'<br/>");
+							a = true;
+							s = true;
+							break;
+
+						case "sa":
+							builder.Append(instruction);
+							builder.Append(" r',ADDR<br/>");
+							s = true;
+							a = true;
+							break;
+
+						case "va":
+							builder.Append(instruction);
+							builder.Append(" #val,ADDR<br/>");
+							v = true;
+							a = true;
+							break;
+
+						case "tss":
+							builder.Append(instruction);
+							builder.Append(" r':r'<br/>");
+							s = true;
+							break;
+
+						case "tvs":
+							builder.Append(instruction);
+							builder.Append(" r':#val<br/>");
+							v = true;
+							s = true;
+							break;
+
+						case "tsa":
+							builder.Append(instruction);
+							builder.Append(" ADDR:r'<br/>");
+							s = true;
+							a = true;
+							break;
+
+						case "tva":
+							builder.Append(instruction);
+							builder.Append(" ADDR:#val<br/>");
+							v = true;
+							a = true;
+							break;
+
+						case "ex":
+							builder.Append(instruction);
+							builder.Append(" A,B ou X,Y<br/>");
+							break;
+					}
+				}
+
+				if (r || s || v || a)
+				{
+					builder.Append("<br/>");
+				}
+
+				if (r)
+				{
+					builder.Append("r = registre (A, B, X, Y)<br/>");
+				}
+
+				if (s)
+				{
+					builder.Append("r' = registre (A, B)<br/>");
+				}
+
+				if (v)
+				{
+					builder.Append("#val = valeur immédiate (#12h, #C0h, #99d)<br/>");
+				}
+
+				if (a)
+				{
+					builder.Append("ADDR = adresse (C00h, {PC}+DAh, {PC}-3h, {SP}+2h, C80h+{X})<br/>");
+				}
+			}
+
+			builder.Append(" <br/>");  // TODO: bug, devrait être inutile, mais la dernière ligne n'est pas visible sans cela !
+
+			return builder.ToString();
+		}
 		#endregion
 
 
