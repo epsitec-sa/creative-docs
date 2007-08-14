@@ -2044,7 +2044,6 @@ namespace Epsitec.App.Dolphin.Components
 		{
 			//	Assemble les codes d'une instruction et retourne une éventuelle erreur.
 			codes.Clear();
-
 			instruction = instruction.ToUpper().Trim();
 
 			char[] seps = {' ', ',', ':'};
@@ -2065,7 +2064,7 @@ namespace Epsitec.App.Dolphin.Components
 				TinyProcessor.GetCodeValue(words[2], out v2);
 				TinyProcessor.GetCodeAddress(words[2], out mh2, out ll2);
 
-				if (instruction.IndexOf(":") != -1)  // instruction de bit (TODO: faire mieux) ?
+				if (instruction.IndexOf(":") != -1)  // instruction de bit ? (TODO: faire mieux)
 				{
 					Misc.Swap(ref r1, ref r2);
 					Misc.Swap(ref v1, ref v2);
@@ -2094,7 +2093,7 @@ namespace Epsitec.App.Dolphin.Components
 					}
 					else
 					{
-						return "<b>L'instuction NOP n'a aucun argument.</b>";
+						return "<b>L'instuction RET n'a aucun argument.</b>";
 					}
 					break;
 
@@ -2910,17 +2909,17 @@ namespace Epsitec.App.Dolphin.Components
 			System.Text.StringBuilder builder = new System.Text.StringBuilder();
 
 			builder.Append("<b>");
-			builder.Append(message);
+			builder.Append(message);  // message principal en gras
 			builder.Append("</b>");
 
 			if (!string.IsNullOrEmpty(types))
 			{
 				builder.Append("<br/><br/>Les combinaisons suivantes sont possibles :<br/>");
 
-				bool r = false;
-				bool s = false;
-				bool v = false;
-				bool a = false;
+				bool r = false;  // r
+				bool s = false;  // r'
+				bool v = false;  // #val
+				bool a = false;  // ADDR
 				string[] list = types.Split(',');
 				foreach(string type in list)
 				{
@@ -3012,14 +3011,14 @@ namespace Epsitec.App.Dolphin.Components
 						case "tss":
 							builder.Append("<list type=\"fix\"/>");
 							builder.Append(instruction);
-							builder.Append(" <i>r'</i>:<i>r'</i><br/>");
+							builder.Append(" <i>r'</i>: <i>r'</i><br/>");
 							s = true;
 							break;
 
 						case "tvs":
 							builder.Append("<list type=\"fix\"/>");
 							builder.Append(instruction);
-							builder.Append(" <i>r'</i>:<i>#val</i><br/>");
+							builder.Append(" <i>r'</i>: <i>#val</i><br/>");
 							v = true;
 							s = true;
 							break;
@@ -3027,7 +3026,7 @@ namespace Epsitec.App.Dolphin.Components
 						case "tsa":
 							builder.Append("<list type=\"fix\"/>");
 							builder.Append(instruction);
-							builder.Append(" <i>ADDR</i>:<i>r'</i><br/>");
+							builder.Append(" <i>ADDR</i>: <i>r'</i><br/>");
 							s = true;
 							a = true;
 							break;
@@ -3035,7 +3034,7 @@ namespace Epsitec.App.Dolphin.Components
 						case "tva":
 							builder.Append("<list type=\"fix\"/>");
 							builder.Append(instruction);
-							builder.Append(" <i>ADDR</i>:<i>#val</i><br/>");
+							builder.Append(" <i>ADDR</i>: <i>#val</i><br/>");
 							v = true;
 							a = true;
 							break;
@@ -3070,7 +3069,7 @@ namespace Epsitec.App.Dolphin.Components
 
 				if (a)
 				{
-					builder.Append("<i>ADDR</i> = adresse C00h, {PC}+DAh, {PC}-3h, {SP}+2h, C80h+{X}<br/>");
+					builder.Append("<i>ADDR</i> = adresse C00h, {PC}+DAh, {PC}-3h, {SP}+2h, C80h+{X}+{Y}<br/>");
 				}
 			}
 
