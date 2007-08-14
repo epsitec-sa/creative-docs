@@ -2848,19 +2848,26 @@ namespace Epsitec.App.Dolphin.Components
 				}
 			}
 
-			if (word.EndsWith("+{X}") || word.EndsWith("+{Y}"))
+			bool action;
+			do
 			{
+				action = false;
+
 				if (word.EndsWith("+{X}"))
 				{
 					mode |= 1;
+					word = word.Substring(0, word.Length-4);  // enlève +{X}
+					action = true;
 				}
-				else
+				
+				if (word.EndsWith("+{Y}"))
 				{
 					mode |= 2;
+					word = word.Substring(0, word.Length-4);  // enlève +{Y}
+					action = true;
 				}
-
-				word = word.Substring(0, word.Length-4);  // enlève +{x}
 			}
+			while (action);
 
 			if (word.EndsWith("H"))
 			{
