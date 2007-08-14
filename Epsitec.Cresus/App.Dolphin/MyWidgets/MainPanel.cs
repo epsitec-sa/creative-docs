@@ -78,6 +78,22 @@ namespace Epsitec.App.Dolphin.MyWidgets
 									}
 								}
 							}
+
+							Code code = field.Parent as Code;
+							if (code != null)
+							{
+								CodeAccessor ca = code.CodeAccessor;
+								if (ca != null)
+								{
+									ca.FirstAddress = ca.NextFirstAddress(offset);
+
+									newWidget = this.SearchTabIndex(widget, widget.TabIndex);
+									if (newWidget != null)
+									{
+										this.SetDolphinFocus(newWidget);
+									}
+								}
+							}
 						}
 						else  // widget suivant/précédent trouvé ?
 						{

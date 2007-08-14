@@ -105,6 +105,25 @@ namespace Epsitec.App.Dolphin.MyWidgets
 			}
 		}
 
+		public int NextFirstAddress(int offset)
+		{
+			//	Retourne la prochaine première adresse affichée (relative dans la banque).
+			int index = this.GetInstructionIndex(this.firstAddress) + offset;
+
+			if (index < 0)
+			{
+				return 0;
+			}
+			else if (index >= this.instructionAddresses.Count)
+			{
+				return this.MemoryLength-1;
+			}
+			else
+			{
+				return this.instructionAddresses[index];
+			}
+		}
+
 		public string Bank
 		{
 			//	Choix de la banque affichée.
@@ -206,7 +225,7 @@ namespace Epsitec.App.Dolphin.MyWidgets
 			this.fields.Clear();
 			this.panel.Children.Clear();
 
-			int index = 200;
+			int index = 300;
 			for (int i=0; i<total; i++)
 			{
 				MyWidgets.Code field = new MyWidgets.Code(this.panel);

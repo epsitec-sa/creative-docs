@@ -43,12 +43,15 @@ namespace Epsitec.App.Dolphin.MyWidgets
 				this.widgetCodes.Add(code);
 			}
 
-			this.widgetInstruction = new TextField(this);
+			this.widgetInstruction = new TextFieldEx(this);
+			this.widgetInstruction.ButtonShowCondition = ShowCondition.WhenModified;
+			this.widgetInstruction.DefocusAction = DefocusAction.AutoAcceptOrRejectEdition;
 			this.widgetInstruction.PreferredHeight = 20;
 			this.widgetInstruction.PreferredWidth = 150;
 			this.widgetInstruction.Margins = new Margins(0, 0, 0, 0);
 			this.widgetInstruction.Dock = DockStyle.Left;
-			this.widgetInstruction.TextChanged += new EventHandler(this.HandleFieldTextChanged);
+			this.widgetInstruction.EditionAccepted += new EventHandler(this.HandleInstructionEditionAccepted);
+			this.widgetInstruction.EditionRejected += new EventHandler(this.HandleInstructionEditionRejected);
 			this.widgetInstruction.IsFocusedChanged += new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleFieldIsFocusedChanged);
 		}
 
@@ -63,8 +66,8 @@ namespace Epsitec.App.Dolphin.MyWidgets
 			{
 				this.widgetAddress.Dispose();
 
-				this.widgetInstruction.TextChanged -= new EventHandler(this.HandleFieldTextChanged);
-				this.widgetInstruction.IsFocusedChanged -= new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleFieldIsFocusedChanged);
+				this.widgetInstruction.EditionAccepted -= new EventHandler(this.HandleInstructionEditionAccepted);
+				this.widgetInstruction.EditionRejected -= new EventHandler(this.HandleInstructionEditionRejected);
 			}
 
 			base.Dispose(disposing);
@@ -179,10 +182,15 @@ namespace Epsitec.App.Dolphin.MyWidgets
 		}
 
 
-		private void HandleFieldTextChanged(object sender)
+		private void HandleInstructionEditionAccepted(object sender)
 		{
-			//	La valeur hexa éditée a changé.
+			//	L'édition de l'instruction a été acceptée.
 			this.OnInstructionChanged();
+		}
+
+		private void HandleInstructionEditionRejected(object sender)
+		{
+			//	L'édition de l'instruction a été rejetée.
 		}
 
 		private void HandleFieldIsFocusedChanged(object sender, Common.Types.DependencyPropertyChangedEventArgs e)
@@ -239,6 +247,6 @@ namespace Epsitec.App.Dolphin.MyWidgets
 
 		protected StaticText					widgetAddress;
 		protected List<TextField>				widgetCodes;
-		protected TextField						widgetInstruction;
+		protected TextFieldEx					widgetInstruction;
 	}
 }
