@@ -103,6 +103,10 @@ namespace Epsitec.App.Dolphin.Components
 			TSetVA = 0xD9,
 			TClrVA = 0xDA,
 			TNotVA = 0xDB,
+			MoveVA = 0xDC,		// op #val,ADDR
+			CompVA = 0xDD,
+			AddVA  = 0xDE,
+			SubVA  = 0xDF,
 			
 			AndSS  = 0xE0,		// op r',r'
 			OrSS   = 0xE2,
@@ -116,7 +120,6 @@ namespace Epsitec.App.Dolphin.Components
 
 			CompAR = 0xF8,		// COMP ADDR,r
 		}
-
 
 
 		public TinyProcessor(Memory memory) : base(memory)
@@ -733,7 +736,7 @@ namespace Epsitec.App.Dolphin.Components
 				}
 			}
 
-			if (op >= (int) Instructions.TestVA && op < (int) Instructions.TestVA+4)  // op #val,ADDR
+			if (op >= (int) Instructions.TestVA && op < (int) Instructions.TestVA+8)  // op #val,ADDR
 			{
 				Instructions i = (Instructions) (op & 0xFF);
 				data = this.memory.Read(this.registerPC++);
@@ -762,6 +765,27 @@ namespace Epsitec.App.Dolphin.Components
 						data = (1 << (data & 0x07));
 						this.SetFlag(TinyProcessor.FlagZero, (this.memory.Read(address) & data) == 0);
 						this.memory.Write(address, this.memory.Read(address) ^ data);
+						return;
+
+					case Instructions.MoveVA:
+						this.memory.Write(address, data);
+						this.SetFlagsOper(data);
+						return;
+
+					case Instructions.CompVA:
+						this.SetFlagsCompare(this.memory.Read(address), data);
+						return;
+
+					case Instructions.AddVA:
+						data = (this.memory.Read(address) + data) & 0xFF;
+						this.memory.Write(address, data);
+						this.SetFlagsOper(data);
+						return;
+
+					case Instructions.SubVA:
+						data = (this.memory.Read(address) - data) & 0xFF;
+						this.memory.Write(address, data);
+						this.SetFlagsOper(data);
 						return;
 				}
 			}
@@ -1211,10 +1235,9 @@ namespace Epsitec.App.Dolphin.Components
 			2,2,2,2,2,2,2,2, 3,3,3,3,3,3,3,3,  // 0xA0
 			3,3,3,3,3,3,3,3, 3,3,3,3,3,3,3,3,  // 0xB0
 			1,1,1,1,1,1,1,1, 3,3,3,3,3,3,3,3,  // 0xC0
-			2,2,2,2,2,2,2,2, 4,4,4,4,0,0,0,0,  // 0xD0
+			2,2,2,2,2,2,2,2, 4,4,4,4,4,4,4,4,  // 0xD0
 			1,1,1,1,1,1,0,0, 3,3,3,3,3,3,0,0,  // 0xE0
 			3,3,3,3,3,3,0,0, 3,3,3,3,0,0,0,0,  // 0xF0
-
 		};
 
 		public override string DessassemblyInstruction(List<int> codes)
@@ -1756,7 +1779,7 @@ namespace Epsitec.App.Dolphin.Components
 				return builder.ToString();
 			}
 
-			if (op >= (int) Instructions.TestVA && op < (int) Instructions.TestVA+8)  // op #val,ADDR
+			if (op >= (int) Instructions.TestVA && op < (int) Instructions.TestVA+4)  // op #val,ADDR
 			{
 				int n = op & 0x01;
 				Instructions i = (Instructions) (op & 0xFE);
@@ -1787,6 +1810,40 @@ namespace Epsitec.App.Dolphin.Components
 				TinyProcessor.PutCodeAddress(builder, codes[2], codes[3]);
 				builder.Append(":");
 				TinyProcessor.PutCodeValue(builder, codes[1]);
+				return builder.ToString();
+			}
+
+			if (op >= (int) Instructions.MoveVA && op < (int) Instructions.MoveVA+4)  // op #val,ADDR
+			{
+				int n = op & 0x01;
+				Instructions i = (Instructions) (op & 0xFE);
+
+				switch (i)
+				{
+					case Instructions.MoveVA:
+						builder.Append("MOVE ");
+						break;
+
+					case Instructions.CompVA:
+						builder.Append("COMP ");
+						break;
+
+					case Instructions.AddVA:
+						builder.Append("ADD ");
+						break;
+
+					case Instructions.SubVA:
+						builder.Append("SUB ");
+						break;
+
+					default:
+						builder.Append("? ");
+						break;
+				}
+
+				TinyProcessor.PutCodeValue(builder, codes[1]);
+				builder.Append(",");
+				TinyProcessor.PutCodeAddress(builder, codes[2], codes[3]);
 				return builder.ToString();
 			}
 
@@ -2516,6 +2573,7 @@ namespace Epsitec.App.Dolphin.Components
 					AbstractProcessor.HelpPutLine(builder, "[50+r] [vv]     <tab/>MOVE #val,r   <tab/><tab/>(N, Z, C)");
 					AbstractProcessor.HelpPutLine(builder, "[54+r] [mh] [ll]<tab/>MOVE ADDR,r   <tab/><tab/>(N, Z, C)");
 					AbstractProcessor.HelpPutLine(builder, "[58+r] [mh] [ll]<tab/>MOVE r,ADDR   <tab/><tab/>(N, Z, C)");
+					AbstractProcessor.HelpPutLine(builder, "[DC] [vv] [mh] [ll] MOVE #val,ADDR  <tab/>(N, Z, C)");
 
 					AbstractProcessor.HelpPutTitle(builder, "Additions");
 					AbstractProcessor.HelpPutLine(builder, "[80+r]          <tab/>ADD A,r      <tab/><tab/>(N, Z, C)");
@@ -2525,6 +2583,7 @@ namespace Epsitec.App.Dolphin.Components
 					AbstractProcessor.HelpPutLine(builder, "[A0+r] [vv]     <tab/>ADD #val,r   <tab/><tab/>(N, Z, C)");
 					AbstractProcessor.HelpPutLine(builder, "[B0+r] [mh] [ll]<tab/>ADD ADDR,r   <tab/><tab/>(N, Z, C)");
 					AbstractProcessor.HelpPutLine(builder, "[B8+r] [mh] [ll]<tab/>ADD r,ADDR   <tab/><tab/>(N, Z, C)");
+					AbstractProcessor.HelpPutLine(builder, "[DE] [vv] [mh] [ll] ADD #val,ADDR  <tab/>(N, Z, C)");
 
 					AbstractProcessor.HelpPutTitle(builder, "Soustractions");
 					AbstractProcessor.HelpPutLine(builder, "[90+r]          <tab/>SUB A,r      <tab/><tab/>(N, Z, C)");
@@ -2534,6 +2593,7 @@ namespace Epsitec.App.Dolphin.Components
 					AbstractProcessor.HelpPutLine(builder, "[A4+r] [vv]     <tab/>SUB #val,r   <tab/><tab/>(N, Z, C)");
 					AbstractProcessor.HelpPutLine(builder, "[B4+r] [mh] [ll]<tab/>SUB ADDR,r   <tab/><tab/>(N, Z, C)");
 					AbstractProcessor.HelpPutLine(builder, "[BC+r] [mh] [ll]<tab/>SUB r,ADDR   <tab/><tab/>(N, Z, C)");
+					AbstractProcessor.HelpPutLine(builder, "[DF] [vv] [mh] [ll] SUB #val,ADDR  <tab/>(N, Z, C)");
 
 					AbstractProcessor.HelpPutTitle(builder, "ET logique");
 					AbstractProcessor.HelpPutLine(builder, "[E0]             <tab/>AND A,B      <tab/><tab/>(N, Z, C)");
@@ -2561,24 +2621,28 @@ namespace Epsitec.App.Dolphin.Components
 					AbstractProcessor.HelpPutLine(builder, "[C1]             <tab/>TEST A:B      <tab/><tab/>(Z)");
 					AbstractProcessor.HelpPutLine(builder, "[D0+r'] [vv]     <tab/>TEST r':#val  <tab/><tab/>(Z)");
 					AbstractProcessor.HelpPutLine(builder, "[C8+r'] [mh] [ll]<tab/>TEST ADDR:r'  <tab/><tab/>(Z)");
+					AbstractProcessor.HelpPutLine(builder, "[DC] [vv] [mh] [ll] TEST ADDR:#val   <tab/>(Z)");
 
 					AbstractProcessor.HelpPutTitle(builder, "Tester puis mettre un bit à un");
 					AbstractProcessor.HelpPutLine(builder, "[C2]             <tab/>TSET B:A      <tab/><tab/>(Z)");
 					AbstractProcessor.HelpPutLine(builder, "[C3]             <tab/>TSET A:B      <tab/><tab/>(Z)");
 					AbstractProcessor.HelpPutLine(builder, "[D2+r'] [vv]     <tab/>TSET r':#val  <tab/><tab/>(Z)");
 					AbstractProcessor.HelpPutLine(builder, "[CA+r'] [mh] [ll]<tab/>TSET ADDR:r'  <tab/><tab/>(Z)");
+					AbstractProcessor.HelpPutLine(builder, "[DD] [vv] [mh] [ll] TSET ADDR:#val   <tab/>(Z)");
 
 					AbstractProcessor.HelpPutTitle(builder, "Tester puis mettre un bit à zéro");
 					AbstractProcessor.HelpPutLine(builder, "[C4]             <tab/>TCLR B:A      <tab/><tab/>(Z)");
 					AbstractProcessor.HelpPutLine(builder, "[C5]             <tab/>TCLR A:B      <tab/><tab/>(Z)");
 					AbstractProcessor.HelpPutLine(builder, "[D4+r'] [vv]     <tab/>TCLR r':#val  <tab/><tab/>(Z)");
 					AbstractProcessor.HelpPutLine(builder, "[CC+r'] [mh] [ll]<tab/>TCLR ADDR:r'  <tab/><tab/>(Z)");
+					AbstractProcessor.HelpPutLine(builder, "[DE] [vv] [mh] [ll] TCLR ADDR:#val   <tab/>(Z)");
 
 					AbstractProcessor.HelpPutTitle(builder, "Tester puis inverser un bit");
 					AbstractProcessor.HelpPutLine(builder, "[C6]             <tab/>TNOT B:A      <tab/><tab/>(Z)");
 					AbstractProcessor.HelpPutLine(builder, "[C7]             <tab/>TNOT A:B      <tab/><tab/>(Z)");
 					AbstractProcessor.HelpPutLine(builder, "[D6+r'] [vv]     <tab/>TNOT r':#val  <tab/><tab/>(Z)");
 					AbstractProcessor.HelpPutLine(builder, "[CE+r'] [mh] [ll]<tab/>TNOT ADDR:r'  <tab/><tab/>(Z)");
+					AbstractProcessor.HelpPutLine(builder, "[DF] [vv] [mh] [ll] TNOT ADDR:#val   <tab/>(Z)");
 
 					AbstractProcessor.HelpPutTitle(builder, "Comparaisons");
 					AbstractProcessor.HelpPutLine(builder, "[60+r]          <tab/>COMP A,r      <tab/><tab/>(N, Z, C)");
@@ -2587,6 +2651,7 @@ namespace Epsitec.App.Dolphin.Components
 					AbstractProcessor.HelpPutLine(builder, "[6C+r]          <tab/>COMP Y,r      <tab/><tab/>(N, Z, C)");
 					AbstractProcessor.HelpPutLine(builder, "[70+r] [vv]     <tab/>COMP #val,r   <tab/><tab/>(N, Z, C)");
 					AbstractProcessor.HelpPutLine(builder, "[F8+r] [mh] [ll]<tab/>COMP ADDR,r   <tab/><tab/>(N, Z, C)");
+					AbstractProcessor.HelpPutLine(builder, "[DD] [vv] [mh] [ll] COMP #val,ADDR  <tab/>(N, Z, C)");
 
 					AbstractProcessor.HelpPutTitle(builder, "Opérations unaires");
 					AbstractProcessor.HelpPutLine(builder, "[20+r]          <tab/>CLR r");
