@@ -191,13 +191,13 @@ namespace Epsitec.App.Dolphin.MyWidgets
 		private void HandleInstructionEditionAccepted(object sender)
 		{
 			//	L'édition de l'instruction a été acceptée.
-			List<int> codes = this.processor.AssemblyInstruction(this.widgetInstruction.Text);
+			List<int> codes = new List<int>();
+			string err = this.processor.AssemblyInstruction(this.widgetInstruction.Text, codes);
 
 			if (codes == null || codes.Count == 0)
 			{
 				string title = "Dauphin";
 				string icon = "manifest:Epsitec.Common.Dialogs.Images.Warning.icon";
-				string err = "Instruction inconnue.";
 				Common.Dialogs.IDialog dialog = Common.Dialogs.MessageDialog.CreateOk(title, icon, err, null, null);
 				dialog.Owner = this.Window;
 				dialog.OpenDialog();

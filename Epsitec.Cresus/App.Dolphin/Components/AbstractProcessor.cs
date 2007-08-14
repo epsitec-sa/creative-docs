@@ -100,12 +100,12 @@ namespace Epsitec.App.Dolphin.Components
 			return "NOP";
 		}
 
-		public virtual List<int> AssemblyInstruction(string instruction)
+		public virtual string AssemblyInstruction(string instruction, List<int> codes)
 		{
-			//	Retourne les codes d'une instruction.
-			List<int> codes = new List<int>();
-			codes.Add(0);
-			return codes;
+			//	Assemble les codes d'une instruction et retourne une éventuelle erreur.
+			codes.Clear();
+			codes.Add(0);  // NOP
+			return null;  // ok
 		}
 
 		

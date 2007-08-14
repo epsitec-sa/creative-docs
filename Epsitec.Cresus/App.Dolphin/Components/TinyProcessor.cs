@@ -2040,10 +2040,10 @@ namespace Epsitec.App.Dolphin.Components
 			}
 		}
 
-		public override List<int> AssemblyInstruction(string instruction)
+		public override string AssemblyInstruction(string instruction, List<int> codes)
 		{
-			//	Retourne les codes d'une instruction.
-			List<int> codes = new List<int>();
+			//	Assemble les codes d'une instruction et retourne une éventuelle erreur.
+			codes.Clear();
 
 			instruction = instruction.ToUpper().Trim();
 
@@ -2300,7 +2300,7 @@ namespace Epsitec.App.Dolphin.Components
 									break;
 
 								default:
-									return null;
+									return "La condition est fausse.";
 							}
 
 							codes.Add(mh2);
@@ -2629,7 +2629,12 @@ namespace Epsitec.App.Dolphin.Components
 				TinyProcessor.GetCodeAddress(words[2], out mh2, out ll2);
 			}
 
-			return codes;
+			if (codes.Count == 0)
+			{
+				return "Instruction inconnue.";
+			}
+
+			return null;  // ok
 		}
 
 		protected static void GetCodeRegister(string word, out int n)
