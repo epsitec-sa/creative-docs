@@ -1847,7 +1847,7 @@ namespace Epsitec.App.Dolphin.Components
 				return builder.ToString();
 			}
 
-			if (op >= (int) Instructions.AndSS && op < (int) Instructions.AndSS+8)  // op r',r'
+			if (op >= (int) Instructions.AndSS && op < (int) Instructions.AndSS+6)  // op r',r'
 			{
 				int n = op & 0x01;
 				int src = n;
@@ -1857,7 +1857,7 @@ namespace Epsitec.App.Dolphin.Components
 				switch (i)
 				{
 					case Instructions.AndSS:
-						builder.Append("TEST ");
+						builder.Append("AND ");
 						break;
 
 					case Instructions.OrSS:
@@ -1873,9 +1873,9 @@ namespace Epsitec.App.Dolphin.Components
 						break;
 				}
 
-				TinyProcessor.PutCodeRegister(builder, dst);
-				builder.Append(":");
 				TinyProcessor.PutCodeRegister(builder, src);
+				builder.Append(",");
+				TinyProcessor.PutCodeRegister(builder, dst);
 				return builder.ToString();
 			}
 
@@ -1887,7 +1887,7 @@ namespace Epsitec.App.Dolphin.Components
 				switch (i)
 				{
 					case Instructions.AndAS:
-						builder.Append("TEST ");
+						builder.Append("AND ");
 						break;
 
 					case Instructions.OrAS:
@@ -1917,7 +1917,7 @@ namespace Epsitec.App.Dolphin.Components
 				switch (i)
 				{
 					case Instructions.AndSA:
-						builder.Append("TEST ");
+						builder.Append("AND ");
 						break;
 
 					case Instructions.OrSA:
