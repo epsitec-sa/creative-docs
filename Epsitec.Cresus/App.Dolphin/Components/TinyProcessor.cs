@@ -1179,88 +1179,43 @@ namespace Epsitec.App.Dolphin.Components
 		public override int GetInstructionLength(int code)
 		{
 			//	Retourne le nombre de bytes d'une instruction.
-			switch ((Instructions) code)
-			{
-				case Instructions.AddVSP:
-				case Instructions.SubVSP:
-					return 2;
+			int length = 0;
 
-				case Instructions.Call:
-					return 3;
+			if (code >= 0x00 && code <= 0xFF)
+			{
+				length = TinyProcessor.InstructionLength[code];
 			}
 
-			if (code >= (int) Instructions.Jump && code <= (int) Instructions.JumpNS)  // JUMP
+			if (length == 0)  // instruction inconnue ?
 			{
-				return 3;
+				System.Diagnostics.Debug.WriteLine(string.Format("Unknow instruction {0}", code.ToString("X2")));
+				length = 1;
 			}
 
-			if (code >= (int) Instructions.MoveVR && code < (int) Instructions.MoveVR+4)  // MOVE #val,r
-			{
-				return 2;
-			}
-
-			if (code >= (int) Instructions.MoveAR && code < (int) Instructions.MoveAR+4)  // MOVE ADDR,r
-			{
-				return 3;
-			}
-
-			if (code >= (int) Instructions.MoveRA && code < (int) Instructions.MoveRA+4)  // MOVE r,ADDR
-			{
-				return 3;
-			}
-
-			if (code >= (int) Instructions.CompVR && code < (int) Instructions.CompVR+16)  // op #val,r
-			{
-				return 2;
-			}
-
-			if (code >= (int) Instructions.AddVR && code < (int) Instructions.AddVR+8)  // op #val,r
-			{
-				return 2;
-			}
-
-			if (code >= (int) Instructions.ClrA && code < (int) Instructions.ClrA+8)  // op ADDR
-			{
-				return 3;
-			}
-
-			if (code >= (int) Instructions.AddAR && code < (int) Instructions.AddAR+16)  // op ADDR,r / r,ADDR
-			{
-				return 3;
-			}
-
-			if (code >= (int) Instructions.TestSA && code < (int) Instructions.TestSA+8)  // op r',ADDR
-			{
-				return 3;
-			}
-
-			if (code >= (int) Instructions.TestVS && code < (int) Instructions.TestVS+8)  // op #val,r'
-			{
-				return 2;
-			}
-
-			if (code >= (int) Instructions.TestVA && code < (int) Instructions.TestVA+8)  // op #val,ADDR
-			{
-				return 4;
-			}
-
-			if (code >= (int) Instructions.AndAS && code < (int) Instructions.AndAS+6)  // op ADDR,r' / r',ADDR
-			{
-				return 3;
-			}
-
-			if (code >= (int) Instructions.AndSA && code < (int) Instructions.AndSA+6)  // op ADDR,r' / r',ADDR
-			{
-				return 3;
-			}
-
-			if (code >= (int) Instructions.CompAR && code < (int) Instructions.CompAR+4)  // COMP ADDR,r
-			{
-				return 3;
-			}
-
-			return 1;
+			return length;
 		}
+
+		protected static readonly byte[] InstructionLength =
+		{
+			1,3,1,1,1,1,2,2, 1,1,1,1,1,1,1,1,  // 0x00
+			3,0,3,3,3,3,3,3, 3,3,3,3,0,0,0,0,  // 0x10
+			1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1,  // 0x20
+			1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1,  // 0x30
+			1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1,  // 0x40
+			2,2,2,2,3,3,3,3, 3,3,3,3,1,1,1,1,  // 0x50
+			1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1,  // 0x60
+			2,2,2,2,2,2,2,2, 2,2,2,2,2,2,2,2,  // 0x70
+
+			1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1,  // 0x80
+			1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1,  // 0x90
+			2,2,2,2,2,2,2,2, 3,3,3,3,3,3,3,3,  // 0xA0
+			3,3,3,3,3,3,3,3, 3,3,3,3,3,3,3,3,  // 0xB0
+			1,1,1,1,1,1,1,1, 3,3,3,3,3,3,3,3,  // 0xC0
+			2,2,2,2,2,2,2,2, 4,4,4,4,0,0,0,0,  // 0xD0
+			1,1,1,1,1,1,0,0, 3,3,3,3,3,3,0,0,  // 0xE0
+			3,3,3,3,3,3,0,0, 3,3,3,3,0,0,0,0,  // 0xF0
+
+		};
 
 		public override string DessassemblyInstruction(List<int> codes)
 		{
@@ -1272,7 +1227,7 @@ namespace Epsitec.App.Dolphin.Components
 
 			System.Text.StringBuilder builder = new System.Text.StringBuilder();
 			int op = codes[0];
-			System.Diagnostics.Debug.WriteLine(string.Format("i={0}", op.ToString("X2")));
+			//?System.Diagnostics.Debug.WriteLine(string.Format("i={0}", op.ToString("X2")));
 
 			switch ((Instructions) op)
 			{
