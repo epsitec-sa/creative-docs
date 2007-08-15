@@ -99,7 +99,7 @@ namespace Epsitec.App.Dolphin.Components
 		public void ShiftRam(int address, int offset)
 		{
 			//	Décale toute la mémoire.
-			System.Diagnostics.Debug.Assert(address != -1);
+			System.Diagnostics.Debug.Assert(address != -1 || offset != 0);
 
 			if (offset > 0)  // creuse un trou ?
 			{

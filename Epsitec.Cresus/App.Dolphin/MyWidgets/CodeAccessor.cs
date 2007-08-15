@@ -156,8 +156,7 @@ namespace Epsitec.App.Dolphin.MyWidgets
 				}
 				else
 				{
-					int index = this.GetInstructionIndex(this.addressSelected);
-					return this.instructionAddresses[index+1] - this.instructionAddresses[index];
+					return this.GetInstructionLength(this.addressSelected);
 				}
 			}
 		}
@@ -383,6 +382,21 @@ namespace Epsitec.App.Dolphin.MyWidgets
 			return 0;
 		}
 
+		protected int GetInstructionLength(int address)
+		{
+			//	Retourne la longueur de l'instruction en fonction de son adresse (relative dans la banque).
+			int index = this.GetInstructionIndex(address);
+
+			if (index < this.instructionAddresses.Count-1)
+			{
+				return this.instructionAddresses[index+1] - this.instructionAddresses[index];
+			}
+			else
+			{
+				return this.MemoryLength - this.instructionAddresses[index];
+			}
+		}
+
 		protected void UpdateMarkPC()
 		{
 			if (this.memory == null)
@@ -539,8 +553,12 @@ namespace Epsitec.App.Dolphin.MyWidgets
 			List<int> codes = new List<int>();
 			widget.GetCode(out address, codes);
 
-			int index = this.GetInstructionIndex(address);
-			int oldLength = this.instructionAddresses[index+1] - this.instructionAddresses[index];
+			int oldLength = this.GetInstructionLength(address);
+
+			if (oldLength < codes.Count)
+			{
+				this.memory.ShiftRam(address, codes.Count-oldLength);
+			}
 
 			foreach (int code in codes)
 			{
