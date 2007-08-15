@@ -2914,13 +2914,22 @@ namespace Epsitec.App.Dolphin.Components
 
 			if (!string.IsNullOrEmpty(types))
 			{
-				builder.Append("<br/><br/>Les combinaisons suivantes sont possibles :<br/>");
+				string[] list = types.Split(',');
+
+				if (list.Length == 1)
+				{
+					builder.Append("<br/><br/>L'instruction suivante est possible :<br/>");
+				}
+				else
+				{
+					builder.Append("<br/><br/>Les instructions suivantes sont possibles :<br/>");
+				}
 
 				bool r = false;  // r
 				bool s = false;  // r'
 				bool v = false;  // #val
 				bool a = false;  // ADDR
-				string[] list = types.Split(',');
+
 				foreach(string type in list)
 				{
 					switch (type)

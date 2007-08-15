@@ -42,16 +42,19 @@ namespace Epsitec.App.Dolphin.MyWidgets
 				if (message.KeyCode == KeyCode.Tab || message.KeyCode == KeyCode.Return)
 				{
 					offset = message.IsShiftPressed ? -1 : 1;
+					message.Consumer = this;
 				}
 
 				if (message.KeyCode == KeyCode.ArrowDown)
 				{
 					offset = 1;
+					message.Consumer = this;
 				}
 
 				if (message.KeyCode == KeyCode.ArrowUp)
 				{
 					offset = -1;
+					message.Consumer = this;
 				}
 
 				if (offset != 0)
