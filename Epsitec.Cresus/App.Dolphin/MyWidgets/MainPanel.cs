@@ -61,6 +61,13 @@ namespace Epsitec.App.Dolphin.MyWidgets
 				{
 					Widget widget = this.dolphinFocusedWidget;
 					TextField field = widget as TextField;
+
+					Code actualCode = field.Parent as Code;
+					if (actualCode != null && actualCode.IsErrorMet)
+					{
+						return;
+					}
+
 					if (field != null)
 					{
 						Widget newWidget = this.SearchTabIndex(widget, widget.TabIndex+offset);

@@ -155,6 +155,15 @@ namespace Epsitec.App.Dolphin.MyWidgets
 			}
 		}
 
+		public bool IsErrorMet
+		{
+			// Indique si une erreur a été rencontrée lors du dernier EditionAccepted.
+			get
+			{
+				return this.isErrorMet;
+			}
+		}
+
 
 		protected MainPanel MainPanel
 		{
@@ -196,6 +205,8 @@ namespace Epsitec.App.Dolphin.MyWidgets
 
 			if (codes == null || codes.Count == 0 || !string.IsNullOrEmpty(err))
 			{
+				this.isErrorMet = true;
+
 				string title = "Dauphin";
 				string icon = "manifest:Epsitec.Common.Dialogs.Images.Warning.icon";
 				Common.Dialogs.IDialog dialog = Common.Dialogs.MessageDialog.CreateOk(title, icon, err, null, null);
@@ -204,6 +215,8 @@ namespace Epsitec.App.Dolphin.MyWidgets
 			}
 			else
 			{
+				this.isErrorMet = false;
+
 				this.valueCodes = codes;
 				this.OnInstructionChanged();
 			}
@@ -222,6 +235,8 @@ namespace Epsitec.App.Dolphin.MyWidgets
 
 			if (focused)  // focus pris ?
 			{
+				this.isErrorMet = false;
+
 				MainPanel mp = this.MainPanel;
 				if (mp != null)
 				{
@@ -265,6 +280,7 @@ namespace Epsitec.App.Dolphin.MyWidgets
 		protected CodeAccessor					codeAccessor;
 		protected int							valueAddress;
 		protected List<int>						valueCodes;
+		protected bool							isErrorMet;
 
 		protected StaticText					widgetAddress;
 		protected List<TextField>				widgetCodes;
