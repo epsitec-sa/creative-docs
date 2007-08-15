@@ -568,9 +568,11 @@ namespace Epsitec.App.Dolphin.MyWidgets
 				}
 			}
 
+			int shift = 0;
 			if (maxLength < codes.Count)  // pas assez de place ?
 			{
-				this.memory.ShiftRam(address, codes.Count-maxLength);
+				shift = codes.Count-maxLength;
+				this.memory.ShiftRam(address, shift);
 			}
 
 			foreach (int code in codes)
@@ -585,6 +587,16 @@ namespace Epsitec.App.Dolphin.MyWidgets
 			}
 
 			this.UpdateData();
+
+			if (shift > 0)
+			{
+				string title = "Dauphin";
+				string icon = "manifest:Epsitec.Common.Dialogs.Images.Warning.icon";
+				string err = string.Format("La mémoire a été décalée de {0} byte(s) à partir de l'adresse {1}h.<br/>N'oubliez pas d'adapter les adresses des instructions ayant un argument ADDR (JUMP, MOVE, etc.).", shift.ToString(), address.ToString("X3"));
+				Common.Dialogs.IDialog dialog = Common.Dialogs.MessageDialog.CreateOk(title, icon, err, null, null);
+				dialog.Owner = this.Window;
+				dialog.OpenDialog();
+			}
 		}
 
 
