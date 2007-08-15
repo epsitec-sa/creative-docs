@@ -242,14 +242,61 @@ namespace Epsitec.App.Dolphin.MyWidgets
 				{
 					mp.SetDolphinFocusedWidget(widget);
 				}
+
+				this.OnInstructionSelected();
 			}
 			else  // focus perdu ?
 			{
+				this.OnInstructionDeselected();
 			}
 		}
 
 
 		#region EventHandler
+		protected virtual void OnInstructionSelected()
+		{
+			//	Génère un événement pour dire qu'une cellule a été sélectionnée.
+			EventHandler handler = (EventHandler) this.GetUserEventHandler("InstructionSelected");
+			if (handler != null)
+			{
+				handler(this);
+			}
+		}
+
+		public event Common.Support.EventHandler InstructionSelected
+		{
+			add
+			{
+				this.AddUserEventHandler("InstructionSelected", value);
+			}
+			remove
+			{
+				this.RemoveUserEventHandler("InstructionSelected", value);
+			}
+		}
+
+		protected virtual void OnInstructionDeselected()
+		{
+			//	Génère un événement pour dire qu'une cellule a été sélectionnée.
+			EventHandler handler = (EventHandler) this.GetUserEventHandler("InstructionDeselected");
+			if (handler != null)
+			{
+				handler(this);
+			}
+		}
+
+		public event Common.Support.EventHandler InstructionDeselected
+		{
+			add
+			{
+				this.AddUserEventHandler("InstructionDeselected", value);
+			}
+			remove
+			{
+				this.RemoveUserEventHandler("InstructionDeselected", value);
+			}
+		}
+
 		protected virtual void OnInstructionChanged()
 		{
 			//	Génère un événement pour dire qu'une cellule a été sélectionnée.

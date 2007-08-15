@@ -96,6 +96,40 @@ namespace Epsitec.App.Dolphin.Components
 			this.application.DisplayBitmap.Invalidate();
 		}
 
+		public void ShiftRam(int address, int offset)
+		{
+			//	Décale toute la mémoire.
+			System.Diagnostics.Debug.Assert(address != -1);
+
+			if (offset > 0)  // creuse un trou ?
+			{
+				for (int i=Memory.RamBase+Memory.RamLength-1; i>=address+offset; i--)
+				{
+					this.memory[i] = this.memory[i-offset];
+				}
+
+				for (int i=address; i<address+offset; i++)
+				{
+					this.memory[i] = 0;
+				}
+			}
+
+			if (offset < 0)  // bouche un trou ?
+			{
+				offset = -offset;
+
+				for (int i=address; i<Memory.RamBase+Memory.RamLength-offset; i++)
+				{
+					this.memory[i] = this.memory[i+offset];
+				}
+
+				for (int i=Memory.RamBase+Memory.RamLength-offset; i<Memory.RamBase+Memory.RamLength; i++)
+				{
+					this.memory[i] = 0;
+				}
+			}
+		}
+
 
 		public string GetContent()
 		{

@@ -25,6 +25,8 @@ namespace Epsitec.App.Dolphin.MyWidgets
 
 			this.fields = new List<MyWidgets.Code>();
 			this.instructionAddresses = new List<int>();
+
+			this.addressSelected = -1;
 		}
 
 		public CodeAccessor(Widget embedder) : this()
@@ -40,6 +42,8 @@ namespace Epsitec.App.Dolphin.MyWidgets
 
 				foreach (MyWidgets.Code field in this.fields)
 				{
+					field.InstructionSelected -= new EventHandler(this.HandleFieldInstructionSelected);
+					field.InstructionDeselected -= new EventHandler(this.HandleFieldInstructionDeselected);
 					field.InstructionChanged -= new EventHandler(this.HandleFieldInstructionChanged);
 				}
 			}
@@ -121,6 +125,40 @@ namespace Epsitec.App.Dolphin.MyWidgets
 			else
 			{
 				return this.instructionAddresses[index];
+			}
+		}
+
+		public int AddressSelected
+		{
+			//	Adresse sélectionnée.
+			get
+			{
+				return this.addressSelected;
+			}
+			set
+			{
+				if (this.addressSelected != value)
+				{
+					this.addressSelected = value;
+					this.OnInstructionSelected();
+				}
+			}
+		}
+
+		public int LengthSelected
+		{
+			//	Longueur de l'instruction à l'adresse sélectionnée.
+			get
+			{
+				if (this.addressSelected == -1)
+				{
+					return 0;
+				}
+				else
+				{
+					int index = this.GetInstructionIndex(this.addressSelected);
+					return this.instructionAddresses[index+1] - this.instructionAddresses[index];
+				}
 			}
 		}
 
@@ -236,6 +274,8 @@ namespace Epsitec.App.Dolphin.MyWidgets
 				field.PreferredHeight = CodeAccessor.LineHeight;
 				field.Margins = new Margins(0, 0, 0, 1);
 				field.Dock = DockStyle.Top;
+				field.InstructionSelected += new EventHandler(this.HandleFieldInstructionSelected);
+				field.InstructionDeselected += new EventHandler(this.HandleFieldInstructionDeselected);
 				field.InstructionChanged += new EventHandler(this.HandleFieldInstructionChanged);
 
 				this.fields.Add(field);
@@ -469,6 +509,28 @@ namespace Epsitec.App.Dolphin.MyWidgets
 			this.FirstAddress = address;
 		}
 
+		private void HandleFieldInstructionSelected(object sender)
+		{
+			MyWidgets.Code widget = sender as MyWidgets.Code;
+			int address = -1;
+
+			for (int i=0; i<this.fields.Count; i++)
+			{
+				if (widget == fields[i])
+				{
+					int index = this.GetInstructionIndex(this.firstAddress);
+					address = this.instructionAddresses[index+i];
+				}
+			}
+
+			this.AddressSelected = address;
+		}
+
+		private void HandleFieldInstructionDeselected(object sender)
+		{
+			this.AddressSelected = -1;
+		}
+
 		private void HandleFieldInstructionChanged(object sender)
 		{
 			MyWidgets.Code widget = sender as MyWidgets.Code;
@@ -495,6 +557,31 @@ namespace Epsitec.App.Dolphin.MyWidgets
 		}
 
 
+		#region EventHandler
+		protected virtual void OnInstructionSelected()
+		{
+			//	Génère un événement pour dire qu'une cellule a été sélectionnée.
+			EventHandler handler = (EventHandler) this.GetUserEventHandler("InstructionSelected");
+			if (handler != null)
+			{
+				handler(this);
+			}
+		}
+
+		public event Common.Support.EventHandler InstructionSelected
+		{
+			add
+			{
+				this.AddUserEventHandler("InstructionSelected", value);
+			}
+			remove
+			{
+				this.RemoveUserEventHandler("InstructionSelected", value);
+			}
+		}
+		#endregion
+
+
 		static protected readonly double LineHeight = 20;
 
 		protected Components.AbstractProcessor		processor;
@@ -505,6 +592,7 @@ namespace Epsitec.App.Dolphin.MyWidgets
 		protected List<MyWidgets.Code>				fields;
 		protected int								firstAddress;  // relatif dans la banque
 		protected int								markPC;
+		protected int								addressSelected;
 		protected List<int>							instructionAddresses;
 		protected bool								ignoreChange;
 	}
