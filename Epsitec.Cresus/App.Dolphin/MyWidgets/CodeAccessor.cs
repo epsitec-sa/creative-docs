@@ -554,18 +554,31 @@ namespace Epsitec.App.Dolphin.MyWidgets
 			widget.GetCode(out address, codes);
 
 			int oldLength = this.GetInstructionLength(address);
+			int maxLength = oldLength;
 
-			if (oldLength < codes.Count)
+			for (int i=address+oldLength; i<address+codes.Count; i++)
 			{
-				this.memory.ShiftRam(address, codes.Count-oldLength);
+				if (this.memory.ReadForDebug(i) == 0)
+				{
+					maxLength++;
+				}
+				else
+				{
+					break;
+				}
+			}
+
+			if (maxLength < codes.Count)  // pas assez de place ?
+			{
+				this.memory.ShiftRam(address, codes.Count-maxLength);
 			}
 
 			foreach (int code in codes)
 			{
-				this.memory.WriteWithDirty(address++, code);
+				this.memory.WriteWithDirty(address++, code);  // écrit la nouvelle instruction assemblée
 			}
 
-			while (oldLength > codes.Count)
+			while (oldLength > codes.Count)  // trop de place ?
 			{
 				this.memory.WriteWithDirty(address++, 0);  // NOP
 				oldLength--;
