@@ -3593,14 +3593,14 @@ namespace Epsitec.App.Dolphin.Components
 					AbstractProcessor.HelpPutLine(builder, "m=1             <tab/>+{X}");
 					AbstractProcessor.HelpPutLine(builder, "m=2             <tab/>+{Y}");
 					AbstractProcessor.HelpPutLine(builder, "m=4             <tab/>{SP}+depl");
-					AbstractProcessor.HelpPutLine(builder, "m=8             <tab/>{PC}+depl");
+					AbstractProcessor.HelpPutLine(builder, "m=8             <tab/>{PC}+depl (± adresse relative)");
 					AbstractProcessor.HelpPutLine(builder, "");
 					AbstractProcessor.HelpPutLine(builder, "<b>Exemples</b>");
-					AbstractProcessor.HelpPutLine(builder, "[64] [0C] [07]  <tab/>MOVE C07,A");
-					AbstractProcessor.HelpPutLine(builder, "[68] [1C] [00]  <tab/>MOVE A,C00+{X}");
+					AbstractProcessor.HelpPutLine(builder, "[54] [0C] [07]  <tab/>MOVE C07,A");
+					AbstractProcessor.HelpPutLine(builder, "[58] [1C] [00]  <tab/>MOVE A,C00+{X}");
 					AbstractProcessor.HelpPutLine(builder, "[10] [80] [10]  <tab/>JUMP {PC}+10 (saute 10 bytes)");
 					AbstractProcessor.HelpPutLine(builder, "[10] [8F] [FD]  <tab/>JUMP {PC}-3 (boucle infinie)");
-					AbstractProcessor.HelpPutLine(builder, "[64] [40] [02]  <tab/>MOVE {SP}+2,A");
+					AbstractProcessor.HelpPutLine(builder, "[54] [40] [02]  <tab/>MOVE {SP}+2,A");
 					break;
 
 				case "Op":

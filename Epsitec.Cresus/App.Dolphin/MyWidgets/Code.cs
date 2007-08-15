@@ -200,6 +200,7 @@ namespace Epsitec.App.Dolphin.MyWidgets
 		private void HandleInstructionEditionAccepted(object sender)
 		{
 			//	L'édition de l'instruction a été acceptée.
+			System.Diagnostics.Debug.WriteLine("HandleInstructionEditionAccepted");
 			List<int> codes = new List<int>();
 			string err = this.processor.AssemblyInstruction(this.widgetInstruction.Text, codes);
 
@@ -225,6 +226,7 @@ namespace Epsitec.App.Dolphin.MyWidgets
 		private void HandleInstructionEditionRejected(object sender)
 		{
 			//	L'édition de l'instruction a été rejetée.
+			System.Diagnostics.Debug.WriteLine("HandleInstructionEditionRejected");
 		}
 
 		private void HandleFieldIsFocusedChanged(object sender, Common.Types.DependencyPropertyChangedEventArgs e)
@@ -232,6 +234,7 @@ namespace Epsitec.App.Dolphin.MyWidgets
 			//	La ligne éditable a pris ou perdu le focus.
 			Widget widget = sender as Widget;
 			bool focused = (bool) e.NewValue;
+			System.Diagnostics.Debug.WriteLine(string.Format("HandleFieldIsFocusedChanged {0}", focused.ToString()));
 
 			if (focused)  // focus pris ?
 			{

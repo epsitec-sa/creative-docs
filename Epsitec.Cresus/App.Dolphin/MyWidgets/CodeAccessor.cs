@@ -79,9 +79,12 @@ namespace Epsitec.App.Dolphin.MyWidgets
 				this.firstAddress = 0;
 				this.markPC = -1;
 
-				this.UpdateData();
-				this.UpdateScroller();
-				this.UpdateMarkPC();
+				if (!string.IsNullOrEmpty(this.bank))
+				{
+					this.UpdateData();
+					this.UpdateScroller();
+					this.UpdateMarkPC();
+				}
 			}
 		}
 
