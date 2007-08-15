@@ -478,7 +478,7 @@ namespace Epsitec.App.Dolphin.MyWidgets
 			}
 		}
 
-		protected int MemoryStart
+		public int MemoryStart
 		{
 			get
 			{
@@ -592,7 +592,7 @@ namespace Epsitec.App.Dolphin.MyWidgets
 			{
 				string title = "Dauphin";
 				string icon = "manifest:Epsitec.Common.Dialogs.Images.Warning.icon";
-				string err = string.Format("La mémoire a été décalée de {0} byte(s) à partir de l'adresse {1}h.<br/>N'oubliez pas d'adapter les adresses des instructions ayant un argument ADDR (JUMP, MOVE, etc.).", shift.ToString(), address.ToString("X3"));
+				string err = string.Format("La mémoire a été décalée de {0} byte(s) à partir de l'adresse {1}h.<br/>N'oubliez pas d'adapter les adresses des instructions ayant un argument <i>ADDR</i> (JUMP, MOVE, etc.).", shift.ToString(), address.ToString("X3"));
 				Common.Dialogs.IDialog dialog = Common.Dialogs.MessageDialog.CreateOk(title, icon, err, null, null);
 				dialog.Owner = this.Window;
 				dialog.OpenDialog();
