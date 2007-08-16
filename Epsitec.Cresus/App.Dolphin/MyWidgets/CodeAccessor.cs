@@ -397,7 +397,7 @@ namespace Epsitec.App.Dolphin.MyWidgets
 			int index = this.GetInstructionIndex(this.firstAddress);
 			for (int i=0; i<this.fields.Count; i++)
 			{
-				int address = this.instructionAddresses[index].Address;
+				int address = this.MemoryStart+this.instructionAddresses[index].Address;
 
 				Color color = Color.Empty;
 				if (address == this.markPC)
