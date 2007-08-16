@@ -24,7 +24,7 @@ namespace Epsitec.App.Dolphin.MyWidgets
 			this.panel.Dock = DockStyle.Fill;
 
 			this.fields = new List<MyWidgets.Code>();
-			this.instructionAddresses = new List<int>();
+			this.instructionAddresses = new List<CodeAddress>();
 
 			this.addressSelected = -1;
 		}
@@ -121,13 +121,9 @@ namespace Epsitec.App.Dolphin.MyWidgets
 			{
 				return 0;
 			}
-			else if (index >= this.instructionAddresses.Count)
-			{
-				return this.MemoryLength-1;
-			}
 			else
 			{
-				return this.instructionAddresses[index];
+				return this.instructionAddresses[index].Address;
 			}
 		}
 
@@ -196,15 +192,7 @@ namespace Epsitec.App.Dolphin.MyWidgets
 					this.markPC = value;
 
 					int firstIndex = this.GetInstructionIndex(this.firstAddress);
-					int lastAddress = 0;
-					if (firstIndex+this.fields.Count < this.instructionAddresses.Count)
-					{
-						lastAddress = this.instructionAddresses[firstIndex+this.fields.Count];
-					}
-					else
-					{
-						lastAddress = this.MemoryLength;
-					}
+					int lastAddress = this.instructionAddresses[firstIndex+this.fields.Count].Address;
 
 					if (this.markPC < this.MemoryStart+this.firstAddress || this.markPC >= this.MemoryStart+lastAddress)
 					{
@@ -316,13 +304,13 @@ namespace Epsitec.App.Dolphin.MyWidgets
 				return;
 			}
 
-			int address = this.MemoryStart+this.firstAddress;
+			int index = this.GetInstructionIndex(this.firstAddress);
 			for (int i=0; i<this.fields.Count; i++)
 			{
-				MyWidgets.Code field = this.fields[i];
-
-				int code = this.memory.ReadForDebug(address);
-				int length = this.processor.GetInstructionLength(code);
+				int address = this.MemoryStart+this.instructionAddresses[index].Address;
+				int length = this.instructionAddresses[index].Length;
+				bool isTable = this.instructionAddresses[index].Type == 1;
+				bool isRom = this.memory.IsReadOnly(address);
 
 				List<int> codes = new List<int>();
 				for (int c=0; c<length; c++)
@@ -330,10 +318,9 @@ namespace Epsitec.App.Dolphin.MyWidgets
 					codes.Add(this.memory.ReadForDebug(address+c));
 				}
 
-				bool isRom = this.memory.IsReadOnly(this.MemoryStart+address);
-				field.SetCode(address, codes, isRom);
+				this.fields[i].SetCode(address, codes, isTable, isRom);
 
-				address += length;
+				index++;
 			}
 		}
 
@@ -346,14 +333,22 @@ namespace Epsitec.App.Dolphin.MyWidgets
 			}
 
 			this.instructionAddresses.Clear();
+			bool isTable = false;
 
 			int address = this.MemoryStart;
 			while (address < this.MemoryStart+this.MemoryLength)
 			{
-				this.instructionAddresses.Add(address-this.MemoryStart);
-
 				int code = this.memory.ReadForDebug(address);
-				address += this.processor.GetInstructionLength(code);
+				if (code == 0xFF)
+				{
+					isTable = !isTable;
+				}
+
+				int length = isTable ? 1 : this.processor.GetInstructionLength(code);
+				int type = (isTable && code != 0xFF) ? 1 : 0;
+
+				this.instructionAddresses.Add(new CodeAddress(address-this.MemoryStart, length, type));
+				address += length;
 			}
 		}
 
@@ -362,9 +357,9 @@ namespace Epsitec.App.Dolphin.MyWidgets
 			//	Retourne une adresse (relative dans la banque) ajustée pour commencer sur un début d'instruction.
 			for (int i=1; i<this.instructionAddresses.Count; i++)
 			{
-				if (address < this.instructionAddresses[i])
+				if (address < this.instructionAddresses[i].Address)
 				{
-					return this.instructionAddresses[i-1];
+					return this.instructionAddresses[i-1].Address;
 				}
 			}
 
@@ -376,7 +371,7 @@ namespace Epsitec.App.Dolphin.MyWidgets
 			//	Retourne l'index de l'instruction en fonction de son adresse (relative dans la banque).
 			for (int i=1; i<this.instructionAddresses.Count; i++)
 			{
-				if (address < this.instructionAddresses[i])
+				if (address < this.instructionAddresses[i].Address)
 				{
 					return i-1;
 				}
@@ -389,15 +384,7 @@ namespace Epsitec.App.Dolphin.MyWidgets
 		{
 			//	Retourne la longueur de l'instruction en fonction de son adresse (relative dans la banque).
 			int index = this.GetInstructionIndex(address);
-
-			if (index < this.instructionAddresses.Count-1)
-			{
-				return this.instructionAddresses[index+1] - this.instructionAddresses[index];
-			}
-			else
-			{
-				return this.MemoryLength - this.instructionAddresses[index];
-			}
+			return this.instructionAddresses[index+1].Length;
 		}
 
 		protected void UpdateMarkPC()
@@ -407,23 +394,20 @@ namespace Epsitec.App.Dolphin.MyWidgets
 				return;
 			}
 
-			int address = this.MemoryStart+this.firstAddress;
+			int index = this.GetInstructionIndex(this.firstAddress);
 			for (int i=0; i<this.fields.Count; i++)
 			{
-				int code = this.memory.ReadForDebug(address);
-				int length = this.processor.GetInstructionLength(code);
+				int address = this.instructionAddresses[index].Address;
 
 				Color color = Color.Empty;
-
 				if (address == this.markPC)
 				{
 					color = Color.FromRgb(1, 0, 0);
 				}
 
-				MyWidgets.Code field = this.fields[i];
-				field.BackColor = color;
+				this.fields[i].BackColor = color;
 
-				address += length;
+				index++;
 			}
 		}
 
@@ -520,7 +504,7 @@ namespace Epsitec.App.Dolphin.MyWidgets
 			int address = 0;
 			if (v >= 0 && v < this.instructionAddresses.Count)
 			{
-				address = this.instructionAddresses[v];
+				address = this.instructionAddresses[v].Address;
 			}
 
 			this.FirstAddress = address;
@@ -536,7 +520,7 @@ namespace Epsitec.App.Dolphin.MyWidgets
 				if (widget == fields[i])
 				{
 					int index = this.GetInstructionIndex(this.firstAddress);
-					address = this.instructionAddresses[index+i];
+					address = this.instructionAddresses[index+i].Address;
 				}
 			}
 
@@ -628,6 +612,45 @@ namespace Epsitec.App.Dolphin.MyWidgets
 		#endregion
 
 
+		protected struct CodeAddress
+		{
+			public CodeAddress(int address, int length, int type)
+			{
+				this.address = address;
+				this.length = (byte) length;
+				this.type = (byte) type;
+			}
+
+			public int Address
+			{
+				get
+				{
+					return this.address;
+				}
+			}
+
+			public int Length
+			{
+				get
+				{
+					return (int) this.length;
+				}
+			}
+
+			public int Type
+			{
+				get
+				{
+					return (int) this.type;
+				}
+			}
+
+			private int address;
+			private byte length;
+			private byte type;
+		}
+
+
 		static protected readonly double LineHeight = 20;
 
 		protected Components.AbstractProcessor		processor;
@@ -639,7 +662,7 @@ namespace Epsitec.App.Dolphin.MyWidgets
 		protected int								firstAddress;  // relatif dans la banque
 		protected int								markPC;
 		protected int								addressSelected;
-		protected List<int>							instructionAddresses;
+		protected List<CodeAddress>					instructionAddresses;
 		protected bool								ignoreChange;
 	}
 }

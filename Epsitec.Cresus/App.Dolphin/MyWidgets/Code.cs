@@ -108,9 +108,11 @@ namespace Epsitec.App.Dolphin.MyWidgets
 			}
 		}
 
-		public void SetCode(int address, List<int> codes, bool isRom)
+		public void SetCode(int address, List<int> codes, bool isTable, bool isRom)
 		{
 			//	Spécifie les codes de l'instruction représenté par ce widget.
+			this.isTable = isTable;
+
 			if (this.valueAddress != address)
 			{
 				this.valueAddress = address;
@@ -134,7 +136,14 @@ namespace Epsitec.App.Dolphin.MyWidgets
 				}
 			}
 
-			this.widgetInstruction.Text = this.processor.DessassemblyInstruction(this.valueCodes);
+			if (this.isTable)
+			{
+				this.widgetInstruction.Text = this.valueCodes[0].ToString("X2");
+			}
+			else
+			{
+				this.widgetInstruction.Text = this.processor.DessassemblyInstruction(this.valueCodes);
+			}
 
 			if (this.widgetInstruction.IsReadOnly != isRom)  // TODO: devrait être inutile (bug à corriger pour Pierre)
 			{
@@ -205,7 +214,31 @@ namespace Epsitec.App.Dolphin.MyWidgets
 			field.AcceptEdition();
 
 			List<int> codes = new List<int>();
-			string err = this.processor.AssemblyInstruction(this.widgetInstruction.Text, codes);
+			string err = null;
+
+			if (this.isTable)
+			{
+				if (this.widgetInstruction.Text.ToUpper().Trim() == "TABLE")
+				{
+					codes.Add(0xFF);
+				}
+				else
+				{
+					int value = Misc.ParseHexa(this.widgetInstruction.Text, -1, -1);
+					if (value == -1)
+					{
+						err = "<b>Valeur hexadécimale incorrecte.</b>";
+					}
+					else
+					{
+						codes.Add(value);
+					}
+				}
+			}
+			else
+			{
+				err = this.processor.AssemblyInstruction(this.widgetInstruction.Text, codes);
+			}
 
 			if (codes == null || codes.Count == 0 || !string.IsNullOrEmpty(err))
 			{
@@ -335,6 +368,7 @@ namespace Epsitec.App.Dolphin.MyWidgets
 		protected CodeAccessor					codeAccessor;
 		protected int							valueAddress;
 		protected List<int>						valueCodes;
+		protected bool							isTable;
 		protected bool							isErrorMet;
 
 		protected StaticText					widgetAddress;

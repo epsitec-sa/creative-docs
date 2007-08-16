@@ -119,6 +119,8 @@ namespace Epsitec.App.Dolphin.Components
 			XorSA  = 0xF4,
 
 			CompAR = 0xF8,		// COMP ADDR,r
+
+			Table  = 0xFF,		// début/fin de table
 		}
 
 
@@ -187,6 +189,7 @@ namespace Epsitec.App.Dolphin.Components
 			switch ((Instructions) op)
 			{
 				case Instructions.Nop:
+				case Instructions.Table:
 					return;
 
 				case Instructions.Call:
@@ -1237,7 +1240,7 @@ namespace Epsitec.App.Dolphin.Components
 			1,1,1,1,1,1,1,1, 3,3,3,3,3,3,3,3,  // 0xC0
 			2,2,2,2,2,2,2,2, 4,4,4,4,4,4,4,4,  // 0xD0
 			1,1,1,1,1,1,0,0, 3,3,3,3,3,3,0,0,  // 0xE0
-			3,3,3,3,3,3,0,0, 3,3,3,3,0,0,0,0,  // 0xF0
+			3,3,3,3,3,3,0,0, 3,3,3,3,0,0,0,1,  // 0xF0
 		};
 
 		public override string DessassemblyInstruction(List<int> codes)
@@ -1297,6 +1300,9 @@ namespace Epsitec.App.Dolphin.Components
 
 				case Instructions.SwapB:
 					return "SWAP B";
+
+				case Instructions.Table:
+					return "TABLE";
 			}
 
 			if (op >= (int) Instructions.PushR && op < (int) Instructions.PushR+4)  // PUSH
@@ -2127,6 +2133,17 @@ namespace Epsitec.App.Dolphin.Components
 					else
 					{
 						return "<b>L'instuction CLRC n'a aucun argument.</b>";
+					}
+					break;
+
+				case "TABLE":
+					if (words.Length == 1)
+					{
+						codes.Add((int) Instructions.Table);
+					}
+					else
+					{
+						return "<b>L'instuction TABLE n'a aucun argument.</b>";
 					}
 					break;
 
@@ -3177,7 +3194,7 @@ namespace Epsitec.App.Dolphin.Components
 
 			(byte) Instructions.AndVR+0, 0x0F,			// AND #0F,A
 			(byte) Instructions.MoveRR+0x2,				// MOVE A,X
-			(byte) Instructions.MoveAR+0, 0x90, 0x0A,	// MOVE R8^TABLE+{X},A
+			(byte) Instructions.MoveAR+0, 0x90, 0x0B,	// MOVE R8^TABLE+{X},A
 
 			(byte) Instructions.AndVR+1, 0x03,			// AND #03,B
 			(byte) Instructions.MoveRR+0x6,				// MOVE B,X
@@ -3188,7 +3205,9 @@ namespace Epsitec.App.Dolphin.Components
 			(byte) Instructions.PopR+0,					// POP A
 			(byte) Instructions.Ret,					// RET
 														// TABLE:
+			(byte) Instructions.Table,
 			0x3F, 0x03, 0x6D, 0x67, 0x53, 0x76, 0x7E, 0x23, 0x7F, 0x77, 0x7B, 0x5E, 0x3C, 0x4F, 0x7C, 0x78,
+			(byte) Instructions.Table,
 		};
 
 		//	Affiche un byte hexadécimal sur deux digits.
@@ -3428,7 +3447,7 @@ namespace Epsitec.App.Dolphin.Components
 														// LOOP:
 			(byte) Instructions.MoveAR+0, 0x40, 1,		// MOVE {SP}+1,A
 			(byte) Instructions.AndSA+0, 0x2C, 0x80,	// AND A,C80+{Y}
-			(byte) Instructions.MoveAR+0, 0x1B, 0x00,	// MOVE CharTable+{X},A
+			(byte) Instructions.MoveAR+0, 0x1B, 0x01,	// MOVE CharTable+{X},A
 			(byte) Instructions.AndAS+0, 0x40, 0,		// AND {SP}+0,A
 			(byte) Instructions.TestVA, 0, 0x40, 2,		// TEST {SP}+2:#0
 			(byte) Instructions.JumpNE, 0x80, 1,		// JUMP,NE +1
@@ -3450,6 +3469,7 @@ namespace Epsitec.App.Dolphin.Components
 
 		protected static byte[] CharTable =
 		{
+			(byte) Instructions.Table,
 			0x04, 0x04, 0x04, 0x00, 0x04,	//  !
 			0xA4, 0xAE, 0x04, 0x0E, 0x04,	// "#
 			0x6A, 0xC2, 0x44, 0x68, 0xCA,	// $%
@@ -3482,6 +3502,7 @@ namespace Epsitec.App.Dolphin.Components
 			0xEC, 0x28, 0x48, 0x88, 0xEC,	// Z[
 			0x86, 0x82, 0x42, 0x22, 0x26,	// \]
 			0x40, 0xA0, 0x00, 0x00, 0x0E,	// ^_
+			(byte) Instructions.Table,
 		};
 		#endregion
 
