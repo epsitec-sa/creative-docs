@@ -384,7 +384,7 @@ namespace Epsitec.App.Dolphin.MyWidgets
 		{
 			//	Retourne la longueur de l'instruction en fonction de son adresse (relative dans la banque).
 			int index = this.GetInstructionIndex(address);
-			return this.instructionAddresses[index+1].Length;
+			return this.instructionAddresses[index].Length;
 		}
 
 		protected void UpdateMarkPC()
