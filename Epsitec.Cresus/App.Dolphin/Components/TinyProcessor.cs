@@ -169,6 +169,24 @@ namespace Epsitec.App.Dolphin.Components
 			}
 		}
 
+		public override int NopInstruction
+		{
+			//	Retourne le code de l'instruction NOP.
+			get
+			{
+				return (int) Instructions.Nop;
+			}
+		}
+
+		public override int TableInstruction
+		{
+			//	Retourne le code de l'instruction TABLE.
+			get
+			{
+				return (int) Instructions.Table;
+			}
+		}
+
 		public override void Clock()
 		{
 			//	Exécute une instruction du processeur.

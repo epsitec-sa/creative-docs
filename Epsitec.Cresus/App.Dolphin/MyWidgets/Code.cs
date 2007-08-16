@@ -220,7 +220,7 @@ namespace Epsitec.App.Dolphin.MyWidgets
 			{
 				if (this.widgetInstruction.Text.ToUpper().Trim() == "TABLE")
 				{
-					codes.Add(0xFF);
+					codes.Add(this.processor.TableInstruction);
 				}
 				else
 				{

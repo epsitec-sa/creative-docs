@@ -54,6 +54,24 @@ namespace Epsitec.App.Dolphin.Components
 			return false;
 		}
 
+		public virtual int NopInstruction
+		{
+			//	Retourne le code de l'instruction NOP.
+			get
+			{
+				return 0x00;
+			}
+		}
+
+		public virtual int TableInstruction
+		{
+			//	Retourne le code de l'instruction TABLE.
+			get
+			{
+				return 0xFF;
+			}
+		}
+
 
 		public virtual IEnumerable<string> RegisterNames
 		{

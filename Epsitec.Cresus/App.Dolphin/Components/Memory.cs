@@ -226,7 +226,7 @@ namespace Epsitec.App.Dolphin.Components
 			}
 			else  // hors de l'espace d'adressage ?
 			{
-				return 0xff;
+				return 0xFF;
 			}
 		}
 
@@ -240,7 +240,7 @@ namespace Epsitec.App.Dolphin.Components
 			}
 			else  // hors de l'espace d'adressage ?
 			{
-				return 0xff;
+				return 0xFF;
 			}
 		}
 

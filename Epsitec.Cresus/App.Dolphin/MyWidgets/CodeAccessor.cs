@@ -339,13 +339,13 @@ namespace Epsitec.App.Dolphin.MyWidgets
 			while (address < this.MemoryStart+this.MemoryLength)
 			{
 				int code = this.memory.ReadForDebug(address);
-				if (code == 0xFF)
+				if (code == this.processor.TableInstruction)
 				{
 					isTable = !isTable;
 				}
 
 				int length = isTable ? 1 : this.processor.GetInstructionLength(code);
-				int type = (isTable && code != 0xFF) ? 1 : 0;
+				int type = (isTable && code != this.processor.TableInstruction) ? 1 : 0;
 
 				this.instructionAddresses.Add(new CodeAddress(address-this.MemoryStart, length, type));
 				address += length;
