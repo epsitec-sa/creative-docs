@@ -2771,7 +2771,7 @@ namespace Epsitec.App.Dolphin.Components
 					break;
 
 				default:
-					return "<b>Instruction inconnue.</b><br/><br/>Les instructions connues sont :<br/><list type=\"fix\"/>JUMP, CALL, RET, PUSH, POP<br/><list type=\"fix\"/>MOVE, COMP, ADD, SUB, AND, OR, XOR<br/><list type=\"fix\"/>CLR, NOT, INC, DEC, RL, RR, RLC, RRC<br/><list type=\"fix\"/>TEST, TSET, TCLR, TNOT<br/><list type=\"fix\"/>NOP, CLRC, SETC, EX, SWAP, HALT<br/> ";
+					return "<b>Instruction inconnue.</b><br/><br/>Les instructions connues sont :<br/><list type=\"fix\"/>JUMP, CALL, RET, PUSH, POP<br/><list type=\"fix\"/>MOVE, COMP, ADD, SUB, AND, OR, XOR<br/><list type=\"fix\"/>CLR, NOT, INC, DEC, RL, RR, RLC, RRC<br/><list type=\"fix\"/>TEST, TSET, TCLR, TNOT<br/><list type=\"fix\"/>NOP, CLRC, SETC, EX, SWAP, TABLE, HALT<br/> ";
 			}
 
 			return null;  // ok
@@ -3239,11 +3239,11 @@ namespace Epsitec.App.Dolphin.Components
 			(byte) Instructions.PushR+1,				// PUSH B
 
 			(byte) Instructions.IncR+1,					// INC B
-			(byte) Instructions.Call, 0x08, 0x0C,		// CALL DisplayHexaDigit
+			(byte) Instructions.Call, 0x08, 0x09,		// CALL DisplayHexaDigit
 
 			(byte) Instructions.SwapA,					// SWAP A
 			(byte) Instructions.DecR+1,					// DEC B
-			(byte) Instructions.Call, 0x08, 0x0C,		// CALL DisplayHexaDigit
+			(byte) Instructions.Call, 0x08, 0x09,		// CALL DisplayHexaDigit
 
 			(byte) Instructions.PopR+1,					// POP B
 			(byte) Instructions.PopR+0,					// POP A
