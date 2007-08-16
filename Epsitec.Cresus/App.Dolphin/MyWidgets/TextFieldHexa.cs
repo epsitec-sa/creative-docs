@@ -197,15 +197,11 @@ namespace Epsitec.App.Dolphin.MyWidgets
 			//	Label affiché à gauche.
 			get
 			{
-				return this.baseName;
+				return this.label.Text;
 			}
 			set
 			{
-				if (this.baseName != value)
-				{
-					this.baseName = value;
-					this.label.Text = string.Concat("<b>", this.baseName, "</b>");;
-				}
+				this.label.Text = value;
 			}
 		}
 
@@ -390,7 +386,6 @@ namespace Epsitec.App.Dolphin.MyWidgets
 		protected static readonly string	initValue = "??";
 
 		protected int						bitCount = -1;
-		protected string					baseName;
 		protected string					bitNames;
 		protected MemoryAccessor			memoryAccessor;
 

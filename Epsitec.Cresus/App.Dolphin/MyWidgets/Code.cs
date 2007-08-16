@@ -114,7 +114,7 @@ namespace Epsitec.App.Dolphin.MyWidgets
 			if (this.valueAddress != address)
 			{
 				this.valueAddress = address;
-				this.widgetAddress.Text = string.Concat("<b>", this.valueAddress.ToString("X3"), "</b>");;
+				this.widgetAddress.Text = this.valueAddress.ToString("X3");
 			}
 
 			this.valueCodes = new List<int>();
