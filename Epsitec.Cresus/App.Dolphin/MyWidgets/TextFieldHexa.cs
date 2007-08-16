@@ -218,35 +218,32 @@ namespace Epsitec.App.Dolphin.MyWidgets
 			}
 			set
 			{
-#if false
-				string text = this.GetHexaText(value);
-				if (this.textField.Text != text)
-				{
-					this.textField.Text = text;
-					this.UpdateButtons();
-					this.OnHexaValueChanged();
-				}
-#else
 				value &= (1 << this.bitCount)-1;
 
 				int current = Misc.ParseHexa(this.textField.Text);
 				if (current != value || this.textField.Text == TextFieldHexa.initValue)
 				{
-					this.textField.Text = this.GetHexaText(value);
+					this.textField.Text = TextFieldHexa.GetHexaText(value, this.bitCount);
 					this.UpdateButtons();
 					this.OnHexaValueChanged();
 				}
-#endif
 			}
 		}
 
 
-		protected string GetHexaText(int value)
+		public static double GetHexaWidth(int bitCount)
+		{
+			//	Retourne la largeur nécessaire pour représenter un certain nombre de bits en hexa dans un TextField.
+			return 8 + ((bitCount+3)/4)*6;
+		}
+
+		public static string GetHexaText(int value, int bitCount)
 		{
 			//	Retourne le texte hexa de la valeur 
-			string format = string.Format("X{0}", (this.bitCount+3)/4);  // "X2" si 8 bits, "X3" si 12 bits, etc.
+			string format = string.Format("X{0}", (bitCount+3)/4);  // "X2" si 8 bits, "X3" si 12 bits, etc.
 			return value.ToString(format);
 		}
+
 
 		protected void UpdateButtons()
 		{
@@ -257,12 +254,6 @@ namespace Epsitec.App.Dolphin.MyWidgets
 			{
 				this.buttons[i].ActiveState = (value & (1 << i)) == 0 ? ActiveState.No : ActiveState.Yes;
 			}
-		}
-
-		protected static double GetHexaWidth(int bitCount)
-		{
-			//	Retourne la largeur nécessaire pour représenter un certain nombre de bits en hexa dans un TextField.
-			return 8 + ((bitCount+3)/4)*6;
 		}
 
 
@@ -321,7 +312,7 @@ namespace Epsitec.App.Dolphin.MyWidgets
 			}
 			else  // focus perdu ?
 			{
-				this.textField.Text = this.GetHexaText(this.HexaValue);  // remet un nombre propre ("a" devient "0A" par exemple)
+				this.textField.Text = TextFieldHexa.GetHexaText(this.HexaValue, this.bitCount);  // remet un nombre propre ("a" devient "0A" par exemple)
 			}
 		}
 
