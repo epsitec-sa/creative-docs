@@ -1261,9 +1261,11 @@ namespace Epsitec.App.Dolphin.Components
 			3,3,3,3,3,3,0,0, 3,3,3,3,0,0,0,1,  // 0xF0
 		};
 
-		public override string DessassemblyInstruction(List<int> codes)
+		public override string DessassemblyInstruction(List<int> codes, int pc, out int address)
 		{
 			//	Retourne le nom d'une instruction.
+			address = -1;
+
 			if (codes == null || codes.Count == 0)
 			{
 				return null;
@@ -1271,6 +1273,7 @@ namespace Epsitec.App.Dolphin.Components
 
 			System.Text.StringBuilder builder = new System.Text.StringBuilder();
 			int op = codes[0];
+			int length = this.GetInstructionLength(op);
 			//?System.Diagnostics.Debug.WriteLine(string.Format("i={0}", op.ToString("X2")));
 
 			switch ((Instructions) op)
@@ -1280,7 +1283,7 @@ namespace Epsitec.App.Dolphin.Components
 
 				case Instructions.Call:
 					builder.Append("CALL ");
-					TinyProcessor.PutCodeAddress(builder, codes[1], codes[2]);
+					address = this.PutCodeAddress(builder, codes[1], codes[2], pc, length);
 					return builder.ToString();
 
 				case Instructions.Ret:
@@ -1392,7 +1395,7 @@ namespace Epsitec.App.Dolphin.Components
 						break;
 				}
 
-				TinyProcessor.PutCodeAddress(builder, codes[1], codes[2]);
+				address = this.PutCodeAddress(builder, codes[1], codes[2], pc, length);
 				return builder.ToString();
 			}
 
@@ -1485,7 +1488,7 @@ namespace Epsitec.App.Dolphin.Components
 			{
 				int n = op & 0x03;
 				builder.Append("MOVE ");
-				TinyProcessor.PutCodeAddress(builder, codes[1], codes[2]);
+				address = this.PutCodeAddress(builder, codes[1], codes[2], pc, length);
 				builder.Append(",");
 				TinyProcessor.PutCodeRegister(builder, n);
 				return builder.ToString();
@@ -1497,7 +1500,7 @@ namespace Epsitec.App.Dolphin.Components
 				builder.Append("MOVE ");
 				TinyProcessor.PutCodeRegister(builder, n);
 				builder.Append(",");
-				TinyProcessor.PutCodeAddress(builder, codes[1], codes[2]);
+				address = this.PutCodeAddress(builder, codes[1], codes[2], pc, length);
 				return builder.ToString();
 			}
 
@@ -1642,7 +1645,7 @@ namespace Epsitec.App.Dolphin.Components
 						break;
 				}
 
-				TinyProcessor.PutCodeAddress(builder, codes[1], codes[2]);
+				address = this.PutCodeAddress(builder, codes[1], codes[2], pc, length);
 				return builder.ToString();
 			}
 
@@ -1666,7 +1669,7 @@ namespace Epsitec.App.Dolphin.Components
 						break;
 				}
 
-				TinyProcessor.PutCodeAddress(builder, codes[1], codes[2]);
+				address = this.PutCodeAddress(builder, codes[1], codes[2], pc, length);
 				builder.Append(",");
 				TinyProcessor.PutCodeRegister(builder, n);
 				return builder.ToString();
@@ -1695,7 +1698,7 @@ namespace Epsitec.App.Dolphin.Components
 				builder.Append("MOVE ");
 				TinyProcessor.PutCodeRegister(builder, n);
 				builder.Append(",");
-				TinyProcessor.PutCodeAddress(builder, codes[1], codes[2]);
+				address = this.PutCodeAddress(builder, codes[1], codes[2], pc, length);
 				return builder.ToString();
 			}
 
@@ -1763,7 +1766,7 @@ namespace Epsitec.App.Dolphin.Components
 						break;
 				}
 
-				TinyProcessor.PutCodeAddress(builder, codes[1], codes[2]);
+				address = this.PutCodeAddress(builder, codes[1], codes[2], pc, length);
 				builder.Append(":");
 				TinyProcessor.PutCodeRegister(builder, n);
 				return builder.ToString();
@@ -1831,7 +1834,7 @@ namespace Epsitec.App.Dolphin.Components
 						break;
 				}
 
-				TinyProcessor.PutCodeAddress(builder, codes[2], codes[3]);
+				address = this.PutCodeAddress(builder, codes[2], codes[3], pc, length);
 				builder.Append(":");
 				TinyProcessor.PutCodeValue(builder, codes[1]);
 				return builder.ToString();
@@ -1867,7 +1870,7 @@ namespace Epsitec.App.Dolphin.Components
 
 				TinyProcessor.PutCodeValue(builder, codes[1]);
 				builder.Append(",");
-				TinyProcessor.PutCodeAddress(builder, codes[2], codes[3]);
+				address = this.PutCodeAddress(builder, codes[2], codes[3], pc, length);
 				return builder.ToString();
 			}
 
@@ -1927,7 +1930,7 @@ namespace Epsitec.App.Dolphin.Components
 						break;
 				}
 
-				TinyProcessor.PutCodeAddress(builder, codes[1], codes[2]);
+				address = this.PutCodeAddress(builder, codes[1], codes[2], pc, length);
 				builder.Append(",");
 				TinyProcessor.PutCodeRegister(builder, n);
 				return builder.ToString();
@@ -1959,7 +1962,7 @@ namespace Epsitec.App.Dolphin.Components
 
 				TinyProcessor.PutCodeRegister(builder, n);
 				builder.Append(",");
-				TinyProcessor.PutCodeAddress(builder, codes[1], codes[2]);
+				address = this.PutCodeAddress(builder, codes[1], codes[2], pc, length);
 				return builder.ToString();
 			}
 
@@ -2007,9 +2010,11 @@ namespace Epsitec.App.Dolphin.Components
 			builder.Append("h");
 		}
 
-		protected static void PutCodeAddress(System.Text.StringBuilder builder, int mh, int ll)
+		protected int PutCodeAddress(System.Text.StringBuilder builder, int mh, int ll, int pc, int instructionLength)
 		{
 			//	Met une adresse hexadécimale.
+			int arrowAddress = -1;
+
 			int mode = (mh << 8) | ll;
 			int address = mode & 0x0FFF;
 
@@ -2019,12 +2024,16 @@ namespace Epsitec.App.Dolphin.Components
 				if ((address & 0x0800) != 0)  // offset négatif ?
 				{
 					address = 0x1000-address;
+					arrowAddress = pc+instructionLength-address;
+
 					builder.Append("-");
 					builder.Append(address.ToString("X3"));
 					builder.Append("h");
 				}
 				else
 				{
+					arrowAddress = pc+instructionLength+address;
+
 					builder.Append("+");
 					builder.Append(address.ToString("X3"));
 					builder.Append("h");
@@ -2049,6 +2058,20 @@ namespace Epsitec.App.Dolphin.Components
 			}
 			else
 			{
+				//	Ne montre pas les adresses qui vont trop loin !
+				if (!this.memory.IsPeriph(address) && !this.memory.IsDisplay(address))
+				{
+					if (this.memory.IsRam(pc) && !this.memory.IsRom(address))
+					{
+						arrowAddress = address;
+					}
+
+					if (this.memory.IsRom(pc) && !this.memory.IsRam(address))
+					{
+						arrowAddress = address;
+					}
+				}
+
 				builder.Append(address.ToString("X3"));
 				builder.Append("h");
 			}
@@ -2062,6 +2085,8 @@ namespace Epsitec.App.Dolphin.Components
 			{
 				builder.Append("+{Y}");
 			}
+
+			return arrowAddress;
 		}
 
 		public override string AssemblyInstruction(string instruction, List<int> codes)

@@ -53,6 +53,10 @@ namespace Epsitec.App.Dolphin.MyWidgets
 			this.widgetInstruction.EditionAccepted += new EventHandler(this.HandleInstructionEditionAccepted);
 			this.widgetInstruction.EditionRejected += new EventHandler(this.HandleInstructionEditionRejected);
 			this.widgetInstruction.IsFocusedChanged += new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleFieldIsFocusedChanged);
+
+			this.widgetCodeAddress = new MyWidgets.CodeAddress(this);
+			this.widgetCodeAddress.PreferredHeight = 20;
+			this.widgetCodeAddress.Dock = DockStyle.Fill;
 		}
 
 		public Code(Widget embedder) : this()
@@ -108,6 +112,15 @@ namespace Epsitec.App.Dolphin.MyWidgets
 			}
 		}
 
+		public CodeAddress CodeAddress
+		{
+			//	CodeAddress associé au widget.
+			get
+			{
+				return this.widgetCodeAddress;
+			}
+		}
+
 		public void SetCode(int address, List<int> codes, bool isTable, bool isRom)
 		{
 			//	Spécifie les codes de l'instruction représenté par ce widget.
@@ -136,13 +149,14 @@ namespace Epsitec.App.Dolphin.MyWidgets
 				}
 			}
 
+			this.arrowAddress = -1;
 			if (this.isTable)
 			{
 				this.widgetInstruction.Text = this.valueCodes[0].ToString("X2");
 			}
 			else
 			{
-				this.widgetInstruction.Text = this.processor.DessassemblyInstruction(this.valueCodes);
+				this.widgetInstruction.Text = this.processor.DessassemblyInstruction(this.valueCodes, address, out this.arrowAddress);
 			}
 
 			if (this.widgetInstruction.IsReadOnly != isRom)  // TODO: devrait être inutile (bug à corriger pour Pierre)
@@ -161,6 +175,22 @@ namespace Epsitec.App.Dolphin.MyWidgets
 			foreach (int code in this.valueCodes)
 			{
 				codes.Add(code);
+			}
+		}
+
+		public int Address
+		{
+			get
+			{
+				return this.valueAddress;
+			}
+		}
+
+		public int ArrowAddress
+		{
+			get
+			{
+				return this.arrowAddress;
 			}
 		}
 
@@ -368,11 +398,13 @@ namespace Epsitec.App.Dolphin.MyWidgets
 		protected CodeAccessor					codeAccessor;
 		protected int							valueAddress;
 		protected List<int>						valueCodes;
+		protected int							arrowAddress;
 		protected bool							isTable;
 		protected bool							isErrorMet;
 
 		protected StaticText					widgetAddress;
 		protected List<TextField>				widgetCodes;
 		protected TextFieldEx					widgetInstruction;
+		protected MyWidgets.CodeAddress			widgetCodeAddress;
 	}
 }
