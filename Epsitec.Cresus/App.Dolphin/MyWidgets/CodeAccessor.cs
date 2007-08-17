@@ -580,6 +580,21 @@ namespace Epsitec.App.Dolphin.MyWidgets
 		}
 
 
+		protected override void ProcessMessage(Message message, Point pos)
+		{
+			if (message.MessageType == MessageType.MouseWheel)
+			{
+				int index = this.GetInstructionIndex(this.firstAddress);
+				index += (message.Wheel > 0) ? -2 : 2;
+
+				index = System.Math.Max(index, 0);
+				index = System.Math.Min(index, this.instructionAddresses.Count-1);
+
+				this.FirstAddress = this.instructionAddresses[index].Address;
+			}
+		}
+
+
 		private void HandleScrollerValueChanged(object sender)
 		{
 			if (this.ignoreChange)

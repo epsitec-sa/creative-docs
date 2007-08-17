@@ -335,6 +335,17 @@ namespace Epsitec.App.Dolphin.MyWidgets
 		}
 
 
+		protected override void ProcessMessage(Message message, Point pos)
+		{
+			if (message.MessageType == MessageType.MouseWheel)
+			{
+				int address = this.firstAddress;
+				address += (message.Wheel > 0) ? -2 : 2;
+				this.FirstAddress = address;
+			}
+		}
+
+		
 		private void HandleScrollerValueChanged(object sender)
 		{
 			if (this.ignoreChange)
