@@ -356,7 +356,7 @@ namespace Epsitec.App.Dolphin.MyWidgets
 
 					if (fear)
 					{
-						this.fields[i].CodeAddress.ArrowAdd(MyWidgets.CodeAddress.Address.Type.Fear, baseAddress, 0, false);
+						this.fields[i].CodeAddress.ArrowAdd(MyWidgets.CodeAddress.Address.Type.Far, baseAddress, 0, false);
 						level--;
 					}
 					else if (address+length <= arrowAddress)  // flèche de haut en bas ?

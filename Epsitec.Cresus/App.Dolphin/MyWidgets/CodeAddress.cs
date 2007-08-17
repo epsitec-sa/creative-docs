@@ -145,7 +145,7 @@ namespace Epsitec.App.Dolphin.MyWidgets
 						path.LineTo(x1+ax, y-d+ay);
 						break;
 
-					case Address.Type.Fear:
+					case Address.Type.Far:
 						path.MoveTo(x1, y+d);
 						path.LineTo(rect.Right, y+d);
 
@@ -196,7 +196,7 @@ namespace Epsitec.App.Dolphin.MyWidgets
 				ArrowFromUp,
 				ArrowFromDown,
 				Arrow,
-				Fear,
+				Far,
 			}
 
 			public Address(Type type, int baseAddress, int level, bool error)
