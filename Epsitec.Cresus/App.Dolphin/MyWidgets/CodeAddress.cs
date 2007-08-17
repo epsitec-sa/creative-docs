@@ -71,6 +71,8 @@ namespace Epsitec.App.Dolphin.MyWidgets
 				Path path = new Path();
 				double x1 = rect.Left + (address.Error ? 12:0);
 				double x2 = System.Math.Floor(rect.Right - (address.Level+2)*6);
+				double r = 6;
+				double k = r*Path.Kappa;
 				
 				if (address.Error)
 				{
@@ -91,13 +93,14 @@ namespace Epsitec.App.Dolphin.MyWidgets
 				{
 					case Address.Type.StartToUp:
 						path.MoveTo(x1, y+4);
-						path.LineTo(x2, y+4);
-						path.LineTo(x2, rect.Top);
+						path.LineTo(x2-r, y+4);
+						path.CurveTo(x2-r+k, y+4, x2, rect.Top-k, x2, rect.Top);
 						break;
 
 					case Address.Type.StartToDown:
 						path.MoveTo(x1, y+4);
-						path.LineTo(x2, y+4);
+						path.LineTo(x2-r, y+4);
+						path.CurveTo(x2-r+k, y+4, x2, y+4-r+k, x2, y+4-r);
 						path.LineTo(x2, rect.Bottom);
 						break;
 
@@ -108,7 +111,8 @@ namespace Epsitec.App.Dolphin.MyWidgets
 
 					case Address.Type.ArrowFromUp:
 						path.MoveTo(x2, rect.Top);
-						path.LineTo(x2, y-4);
+						path.LineTo(x2, y-4+r);
+						path.CurveTo(x2, y-4+r-k, x2-r+k, y-4, x2-r, y-4);
 						path.LineTo(x1, y-4);
 
 						path.MoveTo(x1, y-4);
@@ -119,7 +123,7 @@ namespace Epsitec.App.Dolphin.MyWidgets
 
 					case Address.Type.ArrowFromDown:
 						path.MoveTo(x2, rect.Bottom);
-						path.LineTo(x2, y-4);
+						path.CurveTo(x2, rect.Bottom+k, x2-r+k, y-4, x2-r, y-4);
 						path.LineTo(x1, y-4);
 
 						path.MoveTo(x1, y-4);
