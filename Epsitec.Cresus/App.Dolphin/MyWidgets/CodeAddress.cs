@@ -39,9 +39,9 @@ namespace Epsitec.App.Dolphin.MyWidgets
 			this.Invalidate();
 		}
 
-		public void ArrowAdd(Address.Type type, int level, bool error)
+		public void ArrowAdd(Address.Type type, int baseAddress, int level, bool error)
 		{
-			this.addresses.Add(new Address(type, level, error));
+			this.addresses.Add(new Address(type, baseAddress, level, error));
 			this.Invalidate();
 		}
 
@@ -139,7 +139,7 @@ namespace Epsitec.App.Dolphin.MyWidgets
 						break;
 				}
 
-				Color color = CodeAddress.colors[address.Level%7];
+				Color color = CodeAddress.colors[address.BaseAddress%7];
 
 				if (address.Error)
 				{
@@ -183,9 +183,10 @@ namespace Epsitec.App.Dolphin.MyWidgets
 				Arrow,
 			}
 
-			public Address(Type type, int level, bool error)
+			public Address(Type type, int baseAddress, int level, bool error)
 			{
 				this.type = type;
+				this.baseAddress = baseAddress;
 				this.level = level;
 				this.error = error;
 			}
@@ -195,6 +196,14 @@ namespace Epsitec.App.Dolphin.MyWidgets
 				get
 				{
 					return this.type;
+				}
+			}
+
+			public int BaseAddress
+			{
+				get
+				{
+					return this.baseAddress;
 				}
 			}
 
@@ -215,6 +224,7 @@ namespace Epsitec.App.Dolphin.MyWidgets
 			}
 
 			private Type type;
+			private int baseAddress;
 			private int level;
 			private bool error;
 		}
