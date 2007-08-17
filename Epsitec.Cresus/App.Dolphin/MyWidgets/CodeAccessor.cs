@@ -335,25 +335,31 @@ namespace Epsitec.App.Dolphin.MyWidgets
 					int address = baseAddress;
 
 					//	Ne montre pas les adresses qui vont trop loin !
+					bool fear = false;
 					if (this.memory.IsPeriph(arrowAddress) || this.memory.IsDisplay(arrowAddress))
 					{
-						continue;
+						fear = true;
 					}
 
 					if (this.memory.IsRam(baseAddress) && this.memory.IsRom(arrowAddress))
 					{
-						continue;
+						fear = true;
 					}
 
 					if (this.memory.IsRom(baseAddress) && this.memory.IsRam(arrowAddress))
 					{
-						continue;
+						fear = true;
 					}
 
 					index = this.GetInstructionIndex(address-this.MemoryStart);
 					int length = this.instructionAddresses[index].Length;
 
-					if (address+length <= arrowAddress)  // flèche de haut en bas ?
+					if (fear)
+					{
+						this.fields[i].CodeAddress.ArrowAdd(MyWidgets.CodeAddress.Address.Type.Fear, baseAddress, 0, false);
+						level--;
+					}
+					else if (address+length <= arrowAddress)  // flèche de haut en bas ?
 					{
 						this.fields[i].CodeAddress.ArrowAdd(MyWidgets.CodeAddress.Address.Type.StartToDown, baseAddress, level, false);
 

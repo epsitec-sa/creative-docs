@@ -70,7 +70,7 @@ namespace Epsitec.App.Dolphin.MyWidgets
 			{
 				Path path = new Path();
 				double x1 = rect.Left + (address.Error ? 12:0);
-				double x2 = System.Math.Floor(rect.Right - address.Level*6)-1;
+				double x2 = System.Math.Floor(rect.Right - (address.Level+2)*6);
 				
 				if (address.Error)
 				{
@@ -137,6 +137,16 @@ namespace Epsitec.App.Dolphin.MyWidgets
 						path.MoveTo(x1, y);
 						path.LineTo(x1+10, y+5);
 						break;
+
+					case Address.Type.Fear:
+						path.MoveTo(x1, y);
+						path.LineTo(rect.Right, y);
+
+						path.MoveTo(rect.Right, y);
+						path.LineTo(rect.Right-10, y-5);
+						path.MoveTo(rect.Right, y);
+						path.LineTo(rect.Right-10, y+5);
+						break;
 				}
 
 				Color color = CodeAddress.colors[address.BaseAddress/3%4];
@@ -178,6 +188,7 @@ namespace Epsitec.App.Dolphin.MyWidgets
 				ArrowFromUp,
 				ArrowFromDown,
 				Arrow,
+				Fear,
 			}
 
 			public Address(Type type, int baseAddress, int level, bool error)
