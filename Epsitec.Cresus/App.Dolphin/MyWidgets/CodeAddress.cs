@@ -71,8 +71,11 @@ namespace Epsitec.App.Dolphin.MyWidgets
 				Path path = new Path();
 				double x1 = rect.Left + (address.Error ? 12:0);
 				double x2 = System.Math.Floor(rect.Right - (address.Level+2)*6);
-				double r = 6;
+				double d = 3;
+				double r = rect.Height/2-d;
 				double k = r*Path.Kappa;
+				double ax = 8;
+				double ay = 4;
 				
 				if (address.Error)
 				{
@@ -92,15 +95,15 @@ namespace Epsitec.App.Dolphin.MyWidgets
 				switch (address.AddressType)
 				{
 					case Address.Type.StartToUp:
-						path.MoveTo(x1, y+4);
-						path.LineTo(x2-r, y+4);
-						path.CurveTo(x2-r+k, y+4, x2, rect.Top-k, x2, rect.Top);
+						path.MoveTo(x1, y+d);
+						path.LineTo(x2-r, y+d);
+						path.CurveTo(x2-r+k, y+d, x2, rect.Top-k, x2, rect.Top);
 						break;
 
 					case Address.Type.StartToDown:
-						path.MoveTo(x1, y+4);
-						path.LineTo(x2-r, y+4);
-						path.CurveTo(x2-r+k, y+4, x2, y+4-r+k, x2, y+4-r);
+						path.MoveTo(x1, y+d);
+						path.LineTo(x2-r, y+d);
+						path.CurveTo(x2-r+k, y+d, x2, y+d-r+k, x2, y+d-r);
 						path.LineTo(x2, rect.Bottom);
 						break;
 
@@ -111,45 +114,45 @@ namespace Epsitec.App.Dolphin.MyWidgets
 
 					case Address.Type.ArrowFromUp:
 						path.MoveTo(x2, rect.Top);
-						path.LineTo(x2, y-4+r);
-						path.CurveTo(x2, y-4+r-k, x2-r+k, y-4, x2-r, y-4);
-						path.LineTo(x1, y-4);
+						path.LineTo(x2, y-d+r);
+						path.CurveTo(x2, y-d+r-k, x2-r+k, y-d, x2-r, y-d);
+						path.LineTo(x1, y-d);
 
-						path.MoveTo(x1, y-4);
-						path.LineTo(x1+10, y-4-5);
-						path.MoveTo(x1, y-4);
-						path.LineTo(x1+10, y-4+5);
+						path.MoveTo(x1, y-d);
+						path.LineTo(x1+ax, y-d-ay);
+						path.MoveTo(x1, y-d);
+						path.LineTo(x1+ax, y-d+ay);
 						break;
 
 					case Address.Type.ArrowFromDown:
 						path.MoveTo(x2, rect.Bottom);
-						path.CurveTo(x2, rect.Bottom+k, x2-r+k, y-4, x2-r, y-4);
-						path.LineTo(x1, y-4);
+						path.CurveTo(x2, rect.Bottom+k, x2-r+k, y-d, x2-r, y-d);
+						path.LineTo(x1, y-d);
 
-						path.MoveTo(x1, y-4);
-						path.LineTo(x1+10, y-4-5);
-						path.MoveTo(x1, y-4);
-						path.LineTo(x1+10, y-4+5);
+						path.MoveTo(x1, y-d);
+						path.LineTo(x1+ax, y-d-ay);
+						path.MoveTo(x1, y-d);
+						path.LineTo(x1+ax, y-d+ay);
 						break;
 
 					case Address.Type.Arrow:
-						path.MoveTo(x2, y-4);
-						path.LineTo(x1, y-4);
+						path.MoveTo(x2, y-d);
+						path.LineTo(x1, y-d);
 
-						path.MoveTo(x1, y-4);
-						path.LineTo(x1+10, y-4-5);
-						path.MoveTo(x1, y-4);
-						path.LineTo(x1+10, y-4+5);
+						path.MoveTo(x1, y-d);
+						path.LineTo(x1+ax, y-d-ay);
+						path.MoveTo(x1, y-d);
+						path.LineTo(x1+ax, y-d+ay);
 						break;
 
 					case Address.Type.Fear:
-						path.MoveTo(x1, y+4);
-						path.LineTo(rect.Right, y+4);
+						path.MoveTo(x1, y+d);
+						path.LineTo(rect.Right, y+d);
 
-						path.MoveTo(rect.Right, y+4);
-						path.LineTo(rect.Right-10, y+4-5);
-						path.MoveTo(rect.Right, y+4);
-						path.LineTo(rect.Right-10, y+4+5);
+						path.MoveTo(rect.Right, y+d);
+						path.LineTo(rect.Right-ax, y+d-ay);
+						path.MoveTo(rect.Right, y+d);
+						path.LineTo(rect.Right-ax, y+d+ay);
 						break;
 				}
 
@@ -157,9 +160,10 @@ namespace Epsitec.App.Dolphin.MyWidgets
 
 				if (address.Error)
 				{
-					rect.Right = x2;
+					Rectangle box = rect;
+					box.Right = x2;
 					graphics.Rasterizer.AddOutline(path, 2);
-					Geometry.RenderHorizontalGradient(graphics, rect, Color.FromAlphaRgb(0, color.R, color.G, color.B), color);
+					Geometry.RenderHorizontalGradient(graphics, box, Color.FromAlphaRgb(0, color.R, color.G, color.B), color);
 				}
 				else
 				{
