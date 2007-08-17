@@ -39,9 +39,9 @@ namespace Epsitec.App.Dolphin.MyWidgets
 			this.Invalidate();
 		}
 
-		public void ArrowAdd(Address.Type type, int level)
+		public void ArrowAdd(Address.Type type, int level, bool error)
 		{
-			this.addresses.Add(new Address(type, level));
+			this.addresses.Add(new Address(type, level, error));
 			this.Invalidate();
 		}
 
@@ -69,51 +69,64 @@ namespace Epsitec.App.Dolphin.MyWidgets
 			foreach (Address address in this.addresses)
 			{
 				Path path = new Path();
-				double x = System.Math.Floor(rect.Right - address.Level*6)-1;
+				double x1 = rect.Left + (address.Error ? 10:0);
+				double x2 = System.Math.Floor(rect.Right - address.Level*6)-1;
 				
+				if (address.Error)
+				{
+					graphics.AddFilledCircle(x1-1, y, 8);
+					graphics.RenderSolid(Color.FromRgb(1.0, 0.8, 0.0));  // orange
+				}
+
 				switch (address.AddressType)
 				{
 					case Address.Type.StartToUp:
-						path.MoveTo(rect.Left, y);
-						path.LineTo(x, y);
-						path.LineTo(x, rect.Top);
+						path.MoveTo(x1, y);
+						path.LineTo(x2, y);
+						path.LineTo(x2, rect.Top);
 						break;
 
 					case Address.Type.StartToDown:
-						path.MoveTo(rect.Left, y);
-						path.LineTo(x, y);
-						path.LineTo(x, rect.Bottom);
+						path.MoveTo(x1, y);
+						path.LineTo(x2, y);
+						path.LineTo(x2, rect.Bottom);
 						break;
 
 					case Address.Type.Line:
-						path.MoveTo(x ,rect.Bottom);
-						path.LineTo(x, rect.Top);
+						path.MoveTo(x2 ,rect.Bottom);
+						path.LineTo(x2, rect.Top);
 						break;
 
 					case Address.Type.ArrowFromUp:
-						path.MoveTo(x, rect.Top);
-						path.LineTo(x, y);
-						path.LineTo(rect.Left, y);
-						path.LineTo(rect.Left+10, y-5);
-						path.MoveTo(rect.Left, y);
-						path.LineTo(rect.Left+10, y+5);
+						path.MoveTo(x2, rect.Top);
+						path.LineTo(x2, y);
+						path.LineTo(x1, y);
+
+						path.MoveTo(x1, y);
+						path.LineTo(x1+10, y-5);
+						path.MoveTo(x1, y);
+						path.LineTo(x1+10, y+5);
 						break;
 
 					case Address.Type.ArrowFromDown:
-						path.MoveTo(x, rect.Bottom);
-						path.LineTo(x, y);
-						path.LineTo(rect.Left, y);
-						path.LineTo(rect.Left+10, y-5);
-						path.MoveTo(rect.Left, y);
-						path.LineTo(rect.Left+10, y+5);
+						path.MoveTo(x2, rect.Bottom);
+						path.LineTo(x2, y);
+						path.LineTo(x1, y);
+
+						path.MoveTo(x1, y);
+						path.LineTo(x1+10, y-5);
+						path.MoveTo(x1, y);
+						path.LineTo(x1+10, y+5);
 						break;
 
 					case Address.Type.Arrow:
-						path.MoveTo(x, y);
-						path.LineTo(rect.Left, y);
-						path.LineTo(rect.Left+10, y-5);
-						path.MoveTo(rect.Left, y);
-						path.LineTo(rect.Left+10, y+5);
+						path.MoveTo(x2, y);
+						path.LineTo(x1, y);
+
+						path.MoveTo(x1, y);
+						path.LineTo(x1+10, y-5);
+						path.MoveTo(x1, y);
+						path.LineTo(x1+10, y+5);
 						break;
 				}
 
@@ -150,10 +163,11 @@ namespace Epsitec.App.Dolphin.MyWidgets
 				Arrow,
 			}
 
-			public Address(Type type, int level)
+			public Address(Type type, int level, bool error)
 			{
 				this.type = type;
 				this.level = level;
+				this.error = error;
 			}
 
 			public Type AddressType
@@ -172,8 +186,17 @@ namespace Epsitec.App.Dolphin.MyWidgets
 				}
 			}
 
+			public bool Error
+			{
+				get
+				{
+					return this.error;
+				}
+			}
+
 			private Type type;
 			private int level;
+			private bool error;
 		}
 
 

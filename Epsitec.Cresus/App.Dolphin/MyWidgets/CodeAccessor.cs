@@ -335,26 +335,30 @@ namespace Epsitec.App.Dolphin.MyWidgets
 
 					if (address < arrowAddress)  // flèche de haut en bas ?
 					{
-						this.fields[i].CodeAddress.ArrowAdd(MyWidgets.CodeAddress.Address.Type.StartToDown, level);
+						this.fields[i].CodeAddress.ArrowAdd(MyWidgets.CodeAddress.Address.Type.StartToDown, level, false);
 
 						index = this.GetInstructionIndex(address-this.MemoryStart);
 						address += this.instructionAddresses[index++].Length;
 
 						int j = i+1;
-						while (j < this.fields.Count && address < arrowAddress)
+						while (j < this.fields.Count)
 						{
-							this.fields[j++].CodeAddress.ArrowAdd(MyWidgets.CodeAddress.Address.Type.Line, level);
 							address += this.instructionAddresses[index++].Length;
+							if (address >= arrowAddress)
+							{
+								break;
+							}
+							this.fields[j++].CodeAddress.ArrowAdd(MyWidgets.CodeAddress.Address.Type.Line, level, false);
 						}
 
 						if (j < this.fields.Count)
 						{
-							this.fields[j].CodeAddress.ArrowAdd(MyWidgets.CodeAddress.Address.Type.ArrowFromUp, level);
+							this.fields[j].CodeAddress.ArrowAdd(MyWidgets.CodeAddress.Address.Type.ArrowFromUp, level, address != arrowAddress);
 						}
 					}
 					else if (address > arrowAddress)  // flèche de bas en haut ?
 					{
-						this.fields[i].CodeAddress.ArrowAdd(MyWidgets.CodeAddress.Address.Type.StartToUp, level);
+						this.fields[i].CodeAddress.ArrowAdd(MyWidgets.CodeAddress.Address.Type.StartToUp, level, false);
 
 						index = this.GetInstructionIndex(address-this.MemoryStart);
 						address -= this.instructionAddresses[--index].Length;
@@ -362,18 +366,18 @@ namespace Epsitec.App.Dolphin.MyWidgets
 						int j = i-1;
 						while (j >= 0 && address > arrowAddress)
 						{
-							this.fields[j--].CodeAddress.ArrowAdd(MyWidgets.CodeAddress.Address.Type.Line, level);
+							this.fields[j--].CodeAddress.ArrowAdd(MyWidgets.CodeAddress.Address.Type.Line, level, false);
 							address -= this.instructionAddresses[--index].Length;
 						}
 
 						if (j >= 0)
 						{
-							this.fields[j].CodeAddress.ArrowAdd(MyWidgets.CodeAddress.Address.Type.ArrowFromDown, level);
+							this.fields[j].CodeAddress.ArrowAdd(MyWidgets.CodeAddress.Address.Type.ArrowFromDown, level, address != arrowAddress);
 						}
 					}
 					else  // flèche sur soi-même ?
 					{
-						this.fields[i].CodeAddress.ArrowAdd(MyWidgets.CodeAddress.Address.Type.Arrow, level);
+						this.fields[i].CodeAddress.ArrowAdd(MyWidgets.CodeAddress.Address.Type.Arrow, level, false);
 					}
 
 					level++;
