@@ -139,7 +139,7 @@ namespace Epsitec.App.Dolphin.MyWidgets
 						break;
 				}
 
-				Color color = CodeAddress.colors[address.BaseAddress%7];
+				Color color = CodeAddress.colors[address.BaseAddress/3%4];
 
 				if (address.Error)
 				{
@@ -160,13 +160,10 @@ namespace Epsitec.App.Dolphin.MyWidgets
 
 		protected static readonly Color[] colors =
 		{
-			Color.FromRgb(0.0, 0.0, 0.0),  // noir
-			Color.FromRgb(0.7, 0.0, 0.0),  // rouge
-			Color.FromRgb(0.0, 0.7, 0.0),  // vert
-			Color.FromRgb(0.0, 0.0, 0.7),  // bleu
-			Color.FromRgb(0.7, 0.7, 0.0),  // jaune
-			Color.FromRgb(0.7, 0.0, 0.7),  // magenta
-			Color.FromRgb(0.0, 0.7, 0.7),  // cyan
+			Color.FromBrightness(0.6),
+			Color.FromBrightness(0.4),
+			Color.FromBrightness(0.2),
+			Color.FromBrightness(0.0),
 		};
 
 

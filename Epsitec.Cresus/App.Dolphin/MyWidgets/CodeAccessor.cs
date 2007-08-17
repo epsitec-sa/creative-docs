@@ -334,6 +334,22 @@ namespace Epsitec.App.Dolphin.MyWidgets
 					int baseAddress = this.fields[i].Address;
 					int address = baseAddress;
 
+					//	Ne montre pas les adresses qui vont trop loin !
+					if (this.memory.IsPeriph(arrowAddress) || this.memory.IsDisplay(arrowAddress))
+					{
+						continue;
+					}
+
+					if (this.memory.IsRam(baseAddress) && this.memory.IsRom(arrowAddress))
+					{
+						continue;
+					}
+
+					if (this.memory.IsRom(baseAddress) && this.memory.IsRam(arrowAddress))
+					{
+						continue;
+					}
+
 					index = this.GetInstructionIndex(address-this.MemoryStart);
 					int length = this.instructionAddresses[index].Length;
 
