@@ -74,8 +74,12 @@ namespace Epsitec.App.Dolphin.MyWidgets
 				
 				if (address.Error)
 				{
-					graphics.AddFilledCircle(x1-1, y, 8);
+					Rectangle box = new Rectangle(rect.Left, rect.Bottom+1, 10, rect.Height-2);
+					graphics.AddFilledRectangle(box);
 					graphics.RenderSolid(Color.FromRgb(1.0, 0.8, 0.0));  // orange
+
+					graphics.Color = Color.FromBrightness(0);
+					graphics.PaintText(box.Left, box.Bottom, box.Width, box.Height, "!", Font.GetFont(Font.DefaultFontFamily, "Bold"), 14, ContentAlignment.MiddleCenter);
 				}
 
 				switch (address.AddressType)
@@ -130,8 +134,19 @@ namespace Epsitec.App.Dolphin.MyWidgets
 						break;
 				}
 
-				graphics.Rasterizer.AddOutline(path, 2);
-				graphics.RenderSolid(CodeAddress.colors[address.Level%7]);
+				Color color = CodeAddress.colors[address.Level%7];
+
+				if (address.Error)
+				{
+					rect.Right = x2;
+					graphics.Rasterizer.AddOutline(path, 2);
+					Geometry.RenderHorizontalGradient(graphics, rect, Color.FromAlphaRgb(0, color.R, color.G, color.B), color);
+				}
+				else
+				{
+					graphics.Rasterizer.AddOutline(path, 2);
+					graphics.RenderSolid(color);
+				}
 
 				path.Dispose();
 			}
