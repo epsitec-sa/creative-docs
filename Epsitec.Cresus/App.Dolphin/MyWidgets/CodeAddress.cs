@@ -90,14 +90,14 @@ namespace Epsitec.App.Dolphin.MyWidgets
 				switch (address.AddressType)
 				{
 					case Address.Type.StartToUp:
-						path.MoveTo(x1, y);
-						path.LineTo(x2, y);
+						path.MoveTo(x1, y+4);
+						path.LineTo(x2, y+4);
 						path.LineTo(x2, rect.Top);
 						break;
 
 					case Address.Type.StartToDown:
-						path.MoveTo(x1, y);
-						path.LineTo(x2, y);
+						path.MoveTo(x1, y+4);
+						path.LineTo(x2, y+4);
 						path.LineTo(x2, rect.Bottom);
 						break;
 
@@ -108,44 +108,44 @@ namespace Epsitec.App.Dolphin.MyWidgets
 
 					case Address.Type.ArrowFromUp:
 						path.MoveTo(x2, rect.Top);
-						path.LineTo(x2, y);
-						path.LineTo(x1, y);
+						path.LineTo(x2, y-4);
+						path.LineTo(x1, y-4);
 
-						path.MoveTo(x1, y);
-						path.LineTo(x1+10, y-5);
-						path.MoveTo(x1, y);
-						path.LineTo(x1+10, y+5);
+						path.MoveTo(x1, y-4);
+						path.LineTo(x1+10, y-4-5);
+						path.MoveTo(x1, y-4);
+						path.LineTo(x1+10, y-4+5);
 						break;
 
 					case Address.Type.ArrowFromDown:
 						path.MoveTo(x2, rect.Bottom);
-						path.LineTo(x2, y);
-						path.LineTo(x1, y);
+						path.LineTo(x2, y-4);
+						path.LineTo(x1, y-4);
 
-						path.MoveTo(x1, y);
-						path.LineTo(x1+10, y-5);
-						path.MoveTo(x1, y);
-						path.LineTo(x1+10, y+5);
+						path.MoveTo(x1, y-4);
+						path.LineTo(x1+10, y-4-5);
+						path.MoveTo(x1, y-4);
+						path.LineTo(x1+10, y-4+5);
 						break;
 
 					case Address.Type.Arrow:
-						path.MoveTo(x2, y);
-						path.LineTo(x1, y);
+						path.MoveTo(x2, y-4);
+						path.LineTo(x1, y-4);
 
-						path.MoveTo(x1, y);
-						path.LineTo(x1+10, y-5);
-						path.MoveTo(x1, y);
-						path.LineTo(x1+10, y+5);
+						path.MoveTo(x1, y-4);
+						path.LineTo(x1+10, y-4-5);
+						path.MoveTo(x1, y-4);
+						path.LineTo(x1+10, y-4+5);
 						break;
 
 					case Address.Type.Fear:
-						path.MoveTo(x1, y);
-						path.LineTo(rect.Right, y);
+						path.MoveTo(x1, y+4);
+						path.LineTo(rect.Right, y+4);
 
-						path.MoveTo(rect.Right, y);
-						path.LineTo(rect.Right-10, y-5);
-						path.MoveTo(rect.Right, y);
-						path.LineTo(rect.Right-10, y+5);
+						path.MoveTo(rect.Right, y+4);
+						path.LineTo(rect.Right-10, y+4-5);
+						path.MoveTo(rect.Right, y+4);
+						path.LineTo(rect.Right-10, y+4+5);
 						break;
 				}
 
