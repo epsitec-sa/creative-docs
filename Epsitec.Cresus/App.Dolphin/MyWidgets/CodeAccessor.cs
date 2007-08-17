@@ -333,19 +333,22 @@ namespace Epsitec.App.Dolphin.MyWidgets
 				{
 					int address = this.fields[i].Address;
 
-					if (address < arrowAddress)  // flèche de haut en bas ?
+					index = this.GetInstructionIndex(address-this.MemoryStart);
+					int length = this.instructionAddresses[index].Length;
+
+					if (address+length <= arrowAddress)  // flèche de haut en bas ?
 					{
 						this.fields[i].CodeAddress.ArrowAdd(MyWidgets.CodeAddress.Address.Type.StartToDown, level, false);
 
-						index = this.GetInstructionIndex(address-this.MemoryStart);
 						address += this.instructionAddresses[index++].Length;
 
 						int j = i+1;
 						while (j < this.fields.Count)
 						{
 							address += this.instructionAddresses[index++].Length;
-							if (address >= arrowAddress)
+							if (address > arrowAddress)
 							{
+								address -= this.instructionAddresses[index-1].Length;
 								break;
 							}
 							this.fields[j++].CodeAddress.ArrowAdd(MyWidgets.CodeAddress.Address.Type.Line, level, false);
@@ -377,7 +380,7 @@ namespace Epsitec.App.Dolphin.MyWidgets
 					}
 					else  // flèche sur soi-même ?
 					{
-						this.fields[i].CodeAddress.ArrowAdd(MyWidgets.CodeAddress.Address.Type.Arrow, level, false);
+						this.fields[i].CodeAddress.ArrowAdd(MyWidgets.CodeAddress.Address.Type.Arrow, level, address != arrowAddress);
 					}
 
 					level++;

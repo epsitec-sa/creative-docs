@@ -69,17 +69,22 @@ namespace Epsitec.App.Dolphin.MyWidgets
 			foreach (Address address in this.addresses)
 			{
 				Path path = new Path();
-				double x1 = rect.Left + (address.Error ? 10:0);
+				double x1 = rect.Left + (address.Error ? 12:0);
 				double x2 = System.Math.Floor(rect.Right - address.Level*6)-1;
 				
 				if (address.Error)
 				{
-					Rectangle box = new Rectangle(rect.Left, rect.Bottom+1, 10, rect.Height-2);
+					Rectangle box = new Rectangle(rect.Left-1, rect.Bottom, x1-rect.Left, rect.Height);
+					box.Deflate(0.5);
+
 					graphics.AddFilledRectangle(box);
 					graphics.RenderSolid(Color.FromRgb(1.0, 0.8, 0.0));  // orange
 
+					graphics.AddRectangle(box);
+					graphics.RenderSolid(Color.FromBrightness(0.41));  // gris foncé
+
 					graphics.Color = Color.FromBrightness(0);
-					graphics.PaintText(box.Left, box.Bottom, box.Width, box.Height, "!", Font.GetFont(Font.DefaultFontFamily, "Bold"), 14, ContentAlignment.MiddleCenter);
+					graphics.PaintText(box.Left, box.Bottom+1, box.Width, box.Height, "!", Font.GetFont(Font.DefaultFontFamily, "Bold"), 14, ContentAlignment.MiddleCenter);
 				}
 
 				switch (address.AddressType)
