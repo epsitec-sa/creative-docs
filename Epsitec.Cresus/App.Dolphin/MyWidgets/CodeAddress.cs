@@ -45,24 +45,28 @@ namespace Epsitec.App.Dolphin.MyWidgets
 			this.Invalidate();
 		}
 
-		public int BaseAddress
+		public int DetectAddress(Point pos)
 		{
-			//	Retourne l'adresse de base liée à cette ligne.
-			//	Retourne -1 s'il n'y en a pas.
-			get
+			//	Détecte la flèche visée par la souris.
+			//	Retourne l'adresse de base ou -1.
+			if (!this.Client.Bounds.Contains(pos))
 			{
-				foreach (Address address in this.addresses)
-				{
-					if (address.AddressType == Address.Type.Arrow ||
-						address.AddressType == Address.Type.StartToUp ||
-						address.AddressType == Address.Type.StartToDown ||
-						address.AddressType == Address.Type.Far)
-					{
-						return address.BaseAddress;
-					}
-				}
 				return -1;
 			}
+
+			foreach (Address address in this.addresses)
+			{
+				Path path = this.GetArrowPath(address);
+				bool detect = Geometry.DetectOutline(path, 4, pos);
+				path.Dispose();
+
+				if (detect)
+				{
+					return address.BaseAddress;
+				}
+			}
+
+			return -1;
 		}
 
 		public void HiliteBaseAddress(int baseAddress)
@@ -91,18 +95,11 @@ namespace Epsitec.App.Dolphin.MyWidgets
 		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
 		{
 			Rectangle rect = this.Client.Bounds;
-			double y = System.Math.Floor(rect.Center.Y);
 
 			foreach (Address address in this.addresses)
 			{
-				Path path = new Path();
 				double x1 = rect.Left + (address.Error ? 12:0);
 				double x2 = System.Math.Floor(rect.Right - (address.Level+2)*6);
-				double d = 3;
-				double r = rect.Height/2-d;
-				double k = r*Path.Kappa;
-				double ax = 8;
-				double ay = 4;
 				
 				if (address.Error)
 				{
@@ -119,69 +116,7 @@ namespace Epsitec.App.Dolphin.MyWidgets
 					graphics.PaintText(box.Left, box.Bottom+1, box.Width, box.Height, "!", Font.GetFont(Font.DefaultFontFamily, "Bold"), 14, ContentAlignment.MiddleCenter);
 				}
 
-				switch (address.AddressType)
-				{
-					case Address.Type.StartToUp:
-						path.MoveTo(x1, y+d);
-						path.LineTo(x2-r, y+d);
-						path.CurveTo(x2-r+k, y+d, x2, rect.Top-k, x2, rect.Top);
-						break;
-
-					case Address.Type.StartToDown:
-						path.MoveTo(x1, y+d);
-						path.LineTo(x2-r, y+d);
-						path.CurveTo(x2-r+k, y+d, x2, y+d-r+k, x2, y+d-r);
-						path.LineTo(x2, rect.Bottom);
-						break;
-
-					case Address.Type.Line:
-						path.MoveTo(x2 ,rect.Bottom);
-						path.LineTo(x2, rect.Top);
-						break;
-
-					case Address.Type.ArrowFromUp:
-						path.MoveTo(x2, rect.Top);
-						path.LineTo(x2, y-d+r);
-						path.CurveTo(x2, y-d+r-k, x2-r+k, y-d, x2-r, y-d);
-						path.LineTo(x1, y-d);
-
-						path.MoveTo(x1, y-d);
-						path.LineTo(x1+ax, y-d-ay);
-						path.MoveTo(x1, y-d);
-						path.LineTo(x1+ax, y-d+ay);
-						break;
-
-					case Address.Type.ArrowFromDown:
-						path.MoveTo(x2, rect.Bottom);
-						path.CurveTo(x2, rect.Bottom+k, x2-r+k, y-d, x2-r, y-d);
-						path.LineTo(x1, y-d);
-
-						path.MoveTo(x1, y-d);
-						path.LineTo(x1+ax, y-d-ay);
-						path.MoveTo(x1, y-d);
-						path.LineTo(x1+ax, y-d+ay);
-						break;
-
-					case Address.Type.Arrow:
-						path.MoveTo(x2, y-d);
-						path.LineTo(x1, y-d);
-
-						path.MoveTo(x1, y-d);
-						path.LineTo(x1+ax, y-d-ay);
-						path.MoveTo(x1, y-d);
-						path.LineTo(x1+ax, y-d+ay);
-						break;
-
-					case Address.Type.Far:
-						path.MoveTo(x1, y+d);
-						path.LineTo(rect.Right, y+d);
-
-						path.MoveTo(rect.Right, y+d);
-						path.LineTo(rect.Right-ax, y+d-ay);
-						path.MoveTo(rect.Right, y+d);
-						path.LineTo(rect.Right-ax, y+d+ay);
-						break;
-				}
+				Path path = this.GetArrowPath(address);
 
 				if (address.Hilite)
 				{
@@ -208,6 +143,87 @@ namespace Epsitec.App.Dolphin.MyWidgets
 			}
 		}
 
+		protected Path GetArrowPath(Address address)
+		{
+			Rectangle rect = this.Client.Bounds;
+
+			double x1 = rect.Left + (address.Error ? 12:0);
+			double x2 = System.Math.Floor(rect.Right - (address.Level+2)*6);
+			double d = 3;
+			double r = rect.Height/2-d;
+			double k = r*Path.Kappa;
+			double ax = 8;
+			double ay = 4;
+			double y = System.Math.Floor(rect.Center.Y);
+			
+			Path path = new Path();
+			switch (address.AddressType)
+			{
+				case Address.Type.StartToUp:
+					path.MoveTo(x1, y+d);
+					path.LineTo(x2-r, y+d);
+					path.CurveTo(x2-r+k, y+d, x2, rect.Top-k, x2, rect.Top);
+					break;
+
+				case Address.Type.StartToDown:
+					path.MoveTo(x1, y+d);
+					path.LineTo(x2-r, y+d);
+					path.CurveTo(x2-r+k, y+d, x2, y+d-r+k, x2, y+d-r);
+					path.LineTo(x2, rect.Bottom);
+					break;
+
+				case Address.Type.Line:
+					path.MoveTo(x2 ,rect.Bottom);
+					path.LineTo(x2, rect.Top);
+					break;
+
+				case Address.Type.ArrowFromUp:
+					path.MoveTo(x2, rect.Top);
+					path.LineTo(x2, y-d+r);
+					path.CurveTo(x2, y-d+r-k, x2-r+k, y-d, x2-r, y-d);
+					path.LineTo(x1, y-d);
+
+					path.MoveTo(x1, y-d);
+					path.LineTo(x1+ax, y-d-ay);
+					path.MoveTo(x1, y-d);
+					path.LineTo(x1+ax, y-d+ay);
+					break;
+
+				case Address.Type.ArrowFromDown:
+					path.MoveTo(x2, rect.Bottom);
+					path.CurveTo(x2, rect.Bottom+k, x2-r+k, y-d, x2-r, y-d);
+					path.LineTo(x1, y-d);
+
+					path.MoveTo(x1, y-d);
+					path.LineTo(x1+ax, y-d-ay);
+					path.MoveTo(x1, y-d);
+					path.LineTo(x1+ax, y-d+ay);
+					break;
+
+				case Address.Type.Arrow:
+					path.MoveTo(x2, y-d);
+					path.LineTo(x1, y-d);
+
+					path.MoveTo(x1, y-d);
+					path.LineTo(x1+ax, y-d-ay);
+					path.MoveTo(x1, y-d);
+					path.LineTo(x1+ax, y-d+ay);
+					break;
+
+				case Address.Type.Far:
+					path.MoveTo(x1, y+d);
+					path.LineTo(rect.Right, y+d);
+
+					path.MoveTo(rect.Right, y+d);
+					path.LineTo(rect.Right-ax, y+d-ay);
+					path.MoveTo(rect.Right, y+d);
+					path.LineTo(rect.Right-ax, y+d+ay);
+					break;
+			}
+
+			return path;
+		}
+
 
 		protected static readonly Color[] colors =
 		{
@@ -218,6 +234,9 @@ namespace Epsitec.App.Dolphin.MyWidgets
 		};
 
 
+		/// <summary>
+		/// Cette classe correspond à un fragment de flèche.
+		/// </summary>
 		public class Address
 		{
 			public enum Type

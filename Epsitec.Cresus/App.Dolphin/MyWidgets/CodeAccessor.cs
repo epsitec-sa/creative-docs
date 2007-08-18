@@ -46,8 +46,6 @@ namespace Epsitec.App.Dolphin.MyWidgets
 					field.InstructionSelected -= new EventHandler(this.HandleFieldInstructionSelected);
 					field.InstructionDeselected -= new EventHandler(this.HandleFieldInstructionDeselected);
 					field.InstructionChanged -= new EventHandler(this.HandleFieldInstructionChanged);
-					field.CodeAddressEntered -= new EventHandler(this.HandleCodeAddressEntered);
-					field.CodeAddressExited -= new EventHandler(this.HandleCodeAddressExited);
 					field.CodeAddressClicked -= new EventHandler(this.HandleCodeAddressClicked);
 				}
 			}
@@ -289,8 +287,6 @@ namespace Epsitec.App.Dolphin.MyWidgets
 				field.InstructionSelected += new EventHandler(this.HandleFieldInstructionSelected);
 				field.InstructionDeselected += new EventHandler(this.HandleFieldInstructionDeselected);
 				field.InstructionChanged += new EventHandler(this.HandleFieldInstructionChanged);
-				field.CodeAddressEntered += new EventHandler(this.HandleCodeAddressEntered);
-				field.CodeAddressExited += new EventHandler(this.HandleCodeAddressExited);
 				field.CodeAddressClicked += new EventHandler(this.HandleCodeAddressClicked);
 
 				this.fields.Add(field);
@@ -621,18 +617,65 @@ namespace Epsitec.App.Dolphin.MyWidgets
 		}
 
 
+		protected int DetectAddress(Point pos)
+		{
+			//	Détecte la flèche visée par la souris.
+			//	Retourne son adresse de base, ou -1.
+			for (int i=this.fields.Count-1; i>=0; i--)
+			{
+				Code code = this.fields[i];
+
+				Point p = code.MapParentToClient(pos);
+				p = code.CodeAddress.MapParentToClient(p);
+				p.X -= 17;  // TODO: je n'ai décidément rien compris à ces MapTrucToMachin !
+
+				int baseAddress = code.CodeAddress.DetectAddress(p);
+				if (baseAddress != -1)
+				{
+					return baseAddress;
+				}
+			}
+
+			return -1;
+		}
+
 		protected void HiliteBaseAddress(int baseAddress)
 		{
 			//	Met en évidence une flèche qui part d'une adresse de base donnée.
+			//	Il faut mettre en évidence tous les fragments, dans différents objets CodeAddress.
 			foreach (MyWidgets.Code code in this.fields)
 			{
 				code.CodeAddress.HiliteBaseAddress(baseAddress);
 			}
 		}
 
+		protected MyWidgets.Code SearchCode(int baseAddress)
+		{
+			//	Cherche le Code utilisant une adresse de base donnée.
+			foreach (MyWidgets.Code code in this.fields)
+			{
+				if (baseAddress == code.Address)
+				{
+					return code;
+				}
+			}
+
+			return null;
+		}
+
 
 		protected override void ProcessMessage(Message message, Point pos)
 		{
+			if (message.MessageType == MessageType.MouseMove)
+			{
+				int address = this.DetectAddress(pos);
+				if (this.addressHilited != address)
+				{
+					this.addressHilited = address;
+					this.HiliteBaseAddress(this.addressHilited);
+				}
+			}
+
 			if (message.MessageType == MessageType.MouseWheel)
 			{
 				int index = this.GetInstructionIndex(this.firstAddress);
@@ -739,26 +782,34 @@ namespace Epsitec.App.Dolphin.MyWidgets
 			}
 		}
 
-		private void HandleCodeAddressEntered(object sender)
-		{
-			Code code = sender as Code;
-			int baseAddress = code.CodeAddress.BaseAddress;
-			this.HiliteBaseAddress(baseAddress);
-		}
-
-		private void HandleCodeAddressExited(object sender)
-		{
-			this.HiliteBaseAddress(-1);
-		}
-
 		private void HandleCodeAddressClicked(object sender)
 		{
-			Code code = sender as Code;
-			int address = code.ArrowAddress;
-			if (this.memory.IsRam(address) || this.memory.IsRom(address))
+			//	Flèche cliquée.
+			if (this.addressHilited == -1)
 			{
-				this.FirstAddress = address-this.MemoryStart;
+				return;
 			}
+
+			MyWidgets.Code code = this.SearchCode(this.addressHilited);
+			if (code == null)
+			{
+				return;
+			}
+
+			int arrowAddress = code.ArrowAddress;
+			if (!this.memory.IsRam(arrowAddress) && !this.memory.IsRom(arrowAddress))
+			{
+				return;
+			}
+
+			string newBank = this.MemoryBank(arrowAddress);
+			if (this.Bank != newBank)
+			{
+				this.Bank = newBank;
+				this.OnBankChanged();
+			}
+			
+			this.FirstAddress = arrowAddress-this.MemoryStart;
 		}
 
 
@@ -784,9 +835,35 @@ namespace Epsitec.App.Dolphin.MyWidgets
 				this.RemoveUserEventHandler("InstructionSelected", value);
 			}
 		}
+
+		protected virtual void OnBankChanged()
+		{
+			//	Génère un événement pour dire qu'une cellule a été sélectionnée.
+			EventHandler handler = (EventHandler) this.GetUserEventHandler("BankChanged");
+			if (handler != null)
+			{
+				handler(this);
+			}
+		}
+
+		public event Common.Support.EventHandler BankChanged
+		{
+			add
+			{
+				this.AddUserEventHandler("BankChanged", value);
+			}
+			remove
+			{
+				this.RemoveUserEventHandler("BankChanged", value);
+			}
+		}
 		#endregion
 
 
+		/// <summary>
+		/// Une instance de CodeAddress regroupe les informations sur une instruction. Toutes les instructions,
+		/// visibles ou cachées, ont une instance de CodeAddress.
+		/// </summary>
 		protected struct CodeAddress
 		{
 			public CodeAddress(int address, int length, int type)
@@ -837,6 +914,7 @@ namespace Epsitec.App.Dolphin.MyWidgets
 		protected int								firstAddress;  // relatif dans la banque
 		protected int								markPC;
 		protected int								addressSelected;
+		protected int								addressHilited;
 		protected List<CodeAddress>					instructionAddresses;
 		protected bool								followPC;
 		protected bool								ignoreChange;
