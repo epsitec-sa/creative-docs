@@ -45,6 +45,9 @@ namespace Epsitec.App.Dolphin.MyWidgets
 					field.InstructionSelected -= new EventHandler(this.HandleFieldInstructionSelected);
 					field.InstructionDeselected -= new EventHandler(this.HandleFieldInstructionDeselected);
 					field.InstructionChanged -= new EventHandler(this.HandleFieldInstructionChanged);
+					field.CodeAddressEntered -= new EventHandler(this.HandleCodeAddressEntered);
+					field.CodeAddressExited -= new EventHandler(this.HandleCodeAddressExited);
+					field.CodeAddressClicked -= new EventHandler(this.HandleCodeAddressClicked);
 				}
 			}
 
@@ -267,6 +270,9 @@ namespace Epsitec.App.Dolphin.MyWidgets
 				field.InstructionSelected += new EventHandler(this.HandleFieldInstructionSelected);
 				field.InstructionDeselected += new EventHandler(this.HandleFieldInstructionDeselected);
 				field.InstructionChanged += new EventHandler(this.HandleFieldInstructionChanged);
+				field.CodeAddressEntered += new EventHandler(this.HandleCodeAddressEntered);
+				field.CodeAddressExited += new EventHandler(this.HandleCodeAddressExited);
+				field.CodeAddressClicked += new EventHandler(this.HandleCodeAddressClicked);
 
 				this.fields.Add(field);
 			}
@@ -596,6 +602,16 @@ namespace Epsitec.App.Dolphin.MyWidgets
 		}
 
 
+		protected void HiliteBaseAddress(int baseAddress)
+		{
+			//	Met en évidence une flèche qui part d'une adresse donnée.
+			foreach (MyWidgets.Code code in this.fields)
+			{
+				code.CodeAddress.HiliteBaseAddress(baseAddress);
+			}
+		}
+
+
 		protected override void ProcessMessage(Message message, Point pos)
 		{
 			if (message.MessageType == MessageType.MouseWheel)
@@ -697,11 +713,28 @@ namespace Epsitec.App.Dolphin.MyWidgets
 			{
 				string title = "Dauphin";
 				string icon = "manifest:Epsitec.Common.Dialogs.Images.Warning.icon";
-				string err = string.Format("La mémoire a été décalée de {0} byte(s) à partir de l'adresse {1}h.<br/>N'oubliez pas d'adapter les adresses des instructions ayant un argument <i>ADDR</i> (JUMP, MOVE, etc.).", shift.ToString(), address.ToString("X3"));
+				string err = string.Format("<b>La mémoire a été décalée de {0} byte(s) à partir de l'adresse {1}h.</b><br/>N'oubliez pas d'adapter les adresses des instructions ayant un argument <i>ADDR</i> (JUMP, MOVE, etc.).", shift.ToString(), address.ToString("X3"));
 				Common.Dialogs.IDialog dialog = Common.Dialogs.MessageDialog.CreateOk(title, icon, err, null, null);
 				dialog.Owner = this.Window;
 				dialog.OpenDialog();
 			}
+		}
+
+		private void HandleCodeAddressEntered(object sender)
+		{
+			Code code = sender as Code;
+			int baseAddress = code.CodeAddress.BaseAddress;
+			this.HiliteBaseAddress(baseAddress);
+		}
+
+		private void HandleCodeAddressExited(object sender)
+		{
+			this.HiliteBaseAddress(-1);
+		}
+
+		private void HandleCodeAddressClicked(object sender)
+		{
+			Code code = sender as Code;
 		}
 
 

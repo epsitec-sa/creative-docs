@@ -57,6 +57,9 @@ namespace Epsitec.App.Dolphin.MyWidgets
 			this.widgetCodeAddress = new MyWidgets.CodeAddress(this);
 			this.widgetCodeAddress.PreferredHeight = 20;
 			this.widgetCodeAddress.Dock = DockStyle.Fill;
+			this.widgetCodeAddress.Entered += new MessageEventHandler(this.HandleCodeAddressEntered);
+			this.widgetCodeAddress.Exited += new MessageEventHandler(this.HandleCodeAddressExited);
+			this.widgetCodeAddress.Clicked += new MessageEventHandler(this.HandleCodeAddressClicked);
 		}
 
 		public Code(Widget embedder) : this()
@@ -72,6 +75,10 @@ namespace Epsitec.App.Dolphin.MyWidgets
 
 				this.widgetInstruction.EditionAccepted -= new EventHandler(this.HandleInstructionEditionAccepted);
 				this.widgetInstruction.EditionRejected -= new EventHandler(this.HandleInstructionEditionRejected);
+
+				this.widgetCodeAddress.Entered -= new MessageEventHandler(this.HandleCodeAddressEntered);
+				this.widgetCodeAddress.Exited -= new MessageEventHandler(this.HandleCodeAddressExited);
+				this.widgetCodeAddress.Clicked -= new MessageEventHandler(this.HandleCodeAddressClicked);
 			}
 
 			base.Dispose(disposing);
@@ -298,6 +305,21 @@ namespace Epsitec.App.Dolphin.MyWidgets
 			}
 		}
 
+		private void HandleCodeAddressEntered(object sender, MessageEventArgs e)
+		{
+			this.OnCodeAddressEntered();
+		}
+
+		private void HandleCodeAddressExited(object sender, MessageEventArgs e)
+		{
+			this.OnCodeAddressExited();
+		}
+
+		private void HandleCodeAddressClicked(object sender, MessageEventArgs e)
+		{
+			this.OnCodeAddressClicked();
+		}
+
 
 		#region EventHandler
 		protected virtual void OnInstructionSelected()
@@ -363,6 +385,72 @@ namespace Epsitec.App.Dolphin.MyWidgets
 			remove
 			{
 				this.RemoveUserEventHandler("InstructionChanged", value);
+			}
+		}
+
+		protected virtual void OnCodeAddressEntered()
+		{
+			//	Génère un événement pour dire qu'une cellule a été sélectionnée.
+			EventHandler handler = (EventHandler) this.GetUserEventHandler("CodeAddressEntered");
+			if (handler != null)
+			{
+				handler(this);
+			}
+		}
+
+		public event Common.Support.EventHandler CodeAddressEntered
+		{
+			add
+			{
+				this.AddUserEventHandler("CodeAddressEntered", value);
+			}
+			remove
+			{
+				this.RemoveUserEventHandler("CodeAddressEntered", value);
+			}
+		}
+
+		protected virtual void OnCodeAddressExited()
+		{
+			//	Génère un événement pour dire qu'une cellule a été sélectionnée.
+			EventHandler handler = (EventHandler) this.GetUserEventHandler("CodeAddressExited");
+			if (handler != null)
+			{
+				handler(this);
+			}
+		}
+
+		public event Common.Support.EventHandler CodeAddressExited
+		{
+			add
+			{
+				this.AddUserEventHandler("CodeAddressExited", value);
+			}
+			remove
+			{
+				this.RemoveUserEventHandler("CodeAddressExited", value);
+			}
+		}
+
+		protected virtual void OnCodeAddressClicked()
+		{
+			//	Génère un événement pour dire qu'une cellule a été sélectionnée.
+			EventHandler handler = (EventHandler) this.GetUserEventHandler("CodeAddressClicked");
+			if (handler != null)
+			{
+				handler(this);
+			}
+		}
+
+		public event Common.Support.EventHandler CodeAddressClicked
+		{
+			add
+			{
+				this.AddUserEventHandler("CodeAddressClicked", value);
+			}
+			remove
+			{
+				this.RemoveUserEventHandler("CodeAddressClicked", value);
 			}
 		}
 		#endregion

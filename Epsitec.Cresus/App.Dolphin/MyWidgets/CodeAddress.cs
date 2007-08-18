@@ -45,18 +45,43 @@ namespace Epsitec.App.Dolphin.MyWidgets
 			this.Invalidate();
 		}
 
-		public int ArrowMaxLevel
+		public int BaseAddress
 		{
+			//	Retourne l'adresse de base liée à cette ligne.
 			get
 			{
-				int max = 0;
-
 				foreach (Address address in this.addresses)
 				{
-					max = System.Math.Max(max, address.Level);
+					if (address.AddressType == Address.Type.Arrow ||
+						address.AddressType == Address.Type.StartToUp ||
+						address.AddressType == Address.Type.StartToDown ||
+						address.AddressType == Address.Type.Far)
+					{
+						return address.BaseAddress;
+					}
 				}
+				return -1;
+			}
+		}
 
-				return max;
+		public void HiliteBaseAddress(int baseAddress)
+		{
+			bool changed = false;
+
+			for (int i=0; i<this.addresses.Count; i++)
+			{
+				Address address = this.addresses[i];
+
+				if (address.Hilite != (baseAddress == address.BaseAddress))
+				{
+					address.Hilite = (baseAddress == address.BaseAddress);
+					changed = true;
+				}
+			}
+
+			if (changed)
+			{
+				this.Invalidate();
 			}
 		}
 
@@ -156,7 +181,7 @@ namespace Epsitec.App.Dolphin.MyWidgets
 						break;
 				}
 
-				Color color = CodeAddress.colors[address.BaseAddress/3%4];
+				Color color = address.Hilite ? Color.FromRgb(1.0, 0.0, 0.0) : CodeAddress.colors[address.BaseAddress/3%4];
 
 				if (address.Error)
 				{
@@ -185,7 +210,7 @@ namespace Epsitec.App.Dolphin.MyWidgets
 		};
 
 
-		public struct Address
+		public class Address
 		{
 			public enum Type
 			{
@@ -205,6 +230,7 @@ namespace Epsitec.App.Dolphin.MyWidgets
 				this.baseAddress = baseAddress;
 				this.level = level;
 				this.error = error;
+				this.hilite = false;
 			}
 
 			public Type AddressType
@@ -239,10 +265,23 @@ namespace Epsitec.App.Dolphin.MyWidgets
 				}
 			}
 
+			public bool Hilite
+			{
+				get
+				{
+					return this.hilite;
+				}
+				set
+				{
+					this.hilite = value;
+				}
+			}
+
 			private Type type;
 			private int baseAddress;
 			private int level;
 			private bool error;
+			private bool hilite;
 		}
 
 

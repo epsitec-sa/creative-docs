@@ -3169,7 +3169,7 @@ namespace Epsitec.App.Dolphin.Components
 			System.Diagnostics.Debug.Assert(TinyProcessor.CharTable.Length <= 0x100);
 			this.RomWrite(0xB00, TinyProcessor.CharTable);
 
-			this.RomWrite(address, TinyProcessor.FirstCode);
+			this.RomWrite(address, TinyProcessor.FirstCode);  // première instruction en ROM = HALT
 			address += 3;
 
 			int indirect = address;
@@ -3208,6 +3208,7 @@ namespace Epsitec.App.Dolphin.Components
 			}
 		}
 
+		//	Première instruction en ROM. Occupe 3 bytes, comme un JUMP.
 		protected static byte[] FirstCode =
 		{
 			(byte) Instructions.Halt,
