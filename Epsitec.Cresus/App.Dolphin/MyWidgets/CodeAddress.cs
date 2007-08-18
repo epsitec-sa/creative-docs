@@ -181,6 +181,12 @@ namespace Epsitec.App.Dolphin.MyWidgets
 						break;
 				}
 
+				if (address.Hilite)
+				{
+					graphics.Rasterizer.AddOutline(path, 6);
+					graphics.RenderSolid(Color.FromBrightness(0.8));  // fond gris clair, utile si MarkPC
+				}
+
 				Color color = address.Hilite ? Color.FromRgb(1.0, 0.0, 0.0) : CodeAddress.colors[address.BaseAddress/3%4];
 
 				if (address.Error)
