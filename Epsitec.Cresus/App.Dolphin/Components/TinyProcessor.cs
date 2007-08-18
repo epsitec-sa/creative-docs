@@ -1941,7 +1941,7 @@ namespace Epsitec.App.Dolphin.Components
 				return builder.ToString();
 			}
 
-			if (op >= (int) Instructions.AndSA && op < (int) Instructions.AndSA+6)  // op ADDR,r'
+			if (op >= (int) Instructions.AndSA && op < (int) Instructions.AndSA+6)  // op r',ADDR
 			{
 				int n = op & 0x01;
 				Instructions i = (Instructions) (op & 0xFE);
@@ -1975,7 +1975,7 @@ namespace Epsitec.App.Dolphin.Components
 			{
 				int n = op & 0x03;
 				builder.Append("COMP ");
-				TinyProcessor.PutCodeValue(builder, codes[1]);
+				address = TinyProcessor.PutCodeAddress(builder, codes[1], codes[2], pc, length);
 				builder.Append(",");
 				TinyProcessor.PutCodeRegister(builder, n);
 				return builder.ToString();
