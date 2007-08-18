@@ -244,32 +244,7 @@ namespace Epsitec.App.Dolphin.MyWidgets
 			field.AcceptEdition();
 
 			List<int> codes = new List<int>();
-			string err = null;
-
-			//?if (this.isTable)
-			if (false)
-			{
-				if (this.widgetInstruction.Text.ToUpper().Trim() == "TABLE")
-				{
-					codes.Add(this.processor.TableInstruction);
-				}
-				else
-				{
-					int value = Misc.ParseHexa(this.widgetInstruction.Text, -1, -1);
-					if (value == -1)
-					{
-						err = "<b>Valeur hexadécimale incorrecte.</b>";
-					}
-					else
-					{
-						codes.Add(value);
-					}
-				}
-			}
-			else
-			{
-				err = this.processor.AssemblyInstruction(this.widgetInstruction.Text, codes);
-			}
+			string err = this.processor.AssemblyInstruction(this.widgetInstruction.Text, codes);
 
 			if (codes == null || codes.Count == 0 || !string.IsNullOrEmpty(err))
 			{

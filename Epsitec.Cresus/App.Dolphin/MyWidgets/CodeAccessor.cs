@@ -427,21 +427,25 @@ namespace Epsitec.App.Dolphin.MyWidgets
 			{
 				int code = this.memory.ReadForDebug(address);
 
-				if (code == this.processor.TableInstruction)
+				if (code == this.processor.TableInstruction)  // instruction TABLE #val ?
 				{
 					this.instructionAddresses.Add(new CodeAddress(address-this.MemoryStart, 2, 0));
 					tableLength = this.memory.ReadForDebug(address+1);
+					if (tableLength == 0)
+					{
+						tableLength = 0x100;
+					}
 					address += 2;
 				}
 				else
 				{
-					if (tableLength > 0)
+					if (tableLength > 0)  // BYTE contenu dans la table ?
 					{
 						this.instructionAddresses.Add(new CodeAddress(address-this.MemoryStart, 1, 1));
 						address++;
 						tableLength--;
 					}
-					else
+					else  // instruction normale ?
 					{
 						int length = this.processor.GetInstructionLength(code);
 						this.instructionAddresses.Add(new CodeAddress(address-this.MemoryStart, length, 0));
