@@ -170,6 +170,77 @@ namespace Epsitec.App.Dolphin.Components
 		}
 
 
+		public static string BankSearch(int address)
+		{
+			//	Retourne la banque à utiliser pour une adresse donnée.
+			if (address >= Memory.RamBase && address < Memory.RamBase+Memory.RamLength)
+			{
+				return "M";
+			}
+
+			if (address >= Memory.RomBase && address < Memory.RomBase+Memory.RomLength)
+			{
+				return "R";
+			}
+
+			if (address >= Memory.PeriphBase && address < Memory.PeriphBase+Memory.PeriphLength)
+			{
+				return "P";
+			}
+			
+			if (address >= Memory.DisplayBase && address < Memory.DisplayBase+Memory.DisplayLength)
+			{
+				return "D";
+			}
+			
+			return null;
+		}
+
+		public static int BankStart(string bank)
+		{
+			//	Retourne le début d'une banque.
+			switch (bank)
+			{
+				case "M":
+					return Memory.RamBase;
+
+				case "R":
+					return Memory.RomBase;
+
+				case "P":
+					return Memory.PeriphBase;
+
+				case "D":
+					return Memory.DisplayBase;
+
+				default:
+					return 0;
+			}
+		}
+
+		public static int BankLength(string bank)
+		{
+			//	Retourne la longueur d'une banque.
+			switch (bank)
+			{
+				case "M":
+					return Memory.RamLength;
+
+				case "R":
+					return Memory.RomLength;
+
+				case "P":
+					return Memory.PeriphLength;
+
+				case "D":
+					return Memory.DisplayLength;
+
+				default:
+					return 0;
+			}
+		}
+
+
 		public bool IsReadOnly(int address)
 		{
 			//	Indique si l'adresse ne permet pas l'écriture.

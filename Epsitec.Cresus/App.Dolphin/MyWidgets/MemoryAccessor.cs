@@ -143,7 +143,7 @@ namespace Epsitec.App.Dolphin.MyWidgets
 
 					if (this.followPC && (this.markPC < this.MemoryStart+this.firstAddress || this.markPC >= this.MemoryStart+this.firstAddress+this.fields.Count))
 					{
-						string newBank = this.MemoryBank(this.markPC);
+						string newBank = Components.Memory.BankSearch(this.markPC);
 						if (this.bank == newBank)
 						{
 							this.FirstAddress = this.markPC - this.MemoryStart;
@@ -273,83 +273,19 @@ namespace Epsitec.App.Dolphin.MyWidgets
 		}
 
 
-		protected string MemoryBank(int address)
+		protected int MemoryStart
 		{
-			//	Retourne la banque à utiliser pour une adresse donnée.
-			if (address >= Components.Memory.RamBase && address < Components.Memory.RamBase+Components.Memory.RamLength)
+			get
 			{
-				return "M";
+				return Components.Memory.BankStart(this.bank);
 			}
-
-			if (address >= Components.Memory.RomBase && address < Components.Memory.RomBase+Components.Memory.RomLength)
-			{
-				return "R";
-			}
-
-			if (address >= Components.Memory.PeriphBase && address < Components.Memory.PeriphBase+Components.Memory.PeriphLength)
-			{
-				return "P";
-			}
-			
-			if (address >= Components.Memory.DisplayBase && address < Components.Memory.DisplayBase+Components.Memory.DisplayLength)
-			{
-				return "D";
-			}
-			
-			return null;
 		}
 
 		protected int MemoryLength
 		{
 			get
 			{
-				if (this.bank == "M")
-				{
-					return Components.Memory.RamLength;
-				}
-				else if (this.bank == "R")
-				{
-					return Components.Memory.RomLength;
-				}
-				else if (this.bank == "P")
-				{
-					return Components.Memory.PeriphLength;
-				}
-				else if (this.bank == "D")
-				{
-					return Components.Memory.DisplayLength;
-				}
-				else
-				{
-					return this.memory.Length;
-				}
-			}
-		}
-
-		protected int MemoryStart
-		{
-			get
-			{
-				if (this.bank == "M")
-				{
-					return Components.Memory.RamBase;
-				}
-				else if (this.bank == "R")
-				{
-					return Components.Memory.RomBase;
-				}
-				else if (this.bank == "P")
-				{
-					return Components.Memory.PeriphBase;
-				}
-				else if (this.bank == "D")
-				{
-					return Components.Memory.DisplayBase;
-				}
-				else
-				{
-					return 0;
-				}
+				return Components.Memory.BankLength(this.bank);
 			}
 		}
 
