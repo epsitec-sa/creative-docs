@@ -24,6 +24,8 @@ namespace Epsitec.App.Dolphin.MyWidgets
 			this.panel.Dock = DockStyle.Fill;
 
 			this.fields = new List<MyWidgets.TextFieldHexa>();
+
+			this.followPC = true;
 		}
 
 		public MemoryAccessor(Widget embedder) : this()
@@ -64,6 +66,18 @@ namespace Epsitec.App.Dolphin.MyWidgets
 				this.UpdateScroller();
 				this.UpdateData();
 				this.UpdateMarkPC();
+			}
+		}
+
+		public bool FollowPC
+		{
+			get
+			{
+				return this.followPC;
+			}
+			set
+			{
+				this.followPC = value;
 			}
 		}
 
@@ -108,6 +122,12 @@ namespace Epsitec.App.Dolphin.MyWidgets
 			}
 		}
 
+		public void DirtyMarkPC()
+		{
+			//	Force le prochain MarkPC à faire son travail.
+			this.markPC = -1;
+		}
+
 		public int MarkPC
 		{
 			//	Indique l'adresse pointée par le registre PC.
@@ -121,7 +141,7 @@ namespace Epsitec.App.Dolphin.MyWidgets
 				{
 					this.markPC = value;
 
-					if (this.markPC < this.MemoryStart+this.firstAddress || this.markPC >= this.MemoryStart+this.firstAddress+this.fields.Count)
+					if (this.followPC && (this.markPC < this.MemoryStart+this.firstAddress || this.markPC >= this.MemoryStart+this.firstAddress+this.fields.Count))
 					{
 						string newBank = this.MemoryBank(this.markPC);
 						if (this.bank == newBank)
@@ -148,7 +168,7 @@ namespace Epsitec.App.Dolphin.MyWidgets
 					}
 					else
 					{
-						this.UpdateData();
+						//?this.UpdateData();
 						this.UpdateMarkPC();
 					}
 				}
@@ -248,8 +268,7 @@ namespace Epsitec.App.Dolphin.MyWidgets
 					color = Color.FromRgb(1, 0, 0);
 				}
 
-				MyWidgets.TextFieldHexa field = this.fields[i];
-				field.BackColor = color;
+				this.fields[i].BackColor = color;
 			}
 		}
 
@@ -374,6 +393,7 @@ namespace Epsitec.App.Dolphin.MyWidgets
 		protected List<MyWidgets.TextFieldHexa>		fields;
 		protected int								firstAddress;  // relatif dans la banque
 		protected int								markPC;
+		protected bool								followPC;
 		protected bool								ignoreChange;
 	}
 }

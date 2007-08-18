@@ -27,6 +27,7 @@ namespace Epsitec.App.Dolphin.MyWidgets
 			this.instructionAddresses = new List<CodeAddress>();
 
 			this.addressSelected = -1;
+			this.followPC = true;
 		}
 
 		public CodeAccessor(Widget embedder) : this()
@@ -88,6 +89,18 @@ namespace Epsitec.App.Dolphin.MyWidgets
 					this.UpdateScroller();
 					this.UpdateMarkPC();
 				}
+			}
+		}
+
+		public bool FollowPC
+		{
+			get
+			{
+				return this.followPC;
+			}
+			set
+			{
+				this.followPC = value;
 			}
 		}
 
@@ -181,6 +194,12 @@ namespace Epsitec.App.Dolphin.MyWidgets
 			}
 		}
 
+		public void DirtyMarkPC()
+		{
+			//	Force le prochain MarkPC à faire son travail.
+			this.markPC = -1;
+		}
+
 		public int MarkPC
 		{
 			//	Indique l'adresse pointée par le registre PC.
@@ -197,7 +216,7 @@ namespace Epsitec.App.Dolphin.MyWidgets
 					int firstIndex = this.GetInstructionIndex(this.firstAddress);
 					int lastAddress = this.instructionAddresses[firstIndex+this.fields.Count].Address;
 
-					if (this.markPC < this.MemoryStart+this.firstAddress || this.markPC >= this.MemoryStart+lastAddress)
+					if (this.followPC && (this.markPC < this.MemoryStart+this.firstAddress || this.markPC >= this.MemoryStart+lastAddress))
 					{
 						string newBank = this.MemoryBank(this.markPC);
 						if (this.bank == newBank)
@@ -225,7 +244,7 @@ namespace Epsitec.App.Dolphin.MyWidgets
 					}
 					else
 					{
-						this.UpdateTable();
+						//?this.UpdateTable();
 						this.UpdateMarkPC();
 					}
 				}
@@ -819,6 +838,7 @@ namespace Epsitec.App.Dolphin.MyWidgets
 		protected int								markPC;
 		protected int								addressSelected;
 		protected List<CodeAddress>					instructionAddresses;
+		protected bool								followPC;
 		protected bool								ignoreChange;
 	}
 }
