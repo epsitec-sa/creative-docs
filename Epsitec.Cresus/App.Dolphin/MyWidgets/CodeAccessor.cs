@@ -420,22 +420,34 @@ namespace Epsitec.App.Dolphin.MyWidgets
 			}
 
 			this.instructionAddresses.Clear();
-			bool isTable = false;
+			int tableLength = 0;
 
 			int address = this.MemoryStart;
 			while (address < this.MemoryStart+this.MemoryLength)
 			{
 				int code = this.memory.ReadForDebug(address);
+
 				if (code == this.processor.TableInstruction)
 				{
-					isTable = !isTable;
+					this.instructionAddresses.Add(new CodeAddress(address-this.MemoryStart, 2, 0));
+					tableLength = this.memory.ReadForDebug(address+1);
+					address += 2;
 				}
-
-				int length = isTable ? 1 : this.processor.GetInstructionLength(code);
-				int type = (isTable && code != this.processor.TableInstruction) ? 1 : 0;
-
-				this.instructionAddresses.Add(new CodeAddress(address-this.MemoryStart, length, type));
-				address += length;
+				else
+				{
+					if (tableLength > 0)
+					{
+						this.instructionAddresses.Add(new CodeAddress(address-this.MemoryStart, 1, 1));
+						address++;
+						tableLength--;
+					}
+					else
+					{
+						int length = this.processor.GetInstructionLength(code);
+						this.instructionAddresses.Add(new CodeAddress(address-this.MemoryStart, length, 0));
+						address += length;
+					}
+				}
 			}
 		}
 

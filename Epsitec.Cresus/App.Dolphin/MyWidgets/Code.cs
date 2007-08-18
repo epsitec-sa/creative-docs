@@ -152,7 +152,7 @@ namespace Epsitec.App.Dolphin.MyWidgets
 			this.arrowAddress = -1;
 			if (this.isTable)
 			{
-				this.widgetInstruction.Text = this.valueCodes[0].ToString("X2");
+				this.widgetInstruction.Text = string.Concat("BYTE #", this.valueCodes[0].ToString("X2"), "h");
 			}
 			else
 			{
@@ -246,7 +246,8 @@ namespace Epsitec.App.Dolphin.MyWidgets
 			List<int> codes = new List<int>();
 			string err = null;
 
-			if (this.isTable)
+			//?if (this.isTable)
+			if (false)
 			{
 				if (this.widgetInstruction.Text.ToUpper().Trim() == "TABLE")
 				{

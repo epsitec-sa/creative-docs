@@ -120,7 +120,7 @@ namespace Epsitec.App.Dolphin.Components
 
 			CompAR = 0xF8,		// COMP ADDR,r
 
-			Table  = 0xFF,		// début/fin de table
+			Table  = 0xFF,		// TABLE #val
 		}
 
 
@@ -207,7 +207,6 @@ namespace Epsitec.App.Dolphin.Components
 			switch ((Instructions) op)
 			{
 				case Instructions.Nop:
-				case Instructions.Table:
 					return;
 
 				case Instructions.Call:
@@ -259,6 +258,10 @@ namespace Epsitec.App.Dolphin.Components
 
 				case Instructions.SwapB:
 					this.registerB = ((this.registerB << 4) & 0xF0) | ((this.registerB >> 4) & 0x0F);
+					return;
+
+				case Instructions.Table:
+					this.registerSP++;  // saute #val
 					return;
 			}
 
@@ -1258,7 +1261,7 @@ namespace Epsitec.App.Dolphin.Components
 			1,1,1,1,1,1,1,1, 3,3,3,3,3,3,3,3,  // 0xC0
 			2,2,2,2,2,2,2,2, 4,4,4,4,4,4,4,4,  // 0xD0
 			1,1,1,1,1,1,0,0, 3,3,3,3,3,3,0,0,  // 0xE0
-			3,3,3,3,3,3,0,0, 3,3,3,3,0,0,0,1,  // 0xF0
+			3,3,3,3,3,3,0,0, 3,3,3,3,0,0,0,2,  // 0xF0
 		};
 
 		public override string DessassemblyInstruction(List<int> codes, int pc, out int address)
@@ -1323,7 +1326,9 @@ namespace Epsitec.App.Dolphin.Components
 					return "SWAP B";
 
 				case Instructions.Table:
-					return "TABLE";
+					builder.Append("TABLE ");
+					TinyProcessor.PutCodeValue(builder, codes[1]);
+					return builder.ToString();
 			}
 
 			if (op >= (int) Instructions.PushR && op < (int) Instructions.PushR+4)  // PUSH
@@ -2168,13 +2173,25 @@ namespace Epsitec.App.Dolphin.Components
 					break;
 
 				case "TABLE":
-					if (words.Length == 1)
+					if (words.Length == 2 && v1 != -1)
 					{
 						codes.Add((int) Instructions.Table);
+						codes.Add(v1);
 					}
 					else
 					{
-						return "<b>L'instuction TABLE n'a aucun argument.</b>";
+						return TinyProcessor.GetCodeError("TABLE doit être suivi d'une valeur immédiate correspondant au nombre de BYTE contenus dans la table.", "TABLE", "v");
+					}
+					break;
+
+				case "BYTE":
+					if (words.Length == 2 && v1 != -1)
+					{
+						codes.Add(v1);
+					}
+					else
+					{
+						return TinyProcessor.GetCodeError("BYTE doit être suivi d'une valeur immédiate correspondant au byte contenu dans la table.", "BYTE", "v");
 					}
 					break;
 
@@ -2784,7 +2801,7 @@ namespace Epsitec.App.Dolphin.Components
 					break;
 
 				default:
-					return "<b>Instruction inconnue.</b><br/><br/>Les instructions connues sont :<br/><list type=\"fix\"/>JUMP, CALL, RET, PUSH, POP<br/><list type=\"fix\"/>MOVE, COMP, ADD, SUB, AND, OR, XOR<br/><list type=\"fix\"/>CLR, NOT, INC, DEC, RL, RR, RLC, RRC<br/><list type=\"fix\"/>TEST, TSET, TCLR, TNOT<br/><list type=\"fix\"/>NOP, CLRC, SETC, EX, SWAP, TABLE, HALT<br/> ";
+					return "<b>Instruction inconnue.</b><br/><br/>Les instructions connues sont :<br/><list type=\"fix\"/>JUMP, CALL, RET, PUSH, POP<br/><list type=\"fix\"/>MOVE, COMP, ADD, SUB, AND, OR, XOR<br/><list type=\"fix\"/>CLR, NOT, INC, DEC, RL, RR, RLC, RRC<br/><list type=\"fix\"/>TEST, TSET, TCLR, TNOT<br/><list type=\"fix\"/>NOP, CLRC, SETC, EX, SWAP, HALT<br/><list type=\"fix\"/>TABLE, BYTE<br/> ";
 			}
 
 			return null;  // ok
@@ -3001,6 +3018,13 @@ namespace Epsitec.App.Dolphin.Components
 							builder.Append(instruction);
 							builder.Append(" <i>ADDR</i><br/>");
 							a = true;
+							break;
+
+						case "v":
+							builder.Append("<list type=\"fix\"/>");
+							builder.Append(instruction);
+							builder.Append(" <i>#val</i><br/>");
+							v = true;
 							break;
 
 						case "rr":
@@ -3478,7 +3502,7 @@ namespace Epsitec.App.Dolphin.Components
 														// LOOP:
 			(byte) Instructions.MoveAR+0, 0x40, 1,		// MOVE {SP}+1,A
 			(byte) Instructions.AndSA+0, 0x2C, 0x80,	// AND A,C80+{Y}
-			(byte) Instructions.MoveAR+0, 0x1B, 0x01,	// MOVE CharTable+{X},A
+			(byte) Instructions.MoveAR+0, 0x1B, 0x02,	// MOVE CharTable+{X},A
 			(byte) Instructions.AndAS+0, 0x40, 0,		// AND {SP}+0,A
 			(byte) Instructions.TestVA, 0, 0x40, 2,		// TEST {SP}+2:#0
 			(byte) Instructions.JumpNE, 0x80, 1,		// JUMP,NE +1
@@ -3500,7 +3524,7 @@ namespace Epsitec.App.Dolphin.Components
 
 		protected static byte[] CharTable =
 		{
-			(byte) Instructions.Table,
+			(byte) Instructions.Table, 32*5,
 			0x04, 0x04, 0x04, 0x00, 0x04,	//  !
 			0xA4, 0xAE, 0x04, 0x0E, 0x04,	// "#
 			0x6A, 0xC2, 0x44, 0x68, 0xCA,	// $%
@@ -3533,7 +3557,6 @@ namespace Epsitec.App.Dolphin.Components
 			0xEC, 0x28, 0x48, 0x88, 0xEC,	// Z[
 			0x86, 0x82, 0x42, 0x22, 0x26,	// \]
 			0x40, 0xA0, 0x00, 0x00, 0x0E,	// ^_
-			(byte) Instructions.Table,
 		};
 		#endregion
 
