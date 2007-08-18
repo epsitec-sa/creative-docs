@@ -48,6 +48,7 @@ namespace Epsitec.App.Dolphin.MyWidgets
 		public int BaseAddress
 		{
 			//	Retourne l'adresse de base liée à cette ligne.
+			//	Retourne -1 s'il n'y en a pas.
 			get
 			{
 				foreach (Address address in this.addresses)
@@ -66,6 +67,7 @@ namespace Epsitec.App.Dolphin.MyWidgets
 
 		public void HiliteBaseAddress(int baseAddress)
 		{
+			//	Met en évidence les fragments de flèches utilisant une adresse de base donnée.
 			bool changed = false;
 
 			for (int i=0; i<this.addresses.Count; i++)

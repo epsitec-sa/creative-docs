@@ -187,6 +187,7 @@ namespace Epsitec.App.Dolphin.MyWidgets
 
 		public int Address
 		{
+			//	Adresse source, là où part la flèche.
 			get
 			{
 				return this.valueAddress;
@@ -195,6 +196,7 @@ namespace Epsitec.App.Dolphin.MyWidgets
 
 		public int ArrowAddress
 		{
+			//	Adresse de destination, là où arrive la flèche.
 			get
 			{
 				return this.arrowAddress;

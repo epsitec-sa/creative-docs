@@ -3260,7 +3260,7 @@ namespace Epsitec.App.Dolphin.Components
 
 			(byte) Instructions.AndVR+0, 0x0F,			// AND #0F,A
 			(byte) Instructions.MoveRR+0x2,				// MOVE A,X
-			(byte) Instructions.MoveAR+0, 0x90, 0x0B,	// MOVE R8^TABLE+{X},A
+			(byte) Instructions.MoveAR+0, 0x90, 0x0C,	// MOVE R8^TABLE+{X},A
 
 			(byte) Instructions.AndVR+1, 0x03,			// AND #03,B
 			(byte) Instructions.MoveRR+0x6,				// MOVE B,X
@@ -3271,9 +3271,8 @@ namespace Epsitec.App.Dolphin.Components
 			(byte) Instructions.PopR+0,					// POP A
 			(byte) Instructions.Ret,					// RET
 														// TABLE:
-			(byte) Instructions.Table,
+			(byte) Instructions.Table, 16,
 			0x3F, 0x03, 0x6D, 0x67, 0x53, 0x76, 0x7E, 0x23, 0x7F, 0x77, 0x7B, 0x5E, 0x3C, 0x4F, 0x7C, 0x78,
-			(byte) Instructions.Table,
 		};
 
 		//	Affiche un byte hexadécimal sur deux digits.

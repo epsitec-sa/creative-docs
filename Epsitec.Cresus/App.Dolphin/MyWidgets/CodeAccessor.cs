@@ -604,7 +604,7 @@ namespace Epsitec.App.Dolphin.MyWidgets
 
 		protected void HiliteBaseAddress(int baseAddress)
 		{
-			//	Met en évidence une flèche qui part d'une adresse donnée.
+			//	Met en évidence une flèche qui part d'une adresse de base donnée.
 			foreach (MyWidgets.Code code in this.fields)
 			{
 				code.CodeAddress.HiliteBaseAddress(baseAddress);
@@ -735,6 +735,7 @@ namespace Epsitec.App.Dolphin.MyWidgets
 		private void HandleCodeAddressClicked(object sender)
 		{
 			Code code = sender as Code;
+			this.FirstAddress = code.ArrowAddress-this.MemoryStart;
 		}
 
 
