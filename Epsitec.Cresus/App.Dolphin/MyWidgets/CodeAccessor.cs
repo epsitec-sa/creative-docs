@@ -735,7 +735,11 @@ namespace Epsitec.App.Dolphin.MyWidgets
 		private void HandleCodeAddressClicked(object sender)
 		{
 			Code code = sender as Code;
-			this.FirstAddress = code.ArrowAddress-this.MemoryStart;
+			int address = code.ArrowAddress;
+			if (this.memory.IsRam(address) || this.memory.IsRom(address))
+			{
+				this.FirstAddress = address-this.MemoryStart;
+			}
 		}
 
 
