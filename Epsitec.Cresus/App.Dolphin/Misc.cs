@@ -12,6 +12,111 @@ namespace Epsitec.App.Dolphin
 	/// </summary>
 	public class Misc
 	{
+		static public string Balast(string text)
+		{
+			//	Retourne tout le balast présent au début d'une ligne.
+			int index = 0;
+			while (true)
+			{
+				int i;
+
+				i = text.IndexOf(" ", index);
+				if (i == index)
+				{
+					index = i+1;
+					continue;
+				}
+
+				i = text.IndexOf(",", index);
+				if (i == index)
+				{
+					index = i+1;
+					continue;
+				}
+
+				i = text.IndexOf(":", index);
+				if (i == index)
+				{
+					index = i+1;
+					continue;
+				}
+
+				i = text.IndexOf("<tab/>", index);
+				if (i == index)
+				{
+					index = i+6;
+					continue;
+				}
+
+				break;
+			}
+
+			return text.Substring(0, index);
+		}
+
+		static public int LineIndex(string text, int lineRank)
+		{
+			//	Cherche l'index de la nième ligne d'un texte.
+			if (lineRank == 0)
+			{
+				return 0;
+			}
+
+			int startIndex = 0;
+			while (true)
+			{
+				int index = text.IndexOf("<br/>", startIndex);
+				if (index == -1)
+				{
+					return text.Length;
+				}
+				startIndex = index+5;
+
+				if (--lineRank == 0)
+				{
+					return startIndex;
+				}
+			}
+		}
+
+		static public string FirstLine(string err)
+		{
+			//	Retourne la première ligne d'un texte.
+			int index = err.IndexOf("<br/>");
+			if (index == -1)
+			{
+				return err;
+			}
+			else
+			{
+				return err.Substring(0, index);
+			}
+		}
+
+		static public string RemoveTags(string text)
+		{
+			//	Supprime tous les tags xml <...> dans un texte.
+			while (true)
+			{
+				int start = text.IndexOf("<");
+				if (start == -1)
+				{
+					break;
+				}
+
+				int end = text.IndexOf(">", start);
+				if (end == -1)
+				{
+					break;
+				}
+
+				text = text.Remove(start, end-start+1);
+			}
+
+			return text;
+		}
+
+
 		static public int ParseHexa(string hexa)
 		{
 			//	Analyse une chaîne hexadécimale et retourne sa valeur.
