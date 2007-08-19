@@ -133,6 +133,11 @@ namespace Epsitec.App.Dolphin.Components
 			//	Rempli la Rom.
 		}
 
+		public virtual void RomSymbols(int address, Dictionary<string, int> symbols)
+		{
+			//	Défini les symboles de la Rom.
+		}
+
 
 		public virtual List<string> HelpChapters
 		{

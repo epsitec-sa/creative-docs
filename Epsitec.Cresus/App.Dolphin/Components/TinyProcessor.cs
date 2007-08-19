@@ -3193,6 +3193,22 @@ namespace Epsitec.App.Dolphin.Components
 			System.Diagnostics.Debug.Assert(address < 0xB00);
 		}
 
+		public override void RomSymbols(int address, Dictionary<string, int> symbols)
+		{
+			//	Défini les symboles de la Rom.
+			symbols.Add("WaitKey", address+=3);
+			symbols.Add("WaitSec", address+=3);
+			symbols.Add("DisplayBinaryDigit", address+=3);
+			symbols.Add("DisplayHexaDigit", address+=3);
+			symbols.Add("DisplayHexaByte", address+=3);
+			symbols.Add("DisplayDecimal", address+=3);
+			symbols.Add("SetPixel", address+=3);
+			symbols.Add("ClrPixel", address+=3);
+			symbols.Add("NotPixel", address+=3);
+			symbols.Add("ClearScreen", address+=3);
+			symbols.Add("DrawChar", address+=3);
+		}
+
 		protected void RomWrite(ref int indirect, ref int address, byte[] code)
 		{
 			this.memory.WriteRom(indirect++, (byte) Instructions.Jump);
