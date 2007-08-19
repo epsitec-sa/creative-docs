@@ -119,6 +119,19 @@ namespace Epsitec.App.Dolphin.Components
 			return "NOP";
 		}
 
+		public virtual void AssemblySplitAddr(string addr, out string text, out int mode)
+		{
+			//	Extrait les modes d'adressage spéciaux d'une adresse.
+			text = addr;
+			mode = 0;
+		}
+
+		public virtual string AssemblyCombineAddr(string text, int mode)
+		{
+			//	Combine les modes d'adressage spéciaux d'une adresse.
+			return text;
+		}
+
 		public virtual string AssemblyPreprocess(string instruction)
 		{
 			//	Pré-traitement avant AssemblyInstruction.

@@ -291,15 +291,21 @@ namespace Epsitec.App.Dolphin
 					}
 					else  // ADDR ?
 					{
-						int value = this.Expression(word, pass, true, variables, out err);
+						string text;
+						int mode;
+						this.processor.AssemblySplitAddr(word, out text, out mode);
+
+						int value = this.Expression(text, pass, true, variables, out err);
 						if (err == null)
 						{
-							word = string.Concat("H'", value.ToString("X3"));
+							text = string.Concat("H'", value.ToString("X3"));
 						}
 						else
 						{
 							return null;
 						}
+
+						word = this.processor.AssemblyCombineAddr(text, mode);
 					}
 
 					words[i] = word;

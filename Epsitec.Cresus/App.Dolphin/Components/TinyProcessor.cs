@@ -2078,6 +2078,87 @@ namespace Epsitec.App.Dolphin.Components
 			return arrowAddress;
 		}
 
+
+		public override void AssemblySplitAddr(string addr, out string text, out int mode)
+		{
+			//	Extrait les modes d'adressage spéciaux d'une adresse.
+			mode = 0;
+
+			if (addr.StartsWith("{PC}+"))
+			{
+				addr = addr.Substring(5);  // enlève {PC}+
+				mode |= 1;
+			}
+
+			if (addr.StartsWith("{PC}-"))
+			{
+				addr = addr.Substring(5);  // enlève {PC}-
+				mode |= 2;
+			}
+
+			if (addr.StartsWith("{SP}+"))
+			{
+				addr = addr.Substring(5);  // enlève {SP}+
+				mode |= 4;
+			}
+
+			if (addr.StartsWith("{SP}-"))
+			{
+				addr = addr.Substring(5);  // enlève {SP}-
+				mode |= 8;
+			}
+
+			if (addr.EndsWith("+{X}"))
+			{
+				addr = addr.Substring(0, addr.Length-4);  // enlève +{X}
+				mode |= 16;
+			}
+
+			if (addr.EndsWith("+{Y}"))
+			{
+				addr = addr.Substring(0, addr.Length-4);  // enlève +{Y}
+				mode |= 32;
+			}
+
+			text = addr;
+		}
+
+		public override string AssemblyCombineAddr(string text, int mode)
+		{
+			//	Combine les modes d'adressage spéciaux d'une adresse.
+			if ((mode & 1) != 0)
+			{
+				text = "{PC}+" + text;
+			}
+
+			if ((mode & 2) != 0)
+			{
+				text = "{PC}-" + text;
+			}
+
+			if ((mode & 4) != 0)
+			{
+				text = "{SP}+" + text;
+			}
+
+			if ((mode & 8) != 0)
+			{
+				text = "{SP}-" + text;
+			}
+
+			if ((mode & 16) != 0)
+			{
+				text = text + "+{X}";
+			}
+
+			if ((mode & 32) != 0)
+			{
+				text = text + "+{Y}";
+			}
+
+			return text;
+		}
+
 		public override string AssemblyPreprocess(string instruction)
 		{
 			//	Pré-traitement avant AssemblyInstruction.
