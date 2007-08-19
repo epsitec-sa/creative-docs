@@ -2082,15 +2082,54 @@ namespace Epsitec.App.Dolphin.Components
 			return arrowAddress;
 		}
 
+		public override string AssemblyPreprocess(string instruction)
+		{
+			//	Pré-traitement avant AssemblyInstruction.
+			//	En retour, tout est en majuscule avec un espace pour séparer les arguments.
+			//	Remplace un "JUMP,EQ TOTO" par un "JUMPEQ TOTO".
+			//	Remplace un "TSET A:#2" oar un "TSET #2 A".
+			instruction = instruction.ToUpper().Trim();
+			string[] seps = {" ", ",", ":", "<TAB/>"};
+			string[] words = instruction.Split(seps, System.StringSplitOptions.RemoveEmptyEntries);
+
+			if (words.Length == 3 && words[0] == "JUMP")
+			{
+				if (words[1] == "EQ" || words[1] == "NE" ||
+					words[1] == "LO" || words[1] == "LS" ||
+					words[1] == "HI" || words[1] == "HS" ||
+					words[1] == "CC" || words[1] == "CS" ||
+					words[1] == "NC" || words[1] == "NS")
+				{
+					words[0] = words[0] + words[1];
+					words[1] = null;
+				}
+			}
+
+			if (words.Length == 3 && instruction.IndexOf(":") != -1)  // deux arguments et instruction de bit ?
+			{
+				string t = words[1];
+				words[1] = words[2];
+				words[2] = t;
+			}
+			System.Text.StringBuilder builder = new System.Text.StringBuilder();
+			foreach (string word in words)
+			{
+				if (word != null)
+				{
+					builder.Append(word);
+					builder.Append(" ");
+				}
+			}
+			return builder.ToString();
+		}
+
 		public override string AssemblyInstruction(string instruction, List<int> codes)
 		{
 			//	Assemble les codes d'une instruction et retourne une éventuelle erreur.
 			codes.Clear();
-			instruction = instruction.ToUpper().Trim();
 
-			string[] seps = {" ", ",", ":", "<TAB/>"};
+			string[] seps = {" "};
 			string[] words = instruction.Split(seps, System.StringSplitOptions.RemoveEmptyEntries);
-
 			int r1=-1, r2=-1, v1=-1, v2=-1, mh1=-1, ll1=-1, mh2=-1, ll2=-1;
 
 			if (words.Length == 0)
@@ -2110,14 +2149,6 @@ namespace Epsitec.App.Dolphin.Components
 				TinyProcessor.GetCodeRegister(words[2], out r2);
 				TinyProcessor.GetCodeValue(words[2], out v2);
 				TinyProcessor.GetCodeAddress(words[2], out mh2, out ll2);
-
-				if (instruction.IndexOf(":") != -1)  // instruction de bit ? (TODO: faire mieux)
-				{
-					Misc.Swap(ref r1, ref r2);
-					Misc.Swap(ref v1, ref v2);
-					Misc.Swap(ref mh1, ref mh2);
-					Misc.Swap(ref ll1, ref ll2);
-				}
 			}
 
 			switch (words[0])
@@ -2242,56 +2273,135 @@ namespace Epsitec.App.Dolphin.Components
 						codes.Add(mh1);
 						codes.Add(ll1);
 					}
-					else if (words.Length == 3 && mh2 != -1 && ll2 != -1)
+					else
 					{
-						switch (words[1])
-						{
-							case "EQ":
-								codes.Add((int) Instructions.JumpEQ);
-								break;
+						return TinyProcessor.GetCodeError("JUMP doit être suivi d'une adresse.", "JUMP", "a");
+					}
+					break;
 
-							case "NE":
-								codes.Add((int) Instructions.JumpNE);
-								break;
+				case "JUMPEQ":
+					if (words.Length == 2 && mh1 != -1 && ll1 != -1)
+					{
+						codes.Add((int) Instructions.JumpEQ);
+						codes.Add(mh1);
+						codes.Add(ll1);
+					}
+					else
+					{
+						return TinyProcessor.GetCodeError("JUMP doit être suivi d'une adresse.", "JUMP", "a");
+					}
+					break;
 
-							case "LO":
-								codes.Add((int) Instructions.JumpLO);
-								break;
+				case "JUMPNE":
+					if (words.Length == 2 && mh1 != -1 && ll1 != -1)
+					{
+						codes.Add((int) Instructions.JumpNE);
+						codes.Add(mh1);
+						codes.Add(ll1);
+					}
+					else
+					{
+						return TinyProcessor.GetCodeError("JUMP doit être suivi d'une adresse.", "JUMP", "a");
+					}
+					break;
 
-							case "LS":
-								codes.Add((int) Instructions.JumpLS);
-								break;
+				case "JUMPLO":
+					if (words.Length == 2 && mh1 != -1 && ll1 != -1)
+					{
+						codes.Add((int) Instructions.JumpLO);
+						codes.Add(mh1);
+						codes.Add(ll1);
+					}
+					else
+					{
+						return TinyProcessor.GetCodeError("JUMP doit être suivi d'une adresse.", "JUMP", "a");
+					}
+					break;
 
-							case "HI":
-								codes.Add((int) Instructions.JumpHI);
-								break;
+				case "JUMPLS":
+					if (words.Length == 2 && mh1 != -1 && ll1 != -1)
+					{
+						codes.Add((int) Instructions.JumpLS);
+						codes.Add(mh1);
+						codes.Add(ll1);
+					}
+					else
+					{
+						return TinyProcessor.GetCodeError("JUMP doit être suivi d'une adresse.", "JUMP", "a");
+					}
+					break;
 
-							case "HS":
-								codes.Add((int) Instructions.JumpHS);
-								break;
+				case "JUMPHI":
+					if (words.Length == 2 && mh1 != -1 && ll1 != -1)
+					{
+						codes.Add((int) Instructions.JumpHI);
+						codes.Add(mh1);
+						codes.Add(ll1);
+					}
+					else
+					{
+						return TinyProcessor.GetCodeError("JUMP doit être suivi d'une adresse.", "JUMP", "a");
+					}
+					break;
 
-							case "CC":
-								codes.Add((int) Instructions.JumpCC);
-								break;
+				case "JUMPHS":
+					if (words.Length == 2 && mh1 != -1 && ll1 != -1)
+					{
+						codes.Add((int) Instructions.JumpHS);
+						codes.Add(mh1);
+						codes.Add(ll1);
+					}
+					else
+					{
+						return TinyProcessor.GetCodeError("JUMP doit être suivi d'une adresse.", "JUMP", "a");
+					}
+					break;
 
-							case "CS":
-								codes.Add((int) Instructions.JumpCS);
-								break;
+				case "JUMPCC":
+					if (words.Length == 2 && mh1 != -1 && ll1 != -1)
+					{
+						codes.Add((int) Instructions.JumpCC);
+						codes.Add(mh1);
+						codes.Add(ll1);
+					}
+					else
+					{
+						return TinyProcessor.GetCodeError("JUMP doit être suivi d'une adresse.", "JUMP", "a");
+					}
+					break;
 
-							case "NC":
-								codes.Add((int) Instructions.JumpNC);
-								break;
+				case "JUMPCS":
+					if (words.Length == 2 && mh1 != -1 && ll1 != -1)
+					{
+						codes.Add((int) Instructions.JumpCS);
+						codes.Add(mh1);
+						codes.Add(ll1);
+					}
+					else
+					{
+						return TinyProcessor.GetCodeError("JUMP doit être suivi d'une adresse.", "JUMP", "a");
+					}
+					break;
 
-							case "NS":
-								codes.Add((int) Instructions.JumpNS);
-								break;
+				case "JUMPNC":
+					if (words.Length == 2 && mh1 != -1 && ll1 != -1)
+					{
+						codes.Add((int) Instructions.JumpNC);
+						codes.Add(mh1);
+						codes.Add(ll1);
+					}
+					else
+					{
+						return TinyProcessor.GetCodeError("JUMP doit être suivi d'une adresse.", "JUMP", "a");
+					}
+					break;
 
-							default:
-								return "<b>La condition est fausse.</b><br/><br/>Les conditions possibles sont :<br/><list type=\"fix\"/>EQ, NE<br/><list type=\"fix\"/>LO, LS, HI, HS<br/><list type=\"fix\"/>CC, CS, NC, NS<br/> ";
-						}
-
-						codes.Add(mh2);
-						codes.Add(ll2);
+				case "JUMPNS":
+					if (words.Length == 2 && mh1 != -1 && ll1 != -1)
+					{
+						codes.Add((int) Instructions.JumpNS);
+						codes.Add(mh1);
+						codes.Add(ll1);
 					}
 					else
 					{

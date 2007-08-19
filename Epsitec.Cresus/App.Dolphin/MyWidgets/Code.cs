@@ -253,7 +253,8 @@ namespace Epsitec.App.Dolphin.MyWidgets
 			field.AcceptEdition();
 
 			List<int> codes = new List<int>();
-			string err = this.processor.AssemblyInstruction(this.widgetInstruction.Text, codes);
+			string instruction = this.processor.AssemblyPreprocess(this.widgetInstruction.Text);
+			string err = this.processor.AssemblyInstruction(instruction, codes);
 
 			if (codes.Count == 0 || !string.IsNullOrEmpty(err))
 			{

@@ -119,6 +119,13 @@ namespace Epsitec.App.Dolphin.Components
 			return "NOP";
 		}
 
+		public virtual string AssemblyPreprocess(string instruction)
+		{
+			//	Pré-traitement avant AssemblyInstruction.
+			//	En retour, tout est en majuscule avec un espace pour séparer les arguments.
+			return instruction.ToUpper().Trim();
+		}
+
 		public virtual string AssemblyInstruction(string instruction, List<int> codes)
 		{
 			//	Assemble les codes d'une instruction et retourne une éventuelle erreur.

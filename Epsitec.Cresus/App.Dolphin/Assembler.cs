@@ -92,56 +92,84 @@ namespace Epsitec.App.Dolphin
 
 			foreach (string line in lines)
 			{
-				string instruction = this.GetInstruction(line, pass, pc, lineCounter, symbols, errorLines, errorTexts);
-				if (instruction != null)
-				{
-					List<int> codes = new List<int>();
-					string err = this.processor.AssemblyInstruction(instruction, codes);
+				string instruction = this.RemoveComment(line);
 
-					if (codes.Count == 0)
+				string err;
+				instruction = this.GetSymbol(instruction, pass, pc, symbols, out err);
+				if (err == null)
+				{
+					if (!string.IsNullOrEmpty(instruction))
 					{
-						if (pass == 1)  // deuxième passe ?
+						instruction = this.processor.AssemblyPreprocess(instruction);
+						instruction = this.GetInstruction(instruction, pass, pc, symbols, out err);
+						if (err == null)
 						{
-							if (!string.IsNullOrEmpty(err))
+							if (!string.IsNullOrEmpty(instruction))
 							{
-								errorLines.Add(lineCounter);
-								errorTexts.Add(Misc.RemoveTags(Misc.FirstLine(err)));
+								List<int> codes = new List<int>();
+								err = this.processor.AssemblyInstruction(instruction, codes);
+
+								if (codes.Count == 0)
+								{
+									if (pass == 1)  // deuxième passe ?
+									{
+										if (!string.IsNullOrEmpty(err))
+										{
+											errorLines.Add(lineCounter);
+											errorTexts.Add(Misc.RemoveTags(Misc.FirstLine(err)));
+										}
+									}
+								}
+								else
+								{
+									if (pass == 0)  // première passe ?
+									{
+										pc += codes.Count;
+									}
+									else  // deuxième passe ?
+									{
+										foreach (int code in codes)
+										{
+											this.memory.Write(pc++, code);
+											byteCounter++;
+										}
+										instructionCounter++;
+									}
+								}
 							}
 						}
-					}
-					else
-					{
-						if (pass == 0)  // première passe ?
+						else
 						{
-							pc += codes.Count;
-						}
-						else  // deuxième passe ?
-						{
-							foreach (int code in codes)
-							{
-								this.memory.Write(pc++, code);
-								byteCounter++;
-							}
-							instructionCounter++;
+							errorLines.Add(lineCounter);
+							errorTexts.Add(Misc.RemoveTags(err));
 						}
 					}
 				}
-
+				else
+				{
+					errorLines.Add(lineCounter);
+					errorTexts.Add(Misc.RemoveTags(err));
+				}
+				
 				lineCounter++;
 			}
 		}
 
-		protected string GetInstruction(string instruction, int pass, int pc, int lineCounter, Dictionary<string, int> symbols, List<int> errorLines, List<string> errorTexts)
+		protected string RemoveComment(string instruction)
 		{
-			//	Prépare une instruction pour l'assemblage.
+			//	Supprime l'éventuel commentaire "; blabla" en fin de ligne.
+			instruction = instruction.ToUpper().Trim();
 			int index = instruction.IndexOf(";");  // commentaire à la fin de la ligne ?
 			if (index != -1)
 			{
 				instruction = instruction.Substring(0, index);  // enlève le commentaire
 			}
+			return instruction;
+		}
 
-			instruction = instruction.ToUpper().Trim();
-
+		protected string GetSymbol(string instruction, int pass, int pc, Dictionary<string, int> symbols, out string err)
+		{
+			//	Prépare une instruction pour l'assemblage.
 			//	Gère les définitions de symboles, du genre "TOTO = 12*TITI".
 			string[] defs = instruction.Split('=');
 			if (defs.Length == 2)  // symbol = value ?
@@ -152,89 +180,82 @@ namespace Epsitec.App.Dolphin
 
 					if (this.IsRegister(symbol))
 					{
-						errorLines.Add(lineCounter);
-						errorTexts.Add("Il n'est pas possible d'utiliser un nom de registre.");
+						err = "Il n'est pas possible d'utiliser un nom de registre.";
 					}
 					else if (!this.IsSymbol(symbol))
 					{
-						errorLines.Add(lineCounter);
-						errorTexts.Add("Nom de symbol incorrect.");
+						err = "Nom de symbol incorrect.";
 					}
 					else if (symbols.ContainsKey(symbol))
 					{
-						errorLines.Add(lineCounter);
-						errorTexts.Add("Symbol déjà défini.");
+						err = "Symbol déjà défini.";
 					}
 					else
 					{
-						string err;
 						int value = this.Expression(defs[1].Trim(), pass, pc, symbols, out err);
 						if (err == null)
 						{
 							symbols.Add(symbol, value);
 						}
-						else
-						{
-							errorLines.Add(lineCounter);
-							errorTexts.Add(err);
-						}
 					}
+				}
+				else  // deuxième passe ?
+				{
+					err = null;
 				}
 				return null;  // ce n'est pas une instruction
 			}
 
 			//	Gère les définitions d'étiquettes, du genre "LOOP: MOVE A,B".
-			index = instruction.IndexOf(":");
+			int index = instruction.IndexOf(":");
 			if (index != -1)
 			{
-				string[] labels = instruction.Split(':');
-				if (labels[0].IndexOf(' ') == -1)  // label en début de ligne (et pas "TSET A:#2") ?
+				string label = instruction.Substring(0, index).Trim();
+				if (!string.IsNullOrEmpty(label))
 				{
 					if (pass == 0)  // première passe ?
 					{
-						string name = labels[0];
-
-						if (this.IsRegister(name))
+						if (this.IsRegister(label))
 						{
-							errorLines.Add(lineCounter);
-							errorTexts.Add("Il n'est pas possible d'utiliser un nom de registre.");
+							err = "Il n'est pas possible d'utiliser un nom de registre.";
 							return null;
 						}
-						else if (!this.IsSymbol(name))
+						else if (!this.IsSymbol(label))
 						{
-							errorLines.Add(lineCounter);
-							errorTexts.Add("Nom d'étiquette incorrect.");
+							err = "Nom d'étiquette incorrect.";
+							return null;
 						}
-						else if (symbols.ContainsKey(name))
+						else if (symbols.ContainsKey(label))
 						{
-							errorLines.Add(lineCounter);
-							errorTexts.Add("Etiquette déjà définie.");
+							err = "Etiquette déjà définie.";
 							return null;
 						}
 						else
 						{
-							symbols.Add(name, pc);
+							symbols.Add(label, pc);
 						}
 					}
 
-					instruction = instruction.Substring(index+1);  // enlève le label: au début
+					instruction = instruction.Substring(index+1);  // enlève le "label:" au début
 				}
 			}
 
+			err = null;
+			return instruction;
+		}
+
+		protected string GetInstruction(string instruction, int pass, int pc, Dictionary<string, int> symbols, out string err)
+		{
+			//	Prépare une instruction pour l'assemblage.
+			//	Gère les définitions de symboles, du genre "TOTO = 12*TITI".
 			//	Effectue les substitutions dans les arguments.
-			string[] seps = { " ", ",", ":", "<TAB/>" };
+			string[] seps = {" "};
 			string[] words = instruction.Split(seps, System.StringSplitOptions.RemoveEmptyEntries);
 
 			if (words.Length == 0)
 			{
+				err = null;
 				return null;
-			}
-
-			if (words.Length == 3 && instruction.IndexOf(':') != -1)  // instruction du type "TSET A:#2" ?
-			{
-				string t = words[1];
-				words[1] = words[2];  // permute ("TSET A:#2" devient "TSET #2 A")
-				words[2] = t;
 			}
 
 			if (words.Length >= 2)
@@ -242,7 +263,10 @@ namespace Epsitec.App.Dolphin
 				for (int i=1; i<words.Length; i++)  // passe en revue les arguments
 				{
 					string word = words[i];
-					string err;
+					if (string.IsNullOrEmpty(word))
+					{
+						continue;
+					}
 
 					if (this.IsRegister(word))  // r ?
 					{
@@ -253,12 +277,10 @@ namespace Epsitec.App.Dolphin
 						int value = this.Expression(word.Substring(1), pass, pc, symbols, out err);
 						if (err == null)
 						{
-							word = string.Concat("#", value.ToString("X3"), "h");
+							word = string.Concat("#", value.ToString("X3"), "H");
 						}
 						else
 						{
-							errorLines.Add(lineCounter);
-							errorTexts.Add(err);
 							return null;
 						}
 					}
@@ -267,12 +289,10 @@ namespace Epsitec.App.Dolphin
 						int value = this.Expression(word, pass, pc, symbols, out err);
 						if (err == null)
 						{
-							word = string.Concat(value.ToString("X3"), "h");
+							word = string.Concat(value.ToString("X3"), "H");
 						}
 						else
 						{
-							errorLines.Add(lineCounter);
-							errorTexts.Add(err);
 							return null;
 						}
 					}
@@ -281,11 +301,16 @@ namespace Epsitec.App.Dolphin
 				}
 			}
 
+			err = null;  // ok
+
 			System.Text.StringBuilder builder = new System.Text.StringBuilder();
 			foreach (string word in words)
 			{
-				builder.Append(word);
-				builder.Append(" ");
+				if (!string.IsNullOrEmpty(word))
+				{
+					builder.Append(word);
+					builder.Append(" ");
+				}
 			}
 			return builder.ToString();
 		}
