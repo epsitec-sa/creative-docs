@@ -62,19 +62,22 @@ namespace Epsitec.App.Dolphin.MyWidgets
 					Widget widget = this.dolphinFocusedWidget;
 					TextField field = widget as TextField;
 
-					Code actualCode = field.Parent as Code;
-					if (actualCode != null && actualCode.IsErrorMet)
-					{
 #if false
-						string title = "Dauphin";
-						string icon = "manifest:Epsitec.Common.Dialogs.Images.Warning.icon";
-						string err = "Tralala...";
-						Common.Dialogs.IDialog dialog = Common.Dialogs.MessageDialog.CreateOk(title, icon, err, null, null);
-						dialog.Owner = this.Window;
-						dialog.OpenDialog();
-#endif
-						return;
+					if (field != null)
+					{
+						Code actualCode = field.Parent as Code;
+						if (actualCode != null && actualCode.IsErrorMet)
+						{
+							string title = "Dauphin";
+							string icon = "manifest:Epsitec.Common.Dialogs.Images.Warning.icon";
+							string err = "Tralala...";
+							Common.Dialogs.IDialog dialog = Common.Dialogs.MessageDialog.CreateOk(title, icon, err, null, null);
+							dialog.Owner = this.Window;
+							dialog.OpenDialog();
+							return;
+						}
 					}
+#endif
 
 					if (field != null)
 					{

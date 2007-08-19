@@ -255,7 +255,7 @@ namespace Epsitec.App.Dolphin.MyWidgets
 			List<int> codes = new List<int>();
 			string err = this.processor.AssemblyInstruction(this.widgetInstruction.Text, codes);
 
-			if (codes == null || codes.Count == 0 || !string.IsNullOrEmpty(err))
+			if (codes.Count == 0 || !string.IsNullOrEmpty(err))
 			{
 				this.isErrorMet = true;
 

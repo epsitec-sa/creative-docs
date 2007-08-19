@@ -2088,10 +2088,15 @@ namespace Epsitec.App.Dolphin.Components
 			codes.Clear();
 			instruction = instruction.ToUpper().Trim();
 
-			char[] seps = {' ', ',', ':'};
+			string[] seps = {" ", ",", ":", "<TAB/>"};
 			string[] words = instruction.Split(seps, System.StringSplitOptions.RemoveEmptyEntries);
 
 			int r1=-1, r2=-1, v1=-1, v2=-1, mh1=-1, ll1=-1, mh2=-1, ll2=-1;
+
+			if (words.Length == 0)
+			{
+				return null;
+			}
 
 			if (words.Length >= 2)  // un argument ?
 			{
