@@ -3154,7 +3154,7 @@ namespace Epsitec.App.Dolphin.Components
 				return;
 			}
 
-			if (rel == Misc.undefined)  // adresse relative négative ?
+			if (rel == -1)  // adresse relative négative ?
 			{
 				address = 0x1000000-address;
 			}
