@@ -140,9 +140,9 @@ namespace Epsitec.App.Dolphin.Components
 			//	Rempli la Rom.
 		}
 
-		public virtual void RomSymbols(int address, Dictionary<string, int> symbols)
+		public virtual void RomVariables(int address, Dictionary<string, int> variables)
 		{
-			//	Défini les symboles de la Rom.
+			//	Défini les variables de la Rom.
 		}
 
 

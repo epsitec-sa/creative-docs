@@ -11,7 +11,7 @@ namespace Epsitec.App.Dolphin
 {
 	/// <summary>
 	/// Assembleur CALM selon le principe bien connu des deux passes.
-	/// La 1ère passe récolte les définitions de symboles et d'étiquettes dans un dictionnaire.
+	/// La 1ère passe récolte les définitions de variables et d'étiquettes dans un dictionnaire.
 	/// La 2ème passe génère le code.
 	/// </summary>
 	public class Assembler
@@ -40,12 +40,12 @@ namespace Epsitec.App.Dolphin
 			List<int> errorLines = new List<int>();
 			List<string> errorTexts = new List<string>();
 
-			Dictionary<string, int> symbols = new Dictionary<string, int>();
-			this.processor.RomSymbols(Components.Memory.RomBase, symbols);
+			Dictionary<string, int> variables = new Dictionary<string, int>();
+			this.processor.RomVariables(Components.Memory.RomBase, variables);
 
 			for (int pass=0; pass<2; pass++)
 			{
-				this.DoPass(lines, pass, symbols, errorLines, errorTexts, ref instructionCounter, ref byteCounter);
+				this.DoPass(lines, pass, variables, errorLines, errorTexts, ref instructionCounter, ref byteCounter);
 
 				if (errorLines.Count != 0)
 				{
@@ -84,7 +84,7 @@ namespace Epsitec.App.Dolphin
 		}
 
 
-		protected void DoPass(string[] lines, int pass, Dictionary<string, int> symbols, List<int> errorLines, List<string> errorTexts, ref int instructionCounter, ref int byteCounter)
+		protected void DoPass(string[] lines, int pass, Dictionary<string, int> variables, List<int> errorLines, List<string> errorTexts, ref int instructionCounter, ref int byteCounter)
 		{
 			//	Première ou deuxième passe de l'assemblage.
 			int pc = Components.Memory.RamBase;
@@ -95,13 +95,13 @@ namespace Epsitec.App.Dolphin
 				string instruction = this.RemoveComment(line);
 
 				string err;
-				instruction = this.GetSymbol(instruction, pass, pc, symbols, out err);
+				instruction = this.ProcessVariables(instruction, pass, pc, variables, out err);
 				if (err == null)
 				{
 					if (!string.IsNullOrEmpty(instruction))
 					{
 						instruction = this.processor.AssemblyPreprocess(instruction);
-						instruction = this.GetInstruction(instruction, pass, pc, symbols, out err);
+						instruction = this.PrepareInstruction(instruction, pass, variables, out err);
 						if (err == null)
 						{
 							if (!string.IsNullOrEmpty(instruction))
@@ -168,35 +168,38 @@ namespace Epsitec.App.Dolphin
 			return instruction;
 		}
 
-		protected string GetSymbol(string instruction, int pass, int pc, Dictionary<string, int> symbols, out string err)
+		protected string ProcessVariables(string instruction, int pass, int pc, Dictionary<string, int> variables, out string err)
 		{
-			//	Prépare une instruction pour l'assemblage.
-			//	Gère les définitions de symboles, du genre "TOTO = 12*TITI".
+			//	Traite les variables dans une instruction.
+			//	Retourne l'instruction expurgée des variables.
+			//	Gère les définitions de variables du genre "TOTO = 12*TITI", retourne NULL.
+			//	Gère les étiquettes, du genre "LOOP: MOVE A,B", retourne "MOVE A,B".
 			string[] defs = instruction.Split('=');
-			if (defs.Length == 2)  // symbol = value ?
+			if (defs.Length == 2)  // variable = expression ?
 			{
 				if (pass == 0)  // première passe ?
 				{
-					string symbol = defs[0].Trim();
+					string variable   = defs[0].Trim();
+					string expression = defs[1].Trim();
 
-					if (this.IsRegister(symbol))
+					if (this.IsRegister(variable))
 					{
 						err = "Il n'est pas possible d'utiliser un nom de registre.";
 					}
-					else if (!this.IsSymbol(symbol))
+					else if (!this.IsVariable(variable))
 					{
-						err = "Nom de symbol incorrect.";
+						err = "Nom de variable incorrect.";
 					}
-					else if (symbols.ContainsKey(symbol))
+					else if (variables.ContainsKey(variable))
 					{
-						err = "Symbol déjà défini.";
+						err = "Variable ou étiquette déjà définie.";
 					}
 					else
 					{
-						int value = this.Expression(defs[1].Trim(), pass, pc, symbols, out err);
+						int value = this.Expression(expression, pass, false, variables, out err);
 						if (err == null)
 						{
-							symbols.Add(symbol, value);
+							variables.Add(variable, value);
 						}
 					}
 				}
@@ -221,19 +224,19 @@ namespace Epsitec.App.Dolphin
 							err = "Il n'est pas possible d'utiliser un nom de registre.";
 							return null;
 						}
-						else if (!this.IsSymbol(label))
+						else if (!this.IsVariable(label))
 						{
 							err = "Nom d'étiquette incorrect.";
 							return null;
 						}
-						else if (symbols.ContainsKey(label))
+						else if (variables.ContainsKey(label))
 						{
-							err = "Etiquette déjà définie.";
+							err = "Variable ou étiquette déjà définie.";
 							return null;
 						}
 						else
 						{
-							symbols.Add(label, pc);
+							variables.Add(label, pc);
 						}
 					}
 
@@ -245,11 +248,12 @@ namespace Epsitec.App.Dolphin
 			return instruction;
 		}
 
-		protected string GetInstruction(string instruction, int pass, int pc, Dictionary<string, int> symbols, out string err)
+		protected string PrepareInstruction(string instruction, int pass, Dictionary<string, int> variables, out string err)
 		{
 			//	Prépare une instruction pour l'assemblage.
-			//	Gère les définitions de symboles, du genre "TOTO = 12*TITI".
-			//	Effectue les substitutions dans les arguments.
+			//	Effectue les substitutions dans les arguments en fonction des variables.
+			//	Par exemple, remplace "MOVE #TOTO+1,A" par "MOVE H'12 A", si TOTO=H'11.
+			//	Par exemple, remplace "MOVE {SP}+TITI,A" par "MOVE {SP}+H'02 A", si TITI=H'02.
 			string[] seps = {" "};
 			string[] words = instruction.Split(seps, System.StringSplitOptions.RemoveEmptyEntries);
 
@@ -275,7 +279,7 @@ namespace Epsitec.App.Dolphin
 					}
 					else if (word.Length >= 1 && word[0] == '#')  // #val ?
 					{
-						int value = this.Expression(word.Substring(1), pass, pc, symbols, out err);
+						int value = this.Expression(word.Substring(1), pass, true, variables, out err);
 						if (err == null)
 						{
 							word = string.Concat("#H'", value.ToString("X3"));
@@ -287,7 +291,7 @@ namespace Epsitec.App.Dolphin
 					}
 					else  // ADDR ?
 					{
-						int value = this.Expression(word, pass, pc, symbols, out err);
+						int value = this.Expression(word, pass, true, variables, out err);
 						if (err == null)
 						{
 							word = string.Concat("H'", value.ToString("X3"));
@@ -316,7 +320,7 @@ namespace Epsitec.App.Dolphin
 			return builder.ToString();
 		}
 
-		protected int Expression(string expression, int pass, int pc, Dictionary<string, int> symbols, out string err)
+		protected int Expression(string expression, int pass, bool acceptUndefined, Dictionary<string, int> variables, out string err)
 		{
 			//	Evalue une expression pouvant contenir les 4 opérations de base et des parenthèses.
 			List<string> words = Assembler.Fragment(expression);
@@ -326,7 +330,7 @@ namespace Epsitec.App.Dolphin
 
 			foreach (string word in words)
 			{
-				int value = Assembler.GetValue(word, pass, symbols, out err);
+				int value = Assembler.GetValue(word, pass, acceptUndefined, variables, out err);
 				if (value == Misc.undefined)
 				{
 					if (err != null)
@@ -412,7 +416,7 @@ namespace Epsitec.App.Dolphin
 						break;
 
 					default:
-						return "Opération impossible.";
+						return "Opération inconnue.";
 				}
 
 				values.RemoveAt(values.Count-1);  // enlève la dernière valeur
@@ -486,26 +490,26 @@ namespace Epsitec.App.Dolphin
 			return words;
 		}
 
-		protected static int GetValue(string word, int pass, Dictionary<string, int> symbols, out string err)
+		protected static int GetValue(string word, int pass, bool acceptUndefined, Dictionary<string, int> variables, out string err)
 		{
 			//	Cherche une valeur, qui peut être soit une constante, soit une variable.
 			int value = Assembler.GetNumber(word);
 			if (value == Misc.undefined)  // pas une constante ?
 			{
-				string symbol = Assembler.GetString(word);
-				if (symbol == null)  // pas un symbol ?
+				string variable = Assembler.GetString(word);
+				if (variable == null)  // pas une variable ?
 				{
 					err = null;
 					return Misc.undefined;
 				}
 
-				if (symbols.ContainsKey(symbol))  // symbol défini ?
+				if (variables.ContainsKey(variable))  // variable définie ?
 				{
-					value = symbols[symbol];  // prend la valeur du symbol
+					value = variables[variable];  // prend la valeur de la variable
 				}
 				else
 				{
-					if (pass == 0)  // première passe ?
+					if (pass == 0 && acceptUndefined)  // première passe ?
 					{
 						value = 0;  // valeur quelconque, juste pour assembler une instruction avec le bon nombre de bytes
 					}
@@ -588,9 +592,9 @@ namespace Epsitec.App.Dolphin
 			return false;
 		}
 
-		protected bool IsSymbol(string word)
+		protected bool IsVariable(string word)
 		{
-			//	Indique si le mot correspond à un nom de symbole valide.
+			//	Indique si le mot correspond à un nom de variable valide.
 			if (word.Length == 0)
 			{
 				return false;

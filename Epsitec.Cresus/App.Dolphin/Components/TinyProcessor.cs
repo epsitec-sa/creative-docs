@@ -3302,20 +3302,20 @@ namespace Epsitec.App.Dolphin.Components
 			System.Diagnostics.Debug.Assert(address < 0xB00);
 		}
 
-		public override void RomSymbols(int address, Dictionary<string, int> symbols)
+		public override void RomVariables(int address, Dictionary<string, int> variables)
 		{
-			//	Défini les symboles de la Rom.
-			symbols.Add("WAITKEY", address+=3);
-			symbols.Add("WAITSEC", address+=3);
-			symbols.Add("DISPLAYBINARYDIGIT", address+=3);
-			symbols.Add("DISPLAYHEXADIGIT", address+=3);
-			symbols.Add("DISPLAYHEXABYTE", address+=3);
-			symbols.Add("DISPLAYDECIMAL", address+=3);
-			symbols.Add("SETPIXEL", address+=3);
-			symbols.Add("CLRPIXEL", address+=3);
-			symbols.Add("NOTPIXEL", address+=3);
-			symbols.Add("CLEARSCREEN", address+=3);
-			symbols.Add("DRAWCHAR", address+=3);
+			//	Défini les variables de la Rom.
+			variables.Add("WAITKEY", address+=3);
+			variables.Add("WAITSEC", address+=3);
+			variables.Add("DISPLAYBINARYDIGIT", address+=3);
+			variables.Add("DISPLAYHEXADIGIT", address+=3);
+			variables.Add("DISPLAYHEXABYTE", address+=3);
+			variables.Add("DISPLAYDECIMAL", address+=3);
+			variables.Add("SETPIXEL", address+=3);
+			variables.Add("CLRPIXEL", address+=3);
+			variables.Add("NOTPIXEL", address+=3);
+			variables.Add("CLEARSCREEN", address+=3);
+			variables.Add("DRAWCHAR", address+=3);
 		}
 
 		protected void RomWrite(ref int indirect, ref int address, byte[] code)
