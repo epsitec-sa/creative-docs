@@ -475,7 +475,14 @@ namespace Epsitec.App.Dolphin
 				char newType;
 				if (c >= '0' && c <= '9')
 				{
-					newType = 'n';
+					if (type == 't')
+					{
+						newType = 't';
+					}
+					else
+					{
+						newType = 'n';
+					}
 				}
 				else if (i < expression.Length && expression[i] == '\'')  // "X'" ?
 				{
@@ -486,6 +493,10 @@ namespace Epsitec.App.Dolphin
 					newType = 'n';
 				}
 				else if (c >= 'A' && c <= 'Z')
+				{
+					newType = 't';
+				}
+				else if (c == '_')
 				{
 					newType = 't';
 				}
