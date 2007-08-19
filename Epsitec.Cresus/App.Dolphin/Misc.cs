@@ -368,5 +368,8 @@ namespace Epsitec.App.Dolphin
 			a = b;
 			b = t;
 		}
+
+
+		static public readonly int undefined = int.MinValue;
 	}
 }

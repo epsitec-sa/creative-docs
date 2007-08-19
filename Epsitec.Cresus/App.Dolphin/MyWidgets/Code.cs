@@ -17,7 +17,7 @@ namespace Epsitec.App.Dolphin.MyWidgets
 		{
 			this.PreferredHeight = 20;
 
-			this.valueAddress = -1;
+			this.valueAddress = Misc.undefined;
 
 			this.widgetAddress = new StaticText(this);
 			this.widgetAddress.ContentAlignment = ContentAlignment.MiddleLeft;
@@ -156,7 +156,7 @@ namespace Epsitec.App.Dolphin.MyWidgets
 				}
 			}
 
-			this.arrowAddress = -1;
+			this.arrowAddress = Misc.undefined;
 			if (this.isTable)
 			{
 				this.widgetInstruction.Text = string.Concat("BYTE #H'", this.valueCodes[0].ToString("X2"));

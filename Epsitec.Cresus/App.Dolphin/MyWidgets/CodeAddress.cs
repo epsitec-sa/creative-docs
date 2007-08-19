@@ -48,10 +48,10 @@ namespace Epsitec.App.Dolphin.MyWidgets
 		public int DetectAddress(Point pos)
 		{
 			//	Détecte la flèche visée par la souris.
-			//	Retourne l'adresse de base ou -1.
+			//	Retourne l'adresse de base ou Misc.undefined.
 			if (!this.Client.Bounds.Contains(pos))
 			{
-				return -1;
+				return Misc.undefined;
 			}
 
 			foreach (Address address in this.addresses)
@@ -66,7 +66,7 @@ namespace Epsitec.App.Dolphin.MyWidgets
 				}
 			}
 
-			return -1;
+			return Misc.undefined;
 		}
 
 		public void HiliteBaseAddress(int baseAddress)

@@ -1268,7 +1268,7 @@ namespace Epsitec.App.Dolphin.Components
 		public override string DessassemblyInstruction(List<int> codes, int pc, out int address)
 		{
 			//	Retourne le nom d'une instruction.
-			address = -1;
+			address = Misc.undefined;
 
 			if (codes == null || codes.Count == 0)
 			{
@@ -2018,7 +2018,7 @@ namespace Epsitec.App.Dolphin.Components
 		protected static int PutCodeAddress(System.Text.StringBuilder builder, int mh, int ll, int pc, int instructionLength)
 		{
 			//	Met une adresse hexadécimale.
-			int arrowAddress = -1;
+			int arrowAddress = Misc.undefined;
 
 			int mode = (mh << 8) | ll;
 			int address = mode & 0x0FFF;
@@ -2127,7 +2127,9 @@ namespace Epsitec.App.Dolphin.Components
 
 			string[] seps = {" "};
 			string[] words = instruction.Split(seps, System.StringSplitOptions.RemoveEmptyEntries);
-			int r1=-1, r2=-1, v1=-1, v2=-1, mh1=-1, ll1=-1, mh2=-1, ll2=-1;
+			int r1=Misc.undefined, r2=Misc.undefined;
+			int v1=Misc.undefined, v2=Misc.undefined;
+			int mh1=Misc.undefined, ll1=Misc.undefined, mh2=Misc.undefined, ll2=Misc.undefined;
 
 			if (words.Length == 0)
 			{
@@ -2206,7 +2208,7 @@ namespace Epsitec.App.Dolphin.Components
 					break;
 
 				case "TABLE":
-					if (words.Length == 2 && v1 != -1)
+					if (words.Length == 2 && v1 != Misc.undefined)
 					{
 						codes.Add((int) Instructions.Table);
 						codes.Add(v1);
@@ -2218,7 +2220,7 @@ namespace Epsitec.App.Dolphin.Components
 					break;
 
 				case "BYTE":
-					if (words.Length == 2 && v1 != -1)
+					if (words.Length == 2 && v1 != Misc.undefined)
 					{
 						codes.Add(v1);
 					}
@@ -2229,7 +2231,7 @@ namespace Epsitec.App.Dolphin.Components
 					break;
 
 				case "CALL":
-					if (words.Length == 2 && mh1 != -1 && ll1 != -1)
+					if (words.Length == 2 && mh1 != Misc.undefined && ll1 != Misc.undefined)
 					{
 						codes.Add((int) Instructions.Call);
 						codes.Add(mh1);
@@ -2242,7 +2244,7 @@ namespace Epsitec.App.Dolphin.Components
 					break;
 
 				case "PUSH":
-					if (words.Length == 2 && r1 != -1)
+					if (words.Length == 2 && r1 != Misc.undefined)
 					{
 						codes.Add((int) Instructions.PushR | r1);
 					}
@@ -2253,7 +2255,7 @@ namespace Epsitec.App.Dolphin.Components
 					break;
 
 				case "POP":
-					if (words.Length == 2 && r1 != -1)
+					if (words.Length == 2 && r1 != Misc.undefined)
 					{
 						codes.Add((int) Instructions.PopR | r1);
 					}
@@ -2264,7 +2266,7 @@ namespace Epsitec.App.Dolphin.Components
 					break;
 
 				case "JUMP":
-					if (words.Length == 2 && mh1 != -1 && ll1 != -1)
+					if (words.Length == 2 && mh1 != Misc.undefined && ll1 != Misc.undefined)
 					{
 						codes.Add((int) Instructions.Jump);
 						codes.Add(mh1);
@@ -2277,7 +2279,7 @@ namespace Epsitec.App.Dolphin.Components
 					break;
 
 				case "JUMPEQ":
-					if (words.Length == 2 && mh1 != -1 && ll1 != -1)
+					if (words.Length == 2 && mh1 != Misc.undefined && ll1 != Misc.undefined)
 					{
 						codes.Add((int) Instructions.JumpEQ);
 						codes.Add(mh1);
@@ -2290,7 +2292,7 @@ namespace Epsitec.App.Dolphin.Components
 					break;
 
 				case "JUMPNE":
-					if (words.Length == 2 && mh1 != -1 && ll1 != -1)
+					if (words.Length == 2 && mh1 != Misc.undefined && ll1 != Misc.undefined)
 					{
 						codes.Add((int) Instructions.JumpNE);
 						codes.Add(mh1);
@@ -2303,7 +2305,7 @@ namespace Epsitec.App.Dolphin.Components
 					break;
 
 				case "JUMPLO":
-					if (words.Length == 2 && mh1 != -1 && ll1 != -1)
+					if (words.Length == 2 && mh1 != Misc.undefined && ll1 != Misc.undefined)
 					{
 						codes.Add((int) Instructions.JumpLO);
 						codes.Add(mh1);
@@ -2316,7 +2318,7 @@ namespace Epsitec.App.Dolphin.Components
 					break;
 
 				case "JUMPLS":
-					if (words.Length == 2 && mh1 != -1 && ll1 != -1)
+					if (words.Length == 2 && mh1 != Misc.undefined && ll1 != Misc.undefined)
 					{
 						codes.Add((int) Instructions.JumpLS);
 						codes.Add(mh1);
@@ -2329,7 +2331,7 @@ namespace Epsitec.App.Dolphin.Components
 					break;
 
 				case "JUMPHI":
-					if (words.Length == 2 && mh1 != -1 && ll1 != -1)
+					if (words.Length == 2 && mh1 != Misc.undefined && ll1 != Misc.undefined)
 					{
 						codes.Add((int) Instructions.JumpHI);
 						codes.Add(mh1);
@@ -2342,7 +2344,7 @@ namespace Epsitec.App.Dolphin.Components
 					break;
 
 				case "JUMPHS":
-					if (words.Length == 2 && mh1 != -1 && ll1 != -1)
+					if (words.Length == 2 && mh1 != Misc.undefined && ll1 != Misc.undefined)
 					{
 						codes.Add((int) Instructions.JumpHS);
 						codes.Add(mh1);
@@ -2355,7 +2357,7 @@ namespace Epsitec.App.Dolphin.Components
 					break;
 
 				case "JUMPCC":
-					if (words.Length == 2 && mh1 != -1 && ll1 != -1)
+					if (words.Length == 2 && mh1 != Misc.undefined && ll1 != Misc.undefined)
 					{
 						codes.Add((int) Instructions.JumpCC);
 						codes.Add(mh1);
@@ -2368,7 +2370,7 @@ namespace Epsitec.App.Dolphin.Components
 					break;
 
 				case "JUMPCS":
-					if (words.Length == 2 && mh1 != -1 && ll1 != -1)
+					if (words.Length == 2 && mh1 != Misc.undefined && ll1 != Misc.undefined)
 					{
 						codes.Add((int) Instructions.JumpCS);
 						codes.Add(mh1);
@@ -2381,7 +2383,7 @@ namespace Epsitec.App.Dolphin.Components
 					break;
 
 				case "JUMPNC":
-					if (words.Length == 2 && mh1 != -1 && ll1 != -1)
+					if (words.Length == 2 && mh1 != Misc.undefined && ll1 != Misc.undefined)
 					{
 						codes.Add((int) Instructions.JumpNC);
 						codes.Add(mh1);
@@ -2394,7 +2396,7 @@ namespace Epsitec.App.Dolphin.Components
 					break;
 
 				case "JUMPNS":
-					if (words.Length == 2 && mh1 != -1 && ll1 != -1)
+					if (words.Length == 2 && mh1 != Misc.undefined && ll1 != Misc.undefined)
 					{
 						codes.Add((int) Instructions.JumpNS);
 						codes.Add(mh1);
@@ -2407,11 +2409,11 @@ namespace Epsitec.App.Dolphin.Components
 					break;
 
 				case "CLR":
-					if (words.Length == 2 && r1 != -1)
+					if (words.Length == 2 && r1 != Misc.undefined)
 					{
 						codes.Add((int) Instructions.ClrR | r1);
 					}
-					else if (words.Length == 2 && mh1 != -1 && ll1 != -1)
+					else if (words.Length == 2 && mh1 != Misc.undefined && ll1 != Misc.undefined)
 					{
 						codes.Add((int) Instructions.ClrA);
 						codes.Add(mh1);
@@ -2424,11 +2426,11 @@ namespace Epsitec.App.Dolphin.Components
 					break;
 
 				case "NOT":
-					if (words.Length == 2 && r1 != -1)
+					if (words.Length == 2 && r1 != Misc.undefined)
 					{
 						codes.Add((int) Instructions.NotR | r1);
 					}
-					else if (words.Length == 2 && mh1 != -1 && ll1 != -1)
+					else if (words.Length == 2 && mh1 != Misc.undefined && ll1 != Misc.undefined)
 					{
 						codes.Add((int) Instructions.NotA);
 						codes.Add(mh1);
@@ -2441,11 +2443,11 @@ namespace Epsitec.App.Dolphin.Components
 					break;
 
 				case "INC":
-					if (words.Length == 2 && r1 != -1)
+					if (words.Length == 2 && r1 != Misc.undefined)
 					{
 						codes.Add((int) Instructions.IncR | r1);
 					}
-					else if (words.Length == 2 && mh1 != -1 && ll1 != -1)
+					else if (words.Length == 2 && mh1 != Misc.undefined && ll1 != Misc.undefined)
 					{
 						codes.Add((int) Instructions.IncA);
 						codes.Add(mh1);
@@ -2458,11 +2460,11 @@ namespace Epsitec.App.Dolphin.Components
 					break;
 
 				case "DEC":
-					if (words.Length == 2 && r1 != -1)
+					if (words.Length == 2 && r1 != Misc.undefined)
 					{
 						codes.Add((int) Instructions.DecR | r1);
 					}
-					else if (words.Length == 2 && mh1 != -1 && ll1 != -1)
+					else if (words.Length == 2 && mh1 != Misc.undefined && ll1 != Misc.undefined)
 					{
 						codes.Add((int) Instructions.DecA);
 						codes.Add(mh1);
@@ -2475,11 +2477,11 @@ namespace Epsitec.App.Dolphin.Components
 					break;
 
 				case "RL":
-					if (words.Length == 2 && r1 != -1)
+					if (words.Length == 2 && r1 != Misc.undefined)
 					{
 						codes.Add((int) Instructions.RlR | r1);
 					}
-					else if (words.Length == 2 && mh1 != -1 && ll1 != -1)
+					else if (words.Length == 2 && mh1 != Misc.undefined && ll1 != Misc.undefined)
 					{
 						codes.Add((int) Instructions.RlA);
 						codes.Add(mh1);
@@ -2492,11 +2494,11 @@ namespace Epsitec.App.Dolphin.Components
 					break;
 
 				case "RR":
-					if (words.Length == 2 && r1 != -1)
+					if (words.Length == 2 && r1 != Misc.undefined)
 					{
 						codes.Add((int) Instructions.RrR | r1);
 					}
-					else if (words.Length == 2 && mh1 != -1 && ll1 != -1)
+					else if (words.Length == 2 && mh1 != Misc.undefined && ll1 != Misc.undefined)
 					{
 						codes.Add((int) Instructions.RrA);
 						codes.Add(mh1);
@@ -2509,11 +2511,11 @@ namespace Epsitec.App.Dolphin.Components
 					break;
 
 				case "RLC":
-					if (words.Length == 2 && r1 != -1)
+					if (words.Length == 2 && r1 != Misc.undefined)
 					{
 						codes.Add((int) Instructions.RlcR | r1);
 					}
-					else if (words.Length == 2 && mh1 != -1 && ll1 != -1)
+					else if (words.Length == 2 && mh1 != Misc.undefined && ll1 != Misc.undefined)
 					{
 						codes.Add((int) Instructions.RlcA);
 						codes.Add(mh1);
@@ -2526,11 +2528,11 @@ namespace Epsitec.App.Dolphin.Components
 					break;
 
 				case "RRC":
-					if (words.Length == 2 && r1 != -1)
+					if (words.Length == 2 && r1 != Misc.undefined)
 					{
 						codes.Add((int) Instructions.RrcR | r1);
 					}
-					else if (words.Length == 2 && mh1 != -1 && ll1 != -1)
+					else if (words.Length == 2 && mh1 != Misc.undefined && ll1 != Misc.undefined)
 					{
 						codes.Add((int) Instructions.RrcA);
 						codes.Add(mh1);
@@ -2543,7 +2545,7 @@ namespace Epsitec.App.Dolphin.Components
 					break;
 
 				case "SWAP":
-					if (words.Length == 2 && r1 != -1 && r1 < 2)
+					if (words.Length == 2 && r1 != Misc.undefined && r1 < 2)
 					{
 						codes.Add((int) Instructions.SwapA | r1);
 					}
@@ -2554,28 +2556,28 @@ namespace Epsitec.App.Dolphin.Components
 					break;
 
 				case "MOVE":
-					if (words.Length == 3 && r1 != -1 && r2 != -1)
+					if (words.Length == 3 && r1 != Misc.undefined && r2 != Misc.undefined)
 					{
 						codes.Add((int) Instructions.MoveRR | (r1<<2) | r2);
 					}
-					else if (words.Length == 3 && v1 != -1 && r2 != -1)
+					else if (words.Length == 3 && v1 != Misc.undefined && r2 != Misc.undefined)
 					{
 						codes.Add((int) Instructions.MoveVR | r2);
 						codes.Add(v1);
 					}
-					else if (words.Length == 3 && mh1 != -1 && ll1 != -1 && r2 != -1)
+					else if (words.Length == 3 && mh1 != Misc.undefined && ll1 != Misc.undefined && r2 != Misc.undefined)
 					{
 						codes.Add((int) Instructions.MoveAR | r2);
 						codes.Add(mh1);
 						codes.Add(ll1);
 					}
-					else if (words.Length == 3 && r1 != -1 && mh2 != -1 && ll2 != -1)
+					else if (words.Length == 3 && r1 != Misc.undefined && mh2 != Misc.undefined && ll2 != Misc.undefined)
 					{
 						codes.Add((int) Instructions.MoveRA | r1);
 						codes.Add(mh2);
 						codes.Add(ll2);
 					}
-					else if (words.Length == 3 && v1 != -1 && mh2 != -1 && ll2 != -1)
+					else if (words.Length == 3 && v1 != Misc.undefined && mh2 != Misc.undefined && ll2 != Misc.undefined)
 					{
 						codes.Add((int) Instructions.MoveVA);
 						codes.Add(v1);
@@ -2589,35 +2591,35 @@ namespace Epsitec.App.Dolphin.Components
 					break;
 
 				case "ADD":
-					if (words.Length == 3 && r1 != -1 && r2 != -1)
+					if (words.Length == 3 && r1 != Misc.undefined && r2 != Misc.undefined)
 					{
 						codes.Add((int) Instructions.AddRR | (r1<<2) | r2);
 					}
-					else if (words.Length == 3 && v1 != -1 && r2 != -1)
+					else if (words.Length == 3 && v1 != Misc.undefined && r2 != Misc.undefined)
 					{
 						codes.Add((int) Instructions.AddVR | r2);
 						codes.Add(v1);
 					}
-					else if (words.Length == 3 && mh1 != -1 && ll1 != -1 && r2 != -1)
+					else if (words.Length == 3 && mh1 != Misc.undefined && ll1 != Misc.undefined && r2 != Misc.undefined)
 					{
 						codes.Add((int) Instructions.AddAR | r2);
 						codes.Add(mh1);
 						codes.Add(ll1);
 					}
-					else if (words.Length == 3 && r1 != -1 && mh2 != -1 && ll2 != -1)
+					else if (words.Length == 3 && r1 != Misc.undefined && mh2 != Misc.undefined && ll2 != Misc.undefined)
 					{
 						codes.Add((int) Instructions.AddRA | r1);
 						codes.Add(mh2);
 						codes.Add(ll2);
 					}
-					else if (words.Length == 3 && v1 != -1 && mh2 != -1 && ll2 != -1)
+					else if (words.Length == 3 && v1 != Misc.undefined && mh2 != Misc.undefined && ll2 != Misc.undefined)
 					{
 						codes.Add((int) Instructions.AddVA);
 						codes.Add(v1);
 						codes.Add(mh2);
 						codes.Add(ll2);
 					}
-					else if (words.Length == 3 && v1 != -1 && words[2] == "SP")
+					else if (words.Length == 3 && v1 != Misc.undefined && words[2] == "SP")
 					{
 						codes.Add((int) Instructions.AddVSP);
 						codes.Add(v1);
@@ -2629,35 +2631,35 @@ namespace Epsitec.App.Dolphin.Components
 					break;
 
 				case "SUB":
-					if (words.Length == 3 && r1 != -1 && r2 != -1)
+					if (words.Length == 3 && r1 != Misc.undefined && r2 != Misc.undefined)
 					{
 						codes.Add((int) Instructions.SubRR | (r1<<2) | r2);
 					}
-					else if (words.Length == 3 && v1 != -1 && r2 != -1)
+					else if (words.Length == 3 && v1 != Misc.undefined && r2 != Misc.undefined)
 					{
 						codes.Add((int) Instructions.SubVR | r2);
 						codes.Add(v1);
 					}
-					else if (words.Length == 3 && mh1 != -1 && ll1 != -1 && r2 != -1)
+					else if (words.Length == 3 && mh1 != Misc.undefined && ll1 != Misc.undefined && r2 != Misc.undefined)
 					{
 						codes.Add((int) Instructions.SubAR | r2);
 						codes.Add(mh1);
 						codes.Add(ll1);
 					}
-					else if (words.Length == 3 && r1 != -1 && mh2 != -1 && ll2 != -1)
+					else if (words.Length == 3 && r1 != Misc.undefined && mh2 != Misc.undefined && ll2 != Misc.undefined)
 					{
 						codes.Add((int) Instructions.SubRA | r1);
 						codes.Add(mh2);
 						codes.Add(ll2);
 					}
-					else if (words.Length == 3 && v1 != -1 && mh2 != -1 && ll2 != -1)
+					else if (words.Length == 3 && v1 != Misc.undefined && mh2 != Misc.undefined && ll2 != Misc.undefined)
 					{
 						codes.Add((int) Instructions.SubVA);
 						codes.Add(v1);
 						codes.Add(mh2);
 						codes.Add(ll2);
 					}
-					else if (words.Length == 3 && v1 != -1 && words[2] == "SP")
+					else if (words.Length == 3 && v1 != Misc.undefined && words[2] == "SP")
 					{
 						codes.Add((int) Instructions.SubVSP);
 						codes.Add(v1);
@@ -2669,22 +2671,22 @@ namespace Epsitec.App.Dolphin.Components
 					break;
 
 				case "COMP":
-					if (words.Length == 3 && r1 != -1 && r2 != -1)
+					if (words.Length == 3 && r1 != Misc.undefined && r2 != Misc.undefined)
 					{
 						codes.Add((int) Instructions.CompRR | (r1<<2) | r2);
 					}
-					else if (words.Length == 3 && v1 != -1 && r2 != -1)
+					else if (words.Length == 3 && v1 != Misc.undefined && r2 != Misc.undefined)
 					{
 						codes.Add((int) Instructions.CompVR | r2);
 						codes.Add(v1);
 					}
-					else if (words.Length == 3 && mh1 != -1 && ll1 != -1 && r2 != -1)
+					else if (words.Length == 3 && mh1 != Misc.undefined && ll1 != Misc.undefined && r2 != Misc.undefined)
 					{
 						codes.Add((int) Instructions.CompAR | r2);
 						codes.Add(mh1);
 						codes.Add(ll1);
 					}
-					else if (words.Length == 3 && v1 != -1 && mh2 != -1 && ll2 != -1)
+					else if (words.Length == 3 && v1 != Misc.undefined && mh2 != Misc.undefined && ll2 != Misc.undefined)
 					{
 						codes.Add((int) Instructions.CompVA);
 						codes.Add(v1);
@@ -2698,22 +2700,22 @@ namespace Epsitec.App.Dolphin.Components
 					break;
 
 				case "AND":
-					if (words.Length == 3 && r1 != -1 && r1 < 2 && r2 != -1 && r2 < 2 && r1 != r2)
+					if (words.Length == 3 && r1 != Misc.undefined && r1 < 2 && r2 != Misc.undefined && r2 < 2 && r1 != r2)
 					{
 						codes.Add((int) Instructions.AndSS | r1);
 					}
-					else if (words.Length == 3 && v1 != -1 && r2 != -1)
+					else if (words.Length == 3 && v1 != Misc.undefined && r2 != Misc.undefined)
 					{
 						codes.Add((int) Instructions.AndVR | r2);
 						codes.Add(v1);
 					}
-					else if (words.Length == 3 && mh1 != -1 && ll1 != -1 && r2 != -1 && r2 < 2)
+					else if (words.Length == 3 && mh1 != Misc.undefined && ll1 != Misc.undefined && r2 != Misc.undefined && r2 < 2)
 					{
 						codes.Add((int) Instructions.AndAS | r2);
 						codes.Add(mh1);
 						codes.Add(ll1);
 					}
-					else if (words.Length == 3 && r1 != -1 && r1 < 2 && mh2 != -1 && ll2 != -1)
+					else if (words.Length == 3 && r1 != Misc.undefined && r1 < 2 && mh2 != Misc.undefined && ll2 != Misc.undefined)
 					{
 						codes.Add((int) Instructions.AndSA | r1);
 						codes.Add(mh2);
@@ -2726,22 +2728,22 @@ namespace Epsitec.App.Dolphin.Components
 					break;
 
 				case "OR":
-					if (words.Length == 3 && r1 != -1 && r1 < 2 && r2 != -1 && r2 < 2 && r1 != r2)
+					if (words.Length == 3 && r1 != Misc.undefined && r1 < 2 && r2 != Misc.undefined && r2 < 2 && r1 != r2)
 					{
 						codes.Add((int) Instructions.OrSS | r1);
 					}
-					else if (words.Length == 3 && v1 != -1 && r2 != -1)
+					else if (words.Length == 3 && v1 != Misc.undefined && r2 != Misc.undefined)
 					{
 						codes.Add((int) Instructions.OrVR | r2);
 						codes.Add(v1);
 					}
-					else if (words.Length == 3 && mh1 != -1 && ll1 != -1 && r2 != -1 && r2 < 2)
+					else if (words.Length == 3 && mh1 != Misc.undefined && ll1 != Misc.undefined && r2 != Misc.undefined && r2 < 2)
 					{
 						codes.Add((int) Instructions.OrAS | r2);
 						codes.Add(mh1);
 						codes.Add(ll1);
 					}
-					else if (words.Length == 3 && r1 != -1 && r1 < 2 && mh2 != -1 && ll2 != -1)
+					else if (words.Length == 3 && r1 != Misc.undefined && r1 < 2 && mh2 != Misc.undefined && ll2 != Misc.undefined)
 					{
 						codes.Add((int) Instructions.OrSA | r1);
 						codes.Add(mh2);
@@ -2754,22 +2756,22 @@ namespace Epsitec.App.Dolphin.Components
 					break;
 
 				case "XOR":
-					if (words.Length == 3 && r1 != -1 && r1 < 2 && r2 != -1 && r2 < 2 && r1 != r2)
+					if (words.Length == 3 && r1 != Misc.undefined && r1 < 2 && r2 != Misc.undefined && r2 < 2 && r1 != r2)
 					{
 						codes.Add((int) Instructions.XorSS | r1);
 					}
-					else if (words.Length == 3 && v1 != -1 && r2 != -1)
+					else if (words.Length == 3 && v1 != Misc.undefined && r2 != Misc.undefined)
 					{
 						codes.Add((int) Instructions.XorVR | r2);
 						codes.Add(v1);
 					}
-					else if (words.Length == 3 && mh1 != -1 && ll1 != -1 && r2 != -1 && r2 < 2)
+					else if (words.Length == 3 && mh1 != Misc.undefined && ll1 != Misc.undefined && r2 != Misc.undefined && r2 < 2)
 					{
 						codes.Add((int) Instructions.XorAS | r2);
 						codes.Add(mh1);
 						codes.Add(ll1);
 					}
-					else if (words.Length == 3 && r1 != -1 && r1 < 2 && mh2 != -1 && ll2 != -1)
+					else if (words.Length == 3 && r1 != Misc.undefined && r1 < 2 && mh2 != Misc.undefined && ll2 != Misc.undefined)
 					{
 						codes.Add((int) Instructions.XorSA | r1);
 						codes.Add(mh2);
@@ -2782,22 +2784,22 @@ namespace Epsitec.App.Dolphin.Components
 					break;
 
 				case "TEST":
-					if (words.Length == 3 && r1 != -1 && r1 < 2 && r2 != -1 && r2 < 2 && r1 != r2)
+					if (words.Length == 3 && r1 != Misc.undefined && r1 < 2 && r2 != Misc.undefined && r2 < 2 && r1 != r2)
 					{
 						codes.Add((int) Instructions.TestSS | r1);
 					}
-					else if (words.Length == 3 && v1 != -1 && r2 != -1 && r2 < 2)
+					else if (words.Length == 3 && v1 != Misc.undefined && r2 != Misc.undefined && r2 < 2)
 					{
 						codes.Add((int) Instructions.TestVS | r2);
 						codes.Add(v1);
 					}
-					else if (words.Length == 3 && r1 != -1 && r1 < 2 && mh2 != -1 && ll2 != -1)
+					else if (words.Length == 3 && r1 != Misc.undefined && r1 < 2 && mh2 != Misc.undefined && ll2 != Misc.undefined)
 					{
 						codes.Add((int) Instructions.TestSA | r1);
 						codes.Add(mh2);
 						codes.Add(ll2);
 					}
-					else if (words.Length == 3 && v1 != -1 && mh2 != -1 && ll2 != -1)
+					else if (words.Length == 3 && v1 != Misc.undefined && mh2 != Misc.undefined && ll2 != Misc.undefined)
 					{
 						codes.Add((int) Instructions.TestVA);
 						codes.Add(v1);
@@ -2811,22 +2813,22 @@ namespace Epsitec.App.Dolphin.Components
 					break;
 
 				case "TSET":
-					if (words.Length == 3 && r1 != -1 && r1 < 2 && r2 != -1 && r2 < 2 && r1 != r2)
+					if (words.Length == 3 && r1 != Misc.undefined && r1 < 2 && r2 != Misc.undefined && r2 < 2 && r1 != r2)
 					{
 						codes.Add((int) Instructions.TSetSS | r1);
 					}
-					else if (words.Length == 3 && v1 != -1 && r2 != -1 && r2 < 2)
+					else if (words.Length == 3 && v1 != Misc.undefined && r2 != Misc.undefined && r2 < 2)
 					{
 						codes.Add((int) Instructions.TSetVS | r2);
 						codes.Add(v1);
 					}
-					else if (words.Length == 3 && r1 != -1 && r1 < 2 && mh2 != -1 && ll2 != -1)
+					else if (words.Length == 3 && r1 != Misc.undefined && r1 < 2 && mh2 != Misc.undefined && ll2 != Misc.undefined)
 					{
 						codes.Add((int) Instructions.TSetSA | r1);
 						codes.Add(mh2);
 						codes.Add(ll2);
 					}
-					else if (words.Length == 3 && v1 != -1 && mh2 != -1 && ll2 != -1)
+					else if (words.Length == 3 && v1 != Misc.undefined && mh2 != Misc.undefined && ll2 != Misc.undefined)
 					{
 						codes.Add((int) Instructions.TSetVA);
 						codes.Add(v1);
@@ -2840,22 +2842,22 @@ namespace Epsitec.App.Dolphin.Components
 					break;
 
 				case "TCLR":
-					if (words.Length == 3 && r1 != -1 && r1 < 2 && r2 != -1 && r2 < 2 && r1 != r2)
+					if (words.Length == 3 && r1 != Misc.undefined && r1 < 2 && r2 != Misc.undefined && r2 < 2 && r1 != r2)
 					{
 						codes.Add((int) Instructions.TClrSS | r1);
 					}
-					else if (words.Length == 3 && v1 != -1 && r2 != -1 && r2 < 2)
+					else if (words.Length == 3 && v1 != Misc.undefined && r2 != Misc.undefined && r2 < 2)
 					{
 						codes.Add((int) Instructions.TClrVS | r2);
 						codes.Add(v1);
 					}
-					else if (words.Length == 3 && r1 != -1 && r1 < 2 && mh2 != -1 && ll2 != -1)
+					else if (words.Length == 3 && r1 != Misc.undefined && r1 < 2 && mh2 != Misc.undefined && ll2 != Misc.undefined)
 					{
 						codes.Add((int) Instructions.TClrSA | r1);
 						codes.Add(mh2);
 						codes.Add(ll2);
 					}
-					else if (words.Length == 3 && v1 != -1 && mh2 != -1 && ll2 != -1)
+					else if (words.Length == 3 && v1 != Misc.undefined && mh2 != Misc.undefined && ll2 != Misc.undefined)
 					{
 						codes.Add((int) Instructions.TClrVA);
 						codes.Add(v1);
@@ -2869,22 +2871,22 @@ namespace Epsitec.App.Dolphin.Components
 					break;
 
 				case "TNOT":
-					if (words.Length == 3 && r1 != -1 && r1 < 2 && r2 != -1 && r2 < 2 && r1 != r2)
+					if (words.Length == 3 && r1 != Misc.undefined && r1 < 2 && r2 != Misc.undefined && r2 < 2 && r1 != r2)
 					{
 						codes.Add((int) Instructions.TNotSS | r1);
 					}
-					else if (words.Length == 3 && v1 != -1 && r2 != -1 && r2 < 2)
+					else if (words.Length == 3 && v1 != Misc.undefined && r2 != Misc.undefined && r2 < 2)
 					{
 						codes.Add((int) Instructions.TNotVS | r2);
 						codes.Add(v1);
 					}
-					else if (words.Length == 3 && r1 != -1 && r1 < 2 && mh2 != -1 && ll2 != -1)
+					else if (words.Length == 3 && r1 != Misc.undefined && r1 < 2 && mh2 != Misc.undefined && ll2 != Misc.undefined)
 					{
 						codes.Add((int) Instructions.TNotSA | r1);
 						codes.Add(mh2);
 						codes.Add(ll2);
 					}
-					else if (words.Length == 3 && v1 != -1 && mh2 != -1 && ll2 != -1)
+					else if (words.Length == 3 && v1 != Misc.undefined && mh2 != Misc.undefined && ll2 != Misc.undefined)
 					{
 						codes.Add((int) Instructions.TNotVA);
 						codes.Add(v1);
@@ -2922,7 +2924,7 @@ namespace Epsitec.App.Dolphin.Components
 		protected static void GetCodeRegister(string word, out int n)
 		{
 			//	Analyse un registre.
-			n = -1;
+			n = Misc.undefined;
 
 			switch (word)
 			{
@@ -2949,7 +2951,7 @@ namespace Epsitec.App.Dolphin.Components
 			//	Analyse une valeur immédiate.
 			if (string.IsNullOrEmpty(word) || word[0] != '#')
 			{
-				value = -1;
+				value = Misc.undefined;
 				return;
 			}
 
@@ -2958,7 +2960,7 @@ namespace Epsitec.App.Dolphin.Components
 			if (word.StartsWith("H'"))
 			{
 				word = word.Substring(2);
-				value =  Misc.ParseHexa(word, -1, -1);
+				value =  Misc.ParseHexa(word, Misc.undefined, Misc.undefined);
 				return;
 			}
 			else if (word.StartsWith("D'"))
@@ -2966,7 +2968,7 @@ namespace Epsitec.App.Dolphin.Components
 				word = word.Substring(2);
 				if (!int.TryParse(word, out value))
 				{
-					value = -1;
+					value = Misc.undefined;
 				}
 				return;
 			}
@@ -2974,7 +2976,7 @@ namespace Epsitec.App.Dolphin.Components
 			{
 				if (!int.TryParse(word, out value))
 				{
-					value = -1;
+					value = Misc.undefined;
 				}
 				return;
 			}
@@ -2984,11 +2986,11 @@ namespace Epsitec.App.Dolphin.Components
 		{
 			//	Analyse une adresse.
 			int mode = 0;
-			int address = -1;
+			int address = Misc.undefined;
 			int rel = 0;
 
-			mh = -1;
-			ll = -1;
+			mh = Misc.undefined;
+			ll = Misc.undefined;
 
 			if (word.StartsWith("{PC}") || word.StartsWith("{SP}"))
 			{
@@ -3048,30 +3050,30 @@ namespace Epsitec.App.Dolphin.Components
 			if (word.StartsWith("H'"))
 			{
 				word = word.Substring(2);
-				address = Misc.ParseHexa(word, -1, -1);
+				address = Misc.ParseHexa(word, Misc.undefined, Misc.undefined);
 			}
 			else if (word.StartsWith("D'"))
 			{
 				word = word.Substring(2);
 				if (!int.TryParse(word, out address))
 				{
-					address = -1;
+					address = Misc.undefined;
 				}
 			}
 			else
 			{
 				if (!int.TryParse(word, out address))
 				{
-					address = -1;
+					address = Misc.undefined;
 				}
 			}
 
-			if (address == -1)
+			if (address == Misc.undefined)
 			{
 				return;
 			}
 
-			if (rel == -1)  // adresse relative négative ?
+			if (rel == Misc.undefined)  // adresse relative négative ?
 			{
 				address = 0x1000000-address;
 			}

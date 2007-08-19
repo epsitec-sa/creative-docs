@@ -318,7 +318,7 @@ namespace Epsitec.App.Dolphin
 
 		protected int Expression(string expression, int pass, int pc, Dictionary<string, int> symbols, out string err)
 		{
-			//	Evalue une expression.
+			//	Evalue une expression pouvant contenir les 4 opérations de base et des parenthèses.
 			List<string> words = Assembler.Fragment(expression);
 			List<int> values = new List<int>();
 			List<string> ops = new List<string>();
@@ -326,9 +326,14 @@ namespace Epsitec.App.Dolphin
 
 			foreach (string word in words)
 			{
-				int value = Assembler.GetValue(word, pass, symbols);
-				if (value == -1)
+				int value = Assembler.GetValue(word, pass, symbols, out err);
+				if (value == Misc.undefined)
 				{
+					if (err != null)
+					{
+						return Misc.undefined;
+					}
+
 					switch (word)
 					{
 						case "(":
@@ -339,13 +344,13 @@ namespace Epsitec.App.Dolphin
 							if (level == 0)
 							{
 								err = "Parenthèse fermée en trop.";
-								return -1;
+								return Misc.undefined;
 							}
 							level--;
 							err = Assembler.Reduce(values, ops, level);
 							if (err != null)
 							{
-								return -1;
+								return Misc.undefined;
 							}
 							break;
 
@@ -361,7 +366,7 @@ namespace Epsitec.App.Dolphin
 					err = Assembler.Reduce(values, ops, level);
 					if (err != null)
 					{
-						return -1;
+						return Misc.undefined;
 					}
 				}
 			}
@@ -369,13 +374,13 @@ namespace Epsitec.App.Dolphin
 			if (level != 0)
 			{
 				err = "Il manque une parenthèse fermée.";
-				return -1;
+				return Misc.undefined;
 			}
 
 			if (values.Count != 1 || ops.Count != 0)
 			{
 				err = "Expression incorrecte.";
-				return -1;
+				return Misc.undefined;
 			}
 
 			err = null;
@@ -384,6 +389,8 @@ namespace Epsitec.App.Dolphin
 
 		protected static string Reduce(List<int> values, List<string> ops, int level)
 		{
+			//	Si la pile des valeurs contient deux valeurs (A et B) et la pile des opérations n'est pas vide,
+			//	remplace les deux valeurs par A op B.
 			if (values.Count == level+2 && ops.Count > 0)
 			{
 				switch (ops[ops.Count-1])
@@ -408,8 +415,8 @@ namespace Epsitec.App.Dolphin
 						return "Opération impossible.";
 				}
 
-				values.RemoveAt(values.Count-1);
-				ops.RemoveAt(ops.Count-1);
+				values.RemoveAt(values.Count-1);  // enlève la dernière valeur
+				ops.RemoveAt(ops.Count-1);  // enlève l'opération effectuée
 			}
 
 			return null;
@@ -417,8 +424,8 @@ namespace Epsitec.App.Dolphin
 
 		protected static List<string> Fragment(string expression)
 		{
-			//	Fragmente une expression du type "12+H'34*(TOTO-1)" en fragments suivants:
-			//	"12", "+", "H'34", "*", "(", "TOTO", "-", "1", ")"
+			//	Fragmente une expression en "mots" élémentaires.
+			//	Par exemple, "12+H'34*(TOTO-1)" devient "12", "+", "H'34", "*", "(", "TOTO", "-", "1", ")".
 			expression = Misc.RemoveSpaces(expression);  // enlève les espaces
 			List<string> words = new List<string>();
 
@@ -479,20 +486,22 @@ namespace Epsitec.App.Dolphin
 			return words;
 		}
 
-		protected static int GetValue(string word, int pass, Dictionary<string, int> symbols)
+		protected static int GetValue(string word, int pass, Dictionary<string, int> symbols, out string err)
 		{
+			//	Cherche une valeur, qui peut être soit une constante, soit une variable.
 			int value = Assembler.GetNumber(word);
-			if (value == -1)
+			if (value == Misc.undefined)  // pas une constante ?
 			{
 				string symbol = Assembler.GetString(word);
-				if (symbol == null)
+				if (symbol == null)  // pas un symbol ?
 				{
-					return -1;
+					err = null;
+					return Misc.undefined;
 				}
 
-				if (symbols.ContainsKey(symbol))
+				if (symbols.ContainsKey(symbol))  // symbol défini ?
 				{
-					value = symbols[symbol];
+					value = symbols[symbol];  // prend la valeur du symbol
 				}
 				else
 				{
@@ -502,53 +511,57 @@ namespace Epsitec.App.Dolphin
 					}
 					else  // deuxième passe ?
 					{
-						return -1;
+						err = "Variable indéfinie.";
+						return Misc.undefined;
 					}
 				}
 			}
+			err = null;  // ok
 			return value;
 		}
 
 		protected static int GetNumber(string word)
 		{
+			//	Cherche une constante.
 			if (word.Length == 0)
 			{
-				return -1;
+				return Misc.undefined;
 			}
 
-			if (word[0] >= '0' && word[0] <= '9')
+			if (word[0] >= '0' && word[0] <= '9')  // décimal par défaut ?
 			{
 				int value;
 				if (!int.TryParse(word, out value))
 				{
-					return -1;
+					return Misc.undefined;
 				}
 				return value;
 			}
 
 			if (word.Length > 1 && word[1] == '\'')
 			{
-				if (word[0] == 'H')
+				if (word[0] == 'H')  // héxadécimal ?
 				{
 					return Misc.ParseHexa(word.Substring(2));
 				}
 
-				if (word[0] == 'D')
+				if (word[0] == 'D')  // décimal ?
 				{
 					int value;
 					if (!int.TryParse(word.Substring(2), out value))
 					{
-						return -1;
+						return Misc.undefined;
 					}
 					return value;
 				}
 			}
 
-			return -1;
+			return Misc.undefined;
 		}
 
 		protected static string GetString(string word)
 		{
+			//	Cherche une chaîne (un nom de variable ou une opération).
 			if (word.Length == 0)
 			{
 				return null;
@@ -667,6 +680,8 @@ namespace Epsitec.App.Dolphin
 			this.field.Text = programm;
 		}
 
+
+		protected static readonly int undefined = int.MinValue;
 
 		protected Components.AbstractProcessor processor;
 		protected Components.Memory memory;

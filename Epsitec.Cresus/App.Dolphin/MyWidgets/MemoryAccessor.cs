@@ -61,7 +61,7 @@ namespace Epsitec.App.Dolphin.MyWidgets
 			{
 				this.memory = value;
 				this.firstAddress = 0;
-				this.markPC = -1;
+				this.markPC = Misc.undefined;
 
 				this.UpdateScroller();
 				this.UpdateData();
@@ -125,7 +125,7 @@ namespace Epsitec.App.Dolphin.MyWidgets
 		public void DirtyMarkPC()
 		{
 			//	Force le prochain MarkPC à faire son travail.
-			this.markPC = -1;
+			this.markPC = Misc.undefined;
 		}
 
 		public int MarkPC

@@ -26,7 +26,7 @@ namespace Epsitec.App.Dolphin.MyWidgets
 			this.fields = new List<MyWidgets.Code>();
 			this.instructionAddresses = new List<CodeAddress>();
 
-			this.addressSelected = -1;
+			this.addressSelected = Misc.undefined;
 			this.followPC = true;
 		}
 
@@ -79,7 +79,7 @@ namespace Epsitec.App.Dolphin.MyWidgets
 			{
 				this.memory = value;
 				this.firstAddress = 0;
-				this.markPC = -1;
+				this.markPC = Misc.undefined;
 
 				if (!string.IsNullOrEmpty(this.bank))
 				{
@@ -163,7 +163,7 @@ namespace Epsitec.App.Dolphin.MyWidgets
 			//	Longueur de l'instruction à l'adresse sélectionnée.
 			get
 			{
-				if (this.addressSelected == -1)
+				if (this.addressSelected == Misc.undefined)
 				{
 					return 0;
 				}
@@ -195,7 +195,7 @@ namespace Epsitec.App.Dolphin.MyWidgets
 		public void DirtyMarkPC()
 		{
 			//	Force le prochain MarkPC à faire son travail.
-			this.markPC = -1;
+			this.markPC = Misc.undefined;
 		}
 
 		public int MarkPC
@@ -350,7 +350,7 @@ namespace Epsitec.App.Dolphin.MyWidgets
 			{
 				int arrowAddress = this.fields[i].ArrowAddress;
 
-				if (arrowAddress != -1)
+				if (arrowAddress != Misc.undefined)
 				{
 					int baseAddress = this.fields[i].Address;
 					int address = baseAddress;
@@ -556,7 +556,7 @@ namespace Epsitec.App.Dolphin.MyWidgets
 		protected int DetectAddress(Point pos)
 		{
 			//	Détecte la flèche visée par la souris.
-			//	Retourne son adresse de base, ou -1.
+			//	Retourne son adresse de base, ou Misc.undefined.
 			for (int i=this.fields.Count-1; i>=0; i--)
 			{
 				Code code = this.fields[i];
@@ -566,13 +566,13 @@ namespace Epsitec.App.Dolphin.MyWidgets
 				p.X -= 17;  // TODO: je n'ai décidément rien compris à ces MapTrucToMachin !
 
 				int baseAddress = code.CodeAddress.DetectAddress(p);
-				if (baseAddress != -1)
+				if (baseAddress != Misc.undefined)
 				{
 					return baseAddress;
 				}
 			}
 
-			return -1;
+			return Misc.undefined;
 		}
 
 		protected void HiliteBaseAddress(int baseAddress)
@@ -645,7 +645,7 @@ namespace Epsitec.App.Dolphin.MyWidgets
 		private void HandleFieldInstructionSelected(object sender)
 		{
 			MyWidgets.Code widget = sender as MyWidgets.Code;
-			int address = -1;
+			int address = Misc.undefined;
 
 			for (int i=0; i<this.fields.Count; i++)
 			{
@@ -661,7 +661,7 @@ namespace Epsitec.App.Dolphin.MyWidgets
 
 		private void HandleFieldInstructionDeselected(object sender)
 		{
-			this.AddressSelected = -1;
+			this.AddressSelected = Misc.undefined;
 		}
 
 		private void HandleFieldInstructionChanged(object sender)
@@ -721,7 +721,7 @@ namespace Epsitec.App.Dolphin.MyWidgets
 		private void HandleCodeAddressClicked(object sender)
 		{
 			//	Flèche cliquée.
-			if (this.addressHilited == -1)
+			if (this.addressHilited == Misc.undefined)
 			{
 				return;
 			}

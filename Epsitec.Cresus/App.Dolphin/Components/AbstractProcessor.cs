@@ -115,7 +115,7 @@ namespace Epsitec.App.Dolphin.Components
 		public virtual string DessassemblyInstruction(List<int> codes, int pc, out int address)
 		{
 			//	Retourne le nom d'une instruction.
-			address = -1;
+			address = Misc.undefined;
 			return "NOP";
 		}
 
