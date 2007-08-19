@@ -158,6 +158,7 @@ namespace Epsitec.App.Dolphin
 		protected string RemoveComment(string instruction)
 		{
 			//	Supprime l'éventuel commentaire "; blabla" en fin de ligne.
+			instruction = TextLayout.ConvertToSimpleText(instruction);
 			instruction = instruction.ToUpper().Trim();
 			int index = instruction.IndexOf(";");  // commentaire à la fin de la ligne ?
 			if (index != -1)
@@ -319,53 +320,106 @@ namespace Epsitec.App.Dolphin
 		{
 			//	Evalue une expression.
 			List<string> words = Assembler.Fragment(expression);
+			List<int> values = new List<int>();
+			List<string> ops = new List<string>();
+			int level = 0;
 
-
-
-
-
-			err = null;
-
-			int value = 0;
-			int index = 0;
-			while (index < expression.Length)
+			foreach (string word in words)
 			{
-				int n = this.SkipNumber(expression, ref index, out err);
-				if (err != null)
+				int value = Assembler.GetValue(word, pass, symbols);
+				if (value == -1)
 				{
-					string symbol = this.SkipSymbol(expression, ref index, out err);
-					if (err != null)
+					switch (word)
 					{
-						err = "Expression incorrecte.";
-						return -1;
-					}
+						case "(":
+							level++;
+							break;
 
-					if (symbols.ContainsKey(symbol))
-					{
-						n = symbols[symbol];
-					}
-					else
-					{
-						if (pass == 0)  // première passe ?
-						{
-							n = 0;  // valeur quelconque, juste pour assembler une instruction avec le bon nombre de bytes
-						}
-						else  // deuxième passe ?
-						{
-							err = "Symbole indéfini.";
-							return -1;
-						}
+						case ")":
+							if (level == 0)
+							{
+								err = "Parenthèse fermée en trop.";
+								return -1;
+							}
+							level--;
+							err = Assembler.Reduce(values, ops, level);
+							if (err != null)
+							{
+								return -1;
+							}
+							break;
+
+						default:
+							ops.Add(word);
+							break;
 					}
 				}
+				else
+				{
+					values.Add(value);
 
-				value = n;
+					err = Assembler.Reduce(values, ops, level);
+					if (err != null)
+					{
+						return -1;
+					}
+				}
 			}
 
-			return value;
+			if (level != 0)
+			{
+				err = "Il manque une parenthèse fermée.";
+				return -1;
+			}
+
+			if (values.Count != 1 || ops.Count != 0)
+			{
+				err = "Expression incorrecte.";
+				return -1;
+			}
+
+			err = null;
+			return values[0];
+		}
+
+		protected static string Reduce(List<int> values, List<string> ops, int level)
+		{
+			if (values.Count == level+2 && ops.Count > 0)
+			{
+				switch (ops[ops.Count-1])
+				{
+					case "+":
+						values[values.Count-2] = values[values.Count-2] + values[values.Count-1];
+						break;
+
+					case "-":
+						values[values.Count-2] = values[values.Count-2] - values[values.Count-1];
+						break;
+
+					case "*":
+						values[values.Count-2] = values[values.Count-2] * values[values.Count-1];
+						break;
+
+					case "/":
+						values[values.Count-2] = values[values.Count-2] / values[values.Count-1];
+						break;
+
+					default:
+						return "Opération impossible.";
+				}
+
+				values.RemoveAt(values.Count-1);
+				ops.RemoveAt(ops.Count-1);
+			}
+
+			return null;
 		}
 
 		protected static List<string> Fragment(string expression)
 		{
+			//	Fragmente une expression du type "12+H'34*(TOTO-1)" en fragments suivants:
+			//	"12", "+", "H'34", "*", "(", "TOTO", "-", "1", ")"
+			expression = Misc.RemoveSpaces(expression);  // enlève les espaces
 			List<string> words = new List<string>();
 
 			int i = 0;
@@ -376,17 +430,16 @@ namespace Epsitec.App.Dolphin
 				char c = expression[i++];
 
 				char newType;
-				if (c == ' ')
-				{
-					newType = ' ';
-				}
-				else if (c >= '0' && c <= '9')
+				if (c >= '0' && c <= '9')
 				{
 					newType = 'n';
 				}
 				else if (i < expression.Length && expression[i] == '\'')  // "X'" ?
 				{
-					i++;  // saute l'apostrophe
+					newType = 'n';
+				}
+				else if (c == '\'')
+				{
 					newType = 'n';
 				}
 				else if (c >= 'A' && c <= 'Z')
@@ -398,11 +451,11 @@ namespace Epsitec.App.Dolphin
 					newType = 's';
 				}
 
-				if (type != newType)
+				if (newType != type || newType == 's')
 				{
 					if (type != ' ')
 					{
-						string word = expression.Substring(start, i-start).Trim();
+						string word = expression.Substring(start, i-start-1).Trim();
 						if (!string.IsNullOrEmpty(word))
 						{
 							words.Add(word);
@@ -426,95 +479,87 @@ namespace Epsitec.App.Dolphin
 			return words;
 		}
 
-		protected int SkipNumber(string expression, ref int index, out string err)
+		protected static int GetValue(string word, int pass, Dictionary<string, int> symbols)
 		{
-			int value;
-
-			int i = index;
-			while (i < expression.Length)
+			int value = Assembler.GetNumber(word);
+			if (value == -1)
 			{
-				char c = expression[i];
-				if ((c >= '0' && c <= '9') || (c >= 'A' && c <= 'F'))
+				string symbol = Assembler.GetString(word);
+				if (symbol == null)
 				{
-					i++;
+					return -1;
+				}
+
+				if (symbols.ContainsKey(symbol))
+				{
+					value = symbols[symbol];
 				}
 				else
 				{
-					break;
+					if (pass == 0)  // première passe ?
+					{
+						value = 0;  // valeur quelconque, juste pour assembler une instruction avec le bon nombre de bytes
+					}
+					else  // deuxième passe ?
+					{
+						return -1;
+					}
 				}
 			}
-
-			string sub = expression.Substring(index, i-index);
-
-			char n = 'D';
-			if (i < expression.Length)
-			{
-				n = expression[i++];
-			}
-
-			if (n == 'D')  // décimal ?
-			{
-				if (!int.TryParse(expression, out value))
-				{
-					err = "Valeur incorecte.";
-					return -1;
-				}
-			}
-			else if (n == 'H')  // héxadécimal ?
-			{
-				value = Misc.ParseHexa(sub, -1, -1);
-				if (value == -1)
-				{
-					err = "Valeur incorecte.";
-					return -1;
-				}
-			}
-			else
-			{
-				err = "Base incorrecte.";
-				return -1;
-			}
-
-			index = i;
-			err = null;
 			return value;
 		}
 
-		protected string SkipSymbol(string expression, ref int index, out string err)
+		protected static int GetNumber(string word)
 		{
-			//	Indique si le mot correspond à un nom de symbole.
-			int i = index;
-			while (i < expression.Length)
+			if (word.Length == 0)
 			{
-				char c = expression[i];
+				return -1;
+			}
 
-				if (c >= '0' && c <= '9')
+			if (word[0] >= '0' && word[0] <= '9')
+			{
+				int value;
+				if (!int.TryParse(word, out value))
 				{
-					if (i == index)
+					return -1;
+				}
+				return value;
+			}
+
+			if (word.Length > 1 && word[1] == '\'')
+			{
+				if (word[0] == 'H')
+				{
+					return Misc.ParseHexa(word.Substring(2));
+				}
+
+				if (word[0] == 'D')
+				{
+					int value;
+					if (!int.TryParse(word.Substring(2), out value))
 					{
-						err = "Nom incorrect.";
-						return null;
+						return -1;
 					}
-					i++;
-				}
-				else if (c >= 'A' && c <= 'Z')
-				{
-					i++;
-				}
-				else if (c == '_')
-				{
-					i++;
-				}
-				else
-				{
-					break;
+					return value;
 				}
 			}
 
-			string sub = expression.Substring(index, i-index);
-			index = i;
-			err = null;
-			return sub;
+			return -1;
+		}
+
+		protected static string GetString(string word)
+		{
+			if (word.Length == 0)
+			{
+				return null;
+			}
+
+			if (word[0] >= 'A' && word[0] <= 'Z')
+			{
+				return word;
+			}
+
+			return null;
 		}
 
 		protected bool IsRegister(string word)
