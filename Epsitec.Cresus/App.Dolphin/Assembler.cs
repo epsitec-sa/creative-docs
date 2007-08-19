@@ -43,9 +43,11 @@ namespace Epsitec.App.Dolphin
 			Dictionary<string, int> variables = new Dictionary<string, int>();
 			this.processor.RomVariables(Components.Memory.RomBase, variables);
 
+			List<int> instructionLengths = new List<int>();
+
 			for (int pass=0; pass<2; pass++)
 			{
-				this.DoPass(lines, pass, variables, errorLines, errorTexts, ref instructionCounter, ref byteCounter);
+				this.DoPass(lines, pass, variables, instructionLengths, errorLines, errorTexts, ref instructionCounter, ref byteCounter);
 
 				if (errorLines.Count != 0)
 				{
@@ -84,7 +86,7 @@ namespace Epsitec.App.Dolphin
 		}
 
 
-		protected void DoPass(string[] lines, int pass, Dictionary<string, int> variables, List<int> errorLines, List<string> errorTexts, ref int instructionCounter, ref int byteCounter)
+		protected void DoPass(string[] lines, int pass, Dictionary<string, int> variables, List<int> instructionLengths, List<int> errorLines, List<string> errorTexts, ref int instructionCounter, ref int byteCounter)
 		{
 			//	Première ou deuxième passe de l'assemblage.
 			int pc = Components.Memory.RamBase;
@@ -100,8 +102,14 @@ namespace Epsitec.App.Dolphin
 				{
 					if (!string.IsNullOrEmpty(instruction))
 					{
+						int npc = pc;
+						if (pass == 1)  // deuxième passe ?
+						{
+							npc += instructionLengths[instructionCounter];  // npc = adresse après l'instruction, pour adressage relatif
+						}
+
 						instruction = this.processor.AssemblyPreprocess(instruction);
-						instruction = this.PrepareInstruction(instruction, pass, variables, out err);
+						instruction = this.PrepareInstruction(instruction, pass, npc, variables, out err);
 						if (err == null)
 						{
 							if (!string.IsNullOrEmpty(instruction))
@@ -125,6 +133,7 @@ namespace Epsitec.App.Dolphin
 									if (pass == 0)  // première passe ?
 									{
 										pc += codes.Count;
+										instructionLengths.Add(codes.Count);
 									}
 									else  // deuxième passe ?
 									{
@@ -248,7 +257,7 @@ namespace Epsitec.App.Dolphin
 			return instruction;
 		}
 
-		protected string PrepareInstruction(string instruction, int pass, Dictionary<string, int> variables, out string err)
+		protected string PrepareInstruction(string instruction, int pass, int npc, Dictionary<string, int> variables, out string err)
 		{
 			//	Prépare une instruction pour l'assemblage.
 			//	Effectue les substitutions dans les arguments en fonction des variables.
@@ -295,14 +304,31 @@ namespace Epsitec.App.Dolphin
 						int mode;
 						this.processor.AssemblySplitAddr(word, out text, out mode);
 
-						int value = this.Expression(text, pass, true, variables, out err);
-						if (err == null)
+						if (text.StartsWith("R^"))  // adressage relatif ?
 						{
-							text = string.Concat("H'", value.ToString("X3"));
+							text = text.Substring(2);  // enlève le R^
+							int value = this.Expression(text, pass, true, variables, out err);
+							if (err == null)
+							{
+								value -= npc;
+								text = string.Concat("{PC}+H'", value.ToString("X3"));
+							}
+							else
+							{
+								return null;
+							}
 						}
-						else
+						else  // adressage absolu ?
 						{
-							return null;
+							int value = this.Expression(text, pass, true, variables, out err);
+							if (err == null)
+							{
+								text = string.Concat("H'", value.ToString("X3"));
+							}
+							else
+							{
+								return null;
+							}
 						}
 
 						word = this.processor.AssemblyCombineAddr(text, mode);
