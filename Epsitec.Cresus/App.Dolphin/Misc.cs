@@ -93,6 +93,23 @@ namespace Epsitec.App.Dolphin
 			}
 		}
 
+		static public string RemoveSpaces(string text)
+		{
+			//	Supprime tous les espaces dans un texte.
+			while (true)
+			{
+				int start = text.IndexOf(" ");
+				if (start == -1)
+				{
+					break;
+				}
+
+				text = text.Remove(start, 1);
+			}
+
+			return text;
+		}
+
 		static public string RemoveTags(string text)
 		{
 			//	Supprime tous les tags xml <...> dans un texte.

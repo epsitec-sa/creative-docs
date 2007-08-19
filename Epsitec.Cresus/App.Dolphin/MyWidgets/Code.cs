@@ -159,7 +159,7 @@ namespace Epsitec.App.Dolphin.MyWidgets
 			this.arrowAddress = -1;
 			if (this.isTable)
 			{
-				this.widgetInstruction.Text = string.Concat("BYTE #", this.valueCodes[0].ToString("X2"), "h");
+				this.widgetInstruction.Text = string.Concat("BYTE #H'", this.valueCodes[0].ToString("X2"));
 			}
 			else
 			{

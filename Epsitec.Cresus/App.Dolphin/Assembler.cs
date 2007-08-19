@@ -277,7 +277,7 @@ namespace Epsitec.App.Dolphin
 						int value = this.Expression(word.Substring(1), pass, pc, symbols, out err);
 						if (err == null)
 						{
-							word = string.Concat("#", value.ToString("X3"), "H");
+							word = string.Concat("#H'", value.ToString("X3"));
 						}
 						else
 						{
@@ -289,7 +289,7 @@ namespace Epsitec.App.Dolphin
 						int value = this.Expression(word, pass, pc, symbols, out err);
 						if (err == null)
 						{
-							word = string.Concat(value.ToString("X3"), "H");
+							word = string.Concat("H'", value.ToString("X3"));
 						}
 						else
 						{
@@ -318,6 +318,12 @@ namespace Epsitec.App.Dolphin
 		protected int Expression(string expression, int pass, int pc, Dictionary<string, int> symbols, out string err)
 		{
 			//	Evalue une expression.
+			List<string> words = Assembler.Fragment(expression);
+
+
+
+
+
 			err = null;
 
 			int value = 0;
@@ -356,6 +362,68 @@ namespace Epsitec.App.Dolphin
 			}
 
 			return value;
+		}
+
+		protected static List<string> Fragment(string expression)
+		{
+			List<string> words = new List<string>();
+
+			int i = 0;
+			int start = 0;
+			char type = ' ';
+			while (i < expression.Length)
+			{
+				char c = expression[i++];
+
+				char newType;
+				if (c == ' ')
+				{
+					newType = ' ';
+				}
+				else if (c >= '0' && c <= '9')
+				{
+					newType = 'n';
+				}
+				else if (i < expression.Length && expression[i] == '\'')  // "X'" ?
+				{
+					i++;  // saute l'apostrophe
+					newType = 'n';
+				}
+				else if (c >= 'A' && c <= 'Z')
+				{
+					newType = 't';
+				}
+				else
+				{
+					newType = 's';
+				}
+
+				if (type != newType)
+				{
+					if (type != ' ')
+					{
+						string word = expression.Substring(start, i-start).Trim();
+						if (!string.IsNullOrEmpty(word))
+						{
+							words.Add(word);
+						}
+					}
+
+					type = newType;
+					start = i-1;
+				}
+			}
+
+			if (type != ' ')
+			{
+				string word = expression.Substring(start, i-start).Trim();
+				if (!string.IsNullOrEmpty(word))
+				{
+					words.Add(word);
+				}
+			}
+
+			return words;
 		}
 
 		protected int SkipNumber(string expression, ref int index, out string err)

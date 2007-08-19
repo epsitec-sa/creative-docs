@@ -2,6 +2,7 @@
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
 using System.Collections.Generic;
+using Epsitec.Common.Widgets;
 
 namespace Epsitec.App.Dolphin.Components
 {
@@ -2010,9 +2011,8 @@ namespace Epsitec.App.Dolphin.Components
 		protected static void PutCodeValue(System.Text.StringBuilder builder, int val)
 		{
 			//	Met une valeur immédiate hexadécimale.
-			builder.Append("#");
+			builder.Append("#H'");
 			builder.Append(val.ToString("X2"));
-			builder.Append("h");
 		}
 
 		protected static int PutCodeAddress(System.Text.StringBuilder builder, int mh, int ll, int pc, int instructionLength)
@@ -2031,17 +2031,15 @@ namespace Epsitec.App.Dolphin.Components
 					address = 0x1000-address;
 					arrowAddress = pc+instructionLength-address;
 
-					builder.Append("-");
+					builder.Append("-H'");
 					builder.Append(address.ToString("X3"));
-					builder.Append("h");
 				}
 				else
 				{
 					arrowAddress = pc+instructionLength+address;
 
-					builder.Append("+");
+					builder.Append("+H'");
 					builder.Append(address.ToString("X3"));
-					builder.Append("h");
 				}
 			}
 			else if ((mode & 0x4000) != 0)  // {SP}+depl ?
@@ -2050,23 +2048,21 @@ namespace Epsitec.App.Dolphin.Components
 				if ((address & 0x0800) != 0)  // offset négatif ?
 				{
 					address = 0x1000-address;
-					builder.Append("-");
+					builder.Append("-H'");
 					builder.Append(address.ToString("X3"));
-					builder.Append("h");
 				}
 				else
 				{
-					builder.Append("+");
+					builder.Append("+H'");
 					builder.Append(address.ToString("X3"));
-					builder.Append("h");
 				}
 			}
 			else
 			{
 				arrowAddress = address;
 
+				builder.Append("H'");
 				builder.Append(address.ToString("X3"));
-				builder.Append("h");
 			}
 
 			if ((mode & 0x1000) != 0)  // +{X} ?
@@ -2088,8 +2084,9 @@ namespace Epsitec.App.Dolphin.Components
 			//	En retour, tout est en majuscule avec un espace pour séparer les arguments.
 			//	Remplace un "JUMP,EQ TOTO" par un "JUMPEQ TOTO".
 			//	Remplace un "TSET A:#2" oar un "TSET #2 A".
+			instruction = TextLayout.ConvertToSimpleText(instruction);  // conversion &apos; en '
 			instruction = instruction.ToUpper().Trim();
-			string[] seps = {" ", ",", ":", "<TAB/>"};
+			string[] seps = {" ", ",", ":", "\t"};
 			string[] words = instruction.Split(seps, System.StringSplitOptions.RemoveEmptyEntries);
 
 			if (words.Length == 3 && words[0] == "JUMP")
@@ -2958,15 +2955,15 @@ namespace Epsitec.App.Dolphin.Components
 
 			word = word.Substring(1);  // enlève le '#' au début
 
-			if (word.EndsWith("H"))
+			if (word.StartsWith("H'"))
 			{
-				word = word.Substring(0, word.Length-1);  // enlève le 'H' à la fin
+				word = word.Substring(2);
 				value =  Misc.ParseHexa(word, -1, -1);
 				return;
 			}
-			else if (word.EndsWith("D"))
+			else if (word.StartsWith("D'"))
 			{
-				word = word.Substring(0, word.Length-1);  // enlève le 'D' à la fin
+				word = word.Substring(2);
 				if (!int.TryParse(word, out value))
 				{
 					value = -1;
@@ -3048,14 +3045,14 @@ namespace Epsitec.App.Dolphin.Components
 			}
 			while (action);
 
-			if (word.EndsWith("H"))
+			if (word.StartsWith("H'"))
 			{
-				word = word.Substring(0, word.Length-1);  // enlève H
+				word = word.Substring(2);
 				address = Misc.ParseHexa(word, -1, -1);
 			}
-			else if (word.EndsWith("D"))
+			else if (word.StartsWith("D'"))
 			{
-				word = word.Substring(0, word.Length-1);  // enlève D
+				word = word.Substring(2);
 				if (!int.TryParse(word, out address))
 				{
 					address = -1;
@@ -3260,12 +3257,12 @@ namespace Epsitec.App.Dolphin.Components
 
 				if (v)
 				{
-					builder.Append("<i>#val</i> = valeur immédiate #12h, #C0h, #99d<br/>");
+					builder.Append("<i>#val</i> = valeur immédiate #H'12, #H'C0, #D'99, #99<br/>");
 				}
 
 				if (a)
 				{
-					builder.Append("<i>ADDR</i> = adresse C00h, {PC}+DAh, {PC}-3h, {SP}+2h, C80h+{X}+{Y}<br/>");
+					builder.Append("<i>ADDR</i> = adresse H'C00, {PC}+H'DA, {PC}-3, {SP}+2, H'C80+{X}+{Y}<br/>");
 				}
 			}
 
@@ -3730,35 +3727,35 @@ namespace Epsitec.App.Dolphin.Components
 				case "Intro":
 					AbstractProcessor.HelpPutTitle(builder, "Binaire et hexadécimal");
 					AbstractProcessor.HelpPutLine(builder, "(<i>décimal: binaire = hexa</i>)");
-					AbstractProcessor.HelpPutLine(builder, "  0: 0000 = 0");
-					AbstractProcessor.HelpPutLine(builder, "  1: 0001 = 1");
-					AbstractProcessor.HelpPutLine(builder, "  2: 0010 = 2");
-					AbstractProcessor.HelpPutLine(builder, "  3: 0011 = 3");
-					AbstractProcessor.HelpPutLine(builder, "  4: 0100 = 4");
-					AbstractProcessor.HelpPutLine(builder, "  5: 0101 = 5");
-					AbstractProcessor.HelpPutLine(builder, "  6: 0110 = 6");
-					AbstractProcessor.HelpPutLine(builder, "  7: 0111 = 7");
-					AbstractProcessor.HelpPutLine(builder, "  8: 1000 = 8");
-					AbstractProcessor.HelpPutLine(builder, "  9: 1001 = 9");
-					AbstractProcessor.HelpPutLine(builder, "10: 1010 = A");
-					AbstractProcessor.HelpPutLine(builder, "11: 1011 = B");
-					AbstractProcessor.HelpPutLine(builder, "12: 1100 = C");
-					AbstractProcessor.HelpPutLine(builder, "13: 1101 = D");
-					AbstractProcessor.HelpPutLine(builder, "14: 1110 = E");
-					AbstractProcessor.HelpPutLine(builder, "15: 1111 = F");
+					AbstractProcessor.HelpPutLine(builder, "  0: 0000 = H'0");
+					AbstractProcessor.HelpPutLine(builder, "  1: 0001 = H'1");
+					AbstractProcessor.HelpPutLine(builder, "  2: 0010 = H'2");
+					AbstractProcessor.HelpPutLine(builder, "  3: 0011 = H'3");
+					AbstractProcessor.HelpPutLine(builder, "  4: 0100 = H'4");
+					AbstractProcessor.HelpPutLine(builder, "  5: 0101 = H'5");
+					AbstractProcessor.HelpPutLine(builder, "  6: 0110 = H'6");
+					AbstractProcessor.HelpPutLine(builder, "  7: 0111 = H'7");
+					AbstractProcessor.HelpPutLine(builder, "  8: 1000 = H'8");
+					AbstractProcessor.HelpPutLine(builder, "  9: 1001 = H'9");
+					AbstractProcessor.HelpPutLine(builder, "10: 1010 = H'A");
+					AbstractProcessor.HelpPutLine(builder, "11: 1011 = H'B");
+					AbstractProcessor.HelpPutLine(builder, "12: 1100 = H'C");
+					AbstractProcessor.HelpPutLine(builder, "13: 1101 = H'D");
+					AbstractProcessor.HelpPutLine(builder, "14: 1110 = H'E");
+					AbstractProcessor.HelpPutLine(builder, "15: 1111 = H'F");
 
 					AbstractProcessor.HelpPutTitle(builder, "Espace d'adressage");
-					AbstractProcessor.HelpPutLine(builder, "[000]..[7FF]<tab/>RAM");
-					AbstractProcessor.HelpPutLine(builder, "[800]..[BFF]<tab/>ROM");
-					AbstractProcessor.HelpPutLine(builder, "[C00]..[C10]<tab/>Périphériques");
-					AbstractProcessor.HelpPutLine(builder, "[C80]..[CDF]<tab/>Ecran bitmap");
+					AbstractProcessor.HelpPutLine(builder, "[H'000]..[H'7FF]<tab/>RAM");
+					AbstractProcessor.HelpPutLine(builder, "[H'800]..[H'BFF]<tab/>ROM");
+					AbstractProcessor.HelpPutLine(builder, "[H'C00]..[H'C10]<tab/>Périphériques");
+					AbstractProcessor.HelpPutLine(builder, "[H'C80]..[H'CDF]<tab/>Ecran bitmap");
 
 					AbstractProcessor.HelpPutTitle(builder, "Affichage");
 					AbstractProcessor.HelpPutLine(builder, "L'affichage est constitué de 4 afficheurs à 7 segments (plus un point décimal), numérotés de droite à gauche. On peut écrire une valeur pour mémoriser les digits à allumer, ou relire cette valeur.");
-					AbstractProcessor.HelpPutLine(builder, "[C00]<tab/>Premier digit (celui de gauche).");
-					AbstractProcessor.HelpPutLine(builder, "[C01]<tab/>Deuxième digit.");
-					AbstractProcessor.HelpPutLine(builder, "[C02]<tab/>Troisième digit.");
-					AbstractProcessor.HelpPutLine(builder, "[C03]<tab/>Quatrième digit (celui de droite).");
+					AbstractProcessor.HelpPutLine(builder, "[H'C00]<tab/>Premier digit (celui de gauche).");
+					AbstractProcessor.HelpPutLine(builder, "[H'C01]<tab/>Deuxième digit.");
+					AbstractProcessor.HelpPutLine(builder, "[H'C02]<tab/>Troisième digit.");
+					AbstractProcessor.HelpPutLine(builder, "[H'C03]<tab/>Quatrième digit (celui de droite).");
 					AbstractProcessor.HelpPutLine(builder, "");
 					AbstractProcessor.HelpPutLine(builder, "bit 0<tab/>Segment vertical supérieur droite.");
 					AbstractProcessor.HelpPutLine(builder, "bit 1<tab/>Segment vertical inférieur droite.");
@@ -3771,20 +3768,20 @@ namespace Epsitec.App.Dolphin.Components
 
 					AbstractProcessor.HelpPutTitle(builder, "Clavier");
 					AbstractProcessor.HelpPutLine(builder, "Le clavier est constitué de 8 touches nommées 0..7, plus 2 touches super-shift.");
-					AbstractProcessor.HelpPutLine(builder, "[C07]<tab/>Clavier.");
+					AbstractProcessor.HelpPutLine(builder, "[H'C07]<tab/>Clavier.");
 					AbstractProcessor.HelpPutLine(builder, "");
 					AbstractProcessor.HelpPutLine(builder, "bits 0..2<tab/>Touches 0..7.");
 					AbstractProcessor.HelpPutLine(builder, "bit 3<tab/>Touche Shift.");
 					AbstractProcessor.HelpPutLine(builder, "bit 4<tab/>Touche Ctrl.");
-					AbstractProcessor.HelpPutLine(builder, "bit 7<tab/>Prend la valeur 1 lorsqu'une touche 0..7 est pressée. Est automatiquement remis à zéro lorsque l'adresse [C07] est lue.");
+					AbstractProcessor.HelpPutLine(builder, "bit 7<tab/>Prend la valeur 1 lorsqu'une touche 0..7 est pressée. Est automatiquement remis à zéro lorsque l'adresse [H'C07] est lue.");
 
 					AbstractProcessor.HelpPutTitle(builder, "Ecran bitmap");
 					AbstractProcessor.HelpPutLine(builder, "L'écran bitmap est un écran vidéo monochrome de 32 x 24 pixels. Chaque byte représente 8 pixels horizontaux, avec le bit 7 à gauche.");
 					AbstractProcessor.HelpPutLine(builder, "");
-					AbstractProcessor.HelpPutLine(builder, "[C80]..[C83]<tab/>1ère ligne de 32 pixels.");
-					AbstractProcessor.HelpPutLine(builder, "[C84]..[C87]<tab/>2ème ligne de 32 pixels.");
+					AbstractProcessor.HelpPutLine(builder, "[H'C80]..[H'C83]<tab/>1ère ligne de 32 pixels.");
+					AbstractProcessor.HelpPutLine(builder, "[H'C84]..[H'C87]<tab/>2ème ligne de 32 pixels.");
 					AbstractProcessor.HelpPutLine(builder, "...");
-					AbstractProcessor.HelpPutLine(builder, "[CDC]..[CDF]<tab/>24ème ligne de 32 pixels.");
+					AbstractProcessor.HelpPutLine(builder, "[H'CDC]..[H'CDF]<tab/>24ème ligne de 32 pixels.");
 					break;
 
 				case "Notation":
@@ -3812,8 +3809,8 @@ namespace Epsitec.App.Dolphin.Components
 					AbstractProcessor.HelpPutLine(builder, "m=8             <tab/>{PC}+depl (± adresse relative)");
 					AbstractProcessor.HelpPutLine(builder, "");
 					AbstractProcessor.HelpPutLine(builder, "<b>Exemples</b>");
-					AbstractProcessor.HelpPutLine(builder, "[54] [0C] [07]  <tab/>MOVE C07,A");
-					AbstractProcessor.HelpPutLine(builder, "[58] [1C] [00]  <tab/>MOVE A,C00+{X}");
+					AbstractProcessor.HelpPutLine(builder, "[54] [0C] [07]  <tab/>MOVE H'C07,A");
+					AbstractProcessor.HelpPutLine(builder, "[58] [1C] [00]  <tab/>MOVE A,H'C00+{X}");
 					AbstractProcessor.HelpPutLine(builder, "[10] [80] [10]  <tab/>JUMP {PC}+10 (saute 10 bytes)");
 					AbstractProcessor.HelpPutLine(builder, "[10] [8F] [FD]  <tab/>JUMP {PC}-3 (boucle infinie)");
 					AbstractProcessor.HelpPutLine(builder, "[54] [40] [02]  <tab/>MOVE {SP}+2,A");
