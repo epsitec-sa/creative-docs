@@ -149,22 +149,34 @@ namespace Epsitec.App.Dolphin
 				if (pass == 0)  // première passe ?
 				{
 					string symbol = defs[0].Trim();
+
 					if (this.IsRegister(symbol))
 					{
 						errorLines.Add(lineCounter);
 						errorTexts.Add("Il n'est pas possible d'utiliser un nom de registre.");
 					}
+					else if (!this.IsSymbol(symbol))
+					{
+						errorLines.Add(lineCounter);
+						errorTexts.Add("Nom de symbol incorrect.");
+					}
+					else if (symbols.ContainsKey(symbol))
+					{
+						errorLines.Add(lineCounter);
+						errorTexts.Add("Symbol déjà défini.");
+					}
 					else
 					{
-						int value = Misc.ParseHexa(defs[1].Trim());  // TODO: évaluer l'expression
-						if (symbols.ContainsKey(symbol))
+						string err;
+						int value = this.Expression(defs[1].Trim(), pass, pc, symbols, out err);
+						if (err == null)
 						{
-							errorLines.Add(lineCounter);
-							errorTexts.Add("Symbol déjà défini.");
+							symbols.Add(symbol, value);
 						}
 						else
 						{
-							symbols.Add(symbol, value);
+							errorLines.Add(lineCounter);
+							errorTexts.Add(err);
 						}
 					}
 				}
@@ -180,23 +192,28 @@ namespace Epsitec.App.Dolphin
 				{
 					if (pass == 0)  // première passe ?
 					{
-						if (this.IsRegister(labels[0]))
+						string name = labels[0];
+
+						if (this.IsRegister(name))
 						{
 							errorLines.Add(lineCounter);
 							errorTexts.Add("Il n'est pas possible d'utiliser un nom de registre.");
+							return null;
+						}
+						else if (!this.IsSymbol(name))
+						{
+							errorLines.Add(lineCounter);
+							errorTexts.Add("Nom d'étiquette incorrect.");
+						}
+						else if (symbols.ContainsKey(name))
+						{
+							errorLines.Add(lineCounter);
+							errorTexts.Add("Etiquette déjà définie.");
+							return null;
 						}
 						else
 						{
-							if (symbols.ContainsKey(labels[0]))
-							{
-								errorLines.Add(lineCounter);
-								errorTexts.Add("Etiquette déjà définie.");
-								return null;
-							}
-							else
-							{
-								symbols.Add(labels[0], pc);
-							}
+							symbols.Add(name, pc);
 						}
 					}
 
@@ -225,6 +242,7 @@ namespace Epsitec.App.Dolphin
 				for (int i=1; i<words.Length; i++)  // passe en revue les arguments
 				{
 					string word = words[i];
+					string err;
 
 					if (this.IsRegister(word))  // r ?
 					{
@@ -232,13 +250,31 @@ namespace Epsitec.App.Dolphin
 					}
 					else if (word.Length >= 1 && word[0] == '#')  // #val ?
 					{
-						word = word.Substring(1);
-						word = this.WordSubstitute(word, pass, symbols);
-						word = string.Concat("#", word);
+						int value = this.Expression(word.Substring(1), pass, pc, symbols, out err);
+						if (err == null)
+						{
+							word = string.Concat("#", value.ToString("X3"), "h");
+						}
+						else
+						{
+							errorLines.Add(lineCounter);
+							errorTexts.Add(err);
+							return null;
+						}
 					}
 					else  // ADDR ?
 					{
-						word = this.WordSubstitute(word, pass, symbols);
+						int value = this.Expression(word, pass, pc, symbols, out err);
+						if (err == null)
+						{
+							word = string.Concat(value.ToString("X3"), "h");
+						}
+						else
+						{
+							errorLines.Add(lineCounter);
+							errorTexts.Add(err);
+							return null;
+						}
 					}
 
 					words[i] = word;
@@ -254,21 +290,138 @@ namespace Epsitec.App.Dolphin
 			return builder.ToString();
 		}
 
-		protected string WordSubstitute(string word, int pass, Dictionary<string, int> symbols)
+		protected int Expression(string expression, int pass, int pc, Dictionary<string, int> symbols, out string err)
 		{
-			if (pass == 0)  // première passe ?
+			//	Evalue une expression.
+			err = null;
+
+			int value = 0;
+			int index = 0;
+			while (index < expression.Length)
 			{
-				word = "0";  // valeur quelconque, juste pour assembler une instruction avec le bon nombre de bytes
-			}
-			else  // deuxième passe ?
-			{
-				if (symbols.ContainsKey(word))
+				int n = this.SkipNumber(expression, ref index, out err);
+				if (err != null)
 				{
-					word = string.Concat(symbols[word].ToString("X3"), "h");
+					string symbol = this.SkipSymbol(expression, ref index, out err);
+					if (err != null)
+					{
+						err = "Expression incorrecte.";
+						return -1;
+					}
+
+					if (symbols.ContainsKey(symbol))
+					{
+						n = symbols[symbol];
+					}
+					else
+					{
+						if (pass == 0)  // première passe ?
+						{
+							n = 0;  // valeur quelconque, juste pour assembler une instruction avec le bon nombre de bytes
+						}
+						else  // deuxième passe ?
+						{
+							err = "Symbole indéfini.";
+							return -1;
+						}
+					}
+				}
+
+				value = n;
+			}
+
+			return value;
+		}
+
+		protected int SkipNumber(string expression, ref int index, out string err)
+		{
+			int value;
+
+			int i = index;
+			while (i < expression.Length)
+			{
+				char c = expression[i];
+				if ((c >= '0' && c <= '9') || (c >= 'A' && c <= 'F'))
+				{
+					i++;
+				}
+				else
+				{
+					break;
 				}
 			}
 
-			return word;
+			string sub = expression.Substring(index, i-index);
+
+			char n = 'D';
+			if (i < expression.Length)
+			{
+				n = expression[i++];
+			}
+
+			if (n == 'D')  // décimal ?
+			{
+				if (!int.TryParse(expression, out value))
+				{
+					err = "Valeur incorecte.";
+					return -1;
+				}
+			}
+			else if (n == 'H')  // héxadécimal ?
+			{
+				value = Misc.ParseHexa(sub, -1, -1);
+				if (value == -1)
+				{
+					err = "Valeur incorecte.";
+					return -1;
+				}
+			}
+			else
+			{
+				err = "Base incorrecte.";
+				return -1;
+			}
+
+			index = i;
+			err = null;
+			return value;
+		}
+
+		protected string SkipSymbol(string expression, ref int index, out string err)
+		{
+			//	Indique si le mot correspond à un nom de symbole.
+			int i = index;
+			while (i < expression.Length)
+			{
+				char c = expression[i];
+
+				if (c >= '0' && c <= '9')
+				{
+					if (i == index)
+					{
+						err = "Nom incorrect.";
+						return null;
+					}
+					i++;
+				}
+				else if (c >= 'A' && c <= 'Z')
+				{
+					i++;
+				}
+				else if (c == '_')
+				{
+					i++;
+				}
+				else
+				{
+					break;
+				}
+			}
+
+			string sub = expression.Substring(index, i-index);
+			index = i;
+			err = null;
+			return sub;
 		}
 
 		protected bool IsRegister(string word)
@@ -282,6 +435,42 @@ namespace Epsitec.App.Dolphin
 				}
 			}
 			return false;
+		}
+
+		protected bool IsSymbol(string word)
+		{
+			//	Indique si le mot correspond à un nom de symbole valide.
+			if (word.Length == 0)
+			{
+				return false;
+			}
+
+			if (word[0] >= '0' && word[0] <= '9')
+			{
+				return false;
+			}
+
+			foreach (char c in word)
+			{
+				if (word[0] >= '0' && word[0] <= '9')
+				{
+					continue;
+				}
+				else if (word[0] >= 'A' && word[0] <= 'Z')
+				{
+					continue;
+				}
+				else if (word[0] == '_')
+				{
+					continue;
+				}
+				else
+				{
+					return false;
+				}
+			}
+
+			return true;
 		}
 
 
