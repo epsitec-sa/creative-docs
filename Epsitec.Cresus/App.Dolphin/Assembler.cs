@@ -454,6 +454,20 @@ namespace Epsitec.App.Dolphin
 				values.RemoveAt(values.Count-1);  // enlève la dernière valeur
 				ops.RemoveAt(ops.Count-1);  // enlève l'opération effectuée
 			}
+			else if (values.Count == level+1 && ops.Count > 0)
+			{
+				switch (ops[ops.Count-1])
+				{
+					case "+":
+						ops.RemoveAt(ops.Count-1);  // enlève l'opération effectuée
+						break;
+
+					case "-":
+						values[values.Count-1] = -values[values.Count-1];
+						ops.RemoveAt(ops.Count-1);  // enlève l'opération effectuée
+						break;
+				}
+			}
 
 			return null;
 		}
