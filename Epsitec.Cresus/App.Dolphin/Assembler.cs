@@ -30,6 +30,7 @@ namespace Epsitec.App.Dolphin
 
 			this.memory.ClearRam();
 
+			//	Enlève les éventuelles erreurs précédentes.
 			this.RemoveErrors();
 
 			string[] seps = {"<br/>"};
@@ -37,24 +38,30 @@ namespace Epsitec.App.Dolphin
 
 			int instructionCounter = 0;
 			int byteCounter = 0;
+
+			//	Ces 2 listes stockent toutes les erreurs rencontrées.
 			List<int> errorLines = new List<int>();
 			List<string> errorTexts = new List<string>();
 
+			//	Crée le dictionnaire principal pour les variables et étiquettes.
 			Dictionary<string, int> variables = new Dictionary<string, int>();
 			this.processor.RomVariables(Components.Memory.RomBase, variables);
 
+			//	Longueurs des instructions, construite lors de la 1ère passe et utilisées à la 2ème.
 			List<int> instructionLengths = new List<int>();
 
+			//	Effectue les deux passes.
 			for (int pass=0; pass<2; pass++)
 			{
 				this.DoPass(lines, pass, variables, instructionLengths, errorLines, errorTexts, ref instructionCounter, ref byteCounter);
 
 				if (errorLines.Count != 0)
 				{
-					break;
+					break;  // si erreur pendant la 1ère passe -> pas de 2ème
 				}
 			}
 
+			//	Dialogue selon le déroulement de l'assemblage.
 			string icon, message;
 			if (errorLines.Count == 0)
 			{
@@ -88,76 +95,97 @@ namespace Epsitec.App.Dolphin
 
 		protected void DoPass(string[] lines, int pass, Dictionary<string, int> variables, List<int> instructionLengths, List<int> errorLines, List<string> errorTexts, ref int instructionCounter, ref int byteCounter)
 		{
-			//	Première ou deuxième passe de l'assemblage.
-			int pc = Components.Memory.RamBase;
+			//	Première ou deuxième passe de l'assemblage (pass = [0..1]).
+			//	La 1ère passe récolte les définitions de variables et d'étiquettes dans un dictionnaire.
+			//	La 2ème passe génère le code.
+			int pc = Components.Memory.RamBase;  // on place toujours le code au début de la RAM
 			int lineCounter = 0;
+			this.ending = false;
 
 			foreach (string line in lines)
 			{
 				string instruction = this.RemoveComment(line);
-
 				string err;
-				instruction = this.ProcessVariables(instruction, pass, pc, variables, out err);
-				if (err == null)
+
+				if (this.ProcessPseudo(instruction, pass, variables, ref pc, out err))
 				{
-					if (!string.IsNullOrEmpty(instruction))
+					if (err == null)
 					{
-						int npc = pc;
-						if (pass == 1)  // deuxième passe ?
+						if (this.ending)
 						{
-							npc += instructionLengths[instructionCounter];  // npc = adresse après l'instruction, pour adressage relatif
+							break;
 						}
-
-						instruction = this.processor.AssemblyPreprocess(instruction);
-						instruction = this.PrepareInstruction(instruction, pass, npc, variables, out err);
-						if (err == null)
-						{
-							if (!string.IsNullOrEmpty(instruction))
-							{
-								List<int> codes = new List<int>();
-								err = this.processor.AssemblyInstruction(instruction, codes);
-
-								if (codes.Count == 0)
-								{
-									if (pass == 1)  // deuxième passe ?
-									{
-										if (!string.IsNullOrEmpty(err))
-										{
-											errorLines.Add(lineCounter);
-											errorTexts.Add(Misc.RemoveTags(Misc.FirstLine(err)));
-										}
-									}
-								}
-								else
-								{
-									if (pass == 0)  // première passe ?
-									{
-										pc += codes.Count;
-										instructionLengths.Add(codes.Count);
-									}
-									else  // deuxième passe ?
-									{
-										foreach (int code in codes)
-										{
-											this.memory.Write(pc++, code);
-											byteCounter++;
-										}
-										instructionCounter++;
-									}
-								}
-							}
-						}
-						else
-						{
-							errorLines.Add(lineCounter);
-							errorTexts.Add(Misc.RemoveTags(err));
-						}
+					}
+					else
+					{
+						errorLines.Add(lineCounter);
+						errorTexts.Add(err);
 					}
 				}
 				else
 				{
-					errorLines.Add(lineCounter);
-					errorTexts.Add(Misc.RemoveTags(err));
+					instruction = this.ProcessVariables(instruction, pass, pc, variables, out err);
+					if (err == null)
+					{
+						if (!string.IsNullOrEmpty(instruction))
+						{
+							int npc = pc;  // npc est faux à la 1ère passe, mais c'est sans importance !
+							if (pass == 1)  // deuxième passe ?
+							{
+								npc += instructionLengths[instructionCounter];  // npc = adresse après l'instruction, pour adressage relatif
+							}
+
+							instruction = this.processor.AssemblyPreprocess(instruction);
+							instruction = this.PrepareInstruction(instruction, pass, npc, variables, out err);
+							if (err == null)
+							{
+								if (!string.IsNullOrEmpty(instruction))
+								{
+									List<int> codes = new List<int>();
+									err = this.processor.AssemblyInstruction(instruction, codes);
+
+									if (codes.Count == 0)
+									{
+										if (pass == 1)  // deuxième passe ?
+										{
+											if (!string.IsNullOrEmpty(err))
+											{
+												errorLines.Add(lineCounter);
+												errorTexts.Add(Misc.RemoveTags(Misc.FirstLine(err)));
+											}
+										}
+									}
+									else
+									{
+										if (pass == 0)  // première passe ?
+										{
+											pc += codes.Count;
+											instructionLengths.Add(codes.Count);
+										}
+										else  // deuxième passe ?
+										{
+											foreach (int code in codes)
+											{
+												this.memory.Write(pc++, code);
+												byteCounter++;
+											}
+											instructionCounter++;
+										}
+									}
+								}
+							}
+							else
+							{
+								errorLines.Add(lineCounter);
+								errorTexts.Add(Misc.RemoveTags(err));
+							}
+						}
+					}
+					else
+					{
+						errorLines.Add(lineCounter);
+						errorTexts.Add(Misc.RemoveTags(err));
+					}
 				}
 				
 				lineCounter++;
@@ -175,6 +203,63 @@ namespace Epsitec.App.Dolphin
 				instruction = instruction.Substring(0, index);  // enlève le commentaire
 			}
 			return instruction;
+		}
+
+		protected bool ProcessPseudo(string instruction, int pass, Dictionary<string, int> variables, ref int pc, out string err)
+		{
+			//	Traite les pseudos-instructions .TITLE, .LOC, etc.
+			//	Retourne true si une pseudo a été traitée.
+			err = null;
+
+			if (!instruction.StartsWith("."))
+			{
+				return false;
+			}
+
+			string[] seps = {" ", "\t"};
+			string[] words = instruction.Split(seps, System.StringSplitOptions.RemoveEmptyEntries);
+
+			switch (words[0])
+			{
+				case ".TITLE":
+					if (words.Length == 1)
+					{
+						err = "Il manque le texte du titre.";
+					}
+					break;
+
+				case ".LOC":
+					if (words.Length == 2)
+					{
+						int value = this.Expression(words[1], pass, true, variables, out err);
+						if (err == null)
+						{
+							pc = value;
+						}
+					}
+					else
+					{
+						err = ".LOC doit être suivi d'une adresse.";
+					}
+					break;
+
+				case ".END":
+					if (words.Length == 1)
+					{
+						this.ending = true;
+					}
+					else
+					{
+						err = "Il ne peut pas y avoir d'argument.";
+					}
+					break;
+
+				default:
+					err = "Pseudo-instruction inconnue.";
+					break;
+			}
+
+			return true;
 		}
 
 		protected string ProcessVariables(string instruction, int pass, int pc, Dictionary<string, int> variables, out string err)
@@ -751,10 +836,11 @@ namespace Epsitec.App.Dolphin
 
 		protected static readonly int undefined = int.MinValue;
 
-		protected Components.AbstractProcessor processor;
-		protected Components.Memory memory;
-		protected Window window;
-		protected TextFieldMulti field;
-		protected string filename;
+		protected Components.AbstractProcessor	processor;
+		protected Components.Memory				memory;
+		protected Window						window;
+		protected TextFieldMulti				field;
+		protected string						filename;
+		protected bool							ending;
 	}
 }
