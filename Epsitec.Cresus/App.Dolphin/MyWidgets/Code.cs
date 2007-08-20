@@ -52,7 +52,6 @@ namespace Epsitec.App.Dolphin.MyWidgets
 			this.widgetInstruction.Dock = DockStyle.Left;
 			this.widgetInstruction.AcceptingEdition += new EventHandler<CancelEventArgs> (this.HandleInstructionAcceptingEdition);
 			this.widgetInstruction.EditionAccepted += new EventHandler (this.HandleInstructionEditionAccepted);
-			this.widgetInstruction.EditionRejected += new EventHandler (this.HandleInstructionEditionRejected);
 			this.widgetInstruction.IsFocusedChanged += new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleFieldIsFocusedChanged);
 
 			this.widgetCodeAddress = new MyWidgets.CodeAddress(this);
@@ -76,7 +75,6 @@ namespace Epsitec.App.Dolphin.MyWidgets
 
 				this.widgetInstruction.AcceptingEdition -= new EventHandler<CancelEventArgs> (this.HandleInstructionAcceptingEdition);
 				this.widgetInstruction.EditionAccepted -= new EventHandler (this.HandleInstructionEditionAccepted);
-				this.widgetInstruction.EditionRejected -= new EventHandler(this.HandleInstructionEditionRejected);
 
 				this.widgetCodeAddress.Entered -= new MessageEventHandler(this.HandleCodeAddressEntered);
 				this.widgetCodeAddress.Exited -= new MessageEventHandler(this.HandleCodeAddressExited);
@@ -251,13 +249,13 @@ namespace Epsitec.App.Dolphin.MyWidgets
 		{
 			//	Avant de valider la saisie, la ligne éditable nous donne la
 			//	possibilité de tout annuler en cas d'erreur de syntaxe.
-			List<int> codes = new List<int> ();
-			string instruction = this.processor.AssemblyPreprocess (this.widgetInstruction.Text);
-			string err = this.processor.AssemblyInstruction (instruction, codes);
+			List<int> codes = new List<int>();
+			string instruction = this.processor.AssemblyPreprocess(this.widgetInstruction.Text);
+			string err = this.processor.AssemblyInstruction(instruction, codes);
 
-			if (codes.Count == 0 || !string.IsNullOrEmpty (err))
+			if (codes.Count == 0 || !string.IsNullOrEmpty(err))
 			{
-				Message message = Message.GetLastMessage ();
+				Message message = Message.GetLastMessage();
 				message.Consumer = this;
 				message.Swallowed = true;
 
@@ -280,14 +278,14 @@ namespace Epsitec.App.Dolphin.MyWidgets
 
 					this.isErrorDialogPending = true;
 
-					Application.QueueAsyncCallback (
+					Application.QueueAsyncCallback(
 						delegate
 						{
 							string title = "Dauphin";
 							string icon = "manifest:Epsitec.Common.Dialogs.Images.Warning.icon";
-							Common.Dialogs.IDialog dialog = Common.Dialogs.MessageDialog.CreateOk (title, icon, err, null, null);
+							Common.Dialogs.IDialog dialog = Common.Dialogs.MessageDialog.CreateOk(title, icon, err, null, null);
 							dialog.Owner = this.Window;
-							dialog.OpenDialog ();
+							dialog.OpenDialog();
 							this.isErrorDialogPending = false;
 						});
 				}
@@ -299,9 +297,7 @@ namespace Epsitec.App.Dolphin.MyWidgets
 		private void HandleInstructionEditionAccepted(object sender)
 		{
 			//	L'édition de l'instruction a été acceptée.
-			//?System.Diagnostics.Debug.WriteLine("HandleInstructionEditionAccepted");
 			TextFieldEx field = sender as TextFieldEx;
-//-			field.AcceptEdition();
 
 			List<int> codes = new List<int>();
 			string instruction = this.processor.AssemblyPreprocess(this.widgetInstruction.Text);
@@ -329,20 +325,11 @@ namespace Epsitec.App.Dolphin.MyWidgets
 			}
 		}
 
-		private void HandleInstructionEditionRejected(object sender)
-		{
-			//	L'édition de l'instruction a été rejetée.
-			//?System.Diagnostics.Debug.WriteLine("HandleInstructionEditionRejected");
-			TextFieldEx field = sender as TextFieldEx;
-//-			field.RejectEdition();
-		}
-
 		private void HandleFieldIsFocusedChanged(object sender, Common.Types.DependencyPropertyChangedEventArgs e)
 		{
 			//	La ligne éditable a pris ou perdu le focus.
 			Widget widget = sender as Widget;
 			bool focused = (bool) e.NewValue;
-			//?System.Diagnostics.Debug.WriteLine(string.Format("HandleFieldIsFocusedChanged {0}", focused.ToString()));
 
 			if (focused)  // focus pris ?
 			{
