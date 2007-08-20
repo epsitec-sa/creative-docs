@@ -287,16 +287,20 @@ namespace Epsitec.Common.Support
 
 			if (this.modules.TryGetValue (modulePath, out info))
 			{
+				System.Diagnostics.Debug.Assert (info.IsReadOnly);
 				return info;
 			}
 
 			info = ResourceModule.LoadManifest (this.GetRootAbsolutePath (modulePath));
 
-			if (info != null)
+			if (info == null)
 			{
-				this.modules[modulePath] = info;
+				return null;
 			}
-			
+
+			this.modules[modulePath] = info;
+
+			System.Diagnostics.Debug.Assert (info.IsReadOnly);
 			return info;
 		}
 

@@ -189,6 +189,20 @@ namespace Epsitec.Common.Support
 				return this.defaultModuleName;
 			}
 		}
+
+		public ResourceModuleInfo				DefaultModuleInfo
+		{
+			get
+			{
+				if ((this.pool == null) ||
+					(string.IsNullOrEmpty (this.DefaultModulePath)))
+				{
+					return null;
+				}
+
+				return this.pool.GetModuleInfo (this.DefaultModulePath);
+			}
+		}
 		
 		public bool								IsReady
 		{

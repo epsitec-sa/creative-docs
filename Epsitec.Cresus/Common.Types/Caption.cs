@@ -437,11 +437,20 @@ namespace Epsitec.Common.Types
 
 			if (a != null)
 			{
+				caption.DefineId (a.Id);
 				DependencyObject.CopyDefinedProperties (a, caption);
 			}
 			if ((b != null) &&
 				(a != b))
 			{
+				if (caption.Id.IsEmpty)
+				{
+					caption.DefineId (b.Id);
+				}
+				else
+				{
+					System.Diagnostics.Debug.Assert (caption.Id == b.Id);
+				}
 				DependencyObject.CopyDefinedProperties (b, caption);
 			}
 
