@@ -633,6 +633,11 @@ namespace Epsitec.App.Dolphin
 				return word;
 			}
 
+			if (word[0] == '_')
+			{
+				return word;
+			}
+
 			return null;
 		}
 
@@ -652,12 +657,14 @@ namespace Epsitec.App.Dolphin
 		protected bool IsVariable(string word)
 		{
 			//	Indique si le mot correspond à un nom de variable valide.
+			//	Exemples valides: "TOTO", "TOTO23", "TOTO_2", "_TOTO", "A1000"
+			//	Exemples invalides: "2TOTO", "TOTO 2"
 			if (word.Length == 0)
 			{
 				return false;
 			}
 
-			if (word[0] >= '0' && word[0] <= '9')
+			if ((word[0] < 'A' || word[0] > 'Z') && word[0] != '_')
 			{
 				return false;
 			}
