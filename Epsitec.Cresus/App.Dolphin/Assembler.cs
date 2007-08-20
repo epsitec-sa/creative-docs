@@ -95,7 +95,7 @@ namespace Epsitec.App.Dolphin
 
 		protected void DoPass(string[] lines, int pass, Dictionary<string, int> variables, List<int> instructionLengths, List<int> errorLines, List<string> errorTexts, ref int instructionCounter, ref int byteCounter)
 		{
-			//	Première ou deuxième passe de l'assemblage (pass = [0..1]).
+			//	Première ou deuxième passe de l'assemblage (pass = 0..1).
 			//	La 1ère passe récolte les définitions de variables et d'étiquettes dans un dictionnaire.
 			//	La 2ème passe génère le code.
 			int pc = Components.Memory.RamBase;  // on place toujours le code au début de la RAM
