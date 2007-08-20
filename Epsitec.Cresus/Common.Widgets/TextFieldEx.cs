@@ -97,11 +97,23 @@ namespace Epsitec.Common.Widgets
 				switch (this.DefocusAction)
 				{
 					case DefocusAction.Modal:
-						return this.IsValid;
+						if (this.IsValid)
+						{
+							return this.CheckAcceptEdition ();
+						}
+
+						return false;
 				}
 			}
-			
-			return base.AboutToLoseFocus (dir, mode);
+
+			if (this.CheckBeforeDefocus ())
+			{
+				return base.AboutToLoseFocus (dir, mode);
+			}
+			else
+			{
+				return false;
+			}
 		}
 		
 		protected override bool AboutToGetFocus(TabNavigationDir dir, TabNavigationMode mode, out Widget focus)

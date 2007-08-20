@@ -699,6 +699,34 @@ namespace Epsitec.Common.Widgets
 			return e.Cancel == false;
 		}
 
+		protected bool CheckBeforeDefocus()
+		{
+			switch (this.DefocusAction)
+			{
+				case DefocusAction.AcceptEdition:
+					return this.CheckAcceptEdition ();
+
+				case DefocusAction.RejectEdition:
+					return this.CheckRejectEdition ();
+
+				case DefocusAction.Modal:
+				case DefocusAction.AutoAcceptOrRejectEdition:
+					if (this.IsValid)
+					{
+						return this.CheckAcceptEdition ();
+					}
+					else
+					{
+						return this.CheckRejectEdition ();
+					}
+
+				case DefocusAction.None:
+					return true;
+
+				default:
+					throw new System.NotImplementedException (string.Format ("DefocusAction.{0} not implemented.", this.DefocusAction));
+			}
+		}
 
 		
 		public void SimulateEdited()
