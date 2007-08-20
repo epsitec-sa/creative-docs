@@ -100,6 +100,43 @@ namespace Epsitec.Common.Support
 		}
 
 
+		/// <summary>
+		/// Gets a comparer which can be used to generate a sorted list of
+		/// module versions. The sort is based on the developer id, the build
+		/// number and finally the build date.
+		/// </summary>
+		/// <value>The comparer delegate.</value>
+		public static System.Comparison<ResourceModuleVersion> Comparer
+		{
+			get
+			{
+				return
+					delegate (ResourceModuleVersion a, ResourceModuleVersion b)
+					{
+						if (a.DeveloperId < b.DeveloperId)
+						{
+							return -1;
+						}
+						else if (a.DeveloperId > b.DeveloperId)
+						{
+							return 1;
+						}
+
+						if (a.BuildNumber < b.BuildNumber)
+						{
+							return -1;
+						}
+						else if (a.BuildNumber > b.BuildNumber)
+						{
+							return 1;
+						}
+
+						return a.BuildDate.CompareTo (b.BuildDate);
+					};
+			}
+		}
+
+		
 		#region Interface IReadOnly
 
 		/// <summary>

@@ -77,6 +77,30 @@ namespace Epsitec.Common.Support
 		}
 
 		[Test]
+		public void CheckGetVersionFingerprint()
+		{
+			string root = @"S:\Epsitec.Cresus\Common.Support.Tests\Resources";
+
+			ResourceModuleInfo info = new ResourceModuleInfo ();
+
+			info.FullId = new ResourceModuleId ("Common.Support", root + @"\Customizations", 7, ResourceModuleLayer.System);
+
+			Assert.AreEqual ("", ResourceModule.GetVersionFingerprint (null));
+			Assert.AreEqual ("", ResourceModule.GetVersionFingerprint (info));
+
+			info.Versions.Add (new ResourceModuleVersion (1, 1234, new System.DateTime (2007, 8, 1, 10, 11, 12, System.DateTimeKind.Local)));
+			info.Versions.Add (new ResourceModuleVersion (1, 1230, new System.DateTime (2007, 8, 1, 10, 11, 12, System.DateTimeKind.Local)));
+			info.Versions.Add (new ResourceModuleVersion (1, 1234, new System.DateTime (2007, 8, 1, 10, 11, 10, System.DateTimeKind.Local)));
+			info.Versions.Add (new ResourceModuleVersion (3, 789, new System.DateTime (2007, 8, 19, 10, 11, 12, System.DateTimeKind.Local)));
+			info.Versions.Add (new ResourceModuleVersion (2,  789, new System.DateTime (2007, 8, 19, 10, 11, 12, System.DateTimeKind.Local)));
+
+			string fingerprint = ResourceModule.GetVersionFingerprint (info);
+
+			Assert.AreEqual ("1/1230-1/1234-1/1234-2/789-3/789", fingerprint);
+		}
+
+
+		[Test]
 		public void CheckModuleRootPaths()
 		{
 			ResourceManagerPool pool = new ResourceManagerPool ("Test");

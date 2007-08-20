@@ -192,6 +192,39 @@ namespace Epsitec.Common.Support
 		}
 
 		/// <summary>
+		/// Gets the version fingerprint for the specified module.
+		/// </summary>
+		/// <param name="info">The module information.</param>
+		/// <returns>The fingerprint or <c>""</c>.</returns>
+		public static string GetVersionFingerprint(ResourceModuleInfo info)
+		{
+			if ((info == null) ||
+				(info.HasVersions == false))
+			{
+				return "";
+			}
+
+			List<ResourceModuleVersion> versions = new List<ResourceModuleVersion> (info.Versions);
+			versions.Sort (ResourceModuleVersion.Comparer);
+
+			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
+
+			foreach (ResourceModuleVersion version in versions)
+			{
+				if (buffer.Length > 0)
+				{
+					buffer.Append ("-");
+				}
+
+				buffer.Append (InvariantConverter.ToString (version.DeveloperId));
+				buffer.Append ("/");
+				buffer.Append (InvariantConverter.ToString (version.BuildNumber));
+			}
+
+			return buffer.ToString ();
+		}
+
+		/// <summary>
 		/// Finds all possible module paths given a root path. This will walk
 		/// through the full tree, attempting to locate directories with a
 		/// manifest file.
