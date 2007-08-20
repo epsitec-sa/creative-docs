@@ -670,7 +670,7 @@ namespace Epsitec.App.Dolphin
 					}
 					else  // deuxième passe ?
 					{
-						err = "Variable indéfinie.";
+						err = string.Format("Variable \"{0}\" indéfinie.", variable);
 						return Misc.undefined;
 					}
 				}
