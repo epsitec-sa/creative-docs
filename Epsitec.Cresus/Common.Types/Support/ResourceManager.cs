@@ -227,6 +227,25 @@ namespace Epsitec.Common.Support
 				return this.pool;
 			}
 		}
+
+		public bool								BasedOnDerivedDefaultModule
+		{
+			get
+			{
+				ResourceModuleInfo info = this.DefaultModuleInfo;
+				
+				if (info == null)
+				{
+					return false;
+				}
+				if (string.IsNullOrEmpty (info.ReferenceModulePath))
+				{
+					return false;
+				}
+				
+				return true;
+			}
+		}
 		
 		
 		public void DefineDefaultModuleName(string defaultModuleName)
@@ -271,7 +290,7 @@ namespace Epsitec.Common.Support
 			}
 		}
 
-		public ResourceManager GetReferenceModuleManager()
+		public ResourceManager GetManagerForReferenceModule()
 		{
 			if (this.ContainsValue (ResourceManager.ReferenceManagerProperty))
 			{

@@ -56,8 +56,11 @@ namespace Epsitec.Common.Support
 			Assert.IsTrue (pool.FindReferenceModules ().Count < Types.Collection.Count (pool.Modules));
 
 			ResourceManager manager1 = new ResourceManager (pool, info1);
-			ResourceManager manager2 = manager1.GetReferenceModuleManager ();
-			ResourceManager manager3 = manager2.GetReferenceModuleManager ();
+			ResourceManager manager2 = manager1.GetManagerForReferenceModule ();
+			ResourceManager manager3 = manager2.GetManagerForReferenceModule ();
+
+			Assert.IsTrue (manager1.BasedOnDerivedDefaultModule);
+			Assert.IsFalse (manager2.BasedOnDerivedDefaultModule);
 
 			Assert.IsNotNull (manager2);
 			Assert.IsNull (manager3);
