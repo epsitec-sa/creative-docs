@@ -50,8 +50,9 @@ namespace Epsitec.App.Dolphin.MyWidgets
 			this.widgetInstruction.PreferredWidth = 150;
 			this.widgetInstruction.Margins = new Margins(0, 0, 0, 0);
 			this.widgetInstruction.Dock = DockStyle.Left;
-			this.widgetInstruction.EditionAccepted += new EventHandler(this.HandleInstructionEditionAccepted);
-			this.widgetInstruction.EditionRejected += new EventHandler(this.HandleInstructionEditionRejected);
+			this.widgetInstruction.AcceptingEdition += new EventHandler<CancelEventArgs> (this.HandleInstructionAcceptingEdition);
+			this.widgetInstruction.EditionAccepted += new EventHandler (this.HandleInstructionEditionAccepted);
+			this.widgetInstruction.EditionRejected += new EventHandler (this.HandleInstructionEditionRejected);
 			this.widgetInstruction.IsFocusedChanged += new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleFieldIsFocusedChanged);
 
 			this.widgetCodeAddress = new MyWidgets.CodeAddress(this);
@@ -73,7 +74,8 @@ namespace Epsitec.App.Dolphin.MyWidgets
 			{
 				this.widgetAddress.Dispose();
 
-				this.widgetInstruction.EditionAccepted -= new EventHandler(this.HandleInstructionEditionAccepted);
+				this.widgetInstruction.AcceptingEdition -= new EventHandler<CancelEventArgs> (this.HandleInstructionAcceptingEdition);
+				this.widgetInstruction.EditionAccepted -= new EventHandler (this.HandleInstructionEditionAccepted);
 				this.widgetInstruction.EditionRejected -= new EventHandler(this.HandleInstructionEditionRejected);
 
 				this.widgetCodeAddress.Entered -= new MessageEventHandler(this.HandleCodeAddressEntered);
@@ -245,12 +247,61 @@ namespace Epsitec.App.Dolphin.MyWidgets
 		}
 
 
+		private void HandleInstructionAcceptingEdition(object sender, CancelEventArgs e)
+		{
+			//	Avant de valider la saisie, la ligne éditable nous donne la
+			//	possibilité de tout annuler en cas d'erreur de syntaxe.
+			List<int> codes = new List<int> ();
+			string instruction = this.processor.AssemblyPreprocess (this.widgetInstruction.Text);
+			string err = this.processor.AssemblyInstruction (instruction, codes);
+
+			if (codes.Count == 0 || !string.IsNullOrEmpty (err))
+			{
+				Message message = Message.GetLastMessage ();
+				message.Consumer = this;
+				message.Swallowed = true;
+
+				this.isErrorMet = true;
+
+				//	On ne peut pas ouvrir un dialogue depuis une méthode qui est appelée
+				//	depuis l'intérieur d'une boucle d'événements, sinon on risque de se
+				//	mélanger gaiement les pinceaux avec le dispatch des événements.
+				//	C'est malheureusement fait dans un tas de code de "Epsitec.Cresus",
+				//	où ça ne pose par chance aucun problème visible; par contre, ici, ce
+				//	n'est vraiment pas possible.
+				//	On va donc simplement demander à l'application d'afficher le dialogue
+				//	plus tard, avant la prochaine entrée dans la boucle des événements :
+
+				if (!this.isErrorDialogPending)
+				{
+					//	Evite que le dialogue ne s'affiche deux fois; dans certains cas,
+					//	il se peut en effet que notre méthode soit appelée plusieurs fois
+					//	de suite :
+
+					this.isErrorDialogPending = true;
+
+					Application.QueueAsyncCallback (
+						delegate
+						{
+							string title = "Dauphin";
+							string icon = "manifest:Epsitec.Common.Dialogs.Images.Warning.icon";
+							Common.Dialogs.IDialog dialog = Common.Dialogs.MessageDialog.CreateOk (title, icon, err, null, null);
+							dialog.Owner = this.Window;
+							dialog.OpenDialog ();
+							this.isErrorDialogPending = false;
+						});
+				}
+
+				e.Cancel = true;
+			}
+		}
+
 		private void HandleInstructionEditionAccepted(object sender)
 		{
 			//	L'édition de l'instruction a été acceptée.
 			//?System.Diagnostics.Debug.WriteLine("HandleInstructionEditionAccepted");
 			TextFieldEx field = sender as TextFieldEx;
-			field.AcceptEdition();
+//-			field.AcceptEdition();
 
 			List<int> codes = new List<int>();
 			string instruction = this.processor.AssemblyPreprocess(this.widgetInstruction.Text);
@@ -258,6 +309,9 @@ namespace Epsitec.App.Dolphin.MyWidgets
 
 			if (codes.Count == 0 || !string.IsNullOrEmpty(err))
 			{
+				//	Cela ne devrait jamais se produire, puisque l'on a déjà tout vérifié
+				//	dans la méthode HandleInstructionAcceptingEdition :
+
 				this.isErrorMet = true;
 
 				string title = "Dauphin";
@@ -280,7 +334,7 @@ namespace Epsitec.App.Dolphin.MyWidgets
 			//	L'édition de l'instruction a été rejetée.
 			//?System.Diagnostics.Debug.WriteLine("HandleInstructionEditionRejected");
 			TextFieldEx field = sender as TextFieldEx;
-			field.RejectEdition();
+//-			field.RejectEdition();
 		}
 
 		private void HandleFieldIsFocusedChanged(object sender, Common.Types.DependencyPropertyChangedEventArgs e)
@@ -468,6 +522,7 @@ namespace Epsitec.App.Dolphin.MyWidgets
 		protected int							arrowAddress;
 		protected bool							isTable;
 		protected bool							isErrorMet;
+		protected bool							isErrorDialogPending;
 
 		protected StaticText					widgetAddress;
 		protected List<TextField>				widgetCodes;
