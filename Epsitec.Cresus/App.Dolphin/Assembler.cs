@@ -593,7 +593,14 @@ namespace Epsitec.App.Dolphin
 				}
 				else if (c >= 'A' && c <= 'Z')
 				{
-					newType = 't';
+					if (type == 'n' && c >= 'A' && c <= 'F')
+					{
+						newType = 'n';
+					}
+					else
+					{
+						newType = 't';
+					}
 				}
 				else if (c == '_')
 				{
@@ -792,7 +799,7 @@ namespace Epsitec.App.Dolphin
 			{
 				if (string.IsNullOrEmpty(lines[i]))
 				{
-					total--;
+					total--;  // supprime les lignes vides à la fin
 				}
 				else
 				{
@@ -805,7 +812,7 @@ namespace Epsitec.App.Dolphin
 				string line = lines[i];
 
 				string simply = Misc.RemoveTags(line).Trim();
-				if (!simply.StartsWith("^ "))
+				if (!simply.StartsWith("^ "))  // erreur dans cette ligne ?
 				{
 					builder.Append(line);
 					builder.Append("<br/>");
@@ -820,7 +827,7 @@ namespace Epsitec.App.Dolphin
 			//	Insère les erreurs dans le texte du programme.
 			string programm = this.field.Text;
 
-			for (int i=errorLines.Count-1; i>=0; i--)
+			for (int i=errorLines.Count-1; i>=0; i--)  // commence par la fin pour ne pas perturber les rangs des lignes
 			{
 				int index1 = Misc.LineIndex(programm, errorLines[i]+0);
 				int index2 = Misc.LineIndex(programm, errorLines[i]+1);
