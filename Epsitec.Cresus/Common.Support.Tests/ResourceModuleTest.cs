@@ -19,7 +19,13 @@ namespace Epsitec.Common.Support
 
 			info.FullId = new ResourceModuleId ("Common.Support", root + @"\Customizations", 7, ResourceModuleLayer.System);
 			info.ReferenceModulePath = @"%test%\Common.Support";
+			info.Versions.Add (new ResourceModuleVersion (1, 1234, System.DateTime.Now));
+			info.Versions.Add (new ResourceModuleVersion (2, 789, new System.DateTime (2007, 8, 19, 10, 11, 12, System.DateTimeKind.Local)));
 
+			Assert.AreEqual (2, info.Versions[1].DeveloperId);
+			Assert.AreEqual (789, info.Versions[1].BuildNumber);
+			Assert.AreEqual (new System.DateTime (2007, 8, 19, 8, 11, 12, System.DateTimeKind.Utc), info.Versions[1].BuildDate);
+			
 			ResourceModule.SaveManifest (info);
 
 			System.Console.Out.WriteLine (System.IO.File.ReadAllText (System.IO.Path.Combine (info.FullId.Path, "module.info")));
@@ -41,6 +47,11 @@ namespace Epsitec.Common.Support
 
 			Assert.AreEqual (1, pool.FindPatchModuleInfos (info2).Count);
 			Assert.AreEqual (info1, pool.FindPatchModuleInfos (info2)[0]);
+
+			Assert.AreEqual (2, info1.Versions.Count);
+			Assert.AreEqual (2, info1.Versions[1].DeveloperId);
+			Assert.AreEqual (789, info1.Versions[1].BuildNumber);
+			Assert.AreEqual (new System.DateTime (2007, 8, 19, 8, 11, 12, System.DateTimeKind.Utc), info1.Versions[1].BuildDate);
 
 			Assert.IsTrue (pool.FindReferenceModules ().Count < Types.Collection.Count (pool.Modules));
 		}

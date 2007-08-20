@@ -17,6 +17,20 @@ namespace Epsitec.Common.Support
 		{
 		}
 
+		/// <summary>
+		/// Initializes a new read-only instance of the <see cref="ResourceModuleVersion"/> class.
+		/// </summary>
+		/// <param name="developerId">The developer id.</param>
+		/// <param name="buildNumber">The build number.</param>
+		/// <param name="buildDate">The UTC build date.</param>
+		public ResourceModuleVersion(int developerId, int buildNumber, System.DateTime buildDate)
+		{
+			this.DeveloperId = developerId;
+			this.BuildNumber = buildNumber;
+			this.BuildDate   = buildDate.ToUniversalTime ();
+			this.Freeze ();
+		}
+
 
 		/// <summary>
 		/// Gets or sets the developer id.

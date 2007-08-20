@@ -70,6 +70,51 @@ namespace Epsitec.Common.Support
 			}
 		}
 
+		/// <summary>
+		/// Gets the versions for this module information.
+		/// </summary>
+		/// <value>A list of versions. The collection might be read only
+		/// if this instance was frozen.</value>
+		public IList<ResourceModuleVersion> Versions
+		{
+			get
+			{
+				if (this.isFrozen)
+				{
+					if (this.versions == null)
+					{
+						return Types.Collections.EmptyList<ResourceModuleVersion>.Instance;
+					}
+					else
+					{
+						return new Types.Collections.ReadOnlyList<ResourceModuleVersion> (this.versions);
+					}
+				}
+
+				if (this.versions == null)
+				{
+					this.versions = new List<ResourceModuleVersion> ();
+				}
+
+				return this.versions;
+			}
+		}
+
+		/// <summary>
+		/// Gets a value indicating whether this instance has any versions
+		/// associated to it.
+		/// </summary>
+		/// <value>
+		/// 	<c>true</c> if this instance has any versions; otherwise, <c>false</c>.
+		/// </value>
+		public bool HasVersions
+		{
+			get
+			{
+				return (this.versions == null) || (this.versions.Count == 0) ? false : true;
+			}
+		}
+
 		#region Interface IReadOnly
 
 		/// <summary>
@@ -109,6 +154,7 @@ namespace Epsitec.Common.Support
 			copy.fullId = this.fullId;
 			copy.referenceModulePath = this.referenceModulePath;
 			copy.sourceNamespace = this.sourceNamespace;
+			copy.versions = this.versions == null ? null : new List<ResourceModuleVersion> (this.versions);
 
 			return copy;
 		}
@@ -125,5 +171,6 @@ namespace Epsitec.Common.Support
 		ResourceModuleId fullId;
 		string referenceModulePath;
 		string sourceNamespace;
+		List<ResourceModuleVersion> versions;
 	}
 }

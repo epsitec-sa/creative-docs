@@ -1,6 +1,9 @@
 //	Copyright © 2007, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using Epsitec.Common.Support;
+using Epsitec.Common.Types;
+
 using System.Collections.Generic;
 using System.Globalization;
 
@@ -100,6 +103,26 @@ namespace Epsitec.Common.Support
 							{
 								throw new System.FormatException (string.Format ("{0} specifies more than 1 {1} element in module {2}", ResourceModule.XmlModuleInfo, ResourceModule.XmlReferenceModulePath, modulePath));
 							}
+
+							nodes = root.GetElementsByTagName (ResourceModule.XmlVersions);
+							node  = nodes.Count == 1 ? (nodes[0] as System.Xml.XmlElement) : null;
+
+							if (node != null)
+							{
+								foreach (System.Xml.XmlElement versionNode in node.ChildNodes)
+								{
+									int developerId = InvariantConverter.ToInt (versionNode.GetAttribute (ResourceModule.XmlAttributeId));
+									int buildNumber = InvariantConverter.ToInt (versionNode.GetAttribute (ResourceModule.XmlAttributeBuild));
+									System.DateTime buildDate = InvariantConverter.ToDateTime (versionNode.GetAttribute (ResourceModule.XmlAttributeDate));
+
+									info.Versions.Add (new ResourceModuleVersion (developerId, buildNumber, buildDate));
+								}
+							}
+							else if (nodes.Count > 1)
+							{
+								throw new System.FormatException (string.Format ("{0} specifies more than 1 {1} element in module {2}", ResourceModule.XmlModuleInfo, ResourceModule.XmlVersions, modulePath));
+							}
+
 							
 							info.FullId = new ResourceModuleId (moduleName, modulePath, moduleId, moduleLayer);
 							info.SourceNamespace = namespaceAttribute ?? "";
@@ -127,13 +150,31 @@ namespace Epsitec.Common.Support
 			System.Xml.XmlDocument xml = new System.Xml.XmlDocument ();
 			System.Xml.XmlElement root = xml.CreateElement (ResourceModule.XmlModuleInfo);
 
-			root.SetAttribute (ResourceModule.XmlAttributeId, info.FullId.Id.ToString (CultureInfo.InvariantCulture));
+			root.SetAttribute (ResourceModule.XmlAttributeId, InvariantConverter.ToString (info.FullId.Id));
 			root.SetAttribute (ResourceModule.XmlAttributeName, info.FullId.Name);
 			root.SetAttribute (ResourceModule.XmlAttributeLayer, ResourceModuleId.ConvertLayerToPrefix (info.FullId.Layer));
 
 			if (!string.IsNullOrEmpty (info.SourceNamespace))
 			{
 				root.SetAttribute (ResourceModule.XmlAttributeNamespace, info.SourceNamespace);
+			}
+
+			if (info.HasVersions)
+			{
+				System.Xml.XmlElement versionsNode = xml.CreateElement (ResourceModule.XmlVersions);
+				
+				foreach (ResourceModuleVersion version in info.Versions)
+				{
+					System.Xml.XmlElement versionNode = xml.CreateElement (ResourceModule.XmlVersion);
+
+					versionNode.SetAttribute (ResourceModule.XmlAttributeId, InvariantConverter.ToString (version.DeveloperId));
+					versionNode.SetAttribute (ResourceModule.XmlAttributeBuild, InvariantConverter.ToString (version.BuildNumber));
+					versionNode.SetAttribute (ResourceModule.XmlAttributeDate, InvariantConverter.ToString (version.BuildDate));
+
+					versionsNode.AppendChild (versionNode);
+				}
+
+				root.AppendChild (versionsNode);
 			}
 			
 			xml.InsertBefore (xml.CreateXmlDeclaration ("1.0", "utf-8", null), null);
@@ -186,8 +227,12 @@ namespace Epsitec.Common.Support
 		#region Internal constants
 
 		internal const string XmlModuleInfo          = "ModuleInfo";
+		internal const string XmlVersion			 = "Version";
+		internal const string XmlVersions			 = "Versions";
 		internal const string XmlReferenceModulePath = "ReferenceModulePath";
-		
+
+		internal const string XmlAttributeBuild		= "build";
+		internal const string XmlAttributeDate		= "date";
 		internal const string XmlAttributeId		= "id";
 		internal const string XmlAttributeLayer		= "layer";
 		internal const string XmlAttributeName		= "name";
