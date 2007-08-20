@@ -643,7 +643,8 @@ namespace Epsitec.Common.Widgets
 		
 		public virtual bool AcceptEdition()
 		{
-			if (this.IsEditing)
+			if ((this.IsEditing) &&
+				(this.CheckAcceptEdition ()))
 			{
 				this.IsEditing = false;
 				
@@ -656,10 +657,11 @@ namespace Epsitec.Common.Widgets
 			
 			return false;
 		}
-		
+
 		public virtual bool RejectEdition()
 		{
-			if (this.IsEditing)
+			if ((this.IsEditing) &&
+				(this.CheckRejectEdition ()))
 			{
 				this.IsEditing = false;
 				
@@ -683,6 +685,22 @@ namespace Epsitec.Common.Widgets
 			this.OnCursorChanged(silent);
 		}
 
+		protected bool CheckAcceptEdition()
+		{
+			CancelEventArgs e = new CancelEventArgs ();
+			this.OnAcceptingEdition (e);
+			return e.Cancel == false;
+		}
+
+		protected bool CheckRejectEdition()
+		{
+			CancelEventArgs e = new CancelEventArgs ();
+			this.OnRejectingEdition (e);
+			return e.Cancel == false;
+		}
+
+
+		
 		public void SimulateEdited()
 		{
 			this.OnTextEdited();
@@ -1338,6 +1356,24 @@ namespace Epsitec.Common.Widgets
 				handler(this);
 			}
 		}
+
+		protected virtual void OnAcceptingEdition(CancelEventArgs e)
+		{
+			EventHandler<CancelEventArgs> handler = this.GetUserEventHandler<CancelEventArgs> ("AcceptingEdition");
+			if (handler != null)
+			{
+				handler (this, e);
+			}
+		}
+
+		protected virtual void OnRejectingEdition(CancelEventArgs e)
+		{
+			EventHandler<CancelEventArgs> handler = this.GetUserEventHandler<CancelEventArgs> ("RejectingEdition");
+			if (handler != null)
+			{
+				handler (this, e);
+			}
+		}
 		
 		
 		protected void CursorScroll(bool force)
@@ -1907,6 +1943,30 @@ namespace Epsitec.Common.Widgets
 			remove
 			{
 				this.RemoveUserEventHandler("EditionRejected", value);
+			}
+		}
+
+		public event EventHandler<CancelEventArgs> AcceptingEdition
+		{
+			add
+			{
+				this.AddUserEventHandler ("AcceptingEdition", value);
+			}
+			remove
+			{
+				this.RemoveUserEventHandler ("AcceptingEdition", value);
+			}
+		}
+
+		public event EventHandler<CancelEventArgs> RejectingEdition
+		{
+			add
+			{
+				this.AddUserEventHandler ("RejectingEdition", value);
+			}
+			remove
+			{
+				this.RemoveUserEventHandler ("RejectingEdition", value);
 			}
 		}
 		

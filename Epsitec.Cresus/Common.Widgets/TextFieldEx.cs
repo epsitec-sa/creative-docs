@@ -32,7 +32,8 @@ namespace Epsitec.Common.Widgets
 		public override bool AcceptEdition()
 		{
 			if ((this.IsValid) &&
-				(this.IsEditing))
+				(this.IsEditing) &&
+				(this.CheckAcceptEdition ()))
 			{
 				this.accept_reject_behavior.InitialText = this.Text;
 				this.OnTextDefined ();
@@ -46,12 +47,22 @@ namespace Epsitec.Common.Widgets
 		
 		public override bool RejectEdition()
 		{
-			if (this.IsEditing)
+			if ((this.IsEditing) &&
+				(this.CheckRejectEdition ()))
 			{
-				this.UpdateButtonVisibility ();
-			}
+				bool ok = base.RejectEdition ();
 
-			return base.RejectEdition ();
+				if (ok)
+				{
+					this.UpdateButtonVisibility ();
+				}
+
+				return ok;
+			}
+			else
+			{
+				return base.RejectEdition ();
+			}
 		}
 		
 		

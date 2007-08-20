@@ -1308,6 +1308,11 @@ namespace Epsitec.Common.Widgets
 				(message.MessageType == MessageType.MouseLeave))
 			{
 				widget.SetEntered (false);
+
+				if (window.EngagedWidget == widget)
+				{
+					window.EngagedWidget = null;
+				}
 			}
 			else
 			{

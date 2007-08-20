@@ -2209,6 +2209,7 @@ namespace Epsitec.Common.Widgets
 				{
 					this.EngagedWidget.SimulateReleased ();
 					this.EngagedWidget.SimulateClicked ();
+
 					this.EngagedWidget = null;
 				}
 			}
