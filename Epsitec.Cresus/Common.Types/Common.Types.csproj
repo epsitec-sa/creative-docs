@@ -118,6 +118,7 @@
     <Compile Include="Internal\BindingHelper.cs" />
     <Compile Include="FieldRelation.cs" />
     <Compile Include="Serialization\IDeserialization.cs" />
+    <Compile Include="Support\ResourceModuleVersion.cs" />
     <Compile Include="Support\ResourceModuleInfo.cs" />
     <Compile Include="Support\ResourceModule.cs" />
     <Compile Include="Support\ResourceModuleLayer.cs" />
