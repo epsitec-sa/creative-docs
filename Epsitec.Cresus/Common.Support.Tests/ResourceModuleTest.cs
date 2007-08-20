@@ -54,6 +54,13 @@ namespace Epsitec.Common.Support
 			Assert.AreEqual (new System.DateTime (2007, 8, 19, 8, 11, 12, System.DateTimeKind.Utc), info1.Versions[1].BuildDate);
 
 			Assert.IsTrue (pool.FindReferenceModules ().Count < Types.Collection.Count (pool.Modules));
+
+			ResourceManager manager1 = new ResourceManager (pool, info1);
+			ResourceManager manager2 = manager1.GetReferenceModuleManager ();
+			ResourceManager manager3 = manager2.GetReferenceModuleManager ();
+
+			Assert.IsNotNull (manager2);
+			Assert.IsNull (manager3);
 		}
 
 		[Test]

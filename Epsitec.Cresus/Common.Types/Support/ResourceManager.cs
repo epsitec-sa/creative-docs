@@ -40,6 +40,11 @@ namespace Epsitec.Common.Support
 		{
 		}
 
+		public ResourceManager(ResourceManagerPool pool, ResourceModuleInfo info)
+			: this (Support.Globals.Directories.ExecutableRoot, pool, info == null ? null : info.FullId.Path)
+		{
+		}
+
 		public ResourceManager(ResourceModuleId module, ResourceManagerPool pool)
 			: this (Support.Globals.Directories.ExecutableRoot, pool, module.Path)
 		{
@@ -194,13 +199,16 @@ namespace Epsitec.Common.Support
 		{
 			get
 			{
-				if ((this.pool == null) ||
-					(string.IsNullOrEmpty (this.DefaultModulePath)))
+				System.Diagnostics.Debug.Assert (this.pool != null);
+
+				if (string.IsNullOrEmpty (this.defaultModulePath))
 				{
 					return null;
 				}
-
-				return this.pool.GetModuleInfo (this.DefaultModulePath);
+				else
+				{
+					return this.pool.GetModuleInfo (this.defaultModulePath);
+				}
 			}
 		}
 		
@@ -261,6 +269,31 @@ namespace Epsitec.Common.Support
 
 				provider.ActiveProvider = (module == null) ? null : module.Provider;
 			}
+		}
+
+		public ResourceManager GetReferenceModuleManager()
+		{
+			if (this.ContainsValue (ResourceManager.ReferenceManagerProperty))
+			{
+				return this.GetValue (ResourceManager.ReferenceManagerProperty) as ResourceManager;
+			}
+
+			ResourceModuleInfo info = this.DefaultModuleInfo;
+			ResourceManager manager = null;
+
+			if (info != null)
+			{
+				string modulePath = info.ReferenceModulePath;
+
+				if (!string.IsNullOrEmpty (modulePath))
+				{
+					manager = new ResourceManager (this.defaultPath, this.pool, modulePath);
+				}
+			}
+
+			this.SetValue (ResourceManager.ReferenceManagerProperty, manager);
+
+			return manager;
 		}
 		
 		
@@ -1853,8 +1886,9 @@ namespace Epsitec.Common.Support
 
 		#endregion
 
-		public static DependencyProperty ResourceManagerProperty = DependencyProperty.RegisterAttached ("ResourceManager", typeof (ResourceManager), typeof (ResourceManager), new DependencyPropertyMetadata ().MakeNotSerializable ());
-		public static DependencyProperty SourceBundleProperty    = DependencyProperty.RegisterAttached ("SourceBundle", typeof (ResourceBundle), typeof (ResourceManager), new DependencyPropertyMetadata ().MakeNotSerializable ());
+		public static readonly DependencyProperty ResourceManagerProperty = DependencyProperty.RegisterAttached ("ResourceManager", typeof (ResourceManager), typeof (ResourceManager), new DependencyPropertyMetadata ().MakeNotSerializable ());
+		public static readonly DependencyProperty SourceBundleProperty    = DependencyProperty.RegisterAttached ("SourceBundle", typeof (ResourceBundle), typeof (ResourceManager), new DependencyPropertyMetadata ().MakeNotSerializable ());
+		public static readonly DependencyProperty ReferenceManagerProperty = DependencyProperty.Register ("ReferenceManager", typeof (ResourceManager), typeof (ResourceManager), new DependencyPropertyMetadata ());
 		
 		private static long						nextSerialId = 1;
 		
