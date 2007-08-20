@@ -593,7 +593,7 @@ namespace Epsitec.App.Dolphin
 				}
 				else if (c >= 'A' && c <= 'Z')
 				{
-					if (type == 'n' && c >= 'A' && c <= 'F')
+					if (type == 'n')
 					{
 						newType = 'n';
 					}
@@ -642,7 +642,13 @@ namespace Epsitec.App.Dolphin
 		protected static int GetValue(string word, int pass, bool acceptUndefined, Dictionary<string, int> variables, out string err)
 		{
 			//	Cherche une valeur, qui peut être soit une constante, soit une variable.
-			int value = Assembler.GetNumber(word);
+			int value = Assembler.GetNumber(word, out err);
+			
+			if (err != null)
+			{
+				return Misc.undefined;
+			}
+
 			if (value == Misc.undefined)  // pas une constante ?
 			{
 				string variable = Assembler.GetString(word);
@@ -673,11 +679,12 @@ namespace Epsitec.App.Dolphin
 			return value;
 		}
 
-		protected static int GetNumber(string word)
+		protected static int GetNumber(string word, out string err)
 		{
 			//	Cherche une constante.
 			if (word.Length == 0)
 			{
+				err = null;
 				return Misc.undefined;
 			}
 
@@ -686,29 +693,45 @@ namespace Epsitec.App.Dolphin
 				int value;
 				if (!int.TryParse(word, out value))
 				{
+					err = "Nombre décimal incorrect (H' si hexa).";
 					return Misc.undefined;
 				}
+				err = null;
 				return value;
 			}
 
 			if (word.Length > 1 && word[1] == '\'')
 			{
-				if (word[0] == 'H')  // héxadécimal ?
+				if (word[0] == 'H')  // hexadécimal ?
 				{
-					return Misc.ParseHexa(word.Substring(2));
+					int value = Misc.ParseHexa(word.Substring(2), Misc.undefined, Misc.undefined);
+					if (value == Misc.undefined)
+					{
+						err = "Nombre hexa incorrect.";
+						return Misc.undefined;
+					}
+					err = null;
+					return value;
 				}
-
-				if (word[0] == 'D')  // décimal ?
+				else if (word[0] == 'D')  // décimal ?
 				{
 					int value;
 					if (!int.TryParse(word.Substring(2), out value))
 					{
+						err = "Nombre décimal incorrect.";
 						return Misc.undefined;
 					}
+					err = null;
 					return value;
+				}
+				else
+				{
+					err = "D' = décimal et H' = hexa.";
+					return Misc.undefined;
 				}
 			}
 
+			err = null;
 			return Misc.undefined;
 		}
 
