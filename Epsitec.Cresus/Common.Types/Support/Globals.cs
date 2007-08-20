@@ -82,7 +82,7 @@ namespace Epsitec.Common.Support
 			{
 				if (Globals.isDebugBuildInitialized == false)
 				{
-					Globals.isDebugBuild = typeof (Globals).Assembly.Location.Contains ("Debug");
+					Globals.isDebugBuild = typeof (Globals).Assembly.Location.Contains ("Debug") || Globals.Directories.ExecutableRoot.StartsWith (@"S:\Epsitec.Cresus");
 					Globals.isDebugBuildInitialized = true;
 				}
 

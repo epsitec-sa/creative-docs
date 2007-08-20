@@ -18,6 +18,7 @@ namespace Epsitec.Common.Support
 			this.manager.DefineDefaultModuleName ("Test");
 			this.manager.ActivePrefix = "file";
 			this.manager.ActiveCulture = Resources.FindCultureInfo ("en");
+			this.manager.Pool.SetupDefaultRootPaths ();
 		}
 
 		[Test]
@@ -45,6 +46,8 @@ namespace Epsitec.Common.Support
 			Assert.AreEqual (5, modules[4].Id);
 			Assert.AreEqual (31, modules[5].Id);
 			Assert.AreEqual (4, modules[6].Id);
+
+			Assert.AreEqual (@"%app%\common.support.tests\resources\test", this.manager.Pool.GetRootRelativePath (this.manager.DefaultModuleInfo.FullId.Path).ToLowerInvariant ());
 		}
 
 		[Test]
