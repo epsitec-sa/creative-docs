@@ -748,5 +748,6 @@ namespace Epsitec.App.Dolphin
 		protected Components.Memory memory;
 		protected Window window;
 		protected TextFieldMulti field;
+		protected string filename;
 	}
 }
