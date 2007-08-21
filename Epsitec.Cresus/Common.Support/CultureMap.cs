@@ -124,6 +124,12 @@ namespace Epsitec.Common.Support
 			{
 				return this.source;
 			}
+			internal set
+			{
+				System.Diagnostics.Debug.Assert (value == CultureMapSource.Merge);
+
+				this.source = value;
+			}
 		}
 
 		/// <summary>

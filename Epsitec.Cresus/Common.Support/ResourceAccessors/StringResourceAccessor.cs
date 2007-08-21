@@ -194,31 +194,86 @@ namespace Epsitec.Common.Support.ResourceAccessors
 		protected override Types.StructuredData LoadFromField(ResourceBundle.Field field, int module, string twoLetterISOLanguageName)
 		{
 			Druid id = new Druid (field.Id, module);
-			bool insert = false;
+			bool insert;
+			bool record;
 
 			CultureMap item = this.Collection[id];
+			CultureMapSource fieldSource = this.GetCultureMapSource (field);
+			StructuredData data = new StructuredData (Res.Types.ResourceString);
+			
+			StringResourceAccessor.SetDataFromField (field, data);
 
 			if (item == null)
 			{
-				item   = new CultureMap (this, id, this.GetCultureMapSource (field));
+				//	Fresh item, not yet known :
+
+				item = new CultureMap (this, id, fieldSource);
+				
 				insert = true;
+				record = true;
+			}
+			else if (item.Source == fieldSource)
+			{
+				//	We already have an item for this id, but since we are fetching
+				//	data from the same source as before, we can safely assume that
+				//	this will produce new data for a not yet known culture :
+
+				insert = false;
+				record = true;
+			}
+			else
+			{
+				//	The source which was used to fill this item is different from
+				//	the current source...
+
+				if (item.IsCultureDefined (twoLetterISOLanguageName))
+				{
+					//	...and we know that there is already some data available
+					//	for the culture. Merge the data :
+
+					StructuredData oldData = data;
+					StructuredData newData = item.GetCultureData (twoLetterISOLanguageName);
+
+					//	TODO: merge...
+
+					data = newData;
+
+					insert = false;
+					record = false;
+				}
+				else
+				{
+					//	...but we are filling in data for an unknown culture.
+					//	Simply add the data to the item :
+
+					insert = false;
+					record = true;
+				}
+
+				//	Make sure we remember that the item contains merged data.
+				
+				item.Source = CultureMapSource.Merge;
 			}
 
-			Types.StructuredData data = new Types.StructuredData (Res.Types.ResourceString);
-
-			data.SetValue (Res.Fields.ResourceString.Text, field.AsString);
-			data.SetValue (Res.Fields.ResourceBase.Comment, field.About);
-			data.SetValue (Res.Fields.ResourceBase.ModificationId, field.ModificationId);
-
 			item.Name = field.Name ?? item.Name;
-			item.RecordCultureData (twoLetterISOLanguageName, data);
 
+			if (record)
+			{
+				item.RecordCultureData (twoLetterISOLanguageName, data);
+			}
 			if (insert)
 			{
 				this.Collection.Add (item);
 			}
 
 			return data;
+		}
+
+		private static void SetDataFromField(ResourceBundle.Field field, Types.StructuredData data)
+		{
+			data.SetValue (Res.Fields.ResourceString.Text, field.AsString);
+			data.SetValue (Res.Fields.ResourceBase.Comment, field.About);
+			data.SetValue (Res.Fields.ResourceBase.ModificationId, field.ModificationId);
 		}
 
 		protected override bool FilterField(ResourceBundle.Field field)
