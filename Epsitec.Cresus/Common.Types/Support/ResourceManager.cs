@@ -228,7 +228,7 @@ namespace Epsitec.Common.Support
 			}
 		}
 
-		public bool								BasedOnDerivedDefaultModule
+		public bool								BasedOnPatchModule
 		{
 			get
 			{

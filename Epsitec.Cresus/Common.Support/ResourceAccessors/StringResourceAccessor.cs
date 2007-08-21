@@ -252,7 +252,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 
 				//	Make sure we remember that the item contains merged data.
 				
-				item.Source = CultureMapSource.Merge;
+				item.Source = CultureMapSource.DynamicMerge;
 			}
 
 			item.Name = field.Name ?? item.Name;

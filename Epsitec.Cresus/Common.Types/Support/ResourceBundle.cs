@@ -159,7 +159,7 @@ namespace Epsitec.Common.Support
 			}
 		}
 
-		public bool							BasedOnDerivedModule
+		public bool							BasedOnPatchModule
 		{
 			get
 			{
@@ -169,7 +169,7 @@ namespace Epsitec.Common.Support
 				}
 				else
 				{
-					return this.manager.BasedOnDerivedDefaultModule;
+					return this.manager.BasedOnPatchModule;
 				}
 			}
 		}
@@ -1616,12 +1616,12 @@ namespace Epsitec.Common.Support
 
 			/// <summary>
 			/// Gets a value indicating whether this field content is based on
-			/// a derived module.
+			/// a patch module.
 			/// </summary>
 			/// <value>
-			/// 	<c>true</c> if this field content is based on a derived module; otherwise, <c>false</c>.
+			/// 	<c>true</c> if this field content is based on a patch module; otherwise, <c>false</c>.
 			/// </value>
-			public bool						BasedOnDerivedModule
+			public bool						BasedOnPatchModule
 			{
 				get
 				{
@@ -1631,7 +1631,7 @@ namespace Epsitec.Common.Support
 					}
 					else
 					{
-						return this.parent.BasedOnDerivedModule;
+						return this.parent.BasedOnPatchModule;
 					}
 				}
 			}

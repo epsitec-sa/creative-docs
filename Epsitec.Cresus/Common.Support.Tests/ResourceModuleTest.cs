@@ -59,37 +59,11 @@ namespace Epsitec.Common.Support
 			ResourceManager manager2 = manager1.GetManagerForReferenceModule ();
 			ResourceManager manager3 = manager2.GetManagerForReferenceModule ();
 
-			Assert.IsTrue (manager1.BasedOnDerivedDefaultModule);
-			Assert.IsFalse (manager2.BasedOnDerivedDefaultModule);
+			Assert.IsTrue (manager1.BasedOnPatchModule);
+			Assert.IsFalse (manager2.BasedOnPatchModule);
 
 			Assert.IsNotNull (manager2);
 			Assert.IsNull (manager3);
-		}
-
-		[Test]
-		public void CheckDerivedModule()
-		{
-			ResourceManagerPool pool = new ResourceManagerPool ("Test");
-
-			pool.AddModuleRootPath ("%epsitec%", @"S:\Epsitec.Cresus");
-			pool.AddModuleRootPath ("%test%", @"S:\Epsitec.Cresus\Common.Support.Tests\Resources");
-			
-			pool.ScanForModules ("%test%");
-
-			ResourceModuleInfo info1 = pool.FindModuleInfo (@"%test%\Common.Support");
-			ResourceModuleInfo info2 = pool.FindModuleInfo (@"%test%\Common.Support.Derived");
-
-			Assert.AreEqual (@"%test%\Common.Support", pool.GetRootRelativePath (info1.FullId.Path));
-			Assert.AreEqual (@"S:\Epsitec.Cresus\Common.Support.Tests\Resources\Common.Support", pool.GetRootAbsolutePath (info1.FullId.Path));
-			Assert.AreEqual (@"S:\Epsitec.Cresus\Common.Support.Tests\Resources\Common.Support.Derived", pool.GetRootAbsolutePath (info2.FullId.Path));
-			Assert.AreEqual (@"%test%\Common.Support", pool.GetRootRelativePath (info2, info2.ReferenceModulePath));
-			Assert.AreEqual (@"S:\Epsitec.Cresus\Common.Support.Tests\Resources\Common.Support", pool.GetRootAbsolutePath (info2, info2.ReferenceModulePath));
-
-			Assert.IsNotNull (info1);
-			Assert.IsNotNull (info2);
-
-			Assert.AreEqual (2, pool.FindPatchModuleInfos (info1).Count);
-			Assert.AreEqual (info2, pool.FindPatchModuleInfos (info1)[0]);
 		}
 
 		[Test]
@@ -157,7 +131,31 @@ namespace Epsitec.Common.Support
 			Assert.AreEqual (@"C:\Program Files\abc", pool.GetRootAbsolutePath (@"%program files%\abc"));
 			Assert.AreEqual (@"C:\Program Files\Epsitec\abc", pool.GetRootAbsolutePath (@"%app%\abc"));
 		}
+		
+		[Test]
+		public void CheckPatchModule()
+		{
+			ResourceManagerPool pool = new ResourceManagerPool ("Test");
+
+			pool.AddModuleRootPath ("%epsitec%", @"S:\Epsitec.Cresus");
+			pool.AddModuleRootPath ("%test%", @"S:\Epsitec.Cresus\Common.Support.Tests\Resources");
+
+			pool.ScanForModules ("%test%");
+
+			ResourceModuleInfo info1 = pool.FindModuleInfo (@"%test%\Common.Support");
+			ResourceModuleInfo info2 = pool.FindModuleInfo (@"%test%\Common.Support.Patch");
+
+			Assert.AreEqual (@"%test%\Common.Support", pool.GetRootRelativePath (info1.FullId.Path));
+			Assert.AreEqual (@"S:\Epsitec.Cresus\Common.Support.Tests\Resources\Common.Support", pool.GetRootAbsolutePath (info1.FullId.Path));
+			Assert.AreEqual (@"S:\Epsitec.Cresus\Common.Support.Tests\Resources\Common.Support.Patch", pool.GetRootAbsolutePath (info2.FullId.Path));
+			Assert.AreEqual (@"%test%\Common.Support", pool.GetRootRelativePath (info2, info2.ReferenceModulePath));
+			Assert.AreEqual (@"S:\Epsitec.Cresus\Common.Support.Tests\Resources\Common.Support", pool.GetRootAbsolutePath (info2, info2.ReferenceModulePath));
+
+			Assert.IsNotNull (info1);
+			Assert.IsNotNull (info2);
+
+			Assert.AreEqual (2, pool.FindPatchModuleInfos (info1).Count);
+			Assert.AreEqual (info2, pool.FindPatchModuleInfos (info1)[0]);
+		}
 	}
 }
-
-

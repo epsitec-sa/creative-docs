@@ -126,7 +126,7 @@ namespace Epsitec.Common.Support
 			}
 			internal set
 			{
-				System.Diagnostics.Debug.Assert (value == CultureMapSource.Merge);
+				System.Diagnostics.Debug.Assert (value == CultureMapSource.DynamicMerge);
 
 				this.source = value;
 			}

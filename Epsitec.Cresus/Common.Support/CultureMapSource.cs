@@ -20,14 +20,14 @@ namespace Epsitec.Common.Support
 		ReferenceModule,
 		
 		/// <summary>
-		/// The data originates from a derived module.
+		/// The data originates from a patch module.
 		/// </summary>
-		DerivedModule,
+		PatchModule,
 
 		/// <summary>
 		/// The data is the result of a merge operation between data coming
-		/// both from a derived module and a reference module.
+		/// both from a patch module and a reference module.
 		/// </summary>
-		Merge
+		DynamicMerge
 	}
 }

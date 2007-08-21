@@ -216,7 +216,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 		
 		/// <summary>
 		/// Gets the source for this culture map, based on where the field is
-		/// defined (reference or derived module). If there is no bundle field,
+		/// defined (reference or patch module). If there is no bundle field,
 		/// then the default resource manager source is used.
 		/// </summary>
 		/// <param name="field">The field or <c>null</c>.</param>
@@ -225,11 +225,11 @@ namespace Epsitec.Common.Support.ResourceAccessors
 		{
 			if (field == null)
 			{
-				return this.ResourceManager.BasedOnDerivedDefaultModule ? CultureMapSource.DerivedModule : CultureMapSource.ReferenceModule;
+				return this.ResourceManager.BasedOnPatchModule ? CultureMapSource.PatchModule : CultureMapSource.ReferenceModule;
 			}
 			else
 			{
-				return field.BasedOnDerivedModule ? CultureMapSource.DerivedModule : CultureMapSource.ReferenceModule;
+				return field.BasedOnPatchModule ? CultureMapSource.PatchModule : CultureMapSource.ReferenceModule;
 			}
 		}
 
