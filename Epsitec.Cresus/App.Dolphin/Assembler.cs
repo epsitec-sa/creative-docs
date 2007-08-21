@@ -149,7 +149,7 @@ namespace Epsitec.App.Dolphin
 											if (!string.IsNullOrEmpty(err))
 											{
 												errorLines.Add(lineCounter);
-												errorTexts.Add(Misc.RemoveTags(Misc.FirstLine(err)));
+												errorTexts.Add(Misc.RemoveTags(Assembler.FirstLine(err)));
 											}
 										}
 									}
@@ -853,23 +853,107 @@ namespace Epsitec.App.Dolphin
 		protected void InsertErrors(List<int> errorLines, List<string> errorTexts)
 		{
 			//	Insère les erreurs dans le texte du programme.
-			string program = TextLayout.ConvertToSimpleText(this.field.Text);
+			string program = TextLayout.ConvertToSimpleText(this.field.Text);  // remplace <br/> par \n et <tab/> par \t
 
 			int cursor = 0;
 			for (int i=errorLines.Count-1; i>=0; i--)  // commence par la fin pour ne pas perturber les rangs des lignes
 			{
-				int index1 = Misc.LineIndex(program, errorLines[i]+0);
-				int index2 = Misc.LineIndex(program, errorLines[i]+1);
+				int index1 = Assembler.LineIndex(program, errorLines[i]+0);
+				int index2 = Assembler.LineIndex(program, errorLines[i]+1);
 
-				string balast = Misc.Balast(program.Substring(index1));
+				string balast = Assembler.Balast(program.Substring(index1));
 				string err = string.Concat(balast, "^ ", errorTexts[i], "\n");
 				program = program.Insert(index2, err);
 
 				cursor = index2-1;
 			}
 
-			this.field.Text = TextLayout.ConvertToTaggedText(program);
+			this.field.Text = TextLayout.ConvertToTaggedText(program);  // remplace \n par <br/> et \t par <tab/>
 			this.field.Cursor = cursor;
+		}
+
+
+		protected static string Balast(string text)
+		{
+			//	Retourne tout le balast présent au début d'une ligne.
+			//	TextLayout.ConvertToSimpleText doit avoir été exécuté (<br/> et <tab/> remplacés par \n et \t).
+			int index = 0;
+			while (true)
+			{
+				int i;
+
+				i = text.IndexOf(" ", index);
+				if (i == index)
+				{
+					index = i+1;
+					continue;
+				}
+
+				i = text.IndexOf(",", index);
+				if (i == index)
+				{
+					index = i+1;
+					continue;
+				}
+
+				i = text.IndexOf(":", index);
+				if (i == index)
+				{
+					index = i+1;
+					continue;
+				}
+
+				i = text.IndexOf("\t", index);
+				if (i == index)
+				{
+					index = i+1;
+					continue;
+				}
+
+				break;
+			}
+
+			return text.Substring(0, index);
+		}
+
+		protected static int LineIndex(string text, int lineRank)
+		{
+			//	Cherche l'index de la nième ligne d'un texte.
+			//	TextLayout.ConvertToSimpleText doit avoir été exécuté (<br/> et <tab/> remplacés par \n et \t).
+			if (lineRank == 0)
+			{
+				return 0;
+			}
+
+			int startIndex = 0;
+			while (true)
+			{
+				int index = text.IndexOf("\n", startIndex);
+				if (index == -1)
+				{
+					return text.Length;
+				}
+				startIndex = index+1;
+
+				if (--lineRank == 0)
+				{
+					return startIndex;
+				}
+			}
+		}
+
+		protected static string FirstLine(string err)
+		{
+			//	Retourne la première ligne d'un texte.
+			int index = err.IndexOf("<br/>");
+			if (index == -1)
+			{
+				return err;
+			}
+			else
+			{
+				return err.Substring(0, index);
+			}
 		}
 
 
