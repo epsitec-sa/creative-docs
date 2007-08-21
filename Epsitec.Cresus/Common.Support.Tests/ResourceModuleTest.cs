@@ -172,6 +172,13 @@ namespace Epsitec.Common.Support
 
 			stringAccessor1.Load (manager1);
 			stringAccessor2.Load (manager2);
+
+			Assert.AreEqual (1, stringAccessor1.Collection.Count);
+			Assert.AreEqual ("Image.Description", stringAccessor1.Collection[0].Name);
+
+			Assert.AreEqual (2, stringAccessor2.Collection.Count);
+			Assert.AreEqual ("Image.Description", stringAccessor2.Collection[0].Name);
+			Assert.AreEqual ("Foo", stringAccessor2.Collection[1].Name);
 		}
 	}
 }
