@@ -228,13 +228,6 @@ namespace Epsitec.Common.Support.ResourceAccessors
 		protected abstract string GetNameFromFieldName(CultureMap item, string fieldName);
 
 
-		/// <summary>
-		/// Loads data from a resource bundle field.
-		/// </summary>
-		/// <param name="field">The resource bundle field.</param>
-		/// <param name="module">The source module id.</param>
-		/// <param name="twoLetterISOLanguageName">The two letter ISO language name.</param>
-		/// <returns>The data which describes the specified resource.</returns>
 		protected override Types.StructuredData LoadFromField(ResourceBundle.Field field, int module, string twoLetterISOLanguageName)
 		{
 			Druid id     = new Druid (field.Id, module);

@@ -245,8 +245,11 @@ namespace Epsitec.Common.Support.ResourceAccessors
 		/// <param name="item">The item to store as a resource.</param>
 		protected abstract void PersistItem(CultureMap item);
 
-		protected abstract bool FilterField(ResourceBundle.Field field);
-
+		/// <summary>
+		/// Loads all items found in a bundle into the <c>Collection</c>.
+		/// </summary>
+		/// <param name="bundle">The resource bundle.</param>
+		/// <param name="twoLetterISOLanguageName">The two letter ISO language name.</param>
 		protected void LoadFromBundle(ResourceBundle bundle, string twoLetterISOLanguageName)
 		{
 			using (this.SuspendNotifications ())
@@ -263,7 +266,22 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			}
 		}
 
+		/// <summary>
+		/// Loads data from a resource bundle field.
+		/// </summary>
+		/// <param name="field">The resource bundle field.</param>
+		/// <param name="module">The source module id.</param>
+		/// <param name="twoLetterISOLanguageName">The two letter ISO language name.</param>
+		/// <returns>The data which describes the specified resource.</returns>
 		protected abstract Types.StructuredData LoadFromField(ResourceBundle.Field field, int module, string twoLetterISOLanguageName);
+
+		/// <summary>
+		/// Checks if the data stored in the field matches this accessor. This
+		/// can be used to filter out specific fields.
+		/// </summary>
+		/// <param name="field">The field to check.</param>
+		/// <returns><c>true</c> if data should be loaded from the field; otherwise, <c>false</c>.</returns>
+		protected abstract bool FilterField(ResourceBundle.Field field);
 
 		/// <summary>
 		/// Initializes the accessor and defines the resource manager.
