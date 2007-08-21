@@ -24,9 +24,21 @@ namespace Epsitec.Common.Support.ResourceAccessors
 		{
 			this.Initialize (manager);
 
-			ResourceBundle bundle = this.ResourceManager.GetBundle (Resources.StringsBundleName, ResourceLevel.Default);
+			if (this.ResourceManager.BasedOnPatchModule)
+			{
+				ResourceManager patchModuleManager = this.ResourceManager;
+				ResourceManager refModuleManager   = this.ResourceManager.GetManagerForReferenceModule ();
 
-			this.LoadFromBundle (bundle, Resources.DefaultTwoLetterISOLanguageName);
+				System.Diagnostics.Debug.Assert (refModuleManager != null);
+				System.Diagnostics.Debug.Assert (refModuleManager.BasedOnPatchModule == false);
+
+				this.LoadFromBundle (refModuleManager.GetBundle (Resources.StringsBundleName, ResourceLevel.Default), Resources.DefaultTwoLetterISOLanguageName);
+				this.LoadFromBundle (patchModuleManager.GetBundle (Resources.StringsBundleName, ResourceLevel.Default), Resources.DefaultTwoLetterISOLanguageName);
+			}
+			else
+			{
+				this.LoadFromBundle (this.ResourceManager.GetBundle (Resources.StringsBundleName, ResourceLevel.Default), Resources.DefaultTwoLetterISOLanguageName);
+			}
 		}
 
 		public override Types.StructuredData LoadCultureData(CultureMap item, string twoLetterISOLanguageName)

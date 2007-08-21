@@ -465,15 +465,17 @@ namespace Epsitec.Common.Support
 
 		#region Internal and Private Methods
 
-		internal static string CreateBundleKey(string prefix, int moduleId, string resource_id, ResourceLevel level, CultureInfo culture)
+		internal static string CreateBundleKey(string prefix, ResourceModuleId module, string resourceId, ResourceLevel level, CultureInfo culture, string suffix)
 		{
 			System.Diagnostics.Debug.Assert (prefix != null);
 			System.Diagnostics.Debug.Assert (prefix.Length > 0);
 			System.Diagnostics.Debug.Assert (prefix.IndexOf (Resources.PrefixSeparator) < 0);
 			System.Diagnostics.Debug.Assert (prefix.IndexOf (Resources.ModuleSeparator) < 0);
-			System.Diagnostics.Debug.Assert (resource_id.Length > 0);
-			System.Diagnostics.Debug.Assert (resource_id.IndexOf (Resources.FieldSeparator) < 0);
+			System.Diagnostics.Debug.Assert (resourceId.Length > 0);
+			System.Diagnostics.Debug.Assert (resourceId.IndexOf (Resources.FieldSeparator) < 0);
 
+			int moduleId = module.Id;
+			
 			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
 
 			if (!string.IsNullOrEmpty (prefix))
@@ -487,11 +489,17 @@ namespace Epsitec.Common.Support
 			}
 
 			buffer.Append (Resources.PrefixSeparator);
-			buffer.Append (resource_id);
+			buffer.Append (resourceId);
 			buffer.Append ("~");
-			buffer.Append ((int) level);
+			buffer.Append (((int) level).ToString (System.Globalization.CultureInfo.InvariantCulture));
 			buffer.Append ("~");
 			buffer.Append (level == ResourceLevel.Default ? Resources.DefaultTwoLetterISOLanguageName : culture.TwoLetterISOLanguageName);
+
+			if (!string.IsNullOrEmpty (suffix))
+			{
+				buffer.Append ("~");
+				buffer.Append (suffix);
+			}
 
 			return buffer.ToString ();
 		}

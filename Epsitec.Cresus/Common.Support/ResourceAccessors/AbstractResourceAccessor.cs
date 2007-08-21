@@ -252,15 +252,18 @@ namespace Epsitec.Common.Support.ResourceAccessors
 		/// <param name="twoLetterISOLanguageName">The two letter ISO language name.</param>
 		protected void LoadFromBundle(ResourceBundle bundle, string twoLetterISOLanguageName)
 		{
-			using (this.SuspendNotifications ())
+			if (bundle != null)
 			{
-				int module = bundle.Module.Id;
-
-				foreach (ResourceBundle.Field field in bundle.Fields)
+				using (this.SuspendNotifications ())
 				{
-					if (this.FilterField (field))
+					int module = bundle.Module.Id;
+
+					foreach (ResourceBundle.Field field in bundle.Fields)
 					{
-						this.LoadFromField (field, module, twoLetterISOLanguageName);
+						if (this.FilterField (field))
+						{
+							this.LoadFromField (field, module, twoLetterISOLanguageName);
+						}
 					}
 				}
 			}

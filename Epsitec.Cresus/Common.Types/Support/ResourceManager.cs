@@ -305,13 +305,15 @@ namespace Epsitec.Common.Support
 			ResourceModuleInfo info = this.DefaultModuleInfo;
 			ResourceManager manager = null;
 
-			if (info != null)
+			if ((info != null) &&
+				(!string.IsNullOrEmpty (info.ReferenceModulePath)))
 			{
-				string modulePath = info.ReferenceModulePath;
+				string modulePath = this.pool.GetRootRelativePath (info, info.ReferenceModulePath);
+				info = this.pool.FindModuleInfo (modulePath);
 
-				if (!string.IsNullOrEmpty (modulePath))
+				if (info != null)
 				{
-					manager = new ResourceManager (this.pool, this.defaultPath, modulePath);
+					manager = new ResourceManager (this.pool, info);
 				}
 			}
 
@@ -653,7 +655,7 @@ namespace Epsitec.Common.Support
 			if (provider != null)
 			{
 				string prefix = provider.Prefix;
-				string key = Resources.CreateBundleKey (prefix, module.Id, resourceId, level, culture);
+				string key = Resources.CreateBundleKey (prefix, module, resourceId, level, culture, this.GetKeySuffix ());
 				CultureInfo defaultCulture = Resources.FindCultureInfo (Resources.GetDefaultTwoLetterISOLanguageName ());
 
 				bundle = this.pool.FindBundle (key);
@@ -716,7 +718,7 @@ namespace Epsitec.Common.Support
 		private void CompileBundle(ResourceBundle bundle, IResourceProvider provider, string resourceId, ResourceLevel level, CultureInfo culture)
 		{
 			byte[] data;
-			string key = Resources.CreateBundleKey (provider.Prefix, bundle.Module.Id, resourceId, level, culture);
+			string key = Resources.CreateBundleKey (provider.Prefix, bundle.Module, resourceId, level, culture, this.GetKeySuffix ());
 			ResourceBundle source = this.pool.FindBundle (key);
 
 			if (source != null)
@@ -1168,13 +1170,26 @@ namespace Epsitec.Common.Support
 			ResourceModuleId module;
 			IResourceProvider provider = this.FindProvider (id, out id, out module);
 
+			string keySuffix = this.GetKeySuffix ();
 			string prefix = provider.Prefix;
-			string key = Resources.CreateBundleKey (prefix, module.Id, id, ResourceLevel.Merged, culture);
+			string key = Resources.CreateBundleKey (prefix, module, id, ResourceLevel.Merged, culture, keySuffix);
 
 			this.pool.RemoveBundle (key);
 
-			key = Resources.CreateBundleKey (prefix, module.Id, id, level, culture);
+			key = Resources.CreateBundleKey (prefix, module, id, level, culture, keySuffix);
 			this.pool.RefreshBundle (key, bundle);
+		}
+
+		private string GetKeySuffix()
+		{
+			if (this.BasedOnPatchModule)
+			{
+				return this.serialId.ToString (System.Globalization.CultureInfo.InvariantCulture);
+			}
+			else
+			{
+				return null;
+			}
 		}
 		
 		public bool SetBinaryData(string id, ResourceLevel level, CultureInfo culture, byte[] data, ResourceSetMode mode)
@@ -1238,7 +1253,7 @@ namespace Epsitec.Common.Support
 			if (provider != null)
 			{
 				string prefix = provider.Prefix;
-				string key = Resources.CreateBundleKey (prefix, module.Id, resource_id, level, culture);
+				string key = Resources.CreateBundleKey (prefix, module, resource_id, level, culture, this.GetKeySuffix ());
 
 				this.pool.RemoveBundle (key);
 				
@@ -1420,7 +1435,7 @@ namespace Epsitec.Common.Support
 
 				this.AnalyseFullId (name, out prefix, out localId, out module);
 
-				string key = Resources.CreateBundleKey (prefix, module.Id, localId, level, culture);
+				string key = Resources.CreateBundleKey (prefix, module, localId, level, culture, this.GetKeySuffix ());
 
 				ResourceBundle oldBundle = cache.Bundle;
 				ResourceBundle newBundle = this.GetBundle (name, level, culture);
@@ -1451,7 +1466,7 @@ namespace Epsitec.Common.Support
 
 			this.AnalyseFullId (bundleName, out prefix, out localId, out module);
 
-			string key = Resources.CreateBundleKey (prefix, module.Id, localId, level, culture);
+			string key = Resources.CreateBundleKey (prefix, module, localId, level, culture, this.GetKeySuffix ());
 
 			if (this.bundleRelatedCache.TryGetValue (key, out cache) == false)
 			{
