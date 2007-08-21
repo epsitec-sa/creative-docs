@@ -21,43 +21,43 @@ namespace Epsitec.Common.Support
 	public sealed class ResourceManager : DependencyObject, System.IComparable<ResourceManager>, System.IEquatable<ResourceManager>
 	{
 		public ResourceManager()
-			: this (Support.Globals.Directories.ExecutableRoot, null, null)
+			: this (null, Support.Globals.Directories.ExecutableRoot, null)
 		{
 		}
 
 		public ResourceManager(System.Type type)
-			: this (System.IO.Path.GetDirectoryName (type.Assembly.Location), null, null)
+			: this (null, System.IO.Path.GetDirectoryName (type.Assembly.Location), null)
 		{
 		}
 
 		public ResourceManager(string path)
-			: this (path, null, null)
+			: this (null, path, null)
 		{
 		}
 
 		public ResourceManager(ResourceManagerPool pool)
-			: this (Support.Globals.Directories.ExecutableRoot, pool, null)
+			: this (pool, Support.Globals.Directories.ExecutableRoot, null)
 		{
 		}
 
 		public ResourceManager(ResourceManagerPool pool, ResourceModuleInfo info)
-			: this (Support.Globals.Directories.ExecutableRoot, pool, info == null ? null : info.FullId.Path)
+			: this (pool, Support.Globals.Directories.ExecutableRoot, info == null ? null : info.FullId.Path)
 		{
 		}
 
-		public ResourceManager(ResourceModuleId module, ResourceManagerPool pool)
-			: this (Support.Globals.Directories.ExecutableRoot, pool, module.Path)
+		public ResourceManager(ResourceManagerPool pool, ResourceModuleId module)
+			: this (pool, Support.Globals.Directories.ExecutableRoot, module.Path)
 		{
 			this.defaultModuleId   = module.Id;
 			this.defaultModuleName = module.Name;
 		}
 
-		public ResourceManager(System.Type type, ResourceManagerPool pool)
-			: this (System.IO.Path.GetDirectoryName (type.Assembly.Location), pool, null)
+		public ResourceManager(ResourceManagerPool pool, System.Type type)
+			: this (pool, System.IO.Path.GetDirectoryName (type.Assembly.Location), null)
 		{
 		}
 
-		public ResourceManager(string path, ResourceManagerPool pool, string modulePath)
+		public ResourceManager(ResourceManagerPool pool, string executablePath, string modulePath)
 		{
 			this.pool = pool ?? new ResourceManagerPool ();
 			this.bundleRelatedCache = new Dictionary<string, BundleRelatedCache> ();
@@ -67,7 +67,7 @@ namespace Epsitec.Common.Support
 			this.serialId = System.Threading.Interlocked.Increment (ref ResourceManager.nextSerialId);
 			this.providers = new Dictionary<string, ProviderRecord> ();
 			this.culture = CultureInfo.CurrentCulture;
-			this.defaultPath = string.IsNullOrEmpty (path) ? null : path;
+			this.defaultPath = string.IsNullOrEmpty (executablePath) ? null : executablePath;
 
 			foreach (Allocator<IResourceProvider, ResourceManager> allocator in Resources.Factory.Allocators)
 			{
@@ -306,7 +306,7 @@ namespace Epsitec.Common.Support
 
 				if (!string.IsNullOrEmpty (modulePath))
 				{
-					manager = new ResourceManager (this.defaultPath, this.pool, modulePath);
+					manager = new ResourceManager (this.pool, this.defaultPath, modulePath);
 				}
 			}
 

@@ -156,6 +156,12 @@ namespace Epsitec.Common.Support
 
 			Assert.AreEqual (2, pool.FindPatchModuleInfos (info1).Count);
 			Assert.AreEqual (info2, pool.FindPatchModuleInfos (info1)[0]);
+
+			ResourceManager manager = new ResourceManager (pool, info2);
+
+			Assert.IsTrue (manager.BasedOnPatchModule);
+			Assert.IsNotNull (manager.GetManagerForReferenceModule ());
+			Assert.IsFalse (manager.GetManagerForReferenceModule ().BasedOnPatchModule);
 		}
 	}
 }
