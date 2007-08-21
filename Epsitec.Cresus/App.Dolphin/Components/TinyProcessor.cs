@@ -1305,20 +1305,20 @@ namespace Epsitec.App.Dolphin.Components
 				case Instructions.AddVSP:
 					builder.Append("ADD ");
 					TinyProcessor.PutCodeValue(builder, codes[1]);
-					builder.Append(",SP");
+					builder.Append(" ,SP");
 					return builder.ToString();
 
 				case Instructions.SubVSP:
 					builder.Append("SUB ");
 					TinyProcessor.PutCodeValue(builder, codes[1]);
-					builder.Append(",SP");
+					builder.Append(" ,SP");
 					return builder.ToString();
 
 				case Instructions.ExAB:
-					return "EX A,B";
+					return "EX A, B";
 
 				case Instructions.ExXY:
-					return "EX X,Y";
+					return "EX X, Y";
 
 				case Instructions.SwapA:
 					return "SWAP A";
@@ -1475,7 +1475,7 @@ namespace Epsitec.App.Dolphin.Components
 				int dst = op & 0x03;
 				builder.Append("MOVE ");
 				TinyProcessor.PutCodeRegister(builder, src);
-				builder.Append(",");
+				builder.Append(", ");
 				TinyProcessor.PutCodeRegister(builder, dst);
 				return builder.ToString();
 			}
@@ -1485,7 +1485,7 @@ namespace Epsitec.App.Dolphin.Components
 				int n = op & 0x03;
 				builder.Append("MOVE ");
 				TinyProcessor.PutCodeValue(builder, codes[1]);
-				builder.Append(",");
+				builder.Append(", ");
 				TinyProcessor.PutCodeRegister(builder, n);
 				return builder.ToString();
 			}
@@ -1495,7 +1495,7 @@ namespace Epsitec.App.Dolphin.Components
 				int n = op & 0x03;
 				builder.Append("MOVE ");
 				address = TinyProcessor.PutCodeAddress(builder, codes[1], codes[2], pc, length);
-				builder.Append(",");
+				builder.Append(", ");
 				TinyProcessor.PutCodeRegister(builder, n);
 				return builder.ToString();
 			}
@@ -1505,7 +1505,7 @@ namespace Epsitec.App.Dolphin.Components
 				int n = op & 0x03;
 				builder.Append("MOVE ");
 				TinyProcessor.PutCodeRegister(builder, n);
-				builder.Append(",");
+				builder.Append(", ");
 				address = TinyProcessor.PutCodeAddress(builder, codes[1], codes[2], pc, length);
 				return builder.ToString();
 			}
@@ -1516,7 +1516,7 @@ namespace Epsitec.App.Dolphin.Components
 				int dst = op & 0x03;
 				builder.Append("COMP ");
 				TinyProcessor.PutCodeRegister(builder, src);
-				builder.Append(",");
+				builder.Append(", ");
 				TinyProcessor.PutCodeRegister(builder, dst);
 				return builder.ToString();
 			}
@@ -1526,7 +1526,7 @@ namespace Epsitec.App.Dolphin.Components
 				int n = op & 0x03;
 				builder.Append("COMP ");
 				TinyProcessor.PutCodeValue(builder, codes[1]);
-				builder.Append(",");
+				builder.Append(", ");
 				TinyProcessor.PutCodeRegister(builder, n);
 				return builder.ToString();
 			}
@@ -1556,7 +1556,7 @@ namespace Epsitec.App.Dolphin.Components
 				}
 
 				TinyProcessor.PutCodeValue(builder, codes[1]);
-				builder.Append(",");
+				builder.Append(", ");
 				TinyProcessor.PutCodeRegister(builder, n);
 				return builder.ToString();
 			}
@@ -1583,7 +1583,7 @@ namespace Epsitec.App.Dolphin.Components
 				}
 
 				TinyProcessor.PutCodeRegister(builder, src);
-				builder.Append(",");
+				builder.Append(", ");
 				TinyProcessor.PutCodeRegister(builder, dst);
 				return builder.ToString();
 			}
@@ -1593,7 +1593,7 @@ namespace Epsitec.App.Dolphin.Components
 				int n = op & 0x03;
 				builder.Append("ADD ");
 				TinyProcessor.PutCodeValue(builder, codes[1]);
-				builder.Append(",");
+				builder.Append(", ");
 				TinyProcessor.PutCodeRegister(builder, n);
 				return builder.ToString();
 			}
@@ -1603,7 +1603,7 @@ namespace Epsitec.App.Dolphin.Components
 				int n = op & 0x03;
 				builder.Append("SUB ");
 				TinyProcessor.PutCodeValue(builder, codes[1]);
-				builder.Append(",");
+				builder.Append(", ");
 				TinyProcessor.PutCodeRegister(builder, n);
 				return builder.ToString();
 			}
@@ -1676,7 +1676,7 @@ namespace Epsitec.App.Dolphin.Components
 				}
 
 				address = TinyProcessor.PutCodeAddress(builder, codes[1], codes[2], pc, length);
-				builder.Append(",");
+				builder.Append(", ");
 				TinyProcessor.PutCodeRegister(builder, n);
 				return builder.ToString();
 			}
@@ -1703,7 +1703,7 @@ namespace Epsitec.App.Dolphin.Components
 
 				builder.Append("MOVE ");
 				TinyProcessor.PutCodeRegister(builder, n);
-				builder.Append(",");
+				builder.Append(", ");
 				address = TinyProcessor.PutCodeAddress(builder, codes[1], codes[2], pc, length);
 				return builder.ToString();
 			}
@@ -1875,7 +1875,7 @@ namespace Epsitec.App.Dolphin.Components
 				}
 
 				TinyProcessor.PutCodeValue(builder, codes[1]);
-				builder.Append(",");
+				builder.Append(", ");
 				address = TinyProcessor.PutCodeAddress(builder, codes[2], codes[3], pc, length);
 				return builder.ToString();
 			}
@@ -1907,7 +1907,7 @@ namespace Epsitec.App.Dolphin.Components
 				}
 
 				TinyProcessor.PutCodeRegister(builder, src);
-				builder.Append(",");
+				builder.Append(", ");
 				TinyProcessor.PutCodeRegister(builder, dst);
 				return builder.ToString();
 			}
@@ -1937,7 +1937,7 @@ namespace Epsitec.App.Dolphin.Components
 				}
 
 				address = TinyProcessor.PutCodeAddress(builder, codes[1], codes[2], pc, length);
-				builder.Append(",");
+				builder.Append(", ");
 				TinyProcessor.PutCodeRegister(builder, n);
 				return builder.ToString();
 			}
@@ -1967,7 +1967,7 @@ namespace Epsitec.App.Dolphin.Components
 				}
 
 				TinyProcessor.PutCodeRegister(builder, n);
-				builder.Append(",");
+				builder.Append(", ");
 				address = TinyProcessor.PutCodeAddress(builder, codes[1], codes[2], pc, length);
 				return builder.ToString();
 			}
@@ -1977,7 +1977,7 @@ namespace Epsitec.App.Dolphin.Components
 				int n = op & 0x03;
 				builder.Append("COMP ");
 				address = TinyProcessor.PutCodeAddress(builder, codes[1], codes[2], pc, length);
-				builder.Append(",");
+				builder.Append(", ");
 				TinyProcessor.PutCodeRegister(builder, n);
 				return builder.ToString();
 			}
