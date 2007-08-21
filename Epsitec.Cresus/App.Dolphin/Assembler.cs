@@ -396,6 +396,13 @@ namespace Epsitec.App.Dolphin
 							if (err == null)
 							{
 								value -= npc;
+
+								if (System.Math.Abs(value) > 0x7FF)
+								{
+									err = "Déplacement relatif trop grand.";
+									return null;
+								}
+
 								text = string.Concat("{PC}+H'", value.ToString("X3"));
 							}
 							else
