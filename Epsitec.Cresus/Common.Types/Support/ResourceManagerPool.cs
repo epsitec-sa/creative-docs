@@ -179,6 +179,8 @@ namespace Epsitec.Common.Support
 		/// <returns>The relative path, possibly with a symbolic path name prefix.</returns>
 		public string GetRootRelativePath(string path)
 		{
+			path = ResourceManagerPool.SimplifyPath (path);
+
 			if (string.IsNullOrEmpty (path))
 			{
 				return path;
@@ -200,6 +202,26 @@ namespace Epsitec.Common.Support
 			}
 
 			return string.Concat (prefix, result);
+		}
+
+		public string GetRootRelativePath(ResourceModuleInfo module, string path)
+		{
+			if (string.IsNullOrEmpty (path))
+			{
+				return path;
+			}
+
+			if ((path.StartsWith (@"..\")) ||
+				(path.StartsWith (@"../")) ||
+				(path.StartsWith (@".\")) ||
+				(path.StartsWith (@"./")))
+			{
+				return this.GetRootRelativePath (string.Concat (module.FullId.Path, System.IO.Path.DirectorySeparatorChar, path));
+			}
+			else
+			{
+				return this.GetRootRelativePath (path);
+			}
 		}
 
 		/// <summary>
@@ -231,7 +253,27 @@ namespace Epsitec.Common.Support
 				}
 			}
 
-			return string.Concat (prefix, result);
+			return ResourceManagerPool.SimplifyPath (string.Concat (prefix, result));
+		}
+
+		public string GetRootAbsolutePath(ResourceModuleInfo module, string path)
+		{
+			if (string.IsNullOrEmpty (path))
+			{
+				return path;
+			}
+			
+			if ((path.StartsWith (@"..\")) ||
+				(path.StartsWith (@"../")) ||
+				(path.StartsWith (@".\")) ||
+				(path.StartsWith (@"./")))
+			{
+				return this.GetRootAbsolutePath (string.Concat (module.FullId.Path, System.IO.Path.DirectorySeparatorChar, path));
+			}
+			else
+			{
+				return this.GetRootAbsolutePath (path);
+			}
 		}
 
 		
@@ -396,7 +438,7 @@ namespace Epsitec.Common.Support
 					{
 						return (info.FullId.Id == referenceModule.FullId.Id)
 							&& (info.FullId.Name == referenceModule.FullId.Name)
-							&& (this.GetRootRelativePath (info.ReferenceModulePath) == path);
+							&& (this.GetRootRelativePath (info, info.ReferenceModulePath) == path);
 					});
 			}
 		}
@@ -536,6 +578,35 @@ namespace Epsitec.Common.Support
 			}
 		}
 
+		private static string SimplifyPath(string path)
+		{
+			if (string.IsNullOrEmpty (path))
+			{
+				return path;
+			}
+
+			string[] elements = path.Split ('\\', '/');
+			List<string> list = new List<string> ();
+			
+			foreach (string element in elements)
+			{
+				if ((element.Length == 0) ||
+					(element == "."))
+				{
+					//	Skip element...
+				}
+				else if ((element == "..") && (list.Count > 0))
+				{
+					list.RemoveAt (list.Count-1);
+				}
+				else
+				{
+					list.Add (element);
+				}
+			}
+
+			return string.Join (System.IO.Path.DirectorySeparatorChar.ToString (), list.ToArray ());
+		}
 		
 		public static class SymbolicNames
 		{

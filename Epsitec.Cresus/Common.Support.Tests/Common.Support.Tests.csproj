@@ -239,6 +239,7 @@
     <None Include="resources\LowLevelTest\simple_window.00.resource" />
     <None Include="resources\LowLevelTest\strings.00.resource" />
     <None Include="resources\LowLevelTest\strings.fr.resource" />
+    <None Include="resources\Common.Support.Derived\module.info" />
     <None Include="resources\OtherModule\module.info" />
     <None Include="resources\OtherModule\strings.00.resource" />
     <None Include="resources\Test\captions.00.resource" />
