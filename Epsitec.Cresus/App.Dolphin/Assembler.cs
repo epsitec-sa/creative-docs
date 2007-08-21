@@ -128,7 +128,7 @@ namespace Epsitec.App.Dolphin
 						if (!string.IsNullOrEmpty(instruction))
 						{
 							int npc = pc;  // npc est faux à la 1ère passe, mais c'est sans importance !
-							if (pass == 1)  // deuxième passe ?
+							if (pass == 1 && instructionCounter < instructionLengths.Count)  // deuxième passe ?
 							{
 								npc += instructionLengths[instructionCounter];  // npc = adresse après l'instruction, pour adressage relatif
 							}
