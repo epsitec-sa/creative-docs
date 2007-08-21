@@ -73,7 +73,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			string name = field.Name;
 
 			System.Diagnostics.Debug.Assert (name.StartsWith (this.Prefix));
-			
+
 			string prefix = name.Substring (this.Prefix.Length);
 			int    pos    = prefix.LastIndexOf ('.');
 
@@ -83,8 +83,8 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			}
 
 			prefix = prefix.Substring (0, pos);
-			
-			return new PrefixedCultureMap (this, id, prefix);
+
+			return new PrefixedCultureMap (this, id, this.GetCultureMapSource (field), prefix);
 		}
 	}
 }

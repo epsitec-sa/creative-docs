@@ -15,10 +15,11 @@ namespace Epsitec.Common.Support
 	/// </summary>
 	public class CultureMap : INotifyPropertyChanged
 	{
-		internal CultureMap(IResourceAccessor owner, Druid id)
+		internal CultureMap(IResourceAccessor owner, Druid id, CultureMapSource source)
 		{
 			this.owner = owner;
 			this.id = id;
+			this.source = source;
 		}
 
 		public IResourceAccessor Owner
@@ -110,6 +111,18 @@ namespace Epsitec.Common.Support
 			internal set
 			{
 				this.isNewItem = value;
+			}
+		}
+
+		/// <summary>
+		/// Gets the module source of this item.
+		/// </summary>
+		/// <value>The module source.</value>
+		public CultureMapSource Source
+		{
+			get
+			{
+				return this.source;
 			}
 		}
 
@@ -319,5 +332,6 @@ namespace Epsitec.Common.Support
 		private KeyValuePair<string, Types.StructuredData>[] map;
 		private bool isNewItem;
 		private bool isRefreshNeeded;
+		private CultureMapSource source;
 	}
 }

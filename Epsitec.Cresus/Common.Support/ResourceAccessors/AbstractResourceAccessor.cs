@@ -71,7 +71,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 
 		public virtual CultureMap CreateItem()
 		{
-			CultureMap item = new CultureMap (this, this.CreateId ());
+			CultureMap item = new CultureMap (this, this.CreateId (), this.GetCultureMapSource (null));
 			item.IsNewItem = true;
 			return item;
 		}
@@ -147,6 +147,19 @@ namespace Epsitec.Common.Support.ResourceAccessors
 		public abstract Types.StructuredData LoadCultureData(CultureMap item, string twoLetterISOLanguageName);
 
 		#endregion
+		
+		protected CultureMapSource GetCultureMapSource(ResourceBundle.Field field)
+		{
+			if (field == null)
+			{
+				return this.ResourceManager.BasedOnDerivedDefaultModule ? CultureMapSource.DerivedModule : CultureMapSource.ReferenceModule;
+			}
+			else
+			{
+				return field.BasedOnDerivedModule ? CultureMapSource.DerivedModule : CultureMapSource.ReferenceModule;
+			}
+		}
+
 
 		internal static Druid CreateId(ResourceBundle bundle, IEnumerable<CultureMap> collection)
 		{

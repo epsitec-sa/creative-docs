@@ -295,7 +295,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 
 		protected virtual CultureMap CreateItem(ResourceBundle.Field field, Druid id)
 		{
-			return new CultureMap (this, id);
+			return new CultureMap (this, id, this.GetCultureMapSource (field));
 		}
 
 		#region AccessorsCollection Class

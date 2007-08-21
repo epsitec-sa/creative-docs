@@ -15,9 +15,10 @@ namespace Epsitec.Common.Support.ResourceAccessors
 		/// </summary>
 		/// <param name="owner">The owner.</param>
 		/// <param name="id">The id associated with the item.</param>
+		/// <param name="source">The module source.</param>
 		/// <param name="prefix">The prefix (if any) or <c>null</c>.</param>
-		public PrefixedCultureMap(IResourceAccessor owner, Druid id, string prefix)
-			: base (owner, id)
+		public PrefixedCultureMap(IResourceAccessor owner, Druid id, CultureMapSource source, string prefix)
+			: base (owner, id, source)
 		{
 			this.prefix = prefix;
 		}

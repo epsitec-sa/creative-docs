@@ -5,9 +5,9 @@ namespace Epsitec.Common.Support.Internal
 {
 	public static class Test
 	{
-		public static CultureMap CreateCultureMap(IResourceAccessor owner, Druid id)
+		public static CultureMap CreateCultureMap(IResourceAccessor owner, Druid id, CultureMapSource source)
 		{
-			return new CultureMap (owner, id);
+			return new CultureMap (owner, id, source);
 		}
 	}
 }

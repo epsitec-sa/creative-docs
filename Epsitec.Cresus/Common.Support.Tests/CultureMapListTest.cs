@@ -10,10 +10,10 @@ namespace Epsitec.Common.Support
 		{
 			this.list = new CultureMapList (null);
 
-			this.list.Add (Internal.Test.CreateCultureMap (null, Druid.Parse ("[0001]")));
-			this.list.Add (Internal.Test.CreateCultureMap (null, Druid.Parse ("[0002]")));
-			this.list.Add (Internal.Test.CreateCultureMap (null, Druid.Parse ("[0003]")));
-			this.list.Add (Internal.Test.CreateCultureMap (null, Druid.Parse ("[0004]")));
+			this.list.Add (Internal.Test.CreateCultureMap (null, Druid.Parse ("[0001]"), CultureMapSource.ReferenceModule));
+			this.list.Add (Internal.Test.CreateCultureMap (null, Druid.Parse ("[0002]"), CultureMapSource.ReferenceModule));
+			this.list.Add (Internal.Test.CreateCultureMap (null, Druid.Parse ("[0003]"), CultureMapSource.ReferenceModule));
+			this.list.Add (Internal.Test.CreateCultureMap (null, Druid.Parse ("[0004]"), CultureMapSource.ReferenceModule));
 
 			this.list[0].Name = "A";
 			this.list[1].Name = "B";

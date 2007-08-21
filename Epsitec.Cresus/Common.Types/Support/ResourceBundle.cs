@@ -111,7 +111,7 @@ namespace Epsitec.Common.Support
 			}
 		}
 
-		public ResourceModuleId			Module
+		public ResourceModuleId				Module
 		{
 			get
 			{
@@ -156,6 +156,21 @@ namespace Epsitec.Common.Support
 			get
 			{
 				return this.manager;
+			}
+		}
+
+		public bool							BasedOnDerivedModule
+		{
+			get
+			{
+				if (this.manager == null)
+				{
+					return false;
+				}
+				else
+				{
+					return this.manager.BasedOnDerivedDefaultModule;
+				}
 			}
 		}
 		
@@ -1596,6 +1611,28 @@ namespace Epsitec.Common.Support
 				get
 				{
 					return this.parent;
+				}
+			}
+
+			/// <summary>
+			/// Gets a value indicating whether this field content is based on
+			/// a derived module.
+			/// </summary>
+			/// <value>
+			/// 	<c>true</c> if this field content is based on a derived module; otherwise, <c>false</c>.
+			/// </value>
+			public bool						BasedOnDerivedModule
+			{
+				get
+				{
+					if (this.parent == null)
+					{
+						return false;
+					}
+					else
+					{
+						return this.parent.BasedOnDerivedModule;
+					}
 				}
 			}
 			

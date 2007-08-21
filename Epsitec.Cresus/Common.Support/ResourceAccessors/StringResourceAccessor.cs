@@ -213,7 +213,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 
 			if (item == null)
 			{
-				item   = new CultureMap (this, id);
+				item   = new CultureMap (this, id, this.GetCultureMapSource (field));
 				insert = true;
 			}
 
