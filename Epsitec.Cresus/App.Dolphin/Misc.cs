@@ -41,10 +41,10 @@ namespace Epsitec.App.Dolphin
 					continue;
 				}
 
-				i = text.IndexOf("<tab/>", index);
+				i = text.IndexOf("\t", index);
 				if (i == index)
 				{
-					index = i+6;
+					index = i+1;
 					continue;
 				}
 
@@ -65,12 +65,12 @@ namespace Epsitec.App.Dolphin
 			int startIndex = 0;
 			while (true)
 			{
-				int index = text.IndexOf("<br/>", startIndex);
+				int index = text.IndexOf("\n", startIndex);
 				if (index == -1)
 				{
 					return text.Length;
 				}
-				startIndex = index+5;
+				startIndex = index+1;
 
 				if (--lineRank == 0)
 				{

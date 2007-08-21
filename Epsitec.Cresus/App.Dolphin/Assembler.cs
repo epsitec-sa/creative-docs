@@ -88,8 +88,6 @@ namespace Epsitec.App.Dolphin
 			Common.Dialogs.IDialog dialog = Common.Dialogs.MessageDialog.CreateOk(title, icon, message, null, null);
 			dialog.Owner = this.window;
 			dialog.OpenDialog();
-
-			this.field.Cursor = 0;  // remet le curseur au début pour éviter les débordements dans TextLayout !
 		}
 
 
@@ -819,10 +817,10 @@ namespace Epsitec.App.Dolphin
 		{
 			//	Supprime toutes les erreurs.
 			System.Text.StringBuilder builder = new System.Text.StringBuilder();
-			string programm = this.field.Text;
+			string program = this.field.Text;
 
 			string[] seps = {"<br/>"};
-			string[] lines = programm.Split(seps, System.StringSplitOptions.None);
+			string[] lines = program.Split(seps, System.StringSplitOptions.None);
 
 			int total = lines.Length;
 			for (int i=lines.Length-1; i>=0; i--)
@@ -855,19 +853,23 @@ namespace Epsitec.App.Dolphin
 		protected void InsertErrors(List<int> errorLines, List<string> errorTexts)
 		{
 			//	Insère les erreurs dans le texte du programme.
-			string programm = this.field.Text;
+			string program = TextLayout.ConvertToSimpleText(this.field.Text);
 
+			int cursor = 0;
 			for (int i=errorLines.Count-1; i>=0; i--)  // commence par la fin pour ne pas perturber les rangs des lignes
 			{
-				int index1 = Misc.LineIndex(programm, errorLines[i]+0);
-				int index2 = Misc.LineIndex(programm, errorLines[i]+1);
+				int index1 = Misc.LineIndex(program, errorLines[i]+0);
+				int index2 = Misc.LineIndex(program, errorLines[i]+1);
 
-				string balast = Misc.Balast(programm.Substring(index1));
-				string err = string.Concat(balast, "^ ", errorTexts[i], "<br/>");
-				programm = programm.Insert(index2, err);
+				string balast = Misc.Balast(program.Substring(index1));
+				string err = string.Concat(balast, "^ ", errorTexts[i], "\n");
+				program = program.Insert(index2, err);
+
+				cursor = index2-1;
 			}
 
-			this.field.Text = programm;
+			this.field.Text = TextLayout.ConvertToTaggedText(program);
+			this.field.Cursor = cursor;
 		}
 
 
