@@ -147,19 +147,6 @@ namespace Epsitec.Common.Support.ResourceAccessors
 		public abstract Types.StructuredData LoadCultureData(CultureMap item, string twoLetterISOLanguageName);
 
 		#endregion
-		
-		protected CultureMapSource GetCultureMapSource(ResourceBundle.Field field)
-		{
-			if (field == null)
-			{
-				return this.ResourceManager.BasedOnDerivedDefaultModule ? CultureMapSource.DerivedModule : CultureMapSource.ReferenceModule;
-			}
-			else
-			{
-				return field.BasedOnDerivedModule ? CultureMapSource.DerivedModule : CultureMapSource.ReferenceModule;
-			}
-		}
-
 
 		internal static Druid CreateId(ResourceBundle bundle, IEnumerable<CultureMap> collection)
 		{
@@ -226,6 +213,25 @@ namespace Epsitec.Common.Support.ResourceAccessors
 		/// </summary>
 		/// <returns>The new unique id.</returns>
 		protected abstract Druid CreateId();
+		
+		/// <summary>
+		/// Gets the source for this culture map, based on where the field is
+		/// defined (reference or derived module). If there is no bundle field,
+		/// then the default resource manager source is used.
+		/// </summary>
+		/// <param name="field">The field or <c>null</c>.</param>
+		/// <returns>The <see cref="CultureMapSource"/>.</returns>
+		protected CultureMapSource GetCultureMapSource(ResourceBundle.Field field)
+		{
+			if (field == null)
+			{
+				return this.ResourceManager.BasedOnDerivedDefaultModule ? CultureMapSource.DerivedModule : CultureMapSource.ReferenceModule;
+			}
+			else
+			{
+				return field.BasedOnDerivedModule ? CultureMapSource.DerivedModule : CultureMapSource.ReferenceModule;
+			}
+		}
 
 		/// <summary>
 		/// Deletes the specified item.
