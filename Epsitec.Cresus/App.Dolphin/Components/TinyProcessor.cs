@@ -3792,8 +3792,7 @@ namespace Epsitec.App.Dolphin.Components
 				
 				chapters.Add("Intro");
 				chapters.Add("Notation");
-				chapters.Add("Op");
-				chapters.Add("Branch");
+				chapters.Add("Ops");
 				chapters.Add("ROM");
 				
 				return chapters;
@@ -3828,10 +3827,10 @@ namespace Epsitec.App.Dolphin.Components
 					AbstractProcessor.HelpPutLine(builder, "15: 1111 = H'F");
 
 					AbstractProcessor.HelpPutTitle(builder, "Espace d'adressage");
-					AbstractProcessor.HelpPutLine(builder, "[H'000]..[H'7FF]<tab/>RAM");
-					AbstractProcessor.HelpPutLine(builder, "[H'800]..[H'BFF]<tab/>ROM");
-					AbstractProcessor.HelpPutLine(builder, "[H'C00]..[H'C10]<tab/>Périphériques");
-					AbstractProcessor.HelpPutLine(builder, "[H'C80]..[H'CDF]<tab/>Ecran bitmap");
+					AbstractProcessor.HelpPutLine(builder, "[H'000..H'7FF]<tab/>RAM");
+					AbstractProcessor.HelpPutLine(builder, "[H'800..H'BFF]<tab/>ROM");
+					AbstractProcessor.HelpPutLine(builder, "[H'C00..H'C0F]<tab/>Périphériques");
+					AbstractProcessor.HelpPutLine(builder, "[H'C80..H'CDF]<tab/>Ecran bitmap");
 
 					AbstractProcessor.HelpPutTitle(builder, "Affichage");
 					AbstractProcessor.HelpPutLine(builder, "L'affichage est constitué de 4 afficheurs à 7 segments (plus un point décimal), numérotés de droite à gauche. On peut écrire une valeur pour mémoriser les digits à allumer, ou relire cette valeur.");
@@ -3861,10 +3860,10 @@ namespace Epsitec.App.Dolphin.Components
 					AbstractProcessor.HelpPutTitle(builder, "Ecran bitmap");
 					AbstractProcessor.HelpPutLine(builder, "L'écran bitmap est un écran vidéo monochrome de 32 x 24 pixels. Chaque byte représente 8 pixels horizontaux, avec le bit 7 à gauche.");
 					AbstractProcessor.HelpPutLine(builder, "");
-					AbstractProcessor.HelpPutLine(builder, "[H'C80]..[H'C83]<tab/>1ère ligne de 32 pixels.");
-					AbstractProcessor.HelpPutLine(builder, "[H'C84]..[H'C87]<tab/>2ème ligne de 32 pixels.");
+					AbstractProcessor.HelpPutLine(builder, "[H'C80..H'C83]<tab/>1ère ligne de 32 pixels.");
+					AbstractProcessor.HelpPutLine(builder, "[H'C84..H'C87]<tab/>2ème ligne de 32 pixels.");
 					AbstractProcessor.HelpPutLine(builder, "...");
-					AbstractProcessor.HelpPutLine(builder, "[H'CDC]..[H'CDF]<tab/>24ème ligne de 32 pixels.");
+					AbstractProcessor.HelpPutLine(builder, "[H'CDC..H'CDF]<tab/>24ème ligne de 32 pixels.");
 					break;
 
 				case "Notation":
@@ -3899,7 +3898,7 @@ namespace Epsitec.App.Dolphin.Components
 					AbstractProcessor.HelpPutLine(builder, "[54] [40] [02]  <tab/>MOVE {SP}+2,A");
 					break;
 
-				case "Op":
+				case "Ops":
 					AbstractProcessor.HelpPutTitle(builder, "Transferts");
 					AbstractProcessor.HelpPutLine(builder, "[40+r]          <tab/>MOVE A,r      <tab/><tab/>(N, Z, C)");
 					AbstractProcessor.HelpPutLine(builder, "[44+r]          <tab/>MOVE B,r      <tab/><tab/>(N, Z, C)");
@@ -4008,16 +4007,6 @@ namespace Epsitec.App.Dolphin.Components
 					AbstractProcessor.HelpPutLine(builder, "[AE] [mh] [ll]  <tab/>RLC ADDR      <tab/><tab/>(N, Z, C)");
 					AbstractProcessor.HelpPutLine(builder, "[AF] [mh] [ll]  <tab/>RRC ADDR      <tab/><tab/>(N, Z, C)");
 
-					AbstractProcessor.HelpPutTitle(builder, "Divers");
-					AbstractProcessor.HelpPutLine(builder, "[00]            <tab/>NOP");
-					AbstractProcessor.HelpPutLine(builder, "[03]            <tab/>HALT");
-					AbstractProcessor.HelpPutLine(builder, "[5C]            <tab/>EX A,B");
-					AbstractProcessor.HelpPutLine(builder, "[5D]            <tab/>EX X,Y");
-					AbstractProcessor.HelpPutLine(builder, "[5E]            <tab/>SWAP A");
-					AbstractProcessor.HelpPutLine(builder, "[5F]            <tab/>SWAP B");
-					break;
-
-				case "Branch":
 					AbstractProcessor.HelpPutTitle(builder, "Sauts");
 					AbstractProcessor.HelpPutLine(builder, "[10] [mh] [ll]<tab/>JUMP ADDR");
 					AbstractProcessor.HelpPutLine(builder, "[12] [mh] [ll]<tab/>JUMP,EQ ADDR");
@@ -4046,6 +4035,14 @@ namespace Epsitec.App.Dolphin.Components
 					AbstractProcessor.HelpPutTitle(builder, "Gestion des fanions");
 					AbstractProcessor.HelpPutLine(builder, "[04]             <tab/>SETC           <tab/><tab/>(C=1)");
 					AbstractProcessor.HelpPutLine(builder, "[05]             <tab/>CLRC           <tab/><tab/>(C=0)");
+
+					AbstractProcessor.HelpPutTitle(builder, "Divers");
+					AbstractProcessor.HelpPutLine(builder, "[00]            <tab/>NOP");
+					AbstractProcessor.HelpPutLine(builder, "[03]            <tab/>HALT");
+					AbstractProcessor.HelpPutLine(builder, "[5C]            <tab/>EX A,B");
+					AbstractProcessor.HelpPutLine(builder, "[5D]            <tab/>EX X,Y");
+					AbstractProcessor.HelpPutLine(builder, "[5E]            <tab/>SWAP A");
+					AbstractProcessor.HelpPutLine(builder, "[5F]            <tab/>SWAP B");
 					break;
 
 				case "ROM":

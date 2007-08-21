@@ -199,7 +199,8 @@ namespace Epsitec.App.Dolphin.MyWidgets
 							int value = this.memory.ReadForDebug(address++);
 							for (int b=0; b<8; b++)
 							{
-								if ((value & (1 << (7-b))) == 0)  // bit allumé ?
+								//?if ((value & (1 << (7-b))) != 0)  // bit allumé ?
+								if ((value & (1 << (7-b))) == 0)  // bit éteint ?
 								{
 									Rectangle pixel = new Rectangle(rect.Left+px*(x+b), rect.Top-py*(y+1), px-1, py-1);
 									graphics.AddFilledRectangle(pixel);  // dessine un pixel carré
