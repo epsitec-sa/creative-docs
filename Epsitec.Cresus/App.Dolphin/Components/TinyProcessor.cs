@@ -2307,7 +2307,7 @@ namespace Epsitec.App.Dolphin.Components
 					}
 					else
 					{
-						return TinyProcessor.GetCodeError("BYTE doit être suivi d'une valeur immédiate correspondant au byte contenu dans la table.", "BYTE", "v");
+						return TinyProcessor.GetCodeError("BYTE doit être suivi d'une valeur immédiate correspondant à l'octet contenu dans la table.", "BYTE", "v");
 					}
 					break;
 
@@ -3360,10 +3360,6 @@ namespace Epsitec.App.Dolphin.Components
 		public override void RomInitialise(int address, int length)
 		{
 			//	Rempli la Rom.
-			int start = address;
-			System.Diagnostics.Debug.Assert(TinyProcessor.CharTable.Length <= 0x100);
-			this.RomWrite(0xB00, TinyProcessor.CharTable);
-
 			this.RomWrite(address, TinyProcessor.FirstCode);  // première instruction en ROM = HALT
 			address += 3;
 
@@ -3723,7 +3719,7 @@ namespace Epsitec.App.Dolphin.Components
 														// LOOP:
 			(byte) Instructions.MoveAR+0, 0x40, 1,		// MOVE {SP}+1,A
 			(byte) Instructions.AndSA+0, 0x2C, 0x80,	// AND A,C80+{Y}
-			(byte) Instructions.MoveAR+0, 0x1B, 0x02,	// MOVE CharTable+{X},A
+			(byte) Instructions.MoveAR+0, 0x90, 0x1E,	// MOVE CharTable+{X},A
 			(byte) Instructions.AndAS+0, 0x40, 0,		// AND {SP}+0,A
 			(byte) Instructions.TestVA, 0, 0x40, 2,		// TEST {SP}+2:#0
 			(byte) Instructions.JumpNE, 0x80, 1,		// JUMP,NE +1
@@ -3741,11 +3737,8 @@ namespace Epsitec.App.Dolphin.Components
 			(byte) Instructions.PopR+1,					// POP B
 			(byte) Instructions.PopR+0,					// POP A
 			(byte) Instructions.Ret,					// RET
-		};
 
-		protected static byte[] CharTable =
-		{
-			(byte) Instructions.Table, 32*5,
+			(byte) Instructions.Table, 32*5,			// CharTable:
 			0x04, 0x04, 0x04, 0x00, 0x04,	//  !
 			0xA4, 0xAE, 0x04, 0x0E, 0x04,	// "#
 			0x6A, 0xC2, 0x44, 0x68, 0xCA,	// $%
@@ -3858,12 +3851,12 @@ namespace Epsitec.App.Dolphin.Components
 					AbstractProcessor.HelpPutLine(builder, "bit 7<tab/>Prend la valeur 1 lorsqu'une touche 0..7 est pressée. Est automatiquement remis à zéro lorsque l'adresse [H'C07] est lue.");
 
 					AbstractProcessor.HelpPutTitle(builder, "Ecran bitmap");
-					AbstractProcessor.HelpPutLine(builder, "L'écran bitmap est un écran vidéo monochrome de 32 x 24 pixels. Chaque byte représente 8 pixels horizontaux, avec le bit 7 à gauche.");
+					AbstractProcessor.HelpPutLine(builder, "L'écran bitmap est un écran vidéo monochrome de 32 x 24 pixels. Chaque octet représente 8 points horizontaux, avec le bit 7 à gauche.");
 					AbstractProcessor.HelpPutLine(builder, "");
-					AbstractProcessor.HelpPutLine(builder, "[H'C80..H'C83]<tab/>1ère ligne de 32 pixels.");
-					AbstractProcessor.HelpPutLine(builder, "[H'C84..H'C87]<tab/>2ème ligne de 32 pixels.");
+					AbstractProcessor.HelpPutLine(builder, "[H'C80..H'C83]<tab/>1ère ligne de 32 points.");
+					AbstractProcessor.HelpPutLine(builder, "[H'C84..H'C87]<tab/>2ème ligne de 32 points.");
 					AbstractProcessor.HelpPutLine(builder, "...");
-					AbstractProcessor.HelpPutLine(builder, "[H'CDC..H'CDF]<tab/>24ème ligne de 32 pixels.");
+					AbstractProcessor.HelpPutLine(builder, "[H'CDC..H'CDF]<tab/>24ème ligne de 32 points.");
 					break;
 
 				case "Notation":
@@ -3893,7 +3886,7 @@ namespace Epsitec.App.Dolphin.Components
 					AbstractProcessor.HelpPutLine(builder, "<b>Exemples</b>");
 					AbstractProcessor.HelpPutLine(builder, "[54] [0C] [07]  <tab/>MOVE H'C07, A");
 					AbstractProcessor.HelpPutLine(builder, "[58] [1C] [00]  <tab/>MOVE A, H'C00+{X}");
-					AbstractProcessor.HelpPutLine(builder, "[10] [80] [10]  <tab/>JUMP {PC}+10 (saute 10 bytes)");
+					AbstractProcessor.HelpPutLine(builder, "[10] [80] [10]  <tab/>JUMP {PC}+10 (saute 10 octets)");
 					AbstractProcessor.HelpPutLine(builder, "[10] [8F] [FD]  <tab/>JUMP {PC}-3 (boucle infinie)");
 					AbstractProcessor.HelpPutLine(builder, "[54] [40] [02]  <tab/>MOVE {SP}+2, A");
 					break;
@@ -4077,7 +4070,7 @@ namespace Epsitec.App.Dolphin.Components
 					AbstractProcessor.HelpPutLine(builder, "mod<tab/>F");
 
 					AbstractProcessor.HelpPutTitle(builder, "DisplayHexaByte");
-					AbstractProcessor.HelpPutLine(builder, "Affiche un byte hexadécimal sur deux digits.");
+					AbstractProcessor.HelpPutLine(builder, "Affiche un octet hexadécimal sur deux digits.");
 					AbstractProcessor.HelpPutLine(builder, "[01] [08] [0F]<tab/>CALL DisplayHexaByte");
 					AbstractProcessor.HelpPutLine(builder, "in<tab/>A valeur 0..255");
 					AbstractProcessor.HelpPutLine(builder, "<tab/>B premier digit 0..2 (de gauche à droite)");
