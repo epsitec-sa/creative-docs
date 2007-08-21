@@ -43,6 +43,11 @@ namespace Epsitec.Common.Support
 		public ResourceManager(ResourceManagerPool pool, ResourceModuleInfo info)
 			: this (pool, Support.Globals.Directories.ExecutableRoot, info == null ? null : info.FullId.Path)
 		{
+			if (info != null)
+			{
+				this.defaultModuleId = info.FullId.Id;
+				this.defaultModuleName = info.FullId.Name;
+			}
 		}
 
 		public ResourceManager(ResourceManagerPool pool, ResourceModuleId module)

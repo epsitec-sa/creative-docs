@@ -157,11 +157,21 @@ namespace Epsitec.Common.Support
 			Assert.AreEqual (2, pool.FindPatchModuleInfos (info1).Count);
 			Assert.AreEqual (info2, pool.FindPatchModuleInfos (info1)[0]);
 
-			ResourceManager manager = new ResourceManager (pool, info2);
+			ResourceManager manager1 = new ResourceManager (pool, info1);
+			ResourceManager manager2 = new ResourceManager (pool, info2);
 
-			Assert.IsTrue (manager.BasedOnPatchModule);
-			Assert.IsNotNull (manager.GetManagerForReferenceModule ());
-			Assert.IsFalse (manager.GetManagerForReferenceModule ().BasedOnPatchModule);
+			Assert.IsFalse (manager1.BasedOnPatchModule);
+			Assert.IsTrue (manager2.BasedOnPatchModule);
+
+			Assert.IsNull (manager1.GetManagerForReferenceModule ());
+			Assert.IsNotNull (manager2.GetManagerForReferenceModule ());
+			Assert.IsFalse (manager2.GetManagerForReferenceModule ().BasedOnPatchModule);
+
+			ResourceAccessors.StringResourceAccessor stringAccessor1 = new ResourceAccessors.StringResourceAccessor ();
+			ResourceAccessors.StringResourceAccessor stringAccessor2 = new ResourceAccessors.StringResourceAccessor ();
+
+			stringAccessor1.Load (manager1);
+			stringAccessor2.Load (manager2);
 		}
 	}
 }
