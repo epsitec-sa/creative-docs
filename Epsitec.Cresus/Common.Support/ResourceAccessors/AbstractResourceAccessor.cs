@@ -245,6 +245,26 @@ namespace Epsitec.Common.Support.ResourceAccessors
 		/// <param name="item">The item to store as a resource.</param>
 		protected abstract void PersistItem(CultureMap item);
 
+		protected abstract bool FilterField(ResourceBundle.Field field);
+
+		protected void LoadFromBundle(ResourceBundle bundle, string twoLetterISOLanguageName)
+		{
+			using (this.SuspendNotifications ())
+			{
+				int module = bundle.Module.Id;
+
+				foreach (ResourceBundle.Field field in bundle.Fields)
+				{
+					if (this.FilterField (field))
+					{
+						this.LoadFromField (field, module, twoLetterISOLanguageName);
+					}
+				}
+			}
+		}
+
+		protected abstract Types.StructuredData LoadFromField(ResourceBundle.Field field, int module, string twoLetterISOLanguageName);
+
 		/// <summary>
 		/// Initializes the accessor and defines the resource manager.
 		/// </summary>

@@ -191,20 +191,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			}
 		}
 
-		private void LoadFromBundle(ResourceBundle bundle, string twoLetterISOLanguageName)
-		{
-			using (this.SuspendNotifications ())
-			{
-				int module = bundle.Module.Id;
-
-				foreach (ResourceBundle.Field field in bundle.Fields)
-				{
-					this.LoadFromField (field, module, twoLetterISOLanguageName);
-				}
-			}
-		}
-
-		private Types.StructuredData LoadFromField(ResourceBundle.Field field, int module, string twoLetterISOLanguageName)
+		protected override Types.StructuredData LoadFromField(ResourceBundle.Field field, int module, string twoLetterISOLanguageName)
 		{
 			Druid id = new Druid (field.Id, module);
 			bool insert = false;
@@ -232,6 +219,11 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			}
 
 			return data;
+		}
+
+		protected override bool FilterField(ResourceBundle.Field field)
+		{
+			return true;
 		}
 	}
 }

@@ -227,24 +227,6 @@ namespace Epsitec.Common.Support.ResourceAccessors
 
 		protected abstract string GetNameFromFieldName(CultureMap item, string fieldName);
 
-		protected abstract bool FilterField(ResourceBundle.Field field);
-		
-		private void LoadFromBundle(ResourceBundle bundle, string twoLetterISOLanguageName)
-		{
-			using (this.SuspendNotifications ())
-			{
-				int module = bundle.Module.Id;
-
-				foreach (ResourceBundle.Field field in bundle.Fields)
-				{
-					if (this.FilterField (field))
-					{
-						this.LoadFromField (field, module, twoLetterISOLanguageName);
-					}
-				}
-			}
-		}
-
 
 		/// <summary>
 		/// Loads data from a resource bundle field.
@@ -253,7 +235,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 		/// <param name="module">The source module id.</param>
 		/// <param name="twoLetterISOLanguageName">The two letter ISO language name.</param>
 		/// <returns>The data which describes the specified resource.</returns>
-		private Types.StructuredData LoadFromField(ResourceBundle.Field field, int module, string twoLetterISOLanguageName)
+		protected override Types.StructuredData LoadFromField(ResourceBundle.Field field, int module, string twoLetterISOLanguageName)
 		{
 			Druid id     = new Druid (field.Id, module);
 			bool  insert = false;
