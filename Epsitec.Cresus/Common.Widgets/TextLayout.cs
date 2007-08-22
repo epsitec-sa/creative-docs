@@ -1282,6 +1282,7 @@ namespace Epsitec.Common.Widgets
 				if ( context.PrepareOffset != -1 )  // a-t-on préparé des attributs typographiques ?
 				{
 					cursor = context.PrepareOffset + context.PrepareLength1;
+					cursor = System.Math.Min(cursor, text.Length);
 					prepare = true;
 				}
 				text = text.Insert(cursor, ins);
