@@ -2083,42 +2083,55 @@ namespace Epsitec.App.Dolphin.Components
 		{
 			//	Extrait les modes d'adressage spéciaux d'une adresse.
 			mode = 0;
+			bool action;
 
-			if (addr.StartsWith("{PC}+"))
+			do
 			{
-				addr = addr.Substring(5);  // enlève {PC}+
-				mode |= 1;
-			}
+				action = false;
 
-			if (addr.StartsWith("{PC}-"))
-			{
-				addr = addr.Substring(5);  // enlève {PC}-
-				mode |= 2;
-			}
+				if (addr.StartsWith("{PC}+"))
+				{
+					addr = addr.Substring(5);  // enlève {PC}+
+					mode |= 1;
+					action = true;
+				}
 
-			if (addr.StartsWith("{SP}+"))
-			{
-				addr = addr.Substring(5);  // enlève {SP}+
-				mode |= 4;
-			}
+				if (addr.StartsWith("{PC}-"))
+				{
+					addr = addr.Substring(5);  // enlève {PC}-
+					mode |= 2;
+					action = true;
+				}
 
-			if (addr.StartsWith("{SP}-"))
-			{
-				addr = addr.Substring(5);  // enlève {SP}-
-				mode |= 8;
-			}
+				if (addr.StartsWith("{SP}+"))
+				{
+					addr = addr.Substring(5);  // enlève {SP}+
+					mode |= 4;
+					action = true;
+				}
 
-			if (addr.EndsWith("+{X}"))
-			{
-				addr = addr.Substring(0, addr.Length-4);  // enlève +{X}
-				mode |= 16;
-			}
+				if (addr.StartsWith("{SP}-"))
+				{
+					addr = addr.Substring(5);  // enlève {SP}-
+					mode |= 8;
+					action = true;
+				}
 
-			if (addr.EndsWith("+{Y}"))
-			{
-				addr = addr.Substring(0, addr.Length-4);  // enlève +{Y}
-				mode |= 32;
+				if (addr.EndsWith("+{X}"))
+				{
+					addr = addr.Substring(0, addr.Length-4);  // enlève +{X}
+					mode |= 16;
+					action = true;
+				}
+
+				if (addr.EndsWith("+{Y}"))
+				{
+					addr = addr.Substring(0, addr.Length-4);  // enlève +{Y}
+					mode |= 32;
+					action = true;
+				}
 			}
+			while (action);
 
 			text = addr;
 		}

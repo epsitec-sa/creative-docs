@@ -115,7 +115,7 @@ namespace Epsitec.App.Dolphin.MyWidgets
 		{
 			//	Détecte le point visé par la souris.
 			Rectangle rect = this.Client.Bounds;
-			pos.Y = rect.Height-pos.Y;
+			pos.Y = rect.Height-pos.Y-1;
 			rect.Deflate(17);
 
 			if (!rect.Contains(pos))
