@@ -191,11 +191,23 @@ namespace Epsitec.Common.Support
 			Assert.AreEqual ("Pierre Arnaud", ResourceModuleTest.GetText (stringAccessor1, 1, null));
 			Assert.AreEqual ("Pierre ARNAUD", ResourceModuleTest.GetText (stringAccessor2, 1, null));
 			Assert.AreEqual ("foo", ResourceModuleTest.GetText (stringAccessor2, 2, null));
+			Assert.AreEqual ("Cf. Common.Support.Tests", ResourceModuleTest.GetComment (stringAccessor1, 1, null));
+			Assert.AreEqual ("Cf. Common.Support.Tests", ResourceModuleTest.GetComment (stringAccessor2, 1, null));
 		}
 
 		private static string GetText(ResourceAccessors.StringResourceAccessor accessor, int index, string culture)
 		{
 			return accessor.Collection[index].GetCultureData (culture ?? Resources.DefaultTwoLetterISOLanguageName).GetValue (Common.Support.Res.Fields.ResourceString.Text) as string;
+		}
+
+		private static string GetComment(IResourceAccessor accessor, int index, string culture)
+		{
+			return accessor.Collection[index].GetCultureData (culture ?? Resources.DefaultTwoLetterISOLanguageName).GetValue (Common.Support.Res.Fields.ResourceBase.Comment) as string;
+		}
+		
+		private static int GetModificationId(IResourceAccessor accessor, int index, string culture)
+		{
+			return (int) accessor.Collection[index].GetCultureData (culture ?? Resources.DefaultTwoLetterISOLanguageName).GetValue (Common.Support.Res.Fields.ResourceBase.ModificationId);
 		}
 	}
 }

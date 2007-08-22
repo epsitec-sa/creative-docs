@@ -243,12 +243,24 @@ namespace Epsitec.Common.Support.ResourceAccessors
 					//	...and we know that there is already some data available
 					//	for the culture. Merge the data :
 
-					StructuredData oldData = data;
-					StructuredData newData = item.GetCultureData (twoLetterISOLanguageName);
+					StructuredData newData = data;
+					StructuredData oldData = item.GetCultureData (twoLetterISOLanguageName);
 
-					//	TODO: merge...
+					if (field.AsString != null)
+					{
+						oldData.SetValue (Res.Fields.ResourceString.Text, newData.GetValue (Res.Fields.ResourceString.Text));
+					}
+					if (field.About != null)
+					{
+						oldData.SetValue (Res.Fields.ResourceBase.Comment, newData.GetValue (Res.Fields.ResourceBase.Comment));
+					}
+					if (field.ModificationId > 0)
+					{
+						oldData.SetValue (Res.Fields.ResourceBase.ModificationId, newData.GetValue (Res.Fields.ResourceBase.ModificationId));
+					}
+					
 
-					data = newData;
+					data = oldData;
 
 					insert = false;
 					record = false;
