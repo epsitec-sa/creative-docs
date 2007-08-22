@@ -326,6 +326,10 @@ namespace Epsitec.Common.Support
 			{
 				return null;
 			}
+			if (twoLetterCode == Resources.DefaultTwoLetterISOLanguageName)
+			{
+				return null;
+			}
 
 			twoLetterCode = twoLetterCode.ToLowerInvariant ();
 			CultureInfo[] cultures = CultureInfo.GetCultures (System.Globalization.CultureTypes.NeutralCultures);

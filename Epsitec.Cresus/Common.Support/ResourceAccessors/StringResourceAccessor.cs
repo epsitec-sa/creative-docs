@@ -119,41 +119,21 @@ namespace Epsitec.Common.Support.ResourceAccessors
 				throw new System.ArgumentException (string.Format ("No name for item {0}", item.Id));
 			}
 
+			ResourceLevel level;
 			ResourceBundle bundle;
 			CultureInfo culture;
+			ResourceBundle.Field field;
+			StructuredData data;
 
-			bundle = this.ResourceManager.GetBundle (Resources.StringsBundleName, ResourceLevel.Default);
-
-			ResourceBundle.Field field = bundle[item.Id];
-
-			if (field.IsEmpty)
-			{
-				field = bundle.CreateField (ResourceFieldType.Data);
-				field.SetDruid (item.Id);
-				bundle.Add (field);
-			}
-
-			StructuredData data = item.GetCultureData (Resources.DefaultTwoLetterISOLanguageName);
-
-			string text  = data.GetValue (Res.Fields.ResourceString.Text) as string;
-			string about = data.GetValue (Res.Fields.ResourceBase.Comment) as string;
-			object modId = data.GetValue (Res.Fields.ResourceBase.ModificationId);
-
-			field.SetName (item.Name);
-			field.SetStringValue (text);
-			field.SetAbout (about);
-
-			StringResourceAccessor.SetModificationId (field, modId);
+			string text;
+			string about;
+			object modId;
 
 			foreach (string twoLetterISOLanguageName in item.GetDefinedCultures ())
 			{
-				if (twoLetterISOLanguageName == Resources.DefaultTwoLetterISOLanguageName)
-				{
-					continue;
-				}
-
 				culture = Resources.FindCultureInfo (twoLetterISOLanguageName);
-				bundle  = this.ResourceManager.GetBundle (Resources.StringsBundleName, ResourceLevel.Localized, culture);
+				level   = twoLetterISOLanguageName == Resources.DefaultTwoLetterISOLanguageName ? ResourceLevel.Default : ResourceLevel.Localized;
+				bundle  = this.ResourceManager.GetBundle (Resources.StringsBundleName, level, culture);
 
 				if (bundle == null)
 				{
@@ -182,7 +162,11 @@ namespace Epsitec.Common.Support.ResourceAccessors
 					text  = data.GetValue (Res.Fields.ResourceString.Text) as string;
 					about = data.GetValue (Res.Fields.ResourceBase.Comment) as string;
 					modId = data.GetValue (Res.Fields.ResourceBase.ModificationId);
-					
+
+					if (twoLetterISOLanguageName == Resources.DefaultTwoLetterISOLanguageName)
+					{
+						field.SetName (item.Name);
+					}
 					field.SetStringValue (text);
 					field.SetAbout (about);
 
