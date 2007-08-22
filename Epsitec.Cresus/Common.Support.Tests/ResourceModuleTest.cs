@@ -173,12 +173,29 @@ namespace Epsitec.Common.Support
 			stringAccessor1.Load (manager1);
 			stringAccessor2.Load (manager2);
 
-			Assert.AreEqual (1, stringAccessor1.Collection.Count);
+			Assert.AreEqual (2, stringAccessor1.Collection.Count);
 			Assert.AreEqual ("Image.Description", stringAccessor1.Collection[0].Name);
+			Assert.AreEqual ("Author", stringAccessor1.Collection[1].Name);
+			Assert.AreEqual (CultureMapSource.ReferenceModule, stringAccessor1.Collection[0].Source);
 
-			Assert.AreEqual (2, stringAccessor2.Collection.Count);
+			Assert.AreEqual (3, stringAccessor2.Collection.Count);
 			Assert.AreEqual ("Image.Description", stringAccessor2.Collection[0].Name);
-			Assert.AreEqual ("Foo", stringAccessor2.Collection[1].Name);
+			Assert.AreEqual ("Author", stringAccessor2.Collection[1].Name);
+			Assert.AreEqual ("Foo", stringAccessor2.Collection[2].Name);
+			Assert.AreEqual (CultureMapSource.ReferenceModule, stringAccessor2.Collection[0].Source);
+			Assert.AreEqual (CultureMapSource.DynamicMerge, stringAccessor2.Collection[1].Source);
+			Assert.AreEqual (CultureMapSource.PatchModule, stringAccessor2.Collection[2].Source);
+
+			Assert.IsTrue (ResourceModuleTest.GetText (stringAccessor1, 0, null).StartsWith ("Taille"));
+			Assert.IsTrue (ResourceModuleTest.GetText (stringAccessor2, 0, null).StartsWith ("Taille"));
+			Assert.AreEqual ("Pierre Arnaud", ResourceModuleTest.GetText (stringAccessor1, 1, null));
+			Assert.AreEqual ("Pierre ARNAUD", ResourceModuleTest.GetText (stringAccessor2, 1, null));
+			Assert.AreEqual ("foo", ResourceModuleTest.GetText (stringAccessor2, 2, null));
+		}
+
+		private static string GetText(ResourceAccessors.StringResourceAccessor accessor, int index, string culture)
+		{
+			return accessor.Collection[index].GetCultureData (culture ?? Resources.DefaultTwoLetterISOLanguageName).GetValue (Common.Support.Res.Fields.ResourceString.Text) as string;
 		}
 	}
 }
