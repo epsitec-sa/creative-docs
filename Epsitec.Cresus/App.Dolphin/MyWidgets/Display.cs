@@ -24,6 +24,8 @@ namespace Epsitec.App.Dolphin.MyWidgets
 		public Display() : base()
 		{
 			this.type = Type.CRT;
+			this.hx = -1;
+			this.hy = -1;
 		}
 
 		public Display(Widget embedder) : this()
@@ -62,6 +64,154 @@ namespace Epsitec.App.Dolphin.MyWidgets
 			}
 		}
 
+
+		protected int HX
+		{
+			get
+			{
+				return this.hx;
+			}
+			set
+			{
+				if (this.hx != value)
+				{
+					this.hx = value;
+					this.Invalidate();
+				}
+			}
+		}
+
+		protected int HY
+		{
+			get
+			{
+				return this.hy;
+			}
+			set
+			{
+				if (this.hy != value)
+				{
+					this.hy = value;
+					this.Invalidate();
+				}
+			}
+		}
+
+
+		protected Rectangle GetPixel(int x, int y)
+		{
+			Rectangle rect = this.Client.Bounds;
+			rect.Deflate(17);
+
+			y = this.dy-y-1;
+
+			double px = rect.Width/this.dx;
+			double py = rect.Height/this.dy;
+
+			return new Rectangle(rect.Left+px*x, rect.Bottom+py*y, px, py);
+		}
+
+		protected bool Detect(Point pos, out int x, out int y)
+		{
+			//	Détecte le point visé par la souris.
+			Rectangle rect = this.Client.Bounds;
+			pos.Y = rect.Height-pos.Y;
+			rect.Deflate(17);
+
+			if (!rect.Contains(pos))
+			{
+				x = -1;
+				y = -1;
+				return false;
+			}
+
+			double px = rect.Width/this.dx;
+			double py = rect.Height/this.dy;
+
+			x = System.Math.Min((int) ((pos.X-rect.Left)/px), this.dx);
+			y = System.Math.Min((int) ((pos.Y-rect.Bottom)/py), this.dy);
+			return true;
+		}
+
+		protected void Convert(int x, int y, out int address, out int bit)
+		{
+			address = this.firstAddress;
+
+			address += y*(this.dx/8);
+			address += x/8;
+
+			bit = 7-x%8;
+		}
+
+		protected bool TestPixel(int x, int y)
+		{
+			int address, bit;
+			this.Convert(x, y, out address, out bit);
+
+			int data = this.memory.ReadForDebug(address);
+			return (data &= (1 << bit)) != 0;
+		}
+
+		protected void SetPixel(int x, int y, bool state)
+		{
+			int address, bit;
+			this.Convert(x, y, out address, out bit);
+
+			int data = this.memory.ReadForDebug(address);
+			if (state)
+			{
+				data |= (1 << bit);
+			}
+			else
+			{
+				data &= ~(1 << bit);
+			}
+			this.memory.Write(address, data);
+		}
+
+		protected override void ProcessMessage(Message message, Point pos)
+		{
+			int x, y;
+
+			switch (message.MessageType)
+			{
+				case MessageType.MouseDown:
+					if (this.Detect(pos, out x, out y))
+					{
+						this.firstState = this.TestPixel(x, y);
+						this.SetPixel(x, y, !this.firstState);
+						this.mouseDown = true;
+					}
+					message.Consumer = this;
+					break;
+
+				case MessageType.MouseMove:
+					if (this.mouseDown)
+					{
+						if (this.Detect(pos, out x, out y))
+						{
+							this.SetPixel(x, y, !this.firstState);
+						}
+					}
+
+					this.Detect(pos, out x, out y);
+					this.HX = x;
+					this.HY = y;
+
+					message.Consumer = this;
+					break;
+
+				case MessageType.MouseUp:
+					this.mouseDown = false;
+					message.Consumer = this;
+					break;
+
+				case MessageType.MouseLeave:
+					this.HX = -1;
+					this.HY = -1;
+					break;
+			}
+		}
 
 		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
 		{
@@ -211,6 +361,26 @@ namespace Epsitec.App.Dolphin.MyWidgets
 					graphics.RenderSolid(Color.FromRgb(1.0, 0.9, 0.6));  // ambre (jaune-orange pâle)
 				}
 			}
+
+			//	Dessine le pixel survolé par la souris.
+			if (this.hx != -1 && this.hy != -1)
+			{
+				Rectangle pixel = this.GetPixel(this.hx, this.hy);
+
+				if (this.type == Type.CRT)
+				{
+					pixel.Left--;
+					pixel.Bottom--;
+					graphics.AddFilledCircle(pixel.Center, pixel.Width/2);
+					graphics.RenderSolid(Color.FromAlphaRgb(0.7, 1.0, 0.7, 0.0));
+				}
+
+				if (this.type == Type.LCD)
+				{
+					graphics.AddFilledRectangle(pixel);
+					graphics.RenderSolid(Color.FromAlphaRgb(0.7, 1.0, 0.7, 0.0));
+				}
+			}
 		}
 
 		protected void DrawPixelLine(Graphics graphics, Rectangle rect, int x1, int x2, int y)
@@ -263,10 +433,12 @@ namespace Epsitec.App.Dolphin.MyWidgets
 		}
 
 		
-		protected Type type;
-		protected Components.Memory memory;
-		protected int firstAddress;
-		protected int dx;
-		protected int dy;
+		protected Type						type;
+		protected Components.Memory			memory;
+		protected int						firstAddress;
+		protected int						dx, dy;
+		protected int						hx, hy;
+		protected bool						mouseDown;
+		protected bool						firstState;
 	}
 }
