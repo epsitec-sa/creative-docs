@@ -46,6 +46,7 @@ namespace Epsitec.App.Dolphin
 			//	Crée le dictionnaire principal pour les variables et étiquettes.
 			Dictionary<string, int> variables = new Dictionary<string, int>();
 			this.processor.RomVariables(Components.Memory.RomBase, variables);
+			this.memory.RomVariables(variables);
 
 			//	Longueurs des instructions, construite lors de la 1ère passe et utilisées à la 2ème.
 			List<int> instructionLengths = new List<int>();

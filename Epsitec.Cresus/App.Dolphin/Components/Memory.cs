@@ -27,6 +27,24 @@ namespace Epsitec.App.Dolphin.Components
 			}
 		}
 
+
+		public void RomVariables(Dictionary<string, int> variables)
+		{
+			//	Défini les variables des périphériques.
+			variables.Add("_DIGIT0", Memory.PeriphFirstDigit+0);
+			variables.Add("_DIGIT1", Memory.PeriphFirstDigit+1);
+			variables.Add("_DIGIT2", Memory.PeriphFirstDigit+2);
+			variables.Add("_DIGIT3", Memory.PeriphFirstDigit+3);
+			variables.Add("_DIGITCOUNT", Memory.PeriphLastDigit-Memory.PeriphFirstDigit+1);
+
+			variables.Add("_KEYBOARD", Memory.PeriphKeyboard);
+			
+			variables.Add("_DISPLAY", Memory.DisplayBase);
+			variables.Add("_DISPLAYWIDTH", Memory.DisplayDx);
+			variables.Add("_DISPLAYHEIGHT", Memory.DisplayDy);
+		}
+
+
 		public int Length
 		{
 			//	Retourne la longueur totale de la mémoire (en fait, il serait plus juste

@@ -3395,17 +3395,17 @@ namespace Epsitec.App.Dolphin.Components
 		public override void RomVariables(int address, Dictionary<string, int> variables)
 		{
 			//	Défini les variables de la Rom.
-			variables.Add("WAITKEY", address+=3);
-			variables.Add("WAITSEC", address+=3);
-			variables.Add("DISPLAYBINARYDIGIT", address+=3);
-			variables.Add("DISPLAYHEXADIGIT", address+=3);
-			variables.Add("DISPLAYHEXABYTE", address+=3);
-			variables.Add("DISPLAYDECIMAL", address+=3);
-			variables.Add("SETPIXEL", address+=3);
-			variables.Add("CLRPIXEL", address+=3);
-			variables.Add("NOTPIXEL", address+=3);
-			variables.Add("CLEARSCREEN", address+=3);
-			variables.Add("DRAWCHAR", address+=3);
+			variables.Add("_WAITKEY", address+=3);
+			variables.Add("_WAITSEC", address+=3);
+			variables.Add("_DISPLAYBINARYDIGIT", address+=3);
+			variables.Add("_DISPLAYHEXADIGIT", address+=3);
+			variables.Add("_DISPLAYHEXABYTE", address+=3);
+			variables.Add("_DISPLAYDECIMAL", address+=3);
+			variables.Add("_SETPIXEL", address+=3);
+			variables.Add("_CLRPIXEL", address+=3);
+			variables.Add("_NOTPIXEL", address+=3);
+			variables.Add("_CLEARSCREEN", address+=3);
+			variables.Add("_DRAWCHAR", address+=3);
 		}
 
 		protected void RomWrite(ref int indirect, ref int address, byte[] code)
