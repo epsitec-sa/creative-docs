@@ -307,7 +307,8 @@ namespace Epsitec.App.Dolphin.Components
 				{
 					if ((value & 0x80) != 0)  // bit full ?
 					{
-						this.memory[address] = (byte) (value & ~0x87);  // clear le bit full et les touches 0..7
+						//?this.memory[address] = (byte) (value & ~0x87);  // clear le bit full et les touches 0..7
+						this.memory[address] = (byte) (value & ~0x80);  // clear le bit full
 					}
 				}
 

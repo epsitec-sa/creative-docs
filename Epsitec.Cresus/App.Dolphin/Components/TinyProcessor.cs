@@ -4093,12 +4093,14 @@ namespace Epsitec.App.Dolphin.Components
 					AbstractProcessor.HelpPutLine(builder, "out<tab/>-");
 					AbstractProcessor.HelpPutLine(builder, "mod<tab/>F");
 
+#if false
 					AbstractProcessor.HelpPutTitle(builder, "_DisplayDecimal");
 					AbstractProcessor.HelpPutLine(builder, "Affiche une valeur décimale sur quatre digits.");
 					AbstractProcessor.HelpPutLine(builder, "[01] [08] [12]<tab/>CALL H'812");
 					AbstractProcessor.HelpPutLine(builder, "in<tab/>A valeur 0..255");
 					AbstractProcessor.HelpPutLine(builder, "out<tab/>-");
 					AbstractProcessor.HelpPutLine(builder, "mod<tab/>F");
+#endif
 
 					AbstractProcessor.HelpPutTitle(builder, "_ClearScreen");
 					AbstractProcessor.HelpPutLine(builder, "Efface tout l'écran bitmap.");
