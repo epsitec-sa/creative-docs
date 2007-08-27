@@ -300,25 +300,25 @@ namespace Epsitec.App.Dolphin.Components
 					case Instructions.ClrR:
 						data = 0;
 						this.SetRegister(n, data);
-						this.SetFlagsOper(data);
+						this.SetFlagsOper(data, false);
 						return;
 
 					case Instructions.NotR:
 						data = this.GetRegister(n) ^ 0xFF;
 						this.SetRegister(n, data);
-						this.SetFlagsOper(data);
+						this.SetFlagsOper(data, false);
 						return;
 
 					case Instructions.IncR:
 						data = (this.GetRegister(n) + 1) & 0xFF;
 						this.SetRegister(n, data);
-						this.SetFlagsOper(data);
+						this.SetFlagsOper(data, false);
 						return;
 
 					case Instructions.DecR:
 						data = (this.GetRegister(n) - 1) & 0xFF;
 						this.SetRegister(n, data);
-						this.SetFlagsOper(data);
+						this.SetFlagsOper(data, false);
 						return;
 				}
 			}
@@ -362,25 +362,25 @@ namespace Epsitec.App.Dolphin.Components
 					case Instructions.ClrA:
 						data = 0;
 						this.memory.Write(address, data);
-						this.SetFlagsOper(data);
+						this.SetFlagsOper(data, false);
 						return;
 
 					case Instructions.NotA:
 						data = this.memory.Read(address) ^ 0xFF;
 						this.memory.Write(address, data);
-						this.SetFlagsOper(data);
+						this.SetFlagsOper(data, false);
 						return;
 
 					case Instructions.IncA:
 						data = (this.memory.Read(address) + 1) & 0xFF;
 						this.memory.Write(address, data);
-						this.SetFlagsOper(data);
+						this.SetFlagsOper(data, false);
 						return;
 
 					case Instructions.DecA:
 						data = (this.memory.Read(address) - 1) & 0xFF;
 						this.memory.Write(address, data);
-						this.SetFlagsOper(data);
+						this.SetFlagsOper(data, false);
 						return;
 
 					case Instructions.RlA:
@@ -557,19 +557,19 @@ namespace Epsitec.App.Dolphin.Components
 					case Instructions.AndVR:
 						data = this.GetRegister(n) & data;
 						this.SetRegister(n, data);
-						this.SetFlagsOper(data);
+						this.SetFlagsOper(data, false);
 						return;
 
 					case Instructions.OrVR:
 						data = this.GetRegister(n) | data;
 						this.SetRegister(n, data);
-						this.SetFlagsOper(data);
+						this.SetFlagsOper(data, false);
 						return;
 
 					case Instructions.XorVR:
 						data = this.GetRegister(n) ^ data;
 						this.SetRegister(n, data);
-						this.SetFlagsOper(data);
+						this.SetFlagsOper(data, false);
 						return;
 				}
 			}
@@ -587,19 +587,19 @@ namespace Epsitec.App.Dolphin.Components
 					case Instructions.AndSS:
 						data = this.GetRegister(dst) & data;
 						this.SetRegister(dst, data);
-						this.SetFlagsOper(data);
+						this.SetFlagsOper(data, false);
 						return;
 
 					case Instructions.OrSS:
 						data = this.GetRegister(dst) | data;
 						this.SetRegister(dst, data);
-						this.SetFlagsOper(data);
+						this.SetFlagsOper(data, false);
 						return;
 
 					case Instructions.XorSS:
 						data = this.GetRegister(dst) ^ data;
 						this.SetRegister(dst, data);
-						this.SetFlagsOper(data);
+						this.SetFlagsOper(data, false);
 						return;
 				}
 			}
@@ -615,19 +615,19 @@ namespace Epsitec.App.Dolphin.Components
 					case Instructions.AndAS:
 						data = this.GetRegister(n) & this.memory.Read(address);
 						this.SetRegister(n, data);
-						this.SetFlagsOper(data);
+						this.SetFlagsOper(data, false);
 						return;
 
 					case Instructions.OrAS:
 						data = this.GetRegister(n) | this.memory.Read(address);
 						this.SetRegister(n, data);
-						this.SetFlagsOper(data);
+						this.SetFlagsOper(data, false);
 						return;
 
 					case Instructions.XorAS:
 						data = this.GetRegister(n) ^ this.memory.Read(address);
 						this.SetRegister(n, data);
-						this.SetFlagsOper(data);
+						this.SetFlagsOper(data, false);
 						return;
 				}
 			}
@@ -643,19 +643,19 @@ namespace Epsitec.App.Dolphin.Components
 					case Instructions.AndSA:
 						data = this.memory.Read(address) & this.GetRegister(n);
 						this.memory.Write(address, data);
-						this.SetFlagsOper(data);
+						this.SetFlagsOper(data, false);
 						return;
 
 					case Instructions.OrSA:
 						data = this.memory.Read(address) | this.GetRegister(n);
 						this.memory.Write(address, data);
-						this.SetFlagsOper(data);
+						this.SetFlagsOper(data, false);
 						return;
 
 					case Instructions.XorSA:
 						data = this.memory.Read(address) ^ this.GetRegister(n);
 						this.memory.Write(address, data);
-						this.SetFlagsOper(data);
+						this.SetFlagsOper(data, false);
 						return;
 				}
 			}
@@ -1033,25 +1033,34 @@ namespace Epsitec.App.Dolphin.Components
 
 		protected void SetFlagsCompare(int a, int b)
 		{
+			//	Initialise F après une comparaison.
 			this.SetFlag(TinyProcessor.FlagZero, a == b);
 			this.SetFlag(TinyProcessor.FlagCarry, a >= b);
 		}
 
-		protected int SetFlagsOper(int value)
+		protected void SetFlagsOper(int value)
 		{
+			//	Initialise F selon le résultat d'une opération.
+			this.SetFlagsOper(value, true);
+		}
+
+		protected void SetFlagsOper(int value, bool carry)
+		{
+			//	Initialise F selon le résultat d'une opération.
 			this.SetFlag(TinyProcessor.FlagZero, value == 0);
 			this.SetFlag(TinyProcessor.FlagNeg, (value & 0x80) != 0);
 
-			if ((value & 0x80) == 0)  // valeur positive ?
+			if (carry)
 			{
-				this.SetFlag(TinyProcessor.FlagCarry, (value & 0xffffff00) != 0);
+				if ((value & 0x80) == 0)  // valeur positive ?
+				{
+					this.SetFlag(TinyProcessor.FlagCarry, (value & 0xffffff00) != 0);
+				}
+				else  // valeur négative ?
+				{
+					this.SetFlag(TinyProcessor.FlagCarry, (value & 0xffffff00) == 0);
+				}
 			}
-			else  // valeur négative ?
-			{
-				this.SetFlag(TinyProcessor.FlagCarry, (value & 0xffffff00) == 0);
-			}
-
-			return value & 0xff;
 		}
 
 		protected bool IsTestTrue(int op)
@@ -3939,25 +3948,25 @@ namespace Epsitec.App.Dolphin.Components
 					AbstractProcessor.HelpPutLine(builder, "[DF] [vv] [mh] [ll] SUB <i>#val</i>, <i>ADDR</i> <tab/>(N, Z, C)");
 
 					AbstractProcessor.HelpPutTitle(builder, "ET logique");
-					AbstractProcessor.HelpPutLine(builder, "[E0]             <tab/>AND A, B      <tab/><tab/>(N, Z, C)");
-					AbstractProcessor.HelpPutLine(builder, "[E1]             <tab/>AND B, A      <tab/><tab/>(N, Z, C)");
-					AbstractProcessor.HelpPutLine(builder, "[74+r] [vv]      <tab/>AND <i>#val</i>, <i>r</i>   <tab/><tab/>(N, Z, C)");
-					AbstractProcessor.HelpPutLine(builder, "[E8+r'] [mh] [ll]<tab/>AND <i>ADDR</i>, <i>r'</i>  <tab/><tab/>(N, Z, C)");
-					AbstractProcessor.HelpPutLine(builder, "[F0+r'] [mh] [ll]<tab/>AND <i>r'</i>, <i>ADDR</i>  <tab/><tab/>(N, Z, C)");
+					AbstractProcessor.HelpPutLine(builder, "[E0]             <tab/>AND A, B      <tab/><tab/>(N, Z)");
+					AbstractProcessor.HelpPutLine(builder, "[E1]             <tab/>AND B, A      <tab/><tab/>(N, Z)");
+					AbstractProcessor.HelpPutLine(builder, "[74+r] [vv]      <tab/>AND <i>#val</i>, <i>r</i>   <tab/><tab/>(N, Z)");
+					AbstractProcessor.HelpPutLine(builder, "[E8+r'] [mh] [ll]<tab/>AND <i>ADDR</i>, <i>r'</i>  <tab/><tab/>(N, Z)");
+					AbstractProcessor.HelpPutLine(builder, "[F0+r'] [mh] [ll]<tab/>AND <i>r'</i>, <i>ADDR</i>  <tab/><tab/>(N, Z)");
 
 					AbstractProcessor.HelpPutTitle(builder, "OU logique");
-					AbstractProcessor.HelpPutLine(builder, "[E2]             <tab/>OR A, B      <tab/><tab/>(N, Z, C)");
-					AbstractProcessor.HelpPutLine(builder, "[E3]             <tab/>OR B, A      <tab/><tab/>(N, Z, C)");
-					AbstractProcessor.HelpPutLine(builder, "[78+r] [vv]      <tab/>OR <i>#val</i>, <i>r</i>   <tab/><tab/>(N, Z, C)");
-					AbstractProcessor.HelpPutLine(builder, "[EA+r'] [mh] [ll]<tab/>OR <i>ADDR</i>, <i>r'</i>  <tab/><tab/>(N, Z, C)");
-					AbstractProcessor.HelpPutLine(builder, "[F2+r'] [mh] [ll]<tab/>OR <i>r'</i>, <i>ADDR</i>  <tab/><tab/>(N, Z, C)");
+					AbstractProcessor.HelpPutLine(builder, "[E2]             <tab/>OR A, B      <tab/><tab/>(N, Z)");
+					AbstractProcessor.HelpPutLine(builder, "[E3]             <tab/>OR B, A      <tab/><tab/>(N, Z)");
+					AbstractProcessor.HelpPutLine(builder, "[78+r] [vv]      <tab/>OR <i>#val</i>, <i>r</i>   <tab/><tab/>(N, Z)");
+					AbstractProcessor.HelpPutLine(builder, "[EA+r'] [mh] [ll]<tab/>OR <i>ADDR</i>, <i>r'</i>  <tab/><tab/>(N, Z)");
+					AbstractProcessor.HelpPutLine(builder, "[F2+r'] [mh] [ll]<tab/>OR <i>r'</i>, <i>ADDR</i>  <tab/><tab/>(N, Z)");
 
 					AbstractProcessor.HelpPutTitle(builder, "OU exclusif logique");
-					AbstractProcessor.HelpPutLine(builder, "[E4]             <tab/>XOR A, B      <tab/><tab/>(N, Z, C)");
-					AbstractProcessor.HelpPutLine(builder, "[E5]             <tab/>XOR B, A      <tab/><tab/>(N, Z, C)");
-					AbstractProcessor.HelpPutLine(builder, "[7C+r] [vv]      <tab/>XOR <i>#val</i>, <i>r</i>   <tab/><tab/>(N, Z, C)");
-					AbstractProcessor.HelpPutLine(builder, "[EC+r'] [mh] [ll]<tab/>XOR <i>ADDR</i>, <i>r'</i>  <tab/><tab/>(N, Z, C)");
-					AbstractProcessor.HelpPutLine(builder, "[F4+r'] [mh] [ll]<tab/>XOR <i>r'</i>, <i>ADDR</i>  <tab/><tab/>(N, Z, C)");
+					AbstractProcessor.HelpPutLine(builder, "[E4]             <tab/>XOR A, B      <tab/><tab/>(N, Z)");
+					AbstractProcessor.HelpPutLine(builder, "[E5]             <tab/>XOR B, A      <tab/><tab/>(N, Z)");
+					AbstractProcessor.HelpPutLine(builder, "[7C+r] [vv]      <tab/>XOR <i>#val</i>, <i>r</i>   <tab/><tab/>(N, Z)");
+					AbstractProcessor.HelpPutLine(builder, "[EC+r'] [mh] [ll]<tab/>XOR <i>ADDR</i>, <i>r'</i>  <tab/><tab/>(N, Z)");
+					AbstractProcessor.HelpPutLine(builder, "[F4+r'] [mh] [ll]<tab/>XOR <i>r'</i>, <i>ADDR</i>  <tab/><tab/>(N, Z)");
 
 					AbstractProcessor.HelpPutTitle(builder, "Test de bit");
 					AbstractProcessor.HelpPutLine(builder, "[C0]             <tab/>TEST B :A      <tab/><tab/>(Z)");
@@ -3997,14 +4006,14 @@ namespace Epsitec.App.Dolphin.Components
 					AbstractProcessor.HelpPutLine(builder, "[DD] [vv] [mh] [ll] COMP <i>#val</i>, <i>ADDR</i><tab/>(N, Z, C)");
 
 					AbstractProcessor.HelpPutTitle(builder, "Opérations unaires");
-					AbstractProcessor.HelpPutLine(builder, "[20+r]          <tab/>CLR <i>r</i>");
-					AbstractProcessor.HelpPutLine(builder, "[24+r]          <tab/>NOT <i>r</i>");
-					AbstractProcessor.HelpPutLine(builder, "[28+r]          <tab/>INC <i>r</i>");
-					AbstractProcessor.HelpPutLine(builder, "[2C+r]          <tab/>DEC <i>r</i>");
-					AbstractProcessor.HelpPutLine(builder, "[A8] [mh] [ll]  <tab/>CLR <i>ADDR</i>");
-					AbstractProcessor.HelpPutLine(builder, "[A9] [mh] [ll]  <tab/>NOT <i>ADDR</i>");
-					AbstractProcessor.HelpPutLine(builder, "[AA] [mh] [ll]  <tab/>INC <i>ADDR</i>");
-					AbstractProcessor.HelpPutLine(builder, "[AB] [mh] [ll]  <tab/>DEC <i>ADDR</i>");
+					AbstractProcessor.HelpPutLine(builder, "[20+r]          <tab/>CLR <i>r</i>       <tab/><tab/>(N=0, Z=0)");
+					AbstractProcessor.HelpPutLine(builder, "[24+r]          <tab/>NOT <i>r</i>       <tab/><tab/>(N, Z)");
+					AbstractProcessor.HelpPutLine(builder, "[28+r]          <tab/>INC <i>r</i>       <tab/><tab/>(N, Z)");
+					AbstractProcessor.HelpPutLine(builder, "[2C+r]          <tab/>DEC <i>r</i>       <tab/><tab/>(N, Z)");
+					AbstractProcessor.HelpPutLine(builder, "[A8] [mh] [ll]  <tab/>CLR <i>ADDR</i>    <tab/><tab/>(N=0, Z=0)");
+					AbstractProcessor.HelpPutLine(builder, "[A9] [mh] [ll]  <tab/>NOT <i>ADDR</i>    <tab/><tab/>(N, Z)");
+					AbstractProcessor.HelpPutLine(builder, "[AA] [mh] [ll]  <tab/>INC <i>ADDR</i>    <tab/><tab/>(N, Z)");
+					AbstractProcessor.HelpPutLine(builder, "[AB] [mh] [ll]  <tab/>DEC <i>ADDR</i>    <tab/><tab/>(N, Z)");
 
 					AbstractProcessor.HelpPutTitle(builder, "Rotations");
 					AbstractProcessor.HelpPutLine(builder, "[30+r]          <tab/>RL <i>r</i>          <tab/><tab/>(N, Z, C)");
