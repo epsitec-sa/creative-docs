@@ -120,6 +120,8 @@ namespace Epsitec.App.Dolphin.Components
 			XorSA  = 0xF4,
 
 			CompAR = 0xF8,		// COMP ADDR,r
+			PushF  = 0xFC,		// PUSH F
+			PopF   = 0xFD,		// POP F
 
 			Table  = 0xFF,		// TABLE #val
 		}
@@ -259,6 +261,14 @@ namespace Epsitec.App.Dolphin.Components
 
 				case Instructions.SwapB:
 					this.registerB = ((this.registerB << 4) & 0xF0) | ((this.registerB >> 4) & 0x0F);
+					return;
+
+				case Instructions.PushF:
+					this.StackPushByte(this.registerF);
+					return;
+
+				case Instructions.PopF:
+					this.registerF = this.StackPopByte();
 					return;
 
 				case Instructions.Table:
@@ -1271,7 +1281,7 @@ namespace Epsitec.App.Dolphin.Components
 			1,1,1,1,1,1,1,1, 3,3,3,3,3,3,3,3,  // 0xC0
 			2,2,2,2,2,2,2,2, 4,4,4,4,4,4,4,4,  // 0xD0
 			1,1,1,1,1,1,0,0, 3,3,3,3,3,3,0,0,  // 0xE0
-			3,3,3,3,3,3,0,0, 3,3,3,3,0,0,0,2,  // 0xF0
+			3,3,3,3,3,3,0,0, 3,3,3,3,1,1,0,2,  // 0xF0
 		};
 
 		public override string DessassemblyInstruction(List<int> codes, int pc, out int address)
@@ -1334,6 +1344,12 @@ namespace Epsitec.App.Dolphin.Components
 
 				case Instructions.SwapB:
 					return "SWAP B";
+
+				case Instructions.PushF:
+					return "PUSH F";
+
+				case Instructions.PopF:
+					return "POP F";
 
 				case Instructions.Table:
 					builder.Append("TABLE ");
@@ -2231,6 +2247,7 @@ namespace Epsitec.App.Dolphin.Components
 			string[] seps = {" "};
 			string[] words = instruction.Split(seps, System.StringSplitOptions.RemoveEmptyEntries);
 			int r1=Misc.undefined, r2=Misc.undefined;
+			int f1=Misc.undefined;
 			int v1=Misc.undefined, v2=Misc.undefined;
 			int mh1=Misc.undefined, ll1=Misc.undefined, mh2=Misc.undefined, ll2=Misc.undefined;
 
@@ -2242,6 +2259,7 @@ namespace Epsitec.App.Dolphin.Components
 			if (words.Length >= 2)  // un argument ?
 			{
 				TinyProcessor.GetCodeRegister(words[1], out r1);
+				TinyProcessor.GetCodeFlag(words[1], out f1);
 				TinyProcessor.GetCodeValue(words[1], out v1);
 				TinyProcessor.GetCodeAddress(words[1], out mh1, out ll1);
 			}
@@ -2351,6 +2369,10 @@ namespace Epsitec.App.Dolphin.Components
 					{
 						codes.Add((int) Instructions.PushR | r1);
 					}
+					else if (words.Length == 2 && f1 != Misc.undefined)
+					{
+						codes.Add((int) Instructions.PushF);
+					}
 					else
 					{
 						return TinyProcessor.GetCodeError("PUSH doit être suivi d'un nom de registre.", "PUSH", "r");
@@ -2361,6 +2383,10 @@ namespace Epsitec.App.Dolphin.Components
 					if (words.Length == 2 && r1 != Misc.undefined)
 					{
 						codes.Add((int) Instructions.PopR | r1);
+					}
+					else if (words.Length == 2 && f1 != Misc.undefined)
+					{
+						codes.Add((int) Instructions.PopF);
 					}
 					else
 					{
@@ -3047,6 +3073,12 @@ namespace Epsitec.App.Dolphin.Components
 					n = 3;
 					break;
 			}
+		}
+
+		protected static void GetCodeFlag(string word, out int n)
+		{
+			//	Analyse le registre F.
+			n = (word == "F") ? 0 : Misc.undefined;
 		}
 
 		protected static void GetCodeValue(string word, out int value)
@@ -4044,7 +4076,9 @@ namespace Epsitec.App.Dolphin.Components
 
 					AbstractProcessor.HelpPutTitle(builder, "Utilisation de la pile");
 					AbstractProcessor.HelpPutLine(builder, "[08+r]           <tab/>PUSH <i>r</i>");
+					AbstractProcessor.HelpPutLine(builder, "[FC]             <tab/>PUSH F");
 					AbstractProcessor.HelpPutLine(builder, "[0C+r]           <tab/>POP <i>r</i>");
+					AbstractProcessor.HelpPutLine(builder, "[FD]             <tab/>POP F                     <tab/>(N, Z, C)");
 					AbstractProcessor.HelpPutLine(builder, "[07] [vv]        <tab/>SUB <i>#val</i>, SP");
 					AbstractProcessor.HelpPutLine(builder, "[06] [vv]        <tab/>ADD <i>#val</i>, SP");
 					AbstractProcessor.HelpPutLine(builder, "[54+r] [40] [dd] <tab/>MOVE {SP}+depl, <i>r</i> <tab/>(N, Z, C)");
