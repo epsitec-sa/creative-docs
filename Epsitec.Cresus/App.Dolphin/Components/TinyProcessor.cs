@@ -4005,28 +4005,28 @@ namespace Epsitec.App.Dolphin.Components
 					AbstractProcessor.HelpPutLine(builder, "[C1]             <tab/>TEST A :B      <tab/><tab/>(Z)");
 					AbstractProcessor.HelpPutLine(builder, "[D0+r'] [vv]     <tab/>TEST <i>r'</i> :<i>#val</i>  <tab/><tab/>(Z)");
 					AbstractProcessor.HelpPutLine(builder, "[C8+r'] [mh] [ll]<tab/>TEST <i>ADDR</i> :<i>r'</i>  <tab/><tab/>(Z)");
-					AbstractProcessor.HelpPutLine(builder, "[DC] [vv] [mh] [ll] TEST <i>ADDR</i> :<i>#val</i>   <tab/>(Z)");
+					AbstractProcessor.HelpPutLine(builder, "[D8] [vv] [mh] [ll] TEST <i>ADDR</i> :<i>#val</i>   <tab/>(Z)");
 
 					AbstractProcessor.HelpPutTitle(builder, "Test de bit et mise à un");
 					AbstractProcessor.HelpPutLine(builder, "[C2]             <tab/>TSET B :A      <tab/><tab/>(Z)");
 					AbstractProcessor.HelpPutLine(builder, "[C3]             <tab/>TSET A :B      <tab/><tab/>(Z)");
 					AbstractProcessor.HelpPutLine(builder, "[D2+r'] [vv]     <tab/>TSET <i>r'</i> :<i>#val</i>  <tab/><tab/>(Z)");
 					AbstractProcessor.HelpPutLine(builder, "[CA+r'] [mh] [ll]<tab/>TSET <i>ADDR</i> :<i>r'</i>  <tab/><tab/>(Z)");
-					AbstractProcessor.HelpPutLine(builder, "[DD] [vv] [mh] [ll] TSET <i>ADDR</i> :<i>#val</i>   <tab/>(Z)");
+					AbstractProcessor.HelpPutLine(builder, "[D9] [vv] [mh] [ll] TSET <i>ADDR</i> :<i>#val</i>   <tab/>(Z)");
 
 					AbstractProcessor.HelpPutTitle(builder, "Test de bit et mise à zéro");
 					AbstractProcessor.HelpPutLine(builder, "[C4]             <tab/>TCLR B :A      <tab/><tab/>(Z)");
 					AbstractProcessor.HelpPutLine(builder, "[C5]             <tab/>TCLR A :B      <tab/><tab/>(Z)");
 					AbstractProcessor.HelpPutLine(builder, "[D4+r'] [vv]     <tab/>TCLR <i>r'</i> :<i>#val</i>  <tab/><tab/>(Z)");
 					AbstractProcessor.HelpPutLine(builder, "[CC+r'] [mh] [ll]<tab/>TCLR <i>ADDR</i> :<i>r'</i>  <tab/><tab/>(Z)");
-					AbstractProcessor.HelpPutLine(builder, "[DE] [vv] [mh] [ll] TCLR <i>ADDR</i> :<i>#val</i>   <tab/>(Z)");
+					AbstractProcessor.HelpPutLine(builder, "[DA] [vv] [mh] [ll] TCLR <i>ADDR</i> :<i>#val</i>   <tab/>(Z)");
 
 					AbstractProcessor.HelpPutTitle(builder, "Test de bit et inversion");
 					AbstractProcessor.HelpPutLine(builder, "[C6]             <tab/>TNOT B :A      <tab/><tab/>(Z)");
 					AbstractProcessor.HelpPutLine(builder, "[C7]             <tab/>TNOT A :B      <tab/><tab/>(Z)");
 					AbstractProcessor.HelpPutLine(builder, "[D6+r'] [vv]     <tab/>TNOT <i>r'</i> :<i>#val</i>  <tab/><tab/>(Z)");
 					AbstractProcessor.HelpPutLine(builder, "[CE+r'] [mh] [ll]<tab/>TNOT <i>ADDR</i> :<i>r'</i>  <tab/><tab/>(Z)");
-					AbstractProcessor.HelpPutLine(builder, "[DF] [vv] [mh] [ll] TNOT <i>ADDR</i> :<i>#val</i>   <tab/>(Z)");
+					AbstractProcessor.HelpPutLine(builder, "[DB] [vv] [mh] [ll] TNOT <i>ADDR</i> :<i>#val</i>   <tab/>(Z)");
 
 					AbstractProcessor.HelpPutTitle(builder, "Comparaisons");
 					AbstractProcessor.HelpPutLine(builder, "[60+r]          <tab/>COMP A, <i>r</i>      <tab/><tab/>(N, Z, C)");
