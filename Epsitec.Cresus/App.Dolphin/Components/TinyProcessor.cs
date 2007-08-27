@@ -422,7 +422,7 @@ namespace Epsitec.App.Dolphin.Components
 
 				data = this.GetRegister(src);
 				this.SetRegister(dst, data);
-				this.SetFlagsOper(data);
+				this.SetFlagsOper(data, false);
 				return;
 			}
 
@@ -432,7 +432,7 @@ namespace Epsitec.App.Dolphin.Components
 
 				data = this.memory.Read(this.registerPC++);
 				this.SetRegister(n, data);
-				this.SetFlagsOper(data);
+				this.SetFlagsOper(data, false);
 				return;
 			}
 
@@ -443,7 +443,7 @@ namespace Epsitec.App.Dolphin.Components
 
 				data = this.memory.Read(address);
 				this.SetRegister(n, data);
-				this.SetFlagsOper(data);
+				this.SetFlagsOper(data, false);
 				return;
 			}
 
@@ -454,7 +454,7 @@ namespace Epsitec.App.Dolphin.Components
 
 				data = this.GetRegister(n);
 				this.memory.Write(address, data);
-				this.SetFlagsOper(data);
+				this.SetFlagsOper(data, false);
 				return;
 			}
 
@@ -479,13 +479,13 @@ namespace Epsitec.App.Dolphin.Components
 					case Instructions.AddRR:
 						data = (this.GetRegister(dst) + data) & 0xFF;
 						this.SetRegister(dst, data);
-						this.SetFlagsOper(data);
+						this.SetFlagsOper(data, true);
 						return;
 
 					case Instructions.SubRR:
 						data = (this.GetRegister(dst) - data) & 0xFF;
 						this.SetRegister(dst, data);
-						this.SetFlagsOper(data);
+						this.SetFlagsOper(data, true);
 						return;
 				}
 			}
@@ -501,13 +501,13 @@ namespace Epsitec.App.Dolphin.Components
 					case Instructions.AddVR:
 						data = (this.GetRegister(n) + data) & 0xFF;
 						this.SetRegister(n, data);
-						this.SetFlagsOper(data);
+						this.SetFlagsOper(data, true);
 						return;
 
 					case Instructions.SubVR:
 						data = (this.GetRegister(n) - data) & 0xFF;
 						this.SetRegister(n, data);
-						this.SetFlagsOper(data);
+						this.SetFlagsOper(data, true);
 						return;
 				}
 			}
@@ -523,13 +523,13 @@ namespace Epsitec.App.Dolphin.Components
 					case Instructions.AddAR:
 						data = (this.GetRegister(n) + this.memory.Read(address)) & 0xFF;
 						this.SetRegister(n, data);
-						this.SetFlagsOper(data);
+						this.SetFlagsOper(data, true);
 						return;
 
 					case Instructions.SubAR:
 						data = (this.GetRegister(n) - this.memory.Read(address)) & 0xFF;
 						this.SetRegister(n, data);
-						this.SetFlagsOper(data);
+						this.SetFlagsOper(data, true);
 						return;
 				}
 			}
@@ -545,13 +545,13 @@ namespace Epsitec.App.Dolphin.Components
 					case Instructions.AddRA:
 						data = (this.memory.Read(address) + this.GetRegister(n)) & 0xFF;
 						this.memory.Write(address, data);
-						this.SetFlagsOper(data);
+						this.SetFlagsOper(data, true);
 						return;
 
 					case Instructions.SubRA:
 						data = (this.memory.Read(address) - this.GetRegister(n)) & 0xFF;
 						this.memory.Write(address, data);
-						this.SetFlagsOper(data);
+						this.SetFlagsOper(data, true);
 						return;
 				}
 			}
@@ -804,7 +804,7 @@ namespace Epsitec.App.Dolphin.Components
 
 					case Instructions.MoveVA:
 						this.memory.Write(address, data);
-						this.SetFlagsOper(data);
+						this.SetFlagsOper(data, false);
 						return;
 
 					case Instructions.CompVA:
@@ -814,13 +814,13 @@ namespace Epsitec.App.Dolphin.Components
 					case Instructions.AddVA:
 						data = (this.memory.Read(address) + data) & 0xFF;
 						this.memory.Write(address, data);
-						this.SetFlagsOper(data);
+						this.SetFlagsOper(data, true);
 						return;
 
 					case Instructions.SubVA:
 						data = (this.memory.Read(address) - data) & 0xFF;
 						this.memory.Write(address, data);
-						this.SetFlagsOper(data);
+						this.SetFlagsOper(data, true);
 						return;
 				}
 			}
@@ -1046,12 +1046,6 @@ namespace Epsitec.App.Dolphin.Components
 			//	Initialise F après une comparaison.
 			this.SetFlag(TinyProcessor.FlagZero, a == b);
 			this.SetFlag(TinyProcessor.FlagCarry, a >= b);
-		}
-
-		protected void SetFlagsOper(int value)
-		{
-			//	Initialise F selon le résultat d'une opération.
-			this.SetFlagsOper(value, true);
 		}
 
 		protected void SetFlagsOper(int value, bool carry)
@@ -3950,14 +3944,14 @@ namespace Epsitec.App.Dolphin.Components
 
 				case "Ops":
 					AbstractProcessor.HelpPutTitle(builder, "Transferts");
-					AbstractProcessor.HelpPutLine(builder, "[40+r]          <tab/>MOVE A, <i>r</i>      <tab/><tab/>(N, Z, C)");
-					AbstractProcessor.HelpPutLine(builder, "[44+r]          <tab/>MOVE B, <i>r</i>      <tab/><tab/>(N, Z, C)");
-					AbstractProcessor.HelpPutLine(builder, "[48+r]          <tab/>MOVE X, <i>r</i>      <tab/><tab/>(N, Z, C)");
-					AbstractProcessor.HelpPutLine(builder, "[4C+r]          <tab/>MOVE Y, <i>r</i>      <tab/><tab/>(N, Z, C)");
-					AbstractProcessor.HelpPutLine(builder, "[50+r] [vv]     <tab/>MOVE <i>#val</i>, <i>r</i> <tab/><tab/>(N, Z, C)");
-					AbstractProcessor.HelpPutLine(builder, "[54+r] [mh] [ll]<tab/>MOVE <i>ADDR</i>, <i>r</i> <tab/><tab/>(N, Z, C)");
-					AbstractProcessor.HelpPutLine(builder, "[58+r] [mh] [ll]<tab/>MOVE <i>r</i>, <i>ADDR</i> <tab/><tab/>(N, Z, C)");
-					AbstractProcessor.HelpPutLine(builder, "[DC] [vv] [mh] [ll] MOVE <i>#val</i>, <i>ADDR</i><tab/>(N, Z, C)");
+					AbstractProcessor.HelpPutLine(builder, "[40+r]          <tab/>MOVE A, <i>r</i>      <tab/><tab/>(N, Z)");
+					AbstractProcessor.HelpPutLine(builder, "[44+r]          <tab/>MOVE B, <i>r</i>      <tab/><tab/>(N, Z)");
+					AbstractProcessor.HelpPutLine(builder, "[48+r]          <tab/>MOVE X, <i>r</i>      <tab/><tab/>(N, Z)");
+					AbstractProcessor.HelpPutLine(builder, "[4C+r]          <tab/>MOVE Y, <i>r</i>      <tab/><tab/>(N, Z)");
+					AbstractProcessor.HelpPutLine(builder, "[50+r] [vv]     <tab/>MOVE <i>#val</i>, <i>r</i> <tab/><tab/>(N, Z)");
+					AbstractProcessor.HelpPutLine(builder, "[54+r] [mh] [ll]<tab/>MOVE <i>ADDR</i>, <i>r</i> <tab/><tab/>(N, Z)");
+					AbstractProcessor.HelpPutLine(builder, "[58+r] [mh] [ll]<tab/>MOVE <i>r</i>, <i>ADDR</i> <tab/><tab/>(N, Z)");
+					AbstractProcessor.HelpPutLine(builder, "[DC] [vv] [mh] [ll] MOVE <i>#val</i>, <i>ADDR</i><tab/>(N, Z)");
 
 					AbstractProcessor.HelpPutTitle(builder, "Additions");
 					AbstractProcessor.HelpPutLine(builder, "[80+r]          <tab/>ADD A, <i>r</i>      <tab/><tab/>(N, Z, C)");
@@ -4081,8 +4075,8 @@ namespace Epsitec.App.Dolphin.Components
 					AbstractProcessor.HelpPutLine(builder, "[FD]             <tab/>POP F                     <tab/>(N, Z, C)");
 					AbstractProcessor.HelpPutLine(builder, "[07] [vv]        <tab/>SUB <i>#val</i>, SP");
 					AbstractProcessor.HelpPutLine(builder, "[06] [vv]        <tab/>ADD <i>#val</i>, SP");
-					AbstractProcessor.HelpPutLine(builder, "[54+r] [40] [dd] <tab/>MOVE {SP}+depl, <i>r</i> <tab/>(N, Z, C)");
-					AbstractProcessor.HelpPutLine(builder, "[58+r] [40] [dd] <tab/>MOVE <i>r</i>, {SP}+depl <tab/>(N, Z, C)");
+					AbstractProcessor.HelpPutLine(builder, "[54+r] [40] [dd] <tab/>MOVE {SP}+depl, <i>r</i> <tab/>(N, Z)");
+					AbstractProcessor.HelpPutLine(builder, "[58+r] [40] [dd] <tab/>MOVE <i>r</i>, {SP}+depl <tab/>(N, Z)");
 
 					AbstractProcessor.HelpPutTitle(builder, "Gestion des fanions");
 					AbstractProcessor.HelpPutLine(builder, "[04]             <tab/>SETC           <tab/><tab/>(C=1)");
