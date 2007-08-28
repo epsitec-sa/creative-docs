@@ -313,7 +313,7 @@ namespace Epsitec.App.Dolphin
 			if (index != -1)
 			{
 				string label = instruction.Substring(0, index).Trim();
-				if (!string.IsNullOrEmpty(label) && label.IndexOf(" ") == -1)
+				if (!string.IsNullOrEmpty(label) && label.IndexOf(" ") == -1 && label.IndexOf("\t") == -1)
 				{
 					if (pass == 0)  // première passe ?
 					{
