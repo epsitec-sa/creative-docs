@@ -177,13 +177,19 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_1D9141C0ECFE40E1B23849F75E45F0F3"
-        "OwnerKey" = "8:_99A1ECCB35B241B391BC9274DB770594"
+        "MsmKey" = "8:_1F9DC18EC1BA4B69A20262FE7541E52A"
+        "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_26B80337F66B4B6D943C221AC264B2F3"
+        "MsmKey" = "8:_296FD6B9518E47C0926B8D42710716AB"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_2C873F9056214FA984A00DC55DDD0D9D"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -327,6 +333,12 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_5D27C037F9DD422582A86090BF76C10E"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_5EBB48BD20D813F00F63B9377B37415E"
         "OwnerKey" = "8:_668DB15D007B366C45D217CAF6C05FDC"
         "MsmSig" = "8:_UNDEFINED"
@@ -399,6 +411,18 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_5EC3346E08C740B9BE551DCBF5F204AA"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_602A028F493541D386E075613AEEDCD1"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_61419E4F6FBA1977418593BFDBFF329E"
         "OwnerKey" = "8:_02DF7769C93E5735A1F411B89081ED33"
         "MsmSig" = "8:_UNDEFINED"
@@ -435,7 +459,13 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_68B6F6B4170F4E63B5C4C9485E1F872C"
+        "MsmKey" = "8:_70717003B078469B8A823EA79AA969F8"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_731AD270174F43DEB570906AB97ADB81"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -525,7 +555,19 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_978E499DDF794FB585EF28E1F31E14C1"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_99A1ECCB35B241B391BC9274DB770594"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_9A7994B4F32548CBBEBABB984C9067EF"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -543,6 +585,12 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_A83974E6100E49F58F69B6AC381C0262"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_A83D1CD25B6534F1EC9F72B962C28929"
         "OwnerKey" = "8:_7CF1391F4C27BE382873BFEF4E81CD50"
         "MsmSig" = "8:_UNDEFINED"
@@ -551,6 +599,30 @@
         {
         "MsmKey" = "8:_A83D1CD25B6534F1EC9F72B962C28929"
         "OwnerKey" = "8:_3E380C0810E8469DA841F5F16CFB4733"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_A8A59A72459A4327AF5087B418CB28B6"
+        "OwnerKey" = "8:_99A1ECCB35B241B391BC9274DB770594"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_ADA8ADF1FB3949E79775A3199E61079B"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_B5DBA268DC414EA8AF384BD0E444BAE6"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_B69A473E054546C5B472CE2A30245E62"
+        "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -615,6 +687,12 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_E157B5DAED0148368481CF4F0764D792"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_E8351130851D9B93EA443786B9EF44F9"
         "OwnerKey" = "8:_668DB15D007B366C45D217CAF6C05FDC"
         "MsmSig" = "8:_UNDEFINED"
@@ -653,6 +731,12 @@
         {
         "MsmKey" = "8:_E8351130851D9B93EA443786B9EF44F9"
         "OwnerKey" = "8:_61419E4F6FBA1977418593BFDBFF329E"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_EB01CE7AA71D4141B4228258397D0CD1"
+        "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -1094,10 +1178,50 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_26B80337F66B4B6D943C221AC264B2F3"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_1F9DC18EC1BA4B69A20262FE7541E52A"
             {
-            "SourcePath" = "8:..\\App.Dolphin\\Samples\\add.dolphin"
-            "TargetName" = "8:add.dolphin"
+            "SourcePath" = "8:D:\\Cresus\\Epsitec.Cresus\\App.Dolphin\\bin\\Debug\\Samples\\hello3.dolphin"
+            "TargetName" = "8:hello3.dolphin"
+            "Tag" = "8:"
+            "Folder" = "8:_352DC528711C4E16975F5D327DD1AA0E"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_296FD6B9518E47C0926B8D42710716AB"
+            {
+            "SourcePath" = "8:D:\\Cresus\\Epsitec.Cresus\\App.Dolphin\\bin\\Debug\\Samples\\jump2.dolphin"
+            "TargetName" = "8:jump2.dolphin"
+            "Tag" = "8:"
+            "Folder" = "8:_352DC528711C4E16975F5D327DD1AA0E"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_2C873F9056214FA984A00DC55DDD0D9D"
+            {
+            "SourcePath" = "8:D:\\Cresus\\Epsitec.Cresus\\App.Dolphin\\bin\\Debug\\Samples\\key2.dolphin"
+            "TargetName" = "8:key2.dolphin"
             "Tag" = "8:"
             "Folder" = "8:_352DC528711C4E16975F5D327DD1AA0E"
             "Condition" = "8:"
@@ -1258,6 +1382,26 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_5D27C037F9DD422582A86090BF76C10E"
+            {
+            "SourcePath" = "8:D:\\Cresus\\Epsitec.Cresus\\App.Dolphin\\bin\\Debug\\Samples\\rebond2.dolphin"
+            "TargetName" = "8:rebond2.dolphin"
+            "Tag" = "8:"
+            "Folder" = "8:_352DC528711C4E16975F5D327DD1AA0E"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
             "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_5EBB48BD20D813F00F63B9377B37415E"
             {
             "AssemblyRegister" = "3:1"
@@ -1287,6 +1431,46 @@
             "Register" = "3:1"
             "Exclude" = "11:FALSE"
             "IsDependency" = "11:TRUE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_5EC3346E08C740B9BE551DCBF5F204AA"
+            {
+            "SourcePath" = "8:D:\\Cresus\\Epsitec.Cresus\\App.Dolphin\\bin\\Debug\\Samples\\shift1.dolphin"
+            "TargetName" = "8:shift1.dolphin"
+            "Tag" = "8:"
+            "Folder" = "8:_352DC528711C4E16975F5D327DD1AA0E"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_602A028F493541D386E075613AEEDCD1"
+            {
+            "SourcePath" = "8:D:\\Cresus\\Epsitec.Cresus\\App.Dolphin\\bin\\Debug\\Samples\\rebond4.dolphin"
+            "TargetName" = "8:rebond4.dolphin"
+            "Tag" = "8:"
+            "Folder" = "8:_352DC528711C4E16975F5D327DD1AA0E"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
             "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_61419E4F6FBA1977418593BFDBFF329E"
@@ -1351,10 +1535,30 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_68B6F6B4170F4E63B5C4C9485E1F872C"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_70717003B078469B8A823EA79AA969F8"
             {
-            "SourcePath" = "8:..\\App.Dolphin\\Samples\\2008.dolphin"
-            "TargetName" = "8:2008.dolphin"
+            "SourcePath" = "8:D:\\Cresus\\Epsitec.Cresus\\App.Dolphin\\bin\\Debug\\Samples\\rebond1.dolphin"
+            "TargetName" = "8:rebond1.dolphin"
+            "Tag" = "8:"
+            "Folder" = "8:_352DC528711C4E16975F5D327DD1AA0E"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_731AD270174F43DEB570906AB97ADB81"
+            {
+            "SourcePath" = "8:D:\\Cresus\\Epsitec.Cresus\\App.Dolphin\\bin\\Debug\\Samples\\shift2.dolphin"
+            "TargetName" = "8:shift2.dolphin"
             "Tag" = "8:"
             "Folder" = "8:_352DC528711C4E16975F5D327DD1AA0E"
             "Condition" = "8:"
@@ -1526,6 +1730,46 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_978E499DDF794FB585EF28E1F31E14C1"
+            {
+            "SourcePath" = "8:D:\\Cresus\\Epsitec.Cresus\\App.Dolphin\\bin\\Debug\\Samples\\jump1.dolphin"
+            "TargetName" = "8:jump1.dolphin"
+            "Tag" = "8:"
+            "Folder" = "8:_352DC528711C4E16975F5D327DD1AA0E"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_9A7994B4F32548CBBEBABB984C9067EF"
+            {
+            "SourcePath" = "8:D:\\Cresus\\Epsitec.Cresus\\App.Dolphin\\bin\\Debug\\Samples\\rebond3.dolphin"
+            "TargetName" = "8:rebond3.dolphin"
+            "Tag" = "8:"
+            "Folder" = "8:_352DC528711C4E16975F5D327DD1AA0E"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
             "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_A34BDE605BB2667DD8C3430FEC5D4C23"
             {
             "AssemblyRegister" = "3:1"
@@ -1557,6 +1801,26 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_A83974E6100E49F58F69B6AC381C0262"
+            {
+            "SourcePath" = "8:D:\\Cresus\\Epsitec.Cresus\\App.Dolphin\\bin\\Debug\\Samples\\addhexa.dolphin"
+            "TargetName" = "8:addhexa.dolphin"
+            "Tag" = "8:"
+            "Folder" = "8:_352DC528711C4E16975F5D327DD1AA0E"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
             "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_A83D1CD25B6534F1EC9F72B962C28929"
             {
             "AssemblyRegister" = "3:1"
@@ -1586,6 +1850,66 @@
             "Register" = "3:1"
             "Exclude" = "11:FALSE"
             "IsDependency" = "11:TRUE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_ADA8ADF1FB3949E79775A3199E61079B"
+            {
+            "SourcePath" = "8:D:\\Cresus\\Epsitec.Cresus\\App.Dolphin\\bin\\Debug\\Samples\\hello2.dolphin"
+            "TargetName" = "8:hello2.dolphin"
+            "Tag" = "8:"
+            "Folder" = "8:_352DC528711C4E16975F5D327DD1AA0E"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_B5DBA268DC414EA8AF384BD0E444BAE6"
+            {
+            "SourcePath" = "8:D:\\Cresus\\Epsitec.Cresus\\App.Dolphin\\bin\\Debug\\Samples\\2008.dolphin"
+            "TargetName" = "8:2008.dolphin"
+            "Tag" = "8:"
+            "Folder" = "8:_352DC528711C4E16975F5D327DD1AA0E"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_B69A473E054546C5B472CE2A30245E62"
+            {
+            "SourcePath" = "8:D:\\Cresus\\Epsitec.Cresus\\App.Dolphin\\bin\\Debug\\Samples\\rom1.dolphin"
+            "TargetName" = "8:rom1.dolphin"
+            "Tag" = "8:"
+            "Folder" = "8:_352DC528711C4E16975F5D327DD1AA0E"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_C087D5ABEB59407084606F0DEB10C571"
@@ -1701,6 +2025,26 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_E157B5DAED0148368481CF4F0764D792"
+            {
+            "SourcePath" = "8:D:\\Cresus\\Epsitec.Cresus\\App.Dolphin\\bin\\Debug\\Samples\\key1.dolphin"
+            "TargetName" = "8:key1.dolphin"
+            "Tag" = "8:"
+            "Folder" = "8:_352DC528711C4E16975F5D327DD1AA0E"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
             "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_E8351130851D9B93EA443786B9EF44F9"
             {
             "AssemblyRegister" = "3:1"
@@ -1730,6 +2074,26 @@
             "Register" = "3:1"
             "Exclude" = "11:FALSE"
             "IsDependency" = "11:TRUE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_EB01CE7AA71D4141B4228258397D0CD1"
+            {
+            "SourcePath" = "8:D:\\Cresus\\Epsitec.Cresus\\App.Dolphin\\bin\\Debug\\Samples\\hello1.dolphin"
+            "TargetName" = "8:hello1.dolphin"
+            "Tag" = "8:"
+            "Folder" = "8:_352DC528711C4E16975F5D327DD1AA0E"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_F3D0A065778D409480EA07CA51D62CE1"
@@ -2294,11 +2658,11 @@
         }
         "MergeModule"
         {
-            "{CEE29DC0-9FBA-4B99-8D47-5BC643D9B626}:_1D9141C0ECFE40E1B23849F75E45F0F3"
+            "{CEE29DC0-9FBA-4B99-8D47-5BC643D9B626}:_99A1ECCB35B241B391BC9274DB770594"
             {
             "UseDynamicProperties" = "11:TRUE"
-            "IsDependency" = "11:TRUE"
-            "SourcePath" = "8:policy_8_0_microsoft_vc80_crt_x86.msm"
+            "IsDependency" = "11:FALSE"
+            "SourcePath" = "8:C:\\Program Files (x86)\\Common Files\\Merge Modules\\Microsoft_VC80_CRT_x86.msm"
                 "Properties"
                 {
                 }
@@ -2308,11 +2672,11 @@
             "Feature" = "8:"
             "IsolateTo" = "8:"
             }
-            "{CEE29DC0-9FBA-4B99-8D47-5BC643D9B626}:_99A1ECCB35B241B391BC9274DB770594"
+            "{CEE29DC0-9FBA-4B99-8D47-5BC643D9B626}:_A8A59A72459A4327AF5087B418CB28B6"
             {
             "UseDynamicProperties" = "11:TRUE"
-            "IsDependency" = "11:FALSE"
-            "SourcePath" = "8:C:\\Program Files\\Common Files\\Merge Modules\\Microsoft_VC80_CRT_x86.msm"
+            "IsDependency" = "11:TRUE"
+            "SourcePath" = "8:policy_8_0_microsoft_vc80_crt_x86.msm"
                 "Properties"
                 {
                 }
