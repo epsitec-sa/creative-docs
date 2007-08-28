@@ -309,26 +309,26 @@ namespace Epsitec.App.Dolphin.Components
 				{
 					case Instructions.ClrR:
 						data = 0;
+						data = this.SetFlagsOper(data, false);
 						this.SetRegister(n, data);
-						this.SetFlagsOper(data, false);
 						return;
 
 					case Instructions.NotR:
 						data = this.GetRegister(n) ^ 0xFF;
+						data = this.SetFlagsOper(data, false);
 						this.SetRegister(n, data);
-						this.SetFlagsOper(data, false);
 						return;
 
 					case Instructions.IncR:
-						data = (this.GetRegister(n) + 1) & 0xFF;
+						data = (this.GetRegister(n) + 1);
+						data = this.SetFlagsOper(data, false);
 						this.SetRegister(n, data);
-						this.SetFlagsOper(data, false);
 						return;
 
 					case Instructions.DecR:
-						data = (this.GetRegister(n) - 1) & 0xFF;
+						data = (this.GetRegister(n) - 1);
+						data = this.SetFlagsOper(data, false);
 						this.SetRegister(n, data);
-						this.SetFlagsOper(data, false);
 						return;
 				}
 			}
@@ -371,26 +371,26 @@ namespace Epsitec.App.Dolphin.Components
 				{
 					case Instructions.ClrA:
 						data = 0;
+						data = this.SetFlagsOper(data, false);
 						this.memory.Write(address, data);
-						this.SetFlagsOper(data, false);
 						return;
 
 					case Instructions.NotA:
 						data = this.memory.Read(address) ^ 0xFF;
+						data = this.SetFlagsOper(data, false);
 						this.memory.Write(address, data);
-						this.SetFlagsOper(data, false);
 						return;
 
 					case Instructions.IncA:
-						data = (this.memory.Read(address) + 1) & 0xFF;
+						data = (this.memory.Read(address) + 1);
+						data = this.SetFlagsOper(data, false);
 						this.memory.Write(address, data);
-						this.SetFlagsOper(data, false);
 						return;
 
 					case Instructions.DecA:
-						data = (this.memory.Read(address) - 1) & 0xFF;
+						data = (this.memory.Read(address) - 1);
+						data = this.SetFlagsOper(data, false);
 						this.memory.Write(address, data);
-						this.SetFlagsOper(data, false);
 						return;
 
 					case Instructions.RlA:
@@ -421,8 +421,8 @@ namespace Epsitec.App.Dolphin.Components
 				int dst = op & 0x03;
 
 				data = this.GetRegister(src);
+				data = this.SetFlagsOper(data, false);
 				this.SetRegister(dst, data);
-				this.SetFlagsOper(data, false);
 				return;
 			}
 
@@ -431,8 +431,8 @@ namespace Epsitec.App.Dolphin.Components
 				int n = op & 0x03;
 
 				data = this.memory.Read(this.registerPC++);
+				data = this.SetFlagsOper(data, false);
 				this.SetRegister(n, data);
-				this.SetFlagsOper(data, false);
 				return;
 			}
 
@@ -442,8 +442,8 @@ namespace Epsitec.App.Dolphin.Components
 				address = this.AddressAbs;
 
 				data = this.memory.Read(address);
+				data = this.SetFlagsOper(data, false);
 				this.SetRegister(n, data);
-				this.SetFlagsOper(data, false);
 				return;
 			}
 
@@ -453,8 +453,8 @@ namespace Epsitec.App.Dolphin.Components
 				address = this.AddressAbs;
 
 				data = this.GetRegister(n);
+				data = this.SetFlagsOper(data, false);
 				this.memory.Write(address, data);
-				this.SetFlagsOper(data, false);
 				return;
 			}
 
@@ -463,7 +463,9 @@ namespace Epsitec.App.Dolphin.Components
 				int src = (op>>2) & 0x03;
 				int dst = op & 0x03;
 
-				this.SetFlagsCompare(this.GetRegister(dst), this.GetRegister(src));
+				data = this.GetRegister(src);
+				data = (this.GetRegister(dst) - data);
+				data = this.SetFlagsOper(data, true);
 				return;
 			}
 
@@ -477,15 +479,15 @@ namespace Epsitec.App.Dolphin.Components
 				switch (i)
 				{
 					case Instructions.AddRR:
-						data = (this.GetRegister(dst) + data) & 0xFF;
+						data = (this.GetRegister(dst) + data);
+						data = this.SetFlagsOper(data, true);
 						this.SetRegister(dst, data);
-						this.SetFlagsOper(data, true);
 						return;
 
 					case Instructions.SubRR:
-						data = (this.GetRegister(dst) - data) & 0xFF;
+						data = (this.GetRegister(dst) - data);
+						data = this.SetFlagsOper(data, true);
 						this.SetRegister(dst, data);
-						this.SetFlagsOper(data, true);
 						return;
 				}
 			}
@@ -499,15 +501,15 @@ namespace Epsitec.App.Dolphin.Components
 				switch (i)
 				{
 					case Instructions.AddVR:
-						data = (this.GetRegister(n) + data) & 0xFF;
+						data = (this.GetRegister(n) + data);
+						data = this.SetFlagsOper(data, true);
 						this.SetRegister(n, data);
-						this.SetFlagsOper(data, true);
 						return;
 
 					case Instructions.SubVR:
-						data = (this.GetRegister(n) - data) & 0xFF;
+						data = (this.GetRegister(n) - data);
+						data = this.SetFlagsOper(data, true);
 						this.SetRegister(n, data);
-						this.SetFlagsOper(data, true);
 						return;
 				}
 			}
@@ -521,15 +523,15 @@ namespace Epsitec.App.Dolphin.Components
 				switch (i)
 				{
 					case Instructions.AddAR:
-						data = (this.GetRegister(n) + this.memory.Read(address)) & 0xFF;
+						data = (this.GetRegister(n) + this.memory.Read(address));
+						data = this.SetFlagsOper(data, true);
 						this.SetRegister(n, data);
-						this.SetFlagsOper(data, true);
 						return;
 
 					case Instructions.SubAR:
-						data = (this.GetRegister(n) - this.memory.Read(address)) & 0xFF;
+						data = (this.GetRegister(n) - this.memory.Read(address));
+						data = this.SetFlagsOper(data, true);
 						this.SetRegister(n, data);
-						this.SetFlagsOper(data, true);
 						return;
 				}
 			}
@@ -543,15 +545,15 @@ namespace Epsitec.App.Dolphin.Components
 				switch (i)
 				{
 					case Instructions.AddRA:
-						data = (this.memory.Read(address) + this.GetRegister(n)) & 0xFF;
+						data = (this.memory.Read(address) + this.GetRegister(n));
+						data = this.SetFlagsOper(data, true);
 						this.memory.Write(address, data);
-						this.SetFlagsOper(data, true);
 						return;
 
 					case Instructions.SubRA:
-						data = (this.memory.Read(address) - this.GetRegister(n)) & 0xFF;
+						data = (this.memory.Read(address) - this.GetRegister(n));
+						data = this.SetFlagsOper(data, true);
 						this.memory.Write(address, data);
-						this.SetFlagsOper(data, true);
 						return;
 				}
 			}
@@ -566,20 +568,20 @@ namespace Epsitec.App.Dolphin.Components
 				{
 					case Instructions.AndVR:
 						data = this.GetRegister(n) & data;
+						data = this.SetFlagsOper(data, false);
 						this.SetRegister(n, data);
-						this.SetFlagsOper(data, false);
 						return;
 
 					case Instructions.OrVR:
 						data = this.GetRegister(n) | data;
+						data = this.SetFlagsOper(data, false);
 						this.SetRegister(n, data);
-						this.SetFlagsOper(data, false);
 						return;
 
 					case Instructions.XorVR:
 						data = this.GetRegister(n) ^ data;
+						data = this.SetFlagsOper(data, false);
 						this.SetRegister(n, data);
-						this.SetFlagsOper(data, false);
 						return;
 				}
 			}
@@ -596,20 +598,20 @@ namespace Epsitec.App.Dolphin.Components
 				{
 					case Instructions.AndSS:
 						data = this.GetRegister(dst) & data;
+						data = this.SetFlagsOper(data, false);
 						this.SetRegister(dst, data);
-						this.SetFlagsOper(data, false);
 						return;
 
 					case Instructions.OrSS:
 						data = this.GetRegister(dst) | data;
+						data = this.SetFlagsOper(data, false);
 						this.SetRegister(dst, data);
-						this.SetFlagsOper(data, false);
 						return;
 
 					case Instructions.XorSS:
 						data = this.GetRegister(dst) ^ data;
+						data = this.SetFlagsOper(data, false);
 						this.SetRegister(dst, data);
-						this.SetFlagsOper(data, false);
 						return;
 				}
 			}
@@ -624,20 +626,20 @@ namespace Epsitec.App.Dolphin.Components
 				{
 					case Instructions.AndAS:
 						data = this.GetRegister(n) & this.memory.Read(address);
+						data = this.SetFlagsOper(data, false);
 						this.SetRegister(n, data);
-						this.SetFlagsOper(data, false);
 						return;
 
 					case Instructions.OrAS:
 						data = this.GetRegister(n) | this.memory.Read(address);
+						data = this.SetFlagsOper(data, false);
 						this.SetRegister(n, data);
-						this.SetFlagsOper(data, false);
 						return;
 
 					case Instructions.XorAS:
 						data = this.GetRegister(n) ^ this.memory.Read(address);
+						data = this.SetFlagsOper(data, false);
 						this.SetRegister(n, data);
-						this.SetFlagsOper(data, false);
 						return;
 				}
 			}
@@ -652,20 +654,20 @@ namespace Epsitec.App.Dolphin.Components
 				{
 					case Instructions.AndSA:
 						data = this.memory.Read(address) & this.GetRegister(n);
+						data = this.SetFlagsOper(data, false);
 						this.memory.Write(address, data);
-						this.SetFlagsOper(data, false);
 						return;
 
 					case Instructions.OrSA:
 						data = this.memory.Read(address) | this.GetRegister(n);
+						data = this.SetFlagsOper(data, false);
 						this.memory.Write(address, data);
-						this.SetFlagsOper(data, false);
 						return;
 
 					case Instructions.XorSA:
 						data = this.memory.Read(address) ^ this.GetRegister(n);
+						data = this.SetFlagsOper(data, false);
 						this.memory.Write(address, data);
-						this.SetFlagsOper(data, false);
 						return;
 				}
 			}
@@ -803,24 +805,25 @@ namespace Epsitec.App.Dolphin.Components
 						return;
 
 					case Instructions.MoveVA:
+						data = this.SetFlagsOper(data, false);
 						this.memory.Write(address, data);
-						this.SetFlagsOper(data, false);
 						return;
 
 					case Instructions.CompVA:
-						this.SetFlagsCompare(this.memory.Read(address), data);
+						data = (this.memory.Read(address) - data);
+						data = this.SetFlagsOper(data, true);
 						return;
 
 					case Instructions.AddVA:
-						data = (this.memory.Read(address) + data) & 0xFF;
+						data = (this.memory.Read(address) + data);
+						data = this.SetFlagsOper(data, true);
 						this.memory.Write(address, data);
-						this.SetFlagsOper(data, true);
 						return;
 
 					case Instructions.SubVA:
-						data = (this.memory.Read(address) - data) & 0xFF;
+						data = (this.memory.Read(address) - data);
+						data = this.SetFlagsOper(data, true);
 						this.memory.Write(address, data);
-						this.SetFlagsOper(data, true);
 						return;
 				}
 			}
@@ -830,7 +833,8 @@ namespace Epsitec.App.Dolphin.Components
 				int n = op & 0x03;
 
 				data = this.memory.Read(this.registerPC++);
-				this.SetFlagsCompare(this.GetRegister(n), data);
+				data = (this.GetRegister(n) - data);
+				data = this.SetFlagsOper(data, true);
 				return;
 			}
 
@@ -838,9 +842,9 @@ namespace Epsitec.App.Dolphin.Components
 			{
 				int n = op & 0x03;
 				address = this.AddressAbs;
-
-				data = this.memory.Read(address);
-				this.SetFlagsCompare(this.GetRegister(n), data);
+				address = this.AddressAbs;
+				data = (this.GetRegister(n) - this.memory.Read(address));
+				data = this.SetFlagsOper(data, true);
 				return;
 			}
 		}
@@ -1041,14 +1045,7 @@ namespace Epsitec.App.Dolphin.Components
 		}
 
 
-		protected void SetFlagsCompare(int a, int b)
-		{
-			//	Initialise F après une comparaison.
-			this.SetFlag(TinyProcessor.FlagZero, a == b);
-			this.SetFlag(TinyProcessor.FlagCarry, a >= b);
-		}
-
-		protected void SetFlagsOper(int value, bool carry)
+		protected int SetFlagsOper(int value, bool carry)
 		{
 			//	Initialise F selon le résultat d'une opération.
 			this.SetFlag(TinyProcessor.FlagZero, value == 0);
@@ -1056,15 +1053,10 @@ namespace Epsitec.App.Dolphin.Components
 
 			if (carry)
 			{
-				if ((value & 0x80) == 0)  // valeur positive ?
-				{
-					this.SetFlag(TinyProcessor.FlagCarry, (value & 0xffffff00) != 0);
-				}
-				else  // valeur négative ?
-				{
-					this.SetFlag(TinyProcessor.FlagCarry, (value & 0xffffff00) == 0);
-				}
+				this.SetFlag(TinyProcessor.FlagCarry, (value & 0x100) != 0);
 			}
+
+			return value & 0xFF;
 		}
 
 		protected bool IsTestTrue(int op)
@@ -1080,16 +1072,16 @@ namespace Epsitec.App.Dolphin.Components
 					return !this.TestFlag(TinyProcessor.FlagZero);
 
 				case Instructions.JumpLO:
-					return !this.TestFlag(TinyProcessor.FlagZero) && !this.TestFlag(TinyProcessor.FlagCarry);
+					return !this.TestFlag(TinyProcessor.FlagZero) && this.TestFlag(TinyProcessor.FlagNeg);
 
 				case Instructions.JumpLS:
-					return this.TestFlag(TinyProcessor.FlagZero) || !this.TestFlag(TinyProcessor.FlagCarry);
+					return this.TestFlag(TinyProcessor.FlagZero) || this.TestFlag(TinyProcessor.FlagNeg);
 
 				case Instructions.JumpHI:
-					return !this.TestFlag(TinyProcessor.FlagZero) && this.TestFlag(TinyProcessor.FlagCarry);
+					return !this.TestFlag(TinyProcessor.FlagZero) && !this.TestFlag(TinyProcessor.FlagNeg);
 
 				case Instructions.JumpHS:
-					return this.TestFlag(TinyProcessor.FlagZero) || this.TestFlag(TinyProcessor.FlagCarry);
+					return this.TestFlag(TinyProcessor.FlagZero) || !this.TestFlag(TinyProcessor.FlagNeg);
 
 				case Instructions.JumpCC:
 					return !this.TestFlag(TinyProcessor.FlagCarry);
