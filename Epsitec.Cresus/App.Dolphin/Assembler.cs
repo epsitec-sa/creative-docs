@@ -22,7 +22,7 @@ namespace Epsitec.App.Dolphin
 			this.memory = memory;
 		}
 
-		public void Action(TextFieldMulti field, Window window)
+		public bool Action(TextFieldMulti field, Window window, bool verbose)
 		{
 			//	Assemble les instructions CALM du programme.
 			this.field = field;
@@ -85,10 +85,15 @@ namespace Epsitec.App.Dolphin
 				message = string.Format("<b>Il y a eu {0} erreur(s) lors de l'assemblage.</b>", errorLines.Count.ToString());
 			}
 
-			string title = "Dauphin";
-			Common.Dialogs.IDialog dialog = Common.Dialogs.MessageDialog.CreateOk(title, icon, message, null, null);
-			dialog.Owner = this.window;
-			dialog.OpenDialog();
+			if (verbose || errorLines.Count != 0)
+			{
+				string title = "Dauphin";
+				Common.Dialogs.IDialog dialog = Common.Dialogs.MessageDialog.CreateOk(title, icon, message, null, null);
+				dialog.Owner = this.window;
+				dialog.OpenDialog();
+			}
+
+			return errorLines.Count == 0;
 		}
 
 
