@@ -1072,16 +1072,16 @@ namespace Epsitec.App.Dolphin.Components
 					return !this.TestFlag(TinyProcessor.FlagZero);
 
 				case Instructions.JumpLO:
-					return !this.TestFlag(TinyProcessor.FlagZero) && this.TestFlag(TinyProcessor.FlagNeg);
+					return !this.TestFlag(TinyProcessor.FlagZero) && this.TestFlag(TinyProcessor.FlagCarry);
 
 				case Instructions.JumpLS:
-					return this.TestFlag(TinyProcessor.FlagZero) || this.TestFlag(TinyProcessor.FlagNeg);
+					return this.TestFlag(TinyProcessor.FlagZero) || this.TestFlag(TinyProcessor.FlagCarry);
 
 				case Instructions.JumpHI:
-					return !this.TestFlag(TinyProcessor.FlagZero) && !this.TestFlag(TinyProcessor.FlagNeg);
+					return !this.TestFlag(TinyProcessor.FlagZero) && !this.TestFlag(TinyProcessor.FlagCarry);
 
 				case Instructions.JumpHS:
-					return this.TestFlag(TinyProcessor.FlagZero) || !this.TestFlag(TinyProcessor.FlagNeg);
+					return this.TestFlag(TinyProcessor.FlagZero) || !this.TestFlag(TinyProcessor.FlagCarry);
 
 				case Instructions.JumpCC:
 					return !this.TestFlag(TinyProcessor.FlagCarry);
