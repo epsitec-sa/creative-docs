@@ -380,7 +380,15 @@ namespace Epsitec.App.Dolphin
 						int value = this.Expression(word.Substring(1), pass, true, variables, out err);
 						if (err == null)
 						{
-							word = string.Concat("#H'", value.ToString("X3"));
+							if (Assembler.IsByteOverflow(value))
+							{
+								err = "Valeur hors limites.";
+								return null;
+							}
+							else
+							{
+								word = string.Concat("#H'", value.ToString("X3"));
+							}
 						}
 						else
 						{
@@ -446,6 +454,20 @@ namespace Epsitec.App.Dolphin
 				}
 			}
 			return builder.ToString();
+		}
+
+		protected static bool IsByteOverflow(int value)
+		{
+			//	Vérifie si une valeur dépasse la capacité d'un byte.
+			//	Erreur d'assemblage avec MOVE #256,A ou MOVE -129,A.
+			if (value >= 0)
+			{
+				return value > 255;
+			}
+			else
+			{
+				return value < -128;
+			}
 		}
 
 		protected int Expression(string expression, int pass, bool acceptUndefined, Dictionary<string, int> variables, out string err)

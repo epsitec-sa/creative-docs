@@ -7,7 +7,7 @@ using Epsitec.Common.Widgets;
 namespace Epsitec.App.Dolphin.Components
 {
 	/// <summary>
-	/// Petit processeur 8 bits bien orthogonal.
+	/// Petit processeur 8 bits bien orthogonal, baptisé PSI30 par la suite.
 	/// </summary>
 	public class TinyProcessor : AbstractProcessor
 	{
@@ -15,7 +15,7 @@ namespace Epsitec.App.Dolphin.Components
 		{
 			//	r    (R)  =  A,B,X,Y
 			//	r'   (S)  =  A,B
-			//	ADDR (A)  =  adresse 16 bits, 12 bits valeur, bit 12 = +{X}, bit 13 = +{Y}, bit 15 = relatif
+			//	ADDR (A)  =  adresse 16 bits, 12 bits valeur, bit 12 = +{X}, bit 13 = +{Y}, bit 14 = {SP}+, bit 15 = {PC}+
 			//	#val (V)  =  valeur absolue positive 8 bits
 
 			Nop    = 0x00,
@@ -2188,7 +2188,7 @@ namespace Epsitec.App.Dolphin.Components
 			//	Pré-traitement avant AssemblyInstruction.
 			//	En retour, tout est en majuscule avec un espace pour séparer les arguments.
 			//	Remplace un "JUMP,EQ TOTO" par un "JUMPEQ TOTO".
-			//	Remplace un "TSET A:#2" oar un "TSET #2 A".
+			//	Remplace un "TSET A:#2" par un "TSET #2 A".
 			instruction = TextLayout.ConvertToSimpleText(instruction);  // conversion &apos; en '
 			instruction = instruction.ToUpper().Trim();
 			string[] seps = {" ", ",", ":", "\t"};
@@ -2202,7 +2202,7 @@ namespace Epsitec.App.Dolphin.Components
 					words[1] == "CC" || words[1] == "CS" ||
 					words[1] == "NC" || words[1] == "NS")
 				{
-					words[0] = words[0] + words[1];
+					words[0] = words[0] + words[1];  // "JUMPEQ" par exemple
 					words[1] = null;
 				}
 			}
