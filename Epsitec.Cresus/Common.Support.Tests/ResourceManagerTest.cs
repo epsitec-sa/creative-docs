@@ -95,6 +95,7 @@ namespace Epsitec.Common.Support
 			
 			Assert.AreEqual (ResourceBundle.Field.Null, this.manager.GetBundle ("file/4:Strings")[Druid.Parse ("[4008]")].AsString);
 			Assert.IsNull (this.manager.GetText (Druid.Parse ("[4008]")));
+			Assert.IsNull (this.manager.GetText (Druid.Parse ("[7002]")));
 
 			ResourceBundle bundle = this.manager.GetBundle (new Druid (4, 0, 0));
 
