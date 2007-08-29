@@ -46,29 +46,51 @@ namespace Epsitec.Common.Support.ResourceAccessors
 
 		public override Types.StructuredData LoadCultureData(CultureMap item, string twoLetterISOLanguageName)
 		{
-			ResourceBundle bundle;
+			CultureInfo culture;
+			ResourceLevel level;
 
 			if (twoLetterISOLanguageName == Resources.DefaultTwoLetterISOLanguageName)
 			{
-				bundle = this.ResourceManager.GetBundle (Resources.StringsBundleName, ResourceLevel.Default);
+				culture = null;
+				level = ResourceLevel.Default;
 			}
 			else
 			{
-				CultureInfo culture = Resources.FindCultureInfo (twoLetterISOLanguageName);
-				bundle = this.ResourceManager.GetBundle (Resources.StringsBundleName, ResourceLevel.Localized, culture);
+				culture = Resources.FindCultureInfo (twoLetterISOLanguageName);
+				level   = ResourceLevel.Localized;
+			}
+			
+			ResourceBundle refBundle;
+			ResourceBundle patchBundle;
+			
+			if (this.ResourceManager.BasedOnPatchModule)
+			{
+				refBundle   = this.ResourceManager.GetManagerForReferenceModule ().GetBundle (Resources.StringsBundleName, level, culture);
+				patchBundle = this.ResourceManager.GetBundle (Resources.StringsBundleName, level, culture);
+			}
+			else
+			{
+				refBundle   = this.ResourceManager.GetBundle (Resources.StringsBundleName, level, culture);
+				patchBundle = null;
 			}
 
-			ResourceBundle.Field field = bundle == null ? ResourceBundle.Field.Empty : bundle[item.Id];
+			ResourceBundle.Field refField   = refBundle   == null ? ResourceBundle.Field.Empty : refBundle[item.Id];
+			ResourceBundle.Field patchField = patchBundle == null ? ResourceBundle.Field.Empty : patchBundle[item.Id];
+			
 			Types.StructuredData data  = null;
 
-			if (field.IsEmpty)
+			if ((refField.IsEmpty) &&
+				(patchField.IsEmpty))
 			{
 				data = new Types.StructuredData (Res.Types.ResourceString);
 				item.RecordCultureData (twoLetterISOLanguageName, data);
 			}
 			else
 			{
-				data = this.LoadFromField (field, bundle.Module.Id, twoLetterISOLanguageName);
+				Types.StructuredData data1 = (refField.IsEmpty)   ? null : this.LoadFromField (refField, refBundle.Module.Id, twoLetterISOLanguageName);
+				Types.StructuredData data2 = (patchField.IsEmpty) ? null : this.LoadFromField (patchField, patchBundle.Module.Id, twoLetterISOLanguageName);
+
+				data = data1 ?? data2;
 			}
 
 			return data;
@@ -124,6 +146,8 @@ namespace Epsitec.Common.Support.ResourceAccessors
 
 			ResourceManager refModuleManager = this.ResourceManager.GetManagerForReferenceModule ();
 			bool            usePatchModule   = refModuleManager != null;
+
+			int nonEmptyFieldCount = 0;
 			
 			foreach (string twoLetterISOLanguageName in item.GetDefinedCultures ())
 			{
@@ -143,20 +167,24 @@ namespace Epsitec.Common.Support.ResourceAccessors
 				}
 
 				if ((deleteField) ||
-					((UndefinedValue.IsUndefinedValue (data.GetValue (Res.Fields.ResourceString.Text))) &&
-					 (UndefinedValue.IsUndefinedValue (data.GetValue (Res.Fields.ResourceBase.Comment))) &&
-					 (UndefinedValue.IsUndefinedValue (data.GetValue (Res.Fields.ResourceBase.ModificationId)))))
+					(StringResourceAccessor.IsEmpty (data)))
 				{
-					//	The user decided to kill this string resource by "undefining" it
-					//	completely. If a matching field exists in a bundle, remove it :
+					//	There is no delta found for this resource, so we can safely
+					//	remove it if it is a secondary resource or, if it is the
+					//	primary resource, only remove it if we are sure that there
+					//	are no secondary resources left.
 
-					if (bundle != null)
+					if ((twoLetterISOLanguageName != Resources.DefaultTwoLetterISOLanguageName) ||
+						(nonEmptyFieldCount == 0))
 					{
-						int index = bundle.IndexOf (item.Id);
-						
-						if (index >= 0)
+						if (bundle != null)
 						{
-							bundle.Remove (index);
+							int index = bundle.IndexOf (item.Id);
+
+							if (index >= 0)
+							{
+								bundle.Remove (index);
+							}
 						}
 					}
 				}
@@ -208,8 +236,17 @@ namespace Epsitec.Common.Support.ResourceAccessors
 					field.SetAbout (about);
 
 					StringResourceAccessor.SetModificationId (field, modId);
+					
+					nonEmptyFieldCount++;
 				}
 			}
+		}
+
+		private static bool IsEmpty(StructuredData data)
+		{
+			return (UndefinedValue.IsUndefinedValue (data.GetValue (Res.Fields.ResourceString.Text)))
+				&& (UndefinedValue.IsUndefinedValue (data.GetValue (Res.Fields.ResourceBase.Comment)))
+				&& (UndefinedValue.IsUndefinedValue (data.GetValue (Res.Fields.ResourceBase.ModificationId)));
 		}
 
 		private bool ComputeDelta(ResourceManager refModuleManager, ref StructuredData data, CultureInfo culture, ResourceLevel level, ResourceBundle patchBundle, Druid druid)

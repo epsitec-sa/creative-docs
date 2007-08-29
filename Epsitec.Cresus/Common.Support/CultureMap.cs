@@ -181,12 +181,29 @@ namespace Epsitec.Common.Support
 		/// Gets the enumeration of all defined cultures, even the empty ones.
 		/// </summary>
 		/// <returns>The enumeration of all defined cultures, using their two
-		/// letter ISO language name.</returns>
+		/// letter ISO language name; the default culture will be returned as
+		/// the last one.</returns>
 		public IEnumerable<string> GetDefinedCultures()
 		{
+			bool hasDefault = false;
+
 			for (int i = 0; i < this.map.Length; i++)
 			{
-				yield return this.map[i].Key;
+				if (this.map[i].Key == Resources.DefaultTwoLetterISOLanguageName)
+				{
+					hasDefault = true;
+				}
+				else
+				{
+					yield return this.map[i].Key;
+				}
+			}
+
+			//	Make sure we return the default culture last.
+
+			if (hasDefault)
+			{
+				yield return Resources.DefaultTwoLetterISOLanguageName;
 			}
 		}
 

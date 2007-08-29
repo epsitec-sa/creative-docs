@@ -189,7 +189,7 @@ namespace Epsitec.Common.Support
 			Assert.AreEqual (CultureMapSource.ReferenceModule, stringAccessor2.Collection[0].Source);
 			Assert.AreEqual (CultureMapSource.DynamicMerge, stringAccessor2.Collection[1].Source);
 			Assert.AreEqual (CultureMapSource.ReferenceModule, stringAccessor2.Collection[2].Source);
-			Assert.AreEqual (CultureMapSource.ReferenceModule, stringAccessor2.Collection[3].Source);
+			Assert.AreEqual (CultureMapSource.DynamicMerge, stringAccessor2.Collection[3].Source);
 			Assert.AreEqual (CultureMapSource.PatchModule, stringAccessor2.Collection[4].Source);
 
 			Assert.IsTrue (ResourceModuleTest.GetText (stringAccessor1, 0, null).StartsWith ("Taille"));
@@ -205,13 +205,13 @@ namespace Epsitec.Common.Support
 			Assert.AreEqual ("Pierre ARNAUD", ResourceModuleTest.GetText (stringAccessor2, 1, null));
 			Assert.AreEqual (null, ResourceModuleTest.GetText (stringAccessor1, 2, null));
 			Assert.AreEqual (null, ResourceModuleTest.GetText (stringAccessor2, 2, null));
-			Assert.AreEqual ("Pierre Arnaud &amp; EPSITEC SA", ResourceModuleTest.GetText (stringAccessor1, 3, null));
-			Assert.AreEqual ("Pierre Arnaud &amp; EPSITEC SA", ResourceModuleTest.GetText (stringAccessor2, 3, null));
-			Assert.AreEqual ("Pierre Arnaud &amp; EPSITEC SA (Schweiz)", ResourceModuleTest.GetText (stringAccessor1, 3, "de"));
-			Assert.AreEqual ("Pierre Arnaud &amp; EPSITEC SA (Schweiz)", ResourceModuleTest.GetText (stringAccessor2, 3, "de"));	//<--
-			Assert.AreEqual (null, ResourceModuleTest.GetText (stringAccessor1, 3, "en"));
-			Assert.AreEqual ("Pierre Arnaud &amp; EPSITEC SA (Switzerland)", ResourceModuleTest.GetText (stringAccessor2, 3, "en"));
-			Assert.AreEqual ("foo", ResourceModuleTest.GetText (stringAccessor2, 4, null));
+			Assert.AreEqual ("Pierre Arnaud &amp; EPSITEC SA", ResourceModuleTest.GetText (stringAccessor1, 3, null));				//	define
+			Assert.AreEqual ("Pierre Arnaud &amp; EPSITEC SA", ResourceModuleTest.GetText (stringAccessor2, 3, null));				//	inherit
+			Assert.AreEqual ("Pierre Arnaud &amp; EPSITEC SA (Schweiz)", ResourceModuleTest.GetText (stringAccessor1, 3, "de"));	//	define
+			Assert.AreEqual ("Pierre Arnaud &amp; EPSITEC SA (Schweiz)", ResourceModuleTest.GetText (stringAccessor2, 3, "de"));	//	inherit
+			Assert.AreEqual (null, ResourceModuleTest.GetText (stringAccessor1, 3, "en"));											//	(no definition)
+			Assert.AreEqual ("Pierre Arnaud &amp; OPaC bright ideas", ResourceModuleTest.GetText (stringAccessor2, 3, "en"));		//	override
+			Assert.AreEqual ("foo", ResourceModuleTest.GetText (stringAccessor2, 4, null));											//	local definition
 			Assert.AreEqual ("Cf. Common.Support.Tests", ResourceModuleTest.GetComment (stringAccessor1, 1, null));
 			Assert.AreEqual ("Cf. Common.Support.Tests", ResourceModuleTest.GetComment (stringAccessor2, 1, null));
 		}
