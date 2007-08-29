@@ -568,6 +568,15 @@ namespace Epsitec.App.Dolphin
 			return null;
 		}
 
+		protected enum FragmentType
+		{
+			Unknow,
+			Number,
+			Text,
+			Special,
+			Character,
+		}
+
 		protected static List<string> Fragment(string expression)
 		{
 			//	Fragmente une expression en "mots" élémentaires.
@@ -577,54 +586,69 @@ namespace Epsitec.App.Dolphin
 
 			int i = 0;
 			int start = 0;
-			char type = ' ';
+			int skip = 0;
+			FragmentType type = FragmentType.Unknow;
 			while (i < expression.Length)
 			{
 				char c = expression[i++];
 
-				char newType;
-				if (c >= '0' && c <= '9')
+				FragmentType newType;
+				if (skip > 0)
 				{
-					if (type == 't')
+					skip--;
+					newType = type;
+				}
+				else if (c >= '0' && c <= '9')
+				{
+					if (type == FragmentType.Text)
 					{
-						newType = 't';
+						newType = FragmentType.Text;
 					}
 					else
 					{
-						newType = 'n';
+						newType = FragmentType.Number;
 					}
 				}
 				else if (i < expression.Length && expression[i] == '\'')  // "X'" ?
 				{
-					newType = 'n';
+					newType = FragmentType.Number;
 				}
 				else if (c == '\'')
 				{
-					newType = 'n';
+					newType = FragmentType.Number;
 				}
 				else if (c >= 'A' && c <= 'Z')
 				{
-					if (type == 'n')
+					if (type == FragmentType.Number)
 					{
-						newType = 'n';
+						newType = FragmentType.Number;
 					}
 					else
 					{
-						newType = 't';
+						newType = FragmentType.Text;
 					}
 				}
 				else if (c == '_')
 				{
-					newType = 't';
+					newType = FragmentType.Text;
+				}
+				else if (c == '"' && ((i < expression.Length-1 && expression[i+1] == '"') || (i < expression.Length-2 && expression[i] == '\\' && expression[i+2] == '"')))
+				{
+					newType = FragmentType.Character;
+					skip = 2;
+					if (expression[i] == '\\')
+					{
+						skip++;
+					}
 				}
 				else
 				{
-					newType = 's';
+					newType = FragmentType.Special;
 				}
 
-				if (newType != type || newType == 's')
+				if (newType != type || newType == FragmentType.Special)
 				{
-					if (type != ' ')
+					if (type != FragmentType.Unknow)
 					{
 						string word = expression.Substring(start, i-start-1).Trim();
 						if (!string.IsNullOrEmpty(word))
@@ -638,7 +662,7 @@ namespace Epsitec.App.Dolphin
 				}
 			}
 
-			if (type != ' ')
+			if (type != FragmentType.Unknow)
 			{
 				string word = expression.Substring(start, i-start).Trim();
 				if (!string.IsNullOrEmpty(word))
@@ -697,6 +721,28 @@ namespace Epsitec.App.Dolphin
 			{
 				err = null;
 				return Misc.undefined;
+			}
+
+			if (word[0] == '"')  // caractère ascii ?
+			{
+				if (word.Length < 2)
+				{
+					err = "Caractère incorrect.";
+					return Misc.undefined;
+				}
+
+				char c;
+				if (word[1] == '\\')
+				{
+					c = word[2];
+				}
+				else
+				{
+					c = word[1];
+				}
+
+				err = null;
+				return (int) c;
 			}
 
 			if (word[0] >= '0' && word[0] <= '9')  // décimal par défaut ?
