@@ -33,6 +33,22 @@ namespace Epsitec.App.Dolphin.MyWidgets
 		}
 
 
+		public double Brightness
+		{
+			get
+			{
+				return this.brightness;
+			}
+			set
+			{
+				if (this.brightness != value)
+				{
+					this.brightness = value;
+					this.Invalidate();
+				}
+			}
+		}
+
 		public bool DrawScrew
 		{
 			//	Faut-il dessiner les vis dans les quatre coins ?
@@ -55,16 +71,16 @@ namespace Epsitec.App.Dolphin.MyWidgets
 			Path rr = new Path();
 			rr.AppendRoundedRectangle(rect, 7);
 
-			if (this.BackColor.IsVisible)
+			if (this.brightness != -1)
 			{
 				graphics.Rasterizer.AddSurface(rr);
-				graphics.RenderSolid(this.BackColor);
+				graphics.RenderSolid(DolphinApplication.FromBrightness(this.brightness));
 			}
 
 			if (this.DrawFullFrame)
 			{
 				graphics.Rasterizer.AddOutline(rr);
-				graphics.RenderSolid(Color.FromBrightness(0));
+				graphics.RenderSolid(DolphinApplication.FromBrightness(0));
 			}
 
 			if (this.DrawScrew)
@@ -92,7 +108,7 @@ namespace Epsitec.App.Dolphin.MyWidgets
 			Rectangle rect = new Rectangle(center.X-radius, center.Y-radius, radius*2, radius*2);
 
 			graphics.AddFilledCircle(center, radius);
-			Geometry.RenderVerticalGradient(graphics, rect, Color.FromBrightness(0.4), Color.FromBrightness(1.0));
+			Geometry.RenderVerticalGradient(graphics, rect, DolphinApplication.FromBrightness(0.4), DolphinApplication.FromBrightness(1.0));
 
 			Path fence = new Path();  // chemin approximatif (hexagone irrégulier) pour la fente
 			fence.MoveTo(p1);
@@ -104,14 +120,14 @@ namespace Epsitec.App.Dolphin.MyWidgets
 			fence.Close();
 
 			graphics.Rasterizer.AddSurface(fence);
-			graphics.RenderSolid(Color.FromBrightness(0.5));
+			graphics.RenderSolid(DolphinApplication.FromBrightness(0.5));
 
 			graphics.AddCircle(center, radius);
-			graphics.RenderSolid(Color.FromBrightness(0));
+			graphics.RenderSolid(DolphinApplication.FromBrightness(0));
 
 			graphics.AddLine(p1, p2);
 			graphics.AddLine(p3, p4);
-			graphics.RenderSolid(Color.FromBrightness(0));
+			graphics.RenderSolid(DolphinApplication.FromBrightness(0));
 
 			fence.Dispose();
 		}
@@ -119,6 +135,7 @@ namespace Epsitec.App.Dolphin.MyWidgets
 
 		public static readonly DependencyProperty DrawScrewProperty = DependencyProperty.Register("DrawScrew", typeof(bool), typeof(Panel), new VisualPropertyMetadata(false, VisualPropertyMetadataOptions.AffectsDisplay));
 
+		protected double brightness = -1;
 		protected double[] screwAngles;
 	}
 }

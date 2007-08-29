@@ -47,7 +47,7 @@ namespace Epsitec.App.Dolphin.MyWidgets
 			Color activatorColor = this.FromBrightness(0.9);
 			if (little && this.ActiveState == ActiveState.Yes)
 			{
-				activatorColor = Color.FromRgb(1, 0, 0);  // rouge
+				activatorColor = DolphinApplication.ColorHilite;  // rouge
 			}
 
 			if (rectExt.Width < rectExt.Height)  // bouton vertical ?
@@ -150,7 +150,7 @@ namespace Epsitec.App.Dolphin.MyWidgets
 				return Color.FromHsv(35, 1.0-brightness*0.5, 1);  // orange
 			}
 
-			return Color.FromBrightness(brightness);
+			return DolphinApplication.FromBrightness(brightness);
 		}
 	}
 }

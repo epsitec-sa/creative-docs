@@ -43,33 +43,33 @@ namespace Epsitec.App.Dolphin.MyWidgets
 
 				//	Dessine l'intérieur allumé.
 				graphics.AddFilledCircle(rect.Center, radiusInt);
-				graphics.RenderSolid(Color.FromRgb(1,0,0));
+				graphics.RenderSolid(DolphinApplication.ColorHilite);
 
 				//	Dessine le reflet.
 				Point rc = new Point(rect.Center.X-3, rect.Center.Y+3);
 				graphics.AddFilledCircle(rc, 5);
-				Geometry.RenderCircularGradient(graphics, rc, 5, Color.FromAlphaRgb(0, 1.0, 1.0, 1.0), Color.FromBrightness(1.0));
+				Geometry.RenderCircularGradient(graphics, rc, 5, Color.FromAlphaRgb(0, 1.0, 1.0, 1.0), DolphinApplication.FromBrightness(1.0));
 			}
 			else
 			{
 				//	Dessine le tout.
 				graphics.AddFilledCircle(rect.Center, radiusExt);
-				Geometry.RenderVerticalGradient(graphics, rect, Color.FromBrightness(0.6), Color.FromBrightness(1.0));
+				Geometry.RenderVerticalGradient(graphics, rect, DolphinApplication.FromBrightness(0.6), DolphinApplication.FromBrightness(1.0));
 
 				//	Dessine l'intérieur éteint.
 				graphics.AddFilledCircle(rect.Center, radiusInt);
-				Geometry.RenderVerticalGradient(graphics, rectInt, Color.FromBrightness(0.4), Color.FromBrightness(0.7));
+				Geometry.RenderVerticalGradient(graphics, rectInt, DolphinApplication.FromBrightness(0.4), DolphinApplication.FromBrightness(0.7));
 
 				//	Dessine le reflet.
 				Point rc = new Point(rect.Center.X-3, rect.Center.Y+3);
 				graphics.AddFilledCircle(rc, 7);
-				Geometry.RenderCircularGradient(graphics, rc, 7, Color.FromAlphaRgb(0, 1.0, 1.0, 1.0), Color.FromBrightness(1.0));
+				Geometry.RenderCircularGradient(graphics, rc, 7, Color.FromAlphaRgb(0, 1.0, 1.0, 1.0), DolphinApplication.FromBrightness(1.0));
 			}
 
 			//	Dessine les cercles.
 			graphics.AddCircle(rect.Center, radiusExt);
 			graphics.AddCircle(rect.Center, radiusInt);
-			graphics.RenderSolid(Color.FromBrightness(0));
+			graphics.RenderSolid(DolphinApplication.FromBrightness(0));
 		}
 
 	}

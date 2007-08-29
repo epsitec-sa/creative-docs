@@ -104,7 +104,7 @@ namespace Epsitec.App.Dolphin.MyWidgets
 			Rectangle rect = this.Client.Bounds;
 
 			graphics.AddFilledRectangle(rect);
-			graphics.RenderSolid(Color.FromBrightness(0));
+			graphics.RenderSolid(DolphinApplication.FromBrightness(0));
 
 			for (int i=0; i<Digit.EnumTable.Length; i++)  // TODO: on peut faire mieux, mais je ne trouve plus...
 			{
@@ -113,7 +113,7 @@ namespace Epsitec.App.Dolphin.MyWidgets
 				Path path = this.GetSegmentPath(segment);
 				System.Diagnostics.Debug.Assert(path != null);
 
-				Color color = ((this.segmentValue & segment) != 0) ? Color.FromRgb(1, 0, 0) : Color.FromBrightness(0.2);
+				Color color = ((this.segmentValue & segment) != 0) ? DolphinApplication.ColorHilite : DolphinApplication.FromBrightness(0.2);
 
 				graphics.Rasterizer.AddSurface(path);
 				graphics.RenderSolid(color);  // dessine le segment

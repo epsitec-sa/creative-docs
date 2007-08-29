@@ -85,6 +85,23 @@ namespace Epsitec.App.Dolphin.MyWidgets
 		}
 
 
+		public bool IsBackHilite
+		{
+			//	Détermine si le widget à un fond mis en évidence.
+			get
+			{
+				return this.isBackHilite;
+			}
+			set
+			{
+				if (this.isBackHilite != value)
+				{
+					this.isBackHilite = value;
+					this.Invalidate();
+				}
+			}
+		}
+
 		public void SetTabIndex(int index)
 		{
 			//	Spécifie l'ordre pour la navigation avec Tab.
@@ -236,11 +253,10 @@ namespace Epsitec.App.Dolphin.MyWidgets
 
 		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
 		{
-			Color color = this.BackColor;
-			if (!color.IsEmpty)
+			if (this.isBackHilite)
 			{
 				graphics.AddFilledRectangle(this.Client.Bounds);
-				graphics.RenderSolid(color);  // dessine un fond rouge si MarkPC
+				graphics.RenderSolid(DolphinApplication.ColorHilite);  // dessine un fond rouge si MarkPC
 			}
 		}
 
@@ -503,6 +519,7 @@ namespace Epsitec.App.Dolphin.MyWidgets
 		protected bool							isTable;
 		protected bool							isErrorMet;
 		protected bool							isErrorDialogPending;
+		protected bool							isBackHilite;
 
 		protected StaticText					widgetAddress;
 		protected List<TextField>				widgetCodes;

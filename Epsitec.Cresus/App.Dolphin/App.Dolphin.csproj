@@ -107,6 +107,7 @@
     <None Include="App.ico" />
     <EmbeddedResource Include="Images\Application.icon" />
     <None Include="Dolphin.ico" />
+    <EmbeddedResource Include="Images\Look.icon" />
     <EmbeddedResource Include="Images\FullScreen.icon" />
     <EmbeddedResource Include="Images\FontBig.icon" />
     <EmbeddedResource Include="Images\SaveCalm.icon" />

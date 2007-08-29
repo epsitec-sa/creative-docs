@@ -109,6 +109,23 @@ namespace Epsitec.App.Dolphin.MyWidgets
 		}
 
 
+		public bool IsBackHilite
+		{
+			//	Détermine si le widget à un fond mis en évidence.
+			get
+			{
+				return this.isBackHilite;
+			}
+			set
+			{
+				if (this.isBackHilite != value)
+				{
+					this.isBackHilite = value;
+					this.Invalidate();
+				}
+			}
+		}
+
 		public void SetTabIndex(int index)
 		{
 			//	Spécifie l'ordre pour la navigation avec Tab.
@@ -276,11 +293,10 @@ namespace Epsitec.App.Dolphin.MyWidgets
 
 		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
 		{
-			Color color = this.BackColor;
-			if (!color.IsEmpty)
+			if (this.isBackHilite)
 			{
 				graphics.AddFilledRectangle(this.Client.Bounds);
-				graphics.RenderSolid(color);  // dessine un fond rouge si MarkPC
+				graphics.RenderSolid(DolphinApplication.ColorHilite);  // dessine un fond rouge si MarkPC
 			}
 		}
 
@@ -385,15 +401,16 @@ namespace Epsitec.App.Dolphin.MyWidgets
 		// Pour forcer l'initialisation la première fois qu'une valeur est donnée.
 		protected static readonly string	initValue = "??";
 
-		protected int						bitCount = -1;
-		protected string					bitNames;
-		protected MemoryAccessor			memoryAccessor;
+		protected int							bitCount = -1;
+		protected string						bitNames;
+		protected MemoryAccessor				memoryAccessor;
+		protected bool							isBackHilite;
 
-		protected StaticText				label;
-		protected TextField					textField;
-		protected GlyphButton				buttonPlus;
-		protected GlyphButton				buttonMinus;
-		protected GlyphButton				buttonClear;
-		protected List<PushButton>			buttons;
+		protected StaticText					label;
+		protected TextField						textField;
+		protected GlyphButton					buttonPlus;
+		protected GlyphButton					buttonMinus;
+		protected GlyphButton					buttonClear;
+		protected List<PushButton>				buttons;
 	}
 }

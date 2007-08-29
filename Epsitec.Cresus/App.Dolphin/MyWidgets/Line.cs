@@ -28,7 +28,7 @@ namespace Epsitec.App.Dolphin.MyWidgets
 			Rectangle rect = this.Client.Bounds;
 
 			graphics.AddFilledRectangle(rect);
-			graphics.RenderSolid(Color.FromBrightness(0));
+			graphics.RenderSolid(DolphinApplication.FromBrightness(0));
 		}
 
 	}

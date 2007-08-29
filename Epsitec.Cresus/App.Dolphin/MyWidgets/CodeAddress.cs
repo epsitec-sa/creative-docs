@@ -110,9 +110,9 @@ namespace Epsitec.App.Dolphin.MyWidgets
 					graphics.RenderSolid(Color.FromRgb(1.0, 0.8, 0.0));  // orange
 
 					graphics.AddRectangle(box);
-					graphics.RenderSolid(Color.FromBrightness(0.41));  // gris foncé
+					graphics.RenderSolid(DolphinApplication.FromBrightness(0.41));  // gris foncé
 
-					graphics.Color = Color.FromBrightness(0);
+					graphics.Color = DolphinApplication.FromBrightness(0);
 					graphics.PaintText(box.Left, box.Bottom+1, box.Width, box.Height, "!", Font.GetFont(Font.DefaultFontFamily, "Bold"), 14, ContentAlignment.MiddleCenter);
 				}
 
@@ -121,10 +121,10 @@ namespace Epsitec.App.Dolphin.MyWidgets
 				if (address.Hilite)
 				{
 					graphics.Rasterizer.AddOutline(path, 6);
-					graphics.RenderSolid(Color.FromBrightness(0.8));  // fond gris clair, utile si MarkPC
+					graphics.RenderSolid(DolphinApplication.FromBrightness(0.8));  // fond gris clair, utile si MarkPC
 				}
 
-				Color color = address.Hilite ? Color.FromRgb(1.0, 0.0, 0.0) : CodeAddress.colors[address.BaseAddress/3%4];
+				Color color = address.Hilite ? DolphinApplication.ColorHilite : CodeAddress.colors[address.BaseAddress/3%4];
 
 				if (address.Error)
 				{
@@ -227,10 +227,10 @@ namespace Epsitec.App.Dolphin.MyWidgets
 
 		protected static readonly Color[] colors =
 		{
-			Color.FromBrightness(0.6),
-			Color.FromBrightness(0.4),
-			Color.FromBrightness(0.2),
-			Color.FromBrightness(0.0),
+			DolphinApplication.FromBrightness(0.6),
+			DolphinApplication.FromBrightness(0.4),
+			DolphinApplication.FromBrightness(0.2),
+			DolphinApplication.FromBrightness(0.0),
 		};
 
 

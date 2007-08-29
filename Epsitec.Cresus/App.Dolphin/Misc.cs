@@ -12,6 +12,23 @@ namespace Epsitec.App.Dolphin
 	/// </summary>
 	public class Misc
 	{
+		static public double Norm(double value)
+		{
+			if (value < 0)
+			{
+				return 0;
+			}
+			else if (value > 1)
+			{
+				return 1;
+			}
+			else
+			{
+				return value;
+			}
+		}
+
+
 		static public string RemoveSpaces(string text)
 		{
 			//	Supprime tous les espaces dans un texte.

@@ -522,15 +522,7 @@ namespace Epsitec.App.Dolphin.MyWidgets
 			for (int i=0; i<this.fields.Count; i++)
 			{
 				int address = this.MemoryStart+this.instructionAddresses[index].Address;
-
-				Color color = Color.Empty;
-				if (address == this.markPC)
-				{
-					color = Color.FromRgb(1, 0, 0);
-				}
-
-				this.fields[i].BackColor = color;
-
+				this.fields[i].IsBackHilite = (address == this.markPC);
 				index++;
 			}
 		}

@@ -253,14 +253,14 @@ namespace Epsitec.App.Dolphin.MyWidgets
 				reflect.Bottom = reflect.Top-reflect.Width;
 				reflect.Offset(-reflect.Width*0.2, reflect.Width*0.2);
 				graphics.AddFilledRectangle(reflect);
-				Geometry.RenderCircularGradient(graphics, reflect.Center, reflect.Width/2, Color.FromAlphaRgb(0.0, 0.2, 0.2, 0.2), Color.FromBrightness(0.2));
+				Geometry.RenderCircularGradient(graphics, reflect.Center, reflect.Width/2, Color.FromAlphaRgb(0.0, 0.2, 0.2, 0.2), DolphinApplication.FromBrightness(0.2));
 
 				reflect = rect;
 				reflect.Width *= 0.2;
 				reflect.Bottom = reflect.Top-reflect.Width;
 				reflect.Offset(-reflect.Width*0.2, reflect.Width*0.2);
 				graphics.AddFilledRectangle(reflect);
-				Geometry.RenderCircularGradient(graphics, reflect.Center, reflect.Width/2, Color.FromAlphaRgb(0.0, 0.3, 0.3, 0.3), Color.FromBrightness(0.3));
+				Geometry.RenderCircularGradient(graphics, reflect.Center, reflect.Width/2, Color.FromAlphaRgb(0.0, 0.3, 0.3, 0.3), DolphinApplication.FromBrightness(0.3));
 			}
 
 			if (this.type == Type.LCD)
@@ -429,7 +429,7 @@ namespace Epsitec.App.Dolphin.MyWidgets
 				return Color.FromHsv(35, 1.0-brightness*0.5, 1);  // orange
 			}
 
-			return Color.FromBrightness(brightness);
+			return DolphinApplication.FromBrightness(brightness);
 		}
 
 		
