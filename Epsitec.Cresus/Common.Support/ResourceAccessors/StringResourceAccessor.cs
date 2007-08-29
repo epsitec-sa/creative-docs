@@ -119,18 +119,17 @@ namespace Epsitec.Common.Support.ResourceAccessors
 				throw new System.ArgumentException (string.Format ("No name for item {0}", item.Id));
 			}
 
-			ResourceLevel level;
-			ResourceBundle bundle;
-			CultureInfo culture;
-			ResourceBundle.Field field;
-			StructuredData data;
-
-			string text;
-			string about;
-			object modId;
+			bool patch = this.ResourceManager.BasedOnPatchModule;
 
 			foreach (string twoLetterISOLanguageName in item.GetDefinedCultures ())
 			{
+				ResourceLevel level;
+				ResourceBundle bundle;
+				CultureInfo culture;
+				ResourceBundle.Field field;
+				StructuredData data;
+
+				data    = item.GetCultureData (twoLetterISOLanguageName);
 				culture = Resources.FindCultureInfo (twoLetterISOLanguageName);
 				level   = twoLetterISOLanguageName == Resources.DefaultTwoLetterISOLanguageName ? ResourceLevel.Default : ResourceLevel.Localized;
 				bundle  = this.ResourceManager.GetBundle (Resources.StringsBundleName, level, culture);
@@ -151,14 +150,16 @@ namespace Epsitec.Common.Support.ResourceAccessors
 					bundle.Add (field);
 				}
 
-				data = item.GetCultureData (twoLetterISOLanguageName);
-				
 				if (Types.UndefinedValue.IsUndefinedValue (data.GetValue (Res.Fields.ResourceString.Text)))
 				{
 					bundle.Remove (bundle.IndexOf (item.Id));
 				}
 				else
 				{
+					string text;
+					string about;
+					object modId;
+
 					text  = data.GetValue (Res.Fields.ResourceString.Text) as string;
 					about = data.GetValue (Res.Fields.ResourceBase.Comment) as string;
 					modId = data.GetValue (Res.Fields.ResourceBase.ModificationId);
