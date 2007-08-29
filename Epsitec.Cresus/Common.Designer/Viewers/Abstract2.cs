@@ -773,7 +773,7 @@ namespace Epsitec.Common.Designer.Viewers
 			{
 				//	Crée le contenu pour une colonne primaire ou secondaire.
 				//	Par optimisation, un seul widget est créé s'il n'y a pas de couleur de fond.
-				string text = this.owner.GetColumnText(item, twoLettersCulture);
+				string text = this.owner.GetColumnText(item, twoLettersCulture) ?? ResourceBundle.Field.Null;
 				if (shape == UI.ItemViewShape.ToolTip && string.IsNullOrEmpty(text))
 				{
 					return null;
