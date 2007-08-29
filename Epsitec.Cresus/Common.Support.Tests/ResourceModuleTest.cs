@@ -173,21 +173,24 @@ namespace Epsitec.Common.Support
 			stringAccessor1.Load (manager1);
 			stringAccessor2.Load (manager2);
 
-			Assert.AreEqual (3, stringAccessor1.Collection.Count);
+			Assert.AreEqual (4, stringAccessor1.Collection.Count);
 			Assert.AreEqual ("Image.Description", stringAccessor1.Collection[0].Name);
 			Assert.AreEqual ("Author", stringAccessor1.Collection[1].Name);
 			Assert.AreEqual ("Null", stringAccessor1.Collection[2].Name);
+			Assert.AreEqual ("CopyrightHolder", stringAccessor1.Collection[3].Name);
 			Assert.AreEqual (CultureMapSource.ReferenceModule, stringAccessor1.Collection[0].Source);
 
-			Assert.AreEqual (4, stringAccessor2.Collection.Count);
+			Assert.AreEqual (5, stringAccessor2.Collection.Count);
 			Assert.AreEqual ("Image.Description", stringAccessor2.Collection[0].Name);
 			Assert.AreEqual ("Author", stringAccessor2.Collection[1].Name);
 			Assert.AreEqual ("Null", stringAccessor2.Collection[2].Name);
-			Assert.AreEqual ("Foo", stringAccessor2.Collection[3].Name);
+			Assert.AreEqual ("CopyrightHolder", stringAccessor2.Collection[3].Name);
+			Assert.AreEqual ("Foo", stringAccessor2.Collection[4].Name);
 			Assert.AreEqual (CultureMapSource.ReferenceModule, stringAccessor2.Collection[0].Source);
 			Assert.AreEqual (CultureMapSource.DynamicMerge, stringAccessor2.Collection[1].Source);
 			Assert.AreEqual (CultureMapSource.ReferenceModule, stringAccessor2.Collection[2].Source);
-			Assert.AreEqual (CultureMapSource.PatchModule, stringAccessor2.Collection[3].Source);
+			Assert.AreEqual (CultureMapSource.ReferenceModule, stringAccessor2.Collection[3].Source);
+			Assert.AreEqual (CultureMapSource.PatchModule, stringAccessor2.Collection[4].Source);
 
 			Assert.IsTrue (ResourceModuleTest.GetText (stringAccessor1, 0, null).StartsWith ("Taille"));
 			Assert.IsTrue (ResourceModuleTest.GetText (stringAccessor2, 0, null).StartsWith ("Taille"));
@@ -202,7 +205,13 @@ namespace Epsitec.Common.Support
 			Assert.AreEqual ("Pierre ARNAUD", ResourceModuleTest.GetText (stringAccessor2, 1, null));
 			Assert.AreEqual (null, ResourceModuleTest.GetText (stringAccessor1, 2, null));
 			Assert.AreEqual (null, ResourceModuleTest.GetText (stringAccessor2, 2, null));
-			Assert.AreEqual ("foo", ResourceModuleTest.GetText (stringAccessor2, 3, null));
+			Assert.AreEqual ("Pierre Arnaud &amp; EPSITEC SA", ResourceModuleTest.GetText (stringAccessor1, 3, null));
+			Assert.AreEqual ("Pierre Arnaud &amp; EPSITEC SA", ResourceModuleTest.GetText (stringAccessor2, 3, null));
+			Assert.AreEqual ("Pierre Arnaud &amp; EPSITEC SA (Schweiz)", ResourceModuleTest.GetText (stringAccessor1, 3, "de"));
+			Assert.AreEqual ("Pierre Arnaud &amp; EPSITEC SA (Schweiz)", ResourceModuleTest.GetText (stringAccessor2, 3, "de"));	//<--
+			Assert.AreEqual (null, ResourceModuleTest.GetText (stringAccessor1, 3, "en"));
+			Assert.AreEqual ("Pierre Arnaud &amp; EPSITEC SA (Switzerland)", ResourceModuleTest.GetText (stringAccessor2, 3, "en"));
+			Assert.AreEqual ("foo", ResourceModuleTest.GetText (stringAccessor2, 4, null));
 			Assert.AreEqual ("Cf. Common.Support.Tests", ResourceModuleTest.GetComment (stringAccessor1, 1, null));
 			Assert.AreEqual ("Cf. Common.Support.Tests", ResourceModuleTest.GetComment (stringAccessor2, 1, null));
 		}

@@ -32,6 +32,9 @@ namespace Epsitec.Common.Support.ResourceAccessors
 				System.Diagnostics.Debug.Assert (refModuleManager != null);
 				System.Diagnostics.Debug.Assert (refModuleManager.BasedOnPatchModule == false);
 
+				//	Load the data from the reference module first, then from the
+				//	patch module; this will effectively merge both information :
+				
 				this.LoadFromBundle (refModuleManager.GetBundle (Resources.StringsBundleName, ResourceLevel.Default), Resources.DefaultTwoLetterISOLanguageName);
 				this.LoadFromBundle (patchModuleManager.GetBundle (Resources.StringsBundleName, ResourceLevel.Default), Resources.DefaultTwoLetterISOLanguageName);
 			}
@@ -55,8 +58,8 @@ namespace Epsitec.Common.Support.ResourceAccessors
 				bundle = this.ResourceManager.GetBundle (Resources.StringsBundleName, ResourceLevel.Localized, culture);
 			}
 
-			ResourceBundle.Field field   = bundle == null ? ResourceBundle.Field.Empty : bundle[item.Id];
-			Types.StructuredData data    = null;
+			ResourceBundle.Field field = bundle == null ? ResourceBundle.Field.Empty : bundle[item.Id];
+			Types.StructuredData data  = null;
 
 			if (field.IsEmpty)
 			{

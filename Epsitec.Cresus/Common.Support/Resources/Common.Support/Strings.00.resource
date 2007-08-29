@@ -3,4 +3,5 @@
   <data name="Image.Description" id="0">Taille: {0} × {1}&lt;br/&gt;Format: {2}</data>
   <data name="Author" id="01" about="Cf. Common.Support.Tests">Pierre Arnaud</data>
   <data name="Null" id="02" about="Always NULL string">&lt;null/&gt;</data>
+  <data name="CopyrightHolder" id="03">Pierre Arnaud &amp;amp; EPSITEC SA</data>
 </bundle>
