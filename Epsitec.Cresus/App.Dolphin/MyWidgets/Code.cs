@@ -253,7 +253,7 @@ namespace Epsitec.App.Dolphin.MyWidgets
 			string instruction = this.processor.AssemblyPreprocess(this.widgetInstruction.Text);
 			string err = this.processor.AssemblyInstruction(instruction, codes);
 
-			if (codes.Count == 0 || !string.IsNullOrEmpty(err))
+			if (!string.IsNullOrEmpty(err))
 			{
 				Message message = Message.GetLastMessage();
 				message.Consumer = this;
@@ -303,18 +303,11 @@ namespace Epsitec.App.Dolphin.MyWidgets
 			string instruction = this.processor.AssemblyPreprocess(this.widgetInstruction.Text);
 			string err = this.processor.AssemblyInstruction(instruction, codes);
 
-			if (codes.Count == 0 || !string.IsNullOrEmpty(err))
+			if (!string.IsNullOrEmpty(err))
 			{
 				//	Cela ne devrait jamais se produire, puisque l'on a déjà tout vérifié
 				//	dans la méthode HandleInstructionAcceptingEdition :
-
 				this.isErrorMet = true;
-
-				string title = "Dauphin";
-				string icon = "manifest:Epsitec.Common.Dialogs.Images.Warning.icon";
-				Common.Dialogs.IDialog dialog = Common.Dialogs.MessageDialog.CreateOk(title, icon, err, null, null);
-				dialog.Owner = this.Window;
-				dialog.OpenDialog();
 			}
 			else
 			{
