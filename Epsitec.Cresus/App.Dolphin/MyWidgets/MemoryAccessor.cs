@@ -226,12 +226,20 @@ namespace Epsitec.App.Dolphin.MyWidgets
 				return;
 			}
 
-			this.scroller.MinValue = (decimal) 0;
-			this.scroller.MaxValue = (decimal) (this.MemoryLength - this.fields.Count);
-			this.scroller.Value = (decimal) this.firstAddress;
-			this.scroller.VisibleRangeRatio = (decimal) System.Math.Max((double) this.fields.Count/this.MemoryLength, 0.2);  // évite cabine trop petite
-			this.scroller.LargeChange = (decimal) this.fields.Count;
-			this.scroller.SmallChange = (decimal) 1;
+			if (this.firstAddress >= 0)
+			{
+				this.scroller.MinValue = (decimal) 0;
+				this.scroller.MaxValue = (decimal) (this.MemoryLength - this.fields.Count);
+				this.scroller.Value = (decimal) this.firstAddress;
+				this.scroller.VisibleRangeRatio = (decimal) System.Math.Max((double) this.fields.Count/this.MemoryLength, 0.2);  // évite cabine trop petite
+				this.scroller.LargeChange = (decimal) this.fields.Count;
+				this.scroller.SmallChange = (decimal) 1;
+				this.scroller.Enable = true;
+			}
+			else
+			{
+				this.scroller.Enable = false;
+			}
 		}
 
 		public void UpdateData()

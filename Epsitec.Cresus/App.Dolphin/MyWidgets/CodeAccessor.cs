@@ -212,12 +212,26 @@ namespace Epsitec.App.Dolphin.MyWidgets
 					this.markPC = value;
 
 					int firstIndex = this.GetInstructionIndex(this.firstAddress);
-					int lastAddress = this.instructionAddresses[firstIndex+this.fields.Count].Address;
+
+					int lastAddress;
+					if (firstIndex+this.fields.Count < this.instructionAddresses.Count)
+					{
+						lastAddress = this.instructionAddresses[firstIndex+this.fields.Count].Address;
+					}
+					else
+					{
+						lastAddress = this.MemoryLength;
+					}
 
 					if (this.followPC && (this.markPC < this.MemoryStart+this.firstAddress || this.markPC >= this.MemoryStart+lastAddress))
 					{
 						string newBank = Components.Memory.BankSearch(this.markPC);
-						if (this.bank == newBank)
+						if (newBank == null)
+						{
+							this.bank = newBank;
+							this.FirstAddress = this.MemoryStart;
+						}
+						else if (this.bank == newBank)
 						{
 							this.FirstAddress = this.markPC - this.MemoryStart;
 						}
@@ -302,12 +316,20 @@ namespace Epsitec.App.Dolphin.MyWidgets
 				return;
 			}
 
-			this.scroller.MinValue = (decimal) 0;
-			this.scroller.MaxValue = (decimal) (this.instructionAddresses.Count - this.fields.Count);
-			this.scroller.Value = (decimal) this.GetInstructionIndex(this.firstAddress);
-			this.scroller.VisibleRangeRatio = (decimal) System.Math.Max((double) this.fields.Count/this.instructionAddresses.Count, 0.1);  // évite cabine trop petite
-			this.scroller.LargeChange = (decimal) this.fields.Count;
-			this.scroller.SmallChange = (decimal) 1;
+			if (this.firstAddress >= 0)
+			{
+				this.scroller.MinValue = (decimal) 0;
+				this.scroller.MaxValue = (decimal) (this.instructionAddresses.Count - this.fields.Count);
+				this.scroller.Value = (decimal) this.GetInstructionIndex(this.firstAddress);
+				this.scroller.VisibleRangeRatio = (decimal) System.Math.Max((double) this.fields.Count/this.instructionAddresses.Count, 0.1);  // évite cabine trop petite
+				this.scroller.LargeChange = (decimal) this.fields.Count;
+				this.scroller.SmallChange = (decimal) 1;
+				this.scroller.Enable = true;
+			}
+			else
+			{
+				this.scroller.Enable = false;
+			}
 		}
 
 		public void UpdateData()
@@ -328,19 +350,27 @@ namespace Epsitec.App.Dolphin.MyWidgets
 			int index = this.GetInstructionIndex(this.firstAddress);
 			for (int i=0; i<this.fields.Count; i++)
 			{
-				int address = this.MemoryStart+this.instructionAddresses[index].Address;
-				int length = this.instructionAddresses[index].Length;
-				bool isTable = this.instructionAddresses[index].Type == 1;
-				bool isRom = this.memory.IsReadOnly(address);
-
-				List<int> codes = new List<int>();
-				for (int c=0; c<length; c++)
+				if (index < this.instructionAddresses.Count)
 				{
-					codes.Add(this.memory.ReadForDebug(address+c));
-				}
+					int address = this.MemoryStart+this.instructionAddresses[index].Address;
+					int length = this.instructionAddresses[index].Length;
+					bool isTable = this.instructionAddresses[index].Type == 1;
+					bool isRom = this.memory.IsReadOnly(address);
 
-				this.fields[i].SetCode(address, codes, isTable, isRom);
-				this.fields[i].CodeAddress.ArrowClear();
+					List<int> codes = new List<int>();
+					for (int c=0; c<length; c++)
+					{
+						codes.Add(this.memory.ReadForDebug(address+c));
+					}
+
+					this.fields[i].SetCode(address, codes, isTable, isRom);
+					this.fields[i].CodeAddress.ArrowClear();
+					this.fields[i].Visibility = true;
+				}
+				else
+				{
+					this.fields[i].Visibility = false;
+				}
 
 				index++;
 			}
@@ -521,8 +551,15 @@ namespace Epsitec.App.Dolphin.MyWidgets
 			int index = this.GetInstructionIndex(this.firstAddress);
 			for (int i=0; i<this.fields.Count; i++)
 			{
-				int address = this.MemoryStart+this.instructionAddresses[index].Address;
-				this.fields[i].IsBackHilite = (address == this.markPC);
+				if (index < this.instructionAddresses.Count)
+				{
+					int address = this.MemoryStart+this.instructionAddresses[index].Address;
+					this.fields[i].IsBackHilite = (address == this.markPC);
+				}
+				else
+				{
+					this.fields[i].IsBackHilite = false;
+				}
 				index++;
 			}
 		}
