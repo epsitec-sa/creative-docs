@@ -2866,6 +2866,7 @@ namespace Epsitec.Common.Widgets
 					switch ( tag )
 					{
 						case "<br/>":    return Tag.LineBreak;
+						case "<null/>":	 return Tag.Null;
 						case "<tab/>":   return Tag.Tab;
 						case "<b>":      return Tag.Bold;
 						case "<i>":      return Tag.Italic;
@@ -3404,6 +3405,7 @@ namespace Epsitec.Common.Widgets
 						break;
 
 					case Tag.None:
+					case Tag.Null:
 					case Tag.Image:
 					case Tag.LineBreak:
 					case Tag.Tab:
@@ -3964,6 +3966,11 @@ namespace Epsitec.Common.Widgets
 							case Tag.LineBreak:
 								buffer.Append(TextLayout.CodeLineBreak);
 								currentIndex ++;
+								break;
+
+							case Tag.Null:
+								buffer.Append ("†");
+								currentIndex++;
 								break;
 
 							case Tag.None:
@@ -4833,6 +4840,7 @@ noText:
 			EndOfText,						// fin du texte
 			
 			LineBreak,						// <br/>
+			Null,							// <null/>
 			Tab,							// <tab/>
 			List,							// <list type="fix" glyph="circle" width="1.5" pos="0.0" size="1"/>
 			
