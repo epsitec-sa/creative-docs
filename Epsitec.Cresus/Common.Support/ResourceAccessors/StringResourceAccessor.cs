@@ -163,28 +163,45 @@ namespace Epsitec.Common.Support.ResourceAccessors
 					//	The resource should be stored as a delta (patch) relative
 					//	to the reference resource. Compute what that is...
 
-					deleteField = this.ComputeDelta (refModuleManager, ref data, culture, level, bundle, item.Id);
+					if ((this.ComputeDelta (refModuleManager, ref data, culture, level, bundle, item.Id)) ||
+						(StringResourceAccessor.IsEmpty (data)))
+					{
+						//	The resource is empty... but we may not remove it if
+						//	this is the primary patch resource and we found some
+						//	non-empty secondary resources.
+						
+						if ((twoLetterISOLanguageName == Resources.DefaultTwoLetterISOLanguageName) &&
+							(nonEmptyFieldCount > 0))
+						{
+							//	Don't delete the field for this resource...
+						}
+						else
+						{
+							deleteField = true;
+						}
+					}
+				}
+				else
+				{
+					//	If this an empty secondary resource, delete the corresponding
+					//	field to avoid cluttering the resource bundle.
+
+					if ((twoLetterISOLanguageName != Resources.DefaultTwoLetterISOLanguageName) &&
+						(StringResourceAccessor.IsEmpty (data)))
+					{
+						deleteField = true;
+					}
 				}
 
-				if ((deleteField) ||
-					(StringResourceAccessor.IsEmpty (data)))
+				if (deleteField)
 				{
-					//	There is no delta found for this resource, so we can safely
-					//	remove it if it is a secondary resource or, if it is the
-					//	primary resource, only remove it if we are sure that there
-					//	are no secondary resources left.
-
-					if ((twoLetterISOLanguageName != Resources.DefaultTwoLetterISOLanguageName) ||
-						(nonEmptyFieldCount == 0))
+					if (bundle != null)
 					{
-						if (bundle != null)
-						{
-							int index = bundle.IndexOf (item.Id);
+						int index = bundle.IndexOf (item.Id);
 
-							if (index >= 0)
-							{
-								bundle.Remove (index);
-							}
+						if (index >= 0)
+						{
+							bundle.Remove (index);
 						}
 					}
 				}
