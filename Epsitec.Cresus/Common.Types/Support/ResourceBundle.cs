@@ -1638,6 +1638,8 @@ namespace Epsitec.Common.Support
 			
 			
 			public static readonly Field	Empty = new Field ();
+
+			public static readonly string	Null = "<null/>";
 			
 			public void SetName(string name)
 			{

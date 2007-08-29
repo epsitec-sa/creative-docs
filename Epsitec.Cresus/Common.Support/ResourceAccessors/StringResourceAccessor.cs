@@ -119,61 +119,167 @@ namespace Epsitec.Common.Support.ResourceAccessors
 				throw new System.ArgumentException (string.Format ("No name for item {0}", item.Id));
 			}
 
-			bool patch = this.ResourceManager.BasedOnPatchModule;
-
+			ResourceManager refModuleManager = this.ResourceManager.GetManagerForReferenceModule ();
+			bool            usePatchModule   = refModuleManager != null;
+			
 			foreach (string twoLetterISOLanguageName in item.GetDefinedCultures ())
 			{
-				ResourceLevel level;
-				ResourceBundle bundle;
-				CultureInfo culture;
-				ResourceBundle.Field field;
-				StructuredData data;
-
-				data    = item.GetCultureData (twoLetterISOLanguageName);
-				culture = Resources.FindCultureInfo (twoLetterISOLanguageName);
-				level   = twoLetterISOLanguageName == Resources.DefaultTwoLetterISOLanguageName ? ResourceLevel.Default : ResourceLevel.Localized;
-				bundle  = this.ResourceManager.GetBundle (Resources.StringsBundleName, level, culture);
-
-				if (bundle == null)
-				{
-					bundle = ResourceBundle.Create (this.ResourceManager, this.ResourceManager.ActivePrefix, this.ResourceManager.GetModuleFromFullId (item.Id.ToString ()), Resources.StringsBundleName, ResourceLevel.Localized, culture, 0);
-					bundle.DefineType ("String");
-					this.ResourceManager.SetBundle (bundle, ResourceSetMode.InMemory);
-				}
+				StructuredData data    = item.GetCultureData (twoLetterISOLanguageName);
+				CultureInfo    culture = Resources.FindCultureInfo (twoLetterISOLanguageName);
+				ResourceLevel  level   = twoLetterISOLanguageName == Resources.DefaultTwoLetterISOLanguageName ? ResourceLevel.Default : ResourceLevel.Localized;
+				ResourceBundle bundle  = this.ResourceManager.GetBundle (Resources.StringsBundleName, level, culture);
 				
-				field = bundle[item.Id];
+				bool deleteField = false;
 
-				if (field.IsEmpty)
+				if (usePatchModule)
 				{
-					field = bundle.CreateField (ResourceFieldType.Data);
-					field.SetDruid (item.Id);
-					bundle.Add (field);
+					//	The resource should be stored as a delta (patch) relative
+					//	to the reference resource. Compute what that is...
+
+					deleteField = this.ComputeDelta (refModuleManager, ref data, culture, level, bundle, item.Id);
 				}
 
-				if (Types.UndefinedValue.IsUndefinedValue (data.GetValue (Res.Fields.ResourceString.Text)))
+				if ((deleteField) ||
+					(UndefinedValue.IsUndefinedValue (data.GetValue (Res.Fields.ResourceString.Text))))
 				{
-					bundle.Remove (bundle.IndexOf (item.Id));
+					//	The user decided to kill this string resource by "undefining"
+					//	it. If a matching field exists in a bundle, remove it :
+
+					if (bundle != null)
+					{
+						int index = bundle.IndexOf (item.Id);
+						
+						if (index >= 0)
+						{
+							bundle.Remove (index);
+						}
+					}
 				}
 				else
 				{
-					string text;
-					string about;
-					object modId;
+					//	The resource contains valid data. We will have to create the
+					//	bundle and the field if they are currently missing :
 
-					text  = data.GetValue (Res.Fields.ResourceString.Text) as string;
-					about = data.GetValue (Res.Fields.ResourceBase.Comment) as string;
-					modId = data.GetValue (Res.Fields.ResourceBase.ModificationId);
+					if (bundle == null)
+					{
+						ResourceModuleId moduleId = this.ResourceManager.GetModuleFromFullId (item.Id.ToString ());
+						bundle = ResourceBundle.Create (this.ResourceManager, this.ResourceManager.ActivePrefix, moduleId, Resources.StringsBundleName, ResourceLevel.Localized, culture, 0);
+						bundle.DefineType ("String");
+						this.ResourceManager.SetBundle (bundle, ResourceSetMode.InMemory);
+					}
+
+					ResourceBundle.Field field = bundle[item.Id];
+
+					if (field.IsEmpty)
+					{
+						field = bundle.CreateField (ResourceFieldType.Data);
+						field.SetDruid (item.Id);
+						bundle.Add (field);
+					}
+
+					string text  = data.GetValue (Res.Fields.ResourceString.Text) as string;
+					string about = data.GetValue (Res.Fields.ResourceBase.Comment) as string;
+					object modId = data.GetValue (Res.Fields.ResourceBase.ModificationId);
 
 					if (twoLetterISOLanguageName == Resources.DefaultTwoLetterISOLanguageName)
 					{
 						field.SetName (item.Name);
 					}
-					field.SetStringValue (text);
+					
+					field.SetStringValue (text ?? ResourceBundle.Field.Null);
 					field.SetAbout (about);
 
 					StringResourceAccessor.SetModificationId (field, modId);
 				}
 			}
+		}
+
+		private bool ComputeDelta(ResourceManager refModuleManager, ref StructuredData data, CultureInfo culture, ResourceLevel level, ResourceBundle patchBundle, Druid druid)
+		{
+			ResourceBundle refBundle = refModuleManager.GetBundle (Resources.StringsBundleName, level, culture);
+
+			if (refBundle == null)
+			{
+				return false;
+			}
+
+			ResourceBundle.Field refField = refBundle[druid];
+			
+			if (refField.IsEmpty)
+			{
+				return false;
+			}
+
+			//	Get the reference data from the reference module resource :
+
+			int    refModifId = refField.ModificationId;
+			string refText    = refField.AsString == ResourceBundle.Field.Null ? null : refField.AsString;
+			string refComment = refField.About;
+
+			//	Get the resulting data the user would like to get when applying
+			//	the patch to the reference data :
+
+			object dataModifIdValue = data.GetValue (Res.Fields.ResourceBase.ModificationId);
+			
+			int    dataModifId = UndefinedValue.IsUndefinedValue (dataModifIdValue) ? -1 : (int) dataModifIdValue;
+			string dataText    = data.GetValue (Res.Fields.ResourceString.Text) as string;
+			string dataComment = data.GetValue (Res.Fields.ResourceBase.Comment) as string;
+
+			//	If some of the resulting data are undefined, assume that this
+			//	means that the user wants to get the reference data instead;
+			//	so just merge the reference with the provided data :
+
+			int    mergeModifId = dataModifId == -1   ? refModifId : dataModifId;
+			string mergeText    = dataText    == null ? refText    : dataText;
+			string mergeComment = dataComment == null ? refComment : dataComment;
+
+			//	If the merged data is exactly the same as the reference data,
+			//	then there is nothing left to patch; tell the caller that the
+			//	patch resource can be safely discarded :
+
+			if ((mergeModifId == refModifId) &&
+				(mergeText    == refText) &&
+				(mergeComment == refComment))
+			{
+				return true;
+			}
+
+			//	Wherever the patch data is the same as the reference data, use
+			//	the "undefined" value instead :
+
+			bool replace = false;
+
+			if ((mergeModifId == refModifId) &&
+				(dataModifId != -1))
+			{
+				dataModifId = -1;
+				replace     = true;
+			}
+			
+			if ((mergeText == refText) &&
+				(dataText != null))
+			{
+				dataText = null;
+				replace  = true;
+			}
+			
+			if ((mergeComment == refComment) &&
+				(dataComment != null))
+			{
+				dataComment = null;
+				replace     = true;
+			}
+
+			if (replace)
+			{
+				data = new StructuredData (Res.Types.ResourceString);
+
+				data.SetValue (Res.Fields.ResourceString.Text, dataText);
+				data.SetValue (Res.Fields.ResourceBase.Comment, dataComment);
+				data.SetValue (Res.Fields.ResourceBase.ModificationId, dataModifId);
+			}
+
+			return false;
 		}
 
 		internal static void SetModificationId(ResourceBundle.Field field, object modId)
@@ -231,7 +337,8 @@ namespace Epsitec.Common.Support.ResourceAccessors
 					StructuredData newData = data;
 					StructuredData oldData = item.GetCultureData (twoLetterISOLanguageName);
 
-					if (field.AsString != null)
+					if ((field.AsString != null) &&
+						(field.AsString != ResourceBundle.Field.Null))
 					{
 						oldData.SetValue (Res.Fields.ResourceString.Text, newData.GetValue (Res.Fields.ResourceString.Text));
 					}
@@ -280,7 +387,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 
 		private static void SetDataFromField(ResourceBundle.Field field, Types.StructuredData data)
 		{
-			data.SetValue (Res.Fields.ResourceString.Text, field.AsString);
+			data.SetValue (Res.Fields.ResourceString.Text, field.AsString == ResourceBundle.Field.Null ? null : field.AsString);
 			data.SetValue (Res.Fields.ResourceBase.Comment, field.About);
 			data.SetValue (Res.Fields.ResourceBase.ModificationId, field.ModificationId);
 		}

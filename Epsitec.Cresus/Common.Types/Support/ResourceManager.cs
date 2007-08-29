@@ -1121,7 +1121,16 @@ namespace Epsitec.Common.Support
 					
 					if (field != null)
 					{
-						return field.AsString;
+						string text = field.AsString;
+
+						if (text == ResourceBundle.Field.Null)
+						{
+							return null;
+						}
+						else
+						{
+							return text;
+						}
 					}
 				}
 			}

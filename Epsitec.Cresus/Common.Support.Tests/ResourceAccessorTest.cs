@@ -547,7 +547,7 @@ namespace Epsitec.Common.Support
 
 			accessor.Load (this.manager);
 
-			Assert.AreEqual (8, accessor.Collection.Count);
+			Assert.AreEqual (9, accessor.Collection.Count);
 
 			Assert.AreEqual (Druid.Parse ("[4002]"), accessor.Collection[Druid.Parse ("[4002]")].Id);
 			Assert.AreEqual ("Text A", accessor.Collection[Druid.Parse ("[4002]")].GetCultureData ("00").GetValue (Res.Fields.ResourceString.Text));
@@ -555,6 +555,9 @@ namespace Epsitec.Common.Support
 			Assert.AreEqual (Druid.Parse ("[4006]"), accessor.Collection[Druid.Parse ("[4006]")].Id);
 			Assert.AreEqual ("Text1", accessor.Collection[Druid.Parse ("[4006]")].Name);
 			Assert.AreEqual ("Hello, world", accessor.Collection["Text1"].GetCultureData ("00").GetValue (Res.Fields.ResourceString.Text));
+
+			Assert.AreEqual (Druid.Parse ("[4008]"), accessor.Collection[Druid.Parse ("[4008]")].Id);
+			Assert.IsNull (accessor.Collection[Druid.Parse ("[4008]")].GetCultureData ("00").GetValue (Res.Fields.ResourceString.Text));
 
 			Types.StructuredData data1 = accessor.Collection["Text1"].GetCultureData ("fr");
 			Types.StructuredData data2 = accessor.Collection["Text1"].GetCultureData ("fr");
@@ -589,7 +592,7 @@ namespace Epsitec.Common.Support
 			CultureMap map = accessor.CreateItem ();
 
 			Assert.IsNotNull (map);
-			Assert.AreEqual (Druid.Parse ("[4008]"), map.Id);
+			Assert.AreEqual (Druid.Parse ("[4009]"), map.Id);
 			Assert.IsNull (accessor.Collection[map.Id]);
 
 			accessor.Collection.Add (map);
@@ -602,24 +605,24 @@ namespace Epsitec.Common.Support
 			Assert.AreEqual (1, accessor.PersistChanges ());
 			Assert.IsFalse (accessor.ContainsChanges);
 
-			Assert.AreEqual ("New value", this.manager.GetText (Druid.Parse ("[4008]"), ResourceLevel.Default));
-			Assert.AreEqual ("Nouvelle valeur", this.manager.GetText (Druid.Parse ("[4008]"), ResourceLevel.Merged, Resources.FindCultureInfo ("fr")));
+			Assert.AreEqual ("New value", this.manager.GetText (Druid.Parse ("[4009]"), ResourceLevel.Default));
+			Assert.AreEqual ("Nouvelle valeur", this.manager.GetText (Druid.Parse ("[4009]"), ResourceLevel.Merged, Resources.FindCultureInfo ("fr")));
 
 			map.GetCultureData ("fr").SetValue (Res.Fields.ResourceString.Text, Types.UndefinedValue.Instance);
 
 			Assert.AreEqual (1, accessor.PersistChanges ());
 			Assert.IsFalse (accessor.ContainsChanges);
 
-			Assert.AreEqual ("New value", this.manager.GetText (Druid.Parse ("[4008]"), ResourceLevel.Default));
-			Assert.AreEqual ("New value", this.manager.GetText (Druid.Parse ("[4008]"), ResourceLevel.Merged, Resources.FindCultureInfo ("fr")));
+			Assert.AreEqual ("New value", this.manager.GetText (Druid.Parse ("[4009]"), ResourceLevel.Default));
+			Assert.AreEqual ("New value", this.manager.GetText (Druid.Parse ("[4009]"), ResourceLevel.Merged, Resources.FindCultureInfo ("fr")));
 
 			accessor.Collection.Remove (map);
 			Assert.IsTrue (accessor.ContainsChanges);
 			Assert.AreEqual (1, accessor.PersistChanges ());
 			Assert.IsFalse (accessor.ContainsChanges);
 
-			Assert.IsNull (this.manager.GetText (Druid.Parse ("[4008]"), ResourceLevel.Default));
-			Assert.IsNull (this.manager.GetText (Druid.Parse ("[4008]"), ResourceLevel.Localized, Resources.FindCultureInfo ("fr")));
+			Assert.IsNull (this.manager.GetText (Druid.Parse ("[4009]"), ResourceLevel.Default));
+			Assert.IsNull (this.manager.GetText (Druid.Parse ("[4009]"), ResourceLevel.Localized, Resources.FindCultureInfo ("fr")));
 		}
 
 		[Test]
