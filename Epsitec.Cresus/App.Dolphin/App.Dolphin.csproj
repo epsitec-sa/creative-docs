@@ -7,7 +7,7 @@
     <ProjectGuid>{C7F4F507-E056-46CB-B403-9EC194A0AF0F}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <RootNamespace>Epsitec.App.Dolphin</RootNamespace>
-    <AssemblyName>App.Dolphin</AssemblyName>
+    <AssemblyName>Dolphin</AssemblyName>
     <AssemblyOriginatorKeyFile>..\Epsitec.Cresus.snk</AssemblyOriginatorKeyFile>
     <ApplicationIcon>
     </ApplicationIcon>
