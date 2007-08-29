@@ -95,6 +95,13 @@ namespace Epsitec.Common.Widgets
 				{
 					value = "";
 				}
+
+				if ((value.Length > Support.ResourceBundle.Field.Null.Length) &&
+					(value.Contains (Support.ResourceBundle.Field.Null)))
+				{
+					value = value.Replace (Support.ResourceBundle.Field.Null, "");
+				}
+
 				
 				if ((this.text != value) &&
 					(this.GetSimplifiedText () != value))
@@ -1175,7 +1182,8 @@ namespace Epsitec.Common.Widgets
 					 tag == Tag.LineBreak ||
 					 tag == Tag.Tab       ||
 					 tag == Tag.List      ||
-					 tag == Tag.Image     )
+					 tag == Tag.Image     ||
+					 tag == Tag.Null)
 				{
 					text = text.Remove(begin, from-begin);
 					to -= from-begin;
@@ -1242,6 +1250,12 @@ namespace Epsitec.Common.Widgets
 			
 			int from = System.Math.Min(cursorFrom, cursorTo);
 			int to   = System.Math.Max(cursorFrom, cursorTo);
+
+			if (this.text == Support.ResourceBundle.Field.Null)
+			{
+				from = 0;
+				to   = this.text.Length;
+			}
 			
 			if ( from < to )  // caractères sélectionnés à supprimer ?
 			{
@@ -2555,7 +2569,8 @@ namespace Epsitec.Common.Widgets
 					if ( startOfTag != "<br/>" &&
 						 startOfTag != "<tab/" &&
 						 startOfTag != "<list" &&
-						 startOfTag != "<img " )  continue;
+						 startOfTag != "<img " &&
+						 startOfTag != "<null")  continue;
 				}
 				else if ( this.text[endOffset] == '&' )
 				{
@@ -3880,11 +3895,6 @@ namespace Epsitec.Common.Widgets
 					{
 						if (tag == Tag.Null)
 						{
-							if (this.text.Length != Support.ResourceBundle.Field.Null.Length)
-							{
-								continue;
-							}
-
 							tag = Tag.Image;
 							parameters = new System.Collections.Hashtable ();
 							parameters["src"] = "manifest:Epsitec.Common.Widgets.Images.DefaultValue.icon";
