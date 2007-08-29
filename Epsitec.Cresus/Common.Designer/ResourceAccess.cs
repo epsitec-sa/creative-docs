@@ -3133,6 +3133,8 @@ namespace Epsitec.Common.Designer
 			//	Ajuste les bundles avant une sérialisation.
 			foreach (ResourceBundle bundle in this.bundles)
 			{
+				bool patchModule = bundle.BasedOnPatchModule;
+
 				for (int i=0; i<bundle.FieldCount; i++)
 				{
 					ResourceBundle.Field field = bundle[i];
@@ -3155,19 +3157,29 @@ namespace Epsitec.Common.Designer
 						field.SetStringValue(caption.SerializeToString());
 					}
 
-					if (bundle != this.primaryBundle)
+					if (!patchModule)
 					{
-						//	Supprime le 'name="Truc.Chose' dans tous les bundles,
-						//	sauf dans le bundle par défaut.
-						field.SetName(null);
-
-						//	Si une ressource est vide dans un bundle autre que le bundle
-						//	par défaut, il faut la supprimer.
-						string s = field.AsString;
-						if (string.IsNullOrEmpty(s))
+						if (field.About == "" || ResourceBundle.Field.IsNullString (field.About))
 						{
-							bundle.Remove(i);
-							i--;
+							//	Si un champ contient un commentaire vide et qu'il
+							//	s'agit d'une ressource d'un module de référence,
+							//	alors on peut supprimer complètement son contenu.
+
+							field.SetAbout (null);
+						}
+						
+						if (bundle != this.primaryBundle)
+						{
+							System.Diagnostics.Debug.Assert (field.Name == null);
+
+							//	Si une ressource est vide dans un bundle autre que le bundle
+							//	par défaut, il faut la supprimer.
+							if ((ResourceBundle.Field.IsNullString (field.AsString)) &&
+							(ResourceBundle.Field.IsNullString (field.About)))
+							{
+								bundle.Remove (i);
+								i--;
+							}
 						}
 					}
 				}

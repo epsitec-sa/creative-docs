@@ -129,8 +129,8 @@ namespace Epsitec.Common.Designer.Viewers
 			StructuredData data;
 
 			data = item.GetCultureData(this.GetTwoLetters(0));
-			this.primaryText.Text = data.GetValue(Support.Res.Fields.ResourceString.Text) as string;
-			this.primaryComment.Text = data.GetValue(Support.Res.Fields.ResourceBase.Comment) as string;
+			this.primaryText.Text = data.GetValue (Support.Res.Fields.ResourceString.Text) as string ?? Support.ResourceBundle.Field.Null;
+			this.primaryComment.Text = data.GetValue (Support.Res.Fields.ResourceBase.Comment) as string ?? Support.ResourceBundle.Field.Null;
 
 			if (this.GetTwoLetters(1) == null || this.designerApplication.IsReadonly)
 			{
@@ -142,8 +142,8 @@ namespace Epsitec.Common.Designer.Viewers
 			else
 			{
 				data = item.GetCultureData(this.GetTwoLetters(1));
-				this.secondaryText.Text = data.GetValue(Support.Res.Fields.ResourceString.Text) as string;
-				this.secondaryComment.Text = data.GetValue(Support.Res.Fields.ResourceBase.Comment) as string;
+				this.secondaryText.Text = data.GetValue (Support.Res.Fields.ResourceString.Text) as string ?? Support.ResourceBundle.Field.Null;
+				this.secondaryComment.Text = data.GetValue (Support.Res.Fields.ResourceBase.Comment) as string ?? Support.ResourceBundle.Field.Null;
 				this.secondaryText.Enable = true;
 				this.secondaryComment.Enable = true;
 			}
@@ -167,9 +167,13 @@ namespace Epsitec.Common.Designer.Viewers
 				StructuredData data = item.GetCultureData(twoLettersCulture);
 
 				string text = data.GetValue(Support.Res.Fields.ResourceString.Text) as string;
-				if (string.IsNullOrEmpty(text))
+				if (text == null)
 				{
 					buffer.Append(Misc.Italic("(indéfini)"));
+				}
+				else if (text.Length == 0)
+				{
+					buffer.Append(Misc.Italic("(vide)"));
 				}
 				else
 				{

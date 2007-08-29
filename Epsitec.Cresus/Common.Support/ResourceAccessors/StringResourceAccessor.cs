@@ -140,10 +140,12 @@ namespace Epsitec.Common.Support.ResourceAccessors
 				}
 
 				if ((deleteField) ||
-					(UndefinedValue.IsUndefinedValue (data.GetValue (Res.Fields.ResourceString.Text))))
+					((UndefinedValue.IsUndefinedValue (data.GetValue (Res.Fields.ResourceString.Text))) &&
+					 (UndefinedValue.IsUndefinedValue (data.GetValue (Res.Fields.ResourceBase.Comment))) &&
+					 (UndefinedValue.IsUndefinedValue (data.GetValue (Res.Fields.ResourceBase.ModificationId)))))
 				{
-					//	The user decided to kill this string resource by "undefining"
-					//	it. If a matching field exists in a bundle, remove it :
+					//	The user decided to kill this string resource by "undefining" it
+					//	completely. If a matching field exists in a bundle, remove it :
 
 					if (bundle != null)
 					{
@@ -181,12 +183,25 @@ namespace Epsitec.Common.Support.ResourceAccessors
 					string about = data.GetValue (Res.Fields.ResourceBase.Comment) as string;
 					object modId = data.GetValue (Res.Fields.ResourceBase.ModificationId);
 
+					if (ResourceBundle.Field.IsNullString (text))
+					{
+						text = null;
+					}
+					if (ResourceBundle.Field.IsNullString (about))
+					{
+						about = null;
+					}
+
 					if (twoLetterISOLanguageName == Resources.DefaultTwoLetterISOLanguageName)
 					{
 						field.SetName (item.Name);
 					}
+					else
+					{
+						field.SetName (null);
+					}
 					
-					field.SetStringValue (text ?? ResourceBundle.Field.Null);
+					field.SetStringValue (text);
 					field.SetAbout (about);
 
 					StringResourceAccessor.SetModificationId (field, modId);
@@ -387,8 +402,8 @@ namespace Epsitec.Common.Support.ResourceAccessors
 
 		private static void SetDataFromField(ResourceBundle.Field field, Types.StructuredData data)
 		{
-			data.SetValue (Res.Fields.ResourceString.Text, field.AsString == ResourceBundle.Field.Null ? null : field.AsString);
-			data.SetValue (Res.Fields.ResourceBase.Comment, field.About);
+			data.SetValue (Res.Fields.ResourceString.Text, ResourceBundle.Field.IsNullString (field.AsString) ? null : field.AsString);
+			data.SetValue (Res.Fields.ResourceBase.Comment, ResourceBundle.Field.IsNullString (field.About) ? null : field.About);
 			data.SetValue (Res.Fields.ResourceBase.ModificationId, field.ModificationId);
 		}
 

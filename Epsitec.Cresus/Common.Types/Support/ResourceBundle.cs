@@ -633,13 +633,20 @@ namespace Epsitec.Common.Support
 					
 					Field original = list[index];
 
-					if (string.IsNullOrEmpty (field.Name))
+					if (Field.IsNullString (field.Name))
 					{
 						field.SetName (original.Name);
 					}
-					if (string.IsNullOrEmpty (field.About))
+					if (Field.IsNullString (field.About))
 					{
 						field.SetAbout (original.About);
+					}
+					if (field.Type == ResourceFieldType.Data)
+					{
+						if (Field.IsNullString (field.AsString))
+						{
+							field.SetStringValue (original.AsString);
+						}
 					}
 
 					list[index] = field;
@@ -1533,7 +1540,7 @@ namespace Epsitec.Common.Support
 					return false;
 				}
 			}
-			
+
 			public string					AsString
 			{
 				get
@@ -1743,7 +1750,7 @@ namespace Epsitec.Common.Support
 					this.type = ResourceFieldType.Data;
 					this.data = value;
 					
-					this.xml.InnerText = value ?? "";
+					this.xml.InnerText = value ?? Field.Null;
 					
 					this.parent.OnFieldsChanged ();
 				}
@@ -1768,6 +1775,11 @@ namespace Epsitec.Common.Support
 					
 					this.parent.OnFieldsChanged ();
 				}
+			}
+
+			public static bool IsNullString(string value)
+			{
+				return (value == null) || (value == Field.Null);
 			}
 
 			internal void SetDataLevel(ResourceLevel level)
