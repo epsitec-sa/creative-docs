@@ -3416,6 +3416,8 @@ namespace Epsitec.App.Dolphin.Components
 			this.RomWrite(ref indirect, ref address, TinyProcessor.NotPixel);			// 0x1B
 			this.RomWrite(ref indirect, ref address, TinyProcessor.ClearScreen);		// 0x1E
 			this.RomWrite(ref indirect, ref address, TinyProcessor.DrawChar);			// 0x21
+			this.RomWrite(ref indirect, ref address, TinyProcessor.DrawHexaDigit);		// 0x24
+			this.RomWrite(ref indirect, ref address, TinyProcessor.DrawHexaByte);		// 0x27
 			System.Diagnostics.Debug.Assert(address < 0xB00);
 		}
 
@@ -3433,6 +3435,8 @@ namespace Epsitec.App.Dolphin.Components
 			variables.Add("_NOTPIXEL", address+=3);
 			variables.Add("_CLEARSCREEN", address+=3);
 			variables.Add("_DRAWCHAR", address+=3);
+			variables.Add("_DRAWHEXADIGIT", address+=3);
+			variables.Add("_DRAWHEXABYTE", address+=3);
 		}
 
 		protected void RomWrite(ref int indirect, ref int address, byte[] code)
@@ -3531,9 +3535,6 @@ namespace Epsitec.App.Dolphin.Components
 		//	mod	F
 		protected static byte[] DisplayHexaByte =
 		{
-			(byte) Instructions.PushR+0,				// PUSH A
-			(byte) Instructions.PushR+1,				// PUSH B
-
 			(byte) Instructions.IncR+1,					// INC B
 			(byte) Instructions.Call, 0x08, 0x0C,		// CALL DisplayHexaDigit
 
@@ -3541,8 +3542,7 @@ namespace Epsitec.App.Dolphin.Components
 			(byte) Instructions.DecR+1,					// DEC B
 			(byte) Instructions.Call, 0x08, 0x0C,		// CALL DisplayHexaDigit
 
-			(byte) Instructions.PopR+1,					// POP B
-			(byte) Instructions.PopR+0,					// POP A
+			(byte) Instructions.SwapA,					// SWAP A
 			(byte) Instructions.Ret,					// RET
 		};
 
@@ -3814,6 +3814,46 @@ namespace Epsitec.App.Dolphin.Components
 			0xEC, 0x28, 0x48, 0x88, 0xEC,				// Z[
 			0x86, 0x82, 0x42, 0x22, 0x26,				// \]
 			0x40, 0xA0, 0x00, 0x00, 0x0E,				// ^_
+		};
+
+		//	Dessine un digit hexadécimal.
+		//	in	A valeur 0..15
+		//		X colonne 0..7
+		//		Y ligne 0..3
+		//	out	-
+		//	mod	F
+		protected static byte[] DrawHexaDigit =
+		{
+			(byte) Instructions.PushR+0,				// PUSH A
+
+			(byte) Instructions.AndVR+0, 0x0F,			// AND #H'0F,A	; 0..15
+			(byte) Instructions.AddVR+0, 0x30,			// ADD #H'30,A	; '0'..
+			(byte) Instructions.CompVR+0, 0x3A,			// COMP #H'3A,A ; dépasse '9' ?
+			(byte) Instructions.JumpLO, 0x80, 0x02,		// JUMP,LO +2	; non -> +2
+			(byte) Instructions.AddVR+0, 0x07,			// ADD #H'07,A	; 'A'..'Z'
+			(byte) Instructions.Call, 0x08, 0x21,		// CALL DrawChar
+
+			(byte) Instructions.PopR+0,					// POP A
+			(byte) Instructions.Ret,					// RET
+		};
+
+		//	Dessine un byte hexadécimal sur deux digits.
+		//	in	A valeur 0..255
+		//		X colonne 0..6
+		//		Y ligne 0..3
+		//	out	-
+		//	mod	F
+		protected static byte[] DrawHexaByte =
+		{
+			(byte) Instructions.IncR+2,					// INC X
+			(byte) Instructions.Call, 0x08, 0x24,		// CALL DrawHexaDigit
+
+			(byte) Instructions.SwapA,					// SWAP A
+			(byte) Instructions.DecR+2,					// DEC X
+			(byte) Instructions.Call, 0x08, 0x24,		// CALL DrawHexaDigit
+
+			(byte) Instructions.SwapA,					// SWAP A
+			(byte) Instructions.Ret,					// RET
 		};
 		#endregion
 
@@ -4170,6 +4210,25 @@ namespace Epsitec.App.Dolphin.Components
 					AbstractProcessor.HelpPutLine(builder, "<tab/>Y ligne 0..3");
 					AbstractProcessor.HelpPutLine(builder, "out<tab/>-");
 					AbstractProcessor.HelpPutLine(builder, "mod<tab/>F");
+
+					AbstractProcessor.HelpPutTitle(builder, "_DrawHexaDigit");
+					AbstractProcessor.HelpPutLine(builder, "Dessine un digit hexadécimal dans l'écran bitmap.");
+					AbstractProcessor.HelpPutLine(builder, "[01] [08] [24]<tab/>CALL H'824");
+					AbstractProcessor.HelpPutLine(builder, "in<tab/>A valeur 0..15");
+					AbstractProcessor.HelpPutLine(builder, "<tab/>X colonne 0..7");
+					AbstractProcessor.HelpPutLine(builder, "<tab/>Y ligne 0..3");
+					AbstractProcessor.HelpPutLine(builder, "out<tab/>-");
+					AbstractProcessor.HelpPutLine(builder, "mod<tab/>F");
+
+					AbstractProcessor.HelpPutTitle(builder, "_DrawHexaByte");
+					AbstractProcessor.HelpPutLine(builder, "Dessine un octet hexadécimal sur deux digits dans l'écran bitmap.");
+					AbstractProcessor.HelpPutLine(builder, "[01] [08] [27]<tab/>CALL H'827");
+					AbstractProcessor.HelpPutLine(builder, "in<tab/>A valeur 0..255");
+					AbstractProcessor.HelpPutLine(builder, "<tab/>X colonne 0..6");
+					AbstractProcessor.HelpPutLine(builder, "<tab/>Y ligne 0..3");
+					AbstractProcessor.HelpPutLine(builder, "out<tab/>-");
+					AbstractProcessor.HelpPutLine(builder, "mod<tab/>F");
+
 					break;
 			}
 
