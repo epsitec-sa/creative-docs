@@ -31,4 +31,5 @@
   <data id="15">&lt;s:type id="_1" s:name="Epsitec.Common.Widgets.Command" /&gt;&lt;s:data id="_0" f:_1.Statefull="False" f:_1.DefaultParameter="{Null}" /&gt;</data>
   <data id="16">&lt;s:type id="_1" s:name="Epsitec.Common.Widgets.Command" /&gt;&lt;s:data id="_0" f:_1.Statefull="False" f:_1.DefaultParameter="{Null}" /&gt;</data>
   <data id="17">&lt;s:type id="_1" s:name="Epsitec.Common.Widgets.Command" /&gt;&lt;s:data id="_0" f:Description="Auswahl aufheben" f:_1.Statefull="False" f:_1.DefaultParameter="{Null}" f:Labels="{Collection {Text 'Auswahl aufheben'}, {Text 'Aufheben'}}" /&gt;</data>
+  <data id="18">&lt;s:type id="_1" s:name="Epsitec.Common.Widgets.Command" /&gt;&lt;s:data id="_0" f:Description="Default-Wert benutzen" f:_1.Statefull="False" f:_1.DefaultParameter="{Null}" f:Labels="{Collection {Text 'Default-Wert'}, {Text 'Default'}}" /&gt;</data>
 </bundle>

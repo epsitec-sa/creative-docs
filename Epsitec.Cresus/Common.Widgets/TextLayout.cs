@@ -3342,6 +3342,12 @@ namespace Epsitec.Common.Widgets
 				Tag tag = TextLayout.ParseTag(this.text, ref offset, out parameters);
 				if ( tag == Tag.EndOfText )  break;
 
+				if ((tag == Tag.Null) &&
+					(this.text.Length != Support.ResourceBundle.Field.Null.Length))
+				{
+					continue;
+				}
+
 				switch ( tag )
 				{
 					case Tag.Font:
@@ -3872,6 +3878,18 @@ namespace Epsitec.Common.Widgets
 
 					if ( !this.ProcessFormatTags(tag, fontStack, supplItem, parameters) )
 					{
+						if (tag == Tag.Null)
+						{
+							if (this.text.Length != Support.ResourceBundle.Field.Null.Length)
+							{
+								continue;
+							}
+
+							tag = Tag.Image;
+							parameters = new System.Collections.Hashtable ();
+							parameters["src"] = "manifest:Epsitec.Common.Widgets.Images.DefaultValue.icon";
+						}
+
 						switch ( tag )
 						{
 							case Tag.Image:

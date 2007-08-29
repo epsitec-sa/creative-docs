@@ -807,6 +807,10 @@
   <ItemGroup>
     <EmbeddedResource Include="Images\Cmd.SelectAll.icon" />
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Images\Cmd.UseDefaultValue.icon" />
+    <EmbeddedResource Include="Images\DefaultValue.icon" />
+  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>

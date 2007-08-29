@@ -33,4 +33,5 @@
   <data id="15">&lt;s:type id="_1" s:name="Epsitec.Common.Widgets.Command" /&gt;&lt;s:data id="_0" f:_1.Statefull="False" f:_1.DefaultParameter="{Null}" /&gt;</data>
   <data id="16">&lt;s:type id="_1" s:name="Epsitec.Common.Widgets.Command" /&gt;&lt;s:data id="_0" f:_1.Statefull="False" f:_1.DefaultParameter="{Null}" /&gt;</data>
   <data id="17">&lt;s:type id="_1" s:name="Epsitec.Common.Widgets.Command" /&gt;&lt;s:data id="_0" f:Description="Deselect all" f:_1.Statefull="False" f:_1.DefaultParameter="{Null}" f:Labels="{Collection {Text 'Deselect all'}, {Text 'Deselect'}}" /&gt;</data>
+  <data id="18">&lt;s:type id="_1" s:name="Epsitec.Common.Widgets.Command" /&gt;&lt;s:data id="_0" f:Description="Use the default value" f:_1.Statefull="False" f:_1.DefaultParameter="{Null}" f:Labels="{Collection {Text 'Default value'}, {Text 'Default'}}" /&gt;</data>
 </bundle>

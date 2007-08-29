@@ -129,6 +129,18 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+		public bool								AcceptsNullValue
+		{
+			get
+			{
+				return this.accepts_null_value;
+			}
+			set
+			{
+				this.accepts_null_value = value;
+			}
+		}
+
 		public bool								IsModal
 		{
 			get
@@ -173,6 +185,14 @@ namespace Epsitec.Common.Widgets
 			get
 			{
 				return this.navigator.IsEmpty;
+			}
+		}
+
+		public bool								IsTextNull
+		{
+			get
+			{
+				return this.Text == ResourceBundle.Field.Null;
 			}
 		}
 		
@@ -476,7 +496,7 @@ namespace Epsitec.Common.Widgets
 
 		public void ProcessPaste()
 		{
-			this.copyPasteBehavior.ProcessPaste();
+			this.copyPasteBehavior.ProcessPaste ();
 		}
 
 		
@@ -989,13 +1009,13 @@ namespace Epsitec.Common.Widgets
 		protected virtual bool ProcessKeyDown(Message message, Drawing.Point pos)
 		{
 			//	Gestion d'une touche pressée avec KeyDown dans le texte.
-			return this.navigator.ProcessMessage(message, pos);
+			return this.navigator.ProcessMessage (message, pos);
 		}
 		
 		protected virtual bool ProcessKeyPress(Message message, Drawing.Point pos)
 		{
 			//	Gestion d'une touche pressée avec KeyPress dans le texte.
-			return this.navigator.ProcessMessage(message, pos);
+			return this.navigator.ProcessMessage (message, pos);
 		}
 
 		protected void EnableScroll(Drawing.Point pos)
@@ -1029,17 +1049,27 @@ namespace Epsitec.Common.Widgets
 			System.Diagnostics.Debug.Assert (CommandDispatcherChain.BuildChain (this.contextMenu).IsEmpty == false);
 
 			bool sel = (this.TextNavigator.CursorFrom != this.TextNavigator.CursorTo);
+			bool readWrite = !this.navigator.IsReadOnly;
 
-			context.SetLocalEnable (ApplicationCommands.Cut, sel);
+			context.SetLocalEnable (ApplicationCommands.Cut, sel & readWrite);
 			context.SetLocalEnable (ApplicationCommands.Copy, sel);
-			context.SetLocalEnable (ApplicationCommands.Delete, sel);
-
+			context.SetLocalEnable (ApplicationCommands.Delete, sel & readWrite);
+			context.SetLocalEnable (ApplicationCommands.SelectAll, true);
+			
 			this.contextMenu.Items.AddItem (ApplicationCommands.Cut);
 			this.contextMenu.Items.AddItem (ApplicationCommands.Copy);
 			this.contextMenu.Items.AddItem (ApplicationCommands.Paste);
 			this.contextMenu.Items.AddItem (ApplicationCommands.Delete);
 			this.contextMenu.Items.AddSeparator();
 			this.contextMenu.Items.AddItem (ApplicationCommands.SelectAll);
+
+			if (this.accepts_null_value)
+			{
+				context.SetLocalEnable (Res.Commands.UseDefaultValue, readWrite);
+
+				this.contextMenu.Items.AddSeparator ();
+				this.contextMenu.Items.AddItem (Res.Commands.UseDefaultValue);
+			}
 
 			this.contextMenu.AdjustSize();
 			
@@ -1834,6 +1864,12 @@ namespace Epsitec.Common.Widgets
 					e.Executed = true;
 				}
 			}
+
+			[Command (Res.CommandIds.UseDefaultValue)]
+			public void CommandUseDefaultValue(CommandDispatcher dispatcher, CommandEventArgs e)
+			{
+				this.host.Text = ResourceBundle.Field.Null;
+			}
 			
 			
 			private AbstractTextField			host;
@@ -2027,6 +2063,7 @@ namespace Epsitec.Common.Widgets
 		private bool							is_editing;
 		private bool							is_modal;
 		private bool							is_password;
+		private bool							accepts_null_value;
 		protected bool							has_edited_text;
 		protected bool							swallow_return;
 		protected bool							swallow_escape;
