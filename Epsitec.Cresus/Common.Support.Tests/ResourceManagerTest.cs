@@ -97,6 +97,21 @@ namespace Epsitec.Common.Support
 			Assert.IsNull (this.manager.GetText (Druid.Parse ("[4008]")));
 			Assert.IsNull (this.manager.GetText (Druid.Parse ("[7002]")));
 
+			//	Author is only defined in '00' language; 'de' defines the author as <null/>
+			//	whereas 'en' does not define anything about the author; check fallbacks :
+			
+			Assert.AreEqual ("Pierre Arnaud", this.manager.GetText (Druid.Parse ("[7001]"), ResourceLevel.Default));
+			Assert.AreEqual ("Pierre Arnaud", this.manager.GetText (Druid.Parse ("[7001]"), ResourceLevel.Merged, Resources.FindCultureInfo ("de")));
+			Assert.AreEqual ("Pierre Arnaud", this.manager.GetText (Druid.Parse ("[7001]"), ResourceLevel.Merged, Resources.FindCultureInfo ("en")));
+			Assert.AreEqual (ResourceBundle.Field.Null, this.manager.GetBundle ("file/7:Strings", ResourceLevel.Localized, Resources.FindCultureInfo ("de"))[Druid.Parse ("[7001]")].AsString);
+			Assert.AreEqual (null, this.manager.GetBundle ("file/7:Strings", ResourceLevel.Localized, Resources.FindCultureInfo ("en"))[Druid.Parse ("[7001]")].AsString);
+			Assert.AreEqual (null, this.manager.GetText (Druid.Parse ("[7001]"), ResourceLevel.Localized, Resources.FindCultureInfo ("de")));
+			Assert.AreEqual (null, this.manager.GetText (Druid.Parse ("[7001]"), ResourceLevel.Localized, Resources.FindCultureInfo ("en")));
+
+			Assert.AreEqual ("Cf. Common.Support.Tests", this.manager.GetBundle ("file/7:Strings", ResourceLevel.Default)[Druid.Parse ("[7001]")].About);
+			Assert.AreEqual ("Author muss nicht übersetzt werden", this.manager.GetBundle ("file/7:Strings", ResourceLevel.Merged, Resources.FindCultureInfo ("de"))[Druid.Parse ("[7001]")].About, "Incorrect override by 'de' over '00' of Field.About");
+			Assert.AreEqual ("Cf. Common.Support.Tests", this.manager.GetBundle ("file/7:Strings", ResourceLevel.Merged, Resources.FindCultureInfo ("en"))[Druid.Parse ("[7001]")].About, "Incorrect fallback from 'en' to '00' of Field.About");
+
 			ResourceBundle bundle = this.manager.GetBundle (new Druid (4, 0, 0));
 
 			Assert.IsNotNull (bundle);
