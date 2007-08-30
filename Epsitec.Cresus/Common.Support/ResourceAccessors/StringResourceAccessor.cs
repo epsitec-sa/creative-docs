@@ -240,7 +240,8 @@ namespace Epsitec.Common.Support.ResourceAccessors
 						about = null;
 					}
 
-					if (twoLetterISOLanguageName == Resources.DefaultTwoLetterISOLanguageName)
+					if ((twoLetterISOLanguageName == Resources.DefaultTwoLetterISOLanguageName) &&
+						(!usePatchModule))
 					{
 						field.SetName (item.Name);
 					}
@@ -302,8 +303,8 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			//	so just merge the reference with the provided data :
 
 			int    mergeModifId = dataModifId == -1   ? refModifId : dataModifId;
-			string mergeText    = dataText    == null ? refText    : dataText;
-			string mergeComment = dataComment == null ? refComment : dataComment;
+			string mergeText    = ResourceBundle.Field.IsNullString (dataText)    ? refText    : dataText;
+			string mergeComment = ResourceBundle.Field.IsNullString (dataComment) ? refComment : dataComment;
 
 			//	If the merged data is exactly the same as the reference data,
 			//	then there is nothing left to patch; tell the caller that the
