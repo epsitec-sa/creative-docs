@@ -281,7 +281,7 @@
   <data id="0BE">OpenType Einstellungen</data>
   <data id="0DE">Zeichenabstand</data>
   <data id="0CE">Schriftgröße</data>
-  <data id="0AE">Scgriftstil</data>
+  <data id="0AE">Schriftstil</data>
   <data id="06P">Wiederholen</data>
   <data id="0EP">Suchen und Ersetzen...</data>
   <data id="0DP">Ersetzen</data>
