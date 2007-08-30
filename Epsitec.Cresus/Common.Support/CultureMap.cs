@@ -56,6 +56,11 @@ namespace Epsitec.Common.Support
 			{
 				if (this.name != value)
 				{
+					if (this.isNameFrozen)
+					{
+						throw new System.InvalidOperationException (string.Format ("Trying to rename frozen item {0}.", this.name));
+					}
+
 					string oldName = this.name;
 					string newName = value;
 
@@ -111,6 +116,20 @@ namespace Epsitec.Common.Support
 			internal set
 			{
 				this.isNewItem = value;
+			}
+		}
+
+		/// <summary>
+		/// Gets a value indicating whether the name is read only.
+		/// </summary>
+		/// <value>
+		/// 	<c>true</c> if the name is read only; otherwise, <c>false</c>.
+		/// </value>
+		public bool IsNameReadOnly
+		{
+			get
+			{
+				return this.isNameFrozen;
 			}
 		}
 
@@ -236,6 +255,14 @@ namespace Epsitec.Common.Support
 		}
 
 		/// <summary>
+		/// Freezes the name and makes it read only.
+		/// </summary>
+		public void FreezeName()
+		{
+			this.isNameFrozen = true;
+		}
+
+		/// <summary>
 		/// Returns a string that represents the current object.
 		/// </summary>
 		/// <returns>
@@ -355,6 +382,7 @@ namespace Epsitec.Common.Support
 		private KeyValuePair<string, Types.StructuredData>[] map;
 		private bool isNewItem;
 		private bool isRefreshNeeded;
+		private bool isNameFrozen;
 		private CultureMapSource source;
 	}
 }

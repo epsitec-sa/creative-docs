@@ -372,12 +372,19 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			Druid id = new Druid (field.Id, module);
 			bool insert;
 			bool record;
+			bool freezeName = false;
 
 			CultureMap item = this.Collection[id];
 			CultureMapSource fieldSource = this.GetCultureMapSource (field);
 			StructuredData data = new StructuredData (Res.Types.ResourceString);
 			
 			StringResourceAccessor.SetDataFromField (field, data);
+
+			if ((fieldSource == CultureMapSource.ReferenceModule) &&
+				(this.ResourceManager.BasedOnPatchModule))
+			{
+				freezeName = true;
+			}
 
 			if (item == null)
 			{
@@ -442,10 +449,19 @@ namespace Epsitec.Common.Support.ResourceAccessors
 				//	Make sure we remember that the item contains merged data.
 				
 				item.Source = CultureMapSource.DynamicMerge;
+				freezeName  = true;
 			}
 
-			item.Name = field.Name ?? item.Name;
+			if (!item.IsNameReadOnly)
+			{
+				item.Name = field.Name ?? item.Name;
+			}
 
+			if (freezeName)
+			{
+				item.FreezeName ();
+			}
+			
 			if (record)
 			{
 				item.RecordCultureData (twoLetterISOLanguageName, data);

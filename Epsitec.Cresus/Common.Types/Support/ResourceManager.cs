@@ -309,7 +309,7 @@ namespace Epsitec.Common.Support
 				(!string.IsNullOrEmpty (info.ReferenceModulePath)))
 			{
 				string modulePath = this.pool.GetRootRelativePath (info, info.ReferenceModulePath);
-				info = this.pool.FindModuleInfo (modulePath);
+				info = this.pool.GetModuleInfo (modulePath);
 
 				if (info != null)
 				{

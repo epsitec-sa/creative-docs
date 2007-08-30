@@ -88,7 +88,7 @@ namespace Epsitec.Common.Widgets
 		internal void DefineCommand(Command command)
 		{
 			this.command = command;
-			this.command.Lockdown ();
+			this.command.Freeze ();
 
 			this.OverrideDefineCommand ();
 		}

@@ -216,7 +216,7 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				return this.locked;
+				return this.frozen;
 			}
 		}
 
@@ -224,14 +224,14 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				return !this.locked;
+				return !this.frozen;
 			}
 		}
 
 
 		public void ManuallyDefineCommand(string description, string icon, string group, bool statefull)
 		{
-			if (this.locked)
+			if (this.frozen)
 			{
 				throw new Exceptions.CommandLockedException (this.CommandId);
 			}
@@ -245,7 +245,7 @@ namespace Epsitec.Common.Widgets
 
 		public void DefineGroup(string value)
 		{
-			if (this.locked)
+			if (this.frozen)
 			{
 				throw new Exceptions.CommandLockedException (this.CommandId);
 			}
@@ -259,7 +259,7 @@ namespace Epsitec.Common.Widgets
 
 		public void DefineStatefull(bool value)
 		{
-			if (this.locked)
+			if (this.frozen)
 			{
 				throw new Exceptions.CommandLockedException (this.CommandId);
 			}
@@ -273,7 +273,7 @@ namespace Epsitec.Common.Widgets
 
 		public void DefineCommandType(CommandType value)
 		{
-			if (this.locked)
+			if (this.frozen)
 			{
 				throw new Exceptions.CommandLockedException (this.CommandId);
 			}
@@ -287,7 +287,7 @@ namespace Epsitec.Common.Widgets
 
 		public void DefineDefaultParameter(string value)
 		{
-			if (this.locked)
+			if (this.frozen)
 			{
 				throw new Exceptions.CommandLockedException (this.CommandId);
 			}
@@ -301,7 +301,7 @@ namespace Epsitec.Common.Widgets
 
 		public void DefineShortcuts(Collections.ShortcutCollection value)
 		{
-			if (this.locked)
+			if (this.frozen)
 			{
 				throw new Exceptions.CommandLockedException (this.CommandId);
 			}
@@ -323,7 +323,7 @@ namespace Epsitec.Common.Widgets
 
 		public void DefineMultiCommands(Collections.CommandCollection value)
 		{
-			if (this.locked)
+			if (this.frozen)
 			{
 				throw new Exceptions.CommandLockedException (this.CommandId);
 			}
@@ -713,14 +713,14 @@ namespace Epsitec.Common.Widgets
 			this.caption.Name = this.commandId;
 		}
 
-		internal void Lockdown()
+		internal void Freeze()
 		{
 			if (this.temporary)
 			{
-				throw new System.InvalidOperationException (string.Format ("Temporary command {0} may not be locked", this.CommandId));
+				throw new System.InvalidOperationException (string.Format ("Temporary command {0} may not be frozen", this.CommandId));
 			}
 			
-			this.locked = true;
+			this.frozen = true;
 		}
 		
 		#endregion
@@ -853,7 +853,7 @@ namespace Epsitec.Common.Widgets
 
 		private DependencyObjectType			stateObjectType;
 		private int								uniqueId;
-		private bool							locked;
+		private bool							frozen;
 		private bool							temporary;
 		
 		private string							commandId;
