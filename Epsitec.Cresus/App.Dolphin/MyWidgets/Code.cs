@@ -46,6 +46,7 @@ namespace Epsitec.App.Dolphin.MyWidgets
 			this.widgetInstruction = new TextFieldEx(this);
 			this.widgetInstruction.ButtonShowCondition = ShowCondition.WhenModified;
 			this.widgetInstruction.DefocusAction = DefocusAction.AutoAcceptOrRejectEdition;
+			this.widgetInstruction.TextNavigator.AllowTabInsertion = true;
 			this.widgetInstruction.PreferredHeight = 20;
 			this.widgetInstruction.PreferredWidth = 150;
 			this.widgetInstruction.Margins = new Margins(0, 0, 0, 0);
@@ -53,6 +54,10 @@ namespace Epsitec.App.Dolphin.MyWidgets
 			this.widgetInstruction.AcceptingEdition += new EventHandler<CancelEventArgs> (this.HandleInstructionAcceptingEdition);
 			this.widgetInstruction.EditionAccepted += new EventHandler (this.HandleInstructionEditionAccepted);
 			this.widgetInstruction.IsFocusedChanged += new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleFieldIsFocusedChanged);
+
+			TextStyle.Tab tab = new TextStyle.Tab();
+			tab.Pos = 50.0;
+			this.widgetInstruction.TextLayout.TabInsert(tab);
 
 			this.widgetCodeAddress = new MyWidgets.CodeAddress(this);
 			this.widgetCodeAddress.PreferredHeight = 20;

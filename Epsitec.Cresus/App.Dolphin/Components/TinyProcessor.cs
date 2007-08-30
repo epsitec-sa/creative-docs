@@ -1291,7 +1291,7 @@ namespace Epsitec.App.Dolphin.Components
 					return "NOP";
 
 				case Instructions.Call:
-					builder.Append("CALL ");
+					builder.Append("CALL<tab/>");
 					address = TinyProcessor.PutCodeAddress(builder, codes[1], codes[2], pc, length);
 					return builder.ToString();
 
@@ -1308,44 +1308,44 @@ namespace Epsitec.App.Dolphin.Components
 					return "CLRC";
 
 				case Instructions.AddVSP:
-					builder.Append("ADD ");
+					builder.Append("ADD<tab/>");
 					TinyProcessor.PutCodeValue(builder, codes[1]);
 					builder.Append(" ,SP");
 					return builder.ToString();
 
 				case Instructions.SubVSP:
-					builder.Append("SUB ");
+					builder.Append("SUB<tab/>");
 					TinyProcessor.PutCodeValue(builder, codes[1]);
 					builder.Append(" ,SP");
 					return builder.ToString();
 
 				case Instructions.ExAB:
-					return "EX A, B";
+					return "EX<tab/>A, B";
 
 				case Instructions.ExXY:
-					return "EX X, Y";
+					return "EX<tab/>X, Y";
 
 				case Instructions.SwapA:
-					return "SWAP A";
+					return "SWAP<tab/>A";
 
 				case Instructions.SwapB:
-					return "SWAP B";
+					return "SWAP<tab/>B";
 
 				case Instructions.PushF:
-					return "PUSH F";
+					return "PUSH<tab/>F";
 
 				case Instructions.PopF:
-					return "POP F";
+					return "POP<tab/>F";
 
 				case Instructions.Table:
-					builder.Append("TABLE ");
+					builder.Append("TABLE<tab/>");
 					TinyProcessor.PutCodeValue(builder, codes[1]);
 					return builder.ToString();
 			}
 
 			if (op >= (int) Instructions.PushR && op < (int) Instructions.PushR+4)  // PUSH
 			{
-				builder.Append("PUSH ");
+				builder.Append("PUSH<tab/>");
 				int n = op & 0x03;
 				TinyProcessor.PutCodeRegister(builder, n);
 				return builder.ToString();
@@ -1353,7 +1353,7 @@ namespace Epsitec.App.Dolphin.Components
 
 			if (op >= (int) Instructions.PopR && op < (int) Instructions.PopR+4)  // POP
 			{
-				builder.Append("POP ");
+				builder.Append("POP<tab/>");
 				int n = op & 0x03;
 				TinyProcessor.PutCodeRegister(builder, n);
 				return builder.ToString();
@@ -1364,51 +1364,51 @@ namespace Epsitec.App.Dolphin.Components
 				switch ((Instructions) op)
 				{
 					case Instructions.Jump:
-						builder.Append("JUMP ");
+						builder.Append("JUMP<tab/>");
 						break;
 
 					case Instructions.JumpEQ:
-						builder.Append("JUMP,EQ ");
+						builder.Append("JUMP,EQ<tab/>");
 						break;
 
 					case Instructions.JumpNE:
-						builder.Append("JUMP,NE ");
+						builder.Append("JUMP,NE<tab/>");
 						break;
 
 					case Instructions.JumpLO:
-						builder.Append("JUMP,LO ");
+						builder.Append("JUMP,LO<tab/>");
 						break;
 
 					case Instructions.JumpLS:
-						builder.Append("JUMP,LS ");
+						builder.Append("JUMP,LS<tab/>");
 						break;
 
 					case Instructions.JumpHI:
-						builder.Append("JUMP,HI ");
+						builder.Append("JUMP,HI<tab/>");
 						break;
 
 					case Instructions.JumpHS:
-						builder.Append("JUMP,HS ");
+						builder.Append("JUMP,HS<tab/>");
 						break;
 
 					case Instructions.JumpCC:
-						builder.Append("JUMP,CC ");
+						builder.Append("JUMP,CC<tab/>");
 						break;
 
 					case Instructions.JumpCS:
-						builder.Append("JUMP,CS ");
+						builder.Append("JUMP,CS<tab/>");
 						break;
 
 					case Instructions.JumpNC:
-						builder.Append("JUMP,NC ");
+						builder.Append("JUMP,NC<tab/>");
 						break;
 
 					case Instructions.JumpNS:
-						builder.Append("JUMP,NS ");
+						builder.Append("JUMP,NS<tab/>");
 						break;
 
 					default:
-						builder.Append("JUMP ");
+						builder.Append("JUMP<tab/>");
 						break;
 				}
 
@@ -1424,19 +1424,19 @@ namespace Epsitec.App.Dolphin.Components
 				switch (i)
 				{
 					case Instructions.ClrR:
-						builder.Append("CLR ");
+						builder.Append("CLR<tab/>");
 						break;
 
 					case Instructions.NotR:
-						builder.Append("NOT ");
+						builder.Append("NOT<tab/>");
 						break;
 
 					case Instructions.IncR:
-						builder.Append("INC ");
+						builder.Append("INC<tab/>");
 						break;
 
 					case Instructions.DecR:
-						builder.Append("DEC ");
+						builder.Append("DEC<tab/>");
 						break;
 
 					default:
@@ -1456,19 +1456,19 @@ namespace Epsitec.App.Dolphin.Components
 				switch (i)
 				{
 					case Instructions.RlR:
-						builder.Append("RL ");
+						builder.Append("RL<tab/>");
 						break;
 
 					case Instructions.RrR:
-						builder.Append("RR ");
+						builder.Append("RR<tab/>");
 						break;
 
 					case Instructions.RlcR:
-						builder.Append("RLC ");
+						builder.Append("RLC<tab/>");
 						break;
 
 					case Instructions.RrcR:
-						builder.Append("RRC ");
+						builder.Append("RRC<tab/>");
 						break;
 
 					default:
@@ -1484,7 +1484,7 @@ namespace Epsitec.App.Dolphin.Components
 			{
 				int src = (op>>2) & 0x03;
 				int dst = op & 0x03;
-				builder.Append("MOVE ");
+				builder.Append("MOVE<tab/>");
 				TinyProcessor.PutCodeRegister(builder, src);
 				builder.Append(", ");
 				TinyProcessor.PutCodeRegister(builder, dst);
@@ -1494,7 +1494,7 @@ namespace Epsitec.App.Dolphin.Components
 			if (op >= (int) Instructions.MoveVR && op < (int) Instructions.MoveVR+4)  // MOVE #val,r
 			{
 				int n = op & 0x03;
-				builder.Append("MOVE ");
+				builder.Append("MOVE<tab/>");
 				TinyProcessor.PutCodeValue(builder, codes[1]);
 				builder.Append(", ");
 				TinyProcessor.PutCodeRegister(builder, n);
@@ -1504,7 +1504,7 @@ namespace Epsitec.App.Dolphin.Components
 			if (op >= (int) Instructions.MoveAR && op < (int) Instructions.MoveAR+4)  // MOVE ADDR,r
 			{
 				int n = op & 0x03;
-				builder.Append("MOVE ");
+				builder.Append("MOVE<tab/>");
 				address = TinyProcessor.PutCodeAddress(builder, codes[1], codes[2], pc, length);
 				builder.Append(", ");
 				TinyProcessor.PutCodeRegister(builder, n);
@@ -1514,7 +1514,7 @@ namespace Epsitec.App.Dolphin.Components
 			if (op >= (int) Instructions.MoveRA && op < (int) Instructions.MoveRA+4)  // MOVE r,ADDR
 			{
 				int n = op & 0x03;
-				builder.Append("MOVE ");
+				builder.Append("MOVE<tab/>");
 				TinyProcessor.PutCodeRegister(builder, n);
 				builder.Append(", ");
 				address = TinyProcessor.PutCodeAddress(builder, codes[1], codes[2], pc, length);
@@ -1525,7 +1525,7 @@ namespace Epsitec.App.Dolphin.Components
 			{
 				int src = (op>>2) & 0x03;
 				int dst = op & 0x03;
-				builder.Append("COMP ");
+				builder.Append("COMP<tab/>");
 				TinyProcessor.PutCodeRegister(builder, src);
 				builder.Append(", ");
 				TinyProcessor.PutCodeRegister(builder, dst);
@@ -1535,7 +1535,7 @@ namespace Epsitec.App.Dolphin.Components
 			if (op >= (int) Instructions.CompVR && op < (int) Instructions.CompVR+4)  // COMP #val,r
 			{
 				int n = op & 0x03;
-				builder.Append("COMP ");
+				builder.Append("COMP<tab/>");
 				TinyProcessor.PutCodeValue(builder, codes[1]);
 				builder.Append(", ");
 				TinyProcessor.PutCodeRegister(builder, n);
@@ -1550,15 +1550,15 @@ namespace Epsitec.App.Dolphin.Components
 				switch (i)
 				{
 					case Instructions.AndVR:
-						builder.Append("AND ");
+						builder.Append("AND<tab/>");
 						break;
 
 					case Instructions.OrVR:
-						builder.Append("OR ");
+						builder.Append("OR<tab/>");
 						break;
 
 					case Instructions.XorVR:
-						builder.Append("XOR ");
+						builder.Append("XOR<tab/>");
 						break;
 
 					default:
@@ -1581,11 +1581,11 @@ namespace Epsitec.App.Dolphin.Components
 				switch (i)
 				{
 					case Instructions.AddRR:
-						builder.Append("ADD ");
+						builder.Append("ADD<tab/>");
 						break;
 
 					case Instructions.SubRR:
-						builder.Append("SUB ");
+						builder.Append("SUB<tab/>");
 						break;
 
 					default:
@@ -1602,7 +1602,7 @@ namespace Epsitec.App.Dolphin.Components
 			if (op >= (int) Instructions.AddVR && op < (int) Instructions.AddVR+4)  // ADD #val,r
 			{
 				int n = op & 0x03;
-				builder.Append("ADD ");
+				builder.Append("ADD<tab/>");
 				TinyProcessor.PutCodeValue(builder, codes[1]);
 				builder.Append(", ");
 				TinyProcessor.PutCodeRegister(builder, n);
@@ -1612,7 +1612,7 @@ namespace Epsitec.App.Dolphin.Components
 			if (op >= (int) Instructions.SubVR && op < (int) Instructions.SubVR+4)  // SUB #val,r
 			{
 				int n = op & 0x03;
-				builder.Append("SUB ");
+				builder.Append("SUB<tab/>");
 				TinyProcessor.PutCodeValue(builder, codes[1]);
 				builder.Append(", ");
 				TinyProcessor.PutCodeRegister(builder, n);
@@ -1626,35 +1626,35 @@ namespace Epsitec.App.Dolphin.Components
 				switch (i)
 				{
 					case Instructions.ClrA:
-						builder.Append("CLR ");
+						builder.Append("CLR<tab/>");
 						break;
 
 					case Instructions.NotA:
-						builder.Append("NOT ");
+						builder.Append("NOT<tab/>");
 						break;
 
 					case Instructions.IncA:
-						builder.Append("INC ");
+						builder.Append("INC<tab/>");
 						break;
 
 					case Instructions.DecA:
-						builder.Append("DEC ");
+						builder.Append("DEC<tab/>");
 						break;
 
 					case Instructions.RlA:
-						builder.Append("RL ");
+						builder.Append("RL<tab/>");
 						break;
 
 					case Instructions.RrA:
-						builder.Append("RR ");
+						builder.Append("RR<tab/>");
 						break;
 
 					case Instructions.RlcA:
-						builder.Append("RLC ");
+						builder.Append("RLC<tab/>");
 						break;
 
 					case Instructions.RrcA:
-						builder.Append("RRC ");
+						builder.Append("RRC<tab/>");
 						break;
 
 					default:
@@ -1674,11 +1674,11 @@ namespace Epsitec.App.Dolphin.Components
 				switch (i)
 				{
 					case Instructions.AddAR:
-						builder.Append("ADD ");
+						builder.Append("ADD<tab/>");
 						break;
 
 					case Instructions.SubAR:
-						builder.Append("SUB ");
+						builder.Append("SUB<tab/>");
 						break;
 
 					default:
@@ -1700,11 +1700,11 @@ namespace Epsitec.App.Dolphin.Components
 				switch (i)
 				{
 					case Instructions.AddRA:
-						builder.Append("ADD ");
+						builder.Append("ADD<tab/>");
 						break;
 
 					case Instructions.SubRA:
-						builder.Append("SUB ");
+						builder.Append("SUB<tab/>");
 						break;
 
 					default:
@@ -1712,7 +1712,7 @@ namespace Epsitec.App.Dolphin.Components
 						break;
 				}
 
-				builder.Append("MOVE ");
+				builder.Append("MOVE<tab/>");
 				TinyProcessor.PutCodeRegister(builder, n);
 				builder.Append(", ");
 				address = TinyProcessor.PutCodeAddress(builder, codes[1], codes[2], pc, length);
@@ -1729,19 +1729,19 @@ namespace Epsitec.App.Dolphin.Components
 				switch (i)
 				{
 					case Instructions.TestSS:
-						builder.Append("TEST ");
+						builder.Append("TEST<tab/>");
 						break;
 
 					case Instructions.TSetSS:
-						builder.Append("TSET ");
+						builder.Append("TSET<tab/>");
 						break;
 
 					case Instructions.TClrSS:
-						builder.Append("TCLR ");
+						builder.Append("TCLR<tab/>");
 						break;
 
 					case Instructions.TNotSS:
-						builder.Append("TNOT ");
+						builder.Append("TNOT<tab/>");
 						break;
 
 					default:
@@ -1763,19 +1763,19 @@ namespace Epsitec.App.Dolphin.Components
 				switch (i)
 				{
 					case Instructions.TestSA:
-						builder.Append("TEST ");
+						builder.Append("TEST<tab/>");
 						break;
 
 					case Instructions.TSetSA:
-						builder.Append("TSET ");
+						builder.Append("TSET<tab/>");
 						break;
 
 					case Instructions.TClrSA:
-						builder.Append("TCLR ");
+						builder.Append("TCLR<tab/>");
 						break;
 
 					case Instructions.TNotSA:
-						builder.Append("TNOT ");
+						builder.Append("TNOT<tab/>");
 						break;
 
 					default:
@@ -1797,19 +1797,19 @@ namespace Epsitec.App.Dolphin.Components
 				switch (i)
 				{
 					case Instructions.TestVS:
-						builder.Append("TEST ");
+						builder.Append("TEST<tab/>");
 						break;
 
 					case Instructions.TSetVS:
-						builder.Append("TSET ");
+						builder.Append("TSET<tab/>");
 						break;
 
 					case Instructions.TClrVS:
-						builder.Append("TCLR ");
+						builder.Append("TCLR<tab/>");
 						break;
 
 					case Instructions.TNotVS:
-						builder.Append("TNOT ");
+						builder.Append("TNOT<tab/>");
 						break;
 
 					default:
@@ -1831,19 +1831,19 @@ namespace Epsitec.App.Dolphin.Components
 				switch (i)
 				{
 					case Instructions.TestVA:
-						builder.Append("TEST ");
+						builder.Append("TEST<tab/>");
 						break;
 
 					case Instructions.TSetVA:
-						builder.Append("TSET ");
+						builder.Append("TSET<tab/>");
 						break;
 
 					case Instructions.TClrVA:
-						builder.Append("TCLR ");
+						builder.Append("TCLR<tab/>");
 						break;
 
 					case Instructions.TNotVA:
-						builder.Append("TNOT ");
+						builder.Append("TNOT<tab/>");
 						break;
 
 					default:
@@ -1865,19 +1865,19 @@ namespace Epsitec.App.Dolphin.Components
 				switch (i)
 				{
 					case Instructions.MoveVA:
-						builder.Append("MOVE ");
+						builder.Append("MOVE<tab/>");
 						break;
 
 					case Instructions.CompVA:
-						builder.Append("COMP ");
+						builder.Append("COMP<tab/>");
 						break;
 
 					case Instructions.AddVA:
-						builder.Append("ADD ");
+						builder.Append("ADD<tab/>");
 						break;
 
 					case Instructions.SubVA:
-						builder.Append("SUB ");
+						builder.Append("SUB<tab/>");
 						break;
 
 					default:
@@ -1901,15 +1901,15 @@ namespace Epsitec.App.Dolphin.Components
 				switch (i)
 				{
 					case Instructions.AndSS:
-						builder.Append("AND ");
+						builder.Append("AND<tab/>");
 						break;
 
 					case Instructions.OrSS:
-						builder.Append("OR ");
+						builder.Append("OR<tab/>");
 						break;
 
 					case Instructions.XorSS:
-						builder.Append("XOR ");
+						builder.Append("XOR<tab/>");
 						break;
 
 					default:
@@ -1931,15 +1931,15 @@ namespace Epsitec.App.Dolphin.Components
 				switch (i)
 				{
 					case Instructions.AndAS:
-						builder.Append("AND ");
+						builder.Append("AND<tab/>");
 						break;
 
 					case Instructions.OrAS:
-						builder.Append("OR ");
+						builder.Append("OR<tab/>");
 						break;
 
 					case Instructions.XorAS:
-						builder.Append("XOR ");
+						builder.Append("XOR<tab/>");
 						break;
 
 					default:
@@ -1961,15 +1961,15 @@ namespace Epsitec.App.Dolphin.Components
 				switch (i)
 				{
 					case Instructions.AndSA:
-						builder.Append("AND ");
+						builder.Append("AND<tab/>");
 						break;
 
 					case Instructions.OrSA:
-						builder.Append("OR ");
+						builder.Append("OR<tab/>");
 						break;
 
 					case Instructions.XorSA:
-						builder.Append("XOR ");
+						builder.Append("XOR<tab/>");
 						break;
 
 					default:
@@ -1986,7 +1986,7 @@ namespace Epsitec.App.Dolphin.Components
 			if (op >= (int) Instructions.CompAR && op < (int) Instructions.CompAR+4)  // COMP ADDR,r
 			{
 				int n = op & 0x03;
-				builder.Append("COMP ");
+				builder.Append("COMP<tab/>");
 				address = TinyProcessor.PutCodeAddress(builder, codes[1], codes[2], pc, length);
 				builder.Append(", ");
 				TinyProcessor.PutCodeRegister(builder, n);
