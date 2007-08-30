@@ -101,7 +101,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 		{
 			ResourceBundle bundle = this.ResourceManager.GetBundle (Resources.CaptionsBundleName, ResourceLevel.Default);
 			AccessorsCollection accessors = AbstractCaptionResourceAccessor.GetAccessors (bundle);
-			return AbstractResourceAccessor.CreateId (bundle, accessors.AllCollections);
+			return AbstractResourceAccessor.CreateId (accessors.AllCollections, bundle);
 		}
 
 		protected override void DeleteItem(CultureMap item)

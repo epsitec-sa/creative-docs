@@ -199,11 +199,11 @@ namespace Epsitec.Common.Support.ResourceAccessors
 		/// <summary>
 		/// Creates a unique id, making sure there are no collisions.
 		/// </summary>
-		/// <param name="bundle">The bundle where to look for existing ids.</param>
 		/// <param name="collection">The collection of <see cref="CultureMap"/> items (or <c>null</c>)
 		/// which contains ids that are already in use.</param>
+		/// <param name="bundles">The bundle(s) where to look for existing ids.</param>
 		/// <returns>A unique id.</returns>
-		internal static Druid CreateId(ResourceBundle bundle, IEnumerable<CultureMap> collection)
+		internal static Druid CreateId(IEnumerable<CultureMap> collection, params ResourceBundle[] bundles)
 		{
 			//	Derive the developer id from the value stored in the global properties
 			//	repository. This must have been initialized by the user application,
@@ -211,8 +211,9 @@ namespace Epsitec.Common.Support.ResourceAccessors
 
 			object devIdValue = Support.Globals.Properties.GetProperty (AbstractResourceAccessor.DeveloperIdPropertyName);
 
-			int devId   = -1;
-			int localId = -1;
+			int devId    = -1;
+			int localId  = -1;
+			int moduleId = -1;
 
 			if (Types.UndefinedValue.IsUndefinedValue (devIdValue))
 			{
@@ -227,17 +228,32 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			}
 
 			//	Locate the largest local id for the active developer in
-			//	the specified bundle :
-			
-			foreach (ResourceBundle.Field field in bundle.Fields)
+			//	the specified bundle(s) :
+
+			foreach (ResourceBundle bundle in bundles)
 			{
-				Druid id = field.Id;
-
-				System.Diagnostics.Debug.Assert (id.IsValid);
-
-				if (id.Developer == devId)
+				if (bundle == null)
 				{
-					localId = System.Math.Max (localId, id.Local);
+					continue;
+				}
+
+				if (moduleId == -1)
+				{
+					moduleId = bundle.Module.Id;
+				}
+
+				System.Diagnostics.Debug.Assert (moduleId == bundle.Module.Id);
+				
+				foreach (ResourceBundle.Field field in bundle.Fields)
+				{
+					Druid id = field.Id;
+
+					System.Diagnostics.Debug.Assert (id.IsValid);
+
+					if (id.Developer == devId)
+					{
+						localId = System.Math.Max (localId, id.Local);
+					}
 				}
 			}
 
@@ -259,7 +275,9 @@ namespace Epsitec.Common.Support.ResourceAccessors
 				}
 			}
 
-			return new Druid (bundle.Module.Id, devId, localId+1);
+			System.Diagnostics.Debug.Assert (moduleId >= 0);
+			
+			return new Druid (moduleId, devId, localId+1);
 		}
 
 		/// <summary>

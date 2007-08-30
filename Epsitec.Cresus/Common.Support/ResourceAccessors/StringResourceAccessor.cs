@@ -52,6 +52,14 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			}
 		}
 
+		/// <summary>
+		/// Loads the data for the specified culture into an existing item.
+		/// </summary>
+		/// <param name="item">The item to update.</param>
+		/// <param name="twoLetterISOLanguageName">The two letter ISO language name.</param>
+		/// <returns>
+		/// The data loaded from the resources which was stored in the specified item.
+		/// </returns>
 		public override Types.StructuredData LoadCultureData(CultureMap item, string twoLetterISOLanguageName)
 		{
 			CultureInfo culture;
@@ -67,6 +75,9 @@ namespace Epsitec.Common.Support.ResourceAccessors
 				culture = Resources.FindCultureInfo (twoLetterISOLanguageName);
 				level   = ResourceLevel.Localized;
 			}
+			
+			//	If the module is a patch module, then handle the merge between the
+			//	data coming from the reference module and the patch module :
 			
 			ResourceBundle refBundle;
 			ResourceBundle patchBundle;
@@ -104,17 +115,27 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			return data;
 		}
 
-		public override IDataBroker GetDataBroker(StructuredData container, string fieldId)
-		{
-			return base.GetDataBroker (container, fieldId);
-		}
-
+		/// <summary>
+		/// Creates a new unique id.
+		/// </summary>
+		/// <returns>The new unique id.</returns>
 		protected override Druid CreateId()
 		{
-			ResourceBundle bundle = this.ResourceManager.GetBundle (Resources.StringsBundleName, ResourceLevel.Default);
-			return AbstractResourceAccessor.CreateId (bundle, this.Collection);
+			ResourceBundle bundle1 = this.ResourceManager.GetBundle (Resources.StringsBundleName, ResourceLevel.Default);
+			ResourceBundle bundle2 = null;
+
+			if (this.ResourceManager.BasedOnPatchModule)
+			{
+				bundle2 = this.ResourceManager.GetManagerForReferenceModule ().GetBundle (Resources.StringsBundleName, ResourceLevel.Default);
+			}
+			
+			return AbstractResourceAccessor.CreateId (this.Collection, bundle1, bundle2);
 		}
 
+		/// <summary>
+		/// Deletes the specified item.
+		/// </summary>
+		/// <param name="item">The item to delete.</param>
 		protected override void DeleteItem(CultureMap item)
 		{
 			foreach (string twoLetterISOLanguageName in item.GetDefinedCultures ())
@@ -144,7 +165,11 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			}
 			
 		}
-		
+
+		/// <summary>
+		/// Persists the specified item.
+		/// </summary>
+		/// <param name="item">The item to store as a resource.</param>
 		protected override void PersistItem(CultureMap item)
 		{
 			if (string.IsNullOrEmpty (item.Name))
@@ -171,7 +196,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 					//	The resource should be stored as a delta (patch) relative
 					//	to the reference resource. Compute what that is...
 
-					if ((this.ComputeDelta (refModuleManager, ref data, culture, level, bundle, item.Id)) ||
+					if ((StringResourceAccessor.ComputeDelta (refModuleManager, ref data, culture, level, item.Id)) ||
 						(StringResourceAccessor.IsEmpty (data)))
 					{
 						//	The resource is empty... but we may not remove it if
@@ -272,6 +297,142 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			}
 		}
 
+		/// <summary>
+		/// Loads data from a resource bundle field.
+		/// </summary>
+		/// <param name="field">The resource bundle field.</param>
+		/// <param name="module">The source module id.</param>
+		/// <param name="twoLetterISOLanguageName">The two letter ISO language name.</param>
+		/// <returns>
+		/// The data which describes the specified resource.
+		/// </returns>
+		protected override Types.StructuredData LoadFromField(ResourceBundle.Field field, int module, string twoLetterISOLanguageName)
+		{
+			Druid id = new Druid (field.Id, module);
+			bool insert;
+			bool record;
+			bool freezeName = false;
+
+			CultureMap item = this.Collection[id];
+			CultureMapSource fieldSource = this.GetCultureMapSource (field);
+			StructuredData data = new StructuredData (Res.Types.ResourceString);
+
+			StringResourceAccessor.FillDataFromField (field, data);
+
+			if ((fieldSource == CultureMapSource.ReferenceModule) &&
+				(this.ResourceManager.BasedOnPatchModule))
+			{
+				freezeName = true;
+			}
+
+			if (item == null)
+			{
+				//	Fresh item, not yet known :
+
+				item = new CultureMap (this, id, fieldSource);
+
+				insert = true;
+				record = true;
+			}
+			else if (item.Source == fieldSource)
+			{
+				//	We already have an item for this id, but since we are fetching
+				//	data from the same source as before, we can safely assume that
+				//	this will produce new data for a not yet known culture :
+
+				insert = false;
+				record = true;
+			}
+			else
+			{
+				//	The source which was used to fill this item is different from
+				//	the current source...
+
+				if (item.IsCultureDefined (twoLetterISOLanguageName))
+				{
+					//	...and we know that there is already some data available
+					//	for the culture. Merge the data :
+
+					StructuredData newData = data;
+					StructuredData oldData = item.GetCultureData (twoLetterISOLanguageName);
+
+					if ((field.AsString != null) &&
+						(field.AsString != ResourceBundle.Field.Null))
+					{
+						oldData.SetValue (Res.Fields.ResourceString.Text, newData.GetValue (Res.Fields.ResourceString.Text));
+					}
+					if (field.About != null)
+					{
+						oldData.SetValue (Res.Fields.ResourceBase.Comment, newData.GetValue (Res.Fields.ResourceBase.Comment));
+					}
+					if (field.ModificationId > 0)
+					{
+						oldData.SetValue (Res.Fields.ResourceBase.ModificationId, newData.GetValue (Res.Fields.ResourceBase.ModificationId));
+					}
+
+
+					data = oldData;
+
+					insert = false;
+					record = false;
+				}
+				else
+				{
+					//	...but we are filling in data for an unknown culture.
+					//	Simply add the data to the item :
+
+					insert = false;
+					record = true;
+				}
+
+				//	Make sure we remember that the item contains merged data.
+
+				item.Source = CultureMapSource.DynamicMerge;
+				freezeName  = true;
+			}
+
+			if (!item.IsNameReadOnly)
+			{
+				item.Name = field.Name ?? item.Name;
+			}
+
+			if (freezeName)
+			{
+				item.FreezeName ();
+			}
+
+			if (record)
+			{
+				item.RecordCultureData (twoLetterISOLanguageName, data);
+			}
+			if (insert)
+			{
+				this.Collection.Add (item);
+			}
+
+			return data;
+		}
+
+		/// <summary>
+		/// Checks if the data stored in the field matches this accessor. This
+		/// implementation always returns <c>true</c>.
+		/// </summary>
+		/// <param name="field">The field to check.</param>
+		/// <returns>Always <c>true</c>.
+		/// </returns>
+		protected override bool FilterField(ResourceBundle.Field field)
+		{
+			return true;
+		}
+
+		/// <summary>
+		/// Determines whether the specified data record is empty (only undefined
+		/// values in the text, comment and modification id fields).
+		/// </summary>
+		/// <param name="data">The data record.</param>
+		/// <returns>
+		/// 	<c>true</c> if the specified data record is empty; otherwise, <c>false</c>.
+		/// </returns>
 		private static bool IsEmpty(StructuredData data)
 		{
 			return (UndefinedValue.IsUndefinedValue (data.GetValue (Res.Fields.ResourceString.Text)))
@@ -279,7 +440,18 @@ namespace Epsitec.Common.Support.ResourceAccessors
 				&& (UndefinedValue.IsUndefinedValue (data.GetValue (Res.Fields.ResourceBase.ModificationId)));
 		}
 
-		private bool ComputeDelta(ResourceManager refModuleManager, ref StructuredData data, CultureInfo culture, ResourceLevel level, ResourceBundle patchBundle, Druid druid)
+		/// <summary>
+		/// Computes the delta between the reference data and the current data
+		/// provided in the data record.
+		/// </summary>
+		/// <param name="refModuleManager">The resource manager for the reference module.</param>
+		/// <param name="data">The current data record.</param>
+		/// <param name="culture">The resource culture.</param>
+		/// <param name="level">The resource level.</param>
+		/// <param name="druid">The id for the item.</param>
+		/// <returns><c>true</c> if the current data is the same as the reference data;
+		/// otherwise, <c>false</c>.</returns>
+		private static bool ComputeDelta(ResourceManager refModuleManager, ref StructuredData data, CultureInfo culture, ResourceLevel level, Druid druid)
 		{
 			ResourceBundle refBundle = refModuleManager.GetBundle (Resources.StringsBundleName, level, culture);
 
@@ -367,6 +539,24 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			return false;
 		}
 
+		/// <summary>
+		/// Fills the values in the data record based on a resource bundle field.
+		/// </summary>
+		/// <param name="field">The resource bundle field.</param>
+		/// <param name="data">The data record to fill.</param>
+		private static void FillDataFromField(ResourceBundle.Field field, Types.StructuredData data)
+		{
+			data.SetValue (Res.Fields.ResourceString.Text, ResourceBundle.Field.IsNullString (field.AsString) ? null : field.AsString);
+			data.SetValue (Res.Fields.ResourceBase.Comment, ResourceBundle.Field.IsNullString (field.About) ? null : field.About);
+			data.SetValue (Res.Fields.ResourceBase.ModificationId, field.ModificationId);
+		}
+
+		/// <summary>
+		/// Sets the modification id for the specified resource bundle field,
+		/// based on an object representation.
+		/// </summary>
+		/// <param name="field">The resource bundle field.</param>
+		/// <param name="modId">The modification id (which can be an <c>UndefinedValue.Instance</c>).</param>
 		internal static void SetModificationId(ResourceBundle.Field field, object modId)
 		{
 			if (!UndefinedValue.IsUndefinedValue (modId))
@@ -377,125 +567,6 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			{
 				field.SetModificationId (-1);
 			}
-		}
-
-		protected override Types.StructuredData LoadFromField(ResourceBundle.Field field, int module, string twoLetterISOLanguageName)
-		{
-			Druid id = new Druid (field.Id, module);
-			bool insert;
-			bool record;
-			bool freezeName = false;
-
-			CultureMap item = this.Collection[id];
-			CultureMapSource fieldSource = this.GetCultureMapSource (field);
-			StructuredData data = new StructuredData (Res.Types.ResourceString);
-			
-			StringResourceAccessor.SetDataFromField (field, data);
-
-			if ((fieldSource == CultureMapSource.ReferenceModule) &&
-				(this.ResourceManager.BasedOnPatchModule))
-			{
-				freezeName = true;
-			}
-
-			if (item == null)
-			{
-				//	Fresh item, not yet known :
-
-				item = new CultureMap (this, id, fieldSource);
-				
-				insert = true;
-				record = true;
-			}
-			else if (item.Source == fieldSource)
-			{
-				//	We already have an item for this id, but since we are fetching
-				//	data from the same source as before, we can safely assume that
-				//	this will produce new data for a not yet known culture :
-
-				insert = false;
-				record = true;
-			}
-			else
-			{
-				//	The source which was used to fill this item is different from
-				//	the current source...
-
-				if (item.IsCultureDefined (twoLetterISOLanguageName))
-				{
-					//	...and we know that there is already some data available
-					//	for the culture. Merge the data :
-
-					StructuredData newData = data;
-					StructuredData oldData = item.GetCultureData (twoLetterISOLanguageName);
-
-					if ((field.AsString != null) &&
-						(field.AsString != ResourceBundle.Field.Null))
-					{
-						oldData.SetValue (Res.Fields.ResourceString.Text, newData.GetValue (Res.Fields.ResourceString.Text));
-					}
-					if (field.About != null)
-					{
-						oldData.SetValue (Res.Fields.ResourceBase.Comment, newData.GetValue (Res.Fields.ResourceBase.Comment));
-					}
-					if (field.ModificationId > 0)
-					{
-						oldData.SetValue (Res.Fields.ResourceBase.ModificationId, newData.GetValue (Res.Fields.ResourceBase.ModificationId));
-					}
-					
-
-					data = oldData;
-
-					insert = false;
-					record = false;
-				}
-				else
-				{
-					//	...but we are filling in data for an unknown culture.
-					//	Simply add the data to the item :
-
-					insert = false;
-					record = true;
-				}
-
-				//	Make sure we remember that the item contains merged data.
-				
-				item.Source = CultureMapSource.DynamicMerge;
-				freezeName  = true;
-			}
-
-			if (!item.IsNameReadOnly)
-			{
-				item.Name = field.Name ?? item.Name;
-			}
-
-			if (freezeName)
-			{
-				item.FreezeName ();
-			}
-			
-			if (record)
-			{
-				item.RecordCultureData (twoLetterISOLanguageName, data);
-			}
-			if (insert)
-			{
-				this.Collection.Add (item);
-			}
-
-			return data;
-		}
-
-		private static void SetDataFromField(ResourceBundle.Field field, Types.StructuredData data)
-		{
-			data.SetValue (Res.Fields.ResourceString.Text, ResourceBundle.Field.IsNullString (field.AsString) ? null : field.AsString);
-			data.SetValue (Res.Fields.ResourceBase.Comment, ResourceBundle.Field.IsNullString (field.About) ? null : field.About);
-			data.SetValue (Res.Fields.ResourceBase.ModificationId, field.ModificationId);
-		}
-
-		protected override bool FilterField(ResourceBundle.Field field)
-		{
-			return true;
 		}
 	}
 }
