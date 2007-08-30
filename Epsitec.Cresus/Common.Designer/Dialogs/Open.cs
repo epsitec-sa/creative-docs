@@ -165,7 +165,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			if (scan)
 			{
 				this.designerApplication.ResourceManagerPool.ScanForAllModules();
-				this.moduleInfosAll = this.designerApplication.ResourceManagerPool.FindReferenceModules();
+				this.moduleInfosAll = Collection.ToList(this.designerApplication.ResourceManagerPool.Modules);
 			}
 
 			//	Construit une liste réduite contenant uniquement les modules visibles dans la liste.

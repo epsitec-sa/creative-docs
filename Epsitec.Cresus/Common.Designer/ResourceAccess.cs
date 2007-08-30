@@ -3517,7 +3517,10 @@ namespace Epsitec.Common.Designer
 					return -1;
 				}
 
-				return field1.Name.CompareTo(field2.Name);
+				string name1 = field1.Name ?? "";
+				string name2 = field2.Name ?? "";
+
+				return name1.CompareTo(name2);
 			}
 
 			protected ResourceAccess resourceAccess;

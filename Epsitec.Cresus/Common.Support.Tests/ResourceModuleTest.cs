@@ -67,7 +67,7 @@ namespace Epsitec.Common.Support
 		}
 
 		[Test]
-		public void CheckFindModuleInfos()
+		public void CheckFindModuleInfos1()
 		{
 			ResourceManagerPool pool = new ResourceManagerPool ("Test");
 
@@ -76,11 +76,26 @@ namespace Epsitec.Common.Support
 			pool.ScanForModules ("%epsitec%");
 
 			Assert.IsTrue (Types.Collection.Count (pool.Modules) > 80);
-			
+
 			Assert.IsTrue (pool.FindModuleInfos ("Common.Support").Count > 4);
 			Assert.AreEqual (pool.FindModuleInfos ("Common.Support").Count, pool.FindModuleInfos (7).Count);
 
 			foreach (ResourceModuleInfo info in pool.FindModuleInfos ("Common.Support"))
+			{
+				System.Console.Out.WriteLine ("{0}: {1} in {2}  {3}", info.FullId.Name, info.FullId.Id, info.FullId.Path, info.SourceNamespace);
+			}
+		}
+
+		[Test]
+		public void CheckFindModuleInfos2()
+		{
+			ResourceManagerPool pool = new ResourceManagerPool ("Test");
+
+			pool.AddModuleRootPath ("%epsitec%", @"S:\Epsitec.Cresus\Common.Support.Tests");
+
+			pool.ScanForModules ("%epsitec%");
+
+			foreach (ResourceModuleInfo info in pool.Modules)
 			{
 				System.Console.Out.WriteLine ("{0}: {1} in {2}  {3}", info.FullId.Name, info.FullId.Id, info.FullId.Path, info.SourceNamespace);
 			}
