@@ -137,7 +137,7 @@ namespace Epsitec.App.Dolphin.Components
 			//	Nom du processeur.
 			get
 			{
-				return "Tiny";
+				return "PSI30";
 			}
 		}
 
