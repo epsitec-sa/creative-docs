@@ -84,8 +84,6 @@ namespace Epsitec.App.Dolphin.MyWidgets
 				if (!string.IsNullOrEmpty(this.bank))
 				{
 					this.UpdateData();
-					this.UpdateScroller();
-					this.UpdateMarkPC();
 				}
 			}
 		}
@@ -187,8 +185,6 @@ namespace Epsitec.App.Dolphin.MyWidgets
 				this.firstAddress = 0;
 
 				this.UpdateData();
-				this.UpdateScroller();
-				this.UpdateMarkPC();
 			}
 		}
 
@@ -246,12 +242,6 @@ namespace Epsitec.App.Dolphin.MyWidgets
 							}
 
 							this.UpdateData();
-
-							this.ignoreChange = true;
-							this.UpdateScroller();
-							this.ignoreChange = false;
-
-							this.UpdateMarkPC();
 						}
 					}
 					else
@@ -337,6 +327,12 @@ namespace Epsitec.App.Dolphin.MyWidgets
 			//	Met à jour la table des instructions.
 			this.UpdateInstructionAddresses();
 			this.UpdateTable();
+
+			this.ignoreChange = true;
+			this.UpdateScroller();
+			this.ignoreChange = false;
+
+			this.UpdateMarkPC();
 		}
 
 		protected void UpdateTable()
