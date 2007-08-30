@@ -241,7 +241,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 					}
 
 					if ((twoLetterISOLanguageName == Resources.DefaultTwoLetterISOLanguageName) &&
-						(!usePatchModule))
+						(item.Source != CultureMapSource.DynamicMerge))
 					{
 						field.SetName (item.Name);
 					}
