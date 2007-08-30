@@ -12,6 +12,9 @@ namespace Epsitec.Common.Support.ResourceAccessors
 	/// </summary>
 	public abstract class AbstractResourceAccessor : Types.DependencyObject, IResourceAccessor
 	{
+		/// <summary>
+		/// Initializes a new instance of the <see cref="AbstractResourceAccessor"/> class.
+		/// </summary>
 		protected AbstractResourceAccessor()
 		{
 			this.items = new CultureMapList (this);
@@ -31,14 +34,6 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			}
 		}
 
-		protected bool AreNotificationsEnabled
-		{
-			get
-			{
-				return (this.suspendNotifications == 0);
-			}
-		}
-
 		/// <summary>
 		/// Loads resources from the specified resource manager. The resource
 		/// manager will be used for all upcoming accesses.
@@ -48,6 +43,10 @@ namespace Epsitec.Common.Support.ResourceAccessors
 
 		#region IResourceAccessor Members
 
+		/// <summary>
+		/// Gets the collection of <see cref="CultureMap"/> items.
+		/// </summary>
+		/// <value>The collection of <see cref="CultureMap"/> items.</value>
 		public CultureMapList Collection
 		{
 			get
@@ -56,11 +55,25 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			}
 		}
 
+		/// <summary>
+		/// Gets the data broker associated with the specified field. Usually,
+		/// this is only meaningful if the field defines a collection of
+		/// <see cref="StructuredData"/> items.
+		/// </summary>
+		/// <param name="container">The container.</param>
+		/// <param name="fieldId">The id for the field in the specified container.</param>
+		/// <returns>The data broker or <c>null</c>.</returns>
 		public virtual IDataBroker GetDataBroker(Types.StructuredData container, string fieldId)
 		{
 			return null;
 		}
 
+		/// <summary>
+		/// Gets a value indicating whether this accessor contains changes.
+		/// </summary>
+		/// <value>
+		/// 	<c>true</c> if this accessor contains changes; otherwise, <c>false</c>.
+		/// </value>
 		public bool ContainsChanges
 		{
 			get
@@ -69,6 +82,10 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			}
 		}
 
+		/// <summary>
+		/// Creates a new item which can then be added to the collection.
+		/// </summary>
+		/// <returns>A new <see cref="CultureMap"/> item.</returns>
 		public virtual CultureMap CreateItem()
 		{
 			CultureMap item = new CultureMap (this, this.CreateId (), this.GetCultureMapSource (null));
@@ -76,6 +93,12 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			return item;
 		}
 
+		/// <summary>
+		/// Persists the changes to the underlying data store.
+		/// </summary>
+		/// <returns>
+		/// The number of items which have been persisted.
+		/// </returns>
 		public virtual int PersistChanges()
 		{
 			List<CultureMap> list = new List<CultureMap> (this.dirtyItems.Keys);
@@ -100,6 +123,12 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			return list.Count;
 		}
 
+		/// <summary>
+		/// Reverts the changes applied to the accessor.
+		/// </summary>
+		/// <returns>
+		/// The number of items which have been reverted.
+		/// </returns>
 		public virtual int RevertChanges()
 		{
 			List<CultureMap> list = new List<CultureMap> (this.dirtyItems.Keys);
@@ -132,6 +161,10 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			return list.Count;
 		}
 
+		/// <summary>
+		/// Notifies the resource accessor that the specified item changed.
+		/// </summary>
+		/// <param name="item">The item which was modified.</param>
 		public virtual void NotifyItemChanged(CultureMap item)
 		{
 			if (this.suspendNotifications == 0)
@@ -140,16 +173,42 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			}
 		}
 
+		/// <summary>
+		/// Notifies the resource accessor that the specified culture data was
+		/// just cleared.
+		/// </summary>
+		/// <param name="item">The item.</param>
+		/// <param name="twoLetterISOLanguageName">The two letter ISO language name.</param>
+		/// <param name="data">The data which is cleared.</param>
 		public virtual void NotifyCultureDataCleared(CultureMap item, string twoLetterISOLanguageName, Types.StructuredData data)
 		{
 		}
 
+		/// <summary>
+		/// Loads the data for the specified culture into an existing item.
+		/// </summary>
+		/// <param name="item">The item to update.</param>
+		/// <param name="twoLetterISOLanguageName">The two letter ISO language name.</param>
+		/// <returns>
+		/// The data loaded from the resources which was stored in the specified item.
+		/// </returns>
 		public abstract Types.StructuredData LoadCultureData(CultureMap item, string twoLetterISOLanguageName);
 
 		#endregion
 
+		/// <summary>
+		/// Creates a unique id, making sure there are no collisions.
+		/// </summary>
+		/// <param name="bundle">The bundle where to look for existing ids.</param>
+		/// <param name="collection">The collection of <see cref="CultureMap"/> items (or <c>null</c>)
+		/// which contains ids that are already in use.</param>
+		/// <returns>A unique id.</returns>
 		internal static Druid CreateId(ResourceBundle bundle, IEnumerable<CultureMap> collection)
 		{
+			//	Derive the developer id from the value stored in the global properties
+			//	repository. This must have been initialized by the user application,
+			//	usually the Designer.
+
 			object devIdValue = Support.Globals.Properties.GetProperty (AbstractResourceAccessor.DeveloperIdPropertyName);
 
 			int devId   = -1;
@@ -167,6 +226,9 @@ namespace Epsitec.Common.Support.ResourceAccessors
 				throw new System.InvalidOperationException ("Invalid developer id");
 			}
 
+			//	Locate the largest local id for the active developer in
+			//	the specified bundle :
+			
 			foreach (ResourceBundle.Field field in bundle.Fields)
 			{
 				Druid id = field.Id;
@@ -178,6 +240,9 @@ namespace Epsitec.Common.Support.ResourceAccessors
 					localId = System.Math.Max (localId, id.Local);
 				}
 			}
+
+			//	If the caller provided a collection of items, browse it and
+			//	check if there are higher local ids in there :
 
 			if (collection != null)
 			{
@@ -197,16 +262,25 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			return new Druid (bundle.Module.Id, devId, localId+1);
 		}
 
+		/// <summary>
+		/// Calls the protected <see cref="RefreshItem"/> method; this is intended
+		/// for the <see cref="CultureMapList"/> class only.
+		/// </summary>
+		/// <param name="item">The item.</param>
 		internal void InternalRefreshItem(CultureMap item)
 		{
 			this.RefreshItem (item);
 		}
 
+		/// <summary>
+		/// Refreshes the item. The default implementation simply clears the
+		/// item's <c>IsRefreshNeeded</c>.
+		/// </summary>
+		/// <param name="item">The item.</param>
 		protected virtual void RefreshItem(CultureMap item)
 		{
 			item.IsRefreshNeeded = false;
 		}
-		
 		
 		/// <summary>
 		/// Creates a new unique id.
@@ -374,6 +448,10 @@ namespace Epsitec.Common.Support.ResourceAccessors
 
 		#endregion
 
+		/// <summary>
+		/// This constant is used to tag a global property which contains the
+		/// <c>DeveloperId</c> value (an <c>int</c>).
+		/// </summary>
 		public const string DeveloperIdPropertyName = "DeveloperId";
 		
 		private readonly CultureMapList items;

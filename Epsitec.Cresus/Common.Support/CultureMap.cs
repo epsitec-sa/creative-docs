@@ -107,13 +107,13 @@ namespace Epsitec.Common.Support
 		/// <value>
 		/// 	<c>true</c> if this instance is a new item; otherwise, <c>false</c>.
 		/// </value>
-		public bool IsNewItem
+		internal bool IsNewItem
 		{
 			get
 			{
 				return this.isNewItem;
 			}
-			internal set
+			set
 			{
 				this.isNewItem = value;
 			}

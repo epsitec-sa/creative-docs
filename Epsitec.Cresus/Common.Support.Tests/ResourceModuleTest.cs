@@ -95,6 +95,8 @@ namespace Epsitec.Common.Support
 
 			pool.ScanForModules ("%epsitec%");
 
+			Assert.AreEqual (9, Types.Collection.Count (pool.Modules));
+
 			foreach (ResourceModuleInfo info in pool.Modules)
 			{
 				System.Console.Out.WriteLine ("{0}: {1} in {2}  {3}", info.FullId.Name, info.FullId.Id, info.FullId.Path, info.SourceNamespace);

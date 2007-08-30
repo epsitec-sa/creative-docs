@@ -16,10 +16,18 @@ namespace Epsitec.Common.Support.ResourceAccessors
 	/// </summary>
 	public class StringResourceAccessor : AbstractResourceAccessor
 	{
+		/// <summary>
+		/// Initializes a new instance of the <see cref="StringResourceAccessor"/> class.
+		/// </summary>
 		public StringResourceAccessor()
 		{
 		}
 
+		/// <summary>
+		/// Loads resources from the specified resource manager. The resource
+		/// manager will be used for all upcoming accesses.
+		/// </summary>
+		/// <param name="manager">The resource manager.</param>
 		public override void Load(ResourceManager manager)
 		{
 			this.Initialize (manager);
@@ -247,6 +255,10 @@ namespace Epsitec.Common.Support.ResourceAccessors
 					}
 					else
 					{
+						//	We don't want to name secondary resources, nor do we need
+						//	to name patch resources which override an existing reference
+						//	resource.
+
 						field.SetName (null);
 					}
 					
