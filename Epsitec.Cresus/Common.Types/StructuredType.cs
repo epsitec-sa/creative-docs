@@ -796,6 +796,8 @@ namespace Epsitec.Common.Types
 				ResourceManager manager = this.FindAssociatedResourceManager ();
 				Caption caption = manager.GetCaption (typeId);
 
+				System.Diagnostics.Debug.Assert (manager.BasedOnPatchModule == false);
+
 				if (caption != null)
 				{
 					if (useTypeCache)

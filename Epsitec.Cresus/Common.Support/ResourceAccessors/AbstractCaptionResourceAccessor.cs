@@ -19,36 +19,48 @@ namespace Epsitec.Common.Support.ResourceAccessors
 	/// </summary>
 	public abstract class AbstractCaptionResourceAccessor : AbstractResourceAccessor
 	{
+		/// <summary>
+		/// Initializes a new instance of the <see cref="AbstractCaptionResourceAccessor"/> class.
+		/// </summary>
 		public AbstractCaptionResourceAccessor()
 		{
 		}
 
+		/// <summary>
+		/// Loads resources from the specified resource manager. The resource
+		/// manager will be used for all upcoming accesses.
+		/// </summary>
+		/// <param name="manager">The resource manager.</param>
 		public override void Load(ResourceManager manager)
 		{
 			this.Initialize (manager);
 
-			ResourceBundle bundle = this.ResourceManager.GetBundle (Resources.CaptionsBundleName, ResourceLevel.Default);
-			AccessorsCollection accessors = AbstractCaptionResourceAccessor.GetAccessors (bundle);
+			this.RegisterAccessorWithActiveBundle ();
 
-			//	Associate a collection of caption accessors to the bundle, so we
-			//	can later on iterate over all caption items, managed by different,
-			//	separate accessors :
-			
-			if (accessors == null)
+			if (this.ResourceManager.BasedOnPatchModule)
 			{
-				accessors = new AccessorsCollection ();
-				AbstractCaptionResourceAccessor.SetAccessors (bundle, accessors);
+				ResourceManager patchModuleManager = this.ResourceManager;
+				ResourceManager refModuleManager   = this.ResourceManager.GetManagerForReferenceModule ();
+
+				System.Diagnostics.Debug.Assert (refModuleManager != null);
+				System.Diagnostics.Debug.Assert (refModuleManager.BasedOnPatchModule == false);
+
+				//	Load the data from the reference module first, then from the
+				//	patch module; this will effectively merge both information :
+
+				this.LoadFromBundle (refModuleManager.GetBundle (Resources.CaptionsBundleName, ResourceLevel.Default), Resources.DefaultTwoLetterISOLanguageName);
+				this.LoadFromBundle (patchModuleManager.GetBundle (Resources.CaptionsBundleName, ResourceLevel.Default), Resources.DefaultTwoLetterISOLanguageName);
 			}
 			else
 			{
-				accessors.Remove (this);
+				this.LoadFromBundle (this.ResourceManager.GetBundle (Resources.CaptionsBundleName, ResourceLevel.Default), Resources.DefaultTwoLetterISOLanguageName);
 			}
-
-			accessors.Add (this);
-
-			this.LoadFromBundle (bundle, Resources.DefaultTwoLetterISOLanguageName);
 		}
 
+		/// <summary>
+		/// Creates a new item which can then be added to the collection.
+		/// </summary>
+		/// <returns>A new <see cref="CultureMap"/> item.</returns>
 		public override CultureMap CreateItem()
 		{
 			CultureMap item = this.CreateItem (null, this.CreateId ());
@@ -56,35 +68,67 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			return item;
 		}
 
+		/// <summary>
+		/// Loads the data for the specified culture into an existing item.
+		/// </summary>
+		/// <param name="item">The item to update.</param>
+		/// <param name="twoLetterISOLanguageName">The two letter ISO language name.</param>
+		/// <returns>
+		/// The data loaded from the resources which was stored in the specified item.
+		/// </returns>
 		public override Types.StructuredData LoadCultureData(CultureMap item, string twoLetterISOLanguageName)
 		{
-			ResourceBundle bundle;
+			CultureInfo culture;
+			ResourceLevel level;
 
 			if (twoLetterISOLanguageName == Resources.DefaultTwoLetterISOLanguageName)
 			{
-				bundle = this.ResourceManager.GetBundle (Resources.CaptionsBundleName, ResourceLevel.Default);
+				culture = null;
+				level = ResourceLevel.Default;
 			}
 			else
 			{
-				CultureInfo culture = Resources.FindCultureInfo (twoLetterISOLanguageName);
-				bundle = this.ResourceManager.GetBundle (Resources.CaptionsBundleName, ResourceLevel.Localized, culture);
+				culture = Resources.FindCultureInfo (twoLetterISOLanguageName);
+				level   = ResourceLevel.Localized;
 			}
-			
-			ResourceBundle.Field field   = bundle == null ? ResourceBundle.Field.Empty : bundle[item.Id];
-			Types.StructuredData data    = null;
 
-			if ((field.IsEmpty) ||
-				(string.IsNullOrEmpty (field.AsString)))
+			//	If the module is a patch module, then handle the merge between the
+			//	data coming from the reference module and the patch module :
+
+			ResourceBundle refBundle;
+			ResourceBundle patchBundle;
+
+			if (this.ResourceManager.BasedOnPatchModule)
+			{
+				refBundle   = this.ResourceManager.GetManagerForReferenceModule ().GetBundle (Resources.CaptionsBundleName, level, culture);
+				patchBundle = this.ResourceManager.GetBundle (Resources.CaptionsBundleName, level, culture);
+			}
+			else
+			{
+				refBundle   = this.ResourceManager.GetBundle (Resources.CaptionsBundleName, level, culture);
+				patchBundle = null;
+			}
+
+			ResourceBundle.Field refField   = refBundle   == null ? ResourceBundle.Field.Empty : refBundle[item.Id];
+			ResourceBundle.Field patchField = patchBundle == null ? ResourceBundle.Field.Empty : patchBundle[item.Id];
+
+			Types.StructuredData data  = null;
+
+			if ((refField.IsEmpty || ResourceBundle.Field.IsNullString (refField.AsString)) &&
+				(patchField.IsEmpty || ResourceBundle.Field.IsNullString (patchField.AsString)))
 			{
 				Caption caption = new Caption ();
-				ResourceManager.SetSourceBundle (caption, bundle);
+				ResourceManager.SetSourceBundle (caption, refBundle);
 				data = new Types.StructuredData (this.GetStructuredType ());
 				this.FillDataFromCaption (item, data, caption);
 				item.RecordCultureData (twoLetterISOLanguageName, data);
 			}
 			else
 			{
-				data = this.LoadFromField (field, bundle.Module.Id, twoLetterISOLanguageName);
+				Types.StructuredData data1 = (refField.IsEmpty   || ResourceBundle.Field.IsNullString (refField.AsString))   ? null : this.LoadFromField (refField, refBundle.Module.Id, twoLetterISOLanguageName);
+				Types.StructuredData data2 = (patchField.IsEmpty || ResourceBundle.Field.IsNullString (patchField.AsString)) ? null : this.LoadFromField (patchField, patchBundle.Module.Id, twoLetterISOLanguageName);
+
+				data = data1 ?? data2;
 			}
 
 			return data;
@@ -316,6 +360,31 @@ namespace Epsitec.Common.Support.ResourceAccessors
 		}
 
 		#endregion
+
+		/// <summary>
+		/// Registers the current accessor with the active bundle.
+		/// </summary>
+		private void RegisterAccessorWithActiveBundle()
+		{
+			ResourceBundle bundle = this.ResourceManager.GetBundle (Resources.CaptionsBundleName, ResourceLevel.Default);
+			AccessorsCollection accessors = AbstractCaptionResourceAccessor.GetAccessors (bundle);
+
+			//	Associate a collection of caption accessors to the bundle, so we
+			//	can later on iterate over all caption items, managed by different,
+			//	separate accessors :
+
+			if (accessors == null)
+			{
+				accessors = new AccessorsCollection ();
+				AbstractCaptionResourceAccessor.SetAccessors (bundle, accessors);
+			}
+			else
+			{
+				accessors.Remove (this);
+			}
+
+			accessors.Add (this);
+		}
 
 		private static void SetAccessors(DependencyObject obj, AccessorsCollection collection)
 		{
