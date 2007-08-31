@@ -74,7 +74,7 @@ namespace Epsitec.App.Dolphin
 				else
 				{
 					icon = "manifest:Epsitec.Common.Dialogs.Images.Information.icon";
-					message = string.Format("<b>Assemblage correct de {0} instruction(s) pour un total de {1} octet(s).</b><br/>Cliquez le bouton [R/S] pour exécuter le programme.", instructionCounter.ToString(), byteCounter.ToString());
+					message = string.Format("<b>Assemblage correct de {0} instruction(s) pour un total de {1} octet(s).</b><br/>Cliquez le bouton [RUN] pour exécuter le programme.", instructionCounter.ToString(), byteCounter.ToString());
 				}
 			}
 			else
