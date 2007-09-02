@@ -23,6 +23,18 @@ namespace Epsitec.App.Dolphin.MyWidgets
 		}
 
 
+		public DolphinApplication DolphinApplication
+		{
+			get
+			{
+				return this.application;
+			}
+			set
+			{
+				this.application = value;
+			}
+		}
+
 		public void SetDolphinFocusedWidget(Widget widget)
 		{
 			//	Indique quel widget a le focus.
@@ -35,6 +47,12 @@ namespace Epsitec.App.Dolphin.MyWidgets
 			//	dans la parenté, d'après les propriétés TabIndex (les trous ne sont pas admis).
 			//	Si le widget est un TextFieldHexa utilisé dans un MemoryAccessor, on fait défiler
 			//	la mémoire lorsqu'on bute au début ou à la fin.
+			if (this.application.IsRunning)
+			{
+				this.application.ProcessRunningMessage(message);
+				return;
+			}
+
 			if (message.MessageType == MessageType.KeyDown)
 			{
 				int offset = 0;
@@ -61,23 +79,6 @@ namespace Epsitec.App.Dolphin.MyWidgets
 				{
 					Widget widget = this.dolphinFocusedWidget;
 					TextField field = widget as TextField;
-
-#if false
-					if (field != null)
-					{
-						Code actualCode = field.Parent as Code;
-						if (actualCode != null && actualCode.IsErrorMet)
-						{
-							string title = "Dauphin";
-							string icon = "manifest:Epsitec.Common.Dialogs.Images.Warning.icon";
-							string err = "Tralala...";
-							Common.Dialogs.IDialog dialog = Common.Dialogs.MessageDialog.CreateOk(title, icon, err, null, null);
-							dialog.Owner = this.Window;
-							dialog.OpenDialog();
-							return;
-						}
-					}
-#endif
 
 					if (field != null)
 					{
@@ -178,6 +179,7 @@ namespace Epsitec.App.Dolphin.MyWidgets
 		}
 
 
+		protected DolphinApplication application;
 		protected Widget dolphinFocusedWidget;
 	}
 }

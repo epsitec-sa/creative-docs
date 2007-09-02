@@ -38,6 +38,11 @@ namespace Epsitec.App.Dolphin.Components
 			variables.Add("_DIGITCOUNT", Memory.PeriphLastDigit-Memory.PeriphFirstDigit+1);
 
 			variables.Add("_KEYBOARD", Memory.PeriphKeyboard);
+			variables.Add("_KEYBOARDDOWN", 3);
+			variables.Add("_KEYBOARDUP", 4);
+			variables.Add("_KEYBOARDLEFT", 5);
+			variables.Add("_KEYBOARDRIGHT", 6);
+			variables.Add("_KEYBOARDFULL", 7);
 			
 			variables.Add("_DISPLAY", Memory.DisplayBase);
 			variables.Add("_DISPLAYWIDTH", Memory.DisplayDx);
@@ -359,7 +364,7 @@ namespace Epsitec.App.Dolphin.Components
 				{
 					this.memory[address] = (byte) data;
 
-					if (!this.application.IsEmptyPanel)
+					if (this.application != null && !this.application.IsEmptyPanel)
 					{
 						this.application.MemoryAccessor.UpdateData();
 
@@ -370,18 +375,21 @@ namespace Epsitec.App.Dolphin.Components
 				}
 			}
 
-			if (this.IsPeriph(address))  // périphérique ?
+			if (this.application != null)
 			{
-				if (address >= Memory.PeriphFirstDigit && address <= Memory.PeriphLastDigit)  // l'un des 4 digits ?
+				if (this.IsPeriph(address))  // périphérique ?
 				{
-					int a = address - Memory.PeriphFirstDigit;
-					this.application.DisplayDigits[a].SegmentValue = (MyWidgets.Digit.DigitSegment) this.memory[address];
+					if (address >= Memory.PeriphFirstDigit && address <= Memory.PeriphLastDigit)  // l'un des 4 digits ?
+					{
+						int a = address - Memory.PeriphFirstDigit;
+						this.application.DisplayDigits[a].SegmentValue = (MyWidgets.Digit.DigitSegment) this.memory[address];
+					}
 				}
-			}
 
-			if (this.IsDisplay(address))  // écran bitmap ?
-			{
-				this.application.DisplayBitmap.Invalidate();
+				if (this.IsDisplay(address))  // écran bitmap ?
+				{
+					this.application.DisplayBitmap.Invalidate();
+				}
 			}
 		}
 

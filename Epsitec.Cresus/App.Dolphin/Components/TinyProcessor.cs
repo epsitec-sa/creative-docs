@@ -842,7 +842,7 @@ namespace Epsitec.App.Dolphin.Components
 			{
 				int n = op & 0x03;
 				address = this.AddressAbs;
-				address = this.AddressAbs;
+
 				data = (this.GetRegister(n) - this.memory.Read(address));
 				data = this.SetFlagsOper(data, true);
 				return;
@@ -1712,7 +1712,6 @@ namespace Epsitec.App.Dolphin.Components
 						break;
 				}
 
-				builder.Append("MOVE<tab/>");
 				TinyProcessor.PutCodeRegister(builder, n);
 				builder.Append(", ");
 				address = TinyProcessor.PutCodeAddress(builder, codes[1], codes[2], pc, length);
@@ -1825,8 +1824,7 @@ namespace Epsitec.App.Dolphin.Components
 
 			if (op >= (int) Instructions.TestVA && op < (int) Instructions.TestVA+4)  // op #val,ADDR
 			{
-				int n = op & 0x01;
-				Instructions i = (Instructions) (op & 0xFE);
+				Instructions i = (Instructions) op;
 
 				switch (i)
 				{
@@ -1859,8 +1857,7 @@ namespace Epsitec.App.Dolphin.Components
 
 			if (op >= (int) Instructions.MoveVA && op < (int) Instructions.MoveVA+4)  // op #val,ADDR
 			{
-				int n = op & 0x01;
-				Instructions i = (Instructions) (op & 0xFE);
+				Instructions i = (Instructions) op;
 
 				switch (i)
 				{
@@ -3418,6 +3415,7 @@ namespace Epsitec.App.Dolphin.Components
 			this.RomWrite(ref indirect, ref address, TinyProcessor.DrawChar);			// 0x21
 			this.RomWrite(ref indirect, ref address, TinyProcessor.DrawHexaDigit);		// 0x24
 			this.RomWrite(ref indirect, ref address, TinyProcessor.DrawHexaByte);		// 0x27
+			this.RomWrite(ref indirect, ref address, TinyProcessor.TestPixel);			// 0x2A
 			System.Diagnostics.Debug.Assert(address < 0xB00);
 		}
 
@@ -3437,6 +3435,7 @@ namespace Epsitec.App.Dolphin.Components
 			variables.Add("_DRAWCHAR", address+=3);
 			variables.Add("_DRAWHEXADIGIT", address+=3);
 			variables.Add("_DRAWHEXABYTE", address+=3);
+			variables.Add("_TESTPIXEL", address+=3);
 		}
 
 		protected void RomWrite(ref int indirect, ref int address, byte[] code)
@@ -3642,6 +3641,38 @@ namespace Epsitec.App.Dolphin.Components
 			(byte) Instructions.AndVR+2, 0x03,			// AND #03,X
 
 			(byte) Instructions.TNotSA+1, 0x3C, 0x80,	// TNOT C80+{X}+{Y},B
+
+			(byte) Instructions.PopR+3,					// POP Y
+			(byte) Instructions.PopR+2,					// POP X
+			(byte) Instructions.PopR+1,					// POP B
+			(byte) Instructions.Ret,					// RET
+		};
+
+		//	Teste un pixel dans l'écran bitmap.
+		//	in	X coordonnée X 0..31
+		//		Y coordonnée Y 0..23
+		//	out	EQ si pixel éteint
+		//		NE sui pixel éteint
+		//	mod	F
+		protected static byte[] TestPixel =
+		{
+			(byte) Instructions.PushR+1,				// PUSH B
+			(byte) Instructions.PushR+2,				// PUSH X
+			(byte) Instructions.PushR+3,				// PUSH Y
+
+			(byte) Instructions.AndVR+3, 0x1F,			// AND #1F,Y
+			(byte) Instructions.RlR+3,					// RL Y
+			(byte) Instructions.RlR+3,					// RL Y
+
+			(byte) Instructions.MoveRR+0x9,				// MOVE X,B
+			(byte) Instructions.XorVR+1, 0x07,			// XOR #07,B
+
+			(byte) Instructions.RrR+2,					// RR X
+			(byte) Instructions.RrR+2,					// RR X
+			(byte) Instructions.RrR+2,					// RR X
+			(byte) Instructions.AndVR+2, 0x03,			// AND #03,X
+
+			(byte) Instructions.TestSA+1, 0x3C, 0x80,	// TEST C80+{X}+{Y},B
 
 			(byte) Instructions.PopR+3,					// POP Y
 			(byte) Instructions.PopR+2,					// POP X
@@ -4200,6 +4231,15 @@ namespace Epsitec.App.Dolphin.Components
 					AbstractProcessor.HelpPutLine(builder, "in<tab/>X coordonnée colonne 0..31");
 					AbstractProcessor.HelpPutLine(builder, "<tab/>Y coordonnée ligne 0..23");
 					AbstractProcessor.HelpPutLine(builder, "out<tab/>-");
+					AbstractProcessor.HelpPutLine(builder, "mod<tab/>F");
+
+					AbstractProcessor.HelpPutTitle(builder, "_TestPixel");
+					AbstractProcessor.HelpPutLine(builder, "Teste l'état d'un pixel dans l'écran bitmap.");
+					AbstractProcessor.HelpPutLine(builder, "[01] [08] [2A]<tab/>CALL H'82A");
+					AbstractProcessor.HelpPutLine(builder, "in<tab/>X coordonnée colonne 0..31");
+					AbstractProcessor.HelpPutLine(builder, "<tab/>Y coordonnée ligne 0..23");
+					AbstractProcessor.HelpPutLine(builder, "out<tab/>EQ si le pixel est éteint");
+					AbstractProcessor.HelpPutLine(builder, "<tab/>NE si le pixel est allumé");
 					AbstractProcessor.HelpPutLine(builder, "mod<tab/>F");
 
 					AbstractProcessor.HelpPutTitle(builder, "_DrawChar");

@@ -113,7 +113,7 @@ namespace Epsitec.App.Dolphin.MyWidgets
 				Path path = this.GetSegmentPath(segment);
 				System.Diagnostics.Debug.Assert(path != null);
 
-				Color color = ((this.segmentValue & segment) != 0) ? DolphinApplication.ColorHilite : DolphinApplication.FromBrightness(0.2);
+				Color color = ((this.segmentValue & segment) != 0) ? DolphinApplication.ColorHilite : Color.FromBrightness(0.2);
 
 				graphics.Rasterizer.AddSurface(path);
 				graphics.RenderSolid(color);  // dessine le segment
