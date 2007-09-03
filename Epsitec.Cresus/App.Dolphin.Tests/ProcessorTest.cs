@@ -72,6 +72,7 @@ namespace Epsitec.App.Dolphin
 
 			System.Console.Out.WriteLine(string.Format("{0} instructions testées", count.ToString()));
 			System.Console.Out.WriteLine(string.Format("{0} erreur(s) rencontrée(s)", error.ToString()));
+			System.Console.Out.WriteLine("");
 
 			if (error > 0)
 			{
@@ -106,6 +107,7 @@ namespace Epsitec.App.Dolphin
 
 			System.Console.Out.WriteLine(string.Format("{0} instructions testées", count.ToString()));
 			System.Console.Out.WriteLine(string.Format("{0} erreur(s) rencontrée(s)", error.ToString()));
+			System.Console.Out.WriteLine("");
 
 			if (error > 0)
 			{
@@ -496,6 +498,124 @@ namespace Epsitec.App.Dolphin
 
 			return true;
 		}
+
+
+		[Test]
+		public void CheckCorrectExpressions()
+		{
+			System.Console.Out.WriteLine("CheckCorrectExpressions");
+
+			this.memory = new Components.Memory(null);
+			this.processor = new Components.TinyProcessor(this.memory);
+			this.assembler = new Assembler(this.processor, this.memory);
+
+			int error = 0;
+			int count = 0;
+			for (int i=0; i<correct_expressions.Length; i+=2)
+			{
+				string exp = correct_expressions[i];
+				string err;
+				int result = this.assembler.Expression(exp, 0, false, null, out err);
+				if (err == null)
+				{
+					if (result.ToString() != correct_expressions[i+1])
+					{
+						System.Console.Out.WriteLine(string.Format("L'expressions {0} retourne {1} au lieu de {2}", exp, result.ToString(), correct_expressions[i+1]));
+						error++;
+					}
+				}
+				else
+				{
+					System.Console.Out.WriteLine(string.Format("L'expressions {0} retourne l'erreur {1}", exp, err));
+					error++;
+				}
+
+				count++;
+			}
+
+			System.Console.Out.WriteLine(string.Format("{0} expressions testées", count.ToString()));
+			System.Console.Out.WriteLine(string.Format("{0} erreur(s) rencontrée(s)", error.ToString()));
+			System.Console.Out.WriteLine("");
+
+			if (error > 0)
+			{
+				Assert.Fail();
+			}
+		}
+
+		static protected string[] correct_expressions =
+		{
+			"123", "123",
+			"2+3", "5",
+			"111+222", "333",
+			"333-111", "222",
+			"2*3+4*5", "26",
+			"2+3*4+5", "19",
+			"(3)", "3",
+			"(2*3)+4*5", "26",
+			"2*3+(4*5)", "26",
+			"(2*3)+(4*5)", "26",
+			"2*(3+4)*5", "70",
+			"10-2-3", "5",
+			"10-2*3", "4",
+			"10-2*3-1", "3",
+			"10*(4-1)", "30",
+			"10*(4-1)-2", "28",
+			"10-3-2-1", "4",
+			"10-(3-2)-1", "8",
+			"-3", "-3",
+			"3*(-5)", "-15",
+			"-3*5", "-15",
+			"-(5-3)*3", "-6",
+			"5*(-3+5)", "10",
+			"5*(-3+5)-1", "9",
+			"5*(-3+5)-1*2", "8",
+			"--3", "3",
+			"2+-3", "-1",
+			"2*-3", "-6",
+		};
+
+
+		[Test]
+		public void CheckWrongExpressions()
+		{
+			System.Console.Out.WriteLine("CheckWrongExpressions");
+
+			this.memory = new Components.Memory(null);
+			this.processor = new Components.TinyProcessor(this.memory);
+			this.assembler = new Assembler(this.processor, this.memory);
+
+			int error = 0;
+			int count = 0;
+			for (int i=0; i<wrong_expressions.Length; i++)
+			{
+				string exp = wrong_expressions[i];
+				string err;
+				int result = this.assembler.Expression(exp, 0, false, null, out err);
+				if (err == null)
+				{
+					System.Console.Out.WriteLine(string.Format("L'expressions {0} devrait retrourner une erreur", exp));
+					error++;
+				}
+
+				count++;
+			}
+
+			System.Console.Out.WriteLine(string.Format("{0} expressions testées", count.ToString()));
+			System.Console.Out.WriteLine(string.Format("{0} erreur(s) rencontrée(s)", error.ToString()));
+			System.Console.Out.WriteLine("");
+
+			if (error > 0)
+			{
+				Assert.Fail();
+			}
+		}
+
+		static protected string[] wrong_expressions =
+		{
+			"(2+3",
+			"3+2)",
+		};
 
 
 		protected Components.Memory						memory;

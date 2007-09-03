@@ -470,13 +470,11 @@ namespace Epsitec.App.Dolphin
 			}
 		}
 
-		protected int Expression(string expression, int pass, bool acceptUndefined, Dictionary<string, int> variables, out string err)
+		public int Expression(string expression, int pass, bool acceptUndefined, Dictionary<string, int> variables, out string err)
 		{
 			//	Evalue une expression pouvant contenir les 4 opérations de base et des parenthèses.
 			List<string> words = Assembler.Fragment(expression);
-			List<int> values = new List<int>();
-			List<string> ops = new List<string>();
-			int level = 0;
+			List<Item> items = new List<Item>();
 
 			foreach (string word in words)
 			{
@@ -488,57 +486,130 @@ namespace Epsitec.App.Dolphin
 						return Misc.undefined;
 					}
 
-					switch (word)
-					{
-						case "(":
-							level++;
-							break;
-
-						case ")":
-							if (level == 0)
-							{
-								err = "Parenthèse fermée en trop.";
-								return Misc.undefined;
-							}
-							level--;
-							err = Assembler.Reduce(values, ops, level);
-							if (err != null)
-							{
-								return Misc.undefined;
-							}
-							break;
-
-						default:
-							ops.Add(word);
-							break;
-					}
+					items.Add(new Item(word, value));
 				}
 				else
 				{
-					values.Add(value);
-
-					err = Assembler.Reduce(values, ops, level);
-					if (err != null)
-					{
-						return Misc.undefined;
-					}
+					items.Add(new Item("n", value));
 				}
 			}
 
-			if (level != 0)
+			bool action;
+			do
 			{
-				err = "Il manque une parenthèse fermée.";
-				return Misc.undefined;
+				action = false;
+				action |= this.OperUnary(items);
+				action |= this.OperBinary(items, "*/");
+				action |= this.OperSimplify(items);
+				action |= this.OperBinary(items, "+-");
+				action |= this.OperSimplify(items);
 			}
+			while (action);
 
-			if (values.Count != 1 || ops.Count != 0)
+			if (items.Count != 1 || items[0].Name != "n" || items[0].Value == Misc.undefined)
 			{
-				err = "Expression incorrecte.";
+				err = "Expression incorrecte";
 				return Misc.undefined;
 			}
 
 			err = null;
-			return values[0];
+			return items[0].Value;
+		}
+
+		protected bool OperSimplify(List<Item> items)
+		{
+			bool action = false;
+			int i = 0;
+			while (i < items.Count-2)
+			{
+				if (items[i+0].Name == "(" && items[i+1].Name == "n" && items[i+2].Name == ")")
+				{
+					items.RemoveAt(i+2);
+					items.RemoveAt(i+0);
+					action = true;
+				}
+				else
+				{
+					i++;
+				}
+			}
+
+			return action;
+		}
+
+		protected bool OperUnary(List<Item> items)
+		{
+			bool action = false;
+			int i = 0;
+			while (i < items.Count-1)
+			{
+				if ((i == 0 || "(+-*/".Contains(items[i-1].Name)) && items[i+0].Name == "-" && items[i+1].Name == "n")
+				{
+					items[i] = new Item("n", -items[i+1].Value);
+					items.RemoveAt(i+1);
+					action = true;
+				}
+				else
+				{
+					i++;
+				}
+			}
+
+			return action;
+		}
+
+		protected bool OperBinary(List<Item> items, string ops)
+		{
+			bool action = false;
+			int i = 0;
+			while (i < items.Count-2)
+			{
+				if (items[i+0].Name == "n" && ops.Contains(items[i+1].Name) && items[i+2].Name == "n")
+				{
+					items[i] = OperBinary(items[i+0].Value, items[i+1].Name, items[i+2].Value);
+					items.RemoveAt(i+2);
+					items.RemoveAt(i+1);
+					action = true;
+				}
+				else
+				{
+					i++;
+				}
+			}
+
+			return action;
+		}
+
+		protected Item OperBinary(int v1, string op, int v2)
+		{
+			switch (op)
+			{
+				case "+":
+					return new Item("n", v1 + v2);
+
+				case "-":
+					return new Item("n", v1 - v2);
+
+				case "*":
+					return new Item("n", v1 * v2);
+
+				case "/":
+					return new Item("n", v1 / v2);
+			}
+
+			return new Item(null, Misc.undefined);
+		}
+
+		protected struct Item
+		{
+			public Item(string name, int value)
+			{
+				this.Name = name;
+				this.Value = value;
+			}
+
+			public string Name;
+			public int Value;
 		}
 
 		protected static string Reduce(List<int> values, List<string> ops, int level)
