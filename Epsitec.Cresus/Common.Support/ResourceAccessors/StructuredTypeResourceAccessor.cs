@@ -38,6 +38,18 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			}
 		}
 
+		protected override bool FilterField(ResourceBundle.Field field)
+		{
+			if (this.ResourceManager.BasedOnPatchModule)
+			{
+				return false;
+			}
+			else
+			{
+				return base.FilterField (field);
+			}
+		}
+
 		public override void Load(ResourceManager manager)
 		{
 			base.Load (manager);
