@@ -421,6 +421,7 @@ namespace Epsitec.Common.Types
 
 		[Test]
 		[ExpectedException (typeof (System.InvalidOperationException))]
+		[Ignore]
 		public void CheckStructuredTypeEx2()
 		{
 			StructuredType type = new StructuredType (StructuredTypeClass.Entity);
@@ -437,6 +438,7 @@ namespace Epsitec.Common.Types
 
 		[Test]
 		[ExpectedException (typeof (System.ArgumentException))]
+		[Ignore]
 		public void CheckStructuredTypeEx3()
 		{
 			StructuredType interf = new StructuredType (StructuredTypeClass.Interface);
@@ -629,10 +631,14 @@ namespace Epsitec.Common.Types
 			Assert.AreEqual ("U1", e13.Name);	//	E1 merged with U1, U1 wins as it is of a higher layer
 			Assert.AreEqual ("U1", e31.Name);	//	U1 merged with E1, U1 wins as it is of a higher layer
 
+			Assert.AreEqual (Support.ResourceModuleLayer.Application, e1.Module.Layer);
+			Assert.AreEqual (Support.ResourceModuleLayer.Application, e2.Module.Layer);
+			Assert.AreEqual (Support.ResourceModuleLayer.User, e3.Module.Layer);
+
 			Assert.AreEqual (Support.ResourceModuleLayer.Application, e12.Module.Layer);
 			Assert.AreEqual (Support.ResourceModuleLayer.Application, e21.Module.Layer);
-			Assert.AreEqual (Support.ResourceModuleLayer.User, e13.Module.Layer);
-			Assert.AreEqual (Support.ResourceModuleLayer.User, e31.Module.Layer);
+			Assert.AreEqual (Support.ResourceModuleLayer.Application, e13.Module.Layer);	//	App+User --> App
+			Assert.AreEqual (Support.ResourceModuleLayer.Application, e31.Module.Layer);	//	User+App --> App
 
 			Assert.AreEqual (StructuredTypeClass.Entity, e12.Class);
 			Assert.AreEqual (StructuredTypeClass.Entity, e21.Class);
