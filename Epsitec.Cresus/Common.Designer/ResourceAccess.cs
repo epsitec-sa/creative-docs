@@ -3623,6 +3623,12 @@ namespace Epsitec.Common.Designer
 			{
 				string name = field.Name;
 
+				//	TODO: code mort qui va devoir disparaître un jour; ajouté un hack ci-après pour que ça passe
+				if (name == null)
+				{
+					continue;
+				}
+
 				if (name.StartsWith(filterCap))
 				{
 					countCap++;
@@ -4073,6 +4079,11 @@ namespace Epsitec.Common.Designer
 			}
 			else
 			{
+				//	TODO: code mort qui va devoir disparaître un jour; ajouté un hack ci-après pour que ça passe
+				if (name == null)
+				{
+					return false;
+				}
 				return name.StartsWith(fix);
 			}
 		}
