@@ -907,10 +907,8 @@ namespace Epsitec.Common.Types
 			{
 				manager = ResourceManager.GetResourceManager (this) ?? Support.Resources.DefaultManager;
 
-				while (manager.BasedOnPatchModule)
-				{
-					manager = manager.GetManagerForReferenceModule ();
-				}
+				System.Diagnostics.Debug.Assert (manager != null);
+				System.Diagnostics.Debug.Assert (manager.BasedOnPatchModule == false);
 			}
 			
 			return manager;
