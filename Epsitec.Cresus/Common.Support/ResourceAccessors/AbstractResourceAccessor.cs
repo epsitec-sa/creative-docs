@@ -348,11 +348,27 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			{
 				using (this.SuspendNotifications ())
 				{
+					ResourceBundle refBundle = null;
+
+					bool patch = bundle.BasedOnPatchModule;
 					int module = bundle.Module.Id;
+
+					if (patch)
+					{
+						refBundle = bundle.ReferenceBundle;
+					}
 
 					foreach (ResourceBundle.Field field in bundle.Fields)
 					{
-						if (this.FilterField (field))
+						string name = field.Name;
+
+						if ((name == null) &&
+							(patch))
+						{
+							name = refBundle[field.Id].Name;
+						}
+
+						if (this.FilterField (field, name))
 						{
 							this.LoadFromField (field, module, twoLetterISOLanguageName);
 						}
@@ -375,8 +391,11 @@ namespace Epsitec.Common.Support.ResourceAccessors
 		/// can be used to filter out specific fields.
 		/// </summary>
 		/// <param name="field">The field to check.</param>
-		/// <returns><c>true</c> if data should be loaded from the field; otherwise, <c>false</c>.</returns>
-		protected abstract bool FilterField(ResourceBundle.Field field);
+		/// <param name="fieldName">Name of the field.</param>
+		/// <returns>
+		/// 	<c>true</c> if data should be loaded from the field; otherwise, <c>false</c>.
+		/// </returns>
+		protected abstract bool FilterField(ResourceBundle.Field field, string fieldName);
 
 		/// <summary>
 		/// Initializes the accessor and defines the resource manager.

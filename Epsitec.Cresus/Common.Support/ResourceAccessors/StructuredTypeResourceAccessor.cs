@@ -38,7 +38,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			}
 		}
 
-		protected override bool FilterField(ResourceBundle.Field field)
+		protected override bool FilterField(ResourceBundle.Field field, string fieldName)
 		{
 			if (this.ResourceManager.BasedOnPatchModule)
 			{
@@ -46,7 +46,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			}
 			else
 			{
-				return base.FilterField (field);
+				return base.FilterField (field, fieldName);
 			}
 		}
 

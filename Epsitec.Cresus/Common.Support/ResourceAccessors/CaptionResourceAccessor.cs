@@ -105,10 +105,10 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			}
 		}
 
-		protected override bool FilterField(ResourceBundle.Field field)
+		protected override bool FilterField(ResourceBundle.Field field, string fieldName)
 		{
-			return (!string.IsNullOrEmpty (field.Name))
-				&& (field.Name.StartsWith (this.Prefix));
+			return (!string.IsNullOrEmpty (fieldName))
+				&& (fieldName.StartsWith (this.Prefix));
 		}
 
 		#region Listener Class

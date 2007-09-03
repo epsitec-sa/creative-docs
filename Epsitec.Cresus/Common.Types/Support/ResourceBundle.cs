@@ -173,6 +173,31 @@ namespace Epsitec.Common.Support
 				}
 			}
 		}
+
+		public ResourceBundle				ReferenceBundle
+		{
+			get
+			{
+				if (this.BasedOnPatchModule)
+				{
+					if (this.refBundle == null)
+					{
+						ResourceManager manager = this.manager.GetManagerForReferenceModule ();
+						ResourceBundle  bundle  = manager.GetBundle (string.IsNullOrEmpty (this.prefix) ? string.Concat (this.prefix, ":", this.name) : this.name, this.level, this.culture);
+
+						System.Diagnostics.Debug.Assert (bundle != null);
+
+						this.refBundle = bundle;
+					}
+
+					return this.refBundle;
+				}
+				else
+				{
+					return null;
+				}
+			}
+		}
 		
 		public CultureInfo					Culture
 		{
@@ -1929,6 +1954,7 @@ namespace Epsitec.Common.Support
 		private ResourceLevel			level;
 		private CultureInfo				culture;
 		private ResourceManager			manager;
+		private ResourceBundle			refBundle;
 		private int						rank = -1;
 		
 		private System.Xml.XmlNode		xmlroot;

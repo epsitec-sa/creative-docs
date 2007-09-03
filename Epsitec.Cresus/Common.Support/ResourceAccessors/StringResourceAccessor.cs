@@ -418,9 +418,9 @@ namespace Epsitec.Common.Support.ResourceAccessors
 		/// implementation always returns <c>true</c>.
 		/// </summary>
 		/// <param name="field">The field to check.</param>
-		/// <returns>Always <c>true</c>.
-		/// </returns>
-		protected override bool FilterField(ResourceBundle.Field field)
+		/// <param name="fieldName">Name of the field.</param>
+		/// <returns>Always <c>true</c>.</returns>
+		protected override bool FilterField(ResourceBundle.Field field, string fieldName)
 		{
 			return true;
 		}

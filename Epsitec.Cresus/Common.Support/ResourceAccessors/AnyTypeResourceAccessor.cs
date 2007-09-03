@@ -175,14 +175,14 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			return null;
 		}
 
-		protected override bool FilterField(ResourceBundle.Field field)
+		protected override bool FilterField(ResourceBundle.Field field, string fieldName)
 		{
-			if (base.FilterField (field))
+			if (base.FilterField (field, fieldName))
 			{
 				//	Filter out the structured types, as they are handled elsewhere
 				//	(see the StructuredTypeResourceAccessor class).
 
-				if (field.Name.StartsWith ("Typ.StructuredType."))
+				if (fieldName.StartsWith ("Typ.StructuredType."))
 				{
 					return false;
 				}
