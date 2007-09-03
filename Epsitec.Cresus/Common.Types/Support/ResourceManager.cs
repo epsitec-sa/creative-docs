@@ -1062,7 +1062,7 @@ namespace Epsitec.Common.Support
 				temp.DefineId (druid);
 				temp.DeserializeFromString (source, this);
 				
-				caption = (caption == null) ? temp : Caption.Merge (caption, temp);
+				caption = (caption == null) ? temp : Caption.Merge (caption, temp, true);
 
 				System.Diagnostics.Debug.Assert (caption.Id.IsValid);
 				System.Diagnostics.Debug.Assert (AbstractType.CheckComplexTypeBindingToCaption (caption));

@@ -294,6 +294,11 @@ namespace Epsitec.Common.Types
 		/// <param name="manager">The resource manager.</param>
 		public void DeserializeFromString(string value, Support.ResourceManager manager)
 		{
+			if (string.IsNullOrEmpty (value))
+			{
+				return;
+			}
+
 			value = Caption.DecompressXml (value);
 			
 			if (value.StartsWith ("<" + Serialization.SimpleSerialization.RootElementName))
@@ -425,6 +430,20 @@ namespace Epsitec.Common.Types
 		/// <returns>The merged caption object.</returns>
 		public static Caption Merge(Caption a, Caption b)
 		{
+			return Caption.Merge (a, b, false);
+		}
+
+		/// <summary>
+		/// Merges the two captions and returns the result. If caption <c>a</c>
+		/// and caption <c>b</c> both define the same properties, those of <c>b</c>
+		/// will take precedence.
+		/// </summary>
+		/// <param name="a">The first caption object.</param>
+		/// <param name="b">The second caption object.</param>
+		/// <param name="sameId">If set to <c>true</c>, both captions should have the same id.</param>
+		/// <returns>The merged caption object.</returns>
+		public static Caption Merge(Caption a, Caption b, bool sameId)
+		{
 			if ((a == null) &&
 				(b == null))
 			{
@@ -447,7 +466,7 @@ namespace Epsitec.Common.Types
 				{
 					caption.DefineId (b.Id);
 				}
-				else
+				else if (sameId)
 				{
 					System.Diagnostics.Debug.Assert (caption.Id == b.Id);
 				}

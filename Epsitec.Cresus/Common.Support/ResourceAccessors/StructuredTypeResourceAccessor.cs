@@ -148,11 +148,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			base.FillDataFromCaption (item, data, caption);
 
 			StructuredType type = AbstractType.GetComplexType (caption) as StructuredType;
-
-			if (type != null)
-			{
-				this.FillDataFromType (item, data, type);
-			}
+			this.FillDataFromType (item, data, type);
 		}
 
 		private StructuredType GetTypeFromData(StructuredData data, Caption caption)
@@ -204,7 +200,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 
 		private void FillDataFromType(CultureMap item, StructuredData data, StructuredType type)
 		{
-			System.Diagnostics.Debug.Assert (type.CaptionId.IsValid);
+			System.Diagnostics.Debug.Assert ((type == null) || type.CaptionId.IsValid);
 
 			ObservableList<StructuredData> fields = new ObservableList<StructuredData> ();
 
