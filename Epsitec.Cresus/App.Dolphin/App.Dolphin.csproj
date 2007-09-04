@@ -107,6 +107,9 @@
     <None Include="App.ico" />
     <EmbeddedResource Include="Images\Application.icon" />
     <None Include="Dolphin.ico" />
+    <Content Include="Samples\pingpong2.dolphin" />
+    <Content Include="Samples\snake1.dolphin" />
+    <Content Include="Samples\life1.dolphin" />
     <Content Include="Samples\mur1.dolphin" />
     <Content Include="Samples\pingpong1.dolphin" />
     <EmbeddedResource Include="Images\ArrowUp.icon" />

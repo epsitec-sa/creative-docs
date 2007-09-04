@@ -108,7 +108,8 @@ namespace Epsitec.App.Dolphin
 
 			foreach (string line in lines)
 			{
-				string instruction = this.RemoveComment(line);
+				string instruction = this.ReplaceCharacter(line);
+				instruction = this.RemoveComment(instruction);
 				string err;
 
 				if (this.ProcessPseudo(instruction, pass, variables, ref pc, out err))
@@ -196,10 +197,49 @@ namespace Epsitec.App.Dolphin
 			}
 		}
 
+		protected string ReplaceCharacter(string instruction)
+		{
+			//	Remplace les caractères par des valeurs simples.
+			//	Par exemple, 'move #"A",X' est remplacé par 'move #H'41,X'.
+			instruction = TextLayout.ConvertToSimpleText(instruction);
+
+			if (instruction.IndexOf('"') == -1)
+			{
+				return instruction;
+			}
+
+			System.Text.StringBuilder builder = new System.Text.StringBuilder();
+
+			int i = 0;
+			while (i<instruction.Length)
+			{
+				if (i<instruction.Length-2 && instruction[i] == '"' && instruction[i+2] == '"')
+				{
+					int n = (int) instruction[i+1];
+					builder.Append("H'");
+					builder.Append(n.ToString("X2"));
+					i += 3;
+					continue;
+				}
+
+				if (i<instruction.Length-3 && instruction[i] == '"' && instruction[i+1] == '\\' && instruction[i+3] == '"')
+				{
+					int n = (int) instruction[i+2];
+					builder.Append("H'");
+					builder.Append(n.ToString("X2"));
+					i += 4;
+					continue;
+				}
+
+				builder.Append(instruction[i++]);
+			}
+
+			return builder.ToString();
+		}
+
 		protected string RemoveComment(string instruction)
 		{
 			//	Supprime l'éventuel commentaire "; blabla" en fin de ligne.
-			instruction = TextLayout.ConvertToSimpleText(instruction);
 			instruction = instruction.ToUpper().Trim();
 			int index = instruction.IndexOf(";");  // commentaire à la fin de la ligne ?
 			if (index != -1)
@@ -473,6 +513,7 @@ namespace Epsitec.App.Dolphin
 		public int Expression(string expression, int pass, bool acceptUndefined, Dictionary<string, int> variables, out string err)
 		{
 			//	Evalue une expression pouvant contenir les 4 opérations de base et des parenthèses.
+			//	Donne la priorité aux multiplications et divisions: "2*3+4*5" = "(2*3)+(4*5)" = 26.
 			List<string> words = Assembler.Fragment(expression);
 			List<Item> items = new List<Item>();
 
@@ -498,11 +539,36 @@ namespace Epsitec.App.Dolphin
 			do
 			{
 				action = false;
-				action |= this.OperUnary(items);
-				action |= this.OperBinary(items, "*/");
-				action |= this.OperSimplify(items);
-				action |= this.OperBinary(items, "+-");
-				action |= this.OperSimplify(items);
+
+				action |= this.OperUnary(items, out err);
+				if (err != null)
+				{
+					return Misc.undefined;
+				}
+				
+				action |= this.OperBinary(items, "*/", out err);
+				if (err != null)
+				{
+					return Misc.undefined;
+				}
+				
+				action |= this.OperSimplify(items, out err);
+				if (err != null)
+				{
+					return Misc.undefined;
+				}
+				
+				action |= this.OperBinary(items, "+-", out err);
+				if (err != null)
+				{
+					return Misc.undefined;
+				}
+				
+				action |= this.OperSimplify(items, out err);
+				if (err != null)
+				{
+					return Misc.undefined;
+				}
 			}
 			while (action);
 
@@ -516,8 +582,9 @@ namespace Epsitec.App.Dolphin
 			return items[0].Value;
 		}
 
-		protected bool OperSimplify(List<Item> items)
+		protected bool OperSimplify(List<Item> items, out string err)
 		{
+			//	Simplifie les "(n)" en "n".
 			bool action = false;
 			int i = 0;
 			while (i < items.Count-2)
@@ -534,18 +601,25 @@ namespace Epsitec.App.Dolphin
 				}
 			}
 
+			err = null;
 			return action;
 		}
 
-		protected bool OperUnary(List<Item> items)
+		protected bool OperUnary(List<Item> items, out string err)
 		{
+			//	Résoud les opérations unaires "-n" en "n".
 			bool action = false;
 			int i = 0;
 			while (i < items.Count-1)
 			{
-				if ((i == 0 || "(+-*/".Contains(items[i-1].Name)) && items[i+0].Name == "-" && items[i+1].Name == "n")
+				if ((i == 0 || "(+-*/".Contains(items[i-1].Name)) && "+-".Contains(items[i+0].Name) && items[i+1].Name == "n")
 				{
-					items[i] = new Item("n", -items[i+1].Value);
+					items[i] = this.OperUnary(items[i+0].Name, items[i+1].Value, out err);
+					if (err != null)
+					{
+						return false;
+					}
+
 					items.RemoveAt(i+1);
 					action = true;
 				}
@@ -555,18 +629,43 @@ namespace Epsitec.App.Dolphin
 				}
 			}
 
+			err = null;
 			return action;
 		}
 
-		protected bool OperBinary(List<Item> items, string ops)
+		protected Item OperUnary(string op, int v, out string err)
 		{
+			//	Retourne le résultat d'une opération binaire "-n".
+			err = null;
+
+			switch (op)
+			{
+				case "+":
+					return new Item("n", v);
+
+				case "-":
+					return new Item("n", -v);
+			}
+
+			err = "Opération unaire inconnue.";
+			return new Item(null, Misc.undefined);
+		}
+
+		protected bool OperBinary(List<Item> items, string ops, out string err)
+		{
+			//	Résoud les opérations binaires "n+n" en "n".
 			bool action = false;
 			int i = 0;
 			while (i < items.Count-2)
 			{
 				if (items[i+0].Name == "n" && ops.Contains(items[i+1].Name) && items[i+2].Name == "n")
 				{
-					items[i] = OperBinary(items[i+0].Value, items[i+1].Name, items[i+2].Value);
+					items[i] = OperBinary(items[i+0].Value, items[i+1].Name, items[i+2].Value, out err);
+					if (err != null)
+					{
+						return false;
+					}
+
 					items.RemoveAt(i+2);
 					items.RemoveAt(i+1);
 					action = true;
@@ -577,11 +676,15 @@ namespace Epsitec.App.Dolphin
 				}
 			}
 
+			err = null;
 			return action;
 		}
 
-		protected Item OperBinary(int v1, string op, int v2)
+		protected Item OperBinary(int v1, string op, int v2, out string err)
 		{
+			//	Retourne le résultat d'une opération binaire "n+n".
+			err = null;
+
 			switch (op)
 			{
 				case "+":
@@ -594,9 +697,15 @@ namespace Epsitec.App.Dolphin
 					return new Item("n", v1 * v2);
 
 				case "/":
+					if (v2 == 0)
+					{
+						err = "Division par zéro.";
+						return new Item(null, Misc.undefined);
+					}
 					return new Item("n", v1 / v2);
 			}
 
+			err = "Opération binaire inconnue.";
 			return new Item(null, Misc.undefined);
 		}
 
@@ -612,54 +721,6 @@ namespace Epsitec.App.Dolphin
 			public int Value;
 		}
 
-		protected static string Reduce(List<int> values, List<string> ops, int level)
-		{
-			//	Si la pile des valeurs contient deux valeurs (A et B) et la pile des opérations n'est pas vide,
-			//	remplace les deux valeurs par A op B.
-			if (values.Count == level+2 && ops.Count > 0)
-			{
-				switch (ops[ops.Count-1])
-				{
-					case "+":
-						values[values.Count-2] = values[values.Count-2] + values[values.Count-1];
-						break;
-
-					case "-":
-						values[values.Count-2] = values[values.Count-2] - values[values.Count-1];
-						break;
-
-					case "*":
-						values[values.Count-2] = values[values.Count-2] * values[values.Count-1];
-						break;
-
-					case "/":
-						values[values.Count-2] = values[values.Count-2] / values[values.Count-1];
-						break;
-
-					default:
-						return "Opération inconnue.";
-				}
-
-				values.RemoveAt(values.Count-1);  // enlève la dernière valeur
-				ops.RemoveAt(ops.Count-1);  // enlève l'opération effectuée
-			}
-			else if (values.Count == level+1 && ops.Count > 0)
-			{
-				switch (ops[ops.Count-1])
-				{
-					case "+":
-						ops.RemoveAt(ops.Count-1);  // enlève l'opération effectuée
-						break;
-
-					case "-":
-						values[values.Count-1] = -values[values.Count-1];
-						ops.RemoveAt(ops.Count-1);  // enlève l'opération effectuée
-						break;
-				}
-			}
-
-			return null;
-		}
 
 		protected enum FragmentType
 		{
@@ -667,7 +728,6 @@ namespace Epsitec.App.Dolphin
 			Number,
 			Text,
 			Special,
-			Character,
 		}
 
 		protected static List<string> Fragment(string expression)
@@ -679,19 +739,13 @@ namespace Epsitec.App.Dolphin
 
 			int i = 0;
 			int start = 0;
-			int skip = 0;
 			FragmentType type = FragmentType.Unknow;
 			while (i < expression.Length)
 			{
 				char c = expression[i++];
 
 				FragmentType newType;
-				if (skip > 0)
-				{
-					skip--;
-					newType = type;
-				}
-				else if (c >= '0' && c <= '9')
+				if (c >= '0' && c <= '9')
 				{
 					if (type == FragmentType.Text)
 					{
@@ -724,15 +778,6 @@ namespace Epsitec.App.Dolphin
 				else if (c == '_')
 				{
 					newType = FragmentType.Text;
-				}
-				else if (c == '"' && ((i < expression.Length-1 && expression[i+1] == '"') || (i < expression.Length-2 && expression[i] == '\\' && expression[i+2] == '"')))
-				{
-					newType = FragmentType.Character;
-					skip = 2;
-					if (expression[i] == '\\')
-					{
-						skip++;
-					}
 				}
 				else
 				{
@@ -814,28 +859,6 @@ namespace Epsitec.App.Dolphin
 			{
 				err = null;
 				return Misc.undefined;
-			}
-
-			if (word[0] == '"')  // caractère ascii ?
-			{
-				if (word.Length < 2)
-				{
-					err = "Caractère incorrect.";
-					return Misc.undefined;
-				}
-
-				char c;
-				if (word[1] == '\\')
-				{
-					c = word[2];
-				}
-				else
-				{
-					c = word[1];
-				}
-
-				err = null;
-				return (int) c;
 			}
 
 			if (word[0] >= '0' && word[0] <= '9')  // décimal par défaut ?
