@@ -68,7 +68,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			return string.Concat (this.Prefix, fieldItem.Prefix, ".", fieldItem.Name);
 		}
 
-		protected override CultureMap CreateItem(ResourceBundle.Field field, Druid id)
+		protected override CultureMap CreateItem(ResourceBundle.Field field, Druid id, CultureMapSource source)
 		{
 			string name = field.Name;
 
@@ -84,7 +84,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 
 			prefix = prefix.Substring (0, pos);
 
-			return new PrefixedCultureMap (this, id, this.GetCultureMapSource (field), prefix);
+			return new PrefixedCultureMap (this, id, source, prefix);
 		}
 	}
 }

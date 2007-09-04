@@ -275,17 +275,31 @@ namespace Epsitec.Common.Support.ResourceAccessors
 		protected override Types.StructuredData LoadFromField(ResourceBundle.Field field, int module, string twoLetterISOLanguageName)
 		{
 			Druid id     = new Druid (field.Id, module);
-			bool  insert = false;
+			bool insert = false;
+			bool record;
+			bool freezeName = false;
 
 			CultureMap item = this.Collection[id];
+			CultureMapSource fieldSource = this.GetCultureMapSource (field);
+			StructuredData data = new StructuredData (this.GetStructuredType ());
+
+			//	TODO: fill data from field
+
+			if ((fieldSource == CultureMapSource.ReferenceModule) &&
+				(this.ResourceManager.BasedOnPatchModule))
+			{
+				freezeName = true;
+			}
 
 			if (item == null)
 			{
-				item   = this.CreateItem (field, id);
-				insert = true;
-			}
+				//	Fresh item, not yet known :
 
-			Types.StructuredData data = new Types.StructuredData (this.GetStructuredType ());
+				item   = this.CreateItem (field, id, fieldSource);
+				
+				insert = true;
+				record = true;
+			}
 
 			Caption caption = new Caption (id);
 			string  name    = string.IsNullOrEmpty (field.Name) ? null : this.GetNameFromFieldName (item, field.Name);
@@ -312,9 +326,14 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			return data;
 		}
 
-		protected virtual CultureMap CreateItem(ResourceBundle.Field field, Druid id)
+		protected CultureMap CreateItem(ResourceBundle.Field field, Druid id)
 		{
-			return new CultureMap (this, id, this.GetCultureMapSource (field));
+			return this.CreateItem (field, id, this.GetCultureMapSource (null));
+		}
+
+		protected virtual CultureMap CreateItem(ResourceBundle.Field field, Druid id, CultureMapSource source)
+		{
+			return new CultureMap (this, id, source);
 		}
 
 		#region AccessorsCollection Class
