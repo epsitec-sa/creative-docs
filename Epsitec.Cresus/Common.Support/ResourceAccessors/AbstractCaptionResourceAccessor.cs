@@ -300,6 +300,56 @@ namespace Epsitec.Common.Support.ResourceAccessors
 				insert = true;
 				record = true;
 			}
+			else if (item.Source == fieldSource)
+			{
+				//	We already have an item for this id, but since we are fetching
+				//	data from the same source as before, we can safely assume that
+				//	this will produce new data for a not yet known culture :
+
+				insert = false;
+				record = true;
+			}
+			else
+			{
+				//	The source which was used to fill this item is different from
+				//	the current source...
+
+				if (item.IsCultureDefined (twoLetterISOLanguageName))
+				{
+					//	...and we know that there is already some data available
+					//	for the culture. Merge the data :
+
+					StructuredData newData = data;
+					StructuredData oldData = item.GetCultureData (twoLetterISOLanguageName);
+
+					if (field.About != null)
+					{
+						oldData.SetValue (Res.Fields.ResourceBase.Comment, newData.GetValue (Res.Fields.ResourceBase.Comment));
+					}
+					if (field.ModificationId > 0)
+					{
+						oldData.SetValue (Res.Fields.ResourceBase.ModificationId, newData.GetValue (Res.Fields.ResourceBase.ModificationId));
+					}
+
+					data = oldData;
+
+					insert = false;
+					record = false;
+				}
+				else
+				{
+					//	...but we are filling in data for an unknown culture.
+					//	Simply add the data to the item :
+
+					insert = false;
+					record = true;
+				}
+
+				//	Make sure we remember that the item contains merged data.
+
+				item.Source = CultureMapSource.DynamicMerge;
+				freezeName  = true;
+			}
 
 			Caption caption = new Caption (id);
 			string  name    = string.IsNullOrEmpty (field.Name) ? null : this.GetNameFromFieldName (item, field.Name);
@@ -314,9 +364,21 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			//	It is important to first associate the culture data, then defining
 			//	the item name, since AnyTypeResourceAccessor listens for name changes
 			//	in order to update enumeration value names.
+
+			if (record)
+			{
+				item.RecordCultureData (twoLetterISOLanguageName, data);
+			}
 			
-			item.RecordCultureData (twoLetterISOLanguageName, data);
-			item.Name = name ?? item.Name;
+			if (!item.IsNameReadOnly)
+			{
+				item.Name = field.Name ?? item.Name;
+			}
+
+			if (freezeName)
+			{
+				item.FreezeName ();
+			}
 
 			if (insert)
 			{
