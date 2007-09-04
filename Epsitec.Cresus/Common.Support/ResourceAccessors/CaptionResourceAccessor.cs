@@ -85,21 +85,37 @@ namespace Epsitec.Common.Support.ResourceAccessors
 
 		protected override void FillDataFromCaption(CultureMap item, Types.StructuredData data, Caption caption)
 		{
-			Types.Collections.ObservableList<string> labels = new Epsitec.Common.Types.Collections.ObservableList<string> ();
-			labels.AddRange (caption.Labels);
+			Types.Collections.ObservableList<string> labels = data.GetValue (Res.Fields.ResourceCaption.Labels) as Types.Collections.ObservableList<string>;
 
 			//	The labels property can be accessed as an IList<string> and any modification
 			//	will be reported to the listener.
-			
-			data.SetValue (Res.Fields.ResourceCaption.Labels, labels);
-			data.LockValue (Res.Fields.ResourceCaption.Labels);
-			labels.CollectionChanged += new Listener (this, item).HandleCollectionChanged;
 
-			if (caption.Description != null)
+			bool newLabels = false;
+			
+			if (labels == null)
+			{
+				newLabels = true;
+				labels = new Epsitec.Common.Types.Collections.ObservableList<string> ();
+				labels.AddRange (caption.Labels);
+			}
+			else if (caption.HasLabels)
+			{
+				labels.Clear ();
+				labels.AddRange (caption.Labels);
+			}
+
+			if (newLabels)
+			{
+				data.SetValue (Res.Fields.ResourceCaption.Labels, labels);
+				data.LockValue (Res.Fields.ResourceCaption.Labels);
+				labels.CollectionChanged += new Listener (this, item).HandleCollectionChanged;
+			}
+
+			if (caption.HasDescription)
 			{
 				data.SetValue (Res.Fields.ResourceCaption.Description, caption.Description);
 			}
-			if (caption.Icon != null)
+			if (caption.HasIcon)
 			{
 				data.SetValue (Res.Fields.ResourceCaption.Icon, caption.Icon);
 			}
