@@ -283,7 +283,10 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			CultureMapSource fieldSource = this.GetCultureMapSource (field);
 			StructuredData data = new StructuredData (this.GetStructuredType ());
 
-			//	TODO: fill data from field
+			//	Preliminary fill of the very basic data fields :
+			
+			data.SetValue (Res.Fields.ResourceBase.Comment, ResourceBundle.Field.IsNullString (field.About) ? null : field.About);
+			data.SetValue (Res.Fields.ResourceBase.ModificationId, field.ModificationId);
 
 			if ((fieldSource == CultureMapSource.ReferenceModule) &&
 				(this.ResourceManager.BasedOnPatchModule))
@@ -358,9 +361,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			caption.DeserializeFromString (field.AsString, this.ResourceManager);
 
 			this.FillDataFromCaption (item, data, caption);
-			data.SetValue (Res.Fields.ResourceBase.Comment, field.About);
-			data.SetValue (Res.Fields.ResourceBase.ModificationId, field.ModificationId);
-
+			
 			//	It is important to first associate the culture data, then defining
 			//	the item name, since AnyTypeResourceAccessor listens for name changes
 			//	in order to update enumeration value names.
