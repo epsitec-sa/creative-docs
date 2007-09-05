@@ -44,9 +44,9 @@ namespace Epsitec.App.Dolphin.Components
 			variables.Add("_KEYBOARDRIGHT", 6);
 			variables.Add("_KEYBOARDFULL", 7);
 			
-			variables.Add("_DISPLAY", Memory.DisplayBase);
-			variables.Add("_DISPLAYWIDTH", Memory.DisplayDx);
-			variables.Add("_DISPLAYHEIGHT", Memory.DisplayDy);
+			variables.Add("_BITMAP", Memory.DisplayBase);
+			variables.Add("_BITMAPWIDTH", Memory.DisplayDx);
+			variables.Add("_BITMAPHEIGHT", Memory.DisplayDy);
 		}
 
 
