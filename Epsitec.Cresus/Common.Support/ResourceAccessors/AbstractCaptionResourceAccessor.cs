@@ -237,14 +237,14 @@ namespace Epsitec.Common.Support.ResourceAccessors
 					//	The resource should be stored as a delta (patch) relative
 					//	to the reference resource. Compute what that is...
 #if false
-					if ((AbstractCaptionResourceAccessor.ComputeDelta (refModuleManager, ref data, culture, level, item.Id)) ||
-						(AbstractCaptionResourceAccessor.IsEmpty (data)))
+					if ((this.ComputeDelta (refModuleManager, ref data, culture, level, item.Id)) ||
+						(this.IsEmpty (data)))
 					{
 						//	The resource is empty... but we may not remove it if
 						//	this is the primary patch resource and we found some
 						//	non-empty secondary resources.
 
-						if ((twoLetterISOLanguageName == Resources.DefaultTwoLetterISOLanguageName) &&
+						if ((level == ResourceLevel.Default) &&
 							(nonEmptyFieldCount > 0))
 						{
 							//	Don't delete the field for this resource...
@@ -261,8 +261,8 @@ namespace Epsitec.Common.Support.ResourceAccessors
 					//	If this an empty secondary resource, delete the corresponding
 					//	field to avoid cluttering the resource bundle.
 
-					if ((twoLetterISOLanguageName != Resources.DefaultTwoLetterISOLanguageName) &&
-						(AbstractCaptionResourceAccessor.IsEmpty (data)))
+					if ((level == ResourceLevel.Localized) &&
+						(this.IsEmpty (data)))
 					{
 						deleteField = true;
 					}
@@ -302,8 +302,8 @@ namespace Epsitec.Common.Support.ResourceAccessors
 						bundle.Add (field);
 					}
 
-
-					Caption caption = this.GetCaptionFromData (bundle, data, null, twoLetterISOLanguageName);
+					string  capName = level == ResourceLevel.Default ? item.Name : null;
+					Caption caption = this.GetCaptionFromData (bundle, data, capName, twoLetterISOLanguageName);
 					string  about   = data.GetValue (Res.Fields.ResourceBase.Comment) as string;
 					object  modId   = data.GetValue (Res.Fields.ResourceBase.ModificationId);
 
@@ -318,10 +318,10 @@ namespace Epsitec.Common.Support.ResourceAccessors
 						about = null;
 					}
 
-					if ((twoLetterISOLanguageName == Resources.DefaultTwoLetterISOLanguageName) &&
+					if ((level == ResourceLevel.Default) &&
 						(item.Source != CultureMapSource.DynamicMerge))
 					{
-						field.SetName (item.Name);
+						field.SetName (this.GetFieldNameFromName (item, data));
 					}
 					else
 					{
@@ -339,16 +339,31 @@ namespace Epsitec.Common.Support.ResourceAccessors
 
 					nonEmptyFieldCount++;
 				}
-				
-				this.ResourceManager.ClearCaptionCache (item.Id, ResourceLevel.Localized, culture);
-				this.ResourceManager.ClearCaptionCache (item.Id, ResourceLevel.Merged, culture);
+
+#if false
+				if (level == ResourceLevel.Localized)
+				{
+					this.ResourceManager.ClearCaptionCache (item.Id, ResourceLevel.Localized, culture);
+					this.ResourceManager.ClearCaptionCache (item.Id, ResourceLevel.Merged, culture);
+				}
+#endif
 			}
 		}
 
-		private static bool IsEmpty(StructuredData data)
+		protected virtual bool IsEmpty(StructuredData data)
 		{
-			//	TODO: ...implement...
-			throw new System.Exception ("The method or operation is not implemented.");
+			IList<string> labels = data.GetValue (Res.Fields.ResourceCaption.Labels) as IList<string>;
+
+			string description = data.GetValue (Res.Fields.ResourceCaption.Description) as string;
+			string icon        = data.GetValue (Res.Fields.ResourceCaption.Icon) as string;
+			string comment     = data.GetValue (Res.Fields.ResourceBase.Comment) as string;
+			int    modifId     = StringResourceAccessor.GetModificationId (data);
+
+			return ((labels == null) || (labels.Count == 0))
+				&& (ResourceBundle.Field.IsNullString (description))
+				&& (ResourceBundle.Field.IsNullString (icon))
+				&& (ResourceBundle.Field.IsNullString (comment))
+				&& (modifId < 1);
 		}
 
 		protected abstract string GetFieldNameFromName(CultureMap item, Types.StructuredData data);
@@ -462,7 +477,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			if ((!item.IsNameReadOnly) &&
 				(twoLetterISOLanguageName == Resources.DefaultTwoLetterISOLanguageName))
 			{
-				item.Name = field.Name ?? item.Name;
+				item.Name = name ?? item.Name;
 			}
 
 			if (freezeName)

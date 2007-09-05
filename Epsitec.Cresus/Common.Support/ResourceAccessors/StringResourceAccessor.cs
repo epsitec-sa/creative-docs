@@ -436,9 +436,13 @@ namespace Epsitec.Common.Support.ResourceAccessors
 		/// </returns>
 		private static bool IsEmpty(StructuredData data)
 		{
-			return (UndefinedValue.IsUndefinedValue (data.GetValue (Res.Fields.ResourceString.Text)))
-				&& (UndefinedValue.IsUndefinedValue (data.GetValue (Res.Fields.ResourceBase.Comment)))
-				&& (UndefinedValue.IsUndefinedValue (data.GetValue (Res.Fields.ResourceBase.ModificationId)));
+			string text    = data.GetValue (Res.Fields.ResourceString.Text) as string;
+			string comment = data.GetValue (Res.Fields.ResourceBase.Comment) as string;
+			int    modifId = StringResourceAccessor.GetModificationId (data);
+
+			return (ResourceBundle.Field.IsNullString (text))
+				&& (ResourceBundle.Field.IsNullString (comment))
+				&& (modifId < 1);
 		}
 
 		/// <summary>
@@ -479,7 +483,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 
 			object dataModifIdValue = data.GetValue (Res.Fields.ResourceBase.ModificationId);
 			
-			int    dataModifId = UndefinedValue.IsUndefinedValue (dataModifIdValue) ? -1 : (int) dataModifIdValue;
+			int    dataModifId = StringResourceAccessor.GetModificationId (dataModifIdValue);
 			string dataText    = data.GetValue (Res.Fields.ResourceString.Text) as string;
 			string dataComment = data.GetValue (Res.Fields.ResourceBase.Comment) as string;
 
@@ -487,7 +491,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			//	means that the user wants to get the reference data instead;
 			//	so just merge the reference with the provided data :
 
-			int    mergeModifId = dataModifId == -1   ? refModifId : dataModifId;
+			int    mergeModifId = dataModifId < 1                                 ? refModifId : dataModifId;
 			string mergeText    = ResourceBundle.Field.IsNullString (dataText)    ? refText    : dataText;
 			string mergeComment = ResourceBundle.Field.IsNullString (dataComment) ? refComment : dataComment;
 
@@ -508,9 +512,9 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			bool replace = false;
 
 			if ((mergeModifId == refModifId) &&
-				(dataModifId != -1))
+				(dataModifId > 0))
 			{
-				dataModifId = -1;
+				dataModifId = 0;
 				replace     = true;
 			}
 			
@@ -560,13 +564,38 @@ namespace Epsitec.Common.Support.ResourceAccessors
 		/// <param name="modId">The modification id (which can be an <c>UndefinedValue.Instance</c>).</param>
 		internal static void SetModificationId(ResourceBundle.Field field, object modId)
 		{
-			if (!UndefinedValue.IsUndefinedValue (modId))
+			if (UndefinedValue.IsUndefinedValue (modId))
 			{
-				field.SetModificationId ((int) modId);
+				field.SetModificationId (0);
 			}
 			else
 			{
-				field.SetModificationId (-1);
+				field.SetModificationId ((int) modId);
+			}
+		}
+
+		internal static int GetModificationId(StructuredData data)
+		{
+			if (data == null)
+			{
+				return 0;
+			}
+			else
+			{
+				return StringResourceAccessor.GetModificationId (data.GetValue (Res.Fields.ResourceBase.ModificationId));
+			}
+		}
+
+		internal static int GetModificationId(object modId)
+		{
+			if ((UndefinedValue.IsUndefinedValue (modId)) ||
+				(modId == null))
+			{
+				return 0;
+			}
+			else
+			{
+				return (int) modId;
 			}
 		}
 	}
