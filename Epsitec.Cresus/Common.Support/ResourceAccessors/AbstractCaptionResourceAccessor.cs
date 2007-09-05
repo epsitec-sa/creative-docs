@@ -189,39 +189,9 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			}
 
 			ResourceManager refModuleManager = this.ResourceManager.GetManagerForReferenceModule ();
-			bool usePatchModule   = refModuleManager != null;
+			bool            usePatchModule   = refModuleManager != null;
 
 			int nonEmptyFieldCount = 0;
-
-#if false
-			ResourceBundle bundle;
-			CultureInfo culture;
-
-			bundle = this.ResourceManager.GetBundle (Resources.CaptionsBundleName, ResourceLevel.Default);
-
-			ResourceBundle.Field field = bundle[item.Id];
-
-			if (field.IsEmpty)
-			{
-				field = bundle.CreateField (ResourceFieldType.Data);
-				field.SetDruid (item.Id);
-				bundle.Add (field);
-			}
-
-			Types.StructuredData data = item.GetCultureData (Resources.DefaultTwoLetterISOLanguageName);
-
-			Caption caption = this.GetCaptionFromData (bundle, data, item.Name, Resources.DefaultTwoLetterISOLanguageName);
-			string  name    = this.GetFieldNameFromName (item, data);
-			string  about   = data.GetValue (Res.Fields.ResourceBase.Comment) as string;
-			object  modId   = data.GetValue (Res.Fields.ResourceBase.ModificationId);
-
-			field.SetName (name);
-			field.SetStringValue (caption.SerializeToString ());
-			field.SetAbout (about);
-			StringResourceAccessor.SetModificationId (field, modId);
-
-			this.ResourceManager.ClearCaptionCache (item.Id, ResourceLevel.Default, null);
-#endif
 
 			foreach (string twoLetterISOLanguageName in item.GetDefinedCultures ())
 			{
@@ -345,6 +315,10 @@ namespace Epsitec.Common.Support.ResourceAccessors
 				{
 					this.ResourceManager.ClearCaptionCache (item.Id, ResourceLevel.Localized, culture);
 					this.ResourceManager.ClearCaptionCache (item.Id, ResourceLevel.Merged, culture);
+				}
+				else
+				{
+					this.ResourceManager.ClearCaptionCache (item.Id, ResourceLevel.Default, null);
 				}
 #endif
 			}

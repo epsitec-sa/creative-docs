@@ -196,7 +196,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 					//	The resource should be stored as a delta (patch) relative
 					//	to the reference resource. Compute what that is...
 
-					if ((StringResourceAccessor.ComputeDelta (refModuleManager, ref data, culture, level, item.Id)) ||
+					if ((StringResourceAccessor.ComputeDelta (ref data, refModuleManager.GetBundle (Resources.StringsBundleName, level, culture), item.Id)) ||
 						(StringResourceAccessor.IsEmpty (data)))
 					{
 						//	The resource is empty... but we may not remove it if
@@ -449,17 +449,15 @@ namespace Epsitec.Common.Support.ResourceAccessors
 		/// Computes the delta between the reference data and the current data
 		/// provided in the data record.
 		/// </summary>
-		/// <param name="refModuleManager">The resource manager for the reference module.</param>
 		/// <param name="data">The current data record.</param>
-		/// <param name="culture">The resource culture.</param>
-		/// <param name="level">The resource level.</param>
+		/// <param name="refBundle">The bundle from the reference module.</param>
 		/// <param name="druid">The id for the item.</param>
-		/// <returns><c>true</c> if the current data is the same as the reference data;
-		/// otherwise, <c>false</c>.</returns>
-		private static bool ComputeDelta(ResourceManager refModuleManager, ref StructuredData data, CultureInfo culture, ResourceLevel level, Druid druid)
+		/// <returns>
+		/// <c>true</c> if the current data is the same as the reference data;
+		/// otherwise, <c>false</c>.
+		/// </returns>
+		private static bool ComputeDelta(ref StructuredData data, ResourceBundle refBundle, Druid druid)
 		{
-			ResourceBundle refBundle = refModuleManager.GetBundle (Resources.StringsBundleName, level, culture);
-
 			if (refBundle == null)
 			{
 				return false;
