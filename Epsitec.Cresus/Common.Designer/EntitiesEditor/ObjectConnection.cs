@@ -299,7 +299,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				}
 
 				this.field.Relation = rel;
-				this.editor.Module.AccessEntities.SetGlobalDirty();
+				this.editor.Module.AccessEntities.SetLocalDirty();
 				this.editor.Invalidate();
 				this.hilitedElement = ActiveElement.None;
 			}

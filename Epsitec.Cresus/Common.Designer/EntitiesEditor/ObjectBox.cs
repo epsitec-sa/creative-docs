@@ -1225,7 +1225,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 				this.UpdateFields();
 				this.editor.UpdateAfterAddOrRemoveConnection(this);
-				this.editor.Module.AccessEntities.SetGlobalDirty();
+				this.editor.Module.AccessEntities.SetLocalDirty();
 			}
 
 			this.hilitedElement = ActiveElement.None;
@@ -1249,7 +1249,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 				this.UpdateFields();
 				this.editor.UpdateAfterAddOrRemoveConnection(this);
-				this.editor.Module.AccessEntities.SetGlobalDirty();
+				this.editor.Module.AccessEntities.SetLocalDirty();
 			}
 
 			this.hilitedElement = ActiveElement.None;
@@ -1373,7 +1373,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 			
 			this.UpdateField(dataField, this.fields[rank]);
-			this.editor.Module.AccessEntities.SetGlobalDirty();
+			this.editor.Module.AccessEntities.SetLocalDirty();
 			this.editor.UpdateAfterAddOrRemoveConnection(this);
 		}
 
