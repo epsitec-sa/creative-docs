@@ -38,6 +38,8 @@ namespace Epsitec.App.Dolphin.Components
 			variables.Add("_DIGITCOUNT", Memory.PeriphLastDigit-Memory.PeriphFirstDigit+1);
 
 			variables.Add("_KEYBOARD", Memory.PeriphKeyboard);
+			variables.Add("_KEYBOARDSHIFT", 3);
+			variables.Add("_KEYBOARDCTRL", 4);
 			variables.Add("_KEYBOARDDOWN", 3);
 			variables.Add("_KEYBOARDUP", 4);
 			variables.Add("_KEYBOARDLEFT", 5);

@@ -3954,15 +3954,35 @@ namespace Epsitec.App.Dolphin.Components
 					AbstractProcessor.HelpPutLine(builder, "bit 5<tab/>Segment horizontal supérieur.");
 					AbstractProcessor.HelpPutLine(builder, "bit 6<tab/>Segment horizontal du milieu.");
 					AbstractProcessor.HelpPutLine(builder, "bit 7<tab/>Point décimal.");
+					AbstractProcessor.HelpPutLine(builder, "");
+					AbstractProcessor.HelpPutLine(builder, "Constantes pour l'assembleur:");
+					AbstractProcessor.HelpPutLine(builder, "_DIGIT0<tab/><tab/><tab/>= H'C00");
+					AbstractProcessor.HelpPutLine(builder, "_DIGIT1<tab/><tab/><tab/>= H'C01");
+					AbstractProcessor.HelpPutLine(builder, "_DIGIT2<tab/><tab/><tab/>= H'C02");
+					AbstractProcessor.HelpPutLine(builder, "_DIGIT3<tab/><tab/><tab/>= H'C03");
+					AbstractProcessor.HelpPutLine(builder, "_DIGITCOUNT<tab/><tab/>= D'4");
 
 					AbstractProcessor.HelpPutTitle(builder, "Clavier");
-					AbstractProcessor.HelpPutLine(builder, "Le clavier est constitué de 8 touches nommées 0..7, plus 2 touches super-shift.");
+					AbstractProcessor.HelpPutLine(builder, "En mode [NUM] (numeric), le clavier est constitué de 8 touches nommées 0..7, plus 2 touches super-shift.");
+					AbstractProcessor.HelpPutLine(builder, "En mode [ARR] (arrow), le clavier est constitué de 4 touches super-shift fléchées.");
 					AbstractProcessor.HelpPutLine(builder, "[H'C07]<tab/>Clavier.");
 					AbstractProcessor.HelpPutLine(builder, "");
 					AbstractProcessor.HelpPutLine(builder, "bits 0..2<tab/>Touches 0..7.");
-					AbstractProcessor.HelpPutLine(builder, "bit 3<tab/>Touche Shift.");
-					AbstractProcessor.HelpPutLine(builder, "bit 4<tab/>Touche Ctrl.");
+					AbstractProcessor.HelpPutLine(builder, "bit 3<tab/>Touche Shift ou flèche en bas.");
+					AbstractProcessor.HelpPutLine(builder, "bit 4<tab/>Touche Ctrl ou flèche en haut.");
+					AbstractProcessor.HelpPutLine(builder, "bit 5<tab/>Touche flèche à gauche.");
+					AbstractProcessor.HelpPutLine(builder, "bit 6<tab/>Touche flèche à droite.");
 					AbstractProcessor.HelpPutLine(builder, "bit 7<tab/>Prend la valeur 1 lorsqu'une touche 0..7 est pressée. Est automatiquement remis à zéro lorsque l'adresse [H'C07] est lue.");
+					AbstractProcessor.HelpPutLine(builder, "");
+					AbstractProcessor.HelpPutLine(builder, "Constantes pour l'assembleur:");
+					AbstractProcessor.HelpPutLine(builder, "_KEYBOARD<tab/><tab/>= H'C07");
+					AbstractProcessor.HelpPutLine(builder, "_KEYBOARDSHIFT<tab/>= D'3");
+					AbstractProcessor.HelpPutLine(builder, "_KEYBOARDCTRL<tab/>= D'4");
+					AbstractProcessor.HelpPutLine(builder, "_KEYBOARDDOWN<tab/>= D'3");
+					AbstractProcessor.HelpPutLine(builder, "_KEYBOARDUP<tab/><tab/>= D'4");
+					AbstractProcessor.HelpPutLine(builder, "_KEYBOARDLEFT<tab/><tab/>= D'5");
+					AbstractProcessor.HelpPutLine(builder, "_KEYBOARDRIGHT<tab/>= D'6");
+					AbstractProcessor.HelpPutLine(builder, "_KEYBOARDFULL<tab/>= D'7");
 
 					AbstractProcessor.HelpPutTitle(builder, "Ecran bitmap");
 					AbstractProcessor.HelpPutLine(builder, "L'écran bitmap est un écran vidéo monochrome de 32 x 24 pixels. Chaque octet représente 8 points horizontaux, avec le bit 7 à gauche.");
@@ -3971,6 +3991,11 @@ namespace Epsitec.App.Dolphin.Components
 					AbstractProcessor.HelpPutLine(builder, "[H'C84..H'C87]<tab/>2ème ligne de 32 points.");
 					AbstractProcessor.HelpPutLine(builder, "...");
 					AbstractProcessor.HelpPutLine(builder, "[H'CDC..H'CDF]<tab/>24ème ligne de 32 points.");
+					AbstractProcessor.HelpPutLine(builder, "");
+					AbstractProcessor.HelpPutLine(builder, "Constantes pour l'assembleur:");
+					AbstractProcessor.HelpPutLine(builder, "_BITMAP<tab/><tab/>= H'C80");
+					AbstractProcessor.HelpPutLine(builder, "_BITMAPWIDTH<tab/><tab/>= D'32");
+					AbstractProcessor.HelpPutLine(builder, "_BITMAPHEIGHT<tab/><tab/>= D'24");
 					break;
 
 				case "Notation":
