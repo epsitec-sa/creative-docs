@@ -87,7 +87,11 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			System.Diagnostics.Debug.Assert (data != null);
 			System.Diagnostics.Debug.Assert (AnyTypeResourceAccessor.ToTypeCode (data.GetValue (Res.Fields.ResourceBaseType.TypeCode)) == TypeCode.Enum);
 			
-			return this.valueAccessor.CreateValueItem (item.Name);
+			CultureMap valueItem = this.valueAccessor.CreateValueItem (item.Name);
+
+			valueItem.GetCultureData (Resources.DefaultTwoLetterISOLanguageName);
+			
+			return valueItem;
 		}
 
 		public bool CreateMissingValueItems(CultureMap item)

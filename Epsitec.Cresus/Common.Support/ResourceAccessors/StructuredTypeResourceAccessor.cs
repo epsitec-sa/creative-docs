@@ -92,7 +92,11 @@ namespace Epsitec.Common.Support.ResourceAccessors
 
 		public CultureMap CreateFieldItem(CultureMap item)
 		{
-			return this.fieldAccessor.CreateFieldItem (item.Name);
+			CultureMap fieldItem = this.fieldAccessor.CreateFieldItem (item.Name);
+
+			fieldItem.GetCultureData (Resources.DefaultTwoLetterISOLanguageName);
+
+			return fieldItem;
 		}
 
 		public override int PersistChanges()

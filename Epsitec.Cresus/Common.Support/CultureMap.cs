@@ -204,25 +204,28 @@ namespace Epsitec.Common.Support
 		/// the last one.</returns>
 		public IEnumerable<string> GetDefinedCultures()
 		{
-			bool hasDefault = false;
-
-			for (int i = 0; i < this.map.Length; i++)
+			if (this.map != null)
 			{
-				if (this.map[i].Key == Resources.DefaultTwoLetterISOLanguageName)
-				{
-					hasDefault = true;
-				}
-				else
-				{
-					yield return this.map[i].Key;
-				}
-			}
+				bool hasDefault = false;
 
-			//	Make sure we return the default culture last.
+				for (int i = 0; i < this.map.Length; i++)
+				{
+					if (this.map[i].Key == Resources.DefaultTwoLetterISOLanguageName)
+					{
+						hasDefault = true;
+					}
+					else
+					{
+						yield return this.map[i].Key;
+					}
+				}
 
-			if (hasDefault)
-			{
-				yield return Resources.DefaultTwoLetterISOLanguageName;
+				//	Make sure we return the default culture last.
+
+				if (hasDefault)
+				{
+					yield return Resources.DefaultTwoLetterISOLanguageName;
+				}
 			}
 		}
 

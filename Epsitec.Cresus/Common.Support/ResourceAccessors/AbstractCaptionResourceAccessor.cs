@@ -206,8 +206,8 @@ namespace Epsitec.Common.Support.ResourceAccessors
 				{
 					//	The resource should be stored as a delta (patch) relative
 					//	to the reference resource. Compute what that is...
-#if false
-					if ((this.ComputeDelta (refModuleManager, ref data, culture, level, item.Id)) ||
+					
+					if ((this.ComputeDelta (item, ref data, refModuleManager.GetBundle (Resources.CaptionsBundleName, level, culture), item.Id, bundle, twoLetterISOLanguageName)) ||
 						(this.IsEmpty (data)))
 					{
 						//	The resource is empty... but we may not remove it if
@@ -224,7 +224,6 @@ namespace Epsitec.Common.Support.ResourceAccessors
 							deleteField = true;
 						}
 					}
-#endif
 				}
 				else
 				{
@@ -310,7 +309,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 					nonEmptyFieldCount++;
 				}
 
-#if false
+#if true
 				if (level == ResourceLevel.Localized)
 				{
 					this.ResourceManager.ClearCaptionCache (item.Id, ResourceLevel.Localized, culture);
@@ -339,6 +338,113 @@ namespace Epsitec.Common.Support.ResourceAccessors
 				&& (ResourceBundle.Field.IsNullString (comment))
 				&& (modifId < 1);
 		}
+
+		/// <summary>
+		/// Computes the delta between the reference data and the current data
+		/// provided in the data record.
+		/// </summary>
+		/// <param name="data">The current data record.</param>
+		/// <param name="refBundle">The bundle from the reference module.</param>
+		/// <param name="druid">The id for the item.</param>
+		/// <returns>
+		/// <c>true</c> if the current data is the same as the reference data;
+		/// otherwise, <c>false</c>.
+		/// </returns>
+		protected virtual bool ComputeDelta(CultureMap item, ref StructuredData data, ResourceBundle refBundle, Druid druid, ResourceBundle dataBundle, string twoLetterISOLanguageName)
+		{
+			if (refBundle == null)
+			{
+				return false;
+			}
+
+			ResourceBundle.Field refField = refBundle[druid];
+
+			if (refField.IsEmpty)
+			{
+				return false;
+			}
+
+			//	Get the reference data from the reference module resource :
+
+			int     refModifId = refField.ModificationId;
+			string  refComment = refField.About;
+			Caption refCaption = new Caption ();
+
+			ResourceManager.SetSourceBundle (refCaption, refBundle);
+			refCaption.DeserializeFromString (refField.AsString, refBundle.ResourceManager);
+
+
+			//	Get the resulting data the user would like to get when applying
+			//	the patch to the reference data :
+
+			object dataModifIdValue = data.GetValue (Res.Fields.ResourceBase.ModificationId);
+
+			int     dataModifId = StringResourceAccessor.GetModificationId (data.GetValue (Res.Fields.ResourceBase.ModificationId));
+			string  dataComment = data.GetValue (Res.Fields.ResourceBase.Comment) as string;
+			Caption dataCaption = this.GetCaptionFromData (dataBundle, data, null, twoLetterISOLanguageName);
+
+			//	If some of the resulting data are undefined, assume that this
+			//	means that the user wants to get the reference data instead;
+			//	so just merge the reference with the provided data :
+
+			int    mergeModifId = dataModifId < 1                                 ? refModifId : dataModifId;
+			string mergeComment = ResourceBundle.Field.IsNullString (dataComment) ? refComment : dataComment;
+
+			//	TODO: mergeCaption = ...
+
+			//	If the merged data is exactly the same as the reference data,
+			//	then there is nothing left to patch; tell the caller that the
+			//	patch resource can be safely discarded :
+
+			if ((mergeModifId == refModifId) &&
+				/*(mergeText    == refText) &&*/
+				(mergeComment == refComment))
+			{
+				return true;
+			}
+
+			//	Wherever the patch data is the same as the reference data, use
+			//	the "undefined" value instead :
+
+			bool replace = false;
+
+			if ((mergeModifId == refModifId) &&
+				(dataModifId > 0))
+			{
+				dataModifId = 0;
+				replace     = true;
+			}
+
+			/*
+			if ((mergeText == refText) &&
+				(dataText != null))
+			{
+				dataText = null;
+				replace  = true;
+			}
+			 */
+
+			if ((mergeComment == refComment) &&
+				(dataComment != null))
+			{
+				dataComment = null;
+				replace     = true;
+			}
+
+			if (replace)
+			{
+				data = new StructuredData (Res.Types.ResourceString);
+
+				data.SetValue (Res.Fields.ResourceBase.Comment, dataComment);
+				data.SetValue (Res.Fields.ResourceBase.ModificationId, dataModifId);
+
+				this.FillDataFromCaption (item, data, dataCaption);
+			}
+
+			return false;
+		}
+
+
 
 		protected abstract string GetFieldNameFromName(CultureMap item, Types.StructuredData data);
 

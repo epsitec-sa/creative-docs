@@ -479,9 +479,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			//	Get the resulting data the user would like to get when applying
 			//	the patch to the reference data :
 
-			object dataModifIdValue = data.GetValue (Res.Fields.ResourceBase.ModificationId);
-			
-			int    dataModifId = StringResourceAccessor.GetModificationId (dataModifIdValue);
+			int    dataModifId = StringResourceAccessor.GetModificationId (data.GetValue (Res.Fields.ResourceBase.ModificationId));
 			string dataText    = data.GetValue (Res.Fields.ResourceString.Text) as string;
 			string dataComment = data.GetValue (Res.Fields.ResourceBase.Comment) as string;
 
