@@ -246,7 +246,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 					if (bundle == null)
 					{
 						ResourceModuleId moduleId = this.ResourceManager.GetModuleFromFullId (item.Id.ToString ());
-						bundle = ResourceBundle.Create (this.ResourceManager, this.ResourceManager.ActivePrefix, moduleId, Resources.StringsBundleName, ResourceLevel.Localized, culture, 0);
+						bundle = ResourceBundle.Create (this.ResourceManager, this.ResourceManager.ActivePrefix, moduleId, Resources.StringsBundleName, level, culture, 0);
 						bundle.DefineType ("String");
 						this.ResourceManager.SetBundle (bundle, ResourceSetMode.InMemory);
 					}
@@ -391,7 +391,8 @@ namespace Epsitec.Common.Support.ResourceAccessors
 				freezeName  = true;
 			}
 
-			if (!item.IsNameReadOnly)
+			if ((!item.IsNameReadOnly) &&
+				(twoLetterISOLanguageName == Resources.DefaultTwoLetterISOLanguageName))
 			{
 				item.Name = field.Name ?? item.Name;
 			}

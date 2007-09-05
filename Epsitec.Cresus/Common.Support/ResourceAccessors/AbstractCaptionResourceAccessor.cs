@@ -188,6 +188,12 @@ namespace Epsitec.Common.Support.ResourceAccessors
 				throw new System.ArgumentException (string.Format ("No name for item {0}", item.Id));
 			}
 
+			ResourceManager refModuleManager = this.ResourceManager.GetManagerForReferenceModule ();
+			bool usePatchModule   = refModuleManager != null;
+
+			int nonEmptyFieldCount = 0;
+
+#if false
 			ResourceBundle bundle;
 			CultureInfo culture;
 
@@ -215,52 +221,134 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			StringResourceAccessor.SetModificationId (field, modId);
 
 			this.ResourceManager.ClearCaptionCache (item.Id, ResourceLevel.Default, null);
+#endif
 
 			foreach (string twoLetterISOLanguageName in item.GetDefinedCultures ())
 			{
-				if (twoLetterISOLanguageName == Resources.DefaultTwoLetterISOLanguageName)
-				{
-					continue;
-				}
+				StructuredData data    = item.GetCultureData (twoLetterISOLanguageName);
+				CultureInfo    culture = Resources.FindCultureInfo (twoLetterISOLanguageName);
+				ResourceLevel  level   = twoLetterISOLanguageName == Resources.DefaultTwoLetterISOLanguageName ? ResourceLevel.Default : ResourceLevel.Localized;
+				ResourceBundle bundle  = this.ResourceManager.GetBundle (Resources.CaptionsBundleName, level, culture);
 
-				culture = Resources.FindCultureInfo (twoLetterISOLanguageName);
-				bundle  = this.ResourceManager.GetBundle (Resources.CaptionsBundleName, ResourceLevel.Localized, culture);
+				bool deleteField = false;
 
-				if (bundle == null)
+				if (usePatchModule)
 				{
-					bundle = ResourceBundle.Create (this.ResourceManager, this.ResourceManager.ActivePrefix, this.ResourceManager.GetModuleFromFullId (item.Id.ToString ()), Resources.CaptionsBundleName, ResourceLevel.Localized, culture, 0);
-					bundle.DefineType ("Caption");
-					this.ResourceManager.SetBundle (bundle, ResourceSetMode.InMemory);
-				}
-				
-				field = bundle[item.Id];
+					//	The resource should be stored as a delta (patch) relative
+					//	to the reference resource. Compute what that is...
+#if false
+					if ((AbstractCaptionResourceAccessor.ComputeDelta (refModuleManager, ref data, culture, level, item.Id)) ||
+						(AbstractCaptionResourceAccessor.IsEmpty (data)))
+					{
+						//	The resource is empty... but we may not remove it if
+						//	this is the primary patch resource and we found some
+						//	non-empty secondary resources.
 
-				if (field.IsEmpty)
-				{
-					field = bundle.CreateField (ResourceFieldType.Data);
-					field.SetDruid (item.Id);
-					bundle.Add (field);
-				}
-
-				data    = item.GetCultureData (twoLetterISOLanguageName);
-				caption = this.GetCaptionFromData (bundle, data, null, twoLetterISOLanguageName);
-				about   = data.GetValue (Res.Fields.ResourceBase.Comment) as string;
-				modId   = data.GetValue (Res.Fields.ResourceBase.ModificationId);
-				
-				if (caption == null)
-				{
-					bundle.Remove (bundle.IndexOf (item.Id));
+						if ((twoLetterISOLanguageName == Resources.DefaultTwoLetterISOLanguageName) &&
+							(nonEmptyFieldCount > 0))
+						{
+							//	Don't delete the field for this resource...
+						}
+						else
+						{
+							deleteField = true;
+						}
+					}
+#endif
 				}
 				else
 				{
-					field.SetStringValue (caption.SerializeToString ());
-					field.SetAbout (about);
-					StringResourceAccessor.SetModificationId (field, modId);
+					//	If this an empty secondary resource, delete the corresponding
+					//	field to avoid cluttering the resource bundle.
+
+					if ((twoLetterISOLanguageName != Resources.DefaultTwoLetterISOLanguageName) &&
+						(AbstractCaptionResourceAccessor.IsEmpty (data)))
+					{
+						deleteField = true;
+					}
 				}
 
+				if (deleteField)
+				{
+					if (bundle != null)
+					{
+						int index = bundle.IndexOf (item.Id);
+
+						if (index >= 0)
+						{
+							bundle.Remove (index);
+						}
+					}
+				}
+				else
+				{
+					//	The resource contains valid data. We will have to create the
+					//	bundle and the field if they are currently missing :
+
+					if (bundle == null)
+					{
+						ResourceModuleId moduleId = this.ResourceManager.GetModuleFromFullId (item.Id.ToString ());
+						bundle = ResourceBundle.Create (this.ResourceManager, this.ResourceManager.ActivePrefix, moduleId, Resources.CaptionsBundleName, level, culture, 0);
+						bundle.DefineType ("Caption");
+						this.ResourceManager.SetBundle (bundle, ResourceSetMode.InMemory);
+					}
+
+					ResourceBundle.Field field = bundle[item.Id];
+
+					if (field.IsEmpty)
+					{
+						field = bundle.CreateField (ResourceFieldType.Data);
+						field.SetDruid (item.Id);
+						bundle.Add (field);
+					}
+
+
+					Caption caption = this.GetCaptionFromData (bundle, data, null, twoLetterISOLanguageName);
+					string  about   = data.GetValue (Res.Fields.ResourceBase.Comment) as string;
+					object  modId   = data.GetValue (Res.Fields.ResourceBase.ModificationId);
+
+#if false
+					if (ResourceBundle.Field.IsNullString (text))
+					{
+						text = null;
+					}
+#endif
+					if (ResourceBundle.Field.IsNullString (about))
+					{
+						about = null;
+					}
+
+					if ((twoLetterISOLanguageName == Resources.DefaultTwoLetterISOLanguageName) &&
+						(item.Source != CultureMapSource.DynamicMerge))
+					{
+						field.SetName (item.Name);
+					}
+					else
+					{
+						//	We don't want to name secondary resources, nor do we need
+						//	to name patch resources which override an existing reference
+						//	resource.
+
+						field.SetName (null);
+					}
+
+					field.SetStringValue (caption == null ? null : caption.SerializeToString ());
+					field.SetAbout (about);
+
+					StringResourceAccessor.SetModificationId (field, modId);
+
+					nonEmptyFieldCount++;
+				}
+				
 				this.ResourceManager.ClearCaptionCache (item.Id, ResourceLevel.Localized, culture);
 				this.ResourceManager.ClearCaptionCache (item.Id, ResourceLevel.Merged, culture);
 			}
+		}
+
+		private static bool IsEmpty(StructuredData data)
+		{
+			//	TODO: ...implement...
+			throw new System.Exception ("The method or operation is not implemented.");
 		}
 
 		protected abstract string GetFieldNameFromName(CultureMap item, Types.StructuredData data);
@@ -371,7 +459,8 @@ namespace Epsitec.Common.Support.ResourceAccessors
 				item.RecordCultureData (twoLetterISOLanguageName, data);
 			}
 			
-			if (!item.IsNameReadOnly)
+			if ((!item.IsNameReadOnly) &&
+				(twoLetterISOLanguageName == Resources.DefaultTwoLetterISOLanguageName))
 			{
 				item.Name = field.Name ?? item.Name;
 			}
