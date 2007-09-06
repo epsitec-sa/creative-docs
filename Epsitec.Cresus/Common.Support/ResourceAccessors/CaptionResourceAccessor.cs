@@ -118,10 +118,6 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			{
 				labels.AddRange (caption.Labels);
 			}
-			else
-			{
-				System.Diagnostics.Debug.WriteLine ("Found caption without any label");
-			}
 
 			if (UndefinedValue.IsUndefinedValue (data.GetValue (Res.Fields.ResourceCaption.Labels)))
 			{
