@@ -3,6 +3,7 @@
 
 using Epsitec.Common.Support;
 using Epsitec.Common.Types;
+using Epsitec.Common.Types.Collections;
 
 using System.Collections.Generic;
 
@@ -46,10 +47,18 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			return this.Prefix + item.Name;
 		}
 
-		protected override Caption GetCaptionFromData(ResourceBundle sourceBundle, Types.StructuredData data, string name, string twoLetterISOLanguageName)
+		/// <summary>
+		/// Creates a caption based on the definitions stored in a data record.
+		/// </summary>
+		/// <param name="sourceBundle">The source bundle.</param>
+		/// <param name="data">The data record.</param>
+		/// <param name="name">The name of the caption.</param>
+		/// <param name="twoLetterISOLanguageName">The two letter ISO language name.</param>
+		/// <returns>A <see cref="Caption"/> instance.</returns>
+		protected override Caption CreateCaptionFromData(ResourceBundle sourceBundle, Types.StructuredData data, string name, string twoLetterISOLanguageName)
 		{
 			string description = data.GetValue (Res.Fields.ResourceCaption.Description) as string;
-			string icon = data.GetValue (Res.Fields.ResourceCaption.Icon) as string;
+			string icon        = data.GetValue (Res.Fields.ResourceCaption.Icon) as string;
 
 			Caption caption = new Caption ();
 
@@ -63,17 +72,17 @@ namespace Epsitec.Common.Support.ResourceAccessors
 				}
 			}
 
-			if (name != null)
+			if (!ResourceBundle.Field.IsNullString (name))
 			{
 				caption.Name = name;
 			}
 
-			if (description != null)
+			if (!ResourceBundle.Field.IsNullString (description))
 			{
 				caption.Description = description;
 			}
 
-			if (icon != null)
+			if (!ResourceBundle.Field.IsNullString (icon))
 			{
 				caption.Icon = icon;
 			}
@@ -83,28 +92,38 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			return caption;
 		}
 
+		/// <summary>
+		/// Fills the data record from a given caption.
+		/// </summary>
+		/// <param name="item">The item associated with the data record.</param>
+		/// <param name="data">The data record.</param>
+		/// <param name="caption">The caption.</param>
 		protected override void FillDataFromCaption(CultureMap item, Types.StructuredData data, Caption caption)
 		{
-			Types.Collections.ObservableList<string> labels = data.GetValue (Res.Fields.ResourceCaption.Labels) as Types.Collections.ObservableList<string>;
+			ObservableList<string> labels = data.GetValue (Res.Fields.ResourceCaption.Labels) as ObservableList<string>;
 
 			//	The labels property can be accessed as an IList<string> and any modification
 			//	will be reported to the listener.
 
-			bool newLabels = false;
-			
 			if (labels == null)
 			{
-				newLabels = true;
-				labels = new Epsitec.Common.Types.Collections.ObservableList<string> ();
-				labels.AddRange (caption.Labels);
+				labels = new ObservableList<string> ();
 			}
 			else if (caption.HasLabels)
 			{
 				labels.Clear ();
-				labels.AddRange (caption.Labels);
 			}
 
-			if (newLabels)
+			if (caption.HasLabels)
+			{
+				labels.AddRange (caption.Labels);
+			}
+			else
+			{
+				System.Diagnostics.Debug.WriteLine ("Found caption without any label");
+			}
+
+			if (UndefinedValue.IsUndefinedValue (data.GetValue (Res.Fields.ResourceCaption.Labels)))
 			{
 				data.SetValue (Res.Fields.ResourceCaption.Labels, labels);
 				data.LockValue (Res.Fields.ResourceCaption.Labels);

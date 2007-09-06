@@ -47,9 +47,9 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			return Res.Types.ResourceCommand;
 		}
 
-		protected override Caption GetCaptionFromData(ResourceBundle sourceBundle, Types.StructuredData data, string name, string twoLetterISOLanguageName)
+		protected override Caption CreateCaptionFromData(ResourceBundle sourceBundle, Types.StructuredData data, string name, string twoLetterISOLanguageName)
 		{
-			Caption caption = base.GetCaptionFromData (sourceBundle, data, name, twoLetterISOLanguageName);
+			Caption caption = base.CreateCaptionFromData (sourceBundle, data, name, twoLetterISOLanguageName);
 
 			if (!Types.UndefinedValue.IsUndefinedValue (data.GetValue (Res.Fields.ResourceCommand.Statefull)))
 			{
@@ -86,31 +86,50 @@ namespace Epsitec.Common.Support.ResourceAccessors
 		{
 			base.FillDataFromCaption (item, data, caption);
 
-			ObservableList<StructuredData> shortcuts = new ObservableList<StructuredData> ();
+			ObservableList<StructuredData> shortcuts = data.GetValue (Res.Fields.ResourceCommand.Shortcuts) as ObservableList<StructuredData>;
 
-			foreach (Widgets.Shortcut shortcut in Widgets.Shortcut.GetShortcuts (caption))
+			if (shortcuts == null)
 			{
-				StructuredData x = new StructuredData (Res.Types.Shortcut);
-				x.SetValue (Res.Fields.Shortcut.KeyCode, shortcut.GetValue (Widgets.Shortcut.KeyCodeProperty));
-				shortcuts.Add (x);
-				item.NotifyDataAdded (x);
+				shortcuts = new ObservableList<StructuredData> ();
 			}
-			
-			data.SetValue (Res.Fields.ResourceCommand.Shortcuts, shortcuts);
-			data.LockValue (Res.Fields.ResourceCommand.Shortcuts);
-			shortcuts.CollectionChanged += new Listener (this, item).HandleCollectionChanged;
+			else if (Widgets.Shortcut.HasShortcuts (caption))
+			{
+				shortcuts.Clear ();
+			}
 
-			if (!Types.UndefinedValue.IsUndefinedValue (caption.GetValue (Widgets.Command.StatefullProperty)))
+			if (Widgets.Shortcut.HasShortcuts (caption))
 			{
-				data.SetValue (Res.Fields.ResourceCommand.Statefull, caption.GetValue (Widgets.Command.StatefullProperty));
+				foreach (Widgets.Shortcut shortcut in Widgets.Shortcut.GetShortcuts (caption))
+				{
+					StructuredData x = new StructuredData (Res.Types.Shortcut);
+					x.SetValue (Res.Fields.Shortcut.KeyCode, shortcut.GetValue (Widgets.Shortcut.KeyCodeProperty));
+					shortcuts.Add (x);
+					item.NotifyDataAdded (x);
+				}
 			}
-			if (!Types.UndefinedValue.IsUndefinedValue (caption.GetValue (Widgets.Command.DefaultParameterProperty)))
+
+			if (UndefinedValue.IsUndefinedValue (data.GetValue (Res.Fields.ResourceCommand.Shortcuts)))
 			{
-				data.SetValue (Res.Fields.ResourceCommand.DefaultParameter, caption.GetValue (Widgets.Command.DefaultParameterProperty));
+				data.SetValue (Res.Fields.ResourceCommand.Shortcuts, shortcuts);
+				data.LockValue (Res.Fields.ResourceCommand.Shortcuts);
+				shortcuts.CollectionChanged += new Listener (this, item).HandleCollectionChanged;
 			}
-			if (!Types.UndefinedValue.IsUndefinedValue (caption.GetValue (Widgets.Command.GroupProperty)))
+
+			object statefullValue        = caption.GetValue (Widgets.Command.StatefullProperty);
+			object defaultParameterValue = caption.GetValue (Widgets.Command.DefaultParameterProperty);
+			object groupValue            = caption.GetValue (Widgets.Command.GroupProperty);
+
+			if (!Types.UndefinedValue.IsUndefinedValue (statefullValue))
 			{
-				data.SetValue (Res.Fields.ResourceCommand.Group, caption.GetValue (Widgets.Command.GroupProperty));
+				data.SetValue (Res.Fields.ResourceCommand.Statefull, statefullValue);
+			}
+			if (!Types.UndefinedValue.IsUndefinedValue (defaultParameterValue))
+			{
+				data.SetValue (Res.Fields.ResourceCommand.DefaultParameter, defaultParameterValue);
+			}
+			if (!Types.UndefinedValue.IsUndefinedValue (groupValue))
+			{
+				data.SetValue (Res.Fields.ResourceCommand.Group, groupValue);
 			}
 		}
 

@@ -201,9 +201,9 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			}
 		}
 
-		protected override Caption GetCaptionFromData(ResourceBundle sourceBundle, Types.StructuredData data, string name, string twoLetterISOLanguageName)
+		protected override Caption CreateCaptionFromData(ResourceBundle sourceBundle, Types.StructuredData data, string name, string twoLetterISOLanguageName)
 		{
-			Caption caption = base.GetCaptionFromData (sourceBundle, data, name, twoLetterISOLanguageName);
+			Caption caption = base.CreateCaptionFromData (sourceBundle, data, name, twoLetterISOLanguageName);
 			
 			if (twoLetterISOLanguageName == Resources.DefaultTwoLetterISOLanguageName)
 			{

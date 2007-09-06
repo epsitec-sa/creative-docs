@@ -272,16 +272,16 @@ namespace Epsitec.Common.Support.ResourceAccessors
 					}
 
 					string  capName = level == ResourceLevel.Default ? item.Name : null;
-					Caption caption = this.GetCaptionFromData (bundle, data, capName, twoLetterISOLanguageName);
+					Caption caption = this.CreateCaptionFromData (bundle, data, capName, twoLetterISOLanguageName);
 					string  about   = data.GetValue (Res.Fields.ResourceBase.Comment) as string;
 					object  modId   = data.GetValue (Res.Fields.ResourceBase.ModificationId);
 
-#if false
-					if (ResourceBundle.Field.IsNullString (text))
+					if ((capName == null) &&
+						(this.IsEmptyCaption (data)))
 					{
-						text = null;
+						caption = null;
 					}
-#endif
+					
 					if (ResourceBundle.Field.IsNullString (about))
 					{
 						about = null;
@@ -323,18 +323,24 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			}
 		}
 
-		protected virtual bool IsEmpty(StructuredData data)
+		protected virtual bool IsEmptyCaption(StructuredData data)
 		{
 			IList<string> labels = data.GetValue (Res.Fields.ResourceCaption.Labels) as IList<string>;
 
 			string description = data.GetValue (Res.Fields.ResourceCaption.Description) as string;
 			string icon        = data.GetValue (Res.Fields.ResourceCaption.Icon) as string;
-			string comment     = data.GetValue (Res.Fields.ResourceBase.Comment) as string;
-			int    modifId     = StringResourceAccessor.GetModificationId (data);
 
 			return ((labels == null) || (labels.Count == 0))
 				&& (ResourceBundle.Field.IsNullString (description))
-				&& (ResourceBundle.Field.IsNullString (icon))
+				&& (ResourceBundle.Field.IsNullString (icon));
+		}
+		
+		protected bool IsEmpty(StructuredData data)
+		{
+			string comment     = data.GetValue (Res.Fields.ResourceBase.Comment) as string;
+			int    modifId     = StringResourceAccessor.GetModificationId (data);
+
+			return (this.IsEmptyCaption (data))
 				&& (ResourceBundle.Field.IsNullString (comment))
 				&& (modifId < 1);
 		}
@@ -373,6 +379,12 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			ResourceManager.SetSourceBundle (refCaption, refBundle);
 			refCaption.DeserializeFromString (refField.AsString, refBundle.ResourceManager);
 
+			StructuredData refData = new StructuredData (this.GetStructuredType ());
+
+			refData.SetValue (Res.Fields.ResourceBase.Comment, refComment);
+			refData.SetValue (Res.Fields.ResourceBase.ModificationId, refModifId);
+
+			this.FillDataFromCaption (item, refData, refCaption);
 
 			//	Get the resulting data the user would like to get when applying
 			//	the patch to the reference data :
@@ -381,24 +393,27 @@ namespace Epsitec.Common.Support.ResourceAccessors
 
 			int     dataModifId = StringResourceAccessor.GetModificationId (data.GetValue (Res.Fields.ResourceBase.ModificationId));
 			string  dataComment = data.GetValue (Res.Fields.ResourceBase.Comment) as string;
-			Caption dataCaption = this.GetCaptionFromData (dataBundle, data, null, twoLetterISOLanguageName);
+			Caption dataCaption = this.CreateCaptionFromData (dataBundle, data, null, twoLetterISOLanguageName);
 
 			//	If some of the resulting data are undefined, assume that this
 			//	means that the user wants to get the reference data instead;
 			//	so just merge the reference with the provided data :
 
-			int    mergeModifId = dataModifId < 1                                 ? refModifId : dataModifId;
-			string mergeComment = ResourceBundle.Field.IsNullString (dataComment) ? refComment : dataComment;
-
-			//	TODO: mergeCaption = ...
+			int            mergeModifId = dataModifId < 1                                 ? refModifId : dataModifId;
+			string         mergeComment = ResourceBundle.Field.IsNullString (dataComment) ? refComment : dataComment;
+			StructuredData mergeData    = this.ComputeMergedData (refData, data);
+			Caption        mergeCaption = this.CreateCaptionFromData (dataBundle, mergeData, null, twoLetterISOLanguageName);
+			
+			string refCaptionSrc   = refCaption == null   ? "" : refCaption.SerializeToString ();
+			string mergeCaptionSrc = mergeCaption == null ? "" : mergeCaption.SerializeToString ();
 
 			//	If the merged data is exactly the same as the reference data,
 			//	then there is nothing left to patch; tell the caller that the
 			//	patch resource can be safely discarded :
 
-			if ((mergeModifId == refModifId) &&
-				/*(mergeText    == refText) &&*/
-				(mergeComment == refComment))
+			if ((mergeModifId    == refModifId) &&
+				(mergeCaptionSrc == refCaptionSrc) &&
+				(mergeComment    == refComment))
 			{
 				return true;
 			}
@@ -415,14 +430,12 @@ namespace Epsitec.Common.Support.ResourceAccessors
 				replace     = true;
 			}
 
-			/*
-			if ((mergeText == refText) &&
-				(dataText != null))
+			if ((mergeCaptionSrc == refCaptionSrc) &&
+				(dataCaption != null))
 			{
-				dataText = null;
-				replace  = true;
+				dataCaption = null;
+				replace     = true;
 			}
-			 */
 
 			if ((mergeComment == refComment) &&
 				(dataComment != null))
@@ -433,7 +446,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 
 			if (replace)
 			{
-				data = new StructuredData (Res.Types.ResourceString);
+				data = new StructuredData (this.GetStructuredType ());
 
 				data.SetValue (Res.Fields.ResourceBase.Comment, dataComment);
 				data.SetValue (Res.Fields.ResourceBase.ModificationId, dataModifId);
@@ -444,12 +457,110 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			return false;
 		}
 
+		protected virtual StructuredData ComputeMergedData(StructuredData a, StructuredData b)
+		{
+			StructuredData data = new StructuredData (this.GetStructuredType ());
+
+			string        aDesc   = a.GetValue (Res.Fields.ResourceCaption.Description) as string;
+			string        aIcon   = a.GetValue (Res.Fields.ResourceCaption.Icon) as string;
+			IList<string> aLabels = a.GetValue (Res.Fields.ResourceCaption.Labels) as IList<string>;
+
+			string        bDesc   = b.GetValue (Res.Fields.ResourceCaption.Description) as string;
+			string        bIcon   = b.GetValue (Res.Fields.ResourceCaption.Icon) as string;
+			IList<string> bLabels = b.GetValue (Res.Fields.ResourceCaption.Labels) as IList<string>;
+
+			if (ResourceBundle.Field.IsNullString (aDesc))
+			{
+				aDesc = null;
+			}
+			if (ResourceBundle.Field.IsNullString (aIcon))
+			{
+				aIcon = null;
+			}
+			
+			if (ResourceBundle.Field.IsNullString (bDesc))
+			{
+				bDesc = null;
+			}
+			if (ResourceBundle.Field.IsNullString (bIcon))
+			{
+				bIcon = null;
+			}
+
+			string       cDesc   = bDesc ?? aDesc;
+			string       cIcon   = bIcon ?? aIcon;
+			List<string> cLabels = new List<string> ();
+
+			foreach (string text in aLabels)
+			{
+				if (ResourceBundle.Field.IsNullString (text))
+				{
+					cLabels.Add (null);
+				}
+				else
+				{
+					cLabels.Add (text);
+				}
+			}
+
+			int n = System.Math.Max (aLabels.Count, bLabels.Count);
+
+			for (int i = 0; i < n; i++)
+			{
+				string text = null;
+				
+				if (i < bLabels.Count)
+				{
+					text = bLabels[i];
+					
+					if (ResourceBundle.Field.IsNullString (text))
+					{
+						text = null;
+					}
+				}
+				if (i < aLabels.Count)
+				{
+					if (text != null)
+					{
+						cLabels[i] = text;
+					}
+				}
+				else
+				{
+					if (text != null)
+					{
+						cLabels.Add (text);
+					}
+				}
+			}
+
+			data.SetValue (Res.Fields.ResourceCaption.Description, cDesc);
+			data.SetValue (Res.Fields.ResourceCaption.Icon, cIcon);
+			data.SetValue (Res.Fields.ResourceCaption.Labels, cLabels);
+			
+			return data;
+		}
+
 
 
 		protected abstract string GetFieldNameFromName(CultureMap item, Types.StructuredData data);
 
-		protected abstract Caption GetCaptionFromData(ResourceBundle sourceBundle, Types.StructuredData data, string name, string twoLetterISOLanguageName);
+		/// <summary>
+		/// Creates a caption based on the definitions stored in a data record.
+		/// </summary>
+		/// <param name="sourceBundle">The source bundle.</param>
+		/// <param name="data">The data record.</param>
+		/// <param name="name">The name of the caption.</param>
+		/// <param name="twoLetterISOLanguageName">The two letter ISO language name.</param>
+		/// <returns>A <see cref="Caption"/> instance.</returns>
+		protected abstract Caption CreateCaptionFromData(ResourceBundle sourceBundle, Types.StructuredData data, string name, string twoLetterISOLanguageName);
 
+		/// <summary>
+		/// Fills the data record from a given caption.
+		/// </summary>
+		/// <param name="item">The item associated with the data record.</param>
+		/// <param name="data">The data record.</param>
+		/// <param name="caption">The caption.</param>
 		protected abstract void FillDataFromCaption(CultureMap item, Types.StructuredData data, Caption caption);
 
 		protected abstract string GetNameFromFieldName(CultureMap item, string fieldName);
@@ -457,11 +568,11 @@ namespace Epsitec.Common.Support.ResourceAccessors
 
 		protected override Types.StructuredData LoadFromField(ResourceBundle.Field field, int module, string twoLetterISOLanguageName)
 		{
-			Druid id     = new Druid (field.Id, module);
 			bool insert = false;
 			bool record;
 			bool freezeName = false;
 
+			Druid id = new Druid (field.Id, module);
 			CultureMap item = this.Collection[id];
 			CultureMapSource fieldSource = this.GetCultureMapSource (field);
 			StructuredData data = new StructuredData (this.GetStructuredType ());
@@ -505,19 +616,16 @@ namespace Epsitec.Common.Support.ResourceAccessors
 					//	...and we know that there is already some data available
 					//	for the culture. Merge the data :
 
-					StructuredData newData = data;
-					StructuredData oldData = item.GetCultureData (twoLetterISOLanguageName);
+					data = item.GetCultureData (twoLetterISOLanguageName);
 
-					if (field.About != null)
+					if (!ResourceBundle.Field.IsNullString (field.About))
 					{
-						oldData.SetValue (Res.Fields.ResourceBase.Comment, newData.GetValue (Res.Fields.ResourceBase.Comment));
+						data.SetValue (Res.Fields.ResourceBase.Comment, field.About);
 					}
 					if (field.ModificationId > 0)
 					{
-						oldData.SetValue (Res.Fields.ResourceBase.ModificationId, newData.GetValue (Res.Fields.ResourceBase.ModificationId));
+						data.SetValue (Res.Fields.ResourceBase.ModificationId, field.ModificationId);
 					}
-
-					data = oldData;
 
 					insert = false;
 					record = false;
@@ -537,6 +645,9 @@ namespace Epsitec.Common.Support.ResourceAccessors
 				freezeName  = true;
 			}
 
+			//	Restore the caption definition, then fill the data record while
+			//	merging the fields which might need to be merged.
+			
 			Caption caption = new Caption (id);
 			string  name    = string.IsNullOrEmpty (field.Name) ? null : this.GetNameFromFieldName (item, field.Name);
 
