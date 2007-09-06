@@ -948,6 +948,11 @@ namespace Epsitec.Common.Support
 		
 		private Caption GetCaption(Druid druid, ResourceLevel level, CultureInfo culture, bool cache)
 		{
+			if (druid.IsEmpty)
+			{
+				return null;
+			}
+
 			culture = culture ?? this.culture;
 
 			string resource = Resources.ResolveCaptionsDruidReference (druid.ToResourceId ());

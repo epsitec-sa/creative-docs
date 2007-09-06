@@ -618,6 +618,11 @@ namespace Epsitec.Common.Support.ResourceAccessors
 
 			foreach (EnumValue value in type.Values)
 			{
+				if (value.IsHidden)
+				{
+					continue;
+				}
+
 				StructuredData x = new StructuredData (Res.Types.EnumValue);
 
 				x.SetValue (Res.Fields.EnumValue.CaptionId, value.CaptionId);
