@@ -227,6 +227,11 @@ namespace Epsitec.Common.Support.ResourceAccessors
 							deleteField = true;
 						}
 					}
+
+					if (item.Source == CultureMapSource.ReferenceModule)
+					{
+						item.Source = CultureMapSource.DynamicMerge;
+					}
 				}
 				else
 				{
@@ -274,7 +279,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 						bundle.Add (field);
 					}
 
-					string  capName = level == ResourceLevel.Default ? item.Name : null;
+					string  capName = (level == ResourceLevel.Default) && !usePatchModule ? item.Name : null;
 					Caption caption = this.CreateCaptionFromData (bundle, data, capName, twoLetterISOLanguageName);
 					string  about   = data.GetValue (Res.Fields.ResourceBase.Comment) as string;
 					object  modId   = data.GetValue (Res.Fields.ResourceBase.ModificationId);

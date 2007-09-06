@@ -213,6 +213,11 @@ namespace Epsitec.Common.Support.ResourceAccessors
 							deleteField = true;
 						}
 					}
+
+					if (item.Source == CultureMapSource.ReferenceModule)
+					{
+						item.Source = CultureMapSource.DynamicMerge;
+					}
 				}
 				else
 				{
