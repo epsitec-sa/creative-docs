@@ -397,28 +397,19 @@ namespace Epsitec.Common.Support.ResourceAccessors
 
 			//	Get the reference data from the reference module resource :
 
-			int     refModifId = refField.ModificationId;
-			string  refComment = refField.About;
-			Caption refCaption = this.CreateCaption (refBundle);
+			StructuredData refData = CreateReferenceData (item, refBundle, refField);
 
-			refCaption.DeserializeFromString (refField.AsString, refBundle.ResourceManager);
-
-			StructuredData refData = this.CreateStructuredData ();
-
-			refData.SetValue (Res.Fields.ResourceBase.Comment, refComment);
-			refData.SetValue (Res.Fields.ResourceBase.ModificationId, refModifId);
-
-			this.FillDataFromCaption (item, refData, refCaption, DataCreationMode.Temporary);
-
-			//	Get the resulting data the user would like to get when applying
-			//	the patch to the reference data :
-
-			object dataModifIdValue = data.GetValue (Res.Fields.ResourceBase.ModificationId);
+			int    refModifId = StringResourceAccessor.GetModificationId (refData.GetValue (Res.Fields.ResourceBase.ModificationId));
+			string refComment = data.GetValue (Res.Fields.ResourceBase.Comment) as string;
 
 			int     dataModifId = StringResourceAccessor.GetModificationId (data.GetValue (Res.Fields.ResourceBase.ModificationId));
 			string  dataComment = data.GetValue (Res.Fields.ResourceBase.Comment) as string;
-			Caption dataCaption = this.CreateCaptionFromData (dataBundle, data, null, twoLetterISOLanguageName);
+			
+			//	Get the resulting data the user would like to get when applying
+			//	the patch to the reference data :
 
+			//	TODO: ...
+			
 			//	If some of the resulting data are undefined, assume that this
 			//	means that the user wants to get the reference data instead;
 			//	so just merge the reference with the provided data :
@@ -426,18 +417,16 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			int            mergeModifId = dataModifId < 1                                 ? refModifId : dataModifId;
 			string         mergeComment = ResourceBundle.Field.IsNullString (dataComment) ? refComment : dataComment;
 			StructuredData mergeData    = this.ComputeMergedData (refData, data);
-			Caption        mergeCaption = this.CreateCaptionFromData (dataBundle, mergeData, null, twoLetterISOLanguageName);
 			
-			string refCaptionSrc   = refCaption == null   ? "" : refCaption.SerializeToString ();
-			string mergeCaptionSrc = mergeCaption == null ? "" : mergeCaption.SerializeToString ();
-
 			//	If the merged data is exactly the same as the reference data,
 			//	then there is nothing left to patch; tell the caller that the
 			//	patch resource can be safely discarded :
 
+			//	TODO: compare data records...
+
 			if ((mergeModifId    == refModifId) &&
-				(mergeCaptionSrc == refCaptionSrc) &&
-				(mergeComment    == refComment))
+				(mergeComment    == refComment) &&
+				(true))
 			{
 				return true;
 			}
@@ -451,13 +440,6 @@ namespace Epsitec.Common.Support.ResourceAccessors
 				(dataModifId > 0))
 			{
 				dataModifId = 0;
-				replace     = true;
-			}
-
-			if ((mergeCaptionSrc == refCaptionSrc) &&
-				(dataCaption != null))
-			{
-				dataCaption = null;
 				replace     = true;
 			}
 
@@ -475,10 +457,29 @@ namespace Epsitec.Common.Support.ResourceAccessors
 				data.SetValue (Res.Fields.ResourceBase.Comment, dataComment);
 				data.SetValue (Res.Fields.ResourceBase.ModificationId, dataModifId);
 
-				this.FillDataFromCaption (item, data, dataCaption, DataCreationMode.Temporary);
+				//	TODO: ...
+
+//-				this.FillDataFromCaption (item, data, dataCaption, DataCreationMode.Temporary);
 			}
 
 			return false;
+		}
+
+		private StructuredData CreateReferenceData(CultureMap item, ResourceBundle refBundle, ResourceBundle.Field refField)
+		{
+			StructuredData refData = this.CreateStructuredData ();
+			
+			int     refModifId = refField.ModificationId;
+			string  refComment = refField.About;
+			Caption refCaption = this.CreateCaption (refBundle);
+
+			refCaption.DeserializeFromString (refField.AsString, refBundle.ResourceManager);
+
+			refData.SetValue (Res.Fields.ResourceBase.Comment, refComment);
+			refData.SetValue (Res.Fields.ResourceBase.ModificationId, refModifId);
+
+			this.FillDataFromCaption (item, refData, refCaption, DataCreationMode.Temporary);
+			return refData;
 		}
 
 		protected virtual StructuredData ComputeMergedData(StructuredData a, StructuredData b)
