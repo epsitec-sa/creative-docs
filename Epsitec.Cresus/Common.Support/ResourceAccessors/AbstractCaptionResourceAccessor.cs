@@ -381,7 +381,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 		/// <c>true</c> if the current data is the same as the reference data;
 		/// otherwise, <c>false</c>.
 		/// </returns>
-		protected virtual bool ComputeDelta(CultureMap item, ref StructuredData data, ResourceBundle refBundle, Druid druid, ResourceBundle dataBundle, string twoLetterISOLanguageName)
+		protected bool ComputeDelta(CultureMap item, ref StructuredData rawData, ResourceBundle refBundle, Druid druid, ResourceBundle dataBundle, string twoLetterISOLanguageName)
 		{
 			if (refBundle == null)
 			{
@@ -395,91 +395,55 @@ namespace Epsitec.Common.Support.ResourceAccessors
 				return false;
 			}
 
-			//	Get the reference data from the reference module resource :
-
-			StructuredData refData = CreateReferenceData (item, refBundle, refField);
+			StructuredData refData   = this.CreateStructuredData (item, refBundle, refField, DataCreationMode.Temporary);
+			StructuredData patchData = this.CreateStructuredData ();
 
 			int    refModifId = StringResourceAccessor.GetModificationId (refData.GetValue (Res.Fields.ResourceBase.ModificationId));
-			string refComment = data.GetValue (Res.Fields.ResourceBase.Comment) as string;
-
-			int     dataModifId = StringResourceAccessor.GetModificationId (data.GetValue (Res.Fields.ResourceBase.ModificationId));
-			string  dataComment = data.GetValue (Res.Fields.ResourceBase.Comment) as string;
+			int    rawModifId = StringResourceAccessor.GetModificationId (rawData.GetValue (Res.Fields.ResourceBase.ModificationId));
 			
-			//	Get the resulting data the user would like to get when applying
-			//	the patch to the reference data :
+			string refComment = refData.GetValue (Res.Fields.ResourceBase.Comment) as string;
+			string rawComment = rawData.GetValue (Res.Fields.ResourceBase.Comment) as string;
 
-			//	TODO: ...
+			if ((rawModifId > 0) &&
+				(rawModifId != refModifId))
+			{
+				patchData.SetValue (Res.Fields.ResourceBase.ModificationId, rawModifId);
+			}
 			
-			//	If some of the resulting data are undefined, assume that this
-			//	means that the user wants to get the reference data instead;
-			//	so just merge the reference with the provided data :
+			if (!ResourceBundle.Field.IsNullString (rawComment) &&
+				(rawComment != refComment))
+			{
+				patchData.SetValue (Res.Fields.ResourceBase.Comment, rawComment);
+			}
 
-			int            mergeModifId = dataModifId < 1                                 ? refModifId : dataModifId;
-			string         mergeComment = ResourceBundle.Field.IsNullString (dataComment) ? refComment : dataComment;
-			StructuredData mergeData    = this.ComputeMergedData (refData, data);
-			
-			//	If the merged data is exactly the same as the reference data,
-			//	then there is nothing left to patch; tell the caller that the
-			//	patch resource can be safely discarded :
+			this.ComputeDataDelta (rawData, refData, patchData);
 
-			//	TODO: compare data records...
-
-			if ((mergeModifId    == refModifId) &&
-				(mergeComment    == refComment) &&
-				(true))
+			if (patchData.IsEmpty)
 			{
 				return true;
 			}
-
-			//	Wherever the patch data is the same as the reference data, use
-			//	the "undefined" value instead :
-
-			bool replace = false;
-
-			if ((mergeModifId == refModifId) &&
-				(dataModifId > 0))
+			else
 			{
-				dataModifId = 0;
-				replace     = true;
+				rawData = patchData;
+				return false;
 			}
-
-			if ((mergeComment == refComment) &&
-				(dataComment != null))
-			{
-				dataComment = null;
-				replace     = true;
-			}
-
-			if (replace)
-			{
-				data = this.CreateStructuredData ();
-
-				data.SetValue (Res.Fields.ResourceBase.Comment, dataComment);
-				data.SetValue (Res.Fields.ResourceBase.ModificationId, dataModifId);
-
-				//	TODO: ...
-
-//-				this.FillDataFromCaption (item, data, dataCaption, DataCreationMode.Temporary);
-			}
-
-			return false;
 		}
 
-		private StructuredData CreateReferenceData(CultureMap item, ResourceBundle refBundle, ResourceBundle.Field refField)
+		protected abstract void ComputeDataDelta(StructuredData rawData, StructuredData refData, StructuredData patchData);
+		
+		private StructuredData CreateStructuredData(CultureMap item, ResourceBundle bundle, ResourceBundle.Field field, DataCreationMode mode)
 		{
-			StructuredData refData = this.CreateStructuredData ();
+			StructuredData data    = this.CreateStructuredData ();
+			Caption        caption = this.CreateCaption (bundle);
+
+			caption.DeserializeFromString (field.AsString, bundle.ResourceManager);
+
+			data.SetValue (Res.Fields.ResourceBase.Comment, field.About);
+			data.SetValue (Res.Fields.ResourceBase.ModificationId, field.ModificationId);
+
+			this.FillDataFromCaption (item, data, caption, mode);
 			
-			int     refModifId = refField.ModificationId;
-			string  refComment = refField.About;
-			Caption refCaption = this.CreateCaption (refBundle);
-
-			refCaption.DeserializeFromString (refField.AsString, refBundle.ResourceManager);
-
-			refData.SetValue (Res.Fields.ResourceBase.Comment, refComment);
-			refData.SetValue (Res.Fields.ResourceBase.ModificationId, refModifId);
-
-			this.FillDataFromCaption (item, refData, refCaption, DataCreationMode.Temporary);
-			return refData;
+			return data;
 		}
 
 		protected virtual StructuredData ComputeMergedData(StructuredData a, StructuredData b)

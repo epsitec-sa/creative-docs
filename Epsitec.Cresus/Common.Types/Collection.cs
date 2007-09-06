@@ -275,5 +275,44 @@ namespace Epsitec.Common.Types
 			list.Reverse ();
 			return list;
 		}
+
+		public static bool CompareEqual<T>(IList<T> a, IList<T> b) where T : System.IEquatable<T>
+		{
+			if (a == b)
+			{
+				return true;
+			}
+			if ((a == null) ||
+				(b == null))
+			{
+				return false;
+			}
+			if (a.Count != b.Count)
+			{
+				return false;
+			}
+
+			for (int i = 0; i < a.Count; i++)
+			{
+				T value1 = a[i];
+				T value2 = b[i];
+
+				if ((value1 == null) &&
+					(value2 == null))
+				{
+					continue;
+				}
+				if (value1 == null)
+				{
+					return false;
+				}
+				if (!value1.Equals (value2))
+				{
+					return false;
+				}
+			}
+
+			return true;
+		}
 	}
 }

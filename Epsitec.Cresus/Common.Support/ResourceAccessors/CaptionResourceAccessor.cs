@@ -149,6 +149,36 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			}
 		}
 
+		protected override void ComputeDataDelta(StructuredData rawData, StructuredData refData, StructuredData patchData)
+		{
+			string        rawDesc   = rawData.GetValue (Res.Fields.ResourceCaption.Description) as string;
+			string        rawIcon   = rawData.GetValue (Res.Fields.ResourceCaption.Icon) as string;
+			IList<string> rawLabels = rawData.GetValue (Res.Fields.ResourceCaption.Labels) as IList<string>;
+
+			string        refDesc   = refData.GetValue (Res.Fields.ResourceCaption.Description) as string;
+			string        refIcon   = refData.GetValue (Res.Fields.ResourceCaption.Icon) as string;
+			IList<string> refLabels = refData.GetValue (Res.Fields.ResourceCaption.Labels) as IList<string>;
+
+			if (!ResourceBundle.Field.IsNullString (rawDesc) &&
+				(rawDesc != refDesc))
+			{
+				patchData.SetValue (Res.Fields.ResourceCaption.Description, rawDesc);
+			}
+			if (!ResourceBundle.Field.IsNullString (rawIcon) &&
+				(rawIcon != refIcon))
+			{
+				patchData.SetValue (Res.Fields.ResourceCaption.Icon, rawIcon);
+			}
+			if ((rawLabels != null) &&
+				(rawLabels.Count > 0))
+			{
+				if (!Types.Collection.CompareEqual (rawLabels, refLabels))
+				{
+					patchData.SetValue (Res.Fields.ResourceCaption.Labels, new List<string> (rawLabels));
+				}
+			}
+		}
+
 		protected override bool FilterField(ResourceBundle.Field field, string fieldName)
 		{
 			return (!string.IsNullOrEmpty (fieldName))
