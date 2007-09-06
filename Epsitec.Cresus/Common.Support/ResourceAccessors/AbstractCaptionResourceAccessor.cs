@@ -112,26 +112,27 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			ResourceBundle.Field refField   = refBundle   == null ? ResourceBundle.Field.Empty : refBundle[item.Id];
 			ResourceBundle.Field patchField = patchBundle == null ? ResourceBundle.Field.Empty : patchBundle[item.Id];
 
-			Types.StructuredData data  = null;
-
 			if ((refField.IsEmpty || ResourceBundle.Field.IsNullString (refField.AsString)) &&
 				(patchField.IsEmpty || ResourceBundle.Field.IsNullString (patchField.AsString)))
 			{
-				Caption caption = new Caption ();
-				ResourceManager.SetSourceBundle (caption, refBundle);
-				data = new Types.StructuredData (this.GetStructuredType ());
+				//	There is absolutely no data to start working with for the
+				//	current item. Create a data record from scratch :
+
+				StructuredData data    = this.CreateStructuredData ();
+				Caption        caption = this.CreateCaption (patchBundle ?? refBundle);
+				
 				this.FillDataFromCaption (item, data, caption, DataCreationMode.Public);
 				item.RecordCultureData (twoLetterISOLanguageName, data);
+
+				return data;
 			}
 			else
 			{
 				Types.StructuredData data1 = (refField.IsEmpty   || ResourceBundle.Field.IsNullString (refField.AsString))   ? null : this.LoadFromField (refField, refBundle.Module.Id, twoLetterISOLanguageName);
 				Types.StructuredData data2 = (patchField.IsEmpty || ResourceBundle.Field.IsNullString (patchField.AsString)) ? null : this.LoadFromField (patchField, patchBundle.Module.Id, twoLetterISOLanguageName);
 
-				data = data1 ?? data2;
+				return data1 ?? data2;
 			}
-
-			return data;
 		}
 
 		public override IDataBroker GetDataBroker(StructuredData container, string fieldId)
@@ -336,7 +337,24 @@ namespace Epsitec.Common.Support.ResourceAccessors
 				&& (ResourceBundle.Field.IsNullString (description))
 				&& (ResourceBundle.Field.IsNullString (icon));
 		}
+
+		protected StructuredData CreateStructuredData()
+		{
+			return new StructuredData (this.GetStructuredType ());
+		}
+
+		protected Caption CreateCaption(ResourceBundle bundle)
+		{
+			return this.CreateCaption (bundle, Druid.Empty);
+		}
 		
+		protected Caption CreateCaption(ResourceBundle bundle, Druid id)
+		{
+			Caption caption = new Caption (id);
+			ResourceManager.SetSourceBundle (caption, bundle);
+			return caption;
+		}
+
 		protected bool IsEmpty(StructuredData data)
 		{
 			string comment     = data.GetValue (Res.Fields.ResourceBase.Comment) as string;
@@ -376,12 +394,11 @@ namespace Epsitec.Common.Support.ResourceAccessors
 
 			int     refModifId = refField.ModificationId;
 			string  refComment = refField.About;
-			Caption refCaption = new Caption ();
+			Caption refCaption = this.CreateCaption (refBundle);
 
-			ResourceManager.SetSourceBundle (refCaption, refBundle);
 			refCaption.DeserializeFromString (refField.AsString, refBundle.ResourceManager);
 
-			StructuredData refData = new StructuredData (this.GetStructuredType ());
+			StructuredData refData = this.CreateStructuredData ();
 
 			refData.SetValue (Res.Fields.ResourceBase.Comment, refComment);
 			refData.SetValue (Res.Fields.ResourceBase.ModificationId, refModifId);
@@ -448,7 +465,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 
 			if (replace)
 			{
-				data = new StructuredData (this.GetStructuredType ());
+				data = this.CreateStructuredData ();
 
 				data.SetValue (Res.Fields.ResourceBase.Comment, dataComment);
 				data.SetValue (Res.Fields.ResourceBase.ModificationId, dataModifId);
@@ -461,7 +478,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 
 		protected virtual StructuredData ComputeMergedData(StructuredData a, StructuredData b)
 		{
-			StructuredData data = new StructuredData (this.GetStructuredType ());
+			StructuredData data = this.CreateStructuredData ();
 
 			string        aDesc   = a.GetValue (Res.Fields.ResourceCaption.Description) as string;
 			string        aIcon   = a.GetValue (Res.Fields.ResourceCaption.Icon) as string;
@@ -568,7 +585,6 @@ namespace Epsitec.Common.Support.ResourceAccessors
 
 		protected abstract string GetNameFromFieldName(CultureMap item, string fieldName);
 
-
 		protected override Types.StructuredData LoadFromField(ResourceBundle.Field field, int module, string twoLetterISOLanguageName)
 		{
 			bool insert = false;
@@ -578,7 +594,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			Druid id = new Druid (field.Id, module);
 			CultureMap item = this.Collection[id];
 			CultureMapSource fieldSource = this.GetCultureMapSource (field);
-			StructuredData data = new StructuredData (this.GetStructuredType ());
+			StructuredData data = this.CreateStructuredData ();
 
 			//	Preliminary fill of the very basic data fields :
 			
@@ -617,7 +633,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 				if (item.IsCultureDefined (twoLetterISOLanguageName))
 				{
 					//	...and we know that there is already some data available
-					//	for the culture. Merge the data :
+					//	for the culture. Merge the basic resource data :
 
 					data = item.GetCultureData (twoLetterISOLanguageName);
 
@@ -651,10 +667,9 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			//	Restore the caption definition, then fill the data record while
 			//	merging the fields which might need to be merged.
 			
-			Caption caption = new Caption (id);
+			Caption caption = this.CreateCaption (field.ParentBundle, id);
 			string  name    = string.IsNullOrEmpty (field.Name) ? null : this.GetNameFromFieldName (item, field.Name);
 
-			ResourceManager.SetSourceBundle (caption, field.ParentBundle);
 			caption.DeserializeFromString (field.AsString, this.ResourceManager);
 
 			this.FillDataFromCaption (item, data, caption, DataCreationMode.Public);
