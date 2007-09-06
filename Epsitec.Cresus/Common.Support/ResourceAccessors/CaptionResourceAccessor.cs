@@ -102,9 +102,13 @@ namespace Epsitec.Common.Support.ResourceAccessors
 		{
 			ObservableList<string> labels = data.GetValue (Res.Fields.ResourceCaption.Labels) as ObservableList<string>;
 
-			//	The labels property can be accessed as an IList<string> and any modification
-			//	will be reported to the listener.
+			//	If the caption contains labels, they will overwrite the data
+			//	record labels collection. Otherwise, the previously defined
+			//	labels will remain unmodified in the data record.
 
+			//	Note: a patch module can only replace the Labels list, but not
+			//	alter it in any other more subtle way.
+			
 			if (labels == null)
 			{
 				labels = new ObservableList<string> ();
@@ -121,8 +125,13 @@ namespace Epsitec.Common.Support.ResourceAccessors
 
 			if (UndefinedValue.IsUndefinedValue (data.GetValue (Res.Fields.ResourceCaption.Labels)))
 			{
+				//	The labels property can be accessed as an IList<string> and
+				//	any modification will be reported to the listener. We must
+				//	set up an event handler for that purpose :
+
 				data.SetValue (Res.Fields.ResourceCaption.Labels, labels);
 				data.LockValue (Res.Fields.ResourceCaption.Labels);
+				
 				labels.CollectionChanged += new Listener (this, item).HandleCollectionChanged;
 			}
 
