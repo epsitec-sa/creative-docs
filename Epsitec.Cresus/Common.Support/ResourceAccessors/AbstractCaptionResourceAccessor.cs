@@ -120,7 +120,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 				Caption caption = new Caption ();
 				ResourceManager.SetSourceBundle (caption, refBundle);
 				data = new Types.StructuredData (this.GetStructuredType ());
-				this.FillDataFromCaption (item, data, caption);
+				this.FillDataFromCaption (item, data, caption, DataCreationMode.Public);
 				item.RecordCultureData (twoLetterISOLanguageName, data);
 			}
 			else
@@ -206,8 +206,10 @@ namespace Epsitec.Common.Support.ResourceAccessors
 				{
 					//	The resource should be stored as a delta (patch) relative
 					//	to the reference resource. Compute what that is...
+
+					ResourceBundle refBundle = refModuleManager.GetBundle (Resources.CaptionsBundleName, level, culture);
 					
-					if ((this.ComputeDelta (item, ref data, refModuleManager.GetBundle (Resources.CaptionsBundleName, level, culture), item.Id, bundle, twoLetterISOLanguageName)) ||
+					if ((this.ComputeDelta (item, ref data, refBundle, item.Id, bundle, twoLetterISOLanguageName)) ||
 						(this.IsEmpty (data)))
 					{
 						//	The resource is empty... but we may not remove it if
@@ -227,7 +229,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 				}
 				else
 				{
-					//	If this an empty secondary resource, delete the corresponding
+					//	If this is an empty secondary resource, delete the corresponding
 					//	field to avoid cluttering the resource bundle.
 
 					if ((level == ResourceLevel.Localized) &&
@@ -384,7 +386,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			refData.SetValue (Res.Fields.ResourceBase.Comment, refComment);
 			refData.SetValue (Res.Fields.ResourceBase.ModificationId, refModifId);
 
-			this.FillDataFromCaption (item, refData, refCaption);
+			this.FillDataFromCaption (item, refData, refCaption, DataCreationMode.Temporary);
 
 			//	Get the resulting data the user would like to get when applying
 			//	the patch to the reference data :
@@ -451,7 +453,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 				data.SetValue (Res.Fields.ResourceBase.Comment, dataComment);
 				data.SetValue (Res.Fields.ResourceBase.ModificationId, dataModifId);
 
-				this.FillDataFromCaption (item, data, dataCaption);
+				this.FillDataFromCaption (item, data, dataCaption, DataCreationMode.Temporary);
 			}
 
 			return false;
@@ -561,7 +563,8 @@ namespace Epsitec.Common.Support.ResourceAccessors
 		/// <param name="item">The item associated with the data record.</param>
 		/// <param name="data">The data record.</param>
 		/// <param name="caption">The caption.</param>
-		protected abstract void FillDataFromCaption(CultureMap item, Types.StructuredData data, Caption caption);
+		/// <param name="mode">The creation mode for the data record.</param>
+		protected abstract void FillDataFromCaption(CultureMap item, Types.StructuredData data, Caption caption, DataCreationMode mode);
 
 		protected abstract string GetNameFromFieldName(CultureMap item, string fieldName);
 
@@ -654,7 +657,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			ResourceManager.SetSourceBundle (caption, field.ParentBundle);
 			caption.DeserializeFromString (field.AsString, this.ResourceManager);
 
-			this.FillDataFromCaption (item, data, caption);
+			this.FillDataFromCaption (item, data, caption, DataCreationMode.Public);
 			
 			//	It is important to first associate the culture data, then defining
 			//	the item name, since AnyTypeResourceAccessor listens for name changes

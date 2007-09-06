@@ -213,9 +213,11 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			return caption;
 		}
 
-		protected override void FillDataFromCaption(CultureMap item, Types.StructuredData data, Caption caption)
+		protected override void FillDataFromCaption(CultureMap item, Types.StructuredData data, Caption caption, DataCreationMode mode)
 		{
-			base.FillDataFromCaption (item, data, caption);
+			base.FillDataFromCaption (item, data, caption, mode);
+
+			//	TODO: pass on the mode to the misc. FillDataFrom... methods
 
 			AbstractType type = TypeRosetta.CreateTypeObject (caption, false);
 			TypeCode code = type == null ? TypeCode.Invalid : type.TypeCode;

@@ -82,9 +82,9 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			return caption;
 		}
 
-		protected override void FillDataFromCaption(CultureMap item, Types.StructuredData data, Caption caption)
+		protected override void FillDataFromCaption(CultureMap item, Types.StructuredData data, Caption caption, DataCreationMode mode)
 		{
-			base.FillDataFromCaption (item, data, caption);
+			base.FillDataFromCaption (item, data, caption, mode);
 
 			ObservableList<StructuredData> shortcuts = data.GetValue (Res.Fields.ResourceCommand.Shortcuts) as ObservableList<StructuredData>;
 
@@ -102,9 +102,14 @@ namespace Epsitec.Common.Support.ResourceAccessors
 				foreach (Widgets.Shortcut shortcut in Widgets.Shortcut.GetShortcuts (caption))
 				{
 					StructuredData x = new StructuredData (Res.Types.Shortcut);
+					
 					x.SetValue (Res.Fields.Shortcut.KeyCode, shortcut.GetValue (Widgets.Shortcut.KeyCodeProperty));
 					shortcuts.Add (x);
-					item.NotifyDataAdded (x);
+					
+					if (mode == DataCreationMode.Public)
+					{
+						item.NotifyDataAdded (x);
+					}
 				}
 			}
 
@@ -112,7 +117,11 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			{
 				data.SetValue (Res.Fields.ResourceCommand.Shortcuts, shortcuts);
 				data.LockValue (Res.Fields.ResourceCommand.Shortcuts);
-				shortcuts.CollectionChanged += new Listener (this, item).HandleCollectionChanged;
+
+				if (mode == DataCreationMode.Public)
+				{
+					shortcuts.CollectionChanged += new Listener (this, item).HandleCollectionChanged;
+				}
 			}
 
 			object statefullValue        = caption.GetValue (Widgets.Command.StatefullProperty);

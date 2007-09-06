@@ -98,7 +98,8 @@ namespace Epsitec.Common.Support.ResourceAccessors
 		/// <param name="item">The item associated with the data record.</param>
 		/// <param name="data">The data record.</param>
 		/// <param name="caption">The caption.</param>
-		protected override void FillDataFromCaption(CultureMap item, Types.StructuredData data, Caption caption)
+		/// <param name="mode">The creation mode for the data record.</param>
+		protected override void FillDataFromCaption(CultureMap item, Types.StructuredData data, Caption caption, DataCreationMode mode)
 		{
 			ObservableList<string> labels = data.GetValue (Res.Fields.ResourceCaption.Labels) as ObservableList<string>;
 
@@ -131,8 +132,11 @@ namespace Epsitec.Common.Support.ResourceAccessors
 
 				data.SetValue (Res.Fields.ResourceCaption.Labels, labels);
 				data.LockValue (Res.Fields.ResourceCaption.Labels);
-				
-				labels.CollectionChanged += new Listener (this, item).HandleCollectionChanged;
+
+				if (mode == DataCreationMode.Public)
+				{
+					labels.CollectionChanged += new Listener (this, item).HandleCollectionChanged;
+				}
 			}
 
 			if (caption.HasDescription)
