@@ -74,7 +74,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				left.PreferredWidth = 120;
 				left.Dock = DockStyle.Left;
 
-				//	Crée le groupe pour le type 'Strings'.
+				//	Crée le groupe pour le type 'Strings2'.
 				this.groupStrings = new GroupBox(left);
 				this.groupStrings.Text = Res.Strings.Dialog.Search.Check.Who;
 				this.groupStrings.PreferredWidth = 160;
@@ -84,43 +84,19 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.groupStrings.TabIndex = tabIndex++;
 				this.groupStrings.TabNavigationMode = TabNavigationMode.ForwardTabPassive;
 
-				Viewers.Abstract.SearchCreateFilterGroup(this.groupStrings, this.HandleCheckActiveStateChanged, ResourceAccess.Type.Strings);
+				Viewers.Abstract.SearchCreateFilterGroup(this.groupStrings, this.HandleCheckActiveStateChanged, ResourceAccess.Type.Strings2);
 
-				//	Crée le groupe pour le type 'Strings2'.
-				this.groupStrings2 = new GroupBox(left);
-				this.groupStrings2.Text = Res.Strings.Dialog.Search.Check.Who;
-				this.groupStrings2.PreferredWidth = 160;
-				this.groupStrings2.PreferredHeight = 28+16*2;
-				this.groupStrings2.Dock = DockStyle.Top;
-				this.groupStrings2.Padding = new Margins(5, 5, 5, 5);
-				this.groupStrings2.TabIndex = tabIndex++;
-				this.groupStrings2.TabNavigationMode = TabNavigationMode.ForwardTabPassive;
-
-				Viewers.Abstract.SearchCreateFilterGroup(this.groupStrings2, this.HandleCheckActiveStateChanged, ResourceAccess.Type.Strings2);
-
-				//	Crée le groupe pour le type 'Captions'.
+				//	Crée le groupe pour le type 'Captions2'.
 				this.groupCaptions = new GroupBox(left);
 				this.groupCaptions.Text = Res.Strings.Dialog.Search.Check.Who;
 				this.groupCaptions.PreferredWidth = 160;
-				this.groupCaptions.PreferredHeight = 28+16*3;
+				this.groupCaptions.PreferredHeight = 28+16*2;
 				this.groupCaptions.Dock = DockStyle.Top;
 				this.groupCaptions.Padding = new Margins(5, 5, 5, 5);
 				this.groupCaptions.TabIndex = tabIndex++;
 				this.groupCaptions.TabNavigationMode = TabNavigationMode.ForwardTabPassive;
 
-				Viewers.Abstract.SearchCreateFilterGroup(this.groupCaptions, this.HandleCheckActiveStateChanged, ResourceAccess.Type.Captions);
-
-				//	Crée le groupe pour le type 'Captions2'.
-				this.groupCaptions2 = new GroupBox(left);
-				this.groupCaptions2.Text = Res.Strings.Dialog.Search.Check.Who;
-				this.groupCaptions2.PreferredWidth = 160;
-				this.groupCaptions2.PreferredHeight = 28+16*2;
-				this.groupCaptions2.Dock = DockStyle.Top;
-				this.groupCaptions2.Padding = new Margins(5, 5, 5, 5);
-				this.groupCaptions2.TabIndex = tabIndex++;
-				this.groupCaptions2.TabNavigationMode = TabNavigationMode.ForwardTabPassive;
-
-				Viewers.Abstract.SearchCreateFilterGroup(this.groupCaptions2, this.HandleCheckActiveStateChanged, ResourceAccess.Type.Captions2);
+				Viewers.Abstract.SearchCreateFilterGroup(this.groupCaptions, this.HandleCheckActiveStateChanged, ResourceAccess.Type.Captions2);
 
 				//	Boutons à cocher de droite.
 				Widget right = new Widget(main);
@@ -283,21 +259,13 @@ namespace Epsitec.Common.Designer.Dialogs
 			//	Retourne la liste des index autorisés par le filtre.
 			get
 			{
-				if (this.bundleType == ResourceAccess.Type.Strings)
+				if (this.bundleType == ResourceAccess.Type.Strings2)
 				{
-					return Viewers.Abstract.SearchGetFilterGroup(this.groupStrings, ResourceAccess.Type.Strings);
-				}
-				else if (this.bundleType == ResourceAccess.Type.Strings2)
-				{
-					return Viewers.Abstract.SearchGetFilterGroup(this.groupStrings2, ResourceAccess.Type.Strings2);
+					return Viewers.Abstract.SearchGetFilterGroup(this.groupStrings, ResourceAccess.Type.Strings2);
 				}
 				else if (this.bundleType == ResourceAccess.Type.Captions2 || this.bundleType == ResourceAccess.Type.Commands2)
 				{
-					return Viewers.Abstract.SearchGetFilterGroup(this.groupCaptions2, ResourceAccess.Type.Captions2);
-				}
-				else if (this.bundleType == ResourceAccess.Type.Captions || this.bundleType == ResourceAccess.Type.Fields || this.bundleType == ResourceAccess.Type.Commands || this.bundleType == ResourceAccess.Type.Types)
-				{
-					return Viewers.Abstract.SearchGetFilterGroup(this.groupCaptions, ResourceAccess.Type.Captions);
+					return Viewers.Abstract.SearchGetFilterGroup(this.groupCaptions, ResourceAccess.Type.Captions2);
 				}
 				else
 				{
@@ -346,10 +314,8 @@ namespace Epsitec.Common.Designer.Dialogs
 		{
 			if (this.window != null)
 			{
-				this.groupStrings.Visibility = (this.bundleType == ResourceAccess.Type.Strings);
-				this.groupStrings2.Visibility = (this.bundleType == ResourceAccess.Type.Strings2);
-				this.groupCaptions.Visibility = (this.bundleType == ResourceAccess.Type.Captions || this.bundleType == ResourceAccess.Type.Fields || this.bundleType == ResourceAccess.Type.Commands || this.bundleType == ResourceAccess.Type.Types);
-				this.groupCaptions2.Visibility = (this.bundleType == ResourceAccess.Type.Captions2 || this.bundleType == ResourceAccess.Type.Commands2);
+				this.groupStrings.Visibility = (this.bundleType == ResourceAccess.Type.Strings2);
+				this.groupCaptions.Visibility = (this.bundleType == ResourceAccess.Type.Captions2 || this.bundleType == ResourceAccess.Type.Commands2);
 			}
 		}
 
@@ -450,9 +416,7 @@ namespace Epsitec.Common.Designer.Dialogs
 		protected CheckButton					checkCase;
 		protected CheckButton					checkWord;
 		protected GroupBox						groupStrings;
-		protected GroupBox						groupStrings2;
 		protected GroupBox						groupCaptions;
-		protected GroupBox						groupCaptions2;
 		protected Button						buttonSearchPrev;
 		protected Button						buttonSearchNext;
 		protected Button						buttonCount;

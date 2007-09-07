@@ -24,9 +24,7 @@ namespace Epsitec.Common.Designer
 
 			this.modifier = new Modifier(this);
 
-			this.accessStrings   = new ResourceAccess(ResourceAccess.Type.Strings,   this, this.moduleInfo, this.designerApplication);
 			this.accessStrings2  = new ResourceAccess(ResourceAccess.Type.Strings2,  this, this.moduleInfo, this.designerApplication);
-			this.accessCaptions  = new ResourceAccess(ResourceAccess.Type.Captions,  this, this.moduleInfo, this.designerApplication);
 			this.accessCaptions2 = new ResourceAccess(ResourceAccess.Type.Captions2, this, this.moduleInfo, this.designerApplication);
 			this.accessCommands2 = new ResourceAccess(ResourceAccess.Type.Commands2, this, this.moduleInfo, this.designerApplication);
 			this.accessPanels    = new ResourceAccess(ResourceAccess.Type.Panels,    this, this.moduleInfo, this.designerApplication);
@@ -103,14 +101,6 @@ namespace Epsitec.Common.Designer
 		}
 
 
-		public ResourceAccess AccessStrings
-		{
-			get
-			{
-				return this.accessStrings;
-			}
-		}
-
 		public ResourceAccess AccessStrings2
 		{
 			get
@@ -119,11 +109,12 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
+		// TODO: à supprimer
 		public ResourceAccess AccessCaptions
 		{
 			get
 			{
-				return this.accessCaptions;
+				return null;
 			}
 		}
 
@@ -188,18 +179,8 @@ namespace Epsitec.Common.Designer
 			//	Cherche un accès d'après son type.
 			switch (type)
 			{
-				case ResourceAccess.Type.Strings:
-					return this.accessStrings;
-
 				case ResourceAccess.Type.Strings2:
 					return this.accessStrings2;
-
-				case ResourceAccess.Type.Captions:
-				case ResourceAccess.Type.Fields:
-				case ResourceAccess.Type.Commands:
-				case ResourceAccess.Type.Types:
-				case ResourceAccess.Type.Values:
-					return this.accessCaptions;
 
 				case ResourceAccess.Type.Captions2:
 					return this.accessCaptions2;
@@ -347,9 +328,7 @@ namespace Epsitec.Common.Designer
 			//	Enumère tous les accès.
 			get
 			{
-				yield return accessStrings;
 				yield return accessStrings2;
-				yield return accessCaptions;
 				yield return accessCaptions2;
 				yield return accessCommands2;
 				yield return accessPanels;
@@ -389,9 +368,7 @@ namespace Epsitec.Common.Designer
 		protected ResourceModuleId			moduleInfo;
 		protected Modifier					modifier;
 		protected ResourceManager			resourceManager;
-		protected ResourceAccess			accessStrings;
 		protected ResourceAccess			accessStrings2;
-		protected ResourceAccess			accessCaptions;
 		protected ResourceAccess			accessCaptions2;
 		protected ResourceAccess			accessCommands2;
 		protected ResourceAccess			accessPanels;

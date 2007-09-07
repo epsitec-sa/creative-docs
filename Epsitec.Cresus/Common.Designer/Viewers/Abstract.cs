@@ -39,17 +39,11 @@ namespace Epsitec.Common.Designer.Viewers
 		public static Abstract Create(ResourceAccess.Type type, Module module, PanelsContext context, ResourceAccess access, DesignerApplication designerApplication)
 		{
 			//	Crée un Viewer d'un type donné.
-			if (type == ResourceAccess.Type.Strings)  return new Strings(module, context, access, designerApplication);
 			if (type == ResourceAccess.Type.Strings2)  return new Strings2(module, context, access, designerApplication);
-			if (type == ResourceAccess.Type.Captions)  return new Captions(module, context, access, designerApplication);
 			if (type == ResourceAccess.Type.Captions2)  return new Captions2(module, context, access, designerApplication);
-			if (type == ResourceAccess.Type.Fields)  return new Fields(module, context, access, designerApplication);
 			if (type == ResourceAccess.Type.Fields2)  return new Fields2(module, context, access, designerApplication);
-			if (type == ResourceAccess.Type.Commands)  return new Commands(module, context, access, designerApplication);
 			if (type == ResourceAccess.Type.Commands2)  return new Commands2(module, context, access, designerApplication);
-			if (type == ResourceAccess.Type.Types)  return new Types(module, context, access, designerApplication);
 			if (type == ResourceAccess.Type.Types2)  return new Types2(module, context, access, designerApplication);
-			if (type == ResourceAccess.Type.Values)  return new Values(module, context, access, designerApplication);
 			if (type == ResourceAccess.Type.Values2)  return new Values2(module, context, access, designerApplication);
 			if (type == ResourceAccess.Type.Panels)  return new Panels(module, context, access, designerApplication);
 			if (type == ResourceAccess.Type.Scripts)  return new Scripts(module, context, access, designerApplication);
@@ -1322,10 +1316,6 @@ namespace Epsitec.Common.Designer.Viewers
 			//	Crée le contenu du groupe 'filtre'.
 			switch (type)
 			{
-				case ResourceAccess.Type.Strings:
-					Strings.SearchCreateFilterGroup(parent, handler);
-					break;
-
 				case ResourceAccess.Type.Strings2:
 					Strings2.SearchCreateFilterGroup(parent, handler);
 					break;
@@ -1333,10 +1323,6 @@ namespace Epsitec.Common.Designer.Viewers
 				case ResourceAccess.Type.Captions2:
 				case ResourceAccess.Type.Commands2:
 					Captions2.SearchCreateFilterGroup(parent, handler);
-					break;
-
-				case ResourceAccess.Type.Captions:
-					AbstractCaptions.SearchCreateFilterGroup(parent, handler);
 					break;
 			}
 		}

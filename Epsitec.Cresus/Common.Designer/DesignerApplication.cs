@@ -373,13 +373,13 @@ namespace Epsitec.Common.Designer
 			{
 				ResourceAccess access;
 
-				access = mi.Module.AccessStrings;
+				access = mi.Module.AccessStrings2;
 				builder.Append(Res.Strings.BundleType.Strings);
 				builder.Append(":");
 				builder.Append(access.TotalCount);
 				builder.Append(", ");
 
-				access = mi.Module.AccessCaptions;
+				access = mi.Module.AccessCaptions2;
 				builder.Append(Res.Strings.BundleType.Captions);
 				builder.Append(":");
 				builder.Append(access.TotalCount);
