@@ -331,8 +331,6 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			}
 		}
 
-		protected abstract bool IsEmptyCaption(StructuredData data);
-		
 		protected StructuredData CreateStructuredData()
 		{
 			return new StructuredData (this.GetStructuredType ());
@@ -350,7 +348,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			return caption;
 		}
 
-		protected bool IsEmpty(StructuredData data)
+		private bool IsEmpty(StructuredData data)
 		{
 			string comment     = data.GetValue (Res.Fields.ResourceBase.Comment) as string;
 			int    modifId     = StringResourceAccessor.GetModificationId (data);
@@ -360,6 +358,16 @@ namespace Epsitec.Common.Support.ResourceAccessors
 				&& (modifId < 1);
 		}
 
+		/// <summary>
+		/// Determines whether the specified data record describes an empty
+		/// caption.
+		/// </summary>
+		/// <param name="data">The data record.</param>
+		/// <returns>
+		/// 	<c>true</c> if this is an empty caption; otherwise, <c>false</c>.
+		/// </returns>
+		protected abstract bool IsEmptyCaption(StructuredData data);
+		
 		/// <summary>
 		/// Computes the delta between the reference data and the current data
 		/// provided in the data record.
@@ -371,7 +379,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 		/// <c>true</c> if the current data is the same as the reference data;
 		/// otherwise, <c>false</c>.
 		/// </returns>
-		protected bool ComputeDelta(CultureMap item, ref StructuredData rawData, ResourceBundle refBundle, Druid druid, ResourceBundle dataBundle, string twoLetterISOLanguageName)
+		private bool ComputeDelta(CultureMap item, ref StructuredData rawData, ResourceBundle refBundle, Druid druid, ResourceBundle dataBundle, string twoLetterISOLanguageName)
 		{
 			if (refBundle == null)
 			{

@@ -149,6 +149,14 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			}
 		}
 
+		/// <summary>
+		/// Determines whether the specified data record describes an empty
+		/// caption.
+		/// </summary>
+		/// <param name="data">The data record.</param>
+		/// <returns>
+		/// 	<c>true</c> if this is an empty caption; otherwise, <c>false</c>.
+		/// </returns>
 		protected override bool IsEmptyCaption(StructuredData data)
 		{
 			IList<string> labels = data.GetValue (Res.Fields.ResourceCaption.Labels) as IList<string>;
@@ -161,6 +169,14 @@ namespace Epsitec.Common.Support.ResourceAccessors
 				&& (ResourceBundle.Field.IsNullString (icon));
 		}
 
+		/// <summary>
+		/// Computes the difference between a raw data record and a reference
+		/// data record and fills the patch data record with the resulting
+		/// delta.
+		/// </summary>
+		/// <param name="rawData">The raw data record.</param>
+		/// <param name="refData">The reference data record.</param>
+		/// <param name="patchData">The patch data, which will be filled with the delta.</param>
 		protected override void ComputeDataDelta(StructuredData rawData, StructuredData refData, StructuredData patchData)
 		{
 			string        rawDesc   = rawData.GetValue (Res.Fields.ResourceCaption.Description) as string;
@@ -189,6 +205,15 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			}
 		}
 
+		/// <summary>
+		/// Checks if the data stored in the field matches this accessor. This
+		/// can be used to filter out specific fields.
+		/// </summary>
+		/// <param name="field">The field to check.</param>
+		/// <param name="fieldName">Name of the field.</param>
+		/// <returns>
+		/// 	<c>true</c> if data should be loaded from the field; otherwise, <c>false</c>.
+		/// </returns>
 		protected override bool FilterField(ResourceBundle.Field field, string fieldName)
 		{
 			return (!string.IsNullOrEmpty (fieldName))

@@ -47,6 +47,14 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			return Res.Types.ResourceCommand;
 		}
 
+		/// <summary>
+		/// Creates a caption based on the definitions stored in a data record.
+		/// </summary>
+		/// <param name="sourceBundle">The source bundle.</param>
+		/// <param name="data">The data record.</param>
+		/// <param name="name">The name of the caption.</param>
+		/// <param name="twoLetterISOLanguageName">The two letter ISO language name.</param>
+		/// <returns>A <see cref="Caption"/> instance.</returns>
 		protected override Caption CreateCaptionFromData(ResourceBundle sourceBundle, Types.StructuredData data, string name, string twoLetterISOLanguageName)
 		{
 			Caption caption = base.CreateCaptionFromData (sourceBundle, data, name, twoLetterISOLanguageName);
@@ -82,6 +90,13 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			return caption;
 		}
 
+		/// <summary>
+		/// Fills the data record from a given caption.
+		/// </summary>
+		/// <param name="item">The item associated with the data record.</param>
+		/// <param name="data">The data record.</param>
+		/// <param name="caption">The caption.</param>
+		/// <param name="mode">The creation mode for the data record.</param>
 		protected override void FillDataFromCaption(CultureMap item, Types.StructuredData data, Caption caption, DataCreationMode mode)
 		{
 			base.FillDataFromCaption (item, data, caption, mode);
@@ -142,6 +157,14 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			}
 		}
 
+		/// <summary>
+		/// Determines whether the specified data record describes an empty
+		/// caption.
+		/// </summary>
+		/// <param name="data">The data record.</param>
+		/// <returns>
+		/// 	<c>true</c> if this is an empty caption; otherwise, <c>false</c>.
+		/// </returns>
 		protected override bool IsEmptyCaption(StructuredData data)
 		{
 			if (base.IsEmptyCaption (data))
@@ -164,6 +187,14 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			return false;
 		}
 
+		/// <summary>
+		/// Computes the difference between a raw data record and a reference
+		/// data record and fills the patch data record with the resulting
+		/// delta.
+		/// </summary>
+		/// <param name="rawData">The raw data record.</param>
+		/// <param name="refData">The reference data record.</param>
+		/// <param name="patchData">The patch data, which will be filled with the delta.</param>
 		protected override void ComputeDataDelta(StructuredData rawData, StructuredData refData, StructuredData patchData)
 		{
 			base.ComputeDataDelta (rawData, refData, patchData);
@@ -204,6 +235,8 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			}
 		}
 
+		#region Broker Class
+
 		private class Broker : IDataBroker
 		{
 			#region IDataBroker Members
@@ -215,5 +248,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 
 			#endregion
 		}
+
+		#endregion
 	}
 }
