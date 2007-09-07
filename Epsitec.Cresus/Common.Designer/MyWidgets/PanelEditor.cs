@@ -1670,27 +1670,6 @@ namespace Epsitec.Common.Designer.MyWidgets
 					return false;
 				}
 
-				if (type == ResourceAccess.Type.Commands)
-				{
-					ButtonAspect aspect = ButtonAspect.None;
-
-					switch (this.module.AccessCaptions.DirectDefaultParameter(druid))
-					{
-						case "DialogButton":
-							aspect = ButtonAspect.DialogButton;
-							break;
-
-						case "IconButton":
-							aspect = ButtonAspect.IconButton;
-							break;
-					}
-
-					if (aspect != ButtonAspect.None)
-					{
-						this.objectModifier.SetButtonAspect(obj, aspect);
-					}
-				}
-
 				if (type == ResourceAccess.Type.Panels)
 				{
 					UI.PanelPlaceholder panel = obj as UI.PanelPlaceholder;

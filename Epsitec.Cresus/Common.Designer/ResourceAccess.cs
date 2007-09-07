@@ -15,7 +15,6 @@ namespace Epsitec.Common.Designer
 		public enum Type
 		{
 			Unknow,
-			Strings,
 			Strings2,
 			Captions,
 			Captions2,
@@ -107,14 +106,6 @@ namespace Epsitec.Common.Designer
 			else
 			{
 				this.druidsIndex = new List<Druid>();
-
-				this.captionCounters = new Dictionary<Type, int>();
-				this.captionCounters[Type.Captions] = 0;
-				this.captionCounters[Type.Fields] = 0;
-				this.captionCounters[Type.Commands] = 0;
-				this.captionCounters[Type.Types] = 0;
-				this.captionCounters[Type.Values] = 0;
-
 				this.filterIndexes = new Dictionary<Type, int>();
 				this.filterStrings = new Dictionary<Type, string>();
 				this.filterModes = new Dictionary<Type, Searcher.SearchingMode>();
@@ -134,9 +125,7 @@ namespace Epsitec.Common.Designer
 			{
 				if (this.type != value)
 				{
-					System.Diagnostics.Debug.Assert(this.IsCaptionsType);
 					this.type = value;
-					System.Diagnostics.Debug.Assert(this.IsCaptionsType);
 
 					//	Remet le filtre correspondant au type.
 					string filter = "";
@@ -208,27 +197,21 @@ namespace Epsitec.Common.Designer
 			//	Retourne le nom au singulier ou au pluriel correspondant à un type.
 			switch (type)
 			{
-				case Type.Strings:
 				case Type.Strings2:
 					return many ? Res.Strings.BundleType.Strings : Res.Strings.BundleType.String;
 
-				case Type.Captions:
 				case Type.Captions2:
 					return many ? Res.Strings.BundleType.Captions : Res.Strings.BundleType.Caption;
 
-				case Type.Fields:
 				case Type.Fields2:
 					return many ? Res.Strings.BundleType.Fields : Res.Strings.BundleType.Field;
 
-				case Type.Commands:
 				case Type.Commands2:
 					return many ? Res.Strings.BundleType.Commands : Res.Strings.BundleType.Command;
 
-				case Type.Types:
 				case Type.Types2:
 					return many ? Res.Strings.BundleType.Types : Res.Strings.BundleType.Type;
 
-				case Type.Values:
 				case Type.Values2:
 					return many ? Res.Strings.BundleType.Values : Res.Strings.BundleType.Value;
 
@@ -426,7 +409,6 @@ namespace Epsitec.Common.Designer
 			if (this.IsBundlesType)
 			{
 				this.LoadBundles();
-				this.AdjustBundlesAfterLoad();
 			}
 
 			if (this.type == Type.Panels)
@@ -461,13 +443,6 @@ namespace Epsitec.Common.Designer
 		public void AddShortcuts(List<ShortcutItem> list)
 		{
 			//	Ajoute tous les raccourcis définis dans la liste.
-			if (this.IsCaptionsType)
-			{
-				foreach (ResourceBundle bundle in this.bundles)
-				{
-					this.AddShortcutsCaptions(bundle, list);
-				}
-			}
 		}
 
 		public static void CheckShortcuts(System.Text.StringBuilder builder, List<ShortcutItem> list)
@@ -699,23 +674,6 @@ namespace Epsitec.Common.Designer
 				return;
 			}
 
-			if (this.type == Type.Types && !duplicateContent)
-			{
-				TypeCode code = this.lastTypeCodeCreatated;
-				this.designerApplication.DlgResourceTypeCode(this, ref code, out this.lastTypeCodeSystem);
-				if (code == TypeCode.Invalid)  // annuler ?
-				{
-					return;
-				}
-				this.lastTypeCodeCreatated = code;
-
-				if (this.lastTypeCodeCreatated == TypeCode.Enum && this.lastTypeCodeSystem != null)
-				{
-					et = this.CreateEnumValues(this.lastTypeCodeSystem);
-					newName = this.GetEnumBaseName(this.lastTypeCodeSystem);
-				}
-			}
-
 			if (this.type == Type.Panels && !duplicateContent)
 			{
 				//	Choix d'une ressource type de type 'Types', mais uniquement parmi les TypeCode.Structured.
@@ -768,41 +726,6 @@ namespace Epsitec.Common.Designer
 						newField.SetStringValue("");
 					}
 
-					if (this.type == Type.Types)
-					{
-						if (string.IsNullOrEmpty(newField.AsString))
-						{
-							AbstractType type;
-
-							if (et == null)
-							{
-								type = ResourceAccess.TypeCodeCreate(this.lastTypeCodeCreatated, bundle);
-							}
-							else
-							{
-								type = et;
-							}
-
-							type.DefineDefaultController(ResourceAccess.TypeCodeController(type), ResourceAccess.TypeCodeControllerParameter(type));
-							newField.SetStringValue(type.Caption.SerializeToString());
-						}
-					}
-
-					if (this.IsCaptionsType)
-					{
-						Caption caption = new Caption();
-
-						string s = newField.AsString;
-						if (!string.IsNullOrEmpty(s))
-						{
-							caption.DeserializeFromString(s, this.resourceManager);
-							ResourceManager.SetSourceBundle(caption, bundle);
-						}
-
-						this.AdjustCaptionName(bundle, newField, caption);
-						newField.SetStringValue(caption.SerializeToString());
-					}
-
 					if (bundle == this.primaryBundle)
 					{
 						//?newField.SetModificationId(1);
@@ -813,11 +736,6 @@ namespace Epsitec.Common.Designer
 						//?newField.SetModificationId(0);
 						bundle.Add(newField);
 					}
-				}
-
-				if (this.IsCaptionsType)
-				{
-					this.CaptionsCountersModify(1);
 				}
 			}
 
@@ -948,42 +866,6 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
-		protected EnumType CreateEnumValues(System.Type stype)
-		{
-			EnumType et = new EnumType(stype, new Caption());
-
-			foreach (EnumValue value in et.EnumValues)
-			{
-				if (!value.IsHidden)
-				{
-					string name = this.GetEnumBaseName(stype);
-					name = string.Concat(name, ".", value.Name);
-					string newName = string.Concat(ResourceAccess.GetFixFilter(Type.Values), name);
-
-					if (this.primaryBundle.IndexOf(newName) == -1)
-					{
-						Druid newDruid = this.CreateUniqueDruid();
-						ResourceBundle.Field newField = this.primaryBundle.CreateField(ResourceFieldType.Data);
-						newField.SetDruid(newDruid);
-						newField.SetName(newName);
-
-						Caption caption = value.Caption;
-						caption.DefineId(newDruid);
-						
-						System.Diagnostics.Debug.Assert(caption.Name == value.Name);
-						System.Diagnostics.Debug.Assert(value.IsNative);
-
-						newField.SetStringValue(caption.SerializeToString());
-						value.DefineCaption(caption);
-
-						this.primaryBundle.Add(newField);
-					}
-				}
-			}
-
-			return et;
-		}
-
 		public string GetEnumBaseName(System.Type stype)
 		{
 			//	Retourne le nom de base à utiliser pour une énumération native C#.
@@ -1027,11 +909,6 @@ namespace Epsitec.Common.Designer
 					{
 						bundle.Remove(aIndex);
 					}
-				}
-
-				if (this.IsCaptionsType)
-				{
-					this.CaptionsCountersModify(-1);
 				}
 			}
 
@@ -1224,11 +1101,6 @@ namespace Epsitec.Common.Designer
 				}
 				else
 				{
-					if (this.IsCaptionsType)
-					{
-						return this.captionCounters[this.type];
-					}
-
 					if (this.IsBundlesType)
 					{
 						return this.primaryBundle.FieldCount;
@@ -1545,51 +1417,13 @@ namespace Epsitec.Common.Designer
 
 			this.bypassDruids = new List<Druid>();
 
-			if (this.IsCaptionsType)
+			foreach (ResourceBundle bundle in this.panelsList)
 			{
-				for (int i=0; i<this.primaryBundle.FieldCount; i++)
+				Druid druid = bundle.Id;
+
+				if (!druid.IsEmpty && (exclude == null || !exclude.Contains(druid)))
 				{
-					ResourceBundle.Field field = this.primaryBundle[i];
-					if (this.HasFixFilter(field.Name, true))
-					{
-						if (includePrefix != null)
-						{
-							string name = this.SubFilter(field.Name, true);
-							if (!name.StartsWith(includePrefix))
-							{
-								continue;
-							}
-						}
-
-						Druid fullDruid = new Druid(field.Id, this.primaryBundle.Module.Id);
-
-						if (exclude == null || !exclude.Contains(fullDruid))
-						{
-							if (type == Type.Types && typeCode != TypeCode.Invalid)
-							{
-								AbstractType at = this.DirectGetAbstractType(fullDruid);
-								TypeCode tc = ResourceAccess.AbstractTypeToTypeCode(at);
-								if (tc != typeCode)
-								{
-									continue;
-								}
-							}
-
-							this.bypassDruids.Add(fullDruid);
-						}
-					}
-				}
-			}
-			else
-			{
-				foreach (ResourceBundle bundle in this.panelsList)
-				{
-					Druid druid = bundle.Id;
-
-					if (!druid.IsEmpty && (exclude == null || !exclude.Contains(druid)))
-					{
-						this.bypassDruids.Add(druid);
-					}
+					this.bypassDruids.Add(druid);
 				}
 			}
 
@@ -1613,13 +1447,6 @@ namespace Epsitec.Common.Designer
 			return this.bypassDruids[index];
 		}
 
-		public int BypassFilterGetIndex(Druid druid)
-		{
-			//	Cherche l'index d'un Druid donné.
-			System.Diagnostics.Debug.Assert(this.bypassType != Type.Unknow);
-			return this.bypassDruids.IndexOf(druid);
-		}
-
 		public void BypassFilterRenameStructuredField(Druid druid, ResourceBundle bundle, string initialName, string newName)
 		{
 			//	Renomme le ResourceBundle.Field.Name d'un champ, lorsque le nom du StructuredType a changé.
@@ -1641,148 +1468,6 @@ namespace Epsitec.Common.Designer
 				//?Caption caption = bundle.Caption;
 				//?caption.Name = name;
 			}
-		}
-
-		public void BypassFilterGetStrings(Druid druid, ResourceBundle bundle, double availableHeight, out string name, out string text, out bool isDefined)
-		{
-			//	Retourne une ressource de l'accès 'bypass'.
-			System.Diagnostics.Debug.Assert(this.bypassType != Type.Unknow);
-			if (this.bypassType == Type.Panels)
-			{
-				name = "";
-				text = "";
-				isDefined = false;
-
-				int i = this.GetAbsoluteIndex(druid);
-				if (i != -1)
-				{
-					bundle = this.panelsList[i];
-					name = this.SubFilter(bundle.Caption, false);
-					isDefined = true;
-				}
-			}
-			else
-			{
-				if (bundle == null)
-				{
-					this.BypassFilterGetStrings(druid, this.primaryBundle, availableHeight, out name, out text);
-					isDefined = false;
-				}
-				else
-				{
-					this.BypassFilterGetStrings(druid, bundle, availableHeight, out name, out text);
-
-					if (string.IsNullOrEmpty(text) && bundle != this.primaryBundle)
-					{
-						this.BypassFilterGetStrings(druid, this.primaryBundle, availableHeight, out name, out text);
-						isDefined = false;
-					}
-					else
-					{
-						isDefined = true;
-					}
-				}
-			}
-		}
-
-		protected void BypassFilterGetStrings(Druid druid, ResourceBundle bundle, double availableHeight, out string name, out string text)
-		{
-			//	Retourne une ressource de l'accès 'bypass'.
-			ResourceBundle.Field field = bundle[druid];
-
-			if (field.IsEmpty)
-			{
-				name = null;
-				text = null;
-				return;
-			}
-
-			ResourceBundle.Field primaryField = this.primaryBundle[druid];
-			System.Diagnostics.Debug.Assert(!primaryField.IsEmpty && !string.IsNullOrEmpty(primaryField.Name));
-			name = this.SubFilter(primaryField.Name, true);
-
-			if (this.type == Type.Strings)
-			{
-				text = field.AsString;
-			}
-			else
-			{
-				Caption caption = new Caption();
-
-				string s = field.AsString;
-				if (!string.IsNullOrEmpty(s))
-				{
-					caption.DeserializeFromString(s, this.resourceManager);
-					ResourceManager.SetSourceBundle(caption, bundle);
-				}
-
-				text = ResourceAccess.GetCaptionNiceDescription(caption, availableHeight);
-			}
-		}
-
-		public Druid BypassFilterCreate(ResourceBundle bundle, string name, string text)
-		{
-			//	Crée une nouvelle ressource 'Strings' à la fin.
-			System.Diagnostics.Debug.Assert(this.bypassType != Type.Unknow);
-			name = this.AddFilter(name, true);
-
-			Druid newDruid = this.CreateUniqueDruid();
-
-			foreach (ResourceBundle b in this.bundles)
-			{
-				ResourceBundle.Field newField = b.CreateField(ResourceFieldType.Data);
-				newField.SetDruid(newDruid);
-				newField.SetName(name);
-
-				if (this.type == Type.Strings)
-				{
-					if (b == bundle)
-					{
-						newField.SetStringValue(text);
-					}
-					else
-					{
-						newField.SetStringValue("");
-					}
-				}
-				else
-				{
-					if (b == bundle)
-					{
-						Caption caption = new Caption();
-
-						ICollection<string> dst = caption.Labels;
-						dst.Add(text);
-
-						this.AdjustCaptionName(bundle, newField, caption);
-						newField.SetStringValue(caption.SerializeToString());
-						ResourceManager.SetSourceBundle(caption, bundle);
-					}
-				}
-
-				if (b == this.primaryBundle)
-				{
-					newField.SetModificationId(1);
-					b.Add(newField);
-				}
-				else
-				{
-					newField.SetModificationId(0);
-					b.Add(newField);
-				}
-			}
-
-			if (this.IsCaptionsType)
-			{
-				this.CaptionsCountersModify(1);
-			}
-
-			if (this.bypassType == this.type)
-			{
-				this.druidsIndex.Add(newDruid);
-			}
-
-			return newDruid;
 		}
 
 		public void BypassFilterCloseAccess()
@@ -1904,28 +1589,6 @@ namespace Epsitec.Common.Designer
 
 
 		#region Direct
-		public Type DirectGetType(Druid druid)
-		{
-			//	Retourne le type d'une ressource 'Caption'.
-			if (this.type == Type.Panels)
-			{
-				return Type.Panels;
-			}
-			else
-			{
-				System.Diagnostics.Debug.Assert(this.IsCaptionsType);
-				string name = this.DirectGetName(druid);
-				if (string.IsNullOrEmpty(name))
-				{
-					return Type.Unknow;
-				}
-				else
-				{
-					return ResourceAccess.GetFilterType(name);
-				}
-			}
-		}
-
 		public string DirectGetDisplayName(Druid druid)
 		{
 			//	Retourne le nom d'une ressource à afficher, sans tenir compte du filtre.
@@ -1969,12 +1632,6 @@ namespace Epsitec.Common.Designer
 			return caption.Icon;
 		}
 
-		public Caption DirectGetCaption(Druid druid)
-		{
-			Caption caption = this.resourceManager.GetCaption(druid);
-			return caption;
-		}
-
 		public string DirectDefaultParameter(Druid druid)
 		{
 			//	Retourne le paramètre par défaut d'une commande, sans tenir compte du filtre.
@@ -1988,18 +1645,6 @@ namespace Epsitec.Common.Designer
 			return Command.GetDefaultParameter(caption);
 		}
 
-		public string DirectGetGroup(Druid druid)
-		{
-			//	Retourne le groupe d'une commande.
-			Caption caption = this.resourceManager.GetCaption(druid);
-			if (caption == null)
-			{
-				return null;
-			}
-
-			return Command.GetGroup(caption);
-		}
-
 		public AbstractType DirectGetAbstractType(Druid druid)
 		{
 			//	Retourne le type abstrait d'un caption de type StructuredType (ou autre).
@@ -2010,14 +1655,6 @@ namespace Epsitec.Common.Designer
 			}
 
 			return ResourceAccess.GetAbstractType(caption);
-		}
-
-		public Druid DirectGetDruid(int index)
-		{
-			//	Retourne le Druid correspondant à un index.
-			System.Diagnostics.Debug.Assert(this.IsBundlesType);
-			ResourceBundle.Field field = this.primaryBundle[index];
-			return new Druid(field.Id, this.primaryBundle.Module.Id);
 		}
 		#endregion
 
@@ -2083,113 +1720,6 @@ namespace Epsitec.Common.Designer
 				if (fieldType == FieldType.Name)
 				{
 					return new Field(this.SubFilter(this.accessField.Name, false));
-				}
-			}
-
-			if (this.type == Type.Strings)
-			{
-				if (fieldType == FieldType.String)
-				{
-					return new Field(this.accessField.AsString);
-				}
-
-				if (fieldType == FieldType.About)
-				{
-					return new Field(this.accessField.About);
-				}
-			}
-
-			if (this.IsCaptionsType)
-			{
-				if (this.accessCaption == null)
-				{
-					return null;
-				}
-
-				if (fieldType == FieldType.Labels)
-				{
-					return new Field(this.accessCaption.Labels);
-				}
-
-				if (fieldType == FieldType.Description)
-				{
-					return new Field(this.accessCaption.Description);
-				}
-
-				if (fieldType == FieldType.Icon)
-				{
-					return new Field(this.accessCaption.Icon);
-				}
-
-				if (fieldType == FieldType.About)
-				{
-					return new Field(this.accessField.About);
-				}
-
-				if (fieldType == FieldType.Caption)
-				{
-					return new Field(this.accessCaption);
-				}
-			}
-
-			if (this.type == Type.Commands)
-			{
-				if (fieldType == FieldType.Controller)
-				{
-					string dp = Command.GetDefaultParameter(this.accessCaption);
-					return new Field(dp);
-				}
-
-				if (fieldType == FieldType.Statefull)
-				{
-					bool statefull = Command.GetStatefull(this.accessCaption);
-					return new Field(statefull);
-				}
-
-				if (fieldType == FieldType.Shortcuts)
-				{
-					Widgets.Collections.ShortcutCollection collection = Shortcut.GetShortcuts(this.accessCaption);
-					return new Field(collection);
-				}
-
-				if (fieldType == FieldType.Group)
-				{
-					string group = Command.GetGroup(this.accessCaption);
-					return new Field(group);
-				}
-			}
-
-			if (this.type == Type.Types)
-			{
-				if (fieldType == FieldType.AbstractType)
-				{
-					AbstractType type = this.CachedAbstractType;
-					if (type == null)
-					{
-						return null;
-					}
-
-					return new Field(type);
-				}
-
-				if (fieldType == FieldType.Controller)
-				{
-					AbstractType type = this.CachedAbstractType;
-					if (type == null)
-					{
-						return null;
-					}
-
-					string s;
-					if (string.IsNullOrEmpty(type.DefaultControllerParameter))
-					{
-						s = "";
-					}
-					else
-					{
-						s = type.DefaultControllerParameter;
-					}
-					return new Field(s);
 				}
 			}
 
@@ -2288,147 +1818,6 @@ namespace Epsitec.Common.Designer
 				{
 					string name = this.AddFilter(field.String, false);
 					this.accessField.SetName(name);
-
-#if false
-					Druid druid = this.druidsIndex[index];
-					foreach (ResourceBundle bundle in this.bundles)
-					{
-						ResourceBundle.Field f = bundle[druid];
-						if (!f.IsEmpty)
-						{
-							f.SetName(name);
-						}
-					}
-#endif
-
-					if (this.IsCaptionsType)
-					{
-						this.AdjustCaptionName(this.primaryBundle, this.accessField, this.accessCaption);
-						this.accessField.SetStringValue(this.accessCaption.SerializeToString());
-					}
-				}
-			}
-
-			if (this.type == Type.Strings)
-			{
-				if (fieldType == FieldType.String)
-				{
-					this.accessField.SetStringValue(field.String);
-				}
-
-				if (fieldType == FieldType.About)
-				{
-					this.accessField.SetAbout(field.String);
-				}
-			}
-
-			if (this.IsCaptionsType)
-			{
-				if (this.accessCaption == null)
-				{
-					return;
-				}
-
-				if (fieldType == FieldType.Labels)
-				{
-					ICollection<string> src = field.StringCollection;
-					ICollection<string> dst = this.accessCaption.Labels;
-
-					dst.Clear();
-					foreach (string s in src)
-					{
-						dst.Add(s);
-					}
-
-					this.accessField.SetStringValue(this.accessCaption.SerializeToString());
-				}
-
-				if (fieldType == FieldType.Description)
-				{
-					this.accessCaption.Description = field.String;
-					this.accessField.SetStringValue(this.accessCaption.SerializeToString());
-				}
-
-				if (fieldType == FieldType.Icon)
-				{
-					if (field.String == null)
-					{
-						this.accessCaption.Icon = "";
-					}
-					else
-					{
-						this.accessCaption.Icon = field.String;
-					}
-
-					this.accessField.SetStringValue(this.accessCaption.SerializeToString());
-				}
-
-				if (fieldType == FieldType.About)
-				{
-					this.accessField.SetAbout(field.String);
-				}
-
-				if (fieldType == FieldType.Caption)
-				{
-					throw new System.InvalidOperationException("Operation not suported");
-				}
-			}
-
-			if (this.type == Type.Commands)
-			{
-				if (fieldType == FieldType.Controller)
-				{
-					string dp = field.String;
-					Command.SetDefaultParameter(this.accessCaption, dp);
-					this.accessField.SetStringValue(this.accessCaption.SerializeToString());
-				}
-
-				if (fieldType == FieldType.Statefull)
-				{
-					bool statefull = field.Boolean;
-					Command.SetStatefull(this.accessCaption, statefull);
-					this.accessField.SetStringValue(this.accessCaption.SerializeToString());
-				}
-
-				if (fieldType == FieldType.Shortcuts)
-				{
-					Widgets.Collections.ShortcutCollection collection = field.ShortcutCollection;
-					Shortcut.SetShortcuts(this.accessCaption, collection);
-					this.accessField.SetStringValue(this.accessCaption.SerializeToString());
-				}
-
-				if (fieldType == FieldType.Group)
-				{
-					string group = field.String;
-					Command.SetGroup(this.accessCaption, group);
-					this.accessField.SetStringValue(this.accessCaption.SerializeToString());
-				}
-			}
-
-			if (this.type == Type.Types)
-			{
-				if (fieldType == FieldType.AbstractType)
-				{
-					//	[Note1] Curieusement, on n'utilise pas le paramètre 'field' passé en
-					//	entrée (premier Assert). En effet, le type AbstractType est déjà dans
-					//	la ressource en cache, dans this.accessCaption. Mais il faut être
-					//	certain de ne pas faire d'autres GetField avant ce SetField (ce qui
-					//	est vérifié par le deuxième Assert) !
-					System.Diagnostics.Debug.Assert(field == null);
-					System.Diagnostics.Debug.Assert(fieldType == this.lastAccessField);
-					this.accessField.SetStringValue(this.accessCaption.SerializeToString());
-				}
-
-				if (fieldType == FieldType.Controller)
-				{
-					AbstractType type = this.CachedAbstractType;
-					if (type == null)
-					{
-						return;
-					}
-
-					type.DefineDefaultController(ResourceAccess.TypeCodeController(type), field.String);
-					this.accessField.SetStringValue(this.accessCaption.SerializeToString());
 				}
 			}
 
@@ -2525,23 +1914,6 @@ namespace Epsitec.Common.Designer
 					if (this.accessField == null || string.IsNullOrEmpty(this.accessField.AsString))
 					{
 						return ModificationState.Empty;
-					}
-
-					if (this.IsCaptionsType)
-					{
-						Caption caption = new Caption();
-
-						string s = this.accessField.AsString;
-						if (!string.IsNullOrEmpty(s))
-						{
-							caption.DeserializeFromString(s, this.resourceManager);
-							ResourceManager.SetSourceBundle(caption, this.accessBundle);
-						}
-
-						if (ResourceAccess.IsEmptyCollection(caption.Labels) && string.IsNullOrEmpty(caption.Description))
-						{
-							return ModificationState.Empty;
-						}
 					}
 
 					if (this.accessBundle != this.primaryBundle)  // culture secondaire ?
@@ -2755,7 +2127,7 @@ namespace Epsitec.Common.Designer
 		public void SearcherIndexToAccess(int field, string secondaryCulture, out string cultureName, out FieldType fieldType)
 		{
 			//	Conversion d'un index de champ (0..n) en l'information nécessaire pour Get/SetField.
-			if (this.type == Type.Strings || this.type == Type.Strings2)
+			if (this.type == Type.Strings2)
 			{
 				switch (field)
 				{
@@ -2792,7 +2164,7 @@ namespace Epsitec.Common.Designer
 				}
 			}
 
-			if (this.IsCaptionsType || this.type == Type.Captions2 || this.type == Type.Commands2 || this.type == Type.Types2 || this.type == Type.Fields2 || this.type == Type.Values2)
+			if (this.type == Type.Captions2 || this.type == Type.Commands2 || this.type == Type.Types2 || this.type == Type.Fields2 || this.type == Type.Values2)
 			{
 				switch (field)
 				{
@@ -2890,27 +2262,6 @@ namespace Epsitec.Common.Designer
 				{
 					Druid druid = this.druidsIndex[index];
 					this.accessField = this.accessBundle[druid];
-				}
-
-				//	Met en cache le Caption.
-				if (this.IsCaptionsType)
-				{
-					if (this.accessCached != index || this.accessCaption == null)
-					{
-						this.accessCaption = new Caption();
-
-						if (this.accessField != null)
-						{
-							string s = this.accessField.AsString;
-							if (!string.IsNullOrEmpty(s))
-							{
-								this.accessCaption.DeserializeFromString(s, this.resourceManager);
-								ResourceManager.SetSourceBundle(this.accessCaption, this.accessBundle);
-							}
-
-							this.AdjustCaptionName(this.accessBundle, this.accessField, this.accessCaption);
-						}
-					}
 				}
 			}
 
@@ -3085,18 +2436,7 @@ namespace Epsitec.Common.Designer
 				//	Crée un premier champ vide avec un premier Druid.
 				//	Ceci est nécessaire, car il n'existe pas de commande pour créer un champ à partir
 				//	de rien, mais seulement une commande pour dupliquer un champ existant.
-				if (this.IsCaptionsType)
-				{
-					this.CreateFirstField(bundle, 0, ResourceAccess.GetFixFilter(Type.Captions)+Res.Strings.Viewers.Panels.New);
-					this.CreateFirstField(bundle, 1, ResourceAccess.GetFixFilter(Type.Commands)+Res.Strings.Viewers.Panels.New);
-					this.CreateFirstField(bundle, 2, ResourceAccess.GetFixFilter(Type.Types)+Res.Strings.Viewers.Panels.New);
-					this.CreateFirstField(bundle, 3, ResourceAccess.GetFixFilter(Type.Values)+Res.Strings.Viewers.Panels.New);
-					this.CreateFirstField(bundle, 4, ResourceAccess.GetFixFilter(Type.Fields)+Res.Strings.Viewers.Panels.New);
-				}
-				else
-				{
-					this.CreateFirstField(bundle, 0, Res.Strings.Viewers.Panels.New);
-				}
+				this.CreateFirstField(bundle, 0, Res.Strings.Viewers.Panels.New);
 
 				//	Sérialise le bundle et son premier champ sur disque. Il serait préférable de
 				//	faire ceci lors du Save, mais cette situation étant exceptionelle, il est
@@ -3111,28 +2451,6 @@ namespace Epsitec.Common.Designer
 			this.bundles.LoadBundles(this.resourceManager.ActivePrefix, this.resourceManager.GetBundleIds(ids[0], ResourceLevel.All));
 
 			this.primaryBundle = this.bundles[ResourceLevel.Default];
-
-			if (this.IsCaptionsType)
-			{
-				this.CaptionsCountersUpdate();
-#if false
-				//	La logique qui crée les premiers champs et valeurs crée des informations
-				//	qui ont des noms incorrects; on ne peut donc plus les utiliser. Ca ne
-				//	devrait pas porter à conséquence, vu que ResourceAccess va être mis à
-				//	la retraite prochainement...
-				if (this.captionCounters[Type.Values] == 0)
-				{
-					Druid newDruid = this.CreateUniqueDruid();
-					this.CreateFirstField(this.primaryBundle, newDruid.Local, ResourceAccess.GetFixFilter(Type.Values)+Res.Strings.Viewers.Panels.New);
-				}
-
-				if (this.captionCounters[Type.Fields] == 0)
-				{
-					Druid newDruid = this.CreateUniqueDruid();
-					this.CreateFirstField(this.primaryBundle, newDruid.Local, ResourceAccess.GetFixFilter(Type.Fields)+Res.Strings.Viewers.Panels.New);
-				}
-#endif
-			}
 		}
 
 		protected void CreateFirstField(ResourceBundle bundle, int localId, string name)
@@ -3144,43 +2462,9 @@ namespace Epsitec.Common.Designer
 			ResourceBundle.Field newField = bundle.CreateField(ResourceFieldType.Data);
 			newField.SetDruid(newDruid);
 			newField.SetName(name);
-
-			if (this.IsCaptionsType)
-			{
-				Caption caption = new Caption();
-
-				this.AdjustCaptionName(bundle, newField, caption);
-				newField.SetStringValue(caption.SerializeToString());
-			}
-			else
-			{
-				newField.SetStringValue("");
-			}
+			newField.SetStringValue("");
 
 			bundle.Add(newField);
-		}
-
-		protected void AdjustBundlesAfterLoad()
-		{
-			//	Ajuste les bundles après une désérialisation.
-			if (this.type == Type.Strings)
-			{
-				foreach (ResourceBundle bundle in this.bundles)
-				{
-					for (int i=0; i<bundle.FieldCount; i++)
-					{
-						ResourceBundle.Field field = bundle[i];
-
-						string s1 = field.AsString;
-						string s2 = TextLayout.ConvertToXmlText(s1);
-
-						if (s2 != s1)
-						{
-							field.SetStringValue(s2);
-						}
-					}
-				}
-			}
 		}
 
 		protected void AdjustBundlesBeforeSave()
@@ -3194,24 +2478,6 @@ namespace Epsitec.Common.Designer
 				{
 					ResourceBundle.Field field = bundle[i];
 
-					if (this.IsCaptionsType)
-					{
-						Caption caption = new Caption();
-
-						string s = field.AsString;
-						if (!string.IsNullOrEmpty(s))
-						{
-							caption.DeserializeFromString(s, this.resourceManager);
-							ResourceManager.SetSourceBundle(caption, bundle);
-						}
-
-						string name = caption.Name;
-						//?this.AdjustCaptionName(bundle, field, caption);
-						System.Diagnostics.Debug.Assert(caption.Name == name);
-
-						field.SetStringValue(caption.SerializeToString());
-					}
-
 					if (!patchModule)
 					{
 						if (field.About == "" || ResourceBundle.Field.IsNullString (field.About))
@@ -3220,7 +2486,7 @@ namespace Epsitec.Common.Designer
 							//	s'agit d'une ressource d'un module de référence,
 							//	alors on peut supprimer complètement son contenu.
 
-							field.SetAbout (null);
+							field.SetAbout(null);
 						}
 						
 						if (bundle != this.primaryBundle)
@@ -3238,54 +2504,6 @@ namespace Epsitec.Common.Designer
 						}
 					}
 				}
-			}
-		}
-
-		protected void AdjustCaptionName(ResourceBundle bundle, ResourceBundle.Field field, Caption caption)
-		{
-			//	Met à jour le caption.Name en fonction de field.Name.
-			//	Le Caption.Name doit contenir le nom de la commande, sans le préfixe,
-			//	dans le bundle par défaut. Dans les autres bundles, il ne faut rien.
-			//	Pour une Value, caption.Name ne contient que le dernier nom.
-			if (bundle == this.primaryBundle)
-			{
-				string name;
-
-				if (field.Name.StartsWith(ResourceAccess.GetFixFilter(Type.Values)))
-				{
-					name = ResourceAccess.LastName(field.Name);
-				}
-				else
-				{
-					name = ResourceAccess.SubAllFilter(field.Name);
-				}
-
-				if ((this.bypassType == Type.Unknow && this.type == Type.Fields) || this.bypassType == Type.Fields)
-				{
-					int i = name.LastIndexOf(".");
-					if (i != -1)  // commence par le nom de l'entité ?
-					{
-						name = name.Substring(i+1);
-					}
-				}
-
-				caption.Name = name;
-
-#if true
-				StructuredType st = this.CachedAbstractType as StructuredType;
-				if (st != null)
-				{
-					if (ResourceManager.GetSourceBundle(st.Caption) == null)
-					{
-						//	Ne devrait jamais être nécessaire !
-						ResourceManager.SetSourceBundle(st.Caption, this.accessBundle);
-					}
-				}
-#endif
-			}
-			else
-			{
-				caption.Name = null;
 			}
 		}
 
@@ -3650,73 +2868,6 @@ namespace Epsitec.Common.Designer
 			return -1;
 		}
 
-		protected void CaptionsCountersModify(int value)
-		{
-			//	Modifie le compte des ressources 'Captions'.
-			System.Diagnostics.Debug.Assert(this.IsCaptionsType);
-			this.captionCounters[this.type] += value;
-		}
-
-		protected void CaptionsCountersUpdate()
-		{
-			//	Met à jour les comptes des ressources 'Captions'.
-			System.Diagnostics.Debug.Assert(this.IsCaptionsType);
-
-			int countCap = 0;
-			int countFld = 0;
-			int countCmd = 0;
-			int countTyp = 0;
-			int countVal = 0;
-
-			string filterCap = ResourceAccess.GetFixFilter(Type.Captions);
-			string filterFld = ResourceAccess.GetFixFilter(Type.Fields);
-			string filterCmd = ResourceAccess.GetFixFilter(Type.Commands);
-			string filterTyp = ResourceAccess.GetFixFilter(Type.Types);
-			string filterVal = ResourceAccess.GetFixFilter(Type.Values);
-
-			foreach (ResourceBundle.Field field in this.primaryBundle.Fields)
-			{
-				string name = field.Name;
-
-				//	TODO: code mort qui va devoir disparaître un jour; ajouté un hack ci-après pour que ça passe
-				if (name == null)
-				{
-					continue;
-				}
-
-				if (name.StartsWith(filterCap))
-				{
-					countCap++;
-				}
-
-				if (name.StartsWith(filterFld))
-				{
-					countFld++;
-				}
-
-				if (name.StartsWith(filterCmd))
-				{
-					countCmd++;
-				}
-
-				if (name.StartsWith(filterTyp))
-				{
-					countTyp++;
-				}
-
-				if (name.StartsWith(filterVal))
-				{
-					countVal++;
-				}
-			}
-
-			this.captionCounters[Type.Captions] = countCap;
-			this.captionCounters[Type.Fields] = countFld;
-			this.captionCounters[Type.Commands] = countCmd;
-			this.captionCounters[Type.Types] = countTyp;
-			this.captionCounters[Type.Values] = countVal;
-		}
-
 		protected Druid CreateUniqueDruid()
 		{
 			//	Crée un nouveau druid unique.
@@ -3968,16 +3119,7 @@ namespace Epsitec.Common.Designer
 			//	"un bundle par culture, plusieurs ressources par bundle".
 			get
 			{
-				return (this.type == Type.Strings || this.type == Type.Strings2 || this.type == Type.Captions2 || this.type == Type.Commands2 || this.type == Type.Entities || this.type == Type.Types2 || this.type == Type.Fields2 || this.type == Type.Values2 || this.IsCaptionsType);
-			}
-		}
-
-		protected bool IsCaptionsType
-		{
-			//	Retourne true si on accède à des ressources de type Captions/Commands/Types/Values.
-			get
-			{
-				return (this.type == Type.Captions || this.type == Type.Fields || this.type == Type.Commands || this.type == Type.Types || this.type == Type.Values);
+				return (this.type == Type.Strings2 || this.type == Type.Captions2 || this.type == Type.Commands2 || this.type == Type.Entities || this.type == Type.Types2 || this.type == Type.Fields2 || this.type == Type.Values2);
 			}
 		}
 
@@ -3995,16 +3137,8 @@ namespace Epsitec.Common.Designer
 			//	Retourne un nom interne (pour Common.Support & Cie) en fonction du type.
 			switch (this.type)
 			{
-				case Type.Strings:
 				case Type.Strings2:
 					return many ? "Strings" : "String";
-
-				case Type.Captions:
-				case Type.Fields:
-				case Type.Commands:
-				case Type.Types:
-				case Type.Values:
-					return many ? "Captions" : "Caption";
 
 				case Type.Panels:
 					return "Panel";
@@ -4476,7 +3610,6 @@ namespace Epsitec.Common.Designer
 		protected List<ResourceBundle>						panelsList;
 		protected List<ResourceBundle>						panelsToCreate;
 		protected List<ResourceBundle>						panelsToDelete;
-		protected Dictionary<Type, int>						captionCounters;
 		protected Dictionary<Type, int>						filterIndexes;
 		protected Dictionary<Type, string>					filterStrings;
 		protected Dictionary<Type, Searcher.SearchingMode>	filterModes;
