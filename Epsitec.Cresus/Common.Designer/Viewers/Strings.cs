@@ -10,9 +10,9 @@ namespace Epsitec.Common.Designer.Viewers
 	/// <summary>
 	/// Permet de représenter les ressources d'un module.
 	/// </summary>
-	public class Strings2 : Abstract2
+	public class Strings : Abstract2
 	{
-		public Strings2(Module module, PanelsContext context, ResourceAccess access, DesignerApplication designerApplication) : base(module, context, access, designerApplication)
+		public Strings(Module module, PanelsContext context, ResourceAccess access, DesignerApplication designerApplication) : base(module, context, access, designerApplication)
 		{
 			//	Résumé des captions.
 			MyWidgets.StackedPanel leftContainer, rightContainer;

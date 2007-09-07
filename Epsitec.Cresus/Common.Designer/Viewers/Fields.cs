@@ -10,9 +10,9 @@ namespace Epsitec.Common.Designer.Viewers
 	/// <summary>
 	/// Permet de représenter les ressources d'un module.
 	/// </summary>
-	public class Fields2 : AbstractCaptions2
+	public class Fields : AbstractCaptions
 	{
-		public Fields2(Module module, PanelsContext context, ResourceAccess access, DesignerApplication designerApplication) : base(module, context, access, designerApplication)
+		public Fields(Module module, PanelsContext context, ResourceAccess access, DesignerApplication designerApplication) : base(module, context, access, designerApplication)
 		{
 			this.UpdateAll();
 		}
@@ -58,7 +58,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.table.Columns.Add(new UI.ItemTableColumn("Local", new Widgets.Layouts.GridLength(this.GetColumnWidth(5), Widgets.Layouts.GridUnitType.Proportional)));
 			this.table.Columns.Add(new UI.ItemTableColumn("Identity", new Widgets.Layouts.GridLength(this.GetColumnWidth(6), Widgets.Layouts.GridUnitType.Proportional)));
 
-			this.table.ColumnHeader.SetColumnComparer(0, Fields2.CompareTypeColumns);
+			this.table.ColumnHeader.SetColumnComparer(0, Fields.CompareTypeColumns);
 			this.table.ColumnHeader.SetColumnComparer(2, this.ComparePrimary);
 			this.table.ColumnHeader.SetColumnComparer(3, this.CompareSecondary);
 			this.table.ColumnHeader.SetColumnComparer(4, this.CompareDruid);
@@ -99,11 +99,11 @@ namespace Epsitec.Common.Designer.Viewers
 			//	Retourne la largeur à utiliser pour une colonne de la liste de gauche.
 			if (this.designerApplication.DisplayModeState == DesignerApplication.DisplayMode.Horizontal)
 			{
-				return Fields2.columnWidthHorizontal[column];
+				return Fields.columnWidthHorizontal[column];
 			}
 			else
 			{
-				return Fields2.columnWidthVertical[column];
+				return Fields.columnWidthVertical[column];
 			}
 		}
 
@@ -112,11 +112,11 @@ namespace Epsitec.Common.Designer.Viewers
 			//	Mémorise la largeur à utiliser pour une colonne de la liste de gauche.
 			if (this.designerApplication.DisplayModeState == DesignerApplication.DisplayMode.Horizontal)
 			{
-				Fields2.columnWidthHorizontal[column] = value;
+				Fields.columnWidthHorizontal[column] = value;
 			}
 			else
 			{
-				Fields2.columnWidthVertical[column] = value;
+				Fields.columnWidthVertical[column] = value;
 			}
 		}
 	

@@ -10,9 +10,9 @@ namespace Epsitec.Common.Designer.Viewers
 	/// <summary>
 	/// Permet de représenter les ressources d'un module.
 	/// </summary>
-	public class Types2 : AbstractCaptions2
+	public class Types : AbstractCaptions
 	{
-		public Types2(Module module, PanelsContext context, ResourceAccess access, DesignerApplication designerApplication) : base (module, context, access, designerApplication)
+		public Types(Module module, PanelsContext context, ResourceAccess access, DesignerApplication designerApplication) : base (module, context, access, designerApplication)
 		{
 			MyWidgets.StackedPanel leftContainer;
 
@@ -223,7 +223,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.table.Columns.Add(new UI.ItemTableColumn("Local", new Widgets.Layouts.GridLength(this.GetColumnWidth(5), Widgets.Layouts.GridUnitType.Proportional)));
 			this.table.Columns.Add(new UI.ItemTableColumn("Identity", new Widgets.Layouts.GridLength(this.GetColumnWidth(6), Widgets.Layouts.GridUnitType.Proportional)));
 
-			this.table.ColumnHeader.SetColumnComparer(1, Types2.CompareTypeColumns);
+			this.table.ColumnHeader.SetColumnComparer(1, Types.CompareTypeColumns);
 			this.table.ColumnHeader.SetColumnComparer(2, this.ComparePrimary);
 			this.table.ColumnHeader.SetColumnComparer(3, this.CompareSecondary);
 			this.table.ColumnHeader.SetColumnComparer(4, this.CompareDruid);
@@ -264,11 +264,11 @@ namespace Epsitec.Common.Designer.Viewers
 			//	Retourne la largeur à utiliser pour une colonne de la liste de gauche.
 			if (this.designerApplication.DisplayModeState == DesignerApplication.DisplayMode.Horizontal)
 			{
-				return Types2.columnWidthHorizontal[column];
+				return Types.columnWidthHorizontal[column];
 			}
 			else
 			{
-				return Types2.columnWidthVertical[column];
+				return Types.columnWidthVertical[column];
 			}
 		}
 
@@ -277,11 +277,11 @@ namespace Epsitec.Common.Designer.Viewers
 			//	Mémorise la largeur à utiliser pour une colonne de la liste de gauche.
 			if (this.designerApplication.DisplayModeState == DesignerApplication.DisplayMode.Horizontal)
 			{
-				Types2.columnWidthHorizontal[column] = value;
+				Types.columnWidthHorizontal[column] = value;
 			}
 			else
 			{
-				Types2.columnWidthVertical[column] = value;
+				Types.columnWidthVertical[column] = value;
 			}
 		}
 	
