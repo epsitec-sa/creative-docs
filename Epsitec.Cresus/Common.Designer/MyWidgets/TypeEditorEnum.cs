@@ -309,8 +309,14 @@ namespace Epsitec.Common.Designer.MyWidgets
 				return;
 			}
 
-			IList<StructuredData> list = this.structuredData.GetValue(Support.Res.Fields.ResourceEnumType.Values) as IList<StructuredData>;
+			//	Supprime la ressource "valeur".
+			//	TODO: Il me semble que cette ressource est forcément dans le même module. Juste ?
+			Druid druid = this.GetDruid(sel);
+			CultureMap cultureMap = this.module.AccessValues2.Accessor.Collection[druid];
+			this.module.AccessValues2.Accessor.Collection.Remove(cultureMap);
 
+			//	Supprime la valeur de la liste de l'énumération.
+			IList<StructuredData> list = this.structuredData.GetValue(Support.Res.Fields.ResourceEnumType.Values) as IList<StructuredData>;
 			list.RemoveAt(sel);
 
 			if (sel > list.Count-1)
