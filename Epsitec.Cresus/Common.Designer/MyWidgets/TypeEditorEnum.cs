@@ -377,27 +377,26 @@ namespace Epsitec.Common.Designer.MyWidgets
 			{
 				if (first+i < this.listDruids.Count)
 				{
+					string name = null;
+					string text = null;
+					string icon = null;
+
 					Druid druid = this.listDruids[first+i];
-
-					//?Caption caption = this.module.ResourceManager.GetCaption(druid);
-					//?Caption caption = module.AccessValues2.DirectGetCaption(druid);
 					Module module = this.module.DesignerApplication.SearchModule(druid);
-					CultureMap cultureMap = module.AccessValues2.Accessor.Collection[druid];
-					StructuredData data = cultureMap.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
+					if (module != null)
+					{
+						CultureMap cultureMap = module.AccessValues2.Accessor.Collection[druid];
+						StructuredData data = cultureMap.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
 
-					string name = cultureMap.Name;
-					string text = data.GetValue(Support.Res.Fields.ResourceCaption.Description) as string;
-					string icon = data.GetValue(Support.Res.Fields.ResourceCaption.Icon) as string;
-
-
+						name = cultureMap.Name;
+						text = ResourceAccess.GetCaptionNiceDescription(data, this.array.LineHeight);
+						icon = data.GetValue(Support.Res.Fields.ResourceCaption.Icon) as string;
+					}
 
 					bool active = this.selDruids.Contains(druid);
 
 					this.array.SetLineString(0, first+i, active ? Misc.Image("TypeEnumYes") : "");
 					this.array.SetLineState(0, first+i, StringList.CellState.Normal);
-
-					//?string name = caption.Name;
-					//?string text = ResourceAccess.GetCaptionNiceDescription(caption, this.array.LineHeight);
 
 					this.array.SetLineString(1, first+i, name);
 					this.array.SetLineState(1, first+i, StringList.CellState.Normal);
@@ -405,7 +404,6 @@ namespace Epsitec.Common.Designer.MyWidgets
 					this.array.SetLineString(2, first+i, text);
 					this.array.SetLineState(2, first+i, StringList.CellState.Normal);
 
-					//?string icon = caption.Icon;
 					if (string.IsNullOrEmpty(icon))
 					{
 						this.array.SetLineString(3, first+i, "");
@@ -456,8 +454,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				sel = this.array.TotalRows-1;
 			}
 
-			//	TODO: à partir d'ici, le code écrit est vraissemblablement tout faux, car je n'y comprends rien.
-			//	Il s'agit de créer une nouvelle valeur pour une énumération...
+			//	Code complexe écrit par Pierre permettant de créer une nouvelle valeur pour une énumération.
 			IList<StructuredData> list = this.structuredData.GetValue(Support.Res.Fields.ResourceEnumType.Values) as IList<StructuredData>;
 
 			Support.ResourceAccessors.AnyTypeResourceAccessor accessor = module.AccessTypes2.Accessor as Support.ResourceAccessors.AnyTypeResourceAccessor;

@@ -1789,6 +1789,54 @@ namespace Epsitec.Common.Designer
 		#endregion
 
 
+		public static string GetCaptionNiceDescription(StructuredData data, double availableHeight)
+		{
+			//	Construit un texte d'après les labels et la description.
+			//	Les différents labels sont séparés par des virgules.
+			//	La description vient sur une deuxième ligne (si la hauteur
+			//	disponible le permet), mais seulement si elle est différente
+			//	de tous les labels.
+			System.Text.StringBuilder builder = new System.Text.StringBuilder();
+
+			string description = data.GetValue(Support.Res.Fields.ResourceCaption.Description) as string;
+
+			IList<string> list = data.GetValue(Support.Res.Fields.ResourceCaption.Labels) as IList<string>;
+			foreach (string label in list)
+			{
+				if (builder.Length > 0)
+				{
+					builder.Append(", ");
+				}
+				builder.Append(label);
+
+				if (description != null)
+				{
+					if (description == label)  // description identique à un label ?
+					{
+						description = null;  // pas nécessaire de montrer la description
+					}
+				}
+			}
+
+			if (description != null)  // faut-il montrer la description ?
+			{
+				if (builder.Length > 0)
+				{
+					if (availableHeight >= 30)  // assez de place pour 2 lignes ?
+					{
+						builder.Append("<br/>");  // sur une deuxième ligne
+					}
+					else
+					{
+						builder.Append(". ");  // sur la même ligne
+					}
+				}
+				builder.Append(description);
+			}
+
+			return builder.ToString();
+		}
+
 		public static string GetCaptionNiceDescription(Caption caption, double availableHeight)
 		{
 			//	Construit un texte d'après les labels et la description.
