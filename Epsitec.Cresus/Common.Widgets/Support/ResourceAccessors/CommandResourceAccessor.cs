@@ -142,19 +142,41 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			}
 		}
 
+		protected override bool IsEmptyCaption(StructuredData data)
+		{
+			if (base.IsEmptyCaption (data))
+			{
+				object statefull        = data.GetValue (Res.Fields.ResourceCommand.Statefull);
+				string defaultParameter = data.GetValue (Res.Fields.ResourceCommand.DefaultParameter) as string;
+				string group            = data.GetValue (Res.Fields.ResourceCommand.Group) as string;
+
+				IList<StructuredData> shortcuts = data.GetValue (Res.Fields.ResourceCommand.Shortcuts) as IList<StructuredData>;
+
+				if ((UndefinedValue.IsUndefinedValue (statefull)) &&
+					(ResourceBundle.Field.IsNullString (defaultParameter)) &&
+					(ResourceBundle.Field.IsNullString (group)) &&
+					((shortcuts == null) || (shortcuts.Count == 0)))
+				{
+					return true;
+				}
+			}
+			
+			return false;
+		}
+
 		protected override void ComputeDataDelta(StructuredData rawData, StructuredData refData, StructuredData patchData)
 		{
 			base.ComputeDataDelta (rawData, refData, patchData);
 
 			object refStatefull        = refData.GetValue (Res.Fields.ResourceCommand.Statefull);
-			object refDefaultParameter = refData.GetValue (Res.Fields.ResourceCommand.DefaultParameter);
-			object refGroup            = refData.GetValue (Res.Fields.ResourceCommand.Group);
+			string refDefaultParameter = refData.GetValue (Res.Fields.ResourceCommand.DefaultParameter) as string;
+			string refGroup            = refData.GetValue (Res.Fields.ResourceCommand.Group) as string;
 			
 			IList<StructuredData> refShortcuts = refData.GetValue (Res.Fields.ResourceCommand.Shortcuts) as IList<StructuredData>;
 			
 			object rawStatefull        = rawData.GetValue (Res.Fields.ResourceCommand.Statefull);
-			object rawDefaultParameter = rawData.GetValue (Res.Fields.ResourceCommand.DefaultParameter);
-			object rawGroup            = rawData.GetValue (Res.Fields.ResourceCommand.Group);
+			string rawDefaultParameter = rawData.GetValue (Res.Fields.ResourceCommand.DefaultParameter) as string;
+			string rawGroup            = rawData.GetValue (Res.Fields.ResourceCommand.Group) as string;
 			
 			IList<StructuredData> rawShortcuts = rawData.GetValue (Res.Fields.ResourceCommand.Shortcuts) as IList<StructuredData>;
 
@@ -163,12 +185,12 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			{
 				patchData.SetValue (Res.Fields.ResourceCommand.Statefull, rawStatefull);
 			}
-			if ((!UndefinedValue.IsUndefinedValue (rawDefaultParameter)) &&
+			if ((!ResourceBundle.Field.IsNullString (rawDefaultParameter)) &&
 				(refDefaultParameter != rawDefaultParameter))
 			{
 				patchData.SetValue (Res.Fields.ResourceCommand.DefaultParameter, rawDefaultParameter);
 			}
-			if ((!UndefinedValue.IsUndefinedValue (rawGroup)) &
+			if ((!ResourceBundle.Field.IsNullString (rawGroup)) &
 				(refGroup != rawGroup))
 			{
 				patchData.SetValue (Res.Fields.ResourceCommand.Group, rawGroup);

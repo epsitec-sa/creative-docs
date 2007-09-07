@@ -331,18 +331,8 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			}
 		}
 
-		protected virtual bool IsEmptyCaption(StructuredData data)
-		{
-			IList<string> labels = data.GetValue (Res.Fields.ResourceCaption.Labels) as IList<string>;
-
-			string description = data.GetValue (Res.Fields.ResourceCaption.Description) as string;
-			string icon        = data.GetValue (Res.Fields.ResourceCaption.Icon) as string;
-
-			return ((labels == null) || (labels.Count == 0))
-				&& (ResourceBundle.Field.IsNullString (description))
-				&& (ResourceBundle.Field.IsNullString (icon));
-		}
-
+		protected abstract bool IsEmptyCaption(StructuredData data);
+		
 		protected StructuredData CreateStructuredData()
 		{
 			return new StructuredData (this.GetStructuredType ());

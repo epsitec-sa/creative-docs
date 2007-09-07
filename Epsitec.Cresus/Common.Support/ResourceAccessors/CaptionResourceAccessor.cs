@@ -149,6 +149,18 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			}
 		}
 
+		protected override bool IsEmptyCaption(StructuredData data)
+		{
+			IList<string> labels = data.GetValue (Res.Fields.ResourceCaption.Labels) as IList<string>;
+
+			string description = data.GetValue (Res.Fields.ResourceCaption.Description) as string;
+			string icon        = data.GetValue (Res.Fields.ResourceCaption.Icon) as string;
+
+			return ((labels == null) || (labels.Count == 0))
+				&& (ResourceBundle.Field.IsNullString (description))
+				&& (ResourceBundle.Field.IsNullString (icon));
+		}
+
 		protected override void ComputeDataDelta(StructuredData rawData, StructuredData refData, StructuredData patchData)
 		{
 			string        rawDesc   = rawData.GetValue (Res.Fields.ResourceCaption.Description) as string;
