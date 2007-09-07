@@ -686,14 +686,13 @@ namespace Epsitec.Common.Designer
 				//	Ici, si c'est un type, on a forcément TypeCode qui a été initialisé soit
 				//	explicitement avec un SetValue, soit par recopie de l'original via CopyData;
 				//	c'est indispensable que TypeCode soit défini avant de faire le Add :
-
-				this.accessor.Collection.Add (newItem);
-				this.collectionView.MoveCurrentTo (newItem);
+				this.accessor.Collection.Add(newItem);
+				this.collectionView.MoveCurrentTo(newItem);
 
 				if (generateMissingValues)
 				{
 					Support.ResourceAccessors.AnyTypeResourceAccessor accessor = this.accessor as Support.ResourceAccessors.AnyTypeResourceAccessor;
-					accessor.CreateMissingValueItems (newItem);
+					accessor.CreateMissingValueItems(newItem);
 				}
 
 				this.SetLocalDirty();

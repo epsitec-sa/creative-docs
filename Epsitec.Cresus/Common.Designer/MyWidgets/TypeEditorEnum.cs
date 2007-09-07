@@ -141,13 +141,10 @@ namespace Epsitec.Common.Designer.MyWidgets
 					StructuredData data = list[i];
 
 					Druid druid = (Druid) data.GetValue(Support.Res.Fields.EnumValue.CaptionId);
-					Module module = this.designerApplication.SearchModule(druid);
-					if (module != null)
-					{
-						CultureMap cultureMap = module.AccessValues2.Accessor.Collection[druid];
-						string name = (cultureMap == null) ? "" : cultureMap.Name;
-						builder.Append(name);
-					}
+					//	La valeur est forcément dans le même module que l'énumération.
+					CultureMap cultureMap = this.module.AccessValues2.Accessor.Collection[druid];
+					string name = (cultureMap == null) ? "" : cultureMap.Name;
+					builder.Append(name);
 
 					if (i < list.Count-1)
 					{
@@ -214,24 +211,17 @@ namespace Epsitec.Common.Designer.MyWidgets
 				}
 				else
 				{
-					string name = null;
-					string text = null;
-					string icon = null;
+					//	La valeur est forcément dans le même module que l'énumération.
+					CultureMap cultureMap = this.module.AccessValues2.Accessor.Collection[druid];
+					StructuredData data = cultureMap.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
 
-					Module module = this.module.DesignerApplication.SearchModule(druid);
-					if (module != null)
+					string name = cultureMap.Name;
+					string text = ResourceAccess.GetCaptionNiceDescription(data, this.array.LineHeight);
+
+					string icon = data.GetValue(Support.Res.Fields.ResourceCaption.Icon) as string;
+					if (!string.IsNullOrEmpty(icon))
 					{
-						CultureMap cultureMap = module.AccessValues2.Accessor.Collection[druid];
-						StructuredData data = cultureMap.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
-
-						name = cultureMap.Name;
-						text = ResourceAccess.GetCaptionNiceDescription(data, this.array.LineHeight);
-
-						icon = data.GetValue(Support.Res.Fields.ResourceCaption.Icon) as string;
-						if (!string.IsNullOrEmpty(icon))
-						{
-							icon = Misc.ImageFull(icon);
-						}
+						icon = Misc.ImageFull(icon);
 					}
 
 					this.array.SetLineString(0, first+i, name);
@@ -310,7 +300,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 
 			//	Supprime la ressource "valeur".
-			//	TODO: Il me semble que cette ressource est forcément dans le même module. Juste ?
+			//	Cette ressource est forcément dans le même module.
 			Druid druid = this.GetDruid(sel);
 			CultureMap cultureMap = this.module.AccessValues2.Accessor.Collection[druid];
 			System.Diagnostics.Debug.Assert(cultureMap != null);
