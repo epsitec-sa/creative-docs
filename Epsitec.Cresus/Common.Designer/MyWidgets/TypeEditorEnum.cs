@@ -300,6 +300,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		{
 			//	Supprime une valeur dans l'énumération.
 			int sel = this.array.SelectedRow;
+			System.Diagnostics.Debug.Assert(sel != -1);
 			string name = this.array.GetLineString(0, sel);
 			string question = string.Format("Voulez-vous supprimer la valeur <b>{0}</b> de l'énumération ?", name);
 			Common.Dialogs.DialogResult result = this.module.DesignerApplication.DialogQuestion(question);
@@ -307,6 +308,21 @@ namespace Epsitec.Common.Designer.MyWidgets
 			{
 				return;
 			}
+
+			IList<StructuredData> list = this.structuredData.GetValue(Support.Res.Fields.ResourceEnumType.Values) as IList<StructuredData>;
+
+			list.RemoveAt(sel);
+
+			if (sel > list.Count-1)
+			{
+				this.array.SelectedRow = list.Count-1;
+			}
+
+			this.UpdateArray();
+			this.UpdateButtons();
+
+			this.module.AccessTypes2.SetLocalDirty();
+			this.OnContentChanged();
 		}
 
 		protected void ArrayMove(int direction)
@@ -413,6 +429,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			{
 #if true
 				//	TODO: le résultat rendu avec les énumérations existantes de Common.Types est faux !!!
+				return false;  //?
 				object value = this.structuredData.GetValue(Support.Res.Fields.ResourceEnumType.SystemType);
 				if (value is System.Type)
 				{
