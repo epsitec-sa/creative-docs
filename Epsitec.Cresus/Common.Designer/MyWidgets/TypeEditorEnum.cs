@@ -313,6 +313,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			//	TODO: Il me semble que cette ressource est forcément dans le même module. Juste ?
 			Druid druid = this.GetDruid(sel);
 			CultureMap cultureMap = this.module.AccessValues2.Accessor.Collection[druid];
+			System.Diagnostics.Debug.Assert(cultureMap != null);
 			this.module.AccessValues2.Accessor.Collection.Remove(cultureMap);
 
 			//	Supprime la valeur de la liste de l'énumération.
@@ -435,15 +436,16 @@ namespace Epsitec.Common.Designer.MyWidgets
 			{
 #if true
 				//	TODO: le résultat rendu avec les énumérations existantes de Common.Types est faux !!!
-				return false;  //?
+				System.Type systemType = this.structuredData.GetValue(Support.Res.Fields.ResourceEnumType.SystemType) as System.Type;
 				object value = this.structuredData.GetValue(Support.Res.Fields.ResourceEnumType.SystemType);
-				if (value is System.Type)
+				if ((systemType == null) ||
+					(systemType == typeof (NotAnEnum)))
 				{
-					return true;
+					return false;
 				}
 				else
 				{
-					return false;
+					return true;
 				}
 #else
 				EnumType type = this.AbstractType as EnumType;
