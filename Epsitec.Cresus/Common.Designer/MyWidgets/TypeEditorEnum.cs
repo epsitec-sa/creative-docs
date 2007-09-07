@@ -354,7 +354,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				return;
 			}
 
-			this.designerApplication.LocatorGoto(module.ModuleInfo.Name, ResourceAccess.Type.Values, -1, druid, this.Window.FocusedWidget);
+			this.designerApplication.LocatorGoto(module.ModuleInfo.Name, ResourceAccess.Type.Values2, -1, druid, this.Window.FocusedWidget);
 		}
 
 
