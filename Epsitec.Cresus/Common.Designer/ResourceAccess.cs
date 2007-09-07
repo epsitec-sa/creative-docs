@@ -603,6 +603,7 @@ namespace Epsitec.Common.Designer
 			if (this.IsAbstract2)
 			{
 				CultureMap newItem;
+				bool generateMissingValues = false;
 
 				if (this.type == Type.Types2 && !duplicateContent)
 				{
@@ -624,6 +625,7 @@ namespace Epsitec.Common.Designer
 					if (this.lastTypeCodeSystem != null)
 					{
 						data.SetValue(Support.Res.Fields.ResourceEnumType.SystemType, this.lastTypeCodeSystem);
+						generateMissingValues = true;
 					}
 				}
 				else if (this.type == Type.Entities && !duplicateContent)
@@ -687,6 +689,12 @@ namespace Epsitec.Common.Designer
 
 				this.accessor.Collection.Add (newItem);
 				this.collectionView.MoveCurrentTo (newItem);
+
+				if (generateMissingValues)
+				{
+					Support.ResourceAccessors.AnyTypeResourceAccessor accessor = this.accessor as Support.ResourceAccessors.AnyTypeResourceAccessor;
+					accessor.CreateMissingValueItems (newItem);
+				}
 
 				this.SetLocalDirty();
 				return;

@@ -152,7 +152,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 
 				IList<StructuredData> shortcuts = data.GetValue (Res.Fields.ResourceCommand.Shortcuts) as IList<StructuredData>;
 
-				if ((UndefinedValue.IsUndefinedValue (statefull)) &&
+				if ((UndefinedValue.IsUndefinedValue (statefull) || ((bool)statefull == false)) &&
 					(ResourceBundle.Field.IsNullString (defaultParameter)) &&
 					(ResourceBundle.Field.IsNullString (group)) &&
 					((shortcuts == null) || (shortcuts.Count == 0)))
