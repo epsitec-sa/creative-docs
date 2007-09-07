@@ -16,15 +16,12 @@ namespace Epsitec.Common.Designer
 		{
 			Unknow,
 			Strings2,
-			Captions,
 			Captions2,
 			Fields,
 			Fields2,
-			Commands,
 			Commands2,
 			Types,
 			Types2,
-			Values,
 			Values2,
 			Panels,
 			Scripts,
@@ -692,8 +689,6 @@ namespace Epsitec.Common.Designer
 
 			if (this.IsBundlesType)
 			{
-				newName = this.AddFilter(newName, false);
-
 				Druid actualDruid = this.druidsIndex[this.accessIndex];
 				int aIndex = this.GetAbsoluteIndex(actualDruid);
 				newDruid = this.CreateUniqueDruid();
@@ -1253,14 +1248,12 @@ namespace Epsitec.Common.Designer
 			string err;
 			if (bypass)
 			{
-				string n = this.AddFilter(name, true);
-
 				foreach (Druid druid in this.bypassDruids)
 				{
 					ResourceBundle.Field field = this.primaryBundle[druid];
 					if (field != null && field.Name != null)
 					{
-						err = ResourceAccess.CheckNames(field.Name, n);
+						err = ResourceAccess.CheckNames(field.Name, name);
 						if (err != null)
 						{
 							return err;
@@ -1275,7 +1268,7 @@ namespace Epsitec.Common.Designer
 						ResourceBundle.Field field = this.primaryBundle[druid];
 						if (field != null && field.Name != null)
 						{
-							err = ResourceAccess.CheckNames(field.Name, n);
+							err = ResourceAccess.CheckNames(field.Name, name);
 							if (err != null)
 							{
 								return err;
@@ -1300,12 +1293,11 @@ namespace Epsitec.Common.Designer
 				}
 				else if (this.IsBundlesType)
 				{
-					string n = this.AddFilter(name, false);
 					foreach (ResourceBundle.Field field in this.primaryBundle.Fields)
 					{
 						if (field != null && field.Name != null)
 						{
-							err = ResourceAccess.CheckNames(field.Name, n);
+							err = ResourceAccess.CheckNames(field.Name, name);
 							if (err != null)
 							{
 								return err;
@@ -1451,11 +1443,11 @@ namespace Epsitec.Common.Designer
 		{
 			//	Renomme le ResourceBundle.Field.Name d'un champ, lorsque le nom du StructuredType a changé.
 			//	"Fld.InitialName.Champ1" devient "Fld.NewName.Champ1".
-			string name = this.SubFilter(bundle[druid].Name, true);
+			string name = bundle[druid].Name;
 			if (name.StartsWith(string.Concat(initialName, ".")))
 			{
 				name = name.Substring(initialName.Length, name.Length-initialName.Length);
-				name = this.AddFilter(string.Concat(newName, name), true);
+				name = string.Concat(newName, name);
 				bundle[druid].SetName(name);
 
 				//	TODO: adapter aussi Caption.Name !
@@ -1589,13 +1581,6 @@ namespace Epsitec.Common.Designer
 
 
 		#region Direct
-		public string DirectGetDisplayName(Druid druid)
-		{
-			//	Retourne le nom d'une ressource à afficher, sans tenir compte du filtre.
-			string name = this.DirectGetName(druid);
-			return ResourceAccess.SubAllFilter(name);
-		}
-
 		public string DirectGetName(Druid druid)
 		{
 			//	Retourne le nom d'une ressource, sans tenir compte du filtre.
@@ -1719,7 +1704,7 @@ namespace Epsitec.Common.Designer
 
 				if (fieldType == FieldType.Name)
 				{
-					return new Field(this.SubFilter(this.accessField.Name, false));
+					return new Field(this.accessField.Name);
 				}
 			}
 
@@ -1816,8 +1801,7 @@ namespace Epsitec.Common.Designer
 
 				if (fieldType == FieldType.Name)
 				{
-					string name = this.AddFilter(field.String, false);
-					this.accessField.SetName(name);
+					this.accessField.SetName(field.String);
 				}
 			}
 
@@ -2562,12 +2546,7 @@ namespace Epsitec.Common.Designer
 
 			foreach (ResourceBundle.Field field in this.primaryBundle.Fields)
 			{
-				if (!this.HasFixFilter(field.Name, false))
-				{
-					continue;
-				}
-
-				string name = this.SubFilter(field.Name, false);
+				string name = field.Name;
 
 				if (filter != "")
 				{
@@ -2619,7 +2598,7 @@ namespace Epsitec.Common.Designer
 
 			foreach (ResourceBundle bundle in this.panelsList)
 			{
-				string name = this.SubFilter(bundle.Caption, false);
+				string name = bundle.Caption;
 
 				if (filter != "")
 				{
@@ -3159,154 +3138,6 @@ namespace Epsitec.Common.Designer
 			}
 			return name;
 		}
-
-
-		#region FixFilter
-		protected string AddFilter(string name, bool bypass)
-		{
-			//	Ajoute le filtre fixe si nécessaire.
-			if (!this.HasFixFilter(name, bypass))
-			{
-				string fix = this.FixFilter(bypass);
-				if (fix == null)
-				{
-					return name;
-				}
-				else
-				{
-					return fix + name;
-				}
-			}
-
-			return name;
-		}
-
-		protected string SubFilter(string name, bool bypass)
-		{
-			//	Supprime le filtre fixe si nécessaire.
-			if (this.HasFixFilter(name, bypass))
-			{
-				string fix = this.FixFilter(bypass);
-				if (fix == null)
-				{
-					return name;
-				}
-				else
-				{
-					return name.Substring(fix.Length);
-				}
-			}
-
-			return name;
-		}
-
-		public static string SubAllFilter(string name)
-		{
-			//	Supprime tous les filtres fixes connus si nécessaire.
-			Type type = ResourceAccess.GetFilterType(name);
-
-			if (type != Type.Unknow)
-			{
-				string filter = ResourceAccess.GetFixFilter(type);
-				name = name.Substring(filter.Length);
-			}
-
-			return name;
-		}
-
-		protected static Type GetFilterType(string name)
-		{
-			//	Retourne le type en fonction du préfixe du nom.
-			string filter;
-
-			if (string.IsNullOrEmpty(name))
-			{
-				return Type.Unknow;
-			}
-
-			filter = ResourceAccess.GetFixFilter(Type.Captions);
-			if (name.StartsWith(filter))
-			{
-				return Type.Captions;
-			}
-
-			filter = ResourceAccess.GetFixFilter(Type.Fields);
-			if (name.StartsWith(filter))
-			{
-				return Type.Fields;
-			}
-
-			filter = ResourceAccess.GetFixFilter(Type.Commands);
-			if (name.StartsWith(filter))
-			{
-				return Type.Commands;
-			}
-
-			filter = ResourceAccess.GetFixFilter(Type.Types);
-			if (name.StartsWith(filter))
-			{
-				return Type.Types;
-			}
-
-			filter = ResourceAccess.GetFixFilter(Type.Values);
-			if (name.StartsWith(filter))
-			{
-				return Type.Values;
-			}
-
-			return Type.Unknow;
-		}
-
-		protected bool HasFixFilter(string name, bool bypass)
-		{
-			//	Indique si un nom commence par le filtre fixe.
-			string fix = this.FixFilter(bypass);
-			
-			if (fix == null)
-			{
-				return true;
-			}
-			else
-			{
-				//	TODO: code mort qui va devoir disparaître un jour; ajouté un hack ci-après pour que ça passe
-				if (name == null)
-				{
-					return false;
-				}
-				return name.StartsWith(fix);
-			}
-		}
-
-		protected string FixFilter(bool bypass)
-		{
-			//	Retourne la chaîne fixe du filtre.
-			return ResourceAccess.GetFixFilter(bypass ? this.bypassType : this.type);
-		}
-
-		protected static string GetFixFilter(Type type)
-		{
-			//	Retourne la chaîne fixe du filtre pour un type donné.
-			switch (type)
-			{
-				case Type.Captions:
-					return "Cap.";
-
-				case Type.Fields:
-					return "Fld.";
-
-				case Type.Commands:
-					return "Cmd.";
-
-				case Type.Types:
-					return "Typ.";
-
-				case Type.Values:
-					return "Val.";
-			}
-
-			return null;
-		}
-		#endregion
 
 
 		#region Class ShortcutItem

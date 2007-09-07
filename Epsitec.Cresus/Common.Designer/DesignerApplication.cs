@@ -1261,7 +1261,7 @@ namespace Epsitec.Common.Designer
 				ResourceAccess access = this.moduleInfoList[moduleRank].Module.GetAccess(viewerType);
 				if (access != null)
 				{
-					resourceText = access.DirectGetDisplayName(resource);
+					resourceText = access.DirectGetName(resource);
 				}
 			}
 
