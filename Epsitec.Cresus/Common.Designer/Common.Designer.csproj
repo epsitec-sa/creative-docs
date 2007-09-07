@@ -45,7 +45,6 @@
     <Compile Include="Controllers\BindingController.cs" />
     <Compile Include="Controllers\TableController.cs" />
     <Compile Include="Controllers\StructuredController.cs" />
-    <Compile Include="Controllers\DruidController.cs" />
     <Compile Include="Ribbons\Identity.cs" />
     <Compile Include="Settings.cs" />
     <Compile Include="Designer.cs" />
