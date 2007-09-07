@@ -129,9 +129,6 @@
     <Compile Include="ProxyManager.cs" />
     <Compile Include="UserInterface.cs" />
     <Compile Include="Viewers\Abstract.cs" />
-    <Compile Include="Viewers\Captions.cs" />
-    <Compile Include="Viewers\Commands.cs" />
-    <Compile Include="Viewers\AbstractCaptions.cs" />
     <Compile Include="Viewers\Abstract2.cs" />
     <Compile Include="Viewers\Captions2.cs" />
     <Compile Include="Viewers\Commands2.cs" />
@@ -142,12 +139,8 @@
     <Compile Include="Viewers\Entities.cs" />
     <Compile Include="Viewers\Strings2.cs" />
     <Compile Include="Viewers\Locator.cs" />
-    <Compile Include="Viewers\Fields.cs" />
-    <Compile Include="Viewers\Values.cs" />
-    <Compile Include="Viewers\Types.cs" />
     <Compile Include="Viewers\Scripts.cs" />
     <Compile Include="Viewers\Panels.cs" />
-    <Compile Include="Viewers\Strings.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common.Debug\Common.Debug.csproj">

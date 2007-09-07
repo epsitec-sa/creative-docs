@@ -804,7 +804,6 @@ namespace Epsitec.Common.Designer.Viewers
 			this.primaryCulture.Text = string.Format(Res.Strings.Viewers.Strings.Reference, Misc.CultureName(bundle.Culture));
 
 			Widget parent = this.CultureParentWidget;
-			bool isCaptions = !(parent is Strings);
 
 			List<string> list = this.access.GetSecondaryCultureNames();
 			if (list.Count > 0)
@@ -821,10 +820,7 @@ namespace Epsitec.Common.Designer.Viewers
 					this.secondaryCultures[i].Name = list[i];
 					this.secondaryCultures[i].Text = Misc.CultureName(bundle.Culture);
 					this.secondaryCultures[i].AutoFocus = false;
-					if (isCaptions)
-					{
-						this.secondaryCultures[i].Dock = DockStyle.Fill;
-					}
+					this.secondaryCultures[i].Dock = DockStyle.Fill;
 					this.secondaryCultures[i].Clicked += new MessageEventHandler(this.HandleSecondaryCultureClicked);
 					ToolTip.Default.SetToolTip(this.secondaryCultures[i], Misc.CultureLongName(bundle.Culture));
 				}
