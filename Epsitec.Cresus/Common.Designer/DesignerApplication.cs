@@ -89,7 +89,6 @@ namespace Epsitec.Common.Designer
 				this.dlgNewCulture                  = new Dialogs.NewCulture(this);
 				this.dlgResourceTypeCode            = new Dialogs.ResourceTypeCode(this);
 				this.dlgResourceSelector            = new Dialogs.ResourceSelector(this);
-				this.dlgResourceStructuredTypeField = new Dialogs.ResourceStructuredTypeField(this);
 				this.dlgBindingSelector             = new Dialogs.BindingSelector(this);
 				this.dlgFieldName                   = new Dialogs.ResourceName(this);
 				this.dlgEntityComment               = new Dialogs.EntityComment(this);
@@ -1923,14 +1922,6 @@ namespace Epsitec.Common.Designer
 			return this.dlgResourceSelector.AccessClose(out resource);
 		}
 
-		public string DlgResourceStructuredTypeField(StructuredType st, string field)
-		{
-			//	Ouvre le dialogue pour choisir un champ d'un type structuré.
-			this.dlgResourceStructuredTypeField.Initialise(st, field);
-			this.dlgResourceStructuredTypeField.Show();  // choix dans le dialogue...
-			return this.dlgResourceStructuredTypeField.SelectedField;
-		}
-
 		public string DlgIcon(ResourceManager manager, string icon)
 		{
 			//	Ouvre le dialogue pour choisir une icône.
@@ -2175,7 +2166,6 @@ namespace Epsitec.Common.Designer
 		protected Dialogs.NewCulture			dlgNewCulture;
 		protected Dialogs.ResourceTypeCode		dlgResourceTypeCode;
 		protected Dialogs.ResourceSelector		dlgResourceSelector;
-		protected Dialogs.ResourceStructuredTypeField dlgResourceStructuredTypeField;
 		protected Dialogs.BindingSelector		dlgBindingSelector;
 		protected Dialogs.ResourceName			dlgFieldName;
 		protected Dialogs.EntityComment			dlgEntityComment;

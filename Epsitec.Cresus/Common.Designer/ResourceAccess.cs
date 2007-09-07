@@ -434,6 +434,7 @@ namespace Epsitec.Common.Designer
 		public void AddShortcuts(List<ShortcutItem> list)
 		{
 			//	Ajoute tous les raccourcis définis dans la liste.
+			//	TODO:
 		}
 
 		public static void CheckShortcuts(System.Text.StringBuilder builder, List<ShortcutItem> list)
