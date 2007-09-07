@@ -276,7 +276,17 @@ namespace Epsitec.Common.Types
 			return list;
 		}
 
-		public static bool CompareEqual<T>(IList<T> a, IList<T> b) where T : System.IEquatable<T>
+		/// <summary>
+		/// Compares two collections for equality. All items in the collection
+		/// must compare equal (using their <c>IEquatable.Equals</c> method).
+		/// </summary>
+		/// <typeparam name="T">Type of the elements.</typeparam>
+		/// <param name="a">The first collection.</param>
+		/// <param name="b">The second collection.</param>
+		/// <returns>
+		/// 	<c>true</c> if both collections have an equal content; otherwise, <c>false</c>.
+		/// </returns>
+		public static bool CompareEqual<T>(ICollection<T> a, ICollection<T> b) where T : System.IEquatable<T>
 		{
 			if (a == b)
 			{
@@ -287,15 +297,66 @@ namespace Epsitec.Common.Types
 			{
 				return false;
 			}
-			if (a.Count != b.Count)
+			
+			int n = a.Count;
+			
+			if (n != b.Count)
 			{
 				return false;
 			}
 
-			for (int i = 0; i < a.Count; i++)
+			IEnumerable<T> enumerableA = a as IEnumerable<T>;
+			IEnumerable<T> enumerableB = b as IEnumerable<T>;
+
+			return Collection.CompareEqualNotChecked (enumerableA, enumerableB);
+		}
+
+		/// <summary>
+		/// Compares two collections for equality. All items in the collection
+		/// must compare equal (using their <c>IEquatable.Equals</c> method).
+		/// </summary>
+		/// <typeparam name="T">Type of the elements.</typeparam>
+		/// <param name="a">The first collection.</param>
+		/// <param name="b">The second collection.</param>
+		/// <returns>
+		/// 	<c>true</c> if both collections have an equal content; otherwise, <c>false</c>.
+		/// </returns>
+		public static bool CompareEqual<T>(IEnumerable<T> a, IEnumerable<T> b) where T : System.IEquatable<T>
+		{
+			if (a == b)
 			{
-				T value1 = a[i];
-				T value2 = b[i];
+				return true;
+			}
+			if ((a == null) ||
+				(b == null))
+			{
+				return false;
+			}
+
+			return Collection.CompareEqualNotChecked (a, b);
+		}
+
+		private static bool CompareEqualNotChecked<T>(IEnumerable<T> a, IEnumerable<T> b) where T : System.IEquatable<T>
+		{
+			IEnumerator<T> enumeratorA = a.GetEnumerator ();
+			IEnumerator<T> enumeratorB = b.GetEnumerator ();
+
+			while (true)
+			{
+				bool okA = enumeratorA.MoveNext ();
+				bool okB = enumeratorB.MoveNext ();
+
+				if (okA != okB)
+				{
+					return false;
+				}
+				if (okA == false)
+				{
+					return true;
+				}
+
+				T value1 = enumeratorA.Current;
+				T value2 = enumeratorB.Current;
 
 				if ((value1 == null) &&
 					(value2 == null))
@@ -311,8 +372,6 @@ namespace Epsitec.Common.Types
 					return false;
 				}
 			}
-
-			return true;
 		}
 	}
 }
