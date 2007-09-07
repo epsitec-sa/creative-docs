@@ -64,7 +64,7 @@ namespace Epsitec.Common.Designer
 			this.moduleInfo = moduleInfo;
 			this.designerApplication = designerApplication;
 
-			if (this.IsAbstract2)
+			if (this.IsBundlesType)
 			{
 				if (this.type == Type.Strings2)
 				{
@@ -395,16 +395,12 @@ namespace Epsitec.Common.Designer
 		public void Load()
 		{
 			//	Charge les ressources.
-			if (this.IsAbstract2)
+			if (this.IsBundlesType)
 			{
 				//?this.accessor.Load(this.resourceManager);
 				Support.ResourceAccessors.AbstractResourceAccessor a = this.accessor as Support.ResourceAccessors.AbstractResourceAccessor;
 				a.Load(this.resourceManager);
 				this.collectionView.MoveCurrentToFirst();
-			}
-
-			if (this.IsBundlesType)
-			{
 				this.LoadBundles();
 			}
 
@@ -572,7 +568,7 @@ namespace Epsitec.Common.Designer
 			EnumType et = null;
 			StructuredType st = null;
 
-			if (this.IsAbstract2)
+			if (this.IsBundlesType)
 			{
 				CultureMap newItem;
 				bool generateMissingValues = false;
@@ -774,16 +770,9 @@ namespace Epsitec.Common.Designer
 				}
 			}
 
-#if false
-			this.druidsIndex.Insert(this.accessIndex+1, newDruid);
-			this.accessIndex ++;
-			this.CacheClear();
-#else
 			this.druidsIndex.Add(newDruid);
 			this.Sort();
 			this.accessIndex = this.druidsIndex.IndexOf(newDruid);
-			this.CacheClear();
-#endif
 
 			this.SetGlobalDirty();
 		}
@@ -885,26 +874,12 @@ namespace Epsitec.Common.Designer
 		public void Delete()
 		{
 			//	Supprime la ressource courante dans toutes les cultures.
-			if (this.IsAbstract2)
+			if (this.IsBundlesType)
 			{
 				CultureMap item = this.collectionView.CurrentItem as CultureMap;
 				this.accessor.Collection.Remove(item);
 				this.SetLocalDirty();
 				return;
-			}
-
-			if (this.IsBundlesType)
-			{
-				Druid druid = this.druidsIndex[this.accessIndex];
-
-				foreach (ResourceBundle bundle in this.bundles)
-				{
-					int aIndex = bundle.IndexOf(druid);
-					if (aIndex >= 0)
-					{
-						bundle.Remove(aIndex);
-					}
-				}
 			}
 
 			if (this.type == Type.Panels)
@@ -932,48 +907,14 @@ namespace Epsitec.Common.Designer
 				this.accessIndex --;
 			}
 
-			this.CacheClear();
-
 			this.SetGlobalDirty();
 		}
-
-#if false
-		public void Move(int direction)
-		{
-			//	Déplace la ressource courante.
-			Druid druid = this.druidsIndex[this.accessIndex];
-			int aIndex = this.GetAbsoluteIndex(druid);
-			System.Diagnostics.Debug.Assert(aIndex != -1);
-
-			if (this.IsBundlesType)
-			{
-				ResourceBundle.Field field = this.primaryBundle[aIndex];
-				this.primaryBundle.Remove(aIndex);
-				this.primaryBundle.Insert(aIndex+direction, field);
-			}
-
-			if (this.type == Type.Panels)
-			{
-				ResourceBundle bundle = this.panelsList[aIndex];
-				this.panelsList.RemoveAt(aIndex);
-				this.panelsList.Insert(aIndex+direction, bundle);
-			}
-
-			this.druidsIndex[this.accessIndex] = this.druidsIndex[this.accessIndex+direction];
-			this.druidsIndex[this.accessIndex+direction] = druid;
-
-			this.accessIndex += direction;
-			this.CacheClear();
-
-			this.IsDirty = true;
-		}
-#endif
 
 
 		public void SetFilter(string filter, Searcher.SearchingMode mode)
 		{
 			//	Construit l'index en fonction des ressources primaires.
-			if (this.IsAbstract2)
+			if (this.IsBundlesType)
 			{
 				if (this.collectionViewFilter != filter || this.collectionViewMode != mode)
 				{
@@ -1045,8 +986,6 @@ namespace Epsitec.Common.Designer
 					index = 0;
 				}
 				this.accessIndex = index;
-
-				this.CacheClear();
 			}
 		}
 
@@ -1090,21 +1029,13 @@ namespace Epsitec.Common.Designer
 			//	Retourne le nombre de données accessibles.
 			get
 			{
-				if (this.IsAbstract2)
+				if (this.IsBundlesType)
 				{
 					return this.collectionView.Count;
 				}
-				else
+				else if (this.type == Type.Panels)
 				{
-					if (this.IsBundlesType)
-					{
-						return this.primaryBundle.FieldCount;
-					}
-
-					if (this.type == Type.Panels)
-					{
-						return this.panelsList.Count;
-					}
+					return this.panelsList.Count;
 				}
 
 				return 0;
@@ -1116,7 +1047,7 @@ namespace Epsitec.Common.Designer
 			//	Retourne le nombre de données accessibles.
 			get
 			{
-				if (this.IsAbstract2)
+				if (this.IsBundlesType)
 				{
 					return this.collectionView.Count;
 				}
@@ -1130,7 +1061,7 @@ namespace Epsitec.Common.Designer
 		public Druid AccessDruid(int index)
 		{
 			//	Retourne le druid d'un index donné.
-			if (this.IsAbstract2)
+			if (this.IsBundlesType)
 			{
 				CultureMap item = this.collectionView.Items[index] as CultureMap;
 				return item.Id;
@@ -1151,7 +1082,7 @@ namespace Epsitec.Common.Designer
 		public int AccessIndexOfDruid(Druid druid)
 		{
 			//	Retourne l'index d'un Druid.
-			if (this.IsAbstract2)
+			if (this.IsBundlesType)
 			{
 				for (int i=0; i<this.collectionView.Items.Count; i++)
 				{
@@ -1174,7 +1105,7 @@ namespace Epsitec.Common.Designer
 			//	Index de l'accès en cours.
 			get
 			{
-				if (this.IsAbstract2)
+				if (this.IsBundlesType)
 				{
 					return this.collectionView.CurrentPosition;
 				}
@@ -1186,7 +1117,7 @@ namespace Epsitec.Common.Designer
 
 			set
 			{
-				if (this.IsAbstract2)
+				if (this.IsBundlesType)
 				{
 					value = System.Math.Max(value, 0);
 					value = System.Math.Min(value, this.collectionView.Count-1);
@@ -1279,7 +1210,7 @@ namespace Epsitec.Common.Designer
 			}
 			else
 			{
-				if (this.IsAbstract2)
+				if (this.IsBundlesType)
 				{
 					CollectionView cv = new CollectionView(this.accessor.Collection);
 					foreach (CultureMap item in cv.Items)
@@ -1288,20 +1219,6 @@ namespace Epsitec.Common.Designer
 						if (err != null)
 						{
 							return err;
-						}
-					}
-				}
-				else if (this.IsBundlesType)
-				{
-					foreach (ResourceBundle.Field field in this.primaryBundle.Fields)
-					{
-						if (field != null && field.Name != null)
-						{
-							err = ResourceAccess.CheckNames(field.Name, name);
-							if (err != null)
-							{
-								return err;
-							}
 						}
 					}
 				}
@@ -1653,9 +1570,8 @@ namespace Epsitec.Common.Designer
 			//	redonner lors du SetField. Cela oblige à ne pas faire d'autres GetField
 			//	avant le SetField !
 			this.lastAccessField = fieldType;
-			this.CacheResource(index, cultureName);
 
-			if (this.IsAbstract2)
+			if (this.IsBundlesType)
 			{
 				CultureMap item = this.collectionView.Items[index] as CultureMap;
 
@@ -1695,19 +1611,6 @@ namespace Epsitec.Common.Designer
 				}
 			}
 
-			if (this.IsBundlesType)
-			{
-				if (this.accessField == null)
-				{
-					return null;
-				}
-
-				if (fieldType == FieldType.Name)
-				{
-					return new Field(this.accessField.Name);
-				}
-			}
-
 			if (this.type == Type.Panels)
 			{
 				ResourceBundle bundle = this.PanelBundle(index);
@@ -1734,9 +1637,7 @@ namespace Epsitec.Common.Designer
 		{
 			//	Modifie les données d'un champ.
 			//	Si cultureName est nul, on accède à la culture de base.
-			this.CacheResource(index, cultureName);
-
-			if (this.IsAbstract2)
+			if (this.IsBundlesType)
 			{
 				CultureMap item = this.collectionView.Items[index] as CultureMap;
 
@@ -1790,21 +1691,6 @@ namespace Epsitec.Common.Designer
 				return;
 			}
 
-			if (this.IsBundlesType)
-			{
-				if (this.accessField == null)
-				{
-					return;
-				}
-
-				this.CreateIfNecessary();
-
-				if (fieldType == FieldType.Name)
-				{
-					this.accessField.SetName(field.String);
-				}
-			}
-
 			if (this.type == Type.Panels)
 			{
 				ResourceBundle bundle = this.PanelBundle(index);
@@ -1826,15 +1712,6 @@ namespace Epsitec.Common.Designer
 			}
 
 			this.SetGlobalDirty();
-		}
-
-		protected AbstractType CachedAbstractType
-		{
-			//	Retourne le AbstractType correspondant au Caption dans le cache.
-			get
-			{
-				return ResourceAccess.GetAbstractType(this.accessCaption);
-			}
 		}
 
 		protected static AbstractType GetAbstractType(Caption caption)
@@ -1886,30 +1763,10 @@ namespace Epsitec.Common.Designer
 			//	Donne l'état 'modifié'.
 			if (index != -1)
 			{
-				this.CacheResource(index, cultureName);
-
-				if (this.IsAbstract2)
+				if (this.IsBundlesType)
 				{
 					CultureMap item = this.collectionView.Items[index] as CultureMap;
 					return this.GetModification(item, cultureName);
-				}
-				else if (this.IsBundlesType)
-				{
-					if (this.accessField == null || string.IsNullOrEmpty(this.accessField.AsString))
-					{
-						return ModificationState.Empty;
-					}
-
-					if (this.accessBundle != this.primaryBundle)  // culture secondaire ?
-					{
-						Druid druid = this.druidsIndex[index];
-						ResourceBundle.Field primaryField = this.primaryBundle[druid];
-
-						if (primaryField.ModificationId > this.accessField.ModificationId)
-						{
-							return ModificationState.Modified;
-						}
-					}
 				}
 			}
 
@@ -1919,7 +1776,7 @@ namespace Epsitec.Common.Designer
 		public ModificationState GetModification(CultureMap item, string cultureName)
 		{
 			//	Donne l'état 'modifié'.
-			if (this.IsAbstract2)
+			if (this.IsBundlesType)
 			{
 				if (cultureName == null)
 				{
@@ -1996,9 +1853,7 @@ namespace Epsitec.Common.Designer
 		public void ModificationClear(int index, string cultureName)
 		{
 			//	Considère une ressource comme 'à jour' dans une culture.
-			this.CacheResource(index, cultureName);
-
-			if (this.IsAbstract2)
+			if (this.IsBundlesType)
 			{
 				CultureMap item = this.collectionView.Items[index] as CultureMap;
 				StructuredData data = item.GetCultureData(cultureName);
@@ -2007,14 +1862,6 @@ namespace Epsitec.Common.Designer
 				int primaryValue = this.GetModificationId(primaryData);
 				data.SetValue(Support.Res.Fields.ResourceBase.ModificationId, primaryValue);
 			}
-			else if (this.IsBundlesType)
-			{
-				if (this.accessBundle != this.primaryBundle && !this.accessField.IsEmpty)
-				{
-					Druid druid = this.druidsIndex[index];
-					this.accessField.SetModificationId(this.primaryBundle[druid].ModificationId);
-				}
-			}
 
 			this.SetGlobalDirty();
 		}
@@ -2022,21 +1869,13 @@ namespace Epsitec.Common.Designer
 		public void ModificationSetAll(int index)
 		{
 			//	Considère une ressource comme 'modifiée' dans toutes les cultures.
-			if (this.IsAbstract2)
+			if (this.IsBundlesType)
 			{
 				CultureMap item = this.collectionView.Items[index] as CultureMap;
 				StructuredData primaryData = item.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
 
 				int value = this.GetModificationId(primaryData);
 				primaryData.SetValue(Support.Res.Fields.ResourceBase.ModificationId, value+1);
-			}
-			else if (this.IsBundlesType)
-			{
-				Druid druid = this.druidsIndex[index];
-				int id = this.primaryBundle[druid].ModificationId;
-				this.primaryBundle[druid].SetModificationId(id+1);
-
-				this.CacheClear();
 			}
 
 			this.SetGlobalDirty();
@@ -2045,7 +1884,7 @@ namespace Epsitec.Common.Designer
 		public bool IsModificationAll(int index)
 		{
 			//	Donne l'état de la commande ModificationAll.
-			if (this.IsAbstract2)
+			if (this.IsBundlesType)
 			{
 				CultureMap item = this.collectionView.Items[index] as CultureMap;
 				StructuredData primaryData = item.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
@@ -2064,23 +1903,6 @@ namespace Epsitec.Common.Designer
 					}
 				}
 				return (count != cultures.Count);
-			}
-			else if (this.IsBundlesType)
-			{
-				Druid druid = this.druidsIndex[index];
-				int id = this.primaryBundle[druid].ModificationId;
-				int count = 0;
-				foreach (ResourceBundle bundle in this.bundles)
-				{
-					if (bundle != this.primaryBundle)
-					{
-						if (bundle[druid].IsEmpty || bundle[druid].ModificationId < id)
-						{
-							count++;
-						}
-					}
-				}
-				return (count != this.bundles.Count-1);
 			}
 
 			return false;
@@ -2208,76 +2030,6 @@ namespace Epsitec.Common.Designer
 
 			cultureName = null;
 			fieldType = FieldType.None;
-		}
-
-
-		protected void CacheResource(int index, string cultureName)
-		{
-			//	Cache une ressource.
-			if (this.IsAbstract2)
-			{
-			}
-			else if (this.IsBundlesType)
-			{
-				if (this.accessCulture != cultureName)  // changement de culture ?
-				{
-					this.accessCulture = cultureName;
-					this.accessField = null;
-					this.accessCaption = null;
-
-					if (string.IsNullOrEmpty(this.accessCulture))  // culture de base ?
-					{
-						this.accessBundle = this.bundles[ResourceLevel.Default];
-					}
-					else
-					{
-						this.accessBundle = this.GetCultureBundle(this.accessCulture);
-					}
-				}
-
-				if (this.accessBundle == null || index < 0 || index >= this.druidsIndex.Count)
-				{
-					this.accessCached = -1;
-					return;
-				}
-
-				//	Met en cache le ResourceBundle.Field.
-				if (this.accessCached != index || this.accessField == null)
-				{
-					Druid druid = this.druidsIndex[index];
-					this.accessField = this.accessBundle[druid];
-				}
-			}
-
-			this.accessCached = index;
-		}
-
-		protected void CacheClear()
-		{
-			//	Vide le cache.
-			if (this.IsBundlesType)
-			{
-				this.accessCulture = "?";  // nom différent de null, d'une chaîne vide ou d'un nom existant
-				this.accessField = null;
-				this.accessCaption = null;
-				this.accessCached = -1;
-			}
-		}
-
-		protected void CreateIfNecessary()
-		{
-			//	Crée une ressource secondaire, si nécessaire.
-			if (this.accessBundle != this.primaryBundle && this.accessField.IsEmpty)
-			{
-				Druid druid = this.druidsIndex[this.accessIndex];
-				ResourceBundle.Field defaultField = this.primaryBundle[druid];
-				this.accessField = this.accessBundle.CreateField(ResourceFieldType.Data);
-				this.accessField.SetName(defaultField.Name);
-				this.accessField.SetDruid(druid);
-				this.accessField.SetModificationId(defaultField.ModificationId);
-
-				this.accessBundle.Add(this.accessField);
-			}
 		}
 
 
@@ -2690,12 +2442,10 @@ namespace Epsitec.Common.Designer
 			//	A partir d'une liste déjà triée, déplace un seul élément modifié pour qu'il
 			//	soit de nouveau trié. Si resortAll = true, trie toutes les ressources et retourne
 			//	le nouvel index du Druid.
-			if (this.IsAbstract2)
+			if (this.IsBundlesType)
 			{
 				return index;
 			}
-
-			this.CacheClear();
 
 			if (resortAll)
 			{
@@ -3102,15 +2852,6 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
-		protected bool IsAbstract2
-		{
-			//	Retourne true si on accède à des ressources de type nouveau.
-			get
-			{
-				return (this.type == Type.Strings2 || this.type == Type.Captions2 || this.type == Type.Commands2 || this.type == Type.Entities || this.type == Type.Types2 || this.type == Type.Fields2 || this.type == Type.Values2);
-			}
-		}
-
 		protected string BundleName(bool many)
 		{
 			//	Retourne un nom interne (pour Common.Support & Cie) en fonction du type.
@@ -3431,12 +3172,8 @@ namespace Epsitec.Common.Designer
 		protected ResourceBundleCollection					bundles;
 		protected ResourceBundle							primaryBundle;
 		protected List<Druid>								druidsIndex;
-		protected string									accessCulture;
 		protected ResourceBundle							accessBundle;
 		protected int										accessIndex;
-		protected int										accessCached;
-		protected ResourceBundle.Field						accessField;
-		protected Caption									accessCaption;
 		protected FieldType									lastAccessField = FieldType.None;
 		protected List<ResourceBundle>						panelsList;
 		protected List<ResourceBundle>						panelsToCreate;
