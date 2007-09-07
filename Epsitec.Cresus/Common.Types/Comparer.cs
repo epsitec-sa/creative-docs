@@ -72,6 +72,15 @@ namespace Epsitec.Common.Types
 				
 				return Comparer.Equal (a_array, b_array);
 			}
+
+			System.Collections.IEnumerable enumerableA = a as System.Collections.IEnumerable;
+			System.Collections.IEnumerable enumerableB = b as System.Collections.IEnumerable;
+
+			if ((enumerableA != null) &&
+				(enumerableB != null))
+			{
+				return Collection.CompareEqual (enumerableA, enumerableB);
+			}
 			
 			return a.Equals (b);
 		}

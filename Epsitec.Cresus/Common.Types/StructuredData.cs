@@ -7,7 +7,7 @@ namespace Epsitec.Common.Types
 {
 	using PropertyChangedEventHandler = Epsitec.Common.Support.EventHandler<DependencyPropertyChangedEventArgs>;
 	
-	public class StructuredData : IStructuredTypeProvider, IStructuredData
+	public class StructuredData : IStructuredTypeProvider, IStructuredData, System.IEquatable<StructuredData>
 	{
 		public StructuredData() : this (null)
 		{
@@ -158,6 +158,24 @@ namespace Epsitec.Common.Types
 			else
 			{
 				throw new System.InvalidOperationException ("StructuredType cannot be redefined");
+			}
+		}
+
+		public IEnumerable<KeyValuePair<string, object>> GetKeyValuePairs()
+		{
+			if (this.values != null)
+			{
+				foreach (string id in this.GetValueIds ())
+				{
+					object value = this.GetValue (id);
+
+					if (UndefinedValue.IsUndefinedValue (value))
+					{
+						continue;
+					}
+
+					yield return new KeyValuePair<string, object> (id, value);
+				}
 			}
 		}
 
@@ -381,6 +399,56 @@ namespace Epsitec.Common.Types
 
 		#endregion
 
+		#region IEquatable<StructuredData> Members
+
+		public bool Equals(StructuredData other)
+		{
+			if (other == null)
+			{
+				return false;
+			}
+
+			if (Collection.CompareEqual (this.GetKeyValuePairs (), other.GetKeyValuePairs (),
+				delegate (KeyValuePair<string, object> value1, KeyValuePair<string, object> value2)
+				{
+					if (value1.Key != value2.Key)
+					{
+						return 1;
+					}
+					if (value1.Value == value2.Value)
+					{
+						return 0;
+					}
+					if ((value1.Value == null) ||
+						(value2.Value == null))
+					{
+						return 1;
+					}
+					if (Comparer.Equal (value1.Value, value2.Value))
+					{
+						return 0;
+					}
+					else
+					{
+						return 1;
+					}
+				}))
+			{
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}
+
+		#endregion
+
+		public override bool Equals(object obj)
+		{
+			return this.Equals (obj as StructuredData);
+		}
+		
 		public object GetValue(Support.Druid id)
 		{
 			return this.GetValue (id.ToString ());

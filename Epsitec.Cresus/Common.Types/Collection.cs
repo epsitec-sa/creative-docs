@@ -336,7 +336,64 @@ namespace Epsitec.Common.Types
 			return Collection.CompareEqualNotChecked (a, b);
 		}
 
+		public static bool CompareEqual(System.Collections.IEnumerable a, System.Collections.IEnumerable b)
+		{
+			if (a == b)
+			{
+				return true;
+			}
+			if ((a == null) ||
+				(b == null))
+			{
+				return false;
+			}
+
+			return Collection.CompareEqualNotChecked (a, b);
+		}
+
+		/// <summary>
+		/// Compares two collections for equality. All items in the collection
+		/// must compare equal (using a provided comparison method).
+		/// </summary>
+		/// <typeparam name="T">Type of the elements.</typeparam>
+		/// <param name="a">The first collection.</param>
+		/// <param name="b">The second collection.</param>
+		/// <param name="comparison">The comparison method.</param>
+		/// <returns>
+		/// 	<c>true</c> if both collections have an equal content; otherwise, <c>false</c>.
+		/// </returns>
+		public static bool CompareEqual<T>(IEnumerable<T> a, IEnumerable<T> b, System.Comparison<T> comparison)
+		{
+			if (a == b)
+			{
+				return true;
+			}
+			if ((a == null) ||
+				(b == null))
+			{
+				return false;
+			}
+
+			return Collection.CompareEqualNotChecked (a, b, comparison);
+		}
+
 		private static bool CompareEqualNotChecked<T>(IEnumerable<T> a, IEnumerable<T> b) where T : System.IEquatable<T>
+		{
+			return Collection.CompareEqualNotChecked (a, b,
+				delegate (T value1, T value2)
+				{
+					if (value1.Equals (value2))
+					{
+						return 0;
+					}
+					else
+					{
+						return 1;
+					}
+				});
+		}
+
+		private static bool CompareEqualNotChecked<T>(IEnumerable<T> a, IEnumerable<T> b, System.Comparison<T> comparison)
 		{
 			IEnumerator<T> enumeratorA = a.GetEnumerator ();
 			IEnumerator<T> enumeratorB = b.GetEnumerator ();
@@ -367,11 +424,43 @@ namespace Epsitec.Common.Types
 				{
 					return false;
 				}
-				if (!value1.Equals (value2))
+
+				if (comparison (value1, value2) != 0)
 				{
 					return false;
 				}
 			}
+		}
+
+		private static bool CompareEqualNotChecked(System.Collections.IEnumerable a, System.Collections.IEnumerable b)
+		{
+			System.Collections.IEnumerator enumeratorA = a.GetEnumerator ();
+			System.Collections.IEnumerator enumeratorB = b.GetEnumerator ();
+
+			while (true)
+			{
+				bool okA = enumeratorA.MoveNext ();
+				bool okB = enumeratorB.MoveNext ();
+
+				if (okA != okB)
+				{
+					break;
+				}
+				if (okA == false)
+				{
+					return true;
+				}
+
+				object value1 = enumeratorA.Current;
+				object value2 = enumeratorB.Current;
+
+				if (!Comparer.Equal (value1, value2))
+				{
+					break;
+				}
+			}
+			
+			return false;
 		}
 	}
 }

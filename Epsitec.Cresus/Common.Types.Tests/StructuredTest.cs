@@ -79,6 +79,42 @@ namespace Epsitec.Common.Types
 		}
 
 		[Test]
+		public void CheckStructuredDataEquality()
+		{
+			StructuredData a = new StructuredData ();
+			StructuredData b = new StructuredData ();
+			StructuredData c = null;
+
+			Assert.IsTrue (a.Equals (b));
+			Assert.IsFalse (a.Equals (c));
+
+			a.SetValue ("x", 123);
+			a.SetValue ("y", 456);
+
+			Assert.IsFalse (a.Equals (b));
+
+			b.SetValue ("y", 456);
+			b.SetValue ("x", 123);
+			
+			Assert.IsTrue (a.Equals (b));
+
+			StructuredData x1 = new StructuredData ();
+			StructuredData x2 = new StructuredData ();
+
+			x1.SetValue ("A", 1);
+			x2.SetValue ("A", 1);
+
+			a.SetValue ("list", new List<StructuredData> (new StructuredData[] { x1 }));
+			b.SetValue ("list", new List<StructuredData> (new StructuredData[] { x2 }));
+
+			Assert.IsTrue (a.Equals (b));
+
+			a.SetValue ("u", UndefinedValue.Instance);
+
+			Assert.IsTrue (a.Equals (b));
+		}
+
+		[Test]
 		[ExpectedException (typeof (System.InvalidOperationException))]
 		public void CheckStrurctureDataEx1()
 		{

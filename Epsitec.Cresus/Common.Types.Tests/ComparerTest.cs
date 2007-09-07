@@ -1,4 +1,5 @@
 using NUnit.Framework;
+using System.Collections.Generic;
 
 namespace Epsitec.Common.Types
 {
@@ -114,6 +115,28 @@ namespace Epsitec.Common.Types
 			b = new string[2,3] { { "1", "2", "X" }, { "3", "4", "Y" } };
 			
 			Assert.IsFalse (Comparer.Equal (a, b));
+
+			System.Collections.ArrayList la = new System.Collections.ArrayList ();
+			System.Collections.ArrayList lb = new System.Collections.ArrayList ();
+
+			la.Add ("a");
+			la.Add ("b");
+			lb.Add ("a");
+
+			Assert.IsFalse (Comparer.Equal (la, lb));
+			Assert.IsTrue (Comparer.Equal (la, la));
+
+			lb.Add ("b");
+
+			Assert.IsTrue (Comparer.Equal (la, lb));
+			
+			a = new string[] { "a", "b" };
+			b = new string[] { "a", "b" };
+
+			la.Add (a);
+			lb.Add (b);
+			
+			Assert.IsTrue (Comparer.Equal (la, lb));
 		}
 	}
 }
