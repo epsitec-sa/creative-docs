@@ -434,12 +434,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 			//	Indique s'il s'agit d'une énumération native.
 			get
 			{
-#if true
-				//	TODO: le résultat rendu avec les énumérations existantes de Common.Types est faux !!!
 				System.Type systemType = this.structuredData.GetValue(Support.Res.Fields.ResourceEnumType.SystemType) as System.Type;
-				object value = this.structuredData.GetValue(Support.Res.Fields.ResourceEnumType.SystemType);
-				if ((systemType == null) ||
-					(systemType == typeof (NotAnEnum)))
+				if (systemType == null || systemType == typeof(NotAnEnum))
 				{
 					return false;
 				}
@@ -447,10 +443,6 @@ namespace Epsitec.Common.Designer.MyWidgets
 				{
 					return true;
 				}
-#else
-				EnumType type = this.AbstractType as EnumType;
-				return type.IsNativeEnum;
-#endif
 			}
 		}
 
