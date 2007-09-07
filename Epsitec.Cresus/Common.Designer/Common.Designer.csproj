@@ -75,7 +75,6 @@
     <Compile Include="MyWidgets\TypeEditorBinary.cs" />
     <Compile Include="MyWidgets\TypeEditorDateTime.cs" />
     <Compile Include="MyWidgets\TextFieldExName.cs" />
-    <Compile Include="MyWidgets\TypeEditorStructured.cs" />
     <Compile Include="MyWidgets\TypeEditorEnum.cs" />
     <Compile Include="MyWidgets\TypeEditorString.cs" />
     <Compile Include="MyWidgets\TypeEditorNumeric.cs" />
