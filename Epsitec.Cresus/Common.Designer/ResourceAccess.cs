@@ -15,14 +15,12 @@ namespace Epsitec.Common.Designer
 		public enum Type
 		{
 			Unknow,
-			Strings2,
-			Captions2,
+			Strings,
+			Captions,
 			Fields,
-			Fields2,
-			Commands2,
+			Commands,
 			Types,
-			Types2,
-			Values2,
+			Values,
 			Panels,
 			Scripts,
 			Entities,
@@ -66,15 +64,15 @@ namespace Epsitec.Common.Designer
 
 			if (this.IsBundlesType)
 			{
-				if (this.type == Type.Strings2)
+				if (this.type == Type.Strings)
 				{
 					this.accessor = new Support.ResourceAccessors.StringResourceAccessor();
 				}
-				if (this.type == Type.Captions2)
+				if (this.type == Type.Captions)
 				{
 					this.accessor = new Support.ResourceAccessors.CaptionResourceAccessor();
 				}
-				if (this.type == Type.Commands2)
+				if (this.type == Type.Commands)
 				{
 					this.accessor = new Support.ResourceAccessors.CommandResourceAccessor();
 				}
@@ -82,16 +80,16 @@ namespace Epsitec.Common.Designer
 				{
 					this.accessor = new Support.ResourceAccessors.StructuredTypeResourceAccessor();
 				}
-				if (this.type == Type.Types2)
+				if (this.type == Type.Types)
 				{
 					this.accessor = new Support.ResourceAccessors.AnyTypeResourceAccessor();
 				}
-				if (this.type == Type.Fields2)
+				if (this.type == Type.Fields)
 				{
 					Support.ResourceAccessors.StructuredTypeResourceAccessor typeAccessor = module.AccessEntities.accessor as Support.ResourceAccessors.StructuredTypeResourceAccessor;
 					this.accessor = typeAccessor.FieldAccessor;
 				}
-				if (this.type == Type.Values2)
+				if (this.type == Type.Values)
 				{
 					Support.ResourceAccessors.AnyTypeResourceAccessor typeAccessor = module.AccessTypes2.accessor as Support.ResourceAccessors.AnyTypeResourceAccessor;
 					this.accessor = typeAccessor.ValueAccessor;
@@ -194,22 +192,22 @@ namespace Epsitec.Common.Designer
 			//	Retourne le nom au singulier ou au pluriel correspondant à un type.
 			switch (type)
 			{
-				case Type.Strings2:
+				case Type.Strings:
 					return many ? Res.Strings.BundleType.Strings : Res.Strings.BundleType.String;
 
-				case Type.Captions2:
+				case Type.Captions:
 					return many ? Res.Strings.BundleType.Captions : Res.Strings.BundleType.Caption;
 
-				case Type.Fields2:
+				case Type.Fields:
 					return many ? Res.Strings.BundleType.Fields : Res.Strings.BundleType.Field;
 
-				case Type.Commands2:
+				case Type.Commands:
 					return many ? Res.Strings.BundleType.Commands : Res.Strings.BundleType.Command;
 
-				case Type.Types2:
+				case Type.Types:
 					return many ? Res.Strings.BundleType.Types : Res.Strings.BundleType.Type;
 
-				case Type.Values2:
+				case Type.Values:
 					return many ? Res.Strings.BundleType.Values : Res.Strings.BundleType.Value;
 
 				case Type.Panels:
@@ -573,7 +571,7 @@ namespace Epsitec.Common.Designer
 				CultureMap newItem;
 				bool generateMissingValues = false;
 
-				if (this.type == Type.Types2 && !duplicateContent)
+				if (this.type == Type.Types && !duplicateContent)
 				{
 					TypeCode code = this.lastTypeCodeCreatated;
 					this.designerApplication.DlgResourceTypeCode(this, ref code, out this.lastTypeCodeSystem);
@@ -1795,7 +1793,7 @@ namespace Epsitec.Common.Designer
 					return ModificationState.Empty;
 				}
 
-				if (this.type == Type.Strings2)
+				if (this.type == Type.Strings)
 				{
 					string text = data.GetValue(Support.Res.Fields.ResourceString.Text) as string;
 					if (string.IsNullOrEmpty(text))
@@ -1804,7 +1802,7 @@ namespace Epsitec.Common.Designer
 					}
 				}
 
-				if (this.type == Type.Captions2 || this.type == Type.Commands2 || this.type == Type.Types2 || this.type == Type.Fields2 || this.type == Type.Values2)
+				if (this.type == Type.Captions || this.type == Type.Commands || this.type == Type.Types || this.type == Type.Fields || this.type == Type.Values)
 				{
 					IList<string> labels = data.GetValue(Support.Res.Fields.ResourceCaption.Labels) as IList<string>;
 					string text = data.GetValue(Support.Res.Fields.ResourceCaption.Description) as string;
@@ -1933,7 +1931,7 @@ namespace Epsitec.Common.Designer
 		public void SearcherIndexToAccess(int field, string secondaryCulture, out string cultureName, out FieldType fieldType)
 		{
 			//	Conversion d'un index de champ (0..n) en l'information nécessaire pour Get/SetField.
-			if (this.type == Type.Strings2)
+			if (this.type == Type.Strings)
 			{
 				switch (field)
 				{
@@ -1970,7 +1968,7 @@ namespace Epsitec.Common.Designer
 				}
 			}
 
-			if (this.type == Type.Captions2 || this.type == Type.Commands2 || this.type == Type.Types2 || this.type == Type.Fields2 || this.type == Type.Values2)
+			if (this.type == Type.Captions || this.type == Type.Commands || this.type == Type.Types || this.type == Type.Fields || this.type == Type.Values)
 			{
 				switch (field)
 				{
@@ -2848,7 +2846,7 @@ namespace Epsitec.Common.Designer
 			//	"un bundle par culture, plusieurs ressources par bundle".
 			get
 			{
-				return (this.type == Type.Strings2 || this.type == Type.Captions2 || this.type == Type.Commands2 || this.type == Type.Entities || this.type == Type.Types2 || this.type == Type.Fields2 || this.type == Type.Values2);
+				return (this.type == Type.Strings || this.type == Type.Captions || this.type == Type.Commands || this.type == Type.Entities || this.type == Type.Types || this.type == Type.Fields || this.type == Type.Values);
 			}
 		}
 
@@ -2857,7 +2855,7 @@ namespace Epsitec.Common.Designer
 			//	Retourne un nom interne (pour Common.Support & Cie) en fonction du type.
 			switch (this.type)
 			{
-				case Type.Strings2:
+				case Type.Strings:
 					return many ? "Strings" : "String";
 
 				case Type.Panels:
@@ -3161,7 +3159,6 @@ namespace Epsitec.Common.Designer
 		protected bool										isLocalDirty = false;
 		protected bool										isJustLoaded = false;
 
-		//?protected Support.ResourceAccessors.AbstractResourceAccessor accessor;
 		protected IResourceAccessor							accessor;
 		protected CollectionView							collectionView;
 		protected Searcher.SearchingMode					collectionViewMode;
@@ -3172,7 +3169,6 @@ namespace Epsitec.Common.Designer
 		protected ResourceBundleCollection					bundles;
 		protected ResourceBundle							primaryBundle;
 		protected List<Druid>								druidsIndex;
-		protected ResourceBundle							accessBundle;
 		protected int										accessIndex;
 		protected FieldType									lastAccessField = FieldType.None;
 		protected List<ResourceBundle>						panelsList;

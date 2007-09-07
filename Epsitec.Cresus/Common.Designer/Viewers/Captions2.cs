@@ -31,7 +31,7 @@ namespace Epsitec.Common.Designer.Viewers
 		{
 			get
 			{
-				return ResourceAccess.Type.Captions2;
+				return ResourceAccess.Type.Captions;
 			}
 		}
 	}

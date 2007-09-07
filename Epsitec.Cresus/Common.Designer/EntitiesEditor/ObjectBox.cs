@@ -1178,7 +1178,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 			if (module != null)
 			{
-				this.editor.Module.DesignerApplication.LocatorGoto(module.ModuleInfo.Name, ResourceAccess.Type.Fields2, -1, fieldCaptionId, null);
+				this.editor.Module.DesignerApplication.LocatorGoto(module.ModuleInfo.Name, ResourceAccess.Type.Fields, -1, fieldCaptionId, null);
 			}
 		}
 
@@ -1196,7 +1196,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 			if (module != null)
 			{
-				ResourceAccess.Type access = (rel == FieldRelation.None) ? ResourceAccess.Type.Types2 : ResourceAccess.Type.Entities;
+				ResourceAccess.Type access = (rel == FieldRelation.None) ? ResourceAccess.Type.Types : ResourceAccess.Type.Entities;
 				this.editor.Module.DesignerApplication.LocatorGoto(module.ModuleInfo.Name, access, -1, typeId, null);
 			}
 		}
@@ -1346,7 +1346,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			Druid druid = (Druid) dataField.GetValue(Support.Res.Fields.Field.TypeId);
 
 			Module module = this.editor.Module;
-			Common.Dialogs.DialogResult result = module.DesignerApplication.DlgResourceSelector(Dialogs.ResourceSelector.Operation.TypesOrEntities, module, ResourceAccess.Type.Types2, ref druid, null);
+			Common.Dialogs.DialogResult result = module.DesignerApplication.DlgResourceSelector(Dialogs.ResourceSelector.Operation.TypesOrEntities, module, ResourceAccess.Type.Types, ref druid, null);
 			if (result != Common.Dialogs.DialogResult.Yes)
 			{
 				return;

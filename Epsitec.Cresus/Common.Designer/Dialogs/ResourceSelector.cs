@@ -171,7 +171,7 @@ namespace Epsitec.Common.Designer.Dialogs
 		{
 			//	Début de l'accès aux ressources pour le dialogue.
 			//	Le type peut être inconnu ou la ressource inconnue, mais pas les deux.
-			System.Diagnostics.Debug.Assert(type == ResourceAccess.Type.Unknow || type == ResourceAccess.Type.Captions2 || type == ResourceAccess.Type.Fields2 || type == ResourceAccess.Type.Commands2 || type == ResourceAccess.Type.Types2 || type == ResourceAccess.Type.Entities || type == ResourceAccess.Type.Panels);
+			System.Diagnostics.Debug.Assert(type == ResourceAccess.Type.Unknow || type == ResourceAccess.Type.Captions || type == ResourceAccess.Type.Fields || type == ResourceAccess.Type.Commands || type == ResourceAccess.Type.Types || type == ResourceAccess.Type.Entities || type == ResourceAccess.Type.Panels);
 			System.Diagnostics.Debug.Assert(resource.Type != Common.Support.DruidType.ModuleRelative);
 
 			this.operation = operation;
@@ -234,7 +234,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				int totalTypes = this.module.AccessTypes2.Accessor.Collection.Count;
 				int totalEntities = this.module.AccessEntities.Accessor.Collection.Count;
 
-				if (this.resourceType == ResourceAccess.Type.Types2 && totalTypes == 0 && totalEntities > 0)
+				if (this.resourceType == ResourceAccess.Type.Types && totalTypes == 0 && totalEntities > 0)
 				{
 					this.resourceType = ResourceAccess.Type.Entities;
 					this.UpdateAccess();
@@ -243,7 +243,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 				if (this.resourceType == ResourceAccess.Type.Entities && totalEntities == 0 && totalTypes > 0)
 				{
-					this.resourceType = ResourceAccess.Type.Types2;
+					this.resourceType = ResourceAccess.Type.Types;
 					this.UpdateAccess();
 					return true;
 				}
@@ -357,7 +357,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 				this.buttonUse.Text = Res.Strings.Dialog.ResourceSelector.Button.Use;
 
-				this.radioTypes.ActiveState = (this.resourceType == ResourceAccess.Type.Types2) ? ActiveState.Yes : ActiveState.No;
+				this.radioTypes.ActiveState = (this.resourceType == ResourceAccess.Type.Types) ? ActiveState.Yes : ActiveState.No;
 				this.radioEntities.ActiveState = (this.resourceType == ResourceAccess.Type.Entities) ? ActiveState.Yes : ActiveState.No;
 			}
 			else if (this.operation == Operation.InheritEntity)
@@ -441,7 +441,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 			if (button.Name == "Types")
 			{
-				this.resourceType = ResourceAccess.Type.Types2;
+				this.resourceType = ResourceAccess.Type.Types;
 				this.UpdateAccess();
 				this.UpdateTitle();
 				this.UpdateArray();

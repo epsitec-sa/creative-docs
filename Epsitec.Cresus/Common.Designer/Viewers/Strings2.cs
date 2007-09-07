@@ -109,7 +109,7 @@ namespace Epsitec.Common.Designer.Viewers
 		{
 			get
 			{
-				return ResourceAccess.Type.Strings2;
+				return ResourceAccess.Type.Strings;
 			}
 		}
 

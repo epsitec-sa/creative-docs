@@ -158,7 +158,7 @@ namespace Epsitec.Common.Designer.Viewers
 		{
 			get
 			{
-				return ResourceAccess.Type.Commands2;
+				return ResourceAccess.Type.Commands;
 			}
 		}
 

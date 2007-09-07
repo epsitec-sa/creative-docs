@@ -24,21 +24,21 @@ namespace Epsitec.Common.Designer
 
 			this.modifier = new Modifier(this);
 
-			this.accessStrings2  = new ResourceAccess(ResourceAccess.Type.Strings2,  this, this.moduleInfo, this.designerApplication);
-			this.accessCaptions2 = new ResourceAccess(ResourceAccess.Type.Captions2, this, this.moduleInfo, this.designerApplication);
-			this.accessCommands2 = new ResourceAccess(ResourceAccess.Type.Commands2, this, this.moduleInfo, this.designerApplication);
+			this.accessStrings2  = new ResourceAccess(ResourceAccess.Type.Strings,  this, this.moduleInfo, this.designerApplication);
+			this.accessCaptions2 = new ResourceAccess(ResourceAccess.Type.Captions, this, this.moduleInfo, this.designerApplication);
+			this.accessCommands2 = new ResourceAccess(ResourceAccess.Type.Commands, this, this.moduleInfo, this.designerApplication);
 			this.accessPanels    = new ResourceAccess(ResourceAccess.Type.Panels,    this, this.moduleInfo, this.designerApplication);
 			this.accessScripts   = new ResourceAccess(ResourceAccess.Type.Scripts,   this, this.moduleInfo, this.designerApplication);
 			this.accessEntities  = new ResourceAccess(ResourceAccess.Type.Entities,  this, this.moduleInfo, this.designerApplication);
-			this.accessTypes2    = new ResourceAccess(ResourceAccess.Type.Types2,    this, this.moduleInfo, this.designerApplication);
+			this.accessTypes2    = new ResourceAccess(ResourceAccess.Type.Types,    this, this.moduleInfo, this.designerApplication);
 			this.Load();
 
 			//	Attention: il faut avoir fait le this.accessEntities.Load() avant de créer this.accessFields2 !
-			this.accessFields2   = new ResourceAccess(ResourceAccess.Type.Fields2,   this, this.moduleInfo, this.designerApplication);
+			this.accessFields2   = new ResourceAccess(ResourceAccess.Type.Fields,   this, this.moduleInfo, this.designerApplication);
 			this.accessFields2.Load();
 
 			//	Attention: il faut avoir fait le this.accessTypes2.Load() avant de créer this.accessValues2 !
-			this.accessValues2   = new ResourceAccess(ResourceAccess.Type.Values2,   this, this.moduleInfo, this.designerApplication);
+			this.accessValues2   = new ResourceAccess(ResourceAccess.Type.Values,   this, this.moduleInfo, this.designerApplication);
 			this.accessValues2.Load();
 
 			foreach (ResourceAccess access in Access)
@@ -179,13 +179,13 @@ namespace Epsitec.Common.Designer
 			//	Cherche un accès d'après son type.
 			switch (type)
 			{
-				case ResourceAccess.Type.Strings2:
+				case ResourceAccess.Type.Strings:
 					return this.accessStrings2;
 
-				case ResourceAccess.Type.Captions2:
+				case ResourceAccess.Type.Captions:
 					return this.accessCaptions2;
 
-				case ResourceAccess.Type.Commands2:
+				case ResourceAccess.Type.Commands:
 					return this.accessCommands2;
 
 				case ResourceAccess.Type.Panels:
@@ -197,13 +197,13 @@ namespace Epsitec.Common.Designer
 				case ResourceAccess.Type.Entities:
 					return this.accessEntities;
 
-				case ResourceAccess.Type.Fields2:
+				case ResourceAccess.Type.Fields:
 					return this.accessFields2;
 
-				case ResourceAccess.Type.Values2:
+				case ResourceAccess.Type.Values:
 					return this.accessValues2;
 
-				case ResourceAccess.Type.Types2:
+				case ResourceAccess.Type.Types:
 					return this.accessTypes2;
 			}
 

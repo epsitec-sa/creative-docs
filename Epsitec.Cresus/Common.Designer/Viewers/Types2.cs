@@ -81,7 +81,7 @@ namespace Epsitec.Common.Designer.Viewers
 		{
 			get
 			{
-				return ResourceAccess.Type.Types2;
+				return ResourceAccess.Type.Types;
 			}
 		}
 

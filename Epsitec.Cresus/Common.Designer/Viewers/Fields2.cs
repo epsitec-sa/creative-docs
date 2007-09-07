@@ -31,7 +31,7 @@ namespace Epsitec.Common.Designer.Viewers
 		{
 			get
 			{
-				return ResourceAccess.Type.Fields2;
+				return ResourceAccess.Type.Fields;
 			}
 		}
 

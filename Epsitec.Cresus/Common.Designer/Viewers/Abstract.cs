@@ -39,12 +39,12 @@ namespace Epsitec.Common.Designer.Viewers
 		public static Abstract Create(ResourceAccess.Type type, Module module, PanelsContext context, ResourceAccess access, DesignerApplication designerApplication)
 		{
 			//	Crée un Viewer d'un type donné.
-			if (type == ResourceAccess.Type.Strings2)  return new Strings2(module, context, access, designerApplication);
-			if (type == ResourceAccess.Type.Captions2)  return new Captions2(module, context, access, designerApplication);
-			if (type == ResourceAccess.Type.Fields2)  return new Fields2(module, context, access, designerApplication);
-			if (type == ResourceAccess.Type.Commands2)  return new Commands2(module, context, access, designerApplication);
-			if (type == ResourceAccess.Type.Types2)  return new Types2(module, context, access, designerApplication);
-			if (type == ResourceAccess.Type.Values2)  return new Values2(module, context, access, designerApplication);
+			if (type == ResourceAccess.Type.Strings)  return new Strings2(module, context, access, designerApplication);
+			if (type == ResourceAccess.Type.Captions)  return new Captions2(module, context, access, designerApplication);
+			if (type == ResourceAccess.Type.Fields)  return new Fields2(module, context, access, designerApplication);
+			if (type == ResourceAccess.Type.Commands)  return new Commands2(module, context, access, designerApplication);
+			if (type == ResourceAccess.Type.Types)  return new Types2(module, context, access, designerApplication);
+			if (type == ResourceAccess.Type.Values)  return new Values2(module, context, access, designerApplication);
 			if (type == ResourceAccess.Type.Panels)  return new Panels(module, context, access, designerApplication);
 			if (type == ResourceAccess.Type.Scripts)  return new Scripts(module, context, access, designerApplication);
 			if (type == ResourceAccess.Type.Entities)  return new Entities(module, context, access, designerApplication);
@@ -1214,37 +1214,10 @@ namespace Epsitec.Common.Designer.Viewers
 
 			this.access.SetField(sel, null, ResourceAccess.FieldType.Name, new ResourceAccess.Field(editedName));
 
-			ResourceAccess.Field field = this.access.GetField(sel, null, ResourceAccess.FieldType.AbstractType);
-			if (field != null)
-			{
-				Common.Types.AbstractType type = field.AbstractType;
-				TypeCode typeCode = ResourceAccess.AbstractTypeToTypeCode(type);
-				if (typeCode == TypeCode.Structured)
-				{
-					this.RenameStructuredFields(initialName, editedName);
-				}
-			}
-			
 			sel = this.access.SortUndefer(sel);
 			this.access.AccessIndex = this.access.Sort(sel, false);
 			this.UpdateArray();
 			this.ShowSelectedRow();
-		}
-
-		protected void RenameStructuredFields(string initialName, string newName)
-		{
-			//	Renomme tous les ResourceBundle.Field.Name des champs d'un StructuredType.
-			ResourceAccess access = this.module.AccessCaptions;
-			access.BypassFilterOpenAccess(ResourceAccess.Type.Fields, TypeCode.Invalid, null, null);
-			ResourceBundle bundle = access.GetCultureBundle(null);
-			int count = access.BypassFilterCount;
-			for (int i=0; i<count; i++)
-			{
-				Druid druid = access.BypassFilterGetDruid(i);
-				System.Diagnostics.Debug.Assert(druid.IsValid);
-				access.BypassFilterRenameStructuredField(druid, bundle, initialName, newName);
-			}
-			access.BypassFilterCloseAccess();
 		}
 
 		protected void UpdateArrayField(int column, int row, string culture, ResourceAccess.FieldType fieldType)
@@ -1312,12 +1285,12 @@ namespace Epsitec.Common.Designer.Viewers
 			//	Crée le contenu du groupe 'filtre'.
 			switch (type)
 			{
-				case ResourceAccess.Type.Strings2:
+				case ResourceAccess.Type.Strings:
 					Strings2.SearchCreateFilterGroup(parent, handler);
 					break;
 
-				case ResourceAccess.Type.Captions2:
-				case ResourceAccess.Type.Commands2:
+				case ResourceAccess.Type.Captions:
+				case ResourceAccess.Type.Commands:
 					Captions2.SearchCreateFilterGroup(parent, handler);
 					break;
 			}

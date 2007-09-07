@@ -84,7 +84,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.groupStrings.TabIndex = tabIndex++;
 				this.groupStrings.TabNavigationMode = TabNavigationMode.ForwardTabPassive;
 
-				Viewers.Abstract.SearchCreateFilterGroup(this.groupStrings, this.HandleCheckActiveStateChanged, ResourceAccess.Type.Strings2);
+				Viewers.Abstract.SearchCreateFilterGroup(this.groupStrings, this.HandleCheckActiveStateChanged, ResourceAccess.Type.Strings);
 
 				//	Crée le groupe pour le type 'Captions2'.
 				this.groupCaptions = new GroupBox(left);
@@ -96,7 +96,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.groupCaptions.TabIndex = tabIndex++;
 				this.groupCaptions.TabNavigationMode = TabNavigationMode.ForwardTabPassive;
 
-				Viewers.Abstract.SearchCreateFilterGroup(this.groupCaptions, this.HandleCheckActiveStateChanged, ResourceAccess.Type.Captions2);
+				Viewers.Abstract.SearchCreateFilterGroup(this.groupCaptions, this.HandleCheckActiveStateChanged, ResourceAccess.Type.Captions);
 
 				//	Boutons à cocher de droite.
 				Widget right = new Widget(main);
@@ -259,13 +259,13 @@ namespace Epsitec.Common.Designer.Dialogs
 			//	Retourne la liste des index autorisés par le filtre.
 			get
 			{
-				if (this.bundleType == ResourceAccess.Type.Strings2)
+				if (this.bundleType == ResourceAccess.Type.Strings)
 				{
-					return Viewers.Abstract.SearchGetFilterGroup(this.groupStrings, ResourceAccess.Type.Strings2);
+					return Viewers.Abstract.SearchGetFilterGroup(this.groupStrings, ResourceAccess.Type.Strings);
 				}
-				else if (this.bundleType == ResourceAccess.Type.Captions2 || this.bundleType == ResourceAccess.Type.Commands2)
+				else if (this.bundleType == ResourceAccess.Type.Captions || this.bundleType == ResourceAccess.Type.Commands)
 				{
-					return Viewers.Abstract.SearchGetFilterGroup(this.groupCaptions, ResourceAccess.Type.Captions2);
+					return Viewers.Abstract.SearchGetFilterGroup(this.groupCaptions, ResourceAccess.Type.Captions);
 				}
 				else
 				{
@@ -314,8 +314,8 @@ namespace Epsitec.Common.Designer.Dialogs
 		{
 			if (this.window != null)
 			{
-				this.groupStrings.Visibility = (this.bundleType == ResourceAccess.Type.Strings2);
-				this.groupCaptions.Visibility = (this.bundleType == ResourceAccess.Type.Captions2 || this.bundleType == ResourceAccess.Type.Commands2);
+				this.groupStrings.Visibility = (this.bundleType == ResourceAccess.Type.Strings);
+				this.groupCaptions.Visibility = (this.bundleType == ResourceAccess.Type.Captions || this.bundleType == ResourceAccess.Type.Commands);
 			}
 		}
 

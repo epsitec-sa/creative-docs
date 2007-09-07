@@ -1647,7 +1647,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				ObjectModifier.ObjectType oType = ObjectModifier.GetObjectType(obj);
 				if (oType == ObjectModifier.ObjectType.Button)
 				{
-					type = ResourceAccess.Type.Commands2;
+					type = ResourceAccess.Type.Commands;
 				}
 				else if (oType == ObjectModifier.ObjectType.SubPanel)
 				{
@@ -1658,7 +1658,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				}
 				else
 				{
-					type = ResourceAccess.Type.Captions2;
+					type = ResourceAccess.Type.Captions;
 				}
 
 				Druid druid = Druid.Parse(ObjectModifier.GetDruid(obj));
