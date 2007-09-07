@@ -429,6 +429,14 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			}
 		}
 
+		/// <summary>
+		/// Computes the difference between a raw data record and a reference
+		/// data record and fills the patch data record with the resulting
+		/// delta.
+		/// </summary>
+		/// <param name="rawData">The raw data record.</param>
+		/// <param name="refData">The reference data record.</param>
+		/// <param name="patchData">The patch data, which will be filled with the delta.</param>
 		protected abstract void ComputeDataDelta(StructuredData rawData, StructuredData refData, StructuredData patchData);
 		
 		private StructuredData CreateStructuredData(CultureMap item, ResourceBundle bundle, ResourceBundle.Field field, DataCreationMode mode)
@@ -446,89 +454,6 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			return data;
 		}
 
-		protected virtual StructuredData ComputeMergedData(StructuredData a, StructuredData b)
-		{
-			StructuredData data = this.CreateStructuredData ();
-
-			string        aDesc   = a.GetValue (Res.Fields.ResourceCaption.Description) as string;
-			string        aIcon   = a.GetValue (Res.Fields.ResourceCaption.Icon) as string;
-			IList<string> aLabels = a.GetValue (Res.Fields.ResourceCaption.Labels) as IList<string>;
-
-			string        bDesc   = b.GetValue (Res.Fields.ResourceCaption.Description) as string;
-			string        bIcon   = b.GetValue (Res.Fields.ResourceCaption.Icon) as string;
-			IList<string> bLabels = b.GetValue (Res.Fields.ResourceCaption.Labels) as IList<string>;
-
-			if (ResourceBundle.Field.IsNullString (aDesc))
-			{
-				aDesc = null;
-			}
-			if (ResourceBundle.Field.IsNullString (aIcon))
-			{
-				aIcon = null;
-			}
-			
-			if (ResourceBundle.Field.IsNullString (bDesc))
-			{
-				bDesc = null;
-			}
-			if (ResourceBundle.Field.IsNullString (bIcon))
-			{
-				bIcon = null;
-			}
-
-			string       cDesc   = bDesc ?? aDesc;
-			string       cIcon   = bIcon ?? aIcon;
-			List<string> cLabels = new List<string> ();
-
-			foreach (string text in aLabels)
-			{
-				if (ResourceBundle.Field.IsNullString (text))
-				{
-					cLabels.Add (null);
-				}
-				else
-				{
-					cLabels.Add (text);
-				}
-			}
-
-			int n = System.Math.Max (aLabels.Count, bLabels.Count);
-
-			for (int i = 0; i < n; i++)
-			{
-				string text = null;
-				
-				if (i < bLabels.Count)
-				{
-					text = bLabels[i];
-					
-					if (ResourceBundle.Field.IsNullString (text))
-					{
-						text = null;
-					}
-				}
-				if (i < aLabels.Count)
-				{
-					if (text != null)
-					{
-						cLabels[i] = text;
-					}
-				}
-				else
-				{
-					if (text != null)
-					{
-						cLabels.Add (text);
-					}
-				}
-			}
-
-			data.SetValue (Res.Fields.ResourceCaption.Description, cDesc);
-			data.SetValue (Res.Fields.ResourceCaption.Icon, cIcon);
-			data.SetValue (Res.Fields.ResourceCaption.Labels, cLabels);
-			
-			return data;
-		}
 
 
 

@@ -358,11 +358,11 @@ namespace Epsitec.Common.Types
 		/// <typeparam name="T">Type of the elements.</typeparam>
 		/// <param name="a">The first collection.</param>
 		/// <param name="b">The second collection.</param>
-		/// <param name="comparison">The comparison method.</param>
+		/// <param name="predicate">The comparison method.</param>
 		/// <returns>
 		/// 	<c>true</c> if both collections have an equal content; otherwise, <c>false</c>.
 		/// </returns>
-		public static bool CompareEqual<T>(IEnumerable<T> a, IEnumerable<T> b, System.Comparison<T> comparison)
+		public static bool CompareEqual<T>(IEnumerable<T> a, IEnumerable<T> b, Predicate<T> predicate)
 		{
 			if (a == b)
 			{
@@ -374,7 +374,7 @@ namespace Epsitec.Common.Types
 				return false;
 			}
 
-			return Collection.CompareEqualNotChecked (a, b, comparison);
+			return Collection.CompareEqualNotChecked (a, b, predicate);
 		}
 
 		private static bool CompareEqualNotChecked<T>(IEnumerable<T> a, IEnumerable<T> b) where T : System.IEquatable<T>
@@ -382,18 +382,11 @@ namespace Epsitec.Common.Types
 			return Collection.CompareEqualNotChecked (a, b,
 				delegate (T value1, T value2)
 				{
-					if (value1.Equals (value2))
-					{
-						return 0;
-					}
-					else
-					{
-						return 1;
-					}
+					return value1.Equals (value2);
 				});
 		}
 
-		private static bool CompareEqualNotChecked<T>(IEnumerable<T> a, IEnumerable<T> b, System.Comparison<T> comparison)
+		private static bool CompareEqualNotChecked<T>(IEnumerable<T> a, IEnumerable<T> b, Predicate<T> predicate)
 		{
 			IEnumerator<T> enumeratorA = a.GetEnumerator ();
 			IEnumerator<T> enumeratorB = b.GetEnumerator ();
@@ -425,7 +418,7 @@ namespace Epsitec.Common.Types
 					return false;
 				}
 
-				if (comparison (value1, value2) != 0)
+				if (!predicate (value1, value2))
 				{
 					return false;
 				}
@@ -462,5 +455,7 @@ namespace Epsitec.Common.Types
 			
 			return false;
 		}
+
+		public delegate bool Predicate<T>(T a, T b);
 	}
 }

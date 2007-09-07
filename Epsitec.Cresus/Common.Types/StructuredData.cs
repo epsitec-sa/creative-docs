@@ -413,25 +413,19 @@ namespace Epsitec.Common.Types
 				{
 					if (value1.Key != value2.Key)
 					{
-						return 1;
+						return false;
 					}
 					if (value1.Value == value2.Value)
 					{
-						return 0;
+						return true;
 					}
 					if ((value1.Value == null) ||
 						(value2.Value == null))
 					{
-						return 1;
+						return false;
 					}
-					if (Comparer.Equal (value1.Value, value2.Value))
-					{
-						return 0;
-					}
-					else
-					{
-						return 1;
-					}
+
+					return Comparer.Equal (value1.Value, value2.Value);
 				}))
 			{
 				return true;

@@ -170,12 +170,10 @@ namespace Epsitec.Common.Support.ResourceAccessors
 				patchData.SetValue (Res.Fields.ResourceCaption.Icon, rawIcon);
 			}
 			if ((rawLabels != null) &&
-				(rawLabels.Count > 0))
+				(rawLabels.Count > 0) &&
+				(!Types.Collection.CompareEqual (rawLabels, refLabels)))
 			{
-				if (!Types.Collection.CompareEqual (rawLabels, refLabels))
-				{
-					patchData.SetValue (Res.Fields.ResourceCaption.Labels, new List<string> (rawLabels));
-				}
+				patchData.SetValue (Res.Fields.ResourceCaption.Labels, new List<string> (rawLabels));
 			}
 		}
 

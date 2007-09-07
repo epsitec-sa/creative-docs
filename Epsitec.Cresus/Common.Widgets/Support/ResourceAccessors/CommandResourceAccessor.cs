@@ -142,6 +142,45 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			}
 		}
 
+		protected override void ComputeDataDelta(StructuredData rawData, StructuredData refData, StructuredData patchData)
+		{
+			base.ComputeDataDelta (rawData, refData, patchData);
+
+			object refStatefull        = refData.GetValue (Res.Fields.ResourceCommand.Statefull);
+			object refDefaultParameter = refData.GetValue (Res.Fields.ResourceCommand.DefaultParameter);
+			object refGroup            = refData.GetValue (Res.Fields.ResourceCommand.Group);
+			
+			IList<StructuredData> refShortcuts = refData.GetValue (Res.Fields.ResourceCommand.Shortcuts) as IList<StructuredData>;
+			
+			object rawStatefull        = rawData.GetValue (Res.Fields.ResourceCommand.Statefull);
+			object rawDefaultParameter = rawData.GetValue (Res.Fields.ResourceCommand.DefaultParameter);
+			object rawGroup            = rawData.GetValue (Res.Fields.ResourceCommand.Group);
+			
+			IList<StructuredData> rawShortcuts = rawData.GetValue (Res.Fields.ResourceCommand.Shortcuts) as IList<StructuredData>;
+
+			if ((!UndefinedValue.IsUndefinedValue (rawStatefull)) &&
+				(refStatefull != rawStatefull))
+			{
+				patchData.SetValue (Res.Fields.ResourceCommand.Statefull, rawStatefull);
+			}
+			if ((!UndefinedValue.IsUndefinedValue (rawDefaultParameter)) &&
+				(refDefaultParameter != rawDefaultParameter))
+			{
+				patchData.SetValue (Res.Fields.ResourceCommand.DefaultParameter, rawDefaultParameter);
+			}
+			if ((!UndefinedValue.IsUndefinedValue (rawGroup)) &
+				(refGroup != rawGroup))
+			{
+				patchData.SetValue (Res.Fields.ResourceCommand.Group, rawGroup);
+			}
+
+			if ((rawShortcuts != null) &&
+				(rawShortcuts.Count > 0) &&
+				(!Types.Collection.CompareEqual (rawShortcuts, refShortcuts)))
+			{
+				patchData.SetValue (Res.Fields.ResourceCommand.Shortcuts, new List<StructuredData> (rawShortcuts));
+			}
+		}
 
 		private class Broker : IDataBroker
 		{
