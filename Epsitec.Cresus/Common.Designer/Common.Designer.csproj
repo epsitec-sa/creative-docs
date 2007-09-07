@@ -48,7 +48,6 @@
     <Compile Include="Dialogs\EntityComment.cs" />
     <Compile Include="Dialogs\ResourceName.cs" />
     <Compile Include="Dialogs\ResourceStructuredTypeField.cs" />
-    <Compile Include="Dialogs\TableConfiguration.cs" />
     <Compile Include="DimensionsList.cs" />
     <Compile Include="Dimension.cs" />
     <Compile Include="Dialogs\BindingSelector.cs" />

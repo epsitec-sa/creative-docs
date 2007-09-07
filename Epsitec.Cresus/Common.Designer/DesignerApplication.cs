@@ -91,7 +91,6 @@ namespace Epsitec.Common.Designer
 				this.dlgResourceSelector            = new Dialogs.ResourceSelector(this);
 				this.dlgResourceStructuredTypeField = new Dialogs.ResourceStructuredTypeField(this);
 				this.dlgBindingSelector             = new Dialogs.BindingSelector(this);
-				this.dlgTableConfiguration          = new Dialogs.TableConfiguration(this);
 				this.dlgFieldName                   = new Dialogs.ResourceName(this);
 				this.dlgEntityComment               = new Dialogs.EntityComment(this);
 
@@ -1906,14 +1905,6 @@ namespace Epsitec.Common.Designer
 
 
 		#region Dialogs
-		public List<UI.ItemTableColumn> DlgTableConfiguration(Module baseModule, StructuredType structuredType, List<UI.ItemTableColumn> columns)
-		{
-			//	Ouvre le dialogue pour choisir les rubriques d'une table.
-			this.dlgTableConfiguration.Initialise(baseModule, structuredType, columns);
-			this.dlgTableConfiguration.Show();  // choix dans le dialogue...
-			return this.dlgTableConfiguration.Columns;
-		}
-
 		public bool DlgBindingSelector(Module baseModule, StructuredType type, ObjectModifier.ObjectType objectType, ref Binding binding)
 		{
 			//	Ouvre le dialogue pour choisir une rubrique dans une structure de données.
@@ -2186,7 +2177,6 @@ namespace Epsitec.Common.Designer
 		protected Dialogs.ResourceSelector		dlgResourceSelector;
 		protected Dialogs.ResourceStructuredTypeField dlgResourceStructuredTypeField;
 		protected Dialogs.BindingSelector		dlgBindingSelector;
-		protected Dialogs.TableConfiguration	dlgTableConfiguration;
 		protected Dialogs.ResourceName			dlgFieldName;
 		protected Dialogs.EntityComment			dlgEntityComment;
 		protected PanelsContext					context;
