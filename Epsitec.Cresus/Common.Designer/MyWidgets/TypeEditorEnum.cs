@@ -22,6 +22,11 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.buttonCreate.Clicked += new MessageEventHandler(this.HandleButtonClicked);
 			this.toolbar.Items.Add(this.buttonCreate);
 
+			this.buttonDelete = new IconButton();
+			this.buttonDelete.CaptionId = Res.Captions.Editor.Type.Delete.Id;
+			this.buttonDelete.Clicked += new MessageEventHandler(this.HandleButtonClicked);
+			this.toolbar.Items.Add(this.buttonDelete);
+
 			this.toolbar.Items.Add(new IconSeparator());
 
 			this.buttonPrev = new IconButton();
@@ -102,6 +107,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			if ( disposing )
 			{
 				this.buttonCreate.Clicked -= new MessageEventHandler(this.HandleButtonClicked);
+				this.buttonDelete.Clicked -= new MessageEventHandler(this.HandleButtonClicked);
 				this.buttonPrev.Clicked -= new MessageEventHandler(this.HandleButtonClicked);
 				this.buttonNext.Clicked -= new MessageEventHandler(this.HandleButtonClicked);
 				this.buttonGoto.Clicked -= new MessageEventHandler(this.HandleButtonClicked);
@@ -181,6 +187,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 
 			this.buttonCreate.Enable = !native;
+			this.buttonDelete.Enable = !native && sel != -1;
 			this.buttonPrev.Enable   = prev;
 			this.buttonNext.Enable   = next;
 			this.buttonGoto.Enable   = lgoto;
@@ -244,9 +251,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected void ArrayCreate()
 		{
 			//	Crée une nouvelle valeur dans l'énumération.
-			Module module = this.module;
 			string name = this.GetNewName();
-			name = module.DesignerApplication.DlgResourceName(Dialogs.ResourceName.Operation.Create, Dialogs.ResourceName.Type.Value, name);
+			name = this.module.DesignerApplication.DlgResourceName(Dialogs.ResourceName.Operation.Create, Dialogs.ResourceName.Type.Value, name);
 			if (string.IsNullOrEmpty(name))
 			{
 				return;
@@ -254,7 +260,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			
 			if (!Misc.IsValidLabel(ref name))
 			{
-				module.DesignerApplication.DialogError(Res.Strings.Error.Name.Invalid);
+				this.module.DesignerApplication.DialogError(Res.Strings.Error.Name.Invalid);
 				return;
 			}
 
@@ -267,11 +273,11 @@ namespace Epsitec.Common.Designer.MyWidgets
 			//	Code complexe écrit par Pierre permettant de créer une nouvelle valeur pour une énumération.
 			IList<StructuredData> list = this.structuredData.GetValue(Support.Res.Fields.ResourceEnumType.Values) as IList<StructuredData>;
 
-			Support.ResourceAccessors.AnyTypeResourceAccessor accessor = module.AccessTypes2.Accessor as Support.ResourceAccessors.AnyTypeResourceAccessor;
+			Support.ResourceAccessors.AnyTypeResourceAccessor accessor = this.module.AccessTypes2.Accessor as Support.ResourceAccessors.AnyTypeResourceAccessor;
 			CultureMap valueCultureMap = accessor.CreateValueItem(this.cultureMap);
 			valueCultureMap.Name = name;
 
-			IResourceAccessor valueAccessor = module.AccessValues2.Accessor;
+			IResourceAccessor valueAccessor = this.module.AccessValues2.Accessor;
 			valueAccessor.Collection.Add(valueCultureMap);
 
 			IDataBroker broker = accessor.GetDataBroker(this.structuredData, Support.Res.Fields.ResourceEnumType.Values.ToString());
@@ -288,6 +294,19 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			this.module.AccessTypes2.SetLocalDirty();
 			this.OnContentChanged();
+		}
+
+		protected void ArrayDelete()
+		{
+			//	Supprime une valeur dans l'énumération.
+			int sel = this.array.SelectedRow;
+			string name = this.array.GetLineString(0, sel);
+			string question = string.Format("Voulez-vous supprimer la valeur <b>{0}</b> de l'énumération ?", name);
+			Common.Dialogs.DialogResult result = this.module.DesignerApplication.DialogQuestion(question);
+			if (result != Common.Dialogs.DialogResult.Yes)
+			{
+				return;
+			}
 		}
 
 		protected void ArrayMove(int direction)
@@ -438,6 +457,11 @@ namespace Epsitec.Common.Designer.MyWidgets
 				this.ArrayCreate();
 			}
 
+			if (sender == this.buttonDelete)
+			{
+				this.ArrayDelete();
+			}
+
 			if (sender == this.buttonPrev)
 			{
 				this.ArrayMove(-1);
@@ -496,6 +520,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		protected HToolBar						toolbar;
 		protected IconButton					buttonCreate;
+		protected IconButton					buttonDelete;
 		protected IconButton					buttonPrev;
 		protected IconButton					buttonNext;
 		protected IconButton					buttonGoto;
