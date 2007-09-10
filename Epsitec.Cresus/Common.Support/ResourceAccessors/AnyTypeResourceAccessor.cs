@@ -18,10 +18,17 @@ namespace Epsitec.Common.Support.ResourceAccessors
 	/// </summary>
 	public class AnyTypeResourceAccessor : CaptionResourceAccessor
 	{
+		/// <summary>
+		/// Initializes a new instance of the <see cref="AnyTypeResourceAccessor"/> class.
+		/// </summary>
 		public AnyTypeResourceAccessor()
 		{
 		}
 
+		/// <summary>
+		/// Gets the value accessor associated with this accessor.
+		/// </summary>
+		/// <value>The <see cref="ValueResourceAccessor"/>.</value>
 		public IResourceAccessor ValueAccessor
 		{
 			get
@@ -30,6 +37,12 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			}
 		}
 
+		/// <summary>
+		/// Gets the caption prefix for this accessor.
+		/// Note: several resource types are stored as captions; the prefix of
+		/// the field name is used to differentiate them.
+		/// </summary>
+		/// <value>The caption <c>"Typ."</c> prefix.</value>
 		protected override string Prefix
 		{
 			get
@@ -38,16 +51,28 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			}
 		}
 
+		/// <summary>
+		/// Persists the changes to the underlying data store.
+		/// </summary>
+		/// <returns>
+		/// The number of items which have been persisted.
+		/// </returns>
 		public override int PersistChanges()
 		{
 			int n = 0;
 
-			n += this.ValueAccessor.PersistChanges ();
+			n += this.valueAccessor.PersistChanges ();
 			n += base.PersistChanges ();
 
 			return n;
 		}
 
+		/// <summary>
+		/// Reverts the changes applied to the accessor.
+		/// </summary>
+		/// <returns>
+		/// The number of items which have been reverted.
+		/// </returns>
 		public override int RevertChanges()
 		{
 			int n = 0;
@@ -58,6 +83,11 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			return n;
 		}
 
+		/// <summary>
+		/// Loads resources from the specified resource manager. The resource
+		/// manager will be used for all upcoming accesses.
+		/// </summary>
+		/// <param name="manager">The resource manager.</param>
 		public override void Load(ResourceManager manager)
 		{
 			base.Load (manager);
@@ -70,8 +100,19 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			this.valueAccessor.Load (manager);
 		}
 
+		/// <summary>
+		/// Gets the data broker associated with the specified field. Usually,
+		/// this is only meaningful if the field defines a collection of
+		/// <see cref="StructuredData"/> items.
+		/// </summary>
+		/// <param name="container">The container.</param>
+		/// <param name="fieldId">The id for the field in the specified container.</param>
+		/// <returns>The data broker or <c>null</c>.</returns>
 		public override IDataBroker GetDataBroker(StructuredData container, string fieldId)
 		{
+			//	Return the broker for the enum value collection, if this is the
+			//	field passed in by the caller :
+
 			if (fieldId == Res.Fields.ResourceEnumType.Values.ToString ())
 			{
 				return new EnumValueBroker ();
@@ -80,6 +121,12 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			return base.GetDataBroker (container, fieldId);
 		}
 
+		/// <summary>
+		/// Creates an item which can be stored in the <see cref="ValueResourceAccessor"/>'s
+		/// collection.
+		/// </summary>
+		/// <param name="item">The item (describing an enum type).</param>
+		/// <returns>An empty item for the <see cref="ValueResourceAccessor"/>.</returns>
 		public CultureMap CreateValueItem(CultureMap item)
 		{
 			StructuredData data = item.GetCultureData (Resources.DefaultTwoLetterISOLanguageName);
@@ -94,9 +141,20 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			return valueItem;
 		}
 
+		/// <summary>
+		/// Creates the missing value items for a given enum type. This will
+		/// create items in the <see cref="ValueResourceAccessor"/> if the
+		/// enum type item describes a native C# (or .NET) enumeration.
+		/// </summary>
+		/// <param name="item">The enum type item.</param>
+		/// <returns><c>true</c> if value items were created; otherwise, <c>false</c>.</returns>
 		public bool CreateMissingValueItems(CultureMap item)
 		{
 			StructuredData data = item.GetCultureData (Resources.DefaultTwoLetterISOLanguageName);
+
+			TypeCode code = AnyTypeResourceAccessor.ToTypeCode (data.GetValue (Res.Fields.ResourceBaseType.TypeCode));
+
+			System.Diagnostics.Debug.Assert (code == TypeCode.Enum);
 			
 			IList<StructuredData> values     = data.GetValue (Res.Fields.ResourceEnumType.Values) as IList<StructuredData>;
 			System.Type           systemType = data.GetValue (Res.Fields.ResourceEnumType.SystemType) as System.Type;
@@ -110,6 +168,10 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			}
 			else
 			{
+				//	Create a temporary instance of the EnumType and then walk
+				//	through all the defined values, checking that they exist
+				//	in the value accessor's collection...
+
 				EnumType template = new EnumType (systemType, new Caption ());
 				string   typeName = item.Name;
 				bool     creation = false;
@@ -151,6 +213,10 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			}
 		}
 
+		/// <summary>
+		/// Notifies the resource accessor that the specified item changed.
+		/// </summary>
+		/// <param name="item">The item which was modified.</param>
 		public override void NotifyItemChanged(CultureMap item)
 		{
 			base.NotifyItemChanged (item);
@@ -160,6 +226,10 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			
 			if (code == TypeCode.Enum)
 			{
+				//	The user somehow edited a type enum item. If this item has
+				//	no associated list of values, we use the opportunity to create
+				//	it here :
+
 				object value = data.GetValue (Res.Fields.ResourceEnumType.Values);
 
 				if (UndefinedValue.IsUndefinedValue (value))
@@ -174,11 +244,27 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			}
 		}
 
+		/// <summary>
+		/// Gets the structured type which describes the caption data.
+		/// </summary>
+		/// <returns>
+		/// Always <c>null</c>. The <c>StructuredType</c> will be filled in later
+		/// by method <c>FillDataFromCaption</c>.
+		/// </returns>
 		protected override IStructuredType GetStructuredType()
 		{
 			return null;
 		}
 
+		/// <summary>
+		/// Checks if the data stored in the field matches this accessor. This
+		/// can be used to filter out specific fields.
+		/// </summary>
+		/// <param name="field">The field to check.</param>
+		/// <param name="fieldName">Name of the field.</param>
+		/// <returns>
+		/// 	<c>true</c> if data should be loaded from the field; otherwise, <c>false</c>.
+		/// </returns>
 		protected override bool FilterField(ResourceBundle.Field field, string fieldName)
 		{
 			if (base.FilterField (field, fieldName))
@@ -201,6 +287,14 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			}
 		}
 
+		/// <summary>
+		/// Creates a caption based on the definitions stored in a data record.
+		/// </summary>
+		/// <param name="sourceBundle">The source bundle.</param>
+		/// <param name="data">The data record.</param>
+		/// <param name="name">The name of the caption.</param>
+		/// <param name="twoLetterISOLanguageName">The two letter ISO language name.</param>
+		/// <returns>A <see cref="Caption"/> instance.</returns>
 		protected override Caption CreateCaptionFromData(ResourceBundle sourceBundle, Types.StructuredData data, string name, string twoLetterISOLanguageName)
 		{
 			Caption caption = base.CreateCaptionFromData (sourceBundle, data, name, twoLetterISOLanguageName);
@@ -216,8 +310,6 @@ namespace Epsitec.Common.Support.ResourceAccessors
 		protected override void FillDataFromCaption(CultureMap item, Types.StructuredData data, Caption caption, DataCreationMode mode)
 		{
 			base.FillDataFromCaption (item, data, caption, mode);
-
-			//	TODO: pass on the mode to the misc. FillDataFrom... methods
 
 			AbstractType type = TypeRosetta.CreateTypeObject (caption, false);
 			TypeCode code = type == null ? TypeCode.Invalid : type.TypeCode;
@@ -247,7 +339,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 					break;
 
 				case TypeCode.Enum:
-					this.FillDataFromEnumType (item, data, type as EnumType);
+					this.FillDataFromEnumType (item, data, type as EnumType, mode);
 					break;
 
 				case TypeCode.Other:
@@ -371,6 +463,14 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			return false;
 		}
 
+		/// <summary>
+		/// Computes the difference between a raw data record and a reference
+		/// data record and fills the patch data record with the resulting
+		/// delta.
+		/// </summary>
+		/// <param name="rawData">The raw data record.</param>
+		/// <param name="refData">The reference data record.</param>
+		/// <param name="patchData">The patch data, which will be filled with the delta.</param>
 		protected override void ComputeDataDelta(StructuredData rawData, StructuredData refData, StructuredData patchData)
 		{
 			base.ComputeDataDelta (rawData, refData, patchData);
@@ -543,9 +643,11 @@ namespace Epsitec.Common.Support.ResourceAccessors
 					IList<StructuredData> rawValues = rawData.GetValue (Res.Fields.ResourceEnumType.Values) as IList<StructuredData>;
 					System.Type   rawEnumSystemType = rawData.GetValue (Res.Fields.ResourceEnumType.SystemType) as System.Type;
 
-					if ((rawValues != null) && (rawValues.Count > 0))
+					if ((rawValues != null) &&
+						(rawValues.Count > 0) &&
+						(!Types.Collection.CompareEqual (rawValues, refValues)))
 					{
-						patchData.SetValue (Res.Fields.ResourceEnumType.Values, AnyTypeResourceAccessor.MergeEnumValues (refValues, rawValues));
+						patchData.SetValue (Res.Fields.ResourceEnumType.Values, rawValues);
 					}
 
 					if ((rawEnumSystemType != null) &&
@@ -610,9 +712,17 @@ namespace Epsitec.Common.Support.ResourceAccessors
 		private static IList<StructuredData> MergeEnumValues(IList<StructuredData> sourceA, IList<StructuredData> sourceB)
 		{
 			List<StructuredData> list = new List<StructuredData> ();
-			List<StructuredData> temp = new List<StructuredData> (sourceA);
+			List<StructuredData> temp = sourceA == null ? new List<StructuredData> () : new List<StructuredData> (sourceA);
 
-			AnyTypeResourceAccessor.FillListFromFirstSource (list, temp, sourceB);
+			//	If the first list starts with elements not found in the second
+			//	list, copy them into the resulting list :
+			
+			AnyTypeResourceAccessor.FillEnumValuesListFromFirstSourceNotInSecondSource (list, temp, sourceB);
+			
+			//	For every element found in the second list, copy it into the
+			//	resulting list. Every time, check to see if the next element
+			//	found in the first list is absent from the second list, and
+			//	handle it with a higher priority :
 			
 			foreach (StructuredData data in sourceB)
 			{
@@ -624,23 +734,27 @@ namespace Epsitec.Common.Support.ResourceAccessors
 						return ((Druid) findData.GetValue (Res.Fields.EnumValue.CaptionId)) == bId;
 					});
 
-				if (indexBinA < 0)
+				list.Add (data);
+
+				if (indexBinA >= 0)
 				{
-					list.Add (data);
-				}
-				else
-				{
-					list.Add (data);
 					temp.RemoveAt (indexBinA);
+					AnyTypeResourceAccessor.FillEnumValuesListFromFirstSourceNotInSecondSource (list, temp, sourceB);
 				}
-				
-				AnyTypeResourceAccessor.FillListFromFirstSource (list, temp, sourceB);
 			}
 
 			return list;
 		}
 
-		private static void FillListFromFirstSource(List<StructuredData> list, List<StructuredData> sourceA, IList<StructuredData> sourceB)
+		/// <summary>
+		/// Fills the enum values list, taking elements from the start of the
+		/// first source list, as long as they are not in the second source
+		/// list. Stop as soon as the element is found in the second list.
+		/// </summary>
+		/// <param name="list">The list to fill.</param>
+		/// <param name="sourceA">The first source list.</param>
+		/// <param name="sourceB">The second source list.</param>
+		private static void FillEnumValuesListFromFirstSourceNotInSecondSource(List<StructuredData> list, List<StructuredData> sourceA, IList<StructuredData> sourceB)
 		{
 			while (sourceA.Count > 0)
 			{
@@ -663,6 +777,11 @@ namespace Epsitec.Common.Support.ResourceAccessors
 		}
 
 
+		/// <summary>
+		/// Fills the caption with the values stored in the data record.
+		/// </summary>
+		/// <param name="caption">The caption to fill.</param>
+		/// <param name="data">The data record.</param>
 		private void FillCaptionWithData(Caption caption, StructuredData data)
 		{
 			if (data == null)
@@ -727,6 +846,8 @@ namespace Epsitec.Common.Support.ResourceAccessors
 					break;
 			}
 		}
+
+		#region FillCaptionWithData Support Methods
 
 		private void SetupType(AbstractType type, StructuredData data)
 		{
@@ -1009,11 +1130,12 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			data.SetValue (Res.Fields.ResourceDateTimeType.TimeStep, type.TimeStep);
 		}
 
-		private void FillDataFromEnumType(CultureMap item, StructuredData data, EnumType type)
+		private void FillDataFromEnumType(CultureMap item, StructuredData data, EnumType type, DataCreationMode mode)
 		{
 			data.DefineStructuredType (Res.Types.ResourceEnumType);
-			
-			ObservableList<StructuredData> values = new ObservableList<StructuredData> ();
+
+			ObservableList<StructuredData> values = data.GetValue (Res.Fields.ResourceEnumType.Values) as ObservableList<StructuredData>;
+			IList<StructuredData> source = new List<StructuredData> ();
 
 			foreach (EnumValue value in type.Values)
 			{
@@ -1025,15 +1147,42 @@ namespace Epsitec.Common.Support.ResourceAccessors
 				StructuredData x = new StructuredData (Res.Types.EnumValue);
 
 				x.SetValue (Res.Fields.EnumValue.CaptionId, value.CaptionId);
-				values.Add (x);
-
-				item.NotifyDataAdded (x);
+				source.Add (x);
 			}
 
-			data.SetValue (Res.Fields.ResourceEnumType.Values, values);
-			data.LockValue (Res.Fields.ResourceEnumType.Values);
+			if (values == null)
+			{
+				values = new ObservableList<StructuredData> ();
+			}
+			else
+			{
+				source = AnyTypeResourceAccessor.MergeEnumValues (values, source);
+				values.Clear ();
+			}
 
-			values.CollectionChanged += new Listener (this, item).HandleCollectionChanged;
+			foreach (StructuredData value in source)
+			{
+				StructuredData x = new StructuredData (Res.Types.EnumValue);
+
+				x.SetValue (Res.Fields.EnumValue.CaptionId, value.GetValue (Res.Fields.EnumValue.CaptionId));
+				values.Add (x);
+
+				if (mode == DataCreationMode.Public)
+				{
+					item.NotifyDataAdded (x);
+				}
+			}
+
+			if (UndefinedValue.IsUndefinedValue (data.GetValue (Res.Fields.ResourceEnumType.Values)))
+			{
+				data.SetValue (Res.Fields.ResourceEnumType.Values, values);
+				data.LockValue (Res.Fields.ResourceEnumType.Values);
+
+				if (mode == DataCreationMode.Public)
+				{
+					values.CollectionChanged += new Listener (this, item).HandleCollectionChanged;
+				}
+			}
 
 			data.SetValue (Res.Fields.ResourceEnumType.SystemType, type.SystemType);
 		}
@@ -1053,6 +1202,8 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			data.SetValue (Res.Fields.ResourceStringType.MaximumLength, type.MaximumLength);
 			data.SetValue (Res.Fields.ResourceStringType.UseMultilingualStorage, type.UseMultilingualStorage);
 		}
+
+		#endregion
 
 		protected override void HandleItemsCollectionChanged(object sender, CollectionChangedEventArgs e)
 		{

@@ -651,8 +651,9 @@ namespace Epsitec.Common.Types
 				foreach (EnumValue pendingValue in this.pendingEnumValues)
 				{
 					string name = pendingValue.Name;
+					Support.Druid druid = pendingValue.CaptionId;
 
-					EnumValue internalValue = this[name];
+					EnumValue internalValue = string.IsNullOrEmpty (name) ? this[druid] : this[name];
 
 					if (internalValue == null)
 					{

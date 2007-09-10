@@ -135,6 +135,14 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			}
 		}
 
+		/// <summary>
+		/// Gets the data broker associated with the specified field. Usually,
+		/// this is only meaningful if the field defines a collection of
+		/// <see cref="StructuredData"/> items.
+		/// </summary>
+		/// <param name="container">The container.</param>
+		/// <param name="fieldId">The id for the field in the specified container.</param>
+		/// <returns>The data broker or <c>null</c>.</returns>
 		public override IDataBroker GetDataBroker(StructuredData container, string fieldId)
 		{
 			return base.GetDataBroker (container, fieldId);
@@ -209,7 +217,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 					ResourceBundle refBundle = refModuleManager.GetBundle (Resources.CaptionsBundleName, level, culture);
 					
 					if ((this.ComputeDelta (item, ref data, refBundle, item.Id, bundle, twoLetterISOLanguageName)) ||
-						(this.IsEmpty (data)))
+						((item.Source != CultureMapSource.PatchModule) && (this.IsEmpty (data))))
 					{
 						//	The resource is empty... but we may not remove it if
 						//	this is the primary patch resource and we found some
@@ -277,7 +285,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 						bundle.Add (field);
 					}
 
-					string  capName = (level == ResourceLevel.Default) && !usePatchModule ? item.Name : null;
+					string  capName = (level == ResourceLevel.Default) && (item.Source != CultureMapSource.DynamicMerge) ? item.Name : null;
 					Caption caption = this.CreateCaptionFromData (bundle, data, capName, twoLetterISOLanguageName);
 					string  about   = data.GetValue (Res.Fields.ResourceBase.Comment) as string;
 					object  modId   = data.GetValue (Res.Fields.ResourceBase.ModificationId);

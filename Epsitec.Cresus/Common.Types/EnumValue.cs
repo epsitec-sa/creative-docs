@@ -77,7 +77,9 @@ namespace Epsitec.Common.Types
 					return null;
 				}
 
-				return this.Caption.Name;
+				Caption caption = this.Caption;
+
+				return (caption == null) ? null : caption.Name;
 			}
 		}
 
@@ -100,7 +102,12 @@ namespace Epsitec.Common.Types
 					}
 					else
 					{
-						this.DefineCaption (Support.Resources.DefaultManager.GetCaption (this.captionId));
+						Caption caption = Support.Resources.DefaultManager.GetCaption (this.captionId);
+
+						if (caption != null)
+						{
+							this.DefineCaption (caption);
+						}
 					}
 				}
 
@@ -268,14 +275,17 @@ namespace Epsitec.Common.Types
 				//	deserialization, so that we can properly map the DRUIDs to
 				//	their associated captions when working within the Designer :
 
+#if false
 				Support.ResourceManager manager = Serialization.Context.GetResourceManager (context);
 
 				if (manager == null)
 				{
+#endif
 					EnumValue enumValue = new EnumValue (druid);
 					enumValue.rank = rank;
 					
 					return enumValue;
+#if false
 				}
 				else
 				{
@@ -290,6 +300,7 @@ namespace Epsitec.Common.Types
 
 					return enumValue;
 				}
+#endif
 			}
 
 			#endregion
@@ -345,6 +356,11 @@ namespace Epsitec.Common.Types
 
 		public void DefineCaption(Caption caption)
 		{
+			if (this.caption == caption)
+			{
+				return;
+			}
+
 			if (caption == null)
 			{
 				throw new System.ArgumentNullException ("caption");
