@@ -33,7 +33,13 @@ namespace Epsitec.Common.Support.ResourceAccessors
 				return base.GetDataBroker (container, fieldId);
 			}
 		}
-		
+
+		/// <summary>
+		/// Gets the caption prefix for this accessor.
+		/// Note: several resource types are stored as captions; the prefix of
+		/// the field name is used to differentiate them.
+		/// </summary>
+		/// <value>The caption <c>"Cmd."</c> prefix.</value>
 		protected override string Prefix
 		{
 			get
@@ -42,6 +48,12 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			}
 		}
 
+		/// <summary>
+		/// Gets the structured type which describes the caption data.
+		/// </summary>
+		/// <returns>
+		/// The <see cref="StructuredType"/> instance.
+		/// </returns>
 		protected override IStructuredType GetStructuredType()
 		{
 			return Res.Types.ResourceCommand;

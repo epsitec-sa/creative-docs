@@ -30,7 +30,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 		/// Note: several resource types are stored as captions; the prefix of
 		/// the field name is used to differentiate them.
 		/// </summary>
-		/// <value>The caption <c>Cap.</c> prefix.</value>
+		/// <value>The caption <c>"Cap."</c> prefix.</value>
 		protected virtual string Prefix
 		{
 			get

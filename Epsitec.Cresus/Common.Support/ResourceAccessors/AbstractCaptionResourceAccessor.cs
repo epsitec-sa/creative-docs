@@ -507,6 +507,15 @@ namespace Epsitec.Common.Support.ResourceAccessors
 		/// <returns>The resource field name.</returns>
 		protected abstract string GetFieldNameFromName(CultureMap item, Types.StructuredData data);
 
+		/// <summary>
+		/// Loads data from a resource bundle field.
+		/// </summary>
+		/// <param name="field">The resource bundle field.</param>
+		/// <param name="module">The source module id.</param>
+		/// <param name="twoLetterISOLanguageName">The two letter ISO language name.</param>
+		/// <returns>
+		/// The data which describes the specified resource.
+		/// </returns>
 		protected override Types.StructuredData LoadFromField(ResourceBundle.Field field, int module, string twoLetterISOLanguageName)
 		{
 			bool insert = false;

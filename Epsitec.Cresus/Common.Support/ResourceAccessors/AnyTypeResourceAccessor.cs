@@ -266,6 +266,102 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			data.SetValue (Res.Fields.ResourceBaseType.TypeCode, code);
 		}
 
+
+		protected override bool IsEmptyCaption(StructuredData data)
+		{
+			if (base.IsEmptyCaption (data))
+			{
+				TypeCode code = AnyTypeResourceAccessor.ToTypeCode (data.GetValue (Res.Fields.ResourceBaseType.TypeCode));
+
+				switch (code)
+				{
+					case TypeCode.Invalid:
+						return true;
+					
+					case TypeCode.Binary:
+						if (ResourceBundle.Field.IsNullString (data.GetValue (Res.Fields.ResourceBinaryType.MimeType) as string))
+						{
+							return true;
+						}
+						break;
+
+					case TypeCode.Boolean:
+					case TypeCode.Decimal:
+					case TypeCode.Double:
+					case TypeCode.Integer:
+					case TypeCode.LongInteger:
+						if ((UndefinedValue.IsUndefinedValue (data.GetValue (Res.Fields.ResourceNumericType.Range))) &&
+							(UndefinedValue.IsUndefinedValue (data.GetValue (Res.Fields.ResourceNumericType.PreferredRange))) &&
+							(UndefinedValue.IsUndefinedValue (data.GetValue (Res.Fields.ResourceNumericType.SmallStep))) &&
+							(UndefinedValue.IsUndefinedValue (data.GetValue (Res.Fields.ResourceNumericType.LargeStep))))
+						{
+							return true;
+						}
+
+						break;
+					
+					case TypeCode.Collection:
+						if ((UndefinedValue.IsUndefinedValue (data.GetValue (Res.Fields.ResourceCollectionType.ItemType))) ||
+							(((Druid) data.GetValue (Res.Fields.ResourceCollectionType.ItemType)).IsEmpty))
+						{
+							return true;
+						}
+						break;
+
+					case TypeCode.Date:
+					case TypeCode.DateTime:
+					case TypeCode.Time:
+						if ((UndefinedValue.IsUndefinedValue (data.GetValue (Res.Fields.ResourceDateTimeType.Resolution))) &&
+							(UndefinedValue.IsUndefinedValue (data.GetValue (Res.Fields.ResourceDateTimeType.MinimumDate))) &&
+							(UndefinedValue.IsUndefinedValue (data.GetValue (Res.Fields.ResourceDateTimeType.MaximumDate))) &&
+							(UndefinedValue.IsUndefinedValue (data.GetValue (Res.Fields.ResourceDateTimeType.MinimumTime))) &&
+							(UndefinedValue.IsUndefinedValue (data.GetValue (Res.Fields.ResourceDateTimeType.MaximumTime))) &&
+							(UndefinedValue.IsUndefinedValue (data.GetValue (Res.Fields.ResourceDateTimeType.DateStep))) &&
+							(UndefinedValue.IsUndefinedValue (data.GetValue (Res.Fields.ResourceDateTimeType.TimeStep))))
+						{
+							return true;
+						}
+						break;
+
+					case TypeCode.Enum:
+						IList<StructuredData> values = data.GetValue (Res.Fields.ResourceEnumType.Values) as IList<StructuredData>;
+						System.Type   enumSystemType = data.GetValue (Res.Fields.ResourceEnumType.SystemType) as System.Type;
+
+						if (((values == null) || (values.Count == 0)) &&
+							((enumSystemType == null) || (enumSystemType == typeof (NotAnEnum))))
+						{
+							return true;
+						}
+						break;
+
+
+					case TypeCode.Other:
+						if ((data.GetValue (Res.Fields.ResourceOtherType.SystemType) as System.Type) == null)
+						{
+							return true;
+						}
+						break;
+
+					case TypeCode.String:
+						object useMultilingualStorage = data.GetValue (Res.Fields.ResourceStringType.UseMultilingualStorage);
+
+						if ((UndefinedValue.IsUndefinedValue (data.GetValue (Res.Fields.ResourceStringType.MinimumLength))) &&
+							(UndefinedValue.IsUndefinedValue (data.GetValue (Res.Fields.ResourceStringType.MaximumLength))) &&
+							((UndefinedValue.IsUndefinedValue (useMultilingualStorage)) || ((bool) useMultilingualStorage == false)))
+						{
+							return true;
+						}
+						break;
+
+					default:
+						throw new System.NotSupportedException (string.Format ("Type code '{0}' not supported", code));
+				}
+			}
+			
+			return false;
+		}
+
+
 		private void FillCaptionWithData(Caption caption, StructuredData data)
 		{
 			if (data == null)
