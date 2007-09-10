@@ -78,7 +78,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			int n = 0;
 
 			n += base.RevertChanges ();
-			n += this.ValueAccessor.RevertChanges ();
+			n += this.valueAccessor.RevertChanges ();
 
 			return n;
 		}
@@ -307,6 +307,13 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			return caption;
 		}
 
+		/// <summary>
+		/// Fills the data record from a given caption.
+		/// </summary>
+		/// <param name="item">The item associated with the data record.</param>
+		/// <param name="data">The data record.</param>
+		/// <param name="caption">The caption.</param>
+		/// <param name="mode">The creation mode for the data record.</param>
 		protected override void FillDataFromCaption(CultureMap item, Types.StructuredData data, Caption caption, DataCreationMode mode)
 		{
 			base.FillDataFromCaption (item, data, caption, mode);
@@ -369,7 +376,6 @@ namespace Epsitec.Common.Support.ResourceAccessors
 
 			data.SetValue (Res.Fields.ResourceBaseType.TypeCode, code);
 		}
-
 
 		/// <summary>
 		/// Determines whether the specified data record describes an empty
@@ -1272,6 +1278,11 @@ namespace Epsitec.Common.Support.ResourceAccessors
 
 		#endregion
 
+		/// <summary>
+		/// Handles changes to the item collection.
+		/// </summary>
+		/// <param name="sender">The sender.</param>
+		/// <param name="e">The <see cref="Epsitec.Common.Types.CollectionChangedEventArgs"/> instance containing the event data.</param>
 		protected override void HandleItemsCollectionChanged(object sender, CollectionChangedEventArgs e)
 		{
 			base.HandleItemsCollectionChanged (sender, e);
@@ -1474,6 +1485,12 @@ namespace Epsitec.Common.Support.ResourceAccessors
 
 		#endregion
 
+		/// <summary>
+		/// Converts the value to a type code. An invalid value will be mapped
+		/// to the <c>TypeCode.Invalid</c> type code.
+		/// </summary>
+		/// <param name="value">The value.</param>
+		/// <returns>The <see cref="TypeCode"/> or <c>TypeCode.Invalid</c>.</returns>
 		private static TypeCode ToTypeCode(object value)
 		{
 			return UndefinedValue.IsUndefinedValue (value) ? TypeCode.Invalid : (TypeCode) value;
