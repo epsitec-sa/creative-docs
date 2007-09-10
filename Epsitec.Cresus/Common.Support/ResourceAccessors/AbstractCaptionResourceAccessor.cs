@@ -140,8 +140,6 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			return base.GetDataBroker (container, fieldId);
 		}
 
-		protected abstract IStructuredType GetStructuredType();
-
 		protected override Druid CreateId()
 		{
 			ResourceBundle bundle = this.ResourceManager.GetBundle (Resources.CaptionsBundleName, ResourceLevel.Default);
@@ -359,6 +357,12 @@ namespace Epsitec.Common.Support.ResourceAccessors
 		}
 
 		/// <summary>
+		/// Gets the structured type which describes the caption data.
+		/// </summary>
+		/// <returns>The <see cref="StructuredType"/> instance.</returns>
+		protected abstract IStructuredType GetStructuredType();
+
+		/// <summary>
 		/// Determines whether the specified data record describes an empty
 		/// caption.
 		/// </summary>
@@ -455,8 +459,6 @@ namespace Epsitec.Common.Support.ResourceAccessors
 
 
 
-		protected abstract string GetFieldNameFromName(CultureMap item, Types.StructuredData data);
-
 		/// <summary>
 		/// Creates a caption based on the definitions stored in a data record.
 		/// </summary>
@@ -476,7 +478,23 @@ namespace Epsitec.Common.Support.ResourceAccessors
 		/// <param name="mode">The creation mode for the data record.</param>
 		protected abstract void FillDataFromCaption(CultureMap item, Types.StructuredData data, Caption caption, DataCreationMode mode);
 
+		/// <summary>
+		/// Gets the pure caption name from a field name. This simply strips of
+		/// the field name prefix.
+		/// </summary>
+		/// <param name="item">The item.</param>
+		/// <param name="fieldName">The field name.</param>
+		/// <returns>The pure caption name.</returns>
 		protected abstract string GetNameFromFieldName(CultureMap item, string fieldName);
+
+		/// <summary>
+		/// Gets the resource field name of the resource based on the caption
+		/// name.
+		/// </summary>
+		/// <param name="item">The item.</param>
+		/// <param name="data">The data record.</param>
+		/// <returns>The resource field name.</returns>
+		protected abstract string GetFieldNameFromName(CultureMap item, Types.StructuredData data);
 
 		protected override Types.StructuredData LoadFromField(ResourceBundle.Field field, int module, string twoLetterISOLanguageName)
 		{

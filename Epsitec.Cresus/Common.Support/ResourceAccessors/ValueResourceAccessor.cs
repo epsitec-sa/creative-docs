@@ -44,6 +44,12 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			return this.CreateItem (field, this.CreateId ()) as PrefixedCultureMap;
 		}
 
+		/// <summary>
+		/// Gets the caption prefix for this accessor.
+		/// Note: several resource types are stored as captions; the prefix of
+		/// the field name is used to differentiate them.
+		/// </summary>
+		/// <value>The caption <c>Val.</c> prefix.</value>
 		protected override string Prefix
 		{
 			get
@@ -52,15 +58,33 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			}
 		}
 
+		/// <summary>
+		/// Gets the pure caption name from a field name. This simply strips of
+		/// the field name prefix and the item prefix.
+		/// </summary>
+		/// <param name="item">The item.</param>
+		/// <param name="fieldName">The field name.</param>
+		/// <returns>The pure caption name.</returns>
 		protected override string GetNameFromFieldName(CultureMap item, string fieldName)
 		{
 			PrefixedCultureMap fieldItem = item as PrefixedCultureMap;
 
-			string prefix = string.Concat (this.Prefix, fieldItem.Prefix);
+			System.Diagnostics.Debug.Assert (fieldItem != null);
 
-			return fieldName.Substring (prefix.Length + 1);
+			string prefix = string.Concat (this.Prefix, fieldItem.Prefix, ".");
+
+			System.Diagnostics.Debug.Assert (fieldName.StartsWith (prefix));
+
+			return fieldName.Substring (prefix.Length);
 		}
 
+		/// <summary>
+		/// Gets the resource field name of the resource based on the caption
+		/// name and the item prefix.
+		/// </summary>
+		/// <param name="item">The item.</param>
+		/// <param name="data">The data record.</param>
+		/// <returns>The resource field name.</returns>
 		protected override string GetFieldNameFromName(CultureMap item, StructuredData data)
 		{
 			PrefixedCultureMap fieldItem = item as PrefixedCultureMap;

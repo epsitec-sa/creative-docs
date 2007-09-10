@@ -18,10 +18,19 @@ namespace Epsitec.Common.Support.ResourceAccessors
 	/// </summary>
 	public class CaptionResourceAccessor : AbstractCaptionResourceAccessor
 	{
+		/// <summary>
+		/// Initializes a new instance of the <see cref="CaptionResourceAccessor"/> class.
+		/// </summary>
 		public CaptionResourceAccessor()
 		{
 		}
 
+		/// <summary>
+		/// Gets the caption prefix for this accessor.
+		/// Note: several resource types are stored as captions; the prefix of
+		/// the field name is used to differentiate them.
+		/// </summary>
+		/// <value>The caption <c>Cap.</c> prefix.</value>
 		protected virtual string Prefix
 		{
 			get
@@ -30,11 +39,24 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			}
 		}
 
+		/// <summary>
+		/// Gets the structured type which describes the caption data.
+		/// </summary>
+		/// <returns>
+		/// The <see cref="StructuredType"/> instance.
+		/// </returns>
 		protected override IStructuredType GetStructuredType()
 		{
 			return Res.Types.ResourceCaption;
 		}
 
+		/// <summary>
+		/// Gets the pure caption name from a field name. This simply strips of
+		/// the field name prefix.
+		/// </summary>
+		/// <param name="item">The item.</param>
+		/// <param name="fieldName">The field name.</param>
+		/// <returns>The pure caption name.</returns>
 		protected override string GetNameFromFieldName(CultureMap item, string fieldName)
 		{
 			System.Diagnostics.Debug.Assert (fieldName.StartsWith (this.Prefix));
@@ -42,9 +64,16 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			return fieldName.Substring (this.Prefix.Length);
 		}
 
+		/// <summary>
+		/// Gets the resource field name of the resource based on the caption
+		/// name.
+		/// </summary>
+		/// <param name="item">The item.</param>
+		/// <param name="data">The data record.</param>
+		/// <returns>The resource field name.</returns>
 		protected override string GetFieldNameFromName(CultureMap item, Types.StructuredData data)
 		{
-			return this.Prefix + item.Name;
+			return string.Concat (this.Prefix, item.Name);
 		}
 
 		/// <summary>
