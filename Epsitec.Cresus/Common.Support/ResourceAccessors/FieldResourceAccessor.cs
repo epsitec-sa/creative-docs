@@ -12,6 +12,9 @@ namespace Epsitec.Common.Support.ResourceAccessors
 	/// </summary>
 	internal class FieldResourceAccessor : CaptionResourceAccessor
 	{
+		/// <summary>
+		/// Initializes a new instance of the <see cref="FieldResourceAccessor"/> class.
+		/// </summary>
 		public FieldResourceAccessor()
 		{
 		}
@@ -92,6 +95,13 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			return string.Concat (this.Prefix, fieldItem.Prefix, ".", fieldItem.Name);
 		}
 
+		/// <summary>
+		/// Creates a new item which can then be added to the collection.
+		/// </summary>
+		/// <param name="field">The resource field.</param>
+		/// <param name="id">The id for the new item.</param>
+		/// <param name="source">The source for the data.</param>
+		/// <returns>A new <see cref="CultureMap"/> item.</returns>
 		protected override CultureMap CreateItem(ResourceBundle.Field field, Druid id, CultureMapSource source)
 		{
 			string name = field.Name;

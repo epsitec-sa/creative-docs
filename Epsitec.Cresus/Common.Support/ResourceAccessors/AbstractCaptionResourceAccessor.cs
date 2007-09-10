@@ -440,7 +440,18 @@ namespace Epsitec.Common.Support.ResourceAccessors
 		/// <param name="refData">The reference data record.</param>
 		/// <param name="patchData">The patch data, which will be filled with the delta.</param>
 		protected abstract void ComputeDataDelta(StructuredData rawData, StructuredData refData, StructuredData patchData);
-		
+
+
+		/// <summary>
+		/// Creates a structured data record, properly initialized based on the
+		/// <see cref="StructuredType"/> associated with the accessor's resource
+		/// type. The comment and modification id are taken from the field.
+		/// </summary>
+		/// <param name="item">The item.</param>
+		/// <param name="bundle">The resource bundle.</param>
+		/// <param name="field">The resource field.</param>
+		/// <param name="mode">The creation mode.</param>
+		/// <returns>An initialized data record.</returns>
 		private StructuredData CreateStructuredData(CultureMap item, ResourceBundle bundle, ResourceBundle.Field field, DataCreationMode mode)
 		{
 			StructuredData data    = this.CreateStructuredData ();
@@ -613,11 +624,24 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			return data;
 		}
 
+		/// <summary>
+		/// Creates a new item which can then be added to the collection.
+		/// </summary>
+		/// <param name="field">The resource field.</param>
+		/// <param name="id">The id for the new item.</param>
+		/// <returns>A new <see cref="CultureMap"/> item.</returns>
 		protected CultureMap CreateItem(ResourceBundle.Field field, Druid id)
 		{
 			return this.CreateItem (field, id, this.GetCultureMapSource (null));
 		}
 
+		/// <summary>
+		/// Creates a new item which can then be added to the collection.
+		/// </summary>
+		/// <param name="field">The resource field.</param>
+		/// <param name="id">The id for the new item.</param>
+		/// <param name="source">The source for the data.</param>
+		/// <returns>A new <see cref="CultureMap"/> item.</returns>
 		protected virtual CultureMap CreateItem(ResourceBundle.Field field, Druid id, CultureMapSource source)
 		{
 			return new CultureMap (this, id, source);
