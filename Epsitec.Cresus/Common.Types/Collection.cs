@@ -457,5 +457,22 @@ namespace Epsitec.Common.Types
 		}
 
 		public delegate bool Predicate<T>(T a, T b);
+
+		public static int FindIndex<T>(IEnumerable<T> b, System.Predicate<T> predicate)
+		{
+			int index = 0;
+
+			foreach (T item in b)
+			{
+				if (predicate (item))
+				{
+					return index;
+				}
+
+				index++;
+			}
+			
+			return -1;
+		}
 	}
 }

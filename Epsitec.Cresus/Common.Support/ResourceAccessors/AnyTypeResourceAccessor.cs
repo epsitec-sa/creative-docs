@@ -542,8 +542,11 @@ namespace Epsitec.Common.Support.ResourceAccessors
 
 					IList<StructuredData> rawValues = rawData.GetValue (Res.Fields.ResourceEnumType.Values) as IList<StructuredData>;
 					System.Type   rawEnumSystemType = rawData.GetValue (Res.Fields.ResourceEnumType.SystemType) as System.Type;
-					
-					//	TODO: ...merge lists...
+
+					if ((rawValues != null) && (rawValues.Count > 0))
+					{
+						patchData.SetValue (Res.Fields.ResourceEnumType.Values, AnyTypeResourceAccessor.MergeEnumValues (refValues, rawValues));
+					}
 
 					if ((rawEnumSystemType != null) &&
 						((refEnumSystemType == null) || (refEnumSystemType.FullName != rawEnumSystemType.FullName)))
@@ -595,6 +598,67 @@ namespace Epsitec.Common.Support.ResourceAccessors
 
 				default:
 					throw new System.NotSupportedException (string.Format ("Type code '{0}' not supported", rawCode));
+			}
+		}
+
+		/// <summary>
+		/// Merges two lists of enum values.
+		/// </summary>
+		/// <param name="sourceA">The first enum values list.</param>
+		/// <param name="sourceB">The second enum values list.</param>
+		/// <returns>The resulting enum values list.</returns>
+		private static IList<StructuredData> MergeEnumValues(IList<StructuredData> sourceA, IList<StructuredData> sourceB)
+		{
+			List<StructuredData> list = new List<StructuredData> ();
+			List<StructuredData> temp = new List<StructuredData> (sourceA);
+
+			AnyTypeResourceAccessor.FillListFromFirstSource (list, temp, sourceB);
+			
+			foreach (StructuredData data in sourceB)
+			{
+				Druid bId = (Druid) data.GetValue (Res.Fields.EnumValue.CaptionId);
+				
+				int indexBinA = Types.Collection.FindIndex (temp,
+					delegate (StructuredData findData)
+					{
+						return ((Druid) findData.GetValue (Res.Fields.EnumValue.CaptionId)) == bId;
+					});
+
+				if (indexBinA < 0)
+				{
+					list.Add (data);
+				}
+				else
+				{
+					list.Add (data);
+					temp.RemoveAt (indexBinA);
+				}
+				
+				AnyTypeResourceAccessor.FillListFromFirstSource (list, temp, sourceB);
+			}
+
+			return list;
+		}
+
+		private static void FillListFromFirstSource(List<StructuredData> list, List<StructuredData> sourceA, IList<StructuredData> sourceB)
+		{
+			while (sourceA.Count > 0)
+			{
+				Druid aId = (Druid) sourceA[0].GetValue (Res.Fields.EnumValue.CaptionId);
+
+				int indexAinB = Types.Collection.FindIndex (sourceB,
+					delegate (StructuredData findData)
+					{
+						return ((Druid) findData.GetValue (Res.Fields.EnumValue.CaptionId)) == aId;
+					});
+
+				if (indexAinB >= 0)
+				{
+					break;
+				}
+				
+				list.Add (sourceA[0]);
+				sourceA.RemoveAt (0);
 			}
 		}
 
