@@ -361,8 +361,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 					StructuredData newData = data;
 					StructuredData oldData = item.GetCultureData (twoLetterISOLanguageName);
 
-					if ((field.AsString != null) &&
-						(field.AsString != ResourceBundle.Field.Null))
+					if (!ResourceBundle.Field.IsNullString (field.AsString))
 					{
 						oldData.SetValue (Res.Fields.ResourceString.Text, newData.GetValue (Res.Fields.ResourceString.Text));
 					}

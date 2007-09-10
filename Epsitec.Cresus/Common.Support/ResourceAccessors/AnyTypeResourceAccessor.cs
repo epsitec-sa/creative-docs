@@ -314,6 +314,18 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			AbstractType type = TypeRosetta.CreateTypeObject (caption, false);
 			TypeCode code = type == null ? TypeCode.Invalid : type.TypeCode;
 
+			string controller          = type == null ? null : type.DefaultController;
+			string controllerParameter = type == null ? null : type.DefaultControllerParameter;
+
+			if (!string.IsNullOrEmpty (controller))
+			{
+				data.SetValue (Res.Fields.ResourceBaseType.DefaultController, controller);
+			}
+			if (!string.IsNullOrEmpty (controllerParameter))
+			{
+				data.SetValue (Res.Fields.ResourceBaseType.DefaultControllerParameter, controllerParameter);
+			}
+
 			switch (code)
 			{
 				case TypeCode.Boolean:
@@ -321,33 +333,33 @@ namespace Epsitec.Common.Support.ResourceAccessors
 				case TypeCode.Double:
 				case TypeCode.Integer:
 				case TypeCode.LongInteger:
-					this.FillDataFromNumericType (data, type as AbstractNumericType);
+					this.FillDataFromNumericType (data, caption, type as AbstractNumericType);
 					break;
 
 				case TypeCode.Binary:
-					this.FillDataFromBinaryType (data, type as BinaryType);
+					this.FillDataFromBinaryType (data, caption, type as BinaryType);
 					break;
 
 				case TypeCode.Collection:
-					this.FillDataFromCollectionType (data, type as CollectionType);
+					this.FillDataFromCollectionType (data, caption, type as CollectionType);
 					break;
 
 				case TypeCode.Date:
 				case TypeCode.DateTime:
 				case TypeCode.Time:
-					this.FillDataFromDateTimeType (data, type as AbstractDateTimeType);
+					this.FillDataFromDateTimeType (data, caption, type as AbstractDateTimeType);
 					break;
 
 				case TypeCode.Enum:
-					this.FillDataFromEnumType (item, data, type as EnumType, mode);
+					this.FillDataFromEnumType (item, data, caption, type as EnumType, mode);
 					break;
 
 				case TypeCode.Other:
-					this.FillDataFromOtherType (data, type as OtherType);
+					this.FillDataFromOtherType (data, caption, type as OtherType);
 					break;
 
 				case TypeCode.String:
-					this.FillDataFromStringType (data, type as StringType);
+					this.FillDataFromStringType (data, caption, type as StringType);
 					break;
 
 				default:
@@ -1092,45 +1104,84 @@ namespace Epsitec.Common.Support.ResourceAccessors
 		}
 
 
-		private void FillDataFromNumericType(StructuredData data, AbstractNumericType type)
+		private void FillDataFromNumericType(StructuredData data, Caption caption, AbstractNumericType type)
 		{
 			data.DefineStructuredType (Res.Types.ResourceNumericType);
 
-			data.SetValue (Res.Fields.ResourceNumericType.Range, type.Range);
-			data.SetValue (Res.Fields.ResourceNumericType.PreferredRange, type.PreferredRange);
-			data.SetValue (Res.Fields.ResourceNumericType.SmallStep, type.SmallStep);
-			data.SetValue (Res.Fields.ResourceNumericType.LargeStep, type.LargeStep);
+			if (caption.ContainsLocalValue (AbstractNumericType.RangeProperty))
+			{
+				data.SetValue (Res.Fields.ResourceNumericType.Range, type.Range);
+			}
+			if (caption.ContainsLocalValue (AbstractNumericType.PreferredRangeProperty))
+			{
+				data.SetValue (Res.Fields.ResourceNumericType.PreferredRange, type.PreferredRange);
+			}
+			if (caption.ContainsLocalValue (AbstractNumericType.SmallStepProperty))
+			{
+				data.SetValue (Res.Fields.ResourceNumericType.SmallStep, type.SmallStep);
+			}
+			if (caption.ContainsLocalValue (AbstractNumericType.LargeStepProperty))
+			{
+				data.SetValue (Res.Fields.ResourceNumericType.LargeStep, type.LargeStep);
+			}
 		}
 		
-		private void FillDataFromBinaryType(StructuredData data, BinaryType type)
+		private void FillDataFromBinaryType(StructuredData data, Caption caption, BinaryType type)
 		{
 			data.DefineStructuredType (Res.Types.ResourceBinaryType);
 
-			data.SetValue (Res.Fields.ResourceBinaryType.MimeType, type.MimeType);
+			if (caption.ContainsLocalValue (BinaryType.MimeTypeProperty))
+			{
+				data.SetValue (Res.Fields.ResourceBinaryType.MimeType, type.MimeType);
+			}
 		}
 
-		private void FillDataFromCollectionType(StructuredData data, CollectionType type)
+		private void FillDataFromCollectionType(StructuredData data, Caption caption, CollectionType type)
 		{
 			data.DefineStructuredType (Res.Types.ResourceCollectionType);
 
-			data.SetValue (Res.Fields.ResourceCollectionType.ItemType, type.ItemType.CaptionId);
+			if (caption.ContainsLocalValue (CollectionType.ItemTypeProperty))
+			{
+				data.SetValue (Res.Fields.ResourceCollectionType.ItemType, type.ItemType.CaptionId);
+			}
 		}
 
-		private void FillDataFromDateTimeType(StructuredData data, AbstractDateTimeType type)
+		private void FillDataFromDateTimeType(StructuredData data, Caption caption, AbstractDateTimeType type)
 		{
 			data.DefineStructuredType (Res.Types.ResourceDateTimeType);
 
-			data.SetValue (Res.Fields.ResourceDateTimeType.Resolution, type.Resolution);
-			
-			data.SetValue (Res.Fields.ResourceDateTimeType.MinimumDate, type.MinimumDate);
-			data.SetValue (Res.Fields.ResourceDateTimeType.MaximumDate, type.MaximumDate);
-			data.SetValue (Res.Fields.ResourceDateTimeType.MinimumTime, type.MinimumTime);
-			data.SetValue (Res.Fields.ResourceDateTimeType.MaximumTime, type.MaximumTime);
-			data.SetValue (Res.Fields.ResourceDateTimeType.DateStep, type.DateStep);
-			data.SetValue (Res.Fields.ResourceDateTimeType.TimeStep, type.TimeStep);
+			if (caption.ContainsLocalValue (AbstractDateTimeType.ResolutionProperty))
+			{
+				data.SetValue (Res.Fields.ResourceDateTimeType.Resolution, type.Resolution);
+			}
+
+			if (caption.ContainsLocalValue (AbstractDateTimeType.MinimumDateProperty))
+			{
+				data.SetValue (Res.Fields.ResourceDateTimeType.MinimumDate, type.MinimumDate);
+			}
+			if (caption.ContainsLocalValue (AbstractDateTimeType.MaximumDateProperty))
+			{
+				data.SetValue (Res.Fields.ResourceDateTimeType.MaximumDate, type.MaximumDate);
+			}
+			if (caption.ContainsLocalValue (AbstractDateTimeType.MinimumTimeProperty))
+			{
+				data.SetValue (Res.Fields.ResourceDateTimeType.MinimumTime, type.MinimumTime);
+			}
+			if (caption.ContainsLocalValue (AbstractDateTimeType.MaximumTimeProperty))
+			{
+				data.SetValue (Res.Fields.ResourceDateTimeType.MaximumTime, type.MaximumTime);
+			}
+			if (caption.ContainsLocalValue (AbstractDateTimeType.DateStepProperty))
+			{
+				data.SetValue (Res.Fields.ResourceDateTimeType.DateStep, type.DateStep);
+			}
+			if (caption.ContainsLocalValue (AbstractDateTimeType.TimeStepProperty))
+			{
+				data.SetValue (Res.Fields.ResourceDateTimeType.TimeStep, type.TimeStep);
+			}
 		}
 
-		private void FillDataFromEnumType(CultureMap item, StructuredData data, EnumType type, DataCreationMode mode)
+		private void FillDataFromEnumType(CultureMap item, StructuredData data, Caption caption, EnumType type, DataCreationMode mode)
 		{
 			data.DefineStructuredType (Res.Types.ResourceEnumType);
 
@@ -1184,23 +1235,39 @@ namespace Epsitec.Common.Support.ResourceAccessors
 				}
 			}
 
-			data.SetValue (Res.Fields.ResourceEnumType.SystemType, type.SystemType);
+			if ((UndefinedValue.IsUndefinedValue (data.GetValue (Res.Fields.ResourceEnumType.SystemType))) ||
+				(type.SystemType != null))
+			{
+				data.SetValue (Res.Fields.ResourceEnumType.SystemType, type.SystemType);
+			}
 		}
 
-		private void FillDataFromOtherType(StructuredData data, OtherType type)
+		private void FillDataFromOtherType(StructuredData data, Caption caption, OtherType type)
 		{
 			data.DefineStructuredType (Res.Types.ResourceOtherType);
 
-			data.SetValue (Res.Fields.ResourceOtherType.SystemType, type.SystemType);
+			if (caption.ContainsLocalValue (AbstractType.SytemTypeProperty))
+			{
+				data.SetValue (Res.Fields.ResourceOtherType.SystemType, type.SystemType);
+			}
 		}
 
-		private void FillDataFromStringType(StructuredData data, StringType type)
+		private void FillDataFromStringType(StructuredData data, Caption caption, StringType type)
 		{
 			data.DefineStructuredType (Res.Types.ResourceStringType);
 
-			data.SetValue (Res.Fields.ResourceStringType.MinimumLength, type.MinimumLength);
-			data.SetValue (Res.Fields.ResourceStringType.MaximumLength, type.MaximumLength);
-			data.SetValue (Res.Fields.ResourceStringType.UseMultilingualStorage, type.UseMultilingualStorage);
+			if (caption.ContainsLocalValue (StringType.MinimumLengthProperty))
+			{
+				data.SetValue (Res.Fields.ResourceStringType.MinimumLength, type.MinimumLength);
+			}
+			if (caption.ContainsLocalValue (StringType.MaximumLengthProperty))
+			{
+				data.SetValue (Res.Fields.ResourceStringType.MaximumLength, type.MaximumLength);
+			}
+			if (caption.ContainsLocalValue (StringType.UseMultilingualStorageProperty))
+			{
+				data.SetValue (Res.Fields.ResourceStringType.UseMultilingualStorage, type.UseMultilingualStorage);
+			}
 		}
 
 		#endregion
