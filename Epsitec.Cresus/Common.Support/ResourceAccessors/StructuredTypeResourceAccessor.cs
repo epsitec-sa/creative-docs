@@ -18,10 +18,17 @@ namespace Epsitec.Common.Support.ResourceAccessors
 	/// </summary>
 	public class StructuredTypeResourceAccessor : CaptionResourceAccessor
 	{
+		/// <summary>
+		/// Initializes a new instance of the <see cref="StructuredTypeResourceAccessor"/> class.
+		/// </summary>
 		public StructuredTypeResourceAccessor()
 		{
 		}
 
+		/// <summary>
+		/// Gets the field accessor associated with the structured type accessor.
+		/// </summary>
+		/// <value>The <see cref="FieldResourceAccessor"/>.</value>
 		public IResourceAccessor FieldAccessor
 		{
 			get
@@ -30,6 +37,12 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			}
 		}
 
+		/// <summary>
+		/// Gets the caption prefix for this accessor.
+		/// Note: several resource types are stored as captions; the prefix of
+		/// the field name is used to differentiate them.
+		/// </summary>
+		/// <value>The caption <c>"Type.StructuredType."</c> prefix.</value>
 		protected override string Prefix
 		{
 			get
@@ -38,18 +51,25 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			}
 		}
 
+		/// <summary>
+		/// Checks if the data stored in the field matches this accessor. This
+		/// can be used to filter out specific fields.
+		/// </summary>
+		/// <param name="field">The field to check.</param>
+		/// <param name="fieldName">Name of the field.</param>
+		/// <returns>
+		/// 	<c>true</c> if data should be loaded from the field; otherwise, <c>false</c>.
+		/// </returns>
 		protected override bool FilterField(ResourceBundle.Field field, string fieldName)
 		{
-			if (this.ResourceManager.BasedOnPatchModule)
-			{
-				return false;
-			}
-			else
-			{
-				return base.FilterField (field, fieldName);
-			}
+			return base.FilterField (field, fieldName);
 		}
 
+		/// <summary>
+		/// Loads resources from the specified resource manager. The resource
+		/// manager will be used for all upcoming accesses.
+		/// </summary>
+		/// <param name="manager">The resource manager.</param>
 		public override void Load(ResourceManager manager)
 		{
 			base.Load (manager);
@@ -79,9 +99,20 @@ namespace Epsitec.Common.Support.ResourceAccessors
 
 			accessors.Add (this);
 		}
-		
+
+		/// <summary>
+		/// Gets the data broker associated with the specified field. Usually,
+		/// this is only meaningful if the field defines a collection of
+		/// <see cref="StructuredData"/> items.
+		/// </summary>
+		/// <param name="container">The container.</param>
+		/// <param name="fieldId">The id for the field in the specified container.</param>
+		/// <returns>The data broker or <c>null</c>.</returns>
 		public override IDataBroker GetDataBroker(StructuredData container, string fieldId)
 		{
+			//	When the user requests a broker for the "Fields" value, we provide
+			//	the appropriate FieldBroker :
+
 			if (fieldId == Res.Fields.ResourceStructuredType.Fields.ToString ())
 			{
 				return new FieldBroker ();
@@ -90,6 +121,12 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			return base.GetDataBroker (container, fieldId);
 		}
 
+		/// <summary>
+		/// Creates a field item for the specified structured type item.
+		/// </summary>
+		/// <param name="item">The structured type item.</param>
+		/// <returns>The field item which can then be added in the
+		/// <see cref="FieldResourceAccessor"/> collection.</returns>
 		public CultureMap CreateFieldItem(CultureMap item)
 		{
 			CultureMap fieldItem = this.fieldAccessor.CreateFieldItem (item.Name);
@@ -99,6 +136,12 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			return fieldItem;
 		}
 
+		/// <summary>
+		/// Persists the changes to the underlying data store.
+		/// </summary>
+		/// <returns>
+		/// The number of items which have been persisted.
+		/// </returns>
 		public override int PersistChanges()
 		{
 			int n = this.FieldAccessor.PersistChanges ();
@@ -124,6 +167,12 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			return n+m;
 		}
 
+		/// <summary>
+		/// Reverts the changes applied to the accessor.
+		/// </summary>
+		/// <returns>
+		/// The number of items which have been reverted.
+		/// </returns>
 		public override int RevertChanges()
 		{
 			int n = 0;
@@ -134,11 +183,25 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			return n;
 		}
 
+		/// <summary>
+		/// Gets the structured type which describes the caption data.
+		/// </summary>
+		/// <returns>
+		/// The <see cref="StructuredType"/> instance.
+		/// </returns>
 		protected override IStructuredType GetStructuredType()
 		{
 			return Res.Types.ResourceStructuredType;
 		}
 
+		/// <summary>
+		/// Creates a caption based on the definitions stored in a data record.
+		/// </summary>
+		/// <param name="sourceBundle">The source bundle.</param>
+		/// <param name="data">The data record.</param>
+		/// <param name="name">The name of the caption.</param>
+		/// <param name="twoLetterISOLanguageName">The two letter ISO language name.</param>
+		/// <returns>A <see cref="Caption"/> instance.</returns>
 		protected override Caption CreateCaptionFromData(ResourceBundle sourceBundle, Types.StructuredData data, string name, string twoLetterISOLanguageName)
 		{
 			Caption caption = base.CreateCaptionFromData (sourceBundle, data, name, twoLetterISOLanguageName);
@@ -159,6 +222,13 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			return caption;
 		}
 
+		/// <summary>
+		/// Fills the data record from a given caption.
+		/// </summary>
+		/// <param name="item">The item associated with the data record.</param>
+		/// <param name="data">The data record.</param>
+		/// <param name="caption">The caption.</param>
+		/// <param name="mode">The creation mode for the data record.</param>
 		protected override void FillDataFromCaption(CultureMap item, Types.StructuredData data, Caption caption, DataCreationMode mode)
 		{
 			base.FillDataFromCaption (item, data, caption, mode);
@@ -167,6 +237,97 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			this.FillDataFromType (item, data, type, mode);
 		}
 
+		/// <summary>
+		/// Determines whether the specified data record describes an empty
+		/// caption.
+		/// </summary>
+		/// <param name="data">The data record.</param>
+		/// <returns>
+		/// 	<c>true</c> if this is an empty caption; otherwise, <c>false</c>.
+		/// </returns>
+		protected override bool IsEmptyCaption(StructuredData data)
+		{
+			if (base.IsEmptyCaption (data))
+			{
+				object                baseTypeValue   = data.GetValue (Res.Fields.ResourceStructuredType.BaseType);
+				object                classValue      = data.GetValue (Res.Fields.ResourceStructuredType.Class);
+				IList<StructuredData> fields          = data.GetValue (Res.Fields.ResourceStructuredType.Fields) as IList<StructuredData>;
+				IList<Druid>          interfaceIds    = data.GetValue (Res.Fields.ResourceStructuredType.InterfaceIds) as IList<Druid>;
+				string                designerLayouts = data.GetValue (Res.Fields.ResourceStructuredType.SerializedDesignerLayouts) as string;
+
+				if ((UndefinedValue.IsUndefinedValue (baseTypeValue)) &&
+					/*(UndefinedValue.IsUndefinedValue (classValue)) &&*/
+					((fields == null) || (fields.Count == 0)) &&
+					((interfaceIds == null) || (interfaceIds.Count == 0)) &&
+					(string.IsNullOrEmpty (designerLayouts)))
+				{
+					return true;
+				}
+			}
+
+			return false;
+		}
+
+		/// <summary>
+		/// Computes the difference between a raw data record and a reference
+		/// data record and fills the patch data record with the resulting
+		/// delta.
+		/// </summary>
+		/// <param name="rawData">The raw data record.</param>
+		/// <param name="refData">The reference data record.</param>
+		/// <param name="patchData">The patch data, which will be filled with the delta.</param>
+		protected override void ComputeDataDelta(StructuredData rawData, StructuredData refData, StructuredData patchData)
+		{
+			base.ComputeDataDelta (rawData, refData, patchData);
+			
+			object                refBaseTypeValue   = refData.GetValue (Res.Fields.ResourceStructuredType.BaseType);
+			object                refClassValue      = refData.GetValue (Res.Fields.ResourceStructuredType.Class);
+			IList<StructuredData> refFields          = refData.GetValue (Res.Fields.ResourceStructuredType.Fields) as IList<StructuredData>;
+			IList<Druid>          refInterfaceIds    = refData.GetValue (Res.Fields.ResourceStructuredType.InterfaceIds) as IList<Druid>;
+			string                refDesignerLayouts = refData.GetValue (Res.Fields.ResourceStructuredType.SerializedDesignerLayouts) as string;
+
+			object                rawBaseTypeValue   = rawData.GetValue (Res.Fields.ResourceStructuredType.BaseType);
+			object                rawClassValue      = rawData.GetValue (Res.Fields.ResourceStructuredType.Class);
+			IList<StructuredData> rawFields          = rawData.GetValue (Res.Fields.ResourceStructuredType.Fields) as IList<StructuredData>;
+			IList<Druid>          rawInterfaceIds    = rawData.GetValue (Res.Fields.ResourceStructuredType.InterfaceIds) as IList<Druid>;
+			string                rawDesignerLayouts = rawData.GetValue (Res.Fields.ResourceStructuredType.SerializedDesignerLayouts) as string;
+
+			if ((!UndefinedValue.IsUndefinedValue (rawBaseTypeValue)) &&
+				((UndefinedValue.IsUndefinedValue (refBaseTypeValue)) || ((Druid) refBaseTypeValue != (Druid) rawBaseTypeValue)))
+			{
+				patchData.SetValue (Res.Fields.ResourceStructuredType.BaseType, rawBaseTypeValue);
+			}
+			if (!UndefinedValue.IsUndefinedValue (rawClassValue))
+			{
+				System.Diagnostics.Debug.Assert ((StructuredTypeClass) refClassValue == (StructuredTypeClass) rawClassValue);
+			}
+
+			//	The structured type class must be defined, or else we won't be able
+			//	to generate the correct StructuredType instance for the caption
+			//	serialization.
+			
+			patchData.SetValue (Res.Fields.ResourceStructuredType.Class, refClassValue);
+
+			if ((!string.IsNullOrEmpty (rawDesignerLayouts)) &&
+				(refDesignerLayouts != rawDesignerLayouts))
+			{
+				patchData.SetValue (Res.Fields.ResourceStructuredType.SerializedDesignerLayouts, rawDesignerLayouts);
+			}
+			if ((rawFields != null) &&
+				(rawFields.Count > 0) &&
+				(!Types.Collection.CompareEqual (rawFields, refFields)))
+			{
+				patchData.SetValue (Res.Fields.ResourceStructuredType.Fields, rawFields);
+			}
+			if ((rawInterfaceIds != null) &&
+				(rawInterfaceIds.Count > 0) &&
+				(!Types.Collection.CompareEqual (rawInterfaceIds, refInterfaceIds)))
+			{
+				patchData.SetValue (Res.Fields.ResourceStructuredType.InterfaceIds, rawInterfaceIds);
+			}
+		}
+		
+		
 		private StructuredType GetTypeFromData(StructuredData data, Caption caption)
 		{
 			if (UndefinedValue.IsUndefinedValue (data.GetValue (Res.Fields.ResourceStructuredType.Class)))
@@ -184,31 +345,41 @@ namespace Epsitec.Common.Support.ResourceAccessors
 
 			IList<Druid> interfaceIds = data.GetValue (Res.Fields.ResourceStructuredType.InterfaceIds) as IList<Druid>;
 
-			foreach (Druid interfaceId in interfaceIds)
+			if (interfaceIds != null)
 			{
-				type.InterfaceIds.Add (interfaceId);
+				foreach (Druid interfaceId in interfaceIds)
+				{
+					type.InterfaceIds.Add (interfaceId);
+				}
 			}
 			
 			IList<StructuredData> fieldsData = data.GetValue (Res.Fields.ResourceStructuredType.Fields) as IList<StructuredData>;
 			
 			int rank = 0;
 
-			foreach (StructuredData fieldData in fieldsData)
+			if (fieldsData != null)
 			{
-				Druid fieldType = StructuredTypeResourceAccessor.ToDruid (fieldData.GetValue (Res.Fields.Field.TypeId));
-				Druid fieldCaption = StructuredTypeResourceAccessor.ToDruid (fieldData.GetValue (Res.Fields.Field.CaptionId));
-				FieldRelation relation = (FieldRelation) fieldData.GetValue (Res.Fields.Field.Relation);
-				FieldMembership membership = (FieldMembership) fieldData.GetValue (Res.Fields.Field.Membership);
-				FieldSource source = (FieldSource) fieldData.GetValue (Res.Fields.Field.Source);
-				FieldOptions options = (FieldOptions) fieldData.GetValue (Res.Fields.Field.Options);
-				string expression = fieldData.GetValue (Res.Fields.Field.Expression) as string;
+				type.SetValue (StructuredType.DebugDisableChecksProperty, true);
 
-				if (membership == FieldMembership.Local)
+				foreach (StructuredData fieldData in fieldsData)
 				{
-					StructuredTypeField field = new StructuredTypeField (null, null, fieldCaption, rank++, relation, membership, source, options, expression);
-					field.DefineTypeId (fieldType);
-					type.Fields.Add (field);
+					Druid fieldType = StructuredTypeResourceAccessor.ToDruid (fieldData.GetValue (Res.Fields.Field.TypeId));
+					Druid fieldCaption = StructuredTypeResourceAccessor.ToDruid (fieldData.GetValue (Res.Fields.Field.CaptionId));
+					FieldRelation relation = (FieldRelation) fieldData.GetValue (Res.Fields.Field.Relation);
+					FieldMembership membership = (FieldMembership) fieldData.GetValue (Res.Fields.Field.Membership);
+					FieldSource source = (FieldSource) fieldData.GetValue (Res.Fields.Field.Source);
+					FieldOptions options = (FieldOptions) fieldData.GetValue (Res.Fields.Field.Options);
+					string expression = fieldData.GetValue (Res.Fields.Field.Expression) as string;
+
+					if (membership == FieldMembership.Local)
+					{
+						StructuredTypeField field = new StructuredTypeField (null, null, fieldCaption, rank++, relation, membership, source, options, expression);
+						field.DefineTypeId (fieldType);
+						type.Fields.Add (field);
+					}
 				}
+
+				type.ClearValue (StructuredType.DebugDisableChecksProperty);
 			}
 
 			return type;
@@ -216,14 +387,17 @@ namespace Epsitec.Common.Support.ResourceAccessors
 
 		private void FillDataFromType(CultureMap item, StructuredData data, StructuredType type, DataCreationMode mode)
 		{
-			//	TODO: take in account the mode
-
-			System.Diagnostics.Debug.Assert ((type == null) || type.CaptionId.IsValid);
+			if (mode != DataCreationMode.Temporary)
+			{
+				System.Diagnostics.Debug.Assert ((type == null) || type.CaptionId.IsValid);
+			}
 
 			ObservableList<StructuredData> fields = new ObservableList<StructuredData> ();
 
 			if (type != null)
 			{
+				type.FreezeInheritance ();
+
 				foreach (string fieldId in type.GetFieldIds ())
 				{
 					StructuredTypeField field = type.Fields[fieldId];
@@ -232,12 +406,23 @@ namespace Epsitec.Common.Support.ResourceAccessors
 					StructuredTypeResourceAccessor.FillDataFromField (x, field);
 					fields.Add (x);
 
-					item.NotifyDataAdded (x);
+					if (mode == DataCreationMode.Public)
+					{
+						item.NotifyDataAdded (x);
+					}
 				}
 			}
 
-			data.SetValue (Res.Fields.ResourceStructuredType.Fields, fields);
-			data.LockValue (Res.Fields.ResourceStructuredType.Fields);
+			if (UndefinedValue.IsUndefinedValue (data.GetValue (Res.Fields.ResourceStructuredType.Fields)))
+			{
+				data.SetValue (Res.Fields.ResourceStructuredType.Fields, fields);
+				data.LockValue (Res.Fields.ResourceStructuredType.Fields);
+
+				if (mode == DataCreationMode.Public)
+				{
+					fields.CollectionChanged += new Listener (this, item).HandleCollectionChanged;
+				}
+			}
 			
 			ObservableList<Druid> interfaceIds = new ObservableList<Druid> ();
 
@@ -246,15 +431,20 @@ namespace Epsitec.Common.Support.ResourceAccessors
 				interfaceIds.AddRange (type.InterfaceIds);
 			}
 
-			data.SetValue (Res.Fields.ResourceStructuredType.InterfaceIds, interfaceIds);
-			data.LockValue (Res.Fields.ResourceStructuredType.InterfaceIds);
+			if (UndefinedValue.IsUndefinedValue (data.GetValue (Res.Fields.ResourceStructuredType.InterfaceIds)))
+			{
+				data.SetValue (Res.Fields.ResourceStructuredType.InterfaceIds, interfaceIds);
+				data.LockValue (Res.Fields.ResourceStructuredType.InterfaceIds);
+
+				if (mode == DataCreationMode.Public)
+				{
+					interfaceIds.CollectionChanged += new InterfaceListener (this, item).HandleCollectionChanged;
+				}
+			}
 
 			data.SetValue (Res.Fields.ResourceStructuredType.BaseType, type == null ? Druid.Empty : type.BaseTypeId);
 			data.SetValue (Res.Fields.ResourceStructuredType.Class, type == null ? StructuredTypeClass.None : type.Class);
 			data.SetValue (Res.Fields.ResourceStructuredType.SerializedDesignerLayouts, type == null ? "" : type.SerializedDesignerLayouts);
-
-			interfaceIds.CollectionChanged += new InterfaceListener (this, item).HandleCollectionChanged;
-			fields.CollectionChanged += new Listener (this, item).HandleCollectionChanged;
 		}
 
 		private static void FillDataFromField(StructuredData data, StructuredTypeField field)
@@ -374,6 +564,9 @@ namespace Epsitec.Common.Support.ResourceAccessors
 					
 					StructuredType type = new StructuredType (StructuredTypeClass.Entity, baseTypeId);
 					ResourceManager.SetResourceManager (type, this.ResourceManager);
+					type.FreezeInheritance ();
+
+					//	TODO: rewrite all this code to no longer rely on StructuredType to resolve the base type and interfaces
 
 					foreach (Druid interfaceId in interfaceIds)
 					{

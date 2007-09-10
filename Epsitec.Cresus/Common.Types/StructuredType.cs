@@ -229,6 +229,11 @@ namespace Epsitec.Common.Types
 			return new Collections.ReadOnlyList<Druid> (interfaces);
 		}
 
+		public void FreezeInheritance()
+		{
+			this.fieldInheritance = InheritanceMode.Frozen;
+			this.interfaceInheritance = InheritanceMode.Frozen;
+		}
 
 		#region IStructuredType Members
 
@@ -356,19 +361,30 @@ namespace Epsitec.Common.Types
 			
 			this.RemoveInheritedFields ();
 
-			this.fieldInheritance = InheritanceMode.Disabled;
-			this.interfaceInheritance = InheritanceMode.Disabled;
+			if (this.fieldInheritance != InheritanceMode.Frozen)
+			{
+				this.fieldInheritance = InheritanceMode.Disabled;
+			}
+			if (this.interfaceInheritance != InheritanceMode.Frozen)
+			{
+				this.interfaceInheritance = InheritanceMode.Disabled;
+			}
 			
 			return true;
 		}
 
 		void Serialization.ISerialization.NotifySerializationCompleted(Serialization.Context context)
 		{
-			System.Diagnostics.Debug.Assert (this.fieldInheritance == InheritanceMode.Disabled);
-			System.Diagnostics.Debug.Assert (this.interfaceInheritance == InheritanceMode.Disabled);
-			
-			this.fieldInheritance = InheritanceMode.Undefined;
-			this.interfaceInheritance = InheritanceMode.Undefined;
+			if (this.fieldInheritance != InheritanceMode.Frozen)
+			{
+				System.Diagnostics.Debug.Assert (this.fieldInheritance == InheritanceMode.Disabled);
+				this.fieldInheritance = InheritanceMode.Undefined;
+			}
+			if (this.interfaceInheritance != InheritanceMode.Frozen)
+			{
+				System.Diagnostics.Debug.Assert (this.interfaceInheritance == InheritanceMode.Disabled);
+				this.interfaceInheritance = InheritanceMode.Undefined;
+			}
 		}
 
 		#endregion
@@ -958,7 +974,8 @@ namespace Epsitec.Common.Types
 		{
 			Undefined,
 			Defined,
-			Disabled
+			Disabled,
+			Frozen
 		}
 
 		#endregion
