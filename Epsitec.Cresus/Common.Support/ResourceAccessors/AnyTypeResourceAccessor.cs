@@ -267,9 +267,19 @@ namespace Epsitec.Common.Support.ResourceAccessors
 		}
 
 
+		/// <summary>
+		/// Determines whether the specified data record describes an empty
+		/// caption.
+		/// </summary>
+		/// <param name="data">The data record.</param>
+		/// <returns>
+		/// 	<c>true</c> if this is an empty caption; otherwise, <c>false</c>.
+		/// </returns>
 		protected override bool IsEmptyCaption(StructuredData data)
 		{
-			if (base.IsEmptyCaption (data))
+			if ((base.IsEmptyCaption (data)) &&
+				(ResourceBundle.Field.IsNullString (data.GetValue (Res.Fields.ResourceBaseType.DefaultController) as string)) &&
+				(ResourceBundle.Field.IsNullString (data.GetValue (Res.Fields.ResourceBaseType.DefaultControllerParameter) as string)))
 			{
 				TypeCode code = AnyTypeResourceAccessor.ToTypeCode (data.GetValue (Res.Fields.ResourceBaseType.TypeCode));
 
@@ -359,6 +369,233 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			}
 			
 			return false;
+		}
+
+		protected override void ComputeDataDelta(StructuredData rawData, StructuredData refData, StructuredData patchData)
+		{
+			base.ComputeDataDelta (rawData, refData, patchData);
+
+			TypeCode refCode = AnyTypeResourceAccessor.ToTypeCode (refData.GetValue (Res.Fields.ResourceBaseType.TypeCode));
+			TypeCode rawCode = AnyTypeResourceAccessor.ToTypeCode (rawData.GetValue (Res.Fields.ResourceBaseType.TypeCode));
+
+			if (refCode != rawCode)
+			{
+				throw new System.InvalidOperationException (string.Format ("Mismatched type codes '{0}' and '{1}'", refCode, rawCode));
+			}
+
+			//	We must always set the type code in the resulting patch data
+			//	record, since otherwise, it would be impossible to determine
+			//	for what type the record stands for :
+			
+			patchData.SetValue (Res.Fields.ResourceBaseType.TypeCode, rawCode);
+
+
+			string refDefaultController          = refData.GetValue (Res.Fields.ResourceBaseType.DefaultController) as string;
+			string refDefaultControllerParameter = refData.GetValue (Res.Fields.ResourceBaseType.DefaultControllerParameter) as string;
+
+			string rawDefaultController          = rawData.GetValue (Res.Fields.ResourceBaseType.DefaultController) as string;
+			string rawDefaultControllerParameter = rawData.GetValue (Res.Fields.ResourceBaseType.DefaultControllerParameter) as string;
+
+			if ((!ResourceBundle.Field.IsNullString (rawDefaultController)) &&
+				(refDefaultController != rawDefaultController))
+			{
+				patchData.SetValue (Res.Fields.ResourceBaseType.DefaultController, rawDefaultController);
+			}
+			if ((!ResourceBundle.Field.IsNullString (rawDefaultControllerParameter)) &&
+				(refDefaultControllerParameter != rawDefaultControllerParameter))
+			{
+				patchData.SetValue (Res.Fields.ResourceBaseType.DefaultControllerParameter, rawDefaultControllerParameter);
+			}
+
+
+			switch (rawCode)
+			{
+				case TypeCode.Invalid:
+					break;
+
+				case TypeCode.Binary:
+
+					string refMimeType = refData.GetValue (Res.Fields.ResourceBinaryType.MimeType) as string;
+					string rawMimeType = rawData.GetValue (Res.Fields.ResourceBinaryType.MimeType) as string;
+
+					if ((!ResourceBundle.Field.IsNullString (rawMimeType)) &&
+						(refMimeType != rawMimeType))
+					{
+						patchData.SetValue (Res.Fields.ResourceBinaryType.MimeType, rawMimeType);
+					}
+					break;
+
+				case TypeCode.Boolean:
+				case TypeCode.Decimal:
+				case TypeCode.Double:
+				case TypeCode.Integer:
+				case TypeCode.LongInteger:
+
+					object refRangeValue          = refData.GetValue (Res.Fields.ResourceNumericType.Range);
+					object refPreferredRangeValue = refData.GetValue (Res.Fields.ResourceNumericType.PreferredRange);
+					object refSmallStepValue      = refData.GetValue (Res.Fields.ResourceNumericType.SmallStep);
+					object refLargeStepValue      = refData.GetValue (Res.Fields.ResourceNumericType.LargeStep);
+					
+					object rawRangeValue          = rawData.GetValue (Res.Fields.ResourceNumericType.Range);
+					object rawPreferredRangeValue = rawData.GetValue (Res.Fields.ResourceNumericType.PreferredRange);
+					object rawSmallStepValue      = rawData.GetValue (Res.Fields.ResourceNumericType.SmallStep);
+					object rawLargeStepValue      = rawData.GetValue (Res.Fields.ResourceNumericType.LargeStep);
+
+					if ((!UndefinedValue.IsUndefinedValue (rawRangeValue)) &&
+						((UndefinedValue.IsUndefinedValue (refRangeValue)) || ((DecimalRange) refRangeValue != (DecimalRange) rawRangeValue)))
+					{
+						patchData.SetValue (Res.Fields.ResourceNumericType.Range, rawRangeValue);
+					}
+					if ((!UndefinedValue.IsUndefinedValue (rawPreferredRangeValue)) &&
+						((UndefinedValue.IsUndefinedValue (refPreferredRangeValue)) || ((DecimalRange) refPreferredRangeValue != (DecimalRange) rawPreferredRangeValue)))
+					{
+						patchData.SetValue (Res.Fields.ResourceNumericType.PreferredRange, rawPreferredRangeValue);
+					}
+
+					if ((!UndefinedValue.IsUndefinedValue (rawSmallStepValue)) &&
+						((UndefinedValue.IsUndefinedValue (refSmallStepValue)) || ((decimal) refSmallStepValue != (decimal) rawSmallStepValue)))
+					{
+						patchData.SetValue (Res.Fields.ResourceNumericType.SmallStep, rawSmallStepValue);
+					}
+					if ((!UndefinedValue.IsUndefinedValue (rawLargeStepValue)) &&
+						((UndefinedValue.IsUndefinedValue (refLargeStepValue)) || ((decimal) refLargeStepValue != (decimal) rawLargeStepValue)))
+					{
+						patchData.SetValue (Res.Fields.ResourceNumericType.LargeStep, rawLargeStepValue);
+					}
+
+					break;
+
+				case TypeCode.Collection:
+
+					object refItemTypeValue = refData.GetValue (Res.Fields.ResourceCollectionType.ItemType);
+					object rawItemTypeValue = rawData.GetValue (Res.Fields.ResourceCollectionType.ItemType);
+
+					if ((!UndefinedValue.IsUndefinedValue (rawItemTypeValue)) &&
+						(((Druid) rawItemTypeValue).IsValid) &&
+						((UndefinedValue.IsUndefinedValue (refItemTypeValue)) || ((Druid) refItemTypeValue != (Druid) rawItemTypeValue)))
+					{
+						patchData.SetValue (Res.Fields.ResourceCollectionType.ItemType, rawItemTypeValue);
+					}
+					break;
+
+				case TypeCode.Date:
+				case TypeCode.DateTime:
+				case TypeCode.Time:
+
+					object refResolutionValue  = refData.GetValue (Res.Fields.ResourceDateTimeType.Resolution);
+					object refMinimumDateValue = refData.GetValue (Res.Fields.ResourceDateTimeType.MinimumDate);
+					object refMaximumDateValue = refData.GetValue (Res.Fields.ResourceDateTimeType.MaximumDate);
+					object refMinimumTimeValue = refData.GetValue (Res.Fields.ResourceDateTimeType.MinimumTime);
+					object refMaximumTimeValue = refData.GetValue (Res.Fields.ResourceDateTimeType.MaximumTime);
+					object refDateStepValue    = refData.GetValue (Res.Fields.ResourceDateTimeType.DateStep);
+					object refTimeStepValue    = refData.GetValue (Res.Fields.ResourceDateTimeType.TimeStep);
+
+					object rawResolutionValue  = rawData.GetValue (Res.Fields.ResourceDateTimeType.Resolution);
+					object rawMinimumDateValue = rawData.GetValue (Res.Fields.ResourceDateTimeType.MinimumDate);
+					object rawMaximumDateValue = rawData.GetValue (Res.Fields.ResourceDateTimeType.MaximumDate);
+					object rawMinimumTimeValue = rawData.GetValue (Res.Fields.ResourceDateTimeType.MinimumTime);
+					object rawMaximumTimeValue = rawData.GetValue (Res.Fields.ResourceDateTimeType.MaximumTime);
+					object rawDateStepValue    = rawData.GetValue (Res.Fields.ResourceDateTimeType.DateStep);
+					object rawTimeStepValue    = rawData.GetValue (Res.Fields.ResourceDateTimeType.TimeStep);
+
+					if ((!UndefinedValue.IsUndefinedValue (rawResolutionValue)) &&
+						((UndefinedValue.IsUndefinedValue (refResolutionValue)) || ((TimeResolution) refResolutionValue != (TimeResolution) rawResolutionValue)))
+					{
+						patchData.SetValue (Res.Fields.ResourceDateTimeType.Resolution, rawResolutionValue);
+					}
+					if ((!UndefinedValue.IsUndefinedValue (rawMinimumDateValue)) &&
+						((UndefinedValue.IsUndefinedValue (refMinimumDateValue)) || ((Date) refMinimumDateValue != (Date) rawMinimumDateValue)))
+					{
+						patchData.SetValue (Res.Fields.ResourceDateTimeType.MinimumDate, rawMinimumDateValue);
+					}
+					if ((!UndefinedValue.IsUndefinedValue (rawMaximumDateValue)) &&
+						((UndefinedValue.IsUndefinedValue (refMaximumDateValue)) || ((Date) refMaximumDateValue != (Date) rawMaximumDateValue)))
+					{
+						patchData.SetValue (Res.Fields.ResourceDateTimeType.MaximumDate, rawMaximumDateValue);
+					}
+					if ((!UndefinedValue.IsUndefinedValue (rawMinimumTimeValue)) &&
+						((UndefinedValue.IsUndefinedValue (refMinimumTimeValue)) || ((Time) refMinimumTimeValue != (Time) rawMinimumTimeValue)))
+					{
+						patchData.SetValue (Res.Fields.ResourceDateTimeType.MinimumTime, rawMinimumTimeValue);
+					}
+					if ((!UndefinedValue.IsUndefinedValue (rawMaximumTimeValue)) &&
+						((UndefinedValue.IsUndefinedValue (refMaximumTimeValue)) || ((Time) refMaximumTimeValue != (Time) rawMaximumTimeValue)))
+					{
+						patchData.SetValue (Res.Fields.ResourceDateTimeType.MaximumTime, rawMaximumTimeValue);
+					}
+					if ((!UndefinedValue.IsUndefinedValue (rawDateStepValue)) &&
+						((UndefinedValue.IsUndefinedValue (refDateStepValue)) || ((DateSpan) refDateStepValue != (DateSpan) rawDateStepValue)))
+					{
+						patchData.SetValue (Res.Fields.ResourceDateTimeType.DateStep, rawDateStepValue);
+					}
+					if ((!UndefinedValue.IsUndefinedValue (rawTimeStepValue)) &&
+						((UndefinedValue.IsUndefinedValue (refTimeStepValue)) || ((System.TimeSpan) refTimeStepValue != (System.TimeSpan) rawTimeStepValue)))
+					{
+						patchData.SetValue (Res.Fields.ResourceDateTimeType.TimeStep, rawTimeStepValue);
+					}
+					
+					break;
+
+				case TypeCode.Enum:
+					IList<StructuredData> refValues = refData.GetValue (Res.Fields.ResourceEnumType.Values) as IList<StructuredData>;
+					System.Type   refEnumSystemType = refData.GetValue (Res.Fields.ResourceEnumType.SystemType) as System.Type;
+
+					IList<StructuredData> rawValues = rawData.GetValue (Res.Fields.ResourceEnumType.Values) as IList<StructuredData>;
+					System.Type   rawEnumSystemType = rawData.GetValue (Res.Fields.ResourceEnumType.SystemType) as System.Type;
+					
+					//	TODO: ...merge lists...
+
+					if ((rawEnumSystemType != null) &&
+						((refEnumSystemType == null) || (refEnumSystemType.FullName != rawEnumSystemType.FullName)))
+					{
+						patchData.SetValue (Res.Fields.ResourceEnumType.SystemType, rawEnumSystemType);
+					}
+					
+					break;
+
+
+				case TypeCode.Other:
+
+					System.Type refOtherSystemType = refData.GetValue (Res.Fields.ResourceOtherType.SystemType) as System.Type;
+					System.Type rawOtherSystemType = rawData.GetValue (Res.Fields.ResourceOtherType.SystemType) as System.Type;
+
+					if ((rawOtherSystemType != null) &&
+						((refOtherSystemType == null) || (refOtherSystemType.FullName != rawOtherSystemType.FullName)))
+					{
+						patchData.SetValue (Res.Fields.ResourceOtherType.SystemType, rawOtherSystemType);
+					}
+					break;
+
+				case TypeCode.String:
+
+					object refUseMultilingualStorageValue = refData.GetValue (Res.Fields.ResourceStringType.UseMultilingualStorage);
+					object refMinimumLengthValue          = refData.GetValue (Res.Fields.ResourceStringType.MinimumLength);
+					object refMaximumLengthValue          = refData.GetValue (Res.Fields.ResourceStringType.MaximumLength);
+					
+					object rawUseMultilingualStorageValue = rawData.GetValue (Res.Fields.ResourceStringType.UseMultilingualStorage);
+					object rawMinimumLengthValue          = rawData.GetValue (Res.Fields.ResourceStringType.MinimumLength);
+					object rawMaximumLengthValue          = rawData.GetValue (Res.Fields.ResourceStringType.MaximumLength);
+
+					if ((!UndefinedValue.IsUndefinedValue (rawUseMultilingualStorageValue)) &&
+						((UndefinedValue.IsUndefinedValue (refUseMultilingualStorageValue)) || ((bool) refUseMultilingualStorageValue != (bool) rawUseMultilingualStorageValue)))
+					{
+						patchData.SetValue (Res.Fields.ResourceStringType.UseMultilingualStorage, rawUseMultilingualStorageValue);
+					}
+					if ((!UndefinedValue.IsUndefinedValue (rawMinimumLengthValue)) &&
+						((UndefinedValue.IsUndefinedValue (refMinimumLengthValue)) || ((int) refMinimumLengthValue != (int) rawMinimumLengthValue)))
+					{
+						patchData.SetValue (Res.Fields.ResourceStringType.MinimumLength, rawMinimumLengthValue);
+					}
+					if ((!UndefinedValue.IsUndefinedValue (rawMaximumLengthValue)) &&
+						((UndefinedValue.IsUndefinedValue (refMaximumLengthValue)) || ((int) refMaximumLengthValue != (int) rawMaximumLengthValue)))
+					{
+						patchData.SetValue (Res.Fields.ResourceStringType.MaximumLength, rawMaximumLengthValue);
+					}
+					break;
+
+				default:
+					throw new System.NotSupportedException (string.Format ("Type code '{0}' not supported", rawCode));
+			}
 		}
 
 
