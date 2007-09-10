@@ -392,7 +392,17 @@ namespace Epsitec.Common.Support.ResourceAccessors
 				System.Diagnostics.Debug.Assert ((type == null) || type.CaptionId.IsValid);
 			}
 
-			ObservableList<StructuredData> fields = new ObservableList<StructuredData> ();
+			ObservableList<StructuredData> fields = data.GetValue (Res.Fields.ResourceStructuredType.Fields) as ObservableList<StructuredData>;
+			ObservableList<Druid> interfaceIds = data.GetValue (Res.Fields.ResourceStructuredType.InterfaceIds) as ObservableList<Druid>;
+			
+			if (fields == null)
+			{
+				fields = new ObservableList<StructuredData> ();
+			}
+			if (interfaceIds == null)
+			{
+				interfaceIds = new ObservableList<Druid> ();
+			}
 
 			if (type != null)
 			{
@@ -401,14 +411,23 @@ namespace Epsitec.Common.Support.ResourceAccessors
 				foreach (string fieldId in type.GetFieldIds ())
 				{
 					StructuredTypeField field = type.Fields[fieldId];
-					StructuredData x = new StructuredData (Res.Types.Field);
 
-					StructuredTypeResourceAccessor.FillDataFromField (x, field);
-					fields.Add (x);
-
-					if (mode == DataCreationMode.Public)
+					if (!Types.Collection.Contains (fields,
+						delegate (StructuredData find)
+						{
+							Druid findId = (Druid) find.GetValue (Res.Fields.Field.CaptionId);
+							return findId == field.CaptionId;
+						}))
 					{
-						item.NotifyDataAdded (x);
+						StructuredData x = new StructuredData (Res.Types.Field);
+
+						StructuredTypeResourceAccessor.FillDataFromField (x, field);
+						fields.Add (x);
+
+						if (mode == DataCreationMode.Public)
+						{
+							item.NotifyDataAdded (x);
+						}
 					}
 				}
 			}
@@ -424,11 +443,18 @@ namespace Epsitec.Common.Support.ResourceAccessors
 				}
 			}
 			
-			ObservableList<Druid> interfaceIds = new ObservableList<Druid> ();
 
 			if (type != null)
 			{
-				interfaceIds.AddRange (type.InterfaceIds);
+				foreach (Druid interfaceId in type.InterfaceIds)
+				{
+					if (interfaceIds.Contains (interfaceId))
+					{
+						continue;
+					}
+
+					interfaceIds.Add (interfaceId);
+				}
 			}
 
 			if (UndefinedValue.IsUndefinedValue (data.GetValue (Res.Fields.ResourceStructuredType.InterfaceIds)))
@@ -442,9 +468,28 @@ namespace Epsitec.Common.Support.ResourceAccessors
 				}
 			}
 
-			data.SetValue (Res.Fields.ResourceStructuredType.BaseType, type == null ? Druid.Empty : type.BaseTypeId);
-			data.SetValue (Res.Fields.ResourceStructuredType.Class, type == null ? StructuredTypeClass.None : type.Class);
-			data.SetValue (Res.Fields.ResourceStructuredType.SerializedDesignerLayouts, type == null ? "" : type.SerializedDesignerLayouts);
+			if (type == null)
+			{
+				data.SetValue (Res.Fields.ResourceStructuredType.BaseType, Druid.Empty);
+				data.SetValue (Res.Fields.ResourceStructuredType.Class, StructuredTypeClass.None);
+				data.SetValue (Res.Fields.ResourceStructuredType.SerializedDesignerLayouts, "");
+			}
+			else
+			{
+				if ((type.BaseTypeId.IsValid) ||
+					(UndefinedValue.IsUndefinedValue (data.GetValue (Res.Fields.ResourceStructuredType.BaseType))))
+				{
+					data.SetValue (Res.Fields.ResourceStructuredType.BaseType, type.BaseTypeId);
+				}
+				
+				data.SetValue (Res.Fields.ResourceStructuredType.Class, type.Class);
+
+				if ((!string.IsNullOrEmpty (type.SerializedDesignerLayouts)) ||
+					(UndefinedValue.IsUndefinedValue (data.GetValue (Res.Fields.ResourceStructuredType.SerializedDesignerLayouts))))
+				{
+					data.SetValue (Res.Fields.ResourceStructuredType.SerializedDesignerLayouts, type.SerializedDesignerLayouts);
+				}
+			}
 		}
 
 		private static void FillDataFromField(StructuredData data, StructuredTypeField field)

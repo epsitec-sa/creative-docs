@@ -1211,22 +1211,25 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			{
 				values = new ObservableList<StructuredData> ();
 			}
-			else
+			else if (source.Count > 0)
 			{
 				source = AnyTypeResourceAccessor.MergeEnumValues (values, source);
 				values.Clear ();
 			}
 
-			foreach (StructuredData value in source)
+			if (source.Count > 0)
 			{
-				StructuredData x = new StructuredData (Res.Types.EnumValue);
-
-				x.SetValue (Res.Fields.EnumValue.CaptionId, value.GetValue (Res.Fields.EnumValue.CaptionId));
-				values.Add (x);
-
-				if (mode == DataCreationMode.Public)
+				foreach (StructuredData value in source)
 				{
-					item.NotifyDataAdded (x);
+					StructuredData x = new StructuredData (Res.Types.EnumValue);
+
+					x.SetValue (Res.Fields.EnumValue.CaptionId, value.GetValue (Res.Fields.EnumValue.CaptionId));
+					values.Add (x);
+
+					if (mode == DataCreationMode.Public)
+					{
+						item.NotifyDataAdded (x);
+					}
 				}
 			}
 
