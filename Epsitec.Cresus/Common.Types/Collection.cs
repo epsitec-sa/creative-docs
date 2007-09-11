@@ -23,6 +23,25 @@ namespace Epsitec.Common.Types
 			return n;
 		}
 
+		public static bool IsEmpty(System.Collections.IEnumerable collection)
+		{
+			if (collection == null)
+			{
+				return true;
+			}
+
+			System.Collections.IEnumerator enumerator = collection.GetEnumerator ();
+
+			if (enumerator.MoveNext ())
+			{
+				return false;
+			}
+			else
+			{
+				return true;
+			}
+		}
+
 		public static T Extract<T>(IEnumerable<T> collection, int index)
 		{
 			int n = 0;
@@ -230,7 +249,12 @@ namespace Epsitec.Common.Types
 			System.Array.Sort (array);
 			return array;
 		}
-		
+
+		public static bool Contains<T>(IEnumerable<T> collection, System.Predicate<T> predicate)
+		{
+			return (Collection.FindIndex (collection, predicate) < 0) ? false : true;
+		}
+
 		public static bool ContainsAll<T>(IEnumerable<T> collection, ICollection<T> values)
 		{
 			List<T> ignore = new List<T> ();
@@ -248,6 +272,23 @@ namespace Epsitec.Common.Types
 			}
 
 			return ignore.Count == values.Count;
+		}
+
+		public static int FindIndex<T>(IEnumerable<T> collection, System.Predicate<T> predicate)
+		{
+			int index = 0;
+
+			foreach (T item in collection)
+			{
+				if (predicate (item))
+				{
+					return index;
+				}
+
+				index++;
+			}
+
+			return -1;
 		}
 
 		public static IEnumerable<T> Filter<T>(IEnumerable<T> collection, System.Predicate<T> predicate)
@@ -457,27 +498,5 @@ namespace Epsitec.Common.Types
 		}
 
 		public delegate bool Predicate<T>(T a, T b);
-
-		public static bool Contains<T>(IEnumerable<T> collection, System.Predicate<T> predicate)
-		{
-			return (Collection.FindIndex (collection, predicate) < 0) ? false : true;
-		}
-
-		public static int FindIndex<T>(IEnumerable<T> collection, System.Predicate<T> predicate)
-		{
-			int index = 0;
-
-			foreach (T item in collection)
-			{
-				if (predicate (item))
-				{
-					return index;
-				}
-
-				index++;
-			}
-			
-			return -1;
-		}
 	}
 }
