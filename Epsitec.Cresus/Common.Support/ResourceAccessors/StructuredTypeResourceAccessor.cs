@@ -744,6 +744,11 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			AccessorsCollection            accessors = StructuredTypeResourceAccessor.GetAccessors (this.ResourceManager.Pool);
 			StructuredTypeResourceAccessor candidate = null;
 
+			if (this.ResourceManager.DefaultModuleId == moduleId)
+			{
+				candidate = this;
+			}
+			
 			foreach (StructuredTypeResourceAccessor accessor in accessors.Collection)
 			{
 				if (accessor.ResourceManager.DefaultModuleId == moduleId)
@@ -753,9 +758,10 @@ namespace Epsitec.Common.Support.ResourceAccessors
 						return accessor;
 					}
 
-					System.Diagnostics.Debug.Assert (candidate == null);
-					
-					candidate = accessor;
+					if (candidate == null)
+					{
+						candidate = accessor;
+					}
 				}
 			}
 
