@@ -10,6 +10,7 @@ namespace Epsitec.Common.Types
 		public static class Types
 		{
 			public static readonly global::Epsitec.Common.Types.EnumType BindingMode = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 0, 16));
+			public static readonly global::Epsitec.Common.Types.EnumType CultureMapSource = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 1, 1));
 			public static readonly global::Epsitec.Common.Types.EnumType FieldMembership = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 0, 29));
 			public static readonly global::Epsitec.Common.Types.EnumType FieldOptions = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 1, 0));
 			public static readonly global::Epsitec.Common.Types.EnumType FieldRelation = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 0, 22));
@@ -46,6 +47,13 @@ namespace Epsitec.Common.Types
 				public static global::Epsitec.Common.Types.Caption OneWay { get { return Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 0, 13)); } }
 				public static global::Epsitec.Common.Types.Caption OneWayToSource { get { return Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 0, 14)); } }
 				public static global::Epsitec.Common.Types.Caption TwoWay { get { return Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 0, 15)); } }
+			}
+			
+			public static class CultureMapSource
+			{
+				public static global::Epsitec.Common.Types.Caption DynamicMerge { get { return Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 1, 4)); } }
+				public static global::Epsitec.Common.Types.Caption PatchModule { get { return Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 1, 3)); } }
+				public static global::Epsitec.Common.Types.Caption ReferenceModule { get { return Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 1, 2)); } }
 			}
 			
 			public static class FieldMembership

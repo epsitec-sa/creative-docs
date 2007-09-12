@@ -47,4 +47,8 @@
   <data id="012">&lt;s:data id="_0" f:Description="Stored value" f:Labels="{Collection {Text 'Value'}}" /&gt;</data>
   <data id="1">&lt;s:data id="_0" f:Description="Field options" f:Labels="{Collection {Text 'Options'}}" /&gt;</data>
   <data id="0P">&lt;s:data id="_0" f:Labels="{Collection {Text 'No options'}}" /&gt;</data>
+  <data id="11">&lt;s:data id="_0" f:Labels="{Collection {Text 'Source'}}" /&gt;</data>
+  <data id="12">&lt;s:data id="_0" f:Labels="{Collection {Text 'Reference module'}}" /&gt;</data>
+  <data id="13">&lt;s:data id="_0" f:Labels="{Collection {Text 'Patch module'}}" /&gt;</data>
+  <data id="14">&lt;s:data id="_0" f:Labels="{Collection {Text 'Dynamic merge'}}" /&gt;</data>
 </bundle>

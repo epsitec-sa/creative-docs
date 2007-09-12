@@ -1,17 +1,22 @@
 //	Copyright © 2007, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using Epsitec.Common.Types;
+
 namespace Epsitec.Common.Support
 {
 	/// <summary>
 	/// The <c>CultureMapSource</c> enumeration lists all possible sources for
 	/// the data found in a <see cref="CultureMap"/> instance.
 	/// </summary>
+	
+	[DesignerVisible]
 	public enum CultureMapSource : byte
 	{
 		/// <summary>
 		/// Invalid source.
 		/// </summary>
+		[Hidden]
 		Invalid,
 
 		/// <summary>

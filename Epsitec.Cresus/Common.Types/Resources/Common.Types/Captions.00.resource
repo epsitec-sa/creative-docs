@@ -64,4 +64,8 @@
   <data name="Val.TypeCode.Other" id="0U1">&lt;s:type id="_1" s:name="*eT" /&gt;&lt;s:data id="_0" f:_1.IsNative="True" f:Name="Other" /&gt;</data>
   <data name="Val.FieldSource.Value" id="012">&lt;s:type id="_1" s:name="*eT" /&gt;&lt;s:data id="_0" f:_1.IsNative="True" f:Name="Value" f:Description="Valeur stockée" f:Labels="{Collection {Text 'Valeur'}}" /&gt;</data>
   <data name="Val.FieldSource.Expression" id="022">&lt;s:type id="_1" s:name="*eT" /&gt;&lt;s:data id="_0" f:_1.IsNative="True" f:Name="Expression" f:Description="Valeur calculée au moyen d&amp;amp;apos;une expression" f:Labels="{Collection {Text 'Expression'}}" /&gt;</data>
+  <data name="Val.CultureMapSource.ReferenceModule" id="12">&lt;s:data id="_0" f:Name="ReferenceModule" f:Labels="{Collection {Text 'Module de référence'}}" /&gt;</data>
+  <data name="Val.CultureMapSource.PatchModule" id="13">&lt;s:data id="_0" f:Name="PatchModule" f:Labels="{Collection {Text 'Module de patch'}}" /&gt;</data>
+  <data name="Val.CultureMapSource.DynamicMerge" id="14">&lt;s:data id="_0" f:Name="DynamicMerge" f:Description="" f:Labels="{Collection {Text 'Fusion dynamique'}}" /&gt;</data>
+  <data name="Typ.CultureMapSource" id="11">&lt;s:type id="_1" s:name="*aT" /&gt;&lt;s:type id="_2" s:name="*eT" /&gt;&lt;s:data id="_0" f:Name="CultureMapSource" f:_1.SystemType="E:Epsitec.Common.Support.CultureMapSource, Common.Support" f:_2.EnumValues="{Collection {Text '0 [1012]'}, {Text '1 [1013]'}, {Text '2 [1014]'}}" f:Labels="{Collection {Text 'Source'}}" /&gt;</data>
 </bundle>

@@ -430,7 +430,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 					{
 						StructuredData x = new StructuredData (Res.Types.Field);
 
-						StructuredTypeResourceAccessor.FillDataFromField (x, field);
+						StructuredTypeResourceAccessor.FillDataFromField (item, x, field);
 						fields.Add (x);
 
 						if (mode == DataCreationMode.Public)
@@ -467,6 +467,8 @@ namespace Epsitec.Common.Support.ResourceAccessors
 						StructuredData x = new StructuredData (Res.Types.InterfaceId);
 
 						x.SetValue (Res.Fields.InterfaceId.CaptionId, interfaceId);
+						x.SetValue (Res.Fields.InterfaceId.CultureMapSource, item.Source);
+
 						interfaceIds.Add (x);
 
 						if (mode == DataCreationMode.Public)
@@ -512,12 +514,13 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			}
 		}
 
-		private static void FillDataFromField(StructuredData data, StructuredTypeField field)
+		private static void FillDataFromField(CultureMap item, StructuredData data, StructuredTypeField field)
 		{
 			data.SetValue (Res.Fields.Field.TypeId, field.Type == null ? Druid.Empty : field.Type.CaptionId);
 			data.SetValue (Res.Fields.Field.CaptionId, field.CaptionId);
 			data.SetValue (Res.Fields.Field.Relation, field.Relation);
 			data.SetValue (Res.Fields.Field.Membership, field.Membership);
+			data.SetValue (Res.Fields.Field.CultureMapSource, item.Source);
 			data.SetValue (Res.Fields.Field.Source, field.Source);
 			data.SetValue (Res.Fields.Field.Options, field.Options);
 			data.SetValue (Res.Fields.Field.Expression, field.Expression ?? "");
@@ -638,17 +641,17 @@ namespace Epsitec.Common.Support.ResourceAccessors
 
 					updater.IncludeType (baseTypeId, FieldMembership.Inherited, 0);
 
-					foreach (StructuredData interfaceId in interfaceIds)
+					foreach (StructuredData interfaceData in interfaceIds)
 					{
-						updater.IncludeType ((Druid) interfaceId.GetValue (Res.Fields.InterfaceId.CaptionId), FieldMembership.Inherited, 0);
+						Druid interfaceId = (Druid) interfaceData.GetValue (Res.Fields.InterfaceId.CaptionId);
+						updater.IncludeType (interfaceId, FieldMembership.Local, 0);
 					}
 
 					int i = 0;
 
 					foreach (StructuredData field in updater.Fields)
 					{
-						System.Diagnostics.Debug.Assert ((FieldMembership) field.GetValue (Res.Fields.Field.Membership) == FieldMembership.Inherited);
-						System.Diagnostics.Debug.Assert (((Druid) field.GetValue (Res.Fields.Field.CaptionId)).IsValid);
+						System.Diagnostics.Debug.Assert (((FieldMembership) field.GetValue (Res.Fields.Field.Membership) == FieldMembership.Inherited) || (((Druid) field.GetValue (Res.Fields.Field.CaptionId)).IsValid));
 
 						fields.Insert (i++, field);
 					}
@@ -709,14 +712,15 @@ namespace Epsitec.Common.Support.ResourceAccessors
 
 						StructuredData copy = new StructuredData (Res.Types.Field);
 
-						copy.SetValue (Res.Fields.Field.TypeId,         field.GetValue (Res.Fields.Field.TypeId));
-						copy.SetValue (Res.Fields.Field.CaptionId,      field.GetValue (Res.Fields.Field.CaptionId));
-						copy.SetValue (Res.Fields.Field.Relation,       field.GetValue (Res.Fields.Field.Relation));
-						copy.SetValue (Res.Fields.Field.Membership,     membership);
-						copy.SetValue (Res.Fields.Field.Source,         field.GetValue (Res.Fields.Field.Source));
-						copy.SetValue (Res.Fields.Field.Options,        field.GetValue (Res.Fields.Field.Options));
-						copy.SetValue (Res.Fields.Field.Expression,     field.GetValue (Res.Fields.Field.Expression));
-						copy.SetValue (Res.Fields.Field.DefiningTypeId, membership == FieldMembership.Local ? Druid.Empty : typeId);
+						copy.SetValue (Res.Fields.Field.TypeId,           field.GetValue (Res.Fields.Field.TypeId));
+						copy.SetValue (Res.Fields.Field.CaptionId,        field.GetValue (Res.Fields.Field.CaptionId));
+						copy.SetValue (Res.Fields.Field.Relation,         field.GetValue (Res.Fields.Field.Relation));
+						copy.SetValue (Res.Fields.Field.Membership,       membership);
+						copy.SetValue (Res.Fields.Field.CultureMapSource, field.GetValue (Res.Fields.Field.CultureMapSource));
+						copy.SetValue (Res.Fields.Field.Source,           field.GetValue (Res.Fields.Field.Source));
+						copy.SetValue (Res.Fields.Field.Options,          field.GetValue (Res.Fields.Field.Options));
+						copy.SetValue (Res.Fields.Field.Expression,       field.GetValue (Res.Fields.Field.Expression));
+						copy.SetValue (Res.Fields.Field.DefiningTypeId,   membership == FieldMembership.Local ? Druid.Empty : typeId);
 						
 						copy.LockValue (Res.Fields.Field.DefiningTypeId);
 
@@ -892,6 +896,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 				data.SetValue (Res.Fields.Field.CaptionId, Druid.Empty);
 				data.SetValue (Res.Fields.Field.Relation, FieldRelation.None);
 				data.SetValue (Res.Fields.Field.Membership, FieldMembership.Local);
+				data.SetValue (Res.Fields.Field.CultureMapSource, container.Source);
 				data.SetValue (Res.Fields.Field.Source, FieldSource.Value);
 				data.SetValue (Res.Fields.Field.Options, FieldOptions.None);
 				data.SetValue (Res.Fields.Field.Expression, "");
@@ -917,6 +922,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 				StructuredData data = new StructuredData (Res.Types.InterfaceId);
 
 				data.SetValue (Res.Fields.InterfaceId.CaptionId, Druid.Empty);
+				data.SetValue (Res.Fields.InterfaceId.CultureMapSource, container.Source);
 				
 				return data;
 			}

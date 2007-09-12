@@ -49,6 +49,7 @@ namespace Epsitec.Common.Support
 			{
 				public static readonly global::Epsitec.Common.Support.Druid Caption = new global::Epsitec.Common.Support.Druid (_moduleId, 0, 46);
 				public static readonly global::Epsitec.Common.Support.Druid CaptionId = new global::Epsitec.Common.Support.Druid (_moduleId, 0, 38);
+				public static readonly global::Epsitec.Common.Support.Druid CultureMapSource = new global::Epsitec.Common.Support.Druid (_moduleId, 1, 11);
 				public static readonly global::Epsitec.Common.Support.Druid DefiningTypeId = new global::Epsitec.Common.Support.Druid (_moduleId, 0, 80);
 				public static readonly global::Epsitec.Common.Support.Druid Expression = new global::Epsitec.Common.Support.Druid (_moduleId, 0, 78);
 				public static readonly global::Epsitec.Common.Support.Druid Membership = new global::Epsitec.Common.Support.Druid (_moduleId, 0, 3);
@@ -61,6 +62,7 @@ namespace Epsitec.Common.Support
 			public static class InterfaceId
 			{
 				public static readonly global::Epsitec.Common.Support.Druid CaptionId = new global::Epsitec.Common.Support.Druid (_moduleId, 1, 10);
+				public static readonly global::Epsitec.Common.Support.Druid CultureMapSource = new global::Epsitec.Common.Support.Druid (_moduleId, 1, 12);
 			}
 			
 			public static class ResourceBase
