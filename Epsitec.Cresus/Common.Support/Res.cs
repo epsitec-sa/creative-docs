@@ -43,6 +43,7 @@ namespace Epsitec.Common.Support
 			public static class EnumValue
 			{
 				public static readonly global::Epsitec.Common.Support.Druid CaptionId = new global::Epsitec.Common.Support.Druid (_moduleId, 0, 74);
+				public static readonly global::Epsitec.Common.Support.Druid CultureMapSource = new global::Epsitec.Common.Support.Druid (_moduleId, 1, 13);
 			}
 			
 			public static class Field

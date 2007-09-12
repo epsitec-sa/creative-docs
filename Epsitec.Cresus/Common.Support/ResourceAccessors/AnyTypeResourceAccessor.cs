@@ -203,6 +203,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 							creation = true;
 
 							dataValue.SetValue (Res.Fields.EnumValue.CaptionId, newValue.Id);
+							dataValue.SetValue (Res.Fields.EnumValue.CultureMapSource, item.Source);
 							
 							values.Add (dataValue);
 						}
@@ -1204,6 +1205,8 @@ namespace Epsitec.Common.Support.ResourceAccessors
 				StructuredData x = new StructuredData (Res.Types.EnumValue);
 
 				x.SetValue (Res.Fields.EnumValue.CaptionId, value.CaptionId);
+				x.SetValue (Res.Fields.EnumValue.CultureMapSource, item.Source);
+
 				source.Add (x);
 			}
 
@@ -1221,7 +1224,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 					System.Diagnostics.Debug.Assert (!UnknownValue.IsUnknownValue (value.GetValue (Res.Fields.EnumValue.CaptionId)));
 					System.Diagnostics.Debug.Assert (!value.IsValueLocked (Res.Fields.EnumValue.CaptionId));
 
-					value.LockValue (Res.Fields.EnumValue.CaptionId);
+//-					value.LockValue (Res.Fields.EnumValue.CaptionId);
 				}
 
 				source = AnyTypeResourceAccessor.MergeEnumValues (values, source);
@@ -1235,6 +1238,8 @@ namespace Epsitec.Common.Support.ResourceAccessors
 					StructuredData x = new StructuredData (Res.Types.EnumValue);
 
 					x.SetValue (Res.Fields.EnumValue.CaptionId, value.GetValue (Res.Fields.EnumValue.CaptionId));
+					x.SetValue (Res.Fields.EnumValue.CultureMapSource, value.GetValue (Res.Fields.EnumValue.CultureMapSource));
+
 					values.Add (x);
 
 					if (mode == DataCreationMode.Public)
@@ -1490,6 +1495,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 				StructuredData data = new StructuredData (Res.Types.EnumValue);
 
 				data.SetValue (Res.Fields.EnumValue.CaptionId, Druid.Empty);
+				data.SetValue (Res.Fields.EnumValue.CultureMapSource, container.Source);
 
 				return data;
 			}
