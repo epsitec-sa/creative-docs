@@ -322,17 +322,45 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			{
 				patchData.SetValue (Res.Fields.ResourceStructuredType.SerializedDesignerLayouts, rawDesignerLayouts);
 			}
+			
 			if ((rawFields != null) &&
 				(rawFields.Count > 0) &&
 				(!Types.Collection.CompareEqual (rawFields, refFields)))
 			{
-				patchData.SetValue (Res.Fields.ResourceStructuredType.Fields, rawFields);
+				List<StructuredData> temp = new List<StructuredData> ();
+				
+				foreach (StructuredData field in rawFields)
+				{
+					CultureMapSource fieldSource = (CultureMapSource) field.GetValue (Res.Fields.Field.CultureMapSource);
+					
+					if ((fieldSource == CultureMapSource.DynamicMerge) ||
+						(fieldSource == CultureMapSource.PatchModule))
+					{
+						temp.Add (field);
+					}
+				}
+
+				patchData.SetValue (Res.Fields.ResourceStructuredType.Fields, temp);
 			}
+			
 			if ((rawInterfaceIds != null) &&
 				(rawInterfaceIds.Count > 0) &&
 				(!Types.Collection.CompareEqual (rawInterfaceIds, refInterfaceIds)))
 			{
-				patchData.SetValue (Res.Fields.ResourceStructuredType.InterfaceIds, rawInterfaceIds);
+				List<StructuredData> temp = new List<StructuredData> ();
+
+				foreach (StructuredData interfaceId in rawInterfaceIds)
+				{
+					CultureMapSource interfaceIdSource = (CultureMapSource) interfaceId.GetValue (Res.Fields.InterfaceId.CultureMapSource);
+
+					if ((interfaceIdSource == CultureMapSource.DynamicMerge) ||
+						(interfaceIdSource == CultureMapSource.PatchModule))
+					{
+						temp.Add (interfaceId);
+					}
+				}
+
+				patchData.SetValue (Res.Fields.ResourceStructuredType.InterfaceIds, temp);
 			}
 		}
 		

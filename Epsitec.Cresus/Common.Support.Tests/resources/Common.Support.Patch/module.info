@@ -3,5 +3,5 @@
   <Versions>
     <Version id="1" build="1" date="2007-08-21T06:30:15.0000000Z" />
   </Versions>
-  <ReferenceModulePath>..\Common.Support</ReferenceModulePath>
+  <ReferenceModulePath>..\..\..\Common.Support\Resources\Common.Support</ReferenceModulePath>
 </ModuleInfo>
