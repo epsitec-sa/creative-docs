@@ -117,6 +117,10 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			{
 				return new FieldBroker ();
 			}
+			if (fieldId == Res.Fields.ResourceStructuredType.InterfaceIds.ToString ())
+			{
+				return new InterfaceIdBroker ();
+			}
 
 			return base.GetDataBroker (container, fieldId);
 		}
@@ -252,7 +256,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 				object                baseTypeValue   = data.GetValue (Res.Fields.ResourceStructuredType.BaseType);
 				object                classValue      = data.GetValue (Res.Fields.ResourceStructuredType.Class);
 				IList<StructuredData> fields          = data.GetValue (Res.Fields.ResourceStructuredType.Fields) as IList<StructuredData>;
-				IList<Druid>          interfaceIds    = data.GetValue (Res.Fields.ResourceStructuredType.InterfaceIds) as IList<Druid>;
+				IList<StructuredData> interfaceIds    = data.GetValue (Res.Fields.ResourceStructuredType.InterfaceIds) as IList<StructuredData>;
 				string                designerLayouts = data.GetValue (Res.Fields.ResourceStructuredType.SerializedDesignerLayouts) as string;
 
 				if ((UndefinedValue.IsUndefinedValue (baseTypeValue)) &&
@@ -283,13 +287,13 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			object                refBaseTypeValue   = refData.GetValue (Res.Fields.ResourceStructuredType.BaseType);
 			object                refClassValue      = refData.GetValue (Res.Fields.ResourceStructuredType.Class);
 			IList<StructuredData> refFields          = refData.GetValue (Res.Fields.ResourceStructuredType.Fields) as IList<StructuredData>;
-			IList<Druid>          refInterfaceIds    = refData.GetValue (Res.Fields.ResourceStructuredType.InterfaceIds) as IList<Druid>;
+			IList<StructuredData> refInterfaceIds    = refData.GetValue (Res.Fields.ResourceStructuredType.InterfaceIds) as IList<StructuredData>;
 			string                refDesignerLayouts = refData.GetValue (Res.Fields.ResourceStructuredType.SerializedDesignerLayouts) as string;
 
 			object                rawBaseTypeValue   = rawData.GetValue (Res.Fields.ResourceStructuredType.BaseType);
 			object                rawClassValue      = rawData.GetValue (Res.Fields.ResourceStructuredType.Class);
 			IList<StructuredData> rawFields          = rawData.GetValue (Res.Fields.ResourceStructuredType.Fields) as IList<StructuredData>;
-			IList<Druid>          rawInterfaceIds    = rawData.GetValue (Res.Fields.ResourceStructuredType.InterfaceIds) as IList<Druid>;
+			IList<StructuredData> rawInterfaceIds    = rawData.GetValue (Res.Fields.ResourceStructuredType.InterfaceIds) as IList<StructuredData>;
 			string                rawDesignerLayouts = rawData.GetValue (Res.Fields.ResourceStructuredType.SerializedDesignerLayouts) as string;
 
 			if ((!UndefinedValue.IsUndefinedValue (rawBaseTypeValue)) &&
@@ -343,13 +347,13 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			type.DefineCaption (caption);
 			type.SerializedDesignerLayouts = layouts;
 
-			IList<Druid> interfaceIds = data.GetValue (Res.Fields.ResourceStructuredType.InterfaceIds) as IList<Druid>;
+			IList<StructuredData> interfaceIds = data.GetValue (Res.Fields.ResourceStructuredType.InterfaceIds) as IList<StructuredData>;
 
 			if (interfaceIds != null)
 			{
-				foreach (Druid interfaceId in interfaceIds)
+				foreach (StructuredData interfaceId in interfaceIds)
 				{
-					type.InterfaceIds.Add (interfaceId);
+					type.InterfaceIds.Add ((Druid) interfaceId.GetValue (Res.Fields.InterfaceId.CaptionId));
 				}
 			}
 			
@@ -393,7 +397,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			}
 
 			ObservableList<StructuredData> fields = data.GetValue (Res.Fields.ResourceStructuredType.Fields) as ObservableList<StructuredData>;
-			ObservableList<Druid> interfaceIds = data.GetValue (Res.Fields.ResourceStructuredType.InterfaceIds) as ObservableList<Druid>;
+			ObservableList<StructuredData> interfaceIds = data.GetValue (Res.Fields.ResourceStructuredType.InterfaceIds) as ObservableList<StructuredData>;
 			
 			if (fields == null)
 			{
@@ -401,7 +405,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			}
 			if (interfaceIds == null)
 			{
-				interfaceIds = new ObservableList<Druid> ();
+				interfaceIds = new ObservableList<StructuredData> ();
 			}
 
 			if (type != null)
@@ -448,12 +452,24 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			{
 				foreach (Druid interfaceId in type.InterfaceIds)
 				{
-					if (interfaceIds.Contains (interfaceId))
+					if (!Types.Collection.Contains (interfaceIds,
+						delegate (StructuredData find)
+						{
+							Druid findId = (Druid) find.GetValue (Res.Fields.InterfaceId.CaptionId);
+							return findId == interfaceId;
+						}))
 					{
-						continue;
-					}
+						StructuredData x = new StructuredData (Res.Types.InterfaceId);
 
-					interfaceIds.Add (interfaceId);
+						x.SetValue (Res.Fields.InterfaceId.CaptionId, interfaceId);
+						interfaceIds.Add (x);
+
+						if (mode == DataCreationMode.Public)
+						{
+							//	TODO: ...
+//-							item.NotifyDataAdded (x);
+						}
+					}
 				}
 			}
 
@@ -591,7 +607,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 		private void UpdateInheritedFields(StructuredData data, Druid baseTypeId)
 		{
 			ObservableList<StructuredData> fields = data.GetValue (Res.Fields.ResourceStructuredType.Fields) as ObservableList<StructuredData>;
-			IList<Druid>             interfaceIds = data.GetValue (Res.Fields.ResourceStructuredType.InterfaceIds) as IList<Druid>;
+			IList<StructuredData>          interfaceIds = data.GetValue (Res.Fields.ResourceStructuredType.InterfaceIds) as IList<StructuredData>;
 
 			//	We temporarily disable notifications, in order to avoid generating
 			//	circular update events when just refreshing fields that are in fact
@@ -613,9 +629,9 @@ namespace Epsitec.Common.Support.ResourceAccessors
 
 					//	TODO: rewrite all this code to no longer rely on StructuredType to resolve the base type and interfaces
 
-					foreach (Druid interfaceId in interfaceIds)
+					foreach (StructuredData interfaceId in interfaceIds)
 					{
-						type.InterfaceIds.Add (interfaceId);
+						type.InterfaceIds.Add ((Druid) interfaceId.GetValue (Res.Fields.InterfaceId.CaptionId));
 					}
 
 					int i = 0;
@@ -725,6 +741,26 @@ namespace Epsitec.Common.Support.ResourceAccessors
 				data.SetValue (Res.Fields.Field.Expression, "");
 				data.SetValue (Res.Fields.Field.DefiningTypeId, Druid.Empty);
 				data.LockValue (Res.Fields.Field.DefiningTypeId);
+				
+				return data;
+			}
+
+			#endregion
+		}
+
+		#endregion
+
+		#region InterfaceIdBroker Class
+
+		private class InterfaceIdBroker : IDataBroker
+		{
+			#region IDataBroker Members
+
+			public StructuredData CreateData(CultureMap container)
+			{
+				StructuredData data = new StructuredData (Res.Types.InterfaceId);
+
+				data.SetValue (Res.Fields.Field.CaptionId, Druid.Empty);
 				
 				return data;
 			}

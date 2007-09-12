@@ -234,7 +234,7 @@ namespace Epsitec.Common.Support
 
 			accessor.Load (Res.Manager);
 
-			Assert.AreEqual (18, accessor.Collection.Count);
+			Assert.AreEqual (19, accessor.Collection.Count);
 
 			CultureMap map = accessor.Collection[Res.Types.ResourceStructuredType.CaptionId];
 
@@ -311,11 +311,16 @@ namespace Epsitec.Common.Support
 			
 			Assert.IsTrue (Res.Manager.GetBundle (Resources.CaptionsBundleName, ResourceLevel.Default)[fieldsItem.Id].IsEmpty);
 
-			IList<Druid> interfaceIds = data.GetValue (Res.Fields.ResourceStructuredType.InterfaceIds) as IList<Druid>;
+			IList<Types.StructuredData> interfaceIds = data.GetValue (Res.Fields.ResourceStructuredType.InterfaceIds) as IList<Types.StructuredData>;
 
 			Assert.IsNotNull (interfaceIds);
 
-			interfaceIds.Add (Druid.Parse ("[700I2]"));
+			IDataBroker broker = accessor.GetDataBroker (data, Res.Fields.ResourceStructuredType.InterfaceIds.ToString ());
+			Types.StructuredData interfaceIdData = broker.CreateData (map);
+
+			interfaceIdData.SetValue (Res.Fields.InterfaceId.CaptionId, Druid.Parse ("[700I2]"));
+
+			interfaceIds.Add (interfaceIdData);
 
 			Assert.AreEqual (16, fields.Count);
 		}
