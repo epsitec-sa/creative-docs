@@ -1213,6 +1213,17 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			}
 			else if (source.Count > 0)
 			{
+				System.Diagnostics.Debug.Assert (item.Source != CultureMapSource.ReferenceModule);
+
+				foreach (StructuredData value in values)
+				{
+					System.Diagnostics.Debug.Assert (!UndefinedValue.IsUndefinedValue (value.GetValue (Res.Fields.EnumValue.CaptionId)));
+					System.Diagnostics.Debug.Assert (!UnknownValue.IsUnknownValue (value.GetValue (Res.Fields.EnumValue.CaptionId)));
+					System.Diagnostics.Debug.Assert (!value.IsValueLocked (Res.Fields.EnumValue.CaptionId));
+
+					value.LockValue (Res.Fields.EnumValue.CaptionId);
+				}
+
 				source = AnyTypeResourceAccessor.MergeEnumValues (values, source);
 				values.Clear ();
 			}
