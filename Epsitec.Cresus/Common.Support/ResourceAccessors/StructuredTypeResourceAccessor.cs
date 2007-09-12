@@ -38,20 +38,6 @@ namespace Epsitec.Common.Support.ResourceAccessors
 		}
 
 		/// <summary>
-		/// Gets the collection of <see cref="CultureMap"/> items.
-		/// </summary>
-		/// <value>The collection of <see cref="CultureMap"/> items.</value>
-		public override CultureMapList Collection
-		{
-			get
-			{
-				this.RefreshPendingItems ();
-				
-				return base.Collection;
-			}
-		}
-
-		/// <summary>
 		/// Gets the caption prefix for this accessor.
 		/// Note: several resource types are stored as captions; the prefix of
 		/// the field name is used to differentiate them.
@@ -104,12 +90,12 @@ namespace Epsitec.Common.Support.ResourceAccessors
 
 			accessors.Add (this);
 
-			this.pendingRefreshes = new List<CultureMap> ();
-			this.loading = true;
-			
-			base.Load (manager);
+			//	Temporarily disable the item refreshing while we are loading the
+			//	module data.
 
-			this.loading = false;
+			this.postponeRefreshWhileLoading = true;
+			base.Load (manager);
+			this.postponeRefreshWhileLoading = false;
 
 			if (this.fieldAccessor == null)
 			{
@@ -408,21 +394,6 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			return type;
 		}
 
-		private void RefreshPendingItems()
-		{
-			if ((this.pendingRefreshes != null) &&
-				(!this.loading))
-			{
-				List<CultureMap> pendingRefreshes = this.pendingRefreshes;
-				this.pendingRefreshes = null;
-
-				foreach (CultureMap item in pendingRefreshes)
-				{
-					item.IsRefreshNeeded = true;
-				}
-			}
-		}
-
 		private void FillDataFromType(CultureMap item, StructuredData data, StructuredType type, DataCreationMode mode)
 		{
 			if (mode != DataCreationMode.Temporary)
@@ -592,20 +563,20 @@ namespace Epsitec.Common.Support.ResourceAccessors
 
 		protected override void RefreshItem(CultureMap item)
 		{
-			if (this.pendingRefreshes == null)
+			if (this.postponeRefreshWhileLoading)
+			{
+				//	Don't refresh right now, since to create the list of inherited
+				//	fields; all modules should be loaded first.
+
+				item.IsRefreshNeeded = true;
+			}
+			else
 			{
 				StructuredData data = item.GetCultureData (Resources.DefaultTwoLetterISOLanguageName);
 				object baseTypeIdValue = data.GetValue (Res.Fields.ResourceStructuredType.BaseType);
 				Druid baseTypeId = UndefinedValue.IsUndefinedValue (baseTypeIdValue) ? Druid.Empty : (Druid) baseTypeIdValue;
 				this.UpdateInheritedFields (data, baseTypeId);
 				base.RefreshItem (item);
-			}
-			else
-			{
-				if (!this.pendingRefreshes.Contains (item))
-				{
-					this.pendingRefreshes.Add (item);
-				}
 			}
 		}
 
@@ -1036,7 +1007,6 @@ namespace Epsitec.Common.Support.ResourceAccessors
 		private static DependencyProperty AccessorsProperty = DependencyProperty.RegisterAttached ("Accessors", typeof (AccessorsCollection), typeof (StructuredTypeResourceAccessor), new DependencyPropertyMetadata ().MakeNotSerializable ());
 
 		private FieldResourceAccessor fieldAccessor;
-		private List<CultureMap> pendingRefreshes;
-		private bool loading;
+		private bool postponeRefreshWhileLoading;
 	}
 }
