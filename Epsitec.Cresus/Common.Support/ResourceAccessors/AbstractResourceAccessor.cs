@@ -47,7 +47,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 		/// Gets the collection of <see cref="CultureMap"/> items.
 		/// </summary>
 		/// <value>The collection of <see cref="CultureMap"/> items.</value>
-		public CultureMapList Collection
+		public virtual CultureMapList Collection
 		{
 			get
 			{
