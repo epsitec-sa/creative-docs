@@ -895,7 +895,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			{
 				StructuredData data = new StructuredData (Res.Types.InterfaceId);
 
-				data.SetValue (Res.Fields.Field.CaptionId, Druid.Empty);
+				data.SetValue (Res.Fields.InterfaceId.CaptionId, Druid.Empty);
 				
 				return data;
 			}
