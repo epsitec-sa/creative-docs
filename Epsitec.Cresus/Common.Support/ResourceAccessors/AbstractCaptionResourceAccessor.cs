@@ -703,6 +703,14 @@ namespace Epsitec.Common.Support.ResourceAccessors
 				}
 			}
 
+			public IList<AbstractCaptionResourceAccessor> List
+			{
+				get
+				{
+					return this.list;
+				}
+			}
+
 			List<AbstractCaptionResourceAccessor> list;
 		}
 

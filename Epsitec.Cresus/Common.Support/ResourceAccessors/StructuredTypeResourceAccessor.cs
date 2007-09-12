@@ -72,19 +72,10 @@ namespace Epsitec.Common.Support.ResourceAccessors
 		/// <param name="manager">The resource manager.</param>
 		public override void Load(ResourceManager manager)
 		{
-			base.Load (manager);
-
-			if (this.fieldAccessor == null)
-			{
-				this.fieldAccessor = new FieldResourceAccessor ();
-			}
-
-			this.fieldAccessor.Load (manager);
-
 			//	We maintain a list of structured type resource accessors associated
 			//	with the resource manager pool. This is required since we must mark
 			//	all entities as dirty if any entity is modified in the pool...
-			
+
 			AccessorsCollection accessors = StructuredTypeResourceAccessor.GetAccessors (manager.Pool);
 
 			if (accessors == null)
@@ -98,6 +89,15 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			}
 
 			accessors.Add (this);
+			
+			base.Load (manager);
+
+			if (this.fieldAccessor == null)
+			{
+				this.fieldAccessor = new FieldResourceAccessor ();
+			}
+
+			this.fieldAccessor.Load (manager);
 		}
 
 		/// <summary>
@@ -466,8 +466,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 
 						if (mode == DataCreationMode.Public)
 						{
-							//	TODO: ...
-//-							item.NotifyDataAdded (x);
+							item.NotifyDataAdded (x);
 						}
 					}
 				}
@@ -620,36 +619,172 @@ namespace Epsitec.Common.Support.ResourceAccessors
 				if ((baseTypeId.IsValid) ||
 					(interfaceIds.Count > 0))
 				{
-					//	Create an empty type which will be used to extract the inherited
-					//	fields and those imported throught interfaces :
-					
-					StructuredType type = new StructuredType (StructuredTypeClass.Entity, baseTypeId);
-					ResourceManager.SetResourceManager (type, this.ResourceManager);
-					type.FreezeInheritance ();
+					FieldUpdater updater = new FieldUpdater (this);
 
-					//	TODO: rewrite all this code to no longer rely on StructuredType to resolve the base type and interfaces
+					updater.IncludeType (baseTypeId, FieldMembership.Inherited, 0);
 
 					foreach (StructuredData interfaceId in interfaceIds)
 					{
-						type.InterfaceIds.Add ((Druid) interfaceId.GetValue (Res.Fields.InterfaceId.CaptionId));
+						updater.IncludeType ((Druid) interfaceId.GetValue (Res.Fields.InterfaceId.CaptionId), FieldMembership.Inherited, 0);
 					}
 
 					int i = 0;
 
-					foreach (string fieldId in type.GetFieldIds ())
+					foreach (StructuredData field in updater.Fields)
 					{
-						StructuredTypeField field = type.Fields[fieldId];
+						System.Diagnostics.Debug.Assert ((FieldMembership) field.GetValue (Res.Fields.Field.Membership) == FieldMembership.Inherited);
+						System.Diagnostics.Debug.Assert (((Druid) field.GetValue (Res.Fields.Field.CaptionId)).IsValid);
 
-						if ((field.Membership == FieldMembership.Inherited) ||
-							(field.DefiningTypeId.IsValid))
-						{
-							StructuredData x = new StructuredData (Res.Types.Field);
-							StructuredTypeResourceAccessor.FillDataFromField (x, field);
-							fields.Insert (i++, x);
-						}
+						fields.Insert (i++, field);
 					}
 				}
 			}
+		}
+
+		class FieldUpdater
+		{
+			public FieldUpdater(StructuredTypeResourceAccessor host)
+			{
+				this.host   = host;
+				this.ids    = new List<Druid> ();
+				this.fields = new List<StructuredData> ();
+			}
+
+			public void IncludeType(Druid typeId)
+			{
+				this.IncludeType (typeId, FieldMembership.Local, 0);
+			}
+
+			public void IncludeType(Druid typeId, FieldMembership membership, int depth)
+			{
+				StructuredData data = this.host.FindStructuredData (typeId);
+
+				if (data == null)
+				{
+					return;
+				}
+
+				Druid                 baseDruid    = StructuredTypeResourceAccessor.ToDruid (data.GetValue (Res.Fields.ResourceStructuredType.BaseType));
+				IList<StructuredData> interfaceIds = data.GetValue (Res.Fields.ResourceStructuredType.InterfaceIds) as IList<StructuredData>;
+				IList<StructuredData> fields       = data.GetValue (Res.Fields.ResourceStructuredType.Fields) as IList<StructuredData>;
+
+				if (baseDruid.IsValid)
+				{
+					this.IncludeType (baseDruid, FieldMembership.Inherited, depth+1);
+				}
+
+				if (interfaceIds != null)
+				{
+					foreach (StructuredData interfaceId in interfaceIds)
+					{
+						this.IncludeType ((Druid) interfaceId.GetValue (Res.Fields.InterfaceId.CaptionId), membership, depth);
+					}
+				}
+
+				if (fields != null)
+				{
+					foreach (StructuredData field in fields)
+					{
+						Druid fieldId = (Druid) field.GetValue (Res.Fields.Field.CaptionId);
+
+						if (this.ids.Contains (fieldId))
+						{
+							continue;
+						}
+
+						StructuredData copy = new StructuredData (Res.Types.Field);
+
+						copy.SetValue (Res.Fields.Field.TypeId,         field.GetValue (Res.Fields.Field.TypeId));
+						copy.SetValue (Res.Fields.Field.CaptionId,      field.GetValue (Res.Fields.Field.CaptionId));
+						copy.SetValue (Res.Fields.Field.Relation,       field.GetValue (Res.Fields.Field.Relation));
+						copy.SetValue (Res.Fields.Field.Membership,     membership);
+						copy.SetValue (Res.Fields.Field.Source,         field.GetValue (Res.Fields.Field.Source));
+						copy.SetValue (Res.Fields.Field.Options,        field.GetValue (Res.Fields.Field.Options));
+						copy.SetValue (Res.Fields.Field.Expression,     field.GetValue (Res.Fields.Field.Expression));
+						copy.SetValue (Res.Fields.Field.DefiningTypeId, membership == FieldMembership.Local ? Druid.Empty : typeId);
+						
+						copy.LockValue (Res.Fields.Field.DefiningTypeId);
+
+						this.ids.Add (fieldId);
+						this.fields.Add (copy);
+					}
+				}
+			}
+
+			public IList<StructuredData> Fields
+			{
+				get
+				{
+					return this.fields;
+				}
+			}
+
+			private StructuredTypeResourceAccessor host;
+			private List<Druid> ids;
+			private List<StructuredData> fields;
+		}
+
+		/// <summary>
+		/// Finds the structured type resource accessor for a given module.
+		/// </summary>
+		/// <param name="id">The full resource id.</param>
+		/// <returns>The accessor or <c>null</c>.</returns>
+		private StructuredTypeResourceAccessor FindAccessor(Druid id)
+		{
+			return this.FindAccessor (id.Module);
+		}
+
+		/// <summary>
+		/// Finds the structured type resource accessor for a given module.
+		/// </summary>
+		/// <param name="moduleId">The module id.</param>
+		/// <returns>The accessor or <c>null</c>.</returns>
+		private StructuredTypeResourceAccessor FindAccessor(int moduleId)
+		{
+			AccessorsCollection            accessors = StructuredTypeResourceAccessor.GetAccessors (this.ResourceManager.Pool);
+			StructuredTypeResourceAccessor candidate = null;
+
+			foreach (StructuredTypeResourceAccessor accessor in accessors.Collection)
+			{
+				if (accessor.ResourceManager.DefaultModuleId == moduleId)
+				{
+					if (accessor.ResourceManager.BasedOnPatchModule)
+					{
+						return accessor;
+					}
+
+					System.Diagnostics.Debug.Assert (candidate == null);
+					
+					candidate = accessor;
+				}
+			}
+
+			return candidate;
+		}
+
+		/// <summary>
+		/// Finds the data record for a given resource id. This will use one of the
+		/// available accessors to fetch the data.
+		/// </summary>
+		/// <param name="id">The resource id.</param>
+		/// <returns>The <see cref="StructuredData"/> record or <c>null</c>.</returns>
+		private StructuredData FindStructuredData(Druid id)
+		{
+			StructuredTypeResourceAccessor accessor = this.FindAccessor (id);
+
+			if (accessor == null)
+			{
+				return null;
+			}
+
+			CultureMap map = accessor.Collection[id];
+
+			if (map == null)
+			{
+				return null;
+			}
+
+			return map.GetCultureData (Resources.DefaultTwoLetterISOLanguageName);
 		}
 
 		/// <summary>
