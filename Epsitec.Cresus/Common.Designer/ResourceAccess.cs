@@ -61,53 +61,43 @@ namespace Epsitec.Common.Designer
 			this.moduleInfo = moduleInfo;
 			this.designerApplication = designerApplication;
 
-			if (this.IsBundlesType)
+			if (this.type == Type.Strings)
 			{
-				if (this.type == Type.Strings)
-				{
-					this.accessor = new Support.ResourceAccessors.StringResourceAccessor();
-				}
-				if (this.type == Type.Captions)
-				{
-					this.accessor = new Support.ResourceAccessors.CaptionResourceAccessor();
-				}
-				if (this.type == Type.Commands)
-				{
-					this.accessor = new Support.ResourceAccessors.CommandResourceAccessor();
-				}
-				if (this.type == Type.Entities)
-				{
-					this.accessor = new Support.ResourceAccessors.StructuredTypeResourceAccessor();
-				}
-				if (this.type == Type.Types)
-				{
-					this.accessor = new Support.ResourceAccessors.AnyTypeResourceAccessor();
-				}
-				if (this.type == Type.Fields)
-				{
-					Support.ResourceAccessors.StructuredTypeResourceAccessor typeAccessor = module.AccessEntities.accessor as Support.ResourceAccessors.StructuredTypeResourceAccessor;
-					this.accessor = typeAccessor.FieldAccessor;
-				}
-				if (this.type == Type.Values)
-				{
-					Support.ResourceAccessors.AnyTypeResourceAccessor typeAccessor = module.AccessTypes.accessor as Support.ResourceAccessors.AnyTypeResourceAccessor;
-					this.accessor = typeAccessor.ValueAccessor;
-				}
-				if (this.type == Type.Panels)
-				{
-					this.accessor = new Support.ResourceAccessors.PanelResourceAccessor();
-				}
+				this.accessor = new Support.ResourceAccessors.StringResourceAccessor();
+			}
+			if (this.type == Type.Captions)
+			{
+				this.accessor = new Support.ResourceAccessors.CaptionResourceAccessor();
+			}
+			if (this.type == Type.Commands)
+			{
+				this.accessor = new Support.ResourceAccessors.CommandResourceAccessor();
+			}
+			if (this.type == Type.Entities)
+			{
+				this.accessor = new Support.ResourceAccessors.StructuredTypeResourceAccessor();
+			}
+			if (this.type == Type.Types)
+			{
+				this.accessor = new Support.ResourceAccessors.AnyTypeResourceAccessor();
+			}
+			if (this.type == Type.Fields)
+			{
+				Support.ResourceAccessors.StructuredTypeResourceAccessor typeAccessor = module.AccessEntities.accessor as Support.ResourceAccessors.StructuredTypeResourceAccessor;
+				this.accessor = typeAccessor.FieldAccessor;
+			}
+			if (this.type == Type.Values)
+			{
+				Support.ResourceAccessors.AnyTypeResourceAccessor typeAccessor = module.AccessTypes.accessor as Support.ResourceAccessors.AnyTypeResourceAccessor;
+				this.accessor = typeAccessor.ValueAccessor;
+			}
+			if (this.type == Type.Panels)
+			{
+				this.accessor = new Support.ResourceAccessors.PanelResourceAccessor();
+			}
 
-				this.collectionView = new CollectionView(this.accessor.Collection);
-				this.collectionView.Filter = this.CollectionViewFilter;
-			}
-			else
-			{
-				this.druidsIndex = new List<Druid>();
-				this.filterIndexes = new Dictionary<Type, int>();
-				this.filterStrings = new Dictionary<Type, string>();
-				this.filterModes = new Dictionary<Type, Searcher.SearchingMode>();
-			}
+			this.collectionView = new CollectionView(this.accessor.Collection);
+			this.collectionView.Filter = this.CollectionViewFilter;
 		}
 
 
@@ -284,19 +274,11 @@ namespace Epsitec.Common.Designer
 		public void Load()
 		{
 			//	Charge les ressources.
-			if (this.IsBundlesType)
-			{
-				//?this.accessor.Load(this.resourceManager);
-				Support.ResourceAccessors.AbstractResourceAccessor a = this.accessor as Support.ResourceAccessors.AbstractResourceAccessor;
-				a.Load(this.resourceManager);
-				this.collectionView.MoveCurrentToFirst();
-				this.LoadBundles();
-			}
-
-			if (this.type == Type.Panels)
-			{
-				this.LoadPanels();
-			}
+			//?this.accessor.Load(this.resourceManager);
+			Support.ResourceAccessors.AbstractResourceAccessor a = this.accessor as Support.ResourceAccessors.AbstractResourceAccessor;
+			a.Load(this.resourceManager);
+			this.collectionView.MoveCurrentToFirst();
+			this.LoadBundles();
 
 			this.SetFilter("", Searcher.SearchingMode.None);
 
@@ -307,17 +289,8 @@ namespace Epsitec.Common.Designer
 		public void Save()
 		{
 			//	Enregistre les modifications des ressources.
-			if (this.IsBundlesType)
-			{
-				this.AdjustBundlesBeforeSave();
-				this.SaveBundles();
-			}
-
-			if (this.type == Type.Panels)
-			{
-				this.SavePanels();
-			}
-
+			this.AdjustBundlesBeforeSave();
+			this.SaveBundles();
 			this.ClearGlobalDirty();
 		}
 
@@ -455,213 +428,100 @@ namespace Epsitec.Common.Designer
 		public void Duplicate(string newName, bool duplicateContent)
 		{
 			//	Duplique la ressource courante.
-			StructuredType st = null;
+			CultureMap newItem;
+			bool generateMissingValues = false;
 
-			if (this.IsBundlesType)
+			if (this.type == Type.Types && !duplicateContent)
 			{
-				CultureMap newItem;
-				bool generateMissingValues = false;
-
-				if (this.type == Type.Types && !duplicateContent)
-				{
-					TypeCode code = this.lastTypeCodeCreatated;
-					this.designerApplication.DlgResourceTypeCode(this, ref code, out this.lastTypeCodeSystem);
-					if (code == TypeCode.Invalid)  // annuler ?
-					{
-						return;
-					}
-					
-					this.lastTypeCodeCreatated = code;
-
-					newItem = this.accessor.CreateItem();
-					newItem.Name = newName;
-
-					StructuredData data = newItem.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
-					data.SetValue(Support.Res.Fields.ResourceBaseType.TypeCode, code);
-
-					if (this.lastTypeCodeSystem != null)
-					{
-						data.SetValue(Support.Res.Fields.ResourceEnumType.SystemType, this.lastTypeCodeSystem);
-						generateMissingValues = true;
-					}
-				}
-				else if (this.type == Type.Entities && !duplicateContent)
-				{
-					newName = this.designerApplication.DlgResourceName(Dialogs.ResourceName.Operation.Create, Dialogs.ResourceName.Type.Entity, newName);
-					if (string.IsNullOrEmpty(newName))
-					{
-						return;
-					}
-
-					if (!Misc.IsValidName(ref newName))
-					{
-						this.designerApplication.DialogError(Res.Strings.Error.Name.Invalid);
-						return;
-					}
-
-					Druid druid = Druid.Empty;
-					StructuredTypeClass typeClass = StructuredTypeClass.Entity;
-
-					//	TODO: il faudra que dans le dialogue on puisse choisir si on
-					//	veut créer une entité ou une interface, donc retourner soit
-					//	StructuredTypeClass.Entity, soit StructuredTypeClass.Interface
-					Common.Dialogs.DialogResult result = this.designerApplication.DlgResourceSelector(Dialogs.ResourceSelector.Operation.InheritEntity, this.designerApplication.CurrentModule, Type.Entities, ref druid, null);
-					if (result != Common.Dialogs.DialogResult.Yes)
-					{
-						return;
-					}
-
-					newItem = this.accessor.CreateItem();
-					newItem.Name = newName;
-
-					StructuredData data = newItem.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
-					data.SetValue(Support.Res.Fields.ResourceStructuredType.BaseType, druid);
-					data.SetValue(Support.Res.Fields.ResourceStructuredType.Class, typeClass);
-				}
-				else
-				{
-					newItem = this.accessor.CreateItem();
-					newItem.Name = newName;
-				}
-
-				if (duplicateContent)
-				{
-					//	Construit la liste des cultures à copier
-					List<string> cultures = this.GetSecondaryCultureNames();
-					cultures.Insert(0, Resources.DefaultTwoLetterISOLanguageName);
-					
-					CultureMap item = this.collectionView.CurrentItem as CultureMap;
-
-					foreach (string culture in cultures)
-					{
-						StructuredData data = item.GetCultureData(culture);
-						StructuredData newData = newItem.GetCultureData(culture);
-						ResourceAccess.CopyData(this.accessor, newItem, data, newData);
-					}
-				}
-
-				//	Ici, si c'est un type, on a forcément TypeCode qui a été initialisé soit
-				//	explicitement avec un SetValue, soit par recopie de l'original via CopyData;
-				//	c'est indispensable que TypeCode soit défini avant de faire le Add :
-				this.accessor.Collection.Add(newItem);
-				this.collectionView.MoveCurrentTo(newItem);
-
-				if (generateMissingValues)
-				{
-					Support.ResourceAccessors.AnyTypeResourceAccessor accessor = this.accessor as Support.ResourceAccessors.AnyTypeResourceAccessor;
-					accessor.CreateMissingValueItems(newItem);
-				}
-
-				this.SetLocalDirty();
-				return;
-			}
-
-			if (this.type == Type.Panels && !duplicateContent)
-			{
-				//	Choix d'une ressource type de type 'Types', mais uniquement parmi les TypeCode.Structured.
-				Module module = this.designerApplication.CurrentModule;
-				Druid druid = Druid.Empty;
-				Common.Dialogs.DialogResult result = this.designerApplication.DlgResourceSelector(Dialogs.ResourceSelector.Operation.Selection, module, ResourceAccess.Type.Types, ref druid, null);
-				if (result != Common.Dialogs.DialogResult.Yes)  // annuler ?
+				TypeCode code = this.lastTypeCodeCreatated;
+				this.designerApplication.DlgResourceTypeCode(this, ref code, out this.lastTypeCodeSystem);
+				if (code == TypeCode.Invalid)  // annuler ?
 				{
 					return;
 				}
-			}
-
-			Druid newDruid = Druid.Empty;
-
-			if (this.IsBundlesType)
-			{
-				Druid actualDruid = this.druidsIndex[this.accessIndex];
-				int aIndex = this.GetAbsoluteIndex(actualDruid);
-				newDruid = this.CreateUniqueDruid();
-
-				foreach (ResourceBundle bundle in this.bundles)
-				{
-					ResourceBundle.Field newField = bundle.CreateField(ResourceFieldType.Data);
-					newField.SetDruid(newDruid);
-					
-					if (bundle == this.primaryBundle)
-					{
-						newField.SetName(newName);
-					}
-
-					if (duplicateContent)
-					{
-						ResourceBundle.Field field = bundle[actualDruid];
-						if (field.IsEmpty)
-						{
-							newField.SetStringValue("");
-						}
-						else
-						{
-							newField.SetStringValue(field.AsString);
-							newField.SetAbout(field.About);
-						}
-					}
-					else
-					{
-						newField.SetStringValue("");
-					}
-
-					if (bundle == this.primaryBundle)
-					{
-						//?newField.SetModificationId(1);
-						bundle.Insert(aIndex+1, newField);
-					}
-					else
-					{
-						//?newField.SetModificationId(0);
-						bundle.Add(newField);
-					}
-				}
-			}
-
-			if (this.type == Type.Panels)
-			{
-				newDruid = this.CreateUniqueDruid();
-				ResourceBundle newBundle = null;
-
-				if (duplicateContent)
-				{
-					ResourceBundle actualBundle = this.panelsList[this.accessIndex];
-					newBundle = actualBundle.Clone();
-					newBundle.DefineName(newDruid.ToBundleId());
-					newBundle.DefineCaption(newName);
-
-					UI.Panel actualPanel = UI.Panel.GetPanel(actualBundle);
-					UI.Panel newPanel = UserInterface.Duplicate(actualPanel, this.resourceManager) as UI.Panel;
-
-					UI.Panel.SetPanel(newBundle, newPanel);
-					newPanel.SetupSampleDataSource();
-				}
-				else
-				{
-					string prefix = this.resourceManager.ActivePrefix;
-					System.Globalization.CultureInfo culture = this.BaseCulture;
-					newBundle = ResourceBundle.Create(this.resourceManager, prefix, newDruid.ToBundleId(), ResourceLevel.Default, culture);
-
-					newBundle.DefineType(this.BundleName(false));
-					newBundle.DefineCaption(newName);
-				}
-
-				this.panelsList.Insert(this.accessIndex, newBundle);
-				this.panelsToCreate.Add(newBundle);
 				
-				this.resourceManager.SetBundle(newBundle, ResourceSetMode.None);
+				this.lastTypeCodeCreatated = code;
 
-				if (st != null)
+				newItem = this.accessor.CreateItem();
+				newItem.Name = newName;
+
+				StructuredData data = newItem.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
+				data.SetValue(Support.Res.Fields.ResourceBaseType.TypeCode, code);
+
+				if (this.lastTypeCodeSystem != null)
 				{
-					UI.Panel newPanel = this.GetPanel(newBundle);
-					ObjectModifier.SetStructuredType(newPanel, st);
+					data.SetValue(Support.Res.Fields.ResourceEnumType.SystemType, this.lastTypeCodeSystem);
+					generateMissingValues = true;
+				}
+			}
+			else if (this.type == Type.Entities && !duplicateContent)
+			{
+				newName = this.designerApplication.DlgResourceName(Dialogs.ResourceName.Operation.Create, Dialogs.ResourceName.Type.Entity, newName);
+				if (string.IsNullOrEmpty(newName))
+				{
+					return;
+				}
+
+				if (!Misc.IsValidName(ref newName))
+				{
+					this.designerApplication.DialogError(Res.Strings.Error.Name.Invalid);
+					return;
+				}
+
+				Druid druid = Druid.Empty;
+				StructuredTypeClass typeClass = StructuredTypeClass.Entity;
+
+				//	TODO: il faudra que dans le dialogue on puisse choisir si on
+				//	veut créer une entité ou une interface, donc retourner soit
+				//	StructuredTypeClass.Entity, soit StructuredTypeClass.Interface
+				Common.Dialogs.DialogResult result = this.designerApplication.DlgResourceSelector(Dialogs.ResourceSelector.Operation.InheritEntity, this.designerApplication.CurrentModule, Type.Entities, ref druid, null);
+				if (result != Common.Dialogs.DialogResult.Yes)
+				{
+					return;
+				}
+
+				newItem = this.accessor.CreateItem();
+				newItem.Name = newName;
+
+				StructuredData data = newItem.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
+				data.SetValue(Support.Res.Fields.ResourceStructuredType.BaseType, druid);
+				data.SetValue(Support.Res.Fields.ResourceStructuredType.Class, typeClass);
+			}
+			else
+			{
+				newItem = this.accessor.CreateItem();
+				newItem.Name = newName;
+			}
+
+			if (duplicateContent)
+			{
+				//	Construit la liste des cultures à copier
+				List<string> cultures = this.GetSecondaryCultureNames();
+				cultures.Insert(0, Resources.DefaultTwoLetterISOLanguageName);
+				
+				CultureMap item = this.collectionView.CurrentItem as CultureMap;
+
+				foreach (string culture in cultures)
+				{
+					StructuredData data = item.GetCultureData(culture);
+					StructuredData newData = newItem.GetCultureData(culture);
+					ResourceAccess.CopyData(this.accessor, newItem, data, newData);
 				}
 			}
 
-			this.druidsIndex.Add(newDruid);
-			this.Sort();
-			this.accessIndex = this.druidsIndex.IndexOf(newDruid);
+			//	Ici, si c'est un type, on a forcément TypeCode qui a été initialisé soit
+			//	explicitement avec un SetValue, soit par recopie de l'original via CopyData;
+			//	c'est indispensable que TypeCode soit défini avant de faire le Add :
+			this.accessor.Collection.Add(newItem);
+			this.collectionView.MoveCurrentTo(newItem);
 
-			this.SetGlobalDirty();
+			if (generateMissingValues)
+			{
+				Support.ResourceAccessors.AnyTypeResourceAccessor accessor = this.accessor as Support.ResourceAccessors.AnyTypeResourceAccessor;
+				accessor.CreateMissingValueItems(newItem);
+			}
+
+			this.SetLocalDirty();
 		}
 
 		private static void CopyData(IResourceAccessor accessor, CultureMap dstItem, StructuredData src, StructuredData dst)
@@ -761,118 +621,35 @@ namespace Epsitec.Common.Designer
 		public void Delete()
 		{
 			//	Supprime la ressource courante dans toutes les cultures.
-			if (this.IsBundlesType)
-			{
-				CultureMap item = this.collectionView.CurrentItem as CultureMap;
-				this.accessor.Collection.Remove(item);
-				this.SetLocalDirty();
-				return;
-			}
-
-			if (this.type == Type.Panels)
-			{
-				ResourceBundle bundle = this.PanelBundle(this.accessIndex);
-
-				this.panelsList.Remove(bundle);
-
-				//	S'il ne s'agit pas d'une nouvelle ressource, il faut l'ajouter dans la liste
-				//	des ressources à détruire (lors du PanelsWrite).
-				if (this.panelsToCreate.Contains(bundle))
-				{
-					this.panelsToCreate.Remove(bundle);
-				}
-				else
-				{
-					this.panelsToDelete.Add(bundle);
-				}
-			}
-
-			this.druidsIndex.RemoveAt(this.accessIndex);
-
-			if (this.accessIndex >= this.druidsIndex.Count)
-			{
-				this.accessIndex --;
-			}
-
-			this.SetGlobalDirty();
+			CultureMap item = this.collectionView.CurrentItem as CultureMap;
+			this.accessor.Collection.Remove(item);
+			this.SetLocalDirty();
 		}
 
 
 		public void SetFilter(string filter, Searcher.SearchingMode mode)
 		{
 			//	Construit l'index en fonction des ressources primaires.
-			if (this.IsBundlesType)
+			if (this.collectionViewFilter != filter || this.collectionViewMode != mode)
 			{
-				if (this.collectionViewFilter != filter || this.collectionViewMode != mode)
+				this.collectionViewMode = mode;
+
+				if ((this.collectionViewMode&Searcher.SearchingMode.CaseSensitive) == 0)
 				{
-					this.collectionViewMode = mode;
-
-					if ((this.collectionViewMode&Searcher.SearchingMode.CaseSensitive) == 0)
-					{
-						this.collectionViewFilter = Searcher.RemoveAccent(filter.ToLower());
-					}
-					else
-					{
-						this.collectionViewFilter = filter;
-					}
-
-					this.collectionViewRegex = null;
-					if ((this.collectionViewMode&Searcher.SearchingMode.Jocker) != 0)
-					{
-						this.collectionViewRegex = RegexFactory.FromSimpleJoker(this.collectionViewFilter, RegexFactory.Options.None);
-					}
-
-					this.collectionView.Refresh();
-				}
-			}
-			else
-			{
-				Druid druid = Druid.Empty;
-				if (this.accessIndex >= 0 && this.accessIndex < this.druidsIndex.Count)
-				{
-					druid = this.druidsIndex[this.accessIndex];
-				}
-
-				//	Met à jour druidsIndex.
-				if (this.IsBundlesType)
-				{
-					this.SetFilterBundles(filter, mode);
-				}
-
-				if (this.type == Type.Panels)
-				{
-					this.SetFilterPanels(filter, mode);
-				}
-
-				//	Trie druidsIndex.
-				this.Sort();
-
-				//	Mémorise le filtre utilisé.
-				if (this.filterStrings.ContainsKey(this.type))
-				{
-					this.filterStrings[this.type] = filter;
+					this.collectionViewFilter = Searcher.RemoveAccent(filter.ToLower());
 				}
 				else
 				{
-					this.filterStrings.Add(this.type, filter);
+					this.collectionViewFilter = filter;
 				}
 
-				if (this.filterModes.ContainsKey(this.type))
+				this.collectionViewRegex = null;
+				if ((this.collectionViewMode&Searcher.SearchingMode.Jocker) != 0)
 				{
-					this.filterModes[this.type] = mode;
-				}
-				else
-				{
-					this.filterModes.Add(this.type, mode);
+					this.collectionViewRegex = RegexFactory.FromSimpleJoker(this.collectionViewFilter, RegexFactory.Options.None);
 				}
 
-				//	Cherche l'index correspondant à la ressource d'avant le changement de filtre.
-				int index = this.druidsIndex.IndexOf(druid);
-				if (index == -1)
-				{
-					index = 0;
-				}
-				this.accessIndex = index;
+				this.collectionView.Refresh();
 			}
 		}
 
@@ -916,16 +693,7 @@ namespace Epsitec.Common.Designer
 			//	Retourne le nombre de données accessibles.
 			get
 			{
-				if (this.IsBundlesType)
-				{
-					return this.collectionView.Count;
-				}
-				else if (this.type == Type.Panels)
-				{
-					return this.panelsList.Count;
-				}
-
-				return 0;
+				return this.collectionView.Count;
 			}
 		}
 
@@ -934,57 +702,29 @@ namespace Epsitec.Common.Designer
 			//	Retourne le nombre de données accessibles.
 			get
 			{
-				if (this.IsBundlesType)
-				{
-					return this.collectionView.Count;
-				}
-				else
-				{
-					return this.druidsIndex.Count;
-				}
+				return this.collectionView.Count;
 			}
 		}
 
 		public Druid AccessDruid(int index)
 		{
 			//	Retourne le druid d'un index donné.
-			if (this.IsBundlesType)
-			{
-				CultureMap item = this.collectionView.Items[index] as CultureMap;
-				return item.Id;
-			}
-			else
-			{
-				if (index >= 0 && index < this.druidsIndex.Count)
-				{
-					return this.druidsIndex[index];
-				}
-				else
-				{
-					return Druid.Empty;
-				}
-			}
+			CultureMap item = this.collectionView.Items[index] as CultureMap;
+			return item.Id;
 		}
 
 		public int AccessIndexOfDruid(Druid druid)
 		{
 			//	Retourne l'index d'un Druid.
-			if (this.IsBundlesType)
+			for (int i=0; i<this.collectionView.Items.Count; i++)
 			{
-				for (int i=0; i<this.collectionView.Items.Count; i++)
+				CultureMap item = this.collectionView.Items[i] as CultureMap;
+				if (item.Id == druid)
 				{
-					CultureMap item = this.collectionView.Items[i] as CultureMap;
-					if (item.Id == druid)
-					{
-						return i;
-					}
+					return i;
 				}
-				return -1;
 			}
-			else
-			{
-				return this.druidsIndex.IndexOf(druid);
-			}
+			return -1;
 		}
 
 		public int AccessIndex
@@ -992,43 +732,18 @@ namespace Epsitec.Common.Designer
 			//	Index de l'accès en cours.
 			get
 			{
-				if (this.IsBundlesType)
-				{
-					return this.collectionView.CurrentPosition;
-				}
-				else
-				{
-					return this.accessIndex;
-				}
+				return this.collectionView.CurrentPosition;
 			}
 
 			set
 			{
-				if (this.IsBundlesType)
-				{
-					value = System.Math.Max(value, 0);
-					value = System.Math.Min(value, this.collectionView.Count-1);
+				value = System.Math.Max(value, 0);
+				value = System.Math.Min(value, this.collectionView.Count-1);
 
-					if (this.collectionView.CurrentPosition != value)
-					{
-						this.collectionView.MoveCurrentToPosition(value);
-						this.collectionView.Refresh();
-					}
-				}
-				else
+				if (this.collectionView.CurrentPosition != value)
 				{
-					value = System.Math.Max(value, 0);
-					value = System.Math.Min(value, this.druidsIndex.Count-1);
-					this.accessIndex = value;
-
-					if (this.filterIndexes.ContainsKey(this.type))
-					{
-						this.filterIndexes[this.type] = value;
-					}
-					else
-					{
-						this.filterIndexes.Add(this.type, value);
-					}
+					this.collectionView.MoveCurrentToPosition(value);
+					this.collectionView.Refresh();
 				}
 			}
 		}
@@ -1061,28 +776,13 @@ namespace Epsitec.Common.Designer
 			}
 
 			//	Cherche si le nom existe déjà.
-			string err;
-			if (this.IsBundlesType)
+			CollectionView cv = new CollectionView(this.accessor.Collection);
+			foreach (CultureMap item in cv.Items)
 			{
-				CollectionView cv = new CollectionView(this.accessor.Collection);
-				foreach (CultureMap item in cv.Items)
+				string err = ResourceAccess.CheckNames(item.Name, name);
+				if (err != null)
 				{
-					err = ResourceAccess.CheckNames(item.Name, name);
-					if (err != null)
-					{
-						return err;
-					}
-				}
-			}
-			else if (this.type == Type.Panels)
-			{
-				foreach (ResourceBundle bundle in this.panelsList)
-				{
-					err = ResourceAccess.CheckNames(bundle.Caption, name);
-					if (err != null)
-					{
-						return err;
-					}
+					return err;
 				}
 			}
 
@@ -1218,23 +918,8 @@ namespace Epsitec.Common.Designer
 		{
 			//	Retourne le nom d'une ressource, sans tenir compte du filtre.
 			//	La recherche s'effectue toujours dans la culture de base.
-			if (this.type == Type.Panels)
-			{
-				foreach (ResourceBundle bundle in this.panelsList)
-				{
-					if (bundle.Id == druid)
-					{
-						return bundle.Caption;
-					}
-				}
-				return "?";
-			}
-			else
-			{
-				System.Diagnostics.Debug.Assert(this.IsBundlesType);
-				ResourceBundle.Field field = this.primaryBundle[druid];
-				return field.Name;
-			}
+			ResourceBundle.Field field = this.primaryBundle[druid];
+			return field.Name;
 		}
 
 
@@ -1246,65 +931,41 @@ namespace Epsitec.Common.Designer
 			//	les données peuvent être modifiées directement, sans qu'il faille les
 			//	redonner lors du SetField. Cela oblige à ne pas faire d'autres GetField
 			//	avant le SetField !
-			this.lastAccessField = fieldType;
+			CultureMap item = this.collectionView.Items[index] as CultureMap;
 
-			if (this.IsBundlesType)
+			if (cultureName == null)
 			{
-				CultureMap item = this.collectionView.Items[index] as CultureMap;
+				cultureName = Resources.DefaultTwoLetterISOLanguageName;
+			}
+			StructuredData data = item.GetCultureData(cultureName);
 
-				if (cultureName == null)
-				{
-					cultureName = Resources.DefaultTwoLetterISOLanguageName;
-				}
-				StructuredData data = item.GetCultureData(cultureName);
-
-				if (fieldType == FieldType.Name)
-				{
-					return new Field(item.Name);
-				}
-
-				if (fieldType == FieldType.String)
-				{
-					string text = data.GetValue(Support.Res.Fields.ResourceString.Text) as string;
-					return new Field(text);
-				}
-
-				if (fieldType == FieldType.Description)
-				{
-					string text = data.GetValue(Support.Res.Fields.ResourceCaption.Description) as string;
-					return new Field(text);
-				}
-
-				if (fieldType == FieldType.Labels)
-				{
-					IList<string> list = data.GetValue(Support.Res.Fields.ResourceCaption.Labels) as IList<string>;
-					return new Field(list);
-				}
-
-				if (fieldType == FieldType.About)
-				{
-					string text = data.GetValue(Support.Res.Fields.ResourceBase.Comment) as string;
-					return new Field(text);
-				}
+			if (fieldType == FieldType.Name)
+			{
+				return new Field(item.Name);
 			}
 
-			if (this.type == Type.Panels)
+			if (fieldType == FieldType.String)
 			{
-				ResourceBundle bundle = this.PanelBundle(index);
-				if (bundle == null)
-				{
-					return null;
-				}
+				string text = data.GetValue(Support.Res.Fields.ResourceString.Text) as string;
+				return new Field(text);
+			}
 
-				if (fieldType == FieldType.Name)
-				{
-					return new Field(bundle.Caption);
-				}
+			if (fieldType == FieldType.Description)
+			{
+				string text = data.GetValue(Support.Res.Fields.ResourceCaption.Description) as string;
+				return new Field(text);
+			}
 
-				if (fieldType == FieldType.Panel)
-				{
-					return new Field(bundle);
-				}
+			if (fieldType == FieldType.Labels)
+			{
+				IList<string> list = data.GetValue(Support.Res.Fields.ResourceCaption.Labels) as IList<string>;
+				return new Field(list);
+			}
+
+			if (fieldType == FieldType.About)
+			{
+				string text = data.GetValue(Support.Res.Fields.ResourceBase.Comment) as string;
+				return new Field(text);
 			}
 
 			return null;
@@ -1314,78 +975,52 @@ namespace Epsitec.Common.Designer
 		{
 			//	Modifie les données d'un champ.
 			//	Si cultureName est nul, on accède à la culture de base.
-			if (this.IsBundlesType)
+			CultureMap item = this.collectionView.Items[index] as CultureMap;
+
+			if (cultureName == null)
 			{
-				CultureMap item = this.collectionView.Items[index] as CultureMap;
+				cultureName = Resources.DefaultTwoLetterISOLanguageName;
+			}
+			StructuredData data = item.GetCultureData(cultureName);
 
-				if (cultureName == null)
-				{
-					cultureName = Resources.DefaultTwoLetterISOLanguageName;
-				}
-				StructuredData data = item.GetCultureData(cultureName);
-
-				if (fieldType == FieldType.Name)
-				{
-					item.Name = field.String;
-					this.SetLocalDirty();
-					this.collectionView.Refresh();
-				}
-
-				if (fieldType == FieldType.String)
-				{
-					data.SetValue(Support.Res.Fields.ResourceString.Text, field.String);
-					this.SetLocalDirty();
-					this.collectionView.Refresh();
-				}
-
-				if (fieldType == FieldType.Description)
-				{
-					data.SetValue(Support.Res.Fields.ResourceCaption.Description, field.String);
-					this.SetLocalDirty();
-					this.collectionView.Refresh();
-				}
-
-				if (fieldType == FieldType.Labels)
-				{
-					IList<string> list = data.GetValue(Support.Res.Fields.ResourceCaption.Labels) as IList<string>;
-					list.Clear();
-					foreach (string text in field.StringCollection)
-					{
-						list.Add(text);
-					}
-					this.SetLocalDirty();
-					this.collectionView.Refresh();
-				}
-
-				if (fieldType == FieldType.About)
-				{
-					data.SetValue(Support.Res.Fields.ResourceBase.Comment, field.String);
-					this.SetLocalDirty();
-					this.collectionView.Refresh();
-				}
-
-				this.SetGlobalDirty();
-				return;
+			if (fieldType == FieldType.Name)
+			{
+				item.Name = field.String;
+				this.SetLocalDirty();
+				this.collectionView.Refresh();
 			}
 
-			if (this.type == Type.Panels)
+			if (fieldType == FieldType.String)
 			{
-				ResourceBundle bundle = this.PanelBundle(index);
-				if (bundle == null)
-				{
-					return;
-				}
+				data.SetValue(Support.Res.Fields.ResourceString.Text, field.String);
+				this.SetLocalDirty();
+				this.collectionView.Refresh();
+			}
 
-				if (fieldType == FieldType.Name)
-				{
-					bundle.DefineCaption(field.String);
-				}
+			if (fieldType == FieldType.Description)
+			{
+				data.SetValue(Support.Res.Fields.ResourceCaption.Description, field.String);
+				this.SetLocalDirty();
+				this.collectionView.Refresh();
+			}
 
-				if (fieldType == FieldType.Panel)
+			if (fieldType == FieldType.Labels)
+			{
+				IList<string> list = data.GetValue(Support.Res.Fields.ResourceCaption.Labels) as IList<string>;
+				list.Clear();
+				foreach (string text in field.StringCollection)
 				{
-					System.Diagnostics.Debug.Assert(field == null);
-					System.Diagnostics.Debug.Assert(fieldType == this.lastAccessField);
+					list.Add(text);
 				}
+				this.SetLocalDirty();
+				this.collectionView.Refresh();
+			}
+
+			if (fieldType == FieldType.About)
+			{
+				data.SetValue(Support.Res.Fields.ResourceBase.Comment, field.String);
+				this.SetLocalDirty();
+				this.collectionView.Refresh();
 			}
 
 			this.SetGlobalDirty();
@@ -1397,11 +1032,8 @@ namespace Epsitec.Common.Designer
 			//	Donne l'état 'modifié'.
 			if (index != -1)
 			{
-				if (this.IsBundlesType)
-				{
-					CultureMap item = this.collectionView.Items[index] as CultureMap;
-					return this.GetModification(item, cultureName);
-				}
+				CultureMap item = this.collectionView.Items[index] as CultureMap;
+				return this.GetModification(item, cultureName);
 			}
 
 			return ModificationState.Normal;
@@ -1410,56 +1042,51 @@ namespace Epsitec.Common.Designer
 		public ModificationState GetModification(CultureMap item, string cultureName)
 		{
 			//	Donne l'état 'modifié'.
-			if (this.IsBundlesType)
+			if (cultureName == null)
 			{
-				if (cultureName == null)
-				{
-					cultureName = Resources.DefaultTwoLetterISOLanguageName;
-				}
+				cultureName = Resources.DefaultTwoLetterISOLanguageName;
+			}
 
-				if (item == null)
+			if (item == null)
+			{
+				return ModificationState.Empty;
+			}
+
+			StructuredData data = item.GetCultureData(cultureName);
+
+			if (data.IsEmpty)
+			{
+				return ModificationState.Empty;
+			}
+
+			if (this.type == Type.Strings)
+			{
+				string text = data.GetValue(Support.Res.Fields.ResourceString.Text) as string;
+				if (string.IsNullOrEmpty(text))
 				{
 					return ModificationState.Empty;
 				}
+			}
 
-				StructuredData data = item.GetCultureData(cultureName);
-
-				if (data.IsEmpty)
+			if (this.type == Type.Captions || this.type == Type.Commands || this.type == Type.Types || this.type == Type.Fields || this.type == Type.Values)
+			{
+				IList<string> labels = data.GetValue(Support.Res.Fields.ResourceCaption.Labels) as IList<string>;
+				string text = data.GetValue(Support.Res.Fields.ResourceCaption.Description) as string;
+				if (labels.Count == 0 && string.IsNullOrEmpty(text))
 				{
 					return ModificationState.Empty;
 				}
+			}
 
-				if (this.type == Type.Strings)
+			if (cultureName != Resources.DefaultTwoLetterISOLanguageName)  // culture secondaire ?
+			{
+				StructuredData primaryData = item.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
+				int pmod = this.GetModificationId(primaryData);
+				int cmod = this.GetModificationId(data);
+				if (pmod > cmod)
 				{
-					string text = data.GetValue(Support.Res.Fields.ResourceString.Text) as string;
-					if (string.IsNullOrEmpty(text))
-					{
-						return ModificationState.Empty;
-					}
+					return ModificationState.Modified;
 				}
-
-				if (this.type == Type.Captions || this.type == Type.Commands || this.type == Type.Types || this.type == Type.Fields || this.type == Type.Values)
-				{
-					IList<string> labels = data.GetValue(Support.Res.Fields.ResourceCaption.Labels) as IList<string>;
-					string text = data.GetValue(Support.Res.Fields.ResourceCaption.Description) as string;
-					if (labels.Count == 0 && string.IsNullOrEmpty(text))
-					{
-						return ModificationState.Empty;
-					}
-				}
-
-				if (cultureName != Resources.DefaultTwoLetterISOLanguageName)  // culture secondaire ?
-				{
-					StructuredData primaryData = item.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
-					int pmod = this.GetModificationId(primaryData);
-					int cmod = this.GetModificationId(data);
-					if (pmod > cmod)
-					{
-						return ModificationState.Modified;
-					}
-				}
-
-				return ModificationState.Normal;
 			}
 
 			return ModificationState.Normal;
@@ -1468,15 +1095,12 @@ namespace Epsitec.Common.Designer
 		public void ModificationClear(int index, string cultureName)
 		{
 			//	Considère une ressource comme 'à jour' dans une culture.
-			if (this.IsBundlesType)
-			{
-				CultureMap item = this.collectionView.Items[index] as CultureMap;
-				StructuredData data = item.GetCultureData(cultureName);
-				StructuredData primaryData = item.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
+			CultureMap item = this.collectionView.Items[index] as CultureMap;
+			StructuredData data = item.GetCultureData(cultureName);
+			StructuredData primaryData = item.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
 
-				int primaryValue = this.GetModificationId(primaryData);
-				data.SetValue(Support.Res.Fields.ResourceBase.ModificationId, primaryValue);
-			}
+			int primaryValue = this.GetModificationId(primaryData);
+			data.SetValue(Support.Res.Fields.ResourceBase.ModificationId, primaryValue);
 
 			this.SetGlobalDirty();
 		}
@@ -1484,14 +1108,11 @@ namespace Epsitec.Common.Designer
 		public void ModificationSetAll(int index)
 		{
 			//	Considère une ressource comme 'modifiée' dans toutes les cultures.
-			if (this.IsBundlesType)
-			{
-				CultureMap item = this.collectionView.Items[index] as CultureMap;
-				StructuredData primaryData = item.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
+			CultureMap item = this.collectionView.Items[index] as CultureMap;
+			StructuredData primaryData = item.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
 
-				int value = this.GetModificationId(primaryData);
-				primaryData.SetValue(Support.Res.Fields.ResourceBase.ModificationId, value+1);
-			}
+			int value = this.GetModificationId(primaryData);
+			primaryData.SetValue(Support.Res.Fields.ResourceBase.ModificationId, value+1);
 
 			this.SetGlobalDirty();
 		}
@@ -1499,28 +1120,23 @@ namespace Epsitec.Common.Designer
 		public bool IsModificationAll(int index)
 		{
 			//	Donne l'état de la commande ModificationAll.
-			if (this.IsBundlesType)
+			CultureMap item = this.collectionView.Items[index] as CultureMap;
+			StructuredData primaryData = item.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
+			int primaryValue = this.GetModificationId(primaryData);
+
+			List<string> cultures = this.GetSecondaryCultureNames();
+			int count = 0;
+			foreach (string culture in cultures)
 			{
-				CultureMap item = this.collectionView.Items[index] as CultureMap;
-				StructuredData primaryData = item.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
-				int primaryValue = this.GetModificationId(primaryData);
+				StructuredData data = item.GetCultureData(culture);
+				int value = this.GetModificationId(data);
 
-				List<string> cultures = this.GetSecondaryCultureNames();
-				int count = 0;
-				foreach (string culture in cultures)
+				if (value < primaryValue)
 				{
-					StructuredData data = item.GetCultureData(culture);
-					int value = this.GetModificationId(data);
-
-					if (value < primaryValue)
-					{
-						count++;
-					}
+					count++;
 				}
-				return (count != cultures.Count);
 			}
-
-			return false;
+			return (count != cultures.Count);
 		}
 
 		protected int GetModificationId(StructuredData data)
@@ -1687,12 +1303,7 @@ namespace Epsitec.Common.Designer
 		public string GetBaseCultureName()
 		{
 			//	Retourne le nom de la culture de base.
-			if (this.IsBundlesType)
-			{
-				return this.primaryBundle.Culture.Name;
-			}
-
-			return null;
+			return this.primaryBundle.Culture.Name;
 		}
 
 		public List<string> GetSecondaryCultureNames()
@@ -1700,21 +1311,18 @@ namespace Epsitec.Common.Designer
 			//	Retourne la liste des cultures secondaires, triés par ordre alphabétique.
 			List<string> list = new List<string>();
 
-			if (this.IsBundlesType)
+			if (this.bundles.Count > 1)
 			{
-				if (this.bundles.Count > 1)
+				for (int b=0; b<this.bundles.Count; b++)
 				{
-					for (int b=0; b<this.bundles.Count; b++)
+					ResourceBundle bundle = this.bundles[b];
+					if (bundle != this.primaryBundle)
 					{
-						ResourceBundle bundle = this.bundles[b];
-						if (bundle != this.primaryBundle)
-						{
-							list.Add(bundle.Culture.Name);
-						}
+						list.Add(bundle.Culture.Name);
 					}
-
-					list.Sort();
 				}
+
+				list.Sort();
 			}
 
 			return list;
@@ -1724,33 +1332,27 @@ namespace Epsitec.Common.Designer
 		{
 			//	Crée un nouveau bundle pour une culture donnée.
 			System.Diagnostics.Debug.Assert(cultureName.Length == 2);
-			if (this.IsBundlesType)
-			{
-				string prefix = this.resourceManager.ActivePrefix;
-				System.Globalization.CultureInfo culture = Resources.FindCultureInfo(cultureName);
-				ResourceBundle bundle = ResourceBundle.Create(this.resourceManager, prefix, this.bundles.Name, ResourceLevel.Localized, culture);
+			string prefix = this.resourceManager.ActivePrefix;
+			System.Globalization.CultureInfo culture = Resources.FindCultureInfo(cultureName);
+			ResourceBundle bundle = ResourceBundle.Create(this.resourceManager, prefix, this.bundles.Name, ResourceLevel.Localized, culture);
 
-				bundle.DefineType(this.BundleName(false));
-				this.resourceManager.SetBundle(bundle, ResourceSetMode.CreateOnly);
+			bundle.DefineType(this.BundleName(false));
+			this.resourceManager.SetBundle(bundle, ResourceSetMode.CreateOnly);
 
-				this.LoadBundles();
-				this.SetGlobalDirty();
-			}
+			this.LoadBundles();
+			this.SetGlobalDirty();
 		}
 
 		public void DeleteCulture(string cultureName)
 		{
 			//	Supprime une culture.
 			System.Diagnostics.Debug.Assert(cultureName.Length == 2);
-			if (this.IsBundlesType)
+			ResourceBundle bundle = this.GetCultureBundle(cultureName);
+			if (bundle != null)
 			{
-				ResourceBundle bundle = this.GetCultureBundle(cultureName);
-				if (bundle != null)
-				{
-					this.resourceManager.RemoveBundle(this.BundleName(true), ResourceLevel.Localized, bundle.Culture);
-					this.LoadBundles();
-					this.SetGlobalDirty();
-				}
+				this.resourceManager.RemoveBundle(this.BundleName(true), ResourceLevel.Localized, bundle.Culture);
+				this.LoadBundles();
+				this.SetGlobalDirty();
 			}
 		}
 
@@ -1930,57 +1532,6 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
-		protected void SetFilterPanels(string filter, Searcher.SearchingMode mode)
-		{
-			this.druidsIndex.Clear();
-
-			if ((mode&Searcher.SearchingMode.CaseSensitive) == 0)
-			{
-				filter = Searcher.RemoveAccent(filter.ToLower());
-			}
-
-			Regex regex = null;
-			if ((mode&Searcher.SearchingMode.Jocker) != 0)
-			{
-				regex = RegexFactory.FromSimpleJoker(filter, RegexFactory.Options.None);
-			}
-
-			foreach (ResourceBundle bundle in this.panelsList)
-			{
-				string name = bundle.Caption;
-
-				if (filter != "")
-				{
-					if ((mode&Searcher.SearchingMode.Jocker) != 0)
-					{
-						string text = name;
-						if ((mode&Searcher.SearchingMode.CaseSensitive) == 0)
-						{
-							text = Searcher.RemoveAccent(text.ToLower());
-						}
-						if (!regex.IsMatch(text))
-						{
-							continue;
-						}
-					}
-					else
-					{
-						int index = Searcher.IndexOf(name, filter, 0, mode);
-						if (index == -1)
-						{
-							continue;
-						}
-						if ((mode&Searcher.SearchingMode.AtBeginning) != 0 && index != 0)
-						{
-							continue;
-						}
-					}
-				}
-
-				this.druidsIndex.Add(bundle.Id);
-			}
-		}
-
 
 		public int SortDefer(int index)
 		{
@@ -2034,332 +1585,34 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
-		public int Sort(int index, bool resortAll)
-		{
-			//	A partir d'une liste déjà triée, déplace un seul élément modifié pour qu'il
-			//	soit de nouveau trié. Si resortAll = true, trie toutes les ressources et retourne
-			//	le nouvel index du Druid.
-			if (this.IsBundlesType)
-			{
-				return index;
-			}
-
-			if (resortAll)
-			{
-				Druid druid = this.druidsIndex[index];
-				this.Sort();
-				return this.druidsIndex.IndexOf(druid);
-			}
-			else
-			{
-				Druid druid = this.druidsIndex[index];
-				this.druidsIndex.RemoveAt(index);
-
-				int i=0;
-				if (this.IsBundlesType)
-				{
-					i = this.druidsIndex.BinarySearch(druid, new FieldDruidSort(this));
-				}
-				if (this.type == Type.Panels)
-				{
-					i = this.druidsIndex.BinarySearch(druid, new PanelDruidSort(this));
-				}
-
-				if (i < 0)
-				{
-					i = -1-i;  // 0..n
-				}
-
-				this.druidsIndex.Insert(i, druid);
-				return i;
-			}
-		}
-
-		protected void Sort()
-		{
-			//	Trie druidsIndex.
-			if (this.IsBundlesType)
-			{
-				this.druidsIndex.Sort(new FieldDruidSort(this));
-			}
-
-			if (this.type == Type.Panels)
-			{
-				this.druidsIndex.Sort(new PanelDruidSort(this));
-			}
-		}
-
-		protected class FieldDruidSort : IComparer<Druid>
-		{
-			public FieldDruidSort(ResourceAccess resourceAccess)
-			{
-				this.resourceAccess = resourceAccess;
-			}
-
-			public int Compare(Druid obj1, Druid obj2)
-			{
-				ResourceBundle.Field field1 = this.resourceAccess.primaryBundle[obj1];
-				ResourceBundle.Field field2 = this.resourceAccess.primaryBundle[obj2];
-
-				if (field1 == null && field2 == null)
-				{
-					return 0;
-				}
-
-				if (field1 == null)
-				{
-					return 1;
-				}
-
-				if (field2 == null)
-				{
-					return -1;
-				}
-
-				string name1 = field1.Name ?? "";
-				string name2 = field2.Name ?? "";
-
-				return name1.CompareTo(name2);
-			}
-
-			protected ResourceAccess resourceAccess;
-		}
-
-		protected class PanelDruidSort : IComparer<Druid>
-		{
-			public PanelDruidSort(ResourceAccess resourceAccess)
-			{
-				this.resourceAccess = resourceAccess;
-			}
-
-			public int Compare(Druid obj1, Druid obj2)
-			{
-				ResourceBundle bundle1 = null;
-				ResourceBundle bundle2 = null;
-
-				int i = this.resourceAccess.GetAbsoluteIndex(obj1);
-				if (i != -1)
-				{
-					bundle1 = this.resourceAccess.panelsList[i];
-				}
-
-				i = this.resourceAccess.GetAbsoluteIndex(obj2);
-				if (i != -1)
-				{
-					bundle2 = this.resourceAccess.panelsList[i];
-				}
-
-				if (bundle1 == null && bundle2 == null)
-				{
-					return 0;
-				}
-
-				if (bundle1 == null)
-				{
-					return 1;
-				}
-
-				if (bundle2 == null)
-				{
-					return -1;
-				}
-
-				return bundle1.Caption.CompareTo(bundle2.Caption);
-			}
-
-			protected ResourceAccess resourceAccess;
-		}
-
 
 		protected int GetAbsoluteIndex(Druid druid)
 		{
 			//	Cherche l'index absolu d'une ressource d'après son druid.
-			if (this.IsBundlesType)
-			{
-				ResourceBundle.Field field = this.primaryBundle[druid];
-				return this.primaryBundle.IndexOf(field);
-			}
-
-			if (this.type == Type.Panels)
-			{
-				for (int i=0; i<this.panelsList.Count; i++)
-				{
-					if (this.panelsList[i].Id == druid)
-					{
-						return i;
-					}
-				}
-			}
-
-			return -1;
+			ResourceBundle.Field field = this.primaryBundle[druid];
+			return this.primaryBundle.IndexOf(field);
 		}
 
 		protected Druid CreateUniqueDruid()
 		{
 			//	Crée un nouveau druid unique.
-			if (this.IsBundlesType)
+			int moduleId = this.primaryBundle.Module.Id;
+			int developerId = 0;  // [PA] provisoire
+			int localId = 0;
+
+			foreach (ResourceBundle.Field field in this.primaryBundle.Fields)
 			{
-				int moduleId = this.primaryBundle.Module.Id;
-				int developerId = 0;  // [PA] provisoire
-				int localId = 0;
+				Druid druid = field.Id;
 
-				foreach (ResourceBundle.Field field in this.primaryBundle.Fields)
+				if (druid.IsValid && druid.Developer == developerId && druid.Local >= localId)
 				{
-					Druid druid = field.Id;
-
-					if (druid.IsValid && druid.Developer == developerId && druid.Local >= localId)
-					{
-						localId = druid.Local+1;
-					}
+					localId = druid.Local+1;
 				}
-
-				return new Druid(moduleId, developerId, localId);
 			}
 
-			if (this.type == Type.Panels)
-			{
-				int moduleId = this.moduleInfo.Id;
-				int developerId = 0;  // [PA] provisoire
-				int localId = 0;
-
-				foreach (ResourceBundle bundle in this.panelsList)
-				{
-					Druid druid = bundle.Id;
-
-					if (druid.IsValid && druid.Developer == developerId && druid.Local >= localId)
-					{
-						localId = druid.Local+1;
-					}
-				}
-
-				foreach (ResourceBundle bundle in this.panelsToDelete)
-				{
-					Druid druid = bundle.Id;
-
-					if (druid.IsValid && druid.Developer == developerId && druid.Local >= localId)
-					{
-						localId = druid.Local+1;
-					}
-				}
-
-				foreach (ResourceBundle bundle in this.panelsToCreate)
-				{
-					Druid druid = bundle.Id;
-
-					if (druid.IsValid && druid.Developer == developerId && druid.Local >= localId)
-					{
-						localId = druid.Local+1;
-					}
-				}
-
-				return new Druid(moduleId, developerId, localId);
-			}
-
-			return Druid.Empty;
+			return new Druid(moduleId, developerId, localId);
 		}
 
-
-		protected void LoadPanels()
-		{
-			if (this.panelsList != null)
-			{
-				return;
-			}
-
-			this.panelsList = new List<ResourceBundle>();
-			this.panelsToCreate = new List<ResourceBundle>();
-			this.panelsToDelete = new List<ResourceBundle>();
-
-			string[] names = this.resourceManager.GetBundleIds("*", this.BundleName(false), ResourceLevel.Default);
-			if (names.Length == 0)
-			{
-				//	S'il n'existe aucun panneau, crée un premier panneau vide.
-				//	Ceci est nécessaire, car il n'existe pas de commande pour créer un panneau à partir
-				//	de rien, mais seulement une commande pour dupliquer un panneau existant.
-				Druid druid = this.CreateUniqueDruid();
-				string prefix = this.resourceManager.ActivePrefix;
-				System.Globalization.CultureInfo culture = this.BaseCulture;
-				ResourceBundle bundle = ResourceBundle.Create(this.resourceManager, prefix, druid.ToBundleId(), ResourceLevel.Default, culture);
-
-				bundle.DefineType(this.BundleName(false));
-				bundle.DefineCaption(Res.Strings.Viewers.Panels.New);
-				bundle.DefineRank(0);
-
-				this.panelsList.Add(bundle);
-				this.panelsToCreate.Add(bundle);
-			}
-			else
-			{
-				foreach (string name in names)
-				{
-					ResourceBundle bundle = this.resourceManager.GetBundle(name, ResourceLevel.Default);
-					this.panelsList.Add(bundle);
-
-					ResourceBundle.Field field = bundle[UI.Panel.PanelBundleField];
-
-					if (field.IsValid)
-					{
-						UI.Panel panel = UserInterface.DeserializePanel(field.AsString, this.resourceManager);
-						panel.DrawDesignerFrame = true;
-						UI.Panel.SetPanel(bundle, panel);
-						panel.SetupSampleDataSource();
-					}
-				}
-
-				this.panelsList.Sort(new Comparers.BundleRank());  // trie selon les rangs
-			}
-		}
-
-		protected void SavePanels()
-		{
-			if (this.panelsList == null)
-			{
-				return;
-			}
-
-			for (int i=0; i<this.panelsList.Count; i++)
-			{
-				ResourceBundle bundle = this.panelsList[i];
-				bundle.DefineRank(i);
-				UI.Panel panel = UI.Panel.GetPanel(bundle);
-
-				if (panel != null)
-				{
-					if (!bundle.Contains (UI.Panel.PanelBundleField))
-					{
-						ResourceBundle.Field field = bundle.CreateField (ResourceFieldType.Data);
-						field.SetName (UI.Panel.PanelBundleField);
-						bundle.Add (field);
-					}
-					if (!bundle.Contains (UI.Panel.DefaultSizeBundleField))
-					{
-						ResourceBundle.Field field = bundle.CreateField (ResourceFieldType.Data);
-						field.SetName (UI.Panel.DefaultSizeBundleField);
-						bundle.Add (field);
-					}
-
-					bundle[UI.Panel.PanelBundleField].SetXmlValue (UserInterface.SerializePanel (panel, this.resourceManager));
-					bundle[UI.Panel.DefaultSizeBundleField].SetStringValue (panel.PreferredSize.ToString ());
-				}
-
-				if (this.panelsToCreate.Contains(bundle))
-				{
-					this.resourceManager.SetBundle(bundle, ResourceSetMode.CreateOnly);
-				}
-				else
-				{
-					this.resourceManager.SetBundle(bundle, ResourceSetMode.UpdateOnly);
-				}
-			}
-			this.panelsToCreate.Clear();
-
-			//	Supprime tous les panneaux mis dans la liste 'à supprimer'.
-			foreach (ResourceBundle bundle in this.panelsToDelete)
-			{
-				this.resourceManager.RemoveBundle(bundle.Id.ToBundleId(), ResourceLevel.Default, bundle.Culture);
-			}
-			this.panelsToDelete.Clear();
-		}
 
 		public UI.Panel GetPanel(int index)
 		{
@@ -2414,7 +1667,8 @@ namespace Epsitec.Common.Designer
 			}
 			else
 			{
-				return this.panelsList[i];
+				//?return this.panelsList[i];
+				return null;  // TODO:
 			}
 		}
 
@@ -2438,16 +1692,6 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
-
-		protected bool IsBundlesType
-		{
-			//	Retourne true si on accède à des ressources de type
-			//	"un bundle par culture, plusieurs ressources par bundle".
-			get
-			{
-				return (this.type == Type.Strings || this.type == Type.Captions || this.type == Type.Commands || this.type == Type.Entities || this.type == Type.Types || this.type == Type.Fields || this.type == Type.Values || this.type == Type.Panels);
-			}
-		}
 
 		protected string BundleName(bool many)
 		{
@@ -2700,11 +1944,6 @@ namespace Epsitec.Common.Designer
 		protected ResourceBundleCollection					bundles;
 		protected ResourceBundle							primaryBundle;
 		protected List<Druid>								druidsIndex;
-		protected int										accessIndex;
-		protected FieldType									lastAccessField = FieldType.None;
-		protected List<ResourceBundle>						panelsList;
-		protected List<ResourceBundle>						panelsToCreate;
-		protected List<ResourceBundle>						panelsToDelete;
 		protected Dictionary<Type, int>						filterIndexes;
 		protected Dictionary<Type, string>					filterStrings;
 		protected Dictionary<Type, Searcher.SearchingMode>	filterModes;
