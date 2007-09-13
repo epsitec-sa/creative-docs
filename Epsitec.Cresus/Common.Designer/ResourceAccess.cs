@@ -1598,22 +1598,20 @@ namespace Epsitec.Common.Designer
 		{
 			//	Retourne le UI.Panel associé à une ressource.
 			//	Si nécessaire, il est créé la première fois.
-			return this.GetPanel(this.PanelBundle(index));
-		}
-
-		public UI.Panel GetPanel(ResourceBundle bundle)
-		{
-			//	Retourne le UI.Panel associé à un bundle.
-			//	Si nécessaire, il est créé la première fois.
-			UI.Panel newPanel = UI.Panel.GetPanel(bundle);
-
-			if (newPanel == null)
+			if (index >= 0 && index < this.accessor.Collection.Count)
 			{
-				newPanel = this.CreateEmptyPanel();
-				UI.Panel.SetPanel(bundle, newPanel);
-				newPanel.SetupSampleDataSource();
+				StructuredData data = accessor.Collection[index].GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
+				string xml = data.GetValue(Support.Res.Fields.ResourcePanel.XmlSource) as string;
+				if (!string.IsNullOrEmpty(xml))
+				{
+					return UI.Panel.DeserializePanel(xml, null, this.resourceManager);
+				}
 			}
 
+			ResourceBundle bundle = this.bundles[ResourceLevel.Default];
+			UI.Panel newPanel = this.CreateEmptyPanel();
+			UI.Panel.SetPanel(bundle, newPanel);
+			newPanel.SetupSampleDataSource();
 			return newPanel;
 		}
 
@@ -1634,22 +1632,6 @@ namespace Epsitec.Common.Designer
 			panel.Padding = new Margins(20, 20, 20, 20);
 			panel.DrawDesignerFrame = true;
 			panel.ResourceManager = this.resourceManager;
-		}
-
-		protected ResourceBundle PanelBundle(int index)
-		{
-			//	Donne le bundle d'un panneau en fonction de l'index du druid.
-			Druid druid = this.druidsIndex[index];
-			int i = this.GetAbsoluteIndex(druid);
-			if (i == -1)
-			{
-				return null;
-			}
-			else
-			{
-				//?return this.panelsList[i];
-				return null;  // TODO:
-			}
 		}
 
 
