@@ -1,4 +1,7 @@
+using Epsitec.Common.Types;
+
 using NUnit.Framework;
+
 using System.Collections.Generic;
 
 namespace Epsitec.Common.Support
@@ -508,6 +511,66 @@ namespace Epsitec.Common.Support
 			Assert.AreEqual (count+3, accessor.ValueAccessor.Collection.Count);
 			
 			accessor.PersistChanges ();
+		}
+
+		[Test]
+		public void CheckPanelAccessor()
+		{
+			ResourceAccessors.PanelResourceAccessor accessor = new ResourceAccessors.PanelResourceAccessor ();
+			ResourceModuleId module = new ResourceModuleId ("Cresus.Tests", @"S:\Epsitec.Cresus\App.CresusDocuments\Resources\Cresus.Tests", 500, ResourceModuleLayer.System);
+			ResourceManager manager = new ResourceManager (new ResourceManagerPool (), module);
+			manager.DefineDefaultModuleName ("Cresus.Tests");
+
+
+			accessor.Load (manager);
+
+			Assert.AreEqual (8, accessor.Collection.Count);
+			Assert.AreEqual ("TestAvecHeritage", accessor.Collection[5].Name);
+
+			foreach (CultureMap item in accessor.Collection)
+			{
+				System.Console.Out.WriteLine ("{0}: {1}", item.Id, item.Name);
+			}
+
+			StructuredData data = accessor.Collection[5].GetCultureData (Resources.DefaultTwoLetterISOLanguageName);
+			string xml = data.GetValue (Res.Fields.ResourcePanel.XmlSource) as string;
+
+			Assert.IsNotNull (xml);
+
+			System.Console.Out.WriteLine (xml);
+
+			Assert.AreEqual ("200;200", data.GetValue (Res.Fields.ResourcePanel.DefaultSize));
+			Assert.IsTrue (xml.StartsWith ("<panel"));
+			Assert.IsTrue (xml.EndsWith ("</panel>"));
+
+			CultureMap item1 = accessor.Collection[1];
+			CultureMap item2 = accessor.Collection[2];
+			CultureMap newItem = accessor.CreateItem ();
+
+			newItem.Name = "FooBar";
+
+			accessor.Collection.RemoveAt (2);
+			accessor.Collection.RemoveAt (1);
+			accessor.Collection.Insert (1, item1);
+			accessor.Collection.Insert (1, item2);
+			accessor.Collection.Add (newItem);
+
+			Assert.IsTrue (accessor.ContainsChanges);
+			accessor.PersistChanges ();
+			Assert.IsFalse (accessor.ContainsChanges);
+
+			accessor.Save ();
+
+
+			accessor.Collection.RemoveAt (2);
+			accessor.Collection.RemoveAt (1);
+			accessor.Collection.Insert (1, item1);
+			accessor.Collection.Insert (2, item2);
+
+			accessor.Collection.Remove (newItem);
+			accessor.PersistChanges ();
+			
+			accessor.Save ();
 		}
 
 

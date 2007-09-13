@@ -220,6 +220,19 @@ namespace Epsitec.Common.Support.ResourceAccessors
 		/// <returns>A unique id.</returns>
 		internal static Druid CreateId(IEnumerable<CultureMap> collection, params ResourceBundle[] bundles)
 		{
+			return AbstractResourceAccessor.CreateId (collection, -1, bundles);
+		}
+		
+		/// <summary>
+		/// Creates a unique id, making sure there are no collisions.
+		/// </summary>
+		/// <param name="collection">The collection of <see cref="CultureMap"/> items (or <c>null</c>)
+		/// which contains ids that are already in use.</param>
+		/// <param name="moduleId">The module id.</param>
+		/// <param name="bundles">The bundle(s) where to look for existing ids.</param>
+		/// <returns>A unique id.</returns>
+		internal static Druid CreateId(IEnumerable<CultureMap> collection, int moduleId, ResourceBundle[] bundles)
+		{
 			//	Derive the developer id from the value stored in the global properties
 			//	repository. This must have been initialized by the user application,
 			//	usually the Designer.
@@ -228,7 +241,6 @@ namespace Epsitec.Common.Support.ResourceAccessors
 
 			int devId    = -1;
 			int localId  = -1;
-			int moduleId = -1;
 
 			if (Types.UndefinedValue.IsUndefinedValue (devIdValue))
 			{
@@ -245,29 +257,32 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			//	Locate the largest local id for the active developer in
 			//	the specified bundle(s) :
 
-			foreach (ResourceBundle bundle in bundles)
+			if (bundles != null)
 			{
-				if (bundle == null)
+				foreach (ResourceBundle bundle in bundles)
 				{
-					continue;
-				}
-
-				if (moduleId == -1)
-				{
-					moduleId = bundle.Module.Id;
-				}
-
-				System.Diagnostics.Debug.Assert (moduleId == bundle.Module.Id);
-				
-				foreach (ResourceBundle.Field field in bundle.Fields)
-				{
-					Druid id = field.Id;
-
-					System.Diagnostics.Debug.Assert (id.IsValid);
-
-					if (id.Developer == devId)
+					if (bundle == null)
 					{
-						localId = System.Math.Max (localId, id.Local);
+						continue;
+					}
+
+					if (moduleId == -1)
+					{
+						moduleId = bundle.Module.Id;
+					}
+
+					System.Diagnostics.Debug.Assert (moduleId == bundle.Module.Id);
+
+					foreach (ResourceBundle.Field field in bundle.Fields)
+					{
+						Druid id = field.Id;
+
+						System.Diagnostics.Debug.Assert (id.IsValid);
+
+						if (id.Developer == devId)
+						{
+							localId = System.Math.Max (localId, id.Local);
+						}
 					}
 				}
 			}

@@ -63,26 +63,29 @@ namespace Epsitec.Common.Support.ResourceAccessors
 					return 0;
 				});
 
-			foreach (ResourceBundle bundle in bundles)
+			using (this.SuspendNotifications ())
 			{
-				CultureMap     item   = new CultureMap (this, bundle.Id, CultureMapSource.ReferenceModule);
+				foreach (ResourceBundle bundle in bundles)
+				{
+					CultureMap item   = new CultureMap (this, bundle.Id, CultureMapSource.ReferenceModule);
 
-				item.Name = bundle.Caption;
-				
-				StructuredData data = new StructuredData (Res.Types.ResourcePanel);
+					item.Name = bundle.Caption;
 
-				ResourceBundle.Field panelSourceField = bundle[Strings.XmlSource];
-				ResourceBundle.Field panelSizeField   = bundle[Strings.DefaultSize];
+					StructuredData data = new StructuredData (Res.Types.ResourcePanel);
 
-				string panelSource = panelSourceField.IsValid ? panelSourceField.AsString : null;
-				string panelSize   = panelSizeField.IsValid   ? panelSizeField.AsString   : null;
+					ResourceBundle.Field panelSourceField = bundle[Strings.XmlSource];
+					ResourceBundle.Field panelSizeField   = bundle[Strings.DefaultSize];
 
-				data.SetValue (Res.Fields.ResourcePanel.Bundle, bundle);
-				data.SetValue (Res.Fields.ResourcePanel.XmlSource, panelSource);
-				data.SetValue (Res.Fields.ResourcePanel.DefaultSize, panelSize);
+					string panelSource = panelSourceField.IsValid ? panelSourceField.AsString : null;
+					string panelSize   = panelSizeField.IsValid   ? panelSizeField.AsString   : null;
 
-				item.RecordCultureData (Resources.DefaultTwoLetterISOLanguageName, data);
-				this.Collection.Add (item);
+					data.SetValue (Res.Fields.ResourcePanel.Bundle, bundle);
+					data.SetValue (Res.Fields.ResourcePanel.XmlSource, panelSource);
+					data.SetValue (Res.Fields.ResourcePanel.DefaultSize, panelSize);
+
+					item.RecordCultureData (Resources.DefaultTwoLetterISOLanguageName, data);
+					this.Collection.Add (item);
+				}
 			}
 #if false
 
@@ -100,6 +103,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 
 		public void Save()
 		{
+			this.PersistChanges ();
 			this.RenumberBundles ();
 
 			foreach (ResourceBundle bundle in this.deletedPanels)
@@ -239,7 +243,20 @@ namespace Epsitec.Common.Support.ResourceAccessors
 
 		public StructuredData LoadCultureData(CultureMap item, string twoLetterISOLanguageName)
 		{
-			throw new System.InvalidOperationException ();
+			if (twoLetterISOLanguageName == Resources.DefaultTwoLetterISOLanguageName)
+			{
+				StructuredData data = new StructuredData (Res.Types.ResourcePanel);
+
+//-				data.SetValue (Res.Fields.ResourcePanel.Bundle, null);
+				data.SetValue (Res.Fields.ResourcePanel.DefaultSize, "");
+				data.SetValue (Res.Fields.ResourcePanel.XmlSource, "");
+				
+				return data;
+			}
+			else
+			{
+				throw new System.InvalidOperationException ();
+			}
 		}
 
 		#endregion
@@ -303,6 +320,8 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			this.createdPanels.Remove (bundle);
 			this.editedPanels.Remove (bundle);
 
+			System.Diagnostics.Debug.Assert (bundle != null);
+
 			if (!this.deletedPanels.Contains (bundle))
 			{
 				this.deletedPanels.Add (bundle);
@@ -328,6 +347,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 
 				bundle = ResourceBundle.Create (this.manager, prefix, item.Id.ToBundleId (), ResourceLevel.Default, culture);
 				bundle.DefineType (Strings.PanelType);
+				bundle.DefineRank (this.Collection.IndexOf (item));
 				
 				ResourceBundle.Field field;
 
@@ -355,8 +375,10 @@ namespace Epsitec.Common.Support.ResourceAccessors
 
 		private void RecordBundleAsEdited(ResourceBundle bundle)
 		{
+			System.Diagnostics.Debug.Assert (bundle != null);
+
 			if ((!this.createdPanels.Contains (bundle)) &&
-					(!this.editedPanels.Contains (bundle)))
+				(!this.editedPanels.Contains (bundle)))
 			{
 				this.deletedPanels.Remove (bundle);
 				this.editedPanels.Add (bundle);
@@ -374,7 +396,8 @@ namespace Epsitec.Common.Support.ResourceAccessors
 				StructuredData data   = item.GetCultureData (Resources.DefaultTwoLetterISOLanguageName);
 				ResourceBundle bundle = data.GetValue (Res.Fields.ResourcePanel.Bundle) as ResourceBundle;
 
-				if (bundle.Rank != rank)
+				if ((bundle != null) &&
+					(bundle.Rank != rank))
 				{
 					bundle.DefineRank (rank);
 					this.RecordBundleAsEdited (bundle);
@@ -384,7 +407,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 
 		private Druid CreateId()
 		{
-			return AbstractResourceAccessor.CreateId (this.Collection);
+			return AbstractResourceAccessor.CreateId (this.Collection, this.manager.DefaultModuleId, null);
 		}
 
 		#region Suspender Class
@@ -414,7 +437,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 		private static class Strings
 		{
 			public const string PanelType = "Panel";
-			public const string XmlSource = "XmlSource";
+			public const string XmlSource = "Panel";
 			public const string DefaultSize = "DefaultSize";
 		}
 
