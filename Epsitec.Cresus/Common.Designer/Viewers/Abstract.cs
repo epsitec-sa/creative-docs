@@ -204,6 +204,7 @@ namespace Epsitec.Common.Designer.Viewers
 			base.Dispose(disposing);
 		}
 
+
 		protected virtual void InitializeTable()
 		{
 			//	Initialise la table.
@@ -290,14 +291,14 @@ namespace Epsitec.Common.Designer.Viewers
 		public static Abstract Create(ResourceAccess.Type type, Module module, PanelsContext context, ResourceAccess access, DesignerApplication designerApplication)
 		{
 			//	Crée un Viewer d'un type donné.
-			if (type == ResourceAccess.Type.Strings)  return new Strings(module, context, access, designerApplication);
+			if (type == ResourceAccess.Type.Strings )  return new Strings (module, context, access, designerApplication);
 			if (type == ResourceAccess.Type.Captions)  return new Captions(module, context, access, designerApplication);
-			if (type == ResourceAccess.Type.Fields)  return new Fields(module, context, access, designerApplication);
+			if (type == ResourceAccess.Type.Fields  )  return new Fields  (module, context, access, designerApplication);
 			if (type == ResourceAccess.Type.Commands)  return new Commands(module, context, access, designerApplication);
-			if (type == ResourceAccess.Type.Types)  return new Types(module, context, access, designerApplication);
-			if (type == ResourceAccess.Type.Values)  return new Values(module, context, access, designerApplication);
+			if (type == ResourceAccess.Type.Types   )  return new Types   (module, context, access, designerApplication);
+			if (type == ResourceAccess.Type.Values  )  return new Values  (module, context, access, designerApplication);
 			if (type == ResourceAccess.Type.Entities)  return new Entities(module, context, access, designerApplication);
-			if (type == ResourceAccess.Type.Panels)  return new Panels(module, context, access, designerApplication);
+			if (type == ResourceAccess.Type.Panels  )  return new Panels  (module, context, access, designerApplication);
 			return null;
 		}
 
@@ -731,18 +732,6 @@ namespace Epsitec.Common.Designer.Viewers
 			}
 		}
 
-#if false
-		public void DoMove(int direction)
-		{
-			//	Déplace la ressource sélectionnée.
-			this.access.Move(direction);
-
-			this.UpdateArray();
-			this.SelectedRow = this.access.AccessIndex;
-			this.UpdateCommands();
-		}
-#endif
-
 		public void DoNewCulture()
 		{
 			//	Crée une nouvelle culture.
@@ -1072,6 +1061,45 @@ namespace Epsitec.Common.Designer.Viewers
 						break;
 				}
 			}
+		}
+
+		protected void UpdateFieldName(AbstractTextField edit, int sel)
+		{
+			//	Change le 'Name' d'une ressource, en gérant les diverses impossibilités.
+			sel = this.access.SortDefer(sel);
+
+			string editedName = edit.Text;
+			string initialName = this.access.GetField(sel, null, ResourceAccess.FieldType.Name).String;
+
+			//	Met un nom dont on est certain qu'il est valide et qu'il n'existe pas !
+			this.access.SetField(sel, null, ResourceAccess.FieldType.Name, new ResourceAccess.Field("wXrfGjkleWEuio"));
+
+			string err = this.access.CheckNewName(ref editedName, false);
+			if (err != null)
+			{
+				this.access.SetField(sel, null, ResourceAccess.FieldType.Name, new ResourceAccess.Field(initialName));
+				this.access.SortUndefer();
+
+				this.ignoreChange = true;
+				edit.Text = initialName;
+				edit.SelectAll();
+				this.ignoreChange = false;
+
+				this.module.DesignerApplication.DialogError(err);
+				return;
+			}
+
+			this.ignoreChange = true;
+			edit.Text = editedName;
+			edit.SelectAll();
+			this.ignoreChange = false;
+
+			this.access.SetField(sel, null, ResourceAccess.FieldType.Name, new ResourceAccess.Field(editedName));
+
+			sel = this.access.SortUndefer(sel);
+			this.access.AccessIndex = this.access.Sort(sel, false);
+			this.UpdateArray();
+			this.ShowSelectedRow();
 		}
 
 		protected virtual Widget CultureParentWidget
@@ -1482,99 +1510,6 @@ namespace Epsitec.Common.Designer.Viewers
 			}
 		}
 
-
-		protected void SetTextField(AbstractTextField textField, int index, string cultureName, ResourceAccess.FieldType fieldType)
-		{
-			if (fieldType == ResourceAccess.FieldType.None)
-			{
-				textField.Enable = false;
-				textField.Text = "";
-			}
-			else
-			{
-				ResourceAccess.Field field = this.access.GetField(index, cultureName, fieldType);
-
-				textField.Enable = true;
-				textField.Text = (field == null) ? "" : field.String;
-			}
-		}
-
-		protected void SetTextField(MyWidgets.StringCollection collection, int index, string cultureName, ResourceAccess.FieldType fieldType)
-		{
-			if (fieldType == ResourceAccess.FieldType.None)
-			{
-				collection.Enable = false;
-				collection.Collection = null;
-			}
-			else
-			{
-				ResourceAccess.Field field = this.access.GetField(index, cultureName, fieldType);
-
-				List<string> list = new List<string>();
-				foreach (string text in field.StringCollection)
-				{
-					list.Add(text);
-				}
-
-				collection.Enable = true;
-				collection.Collection = list;
-			}
-		}
-
-		protected void SetTextField(IconButton button, int index, string cultureName, ResourceAccess.FieldType fieldType)
-		{
-			if (fieldType == ResourceAccess.FieldType.None)
-			{
-				button.Enable = false;
-				button.IconName = null;
-			}
-			else
-			{
-				ResourceAccess.Field field = this.access.GetField(index, cultureName, fieldType);
-
-				button.Enable = true;
-				button.IconName = field.String;
-			}
-		}
-
-		protected void UpdateFieldName(AbstractTextField edit, int sel)
-		{
-			//	Change le 'Name' d'une ressource, en gérant les diverses impossibilités.
-			sel = this.access.SortDefer(sel);
-
-			string editedName = edit.Text;
-			string initialName = this.access.GetField(sel, null, ResourceAccess.FieldType.Name).String;
-
-			//	Met un nom dont on est certain qu'il est valide et qu'il n'existe pas !
-			this.access.SetField(sel, null, ResourceAccess.FieldType.Name, new ResourceAccess.Field("wXrfGjkleWEuio"));
-
-			string err = this.access.CheckNewName(ref editedName, false);
-			if (err != null)
-			{
-				this.access.SetField(sel, null, ResourceAccess.FieldType.Name, new ResourceAccess.Field(initialName));
-				this.access.SortUndefer();
-
-				this.ignoreChange = true;
-				edit.Text = initialName;
-				edit.SelectAll();
-				this.ignoreChange = false;
-
-				this.module.DesignerApplication.DialogError(err);
-				return;
-			}
-
-			this.ignoreChange = true;
-			edit.Text = editedName;
-			edit.SelectAll();
-			this.ignoreChange = false;
-
-			this.access.SetField(sel, null, ResourceAccess.FieldType.Name, new ResourceAccess.Field(editedName));
-
-			sel = this.access.SortUndefer(sel);
-			this.access.AccessIndex = this.access.Sort(sel, false);
-			this.UpdateArray();
-			this.ShowSelectedRow();
-		}
 
 		protected static Color GetBackgroundColor(ResourceAccess.ModificationState state, double intensity)
 		{
@@ -2101,6 +2036,7 @@ namespace Epsitec.Common.Designer.Viewers
 		}
 
 
+		#region Handle methods
 		protected void HandleEditKeyboardFocusChanged(object sender, Epsitec.Common.Types.DependencyPropertyChangedEventArgs e)
 		{
 			//	Appelé lorsqu'une ligne éditable voit son focus changer.
@@ -2111,19 +2047,6 @@ namespace Epsitec.Common.Designer.Viewers
 				this.currentTextField = sender as AbstractTextField;
 			}
 		}
-
-		protected void HandleSecondaryCultureClicked(object sender, MessageEventArgs e)
-		{
-			//	Un bouton pour changer de culture secondaire a été cliqué.
-			IconButtonMark button = sender as IconButtonMark;
-			this.secondaryCulture = button.Name;
-
-			this.UpdateSelectedCulture();
-			this.UpdateArray();
-			this.UpdateEdit();
-			this.UpdateCommands();
-		}
-
 
 		private void HandleSplitterDragged(object sender)
 		{
@@ -2275,14 +2198,15 @@ namespace Epsitec.Common.Designer.Viewers
 
 			this.lastActionIsReplace = false;
 		}
+		#endregion
 
 
 		protected static double					leftArrayWidth = 439;
 		protected static double					topArrayHeight = 220;
-		private static double[]					columnWidthHorizontal = {200, 100, 100, 80, 50, 100};
-		private static double[]					columnWidthVertical = {250, 300, 300, 80, 50, 100};
 		protected static bool					mainExtended = false;
 		protected static bool					suiteExtended = false;
+		private static double[]					columnWidthHorizontal = {200, 100, 100, 80, 50, 100};
+		private static double[]					columnWidthVertical = {250, 300, 300, 80, 50, 100};
 
 		protected Module						module;
 		protected PanelsContext					context;

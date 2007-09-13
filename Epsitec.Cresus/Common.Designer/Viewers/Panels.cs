@@ -343,6 +343,22 @@ namespace Epsitec.Common.Designer.Viewers
 			this.UpdateCommands();
 		}
 
+		protected void SetTextField(AbstractTextField textField, int index, string cultureName, ResourceAccess.FieldType fieldType)
+		{
+			if (fieldType == ResourceAccess.FieldType.None)
+			{
+				textField.Enable = false;
+				textField.Text = "";
+			}
+			else
+			{
+				ResourceAccess.Field field = this.access.GetField(index, cultureName, fieldType);
+
+				textField.Enable = true;
+				textField.Text = (field == null) ? "" : field.String;
+			}
+		}
+
 
 		public override void Update()
 		{
