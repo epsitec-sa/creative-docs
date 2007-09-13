@@ -115,28 +115,8 @@ namespace Epsitec.Common.Designer
 				{
 					this.type = value;
 
-					//	Remet le filtre correspondant au type.
-					string filter = "";
-					if (this.filterStrings.ContainsKey(this.type))
-					{
-						filter = this.filterStrings[this.type];
-					}
-
-					Searcher.SearchingMode mode = Searcher.SearchingMode.None;
-					if (this.filterModes.ContainsKey(this.type))
-					{
-						mode = this.filterModes[this.type];
-					}
-
-					this.SetFilter(filter, mode);
-
-					int index = 0;
-					if (this.filterIndexes.ContainsKey(this.type))
-					{
-						index = this.filterIndexes[this.type];
-					}
-
-					this.AccessIndex = index;
+					this.SetFilter("", Searcher.SearchingMode.None);
+					this.AccessIndex = 0;
 				}
 			}
 		}
@@ -275,7 +255,7 @@ namespace Epsitec.Common.Designer
 		{
 			//	Charge les ressources.
 			//?this.accessor.Load(this.resourceManager);
-			Support.ResourceAccessors.AbstractResourceAccessor a = this.accessor as Support.ResourceAccessors.AbstractResourceAccessor;
+			Support.IResourceAccessor a = this.accessor as Support.IResourceAccessor;
 			a.Load(this.resourceManager);
 			this.collectionView.MoveCurrentToFirst();
 			this.LoadBundles();
@@ -1944,9 +1924,6 @@ namespace Epsitec.Common.Designer
 		protected ResourceBundleCollection					bundles;
 		protected ResourceBundle							primaryBundle;
 		protected List<Druid>								druidsIndex;
-		protected Dictionary<Type, int>						filterIndexes;
-		protected Dictionary<Type, string>					filterStrings;
-		protected Dictionary<Type, Searcher.SearchingMode>	filterModes;
 		protected TypeCode									lastTypeCodeCreatated = TypeCode.String;
 		protected System.Type								lastTypeCodeSystem = null;
 	}
