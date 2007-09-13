@@ -379,6 +379,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			StructuredType type = new StructuredType (typeClass, baseType);
 			type.DefineCaption (caption);
 			type.SerializedDesignerLayouts = layouts;
+			type.FreezeInheritance ();
 
 			IList<StructuredData> interfaceIds = data.GetValue (Res.Fields.ResourceStructuredType.InterfaceIds) as IList<StructuredData>;
 
@@ -407,8 +408,10 @@ namespace Epsitec.Common.Support.ResourceAccessors
 					FieldSource source = (FieldSource) fieldData.GetValue (Res.Fields.Field.Source);
 					FieldOptions options = (FieldOptions) fieldData.GetValue (Res.Fields.Field.Options);
 					string expression = fieldData.GetValue (Res.Fields.Field.Expression) as string;
+					Druid fieldDefiningType = StructuredTypeResourceAccessor.ToDruid (fieldData.GetValue (Res.Fields.Field.DefiningTypeId));
 
-					if (membership == FieldMembership.Local)
+					if ((membership == FieldMembership.Local) &&
+						(fieldDefiningType.IsEmpty))
 					{
 						StructuredTypeField field = new StructuredTypeField (null, null, fieldCaption, rank++, relation, membership, source, options, expression);
 						field.DefineTypeId (fieldType);
@@ -667,12 +670,12 @@ namespace Epsitec.Common.Support.ResourceAccessors
 				{
 					FieldUpdater updater = new FieldUpdater (this);
 
-					updater.IncludeType (baseTypeId, FieldMembership.Inherited, 0);
+					updater.IncludeType (baseTypeId, baseTypeId, FieldMembership.Inherited, 0);
 
 					foreach (StructuredData interfaceData in interfaceIds)
 					{
 						Druid interfaceId = (Druid) interfaceData.GetValue (Res.Fields.InterfaceId.CaptionId);
-						updater.IncludeType (interfaceId, FieldMembership.Local, 0);
+						updater.IncludeType (interfaceId, interfaceId, FieldMembership.Local, 0);
 					}
 
 					int i = 0;
@@ -698,10 +701,10 @@ namespace Epsitec.Common.Support.ResourceAccessors
 
 			public void IncludeType(Druid typeId)
 			{
-				this.IncludeType (typeId, FieldMembership.Local, 0);
+				this.IncludeType (typeId, Druid.Empty, FieldMembership.Local, 0);
 			}
 
-			public void IncludeType(Druid typeId, FieldMembership membership, int depth)
+			public void IncludeType(Druid typeId, Druid definingTypeId, FieldMembership membership, int depth)
 			{
 				StructuredData data = this.host.FindStructuredData (typeId);
 
@@ -716,14 +719,15 @@ namespace Epsitec.Common.Support.ResourceAccessors
 
 				if (baseDruid.IsValid)
 				{
-					this.IncludeType (baseDruid, FieldMembership.Inherited, depth+1);
+					this.IncludeType (baseDruid, baseDruid, FieldMembership.Inherited, depth+1);
 				}
 
 				if (interfaceIds != null)
 				{
 					foreach (StructuredData interfaceId in interfaceIds)
 					{
-						this.IncludeType ((Druid) interfaceId.GetValue (Res.Fields.InterfaceId.CaptionId), membership, depth);
+						Druid id = (Druid) interfaceId.GetValue (Res.Fields.InterfaceId.CaptionId);
+						this.IncludeType (id, id, membership, depth);
 					}
 				}
 
@@ -748,7 +752,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 						copy.SetValue (Res.Fields.Field.Source,           field.GetValue (Res.Fields.Field.Source));
 						copy.SetValue (Res.Fields.Field.Options,          field.GetValue (Res.Fields.Field.Options));
 						copy.SetValue (Res.Fields.Field.Expression,       field.GetValue (Res.Fields.Field.Expression));
-						copy.SetValue (Res.Fields.Field.DefiningTypeId,   membership == FieldMembership.Local ? Druid.Empty : typeId);
+						copy.SetValue (Res.Fields.Field.DefiningTypeId,   definingTypeId);
 						
 						copy.LockValue (Res.Fields.Field.DefiningTypeId);
 

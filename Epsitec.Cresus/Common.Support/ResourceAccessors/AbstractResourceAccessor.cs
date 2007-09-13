@@ -47,11 +47,26 @@ namespace Epsitec.Common.Support.ResourceAccessors
 		/// Gets the collection of <see cref="CultureMap"/> items.
 		/// </summary>
 		/// <value>The collection of <see cref="CultureMap"/> items.</value>
-		public virtual CultureMapList Collection
+		public CultureMapList Collection
 		{
 			get
 			{
 				return this.items;
+			}
+		}
+
+		/// <summary>
+		/// Gets a value indicating whether this accessor is taking data from
+		/// resources based on a patch module.
+		/// </summary>
+		/// <value>
+		/// 	<c>true</c> if the data are based on a patch module; otherwise, <c>false</c>.
+		/// </value>
+		public bool BasedOnPatchModule
+		{
+			get
+			{
+				return this.ResourceManager.BasedOnPatchModule;
 			}
 		}
 

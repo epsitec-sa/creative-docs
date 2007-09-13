@@ -21,6 +21,16 @@ namespace Epsitec.Common.Support
 		}
 
 		/// <summary>
+		/// Gets a value indicating whether this accessor is taking data from
+		/// resources based on a patch module.
+		/// </summary>
+		/// <value><c>true</c> if the data are based on a patch module; otherwise, <c>false</c>.</value>
+		bool BasedOnPatchModule
+		{
+			get;
+		}
+
+		/// <summary>
 		/// Gets the data broker associated with the specified field. Usually,
 		/// this is only meaningful if the field defines a collection of
 		/// <see cref="StructuredData"/> items.
