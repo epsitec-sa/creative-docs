@@ -168,10 +168,18 @@ namespace Epsitec.Common.Support
 			Assert.AreEqual (@"%epsitec%\Common.Support\Resources\Common.Support", pool.GetRootRelativePath (info2, info2.ReferenceModulePath));
 			Assert.AreEqual (@"S:\Epsitec.Cresus\Common.Support\Resources\Common.Support", pool.GetRootAbsolutePath (info2, info2.ReferenceModulePath));
 
+			//	We need to take the Common.Support module from its source folder,
+			//	since we defined the patch module to use that path, rather than
+			//	the local test path :
+			
+			pool.ScanForModules (@"%epsitec%\Common.Support\Resources");
+
+			info1 = pool.FindModuleInfo (@"%epsitec%\Common.Support\Resources\Common.Support");
+
 			Assert.IsNotNull (info1);
 			Assert.IsNotNull (info2);
 
-			Assert.AreEqual (2, pool.FindPatchModuleInfos (info1).Count);
+			Assert.AreEqual (1, pool.FindPatchModuleInfos (info1).Count);
 			Assert.AreEqual (info2, pool.FindPatchModuleInfos (info1)[0]);
 
 			ResourceManager manager1 = new ResourceManager (pool, info1);
