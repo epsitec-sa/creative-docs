@@ -140,7 +140,7 @@ namespace Epsitec.Common.Support
 			{
 				public static readonly global::Epsitec.Common.Support.Druid Bundle = new global::Epsitec.Common.Support.Druid (_moduleId, 1, 15);
 				public static readonly global::Epsitec.Common.Support.Druid DefaultSize = new global::Epsitec.Common.Support.Druid (_moduleId, 1, 17);
-				public static readonly global::Epsitec.Common.Support.Druid SourceXml = new global::Epsitec.Common.Support.Druid (_moduleId, 1, 16);
+				public static readonly global::Epsitec.Common.Support.Druid XmlSource = new global::Epsitec.Common.Support.Druid (_moduleId, 1, 16);
 			}
 			
 			public static class ResourceString

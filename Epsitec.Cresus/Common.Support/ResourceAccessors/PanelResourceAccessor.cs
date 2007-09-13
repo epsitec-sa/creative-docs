@@ -21,7 +21,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			this.items.Clear ();
 			this.dirtyItems.Clear ();
 
-			string[] names = this.manager.GetBundleIds ("*", "Panel", ResourceLevel.Default);
+			string[] names = this.manager.GetBundleIds ("*", Strings.PanelType, ResourceLevel.Default);
 
 #if false
 			if (names.Length == 0)
@@ -42,24 +42,44 @@ namespace Epsitec.Common.Support.ResourceAccessors
 				this.panelsToCreate.Add (bundle);
 			}
 #endif
+			List<ResourceBundle> bundles = new List<ResourceBundle> ();
+
 			foreach (string name in names)
 			{
-				ResourceBundle bundle = this.manager.GetBundle (name, ResourceLevel.Default, null);
+				bundles.Add (this.manager.GetBundle (name, ResourceLevel.Default, null));
+			}
+
+			bundles.Sort (
+				delegate (ResourceBundle a, ResourceBundle b)
+				{
+					if (a.Rank < b.Rank)
+					{
+						return -1;
+					}
+					if (a.Rank > b.Rank)
+					{
+						return 1;
+					}
+					return 0;
+				});
+
+			foreach (ResourceBundle bundle in bundles)
+			{
 				CultureMap     item   = new CultureMap (this, bundle.Id, CultureMapSource.ReferenceModule);
 
 				item.Name = bundle.Caption;
 				
 				StructuredData data = new StructuredData (Res.Types.ResourcePanel);
 
-				ResourceBundle.Field panelSourceField = bundle["Panel"];
-				ResourceBundle.Field panelSizeField   = bundle["DefaultSize"];
+				ResourceBundle.Field panelSourceField = bundle[Strings.XmlSource];
+				ResourceBundle.Field panelSizeField   = bundle[Strings.DefaultSize];
 
 				string panelSource = panelSourceField.IsValid ? panelSourceField.AsString : null;
 				string panelSize   = panelSizeField.IsValid   ? panelSizeField.AsString   : null;
 
-				data.SetValue ("Bundle", bundle);
-				data.SetValue ("XmlSource", panelSource);
-				data.SetValue ("DefaultSize", panelSize);
+				data.SetValue (Res.Fields.ResourcePanel.Bundle, bundle);
+				data.SetValue (Res.Fields.ResourcePanel.XmlSource, panelSource);
+				data.SetValue (Res.Fields.ResourcePanel.DefaultSize, panelSize);
 
 				item.RecordCultureData (Resources.DefaultTwoLetterISOLanguageName, data);
 				this.Collection.Add (item);
@@ -80,6 +100,8 @@ namespace Epsitec.Common.Support.ResourceAccessors
 
 		public void Save()
 		{
+			this.RenumberBundles ();
+
 			foreach (ResourceBundle bundle in this.deletedPanels)
 			{
 				this.manager.RemoveBundle (bundle.Id.ToBundleId (), bundle.ResourceLevel, bundle.Culture);
@@ -276,7 +298,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 		protected void DeleteItem(CultureMap item)
 		{
 			StructuredData data = item.GetCultureData (Resources.DefaultTwoLetterISOLanguageName);
-			ResourceBundle bundle = data.GetValue ("Bundle") as ResourceBundle;
+			ResourceBundle bundle = data.GetValue (Res.Fields.ResourcePanel.Bundle) as ResourceBundle;
 
 			this.createdPanels.Remove (bundle);
 			this.editedPanels.Remove (bundle);
@@ -294,10 +316,10 @@ namespace Epsitec.Common.Support.ResourceAccessors
 		protected void PersistItem(CultureMap item)
 		{
 			StructuredData data = item.GetCultureData (Resources.DefaultTwoLetterISOLanguageName);
-			ResourceBundle bundle = data.GetValue ("Bundle") as ResourceBundle;
+			ResourceBundle bundle = data.GetValue (Res.Fields.ResourcePanel.Bundle) as ResourceBundle;
 			
-			string xmlSource   = data.GetValue ("XmlSource") as string;
-			string defaultSize = data.GetValue ("DefaultSize") as string;
+			string xmlSource   = data.GetValue (Res.Fields.ResourcePanel.XmlSource) as string;
+			string defaultSize = data.GetValue (Res.Fields.ResourcePanel.DefaultSize) as string;
 
 			if (bundle == null)
 			{
@@ -305,35 +327,59 @@ namespace Epsitec.Common.Support.ResourceAccessors
 				CultureInfo culture = this.manager.ActiveCulture ?? Resources.FindCultureInfo ("fr");
 
 				bundle = ResourceBundle.Create (this.manager, prefix, item.Id.ToBundleId (), ResourceLevel.Default, culture);
-				bundle.DefineType ("Panel");
+				bundle.DefineType (Strings.PanelType);
 				
 				ResourceBundle.Field field;
 
 				field = bundle.CreateField (ResourceFieldType.Data);
-				field.SetName ("XmlSource");
+				field.SetName (PanelResourceAccessor.Strings.XmlSource);
 				bundle.Add (field);
 
 				field = bundle.CreateField (ResourceFieldType.Data);
-				field.SetName ("DefaultSize");
+				field.SetName (Strings.DefaultSize);
 				bundle.Add (field);
 
 				this.createdPanels.Add (bundle);
 
-				data.SetValue ("Bundle", bundle);
+				data.SetValue (Res.Fields.ResourcePanel.Bundle, bundle);
 			}
 			else
 			{
-				if ((!this.createdPanels.Contains (bundle)) &&
-					(!this.editedPanels.Contains (bundle)))
-				{
-					this.deletedPanels.Remove (bundle);
-					this.editedPanels.Add (bundle);
-				}
+				this.RecordBundleAsEdited (bundle);
 			}
 
 			bundle.DefineCaption (item.Name);
-			bundle["XmlSource"].SetXmlValue (xmlSource);
-			bundle["DefaultSize"].SetStringValue (defaultSize);
+			bundle[Strings.XmlSource].SetXmlValue (xmlSource);
+			bundle[Strings.DefaultSize].SetStringValue (defaultSize);
+		}
+
+		private void RecordBundleAsEdited(ResourceBundle bundle)
+		{
+			if ((!this.createdPanels.Contains (bundle)) &&
+					(!this.editedPanels.Contains (bundle)))
+			{
+				this.deletedPanels.Remove (bundle);
+				this.editedPanels.Add (bundle);
+			}
+		}
+
+		private void RenumberBundles()
+		{
+			int rank = 0;
+
+			foreach (CultureMap item in this.Collection)
+			{
+				rank++;
+
+				StructuredData data   = item.GetCultureData (Resources.DefaultTwoLetterISOLanguageName);
+				ResourceBundle bundle = data.GetValue (Res.Fields.ResourcePanel.Bundle) as ResourceBundle;
+
+				if (bundle.Rank != rank)
+				{
+					bundle.DefineRank (rank);
+					this.RecordBundleAsEdited (bundle);
+				}
+			}
 		}
 
 		private Druid CreateId()
@@ -364,6 +410,13 @@ namespace Epsitec.Common.Support.ResourceAccessors
 		}
 
 		#endregion
+
+		private static class Strings
+		{
+			public const string PanelType = "Panel";
+			public const string XmlSource = "XmlSource";
+			public const string DefaultSize = "DefaultSize";
+		}
 
 		private readonly CultureMapList items;
 		private readonly Dictionary<CultureMap, bool> dirtyItems;
