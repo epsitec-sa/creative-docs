@@ -68,4 +68,5 @@
   <data name="Val.CultureMapSource.PatchModule" id="13">&lt;s:data id="_0" f:Name="PatchModule" f:Labels="{Collection {Text 'Module de patch'}}" /&gt;</data>
   <data name="Val.CultureMapSource.DynamicMerge" id="14">&lt;s:data id="_0" f:Name="DynamicMerge" f:Description="" f:Labels="{Collection {Text 'Fusion dynamique'}}" /&gt;</data>
   <data name="Typ.CultureMapSource" id="11">&lt;s:type id="_1" s:name="*aT" /&gt;&lt;s:type id="_2" s:name="*eT" /&gt;&lt;s:data id="_0" f:Name="CultureMapSource" f:_1.SystemType="E:Epsitec.Common.Support.CultureMapSource, Common.Support" f:_2.EnumValues="{Collection {Text '0 [1012]'}, {Text '1 [1013]'}, {Text '2 [1014]'}}" f:Labels="{Collection {Text 'Source'}}" /&gt;</data>
+  <data name="Typ.Default.Object" id="15">&lt;s:type id="_1" s:name="*aT" /&gt;&lt;s:data id="_0" f:Name="Default.Object" f:_1.SystemType="C:System.Object" f:Labels="{Collection {Text 'Type &amp;lt;i&amp;gt;object&amp;lt;/i&amp;gt; de .NET'}}" /&gt;</data>
 </bundle>

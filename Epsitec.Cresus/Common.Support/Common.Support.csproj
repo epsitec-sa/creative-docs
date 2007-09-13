@@ -141,6 +141,7 @@
     </Compile>
     <Compile Include="EntityEngine\EntityContext.cs" />
     <Compile Include="ResourceAccessors\DataCreationMode.cs" />
+    <Compile Include="ResourceAccessors\PanelResourceAccessor.cs" />
     <Compile Include="Serialization\Converters\BinaryArrayConverter.cs" />
     <Compile Include="CultureMap.cs" />
     <Compile Include="CultureMapList.cs" />
