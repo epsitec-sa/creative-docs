@@ -165,8 +165,8 @@ namespace Epsitec.Common.Support
 			Assert.AreEqual (@"%test%\Common.Support", pool.GetRootRelativePath (info1.FullId.Path));
 			Assert.AreEqual (@"S:\Epsitec.Cresus\Common.Support.Tests\Resources\Common.Support", pool.GetRootAbsolutePath (info1.FullId.Path));
 			Assert.AreEqual (@"S:\Epsitec.Cresus\Common.Support.Tests\Resources\Common.Support.Patch", pool.GetRootAbsolutePath (info2.FullId.Path));
-			Assert.AreEqual (@"%test%\Common.Support", pool.GetRootRelativePath (info2, info2.ReferenceModulePath));
-			Assert.AreEqual (@"S:\Epsitec.Cresus\Common.Support.Tests\Resources\Common.Support", pool.GetRootAbsolutePath (info2, info2.ReferenceModulePath));
+			Assert.AreEqual (@"%epsitec%\Common.Support\Resources\Common.Support", pool.GetRootRelativePath (info2, info2.ReferenceModulePath));
+			Assert.AreEqual (@"S:\Epsitec.Cresus\Common.Support\Resources\Common.Support", pool.GetRootAbsolutePath (info2, info2.ReferenceModulePath));
 
 			Assert.IsNotNull (info1);
 			Assert.IsNotNull (info2);

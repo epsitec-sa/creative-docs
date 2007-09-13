@@ -141,6 +141,8 @@ namespace Epsitec.Common.Support
 			Assert.AreEqual (1, accessor.PersistChanges ());
 			Assert.IsFalse (accessor.ContainsChanges);
 
+			this.manager.ClearCaptionCache (Druid.Parse ("[400C]"), ResourceLevel.All, Resources.FindCultureInfo ("fr"));
+
 			Assert.IsNull (this.manager.GetCaption (Druid.Parse ("[400C]"), ResourceLevel.Default));
 			Assert.IsNull (this.manager.GetCaption (Druid.Parse ("[400C]"), ResourceLevel.Merged, Resources.FindCultureInfo ("fr")));
 		}
@@ -234,7 +236,7 @@ namespace Epsitec.Common.Support
 
 			accessor.Load (Res.Manager);
 
-			Assert.AreEqual (19, accessor.Collection.Count);
+			Assert.AreEqual (20, accessor.Collection.Count);
 
 			CultureMap map = accessor.Collection[Res.Types.ResourceStructuredType.CaptionId];
 
