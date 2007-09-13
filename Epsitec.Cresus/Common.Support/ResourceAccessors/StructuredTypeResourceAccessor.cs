@@ -158,19 +158,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 
 			if (m > 0)
 			{
-				AccessorsCollection accessors = StructuredTypeResourceAccessor.GetAccessors (this.ResourceManager.Pool);
-
-				//	Mark all items describing entities in the same pool as dirty,
-				//	since the changes which have just been persisted may induce
-				//	modifications to inherited fields or interfaces.
-
-				foreach (StructuredTypeResourceAccessor accessor in accessors.Collection)
-				{
-					foreach (CultureMap item in accessor.Collection)
-					{
-						item.IsRefreshNeeded = true;
-					}
-				}
+				this.MarkAllItemsAsDirty ();
 			}
 			
 			return n+m;
@@ -361,7 +349,12 @@ namespace Epsitec.Common.Support.ResourceAccessors
 				patchData.SetValue (Res.Fields.ResourceStructuredType.InterfaceIds, temp);
 			}
 		}
-		
+
+		/// <summary>
+		/// Handles changes to the item collection.
+		/// </summary>
+		/// <param name="sender">The sender.</param>
+		/// <param name="e">The <see cref="Epsitec.Common.Types.CollectionChangedEventArgs"/> instance containing the event data.</param>
 		protected override void HandleItemsCollectionChanged(object sender, CollectionChangedEventArgs e)
 		{
 			base.HandleItemsCollectionChanged (sender, e);
@@ -398,6 +391,10 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			}
 		}
 
+		/// <summary>
+		/// Refreshes the item, by regenerating the inherited fields.
+		/// </summary>
+		/// <param name="item">The item.</param>
 		protected override void RefreshItem(CultureMap item)
 		{
 			if (this.postponeRefreshWhileLoading)
@@ -418,6 +415,26 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			}
 		}
 
+
+		/// <summary>
+		/// Marks all structured type resource items as dirty.
+		/// </summary>
+		private void MarkAllItemsAsDirty()
+		{
+			AccessorsCollection accessors = StructuredTypeResourceAccessor.GetAccessors (this.ResourceManager.Pool);
+
+			//	Mark all items describing entities in the same pool as dirty,
+			//	since the changes which have just been persisted may induce
+			//	modifications to inherited fields or interfaces.
+
+			foreach (StructuredTypeResourceAccessor accessor in accessors.Collection)
+			{
+				foreach (CultureMap item in accessor.Collection)
+				{
+					item.IsRefreshNeeded = true;
+				}
+			}
+		}
 
 		/// <summary>
 		/// Builds a structured type from a definition stored in a data record,
@@ -649,53 +666,6 @@ namespace Epsitec.Common.Support.ResourceAccessors
 		}
 
 
-		/// <summary>
-		/// Updates the inherited fields found in a structured type. This method
-		/// can be used when the <c>BaseType</c> property changes or when a new
-		/// <c>CultureMap</c> object is added, or when an interface is added or
-		/// removed.
-		/// </summary>
-		/// <param name="data">The data describing the structured type.</param>
-		/// <param name="newBaseType">The Druid of the base type.</param>
-		private void UpdateInheritedFields(StructuredData data, Druid baseTypeId)
-		{
-			ObservableList<StructuredData> fields = data.GetValue (Res.Fields.ResourceStructuredType.Fields) as ObservableList<StructuredData>;
-			IList<StructuredData>          interfaceIds = data.GetValue (Res.Fields.ResourceStructuredType.InterfaceIds) as IList<StructuredData>;
-
-			//	We temporarily disable notifications, in order to avoid generating
-			//	circular update events when just refreshing fields that are in fact
-			//	read only for the user :
-			
-			using (fields.DisableNotifications ())
-			{
-				StructuredTypeResourceAccessor.RemoveInheritedFields (fields);
-
-				if ((baseTypeId.IsValid) ||
-					(interfaceIds.Count > 0))
-				{
-					FieldUpdater updater = new FieldUpdater (this);
-
-					updater.IncludeType (baseTypeId, FieldMembership.Inherited);
-
-					foreach (StructuredData interfaceData in interfaceIds)
-					{
-						Druid interfaceId = StructuredTypeResourceAccessor.ToDruid (interfaceData.GetValue (Res.Fields.InterfaceId.CaptionId));
-						updater.IncludeType (interfaceId, FieldMembership.Local);
-					}
-
-					int i = 0;
-
-					foreach (StructuredData field in updater.Fields)
-					{
-						System.Diagnostics.Debug.Assert (((FieldMembership) field.GetValue (Res.Fields.Field.Membership) == FieldMembership.Inherited)
-							/**/					  || (StructuredTypeResourceAccessor.ToDruid (field.GetValue (Res.Fields.Field.CaptionId)).IsValid));
-
-						fields.Insert (i++, field);
-					}
-				}
-			}
-		}
-
 		#region Private FieldUpdater Class
 		
 		private sealed class FieldUpdater
@@ -866,6 +836,53 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			}
 
 			return map.GetCultureData (Resources.DefaultTwoLetterISOLanguageName);
+		}
+
+		/// <summary>
+		/// Updates the inherited fields found in a structured type. This method
+		/// can be used when the <c>BaseType</c> property changes or when a new
+		/// <c>CultureMap</c> object is added, or when an interface is added or
+		/// removed.
+		/// </summary>
+		/// <param name="data">The data describing the structured type.</param>
+		/// <param name="newBaseType">The Druid of the base type.</param>
+		private void UpdateInheritedFields(StructuredData data, Druid baseTypeId)
+		{
+			ObservableList<StructuredData> fields = data.GetValue (Res.Fields.ResourceStructuredType.Fields) as ObservableList<StructuredData>;
+			IList<StructuredData> interfaceIds = data.GetValue (Res.Fields.ResourceStructuredType.InterfaceIds) as IList<StructuredData>;
+
+			//	We temporarily disable notifications, in order to avoid generating
+			//	circular update events when just refreshing fields that are in fact
+			//	read only for the user :
+
+			using (fields.DisableNotifications ())
+			{
+				StructuredTypeResourceAccessor.RemoveInheritedFields (fields);
+
+				if ((baseTypeId.IsValid) ||
+					(interfaceIds.Count > 0))
+				{
+					FieldUpdater updater = new FieldUpdater (this);
+
+					updater.IncludeType (baseTypeId, FieldMembership.Inherited);
+
+					foreach (StructuredData interfaceData in interfaceIds)
+					{
+						Druid interfaceId = StructuredTypeResourceAccessor.ToDruid (interfaceData.GetValue (Res.Fields.InterfaceId.CaptionId));
+						updater.IncludeType (interfaceId, FieldMembership.Local);
+					}
+
+					int i = 0;
+
+					foreach (StructuredData field in updater.Fields)
+					{
+						System.Diagnostics.Debug.Assert (((FieldMembership) field.GetValue (Res.Fields.Field.Membership) == FieldMembership.Inherited)
+							/**/					  || (StructuredTypeResourceAccessor.ToDruid (field.GetValue (Res.Fields.Field.CaptionId)).IsValid));
+
+						fields.Insert (i++, field);
+					}
+				}
+			}
 		}
 
 		/// <summary>

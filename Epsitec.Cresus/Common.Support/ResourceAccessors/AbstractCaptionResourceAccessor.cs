@@ -148,13 +148,26 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			return base.GetDataBroker (container, fieldId);
 		}
 
+		/// <summary>
+		/// Creates a new unique id.
+		/// </summary>
+		/// <returns>The new unique id.</returns>
 		protected override Druid CreateId()
 		{
-			ResourceBundle bundle = this.ResourceManager.GetBundle (Resources.CaptionsBundleName, ResourceLevel.Default);
+			ResourceBundle      bundle    = this.ResourceManager.GetBundle (Resources.CaptionsBundleName, ResourceLevel.Default);
 			AccessorsCollection accessors = AbstractCaptionResourceAccessor.GetAccessors (bundle);
+
+			//	Create a new unique id, making sure we don't have any collisions
+			//	with ids defined in any other accessor attached to the same bundle
+			//	as the current accessor :
+			
 			return AbstractResourceAccessor.CreateId (accessors.AllCollections, bundle);
 		}
 
+		/// <summary>
+		/// Deletes the specified item.
+		/// </summary>
+		/// <param name="item">The item to delete.</param>
 		protected override void DeleteItem(CultureMap item)
 		{
 			foreach (string twoLetterISOLanguageName in item.GetDefinedCultures ())
@@ -165,14 +178,14 @@ namespace Epsitec.Common.Support.ResourceAccessors
 				if (twoLetterISOLanguageName == Resources.DefaultTwoLetterISOLanguageName)
 				{
 					bundle = this.ResourceManager.GetBundle (Resources.CaptionsBundleName, ResourceLevel.Default);
-					this.ResourceManager.ClearCaptionCache (item.Id, ResourceLevel.Default, null);
+					this.ClearCaptionCache (item.Id, ResourceLevel.Default, null);
 				}
 				else
 				{
 					culture = Resources.FindCultureInfo (twoLetterISOLanguageName);
 					bundle  = this.ResourceManager.GetBundle (Resources.CaptionsBundleName, ResourceLevel.Localized, culture);
-					this.ResourceManager.ClearCaptionCache (item.Id, ResourceLevel.Localized, culture);
-					this.ResourceManager.ClearCaptionCache (item.Id, ResourceLevel.Merged, culture);
+					this.ClearCaptionCache (item.Id, ResourceLevel.Localized, culture);
+					this.ClearCaptionCache (item.Id, ResourceLevel.Merged, culture);
 				}
 
 				if (bundle != null)
@@ -187,7 +200,16 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			}
 			
 		}
-		
+
+		protected virtual void ClearCaptionCache(Druid id, ResourceLevel level, CultureInfo culture)
+		{
+			this.ResourceManager.ClearCaptionCache (id, level, culture);
+		}
+
+		/// <summary>
+		/// Persists the specified item.
+		/// </summary>
+		/// <param name="item">The item to store as a resource.</param>
 		protected override void PersistItem(CultureMap item)
 		{
 			if (string.IsNullOrEmpty (item.Name))
@@ -326,42 +348,47 @@ namespace Epsitec.Common.Support.ResourceAccessors
 #if true
 				if (level == ResourceLevel.Localized)
 				{
-					this.ResourceManager.ClearCaptionCache (item.Id, ResourceLevel.Localized, culture);
-					this.ResourceManager.ClearCaptionCache (item.Id, ResourceLevel.Merged, culture);
+					this.ClearCaptionCache (item.Id, ResourceLevel.Localized, culture);
+					this.ClearCaptionCache (item.Id, ResourceLevel.Merged, culture);
 				}
 				else
 				{
-					this.ResourceManager.ClearCaptionCache (item.Id, ResourceLevel.Default, null);
+					this.ClearCaptionCache (item.Id, ResourceLevel.Default, null);
 				}
 #endif
 			}
 		}
 
+		/// <summary>
+		/// Creates an empty data record, attached to the proper type descriptor.
+		/// </summary>
+		/// <returns>A <see cref="StructuredData"/> instance.</returns>
 		protected StructuredData CreateStructuredData()
 		{
 			return new StructuredData (this.GetStructuredType ());
 		}
 
+		/// <summary>
+		/// Creates an empty caption.
+		/// </summary>
+		/// <param name="bundle">The resource bundle where the caption will be stored.</param>
+		/// <returns>An empty <see cref="Caption"/> instance.</returns>
 		protected Caption CreateCaption(ResourceBundle bundle)
 		{
 			return this.CreateCaption (bundle, Druid.Empty);
 		}
-		
+
+		/// <summary>
+		/// Creates an empty caption.
+		/// </summary>
+		/// <param name="bundle">The resource bundle where the caption will be stored.</param>
+		/// <param name="id">The caption id.</param>
+		/// <returns>An empty <see cref="Caption"/> instance.</returns>
 		protected Caption CreateCaption(ResourceBundle bundle, Druid id)
 		{
 			Caption caption = new Caption (id);
 			ResourceManager.SetSourceBundle (caption, bundle);
 			return caption;
-		}
-
-		private bool IsEmpty(StructuredData data)
-		{
-			string comment     = data.GetValue (Res.Fields.ResourceBase.Comment) as string;
-			int    modifId     = StringResourceAccessor.GetModificationId (data);
-
-			return (this.IsEmptyCaption (data))
-				&& (ResourceBundle.Field.IsNullString (comment))
-				&& (modifId < 1);
 		}
 
 		/// <summary>
@@ -381,65 +408,6 @@ namespace Epsitec.Common.Support.ResourceAccessors
 		protected abstract bool IsEmptyCaption(StructuredData data);
 		
 		/// <summary>
-		/// Computes the delta between the reference data and the current data
-		/// provided in the data record.
-		/// </summary>
-		/// <param name="data">The current data record.</param>
-		/// <param name="refBundle">The bundle from the reference module.</param>
-		/// <param name="druid">The id for the item.</param>
-		/// <returns>
-		/// <c>true</c> if the current data is the same as the reference data;
-		/// otherwise, <c>false</c>.
-		/// </returns>
-		private bool ComputeDelta(CultureMap item, ref StructuredData rawData, ResourceBundle refBundle, Druid druid, ResourceBundle dataBundle, string twoLetterISOLanguageName)
-		{
-			if (refBundle == null)
-			{
-				return false;
-			}
-
-			ResourceBundle.Field refField = refBundle[druid];
-
-			if (refField.IsEmpty)
-			{
-				return false;
-			}
-
-			StructuredData refData   = this.CreateStructuredData (item, refBundle, refField, DataCreationMode.Temporary);
-			StructuredData patchData = this.CreateStructuredData ();
-
-			int    refModifId = StringResourceAccessor.GetModificationId (refData.GetValue (Res.Fields.ResourceBase.ModificationId));
-			int    rawModifId = StringResourceAccessor.GetModificationId (rawData.GetValue (Res.Fields.ResourceBase.ModificationId));
-			
-			string refComment = refData.GetValue (Res.Fields.ResourceBase.Comment) as string;
-			string rawComment = rawData.GetValue (Res.Fields.ResourceBase.Comment) as string;
-
-			if ((rawModifId > 0) &&
-				(rawModifId != refModifId))
-			{
-				patchData.SetValue (Res.Fields.ResourceBase.ModificationId, rawModifId);
-			}
-			
-			if (!ResourceBundle.Field.IsNullString (rawComment) &&
-				(rawComment != refComment))
-			{
-				patchData.SetValue (Res.Fields.ResourceBase.Comment, rawComment);
-			}
-
-			this.ComputeDataDelta (rawData, refData, patchData);
-
-			if (patchData.IsEmpty)
-			{
-				return true;
-			}
-			else
-			{
-				rawData = patchData;
-				return false;
-			}
-		}
-
-		/// <summary>
 		/// Computes the difference between a raw data record and a reference
 		/// data record and fills the patch data record with the resulting
 		/// delta.
@@ -448,35 +416,6 @@ namespace Epsitec.Common.Support.ResourceAccessors
 		/// <param name="refData">The reference data record.</param>
 		/// <param name="patchData">The patch data, which will be filled with the delta.</param>
 		protected abstract void ComputeDataDelta(StructuredData rawData, StructuredData refData, StructuredData patchData);
-
-
-		/// <summary>
-		/// Creates a structured data record, properly initialized based on the
-		/// <see cref="StructuredType"/> associated with the accessor's resource
-		/// type. The comment and modification id are taken from the field.
-		/// </summary>
-		/// <param name="item">The item.</param>
-		/// <param name="bundle">The resource bundle.</param>
-		/// <param name="field">The resource field.</param>
-		/// <param name="mode">The creation mode.</param>
-		/// <returns>An initialized data record.</returns>
-		private StructuredData CreateStructuredData(CultureMap item, ResourceBundle bundle, ResourceBundle.Field field, DataCreationMode mode)
-		{
-			StructuredData data    = this.CreateStructuredData ();
-			Caption        caption = this.CreateCaption (bundle);
-
-			caption.DeserializeFromString (field.AsString, bundle.ResourceManager);
-
-			data.SetValue (Res.Fields.ResourceBase.Comment, field.About);
-			data.SetValue (Res.Fields.ResourceBase.ModificationId, field.ModificationId);
-
-			this.FillDataFromCaption (item, data, caption, mode);
-			
-			return data;
-		}
-
-
-
 
 		/// <summary>
 		/// Creates a caption based on the definitions stored in a data record.
@@ -715,6 +654,108 @@ namespace Epsitec.Common.Support.ResourceAccessors
 		}
 
 		#endregion
+
+		/// <summary>
+		/// Determines whether the specified data record is empty. This calls
+		/// the <see cref="IsEmptyCaption"/> method.
+		/// </summary>
+		/// <param name="data">The data record.</param>
+		/// <returns>
+		/// 	<c>true</c> if the specified data record is empty; otherwise, <c>false</c>.
+		/// </returns>
+		private bool IsEmpty(StructuredData data)
+		{
+			string comment     = data.GetValue (Res.Fields.ResourceBase.Comment) as string;
+			int    modifId     = StringResourceAccessor.GetModificationId (data);
+
+			return (this.IsEmptyCaption (data))
+				&& (ResourceBundle.Field.IsNullString (comment))
+				&& (modifId < 1);
+		}
+
+		/// <summary>
+		/// Computes the delta between the reference data and the current data
+		/// provided in the data record.
+		/// </summary>
+		/// <param name="data">The current data record.</param>
+		/// <param name="refBundle">The bundle from the reference module.</param>
+		/// <param name="druid">The id for the item.</param>
+		/// <returns>
+		/// <c>true</c> if the current data is the same as the reference data;
+		/// otherwise, <c>false</c>.
+		/// </returns>
+		private bool ComputeDelta(CultureMap item, ref StructuredData rawData, ResourceBundle refBundle, Druid druid, ResourceBundle dataBundle, string twoLetterISOLanguageName)
+		{
+			if (refBundle == null)
+			{
+				return false;
+			}
+
+			ResourceBundle.Field refField = refBundle[druid];
+
+			if (refField.IsEmpty)
+			{
+				return false;
+			}
+
+			StructuredData refData   = this.CreateStructuredData (item, refBundle, refField, DataCreationMode.Temporary);
+			StructuredData patchData = this.CreateStructuredData ();
+
+			int    refModifId = StringResourceAccessor.GetModificationId (refData.GetValue (Res.Fields.ResourceBase.ModificationId));
+			int    rawModifId = StringResourceAccessor.GetModificationId (rawData.GetValue (Res.Fields.ResourceBase.ModificationId));
+			
+			string refComment = refData.GetValue (Res.Fields.ResourceBase.Comment) as string;
+			string rawComment = rawData.GetValue (Res.Fields.ResourceBase.Comment) as string;
+
+			if ((rawModifId > 0) &&
+				(rawModifId != refModifId))
+			{
+				patchData.SetValue (Res.Fields.ResourceBase.ModificationId, rawModifId);
+			}
+			
+			if (!ResourceBundle.Field.IsNullString (rawComment) &&
+				(rawComment != refComment))
+			{
+				patchData.SetValue (Res.Fields.ResourceBase.Comment, rawComment);
+			}
+
+			this.ComputeDataDelta (rawData, refData, patchData);
+
+			if (patchData.IsEmpty)
+			{
+				return true;
+			}
+			else
+			{
+				rawData = patchData;
+				return false;
+			}
+		}
+
+		/// <summary>
+		/// Creates a structured data record, properly initialized based on the
+		/// <see cref="StructuredType"/> associated with the accessor's resource
+		/// type. The comment and modification id are taken from the field.
+		/// </summary>
+		/// <param name="item">The item.</param>
+		/// <param name="bundle">The resource bundle.</param>
+		/// <param name="field">The resource field.</param>
+		/// <param name="mode">The creation mode.</param>
+		/// <returns>An initialized data record.</returns>
+		private StructuredData CreateStructuredData(CultureMap item, ResourceBundle bundle, ResourceBundle.Field field, DataCreationMode mode)
+		{
+			StructuredData data    = this.CreateStructuredData ();
+			Caption        caption = this.CreateCaption (bundle);
+
+			caption.DeserializeFromString (field.AsString, bundle.ResourceManager);
+
+			data.SetValue (Res.Fields.ResourceBase.Comment, field.About);
+			data.SetValue (Res.Fields.ResourceBase.ModificationId, field.ModificationId);
+
+			this.FillDataFromCaption (item, data, caption, mode);
+			
+			return data;
+		}
 
 		/// <summary>
 		/// Registers the current accessor with the active bundle.
