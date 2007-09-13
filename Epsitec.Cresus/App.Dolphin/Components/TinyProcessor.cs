@@ -950,7 +950,7 @@ namespace Epsitec.App.Dolphin.Components
 			}
 
 			this.SetFlag(TinyProcessor.FlagCarry, bit);
-			this.SetFlag(TinyProcessor.FlagZero, value == 0);
+			this.SetFlag(TinyProcessor.FlagZero, (value & 0xFF) == 0);
 			this.SetFlag(TinyProcessor.FlagNeg, (value & 0x80) != 0);
 
 			return value;
@@ -1048,7 +1048,7 @@ namespace Epsitec.App.Dolphin.Components
 		protected int SetFlagsOper(int value, bool carry)
 		{
 			//	Initialise F selon le résultat d'une opération.
-			this.SetFlag(TinyProcessor.FlagZero, value == 0);
+			this.SetFlag(TinyProcessor.FlagZero, (value & 0xFF) == 0);
 			this.SetFlag(TinyProcessor.FlagNeg, (value & 0x80) != 0);
 
 			if (carry)

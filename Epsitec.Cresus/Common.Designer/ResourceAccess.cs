@@ -564,7 +564,6 @@ namespace Epsitec.Common.Designer
 		public void Duplicate(string newName, bool duplicateContent)
 		{
 			//	Duplique la ressource courante.
-			EnumType et = null;
 			StructuredType st = null;
 
 			if (this.IsBundlesType)

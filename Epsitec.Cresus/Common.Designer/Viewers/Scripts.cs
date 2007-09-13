@@ -22,7 +22,7 @@ namespace Epsitec.Common.Designer.Viewers
 			left.Dock = DockStyle.Left;
 			left.Padding = new Margins(10, 10, 10, 10);
 
-			this.labelEdit = new TextFieldEx(left);
+			this.labelEdit = new MyWidgets.TextFieldExName(this.firstPane);
 			this.labelEdit.Margins = new Margins(0, 0, 10, 0);
 			this.labelEdit.Dock = DockStyle.Bottom;
 			this.labelEdit.ButtonShowCondition = ShowCondition.WhenModified;
@@ -95,14 +95,6 @@ namespace Epsitec.Common.Designer.Viewers
 			this.UpdateCommands();
 		}
 
-		protected void HandleLabelKeyboardFocusChanged(object sender, Epsitec.Common.Types.DependencyPropertyChangedEventArgs e)
-		{
-			//	Appelé lorsque la ligne éditable pour le label voit son focus changer.
-			TextFieldEx field = sender as TextFieldEx;
-			field.AcceptEdition();
-			this.HandleEditKeyboardFocusChanged(sender, e);
-		}
-
 		protected void HandleTextChanged(object sender)
 		{
 			//	Un texte éditable a changé.
@@ -112,7 +104,7 @@ namespace Epsitec.Common.Designer.Viewers
 		}
 
 
-		protected TextFieldEx				labelEdit;
-		protected TextFieldMulti			edit;
+		protected MyWidgets.StringArray			array;
+		protected TextFieldMulti				edit;
 	}
 }

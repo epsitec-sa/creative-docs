@@ -1053,14 +1053,6 @@ namespace Epsitec.Common.Designer.Viewers
 			this.DefineProxies(this.panelEditor.SelectedObjects);
 		}
 
-		private void HandleLabelKeyboardFocusChanged(object sender, Epsitec.Common.Types.DependencyPropertyChangedEventArgs e)
-		{
-			//	Appelé lorsque la ligne éditable pour le label voit son focus changer.
-			TextFieldEx field = sender as TextFieldEx;
-			field.AcceptEdition();
-			this.HandleEditKeyboardFocusChanged(sender, e);
-		}
-
 		private void HandleTextChanged(object sender)
 		{
 			//	Un texte éditable a changé.
@@ -1186,14 +1178,13 @@ namespace Epsitec.Common.Designer.Viewers
 		protected static double					treeBranchesHeight = 30;
 
 		protected ProxyManager					proxyManager;
+		protected MyWidgets.StringArray			array;
 		protected FrameBox						left;
 		protected VSplitter						splitter1;
 		protected VSplitter						splitter2;
-		protected MyWidgets.TextFieldExName		labelEdit;
 		protected Widget						middle;
 		protected VToolBar						vToolBar;
 		protected HToolBar						statusBar;
-		protected Scrollable					scrollable;
 		protected FrameBox						panelContainerParent;
 		protected UI.Panel						panelContainer;
 		protected MyWidgets.PanelEditor			panelEditor;

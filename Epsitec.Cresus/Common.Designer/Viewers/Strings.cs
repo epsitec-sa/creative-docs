@@ -10,7 +10,7 @@ namespace Epsitec.Common.Designer.Viewers
 	/// <summary>
 	/// Permet de représenter les ressources d'un module.
 	/// </summary>
-	public class Strings : Abstract2
+	public class Strings : Abstract
 	{
 		public Strings(Module module, PanelsContext context, ResourceAccess access, DesignerApplication designerApplication) : base(module, context, access, designerApplication)
 		{
