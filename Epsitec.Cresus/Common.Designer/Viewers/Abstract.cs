@@ -527,7 +527,7 @@ namespace Epsitec.Common.Designer.Viewers
 					//	Met un nom dont on est certain qu'il est valide et qu'il n'existe pas !
 					this.access.SetField(searcher.Row, cultureName, fieldType, new ResourceAccess.Field("wXrfGjkleWEuio"));
 
-					string err = this.access.CheckNewName(ref text, false);
+					string err = this.access.CheckNewName(ref text);
 					if (err != null)
 					{
 						this.access.SetField(searcher.Row, cultureName, fieldType, new ResourceAccess.Field(initialName));
@@ -1074,7 +1074,7 @@ namespace Epsitec.Common.Designer.Viewers
 			//	Met un nom dont on est certain qu'il est valide et qu'il n'existe pas !
 			this.access.SetField(sel, null, ResourceAccess.FieldType.Name, new ResourceAccess.Field("wXrfGjkleWEuio"));
 
-			string err = this.access.CheckNewName(ref editedName, false);
+			string err = this.access.CheckNewName(ref editedName);
 			if (err != null)
 			{
 				this.access.SetField(sel, null, ResourceAccess.FieldType.Name, new ResourceAccess.Field(initialName));

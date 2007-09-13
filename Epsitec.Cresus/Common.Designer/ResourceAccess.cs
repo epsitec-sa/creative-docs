@@ -1139,18 +1139,16 @@ namespace Epsitec.Common.Designer
 		}
 
 
-		public bool IsCorrectNewName(ref string name, bool bypass)
+		public bool IsCorrectNewName(ref string name)
 		{
 			//	Retourne true s'il est possible de créer cette nouvelle ressource.
-			return (this.CheckNewName(ref name, bypass) == null);
+			return (this.CheckNewName(ref name) == null);
 		}
 
-		public string CheckNewName(ref string name, bool bypass)
+		public string CheckNewName(ref string name)
 		{
 			//	Retourne l'éventuelle erreur si on tente de créer cette nouvelle ressource.
 			//	Retourne null si tout est correct.
-			System.Diagnostics.Debug.Assert(!bypass || this.bypassType != Type.Unknow);
-
 			if (!Misc.IsValidLabel(ref name))
 			{
 				return Res.Strings.Error.Name.Invalid;
@@ -1169,60 +1167,26 @@ namespace Epsitec.Common.Designer
 
 			//	Cherche si le nom existe déjà.
 			string err;
-			if (bypass)
+			if (this.IsBundlesType)
 			{
-				foreach (Druid druid in this.bypassDruids)
+				CollectionView cv = new CollectionView(this.accessor.Collection);
+				foreach (CultureMap item in cv.Items)
 				{
-					ResourceBundle.Field field = this.primaryBundle[druid];
-					if (field != null && field.Name != null)
+					err = ResourceAccess.CheckNames(item.Name, name);
+					if (err != null)
 					{
-						err = ResourceAccess.CheckNames(field.Name, name);
-						if (err != null)
-						{
-							return err;
-						}
-					}
-				}
-
-				if (this.bypassExclude != null)
-				{
-					foreach (Druid druid in this.bypassExclude)
-					{
-						ResourceBundle.Field field = this.primaryBundle[druid];
-						if (field != null && field.Name != null)
-						{
-							err = ResourceAccess.CheckNames(field.Name, name);
-							if (err != null)
-							{
-								return err;
-							}
-						}
+						return err;
 					}
 				}
 			}
-			else
+			else if (this.type == Type.Panels)
 			{
-				if (this.IsBundlesType)
+				foreach (ResourceBundle bundle in this.panelsList)
 				{
-					CollectionView cv = new CollectionView(this.accessor.Collection);
-					foreach (CultureMap item in cv.Items)
+					err = ResourceAccess.CheckNames(bundle.Caption, name);
+					if (err != null)
 					{
-						err = ResourceAccess.CheckNames(item.Name, name);
-						if (err != null)
-						{
-							return err;
-						}
-					}
-				}
-				else if (this.type == Type.Panels)
-				{
-					foreach (ResourceBundle bundle in this.panelsList)
-					{
-						err = ResourceAccess.CheckNames(bundle.Caption, name);
-						if (err != null)
-						{
-							return err;
-						}
+						return err;
 					}
 				}
 			}
@@ -1288,7 +1252,7 @@ namespace Epsitec.Common.Designer
 			}
 
 			string newName = baseName;
-			if (this.IsCorrectNewName (ref newName, false))
+			if (this.IsCorrectNewName (ref newName))
 			{
 				return newName;
 			}
@@ -1296,7 +1260,7 @@ namespace Epsitec.Common.Designer
 			for (int i=nextNumber; i<nextNumber+100; i++)
 			{
 				newName = string.Concat(baseName, i.ToString(System.Globalization.CultureInfo.InvariantCulture));
-				if (this.IsCorrectNewName(ref newName, false))
+				if (this.IsCorrectNewName(ref newName))
 				{
 					break;
 				}
@@ -2803,11 +2767,7 @@ namespace Epsitec.Common.Designer
 			protected string									stringValue;
 			protected ICollection<string>						stringCollection;
 			protected ResourceBundle							bundle;
-			protected bool										booleanValue;
-			protected int										integerValue;
-			protected Widgets.Collections.ShortcutCollection	shortcutCollection;
 			protected AbstractType								abstractType;
-			protected Caption									caption;
 		}
 		#endregion
 
@@ -2853,9 +2813,6 @@ namespace Epsitec.Common.Designer
 		protected Dictionary<Type, int>						filterIndexes;
 		protected Dictionary<Type, string>					filterStrings;
 		protected Dictionary<Type, Searcher.SearchingMode>	filterModes;
-		protected Type										bypassType = Type.Unknow;
-		protected List<Druid>								bypassDruids;
-		protected List<Druid>								bypassExclude;
 		protected TypeCode									lastTypeCodeCreatated = TypeCode.String;
 		protected System.Type								lastTypeCodeSystem = null;
 	}
