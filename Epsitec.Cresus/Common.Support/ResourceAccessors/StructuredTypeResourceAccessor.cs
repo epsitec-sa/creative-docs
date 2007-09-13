@@ -364,6 +364,61 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			}
 		}
 		
+		protected override void HandleItemsCollectionChanged(object sender, CollectionChangedEventArgs e)
+		{
+			base.HandleItemsCollectionChanged (sender, e);
+
+			//	Always handle the changes, even if the base class suspended the
+			//	notifications, as we need to keep our event handlers up to date:
+
+			switch (e.Action)
+			{
+				case CollectionChangedAction.Add:
+					foreach (CultureMap item in e.NewItems)
+					{
+						this.HandleCultureMapAdded (item);
+					}
+					break;
+
+				case CollectionChangedAction.Remove:
+					foreach (CultureMap item in e.OldItems)
+					{
+						this.HandleCultureMapRemoved (item);
+					}
+					break;
+
+				case CollectionChangedAction.Replace:
+					foreach (CultureMap item in e.OldItems)
+					{
+						this.HandleCultureMapRemoved (item);
+					}
+					foreach (CultureMap item in e.NewItems)
+					{
+						this.HandleCultureMapAdded (item);
+					}
+					break;
+			}
+		}
+
+		protected override void RefreshItem(CultureMap item)
+		{
+			if (this.postponeRefreshWhileLoading)
+			{
+				//	Don't refresh right now, since to create the list of inherited
+				//	fields; all modules should be loaded first.
+
+				item.IsRefreshNeeded = true;
+			}
+			else
+			{
+				StructuredData data = item.GetCultureData (Resources.DefaultTwoLetterISOLanguageName);
+				object baseTypeIdValue = data.GetValue (Res.Fields.ResourceStructuredType.BaseType);
+				Druid baseTypeId = UndefinedValue.IsUndefinedValue (baseTypeIdValue) ? Druid.Empty : (Druid) baseTypeIdValue;
+				this.UpdateInheritedFields (data, baseTypeId);
+				base.RefreshItem (item);
+			}
+		}
+
 		
 		private StructuredType GetTypeFromData(StructuredData data, Caption caption)
 		{
@@ -397,8 +452,6 @@ namespace Epsitec.Common.Support.ResourceAccessors
 
 			if (fieldsData != null)
 			{
-				type.SetValue (StructuredType.DebugDisableChecksProperty, true);
-
 				foreach (StructuredData fieldData in fieldsData)
 				{
 					Druid fieldType = StructuredTypeResourceAccessor.ToDruid (fieldData.GetValue (Res.Fields.Field.TypeId));
@@ -410,6 +463,9 @@ namespace Epsitec.Common.Support.ResourceAccessors
 					string expression = fieldData.GetValue (Res.Fields.Field.Expression) as string;
 					Druid fieldDefiningType = StructuredTypeResourceAccessor.ToDruid (fieldData.GetValue (Res.Fields.Field.DefiningTypeId));
 
+					//	A field must be stored in the type only if it defined locally
+					//	and if it does not belong to a locally defined interface :
+
 					if ((membership == FieldMembership.Local) &&
 						(fieldDefiningType.IsEmpty))
 					{
@@ -418,8 +474,6 @@ namespace Epsitec.Common.Support.ResourceAccessors
 						type.Fields.Add (field);
 					}
 				}
-
-				type.ClearValue (StructuredType.DebugDisableChecksProperty);
 			}
 
 			return type;
@@ -557,61 +611,6 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			data.SetValue (Res.Fields.Field.Expression, field.Expression ?? "");
 			data.SetValue (Res.Fields.Field.DefiningTypeId, field.DefiningTypeId);
 			data.LockValue (Res.Fields.Field.DefiningTypeId);
-		}
-
-		protected override void HandleItemsCollectionChanged(object sender, CollectionChangedEventArgs e)
-		{
-			base.HandleItemsCollectionChanged (sender, e);
-
-			//	Always handle the changes, even if the base class suspended the
-			//	notifications, as we need to keep our event handlers up to date:
-
-			switch (e.Action)
-			{
-				case CollectionChangedAction.Add:
-					foreach (CultureMap item in e.NewItems)
-					{
-						this.HandleCultureMapAdded (item);
-					}
-					break;
-
-				case CollectionChangedAction.Remove:
-					foreach (CultureMap item in e.OldItems)
-					{
-						this.HandleCultureMapRemoved (item);
-					}
-					break;
-
-				case CollectionChangedAction.Replace:
-					foreach (CultureMap item in e.OldItems)
-					{
-						this.HandleCultureMapRemoved (item);
-					}
-					foreach (CultureMap item in e.NewItems)
-					{
-						this.HandleCultureMapAdded (item);
-					}
-					break;
-			}
-		}
-
-		protected override void RefreshItem(CultureMap item)
-		{
-			if (this.postponeRefreshWhileLoading)
-			{
-				//	Don't refresh right now, since to create the list of inherited
-				//	fields; all modules should be loaded first.
-
-				item.IsRefreshNeeded = true;
-			}
-			else
-			{
-				StructuredData data = item.GetCultureData (Resources.DefaultTwoLetterISOLanguageName);
-				object baseTypeIdValue = data.GetValue (Res.Fields.ResourceStructuredType.BaseType);
-				Druid baseTypeId = UndefinedValue.IsUndefinedValue (baseTypeIdValue) ? Druid.Empty : (Druid) baseTypeIdValue;
-				this.UpdateInheritedFields (data, baseTypeId);
-				base.RefreshItem (item);
-			}
 		}
 
 		private void HandleCultureMapAdded(CultureMap item)

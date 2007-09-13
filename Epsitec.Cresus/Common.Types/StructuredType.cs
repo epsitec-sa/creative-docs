@@ -865,6 +865,7 @@ namespace Epsitec.Common.Types
 				(typeClass == StructuredTypeClass.Interface))
 			{
 				if ((this.IsCaptionDefined) &&
+					(this.fieldInheritance != InheritanceMode.Frozen) &&
 					(! (bool) this.GetValue (StructuredType.DebugDisableChecksProperty)))
 				{
 					//	Ensure that the field ID matches the field's caption ID. This is
