@@ -336,6 +336,7 @@ namespace Epsitec.Common.Designer
 			UI.TablePlaceholder table = obj as UI.TablePlaceholder;
 			System.Diagnostics.Debug.Assert(table != null);
 
+			//	TODO: à supprimer un jour !!!
 			Druid sourceTypeId = table.SourceTypeId;
 			ResourceManager resourceManager = Widgets.Helpers.VisualTree.GetResourceManager(obj);
 			Caption sourceTypeCaption = resourceManager.GetCaption(sourceTypeId);

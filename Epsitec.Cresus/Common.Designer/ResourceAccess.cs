@@ -93,6 +93,10 @@ namespace Epsitec.Common.Designer
 					Support.ResourceAccessors.AnyTypeResourceAccessor typeAccessor = module.AccessTypes.accessor as Support.ResourceAccessors.AnyTypeResourceAccessor;
 					this.accessor = typeAccessor.ValueAccessor;
 				}
+				if (this.type == Type.Panels)
+				{
+					this.accessor = new Support.ResourceAccessors.PanelResourceAccessor();
+				}
 
 				this.collectionView = new CollectionView(this.accessor.Collection);
 				this.collectionView.Filter = this.CollectionViewFilter;
@@ -219,115 +223,6 @@ namespace Epsitec.Common.Designer
 			return "?";
 		}
 
-
-		public static TypeCode AbstractTypeToTypeCode(AbstractType type)
-		{
-			if (type is BooleanType    )  return TypeCode.Boolean;
-			if (type is IntegerType    )  return TypeCode.Integer;
-			if (type is LongIntegerType)  return TypeCode.LongInteger;
-			if (type is DoubleType     )  return TypeCode.Double;
-			if (type is DecimalType    )  return TypeCode.Decimal;
-			if (type is StringType     )  return TypeCode.String;
-			if (type is EnumType       )  return TypeCode.Enum;
-			if (type is StructuredType )  return TypeCode.Structured;
-			if (type is CollectionType )  return TypeCode.Collection;
-			if (type is DateType       )  return TypeCode.Date;
-			if (type is TimeType       )  return TypeCode.Time;
-			if (type is DateTimeType   )  return TypeCode.DateTime;
-			if (type is BinaryType     )  return TypeCode.Binary;
-
-			return TypeCode.Invalid;
-		}
-
-		protected static string TypeCodeController(AbstractType type)
-		{
-			if (type is BooleanType          )  return "Boolean";
-			if (type is IntegerType          )  return "Numeric";
-			if (type is LongIntegerType      )  return "Numeric";
-			if (type is DoubleType           )  return "Numeric";
-			if (type is DecimalType          )  return "Numeric";
-			if (type is StringType           )  return "String";
-			if (type is EnumType             )  return "Enum";
-			if (type is StructuredType       )  return null;
-			if (type is CollectionType       )  return null;
-			if (type is AbstractDateTimeType )  return "DateTime";
-			if (type is BinaryType           )  return "Binary";
-
-			return null;
-		}
-
-		protected static string TypeCodeControllerParameter(AbstractType type)
-		{
-			if (type is BooleanType    )  return null;
-			if (type is IntegerType    )  return null;
-			if (type is LongIntegerType)  return null;
-			if (type is DoubleType     )  return null;
-			if (type is DecimalType    )  return null;
-			if (type is StringType     )  return null;
-			if (type is EnumType       )  return "Icons";
-			if (type is StructuredType )  return null;
-			if (type is CollectionType )  return null;
-			if (type is DateType       )  return null;
-			if (type is TimeType       )  return null;
-			if (type is DateTimeType   )  return null;
-			if (type is BinaryType     )  return null;
-
-			return null;
-		}
-
-		protected static AbstractType TypeCodeCreate(TypeCode type, ResourceBundle bundle)
-		{
-			AbstractType abstractType = null;
-
-			switch (type)
-			{
-				case TypeCode.Boolean:      abstractType = new BooleanType(); break;
-				case TypeCode.Integer:      abstractType = new IntegerType(); break;
-				case TypeCode.LongInteger:  abstractType = new LongIntegerType(); break;
-				case TypeCode.Double:       abstractType = new DoubleType(); break;
-				case TypeCode.Decimal:      abstractType = new DecimalType(); break;
-				case TypeCode.String:       abstractType = new StringType(); break;
-				case TypeCode.Enum:         abstractType = new EnumType(); break;
-				case TypeCode.Structured:	abstractType = new StructuredType(StructuredTypeClass.Entity, Druid.Empty); break;
-				case TypeCode.Collection:   abstractType = new CollectionType(); break;
-				case TypeCode.Date:         abstractType = new DateType(); break;
-				case TypeCode.Time:         abstractType = new TimeType(); break;
-				case TypeCode.DateTime:     abstractType = new DateTimeType(); break;
-				case TypeCode.Binary:       abstractType = new BinaryType(); break;
-			}
-
-			if (abstractType != null)
-			{
-				//	Associe le type avec le bundle dans lequel il sera stocké.
-				//	Cela est nécessaire pour certains types qui doivent savoir
-				//	de quel module ils proviennent.
-				Caption caption = abstractType.Caption;
-				ResourceManager.SetSourceBundle(caption, bundle);
-			}
-
-			return abstractType;
-		}
-
-		public static string TypeCodeToDisplay(TypeCode type)
-		{
-			switch (type)
-			{
-				case TypeCode.Boolean:      return Res.Strings.Viewers.Types.Editor.Boolean;
-				case TypeCode.Integer:      return Res.Strings.Viewers.Types.Editor.Integer;
-				case TypeCode.LongInteger:  return Res.Strings.Viewers.Types.Editor.LongInteger;
-				case TypeCode.Decimal:      return Res.Strings.Viewers.Types.Editor.Decimal;
-				case TypeCode.String:       return Res.Strings.Viewers.Types.Editor.String;
-				case TypeCode.Enum:         return Res.Strings.Viewers.Types.Editor.Enum;
-				case TypeCode.Structured:   return Res.Strings.Viewers.Types.Editor.Structured;
-				case TypeCode.Collection:   return Res.Strings.Viewers.Types.Editor.Collection;
-				case TypeCode.Date:         return Res.Strings.Viewers.Types.Editor.Date;
-				case TypeCode.Time:         return Res.Strings.Viewers.Types.Editor.Time;
-				case TypeCode.DateTime:     return Res.Strings.Viewers.Types.Editor.DateTime;
-				case TypeCode.Binary:       return Res.Strings.Viewers.Types.Editor.Binary;
-			}
-
-			return null;
-		}
 
 		public static string TypeCodeToName(TypeCode type)
 		{
@@ -2550,7 +2445,7 @@ namespace Epsitec.Common.Designer
 			//	"un bundle par culture, plusieurs ressources par bundle".
 			get
 			{
-				return (this.type == Type.Strings || this.type == Type.Captions || this.type == Type.Commands || this.type == Type.Entities || this.type == Type.Types || this.type == Type.Fields || this.type == Type.Values);
+				return (this.type == Type.Strings || this.type == Type.Captions || this.type == Type.Commands || this.type == Type.Entities || this.type == Type.Types || this.type == Type.Fields || this.type == Type.Values || this.type == Type.Panels);
 			}
 		}
 
