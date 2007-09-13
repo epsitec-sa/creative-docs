@@ -1354,66 +1354,7 @@ namespace Epsitec.Common.Designer
 			return builder.ToString();
 		}
 
-		public static string GetCaptionNiceDescription(Caption caption, double availableHeight)
-		{
-			//	Construit un texte d'après les labels et la description.
-			//	Les différents labels sont séparés par des virgules.
-			//	La description vient sur une deuxième ligne (si la hauteur
-			//	disponible le permet), mais seulement si elle est différente
-			//	de tous les labels.
-			System.Text.StringBuilder builder = new System.Text.StringBuilder();
 
-			string description = caption.Description;
-
-			foreach (string label in caption.Labels)
-			{
-				if (builder.Length > 0)
-				{
-					builder.Append(", ");
-				}
-				builder.Append(label);
-
-				if (description != null)
-				{
-					if (description == label)  // description identique à un label ?
-					{
-						description = null;  // pas nécessaire de montrer la description
-					}
-				}
-			}
-
-			if (description != null)  // faut-il montrer la description ?
-			{
-				if (builder.Length > 0)
-				{
-					if (availableHeight >= 30)  // assez de place pour 2 lignes ?
-					{
-						builder.Append("<br/>");  // sur une deuxième ligne
-					}
-					else
-					{
-						builder.Append(". ");  // sur la même ligne
-					}
-				}
-				builder.Append(description);
-			}
-
-			return builder.ToString();
-		}
-
-		public static string GetCaptionShortDescription(Caption caption)
-		{
-			//	Construit un texte très court d'après les labels et la description.
-			foreach (string label in caption.Labels)
-			{
-				return label;
-			}
-
-			return caption.Description;
-		}
-
-
-		#region Direct
 		public string DirectGetName(Druid druid)
 		{
 			//	Retourne le nom d'une ressource, sans tenir compte du filtre.
@@ -1436,32 +1377,6 @@ namespace Epsitec.Common.Designer
 				return field.Name;
 			}
 		}
-
-		public string DirectDefaultParameter(Druid druid)
-		{
-			//	Retourne le paramètre par défaut d'une commande, sans tenir compte du filtre.
-			//	La recherche s'effectue toujours dans la culture de base.
-			Caption caption = this.resourceManager.GetCaption(druid);
-			if (caption == null)
-			{
-				return null;
-			}
-
-			return Command.GetDefaultParameter(caption);
-		}
-
-		public AbstractType DirectGetAbstractType(Druid druid)
-		{
-			//	Retourne le type abstrait d'un caption de type StructuredType (ou autre).
-			Caption caption = this.resourceManager.GetCaption(druid);
-			if (caption == null)
-			{
-				return null;
-			}
-
-			return ResourceAccess.GetAbstractType(caption);
-		}
-		#endregion
 
 
 		public Field GetField(int index, string cultureName, FieldType fieldType)
@@ -1617,49 +1532,6 @@ namespace Epsitec.Common.Designer
 			this.SetGlobalDirty();
 		}
 
-		protected static AbstractType GetAbstractType(Caption caption)
-		{
-			//	Retourne le AbstractType correspondant à un caption.
-			if (caption == null)
-			{
-				return null;
-			}
-
-			AbstractType type = AbstractType.GetCachedType(caption);
-
-			if (type == null)
-			{
-				type = TypeRosetta.CreateTypeObject(caption);
-				if (type == null)
-				{
-					return null;
-				}
-
-				AbstractType.SetCachedType(caption, type);
-			}
-
-			return type;
-		}
-
-
-		public static MyWidgets.StringList.CellState CellState(ModificationState state)
-		{
-			//	Conversion de l'état d'une ressource.
-			MyWidgets.StringList.CellState cs = MyWidgets.StringList.CellState.Normal;
-
-			switch (state)
-			{
-				case ResourceAccess.ModificationState.Empty:
-					cs = MyWidgets.StringList.CellState.Warning;
-					break;
-
-				case ResourceAccess.ModificationState.Modified:
-					cs = MyWidgets.StringList.CellState.Modified;
-					break;
-			}
-
-			return cs;
-		}
 
 		public ModificationState GetModification(int index, string cultureName)
 		{
@@ -1732,25 +1604,6 @@ namespace Epsitec.Common.Designer
 			}
 
 			return ModificationState.Normal;
-		}
-
-		protected static bool IsEmptyCollection(ICollection<string> collection)
-		{
-			//	Indique si une collection de strings doit être considérée comme vide.
-			if (collection == null || collection.Count == 0)
-			{
-				return true;
-			}
-
-			foreach (string s in collection)
-			{
-				if (!string.IsNullOrEmpty(s))
-				{
-					return false;
-				}
-			}
-
-			return true;
 		}
 
 		public void ModificationClear(int index, string cultureName)
@@ -2006,24 +1859,6 @@ namespace Epsitec.Common.Designer
 			}
 
 			return list;
-		}
-
-		public bool IsExistingCulture(string cultureName)
-		{
-			//	Indique si une culture donnée existe.
-			System.Diagnostics.Debug.Assert(cultureName.Length == 2);
-			if (this.IsBundlesType)
-			{
-				for (int b=0; b<this.bundles.Count; b++)
-				{
-					ResourceBundle bundle = this.bundles[b];
-					if (cultureName == bundle.Culture.Name)
-					{
-						return true;
-					}
-				}
-			}
-			return false;
 		}
 
 		public void CreateCulture(string cultureName)
@@ -2893,11 +2728,7 @@ namespace Epsitec.Common.Designer
 				String,
 				StringCollection,
 				Bundle,
-				Boolean,
-				Integer,
-				Shortcuts,
 				AbstractType,
-				Caption,
 			}
 
 			public Field(string value)
@@ -2918,34 +2749,10 @@ namespace Epsitec.Common.Designer
 				this.bundle = value;
 			}
 
-			public Field(bool value)
-			{
-				this.type = Type.Boolean;
-				this.booleanValue = value;
-			}
-
-			public Field(int value)
-			{
-				this.type = Type.Integer;
-				this.integerValue = value;
-			}
-
-			public Field(Widgets.Collections.ShortcutCollection value)
-			{
-				this.type = Type.Shortcuts;
-				this.shortcutCollection = value;
-			}
-
 			public Field(AbstractType value)
 			{
 				this.type = Type.AbstractType;
 				this.abstractType = value;
-			}
-
-			public Field(Caption value)
-			{
-				this.type = Type.Caption;
-				this.caption = value;
 			}
 
 			public Type FieldType
@@ -2983,48 +2790,12 @@ namespace Epsitec.Common.Designer
 				}
 			}
 
-			public bool Boolean
-			{
-				get
-				{
-					System.Diagnostics.Debug.Assert(this.type == Type.Boolean);
-					return this.booleanValue;
-				}
-			}
-
-			public int Integer
-			{
-				get
-				{
-					System.Diagnostics.Debug.Assert(this.type == Type.Integer);
-					return this.integerValue;
-				}
-			}
-
-			public Widgets.Collections.ShortcutCollection ShortcutCollection
-			{
-				get
-				{
-					System.Diagnostics.Debug.Assert(this.type == Type.Shortcuts);
-					return this.shortcutCollection;
-				}
-			}
-
 			public AbstractType AbstractType
 			{
 				get
 				{
 					System.Diagnostics.Debug.Assert(this.type == Type.AbstractType);
 					return this.abstractType;
-				}
-			}
-
-			public Caption Caption
-			{
-				get
-				{
-					System.Diagnostics.Debug.Assert(this.type == Type.Caption);
-					return this.caption;
 				}
 			}
 

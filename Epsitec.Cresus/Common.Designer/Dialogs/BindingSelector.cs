@@ -343,6 +343,7 @@ namespace Epsitec.Common.Designer.Dialogs
 							if (field.Relation == FieldRelation.Collection)  iconRelation = Misc.Image("RelationCollection");
 						}
 
+#if false
 						Caption caption = this.module.ResourceManager.GetCaption(type.Caption.Id);
 
 						if (this.array.LineHeight >= 30)  // assez de place pour 2 lignes ?
@@ -355,7 +356,6 @@ namespace Epsitec.Common.Designer.Dialogs
 							captionType = ResourceAccess.GetCaptionNiceDescription(caption, 0);  // texte sur 1 ligne
 						}
 
-#if false
 						iconType = this.resourceAccess.DirectGetIcon(caption.Id);
 						if (!string.IsNullOrEmpty(iconType))
 						{
@@ -369,6 +369,7 @@ namespace Epsitec.Common.Designer.Dialogs
 					Druid druid = field.CaptionId;
 					if (druid.IsValid)
 					{
+#if false
 						Caption caption = this.module.ResourceManager.GetCaption(druid);
 
 						if (this.array.LineHeight >= 30)  // assez de place pour 2 lignes ?
@@ -385,6 +386,7 @@ namespace Epsitec.Common.Designer.Dialogs
 						{
 							iconText = Misc.ImageFull(caption.Icon);
 						}
+#endif
 					}
 
 					this.array.SetLineString(0, first+i, name);
