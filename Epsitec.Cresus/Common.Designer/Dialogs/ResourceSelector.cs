@@ -231,7 +231,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			//	qui voudra vraissemblablement changer de type s'il voit une liste vide.
 			if (this.operation == Operation.TypesOrEntities)
 			{
-				int totalTypes = this.module.AccessTypes2.Accessor.Collection.Count;
+				int totalTypes = this.module.AccessTypes.Accessor.Collection.Count;
 				int totalEntities = this.module.AccessEntities.Accessor.Collection.Count;
 
 				if (this.resourceType == ResourceAccess.Type.Types && totalTypes == 0 && totalEntities > 0)

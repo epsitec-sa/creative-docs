@@ -14,42 +14,13 @@ namespace Epsitec.Common.Designer.Viewers
 	{
 		public Panels(Module module, PanelsContext context, ResourceAccess access, DesignerApplication designerApplication) : base(module, context, access, designerApplication)
 		{
-			int tabIndex = 1;
+			this.scrollable.Visibility = false;
 
-			this.left = new FrameBox(this);
-			this.left.MinWidth = 80;
-			this.left.MaxWidth = 400;
-			this.left.PreferredWidth = Abstract.leftArrayWidth;
-			this.left.Dock = DockStyle.Left;
-			this.left.Padding = new Margins(10, 10, 10, 10);
-
-			this.labelEdit = new MyWidgets.TextFieldExName(this.left);
-			this.labelEdit.Margins = new Margins(0, 0, 10, 0);
-			this.labelEdit.Dock = DockStyle.Bottom;
-			this.labelEdit.ButtonShowCondition = ShowCondition.WhenModified;
-			this.labelEdit.EditionAccepted += new EventHandler(this.HandleTextChanged);
-			this.labelEdit.KeyboardFocusChanged += new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleLabelKeyboardFocusChanged);
-			this.labelEdit.TabIndex = tabIndex++;
-			this.labelEdit.TabNavigationMode = TabNavigationMode.ActivateOnTab;
-			this.labelEdit.Visibility = (this.module.Mode == DesignerMode.Build);
-
-			this.array = new MyWidgets.StringArray(this.left);
-			this.array.Columns = 1;
-			this.array.SetColumnsRelativeWidth(0, 1.00);
-			this.array.SetColumnBreakMode(0, TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine);
-			this.array.SetDynamicToolTips(0, true);
-			this.array.Margins = new Margins(0, 0, 0, 0);
-			this.array.Dock = DockStyle.Fill;
-			this.array.CellCountChanged += new EventHandler (this.HandleArrayCellCountChanged);
-			this.array.SelectedRowChanged += new EventHandler(this.HandleArraySelectedRowChanged);
-
-			this.splitter1 = new VSplitter(this);
-			this.splitter1.Dock = DockStyle.Left;
-			this.splitter1.SplitterDragged += new EventHandler(this.HandleSplitterDragged);
-			VSplitter.SetAutoCollapseEnable(this.left, true);
+			FrameBox surface = new FrameBox(this.lastGroup);
+			surface.Dock = DockStyle.Fill;
 
 			//	Crée le groupe central.
-			this.middle = new FrameBox(this);
+			this.middle = new FrameBox(surface);
 			this.middle.Dock = DockStyle.Fill;
 
 			this.statusBar = new HToolBar(this.middle);
@@ -79,18 +50,18 @@ namespace Epsitec.Common.Designer.Viewers
 			this.VToolBarAdd(Widgets.Command.Get("ObjectGroupBox"));
 			this.VToolBarAdd(Widgets.Command.Get("ObjectPanel"));
 
-			this.scrollable = new Scrollable(drawing);
-			this.scrollable.MinWidth = 100;
-			this.scrollable.MinHeight = 100;
-			this.scrollable.Margins = new Margins(1, 1, 1, 1);
-			this.scrollable.Dock = DockStyle.Fill;
-			this.scrollable.HorizontalScrollerMode = ScrollableScrollerMode.ShowAlways;
-			this.scrollable.VerticalScrollerMode = ScrollableScrollerMode.ShowAlways;
-			this.scrollable.Panel.IsAutoFitting = true;
-			this.scrollable.PaintForegroundFrame = true;
-			//?this.scrollable.ForegroundFrameMargins = new Margins(0, 1, 0, 1);
+			this.drawingScrollable = new Scrollable(drawing);
+			this.drawingScrollable.MinWidth = 100;
+			this.drawingScrollable.MinHeight = 100;
+			this.drawingScrollable.Margins = new Margins(1, 1, 1, 1);
+			this.drawingScrollable.Dock = DockStyle.Fill;
+			this.drawingScrollable.HorizontalScrollerMode = ScrollableScrollerMode.ShowAlways;
+			this.drawingScrollable.VerticalScrollerMode = ScrollableScrollerMode.ShowAlways;
+			this.drawingScrollable.Panel.IsAutoFitting = true;
+			this.drawingScrollable.PaintForegroundFrame = true;
+			//?this.drawingScrollable.ForegroundFrameMargins = new Margins(0, 1, 0, 1);
 
-			FrameBox container = new FrameBox(this.scrollable.Panel);
+			FrameBox container = new FrameBox(this.drawingScrollable.Panel);
 			container.MinWidth = 100;
 			container.Dock = DockStyle.Fill;
 
@@ -118,7 +89,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.panelEditor.UpdateCommands += new EventHandler(this.HandlePanelEditorUpdateCommands);
 
 			//	Crée le groupe droite.
-			this.right = new FrameBox(this);
+			this.right = new FrameBox(surface);
 			this.right.MinWidth = 150;
 			this.right.PreferredWidth = 240;
 			this.right.MaxWidth = 400;
@@ -178,7 +149,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.objectsSlider = new HSlider(header);
 			this.objectsSlider.PreferredWidth = 100;
 			this.objectsSlider.Dock = DockStyle.Left;
-			this.objectsSlider.TabIndex = tabIndex++;
+			this.objectsSlider.TabIndex = this.tabIndex++;
 			this.objectsSlider.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			this.objectsSlider.MinValue = 15.0M;
 			this.objectsSlider.MaxValue = 60.0M;
@@ -206,7 +177,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 			this.tabBook.ActivePage = this.tabPageProperties;
 
-			this.splitter2 = new VSplitter(this);
+			this.splitter2 = new VSplitter(surface);
 			this.splitter2.Dock = DockStyle.Right;
 
 			this.UpdateEdit();
@@ -219,14 +190,6 @@ namespace Epsitec.Common.Designer.Viewers
 		{
 			if (disposing)
 			{
-				this.splitter1.SplitterDragged -= new EventHandler(this.HandleSplitterDragged);
-
-				this.array.CellCountChanged -= new EventHandler(this.HandleArrayCellCountChanged);
-				this.array.SelectedRowChanged -= new EventHandler(this.HandleArraySelectedRowChanged);
-
-				this.labelEdit.EditionAccepted -= new EventHandler(this.HandleTextChanged);
-				this.labelEdit.KeyboardFocusChanged -= new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleLabelKeyboardFocusChanged);
-
 				this.hButtonDefault.Clicked -= new MessageEventHandler(HandleHbuttonClicked);
 				this.hButtonEdition.Clicked -= new MessageEventHandler(HandleHbuttonClicked);
 				this.hButtonSearch.Clicked -= new MessageEventHandler(HandleHbuttonClicked);
@@ -261,6 +224,22 @@ namespace Epsitec.Common.Designer.Viewers
 		}
 
 
+		protected override void InitializeTable()
+		{
+			//	Initialise la table.
+			StructuredType cultureMapType = new StructuredType();
+			cultureMapType.Fields.Add("Name", StringType.Default);
+
+			this.table.SourceType = cultureMapType;
+
+			this.table.Columns.Add(new UI.ItemTableColumn("Name", new Widgets.Layouts.GridLength(this.GetColumnWidth(0), Widgets.Layouts.GridUnitType.Proportional)));
+
+			this.table.ColumnHeader.SetColumnText(0, "Nom");
+
+			this.table.ColumnHeader.SetColumnSort(0, ListSortDirection.Ascending);
+		}
+
+		
 		public override void PaintHandler(Graphics graphics, Rectangle repaint, IPaintFilter paintFilter)
 		{
 			if (paintFilter == null)
@@ -1005,66 +984,6 @@ namespace Epsitec.Common.Designer.Viewers
 		#endregion
 
 
-		protected override void TextFieldToIndex(AbstractTextField textField, out int field, out int subfield)
-		{
-			//	Cherche les index correspondant à un texte éditable.
-			field = -1;
-			subfield = -1;
-
-			if (textField == this.labelEdit)
-			{
-				field = 0;
-				subfield = 0;
-			}
-		}
-
-		protected override AbstractTextField IndexToTextField(int field, int subfield)
-		{
-			//	Cherche le TextField permettant d'éditer des index.
-			if (field == 0 && subfield == 0)
-			{
-				return this.labelEdit;
-			}
-
-			return null;
-		}
-
-
-		private void HandleSplitterDragged(object sender)
-		{
-			//	Le splitter a été bougé.
-			Abstract.leftArrayWidth = this.left.ActualWidth;
-		}
-
-		private void HandleArrayCellCountChanged(object sender)
-		{
-			//	Le nombre de lignes a changé.
-			this.UpdateArray();
-		}
-
-		private void HandleArraySelectedRowChanged(object sender)
-		{
-			//	La ligne sélectionnée a changé.
-			this.access.AccessIndex = this.array.SelectedRow;
-			this.UpdateEdit();
-			this.UpdateType();
-			this.UpdateCommands();
-			this.panelEditor.IsEditEnabled = (this.access.AccessIndex != -1);
-			this.DefineProxies(this.panelEditor.SelectedObjects);
-		}
-
-		private void HandleTextChanged(object sender)
-		{
-			//	Un texte éditable a changé.
-			if ( this.ignoreChange )  return;
-
-			AbstractTextField edit = sender as AbstractTextField;
-			int sel = this.access.AccessIndex;
-			this.UpdateFieldName(edit, sel);
-
-			this.UpdateArray();
-		}
-
 		private void HandlePanelEditorChildrenAdded(object sender)
 		{
 			this.UpdateCommands();
@@ -1144,7 +1063,7 @@ namespace Epsitec.Common.Designer.Viewers
 				Common.Dialogs.DialogResult result = this.designerApplication.DlgResourceSelector(Dialogs.ResourceSelector.Operation.Selection, this.module, ResourceAccess.Type.Types, ref druid, null);
 				if (result == Common.Dialogs.DialogResult.Yes)  // d'accord ?
 				{
-					AbstractType at = this.module.AccessCaptions.DirectGetAbstractType(druid);
+					AbstractType at = this.module.OldAccessCaptionsToDelete.DirectGetAbstractType(druid);
 					System.Diagnostics.Debug.Assert(at is StructuredType);
 					type = at as StructuredType;
 					ObjectModifier.SetStructuredType(this.panelContainer, type);
@@ -1178,12 +1097,10 @@ namespace Epsitec.Common.Designer.Viewers
 		protected static double					treeBranchesHeight = 30;
 
 		protected ProxyManager					proxyManager;
-		protected MyWidgets.StringArray			array;
-		protected FrameBox						left;
-		protected VSplitter						splitter1;
 		protected VSplitter						splitter2;
 		protected Widget						middle;
 		protected VToolBar						vToolBar;
+		protected Scrollable					drawingScrollable;
 		protected HToolBar						statusBar;
 		protected FrameBox						panelContainerParent;
 		protected UI.Panel						panelContainer;

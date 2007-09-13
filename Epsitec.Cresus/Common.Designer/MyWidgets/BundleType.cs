@@ -84,20 +84,6 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.buttonValues.Dock = DockStyle.Left;
 			this.buttonValues.Clicked += new MessageEventHandler(this.HandleButtonClicked);
 
-			this.buttonScripts = new IconButtonMark(this);
-			this.buttonScripts.Text = ResourceAccess.TypeDisplayName(ResourceAccess.Type.Scripts);
-			this.buttonScripts.Name = BundleType.Convert(ResourceAccess.Type.Scripts);
-			this.buttonScripts.ButtonStyle = ButtonStyle.ActivableIcon;
-			this.buttonScripts.SiteMark = ButtonMarkDisposition.Below;
-			this.buttonScripts.MarkDimension = 5;
-			this.buttonScripts.PreferredWidth = width;
-			this.buttonScripts.MinHeight = 20+5;
-			this.buttonScripts.AutoFocus = false;
-			this.buttonScripts.Margins = new Margins(2, 0, 10, 0);
-			this.buttonScripts.Dock = DockStyle.Left;
-			this.buttonScripts.Clicked += new MessageEventHandler(this.HandleButtonClicked);
-			this.buttonScripts.Visibility = false;
-
 			this.buttonFields = new IconButtonMark(this);
 			this.buttonFields.Text = ResourceAccess.TypeDisplayName(ResourceAccess.Type.Fields);
 			this.buttonFields.Name = BundleType.Convert(ResourceAccess.Type.Fields);
@@ -174,9 +160,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.buttonCommands.ActiveState = (this.currentType == ResourceAccess.Type.Commands) ? ActiveState.Yes : ActiveState.No;
 			this.buttonTypes.ActiveState    = (this.currentType == ResourceAccess.Type.Types   ) ? ActiveState.Yes : ActiveState.No;
 			this.buttonValues.ActiveState   = (this.currentType == ResourceAccess.Type.Values  ) ? ActiveState.Yes : ActiveState.No;
-			this.buttonPanels.ActiveState   = (this.currentType == ResourceAccess.Type.Panels   ) ? ActiveState.Yes : ActiveState.No;
-			this.buttonScripts.ActiveState  = (this.currentType == ResourceAccess.Type.Scripts  ) ? ActiveState.Yes : ActiveState.No;
-			this.buttonEntities.ActiveState = (this.currentType == ResourceAccess.Type.Entities ) ? ActiveState.Yes : ActiveState.No;
+			this.buttonPanels.ActiveState   = (this.currentType == ResourceAccess.Type.Panels  ) ? ActiveState.Yes : ActiveState.No;
+			this.buttonEntities.ActiveState = (this.currentType == ResourceAccess.Type.Entities) ? ActiveState.Yes : ActiveState.No;
 		}
 
 
@@ -232,7 +217,6 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		protected ResourceAccess.Type		currentType = ResourceAccess.Type.Strings;
 		protected IconButtonMark			buttonStrings;
-		protected IconButtonMark			buttonScripts;
 		protected IconButtonMark			buttonEntities;
 		protected IconButtonMark			buttonCaptions;
 		protected IconButtonMark			buttonFields;

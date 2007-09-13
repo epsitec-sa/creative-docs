@@ -160,7 +160,7 @@ namespace Epsitec.Common.Designer.Dialogs
 		{
 			//	Initialise le dialogue avec le binding actuel.
 			this.module = module;
-			this.resourceAccess = module.AccessCaptions;
+			this.resourceAccess = module.OldAccessCaptionsToDelete;
 			this.structuredType = type;
 			this.objectType = objectType;
 			this.initialBinding = binding;

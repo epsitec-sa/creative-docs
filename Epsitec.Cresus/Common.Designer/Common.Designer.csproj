@@ -137,7 +137,6 @@
     <Compile Include="Viewers\Entities.cs" />
     <Compile Include="Viewers\Strings.cs" />
     <Compile Include="Viewers\Locator.cs" />
-    <Compile Include="Viewers\Scripts.cs" />
     <Compile Include="Viewers\Panels.cs" />
   </ItemGroup>
   <ItemGroup>

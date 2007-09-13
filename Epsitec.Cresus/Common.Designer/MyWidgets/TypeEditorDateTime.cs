@@ -734,7 +734,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			
 			this.OnContentChanged();
 			this.UpdateContent();
-			this.module.AccessTypes2.SetLocalDirty();
+			this.module.AccessTypes.SetLocalDirty();
 #else
 			//	[Note1] On demande le type avec un ResourceAccess.GetField.
 			AbstractDateTimeType type = this.AbstractType as AbstractDateTimeType;

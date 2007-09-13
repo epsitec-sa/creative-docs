@@ -1280,7 +1280,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			CultureMap fieldCultureMap = accessor.CreateFieldItem(this.cultureMap);
 			fieldCultureMap.Name = name;
 
-			IResourceAccessor fieldAccessor = this.editor.Module.AccessFields2.Accessor;
+			IResourceAccessor fieldAccessor = this.editor.Module.AccessFields.Accessor;
 			fieldAccessor.Collection.Add(fieldCultureMap);
 			//?fieldAccessor.PersistChanges();
 
@@ -1312,7 +1312,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			StructuredData dataField = dataFields[rank];
 			Druid fieldCaptionId = (Druid) dataField.GetValue(Support.Res.Fields.Field.CaptionId);
 
-			IResourceAccessor fieldAccessor = this.editor.Module.AccessFields2.Accessor;
+			IResourceAccessor fieldAccessor = this.editor.Module.AccessFields.Accessor;
 			CultureMap fieldCultureMap = fieldAccessor.Collection[fieldCaptionId];
 			string name = fieldCultureMap.Name;
 			
@@ -1395,13 +1395,13 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 
 			Module fieldModule = this.editor.Module.DesignerApplication.SearchModule(fieldCaptionId);
-			CultureMap fieldCultureMap = fieldModule.AccessFields2.Accessor.Collection[fieldCaptionId];
+			CultureMap fieldCultureMap = fieldModule.AccessFields.Accessor.Collection[fieldCaptionId];
 
 			Module typeModule = this.editor.Module.DesignerApplication.SearchModule(typeId);
 			CultureMap typeCultureMap = null;
 			if (typeModule != null)
 			{
-				typeCultureMap = typeModule.AccessTypes2.Accessor.Collection[typeId];
+				typeCultureMap = typeModule.AccessTypes.Accessor.Collection[typeId];
 				if (typeCultureMap == null)
 				{
 					typeCultureMap = typeModule.AccessEntities.Accessor.Collection[typeId];

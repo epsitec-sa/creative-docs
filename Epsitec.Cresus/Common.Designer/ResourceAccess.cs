@@ -21,9 +21,8 @@ namespace Epsitec.Common.Designer
 			Commands,
 			Types,
 			Values,
-			Panels,
-			Scripts,
 			Entities,
+			Panels,
 		}
 
 		public enum FieldType
@@ -91,7 +90,7 @@ namespace Epsitec.Common.Designer
 				}
 				if (this.type == Type.Values)
 				{
-					Support.ResourceAccessors.AnyTypeResourceAccessor typeAccessor = module.AccessTypes2.accessor as Support.ResourceAccessors.AnyTypeResourceAccessor;
+					Support.ResourceAccessors.AnyTypeResourceAccessor typeAccessor = module.AccessTypes.accessor as Support.ResourceAccessors.AnyTypeResourceAccessor;
 					this.accessor = typeAccessor.ValueAccessor;
 				}
 
@@ -212,9 +211,6 @@ namespace Epsitec.Common.Designer
 
 				case Type.Panels:
 					return many ? Res.Strings.BundleType.Panels : Res.Strings.BundleType.Panel;
-
-				case Type.Scripts:
-					return many ? Res.Strings.BundleType.Scripts : Res.Strings.BundleType.Script;
 
 				case Type.Entities:
 					return many ? "Entités" : "Entité";
@@ -675,7 +671,7 @@ namespace Epsitec.Common.Designer
 				{
 					return;
 				}
-				st = module.AccessCaptions.DirectGetAbstractType(druid) as StructuredType;
+				st = module.OldAccessCaptionsToDelete.DirectGetAbstractType(druid) as StructuredType;
 				System.Diagnostics.Debug.Assert(st != null);
 			}
 

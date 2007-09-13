@@ -142,7 +142,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 					Druid druid = (Druid) data.GetValue(Support.Res.Fields.EnumValue.CaptionId);
 					//	La valeur est forcément dans le même module que l'énumération.
-					CultureMap cultureMap = this.module.AccessValues2.Accessor.Collection[druid];
+					CultureMap cultureMap = this.module.AccessValues.Accessor.Collection[druid];
 					string name = (cultureMap == null) ? "" : cultureMap.Name;
 					builder.Append(name);
 
@@ -212,7 +212,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				else
 				{
 					//	La valeur est forcément dans le même module que l'énumération.
-					CultureMap cultureMap = this.module.AccessValues2.Accessor.Collection[druid];
+					CultureMap cultureMap = this.module.AccessValues.Accessor.Collection[druid];
 					StructuredData data = cultureMap.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
 
 					string name = cultureMap.Name;
@@ -263,11 +263,11 @@ namespace Epsitec.Common.Designer.MyWidgets
 			//	Code complexe écrit par Pierre permettant de créer une nouvelle valeur pour une énumération.
 			IList<StructuredData> list = this.structuredData.GetValue(Support.Res.Fields.ResourceEnumType.Values) as IList<StructuredData>;
 
-			Support.ResourceAccessors.AnyTypeResourceAccessor accessor = this.module.AccessTypes2.Accessor as Support.ResourceAccessors.AnyTypeResourceAccessor;
+			Support.ResourceAccessors.AnyTypeResourceAccessor accessor = this.module.AccessTypes.Accessor as Support.ResourceAccessors.AnyTypeResourceAccessor;
 			CultureMap valueCultureMap = accessor.CreateValueItem(this.cultureMap);
 			valueCultureMap.Name = name;
 
-			IResourceAccessor valueAccessor = this.module.AccessValues2.Accessor;
+			IResourceAccessor valueAccessor = this.module.AccessValues.Accessor;
 			valueAccessor.Collection.Add(valueCultureMap);
 
 			IDataBroker broker = accessor.GetDataBroker(this.structuredData, Support.Res.Fields.ResourceEnumType.Values.ToString());
@@ -282,7 +282,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.UpdateArray();
 			this.UpdateButtons();
 
-			this.module.AccessTypes2.SetLocalDirty();
+			this.module.AccessTypes.SetLocalDirty();
 			this.OnContentChanged();
 		}
 
@@ -302,9 +302,9 @@ namespace Epsitec.Common.Designer.MyWidgets
 			//	Supprime la ressource "valeur".
 			//	Cette ressource est forcément dans le même module.
 			Druid druid = this.GetDruid(sel);
-			CultureMap cultureMap = this.module.AccessValues2.Accessor.Collection[druid];
+			CultureMap cultureMap = this.module.AccessValues.Accessor.Collection[druid];
 			System.Diagnostics.Debug.Assert(cultureMap != null);
-			this.module.AccessValues2.Accessor.Collection.Remove(cultureMap);
+			this.module.AccessValues.Accessor.Collection.Remove(cultureMap);
 
 			//	Supprime la valeur de la liste de l'énumération.
 			IList<StructuredData> list = this.structuredData.GetValue(Support.Res.Fields.ResourceEnumType.Values) as IList<StructuredData>;
@@ -318,7 +318,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.UpdateArray();
 			this.UpdateButtons();
 
-			this.module.AccessTypes2.SetLocalDirty();
+			this.module.AccessTypes.SetLocalDirty();
 			this.OnContentChanged();
 		}
 
@@ -340,7 +340,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.array.ShowSelectedRow();
 			this.UpdateArray();
 
-			this.module.AccessTypes2.SetLocalDirty();
+			this.module.AccessTypes.SetLocalDirty();
 			this.OnContentChanged();
 		}
 
@@ -400,7 +400,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected bool IsExistingName(string name)
 		{
 			//	Indique si un nom existe.
-			CollectionView collection = this.module.AccessValues2.CollectionView;
+			CollectionView collection = this.module.AccessValues.CollectionView;
 
 			for (int i=0; i<collection.Count; i++)
 			{

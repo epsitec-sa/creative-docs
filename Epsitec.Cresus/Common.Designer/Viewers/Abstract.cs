@@ -296,9 +296,8 @@ namespace Epsitec.Common.Designer.Viewers
 			if (type == ResourceAccess.Type.Commands)  return new Commands(module, context, access, designerApplication);
 			if (type == ResourceAccess.Type.Types)  return new Types(module, context, access, designerApplication);
 			if (type == ResourceAccess.Type.Values)  return new Values(module, context, access, designerApplication);
-			if (type == ResourceAccess.Type.Panels)  return new Panels(module, context, access, designerApplication);
-			if (type == ResourceAccess.Type.Scripts)  return new Scripts(module, context, access, designerApplication);
 			if (type == ResourceAccess.Type.Entities)  return new Entities(module, context, access, designerApplication);
+			if (type == ResourceAccess.Type.Panels)  return new Panels(module, context, access, designerApplication);
 			return null;
 		}
 
@@ -2282,23 +2281,16 @@ namespace Epsitec.Common.Designer.Viewers
 		protected static double					topArrayHeight = 220;
 		private static double[]					columnWidthHorizontal = {200, 100, 100, 80, 50, 100};
 		private static double[]					columnWidthVertical = {250, 300, 300, 80, 50, 100};
+		protected static bool					mainExtended = false;
+		protected static bool					suiteExtended = false;
 
 		protected Module						module;
 		protected PanelsContext					context;
 		protected ResourceAccess				access;
 		protected DesignerApplication			designerApplication;
 		protected string						secondaryCulture;  // two letters
-		protected bool							ignoreChange = false;
-		protected bool							lastActionIsReplace = false;
-		protected IconButtonMark				primaryCulture;
-		protected IconButtonMark[]				secondaryCultures;
-		protected AbstractTextField				currentTextField;
-		protected int							tabIndex = 1;
 
 		private ItemViewFactory					itemViewFactory;
-
-		protected static bool					mainExtended = false;
-		protected static bool					suiteExtended = false;
 
 		protected FrameBox						firstPane;
 		protected FrameBox						lastPane;
@@ -2322,5 +2314,10 @@ namespace Epsitec.Common.Designer.Viewers
 		protected GlyphButton					buttonMainCompact;
 		protected GlyphButton					buttonSuiteExtend;
 		protected GlyphButton					buttonSuiteCompact;
+
+		protected bool							ignoreChange = false;
+		protected bool							lastActionIsReplace = false;
+		protected AbstractTextField				currentTextField;
+		protected int							tabIndex = 1;
 	}
 }

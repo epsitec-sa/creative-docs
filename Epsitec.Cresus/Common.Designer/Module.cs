@@ -24,22 +24,21 @@ namespace Epsitec.Common.Designer
 
 			this.modifier = new Modifier(this);
 
-			this.accessStrings2  = new ResourceAccess(ResourceAccess.Type.Strings,  this, this.moduleInfo, this.designerApplication);
-			this.accessCaptions2 = new ResourceAccess(ResourceAccess.Type.Captions, this, this.moduleInfo, this.designerApplication);
-			this.accessCommands2 = new ResourceAccess(ResourceAccess.Type.Commands, this, this.moduleInfo, this.designerApplication);
-			this.accessPanels    = new ResourceAccess(ResourceAccess.Type.Panels,    this, this.moduleInfo, this.designerApplication);
-			this.accessScripts   = new ResourceAccess(ResourceAccess.Type.Scripts,   this, this.moduleInfo, this.designerApplication);
-			this.accessEntities  = new ResourceAccess(ResourceAccess.Type.Entities,  this, this.moduleInfo, this.designerApplication);
-			this.accessTypes2    = new ResourceAccess(ResourceAccess.Type.Types,    this, this.moduleInfo, this.designerApplication);
+			this.accessStrings  = new ResourceAccess(ResourceAccess.Type.Strings,  this, this.moduleInfo, this.designerApplication);
+			this.accessCaptions = new ResourceAccess(ResourceAccess.Type.Captions, this, this.moduleInfo, this.designerApplication);
+			this.accessCommands = new ResourceAccess(ResourceAccess.Type.Commands, this, this.moduleInfo, this.designerApplication);
+			this.accessPanels   = new ResourceAccess(ResourceAccess.Type.Panels,   this, this.moduleInfo, this.designerApplication);
+			this.accessEntities = new ResourceAccess(ResourceAccess.Type.Entities, this, this.moduleInfo, this.designerApplication);
+			this.accessTypes    = new ResourceAccess(ResourceAccess.Type.Types,    this, this.moduleInfo, this.designerApplication);
 			this.Load();
 
-			//	Attention: il faut avoir fait le this.accessEntities.Load() avant de créer this.accessFields2 !
-			this.accessFields2   = new ResourceAccess(ResourceAccess.Type.Fields,   this, this.moduleInfo, this.designerApplication);
-			this.accessFields2.Load();
+			//	Attention: il faut avoir fait le this.accessEntities.Load() avant de créer this.accessFields !
+			this.accessFields   = new ResourceAccess(ResourceAccess.Type.Fields,   this, this.moduleInfo, this.designerApplication);
+			this.accessFields.Load();
 
-			//	Attention: il faut avoir fait le this.accessTypes2.Load() avant de créer this.accessValues2 !
-			this.accessValues2   = new ResourceAccess(ResourceAccess.Type.Values,   this, this.moduleInfo, this.designerApplication);
-			this.accessValues2.Load();
+			//	Attention: il faut avoir fait le this.accessTypes.Load() avant de créer this.accessValues !
+			this.accessValues   = new ResourceAccess(ResourceAccess.Type.Values,   this, this.moduleInfo, this.designerApplication);
+			this.accessValues.Load();
 
 			foreach (ResourceAccess access in Access)
 			{
@@ -101,16 +100,16 @@ namespace Epsitec.Common.Designer
 		}
 
 
-		public ResourceAccess AccessStrings2
+		public ResourceAccess AccessStrings
 		{
 			get
 			{
-				return this.accessStrings2;
+				return this.accessStrings;
 			}
 		}
 
 		// TODO: à supprimer
-		public ResourceAccess AccessCaptions
+		public ResourceAccess OldAccessCaptionsToDelete
 		{
 			get
 			{
@@ -118,19 +117,19 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
-		public ResourceAccess AccessCaptions2
+		public ResourceAccess AccessCaptions
 		{
 			get
 			{
-				return this.accessCaptions2;
+				return this.accessCaptions;
 			}
 		}
 
-		public ResourceAccess AccessCommands2
+		public ResourceAccess AccessCommands
 		{
 			get
 			{
-				return this.accessCommands2;
+				return this.accessCommands;
 			}
 		}
 
@@ -150,27 +149,27 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
-		public ResourceAccess AccessFields2
+		public ResourceAccess AccessFields
 		{
 			get
 			{
-				return this.accessFields2;
+				return this.accessFields;
 			}
 		}
 
-		public ResourceAccess AccessValues2
+		public ResourceAccess AccessValues
 		{
 			get
 			{
-				return this.accessValues2;
+				return this.accessValues;
 			}
 		}
 
-		public ResourceAccess AccessTypes2
+		public ResourceAccess AccessTypes
 		{
 			get
 			{
-				return this.accessTypes2;
+				return this.accessTypes;
 			}
 		}
 
@@ -180,31 +179,28 @@ namespace Epsitec.Common.Designer
 			switch (type)
 			{
 				case ResourceAccess.Type.Strings:
-					return this.accessStrings2;
+					return this.accessStrings;
 
 				case ResourceAccess.Type.Captions:
-					return this.accessCaptions2;
+					return this.accessCaptions;
 
 				case ResourceAccess.Type.Commands:
-					return this.accessCommands2;
+					return this.accessCommands;
 
 				case ResourceAccess.Type.Panels:
 					return this.accessPanels;
-
-				case ResourceAccess.Type.Scripts:
-					return this.accessScripts;
 
 				case ResourceAccess.Type.Entities:
 					return this.accessEntities;
 
 				case ResourceAccess.Type.Fields:
-					return this.accessFields2;
+					return this.accessFields;
 
 				case ResourceAccess.Type.Values:
-					return this.accessValues2;
+					return this.accessValues;
 
 				case ResourceAccess.Type.Types:
-					return this.accessTypes2;
+					return this.accessTypes;
 			}
 
 			return null;
@@ -328,15 +324,14 @@ namespace Epsitec.Common.Designer
 			//	Enumère tous les accès.
 			get
 			{
-				yield return accessStrings2;
-				yield return accessCaptions2;
-				yield return accessCommands2;
-				yield return accessPanels;
-				yield return accessScripts;
+				yield return accessStrings;
+				yield return accessCaptions;
+				yield return accessCommands;
 				yield return accessEntities;
-				yield return accessFields2;
-				yield return accessValues2;
-				yield return accessTypes2;
+				yield return accessFields;
+				yield return accessValues;
+				yield return accessTypes;
+				yield return accessPanels;
 			}
 		}
 
@@ -368,14 +363,13 @@ namespace Epsitec.Common.Designer
 		protected ResourceModuleId			moduleInfo;
 		protected Modifier					modifier;
 		protected ResourceManager			resourceManager;
-		protected ResourceAccess			accessStrings2;
-		protected ResourceAccess			accessCaptions2;
-		protected ResourceAccess			accessCommands2;
+		protected ResourceAccess			accessStrings;
+		protected ResourceAccess			accessCaptions;
+		protected ResourceAccess			accessCommands;
 		protected ResourceAccess			accessPanels;
-		protected ResourceAccess			accessScripts;
 		protected ResourceAccess			accessEntities;
-		protected ResourceAccess			accessFields2;
-		protected ResourceAccess			accessValues2;
-		protected ResourceAccess			accessTypes2;
+		protected ResourceAccess			accessFields;
+		protected ResourceAccess			accessValues;
+		protected ResourceAccess			accessTypes;
 	}
 }
