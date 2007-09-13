@@ -217,7 +217,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			
 			if (twoLetterISOLanguageName == Resources.DefaultTwoLetterISOLanguageName)
 			{
-				StructuredType type = this.GetTypeFromData (data, caption);
+				StructuredType type = this.CreateTypeFromData (data, caption);
 
 				System.Diagnostics.Debug.Assert (AbstractType.GetComplexType (caption) == type);
 				AbstractType.SetComplexType (caption, type);
@@ -290,13 +290,13 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			base.ComputeDataDelta (rawData, refData, patchData);
 			
 			object                refBaseTypeValue   = refData.GetValue (Res.Fields.ResourceStructuredType.BaseType);
-			object                refClassValue      = refData.GetValue (Res.Fields.ResourceStructuredType.Class);
+			StructuredTypeClass   refClass           = StructuredTypeResourceAccessor.ToStructuredTypeClass (refData.GetValue (Res.Fields.ResourceStructuredType.Class));
 			IList<StructuredData> refFields          = refData.GetValue (Res.Fields.ResourceStructuredType.Fields) as IList<StructuredData>;
 			IList<StructuredData> refInterfaceIds    = refData.GetValue (Res.Fields.ResourceStructuredType.InterfaceIds) as IList<StructuredData>;
 			string                refDesignerLayouts = refData.GetValue (Res.Fields.ResourceStructuredType.SerializedDesignerLayouts) as string;
 
 			object                rawBaseTypeValue   = rawData.GetValue (Res.Fields.ResourceStructuredType.BaseType);
-			object                rawClassValue      = rawData.GetValue (Res.Fields.ResourceStructuredType.Class);
+			StructuredTypeClass   rawClass           = StructuredTypeResourceAccessor.ToStructuredTypeClass (rawData.GetValue (Res.Fields.ResourceStructuredType.Class));
 			IList<StructuredData> rawFields          = rawData.GetValue (Res.Fields.ResourceStructuredType.Fields) as IList<StructuredData>;
 			IList<StructuredData> rawInterfaceIds    = rawData.GetValue (Res.Fields.ResourceStructuredType.InterfaceIds) as IList<StructuredData>;
 			string                rawDesignerLayouts = rawData.GetValue (Res.Fields.ResourceStructuredType.SerializedDesignerLayouts) as string;
@@ -306,16 +306,14 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			{
 				patchData.SetValue (Res.Fields.ResourceStructuredType.BaseType, rawBaseTypeValue);
 			}
-			if (!UndefinedValue.IsUndefinedValue (rawClassValue))
-			{
-				System.Diagnostics.Debug.Assert ((StructuredTypeClass) refClassValue == (StructuredTypeClass) rawClassValue);
-			}
-
+			
+			System.Diagnostics.Debug.Assert (refClass == rawClass);
+			
 			//	The structured type class must be defined, or else we won't be able
 			//	to generate the correct StructuredType instance for the caption
 			//	serialization.
 			
-			patchData.SetValue (Res.Fields.ResourceStructuredType.Class, refClassValue);
+			patchData.SetValue (Res.Fields.ResourceStructuredType.Class, refClass);
 
 			if ((!string.IsNullOrEmpty (rawDesignerLayouts)) &&
 				(refDesignerLayouts != rawDesignerLayouts))
@@ -412,22 +410,30 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			else
 			{
 				StructuredData data = item.GetCultureData (Resources.DefaultTwoLetterISOLanguageName);
-				object baseTypeIdValue = data.GetValue (Res.Fields.ResourceStructuredType.BaseType);
-				Druid baseTypeId = UndefinedValue.IsUndefinedValue (baseTypeIdValue) ? Druid.Empty : (Druid) baseTypeIdValue;
+				Druid    baseTypeId = StructuredTypeResourceAccessor.ToDruid (data.GetValue (Res.Fields.ResourceStructuredType.BaseType));
+				
 				this.UpdateInheritedFields (data, baseTypeId);
+				
 				base.RefreshItem (item);
 			}
 		}
 
-		
-		private StructuredType GetTypeFromData(StructuredData data, Caption caption)
+
+		/// <summary>
+		/// Builds a structured type from a definition stored in a data record,
+		/// using the given caption as its vehicle.
+		/// </summary>
+		/// <param name="data">The data record.</param>
+		/// <param name="caption">The caption.</param>
+		/// <returns>The structured type.</returns>
+		private StructuredType CreateTypeFromData(StructuredData data, Caption caption)
 		{
 			if (UndefinedValue.IsUndefinedValue (data.GetValue (Res.Fields.ResourceStructuredType.Class)))
 			{
 				return null;
 			}
 
-			StructuredTypeClass typeClass = (StructuredTypeClass) data.GetValue (Res.Fields.ResourceStructuredType.Class);
+			StructuredTypeClass typeClass = StructuredTypeResourceAccessor.ToStructuredTypeClass (data.GetValue (Res.Fields.ResourceStructuredType.Class));
 			Druid               baseType  = StructuredTypeResourceAccessor.ToDruid (data.GetValue (Res.Fields.ResourceStructuredType.BaseType));
 			string              layouts   = data.GetValue (Res.Fields.ResourceStructuredType.SerializedDesignerLayouts) as string;
 
@@ -442,7 +448,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			{
 				foreach (StructuredData interfaceId in interfaceIds)
 				{
-					type.InterfaceIds.Add ((Druid) interfaceId.GetValue (Res.Fields.InterfaceId.CaptionId));
+					type.InterfaceIds.Add (StructuredTypeResourceAccessor.ToDruid (interfaceId.GetValue (Res.Fields.InterfaceId.CaptionId)));
 				}
 			}
 			
@@ -509,7 +515,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 					if (!Types.Collection.Contains (fields,
 						delegate (StructuredData find)
 						{
-							Druid findId = (Druid) find.GetValue (Res.Fields.Field.CaptionId);
+							Druid findId = StructuredTypeResourceAccessor.ToDruid (find.GetValue (Res.Fields.Field.CaptionId));
 							return findId == field.CaptionId;
 						}))
 					{
@@ -545,7 +551,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 					if (!Types.Collection.Contains (interfaceIds,
 						delegate (StructuredData find)
 						{
-							Druid findId = (Druid) find.GetValue (Res.Fields.InterfaceId.CaptionId);
+							Druid findId = StructuredTypeResourceAccessor.ToDruid (find.GetValue (Res.Fields.InterfaceId.CaptionId));
 							return findId == interfaceId;
 						}))
 					{
@@ -669,19 +675,20 @@ namespace Epsitec.Common.Support.ResourceAccessors
 				{
 					FieldUpdater updater = new FieldUpdater (this);
 
-					updater.IncludeType (baseTypeId, baseTypeId, FieldMembership.Inherited, 0);
+					updater.IncludeType (baseTypeId, FieldMembership.Inherited);
 
 					foreach (StructuredData interfaceData in interfaceIds)
 					{
-						Druid interfaceId = (Druid) interfaceData.GetValue (Res.Fields.InterfaceId.CaptionId);
-						updater.IncludeType (interfaceId, interfaceId, FieldMembership.Local, 0);
+						Druid interfaceId = StructuredTypeResourceAccessor.ToDruid (interfaceData.GetValue (Res.Fields.InterfaceId.CaptionId));
+						updater.IncludeType (interfaceId, FieldMembership.Local);
 					}
 
 					int i = 0;
 
 					foreach (StructuredData field in updater.Fields)
 					{
-						System.Diagnostics.Debug.Assert (((FieldMembership) field.GetValue (Res.Fields.Field.Membership) == FieldMembership.Inherited) || (((Druid) field.GetValue (Res.Fields.Field.CaptionId)).IsValid));
+						System.Diagnostics.Debug.Assert (((FieldMembership) field.GetValue (Res.Fields.Field.Membership) == FieldMembership.Inherited)
+							/**/					  || (StructuredTypeResourceAccessor.ToDruid (field.GetValue (Res.Fields.Field.CaptionId)).IsValid));
 
 						fields.Insert (i++, field);
 					}
@@ -689,7 +696,9 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			}
 		}
 
-		class FieldUpdater
+		#region Private FieldUpdater Class
+		
+		private sealed class FieldUpdater
 		{
 			public FieldUpdater(StructuredTypeResourceAccessor host)
 			{
@@ -698,12 +707,34 @@ namespace Epsitec.Common.Support.ResourceAccessors
 				this.fields = new List<StructuredData> ();
 			}
 
-			public void IncludeType(Druid typeId)
+			public IList<StructuredData> Fields
 			{
-				this.IncludeType (typeId, Druid.Empty, FieldMembership.Local, 0);
+				get
+				{
+					return this.fields;
+				}
 			}
 
-			public void IncludeType(Druid typeId, Druid definingTypeId, FieldMembership membership, int depth)
+			/// <summary>
+			/// Includes all fields defined by the specified type, setting their
+			/// membership accordingly.
+			/// </summary>
+			/// <param name="typeId">The type id.</param>
+			/// <param name="membership">The top level field membership.</param>
+			public void IncludeType(Druid typeId, FieldMembership membership)
+			{
+				this.IncludeType (typeId, typeId, membership, 0);
+			}
+
+			/// <summary>
+			/// Includes all fields defined by the specified type, setting their
+			/// membership accordingly.
+			/// </summary>
+			/// <param name="typeId">The type id.</param>
+			/// <param name="definingTypeId">The type id of the defining type.</param>
+			/// <param name="membership">The top level field membership.</param>
+			/// <param name="depth">The recursion depth.</param>
+			private void IncludeType(Druid typeId, Druid definingTypeId, FieldMembership membership, int depth)
 			{
 				StructuredData data = this.host.FindStructuredData (typeId);
 
@@ -725,7 +756,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 				{
 					foreach (StructuredData interfaceId in interfaceIds)
 					{
-						Druid id = (Druid) interfaceId.GetValue (Res.Fields.InterfaceId.CaptionId);
+						Druid id = StructuredTypeResourceAccessor.ToDruid (interfaceId.GetValue (Res.Fields.InterfaceId.CaptionId));
 						this.IncludeType (id, id, membership, depth);
 					}
 				}
@@ -734,7 +765,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 				{
 					foreach (StructuredData field in fields)
 					{
-						Druid fieldId = (Druid) field.GetValue (Res.Fields.Field.CaptionId);
+						Druid fieldId = StructuredTypeResourceAccessor.ToDruid (field.GetValue (Res.Fields.Field.CaptionId));
 
 						if (this.ids.Contains (fieldId))
 						{
@@ -761,18 +792,12 @@ namespace Epsitec.Common.Support.ResourceAccessors
 				}
 			}
 
-			public IList<StructuredData> Fields
-			{
-				get
-				{
-					return this.fields;
-				}
-			}
-
 			private StructuredTypeResourceAccessor host;
 			private List<Druid> ids;
 			private List<StructuredData> fields;
 		}
+
+		#endregion
 
 		/// <summary>
 		/// Finds the structured type resource accessor for a given module.
@@ -853,7 +878,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			{
 				StructuredData field = fields[i];
 				FieldMembership membership = (FieldMembership) field.GetValue (Res.Fields.Field.Membership);
-				Druid definingTypeId = (Druid) field.GetValue (Res.Fields.Field.DefiningTypeId);
+				Druid definingTypeId = StructuredTypeResourceAccessor.ToDruid (field.GetValue (Res.Fields.Field.DefiningTypeId));
 
 				//	If the field is inherited from a base entity or imported through
 				//	an interface, then we remove it from the collection :
@@ -866,6 +891,12 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			}
 		}
 
+		/// <summary>
+		/// Changes the field prefix for all associated field definition
+		/// resources. This is called when a structured type gets renamed.
+		/// </summary>
+		/// <param name="oldName">The old name.</param>
+		/// <param name="newName">The new name.</param>
 		private void ChangeFieldPrefix(string oldName, string newName)
 		{
 			ResourceBundle bundle = this.ResourceManager.GetBundle (Resources.CaptionsBundleName, ResourceLevel.Default);
@@ -1021,6 +1052,11 @@ namespace Epsitec.Common.Support.ResourceAccessors
 		private static Druid ToDruid(object value)
 		{
 			return UndefinedValue.IsUndefinedValue (value) ? Druid.Empty : (Druid) value;
+		}
+
+		private static StructuredTypeClass ToStructuredTypeClass(object value)
+		{
+			return UndefinedValue.IsUndefinedValue (value) ? StructuredTypeClass.None : (StructuredTypeClass) value;
 		}
 
 

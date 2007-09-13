@@ -5,8 +5,8 @@ namespace Epsitec.Common.Types
 {
 	/// <summary>
 	/// The <c>FieldMembership</c> enumeration specifies where a field is
-	/// originally defined.
-	/// See <see cref="StructuredTypeField"/>.
+	/// originally defined. Do not change the values, as they are used in
+	/// the serialization of <see cref="StructuredTypeField"/>.
 	/// </summary>
 	[DesignerVisible]
 	public enum FieldMembership : byte
