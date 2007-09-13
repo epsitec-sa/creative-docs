@@ -671,8 +671,6 @@ namespace Epsitec.Common.Designer
 				{
 					return;
 				}
-				st = module.OldAccessCaptionsToDelete.DirectGetAbstractType(druid) as StructuredType;
-				System.Diagnostics.Debug.Assert(st != null);
 			}
 
 			Druid newDruid = Druid.Empty;
@@ -1513,19 +1511,6 @@ namespace Epsitec.Common.Designer
 				ResourceBundle.Field field = this.primaryBundle[druid];
 				return field.Name;
 			}
-		}
-
-		public string DirectGetIcon(Druid druid)
-		{
-			//	Retourne l'icône d'une ressource, sans tenir compte du filtre.
-			//	La recherche s'effectue toujours dans la culture de base.
-			Caption caption = this.resourceManager.GetCaption(druid);
-			if (caption == null)
-			{
-				return null;
-			}
-
-			return caption.Icon;
 		}
 
 		public string DirectDefaultParameter(Druid druid)

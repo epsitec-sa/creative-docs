@@ -1065,6 +1065,7 @@ namespace Epsitec.Common.Designer.Viewers
 				this.panelMode = UI.PanelMode.Search;
 			}
 
+#if false
 			if (sender == this.hButtonType)
 			{
 				Druid druid = Druid.Empty;
@@ -1089,6 +1090,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 				return;
 			}
+#endif
 
 			this.panelEditor.DeselectAll();
 			this.UpdateButtons();

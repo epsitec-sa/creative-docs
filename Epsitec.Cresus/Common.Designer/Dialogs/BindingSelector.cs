@@ -160,7 +160,6 @@ namespace Epsitec.Common.Designer.Dialogs
 		{
 			//	Initialise le dialogue avec le binding actuel.
 			this.module = module;
-			this.resourceAccess = module.OldAccessCaptionsToDelete;
 			this.structuredType = type;
 			this.objectType = objectType;
 			this.initialBinding = binding;
@@ -356,11 +355,13 @@ namespace Epsitec.Common.Designer.Dialogs
 							captionType = ResourceAccess.GetCaptionNiceDescription(caption, 0);  // texte sur 1 ligne
 						}
 
+#if false
 						iconType = this.resourceAccess.DirectGetIcon(caption.Id);
 						if (!string.IsNullOrEmpty(iconType))
 						{
 							iconType = Misc.ImageFull(iconType);
 						}
+#endif
 					}
 
 					string captionText = "";
@@ -584,7 +585,6 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		protected static double					arrayLineHeight = 20;
 
-		protected ResourceAccess				resourceAccess;
 		protected Module						module;
 		protected StructuredType				structuredType;
 		protected ObjectModifier.ObjectType		objectType;

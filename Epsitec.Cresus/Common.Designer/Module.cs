@@ -108,15 +108,6 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
-		// TODO: à supprimer
-		public ResourceAccess OldAccessCaptionsToDelete
-		{
-			get
-			{
-				return null;
-			}
-		}
-
 		public ResourceAccess AccessCaptions
 		{
 			get
