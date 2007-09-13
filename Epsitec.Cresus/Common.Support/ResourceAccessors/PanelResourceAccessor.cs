@@ -175,16 +175,19 @@ namespace Epsitec.Common.Support.ResourceAccessors
 
 			this.dirtyItems.Clear ();
 
-			foreach (CultureMap item in list)
+			using (this.SuspendNotifications ())
 			{
-				if (this.Collection.Contains (item))
+				foreach (CultureMap item in list)
 				{
-					this.PersistItem (item);
-					item.IsNewItem = false;
-				}
-				else
-				{
-					this.DeleteItem (item);
+					if (this.Collection.Contains (item))
+					{
+						this.PersistItem (item);
+						item.IsNewItem = false;
+					}
+					else
+					{
+						this.DeleteItem (item);
+					}
 				}
 			}
 
@@ -250,6 +253,8 @@ namespace Epsitec.Common.Support.ResourceAccessors
 //-				data.SetValue (Res.Fields.ResourcePanel.Bundle, null);
 				data.SetValue (Res.Fields.ResourcePanel.DefaultSize, "");
 				data.SetValue (Res.Fields.ResourcePanel.XmlSource, "");
+
+				item.RecordCultureData (Resources.DefaultTwoLetterISOLanguageName, data);
 				
 				return data;
 			}
