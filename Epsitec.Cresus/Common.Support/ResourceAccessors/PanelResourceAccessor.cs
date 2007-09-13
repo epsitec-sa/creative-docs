@@ -317,6 +317,11 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			StructuredData data = item.GetCultureData (Resources.DefaultTwoLetterISOLanguageName);
 			ResourceBundle bundle = data.GetValue (Res.Fields.ResourcePanel.Bundle) as ResourceBundle;
 
+			if (bundle == null)
+			{
+				return;
+			}
+
 			this.createdPanels.Remove (bundle);
 			this.editedPanels.Remove (bundle);
 

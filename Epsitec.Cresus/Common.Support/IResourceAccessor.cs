@@ -30,6 +30,8 @@ namespace Epsitec.Common.Support
 			get;
 		}
 
+		void Load(ResourceManager manager);
+
 		/// <summary>
 		/// Gets the data broker associated with the specified field. Usually,
 		/// this is only meaningful if the field defines a collection of
