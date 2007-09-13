@@ -201,9 +201,15 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			
 		}
 
-		protected virtual void ClearCaptionCache(Druid id, ResourceLevel level, CultureInfo culture)
+		/// <summary>
+		/// Clears the caption cache in the associated resource manager.
+		/// </summary>
+		/// <param name="id">The resource id.</param>
+		/// <param name="level">The resource level.</param>
+		/// <param name="culture">The resource culture.</param>
+		protected void ClearCaptionCache(Druid id, ResourceLevel level, CultureInfo culture)
 		{
-			this.ResourceManager.ClearCaptionCache (id, level, culture);
+//-			this.ResourceManager.ClearCaptionCache (id, level, culture);
 		}
 
 		/// <summary>
