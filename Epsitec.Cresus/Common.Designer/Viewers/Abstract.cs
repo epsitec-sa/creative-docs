@@ -697,7 +697,7 @@ namespace Epsitec.Common.Designer.Viewers
 			else
 			{
 				string newName = "New";
-				if (this.access.TotalCount > 0)
+				if (this.access.AccessIndex >= 0 && this.access.AccessIndex < this.access.AccessCount)
 				{
 					ResourceAccess.Field field = this.access.GetField(this.access.AccessIndex, null, ResourceAccess.FieldType.Name);
 					newName = field.String;
@@ -886,10 +886,11 @@ namespace Epsitec.Common.Designer.Viewers
 				builder.Append("/");
 				builder.Append(this.access.AccessCount.ToString());
 
-				if (this.access.AccessCount < this.access.TotalCount)
+				int total = this.access.TotalCount;
+				if (this.access.AccessCount < total)
 				{
 					builder.Append(" (");
-					builder.Append(this.access.TotalCount.ToString());
+					builder.Append(total.ToString());
 					builder.Append(")");
 				}
 

@@ -364,6 +364,9 @@ namespace Epsitec.Common.Designer
 
 		public void UpdateInfoCurrentModule()
 		{
+#if true
+			//	TODO: trouver qq chose d'utile à afficher
+#else
 			System.Text.StringBuilder builder = new System.Text.StringBuilder();
 
 			ModuleInfo mi = this.CurrentModuleInfo;
@@ -397,6 +400,7 @@ namespace Epsitec.Common.Designer
 				field.Text = text;
 				field.Invalidate();
 			}
+#endif
 		}
 
 		public void UpdateInfoAccess()

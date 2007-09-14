@@ -653,10 +653,20 @@ namespace Epsitec.Common.Designer
 
 		public int TotalCount
 		{
-			//	Retourne le nombre de données accessibles.
+			//	Retourne le nombre total de données (donc sans tenir compte du filtre).
 			get
 			{
-				return this.collectionView.Count;
+				if (string.IsNullOrEmpty(this.collectionViewFilter))
+				{
+					return this.collectionView.Count;
+				}
+				else
+				{
+					this.collectionView.Filter = null;  // supprime le filtre
+					int count = this.collectionView.Count;
+					this.collectionView.Filter = this.CollectionViewFilter;  // remet le filtre
+					return count;
+				}
 			}
 		}
 
