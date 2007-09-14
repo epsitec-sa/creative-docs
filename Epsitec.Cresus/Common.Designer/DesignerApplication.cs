@@ -257,7 +257,7 @@ namespace Epsitec.Common.Designer
 			this.info.Dock = DockStyle.Bottom;
 			this.info.Margins = new Margins(0, 0, 0, 0);
 
-			this.InfoAdd("InfoCurrentModule", 250);
+			this.InfoAdd("InfoCurrentModule", 120);
 			this.InfoAdd("InfoAccess", 250);
 			this.InfoAdd("InfoViewer", 300);
 
@@ -364,43 +364,8 @@ namespace Epsitec.Common.Designer
 
 		public void UpdateInfoCurrentModule()
 		{
-#if true
-			//	TODO: trouver qq chose d'utile à afficher
-#else
-			System.Text.StringBuilder builder = new System.Text.StringBuilder();
-
-			ModuleInfo mi = this.CurrentModuleInfo;
-			if ( mi != null )
-			{
-				ResourceAccess access;
-
-				access = mi.Module.AccessStrings;
-				builder.Append(Res.Strings.BundleType.Strings);
-				builder.Append(":");
-				builder.Append(access.TotalCount);
-				builder.Append(", ");
-
-				access = mi.Module.AccessCaptions;
-				builder.Append(Res.Strings.BundleType.Captions);
-				builder.Append(":");
-				builder.Append(access.TotalCount);
-				builder.Append(", ");
-
-				access = mi.Module.AccessPanels;
-				builder.Append(Res.Strings.BundleType.Panels);
-				builder.Append(":");
-				builder.Append(access.TotalCount);
-			}
-
 			StatusField field = this.info.Items["InfoCurrentModule"] as StatusField;
-			string text = builder.ToString();
-
-			if (field.Text != text)
-			{
-				field.Text = text;
-				field.Invalidate();
-			}
-#endif
+			field.Text = this.IsReadonly ? "<b>Mode bloqué</b>" : "Mode débloqué";
 		}
 
 		public void UpdateInfoAccess()
