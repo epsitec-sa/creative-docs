@@ -158,7 +158,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		public bool IsEditEnabled
 		{
-			//	Est-ce que l'édition est possible ? Pour cela, il faut avoir sélectionner un bundle
+			//	Est-ce que l'édition est possible ? Pour cela, il faut avoir sélectionné un bundle
 			//	dans la liste de gauche.
 			get
 			{

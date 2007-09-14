@@ -352,6 +352,8 @@ namespace Epsitec.Common.Designer.Viewers
 		protected override void UpdateEdit()
 		{
 			//	Met à jour les lignes éditables en fonction de la sélection dans le tableau.
+			base.UpdateEdit();
+
 			bool iic = this.ignoreChange;
 			this.ignoreChange = true;
 
@@ -370,7 +372,7 @@ namespace Epsitec.Common.Designer.Viewers
 			
 			if (sel == -1)
 			{
-				this.SetTextField(this.labelEdit, 0, null, ResourceAccess.FieldType.None);
+				this.panelEditor.IsEditEnabled = false;
 			}
 			else
 			{
@@ -380,16 +382,10 @@ namespace Epsitec.Common.Designer.Viewers
 				this.panelContainer.DrawDesignerFrame = true;
 				this.panelEditor.Panel = this.panelContainer;
 				this.panelEditor.Druid = this.access.AccessDruid(sel);
-
-				int index = this.access.AccessIndex;
-				this.SetTextField(this.labelEdit, index, null, ResourceAccess.FieldType.Name);
-				this.labelEdit.SelectAll();
-				this.labelEdit.Focus();
+				this.panelEditor.IsEditEnabled = !this.designerApplication.IsReadonly;
 			}
 
 			this.ignoreChange = iic;
-
-			this.UpdateCommands();
 		}
 
 		protected void SetTextField(AbstractTextField textField, int index, string cultureName, ResourceAccess.FieldType fieldType)
