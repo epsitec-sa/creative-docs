@@ -356,51 +356,121 @@ namespace Epsitec.Common.Designer.Viewers
 
 			bool iic = this.ignoreChange;
 			this.ignoreChange = true;
+			this.Deserialize();
+			this.ignoreChange = iic;
+		}
 
-			int sel = this.access.AccessIndex;
+		public override bool Terminate(bool soft)
+		{
+			//	Termine le travail sur une ressource, avant de passer à une autre.
+			//	Si soft = true, on sérialise temporairement sans poser de question.
+			//	Retourne false si l'utilisateur a choisi "annuler".
+			bool dirty = this.module.AccessPanels.IsLocalDirty;
 
-			if (sel >= this.access.AccessCount)
+			//?base.Terminate(soft);  // TODO: ne semble pas aimer le PersistChanges !
+
+			if (dirty)
 			{
-				sel = -1;
+				if (soft)
+				{
+					if (this.druidToSerialize.IsValid)
+					{
+						Panels.softSerialize = this.GetPanelData(this.GetPanel());
+					}
+					else
+					{
+						Panels.softSerialize = null;
+					}
+
+					Panels.softDirtySerialization = this.module.AccessPanels.IsLocalDirty;
+				}
+				else
+				{
+					if (this.druidToSerialize.IsValid)
+					{
+						this.access.SetPanel(this.druidToSerialize, this.GetPanel());
+					}
+
+					this.module.AccessPanels.ClearLocalDirty();
+				}
 			}
 
+			return true;
+		}
+
+		protected void Deserialize()
+		{
+			//	Désérialise les données sérialisées. Retourne false s'il n'existe aucune donnée sérialisée.
+			int sel = this.access.AccessIndex;
+			this.druidToSerialize = Druid.Empty;
+
+			if (sel != -1)
+			{
+				this.druidToSerialize = this.access.AccessDruid(sel);
+			}
+
+			if (Panels.softSerialize == null)
+			{
+				UI.Panel panel = this.access.GetPanel(this.druidToSerialize);
+				this.SetPanel(panel, this.druidToSerialize);
+			}
+			else
+			{
+				if (this.module.AccessPanels.IsLocalDirty)
+				{
+					this.module.AccessPanels.SetLocalDirty();
+				}
+				else
+				{
+					this.module.AccessPanels.ClearLocalDirty();
+				}
+
+				UI.Panel panel = this.SetPanelData(Panels.softSerialize);
+				this.SetPanel(panel, this.druidToSerialize);
+
+				Panels.softDirtySerialization = false;
+				Panels.softSerialize = null;
+			}
+		}
+
+		protected string GetPanelData(UI.Panel panel)
+		{
+			//	UI.Panel -> xml.
+			return UI.Panel.SerializePanel(panel);
+		}
+
+		protected UI.Panel SetPanelData(string xml)
+		{
+			//	xml -> UI.Panel.
+			return UI.Panel.DeserializePanel(xml, null, this.module.ResourceManager);
+		}
+
+		protected UI.Panel GetPanel()
+		{
+			return this.panelContainer;
+		}
+
+		protected void SetPanel(UI.Panel panel, Druid druid)
+		{
 			if (this.panelContainer != null)
 			{
 				this.panelContainer.SetParent(null);
 				this.panelContainer = null;
 			}
 			
-			if (sel == -1)
+			if (panel == null || druid.IsEmpty)
 			{
 				this.panelEditor.IsEditEnabled = false;
 			}
 			else
 			{
-				this.panelContainer = this.access.GetPanel(sel).GetPanel(this.panelMode);
+				this.panelContainer = panel;
 				this.panelContainer.SetParent(this.panelContainerParent);
 				this.panelContainer.ZOrder = this.panelEditor.ZOrder+1;
 				this.panelContainer.DrawDesignerFrame = true;
 				this.panelEditor.Panel = this.panelContainer;
-				this.panelEditor.Druid = this.access.AccessDruid(sel);
+				this.panelEditor.Druid = druid;
 				this.panelEditor.IsEditEnabled = !this.designerApplication.IsReadonly;
-			}
-
-			this.ignoreChange = iic;
-		}
-
-		protected void SetTextField(AbstractTextField textField, int index, string cultureName, ResourceAccess.FieldType fieldType)
-		{
-			if (fieldType == ResourceAccess.FieldType.None)
-			{
-				textField.Enable = false;
-				textField.Text = "";
-			}
-			else
-			{
-				ResourceAccess.Field field = this.access.GetField(index, cultureName, fieldType);
-
-				textField.Enable = true;
-				textField.Text = (field == null) ? "" : field.String;
 			}
 		}
 
@@ -1164,6 +1234,9 @@ namespace Epsitec.Common.Designer.Viewers
 		private static double[]					columnWidthHorizontal = {200};
 		private static double[]					columnWidthVertical = {250};
 
+		protected static string					softSerialize = null;
+		protected static bool					softDirtySerialization = false;
+
 		protected ProxyManager					proxyManager;
 		protected VSplitter						splitter2;
 		protected Widget						middle;
@@ -1193,5 +1266,6 @@ namespace Epsitec.Common.Designer.Viewers
 		protected List<IconButton>				cultureButtonList;
 
 		protected UI.PanelMode					panelMode = UI.PanelMode.Default;
+		protected Druid							druidToSerialize;
 	}
 }

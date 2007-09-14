@@ -1594,17 +1594,37 @@ namespace Epsitec.Common.Designer
 		}
 
 
-		public UI.Panel GetPanel(int index)
+		public void SetPanel(Druid druid, UI.Panel panel)
+		{
+			//	Sérialise le UI.Panel dans les ressources.
+			if (druid.IsValid)
+			{
+				string xml = UI.Panel.SerializePanel(panel);
+
+				CultureMap item = this.accessor.Collection[druid];
+				if (item != null)
+				{
+					StructuredData data = item.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
+					data.SetValue(Support.Res.Fields.ResourcePanel.XmlSource, xml);
+				}
+			}
+		}
+
+		public UI.Panel GetPanel(Druid druid)
 		{
 			//	Retourne le UI.Panel associé à une ressource.
 			//	Si nécessaire, il est créé la première fois.
-			if (index >= 0 && index < this.accessor.Collection.Count)
+			if (druid.IsValid)
 			{
-				StructuredData data = accessor.Collection[index].GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
-				string xml = data.GetValue(Support.Res.Fields.ResourcePanel.XmlSource) as string;
-				if (!string.IsNullOrEmpty(xml))
+				CultureMap item = this.accessor.Collection[druid];
+				if (item != null)
 				{
-					return UI.Panel.DeserializePanel(xml, null, this.resourceManager);
+					StructuredData data = item.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
+					string xml = data.GetValue(Support.Res.Fields.ResourcePanel.XmlSource) as string;
+					if (!string.IsNullOrEmpty(xml))
+					{
+						return UI.Panel.DeserializePanel(xml, null, this.resourceManager);
+					}
 				}
 			}
 

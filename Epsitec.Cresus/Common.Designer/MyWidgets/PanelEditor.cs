@@ -4645,7 +4645,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		protected void SetDirty()
 		{
-			this.module.AccessPanels.SetGlobalDirty();
+			this.module.AccessPanels.SetLocalDirty();
 		}
 
 		protected Point ConvPanelToEditor(Point pos)
