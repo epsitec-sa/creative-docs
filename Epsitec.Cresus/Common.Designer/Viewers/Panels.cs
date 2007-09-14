@@ -635,17 +635,18 @@ namespace Epsitec.Common.Designer.Viewers
 				this.statusBar.Items.Add(new IconSeparator());
 
 				List<Widget> parents = new List<Widget>();
-				obj = selection[0].Parent;  // parent du premier objet sélectionné
+				obj = selection[0];
 				while (obj != null)
 				{
 					ObjectModifier.ObjectType type = ObjectModifier.GetObjectType(obj);
-					if (type == ObjectModifier.ObjectType.Unknow)
+					if (type == ObjectModifier.ObjectType.Unknow ||
+						type == ObjectModifier.ObjectType.MainPanel)
 					{
 						break;
 					}
 
-					parents.Add(obj);
 					obj = obj.Parent;
+					parents.Add(obj);
 				}
 
 				//	Crée la chaîne de widgets pour les parents.

@@ -1737,7 +1737,7 @@ namespace Epsitec.Common.Designer
 			obj.Window.ForceLayout();
 			Rectangle bounds = obj.Client.Bounds;
 
-			while (obj != this.Container)
+			while (obj != null && obj != this.Container)
 			{
 				bounds = obj.MapClientToParent(bounds);
 				obj = obj.Parent;
