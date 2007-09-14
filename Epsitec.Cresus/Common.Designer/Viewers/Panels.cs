@@ -180,7 +180,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.splitter2 = new VSplitter(surface);
 			this.splitter2.Dock = DockStyle.Right;
 
-			this.UpdateEdit();
+			this.UpdateAll();
 			this.UpdateType();
 			this.UpdateButtons();
 			this.UpdateViewer(MyWidgets.PanelEditor.Changing.Show);
@@ -237,6 +237,24 @@ namespace Epsitec.Common.Designer.Viewers
 			this.table.ColumnHeader.SetColumnText(0, "Nom");
 
 			this.table.ColumnHeader.SetColumnSort(0, ListSortDirection.Ascending);
+		}
+
+		protected override int PrimaryColumn
+		{
+			//	Retourne le rang de la colonne pour la culture principale.
+			get
+			{
+				return -1;
+			}
+		}
+
+		protected override int SecondaryColumn
+		{
+			//	Retourne le rang de la colonne pour la culture secondaire.
+			get
+			{
+				return -1;
+			}
 		}
 
 		

@@ -1015,8 +1015,15 @@ namespace Epsitec.Common.Designer.Viewers
 		protected virtual void UpdateSelectedCulture()
 		{
 			//	Sélectionne le bouton correspondant à la culture secondaire.
-			this.table.ColumnHeader.SetColumnText(this.PrimaryColumn, Misc.CultureName(this.access.GetBaseCultureName()));
-			this.table.ColumnHeader.SetColumnText(this.SecondaryColumn, Misc.CultureName(this.GetTwoLetters(1)));
+			if (this.PrimaryColumn != -1)
+			{
+				this.table.ColumnHeader.SetColumnText(this.PrimaryColumn, Misc.CultureName(this.access.GetBaseCultureName()));
+			}
+
+			if (this.SecondaryColumn != -1)
+			{
+				this.table.ColumnHeader.SetColumnText(this.SecondaryColumn, Misc.CultureName(this.GetTwoLetters(1)));
+			}
 
 			if (this.secondaryButtonsCulture == null)
 			{
