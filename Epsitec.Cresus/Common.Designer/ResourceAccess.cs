@@ -1628,7 +1628,7 @@ namespace Epsitec.Common.Designer
 				}
 			}
 
-			ResourceBundle bundle = this.bundles[ResourceLevel.Default];
+			ResourceBundle bundle = this.bundles[ResourceLevel.Default];  // TODO: correct ?
 			UI.Panel newPanel = this.CreateEmptyPanel();
 			UI.Panel.SetPanel(bundle, newPanel);
 			newPanel.SetupSampleDataSource();

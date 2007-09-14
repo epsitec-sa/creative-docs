@@ -1440,7 +1440,16 @@ namespace Epsitec.Common.Designer.Viewers
 
 		protected void UpdateCommandTool(string name)
 		{
-			this.GetCommandState(name).ActiveState = (this.context.Tool == name) ? ActiveState.Yes : ActiveState.No;
+			if (this.designerApplication.IsReadonly)
+			{
+				this.GetCommandState(name).ActiveState = ActiveState.No;
+				this.GetCommandState(name).Enable = false;
+			}
+			else
+			{
+				this.GetCommandState(name).ActiveState = (this.context.Tool == name) ? ActiveState.Yes : ActiveState.No;
+				this.GetCommandState(name).Enable = true;
+			}
 		}
 
 		protected CommandState GetCommandState(string command)

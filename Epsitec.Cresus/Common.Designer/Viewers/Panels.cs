@@ -367,7 +367,7 @@ namespace Epsitec.Common.Designer.Viewers
 			//	Retourne false si l'utilisateur a choisi "annuler".
 			bool dirty = this.module.AccessPanels.IsLocalDirty;
 
-			//?base.Terminate(soft);  // TODO: ne semble pas aimer le PersistChanges !
+			base.Terminate(soft);  // TODO: ne semble pas aimer le PersistChanges !
 
 			if (dirty)
 			{
@@ -375,7 +375,7 @@ namespace Epsitec.Common.Designer.Viewers
 				{
 					if (this.druidToSerialize.IsValid)
 					{
-						Panels.softSerialize = this.GetPanelData(this.GetPanel());
+						Panels.softSerialize = this.PanelToXml(this.GetPanel());
 					}
 					else
 					{
@@ -425,7 +425,7 @@ namespace Epsitec.Common.Designer.Viewers
 					this.module.AccessPanels.ClearLocalDirty();
 				}
 
-				UI.Panel panel = this.SetPanelData(Panels.softSerialize);
+				UI.Panel panel = this.XmlToPanel(Panels.softSerialize);
 				this.SetPanel(panel, this.druidToSerialize);
 
 				Panels.softDirtySerialization = false;
@@ -433,13 +433,13 @@ namespace Epsitec.Common.Designer.Viewers
 			}
 		}
 
-		protected string GetPanelData(UI.Panel panel)
+		protected string PanelToXml(UI.Panel panel)
 		{
 			//	UI.Panel -> xml.
 			return UI.Panel.SerializePanel(panel);
 		}
 
-		protected UI.Panel SetPanelData(string xml)
+		protected UI.Panel XmlToPanel(string xml)
 		{
 			//	xml -> UI.Panel.
 			return UI.Panel.DeserializePanel(xml, null, this.module.ResourceManager);
@@ -447,11 +447,13 @@ namespace Epsitec.Common.Designer.Viewers
 
 		protected UI.Panel GetPanel()
 		{
+			//	Retourne le UI.Panel en cours d'édition.
 			return this.panelContainer;
 		}
 
 		protected void SetPanel(UI.Panel panel, Druid druid)
 		{
+			//	Spécifie le UI.Panel en cours d'édition.
 			if (this.panelContainer != null)
 			{
 				this.panelContainer.SetParent(null);
@@ -711,6 +713,7 @@ namespace Epsitec.Common.Designer.Viewers
 			IconButton button = new IconButton(this.statusBar);
 			button.IconName = Misc.Icon(icon);
 			button.Name = name;
+			button.Enable = !this.designerApplication.IsReadonly;
 
 			if (type == "Selected")
 			{
@@ -1089,6 +1092,7 @@ namespace Epsitec.Common.Designer.Viewers
 			//	Régénère la liste des proxies et met à jour les panneaux de l'interface
 			//	utilisateur s'il y a eu un changement dans le nombre de propriétés visibles
 			//	par panneau.
+//	TODO: pourquoi ça ne marche plus ?
 #if false
 			if (this.proxyManager.RegenerateProxies())
 			{
