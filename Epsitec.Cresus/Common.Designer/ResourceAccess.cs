@@ -121,23 +121,6 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
-		public ResourceBundleCollection ResourceBundles
-		{
-			get
-			{
-				return this.bundles;
-			}
-		}
-
-
-		public ResourceManager ResourceManager
-		{
-			get
-			{
-				return this.resourceManager;
-			}
-		}
-
 		public IResourceAccessor Accessor
 		{
 			get
