@@ -17,10 +17,13 @@ namespace Epsitec.Common.Designer.Viewers
 			this.scrollable.Visibility = false;
 
 			FrameBox surface = new FrameBox(this.lastGroup);
+			surface.DrawFullFrame = true;
+			surface.Margins = new Margins(0, 0, 5, 0);
 			surface.Dock = DockStyle.Fill;
 
 			//	Crée le groupe central.
 			this.middle = new FrameBox(surface);
+			this.middle.Padding = new Margins(2, 5, 5, 5);
 			this.middle.Dock = DockStyle.Fill;
 
 			this.statusBar = new HToolBar(this.middle);
@@ -93,6 +96,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.right.MinWidth = 150;
 			this.right.PreferredWidth = 240;
 			this.right.MaxWidth = 400;
+			this.right.Padding = new Margins(5, 5, 5, 5);
 			this.right.Dock = DockStyle.Right;
 
 			//	Crée la toolbar horizontale, au dessus des onglets.
@@ -178,6 +182,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.tabBook.ActivePage = this.tabPageProperties;
 
 			this.splitter2 = new VSplitter(surface);
+			this.splitter2.Margins = new Margins(0, 0, 1, 1);
 			this.splitter2.Dock = DockStyle.Right;
 
 			this.UpdateAll();
@@ -254,6 +259,32 @@ namespace Epsitec.Common.Designer.Viewers
 			get
 			{
 				return -1;
+			}
+		}
+
+		protected override double GetColumnWidth(int column)
+		{
+			//	Retourne la largeur à utiliser pour une colonne de la liste de gauche.
+			if (this.designerApplication.DisplayModeState == DesignerApplication.DisplayMode.Horizontal)
+			{
+				return Panels.columnWidthHorizontal[column];
+			}
+			else
+			{
+				return Panels.columnWidthVertical[column];
+			}
+		}
+
+		protected override void SetColumnWidth(int column, double value)
+		{
+			//	Mémorise la largeur à utiliser pour une colonne de la liste de gauche.
+			if (this.designerApplication.DisplayModeState == DesignerApplication.DisplayMode.Horizontal)
+			{
+				Panels.columnWidthHorizontal[column] = value;
+			}
+			else
+			{
+				Panels.columnWidthVertical[column] = value;
 			}
 		}
 
@@ -991,11 +1022,13 @@ namespace Epsitec.Common.Designer.Viewers
 			//	Régénère la liste des proxies et met à jour les panneaux de l'interface
 			//	utilisateur s'il y a eu un changement dans le nombre de propriétés visibles
 			//	par panneau.
+#if false
 			if (this.proxyManager.RegenerateProxies())
 			{
 				this.ClearProxies();
 				this.proxyManager.CreateUserInterface(this.propertiesScrollable.Panel);
 			}
+#endif
 		}
 
 		public void RegenerateDimensions()
@@ -1131,6 +1164,9 @@ namespace Epsitec.Common.Designer.Viewers
 
 		protected static readonly double		treeButtonWidth = 22;
 		protected static double					treeBranchesHeight = 30;
+
+		private static double[]					columnWidthHorizontal = {200};
+		private static double[]					columnWidthVertical = {250};
 
 		protected ProxyManager					proxyManager;
 		protected VSplitter						splitter2;
