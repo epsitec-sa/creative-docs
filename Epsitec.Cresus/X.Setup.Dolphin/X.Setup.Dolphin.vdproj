@@ -411,6 +411,12 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_6288F0110DF041A688C1998852F336C9"
+        "OwnerKey" = "8:_99A1ECCB35B241B391BC9274DB770594"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_668DB15D007B366C45D217CAF6C05FDC"
         "OwnerKey" = "8:_DBBCE4CC4660607B51A1AA19544ED70F"
         "MsmSig" = "8:_UNDEFINED"
@@ -503,12 +509,6 @@
         {
         "MsmKey" = "8:_86B9036CEC2C0AD7D080AB571BCAF8A8"
         "OwnerKey" = "8:_7CF1391F4C27BE382873BFEF4E81CD50"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_91A3A918A4B44317A84D7E6593D3F335"
-        "OwnerKey" = "8:_99A1ECCB35B241B391BC9274DB770594"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -1820,14 +1820,14 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Simulateur de Dauphin"
-        "ProductCode" = "8:{A3B4D1DE-7F88-46BF-888A-F3E7D548F25B}"
-        "PackageCode" = "8:{5EB5F334-CA84-4F4A-A893-C962F8F5807F}"
+        "ProductCode" = "8:{F371992E-02AC-4498-B546-67B512C286E1}"
+        "PackageCode" = "8:{249E266E-A6D3-414E-9B6D-0D49154EEDE6}"
         "UpgradeCode" = "8:{3E07DF4F-1854-45A8-86B8-F494ADA98964}"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:0.0.4"
+        "ProductVersion" = "8:0.0.5"
         "Manufacturer" = "8:Epsitec"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"
@@ -2242,7 +2242,7 @@
         }
         "MergeModule"
         {
-            "{CEE29DC0-9FBA-4B99-8D47-5BC643D9B626}:_91A3A918A4B44317A84D7E6593D3F335"
+            "{CEE29DC0-9FBA-4B99-8D47-5BC643D9B626}:_6288F0110DF041A688C1998852F336C9"
             {
             "UseDynamicProperties" = "11:TRUE"
             "IsDependency" = "11:TRUE"
