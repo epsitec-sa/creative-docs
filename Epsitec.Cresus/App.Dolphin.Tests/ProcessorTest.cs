@@ -118,6 +118,9 @@ namespace Epsitec.App.Dolphin
 		static protected string[] correct_instructions =
 		{
 			"move #12,a",
+			"move #D'12,a",
+			"move #H'DA,a",
+			"move #B'10011,a",
 			"move #-34,b",
 			"move a,h'c00",
 			"move b,h'c01+{x}",
@@ -424,6 +427,9 @@ namespace Epsitec.App.Dolphin
 			"move a",
 			"move a,xx",
 			"move a,#12",
+			"move #D'1A,a",
+			"move #B'001200,a",
+			"move #H'1G,a",
 
 			"and h'100,x",
 			"and h'100,y",
