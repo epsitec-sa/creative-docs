@@ -411,6 +411,7 @@ namespace Epsitec.App.Dolphin
 
 			"setc",
 			"clrc",
+			"notc",
 			"nop",
 			"halt",
 			"ex a,b",

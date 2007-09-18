@@ -120,7 +120,7 @@ namespace Epsitec.App.Dolphin.Components
 			CompAR = 0xF8,		// COMP ADDR,r
 			PushF  = 0xFC,		// PUSH F
 			PopF   = 0xFD,		// POP F
-
+			NotC   = 0xFE,		// NOTC
 			Table  = 0xFF,		// TABLE #val
 		}
 
@@ -230,6 +230,10 @@ namespace Epsitec.App.Dolphin.Components
 					return;
 
 				case Instructions.ClrC:
+					this.SetFlag(TinyProcessor.FlagCarry, false);
+					return;
+
+				case Instructions.NotC:
 					this.SetFlag(TinyProcessor.FlagCarry, false);
 					return;
 
@@ -1261,7 +1265,7 @@ namespace Epsitec.App.Dolphin.Components
 			1,1,1,1,1,1,1,1, 3,3,3,3,3,3,3,3,  // 0xC0
 			2,2,2,2,2,2,2,2, 4,4,4,4,4,4,4,4,  // 0xD0
 			1,1,1,1,1,1,0,0, 3,3,3,3,3,3,0,0,  // 0xE0
-			3,3,3,3,3,3,0,0, 3,3,3,3,1,1,0,2,  // 0xF0
+			3,3,3,3,3,3,0,0, 3,3,3,3,1,1,1,2,  // 0xF0
 		};
 
 		public override string DessassemblyInstruction(List<int> codes, int pc, out int address)
@@ -1300,6 +1304,9 @@ namespace Epsitec.App.Dolphin.Components
 
 				case Instructions.ClrC:
 					return "CLRC";
+
+				case Instructions.NotC:
+					return "NOTC";
 
 				case Instructions.AddVSP:
 					builder.Append("ADD<tab/>");
@@ -2298,6 +2305,17 @@ namespace Epsitec.App.Dolphin.Components
 					}
 					break;
 
+				case "NOTC":
+					if (words.Length == 1)
+					{
+						codes.Add((int) Instructions.NotC);
+					}
+					else
+					{
+						return "<b>L'instuction NOTC n'a aucun argument.</b>";
+					}
+					break;
+
 				case "TABLE":
 					if (words.Length == 2 && v1 != Misc.undefined)
 					{
@@ -2992,7 +3010,7 @@ namespace Epsitec.App.Dolphin.Components
 					break;
 
 				default:
-					return "<b>Instruction inconnue.</b><br/><br/>Les instructions connues sont :<br/><list type=\"fix\"/>JUMP, CALL, RET, PUSH, POP<br/><list type=\"fix\"/>MOVE, COMP, ADD, SUB, AND, OR, XOR<br/><list type=\"fix\"/>CLR, NOT, INC, DEC, RL, RR, RLC, RRC<br/><list type=\"fix\"/>TEST, TSET, TCLR, TNOT<br/><list type=\"fix\"/>NOP, CLRC, SETC, EX, SWAP, HALT<br/><list type=\"fix\"/>TABLE, BYTE<br/> ";
+					return "<b>Instruction inconnue.</b><br/><br/>Les instructions connues sont :<br/><list type=\"fix\"/>JUMP, CALL, RET, PUSH, POP<br/><list type=\"fix\"/>MOVE, COMP, ADD, SUB, AND, OR, XOR<br/><list type=\"fix\"/>CLR, NOT, INC, DEC, RL, RR, RLC, RRC<br/><list type=\"fix\"/>TEST, TSET, TCLR, TNOT<br/><list type=\"fix\"/>NOP, CLRC, SETC, NOTC, EX, SWAP, HALT<br/><list type=\"fix\"/>TABLE, BYTE<br/> ";
 			}
 
 			return null;  // ok
@@ -4118,15 +4136,17 @@ namespace Epsitec.App.Dolphin.Components
 					AbstractProcessor.HelpPutTitle(builder, "Sauts");
 					AbstractProcessor.HelpPutLine(builder, "[10] [mh] [ll]<tab/>JUMP <i>ADDR</i>");
 					AbstractProcessor.HelpPutLine(builder, "[12] [mh] [ll]<tab/>JUMP,EQ <i>ADDR</i>");
+					AbstractProcessor.HelpPutLine(builder, "[12] [mh] [ll]<tab/>JUMP,ZS <i>ADDR</i>");
 					AbstractProcessor.HelpPutLine(builder, "[13] [mh] [ll]<tab/>JUMP,NE <i>ADDR</i>");
+					AbstractProcessor.HelpPutLine(builder, "[13] [mh] [ll]<tab/>JUMP,ZC <i>ADDR</i>");
 					AbstractProcessor.HelpPutLine(builder, "[14] [mh] [ll]<tab/>JUMP,LO <i>ADDR</i>");
-					AbstractProcessor.HelpPutLine(builder, "[15] [mh] [ll]<tab/>JUMP,LS <i>ADDR</i>");
-					AbstractProcessor.HelpPutLine(builder, "[16] [mh] [ll]<tab/>JUMP,HI <i>ADDR</i>");
-					AbstractProcessor.HelpPutLine(builder, "[17] [mh] [ll]<tab/>JUMP,HS <i>ADDR</i>");
-					AbstractProcessor.HelpPutLine(builder, "[18] [mh] [ll]<tab/>JUMP,CC <i>ADDR</i>");
-					AbstractProcessor.HelpPutLine(builder, "[19] [mh] [ll]<tab/>JUMP,CS <i>ADDR</i>");
-					AbstractProcessor.HelpPutLine(builder, "[1A] [mh] [ll]<tab/>JUMP,NC <i>ADDR</i>");
-					AbstractProcessor.HelpPutLine(builder, "[1B] [mh] [ll]<tab/>JUMP,NS <i>ADDR</i>");
+					AbstractProcessor.HelpPutLine(builder, "[14] [mh] [ll]<tab/>JUMP,CS <i>ADDR</i>");
+					AbstractProcessor.HelpPutLine(builder, "[15] [mh] [ll]<tab/>JUMP,HS <i>ADDR</i>");
+					AbstractProcessor.HelpPutLine(builder, "[15] [mh] [ll]<tab/>JUMP,CC <i>ADDR</i>");
+					AbstractProcessor.HelpPutLine(builder, "[16] [mh] [ll]<tab/>JUMP,LS <i>ADDR</i>");
+					AbstractProcessor.HelpPutLine(builder, "[17] [mh] [ll]<tab/>JUMP,HI <i>ADDR</i>");
+					AbstractProcessor.HelpPutLine(builder, "[18] [mh] [ll]<tab/>JUMP,NS <i>ADDR</i>");
+					AbstractProcessor.HelpPutLine(builder, "[19] [mh] [ll]<tab/>JUMP,NC <i>ADDR</i>");
 
 					AbstractProcessor.HelpPutTitle(builder, "Appels de routines");
 					AbstractProcessor.HelpPutLine(builder, "[01] [mh] [ll]   <tab/>CALL <i>ADDR</i>");
@@ -4145,6 +4165,7 @@ namespace Epsitec.App.Dolphin.Components
 					AbstractProcessor.HelpPutTitle(builder, "Gestion des fanions");
 					AbstractProcessor.HelpPutLine(builder, "[04]             <tab/>SETC           <tab/><tab/>(C=1)");
 					AbstractProcessor.HelpPutLine(builder, "[05]             <tab/>CLRC           <tab/><tab/>(C=0)");
+					AbstractProcessor.HelpPutLine(builder, "[FE]             <tab/>NOTC           <tab/><tab/>(C)");
 
 					AbstractProcessor.HelpPutTitle(builder, "Divers");
 					AbstractProcessor.HelpPutLine(builder, "[00]            <tab/>NOP");
