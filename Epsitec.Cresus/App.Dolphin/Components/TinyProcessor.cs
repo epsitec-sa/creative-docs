@@ -1246,7 +1246,7 @@ namespace Epsitec.App.Dolphin.Components
 		protected static readonly byte[] InstructionLength =
 		{
 			1,3,1,1,1,1,2,2, 1,1,1,1,1,1,1,1,  // 0x00
-			3,0,3,3,3,3,3,3, 3,3,3,3,0,0,0,0,  // 0x10
+			3,0,3,3,3,3,3,3, 3,3,0,0,0,0,0,0,  // 0x10
 			1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1,  // 0x20
 			1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1,  // 0x30
 			1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1,  // 0x40
@@ -3043,7 +3043,13 @@ namespace Epsitec.App.Dolphin.Components
 			if (word.StartsWith("H'"))
 			{
 				word = word.Substring(2);
-				value =  Misc.ParseHexa(word, Misc.undefined, Misc.undefined);
+				value = Misc.ParseHexa(word, Misc.undefined, Misc.undefined);
+				return;
+			}
+			else if (word.StartsWith("B'"))
+			{
+				word = word.Substring(2);
+				value = Misc.ParseBin(word, Misc.undefined, Misc.undefined);
 				return;
 			}
 			else if (word.StartsWith("D'"))
@@ -3134,6 +3140,11 @@ namespace Epsitec.App.Dolphin.Components
 			{
 				word = word.Substring(2);
 				address = Misc.ParseHexa(word, Misc.undefined, Misc.undefined);
+			}
+			else if (word.StartsWith("B'"))
+			{
+				word = word.Substring(2);
+				address = Misc.ParseBin(word, Misc.undefined, Misc.undefined);
 			}
 			else if (word.StartsWith("D'"))
 			{
@@ -3342,7 +3353,7 @@ namespace Epsitec.App.Dolphin.Components
 
 				if (v)
 				{
-					builder.Append("<i>#val</i> = valeur immédiate #H'12, #H'C0, #D'99, #99<br/>");
+					builder.Append("<i>#val</i> = valeur immédiate #H'12, #H'C0, #B'0110, #D'99, #99<br/>");
 				}
 
 				if (a)

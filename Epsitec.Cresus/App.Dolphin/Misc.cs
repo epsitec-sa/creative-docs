@@ -95,6 +95,40 @@ namespace Epsitec.App.Dolphin
 			}
 		}
 
+		static public int ParseBin(string bin)
+		{
+			//	Analyse une chaîne binaire et retourne sa valeur.
+			return Misc.ParseBin(bin, 0, 0);
+		}
+
+		static public int ParseBin(string bin, int defaultValue, int errorValue)
+		{
+			//	Analyse une chaîne binaire et retourne sa valeur.
+			if (string.IsNullOrEmpty(bin))
+			{
+				return defaultValue;
+			}
+
+			int result = 0;
+			foreach (char c in bin)
+			{
+				result = result << 1;
+
+				if (c == '0')
+				{
+				}
+				else if (c == '1')
+				{
+					result |= 1;
+				}
+				else
+				{
+					return errorValue;
+				}
+			}
+			return result;
+		}
+
 
 		static public string GetVersion()
 		{

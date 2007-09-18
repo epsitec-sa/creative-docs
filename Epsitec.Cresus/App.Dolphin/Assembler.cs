@@ -886,6 +886,17 @@ namespace Epsitec.App.Dolphin
 					err = null;
 					return value;
 				}
+				else if (word[0] == 'B')  // binaire ?
+				{
+					int value = Misc.ParseBin(word.Substring(2), Misc.undefined, Misc.undefined);
+					if (value == Misc.undefined)
+					{
+						err = "Nombre binaire incorrect.";
+						return Misc.undefined;
+					}
+					err = null;
+					return value;
+				}
 				else if (word[0] == 'D')  // décimal ?
 				{
 					int value;
@@ -899,7 +910,7 @@ namespace Epsitec.App.Dolphin
 				}
 				else
 				{
-					err = "D' = décimal et H' = hexa.";
+					err = "D' = décimal, H' = hexa et B' = binaire.";
 					return Misc.undefined;
 				}
 			}
