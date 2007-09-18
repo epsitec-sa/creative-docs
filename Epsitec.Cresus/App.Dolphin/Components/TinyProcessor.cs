@@ -31,16 +31,14 @@ namespace Epsitec.App.Dolphin.Components
 			PopR   = 0x0C,		// POP r
 
 			Jump   = 0x10,
-			JumpEQ = 0x12,
-			JumpNE = 0x13,
-			JumpLO = 0x14,
-			JumpLS = 0x15,
-			JumpHI = 0x16,
-			JumpHS = 0x17,
-			JumpCC = 0x18,
-			JumpCS = 0x19,
-			JumpNC = 0x1A,
-			JumpNS = 0x1B,
+			JumpEQ = 0x12,		// = ZS
+			JumpNE = 0x13,		// = ZC
+			JumpLO = 0x14,		// = CS
+			JumpHS = 0x15,		// = CC
+			JumpLS = 0x16,		// = CS ! ZS
+			JumpHI = 0x17,		// = CC & ZC
+			JumpNS = 0x18,
+			JumpNC = 0x19,
 
 			ClrR   = 0x20,		// op r
 			NotR   = 0x24,
@@ -290,7 +288,7 @@ namespace Epsitec.App.Dolphin.Components
 				return;
 			}
 
-			if (op >= (int) Instructions.Jump && op <= (int) Instructions.JumpNS)
+			if (op >= (int) Instructions.Jump && op <= (int) Instructions.JumpNC)
 			{
 				address = this.AddressAbs;
 				if (this.IsTestTrue(op))
@@ -1065,35 +1063,31 @@ namespace Epsitec.App.Dolphin.Components
 
 			switch (test)
 			{
-				case Instructions.JumpEQ:
+				case Instructions.JumpEQ:	// = JumpZS
 					return this.TestFlag(TinyProcessor.FlagZero);
 
-				case Instructions.JumpNE:
+				case Instructions.JumpNE:	// = JumpZC
 					return !this.TestFlag(TinyProcessor.FlagZero);
 
-				case Instructions.JumpLO:
-					return !this.TestFlag(TinyProcessor.FlagZero) && this.TestFlag(TinyProcessor.FlagCarry);
-
-				case Instructions.JumpLS:
-					return this.TestFlag(TinyProcessor.FlagZero) || this.TestFlag(TinyProcessor.FlagCarry);
-
-				case Instructions.JumpHI:
-					return !this.TestFlag(TinyProcessor.FlagZero) && !this.TestFlag(TinyProcessor.FlagCarry);
-
-				case Instructions.JumpHS:
-					return this.TestFlag(TinyProcessor.FlagZero) || !this.TestFlag(TinyProcessor.FlagCarry);
-
-				case Instructions.JumpCC:
-					return !this.TestFlag(TinyProcessor.FlagCarry);
-
-				case Instructions.JumpCS:
+				case Instructions.JumpLO:	// = JumpCS
+					//?return !this.TestFlag(TinyProcessor.FlagZero) && this.TestFlag(TinyProcessor.FlagCarry);
 					return this.TestFlag(TinyProcessor.FlagCarry);
 
-				case Instructions.JumpNC:
-					return !this.TestFlag(TinyProcessor.FlagNeg);
+				case Instructions.JumpHS:	// = JumpCC
+					//?return this.TestFlag(TinyProcessor.FlagZero) || !this.TestFlag(TinyProcessor.FlagCarry);
+					return !this.TestFlag(TinyProcessor.FlagCarry);
+
+				case Instructions.JumpLS:	// = JumpCS ! JumpZS
+					return this.TestFlag(TinyProcessor.FlagZero) || this.TestFlag(TinyProcessor.FlagCarry);
+
+				case Instructions.JumpHI:	// = JumpCC & JumpZC
+					return !this.TestFlag(TinyProcessor.FlagZero) && !this.TestFlag(TinyProcessor.FlagCarry);
 
 				case Instructions.JumpNS:
 					return this.TestFlag(TinyProcessor.FlagNeg);
+
+				case Instructions.JumpNC:
+					return !this.TestFlag(TinyProcessor.FlagNeg);
 			}
 
 			return true;
@@ -1359,7 +1353,7 @@ namespace Epsitec.App.Dolphin.Components
 				return builder.ToString();
 			}
 
-			if (op >= (int) Instructions.Jump && op <= (int) Instructions.JumpNS)  // JUMP
+			if (op >= (int) Instructions.Jump && op <= (int) Instructions.JumpNC)  // JUMP
 			{
 				switch ((Instructions) op)
 				{
@@ -1379,6 +1373,10 @@ namespace Epsitec.App.Dolphin.Components
 						builder.Append("JUMP,LO<tab/>");
 						break;
 
+					case Instructions.JumpHS:
+						builder.Append("JUMP,HS<tab/>");
+						break;
+
 					case Instructions.JumpLS:
 						builder.Append("JUMP,LS<tab/>");
 						break;
@@ -1387,24 +1385,12 @@ namespace Epsitec.App.Dolphin.Components
 						builder.Append("JUMP,HI<tab/>");
 						break;
 
-					case Instructions.JumpHS:
-						builder.Append("JUMP,HS<tab/>");
-						break;
-
-					case Instructions.JumpCC:
-						builder.Append("JUMP,CC<tab/>");
-						break;
-
-					case Instructions.JumpCS:
-						builder.Append("JUMP,CS<tab/>");
+					case Instructions.JumpNS:
+						builder.Append("JUMP,NS<tab/>");
 						break;
 
 					case Instructions.JumpNC:
 						builder.Append("JUMP,NC<tab/>");
-						break;
-
-					case Instructions.JumpNS:
-						builder.Append("JUMP,NS<tab/>");
 						break;
 
 					default:
@@ -2194,10 +2180,11 @@ namespace Epsitec.App.Dolphin.Components
 			if (words.Length == 3 && words[0] == "JUMP")
 			{
 				if (words[1] == "EQ" || words[1] == "NE" ||
-					words[1] == "LO" || words[1] == "LS" ||
-					words[1] == "HI" || words[1] == "HS" ||
-					words[1] == "CC" || words[1] == "CS" ||
-					words[1] == "NC" || words[1] == "NS")
+					words[1] == "ZS" || words[1] == "ZC" ||
+					words[1] == "LO" || words[1] == "HS" ||
+					words[1] == "CS" || words[1] == "CC" ||
+					words[1] == "LS" || words[1] == "HI" ||
+					words[1] == "NS" || words[1] == "NC")
 				{
 					words[0] = words[0] + words[1];  // "JUMPEQ" par exemple
 					words[1] = null;
@@ -2391,6 +2378,7 @@ namespace Epsitec.App.Dolphin.Components
 					break;
 
 				case "JUMPEQ":
+				case "JUMPZS":
 					if (words.Length == 2 && mh1 != Misc.undefined && ll1 != Misc.undefined)
 					{
 						codes.Add((int) Instructions.JumpEQ);
@@ -2399,11 +2387,12 @@ namespace Epsitec.App.Dolphin.Components
 					}
 					else
 					{
-						return TinyProcessor.GetCodeError("JUMP doit être suivi d'une adresse.", "JUMP", "a");
+						return TinyProcessor.GetCodeError("JUMP,EQ doit être suivi d'une adresse.", "JUMP,EQ", "a");
 					}
 					break;
 
 				case "JUMPNE":
+				case "JUMPZC":
 					if (words.Length == 2 && mh1 != Misc.undefined && ll1 != Misc.undefined)
 					{
 						codes.Add((int) Instructions.JumpNE);
@@ -2412,11 +2401,12 @@ namespace Epsitec.App.Dolphin.Components
 					}
 					else
 					{
-						return TinyProcessor.GetCodeError("JUMP doit être suivi d'une adresse.", "JUMP", "a");
+						return TinyProcessor.GetCodeError("JUMP,NE doit être suivi d'une adresse.", "JUMP,NE", "a");
 					}
 					break;
 
 				case "JUMPLO":
+				case "JUMPCS":
 					if (words.Length == 2 && mh1 != Misc.undefined && ll1 != Misc.undefined)
 					{
 						codes.Add((int) Instructions.JumpLO);
@@ -2425,7 +2415,21 @@ namespace Epsitec.App.Dolphin.Components
 					}
 					else
 					{
-						return TinyProcessor.GetCodeError("JUMP doit être suivi d'une adresse.", "JUMP", "a");
+						return TinyProcessor.GetCodeError("JUMP,LO doit être suivi d'une adresse.", "JUMP,LO", "a");
+					}
+					break;
+
+				case "JUMPHS":
+				case "JUMPCC":
+					if (words.Length == 2 && mh1 != Misc.undefined && ll1 != Misc.undefined)
+					{
+						codes.Add((int) Instructions.JumpHS);
+						codes.Add(mh1);
+						codes.Add(ll1);
+					}
+					else
+					{
+						return TinyProcessor.GetCodeError("JUMP,HS doit être suivi d'une adresse.", "JUMP,HS", "a");
 					}
 					break;
 
@@ -2438,7 +2442,7 @@ namespace Epsitec.App.Dolphin.Components
 					}
 					else
 					{
-						return TinyProcessor.GetCodeError("JUMP doit être suivi d'une adresse.", "JUMP", "a");
+						return TinyProcessor.GetCodeError("JUMP,LS doit être suivi d'une adresse.", "JUMP,LS", "a");
 					}
 					break;
 
@@ -2451,59 +2455,7 @@ namespace Epsitec.App.Dolphin.Components
 					}
 					else
 					{
-						return TinyProcessor.GetCodeError("JUMP doit être suivi d'une adresse.", "JUMP", "a");
-					}
-					break;
-
-				case "JUMPHS":
-					if (words.Length == 2 && mh1 != Misc.undefined && ll1 != Misc.undefined)
-					{
-						codes.Add((int) Instructions.JumpHS);
-						codes.Add(mh1);
-						codes.Add(ll1);
-					}
-					else
-					{
-						return TinyProcessor.GetCodeError("JUMP doit être suivi d'une adresse.", "JUMP", "a");
-					}
-					break;
-
-				case "JUMPCC":
-					if (words.Length == 2 && mh1 != Misc.undefined && ll1 != Misc.undefined)
-					{
-						codes.Add((int) Instructions.JumpCC);
-						codes.Add(mh1);
-						codes.Add(ll1);
-					}
-					else
-					{
-						return TinyProcessor.GetCodeError("JUMP doit être suivi d'une adresse.", "JUMP", "a");
-					}
-					break;
-
-				case "JUMPCS":
-					if (words.Length == 2 && mh1 != Misc.undefined && ll1 != Misc.undefined)
-					{
-						codes.Add((int) Instructions.JumpCS);
-						codes.Add(mh1);
-						codes.Add(ll1);
-					}
-					else
-					{
-						return TinyProcessor.GetCodeError("JUMP doit être suivi d'une adresse.", "JUMP", "a");
-					}
-					break;
-
-				case "JUMPNC":
-					if (words.Length == 2 && mh1 != Misc.undefined && ll1 != Misc.undefined)
-					{
-						codes.Add((int) Instructions.JumpNC);
-						codes.Add(mh1);
-						codes.Add(ll1);
-					}
-					else
-					{
-						return TinyProcessor.GetCodeError("JUMP doit être suivi d'une adresse.", "JUMP", "a");
+						return TinyProcessor.GetCodeError("JUMP,HI doit être suivi d'une adresse.", "JUMP,HI", "a");
 					}
 					break;
 
@@ -2516,7 +2468,20 @@ namespace Epsitec.App.Dolphin.Components
 					}
 					else
 					{
-						return TinyProcessor.GetCodeError("JUMP doit être suivi d'une adresse.", "JUMP", "a");
+						return TinyProcessor.GetCodeError("JUMP,NS doit être suivi d'une adresse.", "JUMP,NS", "a");
+					}
+					break;
+
+				case "JUMPNC":
+					if (words.Length == 2 && mh1 != Misc.undefined && ll1 != Misc.undefined)
+					{
+						codes.Add((int) Instructions.JumpNC);
+						codes.Add(mh1);
+						codes.Add(ll1);
+					}
+					else
+					{
+						return TinyProcessor.GetCodeError("JUMP,NC doit être suivi d'une adresse.", "JUMP,NC", "a");
 					}
 					break;
 
@@ -3755,7 +3720,7 @@ namespace Epsitec.App.Dolphin.Components
 
 			(byte) Instructions.ClrC,					// CLRC
 			(byte) Instructions.RrcR+0,					// RRC A
-			(byte) Instructions.JumpCC, 0x80, 3,		// JUMP,CC +3
+			(byte) Instructions.JumpHS, 0x80, 3,		// JUMP,CC +3
 			(byte) Instructions.NotA, 0x40, 0,			// NOT {SP}+0
 			(byte) Instructions.MoveRR+0x1,				// MOVE A,B
 			(byte) Instructions.RlR+0,					// RL A
@@ -3778,7 +3743,7 @@ namespace Epsitec.App.Dolphin.Components
 			(byte) Instructions.AndVR+0, 0x07,			// AND #7,A
 			(byte) Instructions.ClrC,					// CLRC
 			(byte) Instructions.RrcR+0,					// RRC A
-			(byte) Instructions.JumpCC,	0x80, 3,		// JUMP,CC +3
+			(byte) Instructions.JumpHS,	0x80, 3,		// JUMP,CC +3
 			(byte) Instructions.NotA, 0x40, 1,			// NOT {SP}+1
 			(byte) Instructions.AddRR+0x3,				// ADD A,Y
 
