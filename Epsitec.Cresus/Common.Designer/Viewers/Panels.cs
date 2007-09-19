@@ -365,34 +365,23 @@ namespace Epsitec.Common.Designer.Viewers
 			//	Termine le travail sur une ressource, avant de passer à une autre.
 			//	Si soft = true, on sérialise temporairement sans poser de question.
 			//	Retourne false si l'utilisateur a choisi "annuler".
-			bool dirty = this.module.AccessPanels.IsLocalDirty;
+			
+			base.Terminate(soft);
 
-			base.Terminate(soft);  // TODO: ne semble pas aimer le PersistChanges !
-
-			if (dirty)
+			if (this.module.AccessPanels.IsLocalDirty)
 			{
-				if (soft)
+				System.Diagnostics.Debug.Assert (soft);
+				
+				if (this.druidToSerialize.IsValid)
 				{
-					if (this.druidToSerialize.IsValid)
-					{
-						Panels.softSerialize = this.PanelToXml(this.GetPanel());
-					}
-					else
-					{
-						Panels.softSerialize = null;
-					}
-
-					Panels.softDirtySerialization = this.module.AccessPanels.IsLocalDirty;
+					Panels.softSerialize = this.PanelToXml(this.GetPanel());
 				}
 				else
 				{
-					if (this.druidToSerialize.IsValid)
-					{
-						this.access.SetPanel(this.druidToSerialize, this.GetPanel());
-					}
-
-					this.module.AccessPanels.ClearLocalDirty();
+					Panels.softSerialize = null;
 				}
+
+				Panels.softDirtySerialization = this.module.AccessPanels.IsLocalDirty;
 			}
 
 			return true;
@@ -400,12 +389,9 @@ namespace Epsitec.Common.Designer.Viewers
 
 		public override void PersistChanges()
 		{
-			//	TODO: ne faire cela que si le panneau a été édité
-			if (this.druidToSerialize.IsValid)
-			{
-				this.access.SetPanel (this.druidToSerialize, this.GetPanel ());
-			}
-
+			//	Stocke la version XML (sérialisée) du panneau dans l'accesseur
+			//	s'il y a eu des modifications.
+			this.access.SetPanel (this.druidToSerialize, this.GetPanel ());
 			base.PersistChanges ();
 		}
 

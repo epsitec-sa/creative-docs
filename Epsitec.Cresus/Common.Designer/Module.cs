@@ -40,7 +40,7 @@ namespace Epsitec.Common.Designer
 			this.accessValues   = new ResourceAccess(ResourceAccess.Type.Values,   this, this.moduleInfo, this.designerApplication);
 			this.accessValues.Load();
 
-			foreach (ResourceAccess access in Access)
+			foreach (ResourceAccess access in this.Access)
 			{
 				access.DirtyChanged += new EventHandler(this.HandleAccessDirtyChanged);
 			}
@@ -48,7 +48,7 @@ namespace Epsitec.Common.Designer
 
 		public void Dispose()
 		{
-			foreach (ResourceAccess access in Access)
+			foreach (ResourceAccess access in this.Access)
 			{
 				access.DirtyChanged -= new EventHandler(this.HandleAccessDirtyChanged);
 			}
@@ -213,7 +213,7 @@ namespace Epsitec.Common.Designer
 		public void Save()
 		{
 			//	Enregistre toutes les ressources.
-			foreach (ResourceAccess access in Access)
+			foreach (ResourceAccess access in this.Access)
 			{
 				access.Save();
 			}
@@ -224,7 +224,7 @@ namespace Epsitec.Common.Designer
 			//	Retourne l'éventuel rapport.
 			List<ResourceAccess.ShortcutItem> list = new List<ResourceAccess.ShortcutItem>();
 
-			foreach (ResourceAccess access in Access)
+			foreach (ResourceAccess access in this.Access)
 			{
 				access.AddShortcuts(list);
 			}
@@ -271,7 +271,7 @@ namespace Epsitec.Common.Designer
 		{
 			get
 			{
-				foreach (ResourceAccess access in Access)
+				foreach (ResourceAccess access in this.Access)
 				{
 					if (access.IsGlobalDirty)
 					{
@@ -287,7 +287,7 @@ namespace Epsitec.Common.Designer
 		{
 			get
 			{
-				foreach (ResourceAccess access in Access)
+				foreach (ResourceAccess access in this.Access)
 				{
 					if (access.IsLocalDirty)
 					{
