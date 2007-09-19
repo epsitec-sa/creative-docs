@@ -1175,6 +1175,12 @@ namespace Epsitec.Common.Support
 			CultureInfo   culture = bundle.Culture;
 			string        id      = bundle.PrefixedName;
 			byte[]        data    = bundle.CreateXmlAsData ();
+
+			if (mode == ResourceSetMode.Remove)
+			{
+				this.RemoveBundle (id, level, culture);
+				return;
+			}
 			
 			if (this.SetBinaryData (id, level, culture, data, mode) == false)
 			{
@@ -1212,6 +1218,11 @@ namespace Epsitec.Common.Support
 				(mode == ResourceSetMode.InMemory))
 			{
 				return true;
+			}
+
+			if (mode == ResourceSetMode.Remove)
+			{
+				return this.RemoveBundle (id, level, culture);
 			}
 			
 			culture = culture ?? this.culture;

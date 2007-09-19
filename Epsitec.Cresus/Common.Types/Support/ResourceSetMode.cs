@@ -34,5 +34,11 @@ namespace Epsitec.Common.Support
 		/// bundle to the resource provider, but just update the pool cache.
 		/// </summary>
 		InMemory,
+
+		/// <summary>
+		/// Remove the bundle. This will delete the associated file or entry in
+		/// the database.
+		/// </summary>
+		Remove
 	}
 }

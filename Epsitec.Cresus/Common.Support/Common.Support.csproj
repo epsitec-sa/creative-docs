@@ -132,6 +132,7 @@
     <Compile Include="CodeGenerators\CodeFormatter.cs" />
     <Compile Include="CodeGenerators\CodeVisibility.cs" />
     <Compile Include="CodeGenerators\CodeAccessibility.cs" />
+    <Compile Include="ResourceBundleBatchSaver.cs" />
     <Compile Include="CultureMapSource.cs" />
     <Compile Include="EntityEngine\AbstractEntity.cs" />
     <Compile Include="EntityEngine\CodeGenerator.cs" />
@@ -142,6 +143,7 @@
     <Compile Include="EntityEngine\EntityContext.cs" />
     <Compile Include="ResourceAccessors\DataCreationMode.cs" />
     <Compile Include="ResourceAccessors\PanelResourceAccessor.cs" />
+    <Compile Include="ResourceBundleSaver.cs" />
     <Compile Include="Serialization\Converters\BinaryArrayConverter.cs" />
     <Compile Include="CultureMap.cs" />
     <Compile Include="CultureMapList.cs" />

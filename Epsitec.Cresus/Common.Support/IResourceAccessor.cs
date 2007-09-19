@@ -30,7 +30,18 @@ namespace Epsitec.Common.Support
 			get;
 		}
 
+		/// <summary>
+		/// Loads resources from the specified resource manager. The resource
+		/// manager will be used for all upcoming accesses.
+		/// </summary>
+		/// <param name="manager">The resource manager.</param>
 		void Load(ResourceManager manager);
+
+		/// <summary>
+		/// Saves the resources.
+		/// </summary>
+		/// <param name="saverCallback">The saver callback.</param>
+		void Save(ResourceBundleSaver saverCallback);
 
 		/// <summary>
 		/// Gets the data broker associated with the specified field. Usually,
@@ -41,6 +52,12 @@ namespace Epsitec.Common.Support
 		/// <param name="fieldId">The id for the field in the specified container.</param>
 		/// <returns>The data broker or <c>null</c>.</returns>
 		IDataBroker GetDataBroker(Types.StructuredData container, string fieldId);
+
+		/// <summary>
+		/// Gets a list of all available cultures for the specified accessor.
+		/// </summary>
+		/// <returns>A list of two letter ISO language names.</returns>
+		IList<string> GetAvailableCultures();
 
 		/// <summary>
 		/// Gets a value indicating whether this accessor contains changes.

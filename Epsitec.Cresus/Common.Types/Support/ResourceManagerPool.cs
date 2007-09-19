@@ -115,6 +115,36 @@ namespace Epsitec.Common.Support
 			}
 		}
 
+		/// <summary>
+		/// Finds all loaded resource bundles which match a specific criteria.
+		/// </summary>
+		/// <param name="filter">The filter which must return <c>true</c> for
+		/// bundles which must be returned.</param>
+		/// <returns>An enumeration of <see cref="ResourceBundle"/> instances.</returns>
+		public IEnumerable<ResourceBundle> FindAllLoadedBundles(System.Predicate<ResourceBundle> filter)
+		{
+			ResourceBundle[] bundles = new ResourceBundle[this.bundles.Count];
+			this.bundles.Values.CopyTo (bundles, 0);
+
+			if (filter == null)
+			{
+				foreach (ResourceBundle bundle in bundles)
+				{
+					yield return bundle;
+				}
+			}
+			else
+			{
+				foreach (ResourceBundle bundle in bundles)
+				{
+					if (filter (bundle))
+					{
+						yield return bundle;
+					}
+				}
+			}
+		}
+
 
 		public void SetupDefaultRootPaths()
 		{

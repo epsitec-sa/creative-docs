@@ -101,22 +101,26 @@ namespace Epsitec.Common.Support.ResourceAccessors
 #endif
 		}
 
-		public void Save()
+		/// <summary>
+		/// Saves the resources.
+		/// </summary>
+		/// <param name="saverCallback">The saver callback.</param>
+		public void Save(ResourceBundleSaver saverCallback)
 		{
 			this.PersistChanges ();
 			this.RenumberBundles ();
 
 			foreach (ResourceBundle bundle in this.deletedPanels)
 			{
-				this.manager.RemoveBundle (bundle.Id.ToBundleId (), bundle.ResourceLevel, bundle.Culture);
+				saverCallback (this.manager, bundle, ResourceSetMode.Remove);
 			}
 			foreach (ResourceBundle bundle in this.createdPanels)
 			{
-				this.manager.SetBundle (bundle, ResourceSetMode.CreateOnly);
+				saverCallback (this.manager, bundle, ResourceSetMode.CreateOnly);
 			}
 			foreach (ResourceBundle bundle in this.editedPanels)
 			{
-				this.manager.SetBundle (bundle, ResourceSetMode.UpdateOnly);
+				saverCallback (this.manager, bundle, ResourceSetMode.UpdateOnly);
 			}
 
 			this.deletedPanels.Clear ();
@@ -154,6 +158,19 @@ namespace Epsitec.Common.Support.ResourceAccessors
 		public IDataBroker GetDataBroker(Epsitec.Common.Types.StructuredData container, string fieldId)
 		{
 			return null;
+		}
+
+		/// <summary>
+		/// Gets a list of all available cultures for the specified accessor.
+		/// </summary>
+		/// <returns>A list of two letter ISO language names.</returns>
+		public IList<string> GetAvailableCultures()
+		{
+			List<string> list = new List<string> ();
+
+			list.Add (Resources.DefaultTwoLetterISOLanguageName);
+
+			return list;
 		}
 
 		public CultureMap CreateItem()

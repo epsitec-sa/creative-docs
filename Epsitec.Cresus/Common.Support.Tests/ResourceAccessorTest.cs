@@ -549,6 +549,8 @@ namespace Epsitec.Common.Support
 
 			newItem.Name = "FooBar";
 
+			ResourceBundleBatchSaver saver = new ResourceBundleBatchSaver ();
+
 			accessor.Collection.RemoveAt (2);
 			accessor.Collection.RemoveAt (1);
 			accessor.Collection.Insert (1, item1);
@@ -559,8 +561,8 @@ namespace Epsitec.Common.Support
 			accessor.PersistChanges ();
 			Assert.IsFalse (accessor.ContainsChanges);
 
-			accessor.Save ();
-
+			accessor.Save (saver.DelaySave);
+			saver.Execute ();
 
 			accessor.Collection.RemoveAt (2);
 			accessor.Collection.RemoveAt (1);
@@ -569,8 +571,9 @@ namespace Epsitec.Common.Support
 
 			accessor.Collection.Remove (newItem);
 			accessor.PersistChanges ();
-			
-			accessor.Save ();
+
+			accessor.Save (saver.DelaySave);
+			saver.Execute ();
 		}
 
 

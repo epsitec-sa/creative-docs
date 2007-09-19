@@ -246,11 +246,11 @@ namespace Epsitec.Common.Designer
 			this.isJustLoaded = true;
 		}
 
-		public void Save()
+		public void Save(ResourceBundleBatchSaver saver)
 		{
 			//	Enregistre les modifications des ressources.
 			this.AdjustBundlesBeforeSave();
-			this.SaveBundles();
+			this.SaveBundles(saver);
 			this.ClearGlobalDirty();
 		}
 
@@ -1239,14 +1239,7 @@ namespace Epsitec.Common.Designer
 			//	Retourne le nombre de cultures.
 			get
 			{
-				if (this.bundles == null)
-				{
-					return 0;
-				}
-				else
-				{
-					return this.bundles.Count;
-				}
+				return this.cultures == null ? 0 : this.cultures.Count;
 			}
 		}
 
@@ -1332,9 +1325,10 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
-
 		protected void LoadBundles()
 		{
+			this.cultures = this.accessor.GetAvailableCultures ();
+
 			if (this.type == Type.Panels)
 			{
 				return;
@@ -1428,22 +1422,9 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
-		protected void SaveBundles()
+		private void SaveBundles(ResourceBundleBatchSaver saver)
 		{
-			if (this.type == Type.Panels)
-			{
-				Support.ResourceAccessors.PanelResourceAccessor accessor = this.accessor as Support.ResourceAccessors.PanelResourceAccessor;
-				accessor.Save ();
-				return;
-			}
-
-			if (this.bundles != null)
-			{
-				foreach (ResourceBundle bundle in this.bundles)
-				{
-					this.resourceManager.SetBundle (bundle, ResourceSetMode.UpdateOnly);
-				}
-			}
+			this.accessor.Save (saver.DelaySave);
 		}
 
 
@@ -1944,6 +1925,7 @@ namespace Epsitec.Common.Designer
 		protected Regex										collectionViewRegex;
 		protected Types.SortDescription[]					collectionViewInitialSorts;
 
+		protected IList<string>								cultures;
 		protected ResourceBundleCollection					bundles;
 		protected ResourceBundle							primaryBundle;
 		protected List<Druid>								druidsIndex;

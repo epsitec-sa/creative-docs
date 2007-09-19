@@ -48,12 +48,12 @@ namespace Epsitec.Common.Support.ResourceAccessors
 				//	Load the data from the reference module first, then from the
 				//	patch module; this will effectively merge both information :
 
-				this.LoadFromBundle (refModuleManager.GetBundle (Resources.CaptionsBundleName, ResourceLevel.Default), Resources.DefaultTwoLetterISOLanguageName);
-				this.LoadFromBundle (patchModuleManager.GetBundle (Resources.CaptionsBundleName, ResourceLevel.Default), Resources.DefaultTwoLetterISOLanguageName);
+				this.LoadFromBundle (refModuleManager.GetBundle (this.GetBundleName (), ResourceLevel.Default), Resources.DefaultTwoLetterISOLanguageName);
+				this.LoadFromBundle (patchModuleManager.GetBundle (this.GetBundleName (), ResourceLevel.Default), Resources.DefaultTwoLetterISOLanguageName);
 			}
 			else
 			{
-				this.LoadFromBundle (this.ResourceManager.GetBundle (Resources.CaptionsBundleName, ResourceLevel.Default), Resources.DefaultTwoLetterISOLanguageName);
+				this.LoadFromBundle (this.ResourceManager.GetBundle (this.GetBundleName (), ResourceLevel.Default), Resources.DefaultTwoLetterISOLanguageName);
 			}
 		}
 
@@ -100,12 +100,12 @@ namespace Epsitec.Common.Support.ResourceAccessors
 
 			if (this.ResourceManager.BasedOnPatchModule)
 			{
-				refBundle   = this.ResourceManager.GetManagerForReferenceModule ().GetBundle (Resources.CaptionsBundleName, level, culture);
-				patchBundle = this.ResourceManager.GetBundle (Resources.CaptionsBundleName, level, culture);
+				refBundle   = this.ResourceManager.GetManagerForReferenceModule ().GetBundle (this.GetBundleName (), level, culture);
+				patchBundle = this.ResourceManager.GetBundle (this.GetBundleName (), level, culture);
 			}
 			else
 			{
-				refBundle   = this.ResourceManager.GetBundle (Resources.CaptionsBundleName, level, culture);
+				refBundle   = this.ResourceManager.GetBundle (this.GetBundleName (), level, culture);
 				patchBundle = null;
 			}
 
@@ -149,12 +149,21 @@ namespace Epsitec.Common.Support.ResourceAccessors
 		}
 
 		/// <summary>
+		/// Gets the bundle name used by this accessor.
+		/// </summary>
+		/// <returns>The name of the bundle.</returns>
+		protected override string GetBundleName()
+		{
+			return Resources.CaptionsBundleName;
+		}
+
+		/// <summary>
 		/// Creates a new unique id.
 		/// </summary>
 		/// <returns>The new unique id.</returns>
 		protected override Druid CreateId()
 		{
-			ResourceBundle      bundle    = this.ResourceManager.GetBundle (Resources.CaptionsBundleName, ResourceLevel.Default);
+			ResourceBundle      bundle    = this.ResourceManager.GetBundle (this.GetBundleName (), ResourceLevel.Default);
 			AccessorsCollection accessors = AbstractCaptionResourceAccessor.GetAccessors (bundle);
 
 			//	Create a new unique id, making sure we don't have any collisions
@@ -177,13 +186,13 @@ namespace Epsitec.Common.Support.ResourceAccessors
 
 				if (twoLetterISOLanguageName == Resources.DefaultTwoLetterISOLanguageName)
 				{
-					bundle = this.ResourceManager.GetBundle (Resources.CaptionsBundleName, ResourceLevel.Default);
+					bundle = this.ResourceManager.GetBundle (this.GetBundleName (), ResourceLevel.Default);
 					this.ClearCaptionCache (item.Id, ResourceLevel.Default, null);
 				}
 				else
 				{
 					culture = Resources.FindCultureInfo (twoLetterISOLanguageName);
-					bundle  = this.ResourceManager.GetBundle (Resources.CaptionsBundleName, ResourceLevel.Localized, culture);
+					bundle  = this.ResourceManager.GetBundle (this.GetBundleName (), ResourceLevel.Localized, culture);
 					this.ClearCaptionCache (item.Id, ResourceLevel.Localized, culture);
 					this.ClearCaptionCache (item.Id, ResourceLevel.Merged, culture);
 				}
@@ -233,7 +242,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 				StructuredData data    = item.GetCultureData (twoLetterISOLanguageName);
 				CultureInfo    culture = Resources.FindCultureInfo (twoLetterISOLanguageName);
 				ResourceLevel  level   = twoLetterISOLanguageName == Resources.DefaultTwoLetterISOLanguageName ? ResourceLevel.Default : ResourceLevel.Localized;
-				ResourceBundle bundle  = this.ResourceManager.GetBundle (Resources.CaptionsBundleName, level, culture);
+				ResourceBundle bundle  = this.ResourceManager.GetBundle (this.GetBundleName (), level, culture);
 
 				bool deleteField = false;
 
@@ -242,7 +251,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 					//	The resource should be stored as a delta (patch) relative
 					//	to the reference resource. Compute what that is...
 
-					ResourceBundle refBundle = refModuleManager.GetBundle (Resources.CaptionsBundleName, level, culture);
+					ResourceBundle refBundle = refModuleManager.GetBundle (this.GetBundleName (), level, culture);
 					
 					if ((this.ComputeDelta (item, ref data, refBundle, item.Id, bundle, twoLetterISOLanguageName)) ||
 						((item.Source != CultureMapSource.PatchModule) && (this.IsEmpty (data))))
@@ -299,7 +308,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 					if (bundle == null)
 					{
 						ResourceModuleId moduleId = this.ResourceManager.GetModuleFromFullId (item.Id.ToString ());
-						bundle = ResourceBundle.Create (this.ResourceManager, this.ResourceManager.ActivePrefix, moduleId, Resources.CaptionsBundleName, level, culture, 0);
+						bundle = ResourceBundle.Create (this.ResourceManager, this.ResourceManager.ActivePrefix, moduleId, this.GetBundleName (), level, culture, 0);
 						bundle.DefineType ("Caption");
 						this.ResourceManager.SetBundle (bundle, ResourceSetMode.InMemory);
 					}
@@ -768,7 +777,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 		/// </summary>
 		private void RegisterAccessorWithActiveBundle()
 		{
-			ResourceBundle bundle = this.ResourceManager.GetBundle (Resources.CaptionsBundleName, ResourceLevel.Default);
+			ResourceBundle bundle = this.ResourceManager.GetBundle (this.GetBundleName (), ResourceLevel.Default);
 			AccessorsCollection accessors = AbstractCaptionResourceAccessor.GetAccessors (bundle);
 
 			//	Associate a collection of caption accessors to the bundle, so we

@@ -41,6 +41,39 @@ namespace Epsitec.Common.Support.ResourceAccessors
 		/// <param name="manager">The resource manager.</param>
 		public abstract void Load(ResourceManager manager);
 
+		/// <summary>
+		/// Saves the resources.
+		/// </summary>
+		/// <param name="saverCallback">The saver callback.</param>
+		public void Save(ResourceBundleSaver saverCallback)
+		{
+			ResourceManager     manager        = this.ResourceManager;
+			ResourceManagerPool pool           = manager.Pool;
+			string              bundleName     = this.GetBundleName ();
+			int                 bundleModuleId = manager.DefaultModuleId;
+
+			foreach (ResourceBundle bundle in pool.FindAllLoadedBundles (
+				
+				delegate (ResourceBundle candidate)
+				{
+					if ((candidate.ResourceManager == manager) &&
+						(candidate.Name == bundleName) &&
+						(candidate.Module.Id == bundleModuleId))
+					{
+						return true;
+					}
+					else
+					{
+						return false;
+					}
+				}
+				
+				))
+			{
+				saverCallback (manager, bundle, ResourceSetMode.Write);
+			}
+		}
+
 		#region IResourceAccessor Members
 
 		/// <summary>
@@ -81,6 +114,25 @@ namespace Epsitec.Common.Support.ResourceAccessors
 		public virtual IDataBroker GetDataBroker(Types.StructuredData container, string fieldId)
 		{
 			return null;
+		}
+
+		/// <summary>
+		/// Gets a list of all available cultures for the specified accessor.
+		/// </summary>
+		/// <returns>A list of two letter ISO language names.</returns>
+		public IList<string> GetAvailableCultures()
+		{
+			List<string> list = new List<string> ();
+			string[] ids = this.resourceManager.GetBundleIds (this.GetBundleName (), ResourceLevel.All);
+
+			foreach (string id in ids)
+			{
+				list.Add (Resources.ExtractSuffix (id));
+			}
+
+			list.Sort ();
+
+			return list;
 		}
 
 		/// <summary>
@@ -426,6 +478,12 @@ namespace Epsitec.Common.Support.ResourceAccessors
 		/// 	<c>true</c> if data should be loaded from the field; otherwise, <c>false</c>.
 		/// </returns>
 		protected abstract bool FilterField(ResourceBundle.Field field, string fieldName);
+
+		/// <summary>
+		/// Gets the bundle name used by this accessor.
+		/// </summary>
+		/// <returns>The name of the bundle.</returns>
+		protected abstract string GetBundleName();
 
 		/// <summary>
 		/// Initializes the accessor and defines the resource manager.

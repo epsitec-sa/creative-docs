@@ -210,11 +210,13 @@ namespace Epsitec.Common.Designer
 
 		public void Save()
 		{
+			ResourceBundleBatchSaver saver = new ResourceBundleBatchSaver ();
 			//	Enregistre toutes les ressources.
 			foreach (ResourceAccess access in this.Accesses)
 			{
-				access.Save();
+				access.Save(saver);
 			}
+			saver.Execute ();
 		}
 
 		public string CheckMessage()
