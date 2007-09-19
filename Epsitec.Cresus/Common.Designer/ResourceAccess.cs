@@ -1313,16 +1313,26 @@ namespace Epsitec.Common.Designer
 			System.Globalization.CultureInfo culture = this.GetCulture(cultureName);
 			if (this.cultures.Contains (cultureName))
 			{
+				//	ATTENTION: Il faudra rajouter ici un garde-fou pour éviter de
+				//	détruire un bundle partagé entre plusieurs accesseurs (par ex.
+				//	suppression dans Commandes --> Caption sera affecté)
+
 				foreach (CultureMap item in this.accessor.Collection)
 				{
 					item.ClearCultureData (cultureName);
 				}
-				string bundleName = this.GetBundleName ();
-				ResourceBundle bundle = this.resourceManager.GetBundle (bundleName, ResourceLevel.Localized, culture);
-				this.batchSaver.DelaySave (this.resourceManager, bundle, ResourceSetMode.Remove);
+				this.DeleteBundle (culture, this.GetBundleName ());
 				this.cultures.Remove (cultureName);
 				this.SetGlobalDirty ();
 			}
+		}
+
+		#region Méthodes de manipulation bas niveau de ResourceBundle
+
+		private void DeleteBundle(System.Globalization.CultureInfo culture, string bundleName)
+		{
+			ResourceBundle bundle = this.resourceManager.GetBundle (bundleName, ResourceLevel.Localized, culture);
+			this.batchSaver.DelaySave (this.resourceManager, bundle, ResourceSetMode.Remove);
 		}
 
 		private ResourceBundle CreateEmptyBundle(ResourceLevel level, System.Globalization.CultureInfo culture)
@@ -1377,6 +1387,7 @@ namespace Epsitec.Common.Designer
 			this.accessor.Save (saver.DelaySave);
 		}
 
+		#endregion
 
 		protected void AddShortcutsCaptions(ResourceBundle bundle, List<ShortcutItem> list)
 		{
@@ -1410,7 +1421,6 @@ namespace Epsitec.Common.Designer
 			}
 #endif
 		}
-
 
 		protected void SetFilterBundles(string filter, Searcher.SearchingMode mode)
 		{

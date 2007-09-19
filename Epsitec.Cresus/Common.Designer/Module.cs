@@ -225,20 +225,27 @@ namespace Epsitec.Common.Designer
 				access.Save(this.batchSaver);
 			}
 
+			//	Passe en revue les bundles tels que les accesseurs les ont
+			//	préparés pour les optimiser :
 			foreach (ResourceBundle bundle in this.batchSaver.GetLiveBundles ())
 			{
-				this.AdjustBundleBeforeCommit (bundle);
+				this.OptimizeBundles (bundle);
 			}
 			
 			this.batchSaver.Execute ();
 		}
 
-		private void AdjustBundleBeforeCommit(ResourceBundle bundle)
+		private void OptimizeBundles(ResourceBundle bundle)
 		{
-			//	Ajuste un bundle avant sa sérialisation définitive.
+			//	Optimise un bundle; cela va supprimer un certain nombre
+			//	d'informations inutiles (par ex. des ressources secondaires
+			//	vides).
 
 			if (bundle.BasedOnPatchModule)
 			{
+				//	N'optimise pas les ressources d'un module de patch, car
+				//	l'optimisation ne peut se faire qu'après fusion.
+
 				return;
 			}
 			if ((bundle.Name == Resources.CaptionsBundleName) ||
