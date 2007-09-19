@@ -748,8 +748,8 @@ namespace Epsitec.Common.Designer.Viewers
 		public void DoDeleteCulture()
 		{
 			//	Supprime la culture courante.
-			ResourceBundle bundle = this.access.GetCultureBundle(this.secondaryCulture);
-			string question = string.Format(Res.Strings.Dialog.DeleteCulture.Question, Misc.CultureName(bundle.Culture));
+			System.Globalization.CultureInfo culture = this.access.GetCulture(this.secondaryCulture);
+			string question = string.Format(Res.Strings.Dialog.DeleteCulture.Question, Misc.CultureName(culture));
 			Common.Dialogs.DialogResult result = this.module.DesignerApplication.DialogQuestion(question);
 			if (result != Epsitec.Common.Dialogs.DialogResult.Yes)  return;
 

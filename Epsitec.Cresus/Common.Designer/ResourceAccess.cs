@@ -888,8 +888,16 @@ namespace Epsitec.Common.Designer
 		{
 			//	Retourne le nom d'une ressource, sans tenir compte du filtre.
 			//	La recherche s'effectue toujours dans la culture de base.
-			ResourceBundle.Field field = this.primaryBundle[druid];
-			return field.Name;
+			CultureMap item = this.accessor.Collection[druid];
+			
+			if (item == null)
+			{
+				return null;
+			}
+			else
+			{
+				return item.Name;
+			}
 		}
 
 
@@ -1243,55 +1251,41 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
-		public ResourceBundle GetCultureBundle(string cultureName)
+		public System.Globalization.CultureInfo GetCulture(string cultureName)
 		{
-			//	Cherche le bundle d'une culture.
-			if (cultureName == null)
+			if (string.IsNullOrEmpty (cultureName))
 			{
-				return this.primaryBundle;
+				return this.primaryCulture;
 			}
-			if (this.bundles == null)
+			else
 			{
-				return null;
+				return Resources.FindCultureInfo (cultureName);
 			}
-
-			System.Diagnostics.Debug.Assert(cultureName.Length == 2);
-			for (int b=0; b<this.bundles.Count; b++)
-			{
-				ResourceBundle bundle = this.bundles[b];
-				if (Misc.CultureBaseName(bundle.Culture) == cultureName)
-				{
-					return bundle;
-				}
-			}
-			return null;
 		}
 
 		public string GetBaseCultureName()
 		{
 			//	Retourne le nom de la culture de base.
-			return this.primaryBundle == null ? this.resourceManager.ActiveCulture.Name : this.primaryBundle.Culture.Name;
+			return this.primaryCulture.Name;
 		}
 
 		public List<string> GetSecondaryCultureNames()
 		{
 			//	Retourne la liste des cultures secondaires, triés par ordre alphabétique.
 			List<string> list = new List<string>();
-
-			if (this.bundles != null && this.bundles.Count > 1)
+			
+			foreach (string name in this.accessor.GetAvailableCultures ())
 			{
-				for (int b=0; b<this.bundles.Count; b++)
+				System.Globalization.CultureInfo culture = Resources.FindCultureInfo (name);
+				if (culture != null)
 				{
-					ResourceBundle bundle = this.bundles[b];
-					if (bundle != this.primaryBundle)
-					{
-						list.Add(bundle.Culture.Name);
-					}
+					list.Add (culture.Name);
 				}
-
-				list.Sort();
 			}
 
+			System.Diagnostics.Debug.Assert (!list.Contains (this.GetBaseCultureName ()));
+			list.Sort();
+			
 			return list;
 		}
 
@@ -1316,10 +1310,11 @@ namespace Epsitec.Common.Designer
 			//	Supprime une culture.
 			System.Diagnostics.Debug.Assert(this.bundles != null);
 			System.Diagnostics.Debug.Assert(cultureName.Length == 2);
-			ResourceBundle bundle = this.GetCultureBundle(cultureName);
-			if (bundle != null)
+			System.Globalization.CultureInfo culture = this.GetCulture(cultureName);
+			string bundleName = this.primaryBundle.Name;
+			
+			if (this.resourceManager.RemoveBundle(bundleName, ResourceLevel.Localized, culture))
 			{
-				this.resourceManager.RemoveBundle(this.GetBundleName(), ResourceLevel.Localized, bundle.Culture);
 				this.LoadBundles();
 				this.SetGlobalDirty();
 			}
@@ -1361,6 +1356,7 @@ namespace Epsitec.Common.Designer
 			this.bundles.LoadBundles(this.resourceManager.ActivePrefix, this.resourceManager.GetBundleIds(ids[0], ResourceLevel.All));
 
 			this.primaryBundle = this.bundles[ResourceLevel.Default];
+			this.primaryCulture = this.primaryBundle.Culture;
 		}
 
 		protected void CreateFirstField(ResourceBundle bundle, int localId, string name)
@@ -1928,6 +1924,7 @@ namespace Epsitec.Common.Designer
 		protected IList<string>								cultures;
 		protected ResourceBundleCollection					bundles;
 		protected ResourceBundle							primaryBundle;
+		protected System.Globalization.CultureInfo			primaryCulture;
 		protected List<Druid>								druidsIndex;
 		protected TypeCode									lastTypeCodeCreatated = TypeCode.String;
 		protected System.Type								lastTypeCodeSystem = null;

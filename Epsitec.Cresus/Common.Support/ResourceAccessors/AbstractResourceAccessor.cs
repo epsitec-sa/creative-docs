@@ -52,6 +52,9 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			string              bundleName     = this.GetBundleName ();
 			int                 bundleModuleId = manager.DefaultModuleId;
 
+			//	Find all resource bundles which match exactly what this accessor
+			//	usually works with, and save them.
+
 			foreach (ResourceBundle bundle in pool.FindAllLoadedBundles (
 				
 				delegate (ResourceBundle candidate)
