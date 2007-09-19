@@ -1306,22 +1306,6 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
-		private ResourceBundle CreateEmptyBundle(ResourceLevel level, System.Globalization.CultureInfo culture)
-		{
-			string prefix = this.resourceManager.ActivePrefix;
-			string bundleName = this.GetBundleName ();
-			string bundleType = this.GetBundleType ();
-			ResourceBundle bundle = ResourceBundle.Create (this.resourceManager, prefix, bundleName, level, culture);
-
-			bundle.DefineType (bundleType);
-			bundle.DefineModule (this.resourceManager.DefaultModuleInfo.FullId);
-
-			this.resourceManager.SetBundle (bundle, ResourceSetMode.InMemory);
-			this.batchSaver.DelaySave (this.resourceManager, bundle, ResourceSetMode.CreateOnly);
-
-			return bundle;
-		}
-
 		public void DeleteCulture(string cultureName)
 		{
 			//	Supprime une culture.
@@ -1341,7 +1325,23 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
-		protected void CreateEmptyBundle()
+		private ResourceBundle CreateEmptyBundle(ResourceLevel level, System.Globalization.CultureInfo culture)
+		{
+			string prefix = this.resourceManager.ActivePrefix;
+			string bundleName = this.GetBundleName ();
+			string bundleType = this.GetBundleType ();
+			ResourceBundle bundle = ResourceBundle.Create (this.resourceManager, prefix, bundleName, level, culture);
+
+			bundle.DefineType (bundleType);
+			bundle.DefineModule (this.resourceManager.DefaultModuleInfo.FullId);
+
+			this.resourceManager.SetBundle (bundle, ResourceSetMode.InMemory);
+			this.batchSaver.DelaySave (this.resourceManager, bundle, ResourceSetMode.CreateOnly);
+
+			return bundle;
+		}
+
+		private void CreateEmptyBundle()
 		{
 			if (this.type != Type.Panels)
 			{
@@ -1355,7 +1355,7 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
-		protected void LoadBundles()
+		private void LoadBundles()
 		{
 			System.Globalization.CultureInfo culture = Resources.FindCultureInfo (Misc.Cultures[0]);
 
@@ -1370,20 +1370,6 @@ namespace Epsitec.Common.Designer
 			}
 			
 			this.cultures = new List<string> (this.accessor.GetAvailableCultures ());
-		}
-
-		protected void CreateFirstField(ResourceBundle bundle, int localId, string name)
-		{
-			int moduleId = bundle.Module.Id;
-			int developerId = 0;  // [PA] provisoire
-			Druid newDruid = new Druid(moduleId, developerId, localId);
-
-			ResourceBundle.Field newField = bundle.CreateField(ResourceFieldType.Data);
-			newField.SetDruid(newDruid);
-			newField.SetName(name);
-			newField.SetStringValue("");
-
-			bundle.Add(newField);
 		}
 
 		private void SaveBundles(ResourceBundleBatchSaver saver)
