@@ -311,9 +311,8 @@ namespace Epsitec.Common.Designer
 		public void RunPanel(int index)
 		{
 			//	Montre une ressource 'Panel' dans une fenêtre.
-			ResourceBundle bundle = this.accessPanels.GetField(index, null, ResourceAccess.FieldType.Panel).Bundle;
 			string name = this.accessPanels.GetField(index, null, ResourceAccess.FieldType.Name).String;
-			UI.Panel panel = UI.Panel.GetPanel(bundle);
+			UI.Panel panel = this.accessPanels.GetPanel (index);
 
 			if (panel != null)
 			{

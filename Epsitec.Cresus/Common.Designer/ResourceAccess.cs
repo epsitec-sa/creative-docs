@@ -1380,6 +1380,10 @@ namespace Epsitec.Common.Designer
 
 		protected void AddShortcutsCaptions(ResourceBundle bundle, List<ShortcutItem> list)
 		{
+			//	TODO: écrire cela sans accéder aux ResourceBundle ni aux
+			//	ResourceBundle.Field !
+
+#if false
 			//	Ajoute tous les raccourcis définis dans la liste.
 			for (int i=0; i<bundle.FieldCount; i++)
 			{
@@ -1404,6 +1408,7 @@ namespace Epsitec.Common.Designer
 					}
 				}
 			}
+#endif
 		}
 
 
@@ -1411,10 +1416,10 @@ namespace Epsitec.Common.Designer
 		{
 			this.druidsIndex.Clear();
 
-#if false
 			//	TODO: écrire cela sans accéder aux ResourceBundle ni aux
 			//	ResourceBundle.Field !
 
+#if false
 			if ((mode&Searcher.SearchingMode.CaseSensitive) == 0)
 			{
 				filter = Searcher.RemoveAccent(filter.ToLower());
@@ -1548,27 +1553,31 @@ namespace Epsitec.Common.Designer
 		{
 			//	Retourne le UI.Panel associé à une ressource.
 			//	Si nécessaire, il est créé la première fois.
-			if (druid.IsValid)
-			{
-				CultureMap item = this.accessor.Collection[druid];
+			return this.GetPanel (this.accessor.Collection[druid]);
+		}
 
-				System.Diagnostics.Debug.Assert (item != null);
-				
-				StructuredData data = item.GetCultureData (Resources.DefaultTwoLetterISOLanguageName);
-				string xml = data.GetValue (Support.Res.Fields.ResourcePanel.XmlSource) as string;
-				
-				if (string.IsNullOrEmpty (xml))
-				{
-					return this.CreateEmptyPanel ();
-				}
-				else
-				{
-					return UI.Panel.DeserializePanel (xml, null, this.resourceManager);
-				}
+		public UI.Panel GetPanel(int index)
+		{
+			return this.GetPanel (this.accessor.Collection[index]);
+		}
+		
+		private UI.Panel GetPanel(CultureMap item)
+		{
+			if (item == null)
+			{
+				return null;
+			}
+
+			StructuredData data = item.GetCultureData (Resources.DefaultTwoLetterISOLanguageName);
+			string xml = data.GetValue (Support.Res.Fields.ResourcePanel.XmlSource) as string;
+
+			if (string.IsNullOrEmpty (xml))
+			{
+				return this.CreateEmptyPanel ();
 			}
 			else
 			{
-				return null;
+				return UI.Panel.DeserializePanel (xml, null, this.resourceManager);
 			}
 		}
 
