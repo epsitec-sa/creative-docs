@@ -450,6 +450,10 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 			else
 			{
+				//	TODO: on n'a plus le droit d'accéder à this.AbstractType, il
+				//	faut utiliser un accès à StructuredData !
+
+#if false
 				AbstractDateTimeType type = this.AbstractType as AbstractDateTimeType;
 
 				if (type is DateType)
@@ -467,6 +471,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 					System.DateTime dt = (System.DateTime) value;
 					field.Text = TypeEditorDateTime.DateTimeToDateTimeString(dt);
 				}
+#endif
 			}
 		}
 
@@ -478,6 +483,10 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 			else
 			{
+				//	TODO: on n'a plus le droit d'accéder à this.AbstractType, il
+				//	faut utiliser un accès à StructuredData !
+
+#if false
 				AbstractDateTimeType type = this.AbstractType as AbstractDateTimeType;
 
 				if (type is DateType)
@@ -492,6 +501,9 @@ namespace Epsitec.Common.Designer.MyWidgets
 				{
 					return TypeEditorDateTime.FieldToDateTime(field);
 				}
+#else
+				return false;
+#endif
 			}
 		}
 

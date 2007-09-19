@@ -430,7 +430,7 @@ namespace Epsitec.Common.Designer
 					{
 						public static string Any { get { return global::Epsitec.Common.Designer.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (123)); } }
 						public static string Begin { get { return global::Epsitec.Common.Designer.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (122)); } }
-						public static string Jocker { get { return global::Epsitec.Common.Designer.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (124)); } }
+						public static string Joker { get { return global::Epsitec.Common.Designer.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (124)); } }
 					}
 				}
 				

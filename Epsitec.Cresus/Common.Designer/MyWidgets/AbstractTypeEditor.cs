@@ -239,6 +239,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 			//	Met à jour le contenu de l'éditeur.
 		}
 
+#if false
+		//	TODO: supprimer
 		protected AbstractType AbstractType
 		{
 			//	Retourne les définitions du type, en fonction de l'index de la ressource
@@ -257,6 +259,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				return null;
 			}
 		}
+#endif
 
 		protected string SelectedName
 		{

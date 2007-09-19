@@ -249,7 +249,7 @@
   <data name="Dialog.Filter.Label" id="0P3">Critère</data>
   <data name="Dialog.Filter.Radio.Begin" id="0Q3">Au début</data>
   <data name="Dialog.Filter.Radio.Any" id="0R3">N&amp;apos;importe où</data>
-  <data name="Dialog.Filter.Radio.Jocker" id="0S3">Avec des jokers (*?)</data>
+  <data name="Dialog.Filter.Radio.Joker" id="0S3">Avec des jokers (*?)</data>
   <data name="Dialog.Filter.Check.Case" id="0T3">Respecter la casse</data>
   <data name="Dialog.Filter.Check.Word" id="0U3">Mots entiers</data>
   <data name="Dialog.Filter.Button.Insert" id="0V3">Filtrer</data>

@@ -74,14 +74,14 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.radioAny.TabIndex = tabIndex++;
 				this.radioAny.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 
-				this.radioJocker = new RadioButton(left);
-				this.radioJocker.Group = "Part";
-				this.radioJocker.Text = Res.Strings.Dialog.Filter.Radio.Jocker;
-				this.radioJocker.Dock = DockStyle.Top;
-				this.radioJocker.Margins = new Margins(0, 0, 0, 3);
-				this.radioJocker.TabIndex = tabIndex++;
-				this.radioJocker.TabNavigationMode = TabNavigationMode.ActivateOnTab;
-				this.radioJocker.ActiveStateChanged += new EventHandler(this.HandleRadioJockerActiveStateChanged);
+				this.radioJoker = new RadioButton(left);
+				this.radioJoker.Group = "Part";
+				this.radioJoker.Text = Res.Strings.Dialog.Filter.Radio.Joker;
+				this.radioJoker.Dock = DockStyle.Top;
+				this.radioJoker.Margins = new Margins(0, 0, 0, 3);
+				this.radioJoker.TabIndex = tabIndex++;
+				this.radioJoker.TabNavigationMode = TabNavigationMode.ActivateOnTab;
+				this.radioJoker.ActiveStateChanged += new EventHandler(this.HandleRadioJokerActiveStateChanged);
 
 				//	Boutons à cocher de droite.
 				Widget right = new Widget(main);
@@ -161,9 +161,9 @@ namespace Epsitec.Common.Designer.Dialogs
 			this.OnClosed();
 		}
 
-		void HandleRadioJockerActiveStateChanged(object sender)
+		void HandleRadioJokerActiveStateChanged(object sender)
 		{
-			this.checkWord.Enable = (this.radioJocker.ActiveState == ActiveState.No);
+			this.checkWord.Enable = (this.radioJoker.ActiveState == ActiveState.No);
 		}
 
 		private void HandleButtonFilterClicked(object sender, MessageEventArgs e)
@@ -173,7 +173,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 			Searcher.SearchingMode mode = Searcher.SearchingMode.None;
 			if (this.radioBegin.ActiveState  == ActiveState.Yes)  mode |= Searcher.SearchingMode.AtBeginning;
-			if (this.radioJocker.ActiveState == ActiveState.Yes)  mode |= Searcher.SearchingMode.Jocker;
+			if (this.radioJoker.ActiveState == ActiveState.Yes)  mode |= Searcher.SearchingMode.Joker;
 			if (this.checkCase.ActiveState   == ActiveState.Yes)  mode |= Searcher.SearchingMode.CaseSensitive;
 			if (this.checkWord.ActiveState   == ActiveState.Yes)  mode |= Searcher.SearchingMode.WholeWord;
 			module.Modifier.ActiveViewer.DoFilter(this.fieldFilter.Text, mode);
@@ -193,7 +193,7 @@ namespace Epsitec.Common.Designer.Dialogs
 		protected TextFieldCombo				fieldFilter;
 		protected RadioButton					radioBegin;
 		protected RadioButton					radioAny;
-		protected RadioButton					radioJocker;
+		protected RadioButton					radioJoker;
 		protected CheckButton					checkCase;
 		protected CheckButton					checkWord;
 	}

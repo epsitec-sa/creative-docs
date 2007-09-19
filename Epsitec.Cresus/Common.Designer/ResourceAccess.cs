@@ -171,7 +171,7 @@ namespace Epsitec.Common.Designer
 					return many ? Res.Strings.BundleType.Panels : Res.Strings.BundleType.Panel;
 
 				case Type.Entities:
-					return many ? "Entités" : "Entité";
+					return many ? "Entités" : "Entité";	//	TODO: ressources
 			}
 
 			return "?";
@@ -605,7 +605,7 @@ namespace Epsitec.Common.Designer
 				}
 
 				this.collectionViewRegex = null;
-				if ((this.collectionViewMode&Searcher.SearchingMode.Jocker) != 0)
+				if ((this.collectionViewMode&Searcher.SearchingMode.Joker) != 0)
 				{
 					this.collectionViewRegex = RegexFactory.FromSimpleJoker(this.collectionViewFilter, RegexFactory.Options.None);
 				}
@@ -620,7 +620,7 @@ namespace Epsitec.Common.Designer
 			
 			if (!string.IsNullOrEmpty(this.collectionViewFilter))
 			{
-				if ((this.collectionViewMode&Searcher.SearchingMode.Jocker) != 0)
+				if ((this.collectionViewMode&Searcher.SearchingMode.Joker) != 0)
 				{
 					string text = item.Name;
 					if ((this.collectionViewMode&Searcher.SearchingMode.CaseSensitive) == 0)
@@ -1426,7 +1426,7 @@ namespace Epsitec.Common.Designer
 			}
 
 			Regex regex = null;
-			if ((mode&Searcher.SearchingMode.Jocker) != 0)
+			if ((mode&Searcher.SearchingMode.Joker) != 0)
 			{
 				regex = RegexFactory.FromSimpleJoker(filter, RegexFactory.Options.None);
 			}
@@ -1437,7 +1437,7 @@ namespace Epsitec.Common.Designer
 
 				if (filter != "")
 				{
-					if ((mode&Searcher.SearchingMode.Jocker) != 0)
+					if ((mode&Searcher.SearchingMode.Joker) != 0)
 					{
 						string text = name;
 						if ((mode&Searcher.SearchingMode.CaseSensitive) == 0)
@@ -1786,17 +1786,13 @@ namespace Epsitec.Common.Designer
 				this.stringCollection = value;
 			}
 
-			public Field(ResourceBundle value)
-			{
-				this.type = Type.Bundle;
-				this.bundle = value;
-			}
-
+#if false
 			public Field(AbstractType value)
 			{
 				this.type = Type.AbstractType;
 				this.abstractType = value;
 			}
+#endif
 
 			public Type FieldType
 			{
@@ -1824,15 +1820,7 @@ namespace Epsitec.Common.Designer
 				}
 			}
 
-			public ResourceBundle Bundle
-			{
-				get
-				{
-					System.Diagnostics.Debug.Assert(this.type == Type.Bundle);
-					return this.bundle;
-				}
-			}
-
+#if false
 			public AbstractType AbstractType
 			{
 				get
@@ -1841,12 +1829,12 @@ namespace Epsitec.Common.Designer
 					return this.abstractType;
 				}
 			}
+#endif
 
 			protected Type type;
 			protected string									stringValue;
 			protected ICollection<string>						stringCollection;
-			protected ResourceBundle							bundle;
-			protected AbstractType								abstractType;
+//-			protected AbstractType								abstractType;
 		}
 		#endregion
 
