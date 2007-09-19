@@ -187,7 +187,8 @@ namespace Epsitec.Common.Support
 
 			for (int i = 0; i < this.map.Length; i++)
 			{
-				if (this.map[i].Key == twoLetterISOLanguageName)
+				if ((this.map[i].Key == twoLetterISOLanguageName) &&
+					(this.map[i].Value != null))
 				{
 					return true;
 				}
@@ -210,13 +211,16 @@ namespace Epsitec.Common.Support
 
 				for (int i = 0; i < this.map.Length; i++)
 				{
-					if (this.map[i].Key == Resources.DefaultTwoLetterISOLanguageName)
+					if (this.map[i].Value != null)
 					{
-						hasDefault = true;
-					}
-					else
-					{
-						yield return this.map[i].Key;
+						if (this.map[i].Key == Resources.DefaultTwoLetterISOLanguageName)
+						{
+							hasDefault = true;
+						}
+						else
+						{
+							yield return this.map[i].Key;
+						}
 					}
 				}
 
@@ -247,7 +251,8 @@ namespace Epsitec.Common.Support
 			{
 				for (int i = 0; i < this.map.Length; i++)
 				{
-					if (this.map[i].Key == twoLetterISOLanguageName)
+					if ((this.map[i].Key == twoLetterISOLanguageName) &&
+						(this.map[i].Value != null))
 					{
 						return this.map[i].Value;
 					}
@@ -322,19 +327,58 @@ namespace Epsitec.Common.Support
 			else
 			{
 				this.CheckForDuplicates (twoLetterISOLanguageName);
+
+				bool insert = true;
+
+				//	First, try to re-use an empty slot in the map, if there is
+				//	one (the value is null, in that case) :
 				
-				int pos = this.map.Length;
+				for (int i = 0; i < this.map.Length; i++)
+				{
+					if (this.map[i].Key == twoLetterISOLanguageName)
+					{
+						this.map[i] = new KeyValuePair<string, StructuredData> (twoLetterISOLanguageName, data);
+						insert = false;
+					}
+				}
 
-				KeyValuePair<string, Types.StructuredData>[] temp = this.map;
-				KeyValuePair<string, Types.StructuredData>[] copy = new KeyValuePair<string, Types.StructuredData>[pos+1];
+				//	If no empty slot was found, the map must be resized to fit
+				//	the needs of an extra culture :
 
-				temp.CopyTo (copy, 0);
-				copy[pos] = new KeyValuePair<string, Types.StructuredData> (twoLetterISOLanguageName, data);
+				if (insert)
+				{
+					int pos = this.map.Length;
 
-				this.map = copy;
+					KeyValuePair<string, Types.StructuredData>[] temp = this.map;
+					KeyValuePair<string, Types.StructuredData>[] copy = new KeyValuePair<string, Types.StructuredData>[pos+1];
+
+					temp.CopyTo (copy, 0);
+					copy[pos] = new KeyValuePair<string, Types.StructuredData> (twoLetterISOLanguageName, data);
+
+					this.map = copy;
+				}
 			}
 
 			data.ValueChanged += this.HandleDataValueChanged;
+		}
+
+		/// <summary>
+		/// Clears a specific culture data.
+		/// </summary>
+		/// <param name="twoLetterISOLanguageName">The two letter ISO language name.</param>
+		public void ClearCultureData(string twoLetterISOLanguageName)
+		{
+			if (this.map != null)
+			{
+				for (int i = 0; i < this.map.Length; i++)
+				{
+					if (this.map[i].Key == twoLetterISOLanguageName)
+					{
+						this.map[i] = new KeyValuePair<string, StructuredData> (twoLetterISOLanguageName, null);
+						break;
+					}
+				}
+			}
 		}
 
 		/// <summary>
@@ -366,7 +410,8 @@ namespace Epsitec.Common.Support
 			{
 				for (int i = 0; i < this.map.Length; i++)
 				{
-					if (this.map[i].Key == twoLetterISOLanguageName)
+					if ((this.map[i].Key == twoLetterISOLanguageName) &&
+						(this.map[i].Value != null))
 					{
 						throw new System.InvalidOperationException ("Duplicate insertion");
 					}

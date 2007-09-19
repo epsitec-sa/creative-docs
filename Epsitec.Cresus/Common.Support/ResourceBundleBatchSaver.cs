@@ -19,6 +19,7 @@ namespace Epsitec.Common.Support
 		public ResourceBundleBatchSaver()
 		{
 			this.bundles = new Dictionary<ResourceBundle, ResourceSetMode> ();
+			this.blackList = new List<ResourceBundle> ();
 		}
 
 		/// <summary>
@@ -37,16 +38,41 @@ namespace Epsitec.Common.Support
 			switch (mode)
 			{
 				case ResourceSetMode.CreateOnly:
+					if (this.blackList.Contains (bundle))
+					{
+						//	The bundle was on a black list (it was deleted before),
+						//	but since we re-create it now, we can safely remove it
+						//	from the black list :
+
+						this.blackList.Remove (bundle);
+					}
+					
+					this.bundles[bundle] = ResourceSetMode.Write;
+					break;
+				
 				case ResourceSetMode.UpdateOnly:
 				case ResourceSetMode.Write:
-				case ResourceSetMode.Remove:
-					if (this.bundles.ContainsKey (bundle))
+					if (this.blackList.Contains (bundle))
 					{
-						System.Diagnostics.Debug.Assert (this.bundles[bundle] == mode);
+						//	Nothing to do, the bundle is on a black list and should
+						//	never be written back to disk...
 					}
 					else
 					{
-						this.bundles.Add (bundle, mode);
+						this.bundles[bundle] = ResourceSetMode.Write;
+					}
+					break;
+
+				case ResourceSetMode.Remove:
+					if (this.blackList.Contains (bundle))
+					{
+						//	Nothing to do, the bundle has already been added to
+						//	the black list, so it must have been deleted before.
+					}
+					else
+					{
+						this.blackList.Add (bundle);
+						this.bundles[bundle] = ResourceSetMode.Remove;
 					}
 					break;
 
@@ -70,8 +96,10 @@ namespace Epsitec.Common.Support
 			}
 
 			this.bundles.Clear ();
+			this.blackList.Clear ();
 		}
 
 		Dictionary<ResourceBundle, ResourceSetMode> bundles;
+		List<ResourceBundle> blackList;
 	}
 }

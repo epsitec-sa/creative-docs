@@ -58,6 +58,7 @@ namespace Epsitec.Common.Designer
 			//	sauf pour les ressources Captions, Commands, Types et Values.
 			this.type = type;
 			this.resourceManager = module.ResourceManager;
+			this.batchSaver = module.BatchSaver;
 			this.moduleInfo = moduleInfo;
 			this.designerApplication = designerApplication;
 
@@ -1274,7 +1275,7 @@ namespace Epsitec.Common.Designer
 			//	Retourne la liste des cultures secondaires, triés par ordre alphabétique.
 			List<string> list = new List<string>();
 			
-			foreach (string name in this.accessor.GetAvailableCultures ())
+			foreach (string name in this.cultures)
 			{
 				System.Globalization.CultureInfo culture = Resources.FindCultureInfo (name);
 				if (culture != null)
@@ -1292,37 +1293,47 @@ namespace Epsitec.Common.Designer
 		public void CreateCulture(string cultureName)
 		{
 			//	Crée un nouveau bundle pour une culture donnée.
-			System.Diagnostics.Debug.Assert(this.bundles != null);
 			System.Diagnostics.Debug.Assert(cultureName.Length == 2);
-			string prefix = this.resourceManager.ActivePrefix;
-			System.Globalization.CultureInfo culture = Resources.FindCultureInfo(cultureName);
-			ResourceBundle bundle = ResourceBundle.Create(this.resourceManager, prefix, this.bundles.Name, ResourceLevel.Localized, culture);
 
-			bundle.DefineType(this.GetBundleType());
-			this.resourceManager.SetBundle(bundle, ResourceSetMode.CreateOnly);
+			if (!this.cultures.Contains (cultureName))
+			{
+				string prefix = this.resourceManager.ActivePrefix;
+				string bundleName = this.GetBundleName ();
+				System.Globalization.CultureInfo culture = Resources.FindCultureInfo (cultureName);
+				ResourceBundle bundle = ResourceBundle.Create (this.resourceManager, prefix, bundleName, ResourceLevel.Localized, culture);
 
-			this.LoadBundles();
-			this.SetGlobalDirty();
+				bundle.DefineType (this.GetBundleType ());
+				this.resourceManager.SetBundle (bundle, ResourceSetMode.InMemory);
+				this.batchSaver.DelaySave (this.resourceManager, bundle, ResourceSetMode.CreateOnly);
+
+				this.cultures.Add (cultureName);
+				this.cultures.Sort ();
+				this.SetGlobalDirty ();
+			}
 		}
 
 		public void DeleteCulture(string cultureName)
 		{
 			//	Supprime une culture.
-			System.Diagnostics.Debug.Assert(this.bundles != null);
 			System.Diagnostics.Debug.Assert(cultureName.Length == 2);
 			System.Globalization.CultureInfo culture = this.GetCulture(cultureName);
-			string bundleName = this.primaryBundle.Name;
-			
-			if (this.resourceManager.RemoveBundle(bundleName, ResourceLevel.Localized, culture))
+			if (this.cultures.Contains (cultureName))
 			{
-				this.LoadBundles();
-				this.SetGlobalDirty();
+				foreach (CultureMap item in this.accessor.Collection)
+				{
+					item.ClearCultureData (cultureName);
+				}
+				string bundleName = this.GetBundleName ();
+				ResourceBundle bundle = this.resourceManager.GetBundle (bundleName, ResourceLevel.Localized, culture);
+				this.batchSaver.DelaySave (this.resourceManager, bundle, ResourceSetMode.Remove);
+				this.cultures.Remove (cultureName);
+				this.SetGlobalDirty ();
 			}
 		}
 
 		protected void LoadBundles()
 		{
-			this.cultures = this.accessor.GetAvailableCultures ();
+			this.cultures = new List<string> (this.accessor.GetAvailableCultures ());
 
 			if (this.type == Type.Panels)
 			{
@@ -1334,7 +1345,7 @@ namespace Epsitec.Common.Designer
 			{
 				//	Crée un premier bundle vide.
 				string prefix = this.resourceManager.ActivePrefix;
-				System.Globalization.CultureInfo culture = this.BaseCulture;
+				System.Globalization.CultureInfo culture = Resources.FindCultureInfo (Misc.Cultures[0]);
 				ResourceBundle bundle = ResourceBundle.Create(this.resourceManager, prefix, this.GetBundleName(), ResourceLevel.Default, culture);
 				bundle.DefineType(this.GetBundleType());
 
@@ -1407,7 +1418,7 @@ namespace Epsitec.Common.Designer
 							//	Si une ressource est vide dans un bundle autre que le bundle
 							//	par défaut, il faut la supprimer.
 							if ((ResourceBundle.Field.IsNullString (field.AsString)) &&
-							(ResourceBundle.Field.IsNullString (field.About)))
+								(ResourceBundle.Field.IsNullString (field.About)))
 							{
 								bundle.Remove (i);
 								i--;
@@ -1632,26 +1643,6 @@ namespace Epsitec.Common.Designer
 		}
 
 
-		protected System.Globalization.CultureInfo BaseCulture
-		{
-			//	Retourne la culture de base, définie par les ressources "Strings" ou "Captions".
-			get
-			{
-				if (this.bundles == null)
-				{
-					//	S'il n'existe aucun bundle, retourne la culture la plus importante.
-					return new System.Globalization.CultureInfo(Misc.Cultures[0]);
-				}
-				else
-				{
-					//	Retourne la culture du bundle par défaut.
-					ResourceBundle res = this.bundles[ResourceLevel.Default];
-					return res.Culture;
-				}
-			}
-		}
-
-
 		protected string GetBundleName()
 		{
 			//	Retourne le nom du bundle (pour Common.Support & Cie) en fonction du type.
@@ -1661,13 +1652,19 @@ namespace Epsitec.Common.Designer
 					return "Strings";
 
 				case Type.Captions:
+				case Type.Commands:
+				case Type.Entities:
+				case Type.Fields:
+				case Type.Types:
+				case Type.Values:
 					return "Captions";
 
 				case Type.Panels:
-					return "Panel";
-			}
+					return null;
 
-			return null;
+				default:
+					throw new System.NotImplementedException ();
+			}
 		}
 
 		protected string GetBundleType()
@@ -1679,13 +1676,19 @@ namespace Epsitec.Common.Designer
 					return "String";
 
 				case Type.Captions:
+				case Type.Commands:
+				case Type.Entities:
+				case Type.Fields:
+				case Type.Types:
+				case Type.Values:
 					return "Caption";
 
 				case Type.Panels:
 					return "Panel";
+				
+				default:
+					throw new System.NotImplementedException ();
 			}
-
-			return null;
 		}
 
 
@@ -1908,6 +1911,7 @@ namespace Epsitec.Common.Designer
 
 		protected Type										type;
 		protected ResourceManager							resourceManager;
+		protected ResourceBundleBatchSaver					batchSaver;
 		protected ResourceModuleId							moduleInfo;
 		protected DesignerApplication						designerApplication;
 		protected bool										isGlobalDirty = false;
@@ -1921,7 +1925,7 @@ namespace Epsitec.Common.Designer
 		protected Regex										collectionViewRegex;
 		protected Types.SortDescription[]					collectionViewInitialSorts;
 
-		protected IList<string>								cultures;
+		protected List<string>								cultures;
 		protected ResourceBundleCollection					bundles;
 		protected ResourceBundle							primaryBundle;
 		protected System.Globalization.CultureInfo			primaryCulture;

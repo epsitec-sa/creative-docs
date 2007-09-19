@@ -15,6 +15,7 @@ namespace Epsitec.Common.Designer
 			this.designerApplication = designerApplication;
 			this.mode = mode;
 			this.moduleInfo = moduleId;
+			this.batchSaver = new ResourceBundleBatchSaver ();
 
 			this.resourceManager = new ResourceManager(this.designerApplication.ResourceManagerPool, moduleId);
 			this.resourceManager.DefineDefaultModuleName(this.moduleInfo.Name);
@@ -77,6 +78,14 @@ namespace Epsitec.Common.Designer
 			get
 			{
 				return this.modifier;
+			}
+		}
+
+		public ResourceBundleBatchSaver BatchSaver
+		{
+			get
+			{
+				return this.batchSaver;
 			}
 		}
 
@@ -210,13 +219,12 @@ namespace Epsitec.Common.Designer
 
 		public void Save()
 		{
-			ResourceBundleBatchSaver saver = new ResourceBundleBatchSaver ();
 			//	Enregistre toutes les ressources.
 			foreach (ResourceAccess access in this.Accesses)
 			{
-				access.Save(saver);
+				access.Save(this.batchSaver);
 			}
-			saver.Execute ();
+			this.batchSaver.Execute ();
 		}
 
 		public string CheckMessage()
@@ -327,6 +335,7 @@ namespace Epsitec.Common.Designer
 		}
 
 
+		protected ResourceBundleBatchSaver	batchSaver;
 		protected DesignerApplication		designerApplication;
 		protected DesignerMode				mode;
 		protected ResourceModuleId			moduleInfo;
