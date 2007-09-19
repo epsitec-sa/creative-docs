@@ -170,7 +170,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			//	with ids defined in any other accessor attached to the same bundle
 			//	as the current accessor :
 			
-			return AbstractResourceAccessor.CreateId (accessors.AllCollections, bundle);
+			return AbstractResourceAccessor.CreateId (accessors.AllCollections, this.ResourceManager, bundle);
 		}
 
 		/// <summary>

@@ -139,7 +139,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 				bundle2 = this.ResourceManager.GetManagerForReferenceModule ().GetBundle (this.GetBundleName (), ResourceLevel.Default);
 			}
 			
-			return AbstractResourceAccessor.CreateId (this.Collection, bundle1, bundle2);
+			return AbstractResourceAccessor.CreateId (this.Collection, this.ResourceManager, bundle1, bundle2);
 		}
 
 		/// <summary>

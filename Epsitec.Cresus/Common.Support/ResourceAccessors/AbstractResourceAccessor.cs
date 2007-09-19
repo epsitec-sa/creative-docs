@@ -273,9 +273,9 @@ namespace Epsitec.Common.Support.ResourceAccessors
 		/// which contains ids that are already in use.</param>
 		/// <param name="bundles">The bundle(s) where to look for existing ids.</param>
 		/// <returns>A unique id.</returns>
-		internal static Druid CreateId(IEnumerable<CultureMap> collection, params ResourceBundle[] bundles)
+		internal static Druid CreateId(IEnumerable<CultureMap> collection, ResourceManager manager, params ResourceBundle[] bundles)
 		{
-			return AbstractResourceAccessor.CreateId (collection, -1, bundles);
+			return AbstractResourceAccessor.CreateId (collection, manager.DefaultModuleId, bundles);
 		}
 		
 		/// <summary>

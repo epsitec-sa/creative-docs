@@ -224,7 +224,54 @@ namespace Epsitec.Common.Designer
 			{
 				access.Save(this.batchSaver);
 			}
+
+			foreach (ResourceBundle bundle in this.batchSaver.GetLiveBundles ())
+			{
+				this.AdjustBundleBeforeCommit (bundle);
+			}
+			
 			this.batchSaver.Execute ();
+		}
+
+		private void AdjustBundleBeforeCommit(ResourceBundle bundle)
+		{
+			//	Ajuste un bundle avant sa sérialisation définitive.
+
+			if (bundle.BasedOnPatchModule)
+			{
+				return;
+			}
+			if ((bundle.Name == Resources.CaptionsBundleName) ||
+				(bundle.Name == Resources.StringsBundleName))
+			{
+				for (int i=0; i<bundle.FieldCount; i++)
+				{
+					ResourceBundle.Field field = bundle[i];
+
+					if (field.About == "" || ResourceBundle.Field.IsNullString (field.About))
+					{
+						//	Si un champ contient un commentaire vide et qu'il
+						//	s'agit d'une ressource d'un module de référence,
+						//	alors on peut supprimer complètement son contenu.
+
+						field.SetAbout (null);
+					}
+
+					if (bundle.ResourceLevel != ResourceLevel.Default)
+					{
+						System.Diagnostics.Debug.Assert (field.Name == null);
+
+						//	Si une ressource est vide dans un bundle autre que le bundle
+						//	par défaut, il faut la supprimer.
+						if ((ResourceBundle.Field.IsNullString (field.AsString)) &&
+							(ResourceBundle.Field.IsNullString (field.About)))
+						{
+							bundle.Remove (i);
+							i--;
+						}
+					}
+				}
+			}
 		}
 
 		public string CheckMessage()

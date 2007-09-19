@@ -237,6 +237,7 @@ namespace Epsitec.Common.Designer
 
 		public void Load()
 		{
+			this.CreateEmptyBundle ();
 			this.accessor.Load(this.resourceManager);
 			this.collectionView.MoveCurrentToFirst();
 			this.LoadBundles();
@@ -250,7 +251,6 @@ namespace Epsitec.Common.Designer
 		public void Save(ResourceBundleBatchSaver saver)
 		{
 			//	Enregistre les modifications des ressources.
-			this.AdjustBundlesBeforeSave();
 			this.SaveBundles(saver);
 			this.ClearGlobalDirty();
 		}
@@ -1264,7 +1264,7 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
-		public string GetBaseCultureName()
+		public string GetPrimaryCultureName()
 		{
 			//	Retourne le nom de la culture de base.
 			return this.primaryCulture.Name;
@@ -1284,7 +1284,7 @@ namespace Epsitec.Common.Designer
 				}
 			}
 
-			System.Diagnostics.Debug.Assert (!list.Contains (this.GetBaseCultureName ()));
+			System.Diagnostics.Debug.Assert (!list.Contains (this.GetPrimaryCultureName ()));
 			list.Sort();
 			
 			return list;
@@ -1297,19 +1297,29 @@ namespace Epsitec.Common.Designer
 
 			if (!this.cultures.Contains (cultureName))
 			{
-				string prefix = this.resourceManager.ActivePrefix;
-				string bundleName = this.GetBundleName ();
 				System.Globalization.CultureInfo culture = Resources.FindCultureInfo (cultureName);
-				ResourceBundle bundle = ResourceBundle.Create (this.resourceManager, prefix, bundleName, ResourceLevel.Localized, culture);
-
-				bundle.DefineType (this.GetBundleType ());
-				this.resourceManager.SetBundle (bundle, ResourceSetMode.InMemory);
-				this.batchSaver.DelaySave (this.resourceManager, bundle, ResourceSetMode.CreateOnly);
+				this.CreateEmptyBundle (ResourceLevel.Localized, culture);
 
 				this.cultures.Add (cultureName);
 				this.cultures.Sort ();
 				this.SetGlobalDirty ();
 			}
+		}
+
+		private ResourceBundle CreateEmptyBundle(ResourceLevel level, System.Globalization.CultureInfo culture)
+		{
+			string prefix = this.resourceManager.ActivePrefix;
+			string bundleName = this.GetBundleName ();
+			string bundleType = this.GetBundleType ();
+			ResourceBundle bundle = ResourceBundle.Create (this.resourceManager, prefix, bundleName, level, culture);
+
+			bundle.DefineType (bundleType);
+			bundle.DefineModule (this.resourceManager.DefaultModuleInfo.FullId);
+
+			this.resourceManager.SetBundle (bundle, ResourceSetMode.InMemory);
+			this.batchSaver.DelaySave (this.resourceManager, bundle, ResourceSetMode.CreateOnly);
+
+			return bundle;
 		}
 
 		public void DeleteCulture(string cultureName)
@@ -1331,43 +1341,35 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
+		protected void CreateEmptyBundle()
+		{
+			if (this.type != Type.Panels)
+			{
+				System.Globalization.CultureInfo culture = Resources.FindCultureInfo (Misc.Cultures[0]);
+				ResourceBundle bundle = this.resourceManager.GetBundle (this.GetBundleName (), ResourceLevel.Default);
+
+				if (bundle == null)
+				{
+					bundle = this.CreateEmptyBundle (ResourceLevel.Default, culture);
+				}
+			}
+		}
+
 		protected void LoadBundles()
 		{
-			this.cultures = new List<string> (this.accessor.GetAvailableCultures ());
+			System.Globalization.CultureInfo culture = Resources.FindCultureInfo (Misc.Cultures[0]);
 
 			if (this.type == Type.Panels)
 			{
-				return;
+				this.primaryCulture = culture;
+			}
+			else
+			{
+				ResourceBundle bundle = this.resourceManager.GetBundle (this.GetBundleName (), ResourceLevel.Default);
+				this.primaryCulture = bundle.Culture;
 			}
 			
-			string[] ids = this.resourceManager.GetBundleIds("*", this.GetBundleType(), ResourceLevel.Default);
-			if (ids.Length == 0)
-			{
-				//	Crée un premier bundle vide.
-				string prefix = this.resourceManager.ActivePrefix;
-				System.Globalization.CultureInfo culture = Resources.FindCultureInfo (Misc.Cultures[0]);
-				ResourceBundle bundle = ResourceBundle.Create(this.resourceManager, prefix, this.GetBundleName(), ResourceLevel.Default, culture);
-				bundle.DefineType(this.GetBundleType());
-
-				//	Crée un premier champ vide avec un premier Druid.
-				//	Ceci est nécessaire, car il n'existe pas de commande pour créer un champ à partir
-				//	de rien, mais seulement une commande pour dupliquer un champ existant.
-				this.CreateFirstField(bundle, 0, Res.Strings.Viewers.Panels.New);
-
-				//	Sérialise le bundle et son premier champ sur disque. Il serait préférable de
-				//	faire ceci lors du Save, mais cette situation étant exceptionelle, il est
-				//	acceptable de faire ainsi !
-				this.resourceManager.SetBundle(bundle, ResourceSetMode.CreateOnly);
-
-				ids = this.resourceManager.GetBundleIds("*", this.GetBundleType(), ResourceLevel.Default);
-				System.Diagnostics.Debug.Assert(ids.Length != 0);
-			}
-
-			this.bundles = new ResourceBundleCollection(this.resourceManager);
-			this.bundles.LoadBundles(this.resourceManager.ActivePrefix, this.resourceManager.GetBundleIds(ids[0], ResourceLevel.All));
-
-			this.primaryBundle = this.bundles[ResourceLevel.Default];
-			this.primaryCulture = this.primaryBundle.Culture;
+			this.cultures = new List<string> (this.accessor.GetAvailableCultures ());
 		}
 
 		protected void CreateFirstField(ResourceBundle bundle, int localId, string name)
@@ -1382,51 +1384,6 @@ namespace Epsitec.Common.Designer
 			newField.SetStringValue("");
 
 			bundle.Add(newField);
-		}
-
-		protected void AdjustBundlesBeforeSave()
-		{
-			//	Ajuste les bundles avant une sérialisation.
-			if (this.bundles == null)
-			{
-				return;
-			}
-
-			foreach (ResourceBundle bundle in this.bundles)
-			{
-				bool patchModule = bundle.BasedOnPatchModule;
-
-				for (int i=0; i<bundle.FieldCount; i++)
-				{
-					ResourceBundle.Field field = bundle[i];
-
-					if (!patchModule)
-					{
-						if (field.About == "" || ResourceBundle.Field.IsNullString (field.About))
-						{
-							//	Si un champ contient un commentaire vide et qu'il
-							//	s'agit d'une ressource d'un module de référence,
-							//	alors on peut supprimer complètement son contenu.
-
-							field.SetAbout(null);
-						}
-						
-						if (bundle != this.primaryBundle)
-						{
-							System.Diagnostics.Debug.Assert (field.Name == null);
-
-							//	Si une ressource est vide dans un bundle autre que le bundle
-							//	par défaut, il faut la supprimer.
-							if ((ResourceBundle.Field.IsNullString (field.AsString)) &&
-								(ResourceBundle.Field.IsNullString (field.About)))
-							{
-								bundle.Remove (i);
-								i--;
-							}
-						}
-					}
-				}
-			}
 		}
 
 		private void SaveBundles(ResourceBundleBatchSaver saver)
@@ -1467,6 +1424,10 @@ namespace Epsitec.Common.Designer
 		protected void SetFilterBundles(string filter, Searcher.SearchingMode mode)
 		{
 			this.druidsIndex.Clear();
+
+#if false
+			//	TODO: écrire cela sans accéder aux ResourceBundle ni aux
+			//	ResourceBundle.Field !
 
 			if ((mode&Searcher.SearchingMode.CaseSensitive) == 0)
 			{
@@ -1514,6 +1475,7 @@ namespace Epsitec.Common.Designer
 				Druid fullDruid = new Druid(field.Id, this.primaryBundle.Module.Id);
 				this.druidsIndex.Add(fullDruid);
 			}
+#endif
 		}
 
 
@@ -1926,8 +1888,6 @@ namespace Epsitec.Common.Designer
 		protected Types.SortDescription[]					collectionViewInitialSorts;
 
 		protected List<string>								cultures;
-		protected ResourceBundleCollection					bundles;
-		protected ResourceBundle							primaryBundle;
 		protected System.Globalization.CultureInfo			primaryCulture;
 		protected List<Druid>								druidsIndex;
 		protected TypeCode									lastTypeCodeCreatated = TypeCode.String;

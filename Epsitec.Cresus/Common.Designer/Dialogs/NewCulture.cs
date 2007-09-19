@@ -91,7 +91,7 @@ namespace Epsitec.Common.Designer.Dialogs
 		{
 			//	Met à jour la ScrollList des cultures, en enlevant celles qui font déjà
 			//	partie du bundle.
-			string baseCulture = this.access.GetBaseCultureName();
+			string baseCulture = this.access.GetPrimaryCultureName();
 			List<string> secondaryCultures = this.access.GetSecondaryCultureNames();
 
 			//	Construit la liste des cultures inexistantes dans l'accès.

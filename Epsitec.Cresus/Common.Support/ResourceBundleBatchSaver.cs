@@ -99,6 +99,24 @@ namespace Epsitec.Common.Support
 			this.blackList.Clear ();
 		}
 
+		/// <summary>
+		/// Gets an enumeration of all the live bundles.
+		/// </summary>
+		/// <returns>An enumeration of all the live bundles.</returns>
+		public IEnumerable<ResourceBundle> GetLiveBundles()
+		{
+			foreach (KeyValuePair<ResourceBundle, ResourceSetMode> pair in this.bundles)
+			{
+				ResourceBundle  bundle = pair.Key;
+				ResourceSetMode mode   = pair.Value;
+				
+				if (mode != ResourceSetMode.Remove)
+				{
+					yield return bundle;
+				}
+			}
+		}
+
 		Dictionary<ResourceBundle, ResourceSetMode> bundles;
 		List<ResourceBundle> blackList;
 	}

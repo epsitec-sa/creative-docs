@@ -394,6 +394,14 @@ namespace Epsitec.Common.Support
 			this.rank = rank;
 		}
 
+		public void DefineModule(ResourceModuleId module)
+		{
+			if (this.module.Id < 0)
+			{
+				this.module = module;
+			}
+		}
+
 		#region Internal Define... Methods
 
 		internal void DefineManager(ResourceManager resource_manager)
@@ -421,11 +429,6 @@ namespace Epsitec.Common.Support
 			}
 
 			this.prefix = prefix;
-		}
-
-		internal void DefineModule(ResourceModuleId module)
-		{
-			this.module = module;
 		}
 
 		internal void DefineCulture(CultureInfo culture)

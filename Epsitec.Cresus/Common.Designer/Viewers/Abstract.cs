@@ -1018,7 +1018,7 @@ namespace Epsitec.Common.Designer.Viewers
 			//	Sélectionne le bouton correspondant à la culture secondaire.
 			if (this.PrimaryColumn != -1)
 			{
-				this.table.ColumnHeader.SetColumnText(this.PrimaryColumn, Misc.CultureName(this.access.GetBaseCultureName()));
+				this.table.ColumnHeader.SetColumnText(this.PrimaryColumn, Misc.CultureName(this.access.GetPrimaryCultureName()));
 			}
 
 			if (this.SecondaryColumn != -1)
@@ -1130,7 +1130,7 @@ namespace Epsitec.Common.Designer.Viewers
 				this.secondaryButtonsCulture = null;
 			}
 
-			this.primaryButtonCulture.Text = string.Format(Res.Strings.Viewers.Strings.Reference, Misc.CultureName(this.access.GetBaseCultureName()));
+			this.primaryButtonCulture.Text = string.Format(Res.Strings.Viewers.Strings.Reference, Misc.CultureName(this.access.GetPrimaryCultureName()));
 
 			List<string> list = this.access.GetSecondaryCultureNames();  // TODO:
 			if (list.Count > 0)
