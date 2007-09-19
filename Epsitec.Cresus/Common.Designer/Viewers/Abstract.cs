@@ -1503,7 +1503,7 @@ namespace Epsitec.Common.Designer.Viewers
 			return true;
 		}
 
-		public void PersistChanges()
+		public virtual void PersistChanges()
 		{
 			//	Accepte les changements effectués dans les ressources.
 			if (this.access.IsLocalDirty)

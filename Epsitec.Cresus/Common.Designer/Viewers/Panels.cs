@@ -398,9 +398,20 @@ namespace Epsitec.Common.Designer.Viewers
 			return true;
 		}
 
+		public override void PersistChanges()
+		{
+			//	TODO: ne faire cela que si le panneau a été édité
+			if (this.druidToSerialize.IsValid)
+			{
+				this.access.SetPanel (this.druidToSerialize, this.GetPanel ());
+			}
+
+			base.PersistChanges ();
+		}
+
 		protected void Deserialize()
 		{
-			//	Désérialise les données sérialisées. Retourne false s'il n'existe aucune donnée sérialisée.
+			//	Désérialise les données sérialisées.
 			int sel = this.access.AccessIndex;
 			this.druidToSerialize = Druid.Empty;
 

@@ -417,6 +417,22 @@ namespace Epsitec.Common.UI
 			return panel;
 		}
 
+		/// <summary>
+		/// Creates an empty panel.
+		/// </summary>
+		/// <param name="dataSource">The data source.</param>
+		/// <param name="manager">The resource manager.</param>
+		/// <returns>A <see cref="Panel"/> instance.</returns>
+		public static Panel CreateEmptyPanel(DataSource dataSource, Support.ResourceManager manager)
+		{
+			Panel panel = new Panel ();
+
+			panel.DataSource      = dataSource;
+			panel.ResourceManager = manager;
+
+			return panel;
+		}
+
 
 		/// <summary>
 		/// Creates a panel based on its DRUID.

@@ -201,7 +201,7 @@ namespace Epsitec.Common.Designer
 		public void Load()
 		{
 			//	Charge toutes les ressources.
-			foreach (ResourceAccess access in Access)
+			foreach (ResourceAccess access in this.Access)
 			{
 				if (access != null)
 				{
