@@ -236,10 +236,7 @@ namespace Epsitec.Common.Designer
 
 		public void Load()
 		{
-			//	Charge les ressources.
-			//?this.accessor.Load(this.resourceManager);
-			Support.IResourceAccessor a = this.accessor as Support.IResourceAccessor;
-			a.Load(this.resourceManager);
+			this.accessor.Load(this.resourceManager);
 			this.collectionView.MoveCurrentToFirst();
 			this.LoadBundles();
 

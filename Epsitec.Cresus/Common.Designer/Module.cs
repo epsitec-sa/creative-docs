@@ -12,8 +12,6 @@ namespace Epsitec.Common.Designer
 	{
 		public Module(DesignerApplication designerApplication, DesignerMode mode, string resourcePrefix, ResourceModuleId moduleId)
 		{
-			this.UniqueIDCreate();
-
 			this.designerApplication = designerApplication;
 			this.mode = mode;
 			this.moduleInfo = moduleId;
@@ -40,7 +38,7 @@ namespace Epsitec.Common.Designer
 			this.accessValues   = new ResourceAccess(ResourceAccess.Type.Values,   this, this.moduleInfo, this.designerApplication);
 			this.accessValues.Load();
 
-			foreach (ResourceAccess access in this.Access)
+			foreach (ResourceAccess access in this.Accesses)
 			{
 				access.DirtyChanged += new EventHandler(this.HandleAccessDirtyChanged);
 			}
@@ -48,7 +46,7 @@ namespace Epsitec.Common.Designer
 
 		public void Dispose()
 		{
-			foreach (ResourceAccess access in this.Access)
+			foreach (ResourceAccess access in this.Accesses)
 			{
 				access.DirtyChanged -= new EventHandler(this.HandleAccessDirtyChanged);
 			}
@@ -201,7 +199,7 @@ namespace Epsitec.Common.Designer
 		public void Load()
 		{
 			//	Charge toutes les ressources.
-			foreach (ResourceAccess access in this.Access)
+			foreach (ResourceAccess access in this.Accesses)
 			{
 				if (access != null)
 				{
@@ -213,7 +211,7 @@ namespace Epsitec.Common.Designer
 		public void Save()
 		{
 			//	Enregistre toutes les ressources.
-			foreach (ResourceAccess access in this.Access)
+			foreach (ResourceAccess access in this.Accesses)
 			{
 				access.Save();
 			}
@@ -224,7 +222,7 @@ namespace Epsitec.Common.Designer
 			//	Retourne l'éventuel rapport.
 			List<ResourceAccess.ShortcutItem> list = new List<ResourceAccess.ShortcutItem>();
 
-			foreach (ResourceAccess access in this.Access)
+			foreach (ResourceAccess access in this.Accesses)
 			{
 				access.AddShortcuts(list);
 			}
@@ -271,7 +269,7 @@ namespace Epsitec.Common.Designer
 		{
 			get
 			{
-				foreach (ResourceAccess access in this.Access)
+				foreach (ResourceAccess access in this.Accesses)
 				{
 					if (access.IsGlobalDirty)
 					{
@@ -287,7 +285,7 @@ namespace Epsitec.Common.Designer
 		{
 			get
 			{
-				foreach (ResourceAccess access in this.Access)
+				foreach (ResourceAccess access in this.Accesses)
 				{
 					if (access.IsLocalDirty)
 					{
@@ -310,7 +308,7 @@ namespace Epsitec.Common.Designer
 		}
 
 
-		protected IEnumerable<ResourceAccess> Access
+		protected IEnumerable<ResourceAccess> Accesses
 		{
 			//	Enumère tous les accès.
 			get
@@ -325,28 +323,6 @@ namespace Epsitec.Common.Designer
 				yield return accessPanels;
 			}
 		}
-
-
-
-		#region UniqueID
-		protected void UniqueIDCreate()
-		{
-			//	Assigne un numéro unique à ce module.
-			this.uniqueID = Module.uniqueIDGenerator++;
-		}
-
-		public string UniqueName
-		{
-			//	Retourne un nom unique pour ce module.
-			get
-			{
-				return string.Concat("Module-", this.uniqueID.ToString(System.Globalization.CultureInfo.InvariantCulture));
-			}
-		}
-
-		protected static int				uniqueIDGenerator = 0;
-		protected int						uniqueID;
-		#endregion
 
 
 		protected DesignerApplication		designerApplication;
