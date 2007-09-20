@@ -24,27 +24,6 @@ namespace Epsitec.Common.Designer.MyWidgets
 			group.Margins = new Margins(0, 0, 0, 10);
 			this.fieldMax.TextChanged += new EventHandler(this.HandleTextFieldChanged);
 
-#if false
-			this.CreateStringLabeled(Res.Strings.Viewers.Types.String.Default, this, out group, out this.fieldDefault);
-			group.Dock = DockStyle.StackBegin;
-			group.Margins = new Margins(0, 0, 0, 2);
-			this.fieldDefault.PreferredWidth = 400;
-			this.fieldDefault.TextChanged += new EventHandler(this.HandleTextFieldChanged);
-
-			this.CreateStringLabeled(Res.Strings.Viewers.Types.String.Sample, this, out group, out this.fieldSample);
-			group.Dock = DockStyle.StackBegin;
-			group.Margins = new Margins(0, 0, 0, 10);
-			this.fieldSample.PreferredWidth = 400;
-			this.fieldSample.TextChanged += new EventHandler(this.HandleTextFieldChanged);
-			
-			this.checkFixedLength = new CheckButton(this);
-			this.checkFixedLength.AutoToggle = false;
-			this.checkFixedLength.Text = Res.Strings.Viewers.Types.String.FixedLength;
-			this.checkFixedLength.Dock = DockStyle.StackBegin;
-			this.checkFixedLength.Margins = new Margins(0, 0, 0, 3);
-			this.checkFixedLength.Clicked += new MessageEventHandler(this.HandleCheckClicked);
-#endif
-
 			this.checkMultilingual = new CheckButton(this);
 			this.checkMultilingual.AutoToggle = false;
 			this.checkMultilingual.Text = Res.Strings.Viewers.Types.String.Multilingual;
@@ -65,12 +44,6 @@ namespace Epsitec.Common.Designer.MyWidgets
 			{
 				this.fieldMin.TextChanged -= new EventHandler(this.HandleTextFieldChanged);
 				this.fieldMax.TextChanged -= new EventHandler(this.HandleTextFieldChanged);
-#if false
-
-				this.fieldDefault.TextChanged -= new EventHandler(this.HandleTextFieldChanged);
-				this.fieldSample.TextChanged -= new EventHandler(this.HandleTextFieldChanged);
-				this.checkFixedLength.Clicked -= new MessageEventHandler(this.HandleCheckClicked);
-#endif
 				this.checkMultilingual.Clicked -= new MessageEventHandler(this.HandleCheckClicked);
 			}
 			
@@ -148,7 +121,6 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected override void UpdateContent()
 		{
 			//	Met à jour le contenu de l'éditeur.
-#if true
 			this.ignoreChange = true;
 			object value;
 
@@ -200,18 +172,6 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 
 			this.ignoreChange = false;
-#else
-			StringType type = this.AbstractType as StringType;
-
-			this.ignoreChange = true;
-			this.SetDecimal(this.fieldMin, type.MinimumLength);
-			this.SetDecimal(this.fieldMax, type.MaximumLength);
-			this.SetStringObject(this.fieldDefault, type.DefaultValue);
-			this.SetStringObject(this.fieldSample, type.SampleValue);
-			this.checkFixedLength.ActiveState = type.UseFixedLengthStorage ? ActiveState.Yes : ActiveState.No;
-			this.checkMultilingual.ActiveState = type.UseMultilingualStorage ? ActiveState.Yes : ActiveState.No;
-			this.ignoreChange = false;
-#endif
 		}
 
 
@@ -222,7 +182,6 @@ namespace Epsitec.Common.Designer.MyWidgets
 				return;
 			}
 
-#if true
 			if (sender == this.fieldMin)
 			{
 				int min = (int) this.GetDecimal(this.fieldMin);
@@ -238,33 +197,6 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.OnContentChanged();
 			this.UpdateContent();
 			this.module.AccessTypes.SetLocalDirty();
-#else
-			//	[Note1] On demande le type avec un ResourceAccess.GetField.
-			StringType type = this.AbstractType as StringType;
-
-			if (sender == this.fieldMin)
-			{
-				type.DefineMinimumLength((int) this.GetDecimal(this.fieldMin));
-			}
-
-			if (sender == this.fieldMax)
-			{
-				type.DefineMaximumLength((int) this.GetDecimal(this.fieldMax));
-			}
-
-			if (sender == this.fieldDefault)
-			{
-				type.DefineDefaultValue(this.GetStringObject(this.fieldDefault));
-			}
-
-			if (sender == this.fieldSample)
-			{
-				type.DefineSampleValue(this.GetStringObject(this.fieldSample));
-			}
-
-			//	[Note1] Cet appel va provoquer le ResourceAccess.SetField.
-			this.OnContentChanged();
-#endif
 		}
 
 		private void HandleCheckClicked(object sender, MessageEventArgs e)
@@ -274,7 +206,6 @@ namespace Epsitec.Common.Designer.MyWidgets
 				return;
 			}
 
-#if true
 			if (sender == this.checkMultilingual)
 			{
 				bool multi = false;
@@ -290,31 +221,11 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.OnContentChanged();
 			this.UpdateContent();
 			this.module.AccessTypes.SetLocalDirty();
-#else
-			//	[Note1] On demande le type avec un ResourceAccess.GetField.
-			StringType type = this.AbstractType as StringType;
-
-			if (sender == this.checkFixedLength)
-			{
-				type.DefineUseFixedLengthStorage(!type.UseFixedLengthStorage);
-			}
-
-			if (sender == this.checkMultilingual)
-			{
-				type.DefineUseMultilingualStorage(!type.UseMultilingualStorage);
-			}
-
-			//	[Note1] Cet appel va provoquer le ResourceAccess.SetField.
-			this.OnContentChanged();
-#endif
 		}
 
 
 		protected TextField						fieldMin;
 		protected TextField						fieldMax;
-		protected TextField						fieldDefault;
-		protected TextField						fieldSample;
-		protected CheckButton					checkFixedLength;
 		protected CheckButton					checkMultilingual;
 	}
 }
