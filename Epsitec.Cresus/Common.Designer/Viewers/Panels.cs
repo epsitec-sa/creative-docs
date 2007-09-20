@@ -314,6 +314,7 @@ namespace Epsitec.Common.Designer.Viewers
 			if (name == "PanelRun")
 			{
 				this.module.DesignerApplication.ActiveButton("PanelRun", true);
+				this.Terminate(false);
 				this.module.RunPanel(this.access.AccessIndex);
 				this.module.DesignerApplication.ActiveButton("PanelRun", false);
 				return;
