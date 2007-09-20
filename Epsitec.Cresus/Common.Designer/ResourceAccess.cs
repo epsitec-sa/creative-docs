@@ -670,7 +670,7 @@ namespace Epsitec.Common.Designer
 
 		public int AccessCount
 		{
-			//	Retourne le nombre de données accessibles.
+			//	Retourne le nombre de données accessibles, à travers le filtre.
 			get
 			{
 				return this.collectionView.Count;
@@ -1422,63 +1422,6 @@ namespace Epsitec.Common.Designer
 #endif
 		}
 
-		protected void SetFilterBundles(string filter, Searcher.SearchingMode mode)
-		{
-			this.druidsIndex.Clear();
-
-			//	TODO: écrire cela sans accéder aux ResourceBundle ni aux
-			//	ResourceBundle.Field !
-
-#if false
-			if ((mode&Searcher.SearchingMode.CaseSensitive) == 0)
-			{
-				filter = Searcher.RemoveAccent(filter.ToLower());
-			}
-
-			Regex regex = null;
-			if ((mode&Searcher.SearchingMode.Joker) != 0)
-			{
-				regex = RegexFactory.FromSimpleJoker(filter, RegexFactory.Options.None);
-			}
-
-			foreach (ResourceBundle.Field field in this.primaryBundle.Fields)
-			{
-				string name = field.Name;
-
-				if (filter != "")
-				{
-					if ((mode&Searcher.SearchingMode.Joker) != 0)
-					{
-						string text = name;
-						if ((mode&Searcher.SearchingMode.CaseSensitive) == 0)
-						{
-							text = Searcher.RemoveAccent(text.ToLower());
-						}
-						if (!regex.IsMatch(text))
-						{
-							continue;
-						}
-					}
-					else
-					{
-						int index = Searcher.IndexOf(name, filter, 0, mode);
-						if (index == -1)
-						{
-							continue;
-						}
-						if ((mode&Searcher.SearchingMode.AtBeginning) != 0 && index != 0)
-						{
-							continue;
-						}
-					}
-				}
-
-				Druid fullDruid = new Druid(field.Id, this.primaryBundle.Module.Id);
-				this.druidsIndex.Add(fullDruid);
-			}
-#endif
-		}
-
 
 		public int SortDefer(int index)
 		{
@@ -1882,7 +1825,6 @@ namespace Epsitec.Common.Designer
 
 		protected List<string>								cultures;
 		protected System.Globalization.CultureInfo			primaryCulture;
-		protected List<Druid>								druidsIndex;
 		protected TypeCode									lastTypeCodeCreatated = TypeCode.String;
 		protected System.Type								lastTypeCodeSystem = null;
 	}
