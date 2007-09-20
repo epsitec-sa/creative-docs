@@ -44,33 +44,33 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.CreateStringLabeled(Res.Strings.Viewers.Types.DateTime.DateMin, left, out this.groupMinDate, out this.fieldMinDate);
 			this.groupMinDate.Dock = DockStyle.StackBegin;
 			this.groupMinDate.Margins = new Margins(0, 0, 0, 2);
-			this.fieldMinDate.TextChanged += new EventHandler(this.HandleTextFieldChanged);
+			this.fieldMinDate.EditionAccepted += new EventHandler(this.HandleTextFieldChanged);
 
 			this.CreateStringLabeled(Res.Strings.Viewers.Types.DateTime.DateMax, left, out this.groupMaxDate, out this.fieldMaxDate);
 			this.groupMaxDate.Dock = DockStyle.StackBegin;
 			this.groupMaxDate.Margins = new Margins(0, 0, 0, 10);
-			this.fieldMaxDate.TextChanged += new EventHandler(this.HandleTextFieldChanged);
+			this.fieldMaxDate.EditionAccepted += new EventHandler(this.HandleTextFieldChanged);
 
 			this.CreateStringLabeled(Res.Strings.Viewers.Types.DateTime.DateStep, left, out this.groupDateStep, out this.fieldDateStep);
 			this.groupDateStep.Dock = DockStyle.StackBegin;
 			this.groupDateStep.Margins = new Margins(0, 0, 0, 10);
-			this.fieldDateStep.TextChanged += new EventHandler(this.HandleTextFieldChanged);
+			this.fieldDateStep.EditionAccepted += new EventHandler(this.HandleTextFieldChanged);
 
 			//	Heure, à droite.
 			this.CreateStringLabeled(Res.Strings.Viewers.Types.DateTime.TimeMin, right, out this.groupMinTime, out this.fieldMinTime);
 			this.groupMinTime.Dock = DockStyle.StackBegin;
 			this.groupMinTime.Margins = new Margins(0, 0, 22+10, 2);
-			this.fieldMinTime.TextChanged += new EventHandler(this.HandleTextFieldChanged);
+			this.fieldMinTime.EditionAccepted += new EventHandler(this.HandleTextFieldChanged);
 
 			this.CreateStringLabeled(Res.Strings.Viewers.Types.DateTime.TimeMax, right, out this.groupMaxTime, out this.fieldMaxTime);
 			this.groupMaxTime.Dock = DockStyle.StackBegin;
 			this.groupMaxTime.Margins = new Margins(0, 0, 0, 10);
-			this.fieldMaxTime.TextChanged += new EventHandler(this.HandleTextFieldChanged);
+			this.fieldMaxTime.EditionAccepted += new EventHandler(this.HandleTextFieldChanged);
 
 			this.CreateStringLabeled(Res.Strings.Viewers.Types.DateTime.TimeStep, right, out this.groupTimeStep, out this.fieldTimeStep);
 			this.groupTimeStep.Dock = DockStyle.StackBegin;
 			this.groupTimeStep.Margins = new Margins(0, 0, 0, 10);
-			this.fieldTimeStep.TextChanged += new EventHandler(this.HandleTextFieldChanged);
+			this.fieldTimeStep.EditionAccepted += new EventHandler(this.HandleTextFieldChanged);
 		}
 
 		public TypeEditorDateTime(Widget embedder) : this()
@@ -85,13 +85,13 @@ namespace Epsitec.Common.Designer.MyWidgets
 			{
 				this.fieldResol.TextChanged -= new EventHandler(this.HandleTextFieldChanged);
 
-				this.fieldMinDate.TextChanged -= new EventHandler(this.HandleTextFieldChanged);
-				this.fieldMaxDate.TextChanged -= new EventHandler(this.HandleTextFieldChanged);
-				this.fieldDateStep.TextChanged -= new EventHandler(this.HandleTextFieldChanged);
+				this.fieldMinDate.EditionAccepted -= new EventHandler(this.HandleTextFieldChanged);
+				this.fieldMaxDate.EditionAccepted -= new EventHandler(this.HandleTextFieldChanged);
+				this.fieldDateStep.EditionAccepted -= new EventHandler(this.HandleTextFieldChanged);
 				
-				this.fieldMinTime.TextChanged -= new EventHandler(this.HandleTextFieldChanged);
-				this.fieldMaxTime.TextChanged -= new EventHandler(this.HandleTextFieldChanged);
-				this.fieldTimeStep.TextChanged -= new EventHandler(this.HandleTextFieldChanged);
+				this.fieldMinTime.EditionAccepted -= new EventHandler(this.HandleTextFieldChanged);
+				this.fieldMaxTime.EditionAccepted -= new EventHandler(this.HandleTextFieldChanged);
+				this.fieldTimeStep.EditionAccepted -= new EventHandler(this.HandleTextFieldChanged);
 			}
 			
 			base.Dispose(disposing);
@@ -347,7 +347,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		}
 
 
-		protected static void DateToField(TextField field, Date date)
+		protected static void DateToField(TextFieldEx field, Date date)
 		{
 			if (date == Date.Null)
 			{
@@ -359,7 +359,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 		}
 
-		protected static void TimeToField(TextField field, Time time)
+		protected static void TimeToField(TextFieldEx field, Time time)
 		{
 			if (time == Time.Null)
 			{
@@ -371,7 +371,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 		}
 
-		protected static Date FieldToDate(TextField field)
+		protected static Date FieldToDate(TextFieldEx field)
 		{
 			if (!string.IsNullOrEmpty(field.Text))
 			{
@@ -385,7 +385,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			return Date.Null;
 		}
 
-		protected static Time FieldToTime(TextField field)
+		protected static Time FieldToTime(TextFieldEx field)
 		{
 			if (!string.IsNullOrEmpty(field.Text))
 			{
@@ -399,7 +399,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			return Time.Null;
 		}
 
-		protected static System.DateTime FieldToDateTime(TextField field)
+		protected static System.DateTime FieldToDateTime(TextFieldEx field)
 		{
 			if (!string.IsNullOrEmpty(field.Text))
 			{
@@ -409,7 +409,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			return System.DateTime.MinValue;
 		}
 
-		protected static void DateStepToField(TextField field, DateSpan ds)
+		protected static void DateStepToField(TextFieldEx field, DateSpan ds)
 		{
 			if (ds == DateSpan.Zero)
 			{
@@ -421,7 +421,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 		}
 
-		protected static DateSpan FieldToDateStep(TextField field)
+		protected static DateSpan FieldToDateStep(TextFieldEx field)
 		{
 			if (!string.IsNullOrEmpty(field.Text))
 			{
@@ -431,7 +431,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			return DateSpan.Zero;
 		}
 
-		protected static void TimeSpanToField(TextField field, System.TimeSpan ts)
+		protected static void TimeSpanToField(TextFieldEx field, System.TimeSpan ts)
 		{
 			if (ts == System.TimeSpan.Zero)
 			{
@@ -443,7 +443,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 		}
 
-		protected static System.TimeSpan FieldToTimeSpan(TextField field)
+		protected static System.TimeSpan FieldToTimeSpan(TextFieldEx field)
 		{
 			if (!string.IsNullOrEmpty(field.Text))
 			{
@@ -582,17 +582,17 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected TextFieldCombo				fieldResol;
 
 		protected FrameBox						groupMinDate;
-		protected TextField						fieldMinDate;
+		protected TextFieldEx					fieldMinDate;
 		protected FrameBox						groupMaxDate;
-		protected TextField						fieldMaxDate;
+		protected TextFieldEx					fieldMaxDate;
 		protected FrameBox						groupDateStep;
-		protected TextField						fieldDateStep;
+		protected TextFieldEx					fieldDateStep;
 
 		protected FrameBox						groupMinTime;
-		protected TextField						fieldMinTime;
+		protected TextFieldEx					fieldMinTime;
 		protected FrameBox						groupMaxTime;
-		protected TextField						fieldMaxTime;
+		protected TextFieldEx					fieldMaxTime;
 		protected FrameBox						groupTimeStep;
-		protected TextField						fieldTimeStep;
+		protected TextFieldEx					fieldTimeStep;
 	}
 }

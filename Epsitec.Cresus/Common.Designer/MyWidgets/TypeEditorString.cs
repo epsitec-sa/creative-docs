@@ -17,12 +17,12 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.CreateDecimalLabeled(Res.Strings.Viewers.Types.String.Min, this, out group, out this.fieldMin);
 			group.Dock = DockStyle.StackBegin;
 			group.Margins = new Margins(0, 0, 0, 2);
-			this.fieldMin.TextChanged += new EventHandler(this.HandleTextFieldChanged);
+			this.fieldMin.EditionAccepted += new EventHandler(this.HandleTextFieldChanged);
 
 			this.CreateDecimalLabeled(Res.Strings.Viewers.Types.String.Max, this, out group, out this.fieldMax);
 			group.Dock = DockStyle.StackBegin;
 			group.Margins = new Margins(0, 0, 0, 10);
-			this.fieldMax.TextChanged += new EventHandler(this.HandleTextFieldChanged);
+			this.fieldMax.EditionAccepted += new EventHandler(this.HandleTextFieldChanged);
 
 			this.checkMultilingual = new CheckButton(this);
 			this.checkMultilingual.AutoToggle = false;
@@ -42,8 +42,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 		{
 			if ( disposing )
 			{
-				this.fieldMin.TextChanged -= new EventHandler(this.HandleTextFieldChanged);
-				this.fieldMax.TextChanged -= new EventHandler(this.HandleTextFieldChanged);
+				this.fieldMin.EditionAccepted -= new EventHandler(this.HandleTextFieldChanged);
+				this.fieldMax.EditionAccepted -= new EventHandler(this.HandleTextFieldChanged);
 				this.checkMultilingual.Clicked -= new MessageEventHandler(this.HandleCheckClicked);
 			}
 			
@@ -56,7 +56,6 @@ namespace Epsitec.Common.Designer.MyWidgets
 			//	Retourne le texte du résumé.
 			System.Text.StringBuilder builder = new System.Text.StringBuilder();
 			this.PutSummaryInitialise();
-#if true
 			object value;
 
 			value = this.structuredData.GetValue(Support.Res.Fields.ResourceStringType.MinimumLength);
@@ -90,31 +89,6 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 
 			return builder.ToString();
-#else
-			StringType type = this.AbstractType as StringType;
-
-			this.PutSummaryValue(builder, Res.Strings.Viewers.Types.Summary.Min, type.MinimumLength.ToString());
-			this.PutSummaryValue(builder, Res.Strings.Viewers.Types.Summary.Max, type.MaximumLength.ToString());
-
-			this.PutSummaryDefaultAndSample(builder, type);
-
-			if (type.UseFixedLengthStorage || type.UseMultilingualStorage)
-			{
-				this.PutSummarySeparator(builder, 2);
-
-				if (type.UseFixedLengthStorage)
-				{
-					this.PutSummaryValue(builder, Res.Strings.Viewers.Types.Summary.Fix);
-				}
-
-				if (type.UseMultilingualStorage)
-				{
-					this.PutSummaryValue(builder, Res.Strings.Viewers.Types.Summary.Multi);
-				}
-			}
-
-			return builder.ToString();
-#endif
 		}
 
 
@@ -224,8 +198,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 		}
 
 
-		protected TextField						fieldMin;
-		protected TextField						fieldMax;
+		protected TextFieldEx					fieldMin;
+		protected TextFieldEx					fieldMax;
 		protected CheckButton					checkMultilingual;
 	}
 }

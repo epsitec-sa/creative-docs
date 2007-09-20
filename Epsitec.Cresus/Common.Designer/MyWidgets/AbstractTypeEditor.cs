@@ -281,7 +281,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 
 		#region Super widgets
-		protected void CreateStringLabeled(string label, Widget parent, out FrameBox group, out TextField field)
+		protected void CreateStringLabeled(string label, Widget parent, out FrameBox group, out TextFieldEx field)
 		{
 			//	Crée un super-widget permettant d'éditer une chaîne, avec une étiquette à gauche.
 			group = new FrameBox(parent);
@@ -294,7 +294,9 @@ namespace Epsitec.Common.Designer.MyWidgets
 			text.Dock = DockStyle.Left;
 			text.Margins = new Margins(0, 8, 0, 0);
 
-			field = new TextField(group);
+			field = new TextFieldEx(group);
+			field.ButtonShowCondition = ShowCondition.WhenModified;
+			field.DefocusAction = DefocusAction.AutoAcceptOrRejectEdition;
 			field.PreferredWidth = 130;
 			field.Dock = DockStyle.Left;
 			field.TabIndex = 1;
@@ -322,7 +324,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			field.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 		}
 
-		protected void CreateDecimalLabeled(string label, Widget parent, out FrameBox group, out TextField field)
+		protected void CreateDecimalLabeled(string label, Widget parent, out FrameBox group, out TextFieldEx field)
 		{
 			//	Crée un super-widget permettant d'éditer une valeur décimale, avec une étiquette à gauche.
 			group = new FrameBox(parent);
@@ -335,14 +337,14 @@ namespace Epsitec.Common.Designer.MyWidgets
 			text.Dock = DockStyle.Left;
 			text.Margins = new Margins(0, 8, 0, 0);
 
-			field = new TextField(group);
+			field = new TextFieldEx(group);
 			field.PreferredWidth = 130;
 			field.Dock = DockStyle.Left;
 			field.TabIndex = 1;
 			field.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 		}
 
-		protected object GetStringObject(TextField field)
+		protected object GetStringObject(TextFieldEx field)
 		{
 			if (string.IsNullOrEmpty(field.Text))
 			{
@@ -354,7 +356,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 		}
 
-		protected void SetStringObject(TextField field, object value)
+		protected void SetStringObject(TextFieldEx field, object value)
 		{
 			if (value == null)
 			{
@@ -366,7 +368,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 		}
 
-		protected object GetDecimalObject(TextField field, System.Type type)
+		protected object GetDecimalObject(TextFieldEx field, System.Type type)
 		{
 			if (string.IsNullOrEmpty(field.Text))
 			{
@@ -378,7 +380,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 		}
 
-		protected void SetDecimalObject(TextField field, object value)
+		protected void SetDecimalObject(TextFieldEx field, object value)
 		{
 			if (value == null)
 			{
@@ -391,7 +393,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 		}
 
-		protected decimal GetDecimal(TextField field)
+		protected decimal GetDecimal(TextFieldEx field)
 		{
 			decimal value;
 			if (!decimal.TryParse(field.Text, out value))
@@ -401,7 +403,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			return value;
 		}
 
-		protected void SetDecimal(TextField field, decimal value)
+		protected void SetDecimal(TextFieldEx field, decimal value)
 		{
 			field.Text = value.ToString();
 		}
