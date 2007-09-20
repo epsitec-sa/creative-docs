@@ -71,19 +71,6 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.groupTimeStep.Dock = DockStyle.StackBegin;
 			this.groupTimeStep.Margins = new Margins(0, 0, 0, 10);
 			this.fieldTimeStep.TextChanged += new EventHandler(this.HandleTextFieldChanged);
-
-			//	Default et Sample, à gauche.
-#if false
-			this.CreateStringLabeled(Res.Strings.Viewers.Types.DateTime.Default, left, out this.groupDefault, out this.fieldDefault);
-			this.groupDefault.Dock = DockStyle.StackBegin;
-			this.groupDefault.Margins = new Margins(0, 0, 0, 2);
-			this.fieldDefault.TextChanged += new EventHandler(this.HandleTextFieldChanged);
-
-			this.CreateStringLabeled(Res.Strings.Viewers.Types.DateTime.Sample, left, out this.groupSample, out this.fieldSample);
-			this.groupSample.Dock = DockStyle.StackBegin;
-			this.groupSample.Margins = new Margins(0, 0, 0, 0);
-			this.fieldSample.TextChanged += new EventHandler(this.HandleTextFieldChanged);
-#endif
 		}
 
 		public TypeEditorDateTime(Widget embedder) : this()
@@ -105,11 +92,6 @@ namespace Epsitec.Common.Designer.MyWidgets
 				this.fieldMinTime.TextChanged -= new EventHandler(this.HandleTextFieldChanged);
 				this.fieldMaxTime.TextChanged -= new EventHandler(this.HandleTextFieldChanged);
 				this.fieldTimeStep.TextChanged -= new EventHandler(this.HandleTextFieldChanged);
-
-#if false
-				this.fieldDefault.TextChanged -= new EventHandler(this.HandleTextFieldChanged);
-				this.fieldSample.TextChanged -= new EventHandler(this.HandleTextFieldChanged);
-#endif
 			}
 			
 			base.Dispose(disposing);
@@ -121,7 +103,6 @@ namespace Epsitec.Common.Designer.MyWidgets
 			//	Retourne le texte du résumé.
 			System.Text.StringBuilder builder = new System.Text.StringBuilder();
 			this.PutSummaryInitialise();
-#if true
 			object value;
 
 			value = this.structuredData.GetValue(Support.Res.Fields.ResourceDateTimeType.Resolution);
@@ -197,41 +178,6 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.PutSummaryDefaultAndSample(builder);
 
 			return builder.ToString();
-#else
-			AbstractDateTimeType type = this.AbstractType as AbstractDateTimeType;
-
-			if (type.Resolution != TimeResolution.Default)
-			{
-				this.PutSummaryValue(builder, Res.Strings.Viewers.Types.Summary.Resolution, TypeEditorDateTime.TimeResolutionToString(type.Resolution));
-			}
-
-			if (type.MinimumDate != Date.Null)
-			{
-				this.PutSummaryValue(builder, Res.Strings.Viewers.Types.Summary.DateMin, TypeEditorDateTime.DateTimeToDateString(type.MinimumDate.ToDateTime()));
-			}
-
-			if (type.MaximumDate != Date.Null)
-			{
-				this.PutSummaryValue(builder, Res.Strings.Viewers.Types.Summary.DateMax, TypeEditorDateTime.DateTimeToDateString(type.MaximumDate.ToDateTime()));
-			}
-
-			if (type.MinimumTime != Time.Null)
-			{
-				this.PutSummaryValue(builder, Res.Strings.Viewers.Types.Summary.TimeMin, TypeEditorDateTime.DateTimeToTimeString(type.MinimumTime.ToDateTime()));
-			}
-
-			if (type.MaximumTime != Time.Null)
-			{
-				this.PutSummaryValue(builder, Res.Strings.Viewers.Types.Summary.TimeMax, TypeEditorDateTime.DateTimeToTimeString(type.MaximumTime.ToDateTime()));
-			}
-
-			this.PutSummaryValue(builder, Res.Strings.Viewers.Types.Summary.DateStep, TypeEditorDateTime.DateStepToString(type.DateStep));
-			this.PutSummaryValue(builder, Res.Strings.Viewers.Types.Summary.TimeStep, TypeEditorDateTime.TimeSpanToString(type.TimeStep));
-
-			this.PutSummaryDefaultAndSample(builder, type);
-
-			return builder.ToString();
-#endif
 		}
 
 		protected override string TypeToString(object value)
@@ -257,7 +203,6 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected override void UpdateContent()
 		{
 			//	Met à jour le contenu de l'éditeur.
-#if true
 			this.ignoreChange = true;
 			object value;
 
@@ -366,47 +311,6 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 
 			this.ignoreChange = false;
-#else
-			AbstractDateTimeType type = this.AbstractType as AbstractDateTimeType;
-
-			bool showDate = true;
-			bool showTime = true;
-
-			if (type is DateType)
-			{
-				showTime = false;
-			}
-
-			if (type is TimeType)
-			{
-				showDate = false;
-			}
-
-			this.groupMinDate.Visibility = showDate;
-			this.groupMaxDate.Visibility = showDate;
-			this.groupDateStep.Visibility = showDate;
-
-			this.groupMinTime.Visibility = showTime;
-			this.groupMaxTime.Visibility = showTime;
-			this.groupTimeStep.Visibility = showTime;
-
-			this.ignoreChange = true;
-
-			this.fieldResol.Text = TypeEditorDateTime.TimeResolutionToString(type.Resolution);
-
-			TypeEditorDateTime.DateToField(this.fieldMinDate, type.MinimumDate);
-			TypeEditorDateTime.DateToField(this.fieldMaxDate, type.MaximumDate);
-			TypeEditorDateTime.TimeToField(this.fieldMinTime, type.MinimumTime);
-			TypeEditorDateTime.TimeToField(this.fieldMaxTime, type.MaximumTime);
-
-			TypeEditorDateTime.DateStepToField(this.fieldDateStep, type.DateStep);
-			TypeEditorDateTime.TimeSpanToField(this.fieldTimeStep, type.TimeStep);
-
-			this.ObjectToField(this.fieldDefault, type.DefaultValue);
-			this.ObjectToField(this.fieldSample, type.SampleValue);
-
-			this.ignoreChange = false;
-#endif
 		}
 
 
@@ -442,70 +346,6 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 		}
 
-		protected void ObjectToField(TextField field, object value)
-		{
-			if (value == null)
-			{
-				field.Text = "";
-			}
-			else
-			{
-				//	TODO: on n'a plus le droit d'accéder à this.AbstractType, il
-				//	faut utiliser un accès à StructuredData !
-
-#if false
-				AbstractDateTimeType type = this.AbstractType as AbstractDateTimeType;
-
-				if (type is DateType)
-				{
-					Date date = (Date) value;
-					field.Text = TypeEditorDateTime.DateTimeToDateString(date.ToDateTime());
-				}
-				else if (type is TimeType)
-				{
-					Time time = (Time) value;
-					field.Text = TypeEditorDateTime.DateTimeToTimeString(time.ToDateTime());
-				}
-				else  // DateTime ?
-				{
-					System.DateTime dt = (System.DateTime) value;
-					field.Text = TypeEditorDateTime.DateTimeToDateTimeString(dt);
-				}
-#endif
-			}
-		}
-
-		protected object FieldToObject(TextField field)
-		{
-			if (string.IsNullOrEmpty(field.Text))
-			{
-				return null;
-			}
-			else
-			{
-				//	TODO: on n'a plus le droit d'accéder à this.AbstractType, il
-				//	faut utiliser un accès à StructuredData !
-
-#if false
-				AbstractDateTimeType type = this.AbstractType as AbstractDateTimeType;
-
-				if (type is DateType)
-				{
-					return TypeEditorDateTime.FieldToDate(field);
-				}
-				else if (type is TimeType)
-				{
-					return TypeEditorDateTime.FieldToTime(field);
-				}
-				else  // DateTime ?
-				{
-					return TypeEditorDateTime.FieldToDateTime(field);
-				}
-#else
-				return false;
-#endif
-			}
-		}
 
 		protected static void DateToField(TextField field, Date date)
 		{
@@ -691,7 +531,6 @@ namespace Epsitec.Common.Designer.MyWidgets
 				return;
 			}
 
-#if true
 			if (sender == this.fieldResol)
 			{
 				TimeResolution res = TypeEditorDateTime.StringToTimeResolution(this.fieldResol.Text);
@@ -734,71 +573,9 @@ namespace Epsitec.Common.Designer.MyWidgets
 				this.structuredData.SetValue(Support.Res.Fields.ResourceDateTimeType.TimeStep, timeSpan);
 			}
 
-			if (sender == this.fieldDefault)
-			{
-				//	TODO:
-			}
-
-			if (sender == this.fieldSample)
-			{
-				//	TODO:
-			}
-			
 			this.OnContentChanged();
 			this.UpdateContent();
 			this.module.AccessTypes.SetLocalDirty();
-#else
-			//	[Note1] On demande le type avec un ResourceAccess.GetField.
-			AbstractDateTimeType type = this.AbstractType as AbstractDateTimeType;
-
-			if (sender == this.fieldResol)
-			{
-				type.DefineResolution(TypeEditorDateTime.StringToTimeResolution(this.fieldResol.Text));
-			}
-
-			if (sender == this.fieldMinDate)
-			{
-				type.DefineMinimumDate(TypeEditorDateTime.FieldToDate(this.fieldMinDate));
-			}
-
-			if (sender == this.fieldMaxDate)
-			{
-				type.DefineMaximumDate(TypeEditorDateTime.FieldToDate(this.fieldMaxDate));
-			}
-
-			if (sender == this.fieldMinTime)
-			{
-				type.DefineMinimumTime(TypeEditorDateTime.FieldToTime(this.fieldMinTime));
-			}
-
-			if (sender == this.fieldMaxTime)
-			{
-				type.DefineMaximumTime(TypeEditorDateTime.FieldToTime(this.fieldMaxTime));
-			}
-
-			if (sender == this.fieldDateStep)
-			{
-				type.DefineDateStep(TypeEditorDateTime.FieldToDateStep(this.fieldDateStep));
-			}
-
-			if (sender == this.fieldTimeStep)
-			{
-				type.DefineTimeStep(TypeEditorDateTime.FieldToTimeSpan(this.fieldTimeStep));
-			}
-
-			if (sender == this.fieldDefault)
-			{
-				type.DefineDefaultValue(this.FieldToObject(this.fieldDefault));
-			}
-
-			if (sender == this.fieldSample)
-			{
-				type.DefineSampleValue(this.FieldToObject(this.fieldSample));
-			}
-
-			//	[Note1] Cet appel va provoquer le ResourceAccess.SetField.
-			this.OnContentChanged();
-#endif
 		}
 
 
@@ -817,10 +594,5 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected TextField						fieldMaxTime;
 		protected FrameBox						groupTimeStep;
 		protected TextField						fieldTimeStep;
-
-		protected FrameBox						groupDefault;
-		protected TextField						fieldDefault;
-		protected FrameBox						groupSample;
-		protected TextField						fieldSample;
 	}
 }
