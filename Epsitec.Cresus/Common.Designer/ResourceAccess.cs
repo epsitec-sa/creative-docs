@@ -1299,7 +1299,7 @@ namespace Epsitec.Common.Designer
 		public string GetCultureName(string twoLettersCode)
 		{
 			//	Retourne le nom standard (Français, Deutsch, English, etc.) d'une culture.
-			if (twoLettersCode == null || twoLettersCode == Resources.DefaultTwoLetterISOLanguageName)
+			if (twoLettersCode == Resources.DefaultTwoLetterISOLanguageName)
 			{
 				return Misc.CultureName(this.GetPrimaryCultureName());
 			}
