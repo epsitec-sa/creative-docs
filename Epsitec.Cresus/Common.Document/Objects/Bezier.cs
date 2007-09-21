@@ -974,6 +974,11 @@ namespace Epsitec.Common.Document.Objects
 		public override void MoveSelectedSegmentProcess(int rank, Point pos, DrawingContext drawingContext)
 		{
 			//	Déplace une poignée d'un segment sélectionné.
+			if (rank >= this.selectedSegments.Count)
+			{
+				return;
+			}
+
 			this.document.Notifier.NotifyArea(this.BoundingBox);
 
 			drawingContext.SnapPos(ref pos);
