@@ -265,13 +265,13 @@ namespace Epsitec.Common.Designer
 
 		static public string CultureName(System.Globalization.CultureInfo culture)
 		{
-			//	Retourne le nom standard d'une culture.
+			//	Retourne le nom standard (Français, Deutsch, English, etc.) d'une culture.
 			return Misc.ProperName(culture.NativeName);
 		}
 
 		static public string CultureName(string twoLettersCode)
 		{
-			//	Retourne le nom standard d'une culture.
+			//	Retourne le nom standard (Français, Deutsch, English, etc.) d'une culture.
 			System.Globalization.CultureInfo culture = Support.Resources.FindCultureInfo(twoLettersCode);
 			return (culture == null) ? Misc.Italic("(indéfini)") : Misc.ProperName(culture.NativeName);
 		}

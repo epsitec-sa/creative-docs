@@ -278,18 +278,7 @@ namespace Epsitec.Common.Designer
 							if (kc != KeyCode.None)
 							{
 								Shortcut sc = new Shortcut(kc);
-
-								string cultureName;
-								if (culture == Resources.DefaultTwoLetterISOLanguageName)
-								{
-									cultureName = Misc.CultureName(this.GetPrimaryCultureName());
-								}
-								else
-								{
-									cultureName = Misc.CultureName(culture);
-								}
-
-								ShortcutItem si = new ShortcutItem(sc, item.Name, cultureName);
+								ShortcutItem si = new ShortcutItem(sc, item.Name, this.GetCultureName(culture));
 								list.Add(si);
 							}
 						}
@@ -1307,15 +1296,28 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
+		public string GetCultureName(string twoLettersCode)
+		{
+			//	Retourne le nom standard (Français, Deutsch, English, etc.) d'une culture.
+			if (twoLettersCode == null || twoLettersCode == Resources.DefaultTwoLetterISOLanguageName)
+			{
+				return Misc.CultureName(this.GetPrimaryCultureName());
+			}
+			else
+			{
+				return Misc.CultureName(twoLettersCode);
+			}
+		}
+
 		public string GetPrimaryCultureName()
 		{
-			//	Retourne le nom de la culture de base.
+			//	Retourne le nom de la culture de base (twoLettersCode).
 			return this.primaryCulture.Name;
 		}
 
 		public List<string> GetSecondaryCultureNames()
 		{
-			//	Retourne la liste des cultures secondaires, triés par ordre alphabétique.
+			//	Retourne la liste des cultures secondaires, triés par ordre alphabétique (twoLettersCode).
 			List<string> list = new List<string>();
 			
 			foreach (string name in this.cultures)

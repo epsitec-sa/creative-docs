@@ -1018,12 +1018,12 @@ namespace Epsitec.Common.Designer.Viewers
 			//	Sélectionne le bouton correspondant à la culture secondaire.
 			if (this.PrimaryColumn != -1)
 			{
-				this.table.ColumnHeader.SetColumnText(this.PrimaryColumn, Misc.CultureName(this.access.GetPrimaryCultureName()));
+				this.table.ColumnHeader.SetColumnText(this.PrimaryColumn, this.access.GetCultureName(this.access.GetPrimaryCultureName()));
 			}
 
 			if (this.SecondaryColumn != -1)
 			{
-				this.table.ColumnHeader.SetColumnText(this.SecondaryColumn, Misc.CultureName(this.GetTwoLetters(1)));
+				this.table.ColumnHeader.SetColumnText(this.SecondaryColumn, this.access.GetCultureName(this.GetTwoLetters(1)));
 			}
 
 			if (this.secondaryButtonsCulture == null)
@@ -1130,7 +1130,7 @@ namespace Epsitec.Common.Designer.Viewers
 				this.secondaryButtonsCulture = null;
 			}
 
-			this.primaryButtonCulture.Text = string.Format(Res.Strings.Viewers.Strings.Reference, Misc.CultureName(this.access.GetPrimaryCultureName()));
+			this.primaryButtonCulture.Text = string.Format(Res.Strings.Viewers.Strings.Reference, this.access.GetCultureName(this.access.GetPrimaryCultureName()));
 
 			List<string> list = this.access.GetSecondaryCultureNames();  // TODO:
 			if (list.Count > 0)
@@ -1143,7 +1143,7 @@ namespace Epsitec.Common.Designer.Viewers
 					this.secondaryButtonsCulture[i].SiteMark = ButtonMarkDisposition.Below;
 					this.secondaryButtonsCulture[i].MarkDimension = 5;
 					this.secondaryButtonsCulture[i].Name = list[i];
-					this.secondaryButtonsCulture[i].Text = Misc.CultureName(list[i]);
+					this.secondaryButtonsCulture[i].Text = this.access.GetCultureName(list[i]);
 					this.secondaryButtonsCulture[i].AutoFocus = false;
 					this.secondaryButtonsCulture[i].Dock = DockStyle.Fill;
 					this.secondaryButtonsCulture[i].Margins = new Margins(0, (i==list.Count-1)?1:0, 0, 0);
