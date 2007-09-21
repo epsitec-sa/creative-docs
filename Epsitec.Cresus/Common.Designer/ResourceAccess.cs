@@ -264,9 +264,9 @@ namespace Epsitec.Common.Designer
 				List<string> cultures = this.GetSecondaryCultureNames();
 				cultures.Insert(0, Resources.DefaultTwoLetterISOLanguageName);
 
-				foreach (CultureMap item in this.accessor.Collection)
+				foreach (string culture in cultures)
 				{
-					foreach (string culture in cultures)
+					foreach (CultureMap item in this.accessor.Collection)
 					{
 						StructuredData data = item.GetCultureData(culture);
 						IList<StructuredData> shortcuts = data.GetValue(Support.Res.Fields.ResourceCommand.Shortcuts) as IList<StructuredData>;
