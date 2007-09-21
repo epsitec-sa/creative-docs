@@ -644,7 +644,7 @@ namespace Epsitec.Common.Designer
 				return;
 			}
 
-			this.CurrentModule.Modifier.ActiveViewer.PersistChanges();
+			this.CurrentModule.Modifier.ActiveViewer.Terminate(false);
 		}
 
 		[Command("EditCancel")]

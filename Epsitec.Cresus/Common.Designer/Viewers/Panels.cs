@@ -388,12 +388,12 @@ namespace Epsitec.Common.Designer.Viewers
 			return true;
 		}
 
-		public override void PersistChanges()
+		protected override void PersistChanges()
 		{
 			//	Stocke la version XML (sérialisée) du panneau dans l'accesseur
 			//	s'il y a eu des modifications.
-			this.access.SetPanel (this.druidToSerialize, this.GetPanel ());
-			base.PersistChanges ();
+			this.access.SetPanel(this.druidToSerialize, this.GetPanel());
+			base.PersistChanges();
 		}
 
 		protected void Deserialize()
