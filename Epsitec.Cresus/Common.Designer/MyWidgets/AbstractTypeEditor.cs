@@ -239,28 +239,6 @@ namespace Epsitec.Common.Designer.MyWidgets
 			//	Met à jour le contenu de l'éditeur.
 		}
 
-#if false
-		//	TODO: supprimer
-		protected AbstractType AbstractType
-		{
-			//	Retourne les définitions du type, en fonction de l'index de la ressource
-			//	sélectionnée.
-			get
-			{
-				if (this.resourceSelected != -1)
-				{
-					ResourceAccess.Field field = this.resourceAccess.GetField(this.resourceSelected, null, ResourceAccess.FieldType.AbstractType);
-					if (field != null)
-					{
-						return field.AbstractType;
-					}
-				}
-
-				return null;
-			}
-		}
-#endif
-
 		protected string SelectedName
 		{
 			//	Retourne le nom de la ressource sélectionnée.

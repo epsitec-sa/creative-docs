@@ -1739,14 +1739,6 @@ namespace Epsitec.Common.Designer
 				this.stringCollection = value;
 			}
 
-#if false
-			public Field(AbstractType value)
-			{
-				this.type = Type.AbstractType;
-				this.abstractType = value;
-			}
-#endif
-
 			public Type FieldType
 			{
 				get
@@ -1773,21 +1765,9 @@ namespace Epsitec.Common.Designer
 				}
 			}
 
-#if false
-			public AbstractType AbstractType
-			{
-				get
-				{
-					System.Diagnostics.Debug.Assert(this.type == Type.AbstractType);
-					return this.abstractType;
-				}
-			}
-#endif
-
 			protected Type type;
 			protected string									stringValue;
 			protected ICollection<string>						stringCollection;
-//-			protected AbstractType								abstractType;
 		}
 		#endregion
 
