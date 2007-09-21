@@ -1981,7 +1981,7 @@ namespace Epsitec.Common.Designer
 			else
 			{
 				string color = Color.ToHexa(Misc.WarningColor);
-				string line = "____________________";
+				string line = "------------------------------";
 				message = string.Format("{0}<br/><br/><font color=\"#{3}\">{2}<br/>{4}{2}</font><br/><br/>{1}", question1, question2, line, color, warning);
 				icon = "manifest:Epsitec.Common.Dialogs.Images.Warning.icon";
 			}
