@@ -2044,7 +2044,8 @@ namespace Epsitec.Common.Designer
 
 			string title = Res.Strings.Application.Title;
 			string icon = "manifest:Epsitec.Common.Dialogs.Images.Warning.icon";
-			string message = TextLayout.ConvertToTaggedText(error);
+			//?string message = TextLayout.ConvertToTaggedText(error);  // surtout pas, à cause des textes mis en page avec des <b>, etc.
+			string message = error;
 
 			Common.Dialogs.IDialog dialog = Common.Dialogs.MessageDialog.CreateOk(title, icon, message, "", this.CommandDispatcher);
 			dialog.Owner = this.Window;
