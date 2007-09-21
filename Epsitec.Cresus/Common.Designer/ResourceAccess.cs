@@ -259,7 +259,43 @@ namespace Epsitec.Common.Designer
 		public void AddShortcuts(List<ShortcutItem> list)
 		{
 			//	Ajoute tous les raccourcis définis dans la liste.
-			this.AddShortcutsCaptions(list);
+			if (this.type == Type.Commands)
+			{
+				List<string> cultures = this.GetSecondaryCultureNames();
+				cultures.Insert(0, Resources.DefaultTwoLetterISOLanguageName);
+
+				foreach (CultureMap item in this.accessor.Collection)
+				{
+					foreach (string culture in cultures)
+					{
+						StructuredData data = item.GetCultureData(culture);
+						IList<StructuredData> shortcuts = data.GetValue(Support.Res.Fields.ResourceCommand.Shortcuts) as IList<StructuredData>;
+
+						for (int i=0; i<shortcuts.Count; i++)
+						{
+							string keyCode = shortcuts[i].GetValue(Support.Res.Fields.Shortcut.KeyCode) as string;
+							KeyCode kc = (KeyCode) System.Enum.Parse(typeof(KeyCode), keyCode);
+							if (kc != KeyCode.None)
+							{
+								Shortcut sc = new Shortcut(kc);
+
+								string cultureName;
+								if (culture == Resources.DefaultTwoLetterISOLanguageName)
+								{
+									cultureName = Misc.CultureName(this.GetPrimaryCultureName());
+								}
+								else
+								{
+									cultureName = Misc.CultureName(culture);
+								}
+
+								ShortcutItem si = new ShortcutItem(sc, item.Name, cultureName);
+								list.Add(si);
+							}
+						}
+					}
+				}
+			}
 		}
 
 		public static void CheckShortcuts(System.Text.StringBuilder builder, List<ShortcutItem> list)
@@ -286,12 +322,12 @@ namespace Epsitec.Common.Designer
 				{
 					if (builder.Length > 0)  // déjà d'autres avertissements ?
 					{
-						builder.Append("<br/><br/>");
+						builder.Append("<br/>");
 					}
 
 					builder.Append("<font size=\"120%\">");
 					builder.Append(string.Format(Res.Strings.Error.ShortcutMany, list[i].Culture));
-					builder.Append("</font><br/><br/>");
+					builder.Append("</font><br/>");
 					culture = list[i].Culture;
 				}
 
@@ -1384,68 +1420,6 @@ namespace Epsitec.Common.Designer
 		}
 
 		#endregion
-
-		protected void AddShortcutsCaptions(List<ShortcutItem> list)
-		{
-			//	Ajoute tous les raccourcis définis dans la liste.
-			if (this.type == Type.Commands)
-			{
-				List<string> cultures = this.GetSecondaryCultureNames();
-				cultures.Insert(0, Resources.DefaultTwoLetterISOLanguageName);
-
-				foreach (CultureMap item in this.accessor.Collection)
-				{
-					foreach (string culture in cultures)
-					{
-						StructuredData data = item.GetCultureData(culture);
-						IList<StructuredData> shortcuts = data.GetValue(Support.Res.Fields.ResourceCommand.Shortcuts) as IList<StructuredData>;
-
-						for (int i=0; i<shortcuts.Count; i++)
-						{
-							string keyCode = shortcuts[i].GetValue(Support.Res.Fields.Shortcut.KeyCode) as string;
-							KeyCode kc = (KeyCode) System.Enum.Parse(typeof(KeyCode), keyCode);
-							if (kc != KeyCode.None)
-							{
-								Shortcut sc = new Shortcut(kc);
-
-								ShortcutItem si = new ShortcutItem(sc, item.Name, Misc.CultureName(culture));
-								list.Add(si);
-							}
-						}
-					}
-				}
-			}
-
-#if false
-			//	TODO: écrire cela sans accéder aux ResourceBundle ni aux
-			//	ResourceBundle.Field !
-
-			//	Ajoute tous les raccourcis définis dans la liste.
-			for (int i=0; i<bundle.FieldCount; i++)
-			{
-				ResourceBundle.Field field = bundle[i];
-
-				Caption caption = new Caption();
-
-				string s = field.AsString;
-				if (!string.IsNullOrEmpty(s))
-				{
-					caption.DeserializeFromString(s, this.resourceManager);
-					ResourceManager.SetSourceBundle(caption, bundle);
-				}
-
-				Widgets.Collections.ShortcutCollection collection = Shortcut.GetShortcuts(caption);
-				if (collection != null && collection.Count > 0)
-				{
-					foreach (Shortcut shortcut in collection)
-					{
-						ShortcutItem item = new ShortcutItem(shortcut, field.Name, Misc.CultureName(bundle.Culture));
-						list.Add(item);
-					}
-				}
-			}
-#endif
-		}
 
 
 		public int SortDefer(int index)
