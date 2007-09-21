@@ -1390,22 +1390,27 @@ namespace Epsitec.Common.Designer
 			//	Ajoute tous les raccourcis définis dans la liste.
 			if (this.type == Type.Commands)
 			{
+				List<string> cultures = this.GetSecondaryCultureNames();
+				cultures.Insert(0, Resources.DefaultTwoLetterISOLanguageName);
+
 				foreach (CultureMap item in this.accessor.Collection)
 				{
-					//	TODO: chercher dans toutes les cultures...
-					StructuredData data = item.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
-					IList<StructuredData> shortcuts = data.GetValue(Support.Res.Fields.ResourceCommand.Shortcuts) as IList<StructuredData>;
-
-					for (int i=0; i<shortcuts.Count; i++)
+					foreach (string culture in cultures)
 					{
-						string keyCode = shortcuts[i].GetValue(Support.Res.Fields.Shortcut.KeyCode) as string;
-						KeyCode kc = (KeyCode) System.Enum.Parse(typeof(KeyCode), keyCode);
-						if (kc != KeyCode.None)
-						{
-							Shortcut sc = new Shortcut(kc);
+						StructuredData data = item.GetCultureData(culture);
+						IList<StructuredData> shortcuts = data.GetValue(Support.Res.Fields.ResourceCommand.Shortcuts) as IList<StructuredData>;
 
-							ShortcutItem si = new ShortcutItem(sc, item.Name, Resources.DefaultTwoLetterISOLanguageName);
-							list.Add(si);
+						for (int i=0; i<shortcuts.Count; i++)
+						{
+							string keyCode = shortcuts[i].GetValue(Support.Res.Fields.Shortcut.KeyCode) as string;
+							KeyCode kc = (KeyCode) System.Enum.Parse(typeof(KeyCode), keyCode);
+							if (kc != KeyCode.None)
+							{
+								Shortcut sc = new Shortcut(kc);
+
+								ShortcutItem si = new ShortcutItem(sc, item.Name, Misc.CultureName(culture));
+								list.Add(si);
+							}
 						}
 					}
 				}
