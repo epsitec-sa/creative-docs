@@ -237,7 +237,7 @@ namespace Epsitec.Common.Designer
 
 		public void Load()
 		{
-			this.CreateEmptyBundle ();
+			this.CreateEmptyBundle();
 			this.accessor.Load(this.resourceManager);
 			this.collectionView.MoveCurrentToFirst();
 			this.LoadBundles();
@@ -259,7 +259,7 @@ namespace Epsitec.Common.Designer
 		public void AddShortcuts(List<ShortcutItem> list)
 		{
 			//	Ajoute tous les raccourcis définis dans la liste.
-			//	TODO:
+			this.AddShortcutsCaptions(list);
 		}
 
 		public static void CheckShortcuts(System.Text.StringBuilder builder, List<ShortcutItem> list)
@@ -497,7 +497,7 @@ namespace Epsitec.Common.Designer
 
 				if (!UndefinedValue.IsUndefinedValue(value))
 				{
-					ResourceAccess.SetStructuredDataValue (accessor, dstItem, dst, fieldId, value);
+					ResourceAccess.SetStructuredDataValue(accessor, dstItem, dst, fieldId, value);
 				}
 			}
 		}
@@ -511,8 +511,8 @@ namespace Epsitec.Common.Designer
 				//	La donnée que l'on cherche à modifier est verrouillée; c'est
 				//	sans doute parce que c'est une collection et que l'on n'a pas
 				//	le droit de la remplacer...
-				ResourceAccess.AttemptCollectionCopy<string> (accessor, map, data, id, value, null);
-				ResourceAccess.AttemptCollectionCopy<StructuredData> (accessor, map, data, id, value, ResourceAccess.CopyStructuredData);
+				ResourceAccess.AttemptCollectionCopy<string>(accessor, map, data, id, value, null);
+				ResourceAccess.AttemptCollectionCopy<StructuredData>(accessor, map, data, id, value, ResourceAccess.CopyStructuredData);
 			}
 			else
 			{
@@ -552,7 +552,7 @@ namespace Epsitec.Common.Designer
 					}
 					else
 					{
-						destination.Add(copyMethod (accessor, map, data, id, item));
+						destination.Add(copyMethod(accessor, map, data, id, item));
 					}
 				}
 			}
@@ -818,7 +818,7 @@ namespace Epsitec.Common.Designer
 			}
 
 			string newName = baseName;
-			if (this.IsCorrectNewName (ref newName))
+			if (this.IsCorrectNewName(ref newName))
 			{
 				return newName;
 			}
@@ -906,10 +906,6 @@ namespace Epsitec.Common.Designer
 		{
 			//	Retourne les données d'un champ.
 			//	Si cultureName est nul, on accède à la culture de base.
-			//	[Note1] Lorsqu'on utilise FieldType.AbstractType ou FieldType.Panel,
-			//	les données peuvent être modifiées directement, sans qu'il faille les
-			//	redonner lors du SetField. Cela oblige à ne pas faire d'autres GetField
-			//	avant le SetField !
 			CultureMap item = this.collectionView.Items[index] as CultureMap;
 
 			if (cultureName == null)
@@ -1254,13 +1250,13 @@ namespace Epsitec.Common.Designer
 
 		public System.Globalization.CultureInfo GetCulture(string cultureName)
 		{
-			if (string.IsNullOrEmpty (cultureName))
+			if (string.IsNullOrEmpty(cultureName))
 			{
 				return this.primaryCulture;
 			}
 			else
 			{
-				return Resources.FindCultureInfo (cultureName);
+				return Resources.FindCultureInfo(cultureName);
 			}
 		}
 
@@ -1277,14 +1273,14 @@ namespace Epsitec.Common.Designer
 			
 			foreach (string name in this.cultures)
 			{
-				System.Globalization.CultureInfo culture = Resources.FindCultureInfo (name);
+				System.Globalization.CultureInfo culture = Resources.FindCultureInfo(name);
 				if (culture != null)
 				{
-					list.Add (culture.Name);
+					list.Add(culture.Name);
 				}
 			}
 
-			System.Diagnostics.Debug.Assert (!list.Contains (this.GetPrimaryCultureName ()));
+			System.Diagnostics.Debug.Assert(!list.Contains(this.GetPrimaryCultureName()));
 			list.Sort();
 			
 			return list;
@@ -1295,14 +1291,14 @@ namespace Epsitec.Common.Designer
 			//	Crée un nouveau bundle pour une culture donnée.
 			System.Diagnostics.Debug.Assert(cultureName.Length == 2);
 
-			if (!this.cultures.Contains (cultureName))
+			if (!this.cultures.Contains(cultureName))
 			{
-				System.Globalization.CultureInfo culture = Resources.FindCultureInfo (cultureName);
-				this.CreateEmptyBundle (ResourceLevel.Localized, culture);
+				System.Globalization.CultureInfo culture = Resources.FindCultureInfo(cultureName);
+				this.CreateEmptyBundle(ResourceLevel.Localized, culture);
 
-				this.cultures.Add (cultureName);
-				this.cultures.Sort ();
-				this.SetGlobalDirty ();
+				this.cultures.Add(cultureName);
+				this.cultures.Sort();
+				this.SetGlobalDirty();
 			}
 		}
 
@@ -1311,7 +1307,7 @@ namespace Epsitec.Common.Designer
 			//	Supprime une culture.
 			System.Diagnostics.Debug.Assert(cultureName.Length == 2);
 			System.Globalization.CultureInfo culture = this.GetCulture(cultureName);
-			if (this.cultures.Contains (cultureName))
+			if (this.cultures.Contains(cultureName))
 			{
 				//	ATTENTION: Il faudra rajouter ici un garde-fou pour éviter de
 				//	détruire un bundle partagé entre plusieurs accesseurs (par ex.
@@ -1319,11 +1315,11 @@ namespace Epsitec.Common.Designer
 
 				foreach (CultureMap item in this.accessor.Collection)
 				{
-					item.ClearCultureData (cultureName);
+					item.ClearCultureData(cultureName);
 				}
-				this.DeleteBundle (culture, this.GetBundleName ());
-				this.cultures.Remove (cultureName);
-				this.SetGlobalDirty ();
+				this.DeleteBundle(culture, this.GetBundleName());
+				this.cultures.Remove(cultureName);
+				this.SetGlobalDirty();
 			}
 		}
 
@@ -1331,22 +1327,22 @@ namespace Epsitec.Common.Designer
 
 		private void DeleteBundle(System.Globalization.CultureInfo culture, string bundleName)
 		{
-			ResourceBundle bundle = this.resourceManager.GetBundle (bundleName, ResourceLevel.Localized, culture);
-			this.batchSaver.DelaySave (this.resourceManager, bundle, ResourceSetMode.Remove);
+			ResourceBundle bundle = this.resourceManager.GetBundle(bundleName, ResourceLevel.Localized, culture);
+			this.batchSaver.DelaySave(this.resourceManager, bundle, ResourceSetMode.Remove);
 		}
 
 		private ResourceBundle CreateEmptyBundle(ResourceLevel level, System.Globalization.CultureInfo culture)
 		{
 			string prefix = this.resourceManager.ActivePrefix;
-			string bundleName = this.GetBundleName ();
-			string bundleType = this.GetBundleType ();
-			ResourceBundle bundle = ResourceBundle.Create (this.resourceManager, prefix, bundleName, level, culture);
+			string bundleName = this.GetBundleName();
+			string bundleType = this.GetBundleType();
+			ResourceBundle bundle = ResourceBundle.Create(this.resourceManager, prefix, bundleName, level, culture);
 
-			bundle.DefineType (bundleType);
-			bundle.DefineModule (this.resourceManager.DefaultModuleInfo.FullId);
+			bundle.DefineType(bundleType);
+			bundle.DefineModule(this.resourceManager.DefaultModuleInfo.FullId);
 
-			this.resourceManager.SetBundle (bundle, ResourceSetMode.InMemory);
-			this.batchSaver.DelaySave (this.resourceManager, bundle, ResourceSetMode.CreateOnly);
+			this.resourceManager.SetBundle(bundle, ResourceSetMode.InMemory);
+			this.batchSaver.DelaySave(this.resourceManager, bundle, ResourceSetMode.CreateOnly);
 
 			return bundle;
 		}
@@ -1355,19 +1351,19 @@ namespace Epsitec.Common.Designer
 		{
 			if (this.type != Type.Panels)
 			{
-				System.Globalization.CultureInfo culture = Resources.FindCultureInfo (Misc.Cultures[0]);
-				ResourceBundle bundle = this.resourceManager.GetBundle (this.GetBundleName (), ResourceLevel.Default);
+				System.Globalization.CultureInfo culture = Resources.FindCultureInfo(Misc.Cultures[0]);
+				ResourceBundle bundle = this.resourceManager.GetBundle(this.GetBundleName(), ResourceLevel.Default);
 
 				if (bundle == null)
 				{
-					bundle = this.CreateEmptyBundle (ResourceLevel.Default, culture);
+					bundle = this.CreateEmptyBundle(ResourceLevel.Default, culture);
 				}
 			}
 		}
 
 		private void LoadBundles()
 		{
-			System.Globalization.CultureInfo culture = Resources.FindCultureInfo (Misc.Cultures[0]);
+			System.Globalization.CultureInfo culture = Resources.FindCultureInfo(Misc.Cultures[0]);
 
 			if (this.type == Type.Panels)
 			{
@@ -1375,26 +1371,50 @@ namespace Epsitec.Common.Designer
 			}
 			else
 			{
-				ResourceBundle bundle = this.resourceManager.GetBundle (this.GetBundleName (), ResourceLevel.Default);
+				ResourceBundle bundle = this.resourceManager.GetBundle(this.GetBundleName(), ResourceLevel.Default);
 				this.primaryCulture = bundle.Culture;
 			}
 			
-			this.cultures = new List<string> (this.accessor.GetAvailableCultures ());
+			this.cultures = new List<string>(this.accessor.GetAvailableCultures());
 		}
 
 		private void SaveBundles(ResourceBundleBatchSaver saver)
 		{
-			this.accessor.Save (saver.DelaySave);
+			this.accessor.Save(saver.DelaySave);
 		}
 
 		#endregion
 
-		protected void AddShortcutsCaptions(ResourceBundle bundle, List<ShortcutItem> list)
+		protected void AddShortcutsCaptions(List<ShortcutItem> list)
 		{
+			//	Ajoute tous les raccourcis définis dans la liste.
+			if (this.type == Type.Commands)
+			{
+				foreach (CultureMap item in this.accessor.Collection)
+				{
+					//	TODO: chercher dans toutes les cultures...
+					StructuredData data = item.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
+					IList<StructuredData> shortcuts = data.GetValue(Support.Res.Fields.ResourceCommand.Shortcuts) as IList<StructuredData>;
+
+					for (int i=0; i<shortcuts.Count; i++)
+					{
+						string keyCode = shortcuts[i].GetValue(Support.Res.Fields.Shortcut.KeyCode) as string;
+						KeyCode kc = (KeyCode) System.Enum.Parse(typeof(KeyCode), keyCode);
+						if (kc != KeyCode.None)
+						{
+							Shortcut sc = new Shortcut(kc);
+
+							ShortcutItem si = new ShortcutItem(sc, item.Name, Resources.DefaultTwoLetterISOLanguageName);
+							list.Add(si);
+						}
+					}
+				}
+			}
+
+#if false
 			//	TODO: écrire cela sans accéder aux ResourceBundle ni aux
 			//	ResourceBundle.Field !
 
-#if false
 			//	Ajoute tous les raccourcis définis dans la liste.
 			for (int i=0; i<bundle.FieldCount; i++)
 			{
@@ -1482,22 +1502,22 @@ namespace Epsitec.Common.Designer
 			if (druid.IsValid)
 			{
 				string xml = UI.Panel.SerializePanel(panel);
-				string size = panel.PreferredSize.ToString ();
+				string size = panel.PreferredSize.ToString();
 
 				CultureMap item = this.accessor.Collection[druid];
-				System.Diagnostics.Debug.Assert (item != null);
+				System.Diagnostics.Debug.Assert(item != null);
 				StructuredData data = item.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
 				
-				string oldXml = data.GetValue (Support.Res.Fields.ResourcePanel.XmlSource) as string;
-				string oldSize = data.GetValue (Support.Res.Fields.ResourcePanel.DefaultSize) as string;
+				string oldXml = data.GetValue(Support.Res.Fields.ResourcePanel.XmlSource) as string;
+				string oldSize = data.GetValue(Support.Res.Fields.ResourcePanel.DefaultSize) as string;
 
 				if (xml != oldXml)
 				{
-					data.SetValue (Support.Res.Fields.ResourcePanel.XmlSource, xml);
+					data.SetValue(Support.Res.Fields.ResourcePanel.XmlSource, xml);
 				}
 				if (size != oldSize)
 				{
-					data.SetValue (Support.Res.Fields.ResourcePanel.DefaultSize, size);
+					data.SetValue(Support.Res.Fields.ResourcePanel.DefaultSize, size);
 				}
 			}
 		}
@@ -1506,12 +1526,12 @@ namespace Epsitec.Common.Designer
 		{
 			//	Retourne le UI.Panel associé à une ressource.
 			//	Si nécessaire, il est créé la première fois.
-			return this.GetPanel (this.accessor.Collection[druid]);
+			return this.GetPanel(this.accessor.Collection[druid]);
 		}
 
 		public UI.Panel GetPanel(int index)
 		{
-			return this.GetPanel (this.accessor.Collection[index]);
+			return this.GetPanel(this.accessor.Collection[index]);
 		}
 		
 		private UI.Panel GetPanel(CultureMap item)
@@ -1521,16 +1541,16 @@ namespace Epsitec.Common.Designer
 				return null;
 			}
 
-			StructuredData data = item.GetCultureData (Resources.DefaultTwoLetterISOLanguageName);
-			string xml = data.GetValue (Support.Res.Fields.ResourcePanel.XmlSource) as string;
+			StructuredData data = item.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
+			string xml = data.GetValue(Support.Res.Fields.ResourcePanel.XmlSource) as string;
 
-			if (string.IsNullOrEmpty (xml))
+			if (string.IsNullOrEmpty(xml))
 			{
-				return this.CreateEmptyPanel ();
+				return this.CreateEmptyPanel();
 			}
 			else
 			{
-				return UI.Panel.DeserializePanel (xml, null, this.resourceManager);
+				return UI.Panel.DeserializePanel(xml, null, this.resourceManager);
 			}
 		}
 
@@ -1573,7 +1593,7 @@ namespace Epsitec.Common.Designer
 					return null;
 
 				default:
-					throw new System.NotImplementedException ();
+					throw new System.NotImplementedException();
 			}
 		}
 
@@ -1597,7 +1617,7 @@ namespace Epsitec.Common.Designer
 					return "Panel";
 				
 				default:
-					throw new System.NotImplementedException ();
+					throw new System.NotImplementedException();
 			}
 		}
 
