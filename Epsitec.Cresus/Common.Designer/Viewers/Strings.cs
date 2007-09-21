@@ -383,7 +383,8 @@ namespace Epsitec.Common.Designer.Viewers
 			else
 			{
 				StructuredData data = item.GetCultureData(twoLettersCulture);
-				return data.GetValue(Support.Res.Fields.ResourceString.Text) as string;
+				string text = data.GetValue(Support.Res.Fields.ResourceString.Text) as string;
+				return (text == null) ? "" : text;
 			}
 		}
 
