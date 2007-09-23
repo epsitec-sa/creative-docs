@@ -241,11 +241,25 @@ namespace Epsitec.App.Dolphin
 		{
 			//	Supprime l'éventuel commentaire "; blabla" en fin de ligne.
 			instruction = instruction.ToUpper().Trim();
-			int index = instruction.IndexOf(";");  // commentaire à la fin de la ligne ?
+
+			int index = instruction.IndexOf(";");  // point-virgule: commentaire à la fin de la ligne ?
 			if (index != -1)
 			{
 				instruction = instruction.Substring(0, index);  // enlève le commentaire
 			}
+			
+			index = instruction.IndexOf("\\");  // boa: commentaire à la fin de la ligne ?
+			if (index != -1)
+			{
+				instruction = instruction.Substring(0, index);  // enlève le commentaire
+			}
+			
+			index = instruction.IndexOf("//");  // double slash (style C): commentaire à la fin de la ligne ?
+			if (index != -1)
+			{
+				instruction = instruction.Substring(0, index);  // enlève le commentaire
+			}
+			
 			return instruction;
 		}
 
