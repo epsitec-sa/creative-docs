@@ -81,7 +81,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 				if (type == null)
 				{
-					this.module.DesignerApplication.DialogMessage(Res.Strings.Error.Native.Incorrect);
+					this.module.DesignerApplication.DialogError(Res.Strings.Error.Native.Incorrect);
 				}
 				else
 				{
