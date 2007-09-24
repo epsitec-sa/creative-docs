@@ -42,7 +42,7 @@ namespace Epsitec.Common.Text.Exchange
 
 		public static void PasteHtmlText(TextStory story, TextNavigator navigator)
 		{
-			string s = NativeHtmlClipboardReader.ReadClipBoardHtml ();
+			string s = NativeHtmlClipboardReader.Read ();
 
 			if (s.Length == 0)
 				return;

@@ -132,6 +132,7 @@
     <Compile Include="CodeGenerators\CodeFormatter.cs" />
     <Compile Include="CodeGenerators\CodeVisibility.cs" />
     <Compile Include="CodeGenerators\CodeAccessibility.cs" />
+    <Compile Include="Platform\Win32\Clipboard.cs" />
     <Compile Include="ResourceBundleBatchSaver.cs" />
     <Compile Include="CultureMapSource.cs" />
     <Compile Include="EntityEngine\AbstractEntity.cs" />

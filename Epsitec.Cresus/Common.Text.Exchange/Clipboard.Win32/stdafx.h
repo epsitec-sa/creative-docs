@@ -28,6 +28,4 @@
 #include <windows.h>
 #include <stdlib.h>
 
-
-
-// TODO: reference additional headers your program requires here
+#define EXPORT extern "C" __declspec(dllexport)

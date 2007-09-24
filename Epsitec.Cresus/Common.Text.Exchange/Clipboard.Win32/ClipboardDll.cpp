@@ -1,118 +1,145 @@
 //	Copyright © 2006-2007, EPSITEC SA, CH-1092 BELMONT, Switzerland
-//	Responsable: Michael WALZ
-//  DLL pour lire le contenu du presse-papier en format "HTML format".
-//  Depuis .net il semble impossible d'obtenir le texte html sans que certains
-//	caractères encodé avec UTF-8 ne soient mutilés
-//
-//	Attention: extern "C" est nécessaire, sinon on se retrouve avec le nom "mangled" dans la DLL
+//	Author: Michael WALZ, Maintainer: Pierre ARNAUD
+
+/*
+ *	This DLL is used to interface .NET with the clipboard API, in order
+ *	to be able to properly manipulate data in the "HTML format" without
+ *	having .NET interfer with the UTF-8 encoding (problem which exists
+ *	in .NET version 2.0).
+ */
 
 #include "stdafx.h"
 
-#ifdef _MANAGED
-#pragma managed(push, off)
-#endif
+/*****************************************************************************/
 
-#define EXPORT extern "C" __declspec( dllexport )
-
-
-BOOL APIENTRY DllMain( HMODULE hModule,
-                       DWORD  ul_reason_for_call,
-                       LPVOID lpReserved
-					 )
+BOOL
+APIENTRY
+DllMain(HMODULE hModule, DWORD ulReasonForCall, LPVOID lpReserved)
 {
-    return TRUE;
+	return TRUE;
 }
 
-
-static void*  clipboardData = NULL;
-static SIZE_T clipboardSize = 0;
-static int    clipboardHtmlFormat = RegisterClipboardFormat(L"HTML Format");
-
-
-// retourne la taille des données contenues dans le clipboard, ou 0 si
-// aucune donnée compatible HTML n'a été trouvée.
-
-EXPORT int ReadHtmlFromClipboard(HWND mainWindow)
+struct ClipboardData
 {
-	if (clipboardData != NULL)
+	void*  data;
+	int    size;
+};
+
+
+/*****************************************************************************/
+
+static int clipboardHtmlFormat = ::RegisterClipboardFormat(L"HTML Format");
+
+/*****************************************************************************/
+
+/*
+ *	Reads the "HTML Format" data found in the clipboard (if any) and
+ *	stores the data in the provided structure. Returns the size of the
+ *	data, zero if no compatible data was found or -1 if no structure
+ *	was provided or if the clipboard could not be opened.
+ */
+
+EXPORT
+int
+ReadHtmlFromClipboard(ClipboardData* data)
+{
+	if (data == NULL)
 	{
-		free (clipboardData);
-		clipboardData = NULL;
+		return -1;
+	}
+	if (data->data != NULL)
+	{
+		free (data->data);
 	}
 	
-	clipboardData = NULL;
-	clipboardSize = 0;
+	data->data = NULL;
+	data->size = 0;
 	
-	if (!IsClipboardFormatAvailable (clipboardHtmlFormat))
+	if (!::IsClipboardFormatAvailable (clipboardHtmlFormat))
 	{
 		return 0;
 	}
-	if (OpenClipboard(mainWindow))
+
+	if (::OpenClipboard (NULL))
 	{
-		HGLOBAL globalLockHandle = GetClipboardData(clipboardHtmlFormat);
+		HGLOBAL globalLockHandle = ::GetClipboardData (clipboardHtmlFormat);
 		
 		if (globalLockHandle != NULL)
 		{
-			BYTE* pData = (BYTE*)GlobalLock(globalLockHandle);
+			BYTE* pData = (BYTE*)::GlobalLock (globalLockHandle);
 			
 			if (pData != NULL)
 			{
-				clipboardSize = GlobalSize(globalLockHandle);
-				clipboardData = malloc(clipboardSize);
+				data->size = ::GlobalSize (globalLockHandle);
+				data->data = ::malloc (data->size);
 				
-				if (clipboardData != NULL)
+				if (data->data != NULL)
 				{
-					memcpy(clipboardData, pData, clipboardSize);
+					memcpy (data->data, pData, data->size);
 				}
 				else
 				{
-					clipboardSize = 0;
+					data->size = 0;
 				}
 				
-				GlobalUnlock(globalLockHandle);
+				::GlobalUnlock (globalLockHandle);
 			}
 		}
 		
-		CloseClipboard();
-	}
-	
-	return (int) clipboardSize;
-}
-
-
-// copie les données du clipboard dans le buffer passé en entrée; le buffer
-// doit avoir une taille suffisante pour recevoir les données et il faut
-// avoir appelé ReadHtmlFromClipboard avant...
-
-EXPORT void ReadClipboardData(BYTE* buffer, int size)
-{
-	if (size > (int) clipboardSize)
-	{
-		size = (int) clipboardSize;
-	}
-	
-	if (clipboardData != NULL)
-	{
-		memcpy(buffer, clipboardData, size);
-	}
-}
-
-
-// libère la mémoire allouée lors du ReadHtmlFromClipboard()
-
-EXPORT void FreeClipboardData()
-{
-	if (clipboardData != NULL)
-	{
-		free (clipboardData);
+		::CloseClipboard ();
 		
-		clipboardData = NULL;
-		clipboardSize = 0;
+		return data->size;
+	}
+	else
+	{
+		return -1;
+	}
+}
+
+/*
+ *	Copies the data from the structure to the provided buffer.
+ *	The ReadHtmlFromClipboard function must have been called
+ *	previously.
+ */
+
+EXPORT
+void
+CopyClipboardData(const ClipboardData* data, BYTE* buffer, int size)
+{
+	if (data != NULL)
+	{
+		if (size > (int) data->size)
+		{
+			size = (int) data->size;
+		}
+		
+		if ((data->data != NULL) &&
+			(size > 0))
+		{
+			memcpy (buffer, data->data, size);
+		}
 	}
 }
 
 
-#ifdef _MANAGED
-#pragma managed(pop)
-#endif
+/*
+ *	Frees the memory allocated by ReadHtmlFromClipboard.
+ */
 
+EXPORT
+void
+FreeClipboardData(ClipboardData* data)
+{
+	if (data != NULL)
+	{
+		if (data->data != NULL)
+		{
+			free (data->data);
+			
+			data->data = NULL;
+			data->size = 0;
+		}
+	}
+}
+
+/*****************************************************************************/

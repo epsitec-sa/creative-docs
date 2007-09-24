@@ -17,7 +17,7 @@ namespace Epsitec.Common.Support
 	{
 		public static ReadData GetData()
 		{
-			return new ReadData (System.Windows.Forms.Clipboard.GetDataObject ());
+			return new ReadData (null);
 		}
 		
 		public static void     SetData(WriteData data)
@@ -408,7 +408,16 @@ namespace Epsitec.Common.Support
 		{
 			internal ReadData(IDataObject data)
 			{
-				this.data = data;
+				if (data == null)
+				{
+					this.data = System.Windows.Forms.Clipboard.GetDataObject ();
+					this.html = Epsitec.Common.Support.Platform.Win32.Clipboard.ReadHtmlFormat ();
+				}
+				else
+				{
+					this.data = data;
+					this.html = null;
+				}
 			}
 			
 			
@@ -431,7 +440,22 @@ namespace Epsitec.Common.Support
 			
 			public object Read(string format)
 			{
-				return data.GetData (format, true);
+				if ((format == Formats.Hmtl) &&
+					(this.html != null))
+				{
+					System.Text.StringBuilder buffer = new System.Text.StringBuilder (this.html.Length);
+
+					for (int i = 0; i < this.html.Length; i++)
+					{
+						buffer.Append ((char) this.html[i]);
+					}
+
+					return buffer.ToString ();
+				}
+				else
+				{
+					return data.GetData (format, true);
+				}
 			}
 			
 			public string ReadAsString(string format)
@@ -451,7 +475,7 @@ namespace Epsitec.Common.Support
 			
 			public string ReadHtmlFragment()
 			{
-				string raw_html = this.ReadAsString ("HTML Format");
+				string raw_html = this.ReadAsString (Formats.Hmtl);
 				
 				if (raw_html == null)
 				{
@@ -486,7 +510,7 @@ namespace Epsitec.Common.Support
 			
 			public string ReadHtmlDocument()
 			{
-				string raw_html = this.ReadAsString ("HTML Format");
+				string raw_html = this.ReadAsString (Formats.Hmtl);
 				
 				if (raw_html == null)
 				{
@@ -533,11 +557,11 @@ namespace Epsitec.Common.Support
 				switch (format)
 				{
 					case Format.Text:
-						return this.data.GetDataPresent ("System.String", true);
+						return this.data.GetDataPresent (Formats.String, true);
 					case Format.Image:
-						return this.data.GetDataPresent ("System.Drawing.Bitmap", true);
+						return this.data.GetDataPresent (Formats.Bitmap, true);
 					case Format.MicrosoftHtml:
-						return this.data.GetDataPresent ("HTML Format", false);
+						return this.data.GetDataPresent (Formats.Hmtl, false);
 				}
 				
 				return false;
@@ -564,7 +588,8 @@ namespace Epsitec.Common.Support
 			}
 			
 			
-			protected IDataObject				data;
+			private IDataObject				data;
+			private byte[]					html;
 		}
 		#endregion
 		
@@ -788,6 +813,13 @@ namespace Epsitec.Common.Support
 			Clipboard.regex_mso_tabcount = new Regex (@"\Amso\-tab\-count\:\s*(?<opt>\w*)\s*\Z", RegexOptions.Compiled | RegexOptions.Multiline);
 		}
 		#endregion
+
+		private static class Formats
+		{
+			public const string Hmtl   = "HTML Format";
+			public const string String = "System.String";
+			public const string Bitmap = "System.Drawing.Bitmap";
+		}
 		
 		static System.Collections.Hashtable		map_entities;
 		static Regex							regex_style;
