@@ -729,6 +729,40 @@ namespace Epsitec.Common.Widgets.Helpers
 			
 			return null;
 		}
+
+		public static void DebugDump(Visual root, int depth)
+		{
+			string indent = new string (' ', depth*2);
+			
+			if (root != null)
+			{
+				Layouts.LayoutMeasure measureDx;
+				Layouts.LayoutMeasure measureDy;
+
+				root.GetMeasures (out measureDx, out measureDy);
+
+				System.Diagnostics.Debug.WriteLine (string.Format ("{0}{1}", indent, root.ToString ()));
+				System.Diagnostics.Debug.WriteLine (string.Format ("  {0}Dock={1}, Anchor={2}, Visibility={3}, IsVisible={4}", indent, root.Dock, root.Anchor, root.Visibility, root.IsVisible));
+				System.Diagnostics.Debug.WriteLine (string.Format ("  {0}Bounds={1} -> {2}", indent, root.ActualBounds, VisualTree.MapVisualToRoot (root, root.Client.Bounds)));
+				System.Diagnostics.Debug.WriteLine (string.Format ("  {0}Measure DX={1}", indent, measureDx == null ? "none" : measureDx.ToString ()));
+				System.Diagnostics.Debug.WriteLine (string.Format ("  {0}Measure DY={1}", indent, measureDy == null ? "none" : measureDy.ToString ()));
+
+				Widget widget = root as Widget;
+
+				if (widget != null)
+				{
+					System.Diagnostics.Debug.WriteLine (string.Format ("  {0}TabIndex={1}, {2}", indent, widget.TabIndex, widget.TabNavigationMode));
+				}
+
+				if (root.HasChildren)
+				{
+					foreach (Visual child in root.Children)
+					{
+						VisualTree.DebugDump (child, depth+1);
+					}
+				}
+			}
+		}
 		
 		#region AddToDispatcherList (Private Methods)
 		

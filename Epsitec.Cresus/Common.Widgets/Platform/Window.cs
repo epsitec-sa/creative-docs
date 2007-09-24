@@ -1748,6 +1748,14 @@ namespace Epsitec.Common.Widgets.Platform
 						case Win32Const.WM_SYSDEADCHAR:	msg.Msg = Win32Const.WM_DEADCHAR;	break;
 					}
 				}
+
+				if ((Support.Globals.IsDebugBuild) &&
+					(msg.Msg == Win32Const.WM_KEYDOWN) &&
+					(((KeyCode) (int) msg.WParam) == KeyCode.ScrollLock))
+				{
+					System.Diagnostics.Debug.WriteLine (string.Format ("Window {0} :", this.widget_window.Text));
+					Helpers.VisualTree.DebugDump (this.widget_window.Root, 1);
+				}
 				
 				//	Filtre les répétitions clavier des touches super-shift. Cela n'a, à mon avis, aucun
 				//	sens, puisqu'une touche super-shift est soit enfoncée, soit non enfoncée...

@@ -22,6 +22,7 @@ namespace Epsitec.Common.Widgets.Layouts
 				return this.min;
 			}
 		}
+		
 		public double Max
 		{
 			get
@@ -29,6 +30,7 @@ namespace Epsitec.Common.Widgets.Layouts
 				return this.max;
 			}
 		}
+		
 		public double Desired
 		{
 			get
@@ -73,6 +75,11 @@ namespace Epsitec.Common.Widgets.Layouts
 			}
 			
 			return context.PassId == this.passId;
+		}
+
+		public override string ToString()
+		{
+			return string.Format ("{0} in [{1}:{2}], pass={3}, desired={4}", this.Desired, this.Min, this.Max, this.passId, this.desired);
 		}
 
 		protected void SetHasChanged()
