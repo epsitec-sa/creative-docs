@@ -14,6 +14,8 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 	{
 		public Print(DocumentEditor editor) : base(editor)
 		{
+			this.context = new CommandContext ();
+			this.dispatcher = new CommandDispatcher ();
 		}
 
 		public override void Show()
@@ -83,6 +85,9 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 				buttonCancel.TabIndex = 1001;
 				buttonCancel.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 				ToolTip.Default.SetToolTip(buttonCancel, Res.Strings.Dialog.Print.Tooltip.Cancel);
+				
+				CommandDispatcher.SetDispatcher (this.window, this.dispatcher);
+				CommandContext.SetContext (this.window, this.context);
 			}
 
 			if ( this.editor.HasCurrentDocument )
@@ -131,5 +136,8 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 			Common.Dialogs.Print dialog = this.editor.CurrentDocument.PrintDialog;
 			this.editor.CurrentDocument.Print(dialog);
 		}
+		
+		private readonly CommandDispatcher dispatcher;
+		private readonly CommandContext context;
 	}
 }
