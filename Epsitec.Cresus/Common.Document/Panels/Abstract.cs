@@ -179,6 +179,7 @@ namespace Epsitec.Common.Document.Panels
 		private void HandleMouseExited(object sender, MessageEventArgs e)
 		{
 			//	La souris est sortie du panneau.
+			if ( this.document.Modifier == null )  return;
 			if ( !this.document.Modifier.PropertiesDetailMany )  return;
 			if ( this.property == null )  return;
 

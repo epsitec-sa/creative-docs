@@ -2347,16 +2347,16 @@ namespace Epsitec.Common.Widgets
 				
 				Widget[] candidates = this.Children.Widgets[0].FindTabWidgets (mode);
 				
-				if (candidates.Length > 0)
+				for (int i = 0; i < candidates.Length; i++)
 				{
 					if (dir == TabNavigationDir.Forwards)
 					{
-						find = candidates[0].FindTabWidget (dir, mode, false, true, ref iterations);
+						find = candidates[i].FindTabWidget (dir, mode, false, true, ref iterations);
 					}
 					else if (accept_focus)
 					{
 						int count = candidates.Length;
-						find = candidates[count-1].FindTabWidget (dir, mode, false, true, ref iterations);
+						find = candidates[count-i-1].FindTabWidget (dir, mode, false, true, ref iterations);
 					}
 					
 					if (find != null)

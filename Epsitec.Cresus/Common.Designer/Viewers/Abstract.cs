@@ -10,7 +10,7 @@ namespace Epsitec.Common.Designer.Viewers
 	/// <summary>
 	/// Permet de représenter les ressources d'un module.
 	/// </summary>
-	public abstract class Abstract : Widget
+	public abstract class Abstract : AbstractGroup
 	{
 		protected enum BandMode
 		{
