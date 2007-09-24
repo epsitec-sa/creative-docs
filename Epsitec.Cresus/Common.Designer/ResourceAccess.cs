@@ -1346,7 +1346,11 @@ namespace Epsitec.Common.Designer
 			if (!this.cultures.Contains(cultureName))
 			{
 				System.Globalization.CultureInfo culture = Resources.FindCultureInfo(cultureName);
-				this.CreateEmptyBundle(ResourceLevel.Localized, culture);
+				
+				if (!this.BundleExists (ResourceLevel.Localized, culture))
+				{
+					this.CreateEmptyBundle (ResourceLevel.Localized, culture);
+				}
 
 				this.cultures.Add(cultureName);
 				this.cultures.Sort();
@@ -1383,6 +1387,24 @@ namespace Epsitec.Common.Designer
 			this.batchSaver.DelaySave(this.resourceManager, bundle, ResourceSetMode.Remove);
 		}
 
+		private bool BundleExists(ResourceLevel level, System.Globalization.CultureInfo culture)
+		{
+			string bundleName = this.GetBundleName ();
+			string bundleType = this.GetBundleType ();
+			ResourceBundle bundle = this.resourceManager.GetBundle (bundleName, level, culture);
+
+			if (bundle == null)
+			{
+				return false;
+			}
+			else
+			{
+				System.Diagnostics.Debug.Assert (bundle.Type == bundleType);
+
+				return true;
+			}
+		}
+
 		private ResourceBundle CreateEmptyBundle(ResourceLevel level, System.Globalization.CultureInfo culture)
 		{
 			string prefix = this.resourceManager.ActivePrefix;
@@ -1404,11 +1426,10 @@ namespace Epsitec.Common.Designer
 			if (this.type != Type.Panels)
 			{
 				System.Globalization.CultureInfo culture = Resources.FindCultureInfo(Misc.Cultures[0]);
-				ResourceBundle bundle = this.resourceManager.GetBundle(this.GetBundleName(), ResourceLevel.Default);
-
-				if (bundle == null)
+				
+				if (!this.BundleExists (ResourceLevel.Default, culture))
 				{
-					bundle = this.CreateEmptyBundle(ResourceLevel.Default, culture);
+					this.CreateEmptyBundle(ResourceLevel.Default, culture);
 				}
 			}
 		}
