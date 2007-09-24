@@ -195,7 +195,7 @@ namespace Epsitec.Common.Designer
 				case TypeCode.Time:         return "Time";
 				case TypeCode.DateTime:     return "DateTime";
 				case TypeCode.Binary:       return "Binary";
-				case TypeCode.Other:        return "NatifCSharp";
+				case TypeCode.Other:        return "Native";
 			}
 
 			return null;
@@ -218,7 +218,7 @@ namespace Epsitec.Common.Designer
 				case "Time":         return TypeCode.Time;
 				case "DateTime":     return TypeCode.DateTime;
 				case "Binary":       return TypeCode.Binary;
-				case "NatifCSharp":  return TypeCode.Other;
+				case "Native":       return TypeCode.Other;
 			}
 
 			return TypeCode.Invalid;

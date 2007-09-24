@@ -122,5 +122,5 @@
   <data name="Val.Widgets.ButtonAspect.IconButton" id="05C">&lt;s:type id="_1" s:name="*eT" /&gt;&lt;s:data id="_0" f:_1.IsNative="True" f:Name="IconButton" f:Icon="manifest:Epsitec.Common.Designer.Images.ButtonAspectIcon.icon" f:Description="Bouton avec icône et/ou texte" f:Labels="{Collection {Text 'Bouton mixte'}}" /&gt;</data>
   <data name="Cap.Editor.Type.Create" id="2">&lt;s:data id="_0" f:Name="Editor.Type.Create" f:Description="Créer une nouvelle valeur dans l&amp;amp;apos;énumération" f:Icon="manifest:Epsitec.Common.Designer.Images.StringDuplicate.icon" f:Labels="{Collection {Text 'Créer'}}" /&gt;</data>
   <data name="Cap.Editor.Type.Delete" id="21">&lt;s:data id="_0" f:Name="Editor.Type.Delete" f:Description="Supprimer une valeur dans l&amp;amp;apos;énumération" f:Icon="manifest:Epsitec.Common.Designer.Images.StringRemove.icon" f:Labels="{Collection {Text 'Supprimer'}}" /&gt;</data>
-  <data name="Cap.Types.Type.NatifCSharp" id="22">&lt;s:data id="_0" f:Name="Types.Type.NatifCSharp" f:Description="Natif C#" f:Labels="{Collection {Text 'Natif'}}" /&gt;</data>
+  <data name="Cap.Types.Type.Native" id="22">&lt;s:data id="_0" f:Name="Types.Type.Native" f:Description="Natif .NET" f:Labels="{Collection {Text 'Natif'}}" /&gt;</data>
 </bundle>

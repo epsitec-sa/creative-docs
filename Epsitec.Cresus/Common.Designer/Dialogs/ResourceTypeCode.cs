@@ -62,7 +62,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.CreateRadio(Res.Captions.Types.Type.DateTime);
 				this.CreateRadio(Res.Captions.Types.Type.Enum);
 				this.CreateRadio(Res.Captions.Types.Type.Collection);
-				this.CreateRadio(Res.Captions.Types.Type.NatifCSharp);
+				this.CreateRadio(Res.Captions.Types.Type.Native);
 				this.CreateRadio(Res.Captions.Types.Type.Binary);
 				this.tabIndex++;
 
