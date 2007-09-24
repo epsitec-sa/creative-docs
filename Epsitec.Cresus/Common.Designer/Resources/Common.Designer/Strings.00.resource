@@ -100,7 +100,7 @@
   <data name="Viewers.Types.DateTime.DateMax" id="0U8">Date maximale</data>
   <data name="Viewers.Types.DateTime.DateStep" id="0V8">Pas pour la date</data>
   <data name="Viewers.Types.DateTime.TimeMin" id="009">Heure minimale</data>
-  <data name="Viewers.Types.DateTime.TimeMax" id="019">Haure maximale</data>
+  <data name="Viewers.Types.DateTime.TimeMax" id="019">Heure maximale</data>
   <data name="Viewers.Types.DateTime.TimeStep" id="029">Pas pour l&amp;apos;heure</data>
   <data name="Viewers.Types.DateTime.Default" id="039">Valeur par défaut</data>
   <data name="Viewers.Types.DateTime.Sample" id="049">Exemple de valeur</data>

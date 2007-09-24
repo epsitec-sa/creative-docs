@@ -875,8 +875,6 @@ namespace Epsitec.Common.Designer
 			#endregion
 		}
 		
-		//	Code mapping for 'Panel' resources
-		
 		static Res()
 		{
 			Res.Initialize (typeof (Res), "Common.Designer");
