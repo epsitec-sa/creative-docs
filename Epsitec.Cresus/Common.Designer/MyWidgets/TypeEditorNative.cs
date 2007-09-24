@@ -69,15 +69,23 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			set
 			{
+				System.Type type;
 				try
 				{
-					System.Type type = AbstractType.GetSystemTypeFromSystemTypeName(value);
-					this.structuredData.SetValue(Support.Res.Fields.ResourceOtherType.SystemType, type);
+					type = AbstractType.GetSystemTypeFromSystemTypeName(value);
 				}
 				catch
 				{
-					// TODO: génère un assert, mais je ne sais pas quoi faire d'autre...
-					this.structuredData.SetValue(Support.Res.Fields.ResourceOtherType.SystemType, null);
+					type = null;
+				}
+
+				if (type == null)
+				{
+					this.module.DesignerApplication.DialogMessage(Res.Strings.Error.Native.Incorrect);
+				}
+				else
+				{
+					this.structuredData.SetValue(Support.Res.Fields.ResourceOtherType.SystemType, type);
 				}
 			}
 		}

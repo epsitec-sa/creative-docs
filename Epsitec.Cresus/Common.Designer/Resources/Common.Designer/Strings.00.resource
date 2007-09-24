@@ -337,4 +337,5 @@
   <data name="BundleType.Entity" id="25">Entité</data>
   <data name="Viewers.Types.Native.Type" id="26">Type système natif</data>
   <data name="Viewers.Types.Summary.Native" id="27">Natif</data>
+  <data name="Error.Native.Incorrect" id="28">Type natif incorrect.</data>
 </bundle>

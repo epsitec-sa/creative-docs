@@ -609,6 +609,11 @@ namespace Epsitec.Common.Designer
 					public static string SamePrefix { get { return global::Epsitec.Common.Designer.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (232)); } }
 					public static string Twofold { get { return global::Epsitec.Common.Designer.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (231)); } }
 				}
+				
+				public static class Native
+				{
+					public static string Incorrect { get { return global::Epsitec.Common.Designer.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (33554440)); } }
+				}
 			}
 			
 			public static class Misc
