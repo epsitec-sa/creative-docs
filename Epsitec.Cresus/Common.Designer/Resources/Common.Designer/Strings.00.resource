@@ -335,4 +335,6 @@
   <data name="Action.EditOk" id="23">Valider l&amp;apos;édition de la ressource en cours</data>
   <data name="BundleType.Entities" id="24">Entités</data>
   <data name="BundleType.Entity" id="25">Entité</data>
+  <data name="Viewers.Types.Native.Type" id="26">Type système natif</data>
+  <data name="Viewers.Types.Summary.Native" id="27">Natif</data>
 </bundle>

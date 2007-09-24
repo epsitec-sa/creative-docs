@@ -793,6 +793,11 @@ namespace Epsitec.Common.Designer
 						public static string RowName { get { return global::Epsitec.Common.Designer.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (250)); } }
 					}
 					
+					public static class Native
+					{
+						public static string Type { get { return global::Epsitec.Common.Designer.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (33554438)); } }
+					}
+					
 					public static class Nullable
 					{
 						public static string CheckButton { get { return global::Epsitec.Common.Designer.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (240)); } }
@@ -846,6 +851,7 @@ namespace Epsitec.Common.Designer
 						public static string Mime { get { return global::Epsitec.Common.Designer.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (284)); } }
 						public static string Min { get { return global::Epsitec.Common.Designer.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (268)); } }
 						public static string Multi { get { return global::Epsitec.Common.Designer.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (277)); } }
+						public static string Native { get { return global::Epsitec.Common.Designer.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (33554439)); } }
 						public static string Resolution { get { return global::Epsitec.Common.Designer.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (272)); } }
 						public static string Sample { get { return global::Epsitec.Common.Designer.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (271)); } }
 						public static string SmallStep { get { return global::Epsitec.Common.Designer.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (273)); } }

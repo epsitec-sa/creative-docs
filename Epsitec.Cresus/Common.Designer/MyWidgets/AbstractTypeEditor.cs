@@ -47,6 +47,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				case TypeCode.Time:         return new TypeEditorDateTime();
 				case TypeCode.DateTime:     return new TypeEditorDateTime();
 				case TypeCode.Binary:       return new TypeEditorBinary();
+				case TypeCode.Other:        return new TypeEditorNative();
 			}
 
 			return null;
