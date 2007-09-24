@@ -171,7 +171,7 @@ namespace Epsitec.Common.Designer
 					return many ? Res.Strings.BundleType.Panels : Res.Strings.BundleType.Panel;
 
 				case Type.Entities:
-					return many ? "Entités" : "Entité";	//	TODO: ressources
+					return many ? Res.Strings.BundleType.Entities : Res.Strings.BundleType.Entity;
 			}
 
 			return "?";

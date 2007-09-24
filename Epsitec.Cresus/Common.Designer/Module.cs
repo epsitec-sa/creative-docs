@@ -302,7 +302,7 @@ namespace Epsitec.Common.Designer
 		public void Check()
 		{
 			//	Vérifie toutes les ressources et affiche un rapport.
-			string message = CheckMessage();
+			string message = this.CheckMessage();
 
 			if (string.IsNullOrEmpty(message))  // aucune anomalie ?
 			{

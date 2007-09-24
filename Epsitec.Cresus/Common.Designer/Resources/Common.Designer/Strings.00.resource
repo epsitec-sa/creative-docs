@@ -327,10 +327,12 @@
   <data name="Error.Name.AlreadyExist" id="035">Impossible d&amp;apos;utiliser ce nom, car il existe déjà !</data>
   <data name="Error.Name.Twofold" id="077" mod="1">Deux parties successives séparées par des&lt;br/&gt;points ne peuvent pas être identiques !</data>
   <data name="Error.Name.SamePrefix" id="087" mod="1">Racine utilisée à double !</data>
-  <data name="Error.ShortcutMany" id="0V5" mod="1">Raccourci clavier &lt;i&gt;{0}&lt;/i&gt; utilisés plusieurs fois :</data>
+  <data name="Error.ShortcutMany" id="0V5" mod="1">Raccourci clavier &lt;i&gt;{0}&lt;/i&gt; utilisé plusieurs fois :</data>
   <data name="Error.CheckOK" id="006" mod="1">Aucune anomalie détectée.</data>
   <data name="Action.DisplayFullScreen" id="2">Plein écran</data>
   <data name="Action.EditLocked" id="21">Mode bloqué ou débloqué</data>
   <data name="Action.EditCancel" id="22">Annuler l&amp;apos;édition de la ressource en cours</data>
   <data name="Action.EditOk" id="23">Valider l&amp;apos;édition de la ressource en cours</data>
+  <data name="BundleType.Entities" id="24">Entités</data>
+  <data name="BundleType.Entity" id="25">Entité</data>
 </bundle>
