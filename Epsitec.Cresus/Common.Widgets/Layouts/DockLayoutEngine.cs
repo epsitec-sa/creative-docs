@@ -223,6 +223,9 @@ namespace Epsitec.Common.Widgets.Layouts
 			double fillMinDy = 0;
 			double fillMaxDx = 0;
 			double fillMaxDy = 0;
+
+			int xFillCount = 0;
+			int yFillCount = 0;
 			
 			switch (container.ContainerLayoutMode)
 			{
@@ -309,21 +312,32 @@ namespace Epsitec.Common.Widgets.Layouts
 						switch (container.ContainerLayoutMode)
 						{
 							case ContainerLayoutMode.HorizontalFlow:
-								fillMinDx += min.Width;
+								fillMinDx  = System.Math.Max (fillMinDx, min.Width);
 								fillMinDy  = System.Math.Max (fillMinDy, min.Height);
 								fillMaxDx += max.Width;
 								fillMaxDy  = System.Math.Min (fillMaxDy, max.Height);
+								xFillCount++;
 								break;
 							
 							case ContainerLayoutMode.VerticalFlow:
 								fillMinDx  = System.Math.Max (fillMinDx, min.Width);
-								fillMinDy += min.Height;
+								fillMinDy  = System.Math.Max (fillMinDy, min.Height);
 								fillMaxDx  = System.Math.Min (fillMaxDx, max.Width);
 								fillMaxDy += max.Height;
+								yFillCount++;
 								break;
 						}
 						break;
 				}
+			}
+
+			if (xFillCount > 0)
+			{
+				fillMinDx *= xFillCount;
+			}
+			if (yFillCount > 0)
+			{
+				fillMinDy *= yFillCount;
 			}
 			
 			if (fillMaxDx == 0)
