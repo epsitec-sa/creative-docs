@@ -180,7 +180,7 @@ namespace Epsitec.Common.Document.Panels
 		{
 			//	La souris est sortie du panneau.
 			if ( this.document.Modifier == null )  return;
-			if ( !this.document.Modifier.PropertiesDetailMany )  return;
+			if ( this.document.Modifier.PropertiesDetailMany == false )  return;
 			if ( this.property == null )  return;
 
 			int total = this.property.Owners.Count;
