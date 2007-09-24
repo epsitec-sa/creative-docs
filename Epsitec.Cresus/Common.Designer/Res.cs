@@ -144,6 +144,7 @@ namespace Epsitec.Common.Designer
 					public static global::Epsitec.Common.Types.Caption Enum { get { return Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 0, 306)); } }
 					public static global::Epsitec.Common.Types.Caption Integer { get { return Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 0, 302)); } }
 					public static global::Epsitec.Common.Types.Caption LongInteger { get { return Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 0, 303)); } }
+					public static global::Epsitec.Common.Types.Caption NatifCSharp { get { return Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 2, 2)); } }
 					public static global::Epsitec.Common.Types.Caption String { get { return Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 0, 305)); } }
 					public static global::Epsitec.Common.Types.Caption Structured { get { return Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 0, 307)); } }
 					public static global::Epsitec.Common.Types.Caption Time { get { return Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 0, 399)); } }

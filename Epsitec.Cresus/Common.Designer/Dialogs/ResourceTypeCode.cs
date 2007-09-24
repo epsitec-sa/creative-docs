@@ -62,6 +62,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.CreateRadio(Res.Captions.Types.Type.DateTime);
 				this.CreateRadio(Res.Captions.Types.Type.Enum);
 				this.CreateRadio(Res.Captions.Types.Type.Collection);
+				this.CreateRadio(Res.Captions.Types.Type.NatifCSharp);
 				this.CreateRadio(Res.Captions.Types.Type.Binary);
 				this.tabIndex++;
 
@@ -367,7 +368,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		protected static readonly double		windowWidthCompacted = 195;
 		protected static readonly double		windowWidthExtended = 500;
-		protected static readonly double		windowHeight = 260;
+		protected static readonly double		windowHeight = 280;
 
 		protected ResourceAccess				resourceAccess;
 		protected TypeCode						typeEdited;
