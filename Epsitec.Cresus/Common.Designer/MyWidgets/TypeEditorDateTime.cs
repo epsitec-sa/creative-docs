@@ -175,8 +175,6 @@ namespace Epsitec.Common.Designer.MyWidgets
 				}
 			}
 
-			this.PutSummaryDefaultAndSample(builder);
-
 			return builder.ToString();
 		}
 

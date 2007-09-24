@@ -156,31 +156,6 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.summarySeparator = false;
 		}
 
-		protected void PutSummaryDefaultAndSample(System.Text.StringBuilder builder)
-		{
-			//	Met les informations DefaultValue et SampleValue dans le résumé, si elles existent.
-			//	TODO:
-		}
-
-		protected void PutSummaryDefaultAndSample(System.Text.StringBuilder builder, AbstractType type)
-		{
-			//	Met les informations DefaultValue et SampleValue dans le résumé, si elles existent.
-			if (type.DefaultValue != null || type.SampleValue != null)
-			{
-				this.PutSummarySeparator(builder, 2);
-
-				if (type.DefaultValue != null)
-				{
-					this.PutSummaryValue(builder, Res.Strings.Viewers.Types.Summary.Default, this.TypeToString(type.DefaultValue));
-				}
-
-				if (type.SampleValue != null)
-				{
-					this.PutSummaryValue(builder, Res.Strings.Viewers.Types.Summary.Sample, this.TypeToString(type.SampleValue));
-				}
-			}
-		}
-
 		protected void PutSummaryValue(System.Text.StringBuilder builder, string value)
 		{
 			this.PutSummarySeparator(builder, 1);
