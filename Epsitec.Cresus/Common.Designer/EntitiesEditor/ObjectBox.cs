@@ -1469,10 +1469,13 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					{
 						last = this.fields[i].DefiningTypeId;
 
+						Module module = this.editor.Module.DesignerApplication.SearchModule(last);
+						CultureMap cultureMap = module.AccessEntities.Accessor.Collection[last];
+
 						Field field = new Field(this.editor);
 						field.IsTitle = true;
 						field.IsInterface = true;
-						field.FieldName = "Toto";
+						field.FieldName = string.Concat("<b>", cultureMap.Name, "</b>");
 
 						this.fields.Insert(i, field);
 						this.skipedField++;  // compte le titre lui-même
@@ -2338,7 +2341,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		protected int GroupLineCount(int titleRank)
 		{
-			//	Retourne le nombre de ligne d'après le rang d'un titre.
+			//	Retourne le nombre de ligne d'un groupe d'après le rang de son titre.
 			for (int i=titleRank+1; i<this.fields.Count; i++)
 			{
 				if (this.fields[i].IsTitle || this.fields[i].DefiningTypeId.IsEmpty)
