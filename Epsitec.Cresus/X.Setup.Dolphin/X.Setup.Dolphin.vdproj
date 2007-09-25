@@ -1826,7 +1826,7 @@
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
-        "InstallAllUsers" = "11:FALSE"
+        "InstallAllUsers" = "11:TRUE"
         "ProductVersion" = "8:0.0.8"
         "Manufacturer" = "8:Epsitec"
         "ARPHELPTELEPHONE" = "8:"
