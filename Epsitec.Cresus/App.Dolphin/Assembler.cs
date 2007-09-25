@@ -203,6 +203,12 @@ namespace Epsitec.App.Dolphin
 			//	Par exemple, 'move #"A",X' est remplacé par 'move #H'41,X'.
 			instruction = TextLayout.ConvertToSimpleText(instruction);
 
+			//	Remplace les apostrophes et guillemets typographiques par
+			//	leur variante simple :
+			instruction = instruction.Replace ((char) 0x2019, '\'');
+			instruction = instruction.Replace ((char) 0x201C, '\"');
+			instruction = instruction.Replace ((char) 0x201D, '\"');
+
 			if (instruction.IndexOf('"') == -1)
 			{
 				return instruction;
