@@ -284,12 +284,26 @@ namespace Epsitec.Common.Support.EntityEngine
 							break;
 
 						default:
-							throw new System.NotSupportedException (string.Format ("Relation {0} not supported", field.Relation));
+							throw new System.ArgumentException (string.Format ("FieldRelation.{0} not valid in this context", field.Relation));
 					}
 
 					this.generator.formatter.WriteBeginProperty (CodeGenerator.PropertyAttributes, code);
-					this.EmitPropertyGetter (field, typeName, propName);
-					this.EmitPropertySetter (field, typeName, propName);
+
+					switch (field.Source)
+					{
+						case FieldSource.Value:
+							this.EmitPropertyGetter (field, typeName, propName);
+							this.EmitPropertySetter (field, typeName, propName);
+							break;
+						
+						case FieldSource.Expression:
+							this.EmitPropertyGetter (field, typeName, propName);
+							break;
+
+						default:
+							throw new System.ArgumentException (string.Format ("FieldSource.{0} not valid in this context", field.Source));
+					}
+
 					this.generator.formatter.WriteEndProperty ();
 				}
 			}
@@ -404,6 +418,24 @@ namespace Epsitec.Common.Support.EntityEngine
 			public InterfaceEmitter(CodeGenerator generator, StructuredType type)
 				: base (generator, type)
 			{
+			}
+			
+			protected override void EmitPropertyGetter(StructuredTypeField field, string typeName, string propName)
+			{
+				this.generator.formatter.WriteBeginGetter (new CodeAttributes (CodeVisibility.Public));
+				this.generator.formatter.WriteEndGetter ();
+			}
+
+			protected override void EmitPropertySetter(StructuredTypeField field, string typeName, string propName)
+			{
+				if (field.Relation == FieldRelation.Collection)
+				{
+				}
+				else
+				{
+					this.generator.formatter.WriteBeginSetter (new CodeAttributes (CodeVisibility.Public));
+					this.generator.formatter.WriteEndSetter ();
+				}
 			}
 		}
 
