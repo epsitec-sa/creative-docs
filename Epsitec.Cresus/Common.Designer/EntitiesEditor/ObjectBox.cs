@@ -1384,6 +1384,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			FieldMembership membership = (FieldMembership) dataField.GetValue(Support.Res.Fields.Field.Membership);
 			FieldRelation rel = (FieldRelation) dataField.GetValue(Support.Res.Fields.Field.Relation);
 			Druid typeId = (Druid) dataField.GetValue(Support.Res.Fields.Field.TypeId);
+			Druid definingTypeId = (Druid) dataField.GetValue(Support.Res.Fields.Field.DefiningTypeId);
 			
 			Module dstModule = this.editor.Module.DesignerApplication.SearchModule(typeId);
 			CultureMap dstItem = (dstModule == null) ? null : dstModule.AccessEntities.Accessor.Collection[typeId];
@@ -1407,6 +1408,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 
 			field.CaptionId = fieldCaptionId;
+			field.DefiningTypeId = definingTypeId;
 			field.FieldName = (fieldCultureMap == null) ? "" : fieldCultureMap.Name;
 			field.TypeName = (typeCultureMap == null) ? "" : typeCultureMap.Name;
 			field.Relation = rel;
@@ -1427,6 +1429,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				}
 			}
 
+			//	Ajoute le titre de l'entité dont on hérite, s'il existe.
 			if (this.skipedField > 0)
 			{
 				Field field = new Field(this.editor);
@@ -1447,6 +1450,35 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 				this.fields.Insert(0, field);
 				this.skipedField++;  // compte le titre lui-même
+			}
+
+			//	Ajoute les titres des interfaces, si elles existent.
+			Druid last = Druid.Empty;
+			for (int i=0; i<this.fields.Count; i++)
+			{
+				if (this.fields[i].IsTitle)
+				{
+					continue;
+				}
+
+				if (this.fields[i].DefiningTypeId.IsValid && this.fields[i].Membership == FieldMembership.Local)  // champ d'une interface ?
+				{
+					this.skipedField++;
+
+					if (last != this.fields[i].DefiningTypeId)
+					{
+						last = this.fields[i].DefiningTypeId;
+
+						Field field = new Field(this.editor);
+						field.IsTitle = true;
+						field.IsInterface = true;
+						field.FieldName = "Toto";
+
+						this.fields.Insert(i, field);
+						this.skipedField++;  // compte le titre lui-même
+						i++;
+					}
+				}
 			}
 
 			this.UpdateFieldsLink();
@@ -1807,102 +1839,107 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				graphics.AddLine(this.bounds.Left+2, this.bounds.Bottom+AbstractObject.footerHeight+0.5, this.bounds.Right-2, this.bounds.Bottom+AbstractObject.footerHeight+0.5);
 				graphics.RenderSolid(colorFrame);
 
-				rect = this.RectangleMembership;
-				if (!rect.IsEmpty)
-				{
-					graphics.AddFilledRectangle(rect);
-					Color ci1 = this.GetColorMain(this.hilitedElement == ActiveElement.BoxMembership ? 0.5 : (dragging ? 0.2 : 0.1));
-					Color ci2 = this.GetColorMain(0.0);
-					this.RenderVerticalGradient(graphics, rect, ci1, ci2);
-
-					rect = this.GetFieldBounds(0);
-					rect.Deflate(ObjectBox.textMargin, 2);
-					this.fields[0].TextLayoutField.LayoutSize = rect.Size;
-					this.fields[0].TextLayoutField.Paint(rect.BottomLeft, graphics, Rectangle.MaxValue, this.GetColorMain(0.8), GlyphPaintStyle.Normal);
-
-					rect = this.GetFieldBounds(0);
-					graphics.AddLine(rect.Left, rect.Bottom+0.5, rect.Right, rect.Bottom+0.5);
-					graphics.RenderSolid(colorLine);
-				}
-
+				//	Dessine toutes les lignes, titres ou simples champs.
 				for (int i=0; i<this.fields.Count; i++)
 				{
 					if (this.fields[i].IsTitle)
 					{
-						continue;
+						rect = this.GetFieldBounds(i);
+						rect.Deflate(9.5, 0.5);
+						graphics.AddFilledRectangle(rect);
+						Color ci1 = this.GetColorMain(this.hilitedElement == ActiveElement.BoxMembership ? 0.5 : (dragging ? 0.2 : 0.1));
+						Color ci2 = this.GetColorMain(0.0);
+						this.RenderVerticalGradient(graphics, rect, ci1, ci2);
+
+						rect = this.GetFieldBounds(i);
+						rect.Deflate(ObjectBox.textMargin, 2);
+						this.fields[i].TextLayoutField.LayoutSize = rect.Size;
+						this.fields[i].TextLayoutField.Paint(rect.BottomLeft, graphics, Rectangle.MaxValue, this.GetColorMain(0.8), GlyphPaintStyle.Normal);
+
+						rect = this.GetFieldBounds(i);
+						graphics.AddLine(rect.Left, rect.Bottom+0.5, rect.Right, rect.Bottom+0.5);
+						graphics.RenderSolid(colorLine);
 					}
-
-					Color colorName = this.GetColor(0);
-					Color colorType = this.GetColor(0);
-
-					if (this.hilitedElement == ActiveElement.BoxFieldName && this.hilitedFieldRank == i)
+					else
 					{
+						Color colorName = this.GetColor(0);
+						Color colorType = this.GetColor(0);
+
+						if (this.hilitedElement == ActiveElement.BoxFieldName && this.hilitedFieldRank == i)
+						{
+							rect = this.GetFieldNameBounds(i);
+
+							graphics.AddFilledRectangle(rect);
+							graphics.RenderSolid(this.GetColorMain());
+
+							colorName = this.GetColor(1);
+						}
+
+						if (this.hilitedElement == ActiveElement.BoxFieldType && this.hilitedFieldRank == i)
+						{
+							rect = this.GetFieldTypeBounds(i);
+
+							graphics.AddFilledRectangle(rect);
+							graphics.RenderSolid(this.GetColorMain());
+
+							colorType = this.GetColor(1);
+						}
+
+						if ((this.hilitedElement == ActiveElement.BoxFieldRemove || this.hilitedElement == ActiveElement.BoxFieldMovable) && this.hilitedFieldRank == i)
+						{
+							rect = this.GetFieldBounds(i);
+
+							graphics.AddFilledRectangle(rect);
+							graphics.RenderSolid(this.GetColorMain(0.3));
+						}
+
+						if (this.isFieldMoving && this.fieldInitialRank == i)
+						{
+							rect = this.GetFieldBounds(i);
+
+							graphics.AddFilledRectangle(rect);
+							graphics.RenderSolid(this.GetColorMain(0.3));
+						}
+
+						//	Affiche le nom du champ.
 						rect = this.GetFieldNameBounds(i);
+						rect.Right -= 2;
+						this.fields[i].TextLayoutField.LayoutSize = rect.Size;
+						this.fields[i].TextLayoutField.Paint(rect.BottomLeft, graphics, Rectangle.MaxValue, colorName, GlyphPaintStyle.Normal);
 
-						graphics.AddFilledRectangle(rect);
-						graphics.RenderSolid(this.GetColorMain());
-
-						colorName = this.GetColor(1);
-					}
-
-					if (this.hilitedElement == ActiveElement.BoxFieldType && this.hilitedFieldRank == i)
-					{
+						//	Affiche le type du champ.
 						rect = this.GetFieldTypeBounds(i);
+						rect.Left += 1;
+						if (rect.Width > 10)
+						{
+							this.fields[i].TextLayoutType.LayoutSize = rect.Size;
+							this.fields[i].TextLayoutType.Paint(rect.BottomLeft, graphics, Rectangle.MaxValue, colorType, GlyphPaintStyle.Normal);
+						}
 
-						graphics.AddFilledRectangle(rect);
-						graphics.RenderSolid(this.GetColorMain());
-
-						colorType = this.GetColor(1);
-					}
-
-					if ((this.hilitedElement == ActiveElement.BoxFieldRemove || this.hilitedElement == ActiveElement.BoxFieldMovable) && this.hilitedFieldRank == i)
-					{
 						rect = this.GetFieldBounds(i);
-
-						graphics.AddFilledRectangle(rect);
-						graphics.RenderSolid(this.GetColorMain(0.3));
+						graphics.AddLine(rect.Left, rect.Bottom+0.5, rect.Right, rect.Bottom+0.5);
+						graphics.RenderSolid(colorLine);
 					}
-
-					if (this.isFieldMoving && this.fieldInitialRank == i)
-					{
-						rect = this.GetFieldBounds(i);
-
-						graphics.AddFilledRectangle(rect);
-						graphics.RenderSolid(this.GetColorMain(0.3));
-					}
-
-					//	Affiche le nom du champ.
-					rect = this.GetFieldNameBounds(i);
-					rect.Right -= 2;
-					this.fields[i].TextLayoutField.LayoutSize = rect.Size;
-					this.fields[i].TextLayoutField.Paint(rect.BottomLeft, graphics, Rectangle.MaxValue, colorName, GlyphPaintStyle.Normal);
-
-					//	Affiche le type du champ.
-					rect = this.GetFieldTypeBounds(i);
-					rect.Left += 1;
-					if (rect.Width > 10)
-					{
-						this.fields[i].TextLayoutType.LayoutSize = rect.Size;
-						this.fields[i].TextLayoutType.Paint(rect.BottomLeft, graphics, Rectangle.MaxValue, colorType, GlyphPaintStyle.Normal);
-					}
-
-					rect = this.GetFieldBounds(i);
-					graphics.AddLine(rect.Left, rect.Bottom+0.5, rect.Right, rect.Bottom+0.5);
-					graphics.RenderSolid(colorLine);
 				}
 
-				rect = this.RectangleMembership;
-				if (!rect.IsEmpty)
+				//	Dessine tous les cadres liés aux titres.
+				for (int i=0; i<this.fields.Count; i++)
 				{
-					rect = Rectangle.Union(rect, this.GetFieldBounds(this.skipedField-1));
-					rect.Deflate(9.5, 0.5);
-					Path dashedPath = this.PathRoundRectangle(rect, 8.0);
+					if (this.fields[i].IsTitle)
+					{
+						int j = i + this.GroupLineCount(i);
 
-					rect = this.RectangleMembership;
-					dashedPath.MoveTo(rect.Left+2, rect.Bottom);
-					dashedPath.LineTo(rect.Right-1, rect.Bottom);
-					
-					Misc.DrawPathDash(graphics, dashedPath, 1, 0, 2, false, this.GetColorMain(0.8));
+						rect = Rectangle.Union(this.GetFieldBounds(i), this.GetFieldBounds(j));
+						rect.Deflate(9.5, 0.5);
+						Path dashedPath = this.PathRoundRectangle(rect, 8.0);
+
+						rect = this.GetFieldBounds(i);
+						rect.Deflate(9.5, 0.5);
+						dashedPath.MoveTo(rect.Left+2, rect.Bottom);
+						dashedPath.LineTo(rect.Right-1, rect.Bottom);
+						
+						Misc.DrawPathDash(graphics, dashedPath, 1, 0, 2, false, this.GetColorMain(0.8));
+					}
 				}
 
 				if (this.hilitedElement == ActiveElement.BoxFieldMoving)
@@ -2297,6 +2334,20 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				pos.Y += AbstractObject.buttonRadius;
 				return pos;
 			}
+		}
+
+		protected int GroupLineCount(int titleRank)
+		{
+			//	Retourne le nombre de ligne d'après le rang d'un titre.
+			for (int i=titleRank+1; i<this.fields.Count; i++)
+			{
+				if (this.fields[i].IsTitle || this.fields[i].DefiningTypeId.IsEmpty)
+				{
+					return i-titleRank-1;
+				}
+			}
+
+			return this.fields.Count-titleRank-1;
 		}
 
 		protected Rectangle RectangleMembership

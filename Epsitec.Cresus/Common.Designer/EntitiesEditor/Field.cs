@@ -88,6 +88,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			this.relation = FieldRelation.None;
 			this.membership = FieldMembership.Local;
 			this.captionId = Druid.Empty;
+			this.definingTypeId = Druid.Empty;
 			this.destination = Druid.Empty;
 			this.rank = -1;
 			this.isExplored = false;
@@ -134,6 +135,19 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			set
 			{
 				this.isInherited = value;
+			}
+		}
+
+		public bool IsInterface
+		{
+			//	Indique s'il s'agit d'un champ d'une interface.
+			get
+			{
+				return this.isInterface;
+			}
+			set
+			{
+				this.isInterface = value;
 			}
 		}
 
@@ -217,6 +231,19 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			set
 			{
 				this.captionId = value;
+			}
+		}
+
+		public Druid DefiningTypeId
+		{
+			//	Druid définissant l'interface (TODO: juste ?).
+			get
+			{
+				return this.definingTypeId;
+			}
+			set
+			{
+				this.definingTypeId = value;
 			}
 		}
 
@@ -779,11 +806,13 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		protected Editor editor;
 		protected bool isTitle;
 		protected bool isInherited;
+		protected bool isInterface;
 		protected TextLayout textLayoutField;
 		protected TextLayout textLayoutType;
 		protected FieldRelation relation;
 		protected FieldMembership membership;
 		protected Druid captionId;
+		protected Druid definingTypeId;
 		protected Druid destination;
 		protected int rank;
 		protected ObjectBox srcBox;
