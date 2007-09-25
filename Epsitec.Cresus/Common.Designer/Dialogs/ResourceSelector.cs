@@ -338,6 +338,16 @@ namespace Epsitec.Common.Designer.Dialogs
 			{
 				CultureMap cultureMap = this.collectionView.Items[i] as CultureMap;
 
+				if (this.operation == Operation.InheritEntity)
+				{
+					StructuredData data = cultureMap.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
+					StructuredTypeClass typeClass = (StructuredTypeClass) data.GetValue(Support.Res.Fields.ResourceStructuredType.Class);
+					if (typeClass == StructuredTypeClass.Interface)
+					{
+						continue;  // ne liste pas les interfaces
+					}
+				}
+
 				this.listResources.Items.Add(cultureMap.Name);
 
 				if (cultureMap.Id == this.resource)
