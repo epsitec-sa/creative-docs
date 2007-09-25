@@ -470,10 +470,7 @@ namespace Epsitec.Common.Designer
 				Druid druid = Druid.Empty;
 				StructuredTypeClass typeClass = StructuredTypeClass.Entity;
 
-				//	TODO: il faudra que dans le dialogue on puisse choisir si on
-				//	veut créer une entité ou une interface, donc retourner soit
-				//	StructuredTypeClass.Entity, soit StructuredTypeClass.Interface
-				Common.Dialogs.DialogResult result = this.designerApplication.DlgResourceSelector(Dialogs.ResourceSelector.Operation.InheritEntity, this.designerApplication.CurrentModule, Type.Entities, ref druid, null);
+				Common.Dialogs.DialogResult result = this.designerApplication.DlgResourceSelector(Dialogs.ResourceSelector.Operation.InheritEntity, this.designerApplication.CurrentModule, Type.Entities, ref typeClass, ref druid, null);
 				if (result != Common.Dialogs.DialogResult.Yes)
 				{
 					return;

@@ -1661,8 +1661,9 @@ namespace Epsitec.Common.Designer.MyWidgets
 					type = ResourceAccess.Type.Captions;
 				}
 
+				StructuredTypeClass typeClass = StructuredTypeClass.None;
 				Druid druid = Druid.Parse(ObjectModifier.GetDruid(obj));
-				Common.Dialogs.DialogResult result = this.module.DesignerApplication.DlgResourceSelector(Dialogs.ResourceSelector.Operation.Selection, this.module, type, ref druid, exclude);
+				Common.Dialogs.DialogResult result = this.module.DesignerApplication.DlgResourceSelector(Dialogs.ResourceSelector.Operation.Selection, this.module, type, ref typeClass, ref druid, exclude);
 				ObjectModifier.SetDruid(obj, druid.ToString());
 
 				if (result != Common.Dialogs.DialogResult.Yes)  // annuler ?

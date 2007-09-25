@@ -65,10 +65,18 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.radioTypes.Dock = DockStyle.Right;
 				this.radioTypes.Clicked += new MessageEventHandler(this.HandleRadioClicked);
 
+				this.checkInterface = new CheckButton(header);
+				this.checkInterface.AutoToggle = false;
+				this.checkInterface.Text = "<font size=\"130%\"><b>Interface</b></font>";
+				this.checkInterface.Name = "Interface";
+				this.checkInterface.PreferredWidth = 110;
+				this.checkInterface.Dock = DockStyle.Left;
+				this.checkInterface.Clicked += new MessageEventHandler(this.HandleRadioClicked);
+
 				this.radioAlone = new RadioButton(header);
 				this.radioAlone.Text = "<font size=\"130%\"><b>Pas d'héritage</b></font>";
 				this.radioAlone.Name = "Alone";
-				this.radioAlone.PreferredWidth = 140;
+				this.radioAlone.PreferredWidth = 130;
 				this.radioAlone.Dock = DockStyle.Left;
 				this.radioAlone.Clicked += new MessageEventHandler(this.HandleRadioClicked);
 
@@ -215,6 +223,18 @@ namespace Epsitec.Common.Designer.Dialogs
 			}
 		}
 
+		public StructuredTypeClass StructuredTypeClass
+		{
+			get
+			{
+				return this.typeClass;
+			}
+			set
+			{
+				this.typeClass = value;
+			}
+		}
+
 		protected void AccessChange(Module module)
 		{
 			//	Change l'accès aux ressources dans un autre module.
@@ -352,6 +372,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.title.Visibility = true;
 				this.radioTypes.Visibility = true;
 				this.radioEntities.Visibility = true;
+				this.checkInterface.Visibility = false;
 				this.radioAlone.Visibility = false;
 				this.radioInherit.Visibility = false;
 
@@ -365,6 +386,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.title.Visibility = false;
 				this.radioTypes.Visibility = false;
 				this.radioEntities.Visibility = false;
+				this.checkInterface.Visibility = true;
 				this.radioAlone.Visibility = true;
 				this.radioInherit.Visibility = true;
 
@@ -375,6 +397,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.title.Visibility = true;
 				this.radioTypes.Visibility = false;
 				this.radioEntities.Visibility = false;
+				this.checkInterface.Visibility = false;
 				this.radioAlone.Visibility = false;
 				this.radioInherit.Visibility = false;
 
@@ -388,6 +411,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			if (this.operation == Operation.InheritEntity)
 			{
 				this.ignoreChanged = true;
+				this.checkInterface.ActiveState = (this.typeClass == StructuredTypeClass.Interface) ? ActiveState.Yes : ActiveState.No;
 				this.radioAlone.ActiveState = this.isInherit ? ActiveState.No : ActiveState.Yes;
 				this.radioInherit.ActiveState = this.isInherit ? ActiveState.Yes : ActiveState.No;
 				this.ignoreChanged = false;
@@ -437,7 +461,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				return;
 			}
 
-			RadioButton button = sender as RadioButton;
+			AbstractButton button = sender as AbstractButton;
 
 			if (button.Name == "Types")
 			{
@@ -457,6 +481,23 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.UpdateArray();
 				this.UpdateButtons();
 				this.UpdateRadios();
+			}
+
+			if (button.Name == "Interface")
+			{
+				if (this.checkInterface.ActiveState == ActiveState.Yes)
+				{
+					this.checkInterface.ActiveState = ActiveState.No;
+					this.typeClass = StructuredTypeClass.Entity;
+				}
+				else
+				{
+					this.checkInterface.ActiveState = ActiveState.Yes;
+					this.typeClass = StructuredTypeClass.Interface;
+				}
+
+				this.UpdateInherit();
+				this.UpdateButtons();
 			}
 
 			if (button.Name == "Alone")
@@ -560,6 +601,7 @@ namespace Epsitec.Common.Designer.Dialogs
 		protected Module						module;
 		protected Operation						operation;
 		protected ResourceAccess.Type			resourceType;
+		protected StructuredTypeClass			typeClass;
 		protected bool							isInherit;
 		protected ResourceAccess				access;
 		protected Druid							resource;
@@ -569,6 +611,7 @@ namespace Epsitec.Common.Designer.Dialogs
 		protected StaticText					title;
 		protected RadioButton					radioTypes;
 		protected RadioButton					radioEntities;
+		protected CheckButton					checkInterface;
 		protected RadioButton					radioAlone;
 		protected RadioButton					radioInherit;
 		protected StaticText					header1;
