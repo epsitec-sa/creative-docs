@@ -297,6 +297,9 @@ namespace Epsitec.Common.Support.EntityEngine
 							break;
 						
 						case FieldSource.Expression:
+
+							//	TODO: properly handle expressions
+
 							this.EmitPropertyGetter (field, typeName, propName);
 							break;
 

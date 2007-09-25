@@ -283,6 +283,8 @@ namespace Epsitec.Common.Types
 		/// <param name="action">The action for the <see cref="StructuredTypeField"/>.</param>
 		public void ForEachField(System.Action<StructuredTypeField> action)
 		{
+			this.IncludeInheritedFields ();
+
 			foreach (StructuredTypeField field in this.GetSortedFields ())
 			{
 				action (field);
@@ -297,6 +299,8 @@ namespace Epsitec.Common.Types
 		/// <returns>The first matching <see cref="StructuredTypeField"/> or <c>null</c>.</returns>
 		public StructuredTypeField FindField(System.Predicate<StructuredTypeField> predicate)
 		{
+			this.IncludeInheritedFields ();
+			
 			foreach (StructuredTypeField field in this.GetSortedFields ())
 			{
 				if (predicate (field))
