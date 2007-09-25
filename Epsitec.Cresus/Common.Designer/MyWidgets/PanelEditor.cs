@@ -3867,7 +3867,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 				Path path = new Path();
 				path.AppendRectangle(ext);
-				Misc.DrawPathDash(graphics, path, 2, 0, 4, PanelsContext.ColorHiliteOutline);
+				Misc.DrawPathDash(graphics, path, 2, 0, 4, false, PanelsContext.ColorHiliteOutline);
 			}
 
 			if (this.objectModifier.AreChildrenGrid(obj))
@@ -4002,7 +4002,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			Path path = new Path();
 			path.AppendRectangle(rect);
-			Misc.DrawPathDash(graphics, path, thickness, thickness*2-1, thickness*2+1, PanelsContext.ColorHiliteParent);
+			Misc.DrawPathDash(graphics, path, thickness, thickness*2-1, thickness*2+1, false, PanelsContext.ColorHiliteParent);
 
 			rect.Deflate(thickness/2+0.5);
 			graphics.AddRectangle(rect);
@@ -4199,7 +4199,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			else  // hilite ?
 			{
 				path = Misc.GetCrossPath(area1, area2);
-				Misc.DrawPathDash(graphics, path, 1, 8, 3, color);
+				Misc.DrawPathDash(graphics, path, 1, 8, 3, false, color);
 			}
 		}
 
@@ -4222,7 +4222,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			{
 				Path path = new Path();
 				path.AppendRectangle(area);
-				Misc.DrawPathDash(graphics, path, 1, 8, 3, color);
+				Misc.DrawPathDash(graphics, path, 1, 8, 3, false, color);
 			}
 		}
 

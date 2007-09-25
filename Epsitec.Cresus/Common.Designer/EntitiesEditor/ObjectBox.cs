@@ -1875,7 +1875,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					dashedPath.MoveTo(rect.Left+2, rect.Bottom);
 					dashedPath.LineTo(rect.Right-1, rect.Bottom);
 					
-					Misc.DrawPathDash(graphics, dashedPath, 1, 0, 2, this.GetColorMain(0.8));
+					Misc.DrawPathDash(graphics, dashedPath, 1, 0, 2, false, this.GetColorMain(0.8));
 				}
 
 				if (this.hilitedElement == ActiveElement.BoxFieldMoving)
@@ -1913,11 +1913,11 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			{
 				if (this.isRoot)
 				{
-					Misc.DrawPathDash(graphics, path, 6, 0, 7, true, colorFrame);
+					Misc.DrawPathDash(graphics, path, 6, 7, 7, true, colorFrame);
 				}
 				else
 				{
-					Misc.DrawPathDash(graphics, path, 2, 0, 3, true, colorFrame);
+					Misc.DrawPathDash(graphics, path, 2, 7, 4, true, colorFrame);
 				}
 			}
 			else
@@ -2139,7 +2139,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			Path path = new Path();
 			path.MoveTo(p1);
 			path.LineTo(p2);
-			Misc.DrawPathDash(graphics, path, 3, 5, 5, color);
+			Misc.DrawPathDash(graphics, path, 3, 5, 5, false, color);
 		}
 
 		protected void DrawEmptySlider(Graphics graphics, Point p1, Point p2, bool hilited)
