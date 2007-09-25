@@ -34,11 +34,6 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			this.subtitle.Alignment = ContentAlignment.MiddleCenter;
 			this.subtitle.BreakMode = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine;
 
-			this.basename = new TextLayout();
-			this.basename.DefaultFontSize = 10;
-			this.basename.Alignment = ContentAlignment.MiddleCenter;
-			this.basename.BreakMode = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine;
-
 			this.fields = new List<Field>();
 
 			this.columnsSeparatorRelative = 0.5;
@@ -105,31 +100,6 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 		}
 
-		protected string Basename
-		{
-			//	Nom de la classe de base, affiché verticalement.
-			get
-			{
-				return this.basenameString;
-			}
-			set
-			{
-				if (this.basenameString != value)
-				{
-					this.basenameString = value;
-
-					if (string.IsNullOrEmpty(this.basenameString))
-					{
-						this.basename.Text = null;
-					}
-					else
-					{
-						this.basename.Text = string.Concat("<b>", this.basenameString, "</b>");
-					}
-				}
-			}
-		}
-
 		public void SetContent(CultureMap cultureMap)
 		{
 			//	Initialise le contenu de la boîte.
@@ -137,7 +107,6 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 			this.Title = this.cultureMap.Name;
 			this.UpdateSubtitle();
-			this.UpdateBasename();
 
 			StructuredData data = this.cultureMap.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
 			IList<StructuredData> dataFields = data.GetValue(Support.Res.Fields.ResourceStructuredType.Fields) as IList<StructuredData>;
@@ -153,7 +122,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				}
 			}
 
-			this.UpdateFields();
+			this.UpdateFieldsContent();
 			this.UpdateSources();
 		}
 
@@ -271,7 +240,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				{
 					this.isExtended = value;
 
-					this.UpdateFields();
+					this.UpdateFieldsLink();
 					this.editor.Invalidate();
 				}
 			}
@@ -337,13 +306,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			//	Retourne la hauteur requise selon le nombre de champs définis.
 			if (this.isExtended)
 			{
-				int count = this.fields.Count;
-				if (this.membershipCount > 0)
-				{
-					count++;
-				}
-
-				return AbstractObject.headerHeight + ObjectBox.fieldHeight*count + AbstractObject.footerHeight + 20;
+				return AbstractObject.headerHeight + ObjectBox.fieldHeight*this.fields.Count + AbstractObject.footerHeight + 20;
 			}
 			else
 			{
@@ -820,7 +783,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				for (int i=-1; i<this.fields.Count; i++)
 				{
 					rect = this.GetFieldMovingBounds(i);
-					if (i >= this.membershipCount-1 && rect.Contains(pos))
+					if (i >= this.skipedField-1 && rect.Contains(pos))  // TODO: -1 juste ?
 					{
 						element = ActiveElement.BoxFieldMoving;
 						fieldRank = i;
@@ -933,7 +896,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 						for (int i=-1; i<this.fields.Count; i++)
 						{
 							rect = this.GetFieldAddBounds(i);
-							if (i >= this.membershipCount-1 && rect.Contains(pos))
+							if (i >= this.skipedField-1 && rect.Contains(pos))  // TODO: -1 juste ?
 							{
 								element = ActiveElement.BoxFieldAdd;
 								fieldRank = i;
@@ -959,7 +922,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					for (int i=0; i<this.fields.Count; i++)
 					{
 						rect = this.GetFieldRemoveBounds(i);
-						if (this.editor.CurrentModifyMode == Editor.ModifyMode.Unlocked && i >= this.membershipCount && rect.Contains(pos))
+						if (this.editor.CurrentModifyMode == Editor.ModifyMode.Unlocked && i >= this.skipedField && rect.Contains(pos))
 						{
 							element = ActiveElement.BoxFieldRemove;
 							fieldRank = i;
@@ -968,7 +931,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 						}
 
 						rect = this.GetFieldMovableBounds(i);
-						if (this.editor.CurrentModifyMode == Editor.ModifyMode.Unlocked && i >= this.membershipCount && rect.Contains(pos) && this.Fields.Count-this.membershipCount > 1)
+						if (this.editor.CurrentModifyMode == Editor.ModifyMode.Unlocked && i >= this.skipedField && rect.Contains(pos) && this.Fields.Count-this.skipedField > 1)
 						{
 							element = ActiveElement.BoxFieldMovable;
 							fieldRank = i;
@@ -977,7 +940,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 						}
 
 						rect = this.GetFieldNameBounds(i);
-						if (i >= this.membershipCount && rect.Contains(pos))
+						if (i >= this.skipedField && rect.Contains(pos))
 						{
 							element = ActiveElement.BoxFieldName;
 							fieldRank = i;
@@ -986,7 +949,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 						}
 
 						rect = this.GetFieldTypeBounds(i);
-						if (i >= this.membershipCount && rect.Contains(pos))
+						if (i >= this.skipedField && rect.Contains(pos))
 						{
 							element = ActiveElement.BoxFieldType;
 							fieldRank = i;
@@ -1121,12 +1084,6 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		{
 			//	Retourne le rectangle occupé par un champ.
 			Rectangle rect = this.bounds;
-
-			if (this.membershipCount > 0)
-			{
-				rank++;
-			}
-
 			rect.Deflate(2, 0);
 			rect.Bottom = rect.Top - AbstractObject.headerHeight - ObjectBox.fieldHeight*(rank+1) - 12;
 			rect.Height = ObjectBox.fieldHeight;
@@ -1179,10 +1136,16 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		protected void LocateField(int rank)
 		{
 			//	Montre le champ cliqué avec le bouton de droite.
+			int fieldRank = this.fields[rank].Rank;
+			if (fieldRank == -1)
+			{
+				return;
+			}
+
 			StructuredData data = this.cultureMap.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
 			IList<StructuredData> dataFields = data.GetValue(Support.Res.Fields.ResourceStructuredType.Fields) as IList<StructuredData>;
 
-			StructuredData dataField = dataFields[rank];
+			StructuredData dataField = dataFields[fieldRank];
 			Druid fieldCaptionId = (Druid) dataField.GetValue(Support.Res.Fields.Field.CaptionId);
 
 			Module module = this.editor.Module.DesignerApplication.SearchModule(fieldCaptionId);
@@ -1196,10 +1159,16 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		protected void LocateType(int rank)
 		{
 			//	Montre le type cliqué avec le bouton de droite.
+			int fieldRank = this.fields[rank].Rank;
+			if (fieldRank == -1)
+			{
+				return;
+			}
+
 			StructuredData data = this.cultureMap.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
 			IList<StructuredData> dataFields = data.GetValue(Support.Res.Fields.ResourceStructuredType.Fields) as IList<StructuredData>;
 
-			StructuredData dataField = dataFields[rank];
+			StructuredData dataField = dataFields[fieldRank];
 			Druid typeId = (Druid) dataField.GetValue(Support.Res.Fields.Field.TypeId);
 			FieldRelation rel = (FieldRelation) dataField.GetValue(Support.Res.Fields.Field.Relation);
 
@@ -1226,15 +1195,18 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					dstRank++;
 				}
 
-				StructuredData movingfield = dataFields[srcRank];
-				dataFields.RemoveAt(srcRank);
-				dataFields.Insert(dstRank, movingfield);
+				int fieldSrcRank = this.fields[srcRank].Rank;
+				int fieldDstRank = this.fields[dstRank].Rank;
+
+				StructuredData movingfield = dataFields[fieldSrcRank];
+				dataFields.RemoveAt(fieldSrcRank);
+				dataFields.Insert(fieldDstRank, movingfield);
 
 				Field movingFld = this.fields[srcRank];
 				this.fields.RemoveAt(srcRank);
 				this.fields.Insert(dstRank, movingFld);
 
-				this.UpdateFields();
+				this.UpdateFieldsLink();
 				this.editor.UpdateAfterAddOrRemoveConnection(this);
 				this.editor.Module.AccessEntities.SetLocalDirty();
 			}
@@ -1254,11 +1226,12 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 				StructuredData data = this.cultureMap.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
 				IList<StructuredData> dataFields = data.GetValue(Support.Res.Fields.ResourceStructuredType.Fields) as IList<StructuredData>;
-				dataFields.RemoveAt(rank);
+				int fieldRank = this.fields[rank].Rank;
+				dataFields.RemoveAt(fieldRank);
 
 				this.fields.RemoveAt(rank);
 
-				this.UpdateFields();
+				this.UpdateFieldsLink();
 				this.editor.UpdateAfterAddOrRemoveConnection(this);
 				this.editor.Module.AccessEntities.SetLocalDirty();
 			}
@@ -1301,14 +1274,15 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			Druid druid = fieldCultureMap.Id;  //?this.CreateFieldCaption(name);
 			newField.SetValue(Support.Res.Fields.Field.CaptionId, druid);
 
-			dataFields.Insert(rank+1, newField);
+			int fieldRank = this.fields[rank].Rank;
+			dataFields.Insert(fieldRank+1, newField);
 			//?accessor.PersistChanges();
 
 			Field field = new Field(this.editor);
 			this.UpdateField(newField, field);
 			this.fields.Insert(rank+1, field);
 
-			this.UpdateFields();
+			this.UpdateFieldsLink();
 			this.editor.UpdateAfterAddOrRemoveConnection(this);
 			this.editor.Module.AccessEntities.SetLocalDirty();
 			this.hilitedElement = ActiveElement.None;
@@ -1317,10 +1291,16 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		protected void ChangeFieldName(int rank)
 		{
 			//	Choix du nom pour un champ.
+			int fieldRank = this.fields[rank].Rank;
+			if (fieldRank == -1)
+			{
+				return;
+			}
+
 			StructuredData data = this.cultureMap.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
 			IList<StructuredData> dataFields = data.GetValue(Support.Res.Fields.ResourceStructuredType.Fields) as IList<StructuredData>;
 
-			StructuredData dataField = dataFields[rank];
+			StructuredData dataField = dataFields[fieldRank];
 			Druid fieldCaptionId = (Druid) dataField.GetValue(Support.Res.Fields.Field.CaptionId);
 
 			IResourceAccessor fieldAccessor = this.editor.Module.AccessFields.Accessor;
@@ -1350,10 +1330,16 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		protected void ChangeFieldType(int rank)
 		{
 			//	Choix du type pour un champ.
+			int fieldRank = this.fields[rank].Rank;
+			if (fieldRank == -1)
+			{
+				return;
+			}
+
 			StructuredData data = this.cultureMap.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
 			IList<StructuredData> dataFields = data.GetValue(Support.Res.Fields.ResourceStructuredType.Fields) as IList<StructuredData>;
 
-			StructuredData dataField = dataFields[rank];
+			StructuredData dataField = dataFields[fieldRank];
 			Druid druid = (Druid) dataField.GetValue(Support.Res.Fields.Field.TypeId);
 
 			Module module = this.editor.Module;
@@ -1429,18 +1415,53 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			field.SrcBox = this;
 		}
 
-		protected void UpdateFields()
+		protected void UpdateFieldsContent()
 		{
-			//	Met à jour toutes les liaisons des champs.
-			this.membershipCount = 0;
+			//	Crée tous les champs de titrage.
+			this.skipedField = 0;
 			for (int i=0; i<this.fields.Count; i++)
 			{
-				this.fields[i].IsSourceExpanded = this.isExtended;
-				this.fields[i].Rank = i;
-
 				if (this.fields[i].Membership == FieldMembership.Inherited)
 				{
-					this.membershipCount++;  // nombre de champs hérités au début de la liste
+					this.skipedField++;  // nombre de champs hérités au début de la liste
+				}
+			}
+
+			if (this.skipedField > 0)
+			{
+				Field field = new Field(this.editor);
+				field.IsTitle = true;
+				field.IsInherited = true;
+
+				StructuredData data = this.cultureMap.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
+				Druid druid = (Druid) data.GetValue(Support.Res.Fields.ResourceStructuredType.BaseType);
+				if (druid.IsValid)
+				{
+					Module module = this.editor.Module.DesignerApplication.SearchModule(druid);
+					CultureMap cultureMap = module.AccessEntities.Accessor.Collection[druid];
+					if (cultureMap != null)
+					{
+						field.FieldName = string.Concat("<b>", cultureMap.Name, "</b>");
+					}
+				}
+
+				this.fields.Insert(0, field);
+				this.skipedField++;  // compte le titre lui-même
+			}
+
+			this.UpdateFieldsLink();
+		}
+
+		protected void UpdateFieldsLink()
+		{
+			//	Met à jour toutes les liaisons des champs.
+			int rank = 0;
+			for (int i=0; i<this.fields.Count; i++)
+			{
+				if (!this.fields[i].IsTitle)
+				{
+					this.fields[i].IsSourceExpanded = this.isExtended;
+					this.fields[i].Rank = rank++;
 				}
 			}
 		}
@@ -1786,26 +1807,31 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				graphics.AddLine(this.bounds.Left+2, this.bounds.Bottom+AbstractObject.footerHeight+0.5, this.bounds.Right-2, this.bounds.Bottom+AbstractObject.footerHeight+0.5);
 				graphics.RenderSolid(colorFrame);
 
-				if (this.membershipCount > 0)
+				rect = this.RectangleMembership;
+				if (!rect.IsEmpty)
 				{
-					rect = this.RectangleMembership;
 					graphics.AddFilledRectangle(rect);
 					Color ci1 = this.GetColorMain(this.hilitedElement == ActiveElement.BoxMembership ? 0.5 : (dragging ? 0.2 : 0.1));
 					Color ci2 = this.GetColorMain(0.0);
 					this.RenderVerticalGradient(graphics, rect, ci1, ci2);
 
-					rect = this.GetFieldBounds(-1);
+					rect = this.GetFieldBounds(0);
 					rect.Deflate(ObjectBox.textMargin, 2);
-					this.basename.LayoutSize = rect.Size;
-					this.basename.Paint(rect.BottomLeft, graphics, Rectangle.MaxValue, this.GetColorMain(0.8), GlyphPaintStyle.Normal);
+					this.fields[0].TextLayoutField.LayoutSize = rect.Size;
+					this.fields[0].TextLayoutField.Paint(rect.BottomLeft, graphics, Rectangle.MaxValue, this.GetColorMain(0.8), GlyphPaintStyle.Normal);
 
-					rect = this.GetFieldBounds(-1);
+					rect = this.GetFieldBounds(0);
 					graphics.AddLine(rect.Left, rect.Bottom+0.5, rect.Right, rect.Bottom+0.5);
 					graphics.RenderSolid(colorLine);
 				}
 
 				for (int i=0; i<this.fields.Count; i++)
 				{
+					if (this.fields[i].IsTitle)
+					{
+						continue;
+					}
+
 					Color colorName = this.GetColor(0);
 					Color colorType = this.GetColor(0);
 
@@ -1865,9 +1891,10 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					graphics.RenderSolid(colorLine);
 				}
 
-				if (this.membershipCount > 0)
+				rect = this.RectangleMembership;
+				if (!rect.IsEmpty)
 				{
-					rect = Rectangle.Union(this.GetFieldBounds(-1), this.GetFieldBounds(this.membershipCount-1));
+					rect = Rectangle.Union(rect, this.GetFieldBounds(this.skipedField-1));
 					rect.Deflate(9.5, 0.5);
 					Path dashedPath = this.PathRoundRectangle(rect, 8.0);
 
@@ -1893,13 +1920,13 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					!this.IsHeaderHilite && !this.isFieldMoving && !this.isChangeWidth && !this.isMoveColumnsSeparator)
 				{
 					//	Dessine la glissière à gauche pour suggérer les boutons Add/Remove des champs.
-					Point p1 = this.GetFieldAddBounds(this.membershipCount-1).Center;
+					Point p1 = this.GetFieldAddBounds(this.skipedField-1).Center;
 					Point p2 = this.GetFieldAddBounds(this.fields.Count-1).Center;
 					bool hilited = this.hilitedElement == ActiveElement.BoxFieldAdd || this.hilitedElement == ActiveElement.BoxFieldRemove;
 					this.DrawEmptySlider(graphics, p1, p2, hilited);
 
 					//	Dessine la glissière à droite pour suggérer les boutons Movable des champs.
-					if (this.fields.Count-this.membershipCount > 1)
+					if (this.fields.Count-this.skipedField > 1)
 					{
 						p1.X = p2.X = this.GetFieldMovableBounds(0).Center.X;
 						hilited = this.hilitedElement == ActiveElement.BoxFieldMovable;
@@ -2279,9 +2306,9 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			{
 				Rectangle rect = Rectangle.Empty;
 
-				if (this.membershipCount > 0)
+				if (this.fields.Count > 0 && this.fields[0].IsTitle && this.fields[0].IsInherited)
 				{
-					rect = this.GetFieldBounds(-1);
+					rect = this.GetFieldBounds(0);
 					rect.Deflate(9.5, 0.5);
 				}
 
@@ -2328,26 +2355,6 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				this.Subtitle = module.ModuleInfo.Name;
 				this.isDimmed = true;
 			}
-		}
-
-		protected void UpdateBasename()
-		{
-			//	Met à jour le nom de l'entité de base.
-			StructuredData data = this.cultureMap.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
-			Druid druid = (Druid) data.GetValue(Support.Res.Fields.ResourceStructuredType.BaseType);
-
-			if (druid.IsValid)
-			{
-				Module module = this.editor.Module.DesignerApplication.SearchModule(druid);
-				CultureMap cultureMap = module.AccessEntities.Accessor.Collection[druid];
-				if (cultureMap != null)
-				{
-					this.Basename = cultureMap.Name;
-					return;
-				}
-			}
-
-			this.Basename = null;
 		}
 
 
@@ -2461,7 +2468,6 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			//	Ajuste le contenu de la boîte après sa désérialisation.
 			this.Title = this.cultureMap.Name;
 			this.UpdateSubtitle();
-			this.UpdateBasename();
 			this.isRoot = (this == this.editor.Boxes[0]);  // la première boîte est toujours la boîte racine
 
 			StructuredData data = this.cultureMap.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
@@ -2500,7 +2506,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 			this.fields = newFields;  // la nouvelle liste propre remplace la liste désérialisée
 
-			this.UpdateFields();
+			this.UpdateFieldsContent();
 			this.UpdateSources();
 		}
 
@@ -2551,12 +2557,10 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		protected bool isConnectedToRoot;
 		protected string titleString;
 		protected string subtitleString;
-		protected string basenameString;
 		protected TextLayout title;
 		protected TextLayout subtitle;
-		protected TextLayout basename;
 		protected List<Field> fields;
-		protected int membershipCount;
+		protected int skipedField;
 		protected List<SourceInfo> sourcesList;
 		protected int sourcesClosedCount;
 		protected List<ObjectConnection> connectionListBt;

@@ -107,9 +107,39 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			this.commentText = "Commentaire libre, que vous pouvez modifier à volonté.";
 		}
 
+		public bool IsTitle
+		{
+			//	Indique si le champ est un titre d'héritage ou d'interface.
+			get
+			{
+				return this.isTitle;
+			}
+			set
+			{
+				if (this.isTitle != value)
+				{
+					this.isTitle = value;
+					this.textLayoutField.Alignment = this.isTitle ? ContentAlignment.MiddleCenter : ContentAlignment.MiddleLeft;
+				}
+			}
+		}
+
+		public bool IsInherited
+		{
+			//	Indique s'il s'agit d'un champ hérité.
+			get
+			{
+				return this.isInherited;
+			}
+			set
+			{
+				this.isInherited = value;
+			}
+		}
+
 		public string FieldName
 		{
-			//	Nom du champ.
+			//	Nom du champ ou du titre.
 			get
 			{
 				return this.textLayoutField.Text;
@@ -747,6 +777,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 
 		protected Editor editor;
+		protected bool isTitle;
+		protected bool isInherited;
 		protected TextLayout textLayoutField;
 		protected TextLayout textLayoutType;
 		protected FieldRelation relation;
