@@ -356,7 +356,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			//	Met à jour le bouton "Utiliser".
 			if (this.operation == Operation.InheritEntity)
 			{
-				this.buttonUse.Enable = (this.listResources.SelectedIndex != -1 || !this.isInherit);
+				this.buttonUse.Enable = (this.listResources.SelectedIndex != -1 || !this.IsInherit);
 			}
 			else
 			{
@@ -411,15 +411,29 @@ namespace Epsitec.Common.Designer.Dialogs
 			if (this.operation == Operation.InheritEntity)
 			{
 				this.ignoreChanged = true;
-				this.checkInterface.ActiveState = (this.typeClass == StructuredTypeClass.Interface) ? ActiveState.Yes : ActiveState.No;
-				this.radioAlone.ActiveState = this.isInherit ? ActiveState.No : ActiveState.Yes;
-				this.radioInherit.ActiveState = this.isInherit ? ActiveState.Yes : ActiveState.No;
+
+				if (this.typeClass == StructuredTypeClass.Interface)
+				{
+					this.checkInterface.ActiveState = ActiveState.Yes;
+					this.radioAlone.Enable = false;
+					this.radioInherit.Enable = false;
+				}
+				else
+				{
+					this.checkInterface.ActiveState = ActiveState.No;
+					this.radioAlone.Enable = true;
+					this.radioInherit.Enable = true;
+				}
+
+				this.radioAlone.ActiveState = this.IsInherit ? ActiveState.No : ActiveState.Yes;
+				this.radioInherit.ActiveState = this.IsInherit ? ActiveState.Yes : ActiveState.No;
+
 				this.ignoreChanged = false;
 
-				this.header1.Enable = this.isInherit;
-				this.header2.Enable = this.isInherit;
-				this.listModules.Enable = this.isInherit;
-				this.listResources.Enable = this.isInherit;
+				this.header1.Enable = this.IsInherit;
+				this.header2.Enable = this.IsInherit;
+				this.listModules.Enable = this.IsInherit;
+				this.listResources.Enable = this.IsInherit;
 			}
 			else
 			{
@@ -430,12 +444,20 @@ namespace Epsitec.Common.Designer.Dialogs
 			}
 		}
 
+		protected bool IsInherit
+		{
+			get
+			{
+				return this.typeClass != StructuredTypeClass.Interface && this.isInherit;
+			}
+		}
+
 		protected Druid SelectedResource
 		{
 			//	Retourne le Druid de la ressource actuellement sélectionnée.
 			get
 			{
-				if (this.operation == Operation.InheritEntity && !this.isInherit)
+				if (this.operation == Operation.InheritEntity && !this.IsInherit)
 				{
 					return Druid.Empty;
 				}
