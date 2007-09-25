@@ -437,6 +437,17 @@ namespace Epsitec.Common.Types
 						return 1;
 					}
 				}
+				if (valX.DefiningTypeId.IsEmpty != valY.DefiningTypeId.IsEmpty)
+				{
+					if (valX.DefiningTypeId.IsEmpty)
+					{
+						return 1;
+					}
+					else
+					{
+						return -1;
+					}
+				}
 
 				int rx = valX.Rank;
 				int ry = valY.Rank;
