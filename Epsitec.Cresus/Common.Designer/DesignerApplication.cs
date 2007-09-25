@@ -70,8 +70,8 @@ namespace Epsitec.Common.Designer
 					parentCenter = parentWindow.WindowBounds.Center;
 				}
 
-				windowBounds = new Rectangle (parentCenter.X-1000/2, parentCenter.Y-700/2, 1000, 700);
-				windowBounds = ScreenInfo.FitIntoWorkingArea (windowBounds);
+				windowBounds = new Rectangle(parentCenter.X-1000/2, parentCenter.Y-700/2, 1000, 700);
+				windowBounds = ScreenInfo.FitIntoWorkingArea(windowBounds);
 
 				window.WindowBounds = windowBounds;
 				window.Root.MinSize = new Size(500, 400);

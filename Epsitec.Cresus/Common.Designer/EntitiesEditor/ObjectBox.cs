@@ -1135,6 +1135,17 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		}
 
 
+		protected bool IsInterface
+		{
+			//	Indique si l'entité est une interface.
+			get
+			{
+				StructuredData data = this.cultureMap.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
+				StructuredTypeClass typeClass = (StructuredTypeClass) data.GetValue(Support.Res.Fields.ResourceStructuredType.Class);
+				return typeClass == StructuredTypeClass.Interface;
+			}
+		}
+
 		protected void LocateEntity()
 		{
 			//	Montre l'entité cliquée avec le bouton de droite.
@@ -1898,8 +1909,22 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 
 			//	Dessine le cadre en noir.
-			graphics.Rasterizer.AddOutline(path, this.isRoot ? 6 : 2);
-			graphics.RenderSolid(colorFrame);
+			if (this.IsInterface)
+			{
+				if (this.isRoot)
+				{
+					Misc.DrawPathDash(graphics, path, 6, 0, 7, true, colorFrame);
+				}
+				else
+				{
+					Misc.DrawPathDash(graphics, path, 2, 0, 3, true, colorFrame);
+				}
+			}
+			else
+			{
+				graphics.Rasterizer.AddOutline(path, this.isRoot ? 6 : 2);
+				graphics.RenderSolid(colorFrame);
+			}
 
 			//	Dessine les boutons sur les glissières.
 			if (this.isExtended)

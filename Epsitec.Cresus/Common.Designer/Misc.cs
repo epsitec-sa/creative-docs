@@ -124,6 +124,12 @@ namespace Epsitec.Common.Designer
 		static public void DrawPathDash(Graphics graphics, Path path, double width, double dash, double gap, Color color)
 		{
 			//	Dessine un traitillé simple (dash/gap) le long d'un chemin.
+			Misc.DrawPathDash(graphics, path, width, dash, gap, false, color);
+		}
+
+		static public void DrawPathDash(Graphics graphics, Path path, double width, double dash, double gap, bool round, Color color)
+		{
+			//	Dessine un traitillé simple (dash/gap) le long d'un chemin.
 			if (path.IsEmpty)  return;
 
 			DashedPath dp = new DashedPath();
@@ -138,7 +144,7 @@ namespace Epsitec.Common.Designer
 
 			using (Path temp = dp.GenerateDashedPath())
 			{
-				graphics.Rasterizer.AddOutline(temp, width, CapStyle.Square, JoinStyle.Round, 5.0);
+				graphics.Rasterizer.AddOutline(temp, width, round ? CapStyle.Round : CapStyle.Square, JoinStyle.Round, 5.0);
 				graphics.RenderSolid(color);
 			}
 		}
