@@ -348,6 +348,12 @@ namespace Epsitec.Common.Types
 			{
 				throw new System.ArgumentNullException ("Empty field specified");
 			}
+			
+			if ((value == null) &&
+				((field.Options & FieldOptions.Nullable) == FieldOptions.Nullable))
+			{
+				return true;
+			}
 
 			switch (field.Relation)
 			{

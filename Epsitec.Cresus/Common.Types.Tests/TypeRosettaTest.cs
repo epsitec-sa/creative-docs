@@ -258,6 +258,31 @@ namespace Epsitec.Common.Types
 			Assert.IsFalse (TypeRosetta.IsValidValue (listB, new StructuredTypeField ("X", typeA, Support.Druid.Empty, 0, FieldRelation.Collection)));
 		}
 
+		[Test]
+		public void CheckVerifyValueValidityWithNullable()
+		{
+			Assert.IsTrue (StringType.Default.IsNullable);
+			Assert.IsFalse (IntegerType.Default.IsNullable);
+
+			Assert.IsTrue (TypeRosetta.IsValidValue ("Abc", new StructuredTypeField ("X", StringType.Default, Support.Druid.Empty, 0, FieldRelation.None, FieldMembership.Local, FieldSource.Value, FieldOptions.None, null)));
+			Assert.IsTrue (TypeRosetta.IsValidValue (null, new StructuredTypeField ("X", StringType.Default, Support.Druid.Empty, 0, FieldRelation.None, FieldMembership.Local, FieldSource.Value, FieldOptions.None, null)));
+			Assert.IsTrue (TypeRosetta.IsValidValue ("Abc", new StructuredTypeField ("X", StringType.Default, Support.Druid.Empty, 0, FieldRelation.None, FieldMembership.Local, FieldSource.Value, FieldOptions.Nullable, null)));
+			Assert.IsTrue (TypeRosetta.IsValidValue (null, new StructuredTypeField ("X", StringType.Default, Support.Druid.Empty, 0, FieldRelation.None, FieldMembership.Local, FieldSource.Value, FieldOptions.Nullable, null)));
+
+			int? numNull = null;
+			int? num1234 = 1234;
+			
+			Assert.IsTrue (TypeRosetta.IsValidValue (123, new StructuredTypeField ("X", IntegerType.Default, Support.Druid.Empty, 0, FieldRelation.None, FieldMembership.Local, FieldSource.Value, FieldOptions.None, null)));
+			Assert.IsFalse (TypeRosetta.IsValidValue (null, new StructuredTypeField ("X", IntegerType.Default, Support.Druid.Empty, 0, FieldRelation.None, FieldMembership.Local, FieldSource.Value, FieldOptions.None, null)));
+			Assert.IsTrue (TypeRosetta.IsValidValue (123, new StructuredTypeField ("X", IntegerType.Default, Support.Druid.Empty, 0, FieldRelation.None, FieldMembership.Local, FieldSource.Value, FieldOptions.Nullable, null)));
+			Assert.IsTrue (TypeRosetta.IsValidValue (null, new StructuredTypeField ("X", IntegerType.Default, Support.Druid.Empty, 0, FieldRelation.None, FieldMembership.Local, FieldSource.Value, FieldOptions.Nullable, null)));
+			
+			Assert.IsTrue (TypeRosetta.IsValidValue (num1234, new StructuredTypeField ("X", IntegerType.Default, Support.Druid.Empty, 0, FieldRelation.None, FieldMembership.Local, FieldSource.Value, FieldOptions.None, null)));
+			Assert.IsFalse (TypeRosetta.IsValidValue (numNull, new StructuredTypeField ("X", IntegerType.Default, Support.Druid.Empty, 0, FieldRelation.None, FieldMembership.Local, FieldSource.Value, FieldOptions.None, null)));
+			Assert.IsTrue (TypeRosetta.IsValidValue (num1234, new StructuredTypeField ("X", IntegerType.Default, Support.Druid.Empty, 0, FieldRelation.None, FieldMembership.Local, FieldSource.Value, FieldOptions.Nullable, null)));
+			Assert.IsTrue (TypeRosetta.IsValidValue (numNull, new StructuredTypeField ("X", IntegerType.Default, Support.Druid.Empty, 0, FieldRelation.None, FieldMembership.Local, FieldSource.Value, FieldOptions.Nullable, null)));
+		}
+
 		#region A Class
 
 		private class A
