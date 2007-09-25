@@ -44,6 +44,7 @@ namespace Epsitec.Common.Support
 
 			generator.Emit (Epsitec.Common.Support.Res.Types.ResourceString);
 			generator.Emit (Epsitec.Common.Support.Res.Types.TestInterface);
+			generator.Emit (Epsitec.Common.Support.Res.Types.TestInterfaceUser);
 
 			System.Console.Out.Write (buffer);
 		}

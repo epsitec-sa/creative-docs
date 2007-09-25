@@ -75,20 +75,29 @@ namespace Epsitec.Common.Support.EntityEngine
 
 			System.Diagnostics.Debug.Assert ((typeClass == StructuredTypeClass.Entity) || (typeClass == StructuredTypeClass.Interface));
 
-			//	Define the base type from which the entity class will inherit from;
-			//	it is either the defined base type entity or the root AbstractEntity
-			//	class :
+			//	Define the base type from which the entity class will inherit; it is
+			//	either the defined base type entity or the root AbstractEntity class
+			//	for entities. For interfaces, this does not apply.
 
-			if (typeClass == StructuredTypeClass.Entity)
+			switch (typeClass)
 			{
-				if (type.BaseTypeId.IsValid)
-				{
-					specifiers.Add (this.CreateEntityFullName (type.BaseTypeId));
-				}
-				else
-				{
-					specifiers.Add (string.Concat (Keywords.Global, "::", Keywords.AbstractEntity));
-				}
+				case StructuredTypeClass.Entity:
+					if (type.BaseTypeId.IsValid)
+					{
+						specifiers.Add (this.CreateEntityFullName (type.BaseTypeId));
+					}
+					else
+					{
+						specifiers.Add (string.Concat (Keywords.Global, "::", Keywords.AbstractEntity));
+					}
+					break;
+
+				case StructuredTypeClass.Interface:
+					System.Diagnostics.Debug.Assert (type.BaseTypeId.IsEmpty);
+					break;
+
+				default:
+					throw new System.ArgumentException (string.Format ("StructuredTypeClass.{0} not valid in this context", typeClass));
 			}
 
 			//	Include all locally imported interfaces, if any :
@@ -109,7 +118,9 @@ namespace Epsitec.Common.Support.EntityEngine
 					
 					this.formatter.WriteBeginClass (CodeGenerator.EntityClassAttributes, CodeGenerator.CreateEntityIdentifier (name), specifiers);
 					type.ForEachField (emitter.EmitLocalProperty);
+					this.formatter.WriteCodeLine ();
 					type.ForEachField (emitter.EmitLocalPropertyHandlers);
+					this.formatter.WriteCodeLine ();
 					this.EmitMethods (type);
 					this.formatter.WriteEndClass ();
 					break;
@@ -138,7 +149,8 @@ namespace Epsitec.Common.Support.EntityEngine
 			this.formatter.WriteCodeLine (Keywords.Return, " ", Keywords.New, " ", Keywords.Druid, " (",
 				/**/					  id.Module.ToString (System.Globalization.CultureInfo.InvariantCulture), ", ",
 				/**/					  id.Developer.ToString (System.Globalization.CultureInfo.InvariantCulture), ", ",
-				/**/					  id.Local.ToString (System.Globalization.CultureInfo.InvariantCulture), ");");
+				/**/					  id.Local.ToString (System.Globalization.CultureInfo.InvariantCulture), ");",
+				/**/					  "\t", Keywords.SimpleComment, " ", id.ToString ());
 			this.formatter.WriteEndMethod ();
 		}
 
@@ -171,13 +183,32 @@ namespace Epsitec.Common.Support.EntityEngine
 		private string CreateEntityFullName(Druid id)
 		{
 			Caption caption = this.resourceManager.GetCaption (id);
+			StructuredType type = TypeRosetta.GetTypeObject (caption) as StructuredType;
+
 			IList<ResourceModuleInfo> infos = this.resourceManagerPool.FindModuleInfos (id.Module);
 			
 			System.Diagnostics.Debug.Assert (infos.Count > 0);
 			System.Diagnostics.Debug.Assert (caption != null);
 			System.Diagnostics.Debug.Assert (!string.IsNullOrEmpty (infos[0].SourceNamespace));
+			System.Diagnostics.Debug.Assert (type != null);
 
-			return string.Concat (Keywords.Global, "::", CodeGenerator.CreateEntityNamespace (infos[0].SourceNamespace), ".", CodeGenerator.CreateEntityIdentifier (caption.Name));
+			string identifier;
+
+			switch (type.Class)
+			{
+				case StructuredTypeClass.Entity:
+					identifier = CodeGenerator.CreateEntityIdentifier (caption.Name);
+					break;
+
+				case StructuredTypeClass.Interface:
+					identifier = CodeGenerator.CreateInterfaceIdentifier (caption.Name);
+					break;
+
+				default:
+					throw new System.ArgumentException (string.Format ("StructuredTypeClass.{0} not valid in this context", type.Class));
+			}
+
+			return string.Concat (Keywords.Global, "::", CodeGenerator.CreateEntityNamespace (infos[0].SourceNamespace), ".", identifier);
 		}
 
 		private string CreatePropertyName(Druid id)
@@ -396,6 +427,8 @@ namespace Epsitec.Common.Support.EntityEngine
 			public const string Void   = "void";
 			public const string String = "string";
 			public const string Druid  = "global::Epsitec.Common.Support.Druid";
+
+			public const string SimpleComment = "//";
 
 			public const string ValueVariable = "value";
 			public const string OldValueVariable = "oldValue";
