@@ -123,7 +123,15 @@ namespace Epsitec.Common.Widgets.Platform
 			this.MinimizeBox     = false;
 			Window.DummyHandleEater (this.Handle);
 		}
-		
+
+		internal void MakeMinimizableFixedSizeWindow()
+		{
+			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+			this.MaximizeBox     = false;
+			this.MinimizeBox     = true;
+			Window.DummyHandleEater (this.Handle);
+		}
+
 		internal void MakeButtonlessWindow()
 		{
 			this.ControlBox      = false;

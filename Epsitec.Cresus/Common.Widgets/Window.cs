@@ -290,6 +290,11 @@ namespace Epsitec.Common.Widgets
 		{
 			this.window.MakeFixedSizeWindow ();
 		}
+
+		public void MakeMinimizableFixedSizeWindow()
+		{
+			this.window.MakeMinimizableFixedSizeWindow ();
+		}
 		
 		public void MakeButtonlessWindow()
 		{
