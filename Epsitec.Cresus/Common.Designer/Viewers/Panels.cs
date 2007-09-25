@@ -1090,14 +1090,11 @@ namespace Epsitec.Common.Designer.Viewers
 			//	Régénère la liste des proxies et met à jour les panneaux de l'interface
 			//	utilisateur s'il y a eu un changement dans le nombre de propriétés visibles
 			//	par panneau.
-//	TODO: pourquoi ça ne marche plus ?
-#if false
 			if (this.proxyManager.RegenerateProxies())
 			{
 				this.ClearProxies();
 				this.proxyManager.CreateUserInterface(this.propertiesScrollable.Panel);
 			}
-#endif
 		}
 
 		public void RegenerateDimensions()

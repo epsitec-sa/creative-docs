@@ -12,6 +12,8 @@ namespace Epsitec.Common.Designer
 		{
 			this.panel = panel;
 			this.objectModifier = this.panel.PanelEditor.ObjectModifier;
+			this.widgets = new List<Widget> ();
+			this.proxies = new List<IProxy> ();
 		}
 
 		public IEnumerable<Widget> Widgets
