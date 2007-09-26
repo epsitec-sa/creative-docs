@@ -70,7 +70,7 @@ ReadHtmlFromClipboard(ClipboardData* data)
 			
 			if (pData != NULL)
 			{
-				data->size = ::GlobalSize (globalLockHandle);
+				data->size = ::GlobalSize (globalLockHandle) & 0x7fffffff;
 				data->data = ::malloc (data->size);
 				
 				if (data->data != NULL)
