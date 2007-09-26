@@ -364,7 +364,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 
 			//	Souris dans le bouton pour changer la connection ?
-			if ((this.field.IsExplored || this.field.IsSourceExpanded) && this.DetectRoundButton(pos, this.PositionChangeRelation))
+			if ((this.field.IsExplored || this.field.IsSourceExpanded) && !this.field.IsReadOnly && this.DetectRoundButton(pos, this.PositionChangeRelation))
 			{
 				element = ActiveElement.ConnectionChangeRelation;
 				return true;

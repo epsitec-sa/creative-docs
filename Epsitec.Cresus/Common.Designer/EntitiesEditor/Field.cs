@@ -151,6 +151,18 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 		}
 
+		public bool IsReadOnly
+		{
+			//	Indique s'il s'agit d'un champ non modifiable, c'est-à-dire:
+			//	- Un titre
+			//	- Un champ hérité
+			//	- Un champ d'une interface
+			get
+			{
+				return this.IsTitle || this.membership == FieldMembership.Inherited || (this.definingTypeId.IsValid && this.membership == FieldMembership.Local);
+			}
+		}
+
 		public string FieldName
 		{
 			//	Nom du champ ou du titre.
