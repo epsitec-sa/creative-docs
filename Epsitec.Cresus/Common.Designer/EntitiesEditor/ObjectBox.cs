@@ -1365,7 +1365,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			if (this.editor.Module.DesignerApplication.DialogQuestion(question) == Epsitec.Common.Dialogs.DialogResult.Yes)
 			{
 				int count = this.GroupLineCount(rank);
-				for (int i=rank; i<rank+count; i++)
+				for (int i=rank+1; i<rank+1+count; i++)
 				{
 					this.fields[i].IsExplored = false;
 					this.fields[i].DstBox = null;
