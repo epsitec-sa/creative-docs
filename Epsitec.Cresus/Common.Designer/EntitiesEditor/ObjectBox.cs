@@ -926,6 +926,17 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 						return true;
 					}
 
+					//	Souris sur le bouton des interfaces ?
+					if (this.editor.CurrentModifyMode == Editor.ModifyMode.Unlocked)
+					{
+						rect = this.GetFieldInterfaceBounds();
+						if (rect.Contains(pos))
+						{
+							element = ActiveElement.BoxFieldInterface;
+							return true;
+						}
+					}
+
 					//	Souris dans un champ ?
 					for (int i=0; i<this.fields.Count; i++)
 					{
@@ -1062,6 +1073,18 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			
 			rect.Bottom -= ObjectBox.fieldHeight/2;
 			rect.Height = ObjectBox.fieldHeight;
+
+			return rect;
+		}
+
+		protected Rectangle GetFieldInterfaceBounds()
+		{
+			//	Retourne le rectangle occupé par le bouton interface.
+			Rectangle rect = this.GetFieldBounds(this.skipedField-1);
+			
+			rect.Left = rect.Right-rect.Height;
+			rect.Bottom -= 6;
+			rect.Height = 6*2;
 
 			return rect;
 		}
@@ -1940,7 +1963,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 						int j = i + this.GroupLineCount(i);
 
 						rect = Rectangle.Union(this.GetFieldBounds(i), this.GetFieldBounds(j));
-						rect.Deflate(9.5, 0.5);
+						rect.Deflate(9.5, 1.5);
 						Path dashedPath = this.PathRoundRectangle(rect, this.fields[i].IsInherited ? 8.0 : 0.0);
 
 						rect = this.GetFieldBounds(i);
@@ -1980,12 +2003,9 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					this.DrawEmptySlider(graphics, p1, p2, hilited);
 
 					//	Dessine la glissière à droite pour suggérer les boutons Movable des champs.
-					if (this.fields.Count-this.skipedField > 1)
-					{
-						p1.X = p2.X = this.GetFieldMovableBounds(0).Center.X;
-						hilited = this.hilitedElement == ActiveElement.BoxFieldMovable;
-						this.DrawEmptySlider(graphics, p1, p2, hilited);
-					}
+					p1.X = p2.X = this.GetFieldMovableBounds(0).Center.X;
+					hilited = this.hilitedElement == ActiveElement.BoxFieldMovable;
+					this.DrawEmptySlider(graphics, p1, p2, hilited);
 				}
 			}
 
@@ -2037,6 +2057,12 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					rect = this.GetFieldBounds(this.hilitedFieldRank);
 					rect.Deflate(this.isRoot ? 3.5 : 1.5, 0.5);
 					this.DrawDashLine(graphics, rect.BottomRight, rect.BottomLeft, this.GetColorMain());
+				}
+
+				if (this.hilitedElement == ActiveElement.BoxFieldInterface)
+				{
+					rect = this.GetFieldInterfaceBounds();
+					this.DrawRoundButton(graphics, rect.Center, AbstractObject.buttonRadius, "i", true, true);
 				}
 			}
 
