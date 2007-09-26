@@ -693,6 +693,11 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					this.AddField(this.hilitedFieldRank);
 				}
 
+				if (this.hilitedElement == ActiveElement.BoxFieldInterface)
+				{
+					this.AddInterface();
+				}
+
 				if (this.hilitedElement == ActiveElement.BoxFieldName)
 				{
 					if (this.editor.IsLocateAction(message))
@@ -723,11 +728,6 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					{
 						this.LocateTitle(this.hilitedFieldRank);
 					}
-				}
-
-				if (this.hilitedElement == ActiveElement.BoxFieldInterface)
-				{
-					this.AddInterface();
 				}
 
 				if (this.hilitedElement == ActiveElement.BoxComment)
@@ -1298,23 +1298,49 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 			IResourceAccessor fieldAccessor = this.editor.Module.AccessFields.Accessor;
 			fieldAccessor.Collection.Add(fieldCultureMap);
-			//?fieldAccessor.PersistChanges();
 
 			IDataBroker broker = accessor.GetDataBroker(data, Support.Res.Fields.ResourceStructuredType.Fields.ToString());
 			StructuredData newField = broker.CreateData(this.cultureMap);
 
-			Druid druid = fieldCultureMap.Id;  //?this.CreateFieldCaption(name);
+			Druid druid = fieldCultureMap.Id;
 			newField.SetValue(Support.Res.Fields.Field.CaptionId, druid);
 
 			int fieldRank = this.fields[rank].Rank;
 			dataFields.Insert(fieldRank+1, newField);
-			//?accessor.PersistChanges();
 
 			Field field = new Field(this.editor);
 			this.UpdateField(newField, field);
 			this.fields.Insert(rank+1, field);
 
 			this.UpdateFieldsLink();
+			this.editor.UpdateAfterAddOrRemoveConnection(this);
+			this.editor.Module.AccessEntities.SetLocalDirty();
+			this.hilitedElement = ActiveElement.None;
+		}
+
+		protected void AddInterface()
+		{
+			//	Ajoute une interface à l'entité.
+			Druid druid = Druid.Empty;
+			Module module = this.editor.Module;
+			StructuredTypeClass typeClass = StructuredTypeClass.Interface;
+			Common.Dialogs.DialogResult result = module.DesignerApplication.DlgResourceSelector(Dialogs.ResourceSelector.Operation.InterfaceEntities, module, ResourceAccess.Type.Entities, ref typeClass, ref druid, null);
+			if (result != Common.Dialogs.DialogResult.Yes)
+			{
+				return;
+			}
+
+			// TODO: finir...
+			StructuredData data = this.cultureMap.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
+			IList<StructuredData> dataInterfaces = data.GetValue(Support.Res.Fields.ResourceStructuredType.InterfaceIds) as IList<StructuredData>;
+
+			Support.ResourceAccessors.StructuredTypeResourceAccessor accessor = this.editor.Module.AccessEntities.Accessor as Support.ResourceAccessors.StructuredTypeResourceAccessor;
+			IDataBroker broker = accessor.GetDataBroker(data, Support.Res.Fields.ResourceStructuredType.InterfaceIds.ToString());
+			StructuredData newInterface = broker.CreateData(this.cultureMap);
+			newInterface.SetValue(Support.Res.Fields.Field.CaptionId, druid);
+			dataInterfaces.Add(newInterface);
+
+			this.SetContent(this.cultureMap);
 			this.editor.UpdateAfterAddOrRemoveConnection(this);
 			this.editor.Module.AccessEntities.SetLocalDirty();
 			this.hilitedElement = ActiveElement.None;
@@ -1564,19 +1590,6 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			return false;
 		}
 
-
-		protected void AddInterface()
-		{
-			//	Ajoute une interface à l'entité.
-			Druid druid = Druid.Empty;
-			Module module = this.editor.Module;
-			StructuredTypeClass typeClass = StructuredTypeClass.Interface;
-			Common.Dialogs.DialogResult result = module.DesignerApplication.DlgResourceSelector(Dialogs.ResourceSelector.Operation.InterfaceEntities, module, ResourceAccess.Type.Entities, ref typeClass, ref druid, null);
-			if (result != Common.Dialogs.DialogResult.Yes)
-			{
-				return;
-			}
-		}
 
 		protected void AddComment()
 		{
