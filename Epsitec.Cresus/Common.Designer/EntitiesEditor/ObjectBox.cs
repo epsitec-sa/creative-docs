@@ -693,9 +693,14 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					this.AddField(this.hilitedFieldRank);
 				}
 
-				if (this.hilitedElement == ActiveElement.BoxFieldInterface)
+				if (this.hilitedElement == ActiveElement.BoxFieldAddInterface)
 				{
 					this.AddInterface();
+				}
+
+				if (this.hilitedElement == ActiveElement.BoxFieldRemoveInterface)
+				{
+					this.RemoveInterface(this.hilitedFieldRank);
 				}
 
 				if (this.hilitedElement == ActiveElement.BoxFieldName)
@@ -893,6 +898,14 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					{
 						if (this.fields[i].IsTitle)
 						{
+							rect = this.GetFieldMovableBounds(i);
+							if (this.editor.CurrentModifyMode == Editor.ModifyMode.Unlocked && this.fields[i].IsInterface && rect.Contains(pos))
+							{
+								element = ActiveElement.BoxFieldRemoveInterface;
+								fieldRank = i;
+								return true;
+							}
+
 							rect = this.GetFieldBounds(i);
 							if (rect.Contains(pos))
 							{
@@ -937,7 +950,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 						rect = this.GetFieldInterfaceBounds();
 						if (rect.Contains(pos))
 						{
-							element = ActiveElement.BoxFieldInterface;
+							element = ActiveElement.BoxFieldAddInterface;
 							return true;
 						}
 					}
@@ -1343,6 +1356,11 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			this.editor.UpdateAfterAddOrRemoveConnection(this);
 			this.editor.Module.AccessEntities.SetLocalDirty();
 			this.hilitedElement = ActiveElement.None;
+		}
+
+		protected void RemoveInterface(int rank)
+		{
+			//	Supprime une interface à l'entité.
 		}
 
 		protected void ChangeFieldName(int rank)
@@ -2092,10 +2110,34 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					this.DrawDashLine(graphics, rect.BottomRight, rect.BottomLeft, this.GetColorMain());
 				}
 
-				if (this.hilitedElement == ActiveElement.BoxFieldInterface)
+				if (this.hilitedElement == ActiveElement.BoxFieldAddInterface ||
+					(this.hilitedElement == ActiveElement.BoxFieldTitle && this.fields[this.hilitedFieldRank].IsInterface))
 				{
 					rect = this.GetFieldInterfaceBounds();
-					this.DrawRoundButton(graphics, rect.Center, AbstractObject.buttonRadius, "+i", true, true);
+					this.DrawRoundButton(graphics, rect.Center, AbstractObject.buttonRadius, "+i", this.hilitedElement == ActiveElement.BoxFieldAddInterface, true);
+				}
+
+				if (this.hilitedElement == ActiveElement.BoxFieldRemoveInterface ||
+					(this.hilitedElement == ActiveElement.BoxFieldTitle && this.fields[this.hilitedFieldRank].IsInterface))
+				{
+					rect = this.GetFieldMovableBounds(this.hilitedFieldRank);
+					this.DrawRoundButton(graphics, rect.Center, AbstractObject.buttonRadius, "-i", this.hilitedElement == ActiveElement.BoxFieldRemoveInterface, true);
+				}
+
+				//	Si la souris est dans la barre de titre, montre les boutons pour les interfaces.
+				if (this.IsHeaderHilite)
+				{
+					for (int i=0; i<this.fields.Count; i++)
+					{
+						if (this.fields[i].IsTitle && this.fields[i].IsInterface)
+						{
+							rect = this.GetFieldMovableBounds(i);
+							this.DrawRoundButton(graphics, rect.Center, AbstractObject.buttonRadius, "-i", false, true);
+						}
+					}
+
+					rect = this.GetFieldInterfaceBounds();
+					this.DrawRoundButton(graphics, rect.Center, AbstractObject.buttonRadius, "+i", false, true);
 				}
 			}
 

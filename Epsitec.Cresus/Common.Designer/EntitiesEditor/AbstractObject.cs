@@ -30,7 +30,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			BoxFieldMovable,
 			BoxFieldMoving,
 			BoxFieldTitle,
-			BoxFieldInterface,
+			BoxFieldAddInterface,
+			BoxFieldRemoveInterface,
 			BoxChangeWidth,
 			BoxMoveColumnsSeparator,
 			BoxColor1,
@@ -250,8 +251,11 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 						return "Aller sur la définition";
 					}
 
-				case AbstractObject.ActiveElement.BoxFieldInterface:
+				case AbstractObject.ActiveElement.BoxFieldAddInterface:
 					return "Ajoute une interface";
+
+				case AbstractObject.ActiveElement.BoxFieldRemoveInterface:
+					return "Supprime l'interface";
 
 				case AbstractObject.ActiveElement.BoxChangeWidth:
 					return "Modifie la largeur de l'entité";
