@@ -1934,14 +1934,21 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 						rect = Rectangle.Union(this.GetFieldBounds(i), this.GetFieldBounds(j));
 						rect.Deflate(9.5, 0.5);
-						Path dashedPath = this.PathRoundRectangle(rect, 8.0);
+						Path dashedPath = this.PathRoundRectangle(rect, this.fields[i].IsInherited ? 8.0 : 0.0);
 
 						rect = this.GetFieldBounds(i);
 						rect.Deflate(9.5, 0.5);
 						dashedPath.MoveTo(rect.Left+2, rect.Bottom);
 						dashedPath.LineTo(rect.Right-1, rect.Bottom);
-						
-						Misc.DrawPathDash(graphics, dashedPath, 1, 0, 2, false, this.GetColorMain(0.8));
+
+						if (this.fields[i].IsInherited)
+						{
+							Misc.DrawPathDash(graphics, dashedPath, 1, 0, 2, false, this.GetColorMain(0.8));
+						}
+						else
+						{
+							Misc.DrawPathDash(graphics, dashedPath, 1, 6, 3, false, this.GetColorMain(0.8));
+						}
 					}
 				}
 
