@@ -1907,10 +1907,11 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				{
 					if (this.fields[i].IsTitle)
 					{
+						bool hilite = this.hilitedElement == ActiveElement.BoxFieldTitle && this.hilitedFieldRank == i;
 						rect = this.GetFieldBounds(i);
 						rect.Deflate(9.5, 0.5);
 						graphics.AddFilledRectangle(rect);
-						Color ci1 = this.GetColorMain(this.hilitedElement == ActiveElement.BoxFieldTitle ? 0.5 : (dragging ? 0.2 : 0.1));
+						Color ci1 = this.GetColorMain(hilite ? 0.5 : (dragging ? 0.2 : 0.1));
 						Color ci2 = this.GetColorMain(0.0);
 						this.RenderVerticalGradient(graphics, rect, ci1, ci2);
 
