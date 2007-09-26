@@ -284,9 +284,29 @@ namespace Epsitec.Common.Designer.Dialogs
 			}
 
 			this.collectionView = new CollectionView(this.access.Accessor.Collection);
+			this.collectionView.Filter = this.CollectionViewFilter;
 			this.collectionView.SortDescriptions.Add(new SortDescription("Name"));
 		}
 
+		protected bool CollectionViewFilter(object obj)
+		{
+			//	Méthode passé comme paramètre System.Predicate<object> à CollectionView.Filter.
+			//	Retourne false si la ressource doit être exclue.
+			CultureMap cultureMap = obj as CultureMap;
+
+			if (this.operation == Operation.InheritEntity)
+			{
+				StructuredData data = cultureMap.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
+				StructuredTypeClass typeClass = (StructuredTypeClass) data.GetValue(Support.Res.Fields.ResourceStructuredType.Class);
+				if (typeClass == StructuredTypeClass.Interface)
+				{
+					return false;  // ne liste pas les interfaces
+				}
+			}
+
+			return true;
+		}
+			
 		public Common.Dialogs.DialogResult AccessClose(out Druid resource)
 		{
 			//	Fin de l'accès aux ressources pour le dialogue.
@@ -337,16 +357,6 @@ namespace Epsitec.Common.Designer.Dialogs
 			for (int i=0; i<this.collectionView.Items.Count; i++)
 			{
 				CultureMap cultureMap = this.collectionView.Items[i] as CultureMap;
-
-				if (this.operation == Operation.InheritEntity)
-				{
-					StructuredData data = cultureMap.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
-					StructuredTypeClass typeClass = (StructuredTypeClass) data.GetValue(Support.Res.Fields.ResourceStructuredType.Class);
-					if (typeClass == StructuredTypeClass.Interface)
-					{
-						continue;  // ne liste pas les interfaces
-					}
-				}
 
 				this.listResources.Items.Add(cultureMap.Name);
 

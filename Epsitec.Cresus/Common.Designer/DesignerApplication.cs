@@ -81,17 +81,17 @@ namespace Epsitec.Common.Designer
 				
 				DesignerApplication.SetInstance(window, this);  // attache l'instance de DesignerApplication à la fenêtre
 
-				this.dlgOpen                        = new Dialogs.Open(this);
-				this.dlgGlyphs                      = new Dialogs.Glyphs(this);
-				this.dlgIcon                        = new Dialogs.Icon(this);
-				this.dlgFilter                      = new Dialogs.Filter(this);
-				this.dlgSearch                      = new Dialogs.Search(this);
-				this.dlgNewCulture                  = new Dialogs.NewCulture(this);
-				this.dlgResourceTypeCode            = new Dialogs.ResourceTypeCode(this);
-				this.dlgResourceSelector            = new Dialogs.ResourceSelector(this);
-				this.dlgBindingSelector             = new Dialogs.BindingSelector(this);
-				this.dlgFieldName                   = new Dialogs.ResourceName(this);
-				this.dlgEntityComment               = new Dialogs.EntityComment(this);
+				this.dlgOpen             = new Dialogs.Open(this);
+				this.dlgGlyphs           = new Dialogs.Glyphs(this);
+				this.dlgIcon             = new Dialogs.Icon(this);
+				this.dlgFilter           = new Dialogs.Filter(this);
+				this.dlgSearch           = new Dialogs.Search(this);
+				this.dlgNewCulture       = new Dialogs.NewCulture(this);
+				this.dlgResourceTypeCode = new Dialogs.ResourceTypeCode(this);
+				this.dlgResourceSelector = new Dialogs.ResourceSelector(this);
+				this.dlgBindingSelector  = new Dialogs.BindingSelector(this);
+				this.dlgFieldName        = new Dialogs.ResourceName(this);
+				this.dlgEntityComment    = new Dialogs.EntityComment(this);
 
 				this.dlgGlyphs.Closed += new EventHandler(this.HandleDlgClosed);
 				this.dlgFilter.Closed += new EventHandler(this.HandleDlgClosed);

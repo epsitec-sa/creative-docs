@@ -651,6 +651,8 @@ namespace Epsitec.Common.Designer
 
 		protected bool CollectionViewFilter(object obj)
 		{
+			//	Méthode passé comme paramètre System.Predicate<object> à CollectionView.Filter.
+			//	Retourne false si la ressource doit être exclue.
 			CultureMap item = obj as CultureMap;
 			
 			if (!string.IsNullOrEmpty(this.collectionViewFilter))
