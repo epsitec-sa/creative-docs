@@ -108,6 +108,18 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			this.commentText = "Commentaire libre, que vous pouvez modifier à volonté.";
 		}
 
+		public bool IsReadOnly
+		{
+			//	Indique s'il s'agit d'un champ non modifiable, c'est-à-dire:
+			//	- Un titre
+			//	- Un champ hérité
+			//	- Un champ d'une interface
+			get
+			{
+				return this.IsTitle || this.IsInherited || this.IsInterface;
+			}
+		}
+
 		public bool IsTitle
 		{
 			//	Indique si le champ est un titre d'héritage ou d'interface.
@@ -130,7 +142,14 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			//	Indique s'il s'agit d'un champ hérité.
 			get
 			{
-				return this.isInherited;
+				if (this.IsTitle)
+				{
+					return this.isInherited;
+				}
+				else
+				{
+					return this.membership == FieldMembership.Inherited;
+				}
 			}
 			set
 			{
@@ -143,23 +162,18 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			//	Indique s'il s'agit d'un champ d'une interface.
 			get
 			{
-				return this.isInterface;
+				if (this.IsTitle)
+				{
+					return this.isInterface;
+				}
+				else
+				{
+					return this.definingTypeId.IsValid && this.membership == FieldMembership.Local;
+				}
 			}
 			set
 			{
 				this.isInterface = value;
-			}
-		}
-
-		public bool IsReadOnly
-		{
-			//	Indique s'il s'agit d'un champ non modifiable, c'est-à-dire:
-			//	- Un titre
-			//	- Un champ hérité
-			//	- Un champ d'une interface
-			get
-			{
-				return this.IsTitle || this.membership == FieldMembership.Inherited || (this.definingTypeId.IsValid && this.membership == FieldMembership.Local);
 			}
 		}
 
