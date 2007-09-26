@@ -108,6 +108,7 @@ namespace Epsitec.Common.Support.EntityEngine
 			}
 
 			Emitter emitter;
+			InterfaceImplementationEmitter implementationEmitter;
 			
 			this.formatter.WriteBeginNamespace (CodeGenerator.CreateEntityNamespace (this.SourceNamespace));
 
@@ -135,7 +136,10 @@ namespace Epsitec.Common.Support.EntityEngine
 					emitter.EmitCloseRegion ();
 					this.formatter.WriteEndInterface ();
 
+					implementationEmitter = new InterfaceImplementationEmitter (this, type);
+
 					this.formatter.WriteBeginClass (CodeGenerator.StaticClassAttributes, CodeGenerator.CreateInterfaceImplementationIdentifier (name), specifiers);
+					type.ForEachField (implementationEmitter.EmitLocalPropertyImplementation);
 					this.formatter.WriteEndClass ();
 					break;
 			}
@@ -546,6 +550,48 @@ namespace Epsitec.Common.Support.EntityEngine
 			}
 		}
 
+		private sealed class InterfaceImplementationEmitter : Emitter
+		{
+			public InterfaceImplementationEmitter(CodeGenerator generator, StructuredType type)
+				: base (generator, type)
+			{
+			}
+
+			public void EmitLocalPropertyImplementation(StructuredTypeField field)
+			{
+				if (field.Membership == FieldMembership.Local)
+				{
+					string typeName = this.generator.CreateTypeFullName (field.TypeId);
+					string propName = this.generator.CreatePropertyName (field.CaptionId);
+
+					string getterMethodName = string.Concat (Keywords.InterfaceImplementationGetterMethodPrefix, propName);
+					string getterCode = string.Concat (typeName, " ", getterMethodName, "()");
+					
+					string setterMethodName = string.Concat (Keywords.InterfaceImplementationGetterMethodPrefix, propName);
+					string setterCode = string.Concat (Keywords.Void, " ", setterMethodName, "(", typeName, " ", Keywords.ValueVariable, ")");
+
+					this.generator.formatter.WriteBeginMethod (new CodeAttributes (CodeVisibility.Public, CodeAccessibility.Static), getterCode);
+					this.generator.formatter.WriteEndMethod ();
+					this.generator.formatter.WriteBeginMethod (new CodeAttributes (CodeVisibility.Public, CodeAccessibility.Static), setterCode);
+					this.generator.formatter.WriteEndMethod ();
+
+					switch (field.Source)
+					{
+						case FieldSource.Value:
+							break;
+
+						case FieldSource.Expression:
+
+							//	TODO: properly handle expressions
+
+							break;
+
+						default:
+							throw new System.ArgumentException (string.Format ("FieldSource.{0} not valid in this context", field.Source));
+					}
+				}
+			}
+		}
 
 		private static readonly CodeAttributes EntityClassAttributes = new CodeAttributes (CodeVisibility.Public, CodeAccessibility.Default, CodeAttributes.PartialAttribute);
 		private static readonly CodeAttributes StaticClassAttributes = new CodeAttributes (CodeVisibility.Public, CodeAccessibility.Static);
