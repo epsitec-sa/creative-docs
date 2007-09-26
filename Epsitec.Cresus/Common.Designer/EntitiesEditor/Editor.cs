@@ -1316,7 +1316,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 							type = MouseCursorType.Grid;
 						}
 					}
-					else if (fly.HilitedElement == AbstractObject.ActiveElement.BoxMembership)
+					else if (fly.HilitedElement == AbstractObject.ActiveElement.BoxFieldTitle)
 					{
 						if (this.IsLocateAction(message))
 						{

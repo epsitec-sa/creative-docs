@@ -717,11 +717,11 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					}
 				}
 
-				if (this.hilitedElement == ActiveElement.BoxMembership)
+				if (this.hilitedElement == ActiveElement.BoxFieldTitle)
 				{
 					if (this.editor.IsLocateAction(message))
 					{
-						this.LocateMembership();
+						this.LocateTitle(this.hilitedFieldRank);
 					}
 				}
 
@@ -783,7 +783,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				for (int i=-1; i<this.fields.Count; i++)
 				{
 					rect = this.GetFieldMovingBounds(i);
-					if (i >= this.skipedField-1 && rect.Contains(pos))  // TODO: -1 juste ?
+					if (i >= this.skipedField-1 && rect.Contains(pos))
 					{
 						element = ActiveElement.BoxFieldMoving;
 						fieldRank = i;
@@ -883,11 +883,19 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 						return true;
 					}
 
-					//	Souris dans le titre de la classe de base ?
-					if (this.RectangleMembership.Contains(pos))
+					//	Souris dans un titre ?
+					for (int i=0; i<this.fields.Count; i++)
 					{
-						element = ActiveElement.BoxMembership;
-						return true;
+						if (this.fields[i].IsTitle)
+						{
+							rect = this.GetFieldBounds(i);
+							if (rect.Contains(pos))
+							{
+								element = ActiveElement.BoxFieldTitle;
+								fieldRank = i;
+								return true;
+							}
+						}
 					}
 
 					//	Souris entre deux champs ?
@@ -896,7 +904,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 						for (int i=-1; i<this.fields.Count; i++)
 						{
 							rect = this.GetFieldAddBounds(i);
-							if (i >= this.skipedField-1 && rect.Contains(pos))  // TODO: -1 juste ?
+							if (i >= this.skipedField-1 && rect.Contains(pos))
 							{
 								element = ActiveElement.BoxFieldAdd;
 								fieldRank = i;
@@ -1114,16 +1122,12 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 		}
 
-		protected void LocateMembership()
+		protected void LocateTitle(int rank)
 		{
-			//	Montre l'entité de base cliquée avec le bouton de droite.
-			StructuredData data = this.cultureMap.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
-			Druid druid = (Druid) data.GetValue(Support.Res.Fields.ResourceStructuredType.BaseType);
-
-			if (druid.IsEmpty)
-			{
-				return;
-			}
+			//	Montre l'entité héritée ou l'interface cliquée avec le bouton de droite.
+			System.Diagnostics.Debug.Assert(this.fields[rank].IsTitle);
+			Druid druid = this.fields[rank].CaptionId;
+			System.Diagnostics.Debug.Assert(druid.IsValid);
 
 			Module module = this.editor.Module.DesignerApplication.SearchModule(druid);
 
@@ -1440,6 +1444,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				Druid druid = (Druid) data.GetValue(Support.Res.Fields.ResourceStructuredType.BaseType);
 				if (druid.IsValid)
 				{
+					field.CaptionId = druid;
+
 					Module module = this.editor.Module.DesignerApplication.SearchModule(druid);
 					CultureMap cultureMap = module.AccessEntities.Accessor.Collection[druid];
 					if (cultureMap != null)
@@ -1475,6 +1481,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 						Field field = new Field(this.editor);
 						field.IsTitle = true;
 						field.IsInterface = true;
+						field.CaptionId = last;
 						field.FieldName = string.Concat("<b>", cultureMap.Name, "</b>");
 
 						this.fields.Insert(i, field);
@@ -1850,7 +1857,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 						rect = this.GetFieldBounds(i);
 						rect.Deflate(9.5, 0.5);
 						graphics.AddFilledRectangle(rect);
-						Color ci1 = this.GetColorMain(this.hilitedElement == ActiveElement.BoxMembership ? 0.5 : (dragging ? 0.2 : 0.1));
+						Color ci1 = this.GetColorMain(this.hilitedElement == ActiveElement.BoxFieldTitle ? 0.5 : (dragging ? 0.2 : 0.1));
 						Color ci2 = this.GetColorMain(0.0);
 						this.RenderVerticalGradient(graphics, rect, ci1, ci2);
 
@@ -2346,6 +2353,19 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 		}
 
+		protected Rectangle RectangleSourcesMenu
+		{
+			//	Retourne le rectangle du menu pour montrer les sources.
+			get
+			{
+				Point pos = this.PositionSourcesMenu;
+				double h = ObjectBox.sourcesMenuHeight*(this.sourcesList.Count+1);
+				Rectangle rect = new Rectangle(pos.X, pos.Y-h, 200, h);
+				rect.Inflate(0.5);
+				return rect;
+			}
+		}
+
 		protected int GroupLineCount(int titleRank)
 		{
 			//	Retourne le nombre de ligne d'un groupe d'après le rang de son titre.
@@ -2358,36 +2378,6 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 
 			return this.fields.Count-titleRank-1;
-		}
-
-		protected Rectangle RectangleMembership
-		{
-			//	Retourne le rectangle du titre de la classe de base.
-			get
-			{
-				Rectangle rect = Rectangle.Empty;
-
-				if (this.fields.Count > 0 && this.fields[0].IsTitle && this.fields[0].IsInherited)
-				{
-					rect = this.GetFieldBounds(0);
-					rect.Deflate(9.5, 0.5);
-				}
-
-				return rect;
-			}
-		}
-
-		protected Rectangle RectangleSourcesMenu
-		{
-			//	Retourne le rectangle du menu pour montrer les sources.
-			get
-			{
-				Point pos = this.PositionSourcesMenu;
-				double h = ObjectBox.sourcesMenuHeight*(this.sourcesList.Count+1);
-				Rectangle rect = new Rectangle(pos.X, pos.Y-h, 200, h);
-				rect.Inflate(0.5);
-				return rect;
-			}
 		}
 
 		protected double ColumnsSeparatorAbsolute
