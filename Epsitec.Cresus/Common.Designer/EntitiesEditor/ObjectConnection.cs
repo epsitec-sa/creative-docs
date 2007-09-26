@@ -599,7 +599,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				}
 			}
 
-			if (this.points.Count != 0)
+			if (this.points.Count != 0 && !this.field.IsReadOnly)
 			{
 				//	Dessine le bouton pour changer la connection.
 				if (this.hilitedElement == ActiveElement.ConnectionHilited ||
