@@ -84,7 +84,7 @@ namespace Epsitec.Common.Support
 			throw new System.InvalidOperationException (string.Format ("Class {0} Item operator is read-only", this.GetType ().Name));
 		}
 
-		protected void RefreshItemIfNeeded(CultureMap item)
+		private void RefreshItemIfNeeded(CultureMap item)
 		{
 			if ((item.IsRefreshNeeded) &&
 				(this.accessor != null))

@@ -28,7 +28,7 @@ namespace Epsitec.Common.Support.EntityEngine
 			}
 		}
 
-		protected T GetField<T>(string id)
+		public T GetField<T>(string id)
 		{
 			StructuredTypeField field = this.context.GetStructuredType (this).GetField (id);
 
@@ -51,7 +51,7 @@ namespace Epsitec.Common.Support.EntityEngine
 			return (T) value;
 		}
 
-		protected IList<T> GetFieldCollection<T>(string id)
+		public IList<T> GetFieldCollection<T>(string id)
 		{
 			object value = this.values.GetValue (id);
 			IList<T> list = value as IList<T>;
@@ -75,7 +75,7 @@ namespace Epsitec.Common.Support.EntityEngine
 			return list;
 		}
 
-		protected void SetField<T>(string id, T oldValue, T newValue)
+		public void SetField<T>(string id, T oldValue, T newValue)
 		{
 			StructuredTypeField field = this.context.GetStructuredType (this).GetField (id);
 
