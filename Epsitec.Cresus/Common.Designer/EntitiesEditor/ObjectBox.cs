@@ -1360,7 +1360,39 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		protected void RemoveInterface(int rank)
 		{
-			//	Supprime une interface à l'entité.
+			//	Supprime une interface de l'entité.
+			string question = string.Format("Voulez-vous supprimer l'interface <b>{0}</b> ?", this.fields[rank].FieldName);
+			if (this.editor.Module.DesignerApplication.DialogQuestion(question) == Epsitec.Common.Dialogs.DialogResult.Yes)
+			{
+				int count = this.GroupLineCount(rank);
+				for (int i=rank; i<rank+count; i++)
+				{
+					this.fields[i].IsExplored = false;
+					this.fields[i].DstBox = null;
+				}
+				this.editor.CloseBox(null);
+
+				Druid druid = this.fields[rank].CaptionId;
+
+				StructuredData data = this.cultureMap.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
+				IList<StructuredData> dataInterfaces = data.GetValue(Support.Res.Fields.ResourceStructuredType.InterfaceIds) as IList<StructuredData>;
+
+				for (int i=0; i<dataInterfaces.Count; i++)
+				{
+					Druid di = (Druid) dataInterfaces[i].GetValue(Support.Res.Fields.InterfaceId.CaptionId);
+					if (di == druid)
+					{
+						dataInterfaces.RemoveAt(i);
+						break;
+					}
+				}
+
+				this.SetContent(this.cultureMap);
+				this.editor.UpdateAfterAddOrRemoveConnection(this);
+				this.editor.Module.AccessEntities.SetLocalDirty();
+			}
+
+			this.hilitedElement = ActiveElement.None;
 		}
 
 		protected void ChangeFieldName(int rank)

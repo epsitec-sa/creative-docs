@@ -290,6 +290,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		public int Rank
 		{
 			//	Rang du champ dans le tableau, sans tenir compte des titres.
+			//	Un titre a un rang qui vaut -1.
 			get
 			{
 				return this.rank;
@@ -302,7 +303,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		public int Index
 		{
-			//	Index de la ligne dans le tableau, en tenant donc compte des titres.
+			//	Index de la ligne dans le tableau, en tenant compte des titres.
+			//	Donc, toutes les lignes sont numérotées 0..n.
 			get
 			{
 				return this.index;
