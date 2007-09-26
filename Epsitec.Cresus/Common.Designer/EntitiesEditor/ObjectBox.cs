@@ -1553,6 +1553,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			int rank = 0;
 			for (int i=0; i<this.fields.Count; i++)
 			{
+				this.fields[i].Index = i;
+
 				if (!this.fields[i].IsTitle)
 				{
 					this.fields[i].IsSourceExpanded = this.isExtended;

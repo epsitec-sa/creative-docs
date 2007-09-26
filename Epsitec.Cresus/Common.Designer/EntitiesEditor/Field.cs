@@ -91,6 +91,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			this.definingTypeId = Druid.Empty;
 			this.destination = Druid.Empty;
 			this.rank = -1;
+			this.index = -1;
 			this.isExplored = false;
 			this.isSourceExpanded = false;
 			
@@ -288,7 +289,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		public int Rank
 		{
-			//	Rang du champ dans le tableau (numéro de la ligne, 0..n)
+			//	Rang du champ dans le tableau, sans tenir compte des titres.
 			get
 			{
 				return this.rank;
@@ -296,6 +297,19 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			set
 			{
 				this.rank = value;
+			}
+		}
+
+		public int Index
+		{
+			//	Index de la ligne dans le tableau, en tenant donc compte des titres.
+			get
+			{
+				return this.index;
+			}
+			set
+			{
+				this.index = value;
 			}
 		}
 
@@ -841,6 +855,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		protected Druid definingTypeId;
 		protected Druid destination;
 		protected int rank;
+		protected int index;
 		protected ObjectBox srcBox;
 		protected ObjectBox dstBox;
 		protected ObjectConnection connection;

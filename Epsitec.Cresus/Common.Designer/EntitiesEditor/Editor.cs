@@ -342,7 +342,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 							if (field.IsExplored)
 							{
-								this.UpdateConnection(connection, box, field.Rank, field.DstBox);
+								this.UpdateConnection(connection, box, field.Index, field.DstBox);
 							}
 							else
 							{
