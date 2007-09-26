@@ -252,6 +252,11 @@ namespace Epsitec.Common.Support.EntityEngine
 
 		private string CreateTypeFullName(Druid typeId)
 		{
+			return this.CreateTypeFullName (typeId, false);
+		}
+		
+		private string CreateTypeFullName(Druid typeId, bool nullable)
+		{
 			Caption caption = this.resourceManager.GetCaption (typeId);
 			AbstractType type = TypeRosetta.GetTypeObject (caption);
 			System.Type sysType = type.SystemType;
@@ -260,6 +265,10 @@ namespace Epsitec.Common.Support.EntityEngine
 				(sysType == null))
 			{
 				return this.CreateEntityFullName (typeId);
+			}
+			else if (nullable && (sysType.IsValueType) && (!TypeRosetta.IsNullable (sysType)))
+			{
+				return string.Concat (CodeGenerator.GetTypeName (sysType), "?");
 			}
 			else
 			{
@@ -303,7 +312,7 @@ namespace Epsitec.Common.Support.EntityEngine
 				{
 					this.EmitInterfaceRegion (field);
 
-					string typeName = this.generator.CreateTypeFullName (field.TypeId);
+					string typeName = this.generator.CreateTypeFullName (field.TypeId, TypeRosetta.IsNullable (field));
 					string propName = this.generator.CreatePropertyName (field.CaptionId);
 					
 					this.EmitLocalBeginProperty (field, typeName, propName);
@@ -335,7 +344,7 @@ namespace Epsitec.Common.Support.EntityEngine
 				if ((field.Membership == FieldMembership.Local) &&
 					(field.DefiningTypeId.IsEmpty))
 				{
-					string typeName = this.generator.CreateTypeFullName (field.TypeId);
+					string typeName = this.generator.CreateTypeFullName (field.TypeId, TypeRosetta.IsNullable (field));
 					string propName = this.generator.CreatePropertyName (field.CaptionId);
 
 					switch (field.Relation)
@@ -563,7 +572,7 @@ namespace Epsitec.Common.Support.EntityEngine
 			{
 				if (field.Membership == FieldMembership.Local)
 				{
-					string typeName = this.generator.CreateTypeFullName (field.TypeId);
+					string typeName = this.generator.CreateTypeFullName (field.TypeId, TypeRosetta.IsNullable (field));
 					string propName = this.generator.CreatePropertyName (field.CaptionId);
 
 					string getterMethodName = string.Concat (Keywords.InterfaceImplementationGetterMethodPrefix, propName);
