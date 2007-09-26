@@ -1330,14 +1330,13 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				return;
 			}
 
-			// TODO: finir...
 			StructuredData data = this.cultureMap.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
 			IList<StructuredData> dataInterfaces = data.GetValue(Support.Res.Fields.ResourceStructuredType.InterfaceIds) as IList<StructuredData>;
 
 			Support.ResourceAccessors.StructuredTypeResourceAccessor accessor = this.editor.Module.AccessEntities.Accessor as Support.ResourceAccessors.StructuredTypeResourceAccessor;
 			IDataBroker broker = accessor.GetDataBroker(data, Support.Res.Fields.ResourceStructuredType.InterfaceIds.ToString());
 			StructuredData newInterface = broker.CreateData(this.cultureMap);
-			newInterface.SetValue(Support.Res.Fields.Field.CaptionId, druid);
+			newInterface.SetValue(Support.Res.Fields.InterfaceId.CaptionId, druid);
 			dataInterfaces.Add(newInterface);
 
 			this.SetContent(this.cultureMap);
