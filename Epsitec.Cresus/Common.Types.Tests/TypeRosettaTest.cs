@@ -81,6 +81,14 @@ namespace Epsitec.Common.Types
 			Assert.AreEqual (t5, t6);
 			Assert.AreNotEqual (t7, t8);
 		}
+
+		[Test]
+		public void CheckIsNullable()
+		{
+			Assert.IsFalse (TypeRosetta.IsNullable (typeof (int)));
+			Assert.IsTrue (TypeRosetta.IsNullable (typeof (string)));
+			Assert.IsTrue (TypeRosetta.IsNullable (typeof (int?)));
+		}
 		
 		[Test]
 		public void CheckObjectTypeToSytemType()

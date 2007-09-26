@@ -338,6 +338,15 @@ namespace Epsitec.Common.Types
 			}
 		}
 
+		/// <summary>
+		/// Verifies the validity of the value (proper type and valid with respect
+		/// to the field's <see cref="T:IDataConstraint"/>).
+		/// </summary>
+		/// <param name="value">The value.</param>
+		/// <param name="field">The field.</param>
+		/// <returns>
+		/// 	<c>true</c> if the value is compatible with the specified field, <c>false</c> otherwise.
+		/// </returns>
 		public static bool IsValidValue(object value, StructuredTypeField field)
 		{
 			if (UnknownValue.IsUnknownValue (value))
@@ -369,6 +378,98 @@ namespace Epsitec.Common.Types
 			}
 		}
 
+		/// <summary>
+		/// Determines whether the specified type is nullable.
+		/// </summary>
+		/// <param name="type">The type.</param>
+		/// <returns>
+		/// 	<c>true</c> if the specified type is nullable; otherwise, <c>false</c>.
+		/// </returns>
+		public static bool IsNullable(System.Type type)
+		{
+			if (type.IsClass)
+			{
+				return true;
+			}
+			else if (type.IsValueType)
+			{
+				if ((type.IsGenericType) &&
+					(type.GetGenericTypeDefinition () == typeof (System.Nullable<>)))
+				{
+					return true;
+				}
+				else
+				{
+					return false;
+				}
+			}
+			else
+			{
+				throw new System.NotSupportedException ();
+			}
+		}
+
+		/// <summary>
+		/// Determines whether the specified type is nullable.
+		/// </summary>
+		/// <param name="type">The type.</param>
+		/// <returns>
+		/// 	<c>true</c> if the specified type is nullable; otherwise, <c>false</c>.
+		/// </returns>
+		public static bool IsNullable(INamedType type)
+		{
+			if (type == null)
+			{
+				throw new System.ArgumentNullException ("Null type specified");
+			}
+
+			INullableType nullable = type as INullableType;
+
+			return (nullable == null) ? TypeRosetta.IsNullable (type.SystemType) : nullable.IsNullable;
+		}
+
+		/// <summary>
+		/// Determines whether the specified field is nullable.
+		/// </summary>
+		/// <param name="field">The field.</param>
+		/// <returns>
+		/// 	<c>true</c> if the specified field is nullable; otherwise, <c>false</c>.
+		/// </returns>
+		public static bool IsNullable(StructuredTypeField field)
+		{
+			if (field == null)
+			{
+				throw new System.ArgumentNullException ("Empty field specified");
+			}
+
+			if ((field.Options & FieldOptions.Nullable) == FieldOptions.Nullable)
+			{
+				return true;
+			}
+
+			switch (field.Relation)
+			{
+				case FieldRelation.None:
+				case FieldRelation.Reference:
+					return TypeRosetta.IsNullable (field.Type);
+
+				case FieldRelation.Collection:
+					return false;
+
+				default:
+					throw new System.NotImplementedException (string.Format ("Support for Relation.{0} not implemented", field.Relation));
+			}
+		}
+
+		/// <summary>
+		/// Determines whether the specified value is a collection using the
+		/// type of the expected items.
+		/// </summary>
+		/// <param name="value">The value.</param>
+		/// <param name="namedType">The type of the expected items.</param>
+		/// <returns>
+		/// 	<c>true</c> if the value is valid; otherwise, <c>false</c>.
+		/// </returns>
 		public static bool IsValidValueForCollectionOfType(object value, INamedType namedType)
 		{
 			System.Type     typeOfItems    = namedType.SystemType;

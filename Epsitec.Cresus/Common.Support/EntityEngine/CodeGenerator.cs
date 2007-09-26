@@ -138,7 +138,7 @@ namespace Epsitec.Common.Support.EntityEngine
 
 					implementationEmitter = new InterfaceImplementationEmitter (this, type);
 
-					this.formatter.WriteBeginClass (CodeGenerator.StaticClassAttributes, CodeGenerator.CreateInterfaceImplementationIdentifier (name), specifiers);
+					this.formatter.WriteBeginClass (CodeGenerator.StaticPartialClassAttributes, CodeGenerator.CreateInterfaceImplementationIdentifier (name), specifiers);
 					type.ForEachField (implementationEmitter.EmitLocalPropertyImplementation);
 					this.formatter.WriteEndClass ();
 					break;
@@ -555,6 +555,7 @@ namespace Epsitec.Common.Support.EntityEngine
 			public InterfaceImplementationEmitter(CodeGenerator generator, StructuredType type)
 				: base (generator, type)
 			{
+				this.className = CodeGenerator.CreateInterfaceImplementationIdentifier (type.Caption.Name);
 				this.interfaceName = this.generator.CreateEntityFullName (type.CaptionId);
 			}
 
@@ -567,21 +568,23 @@ namespace Epsitec.Common.Support.EntityEngine
 
 					string getterMethodName = string.Concat (Keywords.InterfaceImplementationGetterMethodPrefix, propName);
 					string getterCode = string.Concat (typeName, " ", getterMethodName, "(", this.interfaceName, " ", Keywords.ObjVariable, ")");
+					string entityType = string.Concat (Keywords.Global, "::", Keywords.AbstractEntity);
 					
 					this.generator.formatter.WriteBeginMethod (new CodeAttributes (CodeVisibility.Public, CodeAccessibility.Static), getterCode);
+					this.generator.formatter.WriteCodeLine (entityType, " ", Keywords.EntityVariable, " = ", Keywords.ObjVariable, " ", Keywords.As, " ", entityType, ";");
 					
 					if (field.Relation == FieldRelation.Collection)
 					{
-						this.generator.formatter.WriteCodeLine (Keywords.Return, " ", Keywords.ObjVariable, ".", Keywords.GetFieldCollectionMethod, "<", typeName, "> (", Keywords.Quote, field.Id, Keywords.Quote, ");");
+						this.generator.formatter.WriteCodeLine (Keywords.Return, " ", Keywords.EntityVariable, ".", Keywords.GetFieldCollectionMethod, "<", typeName, "> (", Keywords.Quote, field.Id, Keywords.Quote, ");");
 					}
 					else
 					{
-						this.generator.formatter.WriteCodeLine (Keywords.Return, " ", Keywords.ObjVariable, ".", Keywords.GetFieldMethod, "<", typeName, "> (", Keywords.Quote, field.Id, Keywords.Quote, ");");
+						this.generator.formatter.WriteCodeLine (Keywords.Return, " ", Keywords.EntityVariable, ".", Keywords.GetFieldMethod, "<", typeName, "> (", Keywords.Quote, field.Id, Keywords.Quote, ");");
 					}
 					
 					this.generator.formatter.WriteEndMethod ();
 
-					string setterMethodName = string.Concat (Keywords.InterfaceImplementationGetterMethodPrefix, propName);
+					string setterMethodName = string.Concat (Keywords.InterfaceImplementationSetterMethodPrefix, propName);
 					string setterCode = string.Concat (Keywords.Void, " ", setterMethodName, "(", this.interfaceName, " ", Keywords.ObjVariable, ", ", typeName, " ", Keywords.ValueVariable, ")");
 
 					if (field.Relation == FieldRelation.Collection)
@@ -590,24 +593,27 @@ namespace Epsitec.Common.Support.EntityEngine
 					else
 					{
 						this.generator.formatter.WriteBeginMethod (new CodeAttributes (CodeVisibility.Public, CodeAccessibility.Static), setterCode);
+						this.generator.formatter.WriteCodeLine (entityType, " ", Keywords.EntityVariable, " = ", Keywords.ObjVariable, " ", Keywords.As, " ", entityType, ";");
 						this.generator.formatter.WriteCodeLine (typeName, " ", Keywords.OldValueVariable, " = ", Keywords.ObjVariable, ".", propName, ";");
 						this.generator.formatter.WriteCodeLine (Keywords.If, " (", Keywords.OldValueVariable, " != ", Keywords.ValueVariable, ")");
 						this.generator.formatter.WriteBeginBlock ();
-						this.generator.formatter.WriteCodeLine (Keywords.ObjVariable, ".", Keywords.OnPrefix, propName, Keywords.ChangingSuffix, " (", Keywords.OldValueVariable, ", ", Keywords.ValueVariable, ");");
-						this.generator.formatter.WriteCodeLine (Keywords.ObjVariable, ".", Keywords.SetFieldMethod, "<", typeName, "> (", Keywords.Quote, field.Id, Keywords.Quote, ", ", Keywords.OldValueVariable, ", ", Keywords.ValueVariable, ");");
-						this.generator.formatter.WriteCodeLine (Keywords.ObjVariable, ".", Keywords.OnPrefix, propName, Keywords.ChangedSuffix, " (", Keywords.OldValueVariable, ", ", Keywords.ValueVariable, ");");
+						this.generator.formatter.WriteCodeLine (this.className, ".", Keywords.OnPrefix, propName, Keywords.ChangingSuffix, " (", Keywords.ObjVariable, ", ", Keywords.OldValueVariable, ", ", Keywords.ValueVariable, ");");
+						this.generator.formatter.WriteCodeLine (Keywords.EntityVariable, ".", Keywords.SetFieldMethod, "<", typeName, "> (", Keywords.Quote, field.Id, Keywords.Quote, ", ", Keywords.OldValueVariable, ", ", Keywords.ValueVariable, ");");
+						this.generator.formatter.WriteCodeLine (this.className, ".", Keywords.OnPrefix, propName, Keywords.ChangedSuffix, " (", Keywords.ObjVariable, ", ", Keywords.OldValueVariable, ", ", Keywords.ValueVariable, ");");
 						this.generator.formatter.WriteEndBlock ();
 						this.generator.formatter.WriteEndMethod ();
 						
 						string code;
 
 						code = string.Concat (Keywords.Void, " ", Keywords.OnPrefix, propName, Keywords.ChangedSuffix, "(",
+							/**/			  this.interfaceName, " ", Keywords.ObjVariable, ", ",
 							/**/			  typeName, " ", Keywords.OldValueVariable, ", ",
 							/**/			  typeName, " ", Keywords.NewValueVariable, ")");
 						this.generator.formatter.WriteBeginMethod (CodeGenerator.StaticPartialMethodAttributes, code);
 						this.generator.formatter.WriteEndMethod ();
 
 						code = string.Concat (Keywords.Void, " ", Keywords.OnPrefix, propName, Keywords.ChangingSuffix, "(",
+							/**/			  this.interfaceName, " ", Keywords.ObjVariable, ", ",
 							/**/			  typeName, " ", Keywords.OldValueVariable, ", ",
 							/**/			  typeName, " ", Keywords.NewValueVariable, ")");
 						this.generator.formatter.WriteBeginMethod (CodeGenerator.StaticPartialMethodAttributes, code);
@@ -631,11 +637,13 @@ namespace Epsitec.Common.Support.EntityEngine
 				}
 			}
 
+			private string className;
 			private string interfaceName;
 		}
 
 		private static readonly CodeAttributes EntityClassAttributes = new CodeAttributes (CodeVisibility.Public, CodeAccessibility.Default, CodeAttributes.PartialAttribute);
 		private static readonly CodeAttributes StaticClassAttributes = new CodeAttributes (CodeVisibility.Public, CodeAccessibility.Static);
+		private static readonly CodeAttributes StaticPartialClassAttributes = new CodeAttributes (CodeVisibility.Public, CodeAccessibility.Static, CodeAttributes.PartialAttribute);
 		private static readonly CodeAttributes InterfaceAttributes = new CodeAttributes (CodeVisibility.Public, CodeAccessibility.Default);
 		private static readonly CodeAttributes PropertyAttributes = new CodeAttributes (CodeVisibility.Public);
 		private static readonly CodeAttributes PartialMethodAttributes = new CodeAttributes (CodeVisibility.None, CodeAccessibility.Default, CodeAttributes.PartialDefinitionAttribute);
@@ -648,6 +656,7 @@ namespace Epsitec.Common.Support.EntityEngine
 			public const string New    = "new";
 			public const string This   = "this";
 			public const string If     = "if";
+			public const string As     = "as";
 			public const string Quote  = "\"";
 			public const string Override = "override";
 
@@ -665,6 +674,7 @@ namespace Epsitec.Common.Support.EntityEngine
 			public const string NewValueVariable = "newValue";
 			public const string FieldNameVariable = "fieldName";
 			public const string ObjVariable = "obj";
+			public const string EntityVariable = "entity";
 
 			public const string GenericIList = "System.Collections.Generic.IList";
 			public const string Entities = "Entities";
