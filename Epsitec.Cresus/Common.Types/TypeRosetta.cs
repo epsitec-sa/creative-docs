@@ -272,11 +272,7 @@ namespace Epsitec.Common.Types
 
 			if (value == null)
 			{
-				//	Only reference types can be set to null.
-
-				//	TODO: check for nullable types too ?
-
-				return targetSysType.IsClass;
+				return TypeRosetta.IsNullable (targetSysType);
 			}
 			else
 			{
@@ -316,21 +312,7 @@ namespace Epsitec.Common.Types
 
 			if (value == null)
 			{
-				INullableType nullable = targetType as INullableType;
-
-				if (nullable != null)
-				{
-					//	If the type implements INullable, it specifies support
-					//	for null values explicitely :
-					
-					return nullable.IsNullable;
-				}
-				else
-				{
-					//	Only reference types can be set to null.
-					
-					return targetSysType.IsClass;
-				}
+				return TypeRosetta.IsNullable (targetType);
 			}
 			else
 			{
@@ -357,24 +339,25 @@ namespace Epsitec.Common.Types
 			{
 				throw new System.ArgumentNullException ("Empty field specified");
 			}
-			
-			if ((value == null) &&
-				((field.Options & FieldOptions.Nullable) == FieldOptions.Nullable))
+
+			if (value == null)
 			{
-				return true;
+				return TypeRosetta.IsNullable (field);
 			}
-
-			switch (field.Relation)
+			else
 			{
-				case FieldRelation.None:
-				case FieldRelation.Reference:
-					return TypeRosetta.IsValidValue (value, field.Type);
-				
-				case FieldRelation.Collection:
-					return TypeRosetta.IsValidValueForCollectionOfType (value, field.Type);
+				switch (field.Relation)
+				{
+					case FieldRelation.None:
+					case FieldRelation.Reference:
+						return TypeRosetta.IsValidValue (value, field.Type);
 
-				default:
-					throw new System.NotImplementedException (string.Format ("Support for Relation.{0} not implemented", field.Relation));
+					case FieldRelation.Collection:
+						return TypeRosetta.IsValidValueForCollectionOfType (value, field.Type);
+
+					default:
+						throw new System.NotImplementedException (string.Format ("Support for Relation.{0} not implemented", field.Relation));
+				}
 			}
 		}
 
