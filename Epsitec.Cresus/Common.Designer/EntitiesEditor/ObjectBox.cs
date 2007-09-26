@@ -1774,7 +1774,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			//	Construit le chemin du cadre arrondi.
 			rect = this.bounds;
 			rect.Deflate(1);
-			Path path = this.PathRoundRectangle(rect, ObjectBox.roundFrameRadius);
+			Path path = this.PathRoundRectangle(rect, this.IsInterface ? 0.0 : ObjectBox.roundFrameRadius);
 
 			//	Dessine l'intérieur en blanc.
 			graphics.Rasterizer.AddSurface(path);
