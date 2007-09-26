@@ -243,11 +243,11 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				case AbstractObject.ActiveElement.BoxFieldTitle:
 					if (this.editor.CurrentModifyMode == Editor.ModifyMode.Unlocked)
 					{
-						return "Ctrl+clic: aller sur la définition de l'entité héritée";
+						return "Ctrl+clic: aller sur la définition";
 					}
 					else
 					{
-						return "Aller sur la définition de l'entité héritée";
+						return "Aller sur la définition";
 					}
 
 				case AbstractObject.ActiveElement.BoxFieldInterface:

@@ -1305,7 +1305,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			Druid druid = fieldCultureMap.Id;
 			newField.SetValue(Support.Res.Fields.Field.CaptionId, druid);
 
-			int fieldRank = this.fields[rank].Rank;
+			int fieldRank = (rank == -1) ? -1 : this.fields[rank].Rank;
 			dataFields.Insert(fieldRank+1, newField);
 
 			Field field = new Field(this.editor);
