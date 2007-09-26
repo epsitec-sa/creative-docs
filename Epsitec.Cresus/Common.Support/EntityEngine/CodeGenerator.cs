@@ -118,8 +118,10 @@ namespace Epsitec.Common.Support.EntityEngine
 					
 					this.formatter.WriteBeginClass (CodeGenerator.EntityClassAttributes, CodeGenerator.CreateEntityIdentifier (name), specifiers);
 					type.ForEachField (emitter.EmitLocalProperty);
+					emitter.EmitCloseRegion ();
 					this.formatter.WriteCodeLine ();
 					type.ForEachField (emitter.EmitLocalPropertyHandlers);
+					emitter.EmitCloseRegion ();
 					this.formatter.WriteCodeLine ();
 					this.EmitMethods (type);
 					this.formatter.WriteEndClass ();
@@ -130,6 +132,7 @@ namespace Epsitec.Common.Support.EntityEngine
 					
 					this.formatter.WriteBeginInterface (CodeGenerator.InterfaceAttributes, CodeGenerator.CreateInterfaceIdentifier (name), specifiers);
 					type.ForEachField (emitter.EmitLocalProperty);
+					emitter.EmitCloseRegion ();
 					this.formatter.WriteEndInterface ();
 
 					this.formatter.WriteBeginClass (CodeGenerator.StaticClassAttributes, CodeGenerator.CreateInterfaceImplementationIdentifier (name), specifiers);
@@ -180,6 +183,32 @@ namespace Epsitec.Common.Support.EntityEngine
 			return string.Concat (name, ".", Keywords.Entities);
 		}
 
+		private string CreateEntityShortName(Druid id)
+		{
+			Caption caption = this.resourceManager.GetCaption (id);
+			StructuredType type = TypeRosetta.GetTypeObject (caption) as StructuredType;
+
+			System.Diagnostics.Debug.Assert (type != null);
+
+			string identifier;
+
+			switch (type.Class)
+			{
+				case StructuredTypeClass.Entity:
+					identifier = CodeGenerator.CreateEntityIdentifier (caption.Name);
+					break;
+
+				case StructuredTypeClass.Interface:
+					identifier = CodeGenerator.CreateInterfaceIdentifier (caption.Name);
+					break;
+
+				default:
+					throw new System.ArgumentException (string.Format ("StructuredTypeClass.{0} not valid in this context", type.Class));
+			}
+
+			return identifier;
+		}
+		
 		private string CreateEntityFullName(Druid id)
 		{
 			Caption caption = this.resourceManager.GetCaption (id);
@@ -268,6 +297,8 @@ namespace Epsitec.Common.Support.EntityEngine
 			{
 				if (field.Membership == FieldMembership.Local)
 				{
+					this.EmitInterfaceRegion (field);
+
 					string typeName = this.generator.CreateTypeFullName (field.TypeId);
 					string propName = this.generator.CreatePropertyName (field.CaptionId);
 					
@@ -295,28 +326,6 @@ namespace Epsitec.Common.Support.EntityEngine
 				}
 			}
 
-			private void EmitLocalBeginProperty(StructuredTypeField field, string typeName, string propName)
-			{
-				string code;
-
-				switch (field.Relation)
-				{
-					case FieldRelation.None:
-					case FieldRelation.Reference:
-						code = string.Concat (typeName, " ", propName);
-						break;
-
-					case FieldRelation.Collection:
-						code = string.Concat (Keywords.Global, "::", Keywords.GenericIList, "<", typeName, ">", " ", propName);
-						break;
-
-					default:
-						throw new System.ArgumentException (string.Format ("FieldRelation.{0} not valid in this context", field.Relation));
-				}
-
-				this.generator.formatter.WriteBeginProperty (CodeGenerator.PropertyAttributes, code);
-			}
-
 			public void EmitLocalPropertyHandlers(StructuredTypeField field)
 			{
 				if ((field.Membership == FieldMembership.Local) &&
@@ -342,6 +351,11 @@ namespace Epsitec.Common.Support.EntityEngine
 				}
 			}
 
+			public void EmitCloseRegion()
+			{
+				this.EmitInterfaceRegion (null);
+			}
+
 			protected virtual void EmitPropertyOnChanging(StructuredTypeField field, string typeName, string propName)
 			{
 			}
@@ -358,8 +372,55 @@ namespace Epsitec.Common.Support.EntityEngine
 			{
 			}
 
+			private void EmitLocalBeginProperty(StructuredTypeField field, string typeName, string propName)
+			{
+				string code;
+
+				switch (field.Relation)
+				{
+					case FieldRelation.None:
+					case FieldRelation.Reference:
+						code = string.Concat (typeName, " ", propName);
+						break;
+
+					case FieldRelation.Collection:
+						code = string.Concat (Keywords.Global, "::", Keywords.GenericIList, "<", typeName, ">", " ", propName);
+						break;
+
+					default:
+						throw new System.ArgumentException (string.Format ("FieldRelation.{0} not valid in this context", field.Relation));
+				}
+
+				this.generator.formatter.WriteBeginProperty (CodeGenerator.PropertyAttributes, code);
+			}
+
+			private void EmitInterfaceRegion(StructuredTypeField field)
+			{
+				Druid currentInterfaceId = field == null ? Druid.Empty : field.DefiningTypeId;
+
+				if (this.interfaceId == currentInterfaceId)
+				{
+					return;
+				}
+
+				if (this.interfaceId.IsValid)
+				{
+					this.generator.formatter.WriteCodeLine (Keywords.EndRegion);
+				}
+
+				this.interfaceId = currentInterfaceId;
+
+				if (this.interfaceId.IsValid)
+				{
+					string interfaceName = this.generator.CreateEntityShortName (this.interfaceId);
+					this.generator.formatter.WriteCodeLine (Keywords.BeginRegion, " ", interfaceName, " Members");
+				}
+			}
+
 			protected CodeGenerator generator;
 			protected StructuredType type;
+
+			private Druid interfaceId;
 		}
 
 		private sealed class EntityEmitter : Emitter
@@ -507,6 +568,9 @@ namespace Epsitec.Common.Support.EntityEngine
 			public const string Druid  = "global::Epsitec.Common.Support.Druid";
 
 			public const string SimpleComment = "//";
+
+			public const string BeginRegion = "#region";
+			public const string EndRegion = "#endregion";
 
 			public const string ValueVariable = "value";
 			public const string OldValueVariable = "oldValue";

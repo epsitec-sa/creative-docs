@@ -396,9 +396,21 @@ namespace Epsitec.Common.Support.CodeGenerators
 
 		public void WriteCodeLine(string line)
 		{
-			if (this.isAbstract)
+			string trimmed = line.TrimStart ();
+
+			if ((this.isAbstract) &&
+				(trimmed.Length > 0))
 			{
-				throw new System.InvalidOperationException ("Trying to generate code for an abstract item");
+				if ((trimmed.StartsWith ("#")) ||
+					(trimmed.StartsWith ("//")))
+				{
+					//	OK, accept # directive or comment start, even if we are currently
+					//	in an abstract construct where no code may be emitted.
+				}
+				else
+				{
+					throw new System.InvalidOperationException ("Trying to generate code for an abstract item");
+				}
 			}
 			
 			this.WriteBeginLine ();
