@@ -1334,17 +1334,24 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		protected void AddInterface()
 		{
 			//	Ajoute une interface à l'entité.
+			StructuredData data = this.cultureMap.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
+			IList<StructuredData> dataInterfaces = data.GetValue(Support.Res.Fields.ResourceStructuredType.InterfaceIds) as IList<StructuredData>;
+
+			List<Druid> exclude = new List<Druid>();
+			foreach (StructuredData dataInterface in dataInterfaces)
+			{
+				Druid di = (Druid) dataInterface.GetValue(Support.Res.Fields.InterfaceId.CaptionId);
+				exclude.Add(di);
+			}
+
 			Druid druid = Druid.Empty;
 			Module module = this.editor.Module;
 			StructuredTypeClass typeClass = StructuredTypeClass.Interface;
-			Common.Dialogs.DialogResult result = module.DesignerApplication.DlgResourceSelector(Dialogs.ResourceSelector.Operation.InterfaceEntities, module, ResourceAccess.Type.Entities, ref typeClass, ref druid, null);
+			Common.Dialogs.DialogResult result = module.DesignerApplication.DlgResourceSelector(Dialogs.ResourceSelector.Operation.InterfaceEntities, module, ResourceAccess.Type.Entities, ref typeClass, ref druid, exclude);
 			if (result != Common.Dialogs.DialogResult.Yes)
 			{
 				return;
 			}
-
-			StructuredData data = this.cultureMap.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
-			IList<StructuredData> dataInterfaces = data.GetValue(Support.Res.Fields.ResourceStructuredType.InterfaceIds) as IList<StructuredData>;
 
 			Support.ResourceAccessors.StructuredTypeResourceAccessor accessor = this.editor.Module.AccessEntities.Accessor as Support.ResourceAccessors.StructuredTypeResourceAccessor;
 			IDataBroker broker = accessor.GetDataBroker(data, Support.Res.Fields.ResourceStructuredType.InterfaceIds.ToString());

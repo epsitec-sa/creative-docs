@@ -186,6 +186,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			this.operation = operation;
 			this.resourceType = type;
 			this.resource = resource;
+			this.exclude = exclude;
 			this.isInherit = false;
 
 			//	Cherche le module contenant le Druid de la ressource.
@@ -294,6 +295,14 @@ namespace Epsitec.Common.Designer.Dialogs
 			//	Méthode passé comme paramètre System.Predicate<object> à CollectionView.Filter.
 			//	Retourne false si la ressource doit être exclue.
 			CultureMap cultureMap = obj as CultureMap;
+
+			if (this.exclude != null)
+			{
+				if (this.exclude.Contains(cultureMap.Id))
+				{
+					return false;  // ne liste pas les Druids exclus
+				}
+			}
 
 			if (this.operation == Operation.InheritEntities)
 			{
@@ -663,6 +672,7 @@ namespace Epsitec.Common.Designer.Dialogs
 		protected bool							isInherit;
 		protected ResourceAccess				access;
 		protected Druid							resource;
+		protected List<Druid>					exclude;
 		protected CollectionView				collectionView;
 		protected Common.Dialogs.DialogResult	result;
 
