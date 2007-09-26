@@ -270,24 +270,8 @@ namespace Epsitec.Common.Support.EntityEngine
 				{
 					string typeName = this.generator.CreateTypeFullName (field.TypeId);
 					string propName = this.generator.CreatePropertyName (field.CaptionId);
-					string code;
-
-					switch (field.Relation)
-					{
-						case FieldRelation.None:
-						case FieldRelation.Reference:
-							code = string.Concat (typeName, " ", propName);
-							break;
-
-						case FieldRelation.Collection:
-							code = string.Concat (Keywords.Global, "::", Keywords.GenericIList, "<", typeName, ">", " ", propName);
-							break;
-
-						default:
-							throw new System.ArgumentException (string.Format ("FieldRelation.{0} not valid in this context", field.Relation));
-					}
-
-					this.generator.formatter.WriteBeginProperty (CodeGenerator.PropertyAttributes, code);
+					
+					this.EmitLocalBeginProperty (field, typeName, propName);
 
 					switch (field.Source)
 					{
@@ -311,9 +295,32 @@ namespace Epsitec.Common.Support.EntityEngine
 				}
 			}
 
+			private void EmitLocalBeginProperty(StructuredTypeField field, string typeName, string propName)
+			{
+				string code;
+
+				switch (field.Relation)
+				{
+					case FieldRelation.None:
+					case FieldRelation.Reference:
+						code = string.Concat (typeName, " ", propName);
+						break;
+
+					case FieldRelation.Collection:
+						code = string.Concat (Keywords.Global, "::", Keywords.GenericIList, "<", typeName, ">", " ", propName);
+						break;
+
+					default:
+						throw new System.ArgumentException (string.Format ("FieldRelation.{0} not valid in this context", field.Relation));
+				}
+
+				this.generator.formatter.WriteBeginProperty (CodeGenerator.PropertyAttributes, code);
+			}
+
 			public void EmitLocalPropertyHandlers(StructuredTypeField field)
 			{
-				if (field.Membership == FieldMembership.Local)
+				if ((field.Membership == FieldMembership.Local) &&
+					(field.DefiningTypeId.IsEmpty))
 				{
 					string typeName = this.generator.CreateTypeFullName (field.TypeId);
 					string propName = this.generator.CreatePropertyName (field.CaptionId);
@@ -366,13 +373,30 @@ namespace Epsitec.Common.Support.EntityEngine
 			{
 				this.generator.formatter.WriteBeginGetter (new CodeAttributes (CodeVisibility.Public));
 
-				if (field.Relation == FieldRelation.Collection)
+				if (field.DefiningTypeId.IsEmpty)
 				{
-					this.generator.formatter.WriteCodeLine (Keywords.Return, " ", Keywords.This, ".", Keywords.GetFieldCollectionMethod, "<", typeName, "> (", Keywords.Quote, field.Id, Keywords.Quote,");");
+					//	The field is defined locally and is not the implementation of any
+					//	interface.
+
+					if (field.Relation == FieldRelation.Collection)
+					{
+						this.generator.formatter.WriteCodeLine (Keywords.Return, " ", Keywords.This, ".", Keywords.GetFieldCollectionMethod, "<", typeName, "> (", Keywords.Quote, field.Id, Keywords.Quote, ");");
+					}
+					else
+					{
+						this.generator.formatter.WriteCodeLine (Keywords.Return, " ", Keywords.This, ".", Keywords.GetFieldMethod, "<", typeName, "> (", Keywords.Quote, field.Id, Keywords.Quote, ");");
+					}
 				}
 				else
 				{
-					this.generator.formatter.WriteCodeLine (Keywords.Return, " ", Keywords.This, ".", Keywords.GetFieldMethod, "<", typeName, "> (", Keywords.Quote, field.Id, Keywords.Quote, ");");
+					//	The field is defined by an interface and this is an implementation
+					//	of the getter.
+
+					string interfaceName = this.generator.CreateTypeFullName (field.DefiningTypeId);
+					string interfaceImplementationName = CodeGenerator.CreateInterfaceImplementationIdentifier (interfaceName);
+					string getterMethodName = string.Concat (Keywords.InterfaceImplementationGetterMethodPrefix, propName);
+
+					this.generator.formatter.WriteCodeLine (Keywords.Return, " ", interfaceImplementationName, ".", getterMethodName, " (", Keywords.This, ");");
 				}
 				
 				this.generator.formatter.WriteEndGetter ();
@@ -386,13 +410,32 @@ namespace Epsitec.Common.Support.EntityEngine
 				else
 				{
 					this.generator.formatter.WriteBeginSetter (new CodeAttributes (CodeVisibility.Public));
-					this.generator.formatter.WriteCodeLine (typeName, " ", Keywords.OldValueVariable, " = ", Keywords.This, ".", propName, ";");
-					this.generator.formatter.WriteCodeLine (Keywords.If, " (", Keywords.OldValueVariable, " != ", Keywords.ValueVariable, ")");
-					this.generator.formatter.WriteBeginBlock ();
-					this.generator.formatter.WriteCodeLine (Keywords.This, ".", Keywords.OnPrefix, propName, Keywords.ChangingSuffix, " (", Keywords.OldValueVariable, ", ", Keywords.ValueVariable, ");");
-					this.generator.formatter.WriteCodeLine (Keywords.This, ".", Keywords.SetFieldMethod, "<", typeName, "> (", Keywords.Quote, field.Id, Keywords.Quote, ", ", Keywords.OldValueVariable, ", ", Keywords.ValueVariable, ");");
-					this.generator.formatter.WriteCodeLine (Keywords.This, ".", Keywords.OnPrefix, propName, Keywords.ChangedSuffix, " (", Keywords.OldValueVariable, ", ", Keywords.ValueVariable, ");");
-					this.generator.formatter.WriteEndBlock ();
+
+					if (field.DefiningTypeId.IsEmpty)
+					{
+						//	The field is defined locally and is not the implementation of any
+						//	interface.
+
+						this.generator.formatter.WriteCodeLine (typeName, " ", Keywords.OldValueVariable, " = ", Keywords.This, ".", propName, ";");
+						this.generator.formatter.WriteCodeLine (Keywords.If, " (", Keywords.OldValueVariable, " != ", Keywords.ValueVariable, ")");
+						this.generator.formatter.WriteBeginBlock ();
+						this.generator.formatter.WriteCodeLine (Keywords.This, ".", Keywords.OnPrefix, propName, Keywords.ChangingSuffix, " (", Keywords.OldValueVariable, ", ", Keywords.ValueVariable, ");");
+						this.generator.formatter.WriteCodeLine (Keywords.This, ".", Keywords.SetFieldMethod, "<", typeName, "> (", Keywords.Quote, field.Id, Keywords.Quote, ", ", Keywords.OldValueVariable, ", ", Keywords.ValueVariable, ");");
+						this.generator.formatter.WriteCodeLine (Keywords.This, ".", Keywords.OnPrefix, propName, Keywords.ChangedSuffix, " (", Keywords.OldValueVariable, ", ", Keywords.ValueVariable, ");");
+						this.generator.formatter.WriteEndBlock ();
+					}
+					else
+					{
+						//	The field is defined by an interface and this is an implementation
+						//	of the setter.
+
+						string interfaceName = this.generator.CreateTypeFullName (field.DefiningTypeId);
+						string interfaceImplementationName = CodeGenerator.CreateInterfaceImplementationIdentifier (interfaceName);
+						string setterMethodName = string.Concat (Keywords.InterfaceImplementationSetterMethodPrefix, propName);
+
+						this.generator.formatter.WriteCodeLine (interfaceImplementationName, ".", setterMethodName, " (", Keywords.This, ", ", Keywords.ValueVariable, ");");
+					}
+
 					this.generator.formatter.WriteEndSetter ();
 				}
 			}
@@ -474,6 +517,8 @@ namespace Epsitec.Common.Support.EntityEngine
 			public const string Entities = "Entities";
 			public const string EntitySuffix = "Entity";
 			public const string InterfaceImplementationSuffix = "InterfaceImplementation";
+			public const string InterfaceImplementationGetterMethodPrefix = "Get";
+			public const string InterfaceImplementationSetterMethodPrefix = "Set";
 			public const string AbstractEntity = "Epsitec.Common.Support.EntityEngine.AbstractEntity";
 
 			public const string SetFieldMethod = "SetField";
