@@ -15,7 +15,8 @@ namespace Epsitec.Common.Designer.Dialogs
 		{
 			Selection,
 			TypesOrEntities,
-			InheritEntity,
+			InheritEntities,
+			InterfaceEntities,
 		}
 
 
@@ -247,7 +248,7 @@ namespace Epsitec.Common.Designer.Dialogs
 		protected bool BestAccess()
 		{
 			//	Si le type courant ne contient aucune ressource, mais que l'autre type en contient,
-			//	bascule sur l'autre type (Types2 ou Entities). L'idée est d'anticiper sur l'utilisateur,
+			//	bascule sur l'autre type (Types ou Entities). L'idée est d'anticiper sur l'utilisateur,
 			//	qui voudra vraissemblablement changer de type s'il voit une liste vide.
 			if (this.operation == Operation.TypesOrEntities)
 			{
@@ -294,13 +295,23 @@ namespace Epsitec.Common.Designer.Dialogs
 			//	Retourne false si la ressource doit être exclue.
 			CultureMap cultureMap = obj as CultureMap;
 
-			if (this.operation == Operation.InheritEntity)
+			if (this.operation == Operation.InheritEntities)
 			{
 				StructuredData data = cultureMap.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
 				StructuredTypeClass typeClass = (StructuredTypeClass) data.GetValue(Support.Res.Fields.ResourceStructuredType.Class);
 				if (typeClass == StructuredTypeClass.Interface)
 				{
 					return false;  // ne liste pas les interfaces
+				}
+			}
+
+			if (this.operation == Operation.InterfaceEntities)
+			{
+				StructuredData data = cultureMap.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
+				StructuredTypeClass typeClass = (StructuredTypeClass) data.GetValue(Support.Res.Fields.ResourceStructuredType.Class);
+				if (typeClass != StructuredTypeClass.Interface)
+				{
+					return false;  // ne liste que les interfaces
 				}
 			}
 
@@ -318,7 +329,12 @@ namespace Epsitec.Common.Designer.Dialogs
 		protected void UpdateTitle()
 		{
 			//	Met à jour le titre qui dépend du type des ressources éditées.
-			string text = string.Concat("<font size=\"200%\"><b>", ResourceAccess.TypeDisplayName(this.resourceType), "</b></font>");
+			string name = ResourceAccess.TypeDisplayName(this.resourceType);
+			if (this.operation == Operation.InterfaceEntities)
+			{
+				name = "Interfaces";
+			}
+			string text = string.Concat("<font size=\"200%\"><b>", name, "</b></font>");
 			this.title.Text = text;
 
 			this.listModules.Items.Clear();
@@ -374,7 +390,7 @@ namespace Epsitec.Common.Designer.Dialogs
 		protected void UpdateButtons()
 		{
 			//	Met à jour le bouton "Utiliser".
-			if (this.operation == Operation.InheritEntity)
+			if (this.operation == Operation.InheritEntities)
 			{
 				this.buttonUse.Enable = (this.listResources.SelectedIndex != -1 || !this.IsInherit);
 			}
@@ -401,7 +417,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.radioTypes.ActiveState = (this.resourceType == ResourceAccess.Type.Types) ? ActiveState.Yes : ActiveState.No;
 				this.radioEntities.ActiveState = (this.resourceType == ResourceAccess.Type.Entities) ? ActiveState.Yes : ActiveState.No;
 			}
-			else if (this.operation == Operation.InheritEntity)
+			else if (this.operation == Operation.InheritEntities)
 			{
 				this.title.Visibility = false;
 				this.radioTypes.Visibility = false;
@@ -428,7 +444,7 @@ namespace Epsitec.Common.Designer.Dialogs
 		protected void UpdateInherit()
 		{
 			//	Met à jour en fonction du bouton pour l'héritage.
-			if (this.operation == Operation.InheritEntity)
+			if (this.operation == Operation.InheritEntities)
 			{
 				this.ignoreChanged = true;
 
@@ -477,7 +493,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			//	Retourne le Druid de la ressource actuellement sélectionnée.
 			get
 			{
-				if (this.operation == Operation.InheritEntity && !this.IsInherit)
+				if (this.operation == Operation.InheritEntities && !this.IsInherit)
 				{
 					return Druid.Empty;
 				}

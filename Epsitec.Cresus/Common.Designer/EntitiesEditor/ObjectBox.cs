@@ -725,6 +725,11 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					}
 				}
 
+				if (this.hilitedElement == ActiveElement.BoxFieldInterface)
+				{
+					this.AddInterface();
+				}
+
 				if (this.hilitedElement == ActiveElement.BoxComment)
 				{
 					this.AddComment();
@@ -1560,6 +1565,19 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		}
 
 
+		protected void AddInterface()
+		{
+			//	Ajoute une interface à l'entité.
+			Druid druid = Druid.Empty;
+			Module module = this.editor.Module;
+			StructuredTypeClass typeClass = StructuredTypeClass.Interface;
+			Common.Dialogs.DialogResult result = module.DesignerApplication.DlgResourceSelector(Dialogs.ResourceSelector.Operation.InterfaceEntities, module, ResourceAccess.Type.Entities, ref typeClass, ref druid, null);
+			if (result != Common.Dialogs.DialogResult.Yes)
+			{
+				return;
+			}
+		}
+
 		protected void AddComment()
 		{
 			//	Ajoute un commentaire à la boîte.
@@ -2062,7 +2080,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				if (this.hilitedElement == ActiveElement.BoxFieldInterface)
 				{
 					rect = this.GetFieldInterfaceBounds();
-					this.DrawRoundButton(graphics, rect.Center, AbstractObject.buttonRadius, "i", true, true);
+					this.DrawRoundButton(graphics, rect.Center, AbstractObject.buttonRadius, "+i", true, true);
 				}
 			}
 
