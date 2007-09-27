@@ -1,7 +1,7 @@
 //	Copyright © 2007, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
-namespace Epsitec.Common.Support.CodeGenerators
+namespace Epsitec.Common.Support.CodeGenerator
 {
 	/// <summary>
 	/// The <c>CodeAccessibility</c> enumeration lists all possible code

@@ -128,19 +128,17 @@
     <Compile Include="Clipboard.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="CodeGenerators\CodeAttributes.cs" />
-    <Compile Include="CodeGenerators\CodeFormatter.cs" />
-    <Compile Include="CodeGenerators\CodeVisibility.cs" />
-    <Compile Include="CodeGenerators\CodeAccessibility.cs" />
+    <Compile Include="CodeGenerator\CodeAttributes.cs" />
+    <Compile Include="CodeGenerator\CodeFormatter.cs" />
+    <Compile Include="CodeGenerator\CodeVisibility.cs" />
+    <Compile Include="CodeGenerator\CodeAccessibility.cs" />
+    <Compile Include="CodeGenerator\Sample.cs" />
     <Compile Include="Platform\Win32\Clipboard.cs" />
     <Compile Include="ResourceBundleBatchSaver.cs" />
     <Compile Include="CultureMapSource.cs" />
     <Compile Include="EntityEngine\AbstractEntity.cs" />
     <Compile Include="EntityEngine\CodeGenerator.cs" />
-    <Compile Include="CodeGenerators\Sample.cs" />
-    <Compile Include="CommandAttribute.cs">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="CommandAttribute.cs" />
     <Compile Include="EntityEngine\EntityContext.cs" />
     <Compile Include="ResourceAccessors\DataCreationMode.cs" />
     <Compile Include="ResourceAccessors\PanelResourceAccessor.cs" />
@@ -153,64 +151,32 @@
     <Compile Include="FileFilterInfo.cs" />
     <Compile Include="FileOperationMode.cs" />
     <Compile Include="FolderQueryMode.cs" />
-    <Compile Include="Data\ComponentCollection.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Data\IComponent.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Data\IContainer.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Data\INamedStringSelection.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Data\INumValue.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Data\IStringSelection.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Data\ITextArrayStore.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Data\NullStore.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Data\StringArrayStore.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="EmptyEnumerator.cs">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="Data\ComponentCollection.cs" />
+    <Compile Include="Data\IComponent.cs" />
+    <Compile Include="Data\IContainer.cs" />
+    <Compile Include="Data\INamedStringSelection.cs" />
+    <Compile Include="Data\INumValue.cs" />
+    <Compile Include="Data\IStringSelection.cs" />
+    <Compile Include="Data\ITextArrayStore.cs" />
+    <Compile Include="Data\NullStore.cs" />
+    <Compile Include="Data\StringArrayStore.cs" />
+    <Compile Include="EmptyEnumerator.cs" />
     <Compile Include="FileInfoIconSize.cs" />
     <Compile Include="FileInfoIconSelection.cs" />
     <Compile Include="FileManager.cs" />
     <Compile Include="FolderItem.cs" />
     <Compile Include="IDocumentInfo.cs" />
-    <Compile Include="IImageProvider.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="ImageProvider.cs">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="IImageProvider.cs" />
+    <Compile Include="ImageProvider.cs" />
     <Compile Include="Internal\DocumentManagerStream.cs" />
     <Compile Include="Internal\ImageDocumentInfo.cs" />
     <Compile Include="Internal\Test.cs" />
-    <Compile Include="IOplet.cs">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="IOplet.cs" />
     <Compile Include="IDataBroker.cs" />
     <Compile Include="IResourceAccessor.cs" />
-    <Compile Include="ObjectDictMapper.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="OpletEvent.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="OpletQueue.cs">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="ObjectDictMapper.cs" />
+    <Compile Include="OpletEvent.cs" />
+    <Compile Include="OpletQueue.cs" />
     <Compile Include="FolderItemIconCache.cs" />
     <Compile Include="Platform\FileInfo.cs" />
     <Compile Include="Platform\FileOperation.cs" />

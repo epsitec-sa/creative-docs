@@ -52,7 +52,7 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 				}
 				title.Dock = DockStyle.Top;
 				title.Margins = new Margins (6, 6, 6, 0);
-				title.HypertextClicked += new MessageEventHandler (HandleLinkHypertextClicked);
+				title.HypertextClicked += new MessageEventHandler (this.HandleLinkHypertextClicked);
 
 				string chip = "<list type=\"fix\" width=\"1.5\"/>";
 

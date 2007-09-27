@@ -1,6 +1,8 @@
+//	Copyright © 2007, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support;
-using Epsitec.Common.Support.CodeGenerators;
+using Epsitec.Common.Support.CodeGenerator;
 using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Types;
 
@@ -26,7 +28,7 @@ namespace Epsitec.Common.Support
 			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
 			CodeFormatter formatter = new CodeFormatter (buffer);
 			formatter.IndentationChars = "  ";
-			CodeGenerator generator = new CodeGenerator (formatter, manager);
+			EntityEngine.CodeGenerator generator = new EntityEngine.CodeGenerator (formatter, manager);
 
 			Assert.AreEqual ("Epsitec.Common.Support", generator.SourceNamespace);
 

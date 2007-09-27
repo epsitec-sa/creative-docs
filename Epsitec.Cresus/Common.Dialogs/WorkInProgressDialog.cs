@@ -189,7 +189,7 @@ namespace Epsitec.Common.Dialogs
 			this.window.MakeButtonlessWindow ();
 
 			FrameBox frame = new FrameBox (this.window.Root);
-			frame.DrawFullFrame = true;
+			frame.DrawFullFrame = false;
 			frame.Dock = DockStyle.Fill;
 			frame.ContainerLayoutMode = ContainerLayoutMode.VerticalFlow;
 

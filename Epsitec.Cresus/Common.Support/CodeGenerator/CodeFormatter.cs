@@ -6,7 +6,7 @@ using Epsitec.Common.Types;
 
 using System.Collections.Generic;
 
-namespace Epsitec.Common.Support.CodeGenerators
+namespace Epsitec.Common.Support.CodeGenerator
 {
 	/// <summary>
 	/// The <c>CodeFormatter</c> class is used to generate formatted source

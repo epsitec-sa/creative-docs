@@ -3,7 +3,7 @@
 
 using System.Collections.Generic;
 
-namespace Epsitec.Common.Support.CodeGenerators
+namespace Epsitec.Common.Support.CodeGenerator
 {
 	/// <summary>
 	/// The <c>CodeAttributes</c> structure describes the accessibility, visibility

@@ -1148,7 +1148,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		internal void SimulateClicked()
+		public void SimulateClicked()
 		{
 			if (this.IsEnabled)
 			{
@@ -3912,6 +3912,14 @@ namespace Epsitec.Common.Widgets
 			{
 				e.Message.Consumer = this;
 				this.HypertextClicked (this, e);
+			}
+			else if (!string.IsNullOrEmpty (this.Hypertext))
+			{
+				if (this.Hypertext.StartsWith ("http:"))
+				{
+					e.Message.Consumer = this;
+					System.Diagnostics.Process.Start (this.Hypertext);
+				}
 			}
 		}
 		

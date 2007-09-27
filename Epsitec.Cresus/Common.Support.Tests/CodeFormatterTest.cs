@@ -1,6 +1,8 @@
+//	Copyright © 2007, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support;
-using Epsitec.Common.Support.CodeGenerators;
+using Epsitec.Common.Support.CodeGenerator;
 
 using NUnit.Framework;
 
