@@ -22,6 +22,8 @@ namespace Epsitec.Common.Widgets
 			this.optionButton.ButtonStyle = ButtonStyle.Normal;
 			this.optionButton.Clicked += this.HandleOptionButtonClicked;
 
+			this.includeOpenSaveCommands = true;
+
 			ToolTip.Default.SetToolTip (this.optionButton, Res.Strings.ColorPalette.Options);
 		}
 
@@ -95,6 +97,26 @@ namespace Epsitec.Common.Widgets
 			set
 			{
 				this.SetValue (ColorPalette.HiliteSelectedColorProperty, value);
+			}
+		}
+
+		/// <summary>
+		/// Gets or sets a value indicating whether to include open and save
+		/// commands in the palette menu.
+		/// </summary>
+		/// <value>
+		/// 	<c>true</c> if open and save commands should be included in
+		/// the palette menu; otherwise, <c>false</c>.
+		/// </value>
+		public bool								IncludeOpenSaveCommandsInMenu
+		{
+			get
+			{
+				return this.includeOpenSaveCommands;
+			}
+			set
+			{
+				this.includeOpenSaveCommands = value;
 			}
 		}
 
@@ -483,15 +505,31 @@ namespace Epsitec.Common.Widgets
 				menu.Items.Add (new MenuItem (Res.Commands.ColorPalette.SelectLightColors));
 				menu.Items.Add (new MenuItem (Res.Commands.ColorPalette.SelectDarkColors));
 				menu.Items.Add (new MenuItem (Res.Commands.ColorPalette.SelectGrayColors));
-				menu.Items.Add (new MenuSeparator ());
-				menu.Items.Add (new MenuItem (Res.Commands.ColorPalette.Load));
-				menu.Items.Add (new MenuItem (Res.Commands.ColorPalette.Save));
+
+				this.IncludeAdditionalMenuItems (menu);
+
+				if (this.includeOpenSaveCommands)
+				{
+					menu.Items.Add (new MenuSeparator ());
+					menu.Items.Add (new MenuItem (Res.Commands.ColorPalette.Load));
+					menu.Items.Add (new MenuItem (Res.Commands.ColorPalette.Save));
+				}
+
 				menu.AdjustSize ();
 
 				Drawing.Point pos = button.MapClientToScreen (new Drawing.Point (0, button.ActualHeight));
 				pos.X -= menu.PreferredWidth;
 				menu.ShowAsContextMenu (this.Window, pos);
 			}
+		}
+
+		/// <summary>
+		/// When overridden, this method can be used to add more items into the
+		/// predefined palette menu.
+		/// </summary>
+		/// <param name="menu">The menu.</param>
+		protected virtual void IncludeAdditionalMenuItems(VMenu menu)
+		{
 		}
 
 		private void HandleColorClicked(object sender, MessageEventArgs e)
@@ -622,5 +660,6 @@ namespace Epsitec.Common.Widgets
 		private ColorSample[]					palette;
 		private GlyphButton						optionButton;
 		private Drawing.ColorCollection			colorCollection;
+		private bool							includeOpenSaveCommands;
 	}
 }
