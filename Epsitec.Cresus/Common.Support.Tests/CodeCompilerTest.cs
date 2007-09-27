@@ -20,5 +20,17 @@ namespace Epsitec.Common.Support
 
 			Assert.IsTrue (driver.IsValidInstallation);
 		}
+
+		[Test]
+		public void CheckCodeProjectReplace()
+		{
+			CodeProject project = new CodeProject ();
+
+			project.Add (TemplateItem.ProjectGuid, "{1234}");
+			project.Add (TemplateItem.CompileInsertionPoint, @"<Compile Include=""abc""/>");
+			project.Add (TemplateItem.CompileInsertionPoint, @"<Compile Include=""xyz""/>");
+
+			System.Console.Out.WriteLine (project.CreateProjectFile ());
+		}
 	}
 }

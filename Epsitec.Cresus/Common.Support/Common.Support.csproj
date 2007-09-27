@@ -130,6 +130,7 @@
     </Compile>
     <Compile Include="CodeCompilation\BuildDriver.cs" />
     <Compile Include="CodeCompilation\CodeProject.cs" />
+    <Compile Include="CodeCompilation\TemplateItem.cs" />
     <Compile Include="CodeGeneration\CodeAttributes.cs" />
     <Compile Include="CodeGeneration\CodeFormatter.cs" />
     <Compile Include="CodeGeneration\CodeVisibility.cs" />
@@ -238,6 +239,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Resources\Common.Support\Strings.en.resource" />
+    <EmbeddedResource Include="Resources\ProjectFileTemplate.xml" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Common.Support\Captions.de.resource" />
