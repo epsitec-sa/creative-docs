@@ -295,6 +295,8 @@ namespace Epsitec.App.Dolphin.MyWidgets
 
 				this.fields.Add(field);
 			}
+
+			this.UpdateData();
 		}
 
 
