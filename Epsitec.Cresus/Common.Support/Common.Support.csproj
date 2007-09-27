@@ -128,6 +128,8 @@
     <Compile Include="Clipboard.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="CodeCompilation\BuildDriver.cs" />
+    <Compile Include="CodeCompilation\CodeProject.cs" />
     <Compile Include="CodeGeneration\CodeAttributes.cs" />
     <Compile Include="CodeGeneration\CodeFormatter.cs" />
     <Compile Include="CodeGeneration\CodeVisibility.cs" />
