@@ -70,7 +70,7 @@ namespace Epsitec.Common.Support.CodeCompilation
 			System.Type                hostType = typeof (CodeProject);
 			System.Reflection.Assembly assembly = hostType.Assembly;
 			
-			using (System.IO.Stream resourceStream = assembly.GetManifestResourceStream ("Common.Support.Resources.ProjectFileTemplate.xml"))
+			using (System.IO.Stream resourceStream = assembly.GetManifestResourceStream ("Epsitec.Common.Support.Resources.ProjectFileTemplate.xml"))
 			{
 				using (System.IO.StreamReader resourceReader = new System.IO.StreamReader (resourceStream, System.Text.Encoding.UTF8))
 				{
@@ -89,12 +89,23 @@ namespace Epsitec.Common.Support.CodeCompilation
 			System.Diagnostics.Debug.Assert (pos > 0);
 			System.Diagnostics.Debug.Assert (len > 0);
 
-			int lineStartPos = source.LastIndexOfAny (new char[] { '\r', '\n' }, 0, pos) + 1;
+			int lineStartPos = source.LastIndexOfAny (new char[] { '\r', '\n' }, pos-1, pos) + 1;
 			string lineStart = source.Substring (lineStartPos, pos - lineStartPos);
 
 			if (lineStart.Trim ().Length > 0)
 			{
 				return string.Concat (source.Remove (pos), value, source.Substring (pos+len));
+			}
+			else if (value.Length == 0)
+			{
+				string end = source.Substring (pos+len);
+
+				if (end.StartsWith ("\r\n"))
+				{
+					end = end.Substring (2);
+				}
+
+				return string.Concat (source.Remove (lineStartPos), end);
 			}
 			else
 			{
