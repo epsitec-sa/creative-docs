@@ -28,7 +28,7 @@ namespace Epsitec.Common.Support
 			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
 			CodeFormatter formatter = new CodeFormatter (buffer);
 			formatter.IndentationChars = "  ";
-			EntityEngine.CodeGenerator generator = new EntityEngine.CodeGenerator (formatter, manager);
+			CodeGenerator generator = new CodeGenerator (formatter, manager);
 
 			Assert.AreEqual ("Epsitec.Common.Support", generator.SourceNamespace);
 
