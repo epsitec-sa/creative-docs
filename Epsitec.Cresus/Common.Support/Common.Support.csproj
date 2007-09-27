@@ -128,11 +128,11 @@
     <Compile Include="Clipboard.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="CodeGenerator\CodeAttributes.cs" />
-    <Compile Include="CodeGenerator\CodeFormatter.cs" />
-    <Compile Include="CodeGenerator\CodeVisibility.cs" />
-    <Compile Include="CodeGenerator\CodeAccessibility.cs" />
-    <Compile Include="CodeGenerator\Sample.cs" />
+    <Compile Include="CodeGeneration\CodeAttributes.cs" />
+    <Compile Include="CodeGeneration\CodeFormatter.cs" />
+    <Compile Include="CodeGeneration\CodeVisibility.cs" />
+    <Compile Include="CodeGeneration\CodeAccessibility.cs" />
+    <Compile Include="CodeGeneration\Sample.cs" />
     <Compile Include="Platform\Win32\Clipboard.cs" />
     <Compile Include="ResourceBundleBatchSaver.cs" />
     <Compile Include="CultureMapSource.cs" />
