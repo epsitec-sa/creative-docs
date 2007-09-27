@@ -150,7 +150,6 @@
     <Compile Include="TextStyle.cs">
       <SubType>Code</SubType>
     </Compile>
-    <None Include="Resources\copy.info" />
     <EmbeddedResource Include="Resources\LineBreak.compressed" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
