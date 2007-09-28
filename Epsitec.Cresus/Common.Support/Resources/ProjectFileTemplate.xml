@@ -13,7 +13,8 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath><!--DEBUG-OUTPUT-PATH--></OutputPath>
+    <OutputPath><!--DEBUG-OUTPUT-DIRECTORY--></OutputPath>
+    <IntermediateOutputPath><!--DEBUG-TEMPORARY-DIRECTORY--></IntermediateOutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -22,7 +23,8 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath><!--RELEASE-OUTPUT-PATH--></OutputPath>
+    <OutputPath><!--RELEASE-OUTPUT-DIRECTORY--></OutputPath>
+    <IntermediateOutputPath><!--RELEASE-TEMPORARY-DIRECTORY--></IntermediateOutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>

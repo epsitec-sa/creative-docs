@@ -61,15 +61,27 @@ namespace Epsitec.Common.Support.CodeCompilation
 			}
 		}
 
-		public string OutputPath
+		public string OutputDirectory
 		{
 			get
 			{
-				return this.outputPath;
+				return this.outputDirectory;
 			}
 			set
 			{
-				this.outputPath = value;
+				this.outputDirectory = value;
+			}
+		}
+
+		public string TemporaryDirectory
+		{
+			get
+			{
+				return this.temporaryDirectory;
+			}
+			set
+			{
+				this.temporaryDirectory = value;
 			}
 		}
 
@@ -139,10 +151,15 @@ namespace Epsitec.Common.Support.CodeCompilation
 			{
 				project.Add (TemplateItem.AssemblyName, this.assemblyName);
 			}
-			if (!string.IsNullOrEmpty (this.outputPath))
+			if (!string.IsNullOrEmpty (this.outputDirectory))
 			{
-				project.Add (TemplateItem.DebugOutputPath, this.outputPath);
-				project.Add (TemplateItem.ReleaseOutputPath, this.outputPath);
+				project.Add (TemplateItem.DebugOutputDirectory, this.outputDirectory);
+				project.Add (TemplateItem.ReleaseOutputDirectory, this.outputDirectory);
+			}
+			if (!string.IsNullOrEmpty (this.temporaryDirectory))
+			{
+				project.Add (TemplateItem.DebugTemporaryDirectory, this.temporaryDirectory);
+				project.Add (TemplateItem.ReleaseTemporaryDirectory, this.temporaryDirectory);
 			}
 		}
 
@@ -153,6 +170,7 @@ namespace Epsitec.Common.Support.CodeCompilation
 		private System.Guid projectGuid;
 		private string rootNamespace;
 		private string assemblyName;
-		private string outputPath;
+		private string outputDirectory;
+		private string temporaryDirectory;
 	}
 }

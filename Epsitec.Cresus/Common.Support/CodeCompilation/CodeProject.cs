@@ -23,6 +23,31 @@ namespace Epsitec.Common.Support.CodeCompilation
 			this.templateItems = new Dictionary<TemplateItem, string> ();
 		}
 
+		public CodeProject(CodeProjectSettings settings)
+			: this ()
+		{
+			this.SetProjectSettings (settings);
+		}
+
+		/// <summary>
+		/// Gets the specified template item.
+		/// </summary>
+		/// <param name="item">The item.</param>
+		/// <returns></returns>
+		public string GetItem(TemplateItem item)
+		{
+			string value;
+			
+			if (this.templateItems.TryGetValue (item, out value))
+			{
+				return value;
+			}
+			else
+			{
+				return null;
+			}
+		}
+
 		/// <summary>
 		/// Adds the specified template item to the project file. Some template
 		/// items may only be added once; trying to add them more than once will
@@ -73,7 +98,7 @@ namespace Epsitec.Common.Support.CodeCompilation
 		/// replaced by their values.
 		/// </summary>
 		/// <returns>The source for the project file.</returns>
-		public string CreateProjectFile()
+		public string CreateProjectSource()
 		{
 			string source = CodeProject.GetProjectFileTemplate ();
 

@@ -34,6 +34,66 @@ namespace Epsitec.Common.Support.CodeCompilation
 			}
 		}
 
+		public string BuildDirectory
+		{
+			get
+			{
+				return this.buildDirectory;
+			}
+			set
+			{
+				this.buildDirectory = value;
+			}
+		}
+
+		public void Build(CodeProject project)
+		{
+			string workingDirectory = this.BuildDirectory;
+			string outputDirectory  = project.GetItem (TemplateItem.DebugOutputDirectory);
+			string assemblyName     = project.GetItem (TemplateItem.AssemblyName);
+			string assemblyFileName = string.Concat (assemblyName, ".dll");
+			string assemblyFilePath = System.IO.Path.Combine (outputDirectory, assemblyFileName);
+			string projectFileName  = string.Concat (assemblyName, ".csproj");
+			string projectFilePath  = System.IO.Path.Combine (workingDirectory, projectFileName);
+
+			if (!System.IO.Directory.Exists (workingDirectory))
+			{
+				System.IO.Directory.CreateDirectory (workingDirectory);
+			}
+			
+			if (System.IO.File.Exists (assemblyFilePath))
+			{
+				System.IO.File.Delete (assemblyFilePath);
+			}
+
+			System.IO.File.WriteAllText (projectFilePath, project.CreateProjectSource (), System.Text.Encoding.UTF8);
+
+			string msbuildPath = System.IO.Path.Combine (Paths.V35_Framework, "msbuild.exe");
+			string msbuildArgs = "/ToolsVersion:3.5 /nologo /noautoresponse /verbosity:quiet /t:Build /p:Configuration=Debug";
+			string msbuildOutput;
+			string msbuildErrors;
+
+			BuildDriver.Execute (msbuildPath, msbuildArgs, workingDirectory, out msbuildOutput, out msbuildErrors);
+
+			System.Diagnostics.Debug.WriteLine ("Output: " + msbuildOutput);
+			System.Diagnostics.Debug.WriteLine ("Errors: " + msbuildErrors);
+		}
+
+		public CodeProjectSettings CreateSettings(string assemblyName)
+		{
+			System.Diagnostics.Debug.Assert (string.IsNullOrEmpty (this.BuildDirectory) == false);
+
+			CodeProjectSettings settings = new CodeProjectSettings ();
+
+			settings.AssemblyName       = assemblyName;
+			settings.ProjectGuid        = System.Guid.NewGuid ();
+			settings.OutputDirectory    = System.IO.Path.Combine (this.BuildDirectory, Paths.BuildBin);
+			settings.TemporaryDirectory = System.IO.Path.Combine (this.BuildDirectory, Paths.BuildTemp);
+			settings.References.Add (CodeProjectReference.FromAssembly (typeof (int).Assembly));
+
+			return settings;
+		}
+
 
 		/// <summary>
 		/// Finds the reference assembly path.
@@ -134,6 +194,41 @@ namespace Epsitec.Common.Support.CodeCompilation
 			}
 		}
 
+		private static bool Execute(string program, string arguments, string workingDirectory, out string output, out string errors)
+		{
+			System.Diagnostics.Process process = new System.Diagnostics.Process ();
+			
+			process.StartInfo.FileName = program;
+			process.StartInfo.Arguments = arguments;
+			process.StartInfo.WorkingDirectory = workingDirectory;
+			process.StartInfo.UseShellExecute = false;				//	needed to redirect I/O
+			process.StartInfo.RedirectStandardError = true;
+			process.StartInfo.RedirectStandardOutput = true;
+			process.StartInfo.StandardErrorEncoding = System.Text.Encoding.GetEncoding (System.Globalization.CultureInfo.InstalledUICulture.TextInfo.OEMCodePage);
+			process.StartInfo.StandardOutputEncoding = System.Text.Encoding.GetEncoding (System.Globalization.CultureInfo.InstalledUICulture.TextInfo.OEMCodePage);
+			process.StartInfo.CreateNoWindow = true;				//	needed to avoid the empty window syndrome
+
+			if (process.Start ())
+			{
+				output = process.StandardOutput.ReadToEnd ();
+				errors = process.StandardError.ReadToEnd ();
+
+				process.WaitForExit ();
+
+				return true;
+			}
+			else
+			{
+				output = null;
+				errors = null;
+
+				return false;
+			}
+		}
+
+		[System.Runtime.InteropServices.DllImport ("kernel32.dll")]
+		private static extern int GetConsoleOutputCP();
+
 		#region Paths Static Class
 
 		internal static class Paths
@@ -190,6 +285,9 @@ namespace Epsitec.Common.Support.CodeCompilation
 			private static readonly string ReferenceAssemblies	= System.IO.Path.Combine (Globals.Directories.ProgramFiles, @"Reference Assemblies\Microsoft\Framework");
 			private static readonly string Framework			= System.IO.Path.Combine (Globals.Directories.Windows, @"Microsoft.Net\Framework");
 
+			public const string BuildBin	= "bin";
+			public const string	BuildTemp	= "temp";
+
 			private static readonly string v30_ReferenceAssemblies;
 			private static readonly string v35_ReferenceAssemblies;
 			private static readonly string v35_Framework;
@@ -200,5 +298,6 @@ namespace Epsitec.Common.Support.CodeCompilation
 		#endregion
 
 		private bool? hasValidFrameworkVersions;
+		private string buildDirectory;
 	}
 }

@@ -22,6 +22,15 @@ namespace Epsitec.Common.Support.CodeCompilation
 		{
 		}
 
+		/// <summary>
+		/// Initializes a new instance of the <see cref="CodeProjectReference"/> class.
+		/// </summary>
+		/// <param name="assemblyName">Name of the assembly.</param>
+		public CodeProjectReference(string assemblyName)
+		{
+			this.assemblyName = assemblyName;
+		}
+
 
 		/// <summary>
 		/// Gets or sets the assembly name.

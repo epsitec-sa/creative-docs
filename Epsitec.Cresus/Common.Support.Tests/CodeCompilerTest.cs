@@ -14,6 +14,31 @@ namespace Epsitec.Common.Support
 	public class CodeCompilerTest
 	{
 		[Test]
+		public void CheckBuildDriverBuild()
+		{
+			BuildDriver driver = new BuildDriver ();
+
+			driver.BuildDirectory = System.IO.Path.Combine (System.IO.Path.GetTempPath (), "CodeCompilerTest");
+
+			System.IO.File.WriteAllText (System.IO.Path.Combine (driver.BuildDirectory, "x.cs"),
+				"namespace Foo.Bar\r\n" +
+				"{\r\n" +
+				"	public static class Demo\r\n" +
+				"  {\r\n" +
+				"    public static void DoSomething() { élémentaire (); }\r\n" + 
+				"  }\r\n" +
+				"}\r\n");
+
+			
+			CodeProjectSettings settings = driver.CreateSettings ("Foo.Bar");
+
+			settings.References.Add (new CodeProjectReference ("System.Core"));
+			settings.Sources.Add (new CodeProjectSource ("x.cs"));
+
+			driver.Build (new CodeProject (settings));
+		}
+
+		[Test]
 		public void CheckBuildDriverHasValidFrameworkVersions()
 		{
 			BuildDriver driver = new BuildDriver ();
@@ -31,7 +56,7 @@ namespace Epsitec.Common.Support
 			Assert.AreEqual (@"<Reference Include=""Common.Support"" />", r2.ToSimpleString ());
 
 			Assert.AreEqual (@"<Reference Include=""System, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL"" />", r1.ToString ());
-			Assert.AreEqual (@"<Reference Include=""Common.Support, Version=2.0.0.0, Culture=neutral, PublicKeyToken=7344997cc606b490, processorArchitecture=MSIL"" />", r2.ToString ());
+			Assert.AreEqual ("<Reference Include=\"Common.Support, Version=2.0.0.0, Culture=neutral, PublicKeyToken=7344997cc606b490, processorArchitecture=MSIL\">\r\n  <HintPath>", r2.ToString ().Remove (145));
 
 			Assert.IsTrue (r1.IsFrameworkAssembly ());
 			Assert.IsFalse (r2.IsFrameworkAssembly ());
@@ -46,7 +71,7 @@ namespace Epsitec.Common.Support
 			project.Add (TemplateItem.CompileInsertionPoint, @"<Compile Include=""abc""/>");
 			project.Add (TemplateItem.CompileInsertionPoint, @"<Compile Include=""xyz""/>");
 
-			System.Console.Out.WriteLine (project.CreateProjectFile ());
+			System.Console.Out.WriteLine (project.CreateProjectSource ());
 		}
 
 		[Test]
@@ -67,7 +92,7 @@ namespace Epsitec.Common.Support
 
 			project.SetProjectSettings (settings);
 
-			System.Console.Out.WriteLine (project.CreateProjectFile ());
+			System.Console.Out.WriteLine (project.CreateProjectSource ());
 		}
 	}
 }
