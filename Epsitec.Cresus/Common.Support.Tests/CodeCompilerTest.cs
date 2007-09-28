@@ -14,28 +14,54 @@ namespace Epsitec.Common.Support
 	public class CodeCompilerTest
 	{
 		[Test]
-		public void CheckBuildDriverBuild()
+		public void CheckBuildDriverCompile()
 		{
-			BuildDriver driver = new BuildDriver ();
+			using (BuildDriver driver = new BuildDriver ())
+			{
+				driver.CreateBuildDirectory ();
 
-			driver.BuildDirectory = System.IO.Path.Combine (System.IO.Path.GetTempPath (), "CodeCompilerTest");
+				System.IO.File.WriteAllText (System.IO.Path.Combine (driver.BuildDirectory, "x.cs"),
+					"namespace Foo.Bar\r\n" +
+					"{\r\n" +
+					"	public static class Demo\r\n" +
+					"  {\r\n" +
+					"    public static void DoSomething() { élémentaire (); }\r\n" + 
+					"  }\r\n" +
+					"}\r\n");
 
-			System.IO.File.WriteAllText (System.IO.Path.Combine (driver.BuildDirectory, "x.cs"),
-				"namespace Foo.Bar\r\n" +
-				"{\r\n" +
-				"	public static class Demo\r\n" +
-				"  {\r\n" +
-				"    public static void DoSomething() { élémentaire (); }\r\n" + 
-				"  }\r\n" +
-				"}\r\n");
+				CodeProjectSettings settings = driver.CreateSettings ("Foo.Bar");
 
-			
-			CodeProjectSettings settings = driver.CreateSettings ("Foo.Bar");
+				settings.References.Add (new CodeProjectReference ("System.Core"));
+				settings.Sources.Add (new CodeProjectSource ("x.cs"));
 
-			settings.References.Add (new CodeProjectReference ("System.Core"));
-			settings.Sources.Add (new CodeProjectSource ("x.cs"));
+				List<string> messages;
 
-			driver.Build (new CodeProject (settings));
+				Assert.IsFalse (driver.Compile (new CodeProject (settings)));
+
+				messages = Types.Collection.ToList (driver.GetBuildMessages ());
+
+				Assert.AreEqual (1, messages.Count);
+				Assert.AreEqual ("x.cs(5,40): error CS0103: The name 'élémentaire' does not exist in the current context", messages[0]);
+				Assert.IsNull (driver.GetCompiledAssemblyPath ());
+				Assert.IsNull (driver.GetCompiledAssemblyDebugInfoPath ());
+
+				System.IO.File.WriteAllText (System.IO.Path.Combine (driver.BuildDirectory, "x.cs"),
+					"namespace Foo.Bar\r\n" +
+					"{\r\n" +
+					"	public static class Demo\r\n" +
+					"  {\r\n" +
+					"    public static void DoSomething() { }\r\n" + 
+					"  }\r\n" +
+					"}\r\n");
+
+				Assert.IsTrue (driver.Compile (new CodeProject (settings)));
+
+				messages = Types.Collection.ToList (driver.GetBuildMessages ());
+
+				Assert.AreEqual (0, messages.Count);
+				Assert.IsNotNull (driver.GetCompiledAssemblyPath ());
+				Assert.IsNotNull (driver.GetCompiledAssemblyDebugInfoPath ());
+			}
 		}
 
 		[Test]

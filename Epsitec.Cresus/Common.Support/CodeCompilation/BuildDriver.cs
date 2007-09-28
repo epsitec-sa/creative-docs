@@ -9,11 +9,19 @@ using System.Collections.Generic;
 
 namespace Epsitec.Common.Support.CodeCompilation
 {
-	public class BuildDriver
+	public class BuildDriver : System.IDisposable
 	{
 		public BuildDriver()
 		{
+			string directory = string.Concat ("BuildDriver.", System.DateTime.Now.Ticks, ".", System.Diagnostics.Process.GetCurrentProcess ().Id);
+			this.BuildDirectory = System.IO.Path.Combine (System.IO.Path.GetTempPath (), directory);
 		}
+		
+		~BuildDriver()
+		{
+			this.Dispose (false);
+		}
+
 
 		/// <summary>
 		/// Gets a value indicating whether the correct .NET Framework versions are installed.
@@ -46,21 +54,38 @@ namespace Epsitec.Common.Support.CodeCompilation
 			}
 		}
 
-		public void Build(CodeProject project)
+		public bool DeleteOnDispose
+		{
+			get
+			{
+				return this.deleteOnDispose;
+			}
+			set
+			{
+				this.deleteOnDispose = value;
+			}
+		}
+
+		public void CreateBuildDirectory()
+		{
+			if (!System.IO.Directory.Exists (this.buildDirectory))
+			{
+				System.IO.Directory.CreateDirectory (this.buildDirectory);
+				this.deleteBuildDirectoryOnDispose = true;
+			}
+		}
+
+		public bool Compile(CodeProject project)
 		{
 			string workingDirectory = this.BuildDirectory;
 			string outputDirectory  = project.GetItem (TemplateItem.DebugOutputDirectory);
+			string tempDirectory    = project.GetItem (TemplateItem.DebugTemporaryDirectory);
 			string assemblyName     = project.GetItem (TemplateItem.AssemblyName);
 			string assemblyFileName = string.Concat (assemblyName, ".dll");
 			string assemblyFilePath = System.IO.Path.Combine (outputDirectory, assemblyFileName);
 			string projectFileName  = string.Concat (assemblyName, ".csproj");
 			string projectFilePath  = System.IO.Path.Combine (workingDirectory, projectFileName);
 
-			if (!System.IO.Directory.Exists (workingDirectory))
-			{
-				System.IO.Directory.CreateDirectory (workingDirectory);
-			}
-			
 			if (System.IO.File.Exists (assemblyFilePath))
 			{
 				System.IO.File.Delete (assemblyFilePath);
@@ -73,10 +98,59 @@ namespace Epsitec.Common.Support.CodeCompilation
 			string msbuildOutput;
 			string msbuildErrors;
 
-			BuildDriver.Execute (msbuildPath, msbuildArgs, workingDirectory, out msbuildOutput, out msbuildErrors);
+			this.buildMessages = null;
+			this.buildAssemblyDllPath = null;
+			this.buildAssemblyPdbPath = null;
 
-			System.Diagnostics.Debug.WriteLine ("Output: " + msbuildOutput);
-			System.Diagnostics.Debug.WriteLine ("Errors: " + msbuildErrors);
+			try
+			{
+				if (BuildDriver.Execute (msbuildPath, msbuildArgs, workingDirectory, out msbuildOutput, out msbuildErrors))
+				{
+					System.Diagnostics.Debug.Assert (msbuildErrors.Length == 0);
+
+					this.buildMessages = msbuildOutput;
+
+					if (System.IO.File.Exists (assemblyFilePath))
+					{
+						this.buildAssemblyDllPath = assemblyFilePath;
+						this.buildAssemblyPdbPath = string.Concat (assemblyFilePath.Remove (assemblyFilePath.Length-3), "pdb");
+
+						return true;
+					}
+				}
+
+				return false;
+			}
+			finally
+			{
+				if (System.IO.Directory.Exists (tempDirectory))
+				{
+					System.IO.Directory.Delete (tempDirectory, true);
+				}
+			}
+		}
+
+		public IEnumerable<string> GetBuildMessages()
+		{
+			if (this.buildMessages != null)
+			{
+				string[] lines = this.buildMessages.Split (new char[] { '\r', '\n' }, System.StringSplitOptions.RemoveEmptyEntries);
+
+				foreach (string line in lines)
+				{
+					yield return line;
+				}
+			}
+		}
+
+		public string GetCompiledAssemblyPath()
+		{
+			return this.buildAssemblyDllPath;
+		}
+
+		public string GetCompiledAssemblyDebugInfoPath()
+		{
+			return this.buildAssemblyPdbPath;
 		}
 
 		public CodeProjectSettings CreateSettings(string assemblyName)
@@ -94,6 +168,15 @@ namespace Epsitec.Common.Support.CodeCompilation
 			return settings;
 		}
 
+		#region IDisposable Members
+
+		public void Dispose()
+		{
+			this.Dispose (true);
+			System.GC.SuppressFinalize (this);
+		}
+
+		#endregion
 
 		/// <summary>
 		/// Finds the reference assembly path.
@@ -153,6 +236,18 @@ namespace Epsitec.Common.Support.CodeCompilation
 			return false;
 		}
 
+		protected virtual void Dispose(bool disposing)
+		{
+			if (this.deleteOnDispose)
+			{
+				if (this.deleteBuildDirectoryOnDispose)
+				{
+					System.IO.Directory.Delete (this.buildDirectory, true);
+					this.deleteBuildDirectoryOnDispose = false;
+				}
+			}
+		}
+
 		private static bool VerifyBuildInstallation()
 		{
 			if ((System.IO.Directory.Exists (Paths.V20_Framework)) &&
@@ -197,6 +292,8 @@ namespace Epsitec.Common.Support.CodeCompilation
 		private static bool Execute(string program, string arguments, string workingDirectory, out string output, out string errors)
 		{
 			System.Diagnostics.Process process = new System.Diagnostics.Process ();
+
+			int oemCodePage = System.Globalization.CultureInfo.InstalledUICulture.TextInfo.OEMCodePage;
 			
 			process.StartInfo.FileName = program;
 			process.StartInfo.Arguments = arguments;
@@ -204,14 +301,14 @@ namespace Epsitec.Common.Support.CodeCompilation
 			process.StartInfo.UseShellExecute = false;				//	needed to redirect I/O
 			process.StartInfo.RedirectStandardError = true;
 			process.StartInfo.RedirectStandardOutput = true;
-			process.StartInfo.StandardErrorEncoding = System.Text.Encoding.GetEncoding (System.Globalization.CultureInfo.InstalledUICulture.TextInfo.OEMCodePage);
-			process.StartInfo.StandardOutputEncoding = System.Text.Encoding.GetEncoding (System.Globalization.CultureInfo.InstalledUICulture.TextInfo.OEMCodePage);
+			process.StartInfo.StandardErrorEncoding = System.Text.Encoding.GetEncoding (oemCodePage);
+			process.StartInfo.StandardOutputEncoding = System.Text.Encoding.GetEncoding (oemCodePage);
 			process.StartInfo.CreateNoWindow = true;				//	needed to avoid the empty window syndrome
 
 			if (process.Start ())
 			{
-				output = process.StandardOutput.ReadToEnd ();
-				errors = process.StandardError.ReadToEnd ();
+				output = process.StandardOutput.ReadToEnd ().Trim ();
+				errors = process.StandardError.ReadToEnd ().Trim ();
 
 				process.WaitForExit ();
 
@@ -298,6 +395,11 @@ namespace Epsitec.Common.Support.CodeCompilation
 		#endregion
 
 		private bool? hasValidFrameworkVersions;
+		private bool deleteBuildDirectoryOnDispose;
+		private bool deleteOnDispose;
 		private string buildDirectory;
+		private string buildMessages;
+		private string buildAssemblyDllPath;
+		private string buildAssemblyPdbPath;
 	}
 }
