@@ -118,7 +118,22 @@ namespace Epsitec.Common.Widgets
 				this.ShowToolTip (mouse, caption);
 			}
 		}
-		
+
+		public void RefreshToolTip(Widget widget, Drawing.Point mouse)
+		{
+			if (this.widget == widget)
+			{
+				if (this.ProcessToolTipHost (this.widget as Helpers.IToolTipHost, mouse))
+				{
+					return;
+				}
+
+				if (this.behaviour != ToolTipBehaviour.Manual)
+				{
+					this.DelayShow ();
+				}
+			}
+		}
 		
 		public void SetToolTip(Widget widget, string caption)
 		{
@@ -281,8 +296,10 @@ namespace Epsitec.Common.Widgets
 			this.AttachToWidget (widget);
 			
 			System.Diagnostics.Debug.Assert (this.widget != null);
+
+			Drawing.Point mouse = this.widget.MapRootToClient (Message.CurrentState.LastPosition);
 			
-			if (this.ProcessToolTipHost (this.widget as Helpers.IToolTipHost, e.Point))
+			if (this.ProcessToolTipHost (this.widget as Helpers.IToolTipHost, mouse))
 			{
 				return;
 			}

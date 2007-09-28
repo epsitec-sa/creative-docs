@@ -1211,6 +1211,13 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		{
 			//	Met en évidence tous les widgets selon la position visée par la souris.
 			//	L'objet à l'avant-plan a la priorité.
+
+			if ((message.MessageType == MessageType.MouseMove) &&
+				(Message.CurrentState.Buttons == MouseButtons.None))
+			{
+				ToolTip.Default.RefreshToolTip (this, this.brutPos);
+			}
+
 			if (this.isAreaMoving)
 			{
 				Point offset = new Point();
