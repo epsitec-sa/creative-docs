@@ -1283,6 +1283,16 @@ namespace Epsitec.App.Dolphin.Components
 			int length = this.GetInstructionLength(op);
 			//?System.Diagnostics.Debug.WriteLine(string.Format("i={0}", op.ToString("X2")));
 
+			//	Si l'instruction à désassembler ne correspond pas du tout aux codes lus,
+			//	génère simplement une instruction "byte". C'est le cas lorsqu'une instruction
+			//	modifie le contenu de la mémoire affichée avec l'onglet [CODE].
+			if (codes.Count != length)
+			{
+				builder.Append("BYTE<tab/>");
+				TinyProcessor.PutCodeValue(builder, op);
+				return builder.ToString();
+			}
+
 			switch ((Instructions) op)
 			{
 				case Instructions.Nop:
