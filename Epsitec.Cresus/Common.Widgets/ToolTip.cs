@@ -239,7 +239,8 @@ namespace Epsitec.Common.Widgets
 			{
 				object caption = host.GetToolTipCaption (pos);
 				
-				if (caption == this.host_provided_caption)
+				if ((caption == this.host_provided_caption) ||
+					((caption != null) && caption.Equals (this.host_provided_caption)))
 				{
 					return true;
 				}

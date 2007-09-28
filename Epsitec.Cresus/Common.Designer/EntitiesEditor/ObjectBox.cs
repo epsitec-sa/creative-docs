@@ -2624,8 +2624,6 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				return null;  // pas de tooltip
 			}
 
-			//	Attention: il ne faut pas recréer le même texte à chaque fois. Sinon, le gestionnaire
-			//	des tooltips y perd son latin, et le tooltip est réaffiché en permanance !
 			if (this.lastGroupTooltipRank != rank)
 			{
 				this.lastGroupTooltipRank = rank;
