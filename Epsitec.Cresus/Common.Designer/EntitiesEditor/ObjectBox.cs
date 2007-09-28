@@ -2626,14 +2626,20 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 			Module module = this.editor.Module.DesignerApplication.SearchModule(druid);
 			CultureMap cultureMap = module.AccessEntities.Accessor.Collection[druid];
+			string name = cultureMap.Name;
+
+			if (module != this.editor.Module)  // dans un autre module ?
+			{
+				name = string.Concat(module.ModuleInfo.Name, ".", name);
+			}
 
 			if (this.fields[rank].IsInherited)
 			{
-				return string.Format("Hérité de l'entité <b>{0}</b>", cultureMap.Name);
+				return string.Format("Hérité de l'entité <b>{0}</b>", name);
 			}
 			else
 			{
-				return string.Format("Provient de l'interface <b>{0}</b>", cultureMap.Name);
+				return string.Format("Provient de l'interface <b>{0}</b>", name);
 			}
 		}
 
