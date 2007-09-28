@@ -113,7 +113,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		}
 
 
-		protected override string GetToolTipText(ActiveElement element)
+		protected override string GetToolTipText(ActiveElement element, int fieldRank)
 		{
 			//	Retourne le texte pour le tooltip.
 			if (this.isDraggingRoute)
@@ -138,7 +138,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					}
 			}
 
-			return base.GetToolTipText(element);
+			return base.GetToolTipText(element, fieldRank);
 		}
 
 		public override bool MouseMove(Message message, Point pos)

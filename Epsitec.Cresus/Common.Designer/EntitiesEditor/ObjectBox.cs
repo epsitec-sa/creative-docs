@@ -419,7 +419,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		}
 
 
-		protected override string GetToolTipText(ActiveElement element)
+		protected override string GetToolTipText(ActiveElement element, int fieldRank)
 		{
 			//	Retourne le texte pour le tooltip.
 			if (this.isDragging || this.isFieldMoving || this.isChangeWidth || this.isMoveColumnsSeparator || this.isSourcesMenu)
@@ -493,9 +493,12 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					{
 						return "Ferme l'entité";
 					}
+
+				case AbstractObject.ActiveElement.BoxFieldGroup:
+					return this.GetGroupTooltip(fieldRank);
 			}
 
-			return base.GetToolTipText(element);
+			return base.GetToolTipText(element, fieldRank);
 		}
 
 		public override bool MouseMove(Message message, Point pos)
@@ -993,6 +996,14 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 							this.SetConnectionsHilited(true);
 							return true;
 						}
+
+						rect = this.GetFieldGroupBounds(i);
+						if (rect.Contains(pos))
+						{
+							element = ActiveElement.BoxFieldGroup;
+							fieldRank = i;
+							return true;
+						}
 					}
 				}
 				else  // boîte compactée ?
@@ -1127,6 +1138,44 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			rect.Left = this.ColumnsSeparatorAbsolute+1;
 
 			return rect;
+		}
+
+		protected Rectangle GetFieldGroupBounds(int rank)
+		{
+			//	Retourne le rectangle occupé par un groupe, c'est-à-dire un ensemble de champs IsReadOnly
+			//	ayant le même DeepDefiningTypeId.
+			if (rank == 0 || !this.fields[rank].IsReadOnly)
+			{
+				return Rectangle.Empty;
+			}
+
+			if (this.IsSameGroup(rank-1, rank))
+			{
+				return Rectangle.Empty;
+			}
+
+			Rectangle rect = this.GetFieldBounds(rank);
+
+			for (int i=rank+1; i<this.fields.Count; i++)
+			{
+				if (!this.IsSameGroup(i-1, i))
+				{
+					break;
+				}
+
+				rect = Rectangle.Union(rect, this.GetFieldBounds(i));
+			}
+
+			rect.Deflate(9.0, 0.0);
+			return rect;
+		}
+
+		protected bool IsSameGroup(int i, int j)
+		{
+			return !this.fields[i].IsTitle && !this.fields[j].IsTitle &&
+					this.fields[i].IsInherited == this.fields[j].IsInherited &&
+					this.fields[i].IsInterface == this.fields[j].IsInterface &&
+					this.fields[i].DeepDefiningTypeId == this.fields[j].DeepDefiningTypeId;
 		}
 
 		protected Rectangle GetFieldBounds(int rank)
@@ -2077,7 +2126,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 						if (i < this.fields.Count-1 &&
 							this.fields[i].IsInherited == this.fields[i+1].IsInherited &&
 							this.fields[i].IsInterface == this.fields[i+1].IsInterface &&
-							this.fields[i].DeepDefiningTypeId != this.fields[i+1].DeepDefiningTypeId)
+							this.fields[i].DeepDefiningTypeId != this.fields[i+1].DeepDefiningTypeId &&
+							!this.fields[i+1].IsTitle)
 						{
 							rect = this.GetFieldBounds(i);
 							rect.Deflate(9.5, 0.5);
@@ -2095,6 +2145,21 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 							}
 						}
 					}
+				}
+
+				//	Met en évidence le groupe survolé.
+				if (this.hilitedElement == ActiveElement.BoxFieldGroup)
+				{
+					rect = this.GetFieldGroupBounds(this.hilitedFieldRank);
+					rect.Deflate(1.5);
+
+					graphics.AddFilledRectangle(rect);
+					graphics.RenderSolid(this.GetColorMain(0.1));
+
+					graphics.LineWidth = 3;
+					graphics.AddRectangle(rect);
+					graphics.LineWidth = 1;
+					graphics.RenderSolid(this.GetColorMain(0.5));
 				}
 
 				if (this.hilitedElement == ActiveElement.BoxFieldMoving)
@@ -2543,6 +2608,33 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 
 			return this.fields.Count-titleRank-1;
+		}
+
+		protected string GetGroupTooltip(int rank)
+		{
+			//	Retourne le tooltip à afficher pour un groupe.
+			if (rank == -1)
+			{
+				return null;  // pas de tooltip
+			}
+
+			Druid druid = this.fields[rank].DeepDefiningTypeId;
+			if (druid.IsEmpty)
+			{
+				return null;  // pas de tooltip
+			}
+
+			Module module = this.editor.Module.DesignerApplication.SearchModule(druid);
+			CultureMap cultureMap = module.AccessEntities.Accessor.Collection[druid];
+
+			if (this.fields[rank].IsInherited)
+			{
+				return string.Format("Hérité de l'entité <b>{0}</b>", cultureMap.Name);
+			}
+			else
+			{
+				return string.Format("Provient de l'interface <b>{0}</b>", cultureMap.Name);
+			}
 		}
 
 		protected double ColumnsSeparatorAbsolute

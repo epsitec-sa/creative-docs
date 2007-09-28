@@ -32,6 +32,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			BoxFieldTitle,
 			BoxFieldAddInterface,
 			BoxFieldRemoveInterface,
+			BoxFieldGroup,
 			BoxChangeWidth,
 			BoxMoveColumnsSeparator,
 			BoxColor1,
@@ -178,10 +179,10 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			ActiveElement element;
 			int fieldRank;
 			this.MouseDetect(pos, out element, out fieldRank);
-			return this.GetToolTipText(element);
+			return this.GetToolTipText(element, fieldRank);
 		}
 
-		protected virtual string GetToolTipText(ActiveElement element)
+		protected virtual string GetToolTipText(ActiveElement element, int fieldRank)
 		{
 			switch (element)
 			{
