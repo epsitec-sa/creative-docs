@@ -59,21 +59,6 @@ namespace Epsitec.Common.Support.CodeCompilation
 			}
 		}
 
-		public byte[] AssemblyPublicKey
-		{
-			set
-			{
-				System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
-
-				foreach (byte b in value)
-				{
-					buffer.AppendFormat ("{0:x2}");
-				}
-
-				this.AssemblyPublicKeyToken = buffer.ToString ();
-			}
-		}
-
 		public string AssemblyHintPath
 		{
 			get
@@ -87,6 +72,19 @@ namespace Epsitec.Common.Support.CodeCompilation
 		}
 
 
+
+		public void SetAssemblyPublicKeyToken(byte[] token)
+		{
+			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
+
+			foreach (byte b in token)
+			{
+				buffer.AppendFormat ("{0:x2}", b);
+			}
+
+			this.AssemblyPublicKeyToken = buffer.ToString ();
+		}
+		
 		public override string ToString()
 		{
 			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
@@ -133,7 +131,7 @@ namespace Epsitec.Common.Support.CodeCompilation
 
 			reference.AssemblyName = assemblyName.Name;
 			reference.AssemblyVersion = assemblyName.Version.ToString (4);
-			reference.AssemblyPublicKey = assemblyName.KeyPair.PublicKey;
+			reference.SetAssemblyPublicKeyToken (assemblyName.GetPublicKeyToken ());
 			
 			//	reference.AssemblyHintPath
 

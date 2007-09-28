@@ -22,6 +22,16 @@ namespace Epsitec.Common.Support
 		}
 
 		[Test]
+		public void CheckCodeProjectReference()
+		{
+			CodeProjectReference r;
+
+			r = CodeProjectReference.FromAssembly (typeof (CodeProject).Assembly);
+
+			System.Console.Out.WriteLine (r.ToString ());
+		}
+
+		[Test]
 		public void CheckCodeProjectReplace()
 		{
 			CodeProject project = new CodeProject ();
