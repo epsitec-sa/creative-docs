@@ -156,7 +156,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			return builder.ToString();
 		}
 
-		protected override void UpdateContent()
+		public override void UpdateContent()
 		{
 			//	Met à jour le contenu de l'éditeur.
 			this.array.SelectedRow = -1;

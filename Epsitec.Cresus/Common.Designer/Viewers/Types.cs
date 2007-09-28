@@ -309,7 +309,14 @@ namespace Epsitec.Common.Designer.Viewers
 				return;
 			}
 
-			string controller = this.fieldController.Text;
+			CultureMap item = this.access.CollectionView.CurrentItem as CultureMap;
+			StructuredData data = item.GetCultureData(this.GetTwoLetters(0));
+
+			data.SetValue(Support.Res.Fields.ResourceBaseType.DefaultController, this.fieldController.Text);
+
+			this.editor.OnContentChanged();
+			this.editor.UpdateContent();
+			this.module.AccessTypes.SetLocalDirty();
 		}
 
 		private void HandleNullablePressed(object sender, MessageEventArgs e)
@@ -320,6 +327,14 @@ namespace Epsitec.Common.Designer.Viewers
 				return;
 			}
 
+			CultureMap item = this.access.CollectionView.CurrentItem as CultureMap;
+			StructuredData data = item.GetCultureData(this.GetTwoLetters(0));
+
+			data.SetValue(Support.Res.Fields.ResourceBaseType.Nullable, this.primaryNullable.ActiveState == ActiveState.No);
+
+			this.editor.OnContentChanged();
+			this.editor.UpdateContent();
+			this.module.AccessTypes.SetLocalDirty();
 		}
 
 		private void HandleEditorContentChanged(object sender)

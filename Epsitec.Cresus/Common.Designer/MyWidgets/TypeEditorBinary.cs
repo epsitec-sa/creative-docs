@@ -56,7 +56,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		}
 
 
-		protected override void UpdateContent()
+		public override void UpdateContent()
 		{
 			//	Met à jour le contenu de l'éditeur.
 			this.ignoreChange = true;
