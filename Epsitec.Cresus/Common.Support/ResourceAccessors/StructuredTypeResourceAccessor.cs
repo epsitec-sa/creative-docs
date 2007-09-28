@@ -624,6 +624,8 @@ namespace Epsitec.Common.Support.ResourceAccessors
 
 		private static void FillDataFromField(CultureMap item, StructuredData data, StructuredTypeField field)
 		{
+			System.Diagnostics.Debug.Assert (field.DefiningTypeId.IsEmpty);
+
 			data.SetValue (Res.Fields.Field.TypeId, field.Type == null ? Druid.Empty : field.Type.CaptionId);
 			data.SetValue (Res.Fields.Field.CaptionId, field.CaptionId);
 			data.SetValue (Res.Fields.Field.Relation, field.Relation);
@@ -632,8 +634,10 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			data.SetValue (Res.Fields.Field.Source, field.Source);
 			data.SetValue (Res.Fields.Field.Options, field.Options);
 			data.SetValue (Res.Fields.Field.Expression, field.Expression ?? "");
-			data.SetValue (Res.Fields.Field.DefiningTypeId, field.DefiningTypeId);
+			data.SetValue (Res.Fields.Field.DefiningTypeId, Druid.Empty);
+			data.SetValue (Res.Fields.Field.DeepDefiningTypeId, Druid.Empty);
 			data.LockValue (Res.Fields.Field.DefiningTypeId);
+			data.LockValue (Res.Fields.Field.DeepDefiningTypeId);
 		}
 
 		private void HandleCultureMapAdded(CultureMap item)
@@ -719,7 +723,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 
 				if (baseDruid.IsValid)
 				{
-					this.IncludeType (baseDruid, baseDruid, FieldMembership.Inherited, depth+1);
+					this.IncludeType (baseDruid, definingTypeId, FieldMembership.Inherited, depth+1);
 				}
 
 				if (interfaceIds != null)
@@ -727,7 +731,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 					foreach (StructuredData interfaceId in interfaceIds)
 					{
 						Druid id = StructuredTypeResourceAccessor.ToDruid (interfaceId.GetValue (Res.Fields.InterfaceId.CaptionId));
-						this.IncludeType (id, id, membership, depth);
+						this.IncludeType (id, definingTypeId, membership, depth+1);
 					}
 				}
 
@@ -744,17 +748,19 @@ namespace Epsitec.Common.Support.ResourceAccessors
 
 						StructuredData copy = new StructuredData (Res.Types.Field);
 
-						copy.SetValue (Res.Fields.Field.TypeId,           field.GetValue (Res.Fields.Field.TypeId));
-						copy.SetValue (Res.Fields.Field.CaptionId,        field.GetValue (Res.Fields.Field.CaptionId));
-						copy.SetValue (Res.Fields.Field.Relation,         field.GetValue (Res.Fields.Field.Relation));
-						copy.SetValue (Res.Fields.Field.Membership,       membership);
-						copy.SetValue (Res.Fields.Field.CultureMapSource, field.GetValue (Res.Fields.Field.CultureMapSource));
-						copy.SetValue (Res.Fields.Field.Source,           field.GetValue (Res.Fields.Field.Source));
-						copy.SetValue (Res.Fields.Field.Options,          field.GetValue (Res.Fields.Field.Options));
-						copy.SetValue (Res.Fields.Field.Expression,       field.GetValue (Res.Fields.Field.Expression));
-						copy.SetValue (Res.Fields.Field.DefiningTypeId,   definingTypeId);
+						copy.SetValue (Res.Fields.Field.TypeId,             field.GetValue (Res.Fields.Field.TypeId));
+						copy.SetValue (Res.Fields.Field.CaptionId,          field.GetValue (Res.Fields.Field.CaptionId));
+						copy.SetValue (Res.Fields.Field.Relation,           field.GetValue (Res.Fields.Field.Relation));
+						copy.SetValue (Res.Fields.Field.Membership,         membership);
+						copy.SetValue (Res.Fields.Field.CultureMapSource,   field.GetValue (Res.Fields.Field.CultureMapSource));
+						copy.SetValue (Res.Fields.Field.Source,             field.GetValue (Res.Fields.Field.Source));
+						copy.SetValue (Res.Fields.Field.Options,            field.GetValue (Res.Fields.Field.Options));
+						copy.SetValue (Res.Fields.Field.Expression,         field.GetValue (Res.Fields.Field.Expression));
+						copy.SetValue (Res.Fields.Field.DefiningTypeId,     definingTypeId);
+						copy.SetValue (Res.Fields.Field.DeepDefiningTypeId, typeId);
 						
 						copy.LockValue (Res.Fields.Field.DefiningTypeId);
+						copy.LockValue (Res.Fields.Field.DeepDefiningTypeId);
 
 						this.ids.Add (fieldId);
 						this.fields.Add (copy);
@@ -980,7 +986,9 @@ namespace Epsitec.Common.Support.ResourceAccessors
 				data.SetValue (Res.Fields.Field.Options, FieldOptions.None);
 				data.SetValue (Res.Fields.Field.Expression, "");
 				data.SetValue (Res.Fields.Field.DefiningTypeId, Druid.Empty);
+				data.SetValue (Res.Fields.Field.DeepDefiningTypeId, Druid.Empty);
 				data.LockValue (Res.Fields.Field.DefiningTypeId);
+				data.LockValue (Res.Fields.Field.DeepDefiningTypeId);
 				
 				return data;
 			}
