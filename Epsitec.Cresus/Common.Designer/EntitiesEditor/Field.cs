@@ -89,6 +89,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			this.membership = FieldMembership.Local;
 			this.captionId = Druid.Empty;
 			this.definingTypeId = Druid.Empty;
+			this.deepDefiningTypeId = Druid.Empty;
 			this.destination = Druid.Empty;
 			this.rank = -1;
 			this.index = -1;
@@ -263,7 +264,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		public Druid DefiningTypeId
 		{
-			//	Druid définissant l'interface (TODO: juste ?).
+			//	Druid définissant l'interface.
 			get
 			{
 				return this.definingTypeId;
@@ -271,6 +272,19 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			set
 			{
 				this.definingTypeId = value;
+			}
+		}
+
+		public Druid DeepDefiningTypeId
+		{
+			//	Druid du parent définissant l'interface.
+			get
+			{
+				return this.deepDefiningTypeId;
+			}
+			set
+			{
+				this.deepDefiningTypeId = value;
 			}
 		}
 
@@ -855,6 +869,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		protected FieldMembership membership;
 		protected Druid captionId;
 		protected Druid definingTypeId;
+		protected Druid deepDefiningTypeId;
 		protected Druid destination;
 		protected int rank;
 		protected int index;

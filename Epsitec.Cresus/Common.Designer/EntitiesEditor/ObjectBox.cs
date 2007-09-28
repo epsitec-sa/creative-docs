@@ -1499,6 +1499,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			FieldRelation rel = (FieldRelation) dataField.GetValue(Support.Res.Fields.Field.Relation);
 			Druid typeId = (Druid) dataField.GetValue(Support.Res.Fields.Field.TypeId);
 			Druid definingTypeId = (Druid) dataField.GetValue(Support.Res.Fields.Field.DefiningTypeId);
+			Druid deepDefiningTypeId = (Druid) dataField.GetValue(Support.Res.Fields.Field.DeepDefiningTypeId);
 			
 			Module dstModule = this.editor.Module.DesignerApplication.SearchModule(typeId);
 			CultureMap dstItem = (dstModule == null) ? null : dstModule.AccessEntities.Accessor.Collection[typeId];
@@ -1523,6 +1524,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 			field.CaptionId = fieldCaptionId;
 			field.DefiningTypeId = definingTypeId;
+			field.DeepDefiningTypeId = deepDefiningTypeId;
 			field.FieldName = (fieldCultureMap == null) ? "" : fieldCultureMap.Name;
 			field.TypeName = (typeCultureMap == null) ? "" : typeCultureMap.Name;
 			field.Relation = rel;
@@ -2070,6 +2072,29 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 							Misc.DrawPathDash(graphics, dashedPath, 1, 6, 3, false, this.GetColorMain(0.8));
 						}
 					}
+					else
+					{
+						if (i < this.fields.Count-1 &&
+							this.fields[i].IsInherited == this.fields[i+1].IsInherited &&
+							this.fields[i].IsInterface == this.fields[i+1].IsInterface &&
+							this.fields[i].DeepDefiningTypeId != this.fields[i+1].DeepDefiningTypeId)
+						{
+							rect = this.GetFieldBounds(i);
+							rect.Deflate(9.5, 0.5);
+							Path dashedPath = new Path();
+							dashedPath.MoveTo(rect.Left+2, rect.Bottom);
+							dashedPath.LineTo(rect.Right-1, rect.Bottom);
+
+							if (this.fields[i].IsInherited)
+							{
+								Misc.DrawPathDash(graphics, dashedPath, 1, 0, 2, false, this.GetColorMain(0.8));
+							}
+							else
+							{
+								Misc.DrawPathDash(graphics, dashedPath, 1, 6, 3, false, this.GetColorMain(0.8));
+							}
+						}
+					}
 				}
 
 				if (this.hilitedElement == ActiveElement.BoxFieldMoving)
@@ -2508,7 +2533,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		protected int GroupLineCount(int titleRank)
 		{
-			//	Retourne le nombre de ligne d'un groupe d'après le rang de son titre.
+			//	Retourne le nombre de ligne d'un groupe (héritage ou interface) d'après le rang de son titre.
 			for (int i=titleRank+1; i<this.fields.Count; i++)
 			{
 				if (this.fields[i].IsTitle || this.fields[i].DefiningTypeId.IsEmpty)
