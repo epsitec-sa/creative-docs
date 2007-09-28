@@ -222,6 +222,22 @@ namespace Epsitec.Common.Support
 					return path;
 				}
 			}
+
+			public static string				ProgramFiles
+			{
+				get
+				{
+					return System.Environment.GetFolderPath (System.Environment.SpecialFolder.ProgramFiles);
+				}
+			}
+
+			public static string				Windows
+			{
+				get
+				{
+					return System.IO.Path.GetDirectoryName (System.Environment.GetFolderPath (System.Environment.SpecialFolder.System));
+				}
+			}
 		}
 		
 		#endregion

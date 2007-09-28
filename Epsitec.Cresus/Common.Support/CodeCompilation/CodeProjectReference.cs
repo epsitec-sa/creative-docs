@@ -72,6 +72,11 @@ namespace Epsitec.Common.Support.CodeCompilation
 		}
 
 
+		public bool IsFrameworkAssembly()
+		{
+			return BuildDriver.FindReferenceAssemblyPath (this.AssemblyName) == null ? false : true;
+		}
+
 
 		public void SetAssemblyPublicKeyToken(byte[] token)
 		{
@@ -119,6 +124,16 @@ namespace Epsitec.Common.Support.CodeCompilation
 			return buffer.ToString ();
 		}
 
+		public string ToSimpleString()
+		{
+			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
+
+			buffer.Append (@"<Reference Include=""");
+			buffer.Append (this.assemblyName);
+			buffer.Append (@""" />");
+
+			return buffer.ToString ();
+		}
 
 		public static CodeProjectReference FromAssembly(System.Reflection.Assembly assembly)
 		{
@@ -129,7 +144,7 @@ namespace Epsitec.Common.Support.CodeCompilation
 		{
 			CodeProjectReference reference = new CodeProjectReference ();
 
-			reference.AssemblyName = assemblyName.Name;
+			reference.AssemblyName = assemblyName.Name == "mscorlib" ? "System" : assemblyName.Name;
 			reference.AssemblyVersion = assemblyName.Version.ToString (4);
 			reference.SetAssemblyPublicKeyToken (assemblyName.GetPublicKeyToken ());
 			
