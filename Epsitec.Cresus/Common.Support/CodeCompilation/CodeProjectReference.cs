@@ -59,6 +59,21 @@ namespace Epsitec.Common.Support.CodeCompilation
 			}
 		}
 
+		public byte[] AssemblyPublicKey
+		{
+			set
+			{
+				System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
+
+				foreach (byte b in value)
+				{
+					buffer.AppendFormat ("{0:x2}");
+				}
+
+				this.AssemblyPublicKeyToken = buffer.ToString ();
+			}
+		}
+
 		public string AssemblyHintPath
 		{
 			get
@@ -104,6 +119,25 @@ namespace Epsitec.Common.Support.CodeCompilation
 			}
 
 			return buffer.ToString ();
+		}
+
+
+		public static CodeProjectReference FromAssembly(System.Reflection.Assembly assembly)
+		{
+			return CodeProjectReference.FromAssemblyName (assembly.GetName ());
+		}
+
+		public static CodeProjectReference FromAssemblyName(System.Reflection.AssemblyName assemblyName)
+		{
+			CodeProjectReference reference = new CodeProjectReference ();
+
+			reference.AssemblyName = assemblyName.Name;
+			reference.AssemblyVersion = assemblyName.Version.ToString (4);
+			reference.AssemblyPublicKey = assemblyName.KeyPair.PublicKey;
+			
+			//	reference.AssemblyHintPath
+
+			return reference;
 		}
 
 		
