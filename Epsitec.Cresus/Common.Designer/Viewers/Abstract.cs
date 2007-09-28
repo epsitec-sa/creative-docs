@@ -710,6 +710,7 @@ namespace Epsitec.Common.Designer.Viewers
 				this.SelectedRow = this.access.AccessIndex;
 				this.UpdateEdit();
 				this.UpdateCommands();
+				this.designerApplication.LocatorFix();
 
 				if (this.currentTextField != null)
 				{
