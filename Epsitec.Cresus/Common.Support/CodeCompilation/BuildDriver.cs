@@ -9,6 +9,10 @@ using System.Collections.Generic;
 
 namespace Epsitec.Common.Support.CodeCompilation
 {
+	/// <summary>
+	/// The <c>BuildDriver</c> class is used to compile source projects based
+	/// on the Microsoft <c>msbuild.exe</c> tool.
+	/// </summary>
 	public class BuildDriver : System.IDisposable
 	{
 		public BuildDriver()
@@ -42,6 +46,10 @@ namespace Epsitec.Common.Support.CodeCompilation
 			}
 		}
 
+		/// <summary>
+		/// Gets or sets the build directory.
+		/// </summary>
+		/// <value>The build directory.</value>
 		public string BuildDirectory
 		{
 			get
@@ -54,6 +62,14 @@ namespace Epsitec.Common.Support.CodeCompilation
 			}
 		}
 
+		/// <summary>
+		/// Gets or sets a value indicating whether the build directory
+		/// should be deleted on disposal of this instance.
+		/// </summary>
+		/// <value>
+		/// <c>true</c> if the build directory should be deleted on disposal;
+		/// otherwise, <c>false</c>.
+		/// </value>
 		public bool DeleteOnDispose
 		{
 			get
@@ -66,6 +82,9 @@ namespace Epsitec.Common.Support.CodeCompilation
 			}
 		}
 
+		/// <summary>
+		/// Creates the build directory, if needed.
+		/// </summary>
 		public void CreateBuildDirectory()
 		{
 			if (!System.IO.Directory.Exists (this.buildDirectory))
@@ -75,6 +94,13 @@ namespace Epsitec.Common.Support.CodeCompilation
 			}
 		}
 
+		/// <summary>
+		/// Compiles the specified project.
+		/// </summary>
+		/// <param name="project">The project.</param>
+		/// <returns>
+		/// <c>true</c> if the assembly was successfully built; otherwise, <c>false</c>.
+		/// </returns>
 		public bool Compile(CodeProject project)
 		{
 			string workingDirectory = this.BuildDirectory;
@@ -130,6 +156,10 @@ namespace Epsitec.Common.Support.CodeCompilation
 			}
 		}
 
+		/// <summary>
+		/// Gets the build messages, if any.
+		/// </summary>
+		/// <returns></returns>
 		public IEnumerable<string> GetBuildMessages()
 		{
 			if (this.buildMessages != null)
@@ -143,16 +173,30 @@ namespace Epsitec.Common.Support.CodeCompilation
 			}
 		}
 
+		/// <summary>
+		/// Gets the path to the compiled assembly.
+		/// </summary>
+		/// <returns>The path to the compiled assembly.</returns>
 		public string GetCompiledAssemblyPath()
 		{
 			return this.buildAssemblyDllPath;
 		}
 
+		/// <summary>
+		/// Gets the path to the debug information for the compiled assembly.
+		/// </summary>
+		/// <returns>The path to the debug information for the compiled assembly.</returns>
 		public string GetCompiledAssemblyDebugInfoPath()
 		{
 			return this.buildAssemblyPdbPath;
 		}
 
+		/// <summary>
+		/// Creates default project settings in order to build an assembly with the
+		/// specified name.
+		/// </summary>
+		/// <param name="assemblyName">Name of the expected assembly.</param>
+		/// <returns>The default project settings.</returns>
 		public CodeProjectSettings CreateSettings(string assemblyName)
 		{
 			System.Diagnostics.Debug.Assert (string.IsNullOrEmpty (this.BuildDirectory) == false);
@@ -323,8 +367,6 @@ namespace Epsitec.Common.Support.CodeCompilation
 			}
 		}
 
-		[System.Runtime.InteropServices.DllImport ("kernel32.dll")]
-		private static extern int GetConsoleOutputCP();
 
 		#region Paths Static Class
 
