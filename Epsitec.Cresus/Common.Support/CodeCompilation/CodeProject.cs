@@ -32,7 +32,7 @@ namespace Epsitec.Common.Support.CodeCompilation
 		/// <param name="value">The template value.</param>
 		public void Add(TemplateItem item, string value)
 		{
-			if (value != null)
+			if (! string.IsNullOrEmpty (value))
 			{
 				string oldValue;
 				string newValue = value.Trim ();

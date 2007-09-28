@@ -95,7 +95,14 @@ namespace Epsitec.Common.Support.CodeCompilation
 		{
 			foreach (CodeProjectReference item in this.references)
 			{
-				project.Add (TemplateItem.ReferenceInsertionPoint, item.ToString ());
+				if (item.IsFrameworkAssembly ())
+				{
+					project.Add (TemplateItem.ReferenceInsertionPoint, item.ToSimpleString ());
+				}
+				else
+				{
+					project.Add (TemplateItem.ReferenceInsertionPoint, item.ToString ());
+				}
 			}
 			foreach (CodeProjectSource item in this.sources)
 			{

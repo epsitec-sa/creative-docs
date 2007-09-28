@@ -187,7 +187,15 @@ namespace Epsitec.Common.Support.CodeCompilation
 		/// <returns>The corresponding <see cref="CodeProjectReference"/>.</returns>
 		public static CodeProjectReference FromAssembly(System.Reflection.Assembly assembly)
 		{
-			return CodeProjectReference.FromAssemblyName (assembly.GetName ());
+			string assemblyPath = assembly.Location;
+			CodeProjectReference reference = CodeProjectReference.FromAssemblyName (assembly.GetName ());
+
+			if (!BuildDriver.IsFrameworkPath (assemblyPath))
+			{
+				reference.AssemblyHintPath = assemblyPath;
+			}
+
+			return reference;
 		}
 
 		/// <summary>

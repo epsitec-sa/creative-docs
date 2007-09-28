@@ -48,5 +48,22 @@ namespace Epsitec.Common.Support
 
 			System.Console.Out.WriteLine (project.CreateProjectFile ());
 		}
+
+		[Test]
+		public void CheckCodeProjectSetProjectSettings()
+		{
+			CodeProject project = new CodeProject ();
+			CodeProjectSettings settings = new CodeProjectSettings ();
+
+			settings.References.Add (CodeProjectReference.FromAssembly (typeof (int).Assembly));
+			settings.References.Add (CodeProjectReference.FromAssembly (typeof (Druid).Assembly));
+			settings.References.Add (CodeProjectReference.FromAssembly (typeof (TestAttribute).Assembly));
+			settings.References.Add (CodeProjectReference.FromAssembly (typeof (System.Xml.XmlDocument).Assembly));
+
+
+			project.SetProjectSettings (settings);
+
+			System.Console.Out.WriteLine (project.CreateProjectFile ());
+		}
 	}
 }

@@ -63,6 +63,36 @@ namespace Epsitec.Common.Support.CodeCompilation
 			return null;
 		}
 
+		/// <summary>
+		/// Determines whether the specified assembly path belongs to one of the
+		/// frameworks.
+		/// </summary>
+		/// <param name="assemblyPath">The assembly path.</param>
+		/// <returns>
+		/// 	<c>true</c> if the specified assembly path belongs to one of the frameworks; otherwise, <c>false</c>.
+		/// </returns>
+		public static bool IsFrameworkPath(string assemblyPath)
+		{
+			string assemblyDirectory = System.IO.Path.GetDirectoryName (assemblyPath).ToLowerInvariant ();
+
+			foreach (string path in BuildDriver.ReferenceAssembliesPaths)
+			{
+				if (assemblyDirectory.StartsWith (path.ToLowerInvariant ()))
+				{
+					return true;
+				}
+			}
+			foreach (string path in BuildDriver.FrameworkPaths)
+			{
+				if (assemblyDirectory.StartsWith (path.ToLowerInvariant ()))
+				{
+					return true;
+				}
+			}
+
+			return false;
+		}
+
 		private static bool VerifyBuildInstallation()
 		{
 			if ((System.IO.Directory.Exists (Paths.V20_Framework)) &&
@@ -90,6 +120,16 @@ namespace Epsitec.Common.Support.CodeCompilation
 			{
 				yield return Paths.V35_ReferenceAssemblies;
 				yield return Paths.V30_ReferenceAssemblies;
+				yield return Paths.V20_Framework;
+			}
+		}
+		
+		private static IEnumerable<string> FrameworkPaths
+		{
+			get
+			{
+				yield return Paths.V35_Framework;
+				yield return Paths.V30_Framework;
 				yield return Paths.V20_Framework;
 			}
 		}
