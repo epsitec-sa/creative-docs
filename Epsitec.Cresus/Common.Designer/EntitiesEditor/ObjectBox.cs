@@ -2624,24 +2624,17 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				return null;  // pas de tooltip
 			}
 
-			if (this.lastGroupTooltipRank != rank)
+			Module module = this.editor.Module.DesignerApplication.SearchModule(druid);
+			CultureMap cultureMap = module.AccessEntities.Accessor.Collection[druid];
+
+			if (this.fields[rank].IsInherited)
 			{
-				this.lastGroupTooltipRank = rank;
-
-				Module module = this.editor.Module.DesignerApplication.SearchModule(druid);
-				CultureMap cultureMap = module.AccessEntities.Accessor.Collection[druid];
-
-				if (this.fields[rank].IsInherited)
-				{
-					this.lastGroupTooltipString = string.Format("Hérité de l'entité <b>{0}</b>", cultureMap.Name);
-				}
-				else
-				{
-					this.lastGroupTooltipString = string.Format("Provient de l'interface <b>{0}</b>", cultureMap.Name);
-				}
+				return string.Format("Hérité de l'entité <b>{0}</b>", cultureMap.Name);
 			}
-
-			return this.lastGroupTooltipString;
+			else
+			{
+				return string.Format("Provient de l'interface <b>{0}</b>", cultureMap.Name);
+			}
 		}
 
 		protected double ColumnsSeparatorAbsolute
@@ -2898,8 +2891,5 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		protected bool isSourcesMenu;
 		protected int sourcesMenuSelected;
-
-		protected int lastGroupTooltipRank = -1;
-		protected string lastGroupTooltipString;
 	}
 }
