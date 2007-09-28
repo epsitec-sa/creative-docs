@@ -15,16 +15,22 @@ namespace Epsitec.Common.Support.CodeCompilation
 		{
 		}
 
-		public bool IsValidInstallation
+		/// <summary>
+		/// Gets a value indicating whether the correct .NET Framework versions are installed.
+		/// </summary>
+		/// <value>
+		/// 	<c>true</c> if the correct .NET Framework versions are installed; otherwise, <c>false</c>.
+		/// </value>
+		public bool HasValidFrameworkVersions
 		{
 			get
 			{
-				if (!this.isValidInstallation.HasValue)
+				if (!this.hasValidFrameworkVersions.HasValue)
 				{
-					this.isValidInstallation = BuildDriver.VerifyBuildInstallation ();
+					this.hasValidFrameworkVersions = BuildDriver.VerifyBuildInstallation ();
 				}
 
-				return this.isValidInstallation.Value;
+				return this.hasValidFrameworkVersions.Value;
 			}
 		}
 
@@ -153,6 +159,6 @@ namespace Epsitec.Common.Support.CodeCompilation
 
 		#endregion
 
-		private bool? isValidInstallation;
+		private bool? hasValidFrameworkVersions;
 	}
 }

@@ -22,7 +22,11 @@ namespace Epsitec.Common.Support.CodeCompilation
 		{
 		}
 
-		
+
+		/// <summary>
+		/// Gets or sets the assembly name.
+		/// </summary>
+		/// <value>The name of the assembly.</value>
 		public string AssemblyName
 		{
 			get
@@ -35,6 +39,10 @@ namespace Epsitec.Common.Support.CodeCompilation
 			}
 		}
 
+		/// <summary>
+		/// Gets or sets the assembly version.
+		/// </summary>
+		/// <value>The assembly version.</value>
 		public string AssemblyVersion
 		{
 			get
@@ -47,6 +55,10 @@ namespace Epsitec.Common.Support.CodeCompilation
 			}
 		}
 
+		/// <summary>
+		/// Gets or sets the assembly public key token.
+		/// </summary>
+		/// <value>The assembly public key token.</value>
 		public string AssemblyPublicKeyToken
 		{
 			get
@@ -59,6 +71,10 @@ namespace Epsitec.Common.Support.CodeCompilation
 			}
 		}
 
+		/// <summary>
+		/// Gets or sets the assembly hint path.
+		/// </summary>
+		/// <value>The assembly hint path.</value>
 		public string AssemblyHintPath
 		{
 			get
@@ -72,12 +88,23 @@ namespace Epsitec.Common.Support.CodeCompilation
 		}
 
 
+		/// <summary>
+		/// Determines whether this instance references a framework assembly.
+		/// </summary>
+		/// <returns>
+		/// 	<c>true</c> if this instance references a framework assembly; otherwise, <c>false</c>.
+		/// </returns>
 		public bool IsFrameworkAssembly()
 		{
 			return BuildDriver.FindReferenceAssemblyPath (this.AssemblyName) == null ? false : true;
 		}
 
 
+		/// <summary>
+		/// Sets the public key token for the assembly. This converts the raw
+		/// byte array into a string representation.
+		/// </summary>
+		/// <param name="token">The binary key token.</param>
 		public void SetAssemblyPublicKeyToken(byte[] token)
 		{
 			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
@@ -89,7 +116,15 @@ namespace Epsitec.Common.Support.CodeCompilation
 
 			this.AssemblyPublicKeyToken = buffer.ToString ();
 		}
-		
+
+		/// <summary>
+		/// Returns a full <c>&lt;Reference Include="..."&gt;</c> string, that
+		/// represents the detailed reference, with all the detailed versioning
+		/// information.
+		/// </summary>
+		/// <returns>
+		/// A string that represents this instance.
+		/// </returns>
 		public override string ToString()
 		{
 			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
@@ -124,6 +159,13 @@ namespace Epsitec.Common.Support.CodeCompilation
 			return buffer.ToString ();
 		}
 
+		/// <summary>
+		/// Returns a short <c>&lt;Reference Include="..."&gt;</c> string, that
+		/// represents the detailed reference.
+		/// </summary>
+		/// <returns>
+		/// A string that represents this instance.
+		/// </returns>
 		public string ToSimpleString()
 		{
 			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
@@ -135,11 +177,28 @@ namespace Epsitec.Common.Support.CodeCompilation
 			return buffer.ToString ();
 		}
 
+
+		/// <summary>
+		/// Creates a <see cref="CodeProjectReference"/> based on an assembly.
+		/// The special <c>mscrolib</c> assembly will produce the more user friendly
+		/// <c>"System"</c> name.
+		/// </summary>
+		/// <param name="assembly">The assembly.</param>
+		/// <returns>The corresponding <see cref="CodeProjectReference"/>.</returns>
 		public static CodeProjectReference FromAssembly(System.Reflection.Assembly assembly)
 		{
 			return CodeProjectReference.FromAssemblyName (assembly.GetName ());
 		}
 
+		/// <summary>
+		/// Creates a <see cref="CodeProjectReference"/> based on an assembly name.
+		/// The special <c>mscrolib</c> assembly will produce the more user friendly
+		/// <c>"System"</c> name.
+		/// </summary>
+		/// <param name="assemblyName">Name of the assembly.</param>
+		/// <returns>
+		/// The corresponding <see cref="CodeProjectReference"/>.
+		/// </returns>
 		public static CodeProjectReference FromAssemblyName(System.Reflection.AssemblyName assemblyName)
 		{
 			CodeProjectReference reference = new CodeProjectReference ();

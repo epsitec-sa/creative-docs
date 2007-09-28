@@ -14,11 +14,11 @@ namespace Epsitec.Common.Support
 	public class CodeCompilerTest
 	{
 		[Test]
-		public void CheckBuildDriverIsValidInstallation()
+		public void CheckBuildDriverHasValidFrameworkVersions()
 		{
 			BuildDriver driver = new BuildDriver ();
 
-			Assert.IsTrue (driver.IsValidInstallation);
+			Assert.IsTrue (driver.HasValidFrameworkVersions);
 		}
 
 		[Test]
