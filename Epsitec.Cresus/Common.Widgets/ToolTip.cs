@@ -86,7 +86,6 @@ namespace Epsitec.Common.Widgets
 		{
 			if (ToolTip.HasToolTip (widget))
 			{
-//-			if (this.hash.Contains (widget))
 				this.HideToolTip ();
 				this.AttachToWidget (widget);
 				this.ShowToolTip ();
@@ -123,14 +122,14 @@ namespace Epsitec.Common.Widgets
 		{
 			if (this.widget == widget)
 			{
-				if (this.ProcessToolTipHost (this.widget as Helpers.IToolTipHost, mouse))
-				{
-					return;
-				}
+				this.ProcessToolTipHost (this.widget as Helpers.IToolTipHost, mouse);
 
-				if (this.behaviour != ToolTipBehaviour.Manual)
+				if ((!this.is_displayed) &&
+					(this.host_provided_caption != this.refreshed_caption))
 				{
-					this.DelayShow ();
+					this.refreshed_caption = this.host_provided_caption;
+					this.ShowToolTip ();
+					this.RestartTimer (SystemInformation.ToolTipAutoCloseDelay);
 				}
 			}
 		}
@@ -396,7 +395,8 @@ namespace Epsitec.Common.Widgets
 		
 		private void ShowToolTip()
 		{
-			if (this.widget != null)
+			if ((this.widget != null) &&
+				(this.caption != null))
 			{
 				this.birth_pos = (this.behaviour == ToolTipBehaviour.Manual)
 					/**/	   ? this.initial_pos
@@ -617,6 +617,7 @@ namespace Epsitec.Common.Widgets
 		private Widget							widget;
 		private object							caption;
 		private object							host_provided_caption;
+		private object							refreshed_caption;
 		
 		private Drawing.Point					birth_pos;
 		private Drawing.Point					initial_pos;
