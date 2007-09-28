@@ -61,7 +61,9 @@ namespace Epsitec.Common.Support.ResourceAccessors
 				{
 					if ((candidate.ResourceManager == manager) &&
 						(candidate.Name == bundleName) &&
-						(candidate.Module.Id == bundleModuleId))
+						(candidate.Module.Id == bundleModuleId) &&
+						(candidate.ResourceLevel != ResourceLevel.Merged) &&
+						(candidate.IsEmpty == false))
 					{
 						return true;
 					}
@@ -188,7 +190,10 @@ namespace Epsitec.Common.Support.ResourceAccessors
 				}
 			}
 
-			this.ResourceManager.ClearMergedBundlesFromBundleCache ();
+			if (list.Count > 0)
+			{
+				this.ResourceManager.ClearMergedBundlesFromBundleCache ();
+			}
 
 			return list.Count;
 		}

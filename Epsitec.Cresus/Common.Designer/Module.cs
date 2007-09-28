@@ -248,6 +248,10 @@ namespace Epsitec.Common.Designer
 
 				return;
 			}
+
+			System.Diagnostics.Debug.Assert (bundle.ResourceLevel != ResourceLevel.Merged);
+			System.Diagnostics.Debug.Assert (bundle.ResourceLevel != ResourceLevel.None);
+
 			if ((bundle.Name == Resources.CaptionsBundleName) ||
 				(bundle.Name == Resources.StringsBundleName))
 			{
