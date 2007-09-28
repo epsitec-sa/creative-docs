@@ -36,17 +36,3 @@
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>
-
-<!--
-    <Reference Include="System.Core, Version=3.5.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL" />
-
-    <Reference Include="Common.Support, Version=2.0.0.0, Culture=neutral, PublicKeyToken=7344997cc606b490, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\Common.Support\bin\Debug\Common.Support.dll</HintPath>
-    </Reference>
-  
-  <ItemGroup>
-    <Compile Include="Class1.cs" />
-  </ItemGroup>
-
--->

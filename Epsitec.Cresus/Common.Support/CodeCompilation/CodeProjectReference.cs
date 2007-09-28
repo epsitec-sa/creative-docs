@@ -13,7 +13,7 @@ namespace Epsitec.Common.Support.CodeCompilation
 	/// The <c>CodeProjectReference</c> class describes an assembly reference
 	/// used by the <see cref="CodeProjectSettings"/> class.
 	/// </summary>
-	public class CodeProjectReference
+	public class CodeProjectReference : System.IEquatable<CodeProjectReference>
 	{
 		/// <summary>
 		/// Initializes a new instance of the <see cref="CodeProjectReference"/> class.
@@ -118,6 +118,24 @@ namespace Epsitec.Common.Support.CodeCompilation
 		}
 
 		/// <summary>
+		/// Returns a short <c>&lt;Reference Include="..."&gt;</c> string, that
+		/// represents the detailed reference.
+		/// </summary>
+		/// <returns>
+		/// A string that represents this instance.
+		/// </returns>
+		public string ToSimpleString()
+		{
+			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
+
+			buffer.Append (@"<Reference Include=""");
+			buffer.Append (this.assemblyName);
+			buffer.Append (@""" />");
+
+			return buffer.ToString ();
+		}
+
+		/// <summary>
 		/// Returns a full <c>&lt;Reference Include="..."&gt;</c> string, that
 		/// represents the detailed reference, with all the detailed versioning
 		/// information.
@@ -160,22 +178,44 @@ namespace Epsitec.Common.Support.CodeCompilation
 		}
 
 		/// <summary>
-		/// Returns a short <c>&lt;Reference Include="..."&gt;</c> string, that
-		/// represents the detailed reference.
+		/// Determines whether the specified <see cref="T:System.Object"></see> is equal to the current <see cref="T:System.Object"></see>.
+		/// </summary>
+		/// <param name="obj">The <see cref="T:System.Object"></see> to compare with the current <see cref="T:System.Object"></see>.</param>
+		/// <returns>
+		/// true if the specified <see cref="T:System.Object"></see> is equal to the current <see cref="T:System.Object"></see>; otherwise, false.
+		/// </returns>
+		public override bool Equals(object obj)
+		{
+			CodeProjectReference other = obj as CodeProjectReference;
+			return this.Equals (other);
+		}
+
+		/// <summary>
+		/// Serves as a hash function for a particular type. <see cref="M:System.Object.GetHashCode"></see> is suitable for use in hashing algorithms and data structures like a hash table.
 		/// </summary>
 		/// <returns>
-		/// A string that represents this instance.
+		/// A hash code for the current <see cref="T:System.Object"></see>.
 		/// </returns>
-		public string ToSimpleString()
+		public override int GetHashCode()
 		{
-			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
-
-			buffer.Append (@"<Reference Include=""");
-			buffer.Append (this.assemblyName);
-			buffer.Append (@""" />");
-
-			return buffer.ToString ();
+			return base.GetHashCode ();
 		}
+
+		#region IEquatable<CodeProjectReference> Members
+
+		public bool Equals(CodeProjectReference other)
+		{
+			if (other == null)
+			{
+				return false;
+			}
+			else
+			{
+				return this.ToString () == other.ToString ();
+			}
+		}
+
+		#endregion
 
 
 		/// <summary>

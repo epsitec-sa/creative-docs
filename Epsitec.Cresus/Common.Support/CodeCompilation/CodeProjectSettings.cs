@@ -93,8 +93,16 @@ namespace Epsitec.Common.Support.CodeCompilation
 
 		internal void DefineSettings(CodeProject project)
 		{
+			List<CodeProjectReference> references = new List<CodeProjectReference> ();
+			List<CodeProjectSource> sources = new List<CodeProjectSource> ();
+
 			foreach (CodeProjectReference item in this.references)
 			{
+				if (references.Contains (item))
+				{
+					continue;
+				}
+
 				if (item.IsFrameworkAssembly ())
 				{
 					project.Add (TemplateItem.ReferenceInsertionPoint, item.ToSimpleString ());
@@ -103,10 +111,20 @@ namespace Epsitec.Common.Support.CodeCompilation
 				{
 					project.Add (TemplateItem.ReferenceInsertionPoint, item.ToString ());
 				}
+
+				references.Add (item);
 			}
+			
 			foreach (CodeProjectSource item in this.sources)
 			{
+				if (sources.Contains (item))
+				{
+					continue;
+				}
+
 				project.Add (TemplateItem.CompileInsertionPoint, item.ToString ());
+
+				sources.Add (item);
 			}
 
 			if (this.projectGuid != System.Guid.Empty)

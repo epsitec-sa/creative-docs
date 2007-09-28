@@ -56,10 +56,14 @@ namespace Epsitec.Common.Support
 			CodeProjectSettings settings = new CodeProjectSettings ();
 
 			settings.References.Add (CodeProjectReference.FromAssembly (typeof (int).Assembly));
+			settings.References.Add (CodeProjectReference.FromAssembly (typeof (long).Assembly));
 			settings.References.Add (CodeProjectReference.FromAssembly (typeof (Druid).Assembly));
 			settings.References.Add (CodeProjectReference.FromAssembly (typeof (TestAttribute).Assembly));
 			settings.References.Add (CodeProjectReference.FromAssembly (typeof (System.Xml.XmlDocument).Assembly));
 
+			settings.Sources.Add (new CodeProjectSource ("Abc.cs"));
+			settings.Sources.Add (new CodeProjectSource ("Xyz.cs"));
+			settings.Sources.Add (new CodeProjectSource ("abc.cs"));
 
 			project.SetProjectSettings (settings);
 
