@@ -130,6 +130,9 @@
     </Compile>
     <Compile Include="CodeCompilation\BuildDriver.cs" />
     <Compile Include="CodeCompilation\CodeProject.cs" />
+    <Compile Include="CodeCompilation\CodeProjectSettings.cs" />
+    <Compile Include="CodeCompilation\CodeProjectReference.cs" />
+    <Compile Include="CodeCompilation\CodeProjectSource.cs" />
     <Compile Include="CodeCompilation\TemplateItem.cs" />
     <Compile Include="CodeGeneration\CodeAttributes.cs" />
     <Compile Include="CodeGeneration\CodeFormatter.cs" />

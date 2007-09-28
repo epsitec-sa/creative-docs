@@ -58,6 +58,16 @@ namespace Epsitec.Common.Support.CodeCompilation
 		}
 
 		/// <summary>
+		/// Sets the project settings for this project. This will add all the
+		/// template items as defined in the settings.
+		/// </summary>
+		/// <param name="settings">The project settings.</param>
+		public void SetProjectSettings(CodeProjectSettings settings)
+		{
+			settings.DefineSettings (this);
+		}
+
+		/// <summary>
 		/// Creates the project file based on an internal template file. The
 		/// template items inserted with the <see cref="Add"/> method are
 		/// replaced by their values.
@@ -210,7 +220,7 @@ namespace Epsitec.Common.Support.CodeCompilation
 			return buffer.ToString ();
 		}
 
-		private const string LineSeparator = "\r\n";
+		internal const string LineSeparator = "\r\n";
 
 		Dictionary<TemplateItem, string> templateItems;
 	}
