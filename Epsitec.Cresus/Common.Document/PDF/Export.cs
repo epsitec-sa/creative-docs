@@ -196,6 +196,8 @@ namespace Epsitec.Common.Document.PDF
 			string producer     = Export.EscapeString(Support.Globals.Properties.GetProperty<string>("PDF:Producer") ?? "CrDoc Engine, © 2003-2007 EPSITEC SA & OPaC bright ideas");
 			string creationDate = Export.GetDateString(Support.Globals.Properties.GetProperty<System.DateTime>("PDF:CreationDate", System.DateTime.Now));
 
+			this.documentTitle = titleName;
+
 			writer.WriteObjectDef("Info");
 			writer.WriteString(string.Concat("<< /Title (", titleName, ") "));
 			if ( author != null )  writer.WriteString(string.Concat("/Author (", author, ") "));
@@ -681,6 +683,18 @@ namespace Epsitec.Common.Document.PDF
 				port.LineCap   = CapStyle.Butt;
 				port.RichColor = RichColor.FromCmyk (1.0, 1.0, 1.0, 1.0);  // noir de repérage
 				port.PaintOutline (path);
+			}
+
+			using (Path path = new Path ())
+			{
+				double x = length;
+				double y = 0.0-offset-length/2.0;
+				double size = System.Math.Min (20.0, length * 0.6);
+				string text = string.Format ("{0} : {1}", this.documentTitle, page+1);
+
+				path.Append (Font.GetFont ("Arial", "Regular"), text, x, y, size);
+				port.RichColor = RichColor.FromCmyk (1.0, 1.0, 1.0, 1.0);  // noir de repérage
+				port.PaintSurface (path);
 			}
 		}
 
@@ -2317,5 +2331,6 @@ namespace Epsitec.Common.Document.PDF
 		protected double						imageMinDpi;
 		protected double						imageMaxDpi;
 		protected System.Collections.ArrayList	pageList;
+		protected string						documentTitle;
 	}
 }

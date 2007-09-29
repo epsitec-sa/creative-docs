@@ -303,6 +303,23 @@ namespace Epsitec.Common.Drawing
 			this.is_empty  &= path.is_empty;
 			AntiGrain.Path.AppendPath (this.agg_path, path.agg_path, 1, 0, 0, 1, 0, 0, approximation_zoom, bold_width);
 		}
+
+		public void Append(Font font, string text, double x, double y, double size)
+		{
+			if ((font != null) &&
+				(!string.IsNullOrEmpty (text)))
+			{
+				foreach (char c in text)
+				{
+					ushort glyph   = font.GetGlyphIndex (c);
+					double advance = font.GetGlyphAdvance (glyph) * size;
+
+					this.Append (font, glyph, x, y, size);
+
+					x += advance;
+				}
+			}
+		}
 		
 		public void Append(Font font, int glyph, double x, double y, double size)
 		{
