@@ -694,7 +694,7 @@ namespace Epsitec.Common.Document.PDF
 				double x = length;
 				double y = 0.0-offset-length/2.0;
 				double size = System.Math.Min (20.0, length * 0.6);
-				string text = string.Format ("{0} : {1}", this.documentTitle, this.document.Modifier.PageShortName (rank));
+				string text = string.Format ("{0} : {1}", this.documentTitle, rank+1);
 
 				path.Append (Font.GetFont ("Arial", "Regular"), text, x, y, size);
 				port.RichColor = RichColor.FromCmyk (1.0, 1.0, 1.0, 1.0);  // noir de repérage
