@@ -193,7 +193,7 @@ namespace Epsitec.Common.Document.PDF
 			string titleName    = Export.EscapeString(Support.Globals.Properties.GetProperty<string>("PDF:Title") ?? System.IO.Path.GetFileName(filename));
 			string author       = Export.EscapeString(Support.Globals.Properties.GetProperty<string>("PDF:Author"));
 			string creator      = Export.EscapeString(Support.Globals.Properties.GetProperty<string>("PDF:Creator"));
-			string producer     = Export.EscapeString(Support.Globals.Properties.GetProperty<string>("PDF:Producer"));
+			string producer     = Export.EscapeString(Support.Globals.Properties.GetProperty<string>("PDF:Producer") ?? "CrDoc Engine, © 2003-2007 EPSITEC SA & OPaC bright ideas");
 			string creationDate = Export.GetDateString(Support.Globals.Properties.GetProperty<System.DateTime>("PDF:CreationDate", System.DateTime.Now));
 
 			writer.WriteObjectDef("Info");
@@ -268,10 +268,36 @@ namespace Epsitec.Common.Document.PDF
 				writer.WriteObjectDef(Export.NamePage(page));
 				writer.WriteString("<< /Type /Page /Parent ");
 				writer.WriteObjectRef("HeaderPages");
-				writer.WriteString(Port.StringBBox("/MediaBox", mediaBox));
-				writer.WriteString(Port.StringBBox("/CropBox", mediaBox));
-				writer.WriteString(Port.StringBBox("/BleedBox", bleedBox));
-				writer.WriteString(Port.StringBBox("/TrimBox", trimBox));
+
+				//	Définit les boîtes en utilisant soit les valeurs déterminées par CrDoc,
+				//	soit des modes forcés par l'appelant externe (ça permet par exemple de
+				//	ne pas inclure un MediaBox ou de faire en sorte que le BleedBox ait la
+				//	taille du média d'impression).
+				switch (Support.Globals.Properties.GetProperty<string> ("PDF:MediaBoxDefinition", "MediaBox"))
+				{
+					case "MediaBox":	writer.WriteString(Port.StringBBox("/MediaBox", mediaBox)); break;
+					case "None":		break;
+				}
+				
+				switch (Support.Globals.Properties.GetProperty<string> ("PDF:CropBoxDefinition", "CropBox"))
+				{
+					case "CropBox":		writer.WriteString(Port.StringBBox("/CropBox", mediaBox)); break;
+					case "None":		break;
+				}
+				switch (Support.Globals.Properties.GetProperty<string> ("PDF:BleedBoxDefinition", "BleedBox"))
+				{
+					case "BleedBox":	writer.WriteString(Port.StringBBox("/BleedBox", bleedBox)); break;
+					case "MediaBox":	writer.WriteString(Port.StringBBox("/BleedBox", mediaBox)); break;
+					case "None":		break;
+				}
+				switch (Support.Globals.Properties.GetProperty<string> ("PDF:TrimBoxDefinition", "TrimBox"))
+				{
+					case "BleedBox":	writer.WriteString(Port.StringBBox("/BleedBox", bleedBox)); break;
+					case "MediaBox":	writer.WriteString(Port.StringBBox("/MediaBox", mediaBox)); break;
+					case "TrimBox":		writer.WriteString(Port.StringBBox("/TrimBox", trimBox)); break;
+					case "None":		break;
+				}
+				
 				writer.WriteString("/Resources ");
 				writer.WriteObjectRef(Export.NameResources(page));
 				writer.WriteString("/Contents ");
