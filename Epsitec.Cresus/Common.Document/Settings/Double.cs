@@ -70,8 +70,8 @@ namespace Epsitec.Common.Document.Settings
 					this.factorStep = 1.0;
 					break;
 
-				case "ExportPDFDebord":
-					this.text = Res.Strings.Dialog.Double.ExportPDFDebord;
+				case "ExportPDFBleed":
+					this.text = Res.Strings.Dialog.Double.ExportPDFBleed;
 					this.factorMinValue = 0.0;
 					this.factorMaxValue = 0.1;
 					this.factorResolution = 0.1;
@@ -298,8 +298,8 @@ namespace Epsitec.Common.Document.Settings
 					case "PrintDebord":
 						return this.document.Settings.PrintInfo.Debord;
 
-					case "ExportPDFDebord":
-						return this.document.Settings.ExportPDFInfo.Debord;
+					case "ExportPDFBleed":
+						return this.document.Settings.ExportPDFInfo.BleedMargin;
 
 					case "ExportPDFBleedEvenTop":
 						return this.document.Settings.ExportPDFInfo.BleedEvenMargins.Top;
@@ -398,8 +398,9 @@ namespace Epsitec.Common.Document.Settings
 						this.document.Settings.PrintInfo.Debord = value;
 						break;
 
-					case "ExportPDFDebord":
-						this.document.Settings.ExportPDFInfo.Debord = value;
+					case "ExportPDFBleed":
+						this.document.Settings.ExportPDFInfo.BleedMargin = value;
+						this.document.Settings.ExportPDFInfo.CropMarksOffset = value + 10.0;  // rajoute 1mm entre le débord et le trait de coupe
 						break;
 
 					case "ExportPDFBleedEvenTop":

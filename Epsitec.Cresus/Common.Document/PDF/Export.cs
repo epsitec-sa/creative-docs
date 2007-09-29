@@ -210,18 +210,20 @@ namespace Epsitec.Common.Document.PDF
 			writer.WriteLine("<< /Type /Outlines /Count 0 >> endobj");
 
 			//	Objet décrivant le format de la page.
-			Point pageOffset = new Point(0.0, 0.0);
+			Point pageOffsetEven = Point.Zero;
+			Point pageOffsetOdd  = Point.Zero;
 
-			if ( info.Debord > 0.0 )
-			{
-				pageOffset.X += info.Debord;
-				pageOffset.Y += info.Debord;
-			}
+			pageOffsetEven.X = info.BleedMargin + info.BleedEvenMargins.Left;
+			pageOffsetEven.Y = info.BleedMargin + info.BleedEvenMargins.Bottom;
+			pageOffsetOdd.X  = info.BleedMargin + info.BleedOddMargins.Left;
+			pageOffsetOdd.Y  = info.BleedMargin + info.BleedOddMargins.Bottom;
 
-			if ( info.Target )  // traits de coupe ?
+			if (info.PrintCropMarks)  // traits de coupe ?
 			{
-				pageOffset.X += info.TargetLength;
-				pageOffset.Y += info.TargetLength;
+				pageOffsetEven.X = System.Math.Max (pageOffsetEven.X, info.CropMarksLength + info.CropMarksOffset);
+				pageOffsetEven.Y = System.Math.Max (pageOffsetEven.Y, info.CropMarksLength + info.CropMarksOffset);
+				pageOffsetOdd.X  = System.Math.Max (pageOffsetOdd.X,  info.CropMarksLength + info.CropMarksOffset);
+				pageOffsetOdd.Y  = System.Math.Max (pageOffsetOdd.Y,  info.CropMarksLength + info.CropMarksOffset);
 			}
 
 			//	Objet donnant la liste des pages.
@@ -238,24 +240,45 @@ namespace Epsitec.Common.Document.PDF
 			{
 				Rectangle trimBox = new Rectangle(Point.Zero, this.document.GetPageSize(page));
 				Rectangle bleedBox = trimBox;
+				Rectangle mediaBox = trimBox;
 
-				if ( page%2 == 1 )
+				double markSize = 0.0;
+
+				if (info.PrintCropMarks)  // traits de coupe ?
 				{
-					bleedBox.Inflate(info.BleedEvenMargins);
-					bleedBox.Inflate(info.Debord);
+					markSize = info.CropMarksLength + info.CropMarksOffset;
+				}
+
+				double left, right, top, bottom;
+				
+				if (page%2 == 1)  // page paire
+				{
+					left   = info.BleedMargin + info.BleedEvenMargins.Left;
+					right  = info.BleedMargin + info.BleedEvenMargins.Right;
+					top    = info.BleedMargin + info.BleedEvenMargins.Top;
+					bottom = info.BleedMargin + info.BleedEvenMargins.Bottom;
 				}
 				else
 				{
-					bleedBox.Inflate(info.BleedOddMargins);
-					bleedBox.Inflate(info.Debord);
+					left   = info.BleedMargin + info.BleedOddMargins.Left;
+					right  = info.BleedMargin + info.BleedOddMargins.Right;
+					top    = info.BleedMargin + info.BleedOddMargins.Top;
+					bottom = info.BleedMargin + info.BleedOddMargins.Bottom;
 				}
 
-				Rectangle mediaBox = bleedBox;
+				//	La boîte de débord ne prend en compte que le débord effectivement
+				//	demandé (qui peut être différent entre pages de droite et pages
+				//	de gauche).
+				bleedBox.Inflate (left, right, top, bottom);
 
-				if ( info.Target )  // traits de coupe ?
-				{
-					mediaBox.Inflate(info.TargetLength);
-				}
+				left   = System.Math.Max (left, markSize);
+				right  = System.Math.Max (right, markSize);
+				top    = System.Math.Max (top, markSize);
+				bottom = System.Math.Max (bottom, markSize);
+
+				//	La boîte de média doit être assez grande pour contenir à la fois
+				//	le débord et les éventuels traits de coupe.
+				mediaBox.Inflate (left, right, top, bottom);
 
 				Point offset = -mediaBox.BottomLeft;
 				trimBox.Offset(offset);
@@ -424,22 +447,11 @@ namespace Epsitec.Common.Document.PDF
 
 				port.Reset();
 
-				Point currentPageOffset = pageOffset;
-
-				if ( page%2 == 1 )
-				{
-					currentPageOffset.X += info.BleedEvenMargins.Left;
-					currentPageOffset.Y += info.BleedEvenMargins.Bottom;
-				}
-				else
-				{
-					currentPageOffset.X += info.BleedOddMargins.Left;
-					currentPageOffset.Y += info.BleedOddMargins.Bottom;
-				}
+				Point currentPageOffset = ( page%2 == 1 ) ? pageOffsetEven : pageOffsetOdd;
 
 				//	Matrice de transformation globale:
 				Transform gt = port.Transform;
-				gt.Translate(currentPageOffset);  // translation si débord
+				gt.Translate(currentPageOffset);  // translation si débord et/ou traits de coupe
 				gt.Scale(Export.mm2in);  // unité = 0.1mm
 				port.Transform = gt;
 
@@ -462,7 +474,8 @@ namespace Epsitec.Common.Document.PDF
 					port.PopColorModifier();
 				}
 
-				this.DrawTarget(port, info, page);  // traits de coupe
+				this.CropToBleedBox(port, info, page);  // efface ce qui dépasse de la BleedBox
+				this.DrawCropMarks(port, info, page);  // traits de coupe
 
 				string pdf = port.GetPDF();
 				writer.WriteObjectDef(Export.NameContent(page));
@@ -570,53 +583,105 @@ namespace Epsitec.Common.Document.PDF
 		}
 
 
-		protected void DrawTarget(Port port, Settings.ExportPDFInfo info, int page)
+		protected void CropToBleedBox(Port port, Settings.ExportPDFInfo info, int page)
 		{
-			//	Dessine les traits de coupe.
-			if ( !info.Target )  return;
-
-			Size pageSize = this.document.GetPageSize(page);
+			//	Dessine un masque avec une ouverture qui a exactement la taille
+			//	du BleedBox (à savoir la taille de la page avec ses débords).
+			Size pageSize = this.document.GetPageSize (page);
+			
 			double width  = pageSize.Width;
 			double height = pageSize.Height;
-			double debord = info.Debord;
-			double length = info.TargetLength;
+			
+			double left, right, top, bottom;
 
-			double bleedLeft   = (page%2 == 1) ? info.BleedEvenMargins.Left   : info.BleedOddMargins.Left;
-			double bleedRight  = (page%2 == 1) ? info.BleedEvenMargins.Right  : info.BleedOddMargins.Right;
-			double bleedTop    = (page%2 == 1) ? info.BleedEvenMargins.Top    : info.BleedOddMargins.Top;
-			double bleedBottom = (page%2 == 1) ? info.BleedEvenMargins.Bottom : info.BleedOddMargins.Bottom;
+			if (page%2 == 1)  // page paire
+			{
+				left   = info.BleedMargin + info.BleedEvenMargins.Left;
+				right  = info.BleedMargin + info.BleedEvenMargins.Right;
+				top    = info.BleedMargin + info.BleedEvenMargins.Top;
+				bottom = info.BleedMargin + info.BleedEvenMargins.Bottom;
+			}
+			else
+			{
+				left   = info.BleedMargin + info.BleedOddMargins.Left;
+				right  = info.BleedMargin + info.BleedOddMargins.Right;
+				top    = info.BleedMargin + info.BleedOddMargins.Top;
+				bottom = info.BleedMargin + info.BleedOddMargins.Bottom;
+			}
 
-			Path path = new Path();
+			using (Path path = new Path ())
+			{
+				double clip = 1000.0;
 
-			//	Traits horizontaux.
-			path.MoveTo(0.0-debord-bleedLeft, 0.0);
-			path.LineTo(0.0-debord-bleedLeft-length, 0.0);
+				path.MoveTo (0.0-clip, 0.0-clip);
+				path.LineTo (width+clip, 0.0-clip);
+				path.LineTo (width+clip, height+clip);
+				path.LineTo (0.0-clip, height+clip);
+				path.LineTo (0.0-clip, 0.0-clip);
+				path.Close ();
 
-			path.MoveTo(0.0-debord-bleedLeft, height);
-			path.LineTo(0.0-debord-bleedLeft-length, height);
+				path.MoveTo (0.0-left, 0.0-bottom);
+				path.LineTo (0.0-left, height+top);
+				path.LineTo (width+right, height+top);
+				path.LineTo (width+right, 0.0-bottom);
+				path.LineTo (0.0-left, 0.0-bottom);
+				path.Close ();
 
-			path.MoveTo(width+debord+bleedRight, 0.0);
-			path.LineTo(width+debord+bleedRight+length, 0.0);
+				port.RichColor = RichColor.FromCmyk (0.0, 0.0, 0.0, 0.0);  // masque blanc
+				port.PaintSurface (path);
+			}
+		}
 
-			path.MoveTo(width+debord+bleedRight, height);
-			path.LineTo(width+debord+bleedRight+length, height);
+		protected void DrawCropMarks(Port port, Settings.ExportPDFInfo info, int page)
+		{
+			//	Dessine les traits de coupe.
+			if ( !info.PrintCropMarks )  return;
 
-			//	Traits verticaux.
-			path.MoveTo(0.0, 0.0-debord-bleedBottom);
-			path.LineTo(0.0, 0.0-debord-bleedBottom-length);
+			Size pageSize = this.document.GetPageSize(page);
+			
+			double width  = pageSize.Width;
+			double height = pageSize.Height;
+			double offset = info.CropMarksOffset;
+			double length = info.CropMarksLength;
 
-			path.MoveTo(width, 0.0-debord-bleedBottom);
-			path.LineTo(width, 0.0-debord-bleedBottom-length);
+			using (Path path = new Path ())
+			{
+				//	Traits horizontaux.
+				path.MoveTo (0.0-offset, 0.0);
+				path.LineTo (0.0-offset-length, 0.0);
 
-			path.MoveTo(0.0, height+debord+bleedTop);
-			path.LineTo(0.0, height+debord+bleedTop+length);
+				path.MoveTo (0.0-offset, height);
+				path.LineTo (0.0-offset-length, height);
 
-			path.MoveTo(width, height+debord+bleedTop);
-			path.LineTo(width, height+debord+bleedTop+length);
+				path.MoveTo (width+offset, 0.0);
+				path.LineTo (width+offset+length, 0.0);
 
-			port.LineWidth = info.TargetWidth;
-			port.RichColor = RichColor.FromCmyk(1.0, 1.0, 1.0, 1.0);  // noir de repérage
-			port.PaintOutline(path);
+				path.MoveTo (width+offset, height);
+				path.LineTo (width+offset+length, height);
+
+				//	Traits verticaux.
+				path.MoveTo (0.0, 0.0-offset);
+				path.LineTo (0.0, 0.0-offset-length);
+
+				path.MoveTo (width, 0.0-offset);
+				path.LineTo (width, 0.0-offset-length);
+
+				path.MoveTo (0.0, height+offset);
+				path.LineTo (0.0, height+offset+length);
+
+				path.MoveTo (width, height+offset);
+				path.LineTo (width, height+offset+length);
+
+				port.LineWidth = info.CropMarksWidth * 9;
+				port.LineCap   = CapStyle.Butt;
+				port.RichColor = RichColor.FromCmyk (0.0, 0.0, 0.0, 0.0);  // fond blanc derrière les traits de coupe
+				port.PaintOutline (path);
+
+				port.LineWidth = info.CropMarksWidth;
+				port.LineCap   = CapStyle.Butt;
+				port.RichColor = RichColor.FromCmyk (1.0, 1.0, 1.0, 1.0);  // noir de repérage
+				port.PaintOutline (path);
+			}
 		}
 
 

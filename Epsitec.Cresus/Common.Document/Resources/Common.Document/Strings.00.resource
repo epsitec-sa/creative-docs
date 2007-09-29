@@ -94,7 +94,7 @@
   <data name="Dialog.Double.PrintDpi" id="082">Résolution (dpi)</data>
   <data name="Dialog.Double.PrintMargins" id="092">Marges de centrage</data>
   <data name="Dialog.Double.PrintDebord" id="0A2">Débord</data>
-  <data name="Dialog.Double.ExportPDFDebord" id="0B2">Débord</data>
+  <data name="Dialog.Double.ExportPDFBleed" id="0B2">Débord</data>
   <data name="Dialog.Double.ExportPDFBleedEvenTop" id="0CB01">Haut</data>
   <data name="Dialog.Double.ExportPDFBleedOddTop" id="0JB01">Haut</data>
   <data name="Dialog.Double.ExportPDFBleedEvenBottom" id="0DB01">Bas</data>

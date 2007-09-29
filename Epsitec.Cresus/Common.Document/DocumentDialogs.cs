@@ -477,8 +477,8 @@ namespace Epsitec.Common.Document
 				
 				this.tabIndex = 0;
 				DocumentDialogs.CreateTitle(container, Res.Strings.Dialog.ExportPDF.Publisher);
-				this.CreateDouble(container, "ExportPDFDebord");
-				this.CreateBool(container, "ExportPDFTarget");
+				this.CreateDouble (container, "ExportPDFBleed");
+				this.CreateBool (container, "ExportPDFTarget");
 				DocumentDialogs.CreateTitle (container, Res.Strings.Dialog.ExportPDF.BleedEven);
 				this.CreateDouble (container, "ExportPDFBleedEvenTop");
 				this.CreateDouble(container, "ExportPDFBleedEvenBottom");
@@ -512,9 +512,9 @@ namespace Epsitec.Common.Document
 			this.UpdateCombo("ExportPDFImageFilterA");
 			this.UpdateCombo("ExportPDFImageFilterB");
 
-			//TODO: ajouter this.UpdateBool("ExportPDFTarget");
+			this.UpdateBool("ExportPDFTarget");
 			
-			this.UpdateDouble("ExportPDFDebord");
+			this.UpdateDouble("ExportPDFBleed");
 			this.UpdateDouble("ExportPDFBleedEvenTop");
 			this.UpdateDouble("ExportPDFBleedEvenBottom");
 			this.UpdateDouble("ExportPDFBleedEvenLeft");

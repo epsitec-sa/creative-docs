@@ -110,7 +110,7 @@ namespace Epsitec.Common.Document.Settings
 			this.CreateDefaultInteger("Export", "ImageFilterB");
 
 			this.CreateDefaultRange("ExportPDF", "ExportPDFRange");
-			this.CreateDefaultDouble("ExportPDF", "ExportPDFDebord");
+			this.CreateDefaultDouble("ExportPDF", "ExportPDFBleed");
 			this.CreateDefaultDouble("ExportPDF", "ExportPDFBleedEvenTop");
 			this.CreateDefaultDouble("ExportPDF", "ExportPDFBleedEvenBottom");
 			this.CreateDefaultDouble("ExportPDF", "ExportPDFBleedEvenLeft");

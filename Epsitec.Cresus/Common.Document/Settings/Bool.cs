@@ -220,7 +220,7 @@ namespace Epsitec.Common.Document.Settings
 						return this.document.Printer.ImageOnlySelected;
 
 					case "ExportPDFTarget":
-						return this.document.Settings.ExportPDFInfo.Target;
+						return this.document.Settings.ExportPDFInfo.PrintCropMarks;
 
 					case "ExportPDFTextCurve":
 						return this.document.Settings.ExportPDFInfo.TextCurve;
@@ -334,7 +334,7 @@ namespace Epsitec.Common.Document.Settings
 						break;
 
 					case "ExportPDFTarget":
-						this.document.Settings.ExportPDFInfo.Target = value;
+						this.document.Settings.ExportPDFInfo.PrintCropMarks = value;
 						break;
 
 					case "ExportPDFTextCurve":

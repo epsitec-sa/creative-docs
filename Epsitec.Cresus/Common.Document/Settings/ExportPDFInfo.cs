@@ -24,6 +24,7 @@ namespace Epsitec.Common.Document.Settings
 			this.target = false;
 			this.targetLength = 100.0;  // 10mm
 			this.targetWidth = 1.0;  // 0.1mm
+			this.targetOffset = 50.0;  // 5mm
 			this.textCurve = false;
 			this.colorConversion = PDF.ColorConversion.None;
 			this.imageCompression = PDF.ImageCompression.ZIP;
@@ -54,7 +55,7 @@ namespace Epsitec.Common.Document.Settings
 			set { this.pageTo = value; }
 		}
 
-		public double Debord
+		public double BleedMargin
 		{
 			get { return this.debord; }
 			set { this.debord = value; }
@@ -72,19 +73,25 @@ namespace Epsitec.Common.Document.Settings
 			set { this.bleedOddMargins = value; }
 		}
 
-		public bool Target
+		public bool PrintCropMarks
 		{
 			get { return this.target; }
 			set { this.target = value; }
 		}
 
-		public double TargetLength
+		public double CropMarksLength
 		{
 			get { return this.targetLength; }
 			set { this.targetLength = value; }
 		}
 
-		public double TargetWidth
+		public double CropMarksOffset
+		{
+			get { return this.targetOffset; }
+			set { this.targetOffset = value; }
+		}
+
+		public double CropMarksWidth
 		{
 			get { return this.targetWidth; }
 			set { this.targetWidth = value; }
@@ -148,7 +155,7 @@ namespace Epsitec.Common.Document.Settings
 		public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
 		{
 			//	Sérialise les réglages.
-			info.AddValue("Rev", 6);
+			info.AddValue("Rev", 7);
 			info.AddValue("PageRange", this.pageRange);
 			info.AddValue("PageFrom", this.pageFrom);
 			info.AddValue("PageTo", this.pageTo);
@@ -156,6 +163,7 @@ namespace Epsitec.Common.Document.Settings
 			info.AddValue("Target", this.target);
 			info.AddValue("TargetLength", this.targetLength);
 			info.AddValue("TargetWidth", this.targetWidth);
+			info.AddValue("TargetOffset", this.targetOffset);
 			info.AddValue("TextCurve", this.textCurve);
 			info.AddValue("ColorConversion", this.colorConversion);
 			info.AddValue("ImageCompression", this.imageCompression);
@@ -220,6 +228,11 @@ namespace Epsitec.Common.Document.Settings
 				this.bleedEvenMargins = Margins.Zero;
 				this.bleedOddMargins  = Margins.Zero;
 			}
+
+			if ( rev >= 7 )
+			{
+				this.targetOffset = info.GetDouble("TargetOffset");
+			}
 		}
 		#endregion
 
@@ -232,6 +245,7 @@ namespace Epsitec.Common.Document.Settings
 		protected bool						target;
 		protected double					targetLength;
 		protected double					targetWidth;
+		protected double					targetOffset;
 		protected bool						textCurve;
 		protected PDF.ColorConversion		colorConversion;
 		protected PDF.ImageCompression		imageCompression;
