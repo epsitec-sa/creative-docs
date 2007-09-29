@@ -2,6 +2,8 @@ using Epsitec.Common.Drawing;
 
 namespace Epsitec.Common.Document.PDF
 {
+	using CultureInfo=System.Globalization.CultureInfo;
+
 	/// <summary>
 	/// La classe Writer gère la création du fichier PDF.
 	/// Les objets PDF sont nommés par des objectName, qui seront remplacés par
@@ -69,8 +71,14 @@ namespace Epsitec.Common.Document.PDF
 				obj.Defined = true;
 			}
 
-			this.parts.Add(string.Format(System.Globalization.CultureInfo.InvariantCulture, "{0}{1}", type, objectName));
+			this.parts.Add(string.Format(CultureInfo.InvariantCulture, "{0}{1}", type, objectName));
 			this.WriteString(ending);
+		}
+
+		protected int GetObjectId(string objectName)
+		{
+			Object obj = this.dictionary[objectName] as Object;
+			return obj.Id;
 		}
 
 		public void WriteLine(string line)
@@ -83,7 +91,7 @@ namespace Epsitec.Common.Document.PDF
 		public void WriteString(string text)
 		{
 			//	Ecrit juste une string telle quelle.
-			this.parts.Add(string.Format(System.Globalization.CultureInfo.InvariantCulture, "F{0}", text));  // texte fixe
+			this.parts.Add(string.Format(CultureInfo.InvariantCulture, "F{0}", text));  // texte fixe
 		}
 
 		public void Flush()
@@ -129,18 +137,18 @@ namespace Epsitec.Common.Document.PDF
 			//	Les tables "xref..startxref..%%EOF" en fin de fichier sont créées.
 			System.Diagnostics.Debug.Assert(this.streamIO != null);
 			int startXref = this.streamOffset;
-			this.FileWriteLine(string.Format(System.Globalization.CultureInfo.InvariantCulture, "xref 0 {0}", Writer.ToString(this.dictionary.Count+1)));
+			this.FileWriteLine(string.Format(CultureInfo.InvariantCulture, "xref 0 {0}", Writer.ToString(this.dictionary.Count+1)));
 			this.FileWriteLine("0000000000 65535 f");
 			for ( int i=0 ; i<this.dictionary.Count ; i++ )
 			{
 				Object obj = this.DictionarySearch(i+1);
 				System.Diagnostics.Debug.Assert(obj != null);
 				System.Diagnostics.Debug.Assert(obj.Defined, "PDF.Writer: Object never defined");
-				this.FileWriteLine(string.Format(System.Globalization.CultureInfo.InvariantCulture, "{0} 00000 n", PDF.Writer.ToStringD10(obj.Offset)));
+				this.FileWriteLine(string.Format(CultureInfo.InvariantCulture, "{0} 00000 n", PDF.Writer.ToStringD10(obj.Offset)));
 			}
-			this.FileWriteLine(string.Format(System.Globalization.CultureInfo.InvariantCulture, "trailer << /Size {0} /Root 1 0 R >>", Writer.ToString(this.dictionary.Count+1)));
+			this.FileWriteLine(string.Format (CultureInfo.InvariantCulture, "trailer << /Size {0} /Root 1 0 R /Info {1} 0 R >>", Writer.ToString(this.dictionary.Count+1), this.GetObjectId("Info")));
 			this.FileWriteLine("startxref");
-			this.FileWriteLine(string.Format(System.Globalization.CultureInfo.InvariantCulture, "{0}", startXref));
+			this.FileWriteLine(string.Format(CultureInfo.InvariantCulture, "{0}", startXref));
 			this.FileWriteLine("%%EOF");
 
 			this.FileClose();
@@ -193,13 +201,13 @@ namespace Epsitec.Common.Document.PDF
 		protected static string ToString(int value)
 		{
 			//	Conversion d'un entier en chaîne.
-			return value.ToString(System.Globalization.CultureInfo.InvariantCulture);
+			return value.ToString(CultureInfo.InvariantCulture);
 		}
 
 		protected static string ToStringD10(int value)
 		{
 			//	Conversion d'un entier en chaîne.
-			return value.ToString("D10", System.Globalization.CultureInfo.InvariantCulture);
+			return value.ToString("D10", CultureInfo.InvariantCulture);
 		}
 
 

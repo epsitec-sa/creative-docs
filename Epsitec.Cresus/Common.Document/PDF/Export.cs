@@ -4,6 +4,8 @@ using System.Collections.Generic;
 
 namespace Epsitec.Common.Document.PDF
 {
+	using CultureInfo=System.Globalization.CultureInfo;
+	
 	public enum TypeComplexSurface
 	{
 		None            = -1,
@@ -187,6 +189,22 @@ namespace Epsitec.Common.Document.PDF
 			writer.WriteObjectRef("HeaderPages");
 			writer.WriteLine(">> endobj");
 
+			//	Object info
+			string titleName    = Export.EscapeString(Support.Globals.Properties.GetProperty<string>("PDF:Title") ?? System.IO.Path.GetFileName(filename));
+			string author       = Export.EscapeString(Support.Globals.Properties.GetProperty<string>("PDF:Author"));
+			string creator      = Export.EscapeString(Support.Globals.Properties.GetProperty<string>("PDF:Creator"));
+			string producer     = Export.EscapeString(Support.Globals.Properties.GetProperty<string>("PDF:Producer"));
+			string creationDate = Export.GetDateString(Support.Globals.Properties.GetProperty<System.DateTime>("PDF:CreationDate", System.DateTime.Now));
+
+			writer.WriteObjectDef("Info");
+			writer.WriteString(string.Concat("<< /Title (", titleName, ") "));
+			if ( author != null )  writer.WriteString(string.Concat("/Author (", author, ") "));
+			if ( creator != null )  writer.WriteString(string.Concat("/Creator (", creator, ") "));
+			if ( producer != null )  writer.WriteString(string.Concat("/Producer (", producer, ") "));
+			writer.WriteString(string.Concat("/CreationDate (D:", creationDate, ") "));
+			writer.WriteString("/Trapped /False ");
+			writer.WriteLine(">> endobj");
+
 			//	Objet outlines.
 			writer.WriteObjectDef("HeaderOutlines");
 			writer.WriteLine("<< /Type /Outlines /Count 0 >> endobj");
@@ -213,7 +231,7 @@ namespace Epsitec.Common.Document.PDF
 			{
 				writer.WriteObjectRef(Export.NamePage(page));
 			}
-			writer.WriteLine(string.Format(System.Globalization.CultureInfo.InvariantCulture, "] /Count {0} >> endobj", total));
+			writer.WriteLine(string.Format(CultureInfo.InvariantCulture, "] /Count {0} >> endobj", total));
 
 			//	Un objet pour chaque page.
 			foreach ( int page in this.pageList )
@@ -422,7 +440,7 @@ namespace Epsitec.Common.Document.PDF
 
 				string pdf = port.GetPDF();
 				writer.WriteObjectDef(Export.NameContent(page));
-				writer.WriteLine(string.Format(System.Globalization.CultureInfo.InvariantCulture, "<< {0} >>", Port.StringLength(pdf.Length)));
+				writer.WriteLine(string.Format(CultureInfo.InvariantCulture, "<< {0} >>", Port.StringLength(pdf.Length)));
 				writer.WriteLine("stream");
 				writer.WriteString(pdf);
 				writer.WriteLine("endstream endobj");
@@ -437,55 +455,74 @@ namespace Epsitec.Common.Document.PDF
 			return "";  // ok
 		}
 
+		private static string GetDateString(System.DateTime dateTime)
+		{
+			System.DateTime utc = dateTime.ToUniversalTime();
+			return string.Format(CultureInfo.InvariantCulture, "{0:D4}{1:D2}{2:D2}{3:D2}{4:D2}{5:D2}Z", utc.Year, utc.Month, utc.Day, utc.Hour, utc.Minute, utc.Second);
+		}
+
+		private static string EscapeString(string name)
+		{
+			if (name == null)
+			{
+				return null;
+			}
+
+			name = name.Replace (@"\", @"\\");
+			name = name.Replace (@"(", @"\(");
+			name = name.Replace (@")", @"\)");
+
+			return name;
+		}
 
 		protected static string NamePage(int page)
 		{
-			return string.Format(System.Globalization.CultureInfo.InvariantCulture, "HeaderPage{0}", page);
+			return string.Format(CultureInfo.InvariantCulture, "HeaderPage{0}", page);
 		}
 
 		protected static string NameResources(int page)
 		{
-			return string.Format(System.Globalization.CultureInfo.InvariantCulture, "HeaderResources{0}", page);
+			return string.Format(CultureInfo.InvariantCulture, "HeaderResources{0}", page);
 		}
 
 		protected static string NameContent(int page)
 		{
-			return string.Format(System.Globalization.CultureInfo.InvariantCulture, "HeaderContent{0}", page);
+			return string.Format(CultureInfo.InvariantCulture, "HeaderContent{0}", page);
 		}
 
 		protected static string NameComplexSurface(int id, TypeComplexSurface type)
 		{
-			return string.Format(System.Globalization.CultureInfo.InvariantCulture, "HeaderComplexSurface{0}", id*10+(int)type);
+			return string.Format(CultureInfo.InvariantCulture, "HeaderComplexSurface{0}", id*10+(int)type);
 		}
 
 		public static string ShortNameComplexSurface(int id, TypeComplexSurface type)
 		{
-			return string.Format(System.Globalization.CultureInfo.InvariantCulture, "/S{0} ", id*10+(int)type);
+			return string.Format(CultureInfo.InvariantCulture, "/S{0} ", id*10+(int)type);
 		}
 
 		protected static string NameFont(int id, int fontPage, TypeFont type)
 		{
-			return string.Format(System.Globalization.CultureInfo.InvariantCulture, "HeaderFont{0}", id*100 + fontPage*10 + (int)type);
+			return string.Format(CultureInfo.InvariantCulture, "HeaderFont{0}", id*100 + fontPage*10 + (int)type);
 		}
 
 		public static string ShortNameFont(int id, int fontPage)
 		{
-			return string.Format(System.Globalization.CultureInfo.InvariantCulture, "/F{0} ", id*10 + fontPage);
+			return string.Format(CultureInfo.InvariantCulture, "/F{0} ", id*10 + fontPage);
 		}
 
 		protected static string NameCharacter(int id, int fontPage, CharacterList cl)
 		{
-			return string.Format(System.Globalization.CultureInfo.InvariantCulture, "HeaderCharacter{0}_{1}_{2}_{3}", id, fontPage, cl.Glyph, cl.Unicode);
+			return string.Format(CultureInfo.InvariantCulture, "HeaderCharacter{0}_{1}_{2}_{3}", id, fontPage, cl.Glyph, cl.Unicode);
 		}
 
 		protected static string ShortNameCharacter(int id, int fontPage, CharacterList cl)
 		{
-			return string.Format(System.Globalization.CultureInfo.InvariantCulture, "/C{0}_{1}_{2}_{3} ", id, fontPage, cl.Glyph, cl.Unicode);
+			return string.Format(CultureInfo.InvariantCulture, "/C{0}_{1}_{2}_{3} ", id, fontPage, cl.Glyph, cl.Unicode);
 		}
 
 		protected static string NameFunction(int id, TypeFunction type)
 		{
-			return string.Format(System.Globalization.CultureInfo.InvariantCulture, "HeaderFunction{0}", id*10+(int)type);
+			return string.Format(CultureInfo.InvariantCulture, "HeaderFunction{0}", id*10+(int)type);
 		}
 
 
@@ -881,7 +918,7 @@ namespace Epsitec.Common.Document.PDF
 			port.PutEOL();
 
 			string pdf = port.GetPDF();
-			writer.WriteLine(string.Format(System.Globalization.CultureInfo.InvariantCulture, "{0} >>", Port.StringLength(pdf.Length)));
+			writer.WriteLine(string.Format(CultureInfo.InvariantCulture, "{0} >>", Port.StringLength(pdf.Length)));
 			writer.WriteLine("stream");
 			writer.WriteString(pdf);
 			writer.WriteLine("endstream endobj");
@@ -970,7 +1007,7 @@ namespace Epsitec.Common.Document.PDF
 			}
 
 			string pdf = port.GetPDF();
-			writer.WriteLine(string.Format(System.Globalization.CultureInfo.InvariantCulture, "{0} >>", Port.StringLength(pdf.Length)));
+			writer.WriteLine(string.Format(CultureInfo.InvariantCulture, "{0} >>", Port.StringLength(pdf.Length)));
 			writer.WriteLine("stream");
 			writer.WriteString(pdf);
 			writer.WriteLine("endstream endobj");
@@ -1304,7 +1341,7 @@ namespace Epsitec.Common.Document.PDF
 					}
 					writer.WriteObjectDef(Export.NameFunction(cs.Id, ft));
 					//	PostScript calculator function, voir [*] page 148
-					writer.WriteLine(string.Format(System.Globalization.CultureInfo.InvariantCulture, "<< /FunctionType 4 /Range [0 1] {0} {1} >>", domain, Port.StringLength(fonctions[i].Length)));
+					writer.WriteLine(string.Format(CultureInfo.InvariantCulture, "<< /FunctionType 4 /Range [0 1] {0} {1} >>", domain, Port.StringLength(fonctions[i].Length)));
 					writer.WriteLine("stream");
 					writer.WriteLine(fonctions[i]);
 					writer.WriteLine("endstream endobj");
@@ -1380,7 +1417,7 @@ namespace Epsitec.Common.Document.PDF
 			string range = builder.ToString();
 
 			writer.WriteObjectDef(Export.NameFunction(cs.Id, (nbColors == 0) ? TypeFunction.SampledAlpha : TypeFunction.SampledColor));
-			writer.WriteLine(string.Format(System.Globalization.CultureInfo.InvariantCulture, "<< /FunctionType 0 /Domain [0 1] /Range [{0}] /Size [256] /BitsPerSample 8 /Filter /ASCIIHexDecode {1} >>", range, Port.StringLength(table.Length)));
+			writer.WriteLine(string.Format(CultureInfo.InvariantCulture, "<< /FunctionType 0 /Domain [0 1] /Range [{0}] /Size [256] /BitsPerSample 8 /Filter /ASCIIHexDecode {1} >>", range, Port.StringLength(table.Length)));
 			writer.WriteLine("stream");
 			writer.WriteLine(table);
 			writer.WriteLine("endstream endobj");
@@ -1528,7 +1565,7 @@ namespace Epsitec.Common.Document.PDF
 			writer.WriteString(Port.StringBBox(bbox));
 
 			string pdf = port.GetPDF();
-			writer.WriteLine(string.Format(System.Globalization.CultureInfo.InvariantCulture, "{0} >>", Port.StringLength(pdf.Length)));
+			writer.WriteLine(string.Format(CultureInfo.InvariantCulture, "{0} >>", Port.StringLength(pdf.Length)));
 			writer.WriteLine("stream");
 			writer.WriteString(pdf);
 			writer.WriteLine("endstream endobj");
@@ -1889,7 +1926,7 @@ namespace Epsitec.Common.Document.PDF
 			}
 
 			string pdf = port.GetPDF();
-			writer.WriteLine(string.Format(System.Globalization.CultureInfo.InvariantCulture, " {0} >>", Port.StringLength(pdf.Length)));
+			writer.WriteLine(string.Format(CultureInfo.InvariantCulture, " {0} >>", Port.StringLength(pdf.Length)));
 			writer.WriteLine("stream");
 			writer.WriteString(pdf);
 			writer.WriteLine("endstream endobj");
@@ -1952,7 +1989,7 @@ namespace Epsitec.Common.Document.PDF
 
 			writer.WriteObjectDef(Export.NameFont(font.Id, fontPage, TypeFont.Base));
 			writer.WriteString("<< /Type /Font /Subtype /Type3 ");  // voir [*] page 394
-			writer.WriteString(string.Format(System.Globalization.CultureInfo.InvariantCulture, "/FirstChar 0 /LastChar {0} ", count-1));
+			writer.WriteString(string.Format(CultureInfo.InvariantCulture, "/FirstChar 0 /LastChar {0} ", count-1));
 			writer.WriteString(Port.StringBBox("/FontBBox", bbox));
 			writer.WriteString("/FontMatrix [1 0 0 1 0 0] ");
 
@@ -2043,7 +2080,7 @@ namespace Epsitec.Common.Document.PDF
 			builder.Append("1 begincodespacerange <00> <FF> endcodespacerange ");
 
 			int firstChar = fontPage*Export.charPerFont;
-			builder.Append(string.Format(System.Globalization.CultureInfo.InvariantCulture, "{0} beginbfrange ", count));
+			builder.Append(string.Format(CultureInfo.InvariantCulture, "{0} beginbfrange ", count));
 			for ( int i=0 ; i<count ; i++ )
 			{
 				CharacterList cl = font.GetCharacter(firstChar+i);
@@ -2060,13 +2097,13 @@ namespace Epsitec.Common.Document.PDF
 						hex2 += (cl.Unicodes[u]).ToString("X4");
 					}
 				}
-				builder.Append(string.Format(System.Globalization.CultureInfo.InvariantCulture, "<{0}> <{0}> <{1}> ", hex1, hex2));
+				builder.Append(string.Format(CultureInfo.InvariantCulture, "<{0}> <{0}> <{1}> ", hex1, hex2));
 			}
 			builder.Append("endbfrange ");
 
 			builder.Append("endcmap CMapName currentdict /CMap defineresource pop end end\r\n");
 
-			writer.WriteLine(string.Format(System.Globalization.CultureInfo.InvariantCulture, "<< {0} >>", Port.StringLength(builder.Length)));
+			writer.WriteLine(string.Format(CultureInfo.InvariantCulture, "<< {0} >>", Port.StringLength(builder.Length)));
 			writer.WriteLine("stream");
 			writer.WriteString(builder.ToString());
 			writer.WriteLine("endstream endobj");
@@ -2114,7 +2151,7 @@ namespace Epsitec.Common.Document.PDF
 			port.PaintSurface(path);
 
 			string pdf = port.GetPDF();
-			writer.WriteLine(string.Format(System.Globalization.CultureInfo.InvariantCulture, "<< {0} >>", Port.StringLength(pdf.Length)));
+			writer.WriteLine(string.Format(CultureInfo.InvariantCulture, "<< {0} >>", Port.StringLength(pdf.Length)));
 			writer.WriteLine("stream");
 			writer.WriteString(pdf);
 			writer.WriteLine("endstream endobj");
