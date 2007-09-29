@@ -4549,6 +4549,14 @@ namespace Epsitec.Common.Document
 			return page.Name;
 		}
 
+		public int PageLocalRank(int rank)
+		{
+			//	Retourne le rang d'une page, en fonction de son type.
+			UndoableList pages = this.document.DocumentObjects;
+			Objects.Page page = pages[rank] as Objects.Page;
+			return page.Rank;
+		}
+
 		public void PageName(int rank, string name)
 		{
 			//	Change le nom d'une page.

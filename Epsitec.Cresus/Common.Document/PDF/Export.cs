@@ -189,14 +189,14 @@ namespace Epsitec.Common.Document.PDF
 			writer.WriteObjectRef("HeaderPages");
 			writer.WriteLine(">> endobj");
 
+			this.documentTitle = Support.Globals.Properties.GetProperty<string> ("PDF:Title") ?? System.IO.Path.GetFileName (filename);
+
 			//	Object info
-			string titleName    = Export.EscapeString(Support.Globals.Properties.GetProperty<string>("PDF:Title") ?? System.IO.Path.GetFileName(filename));
+			string titleName    = Export.EscapeString(this.documentTitle);
 			string author       = Export.EscapeString(Support.Globals.Properties.GetProperty<string>("PDF:Author"));
 			string creator      = Export.EscapeString(Support.Globals.Properties.GetProperty<string>("PDF:Creator"));
 			string producer     = Export.EscapeString(Support.Globals.Properties.GetProperty<string>("PDF:Producer") ?? "CrDoc Engine, © 2003-2007 EPSITEC SA & OPaC bright ideas");
 			string creationDate = Export.GetDateString(Support.Globals.Properties.GetProperty<System.DateTime>("PDF:CreationDate", System.DateTime.Now));
-
-			this.documentTitle = titleName;
 
 			writer.WriteObjectDef("Info");
 			writer.WriteString(string.Concat("<< /Title (", titleName, ") "));
@@ -252,8 +252,9 @@ namespace Epsitec.Common.Document.PDF
 				}
 
 				double left, right, top, bottom;
+				int rank = this.document.Modifier.PageLocalRank (page);
 				
-				if (page%2 == 1)  // page paire
+				if (rank%2 == 1)  // page paire
 				{
 					left   = info.BleedMargin + info.BleedEvenMargins.Left;
 					right  = info.BleedMargin + info.BleedEvenMargins.Right;
@@ -448,8 +449,9 @@ namespace Epsitec.Common.Document.PDF
 				}
 
 				port.Reset();
+				int rank = this.document.Modifier.PageLocalRank (page);
 
-				Point currentPageOffset = ( page%2 == 1 ) ? pageOffsetEven : pageOffsetOdd;
+				Point currentPageOffset = ( rank%2 == 1 ) ? pageOffsetEven : pageOffsetOdd;
 
 				//	Matrice de transformation globale:
 				Transform gt = port.Transform;
@@ -595,8 +597,9 @@ namespace Epsitec.Common.Document.PDF
 			double height = pageSize.Height;
 			
 			double left, right, top, bottom;
+			int rank = this.document.Modifier.PageLocalRank (page);
 
-			if (page%2 == 1)  // page paire
+			if (rank%2 == 1)  // page paire
 			{
 				left   = info.BleedMargin + info.BleedEvenMargins.Left;
 				right  = info.BleedMargin + info.BleedEvenMargins.Right;
@@ -687,10 +690,11 @@ namespace Epsitec.Common.Document.PDF
 
 			using (Path path = new Path ())
 			{
+				int rank = this.document.Modifier.PageLocalRank (page);
 				double x = length;
 				double y = 0.0-offset-length/2.0;
 				double size = System.Math.Min (20.0, length * 0.6);
-				string text = string.Format ("{0} : {1}", this.documentTitle, page+1);
+				string text = string.Format ("{0} : {1}", this.documentTitle, this.document.Modifier.PageShortName (rank));
 
 				path.Append (Font.GetFont ("Arial", "Regular"), text, x, y, size);
 				port.RichColor = RichColor.FromCmyk (1.0, 1.0, 1.0, 1.0);  // noir de repérage
