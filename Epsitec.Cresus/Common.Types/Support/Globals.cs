@@ -134,6 +134,34 @@ namespace Epsitec.Common.Support
 
 			return Types.UndefinedValue.Instance;
 		}
+
+		public T GetProperty<T>(string key)
+		{
+			object value = this.GetProperty (key);
+
+			if (Types.UndefinedValue.IsUndefinedValue (value))
+			{
+				return default (T);
+			}
+			else
+			{
+				return (T) value;
+			}
+		}
+
+		public T GetProperty<T>(string key, T defaultValue)
+		{
+			object value = this.GetProperty (key);
+
+			if (Types.UndefinedValue.IsUndefinedValue (value))
+			{
+				return defaultValue;
+			}
+			else
+			{
+				return (T) value;
+			}
+		}
 		
 		public bool IsPropertyDefined(string key)
 		{

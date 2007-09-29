@@ -15,6 +15,9 @@ namespace Epsitec.Common.Support.CodeCompilation
 	/// </summary>
 	public class BuildDriver : System.IDisposable
 	{
+		/// <summary>
+		/// Initializes a new instance of the <see cref="BuildDriver"/> class.
+		/// </summary>
 		public BuildDriver()
 		{
 			string directory = string.Concat ("BuildDriver.", System.DateTime.Now.Ticks, ".", System.Diagnostics.Process.GetCurrentProcess ().Id);
