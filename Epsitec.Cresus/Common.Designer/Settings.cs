@@ -55,6 +55,23 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
+		public static IdentityCard ActiveDeveloperIdentityCard
+		{
+			get
+			{
+				int developerId = Settings.ActiveDeveloperId;
+
+				if (developerId < 0)
+				{
+					return null;
+				}
+				else
+				{
+					return IdentityRepository.Default.FindIdentityCard (developerId);
+				}
+			}
+		}
+
 
 		public bool Write()
 		{

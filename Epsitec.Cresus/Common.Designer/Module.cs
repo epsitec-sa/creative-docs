@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Support;
+using Epsitec.Common.Identity;
 
 namespace Epsitec.Common.Designer
 {
@@ -352,7 +353,11 @@ namespace Epsitec.Common.Designer
 			}
 
 			//	Crée le fichier "module.info" pour le module à générer.
-			ResourceModule.SaveManifest (mergedInfo);
+			System.DateTime mergeTime = System.DateTime.Now.ToUniversalTime ();
+			IdentityCard authorIdentityCard = Settings.ActiveDeveloperIdentityCard;
+			string author  = authorIdentityCard == null ? "" : string.Concat (" by ", authorIdentityCard.UserName);
+			string comment = string.Concat ("Merged on ", mergeTime.ToShortDateString (), " ", mergeTime.ToShortTimeString (), " UTC", author);
+			ResourceModule.SaveManifest (mergedInfo, comment);
 
 			//	Comme on va utiliser le mécanisme d'enregistrement standard
 			//	des accesseurs, on doit "surcharger" la méthode SetBundle de

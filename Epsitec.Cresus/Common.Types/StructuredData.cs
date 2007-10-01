@@ -442,6 +442,11 @@ namespace Epsitec.Common.Types
 		{
 			return this.Equals (obj as StructuredData);
 		}
+
+		public override int GetHashCode()
+		{
+			return base.GetHashCode ();
+		}
 		
 		public object GetValue(Support.Druid id)
 		{

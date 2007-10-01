@@ -144,6 +144,11 @@ namespace Epsitec.Common.Support
 		/// <param name="info">The module identity.</param>
 		public static void SaveManifest(ResourceModuleInfo info)
 		{
+			ResourceModule.SaveManifest (info, null);
+		}
+		
+		public static void SaveManifest(ResourceModuleInfo info, string comment)
+		{
 			string modulePath     = info.FullId.Path;
 			string moduleInfoPath = System.IO.Path.Combine (modulePath, ResourceModule.ManifestFileName);
 	
@@ -178,6 +183,12 @@ namespace Epsitec.Common.Support
 			}
 			
 			xml.InsertBefore (xml.CreateXmlDeclaration ("1.0", "utf-8", null), null);
+			
+			if (!string.IsNullOrEmpty (comment))
+			{
+				xml.AppendChild (xml.CreateComment (comment));
+			}
+			
 			xml.AppendChild (root);
 
 			if (!string.IsNullOrEmpty (info.ReferenceModulePath))
