@@ -1884,7 +1884,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			//	Construit le chemin du cadre arrondi.
 			rect = this.bounds;
 			rect.Deflate(1);
-			Path path = this.PathRoundRectangle(rect, this.IsInterface ? 0.0 : ObjectBox.roundFrameRadius);
+			Path path = this.PathRoundRectangle(rect, ObjectBox.roundFrameRadius);
 
 			//	Dessine l'intérieur en blanc.
 			graphics.Rasterizer.AddSurface(path);
@@ -1934,6 +1934,17 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			{
 				rect = new Rectangle(this.bounds.Left, this.bounds.Top-AbstractObject.headerHeight, this.bounds.Width, AbstractObject.headerHeight);
 				rect.Deflate(4, 2);
+
+				if (this.IsInterface)
+				{
+					Rectangle r = rect;
+					r.Deflate(3, 10);
+					r.Width = r.Height*2;
+					this.DrawGlyphInterface(graphics, r, this.GetColor(0));
+
+					rect.Left = r.Right;
+				}
+
 				this.title.LayoutSize = rect.Size;
 				this.title.Paint(rect.BottomLeft, graphics, Rectangle.MaxValue, this.GetColor(0), GlyphPaintStyle.Normal);
 			}
@@ -2027,6 +2038,17 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 						rect = this.GetFieldBounds(i);
 						rect.Deflate(ObjectBox.textMargin, 2);
+
+						if (this.fields[i].IsInterface)
+						{
+							Rectangle r = rect;
+							r.Deflate(1.0, 5.0);
+							r.Width = r.Height*2;
+							this.DrawGlyphInterface(graphics, r, this.GetColorMain(0.8));
+
+							rect.Left = r.Right;
+						}
+
 						this.fields[i].TextLayoutField.LayoutSize = rect.Size;
 						this.fields[i].TextLayoutField.Paint(rect.BottomLeft, graphics, Rectangle.MaxValue, this.GetColorMain(0.8), GlyphPaintStyle.Normal);
 
@@ -2105,7 +2127,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 						rect = Rectangle.Union(this.GetFieldBounds(i), this.GetFieldBounds(j));
 						rect.Deflate(9.5, 1.5);
-						Path dashedPath = this.PathRoundRectangle(rect, this.fields[i].IsInherited ? 8.0 : 0.0);
+						Path dashedPath = this.PathRoundRectangle(rect, 8.0);
 
 						rect = this.GetFieldBounds(i);
 						rect.Deflate(9.5, 0.5);
@@ -2445,6 +2467,16 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			//	Dessine le cadre du menu.
 			graphics.AddRectangle(box);
 			graphics.RenderSolid(this.GetColor(0));
+		}
+
+		protected void DrawGlyphInterface(Graphics graphics, Rectangle rect, Color color)
+		{
+			//	Dessine le glyph 'o--' d'une interface.
+			double y = System.Math.Floor(rect.Center.Y)-0.5;
+			double radius = rect.Height/2;
+			graphics.AddCircle(rect.Left+radius, y, radius);
+			graphics.AddLine(rect.Left+radius*2, y, rect.Right, y);
+			graphics.RenderSolid(color);
 		}
 
 		protected void DrawDashLine(Graphics graphics, Point p1, Point p2, Color color)
