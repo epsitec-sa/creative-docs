@@ -47,6 +47,14 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
+		public static int ActiveDeveloperId
+		{
+			get
+			{
+				return Globals.Properties.GetProperty<int> (AbstractResourceAccessor.DeveloperIdPropertyName, -1);
+			}
+		}
+
 
 		public bool Write()
 		{

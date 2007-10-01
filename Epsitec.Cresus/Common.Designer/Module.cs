@@ -21,6 +21,8 @@ namespace Epsitec.Common.Designer
 			this.resourceManager.DefineDefaultModuleName(this.moduleId.Name);
 			this.resourceManager.ActivePrefix = resourcePrefix;
 
+			this.moduleInfo = this.resourceManager.DefaultModuleInfo.Clone ();
+
 			this.modifier = new Modifier(this);
 
 			this.accessStrings  = new ResourceAccess(ResourceAccess.Type.Strings,  this, this.moduleId, this.designerApplication);
@@ -110,7 +112,7 @@ namespace Epsitec.Common.Designer
 		{
 			get
 			{
-				return this.resourceManager.DefaultModuleInfo;
+				return this.moduleInfo;
 			}
 		}
 
@@ -242,9 +244,31 @@ namespace Epsitec.Common.Designer
 			
 			this.batchSaver.Execute ();
 
-			ResourceModuleInfo info = this.ModuleInfo;
+			int devId = Settings.ActiveDeveloperId;
+			ResourceModuleVersion version = null;
 
-			ResourceModule.SaveManifest (info);
+			foreach (ResourceModuleVersion item in this.moduleInfo.Versions)
+			{
+				if (item.DeveloperId == devId)
+				{
+					this.moduleInfo.Versions.Remove (item);
+					version = item;
+					break;
+				}
+			}
+
+			if (version == null)
+			{
+				version = new ResourceModuleVersion (devId, 1, System.DateTime.Now.ToUniversalTime ());
+			}
+			else
+			{
+				version = new ResourceModuleVersion (devId, version.BuildNumber, System.DateTime.Now.ToUniversalTime ());
+			}
+
+			this.moduleInfo.Versions.Add (version);
+
+			ResourceModule.SaveManifest (this.moduleInfo);
 		}
 
 		private void OptimizeBundles(ResourceBundle bundle)
@@ -408,6 +432,7 @@ namespace Epsitec.Common.Designer
 		protected DesignerApplication		designerApplication;
 		protected DesignerMode				mode;
 		protected ResourceModuleId			moduleId;
+		protected ResourceModuleInfo		moduleInfo;
 		protected Modifier					modifier;
 		protected ResourceManager			resourceManager;
 		protected ResourceAccess			accessStrings;
