@@ -820,10 +820,13 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				return;  // on ne détruit jamais la boîte racine
 			}
 
+			bool dirty = false;
+
 			if (box != null)
 			{
 				this.CloseOneBox(box);  // supprime la boîte demandée
 				this.CloseConnections(box);  // supprime ses connections
+				dirty = true;
 			}
 
 			foreach (ObjectBox abox in this.boxes)
@@ -886,6 +889,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 						this.CloseOneBox(box);  // supprime la boîte isolée
 						this.CloseConnections(box);  // supprime ses connections
 						removed = true;
+						dirty = true;
 					}
 				}
 			}
@@ -898,7 +902,11 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 
 			this.UpdateAfterOpenOrCloseBox();
-			this.module.AccessEntities.SetLocalDirty();
+
+			if (dirty)
+			{
+				this.module.AccessEntities.SetLocalDirty();
+			}
 		}
 
 		protected void CloseOneBox(ObjectBox box)
