@@ -2239,34 +2239,37 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					this.DrawDashLine(graphics, rect.BottomRight, rect.BottomLeft, this.GetColorMain());
 				}
 
-				if (this.hilitedElement == ActiveElement.BoxFieldAddInterface ||
+				if (this.editor.CurrentModifyMode == Editor.ModifyMode.Unlocked)
+				{
+					if (this.hilitedElement == ActiveElement.BoxFieldAddInterface ||
 					(this.hilitedElement == ActiveElement.BoxFieldTitle && this.fields[this.hilitedFieldRank].IsInterface))
-				{
-					rect = this.GetFieldInterfaceBounds();
-					this.DrawRoundButton(graphics, rect.Center, AbstractObject.buttonRadius, "+i", this.hilitedElement == ActiveElement.BoxFieldAddInterface, true);
-				}
-
-				if (this.hilitedElement == ActiveElement.BoxFieldRemoveInterface ||
-					(this.hilitedElement == ActiveElement.BoxFieldTitle && this.fields[this.hilitedFieldRank].IsInterface))
-				{
-					rect = this.GetFieldMovableBounds(this.hilitedFieldRank);
-					this.DrawRoundButton(graphics, rect.Center, AbstractObject.buttonRadius, "-i", this.hilitedElement == ActiveElement.BoxFieldRemoveInterface, true);
-				}
-
-				//	Si la souris est dans la barre de titre, montre les boutons pour les interfaces.
-				if (this.IsHeaderHilite)
-				{
-					for (int i=0; i<this.fields.Count; i++)
 					{
-						if (this.fields[i].IsTitle && this.fields[i].IsInterface)
-						{
-							rect = this.GetFieldMovableBounds(i);
-							this.DrawRoundButton(graphics, rect.Center, AbstractObject.buttonRadius, "-i", false, true);
-						}
+						rect = this.GetFieldInterfaceBounds();
+						this.DrawRoundButton(graphics, rect.Center, AbstractObject.buttonRadius, "+i", this.hilitedElement == ActiveElement.BoxFieldAddInterface, true);
 					}
 
-					rect = this.GetFieldInterfaceBounds();
-					this.DrawRoundButton(graphics, rect.Center, AbstractObject.buttonRadius, "+i", false, true);
+					if (this.hilitedElement == ActiveElement.BoxFieldRemoveInterface ||
+					(this.hilitedElement == ActiveElement.BoxFieldTitle && this.fields[this.hilitedFieldRank].IsInterface))
+					{
+						rect = this.GetFieldMovableBounds(this.hilitedFieldRank);
+						this.DrawRoundButton(graphics, rect.Center, AbstractObject.buttonRadius, "-i", this.hilitedElement == ActiveElement.BoxFieldRemoveInterface, true);
+					}
+
+					//	Si la souris est dans la barre de titre, montre les boutons pour les interfaces.
+					if (this.IsHeaderHilite)
+					{
+						for (int i=0; i<this.fields.Count; i++)
+						{
+							if (this.fields[i].IsTitle && this.fields[i].IsInterface)
+							{
+								rect = this.GetFieldMovableBounds(i);
+								this.DrawRoundButton(graphics, rect.Center, AbstractObject.buttonRadius, "-i", false, true);
+							}
+						}
+
+						rect = this.GetFieldInterfaceBounds();
+						this.DrawRoundButton(graphics, rect.Center, AbstractObject.buttonRadius, "+i", false, true);
+					}
 				}
 			}
 
