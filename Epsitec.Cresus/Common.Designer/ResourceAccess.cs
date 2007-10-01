@@ -257,6 +257,13 @@ namespace Epsitec.Common.Designer
 			this.ClearGlobalDirty();
 		}
 
+		public void RegenerateAllFieldsInBundle()
+		{
+			foreach (CultureMap item in this.accessor.Collection)
+			{
+				this.accessor.NotifyItemChanged (item);
+			}
+		}
 
 		public void AddShortcuts(List<ShortcutItem> list)
 		{

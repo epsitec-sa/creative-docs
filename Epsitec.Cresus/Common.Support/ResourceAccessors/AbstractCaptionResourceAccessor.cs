@@ -233,7 +233,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			}
 
 			ResourceManager refModuleManager = this.ResourceManager.GetManagerForReferenceModule ();
-			bool            usePatchModule   = refModuleManager != null;
+			bool            usePatchModule   = (!this.ForceModuleMerge) && (refModuleManager != null);
 
 			int nonEmptyFieldCount = 0;
 
@@ -339,7 +339,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 					}
 
 					if ((level == ResourceLevel.Default) &&
-						(item.Source != CultureMapSource.DynamicMerge))
+						((usePatchModule == false) || (item.Source != CultureMapSource.DynamicMerge)))
 					{
 						field.SetName (this.GetFieldNameFromName (item, data));
 					}

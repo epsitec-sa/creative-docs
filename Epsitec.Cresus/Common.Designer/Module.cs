@@ -243,7 +243,27 @@ namespace Epsitec.Common.Designer
 			}
 			
 			this.batchSaver.Execute ();
+			this.UpdateManifest ();
+		}
 
+		private void Regenerate()
+		{
+			foreach (ResourceAccess access in this.Accesses)
+			{
+				Support.ResourceAccessors.AbstractResourceAccessor accessor = access.Accessor as Support.ResourceAccessors.AbstractResourceAccessor;
+
+				if (accessor != null)
+				{
+					access.RegenerateAllFieldsInBundle ();
+					accessor.ForceModuleMerge = true;
+					accessor.PersistChanges ();
+					accessor.ForceModuleMerge = false;
+				}
+			}
+		}
+
+		private void UpdateManifest()
+		{
 			int devId = Settings.ActiveDeveloperId;
 			ResourceModuleVersion version = null;
 

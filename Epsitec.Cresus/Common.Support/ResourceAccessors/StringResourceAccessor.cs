@@ -188,7 +188,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			}
 
 			ResourceManager refModuleManager = this.ResourceManager.GetManagerForReferenceModule ();
-			bool            usePatchModule   = refModuleManager != null;
+			bool            usePatchModule   = (!this.ForceModuleMerge) && (refModuleManager != null);
 
 			int nonEmptyFieldCount = 0;
 			

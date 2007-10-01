@@ -296,7 +296,7 @@ namespace Epsitec.Common.Support
 		{
 			data.ValueChanged -= this.HandleDataValueChanged;
 		}
-		
+
 		protected virtual void OnPropertyChanged(DependencyPropertyChangedEventArgs e)
 		{
 			if (this.owner != null)
