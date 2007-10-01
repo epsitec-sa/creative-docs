@@ -2657,13 +2657,15 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				name = string.Concat(module.ModuleId.Name, ".", name);
 			}
 
-			if (this.fields[rank].IsInherited)
+			StructuredData data = cultureMap.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
+			StructuredTypeClass typeClass = (StructuredTypeClass) data.GetValue(Support.Res.Fields.ResourceStructuredType.Class);
+			if (typeClass == StructuredTypeClass.Interface)
 			{
-				return string.Format("Hérité de l'entité <b>{0}</b>", name);
+				return string.Format("Provient de l'interface <b>{0}</b>", name);
 			}
 			else
 			{
-				return string.Format("Provient de l'interface <b>{0}</b>", name);
+				return string.Format("Hérité de l'entité <b>{0}</b>", name);
 			}
 		}
 
