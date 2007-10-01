@@ -49,6 +49,8 @@ namespace Epsitec.Common.Support
 			generator.Emit (Epsitec.Common.Support.Res.Types.TestInterfaceUser);
 
 			System.Console.Out.Write (buffer);
+
+			formatter.SaveCodeToTextFile ("entities.cs", System.Text.Encoding.UTF8);
 		}
 	}
 }

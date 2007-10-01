@@ -14,8 +14,16 @@ namespace Epsitec.Common.Support.CodeGeneration
 	/// the formatter manages the indentation, blocks, etc. and checks for
 	/// common mistakes which would lead to broken code.
 	/// </summary>
-	public class CodeFormatter
+	public class CodeFormatter : System.IDisposable
 	{
+		/// <summary>
+		/// Initializes a new instance of the <see cref="CodeFormatter"/> class.
+		/// </summary>
+		public CodeFormatter()
+			: this (new System.Text.StringBuilder ())
+		{
+		}
+
 		/// <summary>
 		/// Initializes a new instance of the <see cref="CodeFormatter"/> class.
 		/// </summary>
@@ -24,6 +32,16 @@ namespace Epsitec.Common.Support.CodeGeneration
 		{
 			this.output = buffer;
 			this.indentationChars = "\t";
+		}
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="CodeFormatter"/> class.
+		/// </summary>
+		/// <param name="stream">The output stream.</param>
+		public CodeFormatter(System.IO.TextWriter stream)
+			: this ()
+		{
+			this.stream = stream;
 		}
 
 
@@ -125,6 +143,68 @@ namespace Epsitec.Common.Support.CodeGeneration
 		}
 
 
+
+		/// <summary>
+		/// Clears this instance and puts the formatter back into a clean state.
+		/// </summary>
+		public void Clear()
+		{
+			this.Flush ();
+			
+			this.indentationLevel = 0;
+			this.indentationString = "";
+			this.lineState = LineState.EmptyLine;
+			this.elementStates.Clear ();
+			this.isInInterface = false;
+			this.isAbstract = false;
+			this.isInClassCount = 0;
+		}
+
+		/// <summary>
+		/// Flushes the contents of the internal buffer to the output stream,
+		/// if the <see cref="CodeFormatter"/> was initialized to write to a
+		/// stream; otherwise, this method does nothing.
+		/// </summary>
+		public void Flush()
+		{
+			if (this.stream != null)
+			{
+				this.stream.Write (this.output.ToString ());
+				this.stream.Flush ();
+				
+				this.output.Length = 0;
+			}
+		}
+
+		/// <summary>
+		/// Saves the generated code to the specified text file. This does
+		/// not call method <see cref="Clear"/>; the internal buffer remains
+		/// valid.
+		/// </summary>
+		/// <param name="path">The path of the text file.</param>
+		/// <param name="encoding">The text file encoding.</param>
+		public void SaveCodeToTextFile(string path, System.Text.Encoding encoding)
+		{
+			string source = this.SaveCodeToString ();
+			System.IO.File.WriteAllText (path, source, encoding);
+		}
+
+		/// <summary>
+		/// Saves the generated code into a string. This does not call method
+		/// <see cref="Clear"/>; the internal buffer remains valid.
+		/// </summary>
+		/// <returns>A <c>string</c> with the generated code.</returns>
+		public string SaveCodeToString()
+		{
+			if (this.stream == null)
+			{
+				return this.output.ToString ();
+			}
+			else
+			{
+				throw new System.InvalidOperationException ();
+			}
+		}
 
 		public void WriteBeginNamespace(string code)
 		{
@@ -473,6 +553,24 @@ namespace Epsitec.Common.Support.CodeGeneration
 			this.lineState = LineState.PartialLine;
 		}
 
+		#region IDisposable Members
+
+		public void Dispose()
+		{
+			this.Dispose (true);
+			System.GC.SuppressFinalize (this);
+		}
+
+		#endregion
+
+		protected virtual void Dispose(bool disposing)
+		{
+			if (disposing)
+			{
+				this.Clear ();
+			}
+		}
+		
 		private void IncreaseIndentation()
 		{
 			this.IndentationLevel++;
@@ -720,7 +818,7 @@ namespace Epsitec.Common.Support.CodeGeneration
 
 		internal static class Strings
 		{
-			public const string LineSeparator = "\n";
+			public const string LineSeparator = "\r\n";
 			public const string BlockBegin = "{";
 			public const string BlockEnd = "}";
 			public const string Semicolumn = ";";
@@ -749,6 +847,7 @@ namespace Epsitec.Common.Support.CodeGeneration
 		}
 		
 		System.Text.StringBuilder output;
+		System.IO.TextWriter stream;
 		int indentationLevel;
 		string indentationChars;
 		string indentationString;

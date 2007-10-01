@@ -63,9 +63,6 @@ namespace Epsitec.Common.Support.EntityEngine
 		}
 
 
-
-
-		
 		public void Emit(StructuredType type)
 		{
 			StructuredTypeClass typeClass = type.Class;
@@ -109,7 +106,8 @@ namespace Epsitec.Common.Support.EntityEngine
 
 			Emitter emitter;
 			InterfaceImplementationEmitter implementationEmitter;
-			
+
+			this.formatter.WriteCodeLine (Keywords.BeginRegion, " ", this.SourceNamespace, ".", name, " ", typeClass.ToString ());
 			this.formatter.WriteBeginNamespace (CodeGenerator.CreateEntityNamespace (this.SourceNamespace));
 
 			switch (typeClass)
@@ -145,8 +143,11 @@ namespace Epsitec.Common.Support.EntityEngine
 			}
 
 			this.formatter.WriteEndNamespace ();
+			this.formatter.WriteCodeLine (Keywords.EndRegion);
+			this.formatter.WriteCodeLine ();
 		}
 
+		
 		private void EmitMethods(StructuredType type)
 		{
 			Druid id = type.CaptionId;

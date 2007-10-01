@@ -3,6 +3,8 @@
 
 using Epsitec.Common.Support;
 using Epsitec.Common.Support.CodeCompilation;
+using Epsitec.Common.Support.CodeGeneration;
+using Epsitec.Common.Support.EntityEngine;
 
 using NUnit.Framework;
 
@@ -119,6 +121,65 @@ namespace Epsitec.Common.Support
 			project.SetProjectSettings (settings);
 
 			System.Console.Out.WriteLine (project.CreateProjectSource ());
+		}
+		
+		[Test]
+		public void CheckCompileEntities()
+		{
+			ResourceManager manager = Epsitec.Common.Support.Res.Manager;
+			CodeFormatter formatter = new CodeFormatter ();
+			formatter.IndentationChars = "\t";
+			CodeGenerator generator = new CodeGenerator (formatter, manager);
+
+			Assert.AreEqual ("Epsitec.Common.Support", generator.SourceNamespace);
+
+			generator.Emit (Epsitec.Common.Support.Res.Types.ResourceDateTimeType);
+			generator.Emit (Epsitec.Common.Support.Res.Types.ResourceBaseType);
+			generator.Emit (Epsitec.Common.Support.Res.Types.ResourceCaption);
+			generator.Emit (Epsitec.Common.Support.Res.Types.ResourceBase);
+
+			formatter.WriteCodeLine ();
+
+			generator.Emit (Epsitec.Common.Support.Res.Types.ResourceCommand);
+			generator.Emit (Epsitec.Common.Support.Res.Types.Shortcut);
+
+			formatter.WriteCodeLine ();
+
+			generator.Emit (Epsitec.Common.Support.Res.Types.ResourceString);
+			generator.Emit (Epsitec.Common.Support.Res.Types.TestInterface);
+			generator.Emit (Epsitec.Common.Support.Res.Types.TestInterfaceUser);
+
+			using (BuildDriver driver = new BuildDriver ())
+			{
+				driver.CreateBuildDirectory ();
+
+				formatter.SaveCodeToTextFile (System.IO.Path.Combine (driver.BuildDirectory, "Entities.cs"), System.Text.Encoding.UTF8);
+				CodeProjectSettings settings = driver.CreateSettings ("Common.Support.Entities");
+
+				settings.References.Add (new CodeProjectReference ("System.Core"));
+				settings.References.Add (CodeProjectReference.FromAssembly (typeof (Common.Support.Res).Assembly));
+				settings.References.Add (CodeProjectReference.FromAssembly (typeof (Common.Types.Res).Assembly));
+
+				settings.Sources.Add (new CodeProjectSource ("Entities.cs"));
+
+				List<string> messages;
+
+				bool result = driver.Compile (new CodeProject (settings));
+
+				messages = Types.Collection.ToList (driver.GetBuildMessages ());
+
+				foreach (string message in messages)
+				{
+					System.Console.Out.WriteLine (message);
+				}
+
+				Assert.IsTrue (result);
+				Assert.AreEqual (0, messages.Count);
+				Assert.IsNotNull (driver.GetCompiledAssemblyPath ());
+				Assert.IsNotNull (driver.GetCompiledAssemblyDebugInfoPath ());
+
+				System.IO.File.Copy (driver.GetCompiledAssemblyPath (), "Common.Support.Entities.dll");
+			}
 		}
 	}
 }
