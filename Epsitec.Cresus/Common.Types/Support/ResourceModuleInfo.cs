@@ -115,6 +115,38 @@ namespace Epsitec.Common.Support
 			}
 		}
 
+		/// <summary>
+		/// Updates the version stored in the versions property. If the version
+		/// is newer (the comparison is date based), it will replace the one
+		/// already found in the versions property.
+		/// </summary>
+		/// <param name="version">The version.</param>
+		public void UpdateVersion(ResourceModuleVersion version)
+		{
+			if (this.versions == null)
+			{
+				this.versions = new List<ResourceModuleVersion> ();
+				this.versions.Add (version.Clone ());
+			}
+			else
+			{
+				ResourceModuleVersion existing = this.versions.Find (
+					delegate (ResourceModuleVersion candidate)
+					{
+						return candidate.DeveloperId == version.DeveloperId;
+					});
+
+				if (existing != null)
+				{
+					if (version.BuildDate > existing.BuildDate)
+					{
+						this.versions.Remove (existing);
+						this.versions.Add (version.Clone ());
+					}
+				}
+			}
+		}
+
 		#region Interface IReadOnly
 
 		/// <summary>

@@ -51,7 +51,7 @@ namespace Epsitec.Common.Designer
 		}
 
 
-		public ResourceAccess(Type type, Module module, ResourceModuleId moduleInfo, DesignerApplication designerApplication)
+		public ResourceAccess(Type type, Module module, ResourceModuleId moduleInfo)
 		{
 			//	Constructeur unique pour accéder aux ressources d'un type donné.
 			//	Par la suite, l'instance créée accédera toujours aux ressources de ce type,
@@ -60,7 +60,7 @@ namespace Epsitec.Common.Designer
 			this.resourceManager = module.ResourceManager;
 			this.batchSaver = module.BatchSaver;
 			this.moduleInfo = moduleInfo;
-			this.designerApplication = designerApplication;
+			this.designerApplication = module.DesignerApplication;
 
 			if (this.type == Type.Strings)
 			{

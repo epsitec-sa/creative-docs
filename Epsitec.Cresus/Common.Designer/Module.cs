@@ -1,3 +1,6 @@
+//	Copyright © 2006-2007, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Author: Daniel ROUX, Maintainer: Daniel ROUX
+
 using System.Collections.Generic;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
@@ -17,7 +20,9 @@ namespace Epsitec.Common.Designer
 			this.moduleId = moduleId;
 			this.batchSaver = new ResourceBundleBatchSaver ();
 
-			this.resourceManager = new ResourceManager(this.designerApplication.ResourceManagerPool, moduleId);
+			ResourceManagerPool pool = this.designerApplication == null ? new ResourceManagerPool () : this.designerApplication.ResourceManagerPool;
+
+			this.resourceManager = new ResourceManager(pool, moduleId);
 			this.resourceManager.DefineDefaultModuleName(this.moduleId.Name);
 			this.resourceManager.ActivePrefix = resourcePrefix;
 
@@ -25,20 +30,20 @@ namespace Epsitec.Common.Designer
 
 			this.modifier = new Modifier(this);
 
-			this.accessStrings  = new ResourceAccess(ResourceAccess.Type.Strings,  this, this.moduleId, this.designerApplication);
-			this.accessCaptions = new ResourceAccess(ResourceAccess.Type.Captions, this, this.moduleId, this.designerApplication);
-			this.accessCommands = new ResourceAccess(ResourceAccess.Type.Commands, this, this.moduleId, this.designerApplication);
-			this.accessPanels   = new ResourceAccess(ResourceAccess.Type.Panels,   this, this.moduleId, this.designerApplication);
-			this.accessEntities = new ResourceAccess(ResourceAccess.Type.Entities, this, this.moduleId, this.designerApplication);
-			this.accessTypes    = new ResourceAccess(ResourceAccess.Type.Types,    this, this.moduleId, this.designerApplication);
+			this.accessStrings  = new ResourceAccess(ResourceAccess.Type.Strings,  this, this.moduleId);
+			this.accessCaptions = new ResourceAccess(ResourceAccess.Type.Captions, this, this.moduleId);
+			this.accessCommands = new ResourceAccess(ResourceAccess.Type.Commands, this, this.moduleId);
+			this.accessPanels   = new ResourceAccess(ResourceAccess.Type.Panels,   this, this.moduleId);
+			this.accessEntities = new ResourceAccess(ResourceAccess.Type.Entities, this, this.moduleId);
+			this.accessTypes    = new ResourceAccess(ResourceAccess.Type.Types,    this, this.moduleId);
 			this.Load();
 
 			//	Attention: il faut avoir fait le this.accessEntities.Load() avant de créer this.accessFields !
-			this.accessFields   = new ResourceAccess(ResourceAccess.Type.Fields,   this, this.moduleId, this.designerApplication);
+			this.accessFields   = new ResourceAccess(ResourceAccess.Type.Fields,   this, this.moduleId);
 			this.accessFields.Load();
 
 			//	Attention: il faut avoir fait le this.accessTypes.Load() avant de créer this.accessValues !
-			this.accessValues   = new ResourceAccess(ResourceAccess.Type.Values,   this, this.moduleId, this.designerApplication);
+			this.accessValues   = new ResourceAccess(ResourceAccess.Type.Values,   this, this.moduleId);
 			this.accessValues.Load();
 
 			foreach (ResourceAccess access in this.Accesses)
@@ -215,6 +220,39 @@ namespace Epsitec.Common.Designer
 		}
 
 
+		public bool IsGlobalDirty
+		{
+			get
+			{
+				foreach (ResourceAccess access in this.Accesses)
+				{
+					if (access.IsGlobalDirty)
+					{
+						return true;
+					}
+				}
+
+				return false;
+			}
+		}
+
+		public bool IsLocalDirty
+		{
+			get
+			{
+				foreach (ResourceAccess access in this.Accesses)
+				{
+					if (access.IsLocalDirty)
+					{
+						return true;
+					}
+				}
+
+				return false;
+			}
+		}
+
+
 		public void Load()
 		{
 			//	Charge toutes les ressources.
@@ -232,6 +270,134 @@ namespace Epsitec.Common.Designer
 			//	Enregistre toutes les ressources et met à jour le fichier module.info.
 			this.SaveResources ();
 			this.UpdateManifest ();
+		}
+
+		public string CheckMessage()
+		{
+			//	Retourne l'éventuel rapport.
+			List<ResourceAccess.ShortcutItem> list = new List<ResourceAccess.ShortcutItem>();
+
+			foreach (ResourceAccess access in this.Accesses)
+			{
+				access.AddShortcuts(list);
+			}
+
+			System.Text.StringBuilder builder = new System.Text.StringBuilder();
+			ResourceAccess.CheckShortcuts(builder, list);
+
+			//	On pourrait vérifier ici d'autres choses que les raccourcis...
+
+			return builder.ToString();
+		}
+
+		public void Check()
+		{
+			//	Vérifie toutes les ressources et affiche un rapport.
+			string message = this.CheckMessage();
+
+			if (string.IsNullOrEmpty(message))  // aucune anomalie ?
+			{
+				this.designerApplication.DialogMessage(Res.Strings.Error.CheckOK);
+			}
+			else
+			{
+				this.designerApplication.DialogError(message);
+			}
+		}
+
+		public void RunPanel(int index)
+		{
+			//	Montre une ressource 'Panel' dans une fenêtre.
+			string name = this.accessPanels.GetField(index, null, ResourceAccess.FieldType.Name).String;
+			UI.Panel panel = this.accessPanels.GetPanel(index);
+
+			if (panel != null)
+			{
+				UserInterface.RunPanel(panel, this.resourceManager, this.designerApplication.Window, name);
+			}
+		}
+
+
+		public static void Merge(ResourceModuleId moduleId, string outputPath)
+		{
+			//	Fusionne les ressources du module de patch spécifié avec celles
+			//	du module de référence et enregistre le résultat dans le dossier
+			//	de sortie.
+			string prefix = "file";
+			
+			Module             patchModule = new Module (null, DesignerMode.Build, prefix, moduleId);
+			ResourceModuleInfo patchInfo   = patchModule.ModuleInfo;
+			ResourceManager    refManager  = patchModule.ResourceManager.GetManagerForReferenceModule ();
+			ResourceModuleInfo refInfo     = refManager.DefaultModuleInfo;
+
+			System.Diagnostics.Debug.Assert (refInfo.FullId.Id == patchInfo.FullId.Id);
+			
+			ResourceModuleId    mergedModule  = new ResourceModuleId (moduleId.Name, outputPath, moduleId.Id, moduleId.Layer);
+			ResourceManagerPool mergedPool    = new ResourceManagerPool ();
+			ResourceManager     mergedManager = new ResourceManager (mergedPool, mergedModule);
+			ResourceModuleInfo  mergedInfo    = new ResourceModuleInfo ();
+
+			mergedInfo.FullId = mergedModule;
+
+			//	Reprend les versions du module de référence et ajoute celles
+			//	du module de patch. Le vecteur des versions résultant inclut
+			//	toutes les versions uniques les plus récentes.
+			foreach (ResourceModuleVersion version in refInfo.Versions)
+			{
+				mergedInfo.UpdateVersion (version);
+			}
+			foreach (ResourceModuleVersion version in patchInfo.Versions)
+			{
+				mergedInfo.UpdateVersion (version);
+			}
+
+			//	Crée le fichier "module.info" pour le module à générer.
+			ResourceModule.SaveManifest (mergedInfo);
+
+			//	Comme on va utiliser le mécanisme d'enregistrement standard
+			//	des accesseurs, on doit "surcharger" la méthode SetBundle de
+			//	du gestionnaire de ressources standard pour utiliser le bon
+			//	gestionnaire à la place, avec des bundles adaptés...
+
+			patchModule.ResourceManager.ReplaceSetBundle
+				(
+					delegate (ResourceBundle bundle, ResourceSetMode mode)
+					{
+						if (mode == ResourceSetMode.Write)
+						{
+							//	Clone manuellement le bundle en l'ajustant pour
+							//	qu'il s'intègre dans le nouveau module :
+							ResourceBundle copy = ResourceBundle.Create (mergedManager, prefix, mergedModule, bundle.Name, bundle.ResourceLevel, bundle.Culture, 0);
+							copy.DefineCaption (bundle.Caption);
+							copy.DefineRank (bundle.Rank);
+							copy.Compile (bundle.CreateXmlAsData ());
+
+							mergedManager.SetBundle (copy, ResourceSetMode.Write);
+						}
+
+						return false;
+					}
+				);
+
+			patchModule.Regenerate ();
+			patchModule.SaveResources ();
+		}
+
+
+		private void Regenerate()
+		{
+			foreach (ResourceAccess access in this.Accesses)
+			{
+				Support.ResourceAccessors.AbstractResourceAccessor accessor = access.Accessor as Support.ResourceAccessors.AbstractResourceAccessor;
+
+				if (accessor != null)
+				{
+					access.RegenerateAllFieldsInBundle ();
+					accessor.ForceModuleMerge = true;
+					accessor.PersistChanges ();
+					accessor.ForceModuleMerge = false;
+				}
+			}
 		}
 
 		private void SaveResources()
@@ -252,59 +418,6 @@ namespace Epsitec.Common.Designer
 			this.batchSaver.Execute ();
 		}
 
-		public static void Merge(DesignerApplication designerApplication, string resourcePrefix, ResourceModuleId moduleId, string outputPath)
-		{
-			//	Fusionne les ressources du module de patch spécifié avec celles
-			//	du module de référence et enregistre le résultat dans le dossier
-			//	de sortie.
-			Module module = new Module (designerApplication, DesignerMode.Build, resourcePrefix, moduleId);
-
-			ResourceModuleId  mergedModule = new ResourceModuleId (moduleId.Name, outputPath, moduleId.Id, moduleId.Layer);
-			ResourceManagerPool mergedPool = new ResourceManagerPool ();
-			ResourceManager  mergedManager = new ResourceManager (mergedPool, mergedModule);
-
-			ResourceModuleInfo mergedInfo = new ResourceModuleInfo ();
-
-			mergedInfo.FullId = mergedModule;
-			ResourceModule.SaveManifest (mergedInfo);
-
-			module.ResourceManager.ReplaceSetBundle (
-				delegate (ResourceBundle bundle, ResourceSetMode mode)
-				{
-					if (mode == ResourceSetMode.Write)
-					{
-						ResourceBundle copy = ResourceBundle.Create (mergedManager, resourcePrefix, mergedModule, bundle.Name, bundle.ResourceLevel, bundle.Culture, 0);
-
-						copy.DefineCaption (bundle.Caption);
-						copy.DefineRank (bundle.Rank);
-						copy.Compile (bundle.CreateXmlAsData ());
-
-						mergedManager.SetBundle (copy, ResourceSetMode.Write);
-					}
-					
-					return false;
-				});
-
-			module.Regenerate ();
-			module.SaveResources ();
-		}
-
-		private void Regenerate()
-		{
-			foreach (ResourceAccess access in this.Accesses)
-			{
-				Support.ResourceAccessors.AbstractResourceAccessor accessor = access.Accessor as Support.ResourceAccessors.AbstractResourceAccessor;
-
-				if (accessor != null)
-				{
-					access.RegenerateAllFieldsInBundle ();
-					accessor.ForceModuleMerge = true;
-					accessor.PersistChanges ();
-					accessor.ForceModuleMerge = false;
-				}
-			}
-		}
-
 		private void UpdateManifest()
 		{
 			int devId = Settings.ActiveDeveloperId;
@@ -314,7 +427,6 @@ namespace Epsitec.Common.Designer
 			{
 				if (item.DeveloperId == devId)
 				{
-					this.moduleInfo.Versions.Remove (item);
 					version = item;
 					break;
 				}
@@ -329,7 +441,7 @@ namespace Epsitec.Common.Designer
 				version = new ResourceModuleVersion (devId, version.BuildNumber, System.DateTime.Now.ToUniversalTime ());
 			}
 
-			this.moduleInfo.Versions.Add (version);
+			this.moduleInfo.UpdateVersion (version);
 
 			ResourceModule.SaveManifest (this.moduleInfo);
 		}
@@ -384,93 +496,16 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
-		public string CheckMessage()
-		{
-			//	Retourne l'éventuel rapport.
-			List<ResourceAccess.ShortcutItem> list = new List<ResourceAccess.ShortcutItem>();
-
-			foreach (ResourceAccess access in this.Accesses)
-			{
-				access.AddShortcuts(list);
-			}
-
-			System.Text.StringBuilder builder = new System.Text.StringBuilder();
-			ResourceAccess.CheckShortcuts(builder, list);
-
-			//	On pourrait vérifier ici d'autres choses que les raccourcis...
-
-			return builder.ToString();
-		}
-
-		public void Check()
-		{
-			//	Vérifie toutes les ressources et affiche un rapport.
-			string message = this.CheckMessage();
-
-			if (string.IsNullOrEmpty(message))  // aucune anomalie ?
-			{
-				this.designerApplication.DialogMessage(Res.Strings.Error.CheckOK);
-			}
-			else
-			{
-				this.designerApplication.DialogError(message);
-			}
-		}
-
-
-		public void RunPanel(int index)
-		{
-			//	Montre une ressource 'Panel' dans une fenêtre.
-			string name = this.accessPanels.GetField(index, null, ResourceAccess.FieldType.Name).String;
-			UI.Panel panel = this.accessPanels.GetPanel(index);
-
-			if (panel != null)
-			{
-				UserInterface.RunPanel(panel, this.resourceManager, this.designerApplication.Window, name);
-			}
-		}
-
-
-		public bool IsGlobalDirty
-		{
-			get
-			{
-				foreach (ResourceAccess access in this.Accesses)
-				{
-					if (access.IsGlobalDirty)
-					{
-						return true;
-					}
-				}
-
-				return false;
-			}
-		}
-
-		public bool IsLocalDirty
-		{
-			get
-			{
-				foreach (ResourceAccess access in this.Accesses)
-				{
-					if (access.IsLocalDirty)
-					{
-						return true;
-					}
-				}
-
-				return false;
-			}
-		}
-
-
 		private void HandleAccessDirtyChanged(object sender)
 		{
 			//	Appelé lorsque l'état IsDirty d'un accès a changé.
-			this.designerApplication.GetCommandState("Save").Enable = this.IsGlobalDirty;
-			this.designerApplication.GetCommandState("EditOk").Enable = this.IsLocalDirty;
-			this.designerApplication.GetCommandState("EditCancel").Enable = this.IsLocalDirty;
-			this.designerApplication.UpdateBookModules();
+			if (this.designerApplication != null)
+			{
+				this.designerApplication.GetCommandState ("Save").Enable = this.IsGlobalDirty;
+				this.designerApplication.GetCommandState ("EditOk").Enable = this.IsLocalDirty;
+				this.designerApplication.GetCommandState ("EditCancel").Enable = this.IsLocalDirty;
+				this.designerApplication.UpdateBookModules ();
+			}
 		}
 
 
