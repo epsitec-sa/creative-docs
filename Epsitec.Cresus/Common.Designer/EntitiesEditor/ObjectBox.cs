@@ -343,10 +343,10 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 						return new Point(this.bounds.Left, posv);
 					}
 
-					if (this.isExtended && this.sourcesClosedCount > 0)
+					if (this.isExtended && this.sourcesClosedCount > 0 && this.IsInterface)
 					{
-						//	En dessous du moignon "source".
-						return new Point(this.bounds.Left, this.bounds.Top-AbstractObject.headerHeight);
+						//	En dessous du glyph 'o--' et du moignon "source".
+						return new Point(this.bounds.Left, this.bounds.Top-AbstractObject.headerHeight-12);
 					}
 					else
 					{
@@ -379,8 +379,17 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			//	Cherche si une position verticale n'est occupée par aucun départ de liaison.
 			if (!right && this.isExtended && this.sourcesClosedCount > 0)
 			{
-				double y = this.bounds.Top-AbstractObject.headerHeight*0.5;
+				double y = this.bounds.Top-AbstractObject.headerHeight;
 				if (posv >= y-ObjectBox.fieldHeight/2 && posv <= y+ObjectBox.fieldHeight/2)  // sur le moignon "source" ?
+				{
+					return false;
+				}
+			}
+
+			if (!right && this.isExtended && this.IsInterface)
+			{
+				double y = this.bounds.Top-AbstractObject.headerHeight*0.5;
+				if (posv >= y-ObjectBox.fieldHeight/2 && posv <= y+ObjectBox.fieldHeight/2)  // sur le glyph 'o--' ?
 				{
 					return false;
 				}
@@ -1975,6 +1984,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			if (this.sourcesClosedCount > 0)
 			{
 				Point p1 = this.PositionSourcesButton;
+				p1.Y = this.bounds.Top-AbstractObject.headerHeight;
 				Point p2 = p1;
 				p1.X = this.bounds.Left-1-AbstractObject.lengthClose;
 				p2.X = this.bounds.Left-1;
@@ -2015,7 +2025,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				//	Dessine le glyph 'o--' pour les interfaces.
 				if (this.IsInterface)
 				{
-					rect = new Rectangle(this.bounds.Left+2-25, this.bounds.Top-AbstractObject.headerHeight-0.5-4, 25, 8);
+					rect = new Rectangle(this.bounds.Left-25, this.bounds.Top-AbstractObject.headerHeight+8, 25, 8);
 					this.DrawGlyphInterface(graphics, rect, colorFrame);
 				}
 
@@ -2135,7 +2145,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 						{
 							rect = this.GetFieldBounds(i);
 							rect.Deflate(9.5, 0.5);
-							rect = new Rectangle(rect.Left-25, rect.Bottom-3, 25, 6);
+							rect = new Rectangle(rect.Left-25, rect.Center.Y-5, 25, 6);
 							this.DrawGlyphInterface(graphics, rect, this.GetColorMain(0.8));
 						}
 					}
