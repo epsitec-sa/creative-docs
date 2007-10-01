@@ -146,7 +146,13 @@ namespace Epsitec.Common.Support
 		{
 			ResourceModule.SaveManifest (info, null);
 		}
-		
+
+		/// <summary>
+		/// Saves the module definition identity into the associated manifest
+		/// file (<see cref="ResourceModule.ManifestFileName"/>).
+		/// </summary>
+		/// <param name="info">The module identity.</param>
+		/// <param name="comment">The module comment (or <c>null</c>).</param>
 		public static void SaveManifest(ResourceModuleInfo info, string comment)
 		{
 			string modulePath     = info.FullId.Path;
