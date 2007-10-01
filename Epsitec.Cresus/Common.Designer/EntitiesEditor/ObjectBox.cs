@@ -1934,17 +1934,6 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			{
 				rect = new Rectangle(this.bounds.Left, this.bounds.Top-AbstractObject.headerHeight, this.bounds.Width, AbstractObject.headerHeight);
 				rect.Deflate(4, 2);
-
-				if (this.IsInterface)
-				{
-					Rectangle r = rect;
-					r.Deflate(3, 10);
-					r.Width = r.Height*2;
-					this.DrawGlyphInterface(graphics, r, this.GetColor(0));
-
-					rect.Left = r.Right;
-				}
-
 				this.title.LayoutSize = rect.Size;
 				this.title.Paint(rect.BottomLeft, graphics, Rectangle.MaxValue, this.GetColor(0), GlyphPaintStyle.Normal);
 			}
@@ -2023,6 +2012,13 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				graphics.AddLine(this.bounds.Left+2, this.bounds.Bottom+AbstractObject.footerHeight+0.5, this.bounds.Right-2, this.bounds.Bottom+AbstractObject.footerHeight+0.5);
 				graphics.RenderSolid(colorFrame);
 
+				//	Dessine le glyph 'o--' pour les interfaces.
+				if (this.IsInterface)
+				{
+					rect = new Rectangle(this.bounds.Left+2-25, this.bounds.Top-AbstractObject.headerHeight-0.5-4, 25, 8);
+					this.DrawGlyphInterface(graphics, rect, colorFrame);
+				}
+
 				//	Dessine toutes les lignes, titres ou simples champs.
 				for (int i=0; i<this.fields.Count; i++)
 				{
@@ -2038,17 +2034,6 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 						rect = this.GetFieldBounds(i);
 						rect.Deflate(ObjectBox.textMargin, 2);
-
-						if (this.fields[i].IsInterface)
-						{
-							Rectangle r = rect;
-							r.Deflate(1.0, 5.0);
-							r.Width = r.Height*2;
-							this.DrawGlyphInterface(graphics, r, this.GetColorMain(0.8));
-
-							rect.Left = r.Right;
-						}
-
 						this.fields[i].TextLayoutField.LayoutSize = rect.Size;
 						this.fields[i].TextLayoutField.Paint(rect.BottomLeft, graphics, Rectangle.MaxValue, this.GetColorMain(0.8), GlyphPaintStyle.Normal);
 
@@ -2131,16 +2116,27 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 						rect = this.GetFieldBounds(i);
 						rect.Deflate(9.5, 0.5);
-						dashedPath.MoveTo(rect.Left+2, rect.Bottom);
-						dashedPath.LineTo(rect.Right-1, rect.Bottom);
 
 						if (this.fields[i].IsInherited)
 						{
+							dashedPath.MoveTo(rect.Left+2, rect.Bottom);
+							dashedPath.LineTo(rect.Right-1, rect.Bottom);
 							Misc.DrawPathDash(graphics, dashedPath, 1, 0, 2, false, this.GetColorMain(0.8));
 						}
 						else
 						{
-							Misc.DrawPathDash(graphics, dashedPath, 1, 6, 3, false, this.GetColorMain(0.8));
+							dashedPath.MoveTo(rect.Left, rect.Bottom);
+							dashedPath.LineTo(rect.Right, rect.Bottom);
+							graphics.Rasterizer.AddOutline(dashedPath);
+							graphics.RenderSolid(this.GetColorMain(0.8));
+						}
+
+						if (this.fields[i].IsInterface)
+						{
+							rect = this.GetFieldBounds(i);
+							rect.Deflate(9.5, 0.5);
+							rect = new Rectangle(rect.Left-25, rect.Bottom-3, 25, 6);
+							this.DrawGlyphInterface(graphics, rect, this.GetColorMain(0.8));
 						}
 					}
 					else
@@ -2154,16 +2150,19 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 							rect = this.GetFieldBounds(i);
 							rect.Deflate(9.5, 0.5);
 							Path dashedPath = new Path();
-							dashedPath.MoveTo(rect.Left+2, rect.Bottom);
-							dashedPath.LineTo(rect.Right-1, rect.Bottom);
 
 							if (this.fields[i].IsInherited)
 							{
+								dashedPath.MoveTo(rect.Left+2, rect.Bottom);
+								dashedPath.LineTo(rect.Right-1, rect.Bottom);
 								Misc.DrawPathDash(graphics, dashedPath, 1, 0, 2, false, this.GetColorMain(0.8));
 							}
 							else
 							{
-								Misc.DrawPathDash(graphics, dashedPath, 1, 6, 3, false, this.GetColorMain(0.8));
+								dashedPath.MoveTo(rect.Left, rect.Bottom);
+								dashedPath.LineTo(rect.Right, rect.Bottom);
+								graphics.Rasterizer.AddOutline(dashedPath);
+								graphics.RenderSolid(this.GetColorMain(0.8));
 							}
 						}
 					}
@@ -2212,22 +2211,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 
 			//	Dessine le cadre en noir.
-			if (this.IsInterface)
-			{
-				if (this.isRoot)
-				{
-					Misc.DrawPathDash(graphics, path, 6, 7, 7, true, colorFrame);
-				}
-				else
-				{
-					Misc.DrawPathDash(graphics, path, 2, 7, 4, true, colorFrame);
-				}
-			}
-			else
-			{
-				graphics.Rasterizer.AddOutline(path, this.isRoot ? 6 : 2);
-				graphics.RenderSolid(colorFrame);
-			}
+			graphics.Rasterizer.AddOutline(path, this.isRoot ? 6 : 2);
+			graphics.RenderSolid(colorFrame);
 
 			//	Dessine les boutons sur les glissières.
 			if (this.isExtended)
@@ -2472,8 +2457,12 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		protected void DrawGlyphInterface(Graphics graphics, Rectangle rect, Color color)
 		{
 			//	Dessine le glyph 'o--' d'une interface.
-			double y = System.Math.Floor(rect.Center.Y)-0.5;
+			double y = System.Math.Floor(rect.Center.Y)+0.5;
 			double radius = rect.Height/2;
+
+			graphics.AddFilledCircle(rect.Left+radius, y, radius);
+			graphics.RenderSolid(this.GetColor(1));
+
 			graphics.AddCircle(rect.Left+radius, y, radius);
 			graphics.AddLine(rect.Left+radius*2, y, rect.Right, y);
 			graphics.RenderSolid(color);
