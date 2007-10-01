@@ -85,10 +85,34 @@ namespace Epsitec.Common.Document.Settings
 			set { this.targetLength = value; }
 		}
 
+		public double CropMarksLengthX
+		{
+			get { return this.targetLengthX ?? this.targetLength; }
+			set { this.targetLengthX = value; }
+		}
+
+		public double CropMarksLengthY
+		{
+			get { return this.targetLengthY ?? this.targetLength; }
+			set { this.targetLengthY = value; }
+		}
+
 		public double CropMarksOffset
 		{
 			get { return this.targetOffset; }
 			set { this.targetOffset = value; }
+		}
+		
+		public double CropMarksOffsetX
+		{
+			get { return this.targetOffsetX ?? this.targetOffset; }
+			set { this.targetOffsetX = value; }
+		}
+
+		public double CropMarksOffsetY
+		{
+			get { return this.targetOffsetY ?? this.targetOffset; }
+			set { this.targetOffsetY = value; }
 		}
 
 		public double CropMarksWidth
@@ -244,8 +268,10 @@ namespace Epsitec.Common.Document.Settings
 		protected double					debord;
 		protected bool						target;
 		protected double					targetLength;
+		protected double?					targetLengthX, targetLengthY;
 		protected double					targetWidth;
 		protected double					targetOffset;
+		protected double?					targetOffsetX, targetOffsetY;
 		protected bool						textCurve;
 		protected PDF.ColorConversion		colorConversion;
 		protected PDF.ImageCompression		imageCompression;

@@ -222,10 +222,10 @@ namespace Epsitec.Common.Document.PDF
 
 			if (info.PrintCropMarks)  // traits de coupe ?
 			{
-				pageOffsetEven.X = System.Math.Max (pageOffsetEven.X, info.CropMarksLength + info.CropMarksOffset);
-				pageOffsetEven.Y = System.Math.Max (pageOffsetEven.Y, info.CropMarksLength + info.CropMarksOffset);
-				pageOffsetOdd.X  = System.Math.Max (pageOffsetOdd.X,  info.CropMarksLength + info.CropMarksOffset);
-				pageOffsetOdd.Y  = System.Math.Max (pageOffsetOdd.Y,  info.CropMarksLength + info.CropMarksOffset);
+				pageOffsetEven.X = System.Math.Max (pageOffsetEven.X, info.CropMarksLengthX + info.CropMarksOffsetX);
+				pageOffsetEven.Y = System.Math.Max (pageOffsetEven.Y, info.CropMarksLengthY + info.CropMarksOffsetY);
+				pageOffsetOdd.X  = System.Math.Max (pageOffsetOdd.X,  info.CropMarksLengthX + info.CropMarksOffsetX);
+				pageOffsetOdd.Y  = System.Math.Max (pageOffsetOdd.Y,  info.CropMarksLengthY + info.CropMarksOffsetY);
 			}
 
 			//	Objet donnant la liste des pages.
@@ -244,11 +244,13 @@ namespace Epsitec.Common.Document.PDF
 				Rectangle bleedBox = trimBox;
 				Rectangle mediaBox = trimBox;
 
-				double markSize = 0.0;
+				double markSizeX = 0.0;
+				double markSizeY = 0.0;
 
 				if (info.PrintCropMarks)  // traits de coupe ?
 				{
-					markSize = info.CropMarksLength + info.CropMarksOffset;
+					markSizeX = info.CropMarksLengthX + info.CropMarksOffsetX;
+					markSizeY = info.CropMarksLengthY + info.CropMarksOffsetY;
 				}
 
 				double left, right, top, bottom;
@@ -274,10 +276,10 @@ namespace Epsitec.Common.Document.PDF
 				//	de gauche).
 				bleedBox.Inflate (left, right, top, bottom);
 
-				left   = System.Math.Max (left, markSize);
-				right  = System.Math.Max (right, markSize);
-				top    = System.Math.Max (top, markSize);
-				bottom = System.Math.Max (bottom, markSize);
+				left   = System.Math.Max (left, markSizeX);
+				right  = System.Math.Max (right, markSizeX);
+				top    = System.Math.Max (top, markSizeY);
+				bottom = System.Math.Max (bottom, markSizeY);
 
 				//	La boîte de média doit être assez grande pour contenir à la fois
 				//	le débord et les éventuels traits de coupe.
@@ -614,26 +616,33 @@ namespace Epsitec.Common.Document.PDF
 				bottom = info.BleedMargin + info.BleedOddMargins.Bottom;
 			}
 
-			using (Path path = new Path ())
+			if (Support.Globals.Properties.IsPropertyDefined ("PDF:DisableClipToBleedBox"))
 			{
-				double clip = 1000.0;
+				//	Pas de clipping...
+			}
+			else
+			{
+				using (Path path = new Path ())
+				{
+					double clip = 1000.0;
 
-				path.MoveTo (0.0-clip, 0.0-clip);
-				path.LineTo (width+clip, 0.0-clip);
-				path.LineTo (width+clip, height+clip);
-				path.LineTo (0.0-clip, height+clip);
-				path.LineTo (0.0-clip, 0.0-clip);
-				path.Close ();
+					path.MoveTo (0.0-clip, 0.0-clip);
+					path.LineTo (width+clip, 0.0-clip);
+					path.LineTo (width+clip, height+clip);
+					path.LineTo (0.0-clip, height+clip);
+					path.LineTo (0.0-clip, 0.0-clip);
+					path.Close ();
 
-				path.MoveTo (0.0-left, 0.0-bottom);
-				path.LineTo (0.0-left, height+top);
-				path.LineTo (width+right, height+top);
-				path.LineTo (width+right, 0.0-bottom);
-				path.LineTo (0.0-left, 0.0-bottom);
-				path.Close ();
+					path.MoveTo (0.0-left, 0.0-bottom);
+					path.LineTo (0.0-left, height+top);
+					path.LineTo (width+right, height+top);
+					path.LineTo (width+right, 0.0-bottom);
+					path.LineTo (0.0-left, 0.0-bottom);
+					path.Close ();
 
-				port.RichColor = RichColor.FromCmyk (0.0, 0.0, 0.0, 0.0);  // masque blanc
-				port.PaintSurface (path);
+					port.RichColor = RichColor.FromCmyk (0.0, 0.0, 0.0, 0.0);  // masque blanc
+					port.PaintSurface (path);
+				}
 			}
 		}
 
@@ -646,38 +655,40 @@ namespace Epsitec.Common.Document.PDF
 			
 			double width  = pageSize.Width;
 			double height = pageSize.Height;
-			double offset = info.CropMarksOffset;
-			double length = info.CropMarksLength;
+			double offsetX = info.CropMarksOffsetX;
+			double offsetY = info.CropMarksOffsetY;
+			double lengthX = info.CropMarksLengthX;
+			double lengthY = info.CropMarksLengthY;
 
 			using (Path path = new Path ())
 			{
 				//	Traits horizontaux.
-				path.MoveTo (0.0-offset, 0.0);
-				path.LineTo (0.0-offset-length, 0.0);
+				path.MoveTo (0.0-offsetX, 0.0);
+				path.LineTo (0.0-offsetX-lengthX, 0.0);
 
-				path.MoveTo (0.0-offset, height);
-				path.LineTo (0.0-offset-length, height);
+				path.MoveTo (0.0-offsetX, height);
+				path.LineTo (0.0-offsetX-lengthX, height);
 
-				path.MoveTo (width+offset, 0.0);
-				path.LineTo (width+offset+length, 0.0);
+				path.MoveTo (width+offsetX, 0.0);
+				path.LineTo (width+offsetX+lengthX, 0.0);
 
-				path.MoveTo (width+offset, height);
-				path.LineTo (width+offset+length, height);
+				path.MoveTo (width+offsetX, height);
+				path.LineTo (width+offsetX+lengthX, height);
 
 				//	Traits verticaux.
-				path.MoveTo (0.0, 0.0-offset);
-				path.LineTo (0.0, 0.0-offset-length);
+				path.MoveTo (0.0, 0.0-offsetY);
+				path.LineTo (0.0, 0.0-offsetY-lengthY);
 
-				path.MoveTo (width, 0.0-offset);
-				path.LineTo (width, 0.0-offset-length);
+				path.MoveTo (width, 0.0-offsetY);
+				path.LineTo (width, 0.0-offsetY-lengthY);
 
-				path.MoveTo (0.0, height+offset);
-				path.LineTo (0.0, height+offset+length);
+				path.MoveTo (0.0, height+offsetY);
+				path.LineTo (0.0, height+offsetY+lengthY);
 
-				path.MoveTo (width, height+offset);
-				path.LineTo (width, height+offset+length);
+				path.MoveTo (width, height+offsetY);
+				path.LineTo (width, height+offsetY+lengthY);
 
-				port.LineWidth = info.CropMarksWidth * 9;
+				port.LineWidth = info.CropMarksWidth * 3;
 				port.LineCap   = CapStyle.Butt;
 				port.RichColor = RichColor.FromCmyk (0.0, 0.0, 0.0, 0.0);  // fond blanc derrière les traits de coupe
 				port.PaintOutline (path);
@@ -691,12 +702,20 @@ namespace Epsitec.Common.Document.PDF
 			using (Path path = new Path ())
 			{
 				int rank = this.document.Modifier.PageLocalRank (page);
-				double x = length;
-				double y = 0.0-offset-length/2.0;
-				double size = System.Math.Min (20.0, length * 0.6);
+				double x = lengthY;
+				double y = 0.0-offsetY-lengthY/2.0;
+				double size = System.Math.Min (20.0, lengthY * 0.6);
 				string text = string.Format ("{0} : {1}", this.documentTitle, rank+1);
+				Font   font = Font.GetFont ("Arial", "Regular");
 
-				path.Append (Font.GetFont ("Arial", "Regular"), text, x, y, size);
+				double dx = font.GetTextAdvance (text) * size;
+
+				path.AppendRoundedRectangle (x-x/2, y+size*font.Descender, dx+2*x/2, size, x/8);
+				port.RichColor = RichColor.FromCmyk (0.0, 0.0, 0.0, 0.0);  // fond blanc
+				port.PaintSurface (path);
+				
+				path.Clear ();
+				path.Append (font, text, x, y, size);
 				port.RichColor = RichColor.FromCmyk (1.0, 1.0, 1.0, 1.0);  // noir de repérage
 				port.PaintSurface (path);
 			}
