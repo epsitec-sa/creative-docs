@@ -229,10 +229,17 @@ namespace Epsitec.Common.Designer
 
 		public void Save()
 		{
+			//	Enregistre toutes les ressources et met à jour le fichier module.info.
+			this.SaveResources ();
+			this.UpdateManifest ();
+		}
+
+		private void SaveResources()
+		{
 			//	Enregistre toutes les ressources.
 			foreach (ResourceAccess access in this.Accesses)
 			{
-				access.Save(this.batchSaver);
+				access.Save (this.batchSaver);
 			}
 
 			//	Passe en revue les bundles tels que les accesseurs les ont
@@ -241,9 +248,45 @@ namespace Epsitec.Common.Designer
 			{
 				this.OptimizeBundles (bundle);
 			}
-			
+
 			this.batchSaver.Execute ();
-			this.UpdateManifest ();
+		}
+
+		public static void Merge(DesignerApplication designerApplication, string resourcePrefix, ResourceModuleId moduleId, string outputPath)
+		{
+			//	Fusionne les ressources du module de patch spécifié avec celles
+			//	du module de référence et enregistre le résultat dans le dossier
+			//	de sortie.
+			Module module = new Module (designerApplication, DesignerMode.Build, resourcePrefix, moduleId);
+
+			ResourceModuleId  mergedModule = new ResourceModuleId (moduleId.Name, outputPath, moduleId.Id, moduleId.Layer);
+			ResourceManagerPool mergedPool = new ResourceManagerPool ();
+			ResourceManager  mergedManager = new ResourceManager (mergedPool, mergedModule);
+
+			ResourceModuleInfo mergedInfo = new ResourceModuleInfo ();
+
+			mergedInfo.FullId = mergedModule;
+			ResourceModule.SaveManifest (mergedInfo);
+
+			module.ResourceManager.ReplaceSetBundle (
+				delegate (ResourceBundle bundle, ResourceSetMode mode)
+				{
+					if (mode == ResourceSetMode.Write)
+					{
+						ResourceBundle copy = ResourceBundle.Create (mergedManager, resourcePrefix, mergedModule, bundle.Name, bundle.ResourceLevel, bundle.Culture, 0);
+
+						copy.DefineCaption (bundle.Caption);
+						copy.DefineRank (bundle.Rank);
+						copy.Compile (bundle.CreateXmlAsData ());
+
+						mergedManager.SetBundle (copy, ResourceSetMode.Write);
+					}
+					
+					return false;
+				});
+
+			module.Regenerate ();
+			module.SaveResources ();
 		}
 
 		private void Regenerate()

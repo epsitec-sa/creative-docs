@@ -1167,37 +1167,45 @@ namespace Epsitec.Common.Support
 			
 			return null;
 		}
-		
-		
+
+		public void ReplaceSetBundle(SetBundleCallback callback)
+		{
+			this.setBundleCallback = callback;
+		}
+
 		public void SetBundle(ResourceBundle bundle, ResourceSetMode mode)
 		{
-			ResourceLevel level   = bundle.ResourceLevel;
-			CultureInfo   culture = bundle.Culture;
-			string        id      = bundle.PrefixedName;
-			byte[]        data    = bundle.CreateXmlAsData ();
-
-			if (mode == ResourceSetMode.Remove)
+			if ((this.setBundleCallback == null) ||
+				(this.setBundleCallback (bundle, mode)))
 			{
-				this.RemoveBundle (id, level, culture);
-				return;
+				ResourceLevel level   = bundle.ResourceLevel;
+				CultureInfo culture = bundle.Culture;
+				string id      = bundle.PrefixedName;
+				byte[] data    = bundle.CreateXmlAsData ();
+
+				if (mode == ResourceSetMode.Remove)
+				{
+					this.RemoveBundle (id, level, culture, bundle.Module);
+					return;
+				}
+
+				if (this.SetBinaryData (id, level, culture, data, mode, bundle.Module) == false)
+				{
+					throw new ResourceException (string.Format ("Could not store bundle '{0}'.", id));
+				}
+
+				ResourceModuleId module;
+				IResourceProvider provider = this.FindProvider (id, out id, out module);
+
+				string keySuffix = this.GetKeySuffix ();
+				string prefix = provider.Prefix;
+				string key = Resources.CreateBundleKey (prefix, module, id, ResourceLevel.Merged, culture, keySuffix);
+
+				this.pool.RemoveBundle (key);
+
+				key = Resources.CreateBundleKey (prefix, module, id, level, culture, keySuffix);
+				this.pool.RefreshBundle (key, bundle);
 			}
-			
-			if (this.SetBinaryData (id, level, culture, data, mode) == false)
-			{
-				throw new ResourceException (string.Format ("Could not store bundle '{0}'.", id));
-			}
-			
-			ResourceModuleId module;
-			IResourceProvider provider = this.FindProvider (id, out id, out module);
-
-			string keySuffix = this.GetKeySuffix ();
-			string prefix = provider.Prefix;
-			string key = Resources.CreateBundleKey (prefix, module, id, ResourceLevel.Merged, culture, keySuffix);
-
-			this.pool.RemoveBundle (key);
-
-			key = Resources.CreateBundleKey (prefix, module, id, level, culture, keySuffix);
-			this.pool.RefreshBundle (key, bundle);
 		}
 
 		private string GetKeySuffix()
@@ -1212,7 +1220,7 @@ namespace Epsitec.Common.Support
 			}
 		}
 		
-		public bool SetBinaryData(string id, ResourceLevel level, CultureInfo culture, byte[] data, ResourceSetMode mode)
+		public bool SetBinaryData(string id, ResourceLevel level, CultureInfo culture, byte[] data, ResourceSetMode mode, ResourceModuleId moduleId)
 		{
 			if ((mode == ResourceSetMode.None) ||
 				(mode == ResourceSetMode.InMemory))
@@ -1222,7 +1230,7 @@ namespace Epsitec.Common.Support
 
 			if (mode == ResourceSetMode.Remove)
 			{
-				return this.RemoveBundle (id, level, culture);
+				return this.RemoveBundle (id, level, culture, moduleId);
 			}
 			
 			culture = culture ?? this.culture;
@@ -1241,9 +1249,14 @@ namespace Epsitec.Common.Support
 			string resource_id;
 			
 			IResourceProvider provider = this.FindProvider (id, out resource_id);
-			
+
 			if (provider != null)
 			{
+				if (!moduleId.IsEmpty)
+				{
+					provider.SelectModule (ref moduleId);
+				}
+				
 				if (provider.SetData (resource_id, level, culture, data, mode))
 				{
 					return true;
@@ -1254,7 +1267,7 @@ namespace Epsitec.Common.Support
 		}
 		
 		
-		public bool RemoveBundle(string id, ResourceLevel level, CultureInfo culture)
+		private bool RemoveBundle(string id, ResourceLevel level, CultureInfo culture, ResourceModuleId moduleId)
 		{
 			culture = culture ?? this.culture;
 
@@ -1281,6 +1294,11 @@ namespace Epsitec.Common.Support
 				string key = Resources.CreateBundleKey (prefix, module, resource_id, level, culture, this.GetKeySuffix ());
 
 				this.pool.RemoveBundle (key);
+				
+				if (!moduleId.IsEmpty)
+				{
+					provider.SelectModule (ref moduleId);
+				}
 				
 				if (provider.Remove (resource_id, level, culture))
 				{
@@ -1950,6 +1968,8 @@ namespace Epsitec.Common.Support
 
 		#endregion
 
+		public delegate bool SetBundleCallback(ResourceBundle bundle, ResourceSetMode mode);
+
 		public static readonly DependencyProperty ResourceManagerProperty = DependencyProperty.RegisterAttached ("ResourceManager", typeof (ResourceManager), typeof (ResourceManager), new DependencyPropertyMetadata ().MakeNotSerializable ());
 		public static readonly DependencyProperty SourceBundleProperty    = DependencyProperty.RegisterAttached ("SourceBundle", typeof (ResourceBundle), typeof (ResourceManager), new DependencyPropertyMetadata ().MakeNotSerializable ());
 		public static readonly DependencyProperty ReferenceManagerProperty = DependencyProperty.Register ("ReferenceManager", typeof (ResourceManager), typeof (ResourceManager), new DependencyPropertyMetadata ());
@@ -1965,6 +1985,7 @@ namespace Epsitec.Common.Support
 		private string							defaultPath;
 		
 		private ResourceManagerPool				pool;
+		private SetBundleCallback				setBundleCallback;
 		
 		Dictionary<string, ProviderRecord>		providers;
 		Dictionary<string, BundleRelatedCache>	bundleRelatedCache;

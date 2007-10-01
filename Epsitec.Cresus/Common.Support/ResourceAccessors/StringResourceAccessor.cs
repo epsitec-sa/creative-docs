@@ -289,7 +289,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 					}
 
 					if ((twoLetterISOLanguageName == Resources.DefaultTwoLetterISOLanguageName) &&
-						(item.Source != CultureMapSource.DynamicMerge))
+						((!usePatchModule) || (item.Source != CultureMapSource.DynamicMerge)))
 					{
 						field.SetName (item.Name);
 					}

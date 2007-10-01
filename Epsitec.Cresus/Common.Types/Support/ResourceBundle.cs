@@ -360,15 +360,19 @@ namespace Epsitec.Common.Support
 
 		public void DefineCaption(string caption)
 		{
-			if (caption != null)
+			if (string.IsNullOrEmpty (caption))
+			{
+				this.caption = null;
+			}
+			else
 			{
 				if (! RegexFactory.ResourceBundleName.IsMatch (caption))
 				{
 					throw new ResourceException (string.Format ("Caption '{0}' is not a valid bundle caption.", caption));
 				}
+
+				this.caption = caption;
 			}
-			
-			this.caption = caption;
 		}
 		
 		public void DefineType(string type)
