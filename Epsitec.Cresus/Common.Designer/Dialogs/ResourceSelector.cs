@@ -351,7 +351,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			List<Module> list = this.designerApplication.OpeningListModule;
 			foreach (Module module in list)
 			{
-				text = module.ModuleInfo.Name;
+				text = module.ModuleId.Name;
 
 				if (module == this.baseModule)
 				{
@@ -361,7 +361,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.listModules.Items.Add(text);
 			}
 
-			text = this.module.ModuleInfo.Name;
+			text = this.module.ModuleId.Name;
 
 			if (this.module == this.baseModule)
 			{

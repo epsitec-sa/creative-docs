@@ -377,7 +377,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			List<Module> modules = this.designerApplication.Modules;
 			foreach (Module module in modules)
 			{
-				if (module.ModuleInfo.Id == id)
+				if (module.ModuleId.Id == id)
 				{
 					return true;
 				}

@@ -1072,7 +1072,7 @@ namespace Epsitec.Common.Designer
 				return;
 			}
 
-			string moduleName = mi.Module.ModuleInfo.Name;
+			string moduleName = mi.Module.ModuleId.Name;
 			ResourceAccess.Type viewerType = mi.BundleTypeWidget.CurrentType;
 
 			int subView = -1;
@@ -1341,7 +1341,7 @@ namespace Epsitec.Common.Designer
 			//	Va sur une ressource définie par une localisation.
 			ModuleInfo mi = this.CurrentModuleInfo;
 
-			if (mi.Module.ModuleInfo.Name != locator.ModuleName)
+			if (mi.Module.ModuleId.Name != locator.ModuleName)
 			{
 				int rank = this.SearchModuleRank(locator.ModuleName);
 				if (rank == -1)
@@ -1439,7 +1439,7 @@ namespace Epsitec.Common.Designer
 			ModuleInfo mi = this.CurrentModuleInfo;
 
 			mi.TabPage = new TabPage();
-			mi.TabPage.TabTitle = mi.Module.ModuleInfo.Name;
+			mi.TabPage.TabTitle = mi.Module.ModuleId.Name;
 			this.bookModules.Items.Insert(this.currentModule, mi.TabPage);
 
 			mi.BundleTypeWidget = new MyWidgets.BundleType(mi.TabPage);
@@ -1606,7 +1606,7 @@ namespace Epsitec.Common.Designer
 			//	Cherche un module d'après son nom.
 			foreach (ModuleInfo info in this.moduleInfoList)
 			{
-				if (name == info.Module.ModuleInfo.Name)
+				if (name == info.Module.ModuleId.Name)
 				{
 					return info.Module;
 				}
@@ -1631,7 +1631,7 @@ namespace Epsitec.Common.Designer
 			//	Cherche un module d'après son identificateur.
 			foreach (ModuleInfo info in this.moduleInfoList)
 			{
-				if (info.Module.ModuleInfo.Id == id)
+				if (info.Module.ModuleId.Id == id)
 				{
 					return info.Module;
 				}
@@ -1644,7 +1644,7 @@ namespace Epsitec.Common.Designer
 			//	Cherche un module d'après son identificateur.
 			foreach (ModuleInfo info in this.moduleInfoList)
 			{
-				if (info.Module.ModuleInfo.Equals(id))
+				if (info.Module.ModuleId.Equals(id))
 				{
 					return info.Module;
 				}
@@ -1672,7 +1672,7 @@ namespace Epsitec.Common.Designer
 			for (int i=0; i<this.moduleInfoList.Count; i++)
 			{
 				ModuleInfo mi = this.moduleInfoList[i];
-				if (mi.Module.ModuleInfo.Name == moduleName)
+				if (mi.Module.ModuleId.Name == moduleName)
 				{
 					return i;
 				}
@@ -1756,7 +1756,7 @@ namespace Epsitec.Common.Designer
 			this.ignoreChange = true;
 			this.bookModules.Items.RemoveAt(rank);
 			this.ignoreChange = false;
-			this.LocatorClose(mi.Module.ModuleInfo.Name);
+			this.LocatorClose(mi.Module.ModuleId.Name);
 			mi.Module.Dispose();
 			mi.Dispose();
 
@@ -1844,7 +1844,7 @@ namespace Epsitec.Common.Designer
 
 			foreach (ModuleInfo info in this.moduleInfoList)
 			{
-				this.settings.Modules.Add(info.Module.ModuleInfo);
+				this.settings.Modules.Add(info.Module.ModuleId);
 			}
 			
 			return this.settings.Write();  // enregistre les réglages globaux
@@ -1866,7 +1866,7 @@ namespace Epsitec.Common.Designer
 			//	Met à jour le nom de l'onglet des modules.
 			if ( !this.IsCurrentModule )  return;
 			TabPage tab = this.bookModules.Items[this.currentModule] as TabPage;
-			tab.TabTitle = Misc.ExtractName(this.CurrentModule.ModuleInfo.Name, this.CurrentModule.IsGlobalDirty);
+			tab.TabTitle = Misc.ExtractName(this.CurrentModule.ModuleId.Name, this.CurrentModule.IsGlobalDirty);
 			this.bookModules.UpdateAfterChanges();
 		}
 		#endregion
@@ -1897,7 +1897,7 @@ namespace Epsitec.Common.Designer
 		{
 			//	Ouvre le dialogue pour choisir une icône.
 			ModuleInfo mi = this.CurrentModuleInfo;
-			this.dlgIcon.SetResourceManager(manager, mi.Module.ModuleInfo.Name);
+			this.dlgIcon.SetResourceManager(manager, mi.Module.ModuleId.Name);
 			this.dlgIcon.IconValue = icon;
 			this.dlgIcon.Show();
 			return this.dlgIcon.IconValue;
@@ -1971,7 +1971,7 @@ namespace Epsitec.Common.Designer
 			string title = Res.Strings.Application.Title;
 			string icon = "manifest:Epsitec.Common.Dialogs.Images.Question.icon";
 
-			string question1 = string.Format(Res.Strings.Dialog.Save.Question1, this.CurrentModule.ModuleInfo.Name);
+			string question1 = string.Format(Res.Strings.Dialog.Save.Question1, this.CurrentModule.ModuleId.Name);
 			string question2 = Res.Strings.Dialog.Save.Question2;
 			string warning = this.CurrentModule.CheckMessage();
 			string message;

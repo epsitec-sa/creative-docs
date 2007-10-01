@@ -1208,7 +1208,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 			if (module != null)
 			{
-				this.editor.Module.DesignerApplication.LocatorGoto(module.ModuleInfo.Name, ResourceAccess.Type.Entities, -1, this.cultureMap.Id, null);
+				this.editor.Module.DesignerApplication.LocatorGoto(module.ModuleId.Name, ResourceAccess.Type.Entities, -1, this.cultureMap.Id, null);
 			}
 		}
 
@@ -1223,7 +1223,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 			if (module != null)
 			{
-				this.editor.Module.DesignerApplication.LocatorGoto(module.ModuleInfo.Name, ResourceAccess.Type.Entities, -1, druid, null);
+				this.editor.Module.DesignerApplication.LocatorGoto(module.ModuleId.Name, ResourceAccess.Type.Entities, -1, druid, null);
 			}
 		}
 
@@ -1246,7 +1246,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 			if (module != null)
 			{
-				this.editor.Module.DesignerApplication.LocatorGoto(module.ModuleInfo.Name, ResourceAccess.Type.Fields, -1, fieldCaptionId, null);
+				this.editor.Module.DesignerApplication.LocatorGoto(module.ModuleId.Name, ResourceAccess.Type.Fields, -1, fieldCaptionId, null);
 			}
 		}
 
@@ -1271,7 +1271,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			if (module != null)
 			{
 				ResourceAccess.Type access = (rel == FieldRelation.None) ? ResourceAccess.Type.Types : ResourceAccess.Type.Entities;
-				this.editor.Module.DesignerApplication.LocatorGoto(module.ModuleInfo.Name, access, -1, typeId, null);
+				this.editor.Module.DesignerApplication.LocatorGoto(module.ModuleId.Name, access, -1, typeId, null);
 			}
 		}
 
@@ -1793,7 +1793,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 								SourceInfo info = new SourceInfo();
 								
 								info.CultureMap = cultureMap;
-								info.ModuleName = module.ModuleInfo.Name;
+								info.ModuleName = module.ModuleId.Name;
 								info.FieldName = cultureMap.Name;
 								info.Rank = i;
 								info.Opened = false;
@@ -2633,7 +2633,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 			if (module != this.editor.Module)  // dans un autre module ?
 			{
-				name = string.Concat(module.ModuleInfo.Name, ".", name);
+				name = string.Concat(module.ModuleId.Name, ".", name);
 			}
 
 			if (this.fields[rank].IsInherited)
@@ -2669,7 +2669,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 			else
 			{
-				this.Subtitle = module.ModuleInfo.Name;
+				this.Subtitle = module.ModuleId.Name;
 				this.isDimmed = true;
 			}
 		}

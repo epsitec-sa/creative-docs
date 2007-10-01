@@ -14,29 +14,29 @@ namespace Epsitec.Common.Designer
 		{
 			this.designerApplication = designerApplication;
 			this.mode = mode;
-			this.moduleInfo = moduleId;
+			this.moduleId = moduleId;
 			this.batchSaver = new ResourceBundleBatchSaver ();
 
 			this.resourceManager = new ResourceManager(this.designerApplication.ResourceManagerPool, moduleId);
-			this.resourceManager.DefineDefaultModuleName(this.moduleInfo.Name);
+			this.resourceManager.DefineDefaultModuleName(this.moduleId.Name);
 			this.resourceManager.ActivePrefix = resourcePrefix;
 
 			this.modifier = new Modifier(this);
 
-			this.accessStrings  = new ResourceAccess(ResourceAccess.Type.Strings,  this, this.moduleInfo, this.designerApplication);
-			this.accessCaptions = new ResourceAccess(ResourceAccess.Type.Captions, this, this.moduleInfo, this.designerApplication);
-			this.accessCommands = new ResourceAccess(ResourceAccess.Type.Commands, this, this.moduleInfo, this.designerApplication);
-			this.accessPanels   = new ResourceAccess(ResourceAccess.Type.Panels,   this, this.moduleInfo, this.designerApplication);
-			this.accessEntities = new ResourceAccess(ResourceAccess.Type.Entities, this, this.moduleInfo, this.designerApplication);
-			this.accessTypes    = new ResourceAccess(ResourceAccess.Type.Types,    this, this.moduleInfo, this.designerApplication);
+			this.accessStrings  = new ResourceAccess(ResourceAccess.Type.Strings,  this, this.moduleId, this.designerApplication);
+			this.accessCaptions = new ResourceAccess(ResourceAccess.Type.Captions, this, this.moduleId, this.designerApplication);
+			this.accessCommands = new ResourceAccess(ResourceAccess.Type.Commands, this, this.moduleId, this.designerApplication);
+			this.accessPanels   = new ResourceAccess(ResourceAccess.Type.Panels,   this, this.moduleId, this.designerApplication);
+			this.accessEntities = new ResourceAccess(ResourceAccess.Type.Entities, this, this.moduleId, this.designerApplication);
+			this.accessTypes    = new ResourceAccess(ResourceAccess.Type.Types,    this, this.moduleId, this.designerApplication);
 			this.Load();
 
 			//	Attention: il faut avoir fait le this.accessEntities.Load() avant de créer this.accessFields !
-			this.accessFields   = new ResourceAccess(ResourceAccess.Type.Fields,   this, this.moduleInfo, this.designerApplication);
+			this.accessFields   = new ResourceAccess(ResourceAccess.Type.Fields,   this, this.moduleId, this.designerApplication);
 			this.accessFields.Load();
 
 			//	Attention: il faut avoir fait le this.accessTypes.Load() avant de créer this.accessValues !
-			this.accessValues   = new ResourceAccess(ResourceAccess.Type.Values,   this, this.moduleInfo, this.designerApplication);
+			this.accessValues   = new ResourceAccess(ResourceAccess.Type.Values,   this, this.moduleId, this.designerApplication);
 			this.accessValues.Load();
 
 			foreach (ResourceAccess access in this.Accesses)
@@ -98,11 +98,19 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
-		public ResourceModuleId ModuleInfo
+		public ResourceModuleId ModuleId
 		{
 			get
 			{
-				return this.moduleInfo;
+				return this.moduleId;
+			}
+		}
+
+		public ResourceModuleInfo ModuleInfo
+		{
+			get
+			{
+				return this.resourceManager.DefaultModuleInfo;
 			}
 		}
 
@@ -233,6 +241,10 @@ namespace Epsitec.Common.Designer
 			}
 			
 			this.batchSaver.Execute ();
+
+			ResourceModuleInfo info = this.ModuleInfo;
+
+			ResourceModule.SaveManifest (info);
 		}
 
 		private void OptimizeBundles(ResourceBundle bundle)
@@ -395,7 +407,7 @@ namespace Epsitec.Common.Designer
 		protected ResourceBundleBatchSaver	batchSaver;
 		protected DesignerApplication		designerApplication;
 		protected DesignerMode				mode;
-		protected ResourceModuleId			moduleInfo;
+		protected ResourceModuleId			moduleId;
 		protected Modifier					modifier;
 		protected ResourceManager			resourceManager;
 		protected ResourceAccess			accessStrings;
