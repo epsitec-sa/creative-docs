@@ -1,4 +1,8 @@
+//	Copyright © 2007, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Author: Daniel ROUX, Maintainer: Pierre ARNAUD
+
 using Epsitec.Common.Designer;
+using Epsitec.Common.Designer.ModuleSupport;
 using Epsitec.Common.Identity;
 using Epsitec.Common.Support;
 
@@ -20,10 +24,10 @@ namespace App.Designer
 			string execPath = Epsitec.Common.Support.Globals.Directories.ExecutableRoot;
 			List<string> paths;
 
-			Epsitec.Common.Support.ResourceManagerPool pool = new Epsitec.Common.Support.ResourceManagerPool("Common.Designer");
+			Epsitec.Common.Support.ResourceManagerPool pool = new Epsitec.Common.Support.ResourceManagerPool ("Common.Designer");
 			pool.DefaultPrefix = "file";
-			pool.SetupDefaultRootPaths();
-			pool.ScanForAllModules();
+			pool.SetupDefaultRootPaths ();
+			pool.ScanForAllModules ();
 
 #if false
 			if (Epsitec.Common.Support.Globals.IsDebugBuild)
@@ -77,7 +81,7 @@ namespace App.Designer
 					case "-define-symbolic-root":
 						if (System.IO.Directory.Exists (args[i+2]))
 						{
-							pool.AddModuleRootPath(args[i+1], args[i+2]);
+							pool.AddModuleRootPath (args[i+1], args[i+2]);
 						}
 						i+=2;
 						break;
@@ -90,7 +94,7 @@ namespace App.Designer
 						break;
 
 					case "-merge-module":
-						if (Program.MergeModule (pool, args[++i], args[++i]) == false)
+						if (ModuleMerger.Merge (pool, args[++i], args[++i]) == false)
 						{
 							System.Environment.Exit (1);
 						}
@@ -113,47 +117,17 @@ namespace App.Designer
 
 				paths.AddRange (addPaths);
 			}
-			
+
 			Epsitec.Common.Widgets.Adorners.Factory.SetActive ("LookRoyale");
 			Epsitec.Common.Support.Implementation.FileProvider.DefineGlobalProbingPath (string.Join (";", paths.ToArray ()));
-			
+
 			DesignerApplication designerMainWindow;
-			
+
 			designerMainWindow = new DesignerApplication (pool);
 			designerMainWindow.Mode = DesignerMode.Build;
 			designerMainWindow.Standalone = true;
 			designerMainWindow.Show (null);
 			designerMainWindow.Window.Run ();
-		}
-
-		private static bool MergeModule(ResourceManagerPool pool, string modulePath, string outputPath)
-		{
-			ResourceModuleInfo info = pool.GetModuleInfo (modulePath);
-
-			if (info == null)
-			{
-				System.Diagnostics.Debug.WriteLine ("Failed to locate module " + modulePath);
-				return false;
-			}
-			if (string.IsNullOrEmpty (info.ReferenceModulePath))
-			{
-				System.Diagnostics.Debug.WriteLine ("Not a patch module : "+ modulePath);
-				return false;
-			}
-
-			System.IO.Directory.CreateDirectory (outputPath);
-
-			try
-			{
-				Module.Merge (info.FullId, outputPath);
-			}
-			catch (System.Exception ex)
-			{
-				System.Diagnostics.Debug.WriteLine ("Merge failed : " + ex.Message);
-				return false;
-			}
-
-			return true;
 		}
 	}
 }
