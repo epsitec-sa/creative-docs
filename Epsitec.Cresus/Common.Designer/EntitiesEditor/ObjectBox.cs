@@ -2025,7 +2025,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				//	Dessine le glyph 'o--' pour les interfaces.
 				if (this.IsInterface)
 				{
-					rect = new Rectangle(this.bounds.Left-25, this.bounds.Top-AbstractObject.headerHeight+8, 25, 8);
+					rect = new Rectangle(this.bounds.Left-25, this.bounds.Top-AbstractObject.headerHeight+10, 25, 8);
 					this.DrawGlyphInterface(graphics, rect, 2, colorFrame);
 				}
 
@@ -2467,7 +2467,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		protected void DrawGlyphInterface(Graphics graphics, Rectangle rect, double lineWidth, Color color)
 		{
 			//	Dessine le glyph 'o--' d'une interface.
-			double y = System.Math.Floor(rect.Center.Y)+0.5;
+			double y = System.Math.Floor(rect.Center.Y)+(lineWidth%2)/2;
 			double radius = rect.Height/2;
 
 			graphics.LineWidth = lineWidth;
