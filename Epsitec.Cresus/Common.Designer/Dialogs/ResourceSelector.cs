@@ -304,6 +304,16 @@ namespace Epsitec.Common.Designer.Dialogs
 				}
 			}
 
+			if (this.operation == Operation.TypesOrEntities && this.resourceType == ResourceAccess.Type.Entities)
+			{
+				StructuredData data = cultureMap.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
+				StructuredTypeClass typeClass = (StructuredTypeClass) data.GetValue(Support.Res.Fields.ResourceStructuredType.Class);
+				if (typeClass == StructuredTypeClass.Interface)
+				{
+					return false;  // ne liste pas les interfaces
+				}
+			}
+
 			if (this.operation == Operation.InheritEntities)
 			{
 				StructuredData data = cultureMap.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
