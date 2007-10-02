@@ -473,6 +473,14 @@ namespace Epsitec.Common.Support
 			}
 		}
 
+		/// <summary>
+		/// Finds all the patch modules.
+		/// </summary>
+		/// <returns>The (possibly empty) list of patch modules.</returns>
+		public IList<ResourceModuleInfo> FindPatchModuleInfos()
+		{
+			return this.FindModuleInfos (delegate (ResourceModuleInfo info) { return !string.IsNullOrEmpty (info.ReferenceModulePath); });
+		}
 
 		#region Internal Methods
 
