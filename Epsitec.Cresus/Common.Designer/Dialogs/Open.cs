@@ -301,7 +301,11 @@ namespace Epsitec.Common.Designer.Dialogs
 
 			if (columnName == "Icon")
 			{
-				if (state == ModuleState.Openable)
+				if (!string.IsNullOrEmpty(item.ReferenceModulePath))
+				{
+					text = "P";  // TODO: provisoire
+				}
+				else if (state == ModuleState.Openable)
 				{
 					text = Misc.Image("Open");  // dossier avec flèche
 				}
