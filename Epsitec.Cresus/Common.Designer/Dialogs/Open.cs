@@ -56,23 +56,27 @@ namespace Epsitec.Common.Designer.Dialogs
 				st.Fields.Add("Id",    StringType.Default);
 				st.Fields.Add("State", StringType.Default);
 				st.Fields.Add("Icon",  StringType.Default);
+				st.Fields.Add("Patch", StringType.Default);
 
 				this.table = new UI.ItemTable(this.window.Root);
 				this.table.ItemPanel.CustomItemViewFactoryGetter = this.ItemViewFactoryGetter;
 				this.table.SourceType = st;
 				this.table.Items = this.moduleInfosShowed;
-				this.table.Columns.Add("Name",  335);
+				this.table.Columns.Add("Name",  305);
 				this.table.Columns.Add("Id",     30);
 				this.table.Columns.Add("State",  70);
 				this.table.Columns.Add("Icon",   30);
+				this.table.Columns.Add("Patch",  30);
 				this.table.ColumnHeader.SetColumnText(0, "Nom");
 				this.table.ColumnHeader.SetColumnText(1, "No");
 				this.table.ColumnHeader.SetColumnText(2, "Etat");
 				this.table.ColumnHeader.SetColumnText(3, "");
+				this.table.ColumnHeader.SetColumnText(4, "");
 				this.table.ColumnHeader.SetColumnComparer(0, this.CompareName);
 				this.table.ColumnHeader.SetColumnComparer(1, this.CompareId);
 				this.table.ColumnHeader.SetColumnComparer(2, this.CompareState);
 				this.table.ColumnHeader.SetColumnComparer(3, this.CompareIcon);
+				this.table.ColumnHeader.SetColumnComparer(4, this.ComparePatch);
 				this.table.HeaderVisibility = true;
 				this.table.FrameVisibility = true;
 				this.table.ItemPanel.Layout = UI.ItemPanelLayout.VerticalList;
@@ -258,6 +262,17 @@ namespace Epsitec.Common.Designer.Dialogs
 			return sA.CompareTo(sB);
 		}
 
+		protected int ComparePatch(object a, object b)
+		{
+			ResourceModuleInfo itemA = a as ResourceModuleInfo;
+			ResourceModuleInfo itemB = b as ResourceModuleInfo;
+
+			string sA = this.GetColumnText(itemA, "Patch");
+			string sB = this.GetColumnText(itemB, "Patch");
+
+			return sA.CompareTo(sB);
+		}
+
 		protected string GetColumnText(ResourceModuleInfo item, string columnName)
 		{
 			//	Retourne le texte contenu dans une colonne.
@@ -301,11 +316,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 			if (columnName == "Icon")
 			{
-				if (!string.IsNullOrEmpty(item.ReferenceModulePath))
-				{
-					text = "P";  // TODO: provisoire
-				}
-				else if (state == ModuleState.Openable)
+				if (state == ModuleState.Openable)
 				{
 					text = Misc.Image("Open");  // dossier avec flèche
 				}
@@ -320,6 +331,18 @@ namespace Epsitec.Common.Designer.Dialogs
 				else if (state == ModuleState.Locked)
 				{
 					text = Misc.Image("Locked");  // x bleu
+				}
+			}
+
+			if (columnName == "Patch")
+			{
+				if (string.IsNullOrEmpty(item.ReferenceModulePath))
+				{
+					text = "";
+				}
+				else
+				{
+					text = "P";
 				}
 			}
 
@@ -492,7 +515,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				{
 					text.ContentAlignment = ContentAlignment.MiddleRight;
 				}
-				else if (name == "Icon")
+				else if (name == "Icon" || name == "Patch")
 				{
 					text.ContentAlignment = ContentAlignment.MiddleCenter;
 				}
