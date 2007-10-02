@@ -338,7 +338,8 @@ namespace Epsitec.Common.Designer
 			ResourceManager     mergedManager = new ResourceManager (mergedPool, mergedModule);
 			ResourceModuleInfo  mergedInfo    = new ResourceModuleInfo ();
 
-			mergedInfo.FullId = mergedModule;
+			mergedInfo.FullId          = mergedModule;
+			mergedInfo.SourceNamespace = refInfo.SourceNamespace;
 
 			//	Reprend les versions du module de référence et ajoute celles
 			//	du module de patch. Le vecteur des versions résultant inclut

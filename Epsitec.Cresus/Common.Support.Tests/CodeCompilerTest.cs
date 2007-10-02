@@ -127,33 +127,14 @@ namespace Epsitec.Common.Support
 		public void CheckCompileEntities()
 		{
 			ResourceManager manager = Epsitec.Common.Support.Res.Manager;
-			CodeFormatter formatter = new CodeFormatter ();
-			formatter.IndentationChars = "\t";
-			CodeGenerator generator = new CodeGenerator (formatter, manager);
-
-			Assert.AreEqual ("Epsitec.Common.Support", generator.SourceNamespace);
-
-			generator.Emit (Epsitec.Common.Support.Res.Types.ResourceDateTimeType);
-			generator.Emit (Epsitec.Common.Support.Res.Types.ResourceBaseType);
-			generator.Emit (Epsitec.Common.Support.Res.Types.ResourceCaption);
-			generator.Emit (Epsitec.Common.Support.Res.Types.ResourceBase);
-
-			formatter.WriteCodeLine ();
-
-			generator.Emit (Epsitec.Common.Support.Res.Types.ResourceCommand);
-			generator.Emit (Epsitec.Common.Support.Res.Types.Shortcut);
-
-			formatter.WriteCodeLine ();
-
-			generator.Emit (Epsitec.Common.Support.Res.Types.ResourceString);
-			generator.Emit (Epsitec.Common.Support.Res.Types.TestInterface);
-			generator.Emit (Epsitec.Common.Support.Res.Types.TestInterfaceUser);
+			CodeGenerator generator = new CodeGenerator (manager);
+			generator.Emit ();
 
 			using (BuildDriver driver = new BuildDriver ())
 			{
 				driver.CreateBuildDirectory ();
 
-				formatter.SaveCodeToTextFile (System.IO.Path.Combine (driver.BuildDirectory, "Entities.cs"), System.Text.Encoding.UTF8);
+				generator.Formatter.SaveCodeToTextFile (System.IO.Path.Combine (driver.BuildDirectory, "Entities.cs"), System.Text.Encoding.UTF8);
 				CodeProjectSettings settings = driver.CreateSettings ("Common.Support.Entities");
 
 				settings.References.Add (new CodeProjectReference ("System.Core"));
@@ -177,6 +158,11 @@ namespace Epsitec.Common.Support
 				Assert.AreEqual (0, messages.Count);
 				Assert.IsNotNull (driver.GetCompiledAssemblyPath ());
 				Assert.IsNotNull (driver.GetCompiledAssemblyDebugInfoPath ());
+
+				if (System.IO.File.Exists ("Common.Support.Entities.dll"))
+				{
+					System.IO.File.Delete ("Common.Support.Entities.dll");
+				}
 
 				System.IO.File.Copy (driver.GetCompiledAssemblyPath (), "Common.Support.Entities.dll");
 			}
