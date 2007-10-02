@@ -10,8 +10,26 @@ using System.Collections.Generic;
 
 namespace Epsitec.Common.Support.EntityEngine
 {
+	/// <summary>
+	/// The <c>CodeGenerator</c> class produces a C# source code wrapper for
+	/// the entities defined in the resource files.
+	/// </summary>
 	public class CodeGenerator
 	{
+		/// <summary>
+		/// Initializes a new instance of the <see cref="CodeGenerator"/> class.
+		/// </summary>
+		/// <param name="resourceManager">The resource manager.</param>
+		public CodeGenerator(ResourceManager resourceManager)
+			: this (new CodeFormatter (), resourceManager)
+		{
+		}
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="CodeGenerator"/> class.
+		/// </summary>
+		/// <param name="formatter">The formatter.</param>
+		/// <param name="resourceManager">The resource manager.</param>
 		public CodeGenerator(CodeFormatter formatter, ResourceManager resourceManager)
 		{
 			this.formatter = formatter;
@@ -22,6 +40,10 @@ namespace Epsitec.Common.Support.EntityEngine
 		}
 
 
+		/// <summary>
+		/// Gets the formatter used when generating code.
+		/// </summary>
+		/// <value>The formatter.</value>
 		public CodeFormatter Formatter
 		{
 			get
@@ -29,7 +51,11 @@ namespace Epsitec.Common.Support.EntityEngine
 				return this.formatter;
 			}
 		}
-		
+
+		/// <summary>
+		/// Gets the resource manager.
+		/// </summary>
+		/// <value>The resource manager.</value>
 		public ResourceManager ResourceManager
 		{
 			get
@@ -38,6 +64,10 @@ namespace Epsitec.Common.Support.EntityEngine
 			}
 		}
 
+		/// <summary>
+		/// Gets the resource manager pool.
+		/// </summary>
+		/// <value>The resource manager pool.</value>
 		public ResourceManagerPool ResourceManagerPool
 		{
 			get
@@ -46,6 +76,10 @@ namespace Epsitec.Common.Support.EntityEngine
 			}
 		}
 
+		/// <summary>
+		/// Gets the resource module information.
+		/// </summary>
+		/// <value>The resource module information.</value>
 		public ResourceModuleInfo ResourceModuleInfo
 		{
 			get
@@ -53,7 +87,11 @@ namespace Epsitec.Common.Support.EntityEngine
 				return this.resourceModuleInfo;
 			}
 		}
-		
+
+		/// <summary>
+		/// Gets the source namespace.
+		/// </summary>
+		/// <value>The source namespace.</value>
 		public string SourceNamespace
 		{
 			get
@@ -63,6 +101,10 @@ namespace Epsitec.Common.Support.EntityEngine
 		}
 
 
+		/// <summary>
+		/// Emits the code for all entities and interfaces defined in the
+		/// current module.
+		/// </summary>
 		public void Emit()
 		{
 			ResourceAccessors.StructuredTypeResourceAccessor accessor = new ResourceAccessors.StructuredTypeResourceAccessor ();
@@ -70,14 +112,23 @@ namespace Epsitec.Common.Support.EntityEngine
 
 			foreach (CultureMap item in accessor.Collection)
 			{
-				Caption caption = this.resourceManager.GetCaption (item.Id);
+				Caption     caption = this.resourceManager.GetCaption (item.Id);
 				StructuredType type = TypeRosetta.GetTypeObject (caption) as StructuredType;
-				this.Emit (type);
+
+				if ((type != null) &&
+					((type.Class == StructuredTypeClass.Entity) || (type.Class == StructuredTypeClass.Interface)))
+				{
+					this.Emit (type);
+				}
 			}
 
 			this.Formatter.Flush ();
 		}
 
+		/// <summary>
+		/// Emits the source code for the entity described by the specified type.
+		/// </summary>
+		/// <param name="type">The structured type.</param>
 		public void Emit(StructuredType type)
 		{
 			StructuredTypeClass typeClass = type.Class;
@@ -313,6 +364,7 @@ namespace Epsitec.Common.Support.EntityEngine
 			return string.Concat (Keywords.Global, "::", systemTypeName);
 		}
 
+		#region Emitter Class
 
 		private abstract class Emitter
 		{
@@ -452,6 +504,10 @@ namespace Epsitec.Common.Support.EntityEngine
 			private Druid interfaceId;
 		}
 
+		#endregion
+
+		#region EntityEmitter Class
+
 		private sealed class EntityEmitter : Emitter
 		{
 			public EntityEmitter(CodeGenerator generator, StructuredType type)
@@ -549,6 +605,10 @@ namespace Epsitec.Common.Support.EntityEngine
 			}
 		}
 
+		#endregion
+
+		#region InterfaceEmitter Class
+
 		private sealed class InterfaceEmitter : Emitter
 		{
 			public InterfaceEmitter(CodeGenerator generator, StructuredType type)
@@ -574,6 +634,10 @@ namespace Epsitec.Common.Support.EntityEngine
 				}
 			}
 		}
+
+		#endregion
+
+		#region InterfaceImplementationEmitter Class
 
 		private sealed class InterfaceImplementationEmitter : Emitter
 		{
@@ -666,6 +730,10 @@ namespace Epsitec.Common.Support.EntityEngine
 			private string interfaceName;
 		}
 
+		#endregion
+
+		#region CodeAttributes Constants
+
 		private static readonly CodeAttributes EntityClassAttributes = new CodeAttributes (CodeVisibility.Public, CodeAccessibility.Default, CodeAttributes.PartialAttribute);
 		private static readonly CodeAttributes StaticClassAttributes = new CodeAttributes (CodeVisibility.Public, CodeAccessibility.Static);
 		private static readonly CodeAttributes StaticPartialClassAttributes = new CodeAttributes (CodeVisibility.Public, CodeAccessibility.Static, CodeAttributes.PartialAttribute);
@@ -673,6 +741,10 @@ namespace Epsitec.Common.Support.EntityEngine
 		private static readonly CodeAttributes PropertyAttributes = new CodeAttributes (CodeVisibility.Public);
 		private static readonly CodeAttributes PartialMethodAttributes = new CodeAttributes (CodeVisibility.None, CodeAccessibility.Default, CodeAttributes.PartialDefinitionAttribute);
 		private static readonly CodeAttributes StaticPartialMethodAttributes = new CodeAttributes (CodeVisibility.None, CodeAccessibility.Static, CodeAttributes.PartialDefinitionAttribute);
+
+		#endregion
+
+		#region Keywords Class
 
 		private static class Keywords
 		{
@@ -717,6 +789,8 @@ namespace Epsitec.Common.Support.EntityEngine
 			public const string ChangedSuffix = "Changed";
 			public const string ChangingSuffix = "Changing";
 		}
+
+		#endregion
 
 		private CodeFormatter formatter;
 		private ResourceManager resourceManager;

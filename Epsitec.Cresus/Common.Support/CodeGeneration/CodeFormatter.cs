@@ -196,6 +196,8 @@ namespace Epsitec.Common.Support.CodeGeneration
 		/// <returns>A <c>string</c> with the generated code.</returns>
 		public string SaveCodeToString()
 		{
+			this.Flush ();
+
 			if (this.stream == null)
 			{
 				return this.output.ToString ();

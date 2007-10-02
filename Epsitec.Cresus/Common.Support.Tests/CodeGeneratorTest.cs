@@ -25,11 +25,9 @@ namespace Epsitec.Common.Support
 		public void CheckEmit()
 		{
 			ResourceManager manager = Epsitec.Common.Support.Res.Manager;
-			CodeFormatter formatter = new CodeFormatter ();
-			formatter.IndentationChars = "\t";
-			CodeGenerator generator = new CodeGenerator (formatter, manager);
+			CodeGenerator generator = new CodeGenerator (manager);
 			generator.Emit ();
-			formatter.SaveCodeToTextFile ("Common.Support Entities.cs", System.Text.Encoding.UTF8);
+			generator.Formatter.SaveCodeToTextFile ("Common.Support Entities.cs", System.Text.Encoding.UTF8);
 		}
 
 		[Test]
@@ -62,8 +60,6 @@ namespace Epsitec.Common.Support
 			formatter.Flush ();
 
 			System.Console.Out.Write (buffer);
-
-			formatter.SaveCodeToTextFile ("entities.cs", System.Text.Encoding.UTF8);
 		}
 	}
 }
