@@ -11,8 +11,22 @@ using System.Collections.Generic;
 
 namespace Epsitec.Common.Designer.ModuleSupport
 {
+	/// <summary>
+	/// The <c>ModuleMerger</c> class is used to produce live modules based on
+	/// patch modules and reference modules.
+	/// </summary>
 	public static class ModuleMerger
 	{
+		/// <summary>
+		/// Merges a module using the specified resource manager pool and
+		/// copies the result to the specified output path.
+		/// </summary>
+		/// <param name="pool">The resource manager pool.</param>
+		/// <param name="modulePath">The module path.</param>
+		/// <param name="outputPath">The output path.</param>
+		/// <returns>
+		/// <c>true</c> if the operation was successful, <c>false</c> otherwise.
+		/// </returns>
 		public static bool Merge(ResourceManagerPool pool, string modulePath, string outputPath)
 		{
 			ResourceModuleInfo info = pool.GetModuleInfo (modulePath);
@@ -23,29 +37,29 @@ namespace Epsitec.Common.Designer.ModuleSupport
 				return false;
 			}
 
-			System.IO.Directory.CreateDirectory (outputPath);
-
-			try
+			if (!System.IO.Directory.Exists (outputPath))
 			{
-				if (info.IsPatchModule)
-				{
-					ModuleMerger.Merge (info.FullId, outputPath);
-				}
-				else
-				{
-					ModuleMerger.CopyModule (info.FullId, outputPath);
-				}
+				System.IO.Directory.CreateDirectory (outputPath);
 			}
-			catch (System.Exception ex)
+
+			if (info.IsPatchModule)
 			{
-				System.Diagnostics.Debug.WriteLine ("Merge failed : " + ex.Message);
-				return false;
+				ModuleMerger.MergeModule (info.FullId, outputPath);
+			}
+			else
+			{
+				ModuleMerger.CopyModule (info.FullId, outputPath);
 			}
 
 			return true;
 		}
 
-		
+
+		/// <summary>
+		/// Copies the module to the specified output path.
+		/// </summary>
+		/// <param name="moduleId">The id of the source module.</param>
+		/// <param name="outputPath">The output path.</param>
 		private static void CopyModule(ResourceModuleId moduleId, string outputPath)
 		{
 			string prefix = "file";
@@ -65,51 +79,41 @@ namespace Epsitec.Common.Designer.ModuleSupport
 			
 			ResourceModule.SaveManifest (dstInfo, ModuleMerger.CreateModuleComment ("Copied"));
 
-			//	Comme on va utiliser le mécanisme d'enregistrement standard
-			//	des accesseurs, on doit "surcharger" la méthode SetBundle de
-			//	du gestionnaire de ressources standard pour utiliser le bon
-			//	gestionnaire à la place, avec des bundles adaptés...
+			//	Override the default SetBundle implementation with a special
+			//	version which is responsible for saving using the destination
+			//	resource manager. This allows us to re-use the standard save
+			//	operation implemented in the Designer.Module class.
 
-			srcManager.ReplaceSetBundle
-				(
-					delegate (ResourceBundle bundle, ResourceSetMode mode)
-					{
-						if (mode == ResourceSetMode.Write)
-						{
-							//	Clone manuellement le bundle en l'ajustant pour
-							//	qu'il s'intègre dans le nouveau module :
-							ResourceBundle copy = ResourceBundle.Create (dstManager, prefix, dstModule, bundle.Name, bundle.ResourceLevel, bundle.Culture, 0);
-							copy.DefineCaption (bundle.Caption);
-							copy.DefineRank (bundle.Rank);
-							copy.Compile (bundle.CreateXmlAsData ());
+			srcManager.ReplaceSetBundle (
+				delegate (ResourceBundle bundle, ResourceSetMode mode)
+				{
+					System.Diagnostics.Debug.Assert (mode == ResourceSetMode.Write);
 
-							dstManager.SetBundle (copy, ResourceSetMode.Write);
-						}
+					ResourceBundle copy = ResourceBundle.Create (dstManager, prefix, dstModule, bundle.Name, bundle.ResourceLevel, bundle.Culture, 0);
+					
+					copy.DefineCaption (bundle.Caption);
+					copy.DefineRank (bundle.Rank);
+					copy.Compile (bundle.CreateXmlAsData ());
 
-						return false;
-					}
-				);
+					dstManager.SetBundle (copy, ResourceSetMode.Write);
+
+					//	Don't execute default implementation of SetBundle:
+					
+					return ResourceManager.SetBundleOperation.Skip;
+				});
 
 			srcModule.Regenerate ();
 			srcModule.SaveResources ();
 		}
 
-		private static string CreateModuleComment(string action)
+		/// <summary>
+		/// Merges the patch module with its reference module and copies the
+		/// result to the output path.
+		/// </summary>
+		/// <param name="moduleId">The id of the patch module.</param>
+		/// <param name="outputPath">The output path.</param>
+		private static void MergeModule(ResourceModuleId moduleId, string outputPath)
 		{
-			System.DateTime copyTime = System.DateTime.Now.ToUniversalTime ();
-			IdentityCard    identity = Settings.Default.IdentityCard;
-			
-			string author  = identity == null ? "" : string.Concat (" by ", identity.UserName);
-			string comment = string.Concat (action, " on ", copyTime.ToShortDateString (), " ", copyTime.ToShortTimeString (), " UTC", author);
-			
-			return comment;
-		}
-
-		private static void Merge(ResourceModuleId moduleId, string outputPath)
-		{
-			//	Fusionne les ressources du module de patch spécifié avec celles
-			//	du module de référence et enregistre le résultat dans le dossier
-			//	de sortie.
 			string prefix = "file";
 
 			Module             patchModule = new Module (null, DesignerMode.Build, prefix, moduleId);
@@ -131,36 +135,44 @@ namespace Epsitec.Common.Designer.ModuleSupport
 			mergedInfo.UpdateVersions (refInfo.Versions);
 			mergedInfo.UpdateVersions (patchInfo.Versions);
 			
-			//	Crée le fichier "module.info" pour le module à générer.
 			ResourceModule.SaveManifest (mergedInfo, ModuleMerger.CreateModuleComment ("Merged"));
 
-			//	Comme on va utiliser le mécanisme d'enregistrement standard
-			//	des accesseurs, on doit "surcharger" la méthode SetBundle de
-			//	du gestionnaire de ressources standard pour utiliser le bon
-			//	gestionnaire à la place, avec des bundles adaptés...
+			//	See description in ModuleMerger.CopyModule
+			
+			patchModule.ResourceManager.ReplaceSetBundle (
+				delegate (ResourceBundle bundle, ResourceSetMode mode)
+				{
+					System.Diagnostics.Debug.Assert (mode == ResourceSetMode.Write);
 
-			patchModule.ResourceManager.ReplaceSetBundle
-				(
-					delegate (ResourceBundle bundle, ResourceSetMode mode)
-					{
-						if (mode == ResourceSetMode.Write)
-						{
-							//	Clone manuellement le bundle en l'ajustant pour
-							//	qu'il s'intègre dans le nouveau module :
-							ResourceBundle copy = ResourceBundle.Create (mergedManager, prefix, mergedModule, bundle.Name, bundle.ResourceLevel, bundle.Culture, 0);
-							copy.DefineCaption (bundle.Caption);
-							copy.DefineRank (bundle.Rank);
-							copy.Compile (bundle.CreateXmlAsData ());
+					ResourceBundle copy = ResourceBundle.Create (mergedManager, prefix, mergedModule, bundle.Name, bundle.ResourceLevel, bundle.Culture, 0);
+					
+					copy.DefineCaption (bundle.Caption);
+					copy.DefineRank (bundle.Rank);
+					copy.Compile (bundle.CreateXmlAsData ());
 
-							mergedManager.SetBundle (copy, ResourceSetMode.Write);
-						}
+					mergedManager.SetBundle (copy, ResourceSetMode.Write);
 
-						return false;
-					}
-				);
+					return ResourceManager.SetBundleOperation.Skip;
+				});
 
 			patchModule.Regenerate ();
 			patchModule.SaveResources ();
+		}
+
+		/// <summary>
+		/// Creates the header comment for a module.
+		/// </summary>
+		/// <param name="action">The action (usually <c>"Copied"</c> or <c>"Merged"</c>).</param>
+		/// <returns>The comment with the current date and developer name.</returns>
+		private static string CreateModuleComment(string action)
+		{
+			System.DateTime copyTime = System.DateTime.Now.ToUniversalTime ();
+			IdentityCard identity = Settings.Default.IdentityCard;
+
+			string author  = identity == null ? "" : string.Concat (" by ", identity.UserName);
+			string comment = string.Concat (action, " on ", copyTime.ToShortDateString (), " ", copyTime.ToShortTimeString (), " UTC", author);
+
+			return comment;
 		}
 	}
 }

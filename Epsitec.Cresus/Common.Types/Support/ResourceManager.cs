@@ -1174,7 +1174,7 @@ namespace Epsitec.Common.Support
 		public void SetBundle(ResourceBundle bundle, ResourceSetMode mode)
 		{
 			if ((this.setBundleCallback == null) ||
-				(this.setBundleCallback (bundle, mode)))
+				(this.setBundleCallback (bundle, mode) == SetBundleOperation.Execute))
 			{
 				ResourceLevel level   = bundle.ResourceLevel;
 				CultureInfo culture = bundle.Culture;
@@ -1966,7 +1966,13 @@ namespace Epsitec.Common.Support
 
 		#endregion
 
-		public delegate bool SetBundleCallback(ResourceBundle bundle, ResourceSetMode mode);
+		public delegate SetBundleOperation SetBundleCallback(ResourceBundle bundle, ResourceSetMode mode);
+		
+		public enum SetBundleOperation
+		{
+			Execute,
+			Skip,
+		}
 
 		public static readonly DependencyProperty ResourceManagerProperty = DependencyProperty.RegisterAttached ("ResourceManager", typeof (ResourceManager), typeof (ResourceManager), new DependencyPropertyMetadata ().MakeNotSerializable ());
 		public static readonly DependencyProperty SourceBundleProperty    = DependencyProperty.RegisterAttached ("SourceBundle", typeof (ResourceBundle), typeof (ResourceManager), new DependencyPropertyMetadata ().MakeNotSerializable ());
