@@ -238,17 +238,15 @@ namespace Epsitec.Common.Support
 			get
 			{
 				ResourceModuleInfo info = this.DefaultModuleInfo;
-				
+
 				if (info == null)
 				{
 					return false;
 				}
-				if (string.IsNullOrEmpty (info.ReferenceModulePath))
+				else
 				{
-					return false;
+					return info.IsPatchModule;
 				}
-				
-				return true;
 			}
 		}
 		
@@ -306,7 +304,7 @@ namespace Epsitec.Common.Support
 			ResourceManager manager = null;
 
 			if ((info != null) &&
-				(!string.IsNullOrEmpty (info.ReferenceModulePath)))
+				(info.IsPatchModule))
 			{
 				string modulePath = this.pool.GetRootRelativePath (info, info.ReferenceModulePath);
 				info = this.pool.GetModuleInfo (modulePath);

@@ -116,6 +116,20 @@ namespace Epsitec.Common.Support
 		}
 
 		/// <summary>
+		/// Gets a value indicating whether this is a patch module.
+		/// </summary>
+		/// <value>
+		/// 	<c>true</c> if this is a patch module; otherwise, <c>false</c>.
+		/// </value>
+		public bool IsPatchModule
+		{
+			get
+			{
+				return string.IsNullOrEmpty (this.referenceModulePath) ? false : true;
+			}
+		}
+
+		/// <summary>
 		/// Updates the version stored in the versions property. If the version
 		/// is newer (the comparison is date based), it will replace the one
 		/// already found in the versions property.

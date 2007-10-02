@@ -27,13 +27,13 @@ namespace Epsitec.Common.Designer.ModuleSupport
 
 			try
 			{
-				if (string.IsNullOrEmpty (info.ReferenceModulePath))
+				if (info.IsPatchModule)
 				{
-					ModuleMerger.CopyModule (info.FullId, outputPath);
+					ModuleMerger.Merge (info.FullId, outputPath);
 				}
 				else
 				{
-					ModuleMerger.Merge (info.FullId, outputPath);
+					ModuleMerger.CopyModule (info.FullId, outputPath);
 				}
 			}
 			catch (System.Exception ex)

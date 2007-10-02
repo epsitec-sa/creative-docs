@@ -336,13 +336,13 @@ namespace Epsitec.Common.Designer.Dialogs
 
 			if (columnName == "Patch")
 			{
-				if (string.IsNullOrEmpty(item.ReferenceModulePath))
+				if (item.IsPatchModule)
 				{
-					text = "";
+					text = "P";
 				}
 				else
 				{
-					text = "P";
+					text = "";
 				}
 			}
 

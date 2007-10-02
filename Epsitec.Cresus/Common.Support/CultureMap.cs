@@ -22,6 +22,11 @@ namespace Epsitec.Common.Support
 			this.source = source;
 		}
 
+		/// <summary>
+		/// Gets the owner of this item. This is the resource accessor which
+		/// <see cref="IResourceAccessor.Collection"/> contains the item.
+		/// </summary>
+		/// <value>The owner.</value>
 		public IResourceAccessor Owner
 		{
 			get

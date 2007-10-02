@@ -197,7 +197,7 @@ namespace Epsitec.Common.Support
 			
 			xml.AppendChild (root);
 
-			if (!string.IsNullOrEmpty (info.ReferenceModulePath))
+			if (info.IsPatchModule)
 			{
 				System.Xml.XmlElement node = xml.CreateElement (ResourceModule.XmlReferenceModulePath);
 

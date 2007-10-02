@@ -443,7 +443,7 @@ namespace Epsitec.Common.Support
 		/// <returns>The list of reference modules.</returns>
 		public IList<ResourceModuleInfo> FindReferenceModules()
 		{
-			return this.FindModuleInfos (delegate (ResourceModuleInfo info) { return string.IsNullOrEmpty (info.ReferenceModulePath); });
+			return this.FindModuleInfos (delegate (ResourceModuleInfo info) { return !info.IsPatchModule; });
 		}
 
 		/// <summary>
@@ -479,7 +479,7 @@ namespace Epsitec.Common.Support
 		/// <returns>The (possibly empty) list of patch modules.</returns>
 		public IList<ResourceModuleInfo> FindPatchModuleInfos()
 		{
-			return this.FindModuleInfos (delegate (ResourceModuleInfo info) { return !string.IsNullOrEmpty (info.ReferenceModulePath); });
+			return this.FindModuleInfos (delegate (ResourceModuleInfo info) { return info.IsPatchModule; });
 		}
 
 		#region Internal Methods
