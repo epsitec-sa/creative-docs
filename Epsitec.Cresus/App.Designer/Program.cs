@@ -1,4 +1,6 @@
 using Epsitec.Common.Designer;
+using Epsitec.Common.Identity;
+using Epsitec.Common.Support;
 
 using System.Collections.Generic;
 
@@ -47,6 +49,7 @@ namespace App.Designer
 
 			List<string> addPaths = new List<string> ();
 			bool noDefaultPaths = false;
+			int devId;
 
 			for (int i = 0; i < args.Length; i++)
 			{
@@ -75,10 +78,23 @@ namespace App.Designer
 						if (System.IO.Directory.Exists (args[i+2]))
 						{
 							pool.AddModuleRootPath(args[i+1], args[i+2]);
-							i+=2;
+						}
+						i+=2;
+						break;
+
+					case "-dev-id":
+						if (int.TryParse (args[++i], System.Globalization.NumberStyles.Integer, System.Globalization.CultureInfo.InvariantCulture, out devId))
+						{
+							Settings.Default.IdentityCard = IdentityRepository.Default.FindIdentityCard (devId);
 						}
 						break;
 
+					case "-merge-module":
+						if (Program.MergeModule (pool, args[++i], args[++i]) == false)
+						{
+							System.Environment.Exit (1);
+						}
+						break;
 
 					default:
 						throw new System.NotSupportedException (string.Format ("Option {0} not supported", args[i]));
@@ -105,6 +121,36 @@ namespace App.Designer
 			designerMainWindow.Standalone = true;
 			designerMainWindow.Show (null);
 			designerMainWindow.Window.Run ();
+		}
+
+		private static bool MergeModule(ResourceManagerPool pool, string modulePath, string outputPath)
+		{
+			ResourceModuleInfo info = pool.GetModuleInfo (modulePath);
+
+			if (info == null)
+			{
+				System.Diagnostics.Debug.WriteLine ("Failed to locate module " + modulePath);
+				return false;
+			}
+			if (string.IsNullOrEmpty (info.ReferenceModulePath))
+			{
+				System.Diagnostics.Debug.WriteLine ("Not a patch module : "+ modulePath);
+				return false;
+			}
+
+			System.IO.Directory.CreateDirectory (outputPath);
+
+			try
+			{
+				Module.Merge (info.FullId, outputPath);
+			}
+			catch (System.Exception ex)
+			{
+				System.Diagnostics.Debug.WriteLine ("Merge failed : " + ex.Message);
+				return false;
+			}
+
+			return true;
 		}
 	}
 }

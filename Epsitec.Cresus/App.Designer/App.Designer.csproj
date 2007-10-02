@@ -56,6 +56,10 @@
       <Project>{35FFBEF6-6A7D-4FEA-A4C6-AAB784FA709B}</Project>
       <Name>Common.Drawing</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Common.Identity\Common.Identity.csproj">
+      <Project>{3B21F4C6-9461-4751-9B23-9A9006743D68}</Project>
+      <Name>Common.Identity</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Common.Support.Events\Common.Support.Events.csproj">
       <Project>{EAF258A4-E107-4466-A3E1-9FC072557940}</Project>
       <Name>Common.Support.Events</Name>

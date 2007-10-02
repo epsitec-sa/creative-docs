@@ -44,7 +44,7 @@ namespace Epsitec.Common.Designer
 			this.resourceManagerPool = pool;
 			this.LocatorInit();
 			this.moduleInfoList = new List<ModuleInfo>();
-			this.settings = new Settings();
+			this.settings = Epsitec.Common.Designer.Settings.Default;
 			this.context = new PanelsContext();
 		}
 

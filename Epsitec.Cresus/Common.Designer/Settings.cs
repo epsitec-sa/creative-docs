@@ -15,7 +15,7 @@ namespace Epsitec.Common.Designer
 	/// </summary>
 	public class Settings
 	{
-		public Settings()
+		protected Settings()
 		{
 			this.modules = new List<ResourceModuleId>();
 		}
@@ -71,6 +71,8 @@ namespace Epsitec.Common.Designer
 				}
 			}
 		}
+
+		public static readonly Settings Default = new Settings ();
 
 
 		public bool Write()
