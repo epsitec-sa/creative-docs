@@ -357,7 +357,7 @@ namespace Epsitec.Common.Designer
 
 		private void UpdateManifest()
 		{
-			int devId = Settings.ActiveDeveloperId;
+			int devId = Settings.Default.DeveloperId;
 			ResourceModuleVersion version = null;
 
 			foreach (ResourceModuleVersion item in this.moduleInfo.Versions)

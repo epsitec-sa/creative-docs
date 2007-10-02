@@ -47,27 +47,17 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
-		public static int ActiveDeveloperId
+		public int DeveloperId
 		{
 			get
 			{
-				return Globals.Properties.GetProperty<int> (AbstractResourceAccessor.DeveloperIdPropertyName, -1);
-			}
-		}
-
-		public static IdentityCard ActiveDeveloperIdentityCard
-		{
-			get
-			{
-				int developerId = Settings.ActiveDeveloperId;
-
-				if (developerId < 0)
+				if (this.identityCard == null)
 				{
-					return null;
+					return -1;
 				}
 				else
 				{
-					return IdentityRepository.Default.FindIdentityCard (developerId);
+					return this.identityCard.DeveloperId;
 				}
 			}
 		}

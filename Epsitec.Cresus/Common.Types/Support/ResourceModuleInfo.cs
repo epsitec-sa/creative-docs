@@ -147,6 +147,20 @@ namespace Epsitec.Common.Support
 			}
 		}
 
+		/// <summary>
+		/// Updates the version stored in the versions property. If the version
+		/// is newer (the comparison is date based), it will replace the one
+		/// already found in the versions property.
+		/// </summary>
+		/// <param name="versions">The versions.</param>
+		public void UpdateVersions(IEnumerable<ResourceModuleVersion> versions)
+		{
+			foreach (ResourceModuleVersion version in versions)
+			{
+				this.UpdateVersion (version);
+			}
+		}
+
 		#region Interface IReadOnly
 
 		/// <summary>
