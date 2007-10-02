@@ -96,6 +96,9 @@ namespace App.Designer
 						}
 						break;
 
+					case "-quit":
+						return;
+
 					default:
 						throw new System.NotSupportedException (string.Format ("Option {0} not supported", args[i]));
 				}
