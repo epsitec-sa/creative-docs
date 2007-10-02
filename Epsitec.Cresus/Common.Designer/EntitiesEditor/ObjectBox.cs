@@ -2026,7 +2026,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				if (this.IsInterface)
 				{
 					rect = new Rectangle(this.bounds.Left-25, this.bounds.Top-AbstractObject.headerHeight+8, 25, 8);
-					this.DrawGlyphInterface(graphics, rect, colorFrame);
+					this.DrawGlyphInterface(graphics, rect, 2, colorFrame);
 				}
 
 				//	Dessine toutes les lignes, titres ou simples champs.
@@ -2146,7 +2146,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 							rect = this.GetFieldBounds(i);
 							rect.Deflate(9.5, 0.5);
 							rect = new Rectangle(rect.Left-25, rect.Center.Y-5, 25, 6);
-							this.DrawGlyphInterface(graphics, rect, this.GetColorMain(0.8));
+							this.DrawGlyphInterface(graphics, rect, 1, this.GetColorMain(0.8));
 						}
 					}
 					else
@@ -2464,11 +2464,13 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			graphics.RenderSolid(this.GetColor(0));
 		}
 
-		protected void DrawGlyphInterface(Graphics graphics, Rectangle rect, Color color)
+		protected void DrawGlyphInterface(Graphics graphics, Rectangle rect, double lineWidth, Color color)
 		{
 			//	Dessine le glyph 'o--' d'une interface.
 			double y = System.Math.Floor(rect.Center.Y)+0.5;
 			double radius = rect.Height/2;
+
+			graphics.LineWidth = lineWidth;
 
 			graphics.AddFilledCircle(rect.Left+radius, y, radius);
 			graphics.RenderSolid(this.GetColor(1));
@@ -2476,6 +2478,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			graphics.AddCircle(rect.Left+radius, y, radius);
 			graphics.AddLine(rect.Left+radius*2, y, rect.Right, y);
 			graphics.RenderSolid(color);
+
+			graphics.LineWidth = 1;
 		}
 
 		protected void DrawDashLine(Graphics graphics, Point p1, Point p2, Color color)
