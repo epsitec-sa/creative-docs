@@ -250,10 +250,16 @@ namespace Epsitec.Common.Support
 		/// <returns>The enumeration of plausible module paths.</returns>
 		public static IEnumerable<string> FindModulePaths(string rootPath)
 		{
-			foreach (string path in System.IO.Directory.GetDirectories (rootPath, "*", System.IO.SearchOption.AllDirectories))
+			foreach (string path in System.IO.Directory.GetDirectories (rootPath))
 			{
+				string name  = System.IO.Path.GetFileName (path);
 				string probe = System.IO.Path.Combine (path, ResourceModule.ManifestFileName);
 				bool   found = false;
+
+				if (name.StartsWith ("."))
+				{
+					continue;
+				}
 
 				try
 				{
@@ -268,6 +274,11 @@ namespace Epsitec.Common.Support
 				if (found)
 				{
 					yield return path;
+				}
+
+				foreach (string child in ResourceModule.FindModulePaths (path))
+				{
+					yield return child;
 				}
 			}
 		}

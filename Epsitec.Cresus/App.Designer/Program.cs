@@ -21,7 +21,9 @@ namespace App.Designer
 			Epsitec.Common.Support.ResourceManagerPool pool = new Epsitec.Common.Support.ResourceManagerPool("Common.Designer");
 			pool.DefaultPrefix = "file";
 			pool.SetupDefaultRootPaths();
+			pool.ScanForAllModules();
 
+#if false
 			if (Epsitec.Common.Support.Globals.IsDebugBuild)
 			{
 				paths = new List<string> (new string[]
@@ -37,6 +39,7 @@ namespace App.Designer
 				});
 			}
 			else
+#endif
 			{
 				paths = new List<string> ();
 				paths.Add (System.IO.Path.Combine (execPath, "Resources"));
