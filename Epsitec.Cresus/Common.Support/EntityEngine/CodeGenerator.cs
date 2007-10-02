@@ -63,6 +63,21 @@ namespace Epsitec.Common.Support.EntityEngine
 		}
 
 
+		public void Emit()
+		{
+			ResourceAccessors.StructuredTypeResourceAccessor accessor = new ResourceAccessors.StructuredTypeResourceAccessor ();
+			accessor.Load (this.resourceManager);
+
+			foreach (CultureMap item in accessor.Collection)
+			{
+				Caption caption = this.resourceManager.GetCaption (item.Id);
+				StructuredType type = TypeRosetta.GetTypeObject (caption) as StructuredType;
+				this.Emit (type);
+			}
+
+			this.Formatter.Flush ();
+		}
+
 		public void Emit(StructuredType type)
 		{
 			StructuredTypeClass typeClass = type.Class;

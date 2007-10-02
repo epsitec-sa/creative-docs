@@ -22,6 +22,17 @@ namespace Epsitec.Common.Support
 		}
 
 		[Test]
+		public void CheckEmit()
+		{
+			ResourceManager manager = Epsitec.Common.Support.Res.Manager;
+			CodeFormatter formatter = new CodeFormatter ();
+			formatter.IndentationChars = "\t";
+			CodeGenerator generator = new CodeGenerator (formatter, manager);
+			generator.Emit ();
+			formatter.SaveCodeToTextFile ("Common.Support Entities.cs", System.Text.Encoding.UTF8);
+		}
+
+		[Test]
 		public void CheckEmitEntity()
 		{
 			ResourceManager manager = Epsitec.Common.Support.Res.Manager;
@@ -47,6 +58,8 @@ namespace Epsitec.Common.Support
 			generator.Emit (Epsitec.Common.Support.Res.Types.ResourceString);
 			generator.Emit (Epsitec.Common.Support.Res.Types.TestInterface);
 			generator.Emit (Epsitec.Common.Support.Res.Types.TestInterfaceUser);
+
+			formatter.Flush ();
 
 			System.Console.Out.Write (buffer);
 

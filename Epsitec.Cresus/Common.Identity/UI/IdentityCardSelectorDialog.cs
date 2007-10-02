@@ -87,6 +87,9 @@ namespace Epsitec.Common.Identity.UI
 			table.TabIndex = 1;
 			table.Items = this.collectionView;
 			table.ItemPanel.ItemViewDefaultSize = new Size (180, 48);
+			
+			//	TODO: use ColumnsOfTiles here, once the code is implemented in ItemPanel
+			
 			table.ItemPanel.Layout = ItemPanelLayout.RowsOfTiles;
 			table.ItemPanel.CustomItemViewFactoryGetter = delegate { return this.factory; };
 			table.ItemPanel.CurrentItemTrackingMode = CurrentItemTrackingMode.AutoSelect;
