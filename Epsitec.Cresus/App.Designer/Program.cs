@@ -21,6 +21,8 @@ namespace App.Designer
 			Epsitec.Common.Widgets.Widget.Initialize ();
 			Epsitec.Common.Document.Engine.Initialize ();
 
+			Epsitec.Common.Designer.ModuleSupport.ModuleGenerator.CreateLiveModules ();
+
 			string execPath = Epsitec.Common.Support.Globals.Directories.ExecutableRoot;
 			List<string> paths;
 

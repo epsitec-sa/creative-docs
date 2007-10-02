@@ -37,18 +37,23 @@ namespace Epsitec.Common.Designer.ModuleSupport
 				return false;
 			}
 
+			return ModuleMerger.Merge (pool, info, outputPath);
+		}
+
+		public static bool Merge(ResourceManagerPool pool, ResourceModuleInfo module, string outputPath)
+		{
 			if (!System.IO.Directory.Exists (outputPath))
 			{
 				System.IO.Directory.CreateDirectory (outputPath);
 			}
 
-			if (info.IsPatchModule)
+			if (module.IsPatchModule)
 			{
-				ModuleMerger.MergeModule (info.FullId, outputPath);
+				ModuleMerger.MergeModule (pool, module.FullId, outputPath);
 			}
 			else
 			{
-				ModuleMerger.CopyModule (info.FullId, outputPath);
+				ModuleMerger.CopyModule (pool, module.FullId, outputPath);
 			}
 
 			return true;
@@ -60,11 +65,11 @@ namespace Epsitec.Common.Designer.ModuleSupport
 		/// </summary>
 		/// <param name="moduleId">The id of the source module.</param>
 		/// <param name="outputPath">The output path.</param>
-		private static void CopyModule(ResourceModuleId moduleId, string outputPath)
+		private static void CopyModule(ResourceManagerPool pool, ResourceModuleId moduleId, string outputPath)
 		{
-			string prefix = "file";
+			string prefix = pool.DefaultPrefix;
 			
-			Module              srcModule  = new Module (null, DesignerMode.Build, prefix, moduleId);
+			Module              srcModule  = new Module (pool, moduleId);
 			ResourceModuleInfo  srcInfo    = srcModule.ModuleInfo;
 			ResourceManager     srcManager = srcModule.ResourceManager;
 
@@ -112,11 +117,11 @@ namespace Epsitec.Common.Designer.ModuleSupport
 		/// </summary>
 		/// <param name="moduleId">The id of the patch module.</param>
 		/// <param name="outputPath">The output path.</param>
-		private static void MergeModule(ResourceModuleId moduleId, string outputPath)
+		private static void MergeModule(ResourceManagerPool pool, ResourceModuleId moduleId, string outputPath)
 		{
-			string prefix = "file";
+			string prefix = pool.DefaultPrefix;
 
-			Module             patchModule = new Module (null, DesignerMode.Build, prefix, moduleId);
+			Module             patchModule = new Module (pool, moduleId);
 			ResourceModuleInfo patchInfo   = patchModule.ModuleInfo;
 			ResourceManager    refManager  = patchModule.ResourceManager.GetManagerForReferenceModule ();
 			ResourceModuleInfo refInfo     = refManager == null ? null : refManager.DefaultModuleInfo;

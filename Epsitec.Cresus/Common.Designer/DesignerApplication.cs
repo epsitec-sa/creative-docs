@@ -431,7 +431,7 @@ namespace Epsitec.Common.Designer
 			ResourceModuleId item = this.dlgOpen.SelectedModule;
 			if (item.Name != null)
 			{
-				Module module = new Module(this, this.mode, this.resourceManagerPool.DefaultPrefix, item);
+				Module module = new Module(this, this.mode, item);
 
 				ModuleInfo mi = new ModuleInfo();
 				mi.Module = module;
@@ -1825,7 +1825,7 @@ namespace Epsitec.Common.Designer
 			{
 				foreach (ResourceModuleId id in this.settings.Modules)
 				{
-					Module module = new Module (this, this.mode, this.resourceManagerPool.DefaultPrefix, id);
+					Module module = new Module (this, this.mode, id);
 
 					ModuleInfo mi = new ModuleInfo ();
 					mi.Module = module;

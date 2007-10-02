@@ -259,6 +259,32 @@ namespace Epsitec.Common.Support
 			Assert.AreEqual ("Cf. Common.Support.Tests", ResourceModuleTest.GetComment (stringAccessor2, 1, null));
 		}
 
+		[Test]
+		public void CheckPoolGetRootAbsolutePath()
+		{
+			ResourceManagerPool pool = new ResourceManagerPool ();
+			pool.AddModuleRootPath ("%foo%", @"C:\this folder does not exist", true);
+
+			Assert.AreEqual (@"%foo%\bar", pool.GetRootRelativePath (@"C:\this folder does not exist\bar"));
+			Assert.AreEqual (@"C:\this folder does not exist\bar", pool.GetRootAbsolutePath (@"%foo%\bar"));
+		}
+
+		[Test]
+		[ExpectedException (typeof (System.ArgumentException))]
+		public void CheckPoolGetRootAbsolutePathEx()
+		{
+			ResourceManagerPool pool = new ResourceManagerPool ();
+			pool.AddModuleRootPath ("%foo%", @"C:\this folder does not exist");
+
+			//	Resolution not possible, input path will be left unchanged.
+			Assert.AreEqual (@"C:\this folder does not exist\bar", pool.GetRootRelativePath (@"C:\this folder does not exist\bar"));
+
+			//	Resolution not possible, throws an exception as %foo% cannot
+			//	be resolved, given that the underlying folder does not exist.
+			pool.GetRootAbsolutePath (@"%foo%\bar");
+		}
+
+
 		private static string GetText(ResourceAccessors.StringResourceAccessor accessor, int index, string culture)
 		{
 			return accessor.Collection[index].GetCultureData (culture ?? Resources.DefaultTwoLetterISOLanguageName).GetValue (Common.Support.Res.Fields.ResourceString.Text) as string;

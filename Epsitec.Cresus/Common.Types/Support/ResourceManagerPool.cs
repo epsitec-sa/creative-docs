@@ -146,6 +146,10 @@ namespace Epsitec.Common.Support
 		}
 
 
+		/// <summary>
+		/// Sets up the default root paths (that is, <c>%app%</c>, <c>%lib%</c>,
+		/// <c>%patch%</c>, <c>%custom%</c> and <c>%live%</c>).
+		/// </summary>
 		public void SetupDefaultRootPaths()
 		{
 			//	TODO: définir les chemins...
@@ -162,10 +166,12 @@ namespace Epsitec.Common.Support
 				appPath = System.IO.Path.Combine (appPath, ResourceManagerPool.ModulesDirectory);
 			}
 
-			this.AddModuleRootPath (ResourceManagerPool.SymbolicNames.Application, appPath);
-			this.AddModuleRootPath (ResourceManagerPool.SymbolicNames.Custom, System.IO.Path.Combine (userPath, ResourceManagerPool.CustomModulesDirectory));
-			this.AddModuleRootPath (ResourceManagerPool.SymbolicNames.Library, System.IO.Path.Combine (userPath, ResourceManagerPool.LibraryModulesDirectory));
-			this.AddModuleRootPath (ResourceManagerPool.SymbolicNames.Patches, System.IO.Path.Combine (userPath, ResourceManagerPool.PatchModulesDirectory));
+			this.AddModuleRootPath (SymbolicNames.Application, appPath);
+
+			this.AddModuleRootPath (SymbolicNames.Custom,  System.IO.Path.Combine (userPath, ResourceManagerPool.CustomModulesDirectory), true);
+			this.AddModuleRootPath (SymbolicNames.Library, System.IO.Path.Combine (userPath, ResourceManagerPool.LibraryModulesDirectory), true);
+			this.AddModuleRootPath (SymbolicNames.Patches, System.IO.Path.Combine (userPath, ResourceManagerPool.PatchModulesDirectory), true);
+			this.AddModuleRootPath (SymbolicNames.Live,    System.IO.Path.Combine (userPath, ResourceManagerPool.LiveModulesDirectory), true);
 		}
 
 
@@ -180,6 +186,22 @@ namespace Epsitec.Common.Support
 		/// otherwise.</returns>
 		public bool AddModuleRootPath(string symbolicName, string path)
 		{
+			return this.AddModuleRootPath (symbolicName, path, false);
+		}
+
+		/// <summary>
+		/// Adds the named module root path: this records a link between a symbolic
+		/// name (such as <c>%app%</c>) and a file system path.
+		/// </summary>
+		/// <param name="symbolicName">Name of the symbolic.</param>
+		/// <param name="path">The path.</param>
+		/// <param name="tolerateMissingDirectories">If set to <c>true</c>, tolerates missing directories.</param>
+		/// <returns>
+		/// Returns <c>true</c> if the operation was successfull; <c>false</c>
+		/// otherwise.
+		/// </returns>
+		public bool AddModuleRootPath(string symbolicName, string path, bool tolerateMissingDirectories)
+		{
 			System.Diagnostics.Debug.Assert (!string.IsNullOrEmpty (symbolicName));
 			System.Diagnostics.Debug.Assert (symbolicName.StartsWith ("%"));
 			System.Diagnostics.Debug.Assert (symbolicName.EndsWith ("%"));
@@ -189,6 +211,10 @@ namespace Epsitec.Common.Support
 				this.moduleRoots.Remove (symbolicName);
 			}
 			else if (System.IO.Directory.Exists (path))
+			{
+				this.moduleRoots[symbolicName] = path;
+			}
+			else if (tolerateMissingDirectories)
 			{
 				this.moduleRoots[symbolicName] = path;
 			}
@@ -259,7 +285,7 @@ namespace Epsitec.Common.Support
 		/// starts with a symbolic module path name (such as <c>%app%</c>), it
 		/// will be expanded to the real file system path.
 		/// </summary>
-		/// <param name="path">The relative path.</param>
+		/// <param name="path">The relative path, which may start with a symbolic path name.</param>
 		/// <returns>The absolute path.</returns>
 		public string GetRootAbsolutePath(string path)
 		{
@@ -283,7 +309,14 @@ namespace Epsitec.Common.Support
 				}
 			}
 
-			return ResourceManagerPool.SimplifyPath (string.Concat (prefix, result));
+			result = ResourceManagerPool.SimplifyPath (string.Concat (prefix, result));
+
+			if (result.StartsWith ("%"))
+			{
+				throw new System.ArgumentException (string.Format ("Path '{0}' cannot be resolved", path));
+			}
+
+			return result;
 		}
 
 		public string GetRootAbsolutePath(ResourceModuleInfo module, string path)
@@ -652,12 +685,14 @@ namespace Epsitec.Common.Support
 			public const string Library		= "%lib%";
 			public const string Patches		= "%patches%";
 			public const string Custom		= "%custom%";
+			public const string Live		= "%live%";
 		}
 
 		internal const string ModulesDirectory        = "Modules";
 		internal const string CustomModulesDirectory  = "Custom Modules";
 		internal const string PatchModulesDirectory   = "Patch Modules";
 		internal const string LibraryModulesDirectory = "Library Modules";
+		internal const string LiveModulesDirectory    = "Live Modules";
 		
 		string									name;
 		string									defaultPrefix;

@@ -14,18 +14,22 @@ namespace Epsitec.Common.Designer
 	/// </summary>
 	public class Module
 	{
-		public Module(DesignerApplication designerApplication, DesignerMode mode, string resourcePrefix, ResourceModuleId moduleId)
+		public Module(DesignerApplication designerApplication, DesignerMode mode, ResourceModuleId moduleId)
+			: this (designerApplication.ResourceManagerPool, moduleId)
 		{
 			this.designerApplication = designerApplication;
 			this.mode = mode;
+		}
+
+		public Module(ResourceManagerPool pool, ResourceModuleId moduleId)
+		{
+			System.Diagnostics.Debug.Assert (pool != null);
+
 			this.moduleId = moduleId;
 			this.batchSaver = new ResourceBundleBatchSaver ();
 
-			ResourceManagerPool pool = this.designerApplication == null ? new ResourceManagerPool () : this.designerApplication.ResourceManagerPool;
-
 			this.resourceManager = new ResourceManager(pool, moduleId);
 			this.resourceManager.DefineDefaultModuleName(this.moduleId.Name);
-			this.resourceManager.ActivePrefix = resourcePrefix;
 
 			this.moduleInfo = this.resourceManager.DefaultModuleInfo.Clone ();
 
