@@ -242,7 +242,14 @@ namespace Epsitec.Common.Designer.Viewers
 				
 				if (string.IsNullOrEmpty(name))
 				{
-					this.primaryIconInfo.Text = Res.Strings.Dialog.Icon.None;
+					if (icon == "<null/>")
+					{
+						this.primaryIconInfo.Text = Res.Strings.Dialog.Icon.Default;
+					}
+					else
+					{
+						this.primaryIconInfo.Text = Res.Strings.Dialog.Icon.None;
+					}
 				}
 				else
 				{

@@ -453,6 +453,7 @@ namespace Epsitec.Common.Designer
 				
 				public static class Icon
 				{
+					public static string Default { get { return global::Epsitec.Common.Designer.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (33554441)); } }
 					public static string None { get { return global::Epsitec.Common.Designer.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (196)); } }
 					public static string Title { get { return global::Epsitec.Common.Designer.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (193)); } }
 					public static class Button

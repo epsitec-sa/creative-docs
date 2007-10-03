@@ -268,14 +268,14 @@ namespace Epsitec.Common.Designer.Dialogs
 			{
 				int row = first+i;
 
-				if (row == 0)  // première ligne 'null' ?
+				if (row == 0)  // première ligne 'icône par défaut' ?
 				{
 					this.arrayDetail.SetLineState(0, row, MyWidgets.StringList.CellState.Normal);
 					this.arrayDetail.SetLineState(1, row, MyWidgets.StringList.CellState.Normal);
 					this.arrayDetail.SetLineState(2, row, MyWidgets.StringList.CellState.Normal);
 					this.arrayDetail.SetLineString(0, row, @"<img src=""manifest:Epsitec.Common.Widgets.Images.DefaultValue.icon""/>");
 					this.arrayDetail.SetLineString(1, row, "");
-					this.arrayDetail.SetLineString(2, row, Res.Strings.Dialog.Icon.Default);
+					this.arrayDetail.SetLineString(2, row, "<i>Icône par défaut</i>");
 				}
 				else if (row == 1)  // deuxième ligne 'pas d'icône' ?
 				{
@@ -318,18 +318,23 @@ namespace Epsitec.Common.Designer.Dialogs
 		protected int SelectedIcon(string icon)
 		{
 			//	Retourne le rang d'une icône dans le tableau.
+			if (icon == "<null/>")
+			{
+				return 0;  // première ligne 'icône par défaut'
+			}
+
 			if (!string.IsNullOrEmpty(icon))
 			{
 				for (int i=0; i<this.icons.Count; i++)
 				{
 					if (this.icons[i] == icon)
 					{
-						return i+1;
+						return i+2;
 					}
 				}
 			}
 
-			return 0;  // première ligne 'pas d'icône'
+			return 1;  // deuxième ligne 'pas d'icône'
 		}
 
 		protected void Search(string searching, int direction)

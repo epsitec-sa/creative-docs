@@ -298,7 +298,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 						if ( first < this.TotalCell )
 						{
-							if (first == 0)  // null ?
+							if (first == 0)  // icône par défaut ?
 							{
 								layout.Text = @"<img src=""manifest:Epsitec.Common.Widgets.Images.DefaultValue.icon""/>";
 								layout.Paint(rect.BottomLeft, graphics);
@@ -449,9 +449,9 @@ namespace Epsitec.Common.Designer.MyWidgets
 			//	Donne le texte du tooltip en fonction de la position.
 			int index = this.Detect(pos);
 
-			if (index == 0)  // null ?
+			if (index == 0)  // icône par défaut ?
 			{
-				return "<i>Null</i>";
+				return "<i>Icône par défaut</i>";
 			}
 
 			if (index == 1)  // pas d'icône ?
