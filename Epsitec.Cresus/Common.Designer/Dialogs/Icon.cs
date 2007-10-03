@@ -275,7 +275,7 @@ namespace Epsitec.Common.Designer.Dialogs
 					this.arrayDetail.SetLineState(2, row, MyWidgets.StringList.CellState.Normal);
 					this.arrayDetail.SetLineString(0, row, @"<img src=""manifest:Epsitec.Common.Widgets.Images.DefaultValue.icon""/>");
 					this.arrayDetail.SetLineString(1, row, "");
-					this.arrayDetail.SetLineString(2, row, "<i>Icône par défaut</i>");
+					this.arrayDetail.SetLineString(2, row, Res.Strings.Dialog.Icon.Default);
 				}
 				else if (row == 1)  // deuxième ligne 'pas d'icône' ?
 				{

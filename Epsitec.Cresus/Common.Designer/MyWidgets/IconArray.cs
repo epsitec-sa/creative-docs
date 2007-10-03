@@ -451,7 +451,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			if (index == 0)  // icône par défaut ?
 			{
-				return "<i>Icône par défaut</i>";
+				return Res.Strings.Dialog.Icon.Default;
 			}
 
 			if (index == 1)  // pas d'icône ?
