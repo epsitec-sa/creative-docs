@@ -1278,7 +1278,7 @@ namespace Epsitec.Common.Designer.Viewers
 			{
 				if (this.HasDeleteOrDuplicate && !this.designerApplication.IsReadonly)
 				{
-					this.GetCommandState("Delete").Enable = (sel != -1 && count > 1 && build);
+					this.GetCommandState("Delete").Enable = (sel != -1 && build);
 					this.GetCommandState("Create").Enable = (build);
 					this.GetCommandState("Duplicate").Enable = (sel != -1 && build);
 				}
