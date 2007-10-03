@@ -696,31 +696,45 @@ namespace Epsitec.Common.Drawing
 			}
 			else
 			{
-				using (System.IO.MemoryStream stream = new System.IO.MemoryStream (data, false))
+				for (int attempt = 0; attempt < 10; attempt++)
 				{
-					System.Drawing.Bitmap src_bitmap = new System.Drawing.Bitmap (stream);
-					System.Drawing.Bitmap dst_bitmap = new System.Drawing.Bitmap (src_bitmap.Width, src_bitmap.Height);
-					
-					double dpi_x = src_bitmap.HorizontalResolution;
-					double dpi_y = src_bitmap.VerticalResolution;
-					
-					src_bitmap.SetResolution (dst_bitmap.HorizontalResolution, dst_bitmap.VerticalResolution);
-					
-					using (System.Drawing.Graphics graphics = System.Drawing.Graphics.FromImage (dst_bitmap))
+					try
 					{
-						graphics.DrawImageUnscaled (src_bitmap, 0, 0, src_bitmap.Width, src_bitmap.Height);
+						using (System.IO.MemoryStream stream = new System.IO.MemoryStream (data, false))
+						{
+							System.Drawing.Bitmap src_bitmap = new System.Drawing.Bitmap (stream);
+							System.Drawing.Bitmap dst_bitmap = new System.Drawing.Bitmap (src_bitmap.Width, src_bitmap.Height);
+
+							double dpi_x = src_bitmap.HorizontalResolution;
+							double dpi_y = src_bitmap.VerticalResolution;
+
+							src_bitmap.SetResolution (dst_bitmap.HorizontalResolution, dst_bitmap.VerticalResolution);
+
+							using (System.Drawing.Graphics graphics = System.Drawing.Graphics.FromImage (dst_bitmap))
+							{
+								graphics.DrawImageUnscaled (src_bitmap, 0, 0, src_bitmap.Width, src_bitmap.Height);
+							}
+
+							Image image = Bitmap.FromNativeBitmap (dst_bitmap, origin, size);
+
+							if (image != null)
+							{
+								image.dpi_x = dpi_x;
+								image.dpi_y = dpi_y;
+							}
+
+							return image;
+						}
 					}
-					
-					Image image = Bitmap.FromNativeBitmap (dst_bitmap, origin, size);
-					
-					if (image != null)
+					catch (System.OutOfMemoryException)
 					{
-						image.dpi_x = dpi_x;
-						image.dpi_y = dpi_y;
+						System.Diagnostics.Debug.WriteLine ("Out of memory in GDI - attempt " + attempt);
+						System.GC.Collect ();
+						System.Threading.Thread.Sleep (1);
 					}
-					
-					return image;
 				}
+
+				return null;
 			}
 		}
 		

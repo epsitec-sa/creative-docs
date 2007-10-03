@@ -250,35 +250,38 @@ namespace Epsitec.Common.Support
 		/// <returns>The enumeration of plausible module paths.</returns>
 		public static IEnumerable<string> FindModulePaths(string rootPath)
 		{
-			foreach (string path in System.IO.Directory.GetDirectories (rootPath))
+			if (System.IO.Directory.Exists (rootPath))
 			{
-				string name  = System.IO.Path.GetFileName (path);
-				string probe = System.IO.Path.Combine (path, ResourceModule.ManifestFileName);
-				bool   found = false;
+				foreach (string path in System.IO.Directory.GetDirectories (rootPath))
+				{
+					string name  = System.IO.Path.GetFileName (path);
+					string probe = System.IO.Path.Combine (path, ResourceModule.ManifestFileName);
+					bool found = false;
 
-				if (name.StartsWith ("."))
-				{
-					continue;
-				}
+					if (name.StartsWith ("."))
+					{
+						continue;
+					}
 
-				try
-				{
-					found = System.IO.File.Exists (probe);
-				}
-				catch (System.IO.IOException)
-				{
-					//	Ignore file related exceptions; we don't want to stop if
-					//	we try to analyze some protected directory: just skip it.
-				}
+					try
+					{
+						found = System.IO.File.Exists (probe);
+					}
+					catch (System.IO.IOException)
+					{
+						//	Ignore file related exceptions; we don't want to stop if
+						//	we try to analyze some protected directory: just skip it.
+					}
 
-				if (found)
-				{
-					yield return path;
-				}
+					if (found)
+					{
+						yield return path;
+					}
 
-				foreach (string child in ResourceModule.FindModulePaths (path))
-				{
-					yield return child;
+					foreach (string child in ResourceModule.FindModulePaths (path))
+					{
+						yield return child;
+					}
 				}
 			}
 		}

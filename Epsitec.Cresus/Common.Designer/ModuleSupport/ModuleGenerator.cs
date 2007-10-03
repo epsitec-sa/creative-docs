@@ -12,6 +12,9 @@ namespace Epsitec.Common.Designer.ModuleSupport
 {
 	public static class ModuleGenerator
 	{
+		/// <summary>
+		/// Creates the live modules.
+		/// </summary>
 		public static void CreateLiveModules()
 		{
 			ResourceManagerPool pool = new ResourceManagerPool ("ModuleGenerator");
