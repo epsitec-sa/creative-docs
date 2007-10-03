@@ -1063,29 +1063,22 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
-		public bool IsReference(int index)
+		public CultureMapSource GetCultureMapSource(int index)
 		{
-			//	Retourne true si la ressource provient d'un module de référence (= pas patch).
+			//	Retourne le type de la ressource.
 			if (index != -1)
 			{
 				CultureMap item = this.collectionView.Items[index] as CultureMap;
-				return this.IsReference(item);
+				return this.GetCultureMapSource(item);
 			}
 
-			return true;
+			return CultureMapSource.Invalid;
 		}
 
-		public bool IsReference(CultureMap item)
+		public CultureMapSource GetCultureMapSource(CultureMap item)
 		{
-			//	Retourne true si la ressource provient d'un module de référence (= pas patch).
-			if (this.IsPatchModule)
-			{
-				return item.IsNameReadOnly;
-			}
-			else
-			{
-				return true;
-			}
+			//	Retourne le type de la ressource.
+			return item.Source;
 		}
 
 		public ModificationState GetModification(int index, string cultureName)
