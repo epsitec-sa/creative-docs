@@ -1046,10 +1046,46 @@ namespace Epsitec.Common.Designer
 		}
 
 
-		public bool IsReferenceModule(CultureMap item)
+		public bool IsPatchModule
+		{
+			//	Indique si on est dans un module de patch.
+			get
+			{
+				ResourceModuleInfo info = this.resourceManager.DefaultModuleInfo;
+				if (info == null)
+				{
+					return false;
+				}
+				else
+				{
+					return info.IsPatchModule;
+				}
+			}
+		}
+
+		public bool IsReference(int index)
 		{
 			//	Retourne true si la ressource provient d'un module de référence (= pas patch).
-			return !item.IsNameReadOnly;
+			if (index != -1)
+			{
+				CultureMap item = this.collectionView.Items[index] as CultureMap;
+				return this.IsReference(item);
+			}
+
+			return true;
+		}
+
+		public bool IsReference(CultureMap item)
+		{
+			//	Retourne true si la ressource provient d'un module de référence (= pas patch).
+			if (this.IsPatchModule)
+			{
+				return item.IsNameReadOnly;
+			}
+			else
+			{
+				return true;
+			}
 		}
 
 		public ModificationState GetModification(int index, string cultureName)

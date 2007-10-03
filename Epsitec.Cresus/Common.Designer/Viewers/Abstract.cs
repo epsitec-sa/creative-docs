@@ -1221,6 +1221,8 @@ namespace Epsitec.Common.Designer.Viewers
 			int sel = this.access.AccessIndex;
 			int count = this.access.AccessCount;
 			bool build = (this.module.Mode == DesignerMode.Build);
+			bool patch = this.access.IsPatchModule;
+			bool reference = this.access.IsReference(sel);
 
 			this.UpdateCommandTool("ToolSelect");
 			this.UpdateCommandTool("ToolGlobal");
@@ -1278,7 +1280,7 @@ namespace Epsitec.Common.Designer.Viewers
 			{
 				if (this.HasDeleteOrDuplicate && !this.designerApplication.IsReadonly)
 				{
-					this.GetCommandState("Delete").Enable = (sel != -1 && build);
+					this.GetCommandState("Delete").Enable = (sel != -1 && build && (!patch || !reference));
 					this.GetCommandState("Create").Enable = (build);
 					this.GetCommandState("Duplicate").Enable = (sel != -1 && build);
 				}
@@ -1934,7 +1936,7 @@ namespace Epsitec.Common.Designer.Viewers
 				//	Par optimisation, un seul widget est créé s'il n'y a pas de couleur de fond.
 				UI.ItemViewText main, st;
 
-				if (backColor.IsEmpty && !this.owner.access.IsReferenceModule(item))  // module de patch ?
+				if (backColor.IsEmpty && this.owner.access.IsPatchModule && this.owner.access.IsReference(item))  // module de référence ?
 				{
 					backColor = Color.FromAlphaRgb(0.1, 0,0,0);  // noir très transparent (gris)
 				}
@@ -2041,7 +2043,7 @@ namespace Epsitec.Common.Designer.Viewers
 		public string GetSourceText(CultureMap item)
 		{
 			//	Retourne le texte pour la source.
-			return this.access.IsReferenceModule(item) ? "R" : "P";
+			return this.access.IsReference(item) ? "R" : "P";
 		}
 
 		public string GetDruidText(CultureMap item)
