@@ -33,6 +33,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.buttonMainCompact.Clicked += new MessageEventHandler(this.HandleButtonCompactOrExtendClicked);
 
 			this.primaryText = new TextFieldMulti(leftContainer.Container);
+			this.primaryText.AcceptsNullValue = true;
 			this.primaryText.PreferredHeight = 10+14*6;
 			this.primaryText.Dock = DockStyle.StackBegin;
 			this.primaryText.TextChanged += new EventHandler(this.HandleTextChanged);
@@ -42,6 +43,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.primaryText.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 
 			this.secondaryText = new TextFieldMulti(rightContainer.Container);
+			this.secondaryText.AcceptsNullValue = true;
 			this.secondaryText.PreferredHeight = 10+14*6;
 			this.secondaryText.Dock = DockStyle.StackBegin;
 			this.secondaryText.TextChanged += new EventHandler(this.HandleTextChanged);
@@ -54,6 +56,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.CreateBand(out leftContainer, out rightContainer, Res.Strings.Viewers.Captions.About.Title, BandMode.MainView, GlyphShape.None, false, 0.3);
 
 			this.primaryComment = new TextFieldMulti(leftContainer.Container);
+			this.primaryComment.AcceptsNullValue = true;
 			this.primaryComment.PreferredHeight = 10+14*4;
 			this.primaryComment.Dock = DockStyle.StackBegin;
 			this.primaryComment.TextChanged += new EventHandler(this.HandleTextChanged);
@@ -63,6 +66,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.primaryComment.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 
 			this.secondaryComment = new TextFieldMulti(rightContainer.Container);
+			this.secondaryComment.AcceptsNullValue = true;
 			this.secondaryComment.PreferredHeight = 10+14*4;
 			this.secondaryComment.Dock = DockStyle.StackBegin;
 			this.secondaryComment.TextChanged += new EventHandler(this.HandleTextChanged);
