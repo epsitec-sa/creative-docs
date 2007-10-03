@@ -210,6 +210,7 @@ namespace Epsitec.Common.Designer.Viewers
 			//	Initialise la table.
 			StructuredType cultureMapType = new StructuredType();
 			cultureMapType.Fields.Add("Name", StringType.Default);
+			cultureMapType.Fields.Add("Source", StringType.Default);
 			cultureMapType.Fields.Add("Primary", StringType.Default);
 			cultureMapType.Fields.Add("Secondary", StringType.Default);
 			cultureMapType.Fields.Add("Druid", StringType.Default);
@@ -219,22 +220,24 @@ namespace Epsitec.Common.Designer.Viewers
 			this.table.SourceType = cultureMapType;
 
 			this.table.Columns.Add(new UI.ItemTableColumn("Name", new Widgets.Layouts.GridLength(this.GetColumnWidth(0), Widgets.Layouts.GridUnitType.Proportional)));
-			this.table.Columns.Add(new UI.ItemTableColumn("Primary", new Widgets.Layouts.GridLength(this.GetColumnWidth(1), Widgets.Layouts.GridUnitType.Proportional)));
-			this.table.Columns.Add(new UI.ItemTableColumn("Secondary", new Widgets.Layouts.GridLength(this.GetColumnWidth(2), Widgets.Layouts.GridUnitType.Proportional)));
-			this.table.Columns.Add(new UI.ItemTableColumn("Druid", new Widgets.Layouts.GridLength(this.GetColumnWidth(3), Widgets.Layouts.GridUnitType.Proportional)));
-			this.table.Columns.Add(new UI.ItemTableColumn("Local", new Widgets.Layouts.GridLength(this.GetColumnWidth(4), Widgets.Layouts.GridUnitType.Proportional)));
-			this.table.Columns.Add(new UI.ItemTableColumn("Identity", new Widgets.Layouts.GridLength(this.GetColumnWidth(5), Widgets.Layouts.GridUnitType.Proportional)));
+			this.table.Columns.Add(new UI.ItemTableColumn("Source", new Widgets.Layouts.GridLength(this.GetColumnWidth(1), Widgets.Layouts.GridUnitType.Proportional)));
+			this.table.Columns.Add(new UI.ItemTableColumn("Primary", new Widgets.Layouts.GridLength(this.GetColumnWidth(2), Widgets.Layouts.GridUnitType.Proportional)));
+			this.table.Columns.Add(new UI.ItemTableColumn("Secondary", new Widgets.Layouts.GridLength(this.GetColumnWidth(3), Widgets.Layouts.GridUnitType.Proportional)));
+			this.table.Columns.Add(new UI.ItemTableColumn("Druid", new Widgets.Layouts.GridLength(this.GetColumnWidth(4), Widgets.Layouts.GridUnitType.Proportional)));
+			this.table.Columns.Add(new UI.ItemTableColumn("Local", new Widgets.Layouts.GridLength(this.GetColumnWidth(5), Widgets.Layouts.GridUnitType.Proportional)));
+			this.table.Columns.Add(new UI.ItemTableColumn("Identity", new Widgets.Layouts.GridLength(this.GetColumnWidth(6), Widgets.Layouts.GridUnitType.Proportional)));
 
-			this.table.ColumnHeader.SetColumnComparer(1, this.ComparePrimary);
-			this.table.ColumnHeader.SetColumnComparer(2, this.CompareSecondary);
-			this.table.ColumnHeader.SetColumnComparer(3, this.CompareDruid);
-			this.table.ColumnHeader.SetColumnComparer(4, this.CompareLocal);
-			this.table.ColumnHeader.SetColumnComparer(5, this.CompareIdentity);
+			this.table.ColumnHeader.SetColumnComparer(1, this.CompareSource);
+			this.table.ColumnHeader.SetColumnComparer(2, this.ComparePrimary);
+			this.table.ColumnHeader.SetColumnComparer(3, this.CompareSecondary);
+			this.table.ColumnHeader.SetColumnComparer(4, this.CompareDruid);
+			this.table.ColumnHeader.SetColumnComparer(5, this.CompareLocal);
+			this.table.ColumnHeader.SetColumnComparer(6, this.CompareIdentity);
 
 			this.table.ColumnHeader.SetColumnText(0, "Nom");
-			this.table.ColumnHeader.SetColumnText(3, "Druid");
-			this.table.ColumnHeader.SetColumnText(4, "Local");
-			this.table.ColumnHeader.SetColumnText(5, "Identité");
+			this.table.ColumnHeader.SetColumnText(4, "Druid");
+			this.table.ColumnHeader.SetColumnText(5, "Local");
+			this.table.ColumnHeader.SetColumnText(6, "Identité");
 
 			this.table.ColumnHeader.SetColumnSort(0, ListSortDirection.Ascending);
 		}
@@ -244,7 +247,7 @@ namespace Epsitec.Common.Designer.Viewers
 			//	Retourne le rang de la colonne pour la culture principale.
 			get
 			{
-				return 1;
+				return 2;
 			}
 		}
 
@@ -253,7 +256,7 @@ namespace Epsitec.Common.Designer.Viewers
 			//	Retourne le rang de la colonne pour la culture secondaire.
 			get
 			{
-				return 2;
+				return 3;
 			}
 		}
 
@@ -1762,6 +1765,9 @@ namespace Epsitec.Common.Designer.Viewers
 					case "Name":
 						return this.CreateName(item, shape);
 
+					case "Source":
+						return this.CreateSource(item, shape);
+
 					case "Type":
 						return this.CreateType(item, shape);
 
@@ -1798,6 +1804,13 @@ namespace Epsitec.Common.Designer.Viewers
 
 				text = TextLayout.ConvertToTaggedText(text);
 				return this.CreateItemViewText(item, text, ContentAlignment.MiddleLeft, Color.Empty);
+			}
+
+			private Widget CreateSource(CultureMap item, UI.ItemViewShape shape)
+			{
+				//	Crée le contenu pour la source de la ressource.
+				string text = this.owner.GetSourceText(item);
+				return this.CreateItemViewText(item, text, ContentAlignment.MiddleCenter, Color.Empty);
 			}
 
 			private Widget CreateType(CultureMap item, UI.ItemViewShape shape)
@@ -1953,6 +1966,17 @@ namespace Epsitec.Common.Designer.Viewers
 		}
 
 		
+		protected int CompareSource(object a, object b)
+		{
+			CultureMap itemA = a as CultureMap;
+			CultureMap itemB = b as CultureMap;
+
+			string sA = this.GetSourceText(itemA);
+			string sB = this.GetSourceText(itemB);
+
+			return sA.CompareTo(sB);
+		}
+
 		protected int ComparePrimary(object a, object b)
 		{
 			CultureMap itemA = a as CultureMap;
@@ -2012,6 +2036,12 @@ namespace Epsitec.Common.Designer.Viewers
 		{
 			//	Retourne le texte pour une colonne primaire ou secondaire.
 			return "";
+		}
+
+		public string GetSourceText(CultureMap item)
+		{
+			//	Retourne le texte pour la source.
+			return this.access.IsReferenceModule(item) ? "R" : "P";
 		}
 
 		public string GetDruidText(CultureMap item)
@@ -2213,8 +2243,8 @@ namespace Epsitec.Common.Designer.Viewers
 		protected static double					topArrayHeight = 220;
 		protected static bool					mainExtended = false;
 		protected static bool					suiteExtended = false;
-		private static double[]					columnWidthHorizontal = {200, 100, 100, 80, 50, 100};
-		private static double[]					columnWidthVertical = {250, 300, 300, 80, 50, 100};
+		private static double[]					columnWidthHorizontal = {180, 20, 100, 100, 80, 50, 100};
+		private static double[]					columnWidthVertical = {230, 20, 300, 300, 80, 50, 100};
 
 		protected Module						module;
 		protected PanelsContext					context;
