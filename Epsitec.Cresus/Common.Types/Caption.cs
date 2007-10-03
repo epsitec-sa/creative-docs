@@ -171,7 +171,14 @@ namespace Epsitec.Common.Types
 			}
 			set
 			{
-				this.SetValue (Caption.IconProperty, value);
+				if (value == null)
+				{
+					this.ClearValue (Caption.IconProperty);
+				}
+				else
+				{
+					this.SetValue (Caption.IconProperty, value);
+				}
 			}
 		}
 
