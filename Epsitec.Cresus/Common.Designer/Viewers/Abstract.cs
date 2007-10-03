@@ -1178,7 +1178,8 @@ namespace Epsitec.Common.Designer.Viewers
 				this.secondarySummary.Text = this.GetSummary(this.GetTwoLetters(1));
 			}
 
-			this.labelEdit.Enable = !this.designerApplication.IsReadonly;
+			bool readOlny = this.access.IsNameReadOnly(this.access.AccessIndex);
+			this.labelEdit.Enable = !this.designerApplication.IsReadonly && !readOlny;
 
 			CultureMap item = this.access.CollectionView.CurrentItem as CultureMap;
 			if (item != null)
@@ -1220,7 +1221,7 @@ namespace Epsitec.Common.Designer.Viewers
 			//	Met à jour les commandes en fonction de la ressource sélectionnée.
 			int sel = this.access.AccessIndex;
 			int count = this.access.AccessCount;
-			bool build = (this.module.Mode == DesignerMode.Build);
+			bool build = this.module.Mode == DesignerMode.Build;
 			bool patch = this.access.IsPatchModule;
 			bool reference = this.access.GetCultureMapSource(sel) == CultureMapSource.ReferenceModule;
 
@@ -1936,12 +1937,13 @@ namespace Epsitec.Common.Designer.Viewers
 				//	Par optimisation, un seul widget est créé s'il n'y a pas de couleur de fond.
 				UI.ItemViewText main, st;
 
-				CultureMapSource source = this.owner.access.GetCultureMapSource(item);
-				if (backColor.IsEmpty && this.owner.access.IsPatchModule && source != CultureMapSource.PatchModule)  // module de référence ?
+				if (backColor.IsEmpty && this.owner.access.IsPatchModule)  // module de patch ?
 				{
+					CultureMapSource source = this.owner.access.GetCultureMapSource(item);
+
 					if (source == CultureMapSource.ReferenceModule)
 					{
-						backColor = Color.FromAlphaRgb(0.1, 0, 0, 0);  // noir très transparent (gris clair)
+						backColor = Color.FromAlphaRgb(0.1, 0.0, 0.0, 0.0);  // noir très transparent (gris clair)
 					}
 
 					if (source == CultureMapSource.DynamicMerge)

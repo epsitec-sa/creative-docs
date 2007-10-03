@@ -1081,6 +1081,18 @@ namespace Epsitec.Common.Designer
 			return item.Source;
 		}
 
+		public bool IsNameReadOnly(int index)
+		{
+			//	Indique si le nom est en lecture seule.
+			if (index != -1)
+			{
+				CultureMap item = this.collectionView.Items[index] as CultureMap;
+				return item.IsNameReadOnly;
+			}
+
+			return true;
+		}
+
 		public ModificationState GetModification(int index, string cultureName)
 		{
 			//	Donne l'état 'modifié'.
