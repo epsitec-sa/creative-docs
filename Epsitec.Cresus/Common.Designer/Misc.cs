@@ -603,9 +603,9 @@ namespace Epsitec.Common.Designer
 			{
 				string infix  = ".Images.";
 				string suffix = ".icon";
-				
-				int infixPos  = fullName.IndexOf (infix);
-				int prefixLen = fullName.IndexOf (':') + 1;
+
+				int infixPos  = fullName.IndexOf(infix);
+				int prefixLen = fullName.IndexOf(':') + 1;
 
 				if (infixPos > 0)
 				{
@@ -615,18 +615,18 @@ namespace Epsitec.Common.Designer
 					//	moduleName = "Epsitec.Common.Designer"
 					//	shortName  = "Xyz.Abc"
 
-					moduleName = fullName.Substring (prefixLen, infixPos - prefixLen);
-					shortName  = fullName.Substring (infixPos + infix.Length);
+					moduleName = fullName.Substring(prefixLen, infixPos - prefixLen);
+					shortName  = fullName.Substring(infixPos + infix.Length);
 
-					if (shortName.EndsWith (suffix))
+					if (shortName.EndsWith(suffix))
 					{
-						shortName = shortName.Substring (0, shortName.Length - suffix.Length);
+						shortName = shortName.Substring(0, shortName.Length - suffix.Length);
 					}
 				}
 				else
 				{
 					//	TODO: faire mieux !
-					string[] parts = fullName.Split ('.');
+					string[] parts = fullName.Split('.');
 					moduleName = parts[parts.Length-4];
 					shortName = parts[parts.Length-2];
 				}

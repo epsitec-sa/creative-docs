@@ -261,14 +261,23 @@ namespace Epsitec.Common.Designer.Dialogs
 				return;
 			}
 
-			this.arrayDetail.TotalRows = this.icons.Count+1;
+			this.arrayDetail.TotalRows = this.icons.Count+2;
 
 			int first = this.arrayDetail.FirstVisibleRow;
 			for (int i=0; i<this.arrayDetail.LineCount; i++)
 			{
 				int row = first+i;
 
-				if (row == 0)  // première ligne 'pas d'icône' ?
+				if (row == 0)  // première ligne 'null' ?
+				{
+					this.arrayDetail.SetLineState(0, row, MyWidgets.StringList.CellState.Normal);
+					this.arrayDetail.SetLineState(1, row, MyWidgets.StringList.CellState.Normal);
+					this.arrayDetail.SetLineState(2, row, MyWidgets.StringList.CellState.Normal);
+					this.arrayDetail.SetLineString(0, row, @"<img src=""manifest:Epsitec.Common.Widgets.Images.DefaultValue.icon""/>");
+					this.arrayDetail.SetLineString(1, row, "");
+					this.arrayDetail.SetLineString(2, row, Res.Strings.Dialog.Icon.Default);
+				}
+				else if (row == 1)  // deuxième ligne 'pas d'icône' ?
 				{
 					this.arrayDetail.SetLineState(0, row, MyWidgets.StringList.CellState.Normal);
 					this.arrayDetail.SetLineState(1, row, MyWidgets.StringList.CellState.Normal);
@@ -277,9 +286,9 @@ namespace Epsitec.Common.Designer.Dialogs
 					this.arrayDetail.SetLineString(1, row, "");
 					this.arrayDetail.SetLineString(2, row, Res.Strings.Dialog.Icon.None);
 				}
-				else if (row-1 < this.icons.Count)
+				else if (row-2 < this.icons.Count)
 				{
-					string icon = this.icons[row-1];
+					string icon = this.icons[row-2];
 					string text = Misc.ImageFull(icon);
 
 					string module, name;
@@ -327,7 +336,7 @@ namespace Epsitec.Common.Designer.Dialogs
 		{
 			//	Cherche dans une direction donnée.
 			searching = Searcher.RemoveAccent(searching.ToLower());
-			int sel = this.Selected-1;
+			int sel = this.Selected-2;
 
 			for (int i=0; i<this.icons.Count; i++)
 			{
@@ -349,7 +358,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 				if (name.Contains(searching))
 				{
-					this.Selected = sel+1;
+					this.Selected = sel+2;
 					this.ShowSelection();
 					return;
 				}
@@ -388,6 +397,28 @@ namespace Epsitec.Common.Designer.Dialogs
 		}
 
 
+		protected void SelectedToIcon()
+		{
+			int sel = this.Selected;
+			if (sel < 0)
+			{
+				this.icon = null;
+			}
+			else if (sel == 0)  // null ?
+			{
+				this.icon = "<null/>";
+			}
+			else if (sel == 1)  // pas d'icône ?
+			{
+				this.icon = null;
+			}
+			else
+			{
+				this.icon = this.icons[sel-2];
+			}
+		}
+
+
 		void HandleSearchPrevClicked(object sender, MessageEventArgs e)
 		{
 			//	Cherche l'occurence précédente.
@@ -407,9 +438,9 @@ namespace Epsitec.Common.Designer.Dialogs
 			//	Menu pour choisir le filtre fermé.
 			string icon = null;
 			int sel = this.Selected;
-			if (sel > 0)
+			if (sel >= 2)
 			{
-				icon = this.icons[sel-1];
+				icon = this.icons[sel-2];
 			}
 
 			this.UpdateFilter();
@@ -466,16 +497,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			this.parentWindow.MakeActive();
 			this.window.Hide();
 			this.OnClosed();
-
-			int sel = this.Selected;
-			if (sel <= 0)
-			{
-				this.icon = null;
-			}
-			else
-			{
-				this.icon = this.icons[sel-1];
-			}
+			this.SelectedToIcon();
 		}
 
 		private void HandleWindowCloseClicked(object sender)
@@ -497,16 +519,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			this.parentWindow.MakeActive();
 			this.window.Hide();
 			this.OnClosed();
-
-			int sel = this.Selected;
-			if (sel <= 0)
-			{
-				this.icon = null;
-			}
-			else
-			{
-				this.icon = this.icons[sel-1];
-			}
+			this.SelectedToIcon();
 		}
 
 		private void HandleSliderChanged(object sender)
