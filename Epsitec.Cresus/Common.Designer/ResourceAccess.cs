@@ -1046,6 +1046,12 @@ namespace Epsitec.Common.Designer
 		}
 
 
+		public bool IsReferenceModule(CultureMap item)
+		{
+			//	Retourne true si la ressource provient d'un module de référence (= pas patch).
+			return !item.IsNameReadOnly;
+		}
+
 		public ModificationState GetModification(int index, string cultureName)
 		{
 			//	Donne l'état 'modifié'.

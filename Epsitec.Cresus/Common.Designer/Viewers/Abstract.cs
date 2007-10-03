@@ -1789,23 +1789,20 @@ namespace Epsitec.Common.Designer.Viewers
 
 			private Widget CreateName(CultureMap item, UI.ItemViewShape shape)
 			{
+				//	Crée le contenu pour le nom de la ressource.
 				string text = (shape == UI.ItemViewShape.ToolTip) ? item.FullName : item.Name;
 				if (shape == UI.ItemViewShape.ToolTip && string.IsNullOrEmpty(text))
 				{
 					return null;
 				}
 
-				UI.ItemViewText widget = new UI.ItemViewText();
-				widget.Margins = new Margins(5, 5, 0, 0);
-				widget.Text = TextLayout.ConvertToTaggedText(text);
-				widget.TextBreakMode = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine;
-				widget.PreferredSize = widget.GetBestFitSize();
-
-				return widget;
+				text = TextLayout.ConvertToTaggedText(text);
+				return this.CreateItemViewText(item, text, ContentAlignment.MiddleLeft, Color.Empty);
 			}
 
 			private Widget CreateType(CultureMap item, UI.ItemViewShape shape)
 			{
+				//	Crée le contenu pour le type de la ressource.
 				StructuredData data = item.GetCultureData(Support.Resources.DefaultTwoLetterISOLanguageName);
 				object typeCodeValue = data.GetValue(Support.Res.Fields.ResourceBaseType.TypeCode);
 
@@ -1820,47 +1817,37 @@ namespace Epsitec.Common.Designer.Viewers
 					return null;
 				}
 
-				UI.ItemViewText widget = new UI.ItemViewText();
-				widget.Margins = new Margins(5, 5, 0, 0);
-				widget.Text = TextLayout.ConvertToTaggedText(text);
-				widget.TextBreakMode = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine;
-				widget.PreferredSize = widget.GetBestFitSize();
-
-				return widget;
+				text = TextLayout.ConvertToTaggedText(text);
+				return this.CreateItemViewText(item, text, ContentAlignment.MiddleLeft, Color.Empty);
 			}
 
 			private Widget CreatePrefix(CultureMap item, UI.ItemViewShape shape)
 			{
+				//	Crée le contenu pour le préfixe de la ressource.
 				if (shape == UI.ItemViewShape.ToolTip)
 				{
 					return null;
 				}
 
-				string text = item.Prefix;
-
-				UI.ItemViewText widget = new UI.ItemViewText();
-				widget.Margins = new Margins(5, 5, 0, 0);
-				widget.Text = TextLayout.ConvertToTaggedText(text);
-				widget.TextBreakMode = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine;
-				widget.PreferredSize = widget.GetBestFitSize();
-
-				return widget;
+				string text = TextLayout.ConvertToTaggedText(item.Prefix);
+				return this.CreateItemViewText(item, text, ContentAlignment.MiddleLeft, Color.Empty);
 			}
 
 			private Widget CreatePrimary(CultureMap item, UI.ItemViewShape shape)
 			{
+				//	Crée le contenu pour la colonne primaire.
 				return this.CreateContent(item, shape, this.owner.GetTwoLetters(0));
 			}
 
 			private Widget CreateSecondary(CultureMap item, UI.ItemViewShape shape)
 			{
+				//	Crée le contenu pour la colonne secondaire.
 				return this.CreateContent(item, shape, this.owner.GetTwoLetters(1));
 			}
 			
 			private Widget CreateContent(CultureMap item, UI.ItemViewShape shape, string twoLettersCulture)
 			{
 				//	Crée le contenu pour une colonne primaire ou secondaire.
-				//	Par optimisation, un seul widget est créé s'il n'y a pas de couleur de fond.
 				string text = this.owner.GetColumnText(item, twoLettersCulture) ?? ResourceBundle.Field.Null;
 				if (shape == UI.ItemViewShape.ToolTip && string.IsNullOrEmpty(text))
 				{
@@ -1872,32 +1859,20 @@ namespace Epsitec.Common.Designer.Viewers
 					text = text.Replace("<br/>", ", ");  // pour afficher un texte multi-lignes sur une seule
 				}
 
-				UI.ItemViewText main, st;
+				Color backColor = Color.Empty;
 				ResourceAccess.ModificationState state = this.owner.access.GetModification(item, twoLettersCulture);
 
-				if (state == ResourceAccess.ModificationState.Normal)
+				if (state != ResourceAccess.ModificationState.Normal)
 				{
-					main = st = new UI.ItemViewText();
-				}
-				else
-				{
-					main = new UI.ItemViewText();
-					main.BackColor = Abstract.GetBackgroundColor(state, 0.7);
-
-					st = new UI.ItemViewText(main);
-					st.Dock = DockStyle.Fill;
+					backColor = Abstract.GetBackgroundColor(state, 0.7);
 				}
 
-				st.Margins = new Margins(5, 5, 0, 0);
-				st.Text = text;
-				st.TextBreakMode = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine;
-				st.PreferredSize = st.GetBestFitSize();
-
-				return main;
+				return this.CreateItemViewText(item, text, ContentAlignment.MiddleLeft, backColor);
 			}
 			
 			private Widget CreateDruid(CultureMap item, UI.ItemViewShape shape)
 			{
+				//	Crée le contenu pour le druid de la ressource.
 				string text = this.owner.GetDruidText(item);
 
 				if (shape == UI.ItemViewShape.ToolTip)
@@ -1910,50 +1885,67 @@ namespace Epsitec.Common.Designer.Viewers
 					return null;
 				}
 
-				UI.ItemViewText widget = new UI.ItemViewText();
-				widget.Margins = new Margins(5, 5, 0, 0);
-				widget.Text = TextLayout.ConvertToTaggedText(text);
-				widget.TextBreakMode = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine;
-				widget.PreferredSize = widget.GetBestFitSize();
-
-				return widget;
+				text = TextLayout.ConvertToTaggedText(text);
+				return this.CreateItemViewText(item, text, ContentAlignment.MiddleLeft, Color.Empty);
 			}
 
 			private Widget CreateLocal(CultureMap item, UI.ItemViewShape shape)
 			{
+				//	Crée le contenu pour le numéro local du druid de la ressource.
 				if (shape == UI.ItemViewShape.ToolTip)
 				{
 					return null;
 				}
 
-				string text = this.owner.GetLocalText(item);
-
-				UI.ItemViewText widget = new UI.ItemViewText();
-				widget.Margins = new Margins(5, 5, 0, 0);
-				widget.Text = TextLayout.ConvertToTaggedText(text);
-				widget.TextBreakMode = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine;
-				widget.ContentAlignment = ContentAlignment.MiddleRight;
-				widget.PreferredSize = widget.GetBestFitSize();
-
-				return widget;
+				string text = TextLayout.ConvertToTaggedText(this.owner.GetLocalText(item));
+				return this.CreateItemViewText(item, text, ContentAlignment.MiddleRight, Color.Empty);
 			}
 
 			private Widget CreateIdentity(CultureMap item, UI.ItemViewShape shape)
 			{
+				//	Crée le contenu pour l'identité du créateur de la ressource.
 				if (shape == UI.ItemViewShape.ToolTip)
 				{
 					return null;
 				}
 
-				string text = this.owner.GetIdentityText(item);
+				string text = TextLayout.ConvertToTaggedText(this.owner.GetIdentityText(item));
+				return this.CreateItemViewText(item, text, ContentAlignment.MiddleLeft, Color.Empty);
+			}
 
-				UI.ItemViewText widget = new UI.ItemViewText();
-				widget.Margins = new Margins(5, 5, 0, 0);
-				widget.Text = TextLayout.ConvertToTaggedText(text);
-				widget.TextBreakMode = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine;
-				widget.PreferredSize = widget.GetBestFitSize();
+			private UI.ItemViewText CreateItemViewText(CultureMap item, string text, ContentAlignment alignment, Color backColor)
+			{
+				//	Crée un ou deux UI.ItemViewText, avec éventuellement un fond coloré.
+				//	S'il y a un fond coloré, il faut créer deux widgets, afin que la couleur remplisse toute
+				//	la surface, y compris les marges.
+				//	Par optimisation, un seul widget est créé s'il n'y a pas de couleur de fond.
+				UI.ItemViewText main, st;
 
-				return widget;
+				if (backColor.IsEmpty && !this.owner.access.IsReferenceModule(item))  // module de patch ?
+				{
+					backColor = Color.FromAlphaRgb(0.1, 0,0,0);  // noir très transparent (gris)
+				}
+
+				if (backColor.IsEmpty)
+				{
+					main = st = new UI.ItemViewText();
+				}
+				else
+				{
+					main = new UI.ItemViewText();
+					main.BackColor = backColor;
+
+					st = new UI.ItemViewText(main);
+					st.Dock = DockStyle.Fill;
+				}
+
+				st.Margins = new Margins(5, 5, 0, 0);
+				st.Text = text;
+				st.TextBreakMode = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine;
+				st.ContentAlignment = alignment;
+				st.PreferredSize = st.GetBestFitSize();
+
+				return main;
 			}
 
 
