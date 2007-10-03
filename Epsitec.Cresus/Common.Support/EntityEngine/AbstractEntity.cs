@@ -106,6 +106,11 @@ namespace Epsitec.Common.Support.EntityEngine
 			}
 		}
 
+		public static TResult GetCalculation<T, TResult>(T entity, string id, System.Func<T, TResult> func)
+		{
+			return func (entity);
+		}
+
 		private EntityContext context;
 		private IValueStore values;
 	}
