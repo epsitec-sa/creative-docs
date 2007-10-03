@@ -476,6 +476,19 @@ namespace Epsitec.Common.Support.CodeGeneration
 			this.WriteEndLine ();
 		}
 
+		public void WriteField(CodeAttributes attributes, params string[] fragments)
+		{
+			if (this.IsInInterface)
+			{
+				throw new System.InvalidOperationException ("Trying to generate field for an interface");
+			}
+
+			this.WriteBeginLine ();
+			this.WriteCode (attributes.ToString ());
+			this.WriteCode (fragments);
+			this.WriteEndLine ();
+		}
+
 		public void WriteCodeLine(string line)
 		{
 			string trimmed = line.TrimStart ();
@@ -542,6 +555,11 @@ namespace Epsitec.Common.Support.CodeGeneration
 
 			this.output.Append (code);
 			this.lineState = LineState.PartialLine;
+		}
+
+		public void WriteCode(params string[] fragments)
+		{
+			this.WriteCode (string.Concat (fragments));
 		}
 
 		public void WriteCodeText(string text)

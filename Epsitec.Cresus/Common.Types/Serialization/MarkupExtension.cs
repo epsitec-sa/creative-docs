@@ -43,7 +43,7 @@ namespace Epsitec.Common.Types.Serialization
 			//		these are used to define the markup extensions.
 
 			if ((value == null) ||
-				(value.IndexOfAny (new char[] { '{', '}', '\\', '\"', '\'' }) < 0))
+				(value.IndexOfAny (new char[] { '{', '}', '\\', '\"', '\'', '\n', '\r', '\t' }) < 0))
 			{
 				return value;
 			}
@@ -55,24 +55,16 @@ namespace Epsitec.Common.Types.Serialization
 				{
 					switch (c)
 					{
-						case '{':
-							buffer.Append (@"\[");
-							break;
-						case '\\':
-							buffer.Append (@"\\");
-							break;
-						case '\"':
-							buffer.Append (@"\""");
-							break;
-						case '\'':
-							buffer.Append (@"\'");
-							break;
-						case '}':
-							buffer.Append (@"\]");
-							break;
-						default:
-							buffer.Append (c);
-							break;
+						case '{':	buffer.Append (@"\[");	break;
+						case '\\':	buffer.Append (@"\\");	break;
+						case '\n':	buffer.Append (@"\n");	break;
+						case '\r':	buffer.Append (@"\r");	break;
+						case '\t':	buffer.Append (@"\t");	break;
+						case '\"':	buffer.Append (@"\""");	break;
+						case '\'':	buffer.Append (@"\'");	break;
+						case '}':	buffer.Append (@"\]");	break;
+						
+						default:	buffer.Append (c);		break;
 					}
 				}
 				
@@ -98,15 +90,13 @@ namespace Epsitec.Common.Types.Serialization
 						
 						switch (c)
 						{
-							case '[':
-								buffer.Append ('{');
-								break;
-							case ']':
-								buffer.Append ('}');
-								break;
-							default:
-								buffer.Append (c);
-								break;
+							case '[':	buffer.Append ('{');	break;
+							case ']':	buffer.Append ('}');	break;
+							case 'n':	buffer.Append ('\n');	break;
+							case 'r':	buffer.Append ('\r');	break;
+							case 't':	buffer.Append ('\t');	break;
+							
+							default:	buffer.Append (c);		break;
 						}
 					}
 					else if (c == '\\')
