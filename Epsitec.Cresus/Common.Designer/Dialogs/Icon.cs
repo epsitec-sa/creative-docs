@@ -318,23 +318,46 @@ namespace Epsitec.Common.Designer.Dialogs
 		protected int SelectedIcon(string icon)
 		{
 			//	Retourne le rang d'une icône dans le tableau.
-			if (icon == "<null/>")
+			if (icon == null)
 			{
 				return 0;  // première ligne 'icône par défaut'
 			}
 
-			if (!string.IsNullOrEmpty(icon))
+			if (icon == "")
 			{
-				for (int i=0; i<this.icons.Count; i++)
+				return 1;  // deuxième ligne 'pas d'icône'
+			}
+
+			for (int i=0; i<this.icons.Count; i++)
+			{
+				if (this.icons[i] == icon)
 				{
-					if (this.icons[i] == icon)
-					{
-						return i+2;
-					}
+					return i+2;
 				}
 			}
 
 			return 1;  // deuxième ligne 'pas d'icône'
+		}
+
+		protected string SelectedIcon(int sel)
+		{
+			//	Retourne une icône d'après son rang dans le tableau.
+			if (sel < 0)
+			{
+				return "";
+			}
+			else if (sel == 0)  // icône par défaut ?
+			{
+				return null;
+			}
+			else if (sel == 1)  // pas d'icône ?
+			{
+				return "";
+			}
+			else
+			{
+				return this.icons[sel-2];
+			}
 		}
 
 		protected void Search(string searching, int direction)
@@ -399,28 +422,6 @@ namespace Epsitec.Common.Designer.Dialogs
 			//	Montre la sélection dans un tableau (détaillé ou compact).
 			this.arrayDetail.ShowSelectedRow();
 			this.arrayCompact.ShowSelectedCell();
-		}
-
-
-		protected void SelectedToIcon()
-		{
-			int sel = this.Selected;
-			if (sel < 0)
-			{
-				this.icon = null;
-			}
-			else if (sel == 0)  // null ?
-			{
-				this.icon = "<null/>";
-			}
-			else if (sel == 1)  // pas d'icône ?
-			{
-				this.icon = null;
-			}
-			else
-			{
-				this.icon = this.icons[sel-2];
-			}
 		}
 
 
@@ -502,7 +503,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			this.parentWindow.MakeActive();
 			this.window.Hide();
 			this.OnClosed();
-			this.SelectedToIcon();
+			this.icon = this.SelectedIcon(this.Selected);
 		}
 
 		private void HandleWindowCloseClicked(object sender)
@@ -524,7 +525,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			this.parentWindow.MakeActive();
 			this.window.Hide();
 			this.OnClosed();
-			this.SelectedToIcon();
+			this.icon = this.SelectedIcon(this.Selected);
 		}
 
 		private void HandleSliderChanged(object sender)
