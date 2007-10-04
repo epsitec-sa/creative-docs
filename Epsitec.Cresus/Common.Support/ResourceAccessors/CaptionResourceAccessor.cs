@@ -89,11 +89,24 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			string description = data.GetValue (Res.Fields.ResourceCaption.Description) as string;
 			string icon        = data.GetValue (Res.Fields.ResourceCaption.Icon) as string;
 
+			if (!this.BasedOnPatchModule)
+			{
+				//	Never store an empty string as the icon specification in the
+				//	reference module; storing null instead is more compact !
+
+				if (icon == "")
+				{
+					icon = null;
+				}
+			}
+
 			Caption caption = new Caption ();
 
-			IEnumerable<string> labels = data.GetValue (Res.Fields.ResourceCaption.Labels) as IEnumerable<string>;
+			IList<string> labels = data.GetValue (Res.Fields.ResourceCaption.Labels) as IList<string>;
 
-			if (labels != null)
+			if ((labels != null) &&
+				(labels.Count > 0) &&
+				(!((labels.Count == 1) && (ResourceBundle.Field.IsNullString (labels[0])))))
 			{
 				foreach (string label in labels)
 				{
@@ -172,9 +185,25 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			{
 				data.SetValue (Res.Fields.ResourceCaption.Description, caption.Description);
 			}
-			if (caption.HasIcon)
+
+			string icon = caption.Icon;
+
+			if (item.Source == CultureMapSource.ReferenceModule)
 			{
-				data.SetValue (Res.Fields.ResourceCaption.Icon, caption.Icon);
+				//	If an icon is null in a reference module, replace with an
+				//	empty string, which for the Designer means "no icon", whereas
+				//	a null string would mean "default from reference", which is
+				//	meaningless in the context :
+
+				if (icon == null)
+				{
+					icon = "";
+				}
+			}
+
+			if (UndefinedValue.IsUndefinedValue (data.GetValue (Res.Fields.ResourceCaption.Icon)))
+			{
+				data.SetValue (Res.Fields.ResourceCaption.Icon, icon);
 			}
 		}
 
@@ -193,7 +222,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			string description = data.GetValue (Res.Fields.ResourceCaption.Description) as string;
 			string icon        = data.GetValue (Res.Fields.ResourceCaption.Icon) as string;
 
-			return ((labels == null) || (labels.Count == 0))
+			return ((labels == null) || (labels.Count == 0) || ((labels.Count == 1) && (ResourceBundle.Field.IsNullString (labels[0]))))
 				&& (ResourceBundle.Field.IsNullString (description))
 				&& (ResourceBundle.Field.IsNullString (icon));
 		}
