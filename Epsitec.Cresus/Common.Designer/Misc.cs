@@ -594,7 +594,7 @@ namespace Epsitec.Common.Designer
 		static public void GetIconNames(string fullName, out string moduleName, out string shortName)
 		{
 			//	Fractionne un nom du type "manifest:Epsitec.Common.Designer.Images.xxx.icon".
-			if (string.IsNullOrEmpty(fullName) || fullName == "<null/>")
+			if (string.IsNullOrEmpty(fullName))
 			{
 				moduleName = null;
 				shortName = null;
