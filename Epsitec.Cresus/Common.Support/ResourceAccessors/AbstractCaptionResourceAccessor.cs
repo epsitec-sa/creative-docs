@@ -485,7 +485,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			bool freezeName = false;
 
 			Druid id = new Druid (field.Id, module);
-			CultureMap item = this.Collection[id];
+			CultureMap item = this.Collection.Peek (id);
 			CultureMapSource fieldSource = this.GetCultureMapSource (field);
 			StructuredData data = this.CreateStructuredData ();
 

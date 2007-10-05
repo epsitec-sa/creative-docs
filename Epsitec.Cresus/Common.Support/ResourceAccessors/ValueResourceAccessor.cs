@@ -118,7 +118,9 @@ namespace Epsitec.Common.Support.ResourceAccessors
 
 			prefix = prefix.Substring (0, pos);
 
-			return new PrefixedCultureMap (this, id, source, prefix);
+			CultureMap item = new PrefixedCultureMap (this, id, source, prefix);
+			item.IsNewItem = true;
+			return item;
 		}
 	}
 }

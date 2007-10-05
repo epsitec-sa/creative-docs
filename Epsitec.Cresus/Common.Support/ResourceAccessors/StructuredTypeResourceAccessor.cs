@@ -488,7 +488,8 @@ namespace Epsitec.Common.Support.ResourceAccessors
 					bool? interfaceDefinition = StructuredTypeResourceAccessor.ToBoolean (fieldData.GetValue (Res.Fields.Field.IsInterfaceDefinition));
 
 					//	A field must be stored in the type only if it defined locally
-					//	and if it does not belong to a locally defined interface :
+					//	and if it does not belong to a locally defined interface; or
+					//	if it redefines the expression for a local interface field.
 
 					if (((membership == FieldMembership.Local) && (fieldDefiningType.IsEmpty)) ||
 						((membership == FieldMembership.Local) && (interfaceDefinition.HasValue) && (interfaceDefinition.Value == false)))

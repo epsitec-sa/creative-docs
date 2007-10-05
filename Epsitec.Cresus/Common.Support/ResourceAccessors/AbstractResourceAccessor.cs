@@ -232,6 +232,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 				foreach (CultureMap item in list)
 				{
 					item.ClearCultureData ();
+					item.IsRefreshNeeded = true;
 					
 					if (this.Collection.Contains (item))
 					{

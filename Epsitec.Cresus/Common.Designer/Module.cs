@@ -385,7 +385,7 @@ namespace Epsitec.Common.Designer
 			}
 			else
 			{
-				version = new ResourceModuleVersion (devId, version.BuildNumber, System.DateTime.Now.ToUniversalTime ());
+				version = new ResourceModuleVersion (devId, version.BuildNumber+1, System.DateTime.Now.ToUniversalTime ());
 			}
 
 			this.moduleInfo.UpdateVersion (version);

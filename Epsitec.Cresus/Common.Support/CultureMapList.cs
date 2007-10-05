@@ -75,6 +75,22 @@ namespace Epsitec.Common.Support
 			}
 		}
 
+
+		internal CultureMap Peek(Druid id)
+		{
+			//	Same as [] indexer, but without automatic refresh.
+
+			foreach (CultureMap item in this)
+			{
+				if (item.Id == id)
+				{
+					return item;
+				}
+			}
+
+			return null;
+		}
+
 		protected override void NotifyBeforeSet(int index, CultureMap oldValue, CultureMap newValue)
 		{
 			//	The this[int index] accessor should be considered to be read-only.
