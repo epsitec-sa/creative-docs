@@ -229,14 +229,14 @@ namespace Epsitec.Common.Designer.Viewers
 
 			if (string.IsNullOrEmpty(icon))
 			{
-				this.primaryIcon.IconName = null;
-
 				if (icon == null)
 				{
+					this.primaryIcon.IconName = "manifest:Epsitec.Common.Widgets.Images.DefaultValue.icon";
 					this.primaryIconInfo.Text = Res.Strings.Dialog.Icon.Default;
 				}
 				else
 				{
+					this.primaryIcon.IconName = null;
 					this.primaryIconInfo.Text = Res.Strings.Dialog.Icon.None;
 				}
 			}
@@ -249,14 +249,7 @@ namespace Epsitec.Common.Designer.Viewers
 				
 				if (string.IsNullOrEmpty(name))
 				{
-					if (icon == null)
-					{
-						this.primaryIconInfo.Text = Res.Strings.Dialog.Icon.Default;
-					}
-					else
-					{
-						this.primaryIconInfo.Text = Res.Strings.Dialog.Icon.None;
-					}
+					this.primaryIconInfo.Text = Res.Strings.Dialog.Icon.None;
 				}
 				else
 				{
