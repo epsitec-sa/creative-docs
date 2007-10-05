@@ -329,13 +329,18 @@ namespace Epsitec.Common.Types
 		public StructuredTypeField Clone(FieldMembership membership, Support.Druid definingTypeId)
 		{
 			StructuredTypeField copy = this.Clone (membership);
-
-			if (copy.definingTypeId.IsEmpty)
-			{
-				copy.definingTypeId = definingTypeId;
-			}
+			
+			copy.DefineDefiningTypeId (definingTypeId);
 
 			return copy;
+		}
+
+		internal void DefineDefiningTypeId(Support.Druid definingTypeId)
+		{
+			if (this.definingTypeId.IsEmpty)
+			{
+				this.definingTypeId = definingTypeId;
+			}
 		}
 
 		/// <summary>

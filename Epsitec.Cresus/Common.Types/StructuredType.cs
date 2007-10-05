@@ -726,7 +726,35 @@ namespace Epsitec.Common.Types
 			{
 				foreach (string id in type.GetFieldIds ())
 				{
-					if (!this.fields.ContainsKey (id))
+					if (this.fields.ContainsKey (id))
+					{
+						if (membership == FieldMembership.Local)
+						{
+							StructuredTypeField local = this.fields[id];
+							StructuredTypeField model = type.Fields[id];
+
+							FieldSource source;
+							string expression;
+
+							if (local.Expression != null)
+							{
+								source     = local.Source;
+								expression = local.Expression;
+							}
+							else
+							{
+								source     = model.Source;
+								expression = model.Expression;
+							}
+							
+							StructuredTypeField clone = new StructuredTypeField (model.Id, model.Type, model.CaptionId, model.Rank, model.Relation, membership, source, model.Options, expression);
+
+							clone.DefineDefiningTypeId (typeId);
+							
+							this.fields[id] = clone;
+						}
+					}
+					else
 					{
 						StructuredTypeField clone = type.Fields[id].Clone (membership, typeId);
 						this.fields.Add (id, clone);
