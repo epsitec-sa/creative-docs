@@ -213,7 +213,8 @@ namespace Epsitec.Common.Types
 
 			if (this.values.TryGetValue (id, out record))
 			{
-				record  = new Record (record.Data, record.IsReadOnly, (PropertyChangedEventHandler) System.Delegate.Combine (record.Handler, handler));
+				handler = (PropertyChangedEventHandler) System.Delegate.Combine (record.Handler, handler);
+				record  = new Record (record.Data, record.OriginalData, record.UsesOriginalData, record.IsReadOnly, handler);
 			}
 			else
 			{
@@ -234,9 +235,11 @@ namespace Epsitec.Common.Types
 
 			if (this.values.TryGetValue (id, out record))
 			{
-				record  = new Record (record.Data, record.IsReadOnly, (PropertyChangedEventHandler) System.Delegate.Remove (record.Handler, handler));
+				handler = (PropertyChangedEventHandler) System.Delegate.Remove (record.Handler, handler);
+				record  = new Record (record.Data, record.OriginalData, record.UsesOriginalData, record.IsReadOnly, handler);
 				
 				if ((record.Data == UndefinedValue.Instance) &&
+					(record.OriginalData == UndefinedValue.Instance) &&
 					(record.Handler == null))
 				{
 					this.values.Remove (id);
@@ -273,21 +276,31 @@ namespace Epsitec.Common.Types
 
 		public object GetValue(string id)
 		{
+			bool usesOriginalData;
+			return this.GetValue (id, out usesOriginalData);
+		}
+
+		public object GetValue(string id, out bool usesOriginalData)
+		{
 			StructuredTypeField type;
-			
+
 			if (!this.CheckFieldIdValidity (id, out type))
 			{
+				usesOriginalData = true;
 				return UnknownValue.Instance;
 			}
-			
+
 			Record value;
-			
+
 			if (this.values == null)
 			{
+				usesOriginalData = true;
 				return this.GetUndefinedValue (type, id);
 			}
 			else if (this.values.TryGetValue (id, out value))
 			{
+				usesOriginalData = value.UsesOriginalData;
+
 				if (UndefinedValue.IsUndefinedValue (value.Data))
 				{
 					return this.GetUndefinedValue (type, id);
@@ -299,6 +312,7 @@ namespace Epsitec.Common.Types
 			}
 			else
 			{
+				usesOriginalData = true;
 				return this.GetUndefinedValue (type, id);
 			}
 		}
@@ -336,13 +350,14 @@ namespace Epsitec.Common.Types
 
 						handler = record.Handler;
 
-						if (handler == null)
+						if ((handler == null) &&
+							(record.OriginalData == UndefinedValue.Instance))
 						{
 							this.values.Remove (id);
 						}
 						else
 						{
-							record = new Record (UndefinedValue.Instance, false, handler);
+							record = new Record (UndefinedValue.Instance, record.OriginalData, false, false, handler);
 							this.values[id] = record;
 						}
 					}
@@ -376,7 +391,7 @@ namespace Epsitec.Common.Types
 					}
 					
 					handler = record.Handler;
-					record  = new Record (value, record.IsReadOnly, handler);
+					record  = new Record (value, record.OriginalData, false, record.IsReadOnly, handler);
 				}
 				else
 				{
@@ -394,6 +409,38 @@ namespace Epsitec.Common.Types
 			else if ((oldValue == null) || (!oldValue.Equals (newValue)))
 			{
 				this.InvalidateValue (id, oldValue, newValue, handler);
+			}
+		}
+
+		public void ResetValue(string id)
+		{
+			if (this.values != null)
+			{
+				Record record;
+
+				if (this.values.TryGetValue (id, out record))
+				{
+					if ((record.IsReadOnly) &&
+						(!UndefinedValue.IsUndefinedValue (record.Data)))
+					{
+						throw new System.InvalidOperationException (string.Format ("Field {0} is read only", id));
+					}
+
+					this.values[id] = new Record (UndefinedValue.Instance, record.OriginalData, true, record.IsReadOnly, record.Handler);
+				}
+			}
+		}
+		
+		public void PromoteToOriginalValue(string id)
+		{
+			if (this.values != null)
+			{
+				Record record;
+
+				if (this.values.TryGetValue (id, out record))
+				{
+					this.values[id] = new Record (UndefinedValue.Instance, record.Data, true, record.IsReadOnly, record.Handler);
+				}
 			}
 		}
 
@@ -472,7 +519,7 @@ namespace Epsitec.Common.Types
 			{
 				if (! UndefinedValue.IsUndefinedValue (value.Data))
 				{
-					this.values[id] = new Record (value.Data, true, value.Handler);
+					this.values[id] = new Record (value.Data, value.OriginalData, value.UsesOriginalData, true, value.Handler);
 					return true;
 				}
 			}
@@ -670,22 +717,43 @@ namespace Epsitec.Common.Types
 			public Record(object data, bool readOnly)
 			{
 				this.data = data;
+				this.originalData = UndefinedValue.Instance;
 				this.handler = null;
 				this.readOnly = readOnly;
+				this.usesOriginalData = false;
 			}
 
 			public Record(object data, bool readOnly, PropertyChangedEventHandler handler)
 			{
 				this.data = data;
+				this.originalData = UndefinedValue.Instance;
 				this.handler = handler;
 				this.readOnly = readOnly;
+				this.usesOriginalData = false;
 			}
-			
+
+			public Record(object data, object originalData, bool usesOriginalData, bool readOnly, PropertyChangedEventHandler handler)
+			{
+				this.data = data;
+				this.originalData = originalData;
+				this.handler = handler;
+				this.readOnly = readOnly;
+				this.usesOriginalData = usesOriginalData;
+			}
+
 			public object Data
 			{
 				get
 				{
-					return this.data;
+					return this.usesOriginalData ? this.originalData : this.data;
+				}
+			}
+
+			public object OriginalData
+			{
+				get
+				{
+					return this.originalData;
 				}
 			}
 
@@ -696,7 +764,15 @@ namespace Epsitec.Common.Types
 					return this.readOnly;
 				}
 			}
-			
+
+			public bool UsesOriginalData
+			{
+				get
+				{
+					return this.usesOriginalData;
+				}
+			}
+
 			public PropertyChangedEventHandler Handler
 			{
 				get
@@ -706,7 +782,9 @@ namespace Epsitec.Common.Types
 			}
 			
 			private object data;
+			private object originalData;
 			private bool readOnly;
+			private bool usesOriginalData;
 			private PropertyChangedEventHandler handler;
 		}
 
