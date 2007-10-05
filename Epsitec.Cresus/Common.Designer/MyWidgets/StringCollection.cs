@@ -157,6 +157,13 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.buttonRemove.Pressed += new MessageEventHandler(this.HandleButtonRemovePressed);
 			ToolTip.Default.SetToolTip(this.buttonRemove, Res.Strings.StringCollection.Remove);
 
+			this.buttonDefault = new IconButton(toolbar);
+			this.buttonDefault.IconName = "manifest:Epsitec.Common.Widgets.Images.DefaultValue.icon";
+			this.buttonDefault.Dock = DockStyle.Left;
+			this.buttonDefault.AutoFocus = false;
+			this.buttonDefault.Pressed += new MessageEventHandler(this.HandleButtonDefaultPressed);
+			ToolTip.Default.SetToolTip(this.buttonDefault, Res.Strings.StringCollection.Default);
+
 			IconSeparator sep = new IconSeparator(toolbar);
 			sep.IsHorizontal = true;
 			sep.Dock = DockStyle.Left;
@@ -222,6 +229,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 					this.glyphButtons.Add(button);
 
 					TextFieldMulti field = new TextFieldMulti();
+					field.AcceptsNullValue = true;
 					field.TextChanged += new EventHandler(this.HandleTextChanged);
 					field.KeyboardFocusChanged += new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleTextFocusChanged);
 					//	TODO: bug pour Pierre avec ce mode !
@@ -301,6 +309,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.buttonAdd.Enable = enable;
 			this.buttonDuplicate.Enable = (enable && sel != -1);
 			this.buttonRemove.Enable = (enable && sel != -1 && count > 1);
+			this.buttonDefault.Enable = enable;
 			this.buttonPrev.Enable = (enable && sel != -1 && sel > 0);
 			this.buttonNext.Enable = (enable && sel != -1 && sel < count-1);
 		}
@@ -400,6 +409,23 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 			this.selectedRow = -1;  // pour forcer SelectedRow à refaire son travail
 			this.SelectedRow = sel;
+			this.SetFocusInSelection();
+			this.OnStringTextChanged();
+		}
+
+		protected void HandleButtonDefaultPressed(object sender, MessageEventArgs e)
+		{
+			//	Appelé lorsque le bouton 'par défaut' est pressé.
+			while (this.strings.Count > 1)
+			{
+				this.strings.RemoveAt(0);
+			}
+			this.strings[0] = "<null/>";
+			this.AdaptGrid();
+			this.UpdateGrid();
+
+			this.selectedRow = -1;  // pour forcer SelectedRow à refaire son travail
+			this.SelectedRow = 0;
 			this.SetFocusInSelection();
 			this.OnStringTextChanged();
 		}
@@ -529,6 +555,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected IconButton				buttonAdd;
 		protected IconButton				buttonDuplicate;
 		protected IconButton				buttonRemove;
+		protected IconButton				buttonDefault;
 		protected IconButton				buttonPrev;
 		protected IconButton				buttonNext;
 		protected List<StaticText>			staticTexts;

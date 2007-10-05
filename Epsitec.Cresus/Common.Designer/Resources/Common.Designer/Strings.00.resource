@@ -339,4 +339,5 @@
   <data name="Viewers.Types.Summary.Native" id="27">Natif</data>
   <data name="Error.Native.Incorrect" id="28">Type natif incorrect.</data>
   <data name="Dialog.Icon.Default" id="29">&lt;i&gt;Icône du module de référence&lt;/i&gt;</data>
+  <data name="StringCollection.Default" id="2A">Utiliser le texte du module de référence</data>
 </bundle>
