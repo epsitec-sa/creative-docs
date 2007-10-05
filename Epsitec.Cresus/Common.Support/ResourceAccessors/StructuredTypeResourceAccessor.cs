@@ -485,12 +485,13 @@ namespace Epsitec.Common.Support.ResourceAccessors
 					FieldOptions options = (FieldOptions) fieldData.GetValue (Res.Fields.Field.Options);
 					string expression = fieldData.GetValue (Res.Fields.Field.Expression) as string;
 					Druid fieldDefiningType = StructuredTypeResourceAccessor.ToDruid (fieldData.GetValue (Res.Fields.Field.DefiningTypeId));
+					bool? interfaceDefinition = StructuredTypeResourceAccessor.ToBoolean (fieldData.GetValue (Res.Fields.Field.IsInterfaceDefinition));
 
 					//	A field must be stored in the type only if it defined locally
 					//	and if it does not belong to a locally defined interface :
 
-					if ((membership == FieldMembership.Local) &&
-						(fieldDefiningType.IsEmpty))
+					if (((membership == FieldMembership.Local) && (fieldDefiningType.IsEmpty)) ||
+						((membership == FieldMembership.Local) && (interfaceDefinition.HasValue) && (interfaceDefinition.Value == false)))
 					{
 						StructuredTypeField field = new StructuredTypeField (null, null, fieldCaption, rank++, relation, membership, source, options, expression);
 						field.DefineTypeId (fieldType);
