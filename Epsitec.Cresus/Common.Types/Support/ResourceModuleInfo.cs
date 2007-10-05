@@ -158,6 +158,10 @@ namespace Epsitec.Common.Support
 						this.versions.Add (version.Clone ());
 					}
 				}
+				else
+				{
+					this.versions.Add (version.Clone ());
+				}
 			}
 		}
 
