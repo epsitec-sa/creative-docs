@@ -1135,24 +1135,17 @@ namespace Epsitec.Common.Support.ResourceAccessors
 
 		private static bool? ToBoolean(object value)
 		{
-			if (UndefinedValue.IsUndefinedValue (value))
-			{
-				return null;
-			}
-			else
-			{
-				return (bool) value;
-			}
+			return UndefinedValue.GetValue<bool?> (value, null);
 		}
 
 		private static Druid ToDruid(object value)
 		{
-			return UndefinedValue.IsUndefinedValue (value) ? Druid.Empty : (Druid) value;
+			return UndefinedValue.GetValue<Druid> (value, Druid.Empty);
 		}
 
 		private static StructuredTypeClass ToStructuredTypeClass(object value)
 		{
-			return UndefinedValue.IsUndefinedValue (value) ? StructuredTypeClass.None : (StructuredTypeClass) value;
+			return UndefinedValue.GetValue<StructuredTypeClass> (value, StructuredTypeClass.None);
 		}
 
 
