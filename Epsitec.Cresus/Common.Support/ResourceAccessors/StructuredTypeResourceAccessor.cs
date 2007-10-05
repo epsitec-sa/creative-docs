@@ -885,11 +885,43 @@ namespace Epsitec.Common.Support.ResourceAccessors
 						System.Diagnostics.Debug.Assert (((FieldMembership) field.GetValue (Res.Fields.Field.Membership) == FieldMembership.Inherited)
 							/**/					  || (StructuredTypeResourceAccessor.ToDruid (field.GetValue (Res.Fields.Field.CaptionId)).IsValid));
 
-						fields.Insert (i++, field);
+
+						int pos = StructuredTypeResourceAccessor.IndexOfCompatibleField (fields, field);
+
+						if (pos < 0)
+						{
+							fields.Insert (i++, field);
+						}
+						else
+						{
+							field.SetValue (Res.Fields.Field.Source, fields[pos].GetValue (Res.Fields.Field.Source));
+							field.SetValue (Res.Fields.Field.Expression, fields[pos].GetValue (Res.Fields.Field.Expression));
+
+							System.Diagnostics.Debug.Assert (i <= pos);
+							
+							fields.RemoveAt (pos);
+							fields.Insert (i++, field);
+						}
 					}
 				}
 			}
 		}
+
+		private static int IndexOfCompatibleField(IList<StructuredData> fields, StructuredData field)
+		{
+			Druid id = StructuredTypeResourceAccessor.ToDruid (field.GetValue (Res.Fields.Field.CaptionId));
+			
+			for (int i = 0; i < fields.Count; i++)
+			{
+				if (StructuredTypeResourceAccessor.ToDruid (fields[i].GetValue (Res.Fields.Field.CaptionId)) == id)
+				{
+					return i;
+				}
+			}
+			
+			return -1;
+		}
+
 
 		/// <summary>
 		/// Removes the inherited and included fields.
