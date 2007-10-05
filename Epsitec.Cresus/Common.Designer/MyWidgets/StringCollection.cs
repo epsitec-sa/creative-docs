@@ -229,7 +229,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 					this.glyphButtons.Add(button);
 
 					TextFieldMulti field = new TextFieldMulti();
-					field.AcceptsNullValue = true;
+					//?field.AcceptsNullValue = true;
 					field.TextChanged += new EventHandler(this.HandleTextChanged);
 					field.KeyboardFocusChanged += new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleTextFocusChanged);
 					//	TODO: bug pour Pierre avec ce mode !
