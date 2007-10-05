@@ -1873,6 +1873,7 @@ namespace Epsitec.Common.Designer.Viewers
 				if (!string.IsNullOrEmpty(text))
 				{
 					text = text.Replace("<br/>", ", ");  // pour afficher un texte multi-lignes sur une seule
+					text = text.Replace(ResourceBundle.Field.Null, @"<img src=""manifest:Epsitec.Common.Widgets.Images.DefaultValue.icon""/>");  // 
 				}
 
 				Color backColor = Color.Empty;

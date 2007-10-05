@@ -420,7 +420,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			{
 				this.strings.RemoveAt(0);
 			}
-			this.strings[0] = "<null/>";
+			this.strings[0] = ResourceBundle.Field.Null;  // texte "<null/>"
 			this.AdaptGrid();
 			this.UpdateGrid();
 
