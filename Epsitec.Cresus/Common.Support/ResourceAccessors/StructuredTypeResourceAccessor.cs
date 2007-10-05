@@ -890,12 +890,27 @@ namespace Epsitec.Common.Support.ResourceAccessors
 
 						if (pos < 0)
 						{
+							if ((FieldMembership) field.GetValue (Res.Fields.Field.Membership) == FieldMembership.Local)
+							{
+								//	The field is defined in an interface and its definition
+								//	has not been tampered with (yet) locally :
+
+								field.SetValue (Res.Fields.Field.IsInterfaceDefinition, true);
+							}
+
 							fields.Insert (i++, field);
 						}
 						else
 						{
+							System.Diagnostics.Debug.Assert ((FieldMembership) field.GetValue (Res.Fields.Field.Membership) == FieldMembership.Local);
+
+							//	The field is defined both locally and in the interface; keep
+							//	only the expression from the local definition and otherwise,
+							//	use the interface definition of the field :
+
 							field.SetValue (Res.Fields.Field.Source, fields[pos].GetValue (Res.Fields.Field.Source));
 							field.SetValue (Res.Fields.Field.Expression, fields[pos].GetValue (Res.Fields.Field.Expression));
+							field.SetValue (Res.Fields.Field.IsInterfaceDefinition, false);
 
 							System.Diagnostics.Debug.Assert (i <= pos);
 							
@@ -934,13 +949,23 @@ namespace Epsitec.Common.Support.ResourceAccessors
 				StructuredData field = fields[i];
 				FieldMembership membership = (FieldMembership) field.GetValue (Res.Fields.Field.Membership);
 				Druid definingTypeId = StructuredTypeResourceAccessor.ToDruid (field.GetValue (Res.Fields.Field.DefiningTypeId));
+				bool? interfaceDefinition = StructuredTypeResourceAccessor.ToBoolean (field.GetValue (Res.Fields.Field.IsInterfaceDefinition));
 
 				//	If the field is inherited from a base entity or imported through
 				//	an interface, then we remove it from the collection :
 				
-				if ((membership == FieldMembership.Inherited) ||
-					(definingTypeId.IsValid))
+				if (membership == FieldMembership.Inherited)
 				{
+					fields.RemoveAt (i--);
+				}
+				else if (definingTypeId.IsValid)
+				{
+					if ((interfaceDefinition.HasValue) &&
+						(interfaceDefinition.Value == false))
+					{
+						continue;
+					}
+
 					fields.RemoveAt (i--);
 				}
 			}
@@ -1105,6 +1130,18 @@ namespace Epsitec.Common.Support.ResourceAccessors
 		}
 
 		#endregion
+
+		private static bool? ToBoolean(object value)
+		{
+			if (UndefinedValue.IsUndefinedValue (value))
+			{
+				return null;
+			}
+			else
+			{
+				return (bool) value;
+			}
+		}
 
 		private static Druid ToDruid(object value)
 		{

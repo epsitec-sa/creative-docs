@@ -123,6 +123,22 @@ namespace Epsitec.Common.UI
 			#endregion
 		}
 		
+		//	Code mapping for 'Panel' resources
+		
+		//	Code mapping for 'Panel' resources
+		
+		//	Code mapping for 'Panel' resources
+		
+		//	Code mapping for 'Panel' resources
+		
+		//	Code mapping for 'Panel' resources
+		
+		//	Code mapping for 'Panel' resources
+		
+		//	Code mapping for 'Panel' resources
+		
+		//	Code mapping for 'Panel' resources
+		
 		static Res()
 		{
 			Res.Initialize (typeof (Res), "Cresus.Tests");

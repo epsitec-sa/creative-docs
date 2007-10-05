@@ -122,8 +122,6 @@ namespace Epsitec.Common.Types
 			}
 		}
 		
-		//	Code mapping for 'Panel' resources
-		
 		//	Code mapping for 'String' resources
 		
 		public static class Strings

@@ -55,6 +55,7 @@ namespace Epsitec.Common.Support
 				public static readonly global::Epsitec.Common.Support.Druid DeepDefiningTypeId = new global::Epsitec.Common.Support.Druid (_moduleId, 1, 18);
 				public static readonly global::Epsitec.Common.Support.Druid DefiningTypeId = new global::Epsitec.Common.Support.Druid (_moduleId, 0, 80);
 				public static readonly global::Epsitec.Common.Support.Druid Expression = new global::Epsitec.Common.Support.Druid (_moduleId, 0, 78);
+				public static readonly global::Epsitec.Common.Support.Druid IsInterfaceDefinition = new global::Epsitec.Common.Support.Druid (_moduleId, 1, 19);
 				public static readonly global::Epsitec.Common.Support.Druid Membership = new global::Epsitec.Common.Support.Druid (_moduleId, 0, 3);
 				public static readonly global::Epsitec.Common.Support.Druid Options = new global::Epsitec.Common.Support.Druid (_moduleId, 1, 1);
 				public static readonly global::Epsitec.Common.Support.Druid Relation = new global::Epsitec.Common.Support.Druid (_moduleId, 0, 39);
@@ -181,8 +182,6 @@ namespace Epsitec.Common.Support
 				public static readonly global::Epsitec.Common.Support.Druid Extension1 = new global::Epsitec.Common.Support.Druid (_moduleId, 1, 4);
 			}
 		}
-		
-		//	Code mapping for 'Panel' resources
 		
 		//	Code mapping for 'String' resources
 		
