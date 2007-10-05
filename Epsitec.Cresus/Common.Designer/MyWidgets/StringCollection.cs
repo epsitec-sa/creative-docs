@@ -158,7 +158,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			ToolTip.Default.SetToolTip(this.buttonRemove, Res.Strings.StringCollection.Remove);
 
 			this.buttonDefault = new IconButton(toolbar);
-			this.buttonDefault.IconName = "manifest:Epsitec.Common.Widgets.Images.DefaultValue.icon";
+			this.buttonDefault.IconName = Misc.Icon("StringDefault");
 			this.buttonDefault.Dock = DockStyle.Left;
 			this.buttonDefault.AutoFocus = false;
 			this.buttonDefault.Pressed += new MessageEventHandler(this.HandleButtonDefaultPressed);
