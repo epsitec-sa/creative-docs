@@ -327,6 +327,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			bool insert;
 			bool record;
 			bool freezeName = false;
+			bool original = false;
 
 			CultureMap item = this.Collection[id];
 			CultureMapSource fieldSource = this.GetCultureMapSource (field);
@@ -338,6 +339,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 				(this.ResourceManager.BasedOnPatchModule))
 			{
 				freezeName = true;
+				original   = true;
 			}
 
 			if (item == null)
@@ -416,6 +418,11 @@ namespace Epsitec.Common.Support.ResourceAccessors
 				item.FreezeName ();
 			}
 
+			if (original)
+			{
+				data.PromoteToOriginal ();
+			}
+
 			if (record)
 			{
 				item.RecordCultureData (twoLetterISOLanguageName, data);
@@ -484,6 +491,44 @@ namespace Epsitec.Common.Support.ResourceAccessors
 				return false;
 			}
 
+			bool replace = false;
+
+#if true
+			bool original;
+
+			int dataModifId = StringResourceAccessor.GetModificationId (data.GetValue (Res.Fields.ResourceBase.ModificationId, out original));
+
+			if (original)
+			{
+				dataModifId = 0;
+			}
+			else
+			{
+				replace = true;
+			}
+
+			string dataText    = data.GetValue (Res.Fields.ResourceString.Text, out original) as string;
+
+			if (original)
+			{
+				dataText = null;
+			}
+			else
+			{
+				replace = true;
+			}
+
+			string dataComment = data.GetValue (Res.Fields.ResourceBase.Comment, out original) as string;
+
+			if (original)
+			{
+				dataComment = null;
+			}
+			else
+			{
+				replace = true;
+			}
+#else
 			//	Get the reference data from the reference module resource :
 
 			int    refModifId = refField.ModificationId;
@@ -519,8 +564,6 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			//	Wherever the patch data is the same as the reference data, use
 			//	the "undefined" value instead :
 
-			bool replace = false;
-
 			if ((mergeModifId == refModifId) &&
 				(dataModifId > 0))
 			{
@@ -541,6 +584,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 				dataComment = null;
 				replace     = true;
 			}
+#endif
 
 			if (replace)
 			{

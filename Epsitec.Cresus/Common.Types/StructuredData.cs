@@ -280,43 +280,6 @@ namespace Epsitec.Common.Types
 			return this.GetValue (id, out usesOriginalData);
 		}
 
-		public object GetValue(string id, out bool usesOriginalData)
-		{
-			StructuredTypeField type;
-
-			if (!this.CheckFieldIdValidity (id, out type))
-			{
-				usesOriginalData = true;
-				return UnknownValue.Instance;
-			}
-
-			Record value;
-
-			if (this.values == null)
-			{
-				usesOriginalData = true;
-				return this.GetUndefinedValue (type, id);
-			}
-			else if (this.values.TryGetValue (id, out value))
-			{
-				usesOriginalData = value.UsesOriginalData;
-
-				if (UndefinedValue.IsUndefinedValue (value.Data))
-				{
-					return this.GetUndefinedValue (type, id);
-				}
-				else
-				{
-					return value.Data;
-				}
-			}
-			else
-			{
-				usesOriginalData = true;
-				return this.GetUndefinedValue (type, id);
-			}
-		}
-
 		public void SetValue(string id, object value)
 		{
 			StructuredTypeField type;
@@ -412,38 +375,6 @@ namespace Epsitec.Common.Types
 			}
 		}
 
-		public void ResetValue(string id)
-		{
-			if (this.values != null)
-			{
-				Record record;
-
-				if (this.values.TryGetValue (id, out record))
-				{
-					if ((record.IsReadOnly) &&
-						(!UndefinedValue.IsUndefinedValue (record.Data)))
-					{
-						throw new System.InvalidOperationException (string.Format ("Field {0} is read only", id));
-					}
-
-					this.values[id] = new Record (UndefinedValue.Instance, record.OriginalData, true, record.IsReadOnly, record.Handler);
-				}
-			}
-		}
-		
-		public void PromoteToOriginalValue(string id)
-		{
-			if (this.values != null)
-			{
-				Record record;
-
-				if (this.values.TryGetValue (id, out record))
-				{
-					this.values[id] = new Record (UndefinedValue.Instance, record.Data, true, record.IsReadOnly, record.Handler);
-				}
-			}
-		}
-
 		#endregion
 
 		#region IEquatable<StructuredData> Members
@@ -500,6 +431,93 @@ namespace Epsitec.Common.Types
 			return this.GetValue (id.ToString ());
 		}
 
+		public object GetValue(Support.Druid id, out bool usesOriginalData)
+		{
+			return this.GetValue (id.ToString (), out usesOriginalData);
+		}
+
+		public object GetValue(string id, out bool usesOriginalData)
+		{
+			StructuredTypeField type;
+
+			if (!this.CheckFieldIdValidity (id, out type))
+			{
+				usesOriginalData = true;
+				return UnknownValue.Instance;
+			}
+
+			Record value;
+
+			if (this.values == null)
+			{
+				usesOriginalData = true;
+				return this.GetUndefinedValue (type, id);
+			}
+			else if (this.values.TryGetValue (id, out value))
+			{
+				usesOriginalData = value.UsesOriginalData;
+
+				if (UndefinedValue.IsUndefinedValue (value.Data))
+				{
+					return this.GetUndefinedValue (type, id);
+				}
+				else
+				{
+					return value.Data;
+				}
+			}
+			else
+			{
+				usesOriginalData = true;
+				return this.GetUndefinedValue (type, id);
+			}
+		}
+
+		public void ResetValue(string id)
+		{
+			if (this.values != null)
+			{
+				Record record;
+
+				if (this.values.TryGetValue (id, out record))
+				{
+					if ((record.IsReadOnly) &&
+						(!UndefinedValue.IsUndefinedValue (record.Data)))
+					{
+						throw new System.InvalidOperationException (string.Format ("Field {0} is read only", id));
+					}
+
+					this.values[id] = new Record (UndefinedValue.Instance, record.OriginalData, true, record.IsReadOnly, record.Handler);
+				}
+			}
+		}
+
+		public void ResetValue(Support.Druid id)
+		{
+			this.ResetValue (id.ToString ());
+		}
+
+		public void PromoteToOriginal()
+		{
+			foreach (string id in this.StructuredType.GetFieldIds ())
+			{
+				this.PromoteToOriginalValue (id);
+			}
+		}
+		
+		public void PromoteToOriginalValue(string id)
+		{
+			if (this.values != null)
+			{
+				Record record;
+
+				if (this.values.TryGetValue (id, out record))
+				{
+					this.values[id] = new Record (UndefinedValue.Instance, record.Data, true, record.IsReadOnly, record.Handler);
+				}
+			}
+		}
+		
 		public void SetValue(Support.Druid id, object value)
 		{
 			this.SetValue (id.ToString (), value);
