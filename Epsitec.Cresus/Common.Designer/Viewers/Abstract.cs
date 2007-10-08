@@ -973,6 +973,12 @@ namespace Epsitec.Common.Designer.Viewers
 			{
 				string name = item.FullName;
 				this.titleText.Text = string.Concat("<font size=\"150%\">", name, "</font>");
+
+				if (this.module.IsPatch)
+				{
+					CultureMapSource source = this.access.GetCultureMapSource(item);
+					this.titleBox.BackColor = Misc.SourceColor(source);
+				}
 			}
 		}
 
