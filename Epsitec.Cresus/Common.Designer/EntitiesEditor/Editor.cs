@@ -1315,7 +1315,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					}
 					else if (fly.HilitedElement == AbstractObject.ActiveElement.None ||
 							 fly.HilitedElement == AbstractObject.ActiveElement.BoxInside ||
-							 fly.HilitedElement == AbstractObject.ActiveElement.ConnectionHilited)
+							 fly.HilitedElement == AbstractObject.ActiveElement.ConnectionHilited ||
+							 fly.HilitedElement == AbstractObject.ActiveElement.BoxFieldGroup)
 					{
 						type = MouseCursorType.Arrow;
 					}
