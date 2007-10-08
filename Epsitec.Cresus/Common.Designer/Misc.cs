@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
+using Epsitec.Common.Support;
 
 namespace Epsitec.Common.Designer
 {
@@ -208,6 +209,22 @@ namespace Epsitec.Common.Designer
 			return -1;
 		}
 
+
+		static public Color SourceColor(CultureMapSource source)
+		{
+			//	Retourne la couleur à utiliser en fonction de la source.
+			if (source == CultureMapSource.ReferenceModule)
+			{
+				return Color.FromAlphaRgb(0.1, 0.0, 0.0, 0.0);  // noir très transparent (gris clair)
+			}
+
+			if (source == CultureMapSource.DynamicMerge)
+			{
+				return Color.FromAlphaRgb(0.2, 1.0, 0.7, 0.0);  // orange très transparent
+			}
+
+			return Color.Empty;
+		}
 
 		static public Color AlphaColor(Color c, double a)
 		{

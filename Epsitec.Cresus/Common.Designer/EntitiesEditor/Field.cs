@@ -92,6 +92,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			this.deepDefiningTypeId = Druid.Empty;
 			this.destination = Druid.Empty;
 			this.isNullable = false;
+			this.cultureMapSource = CultureMapSource.Invalid;
 			this.rank = -1;
 			this.index = -1;
 			this.isExplored = false;
@@ -320,6 +321,18 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					this.isNullable = value;
 					this.UpdateTypeName();
 				}
+			}
+		}
+
+		public CultureMapSource CultureMapSource
+		{
+			get
+			{
+				return this.cultureMapSource;
+			}
+			set
+			{
+				this.cultureMapSource = value;
 			}
 		}
 
@@ -909,6 +922,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		protected Druid deepDefiningTypeId;
 		protected Druid destination;
 		protected bool isNullable;
+		protected CultureMapSource cultureMapSource;
 		protected int rank;
 		protected int index;
 		protected ObjectBox srcBox;

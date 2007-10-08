@@ -1941,16 +1941,7 @@ namespace Epsitec.Common.Designer.Viewers
 				if (backColor.IsEmpty && this.owner.module.IsPatch)  // module de patch ?
 				{
 					CultureMapSource source = this.owner.access.GetCultureMapSource(item);
-
-					if (source == CultureMapSource.ReferenceModule)
-					{
-						backColor = Color.FromAlphaRgb(0.1, 0.0, 0.0, 0.0);  // noir très transparent (gris clair)
-					}
-
-					if (source == CultureMapSource.DynamicMerge)
-					{
-						backColor = Color.FromAlphaRgb(0.2, 1.0, 0.7, 0.0);  // orange très transparent
-					}
+					backColor = Misc.SourceColor(source);
 				}
 
 				if (backColor.IsEmpty)

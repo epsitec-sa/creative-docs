@@ -1564,6 +1564,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			Druid definingTypeId = (Druid) dataField.GetValue(Support.Res.Fields.Field.DefiningTypeId);
 			Druid deepDefiningTypeId = (Druid) dataField.GetValue(Support.Res.Fields.Field.DeepDefiningTypeId);
 			FieldOptions options = (FieldOptions) dataField.GetValue(Support.Res.Fields.Field.Options);
+			CultureMapSource source = (CultureMapSource) dataField.GetValue(Support.Res.Fields.Field.CultureMapSource);
+
 			
 			Module dstModule = this.editor.Module.DesignerApplication.SearchModule(typeId);
 			CultureMap dstItem = (dstModule == null) ? null : dstModule.AccessEntities.Accessor.Collection[typeId];
@@ -1590,6 +1592,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			field.DefiningTypeId = definingTypeId;
 			field.DeepDefiningTypeId = deepDefiningTypeId;
 			field.IsNullable = options == FieldOptions.Nullable;
+			field.CultureMapSource = source;
 			field.FieldName = (fieldCultureMap == null) ? "" : fieldCultureMap.Name;
 			field.TypeName = (typeCultureMap == null) ? "" : typeCultureMap.Name;
 			field.Relation = rel;
@@ -2039,6 +2042,16 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				//	Dessine toutes les lignes, titres ou simples champs.
 				for (int i=0; i<this.fields.Count; i++)
 				{
+					if (this.editor.Module.IsPatch &&
+						(this.fields[i].CultureMapSource == CultureMapSource.ReferenceModule ||
+						 this.fields[i].CultureMapSource == CultureMapSource.DynamicMerge))
+					{
+						rect = this.GetFieldBounds(i);
+						rect.Deflate(9.0, 0.0);
+						graphics.AddFilledRectangle(rect);
+						graphics.RenderSolid(Misc.SourceColor(this.fields[i].CultureMapSource));
+					}
+
 					if (this.fields[i].IsTitle)
 					{
 						bool hilite = this.hilitedElement == ActiveElement.BoxFieldTitle && this.hilitedFieldRank == i;
