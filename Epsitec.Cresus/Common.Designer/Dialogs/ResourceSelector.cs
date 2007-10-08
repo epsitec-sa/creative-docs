@@ -141,13 +141,20 @@ namespace Epsitec.Common.Designer.Dialogs
 				footer.Margins = new Margins(0, 0, 8, 0);
 				footer.Dock = DockStyle.Bottom;
 
+				this.buttonIsNullable = new CheckButton(footer);
+				this.buttonIsNullable.Text = "Accepte d'être nul";
+				this.buttonIsNullable.PreferredWidth = 160;
+				this.buttonIsNullable.Dock = DockStyle.Left;
+				this.buttonIsNullable.TabIndex = 10;
+				this.buttonIsNullable.TabNavigationMode = TabNavigationMode.ActivateOnTab;
+
 				this.buttonCancel = new Button(footer);
 				this.buttonCancel.PreferredWidth = 75;
 				this.buttonCancel.Text = Res.Strings.Dialog.Button.Cancel;
 				this.buttonCancel.ButtonStyle = ButtonStyle.DefaultCancel;
 				this.buttonCancel.Dock = DockStyle.Right;
 				this.buttonCancel.Clicked += new MessageEventHandler(this.HandleButtonCloseClicked);
-				this.buttonCancel.TabIndex = 11;
+				this.buttonCancel.TabIndex = 12;
 				this.buttonCancel.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 
 				this.buttonUse = new Button(footer);
@@ -157,13 +164,12 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.buttonUse.Dock = DockStyle.Right;
 				this.buttonUse.Margins = new Margins(0, 6, 0, 0);
 				this.buttonUse.Clicked += new MessageEventHandler(this.HandleButtonUseClicked);
-				this.buttonUse.TabIndex = 10;
+				this.buttonUse.TabIndex = 11;
 				this.buttonUse.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 
 				sep = new Separator(this.window.Root);  // trait horizontal de séparation
 				sep.PreferredHeight = 1;
 				sep.Dock = DockStyle.Bottom;
-
 			}
 
 			this.UpdateTitle();
@@ -176,7 +182,7 @@ namespace Epsitec.Common.Designer.Dialogs
 		}
 
 
-		public void AccessOpen(Operation operation, Module baseModule, ResourceAccess.Type type, Druid resource, List<Druid> exclude)
+		public void AccessOpen(Operation operation, Module baseModule, ResourceAccess.Type type, Druid resource, bool isNullable, List<Druid> exclude)
 		{
 			//	Début de l'accès aux ressources pour le dialogue.
 			//	Le type peut être inconnu ou la ressource inconnue, mais pas les deux.
@@ -186,6 +192,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			this.operation = operation;
 			this.resourceType = type;
 			this.resource = resource;
+			this.isNullable = isNullable;
 			this.exclude = exclude;
 			this.isInherit = false;
 
@@ -234,6 +241,14 @@ namespace Epsitec.Common.Designer.Dialogs
 			set
 			{
 				this.typeClass = value;
+			}
+		}
+
+		public bool IsNullable
+		{
+			get
+			{
+				return this.buttonIsNullable.ActiveState == ActiveState.Yes;
 			}
 		}
 
@@ -431,6 +446,9 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.radioAlone.Visibility = false;
 				this.radioInherit.Visibility = false;
 
+				this.buttonIsNullable.Visibility = true;
+				this.buttonIsNullable.ActiveState = this.isNullable ? ActiveState.Yes : ActiveState.No;
+
 				this.buttonUse.Text = Res.Strings.Dialog.ResourceSelector.Button.Use;
 
 				this.radioTypes.ActiveState = (this.resourceType == ResourceAccess.Type.Types) ? ActiveState.Yes : ActiveState.No;
@@ -444,6 +462,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.checkInterface.Visibility = true;
 				this.radioAlone.Visibility = true;
 				this.radioInherit.Visibility = true;
+				this.buttonIsNullable.Visibility = false;
 
 				this.buttonUse.Text = Res.Strings.Dialog.Button.OK;
 			}
@@ -455,6 +474,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.checkInterface.Visibility = false;
 				this.radioAlone.Visibility = false;
 				this.radioInherit.Visibility = false;
+				this.buttonIsNullable.Visibility = false;
 
 				this.buttonUse.Text = Res.Strings.Dialog.ResourceSelector.Button.Use;
 			}
@@ -682,6 +702,7 @@ namespace Epsitec.Common.Designer.Dialogs
 		protected bool							isInherit;
 		protected ResourceAccess				access;
 		protected Druid							resource;
+		protected bool							isNullable;
 		protected List<Druid>					exclude;
 		protected CollectionView				collectionView;
 		protected Common.Dialogs.DialogResult	result;
@@ -697,6 +718,7 @@ namespace Epsitec.Common.Designer.Dialogs
 		protected VSplitter						splitter;
 		protected StaticText					header2;
 		protected ScrollList					listResources;
+		protected CheckButton					buttonIsNullable;
 		protected Button						buttonUse;
 		protected Button						buttonCancel;
 	}

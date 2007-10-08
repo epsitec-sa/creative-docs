@@ -475,9 +475,10 @@ namespace Epsitec.Common.Designer
 				}
 
 				Druid druid = Druid.Empty;
+				bool isNullable = false;
 				StructuredTypeClass typeClass = StructuredTypeClass.Entity;
 
-				Common.Dialogs.DialogResult result = this.designerApplication.DlgResourceSelector(Dialogs.ResourceSelector.Operation.InheritEntities, this.designerApplication.CurrentModule, Type.Entities, ref typeClass, ref druid, null);
+				Common.Dialogs.DialogResult result = this.designerApplication.DlgResourceSelector(Dialogs.ResourceSelector.Operation.InheritEntities, this.designerApplication.CurrentModule, Type.Entities, ref typeClass, ref druid, ref isNullable, null);
 				if (result != Common.Dialogs.DialogResult.Yes)
 				{
 					return;

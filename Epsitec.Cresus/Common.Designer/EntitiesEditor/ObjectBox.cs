@@ -1403,9 +1403,10 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 
 			Druid druid = Druid.Empty;
+			bool isNullable = false;
 			Module module = this.editor.Module;
 			StructuredTypeClass typeClass = StructuredTypeClass.Interface;
-			Common.Dialogs.DialogResult result = module.DesignerApplication.DlgResourceSelector(Dialogs.ResourceSelector.Operation.InterfaceEntities, module, ResourceAccess.Type.Entities, ref typeClass, ref druid, exclude);
+			Common.Dialogs.DialogResult result = module.DesignerApplication.DlgResourceSelector(Dialogs.ResourceSelector.Operation.InterfaceEntities, module, ResourceAccess.Type.Entities, ref typeClass, ref druid, ref isNullable, exclude);
 			if (result != Common.Dialogs.DialogResult.Yes)
 			{
 				return;
@@ -1513,10 +1514,12 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 			StructuredData dataField = dataFields[fieldRank];
 			Druid druid = (Druid) dataField.GetValue(Support.Res.Fields.Field.TypeId);
+			FieldOptions options = (FieldOptions) dataField.GetValue(Support.Res.Fields.Field.Options);
 
+			bool isNullable = options == FieldOptions.Nullable;
 			Module module = this.editor.Module;
 			StructuredTypeClass typeClass = StructuredTypeClass.None;
-			Common.Dialogs.DialogResult result = module.DesignerApplication.DlgResourceSelector(Dialogs.ResourceSelector.Operation.TypesOrEntities, module, ResourceAccess.Type.Types, ref typeClass, ref druid, null);
+			Common.Dialogs.DialogResult result = module.DesignerApplication.DlgResourceSelector(Dialogs.ResourceSelector.Operation.TypesOrEntities, module, ResourceAccess.Type.Types, ref typeClass, ref druid, ref isNullable, null);
 			if (result != Common.Dialogs.DialogResult.Yes)
 			{
 				return;
@@ -1542,6 +1545,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				dataField.SetValue(Support.Res.Fields.Field.Relation, FieldRelation.None);
 			}
 			
+			dataField.SetValue(Support.Res.Fields.Field.Options, isNullable ? FieldOptions.Nullable : FieldOptions.None);
+
 			this.UpdateField(dataField, this.fields[rank]);
 			this.editor.Module.AccessEntities.SetLocalDirty();
 			this.editor.UpdateAfterAddOrRemoveConnection(this);
