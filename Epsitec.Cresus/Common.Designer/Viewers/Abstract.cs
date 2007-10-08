@@ -1222,7 +1222,7 @@ namespace Epsitec.Common.Designer.Viewers
 			int sel = this.access.AccessIndex;
 			int count = this.access.AccessCount;
 			bool build = this.module.Mode == DesignerMode.Build;
-			bool patch = this.access.IsPatchModule;
+			bool patch = this.module.IsPatch;
 			bool reference = this.access.GetCultureMapSource(sel) == CultureMapSource.ReferenceModule;
 
 			this.UpdateCommandTool("ToolSelect");
@@ -1938,7 +1938,7 @@ namespace Epsitec.Common.Designer.Viewers
 				//	Par optimisation, un seul widget est créé s'il n'y a pas de couleur de fond.
 				UI.ItemViewText main, st;
 
-				if (backColor.IsEmpty && this.owner.access.IsPatchModule)  // module de patch ?
+				if (backColor.IsEmpty && this.owner.module.IsPatch)  // module de patch ?
 				{
 					CultureMapSource source = this.owner.access.GetCultureMapSource(item);
 

@@ -1439,7 +1439,7 @@ namespace Epsitec.Common.Designer
 			ModuleInfo mi = this.CurrentModuleInfo;
 
 			mi.TabPage = new TabPage();
-			mi.TabPage.TabTitle = mi.Module.ModuleId.Name;
+			mi.TabPage.TabTitle = Misc.ExtractName(mi.Module.ModuleId.Name, mi.Module.IsGlobalDirty, mi.Module.IsPatch);
 			this.bookModules.Items.Insert(this.currentModule, mi.TabPage);
 
 			mi.BundleTypeWidget = new MyWidgets.BundleType(mi.TabPage);
@@ -1866,7 +1866,7 @@ namespace Epsitec.Common.Designer
 			//	Met à jour le nom de l'onglet des modules.
 			if ( !this.IsCurrentModule )  return;
 			TabPage tab = this.bookModules.Items[this.currentModule] as TabPage;
-			tab.TabTitle = Misc.ExtractName(this.CurrentModule.ModuleId.Name, this.CurrentModule.IsGlobalDirty);
+			tab.TabTitle = Misc.ExtractName(this.CurrentModule.ModuleId.Name, this.CurrentModule.IsGlobalDirty, this.CurrentModule.IsPatch);
 			this.bookModules.UpdateAfterChanges();
 		}
 		#endregion

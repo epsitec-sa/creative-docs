@@ -1046,23 +1046,6 @@ namespace Epsitec.Common.Designer
 		}
 
 
-		public bool IsPatchModule
-		{
-			//	Indique si on est dans un module de patch.
-			get
-			{
-				ResourceModuleInfo info = this.resourceManager.DefaultModuleInfo;
-				if (info == null)
-				{
-					return false;
-				}
-				else
-				{
-					return info.IsPatchModule;
-				}
-			}
-		}
-
 		public CultureMapSource GetCultureMapSource(int index)
 		{
 			//	Retourne le type de la ressource.

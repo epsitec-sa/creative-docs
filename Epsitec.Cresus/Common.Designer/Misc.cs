@@ -716,12 +716,14 @@ namespace Epsitec.Common.Designer
 		}
 
 		
-		static public string ExtractName(string moduleName, bool dirtySerialize)
+		static public string ExtractName(string moduleName, bool dirtySerialize, bool isPatch)
 		{
 			//	Extrait le nom de module.
 			//	Si le nom n'existe pas, donne "sans titre".
-			//	Si le fichier doit être sérialisé, donne le nom en gras.
+			//	Si le module doit être sérialisé, donne le nom en gras.
+			//	Si le module provient d'un patch, donne le nom en italique.
 			string name = "";
+			if ( isPatch )  name += "<i>";
 			if ( dirtySerialize )  name += "<b>";
 
 			if ( moduleName == "" )
@@ -734,6 +736,7 @@ namespace Epsitec.Common.Designer
 			}
 
 			if ( dirtySerialize )  name += "</b>";
+			if ( isPatch )  name += "</i>";
 			return name;
 		}
 
