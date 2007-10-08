@@ -1563,6 +1563,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			Druid typeId = (Druid) dataField.GetValue(Support.Res.Fields.Field.TypeId);
 			Druid definingTypeId = (Druid) dataField.GetValue(Support.Res.Fields.Field.DefiningTypeId);
 			Druid deepDefiningTypeId = (Druid) dataField.GetValue(Support.Res.Fields.Field.DeepDefiningTypeId);
+			FieldOptions options = (FieldOptions) dataField.GetValue(Support.Res.Fields.Field.Options);
 			
 			Module dstModule = this.editor.Module.DesignerApplication.SearchModule(typeId);
 			CultureMap dstItem = (dstModule == null) ? null : dstModule.AccessEntities.Accessor.Collection[typeId];
@@ -1588,6 +1589,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			field.CaptionId = fieldCaptionId;
 			field.DefiningTypeId = definingTypeId;
 			field.DeepDefiningTypeId = deepDefiningTypeId;
+			field.IsNullable = options == FieldOptions.Nullable;
 			field.FieldName = (fieldCultureMap == null) ? "" : fieldCultureMap.Name;
 			field.TypeName = (typeCultureMap == null) ? "" : typeCultureMap.Name;
 			field.Relation = rel;
@@ -1625,7 +1627,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					CultureMap cultureMap = module.AccessEntities.Accessor.Collection[druid];
 					if (cultureMap != null)
 					{
-						field.FieldName = string.Concat("<b>", cultureMap.Name, "</b>");
+						field.FieldName = Misc.Bold(cultureMap.Name);
 					}
 				}
 
@@ -1657,7 +1659,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 						field.IsTitle = true;
 						field.IsInterface = true;
 						field.CaptionId = last;
-						field.FieldName = string.Concat("<b>", cultureMap.Name, "</b>");
+						field.FieldName = Misc.Bold(cultureMap.Name);
 
 						this.fields.Insert(i, field);
 						this.skipedField++;  // compte le titre lui-même

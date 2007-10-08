@@ -91,6 +91,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			this.definingTypeId = Druid.Empty;
 			this.deepDefiningTypeId = Druid.Empty;
 			this.destination = Druid.Empty;
+			this.isNullable = false;
 			this.rank = -1;
 			this.index = -1;
 			this.isExplored = false;
@@ -197,11 +198,15 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			//	Nom du type.
 			get
 			{
-				return this.textLayoutType.Text;
+				return this.typeName;
 			}
 			set
 			{
-				this.textLayoutType.Text = value;
+				if (this.typeName != value)
+				{
+					this.typeName = value;
+					this.UpdateTypeName();
+				}
 			}
 		}
 
@@ -298,6 +303,23 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			set
 			{
 				this.destination = value;
+			}
+		}
+
+		public bool IsNullable
+		{
+			//	Indique si le champ peut prendre la valeur "null".
+			get
+			{
+				return this.isNullable;
+			}
+			set
+			{
+				if (this.isNullable != value)
+				{
+					this.isNullable = value;
+					this.UpdateTypeName();
+				}
 			}
 		}
 
@@ -673,6 +695,20 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 		}
 
+
+		protected void UpdateTypeName()
+		{
+			//	Met à jour le nom du type.
+			if (this.isNullable)
+			{
+				this.textLayoutType.Text = string.Concat("(", this.typeName, ")");
+			}
+			else
+			{
+				this.textLayoutType.Text = this.typeName;
+			}
+		}
+
 		
 		#region Serialization
 		public void WriteXml(XmlWriter writer)
@@ -865,12 +901,14 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		protected bool isInterface;
 		protected TextLayout textLayoutField;
 		protected TextLayout textLayoutType;
+		protected string typeName;
 		protected FieldRelation relation;
 		protected FieldMembership membership;
 		protected Druid captionId;
 		protected Druid definingTypeId;
 		protected Druid deepDefiningTypeId;
 		protected Druid destination;
+		protected bool isNullable;
 		protected int rank;
 		protected int index;
 		protected ObjectBox srcBox;
