@@ -212,18 +212,18 @@ namespace Epsitec.Common.Designer
 
 		static public Color SourceColor(CultureMapSource source)
 		{
-			//	Retourne la couleur à utiliser en fonction de la source.
-			if (source == CultureMapSource.ReferenceModule)
+			//	Retourne la couleur de fond à utiliser en fonction de la source d'une ressource.
+			switch (source)
 			{
-				return Color.FromAlphaRgb(0.1, 0.0, 0.0, 0.0);  // noir très transparent (gris clair)
-			}
+				case CultureMapSource.ReferenceModule:
+					return Color.FromAlphaRgb(0.1, 0.0, 0.0, 0.0);  // noir très transparent (gris clair)
 
-			if (source == CultureMapSource.DynamicMerge)
-			{
-				return Color.FromAlphaRgb(0.2, 1.0, 0.7, 0.0);  // orange très transparent
-			}
+				case CultureMapSource.DynamicMerge:
+					return Color.FromAlphaRgb(0.2, 1.0, 0.7, 0.0);  // orange très transparent
 
-			return Color.Empty;
+				default:
+					return Color.Empty;
+			}
 		}
 
 		static public Color AlphaColor(Color c, double a)

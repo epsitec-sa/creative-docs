@@ -971,7 +971,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					for (int i=0; i<this.fields.Count; i++)
 					{
 						rect = this.GetFieldRemoveBounds(i);
-						if (this.editor.CurrentModifyMode == Editor.ModifyMode.Unlocked && i >= this.skipedField && rect.Contains(pos))
+						if ((!this.editor.Module.IsPatch || this.fields[i].CultureMapSource != CultureMapSource.ReferenceModule) &&
+							this.editor.CurrentModifyMode == Editor.ModifyMode.Unlocked && i >= this.skipedField && rect.Contains(pos))
 						{
 							element = ActiveElement.BoxFieldRemove;
 							fieldRank = i;
@@ -2042,14 +2043,16 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				//	Dessine toutes les lignes, titres ou simples champs.
 				for (int i=0; i<this.fields.Count; i++)
 				{
-					if (this.editor.Module.IsPatch &&
-						(this.fields[i].CultureMapSource == CultureMapSource.ReferenceModule ||
-						 this.fields[i].CultureMapSource == CultureMapSource.DynamicMerge))
+					if (this.editor.Module.IsPatch)
 					{
-						rect = this.GetFieldBounds(i);
-						rect.Deflate(9.0, 0.0);
-						graphics.AddFilledRectangle(rect);
-						graphics.RenderSolid(Misc.SourceColor(this.fields[i].CultureMapSource));
+						Color sourceColor = Misc.SourceColor(this.fields[i].CultureMapSource);
+						if (!sourceColor.IsEmpty)
+						{
+							rect = this.GetFieldBounds(i);
+							rect.Deflate(9.0, 0.0);
+							graphics.AddFilledRectangle(rect);
+							graphics.RenderSolid(sourceColor);
+						}
 					}
 
 					if (this.fields[i].IsTitle)
