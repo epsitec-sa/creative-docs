@@ -395,6 +395,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 			this.ignoreChanged = true;
 			this.listModules.SelectedItem = text;
+			this.listModules.ShowSelected(ScrollShowMode.Extremity);
 			this.ignoreChanged = false;
 		}
 
@@ -418,6 +419,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 			this.ignoreChanged = true;
 			this.listResources.SelectedIndex = sel;
+			this.listResources.ShowSelected(ScrollShowMode.Extremity);
 			this.ignoreChanged = false;
 		}
 
