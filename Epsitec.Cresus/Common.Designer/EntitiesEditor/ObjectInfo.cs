@@ -452,11 +452,13 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			{
 				rect = rh;
 				rect.Inflate(0.5);
+				rect.Bottom -= ObjectInfo.roundFrameRadius;
 				graphics.AddFilledRectangle(rect);
 				graphics.RenderSolid(this.ColorCommentHeader(this.hilitedElement == ActiveElement.InfoMove, this.isDraggingMove || this.isDraggingWidth));
 				graphics.AddRectangle(rect);
 				graphics.RenderSolid(this.GetColor(0));
 
+				rect.Bottom += ObjectInfo.roundFrameRadius;
 				rect.Width -= rect.Height;
 				rect.Offset(0, 1);
 				this.textLayoutTitle.LayoutSize = rect.Size;
