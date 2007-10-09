@@ -283,7 +283,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 				if (this.hilitedElement == ActiveElement.InfoColor8)
 				{
-					this.BackgroundMainColor = MainColor.DarkGrey;
+					this.BackgroundMainColor = MainColor.Grey;
 					this.UpdateFieldColor();
 				}
 			}
@@ -499,7 +499,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			this.DrawColorButton(graphics, ActiveElement.InfoColor5, 4, MainColor.Purple);
 			this.DrawColorButton(graphics, ActiveElement.InfoColor6, 5, MainColor.Blue);
 			this.DrawColorButton(graphics, ActiveElement.InfoColor7, 6, MainColor.Green);
-			this.DrawColorButton(graphics, ActiveElement.InfoColor8, 7, MainColor.DarkGrey);
+			this.DrawColorButton(graphics, ActiveElement.InfoColor8, 7, MainColor.Grey);
 
 			//	Dessine le bouton pour modifier la largeur.
 			if (this.hilitedElement == ActiveElement.InfoWidth)

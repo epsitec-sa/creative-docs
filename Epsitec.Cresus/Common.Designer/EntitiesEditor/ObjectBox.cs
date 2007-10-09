@@ -1827,6 +1827,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			{
 				this.info = new ObjectInfo(this.editor);
 				this.info.AttachObject = this;
+				this.info.BackgroundMainColor = this.BackgroundMainColor;
 
 				Rectangle rect = this.bounds;
 				rect.Left = rect.Right+30;
