@@ -42,6 +42,7 @@
     <Compile Include="Comparers\WidgetDisposition.cs" />
     <Compile Include="Constrain.cs" />
     <Compile Include="ConstrainsList.cs" />
+    <Compile Include="EntitiesEditor\ObjectInfo.cs" />
     <Compile Include="ModuleSupport\ModuleGenerator.cs" />
     <Compile Include="ModuleSupport\ModuleMerger.cs" />
     <Compile Include="MyWidgets\TypeEditorNative.cs" />

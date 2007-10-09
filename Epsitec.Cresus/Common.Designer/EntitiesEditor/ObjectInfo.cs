@@ -9,9 +9,9 @@ using Epsitec.Common.Drawing;
 namespace Epsitec.Common.Designer.EntitiesEditor
 {
 	/// <summary>
-	/// Bulle pour représenter le commentaire associé à une entité ou une connection.
+	/// Bulle pour représenter les informations associées à une entité.
 	/// </summary>
-	public class ObjectComment : AbstractObject
+	public class ObjectInfo : AbstractObject
 	{
 		protected enum AttachMode
 		{
@@ -27,7 +27,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		}
 
 
-		public ObjectComment(Editor editor) : base(editor)
+		public ObjectInfo(Editor editor) : base(editor)
 		{
 			this.isVisible = true;
 			this.boxColor = MainColor.Yellow;
@@ -36,12 +36,12 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			this.textLayoutTitle.DefaultFontSize = 14;
 			this.textLayoutTitle.BreakMode = TextBreakMode.SingleLine | TextBreakMode.Ellipsis;
 			this.textLayoutTitle.Alignment = ContentAlignment.MiddleCenter;
-			this.textLayoutTitle.Text = "<b>Commentaire</b>";
+			this.textLayoutTitle.Text = "<b>Informations</b>";
 
-			this.textLayoutComment = new TextLayout();
-			this.textLayoutComment.DefaultFontSize = 10;
-			this.textLayoutComment.BreakMode = TextBreakMode.Hyphenate | TextBreakMode.Split;
-			this.textLayoutComment.Text = "Commentaire libre, que vous pouvez modifier à volonté.";
+			this.textLayoutInfo = new TextLayout();
+			this.textLayoutInfo.DefaultFontSize = 10;
+			this.textLayoutInfo.BreakMode = TextBreakMode.Hyphenate | TextBreakMode.Split;
+			this.textLayoutInfo.Text = "Information libre, que vous pouvez modifier à volonté.";
 		}
 
 
@@ -50,11 +50,11 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			//	Texte du commentaire.
 			get
 			{
-				return this.textLayoutComment.Text;
+				return this.textLayoutInfo.Text;
 			}
 			set
 			{
-				this.textLayoutComment.Text = value;
+				this.textLayoutInfo.Text = value;
 			}
 		}
 
@@ -188,22 +188,16 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		public override void MouseDown(Message message, Point pos)
 		{
 			//	Le bouton de la souris est pressé.
-			if (this.hilitedElement == ActiveElement.CommentMove)
+			if (this.hilitedElement == ActiveElement.InfoMove)
 			{
 				this.isDraggingMove = true;
 				this.draggingPos = pos;
 				this.editor.LockObject(this);
 			}
 
-			if (this.hilitedElement == ActiveElement.CommentWidth)
+			if (this.hilitedElement == ActiveElement.InfoWidth)
 			{
 				this.isDraggingWidth = true;
-				this.editor.LockObject(this);
-			}
-
-			if (this.hilitedElement == ActiveElement.CommentAttachToConnection)
-			{
-				this.isDraggingAttach = true;
 				this.editor.LockObject(this);
 			}
 		}
@@ -234,7 +228,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 			else
 			{
-				if (this.hilitedElement == ActiveElement.CommentClose)
+				if (this.hilitedElement == ActiveElement.InfoClose)
 				{
 					this.IsVisible = false;
 
@@ -245,54 +239,49 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					}
 				}
 
-				if (this.hilitedElement == ActiveElement.CommentEdit)
-				{
-					this.EditComment();
-				}
-
-				if (this.hilitedElement == ActiveElement.CommentColor1)
+				if (this.hilitedElement == ActiveElement.InfoColor1)
 				{
 					this.BackgroundMainColor = MainColor.Yellow;
 					this.UpdateFieldColor();
 				}
 
-				if (this.hilitedElement == ActiveElement.CommentColor2)
+				if (this.hilitedElement == ActiveElement.InfoColor2)
 				{
 					this.BackgroundMainColor = MainColor.Orange;
 					this.UpdateFieldColor();
 				}
 
-				if (this.hilitedElement == ActiveElement.CommentColor3)
+				if (this.hilitedElement == ActiveElement.InfoColor3)
 				{
 					this.BackgroundMainColor = MainColor.Red;
 					this.UpdateFieldColor();
 				}
 
-				if (this.hilitedElement == ActiveElement.CommentColor4)
+				if (this.hilitedElement == ActiveElement.InfoColor4)
 				{
 					this.BackgroundMainColor = MainColor.Lilac;
 					this.UpdateFieldColor();
 				}
 
-				if (this.hilitedElement == ActiveElement.CommentColor5)
+				if (this.hilitedElement == ActiveElement.InfoColor5)
 				{
 					this.BackgroundMainColor = MainColor.Purple;
 					this.UpdateFieldColor();
 				}
 
-				if (this.hilitedElement == ActiveElement.CommentColor6)
+				if (this.hilitedElement == ActiveElement.InfoColor6)
 				{
 					this.BackgroundMainColor = MainColor.Blue;
 					this.UpdateFieldColor();
 				}
 
-				if (this.hilitedElement == ActiveElement.CommentColor7)
+				if (this.hilitedElement == ActiveElement.InfoColor7)
 				{
 					this.BackgroundMainColor = MainColor.Green;
 					this.UpdateFieldColor();
 				}
 
-				if (this.hilitedElement == ActiveElement.CommentColor8)
+				if (this.hilitedElement == ActiveElement.InfoColor8)
 				{
 					this.BackgroundMainColor = MainColor.DarkGrey;
 					this.UpdateFieldColor();
@@ -314,84 +303,77 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			//	Souris dans le bouton pour modifier la largeur ?
 			if (this.DetectRoundButton(this.PositionWidthButton, pos))
 			{
-				element = ActiveElement.CommentWidth;
+				element = ActiveElement.InfoWidth;
 				return true;
 			}
 
 			//	Souris dans le bouton de fermeture ?
 			if (this.DetectRoundButton(this.PositionCloseButton, pos))
 			{
-				element = ActiveElement.CommentClose;
-				return true;
-			}
-
-			//	Souris dans le bouton de déplacer l'attache ?
-			if (this.DetectRoundButton(this.PositionAttachToConnectionButton, pos))
-			{
-				element = ActiveElement.CommentAttachToConnection;
+				element = ActiveElement.InfoClose;
 				return true;
 			}
 
 			//	Souris dans l'en-tête ?
 			if (this.HeaderRectangle.Contains(pos))
 			{
-				element = ActiveElement.CommentMove;
+				element = ActiveElement.InfoMove;
 				return true;
 			}
 
 			//	Souris dans le bouton des couleurs ?
 			if (this.DetectSquareButton(this.PositionColorButton(0), pos))
 			{
-				element = ActiveElement.CommentColor1;
+				element = ActiveElement.InfoColor1;
 				return true;
 			}
 
 			if (this.DetectSquareButton(this.PositionColorButton(1), pos))
 			{
-				element = ActiveElement.CommentColor2;
+				element = ActiveElement.InfoColor2;
 				return true;
 			}
 
 			if (this.DetectSquareButton(this.PositionColorButton(2), pos))
 			{
-				element = ActiveElement.CommentColor3;
+				element = ActiveElement.InfoColor3;
 				return true;
 			}
 
 			if (this.DetectSquareButton(this.PositionColorButton(3), pos))
 			{
-				element = ActiveElement.CommentColor4;
+				element = ActiveElement.InfoColor4;
 				return true;
 			}
 
 			if (this.DetectSquareButton(this.PositionColorButton(4), pos))
 			{
-				element = ActiveElement.CommentColor5;
+				element = ActiveElement.InfoColor5;
 				return true;
 			}
 
 			if (this.DetectSquareButton(this.PositionColorButton(5), pos))
 			{
-				element = ActiveElement.CommentColor6;
+				element = ActiveElement.InfoColor6;
 				return true;
 			}
 
 			if (this.DetectSquareButton(this.PositionColorButton(6), pos))
 			{
-				element = ActiveElement.CommentColor7;
+				element = ActiveElement.InfoColor7;
 				return true;
 			}
 
 			if (this.DetectSquareButton(this.PositionColorButton(7), pos))
 			{
-				element = ActiveElement.CommentColor8;
+				element = ActiveElement.InfoColor8;
 				return true;
 			}
 
 			//	Souris dans la boîte ?
 			if (this.bounds.Contains(pos))
 			{
-				element = ActiveElement.CommentEdit;
+				element = ActiveElement.InfoEdit;
 				return true;
 			}
 
@@ -403,11 +385,11 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		{
 			//	Modifie le texte du commentaire.
 			Module module = this.editor.Module;
-			string text = this.textLayoutComment.Text;
+			string text = this.textLayoutInfo.Text;
 			text = module.DesignerApplication.DlgEntityComment(text);
 			if (text != null)
 			{
-				this.textLayoutComment.Text = text;
+				this.textLayoutInfo.Text = text;
 				this.UpdateHeight();
 				this.editor.UpdateAfterCommentChanged();
 				this.editor.Module.AccessEntities.SetLocalDirty();
@@ -418,11 +400,11 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		{
 			//	Adapte la hauteur du commentaire en fonction de sa largeur et du contenu.
 			Rectangle rect = this.bounds;
-			rect.Deflate(ObjectComment.textMargin);
-			this.textLayoutComment.LayoutSize = rect.Size;
+			rect.Deflate(ObjectInfo.textMargin);
+			this.textLayoutInfo.LayoutSize = rect.Size;
 
-			double h = System.Math.Floor(this.textLayoutComment.FindTextHeight()+1);
-			h += ObjectComment.textMargin*2;
+			double h = System.Math.Floor(this.textLayoutInfo.FindTextHeight()+1);
+			h += ObjectInfo.textMargin*2;
 
 			if (this.GetAttachMode() == AttachMode.Bottom)
 			{
@@ -462,8 +444,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				rect = Rectangle.Union(rect, rh);
 			}
 			rect.Inflate(2);
-			rect.Offset(8, -8);
-			this.DrawShadow(graphics, rect, 8, 8, 0.2);
+			rect.Offset(ObjectInfo.shadowOffset, -(ObjectInfo.shadowOffset));
+			this.DrawShadow(graphics, rect, ObjectInfo.roundFrameRadius+ObjectInfo.shadowOffset, (int)ObjectInfo.shadowOffset, 0.2);
 
 			//	Dessine l'en-tête.
 			if (!rh.IsEmpty && !this.isDraggingMove && !this.isDraggingWidth && !this.isDraggingAttach)
@@ -471,7 +453,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				rect = rh;
 				rect.Inflate(0.5);
 				graphics.AddFilledRectangle(rect);
-				graphics.RenderSolid(this.ColorCommentHeader(this.hilitedElement == ActiveElement.CommentMove, this.isDraggingMove || this.isDraggingWidth));
+				graphics.RenderSolid(this.ColorCommentHeader(this.hilitedElement == ActiveElement.InfoMove, this.isDraggingMove || this.isDraggingWidth));
 				graphics.AddRectangle(rect);
 				graphics.RenderSolid(this.GetColor(0));
 
@@ -492,14 +474,14 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 			//	Dessine le texte.
 			rect = this.bounds;
-			rect.Deflate(ObjectComment.textMargin);
-			this.textLayoutComment.LayoutSize = rect.Size;
-			this.textLayoutComment.Paint(rect.BottomLeft, graphics, Rectangle.MaxValue, this.GetColor(this.IsDarkColorMain ? 1:0), GlyphPaintStyle.Normal);
+			rect.Deflate(ObjectInfo.textMargin);
+			this.textLayoutInfo.LayoutSize = rect.Size;
+			this.textLayoutInfo.Paint(rect.BottomLeft, graphics, Rectangle.MaxValue, this.GetColor(this.IsDarkColorMain ? 1:0), GlyphPaintStyle.Normal);
 
 			//	Dessine le bouton de fermeture.
 			if (!rh.IsEmpty)
 			{
-				if (this.hilitedElement == ActiveElement.CommentClose)
+				if (this.hilitedElement == ActiveElement.InfoClose)
 				{
 					this.DrawRoundButton(graphics, this.PositionCloseButton, AbstractObject.buttonRadius, GlyphShape.Close, true, false);
 				}
@@ -510,37 +492,23 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 
 			//	Dessine les boutons des couleurs.
-			this.DrawColorButton(graphics, ActiveElement.CommentColor1, 0, MainColor.Yellow);
-			this.DrawColorButton(graphics, ActiveElement.CommentColor2, 1, MainColor.Orange);
-			this.DrawColorButton(graphics, ActiveElement.CommentColor3, 2, MainColor.Red);
-			this.DrawColorButton(graphics, ActiveElement.CommentColor4, 3, MainColor.Lilac);
-			this.DrawColorButton(graphics, ActiveElement.CommentColor5, 4, MainColor.Purple);
-			this.DrawColorButton(graphics, ActiveElement.CommentColor6, 5, MainColor.Blue);
-			this.DrawColorButton(graphics, ActiveElement.CommentColor7, 6, MainColor.Green);
-			this.DrawColorButton(graphics, ActiveElement.CommentColor8, 7, MainColor.DarkGrey);
+			this.DrawColorButton(graphics, ActiveElement.InfoColor1, 0, MainColor.Yellow);
+			this.DrawColorButton(graphics, ActiveElement.InfoColor2, 1, MainColor.Orange);
+			this.DrawColorButton(graphics, ActiveElement.InfoColor3, 2, MainColor.Red);
+			this.DrawColorButton(graphics, ActiveElement.InfoColor4, 3, MainColor.Lilac);
+			this.DrawColorButton(graphics, ActiveElement.InfoColor5, 4, MainColor.Purple);
+			this.DrawColorButton(graphics, ActiveElement.InfoColor6, 5, MainColor.Blue);
+			this.DrawColorButton(graphics, ActiveElement.InfoColor7, 6, MainColor.Green);
+			this.DrawColorButton(graphics, ActiveElement.InfoColor8, 7, MainColor.DarkGrey);
 
 			//	Dessine le bouton pour modifier la largeur.
-			if (this.hilitedElement == ActiveElement.CommentWidth)
+			if (this.hilitedElement == ActiveElement.InfoWidth)
 			{
 				this.DrawRoundButton(graphics, this.PositionWidthButton, AbstractObject.buttonRadius, GlyphShape.HorizontalMove, true, false);
 			}
 			else if (this.IsHeaderHilite && !this.isDraggingMove && !this.isDraggingWidth && !this.isDraggingAttach)
 			{
 				this.DrawRoundButton(graphics, this.PositionWidthButton, AbstractObject.buttonRadius, GlyphShape.HorizontalMove, false, false);
-			}
-
-			//	Dessine le bouton pour déplacer l'attache.
-			Point p = this.PositionAttachToConnectionButton;
-			if (!p.IsZero)
-			{
-				if (this.hilitedElement == ActiveElement.CommentAttachToConnection)
-				{
-					this.DrawRoundButton(graphics, p, AbstractObject.buttonRadius, "C", true, false);
-				}
-				else if (this.IsHeaderHilite && !this.isDraggingMove && !this.isDraggingWidth && !this.isDraggingAttach)
-				{
-					this.DrawRoundButton(graphics, p, AbstractObject.buttonRadius, "C", false, false);
-				}
 			}
 		}
 
@@ -565,218 +533,55 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			//	Indique si la souris est dans l'en-tête.
 			get
 			{
-				return (this.hilitedElement == ActiveElement.CommentEdit ||
-						this.hilitedElement == ActiveElement.CommentMove ||
-						this.hilitedElement == ActiveElement.CommentClose ||
-						this.hilitedElement == ActiveElement.CommentColor1 ||
-						this.hilitedElement == ActiveElement.CommentColor2 ||
-						this.hilitedElement == ActiveElement.CommentColor3 ||
-						this.hilitedElement == ActiveElement.CommentColor4 ||
-						this.hilitedElement == ActiveElement.CommentColor5 ||
-						this.hilitedElement == ActiveElement.CommentColor6 ||
-						this.hilitedElement == ActiveElement.CommentColor7 ||
-						this.hilitedElement == ActiveElement.CommentColor8 ||
-						this.hilitedElement == ActiveElement.CommentAttachToConnection);
+				return (this.hilitedElement == ActiveElement.InfoEdit ||
+						this.hilitedElement == ActiveElement.InfoMove ||
+						this.hilitedElement == ActiveElement.InfoClose ||
+						this.hilitedElement == ActiveElement.InfoColor1 ||
+						this.hilitedElement == ActiveElement.InfoColor2 ||
+						this.hilitedElement == ActiveElement.InfoColor3 ||
+						this.hilitedElement == ActiveElement.InfoColor4 ||
+						this.hilitedElement == ActiveElement.InfoColor5 ||
+						this.hilitedElement == ActiveElement.InfoColor6 ||
+						this.hilitedElement == ActiveElement.InfoColor7 ||
+						this.hilitedElement == ActiveElement.InfoColor8);
 			}
 		}
 
 
 		protected Path GetFramePath()
 		{
-			//	Retourne le chemin du cadre du commentaire (rectangle avec éventuellement une queue,
-			//	comme une bulle de bd).
-			Path path = new Path();
+			//	Retourne le chemin du cadre du commentaire.
+			Rectangle bounds = this.bounds;
+			bounds.Inflate(0.5);
+			Path path = this.PathRoundRectangle(bounds, ObjectInfo.roundFrameRadius);
 
 			AttachMode mode = this.GetAttachMode();
 			Point himself = this.GetAttachHimself(mode);
 			Point other = this.GetAttachOther(mode);
-			
-			Rectangle bounds = this.bounds;
-			bounds.Inflate(0.5);
 
-			if (mode == AttachMode.None || himself.IsZero || other.IsZero)
+			if (himself.X == other.X)
 			{
-				path.AppendRectangle(bounds);
+				himself.X = System.Math.Floor(himself.X)+0.5;
+				other.X = System.Math.Floor(other.X)+0.5;
 			}
-			else if (mode == AttachMode.Left)
+
+			if (himself.Y == other.Y)
 			{
-				Point h1 = himself;
-				Point h2 = himself;
-
-				h1.Y -= ObjectComment.queueThickness;
-				h2.Y += ObjectComment.queueThickness;
-				
-				if (h1.Y < bounds.Bottom)
-				{
-					h2.Y += bounds.Bottom-h1.Y;
-					h1.Y = bounds.Bottom;
-				}
-				
-				if (h2.Y > bounds.Top)
-				{
-					h1.Y -= h2.Y-bounds.Top;
-					h2.Y = bounds.Top;
-				}
-
-				path.MoveTo(other);
-				path.LineTo(h1);
-				path.LineTo(bounds.BottomLeft);
-				path.LineTo(bounds.BottomRight);
-				path.LineTo(bounds.TopRight);
-				path.LineTo(bounds.TopLeft);
-				path.LineTo(h2);
-				path.Close();
+				himself.Y = System.Math.Floor(himself.Y)+0.5;
+				other.Y = System.Math.Floor(other.Y)+0.5;
 			}
-			else if (mode == AttachMode.Right)
+
+			if (mode != AttachMode.None && !himself.IsZero && !other.IsZero)
 			{
-				Point h1 = himself;
-				Point h2 = himself;
+				double r = 4;
 
-				h1.Y -= ObjectComment.queueThickness;
-				h2.Y += ObjectComment.queueThickness;
-				
-				if (h1.Y < bounds.Bottom)
-				{
-					h2.Y += bounds.Bottom-h1.Y;
-					h1.Y = bounds.Bottom;
-				}
-				
-				if (h2.Y > bounds.Top)
-				{
-					h1.Y -= h2.Y-bounds.Top;
-					h2.Y = bounds.Top;
-				}
+				Point h1 = Point.Move(himself, other, r*1);
+				Point h2 = Point.Move(himself, other, r*2);
 
-				path.MoveTo(other);
-				path.LineTo(h1);
-				path.LineTo(bounds.BottomRight);
-				path.LineTo(bounds.BottomLeft);
-				path.LineTo(bounds.TopLeft);
-				path.LineTo(bounds.TopRight);
-				path.LineTo(h2);
-				path.Close();
-			}
-			else if (mode == AttachMode.Bottom)
-			{
-				Point h1 = himself;
-				Point h2 = himself;
+				path.MoveTo(h2);
+				path.LineTo(other);
 
-				h1.X -= ObjectComment.queueThickness;
-				h2.X += ObjectComment.queueThickness;
-				
-				if (h1.X < bounds.Left)
-				{
-					h2.X += bounds.Left-h1.X;
-					h1.X = bounds.Left;
-				}
-				
-				if (h2.X > bounds.Right)
-				{
-					h1.X -= h2.X-bounds.Right;
-					h2.X = bounds.Right;
-				}
-
-				path.MoveTo(other);
-				path.LineTo(h1);
-				path.LineTo(bounds.BottomLeft);
-				path.LineTo(bounds.TopLeft);
-				path.LineTo(bounds.TopRight);
-				path.LineTo(bounds.BottomRight);
-				path.LineTo(h2);
-				path.Close();
-			}
-			else if (mode == AttachMode.Top)
-			{
-				Point h1 = himself;
-				Point h2 = himself;
-
-				h1.X -= ObjectComment.queueThickness;
-				h2.X += ObjectComment.queueThickness;
-				
-				if (h1.X < bounds.Left)
-				{
-					h2.X += bounds.Left-h1.X;
-					h1.X = bounds.Left;
-				}
-				
-				if (h2.X > bounds.Right)
-				{
-					h1.X -= h2.X-bounds.Right;
-					h2.X = bounds.Right;
-				}
-
-				path.MoveTo(other);
-				path.LineTo(h1);
-				path.LineTo(bounds.TopLeft);
-				path.LineTo(bounds.BottomLeft);
-				path.LineTo(bounds.BottomRight);
-				path.LineTo(bounds.TopRight);
-				path.LineTo(h2);
-				path.Close();
-			}
-			else if (mode == AttachMode.BottomLeft)
-			{
-				Point h1 = himself;
-				Point h2 = himself;
-
-				h1.Y += ObjectComment.queueThickness*System.Math.Sqrt(2);
-				h2.X += ObjectComment.queueThickness*System.Math.Sqrt(2);
-				
-				path.MoveTo(other);
-				path.LineTo(h1);
-				path.LineTo(bounds.TopLeft);
-				path.LineTo(bounds.TopRight);
-				path.LineTo(bounds.BottomRight);
-				path.LineTo(h2);
-				path.Close();
-			}
-			else if (mode == AttachMode.BottomRight)
-			{
-				Point h1 = himself;
-				Point h2 = himself;
-
-				h1.Y += ObjectComment.queueThickness*System.Math.Sqrt(2);
-				h2.X -= ObjectComment.queueThickness*System.Math.Sqrt(2);
-				
-				path.MoveTo(other);
-				path.LineTo(h1);
-				path.LineTo(bounds.TopRight);
-				path.LineTo(bounds.TopLeft);
-				path.LineTo(bounds.BottomLeft);
-				path.LineTo(h2);
-				path.Close();
-			}
-			else if (mode == AttachMode.TopLeft)
-			{
-				Point h1 = himself;
-				Point h2 = himself;
-
-				h1.Y -= ObjectComment.queueThickness*System.Math.Sqrt(2);
-				h2.X += ObjectComment.queueThickness*System.Math.Sqrt(2);
-				
-				path.MoveTo(other);
-				path.LineTo(h1);
-				path.LineTo(bounds.BottomLeft);
-				path.LineTo(bounds.BottomRight);
-				path.LineTo(bounds.TopRight);
-				path.LineTo(h2);
-				path.Close();
-			}
-			else if (mode == AttachMode.TopRight)
-			{
-				Point h1 = himself;
-				Point h2 = himself;
-
-				h1.Y -= ObjectComment.queueThickness*System.Math.Sqrt(2);
-				h2.X -= ObjectComment.queueThickness*System.Math.Sqrt(2);
-				
-				path.MoveTo(other);
-				path.LineTo(h1);
-				path.LineTo(bounds.BottomRight);
-				path.LineTo(bounds.BottomLeft);
-				path.LineTo(bounds.TopLeft);
-				path.LineTo(h2);
-				path.Close();
+				path.AppendCircle(h1, r);
 			}
 
 			return path;
@@ -1109,7 +914,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			{
 				Rectangle rect = this.bounds;
 				rect.Bottom = rect.Top;
-				rect.Height = ObjectComment.commentHeaderHeight;
+				rect.Height = ObjectInfo.infoHeaderHeight;
 				return rect;
 			}
 		}
@@ -1202,10 +1007,10 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			//	Sérialise toutes les informations du commentaire.
 			//	Utilisé seulement pour les commentaires associés à des boîtes.
 			//	Les commentaires associés à des connections sont sérialisés par Field.
-			writer.WriteStartElement(Xml.Comment);
+			writer.WriteStartElement(Xml.Info);
 			
 			writer.WriteElementString(Xml.Bounds, this.bounds.ToString());
-			writer.WriteElementString(Xml.Text, this.textLayoutComment.Text);
+			writer.WriteElementString(Xml.Text, this.textLayoutInfo.Text);
 			writer.WriteElementString(Xml.Color, this.boxColor.ToString());
 
 			writer.WriteEndElement();
@@ -1228,7 +1033,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					}
 					else if (name == Xml.Text)
 					{
-						this.textLayoutComment.Text = element;
+						this.textLayoutInfo.Text = element;
 					}
 					else if (name == Xml.Color)
 					{
@@ -1241,7 +1046,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				}
 				else if (reader.NodeType == XmlNodeType.EndElement)
 				{
-					System.Diagnostics.Debug.Assert(reader.Name == Xml.Comment);
+					System.Diagnostics.Debug.Assert(reader.Name == Xml.Info);
 					break;
 				}
 				else
@@ -1253,15 +1058,17 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		#endregion
 
 
-		protected static readonly double commentHeaderHeight = 24;
+		protected static readonly double infoHeaderHeight = 24;
 		protected static readonly double textMargin = 5;
 		protected static readonly double queueThickness = 5;
+		protected static readonly double roundFrameRadius = 12;
+		protected static readonly double shadowOffset = 8;
 
 		protected Rectangle bounds;
 		protected AbstractObject attachObject;
 		protected bool isVisible;
 		protected TextLayout textLayoutTitle;
-		protected TextLayout textLayoutComment;
+		protected TextLayout textLayoutInfo;
 
 		protected bool isDraggingMove;
 		protected bool isDraggingWidth;

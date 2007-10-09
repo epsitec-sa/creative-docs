@@ -52,6 +52,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			this.boxes = new List<ObjectBox>();
 			this.connections = new List<ObjectConnection>();
 			this.comments = new List<ObjectComment>();
+			this.infos = new List<ObjectInfo>();
 			this.zoom = 1;
 			this.areaOffset = Point.Zero;
 		}
@@ -172,8 +173,14 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		public void AddComment(ObjectComment comment)
 		{
-			//	Ajoute une nouvelle liaison dans l'éditeur.
+			//	Ajoute un nouveau commentaire dans l'éditeur.
 			this.comments.Add(comment);
+		}
+
+		public void AddInfo(ObjectInfo info)
+		{
+			//	Ajoute une nouvelle information dans l'éditeur.
+			this.infos.Add(info);
 		}
 
 		public void Clear()
@@ -182,6 +189,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			this.boxes.Clear();
 			this.connections.Clear();
 			this.comments.Clear();
+			this.infos.Clear();
 			this.LockObject(null);
 		}
 
@@ -260,7 +268,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		public void UpdateAfterCommentChanged()
 		{
-			//	Appelé lorsqu'un commentaire a changé.
+			//	Appelé lorsqu'un commentaire ou une information a changé.
 			this.RedimArea();
 
 			this.UpdateConnections();
@@ -789,6 +797,11 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				{
 					box.Comment.IsDimmed = box.IsDimmed;
 				}
+
+				if (box.Info != null)
+				{
+					box.Info.IsDimmed = box.IsDimmed;
+				}
 			}
 		}
 
@@ -915,6 +928,12 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			{
 				this.comments.Remove(box.Comment);
 				box.Comment = null;
+			}
+
+			if (box.Info != null)
+			{
+				this.infos.Remove(box.Info);
+				box.Info = null;
 			}
 
 			this.boxes.Remove(box);  // supprime la boîte demandée
@@ -1098,6 +1117,11 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				bounds = Rectangle.Union(bounds, comment.Bounds);
 			}
 
+			foreach (ObjectInfo info in this.infos)
+			{
+				bounds = Rectangle.Union(bounds, info.Bounds);
+			}
+
 			return bounds;
 		}
 
@@ -1117,6 +1141,11 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			foreach (ObjectComment comment in this.comments)
 			{
 				comment.Move(dx, dy);
+			}
+		
+			foreach (ObjectInfo info in this.infos)
+			{
+				info.Move(dx, dy);
 			}
 		
 #if false
@@ -1219,11 +1248,10 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		{
 			//	Met en évidence tous les widgets selon la position visée par la souris.
 			//	L'objet à l'avant-plan a la priorité.
-
-			if ((message.MessageType == MessageType.MouseMove) &&
-				(Message.CurrentState.Buttons == MouseButtons.None))
+			if (message.MessageType == MessageType.MouseMove &&
+				Message.CurrentState.Buttons == MouseButtons.None)
 			{
-				ToolTip.Default.RefreshToolTip (this, this.brutPos);
+				ToolTip.Default.RefreshToolTip(this, this.brutPos);
 			}
 
 			if (this.isAreaMoving)
@@ -1245,6 +1273,16 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				for (int i=this.comments.Count-1; i>=0; i--)
 				{
 					AbstractObject obj = this.comments[i];
+					if (obj.MouseMove(message, pos))
+					{
+						fly = obj;
+						pos = Point.Zero;  // si on était dans cet objet -> plus aucun hilite pour les objets placés dessous
+					}
+				}
+
+				for (int i=this.infos.Count-1; i>=0; i--)
+				{
+					AbstractObject obj = this.infos[i];
 					if (obj.MouseMove(message, pos))
 					{
 						fly = obj;
@@ -1354,9 +1392,14 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					{
 						type = MouseCursorType.IBeam;
 					}
-					else if (fly.HilitedElement == AbstractObject.ActiveElement.CommentMove)
+					else if (fly.HilitedElement == AbstractObject.ActiveElement.CommentMove ||
+							 fly.HilitedElement == AbstractObject.ActiveElement.InfoMove)
 					{
 						type = MouseCursorType.Move;
+					}
+					else if (fly.HilitedElement == AbstractObject.ActiveElement.InfoEdit)
+					{
+						type = MouseCursorType.Arrow;
 					}
 					else
 					{
@@ -1462,6 +1505,16 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				}
 			}
 
+			for (int i=this.infos.Count-1; i>=0; i--)
+			{
+				ObjectInfo info = this.infos[i];
+
+				if (info.IsReadyForAction)
+				{
+					return info;
+				}
+			}
+
 			for (int i=this.connections.Count-1; i>=0; i--)
 			{
 				ObjectConnection connection = this.connections[i];
@@ -1532,6 +1585,11 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				obj.DrawBackground(graphics);
 			}
 
+			foreach (AbstractObject obj in this.infos)
+			{
+				obj.DrawBackground(graphics);
+			}
+
 			foreach (AbstractObject obj in this.comments)
 			{
 				obj.DrawBackground(graphics);
@@ -1544,6 +1602,11 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 
 			foreach (AbstractObject obj in this.connections)
+			{
+				obj.DrawForeground(graphics);
+			}
+
+			foreach (AbstractObject obj in this.infos)
 			{
 				obj.DrawForeground(graphics);
 			}
@@ -1789,6 +1852,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		protected List<ObjectBox> boxes;
 		protected List<ObjectConnection> connections;
 		protected List<ObjectComment> comments;
+		protected List<ObjectInfo> infos;
 		protected Size areaSize;
 		protected double zoom;
 		protected Point areaOffset;

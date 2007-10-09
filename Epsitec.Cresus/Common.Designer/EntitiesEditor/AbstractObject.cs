@@ -20,6 +20,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			BoxInside,
 			BoxSources,
 			BoxComment,
+			BoxInfo,
 			BoxExtend,
 			BoxClose,
 			BoxHeader,
@@ -62,6 +63,19 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			CommentColor7,
 			CommentColor8,
 			CommentAttachToConnection,
+
+			InfoEdit,
+			InfoMove,
+			InfoWidth,
+			InfoClose,
+			InfoColor1,
+			InfoColor2,
+			InfoColor3,
+			InfoColor4,
+			InfoColor5,
+			InfoColor6,
+			InfoColor7,
+			InfoColor8,
 		}
 
 		public enum MainColor
@@ -203,6 +217,9 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				case AbstractObject.ActiveElement.BoxComment:
 					return "Montre ou cache le commentaire associé";
 
+				case AbstractObject.ActiveElement.BoxInfo:
+					return "Montre ou cache les informations associées";
+
 				case AbstractObject.ActiveElement.BoxColor1:
 					return "Entité bleue";
 
@@ -339,10 +356,44 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					return "Commentaire vert";
 
 				case AbstractObject.ActiveElement.CommentColor8:
-					return "Commentaire gris foncé";
+					return "Commentaire gris-foncé";
 
 				case AbstractObject.ActiveElement.CommentAttachToConnection:
 					return "Déplace le point d'attache du commentaire";
+
+				case AbstractObject.ActiveElement.InfoMove:
+					return "Déplace les informations";
+
+				case AbstractObject.ActiveElement.InfoWidth:
+					return "Modifie la largeur des informations";
+
+				case AbstractObject.ActiveElement.InfoClose:
+					return "Cache les informations";
+
+				case AbstractObject.ActiveElement.InfoColor1:
+					return "Informations jaunes";
+
+				case AbstractObject.ActiveElement.InfoColor2:
+					return "Informations oranges";
+
+				case AbstractObject.ActiveElement.InfoColor3:
+					return "Informations rouges";
+
+				case AbstractObject.ActiveElement.InfoColor4:
+					return "Informations lilas";
+
+				case AbstractObject.ActiveElement.InfoColor5:
+					return "Informations violettes";
+
+				case AbstractObject.ActiveElement.InfoColor6:
+					return "Informations bleues";
+
+				case AbstractObject.ActiveElement.InfoColor7:
+					return "Informations vertes";
+
+				case AbstractObject.ActiveElement.InfoColor8:
+					return "Informations gris-foncé";
+
 			}
 
 			return null;  // pas de tooltip
@@ -810,6 +861,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		protected static readonly double arrowLength = 12;
 		protected static readonly double arrowAngle = 25;
 		protected static readonly double commentMinWidth = 50;
+		protected static readonly double infoMinWidth = 50;
 
 		protected Editor editor;
 		protected ActiveElement hilitedElement;

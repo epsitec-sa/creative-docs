@@ -11,6 +11,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		public const string Box               = "Box";
 		public const string Field             = "Field";
 		public const string Comment           = "Comm";
+		public const string Info              = "Info";
 		
 		public const string Bounds            = "Bds";
 		public const string Color             = "Clr";

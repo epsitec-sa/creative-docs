@@ -139,6 +139,19 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 		}
 
+		public ObjectInfo Info
+		{
+			//	Informations liées.
+			get
+			{
+				return this.info;
+			}
+			set
+			{
+				this.info = value;
+			}
+		}
+
 		public override Rectangle Bounds
 		{
 			//	Retourne la boîte de l'objet.
@@ -168,6 +181,14 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				Rectangle rect = this.comment.InternalBounds;
 				rect.Offset(p2-p1);
 				this.comment.SetBounds(rect);
+			}
+
+			//	S'il existe des informations associées, elles doivent aussi être déplacées.
+			if (this.info != null)
+			{
+				Rectangle rect = this.info.InternalBounds;
+				rect.Offset(p2-p1);
+				this.info.SetBounds(rect);
 			}
 		}
 
@@ -493,6 +514,20 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 						return "Cache le commentaire associé";
 					}
 
+				case AbstractObject.ActiveElement.BoxInfo:
+					if (this.info == null)
+					{
+						return "Montre les informations associées";
+					}
+					else if (!this.info.IsVisible)
+					{
+						return string.Format("Montre les informations associées<br/><b>{0}</b>", this.info.Text);
+					}
+					else
+					{
+						return "Cache les informations associées";
+					}
+
 				case AbstractObject.ActiveElement.BoxClose:
 					if (this.isRoot)
 					{
@@ -758,6 +793,11 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					this.AddComment();
 				}
 
+				if (this.hilitedElement == ActiveElement.BoxInfo)
+				{
+					this.AddInfo();
+				}
+
 				if (this.hilitedElement == ActiveElement.BoxColor1)
 				{
 					this.BackgroundMainColor = MainColor.Blue;
@@ -849,6 +889,13 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				if (this.editor.CurrentModifyMode != Editor.ModifyMode.Locked && this.DetectRoundButton(this.PositionCommentButton, pos))
 				{
 					element = ActiveElement.BoxComment;
+					return true;
+				}
+
+				//	Souris dans le bouton des informations ?
+				if (this.editor.CurrentModifyMode != Editor.ModifyMode.Locked && this.DetectRoundButton(this.PositionInfoButton, pos))
+				{
+					element = ActiveElement.BoxInfo;
 					return true;
 				}
 
@@ -1773,6 +1820,31 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			this.editor.Module.AccessEntities.SetLocalDirty();
 		}
 
+		protected void AddInfo()
+		{
+			//	Ajoute une information à la boîte.
+			if (this.info == null)
+			{
+				this.info = new ObjectInfo(this.editor);
+				this.info.AttachObject = this;
+
+				Rectangle rect = this.bounds;
+				rect.Left = rect.Right+30;
+				rect.Width = System.Math.Max(this.bounds.Width, AbstractObject.infoMinWidth);
+				this.info.SetBounds(rect);
+				this.info.UpdateHeight();  // adapte la hauteur en fonction du contenu
+
+				this.editor.AddInfo(this.info);
+				this.editor.UpdateAfterCommentChanged();
+			}
+			else
+			{
+				this.info.IsVisible = !this.info.IsVisible;
+			}
+
+			this.editor.Module.AccessEntities.SetLocalDirty();
+		}
+
 
 		/// <summary>
 		/// Informations sur une entité source, ouverte ou fermée.
@@ -2049,6 +2121,16 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			else if (this.IsHeaderHilite && !this.isDragging)
 			{
 				this.DrawRoundButton(graphics, this.PositionCommentButton, AbstractObject.buttonRadius, "C", false, false);
+			}
+
+			//	Dessine le bouton des informations.
+			if (this.hilitedElement == ActiveElement.BoxInfo)
+			{
+				this.DrawRoundButton(graphics, this.PositionInfoButton, AbstractObject.buttonRadius, "i", true, false);
+			}
+			else if (this.IsHeaderHilite && !this.isDragging)
+			{
+				this.DrawRoundButton(graphics, this.PositionInfoButton, AbstractObject.buttonRadius, "i", false, false);
 			}
 
 			//	Dessine les noms des champs.
@@ -2418,6 +2500,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				return (this.hilitedElement == ActiveElement.BoxHeader ||
 						this.hilitedElement == ActiveElement.BoxSources ||
 						this.hilitedElement == ActiveElement.BoxComment ||
+						this.hilitedElement == ActiveElement.BoxInfo ||
 						this.hilitedElement == ActiveElement.BoxColor1 ||
 						this.hilitedElement == ActiveElement.BoxColor2 ||
 						this.hilitedElement == ActiveElement.BoxColor3 ||
@@ -2637,10 +2720,19 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		protected Point PositionCommentButton
 		{
-			//	Retourne la position du bouton pour montrer les sources.
+			//	Retourne la position du bouton pour montrer le commentaire.
 			get
 			{
 				return new Point(this.bounds.Left+AbstractObject.buttonRadius*3+8, this.bounds.Top-AbstractObject.headerHeight/2);
+			}
+		}
+
+		protected Point PositionInfoButton
+		{
+			//	Retourne la position du bouton pour montrer les informations.
+			get
+			{
+				return new Point(this.bounds.Left+AbstractObject.buttonRadius*5+10, this.bounds.Top-AbstractObject.headerHeight/2);
 			}
 		}
 
@@ -2787,6 +2879,11 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				this.comment.WriteXml(writer);
 			}
 			
+			if (this.info != null && this.info.IsVisible)  // informations associées ?
+			{
+				this.info.WriteXml(writer);
+			}
+			
 			writer.WriteEndElement();
 		}
 
@@ -2816,6 +2913,15 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 						this.comment.AttachObject = this;
 						this.comment.UpdateHeight();  // adapte la hauteur en fonction du contenu
 						this.editor.AddComment(this.comment);
+						reader.Read();
+					}
+					else if (name == Xml.Info)
+					{
+						this.info = new ObjectInfo(this.editor);
+						this.info.ReadXml(reader);
+						this.info.AttachObject = this;
+						this.info.UpdateHeight();  // adapte la hauteur en fonction du contenu
+						this.editor.AddInfo(this.info);
 						reader.Read();
 					}
 					else
@@ -2952,6 +3058,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		protected CultureMap cultureMap;
 		protected ObjectComment comment;
+		protected ObjectInfo info;
 		protected Rectangle bounds;
 		protected double columnsSeparatorRelative;
 		protected bool isRoot;
