@@ -1755,6 +1755,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			{
 				System.Text.StringBuilder builder = new System.Text.StringBuilder();
 				int count = 0;
+				//	TODO: remplacer ceci par une recherche résursive des interfaces !
 				for (int i=0; i<this.fields.Count; i++)
 				{
 					if (this.fields[i].IsTitle)
