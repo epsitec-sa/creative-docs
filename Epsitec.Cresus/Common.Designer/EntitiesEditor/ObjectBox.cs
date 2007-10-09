@@ -738,7 +738,10 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					}
 					else
 					{
-						this.ChangeFieldType(this.hilitedFieldRank);
+						if (this.IsMousePossible(this.hilitedElement, this.hilitedFieldRank))
+						{
+							this.ChangeFieldType(this.hilitedFieldRank);
+						}
 					}
 				}
 
