@@ -1045,6 +1045,10 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		public override bool IsMousePossible(ActiveElement element, int fieldRank)
 		{
 			//	Indique si l'opération est possible.
+			//	Dans un module de patch, un champ provenant du module de référence ne doit pas pouvoir
+			//	être modifié, mais la détection (BoxFieldName et BoxFieldType) doit tout de même fonctionner,
+			//	pour permettre la navigation. Cette méthode indique si l'opération de modification est
+			//	possible.
 			if (element == ActiveElement.BoxFieldName ||
 				element == ActiveElement.BoxFieldType)
 			{
