@@ -1836,9 +1836,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				this.comment.AttachObject = this;
 
 				Rectangle rect = this.bounds;
-				rect.Width = System.Math.Max(rect.Width, AbstractObject.commentMinWidth);
-				rect.Bottom = rect.Top+20;
-				rect.Height = 50;  // hauteur arbitraire
+				rect.Left = rect.Right+30;
+				rect.Width = System.Math.Max(this.bounds.Width, AbstractObject.infoMinWidth);
 				this.comment.SetBounds(rect);
 				this.comment.UpdateHeight();  // adapte la hauteur en fonction du contenu
 
@@ -1865,8 +1864,9 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				this.info.BackgroundMainColor = this.BackgroundMainColor;
 
 				Rectangle rect = this.bounds;
-				rect.Left = rect.Right+30;
-				rect.Width = System.Math.Max(this.bounds.Width, AbstractObject.infoMinWidth);
+				rect.Width = System.Math.Max(rect.Width, AbstractObject.commentMinWidth);
+				rect.Bottom = rect.Top+20;
+				rect.Height = 50;  // hauteur arbitraire
 				this.info.SetBounds(rect);
 				this.info.UpdateHeight();  // adapte la hauteur en fonction du contenu
 
