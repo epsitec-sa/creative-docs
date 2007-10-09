@@ -1744,7 +1744,42 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				}
 			}
 
+			this.UpdateInformations();
 			this.UpdateFieldsLink();
+		}
+
+		protected void UpdateInformations()
+		{
+			//	Met à jour les informations dans l'éventuel ObjectInfo lié.
+			if (this.info != null)
+			{
+				System.Text.StringBuilder builder = new System.Text.StringBuilder();
+				int count = 0;
+				for (int i=0; i<this.fields.Count; i++)
+				{
+					if (this.fields[i].IsTitle)
+					{
+						continue;
+					}
+
+					if (count != 0)
+					{
+						builder.Append(", ");
+					}
+
+					builder.Append(this.fields[i].FieldName);
+
+					count++;
+				}
+
+				if (count == 0)
+				{
+					builder.Append(Misc.Italic("Aucune interface"));
+				}
+
+				this.info.Text = builder.ToString();
+				this.editor.UpdateAfterCommentChanged();
+			}
 		}
 
 		protected void UpdateFieldsLink()
@@ -1834,6 +1869,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				rect.Width = System.Math.Max(this.bounds.Width, AbstractObject.infoMinWidth);
 				this.info.SetBounds(rect);
 				this.info.UpdateHeight();  // adapte la hauteur en fonction du contenu
+
+				this.UpdateInformations();
 
 				this.editor.AddInfo(this.info);
 				this.editor.UpdateAfterCommentChanged();

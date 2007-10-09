@@ -41,7 +41,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			this.textLayoutInfo = new TextLayout();
 			this.textLayoutInfo.DefaultFontSize = 10;
 			this.textLayoutInfo.BreakMode = TextBreakMode.Hyphenate | TextBreakMode.Split;
-			this.textLayoutInfo.Text = "Information libre, que vous pouvez modifier à volonté.";
+			this.textLayoutInfo.Text = "";
 		}
 
 
@@ -55,6 +55,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			set
 			{
 				this.textLayoutInfo.Text = value;
+				this.UpdateHeight();
 			}
 		}
 
