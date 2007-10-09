@@ -723,7 +723,10 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					}
 					else
 					{
-						this.ChangeFieldName(this.hilitedFieldRank);
+						if (this.IsMousePossible(this.hilitedElement, this.hilitedFieldRank))
+						{
+							this.ChangeFieldName(this.hilitedFieldRank);
+						}
 					}
 				}
 
@@ -990,8 +993,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 						}
 
 						rect = this.GetFieldNameBounds(i);
-						if ((!this.editor.Module.IsPatch || this.fields[i].CultureMapSource != CultureMapSource.ReferenceModule) &&
-							i >= this.skipedField && rect.Contains(pos))
+						if (i >= this.skipedField && rect.Contains(pos))
 						{
 							element = ActiveElement.BoxFieldName;
 							fieldRank = i;
@@ -1000,8 +1002,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 						}
 
 						rect = this.GetFieldTypeBounds(i);
-						if ((!this.editor.Module.IsPatch || this.fields[i].CultureMapSource != CultureMapSource.ReferenceModule) &&
-							i >= this.skipedField && rect.Contains(pos))
+						if (i >= this.skipedField && rect.Contains(pos))
 						{
 							element = ActiveElement.BoxFieldType;
 							fieldRank = i;
@@ -1035,6 +1036,21 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 			element = ActiveElement.BoxInside;
 			this.SetConnectionsHilited(true);
+			return true;
+		}
+
+		public override bool IsMousePossible(ActiveElement element, int fieldRank)
+		{
+			//	Indique si l'opération est possible.
+			if (element == ActiveElement.BoxFieldName ||
+				element == ActiveElement.BoxFieldType)
+			{
+				if (this.editor.Module.IsPatch && fieldRank != -1)
+				{
+					return this.fields[fieldRank].CultureMapSource != CultureMapSource.ReferenceModule;
+				}
+			}
+
 			return true;
 		}
 

@@ -1329,7 +1329,14 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 						}
 						else
 						{
-							type = MouseCursorType.Grid;
+							if (fly.IsMousePossible(fly.HilitedElement, fly.HilitedFieldRank))
+							{
+								type = MouseCursorType.Grid;
+							}
+							else
+							{
+								type = MouseCursorType.Arrow;
+							}
 						}
 					}
 					else if (fly.HilitedElement == AbstractObject.ActiveElement.BoxFieldTitle)

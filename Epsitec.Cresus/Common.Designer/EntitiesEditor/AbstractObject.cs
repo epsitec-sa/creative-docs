@@ -173,6 +173,14 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 		}
 
+		public int HilitedFieldRank
+		{
+			get
+			{
+				return this.hilitedFieldRank;
+			}
+		}
+
 		public string GetToolTipText(Point pos)
 		{
 			//	Retourne le texte pour le tooltip.
@@ -216,7 +224,14 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				case AbstractObject.ActiveElement.BoxFieldName:
 					if (this.editor.CurrentModifyMode == Editor.ModifyMode.Unlocked)
 					{
-						return "Change le nom du champ<br/>Ctrl+clic: aller sur la définition du champ";
+						if (this.IsMousePossible(element, fieldRank))
+						{
+							return "Change le nom du champ<br/>Ctrl+clic: aller sur la définition du champ";
+						}
+						else
+						{
+							return "Ctrl+clic: aller sur la définition du champ";
+						}
 					}
 					else
 					{
@@ -226,7 +241,14 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				case AbstractObject.ActiveElement.BoxFieldType:
 					if (this.editor.CurrentModifyMode == Editor.ModifyMode.Unlocked)
 					{
-						return "Change le type du champ<br/>Ctrl+clic: aller sur la définition du type";
+						if (this.IsMousePossible(element, fieldRank))
+						{
+							return "Change le type du champ<br/>Ctrl+clic: aller sur la définition du type";
+						}
+						else
+						{
+							return "Ctrl+clic: aller sur la définition du type";
+						}
 					}
 					else
 					{
@@ -360,6 +382,12 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			element = ActiveElement.None;
 			fieldRank = -1;
 			return false;
+		}
+
+		public virtual bool IsMousePossible(ActiveElement element, int fieldRank)
+		{
+			//	Indique si l'opération est possible.
+			return true;
 		}
 
 
