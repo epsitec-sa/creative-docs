@@ -574,7 +574,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			else if (this.isChangeWidth)
 			{
 				Rectangle bounds = this.Bounds;
-				bounds.Width = System.Math.Max(pos.X-this.changeWidthPos+this.changeWidthInitial, 100);
+				bounds.Width = System.Math.Max(pos.X-this.changeWidthPos+this.changeWidthInitial, 120);
 				this.SetBounds(bounds);
 				this.editor.UpdateConnections();
 				return true;
