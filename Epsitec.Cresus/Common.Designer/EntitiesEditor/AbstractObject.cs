@@ -68,14 +68,6 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			InfoMove,
 			InfoWidth,
 			InfoClose,
-			InfoColor1,
-			InfoColor2,
-			InfoColor3,
-			InfoColor4,
-			InfoColor5,
-			InfoColor6,
-			InfoColor7,
-			InfoColor8,
 		}
 
 		public enum MainColor
@@ -369,31 +361,6 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 				case AbstractObject.ActiveElement.InfoClose:
 					return "Cache les informations";
-
-				case AbstractObject.ActiveElement.InfoColor1:
-					return "Informations jaunes";
-
-				case AbstractObject.ActiveElement.InfoColor2:
-					return "Informations oranges";
-
-				case AbstractObject.ActiveElement.InfoColor3:
-					return "Informations rouges";
-
-				case AbstractObject.ActiveElement.InfoColor4:
-					return "Informations lilas";
-
-				case AbstractObject.ActiveElement.InfoColor5:
-					return "Informations violettes";
-
-				case AbstractObject.ActiveElement.InfoColor6:
-					return "Informations bleues";
-
-				case AbstractObject.ActiveElement.InfoColor7:
-					return "Informations vertes";
-
-				case AbstractObject.ActiveElement.InfoColor8:
-					return "Informations grises";
-
 			}
 
 			return null;  // pas de tooltip

@@ -205,12 +205,19 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				{
 					this.boxColor = value;
 
+					//	Change la couleur de toutes les connections liées.
 					foreach (Field field in this.fields)
 					{
 						if (field.Connection != null)
 						{
 							field.Connection.BackgroundMainColor = this.boxColor;
 						}
+					}
+
+					//	Change la couleur des informations liées.
+					if (this.info != null)
+					{
+						this.info.BackgroundMainColor = this.boxColor;
 					}
 
 					this.editor.Invalidate();

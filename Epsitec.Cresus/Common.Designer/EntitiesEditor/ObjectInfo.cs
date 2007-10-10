@@ -239,54 +239,6 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 						connection.Field.HasComment = false;
 					}
 				}
-
-				if (this.hilitedElement == ActiveElement.InfoColor1)
-				{
-					this.BackgroundMainColor = MainColor.Yellow;
-					this.UpdateFieldColor();
-				}
-
-				if (this.hilitedElement == ActiveElement.InfoColor2)
-				{
-					this.BackgroundMainColor = MainColor.Orange;
-					this.UpdateFieldColor();
-				}
-
-				if (this.hilitedElement == ActiveElement.InfoColor3)
-				{
-					this.BackgroundMainColor = MainColor.Red;
-					this.UpdateFieldColor();
-				}
-
-				if (this.hilitedElement == ActiveElement.InfoColor4)
-				{
-					this.BackgroundMainColor = MainColor.Lilac;
-					this.UpdateFieldColor();
-				}
-
-				if (this.hilitedElement == ActiveElement.InfoColor5)
-				{
-					this.BackgroundMainColor = MainColor.Purple;
-					this.UpdateFieldColor();
-				}
-
-				if (this.hilitedElement == ActiveElement.InfoColor6)
-				{
-					this.BackgroundMainColor = MainColor.Blue;
-					this.UpdateFieldColor();
-				}
-
-				if (this.hilitedElement == ActiveElement.InfoColor7)
-				{
-					this.BackgroundMainColor = MainColor.Green;
-					this.UpdateFieldColor();
-				}
-
-				if (this.hilitedElement == ActiveElement.InfoColor8)
-				{
-					this.BackgroundMainColor = MainColor.Grey;
-					this.UpdateFieldColor();
-				}
 			}
 		}
 
@@ -319,55 +271,6 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			if (this.HeaderRectangle.Contains(pos))
 			{
 				element = ActiveElement.InfoMove;
-				return true;
-			}
-
-			//	Souris dans le bouton des couleurs ?
-			if (this.DetectSquareButton(this.PositionColorButton(0), pos))
-			{
-				element = ActiveElement.InfoColor1;
-				return true;
-			}
-
-			if (this.DetectSquareButton(this.PositionColorButton(1), pos))
-			{
-				element = ActiveElement.InfoColor2;
-				return true;
-			}
-
-			if (this.DetectSquareButton(this.PositionColorButton(2), pos))
-			{
-				element = ActiveElement.InfoColor3;
-				return true;
-			}
-
-			if (this.DetectSquareButton(this.PositionColorButton(3), pos))
-			{
-				element = ActiveElement.InfoColor4;
-				return true;
-			}
-
-			if (this.DetectSquareButton(this.PositionColorButton(4), pos))
-			{
-				element = ActiveElement.InfoColor5;
-				return true;
-			}
-
-			if (this.DetectSquareButton(this.PositionColorButton(5), pos))
-			{
-				element = ActiveElement.InfoColor6;
-				return true;
-			}
-
-			if (this.DetectSquareButton(this.PositionColorButton(6), pos))
-			{
-				element = ActiveElement.InfoColor7;
-				return true;
-			}
-
-			if (this.DetectSquareButton(this.PositionColorButton(7), pos))
-			{
-				element = ActiveElement.InfoColor8;
 				return true;
 			}
 
@@ -494,16 +397,6 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				}
 			}
 
-			//	Dessine les boutons des couleurs.
-			this.DrawColorButton(graphics, ActiveElement.InfoColor1, 0, MainColor.Yellow);
-			this.DrawColorButton(graphics, ActiveElement.InfoColor2, 1, MainColor.Orange);
-			this.DrawColorButton(graphics, ActiveElement.InfoColor3, 2, MainColor.Red);
-			this.DrawColorButton(graphics, ActiveElement.InfoColor4, 3, MainColor.Lilac);
-			this.DrawColorButton(graphics, ActiveElement.InfoColor5, 4, MainColor.Purple);
-			this.DrawColorButton(graphics, ActiveElement.InfoColor6, 5, MainColor.Blue);
-			this.DrawColorButton(graphics, ActiveElement.InfoColor7, 6, MainColor.Green);
-			this.DrawColorButton(graphics, ActiveElement.InfoColor8, 7, MainColor.Grey);
-
 			//	Dessine le bouton pour modifier la largeur.
 			if (this.hilitedElement == ActiveElement.InfoWidth)
 			{
@@ -538,15 +431,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			{
 				return (this.hilitedElement == ActiveElement.InfoEdit ||
 						this.hilitedElement == ActiveElement.InfoMove ||
-						this.hilitedElement == ActiveElement.InfoClose ||
-						this.hilitedElement == ActiveElement.InfoColor1 ||
-						this.hilitedElement == ActiveElement.InfoColor2 ||
-						this.hilitedElement == ActiveElement.InfoColor3 ||
-						this.hilitedElement == ActiveElement.InfoColor4 ||
-						this.hilitedElement == ActiveElement.InfoColor5 ||
-						this.hilitedElement == ActiveElement.InfoColor6 ||
-						this.hilitedElement == ActiveElement.InfoColor7 ||
-						this.hilitedElement == ActiveElement.InfoColor8);
+						this.hilitedElement == ActiveElement.InfoClose);
 			}
 		}
 
