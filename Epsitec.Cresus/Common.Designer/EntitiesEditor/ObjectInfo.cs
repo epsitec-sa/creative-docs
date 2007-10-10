@@ -574,20 +574,16 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				other.Y = System.Math.Floor(other.Y)+0.5;
 			}
 
-			if (mode != AttachMode.None && !himself.IsZero && !other.IsZero)
+			double r = 4;
+			if (mode != AttachMode.None && !himself.IsZero && !other.IsZero && Point.Distance(himself, other) >= r*2)
 			{
-				double r = 4;
-
 				Point h1 = Point.Move(himself, other, r*1);
 				Point h2 = Point.Move(himself, other, r*2);
 
 				path.AppendCircle(h1, r);
 
-				if (Point.Distance(himself, other) >= r*3)
-				{
-					path.MoveTo(h2);
-					path.LineTo(other);
-				}
+				path.MoveTo(h2);
+				path.LineTo(other);
 			}
 
 			return path;
