@@ -442,6 +442,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			AttachMode mode = this.GetAttachMode();
 			Point himself = this.GetAttachHimself(mode);
 			Point other = this.GetAttachOther(mode);
+			himself = Point.Move(himself, other, ObjectInfo.roundFrameRadius);
+			other = Point.Move(other, himself, ObjectBox.roundFrameRadius);
 
 			Rectangle bounds = this.bounds;
 			bounds.Inflate(0.5);
@@ -462,8 +464,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			double r = 4;
 			if (mode != AttachMode.None && !himself.IsZero && !other.IsZero && Point.Distance(himself, other) >= r*2)
 			{
-				Point h1 = Point.Move(himself, other, r*1);
-				Point h2 = Point.Move(himself, other, r*2);
+				Point h1 = Point.Move(himself, other, r*1+1);
+				Point h2 = Point.Move(himself, other, r*2+1);
 
 				path.AppendCircle(h1, r);
 
@@ -476,13 +478,14 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		protected Point GetAttachHimself(AttachMode mode)
 		{
-			//	Retourne le point d'attache sur le commentaire.
+			//	Retourne le point d'attache sur les informations.
 			Point pos = Point.Zero;
 
 			if (mode != AttachMode.None)
 			{
 				Rectangle bounds = this.bounds;
 				bounds.Inflate(0.5);
+				bounds.Deflate(ObjectInfo.roundFrameRadius);
 
 				if (mode == AttachMode.BottomLeft)
 				{
@@ -507,13 +510,15 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				if (pos.IsZero && this.attachObject is ObjectBox)
 				{
 					ObjectBox box = this.attachObject as ObjectBox;
+					Rectangle boxBounds = box.Bounds;
+					boxBounds.Deflate(ObjectBox.roundFrameRadius);
 
 					if (mode == AttachMode.Left || mode == AttachMode.Right)
 					{
 						pos.X = (mode == AttachMode.Left) ? bounds.Left : bounds.Right;
 
-						double miny = System.Math.Max(box.Bounds.Bottom, bounds.Bottom);
-						double maxy = System.Math.Min(box.Bounds.Top, bounds.Top);
+						double miny = System.Math.Max(boxBounds.Bottom, bounds.Bottom);
+						double maxy = System.Math.Min(boxBounds.Top, bounds.Top);
 
 						if (miny <= maxy)
 						{
@@ -521,7 +526,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 						}
 						else
 						{
-							pos.Y = (bounds.Top < box.Bounds.Top) ? bounds.Top : bounds.Bottom;
+							pos.Y = (bounds.Top < boxBounds.Top) ? bounds.Top : bounds.Bottom;
 						}
 					}
 
@@ -529,8 +534,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					{
 						pos.Y = (mode == AttachMode.Bottom) ? bounds.Bottom : bounds.Top;
 
-						double minx = System.Math.Max(box.Bounds.Left, bounds.Left);
-						double maxx = System.Math.Min(box.Bounds.Right, bounds.Right);
+						double minx = System.Math.Max(boxBounds.Left, bounds.Left);
+						double maxx = System.Math.Min(boxBounds.Right, bounds.Right);
 
 						if (minx <= maxx)
 						{
@@ -538,49 +543,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 						}
 						else
 						{
-							pos.X = (bounds.Right < box.Bounds.Right) ? bounds.Right : bounds.Left;
-						}
-					}
-				}
-
-				if (pos.IsZero && this.attachObject is ObjectConnection)
-				{
-					ObjectConnection connection = this.attachObject as ObjectConnection;
-					Point attach = connection.PositionConnectionComment;
-
-					if (mode == AttachMode.Left || mode == AttachMode.Right)
-					{
-						pos.X = (mode == AttachMode.Left) ? bounds.Left : bounds.Right;
-
-						if (attach.Y < bounds.Bottom)
-						{
-							pos.Y = bounds.Bottom;
-						}
-						else if (attach.Y > bounds.Top)
-						{
-							pos.Y = bounds.Top;
-						}
-						else
-						{
-							pos.Y = attach.Y;
-						}
-					}
-
-					if (mode == AttachMode.Bottom || mode == AttachMode.Top)
-					{
-						pos.Y = (mode == AttachMode.Bottom) ? bounds.Bottom : bounds.Top;
-
-						if (attach.X < bounds.Left)
-						{
-							pos.X = bounds.Left;
-						}
-						else if (attach.X > bounds.Right)
-						{
-							pos.X = bounds.Right;
-						}
-						else
-						{
-							pos.X = attach.X;
+							pos.X = (bounds.Right < boxBounds.Right) ? bounds.Right : bounds.Left;
 						}
 					}
 				}
@@ -591,51 +554,54 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		protected Point GetAttachOther(AttachMode mode)
 		{
-			//	Retourne le point d'attache sur l'objet lié (boîte ou commentaire).
+			//	Retourne le point d'attache sur l'objet lié (boîte).
 			Point pos = Point.Zero;
 
 			if (mode != AttachMode.None)
 			{
 				Rectangle bounds = this.bounds;
 				bounds.Inflate(0.5);
+				bounds.Deflate(ObjectInfo.roundFrameRadius);
 
 				if (this.attachObject is ObjectBox)
 				{
 					ObjectBox box = this.attachObject as ObjectBox;
+					Rectangle boxBounds = box.Bounds;
+					boxBounds.Deflate(ObjectBox.roundFrameRadius);
 
 					if (mode == AttachMode.BottomLeft)
 					{
-						return box.Bounds.TopRight;
+						return boxBounds.TopRight;
 					}
 
 					if (mode == AttachMode.BottomRight)
 					{
-						return box.Bounds.TopLeft;
+						return boxBounds.TopLeft;
 					}
 
 					if (mode == AttachMode.TopLeft)
 					{
-						return box.Bounds.BottomRight;
+						return boxBounds.BottomRight;
 					}
 
 					if (mode == AttachMode.TopRight)
 					{
-						return box.Bounds.BottomLeft;
+						return boxBounds.BottomLeft;
 					}
 					
 					Point himself = this.GetAttachHimself(mode);
 
 					if (mode == AttachMode.Left || mode == AttachMode.Right)
 					{
-						pos.X = (mode == AttachMode.Left) ? box.Bounds.Right : box.Bounds.Left;
+						pos.X = (mode == AttachMode.Left) ? boxBounds.Right : boxBounds.Left;
 
-						if (himself.Y < box.Bounds.Bottom)
+						if (himself.Y < boxBounds.Bottom)
 						{
-							pos.Y = box.Bounds.Bottom;
+							pos.Y = boxBounds.Bottom;
 						}
-						else if (himself.Y > box.Bounds.Top)
+						else if (himself.Y > boxBounds.Top)
 						{
-							pos.Y = box.Bounds.Top;
+							pos.Y = boxBounds.Top;
 						}
 						else
 						{
@@ -645,46 +611,20 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 					if (mode == AttachMode.Bottom || mode == AttachMode.Top)
 					{
-						pos.Y = (mode == AttachMode.Bottom) ? box.Bounds.Top : box.Bounds.Bottom;
+						pos.Y = (mode == AttachMode.Bottom) ? boxBounds.Top : boxBounds.Bottom;
 
-						if (himself.X < box.Bounds.Left)
+						if (himself.X < boxBounds.Left)
 						{
-							pos.X = box.Bounds.Left;
+							pos.X = boxBounds.Left;
 						}
-						else if (himself.X > box.Bounds.Right)
+						else if (himself.X > boxBounds.Right)
 						{
-							pos.X = box.Bounds.Right;
+							pos.X = boxBounds.Right;
 						}
 						else
 						{
 							pos.X = himself.X;
 						}
-					}
-				}
-
-				if (this.attachObject is ObjectConnection)
-				{
-					ObjectConnection connection = this.attachObject as ObjectConnection;
-					pos = connection.PositionConnectionComment;
-
-					if (mode == AttachMode.Bottom || mode == AttachMode.BottomLeft || mode == AttachMode.BottomRight)
-					{
-						pos.Y += 2;
-					}
-
-					if (mode == AttachMode.Top || mode == AttachMode.TopLeft || mode == AttachMode.TopRight)
-					{
-						pos.Y -= 2;
-					}
-
-					if (mode == AttachMode.Left || mode == AttachMode.BottomLeft || mode == AttachMode.TopLeft)
-					{
-						pos.X += 2;
-					}
-
-					if (mode == AttachMode.Right || mode == AttachMode.BottomRight || mode == AttachMode.TopRight)
-					{
-						pos.X -= 2;
 					}
 				}
 			}
@@ -697,94 +637,52 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			//	Cherche d'où doit partir la queue du commentaire (de quel côté).
 			if (this.attachObject is ObjectBox)
 			{
+				Rectangle bounds = this.bounds;
+				bounds.Inflate(0.5);
+				bounds.Deflate(ObjectInfo.roundFrameRadius);
+
 				ObjectBox box = this.attachObject as ObjectBox;
+				Rectangle boxBounds = box.Bounds;
+				boxBounds.Deflate(ObjectBox.roundFrameRadius);
 
-				if (!this.bounds.IntersectsWith(box.Bounds))
+				if (!bounds.IntersectsWith(boxBounds))
 				{
-					if (this.bounds.Bottom >= box.Bounds.Top && this.bounds.Right <= box.Bounds.Left)
+					if (bounds.Bottom >= boxBounds.Top && bounds.Right <= boxBounds.Left)
 					{
 						return AttachMode.BottomRight;
 					}
 					
-					if (this.bounds.Top <= box.Bounds.Bottom && this.bounds.Right <= box.Bounds.Left)
+					if (bounds.Top <= boxBounds.Bottom && bounds.Right <= boxBounds.Left)
 					{
 						return AttachMode.TopRight;
 					}
 					
-					if (this.bounds.Bottom >= box.Bounds.Top && this.bounds.Left >= box.Bounds.Right)
+					if (bounds.Bottom >= boxBounds.Top && bounds.Left >= boxBounds.Right)
 					{
 						return AttachMode.BottomLeft;
 					}
 					
-					if (this.bounds.Top <= box.Bounds.Bottom && this.bounds.Left >= box.Bounds.Right)
+					if (bounds.Top <= boxBounds.Bottom && bounds.Left >= boxBounds.Right)
 					{
 						return AttachMode.TopLeft;
 					}
 					
-					if (this.bounds.Bottom >= box.Bounds.Top)  // commentaire en dessus ?
+					if (bounds.Bottom >= boxBounds.Top)  // commentaire en dessus ?
 					{
 						return AttachMode.Bottom;
 					}
 					
-					if (this.bounds.Top <= box.Bounds.Bottom)  // commentaire en dessous ?
+					if (bounds.Top <= boxBounds.Bottom)  // commentaire en dessous ?
 					{
 						return AttachMode.Top;
 					}
 
-					if (this.bounds.Left >= box.Bounds.Right)  // commentaire à droite ?
+					if (bounds.Left >= boxBounds.Right)  // commentaire à droite ?
 					{
 						return AttachMode.Left;
 					}
 
-					if (this.bounds.Right <= box.Bounds.Left)  // commentaire à gauche ?
-					{
-						return AttachMode.Right;
-					}
-				}
-			}
-
-			if (this.attachObject is ObjectConnection)
-			{
-				ObjectConnection connection = this.attachObject as ObjectConnection;
-				Point attach = connection.PositionConnectionComment;
-				if (!attach.IsZero && !this.bounds.Contains(attach))
-				{
-					if (this.bounds.Top <= attach.Y && this.bounds.Right <= attach.X)
-					{
-						return AttachMode.TopRight;
-					}
-
-					if (this.bounds.Bottom >= attach.Y && this.bounds.Right <= attach.X)
-					{
-						return AttachMode.BottomRight;
-					}
-
-					if (this.bounds.Top <= attach.Y && this.bounds.Left >= attach.X)
-					{
-						return AttachMode.TopLeft;
-					}
-
-					if (this.bounds.Bottom >= attach.Y && this.bounds.Left >= attach.X)
-					{
-						return AttachMode.BottomLeft;
-					}
-
-					if (this.bounds.Bottom >= attach.Y)  // commentaire en dessus ?
-					{
-						return AttachMode.Bottom;
-					}
-					
-					if (this.bounds.Top <= attach.Y)  // commentaire en dessous ?
-					{
-						return AttachMode.Top;
-					}
-
-					if (this.bounds.Left >= attach.X)  // commentaire à droite ?
-					{
-						return AttachMode.Left;
-					}
-
-					if (this.bounds.Right <= attach.X)  // commentaire à gauche ?
+					if (bounds.Right <= boxBounds.Left)  // commentaire à gauche ?
 					{
 						return AttachMode.Right;
 					}
