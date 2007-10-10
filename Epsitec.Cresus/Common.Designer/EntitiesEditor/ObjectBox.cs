@@ -1811,7 +1811,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 				if (listInherited.Count != 0 || listInterface.Count != 0)
 				{
-					builder.Append("<br/>");
+					builder.Append("----------<br/>");
 				}
 
 				if (listInterface.Count == 0)
