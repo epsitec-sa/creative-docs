@@ -554,13 +554,13 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		protected Path GetFramePath()
 		{
 			//	Retourne le chemin du cadre du commentaire.
-			Rectangle bounds = this.bounds;
-			bounds.Inflate(0.5);
-			Path path = this.PathRoundRectangle(bounds, ObjectInfo.roundFrameRadius);
-
 			AttachMode mode = this.GetAttachMode();
 			Point himself = this.GetAttachHimself(mode);
 			Point other = this.GetAttachOther(mode);
+
+			Rectangle bounds = this.bounds;
+			bounds.Inflate(0.5);
+			Path path = this.PathRoundRectangle(bounds, ObjectInfo.roundFrameRadius);
 
 			if (himself.X == other.X)
 			{
@@ -581,10 +581,13 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				Point h1 = Point.Move(himself, other, r*1);
 				Point h2 = Point.Move(himself, other, r*2);
 
-				path.MoveTo(h2);
-				path.LineTo(other);
-
 				path.AppendCircle(h1, r);
+
+				if (Point.Distance(himself, other) >= r*3)
+				{
+					path.MoveTo(h2);
+					path.LineTo(other);
+				}
 			}
 
 			return path;
