@@ -522,13 +522,9 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					}
 
 				case AbstractObject.ActiveElement.BoxInfo:
-					if (this.info == null)
+					if (this.info == null || !this.info.IsVisible)
 					{
-						return "Montre les informations associées";
-					}
-					else if (!this.info.IsVisible)
-					{
-						return string.Format("Montre les informations associées<br/><b>{0}</b>", this.info.Text);
+						return string.Format("Montre les informations associées<br/><b>{0}</b>", this.GetInformations(true));
 					}
 					else
 					{
@@ -1757,96 +1753,102 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		protected void UpdateInformations()
 		{
-			//	Met à jour les informations dans l'éventuel ObjectInfo lié.
+			//	Met à jour les informations de l'éventuel ObjectInfo lié.
 			if (this.info != null)  // existe un ObjectInfo lié ?
 			{
-				List<string> listInherited = new List<string>();
-				List<string> listInterface = new List<string>();
-
-				for (int i=0; i<this.fields.Count; i++)
-				{
-					StructuredTypeClass type;
-					string name;
-					this.GetGroupName(i, out type, out name);
-
-					if (type == StructuredTypeClass.Entity)
-					{
-						if (!listInherited.Contains(name))
-						{
-							listInherited.Add(name);
-						}
-					}
-
-					if (type == StructuredTypeClass.Interface)
-					{
-						if (!listInterface.Contains(name))
-						{
-							listInterface.Add(name);
-						}
-					}
-				}
-
-				listInherited.Sort();
-				listInterface.Sort();
-
-				System.Text.StringBuilder builder = new System.Text.StringBuilder();
-
-				if (listInherited.Count == 0)
-				{
-					builder.Append(Misc.Italic("Aucun héritage"));
-				}
-				else
-				{
-					builder.Append("Hérite de ");
-
-					for (int i=0; i<listInherited.Count; i++)
-					{
-						if (i != 0 && i == listInherited.Count-1)
-						{
-							builder.Append(" et ");
-						}
-						else if (i > 0)
-						{
-							builder.Append(", ");
-						}
-
-						builder.Append(listInherited[i]);
-					}
-				}
-
-				builder.Append("<br/>");
-
-				if (listInherited.Count != 0 || listInterface.Count != 0)
-				{
-					builder.Append("----------<br/>");
-				}
-
-				if (listInterface.Count == 0)
-				{
-					builder.Append(Misc.Italic("Aucune interface"));
-				}
-				else
-				{
-					builder.Append("Interfacé avec ");
-
-					for (int i=0; i<listInterface.Count; i++)
-					{
-						if (i != 0 && i == listInterface.Count-1)
-						{
-							builder.Append(" et ");
-						}
-						else if (i > 0)
-						{
-							builder.Append(", ");
-						}
-
-						builder.Append(listInterface[i]);
-					}
-				}
-
-				this.info.Text = builder.ToString();
+				this.info.Text = this.GetInformations(false);
 				this.editor.UpdateAfterCommentChanged();
 			}
+		}
+
+		protected string GetInformations(bool resume)
+		{
+			//	Retourne les informations pour l'ObjectInfo lié.
+			List<string> listInherited = new List<string>();
+			List<string> listInterface = new List<string>();
+
+			for (int i=0; i<this.fields.Count; i++)
+			{
+				StructuredTypeClass type;
+				string name;
+				this.GetGroupName(i, out type, out name);
+
+				if (type == StructuredTypeClass.Entity)
+				{
+					if (!listInherited.Contains(name))
+					{
+						listInherited.Add(name);
+					}
+				}
+
+				if (type == StructuredTypeClass.Interface)
+				{
+					if (!listInterface.Contains(name))
+					{
+						listInterface.Add(name);
+					}
+				}
+			}
+
+			listInherited.Sort();
+			listInterface.Sort();
+
+			System.Text.StringBuilder builder = new System.Text.StringBuilder();
+
+			if (listInherited.Count == 0)
+			{
+				builder.Append(Misc.Italic("Aucun héritage"));
+			}
+			else
+			{
+				builder.Append("Hérite de ");
+
+				for (int i=0; i<listInherited.Count; i++)
+				{
+					if (i != 0 && i == listInherited.Count-1)
+					{
+						builder.Append(" et ");
+					}
+					else if (i > 0)
+					{
+						builder.Append(", ");
+					}
+
+					builder.Append(listInherited[i]);
+				}
+			}
+
+			builder.Append("<br/>");
+
+			if (!resume && (listInherited.Count != 0 || listInterface.Count != 0))
+			{
+				builder.Append("----------<br/>");
+			}
+
+			if (listInterface.Count == 0)
+			{
+				builder.Append(Misc.Italic("Aucune interface"));
+			}
+			else
+			{
+				builder.Append("Interfacé avec ");
+
+				for (int i=0; i<listInterface.Count; i++)
+				{
+					if (i != 0 && i == listInterface.Count-1)
+					{
+						builder.Append(" et ");
+					}
+					else if (i > 0)
+					{
+						builder.Append(", ");
+					}
+
+					builder.Append(listInterface[i]);
+				}
+			}
+
+			return builder.ToString();
 		}
 
 		protected void UpdateFieldsLink()
