@@ -1751,31 +1751,90 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		protected void UpdateInformations()
 		{
 			//	Met à jour les informations dans l'éventuel ObjectInfo lié.
-			if (this.info != null)
+			if (this.info != null)  // existe un ObjectInfo lié ?
 			{
-				System.Text.StringBuilder builder = new System.Text.StringBuilder();
-				int count = 0;
-				//	TODO: remplacer ceci par une recherche résursive des interfaces !
+				List<string> listInherited = new List<string>();
+				List<string> listInterface = new List<string>();
+
 				for (int i=0; i<this.fields.Count; i++)
 				{
-					if (this.fields[i].IsTitle)
+					StructuredTypeClass type;
+					string name;
+					this.GetGroupName(i, out type, out name);
+
+					if (type == StructuredTypeClass.Entity)
 					{
-						continue;
+						if (!listInherited.Contains(name))
+						{
+							listInherited.Add(name);
+						}
 					}
 
-					if (count != 0)
+					if (type == StructuredTypeClass.Interface)
 					{
-						builder.Append(", ");
+						if (!listInterface.Contains(name))
+						{
+							listInterface.Add(name);
+						}
 					}
-
-					builder.Append(this.fields[i].FieldName);
-
-					count++;
 				}
 
-				if (count == 0)
+				listInherited.Sort();
+				listInterface.Sort();
+
+				System.Text.StringBuilder builder = new System.Text.StringBuilder();
+
+				if (listInherited.Count == 0)
+				{
+					builder.Append(Misc.Italic("Aucun héritage"));
+				}
+				else
+				{
+					builder.Append("Hérite de ");
+
+					for (int i=0; i<listInherited.Count; i++)
+					{
+						if (i != 0 && i == listInherited.Count-1)
+						{
+							builder.Append(" et ");
+						}
+						else if (i > 0)
+						{
+							builder.Append(", ");
+						}
+
+						builder.Append(listInherited[i]);
+					}
+				}
+
+				builder.Append("<br/>");
+
+				if (listInherited.Count != 0 || listInterface.Count != 0)
+				{
+					builder.Append("<br/>");
+				}
+
+				if (listInterface.Count == 0)
 				{
 					builder.Append(Misc.Italic("Aucune interface"));
+				}
+				else
+				{
+					builder.Append("Interfacé avec ");
+
+					for (int i=0; i<listInterface.Count; i++)
+					{
+						if (i != 0 && i == listInterface.Count-1)
+						{
+							builder.Append(" et ");
+						}
+						else if (i > 0)
+						{
+							builder.Append(", ");
+						}
+
+						builder.Append(listInterface[i]);
+					}
 				}
 
 				this.info.Text = builder.ToString();
@@ -2830,20 +2889,43 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		protected string GetGroupTooltip(int rank)
 		{
 			//	Retourne le tooltip à afficher pour un groupe.
+			StructuredTypeClass type;
+			string name;
+			this.GetGroupName(rank, out type, out name);
+
+			if (type == StructuredTypeClass.Interface)
+			{
+				return string.Format("Provient de l'interface <b>{0}</b>", name);
+			}
+
+			if (type == StructuredTypeClass.Entity)
+			{
+				return string.Format("Hérité de l'entité <b>{0}</b>", name);
+			}
+
+			return null;  // pas de tooltip
+		}
+
+		protected void GetGroupName(int rank, out StructuredTypeClass type, out string name)
+		{
+			//	Retourne le nom à afficher pour un groupe.
+			type = StructuredTypeClass.None;
+			name = null;
+
 			if (rank == -1)
 			{
-				return null;  // pas de tooltip
+				return;  // pas de nom
 			}
 
 			Druid druid = this.fields[rank].DeepDefiningTypeId;
 			if (druid.IsEmpty)
 			{
-				return null;  // pas de tooltip
+				return;  // pas de nom
 			}
 
 			Module module = this.editor.Module.DesignerApplication.SearchModule(druid);
 			CultureMap cultureMap = module.AccessEntities.Accessor.Collection[druid];
-			string name = cultureMap.Name;
+			name = cultureMap.Name;
 
 			if (module != this.editor.Module)  // dans un autre module ?
 			{
@@ -2851,15 +2933,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 
 			StructuredData data = cultureMap.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
-			StructuredTypeClass typeClass = (StructuredTypeClass) data.GetValue(Support.Res.Fields.ResourceStructuredType.Class);
-			if (typeClass == StructuredTypeClass.Interface)
-			{
-				return string.Format("Provient de l'interface <b>{0}</b>", name);
-			}
-			else
-			{
-				return string.Format("Hérité de l'entité <b>{0}</b>", name);
-			}
+			type = (StructuredTypeClass) data.GetValue(Support.Res.Fields.ResourceStructuredType.Class);
 		}
 
 		protected double ColumnsSeparatorAbsolute
