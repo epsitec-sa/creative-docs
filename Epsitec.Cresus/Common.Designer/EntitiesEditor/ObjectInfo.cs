@@ -442,6 +442,9 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			AttachMode mode = this.GetAttachMode();
 			Point himself = this.GetAttachHimself(mode);
 			Point other = this.GetAttachOther(mode);
+
+			double d = Point.Distance(himself, other) - ObjectBox.roundFrameRadius - ObjectInfo.roundFrameRadius;
+
 			himself = Point.Move(himself, other, ObjectInfo.roundFrameRadius);
 			other = Point.Move(other, himself, ObjectBox.roundFrameRadius);
 
@@ -462,7 +465,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 
 			double r = 4;
-			if (mode != AttachMode.None && !himself.IsZero && !other.IsZero && Point.Distance(himself, other) >= r*2)
+			if (mode != AttachMode.None && !himself.IsZero && !other.IsZero && d >= r*2)
 			{
 				Point h1 = Point.Move(himself, other, r*1+1);
 				Point h2 = Point.Move(himself, other, r*2+1);
