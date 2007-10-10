@@ -392,7 +392,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					return "Informations vertes";
 
 				case AbstractObject.ActiveElement.InfoColor8:
-					return "Informations gris-foncé";
+					return "Informations grises";
 
 			}
 
