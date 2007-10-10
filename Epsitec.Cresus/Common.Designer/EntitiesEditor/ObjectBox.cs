@@ -1037,7 +1037,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 						}
 
 						rect = this.GetFieldMovableBounds(i);
-						if (this.editor.CurrentModifyMode == Editor.ModifyMode.Unlocked && i >= this.skipedField && rect.Contains(pos) && this.Fields.Count-this.skipedField > 1)
+						if ((!this.editor.Module.IsPatch || this.fields[i].CultureMapSource != CultureMapSource.ReferenceModule) &&
+							this.editor.CurrentModifyMode == Editor.ModifyMode.Unlocked && i >= this.skipedField && rect.Contains(pos) && this.Fields.Count-this.skipedField > 1)
 						{
 							element = ActiveElement.BoxFieldMovable;
 							fieldRank = i;
