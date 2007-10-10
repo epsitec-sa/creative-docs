@@ -590,11 +590,15 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			AttachMode mode = this.GetAttachMode();
 			Point himself = this.GetAttachHimself(mode);
 			Point other = this.GetAttachOther(mode);
+
+			double d = Point.Distance(himself, other) - ObjectBox.roundFrameRadius;
+			
+			other = Point.Move(other, himself, ObjectBox.roundFrameRadius);
 			
 			Rectangle bounds = this.bounds;
 			bounds.Inflate(0.5);
 
-			if (mode == AttachMode.None || himself.IsZero || other.IsZero)
+			if (mode == AttachMode.None || himself.IsZero || other.IsZero || d <= 0)
 			{
 				path.AppendRectangle(bounds);
 			}
@@ -815,13 +819,15 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				if (pos.IsZero && this.attachObject is ObjectBox)
 				{
 					ObjectBox box = this.attachObject as ObjectBox;
+					Rectangle boxBounds = box.Bounds;
+					boxBounds.Deflate(ObjectBox.roundFrameRadius);
 
 					if (mode == AttachMode.Left || mode == AttachMode.Right)
 					{
 						pos.X = (mode == AttachMode.Left) ? bounds.Left : bounds.Right;
 
-						double miny = System.Math.Max(box.Bounds.Bottom, bounds.Bottom);
-						double maxy = System.Math.Min(box.Bounds.Top, bounds.Top);
+						double miny = System.Math.Max(boxBounds.Bottom, bounds.Bottom);
+						double maxy = System.Math.Min(boxBounds.Top, bounds.Top);
 
 						if (miny <= maxy)
 						{
@@ -829,7 +835,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 						}
 						else
 						{
-							pos.Y = (bounds.Top < box.Bounds.Top) ? bounds.Top : bounds.Bottom;
+							pos.Y = (bounds.Top < boxBounds.Top) ? bounds.Top : bounds.Bottom;
 						}
 					}
 
@@ -837,8 +843,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					{
 						pos.Y = (mode == AttachMode.Bottom) ? bounds.Bottom : bounds.Top;
 
-						double minx = System.Math.Max(box.Bounds.Left, bounds.Left);
-						double maxx = System.Math.Min(box.Bounds.Right, bounds.Right);
+						double minx = System.Math.Max(boxBounds.Left, bounds.Left);
+						double maxx = System.Math.Min(boxBounds.Right, bounds.Right);
 
 						if (minx <= maxx)
 						{
@@ -846,7 +852,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 						}
 						else
 						{
-							pos.X = (bounds.Right < box.Bounds.Right) ? bounds.Right : bounds.Left;
+							pos.X = (bounds.Right < boxBounds.Right) ? bounds.Right : bounds.Left;
 						}
 					}
 				}
@@ -910,40 +916,42 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				if (this.attachObject is ObjectBox)
 				{
 					ObjectBox box = this.attachObject as ObjectBox;
+					Rectangle boxBounds = box.Bounds;
+					boxBounds.Deflate(ObjectBox.roundFrameRadius);
 
 					if (mode == AttachMode.BottomLeft)
 					{
-						return box.Bounds.TopRight;
+						return boxBounds.TopRight;
 					}
 
 					if (mode == AttachMode.BottomRight)
 					{
-						return box.Bounds.TopLeft;
+						return boxBounds.TopLeft;
 					}
 
 					if (mode == AttachMode.TopLeft)
 					{
-						return box.Bounds.BottomRight;
+						return boxBounds.BottomRight;
 					}
 
 					if (mode == AttachMode.TopRight)
 					{
-						return box.Bounds.BottomLeft;
+						return boxBounds.BottomLeft;
 					}
 					
 					Point himself = this.GetAttachHimself(mode);
 
 					if (mode == AttachMode.Left || mode == AttachMode.Right)
 					{
-						pos.X = (mode == AttachMode.Left) ? box.Bounds.Right : box.Bounds.Left;
+						pos.X = (mode == AttachMode.Left) ? boxBounds.Right : boxBounds.Left;
 
-						if (himself.Y < box.Bounds.Bottom)
+						if (himself.Y < boxBounds.Bottom)
 						{
-							pos.Y = box.Bounds.Bottom;
+							pos.Y = boxBounds.Bottom;
 						}
-						else if (himself.Y > box.Bounds.Top)
+						else if (himself.Y > boxBounds.Top)
 						{
-							pos.Y = box.Bounds.Top;
+							pos.Y = boxBounds.Top;
 						}
 						else
 						{
@@ -953,15 +961,15 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 					if (mode == AttachMode.Bottom || mode == AttachMode.Top)
 					{
-						pos.Y = (mode == AttachMode.Bottom) ? box.Bounds.Top : box.Bounds.Bottom;
+						pos.Y = (mode == AttachMode.Bottom) ? boxBounds.Top : boxBounds.Bottom;
 
-						if (himself.X < box.Bounds.Left)
+						if (himself.X < boxBounds.Left)
 						{
-							pos.X = box.Bounds.Left;
+							pos.X = boxBounds.Left;
 						}
-						else if (himself.X > box.Bounds.Right)
+						else if (himself.X > boxBounds.Right)
 						{
-							pos.X = box.Bounds.Right;
+							pos.X = boxBounds.Right;
 						}
 						else
 						{
@@ -1006,45 +1014,47 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			if (this.attachObject is ObjectBox)
 			{
 				ObjectBox box = this.attachObject as ObjectBox;
+				Rectangle boxBounds = box.Bounds;
+				boxBounds.Deflate(ObjectBox.roundFrameRadius);
 
-				if (!this.bounds.IntersectsWith(box.Bounds))
+				if (!this.bounds.IntersectsWith(boxBounds))
 				{
-					if (this.bounds.Bottom >= box.Bounds.Top && this.bounds.Right <= box.Bounds.Left)
+					if (this.bounds.Bottom >= boxBounds.Top && this.bounds.Right <= boxBounds.Left)
 					{
 						return AttachMode.BottomRight;
 					}
 					
-					if (this.bounds.Top <= box.Bounds.Bottom && this.bounds.Right <= box.Bounds.Left)
+					if (this.bounds.Top <= boxBounds.Bottom && this.bounds.Right <= boxBounds.Left)
 					{
 						return AttachMode.TopRight;
 					}
 					
-					if (this.bounds.Bottom >= box.Bounds.Top && this.bounds.Left >= box.Bounds.Right)
+					if (this.bounds.Bottom >= boxBounds.Top && this.bounds.Left >= boxBounds.Right)
 					{
 						return AttachMode.BottomLeft;
 					}
 					
-					if (this.bounds.Top <= box.Bounds.Bottom && this.bounds.Left >= box.Bounds.Right)
+					if (this.bounds.Top <= boxBounds.Bottom && this.bounds.Left >= boxBounds.Right)
 					{
 						return AttachMode.TopLeft;
 					}
 					
-					if (this.bounds.Bottom >= box.Bounds.Top)  // commentaire en dessus ?
+					if (this.bounds.Bottom >= boxBounds.Top)  // commentaire en dessus ?
 					{
 						return AttachMode.Bottom;
 					}
 					
-					if (this.bounds.Top <= box.Bounds.Bottom)  // commentaire en dessous ?
+					if (this.bounds.Top <= boxBounds.Bottom)  // commentaire en dessous ?
 					{
 						return AttachMode.Top;
 					}
 
-					if (this.bounds.Left >= box.Bounds.Right)  // commentaire à droite ?
+					if (this.bounds.Left >= boxBounds.Right)  // commentaire à droite ?
 					{
 						return AttachMode.Left;
 					}
 
-					if (this.bounds.Right <= box.Bounds.Left)  // commentaire à gauche ?
+					if (this.bounds.Right <= boxBounds.Left)  // commentaire à gauche ?
 					{
 						return AttachMode.Right;
 					}
