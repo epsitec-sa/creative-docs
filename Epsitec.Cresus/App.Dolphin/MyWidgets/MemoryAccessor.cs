@@ -69,6 +69,27 @@ namespace Epsitec.App.Dolphin.MyWidgets
 			}
 		}
 
+		public bool IsDeferUpdateData
+		{
+			//	Indique s'il faut différer UpdateData, pendant l'exécution d'un programme.
+			get
+			{
+				return this.isDeferUpdateData;
+			}
+			set
+			{
+				if (this.isDeferUpdateData != value)
+				{
+					this.isDeferUpdateData = value;
+
+					if (!this.isDeferUpdateData)
+					{
+						this.UpdateData();
+					}
+				}
+			}
+		}
+
 		public bool FollowPC
 		{
 			get
@@ -244,6 +265,11 @@ namespace Epsitec.App.Dolphin.MyWidgets
 
 		public void UpdateData()
 		{
+			if (this.isDeferUpdateData)
+			{
+				return;
+			}
+
 			if (this.memory == null)
 			{
 				return;
@@ -331,6 +357,7 @@ namespace Epsitec.App.Dolphin.MyWidgets
 		protected int								firstAddress;  // relatif dans la banque
 		protected int								markPC;
 		protected bool								followPC;
+		protected bool								isDeferUpdateData;
 		protected bool								ignoreChange;
 	}
 }

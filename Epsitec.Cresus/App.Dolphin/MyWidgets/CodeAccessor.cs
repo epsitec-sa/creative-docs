@@ -88,6 +88,27 @@ namespace Epsitec.App.Dolphin.MyWidgets
 			}
 		}
 
+		public bool IsDeferUpdateData
+		{
+			//	Indique s'il faut différer UpdateData, pendant l'exécution d'un programme.
+			get
+			{
+				return this.isDeferUpdateData;
+			}
+			set
+			{
+				if (this.isDeferUpdateData != value)
+				{
+					this.isDeferUpdateData = value;
+
+					if (!this.isDeferUpdateData)
+					{
+						this.UpdateData();
+					}
+				}
+			}
+		}
+
 		public bool FollowPC
 		{
 			get
@@ -207,19 +228,7 @@ namespace Epsitec.App.Dolphin.MyWidgets
 				{
 					this.markPC = value;
 
-					int firstIndex = this.GetInstructionIndex(this.firstAddress);
-
-					int lastAddress;
-					if (firstIndex+this.fields.Count < this.instructionAddresses.Count)
-					{
-						lastAddress = this.instructionAddresses[firstIndex+this.fields.Count].Address;
-					}
-					else
-					{
-						lastAddress = this.MemoryLength;
-					}
-
-					if (this.followPC && (this.markPC < this.MemoryStart+this.firstAddress || this.markPC >= this.MemoryStart+lastAddress))
+					if (this.followPC && !this.IsVisibleAddress(this.markPC))
 					{
 						string newBank = Components.Memory.BankSearch(this.markPC);
 						if (newBank == null)
@@ -251,6 +260,25 @@ namespace Epsitec.App.Dolphin.MyWidgets
 					}
 				}
 			}
+		}
+
+
+		protected bool IsVisibleAddress(int address)
+		{
+			//	Retourne true si une adresse est visible actuellement.
+			int firstIndex = this.GetInstructionIndex(this.firstAddress);
+
+			int lastAddress;
+			if (firstIndex+this.fields.Count < this.instructionAddresses.Count)
+			{
+				lastAddress = this.instructionAddresses[firstIndex+this.fields.Count].Address;
+			}
+			else
+			{
+				lastAddress = this.MemoryLength;
+			}
+
+			return (address >= this.MemoryStart+this.firstAddress && address < this.MemoryStart+lastAddress);
 		}
 
 
@@ -324,9 +352,104 @@ namespace Epsitec.App.Dolphin.MyWidgets
 			}
 		}
 
+#if false
+		public void UpdateData(int address)
+		{
+			//	Met à jour la table des instructions suite au changement d'un seul byte.
+			if (this.isDeferUpdateData)
+			{
+				return;
+			}
+
+			if (address < this.MemoryStart || address >= this.MemoryStart+this.MemoryLength)
+			{
+				return;
+			}
+
+			if (address < Components.Memory.StackBase-Components.Memory.StackMax || address >= Components.Memory.StackBase)
+			{
+				address = this.AdjustAddress(address-this.MemoryStart)+this.MemoryStart;
+				int index = this.GetInstructionIndex(address-this.MemoryStart);
+
+				if (this.instructionAddresses[index].Type == 1)  // sur un BYTE d'une table ?
+				{
+					// rien à faire !
+				}
+				else
+				{
+					int d = index;
+					int tableLength = 0;
+					while (address < this.MemoryStart+this.MemoryLength)
+					{
+						CodeAddress ca = this.GetCodeAddress(ref address, ref tableLength);
+
+						this.instructionAddresses.Insert(index, ca);
+						index++;
+						d++;
+
+						if (this.IsMatch(ca, d))
+						{
+							break;
+						}
+					}
+				}
+			}
+
+			if (this.IsVisibleAddress(address))
+			{
+				this.UpdateTable();
+
+				this.ignoreChange = true;
+				this.UpdateScroller();
+				this.ignoreChange = false;
+
+				this.UpdateMarkPC();
+			}
+		}
+
+		protected bool IsMatch(CodeAddress ca, int index)
+		{
+			int start = index;
+
+			while (index < this.instructionAddresses.Count)
+			{
+				if (this.instructionAddresses[index].Address < ca.Address)
+				{
+					index++;
+				}
+				else if (this.instructionAddresses[index].Address > ca.Address)
+				{
+					return false;
+				}
+				else
+				{
+					if (this.instructionAddresses[index].IsEqual(ca))
+					{
+						for (int i=0; i<=index-start; i++)
+						{
+							this.instructionAddresses.RemoveAt(start);
+						}
+						return true;
+					}
+					else
+					{
+						return false;
+					}
+				}
+			}
+
+			return true;
+		}
+#endif
+
 		public void UpdateData()
 		{
 			//	Met à jour la table des instructions.
+			if (this.isDeferUpdateData)
+			{
+				return;
+			}
+
 			this.UpdateInstructionAddresses();
 			this.UpdateTable();
 
@@ -474,11 +597,27 @@ namespace Epsitec.App.Dolphin.MyWidgets
 			int address = this.MemoryStart;
 			while (address < this.MemoryStart+this.MemoryLength)
 			{
-				int code = this.memory.ReadForDebug(address);
+				CodeAddress ca = this.GetCodeAddress(ref address, ref tableLength);
+				this.instructionAddresses.Add(ca);
+			}
+		}
 
+		protected CodeAddress GetCodeAddress(ref int address, ref int tableLength)
+		{
+			CodeAddress ca;
+			int code = this.memory.ReadForDebug(address);
+
+			if (tableLength > 0)  // BYTE contenu dans la table ?
+			{
+				ca = new CodeAddress(address-this.MemoryStart, 1, 1);
+				address++;
+				tableLength--;
+			}
+			else  // instruction ?
+			{
 				if (code == this.processor.TableInstruction)  // instruction TABLE #val ?
 				{
-					this.instructionAddresses.Add(new CodeAddress(address-this.MemoryStart, 2, 0));
+					ca = new CodeAddress(address-this.MemoryStart, 2, 0);
 					tableLength = this.memory.ReadForDebug(address+1);
 					if (tableLength == 0)
 					{
@@ -486,22 +625,15 @@ namespace Epsitec.App.Dolphin.MyWidgets
 					}
 					address += 2;
 				}
-				else
+				else  // instruction normale ?
 				{
-					if (tableLength > 0)  // BYTE contenu dans la table ?
-					{
-						this.instructionAddresses.Add(new CodeAddress(address-this.MemoryStart, 1, 1));
-						address++;
-						tableLength--;
-					}
-					else  // instruction normale ?
-					{
-						int length = this.processor.GetInstructionLength(code);
-						this.instructionAddresses.Add(new CodeAddress(address-this.MemoryStart, length, 0));
-						address += length;
-					}
+					int length = this.processor.GetInstructionLength(code);
+					ca = new CodeAddress(address-this.MemoryStart, length, 0);
+					address += length;
 				}
 			}
+
+			return ca;
 		}
 
 		protected int AdjustAddress(int address)
@@ -521,12 +653,19 @@ namespace Epsitec.App.Dolphin.MyWidgets
 		protected int GetInstructionIndex(int address)
 		{
 			//	Retourne l'index de l'instruction en fonction de son adresse (relative dans la banque).
-			for (int i=1; i<this.instructionAddresses.Count; i++)
+			int count = this.instructionAddresses.Count;
+
+			for (int i=1; i<count; i++)
 			{
 				if (address < this.instructionAddresses[i].Address)
 				{
 					return i-1;
 				}
+			}
+
+			if (address == this.instructionAddresses[count-1].Address)
+			{
+				return count-1;
 			}
 
 			return 0;
@@ -860,6 +999,11 @@ namespace Epsitec.App.Dolphin.MyWidgets
 				}
 			}
 
+			public bool IsEqual(CodeAddress o)
+			{
+				return this.address == o.address && this.length == o.length && this.type == o.type;
+			}
+
 			private int address;
 			private byte length;
 			private byte type;
@@ -880,6 +1024,7 @@ namespace Epsitec.App.Dolphin.MyWidgets
 		protected int								addressHilited;
 		protected List<CodeAddress>					instructionAddresses;
 		protected bool								followPC;
+		protected bool								isDeferUpdateData;
 		protected bool								ignoreChange;
 	}
 }

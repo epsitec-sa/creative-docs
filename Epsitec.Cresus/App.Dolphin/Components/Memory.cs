@@ -25,6 +25,8 @@ namespace Epsitec.App.Dolphin.Components
 			{
 				this.memory[i] = 0;
 			}
+
+			this.ClearRam();
 		}
 
 
@@ -87,6 +89,9 @@ namespace Epsitec.App.Dolphin.Components
 			{
 				this.memory[i] = 0;
 			}
+
+			this.memory[Memory.StackBase-Memory.StackMax+0] = 0xFF;  // instruction TABLE #val
+			this.memory[Memory.StackBase-Memory.StackMax+1] = (byte) (Memory.StackMax-2);
 		}
 
 		public void ClearPeriph()
@@ -368,11 +373,10 @@ namespace Epsitec.App.Dolphin.Components
 
 					if (this.application != null && !this.application.IsEmptyPanel)
 					{
+						//	Les méthodes UpdateData sont différées lorsqu'on exécute plusieurs ProcessorClock
+						//	par HandleClockTimeElapsed.
 						this.application.MemoryAccessor.UpdateData();
-
-						//	Supprimé, car un programme n'est pas sensé modifier le code (quoique)...
-						//	Enorme ralentissement !
-						//?this.application.CodeAccessor.UpdateData();
+						this.application.CodeAccessor.UpdateData();
 					}
 				}
 			}

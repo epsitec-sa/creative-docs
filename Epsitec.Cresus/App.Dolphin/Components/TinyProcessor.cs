@@ -292,7 +292,7 @@ namespace Epsitec.App.Dolphin.Components
 				return;
 			}
 
-			if (op >= (int) Instructions.Jump && op <= (int) Instructions.JumpNC)
+			if (op == (int) Instructions.Jump || (op >= (int) Instructions.JumpEQ && op <= (int) Instructions.JumpNC))
 			{
 				address = this.AddressAbs;
 				if (this.IsTestTrue(op))
@@ -1240,7 +1240,7 @@ namespace Epsitec.App.Dolphin.Components
 
 			if (length == 0)  // instruction inconnue ?
 			{
-				System.Diagnostics.Debug.WriteLine(string.Format("Unknow instruction {0}", code.ToString("X2")));
+				//?System.Diagnostics.Debug.WriteLine(string.Format("Unknow instruction {0}", code.ToString("X2")));
 				length = 1;
 			}
 
@@ -1370,7 +1370,7 @@ namespace Epsitec.App.Dolphin.Components
 				return builder.ToString();
 			}
 
-			if (op >= (int) Instructions.Jump && op <= (int) Instructions.JumpNC)  // JUMP
+			if (op == (int) Instructions.Jump || (op >= (int) Instructions.JumpEQ && op <= (int) Instructions.JumpNC))  // JUMP
 			{
 				switch ((Instructions) op)
 				{
