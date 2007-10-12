@@ -160,6 +160,27 @@ namespace Epsitec.Common.Designer.MyWidgets
 			return this.cells[index].State;
 		}
 
+		public void SetLineColor(int index, Color color)
+		{
+			//	Spécifie la couleur de fond d'une ligne.
+			if ( this.cells == null )  return;
+			if ( index < 0 || index >= this.cells.Length )  return;
+
+			if ( this.cells[index].Color != color )
+			{
+				this.cells[index].Color = color;
+				this.Invalidate();
+			}
+		}
+
+		public Color GetLineColor(int index)
+		{
+			//	Retourne la couleur de fond d'une ligne.
+			if ( this.cells == null )  return Color.Empty;
+			if ( index < 0 || index >= this.cells.Length )  return Color.Empty;
+			return this.cells[index].Color;
+		}
+
 		public bool AllowMultipleSelection
 		{
 			//	Indique si les sélections multiples sont possibles.
@@ -369,6 +390,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				this.cells[i].TextLayout.Alignment = this.alignment;
 				this.cells[i].TextLayout.BreakMode = this.breakMode;
 				this.cells[i].State = CellState.Normal;
+				this.cells[i].Color = Color.Empty;
 				this.cells[i].Selected = this.IsSelectedCell(i);
 			}
 		}
@@ -431,6 +453,12 @@ namespace Epsitec.Common.Designer.MyWidgets
 				}
 				state &= ~WidgetPaintState.Entered;
 				adorner.PaintCellBackground(graphics, cell, state);
+
+				if (this.cells[i].Color != Color.Empty)
+				{
+					graphics.AddFilledRectangle(cell);
+					graphics.RenderSolid(this.cells[i].Color);
+				}
 
 				if (this.cells[i].State == CellState.Warning)
 				{
@@ -603,6 +631,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		{
 			public TextLayout				TextLayout;
 			public CellState				State;
+			public Color					Color;
 			public bool						Selected;
 		}
 		#endregion

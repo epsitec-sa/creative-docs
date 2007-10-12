@@ -240,6 +240,28 @@ namespace Epsitec.Common.Designer.MyWidgets
 			return this.columns[column].GetLineState(row-this.firstVisibleRow);
 		}
 
+		public void SetLineColor(int column, int row, Color color)
+		{
+			//	Spécifie la couleur de fond d'une ligne.
+			if (this.columns == null)
+			{
+				return;
+			}
+
+			this.columns[column].SetLineColor(row-this.firstVisibleRow, color);
+		}
+
+		public Color GetLineColor(int column, int row)
+		{
+			//	Retourne la couleur de fond d'une ligne.
+			if (this.columns == null)
+			{
+				return Color.Empty;
+			}
+
+			return this.columns[column].GetLineColor(row-this.firstVisibleRow);
+		}
+
 		public void SetDynamicToolTips(int column, bool state)
 		{
 			//	Spécifie si une colonne génère des tooltips dynamiques.
