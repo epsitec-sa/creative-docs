@@ -2222,14 +2222,14 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				//	Trait vertical de séparation.
 				if (this.columnsSeparatorRelative1 < 1.0)
 				{
-					double posx = System.Math.Floor(this.ColumnsSeparatorAbsolute(0))+0.5;
+					double posx = this.ColumnsSeparatorAbsolute(0)+0.5;
 					graphics.AddLine(posx, this.bounds.Bottom+AbstractObject.footerHeight+0.5, posx, this.bounds.Top-AbstractObject.headerHeight-0.5);
 					graphics.RenderSolid(colorLine);
 				}
 
 				if (this.columnsSeparatorRelative2 < 1.0)
 				{
-					double posx = System.Math.Floor(this.ColumnsSeparatorAbsolute(1))+0.5;
+					double posx = this.ColumnsSeparatorAbsolute(1)+0.5;
 					graphics.AddLine(posx, this.bounds.Bottom+AbstractObject.footerHeight+0.5, posx, this.bounds.Top-AbstractObject.headerHeight-0.5);
 					graphics.RenderSolid(colorLine);
 				}
@@ -3063,11 +3063,11 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 			if (rank == 0)
 			{
-				return rect.Left + rect.Width*this.columnsSeparatorRelative1;
+				return rect.Left + System.Math.Floor(rect.Width*this.columnsSeparatorRelative1);
 			}
 			else
 			{
-				return rect.Left + rect.Width*this.columnsSeparatorRelative2;
+				return rect.Left + System.Math.Floor(rect.Width*this.columnsSeparatorRelative2);
 			}
 		}
 
