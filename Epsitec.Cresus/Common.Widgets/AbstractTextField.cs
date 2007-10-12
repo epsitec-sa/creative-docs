@@ -849,7 +849,7 @@ namespace Epsitec.Common.Widgets
 		protected override void ProcessMessage(Message message, Drawing.Point pos)
 		{
 			//	Gestion d'un événement.
-			if ( this.copyPasteBehavior.ProcessMessage(message, pos) )
+			if ( !this.IsReadOnly && this.copyPasteBehavior.ProcessMessage(message, pos) )
 			{
 				return;
 			}
@@ -1783,6 +1783,11 @@ namespace Epsitec.Common.Widgets
 			
 			[Command (Res.CommandIds.Cut)]		public void CommandCut(CommandDispatcher dispatcher, CommandEventArgs e)
 			{
+				if (this.host.IsReadOnly)
+				{
+					return;
+				}
+
 				string value = this.host.Selection;
 				
 				if (value == "")
@@ -1805,6 +1810,11 @@ namespace Epsitec.Common.Widgets
 			
 			[Command (Res.CommandIds.Delete)]	public void CommandDelete(CommandDispatcher dispatcher, CommandEventArgs e)
 			{
+				if (this.host.IsReadOnly)
+				{
+					return;
+				}
+
 				string value = this.host.Selection;
 				
 				if (value == "")
@@ -1827,6 +1837,11 @@ namespace Epsitec.Common.Widgets
 			
 			[Command (Res.CommandIds.Paste)]		public void CommandPaste(CommandDispatcher dispatcher, CommandEventArgs e)
 			{
+				if (this.host.IsReadOnly)
+				{
+					return;
+				}
+
 				Clipboard.ReadData data = Clipboard.GetData ();
 				
 				string text_layout = data.ReadTextLayout ();
@@ -1868,6 +1883,11 @@ namespace Epsitec.Common.Widgets
 			[Command (Res.CommandIds.UseDefaultValue)]
 			public void CommandUseDefaultValue(CommandDispatcher dispatcher, CommandEventArgs e)
 			{
+				if (this.host.IsReadOnly)
+				{
+					return;
+				}
+
 				this.host.Text = ResourceBundle.Field.Null;
 			}
 			
