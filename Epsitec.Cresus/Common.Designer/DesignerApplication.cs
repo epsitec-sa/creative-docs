@@ -92,6 +92,7 @@ namespace Epsitec.Common.Designer
 				this.dlgBindingSelector  = new Dialogs.BindingSelector(this);
 				this.dlgFieldName        = new Dialogs.ResourceName(this);
 				this.dlgEntityComment    = new Dialogs.EntityComment(this);
+				this.dlgEntityExpression = new Dialogs.EntityExpression(this);
 
 				this.dlgGlyphs.Closed += new EventHandler(this.HandleDlgClosed);
 				this.dlgFilter.Closed += new EventHandler(this.HandleDlgClosed);
@@ -1938,6 +1939,14 @@ namespace Epsitec.Common.Designer
 			return this.dlgEntityComment.SelectedText;
 		}
 
+		public string DlgEntityExpression(string text)
+		{
+			//	Ouvre le dialogue pour choisir une expression.
+			this.dlgEntityExpression.Initialise(text);
+			this.dlgEntityExpression.Show();  // choix dans le dialogue...
+			return this.dlgEntityExpression.SelectedText;
+		}
+
 		public Dialogs.Search DialogSearch
 		{
 			get
@@ -2142,6 +2151,7 @@ namespace Epsitec.Common.Designer
 		protected Dialogs.BindingSelector		dlgBindingSelector;
 		protected Dialogs.ResourceName			dlgFieldName;
 		protected Dialogs.EntityComment			dlgEntityComment;
+		protected Dialogs.EntityExpression		dlgEntityExpression;
 		protected PanelsContext					context;
 
 		protected Support.ResourceManagerPool	resourceManagerPool;

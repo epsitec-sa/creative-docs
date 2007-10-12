@@ -808,7 +808,12 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 				if (this.hilitedElement == ActiveElement.BoxFieldExpression)
 				{
-					//	TODO:
+					Module module = this.editor.Module;
+					string text = "Expression régulière...";
+					text = module.DesignerApplication.DlgEntityExpression(text);
+					if (text != null)
+					{
+					}
 				}
 
 				if (this.hilitedElement == ActiveElement.BoxFieldTitle)
