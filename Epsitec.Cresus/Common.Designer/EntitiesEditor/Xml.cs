@@ -15,7 +15,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		
 		public const string Bounds            = "Bds";
 		public const string Color             = "Clr";
-		public const string ColumnsSeparatorRelative = "CSepRel";
+		public const string ColumnsSeparatorRelative1 = "CSepRel";
+		public const string ColumnsSeparatorRelative2 = "CSepRel2";
 		public const string CommentAttach     = "CAtt";
 		public const string CommentBounds     = "CBds";
 		public const string CommentColor      = "CClr";

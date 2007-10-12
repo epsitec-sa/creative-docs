@@ -35,7 +35,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			BoxFieldRemoveInterface,
 			BoxFieldGroup,
 			BoxChangeWidth,
-			BoxMoveColumnsSeparator,
+			BoxMoveColumnsSeparator1,
+			BoxMoveColumnsSeparator2,
 			BoxColor1,
 			BoxColor2,
 			BoxColor3,
@@ -292,7 +293,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				case AbstractObject.ActiveElement.BoxChangeWidth:
 					return "Modifie la largeur de l'entité";
 
-				case AbstractObject.ActiveElement.BoxMoveColumnsSeparator:
+				case AbstractObject.ActiveElement.BoxMoveColumnsSeparator1:
 					return "Déplace le séparateur des colonnes";
 
 				case AbstractObject.ActiveElement.ConnectionOpenLeft:
