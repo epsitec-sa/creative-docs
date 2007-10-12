@@ -179,7 +179,10 @@ namespace Epsitec.Common.Designer.MyWidgets
 				prev = sel > 0;
 				next = sel < this.EnumCount-1;
 
-				Druid druid = this.GetDruid(sel);  // Druid de la ligne sélectionnée
+				Druid druid;
+				CultureMapSource source;
+				this.GetDruid(sel, out druid, out source);  // Druid de la ligne sélectionnée
+
 				lgoto = druid.IsValid;
 			}
 
@@ -196,7 +199,9 @@ namespace Epsitec.Common.Designer.MyWidgets
 			int first = this.array.FirstVisibleRow;
 			for (int i=0; i<this.array.LineCount; i++)
 			{
-				Druid druid = this.GetDruid(first+i);
+				Druid druid;
+				CultureMapSource source;
+				this.GetDruid(first+i, out druid, out source);
 
 				if (druid.IsEmpty)
 				{
@@ -301,7 +306,10 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			//	Supprime la ressource "valeur".
 			//	Cette ressource est forcément dans le même module.
-			Druid druid = this.GetDruid(sel);
+			Druid druid;
+			CultureMapSource source;
+			this.GetDruid(sel, out druid, out source);
+
 			CultureMap cultureMap = this.module.AccessValues.Accessor.Collection[druid];
 			System.Diagnostics.Debug.Assert(cultureMap != null);
 			this.module.AccessValues.Accessor.Collection.Remove(cultureMap);
@@ -347,7 +355,10 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected void ArrayGoto()
 		{
 			//	Va sur la valeur de l'énumération sélectionnée.
-			Druid druid = this.GetDruid(this.array.SelectedRow);
+			Druid druid;
+			CultureMapSource source;
+			this.GetDruid(this.array.SelectedRow, out druid, out source);
+
 			Module module = this.designerApplication.SearchModule(druid);
 			if (module == null)
 			{
@@ -368,18 +379,20 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 		}
 
-		protected Druid GetDruid(int index)
+		protected void GetDruid(int index, out Druid druid, out CultureMapSource source)
 		{
 			//	Retourne le Druid d'une valeur de l'énumération.
 			IList<StructuredData> list = this.structuredData.GetValue(Support.Res.Fields.ResourceEnumType.Values) as IList<StructuredData>;
 
 			if (index < 0 || index >= list.Count)
 			{
-				return Druid.Empty;
+				druid = Druid.Empty;
+				source = CultureMapSource.Invalid;
 			}
 			else
 			{
-				return (Druid) list[index].GetValue(Support.Res.Fields.EnumValue.CaptionId);
+				druid = (Druid) list[index].GetValue(Support.Res.Fields.EnumValue.CaptionId);
+				source = (CultureMapSource) list[index].GetValue(Support.Res.Fields.EnumValue.CultureMapSource);
 			}
 		}
 
