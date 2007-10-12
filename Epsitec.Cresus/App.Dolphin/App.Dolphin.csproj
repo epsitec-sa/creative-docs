@@ -9,8 +9,7 @@
     <RootNamespace>Epsitec.App.Dolphin</RootNamespace>
     <AssemblyName>Dolphin</AssemblyName>
     <AssemblyOriginatorKeyFile>..\Epsitec.Cresus.snk</AssemblyOriginatorKeyFile>
-    <ApplicationIcon>
-    </ApplicationIcon>
+    <ApplicationIcon>Dolphin.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
