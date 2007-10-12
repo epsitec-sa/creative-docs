@@ -172,6 +172,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			bool prev   = false;
 			bool next   = false;
 			bool lgoto  = false;
+			bool patch  = false;
 
 			int sel = this.array.SelectedRow;
 			if (sel != -1)
@@ -184,12 +185,13 @@ namespace Epsitec.Common.Designer.MyWidgets
 				this.GetDruid(sel, out druid, out source);  // Druid de la ligne sélectionnée
 
 				lgoto = druid.IsValid;
+				patch = this.module.IsPatch && source == CultureMapSource.ReferenceModule;
 			}
 
 			this.buttonCreate.Enable = !native;
-			this.buttonDelete.Enable = !native && sel != -1;
-			this.buttonPrev.Enable   = prev;
-			this.buttonNext.Enable   = next;
+			this.buttonDelete.Enable = !native && !patch && sel != -1;
+			this.buttonPrev.Enable   = prev && !patch;
+			this.buttonNext.Enable   = next && !patch;
 			this.buttonGoto.Enable   = lgoto;
 		}
 
