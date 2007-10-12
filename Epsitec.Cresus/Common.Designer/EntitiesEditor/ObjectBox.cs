@@ -806,6 +806,11 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					}
 				}
 
+				if (this.hilitedElement == ActiveElement.BoxFieldExpression)
+				{
+					//	TODO:
+				}
+
 				if (this.hilitedElement == ActiveElement.BoxFieldTitle)
 				{
 					if (this.editor.IsLocateAction(message))
@@ -1112,6 +1117,15 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 						if (i >= this.skipedField && rect.Contains(pos))
 						{
 							element = ActiveElement.BoxFieldType;
+							fieldRank = i;
+							this.SetConnectionsHilited(true);
+							return true;
+						}
+
+						rect = this.GetFieldExpressionBounds(i);
+						if (i >= this.skipedField && rect.Contains(pos))
+						{
+							element = ActiveElement.BoxFieldExpression;
 							fieldRank = i;
 							this.SetConnectionsHilited(true);
 							return true;
@@ -2365,6 +2379,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					{
 						Color colorName = this.GetColor(0);
 						Color colorType = this.GetColor(0);
+						Color colorExpr = this.GetColor(0);
 
 						if (this.hilitedElement == ActiveElement.BoxFieldName && this.hilitedFieldRank == i)
 						{
@@ -2384,6 +2399,16 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 							graphics.RenderSolid(this.GetColorMain());
 
 							colorType = this.GetColor(1);
+						}
+
+						if (this.hilitedElement == ActiveElement.BoxFieldExpression && this.hilitedFieldRank == i)
+						{
+							rect = this.GetFieldExpressionBounds(i);
+
+							graphics.AddFilledRectangle(rect);
+							graphics.RenderSolid(this.GetColorMain());
+
+							colorExpr = this.GetColor(1);
 						}
 
 						if ((this.hilitedElement == ActiveElement.BoxFieldRemove || this.hilitedElement == ActiveElement.BoxFieldMovable) && this.hilitedFieldRank == i)

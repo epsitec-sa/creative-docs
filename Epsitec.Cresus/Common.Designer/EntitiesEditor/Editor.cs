@@ -1359,7 +1359,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 						type = MouseCursorType.Arrow;
 					}
 					else if (fly.HilitedElement == AbstractObject.ActiveElement.BoxFieldName ||
-							 fly.HilitedElement == AbstractObject.ActiveElement.BoxFieldType)
+							 fly.HilitedElement == AbstractObject.ActiveElement.BoxFieldType ||
+							 fly.HilitedElement == AbstractObject.ActiveElement.BoxFieldExpression)
 					{
 						if (this.IsLocateAction(message))
 						{

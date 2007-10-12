@@ -26,6 +26,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			BoxHeader,
 			BoxFieldName,
 			BoxFieldType,
+			BoxFieldExpression,
 			BoxFieldAdd,
 			BoxFieldRemove,
 			BoxFieldMovable,
@@ -265,6 +266,23 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 						return "Aller sur la définition du type";
 					}
 
+				case AbstractObject.ActiveElement.BoxFieldExpression:
+					if (this.editor.CurrentModifyMode == Editor.ModifyMode.Unlocked)
+					{
+						if (this.IsMousePossible(element, fieldRank))
+						{
+							return "Change l'expression du champ<br/>Ctrl+clic: aller sur la définition de l'expression";
+						}
+						else
+						{
+							return "Ctrl+clic: aller sur la définition de l'expression";
+						}
+					}
+					else
+					{
+						return "Aller sur la définition de l'expression";
+					}
+
 				case AbstractObject.ActiveElement.BoxFieldAdd:
 					return "Ajoute un nouveau champ";
 
@@ -294,6 +312,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					return "Modifie la largeur de l'entité";
 
 				case AbstractObject.ActiveElement.BoxMoveColumnsSeparator1:
+				case AbstractObject.ActiveElement.BoxMoveColumnsSeparator2:
 					return "Déplace le séparateur des colonnes";
 
 				case AbstractObject.ActiveElement.ConnectionOpenLeft:
