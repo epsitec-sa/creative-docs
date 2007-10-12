@@ -207,12 +207,15 @@ namespace Epsitec.Common.Designer.MyWidgets
 				{
 					this.array.SetLineString(0, first+i, "");
 					this.array.SetLineState(0, first+i, StringList.CellState.Disabled);
+					this.array.SetLineColor(0, first+i, Color.Empty);
 
 					this.array.SetLineString(1, first+i, "");
 					this.array.SetLineState(1, first+i, StringList.CellState.Disabled);
+					this.array.SetLineColor(1, first+i, Color.Empty);
 
 					this.array.SetLineString(2, first+i, "");
 					this.array.SetLineState(2, first+i, StringList.CellState.Disabled);
+					this.array.SetLineColor(2, first+i, Color.Empty);
 				}
 				else
 				{
@@ -229,14 +232,19 @@ namespace Epsitec.Common.Designer.MyWidgets
 						icon = Misc.ImageFull(icon);
 					}
 
+					Color color = this.module.IsPatch ? Misc.SourceColor(source) : Color.Empty;
+
 					this.array.SetLineString(0, first+i, name);
 					this.array.SetLineState(0, first+i, StringList.CellState.Normal);
+					this.array.SetLineColor(0, first+i, color);
 
 					this.array.SetLineString(1, first+i, text);
 					this.array.SetLineState(1, first+i, StringList.CellState.Normal);
+					this.array.SetLineColor(1, first+i, color);
 
 					this.array.SetLineString(2, first+i, icon);
 					this.array.SetLineState(2, first+i, StringList.CellState.Normal);
+					this.array.SetLineColor(2, first+i, color);
 				}
 			}
 
