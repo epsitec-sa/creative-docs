@@ -808,11 +808,37 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 				if (this.hilitedElement == ActiveElement.BoxFieldExpression)
 				{
+					StructuredData data = this.cultureMap.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
+					IList<StructuredData> dataFields = data.GetValue(Support.Res.Fields.ResourceStructuredType.Fields) as IList<StructuredData>;
+
+					StructuredData dataField = dataFields[this.hilitedFieldRank];
+					string encoded = dataField.GetValue(Support.Res.Fields.Field.Expression) as string;
+					Support.EntityEngine.EntityExpression expression = Support.EntityEngine.EntityExpression.FromEncodedExpression(encoded);
+					string source = expression.SourceCode;
+					Support.EntityEngine.EntityExpressionEncoding encoding = expression.Encoding;
+
 					Module module = this.editor.Module;
-					string text = "Expression régulière...";
-					text = module.DesignerApplication.DlgEntityExpression(text);
-					if (text != null)
+					source = module.DesignerApplication.DlgEntityExpression(source);
+					if (source != null)
 					{
+						bool error = false;
+						try
+						{
+							expression = Support.EntityEngine.EntityExpression.FromSourceCode(encoding, source);
+						}
+						catch
+						{
+							error = true;
+						}
+
+						if (error)
+						{
+							data.SetValue(Support.Res.Fields.Field.Expression, UndefinedValue.Instance);
+						}
+						else
+						{
+							data.SetValue(Support.Res.Fields.Field.Expression, expression.GetEncodedExpression());
+						}
 					}
 				}
 
