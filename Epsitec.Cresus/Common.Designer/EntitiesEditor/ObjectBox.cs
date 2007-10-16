@@ -818,26 +818,32 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					Support.EntityEngine.EntityExpressionEncoding encoding = expression.Encoding;
 
 					Module module = this.editor.Module;
-					source = module.DesignerApplication.DlgEntityExpression(source);
-					if (source != null)
+					if (module.DesignerApplication.DlgEntityExpression(ref source))
 					{
-						bool error = false;
-						try
-						{
-							expression = Support.EntityEngine.EntityExpression.FromSourceCode(encoding, source);
-						}
-						catch
-						{
-							error = true;
-						}
-
-						if (error)
+						if (source == null)
 						{
 							data.SetValue(Support.Res.Fields.Field.Expression, UndefinedValue.Instance);
 						}
 						else
 						{
-							data.SetValue(Support.Res.Fields.Field.Expression, expression.GetEncodedExpression());
+							bool error = false;
+							try
+							{
+								expression = Support.EntityEngine.EntityExpression.FromSourceCode(encoding, source);
+							}
+							catch
+							{
+								error = true;
+							}
+
+							if (error)
+							{
+								data.SetValue(Support.Res.Fields.Field.Expression, UndefinedValue.Instance);
+							}
+							else
+							{
+								data.SetValue(Support.Res.Fields.Field.Expression, expression.GetEncodedExpression());
+							}
 						}
 					}
 				}

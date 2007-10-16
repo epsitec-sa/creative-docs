@@ -35,19 +35,21 @@ namespace Epsitec.Common.Designer.Dialogs
 				resize.Margins = new Margins(0, -8, 0, -8);
 				ToolTip.Default.SetToolTip(resize, Res.Strings.Dialog.Tooltip.Resize);
 
-				//	Crée la toolbar et son contenu.
-				this.toolbar = new HToolBar(this.window.Root);
-				this.toolbar.Margins = new Margins(0, 0, 0, 3);
-				this.toolbar.Dock = DockStyle.Top;
+				//	Crée l'en-tête et son contenu.
+				this.header = new FrameBox(this.window.Root);
+				this.header.Margins = new Margins(0, 0, 0, 3);
+				this.header.Dock = DockStyle.Top;
 
-				this.CreateButton("FontBold");
-				this.CreateButton("FontItalic");
-				this.CreateButton("FontUnderline");
+				this.buttonExpression = new CheckButton(this.header);
+				this.buttonExpression.Text = "Expression";
+				this.buttonExpression.AutoToggle = false;
+				this.buttonExpression.Dock = DockStyle.Top;
+				this.buttonExpression.Clicked += new MessageEventHandler(this.HandleButtonClicked);
 
 				//	Crée le grand pavé de texte éditable.
-				this.fieldText = new TextFieldMulti(this.window.Root);
-				this.fieldText.Dock = DockStyle.Fill;
-				this.fieldText.TabIndex = 1;
+				this.fieldExpression = new TextFieldMulti(this.window.Root);
+				this.fieldExpression.Dock = DockStyle.Fill;
+				this.fieldExpression.TabIndex = 1;
 
 				//	Boutons de fermeture.
 				Widget footer = new Widget(this.window.Root);
@@ -75,42 +77,65 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.buttonOk.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			}
 
-			this.UpdateText();
+			this.UpdateExpression();
 
 			this.window.ShowDialog();
 		}
 
-		public void Initialise(string name)
+		public void Initialise(bool isEditLocked, string expression)
 		{
-			this.initialText = name;
-			this.selectedText = null;
+			this.isEditOk = false;
+			this.isEditLocked = isEditLocked;
+			this.expression = expression;
 		}
 
-		public string SelectedText
+		public bool IsEditOk
 		{
 			get
 			{
-				return this.selectedText;
+				return this.isEditOk;
+			}
+		}
+
+		public string Expression
+		{
+			get
+			{
+				if (this.buttonExpression.ActiveState == ActiveState.No)
+				{
+					return null;
+				}
+				else
+				{
+					return this.expression;
+				}
 			}
 		}
 
 
-		protected void CreateButton(string name)
+		protected void UpdateExpression()
 		{
-			IconButton button = new IconButton();
-			button.Name = name;
-			button.IconName = Misc.Icon(name);
-			button.ButtonStyle = ButtonStyle.ActivableIcon;
-			button.Clicked += new MessageEventHandler(this.HandleButtonClicked);
+			if (string.IsNullOrEmpty(this.expression))
+			{
+				this.fieldExpression.Text = "";
+				this.fieldExpression.Enable = false;
+				this.buttonExpression.ActiveState = ActiveState.No;
+			}
+			else
+			{
+				this.fieldExpression.Text = this.expression;
+				this.fieldExpression.Enable = true;
+				this.buttonExpression.ActiveState = ActiveState.Yes;
+			}
 
-			this.toolbar.Items.Add(button);
-		}
+			this.fieldExpression.IsReadOnly = this.isEditLocked;
+			this.buttonExpression.Enable = !this.isEditLocked;
 
-		protected void UpdateText()
-		{
-			this.fieldText.Text = this.initialText;
-			this.fieldText.SelectAll();
-			this.fieldText.Focus();
+			if (!this.isEditLocked)
+			{
+				this.fieldExpression.SelectAll();
+				this.fieldExpression.Focus();
+			}
 		}
 
 
@@ -134,34 +159,37 @@ namespace Epsitec.Common.Designer.Dialogs
 			this.window.Hide();
 			this.OnClosed();
 
-			this.selectedText = this.fieldText.Text;
+			this.isEditOk = true;
 		}
 
 		private void HandleButtonClicked(object sender, MessageEventArgs e)
 		{
-			IconButton button = sender as IconButton;
+			AbstractButton button = sender as AbstractButton;
 
-			if (button.Name == "FontBold")
+			if (button == this.buttonExpression)
 			{
-				this.fieldText.TextNavigator.SelectionBold = !this.fieldText.TextNavigator.SelectionBold;
-			}
-
-			if (button.Name == "FontItalic")
-			{
-				this.fieldText.TextNavigator.SelectionItalic = !this.fieldText.TextNavigator.SelectionItalic;
-			}
-
-			if (button.Name == "FontUnderline")
-			{
-				this.fieldText.TextNavigator.SelectionUnderline = !this.fieldText.TextNavigator.SelectionUnderline;
+				if (this.buttonExpression.ActiveState == ActiveState.No)
+				{
+					this.buttonExpression.ActiveState = ActiveState.Yes;
+					this.fieldExpression.Enable = true;
+					this.fieldExpression.SelectAll();
+					this.fieldExpression.Focus();
+				}
+				else
+				{
+					this.buttonExpression.ActiveState = ActiveState.No;
+					this.fieldExpression.Enable = false;
+				}
 			}
 		}
 
 
-		protected string						initialText;
-		protected string						selectedText;
-		protected HToolBar						toolbar;
-		protected TextFieldMulti				fieldText;
+		protected string						expression;
+		protected bool							isEditLocked;
+		protected bool							isEditOk;
+		protected FrameBox						header;
+		protected CheckButton					buttonExpression;
+		protected TextFieldMulti				fieldExpression;
 		protected Button						buttonOk;
 		protected Button						buttonCancel;
 	}
