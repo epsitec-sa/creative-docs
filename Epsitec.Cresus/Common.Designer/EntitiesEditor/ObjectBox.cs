@@ -828,24 +828,17 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 						else
 						{
 							source = TextLayout.ConvertToSimpleText(source);
-							bool error = false;
-							try
-							{
-								expression = Support.EntityEngine.EntityExpression.FromSourceCode(Support.EntityEngine.EntityExpressionEncoding.LambdaCSharpSourceCode, source);
-							}
-							catch
-							{
-								error = true;
-							}
+							expression = Support.EntityEngine.EntityExpression.FromSourceCode(Support.EntityEngine.EntityExpressionEncoding.LambdaCSharpSourceCode, source);
+							encoded = expression.GetEncodedExpression();
 
-							if (error)
+							if (encoded == "?")  // TODO: il devrait y avoir un autre moyen !
 							{
 								data.SetValue(Support.Res.Fields.Field.Expression, UndefinedValue.Instance);
 								data.SetValue(Support.Res.Fields.Field.Source, FieldSource.Value);
 							}
 							else
 							{
-								data.SetValue(Support.Res.Fields.Field.Expression, expression.GetEncodedExpression());
+								data.SetValue(Support.Res.Fields.Field.Expression, encoded);
 								data.SetValue(Support.Res.Fields.Field.Source, FieldSource.Expression);
 							}
 						}
