@@ -107,7 +107,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				}
 				else
 				{
-					return this.expression;
+					return this.fieldExpression.Text;
 				}
 			}
 		}

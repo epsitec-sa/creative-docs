@@ -814,8 +814,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					StructuredData dataField = dataFields[this.hilitedFieldRank];
 					string encoded = dataField.GetValue(Support.Res.Fields.Field.Expression) as string;
 					Support.EntityEngine.EntityExpression expression = Support.EntityEngine.EntityExpression.FromEncodedExpression(encoded);
-					string source = expression.SourceCode;
-					Support.EntityEngine.EntityExpressionEncoding encoding = expression.Encoding;
+					string source = TextLayout.ConvertToTaggedText(expression.SourceCode);
+					//?Support.EntityEngine.EntityExpressionEncoding encoding = expression.Encoding;
 
 					Module module = this.editor.Module;
 					if (module.DesignerApplication.DlgEntityExpression(ref source))
@@ -823,13 +823,15 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 						if (source == null)
 						{
 							data.SetValue(Support.Res.Fields.Field.Expression, UndefinedValue.Instance);
+							data.SetValue(Support.Res.Fields.Field.Source, FieldSource.Value);
 						}
 						else
 						{
+							source = TextLayout.ConvertToSimpleText(source);
 							bool error = false;
 							try
 							{
-								expression = Support.EntityEngine.EntityExpression.FromSourceCode(encoding, source);
+								expression = Support.EntityEngine.EntityExpression.FromSourceCode(Support.EntityEngine.EntityExpressionEncoding.LambdaCSharpSourceCode, source);
 							}
 							catch
 							{
@@ -839,10 +841,12 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 							if (error)
 							{
 								data.SetValue(Support.Res.Fields.Field.Expression, UndefinedValue.Instance);
+								data.SetValue(Support.Res.Fields.Field.Source, FieldSource.Value);
 							}
 							else
 							{
 								data.SetValue(Support.Res.Fields.Field.Expression, expression.GetEncodedExpression());
+								data.SetValue(Support.Res.Fields.Field.Source, FieldSource.Expression);
 							}
 						}
 					}
