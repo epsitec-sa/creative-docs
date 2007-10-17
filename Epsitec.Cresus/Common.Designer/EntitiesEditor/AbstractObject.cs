@@ -267,21 +267,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					}
 
 				case AbstractObject.ActiveElement.BoxFieldExpression:
-					if (this.editor.CurrentModifyMode == Editor.ModifyMode.Unlocked)
-					{
-						if (this.IsMousePossible(element, fieldRank))
-						{
-							return "Change l'expression du champ<br/>Ctrl+clic: aller sur la définition de l'expression";
-						}
-						else
-						{
-							return "Ctrl+clic: aller sur la définition de l'expression";
-						}
-					}
-					else
-					{
-						return "Aller sur la définition de l'expression";
-					}
+					return "Expression du champ";
 
 				case AbstractObject.ActiveElement.BoxFieldAdd:
 					return "Ajoute un nouveau champ";

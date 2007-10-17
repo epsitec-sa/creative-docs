@@ -1123,14 +1123,17 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 						}
 
 						rect = this.GetFieldExpressionBounds(i);
-						if (i >= this.skipedField && rect.Contains(pos))
+						if (rect.Contains(pos))
 						{
 							element = ActiveElement.BoxFieldExpression;
 							fieldRank = i;
 							this.SetConnectionsHilited(true);
 							return true;
 						}
+					}
 
+					for (int i=0; i<this.fields.Count; i++)
+					{
 						rect = this.GetFieldGroupBounds(i);
 						if (rect.Contains(pos))
 						{
@@ -2521,7 +2524,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 						if (rect.Width > 10)
 						{
 							this.fields[i].TextLayoutExpression.LayoutSize = rect.Size;
-							this.fields[i].TextLayoutExpression.Paint(rect.BottomLeft, graphics, Rectangle.MaxValue, colorType, GlyphPaintStyle.Normal);
+							this.fields[i].TextLayoutExpression.Paint(rect.BottomLeft, graphics, Rectangle.MaxValue, colorExpr, GlyphPaintStyle.Normal);
 						}
 
 						rect = this.GetFieldBounds(i);
