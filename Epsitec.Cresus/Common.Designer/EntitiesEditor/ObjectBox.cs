@@ -1666,8 +1666,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			{
 				if (source == null)
 				{
-					data.SetValue(Support.Res.Fields.Field.Expression, UndefinedValue.Instance);
-					data.SetValue(Support.Res.Fields.Field.Source, FieldSource.Value);
+					dataField.SetValue(Support.Res.Fields.Field.Expression, UndefinedValue.Instance);
+					dataField.SetValue (Support.Res.Fields.Field.Source, FieldSource.Value);
 				}
 				else
 				{
@@ -1677,13 +1677,13 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 					if (encoded == "?")  // TODO: il devrait y avoir un autre moyen !
 					{
-						data.SetValue(Support.Res.Fields.Field.Expression, UndefinedValue.Instance);
-						data.SetValue(Support.Res.Fields.Field.Source, FieldSource.Value);
+						dataField.SetValue (Support.Res.Fields.Field.Expression, UndefinedValue.Instance);
+						dataField.SetValue (Support.Res.Fields.Field.Source, FieldSource.Value);
 					}
 					else
 					{
-						data.SetValue(Support.Res.Fields.Field.Expression, encoded);
-						data.SetValue(Support.Res.Fields.Field.Source, FieldSource.Expression);
+						dataField.SetValue (Support.Res.Fields.Field.Expression, encoded);
+						dataField.SetValue (Support.Res.Fields.Field.Source, FieldSource.Expression);
 					}
 				}
 			}

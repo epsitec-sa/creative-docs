@@ -473,7 +473,7 @@ namespace Epsitec.Common.Types
 			}
 		}
 
-		public void ResetValue(string id)
+		public void ResetToOriginalValue(string id)
 		{
 			if (this.values != null)
 			{
@@ -492,9 +492,17 @@ namespace Epsitec.Common.Types
 			}
 		}
 
-		public void ResetValue(Support.Druid id)
+		public void ResetToOriginalValue(Support.Druid id)
 		{
-			this.ResetValue (id.ToString ());
+			this.ResetToOriginalValue (id.ToString ());
+		}
+
+		public void ResetToOriginal()
+		{
+			foreach (string id in this.StructuredType.GetFieldIds ())
+			{
+				this.ResetToOriginalValue (id);
+			}
 		}
 
 		public void PromoteToOriginal()

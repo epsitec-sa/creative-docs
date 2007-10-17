@@ -189,7 +189,7 @@ namespace Epsitec.Common.Support.EntityEngine
 
 			public EncodedExpression(EntityExpressionEncoding encoding, string expression)
 			{
-				this.encoding   = EntityExpressionEncoding.Invalid;
+				this.encoding   = encoding;
 				this.expression = expression;
 			}
 
