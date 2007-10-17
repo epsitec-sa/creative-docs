@@ -1791,6 +1791,9 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			FieldOptions options = (FieldOptions) dataField.GetValue(Support.Res.Fields.Field.Options);
 			CultureMapSource source = (CultureMapSource) dataField.GetValue(Support.Res.Fields.Field.CultureMapSource);
 
+			string encoded = dataField.GetValue(Support.Res.Fields.Field.Expression) as string;
+			Support.EntityEngine.EntityExpression expression = Support.EntityEngine.EntityExpression.FromEncodedExpression(encoded);
+			string sourceCode = TextLayout.ConvertToTaggedText(expression.SourceCode);
 			
 			Module dstModule = this.editor.Module.DesignerApplication.SearchModule(typeId);
 			CultureMap dstItem = (dstModule == null) ? null : dstModule.AccessEntities.Accessor.Collection[typeId];
@@ -1816,6 +1819,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			field.CaptionId = fieldCaptionId;
 			field.DefiningTypeId = definingTypeId;
 			field.DeepDefiningTypeId = deepDefiningTypeId;
+			field.Expression = sourceCode;
 			field.IsNullable = options == FieldOptions.Nullable;
 			field.CultureMapSource = source;
 			field.FieldName = (fieldCultureMap == null) ? "" : fieldCultureMap.Name;
@@ -2509,6 +2513,15 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 						{
 							this.fields[i].TextLayoutType.LayoutSize = rect.Size;
 							this.fields[i].TextLayoutType.Paint(rect.BottomLeft, graphics, Rectangle.MaxValue, colorType, GlyphPaintStyle.Normal);
+						}
+
+						//	Affiche l'expression du champ.
+						rect = this.GetFieldExpressionBounds(i);
+						rect.Left += 1;
+						if (rect.Width > 10)
+						{
+							this.fields[i].TextLayoutExpression.LayoutSize = rect.Size;
+							this.fields[i].TextLayoutExpression.Paint(rect.BottomLeft, graphics, Rectangle.MaxValue, colorType, GlyphPaintStyle.Normal);
 						}
 
 						rect = this.GetFieldBounds(i);

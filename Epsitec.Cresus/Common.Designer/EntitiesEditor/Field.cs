@@ -85,6 +85,11 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			this.textLayoutType.Alignment = ContentAlignment.MiddleLeft;
 			this.textLayoutType.BreakMode = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine;
 
+			this.textLayoutExpression = new TextLayout();
+			this.textLayoutExpression.DefaultFontSize = 10;
+			this.textLayoutExpression.Alignment = ContentAlignment.MiddleLeft;
+			this.textLayoutExpression.BreakMode = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine;
+
 			this.relation = FieldRelation.None;
 			this.membership = FieldMembership.Local;
 			this.captionId = Druid.Empty;
@@ -211,6 +216,19 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 		}
 
+		public string Expression
+		{
+			//	Eventuelle expression lambda calculant le champ.
+			get
+			{
+				return this.textLayoutExpression.Text;
+			}
+			set
+			{
+				this.textLayoutExpression.Text = value;
+			}
+		}
+
 		public TextLayout TextLayoutField
 		{
 			//	Retourne le TextLayout utilisé pour le nom du champ.
@@ -226,6 +244,15 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			get
 			{
 				return this.textLayoutType;
+			}
+		}
+
+		public TextLayout TextLayoutExpression
+		{
+			//	Retourne le TextLayout utilisé pour l'expression du champ.
+			get
+			{
+				return this.textLayoutExpression;
 			}
 		}
 
@@ -914,6 +941,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		protected bool isInterface;
 		protected TextLayout textLayoutField;
 		protected TextLayout textLayoutType;
+		protected TextLayout textLayoutExpression;
 		protected string typeName;
 		protected FieldRelation relation;
 		protected FieldMembership membership;
