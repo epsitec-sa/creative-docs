@@ -1631,7 +1631,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 			Dialogs.EntityExpression.Type type;
 			object isInterface = dataField.GetValue(Support.Res.Fields.Field.IsInterfaceDefinition);
-			if (UndefinedValue.IsUndefinedValue(IsInterface))
+			if (UndefinedValue.IsUndefinedValue(isInterface))
 			{
 				type = Dialogs.EntityExpression.Type.Normal;
 			}
