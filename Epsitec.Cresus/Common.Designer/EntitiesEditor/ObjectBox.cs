@@ -1620,10 +1620,12 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		protected void EditExpression(int rank)
 		{
 			//	Edite l'expresion associée à un champ.
+			int fieldRank = (rank == -1) ? -1 : this.fields[rank].Rank;
+
 			StructuredData data = this.cultureMap.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
 			IList<StructuredData> dataFields = data.GetValue(Support.Res.Fields.ResourceStructuredType.Fields) as IList<StructuredData>;
 
-			StructuredData dataField = dataFields[rank];
+			StructuredData dataField = dataFields[fieldRank];
 			string encoded = dataField.GetValue(Support.Res.Fields.Field.Expression) as string;
 			Support.EntityEngine.EntityExpression expression = Support.EntityEngine.EntityExpression.FromEncodedExpression(encoded);
 			string source = TextLayout.ConvertToTaggedText(expression.SourceCode);
@@ -1646,7 +1648,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					type = Dialogs.EntityExpression.Type.InterfaceRedefine;
 					localSource = source;
 
-					Druid definingTypeId = this.fields[rank].DefiningTypeId;
+					Druid definingTypeId = this.fields[fieldRank].DefiningTypeId;
 					Module definingModule = this.editor.Module.DesignerApplication.SearchModule(definingTypeId);
 					CultureMap cultureMap = definingModule.AccessEntities.Accessor.Collection[definingTypeId];
 					StructuredData definingDataField = cultureMap.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
