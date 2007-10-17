@@ -808,68 +808,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 				if (this.hilitedElement == ActiveElement.BoxFieldExpression)
 				{
-					StructuredData data = this.cultureMap.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
-					IList<StructuredData> dataFields = data.GetValue(Support.Res.Fields.ResourceStructuredType.Fields) as IList<StructuredData>;
-
-					StructuredData dataField = dataFields[this.hilitedFieldRank];
-					string encoded = dataField.GetValue(Support.Res.Fields.Field.Expression) as string;
-					Support.EntityEngine.EntityExpression expression = Support.EntityEngine.EntityExpression.FromEncodedExpression(encoded);
-					string source = TextLayout.ConvertToTaggedText(expression.SourceCode);
-					string localSource = null;
-
-					Dialogs.EntityExpression.Type type;
-					object isInterface = dataField.GetValue(Support.Res.Fields.Field.IsInterfaceDefinition);
-					if (UndefinedValue.IsUndefinedValue(IsInterface))
-					{
-						type = Dialogs.EntityExpression.Type.Normal;
-					}
-					else
-					{
-						if ((bool) IsInterface)
-						{
-							type = Dialogs.EntityExpression.Type.Interface;
-						}
-						else
-						{
-							type = Dialogs.EntityExpression.Type.InterfaceRedefine;
-							localSource = source;
-
-							Druid definingTypeId = this.fields[this.hilitedFieldRank].DefiningTypeId;
-							Module definingModule = this.editor.Module.DesignerApplication.SearchModule(definingTypeId);
-							CultureMap cultureMap = definingModule.AccessEntities.Accessor.Collection[definingTypeId];
-							StructuredData definingDataField = cultureMap.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
-							string definingEncoded = definingDataField.GetValue(Support.Res.Fields.Field.Expression) as string;
-							Support.EntityEngine.EntityExpression definingExpression = Support.EntityEngine.EntityExpression.FromEncodedExpression(definingEncoded);
-							source = TextLayout.ConvertToTaggedText(definingExpression.SourceCode);
-						}
-					}
-
-					Module module = this.editor.Module;
-					if (module.DesignerApplication.DlgEntityExpression(ref type, ref source, ref localSource))
-					{
-						if (source == null)
-						{
-							data.SetValue(Support.Res.Fields.Field.Expression, UndefinedValue.Instance);
-							data.SetValue(Support.Res.Fields.Field.Source, FieldSource.Value);
-						}
-						else
-						{
-							source = TextLayout.ConvertToSimpleText(source);
-							expression = Support.EntityEngine.EntityExpression.FromSourceCode(Support.EntityEngine.EntityExpressionEncoding.LambdaCSharpSourceCode, source);
-							encoded = expression.GetEncodedExpression();
-
-							if (encoded == "?")  // TODO: il devrait y avoir un autre moyen !
-							{
-								data.SetValue(Support.Res.Fields.Field.Expression, UndefinedValue.Instance);
-								data.SetValue(Support.Res.Fields.Field.Source, FieldSource.Value);
-							}
-							else
-							{
-								data.SetValue(Support.Res.Fields.Field.Expression, encoded);
-								data.SetValue(Support.Res.Fields.Field.Source, FieldSource.Expression);
-							}
-						}
-					}
+					this.EditExpression(this.hilitedFieldRank);
 				}
 
 				if (this.hilitedElement == ActiveElement.BoxFieldTitle)
@@ -1676,6 +1615,73 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 
 			this.hilitedElement = ActiveElement.None;
+		}
+
+		protected void EditExpression(int rank)
+		{
+			//	Edite l'expresion associée à un champ.
+			StructuredData data = this.cultureMap.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
+			IList<StructuredData> dataFields = data.GetValue(Support.Res.Fields.ResourceStructuredType.Fields) as IList<StructuredData>;
+
+			StructuredData dataField = dataFields[rank];
+			string encoded = dataField.GetValue(Support.Res.Fields.Field.Expression) as string;
+			Support.EntityEngine.EntityExpression expression = Support.EntityEngine.EntityExpression.FromEncodedExpression(encoded);
+			string source = TextLayout.ConvertToTaggedText(expression.SourceCode);
+			string localSource = null;
+
+			Dialogs.EntityExpression.Type type;
+			object isInterface = dataField.GetValue(Support.Res.Fields.Field.IsInterfaceDefinition);
+			if (UndefinedValue.IsUndefinedValue(IsInterface))
+			{
+				type = Dialogs.EntityExpression.Type.Normal;
+			}
+			else
+			{
+				if ((bool) IsInterface)
+				{
+					type = Dialogs.EntityExpression.Type.Interface;
+				}
+				else
+				{
+					type = Dialogs.EntityExpression.Type.InterfaceRedefine;
+					localSource = source;
+
+					Druid definingTypeId = this.fields[rank].DefiningTypeId;
+					Module definingModule = this.editor.Module.DesignerApplication.SearchModule(definingTypeId);
+					CultureMap cultureMap = definingModule.AccessEntities.Accessor.Collection[definingTypeId];
+					StructuredData definingDataField = cultureMap.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
+					string definingEncoded = definingDataField.GetValue(Support.Res.Fields.Field.Expression) as string;
+					Support.EntityEngine.EntityExpression definingExpression = Support.EntityEngine.EntityExpression.FromEncodedExpression(definingEncoded);
+					source = TextLayout.ConvertToTaggedText(definingExpression.SourceCode);
+				}
+			}
+
+			Module module = this.editor.Module;
+			if (module.DesignerApplication.DlgEntityExpression(ref type, ref source, ref localSource))
+			{
+				if (source == null)
+				{
+					data.SetValue(Support.Res.Fields.Field.Expression, UndefinedValue.Instance);
+					data.SetValue(Support.Res.Fields.Field.Source, FieldSource.Value);
+				}
+				else
+				{
+					source = TextLayout.ConvertToSimpleText(source);
+					expression = Support.EntityEngine.EntityExpression.FromSourceCode(Support.EntityEngine.EntityExpressionEncoding.LambdaCSharpSourceCode, source);
+					encoded = expression.GetEncodedExpression();
+
+					if (encoded == "?")  // TODO: il devrait y avoir un autre moyen !
+					{
+						data.SetValue(Support.Res.Fields.Field.Expression, UndefinedValue.Instance);
+						data.SetValue(Support.Res.Fields.Field.Source, FieldSource.Value);
+					}
+					else
+					{
+						data.SetValue(Support.Res.Fields.Field.Expression, encoded);
+						data.SetValue(Support.Res.Fields.Field.Source, FieldSource.Expression);
+					}
+				}
+			}
 		}
 
 		protected void ChangeFieldName(int rank)
