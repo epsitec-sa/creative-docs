@@ -97,12 +97,13 @@ namespace Epsitec.Common.Designer.Dialogs
 			this.window.ShowDialog();
 		}
 
-		public void Initialise(bool isEditLocked, Type type, string expression)
+		public void Initialise(bool isEditLocked, Type type, string expression, string localExpression)
 		{
 			this.isEditOk = false;
 			this.isEditLocked = isEditLocked;
 			this.type = type;
 			this.expression = expression;
+			this.localExpression = localExpression;
 		}
 
 		public bool IsEditOk
@@ -110,6 +111,14 @@ namespace Epsitec.Common.Designer.Dialogs
 			get
 			{
 				return this.isEditOk;
+			}
+		}
+
+		public Type InternalType
+		{
+			get
+			{
+				return this.type;
 			}
 		}
 
@@ -123,7 +132,36 @@ namespace Epsitec.Common.Designer.Dialogs
 				}
 				else
 				{
-					return this.fieldExpression.Text;
+					if (this.type == Type.InterfaceRedefine)
+					{
+						return this.expression;
+					}
+					else
+					{
+						return this.fieldExpression.Text;
+					}
+				}
+			}
+		}
+
+		public string LocalExpression
+		{
+			get
+			{
+				if (this.buttonExpression.ActiveState == ActiveState.No)
+				{
+					return null;
+				}
+				else
+				{
+					if (this.type == Type.InterfaceRedefine)
+					{
+						return this.fieldExpression.Text;
+					}
+					else
+					{
+						return this.localExpression;
+					}
 				}
 			}
 		}
@@ -139,10 +177,12 @@ namespace Epsitec.Common.Designer.Dialogs
 			}
 			else
 			{
-				this.fieldExpression.Text = this.expression;
+				this.fieldExpression.Text = (this.type == Type.InterfaceRedefine) ? this.localExpression : this.expression;
 				this.fieldExpression.Enable = true;
 				this.buttonExpression.ActiveState = ActiveState.Yes;
 			}
+
+			this.buttonLocal.Visibility = (this.type != Type.Normal);
 
 			this.fieldExpression.IsReadOnly = this.isEditLocked;
 			this.buttonExpression.Enable = !this.isEditLocked;
@@ -201,6 +241,22 @@ namespace Epsitec.Common.Designer.Dialogs
 
 			if (button == this.buttonLocal)
 			{
+				if (this.buttonLocal.ActiveState == ActiveState.No)
+				{
+					this.buttonLocal.ActiveState = ActiveState.Yes;
+					this.type = Type.InterfaceRedefine;
+
+					this.expression = this.fieldExpression.Text;
+					this.fieldExpression.Text = this.localExpression;
+				}
+				else
+				{
+					this.buttonLocal.ActiveState = ActiveState.No;
+					this.type = Type.Interface;
+
+					this.localExpression = this.fieldExpression.Text;
+					this.fieldExpression.Text = this.expression;
+				}
 			}
 		}
 
@@ -209,6 +265,7 @@ namespace Epsitec.Common.Designer.Dialogs
 		protected bool							isEditOk;
 		protected Type							type;
 		protected string						expression;
+		protected string						localExpression;
 		protected FrameBox						header;
 		protected CheckButton					buttonExpression;
 		protected CheckButton					buttonLocal;

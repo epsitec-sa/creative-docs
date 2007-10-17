@@ -815,6 +815,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					string encoded = dataField.GetValue(Support.Res.Fields.Field.Expression) as string;
 					Support.EntityEngine.EntityExpression expression = Support.EntityEngine.EntityExpression.FromEncodedExpression(encoded);
 					string source = TextLayout.ConvertToTaggedText(expression.SourceCode);
+					string localSource = null;
 
 					Dialogs.EntityExpression.Type type;
 					object isInterface = dataField.GetValue(Support.Res.Fields.Field.IsInterfaceDefinition);
@@ -831,11 +832,20 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 						else
 						{
 							type = Dialogs.EntityExpression.Type.InterfaceRedefine;
+							localSource = source;
+
+							Druid definingTypeId = this.fields[this.hilitedFieldRank].DefiningTypeId;
+							Module definingModule = this.editor.Module.DesignerApplication.SearchModule(definingTypeId);
+							CultureMap cultureMap = definingModule.AccessEntities.Accessor.Collection[definingTypeId];
+							StructuredData definingDataField = cultureMap.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
+							string definingEncoded = definingDataField.GetValue(Support.Res.Fields.Field.Expression) as string;
+							Support.EntityEngine.EntityExpression definingExpression = Support.EntityEngine.EntityExpression.FromEncodedExpression(definingEncoded);
+							source = TextLayout.ConvertToTaggedText(definingExpression.SourceCode);
 						}
 					}
 
 					Module module = this.editor.Module;
-					if (module.DesignerApplication.DlgEntityExpression(type, ref source))
+					if (module.DesignerApplication.DlgEntityExpression(ref type, ref source, ref localSource))
 					{
 						if (source == null)
 						{

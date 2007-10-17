@@ -1939,12 +1939,14 @@ namespace Epsitec.Common.Designer
 			return this.dlgEntityComment.SelectedText;
 		}
 
-		public bool DlgEntityExpression(Dialogs.EntityExpression.Type type, ref string expression)
+		public bool DlgEntityExpression(ref Dialogs.EntityExpression.Type type, ref string expression, ref string localExpression)
 		{
 			//	Ouvre le dialogue pour éditer une expression.
-			this.dlgEntityExpression.Initialise(this.IsEditLocked, type, expression);
+			this.dlgEntityExpression.Initialise(this.IsEditLocked, type, expression, localExpression);
 			this.dlgEntityExpression.Show();  // choix dans le dialogue...
+			type = this.dlgEntityExpression.InternalType;
 			expression = this.dlgEntityExpression.Expression;
+			localExpression = this.dlgEntityExpression.LocalExpression;
 			return this.dlgEntityExpression.IsEditOk;
 		}
 
