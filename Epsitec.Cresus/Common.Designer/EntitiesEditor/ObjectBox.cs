@@ -1651,7 +1651,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					type = Dialogs.EntityExpression.Type.InterfaceRedefine;
 					localSource = source;
 
-					Druid definingTypeId = this.fields[fieldRank].DefiningTypeId;
+					Druid definingTypeId = this.fields[rank].DefiningTypeId;
 					Module definingModule = this.editor.Module.DesignerApplication.SearchModule(definingTypeId);
 					CultureMap cultureMap = definingModule.AccessEntities.Accessor.Collection[definingTypeId];
 					StructuredData definingDataField = cultureMap.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);

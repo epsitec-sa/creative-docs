@@ -169,7 +169,9 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		protected void UpdateExpression()
 		{
-			if (string.IsNullOrEmpty(this.expression))
+			string expression = (this.type == Type.InterfaceRedefine) ? this.localExpression : this.expression;
+
+			if (string.IsNullOrEmpty(expression))
 			{
 				this.fieldExpression.Text = "";
 				this.fieldExpression.Enable = false;
@@ -177,9 +179,18 @@ namespace Epsitec.Common.Designer.Dialogs
 			}
 			else
 			{
-				this.fieldExpression.Text = (this.type == Type.InterfaceRedefine) ? this.localExpression : this.expression;
+				this.fieldExpression.Text = expression;
 				this.fieldExpression.Enable = true;
 				this.buttonExpression.ActiveState = ActiveState.Yes;
+			}
+
+			if (this.type == Type.InterfaceRedefine)
+			{
+				this.buttonLocal.ActiveState = ActiveState.Yes;
+			}
+			else
+			{
+				this.buttonLocal.ActiveState = ActiveState.No;
 			}
 
 			this.buttonLocal.Visibility = (this.type != Type.Normal);
