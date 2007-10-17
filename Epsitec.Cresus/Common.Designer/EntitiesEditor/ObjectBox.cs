@@ -815,10 +815,27 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					string encoded = dataField.GetValue(Support.Res.Fields.Field.Expression) as string;
 					Support.EntityEngine.EntityExpression expression = Support.EntityEngine.EntityExpression.FromEncodedExpression(encoded);
 					string source = TextLayout.ConvertToTaggedText(expression.SourceCode);
-					//?Support.EntityEngine.EntityExpressionEncoding encoding = expression.Encoding;
+
+					Dialogs.EntityExpression.Type type;
+					object isInterface = dataField.GetValue(Support.Res.Fields.Field.IsInterfaceDefinition);
+					if (UndefinedValue.IsUndefinedValue(IsInterface))
+					{
+						type = Dialogs.EntityExpression.Type.Normal;
+					}
+					else
+					{
+						if ((bool) IsInterface)
+						{
+							type = Dialogs.EntityExpression.Type.Interface;
+						}
+						else
+						{
+							type = Dialogs.EntityExpression.Type.InterfaceRedefine;
+						}
+					}
 
 					Module module = this.editor.Module;
-					if (module.DesignerApplication.DlgEntityExpression(ref source))
+					if (module.DesignerApplication.DlgEntityExpression(type, ref source))
 					{
 						if (source == null)
 						{

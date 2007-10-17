@@ -11,6 +11,13 @@ namespace Epsitec.Common.Designer.Dialogs
 	/// </summary>
 	public class EntityExpression : Abstract
 	{
+		public enum Type
+		{
+			Normal,
+			Interface,
+			InterfaceRedefine,
+		}
+
 		public EntityExpression(DesignerApplication designerApplication) : base(designerApplication)
 		{
 		}
@@ -42,9 +49,17 @@ namespace Epsitec.Common.Designer.Dialogs
 
 				this.buttonExpression = new CheckButton(this.header);
 				this.buttonExpression.Text = "Expression";
+				this.buttonExpression.PreferredWidth = 200;
 				this.buttonExpression.AutoToggle = false;
 				this.buttonExpression.Dock = DockStyle.Top;
 				this.buttonExpression.Clicked += new MessageEventHandler(this.HandleButtonClicked);
+
+				this.buttonLocal = new CheckButton(this.header);
+				this.buttonLocal.Text = "Redéfinition dans l'interface du patch";
+				this.buttonLocal.PreferredWidth = 200;
+				this.buttonLocal.AutoToggle = false;
+				this.buttonLocal.Dock = DockStyle.Top;
+				this.buttonLocal.Clicked += new MessageEventHandler(this.HandleButtonClicked);
 
 				//	Crée le grand pavé de texte éditable.
 				this.fieldExpression = new TextFieldMulti(this.window.Root);
@@ -82,10 +97,11 @@ namespace Epsitec.Common.Designer.Dialogs
 			this.window.ShowDialog();
 		}
 
-		public void Initialise(bool isEditLocked, string expression)
+		public void Initialise(bool isEditLocked, Type type, string expression)
 		{
 			this.isEditOk = false;
 			this.isEditLocked = isEditLocked;
+			this.type = type;
 			this.expression = expression;
 		}
 
@@ -130,6 +146,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 			this.fieldExpression.IsReadOnly = this.isEditLocked;
 			this.buttonExpression.Enable = !this.isEditLocked;
+			this.buttonLocal.Enable = !this.isEditLocked;
 
 			if (!this.isEditLocked)
 			{
@@ -181,14 +198,20 @@ namespace Epsitec.Common.Designer.Dialogs
 					this.fieldExpression.Enable = false;
 				}
 			}
+
+			if (button == this.buttonLocal)
+			{
+			}
 		}
 
 
-		protected string						expression;
 		protected bool							isEditLocked;
 		protected bool							isEditOk;
+		protected Type							type;
+		protected string						expression;
 		protected FrameBox						header;
 		protected CheckButton					buttonExpression;
+		protected CheckButton					buttonLocal;
 		protected TextFieldMulti				fieldExpression;
 		protected Button						buttonOk;
 		protected Button						buttonCancel;
