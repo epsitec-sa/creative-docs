@@ -1801,7 +1801,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 			string encoded = dataField.GetValue(Support.Res.Fields.Field.Expression) as string;
 			Support.EntityEngine.EntityExpression expression = Support.EntityEngine.EntityExpression.FromEncodedExpression(encoded);
-			string sourceCode = TextLayout.ConvertToTaggedText(expression.SourceCode);
+			string sourceCode = expression.SourceCode;
 			
 			Module dstModule = this.editor.Module.DesignerApplication.SearchModule(typeId);
 			CultureMap dstItem = (dstModule == null) ? null : dstModule.AccessEntities.Accessor.Collection[typeId];

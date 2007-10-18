@@ -221,11 +221,15 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			//	Eventuelle expression lambda calculant le champ.
 			get
 			{
-				return this.textLayoutExpression.Text;
+				return this.expression;
 			}
 			set
 			{
-				this.textLayoutExpression.Text = value;
+				if (this.expression != value)
+				{
+					this.expression = value;
+					this.UpdateExpression();
+				}
 			}
 		}
 
@@ -749,6 +753,14 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 		}
 
+		protected void UpdateExpression()
+		{
+			//	Met à jour l'expression.
+			string text = this.expression.Replace("\n", " ");
+			text = TextLayout.ConvertToTaggedText(text);
+			this.textLayoutExpression.Text = text;
+		}
+
 		
 		#region Serialization
 		public void WriteXml(XmlWriter writer)
@@ -943,6 +955,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		protected TextLayout textLayoutType;
 		protected TextLayout textLayoutExpression;
 		protected string typeName;
+		protected string expression;
 		protected FieldRelation relation;
 		protected FieldMembership membership;
 		protected Druid captionId;
