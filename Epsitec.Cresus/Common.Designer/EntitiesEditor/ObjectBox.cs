@@ -1661,32 +1661,37 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				}
 			}
 
-			Module module = this.editor.Module;
-			if (module.DesignerApplication.DlgEntityExpression(ref type, ref source, ref localSource))
+			if (!this.editor.Module.DesignerApplication.DlgEntityExpression(ref type, ref source, ref localSource))
 			{
-				if (source == null)
+				return;
+			}
+
+			if (source == null)
+			{
+				dataField.SetValue(Support.Res.Fields.Field.Expression, UndefinedValue.Instance);
+				dataField.SetValue (Support.Res.Fields.Field.Source, FieldSource.Value);
+			}
+			else
+			{
+				source = TextLayout.ConvertToSimpleText(source);
+				expression = Support.EntityEngine.EntityExpression.FromSourceCode(Support.EntityEngine.EntityExpressionEncoding.LambdaCSharpSourceCode, source);
+				encoded = expression.GetEncodedExpression();
+
+				if (encoded == "?")  // TODO: il devrait y avoir un autre moyen !
 				{
-					dataField.SetValue(Support.Res.Fields.Field.Expression, UndefinedValue.Instance);
+					dataField.SetValue (Support.Res.Fields.Field.Expression, UndefinedValue.Instance);
 					dataField.SetValue (Support.Res.Fields.Field.Source, FieldSource.Value);
 				}
 				else
 				{
-					source = TextLayout.ConvertToSimpleText(source);
-					expression = Support.EntityEngine.EntityExpression.FromSourceCode(Support.EntityEngine.EntityExpressionEncoding.LambdaCSharpSourceCode, source);
-					encoded = expression.GetEncodedExpression();
-
-					if (encoded == "?")  // TODO: il devrait y avoir un autre moyen !
-					{
-						dataField.SetValue (Support.Res.Fields.Field.Expression, UndefinedValue.Instance);
-						dataField.SetValue (Support.Res.Fields.Field.Source, FieldSource.Value);
-					}
-					else
-					{
-						dataField.SetValue (Support.Res.Fields.Field.Expression, encoded);
-						dataField.SetValue (Support.Res.Fields.Field.Source, FieldSource.Expression);
-					}
+					dataField.SetValue (Support.Res.Fields.Field.Expression, encoded);
+					dataField.SetValue (Support.Res.Fields.Field.Source, FieldSource.Expression);
 				}
 			}
+
+			this.UpdateField(dataField, this.fields[rank]);
+			this.editor.Module.AccessEntities.SetLocalDirty();
+			this.editor.Invalidate();
 		}
 
 		protected void ChangeFieldName(int rank)
