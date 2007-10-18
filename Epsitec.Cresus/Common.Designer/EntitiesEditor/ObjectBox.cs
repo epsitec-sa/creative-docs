@@ -1923,12 +1923,46 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			List<string> listInherited = new List<string>();
 			List<string> listInterface = new List<string>();
 
+			//	Cherche récursivement toutes les entités parentes, pour l'héritage.
+			CultureMap cultureMap = this.cultureMap;
+			while (cultureMap != null)
+			{
+				StructuredData data = cultureMap.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
+				cultureMap = null;
+				Druid druid = (Druid) data.GetValue(Support.Res.Fields.ResourceStructuredType.BaseType);
+				if (druid.IsValid)
+				{
+					Module module = this.editor.Module.DesignerApplication.SearchModule(druid);
+					cultureMap = module.AccessEntities.Accessor.Collection[druid];
+					if (cultureMap != null)
+					{
+						string name;
+
+						if (module == this.editor.Module)  // dans le même module ?
+						{
+							name = cultureMap.Name;
+						}
+						else  // dans un autre module ?
+						{
+							name = string.Concat(module.ModuleId.Name, ".", cultureMap.Name);
+						}
+
+						if (!listInherited.Contains(name))
+						{
+							listInherited.Add(name);
+						}
+					}
+				}
+			}
+
+			//	Cherche toutes les interfaces utilisées par les champs.
 			for (int i=0; i<this.fields.Count; i++)
 			{
 				StructuredTypeClass type;
 				string name;
 				this.GetGroupName(i, out type, out name);
 
+#if false
 				if (type == StructuredTypeClass.Entity)
 				{
 					if (!listInherited.Contains(name))
@@ -1936,6 +1970,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 						listInherited.Add(name);
 					}
 				}
+#endif
 
 				if (type == StructuredTypeClass.Interface)
 				{
