@@ -756,9 +756,16 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		protected void UpdateExpression()
 		{
 			//	Met à jour l'expression.
-			string text = this.expression.Replace("\n", " ");
-			text = TextLayout.ConvertToTaggedText(text);
-			this.textLayoutExpression.Text = text;
+			if (this.expression == null)
+			{
+				this.textLayoutExpression.Text = null;
+			}
+			else
+			{
+				string text = this.expression.Replace("\n", " ");
+				text = TextLayout.ConvertToTaggedText(text);
+				this.textLayoutExpression.Text = text;
+			}
 		}
 
 		

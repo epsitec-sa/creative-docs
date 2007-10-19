@@ -55,7 +55,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.buttonExpression.Clicked += new MessageEventHandler(this.HandleButtonClicked);
 
 				this.buttonLocal = new CheckButton(this.header);
-				this.buttonLocal.Text = "Redéfinition dans l'interface du patch";
+				this.buttonLocal.Text = "Redéfinition locale de l'interface";
 				this.buttonLocal.PreferredWidth = 200;
 				this.buttonLocal.AutoToggle = false;
 				this.buttonLocal.Dock = DockStyle.Top;

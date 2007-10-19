@@ -1661,6 +1661,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				}
 			}
 
+			//	Edition de l'expression.
 			if (!this.editor.Module.DesignerApplication.DlgEntityExpression(ref type, ref source, ref localSource))
 			{
 				return;
@@ -1668,25 +1669,34 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 			if (source == null)
 			{
-				dataField.SetValue(Support.Res.Fields.Field.Expression, UndefinedValue.Instance);
-				dataField.SetValue (Support.Res.Fields.Field.Source, FieldSource.Value);
+				encoded = null;
 			}
 			else
 			{
 				source = TextLayout.ConvertToSimpleText(source);
 				expression = Support.EntityEngine.EntityExpression.FromSourceCode(Support.EntityEngine.EntityExpressionEncoding.LambdaCSharpSourceCode, source);
 				encoded = expression.GetEncodedExpression();
+			}
 
-				if (encoded == "?")  // TODO: il devrait y avoir un autre moyen !
-				{
-					dataField.SetValue (Support.Res.Fields.Field.Expression, UndefinedValue.Instance);
-					dataField.SetValue (Support.Res.Fields.Field.Source, FieldSource.Value);
-				}
-				else
-				{
-					dataField.SetValue (Support.Res.Fields.Field.Expression, encoded);
-					dataField.SetValue (Support.Res.Fields.Field.Source, FieldSource.Expression);
-				}
+			if (type == Dialogs.EntityExpression.Type.Interface)
+			{
+				dataField.SetValue(Support.Res.Fields.Field.IsInterfaceDefinition, true);
+			}
+
+			if (type == Dialogs.EntityExpression.Type.InterfaceRedefine)
+			{
+				dataField.SetValue(Support.Res.Fields.Field.IsInterfaceDefinition, false);
+			}
+
+			if (encoded == null)
+			{
+				dataField.SetValue(Support.Res.Fields.Field.Expression, UndefinedValue.Instance);
+				dataField.SetValue(Support.Res.Fields.Field.Source, FieldSource.Value);
+			}
+			else
+			{
+				dataField.SetValue(Support.Res.Fields.Field.Expression, encoded);
+				dataField.SetValue(Support.Res.Fields.Field.Source, FieldSource.Value);
 			}
 
 			this.UpdateField(dataField, this.fields[rank]);
