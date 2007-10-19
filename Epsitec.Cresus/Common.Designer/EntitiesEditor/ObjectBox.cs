@@ -1123,7 +1123,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 						}
 
 						rect = this.GetFieldExpressionBounds(i);
-						if (rect.Contains(pos))
+						if (!this.fields[i].IsInherited && rect.Contains(pos))
 						{
 							element = ActiveElement.BoxFieldExpression;
 							fieldRank = i;
@@ -1642,7 +1642,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 			else
 			{
-				if ((bool) IsInterface)
+				if ((bool) isInterface)
 				{
 					type = Dialogs.EntityExpression.Type.Interface;
 				}
