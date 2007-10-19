@@ -1638,6 +1638,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			object isInterfaceDefinition = dataField.GetValue(Support.Res.Fields.Field.IsInterfaceDefinition);
 			if (UndefinedValue.IsUndefinedValue(isInterfaceDefinition))
 			{
+				//	Champ défini localement, ne provenant pas d'une interface.
 				isInterface = false;
 			}
 			else
@@ -1646,10 +1647,13 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 				if ((bool) isInterfaceDefinition)
 				{
+					//	Champ inclus dans une entité au moyen d'une interface locale.
 					source = null;  // expression locale non définie
 				}
 				else
 				{
+					//	Champ inclus dans une entité au moyen d'une interface locale, mais dont le calcul
+					//	(ou la source, à savoir si c'est une valeur ou une expression) est redéfini localement dans l'entité.
 				}
 
 				//	Cherche l'expression définie dans le champ de l'interface.
@@ -1659,6 +1663,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				StructuredData definingData = cultureMap.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
 
 				IList<StructuredData> definingDataFields = definingData.GetValue(Support.Res.Fields.ResourceStructuredType.Fields) as IList<StructuredData>;
+				//	TODO: est-ce normal de devoir rechercher d'après le Name ?
 				StructuredData definingDataField = this.SearchStructuredData(definingDataFields, this.fields[rank].FieldName);
 
 				string definingEncoded = definingDataField.GetValue(Support.Res.Fields.Field.Expression) as string;

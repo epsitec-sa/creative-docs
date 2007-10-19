@@ -94,6 +94,14 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		public void Initialise(bool isEditLocked, bool isInterface, string deepExpression, string expression)
 		{
+			//	Expression locale:   isInterface = false, deepExpression = null, expression = null (valeur) ou calcul
+			//	Selon interface:     isInterface = true, deepExpression = null/calcul, expression = null
+			//	Intertace redéfinie: isInterface = true, deepExpression = null/calcul, expression = "" (valeur) ou calcul
+			//
+			//	Donc, si isInterface = true, expression peut prendre trois valeurs:
+			//	expression = null:   pas de redéfinition locale, on utilise le calcul défini dans l'interface (deepExpression)
+			//	expression = "":     redéfinition d'une valeur, qui aura la priorité sur le calcul défini dans l'interface (deepExpression)
+			//	expression = calcul: redéfinition d'un calcul, qui aura la priorité sur le calcul défini dans l'interface (deepExpression)
 			this.isEditOk = false;
 			this.isEditLocked = isEditLocked;
 			this.isInterface = isInterface;
