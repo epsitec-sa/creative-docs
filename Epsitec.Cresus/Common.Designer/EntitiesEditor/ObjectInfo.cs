@@ -464,7 +464,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				other.Y = System.Math.Floor(other.Y)+0.5;
 			}
 
-			if (mode != AttachMode.None && !himself.IsZero && !other.IsZero)
+			if (mode != AttachMode.None && !himself.IsZero && !other.IsZero && d > 0)
 			{
 				path.MoveTo(himself);
 				path.LineTo(other);
