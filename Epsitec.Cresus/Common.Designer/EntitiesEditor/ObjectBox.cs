@@ -1654,7 +1654,11 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					Druid definingTypeId = this.fields[rank].DefiningTypeId;
 					Module definingModule = this.editor.Module.DesignerApplication.SearchModule(definingTypeId);
 					CultureMap cultureMap = definingModule.AccessEntities.Accessor.Collection[definingTypeId];
-					StructuredData definingDataField = cultureMap.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
+					StructuredData definingData = cultureMap.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
+
+					IList<StructuredData> definingDataFields = definingData.GetValue(Support.Res.Fields.ResourceStructuredType.Fields) as IList<StructuredData>;
+					StructuredData definingDataField = this.SearchStructuredData(definingDataFields, this.fields[rank].FieldName);
+
 					string definingEncoded = definingDataField.GetValue(Support.Res.Fields.Field.Expression) as string;
 					Support.EntityEngine.EntityExpression definingExpression = Support.EntityEngine.EntityExpression.FromEncodedExpression(definingEncoded);
 					source = TextLayout.ConvertToTaggedText(definingExpression.SourceCode);
@@ -3221,6 +3225,23 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				this.Subtitle = module.ModuleId.Name;
 				this.isDimmed = true;
 			}
+		}
+
+
+		protected StructuredData SearchStructuredData(IList<StructuredData> dataFields, string fieldName)
+		{
+			foreach (StructuredData data in dataFields)
+			{
+				Druid fieldDruid = (Druid) data.GetValue(Support.Res.Fields.Field.CaptionId);
+				Module fieldModule = this.editor.Module.DesignerApplication.SearchModule(fieldDruid);
+				CultureMap fieldCultureMap = fieldModule.AccessFields.Accessor.Collection[fieldDruid];
+				if (fieldCultureMap.Name == fieldName)
+				{
+					return data;
+				}
+			}
+
+			return null;
 		}
 
 
