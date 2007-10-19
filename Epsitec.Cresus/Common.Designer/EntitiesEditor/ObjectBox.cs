@@ -1632,41 +1632,42 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			string encoded = dataField.GetValue(Support.Res.Fields.Field.Expression) as string;
 			Support.EntityEngine.EntityExpression expression = Support.EntityEngine.EntityExpression.FromEncodedExpression(encoded);
 			string source = TextLayout.ConvertToTaggedText(expression.SourceCode);
-			string localSource = null;
+			string deepSource = null;
 
-			Dialogs.EntityExpression.Type type;
-			object isInterface = dataField.GetValue(Support.Res.Fields.Field.IsInterfaceDefinition);
-			if (UndefinedValue.IsUndefinedValue(isInterface))
+			bool isInterface;
+			object isInterfaceDefinition = dataField.GetValue(Support.Res.Fields.Field.IsInterfaceDefinition);
+			if (UndefinedValue.IsUndefinedValue(isInterfaceDefinition))
 			{
-				type = Dialogs.EntityExpression.Type.Normal;
+				isInterface = false;
 			}
 			else
 			{
-				if ((bool) isInterface)
+				isInterface = true;
+
+				if ((bool) isInterfaceDefinition)
 				{
-					type = Dialogs.EntityExpression.Type.Interface;
+					source = null;  // expression locale non définie
 				}
 				else
 				{
-					type = Dialogs.EntityExpression.Type.InterfaceRedefine;
-					localSource = source;
-
-					Druid definingTypeId = this.fields[rank].DefiningTypeId;
-					Module definingModule = this.editor.Module.DesignerApplication.SearchModule(definingTypeId);
-					CultureMap cultureMap = definingModule.AccessEntities.Accessor.Collection[definingTypeId];
-					StructuredData definingData = cultureMap.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
-
-					IList<StructuredData> definingDataFields = definingData.GetValue(Support.Res.Fields.ResourceStructuredType.Fields) as IList<StructuredData>;
-					StructuredData definingDataField = this.SearchStructuredData(definingDataFields, this.fields[rank].FieldName);
-
-					string definingEncoded = definingDataField.GetValue(Support.Res.Fields.Field.Expression) as string;
-					Support.EntityEngine.EntityExpression definingExpression = Support.EntityEngine.EntityExpression.FromEncodedExpression(definingEncoded);
-					source = TextLayout.ConvertToTaggedText(definingExpression.SourceCode);
 				}
+
+				//	Cherche l'expression définie dans le champ de l'interface.
+				Druid definingTypeId = this.fields[rank].DefiningTypeId;
+				Module definingModule = this.editor.Module.DesignerApplication.SearchModule(definingTypeId);
+				CultureMap cultureMap = definingModule.AccessEntities.Accessor.Collection[definingTypeId];
+				StructuredData definingData = cultureMap.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
+
+				IList<StructuredData> definingDataFields = definingData.GetValue(Support.Res.Fields.ResourceStructuredType.Fields) as IList<StructuredData>;
+				StructuredData definingDataField = this.SearchStructuredData(definingDataFields, this.fields[rank].FieldName);
+
+				string definingEncoded = definingDataField.GetValue(Support.Res.Fields.Field.Expression) as string;
+				Support.EntityEngine.EntityExpression definingExpression = Support.EntityEngine.EntityExpression.FromEncodedExpression(definingEncoded);
+				deepSource = TextLayout.ConvertToTaggedText(definingExpression.SourceCode);
 			}
 
 			//	Edition de l'expression.
-			if (!this.editor.Module.DesignerApplication.DlgEntityExpression(ref type, ref source, ref localSource))
+			if (!this.editor.Module.DesignerApplication.DlgEntityExpression(isInterface, deepSource, ref source))
 			{
 				return;
 			}
@@ -1682,25 +1683,40 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				encoded = expression.GetEncodedExpression();
 			}
 
-			if (type == Dialogs.EntityExpression.Type.Interface)
+			if (isInterface)
 			{
-				dataField.SetValue(Support.Res.Fields.Field.IsInterfaceDefinition, true);
-			}
+				if (encoded == null)
+				{
+					dataField.SetValue(Support.Res.Fields.Field.IsInterfaceDefinition, true);
+				}
+				else
+				{
+					dataField.SetValue(Support.Res.Fields.Field.IsInterfaceDefinition, false);
 
-			if (type == Dialogs.EntityExpression.Type.InterfaceRedefine)
-			{
-				dataField.SetValue(Support.Res.Fields.Field.IsInterfaceDefinition, false);
-			}
-
-			if (encoded == null)
-			{
-				dataField.SetValue(Support.Res.Fields.Field.Expression, UndefinedValue.Instance);
-				dataField.SetValue(Support.Res.Fields.Field.Source, FieldSource.Value);
+					if (string.IsNullOrEmpty(encoded))
+					{
+						dataField.SetValue(Support.Res.Fields.Field.Expression, UndefinedValue.Instance);
+						dataField.SetValue(Support.Res.Fields.Field.Source, FieldSource.Value);
+					}
+					else
+					{
+						dataField.SetValue(Support.Res.Fields.Field.Expression, encoded);
+						dataField.SetValue(Support.Res.Fields.Field.Source, FieldSource.Value);
+					}
+				}
 			}
 			else
 			{
-				dataField.SetValue(Support.Res.Fields.Field.Expression, encoded);
-				dataField.SetValue(Support.Res.Fields.Field.Source, FieldSource.Value);
+				if (string.IsNullOrEmpty(encoded))
+				{
+					dataField.SetValue(Support.Res.Fields.Field.Expression, UndefinedValue.Instance);
+					dataField.SetValue(Support.Res.Fields.Field.Source, FieldSource.Value);
+				}
+				else
+				{
+					dataField.SetValue(Support.Res.Fields.Field.Expression, encoded);
+					dataField.SetValue(Support.Res.Fields.Field.Source, FieldSource.Value);
+				}
 			}
 
 			this.UpdateField(dataField, this.fields[rank]);

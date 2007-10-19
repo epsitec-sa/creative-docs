@@ -11,13 +11,6 @@ namespace Epsitec.Common.Designer.Dialogs
 	/// </summary>
 	public class EntityExpression : Abstract
 	{
-		public enum Type
-		{
-			Normal,
-			Interface,
-			InterfaceRedefine,
-		}
-
 		public EntityExpression(DesignerApplication designerApplication) : base(designerApplication)
 		{
 		}
@@ -30,11 +23,11 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.window = new Window();
 				this.window.MakeSecondaryWindow();
 				this.window.PreventAutoClose = true;
-				this.WindowInit("EntityExpression", 350, 250, true);
+				this.WindowInit("EntityExpression", 400, 250, true);
 				this.window.Text = "Expression";  // Res.Strings.Dialog.EntityExpression.Title;
 				this.window.Owner = this.parentWindow;
 				this.window.WindowCloseClicked += new EventHandler(this.HandleWindowCloseClicked);
-				this.window.Root.MinSize = new Size(200, 150);
+				this.window.Root.MinSize = new Size(400, 150);
 				this.window.Root.Padding = new Margins(8, 8, 8, 8);
 
 				ResizeKnob resize = new ResizeKnob(this.window.Root);
@@ -44,22 +37,17 @@ namespace Epsitec.Common.Designer.Dialogs
 
 				//	Crée l'en-tête et son contenu.
 				this.header = new FrameBox(this.window.Root);
+				this.header.PreferredHeight = 0;
+				this.header.MinHeight = 0;
 				this.header.Margins = new Margins(0, 0, 0, 3);
 				this.header.Dock = DockStyle.Top;
 
-				this.buttonExpression = new CheckButton(this.header);
-				this.buttonExpression.Text = "Expression";
-				this.buttonExpression.PreferredWidth = 200;
-				this.buttonExpression.AutoToggle = false;
-				this.buttonExpression.Dock = DockStyle.Top;
-				this.buttonExpression.Clicked += new MessageEventHandler(this.HandleButtonClicked);
-
-				this.buttonLocal = new CheckButton(this.header);
-				this.buttonLocal.Text = "Redéfinition locale de l'interface";
-				this.buttonLocal.PreferredWidth = 200;
-				this.buttonLocal.AutoToggle = false;
-				this.buttonLocal.Dock = DockStyle.Top;
-				this.buttonLocal.Clicked += new MessageEventHandler(this.HandleButtonClicked);
+				this.buttonRedefine = new CheckButton(this.header);
+				this.buttonRedefine.Text = "Redéfinir localement";
+				this.buttonRedefine.PreferredWidth = 200;
+				this.buttonRedefine.AutoToggle = false;
+				this.buttonRedefine.Dock = DockStyle.Top;
+				this.buttonRedefine.Clicked += new MessageEventHandler(this.HandleButtonClicked);
 
 				//	Crée le grand pavé de texte éditable.
 				this.fieldExpression = new TextFieldMulti(this.window.Root);
@@ -71,6 +59,13 @@ namespace Epsitec.Common.Designer.Dialogs
 				footer.PreferredHeight = 22;
 				footer.Margins = new Margins(0, 0, 8, 0);
 				footer.Dock = DockStyle.Bottom;
+
+				this.buttonDeep = new CheckButton(footer);
+				this.buttonDeep.Text = "Voir l'expression dans l'interface";
+				this.buttonDeep.PreferredWidth = 200;
+				this.buttonDeep.AutoToggle = false;
+				this.buttonDeep.Dock = DockStyle.Left;
+				this.buttonDeep.Clicked += new MessageEventHandler(this.HandleButtonClicked);
 
 				this.buttonCancel = new Button(footer);
 				this.buttonCancel.PreferredWidth = 75;
@@ -97,13 +92,13 @@ namespace Epsitec.Common.Designer.Dialogs
 			this.window.ShowDialog();
 		}
 
-		public void Initialise(bool isEditLocked, Type type, string expression, string localExpression)
+		public void Initialise(bool isEditLocked, bool isInterface, string deepExpression, string expression)
 		{
 			this.isEditOk = false;
 			this.isEditLocked = isEditLocked;
-			this.type = type;
+			this.isInterface = isInterface;
+			this.deepExpression = deepExpression;
 			this.expression = expression;
-			this.localExpression = localExpression;
 		}
 
 		public bool IsEditOk
@@ -114,54 +109,17 @@ namespace Epsitec.Common.Designer.Dialogs
 			}
 		}
 
-		public Type InternalType
-		{
-			get
-			{
-				return this.type;
-			}
-		}
-
 		public string Expression
 		{
 			get
 			{
-				if (this.buttonExpression.ActiveState == ActiveState.No)
+				if (this.isInterface && this.buttonRedefine.ActiveState == ActiveState.No)
 				{
 					return null;
 				}
 				else
 				{
-					if (this.type == Type.InterfaceRedefine)
-					{
-						return this.expression;
-					}
-					else
-					{
-						return this.fieldExpression.Text;
-					}
-				}
-			}
-		}
-
-		public string LocalExpression
-		{
-			get
-			{
-				if (this.buttonExpression.ActiveState == ActiveState.No)
-				{
-					return null;
-				}
-				else
-				{
-					if (this.type == Type.InterfaceRedefine)
-					{
-						return this.fieldExpression.Text;
-					}
-					else
-					{
-						return this.localExpression;
-					}
+					return this.fieldExpression.Text;
 				}
 			}
 		}
@@ -169,41 +127,18 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		protected void UpdateExpression()
 		{
-			string expression = (this.type == Type.InterfaceRedefine) ? this.localExpression : this.expression;
+			this.buttonDeep.Visibility = this.isInterface;
+			this.buttonDeep.ActiveState = ActiveState.No;
 
-			if (string.IsNullOrEmpty(expression))
-			{
-				this.fieldExpression.Text = "";
-				this.fieldExpression.Enable = false;
-				this.buttonExpression.ActiveState = ActiveState.No;
-			}
-			else
-			{
-				this.fieldExpression.Text = expression;
-				this.fieldExpression.Enable = true;
-				this.buttonExpression.ActiveState = ActiveState.Yes;
-			}
+			this.buttonRedefine.Visibility = this.isInterface;
+			this.buttonRedefine.ActiveState = (this.expression == null) ? ActiveState.No : ActiveState.Yes;
+			this.header.Visibility = this.buttonRedefine.Visibility;
 
-			if (this.type == Type.InterfaceRedefine)
-			{
-				this.buttonLocal.ActiveState = ActiveState.Yes;
-			}
-			else
-			{
-				this.buttonLocal.ActiveState = ActiveState.No;
-			}
-
-			this.buttonLocal.Visibility = (this.type != Type.Normal);
-
+			this.fieldExpression.Text = this.expression;
+			this.fieldExpression.Enable = (!this.isInterface || this.expression != null);
 			this.fieldExpression.IsReadOnly = this.isEditLocked;
-			this.buttonExpression.Enable = !this.isEditLocked;
-			this.buttonLocal.Enable = !this.isEditLocked;
 
-			if (!this.isEditLocked)
-			{
-				this.fieldExpression.SelectAll();
-				this.fieldExpression.Focus();
-			}
+			this.buttonOk.Enable = true;
 		}
 
 
@@ -234,39 +169,52 @@ namespace Epsitec.Common.Designer.Dialogs
 		{
 			AbstractButton button = sender as AbstractButton;
 
-			if (button == this.buttonExpression)
+			if (button == this.buttonDeep)
 			{
-				if (this.buttonExpression.ActiveState == ActiveState.No)
+				if (this.buttonDeep.ActiveState == ActiveState.No)
 				{
-					this.buttonExpression.ActiveState = ActiveState.Yes;
+					this.buttonDeep.ActiveState = ActiveState.Yes;
+					this.buttonRedefine.Visibility = false;
+					this.header.Visibility = this.buttonRedefine.Visibility;
+
+					this.expression = this.fieldExpression.Text;
+					this.fieldExpression.Text = this.deepExpression;
+					this.fieldExpression.Enable = true;
+					this.fieldExpression.IsReadOnly = true;
+
+					this.buttonOk.Enable = false;
+				}
+				else
+				{
+					this.buttonDeep.ActiveState = ActiveState.No;
+					this.buttonRedefine.Visibility = true;
+					this.header.Visibility = this.buttonRedefine.Visibility;
+
+					this.fieldExpression.Text = this.expression;
+					this.fieldExpression.Enable = (this.buttonRedefine.ActiveState == ActiveState.Yes);
+					this.fieldExpression.IsReadOnly = this.isEditLocked;
+
+					this.buttonOk.Enable = true;
+				}
+			}
+
+			if (button == this.buttonRedefine)
+			{
+				if (this.buttonRedefine.ActiveState == ActiveState.No)
+				{
+					this.buttonRedefine.ActiveState = ActiveState.Yes;
+
+					this.fieldExpression.Text = this.deepExpression;
 					this.fieldExpression.Enable = true;
 					this.fieldExpression.SelectAll();
 					this.fieldExpression.Focus();
 				}
 				else
 				{
-					this.buttonExpression.ActiveState = ActiveState.No;
+					this.buttonRedefine.ActiveState = ActiveState.No;
+
+					this.fieldExpression.Text = "";
 					this.fieldExpression.Enable = false;
-				}
-			}
-
-			if (button == this.buttonLocal)
-			{
-				if (this.buttonLocal.ActiveState == ActiveState.No)
-				{
-					this.buttonLocal.ActiveState = ActiveState.Yes;
-					this.type = Type.InterfaceRedefine;
-
-					this.expression = this.fieldExpression.Text;
-					this.fieldExpression.Text = this.localExpression;
-				}
-				else
-				{
-					this.buttonLocal.ActiveState = ActiveState.No;
-					this.type = Type.Interface;
-
-					this.localExpression = this.fieldExpression.Text;
-					this.fieldExpression.Text = this.expression;
 				}
 			}
 		}
@@ -274,12 +222,12 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		protected bool							isEditLocked;
 		protected bool							isEditOk;
-		protected Type							type;
+		protected bool							isInterface;
+		protected string						deepExpression;
 		protected string						expression;
-		protected string						localExpression;
 		protected FrameBox						header;
-		protected CheckButton					buttonExpression;
-		protected CheckButton					buttonLocal;
+		protected CheckButton					buttonDeep;
+		protected CheckButton					buttonRedefine;
 		protected TextFieldMulti				fieldExpression;
 		protected Button						buttonOk;
 		protected Button						buttonCancel;
