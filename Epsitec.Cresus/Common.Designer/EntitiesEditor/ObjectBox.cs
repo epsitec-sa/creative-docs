@@ -1589,31 +1589,18 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			string question = string.Format("Voulez-vous supprimer l'interface <b>{0}</b> ?", this.fields[rank].FieldName);
 			if (this.editor.Module.DesignerApplication.DialogQuestion(question) == Epsitec.Common.Dialogs.DialogResult.Yes)
 			{
-				StructuredData data = this.cultureMap.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
-				IList<StructuredData> dataInterfaces = data.GetValue(Support.Res.Fields.ResourceStructuredType.InterfaceIds) as IList<StructuredData>;
-#if true
-				Support.ResourceAccessors.StructuredTypeResourceAccessor accessor = this.editor.Module.AccessEntities.Accessor as Support.ResourceAccessors.StructuredTypeResourceAccessor;
-#else
-				IList<StructuredData> dataFields = data.GetValue(Support.Res.Fields.ResourceStructuredType.Fields) as IList<StructuredData>;
-
 				int count = this.GroupLineCount(rank);
 				for (int i=rank+1; i<rank+1+count; i++)
 				{
 					this.fields[i].IsExplored = false;
 					this.fields[i].DstBox = null;
-
-					if (this.fields[i].Expression != null)
-					{
-						//	TODO: ne fonctionne pas, ou n'est pas correct ?!
-						StructuredData dataField = dataFields[i-(rank+1)];
-						dataField.SetValue(Support.Res.Fields.Field.Expression, UndefinedValue.Instance);
-						dataField.SetValue(Support.Res.Fields.Field.Source, FieldSource.Value);
-					}
 				}
-#endif
 				this.editor.CloseBox(null);
 
 				Druid druid = this.fields[rank].CaptionId;
+
+				StructuredData data = this.cultureMap.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
+				IList<StructuredData> dataInterfaces = data.GetValue(Support.Res.Fields.ResourceStructuredType.InterfaceIds) as IList<StructuredData>;
 
 				for (int i=0; i<dataInterfaces.Count; i++)
 				{
@@ -1625,7 +1612,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					}
 				}
 				
-				accessor.RefreshFields (this.cultureMap);
+				Support.ResourceAccessors.StructuredTypeResourceAccessor accessor = this.editor.Module.AccessEntities.Accessor as Support.ResourceAccessors.StructuredTypeResourceAccessor;
+				accessor.RefreshFields(this.cultureMap);
 
 				this.SetContent(this.cultureMap);
 				this.editor.UpdateAfterAddOrRemoveConnection(this);
@@ -1672,6 +1660,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				}
 
 				//	Cherche l'expression définie dans le champ de l'interface.
+#if true
 				Druid definingTypeId = this.fields[rank].DefiningTypeId;
 				Module definingModule = this.editor.Module.DesignerApplication.SearchModule(definingTypeId);
 				CultureMap cultureMap = definingModule.AccessEntities.Accessor.Collection[definingTypeId];
@@ -1684,6 +1673,16 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				string definingEncoded = definingDataField.GetValue(Support.Res.Fields.Field.Expression) as string;
 				Support.EntityEngine.EntityExpression definingExpression = Support.EntityEngine.EntityExpression.FromEncodedExpression(definingEncoded);
 				deepSource = TextLayout.ConvertToTaggedText(definingExpression.SourceCode);
+#else
+				Druid interfaceId = this.fields[rank].CaptionId;
+				Module interfaceModule = this.editor.Module.DesignerApplication.SearchModule(interfaceId);
+				CultureMap interfaceCultureMap = interfaceModule.AccessEntities.Accessor.Collection[interfaceId];
+				StructuredData interfaceData = interfaceCultureMap.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
+
+				string definingEncoded = interfaceData.GetValue(Support.Res.Fields.Field.Expression) as string;
+				Support.EntityEngine.EntityExpression definingExpression = Support.EntityEngine.EntityExpression.FromEncodedExpression(definingEncoded);
+				deepSource = TextLayout.ConvertToTaggedText(definingExpression.SourceCode);
+#endif
 			}
 
 			//	Edition de l'expression.
