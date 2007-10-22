@@ -66,6 +66,62 @@
       <Name>Common.Widgets</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="Executable\1.0.0\App.Dolphin.Core.dll" />
+    <Content Include="Executable\1.0.0\App.Dolphin.SplashScreen.dll" />
+    <Content Include="Executable\1.0.0\Dolphin.exe" />
+    <Content Include="Executable\1.0.0\Resources\Common.Document\module.info" />
+    <Content Include="Executable\1.0.0\Resources\Common.Document\Strings.00.resource" />
+    <Content Include="Executable\1.0.0\Resources\Common.Document\Strings.en.resource" />
+    <Content Include="Executable\1.0.0\Resources\Common.Types\Captions.00.resource" />
+    <Content Include="Executable\1.0.0\Resources\Common.Types\Captions.en.resource" />
+    <Content Include="Executable\1.0.0\Resources\Common.Types\module.info" />
+    <Content Include="Executable\1.0.0\Resources\Common.Types\Strings.00.resource" />
+    <Content Include="Executable\1.0.0\Resources\Common.Types\Strings.en.resource" />
+    <Content Include="Executable\1.0.0\Resources\Common.Widgets\Captions.00.resource" />
+    <Content Include="Executable\1.0.0\Resources\Common.Widgets\Captions.en.resource" />
+    <Content Include="Executable\1.0.0\Resources\Common.Widgets\module.info" />
+    <Content Include="Executable\1.0.0\Resources\Common.Widgets\Strings.00.resource" />
+    <Content Include="Executable\1.0.0\Resources\Common.Widgets\Strings.en.resource" />
+    <Content Include="Executable\1.0.0\Resources\Common.Dialogs\Captions.00.resource" />
+    <Content Include="Executable\1.0.0\Resources\Common.Dialogs\Captions.en.resource" />
+    <Content Include="Executable\1.0.0\Resources\Common.Dialogs\module.info" />
+    <Content Include="Executable\1.0.0\Resources\Common.Dialogs\Strings.00.resource" />
+    <Content Include="Executable\1.0.0\Resources\Common.Dialogs\Strings.de.resource" />
+    <Content Include="Executable\1.0.0\Resources\Common.Dialogs\Strings.en.resource" />
+    <Content Include="Executable\1.0.0\Resources\Common.Document\Captions.00.resource" />
+    <Content Include="Executable\1.0.0\Resources\Common.Support\Captions.00.resource" />
+    <Content Include="Executable\1.0.0\Resources\Common.Support\Captions.de.resource" />
+    <Content Include="Executable\1.0.0\Resources\Common.Support\Captions.en.resource" />
+    <Content Include="Executable\1.0.0\Resources\Common.Support\module.info" />
+    <Content Include="Executable\1.0.0\Resources\Common.Support\Strings.00.resource" />
+    <Content Include="Executable\1.0.0\Resources\Common.Support\Strings.de.resource" />
+    <Content Include="Executable\1.0.0\Resources\Common.Support\Strings.en.resource" />
+    <Content Include="Executable\1.0.0\AntiGrain.NET.dll" />
+    <Content Include="Executable\1.0.0\AntiGrain.Win32.dll" />
+    <Content Include="Executable\1.0.0\Common.Debug.dll" />
+    <Content Include="Executable\1.0.0\Common.Dialogs.dll" />
+    <Content Include="Executable\1.0.0\Common.Document.dll" />
+    <Content Include="Executable\1.0.0\Common.Drawing.Agg.dll" />
+    <Content Include="Executable\1.0.0\Common.Drawing.dll" />
+    <Content Include="Executable\1.0.0\Common.Drawing.Images.dll" />
+    <Content Include="Executable\1.0.0\Common.Drawing.Platform.dll" />
+    <Content Include="Executable\1.0.0\Common.IO.dll" />
+    <Content Include="Executable\1.0.0\Common.OpenType.dll" />
+    <Content Include="Executable\1.0.0\Common.Printing.dll" />
+    <Content Include="Executable\1.0.0\Common.Support.dll" />
+    <Content Include="Executable\1.0.0\Common.Support.Events.dll" />
+    <Content Include="Executable\1.0.0\Common.Support.Implementation.dll" />
+    <Content Include="Executable\1.0.0\Common.Text.dll" />
+    <Content Include="Executable\1.0.0\Common.Text.Exchange.dll" />
+    <Content Include="Executable\1.0.0\Common.Types.dll" />
+    <Content Include="Executable\1.0.0\Common.UI.dll" />
+    <Content Include="Executable\1.0.0\Common.Widgets.dll" />
+    <Content Include="Executable\1.0.0\ICSharpCode.SharpZipLib.dll" />
+    <Content Include="Executable\1.0.0\SoftwareInfo.xml" />
+    <Content Include="Executable\Shell.exe" />
+    <Content Include="Executable\ShellUpdateService.exe" />
+  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
@@ -86,6 +142,8 @@ xcopy "$(SolutionDir)App.Dolphin\$(OutDir)*.dll" "$(SolutionDir)App.Dolphin.Core
 xcopy "$(SolutionDir)App.Dolphin\$(OutDir)Dolphin.exe" "$(SolutionDir)App.Dolphin.Core\Executable\1.0.0\" /Y
 xcopy "$(SolutionDir)App.Dolphin.Core\$(OutDir)*.dll" "$(SolutionDir)App.Dolphin.Core\Executable\1.0.0\" /Y
 xcopy "$(SolutionDir)Export\*Win32*.dll" "$(SolutionDir)App.Dolphin.Core\Executable\1.0.0\" /Y
+
+del "$(SolutionDir)App.Dolphin.Core\Executable\1.0.0\Resources\*.xml"
 </PostBuildEvent>
   </PropertyGroup>
 </Project>
