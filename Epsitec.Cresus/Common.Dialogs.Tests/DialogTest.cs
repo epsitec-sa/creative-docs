@@ -1,7 +1,10 @@
 using NUnit.Framework;
 using Epsitec.Common.UI;
 using Epsitec.Common.UI.Data;
+
+#if false
 using Epsitec.Common.Script;
+#endif
 
 namespace Epsitec.Common.Dialogs
 {
@@ -150,6 +153,7 @@ namespace Epsitec.Common.Dialogs
 		}
 		
 		
+#if false
 		public static Source CreateSource(Types.IDataValue[] values)
 		{
 			Source.Method[]      methods = new Source.Method[2];
@@ -172,6 +176,7 @@ namespace Epsitec.Common.Dialogs
 			
 			return new Source ("Hello", methods, values, "");
 		}
+#endif
 		
 		public static Types.IDataValue[] CreateValues(out Common.UI.Data.ObsoleteRecord record)
 		{

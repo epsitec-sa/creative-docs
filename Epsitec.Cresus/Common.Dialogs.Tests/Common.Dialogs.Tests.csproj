@@ -125,21 +125,6 @@
       <Project>{21655556-2BC3-46A4-931A-1295AD971737}</Project>
       <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
     </ProjectReference>
-    <ProjectReference Include="..\Common.Script.Developer\Common.Script.Developer.csproj">
-      <Name>Common.Script.Developer</Name>
-      <Project>{D6D65D1A-47C1-44F8-992F-F55816D95F05}</Project>
-      <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
-    </ProjectReference>
-    <ProjectReference Include="..\Common.Script.Glue\Common.Script.Glue.csproj">
-      <Name>Common.Script.Glue</Name>
-      <Project>{B2266071-EA0F-40E5-844F-98EE68A5A39C}</Project>
-      <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
-    </ProjectReference>
-    <ProjectReference Include="..\Common.Script\Common.Script.csproj">
-      <Name>Common.Script</Name>
-      <Project>{6CFA7609-E5A8-4B9D-B174-BE1CC57A6954}</Project>
-      <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
-    </ProjectReference>
     <ProjectReference Include="..\Common.Support.Events\Common.Support.Events.csproj">
       <Name>Common.Support.Events</Name>
       <Project>{EAF258A4-E107-4466-A3E1-9FC072557940}</Project>
