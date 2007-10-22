@@ -65,8 +65,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "App.Dolphin.SplashScreen", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "App.Dolphin.Core", "App.Dolphin.Core\App.Dolphin.Core.csproj", "{57C124C2-BE7E-42C0-AD03-0455373C48E6}"
 	ProjectSection(ProjectDependencies) = postProject
-		{EF853C31-7276-40E4-8B01-9939C4934BD0} = {EF853C31-7276-40E4-8B01-9939C4934BD0}
 		{F3A53056-6C28-470B-A79F-9AA9C2235BBF} = {F3A53056-6C28-470B-A79F-9AA9C2235BBF}
+		{EF853C31-7276-40E4-8B01-9939C4934BD0} = {EF853C31-7276-40E4-8B01-9939C4934BD0}
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "App.Dolphin.Executable", "App.Dolphin.Executable\App.Dolphin.Executable.csproj", "{B6FF1855-D7B4-45AB-A121-897B37DD00E2}"
+	ProjectSection(ProjectDependencies) = postProject
+		{57C124C2-BE7E-42C0-AD03-0455373C48E6} = {57C124C2-BE7E-42C0-AD03-0455373C48E6}
 	EndProjectSection
 EndProject
 Global
@@ -345,6 +350,16 @@ Global
 		{57C124C2-BE7E-42C0-AD03-0455373C48E6}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{57C124C2-BE7E-42C0-AD03-0455373C48E6}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{57C124C2-BE7E-42C0-AD03-0455373C48E6}.Release|Win32.ActiveCfg = Release|Any CPU
+		{B6FF1855-D7B4-45AB-A121-897B37DD00E2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B6FF1855-D7B4-45AB-A121-897B37DD00E2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B6FF1855-D7B4-45AB-A121-897B37DD00E2}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{B6FF1855-D7B4-45AB-A121-897B37DD00E2}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{B6FF1855-D7B4-45AB-A121-897B37DD00E2}.Debug|Win32.ActiveCfg = Debug|Any CPU
+		{B6FF1855-D7B4-45AB-A121-897B37DD00E2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B6FF1855-D7B4-45AB-A121-897B37DD00E2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B6FF1855-D7B4-45AB-A121-897B37DD00E2}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{B6FF1855-D7B4-45AB-A121-897B37DD00E2}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{B6FF1855-D7B4-45AB-A121-897B37DD00E2}.Release|Win32.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
