@@ -3447,6 +3447,7 @@ namespace Epsitec.Common.DocumentEditor
 		}
 
 
+#if false
 		[Command ("ResDesignerBuild")]
 		void CommandResDesignerBuild(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
@@ -3464,6 +3465,7 @@ namespace Epsitec.Common.DocumentEditor
 			this.resDesignerMainWindow.Mode = Epsitec.Common.Designer.DesignerMode.Translate;
 			this.resDesignerMainWindow.Show(this.Window);
 		}
+#endif
 
 		[Command ("DebugBboxThin")]
 		void CommandDebugBboxThin(CommandDispatcher dispatcher, CommandEventArgs e)
@@ -3765,8 +3767,10 @@ namespace Epsitec.Common.DocumentEditor
 			this.arraySwapRowState = this.CreateCommandState("ArraySwapRow");
 			this.arrayLookState = this.CreateCommandState("ArrayLook");
 
+#if false
 			this.resDesignerBuildState = this.CreateCommandState("ResDesignerBuild");
 			this.resDesignerTranslateState = this.CreateCommandState("ResDesignerTranslate");
+#endif
 			this.debugBboxThinState = this.CreateCommandState("DebugBboxThin");
 			this.debugBboxGeomState = this.CreateCommandState("DebugBboxGeom");
 			this.debugBboxFullState = this.CreateCommandState("DebugBboxFull");
@@ -5616,7 +5620,9 @@ namespace Epsitec.Common.DocumentEditor
 		protected bool							askKey = false;
 		protected MouseCursor					lastMouseCursor = MouseCursor.AsArrow;
 		protected VersionChecker				checker;
-		protected Common.Designer.DesignerApplication	resDesignerMainWindow;
+#if false
+		Common.Designer.DesignerApplication		resDesignerMainWindow;
+#endif
 
 		protected CommandDispatcher				commandDispatcher;
 		protected CommandContext				commandContext;
@@ -5861,8 +5867,10 @@ namespace Epsitec.Common.DocumentEditor
 		protected CommandState					arraySwapColumnState;
 		protected CommandState					arraySwapRowState;
 		protected CommandState					arrayLookState;
+#if false
 		protected CommandState					resDesignerBuildState;
 		protected CommandState					resDesignerTranslateState;
+#endif
 		protected CommandState					debugBboxThinState;
 		protected CommandState					debugBboxGeomState;
 		protected CommandState					debugBboxFullState;

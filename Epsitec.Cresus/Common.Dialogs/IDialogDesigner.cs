@@ -17,7 +17,9 @@ namespace Epsitec.Common.Dialogs
 		CommandDispatcher			DialogCommands		{ get; set; }
 		string						ResourceName		{ get; set; }
 		Support.ResourceManager		ResourceManager		{ get; set; }
+#if false
 		Script.ScriptWrapper		DialogScript		{ get; set; }
+#endif
 		bool						IsEditOnlyInterface	{ get; set; }
 		
 		void StartDesign();
