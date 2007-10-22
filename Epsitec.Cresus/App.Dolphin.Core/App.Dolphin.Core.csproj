@@ -74,4 +74,18 @@
   <Target Name="AfterBuild">
   </Target>
   -->
+  <PropertyGroup>
+    <PostBuildEvent>
+del "$(SolutionDir)App.Dolphin.Core\Executable\1.0.0\*.exe"
+del "$(SolutionDir)App.Dolphin.Core\Executable\1.0.0\*.dll"
+
+xcopy "$(SolutionDir)App.Dolphin.SplashScreen\$(OutDir)*.dll" "$(SolutionDir)App.Dolphin.Core\Executable\1.0.0\" /Y
+xcopy "$(SolutionDir)App.Dolphin.SplashScreen\$(OutDir)*.exe" "$(SolutionDir)App.Dolphin.Core\Executable\" /Y
+xcopy "$(SolutionDir)Export\Resources\*" "$(SolutionDir)App.Dolphin.Core\Executable\1.0.0\Resources\" /Y /S
+xcopy "$(SolutionDir)App.Dolphin\$(OutDir)*.dll" "$(SolutionDir)App.Dolphin.Core\Executable\1.0.0\" /Y
+xcopy "$(SolutionDir)App.Dolphin\$(OutDir)Dolphin.exe" "$(SolutionDir)App.Dolphin.Core\Executable\1.0.0\" /Y
+xcopy "$(SolutionDir)App.Dolphin.Core\$(OutDir)*.dll" "$(SolutionDir)App.Dolphin.Core\Executable\1.0.0\" /Y
+xcopy "$(SolutionDir)Export\*Win32*.dll" "$(SolutionDir)App.Dolphin.Core\Executable\1.0.0\" /Y
+</PostBuildEvent>
+  </PropertyGroup>
 </Project>

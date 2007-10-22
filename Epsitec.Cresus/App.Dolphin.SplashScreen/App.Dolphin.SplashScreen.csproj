@@ -77,16 +77,6 @@
   -->
   <PropertyGroup>
     <PostBuildEvent>
-del "$(SolutionDir)App.Dolphin\Executable\1.0.0\*.exe"
-del "$(SolutionDir)App.Dolphin\Executable\1.0.0\*.dll"
-
-xcopy "$(TargetDir)*.dll" "$(SolutionDir)App.Dolphin\Executable\1.0.0\" /Y
-xcopy "$(TargetDir)*.exe" "$(SolutionDir)App.Dolphin\Executable\" /Y
-xcopy "$(SolutionDir)Export\Resources\*" "$(SolutionDir)App.Dolphin\Executable\1.0.0\Resources\" /Y /S
-xcopy "$(SolutionDir)App.Dolphin\bin\Debug\*.dll" "$(SolutionDir)App.Dolphin\Executable\1.0.0\" /Y
-xcopy "$(SolutionDir)App.Dolphin.Core\bin\Debug\*.dll" "$(SolutionDir)App.Dolphin\Executable\1.0.0\" /Y
-xcopy "$(SolutionDir)App.Dolphin\bin\Debug\Dolphin.exe" "$(SolutionDir)App.Dolphin\Executable\1.0.0\" /Y
-xcopy "$(SolutionDir)Export\*Win32*.dll" "$(SolutionDir)App.Dolphin\Executable\1.0.0\" /Y
-</PostBuildEvent>
+    </PostBuildEvent>
   </PropertyGroup>
 </Project>
