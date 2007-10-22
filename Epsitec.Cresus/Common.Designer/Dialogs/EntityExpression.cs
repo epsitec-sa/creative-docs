@@ -145,6 +145,8 @@ namespace Epsitec.Common.Designer.Dialogs
 			this.fieldExpression.Text = this.expression;
 			this.fieldExpression.Enable = (!this.isInterface || this.expression != null);
 			this.fieldExpression.IsReadOnly = this.isEditLocked;
+			this.fieldExpression.SelectAll();
+			this.fieldExpression.Focus();
 
 			this.buttonOk.Enable = true;
 		}

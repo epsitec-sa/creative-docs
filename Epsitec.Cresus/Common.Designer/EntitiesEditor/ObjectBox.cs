@@ -1728,9 +1728,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				}
 			}
 
-			this.UpdateField(dataField, this.fields[rank]);
+			this.SetContent(this.cultureMap);
 			this.editor.Module.AccessEntities.SetLocalDirty();
-			this.editor.Invalidate();
 		}
 
 		protected void ChangeFieldName(int rank)
