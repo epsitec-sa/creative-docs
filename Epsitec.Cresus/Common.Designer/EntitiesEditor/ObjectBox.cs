@@ -1660,7 +1660,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				}
 
 				//	Cherche l'expression définie dans le champ de l'interface.
-#if true
+#if false
 				Druid definingTypeId = this.fields[rank].DefiningTypeId;
 				Module definingModule = this.editor.Module.DesignerApplication.SearchModule(definingTypeId);
 				CultureMap cultureMap = definingModule.AccessEntities.Accessor.Collection[definingTypeId];
@@ -1676,12 +1676,13 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 #else
 				Druid interfaceId = this.fields[rank].CaptionId;
 				Module interfaceModule = this.editor.Module.DesignerApplication.SearchModule(interfaceId);
-				CultureMap interfaceCultureMap = interfaceModule.AccessEntities.Accessor.Collection[interfaceId];
+				CultureMap interfaceCultureMap = interfaceModule.AccessFields.Accessor.Collection[interfaceId];
+				//	TODO: Le StructuredData obtenu n'est pas le bon, je n'y comprends rien !!!
 				StructuredData interfaceData = interfaceCultureMap.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
 
-				string definingEncoded = interfaceData.GetValue(Support.Res.Fields.Field.Expression) as string;
-				Support.EntityEngine.EntityExpression definingExpression = Support.EntityEngine.EntityExpression.FromEncodedExpression(definingEncoded);
-				deepSource = TextLayout.ConvertToTaggedText(definingExpression.SourceCode);
+				string interfaceEncoded = interfaceData.GetValue(Support.Res.Fields.Field.Expression) as string;
+				Support.EntityEngine.EntityExpression interfaceExpression = Support.EntityEngine.EntityExpression.FromEncodedExpression(interfaceEncoded);
+				deepSource = TextLayout.ConvertToTaggedText(interfaceExpression.SourceCode);
 #endif
 			}
 
