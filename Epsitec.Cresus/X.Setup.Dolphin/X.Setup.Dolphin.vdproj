@@ -15,12 +15,6 @@
     {
         "Entry"
         {
-        "MsmKey" = "8:_00CB1573C1B844F49DCB69731075C823"
-        "OwnerKey" = "8:_99A1ECCB35B241B391BC9274DB770594"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_02DF7769C93E5735A1F411B89081ED33"
         "OwnerKey" = "8:_668DB15D007B366C45D217CAF6C05FDC"
         "MsmSig" = "8:_UNDEFINED"
@@ -513,6 +507,18 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_963A2BB88E83677FE6A59ADB42A6CE1E"
+        "OwnerKey" = "8:_3E380C0810E8469DA841F5F16CFB4733"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_963A2BB88E83677FE6A59ADB42A6CE1E"
+        "OwnerKey" = "8:_E8351130851D9B93EA443786B9EF44F9"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_99A1ECCB35B241B391BC9274DB770594"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -591,18 +597,6 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_DB4771412774CCD9544754FEE79DAC21"
-        "OwnerKey" = "8:_3E380C0810E8469DA841F5F16CFB4733"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_DB4771412774CCD9544754FEE79DAC21"
-        "OwnerKey" = "8:_E8351130851D9B93EA443786B9EF44F9"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_DBBCE4CC4660607B51A1AA19544ED70F"
         "OwnerKey" = "8:_3E380C0810E8469DA841F5F16CFB4733"
         "MsmSig" = "8:_UNDEFINED"
@@ -611,6 +605,12 @@
         {
         "MsmKey" = "8:_DBBCE4CC4660607B51A1AA19544ED70F"
         "OwnerKey" = "8:_7CF1391F4C27BE382873BFEF4E81CD50"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_DE7CFCF9949E4637910901589873A5C8"
+        "OwnerKey" = "8:_99A1ECCB35B241B391BC9274DB770594"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -838,7 +838,7 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_DB4771412774CCD9544754FEE79DAC21"
+        "OwnerKey" = "8:_963A2BB88E83677FE6A59ADB42A6CE1E"
         "MsmSig" = "8:_UNDEFINED"
         }
     }
@@ -1492,6 +1492,37 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_963A2BB88E83677FE6A59ADB42A6CE1E"
+            {
+            "AssemblyRegister" = "3:1"
+            "AssemblyIsInGAC" = "11:FALSE"
+            "AssemblyAsmDisplayName" = "8:System.Core, Version=3.5.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL"
+                "ScatterAssemblies"
+                {
+                    "_963A2BB88E83677FE6A59ADB42A6CE1E"
+                    {
+                    "Name" = "8:System.Core.dll"
+                    "Attributes" = "3:512"
+                    }
+                }
+            "SourcePath" = "8:System.Core.dll"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_EE585F4A4E9341C0834D01A0F2F0DCF6"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:TRUE"
+            "IsolateTo" = "8:"
+            }
             "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_A34BDE605BB2667DD8C3430FEC5D4C23"
             {
             "AssemblyRegister" = "3:1"
@@ -1619,37 +1650,6 @@
                     }
                 }
             "SourcePath" = "8:Common.Debug.dll"
-            "TargetName" = "8:"
-            "Tag" = "8:"
-            "Folder" = "8:_EE585F4A4E9341C0834D01A0F2F0DCF6"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:TRUE"
-            "IsolateTo" = "8:"
-            }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_DB4771412774CCD9544754FEE79DAC21"
-            {
-            "AssemblyRegister" = "3:1"
-            "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:System.Core, Version=3.5.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL"
-                "ScatterAssemblies"
-                {
-                    "_DB4771412774CCD9544754FEE79DAC21"
-                    {
-                    "Name" = "8:System.Core.dll"
-                    "Attributes" = "3:512"
-                    }
-                }
-            "SourcePath" = "8:System.Core.dll"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_EE585F4A4E9341C0834D01A0F2F0DCF6"
@@ -1868,19 +1868,19 @@
         "Product"
         {
         "Name" = "8:Microsoft Visual Studio"
-        "ProductName" = "8:Simulateur de Dauphin"
-        "ProductCode" = "8:{D9A73A7E-75C1-41C8-BA62-A455C1CBA98D}"
-        "PackageCode" = "8:{D0BA0FF1-09E4-4A99-B479-F3759FFA8234}"
+        "ProductName" = "8:Dauphin"
+        "ProductCode" = "8:{2B6F80EA-DADD-4F52-8E62-9AAA983A8DCA}"
+        "PackageCode" = "8:{B77025DB-0568-4537-819B-9750C6173450}"
         "UpgradeCode" = "8:{3E07DF4F-1854-45A8-86B8-F494ADA98964}"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:TRUE"
-        "ProductVersion" = "8:1.0.2"
+        "ProductVersion" = "8:1.0.4"
         "Manufacturer" = "8:Epsitec"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"
-        "Title" = "8:Simulateur de Dauphin"
+        "Title" = "8:Dauphin"
         "Subject" = "8:"
         "ARPCONTACT" = "8:EPSITEC"
         "Keywords" = "8:"
@@ -2291,11 +2291,11 @@
         }
         "MergeModule"
         {
-            "{CEE29DC0-9FBA-4B99-8D47-5BC643D9B626}:_00CB1573C1B844F49DCB69731075C823"
+            "{CEE29DC0-9FBA-4B99-8D47-5BC643D9B626}:_99A1ECCB35B241B391BC9274DB770594"
             {
             "UseDynamicProperties" = "11:TRUE"
-            "IsDependency" = "11:TRUE"
-            "SourcePath" = "8:policy_8_0_microsoft_vc80_crt_x86.msm"
+            "IsDependency" = "11:FALSE"
+            "SourcePath" = "8:C:\\Program Files (x86)\\Common Files\\Merge Modules\\Microsoft_VC80_CRT_x86.msm"
                 "Properties"
                 {
                 }
@@ -2305,11 +2305,11 @@
             "Feature" = "8:"
             "IsolateTo" = "8:"
             }
-            "{CEE29DC0-9FBA-4B99-8D47-5BC643D9B626}:_99A1ECCB35B241B391BC9274DB770594"
+            "{CEE29DC0-9FBA-4B99-8D47-5BC643D9B626}:_DE7CFCF9949E4637910901589873A5C8"
             {
             "UseDynamicProperties" = "11:TRUE"
-            "IsDependency" = "11:FALSE"
-            "SourcePath" = "8:C:\\Program Files\\Common Files\\Merge Modules\\Microsoft_VC80_CRT_x86.msm"
+            "IsDependency" = "11:TRUE"
+            "SourcePath" = "8:policy_8_0_microsoft_vc80_crt_x86.msm"
                 "Properties"
                 {
                 }
