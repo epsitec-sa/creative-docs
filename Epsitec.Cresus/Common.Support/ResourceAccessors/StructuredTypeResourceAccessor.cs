@@ -687,9 +687,10 @@ namespace Epsitec.Common.Support.ResourceAccessors
 		{
 			public FieldUpdater(StructuredTypeResourceAccessor host)
 			{
-				this.host   = host;
-				this.ids    = new List<Druid> ();
-				this.fields = new List<StructuredData> ();
+				this.host         = host;
+				this.ids          = new List<Druid> ();
+				this.interfaceIds = new List<Druid> ();
+				this.fields       = new List<StructuredData> ();
 			}
 
 			public IList<StructuredData> Fields
@@ -700,6 +701,30 @@ namespace Epsitec.Common.Support.ResourceAccessors
 				}
 			}
 
+			public IList<Druid> InterfaceIds
+			{
+				get
+				{
+					return this.interfaceIds;
+				}
+			}
+
+			/// <summary>
+			/// Includes the interface id in the scan.
+			/// </summary>
+			/// <param name="interfaceId">The interface id.</param>
+			public void IncludeInterfaceId(Druid interfaceId)
+			{
+				if (this.interfaceIds.Contains (interfaceId))
+				{
+					//	Nothing to do, interface is already known
+				}
+				else
+				{
+					this.interfaceIds.Add (interfaceId);
+				}
+			}
+			
 			/// <summary>
 			/// Includes all fields defined by the specified type, setting their
 			/// membership accordingly.
@@ -743,6 +768,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 					{
 						Druid id = StructuredTypeResourceAccessor.ToDruid (interfaceId.GetValue (Res.Fields.InterfaceId.CaptionId));
 						this.IncludeType (id, definingTypeId, membership, depth+1);
+						this.IncludeInterfaceId (id);
 					}
 				}
 
@@ -781,6 +807,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 
 			private StructuredTypeResourceAccessor host;
 			private List<Druid> ids;
+			private List<Druid> interfaceIds;
 			private List<StructuredData> fields;
 		}
 
@@ -874,8 +901,6 @@ namespace Epsitec.Common.Support.ResourceAccessors
 
 			using (fields.DisableNotifications ())
 			{
-				StructuredTypeResourceAccessor.RemoveInheritedFields (fields);
-
 				if ((baseTypeId.IsValid) ||
 					(interfaceIds.Count > 0))
 				{
@@ -887,7 +912,10 @@ namespace Epsitec.Common.Support.ResourceAccessors
 					{
 						Druid interfaceId = StructuredTypeResourceAccessor.ToDruid (interfaceData.GetValue (Res.Fields.InterfaceId.CaptionId));
 						updater.IncludeType (interfaceId, FieldMembership.Local);
+						updater.IncludeInterfaceId (interfaceId);
 					}
+
+					StructuredTypeResourceAccessor.RemoveInheritedFields (fields, updater.InterfaceIds);
 
 					int i = 0;
 
@@ -907,7 +935,6 @@ namespace Epsitec.Common.Support.ResourceAccessors
 								//	has not been tampered with (yet) locally :
 
 								field.SetValue (Res.Fields.Field.IsInterfaceDefinition, true);
-//								field.LockValue (Res.Fields.Field.IsInterfaceDefinition);
 							}
 
 							fields.Insert (i++, field);
@@ -915,6 +942,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 						else
 						{
 							System.Diagnostics.Debug.Assert ((FieldMembership) field.GetValue (Res.Fields.Field.Membership) == FieldMembership.Local);
+							System.Diagnostics.Debug.Assert (updater.InterfaceIds.Contains (StructuredTypeResourceAccessor.ToDruid (field.GetValue (Res.Fields.Field.DefiningTypeId))));
 
 							//	The field is defined both locally and in the interface; keep
 							//	only the expression from the local definition and otherwise,
@@ -923,14 +951,17 @@ namespace Epsitec.Common.Support.ResourceAccessors
 							field.SetValue (Res.Fields.Field.Source, fields[pos].GetValue (Res.Fields.Field.Source));
 							field.SetValue (Res.Fields.Field.Expression, fields[pos].GetValue (Res.Fields.Field.Expression));
 							field.SetValue (Res.Fields.Field.IsInterfaceDefinition, false);
-//							field.LockValue (Res.Fields.Field.IsInterfaceDefinition);
 
 							System.Diagnostics.Debug.Assert (i <= pos);
-							
+
 							fields.RemoveAt (pos);
 							fields.Insert (i++, field);
 						}
 					}
+				}
+				else
+				{
+					StructuredTypeResourceAccessor.RemoveInheritedFields (fields);
 				}
 			}
 		}
@@ -957,6 +988,16 @@ namespace Epsitec.Common.Support.ResourceAccessors
 		/// <param name="fields">The field collection.</param>
 		private static void RemoveInheritedFields(IList<StructuredData> fields)
 		{
+			StructuredTypeResourceAccessor.RemoveInheritedFields (fields, EmptyList<Druid>.Instance);
+		}
+
+		/// <summary>
+		/// Removes the inherited and included fields.
+		/// </summary>
+		/// <param name="fields">The field collection.</param>
+		/// <param name="interfaceIds">The live interface ids.</param>
+		private static void RemoveInheritedFields(IList<StructuredData> fields, IList<Druid> interfaceIds)
+		{
 			for (int i = 0; i < fields.Count; i++)
 			{
 				StructuredData field = fields[i];
@@ -976,7 +1017,10 @@ namespace Epsitec.Common.Support.ResourceAccessors
 					if ((interfaceDefinition.HasValue) &&
 						(interfaceDefinition.Value == false))
 					{
-						continue;
+						if (interfaceIds.Contains (definingTypeId))
+						{
+							continue;
+						}
 					}
 
 					fields.RemoveAt (i--);
