@@ -1687,18 +1687,22 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				expression = Support.EntityEngine.EntityExpression.FromSourceCode(Support.EntityEngine.EntityExpressionEncoding.LambdaCSharpSourceCode, source);
 				encoded = expression.GetEncodedExpression();
 			}
-
+			
 			if (isInterface)
 			{
 				if (encoded == null)
 				{
-					dataField.SetValue(Support.Res.Fields.Field.IsInterfaceDefinition, true);
+					Support.ResourceAccessors.StructuredTypeResourceAccessor accessor = this.editor.Module.AccessEntities.Accessor as Support.ResourceAccessors.StructuredTypeResourceAccessor;
+					dataField.SetValue (Support.Res.Fields.Field.IsInterfaceDefinition, true);
+					accessor.RefreshFields(this.cultureMap);
+					//	TODO: il faut rafraîchir ta représentation graphique pour refléter le nouveau
+					//	contenu du champ en question; je ne sais pas comment faire cela ici...
 				}
 				else
 				{
 					dataField.SetValue(Support.Res.Fields.Field.IsInterfaceDefinition, false);
 
-					if (string.IsNullOrEmpty(encoded))
+					if (string.IsNullOrEmpty(source))  //  pas de source = valeur
 					{
 						dataField.SetValue(Support.Res.Fields.Field.Expression, UndefinedValue.Instance);
 						dataField.SetValue(Support.Res.Fields.Field.Source, FieldSource.Value);
@@ -1712,7 +1716,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 			else
 			{
-				if (string.IsNullOrEmpty(encoded))
+				if (string.IsNullOrEmpty (source))  //  pas de source = valeur
 				{
 					dataField.SetValue(Support.Res.Fields.Field.Expression, UndefinedValue.Instance);
 					dataField.SetValue(Support.Res.Fields.Field.Source, FieldSource.Value);

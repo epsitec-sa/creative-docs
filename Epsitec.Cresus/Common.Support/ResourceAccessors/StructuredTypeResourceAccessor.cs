@@ -146,6 +146,15 @@ namespace Epsitec.Common.Support.ResourceAccessors
 		}
 
 		/// <summary>
+		/// Refreshes the fields for the specified item.
+		/// </summary>
+		/// <param name="item">The item.</param>
+		public void RefreshFields(CultureMap item)
+		{
+			this.RefreshItem (item);
+		}
+
+		/// <summary>
 		/// Persists the changes to the underlying data store.
 		/// </summary>
 		/// <returns>
@@ -487,7 +496,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 					Druid fieldDefiningType = StructuredTypeResourceAccessor.ToDruid (fieldData.GetValue (Res.Fields.Field.DefiningTypeId));
 					bool? interfaceDefinition = StructuredTypeResourceAccessor.ToBoolean (fieldData.GetValue (Res.Fields.Field.IsInterfaceDefinition));
 
-					//	A field must be stored in the type only if it defined locally
+					//	A field must be stored in the type only if it is defined locally
 					//	and if it does not belong to a locally defined interface; or
 					//	if it redefines the expression for a local interface field.
 
@@ -898,6 +907,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 								//	has not been tampered with (yet) locally :
 
 								field.SetValue (Res.Fields.Field.IsInterfaceDefinition, true);
+//								field.LockValue (Res.Fields.Field.IsInterfaceDefinition);
 							}
 
 							fields.Insert (i++, field);
@@ -913,6 +923,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 							field.SetValue (Res.Fields.Field.Source, fields[pos].GetValue (Res.Fields.Field.Source));
 							field.SetValue (Res.Fields.Field.Expression, fields[pos].GetValue (Res.Fields.Field.Expression));
 							field.SetValue (Res.Fields.Field.IsInterfaceDefinition, false);
+//							field.LockValue (Res.Fields.Field.IsInterfaceDefinition);
 
 							System.Diagnostics.Debug.Assert (i <= pos);
 							
