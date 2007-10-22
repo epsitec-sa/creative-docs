@@ -1589,18 +1589,27 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			string question = string.Format("Voulez-vous supprimer l'interface <b>{0}</b> ?", this.fields[rank].FieldName);
 			if (this.editor.Module.DesignerApplication.DialogQuestion(question) == Epsitec.Common.Dialogs.DialogResult.Yes)
 			{
+				StructuredData data = this.cultureMap.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
+				IList<StructuredData> dataInterfaces = data.GetValue(Support.Res.Fields.ResourceStructuredType.InterfaceIds) as IList<StructuredData>;
+				IList<StructuredData> dataFields = data.GetValue(Support.Res.Fields.ResourceStructuredType.Fields) as IList<StructuredData>;
+
 				int count = this.GroupLineCount(rank);
 				for (int i=rank+1; i<rank+1+count; i++)
 				{
 					this.fields[i].IsExplored = false;
 					this.fields[i].DstBox = null;
+
+					if (this.fields[i].Expression != null)
+					{
+						//	TODO: ne fonctionne pas, ou n'est pas correct ?!
+						StructuredData dataField = dataFields[i-(rank+1)];
+						dataField.SetValue(Support.Res.Fields.Field.Expression, UndefinedValue.Instance);
+						dataField.SetValue(Support.Res.Fields.Field.Source, FieldSource.Value);
+					}
 				}
 				this.editor.CloseBox(null);
 
 				Druid druid = this.fields[rank].CaptionId;
-
-				StructuredData data = this.cultureMap.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
-				IList<StructuredData> dataInterfaces = data.GetValue(Support.Res.Fields.ResourceStructuredType.InterfaceIds) as IList<StructuredData>;
 
 				for (int i=0; i<dataInterfaces.Count; i++)
 				{
