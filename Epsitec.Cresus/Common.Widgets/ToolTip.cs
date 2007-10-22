@@ -68,7 +68,6 @@ namespace Epsitec.Common.Widgets
 			ToolTip.Default.HideToolTip ();
 		}
 
-
 		public static bool HasToolTip(DependencyObject obj)
 		{
 			if ((obj.ContainsValue (ToolTip.ToolTipTextProperty)) ||
@@ -100,7 +99,30 @@ namespace Epsitec.Common.Widgets
 				this.HideToolTip ();
 			}
 		}
-		
+
+		public void RegisterDynamicToolTipHost(Widget widget)
+		{
+			Helpers.IToolTipHost host = widget as Helpers.IToolTipHost;
+
+			if (host == null)
+			{
+				throw new System.ArgumentException ("Widget does not implement IToolTipHost");
+			}
+
+			this.RegisterWidget (widget);
+		}
+
+		public void UnregisterDynamicToolTipHost(Widget widget)
+		{
+			Helpers.IToolTipHost host = widget as Helpers.IToolTipHost;
+
+			if (host == null)
+			{
+				throw new System.ArgumentException ("Widget does not implement IToolTipHost");
+			}
+
+			this.UnregisterWidget (widget);
+		}
 		
 		public void UpdateManualToolTip(Drawing.Point mouse, string caption)
 		{
@@ -159,29 +181,15 @@ namespace Epsitec.Common.Widgets
 			if ((this.hash.Contains (widget)) &&
 				(caption == null))
 			{
-				if (this.widget == widget)
-				{
-					this.DetachFromWidget (this.widget);
-				}
-				
-				this.hash.Remove (widget);
-				
-				widget.Entered  -= new MessageEventHandler (this.HandleWidgetEntered);
-				widget.Exited   -= new MessageEventHandler (this.HandleWidgetExited);
-				widget.Disposed -= new Support.EventHandler (this.HandleWidgetDisposed);
+				this.UnregisterWidget (widget);
 			}
 			
 			if (caption == null)
 			{
 				return;
 			}
-			
-			if (this.hash.Contains (widget) == false)
-			{
-				widget.Entered   += new MessageEventHandler (this.HandleWidgetEntered);
-				widget.Exited    += new MessageEventHandler (this.HandleWidgetExited);
-				widget.Disposed  += new Support.EventHandler (this.HandleWidgetDisposed);
-			}
+
+			this.RegisterWidget (widget);
 			
 			this.hash[widget] = caption;
 			
@@ -191,6 +199,32 @@ namespace Epsitec.Common.Widgets
 				this.caption = caption;
 				this.ShowToolTip (this.birth_pos, this.caption);
 			}
+		}
+
+		private void RegisterWidget(Widget widget)
+		{
+			if (this.hash.Contains (widget) == false)
+			{
+				widget.Entered   += new MessageEventHandler (this.HandleWidgetEntered);
+				widget.Exited    += new MessageEventHandler (this.HandleWidgetExited);
+				widget.Disposed  += new Support.EventHandler (this.HandleWidgetDisposed);
+
+				this.hash[widget] = null;
+			}
+		}
+
+		private void UnregisterWidget(Widget widget)
+		{
+			if (this.widget == widget)
+			{
+				this.DetachFromWidget (this.widget);
+			}
+
+			this.hash.Remove (widget);
+
+			widget.Entered  -= new MessageEventHandler (this.HandleWidgetEntered);
+			widget.Exited   -= new MessageEventHandler (this.HandleWidgetExited);
+			widget.Disposed -= new Support.EventHandler (this.HandleWidgetDisposed);
 		}
 		
 		private void AttachToWidget(Widget widget)
