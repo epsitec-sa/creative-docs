@@ -1591,6 +1591,9 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			{
 				StructuredData data = this.cultureMap.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
 				IList<StructuredData> dataInterfaces = data.GetValue(Support.Res.Fields.ResourceStructuredType.InterfaceIds) as IList<StructuredData>;
+#if true
+				Support.ResourceAccessors.StructuredTypeResourceAccessor accessor = this.editor.Module.AccessEntities.Accessor as Support.ResourceAccessors.StructuredTypeResourceAccessor;
+#else
 				IList<StructuredData> dataFields = data.GetValue(Support.Res.Fields.ResourceStructuredType.Fields) as IList<StructuredData>;
 
 				int count = this.GroupLineCount(rank);
@@ -1607,6 +1610,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 						dataField.SetValue(Support.Res.Fields.Field.Source, FieldSource.Value);
 					}
 				}
+#endif
 				this.editor.CloseBox(null);
 
 				Druid druid = this.fields[rank].CaptionId;
@@ -1620,6 +1624,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 						break;
 					}
 				}
+				
+				accessor.RefreshFields (this.cultureMap);
 
 				this.SetContent(this.cultureMap);
 				this.editor.UpdateAfterAddOrRemoveConnection(this);

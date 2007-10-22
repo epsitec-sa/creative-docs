@@ -476,8 +476,13 @@ namespace Epsitec.Common.Types
 				if (expId == "Exp")
 				{
 					expression = string.Join (";", args, 6, args.Length-6);
+					
+					if (flags.Length == 0)
+					{
+						flags = "0";
+					}
 				}
-
+				
 				int rankValue  = System.Int32.Parse (rank, System.Globalization.CultureInfo.InvariantCulture);
 				int flagsValue = System.Int32.Parse (flags, System.Globalization.CultureInfo.InvariantCulture);
 				
