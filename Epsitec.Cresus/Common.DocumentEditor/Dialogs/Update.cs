@@ -106,7 +106,7 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 			b.Append(chip);
 			b.Append(string.Format("{0}<tab/>{1}", Res.Strings.Dialog.Update.Fax1, Res.Strings.Dialog.Update.Fax2));
 			this.buy.Text = b.ToString();
-			this.buy.HypertextClicked += new MessageEventHandler(HandleLinkHypertextClicked);
+			this.buy.HypertextClicked += new MessageEventHandler(this.HandleLinkHypertextClicked);
 
 			TextStyle.Tab tab = new TextStyle.Tab();
 			tab.Pos = 70;
