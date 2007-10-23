@@ -274,6 +274,21 @@ namespace Epsitec.Common.Types
 			return ignore.Count == values.Count;
 		}
 
+		public static bool TryFind<T>(IEnumerable<T> collection, System.Predicate<T> predicate, out T result)
+		{
+			foreach (T item in collection)
+			{
+				if (predicate (item))
+				{
+					result = item;
+					return true;
+				}
+			}
+
+			result = default (T);
+			return false;
+		}
+
 		public static int FindIndex<T>(IEnumerable<T> collection, System.Predicate<T> predicate)
 		{
 			int index = 0;

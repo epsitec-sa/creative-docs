@@ -1674,15 +1674,26 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				Support.EntityEngine.EntityExpression definingExpression = Support.EntityEngine.EntityExpression.FromEncodedExpression(definingEncoded);
 				deepSource = TextLayout.ConvertToTaggedText(definingExpression.SourceCode);
 #else
-				Druid interfaceId = this.fields[rank].CaptionId;
-				Module interfaceModule = this.editor.Module.DesignerApplication.SearchModule(interfaceId);
-				CultureMap interfaceCultureMap = interfaceModule.AccessFields.Accessor.Collection[interfaceId];
-				//	TODO: Le StructuredData obtenu n'est pas le bon, je n'y comprends rien !!!
-				StructuredData interfaceData = interfaceCultureMap.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
+				Druid          interfaceId      = this.fields[rank].DefiningTypeId;
+				Druid          interfaceFieldId = this.fields[rank].CaptionId;
+				Module         interfaceModule  = this.editor.Module.DesignerApplication.SearchModule(interfaceId);
+				CultureMap     interfaceItem    = interfaceModule.AccessEntities.Accessor.Collection[interfaceId];
+				StructuredData interfaceData    = interfaceItem.GetCultureData (Resources.DefaultTwoLetterISOLanguageName);
+				StructuredData interfaceFieldData;
 
-				string interfaceEncoded = interfaceData.GetValue(Support.Res.Fields.Field.Expression) as string;
-				Support.EntityEngine.EntityExpression interfaceExpression = Support.EntityEngine.EntityExpression.FromEncodedExpression(interfaceEncoded);
-				deepSource = TextLayout.ConvertToTaggedText(interfaceExpression.SourceCode);
+				IList<StructuredData> interfaceDataFields = interfaceData.GetValue (Support.Res.Fields.ResourceStructuredType.Fields) as IList<StructuredData>;
+
+				if (Collection.TryFind (interfaceDataFields,
+					delegate (StructuredData fieldData)
+					{
+						Druid fieldDataId = (Druid) fieldData.GetValue (Support.Res.Fields.Field.CaptionId);
+						return fieldDataId == interfaceFieldId;
+					}, out interfaceFieldData))
+				{
+					string interfaceEncoded = interfaceFieldData.GetValue (Support.Res.Fields.Field.Expression) as string;
+					Support.EntityEngine.EntityExpression interfaceExpression = Support.EntityEngine.EntityExpression.FromEncodedExpression (interfaceEncoded);
+					deepSource = TextLayout.ConvertToTaggedText (interfaceExpression.SourceCode);
+				}
 #endif
 			}
 
