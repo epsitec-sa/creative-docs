@@ -1660,41 +1660,26 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				}
 
 				//	Cherche l'expression définie dans le champ de l'interface.
-#if false
-				Druid definingTypeId = this.fields[rank].DefiningTypeId;
-				Module definingModule = this.editor.Module.DesignerApplication.SearchModule(definingTypeId);
-				CultureMap cultureMap = definingModule.AccessEntities.Accessor.Collection[definingTypeId];
-				StructuredData definingData = cultureMap.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
-
-				IList<StructuredData> definingDataFields = definingData.GetValue(Support.Res.Fields.ResourceStructuredType.Fields) as IList<StructuredData>;
-				//	TODO: est-ce normal de devoir rechercher d'après le Name ?
-				StructuredData definingDataField = this.SearchStructuredData(definingDataFields, this.fields[rank].FieldName);
-
-				string definingEncoded = definingDataField.GetValue(Support.Res.Fields.Field.Expression) as string;
-				Support.EntityEngine.EntityExpression definingExpression = Support.EntityEngine.EntityExpression.FromEncodedExpression(definingEncoded);
-				deepSource = TextLayout.ConvertToTaggedText(definingExpression.SourceCode);
-#else
 				Druid          interfaceId      = this.fields[rank].DefiningTypeId;
 				Druid          interfaceFieldId = this.fields[rank].CaptionId;
 				Module         interfaceModule  = this.editor.Module.DesignerApplication.SearchModule(interfaceId);
 				CultureMap     interfaceItem    = interfaceModule.AccessEntities.Accessor.Collection[interfaceId];
-				StructuredData interfaceData    = interfaceItem.GetCultureData (Resources.DefaultTwoLetterISOLanguageName);
+				StructuredData interfaceData    = interfaceItem.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
 				StructuredData interfaceFieldData;
 
-				IList<StructuredData> interfaceDataFields = interfaceData.GetValue (Support.Res.Fields.ResourceStructuredType.Fields) as IList<StructuredData>;
+				IList<StructuredData> interfaceDataFields = interfaceData.GetValue(Support.Res.Fields.ResourceStructuredType.Fields) as IList<StructuredData>;
 
-				if (Collection.TryFind (interfaceDataFields,
+				if (Collection.TryFind(interfaceDataFields,
 					delegate (StructuredData fieldData)
 					{
-						Druid fieldDataId = (Druid) fieldData.GetValue (Support.Res.Fields.Field.CaptionId);
+						Druid fieldDataId = (Druid) fieldData.GetValue(Support.Res.Fields.Field.CaptionId);
 						return fieldDataId == interfaceFieldId;
 					}, out interfaceFieldData))
 				{
-					string interfaceEncoded = interfaceFieldData.GetValue (Support.Res.Fields.Field.Expression) as string;
-					Support.EntityEngine.EntityExpression interfaceExpression = Support.EntityEngine.EntityExpression.FromEncodedExpression (interfaceEncoded);
-					deepSource = TextLayout.ConvertToTaggedText (interfaceExpression.SourceCode);
+					string interfaceEncoded = interfaceFieldData.GetValue(Support.Res.Fields.Field.Expression) as string;
+					Support.EntityEngine.EntityExpression interfaceExpression = Support.EntityEngine.EntityExpression.FromEncodedExpression(interfaceEncoded);
+					deepSource = TextLayout.ConvertToTaggedText(interfaceExpression.SourceCode);
 				}
-#endif
 			}
 
 			//	Edition de l'expression.
@@ -3275,23 +3260,6 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				this.Subtitle = module.ModuleId.Name;
 				this.isDimmed = true;
 			}
-		}
-
-
-		protected StructuredData SearchStructuredData(IList<StructuredData> dataFields, string fieldName)
-		{
-			foreach (StructuredData data in dataFields)
-			{
-				Druid fieldDruid = (Druid) data.GetValue(Support.Res.Fields.Field.CaptionId);
-				Module fieldModule = this.editor.Module.DesignerApplication.SearchModule(fieldDruid);
-				CultureMap fieldCultureMap = fieldModule.AccessFields.Accessor.Collection[fieldDruid];
-				if (fieldCultureMap.Name == fieldName)
-				{
-					return data;
-				}
-			}
-
-			return null;
 		}
 
 
