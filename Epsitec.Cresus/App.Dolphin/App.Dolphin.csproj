@@ -43,6 +43,7 @@
     <Compile Include="Assembler.cs" />
     <Compile Include="Dialogs\Abstract.cs" />
     <Compile Include="Dialogs\About.cs" />
+    <Compile Include="Dialogs\Download.cs" />
     <Compile Include="DolphinApplication.cs" />
     <Compile Include="Geometry.cs" />
     <Compile Include="Components\Memory.cs" />
