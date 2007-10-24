@@ -1134,16 +1134,61 @@ namespace Epsitec.Common.Support.ResourceAccessors
 
 			public override void HandleCollectionChanging(object sender)
 			{
-				
+				if (this.UsesOriginalValue (Res.Fields.ResourceStructuredType.Fields))
+				{
+					this.data.UnlockValue (Res.Fields.ResourceStructuredType.Fields);
+					this.data.CopyOriginalToCurrentValue (Res.Fields.ResourceStructuredType.Fields);
+					this.data.LockValue (Res.Fields.ResourceStructuredType.Fields);
+
+					ObservableList<StructuredData> fields = this.data.GetValue (Res.Fields.ResourceStructuredType.Fields) as ObservableList<StructuredData>;
+
+					this.originalFields = new List<StructuredData> ();
+
+					foreach (StructuredData data in fields)
+					{
+						this.originalFields.Add (data.GetShallowCopy ());
+					}
+				}
 			}
 
 			public override void ResetToOriginalValue()
 			{
-				
+				if (this.originalFields != null)
+				{
+					this.data.UnlockValue (Res.Fields.ResourceStructuredType.Fields);
+					this.data.ResetToOriginalValue (Res.Fields.ResourceStructuredType.Fields);
+					this.data.LockValue (Res.Fields.ResourceStructuredType.Fields);
+
+					ObservableList<StructuredData> fields = this.data.GetValue (Res.Fields.ResourceStructuredType.Fields) as ObservableList<StructuredData>;
+
+					using (fields.DisableNotifications ())
+					{
+						int index = fields.Count - 1;
+						
+						while (index >= 0)
+						{
+							StructuredData data = fields[index];
+							fields.RemoveAt (index--);
+							this.item.NotifyDataRemoved (data);
+						}
+
+						System.Diagnostics.Debug.Assert (fields.Count == 0);
+
+						foreach (StructuredData data in this.originalFields)
+						{
+							StructuredData copy = data.GetShallowCopy ();
+							copy.PromoteToOriginal ();
+							fields.Add (copy);
+							this.item.NotifyDataAdded (copy);
+						}
+					}
+				}
 			}
+
+			List<StructuredData> originalFields;
 		}
 
-		#region Listener Class
+		#region InterfaceListener Class
 
 		protected class InterfaceListener : Listener
 		{
@@ -1154,6 +1199,21 @@ namespace Epsitec.Common.Support.ResourceAccessors
 
 			public override void HandleCollectionChanging(object sender)
 			{
+				if (this.UsesOriginalValue (Res.Fields.ResourceStructuredType.InterfaceIds))
+				{
+					this.data.UnlockValue (Res.Fields.ResourceStructuredType.InterfaceIds);
+					this.data.CopyOriginalToCurrentValue (Res.Fields.ResourceStructuredType.InterfaceIds);
+					this.data.LockValue (Res.Fields.ResourceStructuredType.InterfaceIds);
+
+					ObservableList<StructuredData> interfaceIds = this.data.GetValue (Res.Fields.ResourceStructuredType.InterfaceIds) as ObservableList<StructuredData>;
+
+					this.originalInterfaceIds = new List<StructuredData> ();
+
+					foreach (StructuredData data in interfaceIds)
+					{
+						this.originalInterfaceIds.Add (data.GetShallowCopy ());
+					}
+				}
 			}
 
 			public override void HandleCollectionChanged(object sender, CollectionChangedEventArgs e)
@@ -1166,7 +1226,37 @@ namespace Epsitec.Common.Support.ResourceAccessors
 
 			public override void ResetToOriginalValue()
 			{
+				if (this.originalInterfaceIds != null)
+				{
+					this.data.UnlockValue (Res.Fields.ResourceStructuredType.InterfaceIds);
+					this.data.ResetToOriginalValue (Res.Fields.ResourceStructuredType.InterfaceIds);
+					this.data.LockValue (Res.Fields.ResourceStructuredType.InterfaceIds);
+
+					ObservableList<StructuredData> interfaceIds = this.data.GetValue (Res.Fields.ResourceStructuredType.InterfaceIds) as ObservableList<StructuredData>;
+
+					using (interfaceIds.DisableNotifications ())
+					{
+						int index = interfaceIds.Count - 1;
+
+						while (index >= 0)
+						{
+							StructuredData data = interfaceIds[index];
+							interfaceIds.RemoveAt (index--);
+						}
+
+						System.Diagnostics.Debug.Assert (interfaceIds.Count == 0);
+
+						foreach (StructuredData data in this.originalInterfaceIds)
+						{
+							StructuredData copy = data.GetShallowCopy ();
+							copy.PromoteToOriginal ();
+							interfaceIds.Add (copy);
+						}
+					}
+				}
 			}
+			
+			List<StructuredData> originalInterfaceIds;
 		}
 
 		#endregion
