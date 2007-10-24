@@ -530,12 +530,16 @@ namespace Epsitec.Common.Support.ResourceAccessors
 				System.Diagnostics.Debug.Assert ((type == null) || type.CaptionId.IsValid);
 			}
 
+			bool recordFields = false;
+			bool recordInterfaceIds = false;
+
 			ObservableList<StructuredData> fields = data.GetValue (Res.Fields.ResourceStructuredType.Fields) as ObservableList<StructuredData>;
 			ObservableList<StructuredData> interfaceIds = data.GetValue (Res.Fields.ResourceStructuredType.InterfaceIds) as ObservableList<StructuredData>;
 
 			if (fields == null)
 			{
 				fields = new ObservableList<StructuredData> ();
+				recordFields = true;
 			}
 			else
 			{
@@ -544,6 +548,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			if (interfaceIds == null)
 			{
 				interfaceIds = new ObservableList<StructuredData> ();
+				recordInterfaceIds = true;
 			}
 			else
 			{
@@ -578,7 +583,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 				}
 			}
 
-			if (UndefinedValue.IsUndefinedValue (data.GetValue (Res.Fields.ResourceStructuredType.Fields)))
+			if (recordFields)
 			{
 				data.SetValue (Res.Fields.ResourceStructuredType.Fields, fields);
 				data.LockValue (Res.Fields.ResourceStructuredType.Fields);
@@ -616,7 +621,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 				}
 			}
 
-			if (UndefinedValue.IsUndefinedValue (data.GetValue (Res.Fields.ResourceStructuredType.InterfaceIds)))
+			if (recordInterfaceIds)
 			{
 				data.SetValue (Res.Fields.ResourceStructuredType.InterfaceIds, interfaceIds);
 				data.LockValue (Res.Fields.ResourceStructuredType.InterfaceIds);

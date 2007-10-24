@@ -513,7 +513,7 @@ namespace Epsitec.Common.Types
 			}
 		}
 		
-		public void PromoteToOriginalValue(string id)
+		public bool PromoteToOriginalValue(string id)
 		{
 			if (this.values != null)
 			{
@@ -522,8 +522,11 @@ namespace Epsitec.Common.Types
 				if (this.values.TryGetValue (id, out record))
 				{
 					this.values[id] = new Record (UndefinedValue.Instance, record.Data, true, record.IsReadOnly, record.Handler);
+					return true;
 				}
 			}
+
+			return false;
 		}
 		
 		public void SetValue(Support.Druid id, object value)
@@ -543,9 +546,31 @@ namespace Epsitec.Common.Types
 			if ((this.values != null) &&
 				(this.values.TryGetValue (id, out value)))
 			{
-				if (! UndefinedValue.IsUndefinedValue (value.Data))
+				if (!UndefinedValue.IsUndefinedValue (value.Data))
 				{
 					this.values[id] = new Record (value.Data, value.OriginalData, value.UsesOriginalData, true, value.Handler);
+					return true;
+				}
+			}
+
+			return false;
+		}
+
+		public bool UnlockValue(Support.Druid id)
+		{
+			return this.UnlockValue (id.ToString ());
+		}
+
+		public bool UnlockValue(string id)
+		{
+			Record value;
+
+			if ((this.values != null) &&
+				(this.values.TryGetValue (id, out value)))
+			{
+				if (!UndefinedValue.IsUndefinedValue (value.Data))
+				{
+					this.values[id] = new Record (value.Data, value.OriginalData, value.UsesOriginalData, false, value.Handler);
 					return true;
 				}
 			}

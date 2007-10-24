@@ -11,7 +11,7 @@ namespace Epsitec.Common.Types.Collections
 	/// refreshed.
 	/// </summary>
 	/// <typeparam name="T">The manipulated data type.</typeparam>
-	public class ObservableList<T> : IList<T>, INotifyCollectionChanged, System.Collections.ICollection, System.Collections.IList
+	public class ObservableList<T> : IList<T>, INotifyCollectionChanged, System.Collections.ICollection, System.Collections.IList, IReadOnly, IReadOnlyLock
 	{
 		public ObservableList()
 		{
@@ -79,7 +79,47 @@ namespace Epsitec.Common.Types.Collections
 			System.Threading.Interlocked.Increment (ref this.silent);
 			return new ReEnabler (this);
 		}
-		
+
+		/// <summary>
+		/// Makes this collection read only. Any further modification is prohibited
+		/// and will throw an exception.
+		/// </summary>
+		public void Lock()
+		{
+			this.isReadOnly = true;
+		}
+
+		internal void Unlock()
+		{
+			this.isReadOnly = false;
+		}
+
+		#region IReadOnlyLock Members
+
+		void IReadOnlyLock.Lock()
+		{
+			this.Lock ();
+		}
+
+		void IReadOnlyLock.Unlock()
+		{
+			this.Unlock ();
+		}
+
+		#endregion
+
+		#region IReadOnly Members
+
+		bool IReadOnly.IsReadOnly
+		{
+			get
+			{
+				return this.IsReadOnly;
+			}
+		}
+
+		#endregion
+
 		#region IList<T> Members
 
 		public int IndexOf(T item)
@@ -167,7 +207,7 @@ namespace Epsitec.Common.Types.Collections
 		{
 			get
 			{
-				return false;
+				return this.isReadOnly;
 			}
 		}
 
@@ -316,6 +356,10 @@ namespace Epsitec.Common.Types.Collections
 
 		protected virtual void NotifyBeforeChange()
 		{
+			if (this.IsReadOnly)
+			{
+				throw new System.InvalidOperationException ("Read-only list may not be changed");
+			}
 		}
 		
 		protected virtual void OnCollectionChanged(CollectionChangedEventArgs e)
@@ -385,5 +429,6 @@ namespace Epsitec.Common.Types.Collections
 
 		private List<T> list = new List<T> ();
 		private int silent;
+		private bool isReadOnly;
 	}
 }

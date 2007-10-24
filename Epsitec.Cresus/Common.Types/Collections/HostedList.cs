@@ -86,6 +86,7 @@ namespace Epsitec.Common.Types.Collections
 
 		protected override void NotifyBeforeChange()
 		{
+			base.NotifyBeforeChange ();
 		}
 
 		protected override void OnCollectionChanged(CollectionChangedEventArgs e)
