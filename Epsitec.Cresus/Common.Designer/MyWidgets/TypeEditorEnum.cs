@@ -285,7 +285,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			IResourceAccessor valueAccessor = this.module.AccessValues.Accessor;
 			valueAccessor.Collection.Add(valueCultureMap);
 
-			IDataBroker broker = accessor.GetDataBroker(this.structuredData, Support.Res.Fields.ResourceEnumType.Values.ToString());
+			IDataBroker broker = accessor.GetDataBroker(this.structuredData, Support.Res.Fields.ResourceEnumType.Values);
 			StructuredData newValue = broker.CreateData(this.cultureMap);
 
 			Druid druid = valueCultureMap.Id;

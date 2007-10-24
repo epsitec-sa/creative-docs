@@ -26,7 +26,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 		{
 			if (fieldId == Res.Fields.ResourceCommand.Shortcuts.ToString ())
 			{
-				return new Broker ();
+				return new ShortcutBroker ();
 			}
 			else
 			{
@@ -147,7 +147,10 @@ namespace Epsitec.Common.Support.ResourceAccessors
 
 				if (mode == DataCreationMode.Public)
 				{
-					shortcuts.CollectionChanged += new Listener (this, item).HandleCollectionChanged;
+					ShortcutListener listener = new ShortcutListener (this, item, data);
+
+					shortcuts.CollectionChanging += listener.HandleCollectionChanging;
+					shortcuts.CollectionChanged  += listener.HandleCollectionChanged;
 				}
 			}
 
@@ -256,7 +259,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 
 		#region Broker Class
 
-		private class Broker : IDataBroker
+		private class ShortcutBroker : IDataBroker
 		{
 			#region IDataBroker Members
 
@@ -269,5 +272,17 @@ namespace Epsitec.Common.Support.ResourceAccessors
 		}
 
 		#endregion
+
+		protected class ShortcutListener : Listener
+		{
+			public ShortcutListener(CommandResourceAccessor accessor, CultureMap item, StructuredData data)
+				: base (accessor, item, data)
+			{
+			}
+
+			public override void HandleCollectionChanging(object sender)
+			{
+			}
+		}
 	}
 }

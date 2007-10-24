@@ -590,7 +590,10 @@ namespace Epsitec.Common.Support.ResourceAccessors
 
 				if (mode == DataCreationMode.Public)
 				{
-					fields.CollectionChanged += new Listener (this, item).HandleCollectionChanged;
+					FieldListener listener = new FieldListener (this, item, data);
+
+					fields.CollectionChanging += listener.HandleCollectionChanging;
+					fields.CollectionChanged  += listener.HandleCollectionChanged;
 				}
 			}
 			
@@ -628,7 +631,10 @@ namespace Epsitec.Common.Support.ResourceAccessors
 
 				if (mode == DataCreationMode.Public)
 				{
-					interfaceIds.CollectionChanged += new InterfaceListener (this, item).HandleCollectionChanged;
+					InterfaceListener listener = new InterfaceListener (this, item, data);
+
+					interfaceIds.CollectionChanging += listener.HandleCollectionChanging;
+					interfaceIds.CollectionChanged  += listener.HandleCollectionChanged;
 				}
 			}
 
@@ -1081,14 +1087,32 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			}
 		}
 
+		protected class FieldListener : Listener
+		{
+			public FieldListener(StructuredTypeResourceAccessor accessor, CultureMap item, StructuredData data)
+				: base (accessor, item, data)
+			{
+			}
+
+			public override void HandleCollectionChanging(object sender)
+			{
+				
+			}
+		}
+
 		#region Listener Class
 
 		protected class InterfaceListener
 		{
-			public InterfaceListener(StructuredTypeResourceAccessor accessor, CultureMap item)
+			public InterfaceListener(StructuredTypeResourceAccessor accessor, CultureMap item, StructuredData data)
 			{
 				this.accessor = accessor;
 				this.item = item;
+				this.data = data;
+			}
+
+			public void HandleCollectionChanging(object sender)
+			{
 			}
 
 			public void HandleCollectionChanged(object sender, CollectionChangedEventArgs e)
@@ -1100,6 +1124,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 
 			private StructuredTypeResourceAccessor accessor;
 			private CultureMap item;
+			private StructuredData data;
 		}
 
 		#endregion

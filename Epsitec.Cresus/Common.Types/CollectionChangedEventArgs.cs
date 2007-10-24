@@ -84,7 +84,7 @@ namespace Epsitec.Common.Types
 		/// <see cref="CollectionChangedAction.Replace"/> actions).
 		/// </summary>
 		/// <value>The list of old items or <c>null</c>.</value>
-		public System.Collections.IList OldItems
+		public System.Collections.IList			OldItems
 		{
 			get
 			{

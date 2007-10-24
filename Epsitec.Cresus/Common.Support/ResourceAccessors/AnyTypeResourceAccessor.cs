@@ -239,8 +239,11 @@ namespace Epsitec.Common.Support.ResourceAccessors
 					
 					data.SetValue (Res.Fields.ResourceEnumType.Values, values);
 					data.LockValue (Res.Fields.ResourceEnumType.Values);
-					
-					values.CollectionChanged += new Listener (this, item).HandleCollectionChanged;
+
+					EnumValueListener listener = new EnumValueListener (this, item, data);
+
+					values.CollectionChanging += listener.HandleCollectionChanging;
+					values.CollectionChanged  += listener.HandleCollectionChanged;
 				}
 			}
 		}
@@ -1331,7 +1334,10 @@ namespace Epsitec.Common.Support.ResourceAccessors
 
 				if (mode == DataCreationMode.Public)
 				{
-					values.CollectionChanged += new Listener (this, item).HandleCollectionChanged;
+					EnumValueListener listener = new EnumValueListener (this, item, data);
+
+					values.CollectionChanging += listener.HandleCollectionChanging;
+					values.CollectionChanged  += listener.HandleCollectionChanged;
 				}
 			}
 
@@ -1371,6 +1377,18 @@ namespace Epsitec.Common.Support.ResourceAccessors
 		}
 
 		#endregion
+
+		protected class EnumValueListener : Listener
+		{
+			public EnumValueListener(AnyTypeResourceAccessor accessor, CultureMap item, StructuredData data)
+				: base (accessor, item, data)
+			{
+			}
+
+			public override void HandleCollectionChanging(object sender)
+			{
+			}
+		}
 
 		/// <summary>
 		/// Handles changes to the item collection.

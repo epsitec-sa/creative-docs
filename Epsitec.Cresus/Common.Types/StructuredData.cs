@@ -446,24 +446,24 @@ namespace Epsitec.Common.Types
 				return UnknownValue.Instance;
 			}
 
-			Record value;
+			Record record;
 
 			if (this.values == null)
 			{
 				usesOriginalData = true;
 				return this.GetUndefinedValue (type, id);
 			}
-			else if (this.values.TryGetValue (id, out value))
+			else if (this.values.TryGetValue (id, out record))
 			{
-				usesOriginalData = value.UsesOriginalData;
+				usesOriginalData = record.UsesOriginalData;
 
-				if (UndefinedValue.IsUndefinedValue (value.Data))
+				if (UndefinedValue.IsUndefinedValue (record.Data))
 				{
 					return this.GetUndefinedValue (type, id);
 				}
 				else
 				{
-					return value.Data;
+					return record.Data;
 				}
 			}
 			else
@@ -528,6 +528,33 @@ namespace Epsitec.Common.Types
 
 			return false;
 		}
+
+		public bool CopyOriginalToCurrentValue(Support.Druid id)
+		{
+			return this.CopyOriginalToCurrentValue (id.ToString ());
+		}
+
+		public bool CopyOriginalToCurrentValue(string id)
+		{
+			if (this.values != null)
+			{
+				Record record;
+
+				if (this.values.TryGetValue (id, out record))
+				{
+					if ((record.IsReadOnly) &&
+						(!UndefinedValue.IsUndefinedValue (record.Data)))
+					{
+						throw new System.InvalidOperationException (string.Format ("Field {0} is read only", id));
+					}
+
+					this.values[id] = new Record (record.OriginalData, record.OriginalData, false, record.IsReadOnly, record.Handler);
+					return true;
+				}
+			}
+
+			return false;
+		}
 		
 		public void SetValue(Support.Druid id, object value)
 		{
@@ -541,14 +568,15 @@ namespace Epsitec.Common.Types
 
 		public bool LockValue(string id)
 		{
-			Record value;
+			Record record;
 
 			if ((this.values != null) &&
-				(this.values.TryGetValue (id, out value)))
+				(this.values.TryGetValue (id, out record)))
 			{
-				if (!UndefinedValue.IsUndefinedValue (value.Data))
+				if ((!UndefinedValue.IsUndefinedValue (record.Data)) &&
+					(record.IsReadOnly == false))
 				{
-					this.values[id] = new Record (value.Data, value.OriginalData, value.UsesOriginalData, true, value.Handler);
+					this.values[id] = new Record (record.Data, record.OriginalData, record.UsesOriginalData, true, record.Handler);
 					return true;
 				}
 			}
@@ -563,14 +591,15 @@ namespace Epsitec.Common.Types
 
 		public bool UnlockValue(string id)
 		{
-			Record value;
+			Record record;
 
 			if ((this.values != null) &&
-				(this.values.TryGetValue (id, out value)))
+				(this.values.TryGetValue (id, out record)))
 			{
-				if (!UndefinedValue.IsUndefinedValue (value.Data))
+				if ((!UndefinedValue.IsUndefinedValue (record.Data)) &&
+					(record.IsReadOnly))
 				{
-					this.values[id] = new Record (value.Data, value.OriginalData, value.UsesOriginalData, false, value.Handler);
+					this.values[id] = new Record (record.Data, record.OriginalData, record.UsesOriginalData, false, record.Handler);
 					return true;
 				}
 			}
@@ -585,12 +614,12 @@ namespace Epsitec.Common.Types
 
 		public bool IsValueLocked(string id)
 		{
-			Record value;
+			Record record;
 
 			if ((this.values != null) &&
-				(this.values.TryGetValue (id, out value)))
+				(this.values.TryGetValue (id, out record)))
 			{
-				return value.IsReadOnly;
+				return record.IsReadOnly;
 			}
 			else
 			{
@@ -734,11 +763,11 @@ namespace Epsitec.Common.Types
 			this.values = new Collections.HostedDictionary<string, Record> (this.NotifyInsertion, this.NotifyRemoval);
 		}
 
-		protected virtual void NotifyInsertion(string id, Record value)
+		protected virtual void NotifyInsertion(string id, Record record)
 		{
 		}
 
-		protected virtual void NotifyRemoval(string id, Record value)
+		protected virtual void NotifyRemoval(string id, Record record)
 		{
 		}
 

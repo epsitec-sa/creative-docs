@@ -143,6 +143,8 @@ namespace Epsitec.Common.Support.ResourceAccessors
 		/// <param name="mode">The creation mode for the data record.</param>
 		protected override void FillDataFromCaption(CultureMap item, Types.StructuredData data, Caption caption, DataCreationMode mode)
 		{
+			bool recordLabels = false;
+			
 			ObservableList<string> labels = data.GetValue (Res.Fields.ResourceCaption.Labels) as ObservableList<string>;
 
 			//	If the caption contains labels, they will overwrite the data
@@ -155,6 +157,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			if (labels == null)
 			{
 				labels = new ObservableList<string> ();
+				recordLabels = true;
 			}
 			else if (caption.HasLabels)
 			{
@@ -168,7 +171,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 				labels.AddRange (caption.Labels);
 			}
 
-			if (UndefinedValue.IsUndefinedValue (data.GetValue (Res.Fields.ResourceCaption.Labels)))
+			if (recordLabels)
 			{
 				//	The labels property can be accessed as an IList<string> and
 				//	any modification will be reported to the listener. We must
@@ -179,7 +182,10 @@ namespace Epsitec.Common.Support.ResourceAccessors
 
 				if (mode == DataCreationMode.Public)
 				{
-					labels.CollectionChanged += new Listener (this, item).HandleCollectionChanged;
+					LabelListener listener = new LabelListener (this, item, data);
+
+					labels.CollectionChanging += listener.HandleCollectionChanging;
+					labels.CollectionChanged  += listener.HandleCollectionChanged;
 				}
 			}
 
@@ -286,15 +292,36 @@ namespace Epsitec.Common.Support.ResourceAccessors
 				&& (fieldName.StartsWith (this.Prefix));
 		}
 
+		protected class LabelListener : Listener
+		{
+			public LabelListener(CaptionResourceAccessor accessor, CultureMap item, StructuredData data)
+				: base (accessor, item, data)
+			{
+			}
+
+			public override void HandleCollectionChanging(object sender)
+			{
+				if (this.UsesOriginalValue (Res.Fields.ResourceCaption.Labels))
+				{
+					this.data.CopyOriginalToCurrentValue (Res.Fields.ResourceCaption.Labels);
+
+					//	TODO: ...save original copy somewhere...
+				}
+			}
+		}
+
 		#region Listener Class
 
-		protected class Listener
+		protected abstract class Listener
 		{
-			public Listener(CaptionResourceAccessor accessor, CultureMap item)
+			public Listener(CaptionResourceAccessor accessor, CultureMap item, StructuredData data)
 			{
 				this.accessor = accessor;
 				this.item = item;
+				this.data = data;
 			}
+
+			public abstract void HandleCollectionChanging(object sender);
 
 			public void HandleCollectionChanged(object sender, CollectionChangedEventArgs e)
 			{
@@ -316,6 +343,22 @@ namespace Epsitec.Common.Support.ResourceAccessors
 				
 				System.Diagnostics.Debug.WriteLine (string.Format ("{0}: index {1} -> {2}", e.Action, e.OldStartingIndex, e.NewStartingIndex));
 				this.accessor.NotifyItemChanged (this.item);
+			}
+
+			protected bool UsesOriginalValue(Druid id)
+			{
+				if (this.accessor.BasedOnPatchModule)
+				{
+					bool usesOriginalData;
+					
+					this.data.GetValue (id, out usesOriginalData);
+					
+					return usesOriginalData;
+				}
+				else
+				{
+					return false;
+				}
 			}
 
 			private void HandleCollectionAdd(System.Collections.IEnumerable list)
@@ -344,8 +387,9 @@ namespace Epsitec.Common.Support.ResourceAccessors
 				}
 			}
 
-			private CaptionResourceAccessor accessor;
-			private CultureMap item;
+			protected CaptionResourceAccessor accessor;
+			protected CultureMap item;
+			protected StructuredData data;
 		}
 
 		#endregion

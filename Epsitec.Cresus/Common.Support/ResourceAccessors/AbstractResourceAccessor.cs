@@ -125,6 +125,11 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			}
 		}
 
+		public IDataBroker GetDataBroker(Types.StructuredData container, Druid fieldId)
+		{
+			return this.GetDataBroker (container, fieldId.ToString ());
+		}
+
 		/// <summary>
 		/// Gets the data broker associated with the specified field. Usually,
 		/// this is only meaningful if the field defines a collection of

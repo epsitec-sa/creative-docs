@@ -1529,7 +1529,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			IResourceAccessor fieldAccessor = this.editor.Module.AccessFields.Accessor;
 			fieldAccessor.Collection.Add(fieldCultureMap);
 
-			IDataBroker broker = accessor.GetDataBroker(data, Support.Res.Fields.ResourceStructuredType.Fields.ToString());
+			IDataBroker broker = accessor.GetDataBroker(data, Support.Res.Fields.ResourceStructuredType.Fields);
 			StructuredData newField = broker.CreateData(this.cultureMap);
 
 			Druid druid = fieldCultureMap.Id;
@@ -1572,7 +1572,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 
 			Support.ResourceAccessors.StructuredTypeResourceAccessor accessor = this.editor.Module.AccessEntities.Accessor as Support.ResourceAccessors.StructuredTypeResourceAccessor;
-			IDataBroker broker = accessor.GetDataBroker(data, Support.Res.Fields.ResourceStructuredType.InterfaceIds.ToString());
+			IDataBroker broker = accessor.GetDataBroker(data, Support.Res.Fields.ResourceStructuredType.InterfaceIds);
 			StructuredData newInterface = broker.CreateData(this.cultureMap);
 			newInterface.SetValue(Support.Res.Fields.InterfaceId.CaptionId, druid);
 			dataInterfaces.Add(newInterface);

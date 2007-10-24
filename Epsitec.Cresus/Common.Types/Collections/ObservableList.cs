@@ -360,8 +360,28 @@ namespace Epsitec.Common.Types.Collections
 			{
 				throw new System.InvalidOperationException ("Read-only list may not be changed");
 			}
+
+			this.OnCollectionChanging ();
 		}
-		
+
+		protected virtual void OnCollectionChanging()
+		{
+			if (this.silent == 0)
+			{
+				Epsitec.Common.Support.EventHandler handler;
+
+				lock (this.list)
+				{
+					handler = this.collectionChangingEvent;
+				}
+
+				if (handler != null)
+				{
+					handler (this);
+				}
+			}
+		}
+
 		protected virtual void OnCollectionChanged(CollectionChangedEventArgs e)
 		{
 			if (this.silent == 0)
@@ -406,6 +426,30 @@ namespace Epsitec.Common.Types.Collections
 
 		#endregion
 
+		/// <summary>
+		/// Occurs before the collection changes. There is no way to prevent
+		/// the change; the event is only informative.
+		/// </summary>
+		public event Epsitec.Common.Support.EventHandler CollectionChanging
+		{
+			add
+			{
+				lock (this.list)
+				{
+					this.collectionChangingEvent += value;
+				}
+			}
+			remove
+			{
+				lock (this.list)
+				{
+					this.collectionChangingEvent -= value;
+				}
+			}
+		}
+
+		#region ReEnabler Class
+
 		private class ReEnabler : System.IDisposable
 		{
 			public ReEnabler(ObservableList<T> list)
@@ -425,7 +469,10 @@ namespace Epsitec.Common.Types.Collections
 			ObservableList<T> list;
 		}
 
+		#endregion
+
 		private event Epsitec.Common.Support.EventHandler<CollectionChangedEventArgs> collectionChangedEvent;
+		private event Epsitec.Common.Support.EventHandler collectionChangingEvent;
 
 		private List<T> list = new List<T> ();
 		private int silent;
