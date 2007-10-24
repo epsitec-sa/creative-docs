@@ -5537,6 +5537,8 @@ namespace Epsitec.Common.DocumentEditor
 		{
 			//	Lance le processus asynchrone qui va se connecter au site web
 			//	et regarder s'il y a une version plus récente.
+			//	Chaque exécution (qui débouche sur une vérification) incrémente le compteur
+			//	'/counter/check/Cresus_Documents' dans la base MySQL (pour la version française).
 			if ( !always && !this.globalSettings.AutoChecker )  return;
 
 			if ( !always )
