@@ -70,7 +70,7 @@
   <data id="042">Expired</data>
   <data id="062">Check for Updates</data>
   <data id="072">Your application is up-to-date.</data>
-  <data id="082">A new version is currently available (&lt;a href=&quot;http://www.creativedocs.net/donate&quot;&gt;donate&lt;/a&gt;):</data>
+  <data id="082">A new version is currently available (&lt;a href="http://www.creativedocs.net/donate"&gt;donate&lt;/a&gt;):</data>
   <data id="092">Your version: {0}</data>
   <data id="0A2">New version: {0}</data>
   <data id="0B2">No new version is currently available.</data>

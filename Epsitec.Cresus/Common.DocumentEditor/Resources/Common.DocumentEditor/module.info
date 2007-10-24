@@ -1,2 +1,6 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
-<ModuleInfo name="Common.DocumentEditor" id="100" layer="s" />
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ModuleInfo id="100" name="Common.DocumentEditor" layer="s">
+  <Versions>
+    <Version id="2" build="1" date="2007-10-24T08:40:56.6131323Z" />
+  </Versions>
+</ModuleInfo>

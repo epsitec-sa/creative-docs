@@ -219,6 +219,12 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_36D02F2E10BC43889AD8A9F872BB8442"
+        "OwnerKey" = "8:_B0FC9A5706914E848F9F20C897BFA22A"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_39FAF39AB693D6CD02246594963C41D6"
         "OwnerKey" = "8:_8C83F6D6089DBEF8E5B2F58D42655F51"
         "MsmSig" = "8:_UNDEFINED"
@@ -257,12 +263,6 @@
         {
         "MsmKey" = "8:_4E261EC37D5943319CD345A65C5A3E91"
         "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_556AB67BD9074BF7AD28E0CD85558DD6"
-        "OwnerKey" = "8:_B0FC9A5706914E848F9F20C897BFA22A"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -1637,7 +1637,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:Common.Document, Version=2.1.2.0, Culture=neutral, PublicKeyToken=7344997cc606b490, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:Common.Document, Version=2.1.3.0, Culture=neutral, PublicKeyToken=7344997cc606b490, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                     "_D072788192480C3080C41D0B8CDB4EB7"
@@ -1668,7 +1668,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:Common.DocumentEditor, Version=2.1.2.0, Culture=neutral, PublicKeyToken=7344997cc606b490, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:Common.DocumentEditor, Version=2.1.3.0, Culture=neutral, PublicKeyToken=7344997cc606b490, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                     "_D5816E49C05BF416FAAAF9897C2E85CC"
@@ -1972,14 +1972,14 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Crésus Documents"
-        "ProductCode" = "8:{795407E7-39F7-4F23-87EF-84F06A2FEDE9}"
-        "PackageCode" = "8:{0F17829D-AD07-48FA-B76D-66FAD75159F4}"
+        "ProductCode" = "8:{1FBAEDD7-CAC1-431C-940B-37C392F3995B}"
+        "PackageCode" = "8:{6484D51D-3586-4EC8-A842-C2B0636E8CB1}"
         "UpgradeCode" = "8:{028E66AB-AF47-419F-A2DE-8EDC1BC9C240}"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:TRUE"
-        "ProductVersion" = "8:2.1.2"
+        "ProductVersion" = "8:2.1.3"
         "Manufacturer" = "8:Epsitec"
         "ARPHELPTELEPHONE" = "8:0848 27 37 87"
         "ARPHELPLINK" = "8:"
@@ -2555,7 +2555,7 @@
         }
         "MergeModule"
         {
-            "{CEE29DC0-9FBA-4B99-8D47-5BC643D9B626}:_556AB67BD9074BF7AD28E0CD85558DD6"
+            "{CEE29DC0-9FBA-4B99-8D47-5BC643D9B626}:_36D02F2E10BC43889AD8A9F872BB8442"
             {
             "UseDynamicProperties" = "11:TRUE"
             "IsDependency" = "11:TRUE"
