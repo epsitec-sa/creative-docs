@@ -140,28 +140,28 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.buttonAdd.IconName = Misc.Icon("StringAdd");
 			this.buttonAdd.Dock = DockStyle.Left;
 			this.buttonAdd.AutoFocus = false;
-			this.buttonAdd.Pressed += new MessageEventHandler(this.HandleButtonAddPressed);
+			this.buttonAdd.Clicked += new MessageEventHandler(this.HandleButtonAddClicked);
 			ToolTip.Default.SetToolTip(this.buttonAdd, Res.Strings.StringCollection.Add);
 
 			this.buttonDuplicate = new IconButton(toolbar);
 			this.buttonDuplicate.IconName = Misc.Icon("StringDuplicate");
 			this.buttonDuplicate.Dock = DockStyle.Left;
 			this.buttonDuplicate.AutoFocus = false;
-			this.buttonDuplicate.Pressed += new MessageEventHandler(this.HandleButtonDuplicatePressed);
+			this.buttonDuplicate.Clicked += new MessageEventHandler(this.HandleButtonDuplicateClicked);
 			ToolTip.Default.SetToolTip(this.buttonDuplicate, Res.Strings.StringCollection.Duplicate);
 
 			this.buttonRemove = new IconButton(toolbar);
 			this.buttonRemove.IconName = Misc.Icon("StringRemove");
 			this.buttonRemove.Dock = DockStyle.Left;
 			this.buttonRemove.AutoFocus = false;
-			this.buttonRemove.Pressed += new MessageEventHandler(this.HandleButtonRemovePressed);
+			this.buttonRemove.Clicked += new MessageEventHandler(this.HandleButtonRemoveClicked);
 			ToolTip.Default.SetToolTip(this.buttonRemove, Res.Strings.StringCollection.Remove);
 
 			this.buttonDefault = new IconButton(toolbar);
 			this.buttonDefault.IconName = Misc.Icon("StringDefault");
 			this.buttonDefault.Dock = DockStyle.Left;
 			this.buttonDefault.AutoFocus = false;
-			this.buttonDefault.Pressed += new MessageEventHandler(this.HandleButtonDefaultPressed);
+			this.buttonDefault.Clicked += new MessageEventHandler(this.HandleButtonDefaultClicked);
 			ToolTip.Default.SetToolTip(this.buttonDefault, Res.Strings.StringCollection.Default);
 
 			IconSeparator sep = new IconSeparator(toolbar);
@@ -172,14 +172,14 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.buttonPrev.IconName = Misc.Icon("StringPrev");
 			this.buttonPrev.Dock = DockStyle.Left;
 			this.buttonPrev.AutoFocus = false;
-			this.buttonPrev.Pressed += new MessageEventHandler(this.HandleButtonPrevPressed);
+			this.buttonPrev.Clicked += new MessageEventHandler(this.HandleButtonPrevClicked);
 			ToolTip.Default.SetToolTip(this.buttonPrev, Res.Strings.StringCollection.Prev);
 
 			this.buttonNext = new IconButton(toolbar);
 			this.buttonNext.IconName = Misc.Icon("StringNext");
 			this.buttonNext.Dock = DockStyle.Left;
 			this.buttonNext.AutoFocus = false;
-			this.buttonNext.Pressed += new MessageEventHandler(this.HandleButtonNextPressed);
+			this.buttonNext.Clicked += new MessageEventHandler(this.HandleButtonNextClicked);
 			ToolTip.Default.SetToolTip(this.buttonNext, Res.Strings.StringCollection.Next);
 
 			HSlider slider = new HSlider(toolbar);
@@ -222,7 +222,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 					GlyphButton button = new GlyphButton();
 					button.GlyphShape = GlyphShape.None;
-					button.Pressed += new MessageEventHandler(this.HandleButtonTextPressed);
+					button.Clicked += new MessageEventHandler(this.HandleButtonTextClicked);
 					GridLayoutEngine.SetColumn(button, 1);
 					GridLayoutEngine.SetRow(button, count);
 					this.Children.Add(button);
@@ -245,7 +245,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				}
 				else  // supprime une ligne ?
 				{
-					this.glyphButtons[count-2].Pressed -= new MessageEventHandler(this.HandleButtonTextPressed);
+					this.glyphButtons[count-2].Clicked -= new MessageEventHandler(this.HandleButtonTextClicked);
 					this.textFields[count-2].TextChanged -= new EventHandler(this.HandleTextChanged);
 					this.textFields[count-2].KeyboardFocusChanged -= new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleTextFocusChanged);
 
@@ -362,7 +362,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		}
 
 
-		protected void HandleButtonAddPressed(object sender, MessageEventArgs e)
+		protected void HandleButtonAddClicked(object sender, MessageEventArgs e)
 		{
 			//	Appelé lorsque le bouton pour créer une nouvelle ligne est pressé.
 			int sel = this.SelectedRow;
@@ -379,7 +379,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.OnStringTextChanged();
 		}
 
-		protected void HandleButtonDuplicatePressed(object sender, MessageEventArgs e)
+		protected void HandleButtonDuplicateClicked(object sender, MessageEventArgs e)
 		{
 			//	Appelé lorsque le bouton pour dupliquer une ligne est pressé.
 			int sel = this.SelectedRow;
@@ -393,7 +393,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.OnStringTextChanged();
 		}
 
-		protected void HandleButtonRemovePressed(object sender, MessageEventArgs e)
+		protected void HandleButtonRemoveClicked(object sender, MessageEventArgs e)
 		{
 			//	Appelé lorsque le bouton pour supprimer une ligne est pressé.
 			int sel = this.SelectedRow;
@@ -413,7 +413,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.OnStringTextChanged();
 		}
 
-		protected void HandleButtonDefaultPressed(object sender, MessageEventArgs e)
+		protected void HandleButtonDefaultClicked(object sender, MessageEventArgs e)
 		{
 			//	Appelé lorsque le bouton 'par défaut' est pressé.
 			while (this.strings.Count > 1)
@@ -430,7 +430,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.OnStringTextChanged();
 		}
 
-		protected void HandleButtonPrevPressed(object sender, MessageEventArgs e)
+		protected void HandleButtonPrevClicked(object sender, MessageEventArgs e)
 		{
 			//	Appelé lorsque le bouton pour monter une ligne est pressé.
 			int sel = this.SelectedRow;
@@ -445,7 +445,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.SetFocusInSelection();
 		}
 
-		protected void HandleButtonNextPressed(object sender, MessageEventArgs e)
+		protected void HandleButtonNextClicked(object sender, MessageEventArgs e)
 		{
 			//	Appelé lorsque le bouton pour descendre une ligne est pressé.
 			int sel = this.SelectedRow;
@@ -468,7 +468,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.AdaptTextFieldLines();
 		}
 
-		protected void HandleButtonTextPressed(object sender, MessageEventArgs e)
+		protected void HandleButtonTextClicked(object sender, MessageEventArgs e)
 		{
 			//	Appelé lorsque le bouton ">" pour sélectionner une ligne est pressé.
 			GlyphButton button = sender as GlyphButton;

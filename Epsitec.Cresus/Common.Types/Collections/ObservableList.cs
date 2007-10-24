@@ -11,7 +11,7 @@ namespace Epsitec.Common.Types.Collections
 	/// refreshed.
 	/// </summary>
 	/// <typeparam name="T">The manipulated data type.</typeparam>
-	public class ObservableList<T> : IList<T>, INotifyCollectionChanged, System.Collections.ICollection, System.Collections.IList, IReadOnly, IReadOnlyLock
+	public class ObservableList<T> : AbstractObservableList, IList<T>, INotifyCollectionChanged, System.Collections.ICollection, System.Collections.IList, IReadOnly, IReadOnlyLock
 	{
 		public ObservableList()
 		{
@@ -92,6 +92,62 @@ namespace Epsitec.Common.Types.Collections
 		internal void Unlock()
 		{
 			this.isReadOnly = false;
+		}
+
+		/// <summary>
+		/// Gets target for the specified collection changing event handler.
+		/// </summary>
+		/// <param name="index">The index.</param>
+		/// <returns>The target handler instance or <c>null</c>.</returns>
+		public override object GetCollectionChangingTarget(int index)
+		{
+			Support.EventHandler handler;
+
+			lock (this.list)
+			{
+				handler = this.collectionChangingEvent;
+			}
+
+			if (handler != null)
+			{
+				System.Delegate[] delegates = handler.GetInvocationList ();
+
+				if ((index >= 0) &&
+					(index < delegates.Length))
+				{
+					return delegates[index].Target;
+				}
+			}
+
+			return null;
+		}
+
+		/// <summary>
+		/// Gets target for the specified collection changed event handler.
+		/// </summary>
+		/// <param name="index">The index.</param>
+		/// <returns>The target handler instance or <c>null</c>.</returns>
+		public override object GetCollectionChangedTarget(int index)
+		{
+			Support.EventHandler<CollectionChangedEventArgs> handler;
+
+			lock (this.list)
+			{
+				handler = this.collectionChangedEvent;
+			}
+
+			if (handler != null)
+			{
+				System.Delegate[] delegates = handler.GetInvocationList ();
+
+				if ((index >= 0) &&
+					(index < delegates.Length))
+				{
+					return delegates[index].Target;
+				}
+			}
+
+			return null;
 		}
 
 		#region IReadOnlyLock Members

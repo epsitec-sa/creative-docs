@@ -1,6 +1,9 @@
 //	Copyright © 2007, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using Epsitec.Common.Support;
+using Epsitec.Common.Types;
+
 using System.Collections.Generic;
 
 namespace Epsitec.Common.Support.ResourceAccessors
@@ -10,7 +13,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 	/// all resource accessors found in the <c>Epsitec.Common.Support</c>
 	/// namespace.
 	/// </summary>
-	public abstract class AbstractResourceAccessor : Types.DependencyObject, IResourceAccessor
+	public abstract class AbstractResourceAccessor : DependencyObject, IResourceAccessor
 	{
 		/// <summary>
 		/// Initializes a new instance of the <see cref="AbstractResourceAccessor"/> class.
@@ -96,6 +99,31 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			}
 		}
 
+		/// <summary>
+		/// Resets the specified field to its original value.
+		/// </summary>
+		/// <param name="item">The item.</param>
+		/// <param name="container">The container.</param>
+		/// <param name="fieldId">The field id.</param>
+		public void ResetToOriginal(CultureMap item, StructuredData container, Druid fieldId)
+		{
+			if ((this.BasedOnPatchModule) &&
+				(item.Source == CultureMapSource.DynamicMerge))
+			{
+				this.ResetToOriginalValue (item, container, fieldId);
+
+				bool usesOriginalData;
+				container.GetValue (fieldId, out usesOriginalData);
+
+				System.Diagnostics.Debug.Assert (usesOriginalData);
+			}
+		}
+
+		protected virtual void ResetToOriginalValue(CultureMap item, StructuredData container, Druid fieldId)
+		{
+			container.ResetToOriginalValue (fieldId);
+		}
+
 		#region IResourceAccessor Members
 
 		/// <summary>
@@ -125,7 +153,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			}
 		}
 
-		public IDataBroker GetDataBroker(Types.StructuredData container, Druid fieldId)
+		public IDataBroker GetDataBroker(StructuredData container, Druid fieldId)
 		{
 			return this.GetDataBroker (container, fieldId.ToString ());
 		}
@@ -138,7 +166,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 		/// <param name="container">The container.</param>
 		/// <param name="fieldId">The id for the field in the specified container.</param>
 		/// <returns>The data broker or <c>null</c>.</returns>
-		public virtual IDataBroker GetDataBroker(Types.StructuredData container, string fieldId)
+		public virtual IDataBroker GetDataBroker(StructuredData container, string fieldId)
 		{
 			return null;
 		}
@@ -278,7 +306,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 		/// <param name="item">The item.</param>
 		/// <param name="twoLetterISOLanguageName">The two letter ISO language name.</param>
 		/// <param name="data">The data which is cleared.</param>
-		public virtual void NotifyCultureDataCleared(CultureMap item, string twoLetterISOLanguageName, Types.StructuredData data)
+		public virtual void NotifyCultureDataCleared(CultureMap item, string twoLetterISOLanguageName, StructuredData data)
 		{
 		}
 
@@ -290,7 +318,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 		/// <returns>
 		/// The data loaded from the resources which was stored in the specified item.
 		/// </returns>
-		public abstract Types.StructuredData LoadCultureData(CultureMap item, string twoLetterISOLanguageName);
+		public abstract StructuredData LoadCultureData(CultureMap item, string twoLetterISOLanguageName);
 
 		#endregion
 
@@ -325,7 +353,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			int devId    = -1;
 			int localId  = -1;
 
-			if (Types.UndefinedValue.IsUndefinedValue (devIdValue))
+			if (UndefinedValue.IsUndefinedValue (devIdValue))
 			{
 				throw new System.InvalidOperationException ("Undefined developer id");
 			}
@@ -497,7 +525,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 		/// <param name="module">The source module id.</param>
 		/// <param name="twoLetterISOLanguageName">The two letter ISO language name.</param>
 		/// <returns>The data which describes the specified resource.</returns>
-		protected abstract Types.StructuredData LoadFromField(ResourceBundle.Field field, int module, string twoLetterISOLanguageName);
+		protected abstract StructuredData LoadFromField(ResourceBundle.Field field, int module, string twoLetterISOLanguageName);
 
 		/// <summary>
 		/// Checks if the data stored in the field matches this accessor. This
@@ -542,8 +570,8 @@ namespace Epsitec.Common.Support.ResourceAccessors
 		/// Handles changes to the item collection.
 		/// </summary>
 		/// <param name="sender">The sender.</param>
-		/// <param name="e">The <see cref="Epsitec.Common.Types.CollectionChangedEventArgs"/> instance containing the event data.</param>
-		protected virtual void HandleItemsCollectionChanged(object sender, Types.CollectionChangedEventArgs e)
+		/// <param name="e">The <see cref="Epsitec.Common.CollectionChangedEventArgs"/> instance containing the event data.</param>
+		protected virtual void HandleItemsCollectionChanged(object sender, CollectionChangedEventArgs e)
 		{
 			if (this.suspendNotifications == 0)
 			{

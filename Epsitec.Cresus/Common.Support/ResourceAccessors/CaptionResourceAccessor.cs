@@ -292,6 +292,40 @@ namespace Epsitec.Common.Support.ResourceAccessors
 				&& (fieldName.StartsWith (this.Prefix));
 		}
 
+		/// <summary>
+		/// Finds the listener associated with a given value in the data record.
+		/// </summary>
+		/// <param name="data">The data record.</param>
+		/// <param name="id">The field id.</param>
+		/// <returns>The <c>Listener</c> instance or <c>null</c>.</returns>
+		protected static T FindListener<T>(StructuredData data, Druid id) where T : Listener
+		{
+			AbstractObservableList list = data.GetValue (id) as AbstractObservableList;
+
+			if (list != null)
+			{
+				return list.GetCollectionChangingTarget (0) as T;
+			}
+
+			return null;
+		}
+
+		protected override void ResetToOriginalValue(CultureMap item, StructuredData container, Druid fieldId)
+		{
+			if (fieldId == Res.Fields.ResourceCaption.Labels)
+			{
+				LabelListener listener = CaptionResourceAccessor.FindListener<LabelListener> (container, fieldId);
+
+				System.Diagnostics.Debug.Assert (listener != null);
+
+				listener.ResetToOriginalValue ();
+			}
+			else
+			{
+				base.ResetToOriginalValue (item, container, fieldId);
+			}
+		}
+
 		protected class LabelListener : Listener
 		{
 			public LabelListener(CaptionResourceAccessor accessor, CultureMap item, StructuredData data)
@@ -303,11 +337,35 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			{
 				if (this.UsesOriginalValue (Res.Fields.ResourceCaption.Labels))
 				{
+					this.data.UnlockValue (Res.Fields.ResourceCaption.Labels);
 					this.data.CopyOriginalToCurrentValue (Res.Fields.ResourceCaption.Labels);
+					this.data.LockValue (Res.Fields.ResourceCaption.Labels);
 
-					//	TODO: ...save original copy somewhere...
+					ObservableList<string> labels = this.data.GetValue (Res.Fields.ResourceCaption.Labels) as ObservableList<string>;
+
+					this.originalLabels = new List<string> (labels);
 				}
 			}
+
+			public void ResetToOriginalValue()
+			{
+				if (this.originalLabels != null)
+				{
+					this.data.UnlockValue (Res.Fields.ResourceCaption.Labels);
+					this.data.ResetToOriginalValue (Res.Fields.ResourceCaption.Labels);
+					this.data.LockValue (Res.Fields.ResourceCaption.Labels);
+
+					ObservableList<string> labels = this.data.GetValue (Res.Fields.ResourceCaption.Labels) as ObservableList<string>;
+
+					using (labels.DisableNotifications ())
+					{
+						labels.Clear ();
+						labels.AddRange (this.originalLabels);
+					}
+				}
+			}
+
+			private List<string> originalLabels;
 		}
 
 		#region Listener Class
