@@ -146,25 +146,31 @@ namespace Epsitec.Common.Support
 			minor    = 0;
 			build    = 0;
 			revision = 0;
-			
-			if (args.Length > 0)
+
+			try
 			{
-				major = System.Int32.Parse (args[0], System.Globalization.CultureInfo.InvariantCulture);
-				
-				if (args.Length > 1)
+				if (args.Length > 0)
 				{
-					minor = System.Int32.Parse (args[1], System.Globalization.CultureInfo.InvariantCulture);
-					
-					if (args.Length > 2)
+					major = System.Int32.Parse (args[0], System.Globalization.CultureInfo.InvariantCulture);
+
+					if (args.Length > 1)
 					{
-						build = System.Int32.Parse (args[2], System.Globalization.CultureInfo.InvariantCulture);
-						
-						if (args.Length > 3)
+						minor = System.Int32.Parse(args[1], System.Globalization.CultureInfo.InvariantCulture);
+
+						if (args.Length > 2)
 						{
-							revision = System.Int32.Parse (args[3], System.Globalization.CultureInfo.InvariantCulture);
+							build = System.Int32.Parse(args[2], System.Globalization.CultureInfo.InvariantCulture);
+
+							if (args.Length > 3)
+							{
+								revision = System.Int32.Parse(args[3], System.Globalization.CultureInfo.InvariantCulture);
+							}
 						}
 					}
 				}
+			}
+			catch
+			{
 			}
 		}
 		
