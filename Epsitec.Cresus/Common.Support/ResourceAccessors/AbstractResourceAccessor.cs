@@ -103,25 +103,20 @@ namespace Epsitec.Common.Support.ResourceAccessors
 		/// Resets the specified field to its original value.
 		/// </summary>
 		/// <param name="item">The item.</param>
-		/// <param name="container">The container.</param>
+		/// <param name="container">The data record.</param>
 		/// <param name="fieldId">The field id.</param>
-		public void ResetToOriginal(CultureMap item, StructuredData container, Druid fieldId)
+		public void ResetToOriginalValue(CultureMap item, StructuredData container, Druid fieldId)
 		{
 			if ((this.BasedOnPatchModule) &&
 				(item.Source == CultureMapSource.DynamicMerge))
 			{
-				this.ResetToOriginalValue (item, container, fieldId);
+				this.ResetToOriginal (item, container, fieldId);
 
 				bool usesOriginalData;
 				container.GetValue (fieldId, out usesOriginalData);
 
 				System.Diagnostics.Debug.Assert (usesOriginalData);
 			}
-		}
-
-		protected virtual void ResetToOriginalValue(CultureMap item, StructuredData container, Druid fieldId)
-		{
-			container.ResetToOriginalValue (fieldId);
 		}
 
 		#region IResourceAccessor Members
@@ -477,6 +472,18 @@ namespace Epsitec.Common.Support.ResourceAccessors
 		/// </summary>
 		/// <param name="item">The item to store as a resource.</param>
 		protected abstract void PersistItem(CultureMap item);
+
+		/// <summary>
+		/// Resets the specified field to its original value. This is the
+		/// internal implementation which can be overridden.
+		/// </summary>
+		/// <param name="item">The item.</param>
+		/// <param name="container">The data record.</param>
+		/// <param name="fieldId">The field id.</param>
+		protected virtual void ResetToOriginal(CultureMap item, StructuredData container, Druid fieldId)
+		{
+			container.ResetToOriginalValue (fieldId);
+		}
 
 		/// <summary>
 		/// Loads all items found in a bundle into the <c>Collection</c>.

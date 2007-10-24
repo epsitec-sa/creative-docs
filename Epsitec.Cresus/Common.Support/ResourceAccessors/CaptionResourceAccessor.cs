@@ -293,79 +293,28 @@ namespace Epsitec.Common.Support.ResourceAccessors
 		}
 
 		/// <summary>
-		/// Finds the listener associated with a given value in the data record.
+		/// Resets the specified field to its original value. This is the
+		/// internal implementation which can be overridden.
 		/// </summary>
-		/// <param name="data">The data record.</param>
-		/// <param name="id">The field id.</param>
-		/// <returns>The <c>Listener</c> instance or <c>null</c>.</returns>
-		protected static T FindListener<T>(StructuredData data, Druid id) where T : Listener
-		{
-			AbstractObservableList list = data.GetValue (id) as AbstractObservableList;
-
-			if (list != null)
-			{
-				return list.GetCollectionChangingTarget (0) as T;
-			}
-
-			return null;
-		}
-
-		protected override void ResetToOriginalValue(CultureMap item, StructuredData container, Druid fieldId)
+		/// <param name="item">The item.</param>
+		/// <param name="container">The data record.</param>
+		/// <param name="fieldId">The field id.</param>
+		protected override void ResetToOriginal(CultureMap item, StructuredData container, Druid fieldId)
 		{
 			if (fieldId == Res.Fields.ResourceCaption.Labels)
 			{
-				LabelListener listener = CaptionResourceAccessor.FindListener<LabelListener> (container, fieldId);
+				LabelListener listener = Listener.FindListener<LabelListener> (container, fieldId);
 
 				System.Diagnostics.Debug.Assert (listener != null);
+				System.Diagnostics.Debug.Assert (listener.Item == item);
+				System.Diagnostics.Debug.Assert (listener.Data == container);
 
 				listener.ResetToOriginalValue ();
 			}
 			else
 			{
-				base.ResetToOriginalValue (item, container, fieldId);
+				base.ResetToOriginal (item, container, fieldId);
 			}
-		}
-
-		protected class LabelListener : Listener
-		{
-			public LabelListener(CaptionResourceAccessor accessor, CultureMap item, StructuredData data)
-				: base (accessor, item, data)
-			{
-			}
-
-			public override void HandleCollectionChanging(object sender)
-			{
-				if (this.UsesOriginalValue (Res.Fields.ResourceCaption.Labels))
-				{
-					this.data.UnlockValue (Res.Fields.ResourceCaption.Labels);
-					this.data.CopyOriginalToCurrentValue (Res.Fields.ResourceCaption.Labels);
-					this.data.LockValue (Res.Fields.ResourceCaption.Labels);
-
-					ObservableList<string> labels = this.data.GetValue (Res.Fields.ResourceCaption.Labels) as ObservableList<string>;
-
-					this.originalLabels = new List<string> (labels);
-				}
-			}
-
-			public void ResetToOriginalValue()
-			{
-				if (this.originalLabels != null)
-				{
-					this.data.UnlockValue (Res.Fields.ResourceCaption.Labels);
-					this.data.ResetToOriginalValue (Res.Fields.ResourceCaption.Labels);
-					this.data.LockValue (Res.Fields.ResourceCaption.Labels);
-
-					ObservableList<string> labels = this.data.GetValue (Res.Fields.ResourceCaption.Labels) as ObservableList<string>;
-
-					using (labels.DisableNotifications ())
-					{
-						labels.Clear ();
-						labels.AddRange (this.originalLabels);
-					}
-				}
-			}
-
-			private List<string> originalLabels;
 		}
 
 		#region Listener Class
@@ -379,9 +328,27 @@ namespace Epsitec.Common.Support.ResourceAccessors
 				this.data = data;
 			}
 
+			public CultureMap Item
+			{
+				get
+				{
+					return this.item;
+				}
+			}
+
+			public StructuredData Data
+			{
+				get
+				{
+					return this.data;
+				}
+			}
+
 			public abstract void HandleCollectionChanging(object sender);
 
-			public void HandleCollectionChanged(object sender, CollectionChangedEventArgs e)
+			public abstract void ResetToOriginalValue();
+
+			public virtual void HandleCollectionChanged(object sender, CollectionChangedEventArgs e)
 			{
 				switch (e.Action)
 				{
@@ -401,6 +368,24 @@ namespace Epsitec.Common.Support.ResourceAccessors
 				
 				System.Diagnostics.Debug.WriteLine (string.Format ("{0}: index {1} -> {2}", e.Action, e.OldStartingIndex, e.NewStartingIndex));
 				this.accessor.NotifyItemChanged (this.item);
+			}
+
+			/// <summary>
+			/// Finds the listener associated with a given value in the data record.
+			/// </summary>
+			/// <param name="data">The data record.</param>
+			/// <param name="id">The field id.</param>
+			/// <returns>The <c>Listener</c> instance or <c>null</c>.</returns>
+			public static T FindListener<T>(StructuredData data, Druid id) where T : Listener
+			{
+				AbstractObservableList list = data.GetValue (id) as AbstractObservableList;
+
+				if (list != null)
+				{
+					return list.GetCollectionChangingTarget (0) as T;
+				}
+
+				return null;
 			}
 
 			protected bool UsesOriginalValue(Druid id)
@@ -448,6 +433,52 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			protected CaptionResourceAccessor accessor;
 			protected CultureMap item;
 			protected StructuredData data;
+		}
+
+		#endregion
+
+		#region LabelListener Class
+
+		protected class LabelListener : Listener
+		{
+			public LabelListener(CaptionResourceAccessor accessor, CultureMap item, StructuredData data)
+				: base (accessor, item, data)
+			{
+			}
+
+			public override void HandleCollectionChanging(object sender)
+			{
+				if (this.UsesOriginalValue (Res.Fields.ResourceCaption.Labels))
+				{
+					this.data.UnlockValue (Res.Fields.ResourceCaption.Labels);
+					this.data.CopyOriginalToCurrentValue (Res.Fields.ResourceCaption.Labels);
+					this.data.LockValue (Res.Fields.ResourceCaption.Labels);
+
+					ObservableList<string> labels = this.data.GetValue (Res.Fields.ResourceCaption.Labels) as ObservableList<string>;
+
+					this.originalLabels = new List<string> (labels);
+				}
+			}
+
+			public override void ResetToOriginalValue()
+			{
+				if (this.originalLabels != null)
+				{
+					this.data.UnlockValue (Res.Fields.ResourceCaption.Labels);
+					this.data.ResetToOriginalValue (Res.Fields.ResourceCaption.Labels);
+					this.data.LockValue (Res.Fields.ResourceCaption.Labels);
+
+					ObservableList<string> labels = this.data.GetValue (Res.Fields.ResourceCaption.Labels) as ObservableList<string>;
+
+					using (labels.DisableNotifications ())
+					{
+						labels.Clear ();
+						labels.AddRange (this.originalLabels);
+					}
+				}
+			}
+
+			private List<string> originalLabels;
 		}
 
 		#endregion

@@ -190,6 +190,44 @@ namespace Epsitec.Common.Support.ResourceAccessors
 		}
 
 		/// <summary>
+		/// Resets the specified field to its original value. This is the
+		/// internal implementation which can be overridden.
+		/// </summary>
+		/// <param name="item">The item.</param>
+		/// <param name="container">The data record.</param>
+		/// <param name="fieldId">The field id.</param>
+		protected override void ResetToOriginal(CultureMap item, StructuredData container, Druid fieldId)
+		{
+			Listener listener;
+
+			if (fieldId == Res.Fields.ResourceStructuredType.Fields)
+			{
+				listener = Listener.FindListener<FieldListener> (container, fieldId);
+			}
+			else if (fieldId == Res.Fields.ResourceStructuredType.InterfaceIds)
+			{
+				listener = Listener.FindListener<InterfaceListener> (container, fieldId);
+			}
+			else
+			{
+				listener = null;
+			}
+
+			if (listener != null)
+			{
+				System.Diagnostics.Debug.Assert (listener != null);
+				System.Diagnostics.Debug.Assert (listener.Item == item);
+				System.Diagnostics.Debug.Assert (listener.Data == container);
+
+				listener.ResetToOriginalValue ();
+			}
+			else
+			{
+				base.ResetToOriginal (item, container, fieldId);
+			}
+		}
+		
+		/// <summary>
 		/// Gets the structured type which describes the caption data.
 		/// </summary>
 		/// <returns>
@@ -1098,33 +1136,37 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			{
 				
 			}
+
+			public override void ResetToOriginalValue()
+			{
+				
+			}
 		}
 
 		#region Listener Class
 
-		protected class InterfaceListener
+		protected class InterfaceListener : Listener
 		{
 			public InterfaceListener(StructuredTypeResourceAccessor accessor, CultureMap item, StructuredData data)
-			{
-				this.accessor = accessor;
-				this.item = item;
-				this.data = data;
-			}
-
-			public void HandleCollectionChanging(object sender)
+				: base (accessor, item, data)
 			{
 			}
 
-			public void HandleCollectionChanged(object sender, CollectionChangedEventArgs e)
+			public override void HandleCollectionChanging(object sender)
 			{
-				this.accessor.RefreshItem (this.item);
-				this.accessor.NotifyItemChanged (this.item);
 			}
 
+			public override void HandleCollectionChanged(object sender, CollectionChangedEventArgs e)
+			{
+				StructuredTypeResourceAccessor accessor = this.accessor as StructuredTypeResourceAccessor;
 
-			private StructuredTypeResourceAccessor accessor;
-			private CultureMap item;
-			private StructuredData data;
+				accessor.RefreshItem (this.item);
+				accessor.NotifyItemChanged (this.item);
+			}
+
+			public override void ResetToOriginalValue()
+			{
+			}
 		}
 
 		#endregion

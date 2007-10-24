@@ -292,6 +292,31 @@ namespace Epsitec.Common.Support.ResourceAccessors
 		}
 
 		/// <summary>
+		/// Resets the specified field to its original value. This is the
+		/// internal implementation which can be overridden.
+		/// </summary>
+		/// <param name="item">The item.</param>
+		/// <param name="container">The data record.</param>
+		/// <param name="fieldId">The field id.</param>
+		protected override void ResetToOriginal(CultureMap item, StructuredData container, Druid fieldId)
+		{
+			if (fieldId == Res.Fields.ResourceEnumType.Values)
+			{
+				EnumValueListener listener = Listener.FindListener<EnumValueListener> (container, fieldId);
+
+				System.Diagnostics.Debug.Assert (listener != null);
+				System.Diagnostics.Debug.Assert (listener.Item == item);
+				System.Diagnostics.Debug.Assert (listener.Data == container);
+
+				listener.ResetToOriginalValue ();
+			}
+			else
+			{
+				base.ResetToOriginal (item, container, fieldId);
+			}
+		}
+		
+		/// <summary>
 		/// Creates a caption based on the definitions stored in a data record.
 		/// </summary>
 		/// <param name="sourceBundle">The source bundle.</param>
@@ -1386,6 +1411,10 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			}
 
 			public override void HandleCollectionChanging(object sender)
+			{
+			}
+
+			public override void ResetToOriginalValue()
 			{
 			}
 		}

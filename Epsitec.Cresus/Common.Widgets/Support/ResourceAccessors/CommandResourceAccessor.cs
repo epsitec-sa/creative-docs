@@ -257,6 +257,24 @@ namespace Epsitec.Common.Support.ResourceAccessors
 #endif
 		}
 
+		protected override void ResetToOriginal(CultureMap item, StructuredData container, Druid fieldId)
+		{
+			if (fieldId == Res.Fields.ResourceCommand.Shortcuts)
+			{
+				ShortcutListener listener = Listener.FindListener<ShortcutListener> (container, fieldId);
+
+				System.Diagnostics.Debug.Assert (listener != null);
+				System.Diagnostics.Debug.Assert (listener.Item == item);
+				System.Diagnostics.Debug.Assert (listener.Data == container);
+
+				listener.ResetToOriginalValue ();
+			}
+			else
+			{
+				base.ResetToOriginal (item, container, fieldId);
+			}
+		}
+
 		#region Broker Class
 
 		private class ShortcutBroker : IDataBroker
@@ -282,6 +300,11 @@ namespace Epsitec.Common.Support.ResourceAccessors
 
 			public override void HandleCollectionChanging(object sender)
 			{
+			}
+
+			public override void ResetToOriginalValue()
+			{
+				throw new System.Exception ("The method or operation is not implemented.");
 			}
 		}
 	}
