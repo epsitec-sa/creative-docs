@@ -128,6 +128,16 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			this.editedPanels.Clear ();
 		}
 
+		/// <summary>
+		/// Resets the specified field to its original value.
+		/// </summary>
+		/// <param name="item">The item.</param>
+		/// <param name="container">The data record.</param>
+		/// <param name="fieldId">The field id.</param>
+		public void ResetToOriginalValue(CultureMap item, StructuredData container, Druid fieldId)
+		{
+			throw new System.NotImplementedException ();
+		}
 
 		#region IResourceAccessor Members
 

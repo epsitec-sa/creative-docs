@@ -1,6 +1,9 @@
 //	Copyright © 2007, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using Epsitec.Common.Support;
+using Epsitec.Common.Types;
+
 using System.Collections.Generic;
 
 namespace Epsitec.Common.Support
@@ -42,6 +45,14 @@ namespace Epsitec.Common.Support
 		/// </summary>
 		/// <param name="saverCallback">The saver callback.</param>
 		void Save(ResourceBundleSaver saverCallback);
+
+		/// <summary>
+		/// Resets the specified field to its original value.
+		/// </summary>
+		/// <param name="item">The item.</param>
+		/// <param name="container">The data record.</param>
+		/// <param name="fieldId">The field id.</param>
+		void ResetToOriginalValue(CultureMap item, StructuredData container, Druid fieldId);
 
 		/// <summary>
 		/// Gets the data broker associated with the specified field. Usually,
