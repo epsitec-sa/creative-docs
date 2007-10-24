@@ -1814,6 +1814,11 @@ namespace Epsitec.Common.Support
 				return (value == null) || (value == Field.Null);
 			}
 
+			public static bool IsNullOrEmptyString(string value)
+			{
+				return (value == null) || (value == Field.Null) || (value.Length == 0);
+			}
+
 			internal void SetDataLevel(ResourceLevel level)
 			{
 				this.level = level;

@@ -286,6 +286,15 @@ namespace Epsitec.Common.Support.ResourceAccessors
 		{
 			base.ComputeDataDelta (rawData, refData, patchData);
 			
+#if true
+			AbstractCaptionResourceAccessor.CopyDeltaValue (rawData, patchData, Res.Fields.ResourceStructuredType.BaseType);
+			AbstractCaptionResourceAccessor.CopyDeltaValue (rawData, patchData, Res.Fields.ResourceStructuredType.Class);
+			AbstractCaptionResourceAccessor.CopyDeltaValue (rawData, patchData, Res.Fields.ResourceStructuredType.Fields);
+			AbstractCaptionResourceAccessor.CopyDeltaValue (rawData, patchData, Res.Fields.ResourceStructuredType.InterfaceIds);
+			AbstractCaptionResourceAccessor.CopyDeltaValue (rawData, patchData, Res.Fields.ResourceStructuredType.SerializedDesignerLayouts);
+
+			//	TODO: ...process intelligently field and interface lists to keep just the delta...
+#else
 			object                refBaseTypeValue   = refData.GetValue (Res.Fields.ResourceStructuredType.BaseType);
 			StructuredTypeClass   refClass           = StructuredTypeResourceAccessor.ToStructuredTypeClass (refData.GetValue (Res.Fields.ResourceStructuredType.Class));
 			IList<StructuredData> refFields          = refData.GetValue (Res.Fields.ResourceStructuredType.Fields) as IList<StructuredData>;
@@ -357,6 +366,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 
 				patchData.SetValue (Res.Fields.ResourceStructuredType.InterfaceIds, temp);
 			}
+#endif
 		}
 
 		/// <summary>
@@ -522,14 +532,22 @@ namespace Epsitec.Common.Support.ResourceAccessors
 
 			ObservableList<StructuredData> fields = data.GetValue (Res.Fields.ResourceStructuredType.Fields) as ObservableList<StructuredData>;
 			ObservableList<StructuredData> interfaceIds = data.GetValue (Res.Fields.ResourceStructuredType.InterfaceIds) as ObservableList<StructuredData>;
-			
+
 			if (fields == null)
 			{
 				fields = new ObservableList<StructuredData> ();
 			}
+			else
+			{
+				System.Diagnostics.Debug.WriteLine ("Re-using existing fields list");
+			}
 			if (interfaceIds == null)
 			{
 				interfaceIds = new ObservableList<StructuredData> ();
+			}
+			else
+			{
+				System.Diagnostics.Debug.WriteLine ("Re-using existing interface list");
 			}
 
 			if (type != null)

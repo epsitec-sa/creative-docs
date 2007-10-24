@@ -211,6 +211,12 @@ namespace Epsitec.Common.Support.ResourceAccessors
 		{
 			base.ComputeDataDelta (rawData, refData, patchData);
 
+#if true
+			AbstractCaptionResourceAccessor.CopyDeltaValue (rawData, patchData, Res.Fields.ResourceCommand.DefaultParameter);
+			AbstractCaptionResourceAccessor.CopyDeltaValue (rawData, patchData, Res.Fields.ResourceCommand.Group);
+			AbstractCaptionResourceAccessor.CopyDeltaValue (rawData, patchData, Res.Fields.ResourceCommand.Shortcuts);
+			AbstractCaptionResourceAccessor.CopyDeltaValue (rawData, patchData, Res.Fields.ResourceCommand.Statefull);
+#else
 			object refStatefull        = refData.GetValue (Res.Fields.ResourceCommand.Statefull);
 			string refDefaultParameter = refData.GetValue (Res.Fields.ResourceCommand.DefaultParameter) as string;
 			string refGroup            = refData.GetValue (Res.Fields.ResourceCommand.Group) as string;
@@ -245,6 +251,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			{
 				patchData.SetValue (Res.Fields.ResourceCommand.Shortcuts, new List<StructuredData> (rawShortcuts));
 			}
+#endif
 		}
 
 		#region Broker Class

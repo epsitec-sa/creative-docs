@@ -301,7 +301,7 @@ namespace Epsitec.Common.Types
 		/// <param name="manager">The resource manager.</param>
 		public void DeserializeFromString(string value, Support.ResourceManager manager)
 		{
-			if (string.IsNullOrEmpty (value))
+			if (Support.ResourceBundle.Field.IsNullOrEmptyString (value))
 			{
 				return;
 			}

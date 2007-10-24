@@ -483,6 +483,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			bool insert = false;
 			bool record;
 			bool freezeName = false;
+			bool original = false;
 
 			Druid id = new Druid (field.Id, module);
 			CultureMap item = this.Collection.Peek (id);
@@ -498,6 +499,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 				(this.ResourceManager.BasedOnPatchModule))
 			{
 				freezeName = true;
+				original = true;
 			}
 
 			if (item == null)
@@ -585,6 +587,11 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			if (freezeName)
 			{
 				item.FreezeName ();
+			}
+			
+			if (original)
+			{
+				data.PromoteToOriginal ();
 			}
 
 			if (insert)
@@ -716,6 +723,16 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			StructuredData refData   = this.CreateStructuredData (item, refBundle, refField, DataCreationMode.Temporary);
 			StructuredData patchData = this.CreateStructuredData ();
 
+#if true
+			int dataModifId = StringResourceAccessor.GetModificationId (StringResourceAccessor.GetDeltaValue (rawData, Res.Fields.ResourceBase.ModificationId));
+
+			if (dataModifId > 0)
+			{
+				patchData.SetValue (Res.Fields.ResourceBase.ModificationId, dataModifId);
+			}
+
+			AbstractCaptionResourceAccessor.CopyDeltaValue (rawData, patchData, Res.Fields.ResourceBase.Comment);
+#else
 			int    refModifId = StringResourceAccessor.GetModificationId (refData.GetValue (Res.Fields.ResourceBase.ModificationId));
 			int    rawModifId = StringResourceAccessor.GetModificationId (rawData.GetValue (Res.Fields.ResourceBase.ModificationId));
 			
@@ -733,6 +750,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			{
 				patchData.SetValue (Res.Fields.ResourceBase.Comment, rawComment);
 			}
+#endif
 
 			this.ComputeDataDelta (rawData, refData, patchData);
 
@@ -744,6 +762,17 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			{
 				rawData = patchData;
 				return false;
+			}
+		}
+
+		protected static void CopyDeltaValue(StructuredData source, StructuredData destination, Druid id)
+		{
+			bool replace = false;
+			object value = StringResourceAccessor.GetDeltaValue (source, id, ref replace);
+			
+			if (replace)
+			{
+				destination.SetValue (id, value);
 			}
 		}
 

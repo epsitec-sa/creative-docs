@@ -494,6 +494,80 @@ namespace Epsitec.Common.Support.ResourceAccessors
 		{
 			base.ComputeDataDelta (rawData, refData, patchData);
 
+#if true
+			TypeCode refCode = AnyTypeResourceAccessor.ToTypeCode (refData.GetValue (Res.Fields.ResourceBaseType.TypeCode));
+			TypeCode rawCode = AnyTypeResourceAccessor.ToTypeCode (rawData.GetValue (Res.Fields.ResourceBaseType.TypeCode));
+
+			if (refCode != rawCode)
+			{
+				throw new System.InvalidOperationException (string.Format ("Mismatched type codes '{0}' and '{1}'", refCode, rawCode));
+			}
+
+			//	We must always set the type code in the resulting patch data
+			//	record, since otherwise, it would be impossible to determine
+			//	for what type the record stands for :
+
+			patchData.SetValue (Res.Fields.ResourceBaseType.TypeCode, rawCode);
+
+			AbstractCaptionResourceAccessor.CopyDeltaValue (rawData, patchData, Res.Fields.ResourceBaseType.DefaultController);
+			AbstractCaptionResourceAccessor.CopyDeltaValue (rawData, patchData, Res.Fields.ResourceBaseType.DefaultControllerParameter);
+			AbstractCaptionResourceAccessor.CopyDeltaValue (rawData, patchData, Res.Fields.ResourceBaseType.Nullable);
+
+			switch (rawCode)
+			{
+				case TypeCode.Invalid:
+					break;
+
+				case TypeCode.Binary:
+					AbstractCaptionResourceAccessor.CopyDeltaValue (rawData, patchData, Res.Fields.ResourceBinaryType.MimeType);
+					break;
+
+				case TypeCode.Boolean:
+				case TypeCode.Decimal:
+				case TypeCode.Double:
+				case TypeCode.Integer:
+				case TypeCode.LongInteger:
+					AbstractCaptionResourceAccessor.CopyDeltaValue (rawData, patchData, Res.Fields.ResourceNumericType.Range);
+					AbstractCaptionResourceAccessor.CopyDeltaValue (rawData, patchData, Res.Fields.ResourceNumericType.PreferredRange);
+					AbstractCaptionResourceAccessor.CopyDeltaValue (rawData, patchData, Res.Fields.ResourceNumericType.SmallStep);
+					AbstractCaptionResourceAccessor.CopyDeltaValue (rawData, patchData, Res.Fields.ResourceNumericType.LargeStep);
+					break;
+
+				case TypeCode.Collection:
+					AbstractCaptionResourceAccessor.CopyDeltaValue (rawData, patchData, Res.Fields.ResourceCollectionType.ItemType);
+					break;
+
+				case TypeCode.Date:
+				case TypeCode.DateTime:
+				case TypeCode.Time:
+					AbstractCaptionResourceAccessor.CopyDeltaValue (rawData, patchData, Res.Fields.ResourceDateTimeType.Resolution);
+					AbstractCaptionResourceAccessor.CopyDeltaValue (rawData, patchData, Res.Fields.ResourceDateTimeType.MinimumDate);
+					AbstractCaptionResourceAccessor.CopyDeltaValue (rawData, patchData, Res.Fields.ResourceDateTimeType.MaximumDate);
+					AbstractCaptionResourceAccessor.CopyDeltaValue (rawData, patchData, Res.Fields.ResourceDateTimeType.MinimumTime);
+					AbstractCaptionResourceAccessor.CopyDeltaValue (rawData, patchData, Res.Fields.ResourceDateTimeType.MaximumTime);
+					AbstractCaptionResourceAccessor.CopyDeltaValue (rawData, patchData, Res.Fields.ResourceDateTimeType.DateStep);
+					AbstractCaptionResourceAccessor.CopyDeltaValue (rawData, patchData, Res.Fields.ResourceDateTimeType.TimeStep);
+					break;
+
+				case TypeCode.Enum:
+					AbstractCaptionResourceAccessor.CopyDeltaValue (rawData, patchData, Res.Fields.ResourceEnumType.Values);
+					AbstractCaptionResourceAccessor.CopyDeltaValue (rawData, patchData, Res.Fields.ResourceEnumType.SystemType);
+					break;
+
+				case TypeCode.Other:
+					AbstractCaptionResourceAccessor.CopyDeltaValue (rawData, patchData, Res.Fields.ResourceOtherType.SystemType);
+					break;
+
+				case TypeCode.String:
+					AbstractCaptionResourceAccessor.CopyDeltaValue (rawData, patchData, Res.Fields.ResourceStringType.UseMultilingualStorage);
+					AbstractCaptionResourceAccessor.CopyDeltaValue (rawData, patchData, Res.Fields.ResourceStringType.MinimumLength);
+					AbstractCaptionResourceAccessor.CopyDeltaValue (rawData, patchData, Res.Fields.ResourceStringType.MaximumLength);
+					break;
+
+				default:
+					throw new System.NotSupportedException (string.Format ("Type code '{0}' not supported", rawCode));
+			}
+#else
 			TypeCode refCode = AnyTypeResourceAccessor.ToTypeCode (refData.GetValue (Res.Fields.ResourceBaseType.TypeCode));
 			TypeCode rawCode = AnyTypeResourceAccessor.ToTypeCode (rawData.GetValue (Res.Fields.ResourceBaseType.TypeCode));
 
@@ -720,6 +794,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 				default:
 					throw new System.NotSupportedException (string.Format ("Type code '{0}' not supported", rawCode));
 			}
+#endif
 		}
 
 		/// <summary>

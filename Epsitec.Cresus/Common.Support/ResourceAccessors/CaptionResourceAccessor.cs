@@ -161,6 +161,8 @@ namespace Epsitec.Common.Support.ResourceAccessors
 				labels.Clear ();
 			}
 
+			//	TODO: always overwrite the labels list
+
 			if (caption.HasLabels)
 			{
 				labels.AddRange (caption.Labels);
@@ -237,6 +239,11 @@ namespace Epsitec.Common.Support.ResourceAccessors
 		/// <param name="patchData">The patch data, which will be filled with the delta.</param>
 		protected override void ComputeDataDelta(StructuredData rawData, StructuredData refData, StructuredData patchData)
 		{
+#if true
+			AbstractCaptionResourceAccessor.CopyDeltaValue (rawData, patchData, Res.Fields.ResourceCaption.Description);
+			AbstractCaptionResourceAccessor.CopyDeltaValue (rawData, patchData, Res.Fields.ResourceCaption.Icon);
+			AbstractCaptionResourceAccessor.CopyDeltaValue (rawData, patchData, Res.Fields.ResourceCaption.Labels);
+#else
 			string        rawDesc   = rawData.GetValue (Res.Fields.ResourceCaption.Description) as string;
 			string        rawIcon   = rawData.GetValue (Res.Fields.ResourceCaption.Icon) as string;
 			IList<string> rawLabels = rawData.GetValue (Res.Fields.ResourceCaption.Labels) as IList<string>;
@@ -261,6 +268,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			{
 				patchData.SetValue (Res.Fields.ResourceCaption.Labels, new List<string> (rawLabels));
 			}
+#endif
 		}
 
 		/// <summary>

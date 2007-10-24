@@ -492,99 +492,10 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			}
 
 			bool replace = false;
-
-#if true
-			bool original;
-
-			int dataModifId = StringResourceAccessor.GetModificationId (data.GetValue (Res.Fields.ResourceBase.ModificationId, out original));
-
-			if (original)
-			{
-				dataModifId = 0;
-			}
-			else
-			{
-				replace = true;
-			}
-
-			string dataText    = data.GetValue (Res.Fields.ResourceString.Text, out original) as string;
-
-			if (original)
-			{
-				dataText = null;
-			}
-			else
-			{
-				replace = true;
-			}
-
-			string dataComment = data.GetValue (Res.Fields.ResourceBase.Comment, out original) as string;
-
-			if (original)
-			{
-				dataComment = null;
-			}
-			else
-			{
-				replace = true;
-			}
-#else
-			//	Get the reference data from the reference module resource :
-
-			int    refModifId = refField.ModificationId;
-			string refText    = refField.AsString == ResourceBundle.Field.Null ? null : refField.AsString;
-			string refComment = refField.About;
-
-			//	Get the resulting data the user would like to get when applying
-			//	the patch to the reference data :
-
-			int    dataModifId = StringResourceAccessor.GetModificationId (data.GetValue (Res.Fields.ResourceBase.ModificationId));
-			string dataText    = data.GetValue (Res.Fields.ResourceString.Text) as string;
-			string dataComment = data.GetValue (Res.Fields.ResourceBase.Comment) as string;
-
-			//	If some of the resulting data are undefined, assume that this
-			//	means that the user wants to get the reference data instead;
-			//	so just merge the reference with the provided data :
-
-			int    mergeModifId = dataModifId < 1                                 ? refModifId : dataModifId;
-			string mergeText    = ResourceBundle.Field.IsNullString (dataText)    ? refText    : dataText;
-			string mergeComment = ResourceBundle.Field.IsNullString (dataComment) ? refComment : dataComment;
-
-			//	If the merged data is exactly the same as the reference data,
-			//	then there is nothing left to patch; tell the caller that the
-			//	patch resource can be safely discarded :
-
-			if ((mergeModifId == refModifId) &&
-				(mergeText    == refText) &&
-				(mergeComment == refComment))
-			{
-				return true;
-			}
-
-			//	Wherever the patch data is the same as the reference data, use
-			//	the "undefined" value instead :
-
-			if ((mergeModifId == refModifId) &&
-				(dataModifId > 0))
-			{
-				dataModifId = 0;
-				replace     = true;
-			}
 			
-			if ((mergeText == refText) &&
-				(dataText != null))
-			{
-				dataText = null;
-				replace  = true;
-			}
-			
-			if ((mergeComment == refComment) &&
-				(dataComment != null))
-			{
-				dataComment = null;
-				replace     = true;
-			}
-#endif
+			int    dataModifId = StringResourceAccessor.GetModificationId (StringResourceAccessor.GetDeltaValue (data, Res.Fields.ResourceBase.ModificationId, ref replace));
+			string dataText    = StringResourceAccessor.GetDeltaValue (data, Res.Fields.ResourceString.Text, ref replace) as string;
+			string dataComment = StringResourceAccessor.GetDeltaValue (data, Res.Fields.ResourceBase.Comment, ref replace) as string;
 
 			if (replace)
 			{
@@ -637,6 +548,36 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			else
 			{
 				return StringResourceAccessor.GetModificationId (data.GetValue (Res.Fields.ResourceBase.ModificationId));
+			}
+		}
+
+		internal static object GetDeltaValue(StructuredData data, Druid id)
+		{
+			bool replace = false;
+			return StringResourceAccessor.GetDeltaValue (data, id, ref replace);
+		}
+
+		/// <summary>
+		/// Gets the value used when computing the delta for a given data field.
+		/// </summary>
+		/// <param name="data">The structured data record.</param>
+		/// <param name="id">The field id.</param>
+		/// <param name="replace">Set to <c>true</c> if there is a replacement for the original data.</param>
+		/// <returns>The value or <c>UndefinedValue.Instance</c>.</returns>
+		internal static object GetDeltaValue(StructuredData data, Druid id, ref bool replace)
+		{
+			bool usesOriginalData;
+
+			object value = data.GetValue (id, out usesOriginalData);
+
+			if (usesOriginalData)
+			{
+				return UndefinedValue.Instance;
+			}
+			else
+			{
+				replace = true;
+				return value;
 			}
 		}
 
