@@ -81,9 +81,9 @@
   <data name="Viewers.Types.Numeric.Min" id="0R6" mod="1">Valeur minimale</data>
   <data name="Viewers.Types.Numeric.Max" id="0S6" mod="1">Valeur maximale</data>
   <data name="Viewers.Types.Numeric.Resol" id="0T6" mod="1">Résolution</data>
-  <data name="Viewers.Types.Numeric.PreferredMin" id="0U6" mod="1">Valeur minimale préférentielle</data>
-  <data name="Viewers.Types.Numeric.PreferredMax" id="0V6" mod="1">Valeur maximale préférentielle</data>
-  <data name="Viewers.Types.Numeric.PreferredResol" id="007" mod="1">Résolution préférentielle</data>
+  <data name="Viewers.Types.Numeric.PreferredMin" id="0U6" mod="1">Min. préférentiel</data>
+  <data name="Viewers.Types.Numeric.PreferredMax" id="0V6" mod="1">Max. préférentiel</data>
+  <data name="Viewers.Types.Numeric.PreferredResol" id="007" mod="1">Rés. préférentielle</data>
   <data name="Viewers.Types.Numeric.SmallStep" id="017" mod="1">Petit pas</data>
   <data name="Viewers.Types.Numeric.LargeStep" id="027" mod="1">Grand pas</data>
   <data name="Viewers.Types.Numeric.Default" id="059">Valeur par défaut</data>

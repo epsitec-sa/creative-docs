@@ -1,2 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<ModuleInfo id="3" name="Common.Designer" layer="s" />
+<ModuleInfo id="3" name="Common.Designer" layer="s">
+  <Versions>
+    <Version id="2" build="2" date="2007-10-25T12:32:36.4725358Z" />
+  </Versions>
+</ModuleInfo>

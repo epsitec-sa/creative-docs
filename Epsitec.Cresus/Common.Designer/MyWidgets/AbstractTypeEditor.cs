@@ -233,14 +233,14 @@ namespace Epsitec.Common.Designer.MyWidgets
 			StaticText text = new StaticText(group.GroupBox);
 			text.Text = label;
 			text.ContentAlignment = ContentAlignment.MiddleRight;
-			text.PreferredWidth = 160;
+			text.PreferredWidth = 100;
 			text.Dock = DockStyle.Left;
 			text.Margins = new Margins(0, 8, 0, 0);
 
 			field = new TextFieldEx(group.GroupBox);
 			field.ButtonShowCondition = ShowCondition.WhenModified;
 			field.DefocusAction = DefocusAction.AutoAcceptOrRejectEdition;
-			field.MinWidth = 130;
+			field.MinWidth = 120;
 			field.Dock = DockStyle.Fill;
 			field.TabIndex = 1;
 			field.TabNavigationMode = TabNavigationMode.ActivateOnTab;
@@ -257,13 +257,13 @@ namespace Epsitec.Common.Designer.MyWidgets
 			StaticText text = new StaticText(group.GroupBox);
 			text.Text = label;
 			text.ContentAlignment = ContentAlignment.MiddleRight;
-			text.PreferredWidth = 160;
+			text.PreferredWidth = 100;
 			text.Dock = DockStyle.Left;
 			text.Margins = new Margins(0, 8, 0, 0);
 
 			field = new TextFieldCombo(group.GroupBox);
 			field.IsReadOnly = true;
-			field.MinWidth = 130;
+			field.MinWidth = 120;
 			field.Dock = DockStyle.Fill;
 			field.TabIndex = 1;
 			field.TabNavigationMode = TabNavigationMode.ActivateOnTab;
@@ -280,12 +280,12 @@ namespace Epsitec.Common.Designer.MyWidgets
 			StaticText text = new StaticText(group.GroupBox);
 			text.Text = label;
 			text.ContentAlignment = ContentAlignment.MiddleRight;
-			text.PreferredWidth = 160;
+			text.PreferredWidth = 100;
 			text.Dock = DockStyle.Left;
 			text.Margins = new Margins(0, 8, 0, 0);
 
 			field = new TextFieldEx(group.GroupBox);
-			field.MinWidth = 130;
+			field.MinWidth = 120;
 			field.Dock = DockStyle.Fill;
 			field.TabIndex = 1;
 			field.TabNavigationMode = TabNavigationMode.ActivateOnTab;
