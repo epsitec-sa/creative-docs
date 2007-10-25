@@ -793,7 +793,7 @@ namespace Epsitec.Common.Document.Containers
 					string brief;
 					int lines;
 					this.document.Wrappers.GetStyleBrief(style, out brief, out lines);
-					double h = 5 + lines*14 + 5;
+					double h = 5 + lines*14 + 5 + 1;
 
 					this.styleBriefPanel = new StaticText(this.panelContainer);
 					this.styleBriefPanel.ContentAlignment = ContentAlignment.TopLeft;
