@@ -45,32 +45,44 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.groupMinDate.Dock = DockStyle.StackBegin;
 			this.groupMinDate.Margins = new Margins(0, 0, 0, 2);
 			this.fieldMinDate.EditionAccepted += new EventHandler(this.HandleTextFieldChanged);
+			this.groupMinDate.ResetButton.Name = "MinDate";
+			this.groupMinDate.ResetButton.Clicked += new MessageEventHandler(this.HandleResetButtonClicked);
 
 			this.CreateStringLabeled(Res.Strings.Viewers.Types.DateTime.DateMax, left, out this.groupMaxDate, out this.fieldMaxDate);
 			this.groupMaxDate.Dock = DockStyle.StackBegin;
 			this.groupMaxDate.Margins = new Margins(0, 0, 0, 10);
 			this.fieldMaxDate.EditionAccepted += new EventHandler(this.HandleTextFieldChanged);
+			this.groupMaxDate.ResetButton.Name = "MaxDate";
+			this.groupMaxDate.ResetButton.Clicked += new MessageEventHandler(this.HandleResetButtonClicked);
 
 			this.CreateStringLabeled(Res.Strings.Viewers.Types.DateTime.DateStep, left, out this.groupDateStep, out this.fieldDateStep);
 			this.groupDateStep.Dock = DockStyle.StackBegin;
 			this.groupDateStep.Margins = new Margins(0, 0, 0, 10);
 			this.fieldDateStep.EditionAccepted += new EventHandler(this.HandleTextFieldChanged);
+			this.groupDateStep.ResetButton.Name = "DateStep";
+			this.groupDateStep.ResetButton.Clicked += new MessageEventHandler(this.HandleResetButtonClicked);
 
 			//	Heure, à droite.
 			this.CreateStringLabeled(Res.Strings.Viewers.Types.DateTime.TimeMin, right, out this.groupMinTime, out this.fieldMinTime);
 			this.groupMinTime.Dock = DockStyle.StackBegin;
 			this.groupMinTime.Margins = new Margins(0, 0, 22+10, 2);
 			this.fieldMinTime.EditionAccepted += new EventHandler(this.HandleTextFieldChanged);
+			this.groupMinTime.ResetButton.Name = "MinTime";
+			this.groupMinTime.ResetButton.Clicked += new MessageEventHandler(this.HandleResetButtonClicked);
 
 			this.CreateStringLabeled(Res.Strings.Viewers.Types.DateTime.TimeMax, right, out this.groupMaxTime, out this.fieldMaxTime);
 			this.groupMaxTime.Dock = DockStyle.StackBegin;
 			this.groupMaxTime.Margins = new Margins(0, 0, 0, 10);
 			this.fieldMaxTime.EditionAccepted += new EventHandler(this.HandleTextFieldChanged);
+			this.groupMaxTime.ResetButton.Name = "MaxTime";
+			this.groupMaxTime.ResetButton.Clicked += new MessageEventHandler(this.HandleResetButtonClicked);
 
 			this.CreateStringLabeled(Res.Strings.Viewers.Types.DateTime.TimeStep, right, out this.groupTimeStep, out this.fieldTimeStep);
 			this.groupTimeStep.Dock = DockStyle.StackBegin;
 			this.groupTimeStep.Margins = new Margins(0, 0, 0, 10);
 			this.fieldTimeStep.EditionAccepted += new EventHandler(this.HandleTextFieldChanged);
+			this.groupTimeStep.ResetButton.Name = "TimeStep";
+			this.groupTimeStep.ResetButton.Clicked += new MessageEventHandler(this.HandleResetButtonClicked);
 		}
 
 		public TypeEditorDateTime(Widget embedder) : this()
@@ -574,6 +586,41 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.OnContentChanged();
 			this.UpdateContent();
 			this.module.AccessTypes.SetLocalDirty();
+		}
+
+		private void HandleResetButtonClicked(object sender, MessageEventArgs e)
+		{
+			AbstractButton button = sender as AbstractButton;
+
+			if (button.Name == "MinDate")
+			{
+				this.ResetToOriginalValue(Support.Res.Fields.ResourceDateTimeType.MinimumDate);
+			}
+
+			if (button.Name == "MaxDate")
+			{
+				this.ResetToOriginalValue(Support.Res.Fields.ResourceDateTimeType.MaximumDate);
+			}
+
+			if (button.Name == "DateStep")
+			{
+				this.ResetToOriginalValue(Support.Res.Fields.ResourceDateTimeType.DateStep);
+			}
+
+			if (button.Name == "MinTime")
+			{
+				this.ResetToOriginalValue(Support.Res.Fields.ResourceDateTimeType.MinimumTime);
+			}
+
+			if (button.Name == "MaxTime")
+			{
+				this.ResetToOriginalValue(Support.Res.Fields.ResourceDateTimeType.MaximumTime);
+			}
+
+			if (button.Name == "TimeStep")
+			{
+				this.ResetToOriginalValue(Support.Res.Fields.ResourceDateTimeType.TimeStep);
+			}
 		}
 
 

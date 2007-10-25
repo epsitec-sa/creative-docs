@@ -143,6 +143,12 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 		}
 
+		public void ResetToOriginalValue(Druid id)
+		{
+			//	Force la ressource à revenir à la version "par défaut" du module de référence.
+			this.module.AccessTypes.Accessor.ResetToOriginalValue(this.cultureMap, this.structuredData, id);
+		}
+
 		public virtual string GetSummary()
 		{
 			//	Retourne le texte du résumé.
