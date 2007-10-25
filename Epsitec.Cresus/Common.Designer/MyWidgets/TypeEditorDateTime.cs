@@ -617,6 +617,10 @@ namespace Epsitec.Common.Designer.MyWidgets
 			{
 				this.ResetToOriginalValue(Support.Res.Fields.ResourceDateTimeType.TimeStep);
 			}
+
+			this.OnContentChanged();
+			this.UpdateContent();
+			this.module.AccessTypes.SetLocalDirty();
 		}
 
 
