@@ -291,7 +291,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			field = new TextFieldEx(group);
 			field.PreferredWidth = 130;
-			field.Dock = DockStyle.Left;
+			field.Dock = DockStyle.Left;  // TODO: Grrr, pourquoi le mode Fill casse tout ???
 			field.TabIndex = 1;
 			field.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 		}
