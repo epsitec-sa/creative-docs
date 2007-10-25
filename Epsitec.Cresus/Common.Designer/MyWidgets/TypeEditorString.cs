@@ -13,23 +13,31 @@ namespace Epsitec.Common.Designer.MyWidgets
 		public TypeEditorString(Module module)
 		{
 			this.module = module;
-			ResetBox group;
 
-			this.CreateDecimalLabeled(Res.Strings.Viewers.Types.String.Min, this, out group, out this.fieldMin);
-			group.Dock = DockStyle.StackBegin;
-			group.Margins = new Margins(0, 0, 0, 2);
+			this.CreateDecimalLabeled(Res.Strings.Viewers.Types.String.Min, this, out this.groupMin, out this.fieldMin);
+			this.groupMin.Dock = DockStyle.StackBegin;
+			this.groupMin.Margins = new Margins(0, 0, 0, 2);
+			this.groupMin.ResetButton.Name = "Min";
+			this.groupMin.ResetButton.Clicked += new MessageEventHandler(this.HandleResetButtonClicked);
 			this.fieldMin.EditionAccepted += new EventHandler(this.HandleTextFieldChanged);
 
-			this.CreateDecimalLabeled(Res.Strings.Viewers.Types.String.Max, this, out group, out this.fieldMax);
-			group.Dock = DockStyle.StackBegin;
-			group.Margins = new Margins(0, 0, 0, 10);
+			this.CreateDecimalLabeled(Res.Strings.Viewers.Types.String.Max, this, out this.groupMax, out this.fieldMax);
+			this.groupMax.Dock = DockStyle.StackBegin;
+			this.groupMax.Margins = new Margins(0, 0, 0, 10);
+			this.groupMax.ResetButton.Name = "Max";
+			this.groupMax.ResetButton.Clicked += new MessageEventHandler(this.HandleResetButtonClicked);
 			this.fieldMax.EditionAccepted += new EventHandler(this.HandleTextFieldChanged);
 
-			this.checkMultilingual = new CheckButton(this);
+			this.groupMultilingual = new ResetBox(this);
+			this.groupMultilingual.Dock = DockStyle.StackBegin;
+			this.groupMultilingual.Margins = new Margins(0, 0, 0, 0);
+			this.groupMultilingual.ResetButton.Name = "Multi";
+			this.groupMultilingual.ResetButton.Clicked += new MessageEventHandler(this.HandleResetButtonClicked);
+
+			this.checkMultilingual = new CheckButton(this.groupMultilingual.GroupBox);
 			this.checkMultilingual.AutoToggle = false;
 			this.checkMultilingual.Text = Res.Strings.Viewers.Types.String.Multilingual;
-			this.checkMultilingual.Dock = DockStyle.StackBegin;
-			this.checkMultilingual.Margins = new Margins(0, 0, 0, 0);
+			this.checkMultilingual.Dock = DockStyle.Fill;
 			this.checkMultilingual.Clicked += new MessageEventHandler(this.HandleCheckClicked);
 		}
 
@@ -38,6 +46,9 @@ namespace Epsitec.Common.Designer.MyWidgets
 		{
 			if ( disposing )
 			{
+				this.groupMin.ResetButton.Clicked -= new MessageEventHandler(this.HandleResetButtonClicked);
+				this.groupMax.ResetButton.Clicked -= new MessageEventHandler(this.HandleResetButtonClicked);
+
 				this.fieldMin.EditionAccepted -= new EventHandler(this.HandleTextFieldChanged);
 				this.fieldMax.EditionAccepted -= new EventHandler(this.HandleTextFieldChanged);
 				this.checkMultilingual.Clicked -= new MessageEventHandler(this.HandleCheckClicked);
@@ -93,8 +104,10 @@ namespace Epsitec.Common.Designer.MyWidgets
 			//	Met à jour le contenu de l'éditeur.
 			this.ignoreChange = true;
 			object value;
+			bool usesOriginalData;
 
-			value = this.structuredData.GetValue(Support.Res.Fields.ResourceStringType.MinimumLength);
+			value = this.structuredData.GetValue(Support.Res.Fields.ResourceStringType.MinimumLength, out usesOriginalData);
+			this.ColorizeResetBox(this.groupMin, usesOriginalData);
 			if (UndefinedValue.IsUndefinedValue(value))
 			{
 				this.fieldMin.Text = "";
@@ -112,7 +125,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 				}
 			}
 			
-			value = this.structuredData.GetValue(Support.Res.Fields.ResourceStringType.MaximumLength);
+			value = this.structuredData.GetValue(Support.Res.Fields.ResourceStringType.MaximumLength, out usesOriginalData);
+			this.ColorizeResetBox(this.groupMax, usesOriginalData);
 			if (UndefinedValue.IsUndefinedValue(value))
 			{
 				this.fieldMax.Text = "";
@@ -130,7 +144,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 				}
 			}
 			
-			value = this.structuredData.GetValue(Support.Res.Fields.ResourceStringType.UseMultilingualStorage);
+			value = this.structuredData.GetValue(Support.Res.Fields.ResourceStringType.UseMultilingualStorage, out usesOriginalData);
+			this.ColorizeResetBox(this.groupMultilingual, usesOriginalData);
 			if (UndefinedValue.IsUndefinedValue(value))
 			{
 				this.checkMultilingual.ActiveState = ActiveState.No;
@@ -193,9 +208,36 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.module.AccessTypes.SetLocalDirty();
 		}
 
+		private void HandleResetButtonClicked(object sender, MessageEventArgs e)
+		{
+			AbstractButton button = sender as AbstractButton;
 
+			if (button.Name == "Min")
+			{
+				this.ResetToOriginalValue(Support.Res.Fields.ResourceStringType.MinimumLength);
+			}
+
+			if (button.Name == "Max")
+			{
+				this.ResetToOriginalValue(Support.Res.Fields.ResourceStringType.MaximumLength);
+			}
+
+			if (button.Name == "Multi")
+			{
+				this.ResetToOriginalValue(Support.Res.Fields.ResourceStringType.UseMultilingualStorage);
+			}
+
+			this.OnContentChanged();
+			this.UpdateContent();
+			this.module.AccessTypes.SetLocalDirty();
+		}
+
+
+		protected ResetBox						groupMin;
 		protected TextFieldEx					fieldMin;
+		protected ResetBox						groupMax;
 		protected TextFieldEx					fieldMax;
+		protected ResetBox						groupMultilingual;
 		protected CheckButton					checkMultilingual;
 	}
 }
