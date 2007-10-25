@@ -154,14 +154,13 @@ namespace Epsitec.Common.Designer.Viewers
 					this.editor = null;
 				}
 
-				this.editor = MyWidgets.AbstractTypeEditor.Create(this.typeCode);
+				this.editor = MyWidgets.AbstractTypeEditor.Create(this.typeCode, this.module);
 
 				if (this.editor != null)
 				{
 					//	Crée le nouvel éditeur.
 					this.editor.SetParent(this.container.Container);
 					this.editor.TypeCode = this.typeCode;
-					this.editor.Module = this.module;
 					this.editor.DesignerApplication = this.designerApplication;
 					this.editor.ResourceAccess = this.access;
 					this.editor.Dock = DockStyle.StackBegin;

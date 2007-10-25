@@ -10,8 +10,9 @@ namespace Epsitec.Common.Designer.MyWidgets
 	/// </summary>
 	public class TypeEditorBinary : AbstractTypeEditor
 	{
-		public TypeEditorBinary()
+		public TypeEditorBinary(Module module)
 		{
+			this.module = module;
 			ResetBox group;
 			this.CreateStringLabeled(Res.Strings.Viewers.Types.Binary.Mime, this, out group, out this.fieldMime);
 			group.Dock = DockStyle.StackBegin;
@@ -20,11 +21,6 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.fieldMime.EditionAccepted += new EventHandler(this.HandleTextFieldChanged);
 		}
 
-		public TypeEditorBinary(Widget embedder) : this()
-		{
-			this.SetEmbedder(embedder);
-		}
-		
 		
 		protected override void Dispose(bool disposing)
 		{

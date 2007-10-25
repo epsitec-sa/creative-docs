@@ -10,8 +10,9 @@ namespace Epsitec.Common.Designer.MyWidgets
 	/// </summary>
 	public class TypeEditorString : AbstractTypeEditor
 	{
-		public TypeEditorString()
+		public TypeEditorString(Module module)
 		{
+			this.module = module;
 			ResetBox group;
 
 			this.CreateDecimalLabeled(Res.Strings.Viewers.Types.String.Min, this, out group, out this.fieldMin);
@@ -32,11 +33,6 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.checkMultilingual.Clicked += new MessageEventHandler(this.HandleCheckClicked);
 		}
 
-		public TypeEditorString(Widget embedder) : this()
-		{
-			this.SetEmbedder(embedder);
-		}
-		
 		
 		protected override void Dispose(bool disposing)
 		{

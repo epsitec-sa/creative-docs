@@ -10,8 +10,9 @@ namespace Epsitec.Common.Designer.MyWidgets
 	/// </summary>
 	public class TypeEditorNumeric : AbstractTypeEditor
 	{
-		public TypeEditorNumeric()
+		public TypeEditorNumeric(Module module)
 		{
+			this.module = module;
 			ResetBox group;
 
 			FrameBox band = new FrameBox(this);
@@ -69,11 +70,6 @@ namespace Epsitec.Common.Designer.MyWidgets
 			group.Dock = DockStyle.StackBegin;
 			group.Margins = new Margins(0, 0, 0, 0);
 			this.fieldLargeStep.EditionAccepted += new EventHandler(this.HandleTextFieldChanged);
-		}
-		
-		public TypeEditorNumeric(Widget embedder) : this()
-		{
-			this.SetEmbedder(embedder);
 		}
 		
 		

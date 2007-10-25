@@ -10,8 +10,9 @@ namespace Epsitec.Common.Designer.MyWidgets
 	/// </summary>
 	public class TypeEditorDateTime : AbstractTypeEditor
 	{
-		public TypeEditorDateTime()
+		public TypeEditorDateTime(Module module)
 		{
+			this.module = module;
 			ResetBox group;
 
 			FrameBox band = new FrameBox(this);
@@ -85,11 +86,6 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.groupTimeStep.ResetButton.Clicked += new MessageEventHandler(this.HandleResetButtonClicked);
 		}
 
-		public TypeEditorDateTime(Widget embedder) : this()
-		{
-			this.SetEmbedder(embedder);
-		}
-		
 		
 		protected override void Dispose(bool disposing)
 		{

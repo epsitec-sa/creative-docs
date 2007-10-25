@@ -11,8 +11,10 @@ namespace Epsitec.Common.Designer.MyWidgets
 	/// </summary>
 	public class TypeEditorEnum : AbstractTypeEditor
 	{
-		public TypeEditorEnum()
+		public TypeEditorEnum(Module module)
 		{
+			this.module = module;
+
 			//	Crée la toolbar.
 			this.toolbar = new HToolBar(this);
 			this.toolbar.Dock = DockStyle.StackBegin;
@@ -96,11 +98,6 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.array.SelectedRowChanged += new EventHandler(this.HandleArraySelectedRowChanged);
 		}
 
-		public TypeEditorEnum(Widget embedder) : this()
-		{
-			this.SetEmbedder(embedder);
-		}
-		
 		
 		protected override void Dispose(bool disposing)
 		{

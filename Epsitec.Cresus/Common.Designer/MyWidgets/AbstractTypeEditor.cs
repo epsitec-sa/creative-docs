@@ -14,11 +14,6 @@ namespace Epsitec.Common.Designer.MyWidgets
 		{
 		}
 		
-		public AbstractTypeEditor(Widget embedder) : this()
-		{
-			this.SetEmbedder(embedder);
-		}
-		
 		
 		protected override void Dispose(bool disposing)
 		{
@@ -30,22 +25,22 @@ namespace Epsitec.Common.Designer.MyWidgets
 		}
 
 
-		public static AbstractTypeEditor Create(TypeCode typeCode)
+		public static AbstractTypeEditor Create(TypeCode typeCode, Module module)
 		{
 			//	Crée le bon widget AbstractTypeEditor pour éditer un type.
 			switch (typeCode)
 			{
-				case TypeCode.Integer:      return new TypeEditorNumeric();
-				case TypeCode.LongInteger:  return new TypeEditorNumeric();
-				case TypeCode.Double:       return new TypeEditorNumeric();
-				case TypeCode.Decimal:      return new TypeEditorNumeric();
-				case TypeCode.String:       return new TypeEditorString();
-				case TypeCode.Enum:         return new TypeEditorEnum();
-				case TypeCode.Date:         return new TypeEditorDateTime();
-				case TypeCode.Time:         return new TypeEditorDateTime();
-				case TypeCode.DateTime:     return new TypeEditorDateTime();
-				case TypeCode.Binary:       return new TypeEditorBinary();
-				case TypeCode.Other:        return new TypeEditorNative();
+				case TypeCode.Integer:      return new TypeEditorNumeric(module);
+				case TypeCode.LongInteger:  return new TypeEditorNumeric(module);
+				case TypeCode.Double:       return new TypeEditorNumeric(module);
+				case TypeCode.Decimal:      return new TypeEditorNumeric(module);
+				case TypeCode.String:       return new TypeEditorString(module);
+				case TypeCode.Enum:         return new TypeEditorEnum(module);
+				case TypeCode.Date:         return new TypeEditorDateTime(module);
+				case TypeCode.Time:         return new TypeEditorDateTime(module);
+				case TypeCode.DateTime:     return new TypeEditorDateTime(module);
+				case TypeCode.Binary:       return new TypeEditorBinary(module);
+				case TypeCode.Other:        return new TypeEditorNative(module);
 			}
 
 			return null;
@@ -88,18 +83,6 @@ namespace Epsitec.Common.Designer.MyWidgets
 			get
 			{
 				return this.structuredData;
-			}
-		}
-
-		public Module Module
-		{
-			get
-			{
-				return this.module;
-			}
-			set
-			{
-				this.module = value;
 			}
 		}
 
@@ -243,7 +226,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 		{
 			//	Crée un super-widget permettant d'éditer une chaîne, avec une étiquette à gauche.
 			group = new ResetBox(parent);
-			//?group.ResetVisibility = this.module.IsPatch;
+			System.Diagnostics.Debug.Assert(this.module != null);
+			group.ResetVisibility = this.module.IsPatch;
 			group.TabIndex = this.tabIndex++;
 
 			StaticText text = new StaticText(group.GroupBox);
@@ -266,7 +250,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 		{
 			//	Crée un super-widget permettant d'éditer une chaîne, avec une étiquette à gauche.
 			group = new ResetBox(parent);
-			//?group.ResetVisibility = this.module.IsPatch;
+			System.Diagnostics.Debug.Assert(this.module != null);
+			group.ResetVisibility = this.module.IsPatch;
 			group.TabIndex = this.tabIndex++;
 
 			StaticText text = new StaticText(group.GroupBox);
@@ -288,7 +273,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 		{
 			//	Crée un super-widget permettant d'éditer une valeur décimale, avec une étiquette à gauche.
 			group = new ResetBox(parent);
-			//?group.ResetVisibility = this.module.IsPatch;
+			System.Diagnostics.Debug.Assert(this.module != null);
+			group.ResetVisibility = this.module.IsPatch;
 			group.TabIndex = this.tabIndex++;
 			
 			StaticText text = new StaticText(group.GroupBox);

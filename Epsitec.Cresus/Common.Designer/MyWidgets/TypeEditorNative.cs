@@ -10,8 +10,9 @@ namespace Epsitec.Common.Designer.MyWidgets
 	/// </summary>
 	public class TypeEditorNative : AbstractTypeEditor
 	{
-		public TypeEditorNative()
+		public TypeEditorNative(Module module)
 		{
+			this.module = module;
 			ResetBox group;
 			this.CreateStringLabeled(Res.Strings.Viewers.Types.Native.Type, this, out group, out this.fieldSystemType);
 			group.Dock = DockStyle.StackBegin;
@@ -20,11 +21,6 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.fieldSystemType.EditionAccepted += new EventHandler(this.HandleTextFieldChanged);
 		}
 
-		public TypeEditorNative(Widget embedder) : this()
-		{
-			this.SetEmbedder(embedder);
-		}
-		
 		
 		protected override void Dispose(bool disposing)
 		{
