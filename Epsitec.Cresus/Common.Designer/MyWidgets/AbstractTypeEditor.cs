@@ -233,10 +233,10 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 
 		#region Super widgets
-		protected void CreateStringLabeled(string label, Widget parent, out FrameBox group, out TextFieldEx field)
+		protected void CreateStringLabeled(string label, Widget parent, out ResetBox group, out TextFieldEx field)
 		{
 			//	Crée un super-widget permettant d'éditer une chaîne, avec une étiquette à gauche.
-			group = new FrameBox(parent);
+			group = new ResetBox(parent);
 			group.TabIndex = this.tabIndex++;
 
 			StaticText text = new StaticText(group);
@@ -255,10 +255,10 @@ namespace Epsitec.Common.Designer.MyWidgets
 			field.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 		}
 
-		protected void CreateComboLabeled(string label, Widget parent, out FrameBox group, out TextFieldCombo field)
+		protected void CreateComboLabeled(string label, Widget parent, out ResetBox group, out TextFieldCombo field)
 		{
 			//	Crée un super-widget permettant d'éditer une chaîne, avec une étiquette à gauche.
-			group = new FrameBox(parent);
+			group = new ResetBox(parent);
 			group.TabIndex = this.tabIndex++;
 
 			StaticText text = new StaticText(group);
@@ -276,10 +276,10 @@ namespace Epsitec.Common.Designer.MyWidgets
 			field.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 		}
 
-		protected void CreateDecimalLabeled(string label, Widget parent, out FrameBox group, out TextFieldEx field)
+		protected void CreateDecimalLabeled(string label, Widget parent, out ResetBox group, out TextFieldEx field)
 		{
 			//	Crée un super-widget permettant d'éditer une valeur décimale, avec une étiquette à gauche.
-			group = new FrameBox(parent);
+			group = new ResetBox(parent);
 			group.TabIndex = this.tabIndex++;
 
 			StaticText text = new StaticText(group);

@@ -16,6 +16,7 @@ namespace Epsitec.Common.Designer.Viewers
 		{
 			//	Résumé des captions.
 			MyWidgets.StackedPanel leftContainer, rightContainer;
+			MyWidgets.ResetBox leftResetBox, rightResetBox;
 
 			this.buttonMainExtend = this.CreateBand(out leftContainer, out rightContainer, "Résumé", BandMode.MainSummary, GlyphShape.ArrowDown, false, 0.3);
 			this.buttonMainExtend.Clicked += new MessageEventHandler(this.HandleButtonCompactOrExtendClicked);
@@ -32,7 +33,13 @@ namespace Epsitec.Common.Designer.Viewers
 			this.buttonMainCompact = this.CreateBand(out leftContainer, out rightContainer, Res.Strings.Viewers.Captions.Labels.Title, BandMode.MainView, GlyphShape.ArrowUp, false, 0.3);
 			this.buttonMainCompact.Clicked += new MessageEventHandler(this.HandleButtonCompactOrExtendClicked);
 
-			this.primaryText = new TextFieldMulti(leftContainer.Container);
+			leftResetBox = new MyWidgets.ResetBox(leftContainer.Container);
+			leftResetBox.Dock = DockStyle.Fill;
+
+			rightResetBox = new MyWidgets.ResetBox(rightContainer.Container);
+			rightResetBox.Dock = DockStyle.Fill;
+
+			this.primaryText = new TextFieldMulti(leftResetBox.GroupBox);
 			this.primaryText.AcceptsNullValue = true;
 			this.primaryText.PreferredHeight = 10+14*6;
 			this.primaryText.Dock = DockStyle.StackBegin;
@@ -42,7 +49,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.primaryText.TabIndex = this.tabIndex++;
 			this.primaryText.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 
-			this.secondaryText = new TextFieldMulti(rightContainer.Container);
+			this.secondaryText = new TextFieldMulti(rightResetBox.GroupBox);
 			this.secondaryText.AcceptsNullValue = true;
 			this.secondaryText.PreferredHeight = 10+14*6;
 			this.secondaryText.Dock = DockStyle.StackBegin;
@@ -55,7 +62,13 @@ namespace Epsitec.Common.Designer.Viewers
 			//	Commentaires.
 			this.CreateBand(out leftContainer, out rightContainer, Res.Strings.Viewers.Captions.About.Title, BandMode.MainView, GlyphShape.None, false, 0.3);
 
-			this.primaryComment = new TextFieldMulti(leftContainer.Container);
+			leftResetBox = new MyWidgets.ResetBox(leftContainer.Container);
+			leftResetBox.Dock = DockStyle.Fill;
+
+			rightResetBox = new MyWidgets.ResetBox(rightContainer.Container);
+			rightResetBox.Dock = DockStyle.Fill;
+
+			this.primaryComment = new TextFieldMulti(leftResetBox.GroupBox);
 			this.primaryComment.AcceptsNullValue = true;
 			this.primaryComment.PreferredHeight = 10+14*4;
 			this.primaryComment.Dock = DockStyle.StackBegin;
@@ -65,7 +78,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.primaryComment.TabIndex = this.tabIndex++;
 			this.primaryComment.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 
-			this.secondaryComment = new TextFieldMulti(rightContainer.Container);
+			this.secondaryComment = new TextFieldMulti(rightResetBox.GroupBox);
 			this.secondaryComment.AcceptsNullValue = true;
 			this.secondaryComment.PreferredHeight = 10+14*4;
 			this.secondaryComment.Dock = DockStyle.StackBegin;

@@ -12,7 +12,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 	{
 		public TypeEditorNumeric()
 		{
-			FrameBox group;
+			ResetBox group;
 
 			FrameBox band = new FrameBox(this);
 			band.TabIndex = this.tabIndex++;

@@ -12,8 +12,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 	{
 		public TypeEditorBinary()
 		{
-			FrameBox group;
-
+			ResetBox group;
 			this.CreateStringLabeled(Res.Strings.Viewers.Types.Binary.Mime, this, out group, out this.fieldMime);
 			group.Dock = DockStyle.StackBegin;
 			group.Margins = new Margins(0, 0, 0, 0);

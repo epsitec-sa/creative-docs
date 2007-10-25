@@ -12,7 +12,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 	{
 		public TypeEditorDateTime()
 		{
-			FrameBox group;
+			ResetBox group;
 
 			FrameBox band = new FrameBox(this);
 			band.TabIndex = this.tabIndex++;
@@ -579,18 +579,18 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		protected TextFieldCombo				fieldResol;
 
-		protected FrameBox						groupMinDate;
+		protected ResetBox						groupMinDate;
 		protected TextFieldEx					fieldMinDate;
-		protected FrameBox						groupMaxDate;
+		protected ResetBox						groupMaxDate;
 		protected TextFieldEx					fieldMaxDate;
-		protected FrameBox						groupDateStep;
+		protected ResetBox						groupDateStep;
 		protected TextFieldEx					fieldDateStep;
 
-		protected FrameBox						groupMinTime;
+		protected ResetBox						groupMinTime;
 		protected TextFieldEx					fieldMinTime;
-		protected FrameBox						groupMaxTime;
+		protected ResetBox						groupMaxTime;
 		protected TextFieldEx					fieldMaxTime;
-		protected FrameBox						groupTimeStep;
+		protected ResetBox						groupTimeStep;
 		protected TextFieldEx					fieldTimeStep;
 	}
 }

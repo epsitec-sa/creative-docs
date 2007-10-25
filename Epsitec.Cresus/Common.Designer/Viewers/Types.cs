@@ -15,6 +15,7 @@ namespace Epsitec.Common.Designer.Viewers
 		public Types(Module module, PanelsContext context, ResourceAccess access, DesignerApplication designerApplication) : base (module, context, access, designerApplication)
 		{
 			MyWidgets.StackedPanel leftContainer;
+			MyWidgets.ResetBox resetBox;
 
 			//	Séparateur.
 			this.CreateBand(out leftContainer, "", BandMode.Separator, GlyphShape.None, false, 0.0);
@@ -23,7 +24,10 @@ namespace Epsitec.Common.Designer.Viewers
 			this.buttonSuiteCompact = this.CreateBand(out leftContainer, Res.Strings.Viewers.Types.Controller.Title, BandMode.SuiteView, GlyphShape.ArrowUp, true, 0.1);
 			this.buttonSuiteCompact.Clicked += new MessageEventHandler(this.HandleButtonCompactOrExtendClicked);
 
-			StaticText label = new StaticText(leftContainer.Container);
+			resetBox = new MyWidgets.ResetBox(leftContainer.Container);
+			resetBox.Dock = DockStyle.Fill;
+
+			StaticText label = new StaticText(resetBox.GroupBox);
 			label.Text = Res.Strings.Viewers.Types.Controller.Title;
 			label.MinHeight = 20;  // attention, très important !
 			label.PreferredHeight = 20;
@@ -32,7 +36,7 @@ namespace Epsitec.Common.Designer.Viewers
 			label.Margins = new Margins(0, 5, 0, 0);
 			label.Dock = DockStyle.Left;
 
-			this.fieldController = new TextFieldCombo(leftContainer.Container);
+			this.fieldController = new TextFieldCombo(resetBox.GroupBox);
 			this.fieldController.IsReadOnly = true;
 			this.fieldController.MinHeight = 20;  // attention, très important !
 			this.fieldController.PreferredWidth = 200;
@@ -45,7 +49,10 @@ namespace Epsitec.Common.Designer.Viewers
 			//	Zone 'nullable'.
 			this.CreateBand(out leftContainer, Res.Strings.Viewers.Types.Nullable.Title, BandMode.SuiteView, GlyphShape.None, false, 0.1);
 
-			this.primaryNullable = new CheckButton(leftContainer.Container);
+			resetBox = new MyWidgets.ResetBox(leftContainer.Container);
+			resetBox.Dock = DockStyle.Fill;
+
+			this.primaryNullable = new CheckButton(resetBox.GroupBox);
 			this.primaryNullable.Text = Res.Strings.Viewers.Types.Nullable.CheckButton;
 			this.primaryNullable.Dock = DockStyle.StackBegin;
 			this.primaryNullable.Pressed += new MessageEventHandler(this.HandleNullablePressed);

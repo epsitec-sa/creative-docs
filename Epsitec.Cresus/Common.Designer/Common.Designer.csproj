@@ -46,6 +46,7 @@
     <Compile Include="EntitiesEditor\ObjectInfo.cs" />
     <Compile Include="ModuleSupport\ModuleGenerator.cs" />
     <Compile Include="ModuleSupport\ModuleMerger.cs" />
+    <Compile Include="MyWidgets\ResetBox.cs" />
     <Compile Include="MyWidgets\TypeEditorNative.cs" />
     <Compile Include="Ribbons\Identity.cs" />
     <Compile Include="Settings.cs" />
@@ -548,6 +549,9 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Images\StringDefault.icon" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Images\Reset.icon" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

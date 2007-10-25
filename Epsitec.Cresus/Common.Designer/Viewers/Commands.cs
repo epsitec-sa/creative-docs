@@ -15,36 +15,46 @@ namespace Epsitec.Common.Designer.Viewers
 		public Commands(Module module, PanelsContext context, ResourceAccess access, DesignerApplication designerApplication) : base(module, context, access, designerApplication)
 		{
 			MyWidgets.StackedPanel leftContainer, rightContainer;
+			MyWidgets.ResetBox leftResetBox, rightResetBox;
 
 			//	Séparateur.
 			this.CreateBand(out leftContainer, "", BandMode.Separator, GlyphShape.None, false, 0.0);
 
-			//	Aspect (pour DefaultParameter) et Statefull.
+			//	Aspect (pour DefaultParameter).
 			this.buttonSuiteCompact = this.CreateBand(out leftContainer, Res.Strings.Viewers.Commands.Statefull.Title, BandMode.SuiteView, GlyphShape.ArrowUp, true, 0.1);
 			this.buttonSuiteCompact.Clicked += new MessageEventHandler(this.HandleButtonCompactOrExtendClicked);
 
-			StaticText label = new StaticText(leftContainer.Container);
+			leftResetBox = new MyWidgets.ResetBox(leftContainer.Container);
+			leftResetBox.Dock = DockStyle.Fill;
+
+			StaticText label = new StaticText(leftResetBox.GroupBox);
 			label.CaptionId = Res.Captions.Command.ButtonAspect.Id;
 			label.PreferredWidth = 150;
 			label.ContentAlignment = ContentAlignment.MiddleRight;
 			label.Margins = new Margins(0, 5, 0, 0);
 			label.Dock = DockStyle.Left;
 
-			this.primaryAspectIcon = new IconButton(leftContainer.Container);
+			this.primaryAspectIcon = new IconButton(leftResetBox.GroupBox);
 			this.primaryAspectIcon.MinSize = this.primaryAspectIcon.PreferredSize;  // attention, très important !
 			this.primaryAspectIcon.CommandDruid = Res.Values.Widgets.ButtonAspect.IconButton.Id;
 			this.primaryAspectIcon.ButtonStyle = ButtonStyle.ActivableIcon;  // comme Statefull
 			this.primaryAspectIcon.Dock = DockStyle.Left;
 			this.primaryAspectIcon.Clicked += new MessageEventHandler(this.HandlePrimaryAspectClicked);
 
-			this.primaryAspectDialog = new IconButton(leftContainer.Container);
+			this.primaryAspectDialog = new IconButton(leftResetBox.GroupBox);
 			this.primaryAspectDialog.MinSize = this.primaryAspectDialog.PreferredSize;  // attention, très important !
 			this.primaryAspectDialog.CommandDruid = Res.Values.Widgets.ButtonAspect.DialogButton.Id;
 			this.primaryAspectDialog.ButtonStyle = ButtonStyle.ActivableIcon;  // comme Statefull
 			this.primaryAspectDialog.Dock = DockStyle.Left;
 			this.primaryAspectDialog.Clicked += new MessageEventHandler(this.HandlePrimaryAspectClicked);
 
-			this.primaryStatefull = new CheckButton(leftContainer.Container);
+			//	Statefull.
+			this.CreateBand(out leftContainer, Res.Strings.Viewers.Commands.Statefull.Title, BandMode.SuiteView, GlyphShape.None, true, 0.1);
+
+			leftResetBox = new MyWidgets.ResetBox(leftContainer.Container);
+			leftResetBox.Dock = DockStyle.Fill;
+
+			this.primaryStatefull = new CheckButton(leftResetBox.GroupBox);
 			this.primaryStatefull.Text = Res.Strings.Viewers.Commands.Statefull.CheckButton;
 			this.primaryStatefull.PreferredWidth = 250;
 			this.primaryStatefull.Margins = new Margins(40, 0, 0, 0);
@@ -56,7 +66,13 @@ namespace Epsitec.Common.Designer.Viewers
 			//	Shortcuts.
 			this.CreateBand(out leftContainer, out rightContainer, Res.Strings.Viewers.Commands.Shortcut.Title, BandMode.SuiteView, GlyphShape.None, false, 0.1);
 
-			this.primaryShortcut1 = new ShortcutEditor(leftContainer.Container);
+			leftResetBox = new MyWidgets.ResetBox(leftContainer.Container);
+			leftResetBox.Dock = DockStyle.Fill;
+
+			rightResetBox = new MyWidgets.ResetBox(rightContainer.Container);
+			rightResetBox.Dock = DockStyle.Fill;
+
+			this.primaryShortcut1 = new ShortcutEditor(leftResetBox.GroupBox);
 			this.primaryShortcut1.Title = Res.Strings.Viewers.Commands.Shortcut.Main;
 			this.primaryShortcut1.Margins = new Margins(0, 0, 0, 2);
 			this.primaryShortcut1.Dock = DockStyle.StackBegin;
@@ -64,14 +80,14 @@ namespace Epsitec.Common.Designer.Viewers
 			this.primaryShortcut1.TabIndex = this.tabIndex++;
 			this.primaryShortcut1.TabNavigationMode = TabNavigationMode.ForwardTabPassive;
 
-			this.primaryShortcut2 = new ShortcutEditor(leftContainer.Container);
+			this.primaryShortcut2 = new ShortcutEditor(leftResetBox.GroupBox);
 			this.primaryShortcut2.Title = Res.Strings.Viewers.Commands.Shortcut.Suppl;
 			this.primaryShortcut2.Dock = DockStyle.StackBegin;
 			this.primaryShortcut2.EditedShortcutChanged += new EventHandler(this.HandleShortcutEditedShortcutChanged);
 			this.primaryShortcut2.TabIndex = this.tabIndex++;
 			this.primaryShortcut2.TabNavigationMode = TabNavigationMode.ForwardTabPassive;
 
-			this.secondaryShortcut1 = new ShortcutEditor(rightContainer.Container);
+			this.secondaryShortcut1 = new ShortcutEditor(rightResetBox.GroupBox);
 			this.secondaryShortcut1.Title = Res.Strings.Viewers.Commands.Shortcut.Main;
 			this.secondaryShortcut1.Margins = new Margins(0, 0, 0, 2);
 			this.secondaryShortcut1.Dock = DockStyle.StackBegin;
@@ -79,7 +95,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.secondaryShortcut1.TabIndex = this.tabIndex++;
 			this.secondaryShortcut1.TabNavigationMode = TabNavigationMode.ForwardTabPassive;
 
-			this.secondaryShortcut2 = new ShortcutEditor(rightContainer.Container);
+			this.secondaryShortcut2 = new ShortcutEditor(rightResetBox.GroupBox);
 			this.secondaryShortcut2.Title = Res.Strings.Viewers.Commands.Shortcut.Suppl;
 			this.secondaryShortcut2.Dock = DockStyle.StackBegin;
 			this.secondaryShortcut2.EditedShortcutChanged += new EventHandler(this.HandleShortcutEditedShortcutChanged);
@@ -89,7 +105,10 @@ namespace Epsitec.Common.Designer.Viewers
 			//	Group.
 			this.CreateBand(out leftContainer, Res.Strings.Viewers.Commands.Group.Title, BandMode.SuiteView, GlyphShape.None, false, 0.1);
 
-			label = new StaticText(leftContainer.Container);
+			leftResetBox = new MyWidgets.ResetBox(leftContainer.Container);
+			leftResetBox.Dock = DockStyle.Fill;
+
+			label = new StaticText(leftResetBox.GroupBox);
 			label.Text = Res.Strings.Viewers.Commands.Group.Title;
 			label.MinHeight = 20;  // attention, très important !
 			label.PreferredHeight = 20;
@@ -98,7 +117,7 @@ namespace Epsitec.Common.Designer.Viewers
 			label.Margins = new Margins(0, 5, 0, 0);
 			label.Dock = DockStyle.Left;
 
-			this.primaryGroup = new TextFieldCombo(leftContainer.Container);
+			this.primaryGroup = new TextFieldCombo(leftResetBox.GroupBox);
 			this.primaryGroup.MinHeight = 20;  // attention, très important !
 			this.primaryGroup.PreferredWidth = 216;  // calqué sur ShortcutEditor
 			this.primaryGroup.HorizontalAlignment = HorizontalAlignment.Left;

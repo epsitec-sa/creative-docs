@@ -12,8 +12,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 	{
 		public TypeEditorNative()
 		{
-			FrameBox group;
-
+			ResetBox group;
 			this.CreateStringLabeled(Res.Strings.Viewers.Types.Native.Type, this, out group, out this.fieldSystemType);
 			group.Dock = DockStyle.StackBegin;
 			group.Margins = new Margins(0, 0, 0, 0);
