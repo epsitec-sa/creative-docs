@@ -69,6 +69,7 @@
   <ItemGroup>
     <Content Include="Executable\1.0.0\App.Dolphin.Core.dll" />
     <Content Include="Executable\1.0.0\App.Dolphin.SplashScreen.dll" />
+    <Content Include="Executable\1.0.0\Clipboard.Win32.dll" />
     <Content Include="Executable\1.0.0\Dolphin.exe" />
     <Content Include="Executable\1.0.0\Resources\Common.Document\module.info" />
     <Content Include="Executable\1.0.0\Resources\Common.Document\Strings.00.resource" />
