@@ -291,6 +291,11 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			if (this.suspendNotifications == 0)
 			{
 				this.dirtyItems[item] = true;
+				
+				if (item.Source == CultureMapSource.ReferenceModule)
+				{
+					item.Source = CultureMapSource.DynamicMerge;
+				}
 			}
 		}
 
