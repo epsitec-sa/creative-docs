@@ -119,7 +119,28 @@ namespace Epsitec.Common.Types
 		
 		public override bool Equals(object obj)
 		{
-			return this.CompareTo (obj) == 0;
+			if (obj == null)
+			{
+				return false;
+			}
+
+			long this_ticks = this.Ticks;
+			long that_ticks;
+
+			if (obj is System.DateTime)
+			{
+				that_ticks = ((System.DateTime) obj).Ticks;
+			}
+			else if (obj is Date)
+			{
+				that_ticks = ((Date) obj).Ticks;
+			}
+			else
+			{
+				return false;
+			}
+
+			return this_ticks == that_ticks;
 		}
 		
 		public override int GetHashCode()
