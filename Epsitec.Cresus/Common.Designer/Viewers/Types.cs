@@ -15,7 +15,6 @@ namespace Epsitec.Common.Designer.Viewers
 		public Types(Module module, PanelsContext context, ResourceAccess access, DesignerApplication designerApplication) : base (module, context, access, designerApplication)
 		{
 			MyWidgets.StackedPanel leftContainer;
-			MyWidgets.ResetBox resetBox;
 
 			//	Séparateur.
 			this.CreateBand(out leftContainer, "", BandMode.Separator, GlyphShape.None, false, 0.0);
@@ -24,11 +23,13 @@ namespace Epsitec.Common.Designer.Viewers
 			this.buttonSuiteCompact = this.CreateBand(out leftContainer, Res.Strings.Viewers.Types.Controller.Title, BandMode.SuiteView, GlyphShape.ArrowUp, true, 0.1);
 			this.buttonSuiteCompact.Clicked += new MessageEventHandler(this.HandleButtonCompactOrExtendClicked);
 
-			resetBox = new MyWidgets.ResetBox(leftContainer.Container);
-			resetBox.IsPatch = this.module.IsPatch;
-			resetBox.Dock = DockStyle.Fill;
+			this.groupController = new MyWidgets.ResetBox(leftContainer.Container);
+			this.groupController.IsPatch = this.module.IsPatch;
+			this.groupController.Dock = DockStyle.Fill;
+			this.groupController.ResetButton.Name = "Controller";
+			this.groupController.ResetButton.Clicked += new MessageEventHandler(this.HandleResetButtonClicked);
 
-			StaticText label = new StaticText(resetBox.GroupBox);
+			StaticText label = new StaticText(this.groupController.GroupBox);
 			label.Text = Res.Strings.Viewers.Types.Controller.Title;
 			label.MinHeight = 20;  // attention, très important !
 			label.PreferredHeight = 20;
@@ -37,7 +38,7 @@ namespace Epsitec.Common.Designer.Viewers
 			label.Margins = new Margins(0, 5, 0, 0);
 			label.Dock = DockStyle.Left;
 
-			this.fieldController = new TextFieldCombo(resetBox.GroupBox);
+			this.fieldController = new TextFieldCombo(this.groupController.GroupBox);
 			this.fieldController.IsReadOnly = true;
 			this.fieldController.MinHeight = 20;  // attention, très important !
 			this.fieldController.PreferredWidth = 200;
@@ -50,11 +51,13 @@ namespace Epsitec.Common.Designer.Viewers
 			//	Zone 'nullable'.
 			this.CreateBand(out leftContainer, Res.Strings.Viewers.Types.Nullable.Title, BandMode.SuiteView, GlyphShape.None, false, 0.1);
 
-			resetBox = new MyWidgets.ResetBox(leftContainer.Container);
-			resetBox.IsPatch = this.module.IsPatch;
-			resetBox.Dock = DockStyle.Fill;
+			this.groupNullable = new MyWidgets.ResetBox(leftContainer.Container);
+			this.groupNullable.IsPatch = this.module.IsPatch;
+			this.groupNullable.Dock = DockStyle.Fill;
+			this.groupNullable.ResetButton.Name = "Nullable";
+			this.groupNullable.ResetButton.Clicked += new MessageEventHandler(this.HandleResetButtonClicked);
 
-			this.primaryNullable = new CheckButton(resetBox.GroupBox);
+			this.primaryNullable = new CheckButton(this.groupNullable.GroupBox);
 			this.primaryNullable.Text = Res.Strings.Viewers.Types.Nullable.CheckButton;
 			this.primaryNullable.Dock = DockStyle.StackBegin;
 			this.primaryNullable.Pressed += new MessageEventHandler(this.HandleNullablePressed);
@@ -103,12 +106,13 @@ namespace Epsitec.Common.Designer.Viewers
 			bool iic = this.ignoreChange;
 			this.ignoreChange = true;
 
-			this.fieldController.Enable = !this.designerApplication.IsReadonly;
-			this.primaryNullable.Enable = !this.designerApplication.IsReadonly;
+			this.groupController.Enable = !this.designerApplication.IsReadonly;
+			this.groupNullable.Enable = !this.designerApplication.IsReadonly;
 
 			CultureMap item = this.access.CollectionView.CurrentItem as CultureMap;
 			StructuredData data = null;
 			object value;
+			bool usesOriginalData;
 			
 			if (item != null)
 			{
@@ -122,16 +126,18 @@ namespace Epsitec.Common.Designer.Viewers
 
 			if (data != null)
 			{
-				value = data.GetValue(Support.Res.Fields.ResourceBaseType.TypeCode);
+				value = data.GetValue(Support.Res.Fields.ResourceBaseType.TypeCode, out usesOriginalData);
 				if (!UndefinedValue.IsUndefinedValue(value))
 				{
 					typeCode = (TypeCode) value;
 				}
 
-				controller = data.GetValue(Support.Res.Fields.ResourceBaseType.DefaultController) as string;
+				controller = data.GetValue(Support.Res.Fields.ResourceBaseType.DefaultController, out usesOriginalData) as string;
+				Abstract.ColorizeResetBox(this.groupController, usesOriginalData);
 				controllerParameter = data.GetValue(Support.Res.Fields.ResourceBaseType.DefaultControllerParameter) as string;
 
-				value = data.GetValue(Support.Res.Fields.ResourceBaseType.Nullable);
+				value = data.GetValue(Support.Res.Fields.ResourceBaseType.Nullable, out usesOriginalData);
+				Abstract.ColorizeResetBox(this.groupNullable, usesOriginalData);
 				if (!UndefinedValue.IsUndefinedValue(value))
 				{
 					nullable = (bool) value;
@@ -325,6 +331,10 @@ namespace Epsitec.Common.Designer.Viewers
 
 			data.SetValue(Support.Res.Fields.ResourceBaseType.DefaultController, this.fieldController.Text);
 
+			bool usesOriginalData;
+			data.GetValue(Support.Res.Fields.ResourceBaseType.DefaultController, out usesOriginalData);
+			Abstract.ColorizeResetBox(this.groupController, usesOriginalData);
+
 			this.editor.OnContentChanged();
 			this.editor.UpdateContent();
 			this.module.AccessTypes.SetLocalDirty();
@@ -343,6 +353,10 @@ namespace Epsitec.Common.Designer.Viewers
 
 			data.SetValue(Support.Res.Fields.ResourceBaseType.Nullable, this.primaryNullable.ActiveState == ActiveState.No);
 
+			bool usesOriginalData;
+			data.GetValue(Support.Res.Fields.ResourceBaseType.Nullable, out usesOriginalData);
+			Abstract.ColorizeResetBox(this.groupNullable, usesOriginalData);
+
 			this.editor.OnContentChanged();
 			this.editor.UpdateContent();
 			this.module.AccessTypes.SetLocalDirty();
@@ -353,13 +367,33 @@ namespace Epsitec.Common.Designer.Viewers
 			//	Le contenu de l'éditeur de type a changé.
 		}
 
+		private void HandleResetButtonClicked(object sender, MessageEventArgs e)
+		{
+			AbstractButton button = sender as AbstractButton;
+
+			if (button.Name == "Controller")
+			{
+				this.editor.ResetToOriginalValue(Support.Res.Fields.ResourceBaseType.DefaultController);
+			}
+
+			if (button.Name == "Nullable")
+			{
+				this.editor.ResetToOriginalValue(Support.Res.Fields.ResourceBaseType.Nullable);
+			}
+
+			this.UpdateEdit();
+			this.module.AccessTypes.SetLocalDirty();
+		}
+
 
 		private static double[]					columnWidthHorizontal = {140, 60, 100, 100, 20, 80, 50, 100};
 		private static double[]					columnWidthVertical = {250, 60, 270, 270, 20, 80, 50, 100};
 
 		protected MyWidgets.StackedPanel		container;
 		protected TypeCode						typeCode = TypeCode.Invalid;
+		protected MyWidgets.ResetBox			groupController;
 		protected TextFieldCombo				fieldController;
+		protected MyWidgets.ResetBox			groupNullable;
 		protected CheckButton					primaryNullable;
 		protected MyWidgets.AbstractTypeEditor	editor;
 		protected StaticText					primarySuiteSummary;

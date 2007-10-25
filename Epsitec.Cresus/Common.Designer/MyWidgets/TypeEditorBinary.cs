@@ -61,7 +61,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			bool usesOriginalData;
 
 			object value = this.structuredData.GetValue(Support.Res.Fields.ResourceBinaryType.MimeType, out usesOriginalData);
-			this.ColorizeResetBox(this.groupMime, usesOriginalData);
+			Viewers.Abstract.ColorizeResetBox(this.groupMime, usesOriginalData);
 			if (UndefinedValue.IsUndefinedValue(value))
 			{
 				this.fieldMime.Text = "";

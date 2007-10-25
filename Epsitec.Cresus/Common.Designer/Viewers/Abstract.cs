@@ -2099,6 +2099,20 @@ namespace Epsitec.Common.Designer.Viewers
 		}
 
 
+		static public void ColorizeResetBox(MyWidgets.ResetBox box, bool usesOriginalData)
+		{
+			//	Colore la boîte si on est dans un module de patch avec redéfinition de la donnée.
+			if (!box.IsPatch || usesOriginalData)
+			{
+				box.BackColor = Color.Empty;
+			}
+			else
+			{
+				box.BackColor = Color.FromAlphaRgb(0.1, 0.0, 0.5, 1.0);
+			}
+		}
+
+
 		#region Handle methods
 		protected void HandleEditKeyboardFocusChanged(object sender, Epsitec.Common.Types.DependencyPropertyChangedEventArgs e)
 		{

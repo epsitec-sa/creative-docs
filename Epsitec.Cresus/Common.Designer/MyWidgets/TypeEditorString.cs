@@ -107,7 +107,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			bool usesOriginalData;
 
 			value = this.structuredData.GetValue(Support.Res.Fields.ResourceStringType.MinimumLength, out usesOriginalData);
-			this.ColorizeResetBox(this.groupMin, usesOriginalData);
+			Viewers.Abstract.ColorizeResetBox(this.groupMin, usesOriginalData);
 			if (UndefinedValue.IsUndefinedValue(value))
 			{
 				this.fieldMin.Text = "";
@@ -126,7 +126,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 			
 			value = this.structuredData.GetValue(Support.Res.Fields.ResourceStringType.MaximumLength, out usesOriginalData);
-			this.ColorizeResetBox(this.groupMax, usesOriginalData);
+			Viewers.Abstract.ColorizeResetBox(this.groupMax, usesOriginalData);
 			if (UndefinedValue.IsUndefinedValue(value))
 			{
 				this.fieldMax.Text = "";
@@ -145,7 +145,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 			
 			value = this.structuredData.GetValue(Support.Res.Fields.ResourceStringType.UseMultilingualStorage, out usesOriginalData);
-			this.ColorizeResetBox(this.groupMultilingual, usesOriginalData);
+			Viewers.Abstract.ColorizeResetBox(this.groupMultilingual, usesOriginalData);
 			if (UndefinedValue.IsUndefinedValue(value))
 			{
 				this.checkMultilingual.ActiveState = ActiveState.No;

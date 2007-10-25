@@ -132,23 +132,10 @@ namespace Epsitec.Common.Designer.MyWidgets
 			return "";
 		}
 
-		protected void ResetToOriginalValue(Druid id)
+		public void ResetToOriginalValue(Druid id)
 		{
 			//	Force la ressource à revenir à la version "par défaut" du module de référence.
 			this.module.AccessTypes.Accessor.ResetToOriginalValue(this.cultureMap, this.structuredData, id);
-		}
-
-		protected void ColorizeResetBox(MyWidgets.ResetBox box, bool usesOriginalData)
-		{
-			//	Colore la boîte si on est dans un module de patch avec redéfinition de la donnée.
-			if (!box.IsPatch || usesOriginalData)
-			{
-				box.BackColor = Color.Empty;
-			}
-			else
-			{
-				box.BackColor = Color.FromAlphaRgb(0.1, 0.0, 0.5, 1.0);
-			}
 		}
 
 		protected void PutSummaryInitialise()

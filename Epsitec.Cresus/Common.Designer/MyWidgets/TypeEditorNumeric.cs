@@ -178,9 +178,9 @@ namespace Epsitec.Common.Designer.MyWidgets
 			bool usesOriginalData;
 
 			value = this.structuredData.GetValue(Support.Res.Fields.ResourceNumericType.Range, out usesOriginalData);
-			this.ColorizeResetBox(this.groupMin, usesOriginalData);
-			this.ColorizeResetBox(this.groupMax, usesOriginalData);
-			this.ColorizeResetBox(this.groupRes, usesOriginalData);
+			Viewers.Abstract.ColorizeResetBox(this.groupMin, usesOriginalData);
+			Viewers.Abstract.ColorizeResetBox(this.groupMax, usesOriginalData);
+			Viewers.Abstract.ColorizeResetBox(this.groupRes, usesOriginalData);
 			if (UndefinedValue.IsUndefinedValue(value))
 			{
 				this.fieldMin.Text = "";
@@ -205,9 +205,9 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 
 			value = this.structuredData.GetValue(Support.Res.Fields.ResourceNumericType.PreferredRange, out usesOriginalData);
-			this.ColorizeResetBox(this.groupPreferredMin, usesOriginalData);
-			this.ColorizeResetBox(this.groupPreferredMax, usesOriginalData);
-			this.ColorizeResetBox(this.groupPreferredRes, usesOriginalData);
+			Viewers.Abstract.ColorizeResetBox(this.groupPreferredMin, usesOriginalData);
+			Viewers.Abstract.ColorizeResetBox(this.groupPreferredMax, usesOriginalData);
+			Viewers.Abstract.ColorizeResetBox(this.groupPreferredRes, usesOriginalData);
 			if (UndefinedValue.IsUndefinedValue(value))
 			{
 				this.fieldPreferredMin.Text = "";
@@ -232,7 +232,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 
 			value = this.structuredData.GetValue(Support.Res.Fields.ResourceNumericType.SmallStep, out usesOriginalData);
-			this.ColorizeResetBox(this.groupSmallStep, usesOriginalData);
+			Viewers.Abstract.ColorizeResetBox(this.groupSmallStep, usesOriginalData);
 			if (UndefinedValue.IsUndefinedValue(value))
 			{
 				this.fieldSmallStep.Text = "";
@@ -251,7 +251,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 
 			value = this.structuredData.GetValue(Support.Res.Fields.ResourceNumericType.LargeStep, out usesOriginalData);
-			this.ColorizeResetBox(this.groupLargeStep, usesOriginalData);
+			Viewers.Abstract.ColorizeResetBox(this.groupLargeStep, usesOriginalData);
 			if (UndefinedValue.IsUndefinedValue(value))
 			{
 				this.fieldLargeStep.Text = "";
