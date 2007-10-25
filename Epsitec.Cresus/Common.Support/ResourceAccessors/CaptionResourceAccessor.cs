@@ -422,6 +422,29 @@ namespace Epsitec.Common.Support.ResourceAccessors
 				}
 			}
 
+			protected bool SaveField(Druid id)
+			{
+				if (this.UsesOriginalValue (id))
+				{
+					this.data.UnlockValue (id);
+					this.data.CopyOriginalToCurrentValue (id);
+					this.data.LockValue (id);
+					
+					return true;
+				}
+				else
+				{
+					return false;
+				}
+			}
+
+			protected void RestoreField(Druid id)
+			{
+				this.data.UnlockValue (id);
+				this.data.ResetToOriginalValue (id);
+				this.data.LockValue (id);
+			}
+
 			private void HandleCollectionAdd(System.Collections.IEnumerable list)
 			{
 				foreach (object item in list)
@@ -466,15 +489,9 @@ namespace Epsitec.Common.Support.ResourceAccessors
 
 			public override void HandleCollectionChanging(object sender)
 			{
-				if (this.UsesOriginalValue (Res.Fields.ResourceCaption.Labels))
+				if (this.SaveField (Res.Fields.ResourceCaption.Labels))
 				{
-					this.Data.UnlockValue (Res.Fields.ResourceCaption.Labels);
-					this.Data.CopyOriginalToCurrentValue (Res.Fields.ResourceCaption.Labels);
-					this.Data.LockValue (Res.Fields.ResourceCaption.Labels);
-
-					ObservableList<string> labels = this.Data.GetValue (Res.Fields.ResourceCaption.Labels) as ObservableList<string>;
-
-					this.originalLabels = new List<string> (labels);
+					this.originalLabels = new List<string> (this.Data.GetValue (Res.Fields.ResourceCaption.Labels) as IList<string>);
 				}
 			}
 
@@ -482,9 +499,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			{
 				if (this.originalLabels != null)
 				{
-					this.Data.UnlockValue (Res.Fields.ResourceCaption.Labels);
-					this.Data.ResetToOriginalValue (Res.Fields.ResourceCaption.Labels);
-					this.Data.LockValue (Res.Fields.ResourceCaption.Labels);
+					this.RestoreField (Res.Fields.ResourceCaption.Labels);
 
 					ObservableList<string> labels = this.Data.GetValue (Res.Fields.ResourceCaption.Labels) as ObservableList<string>;
 

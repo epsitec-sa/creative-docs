@@ -1372,7 +1372,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		protected void LocateEntity()
 		{
 			//	Montre l'entité cliquée avec le bouton de droite.
-			Module module = this.editor.Module.DesignerApplication.SearchModule(this.cultureMap.Id);
+			Module module = this.SearchModule(this.cultureMap.Id);
 
 			if (module != null)
 			{
@@ -1387,7 +1387,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			Druid druid = this.fields[rank].CaptionId;
 			System.Diagnostics.Debug.Assert(druid.IsValid);
 
-			Module module = this.editor.Module.DesignerApplication.SearchModule(druid);
+			Module module = this.SearchModule(druid);
 
 			if (module != null)
 			{
@@ -1410,7 +1410,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			StructuredData dataField = dataFields[fieldRank];
 			Druid fieldCaptionId = (Druid) dataField.GetValue(Support.Res.Fields.Field.CaptionId);
 
-			Module module = this.editor.Module.DesignerApplication.SearchModule(fieldCaptionId);
+			Module module = this.SearchModule(fieldCaptionId);
 
 			if (module != null)
 			{
@@ -1434,7 +1434,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			Druid typeId = (Druid) dataField.GetValue(Support.Res.Fields.Field.TypeId);
 			FieldRelation rel = (FieldRelation) dataField.GetValue(Support.Res.Fields.Field.Relation);
 
-			Module module = this.editor.Module.DesignerApplication.SearchModule(typeId);
+			Module module = this.SearchModule(typeId);
 
 			if (module != null)
 			{
@@ -1662,7 +1662,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				//	Cherche l'expression définie dans le champ de l'interface.
 				Druid          interfaceId      = this.fields[rank].DefiningTypeId;
 				Druid          interfaceFieldId = this.fields[rank].CaptionId;
-				Module         interfaceModule  = this.editor.Module.DesignerApplication.SearchModule(interfaceId);
+				Module         interfaceModule  = this.SearchModule(interfaceId);
 				CultureMap     interfaceItem    = interfaceModule.AccessEntities.Accessor.Collection[interfaceId];
 				StructuredData interfaceData    = interfaceItem.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
 				StructuredData interfaceFieldData;
@@ -1817,8 +1817,12 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 			dataField.SetValue(Support.Res.Fields.Field.TypeId, druid);
 
-			AbstractType type = TypeRosetta.GetTypeObject(module.ResourceManager.GetCaption(druid));
-			if (type is StructuredType)
+			Druid typeId = druid;
+			Module typeModule = this.SearchModule (typeId);
+			System.Diagnostics.Debug.Assert(typeId.IsValid);
+			System.Diagnostics.Debug.Assert(typeModule != null);
+			
+			if (typeModule.AccessEntities.Accessor.Collection[typeId] != null)
 			{
 				dataField.SetValue(Support.Res.Fields.Field.Relation, FieldRelation.Reference);
 			}
@@ -1852,17 +1856,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			Support.EntityEngine.EntityExpression expression = Support.EntityEngine.EntityExpression.FromEncodedExpression(encoded);
 			string sourceCode = expression.SourceCode;
 			
-			Module dstModule = this.editor.Module.DesignerApplication.SearchModule(typeId);
-			CultureMap dstItem = (dstModule == null) ? null : dstModule.AccessEntities.Accessor.Collection[typeId];
-			if (dstItem == null)
-			{
-				rel = FieldRelation.None;  // ce n'est pas une vraie relation !
-			}
-
-			Module fieldModule = this.editor.Module.DesignerApplication.SearchModule(fieldCaptionId);
-			CultureMap fieldCultureMap = fieldModule.AccessFields.Accessor.Collection[fieldCaptionId];
-
-			Module typeModule = this.editor.Module.DesignerApplication.SearchModule(typeId);
+			Module typeModule = this.SearchModule(typeId);
 			CultureMap typeCultureMap = null;
 			if (typeModule != null)
 			{
@@ -1871,7 +1865,16 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				{
 					typeCultureMap = typeModule.AccessEntities.Accessor.Collection[typeId];
 				}
+				else
+				{
+					//	Le type est un type simple, pas une entité. Cela ne peut donc
+					//	pas être une relation !
+					rel = FieldRelation.None;
+				}
 			}
+
+			Module fieldModule = this.SearchModule(fieldCaptionId);
+			CultureMap fieldCultureMap = fieldModule.AccessFields.Accessor.Collection[fieldCaptionId];
 
 			field.CaptionId = fieldCaptionId;
 			field.DefiningTypeId = definingTypeId;
@@ -1912,7 +1915,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				{
 					field.CaptionId = druid;
 
-					Module module = this.editor.Module.DesignerApplication.SearchModule(druid);
+					Module module = this.SearchModule(druid);
 					CultureMap cultureMap = module.AccessEntities.Accessor.Collection[druid];
 					if (cultureMap != null)
 					{
@@ -1941,7 +1944,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					{
 						last = this.fields[i].DefiningTypeId;
 
-						Module module = this.editor.Module.DesignerApplication.SearchModule(last);
+						Module module = this.SearchModule(last);
 						CultureMap cultureMap = module.AccessEntities.Accessor.Collection[last];
 
 						Field field = new Field(this.editor);
@@ -1986,7 +1989,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				Druid druid = (Druid) data.GetValue(Support.Res.Fields.ResourceStructuredType.BaseType);
 				if (druid.IsValid)
 				{
-					Module module = this.editor.Module.DesignerApplication.SearchModule(druid);
+					Module module = this.SearchModule(druid);
 					cultureMap = module.AccessEntities.Accessor.Collection[druid];
 					if (cultureMap != null)
 					{
@@ -2197,6 +2200,11 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			this.editor.Module.AccessEntities.SetLocalDirty();
 		}
 
+		private Module SearchModule(Druid id)
+		{
+			return this.editor.Module.DesignerApplication.SearchModule(id);
+		}
+
 
 		/// <summary>
 		/// Informations sur une entité source, ouverte ou fermée.
@@ -2254,7 +2262,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 						foreach (StructuredData dataField in dataFields)
 						{
 							Druid typeId = (Druid) dataField.GetValue(Support.Res.Fields.Field.TypeId);
-							Module dstModule = this.editor.Module.DesignerApplication.SearchModule(typeId);
+							Module dstModule = this.SearchModule(typeId);
 							CultureMap fieldCultureMap = (dstModule == null) ? null : dstModule.AccessEntities.Accessor.Collection[typeId];
 							
 							if (fieldCultureMap == this.cultureMap && !this.IsExistingSourceInfo(cultureMap))
@@ -3216,7 +3224,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				return;  // pas de nom
 			}
 
-			Module module = this.editor.Module.DesignerApplication.SearchModule(druid);
+			Module module = this.SearchModule(druid);
 			CultureMap cultureMap = module.AccessEntities.Accessor.Collection[druid];
 			name = cultureMap.Name;
 
@@ -3249,7 +3257,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		protected void UpdateSubtitle()
 		{
 			//	Met à jour le sous-titre de l'entité (nom du module).
-			Module module = this.editor.Module.DesignerApplication.SearchModule(this.cultureMap.Id);
+			Module module = this.SearchModule(this.cultureMap.Id);
 			if (module == this.editor.Module.DesignerApplication.CurrentModule)
 			{
 				this.Subtitle = null;
@@ -3349,7 +3357,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 							Druid druid = Druid.Parse(element);
 							if (druid.IsValid)
 							{
-								Module module = this.editor.Module.DesignerApplication.SearchModule(druid);
+								Module module = this.SearchModule(druid);
 								this.cultureMap = module.AccessEntities.Accessor.Collection[druid];
 							}
 						}

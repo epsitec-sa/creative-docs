@@ -120,11 +120,11 @@ namespace Epsitec.Common.Support.ResourceAccessors
 
 			if (fieldId == Res.Fields.ResourceStructuredType.Fields.ToString ())
 			{
-				return new FieldBroker ();
+				return new FieldBroker (this);
 			}
 			if (fieldId == Res.Fields.ResourceStructuredType.InterfaceIds.ToString ())
 			{
-				return new InterfaceIdBroker ();
+				return new InterfaceIdBroker (this);
 			}
 
 			return base.GetDataBroker (container, fieldId);
@@ -1033,6 +1033,13 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			}
 		}
 
+		/// <summary>
+		/// Finds the index of a compatible field in the given collection.
+		/// </summary>
+		/// <param name="fields">The fields collection.</param>
+		/// <param name="field">The field to locate.</param>
+		/// <returns>The index of the field in the collection or <c>-1</c>
+		/// if no compatible field can be found.</returns>
 		private static int IndexOfCompatibleField(IList<StructuredData> fields, StructuredData field)
 		{
 			Druid id = StructuredTypeResourceAccessor.ToDruid (field.GetValue (Res.Fields.Field.CaptionId));
@@ -1125,6 +1132,8 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			}
 		}
 
+		#region FieldListener Class
+
 		protected class FieldListener : Listener
 		{
 			public FieldListener(StructuredTypeResourceAccessor accessor, CultureMap item, StructuredData data)
@@ -1134,15 +1143,11 @@ namespace Epsitec.Common.Support.ResourceAccessors
 
 			public override void HandleCollectionChanging(object sender)
 			{
-				if (this.UsesOriginalValue (Res.Fields.ResourceStructuredType.Fields))
+				if (this.SaveField (Res.Fields.ResourceStructuredType.Fields))
 				{
-					this.Data.UnlockValue (Res.Fields.ResourceStructuredType.Fields);
-					this.Data.CopyOriginalToCurrentValue (Res.Fields.ResourceStructuredType.Fields);
-					this.Data.LockValue (Res.Fields.ResourceStructuredType.Fields);
-
-					ObservableList<StructuredData> fields = this.Data.GetValue (Res.Fields.ResourceStructuredType.Fields) as ObservableList<StructuredData>;
-
 					this.originalFields = new List<StructuredData> ();
+					
+					IList<StructuredData> fields = this.Data.GetValue (Res.Fields.ResourceStructuredType.Fields) as IList<StructuredData>;
 
 					foreach (StructuredData data in fields)
 					{
@@ -1155,9 +1160,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			{
 				if (this.originalFields != null)
 				{
-					this.Data.UnlockValue (Res.Fields.ResourceStructuredType.Fields);
-					this.Data.ResetToOriginalValue (Res.Fields.ResourceStructuredType.Fields);
-					this.Data.LockValue (Res.Fields.ResourceStructuredType.Fields);
+					this.RestoreField (Res.Fields.ResourceStructuredType.Fields);
 
 					ObservableList<StructuredData> fields = this.Data.GetValue (Res.Fields.ResourceStructuredType.Fields) as ObservableList<StructuredData>;
 
@@ -1188,6 +1191,8 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			List<StructuredData> originalFields;
 		}
 
+		#endregion
+
 		#region InterfaceListener Class
 
 		protected class InterfaceListener : Listener
@@ -1199,15 +1204,11 @@ namespace Epsitec.Common.Support.ResourceAccessors
 
 			public override void HandleCollectionChanging(object sender)
 			{
-				if (this.UsesOriginalValue (Res.Fields.ResourceStructuredType.InterfaceIds))
+				if (this.SaveField (Res.Fields.ResourceStructuredType.InterfaceIds))
 				{
-					this.Data.UnlockValue (Res.Fields.ResourceStructuredType.InterfaceIds);
-					this.Data.CopyOriginalToCurrentValue (Res.Fields.ResourceStructuredType.InterfaceIds);
-					this.Data.LockValue (Res.Fields.ResourceStructuredType.InterfaceIds);
-
-					ObservableList<StructuredData> interfaceIds = this.Data.GetValue (Res.Fields.ResourceStructuredType.InterfaceIds) as ObservableList<StructuredData>;
-
 					this.originalInterfaceIds = new List<StructuredData> ();
+
+					IList<StructuredData> interfaceIds = this.Data.GetValue (Res.Fields.ResourceStructuredType.InterfaceIds) as IList<StructuredData>;
 
 					foreach (StructuredData data in interfaceIds)
 					{
@@ -1218,6 +1219,8 @@ namespace Epsitec.Common.Support.ResourceAccessors
 
 			public override void HandleCollectionChanged(object sender, CollectionChangedEventArgs e)
 			{
+				base.HandleCollectionChanged (sender, e);
+
 				StructuredTypeResourceAccessor accessor = this.Accessor as StructuredTypeResourceAccessor;
 
 				accessor.RefreshItem (this.Item);
@@ -1228,9 +1231,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			{
 				if (this.originalInterfaceIds != null)
 				{
-					this.Data.UnlockValue (Res.Fields.ResourceStructuredType.InterfaceIds);
-					this.Data.ResetToOriginalValue (Res.Fields.ResourceStructuredType.InterfaceIds);
-					this.Data.LockValue (Res.Fields.ResourceStructuredType.InterfaceIds);
+					this.RestoreField (Res.Fields.ResourceStructuredType.InterfaceIds);
 
 					ObservableList<StructuredData> interfaceIds = this.Data.GetValue (Res.Fields.ResourceStructuredType.InterfaceIds) as ObservableList<StructuredData>;
 
@@ -1242,6 +1243,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 						{
 							StructuredData data = interfaceIds[index];
 							interfaceIds.RemoveAt (index--);
+							this.Item.NotifyDataRemoved (data);
 						}
 
 						System.Diagnostics.Debug.Assert (interfaceIds.Count == 0);
@@ -1251,6 +1253,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 							StructuredData copy = data.GetShallowCopy ();
 							copy.PromoteToOriginal ();
 							interfaceIds.Add (copy);
+							this.Item.NotifyDataAdded (copy);
 						}
 					}
 				}
@@ -1265,17 +1268,28 @@ namespace Epsitec.Common.Support.ResourceAccessors
 
 		private class FieldBroker : IDataBroker
 		{
+			public FieldBroker(StructuredTypeResourceAccessor accessor)
+			{
+				this.accessor = accessor;
+			}
+
 			#region IDataBroker Members
 
 			public StructuredData CreateData(CultureMap container)
 			{
 				StructuredData data = new StructuredData (Res.Types.Field);
+				CultureMapSource source = container.Source;
+
+				if (this.accessor.BasedOnPatchModule)
+				{
+					source = CultureMapSource.PatchModule;
+				}
 
 				data.SetValue (Res.Fields.Field.TypeId, Druid.Empty);
 				data.SetValue (Res.Fields.Field.CaptionId, Druid.Empty);
 				data.SetValue (Res.Fields.Field.Relation, FieldRelation.None);
 				data.SetValue (Res.Fields.Field.Membership, FieldMembership.Local);
-				data.SetValue (Res.Fields.Field.CultureMapSource, container.Source);
+				data.SetValue (Res.Fields.Field.CultureMapSource, source);
 				data.SetValue (Res.Fields.Field.Source, FieldSource.Value);
 				data.SetValue (Res.Fields.Field.Options, FieldOptions.None);
 				data.SetValue (Res.Fields.Field.Expression, "");
@@ -1288,6 +1302,8 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			}
 
 			#endregion
+
+			private StructuredTypeResourceAccessor accessor;
 		}
 
 		#endregion
@@ -1296,19 +1312,32 @@ namespace Epsitec.Common.Support.ResourceAccessors
 
 		private class InterfaceIdBroker : IDataBroker
 		{
+			public InterfaceIdBroker(StructuredTypeResourceAccessor accessor)
+			{
+				this.accessor = accessor;
+			}
+
 			#region IDataBroker Members
 
 			public StructuredData CreateData(CultureMap container)
 			{
 				StructuredData data = new StructuredData (Res.Types.InterfaceId);
+				CultureMapSource source = container.Source;
+
+				if (this.accessor.BasedOnPatchModule)
+				{
+					source = CultureMapSource.PatchModule;
+				}
 
 				data.SetValue (Res.Fields.InterfaceId.CaptionId, Druid.Empty);
-				data.SetValue (Res.Fields.InterfaceId.CultureMapSource, container.Source);
+				data.SetValue (Res.Fields.InterfaceId.CultureMapSource, source);
 				
 				return data;
 			}
 
 			#endregion
+
+			private StructuredTypeResourceAccessor accessor;
 		}
 
 		#endregion
