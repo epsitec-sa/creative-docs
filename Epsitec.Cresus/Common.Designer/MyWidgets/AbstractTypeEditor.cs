@@ -243,20 +243,21 @@ namespace Epsitec.Common.Designer.MyWidgets
 		{
 			//	Crée un super-widget permettant d'éditer une chaîne, avec une étiquette à gauche.
 			group = new ResetBox(parent);
+			//?group.ResetVisibility = this.module.IsPatch;
 			group.TabIndex = this.tabIndex++;
 
-			StaticText text = new StaticText(group);
+			StaticText text = new StaticText(group.GroupBox);
 			text.Text = label;
 			text.ContentAlignment = ContentAlignment.MiddleRight;
 			text.PreferredWidth = 160;
 			text.Dock = DockStyle.Left;
 			text.Margins = new Margins(0, 8, 0, 0);
 
-			field = new TextFieldEx(group);
+			field = new TextFieldEx(group.GroupBox);
 			field.ButtonShowCondition = ShowCondition.WhenModified;
 			field.DefocusAction = DefocusAction.AutoAcceptOrRejectEdition;
-			field.PreferredWidth = 130;
-			field.Dock = DockStyle.Left;
+			field.MinWidth = 130;
+			field.Dock = DockStyle.Fill;
 			field.TabIndex = 1;
 			field.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 		}
@@ -265,19 +266,20 @@ namespace Epsitec.Common.Designer.MyWidgets
 		{
 			//	Crée un super-widget permettant d'éditer une chaîne, avec une étiquette à gauche.
 			group = new ResetBox(parent);
+			//?group.ResetVisibility = this.module.IsPatch;
 			group.TabIndex = this.tabIndex++;
 
-			StaticText text = new StaticText(group);
+			StaticText text = new StaticText(group.GroupBox);
 			text.Text = label;
 			text.ContentAlignment = ContentAlignment.MiddleRight;
 			text.PreferredWidth = 160;
 			text.Dock = DockStyle.Left;
 			text.Margins = new Margins(0, 8, 0, 0);
 
-			field = new TextFieldCombo(group);
+			field = new TextFieldCombo(group.GroupBox);
 			field.IsReadOnly = true;
-			field.PreferredWidth = 130;
-			field.Dock = DockStyle.Left;
+			field.MinWidth = 130;
+			field.Dock = DockStyle.Fill;
 			field.TabIndex = 1;
 			field.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 		}
@@ -286,6 +288,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		{
 			//	Crée un super-widget permettant d'éditer une valeur décimale, avec une étiquette à gauche.
 			group = new ResetBox(parent);
+			//?group.ResetVisibility = this.module.IsPatch;
 			group.TabIndex = this.tabIndex++;
 			
 			StaticText text = new StaticText(group.GroupBox);

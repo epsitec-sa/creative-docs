@@ -50,6 +50,18 @@ namespace Epsitec.Common.Designer.MyWidgets
 		}
 
 
+		public bool ResetVisibility
+		{
+			get
+			{
+				return this.groupButton.Visibility;
+			}
+			set
+			{
+				this.groupButton.Visibility = value;
+			}
+		}
+
 		public FrameBox GroupBox
 		{
 			get
