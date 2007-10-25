@@ -25,7 +25,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.buttonSuiteCompact.Clicked += new MessageEventHandler(this.HandleButtonCompactOrExtendClicked);
 
 			resetBox = new MyWidgets.ResetBox(leftContainer.Container);
-			resetBox.ResetVisibility = this.module.IsPatch;
+			resetBox.IsPatch = this.module.IsPatch;
 			resetBox.Dock = DockStyle.Fill;
 
 			StaticText label = new StaticText(resetBox.GroupBox);
@@ -51,7 +51,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.CreateBand(out leftContainer, Res.Strings.Viewers.Types.Nullable.Title, BandMode.SuiteView, GlyphShape.None, false, 0.1);
 
 			resetBox = new MyWidgets.ResetBox(leftContainer.Container);
-			resetBox.ResetVisibility = this.module.IsPatch;
+			resetBox.IsPatch = this.module.IsPatch;
 			resetBox.Dock = DockStyle.Fill;
 
 			this.primaryNullable = new CheckButton(resetBox.GroupBox);

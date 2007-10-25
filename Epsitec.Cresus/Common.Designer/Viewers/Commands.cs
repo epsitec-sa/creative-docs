@@ -25,7 +25,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.buttonSuiteCompact.Clicked += new MessageEventHandler(this.HandleButtonCompactOrExtendClicked);
 
 			leftResetBox = new MyWidgets.ResetBox(leftContainer.Container);
-			leftResetBox.ResetVisibility = this.module.IsPatch;
+			leftResetBox.IsPatch = this.module.IsPatch;
 			leftResetBox.Dock = DockStyle.Fill;
 
 			StaticText label = new StaticText(leftResetBox.GroupBox);
@@ -53,7 +53,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.CreateBand(out leftContainer, Res.Strings.Viewers.Commands.Statefull.Title, BandMode.SuiteView, GlyphShape.None, true, 0.1);
 
 			leftResetBox = new MyWidgets.ResetBox(leftContainer.Container);
-			leftResetBox.ResetVisibility = this.module.IsPatch;
+			leftResetBox.IsPatch = this.module.IsPatch;
 			leftResetBox.Dock = DockStyle.Fill;
 
 			this.primaryStatefull = new CheckButton(leftResetBox.GroupBox);
@@ -69,11 +69,11 @@ namespace Epsitec.Common.Designer.Viewers
 			this.CreateBand(out leftContainer, out rightContainer, Res.Strings.Viewers.Commands.Shortcut.Title, BandMode.SuiteView, GlyphShape.None, false, 0.1);
 
 			leftResetBox = new MyWidgets.ResetBox(leftContainer.Container);
-			leftResetBox.ResetVisibility = this.module.IsPatch;
+			leftResetBox.IsPatch = this.module.IsPatch;
 			leftResetBox.Dock = DockStyle.Fill;
 
 			rightResetBox = new MyWidgets.ResetBox(rightContainer.Container);
-			rightResetBox.ResetVisibility = this.module.IsPatch;
+			rightResetBox.IsPatch = this.module.IsPatch;
 			rightResetBox.Dock = DockStyle.Fill;
 
 			this.primaryShortcut1 = new ShortcutEditor(leftResetBox.GroupBox);
@@ -110,7 +110,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.CreateBand(out leftContainer, Res.Strings.Viewers.Commands.Group.Title, BandMode.SuiteView, GlyphShape.None, false, 0.1);
 
 			leftResetBox = new MyWidgets.ResetBox(leftContainer.Container);
-			leftResetBox.ResetVisibility = this.module.IsPatch;
+			leftResetBox.IsPatch = this.module.IsPatch;
 			leftResetBox.Dock = DockStyle.Fill;
 
 			label = new StaticText(leftResetBox.GroupBox);

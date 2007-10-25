@@ -126,16 +126,29 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 		}
 
-		public void ResetToOriginalValue(Druid id)
+		public virtual string GetSummary()
+		{
+			//	Retourne le texte du résumé.
+			return "";
+		}
+
+		protected void ResetToOriginalValue(Druid id)
 		{
 			//	Force la ressource à revenir à la version "par défaut" du module de référence.
 			this.module.AccessTypes.Accessor.ResetToOriginalValue(this.cultureMap, this.structuredData, id);
 		}
 
-		public virtual string GetSummary()
+		protected void ColorizeResetBox(MyWidgets.ResetBox box, bool usesOriginalData)
 		{
-			//	Retourne le texte du résumé.
-			return "";
+			//	Colore la boîte si on est dans un module de patch avec redéfinition de la donnée.
+			if (!box.IsPatch || usesOriginalData)
+			{
+				box.BackColor = Color.Empty;
+			}
+			else
+			{
+				box.BackColor = Color.FromAlphaRgb(0.1, 0.0, 0.5, 1.0);
+			}
 		}
 
 		protected void PutSummaryInitialise()
@@ -227,7 +240,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			//	Crée un super-widget permettant d'éditer une chaîne, avec une étiquette à gauche.
 			group = new ResetBox(parent);
 			System.Diagnostics.Debug.Assert(this.module != null);
-			group.ResetVisibility = this.module.IsPatch;
+			group.IsPatch = this.module.IsPatch;
 			group.TabIndex = this.tabIndex++;
 
 			StaticText text = new StaticText(group.GroupBox);
@@ -251,7 +264,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			//	Crée un super-widget permettant d'éditer une chaîne, avec une étiquette à gauche.
 			group = new ResetBox(parent);
 			System.Diagnostics.Debug.Assert(this.module != null);
-			group.ResetVisibility = this.module.IsPatch;
+			group.IsPatch = this.module.IsPatch;
 			group.TabIndex = this.tabIndex++;
 
 			StaticText text = new StaticText(group.GroupBox);
@@ -274,7 +287,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			//	Crée un super-widget permettant d'éditer une valeur décimale, avec une étiquette à gauche.
 			group = new ResetBox(parent);
 			System.Diagnostics.Debug.Assert(this.module != null);
-			group.ResetVisibility = this.module.IsPatch;
+			group.IsPatch = this.module.IsPatch;
 			group.TabIndex = this.tabIndex++;
 			
 			StaticText text = new StaticText(group.GroupBox);

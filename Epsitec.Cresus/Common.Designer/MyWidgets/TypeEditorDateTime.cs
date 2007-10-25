@@ -13,7 +13,6 @@ namespace Epsitec.Common.Designer.MyWidgets
 		public TypeEditorDateTime(Module module)
 		{
 			this.module = module;
-			ResetBox group;
 
 			FrameBox band = new FrameBox(this);
 			band.TabIndex = this.tabIndex++;
@@ -28,9 +27,11 @@ namespace Epsitec.Common.Designer.MyWidgets
 			right.TabIndex = this.tabIndex++;
 			right.Dock = DockStyle.Fill;
 
-			this.CreateComboLabeled(Res.Strings.Viewers.Types.DateTime.Resolution, left, out group, out this.fieldResol);
-			group.Dock = DockStyle.StackBegin;
-			group.Margins = new Margins(0, 0, 0, 10);
+			this.CreateComboLabeled(Res.Strings.Viewers.Types.DateTime.Resolution, left, out this.groupResol, out this.fieldResol);
+			this.groupResol.Dock = DockStyle.StackBegin;
+			this.groupResol.Margins = new Margins(0, 0, 0, 10);
+			this.groupResol.ResetButton.Name = "Resol";
+			this.groupResol.ResetButton.Clicked += new MessageEventHandler(this.HandleResetButtonClicked);
 			this.fieldResol.TextChanged += new EventHandler(this.HandleTextFieldChanged);
 			this.fieldResol.Items.Add("Milliseconds");
 			this.fieldResol.Items.Add("Seconds");
@@ -45,45 +46,45 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.CreateStringLabeled(Res.Strings.Viewers.Types.DateTime.DateMin, left, out this.groupMinDate, out this.fieldMinDate);
 			this.groupMinDate.Dock = DockStyle.StackBegin;
 			this.groupMinDate.Margins = new Margins(0, 0, 0, 2);
-			this.fieldMinDate.EditionAccepted += new EventHandler(this.HandleTextFieldChanged);
 			this.groupMinDate.ResetButton.Name = "MinDate";
 			this.groupMinDate.ResetButton.Clicked += new MessageEventHandler(this.HandleResetButtonClicked);
+			this.fieldMinDate.EditionAccepted += new EventHandler(this.HandleTextFieldChanged);
 
 			this.CreateStringLabeled(Res.Strings.Viewers.Types.DateTime.DateMax, left, out this.groupMaxDate, out this.fieldMaxDate);
 			this.groupMaxDate.Dock = DockStyle.StackBegin;
 			this.groupMaxDate.Margins = new Margins(0, 0, 0, 10);
-			this.fieldMaxDate.EditionAccepted += new EventHandler(this.HandleTextFieldChanged);
 			this.groupMaxDate.ResetButton.Name = "MaxDate";
 			this.groupMaxDate.ResetButton.Clicked += new MessageEventHandler(this.HandleResetButtonClicked);
+			this.fieldMaxDate.EditionAccepted += new EventHandler(this.HandleTextFieldChanged);
 
 			this.CreateStringLabeled(Res.Strings.Viewers.Types.DateTime.DateStep, left, out this.groupDateStep, out this.fieldDateStep);
 			this.groupDateStep.Dock = DockStyle.StackBegin;
 			this.groupDateStep.Margins = new Margins(0, 0, 0, 10);
-			this.fieldDateStep.EditionAccepted += new EventHandler(this.HandleTextFieldChanged);
 			this.groupDateStep.ResetButton.Name = "DateStep";
 			this.groupDateStep.ResetButton.Clicked += new MessageEventHandler(this.HandleResetButtonClicked);
+			this.fieldDateStep.EditionAccepted += new EventHandler(this.HandleTextFieldChanged);
 
 			//	Heure, à droite.
 			this.CreateStringLabeled(Res.Strings.Viewers.Types.DateTime.TimeMin, right, out this.groupMinTime, out this.fieldMinTime);
 			this.groupMinTime.Dock = DockStyle.StackBegin;
-			this.groupMinTime.Margins = new Margins(0, 0, 22+10, 2);
-			this.fieldMinTime.EditionAccepted += new EventHandler(this.HandleTextFieldChanged);
+			this.groupMinTime.Margins = new Margins(0, 0, 20+10, 2);
 			this.groupMinTime.ResetButton.Name = "MinTime";
 			this.groupMinTime.ResetButton.Clicked += new MessageEventHandler(this.HandleResetButtonClicked);
+			this.fieldMinTime.EditionAccepted += new EventHandler(this.HandleTextFieldChanged);
 
 			this.CreateStringLabeled(Res.Strings.Viewers.Types.DateTime.TimeMax, right, out this.groupMaxTime, out this.fieldMaxTime);
 			this.groupMaxTime.Dock = DockStyle.StackBegin;
 			this.groupMaxTime.Margins = new Margins(0, 0, 0, 10);
-			this.fieldMaxTime.EditionAccepted += new EventHandler(this.HandleTextFieldChanged);
 			this.groupMaxTime.ResetButton.Name = "MaxTime";
 			this.groupMaxTime.ResetButton.Clicked += new MessageEventHandler(this.HandleResetButtonClicked);
+			this.fieldMaxTime.EditionAccepted += new EventHandler(this.HandleTextFieldChanged);
 
 			this.CreateStringLabeled(Res.Strings.Viewers.Types.DateTime.TimeStep, right, out this.groupTimeStep, out this.fieldTimeStep);
 			this.groupTimeStep.Dock = DockStyle.StackBegin;
 			this.groupTimeStep.Margins = new Margins(0, 0, 0, 10);
-			this.fieldTimeStep.EditionAccepted += new EventHandler(this.HandleTextFieldChanged);
 			this.groupTimeStep.ResetButton.Name = "TimeStep";
 			this.groupTimeStep.ResetButton.Clicked += new MessageEventHandler(this.HandleResetButtonClicked);
+			this.fieldTimeStep.EditionAccepted += new EventHandler(this.HandleTextFieldChanged);
 		}
 
 		
@@ -93,10 +94,16 @@ namespace Epsitec.Common.Designer.MyWidgets
 			{
 				this.fieldResol.TextChanged -= new EventHandler(this.HandleTextFieldChanged);
 
+				this.groupMinDate.ResetButton.Clicked -= new MessageEventHandler(this.HandleResetButtonClicked);
+				this.groupMaxDate.ResetButton.Clicked -= new MessageEventHandler(this.HandleResetButtonClicked);
+				this.groupDateStep.ResetButton.Clicked -= new MessageEventHandler(this.HandleResetButtonClicked);
+				this.groupMinTime.ResetButton.Clicked -= new MessageEventHandler(this.HandleResetButtonClicked);
+				this.groupMaxTime.ResetButton.Clicked -= new MessageEventHandler(this.HandleResetButtonClicked);
+				this.groupTimeStep.ResetButton.Clicked -= new MessageEventHandler(this.HandleResetButtonClicked);
+
 				this.fieldMinDate.EditionAccepted -= new EventHandler(this.HandleTextFieldChanged);
 				this.fieldMaxDate.EditionAccepted -= new EventHandler(this.HandleTextFieldChanged);
 				this.fieldDateStep.EditionAccepted -= new EventHandler(this.HandleTextFieldChanged);
-				
 				this.fieldMinTime.EditionAccepted -= new EventHandler(this.HandleTextFieldChanged);
 				this.fieldMaxTime.EditionAccepted -= new EventHandler(this.HandleTextFieldChanged);
 				this.fieldTimeStep.EditionAccepted -= new EventHandler(this.HandleTextFieldChanged);
@@ -211,6 +218,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			//	Met à jour le contenu de l'éditeur.
 			this.ignoreChange = true;
 			object value;
+			bool usesOriginalData;
 
 			bool showDate = true;
 			bool showTime = true;
@@ -229,16 +237,12 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.groupMaxDate.Visibility = showDate;
 			this.groupDateStep.Visibility = showDate;
 
-			//	Pour une raison mystérieuse (probablement un bug de layout), la groupe de gauche est
-			//	tronqué lorsque tous les objets du groupe de droite sont invisibles et que la largeur
-			//	est trop étroite. En revanche, cacher le groupe de droite (au lieu de cacher les différents
-			//	objets contenus) semble contourner le bug.
 			this.groupMinTime.Visibility = showTime;
 			this.groupMaxTime.Visibility = showTime;
 			this.groupTimeStep.Visibility = showTime;
-			//?this.groupMinDate.Parent.Visibility = showTime;
 
-			value = this.structuredData.GetValue(Support.Res.Fields.ResourceDateTimeType.Resolution);
+			value = this.structuredData.GetValue(Support.Res.Fields.ResourceDateTimeType.Resolution, out usesOriginalData);
+			this.ColorizeResetBox(this.groupResol, usesOriginalData);
 			if (UndefinedValue.IsUndefinedValue(value))
 			{
 				this.fieldResol.Text = "";
@@ -256,7 +260,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 				}
 			}
 
-			value = this.structuredData.GetValue(Support.Res.Fields.ResourceDateTimeType.MinimumDate);
+			value = this.structuredData.GetValue(Support.Res.Fields.ResourceDateTimeType.MinimumDate, out usesOriginalData);
+			this.ColorizeResetBox(this.groupMinDate, usesOriginalData);
 			if (UndefinedValue.IsUndefinedValue(value))
 			{
 				this.fieldMinDate.Text = "";
@@ -266,7 +271,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 				TypeEditorDateTime.DateToField(this.fieldMinDate, (Date) value);
 			}
 
-			value = this.structuredData.GetValue(Support.Res.Fields.ResourceDateTimeType.MaximumDate);
+			value = this.structuredData.GetValue(Support.Res.Fields.ResourceDateTimeType.MaximumDate, out usesOriginalData);
+			this.ColorizeResetBox(this.groupMaxDate, usesOriginalData);
 			if (UndefinedValue.IsUndefinedValue(value))
 			{
 				this.fieldMaxDate.Text = "";
@@ -276,7 +282,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 				TypeEditorDateTime.DateToField(this.fieldMaxDate, (Date) value);
 			}
 
-			value = this.structuredData.GetValue(Support.Res.Fields.ResourceDateTimeType.MinimumTime);
+			value = this.structuredData.GetValue(Support.Res.Fields.ResourceDateTimeType.MinimumTime, out usesOriginalData);
+			this.ColorizeResetBox(this.groupMinTime, usesOriginalData);
 			if (UndefinedValue.IsUndefinedValue(value))
 			{
 				this.fieldMinTime.Text = "";
@@ -286,7 +293,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 				TypeEditorDateTime.TimeToField(this.fieldMinTime, (Time) value);
 			}
 
-			value = this.structuredData.GetValue(Support.Res.Fields.ResourceDateTimeType.MaximumTime);
+			value = this.structuredData.GetValue(Support.Res.Fields.ResourceDateTimeType.MaximumTime, out usesOriginalData);
+			this.ColorizeResetBox(this.groupMaxTime, usesOriginalData);
 			if (UndefinedValue.IsUndefinedValue(value))
 			{
 				this.fieldMaxTime.Text = "";
@@ -296,7 +304,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 				TypeEditorDateTime.TimeToField(this.fieldMaxTime, (Time) value);
 			}
 
-			value = this.structuredData.GetValue(Support.Res.Fields.ResourceDateTimeType.DateStep);
+			value = this.structuredData.GetValue(Support.Res.Fields.ResourceDateTimeType.DateStep, out usesOriginalData);
+			this.ColorizeResetBox(this.groupDateStep, usesOriginalData);
 			if (UndefinedValue.IsUndefinedValue(value))
 			{
 				this.fieldDateStep.Text = "";
@@ -306,7 +315,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 				TypeEditorDateTime.DateStepToField(this.fieldDateStep, (DateSpan) value);
 			}
 
-			value = this.structuredData.GetValue(Support.Res.Fields.ResourceDateTimeType.TimeStep);
+			value = this.structuredData.GetValue(Support.Res.Fields.ResourceDateTimeType.TimeStep, out usesOriginalData);
+			this.ColorizeResetBox(this.groupTimeStep, usesOriginalData);
 			if (UndefinedValue.IsUndefinedValue(value))
 			{
 				this.fieldTimeStep.Text = "";
@@ -588,6 +598,11 @@ namespace Epsitec.Common.Designer.MyWidgets
 		{
 			AbstractButton button = sender as AbstractButton;
 
+			if (button.Name == "Resol")
+			{
+				this.ResetToOriginalValue(Support.Res.Fields.ResourceDateTimeType.Resolution);
+			}
+
 			if (button.Name == "MinDate")
 			{
 				this.ResetToOriginalValue(Support.Res.Fields.ResourceDateTimeType.MinimumDate);
@@ -624,6 +639,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		}
 
 
+		protected ResetBox						groupResol;
 		protected TextFieldCombo				fieldResol;
 
 		protected ResetBox						groupMinDate;

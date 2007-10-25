@@ -42,11 +42,11 @@ namespace Epsitec.Common.Designer.Viewers
 			this.buttonMainCompact.Clicked += new MessageEventHandler(this.HandleButtonCompactOrExtendClicked);
 
 			leftResetBox = new MyWidgets.ResetBox(leftContainer.Container);
-			leftResetBox.ResetVisibility = this.module.IsPatch;
+			leftResetBox.IsPatch = this.module.IsPatch;
 			leftResetBox.Dock = DockStyle.Fill;
 
 			rightResetBox = new MyWidgets.ResetBox(rightContainer.Container);
-			rightResetBox.ResetVisibility = this.module.IsPatch;
+			rightResetBox.IsPatch = this.module.IsPatch;
 			rightResetBox.Dock = DockStyle.Fill;
 
 			this.primaryLabels = new MyWidgets.StringCollection(leftResetBox.GroupBox);
@@ -67,11 +67,11 @@ namespace Epsitec.Common.Designer.Viewers
 			this.CreateBand(out leftContainer, out rightContainer, Res.Strings.Viewers.Captions.Description.Title, BandMode.MainView, GlyphShape.None, false, 0.3);
 
 			leftResetBox = new MyWidgets.ResetBox(leftContainer.Container);
-			leftResetBox.ResetVisibility = this.module.IsPatch;
+			leftResetBox.IsPatch = this.module.IsPatch;
 			leftResetBox.Dock = DockStyle.Fill;
 
 			rightResetBox = new MyWidgets.ResetBox(rightContainer.Container);
-			rightResetBox.ResetVisibility = this.module.IsPatch;
+			rightResetBox.IsPatch = this.module.IsPatch;
 			rightResetBox.Dock = DockStyle.Fill;
 
 			this.primaryDescription = new TextFieldMulti(leftResetBox.GroupBox);
@@ -98,7 +98,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.CreateBand(out leftContainer, Res.Strings.Viewers.Captions.Icon.Title, BandMode.MainView, GlyphShape.None, false, 0.3);
 
 			leftResetBox = new MyWidgets.ResetBox(leftContainer.Container);
-			leftResetBox.ResetVisibility = this.module.IsPatch;
+			leftResetBox.IsPatch = this.module.IsPatch;
 			leftResetBox.Dock = DockStyle.Fill;
 
 			StaticText label = new StaticText(leftResetBox.GroupBox);
@@ -130,11 +130,11 @@ namespace Epsitec.Common.Designer.Viewers
 			this.CreateBand(out leftContainer, out rightContainer, Res.Strings.Viewers.Captions.About.Title, BandMode.MainView, GlyphShape.None, false, 0.3);
 
 			leftResetBox = new MyWidgets.ResetBox(leftContainer.Container);
-			leftResetBox.ResetVisibility = this.module.IsPatch;
+			leftResetBox.IsPatch = this.module.IsPatch;
 			leftResetBox.Dock = DockStyle.Fill;
 
 			rightResetBox = new MyWidgets.ResetBox(rightContainer.Container);
-			rightResetBox.ResetVisibility = this.module.IsPatch;
+			rightResetBox.IsPatch = this.module.IsPatch;
 			rightResetBox.Dock = DockStyle.Fill;
 
 			this.primaryComment = new TextFieldMulti(leftResetBox.GroupBox);

@@ -13,7 +13,6 @@ namespace Epsitec.Common.Designer.MyWidgets
 		public TypeEditorNumeric(Module module)
 		{
 			this.module = module;
-			ResetBox group;
 
 			FrameBox band = new FrameBox(this);
 			band.TabIndex = this.tabIndex++;
@@ -29,46 +28,62 @@ namespace Epsitec.Common.Designer.MyWidgets
 			right.Dock = DockStyle.Fill;
 
 			//	Range.
-			this.CreateDecimalLabeled(Res.Strings.Viewers.Types.Numeric.Min, left, out group, out this.fieldMin);
-			group.Dock = DockStyle.StackBegin;
-			group.Margins = new Margins(0, 0, 0, 2);
+			this.CreateDecimalLabeled(Res.Strings.Viewers.Types.Numeric.Min, left, out this.groupMin, out this.fieldMin);
+			this.groupMin.Dock = DockStyle.StackBegin;
+			this.groupMin.Margins = new Margins(0, 0, 0, 2);
+			this.groupMin.ResetButton.Name = "Min";
+			this.groupMin.ResetButton.Clicked += new MessageEventHandler(this.HandleResetButtonClicked);
 			this.fieldMin.EditionAccepted += new EventHandler(this.HandleTextFieldChanged);
 
-			this.CreateDecimalLabeled(Res.Strings.Viewers.Types.Numeric.Max, left, out group, out this.fieldMax);
-			group.Dock = DockStyle.StackBegin;
-			group.Margins = new Margins(0, 0, 0, 2);
+			this.CreateDecimalLabeled(Res.Strings.Viewers.Types.Numeric.Max, left, out this.groupMax, out this.fieldMax);
+			this.groupMax.Dock = DockStyle.StackBegin;
+			this.groupMax.Margins = new Margins(0, 0, 0, 2);
+			this.groupMax.ResetButton.Name = "Max";
+			this.groupMax.ResetButton.Clicked += new MessageEventHandler(this.HandleResetButtonClicked);
 			this.fieldMax.EditionAccepted += new EventHandler(this.HandleTextFieldChanged);
 
-			this.CreateDecimalLabeled(Res.Strings.Viewers.Types.Numeric.Resol, left, out group, out this.fieldRes);
-			group.Dock = DockStyle.StackBegin;
-			group.Margins = new Margins(0, 0, 0, 0);
+			this.CreateDecimalLabeled(Res.Strings.Viewers.Types.Numeric.Resol, left, out this.groupRes, out this.fieldRes);
+			this.groupRes.Dock = DockStyle.StackBegin;
+			this.groupRes.Margins = new Margins(0, 0, 0, 0);
+			this.groupRes.ResetButton.Name = "Res";
+			this.groupRes.ResetButton.Clicked += new MessageEventHandler(this.HandleResetButtonClicked);
 			this.fieldRes.EditionAccepted += new EventHandler(this.HandleTextFieldChanged);
 
 			//	PreferredRange.
-			this.CreateDecimalLabeled(Res.Strings.Viewers.Types.Numeric.PreferredMin, right, out group, out this.fieldPreferredMin);
-			group.Dock = DockStyle.StackBegin;
-			group.Margins = new Margins(0, 0, 0, 2);
+			this.CreateDecimalLabeled(Res.Strings.Viewers.Types.Numeric.PreferredMin, right, out this.groupPreferredMin, out this.fieldPreferredMin);
+			this.groupPreferredMin.Dock = DockStyle.StackBegin;
+			this.groupPreferredMin.Margins = new Margins(0, 0, 0, 2);
+			this.groupPreferredMin.ResetButton.Name = "PreferredMin";
+			this.groupPreferredMin.ResetButton.Clicked += new MessageEventHandler(this.HandleResetButtonClicked);
 			this.fieldPreferredMin.EditionAccepted += new EventHandler(this.HandleTextFieldChanged);
 
-			this.CreateDecimalLabeled(Res.Strings.Viewers.Types.Numeric.PreferredMax, right, out group, out this.fieldPreferredMax);
-			group.Dock = DockStyle.StackBegin;
-			group.Margins = new Margins(0, 0, 0, 2);
+			this.CreateDecimalLabeled(Res.Strings.Viewers.Types.Numeric.PreferredMax, right, out this.groupPreferredMax, out this.fieldPreferredMax);
+			this.groupPreferredMax.Dock = DockStyle.StackBegin;
+			this.groupPreferredMax.Margins = new Margins(0, 0, 0, 2);
+			this.groupPreferredMax.ResetButton.Name = "PreferredMax";
+			this.groupPreferredMax.ResetButton.Clicked += new MessageEventHandler(this.HandleResetButtonClicked);
 			this.fieldPreferredMax.EditionAccepted += new EventHandler(this.HandleTextFieldChanged);
 
-			this.CreateDecimalLabeled(Res.Strings.Viewers.Types.Numeric.PreferredResol, right, out group, out this.fieldPreferredRes);
-			group.Dock = DockStyle.StackBegin;
-			group.Margins = new Margins(0, 0, 0, 0);
+			this.CreateDecimalLabeled(Res.Strings.Viewers.Types.Numeric.PreferredResol, right, out this.groupPreferredRes, out this.fieldPreferredRes);
+			this.groupPreferredRes.Dock = DockStyle.StackBegin;
+			this.groupPreferredRes.Margins = new Margins(0, 0, 0, 0);
+			this.groupPreferredRes.ResetButton.Name = "PreferredRes";
+			this.groupPreferredRes.ResetButton.Clicked += new MessageEventHandler(this.HandleResetButtonClicked);
 			this.fieldPreferredRes.EditionAccepted += new EventHandler(this.HandleTextFieldChanged);
 
 			//	Steps.
-			this.CreateDecimalLabeled(Res.Strings.Viewers.Types.Numeric.SmallStep, left, out group, out this.fieldSmallStep);
-			group.Dock = DockStyle.StackBegin;
-			group.Margins = new Margins(0, 0, 10, 2);
+			this.CreateDecimalLabeled(Res.Strings.Viewers.Types.Numeric.SmallStep, left, out this.groupSmallStep, out this.fieldSmallStep);
+			this.groupSmallStep.Dock = DockStyle.StackBegin;
+			this.groupSmallStep.Margins = new Margins(0, 0, 10, 2);
+			this.groupSmallStep.ResetButton.Name = "SmallStep";
+			this.groupSmallStep.ResetButton.Clicked += new MessageEventHandler(this.HandleResetButtonClicked);
 			this.fieldSmallStep.EditionAccepted += new EventHandler(this.HandleTextFieldChanged);
 
-			this.CreateDecimalLabeled(Res.Strings.Viewers.Types.Numeric.LargeStep, left, out group, out this.fieldLargeStep);
-			group.Dock = DockStyle.StackBegin;
-			group.Margins = new Margins(0, 0, 0, 0);
+			this.CreateDecimalLabeled(Res.Strings.Viewers.Types.Numeric.LargeStep, left, out this.groupLargeStep, out this.fieldLargeStep);
+			this.groupLargeStep.Dock = DockStyle.StackBegin;
+			this.groupLargeStep.Margins = new Margins(0, 0, 0, 0);
+			this.groupLargeStep.ResetButton.Name = "LargeStep";
+			this.groupLargeStep.ResetButton.Clicked += new MessageEventHandler(this.HandleResetButtonClicked);
 			this.fieldLargeStep.EditionAccepted += new EventHandler(this.HandleTextFieldChanged);
 		}
 		
@@ -77,14 +92,21 @@ namespace Epsitec.Common.Designer.MyWidgets
 		{
 			if ( disposing )
 			{
+				this.groupMin.ResetButton.Clicked -= new MessageEventHandler(this.HandleResetButtonClicked);
+				this.groupMax.ResetButton.Clicked -= new MessageEventHandler(this.HandleResetButtonClicked);
+				this.groupRes.ResetButton.Clicked -= new MessageEventHandler(this.HandleResetButtonClicked);
+				this.groupPreferredMin.ResetButton.Clicked -= new MessageEventHandler(this.HandleResetButtonClicked);
+				this.groupPreferredMax.ResetButton.Clicked -= new MessageEventHandler(this.HandleResetButtonClicked);
+				this.groupPreferredRes.ResetButton.Clicked -= new MessageEventHandler(this.HandleResetButtonClicked);
+				this.groupSmallStep.ResetButton.Clicked -= new MessageEventHandler(this.HandleResetButtonClicked);
+				this.groupLargeStep.ResetButton.Clicked -= new MessageEventHandler(this.HandleResetButtonClicked);
+				
 				this.fieldMin.EditionAccepted -= new EventHandler(this.HandleTextFieldChanged);
 				this.fieldMax.EditionAccepted -= new EventHandler(this.HandleTextFieldChanged);
 				this.fieldRes.EditionAccepted -= new EventHandler(this.HandleTextFieldChanged);
-
 				this.fieldPreferredMin.EditionAccepted -= new EventHandler(this.HandleTextFieldChanged);
 				this.fieldPreferredMax.EditionAccepted -= new EventHandler(this.HandleTextFieldChanged);
 				this.fieldPreferredRes.EditionAccepted -= new EventHandler(this.HandleTextFieldChanged);
-
 				this.fieldSmallStep.EditionAccepted -= new EventHandler(this.HandleTextFieldChanged);
 				this.fieldLargeStep.EditionAccepted -= new EventHandler(this.HandleTextFieldChanged);
 			}
@@ -365,14 +387,71 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 		}
 
+		private void HandleResetButtonClicked(object sender, MessageEventArgs e)
+		{
+			AbstractButton button = sender as AbstractButton;
 
+			if (button.Name == "Min")
+			{
+				this.ResetToOriginalValue(Support.Res.Fields.ResourceNumericType.Range);
+			}
+
+			if (button.Name == "Max")
+			{
+				this.ResetToOriginalValue(Support.Res.Fields.ResourceNumericType.Range);
+			}
+
+			if (button.Name == "Res")
+			{
+				this.ResetToOriginalValue(Support.Res.Fields.ResourceNumericType.Range);
+			}
+
+			if (button.Name == "PreferredMin")
+			{
+				this.ResetToOriginalValue(Support.Res.Fields.ResourceNumericType.PreferredRange);
+			}
+
+			if (button.Name == "PreferredMax")
+			{
+				this.ResetToOriginalValue(Support.Res.Fields.ResourceNumericType.PreferredRange);
+			}
+
+			if (button.Name == "PreferredRes")
+			{
+				this.ResetToOriginalValue(Support.Res.Fields.ResourceNumericType.PreferredRange);
+			}
+
+			if (button.Name == "SmallStep")
+			{
+				this.ResetToOriginalValue(Support.Res.Fields.ResourceNumericType.SmallStep);
+			}
+
+			if (button.Name == "LargeStep")
+			{
+				this.ResetToOriginalValue(Support.Res.Fields.ResourceNumericType.LargeStep);
+			}
+
+			this.OnContentChanged();
+			this.UpdateContent();
+			this.module.AccessTypes.SetLocalDirty();
+		}
+
+
+		protected ResetBox						groupMin;
 		protected TextFieldEx					fieldMin;
+		protected ResetBox						groupMax;
 		protected TextFieldEx					fieldMax;
+		protected ResetBox						groupRes;
 		protected TextFieldEx					fieldRes;
+		protected ResetBox						groupPreferredMin;
 		protected TextFieldEx					fieldPreferredMin;
+		protected ResetBox						groupPreferredMax;
 		protected TextFieldEx					fieldPreferredMax;
+		protected ResetBox						groupPreferredRes;
 		protected TextFieldEx					fieldPreferredRes;
+		protected ResetBox						groupSmallStep;
 		protected TextFieldEx					fieldSmallStep;
+		protected ResetBox						groupLargeStep;
 		protected TextFieldEx					fieldLargeStep;
 	}
 }

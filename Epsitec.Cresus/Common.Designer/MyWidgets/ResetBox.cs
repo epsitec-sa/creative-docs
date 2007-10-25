@@ -50,7 +50,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		}
 
 
-		public bool ResetVisibility
+		public bool IsPatch
 		{
 			get
 			{
