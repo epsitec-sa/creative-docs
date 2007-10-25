@@ -319,6 +319,11 @@ namespace Epsitec.Common.Support.ResourceAccessors
 
 		#region Listener Class
 
+		/// <summary>
+		/// The <c>Listener</c> class is used to handle changes to fields which
+		/// contain collection of items and for which the automatic notification
+		/// mechanism implemented by <c>StructuredData</c> does not work.
+		/// </summary>
 		protected abstract class Listener
 		{
 			public Listener(CaptionResourceAccessor accessor, CultureMap item, StructuredData data)
@@ -341,6 +346,14 @@ namespace Epsitec.Common.Support.ResourceAccessors
 				get
 				{
 					return this.data;
+				}
+			}
+
+			public CaptionResourceAccessor Accessor
+			{
+				get
+				{
+					return this.accessor;
 				}
 			}
 
@@ -388,6 +401,11 @@ namespace Epsitec.Common.Support.ResourceAccessors
 				return null;
 			}
 
+			/// <summary>
+			/// Checks whether the specified field contains an original value.
+			/// </summary>
+			/// <param name="id">The field id.</param>
+			/// <returns><c>true</c> if the field contains an original value; otherwise, <c>false</c>.</returns>
 			protected bool UsesOriginalValue(Druid id)
 			{
 				if (this.accessor.BasedOnPatchModule)
@@ -430,9 +448,9 @@ namespace Epsitec.Common.Support.ResourceAccessors
 				}
 			}
 
-			protected CaptionResourceAccessor accessor;
-			protected CultureMap item;
-			protected StructuredData data;
+			private CaptionResourceAccessor accessor;
+			private CultureMap item;
+			private StructuredData data;
 		}
 
 		#endregion
@@ -450,11 +468,11 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			{
 				if (this.UsesOriginalValue (Res.Fields.ResourceCaption.Labels))
 				{
-					this.data.UnlockValue (Res.Fields.ResourceCaption.Labels);
-					this.data.CopyOriginalToCurrentValue (Res.Fields.ResourceCaption.Labels);
-					this.data.LockValue (Res.Fields.ResourceCaption.Labels);
+					this.Data.UnlockValue (Res.Fields.ResourceCaption.Labels);
+					this.Data.CopyOriginalToCurrentValue (Res.Fields.ResourceCaption.Labels);
+					this.Data.LockValue (Res.Fields.ResourceCaption.Labels);
 
-					ObservableList<string> labels = this.data.GetValue (Res.Fields.ResourceCaption.Labels) as ObservableList<string>;
+					ObservableList<string> labels = this.Data.GetValue (Res.Fields.ResourceCaption.Labels) as ObservableList<string>;
 
 					this.originalLabels = new List<string> (labels);
 				}
@@ -464,11 +482,11 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			{
 				if (this.originalLabels != null)
 				{
-					this.data.UnlockValue (Res.Fields.ResourceCaption.Labels);
-					this.data.ResetToOriginalValue (Res.Fields.ResourceCaption.Labels);
-					this.data.LockValue (Res.Fields.ResourceCaption.Labels);
+					this.Data.UnlockValue (Res.Fields.ResourceCaption.Labels);
+					this.Data.ResetToOriginalValue (Res.Fields.ResourceCaption.Labels);
+					this.Data.LockValue (Res.Fields.ResourceCaption.Labels);
 
-					ObservableList<string> labels = this.data.GetValue (Res.Fields.ResourceCaption.Labels) as ObservableList<string>;
+					ObservableList<string> labels = this.Data.GetValue (Res.Fields.ResourceCaption.Labels) as ObservableList<string>;
 
 					using (labels.DisableNotifications ())
 					{

@@ -1136,11 +1136,11 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			{
 				if (this.UsesOriginalValue (Res.Fields.ResourceStructuredType.Fields))
 				{
-					this.data.UnlockValue (Res.Fields.ResourceStructuredType.Fields);
-					this.data.CopyOriginalToCurrentValue (Res.Fields.ResourceStructuredType.Fields);
-					this.data.LockValue (Res.Fields.ResourceStructuredType.Fields);
+					this.Data.UnlockValue (Res.Fields.ResourceStructuredType.Fields);
+					this.Data.CopyOriginalToCurrentValue (Res.Fields.ResourceStructuredType.Fields);
+					this.Data.LockValue (Res.Fields.ResourceStructuredType.Fields);
 
-					ObservableList<StructuredData> fields = this.data.GetValue (Res.Fields.ResourceStructuredType.Fields) as ObservableList<StructuredData>;
+					ObservableList<StructuredData> fields = this.Data.GetValue (Res.Fields.ResourceStructuredType.Fields) as ObservableList<StructuredData>;
 
 					this.originalFields = new List<StructuredData> ();
 
@@ -1155,11 +1155,11 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			{
 				if (this.originalFields != null)
 				{
-					this.data.UnlockValue (Res.Fields.ResourceStructuredType.Fields);
-					this.data.ResetToOriginalValue (Res.Fields.ResourceStructuredType.Fields);
-					this.data.LockValue (Res.Fields.ResourceStructuredType.Fields);
+					this.Data.UnlockValue (Res.Fields.ResourceStructuredType.Fields);
+					this.Data.ResetToOriginalValue (Res.Fields.ResourceStructuredType.Fields);
+					this.Data.LockValue (Res.Fields.ResourceStructuredType.Fields);
 
-					ObservableList<StructuredData> fields = this.data.GetValue (Res.Fields.ResourceStructuredType.Fields) as ObservableList<StructuredData>;
+					ObservableList<StructuredData> fields = this.Data.GetValue (Res.Fields.ResourceStructuredType.Fields) as ObservableList<StructuredData>;
 
 					using (fields.DisableNotifications ())
 					{
@@ -1169,7 +1169,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 						{
 							StructuredData data = fields[index];
 							fields.RemoveAt (index--);
-							this.item.NotifyDataRemoved (data);
+							this.Item.NotifyDataRemoved (data);
 						}
 
 						System.Diagnostics.Debug.Assert (fields.Count == 0);
@@ -1179,7 +1179,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 							StructuredData copy = data.GetShallowCopy ();
 							copy.PromoteToOriginal ();
 							fields.Add (copy);
-							this.item.NotifyDataAdded (copy);
+							this.Item.NotifyDataAdded (copy);
 						}
 					}
 				}
@@ -1201,11 +1201,11 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			{
 				if (this.UsesOriginalValue (Res.Fields.ResourceStructuredType.InterfaceIds))
 				{
-					this.data.UnlockValue (Res.Fields.ResourceStructuredType.InterfaceIds);
-					this.data.CopyOriginalToCurrentValue (Res.Fields.ResourceStructuredType.InterfaceIds);
-					this.data.LockValue (Res.Fields.ResourceStructuredType.InterfaceIds);
+					this.Data.UnlockValue (Res.Fields.ResourceStructuredType.InterfaceIds);
+					this.Data.CopyOriginalToCurrentValue (Res.Fields.ResourceStructuredType.InterfaceIds);
+					this.Data.LockValue (Res.Fields.ResourceStructuredType.InterfaceIds);
 
-					ObservableList<StructuredData> interfaceIds = this.data.GetValue (Res.Fields.ResourceStructuredType.InterfaceIds) as ObservableList<StructuredData>;
+					ObservableList<StructuredData> interfaceIds = this.Data.GetValue (Res.Fields.ResourceStructuredType.InterfaceIds) as ObservableList<StructuredData>;
 
 					this.originalInterfaceIds = new List<StructuredData> ();
 
@@ -1218,21 +1218,21 @@ namespace Epsitec.Common.Support.ResourceAccessors
 
 			public override void HandleCollectionChanged(object sender, CollectionChangedEventArgs e)
 			{
-				StructuredTypeResourceAccessor accessor = this.accessor as StructuredTypeResourceAccessor;
+				StructuredTypeResourceAccessor accessor = this.Accessor as StructuredTypeResourceAccessor;
 
-				accessor.RefreshItem (this.item);
-				accessor.NotifyItemChanged (this.item);
+				accessor.RefreshItem (this.Item);
+				accessor.NotifyItemChanged (this.Item);
 			}
 
 			public override void ResetToOriginalValue()
 			{
 				if (this.originalInterfaceIds != null)
 				{
-					this.data.UnlockValue (Res.Fields.ResourceStructuredType.InterfaceIds);
-					this.data.ResetToOriginalValue (Res.Fields.ResourceStructuredType.InterfaceIds);
-					this.data.LockValue (Res.Fields.ResourceStructuredType.InterfaceIds);
+					this.Data.UnlockValue (Res.Fields.ResourceStructuredType.InterfaceIds);
+					this.Data.ResetToOriginalValue (Res.Fields.ResourceStructuredType.InterfaceIds);
+					this.Data.LockValue (Res.Fields.ResourceStructuredType.InterfaceIds);
 
-					ObservableList<StructuredData> interfaceIds = this.data.GetValue (Res.Fields.ResourceStructuredType.InterfaceIds) as ObservableList<StructuredData>;
+					ObservableList<StructuredData> interfaceIds = this.Data.GetValue (Res.Fields.ResourceStructuredType.InterfaceIds) as ObservableList<StructuredData>;
 
 					using (interfaceIds.DisableNotifications ())
 					{
