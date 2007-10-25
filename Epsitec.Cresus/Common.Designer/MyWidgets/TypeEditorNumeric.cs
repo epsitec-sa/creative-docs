@@ -175,8 +175,12 @@ namespace Epsitec.Common.Designer.MyWidgets
 			//	Met à jour le contenu de l'éditeur.
 			this.ignoreChange = true;
 			object value;
+			bool usesOriginalData;
 
-			value = this.structuredData.GetValue(Support.Res.Fields.ResourceNumericType.Range);
+			value = this.structuredData.GetValue(Support.Res.Fields.ResourceNumericType.Range, out usesOriginalData);
+			this.ColorizeResetBox(this.groupMin, usesOriginalData);
+			this.ColorizeResetBox(this.groupMax, usesOriginalData);
+			this.ColorizeResetBox(this.groupRes, usesOriginalData);
 			if (UndefinedValue.IsUndefinedValue(value))
 			{
 				this.fieldMin.Text = "";
@@ -200,7 +204,10 @@ namespace Epsitec.Common.Designer.MyWidgets
 				}
 			}
 
-			value = this.structuredData.GetValue(Support.Res.Fields.ResourceNumericType.PreferredRange);
+			value = this.structuredData.GetValue(Support.Res.Fields.ResourceNumericType.PreferredRange, out usesOriginalData);
+			this.ColorizeResetBox(this.groupPreferredMin, usesOriginalData);
+			this.ColorizeResetBox(this.groupPreferredMax, usesOriginalData);
+			this.ColorizeResetBox(this.groupPreferredRes, usesOriginalData);
 			if (UndefinedValue.IsUndefinedValue(value))
 			{
 				this.fieldPreferredMin.Text = "";
@@ -224,7 +231,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 				}
 			}
 
-			value = this.structuredData.GetValue(Support.Res.Fields.ResourceNumericType.SmallStep);
+			value = this.structuredData.GetValue(Support.Res.Fields.ResourceNumericType.SmallStep, out usesOriginalData);
+			this.ColorizeResetBox(this.groupSmallStep, usesOriginalData);
 			if (UndefinedValue.IsUndefinedValue(value))
 			{
 				this.fieldSmallStep.Text = "";
@@ -242,7 +250,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 				}
 			}
 
-			value = this.structuredData.GetValue(Support.Res.Fields.ResourceNumericType.LargeStep);
+			value = this.structuredData.GetValue(Support.Res.Fields.ResourceNumericType.LargeStep, out usesOriginalData);
+			this.ColorizeResetBox(this.groupLargeStep, usesOriginalData);
 			if (UndefinedValue.IsUndefinedValue(value))
 			{
 				this.fieldLargeStep.Text = "";
