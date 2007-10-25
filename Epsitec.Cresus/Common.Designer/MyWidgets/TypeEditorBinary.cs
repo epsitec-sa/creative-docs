@@ -13,11 +13,12 @@ namespace Epsitec.Common.Designer.MyWidgets
 		public TypeEditorBinary(Module module)
 		{
 			this.module = module;
-			ResetBox group;
 
-			this.CreateStringLabeled(Res.Strings.Viewers.Types.Binary.Mime, this, out group, out this.fieldMime);
-			group.Dock = DockStyle.StackBegin;
-			group.Margins = new Margins(0, 0, 0, 0);
+			this.CreateStringLabeled(Res.Strings.Viewers.Types.Binary.Mime, this, out this.groupMime, out this.fieldMime);
+			this.groupMime.Dock = DockStyle.StackBegin;
+			this.groupMime.Margins = new Margins(0, 0, 0, 0);
+			this.groupMime.ResetButton.Name = "Mime";
+			this.groupMime.ResetButton.Clicked += new MessageEventHandler(this.HandleResetButtonClicked);
 			this.fieldMime.PreferredWidth = 400;
 			this.fieldMime.EditionAccepted += new EventHandler(this.HandleTextFieldChanged);
 		}
@@ -27,6 +28,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		{
 			if ( disposing )
 			{
+				this.groupMime.ResetButton.Clicked -= new MessageEventHandler(this.HandleResetButtonClicked);
 				this.fieldMime.EditionAccepted -= new EventHandler(this.HandleTextFieldChanged);
 			}
 			
@@ -56,8 +58,10 @@ namespace Epsitec.Common.Designer.MyWidgets
 		{
 			//	Met à jour le contenu de l'éditeur.
 			this.ignoreChange = true;
+			bool usesOriginalData;
 
-			object value = this.structuredData.GetValue(Support.Res.Fields.ResourceBinaryType.MimeType);
+			object value = this.structuredData.GetValue(Support.Res.Fields.ResourceBinaryType.MimeType, out usesOriginalData);
+			this.ColorizeResetBox(this.groupMime, usesOriginalData);
 			if (UndefinedValue.IsUndefinedValue(value))
 			{
 				this.fieldMime.Text = "";
@@ -88,7 +92,22 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.module.AccessTypes.SetLocalDirty();
 		}
 
+		private void HandleResetButtonClicked(object sender, MessageEventArgs e)
+		{
+			AbstractButton button = sender as AbstractButton;
 
+			if (button.Name == "Mime")
+			{
+				this.ResetToOriginalValue(Support.Res.Fields.ResourceBinaryType.MimeType);
+			}
+
+			this.OnContentChanged();
+			this.UpdateContent();
+			this.module.AccessTypes.SetLocalDirty();
+		}
+
+
+		protected ResetBox						groupMime;
 		protected TextFieldEx					fieldMime;
 	}
 }
