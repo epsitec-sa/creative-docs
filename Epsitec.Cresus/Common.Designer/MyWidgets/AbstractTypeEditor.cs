@@ -281,17 +281,17 @@ namespace Epsitec.Common.Designer.MyWidgets
 			//	Crée un super-widget permettant d'éditer une valeur décimale, avec une étiquette à gauche.
 			group = new ResetBox(parent);
 			group.TabIndex = this.tabIndex++;
-
-			StaticText text = new StaticText(group);
+			
+			StaticText text = new StaticText(group.GroupBox);
 			text.Text = label;
 			text.ContentAlignment = ContentAlignment.MiddleRight;
 			text.PreferredWidth = 160;
 			text.Dock = DockStyle.Left;
 			text.Margins = new Margins(0, 8, 0, 0);
 
-			field = new TextFieldEx(group);
-			field.PreferredWidth = 130;
-			field.Dock = DockStyle.Left;  // TODO: Grrr, pourquoi le mode Fill casse tout ???
+			field = new TextFieldEx(group.GroupBox);
+			field.MinWidth = 130;
+			field.Dock = DockStyle.Fill;
 			field.TabIndex = 1;
 			field.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 		}
