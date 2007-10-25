@@ -34,9 +34,11 @@ namespace Epsitec.Common.Designer.Viewers
 			this.buttonMainCompact.Clicked += new MessageEventHandler(this.HandleButtonCompactOrExtendClicked);
 
 			leftResetBox = new MyWidgets.ResetBox(leftContainer.Container);
+			leftResetBox.ResetVisibility = this.module.IsPatch;
 			leftResetBox.Dock = DockStyle.Fill;
 
 			rightResetBox = new MyWidgets.ResetBox(rightContainer.Container);
+			rightResetBox.ResetVisibility = this.module.IsPatch;
 			rightResetBox.Dock = DockStyle.Fill;
 
 			this.primaryText = new TextFieldMulti(leftResetBox.GroupBox);
@@ -63,9 +65,11 @@ namespace Epsitec.Common.Designer.Viewers
 			this.CreateBand(out leftContainer, out rightContainer, Res.Strings.Viewers.Captions.About.Title, BandMode.MainView, GlyphShape.None, false, 0.3);
 
 			leftResetBox = new MyWidgets.ResetBox(leftContainer.Container);
+			leftResetBox.ResetVisibility = this.module.IsPatch;
 			leftResetBox.Dock = DockStyle.Fill;
 
 			rightResetBox = new MyWidgets.ResetBox(rightContainer.Container);
+			rightResetBox.ResetVisibility = this.module.IsPatch;
 			rightResetBox.Dock = DockStyle.Fill;
 
 			this.primaryComment = new TextFieldMulti(leftResetBox.GroupBox);
