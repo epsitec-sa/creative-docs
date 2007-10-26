@@ -591,7 +591,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			
 			if (original)
 			{
-				data.PromoteToOriginal ();
+				this.PromoteToOriginal (item, data);
 			}
 
 			if (insert)
@@ -600,6 +600,11 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			}
 
 			return data;
+		}
+
+		protected virtual void PromoteToOriginal(CultureMap item, StructuredData data)
+		{
+			data.PromoteToOriginal ();
 		}
 
 		/// <summary>

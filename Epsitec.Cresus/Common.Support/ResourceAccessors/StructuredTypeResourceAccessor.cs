@@ -243,6 +243,21 @@ namespace Epsitec.Common.Support.ResourceAccessors
 				base.ResetToOriginal (item, container, fieldId);
 			}
 		}
+
+		protected override void PromoteToOriginal(CultureMap item, StructuredData data)
+		{
+			base.PromoteToOriginal (item, data);
+
+			ObservableList<StructuredData> fields = data.GetValue (Res.Fields.ResourceStructuredType.Fields) as ObservableList<StructuredData>;
+
+			using (fields.DisableNotifications ())
+			{
+				foreach (StructuredData field in fields)
+				{
+					field.PromoteToOriginal ();
+				}
+			}
+		}
 		
 		/// <summary>
 		/// Gets the structured type which describes the caption data.
