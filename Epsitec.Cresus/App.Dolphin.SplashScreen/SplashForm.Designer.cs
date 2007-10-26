@@ -50,12 +50,11 @@ namespace Epsitec.App.Dolphin
 			this.labelCopyright.AutoSize = true;
 			this.labelCopyright.BackColor = System.Drawing.Color.Transparent;
 			this.labelCopyright.Dock = System.Windows.Forms.DockStyle.Bottom;
+			this.labelCopyright.ForeColor = System.Drawing.Color.White;
 			this.labelCopyright.Location = new System.Drawing.Point (4, 183);
 			this.labelCopyright.Name = "labelCopyright";
-			this.labelCopyright.Size = new System.Drawing.Size (262, 13);
+			this.labelCopyright.Size = new System.Drawing.Size (0, 13);
 			this.labelCopyright.TabIndex = 1;
-			this.labelCopyright.Text = "";
-			this.labelCopyright.ForeColor = System.Drawing.Color.White;
 			// 
 			// SplashForm
 			// 
@@ -67,6 +66,7 @@ namespace Epsitec.App.Dolphin
 			this.ControlBox = false;
 			this.Controls.Add (this.labelMessage);
 			this.Controls.Add (this.labelCopyright);
+			this.Cursor = System.Windows.Forms.Cursors.AppStarting;
 			this.DoubleBuffered = true;
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
 			this.MaximizeBox = false;

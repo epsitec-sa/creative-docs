@@ -145,6 +145,10 @@ xcopy "$(SolutionDir)App.Dolphin.Core\$(OutDir)*.dll" "$(SolutionDir)App.Dolphin
 xcopy "$(SolutionDir)Export\*Win32*.dll" "$(SolutionDir)App.Dolphin.Core\Executable\1.0.0\" /Y
 
 del "$(SolutionDir)App.Dolphin.Core\Executable\1.0.0\Resources\*.xml"
+
+call "$(SolutionDir)External\CodeSigning\sign-epsitec.bat" "$(SolutionDir)App.Dolphin.Core\Executable\*.exe" "Dauphin"
+call "$(SolutionDir)External\CodeSigning\sign-epsitec.bat" "$(SolutionDir)App.Dolphin.Core\Executable\1.0.0\*.exe" "Dauphin"
+call "$(SolutionDir)External\CodeSigning\sign-epsitec.bat" "$(SolutionDir)App.Dolphin.Core\Executable\1.0.0\*.dll" "Dauphin"
 </PostBuildEvent>
   </PropertyGroup>
 </Project>
