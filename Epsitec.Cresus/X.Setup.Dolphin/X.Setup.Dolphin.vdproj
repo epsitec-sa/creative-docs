@@ -21,14 +21,14 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_59C2CADB4BAF4200AB5061BE85415427"
-        "OwnerKey" = "8:_UNDEFINED"
+        "MsmKey" = "8:_3533C3F936BF4DB5BFF12324625598C3"
+        "OwnerKey" = "8:_99A1ECCB35B241B391BC9274DB770594"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_990E7306EFAA443AA9A15D1DC764DB45"
-        "OwnerKey" = "8:_99A1ECCB35B241B391BC9274DB770594"
+        "MsmKey" = "8:_59C2CADB4BAF4200AB5061BE85415427"
+        "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -284,14 +284,14 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Dauphin"
-        "ProductCode" = "8:{4E352544-14B4-4FBE-8FB7-ACB41FC71BF9}"
-        "PackageCode" = "8:{CD71FCA7-38AA-45A4-BFAA-D318E42E2803}"
+        "ProductCode" = "8:{63BF52AA-4778-4C94-9676-3C67A07ABFAF}"
+        "PackageCode" = "8:{AD3EE66E-5C96-4BFF-91EF-68549B34ED9A}"
         "UpgradeCode" = "8:{3E07DF4F-1854-45A8-86B8-F494ADA98964}"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:TRUE"
-        "ProductVersion" = "8:1.0.5"
+        "ProductVersion" = "8:1.0.6"
         "Manufacturer" = "8:Epsitec"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"
@@ -706,7 +706,7 @@
         }
         "MergeModule"
         {
-            "{CEE29DC0-9FBA-4B99-8D47-5BC643D9B626}:_990E7306EFAA443AA9A15D1DC764DB45"
+            "{CEE29DC0-9FBA-4B99-8D47-5BC643D9B626}:_3533C3F936BF4DB5BFF12324625598C3"
             {
             "UseDynamicProperties" = "11:TRUE"
             "IsDependency" = "11:TRUE"
