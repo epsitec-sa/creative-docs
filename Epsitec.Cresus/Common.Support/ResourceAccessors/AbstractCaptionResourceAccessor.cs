@@ -602,6 +602,13 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			return data;
 		}
 
+		/// <summary>
+		/// Promotes the data in the specified data record to the "original"
+		/// state. This is required in order to be able to reset the data back
+		/// later on.
+		/// </summary>
+		/// <param name="item">The item.</param>
+		/// <param name="data">The data record.</param>
 		protected virtual void PromoteToOriginal(CultureMap item, StructuredData data)
 		{
 			data.PromoteToOriginal ();
