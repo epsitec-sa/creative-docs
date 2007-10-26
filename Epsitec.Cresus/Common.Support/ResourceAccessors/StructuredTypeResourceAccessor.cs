@@ -370,6 +370,14 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			//AbstractCaptionResourceAccessor.CopyDeltaValue (rawData, patchData, Res.Fields.ResourceStructuredType.InterfaceIds);
 			AbstractCaptionResourceAccessor.CopyDeltaValue (rawData, patchData, Res.Fields.ResourceStructuredType.SerializedDesignerLayouts);
 
+			//	The structured type class must be defined, or else we won't be able
+			//	to generate the correct StructuredType instance for the caption
+			//	serialization.
+			
+			StructuredTypeClass refClass = StructuredTypeResourceAccessor.ToStructuredTypeClass (refData.GetValue (Res.Fields.ResourceStructuredType.Class));
+
+			patchData.SetValue (Res.Fields.ResourceStructuredType.Class, refClass);
+			
 			IList<StructuredData> refFields          = refData.GetValue (Res.Fields.ResourceStructuredType.Fields) as IList<StructuredData>;
 			IList<StructuredData> refInterfaceIds    = refData.GetValue (Res.Fields.ResourceStructuredType.InterfaceIds) as IList<StructuredData>;
 			IList<StructuredData> rawFields          = rawData.GetValue (Res.Fields.ResourceStructuredType.Fields) as IList<StructuredData>;
@@ -691,7 +699,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 						}))
 					{
 						StructuredData x = new StructuredData (Res.Types.Field);
-						
+
 						StructuredTypeResourceAccessor.FillDataFromField (item, x, field, recordFields ? item.Source : CultureMapSource.PatchModule);
 
 						fields.Add (x);
@@ -700,6 +708,10 @@ namespace Epsitec.Common.Support.ResourceAccessors
 						{
 							item.NotifyDataAdded (x);
 						}
+					}
+					else
+					{
+						System.Diagnostics.Debug.WriteLine ("Duplicate field definition");
 					}
 				}
 			}
@@ -741,6 +753,10 @@ namespace Epsitec.Common.Support.ResourceAccessors
 						{
 							item.NotifyDataAdded (x);
 						}
+					}
+					else
+					{
+						System.Diagnostics.Debug.WriteLine ("Duplicate interface definition");
 					}
 				}
 			}
