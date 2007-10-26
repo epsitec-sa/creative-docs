@@ -152,7 +152,12 @@ namespace Epsitec.Common.Support
 			{
 				System.Diagnostics.Debug.Assert (value == CultureMapSource.DynamicMerge);
 
+				CultureMapSource oldSource = this.source;
+				CultureMapSource newSource = value;
+
 				this.source = value;
+
+				this.OnPropertyChanged (null, new DependencyPropertyChangedEventArgs ("Source", oldSource, newSource));
 			}
 		}
 
