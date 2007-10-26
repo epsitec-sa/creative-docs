@@ -366,11 +366,54 @@ namespace Epsitec.Common.Support.ResourceAccessors
 #if true
 			AbstractCaptionResourceAccessor.CopyDeltaValue (rawData, patchData, Res.Fields.ResourceStructuredType.BaseType);
 			AbstractCaptionResourceAccessor.CopyDeltaValue (rawData, patchData, Res.Fields.ResourceStructuredType.Class);
-			AbstractCaptionResourceAccessor.CopyDeltaValue (rawData, patchData, Res.Fields.ResourceStructuredType.Fields);
-			AbstractCaptionResourceAccessor.CopyDeltaValue (rawData, patchData, Res.Fields.ResourceStructuredType.InterfaceIds);
+			//AbstractCaptionResourceAccessor.CopyDeltaValue (rawData, patchData, Res.Fields.ResourceStructuredType.Fields);
+			//AbstractCaptionResourceAccessor.CopyDeltaValue (rawData, patchData, Res.Fields.ResourceStructuredType.InterfaceIds);
 			AbstractCaptionResourceAccessor.CopyDeltaValue (rawData, patchData, Res.Fields.ResourceStructuredType.SerializedDesignerLayouts);
 
-			//	TODO: ...process intelligently field and interface lists to keep just the delta...
+			IList<StructuredData> refFields          = refData.GetValue (Res.Fields.ResourceStructuredType.Fields) as IList<StructuredData>;
+			IList<StructuredData> refInterfaceIds    = refData.GetValue (Res.Fields.ResourceStructuredType.InterfaceIds) as IList<StructuredData>;
+			IList<StructuredData> rawFields          = rawData.GetValue (Res.Fields.ResourceStructuredType.Fields) as IList<StructuredData>;
+			IList<StructuredData> rawInterfaceIds    = rawData.GetValue (Res.Fields.ResourceStructuredType.InterfaceIds) as IList<StructuredData>;
+			
+			if ((rawFields != null) &&
+				(rawFields.Count > 0) &&
+				(!Types.Collection.CompareEqual (rawFields, refFields)))
+			{
+				List<StructuredData> temp = new List<StructuredData> ();
+
+				foreach (StructuredData field in rawFields)
+				{
+					CultureMapSource fieldSource = (CultureMapSource) field.GetValue (Res.Fields.Field.CultureMapSource);
+
+					if ((fieldSource == CultureMapSource.DynamicMerge) ||
+						(fieldSource == CultureMapSource.PatchModule))
+					{
+						temp.Add (field);
+					}
+				}
+
+				patchData.SetValue (Res.Fields.ResourceStructuredType.Fields, temp);
+			}
+
+			if ((rawInterfaceIds != null) &&
+				(rawInterfaceIds.Count > 0) &&
+				(!Types.Collection.CompareEqual (rawInterfaceIds, refInterfaceIds)))
+			{
+				List<StructuredData> temp = new List<StructuredData> ();
+
+				foreach (StructuredData interfaceId in rawInterfaceIds)
+				{
+					CultureMapSource interfaceIdSource = (CultureMapSource) interfaceId.GetValue (Res.Fields.InterfaceId.CultureMapSource);
+
+					if ((interfaceIdSource == CultureMapSource.DynamicMerge) ||
+						(interfaceIdSource == CultureMapSource.PatchModule))
+					{
+						temp.Add (interfaceId);
+					}
+				}
+
+				patchData.SetValue (Res.Fields.ResourceStructuredType.InterfaceIds, temp);
+			}
 #else
 			object                refBaseTypeValue   = refData.GetValue (Res.Fields.ResourceStructuredType.BaseType);
 			StructuredTypeClass   refClass           = StructuredTypeResourceAccessor.ToStructuredTypeClass (refData.GetValue (Res.Fields.ResourceStructuredType.Class));
@@ -648,8 +691,9 @@ namespace Epsitec.Common.Support.ResourceAccessors
 						}))
 					{
 						StructuredData x = new StructuredData (Res.Types.Field);
+						
+						StructuredTypeResourceAccessor.FillDataFromField (item, x, field, recordFields ? item.Source : CultureMapSource.PatchModule);
 
-						StructuredTypeResourceAccessor.FillDataFromField (item, x, field);
 						fields.Add (x);
 
 						if (mode == DataCreationMode.Public)
@@ -689,7 +733,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 						StructuredData x = new StructuredData (Res.Types.InterfaceId);
 
 						x.SetValue (Res.Fields.InterfaceId.CaptionId, interfaceId);
-						x.SetValue (Res.Fields.InterfaceId.CultureMapSource, item.Source);
+						x.SetValue (Res.Fields.InterfaceId.CultureMapSource, recordInterfaceIds ? item.Source : CultureMapSource.PatchModule);
 
 						interfaceIds.Add (x);
 
@@ -739,7 +783,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			}
 		}
 
-		private static void FillDataFromField(CultureMap item, StructuredData data, StructuredTypeField field)
+		private static void FillDataFromField(CultureMap item, StructuredData data, StructuredTypeField field, CultureMapSource source)
 		{
 			System.Diagnostics.Debug.Assert (field.DefiningTypeId.IsEmpty);
 
@@ -747,7 +791,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			data.SetValue (Res.Fields.Field.CaptionId, field.CaptionId);
 			data.SetValue (Res.Fields.Field.Relation, field.Relation);
 			data.SetValue (Res.Fields.Field.Membership, field.Membership);
-			data.SetValue (Res.Fields.Field.CultureMapSource, item.Source);
+			data.SetValue (Res.Fields.Field.CultureMapSource, source);
 			data.SetValue (Res.Fields.Field.Source, field.Source);
 			data.SetValue (Res.Fields.Field.Options, field.Options);
 			data.SetValue (Res.Fields.Field.Expression, field.Expression ?? "");
