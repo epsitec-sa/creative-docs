@@ -690,18 +690,26 @@ namespace Epsitec.Common.Support.ResourceAccessors
 				foreach (string fieldId in type.GetFieldIds ())
 				{
 					StructuredTypeField field = type.Fields[fieldId];
+					StructuredData original = null;
+					StructuredData x = new StructuredData (Res.Types.Field);
+					StructuredTypeResourceAccessor.FillDataFromField (item, x, field, recordFields ? item.Source : CultureMapSource.PatchModule);
 
 					if (!Types.Collection.Contains (fields,
 						delegate (StructuredData find)
 						{
 							Druid findId = StructuredTypeResourceAccessor.ToDruid (find.GetValue (Res.Fields.Field.CaptionId));
-							return findId == field.CaptionId;
+							
+							if (findId == field.CaptionId)
+							{
+								original = find;
+								return true;
+							}
+							else
+							{
+								return false;
+							}
 						}))
 					{
-						StructuredData x = new StructuredData (Res.Types.Field);
-
-						StructuredTypeResourceAccessor.FillDataFromField (item, x, field, recordFields ? item.Source : CultureMapSource.PatchModule);
-
 						fields.Add (x);
 
 						if (mode == DataCreationMode.Public)
@@ -711,7 +719,13 @@ namespace Epsitec.Common.Support.ResourceAccessors
 					}
 					else
 					{
+						System.Diagnostics.Debug.Assert (original != null);
+						System.Diagnostics.Debug.Assert (recordFields == false);
+
 						System.Diagnostics.Debug.WriteLine ("Duplicate field definition");
+						
+						original.SetValue (Res.Fields.Field.Expression, x.GetValue (Res.Fields.Field.Expression));
+						original.SetValue (Res.Fields.Field.CultureMapSource, CultureMapSource.DynamicMerge);
 					}
 				}
 			}
