@@ -972,13 +972,20 @@ namespace Epsitec.Common.Designer.Viewers
 			if (item != null)
 			{
 				string name = item.FullName;
-				this.titleText.Text = string.Concat("<font size=\"150%\">", name, "</font>");
+				string mode = null;
 
 				if (this.module.IsPatch)
 				{
 					CultureMapSource source = this.access.GetCultureMapSource(item);
 					this.titleBox.BackColor = Misc.SourceColor(source);
+					mode = Misc.SourceText(source);
+					if (!string.IsNullOrEmpty(mode))
+					{
+						mode = string.Concat(" (", mode, ")");
+					}
 				}
+
+				this.titleText.Text = string.Concat("<font size=\"150%\">", name, "</font>", mode);
 			}
 		}
 

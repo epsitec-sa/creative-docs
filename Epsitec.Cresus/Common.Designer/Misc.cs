@@ -210,6 +210,22 @@ namespace Epsitec.Common.Designer
 		}
 
 
+		static public string SourceText(CultureMapSource source)
+		{
+			//	Retourne le texte descriptif en fonction de la source d'une ressource.
+			switch (source)
+			{
+				case CultureMapSource.ReferenceModule:
+					return "inchangé";
+
+				case CultureMapSource.DynamicMerge:
+					return "modifié";
+
+				default:
+					return null;
+			}
+		}
+
 		static public Color SourceColor(CultureMapSource source)
 		{
 			//	Retourne la couleur de fond à utiliser en fonction de la source d'une ressource.
