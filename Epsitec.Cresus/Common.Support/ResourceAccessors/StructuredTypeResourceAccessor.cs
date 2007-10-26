@@ -189,6 +189,23 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			return n;
 		}
 
+		public override void NotifyItemChanged(CultureMap item, StructuredData container, DependencyPropertyChangedEventArgs e)
+		{
+			base.NotifyItemChanged (item, container, e);
+
+			if ((container != null) &&
+				(e != null) &&
+				(item.Source == CultureMapSource.DynamicMerge))
+			{
+				Druid id = Druid.Parse (e.PropertyName);
+
+				if (id == Res.Fields.Field.Expression)
+				{
+					container.SetValue (Res.Fields.Field.CultureMapSource, CultureMapSource.DynamicMerge);
+				}
+			}
+		}
+
 		/// <summary>
 		/// Resets the specified field to its original value. This is the
 		/// internal implementation which can be overridden.
@@ -1219,12 +1236,11 @@ namespace Epsitec.Common.Support.ResourceAccessors
 
 			public override void HandleCollectionChanged(object sender, CollectionChangedEventArgs e)
 			{
-				base.HandleCollectionChanged (sender, e);
 
 				StructuredTypeResourceAccessor accessor = this.Accessor as StructuredTypeResourceAccessor;
 
 				accessor.RefreshItem (this.Item);
-				accessor.NotifyItemChanged (this.Item);
+				base.HandleCollectionChanged (sender, e);
 			}
 
 			public override void ResetToOriginalValue()

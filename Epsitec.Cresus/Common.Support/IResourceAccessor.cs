@@ -62,7 +62,7 @@ namespace Epsitec.Common.Support
 		/// <param name="container">The container.</param>
 		/// <param name="fieldId">The id for the field in the specified container.</param>
 		/// <returns>The data broker or <c>null</c>.</returns>
-		IDataBroker GetDataBroker(Types.StructuredData container, string fieldId);
+		IDataBroker GetDataBroker(StructuredData container, string fieldId);
 
 		/// <summary>
 		/// Gets a list of all available cultures for the specified accessor.
@@ -101,7 +101,9 @@ namespace Epsitec.Common.Support
 		/// Notifies the resource accessor that the specified item changed.
 		/// </summary>
 		/// <param name="item">The item which was modified.</param>
-		void NotifyItemChanged(CultureMap item);
+		/// <param name="container">The container which changed, if any.</param>
+		/// <param name="e">The <see cref="DependencyPropertyChangedEventArgs"/> instance containing the event data.</param>
+		void NotifyItemChanged(CultureMap item, StructuredData container, DependencyPropertyChangedEventArgs e);
 
 		/// <summary>
 		/// Notifies the resource accessor that the specified culture data was
@@ -110,7 +112,7 @@ namespace Epsitec.Common.Support
 		/// <param name="item">The item.</param>
 		/// <param name="twoLetterISOLanguageName">The two letter ISO language name.</param>
 		/// <param name="data">The data which is cleared.</param>
-		void NotifyCultureDataCleared(CultureMap item, string twoLetterISOLanguageName, Types.StructuredData data);
+		void NotifyCultureDataCleared(CultureMap item, string twoLetterISOLanguageName, StructuredData data);
 
 		/// <summary>
 		/// Loads the data for the specified culture into an existing item.
@@ -118,6 +120,6 @@ namespace Epsitec.Common.Support
 		/// <param name="item">The item to update.</param>
 		/// <param name="twoLetterISOLanguageName">The two letter ISO language name.</param>
 		/// <returns>The data loaded from the resources which was stored in the specified item.</returns>
-		Types.StructuredData LoadCultureData(CultureMap item, string twoLetterISOLanguageName);
+		StructuredData LoadCultureData(CultureMap item, string twoLetterISOLanguageName);
 	}
 }

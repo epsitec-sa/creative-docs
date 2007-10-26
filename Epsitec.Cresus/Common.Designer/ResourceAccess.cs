@@ -261,7 +261,7 @@ namespace Epsitec.Common.Designer
 		{
 			foreach (CultureMap item in this.accessor.Collection)
 			{
-				this.accessor.NotifyItemChanged (item);
+				this.accessor.NotifyItemChanged (item, null, null);
 			}
 		}
 

@@ -286,11 +286,15 @@ namespace Epsitec.Common.Support.ResourceAccessors
 		/// Notifies the resource accessor that the specified item changed.
 		/// </summary>
 		/// <param name="item">The item which was modified.</param>
-		public virtual void NotifyItemChanged(CultureMap item)
+		/// <param name="container">The container which changed, if any.</param>
+		/// <param name="e">The <see cref="DependencyPropertyChangedEventArgs"/> instance containing the event data.</param>
+		public virtual void NotifyItemChanged(CultureMap item, StructuredData container, DependencyPropertyChangedEventArgs e)
 		{
 			if (this.suspendNotifications == 0)
 			{
 				this.dirtyItems[item] = true;
+
+				//	TODO: mise à jour du CultureMapSource du StructuredData
 				
 				if (item.Source == CultureMapSource.ReferenceModule)
 				{

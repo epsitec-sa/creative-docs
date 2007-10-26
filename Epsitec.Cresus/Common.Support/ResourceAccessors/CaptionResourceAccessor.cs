@@ -380,7 +380,8 @@ namespace Epsitec.Common.Support.ResourceAccessors
 				}
 				
 				System.Diagnostics.Debug.WriteLine (string.Format ("{0}: index {1} -> {2}", e.Action, e.OldStartingIndex, e.NewStartingIndex));
-				this.accessor.NotifyItemChanged (this.item);
+				
+				this.accessor.NotifyItemChanged (this.item, this.data, null);
 			}
 
 			/// <summary>

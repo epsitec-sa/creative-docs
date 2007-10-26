@@ -71,7 +71,7 @@ namespace Epsitec.Common.Support
 
 					this.name = value;
 
-					this.OnPropertyChanged (new DependencyPropertyChangedEventArgs ("Name", oldName, newName));
+					this.OnPropertyChanged (null, new DependencyPropertyChangedEventArgs ("Name", oldName, newName));
 				}
 			}
 		}
@@ -302,11 +302,11 @@ namespace Epsitec.Common.Support
 			data.ValueChanged -= this.HandleDataValueChanged;
 		}
 
-		protected virtual void OnPropertyChanged(DependencyPropertyChangedEventArgs e)
+		protected virtual void OnPropertyChanged(StructuredData sender, DependencyPropertyChangedEventArgs e)
 		{
 			if (this.owner != null)
 			{
-				this.owner.NotifyItemChanged (this);
+				this.owner.NotifyItemChanged (this, sender, e);
 
 				if (this.PropertyChanged != null)
 				{
@@ -426,7 +426,7 @@ namespace Epsitec.Common.Support
 
 		private void HandleDataValueChanged(object sender, Types.DependencyPropertyChangedEventArgs e)
 		{
-			this.OnPropertyChanged (e);
+			this.OnPropertyChanged (sender as StructuredData, e);
 		}
 
 		private readonly IResourceAccessor owner;

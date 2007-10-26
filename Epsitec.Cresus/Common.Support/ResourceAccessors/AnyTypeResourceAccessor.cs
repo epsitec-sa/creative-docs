@@ -218,9 +218,9 @@ namespace Epsitec.Common.Support.ResourceAccessors
 		/// Notifies the resource accessor that the specified item changed.
 		/// </summary>
 		/// <param name="item">The item which was modified.</param>
-		public override void NotifyItemChanged(CultureMap item)
+		public override void NotifyItemChanged(CultureMap item, StructuredData container, DependencyPropertyChangedEventArgs e)
 		{
-			base.NotifyItemChanged (item);
+			base.NotifyItemChanged (item, container, e);
 
 			StructuredData data = item.GetCultureData (Resources.DefaultTwoLetterISOLanguageName);
 			TypeCode code = AnyTypeResourceAccessor.ToTypeCode (data.GetValue (Res.Fields.ResourceBaseType.TypeCode));
