@@ -339,7 +339,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 				string                designerLayouts = data.GetValue (Res.Fields.ResourceStructuredType.SerializedDesignerLayouts) as string;
 
 				if ((UndefinedValue.IsUndefinedValue (baseTypeValue)) &&
-					/*(UndefinedValue.IsUndefinedValue (classValue)) &&*/
+					/*(UndefinedValue.IsUndefinedValue (classValue)) && -- see ComputeDataDelta */
 					((fields == null) || (fields.Count == 0)) &&
 					((interfaceIds == null) || (interfaceIds.Count == 0)) &&
 					(string.IsNullOrEmpty (designerLayouts)))
@@ -363,31 +363,31 @@ namespace Epsitec.Common.Support.ResourceAccessors
 		{
 			base.ComputeDataDelta (rawData, refData, patchData);
 			
-#if true
 			AbstractCaptionResourceAccessor.CopyDeltaValue (rawData, patchData, Res.Fields.ResourceStructuredType.BaseType);
-			AbstractCaptionResourceAccessor.CopyDeltaValue (rawData, patchData, Res.Fields.ResourceStructuredType.Class);
-			//AbstractCaptionResourceAccessor.CopyDeltaValue (rawData, patchData, Res.Fields.ResourceStructuredType.Fields);
-			//AbstractCaptionResourceAccessor.CopyDeltaValue (rawData, patchData, Res.Fields.ResourceStructuredType.InterfaceIds);
 			AbstractCaptionResourceAccessor.CopyDeltaValue (rawData, patchData, Res.Fields.ResourceStructuredType.SerializedDesignerLayouts);
 
 			//	The structured type class must be defined, or else we won't be able
 			//	to generate the correct StructuredType instance for the caption
-			//	serialization.
+			//	serialization. Defining only the "Class" value won't make the record
+			//	show up as non-empty in the IsEmptyCaption test.
 			
-			StructuredTypeClass refClass = StructuredTypeResourceAccessor.ToStructuredTypeClass (refData.GetValue (Res.Fields.ResourceStructuredType.Class));
-
-			patchData.SetValue (Res.Fields.ResourceStructuredType.Class, refClass);
+			patchData.SetValue (Res.Fields.ResourceStructuredType.Class, refData.GetValue (Res.Fields.ResourceStructuredType.Class));
 			
-			IList<StructuredData> refFields          = refData.GetValue (Res.Fields.ResourceStructuredType.Fields) as IList<StructuredData>;
-			IList<StructuredData> refInterfaceIds    = refData.GetValue (Res.Fields.ResourceStructuredType.InterfaceIds) as IList<StructuredData>;
-			IList<StructuredData> rawFields          = rawData.GetValue (Res.Fields.ResourceStructuredType.Fields) as IList<StructuredData>;
-			IList<StructuredData> rawInterfaceIds    = rawData.GetValue (Res.Fields.ResourceStructuredType.InterfaceIds) as IList<StructuredData>;
+			IList<StructuredData> refFields = refData.GetValue (Res.Fields.ResourceStructuredType.Fields) as IList<StructuredData>;
+			IList<StructuredData> rawFields = rawData.GetValue (Res.Fields.ResourceStructuredType.Fields) as IList<StructuredData>;
+			
+			IList<StructuredData> refInterfaceIds = refData.GetValue (Res.Fields.ResourceStructuredType.InterfaceIds) as IList<StructuredData>;
+			IList<StructuredData> rawInterfaceIds = rawData.GetValue (Res.Fields.ResourceStructuredType.InterfaceIds) as IList<StructuredData>;
 			
 			if ((rawFields != null) &&
 				(rawFields.Count > 0) &&
 				(!Types.Collection.CompareEqual (rawFields, refFields)))
 			{
 				List<StructuredData> temp = new List<StructuredData> ();
+
+				//	Include all fields which are either local to the patch module or
+				//	defined both in the patch module and in the reference module. The
+				//	deserialization will take care of properly merging the fields.
 
 				foreach (StructuredData field in rawFields)
 				{
@@ -409,84 +409,16 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			{
 				List<StructuredData> temp = new List<StructuredData> ();
 
-				foreach (StructuredData interfaceId in rawInterfaceIds)
-				{
-					CultureMapSource interfaceIdSource = (CultureMapSource) interfaceId.GetValue (Res.Fields.InterfaceId.CultureMapSource);
-
-					if ((interfaceIdSource == CultureMapSource.DynamicMerge) ||
-						(interfaceIdSource == CultureMapSource.PatchModule))
-					{
-						temp.Add (interfaceId);
-					}
-				}
-
-				patchData.SetValue (Res.Fields.ResourceStructuredType.InterfaceIds, temp);
-			}
-#else
-			object                refBaseTypeValue   = refData.GetValue (Res.Fields.ResourceStructuredType.BaseType);
-			StructuredTypeClass   refClass           = StructuredTypeResourceAccessor.ToStructuredTypeClass (refData.GetValue (Res.Fields.ResourceStructuredType.Class));
-			IList<StructuredData> refFields          = refData.GetValue (Res.Fields.ResourceStructuredType.Fields) as IList<StructuredData>;
-			IList<StructuredData> refInterfaceIds    = refData.GetValue (Res.Fields.ResourceStructuredType.InterfaceIds) as IList<StructuredData>;
-			string                refDesignerLayouts = refData.GetValue (Res.Fields.ResourceStructuredType.SerializedDesignerLayouts) as string;
-
-			object                rawBaseTypeValue   = rawData.GetValue (Res.Fields.ResourceStructuredType.BaseType);
-			StructuredTypeClass   rawClass           = StructuredTypeResourceAccessor.ToStructuredTypeClass (rawData.GetValue (Res.Fields.ResourceStructuredType.Class));
-			IList<StructuredData> rawFields          = rawData.GetValue (Res.Fields.ResourceStructuredType.Fields) as IList<StructuredData>;
-			IList<StructuredData> rawInterfaceIds    = rawData.GetValue (Res.Fields.ResourceStructuredType.InterfaceIds) as IList<StructuredData>;
-			string                rawDesignerLayouts = rawData.GetValue (Res.Fields.ResourceStructuredType.SerializedDesignerLayouts) as string;
-
-			if ((!UndefinedValue.IsUndefinedValue (rawBaseTypeValue)) &&
-				((UndefinedValue.IsUndefinedValue (refBaseTypeValue)) || ((Druid) refBaseTypeValue != (Druid) rawBaseTypeValue)))
-			{
-				patchData.SetValue (Res.Fields.ResourceStructuredType.BaseType, rawBaseTypeValue);
-			}
-			
-			System.Diagnostics.Debug.Assert (refClass == rawClass);
-			
-			//	The structured type class must be defined, or else we won't be able
-			//	to generate the correct StructuredType instance for the caption
-			//	serialization.
-			
-			patchData.SetValue (Res.Fields.ResourceStructuredType.Class, refClass);
-
-			if ((!string.IsNullOrEmpty (rawDesignerLayouts)) &&
-				(refDesignerLayouts != rawDesignerLayouts))
-			{
-				patchData.SetValue (Res.Fields.ResourceStructuredType.SerializedDesignerLayouts, rawDesignerLayouts);
-			}
-			
-			if ((rawFields != null) &&
-				(rawFields.Count > 0) &&
-				(!Types.Collection.CompareEqual (rawFields, refFields)))
-			{
-				List<StructuredData> temp = new List<StructuredData> ();
+				//	Include all interfaces which are defined by the patch module.
+				//	No merge is possible at this level.
 				
-				foreach (StructuredData field in rawFields)
-				{
-					CultureMapSource fieldSource = (CultureMapSource) field.GetValue (Res.Fields.Field.CultureMapSource);
-					
-					if ((fieldSource == CultureMapSource.DynamicMerge) ||
-						(fieldSource == CultureMapSource.PatchModule))
-					{
-						temp.Add (field);
-					}
-				}
-
-				patchData.SetValue (Res.Fields.ResourceStructuredType.Fields, temp);
-			}
-			
-			if ((rawInterfaceIds != null) &&
-				(rawInterfaceIds.Count > 0) &&
-				(!Types.Collection.CompareEqual (rawInterfaceIds, refInterfaceIds)))
-			{
-				List<StructuredData> temp = new List<StructuredData> ();
-
 				foreach (StructuredData interfaceId in rawInterfaceIds)
 				{
 					CultureMapSource interfaceIdSource = (CultureMapSource) interfaceId.GetValue (Res.Fields.InterfaceId.CultureMapSource);
 
-					if ((interfaceIdSource == CultureMapSource.DynamicMerge) ||
-						(interfaceIdSource == CultureMapSource.PatchModule))
+					System.Diagnostics.Debug.Assert (interfaceIdSource != CultureMapSource.DynamicMerge);
+
+					if (interfaceIdSource == CultureMapSource.PatchModule)
 					{
 						temp.Add (interfaceId);
 					}
@@ -494,7 +426,6 @@ namespace Epsitec.Common.Support.ResourceAccessors
 
 				patchData.SetValue (Res.Fields.ResourceStructuredType.InterfaceIds, temp);
 			}
-#endif
 		}
 
 		/// <summary>
