@@ -2112,10 +2112,12 @@ namespace Epsitec.Common.Designer.Viewers
 			if (!box.IsPatch || source != CultureMapSource.DynamicMerge || usesOriginalData)
 			{
 				box.BackColor = Color.Empty;
+				box.ResetButton.Enable = false;
 			}
 			else
 			{
 				box.BackColor = Misc.SourceColor(CultureMapSource.DynamicMerge);
+				box.ResetButton.Enable = true;
 			}
 		}
 

@@ -236,18 +236,18 @@ namespace Epsitec.Common.Designer.Viewers
 				Abstract.ColorizeResetBox(this.groupPrimaryComment, source, usesOriginalData);
 			}
 
-			this.primaryLabels.Enable = !this.designerApplication.IsReadonly;
-			this.primaryDescription.Enable = !this.designerApplication.IsReadonly;
-			this.primaryComment.Enable = !this.designerApplication.IsReadonly;
+			this.groupPrimaryLabels.Enable = !this.designerApplication.IsReadonly;
+			this.groupPrimaryDescription.Enable = !this.designerApplication.IsReadonly;
+			this.groupPrimaryComment.Enable = !this.designerApplication.IsReadonly;
 
 			if (data == null || this.GetTwoLetters(1) == null || this.designerApplication.IsReadonly)
 			{
 				this.secondaryLabels.Collection = null;
 				this.secondaryDescription.Text = "";
 				this.secondaryComment.Text = "";
-				this.secondaryLabels.Enable = false;
-				this.secondaryDescription.Enable = false;
-				this.secondaryComment.Enable = false;
+				this.groupSecondaryLabels.Enable = false;
+				this.groupSecondaryDescription.Enable = false;
+				this.groupSecondaryComment.Enable = false;
 			}
 			else
 			{
@@ -258,8 +258,8 @@ namespace Epsitec.Common.Designer.Viewers
 				Abstract.ColorizeResetBox(this.groupSecondaryDescription, source, usesOriginalData);
 				this.secondaryComment.Text = data.GetValue(Support.Res.Fields.ResourceBase.Comment, out usesOriginalData) as string;
 				Abstract.ColorizeResetBox(this.groupSecondaryComment, source, usesOriginalData);
-				this.secondaryDescription.Enable = true;
-				this.secondaryComment.Enable = true;
+				this.groupSecondaryDescription.Enable = true;
+				this.groupSecondaryComment.Enable = true;
 			}
 
 			this.UpdateIcon();
@@ -269,7 +269,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 		protected void UpdateIcon()
 		{
-			this.primaryIcon.Enable = !this.designerApplication.IsReadonly;
+			this.groupPrimaryIcon.Enable = !this.designerApplication.IsReadonly;
 
 			CultureMap item = this.access.CollectionView.CurrentItem as CultureMap;
 			string icon = null;
