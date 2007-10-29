@@ -928,9 +928,7 @@ namespace Epsitec.Common.Designer.Viewers
 		public void UpdateWhenModuleUsed()
 		{
 			//	Met à jour les ressources lorsque le module est utilisé.
-			//	Il faut remettre à jour la liste des ressources, car elle a pu être complétée
-			//	par ResourceAccess.BypassFilterCreate, par exemple.
-			//	Il faut également mettre à jour le contenu de la ressource en cours d'édition,
+			//	Il faut mettre à jour le contenu de la ressource en cours d'édition,
 			//	car un Name peut avoir changé (par exemple dans le tableau Structured).
 			this.ClearCache();
 			this.UpdateArray();
@@ -1207,6 +1205,7 @@ namespace Epsitec.Common.Designer.Viewers
 		{
 			//	Met à jour le contenu de la liste de gauche.
 			this.access.CollectionView.Refresh();
+			this.UpdateTitle();
 		}
 
 		public virtual void Update()

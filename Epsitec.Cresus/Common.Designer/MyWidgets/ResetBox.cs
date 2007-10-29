@@ -6,7 +6,7 @@ using Epsitec.Common.Drawing;
 namespace Epsitec.Common.Designer.MyWidgets
 {
 	/// <summary>
-	/// Le widget ResetBox contient un groupe quelconque de widgets avec un bouton "reset".
+	/// Le widget ResetBox contient un groupe quelconque de widgets avec un petit bouton 'reset' en haut à droite.
 	/// </summary>
 	public class ResetBox : FrameBox
 	{
@@ -52,6 +52,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		public bool IsPatch
 		{
+			//	Indique si on est dans un module de patch.
+			//	Dans ce cas, le bouton 'reset' est visible.
 			get
 			{
 				return this.groupButton.Visibility;
@@ -64,6 +66,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		public FrameBox GroupBox
 		{
+			//	Retourne le groupe à utiliser comme parent pour tous les widgets contenus.
 			get
 			{
 				return this.groupBox;
@@ -72,6 +75,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		public IconButton ResetButton
 		{
+			//	Retourne le bouton 'reset', pour se connecter sur l'événement 'clicked' par exemple.
 			get
 			{
 				return this.resetButton;
