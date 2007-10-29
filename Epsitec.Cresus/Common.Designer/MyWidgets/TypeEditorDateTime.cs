@@ -234,8 +234,10 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.groupMaxTime.Visibility = showTime;
 			this.groupTimeStep.Visibility = showTime;
 
+			CultureMapSource source = this.module.AccessTypes.GetCultureMapSource(this.cultureMap);
+
 			value = this.structuredData.GetValue(Support.Res.Fields.ResourceDateTimeType.Resolution, out usesOriginalData);
-			Viewers.Abstract.ColorizeResetBox(this.groupResol, usesOriginalData);
+			Viewers.Abstract.ColorizeResetBox(this.groupResol, source, usesOriginalData);
 			if (UndefinedValue.IsUndefinedValue(value))
 			{
 				this.fieldResol.Text = "";
@@ -254,7 +256,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 
 			value = this.structuredData.GetValue(Support.Res.Fields.ResourceDateTimeType.MinimumDate, out usesOriginalData);
-			Viewers.Abstract.ColorizeResetBox(this.groupMinDate, usesOriginalData);
+			Viewers.Abstract.ColorizeResetBox(this.groupMinDate, source, usesOriginalData);
 			if (UndefinedValue.IsUndefinedValue(value))
 			{
 				this.fieldMinDate.Text = "";
@@ -265,7 +267,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 
 			value = this.structuredData.GetValue(Support.Res.Fields.ResourceDateTimeType.MaximumDate, out usesOriginalData);
-			Viewers.Abstract.ColorizeResetBox(this.groupMaxDate, usesOriginalData);
+			Viewers.Abstract.ColorizeResetBox(this.groupMaxDate, source, usesOriginalData);
 			if (UndefinedValue.IsUndefinedValue(value))
 			{
 				this.fieldMaxDate.Text = "";
@@ -276,7 +278,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 
 			value = this.structuredData.GetValue(Support.Res.Fields.ResourceDateTimeType.MinimumTime, out usesOriginalData);
-			Viewers.Abstract.ColorizeResetBox(this.groupMinTime, usesOriginalData);
+			Viewers.Abstract.ColorizeResetBox(this.groupMinTime, source, usesOriginalData);
 			if (UndefinedValue.IsUndefinedValue(value))
 			{
 				this.fieldMinTime.Text = "";
@@ -287,7 +289,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 
 			value = this.structuredData.GetValue(Support.Res.Fields.ResourceDateTimeType.MaximumTime, out usesOriginalData);
-			Viewers.Abstract.ColorizeResetBox(this.groupMaxTime, usesOriginalData);
+			Viewers.Abstract.ColorizeResetBox(this.groupMaxTime, source, usesOriginalData);
 			if (UndefinedValue.IsUndefinedValue(value))
 			{
 				this.fieldMaxTime.Text = "";
@@ -298,7 +300,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 
 			value = this.structuredData.GetValue(Support.Res.Fields.ResourceDateTimeType.DateStep, out usesOriginalData);
-			Viewers.Abstract.ColorizeResetBox(this.groupDateStep, usesOriginalData);
+			Viewers.Abstract.ColorizeResetBox(this.groupDateStep, source, usesOriginalData);
 			if (UndefinedValue.IsUndefinedValue(value))
 			{
 				this.fieldDateStep.Text = "";
@@ -309,7 +311,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 
 			value = this.structuredData.GetValue(Support.Res.Fields.ResourceDateTimeType.TimeStep, out usesOriginalData);
-			Viewers.Abstract.ColorizeResetBox(this.groupTimeStep, usesOriginalData);
+			Viewers.Abstract.ColorizeResetBox(this.groupTimeStep, source, usesOriginalData);
 			if (UndefinedValue.IsUndefinedValue(value))
 			{
 				this.fieldTimeStep.Text = "";

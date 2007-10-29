@@ -124,6 +124,8 @@ namespace Epsitec.Common.Designer.Viewers
 
 			if (data != null)
 			{
+				CultureMapSource source = this.access.GetCultureMapSource(item);
+
 				value = data.GetValue(Support.Res.Fields.ResourceBaseType.TypeCode, out usesOriginalData);
 				if (!UndefinedValue.IsUndefinedValue(value))
 				{
@@ -131,11 +133,11 @@ namespace Epsitec.Common.Designer.Viewers
 				}
 
 				controller = data.GetValue(Support.Res.Fields.ResourceBaseType.DefaultController, out usesOriginalData) as string;
-				Abstract.ColorizeResetBox(this.groupController, usesOriginalData);
+				Abstract.ColorizeResetBox(this.groupController, source, usesOriginalData);
 				controllerParameter = data.GetValue(Support.Res.Fields.ResourceBaseType.DefaultControllerParameter) as string;
 
 				value = data.GetValue(Support.Res.Fields.ResourceBaseType.Nullable, out usesOriginalData);
-				Abstract.ColorizeResetBox(this.groupNullable, usesOriginalData);
+				Abstract.ColorizeResetBox(this.groupNullable, source, usesOriginalData);
 				if (!UndefinedValue.IsUndefinedValue(value))
 				{
 					nullable = (bool) value;
@@ -325,13 +327,14 @@ namespace Epsitec.Common.Designer.Viewers
 			}
 
 			CultureMap item = this.access.CollectionView.CurrentItem as CultureMap;
+			CultureMapSource source = this.access.GetCultureMapSource(item);
 			StructuredData data = item.GetCultureData(this.GetTwoLetters(0));
 
 			data.SetValue(Support.Res.Fields.ResourceBaseType.DefaultController, this.fieldController.Text);
 
 			bool usesOriginalData;
 			data.GetValue(Support.Res.Fields.ResourceBaseType.DefaultController, out usesOriginalData);
-			Abstract.ColorizeResetBox(this.groupController, usesOriginalData);
+			Abstract.ColorizeResetBox(this.groupController, source, usesOriginalData);
 
 			this.editor.OnContentChanged();
 			this.editor.UpdateContent();
@@ -347,13 +350,14 @@ namespace Epsitec.Common.Designer.Viewers
 			}
 
 			CultureMap item = this.access.CollectionView.CurrentItem as CultureMap;
+			CultureMapSource source = this.access.GetCultureMapSource(item);
 			StructuredData data = item.GetCultureData(this.GetTwoLetters(0));
 
 			data.SetValue(Support.Res.Fields.ResourceBaseType.Nullable, this.primaryNullable.ActiveState == ActiveState.No);
 
 			bool usesOriginalData;
 			data.GetValue(Support.Res.Fields.ResourceBaseType.Nullable, out usesOriginalData);
-			Abstract.ColorizeResetBox(this.groupNullable, usesOriginalData);
+			Abstract.ColorizeResetBox(this.groupNullable, source, usesOriginalData);
 
 			this.editor.OnContentChanged();
 			this.editor.UpdateContent();

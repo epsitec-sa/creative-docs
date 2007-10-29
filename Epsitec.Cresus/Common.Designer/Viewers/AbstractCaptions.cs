@@ -221,17 +221,18 @@ namespace Epsitec.Common.Designer.Viewers
 			this.ignoreChange = true;
 
 			CultureMap item = this.access.CollectionView.CurrentItem as CultureMap;
+			CultureMapSource source = this.access.GetCultureMapSource(item);
 			StructuredData data = null;
 
 			if (item != null)
 			{
 				data = item.GetCultureData(this.GetTwoLetters(0));
 				this.SetTextField(this.primaryLabels, data.GetValue(Support.Res.Fields.ResourceCaption.Labels, out usesOriginalData) as IList<string>);
-				Abstract.ColorizeResetBox(this.groupPrimaryLabels, usesOriginalData);
+				Abstract.ColorizeResetBox(this.groupPrimaryLabels, source, usesOriginalData);
 				this.primaryDescription.Text = data.GetValue(Support.Res.Fields.ResourceCaption.Description, out usesOriginalData) as string;
-				Abstract.ColorizeResetBox(this.groupPrimaryDescription, usesOriginalData);
+				Abstract.ColorizeResetBox(this.groupPrimaryDescription, source, usesOriginalData);
 				this.primaryComment.Text = data.GetValue(Support.Res.Fields.ResourceBase.Comment, out usesOriginalData) as string;
-				Abstract.ColorizeResetBox(this.groupPrimaryComment, usesOriginalData);
+				Abstract.ColorizeResetBox(this.groupPrimaryComment, source, usesOriginalData);
 			}
 
 			this.primaryLabels.Enable = !this.designerApplication.IsReadonly;
@@ -251,11 +252,11 @@ namespace Epsitec.Common.Designer.Viewers
 			{
 				data = item.GetCultureData(this.GetTwoLetters(1));
 				this.SetTextField(this.secondaryLabels, data.GetValue(Support.Res.Fields.ResourceCaption.Labels, out usesOriginalData) as IList<string>);
-				Abstract.ColorizeResetBox(this.groupSecondaryLabels, usesOriginalData);
+				Abstract.ColorizeResetBox(this.groupSecondaryLabels, source, usesOriginalData);
 				this.secondaryDescription.Text = data.GetValue(Support.Res.Fields.ResourceCaption.Description, out usesOriginalData) as string;
-				Abstract.ColorizeResetBox(this.groupSecondaryDescription, usesOriginalData);
+				Abstract.ColorizeResetBox(this.groupSecondaryDescription, source, usesOriginalData);
 				this.secondaryComment.Text = data.GetValue(Support.Res.Fields.ResourceBase.Comment, out usesOriginalData) as string;
-				Abstract.ColorizeResetBox(this.groupSecondaryComment, usesOriginalData);
+				Abstract.ColorizeResetBox(this.groupSecondaryComment, source, usesOriginalData);
 				this.secondaryDescription.Enable = true;
 				this.secondaryComment.Enable = true;
 			}
@@ -273,10 +274,11 @@ namespace Epsitec.Common.Designer.Viewers
 			string icon = null;
 			if (item != null)
 			{
+				CultureMapSource source = this.access.GetCultureMapSource(item);
 				StructuredData data = item.GetCultureData("00");
 				bool usesOriginalData;
 				icon = data.GetValue(Support.Res.Fields.ResourceCaption.Icon, out usesOriginalData) as string;
-				Abstract.ColorizeResetBox(this.groupPrimaryIcon, usesOriginalData);
+				Abstract.ColorizeResetBox(this.groupPrimaryIcon, source, usesOriginalData);
 			}
 
 			if (string.IsNullOrEmpty(icon))
@@ -728,47 +730,47 @@ namespace Epsitec.Common.Designer.Viewers
 			if (button == this.groupPrimaryLabels.ResetButton)
 			{
 				StructuredData data = item.GetCultureData(this.GetTwoLetters(0));
-				this.module.AccessCaptions.Accessor.ResetToOriginalValue(item, data, Support.Res.Fields.ResourceCaption.Labels);
+				this.access.Accessor.ResetToOriginalValue(item, data, Support.Res.Fields.ResourceCaption.Labels);
 			}
 
 			if (button == this.groupSecondaryLabels.ResetButton)
 			{
 				StructuredData data = item.GetCultureData(this.GetTwoLetters(1));
-				this.module.AccessCaptions.Accessor.ResetToOriginalValue(item, data, Support.Res.Fields.ResourceCaption.Labels);
+				this.access.Accessor.ResetToOriginalValue(item, data, Support.Res.Fields.ResourceCaption.Labels);
 			}
 
 			if (button == this.groupPrimaryDescription.ResetButton)
 			{
 				StructuredData data = item.GetCultureData(this.GetTwoLetters(0));
-				this.module.AccessCaptions.Accessor.ResetToOriginalValue(item, data, Support.Res.Fields.ResourceCaption.Description);
+				this.access.Accessor.ResetToOriginalValue(item, data, Support.Res.Fields.ResourceCaption.Description);
 			}
 
 			if (button == this.groupSecondaryDescription.ResetButton)
 			{
 				StructuredData data = item.GetCultureData(this.GetTwoLetters(1));
-				this.module.AccessCaptions.Accessor.ResetToOriginalValue(item, data, Support.Res.Fields.ResourceCaption.Description);
+				this.access.Accessor.ResetToOriginalValue(item, data, Support.Res.Fields.ResourceCaption.Description);
 			}
 
 			if (button == this.groupPrimaryIcon.ResetButton)
 			{
 				StructuredData data = item.GetCultureData(this.GetTwoLetters(0));
-				this.module.AccessCaptions.Accessor.ResetToOriginalValue(item, data, Support.Res.Fields.ResourceCaption.Icon);
+				this.access.Accessor.ResetToOriginalValue(item, data, Support.Res.Fields.ResourceCaption.Icon);
 			}
 
 			if (button == this.groupPrimaryComment.ResetButton)
 			{
 				StructuredData data = item.GetCultureData(this.GetTwoLetters(0));
-				this.module.AccessCaptions.Accessor.ResetToOriginalValue(item, data, Support.Res.Fields.ResourceBase.Comment);
+				this.access.Accessor.ResetToOriginalValue(item, data, Support.Res.Fields.ResourceBase.Comment);
 			}
 
 			if (button == this.groupSecondaryComment.ResetButton)
 			{
 				StructuredData data = item.GetCultureData(this.GetTwoLetters(1));
-				this.module.AccessCaptions.Accessor.ResetToOriginalValue(item, data, Support.Res.Fields.ResourceBase.Comment);
+				this.access.Accessor.ResetToOriginalValue(item, data, Support.Res.Fields.ResourceBase.Comment);
 			}
 
 			this.UpdateEdit();
-			this.module.AccessCaptions.SetLocalDirty();
+			this.access.SetLocalDirty();
 		}
 
 

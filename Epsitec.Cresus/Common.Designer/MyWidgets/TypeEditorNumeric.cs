@@ -169,10 +169,12 @@ namespace Epsitec.Common.Designer.MyWidgets
 			object value;
 			bool usesOriginalData;
 
+			CultureMapSource source = this.module.AccessTypes.GetCultureMapSource(this.cultureMap);
+
 			value = this.structuredData.GetValue(Support.Res.Fields.ResourceNumericType.Range, out usesOriginalData);
-			Viewers.Abstract.ColorizeResetBox(this.groupMin, usesOriginalData);
-			Viewers.Abstract.ColorizeResetBox(this.groupMax, usesOriginalData);
-			Viewers.Abstract.ColorizeResetBox(this.groupRes, usesOriginalData);
+			Viewers.Abstract.ColorizeResetBox(this.groupMin, source, usesOriginalData);
+			Viewers.Abstract.ColorizeResetBox(this.groupMax, source, usesOriginalData);
+			Viewers.Abstract.ColorizeResetBox(this.groupRes, source, usesOriginalData);
 			if (UndefinedValue.IsUndefinedValue(value))
 			{
 				this.fieldMin.Text = "";
@@ -197,9 +199,9 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 
 			value = this.structuredData.GetValue(Support.Res.Fields.ResourceNumericType.PreferredRange, out usesOriginalData);
-			Viewers.Abstract.ColorizeResetBox(this.groupPreferredMin, usesOriginalData);
-			Viewers.Abstract.ColorizeResetBox(this.groupPreferredMax, usesOriginalData);
-			Viewers.Abstract.ColorizeResetBox(this.groupPreferredRes, usesOriginalData);
+			Viewers.Abstract.ColorizeResetBox(this.groupPreferredMin, source, usesOriginalData);
+			Viewers.Abstract.ColorizeResetBox(this.groupPreferredMax, source, usesOriginalData);
+			Viewers.Abstract.ColorizeResetBox(this.groupPreferredRes, source, usesOriginalData);
 			if (UndefinedValue.IsUndefinedValue(value))
 			{
 				this.fieldPreferredMin.Text = "";
@@ -224,7 +226,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 
 			value = this.structuredData.GetValue(Support.Res.Fields.ResourceNumericType.SmallStep, out usesOriginalData);
-			Viewers.Abstract.ColorizeResetBox(this.groupSmallStep, usesOriginalData);
+			Viewers.Abstract.ColorizeResetBox(this.groupSmallStep, source, usesOriginalData);
 			if (UndefinedValue.IsUndefinedValue(value))
 			{
 				this.fieldSmallStep.Text = "";
@@ -243,7 +245,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 
 			value = this.structuredData.GetValue(Support.Res.Fields.ResourceNumericType.LargeStep, out usesOriginalData);
-			Viewers.Abstract.ColorizeResetBox(this.groupLargeStep, usesOriginalData);
+			Viewers.Abstract.ColorizeResetBox(this.groupLargeStep, source, usesOriginalData);
 			if (UndefinedValue.IsUndefinedValue(value))
 			{
 				this.fieldLargeStep.Text = "";

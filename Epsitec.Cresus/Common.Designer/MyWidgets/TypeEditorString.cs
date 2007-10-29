@@ -103,8 +103,10 @@ namespace Epsitec.Common.Designer.MyWidgets
 			object value;
 			bool usesOriginalData;
 
+			CultureMapSource source = this.module.AccessTypes.GetCultureMapSource(this.cultureMap);
+
 			value = this.structuredData.GetValue(Support.Res.Fields.ResourceStringType.MinimumLength, out usesOriginalData);
-			Viewers.Abstract.ColorizeResetBox(this.groupMin, usesOriginalData);
+			Viewers.Abstract.ColorizeResetBox(this.groupMin, source, usesOriginalData);
 			if (UndefinedValue.IsUndefinedValue(value))
 			{
 				this.fieldMin.Text = "";
@@ -123,7 +125,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 			
 			value = this.structuredData.GetValue(Support.Res.Fields.ResourceStringType.MaximumLength, out usesOriginalData);
-			Viewers.Abstract.ColorizeResetBox(this.groupMax, usesOriginalData);
+			Viewers.Abstract.ColorizeResetBox(this.groupMax, source, usesOriginalData);
 			if (UndefinedValue.IsUndefinedValue(value))
 			{
 				this.fieldMax.Text = "";
@@ -142,7 +144,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 			
 			value = this.structuredData.GetValue(Support.Res.Fields.ResourceStringType.UseMultilingualStorage, out usesOriginalData);
-			Viewers.Abstract.ColorizeResetBox(this.groupMultilingual, usesOriginalData);
+			Viewers.Abstract.ColorizeResetBox(this.groupMultilingual, source, usesOriginalData);
 			if (UndefinedValue.IsUndefinedValue(value))
 			{
 				this.checkMultilingual.ActiveState = ActiveState.No;

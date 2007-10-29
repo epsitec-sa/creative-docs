@@ -2106,10 +2106,10 @@ namespace Epsitec.Common.Designer.Viewers
 		}
 
 
-		static public void ColorizeResetBox(MyWidgets.ResetBox box, bool usesOriginalData)
+		static public void ColorizeResetBox(MyWidgets.ResetBox box, CultureMapSource source, bool usesOriginalData)
 		{
 			//	Colore la boîte si on est dans un module de patch avec redéfinition de la donnée.
-			if (!box.IsPatch || usesOriginalData)
+			if (!box.IsPatch || source != CultureMapSource.DynamicMerge || usesOriginalData)
 			{
 				box.BackColor = Color.Empty;
 			}

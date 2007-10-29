@@ -59,8 +59,10 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.ignoreChange = true;
 			bool usesOriginalData;
 
+			CultureMapSource source = this.module.AccessTypes.GetCultureMapSource(this.cultureMap);
+
 			object value = this.structuredData.GetValue(Support.Res.Fields.ResourceBinaryType.MimeType, out usesOriginalData);
-			Viewers.Abstract.ColorizeResetBox(this.groupMime, usesOriginalData);
+			Viewers.Abstract.ColorizeResetBox(this.groupMime, source, usesOriginalData);
 			if (UndefinedValue.IsUndefinedValue(value))
 			{
 				this.fieldMime.Text = "";
