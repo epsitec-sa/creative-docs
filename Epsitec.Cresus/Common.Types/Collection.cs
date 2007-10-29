@@ -250,6 +250,15 @@ namespace Epsitec.Common.Types
 			return array;
 		}
 
+		/// <summary>
+		/// Determines whether the collection contains an item based on a predicate.
+		/// </summary>
+		/// <typeparam name="T">The item type.</typeparam>
+		/// <param name="collection">The collection.</param>
+		/// <param name="predicate">The predicate.</param>
+		/// <returns>
+		/// 	<c>true</c> if the collection contains the searched item; otherwise, <c>false</c>.
+		/// </returns>
 		public static bool Contains<T>(IEnumerable<T> collection, System.Predicate<T> predicate)
 		{
 			return (Collection.FindIndex (collection, predicate) < 0) ? false : true;

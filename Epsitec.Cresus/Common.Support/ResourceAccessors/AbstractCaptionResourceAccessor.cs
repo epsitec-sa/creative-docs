@@ -735,7 +735,6 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			StructuredData refData   = this.CreateStructuredData (item, refBundle, refField, DataCreationMode.Temporary);
 			StructuredData patchData = this.CreateStructuredData ();
 
-#if true
 			int dataModifId = StringResourceAccessor.GetModificationId (StringResourceAccessor.GetDeltaValue (rawData, Res.Fields.ResourceBase.ModificationId));
 
 			if (dataModifId > 0)
@@ -744,26 +743,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			}
 
 			AbstractCaptionResourceAccessor.CopyDeltaValue (rawData, patchData, Res.Fields.ResourceBase.Comment);
-#else
-			int    refModifId = StringResourceAccessor.GetModificationId (refData.GetValue (Res.Fields.ResourceBase.ModificationId));
-			int    rawModifId = StringResourceAccessor.GetModificationId (rawData.GetValue (Res.Fields.ResourceBase.ModificationId));
 			
-			string refComment = refData.GetValue (Res.Fields.ResourceBase.Comment) as string;
-			string rawComment = rawData.GetValue (Res.Fields.ResourceBase.Comment) as string;
-
-			if ((rawModifId > 0) &&
-				(rawModifId != refModifId))
-			{
-				patchData.SetValue (Res.Fields.ResourceBase.ModificationId, rawModifId);
-			}
-			
-			if (!ResourceBundle.Field.IsNullString (rawComment) &&
-				(rawComment != refComment))
-			{
-				patchData.SetValue (Res.Fields.ResourceBase.Comment, rawComment);
-			}
-#endif
-
 			this.ComputeDataDelta (rawData, refData, patchData);
 
 			if (patchData.IsEmpty)
@@ -777,6 +757,13 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			}
 		}
 
+		/// <summary>
+		/// Copies a value from the source record to the destination record, if
+		/// the source contains a modified value. Othwerise, don't copy anything.
+		/// </summary>
+		/// <param name="source">The source record.</param>
+		/// <param name="destination">The destination record.</param>
+		/// <param name="id">The id of the value.</param>
 		protected static void CopyDeltaValue(StructuredData source, StructuredData destination, Druid id)
 		{
 			bool replace = false;

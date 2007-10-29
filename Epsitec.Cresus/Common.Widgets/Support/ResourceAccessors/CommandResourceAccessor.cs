@@ -18,10 +18,21 @@ namespace Epsitec.Common.Support.ResourceAccessors
 	/// </summary>
 	public class CommandResourceAccessor : CaptionResourceAccessor
 	{
+		/// <summary>
+		/// Initializes a new instance of the <see cref="CommandResourceAccessor"/> class.
+		/// </summary>
 		public CommandResourceAccessor()
 		{
 		}
 
+		/// <summary>
+		/// Gets the data broker associated with the specified field. Usually,
+		/// this is only meaningful if the field defines a collection of
+		/// <see cref="StructuredData"/> items.
+		/// </summary>
+		/// <param name="container">The container.</param>
+		/// <param name="fieldId">The id for the field in the specified container.</param>
+		/// <returns>The data broker or <c>null</c>.</returns>
 		public override IDataBroker GetDataBroker(StructuredData container, string fieldId)
 		{
 			if (fieldId == Res.Fields.ResourceCommand.Shortcuts.ToString ())
@@ -113,34 +124,40 @@ namespace Epsitec.Common.Support.ResourceAccessors
 		{
 			base.FillDataFromCaption (item, data, caption, mode);
 
+			bool recordShortcuts = false;
+			bool containsShortcuts = Widgets.Shortcut.HasShortcuts (caption);
+
 			ObservableList<StructuredData> shortcuts = data.GetValue (Res.Fields.ResourceCommand.Shortcuts) as ObservableList<StructuredData>;
 
 			if (shortcuts == null)
 			{
 				shortcuts = new ObservableList<StructuredData> ();
+				recordShortcuts = true;
 			}
-			else if (Widgets.Shortcut.HasShortcuts (caption))
+			else if (containsShortcuts)
 			{
 				shortcuts.Clear ();
 			}
 
-			if (Widgets.Shortcut.HasShortcuts (caption))
+			if (containsShortcuts)
 			{
-				foreach (Widgets.Shortcut shortcut in Widgets.Shortcut.GetShortcuts (caption))
+				IList<Widgets.Shortcut> captionShortcuts = Widgets.Shortcut.GetShortcuts (caption);
+
+				foreach (Widgets.Shortcut captionShortcut in captionShortcuts)
 				{
-					StructuredData x = new StructuredData (Res.Types.Shortcut);
+					StructuredData shortcut = new StructuredData (Res.Types.Shortcut);
 					
-					x.SetValue (Res.Fields.Shortcut.KeyCode, shortcut.GetValue (Widgets.Shortcut.KeyCodeProperty));
-					shortcuts.Add (x);
+					shortcut.SetValue (Res.Fields.Shortcut.KeyCode, captionShortcut.GetValue (Widgets.Shortcut.KeyCodeProperty));
+					shortcuts.Add (shortcut);
 					
 					if (mode == DataCreationMode.Public)
 					{
-						item.NotifyDataAdded (x);
+						item.NotifyDataAdded (shortcut);
 					}
 				}
 			}
 
-			if (UndefinedValue.IsUndefinedValue (data.GetValue (Res.Fields.ResourceCommand.Shortcuts)))
+			if (recordShortcuts)
 			{
 				data.SetValue (Res.Fields.ResourceCommand.Shortcuts, shortcuts);
 				data.LockValue (Res.Fields.ResourceCommand.Shortcuts);
@@ -257,6 +274,13 @@ namespace Epsitec.Common.Support.ResourceAccessors
 #endif
 		}
 
+		/// <summary>
+		/// Resets the specified field to its original value. This is the
+		/// internal implementation which can be overridden.
+		/// </summary>
+		/// <param name="item">The item.</param>
+		/// <param name="container">The data record.</param>
+		/// <param name="fieldId">The field id.</param>
 		protected override void ResetToOriginal(CultureMap item, StructuredData container, Druid fieldId)
 		{
 			if (fieldId == Res.Fields.ResourceCommand.Shortcuts)
@@ -291,6 +315,8 @@ namespace Epsitec.Common.Support.ResourceAccessors
 
 		#endregion
 
+		#region ShortcutListener Class
+
 		protected class ShortcutListener : Listener
 		{
 			public ShortcutListener(CommandResourceAccessor accessor, CultureMap item, StructuredData data)
@@ -300,12 +326,54 @@ namespace Epsitec.Common.Support.ResourceAccessors
 
 			public override void HandleCollectionChanging(object sender)
 			{
+				if (this.SaveField (Res.Fields.ResourceCommand.Shortcuts))
+				{
+					this.originalShortcuts = new List<StructuredData> ();
+
+					IList<StructuredData> shortcuts = this.Data.GetValue (Res.Fields.ResourceCommand.Shortcuts) as IList<StructuredData>;
+
+					foreach (StructuredData data in shortcuts)
+					{
+						this.originalShortcuts.Add (data.GetShallowCopy ());
+					}
+				}
 			}
 
 			public override void ResetToOriginalValue()
 			{
-				throw new System.Exception ("The method or operation is not implemented.");
+				if (this.originalShortcuts != null)
+				{
+					this.RestoreField (Res.Fields.ResourceCommand.Shortcuts);
+
+					ObservableList<StructuredData> shortcuts = this.Data.GetValue (Res.Fields.ResourceCommand.Shortcuts) as ObservableList<StructuredData>;
+
+					using (shortcuts.DisableNotifications ())
+					{
+						int index = shortcuts.Count - 1;
+
+						while (index >= 0)
+						{
+							StructuredData data = shortcuts[index];
+							shortcuts.RemoveAt (index--);
+							this.Item.NotifyDataRemoved (data);
+						}
+
+						System.Diagnostics.Debug.Assert (shortcuts.Count == 0);
+
+						foreach (StructuredData data in this.originalShortcuts)
+						{
+							StructuredData copy = data.GetShallowCopy ();
+							copy.PromoteToOriginal ();
+							shortcuts.Add (copy);
+							this.Item.NotifyDataAdded (copy);
+						}
+					}
+				}
 			}
+
+			List<StructuredData> originalShortcuts;
 		}
+
+		#endregion
 	}
 }

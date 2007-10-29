@@ -6,24 +6,45 @@ using System.Collections.Generic;
 
 namespace Epsitec.Common.Widgets.Collections
 {
+	/// <summary>
+	/// The <c>ShortcutCollection</c> class represents a list of <see cref="Shortcut"/>
+	/// items.
+	/// </summary>
 	public class ShortcutCollection : Types.Collections.HostedDependencyObjectList<Shortcut>
 	{
+		/// <summary>
+		/// Initializes a new instance of the <see cref="ShortcutCollection"/> class.
+		/// </summary>
 		public ShortcutCollection()
 			: base (null)
 		{
 		}
 
+		/// <summary>
+		/// Initializes a new instance of the <see cref="ShortcutCollection"/> class.
+		/// </summary>
+		/// <param name="host">The host which must be notified.</param>
 		public ShortcutCollection(IListHost<Shortcut> host)
 			: base (host)
 		{
 		}
 
+		/// <summary>
+		/// Initializes a new instance of the <see cref="ShortcutCollection"/> class.
+		/// </summary>
+		/// <param name="insertionCallback">The insertion callback.</param>
+		/// <param name="removalCallback">The removal callback.</param>
 		public ShortcutCollection(Callback insertionCallback, Callback removalCallback)
 			: base (insertionCallback, removalCallback)
 		{
 		}
-		
-		
+
+
+		/// <summary>
+		/// Defines the specified shortcut as the only active shortcut in
+		/// the collection.
+		/// </summary>
+		/// <param name="value">The shortcut.</param>
 		public void Define(Shortcut value)
 		{
 			if (this.Count == 1)
@@ -39,8 +60,13 @@ namespace Epsitec.Common.Widgets.Collections
 			this.Clear ();
 			this.Add (value);
 		}
-		
-		public void Define(Shortcut[] values)
+
+		/// <summary>
+		/// Defines the specified shortcuts as the only active shortcuts
+		/// in the collection.
+		/// </summary>
+		/// <param name="values">The shortcuts.</param>
+		public void Define(params Shortcut[] values)
 		{
 			if (((values == null) || (values.Length == 0)) &&
 				(this.Count == 0))
@@ -76,6 +102,11 @@ namespace Epsitec.Common.Widgets.Collections
 			}
 		}
 
+		/// <summary>
+		/// Adds the specified shortcut if it is not yet in the collection.
+		/// Empty shortcuts will be ignored.
+		/// </summary>
+		/// <param name="shortcut">The shortcut.</param>
 		public override void Add(Shortcut shortcut)
 		{
 			if ((this.Contains (shortcut)) &&

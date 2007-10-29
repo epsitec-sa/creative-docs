@@ -469,6 +469,39 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			}
 		}
 
+		#region CollectionChanged Handler Methods
+
+		private void HandleCultureMapAdded(CultureMap item)
+		{
+			item.PropertyChanged += this.HandleItemPropertyChanged;
+			this.RefreshItem (item);
+		}
+
+		private void HandleCultureMapRemoved(CultureMap item)
+		{
+			item.PropertyChanged -= this.HandleItemPropertyChanged;
+		}
+
+		private void HandleItemPropertyChanged(object sender, DependencyPropertyChangedEventArgs e)
+		{
+			if (e.PropertyName == "Name")
+			{
+				string oldName = e.OldValue as string;
+				string newName = e.NewValue as string;
+
+				this.ChangeFieldPrefix (oldName, newName);
+			}
+			if (e.PropertyName == Res.Fields.ResourceStructuredType.BaseType.ToString ())
+			{
+				StructuredData data = sender as StructuredData;
+				Druid   newBaseType = (Druid) e.NewValue;
+				
+				this.UpdateInheritedFields (data, newBaseType);
+			}
+		}
+
+		#endregion
+
 		/// <summary>
 		/// Refreshes the item, by regenerating the inherited fields.
 		/// </summary>
@@ -582,6 +615,13 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			return type;
 		}
 
+		/// <summary>
+		/// Fills the data record based on a <see cref="StructuredType"/> instance.
+		/// </summary>
+		/// <param name="item">The item.</param>
+		/// <param name="data">The data record which is to be filled.</param>
+		/// <param name="type">The type instance.</param>
+		/// <param name="mode">The data creation mode.</param>
 		private void FillDataFromType(CultureMap item, StructuredData data, StructuredType type, DataCreationMode mode)
 		{
 			if (mode != DataCreationMode.Temporary)
@@ -600,66 +640,119 @@ namespace Epsitec.Common.Support.ResourceAccessors
 				fields = new ObservableList<StructuredData> ();
 				recordFields = true;
 			}
-			else
-			{
-				System.Diagnostics.Debug.WriteLine ("Re-using existing fields list");
-			}
 			if (interfaceIds == null)
 			{
 				interfaceIds = new ObservableList<StructuredData> ();
 				recordInterfaceIds = true;
-			}
-			else
-			{
-				System.Diagnostics.Debug.WriteLine ("Re-using existing interface list");
 			}
 
 			if (type != null)
 			{
 				type.FreezeInheritance ();
 
+				//	Populate the field list.
+
 				foreach (string fieldId in type.GetFieldIds ())
 				{
-					StructuredTypeField field = type.Fields[fieldId];
-					StructuredData original = null;
-					StructuredData x = new StructuredData (Res.Types.Field);
-					StructuredTypeResourceAccessor.FillDataFromField (item, x, field, recordFields ? item.Source : CultureMapSource.PatchModule);
+					StructuredTypeField typeField = type.Fields[fieldId];
+					StructuredData oldField;
+					StructuredData newField = new StructuredData (Res.Types.Field);
+					StructuredTypeResourceAccessor.FillDataFromField (item, newField, typeField, recordFields ? item.Source : CultureMapSource.PatchModule);
 
-					if (!Types.Collection.Contains (fields,
-						delegate (StructuredData find)
-						{
-							Druid findId = StructuredTypeResourceAccessor.ToDruid (find.GetValue (Res.Fields.Field.CaptionId));
-							
-							if (findId == field.CaptionId)
-							{
-								original = find;
-								return true;
-							}
-							else
-							{
-								return false;
-							}
-						}))
+					if (Types.Collection.TryFind (fields,
+						/**/					  delegate (StructuredData find)
+												  {
+													  return StructuredTypeResourceAccessor.ToDruid (find.GetValue (Res.Fields.Field.CaptionId)) == typeField.CaptionId;
+												  },
+						/**/					  out oldField))
 					{
-						fields.Add (x);
+						//	This field was already defined previously, in the reference
+						//	module. This will result in a merged expression definition
+						//	without adding a new record to the field list :
 
-						if (mode == DataCreationMode.Public)
-						{
-							item.NotifyDataAdded (x);
-						}
+						System.Diagnostics.Debug.Assert (oldField != null);
+						System.Diagnostics.Debug.Assert (recordFields == false);
+
+						oldField.SetValue (Res.Fields.Field.Expression, newField.GetValue (Res.Fields.Field.Expression));
+						oldField.SetValue (Res.Fields.Field.CultureMapSource, CultureMapSource.DynamicMerge);
 					}
 					else
 					{
-						System.Diagnostics.Debug.Assert (original != null);
-						System.Diagnostics.Debug.Assert (recordFields == false);
+						//	This is a new field definition; simply add it to the list
+						//	and, if needed, attach the new record to the item event handler
+						//	code :
 
-						System.Diagnostics.Debug.WriteLine ("Duplicate field definition");
-						
-						original.SetValue (Res.Fields.Field.Expression, x.GetValue (Res.Fields.Field.Expression));
-						original.SetValue (Res.Fields.Field.CultureMapSource, CultureMapSource.DynamicMerge);
+						fields.Add (newField);
+
+						if (mode == DataCreationMode.Public)
+						{
+							item.NotifyDataAdded (newField);
+						}
 					}
 				}
+
+				//	Populate the interface list.
+
+				foreach (Druid interfaceId in type.InterfaceIds)
+				{
+					StructuredData oldInterfaceId;
+					StructuredData newInterfaceId = new StructuredData (Res.Types.InterfaceId);
+
+					if (Types.Collection.TryFind (interfaceIds,
+						/**/					  delegate (StructuredData find)
+												  {
+													  return StructuredTypeResourceAccessor.ToDruid (find.GetValue (Res.Fields.InterfaceId.CaptionId)) == interfaceId;
+												  },
+						/**/					  out oldInterfaceId))
+					{
+						System.Diagnostics.Debug.Fail ("Duplicate interface definition");
+					}
+					else
+					{
+						//	This is a new interface id definition; add it to the list
+						//	and attach the new record to the item event handler code :
+
+						newInterfaceId.SetValue (Res.Fields.InterfaceId.CaptionId, interfaceId);
+						newInterfaceId.SetValue (Res.Fields.InterfaceId.CultureMapSource, recordInterfaceIds ? item.Source : CultureMapSource.PatchModule);
+
+						interfaceIds.Add (newInterfaceId);
+
+						if (mode == DataCreationMode.Public)
+						{
+							item.NotifyDataAdded (newInterfaceId);
+						}
+					}
+				}
+				
+				//	Fill the remaining entity definitions by overwriting the previous
+				//	data :
+				
+				if ((type.BaseTypeId.IsValid) ||
+					(UndefinedValue.IsUndefinedValue (data.GetValue (Res.Fields.ResourceStructuredType.BaseType))))
+				{
+					data.SetValue (Res.Fields.ResourceStructuredType.BaseType, type.BaseTypeId);
+				}
+
+				if (UndefinedValue.IsUndefinedValue (data.GetValue (Res.Fields.ResourceStructuredType.Class)))
+				{
+					data.SetValue (Res.Fields.ResourceStructuredType.Class, type.Class);
+				}
+
+				if ((!string.IsNullOrEmpty (type.SerializedDesignerLayouts)) ||
+					(UndefinedValue.IsUndefinedValue (data.GetValue (Res.Fields.ResourceStructuredType.SerializedDesignerLayouts))))
+				{
+					data.SetValue (Res.Fields.ResourceStructuredType.SerializedDesignerLayouts, type.SerializedDesignerLayouts);
+				}
 			}
+			else
+			{
+				data.SetValue (Res.Fields.ResourceStructuredType.BaseType, Druid.Empty);
+				data.SetValue (Res.Fields.ResourceStructuredType.Class, StructuredTypeClass.None);
+				data.SetValue (Res.Fields.ResourceStructuredType.SerializedDesignerLayouts, "");
+			}
+
+			//	Record the fields and the interface ids collections into the
+			//	entity record :
 
 			if (recordFields)
 			{
@@ -674,38 +767,6 @@ namespace Epsitec.Common.Support.ResourceAccessors
 					fields.CollectionChanged  += listener.HandleCollectionChanged;
 				}
 			}
-			
-
-			if (type != null)
-			{
-				foreach (Druid interfaceId in type.InterfaceIds)
-				{
-					if (!Types.Collection.Contains (interfaceIds,
-						delegate (StructuredData find)
-						{
-							Druid findId = StructuredTypeResourceAccessor.ToDruid (find.GetValue (Res.Fields.InterfaceId.CaptionId));
-							return findId == interfaceId;
-						}))
-					{
-						StructuredData x = new StructuredData (Res.Types.InterfaceId);
-
-						x.SetValue (Res.Fields.InterfaceId.CaptionId, interfaceId);
-						x.SetValue (Res.Fields.InterfaceId.CultureMapSource, recordInterfaceIds ? item.Source : CultureMapSource.PatchModule);
-
-						interfaceIds.Add (x);
-
-						if (mode == DataCreationMode.Public)
-						{
-							item.NotifyDataAdded (x);
-						}
-					}
-					else
-					{
-						System.Diagnostics.Debug.WriteLine ("Duplicate interface definition");
-					}
-				}
-			}
-
 			if (recordInterfaceIds)
 			{
 				data.SetValue (Res.Fields.ResourceStructuredType.InterfaceIds, interfaceIds);
@@ -719,31 +780,15 @@ namespace Epsitec.Common.Support.ResourceAccessors
 					interfaceIds.CollectionChanged  += listener.HandleCollectionChanged;
 				}
 			}
-
-			if (type == null)
-			{
-				data.SetValue (Res.Fields.ResourceStructuredType.BaseType, Druid.Empty);
-				data.SetValue (Res.Fields.ResourceStructuredType.Class, StructuredTypeClass.None);
-				data.SetValue (Res.Fields.ResourceStructuredType.SerializedDesignerLayouts, "");
-			}
-			else
-			{
-				if ((type.BaseTypeId.IsValid) ||
-					(UndefinedValue.IsUndefinedValue (data.GetValue (Res.Fields.ResourceStructuredType.BaseType))))
-				{
-					data.SetValue (Res.Fields.ResourceStructuredType.BaseType, type.BaseTypeId);
-				}
-				
-				data.SetValue (Res.Fields.ResourceStructuredType.Class, type.Class);
-
-				if ((!string.IsNullOrEmpty (type.SerializedDesignerLayouts)) ||
-					(UndefinedValue.IsUndefinedValue (data.GetValue (Res.Fields.ResourceStructuredType.SerializedDesignerLayouts))))
-				{
-					data.SetValue (Res.Fields.ResourceStructuredType.SerializedDesignerLayouts, type.SerializedDesignerLayouts);
-				}
-			}
 		}
 
+		/// <summary>
+		/// Fills the data record based on a field definition.
+		/// </summary>
+		/// <param name="item">The item.</param>
+		/// <param name="data">The data record which is to be filled.</param>
+		/// <param name="field">The field definition.</param>
+		/// <param name="source">The item source for this field.</param>
 		private static void FillDataFromField(CultureMap item, StructuredData data, StructuredTypeField field, CultureMapSource source)
 		{
 			System.Diagnostics.Debug.Assert (field.DefiningTypeId.IsEmpty);
@@ -760,35 +805,6 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			data.SetValue (Res.Fields.Field.DeepDefiningTypeId, Druid.Empty);
 			data.LockValue (Res.Fields.Field.DefiningTypeId);
 			data.LockValue (Res.Fields.Field.DeepDefiningTypeId);
-		}
-
-		private void HandleCultureMapAdded(CultureMap item)
-		{
-			item.PropertyChanged += this.HandleItemPropertyChanged;
-			this.RefreshItem (item);
-		}
-
-		private void HandleCultureMapRemoved(CultureMap item)
-		{
-			item.PropertyChanged -= this.HandleItemPropertyChanged;
-		}
-
-		private void HandleItemPropertyChanged(object sender, DependencyPropertyChangedEventArgs e)
-		{
-			if (e.PropertyName == "Name")
-			{
-				string oldName = e.OldValue as string;
-				string newName = e.NewValue as string;
-
-				this.ChangeFieldPrefix (oldName, newName);
-			}
-			if (e.PropertyName == Res.Fields.ResourceStructuredType.BaseType.ToString ())
-			{
-				StructuredData data = sender as StructuredData;
-				Druid   newBaseType = (Druid) e.NewValue;
-				
-				this.UpdateInheritedFields (data, newBaseType);
-			}
 		}
 
 
@@ -1440,12 +1456,12 @@ namespace Epsitec.Common.Support.ResourceAccessors
 
 		#endregion
 
-		private static bool? ToBoolean(object value)
+		internal static bool? ToBoolean(object value)
 		{
 			return UndefinedValue.GetValue<bool?> (value, null);
 		}
 
-		private static Druid ToDruid(object value)
+		internal static Druid ToDruid(object value)
 		{
 			return UndefinedValue.GetValue<Druid> (value, Druid.Empty);
 		}
