@@ -217,8 +217,9 @@ namespace Epsitec.Common.Designer.Viewers
 			base.UpdateEdit();
 
 			bool iic = this.ignoreChange;
-			bool usesOriginalData;
 			this.ignoreChange = true;
+
+			bool usesOriginalData;
 
 			CultureMap item = this.access.CollectionView.CurrentItem as CultureMap;
 			CultureMapSource source = this.access.GetCultureMapSource(item);

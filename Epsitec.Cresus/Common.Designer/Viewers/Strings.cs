@@ -16,7 +16,6 @@ namespace Epsitec.Common.Designer.Viewers
 		{
 			//	Résumé des captions.
 			MyWidgets.StackedPanel leftContainer, rightContainer;
-			MyWidgets.ResetBox leftResetBox, rightResetBox;
 
 			this.buttonMainExtend = this.CreateBand(out leftContainer, out rightContainer, "Résumé", BandMode.MainSummary, GlyphShape.ArrowDown, false, 0.3);
 			this.buttonMainExtend.Clicked += new MessageEventHandler(this.HandleButtonCompactOrExtendClicked);
@@ -33,15 +32,17 @@ namespace Epsitec.Common.Designer.Viewers
 			this.buttonMainCompact = this.CreateBand(out leftContainer, out rightContainer, Res.Strings.Viewers.Captions.Labels.Title, BandMode.MainView, GlyphShape.ArrowUp, false, 0.3);
 			this.buttonMainCompact.Clicked += new MessageEventHandler(this.HandleButtonCompactOrExtendClicked);
 
-			leftResetBox = new MyWidgets.ResetBox(leftContainer.Container);
-			leftResetBox.IsPatch = this.module.IsPatch;
-			leftResetBox.Dock = DockStyle.Fill;
+			this.groupPrimaryText = new MyWidgets.ResetBox(leftContainer.Container);
+			this.groupPrimaryText.IsPatch = this.module.IsPatch;
+			this.groupPrimaryText.Dock = DockStyle.Fill;
+			this.groupPrimaryText.ResetButton.Clicked += new MessageEventHandler(this.HandleResetButtonClicked);
 
-			rightResetBox = new MyWidgets.ResetBox(rightContainer.Container);
-			rightResetBox.IsPatch = this.module.IsPatch;
-			rightResetBox.Dock = DockStyle.Fill;
+			this.groupSecondaryText = new MyWidgets.ResetBox(rightContainer.Container);
+			this.groupSecondaryText.IsPatch = this.module.IsPatch;
+			this.groupSecondaryText.Dock = DockStyle.Fill;
+			this.groupSecondaryText.ResetButton.Clicked += new MessageEventHandler(this.HandleResetButtonClicked);
 
-			this.primaryText = new TextFieldMulti(leftResetBox.GroupBox);
+			this.primaryText = new TextFieldMulti(this.groupPrimaryText.GroupBox);
 			this.primaryText.AcceptsNullValue = true;
 			this.primaryText.PreferredHeight = 10+14*6;
 			this.primaryText.Dock = DockStyle.StackBegin;
@@ -51,7 +52,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.primaryText.TabIndex = this.tabIndex++;
 			this.primaryText.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 
-			this.secondaryText = new TextFieldMulti(rightResetBox.GroupBox);
+			this.secondaryText = new TextFieldMulti(this.groupSecondaryText.GroupBox);
 			this.secondaryText.AcceptsNullValue = true;
 			this.secondaryText.PreferredHeight = 10+14*6;
 			this.secondaryText.Dock = DockStyle.StackBegin;
@@ -64,15 +65,17 @@ namespace Epsitec.Common.Designer.Viewers
 			//	Commentaires.
 			this.CreateBand(out leftContainer, out rightContainer, Res.Strings.Viewers.Captions.About.Title, BandMode.MainView, GlyphShape.None, false, 0.3);
 
-			leftResetBox = new MyWidgets.ResetBox(leftContainer.Container);
-			leftResetBox.IsPatch = this.module.IsPatch;
-			leftResetBox.Dock = DockStyle.Fill;
+			this.groupPrimaryComment = new MyWidgets.ResetBox(leftContainer.Container);
+			this.groupPrimaryComment.IsPatch = this.module.IsPatch;
+			this.groupPrimaryComment.Dock = DockStyle.Fill;
+			this.groupPrimaryComment.ResetButton.Clicked += new MessageEventHandler(this.HandleResetButtonClicked);
 
-			rightResetBox = new MyWidgets.ResetBox(rightContainer.Container);
-			rightResetBox.IsPatch = this.module.IsPatch;
-			rightResetBox.Dock = DockStyle.Fill;
+			this.groupSecondaryComment = new MyWidgets.ResetBox(rightContainer.Container);
+			this.groupSecondaryComment.IsPatch = this.module.IsPatch;
+			this.groupSecondaryComment.Dock = DockStyle.Fill;
+			this.groupSecondaryComment.ResetButton.Clicked += new MessageEventHandler(this.HandleResetButtonClicked);
 
-			this.primaryComment = new TextFieldMulti(leftResetBox.GroupBox);
+			this.primaryComment = new TextFieldMulti(this.groupPrimaryComment.GroupBox);
 			this.primaryComment.AcceptsNullValue = true;
 			this.primaryComment.PreferredHeight = 10+14*4;
 			this.primaryComment.Dock = DockStyle.StackBegin;
@@ -82,7 +85,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.primaryComment.TabIndex = this.tabIndex++;
 			this.primaryComment.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 
-			this.secondaryComment = new TextFieldMulti(rightResetBox.GroupBox);
+			this.secondaryComment = new TextFieldMulti(this.groupSecondaryComment.GroupBox);
 			this.secondaryComment.AcceptsNullValue = true;
 			this.secondaryComment.PreferredHeight = 10+14*4;
 			this.secondaryComment.Dock = DockStyle.StackBegin;
@@ -105,6 +108,11 @@ namespace Epsitec.Common.Designer.Viewers
 		{
 			if (disposing)
 			{
+				this.groupPrimaryText.ResetButton.Clicked -= new MessageEventHandler(this.HandleResetButtonClicked);
+				this.groupSecondaryText.ResetButton.Clicked -= new MessageEventHandler(this.HandleResetButtonClicked);
+				this.groupPrimaryComment.ResetButton.Clicked -= new MessageEventHandler(this.HandleResetButtonClicked);
+				this.groupSecondaryComment.ResetButton.Clicked -= new MessageEventHandler(this.HandleResetButtonClicked);
+				
 				this.primaryText.TextChanged -= new EventHandler(this.HandleTextChanged);
 				this.primaryText.CursorChanged -= new EventHandler(this.HandleCursorChanged);
 				this.primaryText.KeyboardFocusChanged -= new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleEditKeyboardFocusChanged);
@@ -143,15 +151,20 @@ namespace Epsitec.Common.Designer.Viewers
 			bool iic = this.ignoreChange;
 			this.ignoreChange = true;
 
+			bool usesOriginalData;
+
 			this.primaryText.Enable = !this.designerApplication.IsReadonly;
 			this.primaryComment.Enable = !this.designerApplication.IsReadonly;
 
 			CultureMap item = this.access.CollectionView.CurrentItem as CultureMap;
+			CultureMapSource source = this.access.GetCultureMapSource(item);
 			StructuredData data;
 
 			data = item.GetCultureData(this.GetTwoLetters(0));
-			this.primaryText.Text = data.GetValue (Support.Res.Fields.ResourceString.Text) as string ?? Support.ResourceBundle.Field.Null;
-			this.primaryComment.Text = data.GetValue (Support.Res.Fields.ResourceBase.Comment) as string ?? Support.ResourceBundle.Field.Null;
+			this.primaryText.Text = data.GetValue(Support.Res.Fields.ResourceString.Text, out usesOriginalData) as string ?? Support.ResourceBundle.Field.Null;
+			Abstract.ColorizeResetBox(this.groupPrimaryText, source, usesOriginalData);
+			this.primaryComment.Text = data.GetValue(Support.Res.Fields.ResourceBase.Comment, out usesOriginalData) as string ?? Support.ResourceBundle.Field.Null;
+			Abstract.ColorizeResetBox(this.groupPrimaryComment, source, usesOriginalData);
 
 			if (this.GetTwoLetters(1) == null || this.designerApplication.IsReadonly)
 			{
@@ -163,8 +176,10 @@ namespace Epsitec.Common.Designer.Viewers
 			else
 			{
 				data = item.GetCultureData(this.GetTwoLetters(1));
-				this.secondaryText.Text = data.GetValue (Support.Res.Fields.ResourceString.Text) as string ?? Support.ResourceBundle.Field.Null;
-				this.secondaryComment.Text = data.GetValue (Support.Res.Fields.ResourceBase.Comment) as string ?? Support.ResourceBundle.Field.Null;
+				this.secondaryText.Text = data.GetValue(Support.Res.Fields.ResourceString.Text, out usesOriginalData) as string ?? Support.ResourceBundle.Field.Null;
+				Abstract.ColorizeResetBox(this.groupSecondaryText, source, usesOriginalData);
+				this.secondaryComment.Text = data.GetValue(Support.Res.Fields.ResourceBase.Comment, out usesOriginalData) as string ?? Support.ResourceBundle.Field.Null;
+				Abstract.ColorizeResetBox(this.groupSecondaryComment, source, usesOriginalData);
 				this.secondaryText.Enable = true;
 				this.secondaryComment.Enable = true;
 			}
@@ -409,10 +424,48 @@ namespace Epsitec.Common.Designer.Viewers
 			}
 		}
 
+		private void HandleResetButtonClicked(object sender, MessageEventArgs e)
+		{
+			AbstractButton button = sender as AbstractButton;
 
+			CultureMap item = this.access.CollectionView.CurrentItem as CultureMap;
+
+			if (button == this.groupPrimaryText.ResetButton)
+			{
+				StructuredData data = item.GetCultureData(this.GetTwoLetters(0));
+				this.access.Accessor.ResetToOriginalValue(item, data, Support.Res.Fields.ResourceString.Text);
+			}
+
+			if (button == this.groupSecondaryText.ResetButton)
+			{
+				StructuredData data = item.GetCultureData(this.GetTwoLetters(1));
+				this.access.Accessor.ResetToOriginalValue(item, data, Support.Res.Fields.ResourceString.Text);
+			}
+
+			if (button == this.groupPrimaryComment.ResetButton)
+			{
+				StructuredData data = item.GetCultureData(this.GetTwoLetters(0));
+				this.access.Accessor.ResetToOriginalValue(item, data, Support.Res.Fields.ResourceBase.Comment);
+			}
+
+			if (button == this.groupSecondaryComment.ResetButton)
+			{
+				StructuredData data = item.GetCultureData(this.GetTwoLetters(1));
+				this.access.Accessor.ResetToOriginalValue(item, data, Support.Res.Fields.ResourceBase.Comment);
+			}
+
+			this.UpdateEdit();
+			this.access.SetLocalDirty();
+		}
+
+
+		protected MyWidgets.ResetBox			groupPrimaryText;
 		protected TextFieldMulti				primaryText;
+		protected MyWidgets.ResetBox			groupSecondaryText;
 		protected TextFieldMulti				secondaryText;
+		protected MyWidgets.ResetBox			groupPrimaryComment;
 		protected TextFieldMulti				primaryComment;
+		protected MyWidgets.ResetBox			groupSecondaryComment;
 		protected TextFieldMulti				secondaryComment;
 	}
 }
