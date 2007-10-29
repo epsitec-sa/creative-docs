@@ -17,7 +17,6 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.CreateStringLabeled(Res.Strings.Viewers.Types.Native.Type, this, out this.groupSystemType, out this.fieldSystemType);
 			this.groupSystemType.Dock = DockStyle.StackBegin;
 			this.groupSystemType.Margins = new Margins(0, 0, 0, 0);
-			this.groupSystemType.ResetButton.Name = "SystemType";
 			this.groupSystemType.ResetButton.Clicked += new MessageEventHandler(this.HandleResetButtonClicked);
 			this.fieldSystemType.PreferredWidth = 400;
 			this.fieldSystemType.EditionAccepted += new EventHandler(this.HandleTextFieldChanged);
@@ -115,7 +114,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		{
 			AbstractButton button = sender as AbstractButton;
 
-			if (button.Name == "SystemType")
+			if (button == this.groupSystemType.ResetButton)
 			{
 				this.ResetToOriginalValue(Support.Res.Fields.ResourceOtherType.SystemType);
 			}

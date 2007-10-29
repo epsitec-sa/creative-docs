@@ -17,7 +17,6 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.CreateStringLabeled(Res.Strings.Viewers.Types.Binary.Mime, this, out this.groupMime, out this.fieldMime);
 			this.groupMime.Dock = DockStyle.StackBegin;
 			this.groupMime.Margins = new Margins(0, 0, 0, 0);
-			this.groupMime.ResetButton.Name = "Mime";
 			this.groupMime.ResetButton.Clicked += new MessageEventHandler(this.HandleResetButtonClicked);
 			this.fieldMime.PreferredWidth = 400;
 			this.fieldMime.EditionAccepted += new EventHandler(this.HandleTextFieldChanged);
@@ -96,7 +95,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		{
 			AbstractButton button = sender as AbstractButton;
 
-			if (button.Name == "Mime")
+			if (button == this.groupMime.ResetButton)
 			{
 				this.ResetToOriginalValue(Support.Res.Fields.ResourceBinaryType.MimeType);
 			}

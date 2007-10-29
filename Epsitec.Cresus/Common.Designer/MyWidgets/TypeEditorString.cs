@@ -17,21 +17,18 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.CreateDecimalLabeled(Res.Strings.Viewers.Types.String.Min, this, out this.groupMin, out this.fieldMin);
 			this.groupMin.Dock = DockStyle.StackBegin;
 			this.groupMin.Margins = new Margins(0, 0, 0, 2);
-			this.groupMin.ResetButton.Name = "Min";
 			this.groupMin.ResetButton.Clicked += new MessageEventHandler(this.HandleResetButtonClicked);
 			this.fieldMin.EditionAccepted += new EventHandler(this.HandleTextFieldChanged);
 
 			this.CreateDecimalLabeled(Res.Strings.Viewers.Types.String.Max, this, out this.groupMax, out this.fieldMax);
 			this.groupMax.Dock = DockStyle.StackBegin;
 			this.groupMax.Margins = new Margins(0, 0, 0, 10);
-			this.groupMax.ResetButton.Name = "Max";
 			this.groupMax.ResetButton.Clicked += new MessageEventHandler(this.HandleResetButtonClicked);
 			this.fieldMax.EditionAccepted += new EventHandler(this.HandleTextFieldChanged);
 
 			this.groupMultilingual = new ResetBox(this);
 			this.groupMultilingual.Dock = DockStyle.StackBegin;
 			this.groupMultilingual.Margins = new Margins(0, 0, 0, 0);
-			this.groupMultilingual.ResetButton.Name = "Multi";
 			this.groupMultilingual.ResetButton.Clicked += new MessageEventHandler(this.HandleResetButtonClicked);
 
 			this.checkMultilingual = new CheckButton(this.groupMultilingual.GroupBox);
@@ -212,17 +209,17 @@ namespace Epsitec.Common.Designer.MyWidgets
 		{
 			AbstractButton button = sender as AbstractButton;
 
-			if (button.Name == "Min")
+			if (button == this.groupMin.ResetButton)
 			{
 				this.ResetToOriginalValue(Support.Res.Fields.ResourceStringType.MinimumLength);
 			}
 
-			if (button.Name == "Max")
+			if (button == this.groupMax.ResetButton)
 			{
 				this.ResetToOriginalValue(Support.Res.Fields.ResourceStringType.MaximumLength);
 			}
 
-			if (button.Name == "Multi")
+			if (button == this.groupMultilingual.ResetButton)
 			{
 				this.ResetToOriginalValue(Support.Res.Fields.ResourceStringType.UseMultilingualStorage);
 			}
