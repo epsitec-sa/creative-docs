@@ -1482,6 +1482,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			string question = string.Format("Voulez-vous supprimer le champ <b>{0}</b> ?", this.fields[rank].FieldName);
 			if (this.editor.Module.DesignerApplication.DialogQuestion(question) == Epsitec.Common.Dialogs.DialogResult.Yes)
 			{
+				Druid fieldId = this.fields[rank].CaptionId;
+
 				this.fields[rank].IsExplored = false;
 				this.fields[rank].DstBox = null;
 				this.editor.CloseBox(null);
@@ -1492,6 +1494,10 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				dataFields.RemoveAt(fieldRank);
 
 				this.fields.RemoveAt(rank);
+
+				CultureMap fieldCaptionItem = this.editor.Module.AccessFields.Accessor.Collection[fieldId];
+				this.editor.Module.AccessFields.Accessor.Collection.Remove(fieldCaptionItem);
+				this.editor.Module.AccessFields.SetLocalDirty();
 
 				this.UpdateFieldsLink();
 				this.editor.UpdateAfterAddOrRemoveConnection(this);
