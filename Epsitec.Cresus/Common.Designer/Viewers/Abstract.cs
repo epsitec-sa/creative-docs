@@ -1490,6 +1490,7 @@ namespace Epsitec.Common.Designer.Viewers
 			ResourceAccess.SetStructuredDataValue(this.access.Accessor, item, data, id.ToString(), value);
 			this.access.SetLocalDirty();
 			this.UpdateColor();
+			this.UpdateEdit();
 		}
 
 
@@ -2114,7 +2115,7 @@ namespace Epsitec.Common.Designer.Viewers
 			}
 			else
 			{
-				box.BackColor = Color.FromAlphaRgb(0.1, 0.0, 0.5, 1.0);
+				box.BackColor = Misc.SourceColor(CultureMapSource.DynamicMerge);
 			}
 		}
 
