@@ -26,7 +26,6 @@ namespace Epsitec.Common.Designer.Viewers
 			this.groupController = new MyWidgets.ResetBox(leftContainer.Container);
 			this.groupController.IsPatch = this.module.IsPatch;
 			this.groupController.Dock = DockStyle.Fill;
-			this.groupController.ResetButton.Name = "Controller";
 			this.groupController.ResetButton.Clicked += new MessageEventHandler(this.HandleResetButtonClicked);
 
 			StaticText label = new StaticText(this.groupController.GroupBox);
@@ -54,7 +53,6 @@ namespace Epsitec.Common.Designer.Viewers
 			this.groupNullable = new MyWidgets.ResetBox(leftContainer.Container);
 			this.groupNullable.IsPatch = this.module.IsPatch;
 			this.groupNullable.Dock = DockStyle.Fill;
-			this.groupNullable.ResetButton.Name = "Nullable";
 			this.groupNullable.ResetButton.Clicked += new MessageEventHandler(this.HandleResetButtonClicked);
 
 			this.primaryNullable = new CheckButton(this.groupNullable.GroupBox);
@@ -371,12 +369,12 @@ namespace Epsitec.Common.Designer.Viewers
 		{
 			AbstractButton button = sender as AbstractButton;
 
-			if (button.Name == "Controller")
+			if (button == this.groupController.ResetButton)
 			{
 				this.editor.ResetToOriginalValue(Support.Res.Fields.ResourceBaseType.DefaultController);
 			}
 
-			if (button.Name == "Nullable")
+			if (button == this.groupNullable.ResetButton)
 			{
 				this.editor.ResetToOriginalValue(Support.Res.Fields.ResourceBaseType.Nullable);
 			}
