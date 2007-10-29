@@ -221,6 +221,9 @@ namespace Epsitec.Common.Designer
 				case CultureMapSource.DynamicMerge:
 					return "modifié";
 
+				case CultureMapSource.PatchModule:
+					return "local";
+
 				default:
 					return null;
 			}
