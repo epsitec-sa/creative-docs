@@ -984,7 +984,10 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 						if (this.fields[i].IsTitle)
 						{
 							rect = this.GetFieldMovableBounds(i);
-							if (this.editor.CurrentModifyMode == Editor.ModifyMode.Unlocked && this.fields[i].IsInterface && rect.Contains(pos))
+							if (this.editor.CurrentModifyMode == Editor.ModifyMode.Unlocked &&
+								this.fields[i].IsInterface &&
+								(!this.editor.Module.IsPatch || this.fields[i].CultureMapSource != CultureMapSource.ReferenceModule) &&
+								rect.Contains(pos))
 							{
 								element = ActiveElement.BoxFieldRemoveInterface;
 								fieldRank = i;
@@ -1867,6 +1870,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				}
 			}
 
+			StructuredData data = this.cultureMap.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
+
 			//	Ajoute le titre de l'entité dont on hérite, s'il existe.
 			if (this.skipedField > 0)
 			{
@@ -1874,7 +1879,6 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				field.IsTitle = true;
 				field.IsInherited = true;
 
-				StructuredData data = this.cultureMap.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
 				Druid druid = (Druid) data.GetValue(Support.Res.Fields.ResourceStructuredType.BaseType);
 				if (druid.IsValid)
 				{
@@ -1922,6 +1926,17 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 						this.skipedField++;  // compte le titre lui-même
 						i++;
 					}
+				}
+			}
+
+			IList<StructuredData> dataInterfaces = data.GetValue(Support.Res.Fields.ResourceStructuredType.InterfaceIds) as IList<StructuredData>;
+			for (int i=0; i<dataInterfaces.Count; i++)
+			{
+				Druid di = (Druid) dataInterfaces[i].GetValue(Support.Res.Fields.InterfaceId.CaptionId);
+				Field field = this.SearchDruid(di);
+				if (field != null)
+				{
+					field.CultureMapSource = (CultureMapSource) dataInterfaces[i].GetValue(Support.Res.Fields.InterfaceId.CultureMapSource);
 				}
 			}
 
@@ -2168,6 +2183,19 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		private Module SearchModule(Druid id)
 		{
 			return this.editor.Module.DesignerApplication.SearchModule(id);
+		}
+
+		private Field SearchDruid(Druid druid)
+		{
+			foreach (Field field in this.fields)
+			{
+				if (field.CaptionId == druid)
+				{
+					return field;
+				}
+			}
+
+			return null;
 		}
 
 
@@ -2747,7 +2775,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					}
 
 					if (this.hilitedElement == ActiveElement.BoxFieldRemoveInterface ||
-					(this.hilitedElement == ActiveElement.BoxFieldTitle && this.fields[this.hilitedFieldRank].IsInterface))
+						(this.hilitedElement == ActiveElement.BoxFieldTitle && this.fields[this.hilitedFieldRank].IsInterface) && (!this.editor.Module.IsPatch || this.fields[this.hilitedFieldRank].CultureMapSource != CultureMapSource.ReferenceModule))
 					{
 						rect = this.GetFieldMovableBounds(this.hilitedFieldRank);
 						this.DrawRoundButton(graphics, rect.Center, AbstractObject.buttonRadius, "-i", this.hilitedElement == ActiveElement.BoxFieldRemoveInterface, true);
@@ -2758,7 +2786,9 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					{
 						for (int i=0; i<this.fields.Count; i++)
 						{
-							if (this.fields[i].IsTitle && this.fields[i].IsInterface)
+							if (this.fields[i].IsTitle &&
+								this.fields[i].IsInterface &&
+								(!this.editor.Module.IsPatch || this.fields[i].CultureMapSource != CultureMapSource.ReferenceModule))
 							{
 								rect = this.GetFieldMovableBounds(i);
 								this.DrawRoundButton(graphics, rect.Center, AbstractObject.buttonRadius, "-i", false, true);
