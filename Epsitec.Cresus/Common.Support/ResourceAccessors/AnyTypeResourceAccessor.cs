@@ -315,6 +315,26 @@ namespace Epsitec.Common.Support.ResourceAccessors
 				base.ResetToOriginal (item, container, fieldId);
 			}
 		}
+
+		protected override void PromoteToOriginal(CultureMap item, StructuredData data)
+		{
+			base.PromoteToOriginal (item, data);
+
+			ObservableList<StructuredData> enumValues = data.GetValue (Res.Fields.ResourceEnumType.Values) as ObservableList<StructuredData>;
+
+			if (enumValues != null)
+			{
+				using (enumValues.DisableNotifications ())
+				{
+					foreach (StructuredData enumValue in enumValues)
+					{
+						enumValue.PromoteToOriginal ();
+					}
+				}
+
+				Listener.FindListener<EnumValueListener> (enumValues).HandleCollectionChanging (enumValues);
+			}
+		}
 		
 		/// <summary>
 		/// Creates a caption based on the definitions stored in a data record.

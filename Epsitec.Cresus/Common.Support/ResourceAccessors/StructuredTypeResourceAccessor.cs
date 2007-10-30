@@ -244,6 +244,8 @@ namespace Epsitec.Common.Support.ResourceAccessors
 				System.Diagnostics.Debug.Assert (listener.Data == container);
 
 				listener.ResetToOriginalValue ();
+				
+				this.RefreshFields (item);
 			}
 			else
 			{
@@ -263,6 +265,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			base.PromoteToOriginal (item, data);
 
 			ObservableList<StructuredData> fields = data.GetValue (Res.Fields.ResourceStructuredType.Fields) as ObservableList<StructuredData>;
+			ObservableList<StructuredData> interfaceIds = data.GetValue (Res.Fields.ResourceStructuredType.InterfaceIds) as ObservableList<StructuredData>;
 
 			using (fields.DisableNotifications ())
 			{
@@ -271,6 +274,17 @@ namespace Epsitec.Common.Support.ResourceAccessors
 					field.PromoteToOriginal ();
 				}
 			}
+
+			using (interfaceIds.DisableNotifications ())
+			{
+				foreach (StructuredData interfaceId in interfaceIds)
+				{
+					interfaceId.PromoteToOriginal ();
+				}
+			}
+
+			Listener.FindListener<FieldListener> (fields).HandleCollectionChanging (fields);
+			Listener.FindListener<InterfaceListener> (interfaceIds).HandleCollectionChanging (interfaceIds);
 		}
 		
 		/// <summary>
@@ -500,10 +514,11 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			}
 			if (e.PropertyName == Res.Fields.ResourceStructuredType.BaseType.ToString ())
 			{
-				StructuredData data = sender as StructuredData;
+				CultureMap     item = sender as CultureMap;
+				StructuredData data = item.GetCultureData (Resources.DefaultTwoLetterISOLanguageName);
 				Druid   newBaseType = (Druid) e.NewValue;
 				
-				this.UpdateInheritedFields (data, newBaseType, null);
+				this.UpdateInheritedFields (item, data, newBaseType, null);
 			}
 		}
 
@@ -527,7 +542,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 				StructuredData data = item.GetCultureData (Resources.DefaultTwoLetterISOLanguageName);
 				Druid    baseTypeId = StructuredTypeResourceAccessor.ToDruid (data.GetValue (Res.Fields.ResourceStructuredType.BaseType));
 				
-				this.UpdateInheritedFields (data, baseTypeId, null);
+				this.UpdateInheritedFields (item, data, baseTypeId, null);
 				
 				base.RefreshItem (item);
 			}
@@ -686,19 +701,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 
 						if (state == UpdateState.None)
 						{
-							//	The fields list is still intact. We have to artificially
-							//	cause an "original" snapshot to be taken, but for this,
-							//	all inherited fields have to be included first :
-
-							Druid baseTypeId = StructuredTypeResourceAccessor.ToDruid (data.GetValue (Res.Fields.ResourceStructuredType.BaseType));
-
-							this.UpdateInheritedFields (data, baseTypeId, this.referenceAccessor);
-
-							//	Snapshot by faking a collection changing event :
-
-							FieldListener listener = Listener.FindListener<FieldListener> (fields);
-							listener.HandleCollectionChanging (fields);
-
+							this.SnapshotReferenceFields (item, data, fields);
 							state = UpdateState.Merging;
 						}
 
@@ -721,7 +724,15 @@ namespace Epsitec.Common.Support.ResourceAccessors
 					}
 				}
 
+				if ((state == UpdateState.None) &&
+					(recordFields == false))
+				{
+					this.SnapshotReferenceFields (item, data, fields);
+				}
+
 				//	Populate the interface list.
+
+				state = UpdateState.None;
 
 				foreach (Druid interfaceId in type.InterfaceIds)
 				{
@@ -742,6 +753,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 						//	This is a new interface id definition; add it to the list
 						//	and attach the new record to the item event handler code :
 
+						state = UpdateState.Adding;
 						newInterfaceId.SetValue (Res.Fields.InterfaceId.CaptionId, interfaceId);
 						newInterfaceId.SetValue (Res.Fields.InterfaceId.CultureMapSource, recordInterfaceIds ? item.Source : CultureMapSource.PatchModule);
 
@@ -752,6 +764,12 @@ namespace Epsitec.Common.Support.ResourceAccessors
 							item.NotifyDataAdded (newInterfaceId);
 						}
 					}
+				}
+
+				if ((state == UpdateState.None) &&
+					(recordInterfaceIds == false))
+				{
+					this.SnapshotReferenceInterfaceIds (item, data, interfaceIds);
 				}
 				
 				//	Fill the remaining entity definitions by overwriting the previous
@@ -810,6 +828,31 @@ namespace Epsitec.Common.Support.ResourceAccessors
 					interfaceIds.CollectionChanged  += listener.HandleCollectionChanged;
 				}
 			}
+		}
+
+		private void SnapshotReferenceFields(CultureMap item, StructuredData data, ObservableList<StructuredData> fields)
+		{
+			//	The fields list is still intact. We have to artificially
+			//	cause an "original" snapshot to be taken, but for this,
+			//	all inherited fields have to be included first :
+
+			Druid baseTypeId = StructuredTypeResourceAccessor.ToDruid (data.GetValue (Res.Fields.ResourceStructuredType.BaseType));
+
+			this.UpdateInheritedFields (item, data, baseTypeId, this.referenceAccessor);
+
+			//	Snapshot by faking a collection changing event :
+
+			FieldListener listener = Listener.FindListener<FieldListener> (fields);
+			listener.HandleCollectionChanging (fields);
+		}
+
+		private void SnapshotReferenceInterfaceIds(CultureMap item, StructuredData data, ObservableList<StructuredData> interfaceIds)
+		{
+			//	The interface ids list is still intact. We have to artificially
+			//	cause an "original" snapshot to be taken :
+			
+			InterfaceListener listener = Listener.FindListener<InterfaceListener> (interfaceIds);
+			listener.HandleCollectionChanging (interfaceIds);
 		}
 
 		private enum UpdateState
@@ -1053,10 +1096,11 @@ namespace Epsitec.Common.Support.ResourceAccessors
 		/// <c>CultureMap</c> object is added, or when an interface is added or
 		/// removed.
 		/// </summary>
+		/// <param name="item">The item.</param>
 		/// <param name="data">The data describing the structured type.</param>
 		/// <param name="baseTypeId">The Druid of the base type.</param>
 		/// <param name="accessor">The specific accessor (or <c>null</c>).</param>
-		private void UpdateInheritedFields(StructuredData data, Druid baseTypeId, StructuredTypeResourceAccessor accessor)
+		private void UpdateInheritedFields(CultureMap item, StructuredData data, Druid baseTypeId, StructuredTypeResourceAccessor accessor)
 		{
 			ObservableList<StructuredData> fields = data.GetValue (Res.Fields.ResourceStructuredType.Fields) as ObservableList<StructuredData>;
 			IList<StructuredData> interfaceIds = data.GetValue (Res.Fields.ResourceStructuredType.InterfaceIds) as IList<StructuredData>;
@@ -1081,7 +1125,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 						updater.IncludeInterfaceId (interfaceId);
 					}
 
-					StructuredTypeResourceAccessor.RemoveInheritedFields (fields, updater.InterfaceIds);
+					StructuredTypeResourceAccessor.RemoveInheritedFields (item, fields, updater.InterfaceIds);
 
 					int i = 0;
 
@@ -1104,6 +1148,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 							}
 
 							fields.Insert (i++, field);
+							item.NotifyDataAdded (field);
 						}
 						else
 						{
@@ -1120,14 +1165,18 @@ namespace Epsitec.Common.Support.ResourceAccessors
 
 							System.Diagnostics.Debug.Assert (i <= pos);
 
+							item.NotifyDataRemoved (fields[pos]);
+
 							fields.RemoveAt (pos);
 							fields.Insert (i++, field);
+
+							item.NotifyDataAdded (field);
 						}
 					}
 				}
 				else
 				{
-					StructuredTypeResourceAccessor.RemoveInheritedFields (fields);
+					StructuredTypeResourceAccessor.RemoveInheritedFields (item, fields);
 				}
 			}
 		}
@@ -1159,9 +1208,9 @@ namespace Epsitec.Common.Support.ResourceAccessors
 		/// Removes the inherited and included fields.
 		/// </summary>
 		/// <param name="fields">The field collection.</param>
-		private static void RemoveInheritedFields(IList<StructuredData> fields)
+		private static void RemoveInheritedFields(CultureMap item, IList<StructuredData> fields)
 		{
-			StructuredTypeResourceAccessor.RemoveInheritedFields (fields, EmptyList<Druid>.Instance);
+			StructuredTypeResourceAccessor.RemoveInheritedFields (item, fields, EmptyList<Druid>.Instance);
 		}
 
 		/// <summary>
@@ -1169,7 +1218,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 		/// </summary>
 		/// <param name="fields">The field collection.</param>
 		/// <param name="interfaceIds">The live interface ids.</param>
-		private static void RemoveInheritedFields(IList<StructuredData> fields, IList<Druid> interfaceIds)
+		private static void RemoveInheritedFields(CultureMap item, IList<StructuredData> fields, IList<Druid> interfaceIds)
 		{
 			for (int i = 0; i < fields.Count; i++)
 			{
@@ -1184,6 +1233,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 				if (membership == FieldMembership.Inherited)
 				{
 					fields.RemoveAt (i--);
+					item.NotifyDataRemoved (field);
 				}
 				else if (definingTypeId.IsValid)
 				{
@@ -1197,6 +1247,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 					}
 
 					fields.RemoveAt (i--);
+					item.NotifyDataRemoved (field);
 				}
 			}
 		}
@@ -1284,6 +1335,9 @@ namespace Epsitec.Common.Support.ResourceAccessors
 							this.Item.NotifyDataAdded (copy);
 						}
 					}
+
+					StructuredTypeResourceAccessor accessor = this.Accessor as StructuredTypeResourceAccessor;
+					accessor.RefreshItem (this.Item);
 				}
 			}
 
@@ -1318,10 +1372,9 @@ namespace Epsitec.Common.Support.ResourceAccessors
 
 			public override void HandleCollectionChanged(object sender, CollectionChangedEventArgs e)
 			{
-
 				StructuredTypeResourceAccessor accessor = this.Accessor as StructuredTypeResourceAccessor;
-
 				accessor.RefreshItem (this.Item);
+				
 				base.HandleCollectionChanged (sender, e);
 			}
 
@@ -1354,6 +1407,9 @@ namespace Epsitec.Common.Support.ResourceAccessors
 							this.Item.NotifyDataAdded (copy);
 						}
 					}
+
+					StructuredTypeResourceAccessor accessor = this.Accessor as StructuredTypeResourceAccessor;
+					accessor.RefreshItem (this.Item);
 				}
 			}
 			
