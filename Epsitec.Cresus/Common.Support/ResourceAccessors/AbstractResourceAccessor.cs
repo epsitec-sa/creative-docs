@@ -294,9 +294,8 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			{
 				this.dirtyItems[item] = true;
 
-				//	TODO: mise à jour du CultureMapSource du StructuredData
-				
-				if (item.Source == CultureMapSource.ReferenceModule)
+				if ((this.BasedOnPatchModule) &&
+					(item.Source == CultureMapSource.ReferenceModule))
 				{
 					item.Source = CultureMapSource.DynamicMerge;
 				}

@@ -150,14 +150,17 @@ namespace Epsitec.Common.Support
 			}
 			internal set
 			{
-				System.Diagnostics.Debug.Assert (value == CultureMapSource.DynamicMerge);
+				if (value != this.source)
+				{
+					System.Diagnostics.Debug.Assert (value == CultureMapSource.DynamicMerge);
 
-				CultureMapSource oldSource = this.source;
-				CultureMapSource newSource = value;
+					CultureMapSource oldSource = this.source;
+					CultureMapSource newSource = value;
 
-				this.source = value;
+					this.source = value;
 
-				this.OnPropertyChanged (null, new DependencyPropertyChangedEventArgs ("Source", oldSource, newSource));
+					this.OnPropertyChanged (null, new DependencyPropertyChangedEventArgs ("Source", oldSource, newSource));
+				}
 			}
 		}
 
