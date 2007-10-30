@@ -3192,13 +3192,16 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			Rectangle rect = this.bounds;
 			rect.Deflate(ObjectBox.textMargin, 0);
 
+			double max = rect.Left + System.Math.Floor(rect.Width-ObjectBox.expressionWidth);
+
 			if (rank == 0)
 			{
-				return rect.Left + System.Math.Floor(rect.Width*this.columnsSeparatorRelative1);
+				double pos = rect.Left + System.Math.Floor(rect.Width*this.columnsSeparatorRelative1);
+				return System.Math.Min(pos, max);
 			}
 			else
 			{
-				return rect.Left + System.Math.Floor(rect.Width-ObjectBox.expressionWidth);
+				return max;
 			}
 		}
 
