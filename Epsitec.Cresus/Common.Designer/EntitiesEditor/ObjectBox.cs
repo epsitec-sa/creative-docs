@@ -1727,7 +1727,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					else
 					{
 						dataField.SetValue(Support.Res.Fields.Field.Expression, encoded);
-						dataField.SetValue(Support.Res.Fields.Field.Source, FieldSource.Value);
+						dataField.SetValue(Support.Res.Fields.Field.Source, FieldSource.Expression);
 					}
 				}
 			}
@@ -1741,7 +1741,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				else
 				{
 					dataField.SetValue(Support.Res.Fields.Field.Expression, encoded);
-					dataField.SetValue(Support.Res.Fields.Field.Source, FieldSource.Value);
+					dataField.SetValue(Support.Res.Fields.Field.Source, FieldSource.Expression);
 				}
 			}
 
