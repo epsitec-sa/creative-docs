@@ -544,6 +544,17 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 				case AbstractObject.ActiveElement.BoxFieldGroup:
 					return this.GetGroupTooltip(fieldRank);
+
+				case AbstractObject.ActiveElement.BoxFieldExpression:
+					string expression = this.fields[fieldRank].Expression;
+					if (string.IsNullOrEmpty(expression))
+					{
+						return "Expression du champ";
+					}
+					else
+					{
+						return string.Concat("Expression du champ", "<br/>", expression);
+					}
 			}
 
 			return base.GetToolTipText(element, fieldRank);
@@ -1302,7 +1313,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			//	Retourne le rectangle occupé par l'expression d'un champ.
 			Rectangle rect = this.GetFieldBounds(rank);
 			
-			rect.Deflate(ObjectBox.textMargin, 0);
+			rect.Deflate(9.5, 0);
 			rect.Left = this.ColumnsSeparatorAbsolute(1)+1;
 
 			return rect;
