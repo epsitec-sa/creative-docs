@@ -40,7 +40,7 @@ namespace Epsitec.Common.Support
 			CodeGenerator generator = new CodeGenerator (formatter, manager);
 
 			Assert.AreEqual ("Epsitec.Common.Support", generator.SourceNamespace);
-
+			
 			generator.Emit (Epsitec.Common.Support.Res.Types.ResourceDateTimeType);
 			generator.Emit (Epsitec.Common.Support.Res.Types.ResourceBaseType);
 			generator.Emit (Epsitec.Common.Support.Res.Types.ResourceCaption);
