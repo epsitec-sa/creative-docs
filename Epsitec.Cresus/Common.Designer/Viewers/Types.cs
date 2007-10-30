@@ -327,17 +327,15 @@ namespace Epsitec.Common.Designer.Viewers
 			}
 
 			CultureMap item = this.access.CollectionView.CurrentItem as CultureMap;
-			CultureMapSource source = this.access.GetCultureMapSource(item);
 			StructuredData data = item.GetCultureData(this.GetTwoLetters(0));
 
 			data.SetValue(Support.Res.Fields.ResourceBaseType.DefaultController, this.fieldController.Text);
 
+			CultureMapSource source = this.access.GetCultureMapSource(item);
 			bool usesOriginalData;
 			data.GetValue(Support.Res.Fields.ResourceBaseType.DefaultController, out usesOriginalData);
 			Abstract.ColorizeResetBox(this.groupController, source, usesOriginalData);
 
-			this.editor.OnContentChanged();
-			this.editor.UpdateContent();
 			this.module.AccessTypes.SetLocalDirty();
 		}
 
@@ -350,17 +348,15 @@ namespace Epsitec.Common.Designer.Viewers
 			}
 
 			CultureMap item = this.access.CollectionView.CurrentItem as CultureMap;
-			CultureMapSource source = this.access.GetCultureMapSource(item);
 			StructuredData data = item.GetCultureData(this.GetTwoLetters(0));
 
 			data.SetValue(Support.Res.Fields.ResourceBaseType.Nullable, this.primaryNullable.ActiveState == ActiveState.No);
 
+			CultureMapSource source = this.access.GetCultureMapSource(item);
 			bool usesOriginalData;
 			data.GetValue(Support.Res.Fields.ResourceBaseType.Nullable, out usesOriginalData);
 			Abstract.ColorizeResetBox(this.groupNullable, source, usesOriginalData);
 
-			this.editor.OnContentChanged();
-			this.editor.UpdateContent();
 			this.module.AccessTypes.SetLocalDirty();
 		}
 
@@ -373,14 +369,17 @@ namespace Epsitec.Common.Designer.Viewers
 		{
 			AbstractButton button = sender as AbstractButton;
 
+			CultureMap item = this.access.CollectionView.CurrentItem as CultureMap;
+			StructuredData data = item.GetCultureData(this.GetTwoLetters(0));
+
 			if (button == this.groupController.ResetButton)
 			{
-				this.editor.ResetToOriginalValue(Support.Res.Fields.ResourceBaseType.DefaultController);
+				this.access.Accessor.ResetToOriginalValue(item, data, Support.Res.Fields.ResourceBaseType.DefaultController);
 			}
 
 			if (button == this.groupNullable.ResetButton)
 			{
-				this.editor.ResetToOriginalValue(Support.Res.Fields.ResourceBaseType.Nullable);
+				this.access.Accessor.ResetToOriginalValue(item, data, Support.Res.Fields.ResourceBaseType.Nullable);
 			}
 
 			this.UpdateEdit();
