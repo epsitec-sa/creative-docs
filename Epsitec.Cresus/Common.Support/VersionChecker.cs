@@ -118,6 +118,8 @@ namespace Epsitec.Common.Support
 			
 			try
 			{
+				System.Diagnostics.Debug.WriteLine ("Checking for updates at URL " + url);
+
 				System.Net.WebRequest  request  = System.Net.HttpWebRequest.Create (new System.Uri (url));
 				System.Net.WebResponse response = request.GetResponse ();
 				
@@ -128,9 +130,13 @@ namespace Epsitec.Common.Support
 				
 				reader.Close ();
 				response.Close ();
+
+				System.Diagnostics.Debug.WriteLine ("Update result : " + result);
 			}
-			catch
+			catch (System.Exception ex)
 			{
+				System.Diagnostics.Debug.WriteLine ("No updates found : " + ex.Message);
+
 				//	Mange toutes les exceptions. On retourne simple une chaîne
 				//	vide si on n'a pas réussi à se connecter à l'URL spécifiée.
 			}

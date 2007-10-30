@@ -116,6 +116,7 @@ namespace Epsitec.Common.Document.Ribbons
 		private void HandleFieldValueChanged(object sender)
 		{
 			if ( this.ignoreChange )  return;
+			if ( this.document.Modifier == null )  return;
 			TextFieldReal field = sender as TextFieldReal;
 
 			if ( field == this.fieldMoveH )

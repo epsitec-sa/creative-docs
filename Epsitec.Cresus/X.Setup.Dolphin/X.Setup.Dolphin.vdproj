@@ -21,7 +21,7 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_3533C3F936BF4DB5BFF12324625598C3"
+        "MsmKey" = "8:_3ABF629414AD4D5D903DAF92633FA7B7"
         "OwnerKey" = "8:_99A1ECCB35B241B391BC9274DB770594"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -285,7 +285,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Dauphin"
         "ProductCode" = "8:{2941C666-1E1A-4FCF-907E-C194E562EC6E}"
-        "PackageCode" = "8:{2398FE3D-D47D-47CD-9E8B-56A568717FBB}"
+        "PackageCode" = "8:{A324F931-590F-427D-B8BE-2A83AFD123EB}"
         "UpgradeCode" = "8:{3E07DF4F-1854-45A8-86B8-F494ADA98964}"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
@@ -706,7 +706,7 @@
         }
         "MergeModule"
         {
-            "{CEE29DC0-9FBA-4B99-8D47-5BC643D9B626}:_3533C3F936BF4DB5BFF12324625598C3"
+            "{CEE29DC0-9FBA-4B99-8D47-5BC643D9B626}:_3ABF629414AD4D5D903DAF92633FA7B7"
             {
             "UseDynamicProperties" = "11:TRUE"
             "IsDependency" = "11:TRUE"
@@ -724,7 +724,7 @@
             {
             "UseDynamicProperties" = "11:TRUE"
             "IsDependency" = "11:FALSE"
-            "SourcePath" = "8:C:\\Program Files (x86)\\Common Files\\Merge Modules\\Microsoft_VC80_CRT_x86.msm"
+            "SourcePath" = "8:C:\\Program Files\\Common Files\\Merge Modules\\Microsoft_VC80_CRT_x86.msm"
                 "Properties"
                 {
                 }
