@@ -221,6 +221,22 @@ namespace Epsitec.Common.Designer.MyWidgets
 		}
 
 
+		public void ColorizeResetBox(MyWidgets.ResetBox box, CultureMapSource source, bool usesOriginalData)
+		{
+			//	Colore la boîte si on est dans un module de patch avec redéfinition de la donnée.
+			if (!box.IsPatch || source != CultureMapSource.DynamicMerge || usesOriginalData)
+			{
+				box.BackColor = Color.Empty;
+				box.ResetButton.Enable = false;
+			}
+			else
+			{
+				box.BackColor = Misc.SourceColor(CultureMapSource.DynamicMerge);
+				box.ResetButton.Enable = !this.designerApplication.IsReadonly;
+			}
+		}
+
+
 		#region Super widgets
 		protected void CreateStringLabeled(string label, Widget parent, out ResetBox group, out TextFieldEx field)
 		{

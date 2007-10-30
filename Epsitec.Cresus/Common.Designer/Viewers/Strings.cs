@@ -162,9 +162,9 @@ namespace Epsitec.Common.Designer.Viewers
 
 			data = item.GetCultureData(this.GetTwoLetters(0));
 			this.primaryText.Text = data.GetValue(Support.Res.Fields.ResourceString.Text, out usesOriginalData) as string ?? Support.ResourceBundle.Field.Null;
-			Abstract.ColorizeResetBox(this.groupPrimaryText, source, usesOriginalData);
+			this.ColorizeResetBox(this.groupPrimaryText, source, usesOriginalData);
 			this.primaryComment.Text = data.GetValue(Support.Res.Fields.ResourceBase.Comment, out usesOriginalData) as string ?? Support.ResourceBundle.Field.Null;
-			Abstract.ColorizeResetBox(this.groupPrimaryComment, source, usesOriginalData);
+			this.ColorizeResetBox(this.groupPrimaryComment, source, usesOriginalData);
 
 			if (this.GetTwoLetters(1) == null || this.designerApplication.IsReadonly)
 			{
@@ -177,9 +177,9 @@ namespace Epsitec.Common.Designer.Viewers
 			{
 				data = item.GetCultureData(this.GetTwoLetters(1));
 				this.secondaryText.Text = data.GetValue(Support.Res.Fields.ResourceString.Text, out usesOriginalData) as string ?? Support.ResourceBundle.Field.Null;
-				Abstract.ColorizeResetBox(this.groupSecondaryText, source, usesOriginalData);
+				this.ColorizeResetBox(this.groupSecondaryText, source, usesOriginalData);
 				this.secondaryComment.Text = data.GetValue(Support.Res.Fields.ResourceBase.Comment, out usesOriginalData) as string ?? Support.ResourceBundle.Field.Null;
-				Abstract.ColorizeResetBox(this.groupSecondaryComment, source, usesOriginalData);
+				this.ColorizeResetBox(this.groupSecondaryComment, source, usesOriginalData);
 				this.groupSecondaryText.Enable = true;
 				this.groupSecondaryComment.Enable = true;
 			}

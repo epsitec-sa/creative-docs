@@ -133,11 +133,11 @@ namespace Epsitec.Common.Designer.Viewers
 				}
 
 				controller = data.GetValue(Support.Res.Fields.ResourceBaseType.DefaultController, out usesOriginalData) as string;
-				Abstract.ColorizeResetBox(this.groupController, source, usesOriginalData);
+				this.ColorizeResetBox(this.groupController, source, usesOriginalData);
 				controllerParameter = data.GetValue(Support.Res.Fields.ResourceBaseType.DefaultControllerParameter) as string;
 
 				value = data.GetValue(Support.Res.Fields.ResourceBaseType.Nullable, out usesOriginalData);
-				Abstract.ColorizeResetBox(this.groupNullable, source, usesOriginalData);
+				this.ColorizeResetBox(this.groupNullable, source, usesOriginalData);
 				if (!UndefinedValue.IsUndefinedValue(value))
 				{
 					nullable = (bool) value;
@@ -334,7 +334,7 @@ namespace Epsitec.Common.Designer.Viewers
 			CultureMapSource source = this.access.GetCultureMapSource(item);
 			bool usesOriginalData;
 			data.GetValue(Support.Res.Fields.ResourceBaseType.DefaultController, out usesOriginalData);
-			Abstract.ColorizeResetBox(this.groupController, source, usesOriginalData);
+			this.ColorizeResetBox(this.groupController, source, usesOriginalData);
 
 			this.module.AccessTypes.SetLocalDirty();
 		}
@@ -355,7 +355,7 @@ namespace Epsitec.Common.Designer.Viewers
 			CultureMapSource source = this.access.GetCultureMapSource(item);
 			bool usesOriginalData;
 			data.GetValue(Support.Res.Fields.ResourceBaseType.Nullable, out usesOriginalData);
-			Abstract.ColorizeResetBox(this.groupNullable, source, usesOriginalData);
+			this.ColorizeResetBox(this.groupNullable, source, usesOriginalData);
 
 			this.module.AccessTypes.SetLocalDirty();
 		}

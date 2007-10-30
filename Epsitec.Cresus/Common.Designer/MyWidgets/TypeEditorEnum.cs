@@ -265,7 +265,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			CultureMapSource source = this.module.AccessTypes.GetCultureMapSource(this.cultureMap);
 			bool usesOriginalData;
 			this.structuredData.GetValue(Support.Res.Fields.ResourceEnumType.Values, out usesOriginalData);
-			Viewers.Abstract.ColorizeResetBox(this.groupToolbar, source, usesOriginalData);
+			this.ColorizeResetBox(this.groupToolbar, source, usesOriginalData);
 		}
 
 		protected void ArrayCreate()

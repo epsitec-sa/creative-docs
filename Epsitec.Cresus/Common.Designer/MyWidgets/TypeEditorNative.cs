@@ -57,7 +57,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			this.fieldSystemType.Text = this.TypeName;
 			this.structuredData.GetValue(Support.Res.Fields.ResourceOtherType.SystemType, out usesOriginalData);
-			Viewers.Abstract.ColorizeResetBox(this.groupSystemType, source, usesOriginalData);
+			this.ColorizeResetBox(this.groupSystemType, source, usesOriginalData);
 
 			this.ignoreChange = false;
 		}

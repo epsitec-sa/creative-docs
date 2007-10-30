@@ -229,11 +229,11 @@ namespace Epsitec.Common.Designer.Viewers
 			{
 				data = item.GetCultureData(this.GetTwoLetters(0));
 				this.SetTextField(this.primaryLabels, data.GetValue(Support.Res.Fields.ResourceCaption.Labels, out usesOriginalData) as IList<string>);
-				Abstract.ColorizeResetBox(this.groupPrimaryLabels, source, usesOriginalData);
+				this.ColorizeResetBox(this.groupPrimaryLabels, source, usesOriginalData);
 				this.primaryDescription.Text = data.GetValue(Support.Res.Fields.ResourceCaption.Description, out usesOriginalData) as string;
-				Abstract.ColorizeResetBox(this.groupPrimaryDescription, source, usesOriginalData);
+				this.ColorizeResetBox(this.groupPrimaryDescription, source, usesOriginalData);
 				this.primaryComment.Text = data.GetValue(Support.Res.Fields.ResourceBase.Comment, out usesOriginalData) as string;
-				Abstract.ColorizeResetBox(this.groupPrimaryComment, source, usesOriginalData);
+				this.ColorizeResetBox(this.groupPrimaryComment, source, usesOriginalData);
 			}
 
 			this.groupPrimaryLabels.Enable = !this.designerApplication.IsReadonly;
@@ -253,11 +253,11 @@ namespace Epsitec.Common.Designer.Viewers
 			{
 				data = item.GetCultureData(this.GetTwoLetters(1));
 				this.SetTextField(this.secondaryLabels, data.GetValue(Support.Res.Fields.ResourceCaption.Labels, out usesOriginalData) as IList<string>);
-				Abstract.ColorizeResetBox(this.groupSecondaryLabels, source, usesOriginalData);
+				this.ColorizeResetBox(this.groupSecondaryLabels, source, usesOriginalData);
 				this.secondaryDescription.Text = data.GetValue(Support.Res.Fields.ResourceCaption.Description, out usesOriginalData) as string;
-				Abstract.ColorizeResetBox(this.groupSecondaryDescription, source, usesOriginalData);
+				this.ColorizeResetBox(this.groupSecondaryDescription, source, usesOriginalData);
 				this.secondaryComment.Text = data.GetValue(Support.Res.Fields.ResourceBase.Comment, out usesOriginalData) as string;
-				Abstract.ColorizeResetBox(this.groupSecondaryComment, source, usesOriginalData);
+				this.ColorizeResetBox(this.groupSecondaryComment, source, usesOriginalData);
 				this.groupSecondaryDescription.Enable = true;
 				this.groupSecondaryComment.Enable = true;
 			}
@@ -279,7 +279,7 @@ namespace Epsitec.Common.Designer.Viewers
 				StructuredData data = item.GetCultureData("00");
 				bool usesOriginalData;
 				icon = data.GetValue(Support.Res.Fields.ResourceCaption.Icon, out usesOriginalData) as string;
-				Abstract.ColorizeResetBox(this.groupPrimaryIcon, source, usesOriginalData);
+				this.ColorizeResetBox(this.groupPrimaryIcon, source, usesOriginalData);
 			}
 
 			if (string.IsNullOrEmpty(icon))
