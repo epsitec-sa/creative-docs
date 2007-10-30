@@ -107,6 +107,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 		{
 			if ( disposing )
 			{
+				this.groupToolbar.ResetButton.Clicked -= new MessageEventHandler(this.HandleResetButtonClicked);
+
 				this.buttonCreate.Clicked -= new MessageEventHandler(this.HandleButtonClicked);
 				this.buttonDelete.Clicked -= new MessageEventHandler(this.HandleButtonClicked);
 				this.buttonPrev.Clicked -= new MessageEventHandler(this.HandleButtonClicked);
