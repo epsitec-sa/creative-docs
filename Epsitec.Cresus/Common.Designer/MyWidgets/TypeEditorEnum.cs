@@ -16,8 +16,12 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.module = module;
 
 			//	Crée la toolbar.
-			this.toolbar = new HToolBar(this);
-			this.toolbar.Dock = DockStyle.StackBegin;
+			this.groupToolbar = new ResetBox(this);
+			this.groupToolbar.Dock = DockStyle.StackBegin;
+			this.groupToolbar.ResetButton.Clicked += new MessageEventHandler(this.HandleResetButtonClicked);
+
+			this.toolbar = new HToolBar(this.groupToolbar.GroupBox);
+			this.toolbar.Dock = DockStyle.Fill;
 
 			this.buttonCreate = new IconButton();
 			this.buttonCreate.CaptionId = Res.Captions.Editor.Type.Create.Id;
@@ -199,8 +203,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 			for (int i=0; i<this.array.LineCount; i++)
 			{
 				Druid druid;
-				CultureMapSource source;
-				this.GetDruid(first+i, out druid, out source);
+				CultureMapSource sourceValue;
+				this.GetDruid(first+i, out druid, out sourceValue);
 
 				if (druid.IsEmpty)
 				{
@@ -231,7 +235,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 						icon = Misc.ImageFull(icon);
 					}
 
-					Color color = this.module.IsPatch ? Misc.SourceColor(source) : Color.Empty;
+					Color color = this.module.IsPatch ? Misc.SourceColor(sourceValue) : Color.Empty;
 
 					this.array.SetLineString(0, first+i, name);
 					this.array.SetLineState(0, first+i, StringList.CellState.Normal);
@@ -248,6 +252,11 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 
 			this.array.TotalRows = this.EnumCount;
+
+			CultureMapSource source = this.module.AccessTypes.GetCultureMapSource(this.cultureMap);
+			bool usesOriginalData;
+			this.structuredData.GetValue(Support.Res.Fields.ResourceEnumType.Values, out usesOriginalData);
+			Viewers.Abstract.ColorizeResetBox(this.groupToolbar, source, usesOriginalData);
 		}
 
 		protected void ArrayCreate()
@@ -542,9 +551,24 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.UpdateButtons();
 		}
 
+		private void HandleResetButtonClicked(object sender, MessageEventArgs e)
+		{
+			AbstractButton button = sender as AbstractButton;
+
+			if (button == this.groupToolbar.ResetButton)
+			{
+				this.ResetToOriginalValue(Support.Res.Fields.ResourceEnumType.Values);
+			}
+
+			this.OnContentChanged();
+			this.UpdateContent();
+			this.module.AccessTypes.SetLocalDirty();
+		}
+
 
 		protected static double					arrayLineHeight = 20;
 
+		protected ResetBox						groupToolbar;
 		protected HToolBar						toolbar;
 		protected IconButton					buttonCreate;
 		protected IconButton					buttonDelete;
