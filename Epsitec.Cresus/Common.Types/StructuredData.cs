@@ -487,7 +487,17 @@ namespace Epsitec.Common.Types
 						throw new System.InvalidOperationException (string.Format ("Field {0} is read only", id));
 					}
 
+					if (record.UsesOriginalData)
+					{
+						return;
+					}
+
+					object oldValue = record.Data;
+					object newValue = record.OriginalData;
+
 					this.values[id] = new Record (UndefinedValue.Instance, record.OriginalData, true, record.IsReadOnly, record.Handler);
+					
+					this.InvalidateValue (id, oldValue, newValue, record.Handler);
 				}
 			}
 		}

@@ -1330,9 +1330,9 @@ namespace Epsitec.Common.Support.ResourceAccessors
 						foreach (StructuredData data in this.originalFields)
 						{
 							StructuredData copy = data.GetShallowCopy ();
-							copy.PromoteToOriginal ();
 							fields.Add (copy);
 							this.Item.NotifyDataAdded (copy);
+							copy.PromoteToOriginal ();
 						}
 					}
 
@@ -1402,9 +1402,9 @@ namespace Epsitec.Common.Support.ResourceAccessors
 						foreach (StructuredData data in this.originalInterfaceIds)
 						{
 							StructuredData copy = data.GetShallowCopy ();
-							copy.PromoteToOriginal ();
 							interfaceIds.Add (copy);
 							this.Item.NotifyDataAdded (copy);
+							copy.PromoteToOriginal ();
 						}
 					}
 
