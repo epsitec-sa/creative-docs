@@ -284,16 +284,8 @@ namespace Epsitec.Common.Designer.Viewers
 
 			if (string.IsNullOrEmpty(icon))
 			{
-				if (icon == null)
-				{
-					this.primaryIcon.IconName = "manifest:Epsitec.Common.Widgets.Images.DefaultValue.icon";
-					this.primaryIconInfo.Text = Res.Strings.Dialog.Icon.Default;
-				}
-				else
-				{
-					this.primaryIcon.IconName = null;
-					this.primaryIconInfo.Text = Res.Strings.Dialog.Icon.None;
-				}
+				this.primaryIcon.IconName = null;
+				this.primaryIconInfo.Text = Res.Strings.Dialog.Icon.None;
 			}
 			else
 			{

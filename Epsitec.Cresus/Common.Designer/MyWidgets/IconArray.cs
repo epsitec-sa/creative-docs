@@ -298,14 +298,14 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 						if ( first < this.TotalCell )
 						{
-							if (first == 0)  // icône par défaut ?
+							if (first == 0)  // pas d'icône ?
 							{
-								layout.Text = @"<img src=""manifest:Epsitec.Common.Widgets.Images.DefaultValue.icon""/>";
+								layout.Text = null;
 								layout.Paint(rect.BottomLeft, graphics);
 							}
-							else if (first >= 2)
+							else if (first >= 1)
 							{
-								layout.Text = Misc.ImageFull(this.icons[first-2]);
+								layout.Text = Misc.ImageFull(this.icons[first-1]);
 								layout.Paint(rect.BottomLeft, graphics);
 							}
 
@@ -418,7 +418,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			//	Retourne le nombre total de cases.
 			get
 			{
-				return 2 + this.icons.Count;
+				return 1 + this.icons.Count;
 			}
 		}
 
@@ -449,20 +449,15 @@ namespace Epsitec.Common.Designer.MyWidgets
 			//	Donne le texte du tooltip en fonction de la position.
 			int index = this.Detect(pos);
 
-			if (index == 0)  // icône par défaut ?
-			{
-				return Res.Strings.Dialog.Icon.Default;
-			}
-
-			if (index == 1)  // pas d'icône ?
+			if (index == 0)  // pas d'icône ?
 			{
 				return Res.Strings.Dialog.Icon.None;
 			}
 
-			if (index >= 2 && index < this.TotalCell)
+			if (index >= 1 && index < this.TotalCell)
 			{
 				string module, name;
-				Misc.GetIconNames(this.icons[index-2], out module, out name);
+				Misc.GetIconNames(this.icons[index-1], out module, out name);
 				return string.Format("{0}<br/>{1}", module, name);
 			}
 
