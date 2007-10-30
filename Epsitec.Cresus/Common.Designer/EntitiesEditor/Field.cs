@@ -85,11 +85,6 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			this.textLayoutType.Alignment = ContentAlignment.MiddleLeft;
 			this.textLayoutType.BreakMode = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine;
 
-			this.textLayoutExpression = new TextLayout();
-			this.textLayoutExpression.DefaultFontSize = 10;
-			this.textLayoutExpression.Alignment = ContentAlignment.MiddleLeft;
-			this.textLayoutExpression.BreakMode = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine;
-
 			this.relation = FieldRelation.None;
 			this.membership = FieldMembership.Local;
 			this.captionId = Druid.Empty;
@@ -225,11 +220,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 			set
 			{
-				if (this.expression != value)
-				{
-					this.expression = value;
-					this.UpdateExpression();
-				}
+				this.expression = value;
 			}
 		}
 
@@ -248,15 +239,6 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			get
 			{
 				return this.textLayoutType;
-			}
-		}
-
-		public TextLayout TextLayoutExpression
-		{
-			//	Retourne le TextLayout utilisé pour l'expression du champ.
-			get
-			{
-				return this.textLayoutExpression;
 			}
 		}
 
@@ -753,21 +735,6 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 		}
 
-		protected void UpdateExpression()
-		{
-			//	Met à jour l'expression.
-			if (this.expression == null)
-			{
-				this.textLayoutExpression.Text = null;
-			}
-			else
-			{
-				string text = this.expression.Replace("\n", " ");
-				text = TextLayout.ConvertToTaggedText(text);
-				this.textLayoutExpression.Text = text;
-			}
-		}
-
 		
 		#region Serialization
 		public void WriteXml(XmlWriter writer)
@@ -960,7 +927,6 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		protected bool isInterface;
 		protected TextLayout textLayoutField;
 		protected TextLayout textLayoutType;
-		protected TextLayout textLayoutExpression;
 		protected string typeName;
 		protected string expression;
 		protected FieldRelation relation;

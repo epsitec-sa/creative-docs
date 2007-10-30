@@ -37,7 +37,6 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			this.fields = new List<Field>();
 
 			this.columnsSeparatorRelative1 = 0.5;
-			this.columnsSeparatorRelative2 = 0.9;
 			this.isRoot = false;
 			this.isExtended = false;
 
@@ -460,7 +459,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		protected override string GetToolTipText(ActiveElement element, int fieldRank)
 		{
 			//	Retourne le texte pour le tooltip.
-			if (this.isDragging || this.isFieldMoving || this.isChangeWidth || this.isMoveColumnsSeparator1 || this.isMoveColumnsSeparator2 || this.isSourcesMenu)
+			if (this.isDragging || this.isFieldMoving || this.isChangeWidth || this.isMoveColumnsSeparator1 || this.isSourcesMenu)
 			{
 				return null;  // pas de tooltip
 			}
@@ -591,19 +590,9 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			{
 				Rectangle rect = this.Bounds;
 				rect.Deflate(ObjectBox.textMargin, 0);
+				pos.X = System.Math.Min(pos.X, this.ColumnsSeparatorAbsolute(1));
 				this.columnsSeparatorRelative1 = (pos.X-rect.Left)/rect.Width;
 				this.columnsSeparatorRelative1 = System.Math.Max(this.columnsSeparatorRelative1, 0.2);
-				this.columnsSeparatorRelative1 = System.Math.Min(this.columnsSeparatorRelative1, this.columnsSeparatorRelative2);
-				this.editor.Invalidate();
-				return true;
-			}
-			else if (this.isMoveColumnsSeparator2)
-			{
-				Rectangle rect = this.Bounds;
-				rect.Deflate(ObjectBox.textMargin, 0);
-				this.columnsSeparatorRelative2 = (pos.X-rect.Left)/rect.Width;
-				this.columnsSeparatorRelative2 = System.Math.Max(this.columnsSeparatorRelative2, this.columnsSeparatorRelative1);
-				this.columnsSeparatorRelative2 = System.Math.Min(this.columnsSeparatorRelative2, 1.0);
 				this.editor.Invalidate();
 				return true;
 			}
@@ -674,12 +663,6 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				this.editor.LockObject(this);
 			}
 
-			if (this.hilitedElement == ActiveElement.BoxMoveColumnsSeparator2)
-			{
-				this.isMoveColumnsSeparator2 = true;
-				this.editor.LockObject(this);
-			}
-
 			if (this.hilitedElement == ActiveElement.BoxSources)
 			{
 				this.isSourcesMenu = true;
@@ -718,12 +701,6 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			else if (this.isMoveColumnsSeparator1)
 			{
 				this.isMoveColumnsSeparator1 = false;
-				this.editor.LockObject(null);
-				this.editor.Module.AccessEntities.SetLocalDirty();
-			}
-			else if (this.isMoveColumnsSeparator2)
-			{
-				this.isMoveColumnsSeparator2 = false;
 				this.editor.LockObject(null);
 				this.editor.Module.AccessEntities.SetLocalDirty();
 			}
@@ -991,24 +968,6 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 						}
 					}
 
-					d2 = Point.Distance(this.PositionMoveColumnsButton(1), pos);
-					if (d1 < d2)
-					{
-						if (this.editor.CurrentModifyMode != Editor.ModifyMode.Locked && d1 <= AbstractObject.buttonRadius+1)
-						{
-							element = ActiveElement.BoxChangeWidth;
-							return true;
-						}
-					}
-					else
-					{
-						if (this.editor.CurrentModifyMode != Editor.ModifyMode.Locked && d2 <= AbstractObject.buttonRadius+1)
-						{
-							element = ActiveElement.BoxMoveColumnsSeparator2;
-							return true;
-						}
-					}
-
 					//	Souris dans l'en-tête ?
 					if (this.bounds.Contains(pos) && 
 						(pos.Y >= this.bounds.Top-AbstractObject.headerHeight ||
@@ -1066,17 +1025,6 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 						pos.Y <= this.bounds.Top-AbstractObject.headerHeight)
 					{
 						element = ActiveElement.BoxMoveColumnsSeparator1;
-						this.SetConnectionsHilited(true);
-						return true;
-					}
-
-					sep = this.ColumnsSeparatorAbsolute(1);
-					if (this.editor.CurrentModifyMode != Editor.ModifyMode.Locked &&
-						this.columnsSeparatorRelative2 < 1.0 && pos.X >= sep-4 && pos.X <= sep+4 &&
-						pos.Y >= this.bounds.Bottom+AbstractObject.footerHeight &&
-						pos.Y <= this.bounds.Top-AbstractObject.headerHeight)
-					{
-						element = ActiveElement.BoxMoveColumnsSeparator2;
 						this.SetConnectionsHilited(true);
 						return true;
 					}
@@ -2417,7 +2365,6 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					graphics.RenderSolid(colorLine);
 				}
 
-				if (this.columnsSeparatorRelative2 < 1.0)
 				{
 					double posx = this.ColumnsSeparatorAbsolute(1)+0.5;
 					graphics.AddLine(posx, this.bounds.Bottom+AbstractObject.footerHeight+0.5, posx, this.bounds.Top-AbstractObject.headerHeight-0.5);
@@ -2633,12 +2580,12 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 						}
 
 						//	Affiche l'expression du champ.
-						rect = this.GetFieldExpressionBounds(i);
-						rect.Left += 1;
-						if (rect.Width > 10)
+						if (!string.IsNullOrEmpty(this.fields[i].Expression))
 						{
-							this.fields[i].TextLayoutExpression.LayoutSize = rect.Size;
-							this.fields[i].TextLayoutExpression.Paint(rect.BottomLeft, graphics, Rectangle.MaxValue, colorExpr, GlyphPaintStyle.Normal);
+							rect = this.GetFieldExpressionBounds(i);
+							rect.Right -= 2;
+							graphics.AddText(rect.Left, rect.Bottom+1, rect.Width, rect.Height, "e", Font.DefaultFont, 14, ContentAlignment.MiddleCenter);
+							graphics.RenderSolid(colorExpr);
 						}
 
 						rect = this.GetFieldBounds(i);
@@ -2739,7 +2686,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					this.hilitedElement != ActiveElement.BoxChangeWidth &&
 					this.hilitedElement != ActiveElement.BoxMoveColumnsSeparator1 &&
 					this.editor.CurrentModifyMode == Editor.ModifyMode.Unlocked &&
-					!this.IsHeaderHilite && !this.isFieldMoving && !this.isChangeWidth && !this.isMoveColumnsSeparator1 && !this.isMoveColumnsSeparator2)
+					!this.IsHeaderHilite && !this.isFieldMoving && !this.isChangeWidth && !this.isMoveColumnsSeparator1)
 				{
 					//	Dessine la glissière à gauche pour suggérer les boutons Add/Remove des champs.
 					Point p1 = this.GetFieldAddBounds(this.skipedField-1).Center;
@@ -2877,21 +2824,6 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				if (this.editor.CurrentModifyMode != Editor.ModifyMode.Locked && this.hilitedElement == ActiveElement.BoxHeader && !this.isDragging)
 				{
 					this.DrawRoundButton(graphics, this.PositionMoveColumnsButton(0), AbstractObject.buttonRadius, GlyphShape.HorizontalMove, false, false);
-				}
-
-				if (this.hilitedElement == ActiveElement.BoxMoveColumnsSeparator2)
-				{
-					double sep = this.ColumnsSeparatorAbsolute(1);
-					graphics.LineWidth = 4;
-					graphics.AddLine(sep, this.bounds.Bottom+AbstractObject.footerHeight+3, sep, this.bounds.Top-AbstractObject.headerHeight-3);
-					graphics.LineWidth = 1;
-					graphics.RenderSolid(this.GetColorMain());
-
-					this.DrawRoundButton(graphics, this.PositionMoveColumnsButton(1), AbstractObject.buttonRadius, GlyphShape.HorizontalMove, true, false);
-				}
-				if (this.editor.CurrentModifyMode != Editor.ModifyMode.Locked && this.hilitedElement == ActiveElement.BoxHeader && !this.isDragging)
-				{
-					this.DrawRoundButton(graphics, this.PositionMoveColumnsButton(1), AbstractObject.buttonRadius, GlyphShape.HorizontalMove, false, false);
 				}
 
 				//	Dessine le bouton pour changer la largeur.
@@ -3266,7 +3198,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 			else
 			{
-				return rect.Left + System.Math.Floor(rect.Width*this.columnsSeparatorRelative2);
+				return rect.Left + System.Math.Floor(rect.Width-ObjectBox.expressionWidth);
 			}
 		}
 
@@ -3301,11 +3233,6 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			if (this.columnsSeparatorRelative1 != 0.5)
 			{
 				writer.WriteElementString(Xml.ColumnsSeparatorRelative1, this.columnsSeparatorRelative1.ToString(System.Globalization.CultureInfo.InvariantCulture));
-			}
-			
-			if (this.columnsSeparatorRelative2 != 0.9)
-			{
-				writer.WriteElementString(Xml.ColumnsSeparatorRelative2, this.columnsSeparatorRelative2.ToString(System.Globalization.CultureInfo.InvariantCulture));
 			}
 			
 			writer.WriteElementString(Xml.Color, this.boxColor.ToString());
@@ -3389,10 +3316,6 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 						else if (name == Xml.ColumnsSeparatorRelative1)
 						{
 							this.columnsSeparatorRelative1 = double.Parse(element);
-						}
-						else if (name == Xml.ColumnsSeparatorRelative2)
-						{
-							this.columnsSeparatorRelative2 = double.Parse(element);
 						}
 						else if (name == Xml.Color)
 						{
@@ -3498,6 +3421,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		public static readonly double roundFrameRadius = 12;
 		protected static readonly double shadowOffset = 6;
 		protected static readonly double textMargin = 13;
+		protected static readonly double expressionWidth = 20;
 		protected static readonly double fieldHeight = 20;
 		protected static readonly double sourcesMenuHeight = 20;
 
@@ -3506,7 +3430,6 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		protected ObjectInfo info;
 		protected Rectangle bounds;
 		protected double columnsSeparatorRelative1;
-		protected double columnsSeparatorRelative2;
 		protected bool isRoot;
 		protected bool isExtended;
 		protected bool isConnectedToRoot;
@@ -3535,7 +3458,6 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		protected double changeWidthInitial;
 
 		protected bool isMoveColumnsSeparator1;
-		protected bool isMoveColumnsSeparator2;
 
 		protected bool isSourcesMenu;
 		protected int sourcesMenuSelected;
