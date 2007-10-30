@@ -385,7 +385,14 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			base.ComputeDataDelta (rawData, refData, patchData);
 			
 			AbstractCaptionResourceAccessor.CopyDeltaValue (rawData, patchData, Res.Fields.ResourceStructuredType.BaseType);
-			AbstractCaptionResourceAccessor.CopyDeltaValue (rawData, patchData, Res.Fields.ResourceStructuredType.SerializedDesignerLayouts);
+
+			string rawLayout = rawData.GetValue (Res.Fields.ResourceStructuredType.SerializedDesignerLayouts) as string;
+			string refLayout = refData.GetValue (Res.Fields.ResourceStructuredType.SerializedDesignerLayouts) as string;
+
+			if (rawLayout != refLayout)
+			{
+				AbstractCaptionResourceAccessor.CopyDeltaValue (rawData, patchData, Res.Fields.ResourceStructuredType.SerializedDesignerLayouts);
+			}
 
 			//	The structured type class must be defined, or else we won't be able
 			//	to generate the correct StructuredType instance for the caption

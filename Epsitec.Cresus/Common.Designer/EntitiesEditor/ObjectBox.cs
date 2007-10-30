@@ -1047,7 +1047,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					for (int i=0; i<this.fields.Count; i++)
 					{
 						rect = this.GetFieldRemoveBounds(i);
-						if ((!this.editor.Module.IsPatch || this.fields[i].CultureMapSource != CultureMapSource.ReferenceModule) &&
+						if ((!this.editor.Module.IsPatch || this.fields[i].CultureMapSource == CultureMapSource.PatchModule) &&
 							this.editor.CurrentModifyMode == Editor.ModifyMode.Unlocked && i >= this.skipedField && rect.Contains(pos))
 						{
 							element = ActiveElement.BoxFieldRemove;
@@ -1057,7 +1057,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 						}
 
 						rect = this.GetFieldMovableBounds(i);
-						if ((!this.editor.Module.IsPatch || this.fields[i].CultureMapSource != CultureMapSource.ReferenceModule) &&
+						if ((!this.editor.Module.IsPatch || this.fields[i].CultureMapSource == CultureMapSource.PatchModule) &&
 							this.editor.CurrentModifyMode == Editor.ModifyMode.Unlocked && i >= this.skipedField && rect.Contains(pos) && this.Fields.Count-this.skipedField > 1)
 						{
 							element = ActiveElement.BoxFieldMovable;
@@ -1137,7 +1137,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			{
 				if (this.editor.Module.IsPatch && fieldRank != -1)
 				{
-					return this.fields[fieldRank].CultureMapSource != CultureMapSource.ReferenceModule;
+					return this.fields[fieldRank].CultureMapSource == CultureMapSource.PatchModule;
 				}
 			}
 
@@ -2775,7 +2775,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					}
 
 					if (this.hilitedElement == ActiveElement.BoxFieldRemoveInterface ||
-						(this.hilitedElement == ActiveElement.BoxFieldTitle && this.fields[this.hilitedFieldRank].IsInterface) && (!this.editor.Module.IsPatch || this.fields[this.hilitedFieldRank].CultureMapSource != CultureMapSource.ReferenceModule))
+						(this.hilitedElement == ActiveElement.BoxFieldTitle && this.fields[this.hilitedFieldRank].IsInterface) && (!this.editor.Module.IsPatch || this.fields[this.hilitedFieldRank].CultureMapSource == CultureMapSource.PatchModule))
 					{
 						rect = this.GetFieldMovableBounds(this.hilitedFieldRank);
 						this.DrawRoundButton(graphics, rect.Center, AbstractObject.buttonRadius, "-i", this.hilitedElement == ActiveElement.BoxFieldRemoveInterface, true);
