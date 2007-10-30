@@ -18,11 +18,13 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.groupButton = new FrameBox(this);
 			this.groupButton.PreferredWidth = 15;
 			this.groupButton.Dock = DockStyle.Right;
+			this.groupButton.Margins = new Margins(2, 0, 0, 0);
 
 			this.resetButton = new IconButton(this.groupButton);
 			this.resetButton.IconName = Misc.Icon("Reset");
-			this.resetButton.PreferredSize = new Size(15, 15);
-			this.resetButton.Dock = DockStyle.Top;
+			//?this.resetButton.PreferredSize = new Size(15, 15);
+			//?this.resetButton.Dock = DockStyle.Top;
+			this.resetButton.Dock = DockStyle.Fill;
 			ToolTip.Default.SetToolTip(this.resetButton, "Reset");
 		}
 		
