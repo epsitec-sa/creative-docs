@@ -191,8 +191,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			this.buttonCreate.Enable = !native;
 			this.buttonDelete.Enable = !native && !patch && sel != -1;
-			this.buttonPrev.Enable   = prev && !patch;
-			this.buttonNext.Enable   = next && !patch;
+			this.buttonPrev.Enable   = prev;
+			this.buttonNext.Enable   = next;
 			this.buttonGoto.Enable   = lgoto;
 		}
 
@@ -203,8 +203,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 			for (int i=0; i<this.array.LineCount; i++)
 			{
 				Druid druid;
-				CultureMapSource sourceValue;
-				this.GetDruid(first+i, out druid, out sourceValue);
+				CultureMapSource source;
+				this.GetDruid(first+i, out druid, out source);
 
 				if (druid.IsEmpty)
 				{
@@ -235,7 +235,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 						icon = Misc.ImageFull(icon);
 					}
 
-					Color color = this.module.IsPatch ? Misc.SourceColor(sourceValue) : Color.Empty;
+					Color color = this.module.IsPatch ? Misc.SourceColor(source) : Color.Empty;
 
 					this.array.SetLineString(0, first+i, name);
 					this.array.SetLineState(0, first+i, StringList.CellState.Normal);
@@ -253,6 +253,12 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			this.array.TotalRows = this.EnumCount;
 
+			this.UpdateReset();
+		}
+
+		protected void UpdateReset()
+		{
+			//	Met à jour la couleur de fond du bouton 'reset'.
 			CultureMapSource source = this.module.AccessTypes.GetCultureMapSource(this.cultureMap);
 			bool usesOriginalData;
 			this.structuredData.GetValue(Support.Res.Fields.ResourceEnumType.Values, out usesOriginalData);
