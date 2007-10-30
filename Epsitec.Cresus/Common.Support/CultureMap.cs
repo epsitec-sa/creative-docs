@@ -20,6 +20,7 @@ namespace Epsitec.Common.Support
 			this.owner = owner;
 			this.id = id;
 			this.source = source;
+			this.originalSource = source;
 		}
 
 		/// <summary>
@@ -408,6 +409,8 @@ namespace Epsitec.Common.Support
 				
 				this.map = null;
 			}
+			
+			this.source = this.originalSource;
 		}
 
 		/// <summary>
@@ -445,5 +448,6 @@ namespace Epsitec.Common.Support
 		private bool isRefreshNeeded;
 		private bool isNameFrozen;
 		private CultureMapSource source;
+		private CultureMapSource originalSource;
 	}
 }
