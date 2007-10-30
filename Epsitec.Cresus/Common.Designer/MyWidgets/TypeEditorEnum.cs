@@ -17,6 +17,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			//	Crée la toolbar.
 			this.groupToolbar = new ResetBox(this);
+			this.groupToolbar.IsPatch = this.module.IsPatch;
 			this.groupToolbar.Dock = DockStyle.StackBegin;
 			this.groupToolbar.ResetButton.Clicked += new MessageEventHandler(this.HandleResetButtonClicked);
 

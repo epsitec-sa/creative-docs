@@ -27,6 +27,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.fieldMax.EditionAccepted += new EventHandler(this.HandleTextFieldChanged);
 
 			this.groupMultilingual = new ResetBox(this);
+			this.groupMultilingual.IsPatch = this.module.IsPatch;
 			this.groupMultilingual.Dock = DockStyle.StackBegin;
 			this.groupMultilingual.Margins = new Margins(0, 0, 0, 0);
 			this.groupMultilingual.ResetButton.Clicked += new MessageEventHandler(this.HandleResetButtonClicked);
