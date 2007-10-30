@@ -552,7 +552,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					}
 					else
 					{
-						return string.Concat("Expression du champ", "<br/>", expression);
+						return string.Concat("Expression du champ", "<br/><b>", expression, "</b>");
 					}
 			}
 
