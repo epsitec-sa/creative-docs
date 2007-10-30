@@ -1062,7 +1062,14 @@ namespace Epsitec.Common.Designer
 		public CultureMapSource GetCultureMapSource(CultureMap item)
 		{
 			//	Retourne le type de la ressource.
-			return item.Source;
+			if (item == null)
+			{
+				return CultureMapSource.Invalid;
+			}
+			else
+			{
+				return item.Source;
+			}
 		}
 
 		public bool IsNameReadOnly(int index)
