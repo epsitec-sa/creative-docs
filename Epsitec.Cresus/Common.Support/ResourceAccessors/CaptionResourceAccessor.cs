@@ -392,8 +392,11 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			/// <returns>The <c>Listener</c> instance or <c>null</c>.</returns>
 			public static T FindListener<T>(StructuredData data, Druid id) where T : Listener
 			{
-				AbstractObservableList list = data.GetValue (id) as AbstractObservableList;
+				return Listener.FindListener<T> (data.GetValue (id) as AbstractObservableList);
+			}
 
+			public static T FindListener<T>(AbstractObservableList list) where T : Listener
+			{
 				if (list != null)
 				{
 					return list.GetCollectionChangingTarget (0) as T;

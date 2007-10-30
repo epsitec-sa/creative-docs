@@ -72,6 +72,12 @@ namespace Epsitec.Common.Support.ResourceAccessors
 		/// <param name="manager">The resource manager.</param>
 		public override void Load(ResourceManager manager)
 		{
+			if (manager.BasedOnPatchModule)
+			{
+				this.referenceAccessor = new StructuredTypeResourceAccessor ();
+				this.referenceAccessor.Load (manager.GetManagerForReferenceModule ());
+			}
+
 			//	We maintain a list of structured type resource accessors associated
 			//	with the resource manager pool. This is required since we must mark
 			//	all entities as dirty if any entity is modified in the pool...
@@ -199,7 +205,8 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			{
 				Druid id = Druid.Parse (e.PropertyName);
 
-				if (id == Res.Fields.Field.Expression)
+				if ((id == Res.Fields.Field.Expression) &&
+					((CultureMapSource) container.GetValue (Res.Fields.Field.CultureMapSource) == CultureMapSource.ReferenceModule))
 				{
 					container.SetValue (Res.Fields.Field.CultureMapSource, CultureMapSource.DynamicMerge);
 				}
@@ -496,7 +503,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 				StructuredData data = sender as StructuredData;
 				Druid   newBaseType = (Druid) e.NewValue;
 				
-				this.UpdateInheritedFields (data, newBaseType);
+				this.UpdateInheritedFields (data, newBaseType, null);
 			}
 		}
 
@@ -520,7 +527,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 				StructuredData data = item.GetCultureData (Resources.DefaultTwoLetterISOLanguageName);
 				Druid    baseTypeId = StructuredTypeResourceAccessor.ToDruid (data.GetValue (Res.Fields.ResourceStructuredType.BaseType));
 				
-				this.UpdateInheritedFields (data, baseTypeId);
+				this.UpdateInheritedFields (data, baseTypeId, null);
 				
 				base.RefreshItem (item);
 			}
@@ -650,6 +657,8 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			{
 				type.FreezeInheritance ();
 
+				UpdateState state = UpdateState.None;
+
 				//	Populate the field list.
 
 				foreach (string fieldId in type.GetFieldIds ())
@@ -672,6 +681,26 @@ namespace Epsitec.Common.Support.ResourceAccessors
 
 						System.Diagnostics.Debug.Assert (oldField != null);
 						System.Diagnostics.Debug.Assert (recordFields == false);
+						System.Diagnostics.Debug.Assert (state != UpdateState.Adding);
+						System.Diagnostics.Debug.Assert (this.referenceAccessor != null);
+
+						if (state == UpdateState.None)
+						{
+							//	The fields list is still intact. We have to artificially
+							//	cause an "original" snapshot to be taken, but for this,
+							//	all inherited fields have to be included first :
+
+							Druid baseTypeId = StructuredTypeResourceAccessor.ToDruid (data.GetValue (Res.Fields.ResourceStructuredType.BaseType));
+
+							this.UpdateInheritedFields (data, baseTypeId, this.referenceAccessor);
+
+							//	Snapshot by faking a collection changing event :
+
+							FieldListener listener = Listener.FindListener<FieldListener> (fields);
+							listener.HandleCollectionChanging (fields);
+
+							state = UpdateState.Merging;
+						}
 
 						oldField.SetValue (Res.Fields.Field.Expression, newField.GetValue (Res.Fields.Field.Expression));
 						oldField.SetValue (Res.Fields.Field.CultureMapSource, CultureMapSource.DynamicMerge);
@@ -682,6 +711,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 						//	and, if needed, attach the new record to the item event handler
 						//	code :
 
+						state = UpdateState.Adding;
 						fields.Add (newField);
 
 						if (mode == DataCreationMode.Public)
@@ -780,6 +810,13 @@ namespace Epsitec.Common.Support.ResourceAccessors
 					interfaceIds.CollectionChanged  += listener.HandleCollectionChanged;
 				}
 			}
+		}
+
+		private enum UpdateState
+		{
+			None,
+			Merging,
+			Adding
 		}
 
 		/// <summary>
@@ -1017,8 +1054,9 @@ namespace Epsitec.Common.Support.ResourceAccessors
 		/// removed.
 		/// </summary>
 		/// <param name="data">The data describing the structured type.</param>
-		/// <param name="newBaseType">The Druid of the base type.</param>
-		private void UpdateInheritedFields(StructuredData data, Druid baseTypeId)
+		/// <param name="baseTypeId">The Druid of the base type.</param>
+		/// <param name="accessor">The specific accessor (or <c>null</c>).</param>
+		private void UpdateInheritedFields(StructuredData data, Druid baseTypeId, StructuredTypeResourceAccessor accessor)
 		{
 			ObservableList<StructuredData> fields = data.GetValue (Res.Fields.ResourceStructuredType.Fields) as ObservableList<StructuredData>;
 			IList<StructuredData> interfaceIds = data.GetValue (Res.Fields.ResourceStructuredType.InterfaceIds) as IList<StructuredData>;
@@ -1032,7 +1070,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 				if ((baseTypeId.IsValid) ||
 					(interfaceIds.Count > 0))
 				{
-					FieldUpdater updater = new FieldUpdater (this);
+					FieldUpdater updater = new FieldUpdater (accessor ?? this);
 
 					updater.IncludeType (baseTypeId, FieldMembership.Inherited);
 
@@ -1493,6 +1531,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 		private static DependencyProperty AccessorsProperty = DependencyProperty.RegisterAttached ("Accessors", typeof (AccessorsCollection), typeof (StructuredTypeResourceAccessor), new DependencyPropertyMetadata ().MakeNotSerializable ());
 
 		private FieldResourceAccessor fieldAccessor;
+		private StructuredTypeResourceAccessor referenceAccessor;
 		private bool postponeRefreshWhileLoading;
 	}
 }
