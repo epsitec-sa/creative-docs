@@ -792,6 +792,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 		private static void FillDataFromField(CultureMap item, StructuredData data, StructuredTypeField field, CultureMapSource source)
 		{
 			System.Diagnostics.Debug.Assert (field.DefiningTypeId.IsEmpty);
+			System.Diagnostics.Debug.Assert (field.Membership != FieldMembership.LocalOverride);
 
 			data.SetValue (Res.Fields.Field.TypeId, field.Type == null ? Druid.Empty : field.Type.CaptionId);
 			data.SetValue (Res.Fields.Field.CaptionId, field.CaptionId);

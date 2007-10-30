@@ -20,5 +20,10 @@ namespace Epsitec.Common.Types
 		/// The field is inherited from some parent or base class.
 		/// </summary>
 		Inherited=1,
+
+		/// <summary>
+		/// The field is redefined locally.
+		/// </summary>
+		LocalOverride=2
 	}
 }

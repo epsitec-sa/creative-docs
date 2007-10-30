@@ -560,9 +560,12 @@ namespace Epsitec.Common.Types
 			{
 				StructuredTypeField field = a.GetField (id);
 
-				if (field.Membership == FieldMembership.Local)
+				switch (field.Membership)
 				{
-					merge.fields.Add (new StructuredTypeField (id, field.Type, field.CaptionId, rank++, field.Relation));
+					case FieldMembership.Local:
+					case FieldMembership.LocalOverride:
+						merge.fields.Add (new StructuredTypeField (id, field.Type, field.CaptionId, rank++, field.Relation));
+						break;
 				}
 			}
 
@@ -570,22 +573,25 @@ namespace Epsitec.Common.Types
 			{
 				StructuredTypeField field = b.GetField (id);
 
-				if (field.Membership == FieldMembership.Local)
+				switch (field.Membership)
 				{
-					if (merge.fields.ContainsKey (id))
-					{
-						//	There is a collision between two fields; the second structured type (b)
-						//	wins over (a); this can be used for a user layer to override something
-						//	defined in the application layer.
+					case FieldMembership.Local:
+					case FieldMembership.LocalOverride:
+						if (merge.fields.ContainsKey (id))
+						{
+							//	There is a collision between two fields; the second structured type (b)
+							//	wins over (a); this can be used for a user layer to override something
+							//	defined in the application layer.
 
-						int fieldRank = merge.fields[id].Rank;
+							int fieldRank = merge.fields[id].Rank;
 
-						merge.fields[id] = new StructuredTypeField (id, field.Type, field.CaptionId, fieldRank, field.Relation, FieldMembership.Local, field.Source, field.Options, field.Expression);
-					}
-					else
-					{
-						merge.fields.Add (new StructuredTypeField (id, field.Type, field.CaptionId, rank++, field.Relation, FieldMembership.Local, field.Source, field.Options, field.Expression));
-					}
+							merge.fields[id] = new StructuredTypeField (id, field.Type, field.CaptionId, fieldRank, field.Relation, FieldMembership.Local, field.Source, field.Options, field.Expression);
+						}
+						else
+						{
+							merge.fields.Add (new StructuredTypeField (id, field.Type, field.CaptionId, rank++, field.Relation, FieldMembership.Local, field.Source, field.Options, field.Expression));
+						}
+						break;
 				}
 			}
 
@@ -720,6 +726,8 @@ namespace Epsitec.Common.Types
 
 		private void IncludeInheritedFields(Druid typeId, FieldMembership membership)
 		{
+			System.Diagnostics.Debug.Assert (membership != FieldMembership.LocalOverride);
+
 			StructuredType type = this.GetType (typeId, false);
 
 			if (type != null)
@@ -733,21 +741,24 @@ namespace Epsitec.Common.Types
 							StructuredTypeField local = this.fields[id];
 							StructuredTypeField model = type.Fields[id];
 
+							FieldMembership localMembership;
 							FieldSource source;
 							string expression;
 
 							if (local.Expression != null)
 							{
-								source     = local.Source;
-								expression = local.Expression;
+								source          = local.Source;
+								expression      = local.Expression;
+								localMembership = FieldMembership.LocalOverride;
 							}
 							else
 							{
-								source     = model.Source;
-								expression = model.Expression;
+								source          = model.Source;
+								expression      = model.Expression;
+								localMembership = FieldMembership.Local;
 							}
-							
-							StructuredTypeField clone = new StructuredTypeField (model.Id, model.Type, model.CaptionId, model.Rank, model.Relation, membership, source, model.Options, expression);
+
+							StructuredTypeField clone = new StructuredTypeField (model.Id, model.Type, model.CaptionId, model.Rank, model.Relation, localMembership, source, model.Options, expression);
 
 							clone.DefineDefiningTypeId (typeId);
 							

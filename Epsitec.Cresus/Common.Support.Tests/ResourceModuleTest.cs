@@ -94,7 +94,7 @@ namespace Epsitec.Common.Support
 			pool.AddModuleRootPath ("%epsitec%", @"S:\Epsitec.Cresus\Common.Support.Tests");
 			pool.ScanForModules ("%epsitec%");
 
-			Assert.AreEqual (9, Types.Collection.Count (pool.Modules));
+			Assert.AreEqual (10, Types.Collection.Count (pool.Modules));
 
 			foreach (ResourceModuleInfo info in pool.Modules)
 			{
@@ -110,8 +110,8 @@ namespace Epsitec.Common.Support
 			pool.AddModuleRootPath ("%epsitec%", @"S:\Epsitec.Cresus\Common.Support.Tests");
 			pool.ScanForModules ("%epsitec%");
 
-			Assert.AreEqual (9, Types.Collection.Count (pool.Modules));
-			Assert.AreEqual (2, Types.Collection.Count (pool.FindPatchModuleInfos ()));
+			Assert.AreEqual (10, Types.Collection.Count (pool.Modules));
+			Assert.AreEqual (3, Types.Collection.Count (pool.FindPatchModuleInfos ()));
 
 			System.Console.Out.WriteLine ("Patch modules: ");
 
