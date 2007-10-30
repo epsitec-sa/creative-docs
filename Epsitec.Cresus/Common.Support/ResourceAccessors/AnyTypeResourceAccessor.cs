@@ -1210,11 +1210,52 @@ namespace Epsitec.Common.Support.ResourceAccessors
 
 			public override void HandleCollectionChanging(object sender)
 			{
+				if (this.SaveField (Res.Fields.ResourceEnumType.Values))
+				{
+					this.originalValues = new List<StructuredData> ();
+
+					IList<StructuredData> values = this.Data.GetValue (Res.Fields.ResourceEnumType.Values) as IList<StructuredData>;
+
+					foreach (StructuredData data in values)
+					{
+						this.originalValues.Add (data.GetShallowCopy ());
+					}
+				}
 			}
 
 			public override void ResetToOriginalValue()
 			{
+				if (this.originalValues != null)
+				{
+					this.RestoreField (Res.Fields.ResourceEnumType.Values);
+
+					ObservableList<StructuredData> values = this.Data.GetValue (Res.Fields.ResourceEnumType.Values) as ObservableList<StructuredData>;
+
+					using (values.DisableNotifications ())
+					{
+						int index = values.Count - 1;
+
+						while (index >= 0)
+						{
+							StructuredData data = values[index];
+							values.RemoveAt (index--);
+							this.Item.NotifyDataRemoved (data);
+						}
+
+						System.Diagnostics.Debug.Assert (values.Count == 0);
+
+						foreach (StructuredData data in this.originalValues)
+						{
+							StructuredData copy = data.GetShallowCopy ();
+							copy.PromoteToOriginal ();
+							values.Add (copy);
+							this.Item.NotifyDataAdded (copy);
+						}
+					}
+				}
 			}
+			
+			List<StructuredData> originalValues;
 		}
 
 		/// <summary>
