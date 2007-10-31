@@ -70,7 +70,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				{
 					this.titleString = value;
 
-					this.title.Text = string.Concat("<b>", this.titleString, "</b>");
+					this.title.Text = Misc.Bold(this.titleString);
 				}
 			}
 		}
@@ -94,7 +94,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					}
 					else
 					{
-						this.subtitle.Text = string.Concat("<i>", this.subtitleString, "</i>");
+						this.subtitle.Text = Misc.Italic(this.subtitleString);
 					}
 				}
 			}
@@ -475,15 +475,15 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					{
 						if (this.isRoot)
 						{
-							return "Déplace l'entité";
+							return Res.Strings.Entities.Action.BoxHeader;
 						}
 						else if (this.editor.CurrentModifyMode == Editor.ModifyMode.Locked)
 						{
-							return "Aller sur la définition de l'entité";
+							return Res.Strings.Entities.Action.BoxHeader1;
 						}
 						else
 						{
-							return "Déplace l'entité<br/>Ctrl+clic: aller sur la définition de l'entité";
+							return Res.Strings.Entities.Action.BoxHeader2;
 						}
 					}
 
@@ -494,41 +494,41 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					}
 					else
 					{
-						return "Ouvre une entité source à choix";
+						return Res.Strings.Entities.Action.BoxSources1;
 					}
 
 				case AbstractObject.ActiveElement.BoxExtend:
 					if (this.isExtended)
 					{
-						return "Compacte l'entité";
+						return Res.Strings.Entities.Action.BoxExtend1;
 					}
 					else
 					{
-						return "Etend l'entité";
+						return Res.Strings.Entities.Action.BoxExtend2;
 					}
 
 				case AbstractObject.ActiveElement.BoxComment:
 					if (this.comment == null)
 					{
-						return "Montre le commentaire associé";
+						return Res.Strings.Entities.Action.BoxComment1;
 					}
 					else if (!this.comment.IsVisible)
 					{
-						return string.Format("Montre le commentaire associé<br/><b>{0}</b>", this.comment.Text);
+						return string.Format(Res.Strings.Entities.Action.BoxComment2, this.comment.Text);
 					}
 					else
 					{
-						return "Cache le commentaire associé";
+						return Res.Strings.Entities.Action.BoxComment3;
 					}
 
 				case AbstractObject.ActiveElement.BoxInfo:
 					if (this.info == null || !this.info.IsVisible)
 					{
-						return string.Format("Montre les informations associées<br/><b>{0}</b>", this.GetInformations(true));
+						return string.Format(Res.Strings.Entities.Action.BoxInfo1, this.GetInformations(true));
 					}
 					else
 					{
-						return "Cache les informations associées";
+						return Res.Strings.Entities.Action.BoxInfo2;
 					}
 
 				case AbstractObject.ActiveElement.BoxClose:
@@ -538,7 +538,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					}
 					else
 					{
-						return "Ferme l'entité";
+						return Res.Strings.Entities.Action.BoxClose;
 					}
 
 				case AbstractObject.ActiveElement.BoxFieldGroup:
@@ -548,11 +548,11 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					string expression = this.fields[fieldRank].Expression;
 					if (string.IsNullOrEmpty(expression))
 					{
-						return "Expression du champ";
+						return Res.Strings.Entities.Action.BoxFieldExpression;
 					}
 					else
 					{
-						return string.Concat("Expression du champ", "<br/><b>", expression, "</b>");
+						return string.Format(Res.Strings.Entities.Action.BoxFieldExpression1, expression);
 					}
 			}
 
@@ -1441,7 +1441,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		protected void RemoveField(int rank)
 		{
 			//	Supprime un champ.
-			string question = string.Format("Voulez-vous supprimer le champ <b>{0}</b> ?", this.fields[rank].FieldName);
+			string question = string.Format(Res.Strings.Entities.Question.RemoveField.Base, this.fields[rank].FieldName);
 			if (this.editor.Module.DesignerApplication.DialogQuestion(question) == Epsitec.Common.Dialogs.DialogResult.Yes)
 			{
 				Druid fieldId = this.fields[rank].CaptionId;
@@ -1556,7 +1556,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		protected void RemoveInterface(int rank)
 		{
 			//	Supprime une interface de l'entité.
-			string question = string.Format("Voulez-vous supprimer l'interface <b>{0}</b> ?", this.fields[rank].FieldName);
+			string question = string.Format(Res.Strings.Entities.Question.RemoveInterface.Base, this.fields[rank].FieldName);
 			if (this.editor.Module.DesignerApplication.DialogQuestion(question) == Epsitec.Common.Dialogs.DialogResult.Yes)
 			{
 				int count = this.GroupLineCount(rank);
@@ -2027,17 +2027,17 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 			if (listInherited.Count == 0)
 			{
-				builder.Append(Misc.Italic("Aucun héritage"));
+				builder.Append(Misc.Italic(Res.Strings.Entities.Info.InheritFrom));
 			}
 			else
 			{
-				builder.Append("Hérite de ");
+				builder.Append(Res.Strings.Entities.Info.InheritFrom);
 
 				for (int i=0; i<listInherited.Count; i++)
 				{
 					if (i != 0 && i == listInherited.Count-1)
 					{
-						builder.Append(" et ");
+						builder.Append(Res.Strings.Entities.Info.InheritAnd);
 					}
 					else if (i > 0)
 					{
@@ -2057,17 +2057,17 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 			if (listInterface.Count == 0)
 			{
-				builder.Append(Misc.Italic("Aucune interface"));
+				builder.Append(Misc.Italic(Res.Strings.Entities.Info.InterfaceNull));
 			}
 			else
 			{
-				builder.Append("Interfacé avec ");
+				builder.Append(Res.Strings.Entities.Info.InterfaceFrom);
 
 				for (int i=0; i<listInterface.Count; i++)
 				{
 					if (i != 0 && i == listInterface.Count-1)
 					{
-						builder.Append(" et ");
+						builder.Append(Res.Strings.Entities.Info.InterfaceAnd);
 					}
 					else if (i > 0)
 					{
@@ -2477,21 +2477,21 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			//	Dessine le bouton des commentaires.
 			if (this.hilitedElement == ActiveElement.BoxComment)
 			{
-				this.DrawRoundButton(graphics, this.PositionCommentButton, AbstractObject.buttonRadius, "C", true, false);
+				this.DrawRoundButton(graphics, this.PositionCommentButton, AbstractObject.buttonRadius, Res.Strings.Entities.Button.BoxComment, true, false);
 			}
 			else if (this.IsHeaderHilite && !this.isDragging)
 			{
-				this.DrawRoundButton(graphics, this.PositionCommentButton, AbstractObject.buttonRadius, "C", false, false);
+				this.DrawRoundButton(graphics, this.PositionCommentButton, AbstractObject.buttonRadius, Res.Strings.Entities.Button.BoxComment, false, false);
 			}
 
 			//	Dessine le bouton des informations.
 			if (this.hilitedElement == ActiveElement.BoxInfo)
 			{
-				this.DrawRoundButton(graphics, this.PositionInfoButton, AbstractObject.buttonRadius, "i", true, false);
+				this.DrawRoundButton(graphics, this.PositionInfoButton, AbstractObject.buttonRadius, Res.Strings.Entities.Button.BoxInfo, true, false);
 			}
 			else if (this.IsHeaderHilite && !this.isDragging)
 			{
-				this.DrawRoundButton(graphics, this.PositionInfoButton, AbstractObject.buttonRadius, "i", false, false);
+				this.DrawRoundButton(graphics, this.PositionInfoButton, AbstractObject.buttonRadius, Res.Strings.Entities.Button.BoxInfo, false, false);
 			}
 
 			//	Dessine les noms des champs.
@@ -2614,7 +2614,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 						{
 							rect = this.GetFieldExpressionBounds(i);
 							rect.Right -= 2;
-							graphics.AddText(rect.Left, rect.Bottom+1, rect.Width, rect.Height, "e", Font.DefaultFont, 14, ContentAlignment.MiddleCenter);
+							graphics.AddText(rect.Left, rect.Bottom+1, rect.Width, rect.Height, Res.Strings.Entities.Icon.Expression, Font.DefaultFont, 14, ContentAlignment.MiddleCenter);
 							graphics.RenderSolid(colorExpr);
 						}
 
@@ -2773,14 +2773,14 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					(this.hilitedElement == ActiveElement.BoxFieldTitle && this.fields[this.hilitedFieldRank].IsInterface))
 					{
 						rect = this.GetFieldInterfaceBounds();
-						this.DrawRoundButton(graphics, rect.Center, AbstractObject.buttonRadius, "+i", this.hilitedElement == ActiveElement.BoxFieldAddInterface, true);
+						this.DrawRoundButton(graphics, rect.Center, AbstractObject.buttonRadius, Res.Strings.Entities.Button.BoxFieldAddInterface, this.hilitedElement == ActiveElement.BoxFieldAddInterface, true);
 					}
 
 					if (this.hilitedElement == ActiveElement.BoxFieldRemoveInterface ||
 						(this.hilitedElement == ActiveElement.BoxFieldTitle && this.fields[this.hilitedFieldRank].IsInterface) && (!this.editor.Module.IsPatch || this.fields[this.hilitedFieldRank].CultureMapSource == CultureMapSource.PatchModule))
 					{
 						rect = this.GetFieldMovableBounds(this.hilitedFieldRank);
-						this.DrawRoundButton(graphics, rect.Center, AbstractObject.buttonRadius, "-i", this.hilitedElement == ActiveElement.BoxFieldRemoveInterface, true);
+						this.DrawRoundButton(graphics, rect.Center, AbstractObject.buttonRadius, Res.Strings.Entities.Button.BoxFieldRemoveInterface, this.hilitedElement == ActiveElement.BoxFieldRemoveInterface, true);
 					}
 
 					//	Si la souris est dans la barre de titre, montre les boutons pour les interfaces.
@@ -2793,12 +2793,12 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 								(!this.editor.Module.IsPatch || this.fields[i].CultureMapSource != CultureMapSource.ReferenceModule))
 							{
 								rect = this.GetFieldMovableBounds(i);
-								this.DrawRoundButton(graphics, rect.Center, AbstractObject.buttonRadius, "-i", false, true);
+								this.DrawRoundButton(graphics, rect.Center, AbstractObject.buttonRadius, Res.Strings.Entities.Button.BoxFieldRemoveInterface, false, true);
 							}
 						}
 
 						rect = this.GetFieldInterfaceBounds();
-						this.DrawRoundButton(graphics, rect.Center, AbstractObject.buttonRadius, "+i", false, true);
+						this.DrawRoundButton(graphics, rect.Center, AbstractObject.buttonRadius, Res.Strings.Entities.Button.BoxFieldAddInterface, false, true);
 					}
 				}
 			}
@@ -2940,7 +2940,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			Rectangle gr = new Rectangle(this.PositionSourcesButton.X-AbstractObject.buttonRadius, this.PositionSourcesButton.Y-AbstractObject.buttonRadius, AbstractObject.buttonRadius*2, AbstractObject.buttonRadius*2);
 			adorner.PaintGlyph(graphics, gr, WidgetPaintState.Enabled, this.GetColor(1), GlyphShape.TriangleDown, PaintTextStyle.Button);
 			
-			graphics.AddText(rect.Left+AbstractObject.buttonRadius*2+5, rect.Bottom+1, rect.Width-(AbstractObject.buttonRadius*2+10), rect.Height, "Entités sources", Font.GetFont(Font.DefaultFontFamily, "Bold"), 14, ContentAlignment.MiddleLeft);
+			graphics.AddText(rect.Left+AbstractObject.buttonRadius*2+5, rect.Bottom+1, rect.Width-(AbstractObject.buttonRadius*2+10), rect.Height, Res.Strings.Entities.Menu.Sources.Title, Font.GetFont(Font.DefaultFontFamily, "Bold"), 14, ContentAlignment.MiddleLeft);
 			graphics.RenderSolid(this.GetColor(1));
 			
 			rect = box;
@@ -3177,12 +3177,12 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 			if (type == StructuredTypeClass.Interface)
 			{
-				return string.Format("Provient de l'interface <b>{0}</b>", name);
+				return string.Format(Res.Strings.Entities.Action.BoxGroup.Interface, name);
 			}
 
 			if (type == StructuredTypeClass.Entity)
 			{
-				return string.Format("Hérité de l'entité <b>{0}</b>", name);
+				return string.Format(Res.Strings.Entities.Action.BoxGroup.Inherit, name);
 			}
 
 			return null;  // pas de tooltip

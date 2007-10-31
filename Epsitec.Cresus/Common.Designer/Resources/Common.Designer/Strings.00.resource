@@ -403,4 +403,31 @@
   <data name="Entities.Action.InfoMove" id="2C2">Déplace les informations</data>
   <data name="Entities.Action.InfoWidth" id="2D2">Modifie la largeur des informations</data>
   <data name="Entities.Action.InfoClose" id="2E2">Cache les informations</data>
+  <data name="Entities.Action.BoxHeader1" id="2F2">Aller sur la définition de l&amp;apos;entité</data>
+  <data name="Entities.Action.BoxHeader2" id="2G2">Déplace l&amp;apos;entité&lt;br/&gt;Ctrl+clic: aller sur la définition de l&amp;apos;entité</data>
+  <data name="Entities.Action.BoxSources1" id="2H2">Ouvre une entité source à choix</data>
+  <data name="Entities.Action.BoxExtend1" id="2I2">Compacte l&amp;apos;entité</data>
+  <data name="Entities.Action.BoxExtend2" id="2J2">Etend l&amp;apos;entité</data>
+  <data name="Entities.Action.BoxComment1" id="2K2">Montre le commentaire associé</data>
+  <data name="Entities.Action.BoxComment2" id="2L2">Montre le commentaire associé&lt;br/&gt;&lt;b&gt;{0}&lt;/b&gt;</data>
+  <data name="Entities.Action.BoxComment3" id="2M2">Cache le commentaire associé</data>
+  <data name="Entities.Action.BoxInfo1" id="2N2">Montre les informations associées&lt;br/&gt;&lt;b&gt;{0}&lt;/b&gt;</data>
+  <data name="Entities.Action.BoxInfo2" id="2O2">Cache les informations associées</data>
+  <data name="Entities.Action.BoxFieldExpression1" id="2P2">Expression du champ&lt;br/&gt;&lt;b&gt;{0}&lt;/b&gt;</data>
+  <data name="Entities.Question.RemoveField.Base" id="2Q2">Voulez-vous supprimer le champ &lt;b&gt;{0}&lt;/b&gt; ?</data>
+  <data name="Entities.Question.RemoveInterface.Base" id="2R2">Voulez-vous supprimer l&amp;apos;interface &lt;b&gt;{0}&lt;/b&gt; ?</data>
+  <data name="Entities.Info.InheritNull" id="2S2">Aucun héritage</data>
+  <data name="Entities.Info.InheritFrom" id="2T2">Hérite de </data>
+  <data name="Entities.Info.InheritAnd" id="2U2"> et </data>
+  <data name="Entities.Info.InterfaceAnd" id="2V2"> et </data>
+  <data name="Entities.Info.InterfaceFrom" id="203">Interfacé avec </data>
+  <data name="Entities.Info.InterfaceNull" id="213">Aucune interface</data>
+  <data name="Entities.Button.BoxComment" id="223">C</data>
+  <data name="Entities.Button.BoxInfo" id="233">i</data>
+  <data name="Entities.Icon.Expression" id="243">e</data>
+  <data name="Entities.Button.BoxFieldAddInterface" id="253">+i</data>
+  <data name="Entities.Button.BoxFieldRemoveInterface" id="263">-i</data>
+  <data name="Entities.Menu.Sources.Title" id="273">Entités sources</data>
+  <data name="Entities.Action.BoxGroup.Interface" id="283">Provient de l&amp;apos;interface &lt;b&gt;{0}&lt;/b&gt;</data>
+  <data name="Entities.Action.BoxGroup.Inherit" id="293">Hérité de l&amp;apos;entité &lt;b&gt;{0}&lt;/b&gt;</data>
 </bundle>
