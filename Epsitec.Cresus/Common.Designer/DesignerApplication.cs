@@ -366,7 +366,7 @@ namespace Epsitec.Common.Designer
 		public void UpdateInfoCurrentModule()
 		{
 			StatusField field = this.info.Items["InfoCurrentModule"] as StatusField;
-			field.Text = this.IsReadonly ? "<b>Mode bloqué</b>" : "Mode débloqué";
+			field.Text = this.IsReadonly ? Res.Strings.Application.Mode.Lock : Res.Strings.Application.Mode.Unlock;
 		}
 
 		public void UpdateInfoAccess()

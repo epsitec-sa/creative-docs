@@ -359,6 +359,11 @@ namespace Epsitec.Common.Designer
 			public static class Application
 			{
 				public static string Title { get { return global::Epsitec.Common.Designer.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (0)); } }
+				public static class Mode
+				{
+					public static string Lock { get { return global::Epsitec.Common.Designer.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (33554563)); } }
+					public static string Unlock { get { return global::Epsitec.Common.Designer.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (33554564)); } }
+				}
 			}
 			
 			public static class BundleType
@@ -849,6 +854,7 @@ namespace Epsitec.Common.Designer
 			{
 				public static class Captions
 				{
+					public static string Brief { get { return global::Epsitec.Common.Designer.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (33554560)); } }
 					public static class About
 					{
 						public static string Title { get { return global::Epsitec.Common.Designer.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (171)); } }
@@ -868,6 +874,12 @@ namespace Epsitec.Common.Designer
 					public static class Labels
 					{
 						public static string Title { get { return global::Epsitec.Common.Designer.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (170)); } }
+					}
+					
+					public static class Summary
+					{
+						public static string Empty { get { return global::Epsitec.Common.Designer.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (33554562)); } }
+						public static string Undefined { get { return global::Epsitec.Common.Designer.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (33554561)); } }
 					}
 				}
 				

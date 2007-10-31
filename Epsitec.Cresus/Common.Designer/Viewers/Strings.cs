@@ -17,7 +17,7 @@ namespace Epsitec.Common.Designer.Viewers
 			//	Résumé des captions.
 			MyWidgets.StackedPanel leftContainer, rightContainer;
 
-			this.buttonMainExtend = this.CreateBand(out leftContainer, out rightContainer, "Résumé", BandMode.MainSummary, GlyphShape.ArrowDown, false, 0.3);
+			this.buttonMainExtend = this.CreateBand(out leftContainer, out rightContainer, Res.Strings.Viewers.Captions.Brief, BandMode.MainSummary, GlyphShape.ArrowDown, false, 0.3);
 			this.buttonMainExtend.Clicked += new MessageEventHandler(this.HandleButtonCompactOrExtendClicked);
 
 			this.primarySummary = new StaticText(leftContainer.Container);

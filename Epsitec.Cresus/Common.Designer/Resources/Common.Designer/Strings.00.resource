@@ -452,4 +452,9 @@
   <data name="Viewers.Source.Short.Merge" id="2T3">M</data>
   <data name="Viewers.Identity.God" id="2U3">Dieu</data>
   <data name="Viewers.Identity.Developer" id="2V3">Dev {0}</data>
+  <data name="Viewers.Captions.Brief" id="204">Résumé</data>
+  <data name="Viewers.Captions.Summary.Undefined" id="214">(indéfini)</data>
+  <data name="Viewers.Captions.Summary.Empty" id="224">(vide)</data>
+  <data name="Application.Mode.Lock" id="234">&lt;b&gt;Mode bloqué&lt;/b&gt;</data>
+  <data name="Application.Mode.Unlock" id="244">Mode débloqué</data>
 </bundle>

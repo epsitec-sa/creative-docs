@@ -17,7 +17,7 @@ namespace Epsitec.Common.Designer.Viewers
 			//	Résumé des captions.
 			MyWidgets.StackedPanel leftContainer, rightContainer;
 
-			this.buttonMainExtend = this.CreateBand(out leftContainer, out rightContainer, "Résumé", BandMode.MainSummary, GlyphShape.ArrowDown, false, 0.3);
+			this.buttonMainExtend = this.CreateBand(out leftContainer, out rightContainer, Res.Strings.Viewers.Captions.Brief, BandMode.MainSummary, GlyphShape.ArrowDown, false, 0.3);
 			this.buttonMainExtend.Clicked += new MessageEventHandler(this.HandleButtonCompactOrExtendClicked);
 
 			this.primarySummary = new StaticText(leftContainer.Container);
@@ -316,14 +316,14 @@ namespace Epsitec.Common.Designer.Viewers
 
 			if (twoLettersCulture == null)
 			{
-				buffer.Append(Misc.Italic("(indéfini)"));
+				buffer.Append(Misc.Italic(Res.Strings.Viewers.Captions.Summary.Undefined));
 			}
 			else
 			{
 				CultureMap item = this.access.CollectionView.CurrentItem as CultureMap;
 				if (item == null)
 				{
-					buffer.Append(Misc.Italic("(vide)"));
+					buffer.Append(Misc.Italic(Res.Strings.Viewers.Captions.Summary.Empty));
 				}
 				else
 				{
@@ -334,7 +334,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 					if ((list == null || list.Count == 0) && string.IsNullOrEmpty(desc))
 					{
-						buffer.Append(Misc.Italic("(indéfini)"));
+						buffer.Append(Misc.Italic(Res.Strings.Viewers.Captions.Summary.Undefined));
 					}
 					else
 					{

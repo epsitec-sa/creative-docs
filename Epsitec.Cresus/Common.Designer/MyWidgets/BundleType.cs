@@ -98,7 +98,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.buttonFields.Clicked += new MessageEventHandler(this.HandleButtonClicked);
 
 			this.buttonEntities = new IconButtonMark(this);
-			this.buttonEntities.Text = "Entités"; // ResourceAccess.TypeDisplayName(ResourceAccess.Type.Entities);
+			this.buttonEntities.Text = ResourceAccess.TypeDisplayName(ResourceAccess.Type.Entities);
 			this.buttonEntities.Name = BundleType.Convert(ResourceAccess.Type.Entities);
 			this.buttonEntities.ButtonStyle = ButtonStyle.ActivableIcon;
 			this.buttonEntities.SiteMark = ButtonMarkDisposition.Below;

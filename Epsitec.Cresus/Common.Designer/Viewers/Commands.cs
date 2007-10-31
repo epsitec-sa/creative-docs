@@ -134,7 +134,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.primaryGroup.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 
 			//	Résumé des paramètres.
-			this.buttonSuiteExtend = this.CreateBand(out leftContainer, out rightContainer, "Résumé", BandMode.SuiteSummary, GlyphShape.ArrowDown, true, 0.1);
+			this.buttonSuiteExtend = this.CreateBand(out leftContainer, out rightContainer, Res.Strings.Viewers.Captions.Brief, BandMode.SuiteSummary, GlyphShape.ArrowDown, true, 0.1);
 			this.buttonSuiteExtend.Clicked += new MessageEventHandler(this.HandleButtonCompactOrExtendClicked);
 
 			this.primarySuiteSummary = new StaticText(leftContainer.Container);
