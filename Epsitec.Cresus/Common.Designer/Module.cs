@@ -282,6 +282,45 @@ namespace Epsitec.Common.Designer
 		}
 
 
+		public ResourceAccess.Type GetCaptionType(Druid id)
+		{
+			//	Cherche à quel type 'caption' appartient un Druid.
+			//	Il ne peut pas s'agir d'un type ResourceAccess.Type.Strings, car les Druids 'string' et 'caption'
+			//	peuvent être identiques !
+			if (this.accessCaptions.Accessor.Collection[id] != null)
+			{
+				return ResourceAccess.Type.Captions;
+			}
+
+			if (this.accessCommands.Accessor.Collection[id] != null)
+			{
+				return ResourceAccess.Type.Commands;
+			}
+
+			if (this.accessTypes.Accessor.Collection[id] != null)
+			{
+				return ResourceAccess.Type.Types;
+			}
+
+			if (this.accessValues.Accessor.Collection[id] != null)
+			{
+				return ResourceAccess.Type.Values;
+			}
+
+			if (this.accessFields.Accessor.Collection[id] != null)
+			{
+				return ResourceAccess.Type.Fields;
+			}
+
+			if (this.accessEntities.Accessor.Collection[id] != null)
+			{
+				return ResourceAccess.Type.Entities;
+			}
+
+			return ResourceAccess.Type.Unknow;
+		}
+
+
 		public void Load()
 		{
 			//	Charge toutes les ressources.

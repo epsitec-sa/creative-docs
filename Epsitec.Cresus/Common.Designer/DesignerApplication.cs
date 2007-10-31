@@ -1046,6 +1046,64 @@ namespace Epsitec.Common.Designer
 		}
 
 
+		#region Navigate
+		public bool NavigateToString(Druid stringId)
+		{
+			//	Sélectionne la string correspondante dans la liste du bon module.
+			Module module = this.SearchModule(stringId);
+			if (module == null)
+			{
+				return false;
+			}
+
+			Viewers.Locator locator = new Viewers.Locator(module.ModuleId.Name, ResourceAccess.Type.Strings, -1, stringId, null, -1);
+			this.LocatorGoto(locator);
+			return true;
+		}
+
+		public bool NavigateToCaption(Druid captionId)
+		{
+			//	Sélectionne la ressource correspondante dans la liste du bon module.
+			Module module = this.SearchModule(captionId);
+			if (module == null)
+			{
+				return false;
+			}
+
+			ResourceAccess.Type type = module.GetCaptionType(captionId);
+			if (type == ResourceAccess.Type.Unknow)
+			{
+				return false;
+			}
+
+			Viewers.Locator locator = new Viewers.Locator(module.ModuleId.Name, type, -1, captionId, null, -1);
+			this.LocatorGoto(locator);
+			return true;
+		}
+
+		public bool NavigateToEntityField(Druid entityId, Druid fieldId)
+		{
+			//	Sélectionne l'entité correspondante dans la liste du bon module puis édite l'expression d'un champ.
+			Module module = this.SearchModule(entityId);
+			if (module == null)
+			{
+				return false;
+			}
+
+			Viewers.Locator locator = new Viewers.Locator(module.ModuleId.Name, ResourceAccess.Type.Entities, -1, entityId, null, -1);
+			this.LocatorGoto(locator);
+
+			Viewers.Entities viewer = this.CurrentModuleInfo.Module.Modifier.ActiveViewer as Viewers.Entities;
+			if (viewer == null)
+			{
+				return false;
+			}
+
+			return viewer.EditExpression(fieldId);
+		}
+		#endregion
+
+
 		#region Locator
 		protected void LocatorInit()
 		{

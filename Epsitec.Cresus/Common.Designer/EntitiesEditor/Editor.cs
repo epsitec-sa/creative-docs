@@ -110,6 +110,19 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		}
 
 
+		public bool EditExpression(Druid fieldId)
+		{
+			//	Edite l'expression d'un champ.
+			ObjectBox root = this.RootBox;
+			if (root == null)
+			{
+				return false;
+			}
+
+			return root.EditExpression(fieldId);
+		}
+
+
 		public void AddBox(ObjectBox box)
 		{
 			//	Ajoute une nouvelle boîte dans l'éditeur. Elle est positionnée toujours au même endroit,

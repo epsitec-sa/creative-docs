@@ -1593,6 +1593,19 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			this.hilitedElement = ActiveElement.None;
 		}
 
+		public bool EditExpression(Druid fieldId)
+		{
+			//	Edite l'expresion associée à un champ.
+			Field field = this.AdjustAfterReadSearchField(fieldId);
+			if (field == null)
+			{
+				return false;
+			}
+
+			this.EditExpression(field.Index);
+			return true;
+		}
+
 		protected void EditExpression(int rank)
 		{
 			//	Edite l'expresion associée à un champ.
