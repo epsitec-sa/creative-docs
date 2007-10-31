@@ -126,15 +126,15 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				case AbstractObject.ActiveElement.ConnectionComment:
 					if (this.comment == null)
 					{
-						return "Montre le commentaire associé";
+						return Res.Strings.Entities.Action.ConnectionComment3;
 					}
 					else if (!this.comment.IsVisible)
 					{
-						return string.Format("Montre le commentaire associé<br/><b>{0}</b>", this.comment.Text);
+						return string.Format(Res.Strings.Entities.Action.ConnectionComment2, this.comment.Text);
 					}
 					else
 					{
-						return "Cache le commentaire associé";
+						return Res.Strings.Entities.Action.ConnectionComment1;
 					}
 			}
 
@@ -564,11 +564,11 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			{
 				if (this.hilitedElement == ActiveElement.ConnectionComment)
 				{
-					this.DrawRoundButton(graphics, p, AbstractObject.buttonRadius, "C", true, false);
+					this.DrawRoundButton(graphics, p, AbstractObject.buttonRadius, Res.Strings.Entities.Button.BoxComment, true, false);
 				}
 				if (this.hilitedElement == ActiveElement.ConnectionHilited)
 				{
-					this.DrawRoundButton(graphics, p, AbstractObject.buttonRadius, "C", false, false);
+					this.DrawRoundButton(graphics, p, AbstractObject.buttonRadius, Res.Strings.Entities.Button.BoxComment, false, false);
 				}
 			}
 
@@ -610,11 +610,11 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					{
 						if (this.hilitedElement == ActiveElement.ConnectionChangeRelation)
 						{
-							this.DrawRoundButton(graphics, p, AbstractObject.buttonRadius, "R", true, false);
+							this.DrawRoundButton(graphics, p, AbstractObject.buttonRadius, Res.Strings.Entities.Button.ChangeRelation, true, false);
 						}
 						else
 						{
-							this.DrawRoundButton(graphics, p, AbstractObject.buttonRadius, "R", false, false);
+							this.DrawRoundButton(graphics, p, AbstractObject.buttonRadius, Res.Strings.Entities.Button.ChangeRelation, false, false);
 						}
 					}
 				}

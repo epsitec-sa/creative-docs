@@ -36,7 +36,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			this.textLayoutTitle.DefaultFontSize = 14;
 			this.textLayoutTitle.BreakMode = TextBreakMode.SingleLine | TextBreakMode.Ellipsis;
 			this.textLayoutTitle.Alignment = ContentAlignment.MiddleCenter;
-			this.textLayoutTitle.Text = "<b>Informations</b>";
+			this.textLayoutTitle.Text = Res.Strings.Entities.Info.Title;
 
 			this.textLayoutInfo = new TextLayout();
 			this.textLayoutInfo.DefaultFontSize = 10;

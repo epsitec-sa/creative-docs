@@ -430,4 +430,11 @@
   <data name="Entities.Menu.Sources.Title" id="273">Entités sources</data>
   <data name="Entities.Action.BoxGroup.Interface" id="283">Provient de l&amp;apos;interface &lt;b&gt;{0}&lt;/b&gt;</data>
   <data name="Entities.Action.BoxGroup.Inherit" id="293">Hérité de l&amp;apos;entité &lt;b&gt;{0}&lt;/b&gt;</data>
+  <data name="Entities.Comment.Title" id="2A3">&lt;b&gt;Commentaire&lt;/b&gt;</data>
+  <data name="Entities.Comment.DefaultText" id="2B3">Commentaire libre, que vous pouvez modifier à volonté.</data>
+  <data name="Entities.Button.ChangeRelation" id="2C3">R</data>
+  <data name="Entities.Action.ConnectionComment1" id="2D3">Cache le commentaire associé</data>
+  <data name="Entities.Action.ConnectionComment2" id="2E3">Cache le commentaire associé&lt;br/&gt;&lt;b&gt;{0}&lt;/b&gt;</data>
+  <data name="Entities.Action.ConnectionComment3" id="2F3">Montre le commentaire associé</data>
+  <data name="Entities.Info.Title" id="2G3">&lt;b&gt;Informations&lt;/b&gt;</data>
 </bundle>

@@ -36,12 +36,12 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			this.textLayoutTitle.DefaultFontSize = 14;
 			this.textLayoutTitle.BreakMode = TextBreakMode.SingleLine | TextBreakMode.Ellipsis;
 			this.textLayoutTitle.Alignment = ContentAlignment.MiddleCenter;
-			this.textLayoutTitle.Text = "<b>Commentaire</b>";
+			this.textLayoutTitle.Text = Res.Strings.Entities.Comment.Title;
 
 			this.textLayoutComment = new TextLayout();
 			this.textLayoutComment.DefaultFontSize = 10;
 			this.textLayoutComment.BreakMode = TextBreakMode.Hyphenate | TextBreakMode.Split;
-			this.textLayoutComment.Text = "Commentaire libre, que vous pouvez modifier à volonté.";
+			this.textLayoutComment.Text = Res.Strings.Entities.Comment.DefaultText;
 		}
 
 
@@ -535,11 +535,11 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			{
 				if (this.hilitedElement == ActiveElement.CommentAttachToConnection)
 				{
-					this.DrawRoundButton(graphics, p, AbstractObject.buttonRadius, "C", true, false);
+					this.DrawRoundButton(graphics, p, AbstractObject.buttonRadius, Res.Strings.Entities.Button.BoxComment, true, false);
 				}
 				else if (this.IsHeaderHilite && !this.isDraggingMove && !this.isDraggingWidth && !this.isDraggingAttach)
 				{
-					this.DrawRoundButton(graphics, p, AbstractObject.buttonRadius, "C", false, false);
+					this.DrawRoundButton(graphics, p, AbstractObject.buttonRadius, Res.Strings.Entities.Button.BoxComment, false, false);
 				}
 			}
 		}

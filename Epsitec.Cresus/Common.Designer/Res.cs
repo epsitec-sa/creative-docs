@@ -656,6 +656,9 @@ namespace Epsitec.Common.Designer
 					public static string ConnectionChangeRelation { get { return global::Epsitec.Common.Designer.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (33554492)); } }
 					public static string ConnectionClose { get { return global::Epsitec.Common.Designer.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (33554491)); } }
 					public static string ConnectionComment { get { return global::Epsitec.Common.Designer.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (33554494)); } }
+					public static string ConnectionComment1 { get { return global::Epsitec.Common.Designer.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (33554541)); } }
+					public static string ConnectionComment2 { get { return global::Epsitec.Common.Designer.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (33554542)); } }
+					public static string ConnectionComment3 { get { return global::Epsitec.Common.Designer.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (33554543)); } }
 					public static string ConnectionMove { get { return global::Epsitec.Common.Designer.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (33554493)); } }
 					public static string ConnectionOpenLeft { get { return global::Epsitec.Common.Designer.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (33554489)); } }
 					public static string ConnectionOpenRight { get { return global::Epsitec.Common.Designer.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (33554490)); } }
@@ -681,6 +684,13 @@ namespace Epsitec.Common.Designer
 					public static string BoxFieldAddInterface { get { return global::Epsitec.Common.Designer.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (33554533)); } }
 					public static string BoxFieldRemoveInterface { get { return global::Epsitec.Common.Designer.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (33554534)); } }
 					public static string BoxInfo { get { return global::Epsitec.Common.Designer.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (33554531)); } }
+					public static string ChangeRelation { get { return global::Epsitec.Common.Designer.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (33554540)); } }
+				}
+				
+				public static class Comment
+				{
+					public static string DefaultText { get { return global::Epsitec.Common.Designer.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (33554539)); } }
+					public static string Title { get { return global::Epsitec.Common.Designer.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (33554538)); } }
 				}
 				
 				public static class Icon
@@ -696,6 +706,7 @@ namespace Epsitec.Common.Designer
 					public static string InterfaceAnd { get { return global::Epsitec.Common.Designer.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (33554527)); } }
 					public static string InterfaceFrom { get { return global::Epsitec.Common.Designer.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (33554528)); } }
 					public static string InterfaceNull { get { return global::Epsitec.Common.Designer.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (33554529)); } }
+					public static string Title { get { return global::Epsitec.Common.Designer.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (33554544)); } }
 				}
 				
 				public static class Menu
