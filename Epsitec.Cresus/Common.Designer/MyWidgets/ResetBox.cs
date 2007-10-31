@@ -15,16 +15,11 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.groupBox = new FrameBox(this);
 			this.groupBox.Dock = DockStyle.Fill;
 
-			this.groupButton = new FrameBox(this);
-			this.groupButton.PreferredWidth = 15;
-			this.groupButton.Dock = DockStyle.Right;
-			this.groupButton.Margins = new Margins(2, 0, 0, 0);
-
-			this.resetButton = new IconButton(this.groupButton);
+			this.resetButton = new IconButton(this);
 			this.resetButton.IconName = Misc.Icon("Reset");
-			//?this.resetButton.PreferredSize = new Size(15, 15);
-			//?this.resetButton.Dock = DockStyle.Top;
-			this.resetButton.Dock = DockStyle.Fill;
+			this.resetButton.PreferredWidth = 15;
+			this.resetButton.Dock = DockStyle.Right;
+			this.resetButton.Margins = new Margins(2, 0, 0, 0);
 			ToolTip.Default.SetToolTip(this.resetButton, "Reset");
 		}
 		
@@ -41,9 +36,6 @@ namespace Epsitec.Common.Designer.MyWidgets
 				this.groupBox.Dispose();
 				this.groupBox = null;
 
-				this.groupButton.Dispose();
-				this.groupButton = null;
-
 				this.resetButton.Dispose();
 				this.resetButton = null;
 			}
@@ -58,11 +50,11 @@ namespace Epsitec.Common.Designer.MyWidgets
 			//	Dans ce cas, le bouton 'reset' est visible.
 			get
 			{
-				return this.groupButton.Visibility;
+				return this.resetButton.Visibility;
 			}
 			set
 			{
-				this.groupButton.Visibility = value;
+				this.resetButton.Visibility = value;
 			}
 		}
 
@@ -86,7 +78,6 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 
 		protected FrameBox groupBox;
-		protected FrameBox groupButton;
 		protected IconButton resetButton;
 	}
 }
