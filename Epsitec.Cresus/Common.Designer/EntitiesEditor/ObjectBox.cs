@@ -1462,6 +1462,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				this.editor.Module.AccessFields.SetLocalDirty();
 
 				this.UpdateFieldsLink();
+				this.editor.Entities.UpdateReset();
 				this.editor.UpdateAfterAddOrRemoveConnection(this);
 				this.editor.Module.AccessEntities.SetLocalDirty();
 			}
@@ -1511,6 +1512,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			this.fields.Insert(rank+1, field);
 
 			this.UpdateFieldsLink();
+			this.editor.Entities.UpdateReset();
 			this.editor.UpdateAfterAddOrRemoveConnection(this);
 			this.editor.Module.AccessEntities.SetLocalDirty();
 			this.hilitedElement = ActiveElement.None;
