@@ -162,7 +162,7 @@ namespace Epsitec.Common.UI
 		{
 			bool focus = (bool) e.NewValue;
 
-			System.Diagnostics.Debug.WriteLine ("Focus=" + focus.ToString () + ", " + this.ToString ());
+			//-System.Diagnostics.Debug.WriteLine ("Focus=" + focus.ToString () + ", " + this.ToString ());
 
 			if (focus)
 			{

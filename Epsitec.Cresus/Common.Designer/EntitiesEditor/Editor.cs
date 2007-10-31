@@ -1169,7 +1169,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			this.lastMessageType = message.MessageType;
 			this.lastMessagePos = pos;
 
-			System.Diagnostics.Debug.WriteLine(string.Format("Type={0}", message.MessageType));
+			//-System.Diagnostics.Debug.WriteLine(string.Format("Type={0}", message.MessageType));
 
 			switch (message.MessageType)
 			{

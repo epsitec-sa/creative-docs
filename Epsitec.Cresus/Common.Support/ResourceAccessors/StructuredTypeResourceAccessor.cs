@@ -283,8 +283,8 @@ namespace Epsitec.Common.Support.ResourceAccessors
 				}
 			}
 
-			Listener.FindListener<FieldListener> (fields).HandleCollectionChanging (fields);
-			Listener.FindListener<InterfaceListener> (interfaceIds).HandleCollectionChanging (interfaceIds);
+			Listener.FindListener<FieldListener> (fields).CreateSnapshot ();
+			Listener.FindListener<InterfaceListener> (interfaceIds).CreateSnapshot ();
 		}
 		
 		/// <summary>
@@ -850,7 +850,8 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			//	Snapshot by faking a collection changing event :
 
 			FieldListener listener = Listener.FindListener<FieldListener> (fields);
-			listener.HandleCollectionChanging (fields);
+			System.Diagnostics.Debug.Assert (listener.HasSnapshotData);	// is this always true ?
+			listener.CreateSnapshot ();
 		}
 
 		private void SnapshotReferenceInterfaceIds(CultureMap item, StructuredData data, ObservableList<StructuredData> interfaceIds)
@@ -859,7 +860,8 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			//	cause an "original" snapshot to be taken :
 			
 			InterfaceListener listener = Listener.FindListener<InterfaceListener> (interfaceIds);
-			listener.HandleCollectionChanging (interfaceIds);
+			System.Diagnostics.Debug.Assert (listener.HasSnapshotData);	// is this always true ?
+			listener.CreateSnapshot ();
 		}
 
 		private enum UpdateState
@@ -1298,12 +1300,20 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			{
 			}
 
-			public override void HandleCollectionChanging(object sender)
+			public bool HasSnapshotData
+			{
+				get
+				{
+					return this.originalFields != null;
+				}
+			}
+
+			public void CreateSnapshot()
 			{
 				if (this.SaveField (Res.Fields.ResourceStructuredType.Fields))
 				{
 					this.originalFields = new List<StructuredData> ();
-					
+
 					IList<StructuredData> fields = this.Data.GetValue (Res.Fields.ResourceStructuredType.Fields) as IList<StructuredData>;
 
 					foreach (StructuredData data in fields)
@@ -1311,6 +1321,11 @@ namespace Epsitec.Common.Support.ResourceAccessors
 						this.originalFields.Add (data.GetShallowCopy ());
 					}
 				}
+			}
+
+			public override void HandleCollectionChanging(object sender)
+			{
+				this.CreateSnapshot ();
 			}
 
 			public override void ResetToOriginalValue()
@@ -1362,7 +1377,15 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			{
 			}
 
-			public override void HandleCollectionChanging(object sender)
+			public bool HasSnapshotData
+			{
+				get
+				{
+					return this.originalInterfaceIds != null;
+				}
+			}
+
+			public void CreateSnapshot()
 			{
 				if (this.SaveField (Res.Fields.ResourceStructuredType.InterfaceIds))
 				{
@@ -1375,6 +1398,11 @@ namespace Epsitec.Common.Support.ResourceAccessors
 						this.originalInterfaceIds.Add (data.GetShallowCopy ());
 					}
 				}
+			}
+
+			public override void HandleCollectionChanging(object sender)
+			{
+				this.CreateSnapshot ();
 			}
 
 			public override void HandleCollectionChanged(object sender, CollectionChangedEventArgs e)
