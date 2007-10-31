@@ -355,4 +355,52 @@
   <data name="Entities.Question.SubView.Quick.Swap" id="2S">Permuter</data>
   <data name="Entities.Question.SubView.Long.Copy" id="2T">La vue &lt;b&gt;{0}&lt;/b&gt; est copiée dans la vue &lt;b&gt;{1}&lt;/b&gt;.</data>
   <data name="Entities.Question.SubView.Long.Swap" id="2U">Les vues &lt;b&gt;{0}&lt;/b&gt; et &lt;b&gt;{1}&lt;/b&gt; sont permutées.</data>
+  <data name="Entities.Action.BoxHeader" id="2V">Déplace l&amp;apos;entité</data>
+  <data name="Entities.Action.BoxSources" id="201">Ouvre une entité source</data>
+  <data name="Entities.Action.BoxComment" id="211">Montre ou cache le commentaire associé</data>
+  <data name="Entities.Action.BoxInfo" id="221">Montre ou cache les informations associées</data>
+  <data name="Entities.Action.BoxColor1" id="231">Entité bleue</data>
+  <data name="Entities.Action.BoxColor4" id="241">Entité grise</data>
+  <data name="Entities.Action.BoxColor2" id="251">Entité verte</data>
+  <data name="Entities.Action.BoxColor3" id="261">Entité rouge</data>
+  <data name="Entities.Action.BoxExtend" id="271">Compacte ou étend l&amp;apos;entité</data>
+  <data name="Entities.Action.BoxClose" id="281">Ferme l&amp;apos;entité</data>
+  <data name="Entities.Action.BoxFieldName1" id="291">Aller sur la définition du champ</data>
+  <data name="Entities.Action.BoxFieldName2" id="2A1">Ctrl+clic: aller sur la définition du champ</data>
+  <data name="Entities.Action.BoxFieldName3" id="2B1">Change le nom du champ&lt;br/&gt;Ctrl+clic: aller sur la définition du champ</data>
+  <data name="Entities.Action.BoxFieldType1" id="2C1">Aller sur la définition du type</data>
+  <data name="Entities.Action.BoxFieldType2" id="2D1">Ctrl+clic: aller sur la définition du type</data>
+  <data name="Entities.Action.BoxFieldType3" id="2E1">Change le type du champ&lt;br/&gt;Ctrl+clic: aller sur la définition du type</data>
+  <data name="Entities.Action.BoxFieldExpression" id="2F1">Expression du champ</data>
+  <data name="Entities.Action.BoxFieldAdd" id="2G1">Ajoute un nouveau champ</data>
+  <data name="Entities.Action.BoxFieldRemove" id="2H1">Supprime le champ</data>
+  <data name="Entities.Action.BoxFieldMovable" id="2I1">Change l&amp;apos;ordre du champ dans la liste</data>
+  <data name="Entities.Action.BoxFieldTitle1" id="2J1">Aller sur la définition</data>
+  <data name="Entities.Action.BoxFieldTitle2" id="2K1">Ctrl+clic: aller sur la définition</data>
+  <data name="Entities.Action.BoxFieldAddInterface" id="2L1">Ajoute une interface</data>
+  <data name="Entities.Action.BoxFieldRemoveInterface" id="2M1">Supprime l&amp;apos;interface</data>
+  <data name="Entities.Action.BoxChangeWidth" id="2N1">Modifie la largeur de l&amp;apos;entité</data>
+  <data name="Entities.Action.BoxMoveColumnsSeparator" id="2O1">Déplace le séparateur des colonnes</data>
+  <data name="Entities.Action.ConnectionOpenLeft" id="2P1">Ouvre l&amp;apos;entité liée sur la gauche</data>
+  <data name="Entities.Action.ConnectionOpenRight" id="2Q1">Ouvre l&amp;apos;entité liée sur la droite</data>
+  <data name="Entities.Action.ConnectionClose" id="2R1">Ferme l&amp;apos;entité</data>
+  <data name="Entities.Action.ConnectionChangeRelation" id="2S1">Change le type de la relation</data>
+  <data name="Entities.Action.ConnectionMove" id="2T1">Modifie le routage de la relation</data>
+  <data name="Entities.Action.ConnectionComment" id="2U1">Montre ou cache le commentaire associé</data>
+  <data name="Entities.Action.CommentEdit" id="2V1">Modifie le texte du commentaire</data>
+  <data name="Entities.Action.CommentMove" id="202">Déplace le commentaire</data>
+  <data name="Entities.Action.CommentClose" id="212">Cache le commentaire</data>
+  <data name="Entities.Action.CommentWidth" id="222">Modifie la largeur du commentaire</data>
+  <data name="Entities.Action.CommentColor1" id="232">Commentaire jaune</data>
+  <data name="Entities.Action.CommentColor8" id="242">Commentaire gris-foncé</data>
+  <data name="Entities.Action.CommentColor2" id="252">Commentaire orange</data>
+  <data name="Entities.Action.CommentColor3" id="262">Commentaire rouge</data>
+  <data name="Entities.Action.CommentColor4" id="272">Commentaire lilas</data>
+  <data name="Entities.Action.CommentColor5" id="282">Commentaire violet</data>
+  <data name="Entities.Action.CommentColor6" id="292">Commentaire bleu</data>
+  <data name="Entities.Action.CommentColor7" id="2A2">Commentaire vert</data>
+  <data name="Entities.Action.CommentAttachToConnection" id="2B2">Déplace le point d&amp;apos;attache du commentaire</data>
+  <data name="Entities.Action.InfoMove" id="2C2">Déplace les informations</data>
+  <data name="Entities.Action.InfoWidth" id="2D2">Modifie la largeur des informations</data>
+  <data name="Entities.Action.InfoClose" id="2E2">Cache les informations</data>
 </bundle>

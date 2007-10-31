@@ -202,50 +202,50 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			switch (element)
 			{
 				case AbstractObject.ActiveElement.BoxHeader:
-					return "Déplace l'entité";
+					return Res.Strings.Entities.Action.BoxHeader;
 
 				case AbstractObject.ActiveElement.BoxSources:
-					return "Ouvre une entité source";
+					return Res.Strings.Entities.Action.BoxSources;
 
 				case AbstractObject.ActiveElement.BoxComment:
-					return "Montre ou cache le commentaire associé";
+					return Res.Strings.Entities.Action.BoxComment;
 
 				case AbstractObject.ActiveElement.BoxInfo:
-					return "Montre ou cache les informations associées";
+					return Res.Strings.Entities.Action.BoxInfo;
 
 				case AbstractObject.ActiveElement.BoxColor1:
-					return "Entité bleue";
+					return Res.Strings.Entities.Action.BoxColor1;
 
 				case AbstractObject.ActiveElement.BoxColor2:
-					return "Entité verte";
+					return Res.Strings.Entities.Action.BoxColor2;
 
 				case AbstractObject.ActiveElement.BoxColor3:
-					return "Entité rouge";
+					return Res.Strings.Entities.Action.BoxColor3;
 
 				case AbstractObject.ActiveElement.BoxColor4:
-					return "Entité grise";
+					return Res.Strings.Entities.Action.BoxColor4;
 
 				case AbstractObject.ActiveElement.BoxExtend:
-					return "Compacte ou étend l'entité";
+					return Res.Strings.Entities.Action.BoxExtend;
 
 				case AbstractObject.ActiveElement.BoxClose:
-					return "Ferme l'entité";
+					return Res.Strings.Entities.Action.BoxClose;
 
 				case AbstractObject.ActiveElement.BoxFieldName:
 					if (this.editor.CurrentModifyMode == Editor.ModifyMode.Unlocked)
 					{
 						if (this.IsMousePossible(element, fieldRank))
 						{
-							return "Change le nom du champ<br/>Ctrl+clic: aller sur la définition du champ";
+							return Res.Strings.Entities.Action.BoxFieldName3;
 						}
 						else
 						{
-							return "Ctrl+clic: aller sur la définition du champ";
+							return Res.Strings.Entities.Action.BoxFieldName2;
 						}
 					}
 					else
 					{
-						return "Aller sur la définition du champ";
+						return Res.Strings.Entities.Action.BoxFieldName1;
 					}
 
 				case AbstractObject.ActiveElement.BoxFieldType:
@@ -253,118 +253,118 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					{
 						if (this.IsMousePossible(element, fieldRank))
 						{
-							return "Change le type du champ<br/>Ctrl+clic: aller sur la définition du type";
+							return Res.Strings.Entities.Action.BoxFieldType3;
 						}
 						else
 						{
-							return "Ctrl+clic: aller sur la définition du type";
+							return Res.Strings.Entities.Action.BoxFieldType2;
 						}
 					}
 					else
 					{
-						return "Aller sur la définition du type";
+						return Res.Strings.Entities.Action.BoxFieldType1;
 					}
 
 				case AbstractObject.ActiveElement.BoxFieldExpression:
-					return "Expression du champ";
+					return Res.Strings.Entities.Action.BoxFieldExpression;
 
 				case AbstractObject.ActiveElement.BoxFieldAdd:
-					return "Ajoute un nouveau champ";
+					return Res.Strings.Entities.Action.BoxFieldAdd;
 
 				case AbstractObject.ActiveElement.BoxFieldRemove:
-					return "Supprime le champ";
+					return Res.Strings.Entities.Action.BoxFieldRemove;
 
 				case AbstractObject.ActiveElement.BoxFieldMovable:
-					return "Change l'ordre du champ dans la liste";
+					return Res.Strings.Entities.Action.BoxFieldMovable;
 
 				case AbstractObject.ActiveElement.BoxFieldTitle:
 					if (this.editor.CurrentModifyMode == Editor.ModifyMode.Unlocked)
 					{
-						return "Ctrl+clic: aller sur la définition";
+						return Res.Strings.Entities.Action.BoxFieldTitle2;
 					}
 					else
 					{
-						return "Aller sur la définition";
+						return Res.Strings.Entities.Action.BoxFieldTitle1;
 					}
 
 				case AbstractObject.ActiveElement.BoxFieldAddInterface:
-					return "Ajoute une interface";
+					return Res.Strings.Entities.Action.BoxFieldAddInterface;
 
 				case AbstractObject.ActiveElement.BoxFieldRemoveInterface:
-					return "Supprime l'interface";
+					return Res.Strings.Entities.Action.BoxFieldRemoveInterface;
 
 				case AbstractObject.ActiveElement.BoxChangeWidth:
-					return "Modifie la largeur de l'entité";
+					return Res.Strings.Entities.Action.BoxChangeWidth;
 
 				case AbstractObject.ActiveElement.BoxMoveColumnsSeparator1:
-					return "Déplace le séparateur des colonnes";
+					return Res.Strings.Entities.Action.BoxMoveColumnsSeparator;
 
 				case AbstractObject.ActiveElement.ConnectionOpenLeft:
-					return "Ouvre l'entité liée sur la gauche";
+					return Res.Strings.Entities.Action.ConnectionOpenLeft;
 
 				case AbstractObject.ActiveElement.ConnectionOpenRight:
-					return "Ouvre l'entité liée sur la droite";
+					return Res.Strings.Entities.Action.ConnectionOpenRight;
 
 				case AbstractObject.ActiveElement.ConnectionClose:
-					return "Ferme l'entité";
+					return Res.Strings.Entities.Action.ConnectionClose;
 
 				case AbstractObject.ActiveElement.ConnectionChangeRelation:
-					return "Change le type de la relation";
+					return Res.Strings.Entities.Action.ConnectionChangeRelation;
 
 				case AbstractObject.ActiveElement.ConnectionMove1:
 				case AbstractObject.ActiveElement.ConnectionMove2:
-					return "Modifie le routage de la relation";
+					return Res.Strings.Entities.Action.ConnectionMove;
 
 				case AbstractObject.ActiveElement.ConnectionComment:
-					return "Montre ou cache le commentaire associé";
+					return Res.Strings.Entities.Action.ConnectionComment;
 
 				case AbstractObject.ActiveElement.CommentEdit:
-					return "Modifie le texte du commentaire";
+					return Res.Strings.Entities.Action.CommentEdit;
 
 				case AbstractObject.ActiveElement.CommentMove:
-					return "Déplace le commentaire";
+					return Res.Strings.Entities.Action.CommentMove;
 
 				case AbstractObject.ActiveElement.CommentWidth:
-					return "Modifie la largeur du commentaire";
+					return Res.Strings.Entities.Action.CommentWidth;
 
 				case AbstractObject.ActiveElement.CommentClose:
-					return "Cache le commentaire";
+					return Res.Strings.Entities.Action.CommentClose;
 
 				case AbstractObject.ActiveElement.CommentColor1:
-					return "Commentaire jaune";
+					return Res.Strings.Entities.Action.CommentColor1;
 
 				case AbstractObject.ActiveElement.CommentColor2:
-					return "Commentaire orange";
+					return Res.Strings.Entities.Action.CommentColor2;
 
 				case AbstractObject.ActiveElement.CommentColor3:
-					return "Commentaire rouge";
+					return Res.Strings.Entities.Action.CommentColor3;
 
 				case AbstractObject.ActiveElement.CommentColor4:
-					return "Commentaire lilas";
+					return Res.Strings.Entities.Action.CommentColor4;
 
 				case AbstractObject.ActiveElement.CommentColor5:
-					return "Commentaire violet";
+					return Res.Strings.Entities.Action.CommentColor5;
 
 				case AbstractObject.ActiveElement.CommentColor6:
-					return "Commentaire bleu";
+					return Res.Strings.Entities.Action.CommentColor6;
 
 				case AbstractObject.ActiveElement.CommentColor7:
-					return "Commentaire vert";
+					return Res.Strings.Entities.Action.CommentColor7;
 
 				case AbstractObject.ActiveElement.CommentColor8:
-					return "Commentaire gris-foncé";
+					return Res.Strings.Entities.Action.CommentColor8;
 
 				case AbstractObject.ActiveElement.CommentAttachToConnection:
-					return "Déplace le point d'attache du commentaire";
+					return Res.Strings.Entities.Action.CommentAttachToConnection;
 
 				case AbstractObject.ActiveElement.InfoMove:
-					return "Déplace les informations";
+					return Res.Strings.Entities.Action.InfoMove;
 
 				case AbstractObject.ActiveElement.InfoWidth:
-					return "Modifie la largeur des informations";
+					return Res.Strings.Entities.Action.InfoWidth;
 
 				case AbstractObject.ActiveElement.InfoClose:
-					return "Cache les informations";
+					return Res.Strings.Entities.Action.InfoClose;
 			}
 
 			return null;  // pas de tooltip
