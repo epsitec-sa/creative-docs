@@ -711,6 +711,9 @@ namespace Epsitec.Common.Designer
 				
 				public static class Menu
 				{
+					public static string ZoomCurrent { get { return global::Epsitec.Common.Designer.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (33554546)); } }
+					public static string ZoomDefault { get { return global::Epsitec.Common.Designer.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (33554545)); } }
+					public static string ZoomPage { get { return global::Epsitec.Common.Designer.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (33554547)); } }
 					public static class Sources
 					{
 						public static string Title { get { return global::Epsitec.Common.Designer.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (33554535)); } }

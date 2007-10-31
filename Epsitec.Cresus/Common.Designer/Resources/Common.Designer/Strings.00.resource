@@ -437,4 +437,7 @@
   <data name="Entities.Action.ConnectionComment2" id="2E3">Cache le commentaire associé&lt;br/&gt;&lt;b&gt;{0}&lt;/b&gt;</data>
   <data name="Entities.Action.ConnectionComment3" id="2F3">Montre le commentaire associé</data>
   <data name="Entities.Info.Title" id="2G3">&lt;b&gt;Informations&lt;/b&gt;</data>
+  <data name="Entities.Menu.ZoomDefault" id="2H3">zoom 1:1</data>
+  <data name="Entities.Menu.ZoomCurrent" id="2I3">zoom courant</data>
+  <data name="Entities.Menu.ZoomPage" id="2J3">pleine page</data>
 </bundle>

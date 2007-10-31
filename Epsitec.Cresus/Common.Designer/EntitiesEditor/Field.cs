@@ -109,7 +109,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 			this.commentAttach = AbstractObject.minAttach;
 			this.commentMainColor = AbstractObject.MainColor.Yellow;
-			this.commentText = "Commentaire libre, que vous pouvez modifier à volonté.";
+			this.commentText = Res.Strings.Entities.Comment.DefaultText;
 		}
 
 		public bool IsReadOnly

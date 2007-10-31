@@ -54,9 +54,9 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			//	Construit le menu pour changer de zoom.
 			System.Collections.ArrayList list = new System.Collections.ArrayList();
 
-			ZoomMenu.Add(list, zoomDefault, "zoom 1:1");
-			ZoomMenu.Add(list, zoomCurrent, "zoom courant");
-			ZoomMenu.Add(list, zoomPage,    "pleine page");
+			ZoomMenu.Add(list, zoomDefault, Res.Strings.Entities.Menu.ZoomDefault);
+			ZoomMenu.Add(list, zoomCurrent, Res.Strings.Entities.Menu.ZoomCurrent);
+			ZoomMenu.Add(list, zoomPage,    Res.Strings.Entities.Menu.ZoomPage);
 
 			ZoomMenu.Add(list,   20);
 			ZoomMenu.Add(list,   50);
