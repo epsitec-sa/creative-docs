@@ -599,6 +599,57 @@ namespace Epsitec.Common.Designer
 				}
 			}
 			
+			public static class Entities
+			{
+				public static class Action
+				{
+					public static string ZoomDefault { get { return global::Epsitec.Common.Designer.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (33554454)); } }
+					public static string ZoomMax { get { return global::Epsitec.Common.Designer.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (33554455)); } }
+					public static string ZoomMenu { get { return global::Epsitec.Common.Designer.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (33554456)); } }
+					public static string ZoomMin { get { return global::Epsitec.Common.Designer.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (33554453)); } }
+					public static string ZoomPage { get { return global::Epsitec.Common.Designer.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (33554452)); } }
+					public static string ZoomSlider { get { return global::Epsitec.Common.Designer.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (33554457)); } }
+				}
+				
+				public static class Question
+				{
+					public static class SubView
+					{
+						public static string Base { get { return global::Epsitec.Common.Designer.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (33554458)); } }
+						public static class Long
+						{
+							public static string Copy { get { return global::Epsitec.Common.Designer.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (33554461)); } }
+							public static string Swap { get { return global::Epsitec.Common.Designer.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (33554462)); } }
+						}
+						
+						public static class Quick
+						{
+							public static string Copy { get { return global::Epsitec.Common.Designer.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (33554459)); } }
+							public static string Swap { get { return global::Epsitec.Common.Designer.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (33554460)); } }
+						}
+					}
+				}
+				
+				public static class SubView
+				{
+					public static class Long
+					{
+						public static string A { get { return global::Epsitec.Common.Designer.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (33554448)); } }
+						public static string B { get { return global::Epsitec.Common.Designer.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (33554449)); } }
+						public static string C { get { return global::Epsitec.Common.Designer.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (33554450)); } }
+						public static string T { get { return global::Epsitec.Common.Designer.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (33554451)); } }
+					}
+					
+					public static class Quick
+					{
+						public static string A { get { return global::Epsitec.Common.Designer.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (33554444)); } }
+						public static string B { get { return global::Epsitec.Common.Designer.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (33554445)); } }
+						public static string C { get { return global::Epsitec.Common.Designer.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (33554446)); } }
+						public static string T { get { return global::Epsitec.Common.Designer.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (33554447)); } }
+					}
+				}
+			}
+			
 			public static class Error
 			{
 				public static string CheckOK { get { return global::Epsitec.Common.Designer.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (192)); } }

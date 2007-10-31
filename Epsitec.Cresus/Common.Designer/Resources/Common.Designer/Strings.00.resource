@@ -351,4 +351,8 @@
   <data name="Entities.Action.ZoomMenu" id="2O">Cliquez pour choisir le zoom dans un menu</data>
   <data name="Entities.Action.ZoomSlider" id="2P">Choix du zoom</data>
   <data name="Entities.Question.SubView.Base" id="2Q">Quelle opération voulez-vous effectuer sur l&amp;apos;entité &lt;b&gt;{0}&lt;/b&gt; ?</data>
+  <data name="Entities.Question.SubView.Quick.Copy" id="2R">Copier</data>
+  <data name="Entities.Question.SubView.Quick.Swap" id="2S">Permuter</data>
+  <data name="Entities.Question.SubView.Long.Copy" id="2T">La vue &lt;b&gt;{0}&lt;/b&gt; est copiée dans la vue &lt;b&gt;{1}&lt;/b&gt;.</data>
+  <data name="Entities.Question.SubView.Long.Swap" id="2U">Les vues &lt;b&gt;{0}&lt;/b&gt; et &lt;b&gt;{1}&lt;/b&gt; sont permutées.</data>
 </bundle>
