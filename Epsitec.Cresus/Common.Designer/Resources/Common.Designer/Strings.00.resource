@@ -457,4 +457,13 @@
   <data name="Viewers.Captions.Summary.Empty" id="224">(vide)</data>
   <data name="Application.Mode.Lock" id="234">&lt;b&gt;Mode bloqué&lt;/b&gt;</data>
   <data name="Application.Mode.Unlock" id="244">Mode débloqué</data>
+  <data name="Viewers.Types.DateTime.Res.Minutes" id="254">Minutes</data>
+  <data name="Viewers.Types.DateTime.Res.Seconds" id="264">Secondes</data>
+  <data name="Viewers.Types.DateTime.Res.Hours" id="274">Heures</data>
+  <data name="Viewers.Types.DateTime.Res.Days" id="284">Jours</data>
+  <data name="Viewers.Types.DateTime.Res.Weeks" id="294">Samaines</data>
+  <data name="Viewers.Types.DateTime.Res.Months" id="2A4">Mois</data>
+  <data name="Viewers.Types.DateTime.Res.Milliseconds" id="2B4">Millisecondes</data>
+  <data name="Viewers.Types.DateTime.Res.Years" id="2C4">Années</data>
+  <data name="Viewers.Types.Enum.Question.Delete" id="2D4">Voulez-vous supprimer la valeur &lt;b&gt;{0}&lt;/b&gt; de l&amp;apos;énumération ?</data>
 </bundle>

@@ -322,7 +322,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			int sel = this.array.SelectedRow;
 			System.Diagnostics.Debug.Assert(sel != -1);
 			string name = this.array.GetLineString(0, sel);
-			string question = string.Format("Voulez-vous supprimer la valeur <b>{0}</b> de l'énumération ?", name);
+			string question = string.Format(Res.Strings.Viewers.Types.Enum.Question.Delete, name);
 			Common.Dialogs.DialogResult result = this.module.DesignerApplication.DialogQuestion(question);
 			if (result != Common.Dialogs.DialogResult.Yes)
 			{

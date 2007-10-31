@@ -32,14 +32,14 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.groupResol.Margins = new Margins(0, 0, 0, 10);
 			this.groupResol.ResetButton.Clicked += new MessageEventHandler(this.HandleResetButtonClicked);
 			this.fieldResol.TextChanged += new EventHandler(this.HandleTextFieldChanged);
-			this.fieldResol.Items.Add("Milliseconds");
-			this.fieldResol.Items.Add("Seconds");
-			this.fieldResol.Items.Add("Minutes");
-			this.fieldResol.Items.Add("Hours");
-			this.fieldResol.Items.Add("Days");
-			this.fieldResol.Items.Add("Weeks");
-			this.fieldResol.Items.Add("Months");
-			this.fieldResol.Items.Add("Years");
+			this.fieldResol.Items.Add(Res.Strings.Viewers.Types.DateTime.Res.Milliseconds);
+			this.fieldResol.Items.Add(Res.Strings.Viewers.Types.DateTime.Res.Seconds);
+			this.fieldResol.Items.Add(Res.Strings.Viewers.Types.DateTime.Res.Minutes);
+			this.fieldResol.Items.Add(Res.Strings.Viewers.Types.DateTime.Res.Hours);
+			this.fieldResol.Items.Add(Res.Strings.Viewers.Types.DateTime.Res.Days);
+			this.fieldResol.Items.Add(Res.Strings.Viewers.Types.DateTime.Res.Weeks);
+			this.fieldResol.Items.Add(Res.Strings.Viewers.Types.DateTime.Res.Months);
+			this.fieldResol.Items.Add(Res.Strings.Viewers.Types.DateTime.Res.Years);
 
 			//	Date, à gauche.
 			this.CreateStringLabeled(Res.Strings.Viewers.Types.DateTime.DateMin, left, out this.groupMinDate, out this.fieldMinDate);
@@ -327,32 +327,29 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		protected static TimeResolution StringToTimeResolution(string text)
 		{
-			switch (text)
-			{
-				case "Milliseconds":  return TimeResolution.Milliseconds;
-				case "Seconds":       return TimeResolution.Seconds;
-				case "Minutes":       return TimeResolution.Minutes;
-				case "Hours":         return TimeResolution.Hours;
-				case "Days":          return TimeResolution.Days;
-				case "Weeks":         return TimeResolution.Weeks;
-				case "Months":        return TimeResolution.Months;
-				case "Years":         return TimeResolution.Years;
-				default:              return TimeResolution.Default;
-			}
+			if (text == Res.Strings.Viewers.Types.DateTime.Res.Milliseconds)  return TimeResolution.Milliseconds;
+			if (text == Res.Strings.Viewers.Types.DateTime.Res.Seconds)       return TimeResolution.Seconds;
+			if (text == Res.Strings.Viewers.Types.DateTime.Res.Minutes)       return TimeResolution.Minutes;
+			if (text == Res.Strings.Viewers.Types.DateTime.Res.Hours)         return TimeResolution.Hours;
+			if (text == Res.Strings.Viewers.Types.DateTime.Res.Days)          return TimeResolution.Days;
+			if (text == Res.Strings.Viewers.Types.DateTime.Res.Weeks)         return TimeResolution.Weeks;
+			if (text == Res.Strings.Viewers.Types.DateTime.Res.Months)        return TimeResolution.Months;
+			if (text == Res.Strings.Viewers.Types.DateTime.Res.Years)         return TimeResolution.Years;
+			return TimeResolution.Default;
 		}
 
 		protected static string TimeResolutionToString(TimeResolution resol)
 		{
 			switch (resol)
 			{
-				case TimeResolution.Milliseconds:  return "Milliseconds";
-				case TimeResolution.Seconds:       return "Seconds";
-				case TimeResolution.Minutes:       return "Minutes";
-				case TimeResolution.Hours:         return "Hours";
-				case TimeResolution.Days:          return "Days";
-				case TimeResolution.Weeks:         return "Weeks";
-				case TimeResolution.Months:        return "Months";
-				case TimeResolution.Years:         return "Years";
+				case TimeResolution.Milliseconds:  return Res.Strings.Viewers.Types.DateTime.Res.Milliseconds;
+				case TimeResolution.Seconds:       return Res.Strings.Viewers.Types.DateTime.Res.Seconds;
+				case TimeResolution.Minutes:       return Res.Strings.Viewers.Types.DateTime.Res.Minutes;
+				case TimeResolution.Hours:         return Res.Strings.Viewers.Types.DateTime.Res.Hours;
+				case TimeResolution.Days:          return Res.Strings.Viewers.Types.DateTime.Res.Days;
+				case TimeResolution.Weeks:         return Res.Strings.Viewers.Types.DateTime.Res.Weeks;
+				case TimeResolution.Months:        return Res.Strings.Viewers.Types.DateTime.Res.Months;
+				case TimeResolution.Years:         return Res.Strings.Viewers.Types.DateTime.Res.Years;
 				default:                           return "";
 			}
 		}
