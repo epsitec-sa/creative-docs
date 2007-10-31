@@ -234,10 +234,10 @@ namespace Epsitec.Common.Designer.Viewers
 			this.table.ColumnHeader.SetColumnComparer(5, this.CompareLocal);
 			this.table.ColumnHeader.SetColumnComparer(6, this.CompareIdentity);
 
-			this.table.ColumnHeader.SetColumnText(0, "Nom");
-			this.table.ColumnHeader.SetColumnText(4, "Druid");
-			this.table.ColumnHeader.SetColumnText(5, "Local");
-			this.table.ColumnHeader.SetColumnText(6, "Identité");
+			this.table.ColumnHeader.SetColumnText(0, Res.Strings.Viewers.Column.Name);
+			this.table.ColumnHeader.SetColumnText(4, Res.Strings.Viewers.Column.Druid);
+			this.table.ColumnHeader.SetColumnText(5, Res.Strings.Viewers.Column.Local);
+			this.table.ColumnHeader.SetColumnText(6, Res.Strings.Viewers.Column.Identity);
 
 			this.table.ColumnHeader.SetColumnSort(0, ListSortDirection.Ascending);
 		}
@@ -2064,13 +2064,13 @@ namespace Epsitec.Common.Designer.Viewers
 			switch (source)
 			{
 				case CultureMapSource.ReferenceModule:
-					return "R";
+					return Res.Strings.Viewers.Source.Short.Reference;
 
 				case CultureMapSource.PatchModule:
-					return "P";
+					return Res.Strings.Viewers.Source.Short.Patch;
 
 				case CultureMapSource.DynamicMerge:
-					return "M";
+					return Res.Strings.Viewers.Source.Short.Merge;
 			}
 
 			return "";
@@ -2093,7 +2093,7 @@ namespace Epsitec.Common.Designer.Viewers
 			//	Retourne le texte pour la colonne Identity.
 			if (item.Id.Developer == 0)
 			{
-				return "Dieu";
+				return Res.Strings.Viewers.Identity.God;
 			}
 
 			Identity.IdentityCard card = Identity.IdentityRepository.Default.FindIdentityCard(item.Id.Developer);
@@ -2102,7 +2102,7 @@ namespace Epsitec.Common.Designer.Viewers
 				return card.UserName;
 			}
 
-			return string.Format("Dev {0}", item.Id.Developer.ToString());
+			return string.Format(Res.Strings.Viewers.Identity.Developer, item.Id.Developer.ToString());
 		}
 
 

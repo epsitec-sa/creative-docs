@@ -239,7 +239,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 			this.table.Columns.Add(new UI.ItemTableColumn("Name", new Widgets.Layouts.GridLength(this.GetColumnWidth(0), Widgets.Layouts.GridUnitType.Proportional)));
 
-			this.table.ColumnHeader.SetColumnText(0, "Nom");
+			this.table.ColumnHeader.SetColumnText(0, Res.Strings.Viewers.Column.Name);
 
 			this.table.ColumnHeader.SetColumnSort(0, ListSortDirection.Ascending);
 		}

@@ -247,11 +247,11 @@ namespace Epsitec.Common.Designer.Viewers
 			this.table.ColumnHeader.SetColumnComparer(6, this.CompareLocal);
 			this.table.ColumnHeader.SetColumnComparer(7, this.CompareIdentity);
 
-			this.table.ColumnHeader.SetColumnText(0, "Nom");
-			this.table.ColumnHeader.SetColumnText(1, "Type");
-			this.table.ColumnHeader.SetColumnText(5, "Druid");
-			this.table.ColumnHeader.SetColumnText(6, "Local");
-			this.table.ColumnHeader.SetColumnText(7, "Identité");
+			this.table.ColumnHeader.SetColumnText(0, Res.Strings.Viewers.Column.Name);
+			this.table.ColumnHeader.SetColumnText(1, Res.Strings.Viewers.Column.Type);
+			this.table.ColumnHeader.SetColumnText(5, Res.Strings.Viewers.Column.Druid);
+			this.table.ColumnHeader.SetColumnText(6, Res.Strings.Viewers.Column.Local);
+			this.table.ColumnHeader.SetColumnText(7, Res.Strings.Viewers.Column.Identity);
 			
 			this.table.ColumnHeader.SetColumnSort(0, ListSortDirection.Ascending);
 			this.table.ColumnHeader.SetColumnSort(1, ListSortDirection.Ascending);

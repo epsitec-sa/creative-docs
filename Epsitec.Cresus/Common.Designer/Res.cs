@@ -871,6 +871,17 @@ namespace Epsitec.Common.Designer
 					}
 				}
 				
+				public static class Column
+				{
+					public static string Druid { get { return global::Epsitec.Common.Designer.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (33554549)); } }
+					public static string Entity { get { return global::Epsitec.Common.Designer.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (33554552)); } }
+					public static string Identity { get { return global::Epsitec.Common.Designer.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (33554551)); } }
+					public static string Local { get { return global::Epsitec.Common.Designer.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (33554550)); } }
+					public static string Name { get { return global::Epsitec.Common.Designer.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (33554548)); } }
+					public static string Prefix { get { return global::Epsitec.Common.Designer.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (33554554)); } }
+					public static string Type { get { return global::Epsitec.Common.Designer.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (33554553)); } }
+				}
+				
 				public static class Commands
 				{
 					public static class Group
@@ -892,6 +903,12 @@ namespace Epsitec.Common.Designer
 					}
 				}
 				
+				public static class Identity
+				{
+					public static string Developer { get { return global::Epsitec.Common.Designer.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (33554559)); } }
+					public static string God { get { return global::Epsitec.Common.Designer.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (33554558)); } }
+				}
+				
 				public static class Panels
 				{
 					public static string Info { get { return global::Epsitec.Common.Designer.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (28)); } }
@@ -909,6 +926,16 @@ namespace Epsitec.Common.Designer
 						public static string Parent { get { return global::Epsitec.Common.Designer.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (304)); } }
 						public static string Root { get { return global::Epsitec.Common.Designer.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (303)); } }
 						public static string This { get { return global::Epsitec.Common.Designer.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (305)); } }
+					}
+				}
+				
+				public static class Source
+				{
+					public static class Short
+					{
+						public static string Merge { get { return global::Epsitec.Common.Designer.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (33554557)); } }
+						public static string Patch { get { return global::Epsitec.Common.Designer.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (33554556)); } }
+						public static string Reference { get { return global::Epsitec.Common.Designer.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (33554555)); } }
 					}
 				}
 				
