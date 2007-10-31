@@ -6,7 +6,8 @@ using Epsitec.Common.Drawing;
 namespace Epsitec.Common.Designer.MyWidgets
 {
 	/// <summary>
-	/// Le widget ResetBox contient un groupe quelconque de widgets avec un petit bouton 'reset' en haut à droite.
+	/// Le widget ResetBox contient un groupe quelconque de widgets avec un bouton 'reset' à droite.
+	/// Le fond peut être coloré pour indiquer divers modes.
 	/// </summary>
 	public class ResetBox : FrameBox
 	{
@@ -20,7 +21,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.resetButton.PreferredWidth = 15;
 			this.resetButton.Dock = DockStyle.Right;
 			this.resetButton.Margins = new Margins(2, 0, 0, 0);
-			ToolTip.Default.SetToolTip(this.resetButton, "Reset");
+			ToolTip.Default.SetToolTip(this.resetButton, Res.Strings.Action.Reset);
 		}
 		
 		public ResetBox(Widget embedder) : this()

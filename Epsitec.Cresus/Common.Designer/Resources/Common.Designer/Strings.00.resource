@@ -86,12 +86,10 @@
   <data name="Viewers.Types.Numeric.PreferredResol" id="007" mod="1">Rés. préférentielle</data>
   <data name="Viewers.Types.Numeric.SmallStep" id="017" mod="1">Petit pas</data>
   <data name="Viewers.Types.Numeric.LargeStep" id="027" mod="1">Grand pas</data>
-  <data name="Viewers.Types.Numeric.Default" id="059">Valeur par défaut</data>
   <data name="Viewers.Types.Numeric.Sample" id="069">Exemple de valeur</data>
   <data name="Viewers.Types.Numeric.CompactStorage" id="088">Stockage compact</data>
   <data name="Viewers.Types.String.Min" id="037" mod="1">Longueur minimale</data>
   <data name="Viewers.Types.String.Max" id="047" mod="1">Longueur maximale</data>
-  <data name="Viewers.Types.String.Default" id="0A8">Chaîne par défaut</data>
   <data name="Viewers.Types.String.Sample" id="0B8">Exemple de chaîne</data>
   <data name="Viewers.Types.String.FixedLength" id="018">Longueur fixe dans la base de données</data>
   <data name="Viewers.Types.String.Multilingual" id="028">Le texte existe en plusieurs langues</data>
@@ -102,7 +100,6 @@
   <data name="Viewers.Types.DateTime.TimeMin" id="009">Heure minimale</data>
   <data name="Viewers.Types.DateTime.TimeMax" id="019">Heure maximale</data>
   <data name="Viewers.Types.DateTime.TimeStep" id="029">Pas pour l&amp;apos;heure</data>
-  <data name="Viewers.Types.DateTime.Default" id="039">Valeur par défaut</data>
   <data name="Viewers.Types.DateTime.Sample" id="049">Exemple de valeur</data>
   <data name="Viewers.Types.Nullable.Title" id="0F7">Etats</data>
   <data name="Viewers.Types.Nullable.CheckButton" id="0G7">Accepte d&amp;apos;être nul</data>
@@ -121,7 +118,6 @@
   <data name="Viewers.Types.Summary.Resolution" id="0G8">Résolution</data>
   <data name="Viewers.Types.Summary.SmallStep" id="0H8">Petit pas</data>
   <data name="Viewers.Types.Summary.BigStep" id="0I8">Grand pas</data>
-  <data name="Viewers.Types.Summary.Default" id="0E8">Défaut</data>
   <data name="Viewers.Types.Summary.Sample" id="0F8">Exemple</data>
   <data name="Viewers.Types.Summary.Compact" id="0J8">Compact</data>
   <data name="Viewers.Types.Summary.Fix" id="0K8">Fixe</data>
@@ -338,6 +334,21 @@
   <data name="Viewers.Types.Native.Type" id="26">Type système natif</data>
   <data name="Viewers.Types.Summary.Native" id="27">Natif</data>
   <data name="Error.Native.Incorrect" id="28">Type natif incorrect.</data>
-  <data name="Dialog.Icon.Default" id="29">&lt;i&gt;Icône du module de référence&lt;/i&gt;</data>
   <data name="StringCollection.Default" id="2A">Utiliser le texte du module de référence</data>
+  <data name="Action.Reset" id="2B">Reset (supprime la définition locale)</data>
+  <data name="Entities.SubView.Quick.A" id="2C">A</data>
+  <data name="Entities.SubView.Quick.B" id="2D">B</data>
+  <data name="Entities.SubView.Quick.C" id="2E">C</data>
+  <data name="Entities.SubView.Quick.T" id="2F">T</data>
+  <data name="Entities.SubView.Long.A" id="2G">Vue A</data>
+  <data name="Entities.SubView.Long.B" id="2H">Vue B</data>
+  <data name="Entities.SubView.Long.C" id="2I">Vue C</data>
+  <data name="Entities.SubView.Long.T" id="2J">Vue temporaire</data>
+  <data name="Entities.Action.ZoomPage" id="2K">Zoom pleine page</data>
+  <data name="Entities.Action.ZoomMin" id="2L">Zoom minimal</data>
+  <data name="Entities.Action.ZoomDefault" id="2M">Zoom par défaut (1:1)</data>
+  <data name="Entities.Action.ZoomMax" id="2N">Zoom maximal</data>
+  <data name="Entities.Action.ZoomMenu" id="2O">Cliquez pour choisir le zoom dans un menu</data>
+  <data name="Entities.Action.ZoomSlider" id="2P">Choix du zoom</data>
+  <data name="Entities.Question.SubView.Base" id="2Q">Quelle opération voulez-vous effectuer sur l&amp;apos;entité &lt;b&gt;{0}&lt;/b&gt; ?</data>
 </bundle>
