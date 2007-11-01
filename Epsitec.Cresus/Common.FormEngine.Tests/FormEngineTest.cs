@@ -1,4 +1,7 @@
+using System.Collections.Generic;
+
 using NUnit.Framework;
+using Epsitec.Common.FormEngine;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Support;
 using Epsitec.Common.Widgets;
@@ -36,11 +39,17 @@ namespace Epsitec.Common.FormEngine
 			CultureMap item = this.collection.CurrentItem as CultureMap;
 			StructuredData data = item.GetCultureData("00");
 
+			FormEngine engine = new FormEngine();
+			Widget form = engine.CreateForm(data);
+
 			Window window = new Window();
 			
 			window.ClientSize = new Size(400, 300);
 			window.Text = "CheckFormEngine";
 			window.Root.Padding = new Margins(10, 10, 10, 10);
+
+			form.Anchor = AnchorStyles.TopLeft;
+			window.Root.Children.Add(form);
 
 			Button a = new Button();
 			a.PreferredWidth = 75;
@@ -56,6 +65,7 @@ namespace Epsitec.Common.FormEngine
 
 		protected void LoadResource()
 		{
+			//	Charge les ressources 'Demo5juin'.
 			this.manager = new ResourceManager(typeof(FormEngineTest));
 			this.manager.DefineDefaultModuleName("Demo5juin");
 
