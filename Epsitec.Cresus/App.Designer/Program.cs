@@ -145,8 +145,11 @@ namespace Epsitec.Designer
 					Druid id;
 					if (Druid.TryParse (arg, out id))
 					{
-						designerMainWindow.NavigateToString (id);
-						designerMainWindow.Window.MakeActive ();
+						Epsitec.Common.Widgets.Application.QueueAsyncCallback (
+							delegate ()
+							{
+								designerMainWindow.NavigateToString (id);
+							});
 					}
 				});
 
@@ -156,8 +159,11 @@ namespace Epsitec.Designer
 					Druid id;
 					if (Druid.TryParse (arg, out id))
 					{
-						designerMainWindow.NavigateToCaption (id);
-						designerMainWindow.Window.MakeActive ();
+						Epsitec.Common.Widgets.Application.QueueAsyncCallback (
+							delegate ()
+							{
+								designerMainWindow.NavigateToCaption (id);
+							});
 					}
 				});
 
@@ -172,8 +178,13 @@ namespace Epsitec.Designer
 					if ((Druid.TryParse (args[0], out entityId)) &&
 						(Druid.TryParse (args[1], out fieldId)))
 					{
-						designerMainWindow.NavigateToEntityField (entityId, fieldId);
-						designerMainWindow.Window.MakeActive ();
+						//	Exemples de champs navigables designer:fld/700H1/70022 ou designer:fld/7013/700J2.
+
+						Epsitec.Common.Widgets.Application.QueueAsyncCallback (
+							delegate ()
+							{
+								designerMainWindow.NavigateToEntityField (entityId, fieldId);
+							});
 					}
 				});
 
