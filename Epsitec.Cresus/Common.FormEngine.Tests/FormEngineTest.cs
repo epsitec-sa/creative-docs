@@ -2,6 +2,7 @@ using NUnit.Framework;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Support;
 using Epsitec.Common.Widgets;
+using Epsitec.Common.Types;
 
 namespace Epsitec.Common.FormEngine
 {
@@ -31,6 +32,10 @@ namespace Epsitec.Common.FormEngine
 		[Test]
 		public void CheckFormEngine()
 		{
+			this.collection.MoveCurrentToFirst();
+			CultureMap item = this.collection.CurrentItem as CultureMap;
+			StructuredData data = item.GetCultureData("00");
+
 			Window window = new Window();
 			
 			window.ClientSize = new Size(400, 300);
@@ -57,12 +62,12 @@ namespace Epsitec.Common.FormEngine
 			this.accessor = new Support.ResourceAccessors.StructuredTypeResourceAccessor();
 			this.accessor.Load(this.manager);
 
-			this.collection = new Types.CollectionView(this.accessor.Collection);
+			this.collection = new CollectionView(this.accessor.Collection);
 		}
 
 
 		protected ResourceManager manager;
 		protected Support.ResourceAccessors.StructuredTypeResourceAccessor accessor;
-		protected Types.CollectionView collection;
+		protected CollectionView collection;
 	}
 }
