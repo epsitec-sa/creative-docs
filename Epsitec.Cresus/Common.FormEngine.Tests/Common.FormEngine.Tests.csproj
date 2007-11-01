@@ -57,6 +57,10 @@
       <Project>{35FFBEF6-6A7D-4FEA-A4C6-AAB784FA709B}</Project>
       <Name>Common.Drawing</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Common.Support.Implementation\Common.Support.Implementation.csproj">
+      <Project>{5ABF5752-A44A-4D8B-B4F0-D64CF5E74B2D}</Project>
+      <Name>Common.Support.Implementation</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Common.Support\Common.Support.csproj">
       <Project>{AC07F95F-9D11-44BE-8ABC-D6E33C3BB10B}</Project>
       <Name>Common.Support</Name>
@@ -78,4 +82,11 @@
   <Target Name="AfterBuild">
   </Target>
   -->
+  <PropertyGroup>
+    <PostBuildEvent>xcopy "$(SolutionDir)Common.Document\Resources\*" "$(ProjectDir)Resources\" /S/Y /EXCLUDE:..\..\..\excludesvn.ini
+xcopy "$(SolutionDir)Common.Support\Resources\*" "$(ProjectDir)Resources\" /S/Y /EXCLUDE:..\..\..\excludesvn.ini
+xcopy "$(SolutionDir)Common.Types\Resources\*" "$(ProjectDir)Resources\" /S/Y /EXCLUDE:..\..\..\excludesvn.ini
+xcopy "$(SolutionDir)Common.Widgets\Resources\*" "$(ProjectDir)Resources\" /S/Y /EXCLUDE:..\..\..\excludesvn.ini
+</PostBuildEvent>
+  </PropertyGroup>
 </Project>
