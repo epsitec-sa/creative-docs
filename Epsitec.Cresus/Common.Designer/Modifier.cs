@@ -51,7 +51,7 @@ namespace Epsitec.Common.Designer
 			{
 				if (this.activeViewer == null)
 				{
-					return ResourceAccess.Type.Unknow;
+					return ResourceAccess.Type.Unknown;
 				}
 				else
 				{

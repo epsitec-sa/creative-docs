@@ -14,7 +14,7 @@ namespace Epsitec.Common.Designer
 	{
 		public enum Type
 		{
-			Unknow,
+			Unknown,
 			Strings,
 			Captions,
 			Fields,

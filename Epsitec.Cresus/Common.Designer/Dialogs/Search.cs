@@ -409,7 +409,7 @@ namespace Epsitec.Common.Designer.Dialogs
 		}
 
 
-		protected ResourceAccess.Type			bundleType = ResourceAccess.Type.Unknow;
+		protected ResourceAccess.Type			bundleType = ResourceAccess.Type.Unknown;
 
 		protected TextFieldCombo				fieldSearch;
 		protected TextFieldCombo				fieldReplace;

@@ -1071,7 +1071,7 @@ namespace Epsitec.Common.Designer
 			}
 
 			ResourceAccess.Type type = module.GetCaptionType(captionId);
-			if (type == ResourceAccess.Type.Unknow)
+			if (type == ResourceAccess.Type.Unknown)
 			{
 				return false;
 			}
@@ -2020,7 +2020,7 @@ namespace Epsitec.Common.Designer
 			ModuleInfo mi = this.CurrentModuleInfo;
 			if (mi == null)
 			{
-				this.dlgSearch.Adapt(ResourceAccess.Type.Unknow);
+				this.dlgSearch.Adapt(ResourceAccess.Type.Unknown);
 			}
 			else
 			{

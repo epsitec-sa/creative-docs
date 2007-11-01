@@ -317,7 +317,7 @@ namespace Epsitec.Common.Designer
 				return ResourceAccess.Type.Entities;
 			}
 
-			return ResourceAccess.Type.Unknow;
+			return ResourceAccess.Type.Unknown;
 		}
 
 
