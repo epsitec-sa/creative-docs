@@ -14,6 +14,16 @@ namespace Epsitec.Common.FormEngine
 			Widgets.Adorners.Factory.SetActive("LookMetal");
 			Widget.Initialize();
 		}
+		
+		[Test]
+		public void AutomatedTestEnvironment()
+		{
+			//	Si ce test est exécuté avant les autres tests, ceux-ci ne bloquent pas
+			//	dans l'interaction des diverses fenêtres. Utile si on fait un [Run] de
+			//	tous les tests d'un coup.
+
+			Epsitec.Common.Widgets.Window.RunningInAutomatedTestEnvironment = true;
+		}
 
 		[Test]
 		public void CheckFormEngine()
