@@ -632,6 +632,12 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 		}
 
+		public void RouteAbsoluteAYClear()
+		{
+			//	Réinitialise un cas A simple, sans exécuter UpdateRoute().
+			this.routeAbsoluteAY = 0;
+		}
+
 		public double RouteRelativeBX
 		{
 			//	Position intermédiaire de la connection (cas B).

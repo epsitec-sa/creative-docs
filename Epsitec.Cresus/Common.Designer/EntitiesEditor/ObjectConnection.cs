@@ -927,6 +927,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		public void UpdateRoute()
 		{
 			//	Met à jour le routage de la connection, dans les cas ou le routage dépend des choix de l'utilisateur.
+			retry:
 			if (this.field.Route == Field.RouteType.A)
 			{
 				if (this.field.RouteAbsoluteAY == 0)
@@ -949,8 +950,35 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 						this.points.Insert(1, Point.Zero);
 					}
 
-					double px1 = this.points[0].X + (this.points[5].X-this.points[0].X)*this.field.RouteRelativeAX1;
-					double px2 = this.points[0].X + (this.points[5].X-this.points[0].X)*this.field.RouteRelativeAX2;
+					double d = this.points[5].X-this.points[0].X;
+					double d1 = d*this.field.RouteRelativeAX1;
+					double d2 = d*this.field.RouteRelativeAX2;
+
+					d1 -= d;
+					d2 -= d;
+					if (d2 > 0)
+					{
+						d2 = System.Math.Max(d2, ObjectConnection.arrowMinimalLength);
+						if (d2 > d1)
+						{
+							this.field.RouteAbsoluteAYClear();  // revient à un cas simple, puis recommencer le routage
+							goto retry;
+						}
+					}
+					else
+					{
+						d2 = -System.Math.Max(-d2, ObjectConnection.arrowMinimalLength);
+						if (d2 < d1)
+						{
+							this.field.RouteAbsoluteAYClear();  // revient à un cas simple, puis recommencer le routage
+							goto retry;
+						}
+					}
+					d1 += d;
+					d2 += d;
+
+					double px1 = this.points[0].X + d1;
+					double px2 = this.points[0].X + d2;
 					double py = this.points[0].Y + this.field.RouteAbsoluteAY;
 					this.points[1] = new Point(px1, this.points[0].Y);
 					this.points[2] = new Point(px1, py);
@@ -978,8 +1006,22 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 						this.points.Insert(1, Point.Zero);
 					}
 
+					double d = this.points[4].Y-this.points[0].Y;
+					double d1 = d*this.field.RouteRelativeBY;
+
+					d1 -= d;
+					if (d1 > 0)
+					{
+						d1 = System.Math.Max(d1, ObjectConnection.arrowMinimalLength);
+					}
+					else
+					{
+						d1 = -System.Math.Max(-d1, ObjectConnection.arrowMinimalLength);
+					}
+					d1 += d;
+
 					double px = this.points[4].X + (this.points[0].X-this.points[4].X)*this.field.RouteRelativeBX;
-					double py = this.points[0].Y + (this.points[4].Y-this.points[0].Y)*this.field.RouteRelativeBY;
+					double py = this.points[0].Y + d1;
 					this.points[1] = new Point(px, this.points[0].Y);
 					this.points[2] = new Point(px, py);
 					this.points[3] = new Point(this.points[4].X, py);
@@ -989,7 +1031,21 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			if (this.field.Route == Field.RouteType.C)
 			{
 				//	Met à jour les points milieu de la connection.
-				double px = this.points[0].X + (this.points[3].X-this.points[0].X)*this.field.RouteRelativeCX;
+				double d = this.points[3].X-this.points[0].X;
+				double d1 = d*this.field.RouteRelativeCX;
+
+				d1 -= d;
+				if (d1 > 0)
+				{
+					d1 = System.Math.Max(d1, ObjectConnection.arrowMinimalLength);
+				}
+				else
+				{
+					d1 = -System.Math.Max(-d1, ObjectConnection.arrowMinimalLength);
+				}
+				d1 += d;
+
+				double px = this.points[0].X + d1;
 				this.points[1] = new Point(px, this.points[0].Y);
 				this.points[2] = new Point(px, this.points[3].Y);
 			}
@@ -1013,7 +1069,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		}
 
 
-		protected static readonly double pushMargin = 10;
+		protected static readonly double arrowMinimalLength = 25;
 
 		protected Field field;
 		protected List<Point> points;
