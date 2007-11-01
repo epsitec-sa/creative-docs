@@ -35,33 +35,36 @@ namespace Epsitec.Common.FormEngine
 		[Test]
 		public void CheckFormEngine()
 		{
-			this.collection.MoveCurrentToFirst();
-			CultureMap item = this.collection.CurrentItem as CultureMap;
-			StructuredData data = item.GetCultureData("00");
-
-			FormEngine engine = new FormEngine();
-			Widget form = engine.CreateForm(data);
-
 			Window window = new Window();
 			
 			window.ClientSize = new Size(400, 300);
 			window.Text = "CheckFormEngine";
 			window.Root.Padding = new Margins(10, 10, 10, 10);
 
-			form.Anchor = AnchorStyles.TopLeft;
+			Widget form = this.CreateForm();
+			form.Dock = DockStyle.Fill;
 			window.Root.Children.Add(form);
 
 			Button a = new Button();
-			a.PreferredWidth = 75;
 			a.Text = "OK";
 			a.ButtonStyle = ButtonStyle.DefaultAccept;
-			a.Anchor = AnchorStyles.BottomRight;
+			a.Dock = DockStyle.Bottom;
 			window.Root.Children.Add(a);
 
 			window.Show();
 			Window.RunInTestEnvironment(window);
 		}
 
+
+		protected Widget CreateForm()
+		{
+			this.collection.MoveCurrentToFirst();
+			CultureMap item = this.collection.CurrentItem as CultureMap;
+			StructuredData data = item.GetCultureData("00");
+
+			FormEngine engine = new FormEngine();
+			return engine.CreateForm(data);
+		}
 
 		protected void LoadResource()
 		{
