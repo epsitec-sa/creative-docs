@@ -429,15 +429,18 @@ namespace Epsitec.Common.Tool.ResGenerator
 
 				//	Crée l'accesseur pour le champ actuel :
 
-				Support.Druid druid = bundle[fields[i]].Id;
-				
+				Support.Druid localDruid = bundle[fields[i]].Id;
+				Druid moduleDruid = new Druid (localDruid, bundle.Module.Id);
+
+				buffer.Append (string.Concat (generator.Tabs, "//\tdesigner:cap/", moduleDruid.ToString ().Trim ('[', ']'), "\n"));
 				buffer.Append (generator.Tabs);
+				
 				buffer.Append ("public static readonly global::Epsitec.Common.Widgets.Command ");
 				buffer.Append (delta);
 				buffer.Append (@" = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, ");
-				buffer.Append (druid.Developer.ToString (System.Globalization.CultureInfo.InvariantCulture));
+				buffer.Append (localDruid.Developer.ToString (System.Globalization.CultureInfo.InvariantCulture));
 				buffer.Append (", ");
-				buffer.Append (druid.Local.ToString (System.Globalization.CultureInfo.InvariantCulture));
+				buffer.Append (localDruid.Local.ToString (System.Globalization.CultureInfo.InvariantCulture));
 				buffer.Append ("));\n");
 			}
 
@@ -546,11 +549,13 @@ namespace Epsitec.Common.Tool.ResGenerator
 				}
 
 				//	Crée l'accesseur pour le champ actuel :
-				buffer.Append (generator.Tabs);
 
 				Support.Druid druid = bundle[fields[i]].Id;
 
 				druid = new Support.Druid (druid, manager.DefaultModuleId);
+
+				buffer.Append (string.Concat (generator.Tabs, "//\tdesigner:cap/", druid.ToString ().Trim ('[', ']'), "\n"));
+				buffer.Append (generator.Tabs);
 
 				buffer.Append ("public const long ");
 				buffer.Append (delta);
@@ -646,16 +651,19 @@ namespace Epsitec.Common.Tool.ResGenerator
 				}
 
 				//	Crée l'accesseur pour le champ actuel :
-				buffer.Append (generator.Tabs);
 
-				Support.Druid druid = bundle[fields[i]].Id;
+				Support.Druid localDruid = bundle[fields[i]].Id;
+				Druid moduleDruid = new Druid (localDruid, bundle.Module.Id);
+
+				buffer.Append (string.Concat (generator.Tabs, "//\tdesigner:cap/", moduleDruid.ToString ().Trim ('[', ']'), "\n"));
+				buffer.Append (generator.Tabs);
 
 				buffer.Append ("public static global::Epsitec.Common.Types.Caption ");
 				buffer.Append (delta);
 				buffer.Append (@" { get { return Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, ");
-				buffer.Append (druid.Developer.ToString (System.Globalization.CultureInfo.InvariantCulture));
+				buffer.Append (localDruid.Developer.ToString (System.Globalization.CultureInfo.InvariantCulture));
 				buffer.Append (", ");
-				buffer.Append (druid.Local.ToString (System.Globalization.CultureInfo.InvariantCulture));
+				buffer.Append (localDruid.Local.ToString (System.Globalization.CultureInfo.InvariantCulture));
 				buffer.Append (")); } }\n");
 			}
 
@@ -748,16 +756,19 @@ namespace Epsitec.Common.Tool.ResGenerator
 				}
 
 				//	Crée l'accesseur pour le champ actuel :
-				buffer.Append (generator.Tabs);
+				
+				Support.Druid localDruid = bundle[fields[i]].Id;
+				Druid moduleDruid = new Druid (localDruid, bundle.Module.Id);
 
-				Support.Druid druid = bundle[fields[i]].Id;
+				buffer.Append (string.Concat (generator.Tabs, "//\tdesigner:cap/", moduleDruid.ToString ().Trim ('[', ']'), "\n"));
+				buffer.Append (generator.Tabs);
 
 				buffer.Append ("public static global::Epsitec.Common.Types.Caption ");
 				buffer.Append (delta);
 				buffer.Append (@" { get { return Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, ");
-				buffer.Append (druid.Developer.ToString (System.Globalization.CultureInfo.InvariantCulture));
+				buffer.Append (localDruid.Developer.ToString (System.Globalization.CultureInfo.InvariantCulture));
 				buffer.Append (", ");
-				buffer.Append (druid.Local.ToString (System.Globalization.CultureInfo.InvariantCulture));
+				buffer.Append (localDruid.Local.ToString (System.Globalization.CultureInfo.InvariantCulture));
 				buffer.Append (")); } }\n");
 			}
 
@@ -848,16 +859,19 @@ namespace Epsitec.Common.Tool.ResGenerator
 				}
 
 				//	Crée l'accesseur pour le champ actuel :
-				buffer.Append (generator.Tabs);
+				
+				Support.Druid localDruid = bundle[fields[i]].Id;
+				Druid moduleDruid = new Druid (localDruid, bundle.Module.Id);
 
-				Support.Druid druid = bundle[fields[i]].Id;
+				buffer.Append (string.Concat (generator.Tabs, "//\tdesigner:cap/", moduleDruid.ToString ().Trim ('[', ']'), "\n"));
+				buffer.Append (generator.Tabs);
 
 				buffer.Append ("public static readonly global::Epsitec.Common.Support.Druid ");
 				buffer.Append (delta);
 				buffer.Append (@" = new global::Epsitec.Common.Support.Druid (_moduleId, ");
-				buffer.Append (druid.Developer.ToString (System.Globalization.CultureInfo.InvariantCulture));
+				buffer.Append (localDruid.Developer.ToString (System.Globalization.CultureInfo.InvariantCulture));
 				buffer.Append (", ");
-				buffer.Append (druid.Local.ToString (System.Globalization.CultureInfo.InvariantCulture));
+				buffer.Append (localDruid.Local.ToString (System.Globalization.CultureInfo.InvariantCulture));
 				buffer.Append (");\n");
 			}
 
@@ -960,7 +974,7 @@ namespace Epsitec.Common.Tool.ResGenerator
 
 				//	Crée l'accesseur pour le champ actuel :
 				Support.ResourceBundle.Field f = bundle[fields[i]];
-				Support.Druid druid = f.Id;
+				Support.Druid localDruid = f.Id;
 
 				string s = f.AsString;
 
@@ -982,7 +996,11 @@ namespace Epsitec.Common.Tool.ResGenerator
 				//	Cherche le nom du type complet, par exemple "Epsitec.Common.Types.StringType"
 				string typeName = type.ToString ();
 
+				Druid moduleDruid = new Druid (localDruid, bundle.Module.Id);
+				
+				buffer.Append (string.Concat (generator.Tabs, "//\tdesigner:cap/", moduleDruid.ToString ().Trim ('[', ']'), "\n"));
 				buffer.Append (generator.Tabs);
+				
 				buffer.Append ("public static readonly global::");
 				buffer.Append (typeName);
 				buffer.Append (" ");
@@ -991,9 +1009,9 @@ namespace Epsitec.Common.Tool.ResGenerator
 				buffer.Append (typeName);
 				buffer.Append (") global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (");
 				buffer.Append ("new global::Epsitec.Common.Support.Druid (_moduleId, ");
-				buffer.Append (druid.Developer.ToString (System.Globalization.CultureInfo.InvariantCulture));
+				buffer.Append (localDruid.Developer.ToString (System.Globalization.CultureInfo.InvariantCulture));
 				buffer.Append (", ");
-				buffer.Append (druid.Local.ToString (System.Globalization.CultureInfo.InvariantCulture));
+				buffer.Append (localDruid.Local.ToString (System.Globalization.CultureInfo.InvariantCulture));
 				buffer.Append ("));\n");
 			}
 
@@ -1089,9 +1107,11 @@ namespace Epsitec.Common.Tool.ResGenerator
 
 				//	Crée l'accesseur pour le champ actuel :
 
-				buffer.Append (generator.Tabs);
+				Druid localDruid = bundle[field].Id;
+				Druid moduleDruid = new Druid (localDruid, bundle.Module.Id);
 
-				Support.Druid druid = bundle[field].Id;
+				buffer.Append (string.Concat (generator.Tabs, "//\tdesigner:str/", moduleDruid.ToString ().Trim ('[', ']'), "\n"));
+				buffer.Append (generator.Tabs);
 
 				buffer.Append ("public static string ");
 				buffer.Append (delta);
@@ -1101,10 +1121,10 @@ namespace Epsitec.Common.Tool.ResGenerator
 				buffer.Append (bundleId);
 				buffer.Append (@".GetText (");
 
-				if (druid.Type == Support.DruidType.ModuleRelative)
+				if (localDruid.Type == Support.DruidType.ModuleRelative)
 				{
 					buffer.Append (@"global::Epsitec.Common.Support.Druid.FromFieldId (");
-					buffer.Append (druid.ToFieldId ());
+					buffer.Append (localDruid.ToFieldId ());
 					buffer.Append (@")");
 				}
 				else

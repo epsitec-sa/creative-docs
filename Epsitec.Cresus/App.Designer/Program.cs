@@ -8,7 +8,7 @@ using Epsitec.Common.Support;
 
 using System.Collections.Generic;
 
-namespace App.Designer
+namespace Epsitec.Designer
 {
 	static class Program
 	{
@@ -129,7 +129,67 @@ namespace App.Designer
 			designerMainWindow.Mode = DesignerMode.Build;
 			designerMainWindow.Standalone = true;
 			designerMainWindow.Show (null);
+
+			Program.StartProtocolService (designerMainWindow);
+			
 			designerMainWindow.Window.Run ();
+
+			Program.StopProtocolService ();
 		}
+
+		private static void StartProtocolService(DesignerApplication designerMainWindow)
+		{
+			Epsitec.Designer.Protocol.NavigatorService.DefineNavigateToStringAction (
+				delegate (string arg)
+				{
+					Druid id;
+					if (Druid.TryParse (arg, out id))
+					{
+						designerMainWindow.NavigateToString (id);
+						designerMainWindow.Window.MakeActive ();
+					}
+				});
+
+			Epsitec.Designer.Protocol.NavigatorService.DefineNavigateToCaptionAction (
+				delegate (string arg)
+				{
+					Druid id;
+					if (Druid.TryParse (arg, out id))
+					{
+						designerMainWindow.NavigateToCaption (id);
+						designerMainWindow.Window.MakeActive ();
+					}
+				});
+
+			Epsitec.Designer.Protocol.NavigatorService.DefineNavigateToEntityFieldAction (
+				delegate (string arg)
+				{
+					string[] args = arg.Split (':');
+
+					Druid entityId;
+					Druid fieldId;
+
+					if ((Druid.TryParse (args[0], out entityId)) &&
+						(Druid.TryParse (args[1], out fieldId)))
+					{
+						designerMainWindow.NavigateToEntityField (entityId, fieldId);
+						designerMainWindow.Window.MakeActive ();
+					}
+				});
+
+			Program.protocolServer = new Epsitec.Designer.Protocol.Server (false);
+			Program.protocolServer.Open ();
+		}
+
+		private static void StopProtocolService()
+		{
+			if (Program.protocolServer != null)
+			{
+				Program.protocolServer.Dispose ();
+				Program.protocolServer = null;
+			}
+		}
+
+		static Epsitec.Designer.Protocol.Server protocolServer;
 	}
 }
