@@ -618,8 +618,9 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 			if (relation == FieldRelation.Collection)
 			{
-				end = Point.Move(end, start, AbstractObject.arrowLength*0.75);
-				this.DrawArrowBase(graphics, start, end);
+				Point p1 = Point.Move(end, start, AbstractObject.arrowLength);
+				Point p2 = Point.Move(end, start, AbstractObject.arrowLength*0.75);
+				this.DrawArrowBase(graphics, p1, p2);
 			}
 		}
 
