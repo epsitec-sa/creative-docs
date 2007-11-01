@@ -8,11 +8,14 @@ namespace Epsitec.Common.FormEngine
 	[TestFixture]
 	public class FormEngineTest
 	{
-		[SetUp] public void Initialize()
+		[SetUp]
+		public void Initialize()
 		{
 			Document.Engine.Initialize();
 			Widgets.Adorners.Factory.SetActive("LookMetal");
 			Widget.Initialize();
+
+			this.LoadResource();
 		}
 		
 		[Test]
@@ -22,7 +25,7 @@ namespace Epsitec.Common.FormEngine
 			//	dans l'interaction des diverses fenêtres. Utile si on fait un [Run] de
 			//	tous les tests d'un coup.
 
-			Epsitec.Common.Widgets.Window.RunningInAutomatedTestEnvironment = true;
+			Window.RunningInAutomatedTestEnvironment = true;
 		}
 
 		[Test]
@@ -44,5 +47,22 @@ namespace Epsitec.Common.FormEngine
 			window.Show();
 			Window.RunInTestEnvironment(window);
 		}
+
+
+		protected void LoadResource()
+		{
+			this.manager = new ResourceManager(typeof(FormEngineTest));
+			this.manager.DefineDefaultModuleName("Demo5juin");
+
+			this.accessor = new Support.ResourceAccessors.StructuredTypeResourceAccessor();
+			this.accessor.Load(this.manager);
+
+			this.collection = new Types.CollectionView(this.accessor.Collection);
+		}
+
+
+		protected ResourceManager manager;
+		protected Support.ResourceAccessors.StructuredTypeResourceAccessor accessor;
+		protected Types.CollectionView collection;
 	}
 }
