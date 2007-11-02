@@ -65,24 +65,37 @@ namespace Epsitec.Common.FormEngine
 			CultureMap item = this.collection.CurrentItem as CultureMap;
 			Druid itemId = item.Id;
 
+			List<FieldDescription> fields = new List<FieldDescription>();
+#if false
 			itemId = Druid.Parse("[63081]");  // Adresse
-			//?itemId = Druid.Parse ("[63021]"); // Facture
+			fields.Add(this.CreateField("[63083]"));  // Rue
+			fields.Add(this.CreateField("[630C3]"));  // Npa
+			fields.Add(this.CreateField("[630B3]"));  // Ville
+#endif
+#if true
+			itemId = Druid.Parse ("[63021]"); // Facture
+			fields.Add(this.CreateField("[630A2]"));  // Numéro
+			fields.Add(this.CreateField("[630B2].[630S2]"));  // Affaire.Client
+			fields.Add(this.CreateField("[630B2].[63013]"));  // Affaire.SoldeDû
+			fields.Add(this.CreateField("[630L2]"));  // TotalFacturé
+#endif
 
 			System.Console.Out.WriteLine("Génère l'interface pour le DRUID {0}", itemId);
-
-			List<FieldDescription> fields = new List<FieldDescription>();
-			fields.Add(this.CreateField(Druid.Parse("[63083]")));  // Rue
-			fields.Add(this.CreateField(Druid.Parse("[630C3]")));  // Npa
-			fields.Add(this.CreateField(Druid.Parse("[630B3]")));  // Ville
 
 			FormEngine engine = new FormEngine(this.manager);
 			return engine.CreateForm(itemId, fields);
 		}
 
-		protected FieldDescription CreateField(Druid id)
+		protected FieldDescription CreateField(string text)
 		{
 			FieldDescription field = new FieldDescription();
-			field.FieldsIds.Add(id);
+
+			string[] list = text.Split('.');
+			foreach (string d in list)
+			{
+				Druid id = Druid.Parse(d);
+				field.FieldsIds.Add(id);
+			}
 
 			return field;
 		}

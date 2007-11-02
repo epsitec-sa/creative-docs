@@ -20,6 +20,7 @@ namespace Epsitec.Common.FormEngine
 
 		public List<Druid> FieldsIds
 		{
+			//	Liste des Druids qui représentent le champ.
 			get
 			{
 				return this.fieldIds;
@@ -28,6 +29,8 @@ namespace Epsitec.Common.FormEngine
 
 		public string GetPath(string prefix)
 		{
+			//	Retourne le chemin permettant d'accéder au champ.
+			//	Par exemple: "Data.[630B2].[630S2]"
 			System.Text.StringBuilder builder = new System.Text.StringBuilder();
 			builder.Append(prefix);
 
