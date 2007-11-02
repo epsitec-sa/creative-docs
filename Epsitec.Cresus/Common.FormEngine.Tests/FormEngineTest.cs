@@ -47,6 +47,12 @@ namespace Epsitec.Common.FormEngine
 			this.CreateWindow("Facture");
 		}
 
+		[Test]
+		public void CheckFormEngineAffaire()
+		{
+			this.CreateWindow("Affaire");
+		}
+
 
 		protected void CreateWindow(string name)
 		{
@@ -93,6 +99,14 @@ namespace Epsitec.Common.FormEngine
 				fields.Add(this.CreateField("[630B2].[630S2]"));  // Affaire.Client
 				fields.Add(this.CreateField("[630B2].[63013]"));  // Affaire.SoldeDû
 				fields.Add(this.CreateField("[630L2]"));  // TotalFacturé
+			}
+
+			if (name == "Affaire")
+			{
+				itemId = Druid.Parse("[63051]"); // Affaire
+				fields.Add(this.CreateField("[630S2]"));  // Client
+				fields.Add(this.CreateField("[630T2]"));  // Désignation
+				fields.Add(this.CreateField("[63013]"));  // SoldeDû
 			}
 
 			System.Console.Out.WriteLine("Génère l'interface pour le DRUID {0}", itemId);
