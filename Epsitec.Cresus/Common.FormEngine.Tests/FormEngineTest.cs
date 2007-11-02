@@ -63,6 +63,7 @@ namespace Epsitec.Common.FormEngine
 			Druid itemId = item.Id;
 
 			itemId = Druid.Parse("[63081]"); // force l'adresse pour jouer un peu
+			itemId = Druid.Parse ("[63021]"); // force la facture pour jouer un peu plus en profondeur
 
 			System.Console.Out.WriteLine("Génère l'interface pour le DRUID {0}", itemId);
 
