@@ -33,10 +33,16 @@ namespace Epsitec.Common.FormEngine
 			root.DataSource.AddDataSource("Data", entityData);
 
 			Widgets.Layouts.GridLayoutEngine grid = new Widgets.Layouts.GridLayoutEngine();
-			grid.ColumnDefinitions.Add(new Widgets.Layouts.ColumnDefinition());
 			for (int i=0; i<FormEngine.MaxColumnsRequired; i++)
 			{
-				grid.ColumnDefinitions.Add(new Widgets.Layouts.ColumnDefinition(new Widgets.Layouts.GridLength(1+i, Widgets.Layouts.GridUnitType.Proportional), 20, double.PositiveInfinity));
+				if (i == 0)
+				{
+					grid.ColumnDefinitions.Add(new Widgets.Layouts.ColumnDefinition());
+				}
+				else
+				{
+					grid.ColumnDefinitions.Add(new Widgets.Layouts.ColumnDefinition(new Widgets.Layouts.GridLength(i, Widgets.Layouts.GridUnitType.Proportional), 20, double.PositiveInfinity));
+				}
 			}
 			grid.ColumnDefinitions[0].RightBorder = 1;
 
@@ -82,23 +88,30 @@ namespace Epsitec.Common.FormEngine
 			}
 			grid.RowDefinitions[index].BottomBorder = m;
 
+			int columnsRequired = System.Math.Min(field.ColumnsRequired, FormEngine.MaxColumnsRequired-1);
+
+			if (row+1+columnsRequired > FormEngine.MaxColumnsRequired)  // dépasse à droite ?
+			{
+				row++;
+				column = 0;
+			}
+
+			if (field.RowsRequired > 1)
+			{
+				placeholder.PreferredHeight = field.RowsRequired*20;
+			}
+
 			Widgets.Layouts.GridLayoutEngine.SetColumn(placeholder, column);
 			Widgets.Layouts.GridLayoutEngine.SetRow(placeholder, row);
-			Widgets.Layouts.GridLayoutEngine.SetColumnSpan(placeholder, 1+field.ColumnsRequired);
-			Widgets.Layouts.GridLayoutEngine.SetRowSpan(placeholder, field.RowsRequired);
+			Widgets.Layouts.GridLayoutEngine.SetColumnSpan(placeholder, 1+columnsRequired);
 
 			if (field.BottomSeparator == FieldDescription.SeparatorType.Append)
 			{
-				column += 1+field.ColumnsRequired;
-				if (column >= FormEngine.MaxColumnsRequired)
-				{
-					row += field.RowsRequired;
-					column = 0;
-				}
+				column += 1+columnsRequired;
 			}
 			else
 			{
-				row += field.RowsRequired;
+				row++;
 				column = 0;
 			}
 
