@@ -26,6 +26,20 @@ namespace Epsitec.Common.FormEngine
 			}
 		}
 
+		public string GetPath(string prefix)
+		{
+			System.Text.StringBuilder builder = new System.Text.StringBuilder();
+			builder.Append(prefix);
+
+			foreach (Druid druid in this.fieldIds)
+			{
+				builder.Append(".");
+				builder.Append(druid);
+			}
+
+			return builder.ToString();
+		}
+
 		public bool Separator
 		{
 			get

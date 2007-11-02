@@ -22,9 +22,9 @@ namespace Epsitec.Common.FormEngine
 		{
 			//	Crée un masque de saisie pour une entité donnée.
 			Caption entityCaption = this.resourceManager.GetCaption(entityId);
-			StructuredType entityType = TypeRosetta.GetTypeObject(entityCaption) as StructuredType;
+			StructuredType entity = TypeRosetta.GetTypeObject(entityCaption) as StructuredType;
 
-			StructuredData entityData = new StructuredData(entityType);
+			StructuredData entityData = new StructuredData(entity);
 			entityData.UndefinedValueMode = UndefinedValueMode.Default;
 
 			UI.Panel root = new UI.Panel();
@@ -39,13 +39,21 @@ namespace Epsitec.Common.FormEngine
 
 			Widgets.Layouts.LayoutEngine.SetLayoutEngine(root, grid);
 
+#if false
 			List<Druid> entitiesBlackList = new List<Druid>();
-			this.CreateFormRows(entityType, root, grid, "Data.", 0, entitiesBlackList);
+			this.CreateFormRows(entity, root, grid, "Data.", 0, entitiesBlackList);
+#else
+			foreach (FieldDescription field in fields)
+			{
+				string path = field.GetPath("Data");
+				this.CreateField(root, grid, path);
+			}
+#endif
 
 			return root;
 		}
 
-		private void CreateFormRows(StructuredType entityType, UI.Panel root, Widgets.Layouts.GridLayoutEngine grid, string prefix, int depth, List<Druid> entitiesBlackList)
+		private void CreateFormRows(StructuredType entity, UI.Panel root, Widgets.Layouts.GridLayoutEngine grid, string prefix, int depth, List<Druid> entitiesBlackList)
 		{
 			if (depth > 3)
 			{
@@ -54,22 +62,22 @@ namespace Epsitec.Common.FormEngine
 
 			//	A-t-on déjà traité cette entité ? Si oui, on ne génère pas de nouveaux
 			//	champs pour éviter de tourner en rond avec des relations cycliques.
-			if (entitiesBlackList.Contains(entityType.CaptionId))
+			if (entitiesBlackList.Contains(entity.CaptionId))
 			{
 				return;
 			}
 			else
 			{
-				entitiesBlackList.Add(entityType.CaptionId);
+				entitiesBlackList.Add(entity.CaptionId);
 			}
 
-			foreach (string fieldId in entityType.GetFieldIds())
+			foreach (string fieldId in entity.GetFieldIds())
 			{
-				StructuredTypeField field = entityType.GetField(fieldId);
+				StructuredTypeField field = entity.GetField(fieldId);
 
 				if (field.Relation == FieldRelation.None)
 				{
-					this.CreateField(field, root, grid, prefix);
+					this.CreateField(root, grid, string.Concat(prefix, field.Id));
 				}
 				else if (field.Relation == FieldRelation.Reference)
 				{
@@ -78,12 +86,12 @@ namespace Epsitec.Common.FormEngine
 			}
 		}
 
-		private void CreateField(StructuredTypeField field, UI.Panel root, Widgets.Layouts.GridLayoutEngine grid, string prefix)
+		private void CreateField(UI.Panel root, Widgets.Layouts.GridLayoutEngine grid, string path)
 		{
 			int row = grid.RowDefinitions.Count;
 
 			UI.Placeholder placeholder = new Epsitec.Common.UI.Placeholder(root);
-			placeholder.SetBinding(UI.Placeholder.ValueProperty, new Binding(BindingMode.TwoWay, string.Concat(prefix, field.Id)));
+			placeholder.SetBinding(UI.Placeholder.ValueProperty, new Binding(BindingMode.TwoWay, path));
 			placeholder.TabIndex = row;
 
 			grid.RowDefinitions.Add(new Widgets.Layouts.RowDefinition());
