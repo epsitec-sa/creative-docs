@@ -42,55 +42,18 @@ namespace Epsitec.Common.FormEngine
 
 			Widgets.Layouts.LayoutEngine.SetLayoutEngine(root, grid);
 
-#if false
-			List<Druid> entitiesBlackList = new List<Druid>();
-			this.CreateFormRows(entity, root, grid, "Data.", 0, entitiesBlackList);
-#else
 			foreach (FieldDescription field in fields)
 			{
 				string path = field.GetPath("Data");
 				this.CreateField(root, grid, path, field);
 			}
-#endif
 
 			return root;
 		}
 
-		private void CreateFormRows(StructuredType entity, UI.Panel root, Widgets.Layouts.GridLayoutEngine grid, string prefix, int depth, List<Druid> entitiesBlackList)
-		{
-			if (depth > 3)
-			{
-				return;
-			}
-
-			//	A-t-on déjà traité cette entité ? Si oui, on ne génère pas de nouveaux
-			//	champs pour éviter de tourner en rond avec des relations cycliques.
-			if (entitiesBlackList.Contains(entity.CaptionId))
-			{
-				return;
-			}
-			else
-			{
-				entitiesBlackList.Add(entity.CaptionId);
-			}
-
-			foreach (string fieldId in entity.GetFieldIds())
-			{
-				StructuredTypeField field = entity.GetField(fieldId);
-
-				if (field.Relation == FieldRelation.None)
-				{
-					this.CreateField(root, grid, string.Concat(prefix, field.Id), null);
-				}
-				else if (field.Relation == FieldRelation.Reference)
-				{
-					this.CreateFormRows(field.Type as StructuredType, root, grid, string.Concat(prefix, field.Id, "."), depth+1, entitiesBlackList);
-				}
-			}
-		}
-
 		private void CreateField(UI.Panel root, Widgets.Layouts.GridLayoutEngine grid, string path, FieldDescription field)
 		{
+			//	Crée les widgets pour un champ dans la grille.
 			int row = grid.RowDefinitions.Count;
 
 			UI.Placeholder placeholder = new Epsitec.Common.UI.Placeholder(root);
@@ -147,6 +110,7 @@ namespace Epsitec.Common.FormEngine
 
 
 		public static readonly int MaxColumnsRequired = 10;
+		public static readonly int MaxRowsRequired = 20;
 
 		ResourceManager resourceManager;
 	}

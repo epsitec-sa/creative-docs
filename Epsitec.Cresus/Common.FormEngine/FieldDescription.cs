@@ -14,10 +14,10 @@ namespace Epsitec.Common.FormEngine
 	{
 		public enum SeparatorType
 		{
-			Normal  = 0,
-			Compact = 1,
-			Extend  = 2,
-			Line    = 3,
+			Normal  = 0,	// petit séparateur standard
+			Compact = 1,	// les champs se touchent (chevauchement d'un pixel)
+			Extend  = 2,	// grand séparateur
+			Line    = 3,	// grand séparateur avec trait horizontal
 		}
 
 
@@ -34,7 +34,7 @@ namespace Epsitec.Common.FormEngine
 		public FieldDescription(string listDruids) : this()
 		{
 			//	Constructeur sur la base d'une liste de Druids séparés par des points.
-			//	Par exemple: "[630B2].[630S2]"
+			//	Par exemple: listDruids = "[630B2].[630S2]"
 			string[] druids = listDruids.Split('.');
 			foreach (string druid in druids)
 			{
@@ -55,7 +55,7 @@ namespace Epsitec.Common.FormEngine
 		public string GetPath(string prefix)
 		{
 			//	Retourne le chemin permettant d'accéder au champ.
-			//	Par exemple: "Data.[630B2].[630S2]"
+			//	Par exemple, si prefix = "Data": retourne "Data.[630B2].[630S2]"
 			System.Text.StringBuilder builder = new System.Text.StringBuilder();
 			builder.Append(prefix);
 
@@ -70,7 +70,7 @@ namespace Epsitec.Common.FormEngine
 
 		public SeparatorType BottomSeparator
 		{
-			//	Type du séparateur en dessous du champ.
+			//	Type du séparateur après le champ (donc en dessous).
 			get
 			{
 				return this.bottomSeparator;
@@ -96,7 +96,7 @@ namespace Epsitec.Common.FormEngine
 
 		public int ColumnsRequired
 		{
-			//	Nombre de colonnes requises.
+			//	Nombre de colonnes requises [1..10].
 			get
 			{
 				return this.columnsRequired;
@@ -111,7 +111,7 @@ namespace Epsitec.Common.FormEngine
 
 		public int RowsRequired
 		{
-			//	Nombre de lignes requises.
+			//	Nombre de lignes requises [1..20].
 			get
 			{
 				return this.rowsRequired;
@@ -119,7 +119,7 @@ namespace Epsitec.Common.FormEngine
 			set
 			{
 				value = System.Math.Max(value, 1);
-				value = System.Math.Min(value, 10);
+				value = System.Math.Min(value, FormEngine.MaxRowsRequired);
 				this.rowsRequired = value;
 			}
 		}
