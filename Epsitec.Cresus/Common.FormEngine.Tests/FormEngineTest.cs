@@ -60,10 +60,10 @@ namespace Epsitec.Common.FormEngine
 		{
 			this.collection.MoveCurrentToFirst();
 			CultureMap item = this.collection.CurrentItem as CultureMap;
-			StructuredData data = item.GetCultureData("00");
+			Druid itemId = item.Id;
 
-			FormEngine engine = new FormEngine();
-			return engine.CreateForm(data);
+			FormEngine engine = new FormEngine(this.manager);
+			return engine.CreateForm(itemId);
 		}
 
 		protected void LoadResource()

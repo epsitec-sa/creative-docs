@@ -9,35 +9,41 @@ namespace Epsitec.Common.FormEngine
 {
 	public class FormEngine
 	{
-		public FormEngine()
+		public FormEngine(ResourceManager resourceManager)
 		{
 			//	Constructeur.
+			this.resourceManager = resourceManager;
 		}
 
-		public Widget CreateForm(StructuredData data)
+		public Widget CreateForm(Druid entityId)
 		{
 			//	Crée un masque de saisie pour une entité donnée.
-			Widget root = new Widget();
+			
+			Caption        entityCaption = this.resourceManager.GetCaption (entityId);
+			StructuredType entityType    = TypeRosetta.GetTypeObject (entityCaption) as StructuredType;
 
-#if false
-			IList<StructuredData> fields = data.GetValue(Res.Fields.ResourceStructuredType.Fields) as IList<StructuredData>;
-			foreach (StructuredData field in fields)
+			StructuredData entityData = new StructuredData (entityType);
+
+			UI.Panel root = new UI.Panel();
+			
+			root.ResourceManager = this.resourceManager;
+			root.DataSource = new UI.DataSource ();
+			root.DataSource.AddDataSource ("Data", entityData);
+
+			foreach (string fieldId in entityType.GetFieldIds())
 			{
-				Druid id = (Druid) field.GetValue(Res.Fields.Field.CaptionId);
+				StructuredTypeField field = entityType.GetField(fieldId);
+				Caption fieldCaption = this.resourceManager.GetCaption (field.CaptionId);
+
+				UI.Placeholder placeholder = new Epsitec.Common.UI.Placeholder (root);
+				placeholder.Dock = DockStyle.Stacked;
+				placeholder.SetBinding (UI.Placeholder.ValueProperty, new Binding (BindingMode.TwoWay, "Data." + field.Id));
 			}
-#endif
-
-			StaticText t;
-
-			t = new StaticText(root);
-			t.Text = "Coucou";
-			t.Dock = DockStyle.Top;
-
-			t = new StaticText(root);
-			t.Text = "Tralala";
-			t.Dock = DockStyle.Top;
 
 			return root;
 		}
+
+
+		ResourceManager resourceManager;
 	}
 }

@@ -536,6 +536,12 @@ namespace Epsitec.Common.Widgets
 		{
 			ColorSample cs = sender as ColorSample;
 
+			if (e == null)
+			{
+				this.SelectSample (cs, Operation.Export);
+				return;
+			}
+
 			if ((e.Message.IsShiftPressed) ||
 				(e.Message.IsControlPressed))
 			{
