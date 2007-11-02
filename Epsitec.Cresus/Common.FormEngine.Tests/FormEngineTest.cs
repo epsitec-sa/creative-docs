@@ -62,7 +62,7 @@ namespace Epsitec.Common.FormEngine
 			CultureMap item = this.collection.CurrentItem as CultureMap;
 			Druid itemId = item.Id;
 
-			itemId = Druid.Parse ("[63081]"); // force l'adresse pour jouer un peu
+			itemId = Druid.Parse("[63081]"); // force l'adresse pour jouer un peu
 
 			System.Console.Out.WriteLine("Génère l'interface pour le DRUID {0}", itemId);
 

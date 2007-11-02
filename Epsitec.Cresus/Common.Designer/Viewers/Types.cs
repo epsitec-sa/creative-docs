@@ -37,15 +37,24 @@ namespace Epsitec.Common.Designer.Viewers
 			label.Margins = new Margins(0, 5, 0, 0);
 			label.Dock = DockStyle.Left;
 
-			this.fieldController = new TextFieldCombo(this.groupController.GroupBox);
-			this.fieldController.IsReadOnly = true;
+			this.fieldController = new TextField(this.groupController.GroupBox);
 			this.fieldController.MinHeight = 20;  // attention, très important !
-			this.fieldController.PreferredWidth = 200;
+			this.fieldController.PreferredWidth = 120;
 			this.fieldController.HorizontalAlignment = HorizontalAlignment.Left;
 			this.fieldController.Dock = DockStyle.Left;
 			this.fieldController.TextChanged += new EventHandler(this.HandleControllerTextChanged);
 			this.fieldController.TabIndex = this.tabIndex++;
 			this.fieldController.TabNavigationMode = TabNavigationMode.ActivateOnTab;
+
+			this.fieldControllerParameter = new TextField(this.groupController.GroupBox);
+			this.fieldControllerParameter.MinHeight = 20;  // attention, très important !
+			this.fieldControllerParameter.PreferredWidth = 120;
+			this.fieldControllerParameter.HorizontalAlignment = HorizontalAlignment.Left;
+			this.fieldControllerParameter.Dock = DockStyle.Left;
+			this.fieldControllerParameter.Margins = new Margins(10, 0, 0, 0);
+			this.fieldControllerParameter.TextChanged += new EventHandler(this.HandleControllerTextChanged);
+			this.fieldControllerParameter.TabIndex = this.tabIndex++;
+			this.fieldControllerParameter.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 
 			//	Zone 'nullable'.
 			this.CreateBand(out leftContainer, Res.Strings.Viewers.Types.Nullable.Title, BandMode.SuiteView, GlyphShape.None, false, 0.1);
@@ -81,6 +90,7 @@ namespace Epsitec.Common.Designer.Viewers
 			if (disposing)
 			{
 				this.fieldController.TextChanged -= new EventHandler(this.HandleControllerTextChanged);
+				this.fieldControllerParameter.TextChanged -= new EventHandler(this.HandleControllerTextChanged);
 				this.primaryNullable.Pressed -= new MessageEventHandler(this.HandleNullablePressed);
 			}
 
@@ -146,6 +156,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 			this.UpdateController(typeCode);
 			this.fieldController.Text = controller;
+			this.fieldControllerParameter.Text = controllerParameter;
 
 			this.primaryNullable.ActiveState = nullable ? ActiveState.Yes : ActiveState.No;
 
@@ -192,6 +203,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 		protected void UpdateController(TypeCode typeCode)
 		{
+#if false
 			this.fieldController.Items.Clear();
 			this.fieldController.Items.Add("Normal");
 
@@ -212,6 +224,7 @@ namespace Epsitec.Common.Designer.Viewers
 				this.fieldController.Items.Add("ScrollList");
 				this.fieldController.Items.Add("Combo");
 			}
+#endif
 		}
 
 		
@@ -330,6 +343,7 @@ namespace Epsitec.Common.Designer.Viewers
 			StructuredData data = item.GetCultureData(this.GetTwoLetters(0));
 
 			data.SetValue(Support.Res.Fields.ResourceBaseType.DefaultController, this.fieldController.Text);
+			data.SetValue(Support.Res.Fields.ResourceBaseType.DefaultControllerParameter, this.fieldControllerParameter.Text);
 
 			CultureMapSource source = this.access.GetCultureMapSource(item);
 			bool usesOriginalData;
@@ -375,6 +389,7 @@ namespace Epsitec.Common.Designer.Viewers
 			if (button == this.groupController.ResetButton)
 			{
 				this.access.Accessor.ResetToOriginalValue(item, data, Support.Res.Fields.ResourceBaseType.DefaultController);
+				this.access.Accessor.ResetToOriginalValue(item, data, Support.Res.Fields.ResourceBaseType.DefaultControllerParameter);
 			}
 
 			if (button == this.groupNullable.ResetButton)
@@ -393,7 +408,8 @@ namespace Epsitec.Common.Designer.Viewers
 		protected MyWidgets.StackedPanel		container;
 		protected TypeCode						typeCode = TypeCode.Invalid;
 		protected MyWidgets.ResetBox			groupController;
-		protected TextFieldCombo				fieldController;
+		protected TextField						fieldController;
+		protected TextField						fieldControllerParameter;
 		protected MyWidgets.ResetBox			groupNullable;
 		protected CheckButton					primaryNullable;
 		protected MyWidgets.AbstractTypeEditor	editor;
