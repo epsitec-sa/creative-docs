@@ -102,14 +102,21 @@ namespace Epsitec.Common.FormEngine
 
 			grid.RowDefinitions.Add(new Widgets.Layouts.RowDefinition());
 
-			if (field != null && field.Separator)
+			double m = 2;
+			if (field != null)
 			{
-				grid.RowDefinitions[row].BottomBorder = 10;
+				switch (field.BottomSeparator)
+				{
+					case FieldDescription.SeparatorType.Compact:
+						m = -1;
+						break;
+
+					case FieldDescription.SeparatorType.Extend:
+						m = 10;
+						break;
+				}
 			}
-			else
-			{
-				grid.RowDefinitions[row].BottomBorder = 2;
-			}
+			grid.RowDefinitions[row].BottomBorder = m;
 
 			Widgets.Layouts.GridLayoutEngine.SetColumn(placeholder, 0);
 			Widgets.Layouts.GridLayoutEngine.SetRow(placeholder, row);

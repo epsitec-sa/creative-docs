@@ -12,12 +12,20 @@ namespace Epsitec.Common.FormEngine
 	/// </summary>
 	public class FieldDescription
 	{
+		public enum SeparatorType
+		{
+			Normal,
+			Compact,
+			Extend,
+		}
+
+
 		public FieldDescription()
 		{
 			//	Constructeur.
 			this.fieldIds = new List<Druid>();
 			this.backColor = Color.Empty;
-			this.separator = false;
+			this.bottomSeparator = SeparatorType.Normal;
 		}
 
 		public FieldDescription(string listDruids) : this()
@@ -57,15 +65,15 @@ namespace Epsitec.Common.FormEngine
 			return builder.ToString();
 		}
 
-		public bool Separator
+		public SeparatorType BottomSeparator
 		{
 			get
 			{
-				return this.separator;
+				return this.bottomSeparator;
 			}
 			set
 			{
-				this.separator = value;
+				this.bottomSeparator = value;
 			}
 		}
 
@@ -84,6 +92,6 @@ namespace Epsitec.Common.FormEngine
 
 		protected List<Druid> fieldIds;
 		protected Color backColor;
-		protected bool separator;
+		protected SeparatorType bottomSeparator;
 	}
 }
