@@ -9,6 +9,9 @@ using Epsitec.Common.Types;
 
 namespace Epsitec.Common.FormEngine
 {
+	/// <summary>
+	/// Projet de test de Common.FormEngine.
+	/// </summary>
 	[TestFixture]
 	public class FormEngineTest
 	{
@@ -62,13 +65,26 @@ namespace Epsitec.Common.FormEngine
 			CultureMap item = this.collection.CurrentItem as CultureMap;
 			Druid itemId = item.Id;
 
-			itemId = Druid.Parse("[63081]"); // force l'adresse pour jouer un peu
-			itemId = Druid.Parse ("[63021]"); // force la facture pour jouer un peu plus en profondeur
+			//?itemId = Druid.Parse("[63081]");  // Adresse
+			itemId = Druid.Parse ("[63021]"); // Facture
 
 			System.Console.Out.WriteLine("Génère l'interface pour le DRUID {0}", itemId);
 
+			List<FieldDescription> fields = new List<FieldDescription>();
+			fields.Add(this.CreateField(Druid.Parse("[63083]")));  // Rue
+			fields.Add(this.CreateField(Druid.Parse("[630C3]")));  // Npa
+			fields.Add(this.CreateField(Druid.Parse("[630B3]")));  // Ville
+
 			FormEngine engine = new FormEngine(this.manager);
-			return engine.CreateForm(itemId);
+			return engine.CreateForm(itemId, fields);
+		}
+
+		protected FieldDescription CreateField(Druid id)
+		{
+			FieldDescription field = new FieldDescription();
+			field.FieldsIds.Add(id);
+
+			return field;
 		}
 
 		protected void LoadResource()
