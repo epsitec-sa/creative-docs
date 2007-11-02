@@ -36,15 +36,27 @@ namespace Epsitec.Common.FormEngine
 		}
 
 		[Test]
-		public void CheckFormEngine()
+		public void CheckFormEngineAdresse()
+		{
+			this.CreateWindow("Adresse");
+		}
+
+		[Test]
+		public void CheckFormEngineFacture()
+		{
+			this.CreateWindow("Facture");
+		}
+
+
+		protected void CreateWindow(string name)
 		{
 			Window window = new Window();
 			
 			window.ClientSize = new Size(400, 300);
-			window.Text = "CheckFormEngine";
+			window.Text = string.Concat("CheckFormEngine-", name);
 			window.Root.Padding = new Margins(10, 10, 10, 10);
 
-			Widget form = this.CreateForm();
+			Widget form = this.CreateForm(name);
 			form.Dock = DockStyle.Fill;
 			window.Root.Children.Add(form);
 
@@ -58,27 +70,30 @@ namespace Epsitec.Common.FormEngine
 			Window.RunInTestEnvironment(window);
 		}
 
-
-		protected Widget CreateForm()
+		protected Widget CreateForm(string name)
 		{
 			this.collection.MoveCurrentToFirst();
 			CultureMap item = this.collection.CurrentItem as CultureMap;
 			Druid itemId = item.Id;
 
 			List<FieldDescription> fields = new List<FieldDescription>();
-#if false
-			itemId = Druid.Parse("[63081]");  // Adresse
-			fields.Add(this.CreateField("[63083]"));  // Rue
-			fields.Add(this.CreateField("[630C3]"));  // Npa
-			fields.Add(this.CreateField("[630B3]"));  // Ville
-#endif
-#if true
-			itemId = Druid.Parse ("[63021]"); // Facture
-			fields.Add(this.CreateField("[630A2]"));  // Numéro
-			fields.Add(this.CreateField("[630B2].[630S2]"));  // Affaire.Client
-			fields.Add(this.CreateField("[630B2].[63013]"));  // Affaire.SoldeDû
-			fields.Add(this.CreateField("[630L2]"));  // TotalFacturé
-#endif
+
+			if (name == "Adresse")
+			{
+				itemId = Druid.Parse("[63081]");  // Adresse
+				fields.Add(this.CreateField("[63083]"));  // Rue
+				fields.Add(this.CreateField("[630C3]"));  // Npa
+				fields.Add(this.CreateField("[630B3]"));  // Ville
+			}
+
+			if (name == "Facture")
+			{
+				itemId = Druid.Parse("[63021]"); // Facture
+				fields.Add(this.CreateField("[630A2]"));  // Numéro
+				fields.Add(this.CreateField("[630B2].[630S2]"));  // Affaire.Client
+				fields.Add(this.CreateField("[630B2].[63013]"));  // Affaire.SoldeDû
+				fields.Add(this.CreateField("[630L2]"));  // TotalFacturé
+			}
 
 			System.Console.Out.WriteLine("Génère l'interface pour le DRUID {0}", itemId);
 
