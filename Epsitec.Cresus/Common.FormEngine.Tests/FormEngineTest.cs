@@ -87,26 +87,26 @@ namespace Epsitec.Common.FormEngine
 			if (name == "Adresse")
 			{
 				itemId = Druid.Parse("[63081]");  // Adresse
-				fields.Add(this.CreateField("[63083]"));  // Rue
-				fields.Add(this.CreateField("[630C3]"));  // Npa
-				fields.Add(this.CreateField("[630B3]"));  // Ville
+				fields.Add(this.CreateField("[63083]", true));  // Rue
+				fields.Add(this.CreateField("[630C3]", false));  // Npa
+				fields.Add(this.CreateField("[630B3]", false));  // Ville
 			}
 
 			if (name == "Facture")
 			{
 				itemId = Druid.Parse("[63021]"); // Facture
-				fields.Add(this.CreateField("[630A2]"));  // Numéro
-				fields.Add(this.CreateField("[630B2].[630S2]"));  // Affaire.Client
-				fields.Add(this.CreateField("[630B2].[63013]"));  // Affaire.SoldeDû
-				fields.Add(this.CreateField("[630L2]"));  // TotalFacturé
+				fields.Add(this.CreateField("[630A2]", false));  // Numéro
+				fields.Add(this.CreateField("[630B2].[630S2]", false));  // Affaire.Client
+				fields.Add(this.CreateField("[630B2].[63013]", false));  // Affaire.SoldeDû
+				fields.Add(this.CreateField("[630L2]", false));  // TotalFacturé
 			}
 
 			if (name == "Affaire")
 			{
 				itemId = Druid.Parse("[63051]"); // Affaire
-				fields.Add(this.CreateField("[630S2]"));  // Client
-				fields.Add(this.CreateField("[630T2]"));  // Désignation
-				fields.Add(this.CreateField("[63013]"));  // SoldeDû
+				fields.Add(this.CreateField("[630S2]", false));  // Client
+				fields.Add(this.CreateField("[630T2]", true));  // Désignation
+				fields.Add(this.CreateField("[63013]", false));  // SoldeDû
 			}
 
 			System.Console.Out.WriteLine("Génère l'interface pour le DRUID {0}", itemId);
@@ -115,9 +115,10 @@ namespace Epsitec.Common.FormEngine
 			return engine.CreateForm(itemId, fields);
 		}
 
-		protected FieldDescription CreateField(string listDruids)
+		protected FieldDescription CreateField(string listDruids, bool separator)
 		{
 			FieldDescription field = new FieldDescription(listDruids);
+			field.Separator = separator;
 			return field;
 		}
 

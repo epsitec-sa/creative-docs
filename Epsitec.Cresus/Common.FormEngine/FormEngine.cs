@@ -46,7 +46,7 @@ namespace Epsitec.Common.FormEngine
 			foreach (FieldDescription field in fields)
 			{
 				string path = field.GetPath("Data");
-				this.CreateField(root, grid, path);
+				this.CreateField(root, grid, path, field.Separator);
 			}
 #endif
 
@@ -77,7 +77,7 @@ namespace Epsitec.Common.FormEngine
 
 				if (field.Relation == FieldRelation.None)
 				{
-					this.CreateField(root, grid, string.Concat(prefix, field.Id));
+					this.CreateField(root, grid, string.Concat(prefix, field.Id), false);
 				}
 				else if (field.Relation == FieldRelation.Reference)
 				{
@@ -86,12 +86,13 @@ namespace Epsitec.Common.FormEngine
 			}
 		}
 
-		private void CreateField(UI.Panel root, Widgets.Layouts.GridLayoutEngine grid, string path)
+		private void CreateField(UI.Panel root, Widgets.Layouts.GridLayoutEngine grid, string path, bool separator)
 		{
 			int row = grid.RowDefinitions.Count;
 
 			UI.Placeholder placeholder = new Epsitec.Common.UI.Placeholder(root);
 			placeholder.SetBinding(UI.Placeholder.ValueProperty, new Binding(BindingMode.TwoWay, path));
+			placeholder.Margins = new Margins(0, 0, 0, separator?10:0);
 			placeholder.TabIndex = row;
 
 			grid.RowDefinitions.Add(new Widgets.Layouts.RowDefinition());
