@@ -87,26 +87,26 @@ namespace Epsitec.Common.FormEngine
 			if (name == "Adresse")
 			{
 				itemId = Druid.Parse("[63081]");  // Adresse
-				fields.Add(this.CreateField("[63083]", true));  // Rue
-				fields.Add(this.CreateField("[630C3]", false));  // Npa
-				fields.Add(this.CreateField("[630B3]", false));  // Ville
+				fields.Add(this.CreateField("[63083]", Color.Empty, true));  // Rue
+				fields.Add(this.CreateField("[630C3]", Color.Empty, false));  // Npa
+				fields.Add(this.CreateField("[630B3]", Color.Empty, false));  // Ville
 			}
 
 			if (name == "Facture")
 			{
 				itemId = Druid.Parse("[63021]"); // Facture
-				fields.Add(this.CreateField("[630A2]", false));  // Numéro
-				fields.Add(this.CreateField("[630B2].[630S2]", false));  // Affaire.Client
-				fields.Add(this.CreateField("[630B2].[63013]", false));  // Affaire.SoldeDû
-				fields.Add(this.CreateField("[630L2]", false));  // TotalFacturé
+				fields.Add(this.CreateField("[630A2]", Color.Empty, false));  // Numéro
+				fields.Add(this.CreateField("[630B2].[630S2]", Color.Empty, false));  // Affaire.Client
+				fields.Add(this.CreateField("[630B2].[63013].[63053]", Color.Empty, false));  // Affaire.SoldeDû.Montant
+				fields.Add(this.CreateField("[630L2].[630N]", Color.FromRgb(1, 0.9, 0.5), false));  // TotalFacturé.TotalHt
 			}
 
 			if (name == "Affaire")
 			{
 				itemId = Druid.Parse("[63051]"); // Affaire
-				fields.Add(this.CreateField("[630S2]", false));  // Client
-				fields.Add(this.CreateField("[630T2]", true));  // Désignation
-				fields.Add(this.CreateField("[63013]", false));  // SoldeDû
+				fields.Add(this.CreateField("[630S2]", Color.Empty, false));  // Client
+				fields.Add(this.CreateField("[630T2]", Color.Empty, true));  // Désignation
+				fields.Add(this.CreateField("[63013].[63053]", Color.FromRgb(1, 0.9, 0.5), false));  // SoldeDû.Montant
 			}
 
 			System.Console.Out.WriteLine("Génère l'interface pour le DRUID {0}", itemId);
@@ -115,9 +115,10 @@ namespace Epsitec.Common.FormEngine
 			return engine.CreateForm(itemId, fields);
 		}
 
-		protected FieldDescription CreateField(string listDruids, bool separator)
+		protected FieldDescription CreateField(string listDruids, Color backColor, bool separator)
 		{
 			FieldDescription field = new FieldDescription(listDruids);
+			field.BackColor = backColor;
 			field.Separator = separator;
 			return field;
 		}

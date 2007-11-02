@@ -46,7 +46,7 @@ namespace Epsitec.Common.FormEngine
 			foreach (FieldDescription field in fields)
 			{
 				string path = field.GetPath("Data");
-				this.CreateField(root, grid, path, field.Separator);
+				this.CreateField(root, grid, path, field);
 			}
 #endif
 
@@ -77,7 +77,7 @@ namespace Epsitec.Common.FormEngine
 
 				if (field.Relation == FieldRelation.None)
 				{
-					this.CreateField(root, grid, string.Concat(prefix, field.Id), false);
+					this.CreateField(root, grid, string.Concat(prefix, field.Id), null);
 				}
 				else if (field.Relation == FieldRelation.Reference)
 				{
@@ -86,17 +86,30 @@ namespace Epsitec.Common.FormEngine
 			}
 		}
 
-		private void CreateField(UI.Panel root, Widgets.Layouts.GridLayoutEngine grid, string path, bool separator)
+		private void CreateField(UI.Panel root, Widgets.Layouts.GridLayoutEngine grid, string path, FieldDescription field)
 		{
 			int row = grid.RowDefinitions.Count;
 
 			UI.Placeholder placeholder = new Epsitec.Common.UI.Placeholder(root);
 			placeholder.SetBinding(UI.Placeholder.ValueProperty, new Binding(BindingMode.TwoWay, path));
-			placeholder.Margins = new Margins(0, 0, 0, separator?10:0);
+
+			if (field != null)
+			{
+				placeholder.BackColor = field.BackColor;
+			}
+
 			placeholder.TabIndex = row;
 
 			grid.RowDefinitions.Add(new Widgets.Layouts.RowDefinition());
-			grid.RowDefinitions[row].BottomBorder = 2;
+
+			if (field != null && field.Separator)
+			{
+				grid.RowDefinitions[row].BottomBorder = 10;
+			}
+			else
+			{
+				grid.RowDefinitions[row].BottomBorder = 2;
+			}
 
 			Widgets.Layouts.GridLayoutEngine.SetColumn(placeholder, 0);
 			Widgets.Layouts.GridLayoutEngine.SetRow(placeholder, row);

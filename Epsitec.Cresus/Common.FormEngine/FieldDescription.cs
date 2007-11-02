@@ -16,6 +16,8 @@ namespace Epsitec.Common.FormEngine
 		{
 			//	Constructeur.
 			this.fieldIds = new List<Druid>();
+			this.backColor = Color.Empty;
+			this.separator = false;
 		}
 
 		public FieldDescription(string listDruids) : this()
@@ -67,8 +69,21 @@ namespace Epsitec.Common.FormEngine
 			}
 		}
 
+		public Color BackColor
+		{
+			get
+			{
+				return this.backColor;
+			}
+			set
+			{
+				this.backColor = value;
+			}
+		}
+
 
 		protected List<Druid> fieldIds;
+		protected Color backColor;
 		protected bool separator;
 	}
 }
