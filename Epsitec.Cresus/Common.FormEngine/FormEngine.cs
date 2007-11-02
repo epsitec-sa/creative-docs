@@ -34,7 +34,10 @@ namespace Epsitec.Common.FormEngine
 
 			Widgets.Layouts.GridLayoutEngine grid = new Widgets.Layouts.GridLayoutEngine();
 			grid.ColumnDefinitions.Add(new Widgets.Layouts.ColumnDefinition());
-			grid.ColumnDefinitions.Add(new Widgets.Layouts.ColumnDefinition(new Widgets.Layouts.GridLength(1, Widgets.Layouts.GridUnitType.Proportional), 60, double.PositiveInfinity));
+			for (int i=0; i<FormEngine.MaxColumnsRequired; i++)
+			{
+				grid.ColumnDefinitions.Add(new Widgets.Layouts.ColumnDefinition(new Widgets.Layouts.GridLength(1+i, Widgets.Layouts.GridUnitType.Proportional), 20, double.PositiveInfinity));
+			}
 			grid.ColumnDefinitions[0].RightBorder = 1;
 
 			Widgets.Layouts.LayoutEngine.SetLayoutEngine(root, grid);
@@ -123,7 +126,7 @@ namespace Epsitec.Common.FormEngine
 
 			Widgets.Layouts.GridLayoutEngine.SetColumn(placeholder, 0);
 			Widgets.Layouts.GridLayoutEngine.SetRow(placeholder, row);
-			Widgets.Layouts.GridLayoutEngine.SetColumnSpan(placeholder, 2);
+			Widgets.Layouts.GridLayoutEngine.SetColumnSpan(placeholder, 1+field.ColumnsRequired);
 
 			if (field != null && field.BottomSeparator == FieldDescription.SeparatorType.Line)
 			{
@@ -137,10 +140,12 @@ namespace Epsitec.Common.FormEngine
 
 				Widgets.Layouts.GridLayoutEngine.SetColumn(sep, 0);
 				Widgets.Layouts.GridLayoutEngine.SetRow(sep, row);
-				Widgets.Layouts.GridLayoutEngine.SetColumnSpan(sep, 2);
+				Widgets.Layouts.GridLayoutEngine.SetColumnSpan(sep, 1+FormEngine.MaxColumnsRequired);
 			}
 		}
 
+
+		public static readonly int MaxColumnsRequired = 10;
 
 		ResourceManager resourceManager;
 	}

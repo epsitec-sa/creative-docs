@@ -27,6 +27,8 @@ namespace Epsitec.Common.FormEngine
 			this.fieldIds = new List<Druid>();
 			this.backColor = Color.Empty;
 			this.bottomSeparator = SeparatorType.Normal;
+			this.columnsRequired = 10;
+			this.linesRequired = 1;
 		}
 
 		public FieldDescription(string listDruids) : this()
@@ -92,9 +94,37 @@ namespace Epsitec.Common.FormEngine
 			}
 		}
 
+		public int ColumnsRequired
+		{
+			//	Nombre de colonnes requises.
+			get
+			{
+				return this.columnsRequired;
+			}
+			set
+			{
+				this.columnsRequired = value;
+			}
+		}
+
+		public int LinesRequired
+		{
+			//	Nombre de lignes requises.
+			get
+			{
+				return this.linesRequired;
+			}
+			set
+			{
+				this.linesRequired = value;
+			}
+		}
+
 
 		protected List<Druid> fieldIds;
 		protected Color backColor;
 		protected SeparatorType bottomSeparator;
+		protected int columnsRequired;
+		protected int linesRequired;
 	}
 }

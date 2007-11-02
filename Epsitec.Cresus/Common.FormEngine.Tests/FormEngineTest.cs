@@ -87,26 +87,26 @@ namespace Epsitec.Common.FormEngine
 			if (name == "Adresse")
 			{
 				itemId = Druid.Parse("[63081]");  // Adresse
-				fields.Add(this.CreateField("[63083]", Color.Empty, FieldDescription.SeparatorType.Line));  // Rue
-				fields.Add(this.CreateField("[630C3]", Color.Empty, FieldDescription.SeparatorType.Compact));  // Npa
-				fields.Add(this.CreateField("[630B3]", Color.Empty, FieldDescription.SeparatorType.Normal));  // Ville
+				fields.Add(this.CreateField("[63083]", Color.Empty, FieldDescription.SeparatorType.Line, 10, 1));  // Rue
+				fields.Add(this.CreateField("[630C3]", Color.Empty, FieldDescription.SeparatorType.Compact, 3, 1));  // Npa
+				fields.Add(this.CreateField("[630B3]", Color.Empty, FieldDescription.SeparatorType.Normal, 10, 1));  // Ville
 			}
 
 			if (name == "Facture")
 			{
 				itemId = Druid.Parse("[63021]"); // Facture
-				fields.Add(this.CreateField("[630A2]", Color.Empty, FieldDescription.SeparatorType.Normal));  // Numéro
-				fields.Add(this.CreateField("[630B2].[630S2]", Color.Empty, FieldDescription.SeparatorType.Normal));  // Affaire.Client
-				fields.Add(this.CreateField("[630B2].[63013].[63053]", Color.Empty, FieldDescription.SeparatorType.Normal));  // Affaire.SoldeDû.Montant
-				fields.Add(this.CreateField("[630L2].[630N]", Color.FromRgb(1, 0.9, 0.5), FieldDescription.SeparatorType.Normal));  // TotalFacturé.TotalHt
+				fields.Add(this.CreateField("[630A2]", Color.Empty, FieldDescription.SeparatorType.Normal, 5, 1));  // Numéro
+				fields.Add(this.CreateField("[630B2].[630S2]", Color.Empty, FieldDescription.SeparatorType.Normal, 10, 1));  // Affaire.Client
+				fields.Add(this.CreateField("[630B2].[63013].[63053]", Color.Empty, FieldDescription.SeparatorType.Normal, 4, 1));  // Affaire.SoldeDû.Montant
+				fields.Add(this.CreateField("[630L2].[630N]", Color.FromRgb(1, 0.9, 0.5), FieldDescription.SeparatorType.Normal, 4, 1));  // TotalFacturé.TotalHt
 			}
 
 			if (name == "Affaire")
 			{
 				itemId = Druid.Parse("[63051]"); // Affaire
-				fields.Add(this.CreateField("[630S2]", Color.Empty, FieldDescription.SeparatorType.Normal));  // Client
-				fields.Add(this.CreateField("[630T2]", Color.Empty, FieldDescription.SeparatorType.Extend));  // Désignation
-				fields.Add(this.CreateField("[63013].[63053]", Color.FromRgb(1, 0.9, 0.5), FieldDescription.SeparatorType.Normal));  // SoldeDû.Montant
+				fields.Add(this.CreateField("[630S2]", Color.Empty, FieldDescription.SeparatorType.Normal, 5, 1));  // Client
+				fields.Add(this.CreateField("[630T2]", Color.Empty, FieldDescription.SeparatorType.Extend, 10, 1));  // Désignation
+				fields.Add(this.CreateField("[63013].[63053]", Color.FromRgb(1, 0.9, 0.5), FieldDescription.SeparatorType.Normal, 4, 1));  // SoldeDû.Montant
 			}
 
 			System.Console.Out.WriteLine("Génère l'interface pour le DRUID {0}", itemId);
@@ -115,11 +115,15 @@ namespace Epsitec.Common.FormEngine
 			return engine.CreateForm(itemId, fields);
 		}
 
-		protected FieldDescription CreateField(string listDruids, Color backColor, FieldDescription.SeparatorType separator)
+		protected FieldDescription CreateField(string listDruids, Color backColor, FieldDescription.SeparatorType separator, int columns, int lines)
 		{
 			FieldDescription field = new FieldDescription(listDruids);
+
 			field.BackColor = backColor;
 			field.BottomSeparator = separator;
+			field.ColumnsRequired = columns;
+			field.LinesRequired = lines;
+			
 			return field;
 		}
 
