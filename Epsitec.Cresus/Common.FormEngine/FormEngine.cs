@@ -127,6 +127,7 @@ namespace Epsitec.Common.FormEngine
 			Widgets.Layouts.GridLayoutEngine.SetColumn(placeholder, 0);
 			Widgets.Layouts.GridLayoutEngine.SetRow(placeholder, row);
 			Widgets.Layouts.GridLayoutEngine.SetColumnSpan(placeholder, 1+field.ColumnsRequired);
+			Widgets.Layouts.GridLayoutEngine.SetRowSpan(placeholder, field.RowsRequired);
 
 			if (field != null && field.BottomSeparator == FieldDescription.SeparatorType.Line)
 			{

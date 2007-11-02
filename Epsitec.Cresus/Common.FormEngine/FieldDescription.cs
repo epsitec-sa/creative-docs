@@ -28,7 +28,7 @@ namespace Epsitec.Common.FormEngine
 			this.backColor = Color.Empty;
 			this.bottomSeparator = SeparatorType.Normal;
 			this.columnsRequired = 10;
-			this.linesRequired = 1;
+			this.rowsRequired = 1;
 		}
 
 		public FieldDescription(string listDruids) : this()
@@ -103,20 +103,24 @@ namespace Epsitec.Common.FormEngine
 			}
 			set
 			{
+				value = System.Math.Max(value, 1);
+				value = System.Math.Min(value, FormEngine.MaxColumnsRequired);
 				this.columnsRequired = value;
 			}
 		}
 
-		public int LinesRequired
+		public int RowsRequired
 		{
 			//	Nombre de lignes requises.
 			get
 			{
-				return this.linesRequired;
+				return this.rowsRequired;
 			}
 			set
 			{
-				this.linesRequired = value;
+				value = System.Math.Max(value, 1);
+				value = System.Math.Min(value, 10);
+				this.rowsRequired = value;
 			}
 		}
 
@@ -125,6 +129,6 @@ namespace Epsitec.Common.FormEngine
 		protected Color backColor;
 		protected SeparatorType bottomSeparator;
 		protected int columnsRequired;
-		protected int linesRequired;
+		protected int rowsRequired;
 	}
 }
