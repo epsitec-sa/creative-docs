@@ -87,9 +87,9 @@ namespace Epsitec.Common.FormEngine
 			if (name == "Adresse")
 			{
 				itemId = Druid.Parse("[63081]");  // Adresse
-				fields.Add(this.CreateField("[63083]", Color.Empty, FieldDescription.SeparatorType.Line, 10, 3));  // Rue
-				fields.Add(this.CreateField("[630C3]", Color.Empty, FieldDescription.SeparatorType.Compact, 3, 1));  // Npa
-				fields.Add(this.CreateField("[630B3]", Color.Empty, FieldDescription.SeparatorType.Normal, 10, 1));  // Ville
+				fields.Add(this.CreateField("[63083]", Color.Empty, FieldDescription.SeparatorType.Line, 10, 2));  // Rue
+				fields.Add(this.CreateField("[630C3]", Color.Empty, FieldDescription.SeparatorType.Append, 3, 1));  // Npa
+				fields.Add(this.CreateField("[630B3]", Color.Empty, FieldDescription.SeparatorType.Normal, 6, 1));  // Ville
 			}
 
 			if (name == "Facture")
@@ -105,7 +105,7 @@ namespace Epsitec.Common.FormEngine
 			{
 				itemId = Druid.Parse("[63051]"); // Affaire
 				fields.Add(this.CreateField("[630S2]", Color.Empty, FieldDescription.SeparatorType.Normal, 5, 1));  // Client
-				fields.Add(this.CreateField("[630T2]", Color.Empty, FieldDescription.SeparatorType.Extend, 10, 2));  // Désignation
+				fields.Add(this.CreateField("[630T2]", Color.Empty, FieldDescription.SeparatorType.Extend, 10, 5));  // Désignation
 				fields.Add(this.CreateField("[63013].[63053]", Color.FromRgb(1, 0.9, 0.5), FieldDescription.SeparatorType.Normal, 4, 1));  // SoldeDû.Montant
 			}
 

@@ -42,62 +42,72 @@ namespace Epsitec.Common.FormEngine
 
 			Widgets.Layouts.LayoutEngine.SetLayoutEngine(root, grid);
 
+			int column = 0;
+			int row = 0;
 			foreach (FieldDescription field in fields)
 			{
 				string path = field.GetPath("Data");
-				this.CreateField(root, grid, path, field);
+				this.CreateField(root, grid, path, field, ref column, ref row);
 			}
 
 			return root;
 		}
 
-		private void CreateField(UI.Panel root, Widgets.Layouts.GridLayoutEngine grid, string path, FieldDescription field)
+		private void CreateField(UI.Panel root, Widgets.Layouts.GridLayoutEngine grid, string path, FieldDescription field, ref int column, ref int row)
 		{
 			//	Crée les widgets pour un champ dans la grille.
-			int row = grid.RowDefinitions.Count;
+			int index = grid.RowDefinitions.Count;
 
 			UI.Placeholder placeholder = new Epsitec.Common.UI.Placeholder(root);
 			placeholder.SetBinding(UI.Placeholder.ValueProperty, new Binding(BindingMode.TwoWay, path));
-			placeholder.TabIndex = row;
-
-			if (field != null)
-			{
-				placeholder.BackColor = field.BackColor;
-			}
+			placeholder.BackColor = field.BackColor;
+			placeholder.TabIndex = index;
 
 			grid.RowDefinitions.Add(new Widgets.Layouts.RowDefinition());
 
 			double m = 2;
-			if (field != null)
+			switch (field.BottomSeparator)
 			{
-				switch (field.BottomSeparator)
-				{
-					case FieldDescription.SeparatorType.Compact:
-						m = -1;
-						break;
+				case FieldDescription.SeparatorType.Compact:
+					m = -1;
+					break;
 
-					case FieldDescription.SeparatorType.Extend:
-						m = 10;
-						break;
+				case FieldDescription.SeparatorType.Extend:
+					m = 10;
+					break;
 
-					case FieldDescription.SeparatorType.Line:
-						m = 0;
-						break;
-				}
+				case FieldDescription.SeparatorType.Line:
+					m = 0;
+					break;
 			}
-			grid.RowDefinitions[row].BottomBorder = m;
+			grid.RowDefinitions[index].BottomBorder = m;
 
-			Widgets.Layouts.GridLayoutEngine.SetColumn(placeholder, 0);
+			Widgets.Layouts.GridLayoutEngine.SetColumn(placeholder, column);
 			Widgets.Layouts.GridLayoutEngine.SetRow(placeholder, row);
 			Widgets.Layouts.GridLayoutEngine.SetColumnSpan(placeholder, 1+field.ColumnsRequired);
 			Widgets.Layouts.GridLayoutEngine.SetRowSpan(placeholder, field.RowsRequired);
 
-			if (field != null && field.BottomSeparator == FieldDescription.SeparatorType.Line)
+			if (field.BottomSeparator == FieldDescription.SeparatorType.Append)
 			{
-				row++;
+				column += 1+field.ColumnsRequired;
+				if (column >= FormEngine.MaxColumnsRequired)
+				{
+					row += field.RowsRequired;
+					column = 0;
+				}
+			}
+			else
+			{
+				row += field.RowsRequired;
+				column = 0;
+			}
+
+			if (field.BottomSeparator == FieldDescription.SeparatorType.Line)
+			{
+				index++;
 				grid.RowDefinitions.Add(new Widgets.Layouts.RowDefinition());
-				grid.RowDefinitions[row].TopBorder = 10;
-				grid.RowDefinitions[row].BottomBorder = 10;
+				grid.RowDefinitions[index].TopBorder = 10;
+				grid.RowDefinitions[index].BottomBorder = 10;
 
 				Separator sep = new Separator(root);
 				sep.PreferredHeight = 1;
@@ -105,6 +115,8 @@ namespace Epsitec.Common.FormEngine
 				Widgets.Layouts.GridLayoutEngine.SetColumn(sep, 0);
 				Widgets.Layouts.GridLayoutEngine.SetRow(sep, row);
 				Widgets.Layouts.GridLayoutEngine.SetColumnSpan(sep, 1+FormEngine.MaxColumnsRequired);
+
+				row++;
 			}
 		}
 
