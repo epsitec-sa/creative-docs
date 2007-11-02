@@ -87,7 +87,7 @@ namespace Epsitec.Common.FormEngine
 			if (name == "Adresse")
 			{
 				itemId = Druid.Parse("[63081]");  // Adresse
-				fields.Add(this.CreateField("[63083]", Color.Empty, FieldDescription.SeparatorType.Extend));  // Rue
+				fields.Add(this.CreateField("[63083]", Color.Empty, FieldDescription.SeparatorType.Line));  // Rue
 				fields.Add(this.CreateField("[630C3]", Color.Empty, FieldDescription.SeparatorType.Compact));  // Npa
 				fields.Add(this.CreateField("[630B3]", Color.Empty, FieldDescription.SeparatorType.Normal));  // Ville
 			}

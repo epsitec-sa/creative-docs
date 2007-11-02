@@ -14,9 +14,10 @@ namespace Epsitec.Common.FormEngine
 	{
 		public enum SeparatorType
 		{
-			Normal,
-			Compact,
-			Extend,
+			Normal  = 0,
+			Compact = 1,
+			Extend  = 2,
+			Line    = 3,
 		}
 
 
@@ -67,6 +68,7 @@ namespace Epsitec.Common.FormEngine
 
 		public SeparatorType BottomSeparator
 		{
+			//	Type du séparateur en dessous du champ.
 			get
 			{
 				return this.bottomSeparator;
@@ -79,6 +81,7 @@ namespace Epsitec.Common.FormEngine
 
 		public Color BackColor
 		{
+			//	Couleur de fond pour le champ.
 			get
 			{
 				return this.backColor;
