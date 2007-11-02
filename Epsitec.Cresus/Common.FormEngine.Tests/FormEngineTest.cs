@@ -86,17 +86,9 @@ namespace Epsitec.Common.FormEngine
 			return engine.CreateForm(itemId, fields);
 		}
 
-		protected FieldDescription CreateField(string text)
+		protected FieldDescription CreateField(string listDruids)
 		{
-			FieldDescription field = new FieldDescription();
-
-			string[] list = text.Split('.');
-			foreach (string d in list)
-			{
-				Druid id = Druid.Parse(d);
-				field.FieldsIds.Add(id);
-			}
-
+			FieldDescription field = new FieldDescription(listDruids);
 			return field;
 		}
 

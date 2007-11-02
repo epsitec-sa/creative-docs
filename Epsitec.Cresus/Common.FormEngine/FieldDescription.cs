@@ -18,7 +18,19 @@ namespace Epsitec.Common.FormEngine
 			this.fieldIds = new List<Druid>();
 		}
 
-		public List<Druid> FieldsIds
+		public FieldDescription(string listDruids) : this()
+		{
+			//	Constructeur sur la base d'une liste de Druids séparés par des points.
+			//	Par exemple: "[630B2].[630S2]"
+			string[] druids = listDruids.Split('.');
+			foreach (string druid in druids)
+			{
+				Druid id = Druid.Parse(druid);
+				this.fieldIds.Add(id);
+			}
+		}
+
+		public List<Druid> FieldIds
 		{
 			//	Liste des Druids qui représentent le champ.
 			get
