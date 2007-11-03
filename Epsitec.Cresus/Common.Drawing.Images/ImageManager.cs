@@ -119,18 +119,26 @@ namespace Epsitec.Common.Drawing
 
 			lock (this.localExclusion)
 			{
-				if (this.images.ContainsKey (key))
-				{
-					return null;
-				}
-				else
-				{
-					ImageData image = new ImageData (this, imageFilePath, imageId, imageFileDate);
+				ImageData image;
 
-					this.images.Add (key, image);
-					this.imageList.Add (image);
-					return image;
+				if (this.images.TryGetValue (key, out image))
+				{
+					if (image.QueueStatus == QueueStatus.Discarded)
+					{
+						this.images.Remove (key);
+						this.imageList.Remove (image);
+					}
+					else
+					{
+						return null;
+					}
 				}
+				
+				image = new ImageData (this, imageFilePath, imageId, imageFileDate);
+
+				this.images.Add (key, image);
+				this.imageList.Add (image);
+				return image;
 			}
 		}
 
@@ -634,7 +642,15 @@ namespace Epsitec.Common.Drawing
 				try
 				{
 					System.Threading.Interlocked.Increment (ref this.runningThreadCount);
-					callback ();
+
+					if (queueable.QueueStatus == QueueStatus.Discarded)
+					{
+						//System.Diagnostics.Debug.WriteLine ("Dropping discarded work item");
+					}
+					else
+					{
+						callback ();
+					}
 				}
 				finally
 				{

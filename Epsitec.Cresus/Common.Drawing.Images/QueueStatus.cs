@@ -9,5 +9,7 @@ namespace Epsitec.Common.Drawing
 
 		Pending,
 		Working,
+
+		Discarded
 	}
 }

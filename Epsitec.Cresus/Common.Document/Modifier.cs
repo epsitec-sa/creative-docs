@@ -4402,6 +4402,7 @@ namespace Epsitec.Common.Document
 
 			using ( this.OpletQueueBeginAction(Res.Strings.Action.PageNew) )
 			{
+				this.OpletQueue.Insert (new OpletPageUpdate (this, true, false));
 				this.InitiateChangingPage();
 
 				UndoableList list = this.document.DocumentObjects;  // liste des pages
@@ -4416,6 +4417,7 @@ namespace Epsitec.Common.Document
 				page.Objects.Add(layer);
 
 				this.TerminateChangingPage(rank);
+				this.OpletQueue.Insert (new OpletPageUpdate (this, false, true));
 
 				this.UpdatePageAfterChanging();
 				this.document.Notifier.NotifyArea(this.ActiveViewer);
@@ -4434,6 +4436,7 @@ namespace Epsitec.Common.Document
 
 			using ( this.OpletQueueBeginAction(Res.Strings.Action.PageDuplicate) )
 			{
+				this.OpletQueue.Insert (new OpletPageUpdate (this, true, false));
 				this.InitiateChangingPage();
 
 				UndoableList list = this.document.DocumentObjects;  // liste des pages
@@ -4459,6 +4462,7 @@ namespace Epsitec.Common.Document
 				Modifier.Duplicate(this.document, this.document, src, dst, false, new Point(0,0), false);
 
 				this.TerminateChangingPage(rank+1);
+				this.OpletQueue.Insert (new OpletPageUpdate (this, false, true));
 
 				this.UpdatePageAfterChanging();
 				this.document.Notifier.NotifyArea(this.ActiveViewer);
@@ -4477,6 +4481,7 @@ namespace Epsitec.Common.Document
 
 			using ( this.OpletQueueBeginAction(Res.Strings.Action.PageDelete) )
 			{
+				this.OpletQueue.Insert (new OpletPageUpdate (this, true, false));
 				this.InitiateChangingPage();
 
 				UndoableList list = this.document.DocumentObjects;  // liste des pages
@@ -4493,7 +4498,7 @@ namespace Epsitec.Common.Document
 
 				rank = System.Math.Min(rank, list.Count-1);
 				this.TerminateChangingPage(rank);
-
+				this.OpletQueue.Insert (new OpletPageUpdate (this, false, true));
 				this.UpdatePageAfterChanging();
 				this.document.Notifier.NotifyArea(this.ActiveViewer);
 				this.document.Notifier.NotifySelectionChanged();
@@ -4516,8 +4521,7 @@ namespace Epsitec.Common.Document
 				//	Ajoute un oplet pour permettre de forcer une mise à jour des
 				//	informations liées aux pages après un Undo (l'oplet s'exécute
 				//	en dernier, après les modifications faites aux UndoableList).
-				this.OpletQueue.Insert (new OpletPageSwap (this, true, false));
-				
+				this.OpletQueue.Insert (new OpletPageUpdate (this, true, false));
 				this.InitiateChangingPage ();
 
 				UndoableList list = this.document.DocumentObjects;  // liste des pages
@@ -4532,11 +4536,10 @@ namespace Epsitec.Common.Document
 				pages.Insert(rank2, temp);
 
 				this.TerminateChangingPage(rank2);
-				
 				//	Ajoute un oplet pour permettre de forcer une mise à jour des
 				//	informations liées aux pages après un Redo (l'oplet s'exécute
 				//	en dernier, après les modifications faites aux UndoableList).
-				this.OpletQueue.Insert (new OpletPageSwap (this, false, true));
+				this.OpletQueue.Insert (new OpletPageUpdate (this, false, true));
 
 				this.UpdatePageAfterChanging();
 				this.document.Notifier.NotifyArea();
@@ -4545,9 +4548,9 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		protected class OpletPageSwap : AbstractOplet
+		protected class OpletPageUpdate : AbstractOplet
 		{
-			public OpletPageSwap(Modifier host, bool updateOnUndo, bool updateOnRedo)
+			public OpletPageUpdate(Modifier host, bool updateOnUndo, bool updateOnRedo)
 			{
 				this.host = host;
 				this.updateOnUndo = updateOnUndo;

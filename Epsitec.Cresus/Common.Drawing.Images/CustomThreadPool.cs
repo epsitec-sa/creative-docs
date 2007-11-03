@@ -86,7 +86,7 @@ namespace Epsitec.Common.Drawing
 
 			lock (this.exclusion)
 			{
-				if (this.threads.Count >= 2*System.Environment.ProcessorCount)
+				if (this.threads.Count >= System.Environment.ProcessorCount + 1)
 				{
 					return;
 				}
@@ -130,23 +130,26 @@ namespace Epsitec.Common.Drawing
 
 					if (this.semaphore.WaitOne (this.lifeTimeout, false))
 					{
-
 						bool doSomeWork = true;
+						bool ignoreWork = false;
 
 						while (doSomeWork)
 						{
 							System.Threading.Interlocked.Increment (ref this.busyThreadCount);
 
-							try
+							if (ignoreWork == false)
 							{
-								this.ProcessWorkItem ();
-							}
-							finally
-							{
-								System.Threading.Interlocked.Decrement (ref this.busyThreadCount);
+								try
+								{
+									this.ProcessWorkItem ();
+								}
+								finally
+								{
+									System.Threading.Interlocked.Decrement (ref this.busyThreadCount);
+								}
 							}
 
-							if (this.UsesToMuchMemory ())
+							if (this.UsesTooMuchMemory ())
 							{
 								if (isFirstThread)
 								{
@@ -156,16 +159,20 @@ namespace Epsitec.Common.Drawing
 									}
 									else
 									{
-										System.Diagnostics.Debug.WriteLine ("Low memory, GC collection.");
+										//System.Diagnostics.Debug.WriteLine ("Low memory, GC collection.");
 										System.GC.Collect ();
 										gcExecuted = true;
 									}
 								}
 								else
 								{
-									System.Diagnostics.Debug.WriteLine ("Low memory, wait.");
 									System.Threading.Thread.Sleep (100);
+									ignoreWork = true;
 								}
+							}
+							else
+							{
+								ignoreWork = false;
 							}
 
 							lock (this.exclusion)
@@ -221,14 +228,14 @@ namespace Epsitec.Common.Drawing
 
 				callback ();
 
-				if (this.UsesToMuchMemory ())
+				if (this.UsesTooMuchMemory ())
 				{
 					break;
 				}
 			}
 		}
 
-		private bool UsesToMuchMemory()
+		private bool UsesTooMuchMemory()
 		{
 			if (System.Diagnostics.Process.GetCurrentProcess ().VirtualMemorySize64 > this.memoryLimit)
 			{

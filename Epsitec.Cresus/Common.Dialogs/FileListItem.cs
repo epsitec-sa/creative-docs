@@ -193,6 +193,10 @@ namespace Epsitec.Common.Dialogs
 
 				return this.cachedShortFileName;
 			}
+			set
+			{
+				this.cachedShortFileName = value;
+			}
 		}
 
 		public bool IsSynthetic
@@ -201,6 +205,18 @@ namespace Epsitec.Common.Dialogs
 			get
 			{
 				return this.isSynthetic;
+			}
+		}
+
+		public bool IsDefaultItem
+		{
+			get
+			{
+				return this.isDefaultItem;
+			}
+			set
+			{
+				this.isDefaultItem = value;
 			}
 		}
 
@@ -795,6 +811,17 @@ namespace Epsitec.Common.Dialogs
 					return this.isSynthetic ? -1 : 1;  // 'nouveau document vide' au début
 				}
 			}
+			if (this.isDefaultItem || other.isDefaultItem)
+			{
+				if (this.isDefaultItem == other.isDefaultItem)
+				{
+					return string.Compare (this.ShortFileName, other.ShortFileName);
+				}
+				else
+				{
+					return this.isDefaultItem ? -1 : 1;  // 'document par défaut' au début
+				}
+			}
 
 			if (this.IsDrive != other.IsDrive)
 			{
@@ -1050,6 +1077,7 @@ namespace Epsitec.Common.Dialogs
 		protected FolderItemIcon largeIcon;
 		protected FileListItem parent;
 		protected bool isSynthetic;
+		protected bool isDefaultItem;
 		protected bool sortAccordingToLevel = false;
 	}
 }

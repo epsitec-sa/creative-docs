@@ -20,7 +20,11 @@ namespace Epsitec.Common.Drawing
 		{
 			get
 			{
-				if (this.workingCounter > 0)
+				if (this.discarded)
+				{
+					return QueueStatus.Discarded;
+				}
+				else if (this.workingCounter > 0)
 				{
 					return QueueStatus.Working;
 				}
@@ -107,6 +111,11 @@ namespace Epsitec.Common.Drawing
 			{
 				return this.height;
 			}
+		}
+
+		public void Discard()
+		{
+			this.discarded = true;
 		}
 
 		public Opac.FreeImage.FileFormat GetFileFormat()
@@ -747,6 +756,7 @@ namespace Epsitec.Common.Drawing
 		private Opac.FreeImage.FileFormat fileFormat;
 		private int width;
 		private int height;
+		private bool discarded;
 
 		private byte[] compressedThumbnail;
 		private byte[] compressedSampleImage;

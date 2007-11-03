@@ -619,7 +619,7 @@ namespace Epsitec.Common.Document
 			public byte[] GetImageData()
 			{
 				//	Données brutes de l'image.
-				this.ReadImageData(true);
+				this.TryReadImageData(true);
 				return this.data;
 			}
 
@@ -677,7 +677,7 @@ namespace Epsitec.Common.Document
 			protected void ReadOriginalImage(bool read)
 			{
 				//	Lit l'image originale, si nécessaire.
-				this.ReadImageData(read);
+				this.TryReadImageData(read);
 
 				if (this.data == null || this.originalImage != null || read == false)
 				{
@@ -685,10 +685,45 @@ namespace Epsitec.Common.Document
 				}
 
 				//?System.Diagnostics.Debug.WriteLine(string.Format("GlobalImageCache: ReadOriginalImage {0}", this.filename));
-				this.originalImage = Bitmap.FromData(this.data);
+				try
+				{
+					this.originalImage = Bitmap.FromData (this.data);
+				}
+				catch (System.Exception ex)
+				{
+					System.Diagnostics.Debug.WriteLine ("ReadOriginalImage failed: " + ex.Message);
+					this.originalImage = null;
+				}
+
 				System.Diagnostics.Debug.Assert(this.originalImage != null);
 				this.originalSize = this.originalImage.Size;
 				this.SetRecentTimeStamp();
+			}
+
+			protected void TryReadImageData(bool read)
+			{
+				int attemptCount = 0;
+
+				while (attemptCount < 5)
+				{
+					try
+					{
+						this.ReadImageData (read);
+						return;
+					}
+					catch (System.OutOfMemoryException ex)
+					{
+						System.Diagnostics.Debug.WriteLine ("TryReadOriginalImage failed: " + ex.Message);
+						
+						this.data = null;
+						this.date = System.DateTime.MinValue;
+						
+						System.GC.Collect ();
+						System.Threading.Thread.Sleep (10);
+						
+						attemptCount++;
+					}
+				}
 			}
 
 			protected void ReadImageData(bool read)

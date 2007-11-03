@@ -101,7 +101,22 @@ namespace Epsitec.Common.Widgets.Platform
 			
 			WindowList.Insert (this);
 		}
-		
+
+
+		internal static bool IsInAnyWndProc
+		{
+			get
+			{
+				if (Window.globalWndProcDepth > 0)
+				{
+					return true;
+				}
+				else
+				{
+					return false;
+				}
+			}
+		}
 		
 		internal void MakeTopLevelWindow()
 		{
@@ -1572,8 +1587,11 @@ namespace Epsitec.Common.Widgets.Platform
 					Window.is_awake_requested = false;
 				}
 			}
-			
-			Application.ExecuteAsyncCallbacks ();
+
+			if (Window.IsInAnyWndProc == false)
+			{
+				Application.ExecuteAsyncCallbacks ();
+			}
 
 			if (RestartManager.HandleWndProc (ref msg))
 			{
@@ -1730,6 +1748,7 @@ namespace Epsitec.Common.Widgets.Platform
 			}
 			
 			this.wnd_proc_depth++;
+			System.Threading.Interlocked.Increment (ref Window.globalWndProcDepth);
 			
 			try
 			{
@@ -1826,6 +1845,12 @@ namespace Epsitec.Common.Widgets.Platform
 				System.Diagnostics.Debug.Assert (this.IsDisposed == false);
 				System.Diagnostics.Debug.Assert (this.wnd_proc_depth > 0);
 				this.wnd_proc_depth--;
+				System.Threading.Interlocked.Decrement (ref Window.globalWndProcDepth);
+
+				if (Window.IsInAnyWndProc == false)
+				{
+					Application.ExecuteAsyncCallbacks ();
+				}
 				
 				if ((this.wnd_proc_depth == 0) &&
 					(this.is_dispatch_pending))
@@ -2495,6 +2520,8 @@ namespace Epsitec.Common.Widgets.Platform
 		private WindowStyles					window_styles;
 		private WindowType						window_type;
 		
+		private static int						globalWndProcDepth;
+
 		private int								wnd_proc_depth;
 		private bool							is_dispatch_pending;
 		private bool							is_pixmap_ok;

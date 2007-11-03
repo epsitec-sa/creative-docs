@@ -2171,8 +2171,13 @@ namespace Epsitec.Common.Widgets
 			}
 			
 			this.PostProcessMessage (message);
-			
-			Application.ExecuteAsyncCallbacks ();
+#if false
+			if ((this.window != null) &&
+				(Platform.Window.IsInAnyWndProc == false))
+			{
+				Application.ExecuteAsyncCallbacks ();
+			}
+#endif
 		}
 
 		public void ReleaseCapture()
