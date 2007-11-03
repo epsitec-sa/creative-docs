@@ -4509,9 +4509,16 @@ namespace Epsitec.Common.Document
 			if ( this.ActiveViewer.IsCreating )  return;
 			this.document.IsDirtySerialize = true;
 
+			System.Diagnostics.Debug.Assert (this.document.Modifier.OpletQueueEnable);
+
 			using ( this.OpletQueueBeginAction(Res.Strings.Action.PageSwap) )
 			{
-				this.InitiateChangingPage();
+				//	Ajoute un oplet pour permettre de forcer une mise à jour des
+				//	informations liées aux pages après un Undo (l'oplet s'exécute
+				//	en dernier, après les modifications faites aux UndoableList).
+				this.OpletQueue.Insert (new OpletPageSwap (this, true, false));
+				
+				this.InitiateChangingPage ();
 
 				UndoableList list = this.document.DocumentObjects;  // liste des pages
 				rank1 = System.Math.Max(rank1, 0);
@@ -4525,12 +4532,56 @@ namespace Epsitec.Common.Document
 				pages.Insert(rank2, temp);
 
 				this.TerminateChangingPage(rank2);
+				
+				//	Ajoute un oplet pour permettre de forcer une mise à jour des
+				//	informations liées aux pages après un Redo (l'oplet s'exécute
+				//	en dernier, après les modifications faites aux UndoableList).
+				this.OpletQueue.Insert (new OpletPageSwap (this, false, true));
 
 				this.UpdatePageAfterChanging();
 				this.document.Notifier.NotifyArea();
 				this.document.Notifier.NotifyPagesChanged();
 				this.OpletQueueValidateAction();
 			}
+		}
+
+		protected class OpletPageSwap : AbstractOplet
+		{
+			public OpletPageSwap(Modifier host, bool updateOnUndo, bool updateOnRedo)
+			{
+				this.host = host;
+				this.updateOnUndo = updateOnUndo;
+				this.updateOnRedo = updateOnRedo;
+			}
+
+			public override IOplet Undo()
+			{
+				if (this.updateOnUndo)
+				{
+					this.Update ();
+				}
+				return this;
+			}
+
+			public override IOplet Redo()
+			{
+				if (this.updateOnUndo)
+				{
+					this.Update ();
+				}
+				return this;
+			}
+
+			private void Update()
+			{
+				this.host.UpdatePageAfterChanging ();
+				this.host.document.Notifier.NotifyArea ();
+				this.host.document.Notifier.NotifyPagesChanged ();
+			}
+
+			Modifier host;
+			bool updateOnUndo;
+			bool updateOnRedo;
 		}
 
 		public string PageShortName(int rank)
