@@ -507,8 +507,11 @@ namespace Epsitec.Common.Document.Objects
 				{
 					using (Path path = this.PathBuild ())
 					{
-						port.Color = Color.FromAlphaRgb (0.5, 1, 0, 0);
-						port.PaintSurface (path);  // dessine une surface rouge
+						port.Color = Color.FromAlphaRgb (1.0, 1, 0, 0);
+						port.LineWidth = 20.0;
+						port.LineJoin = JoinStyle.Miter;
+//						port.PaintSurface (path);  // dessine une surface rouge
+						port.PaintOutline (path);
 					}
 				}
 			}
