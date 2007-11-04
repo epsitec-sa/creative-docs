@@ -29,7 +29,14 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				return this.color;
+				if (this.color.Basic == Drawing.Color.FromBrightness (0))
+				{
+					return this.blackReplacement;
+				}
+				else
+				{
+					return this.color;
+				}
 			}
 			set
 			{
@@ -72,6 +79,19 @@ namespace Epsitec.Common.Widgets
 				}
 			}
 		}
+
+		public Drawing.RichColor				BlackReplacement
+		{
+			get
+			{
+				return this.blackReplacement;
+			}
+			set
+			{
+				this.blackReplacement = value;
+			}
+		}
+
 
 
 		protected override void SetBoundsOverride(Drawing.Rectangle oldRect, Drawing.Rectangle newRect)
@@ -995,5 +1015,6 @@ namespace Epsitec.Common.Widgets
 		private IconButton						buttonCmyk;
 		private IconButton						buttonGray;
 		private Tools.MagnifierDragSource		picker;
+		private Drawing.RichColor				blackReplacement;
 	}
 }

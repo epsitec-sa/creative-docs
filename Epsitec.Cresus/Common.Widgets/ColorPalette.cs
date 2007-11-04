@@ -4,6 +4,8 @@
 using Epsitec.Common.Support;
 using Epsitec.Common.Types;
 
+using System.Collections.Generic;
+
 namespace Epsitec.Common.Widgets
 {
 	/// <summary>
@@ -23,6 +25,13 @@ namespace Epsitec.Common.Widgets
 			this.optionButton.Clicked += this.HandleOptionButtonClicked;
 
 			this.includeOpenSaveCommands = true;
+			this.menuCommands = new List<Command> ();
+
+			this.menuCommands.Add (Res.Commands.ColorPalette.SelectDefaultColors);
+			this.menuCommands.Add (Res.Commands.ColorPalette.SelectRainbowColors);
+			this.menuCommands.Add (Res.Commands.ColorPalette.SelectLightColors);
+			this.menuCommands.Add (Res.Commands.ColorPalette.SelectDarkColors);
+			this.menuCommands.Add (Res.Commands.ColorPalette.SelectGrayColors);
 
 			ToolTip.Default.SetToolTip (this.optionButton, Res.Strings.ColorPalette.Options);
 		}
@@ -211,6 +220,13 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+		public IList<Command>					BaseMenuCommands
+		{
+			get
+			{
+				return this.menuCommands;
+			}
+		}
 
 		public int FindColorIndex(Drawing.RichColor color)
 		{
@@ -500,11 +516,18 @@ namespace Epsitec.Common.Widgets
 
 				VMenu menu = new VMenu ();
 				menu.Host = this;
-				menu.Items.Add (new MenuItem (Res.Commands.ColorPalette.SelectDefaultColors));
-				menu.Items.Add (new MenuItem (Res.Commands.ColorPalette.SelectRainbowColors));
-				menu.Items.Add (new MenuItem (Res.Commands.ColorPalette.SelectLightColors));
-				menu.Items.Add (new MenuItem (Res.Commands.ColorPalette.SelectDarkColors));
-				menu.Items.Add (new MenuItem (Res.Commands.ColorPalette.SelectGrayColors));
+
+				foreach (Command command in this.menuCommands)
+				{
+					if (command == null)
+					{
+						menu.Items.Add (new MenuSeparator ());
+					}
+					else
+					{
+						menu.Items.Add (new MenuItem (command));
+					}
+				}
 
 				this.IncludeAdditionalMenuItems (menu);
 
@@ -667,5 +690,6 @@ namespace Epsitec.Common.Widgets
 		private GlyphButton						optionButton;
 		private Drawing.ColorCollection			colorCollection;
 		private bool							includeOpenSaveCommands;
+		private List<Command>					menuCommands;
 	}
 }

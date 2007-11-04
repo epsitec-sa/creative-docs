@@ -12,5 +12,7 @@ namespace Epsitec.Common.Document
 		public const string FontSubscript   = "FontSubscript";
 		public const string FontSuperscript = "FontSuperscript";
 		public const string FontClear       = "FontClear";
+		
+		public const string TextShowControlCharacters = "TextShowControlCharacters";
 	}
 }

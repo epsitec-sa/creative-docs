@@ -35,7 +35,7 @@ namespace Epsitec.Common.Document.Settings
 					this.text = Res.Strings.Dialog.Bool.TextGridShow;
 					break;
 
-				case "TextShowControlCharacters":
+				case Commands.TextShowControlCharacters:
 					this.text = Res.Strings.Dialog.Bool.TextShowControlCharacters;
 					break;
 
@@ -155,7 +155,7 @@ namespace Epsitec.Common.Document.Settings
 					case "TextGridShow":
 						return this.document.Modifier.ActiveViewer.DrawingContext.TextGridShow;
 
-					case "TextShowControlCharacters":
+					case Commands.TextShowControlCharacters:
 						return this.document.Modifier.ActiveViewer.DrawingContext.TextShowControlCharacters;
 
 					case "TextFontFilter":
@@ -248,7 +248,7 @@ namespace Epsitec.Common.Document.Settings
 						this.document.Modifier.ActiveViewer.DrawingContext.TextGridShow = value;
 						break;
 
-					case "TextShowControlCharacters":
+					case Commands.TextShowControlCharacters:
 						this.document.Modifier.ActiveViewer.DrawingContext.TextShowControlCharacters = value;
 						break;
 

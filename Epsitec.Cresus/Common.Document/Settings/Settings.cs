@@ -52,7 +52,7 @@ namespace Epsitec.Common.Document.Settings
 			this.CreateDefaultDouble("Settings", "TextGridStep");
 			this.CreateDefaultDouble("Settings", "TextGridSubdiv");
 			this.CreateDefaultDouble("Settings", "TextGridOffset");
-			this.CreateDefaultBool("Settings", "TextShowControlCharacters");
+			this.CreateDefaultBool ("Settings", Commands.TextShowControlCharacters);
 			this.CreateDefaultBool("Settings", "TextFontFilter");
 			this.CreateDefaultBool("Settings", "TextFontSampleAbc");
 			this.CreateDefaultDouble("Settings", "TextFontSampleHeight");

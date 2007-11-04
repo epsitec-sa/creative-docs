@@ -2735,7 +2735,7 @@ namespace Epsitec.Common.DocumentEditor
 			context.TextGridShow = !context.TextGridShow;
 		}
 
-		[Command ("TextShowControlCharacters")]
+		[Command (Commands.TextShowControlCharacters)]
 		void CommandTextShowControlCharacters(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
 			DrawingContext context = this.CurrentDocument.Modifier.ActiveViewer.DrawingContext;
@@ -3739,7 +3739,7 @@ namespace Epsitec.Common.DocumentEditor
 			this.previewState = this.CreateCommandState("Preview", "Preview", true);
 			this.gridState = this.CreateCommandState("Grid", "Grid", true);
 			this.textGridState = this.CreateCommandState("TextGrid", "TextGrid", true);
-			this.textShowControlCharactersState = this.CreateCommandState("TextShowControlCharacters", "TextShowControlCharacters", true);
+			this.textShowControlCharactersState = this.CreateCommandState(Commands.TextShowControlCharacters, "TextShowControlCharacters", true);
 			this.textFontFilterState = this.CreateCommandState("TextFontFilter", "TextFontFilter", true);
 			this.textFontSampleAbcState = this.CreateCommandState("TextFontSampleAbc", "TextFontSampleAbc", true);
 			this.textInsertQuadState = this.CreateCommandState("TextInsertQuad", "TextInsertQuad");

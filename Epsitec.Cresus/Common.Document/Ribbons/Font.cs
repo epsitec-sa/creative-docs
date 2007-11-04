@@ -29,7 +29,7 @@ namespace Epsitec.Common.Document.Ribbons
 			this.buttonItalic        = this.CreateIconButton(Res.Commands.FontItalic.CommandId);
 			this.buttonFontSizeMinus = this.CreateIconButton(Commands.FontSizeMinus);
 			this.buttonFontSizePlus  = this.CreateIconButton(Commands.FontSizePlus);
-			this.buttonShowControl   = this.CreateIconButton("TextShowControlCharacters");
+			this.buttonShowControl   = this.CreateIconButton(Commands.TextShowControlCharacters);
 			this.buttonUnderline     = this.CreateIconButton(Res.Commands.FontUnderline.CommandId);
 			this.buttonOverline      = this.CreateIconButton(Commands.FontOverline);
 			this.buttonStrikeout     = this.CreateIconButton(Commands.FontStrikeout);
