@@ -32,10 +32,17 @@ namespace Epsitec.Common.FormEngine
 			root.DataSource = new UI.DataSource();
 			root.DataSource.AddDataSource("Data", entityData);
 
+			int column = 0, row = 0;
+			bool[] isLabel = new bool[FormEngine.MaxColumnsRequired];
+			foreach (FieldDescription field in fields)
+			{
+				this.PrecreateField(field, isLabel, ref column, ref row);
+			}
+
 			Widgets.Layouts.GridLayoutEngine grid = new Widgets.Layouts.GridLayoutEngine();
 			for (int i=0; i<FormEngine.MaxColumnsRequired; i++)
 			{
-				if (i == 0)
+				if (isLabel[i])
 				{
 					grid.ColumnDefinitions.Add(new Widgets.Layouts.ColumnDefinition());
 				}
@@ -48,8 +55,8 @@ namespace Epsitec.Common.FormEngine
 
 			Widgets.Layouts.LayoutEngine.SetLayoutEngine(root, grid);
 
-			int column = 0;
-			int row = 0;
+			column = 0;
+			row = 0;
 			foreach (FieldDescription field in fields)
 			{
 				string path = field.GetPath("Data");
@@ -57,6 +64,29 @@ namespace Epsitec.Common.FormEngine
 			}
 
 			return root;
+		}
+
+		private void PrecreateField(FieldDescription field, bool[] isLabel, ref int column, ref int row)
+		{
+			int columnsRequired = System.Math.Min(field.ColumnsRequired, FormEngine.MaxColumnsRequired-1);
+
+			if (column+1+columnsRequired > FormEngine.MaxColumnsRequired)  // dépasse à droite ?
+			{
+				row++;
+				column = 0;
+			}
+
+			isLabel[column] = true;
+
+			if (field.BottomSeparator == FieldDescription.SeparatorType.Append)
+			{
+				column += 1+columnsRequired;
+			}
+			else
+			{
+				row++;
+				column = 0;
+			}
 		}
 
 		private void CreateField(UI.Panel root, Widgets.Layouts.GridLayoutEngine grid, string path, FieldDescription field, ref int column, ref int row)
@@ -119,7 +149,7 @@ namespace Epsitec.Common.FormEngine
 			{
 				index++;
 				grid.RowDefinitions.Add(new Widgets.Layouts.RowDefinition());
-				grid.RowDefinitions[index].TopBorder = 10;
+				grid.RowDefinitions[index].TopBorder = 20;
 				grid.RowDefinitions[index].BottomBorder = 10;
 
 				Separator sep = new Separator(root);
