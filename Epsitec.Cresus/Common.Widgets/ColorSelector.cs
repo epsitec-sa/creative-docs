@@ -29,7 +29,8 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				if (this.color.Basic == Drawing.Color.FromBrightness (0))
+				if ((this.blackReplacement.IsValid) &&
+					(this.color.Basic == Drawing.Color.FromBrightness (0)))
 				{
 					return this.blackReplacement;
 				}
