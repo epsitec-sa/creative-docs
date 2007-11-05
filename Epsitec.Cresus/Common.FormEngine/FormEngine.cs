@@ -149,7 +149,7 @@ namespace Epsitec.Common.FormEngine
 			{
 				index++;
 				grid.RowDefinitions.Add(new Widgets.Layouts.RowDefinition());
-				grid.RowDefinitions[index].TopBorder = 20;
+				grid.RowDefinitions[index].TopBorder = 10;
 				grid.RowDefinitions[index].BottomBorder = 10;
 
 				Separator sep = new Separator(root);
