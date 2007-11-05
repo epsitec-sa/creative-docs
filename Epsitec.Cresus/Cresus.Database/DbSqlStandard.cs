@@ -289,6 +289,11 @@ namespace Epsitec.Cresus.Database
 					buffer = new System.Text.StringBuilder ();
 					buffer.Append ("R_");
 					break;
+
+				case DbElementCat.Relation:
+					buffer = new System.Text.StringBuilder ();
+					buffer.Append ("X_");
+					break;
 				
 				default:
 					throw new System.NotImplementedException (string.Format ("Support for category {0} not implemented", category));
@@ -296,12 +301,12 @@ namespace Epsitec.Cresus.Database
 			
 			DbSqlStandard.CreateSimpleSqlName (name, buffer);
 			
-			//	Limit table name to at most 30 characters. As we add a maximum of 18 digits
-			//	long suffix, only 12 characters are usable for the name itself :
+			//	Limit table name to at most 48 characters. As we add a maximum of 18 digits
+			//	long suffix, only 30 characters are usable for the name itself :
 			
-			if (buffer.Length > 30-18)
+			if (buffer.Length > 48-18)
 			{
-				buffer.Length = 30-18;
+				buffer.Length = 48-18;
 			}
 			
 			buffer.AppendFormat (System.Globalization.CultureInfo.InvariantCulture, "_{0}", key.Id.Value);

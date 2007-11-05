@@ -56,7 +56,7 @@ namespace Epsitec.Cresus.Database
 
 			if (stringType != null)
 			{
-				this.length         = stringType.MaximumLength;
+				this.length         = System.Math.Min (1000, stringType.MaximumLength);
 				this.isFixedLength  = stringType.UseFixedLengthStorage;
 				this.isMultilingual = stringType.UseMultilingualStorage;
 			}

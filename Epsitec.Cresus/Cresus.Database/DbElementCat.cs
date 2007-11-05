@@ -45,5 +45,11 @@ namespace Epsitec.Cresus.Database
 		/// intended for public use.
 		/// </summary>
 		RevisionHistory = 6,
+
+		/// <summary>
+		/// Relation table; used to link a source column with target rows and
+		/// not intended for public use.
+		/// </summary>
+		Relation = 7
 	}
 }

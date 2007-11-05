@@ -489,6 +489,13 @@ namespace Epsitec.Cresus.Database
 					throw new Exceptions.SyntaxException (DbAccess.Empty, string.Format ("Primary key '{0}' may not be localized", dbColumn.Name));
 				}
 
+				if (dbColumn.IsVirtualColumn)
+				{
+					//	Skip virtual columns, they are not needed in an SQL table.
+
+					continue;
+				}
+
 				foreach (SqlColumn sqlColumn in this.CreateSqlColumns (converter, dbColumn))
 				{
 					//	Make sure we don't try to create an SQL column more than once.
@@ -589,6 +596,14 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 
+		public string GetRelationTableName(DbColumn column)
+		{
+			System.Diagnostics.Debug.Assert (column.IsVirtualColumn);
+
+			string relationName = string.Concat (column.InternalName, ":", this.InternalName);
+			return DbSqlStandard.MakeSqlTableName (relationName, DbElementCat.Relation, this.Key);
+		}
+		
 		/// <summary>
 		/// Extracts the key from the specified row.
 		/// </summary>

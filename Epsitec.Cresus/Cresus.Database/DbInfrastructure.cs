@@ -1164,15 +1164,52 @@ namespace Epsitec.Cresus.Database
 			transaction.SqlBuilder.InsertTable (sqlTable);
 			this.ExecuteSilent (transaction);
 
+			//	Create the revision tracking table, if needed :
+
 			if (table.RevisionMode == DbRevisionMode.TrackChanges)
 			{
-				sqlTable = new SqlTable (table.GetRevisionTableName ());
-				sqlTable.Columns.Add (new SqlColumn (Tags.ColumnRefId, DbKey.RawTypeForId, DbNullability.No));
-				sqlTable.Columns.Add (new SqlColumn (Tags.ColumnRefModel, DbKey.RawTypeForId, DbNullability.No));
-
-				transaction.SqlBuilder.InsertTable (sqlTable);
-				this.ExecuteSilent (transaction);
+				this.CreateRevisionTrackingTable (transaction, table);
 			}
+
+			//	Create relation tables if virtual columns exist in the source
+			//	table :
+
+			foreach (DbColumn column in table.Columns)
+			{
+				if (column.IsVirtualColumn)
+				{
+					this.CreateRelationTable (transaction, table, column);
+				}
+			}
+		}
+
+		/// <summary>
+		/// Creates the revision tracking table for a given table.
+		/// </summary>
+		/// <param name="transaction">The transaction.</param>
+		/// <param name="table">The table.</param>
+		private void CreateRevisionTrackingTable(DbTransaction transaction, DbTable table)
+		{
+			SqlTable sqlTable;
+
+			sqlTable = new SqlTable (table.GetRevisionTableName ());
+			sqlTable.Columns.Add (new SqlColumn (Tags.ColumnRefId, DbKey.RawTypeForId, DbNullability.No));
+			sqlTable.Columns.Add (new SqlColumn (Tags.ColumnRefModel, DbKey.RawTypeForId, DbNullability.No));
+
+			transaction.SqlBuilder.InsertTable (sqlTable);
+			this.ExecuteSilent (transaction);
+		}
+
+		private void CreateRelationTable(DbTransaction transaction, DbTable table, DbColumn column)
+		{
+			SqlTable sqlTable;
+
+			sqlTable = new SqlTable (table.GetRelationTableName (column));
+			sqlTable.Columns.Add (new SqlColumn (Tags.ColumnRefId, DbKey.RawTypeForId, DbNullability.No));
+			sqlTable.Columns.Add (new SqlColumn (Tags.ColumnRefModel, DbKey.RawTypeForId, DbNullability.No));
+
+			transaction.SqlBuilder.InsertTable (sqlTable);
+			this.ExecuteSilent (transaction);
 		}
 
 		/// <summary>
@@ -1186,6 +1223,11 @@ namespace Epsitec.Cresus.Database
 		{
 			foreach (DbColumn column in table.Columns)
 			{
+				if (column.IsVirtualColumn)
+				{
+					continue;
+				}
+
 				DbTypeDef typeDef = column.Type;
 				
 				System.Diagnostics.Debug.Assert (typeDef != null);
@@ -2355,7 +2397,7 @@ namespace Epsitec.Cresus.Database
 #endif
 			fields.Add (this.CreateSqlField (columnDefTable.Columns[Tags.ColumnInfoXml],  DbTools.GetCompactXml (column)));
 			fields.Add (this.CreateSqlField (columnDefTable.Columns[Tags.ColumnRefTable], table.Key.Id));
-			fields.Add (this.CreateSqlField (columnDefTable.Columns[Tags.ColumnRefType],  column.Type.Key.Id));
+			fields.Add (this.CreateSqlField (columnDefTable.Columns[Tags.ColumnRefType],  column.Type == null ? 0 : column.Type.Key.Id));
 			
 			transaction.SqlBuilder.InsertData (columnDefTable.GetSqlName (), fields);
 			this.ExecuteSilent (transaction);

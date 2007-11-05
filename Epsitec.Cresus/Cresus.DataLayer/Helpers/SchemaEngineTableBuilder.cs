@@ -94,6 +94,7 @@ namespace Epsitec.Cresus.DataLayer.Helpers
 					break;
 				
 				case FieldRelation.Reference:
+					this.AddRelationColumn (table, field);
 					break;
 				
 				case FieldRelation.Collection:
@@ -102,6 +103,13 @@ namespace Epsitec.Cresus.DataLayer.Helpers
 				default:
 					throw new System.NotImplementedException (string.Format ("Missing support for Relation.{0}", field.Relation));
 			}
+		}
+
+		private void AddRelationColumn(DbTable table, StructuredTypeField field)
+		{
+			DbColumn column = new DbColumn (field.CaptionId, null, DbColumnClass.Virtual, DbElementCat.ManagedUserData, DbRevisionMode.TrackChanges);
+
+			table.Columns.Add (column);
 		}
 
 		private void AddDataColumn(DbTable table, StructuredTypeField field)

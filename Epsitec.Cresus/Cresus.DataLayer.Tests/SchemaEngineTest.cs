@@ -60,7 +60,7 @@ namespace Epsitec.Cresus.DataLayer
 
 			SchemaEngine engine = new SchemaEngine (this.infrastructure);
 
-			engine.CreateTableDefinition (Res.Types.Record.Address.CaptionId);
+			engine.CreateTableDefinition (Druid.Parse ("[630Q]"));
 		}
 		
 		private DbInfrastructure infrastructure;

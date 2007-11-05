@@ -356,6 +356,22 @@ namespace Epsitec.Cresus.Database
 		}
 
 		/// <summary>
+		/// Gets a value indicating whether this column is virtual. A virtual
+		/// column does not require any storage in the SQL table; it does not
+		/// really exist and is used in a many-to-many relation.
+		/// </summary>
+		/// <value>
+		/// 	<c>true</c> if this column is virtual; otherwise, <c>false</c>.
+		/// </value>
+		public bool								IsVirtualColumn
+		{
+			get
+			{
+				return this.columnClass == DbColumnClass.Virtual;
+			}
+		}
+
+		/// <summary>
 		/// Gets the column localization.
 		/// </summary>
 		/// <value>The column localization.</value>
