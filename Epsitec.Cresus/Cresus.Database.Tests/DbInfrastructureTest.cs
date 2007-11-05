@@ -189,7 +189,7 @@ namespace Epsitec.Cresus.Database
 				infrastructure.DefaultLocalizations = new string[] { "fr", "de", "it", "en" };
 				infrastructure.Logger.CreateTemporaryEntry (null);
 
-				DbTable db_table1 = infrastructure.CreateDbTable ("SimpleTest", DbElementCat.ManagedUserData, DbRevisionMode.Disabled);
+				DbTable db_table1 = infrastructure.CreateDbTable ("SimpleTest", DbElementCat.ManagedUserData, DbRevisionMode.IgnoreChanges);
 
 				DbTypeDef db_type_name  = new DbTypeDef ("Name", DbSimpleType.String, null, 80, false, DbNullability.No);
 				DbTypeDef db_type_level = new DbTypeDef ("Level", DbSimpleType.String, null, 4, false, DbNullability.No);
@@ -203,7 +203,7 @@ namespace Epsitec.Cresus.Database
 				infrastructure.RegisterNewDbType (db_type_data);
 				infrastructure.RegisterNewDbType (db_type_guid);
 
-				DbColumn col1 = DbTable.CreateUserDataColumn ("Name", db_type_name, DbRevisionMode.Enabled);
+				DbColumn col1 = DbTable.CreateUserDataColumn ("Name", db_type_name, DbRevisionMode.TrackChanges);
 				DbColumn col2 = DbTable.CreateUserDataColumn ("Level", db_type_level);
 				DbColumn col3 = DbTable.CreateUserDataColumn ("Type", db_type_type);
 				DbColumn col4 = DbTable.CreateUserDataColumn ("Data", db_type_data);
@@ -304,7 +304,7 @@ namespace Epsitec.Cresus.Database
 
 			using (DbInfrastructure infrastructure = DbInfrastructureTest.GetInfrastructureFromBase ("fiche", false))
 			{
-				DbTable db_table = infrastructure.CreateDbTable ("SimpleTest", DbElementCat.ManagedUserData, DbRevisionMode.Disabled);
+				DbTable db_table = infrastructure.CreateDbTable ("SimpleTest", DbElementCat.ManagedUserData, DbRevisionMode.IgnoreChanges);
 				infrastructure.RegisterNewDbTable (db_table);
 			}
 		}
@@ -389,7 +389,7 @@ namespace Epsitec.Cresus.Database
 
 			using (DbInfrastructure infrastructure = DbInfrastructureTest.GetInfrastructureFromBase ("fiche", false))
 			{
-				DbTable db_table = infrastructure.CreateDbTable ("SimpleTest", DbElementCat.ManagedUserData, DbRevisionMode.Disabled);
+				DbTable db_table = infrastructure.CreateDbTable ("SimpleTest", DbElementCat.ManagedUserData, DbRevisionMode.IgnoreChanges);
 				infrastructure.RegisterNewDbTable (db_table);
 
 				Assert.IsNotNull (infrastructure.ResolveDbTable (db_table.Name));

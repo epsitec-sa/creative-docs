@@ -633,6 +633,40 @@ namespace Epsitec.Common.Types
 		}
 
 		/// <summary>
+		/// Creates the type object for the specified type id.
+		/// </summary>
+		/// <param name="manager">The resource manager.</param>
+		/// <param name="druid">The type object DRUID.</param>
+		/// <returns>
+		/// The type object or <c>null</c> if the type object cannot be created.
+		/// </returns>
+		public static AbstractType CreateTypeObject(Support.ResourceManager manager, Support.Druid druid)
+		{
+			return TypeRosetta.CreateTypeObject (manager, druid, true);
+		}
+
+		/// <summary>
+		/// Creates the type object for the specified type id.
+		/// </summary>
+		/// <param name="manager">The resource manager.</param>
+		/// <param name="druid">The type object DRUID.</param>
+		/// <param name="cache">If set to <c>true</c>, cache the resulting type object.</param>
+		/// <returns>
+		/// The type object or <c>null</c> if the type object cannot be created.
+		/// </returns>
+		public static AbstractType CreateTypeObject(Support.ResourceManager manager, Support.Druid druid, bool cache)
+		{
+			if (manager == null)
+			{
+				return null;
+			}
+			else
+			{
+				return TypeRosetta.CreateTypeObject (manager.GetCaption (druid), cache);
+			}
+		}
+
+		/// <summary>
 		/// Creates the type object for the specified caption.
 		/// </summary>
 		/// <param name="caption">The caption used to store the type object definition.</param>
@@ -654,12 +688,12 @@ namespace Epsitec.Common.Types
 		/// </returns>
 		public static AbstractType CreateTypeObject(Caption caption, bool cache)
 		{
-			TypeRosetta.InitializeKnownTypes ();
-
 			if (caption == null)
 			{
-				throw new System.ArgumentNullException ("caption");
+				return null;
 			}
+
+			TypeRosetta.InitializeKnownTypes ();
 
 			lock (TypeRosetta.knownTypes)
 			{
@@ -672,6 +706,7 @@ namespace Epsitec.Common.Types
 				{
 					TypeRosetta.creatingTypeObject++;
 					TypeRosetta.pendingTypes[caption.Id] = true;
+					
 					return TypeRosetta.LockedCreateTypeObject (caption, cache);
 				}
 				finally

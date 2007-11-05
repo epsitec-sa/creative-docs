@@ -75,12 +75,12 @@ namespace Epsitec.Cresus.Database
 		/// Parses the revision mode.
 		/// </summary>
 		/// <param name="text">The text.</param>
-		/// <returns>The value or <c>DbRevisionMode.Disabled</c> if the text is empty.</returns>
+		/// <returns>The value or <c>DbRevisionMode.IgnoreChanges</c> if the text is empty.</returns>
 		public static DbRevisionMode ParseRevisionMode(string text)
 		{
 			if (string.IsNullOrEmpty (text))
 			{
-				return DbRevisionMode.Disabled;
+				return DbRevisionMode.IgnoreChanges;
 			}
 			else
 			{
@@ -305,7 +305,7 @@ namespace Epsitec.Cresus.Database
 		{
 			System.Diagnostics.Debug.Assert (value != DbRevisionMode.Unknown);
 			
-			if (value == DbRevisionMode.Disabled)
+			if (value == DbRevisionMode.IgnoreChanges)
 			{
 				return null;
 			}

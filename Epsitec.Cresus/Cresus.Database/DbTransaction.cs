@@ -132,6 +132,20 @@ namespace Epsitec.Cresus.Database
 				return this.inheritFromTransaction != null;
 			}
 		}
+
+		/// <summary>
+		/// Gets a value indicating whether this transaction is currently
+		/// active. Committing, rolling back or disposing will render the
+		/// transaction inactive.
+		/// </summary>
+		/// <value><c>true</c> if this transaction is active; otherwise, <c>false</c>.</value>
+		public bool								IsActive
+		{
+			get
+			{
+				return this.infrastructure != null;
+			}
+		}
 		
 		#region IDbTransaction Members
 		

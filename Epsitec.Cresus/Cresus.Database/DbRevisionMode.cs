@@ -17,11 +17,16 @@ namespace Epsitec.Cresus.Database
 		/// <summary>
 		/// Without revision history.
 		/// </summary>
-		Disabled = 1,
+		IgnoreChanges = 1,
 		
 		/// <summary>
 		/// With revision history.
 		/// </summary>
-		Enabled = 2,
+		TrackChanges = 2,
+
+		/// <summary>
+		/// The data is immutable. No revision history is needed.
+		/// </summary>
+		Immutable = 3,
 	}
 }

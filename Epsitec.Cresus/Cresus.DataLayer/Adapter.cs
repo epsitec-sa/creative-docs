@@ -250,7 +250,7 @@ namespace Epsitec.Cresus.DataLayer
 				}
 			}
 
-			DbTable table = infrastructure.CreateDbTable (tableName, DbElementCat.ManagedUserData, DbRevisionMode.Enabled);
+			DbTable table = infrastructure.CreateDbTable (tableName, DbElementCat.ManagedUserData, DbRevisionMode.TrackChanges);
 
 			table.DefineCaptionId (type.CaptionId);
 

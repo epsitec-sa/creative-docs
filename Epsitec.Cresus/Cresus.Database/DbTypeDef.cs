@@ -32,6 +32,17 @@ namespace Epsitec.Cresus.Database
 		/// Initializes a new instance of the <see cref="DbTypeDef"/> class.
 		/// </summary>
 		/// <param name="namedType">The named type.</param>
+		/// <param name="typeName">Name of the type to use in place of <c>INamedType.Name</c>.</param>
+		public DbTypeDef(INamedType namedType, string typeName)
+			: this (namedType, DbKey.Empty)
+		{
+			this.name = typeName;
+		}
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="DbTypeDef"/> class.
+		/// </summary>
+		/// <param name="namedType">The named type.</param>
 		/// <param name="key">The key.</param>
 		public DbTypeDef(INamedType namedType, DbKey key)
 		{

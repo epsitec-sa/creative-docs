@@ -125,9 +125,11 @@
     <Compile Include="DataBrokerRecord.cs" />
     <Compile Include="DataTableBroker.cs" />
     <Compile Include="DataBrokerItem.cs" />
+    <Compile Include="Helpers\SchemaEngineTableBuilder.cs" />
     <Compile Include="RequestFactory.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="SchemaEngine.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

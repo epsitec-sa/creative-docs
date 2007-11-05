@@ -81,6 +81,30 @@ namespace Epsitec.Cresus.Database.Collections
 		}
 
 		/// <summary>
+		/// Try to get the value with the given name.
+		/// </summary>
+		/// <param name="name">The name.</param>
+		/// <param name="value">The value.</param>
+		/// <returns>
+		/// 	<c>true</c> if the list contains the item with the specified name; otherwise <c>faluse</c>.
+		/// </returns>
+		public bool TryGetValue(string name, out T value)
+		{
+			int index = this.IndexOf (name);
+
+			if (index < 0)
+			{
+				value = default (T);
+				return false;
+			}
+			else
+			{
+				value = this[index];
+				return true;
+			}
+		}
+
+		/// <summary>
 		/// Returns the index of the first item with the specified name, starting at
 		/// the specified start index.
 		/// </summary>

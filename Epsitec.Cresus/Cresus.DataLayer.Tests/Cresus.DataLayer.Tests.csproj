@@ -187,6 +187,7 @@
     <Compile Include="AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="SchemaEngineTest.cs" />
     <Compile Include="DataBrokerTest.cs" />
     <Compile Include="RequestFactoryTest.cs">
       <SubType>Code</SubType>

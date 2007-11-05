@@ -285,14 +285,14 @@ namespace Epsitec.Cresus.Database
 		{
 			foreach (DbColumn column in this.columns)
 			{
-				if (column.RevisionMode == DbRevisionMode.Enabled)
+				if (column.RevisionMode == DbRevisionMode.TrackChanges)
 				{
-					this.revisionMode = DbRevisionMode.Enabled;
+					this.revisionMode = DbRevisionMode.TrackChanges;
 					return;
 				}
 			}
 
-			this.revisionMode = DbRevisionMode.Disabled;
+			this.revisionMode = DbRevisionMode.IgnoreChanges;
 		}
 
 		/// <summary>
@@ -560,7 +560,7 @@ namespace Epsitec.Cresus.Database
 		/// the table is not revisioned.</returns>
 		public string GetRevisionTableName()
 		{
-			if (this.RevisionMode == DbRevisionMode.Enabled)
+			if (this.RevisionMode == DbRevisionMode.TrackChanges)
 			{
 				return DbSqlStandard.MakeSqlTableName (this.Name, DbElementCat.RevisionHistory, this.Key);
 			}

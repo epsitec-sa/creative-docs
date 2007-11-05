@@ -30,6 +30,7 @@ namespace Epsitec.Cresus.Database
 		public const string	ColumnInfoXml		= "CR_INFO";
 		public const string	ColumnNextId		= "CR_NEXT_ID";
 		public const string ColumnDateTime		= "CR_DATETIME";
+		public const string ColumnInstanceType	= "CR_TYPE";
 		
 		public const string ColumnDictKey		= "CR_DICT_KEY";
 		public const string ColumnDictValue		= "CR_DICT_VALUE";

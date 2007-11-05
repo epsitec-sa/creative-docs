@@ -223,8 +223,8 @@ namespace Epsitec.Cresus.Database
 
 			using (DbTransaction transaction = this.BeginTransaction (DbTransactionMode.ReadWrite))
 			{
-				Settings.Globals.CreateTable (this, transaction, Settings.Globals.Name, DbElementCat.Internal, DbRevisionMode.Disabled, DbReplicationMode.Automatic);
-				Settings.Locals.CreateTable (this, transaction, Settings.Locals.Name, DbElementCat.Internal, DbRevisionMode.Disabled, DbReplicationMode.None);
+				Settings.Globals.CreateTable (this, transaction, Settings.Globals.Name, DbElementCat.Internal, DbRevisionMode.IgnoreChanges, DbReplicationMode.Automatic);
+				Settings.Locals.CreateTable (this, transaction, Settings.Locals.Name, DbElementCat.Internal, DbRevisionMode.IgnoreChanges, DbReplicationMode.None);
 				
 				transaction.Commit ();
 			}
@@ -944,10 +944,19 @@ namespace Epsitec.Cresus.Database
 		/// <returns>The type definition or <c>null</c>.</returns>
 		public DbTypeDef ResolveDbType(DbTransaction transaction, string typeName)
 		{
+			DbTypeDef value;
+
+			if (this.internalTypes.TryGetValue (typeName, out value))
+			{
+				return value;
+			}
+
 			System.Diagnostics.Debug.Assert (transaction != null);
 			
 			DbKey key = this.FindDbTypeKey (transaction, typeName);
-			return this.ResolveDbType (transaction, key);
+			value = this.ResolveDbType (transaction, key);
+			
+			return value;
 		}
 
 		/// <summary>
@@ -1089,8 +1098,8 @@ namespace Epsitec.Cresus.Database
 			
 			DbTypeDef typeDef = this.internalTypes[Tags.TypeKeyId];
 			
-			DbColumn colId   = new DbColumn (Tags.ColumnId,     this.internalTypes[Tags.TypeKeyId],     DbColumnClass.KeyId, DbElementCat.Internal);
-			DbColumn colStat = new DbColumn (Tags.ColumnStatus, this.internalTypes[Tags.TypeKeyStatus], DbColumnClass.KeyStatus, DbElementCat.Internal);
+			DbColumn colId   = new DbColumn (Tags.ColumnId,     this.internalTypes[Tags.TypeKeyId],     DbColumnClass.KeyId,       DbElementCat.Internal, DbRevisionMode.Immutable);
+			DbColumn colStat = new DbColumn (Tags.ColumnStatus, this.internalTypes[Tags.TypeKeyStatus], DbColumnClass.KeyStatus,   DbElementCat.Internal);
 			DbColumn colLog  = new DbColumn (Tags.ColumnRefLog, this.internalTypes[Tags.TypeKeyId],     DbColumnClass.RefInternal, DbElementCat.Internal);
 			
 			table.DefineCategory (category);
@@ -1155,7 +1164,7 @@ namespace Epsitec.Cresus.Database
 			transaction.SqlBuilder.InsertTable (sqlTable);
 			this.ExecuteSilent (transaction);
 
-			if (table.RevisionMode == DbRevisionMode.Enabled)
+			if (table.RevisionMode == DbRevisionMode.TrackChanges)
 			{
 				sqlTable = new SqlTable (table.GetRevisionTableName ());
 				sqlTable.Columns.Add (new SqlColumn (Tags.ColumnRefId, DbKey.RawTypeForId, DbNullability.No));
@@ -2427,12 +2436,12 @@ namespace Epsitec.Cresus.Database
 				DbTable    table   = new DbTable (Tags.TableTableDef);
 				DbColumn[] columns = new DbColumn[]
 					{
-						new DbColumn (Tags.ColumnId,		  types.KeyId,		 DbColumnClass.KeyId),
-						new DbColumn (Tags.ColumnStatus,	  types.KeyStatus,	 DbColumnClass.KeyStatus),
-						new DbColumn (Tags.ColumnRefLog,	  types.KeyId,		 DbColumnClass.RefInternal),
-						new DbColumn (Tags.ColumnName,		  types.Name,		 DbColumnClass.Data),
-						new DbColumn (Tags.ColumnInfoXml,	  types.InfoXml,	 DbColumnClass.Data),
-						new DbColumn (Tags.ColumnNextId,	  types.KeyId,		 DbColumnClass.RefInternal)
+						new DbColumn (Tags.ColumnId,		  types.KeyId,		 DbColumnClass.KeyId,		DbElementCat.Internal, DbRevisionMode.Immutable),
+						new DbColumn (Tags.ColumnStatus,	  types.KeyStatus,	 DbColumnClass.KeyStatus,	DbElementCat.Internal),
+						new DbColumn (Tags.ColumnRefLog,	  types.KeyId,		 DbColumnClass.RefInternal, DbElementCat.Internal),
+						new DbColumn (Tags.ColumnName,		  types.Name,		 DbColumnClass.Data,		DbElementCat.Internal),
+						new DbColumn (Tags.ColumnInfoXml,	  types.InfoXml,	 DbColumnClass.Data,		DbElementCat.Internal),
+						new DbColumn (Tags.ColumnNextId,	  types.KeyId,		 DbColumnClass.RefInternal, DbElementCat.Internal)
 					};
 
 				this.CreateTable (table, columns, DbReplicationMode.Manual);
@@ -2444,14 +2453,14 @@ namespace Epsitec.Cresus.Database
 				DbTable    table   = new DbTable (Tags.TableColumnDef);
 				DbColumn[] columns = new DbColumn[]
 					{
-						new DbColumn (Tags.ColumnId,		  types.KeyId,		   DbColumnClass.KeyId),
-						new DbColumn (Tags.ColumnStatus,	  types.KeyStatus,	   DbColumnClass.KeyStatus),
-						new DbColumn (Tags.ColumnRefLog,	  types.KeyId,		   DbColumnClass.RefInternal),
-						new DbColumn (Tags.ColumnName,		  types.Name,		   DbColumnClass.Data),
-						new DbColumn (Tags.ColumnInfoXml,	  types.InfoXml,	   DbColumnClass.Data),
-						new DbColumn (Tags.ColumnRefTable,	  types.KeyId,         DbColumnClass.RefId),
-						new DbColumn (Tags.ColumnRefType,	  types.KeyId,         DbColumnClass.RefId),
-						new DbColumn (Tags.ColumnRefTarget,	  types.NullableKeyId, DbColumnClass.RefId)
+						new DbColumn (Tags.ColumnId,		  types.KeyId,		   DbColumnClass.KeyId,		  DbElementCat.Internal, DbRevisionMode.Immutable),
+						new DbColumn (Tags.ColumnStatus,	  types.KeyStatus,	   DbColumnClass.KeyStatus,   DbElementCat.Internal),
+						new DbColumn (Tags.ColumnRefLog,	  types.KeyId,		   DbColumnClass.RefInternal, DbElementCat.Internal),
+						new DbColumn (Tags.ColumnName,		  types.Name,		   DbColumnClass.Data,		  DbElementCat.Internal),
+						new DbColumn (Tags.ColumnInfoXml,	  types.InfoXml,	   DbColumnClass.Data,		  DbElementCat.Internal),
+						new DbColumn (Tags.ColumnRefTable,	  types.KeyId,         DbColumnClass.RefId,		  DbElementCat.Internal),
+						new DbColumn (Tags.ColumnRefType,	  types.KeyId,         DbColumnClass.RefId,		  DbElementCat.Internal),
+						new DbColumn (Tags.ColumnRefTarget,	  types.NullableKeyId, DbColumnClass.RefId,		  DbElementCat.Internal)
 					};
 				
 				this.CreateTable (table, columns, DbReplicationMode.Manual);
@@ -2463,11 +2472,11 @@ namespace Epsitec.Cresus.Database
 				DbTable    table   = new DbTable (Tags.TableTypeDef);
 				DbColumn[] columns = new DbColumn[]
 					{
-						new DbColumn (Tags.ColumnId,		  types.KeyId,		 DbColumnClass.KeyId),
-						new DbColumn (Tags.ColumnStatus,	  types.KeyStatus,	 DbColumnClass.KeyStatus),
-						new DbColumn (Tags.ColumnRefLog,	  types.KeyId,		 DbColumnClass.RefInternal),
-						new DbColumn (Tags.ColumnName,		  types.Name,		 DbColumnClass.Data),
-						new DbColumn (Tags.ColumnInfoXml,	  types.InfoXml,	 DbColumnClass.Data)
+						new DbColumn (Tags.ColumnId,		  types.KeyId,		 DbColumnClass.KeyId,		DbElementCat.Internal, DbRevisionMode.Immutable),
+						new DbColumn (Tags.ColumnStatus,	  types.KeyStatus,	 DbColumnClass.KeyStatus,	DbElementCat.Internal),
+						new DbColumn (Tags.ColumnRefLog,	  types.KeyId,		 DbColumnClass.RefInternal, DbElementCat.Internal),
+						new DbColumn (Tags.ColumnName,		  types.Name,		 DbColumnClass.Data,		DbElementCat.Internal),
+						new DbColumn (Tags.ColumnInfoXml,	  types.InfoXml,	 DbColumnClass.Data,		DbElementCat.Internal)
 					};
 				
 				this.CreateTable (table, columns, DbReplicationMode.Manual);
@@ -2479,8 +2488,8 @@ namespace Epsitec.Cresus.Database
 				DbTable    table   = new DbTable (Tags.TableLog);
 				DbColumn[] columns = new DbColumn[]
 					{
-						new DbColumn (Tags.ColumnId,		  types.KeyId,		DbColumnClass.KeyId),
-						new DbColumn (Tags.ColumnDateTime,	  types.DateTime,	DbColumnClass.Data)
+						new DbColumn (Tags.ColumnId,		  types.KeyId,		DbColumnClass.KeyId, DbElementCat.Internal, DbRevisionMode.Immutable),
+						new DbColumn (Tags.ColumnDateTime,	  types.DateTime,	DbColumnClass.Data,  DbElementCat.Internal, DbRevisionMode.Immutable)
 					};
 				
 				//	TODO: add a column recording the nature of the change and the author of the change...
@@ -2494,12 +2503,12 @@ namespace Epsitec.Cresus.Database
 				DbTable    table   = new DbTable (Tags.TableRequestQueue);
 				DbColumn[] columns = new DbColumn[]
 					{
-						new DbColumn (Tags.ColumnId,		  types.KeyId,		DbColumnClass.KeyId),
-						new DbColumn (Tags.ColumnStatus,	  types.KeyStatus,	DbColumnClass.KeyStatus),
-						new DbColumn (Tags.ColumnRefLog,	  types.KeyId,		DbColumnClass.RefInternal),
-						new DbColumn (Tags.ColumnReqExState,  types.ReqExecState, DbColumnClass.Data),
-						new DbColumn (Tags.ColumnReqData,	  types.ReqData,	DbColumnClass.Data),
-						new DbColumn (Tags.ColumnDateTime,    types.DateTime,   DbColumnClass.Data)
+						new DbColumn (Tags.ColumnId,		  types.KeyId,		  DbColumnClass.KeyId,		 DbElementCat.Internal, DbRevisionMode.Immutable),
+						new DbColumn (Tags.ColumnStatus,	  types.KeyStatus,	  DbColumnClass.KeyStatus,	 DbElementCat.Internal),
+						new DbColumn (Tags.ColumnRefLog,	  types.KeyId,		  DbColumnClass.RefInternal, DbElementCat.Internal),
+						new DbColumn (Tags.ColumnReqExState,  types.ReqExecState, DbColumnClass.Data,		 DbElementCat.Internal),
+						new DbColumn (Tags.ColumnReqData,	  types.ReqData,	  DbColumnClass.Data,		 DbElementCat.Internal),
+						new DbColumn (Tags.ColumnDateTime,    types.DateTime,     DbColumnClass.Data,		 DbElementCat.Internal)
 					};
 				
 				this.CreateTable (table, columns, DbReplicationMode.None);
@@ -2511,14 +2520,14 @@ namespace Epsitec.Cresus.Database
 				DbTable    table   = new DbTable (Tags.TableClientDef);
 				DbColumn[] columns = new DbColumn[]
 					{
-						new DbColumn (Tags.ColumnId,			types.KeyId,	 DbColumnClass.KeyId),
-						new DbColumn (Tags.ColumnStatus,		types.KeyStatus, DbColumnClass.KeyStatus),
-						new DbColumn (Tags.ColumnRefLog,		types.KeyId,	 DbColumnClass.RefInternal),
-						new DbColumn (Tags.ColumnClientId,		types.KeyId,	 DbColumnClass.Data),
-						new DbColumn (Tags.ColumnClientName,	types.Name,      DbColumnClass.Data),
-						new DbColumn (Tags.ColumnClientSync,	types.KeyId,	 DbColumnClass.Data),
-						new DbColumn (Tags.ColumnClientCreDate,	types.DateTime,  DbColumnClass.Data),
-						new DbColumn (Tags.ColumnClientConDate,	types.DateTime,  DbColumnClass.Data)
+						new DbColumn (Tags.ColumnId,			types.KeyId,	 DbColumnClass.KeyId,		DbElementCat.Internal, DbRevisionMode.Immutable),
+						new DbColumn (Tags.ColumnStatus,		types.KeyStatus, DbColumnClass.KeyStatus,	DbElementCat.Internal),
+						new DbColumn (Tags.ColumnRefLog,		types.KeyId,	 DbColumnClass.RefInternal, DbElementCat.Internal),
+						new DbColumn (Tags.ColumnClientId,		types.KeyId,	 DbColumnClass.Data,		DbElementCat.Internal),
+						new DbColumn (Tags.ColumnClientName,	types.Name,      DbColumnClass.Data,		DbElementCat.Internal),
+						new DbColumn (Tags.ColumnClientSync,	types.KeyId,	 DbColumnClass.Data,		DbElementCat.Internal),
+						new DbColumn (Tags.ColumnClientCreDate,	types.DateTime,  DbColumnClass.Data,		DbElementCat.Internal),
+						new DbColumn (Tags.ColumnClientConDate,	types.DateTime,  DbColumnClass.Data,		DbElementCat.Internal)
 					};
 				
 				this.CreateTable (table, columns, DbReplicationMode.None);

@@ -627,7 +627,7 @@ namespace Epsitec.Cresus.Database
 
 			DbTable table = this.tables[row.Table.TableName];
 
-			if (table.RevisionMode == DbRevisionMode.Enabled)
+			if (table.RevisionMode == DbRevisionMode.TrackChanges)
 			{
 				DbRowStatus status = DbKey.GetRowStatus (row);
 

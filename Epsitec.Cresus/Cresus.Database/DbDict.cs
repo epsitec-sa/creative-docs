@@ -468,7 +468,7 @@ namespace Epsitec.Cresus.Database
 		/// <param name="tableName">Name of the table.</param>
 		public static void CreateTable(DbInfrastructure infrastructure, DbTransaction transaction, string tableName)
 		{
-			DbDict.CreateTable (infrastructure, transaction, tableName, DbElementCat.ManagedUserData, DbRevisionMode.Disabled, DbReplicationMode.Automatic);
+			DbDict.CreateTable (infrastructure, transaction, tableName, DbElementCat.ManagedUserData, DbRevisionMode.IgnoreChanges, DbReplicationMode.Automatic);
 		}
 
 		/// <summary>
