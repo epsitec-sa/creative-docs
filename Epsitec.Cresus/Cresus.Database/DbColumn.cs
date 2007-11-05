@@ -104,6 +104,42 @@ namespace Epsitec.Cresus.Database
 			this.DefineRevisionMode (revisionMode);
 		}
 
+		/// <summary>
+		/// Initializes a new instance of the <see cref="DbColumn"/> class.
+		/// </summary>
+		/// <param name="name">The name.</param>
+		/// <param name="type">The type.</param>
+		/// <param name="columnClass">The column class.</param>
+		/// <param name="category">The category.</param>
+		/// <param name="revisionMode">The revision mode.</param>
+		public DbColumn(Druid captionId, DbTypeDef type, DbColumnClass columnClass, DbElementCat category, DbRevisionMode revisionMode)
+			: this (captionId, type)
+		{
+			this.DefineColumnClass (columnClass);
+			this.DefineCategory (category);
+			this.DefineRevisionMode (revisionMode);
+		}
+
+		
+		/// <summary>
+		/// Gets the internal name of the column.
+		/// </summary>
+		/// <value>The internal name of the column.</value>
+		public string							InternalName
+		{
+			get
+			{
+				if (this.captionId.IsValid)
+				{
+					return Druid.ToFullString (this.CaptionId.ToLong ());
+				}
+				else
+				{
+					return this.name;
+				}
+			}
+		}
+
 
 		#region IName Members
 
@@ -638,10 +674,10 @@ namespace Epsitec.Cresus.Database
 
 			switch (this.columnClass)
 			{
-				case DbColumnClass.Data:		return DbSqlStandard.MakeSimpleSqlName (this.Name, this.Category);
+				case DbColumnClass.Data:		return DbSqlStandard.MakeSimpleSqlName (this.InternalName, this.Category);
 				case DbColumnClass.KeyId:		return Tags.ColumnId;
 				case DbColumnClass.KeyStatus:	return Tags.ColumnStatus;
-				case DbColumnClass.RefId:		return DbSqlStandard.MakeSimpleSqlName (this.Name, "REF", "ID");
+				case DbColumnClass.RefId:		return DbSqlStandard.MakeSimpleSqlName (this.InternalName, "REF", "ID");
 			}
 
 			throw new System.NotSupportedException (string.Format ("Column '{0}' has an unsupported class", this.Name));

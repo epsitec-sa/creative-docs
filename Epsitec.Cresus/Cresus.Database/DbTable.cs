@@ -87,6 +87,25 @@ namespace Epsitec.Cresus.Database
 		#endregion
 
 		/// <summary>
+		/// Gets the internal name of the table.
+		/// </summary>
+		/// <value>The internal name of the table.</value>
+		public string							InternalName
+		{
+			get
+			{
+				if (this.captionId.IsValid)
+				{
+					return Druid.ToFullString (this.CaptionId.ToLong ());
+				}
+				else
+				{
+					return this.name;
+				}
+			}
+		}
+
+		/// <summary>
 		/// Gets the caption for the table.
 		/// </summary>
 		/// <value>The caption or <c>null</c> if the <c>CaptionId</c> is not valid.</value>
@@ -550,7 +569,7 @@ namespace Epsitec.Cresus.Database
 		/// <returns>The SQL name.</returns>
 		public string GetSqlName()
 		{
-			return DbSqlStandard.MakeSqlTableName (this.Name, this.Category, this.Key);
+			return DbSqlStandard.MakeSqlTableName (this.InternalName, this.Category, this.Key);
 		}
 
 		/// <summary>
@@ -562,7 +581,7 @@ namespace Epsitec.Cresus.Database
 		{
 			if (this.RevisionMode == DbRevisionMode.TrackChanges)
 			{
-				return DbSqlStandard.MakeSqlTableName (this.Name, DbElementCat.RevisionHistory, this.Key);
+				return DbSqlStandard.MakeSqlTableName (this.InternalName, DbElementCat.RevisionHistory, this.Key);
 			}
 			else
 			{

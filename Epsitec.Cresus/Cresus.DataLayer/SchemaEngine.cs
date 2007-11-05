@@ -50,13 +50,12 @@ namespace Epsitec.Cresus.DataLayer
 			return TypeRosetta.CreateTypeObject (this.resourceManager, entityId) as StructuredType;
 		}
 
-		internal string GetTableName(Druid entityId)
+		internal string GetUserFriendlyTableName(Druid entityId)
 		{
 			Caption entityCaption = this.resourceManager.GetCaption (entityId);
-			string  entityDruid   = Druid.ToFullString (entityId.ToLong ());
 			string  entityName    = entityCaption.Name;
 
-			return string.Concat ("@", entityDruid, ":", entityName);
+			return string.Concat (entityName, " ", entityId.ToString ());
 		}
 
 		internal string GetTypeName(Druid typeId)

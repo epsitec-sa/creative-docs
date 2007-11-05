@@ -43,7 +43,7 @@ namespace Epsitec.Cresus.DataLayer.Helpers
 		public void Add(Druid entityId)
 		{
 			StructuredType entityType = this.engine.GetEntityType (entityId);
-			string         tableName  = this.engine.GetTableName (entityId);
+			string         tableName  = this.engine.GetUserFriendlyTableName (entityId);
 
 			if (entityType == null)
 			{
@@ -56,8 +56,7 @@ namespace Epsitec.Cresus.DataLayer.Helpers
 			DbTable table = infrastructure.CreateDbTable (tableName, DbElementCat.ManagedUserData, DbRevisionMode.TrackChanges);
 
 			table.DefineCaptionId (entityId);
-			table.DefineName (tableName);
-
+			
 			this.tables.Add (table);
 
 			if (entityType.BaseTypeId.IsEmpty)
@@ -107,11 +106,9 @@ namespace Epsitec.Cresus.DataLayer.Helpers
 
 		private void AddDataColumn(DbTable table, StructuredTypeField field)
 		{
-			string typeName   = this.engine.GetTypeName (field.TypeId);
-			string columnName = this.engine.GetColumnName (field.CaptionId);
-
-			DbTypeDef typeDef = this.GetTypeDef (typeName, field.Type);
-			DbColumn  column  = new DbColumn (columnName, typeDef, DbColumnClass.Data, DbElementCat.ManagedUserData, DbRevisionMode.TrackChanges);
+			string    typeName = this.engine.GetTypeName (field.TypeId);
+			DbTypeDef typeDef  = this.GetTypeDef (typeName, field.Type);
+			DbColumn  column   = new DbColumn (field.CaptionId, typeDef, DbColumnClass.Data, DbElementCat.ManagedUserData, DbRevisionMode.TrackChanges);
 
 			table.Columns.Add (column);
 		}
