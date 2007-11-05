@@ -94,6 +94,23 @@ namespace Epsitec.Common.FormEngine
 			//	Crée les widgets pour un champ dans la grille.
 			int index = grid.RowDefinitions.Count;
 
+			if (field.TopSeparator == FieldDescription.SeparatorType.Line)
+			{
+				grid.RowDefinitions.Add(new Widgets.Layouts.RowDefinition());
+				grid.RowDefinitions[index].TopBorder = 10;
+				grid.RowDefinitions[index].BottomBorder = 10;
+
+				Separator sep = new Separator(root);
+				sep.PreferredHeight = 1;
+
+				Widgets.Layouts.GridLayoutEngine.SetColumn(sep, 0);
+				Widgets.Layouts.GridLayoutEngine.SetRow(sep, row);
+				Widgets.Layouts.GridLayoutEngine.SetColumnSpan(sep, 1+FormEngine.MaxColumnsRequired);
+
+				index++;
+				row++;
+			}
+
 			UI.Placeholder placeholder = new Epsitec.Common.UI.Placeholder(root);
 			placeholder.SetBinding(UI.Placeholder.ValueProperty, new Binding(BindingMode.TwoWay, path));
 			placeholder.BackColor = field.BackColor;

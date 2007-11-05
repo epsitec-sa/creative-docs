@@ -27,6 +27,7 @@ namespace Epsitec.Common.FormEngine
 			//	Constructeur.
 			this.fieldIds = new List<Druid>();
 			this.backColor = Color.Empty;
+			this.topSeparator = SeparatorType.Normal;
 			this.bottomSeparator = SeparatorType.Normal;
 			this.columnsRequired = 10;
 			this.rowsRequired = 1;
@@ -67,6 +68,19 @@ namespace Epsitec.Common.FormEngine
 			}
 
 			return builder.ToString();
+		}
+
+		public SeparatorType TopSeparator
+		{
+			//	Type du séparateur avant le champ (donc en dessus).
+			get
+			{
+				return this.topSeparator;
+			}
+			set
+			{
+				this.topSeparator = value;
+			}
 		}
 
 		public SeparatorType BottomSeparator
@@ -128,6 +142,7 @@ namespace Epsitec.Common.FormEngine
 
 		protected List<Druid> fieldIds;
 		protected Color backColor;
+		protected SeparatorType topSeparator;
 		protected SeparatorType bottomSeparator;
 		protected int columnsRequired;
 		protected int rowsRequired;
