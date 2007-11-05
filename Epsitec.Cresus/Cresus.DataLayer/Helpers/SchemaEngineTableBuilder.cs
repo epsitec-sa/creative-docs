@@ -94,10 +94,11 @@ namespace Epsitec.Cresus.DataLayer.Helpers
 					break;
 				
 				case FieldRelation.Reference:
-					this.AddRelationColumn (table, field);
+					this.AddRelationColumn (table, field, DbCardinality.Reference);
 					break;
 				
 				case FieldRelation.Collection:
+					this.AddRelationColumn (table, field, DbCardinality.Collection);
 					break;
 
 				default:
@@ -105,9 +106,14 @@ namespace Epsitec.Cresus.DataLayer.Helpers
 			}
 		}
 
-		private void AddRelationColumn(DbTable table, StructuredTypeField field)
+		private void AddRelationColumn(DbTable table, StructuredTypeField field, DbCardinality cardinality)
 		{
+			System.Diagnostics.Debug.Assert (cardinality != DbCardinality.None);
+			System.Diagnostics.Debug.Assert (field.CaptionId.IsValid);
+
 			DbColumn column = new DbColumn (field.CaptionId, null, DbColumnClass.Virtual, DbElementCat.ManagedUserData, DbRevisionMode.TrackChanges);
+
+			column.DefineCardinality (cardinality);
 
 			table.Columns.Add (column);
 		}

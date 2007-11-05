@@ -122,6 +122,18 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 
+		public static DbCardinality ParseCardinality(string text)
+		{
+			if (string.IsNullOrEmpty (text))
+			{
+				return DbCardinality.None;
+			}
+			else
+			{
+				return (DbCardinality) InvariantConverter.ParseInt (text);
+			}
+		}
+
 		/// <summary>
 		/// Parses the localization.
 		/// </summary>
@@ -336,6 +348,18 @@ namespace Epsitec.Cresus.Database
 		public static string ColumnClassToString(DbColumnClass value)
 		{
 			if (value == DbColumnClass.Data)
+			{
+				return null;
+			}
+			else
+			{
+				return InvariantConverter.ToString ((int) value);
+			}
+		}
+
+		public static string CardinalityToString(DbCardinality value)
+		{
+			if (value == DbCardinality.None)
 			{
 				return null;
 			}

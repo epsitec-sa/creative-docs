@@ -395,6 +395,15 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 
+		public DbCardinality Cardinality
+		{
+			get
+			{
+				return this.cardinality;
+			}
+		}
+
+
 
 		/// <summary>
 		/// Defines the column category. A column category may not be changed
@@ -566,6 +575,22 @@ namespace Epsitec.Cresus.Database
 		internal void DefineColumnClass(DbColumnClass value)
 		{
 			this.columnClass = value;
+		}
+
+		public void DefineCardinality(DbCardinality value)
+		{
+			if (this.cardinality == value)
+			{
+				return;
+			}
+			if (this.cardinality == DbCardinality.None)
+			{
+				this.cardinality = value;
+			}
+			else
+			{
+				throw new System.InvalidOperationException (string.Format ("Column '{0}' cannot change its cardinality", this.Name));
+			}
 		}
 
 		/// <summary>
@@ -752,6 +777,7 @@ namespace Epsitec.Cresus.Database
 				column.category     = DbTools.ParseElementCategory (xmlReader.GetAttribute ("cat"));
 				column.revisionMode = DbTools.ParseRevisionMode (xmlReader.GetAttribute ("rev"));
 				column.columnClass  = DbTools.ParseColumnClass (xmlReader.GetAttribute ("class"));
+				column.cardinality  = DbTools.ParseCardinality (xmlReader.GetAttribute ("card"));
 				column.localization = DbTools.ParseLocalization (xmlReader.GetAttribute ("loc"));
 				column.isPrimaryKey = DbTools.ParseDefaultingToFalseBool (xmlReader.GetAttribute ("pk"));
 
@@ -782,6 +808,7 @@ namespace Epsitec.Cresus.Database
 			DbTools.WriteAttribute (xmlWriter, "cat", DbTools.ElementCategoryToString (this.Category));
 			DbTools.WriteAttribute (xmlWriter, "rev", DbTools.RevisionModeToString (this.revisionMode == DbRevisionMode.Unknown ? DbRevisionMode.IgnoreChanges : this.revisionMode));
 			DbTools.WriteAttribute (xmlWriter, "class", DbTools.ColumnClassToString (this.ColumnClass));
+			DbTools.WriteAttribute (xmlWriter, "card", DbTools.CardinalityToString (this.Cardinality));
 			DbTools.WriteAttribute (xmlWriter, "loc", DbTools.ColumnLocalizationToString (this.Localization));
 			DbTools.WriteAttribute (xmlWriter, "pk", DbTools.BoolDefaultingToFalseToString (this.IsPrimaryKey));
 			
@@ -834,5 +861,6 @@ namespace Epsitec.Cresus.Database
 		private DbRevisionMode					revisionMode;
 		private DbColumnClass					columnClass;
 		private DbColumnLocalization			localization;
+		private DbCardinality					cardinality;
 	}
 }
