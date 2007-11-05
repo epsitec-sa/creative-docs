@@ -90,7 +90,7 @@ namespace Epsitec.Common.FormEngine
 
 			int columnsRequired = System.Math.Min(field.ColumnsRequired, FormEngine.MaxColumnsRequired-1);
 
-			if (row+1+columnsRequired > FormEngine.MaxColumnsRequired)  // dépasse à droite ?
+			if (column+1+columnsRequired > FormEngine.MaxColumnsRequired)  // dépasse à droite ?
 			{
 				row++;
 				column = 0;
