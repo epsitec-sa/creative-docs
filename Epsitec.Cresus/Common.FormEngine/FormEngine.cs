@@ -130,13 +130,11 @@ namespace Epsitec.Common.FormEngine
 		private void CreateField(UI.Panel root, Widgets.Layouts.GridLayoutEngine grid, string path, FieldDescription field, ref int column, ref int row)
 		{
 			//	Crée les widgets pour un champ dans la grille.
-			int index = grid.RowDefinitions.Count;
-
 			if (field.TopSeparator == FieldDescription.SeparatorType.Line)
 			{
 				grid.RowDefinitions.Add(new Widgets.Layouts.RowDefinition());
-				grid.RowDefinitions[index].TopBorder = 10;
-				grid.RowDefinitions[index].BottomBorder = 10;
+				grid.RowDefinitions[row].TopBorder = 10;
+				grid.RowDefinitions[row].BottomBorder = 10;
 
 				Separator sep = new Separator(root);
 				sep.PreferredHeight = 1;
@@ -145,14 +143,13 @@ namespace Epsitec.Common.FormEngine
 				Widgets.Layouts.GridLayoutEngine.SetRow(sep, row);
 				Widgets.Layouts.GridLayoutEngine.SetColumnSpan(sep, 1+FormEngine.MaxColumnsRequired);
 
-				index++;
 				row++;
 			}
 
 			UI.Placeholder placeholder = new Epsitec.Common.UI.Placeholder(root);
 			placeholder.SetBinding(UI.Placeholder.ValueProperty, new Binding(BindingMode.TwoWay, path));
 			placeholder.BackColor = field.BackColor;
-			placeholder.TabIndex = index;
+			placeholder.TabIndex = grid.RowDefinitions.Count;
 
 			grid.RowDefinitions.Add(new Widgets.Layouts.RowDefinition());
 
@@ -171,7 +168,7 @@ namespace Epsitec.Common.FormEngine
 					m = 0;
 					break;
 			}
-			grid.RowDefinitions[index].BottomBorder = m;
+			grid.RowDefinitions[row].BottomBorder = m;
 
 			int columnsRequired = System.Math.Min(field.ColumnsRequired, FormEngine.MaxColumnsRequired-1);
 
@@ -202,10 +199,9 @@ namespace Epsitec.Common.FormEngine
 
 			if (field.BottomSeparator == FieldDescription.SeparatorType.Line)
 			{
-				index++;
 				grid.RowDefinitions.Add(new Widgets.Layouts.RowDefinition());
-				grid.RowDefinitions[index].TopBorder = 10;
-				grid.RowDefinitions[index].BottomBorder = 10;
+				grid.RowDefinitions[row].TopBorder = 10;
+				grid.RowDefinitions[row].BottomBorder = 10;
 
 				Separator sep = new Separator(root);
 				sep.PreferredHeight = 1;
