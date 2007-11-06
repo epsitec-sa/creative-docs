@@ -130,10 +130,41 @@ namespace Epsitec.Common.FormEngine
 		private void CreateField(UI.Panel root, Widgets.Layouts.GridLayoutEngine grid, string path, FieldDescription field, ref int column, ref int row)
 		{
 			//	Crée les widgets pour un champ dans la grille.
-			if (field.TopSeparator == FieldDescription.SeparatorType.Line)
+			if (field.TopSeparator == FieldDescription.SeparatorType.Title)
+			{
+				System.Text.StringBuilder builder = new System.Text.StringBuilder();
+				List<Druid> druids = field.FieldIds;
+				for (int i=0; i<druids.Count-1; i++)
+				{
+					if (i > 0)
+					{
+						builder.Append(".");
+					}
+
+					Druid druid = druids[i];
+					Caption caption = this.resourceManager.GetCaption(druid);
+					builder.Append(caption.Name);
+				}
+
+				grid.RowDefinitions.Add(new Widgets.Layouts.RowDefinition());
+				grid.RowDefinitions[row].TopBorder = 5;
+				grid.RowDefinitions[row].BottomBorder = 5;
+
+				StaticText text = new StaticText(root);
+				text.Text = string.Concat("<font size=\"125%\"><b>", builder.ToString(), "</b></font>");
+
+				Widgets.Layouts.GridLayoutEngine.SetColumn(text, 0);
+				Widgets.Layouts.GridLayoutEngine.SetRow(text, row);
+				Widgets.Layouts.GridLayoutEngine.SetColumnSpan(text, 1+FormEngine.MaxColumnsRequired);
+
+				row++;
+			}
+
+			if (field.TopSeparator == FieldDescription.SeparatorType.Line ||
+				field.TopSeparator == FieldDescription.SeparatorType.Title)
 			{
 				grid.RowDefinitions.Add(new Widgets.Layouts.RowDefinition());
-				grid.RowDefinitions[row].TopBorder = 10;
+				grid.RowDefinitions[row].TopBorder = (field.TopSeparator == FieldDescription.SeparatorType.Title) ? 0 : 10;
 				grid.RowDefinitions[row].BottomBorder = 10;
 
 				Separator sep = new Separator(root);

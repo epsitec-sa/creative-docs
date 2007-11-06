@@ -18,7 +18,8 @@ namespace Epsitec.Common.FormEngine
 			Compact = 1,	// les champs se touchent (chevauchement d'un pixel)
 			Extend  = 2,	// grand séparateur
 			Line    = 3,	// grand séparateur avec trait horizontal
-			Append  = 4,	// le champ suivant sera sur la même ligne
+			Title   = 4,	// titre automatique
+			Append  = 5,	// le champ suivant sera sur la même ligne
 		}
 
 
