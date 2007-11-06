@@ -18,6 +18,7 @@ namespace Epsitec.Cresus.DataLayer.Helpers
 		{
 			this.engine = engine;
 			this.tables = new List<DbTable> ();
+			this.newTables = new List<DbTable> ();
 			this.tablesDictionary = new Dictionary<Druid, DbTable> ();
 		}
 
@@ -43,20 +44,30 @@ namespace Epsitec.Cresus.DataLayer.Helpers
 
 		public void Add(Druid entityId)
 		{
-			DbTable table = this.CreateTable (entityId);
+			System.Diagnostics.Debug.Assert (this.newTables.Count == 0);
 
-			if (table != null)
+			this.CreateTable (entityId);
+
+			foreach (DbTable table in this.newTables)
 			{
 				this.engine.Infrastructure.RegisterNewDbTable (this.transaction, table);
 			}
+			foreach (DbTable table in this.newTables)
+			{
+				this.engine.Infrastructure.RegisterColumnRelations (this.transaction, table);
+			}
+
+			this.newTables.Clear ();
 		}
 
 		
 		private DbTable CreateTable(Druid entityId)
 		{
-			if (this.tablesDictionary.ContainsKey (entityId))
+			DbTable table;
+
+			if (this.tablesDictionary.TryGetValue (entityId, out table))
 			{
-				return null;
+				return table;
 			}
 
 			StructuredType entityType = this.engine.GetEntityType (entityId);
@@ -70,10 +81,12 @@ namespace Epsitec.Cresus.DataLayer.Helpers
 			this.AssertTransaction ();
 
 			DbInfrastructure infrastructure = this.engine.Infrastructure;
-			DbTable table = infrastructure.CreateDbTable (tableName, DbElementCat.ManagedUserData, DbRevisionMode.TrackChanges);
+			
+			table = infrastructure.CreateDbTable (tableName, DbElementCat.ManagedUserData, DbRevisionMode.TrackChanges);
 
 			table.DefineCaptionId (entityId);
-			
+
+			this.newTables.Add (table);
 			this.tables.Add (table);
 			this.tablesDictionary[entityId] = table;
 
@@ -128,10 +141,10 @@ namespace Epsitec.Cresus.DataLayer.Helpers
 		{
 			System.Diagnostics.Debug.Assert (cardinality != DbCardinality.None);
 			System.Diagnostics.Debug.Assert (field.CaptionId.IsValid);
+			System.Diagnostics.Debug.Assert (field.Type is IStructuredType);
 
-			DbColumn column = new DbColumn (field.CaptionId, null, DbColumnClass.Virtual, DbElementCat.ManagedUserData, DbRevisionMode.TrackChanges);
-
-			column.DefineCardinality (cardinality);
+			DbTable  target = this.CreateTable (field.TypeId);
+			DbColumn column = DbTable.CreateRelationColumn (this.transaction, this.engine.Infrastructure, field.CaptionId, target, DbRevisionMode.TrackChanges, cardinality);
 			
 			table.Columns.Add (column);
 		}
@@ -205,6 +218,7 @@ namespace Epsitec.Cresus.DataLayer.Helpers
 
 		SchemaEngine engine;
 		List<DbTable> tables;
+		List<DbTable> newTables;
 		Dictionary<Druid, DbTable> tablesDictionary;
 		DbTransaction transaction;
 	}

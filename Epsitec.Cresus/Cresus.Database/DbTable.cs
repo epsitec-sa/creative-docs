@@ -779,11 +779,11 @@ namespace Epsitec.Cresus.Database
 		/// <param name="targetTable">The target table.</param>
 		/// <param name="revisionMode">The revision mode.</param>
 		/// <param name="cardinality">The cardinality.</param>
-		/// <param name="nullability">The column nullability.</param>
 		/// <returns>The column.</returns>
-		public static DbColumn CreateRelationColumn(DbTransaction transaction, DbInfrastructure infrastructure, Druid columnCaptionId, DbTable targetTable, DbRevisionMode revisionMode, DbCardinality cardinality, DbNullability nullability)
+		public static DbColumn CreateRelationColumn(DbTransaction transaction, DbInfrastructure infrastructure, Druid columnCaptionId, DbTable targetTable, DbRevisionMode revisionMode, DbCardinality cardinality)
 		{
-			System.Diagnostics.Debug.Assert (nullability != DbNullability.Undefined);
+			System.Diagnostics.Debug.Assert (targetTable != null);
+			System.Diagnostics.Debug.Assert (cardinality != DbCardinality.None);
 
 			DbColumn column = new DbColumn (columnCaptionId, null, DbColumnClass.Virtual, DbElementCat.ManagedUserData, revisionMode);
 
