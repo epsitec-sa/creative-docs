@@ -54,7 +54,8 @@ namespace Epsitec.Cresus.Server
 		protected override void OnShutdown()
 		{
 			base.OnShutdown ();
-			this.StopServices ();
+//-			this.StopServices ();
+			this.Stop ();
 			EventLog.WriteEntry ("Shutting down.", System.Diagnostics.EventLogEntryType.Information);
 		}
 		
