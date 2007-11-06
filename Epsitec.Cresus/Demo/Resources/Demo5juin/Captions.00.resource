@@ -5,21 +5,21 @@
   <data name="Typ.StructuredType.Prix" id="08">&lt;objects xmlns:s="*1" xmlns:f="*1"&gt;&lt;s:storage s:root="_1" s:n_ext="0" s:n_typ="3" s:n_obj="2"&gt;&lt;s:type id="_1" s:name="*C" /&gt;&lt;s:type id="_2" s:name="*aT" /&gt;&lt;s:type id="_3" s:name="*S" /&gt;&lt;s:object id="_1" s:type="_1" /&gt;&lt;s:object id="_2" s:type="_3" /&gt;&lt;s:data id="_1" f:Name="Prix" f:_2.ComplexType="{ObjRef _2}" /&gt;&lt;s:data id="_2" f:Class="Entity" f:Fields="{Collection {Text '[630G];[6305];0;[630G];1'}, {Text '[630H];[1004];1;[630H]'}, {Text '[630I];[6307];2;[630I];1'}, {Text '[630J];[1004];3;[630J]'}, {Text '[630K];[1004];4;[630K]'}, {Text '[630L];[1004];5;[630L]'}}" /&gt;&lt;/s:storage&gt;&lt;/objects&gt;</data>
   <data name="Typ.StructuredType.PrixCompose" id="09">&lt;objects xmlns:s="*1" xmlns:f="*1"&gt;&lt;s:storage s:root="_1" s:n_ext="0" s:n_typ="3" s:n_obj="2"&gt;&lt;s:type id="_1" s:name="*C" /&gt;&lt;s:type id="_2" s:name="*aT" /&gt;&lt;s:type id="_3" s:name="*S" /&gt;&lt;s:object id="_1" s:type="_1" /&gt;&lt;s:object id="_2" s:type="_3" /&gt;&lt;s:data id="_1" f:Name="PrixCompose" f:_2.ComplexType="{ObjRef _2}" /&gt;&lt;s:data id="_2" f:Class="Entity" f:Fields="{Collection {Text '[630M];[6308];0;[630M];3'}, {Text '[630N];[1004];1;[630N]'}, {Text '[630O];[1004];2;[630O]'}, {Text '[630P];[1004];3;[630P]'}}" /&gt;&lt;/s:storage&gt;&lt;/objects&gt;</data>
   <data name="Fld.Monnaie.Désignation" id="0A" mod="1">&lt;s:data id="_0" f:Name="Désignation" f:Labels="{Collection {Text 'Désignation'}}" /&gt;</data>
-  <data name="Fld.Monnaie.TauxChangeVersChf" id="0B" mod="1">&lt;s:data id="_0" f:Name="TauxChangeVersChf" f:Labels="{Collection {Text 'TauxChangeVersChf'}}" /&gt;</data>
+  <data name="Fld.Monnaie.TauxChangeVersChf" id="0B" mod="1">&lt;s:data id="_0" f:Name="TauxChangeVersChf" f:Labels="{Collection {Text 'Taux change vers Chf'}}" /&gt;</data>
   <data name="Fld.Monnaie.Date" id="0C" mod="1">&lt;s:data id="_0" f:Name="Date" f:Labels="{Collection {Text 'Date'}}" /&gt;</data>
   <data name="Fld.CodeTva.Désignation" id="0D" mod="1">&lt;s:data id="_0" f:Name="Désignation" f:Labels="{Collection {Text 'Désignation'}}" /&gt;</data>
   <data name="Fld.CodeTva.Taux" id="0E" mod="1">&lt;s:data id="_0" f:Name="Taux" f:Labels="{Collection {Text 'Taux'}}" /&gt;</data>
-  <data name="Fld.CodeTva.DateDébutValidité" id="0F" mod="1">&lt;s:data id="_0" f:Name="DateDébutValidité" f:Labels="{Collection {Text 'DateDébutValidité'}}" /&gt;</data>
+  <data name="Fld.CodeTva.DateDébutValidité" id="0F" mod="1">&lt;s:data id="_0" f:Name="DateDébutValidité" f:Labels="{Collection {Text 'Date début validité'}}" /&gt;</data>
   <data name="Fld.Prix.Monnaie" id="0G" mod="1">&lt;s:data id="_0" f:Name="Monnaie" f:Labels="{Collection {Text 'Monnaie'}}" /&gt;</data>
   <data name="Fld.Prix.Ht" id="0H" mod="1">&lt;s:data id="_0" f:Name="Ht" f:Labels="{Collection {Text 'Ht'}}" /&gt;</data>
   <data name="Fld.Prix.CodeTva" id="0I" mod="1">&lt;s:data id="_0" f:Name="CodeTva" f:Labels="{Collection {Text 'CodeTva'}}" /&gt;</data>
-  <data name="Fld.Prix.ArrondiTva" id="0J" mod="1">&lt;s:data id="_0" f:Name="ArrondiTva" f:Labels="{Collection {Text 'ArrondiTva'}}" /&gt;</data>
-  <data name="Fld.Prix.MontantTva" id="0K" mod="1">&lt;s:data id="_0" f:Name="MontantTva" f:Labels="{Collection {Text 'MontantTva'}}" /&gt;</data>
+  <data name="Fld.Prix.ArrondiTva" id="0J" mod="1">&lt;s:data id="_0" f:Name="ArrondiTva" f:Labels="{Collection {Text 'Arrondi Tva'}}" /&gt;</data>
+  <data name="Fld.Prix.MontantTva" id="0K" mod="1">&lt;s:data id="_0" f:Name="MontantTva" f:Labels="{Collection {Text 'Montant Tva'}}" /&gt;</data>
   <data name="Fld.Prix.Ttc" id="0L" mod="1">&lt;s:data id="_0" f:Name="Ttc" f:Labels="{Collection {Text 'Ttc'}}" /&gt;</data>
   <data name="Fld.PrixCompose.Prix" id="0M" mod="1">&lt;s:data id="_0" f:Name="Prix" f:Labels="{Collection {Text 'Prix'}}" /&gt;</data>
-  <data name="Fld.PrixCompose.TotalHt" id="0N" mod="1">&lt;s:data id="_0" f:Name="TotalHt" f:Labels="{Collection {Text 'TotalHt'}}" /&gt;</data>
-  <data name="Fld.PrixCompose.TotalTtc" id="0O" mod="1">&lt;s:data id="_0" f:Name="TotalTtc" f:Labels="{Collection {Text 'TotalTtc'}}" /&gt;</data>
-  <data name="Fld.PrixCompose.TotalTva" id="0P" mod="1">&lt;s:data id="_0" f:Name="TotalTva" f:Labels="{Collection {Text 'TotalTva'}}" /&gt;</data>
+  <data name="Fld.PrixCompose.TotalHt" id="0N" mod="1">&lt;s:data id="_0" f:Name="TotalHt" f:Labels="{Collection {Text 'Total Ht'}}" /&gt;</data>
+  <data name="Fld.PrixCompose.TotalTtc" id="0O" mod="1">&lt;s:data id="_0" f:Name="TotalTtc" f:Labels="{Collection {Text 'Total Ttc'}}" /&gt;</data>
+  <data name="Fld.PrixCompose.TotalTva" id="0P" mod="1">&lt;s:data id="_0" f:Name="TotalTva" f:Labels="{Collection {Text 'Total Tva'}}" /&gt;</data>
   <data name="Typ.StructuredType.Article" id="0Q">&lt;objects xmlns:s="*1" xmlns:f="*1"&gt;&lt;s:storage s:root="_1" s:n_ext="0" s:n_typ="3" s:n_obj="2"&gt;&lt;s:type id="_1" s:name="*C" /&gt;&lt;s:type id="_2" s:name="*aT" /&gt;&lt;s:type id="_3" s:name="*S" /&gt;&lt;s:object id="_1" s:type="_1" /&gt;&lt;s:object id="_2" s:type="_3" /&gt;&lt;s:data id="_1" f:Name="Article" f:_2.ComplexType="{ObjRef _2}" /&gt;&lt;s:data id="_2" f:Class="Entity" f:SerializedDesignerLayouts="{Null}" f:Fields="{Collection {Text '[63091];[1008];0;[63091]'}, {Text '[630A1];[1008];1;[630A1]'}, {Text '[630B1];[6308];2;[630B1];1'}, {Text '[630C1];[63081];3;[630C1];1'}, {Text '[630D1];[630V];4;[630D1];1'}, {Text '[630E1];[630S];5;[630E1];3'}, {Text '[630F1];[1006];6;[630F1]'}}" /&gt;&lt;/s:storage&gt;&lt;/objects&gt;</data>
   <data name="Typ.StructuredType.Stock" id="0R">&lt;objects xmlns:s="*1" xmlns:f="*1"&gt;&lt;s:storage s:root="_1" s:n_ext="0" s:n_typ="3" s:n_obj="2"&gt;&lt;s:type id="_1" s:name="*C" /&gt;&lt;s:type id="_2" s:name="*aT" /&gt;&lt;s:type id="_3" s:name="*S" /&gt;&lt;s:object id="_1" s:type="_1" /&gt;&lt;s:object id="_2" s:type="_3" /&gt;&lt;s:data id="_1" f:Name="Stock" f:_2.ComplexType="{ObjRef _2}" /&gt;&lt;s:data id="_2" f:Class="Entity" f:Fields="{Collection {Text '[630G1];[630S];0;[630G1];3'}, {Text '[630H1];[1008];1;[630H1]'}}" /&gt;&lt;/s:storage&gt;&lt;/objects&gt;</data>
   <data name="Typ.StructuredType.ArticleStock" id="0S">&lt;objects xmlns:s="*1" xmlns:f="*1"&gt;&lt;s:storage s:root="_1" s:n_ext="0" s:n_typ="3" s:n_obj="2"&gt;&lt;s:type id="_1" s:name="*C" /&gt;&lt;s:type id="_2" s:name="*aT" /&gt;&lt;s:type id="_3" s:name="*S" /&gt;&lt;s:object id="_1" s:type="_1" /&gt;&lt;s:object id="_2" s:type="_3" /&gt;&lt;s:data id="_1" f:Name="ArticleStock" f:_2.ComplexType="{ObjRef _2}" /&gt;&lt;s:data id="_2" f:Class="Entity" f:Fields="{Collection {Text '[630I1];[630Q];0;[630I1];1'}, {Text '[630J1];[630U];1;[630J1];1'}, {Text '[630K1];[630T];2;[630K1];1'}, {Text '[630L1];[6309];3;[630L1];1'}, {Text '[630M1];[6309];4;[630M1];1'}, {Text '[630N1];[1006];5;[630N1]'}}" /&gt;&lt;/s:storage&gt;&lt;/objects&gt;</data>
@@ -37,22 +37,22 @@
   <data name="Typ.StructuredType.Adresse" id="081">&lt;objects xmlns:s="*1" xmlns:f="*1"&gt;&lt;s:storage s:root="_1" s:n_ext="0" s:n_typ="3" s:n_obj="2"&gt;&lt;s:type id="_1" s:name="*C" /&gt;&lt;s:type id="_2" s:name="*aT" /&gt;&lt;s:type id="_3" s:name="*S" /&gt;&lt;s:object id="_1" s:type="_1" /&gt;&lt;s:object id="_2" s:type="_3" /&gt;&lt;s:data id="_1" f:Name="Adresse" f:_2.ComplexType="{ObjRef _2}" /&gt;&lt;s:data id="_2" f:Class="Entity" f:SerializedDesignerLayouts="&amp;lt;Layout id=\&amp;quot;0\&amp;quot;&amp;gt;&amp;lt;Boxes&amp;gt;&amp;lt;Box&amp;gt;&amp;lt;ID&amp;gt;[63081]&amp;lt;/ID&amp;gt;&amp;lt;Bds&amp;gt;40;40;200;228&amp;lt;/Bds&amp;gt;&amp;lt;Ext&amp;gt;True&amp;lt;/Ext&amp;gt;&amp;lt;Clr&amp;gt;Blue&amp;lt;/Clr&amp;gt;&amp;lt;Field&amp;gt;&amp;lt;Cap&amp;gt;[63073]&amp;lt;/Cap&amp;gt;&amp;lt;Dst&amp;gt;[1008]&amp;lt;/Dst&amp;gt;&amp;lt;/Field&amp;gt;&amp;lt;Field&amp;gt;&amp;lt;Cap&amp;gt;[63083]&amp;lt;/Cap&amp;gt;&amp;lt;Dst&amp;gt;[632]&amp;lt;/Dst&amp;gt;&amp;lt;/Field&amp;gt;&amp;lt;Field&amp;gt;&amp;lt;Cap&amp;gt;[63093]&amp;lt;/Cap&amp;gt;&amp;lt;Dst&amp;gt;[1008]&amp;lt;/Dst&amp;gt;&amp;lt;/Field&amp;gt;&amp;lt;Field&amp;gt;&amp;lt;Cap&amp;gt;[630A3]&amp;lt;/Cap&amp;gt;&amp;lt;Dst&amp;gt;[1008]&amp;lt;/Dst&amp;gt;&amp;lt;/Field&amp;gt;&amp;lt;Field&amp;gt;&amp;lt;Cap&amp;gt;[630B3]&amp;lt;/Cap&amp;gt;&amp;lt;Dst&amp;gt;[1008]&amp;lt;/Dst&amp;gt;&amp;lt;/Field&amp;gt;&amp;lt;Field&amp;gt;&amp;lt;Cap&amp;gt;[630C3]&amp;lt;/Cap&amp;gt;&amp;lt;Dst&amp;gt;[1008]&amp;lt;/Dst&amp;gt;&amp;lt;/Field&amp;gt;&amp;lt;Field&amp;gt;&amp;lt;Cap&amp;gt;[630D3]&amp;lt;/Cap&amp;gt;&amp;lt;Dst&amp;gt;[1008]&amp;lt;/Dst&amp;gt;&amp;lt;/Field&amp;gt;&amp;lt;Field&amp;gt;&amp;lt;Cap&amp;gt;[630E3]&amp;lt;/Cap&amp;gt;&amp;lt;Dst&amp;gt;[1008]&amp;lt;/Dst&amp;gt;&amp;lt;/Field&amp;gt;&amp;lt;/Box&amp;gt;&amp;lt;/Boxes&amp;gt;&amp;lt;/Layout&amp;gt;" f:Fields="{Collection {Text '[63073];[1008];0;[63073]'}, {Text '[63083];[632];1;[63083]'}, {Text '[63093];[1008];2;[63093]'}, {Text '[630A3];[1008];3;[630A3]'}, {Text '[630B3];[1008];4;[630B3]'}, {Text '[630C3];[1008];5;[630C3]'}, {Text '[630D3];[1008];6;[630D3]'}, {Text '[630E3];[1008];7;[630E3]'}}" /&gt;&lt;/s:storage&gt;&lt;/objects&gt;</data>
   <data name="Fld.Article.Numéro" id="091" mod="1">&lt;s:data id="_0" f:Name="Numéro" f:Labels="{Collection {Text 'Numéro'}}" /&gt;</data>
   <data name="Fld.Article.Désignation" id="0A1" mod="1">&lt;s:data id="_0" f:Name="Désignation" f:Labels="{Collection {Text 'Désignation'}}" /&gt;</data>
-  <data name="Fld.Article.PrixVente" id="0B1" mod="1">&lt;s:data id="_0" f:Name="PrixVente" f:Labels="{Collection {Text 'PrixVente'}}" /&gt;</data>
+  <data name="Fld.Article.PrixVente" id="0B1" mod="1">&lt;s:data id="_0" f:Name="PrixVente" f:Labels="{Collection {Text 'Prix vente'}}" /&gt;</data>
   <data name="Fld.Article.Fournisseur" id="0C1" mod="1">&lt;s:data id="_0" f:Name="Fournisseur" f:Labels="{Collection {Text 'Fournisseur'}}" /&gt;</data>
   <data name="Fld.Article.Unité" id="0D1" mod="1">&lt;s:data id="_0" f:Name="Unité" f:Labels="{Collection {Text 'Unité'}}" /&gt;</data>
-  <data name="Fld.Article.ArticlesEnStock" id="0E1" mod="1">&lt;s:data id="_0" f:Name="ArticlesEnStock" f:Labels="{Collection {Text 'ArticlesEnStock'}}" /&gt;</data>
-  <data name="Fld.Article.QuantitéEnStock" id="0F1" mod="1">&lt;s:data id="_0" f:Name="QuantitéEnStock" f:Labels="{Collection {Text 'QuantitéEnStock'}}" /&gt;</data>
+  <data name="Fld.Article.ArticlesEnStock" id="0E1" mod="1">&lt;s:data id="_0" f:Name="ArticlesEnStock" f:Labels="{Collection {Text 'Articles en stock'}}" /&gt;</data>
+  <data name="Fld.Article.QuantitéEnStock" id="0F1" mod="1">&lt;s:data id="_0" f:Name="QuantitéEnStock" f:Labels="{Collection {Text 'Quantité en stock'}}" /&gt;</data>
   <data name="Fld.Stock.Articles" id="0G1" mod="1">&lt;s:data id="_0" f:Name="Articles" f:Labels="{Collection {Text 'Articles'}}" /&gt;</data>
   <data name="Fld.Stock.Désignation" id="0H1" mod="1">&lt;s:data id="_0" f:Name="Désignation" f:Labels="{Collection {Text 'Désignation'}}" /&gt;</data>
   <data name="Fld.ArticleStock.Article" id="0I1" mod="1">&lt;s:data id="_0" f:Name="Article" f:Labels="{Collection {Text 'Article'}}" /&gt;</data>
   <data name="Fld.ArticleStock.Emplacement" id="0J1" mod="1">&lt;s:data id="_0" f:Name="Emplacement" f:Labels="{Collection {Text 'Emplacement'}}" /&gt;</data>
   <data name="Fld.ArticleStock.Mouvements" id="0K1" mod="1">&lt;s:data id="_0" f:Name="Mouvements" f:Labels="{Collection {Text 'Mouvements'}}" /&gt;</data>
-  <data name="Fld.ArticleStock.TotalValeurAchat" id="0L1" mod="1">&lt;s:data id="_0" f:Name="TotalValeurAchat" f:Labels="{Collection {Text 'TotalValeurAchat'}}" /&gt;</data>
-  <data name="Fld.ArticleStock.TotalValeurVente" id="0M1" mod="1">&lt;s:data id="_0" f:Name="TotalValeurVente" f:Labels="{Collection {Text 'TotalValeurVente'}}" /&gt;</data>
-  <data name="Fld.ArticleStock.QuantitéEnStock" id="0N1" mod="1">&lt;s:data id="_0" f:Name="QuantitéEnStock" f:Labels="{Collection {Text 'QuantitéEnStock'}}" /&gt;</data>
-  <data name="Fld.MouvementStock.PrixAchatOuVente" id="0O1" mod="1">&lt;s:data id="_0" f:Name="PrixAchatOuVente" f:Labels="{Collection {Text 'PrixAchatOuVente'}}" /&gt;</data>
+  <data name="Fld.ArticleStock.TotalValeurAchat" id="0L1" mod="1">&lt;s:data id="_0" f:Name="TotalValeurAchat" f:Labels="{Collection {Text 'Total valeur achat'}}" /&gt;</data>
+  <data name="Fld.ArticleStock.TotalValeurVente" id="0M1" mod="1">&lt;s:data id="_0" f:Name="TotalValeurVente" f:Labels="{Collection {Text 'Total valeur vente'}}" /&gt;</data>
+  <data name="Fld.ArticleStock.QuantitéEnStock" id="0N1" mod="1">&lt;s:data id="_0" f:Name="QuantitéEnStock" f:Labels="{Collection {Text 'Quantité en stock'}}" /&gt;</data>
+  <data name="Fld.MouvementStock.PrixAchatOuVente" id="0O1" mod="1">&lt;s:data id="_0" f:Name="PrixAchatOuVente" f:Labels="{Collection {Text 'Prix achat ou vente'}}" /&gt;</data>
   <data name="Fld.MouvementStock.Opération" id="0P1" mod="1">&lt;s:data id="_0" f:Name="Opération" f:Labels="{Collection {Text 'Opération'}}" /&gt;</data>
-  <data name="Fld.MouvementStock.ModifQuantité" id="0Q1" mod="1">&lt;s:data id="_0" f:Name="ModifQuantité" f:Labels="{Collection {Text 'ModifQuantité'}}" /&gt;</data>
+  <data name="Fld.MouvementStock.ModifQuantité" id="0Q1" mod="1">&lt;s:data id="_0" f:Name="ModifQuantité" f:Labels="{Collection {Text 'Modif quantité'}}" /&gt;</data>
   <data name="Fld.MouvementStock.Date" id="0R1" mod="1">&lt;s:data id="_0" f:Name="Date" f:Labels="{Collection {Text 'Date'}}" /&gt;</data>
   <data name="Fld.EmplacementStock.Stock" id="0S1" mod="1">&lt;s:data id="_0" f:Name="Stock" f:Labels="{Collection {Text 'Stock'}}" /&gt;</data>
   <data name="Fld.EmplacementStock.Etage" id="0T1" mod="1">&lt;s:data id="_0" f:Name="Etage" f:Labels="{Collection {Text 'Etage'}}" /&gt;</data>
@@ -60,39 +60,39 @@
   <data name="Fld.EmplacementStock.Casier" id="0V1" mod="1">&lt;s:data id="_0" f:Name="Casier" f:Labels="{Collection {Text 'Casier'}}" /&gt;</data>
   <data name="Fld.Unite.Désignation" id="002" mod="1">&lt;s:data id="_0" f:Name="Désignation" f:Labels="{Collection {Text 'Désignation'}}" /&gt;</data>
   <data name="Fld.Unite.Code" id="012" mod="1">&lt;s:data id="_0" f:Name="Code" f:Labels="{Collection {Text 'Code'}}" /&gt;</data>
-  <data name="Fld.Unite.UnitéDeBase" id="022" mod="1">&lt;s:data id="_0" f:Name="UnitéDeBase" f:Labels="{Collection {Text 'UnitéDeBase'}}" /&gt;</data>
-  <data name="Fld.Unite.MultipleUnitéDeBase" id="032" mod="1">&lt;s:data id="_0" f:Name="MultipleUnitéDeBase" f:Labels="{Collection {Text 'MultipleUnitéDeBase'}}" /&gt;</data>
+  <data name="Fld.Unite.UnitéDeBase" id="022" mod="1">&lt;s:data id="_0" f:Name="UnitéDeBase" f:Labels="{Collection {Text 'Unité de base'}}" /&gt;</data>
+  <data name="Fld.Unite.MultipleUnitéDeBase" id="032" mod="1">&lt;s:data id="_0" f:Name="MultipleUnitéDeBase" f:Labels="{Collection {Text 'Multiple unité de base'}}" /&gt;</data>
   <data name="Fld.Position.Article" id="042" mod="1">&lt;s:data id="_0" f:Name="Article" f:Labels="{Collection {Text 'Article'}}" /&gt;</data>
   <data name="Fld.Position.Quantité" id="052" mod="1">&lt;s:data id="_0" f:Name="Quantité" f:Labels="{Collection {Text 'Quantité'}}" /&gt;</data>
   <data name="Fld.Position.Unité" id="062" mod="1">&lt;s:data id="_0" f:Name="Unité" f:Labels="{Collection {Text 'Unité'}}" /&gt;</data>
   <data name="Fld.Position.Rabais" id="072" mod="1">&lt;s:data id="_0" f:Name="Rabais" f:Labels="{Collection {Text 'Rabais'}}" /&gt;</data>
   <data name="Fld.RabaisSurArticle.Pourcent" id="082" mod="1">&lt;s:data id="_0" f:Name="Pourcent" f:Labels="{Collection {Text 'Pourcent'}}" /&gt;</data>
-  <data name="Fld.RabaisSurArticle.CodeRaison" id="092" mod="1">&lt;s:data id="_0" f:Name="CodeRaison" f:Labels="{Collection {Text 'CodeRaison'}}" /&gt;</data>
+  <data name="Fld.RabaisSurArticle.CodeRaison" id="092" mod="1">&lt;s:data id="_0" f:Name="CodeRaison" f:Labels="{Collection {Text 'Code raison'}}" /&gt;</data>
   <data name="Fld.Facture.Numéro" id="0A2" mod="1">&lt;s:data id="_0" f:Name="Numéro" f:Labels="{Collection {Text 'Numéro'}}" /&gt;</data>
   <data name="Fld.Facture.Affaire" id="0B2" mod="1">&lt;s:data id="_0" f:Name="Affaire" f:Labels="{Collection {Text 'Affaire'}}" /&gt;</data>
-  <data name="Fld.Facture.DateTravail" id="0C2" mod="1">&lt;s:data id="_0" f:Name="DateTravail" f:Labels="{Collection {Text 'DateTravail'}}" /&gt;</data>
-  <data name="Fld.Facture.DateFacture" id="0D2" mod="1">&lt;s:data id="_0" f:Name="DateFacture" f:Labels="{Collection {Text 'DateFacture'}}" /&gt;</data>
-  <data name="Fld.Facture.DateEchéance" id="0E2" mod="1">&lt;s:data id="_0" f:Name="DateEchéance" f:Labels="{Collection {Text 'DateEchéance'}}" /&gt;</data>
-  <data name="Fld.Facture.AdresseFacturation" id="0F2" mod="1">&lt;s:data id="_0" f:Name="AdresseFacturation" f:Labels="{Collection {Text 'AdresseFacturation'}}" /&gt;</data>
-  <data name="Fld.Facture.AdresseLivraison" id="0G2" mod="1">&lt;s:data id="_0" f:Name="AdresseLivraison" f:Labels="{Collection {Text 'AdresseLivraison'}}" /&gt;</data>
+  <data name="Fld.Facture.DateTravail" id="0C2" mod="1">&lt;s:data id="_0" f:Name="DateTravail" f:Labels="{Collection {Text 'Date travail'}}" /&gt;</data>
+  <data name="Fld.Facture.DateFacture" id="0D2" mod="1">&lt;s:data id="_0" f:Name="DateFacture" f:Labels="{Collection {Text 'Date facture'}}" /&gt;</data>
+  <data name="Fld.Facture.DateEchéance" id="0E2" mod="1">&lt;s:data id="_0" f:Name="DateEchéance" f:Labels="{Collection {Text 'Date échéance'}}" /&gt;</data>
+  <data name="Fld.Facture.AdresseFacturation" id="0F2" mod="1">&lt;s:data id="_0" f:Name="AdresseFacturation" f:Labels="{Collection {Text 'Adresse facturation'}}" /&gt;</data>
+  <data name="Fld.Facture.AdresseLivraison" id="0G2" mod="1">&lt;s:data id="_0" f:Name="AdresseLivraison" f:Labels="{Collection {Text 'Adresse livraison'}}" /&gt;</data>
   <data name="Fld.Facture.Positions" id="0H2" mod="1">&lt;s:data id="_0" f:Name="Positions" f:Labels="{Collection {Text 'Positions'}}" /&gt;</data>
-  <data name="Fld.Facture.FraisDePort" id="0I2" mod="1">&lt;s:data id="_0" f:Name="FraisDePort" f:Labels="{Collection {Text 'FraisDePort'}}" /&gt;</data>
-  <data name="Fld.Facture.MoyenDePaiement" id="0J2" mod="1">&lt;s:data id="_0" f:Name="MoyenDePaiement" f:Labels="{Collection {Text 'MoyenDePaiement'}}" /&gt;</data>
+  <data name="Fld.Facture.FraisDePort" id="0I2" mod="1">&lt;s:data id="_0" f:Name="FraisDePort" f:Labels="{Collection {Text 'Frais de port'}}" /&gt;</data>
+  <data name="Fld.Facture.MoyenDePaiement" id="0J2" mod="1">&lt;s:data id="_0" f:Name="MoyenDePaiement" f:Labels="{Collection {Text 'Moyen de paiement'}}" /&gt;</data>
   <data name="Fld.Facture.Remise" id="0K2" mod="1">&lt;s:data id="_0" f:Name="Remise" f:Labels="{Collection {Text 'Remise'}}" /&gt;</data>
-  <data name="Fld.Facture.TotalFacturé" id="0L2" mod="1">&lt;s:data id="_0" f:Name="TotalFacturé" f:Labels="{Collection {Text 'TotalFacturé'}}" /&gt;</data>
+  <data name="Fld.Facture.TotalFacturé" id="0L2" mod="1">&lt;s:data id="_0" f:Name="TotalFacturé" f:Labels="{Collection {Text 'Total facturé'}}" /&gt;</data>
   <data name="Fld.Rappel.Nième" id="0M2" mod="1">&lt;s:data id="_0" f:Name="Nième" f:Labels="{Collection {Text 'Nième'}}" /&gt;</data>
   <data name="Fld.Rappel.Texte" id="0N2" mod="1">&lt;s:data id="_0" f:Name="Texte" f:Labels="{Collection {Text 'Texte'}}" /&gt;</data>
   <data name="Fld.Rappel.Facture" id="0O2" mod="1">&lt;s:data id="_0" f:Name="Facture" f:Labels="{Collection {Text 'Facture'}}" /&gt;</data>
-  <data name="Fld.Rappel.FraisRappel" id="0P2" mod="1">&lt;s:data id="_0" f:Name="FraisRappel" f:Labels="{Collection {Text 'FraisRappel'}}" /&gt;</data>
-  <data name="Fld.Rappel.TotalRappel" id="0Q2" mod="1">&lt;s:data id="_0" f:Name="TotalRappel" f:Labels="{Collection {Text 'TotalRappel'}}" /&gt;</data>
+  <data name="Fld.Rappel.FraisRappel" id="0P2" mod="1">&lt;s:data id="_0" f:Name="FraisRappel" f:Labels="{Collection {Text 'Frais rappel'}}" /&gt;</data>
+  <data name="Fld.Rappel.TotalRappel" id="0Q2" mod="1">&lt;s:data id="_0" f:Name="TotalRappel" f:Labels="{Collection {Text 'Total rappel'}}" /&gt;</data>
   <data name="Fld.MoyenDePaiement.Désignation" id="0R2" mod="1">&lt;s:data id="_0" f:Name="Désignation" f:Labels="{Collection {Text 'Désignation'}}" /&gt;</data>
   <data name="Fld.Affaire.Client" id="0S2" mod="1">&lt;s:data id="_0" f:Name="Client" f:Labels="{Collection {Text 'Client'}}" /&gt;</data>
   <data name="Fld.Affaire.Désignation" id="0T2" mod="1">&lt;s:data id="_0" f:Name="Désignation" f:Labels="{Collection {Text 'Désignation'}}" /&gt;</data>
   <data name="Fld.Affaire.Facture" id="0U2" mod="1">&lt;s:data id="_0" f:Name="Facture" f:Labels="{Collection {Text 'Facture'}}" /&gt;</data>
   <data name="Fld.Affaire.Rappels" id="0V2" mod="1">&lt;s:data id="_0" f:Name="Rappels" f:Labels="{Collection {Text 'Rappels'}}" /&gt;</data>
   <data name="Fld.Affaire.Paiements" id="003" mod="1">&lt;s:data id="_0" f:Name="Paiements" f:Labels="{Collection {Text 'Paiements'}}" /&gt;</data>
-  <data name="Fld.Affaire.SoldeDû" id="013" mod="1">&lt;s:data id="_0" f:Name="SoldeDû" f:Labels="{Collection {Text 'SoldeDû'}}" /&gt;</data>
-  <data name="Fld.Affaire.SoldeCadeau" id="023" mod="1">&lt;s:data id="_0" f:Name="SoldeCadeau" f:Labels="{Collection {Text 'SoldeCadeau'}}" /&gt;</data>
+  <data name="Fld.Affaire.SoldeDû" id="013" mod="1">&lt;s:data id="_0" f:Name="SoldeDû" f:Labels="{Collection {Text 'Solde dû'}}" /&gt;</data>
+  <data name="Fld.Affaire.SoldeCadeau" id="023" mod="1">&lt;s:data id="_0" f:Name="SoldeCadeau" f:Labels="{Collection {Text 'Solde cadeau'}}" /&gt;</data>
   <data name="Fld.Paiement.Moyen" id="033" mod="1">&lt;s:data id="_0" f:Name="Moyen" f:Labels="{Collection {Text 'Moyen'}}" /&gt;</data>
   <data name="Fld.Paiement.Valeur" id="043" mod="1">&lt;s:data id="_0" f:Name="Valeur" f:Labels="{Collection {Text 'Valeur'}}" /&gt;</data>
   <data name="Fld.PrixSimple.Montant" id="053" mod="1">&lt;s:data id="_0" f:Name="Montant" f:Labels="{Collection {Text 'Montant'}}" /&gt;</data>

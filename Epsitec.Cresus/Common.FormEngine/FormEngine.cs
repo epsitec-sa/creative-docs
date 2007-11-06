@@ -143,12 +143,12 @@ namespace Epsitec.Common.FormEngine
 				{
 					if (i > 0)
 					{
-						builder.Append(".");
+						builder.Append(", ");
 					}
 
 					Druid druid = druids[i];
 					Caption caption = this.resourceManager.GetCaption(druid);
-					builder.Append(caption.Name);
+					builder.Append(caption.DefaultLabel);
 				}
 
 				grid.RowDefinitions.Add(new Widgets.Layouts.RowDefinition());
