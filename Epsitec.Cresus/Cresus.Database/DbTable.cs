@@ -490,24 +490,20 @@ namespace Epsitec.Cresus.Database
 					throw new Exceptions.SyntaxException (DbAccess.Empty, string.Format ("Primary key '{0}' may not be localized", dbColumn.Name));
 				}
 
-				if (dbColumn.IsVirtualColumn)
+				if (dbColumn.Cardinality == DbCardinality.None)
 				{
-					//	Skip virtual columns, they are not needed in an SQL table.
-
-					continue;
-				}
-
-				foreach (SqlColumn sqlColumn in this.CreateSqlColumns (converter, dbColumn))
-				{
-					//	Make sure we don't try to create an SQL column more than once.
-
-					if (sqlTable.Columns.IndexOf (sqlColumn.Name) >= 0)
+					foreach (SqlColumn sqlColumn in this.CreateSqlColumns (converter, dbColumn))
 					{
-						string message = string.Format ("Multiple columns with same name ({0}) are forbidden", sqlColumn.Name);
-						throw new Exceptions.SyntaxException (DbAccess.Empty, message);
-					}
+						//	Make sure we don't try to create an SQL column more than once.
 
-					sqlTable.Columns.Add (sqlColumn);
+						if (sqlTable.Columns.IndexOf (sqlColumn.Name) >= 0)
+						{
+							string message = string.Format ("Multiple columns with same name ({0}) are forbidden", sqlColumn.Name);
+							throw new Exceptions.SyntaxException (DbAccess.Empty, message);
+						}
+
+						sqlTable.Columns.Add (sqlColumn);
+					}
 				}
 			}
 
@@ -599,7 +595,7 @@ namespace Epsitec.Cresus.Database
 
 		public string GetRelationTableName(DbColumn column)
 		{
-			System.Diagnostics.Debug.Assert (column.IsVirtualColumn);
+			System.Diagnostics.Debug.Assert (column.Cardinality != DbCardinality.None);
 
 			string relationName = string.Concat (column.Name, ":", this.Name);
 			return DbSqlStandard.MakeSqlTableName (relationName, this.CaptionId.IsEmpty, DbElementCat.Relation, this.Key);

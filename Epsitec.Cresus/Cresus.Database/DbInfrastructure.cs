@@ -1188,7 +1188,7 @@ namespace Epsitec.Cresus.Database
 
 			foreach (DbColumn column in table.Columns)
 			{
-				if (column.IsVirtualColumn)
+				if (column.Cardinality != DbCardinality.None)
 				{
 					this.CreateRelationTable (transaction, table, column);
 				}
@@ -1244,21 +1244,19 @@ namespace Epsitec.Cresus.Database
 		{
 			foreach (DbColumn column in table.Columns)
 			{
-				if (column.IsVirtualColumn)
+				if (column.Cardinality == DbCardinality.None)
 				{
-					continue;
-				}
+					DbTypeDef typeDef = column.Type;
 
-				DbTypeDef typeDef = column.Type;
-				
-				System.Diagnostics.Debug.Assert (typeDef != null);
-				
-				if (typeDef.Key.IsEmpty)
-				{
-					string message = string.Format ("Unregistered type '{0}' used in table '{1}', column '{2}'.",
-						/* */						typeDef.Name, table.Name, column.Name);
-					
-					throw new Exceptions.GenericException (this.access, message);
+					System.Diagnostics.Debug.Assert (typeDef != null);
+
+					if (typeDef.Key.IsEmpty)
+					{
+						string message = string.Format ("Unregistered type '{0}' used in table '{1}', column '{2}'.",
+							/* */						typeDef.Name, table.Name, column.Name);
+
+						throw new Exceptions.GenericException (this.access, message);
+					}
 				}
 			}
 		}
