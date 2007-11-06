@@ -181,7 +181,7 @@ namespace Epsitec.Cresus.Database
 			Assert.AreEqual (false, type.IsNullable);
 			Assert.AreEqual (1, type.Length);
 			Assert.AreEqual (DbKey.Empty, type.Key);
-			Assert.AreEqual ("Num.KeyId", type.Name);
+			Assert.AreEqual (Tags.TypeKeyId, type.Name);
 			Assert.AreEqual (DbRawType.Int64, type.RawType);
 			Assert.AreEqual (DbSimpleType.Decimal, type.SimpleType);
 			Assert.AreEqual (Res.Types.Num.KeyId.CaptionId, type.TypeId);
@@ -194,7 +194,7 @@ namespace Epsitec.Cresus.Database
 			Assert.AreEqual (true, type.IsNullable);
 			Assert.AreEqual (1, type.Length);
 			Assert.AreEqual (DbKey.Empty, type.Key);
-			Assert.AreEqual ("Num.NullableKeyId", type.Name);
+			Assert.AreEqual (Tags.TypeNullableKeyId, type.Name);
 			Assert.AreEqual (DbRawType.Int64, type.RawType);
 			Assert.AreEqual (DbSimpleType.Decimal, type.SimpleType);
 			Assert.AreEqual (Res.Types.Num.NullableKeyId.CaptionId, type.TypeId);
@@ -207,7 +207,7 @@ namespace Epsitec.Cresus.Database
 			Assert.AreEqual (false, type.IsNullable);
 			Assert.AreEqual (1, type.Length);
 			Assert.AreEqual (DbKey.Empty, type.Key);
-			Assert.AreEqual ("Num.KeyStatus", type.Name);
+			Assert.AreEqual (Tags.TypeKeyStatus, type.Name);
 			Assert.AreEqual (DbRawType.Int16, type.RawType);
 			Assert.AreEqual (DbSimpleType.Decimal, type.SimpleType);
 			Assert.AreEqual (Res.Types.Num.KeyStatus.CaptionId, type.TypeId);
@@ -220,7 +220,7 @@ namespace Epsitec.Cresus.Database
 			Assert.AreEqual (false, type.IsNullable);
 			Assert.AreEqual (1, type.Length);
 			Assert.AreEqual (DbKey.Empty, type.Key);
-			Assert.AreEqual ("Num.ReqExecState", type.Name);
+			Assert.AreEqual (Tags.TypeReqExState, type.Name);
 			Assert.AreEqual (DbRawType.Int16, type.RawType);
 			Assert.AreEqual (DbSimpleType.Decimal, type.SimpleType);
 			Assert.AreEqual (Res.Types.Num.ReqExecState.CaptionId, type.TypeId);
@@ -233,7 +233,7 @@ namespace Epsitec.Cresus.Database
 			Assert.AreEqual (false, type.IsNullable);
 			Assert.AreEqual (1, type.Length);
 			Assert.AreEqual (DbKey.Empty, type.Key);
-			Assert.AreEqual ("Other.DateTime", type.Name);
+			Assert.AreEqual (Tags.TypeDateTime, type.Name);
 			Assert.AreEqual (DbRawType.DateTime, type.RawType);
 			Assert.AreEqual (DbSimpleType.DateTime, type.SimpleType);
 			Assert.AreEqual (Res.Types.Other.DateTime.CaptionId, type.TypeId);
@@ -246,7 +246,7 @@ namespace Epsitec.Cresus.Database
 			Assert.AreEqual (false, type.IsNullable);
 			Assert.AreEqual (1, type.Length);
 			Assert.AreEqual (DbKey.Empty, type.Key);
-			Assert.AreEqual ("Other.ReqData", type.Name);
+			Assert.AreEqual (Tags.TypeReqData, type.Name);
 			Assert.AreEqual (DbRawType.ByteArray, type.RawType);
 			Assert.AreEqual (DbSimpleType.ByteArray, type.SimpleType);
 			Assert.AreEqual (Res.Types.Other.ReqData.CaptionId, type.TypeId);

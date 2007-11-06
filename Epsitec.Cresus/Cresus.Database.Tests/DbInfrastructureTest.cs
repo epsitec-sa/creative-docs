@@ -44,7 +44,7 @@ namespace Epsitec.Cresus.Database
 
 				Assert.IsNotNull (table);
 				Assert.AreEqual (1000000000001L, table.Key.Id);
-				Assert.AreEqual (6, table.Columns.Count);
+				Assert.AreEqual (7, table.Columns.Count);
 
 				table = infrastructure.ResolveDbTable ("CR_COLUMN_DEF");
 
@@ -56,7 +56,7 @@ namespace Epsitec.Cresus.Database
 
 				Assert.IsNotNull (table);
 				Assert.AreEqual (1000000000003L, table.Key.Id);
-				Assert.AreEqual (5, table.Columns.Count);
+				Assert.AreEqual (6, table.Columns.Count);
 
 				using (DbTransaction transaction = infrastructure.BeginTransaction (DbTransactionMode.ReadOnly))
 				{
@@ -97,7 +97,7 @@ namespace Epsitec.Cresus.Database
 
 				Assert.AreEqual (db_type1, db_type2);
 
-				Assert.AreEqual (6, db_table.Columns.Count);
+				Assert.AreEqual (7, db_table.Columns.Count);
 				Assert.AreEqual ("CR_ID", db_table.Columns[0].Name);
 				Assert.AreEqual ("CREF_LOG", db_table.Columns[2].Name);
 				Assert.AreEqual (db_type1, db_table.Columns["CR_NAME"].Type);

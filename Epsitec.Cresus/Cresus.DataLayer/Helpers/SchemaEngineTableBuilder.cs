@@ -138,14 +138,13 @@ namespace Epsitec.Cresus.DataLayer.Helpers
 
 		private void CreateDataColumn(DbTable table, StructuredTypeField field)
 		{
-			string    typeName = this.engine.GetTypeName (field.TypeId);
-			DbTypeDef typeDef  = this.GetTypeDef (typeName, field.Type);
+			DbTypeDef typeDef  = this.GetTypeDef (field.Type);
 			DbColumn  column   = new DbColumn (field.CaptionId, typeDef, DbColumnClass.Data, DbElementCat.ManagedUserData, DbRevisionMode.TrackChanges);
 
 			table.Columns.Add (column);
 		}
 
-		private DbTypeDef GetTypeDef(string typeName, INamedType type)
+		private DbTypeDef GetTypeDef(INamedType type)
 		{
 			this.AssertTransaction ();
 
@@ -162,11 +161,11 @@ namespace Epsitec.Cresus.DataLayer.Helpers
 
 			DbTypeDef typeDef;
 
-			typeDef = infrastructure.ResolveDbType (this.transaction, typeName);
+			typeDef = infrastructure.ResolveDbType (this.transaction, type);
 
 			if (typeDef == null)
 			{
-				typeDef = new DbTypeDef (type, typeName);
+				typeDef = new DbTypeDef (type);
 
 				infrastructure.RegisterNewDbType (this.transaction, typeDef);
 			}

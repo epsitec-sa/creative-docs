@@ -33,7 +33,7 @@ namespace Epsitec.Cresus.Database
 		public DbTable(string name)
 			: this ()
 		{
-			this.DefineName (name);
+			this.DefineDisplayName (name);
 		}
 
 		/// <summary>
@@ -46,6 +46,27 @@ namespace Epsitec.Cresus.Database
 			this.DefineCaptionId (captionId);
 		}
 
+		/// <summary>
+		/// Gets the display name of the table. If no name is defined, tries to use
+		/// the caption name instead.
+		/// </summary>
+		/// <value>The display name of the table.</value>
+		public string							DisplayName
+		{
+			get
+			{
+				if (this.name == null)
+				{
+					Caption caption = this.Caption;
+					return caption == null ? null : caption.Name;
+				}
+				else
+				{
+					return this.name;
+				}
+			}
+		}
+		
 		#region IName Members
 
 		/// <summary>
@@ -56,10 +77,9 @@ namespace Epsitec.Cresus.Database
 		{
 			get
 			{
-				if (this.name == null)
+				if (this.captionId.IsValid)
 				{
-					Caption caption = this.Caption;
-					return caption == null ? null : caption.Name;
+					return Druid.ToFullString (this.CaptionId.ToLong ());
 				}
 				else
 				{
@@ -85,25 +105,6 @@ namespace Epsitec.Cresus.Database
 		}
 
 		#endregion
-
-		/// <summary>
-		/// Gets the internal name of the table.
-		/// </summary>
-		/// <value>The internal name of the table.</value>
-		public string							InternalName
-		{
-			get
-			{
-				if (this.captionId.IsValid)
-				{
-					return Druid.ToFullString (this.CaptionId.ToLong ());
-				}
-				else
-				{
-					return this.name;
-				}
-			}
-		}
 
 		/// <summary>
 		/// Gets the caption for the table.
@@ -319,7 +320,7 @@ namespace Epsitec.Cresus.Database
 		/// after it has been defined.
 		/// </summary>
 		/// <param name="value">The table name.</param>
-		public void DefineName(string value)
+		public void DefineDisplayName(string value)
 		{
 			if (this.name == value)
 			{
@@ -576,7 +577,7 @@ namespace Epsitec.Cresus.Database
 		/// <returns>The SQL name.</returns>
 		public string GetSqlName()
 		{
-			return DbSqlStandard.MakeSqlTableName (this.InternalName, this.Category, this.Key);
+			return DbSqlStandard.MakeSqlTableName (this.Name, this.Category, this.Key);
 		}
 
 		/// <summary>
@@ -588,7 +589,7 @@ namespace Epsitec.Cresus.Database
 		{
 			if (this.RevisionMode == DbRevisionMode.TrackChanges)
 			{
-				return DbSqlStandard.MakeSqlTableName (this.InternalName, DbElementCat.RevisionHistory, this.Key);
+				return DbSqlStandard.MakeSqlTableName (this.Name, DbElementCat.RevisionHistory, this.Key);
 			}
 			else
 			{
@@ -600,7 +601,7 @@ namespace Epsitec.Cresus.Database
 		{
 			System.Diagnostics.Debug.Assert (column.IsVirtualColumn);
 
-			string relationName = string.Concat (column.Name, ":", this.InternalName);
+			string relationName = string.Concat (column.Name, ":", this.Name);
 			return DbSqlStandard.MakeSqlTableName (relationName, DbElementCat.Relation, this.Key);
 		}
 		
@@ -787,7 +788,7 @@ namespace Epsitec.Cresus.Database
 			DbColumn column = new DbColumn (columnCaptionId, null, DbColumnClass.Virtual, DbElementCat.ManagedUserData, revisionMode);
 
 			column.DefineCardinality (cardinality);
-			column.DefineTargetTableName (targetTable.InternalName);
+			column.DefineTargetTableName (targetTable.Name);
 
 			return column;
 		}

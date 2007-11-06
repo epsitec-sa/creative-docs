@@ -959,6 +959,18 @@ namespace Epsitec.Cresus.Database
 			return value;
 		}
 
+		public DbTypeDef ResolveDbType(DbTransaction transaction, INamedType type)
+		{
+			if (type == null)
+			{
+				return null;
+			}
+
+			DbTypeDef templateType = new DbTypeDef (type);
+
+			return this.ResolveDbType (transaction, templateType.Name);
+		}
+
 		/// <summary>
 		/// Resolves a type definition from its key.
 		/// </summary>
@@ -1808,9 +1820,10 @@ namespace Epsitec.Cresus.Database
 			
 			//	Table related informations :
 			
-			query.Fields.Add ("T_ID",   SqlField.CreateName ("T_TABLE", Tags.ColumnId));
-			query.Fields.Add ("T_NAME", SqlField.CreateName ("T_TABLE", Tags.ColumnName));
-			query.Fields.Add ("T_INFO", SqlField.CreateName ("T_TABLE", Tags.ColumnInfoXml));
+			query.Fields.Add ("T_ID",     SqlField.CreateName ("T_TABLE", Tags.ColumnId));
+			query.Fields.Add ("T_NAME",   SqlField.CreateName ("T_TABLE", Tags.ColumnName));
+			query.Fields.Add ("T_D_NAME", SqlField.CreateName ("T_TABLE", Tags.ColumnDisplayName));
+			query.Fields.Add ("T_INFO",   SqlField.CreateName ("T_TABLE", Tags.ColumnInfoXml));
 			
 			//	Column related informations :
 			
@@ -1864,6 +1877,7 @@ namespace Epsitec.Cresus.Database
 					
 					string tableInfo = InvariantConverter.ToString (row["T_INFO"]);
 					string tableName = InvariantConverter.ToString (row["T_NAME"]);
+					string tableDisplayName = InvariantConverter.ToString (row["T_D_NAME"]);
 					DbKey  tableKey  = key.IsEmpty ? new DbKey (rowId) : key;
 					
 					dbTable = this.tableCache[tableKey];
@@ -1876,7 +1890,7 @@ namespace Epsitec.Cresus.Database
 						dbTable = DbTools.DeserializeFromXml<DbTable> (tableInfo);
 						recycle = false;
 
-						dbTable.DefineName (tableName);
+						dbTable.DefineDisplayName (tableDisplayName);
 						dbTable.DefineKey (tableKey);
 						
 						if ((tableKey.Status == DbRowStatus.Live) ||
@@ -1963,9 +1977,10 @@ namespace Epsitec.Cresus.Database
 			
 			SqlSelect query = new SqlSelect ();
 			
-			query.Fields.Add ("T_ID",   SqlField.CreateName ("T_TYPE", Tags.ColumnId));
-			query.Fields.Add ("T_NAME", SqlField.CreateName ("T_TYPE", Tags.ColumnName));
-			query.Fields.Add ("T_INFO", SqlField.CreateName ("T_TYPE", Tags.ColumnInfoXml));
+			query.Fields.Add ("T_ID",     SqlField.CreateName ("T_TYPE", Tags.ColumnId));
+			query.Fields.Add ("T_NAME",   SqlField.CreateName ("T_TYPE", Tags.ColumnName));
+			query.Fields.Add ("T_D_NAME", SqlField.CreateName ("T_TYPE", Tags.ColumnDisplayName));
+			query.Fields.Add ("T_INFO",   SqlField.CreateName ("T_TYPE", Tags.ColumnInfoXml));
 			
 			query.Tables.Add ("T_TYPE", SqlField.CreateName (Tags.TableTypeDef));
 			
@@ -1983,9 +1998,10 @@ namespace Epsitec.Cresus.Database
 			
 			foreach (System.Data.DataRow row in dataTable.Rows)
 			{
-				long   typeId   = InvariantConverter.ToLong (row["T_ID"]);
-				string typeName = InvariantConverter.ToString (row["T_NAME"]);
-				string typeInfo = InvariantConverter.ToString (row["T_INFO"]);
+				long   typeId          = InvariantConverter.ToLong (row["T_ID"]);
+				string typeName        = InvariantConverter.ToString (row["T_NAME"]);
+				string typeDisplayName = InvariantConverter.ToString (row["T_D_NAME"]);
+				string typeInfo        = InvariantConverter.ToString (row["T_INFO"]);
 				
 				DbTypeDef typeDef = this.typeCache[typeKey];
 
@@ -1993,7 +2009,7 @@ namespace Epsitec.Cresus.Database
 				{
 					typeDef = DbTools.DeserializeFromXml<DbTypeDef> (typeInfo);
 
-					typeDef.DefineName (typeName);
+					typeDef.DefineDisplayName (typeDisplayName);
 					typeDef.DefineKey (new DbKey (typeId));
 
 					this.typeCache[typeKey] = typeDef;
@@ -2312,11 +2328,12 @@ namespace Epsitec.Cresus.Database
 			
 			Collections.SqlFields fields = new Collections.SqlFields ();
 
-			fields.Add (this.CreateSqlField (typeDefTable.Columns[Tags.ColumnId],      typeDef.Key.Id));
-			fields.Add (this.CreateSqlField (typeDefTable.Columns[Tags.ColumnStatus],  typeDef.Key.IntStatus));
-			fields.Add (this.CreateSqlField (typeDefTable.Columns[Tags.ColumnRefLog],  this.logger.CurrentId));
-			fields.Add (this.CreateSqlField (typeDefTable.Columns[Tags.ColumnName],    typeDef.Name));
-			fields.Add (this.CreateSqlField (typeDefTable.Columns[Tags.ColumnInfoXml], DbTools.GetCompactXml (typeDef)));
+			fields.Add (this.CreateSqlField (typeDefTable.Columns[Tags.ColumnId],          typeDef.Key.Id));
+			fields.Add (this.CreateSqlField (typeDefTable.Columns[Tags.ColumnStatus],      typeDef.Key.IntStatus));
+			fields.Add (this.CreateSqlField (typeDefTable.Columns[Tags.ColumnRefLog],      this.logger.CurrentId));
+			fields.Add (this.CreateSqlField (typeDefTable.Columns[Tags.ColumnName],        typeDef.Name));
+			fields.Add (this.CreateSqlField (typeDefTable.Columns[Tags.ColumnDisplayName], typeDef.DisplayName));
+			fields.Add (this.CreateSqlField (typeDefTable.Columns[Tags.ColumnInfoXml],     DbTools.GetCompactXml (typeDef)));
 			
 			transaction.SqlBuilder.InsertData (typeDefTable.GetSqlName (), fields);
 			this.ExecuteSilent (transaction);
@@ -2336,12 +2353,13 @@ namespace Epsitec.Cresus.Database
 			
 			Collections.SqlFields fields = new Collections.SqlFields ();
 
-			fields.Add (this.CreateSqlField (tableDefTable.Columns[Tags.ColumnId],		table.Key.Id));
-			fields.Add (this.CreateSqlField (tableDefTable.Columns[Tags.ColumnStatus],  table.Key.IntStatus));
-			fields.Add (this.CreateSqlField (tableDefTable.Columns[Tags.ColumnRefLog],  this.logger.CurrentId));
-			fields.Add (this.CreateSqlField (tableDefTable.Columns[Tags.ColumnName],    table.Name));
-			fields.Add (this.CreateSqlField (tableDefTable.Columns[Tags.ColumnInfoXml], DbTools.GetCompactXml (table)));
-			fields.Add (this.CreateSqlField (tableDefTable.Columns[Tags.ColumnNextId],  DbId.CreateId (1, this.clientId)));
+			fields.Add (this.CreateSqlField (tableDefTable.Columns[Tags.ColumnId],		    table.Key.Id));
+			fields.Add (this.CreateSqlField (tableDefTable.Columns[Tags.ColumnStatus],      table.Key.IntStatus));
+			fields.Add (this.CreateSqlField (tableDefTable.Columns[Tags.ColumnRefLog],      this.logger.CurrentId));
+			fields.Add (this.CreateSqlField (tableDefTable.Columns[Tags.ColumnName],        table.Name));
+			fields.Add (this.CreateSqlField (tableDefTable.Columns[Tags.ColumnDisplayName], table.DisplayName));
+			fields.Add (this.CreateSqlField (tableDefTable.Columns[Tags.ColumnInfoXml],     DbTools.GetCompactXml (table)));
+			fields.Add (this.CreateSqlField (tableDefTable.Columns[Tags.ColumnNextId],      DbId.CreateId (1, this.clientId)));
 			
 			transaction.SqlBuilder.InsertData (tableDefTable.GetSqlName (), fields);
 			this.ExecuteSilent (transaction);
@@ -2456,6 +2474,7 @@ namespace Epsitec.Cresus.Database
 						new DbColumn (Tags.ColumnStatus,	  types.KeyStatus,	 DbColumnClass.KeyStatus,	DbElementCat.Internal),
 						new DbColumn (Tags.ColumnRefLog,	  types.KeyId,		 DbColumnClass.RefInternal, DbElementCat.Internal),
 						new DbColumn (Tags.ColumnName,		  types.Name,		 DbColumnClass.Data,		DbElementCat.Internal),
+						new DbColumn (Tags.ColumnDisplayName, types.Name,		 DbColumnClass.Data,		DbElementCat.Internal),
 						new DbColumn (Tags.ColumnInfoXml,	  types.InfoXml,	 DbColumnClass.Data,		DbElementCat.Internal),
 						new DbColumn (Tags.ColumnNextId,	  types.KeyId,		 DbColumnClass.RefInternal, DbElementCat.Internal)
 					};
@@ -2493,6 +2512,7 @@ namespace Epsitec.Cresus.Database
 						new DbColumn (Tags.ColumnStatus,	  types.KeyStatus,	 DbColumnClass.KeyStatus,	DbElementCat.Internal),
 						new DbColumn (Tags.ColumnRefLog,	  types.KeyId,		 DbColumnClass.RefInternal, DbElementCat.Internal),
 						new DbColumn (Tags.ColumnName,		  types.Name,		 DbColumnClass.Data,		DbElementCat.Internal),
+						new DbColumn (Tags.ColumnDisplayName, types.Name,		 DbColumnClass.Data,        DbElementCat.Internal),
 						new DbColumn (Tags.ColumnInfoXml,	  types.InfoXml,	 DbColumnClass.Data,		DbElementCat.Internal)
 					};
 				

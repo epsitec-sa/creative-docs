@@ -58,15 +58,6 @@ namespace Epsitec.Cresus.DataLayer
 			return string.Concat (entityName, " ", entityId.ToString ());
 		}
 
-		internal string GetTypeName(Druid typeId)
-		{
-			Caption typeCaption = this.resourceManager.GetCaption (typeId);
-			string typeDruid   = Druid.ToFullString (typeId.ToLong ());
-			string typeName    = typeCaption.Name;
-
-			return string.Concat ("@", typeDruid);
-		}
-
 		internal string GetColumnName(Druid columnId)
 		{
 			Caption columnCaption = this.resourceManager.GetCaption (columnId);

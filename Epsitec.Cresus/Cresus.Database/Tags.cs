@@ -11,16 +11,16 @@ namespace Epsitec.Cresus.Database
 	{
 		//	Basic CRESUS type names :
 
-		public const string TypeKeyId			= "Num.KeyId";
-		public const string TypeNullableKeyId	= "Num.NullableKeyId";
-		public const string TypeKeyStatus		= "Num.KeyStatus";
-		public const string	TypeName			= "Str.Name";
-		public const string	TypeInfoXml			= "Str.InfoXml";
-		public const string	TypeDateTime		= "Other.DateTime";
-		public const string TypeDictKey			= "Str.Dict.Key";
-		public const string TypeDictValue		= "Str.Dict.Value";
-		public const string TypeReqData			= "Other.ReqData";
-		public const string TypeReqExState		= "Num.ReqExecState";
+		public const string TypeKeyId			= "K004"; //"Num.KeyId";
+		public const string TypeNullableKeyId	= "K007"; //"Num.NullableKeyId";
+		public const string TypeKeyStatus		= "K005"; //"Num.KeyStatus";
+		public const string TypeReqExState		= "K006"; //"Num.ReqExecState";
+		public const string TypeName			= "K008"; //"Str.Name";
+		public const string	TypeInfoXml			= "K009"; //"Str.InfoXml";
+		public const string TypeDictKey			= "K00A"; //"Str.Dict.Key";
+		public const string TypeDictValue		= "K00B"; //"Str.Dict.Value";
+		public const string TypeReqData			= "K00C"; //"Other.ReqData";
+		public const string TypeDateTime		= "K00D"; //"Other.DateTime";
 		
 		//	Basic CRESUS column names :
 		

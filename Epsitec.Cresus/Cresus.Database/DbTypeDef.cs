@@ -10,7 +10,7 @@ namespace Epsitec.Cresus.Database
 	/// The <c>DbTypeDef</c> class represents a type definition, as stored in
 	/// the database.
 	/// </summary>
-	public sealed class DbTypeDef : IName, System.IEquatable<DbTypeDef>, IXmlSerializable
+	public sealed class DbTypeDef : IName, ICaption, System.IEquatable<DbTypeDef>, IXmlSerializable
 	{
 		/// <summary>
 		/// Initializes a new instance of the <see cref="DbTypeDef"/> class.
@@ -226,6 +226,28 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 
+
+		/// <summary>
+		/// Gets the display name of the type. If no name is defined, tries to use
+		/// the caption name instead.
+		/// </summary>
+		/// <value>The display name of the type.</value>
+		public string							DisplayName
+		{
+			get
+			{
+				if (this.name == null)
+				{
+					Caption caption = this.Caption;
+					return caption == null ? null : caption.Name;
+				}
+				else
+				{
+					return this.name;
+				}
+			}
+		}
+		
 		#region IName Members
 
 		/// <summary>
@@ -236,18 +258,65 @@ namespace Epsitec.Cresus.Database
 		{
 			get
 			{
-				return this.name;
+				if (this.TypeId.IsValid)
+				{
+					return Druid.ToFullString (this.TypeId.ToLong ());
+				}
+				else
+				{
+					return this.name;
+				}
 			}
 		}
 
 		#endregion
+
+		#region ICaption Members
+
+		/// <summary>
+		/// Gets the caption id for the type.
+		/// </summary>
+		/// <value>The caption id.</value>
+		Druid									ICaption.CaptionId
+		{
+			get
+			{
+				return this.typeId;
+			}
+		}
+
+		#endregion
+
+		/// <summary>
+		/// Gets the caption for the type.
+		/// </summary>
+		/// <value>The caption or <c>null</c> if the <c>CaptionId</c> is not valid.</value>
+		public Caption							Caption
+		{
+			get
+			{
+				if (this.caption == null)
+				{
+					this.caption = DbContext.Current.ResourceManager.GetCaption (this.typeId) ?? DbTypeDef.nullCaption;
+				}
+
+				if (this.caption == DbTypeDef.nullCaption)
+				{
+					return null;
+				}
+				else
+				{
+					return this.caption;
+				}
+			}
+		}
 
 		internal void DefineKey(DbKey key)
 		{
 			this.key = key;
 		}
 
-		internal void DefineName(string name)
+		internal void DefineDisplayName(string name)
 		{
 			this.name = name;
 		}
@@ -383,8 +452,11 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 
+		private static readonly Caption			nullCaption = new Caption ();
+
 		private string							name;
 		private Druid							typeId;
+		private Caption							caption;
 		private DbRawType						rawType;
 		private DbSimpleType					simpleType;
 		private DbNumDef						numDef;
