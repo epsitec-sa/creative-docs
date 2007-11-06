@@ -50,7 +50,7 @@ namespace Epsitec.Cresus.Database
 
 				Assert.IsNotNull (table);
 				Assert.AreEqual (1000000000002L, table.Key.Id);
-				Assert.AreEqual (8, table.Columns.Count);
+				Assert.AreEqual (9, table.Columns.Count);
 
 				table = infrastructure.ResolveDbTable ("CR_TYPE_DEF");
 

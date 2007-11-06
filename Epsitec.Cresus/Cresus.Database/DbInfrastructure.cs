@@ -1816,6 +1816,7 @@ namespace Epsitec.Cresus.Database
 			
 			query.Fields.Add ("C_ID",     SqlField.CreateName ("T_COLUMN", Tags.ColumnId));
 			query.Fields.Add ("C_NAME",   SqlField.CreateName ("T_COLUMN", Tags.ColumnName));
+			query.Fields.Add ("C_D_NAME", SqlField.CreateName ("T_COLUMN", Tags.ColumnDisplayName));
 			query.Fields.Add ("C_INFO",   SqlField.CreateName ("T_COLUMN", Tags.ColumnInfoXml));
 			query.Fields.Add ("C_TYPE",   SqlField.CreateName ("T_COLUMN", Tags.ColumnRefType));
 			query.Fields.Add ("C_TARGET", SqlField.CreateName ("T_COLUMN", Tags.ColumnRefTarget));
@@ -1903,6 +1904,7 @@ namespace Epsitec.Cresus.Database
 				long   typeDefId  = InvariantConverter.ToLong (row["C_TYPE"]);
 				long   columnId   = InvariantConverter.ToLong (row["C_ID"]);
 				string columnName = InvariantConverter.ToString (row["C_NAME"]);
+				string columnDisplayName = InvariantConverter.ToString (row["C_D_NAME"]);
 				string columnInfo = InvariantConverter.ToString (row["C_INFO"]);
 				string targetName = null;
 
@@ -1931,7 +1933,7 @@ namespace Epsitec.Cresus.Database
 
 				DbColumn dbColumn = DbTools.DeserializeFromXml<DbColumn> (columnInfo);
 
-				dbColumn.DefineUserFriendlyName (columnName);
+				dbColumn.DefineDisplayName (columnDisplayName);
 				dbColumn.DefineKey (new DbKey (columnId));
 				dbColumn.DefineType (typeDef);
 				dbColumn.DefineTargetTableName (targetName);
@@ -2362,42 +2364,14 @@ namespace Epsitec.Cresus.Database
 			
 			Collections.SqlFields fields = new Collections.SqlFields ();
 
-			fields.Add (this.CreateSqlField (columnDefTable.Columns[Tags.ColumnId],       column.Key.Id));
-			fields.Add (this.CreateSqlField (columnDefTable.Columns[Tags.ColumnStatus],   column.Key.IntStatus));
-			fields.Add (this.CreateSqlField (columnDefTable.Columns[Tags.ColumnRefLog],   this.logger.CurrentId));
-			fields.Add (this.CreateSqlField (columnDefTable.Columns[Tags.ColumnName],     column.Name));
-#if false
-			//	NON : on n'a pas le droit d'accéder au ResourceManager depuis ici, car
-			//	le ResourceManager lui-même peut faire appel à DbInfrastructure.
-			
-			if (column.CaptionId.IsValid) // modOK001 on accepte aussi les colonnes avec un DRUID, j'ai rajouté le 
-				                          // code suivant pour que ce soit géré
-			{
-				Caption caption = this.DefaultContext.ResourceManager.GetCaption (column.CaptionId);
-				if (caption == null)
-				{
-					if (column.Name != null)
-					{
-						fields.Add (this.CreateSqlField (columnDefTable.Columns[Tags.ColumnName], column.Name));
-					}
-					else
-					{
-						throw new System.Exception ("Column without a name");
-					}
-				}
-				else
-				{
-					fields.Add (this.CreateSqlField (columnDefTable.Columns[Tags.ColumnName], transaction.Infrastructure.DefaultContext.ResourceManager.GetCaption (column.CaptionId).Name));
-				}
-			}
-			else
-			{
-				fields.Add (this.CreateSqlField (columnDefTable.Columns[Tags.ColumnName], column.Name));
-			}
-#endif
-			fields.Add (this.CreateSqlField (columnDefTable.Columns[Tags.ColumnInfoXml],  DbTools.GetCompactXml (column)));
-			fields.Add (this.CreateSqlField (columnDefTable.Columns[Tags.ColumnRefTable], table.Key.Id));
-			fields.Add (this.CreateSqlField (columnDefTable.Columns[Tags.ColumnRefType],  column.Type == null ? 0 : column.Type.Key.Id));
+			fields.Add (this.CreateSqlField (columnDefTable.Columns[Tags.ColumnId],          column.Key.Id));
+			fields.Add (this.CreateSqlField (columnDefTable.Columns[Tags.ColumnStatus],      column.Key.IntStatus));
+			fields.Add (this.CreateSqlField (columnDefTable.Columns[Tags.ColumnRefLog],      this.logger.CurrentId));
+			fields.Add (this.CreateSqlField (columnDefTable.Columns[Tags.ColumnName],        column.Name));
+			fields.Add (this.CreateSqlField (columnDefTable.Columns[Tags.ColumnDisplayName], column.DisplayName));
+			fields.Add (this.CreateSqlField (columnDefTable.Columns[Tags.ColumnInfoXml],     DbTools.GetCompactXml (column)));
+			fields.Add (this.CreateSqlField (columnDefTable.Columns[Tags.ColumnRefTable],    table.Key.Id));
+			fields.Add (this.CreateSqlField (columnDefTable.Columns[Tags.ColumnRefType],     column.Type == null ? 0 : column.Type.Key.Id));
 			
 			transaction.SqlBuilder.InsertData (columnDefTable.GetSqlName (), fields);
 			this.ExecuteSilent (transaction);
@@ -2499,6 +2473,7 @@ namespace Epsitec.Cresus.Database
 						new DbColumn (Tags.ColumnStatus,	  types.KeyStatus,	   DbColumnClass.KeyStatus,   DbElementCat.Internal),
 						new DbColumn (Tags.ColumnRefLog,	  types.KeyId,		   DbColumnClass.RefInternal, DbElementCat.Internal),
 						new DbColumn (Tags.ColumnName,		  types.Name,		   DbColumnClass.Data,		  DbElementCat.Internal),
+						new DbColumn (Tags.ColumnDisplayName, types.Name,		   DbColumnClass.Data,        DbElementCat.Internal),
 						new DbColumn (Tags.ColumnInfoXml,	  types.InfoXml,	   DbColumnClass.Data,		  DbElementCat.Internal),
 						new DbColumn (Tags.ColumnRefTable,	  types.KeyId,         DbColumnClass.RefId,		  DbElementCat.Internal),
 						new DbColumn (Tags.ColumnRefType,	  types.KeyId,         DbColumnClass.RefId,		  DbElementCat.Internal),

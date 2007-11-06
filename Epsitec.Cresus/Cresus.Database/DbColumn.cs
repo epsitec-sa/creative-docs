@@ -28,7 +28,7 @@ namespace Epsitec.Cresus.Database
 		public DbColumn(string name, DbTypeDef type)
 			: this ()
 		{
-			this.DefineUserFriendlyName (name);
+			this.DefineDisplayName (name);
 			this.DefineType (type);
 		}
 
@@ -145,11 +145,11 @@ namespace Epsitec.Cresus.Database
 		#endregion
 
 		/// <summary>
-		/// Gets the name of the column. If no name is defined, uses the caption
-		/// name instead.
+		/// Gets the display name of the column. If no name is defined, tries to use
+		/// the caption name instead.
 		/// </summary>
-		/// <value>The name of the column.</value>
-		public string UserFriendlyName
+		/// <value>The display name of the column.</value>
+		public string DisplayName
 		{
 			get
 			{
@@ -509,7 +509,7 @@ namespace Epsitec.Cresus.Database
 		/// the method <see cref="DefineCaptionId"/>.
 		/// </summary>
 		/// <param name="name">The name or a caption DRUID (like <c>"[1234]"</c>).</param>
-		internal void DefineUserFriendlyName(string name)
+		internal void DefineDisplayName(string name)
 		{
 			if (Druid.IsValidResourceId (name))
 			{
@@ -686,15 +686,6 @@ namespace Epsitec.Cresus.Database
 			column.IsForeignKey = this.IsForeignKey;
 			
 			return column;
-		}
-
-		/// <summary>
-		/// Creates the display name of the column.
-		/// </summary>
-		/// <returns>The display name.</returns>
-		public string GetDisplayName()
-		{
-			return this.UserFriendlyName;
 		}
 
 		/// <summary>
