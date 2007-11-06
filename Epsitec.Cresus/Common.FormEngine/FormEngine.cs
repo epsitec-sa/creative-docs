@@ -44,6 +44,11 @@ namespace Epsitec.Common.FormEngine
 					Widget container = this.CreateFormContainer(entityId, fields, containers[i]);
 					container.SetParent(root);
 					container.Dock = DockStyle.StackFill;
+
+					if (i < containers.Count-1)
+					{
+						container.Margins = new Margins(0, 10, 0, 0);
+					}
 				}
 
 				return root;
