@@ -126,7 +126,7 @@ namespace Epsitec.Common.FormEngine
 				itemId = Druid.Parse("[63051]"); // Affaire
 				fields.Add(this.CreateField("[630S2]", Color.Empty, FieldDescription.SeparatorType.Normal, FieldDescription.SeparatorType.Normal, 4, 1, "First"));  // Client
 				fields.Add(this.CreateField("[630T2]", Color.Empty, FieldDescription.SeparatorType.Normal, FieldDescription.SeparatorType.Extend, 9, 5, "First"));  // Désignation
-				fields.Add(this.CreateField("[63013].[63053]", Color.FromRgb(1, 0.9, 0.5), FieldDescription.SeparatorType.Normal, FieldDescription.SeparatorType.Normal, 3, 1, "First"));  // SoldeDû.Montant
+				fields.Add(this.CreateField("[63013].[63053]", Color.FromRgb(1, 0.9, 0.5), FieldDescription.SeparatorType.Title, FieldDescription.SeparatorType.Normal, 3, 1, "First"));  // SoldeDû.Montant
 			}
 
 			System.Console.Out.WriteLine("Génère l'interface pour le DRUID {0}", itemId);

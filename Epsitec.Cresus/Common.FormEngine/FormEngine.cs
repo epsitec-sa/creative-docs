@@ -153,7 +153,7 @@ namespace Epsitec.Common.FormEngine
 
 				grid.RowDefinitions.Add(new Widgets.Layouts.RowDefinition());
 				grid.RowDefinitions[row].TopBorder = 5;
-				grid.RowDefinitions[row].BottomBorder = 5;
+				grid.RowDefinitions[row].BottomBorder = 2;
 
 				StaticText text = new StaticText(root);
 				text.Text = string.Concat("<font size=\"125%\"><b>", builder.ToString(), "</b></font>");
