@@ -260,12 +260,13 @@ namespace Epsitec.Cresus.Database
 
 		/// <summary>
 		/// Create an SQL table name based on a high level name and an element
-		/// category. This will prefix the name with <c>"D_"</c> if the table
-		/// is a user data table and suffix it with the key id.
-		/// The key id suffix is required to allow for several tables with the
-		/// same name in the life of the database.
+		/// category. This will prefix the name with <c>"MUD_"</c> if the table
+		/// is a user data table, for instance. If required, it will also add a
+		/// suffix based on the key id. The key id suffix is required to allow
+		/// for several tables with the same name in the life of the database.
 		/// </summary>
 		/// <param name="name">The high level name.</param>
+		/// <param name="includeKey">If set to <c>true</c>, includes the key in the name.</param>
 		/// <param name="category">The table category.</param>
 		/// <param name="key">The key.</param>
 		/// <returns>The SQL table name.</returns>

@@ -45,7 +45,10 @@ namespace Epsitec.Cresus.Database
 		public const string	ColumnRefTarget		= "CREF_TARGET_TABLE";
 		public const string ColumnRefLog		= "CREF_LOG";
 		public const string ColumnRefId			= "CREF_ID";
+		public const string ColumnRefSourceId	= "CREF_SOURCE_ID";
+		public const string ColumnRefTargetId	= "CREF_TARGET_ID";
 		public const string ColumnRefModel		= "CREF_MODEL";
+		public const string ColumnRefRank		= "CREF_RANK";
 		
 		public const string ColumnClientName	= "CR_CLIENT_NAME";
 		public const string ColumnClientId		= "CR_CLIENT_ID";
