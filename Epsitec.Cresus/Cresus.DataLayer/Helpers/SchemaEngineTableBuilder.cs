@@ -18,6 +18,7 @@ namespace Epsitec.Cresus.DataLayer.Helpers
 		{
 			this.engine = engine;
 			this.tables = new List<DbTable> ();
+			this.tablesDictionary = new Dictionary<Druid, DbTable> ();
 		}
 
 		public System.IDisposable BeginTransaction()
@@ -42,6 +43,22 @@ namespace Epsitec.Cresus.DataLayer.Helpers
 
 		public void Add(Druid entityId)
 		{
+			DbTable table = this.CreateTable (entityId);
+
+			if (table != null)
+			{
+				this.engine.Infrastructure.RegisterNewDbTable (this.transaction, table);
+			}
+		}
+
+		
+		private DbTable CreateTable(Druid entityId)
+		{
+			if (this.tablesDictionary.ContainsKey (entityId))
+			{
+				return null;
+			}
+
 			StructuredType entityType = this.engine.GetEntityType (entityId);
 			string         tableName  = this.engine.GetUserFriendlyTableName (entityId);
 
@@ -58,6 +75,7 @@ namespace Epsitec.Cresus.DataLayer.Helpers
 			table.DefineCaptionId (entityId);
 			
 			this.tables.Add (table);
+			this.tablesDictionary[entityId] = table;
 
 			if (entityType.BaseTypeId.IsEmpty)
 			{
@@ -78,27 +96,27 @@ namespace Epsitec.Cresus.DataLayer.Helpers
 				{
 					//	Add a column for the specified field.
 
-					this.AddColumn (table, field);
+					this.CreateColumn (table, field);
 				}
 			}
 
-			infrastructure.RegisterNewDbTable (this.transaction, table);
+			return table;
 		}
 
-		private void AddColumn(DbTable table, StructuredTypeField field)
+		private void CreateColumn(DbTable table, StructuredTypeField field)
 		{
 			switch (field.Relation)
 			{
 				case FieldRelation.None:
-					this.AddDataColumn (table, field);
+					this.CreateDataColumn (table, field);
 					break;
 				
 				case FieldRelation.Reference:
-					this.AddRelationColumn (table, field, DbCardinality.Reference);
+					this.CreateRelationColumn (table, field, DbCardinality.Reference);
 					break;
 				
 				case FieldRelation.Collection:
-					this.AddRelationColumn (table, field, DbCardinality.Collection);
+					this.CreateRelationColumn (table, field, DbCardinality.Collection);
 					break;
 
 				default:
@@ -106,7 +124,7 @@ namespace Epsitec.Cresus.DataLayer.Helpers
 			}
 		}
 
-		private void AddRelationColumn(DbTable table, StructuredTypeField field, DbCardinality cardinality)
+		private void CreateRelationColumn(DbTable table, StructuredTypeField field, DbCardinality cardinality)
 		{
 			System.Diagnostics.Debug.Assert (cardinality != DbCardinality.None);
 			System.Diagnostics.Debug.Assert (field.CaptionId.IsValid);
@@ -114,11 +132,11 @@ namespace Epsitec.Cresus.DataLayer.Helpers
 			DbColumn column = new DbColumn (field.CaptionId, null, DbColumnClass.Virtual, DbElementCat.ManagedUserData, DbRevisionMode.TrackChanges);
 
 			column.DefineCardinality (cardinality);
-
+			
 			table.Columns.Add (column);
 		}
 
-		private void AddDataColumn(DbTable table, StructuredTypeField field)
+		private void CreateDataColumn(DbTable table, StructuredTypeField field)
 		{
 			string    typeName = this.engine.GetTypeName (field.TypeId);
 			DbTypeDef typeDef  = this.GetTypeDef (typeName, field.Type);
@@ -188,6 +206,7 @@ namespace Epsitec.Cresus.DataLayer.Helpers
 
 		SchemaEngine engine;
 		List<DbTable> tables;
+		Dictionary<Druid, DbTable> tablesDictionary;
 		DbTransaction transaction;
 	}
 }

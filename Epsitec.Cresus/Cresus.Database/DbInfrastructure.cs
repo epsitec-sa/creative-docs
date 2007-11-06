@@ -1931,7 +1931,7 @@ namespace Epsitec.Cresus.Database
 
 				DbColumn dbColumn = DbTools.DeserializeFromXml<DbColumn> (columnInfo);
 
-				dbColumn.DefineName (columnName);
+				dbColumn.DefineUserFriendlyName (columnName);
 				dbColumn.DefineKey (new DbKey (columnId));
 				dbColumn.DefineType (typeDef);
 				dbColumn.DefineTargetTableName (targetName);

@@ -28,7 +28,7 @@ namespace Epsitec.Cresus.Database
 		public DbColumn(string name, DbTypeDef type)
 			: this ()
 		{
-			this.DefineName (name);
+			this.DefineUserFriendlyName (name);
 			this.DefineType (type);
 		}
 
@@ -121,11 +121,13 @@ namespace Epsitec.Cresus.Database
 		}
 
 		
+		#region IName Members
+
 		/// <summary>
-		/// Gets the internal name of the column.
+		/// Gets the name of the column.
 		/// </summary>
-		/// <value>The internal name of the column.</value>
-		public string							InternalName
+		/// <value>The name of the column.</value>
+		public string							Name
 		{
 			get
 			{
@@ -140,15 +142,14 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 
-
-		#region IName Members
+		#endregion
 
 		/// <summary>
 		/// Gets the name of the column. If no name is defined, uses the caption
 		/// name instead.
 		/// </summary>
 		/// <value>The name of the column.</value>
-		public string Name
+		public string UserFriendlyName
 		{
 			get
 			{
@@ -163,8 +164,6 @@ namespace Epsitec.Cresus.Database
 				}
 			}
 		}
-
-		#endregion
 
 		#region ICaption Members
 
@@ -510,7 +509,7 @@ namespace Epsitec.Cresus.Database
 		/// the method <see cref="DefineCaptionId"/>.
 		/// </summary>
 		/// <param name="name">The name or a caption DRUID (like <c>"[1234]"</c>).</param>
-		internal void DefineName(string name)
+		internal void DefineUserFriendlyName(string name)
 		{
 			if (Druid.IsValidResourceId (name))
 			{
@@ -695,7 +694,7 @@ namespace Epsitec.Cresus.Database
 		/// <returns>The display name.</returns>
 		public string GetDisplayName()
 		{
-			return this.Name;
+			return this.UserFriendlyName;
 		}
 
 		/// <summary>
@@ -715,10 +714,10 @@ namespace Epsitec.Cresus.Database
 
 			switch (this.columnClass)
 			{
-				case DbColumnClass.Data:		return DbSqlStandard.MakeSimpleSqlName (this.InternalName, this.Category);
+				case DbColumnClass.Data:		return DbSqlStandard.MakeSimpleSqlName (this.Name, this.Category);
 				case DbColumnClass.KeyId:		return Tags.ColumnId;
 				case DbColumnClass.KeyStatus:	return Tags.ColumnStatus;
-				case DbColumnClass.RefId:		return DbSqlStandard.MakeSimpleSqlName (this.InternalName, "REF", "ID");
+				case DbColumnClass.RefId:		return DbSqlStandard.MakeSimpleSqlName (this.Name, "REF", "ID");
 			}
 
 			throw new System.NotSupportedException (string.Format ("Column '{0}' has an unsupported class", this.Name));
@@ -740,6 +739,7 @@ namespace Epsitec.Cresus.Database
 			else
 			{
 				return this.Name == other.Name;
+				//	TODO: ...
 			}
 		}
 

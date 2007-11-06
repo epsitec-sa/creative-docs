@@ -600,7 +600,7 @@ namespace Epsitec.Cresus.Database
 		{
 			System.Diagnostics.Debug.Assert (column.IsVirtualColumn);
 
-			string relationName = string.Concat (column.InternalName, ":", this.InternalName);
+			string relationName = string.Concat (column.Name, ":", this.InternalName);
 			return DbSqlStandard.MakeSqlTableName (relationName, DbElementCat.Relation, this.Key);
 		}
 		
@@ -769,6 +769,29 @@ namespace Epsitec.Cresus.Database
 			return column;
 		}
 
+		/// <summary>
+		/// Creates the relation column.
+		/// </summary>
+		/// <param name="transaction">The transaction.</param>
+		/// <param name="infrastructure">The database infrastructure.</param>
+		/// <param name="columnCaptionId">The column caption id.</param>
+		/// <param name="targetTable">The target table.</param>
+		/// <param name="revisionMode">The revision mode.</param>
+		/// <param name="cardinality">The cardinality.</param>
+		/// <param name="nullability">The column nullability.</param>
+		/// <returns>The column.</returns>
+		public static DbColumn CreateRelationColumn(DbTransaction transaction, DbInfrastructure infrastructure, Druid columnCaptionId, DbTable targetTable, DbRevisionMode revisionMode, DbCardinality cardinality, DbNullability nullability)
+		{
+			System.Diagnostics.Debug.Assert (nullability != DbNullability.Undefined);
+
+			DbColumn column = new DbColumn (columnCaptionId, null, DbColumnClass.Virtual, DbElementCat.ManagedUserData, revisionMode);
+
+			column.DefineCardinality (cardinality);
+			column.DefineTargetTableName (targetTable.InternalName);
+
+			return column;
+		}
+		
 		/// <summary>
 		/// Creates a column for user data.
 		/// </summary>
