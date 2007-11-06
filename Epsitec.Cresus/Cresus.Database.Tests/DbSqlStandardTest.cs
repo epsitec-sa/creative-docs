@@ -87,25 +87,26 @@ namespace Epsitec.Cresus.Database
 			Assert.AreEqual ("Y12", name);
 		}
 		
-#if false
 		[Test] public void CheckCreateSqlTableName()
 		{
 			string nam1 = "test-x";
 			string nam2 = "CR_TEST";
-			string std1 = DbSqlStandard.MakeSqlTableName (nam1, DbElementCat.UserDataManaged, new DbKey (123));
-			string std2 = DbSqlStandard.MakeSqlTableName (nam2, DbElementCat.Internal, null);
 			
-			Assert.AreEqual ("U_TEST_X_123", std1);
-			Assert.AreEqual ("CR_TEST",      std2);
+			string std1 = DbSqlStandard.MakeSqlTableName (nam1, true, DbElementCat.ManagedUserData, new DbKey (123));
+			string std2 = DbSqlStandard.MakeSqlTableName (nam2, true, DbElementCat.Internal, DbKey.Empty);
+			string std3 = DbSqlStandard.MakeSqlTableName (nam1, false, DbElementCat.ManagedUserData, new DbKey (123));
+			
+			Assert.AreEqual ("MUD_TEST_X_123", std1);
+			Assert.AreEqual ("CR_TEST",        std2);
+			Assert.AreEqual ("MUD_TEST_X",     std3);
 		}
-#endif
 		
 		[Test] [ExpectedException (typeof (Exceptions.GenericException))] public void CheckCreateSqlTableNameEx1()
 		{
 			string name = "test-x";
-			string std  = DbSqlStandard.MakeSqlTableName (name, DbElementCat.Internal, new DbKey (123));
+			string std  = DbSqlStandard.MakeSqlTableName (name, true, DbElementCat.Internal, new DbKey (123));
 			
-			Assert.AreEqual ("U_TEST_X_123", std);
+			Assert.AreEqual ("MUD_TEST_X_123", std);
 		}
 	}
 }

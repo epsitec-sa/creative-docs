@@ -577,7 +577,7 @@ namespace Epsitec.Cresus.Database
 		/// <returns>The SQL name.</returns>
 		public string GetSqlName()
 		{
-			return DbSqlStandard.MakeSqlTableName (this.Name, this.Category, this.Key);
+			return DbSqlStandard.MakeSqlTableName (this.Name, this.CaptionId.IsEmpty, this.Category, this.Key);
 		}
 
 		/// <summary>
@@ -589,7 +589,7 @@ namespace Epsitec.Cresus.Database
 		{
 			if (this.RevisionMode == DbRevisionMode.TrackChanges)
 			{
-				return DbSqlStandard.MakeSqlTableName (this.Name, DbElementCat.RevisionHistory, this.Key);
+				return DbSqlStandard.MakeSqlTableName (this.Name, this.CaptionId.IsEmpty, DbElementCat.RevisionHistory, this.Key);
 			}
 			else
 			{
@@ -602,7 +602,7 @@ namespace Epsitec.Cresus.Database
 			System.Diagnostics.Debug.Assert (column.IsVirtualColumn);
 
 			string relationName = string.Concat (column.Name, ":", this.Name);
-			return DbSqlStandard.MakeSqlTableName (relationName, DbElementCat.Relation, this.Key);
+			return DbSqlStandard.MakeSqlTableName (relationName, this.CaptionId.IsEmpty, DbElementCat.Relation, this.Key);
 		}
 		
 		/// <summary>

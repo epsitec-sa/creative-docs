@@ -10,6 +10,9 @@ namespace Epsitec.Cresus.Database
 	/// </summary>
 	public static class DbSqlStandard
 	{
+		/// <summary>
+		/// Initializes the <see cref="DbSqlStandard"/> class.
+		/// </summary>
 		static DbSqlStandard()
 		{
 			//	A valid SQL name is defined as :
@@ -257,15 +260,16 @@ namespace Epsitec.Cresus.Database
 
 		/// <summary>
 		/// Create an SQL table name based on a high level name and an element
-		/// category. This will prefix the name with "U_" if the table is a user
-		/// data table and suffix it with the key id. This is required to allow
-		/// several tables with the same name in the life of the database.
+		/// category. This will prefix the name with <c>"D_"</c> if the table
+		/// is a user data table and suffix it with the key id.
+		/// The key id suffix is required to allow for several tables with the
+		/// same name in the life of the database.
 		/// </summary>
 		/// <param name="name">The high level name.</param>
 		/// <param name="category">The table category.</param>
 		/// <param name="key">The key.</param>
 		/// <returns>The SQL table name.</returns>
-		public static string MakeSqlTableName(string name, DbElementCat category, DbKey key)
+		public static string MakeSqlTableName(string name, bool includeKey, DbElementCat category, DbKey key)
 		{
 			System.Text.StringBuilder buffer;
 			
@@ -282,17 +286,17 @@ namespace Epsitec.Cresus.Database
 				
 				case DbElementCat.ManagedUserData:
 					buffer = new System.Text.StringBuilder ();
-					buffer.Append ("U_");
+					buffer.Append (TablePrefixes.ManagedUserDataTablePrefix);
 					break;
 
 				case DbElementCat.RevisionHistory:
 					buffer = new System.Text.StringBuilder ();
-					buffer.Append ("R_");
+					buffer.Append (TablePrefixes.RevisionHistoryTablePrefix);
 					break;
 
 				case DbElementCat.Relation:
 					buffer = new System.Text.StringBuilder ();
-					buffer.Append ("X_");
+					buffer.Append (TablePrefixes.RelationTablePrefix);
 					break;
 				
 				default:
@@ -300,16 +304,19 @@ namespace Epsitec.Cresus.Database
 			}
 			
 			DbSqlStandard.CreateSimpleSqlName (name, buffer);
-			
-			//	Limit table name to at most 48 characters. As we add a maximum of 18 digits
-			//	long suffix, only 30 characters are usable for the name itself :
-			
-			if (buffer.Length > 48-18)
+
+			if (includeKey)
 			{
-				buffer.Length = 48-18;
+				//	Limit table name to at most 48 characters. As we add a maximum of 18 digits
+				//	long suffix, only 30 characters are usable for the name itself :
+
+				if (buffer.Length > 48-18)
+				{
+					buffer.Length = 48-18;
+				}
+
+				buffer.AppendFormat (System.Globalization.CultureInfo.InvariantCulture, "_{0}", key.Id.Value);
 			}
-			
-			buffer.AppendFormat (System.Globalization.CultureInfo.InvariantCulture, "_{0}", key.Id.Value);
 			
 			return buffer.ToString ();
 		}
@@ -458,8 +465,19 @@ namespace Epsitec.Cresus.Database
 				}
 			}
 		}
-		
-		
+
+		#region TablePrefixes Static Class
+
+		private static class TablePrefixes
+		{
+			public static readonly string ManagedUserDataTablePrefix	= "MUD_";
+			public static readonly string RevisionHistoryTablePrefix	= "REV_";
+			public static readonly string RelationTablePrefix			= "X_";
+		}
+
+		#endregion
+
+				
 		private static Regex					regexName;
 		private static Regex					regexString;
 		private static Regex					regexNumber;
