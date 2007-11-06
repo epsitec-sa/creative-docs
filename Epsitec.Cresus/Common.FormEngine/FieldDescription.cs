@@ -139,6 +139,19 @@ namespace Epsitec.Common.FormEngine
 			}
 		}
 
+		public string Container
+		{
+			//	Nom du conteneur (sorte de colonne).
+			get
+			{
+				return this.container;
+			}
+			set
+			{
+				this.container = value;
+			}
+		}
+
 
 		protected List<Druid> fieldIds;
 		protected Color backColor;
@@ -146,5 +159,6 @@ namespace Epsitec.Common.FormEngine
 		protected SeparatorType bottomSeparator;
 		protected int columnsRequired;
 		protected int rowsRequired;
+		protected string container;
 	}
 }

@@ -21,6 +21,38 @@ namespace Epsitec.Common.FormEngine
 		public Widget CreateForm(Druid entityId, List<FieldDescription> fields)
 		{
 			//	Crée un masque de saisie pour une entité donnée.
+			List<string> containers = new List<string>();
+			foreach (FieldDescription field in fields)
+			{
+				if (!containers.Contains(field.Container))
+				{
+					containers.Add(field.Container);
+				}
+			}
+
+			if (containers.Count == 1)
+			{
+				return this.CreateFormContainer(entityId, fields, containers[0]);
+			}
+			else
+			{
+				Widget root = new FrameBox();
+				root.ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow;
+
+				for (int i=0; i<containers.Count; i++)
+				{
+					Widget container = this.CreateFormContainer(entityId, fields, containers[i]);
+					container.SetParent(root);
+					container.Dock = DockStyle.StackFill;
+				}
+
+				return root;
+			}
+		}
+
+		private Widget CreateFormContainer(Druid entityId, List<FieldDescription> fields, string container)
+		{
+			//	Crée un conteneur d'un masque de saisie pour une entité donnée.
 			Caption entityCaption = this.resourceManager.GetCaption(entityId);
 			StructuredType entity = TypeRosetta.GetTypeObject(entityCaption) as StructuredType;
 
@@ -36,7 +68,10 @@ namespace Epsitec.Common.FormEngine
 			bool[] isLabel = new bool[FormEngine.MaxColumnsRequired];
 			foreach (FieldDescription field in fields)
 			{
-				this.PrecreateField(field, isLabel, ref column, ref row);
+				if (field.Container == container)
+				{
+					this.PrecreateField(field, isLabel, ref column, ref row);
+				}
 			}
 
 			Widgets.Layouts.GridLayoutEngine grid = new Widgets.Layouts.GridLayoutEngine();
@@ -59,8 +94,11 @@ namespace Epsitec.Common.FormEngine
 			row = 0;
 			foreach (FieldDescription field in fields)
 			{
-				string path = field.GetPath("Data");
-				this.CreateField(root, grid, path, field, ref column, ref row);
+				if (field.Container == container)
+				{
+					string path = field.GetPath("Data");
+					this.CreateField(root, grid, path, field, ref column, ref row);
+				}
 			}
 
 			return root;
