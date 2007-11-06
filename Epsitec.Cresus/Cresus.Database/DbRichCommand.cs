@@ -18,8 +18,8 @@ namespace Epsitec.Cresus.Database
 		{
 			this.infrastructure = infrastructure;
 			
-			this.commands = new Collections.DbCommands ();
-			this.tables   = new Collections.DbTables ();
+			this.commands = new Collections.DbCommandList ();
+			this.tables   = new Collections.DbTableList ();
 			this.adapters = new List<System.Data.IDataAdapter> ();
 		}
 
@@ -27,7 +27,7 @@ namespace Epsitec.Cresus.Database
 		/// Gets the individual commands associated with this rich command.
 		/// </summary>
 		/// <value>The commands.</value>
-		public Collections.DbCommands			Commands
+		public Collections.DbCommandList			Commands
 		{
 			get
 			{
@@ -39,7 +39,7 @@ namespace Epsitec.Cresus.Database
 		/// Gets the individual table definitions associated with this rich command.
 		/// </summary>
 		/// <value>The table definitions.</value>
-		public Collections.DbTables				Tables
+		public Collections.DbTableList				Tables
 		{
 			get
 			{
@@ -186,7 +186,7 @@ namespace Epsitec.Cresus.Database
 		/// <param name="transaction">The transaction.</param>
 		/// <param name="tables">The table definitions.</param>
 		/// <returns>The <c>DbRichCommand</c> instance.</returns>
-		public static DbRichCommand CreateFromTables(DbInfrastructure infrastructure, DbTransaction transaction, Collections.DbTables tables)
+		public static DbRichCommand CreateFromTables(DbInfrastructure infrastructure, DbTransaction transaction, Collections.DbTableList tables)
 		{
 			return DbRichCommand.CreateFromTables (infrastructure, transaction, tables.ToArray ());
 		}
@@ -308,11 +308,11 @@ namespace Epsitec.Cresus.Database
 
 			this.infrastructure.DefaultSqlBuilder.SelectData (select);
 
-			Collections.DbCommands oldCommands = this.commands;
-			Collections.DbCommands newCommands = new Collections.DbCommands ();
+			Collections.DbCommandList oldCommands = this.commands;
+			Collections.DbCommandList newCommands = new Collections.DbCommandList ();
 			
-			Collections.DbTables oldTables = this.tables;
-			Collections.DbTables newTables = new Collections.DbTables ();
+			Collections.DbTableList oldTables = this.tables;
+			Collections.DbTableList newTables = new Collections.DbTableList ();
 			
 			List<System.Data.IDataAdapter> oldAdapters = this.adapters;
 			List<System.Data.IDataAdapter> newAdapters = new List<System.Data.IDataAdapter> ();
@@ -1410,9 +1410,9 @@ namespace Epsitec.Cresus.Database
 			ISqlBuilder    builder   = database.SqlBuilder;
 			ITypeConverter converter = this.infrastructure.Converter;
 			
-			Collections.SqlFields sqlUpdate = new Collections.SqlFields ();
-			Collections.SqlFields sqlInsert = new Collections.SqlFields ();
-			Collections.SqlFields sqlConds  = new Collections.SqlFields ();
+			Collections.SqlFieldList sqlUpdate = new Collections.SqlFieldList ();
+			Collections.SqlFieldList sqlInsert = new Collections.SqlFieldList ();
+			Collections.SqlFieldList sqlConds  = new Collections.SqlFieldList ();
 			
 			int colCount = dbTable.GetSqlColumnCount ();
 			int rowCount = dataTable.Rows.Count;
@@ -1599,8 +1599,8 @@ namespace Epsitec.Cresus.Database
 
 
 		private DbInfrastructure				infrastructure;
-		private Collections.DbCommands			commands;
-		private Collections.DbTables			tables;
+		private Collections.DbCommandList			commands;
+		private Collections.DbTableList			tables;
 		private System.Data.DataSet				dataSet;
 		private DbAccess						access;
 		private List<System.Data.IDataAdapter>	adapters;

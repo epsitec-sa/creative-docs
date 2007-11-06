@@ -20,7 +20,7 @@ namespace Epsitec.Cresus.Database
 		/// </summary>
 		public DbTable()
 		{
-			this.columns = new Collections.DbColumns ();
+			this.columns = new Collections.DbColumnList ();
 
 			this.columns.ItemInserted += this.HandleColumnInserted;
 			this.columns.ItemRemoved  += this.HandleColumnRemoved;
@@ -182,7 +182,7 @@ namespace Epsitec.Cresus.Database
 		/// Gets the columns defined for the table.
 		/// </summary>
 		/// <value>The columns.</value>
-		public Collections.DbColumns			Columns
+		public Collections.DbColumnList			Columns
 		{
 			get
 			{
@@ -209,13 +209,13 @@ namespace Epsitec.Cresus.Database
 		/// be unique.
 		/// </summary>
 		/// <value>The primary keys.</value>
-		public Collections.DbColumns			PrimaryKeys
+		public Collections.DbColumnList			PrimaryKeys
 		{
 			get
 			{
 				if (this.primaryKeys == null)
 				{
-					this.primaryKeys = new Collections.DbColumns ();
+					this.primaryKeys = new Collections.DbColumnList ();
 				}
 
 				return this.primaryKeys;
@@ -847,8 +847,8 @@ namespace Epsitec.Cresus.Database
 		private Caption							caption;
 		private string							localizations;
 
-		private Collections.DbColumns			columns;
-		private Collections.DbColumns			primaryKeys;
+		private Collections.DbColumnList			columns;
+		private Collections.DbColumnList			primaryKeys;
 		private DbElementCat					category;
 		private DbRevisionMode					revisionMode;
 		private DbReplicationMode				replicationMode;

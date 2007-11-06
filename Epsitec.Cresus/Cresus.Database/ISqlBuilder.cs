@@ -127,7 +127,7 @@ namespace Epsitec.Cresus.Database
 		/// </summary>
 		/// <param name="tableName">Name of the table.</param>
 		/// <param name="fields">The fields.</param>
-		void InsertData(string tableName, Collections.SqlFields fields);
+		void InsertData(string tableName, Collections.SqlFieldList fields);
 		
 		/// <summary>
 		/// Updates data from a table, based on a collection of fields and a
@@ -136,35 +136,35 @@ namespace Epsitec.Cresus.Database
 		/// <param name="tableName">Name of the table.</param>
 		/// <param name="fields">The fields.</param>
 		/// <param name="conditions">The conditions.</param>
-		void UpdateData(string tableName, Collections.SqlFields fields, Collections.SqlFields conditions);
+		void UpdateData(string tableName, Collections.SqlFieldList fields, Collections.SqlFieldList conditions);
 
 		/// <summary>
 		/// Removes the data from a table, based on a set of conditions.
 		/// </summary>
 		/// <param name="tableName">Name of the table.</param>
 		/// <param name="conditions">The conditions.</param>
-		void RemoveData(string tableName, Collections.SqlFields conditions);
+		void RemoveData(string tableName, Collections.SqlFieldList conditions);
 
 		/// <summary>
 		/// Executes a stored procedure.
 		/// </summary>
 		/// <param name="procedureName">Name of the procedure.</param>
 		/// <param name="fields">The fields.</param>
-		void ExecuteProcedure(string procedureName, Collections.SqlFields fields);
+		void ExecuteProcedure(string procedureName, Collections.SqlFieldList fields);
 
 		/// <summary>
 		/// Sets the SQL parameters for a stored procedure.
 		/// </summary>
 		/// <param name="command">The command.</param>
 		/// <param name="fields">The fields.</param>
-		void SetSqlParameters(System.Data.IDbCommand command, Collections.SqlFields fields);
+		void SetSqlParameters(System.Data.IDbCommand command, Collections.SqlFieldList fields);
 		
 		/// <summary>
 		/// Gets the SQL parameters for a stored procedure.
 		/// </summary>
 		/// <param name="command">The command.</param>
 		/// <param name="fields">The fields.</param>
-		void GetSqlParameters(System.Data.IDbCommand command, Collections.SqlFields fields);
+		void GetSqlParameters(System.Data.IDbCommand command, Collections.SqlFieldList fields);
 
 		/// <summary>
 		/// Sets a value for a parameterized command.

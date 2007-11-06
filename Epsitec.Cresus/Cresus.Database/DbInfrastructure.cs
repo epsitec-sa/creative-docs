@@ -363,7 +363,7 @@ namespace Epsitec.Cresus.Database
 		private void ResetColumnData(DbTransaction transaction, DbTable table, string columnName, DbId data)
 		{
 			DbColumn              column = table.Columns[columnName];
-			Collections.SqlFields fields = new Collections.SqlFields ();
+			Collections.SqlFieldList fields = new Collections.SqlFieldList ();
 			
 			fields.Add (column.GetSqlName (), this.CreateSqlField (column, data));
 			
@@ -1771,8 +1771,8 @@ namespace Epsitec.Cresus.Database
 		/// <param name="newKey">The new key of the row.</param>
 		private void UpdateKeyInRow(DbTransaction transaction, string tableName, DbKey oldKey, DbKey newKey)
 		{
-			Collections.SqlFields fields = new Collections.SqlFields ();
-			Collections.SqlFields conds  = new Collections.SqlFields ();
+			Collections.SqlFieldList fields = new Collections.SqlFieldList ();
+			Collections.SqlFieldList conds  = new Collections.SqlFieldList ();
 			
 			fields.Add (Tags.ColumnId,     SqlField.CreateConstant (newKey.Id,             DbKey.RawTypeForId));
 			fields.Add (Tags.ColumnStatus, SqlField.CreateConstant (newKey.IntStatus,      DbKey.RawTypeForStatus));
@@ -1799,8 +1799,8 @@ namespace Epsitec.Cresus.Database
 		/// <param name="nextId">The next column id.</param>
 		internal void UpdateTableNextId(DbTransaction transaction, DbTable table, DbId nextId)
 		{
-			Collections.SqlFields fields = new Collections.SqlFields ();
-			Collections.SqlFields conds  = new Collections.SqlFields ();
+			Collections.SqlFieldList fields = new Collections.SqlFieldList ();
+			Collections.SqlFieldList conds  = new Collections.SqlFieldList ();
 			
 			fields.Add (Tags.ColumnNextId, SqlField.CreateConstant (nextId, DbKey.RawTypeForId));
 			
@@ -2055,8 +2055,8 @@ namespace Epsitec.Cresus.Database
 			System.Diagnostics.Debug.Assert (transaction != null);
 			System.Diagnostics.Debug.Assert (numKeys >= 0);
 			
-			Collections.SqlFields fields = new Collections.SqlFields ();
-			Collections.SqlFields conds  = new Collections.SqlFields ();
+			Collections.SqlFieldList fields = new Collections.SqlFieldList ();
+			Collections.SqlFieldList conds  = new Collections.SqlFieldList ();
 			
 			SqlField fieldNextId = SqlField.CreateName (Tags.ColumnNextId);
 			SqlField fieldConstN = SqlField.CreateConstant (numKeys, DbRawType.Int32);
@@ -2090,7 +2090,7 @@ namespace Epsitec.Cresus.Database
 		/// <param name="conditions">The conditions.</param>
 		/// <param name="tableName">Name of the table.</param>
 		/// <param name="key">The key.</param>
-		private static void AddKeyExtraction(Collections.SqlFields conditions, string tableName, DbKey key)
+		private static void AddKeyExtraction(Collections.SqlFieldList conditions, string tableName, DbKey key)
 		{
 			SqlField nameColId  = SqlField.CreateName (tableName, Tags.ColumnId);
 			SqlField constantId = SqlField.CreateConstant (key.Id, DbKey.RawTypeForId);
@@ -2106,7 +2106,7 @@ namespace Epsitec.Cresus.Database
 		/// <param name="sourceTableName">Name of the source table.</param>
 		/// <param name="sourceColumnName">Name of the source column.</param>
 		/// <param name="targetTableName">Name of the target table.</param>
-		private static void AddKeyExtraction(Collections.SqlFields conditions, string sourceTableName, string sourceColumnName, string targetTableName)
+		private static void AddKeyExtraction(Collections.SqlFieldList conditions, string sourceTableName, string sourceColumnName, string targetTableName)
 		{
 			SqlField targetColumnId = SqlField.CreateName (targetTableName, Tags.ColumnId);
 			SqlField sourceColumnId = SqlField.CreateName (sourceTableName, sourceColumnName);
@@ -2122,7 +2122,7 @@ namespace Epsitec.Cresus.Database
 		/// <param name="sourceTableName">Name of the source table.</param>
 		/// <param name="sourceColumnName">Name of the source column.</param>
 		/// <param name="key">The key.</param>
-		private static void AddKeyExtraction(Collections.SqlFields conditions, string sourceTableName, string sourceColumnName, DbKey key)
+		private static void AddKeyExtraction(Collections.SqlFieldList conditions, string sourceTableName, string sourceColumnName, DbKey key)
 		{
 			SqlField sourceColId = SqlField.CreateName (sourceTableName, sourceColumnName);
 			SqlField constantId  = SqlField.CreateConstant (key.Id, DbKey.RawTypeForId);
@@ -2137,7 +2137,7 @@ namespace Epsitec.Cresus.Database
 		/// <param name="conditions">The conditions.</param>
 		/// <param name="tableName">Name of the table.</param>
 		/// <param name="searchMode">The search mode (live, deleted, etc.).</param>
-		private static void AddKeyExtraction(Collections.SqlFields conditions, string tableName, DbRowSearchMode searchMode)
+		private static void AddKeyExtraction(Collections.SqlFieldList conditions, string tableName, DbRowSearchMode searchMode)
 		{
 			SqlFunctionCode function;
 			DbRowStatus     status;
@@ -2293,8 +2293,8 @@ namespace Epsitec.Cresus.Database
 			System.Diagnostics.Debug.Assert (sourceColumnKey != null);
 			System.Diagnostics.Debug.Assert (targetTableKey  != null);
 			
-			Collections.SqlFields fields = new Collections.SqlFields ();
-			Collections.SqlFields conds  = new Collections.SqlFields ();
+			Collections.SqlFieldList fields = new Collections.SqlFieldList ();
+			Collections.SqlFieldList conds  = new Collections.SqlFieldList ();
 			
 			fields.Add (Tags.ColumnRefTarget, SqlField.CreateConstant (targetTableKey.Id, DbKey.RawTypeForId));
 
@@ -2335,7 +2335,7 @@ namespace Epsitec.Cresus.Database
 			
 			DbTable typeDefTable = this.internalTables[Tags.TableTypeDef];
 			
-			Collections.SqlFields fields = new Collections.SqlFields ();
+			Collections.SqlFieldList fields = new Collections.SqlFieldList ();
 
 			fields.Add (this.CreateSqlField (typeDefTable.Columns[Tags.ColumnId],          typeDef.Key.Id));
 			fields.Add (this.CreateSqlField (typeDefTable.Columns[Tags.ColumnStatus],      typeDef.Key.IntStatus));
@@ -2360,7 +2360,7 @@ namespace Epsitec.Cresus.Database
 			
 			DbTable tableDefTable = this.internalTables[Tags.TableTableDef];
 			
-			Collections.SqlFields fields = new Collections.SqlFields ();
+			Collections.SqlFieldList fields = new Collections.SqlFieldList ();
 
 			fields.Add (this.CreateSqlField (tableDefTable.Columns[Tags.ColumnId],		    table.Key.Id));
 			fields.Add (this.CreateSqlField (tableDefTable.Columns[Tags.ColumnStatus],      table.Key.IntStatus));
@@ -2389,7 +2389,7 @@ namespace Epsitec.Cresus.Database
 			
 			DbTable columnDefTable = this.internalTables[Tags.TableColumnDef];
 			
-			Collections.SqlFields fields = new Collections.SqlFields ();
+			Collections.SqlFieldList fields = new Collections.SqlFieldList ();
 
 			fields.Add (this.CreateSqlField (columnDefTable.Columns[Tags.ColumnId],          column.Key.Id));
 			fields.Add (this.CreateSqlField (columnDefTable.Columns[Tags.ColumnStatus],      column.Key.IntStatus));
@@ -2817,8 +2817,8 @@ namespace Epsitec.Cresus.Database
 		private Settings.Globals				globals;
 		private Settings.Locals					locals;
 
-		private Collections.DbTables			internalTables = new Collections.DbTables ();
-		private Collections.DbTypeDefs			internalTypes = new Collections.DbTypeDefs ();
+		private Collections.DbTableList			internalTables = new Collections.DbTableList ();
+		private Collections.DbTypeDefList			internalTypes = new Collections.DbTypeDefList ();
 
 		private int								clientId;
 		

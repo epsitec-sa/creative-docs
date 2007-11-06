@@ -156,7 +156,7 @@ namespace Epsitec.Cresus.Database
 			}
 			else
 			{
-				Collections.SqlFields conditions = new Collections.SqlFields ();
+				Collections.SqlFieldList conditions = new Collections.SqlFieldList ();
 				
 				SqlField logIdName  = SqlField.CreateName (this.tableSqlName, Tags.ColumnId);
 				SqlField logIdValue = SqlField.CreateConstant (id.Value, DbKey.RawTypeForId);
@@ -205,7 +205,7 @@ namespace Epsitec.Cresus.Database
 			}
 			else
 			{
-				Collections.SqlFields conditions = new Collections.SqlFields ();
+				Collections.SqlFieldList conditions = new Collections.SqlFieldList ();
 				
 				SqlField logIdName = SqlField.CreateName (this.tableSqlName, Tags.ColumnId);
 				SqlField logIdVal1 = SqlField.CreateConstant (startId.Value, DbKey.RawTypeForId);
@@ -321,7 +321,7 @@ namespace Epsitec.Cresus.Database
 			}
 			else
 			{
-				Collections.SqlFields fields = new Collections.SqlFields ();
+				Collections.SqlFieldList fields = new Collections.SqlFieldList ();
 
 				fields.Add (this.infrastructure.CreateSqlField (this.table.Columns[Tags.ColumnId], entry.Id));
 				fields.Add (this.infrastructure.CreateSqlField (this.table.Columns[Tags.ColumnDateTime], entry.DateTime));

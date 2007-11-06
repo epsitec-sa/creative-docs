@@ -4,14 +4,14 @@
 namespace Epsitec.Cresus.Database.Collections
 {
 	/// <summary>
-	/// The <c>Collections.DbTypeDefs</c> class manages a list of <c>DbTypeDef</c> items.
+	/// The <c>Collections.DbTypeDefList</c> class manages a list of <c>DbTypeDef</c> items.
 	/// </summary>
-	public sealed class DbTypeDefs : NameList<DbTypeDef>
+	public sealed class DbTypeDefList : NameList<DbTypeDef>
 	{
 		/// <summary>
-		/// Initializes a new instance of the <see cref="DbTypeDefs"/> class.
+		/// Initializes a new instance of the <see cref="DbTypeDefList"/> class.
 		/// </summary>
-		public DbTypeDefs()
+		public DbTypeDefList()
 		{
 		}
 	}

@@ -36,7 +36,7 @@ namespace Epsitec.Cresus.Database
 		/// Gets the fields for the columns.
 		/// </summary>
 		/// <value>The fields.</value>
-		public Collections.SqlFields			Fields
+		public Collections.SqlFieldList			Fields
 		{
 			get
 			{
@@ -48,7 +48,7 @@ namespace Epsitec.Cresus.Database
 		/// Gets the tables.
 		/// </summary>
 		/// <value>The tables.</value>
-		public Collections.SqlFields			Tables
+		public Collections.SqlFieldList			Tables
 		{
 			get
 			{
@@ -60,7 +60,7 @@ namespace Epsitec.Cresus.Database
 		/// Gets the conditions for the WHERE clause.
 		/// </summary>
 		/// <value>The conditions.</value>
-		public Collections.SqlFields			Conditions
+		public Collections.SqlFieldList			Conditions
 		{
 			get
 			{
@@ -72,7 +72,7 @@ namespace Epsitec.Cresus.Database
 		/// Gets the joins.
 		/// </summary>
 		/// <value>The joins.</value>
-		public Collections.SqlFields			Joins
+		public Collections.SqlFieldList			Joins
 		{
 			get
 			{
@@ -128,10 +128,10 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 
-		private Collections.SqlFields			fields	= new Collections.SqlFields ();
-		private Collections.SqlFields			tables	= new Collections.SqlFields ();
-		private Collections.SqlFields			wheres	= new Collections.SqlFields ();
-		private Collections.SqlFields			joins	= new Collections.SqlFields ();
+		private Collections.SqlFieldList			fields	= new Collections.SqlFieldList ();
+		private Collections.SqlFieldList			tables	= new Collections.SqlFieldList ();
+		private Collections.SqlFieldList			wheres	= new Collections.SqlFieldList ();
+		private Collections.SqlFieldList			joins	= new Collections.SqlFieldList ();
 
 		private SqlSelectPredicate				predicate;
 		private SqlSelectSetOp					setOp;

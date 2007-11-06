@@ -4,14 +4,14 @@
 namespace Epsitec.Cresus.Database.Collections
 {
 	/// <summary>
-	/// The <c>Collections.SqlFields</c> class manages a list of <c>SqlField</c> items.
+	/// The <c>Collections.SqlFieldList</c> class manages a list of <c>SqlField</c> items.
 	/// </summary>
-	public sealed class SqlFields : GenericList<SqlField>
+	public sealed class SqlFieldList : GenericList<SqlField>
 	{
 		/// <summary>
-		/// Initializes a new instance of the <see cref="SqlFields"/> class.
+		/// Initializes a new instance of the <see cref="SqlFieldList"/> class.
 		/// </summary>
-		public SqlFields()
+		public SqlFieldList()
 		{
 		}
 
@@ -119,7 +119,7 @@ namespace Epsitec.Cresus.Database.Collections
 		/// <returns>A SQL field object encoding a function applied to all items.</returns>
 		public SqlField Merge(SqlFunctionCode op)
 		{
-			return SqlFields.Merge (op, this.ToArray ());
+			return SqlFieldList.Merge (op, this.ToArray ());
 		}
 		
 		
@@ -140,8 +140,8 @@ namespace Epsitec.Cresus.Database.Collections
 			System.Array.Copy (fields,   0, h1, 0, n/2);
 			System.Array.Copy (fields, n/2, h2, 0, n-n/2);
 			
-			SqlField a = SqlFields.Merge (op, h1);
-			SqlField b = SqlFields.Merge (op, h2);
+			SqlField a = SqlFieldList.Merge (op, h1);
+			SqlField b = SqlFieldList.Merge (op, h2);
 			
 			return SqlField.CreateFunction (new SqlFunction (op, a, b));
 		}

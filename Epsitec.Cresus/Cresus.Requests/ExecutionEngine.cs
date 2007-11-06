@@ -5,7 +5,7 @@ using Epsitec.Cresus.Database;
 
 namespace Epsitec.Cresus.Requests
 {
-	using SqlFields = Database.Collections.SqlFields;
+	using SqlFields = Database.Collections.SqlFieldList;
 	
 	/// <summary>
 	/// La classe ExecutionEngine exécute les requêtes qui modifient la base de
@@ -133,7 +133,7 @@ namespace Epsitec.Cresus.Requests
 				this.PatchLogId (table, data_columns, sql_data_fields);
 			}
 			
-			SqlFields sql_cond_fields = new Database.Collections.SqlFields ();
+			SqlFields sql_cond_fields = new Database.Collections.SqlFieldList ();
 			
 			for (int i = 0; i < sql_cond_values.Count; i++)
 			{
@@ -230,7 +230,7 @@ namespace Epsitec.Cresus.Requests
 		
 		private SqlFields CreateSqlValues(DbTable table, SqlColumn[] columns, object[] values)
 		{
-			SqlFields sql_fields = new Database.Collections.SqlFields ();
+			SqlFields sql_fields = new Database.Collections.SqlFieldList ();
 			
 			for (int i = 0; i < columns.Length; i++)
 			{

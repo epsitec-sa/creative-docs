@@ -108,24 +108,24 @@
     <Compile Include="Cache\DbTables.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Collections\DbTypeDefs.cs" />
+    <Compile Include="Collections\DbTypeDefList.cs" />
     <Compile Include="Collections\GenericList.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Collections\NameList.cs" />
-    <Compile Include="Collections\DbColumns.cs">
+    <Compile Include="Collections\DbColumnList.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Collections\DbCommands.cs">
+    <Compile Include="Collections\DbCommandList.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Collections\DbTables.cs">
+    <Compile Include="Collections\DbTableList.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Collections\SqlColumns.cs">
+    <Compile Include="Collections\SqlColumnList.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Collections\SqlFields.cs">
+    <Compile Include="Collections\SqlFieldList.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="DbCardinality.cs" />

@@ -321,7 +321,7 @@ namespace Epsitec.Cresus.Database.Implementation
 			this.Append (";\n");
 		}
 
-		public void InsertData(string tableName, Collections.SqlFields fields)
+		public void InsertData(string tableName, Collections.SqlFieldList fields)
 		{
 			if (!this.ValidateName (tableName))
 			{
@@ -399,7 +399,7 @@ namespace Epsitec.Cresus.Database.Implementation
 			this.Append (");\n");
 		}
 
-		public void UpdateData(string tableName, Collections.SqlFields fields, Collections.SqlFields conditions)
+		public void UpdateData(string tableName, Collections.SqlFieldList fields, Collections.SqlFieldList conditions)
 		{
 			if (!this.ValidateName (tableName))
 			{
@@ -469,7 +469,7 @@ namespace Epsitec.Cresus.Database.Implementation
 			this.Append (";\n");
 		}
 
-		public void RemoveData(string tableName, Collections.SqlFields conditions)
+		public void RemoveData(string tableName, Collections.SqlFieldList conditions)
 		{
 			if (!this.ValidateName (tableName))
 			{
@@ -514,7 +514,7 @@ namespace Epsitec.Cresus.Database.Implementation
 		}
 
 		
-		public void ExecuteProcedure(string procedureName, Collections.SqlFields fields)
+		public void ExecuteProcedure(string procedureName, Collections.SqlFieldList fields)
 		{
 			//	TODO:  Add FirebirdSqlBuilder.ExecuteProcedure implementation
 			
@@ -522,7 +522,7 @@ namespace Epsitec.Cresus.Database.Implementation
 		}
 
 		
-		public void GetSqlParameters(System.Data.IDbCommand command, Collections.SqlFields fields)
+		public void GetSqlParameters(System.Data.IDbCommand command, Collections.SqlFieldList fields)
 		{
 			//	TODO:  Add FirebirdSqlBuilder.GetSqlParameters implementation
 #if false
@@ -553,7 +553,7 @@ namespace Epsitec.Cresus.Database.Implementation
 #endif
 		}
 
-		public void SetSqlParameters(System.Data.IDbCommand command, Collections.SqlFields fields)
+		public void SetSqlParameters(System.Data.IDbCommand command, Collections.SqlFieldList fields)
 		{
 			//	TODO:  Add FirebirdSqlBuilder.SetSqlParameters implementation
 			throw new System.NotImplementedException ();
@@ -904,7 +904,7 @@ namespace Epsitec.Cresus.Database.Implementation
 			}
 		}
 
-		private void Append(SqlJoin sqlJoin, Collections.SqlFields sqlTables, int row)
+		private void Append(SqlJoin sqlJoin, Collections.SqlFieldList sqlTables, int row)
 		{
 			System.Diagnostics.Debug.Assert (sqlJoin != null);
 			System.Diagnostics.Debug.Assert (row > 0);

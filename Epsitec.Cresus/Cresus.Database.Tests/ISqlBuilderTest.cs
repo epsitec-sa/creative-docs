@@ -204,7 +204,7 @@ namespace Epsitec.Cresus.Database
 			ISqlBuilder     sql_builder    = db_abstraction.SqlBuilder;
 			ISqlEngine		sql_engine     = db_abstraction.SqlEngine;
 
-			Collections.SqlFields fields = new Collections.SqlFields ();
+			Collections.SqlFieldList fields = new Collections.SqlFieldList ();
 
 			SqlField field;
 			
@@ -247,7 +247,7 @@ namespace Epsitec.Cresus.Database
 			ISqlBuilder     sql_builder    = db_abstraction.SqlBuilder;
 			ISqlEngine		sql_engine     = db_abstraction.SqlEngine;
 
-			Collections.SqlFields fields = new Collections.SqlFields ();
+			Collections.SqlFieldList fields = new Collections.SqlFieldList ();
 
 			SqlField field;
 			
@@ -308,7 +308,7 @@ namespace Epsitec.Cresus.Database
 			ISqlBuilder     sql_builder    = db_abstraction.SqlBuilder;
 			ISqlEngine		sql_engine     = db_abstraction.SqlEngine;
 
-			Collections.SqlFields conditions = new Collections.SqlFields ();
+			Collections.SqlFieldList conditions = new Collections.SqlFieldList ();
 
 			SqlField field1, field2;
 			
@@ -508,7 +508,7 @@ namespace Epsitec.Cresus.Database
 				insert_values[i] = (byte)(i);
 			}
 
-			Collections.SqlFields fields = new Collections.SqlFields ();
+			Collections.SqlFieldList fields = new Collections.SqlFieldList ();
 
 			SqlField field_ID, field_BLOB;
 			

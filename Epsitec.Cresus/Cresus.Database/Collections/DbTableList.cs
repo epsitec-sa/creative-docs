@@ -4,14 +4,14 @@
 namespace Epsitec.Cresus.Database.Collections
 {
 	/// <summary>
-	/// The <c>Collections.DbCommands</c> class manages a list of <c>IDbCommand</c> items.
+	/// The <c>Collections.DbTableList</c> class manages a list of <c>DbTable</c> items.
 	/// </summary>
-	public sealed class DbCommands : GenericList<System.Data.IDbCommand>
+	public sealed class DbTableList : NameList<DbTable>
 	{
 		/// <summary>
-		/// Initializes a new instance of the <see cref="DbCommands"/> class.
+		/// Initializes a new instance of the <see cref="DbTableList"/> class.
 		/// </summary>
-		public DbCommands()
+		public DbTableList()
 		{
 		}
 	}

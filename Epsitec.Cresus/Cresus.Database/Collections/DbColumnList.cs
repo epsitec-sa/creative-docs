@@ -4,14 +4,14 @@
 namespace Epsitec.Cresus.Database.Collections
 {
 	/// <summary>
-	/// The <c>Collections.DbColumns</c> class manages a list of <c>DbColumn</c> items.
+	/// The <c>Collections.DbColumnList</c> class manages a list of <c>DbColumn</c> items.
 	/// </summary>
-	public sealed class DbColumns : NameList<DbColumn>
+	public sealed class DbColumnList : NameList<DbColumn>
 	{
 		/// <summary>
-		/// Initializes a new instance of the <see cref="DbColumns"/> class.
+		/// Initializes a new instance of the <see cref="DbColumnList"/> class.
 		/// </summary>
-		public DbColumns()
+		public DbColumnList()
 		{
 		}
 

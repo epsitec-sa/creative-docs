@@ -48,7 +48,7 @@ namespace Epsitec.Cresus.Database
 		/// Gets the columns collection.
 		/// </summary>
 		/// <value>The columns.</value>
-		public Collections.SqlColumns			Columns
+		public Collections.SqlColumnList			Columns
 		{
 			get
 			{
@@ -120,7 +120,7 @@ namespace Epsitec.Cresus.Database
 						return;
 					}
 
-					this.primaryKey = new Collections.SqlColumns ();
+					this.primaryKey = new Collections.SqlColumnList ();
 				}
 
 				if ((value == null) ||
@@ -156,7 +156,7 @@ namespace Epsitec.Cresus.Database
 
 
 		private string							name;
-		private Collections.SqlColumns			columns = new Collections.SqlColumns ();
-		private Collections.SqlColumns			primaryKey;
+		private Collections.SqlColumnList			columns = new Collections.SqlColumnList ();
+		private Collections.SqlColumnList			primaryKey;
 	}
 }

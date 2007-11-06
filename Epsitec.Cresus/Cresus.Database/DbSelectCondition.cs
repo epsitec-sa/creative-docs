@@ -26,7 +26,7 @@ namespace Epsitec.Cresus.Database
 		public DbSelectCondition(ITypeConverter typeConverter, DbSelectRevision revision)
 		{
 			this.typeConverter = typeConverter;
-			this.sqlFields     = new Collections.SqlFields ();
+			this.sqlFields     = new Collections.SqlFieldList ();
 			this.revision      = revision;
 		}
 
@@ -169,7 +169,7 @@ namespace Epsitec.Cresus.Database
 		/// </summary>
 		/// <param name="mainTable">The main table.</param>
 		/// <param name="fields">The collection to which the conditions will be added.</param>
-		internal void CreateConditions(DbTable mainTable, Collections.SqlFields fields)
+		internal void CreateConditions(DbTable mainTable, Collections.SqlFieldList fields)
 		{
 			SqlField revisionCondition = null;
 			
@@ -267,7 +267,7 @@ namespace Epsitec.Cresus.Database
 		}
 
 		private ITypeConverter					typeConverter;
-		private Collections.SqlFields			sqlFields;
+		private Collections.SqlFieldList			sqlFields;
 		private DbSelectRevision				revision;
 		private DbCompareCombiner				combiner = DbCompareCombiner.And;
 	}
