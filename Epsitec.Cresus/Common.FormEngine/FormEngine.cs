@@ -47,7 +47,7 @@ namespace Epsitec.Common.FormEngine
 
 					if (i < containers.Count-1)
 					{
-						container.Margins = new Margins(0, 10, 0, 0);
+						container.Margins = new Margins(0, 20, 0, 0);
 					}
 				}
 
@@ -153,10 +153,13 @@ namespace Epsitec.Common.FormEngine
 
 				grid.RowDefinitions.Add(new Widgets.Layouts.RowDefinition());
 				grid.RowDefinitions[row].TopBorder = 5;
-				grid.RowDefinitions[row].BottomBorder = 2;
+				grid.RowDefinitions[row].BottomBorder = 0;
+
+				double size = System.Math.Max(200-(druids.Count-2)*25, 100);
 
 				StaticText text = new StaticText(root);
-				text.Text = string.Concat("<font size=\"125%\"><b>", builder.ToString(), "</b></font>");
+				text.Text = string.Concat("<font size=\"", size.ToString(System.Globalization.CultureInfo.InvariantCulture), "%\"><b>", builder.ToString(), "</b></font>");
+				text.PreferredHeight = size/100*16;
 
 				Widgets.Layouts.GridLayoutEngine.SetColumn(text, 0);
 				Widgets.Layouts.GridLayoutEngine.SetRow(text, row);

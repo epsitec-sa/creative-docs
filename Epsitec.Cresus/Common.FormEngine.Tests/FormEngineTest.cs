@@ -111,12 +111,18 @@ namespace Epsitec.Common.FormEngine
 				fields.Add(this.CreateField("[630C2]", Color.Empty, FieldDescription.SeparatorType.Normal, FieldDescription.SeparatorType.Normal, 5, 1, "First"));  // DateTravail
 				fields.Add(this.CreateField("[630D2]", Color.Empty, FieldDescription.SeparatorType.Normal, FieldDescription.SeparatorType.Normal, 5, 1, "First"));  // DateFacture
 				fields.Add(this.CreateField("[630E2]", Color.Empty, FieldDescription.SeparatorType.Normal, FieldDescription.SeparatorType.Normal, 5, 1, "First"));  // DateEcheance
+
 				fields.Add(this.CreateField("[630B2].[630S2]", Color.Empty, FieldDescription.SeparatorType.Title, FieldDescription.SeparatorType.Normal, 9, 1, "First"));  // Affaire.Client
 				fields.Add(this.CreateField("[630B2].[630T2]", Color.Empty, FieldDescription.SeparatorType.Normal, FieldDescription.SeparatorType.Normal, 9, 5, "First"));  // Affaire.Désignation
-				fields.Add(this.CreateField("[630B2].[63013].[63053]", Color.Empty, FieldDescription.SeparatorType.Title, FieldDescription.SeparatorType.Append, 3, 1, "First"));  // Affaire.SoldeDû.Montant
-				fields.Add(this.CreateField("[630B2].[63013].[63063].[630A]", Color.Empty, FieldDescription.SeparatorType.Normal, FieldDescription.SeparatorType.Line, 3, 1, "First"));  // Affaire.SoldeDû.Monnaie.Designation
+				fields.Add(this.CreateField("[630B2].[63003].[63043].[63053]", Color.Empty, FieldDescription.SeparatorType.Title, FieldDescription.SeparatorType.Normal, 9, 1, "First"));  // Affaire.Paiements.Valeur.PrixSimple.Montant
+				fields.Add(this.CreateField("[630B2].[63003].[63043].[63063].[630A]", Color.Empty, FieldDescription.SeparatorType.Title, FieldDescription.SeparatorType.Normal, 9, 1, "First"));  // Affaire.Paiements.Valeur.PrixSimple.Monnaie.Désignation
+				fields.Add(this.CreateField("[630B2].[63003].[63043].[63063].[630B]", Color.Empty, FieldDescription.SeparatorType.Normal, FieldDescription.SeparatorType.Normal, 9, 1, "First"));  // Affaire.Paiements.Valeur.PrixSimple.Monnaie.TauxChangeVersChf
+				
+				fields.Add(this.CreateField("[630B2].[63013].[63053]", Color.Empty, FieldDescription.SeparatorType.Title, FieldDescription.SeparatorType.Append, 3, 1, "Second"));  // Affaire.SoldeDû.Montant
+				fields.Add(this.CreateField("[630B2].[63013].[63063].[630A]", Color.Empty, FieldDescription.SeparatorType.Normal, FieldDescription.SeparatorType.Line, 3, 1, "Second"));  // Affaire.SoldeDû.Monnaie.Designation
+				
 				fields.Add(this.CreateField("[630L2].[630M].[630H]", Color.FromRgb(1, 0.5, 0.5), FieldDescription.SeparatorType.Title, FieldDescription.SeparatorType.Normal, 3, 1, "Second"));  // TotalFacturé.Prix.Ht
-				fields.Add(this.CreateField("[630L2].[630N]", Color.FromRgb(1, 0.9, 0.5), FieldDescription.SeparatorType.Normal, FieldDescription.SeparatorType.Normal, 3, 1, "Second"));  // TotalFacturé.TotalHt
+				fields.Add(this.CreateField("[630L2].[630N]", Color.FromRgb(1, 0.9, 0.5), FieldDescription.SeparatorType.Title, FieldDescription.SeparatorType.Normal, 3, 1, "Second"));  // TotalFacturé.TotalHt
 				fields.Add(this.CreateField("[630L2].[630O]", Color.FromRgb(1, 0.9, 0.5), FieldDescription.SeparatorType.Normal, FieldDescription.SeparatorType.Normal, 3, 1, "Second"));  // TotalFacturé.TotalTtc
 				fields.Add(this.CreateField("[630L2].[630P]", Color.FromRgb(1, 0.9, 0.5), FieldDescription.SeparatorType.Normal, FieldDescription.SeparatorType.Normal, 3, 1, "Second"));  // TotalFacturé.TotalTva
 			}
