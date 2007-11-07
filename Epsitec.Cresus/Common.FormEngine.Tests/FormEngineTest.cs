@@ -136,6 +136,8 @@ namespace Epsitec.Common.FormEngine
 				fields.Add(this.CreateField("[630L2].[630N]", Color.FromRgb(1, 0.9, 0.5), FieldDescription.SeparatorType.Normal, 3, 1, "Second"));  // TotalFacturé.TotalHt
 				fields.Add(this.CreateField("[630L2].[630O]", Color.FromRgb(1, 0.9, 0.5), FieldDescription.SeparatorType.Normal, 3, 1, "Second"));  // TotalFacturé.TotalTtc
 				fields.Add(this.CreateField("[630L2].[630P]", Color.FromRgb(1, 0.9, 0.5), FieldDescription.SeparatorType.Normal, 3, 1, "Second"));  // TotalFacturé.TotalTva
+
+				fields.Add(this.CreateSeparator(FieldDescription.FieldType.Title, "Second"));
 			}
 
 			if (name == "Affaire")

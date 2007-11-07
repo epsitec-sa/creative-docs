@@ -114,7 +114,7 @@ namespace Epsitec.Common.FormEngine
 					}
 					else
 					{
-						FieldDescription next = FormEngine.SearchNext(fields, i);
+						FieldDescription next = FormEngine.SearchNextField(fields, i);
 						this.CreateSeparator(root, grid, field, next, ref column, ref row, ref lastTitle);
 					}
 				}
@@ -276,14 +276,14 @@ namespace Epsitec.Common.FormEngine
 			}
 		}
 
-		static private FieldDescription SearchNext(List<FieldDescription> fields, int index)
+		static private FieldDescription SearchNextField(List<FieldDescription> fields, int index)
 		{
-			//	Cherche laprochaine description qui utilise le même container.
+			//	Cherche la prochaine description de champ (pas de séparateur) qui utilise le même container.
 			string container = fields[index].Container;
 
 			for (int i=index+1; i<fields.Count; i++)
 			{
-				if (fields[i].Container == container)
+				if (fields[i].Type == FieldDescription.FieldType.Field && fields[i].Container == container)
 				{
 					return fields[i];
 				}
