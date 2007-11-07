@@ -77,7 +77,9 @@ namespace Epsitec.Cresus.DataLayer
 			engine = new SchemaEngine (this.infrastructure);
 			DbTable table3 = engine.FindTableDefinition (Druid.Parse ("[630Q]"));
 
-			Assert.AreEqual (table1, table3);
+			Assert.AreNotEqual (table1, table3);
+			Assert.AreEqual (table1.Name, table3.Name);
+			Assert.AreEqual (table1.Columns.Count, table3.Columns.Count);
 		}
 
 		private DbInfrastructure infrastructure;

@@ -61,6 +61,7 @@ namespace Epsitec.Cresus.DataLayer
 				using (DbTransaction transaction = this.infrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadOnly))
 				{
 					table = this.infrastructure.ResolveDbTable (transaction, entityId);
+					transaction.Commit ();
 				}
 
 				if (table != null)
@@ -72,7 +73,34 @@ namespace Epsitec.Cresus.DataLayer
 			}
 		}
 
+		public DbTypeDef FindTypeDefinition(INamedType type)
+		{
+			DbTypeDef typeDef;
 
+			if (type == null)
+			{
+				return null;
+			}
+			else if (this.typeDefinitionCache.TryGetValue (type.CaptionId, out typeDef))
+			{
+				return typeDef;
+			}
+			else
+			{
+				using (DbTransaction transaction = this.infrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadOnly))
+				{
+					typeDef = this.infrastructure.ResolveDbType (transaction, type);
+					transaction.Commit ();
+				}
+
+				if (typeDef != null)
+				{
+					this.typeDefinitionCache[type.CaptionId] = typeDef;
+				}
+
+				return typeDef;
+			}
+		}
 
 		internal StructuredType GetEntityType(Druid entityId)
 		{

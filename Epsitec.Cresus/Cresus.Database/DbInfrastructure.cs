@@ -2008,14 +2008,17 @@ namespace Epsitec.Cresus.Database
 				}
 
 				DbKey     typeDefKey = new DbKey (typeDefId);
-				DbTypeDef typeDef    = this.ResolveDbType (transaction, typeDefKey);
-				
-				if (typeDef == null)
-				{
-					throw new Exceptions.GenericException (this.access, string.Format ("Missing type for column '{0}' in table '{1}'", columnName, dbTable.Name));
-				}
+				DbTypeDef typeDef    = typeDefId == 0 ? null : this.ResolveDbType (transaction, typeDefKey);
 
-				System.Diagnostics.Debug.Assert (typeDef.Key == typeDefKey);
+				if (typeDefId != 0)
+				{
+					if (typeDef == null)
+					{
+						throw new Exceptions.GenericException (this.access, string.Format ("Missing type for column '{0}' in table '{1}'", columnName, dbTable.Name));
+					}
+
+					System.Diagnostics.Debug.Assert (typeDef.Key == typeDefKey);
+				}
 
 				DbColumn dbColumn = DbTools.DeserializeFromXml<DbColumn> (columnInfo);
 

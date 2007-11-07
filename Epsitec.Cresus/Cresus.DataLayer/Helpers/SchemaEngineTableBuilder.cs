@@ -142,17 +142,18 @@ namespace Epsitec.Cresus.DataLayer.Helpers
 			
 			this.AssertTransaction ();
 
-			DbInfrastructure infrastructure = this.engine.Infrastructure;
-
-			table = infrastructure.ResolveDbTable (this.transaction, entityId);
+			table = this.engine.FindTableDefinition (entityId);
 
 			if (table != null)
 			{
+				//	Add the table to the list of tables, but not to the tables
+				//	dictionary - that one will only contain "new" tables.
+
 				this.tables.Add (table);
-				this.tablesDictionary[entityId] = table;
-				
 				return table;
 			}
+
+			DbInfrastructure infrastructure = this.engine.Infrastructure;
 
 			table = infrastructure.CreateDbTable (entityId, DbElementCat.ManagedUserData, DbRevisionMode.TrackChanges);
 
@@ -264,12 +265,19 @@ namespace Epsitec.Cresus.DataLayer.Helpers
 				throw new System.InvalidOperationException ("Cannot create type definition for structure");
 			}
 
-			Druid typeId = type.CaptionId;
 			DbTypeDef typeDef;
+			Druid typeId = type.CaptionId;
 
 			System.Diagnostics.Debug.Assert (typeId.IsValid);
 
 			if (this.typesDictionary.TryGetValue (typeId, out typeDef))
+			{
+				return typeDef;
+			}
+
+			typeDef = this.engine.FindTypeDefinition (type);
+
+			if (typeDef != null)
 			{
 				return typeDef;
 			}
