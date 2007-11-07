@@ -12,16 +12,32 @@ using System.Collections.Generic;
 
 namespace Epsitec.Cresus.DataLayer.Helpers
 {
+	/// <summary>
+	/// The <c>SchemaEngineTableBuilder</c> class is used internally to build
+	/// one or more <see cref="DbTable"/> instances based on entity ids.
+	/// </summary>
 	internal class SchemaEngineTableBuilder
 	{
+		/// <summary>
+		/// Initializes a new instance of the <see cref="SchemaEngineTableBuilder"/> class.
+		/// </summary>
+		/// <param name="engine">The schema engine.</param>
 		public SchemaEngineTableBuilder(SchemaEngine engine)
 		{
 			this.engine = engine;
 			this.tables = new List<DbTable> ();
 			this.newTables = new List<DbTable> ();
 			this.tablesDictionary = new Dictionary<Druid, DbTable> ();
+			this.typesDictionary = new Dictionary<Druid, DbTypeDef> ();
 		}
 
+		/// <summary>
+		/// Starts a transaction. This will inherit the currently active
+		/// transaction, if one is already active. Use this method inside
+		/// a <c>using</c> block.
+		/// </summary>
+		/// <returns>A <see cref="System.IDisposable"/> object which must be
+		/// disposed of when the transaction block ends.</returns>
 		public System.IDisposable BeginTransaction()
 		{
 			if ((this.transaction != null) &&
@@ -35,6 +51,10 @@ namespace Epsitec.Cresus.DataLayer.Helpers
 			return this.transaction;
 		}
 
+		/// <summary>
+		/// Commits the active transaction, which must have been started
+		/// with the <see cref="BeginTransaction"/> method.
+		/// </summary>
 		public void CommitTransaction()
 		{
 			this.transaction.Commit ();
@@ -42,6 +62,10 @@ namespace Epsitec.Cresus.DataLayer.Helpers
 		}
 
 
+		/// <summary>
+		/// Adds the table graph required to store data for the specified entity.
+		/// </summary>
+		/// <param name="entityId">The entity id.</param>
 		public void Add(Druid entityId)
 		{
 			System.Diagnostics.Debug.Assert (this.newTables.Count == 0);
@@ -60,11 +84,50 @@ namespace Epsitec.Cresus.DataLayer.Helpers
 			this.newTables.Clear ();
 		}
 
-		
+		/// <summary>
+		/// Gets the root table.
+		/// </summary>
+		/// <returns>The root <see cref="DbTable"/> instance or <c>null</c>.</returns>
+		public DbTable GetRootTable()
+		{
+			if (this.tables.Count > 0)
+			{
+				return this.tables[0];
+			}
+			else
+			{
+				return null;
+			}
+		}
+
+
+
+		public void UpdateCache()
+		{
+			foreach (KeyValuePair<Druid, DbTable> entry in this.tablesDictionary)
+			{
+				this.engine.AddTableDefinitionToCache (entry.Key, entry.Value);
+			}
+			foreach (KeyValuePair<Druid, DbTypeDef> entry in this.typesDictionary)
+			{
+				this.engine.AddTypeDefinitionToCache (entry.Key, entry.Value);
+			}
+		}
+
+
+		/// <summary>
+		/// Creates the table definition, without registering it with the database.
+		/// This method will be called recursively.
+		/// </summary>
+		/// <param name="entityId">The entity id.</param>
+		/// <returns>The root table for the entity.</returns>
 		private DbTable CreateTable(Druid entityId)
 		{
 			DbTable table;
 
+			//	If we have already generated a table definition for this entity,
+			//	just re-use it. This check makes circular references possible.
+			
 			if (this.tablesDictionary.TryGetValue (entityId, out table))
 			{
 				return table;
@@ -80,10 +143,18 @@ namespace Epsitec.Cresus.DataLayer.Helpers
 			this.AssertTransaction ();
 
 			DbInfrastructure infrastructure = this.engine.Infrastructure;
-			
-			table = infrastructure.CreateDbTable (entityId, DbElementCat.ManagedUserData, DbRevisionMode.TrackChanges);
 
-			table.DefineCaptionId (entityId);
+			table = infrastructure.ResolveDbTable (this.transaction, entityId);
+
+			if (table != null)
+			{
+				this.tables.Add (table);
+				this.tablesDictionary[entityId] = table;
+				
+				return table;
+			}
+
+			table = infrastructure.CreateDbTable (entityId, DbElementCat.ManagedUserData, DbRevisionMode.TrackChanges);
 
 			this.newTables.Add (table);
 			this.tables.Add (table);
@@ -101,13 +172,15 @@ namespace Epsitec.Cresus.DataLayer.Helpers
 				table.Columns.Add (column);
 			}
 
+			//	For every locally defined field (this includes field inserted
+			//	through an interface, possibly locally overridden), create a
+			//	column in the table.
+
 			foreach (StructuredTypeField field in entityType.Fields.Values)
 			{
 				if ((field.Membership == FieldMembership.Local) ||
 					(field.Membership == FieldMembership.LocalOverride))
 				{
-					//	Add a column for the specified field.
-
 					this.CreateColumn (table, field);
 				}
 			}
@@ -115,6 +188,11 @@ namespace Epsitec.Cresus.DataLayer.Helpers
 			return table;
 		}
 
+		/// <summary>
+		/// Creates a column to represent the specified field.
+		/// </summary>
+		/// <param name="table">The table.</param>
+		/// <param name="field">The field.</param>
 		private void CreateColumn(DbTable table, StructuredTypeField field)
 		{
 			switch (field.Relation)
@@ -136,11 +214,30 @@ namespace Epsitec.Cresus.DataLayer.Helpers
 			}
 		}
 
+		/// <summary>
+		/// Creates a data column for the specified field.
+		/// </summary>
+		/// <param name="table">The table.</param>
+		/// <param name="field">The field.</param>
+		private void CreateDataColumn(DbTable table, StructuredTypeField field)
+		{
+			DbTypeDef typeDef = this.CreateTypeDef (field.Type);
+			DbColumn  column  = new DbColumn (field.CaptionId, typeDef, DbColumnClass.Data, DbElementCat.ManagedUserData, DbRevisionMode.TrackChanges);
+
+			table.Columns.Add (column);
+		}
+
+		/// <summary>
+		/// Creates a relation column for the specified field.
+		/// </summary>
+		/// <param name="table">The table.</param>
+		/// <param name="field">The field.</param>
+		/// <param name="cardinality">The cardinality of the relation.</param>
 		private void CreateRelationColumn(DbTable table, StructuredTypeField field, DbCardinality cardinality)
 		{
 			System.Diagnostics.Debug.Assert (cardinality != DbCardinality.None);
 			System.Diagnostics.Debug.Assert (field.CaptionId.IsValid);
-			System.Diagnostics.Debug.Assert (field.Type is IStructuredType);
+			System.Diagnostics.Debug.Assert (field.Type is StructuredType);
 
 			DbTable  target = this.CreateTable (field.TypeId);
 			DbColumn column = DbTable.CreateRelationColumn (this.transaction, this.engine.Infrastructure, field.CaptionId, target, DbRevisionMode.TrackChanges, cardinality);
@@ -148,15 +245,13 @@ namespace Epsitec.Cresus.DataLayer.Helpers
 			table.Columns.Add (column);
 		}
 
-		private void CreateDataColumn(DbTable table, StructuredTypeField field)
-		{
-			DbTypeDef typeDef  = this.GetTypeDef (field.Type);
-			DbColumn  column   = new DbColumn (field.CaptionId, typeDef, DbColumnClass.Data, DbElementCat.ManagedUserData, DbRevisionMode.TrackChanges);
-
-			table.Columns.Add (column);
-		}
-
-		private DbTypeDef GetTypeDef(INamedType type)
+		/// <summary>
+		/// Gets the type definition object for the specified type. If the
+		/// type is not yet known, register it with the database.
+		/// </summary>
+		/// <param name="type">The type.</param>
+		/// <returns>The <see cref="DbTypeDef"/> instance or <c>null</c>.</returns>
+		private DbTypeDef CreateTypeDef(INamedType type)
 		{
 			this.AssertTransaction ();
 
@@ -169,10 +264,17 @@ namespace Epsitec.Cresus.DataLayer.Helpers
 				throw new System.InvalidOperationException ("Cannot create type definition for structure");
 			}
 
-			DbInfrastructure infrastructure = this.engine.Infrastructure;
-
+			Druid typeId = type.CaptionId;
 			DbTypeDef typeDef;
 
+			System.Diagnostics.Debug.Assert (typeId.IsValid);
+
+			if (this.typesDictionary.TryGetValue (typeId, out typeDef))
+			{
+				return typeDef;
+			}
+
+			DbInfrastructure infrastructure = this.engine.Infrastructure;
 			typeDef = infrastructure.ResolveDbType (this.transaction, type);
 
 			if (typeDef == null)
@@ -185,22 +287,11 @@ namespace Epsitec.Cresus.DataLayer.Helpers
 			System.Diagnostics.Debug.Assert (typeDef != null);
 			System.Diagnostics.Debug.Assert (!typeDef.Key.IsEmpty);
 
+			this.typesDictionary[typeId] = typeDef;
+
 			return typeDef;
 			
 		}
-
-		public DbTable GetFirstTable()
-		{
-			if (this.tables.Count > 0)
-			{
-				return this.tables[0];
-			}
-			else
-			{
-				return null;
-			}
-		}
-
 
 		private void AssertTransaction()
 		{
@@ -219,6 +310,7 @@ namespace Epsitec.Cresus.DataLayer.Helpers
 		List<DbTable> tables;
 		List<DbTable> newTables;
 		Dictionary<Druid, DbTable> tablesDictionary;
+		Dictionary<Druid, DbTypeDef> typesDictionary;
 		DbTransaction transaction;
 	}
 }

@@ -757,6 +757,20 @@ namespace Epsitec.Cresus.Database
 		}
 
 		/// <summary>
+		/// Resolves the database table definition with the specified id. This
+		/// will return the same object when called multiple times with the same
+		/// id, unless the cache is cleared with <c>ClearCaches</c>.
+		/// </summary>
+		/// <param name="transaction">The transaction.</param>
+		/// <param name="tableId">The table id.</param>
+		/// <returns>The table definition.</returns>
+		public DbTable ResolveDbTable(DbTransaction transaction, Druid tableId)
+		{
+			DbTable templateTable = new DbTable (tableId);
+			return this.ResolveDbTable (transaction, templateTable.Name);
+		}
+
+		/// <summary>
 		/// Finds all live database table definitions belonging to the specified
 		/// category (either internal or user data).
 		/// </summary>
@@ -983,6 +997,12 @@ namespace Epsitec.Cresus.Database
 			return value;
 		}
 
+		/// <summary>
+		/// Resolves a type definition from an <see cref="INamedType"/> instance.
+		/// </summary>
+		/// <param name="transaction">The transaction.</param>
+		/// <param name="type">The type object.</param>
+		/// <returns>The type definition or <c>null</c>.</returns>
 		public DbTypeDef ResolveDbType(DbTransaction transaction, INamedType type)
 		{
 			if (type == null)
@@ -991,7 +1011,6 @@ namespace Epsitec.Cresus.Database
 			}
 
 			DbTypeDef templateType = new DbTypeDef (type);
-
 			return this.ResolveDbType (transaction, templateType.Name);
 		}
 

@@ -19,6 +19,9 @@ namespace Epsitec.Cresus.DataLayer
 			this.infrastructure  = infrastructure;
 			this.context         = this.infrastructure.DefaultContext;
 			this.resourceManager = this.context.ResourceManager;
+
+			this.tableDefinitionCache = new Dictionary<Druid, DbTable> ();
+			this.typeDefinitionCache  = new Dictionary<Druid, DbTypeDef> ();
 		}
 
 
@@ -40,7 +43,33 @@ namespace Epsitec.Cresus.DataLayer
 				builder.CommitTransaction ();
 			}
 
-			return builder.GetFirstTable ();
+			builder.UpdateCache ();
+
+			return builder.GetRootTable ();
+		}
+
+		public DbTable FindTableDefinition(Druid entityId)
+		{
+			DbTable table;
+
+			if (this.tableDefinitionCache.TryGetValue (entityId, out table))
+			{
+				return table;
+			}
+			else
+			{
+				using (DbTransaction transaction = this.infrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadOnly))
+				{
+					table = this.infrastructure.ResolveDbTable (transaction, entityId);
+				}
+
+				if (table != null)
+				{
+					this.tableDefinitionCache[entityId] = table;
+				}
+
+				return table;
+			}
 		}
 
 
@@ -50,9 +79,36 @@ namespace Epsitec.Cresus.DataLayer
 			return TypeRosetta.CreateTypeObject (this.resourceManager, entityId) as StructuredType;
 		}
 
+		internal void AddTableDefinitionToCache(Druid entityId, DbTable table)
+		{
+			if (this.tableDefinitionCache.ContainsKey (entityId))
+			{
+				//	Nothing to do.
+			}
+			else
+			{
+				this.tableDefinitionCache[entityId] = table;
+			}
+		}
+
+		internal void AddTypeDefinitionToCache(Druid typeId, DbTypeDef type)
+		{
+			if (this.typeDefinitionCache.ContainsKey (typeId))
+			{
+				//	Nothing to do.
+			}
+			else
+			{
+				this.typeDefinitionCache[typeId] = type;
+			}
+		}
+
 
 		DbInfrastructure infrastructure;
 		DbContext context;
 		ResourceManager resourceManager;
+		
+		Dictionary<Druid, DbTable> tableDefinitionCache;
+		Dictionary<Druid, DbTypeDef> typeDefinitionCache;
 	}
 }

@@ -56,13 +56,30 @@ namespace Epsitec.Cresus.DataLayer
 		[Test]
 		public void Check01CreateTableDefinition()
 		{
-			System.Diagnostics.Debug.WriteLine ("Create Table Definition 1");
+			SchemaEngine engine = new SchemaEngine (this.infrastructure);
+			DbTransaction transaction = this.infrastructure.BeginTransaction (DbTransactionMode.ReadWrite);
+			engine.CreateTableDefinition (Druid.Parse ("[630Q]"));
+			transaction.Rollback ();
+			transaction.Dispose ();
+		}
 
+		[Test]
+		public void Check02CreateTwiceAndFindTableDefinition()
+		{
 			SchemaEngine engine = new SchemaEngine (this.infrastructure);
 
-			engine.CreateTableDefinition (Druid.Parse ("[630Q]"));
+			Assert.IsNull (engine.FindTableDefinition (Druid.Parse ("[630Q]")));
+			DbTable table1 = engine.CreateTableDefinition (Druid.Parse ("[630Q]"));
+			DbTable table2 = engine.CreateTableDefinition (Druid.Parse ("[630Q]"));
+
+			Assert.AreEqual (table1, table2);
+
+			engine = new SchemaEngine (this.infrastructure);
+			DbTable table3 = engine.FindTableDefinition (Druid.Parse ("[630Q]"));
+
+			Assert.AreEqual (table1, table3);
 		}
-		
+
 		private DbInfrastructure infrastructure;
 	}
 }
