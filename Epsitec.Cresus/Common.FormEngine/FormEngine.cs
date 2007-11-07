@@ -169,22 +169,30 @@ namespace Epsitec.Common.FormEngine
 					builder.Append(caption.DefaultLabel);
 				}
 
-				grid.RowDefinitions.Add(new Widgets.Layouts.RowDefinition());
-				grid.RowDefinitions[row].TopBorder = 5;
-				grid.RowDefinitions[row].BottomBorder = 0;
+				if (builder.Length == 0)
+				{
+					topSeparator = FieldDescription.SeparatorType.Line;
+				}
+				else
+				{
+					grid.RowDefinitions.Add(new Widgets.Layouts.RowDefinition());
+					grid.RowDefinitions[row].TopBorder = 5;
+					grid.RowDefinitions[row].BottomBorder = 0;
 
-				double size = System.Math.Max(200-(druids.Count-2)*25, 100);
+					double size = System.Math.Max(200-(druids.Count-2)*25, 100);
 
-				StaticText text = new StaticText(root);
-				text.Text = string.Concat("<font size=\"", size.ToString(System.Globalization.CultureInfo.InvariantCulture), "%\"><b>", builder.ToString(), "</b></font>");
-				text.PreferredHeight = size/100*16;
+					StaticText text = new StaticText(root);
+					text.Text = string.Concat("<font size=\"", size.ToString(System.Globalization.CultureInfo.InvariantCulture), "%\"><b>", builder.ToString(), "</b></font>");
+					text.PreferredHeight = size/100*16;
 
-				Widgets.Layouts.GridLayoutEngine.SetColumn(text, 0);
-				Widgets.Layouts.GridLayoutEngine.SetRow(text, row);
-				Widgets.Layouts.GridLayoutEngine.SetColumnSpan(text, 1+FormEngine.MaxColumnsRequired);
+					Widgets.Layouts.GridLayoutEngine.SetColumn(text, 0);
+					Widgets.Layouts.GridLayoutEngine.SetRow(text, row);
+					Widgets.Layouts.GridLayoutEngine.SetColumnSpan(text, 1+FormEngine.MaxColumnsRequired);
+
+					row++;
+				}
 
 				lastTitle = druids;
-				row++;
 			}
 
 			if (topSeparator == FieldDescription.SeparatorType.Line ||
