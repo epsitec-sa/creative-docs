@@ -68,7 +68,7 @@ namespace Epsitec.Common.Support.EntityEngine
 		{
 			this.EnsureCorrectThread ();
 
-			IStructuredTypeProvider provider = entity.ValueStore as IStructuredTypeProvider;
+			IStructuredTypeProvider provider = entity.OriginalValueStore as IStructuredTypeProvider;
 
 			if (provider == null)
 			{
