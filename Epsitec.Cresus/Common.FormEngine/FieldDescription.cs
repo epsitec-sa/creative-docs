@@ -8,7 +8,7 @@ using Epsitec.Common.Types;
 namespace Epsitec.Common.FormEngine
 {
 	/// <summary>
-	/// Décrit un champ ou un séparateur dans un masque de saisie.
+	/// Décrit un noeud, un champ ou un séparateur dans un masque de saisie.
 	/// </summary>
 	public class FieldDescription
 	{
@@ -90,6 +90,7 @@ namespace Epsitec.Common.FormEngine
 			//	Donne d'une liste de Druids séparés par des points.
 			//	Par exemple: listDruids = "[630B2].[630S2]"
 			System.Diagnostics.Debug.Assert(this.type == FieldType.Field);
+
 			this.fieldIds = new List<Druid>();
 			string[] druids = listDruids.Split('.');
 			foreach (string druid in druids)

@@ -160,6 +160,10 @@ namespace Epsitec.Common.FormEngine
 
 				fields.Add(this.CreateField("[630A2]", Color.Empty, FieldDescription.SeparatorType.Normal, 4, 1, "First"));  // Numéro
 
+				fields.Add(this.CreateSeparator(FieldDescription.FieldType.Title, "First"));
+				fields.Add(this.CreateField("[630B2].[63013].[63053]", Color.Empty, FieldDescription.SeparatorType.Append, 3, 1, "First"));  // Affaire.SoldeDû.Montant
+				fields.Add(this.CreateField("[630B2].[63013].[63063].[630A]", Color.Empty, FieldDescription.SeparatorType.Normal, 3, 1, "First"));  // Affaire.SoldeDû.Monnaie.Designation
+				
 				List<FieldDescription> subFields = new List<FieldDescription>();
 				subFields.Add(this.CreateSeparator(FieldDescription.FieldType.Title, "First"));
 				subFields.Add(this.CreateField("[630B2].[630S2]", Color.Empty, FieldDescription.SeparatorType.Normal, 9, 1, "First"));  // Affaire.Client
@@ -170,10 +174,6 @@ namespace Epsitec.Common.FormEngine
 				subFields.Add(this.CreateField("[630B2].[63003].[63043].[63063].[630A]", Color.Empty, FieldDescription.SeparatorType.Normal, 9, 1, "First"));  // Affaire.Paiements.Valeur.PrixSimple.Monnaie.Désignation
 				subFields.Add(this.CreateField("[630B2].[63003].[63043].[63063].[630B]", Color.Empty, FieldDescription.SeparatorType.Normal, 9, 1, "First"));  // Affaire.Paiements.Valeur.PrixSimple.Monnaie.TauxChangeVersChf
 				fields.Add(this.CreateNode(subFields));
-				
-				fields.Add(this.CreateSeparator(FieldDescription.FieldType.Title, "Second"));
-				fields.Add(this.CreateField("[630B2].[63013].[63053]", Color.Empty, FieldDescription.SeparatorType.Append, 3, 1, "Second"));  // Affaire.SoldeDû.Montant
-				fields.Add(this.CreateField("[630B2].[63013].[63063].[630A]", Color.Empty, FieldDescription.SeparatorType.Normal, 3, 1, "Second"));  // Affaire.SoldeDû.Monnaie.Designation
 				
 				fields.Add(this.CreateSeparator(FieldDescription.FieldType.Title, "Second"));
 				fields.Add(this.CreateField("[630L2].[630M].[630H]", Color.FromRgb(1, 0.5, 0.5), FieldDescription.SeparatorType.Normal, 3, 1, "Second"));  // TotalFacturé.Prix.Ht

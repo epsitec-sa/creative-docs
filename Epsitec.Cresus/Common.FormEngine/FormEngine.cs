@@ -61,6 +61,7 @@ namespace Epsitec.Common.FormEngine
 		private List<FieldDescription> Develop(List<FieldDescription> fields)
 		{
 			//	Retourne une liste développée qui ne contient plus de noeuds.
+			//	On s'assure que les noms des containers soient forcément différents pour le contenu d'un noeud.
 			List<FieldDescription> dst = new List<FieldDescription>();
 
 			int rank = 0;
