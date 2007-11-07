@@ -671,13 +671,16 @@ namespace Epsitec.Common.Types
 		public void CheckObservableListCopyOnWrite()
 		{
 			CowList<int> original = new CowList<int> ();
-			IList<int>   copy     = original.GetCopy ();
+			ObservableList<int> copy = original.GetCopy ();
 
 			Assert.IsNull (copy);
 
 			original.AddRange (new int[] { 1, 2, 3 });
 
 			Assert.IsFalse (original.HasCopy);
+
+			original.CollectionChanged += delegate { Assert.Fail (); };
+			original.CollectionChanging += delegate { Assert.Fail (); };
 
 			original.Lock ();
 			original.Add (4);
@@ -688,8 +691,14 @@ namespace Epsitec.Common.Types
 			Assert.IsTrue (Collection.CompareEqual (new int[] { 1, 2, 3 }, original));
 			Assert.IsTrue (Collection.CompareEqual (new int[] { 1, 2, 3, 4 }, copy));
 
+			int changeCount = 0;
+
+			copy.CollectionChanging += delegate { changeCount++; };
+
 			original.Remove (2);
 			original.Insert (0, 8);
+
+			Assert.AreEqual (2, changeCount);
 			
 			Assert.IsTrue (Collection.CompareEqual (new int[] { 1, 2, 3 }, original));
 			Assert.IsTrue (Collection.CompareEqual (new int[] { 8, 1, 3, 4 }, copy));
@@ -1024,7 +1033,7 @@ namespace Epsitec.Common.Types
 				}
 			}
 
-			public IList<T> GetCopy()
+			public ObservableList<T> GetCopy()
 			{
 				return this.copy;
 			}
