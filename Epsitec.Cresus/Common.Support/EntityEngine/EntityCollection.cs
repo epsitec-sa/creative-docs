@@ -12,10 +12,11 @@ namespace Epsitec.Common.Support.EntityEngine
 {
 	public sealed class EntityCollection<T> : ObservableList<T> where T : AbstractEntity
 	{
-		public EntityCollection(string id, AbstractEntity container)
+		public EntityCollection(string id, AbstractEntity container, bool copyOnWrite)
 		{
 			this.id = id;
 			this.container = container;
+			this.state = copyOnWrite ? State.CopyOnWrite : State.Default;
 		}
 
 		public void SetCopyOnWrite(bool enable)
@@ -32,28 +33,29 @@ namespace Epsitec.Common.Support.EntityEngine
 
 		protected override ObservableList<T> GetWorkingList()
 		{
-			switch (this.state)
+			if (this.container.IsDefiningOriginalValues)
 			{
-				case State.CopyOnWrite:
-					return this.CreateCopyOnWrite ();
+				return this;
+			}
+			else
+			{
+				switch (this.state)
+				{
+					case State.CopyOnWrite:
+						this.state = State.Copied;
+						return this.container.CopyFieldCollection<T> (this.id, this);
 
-				case State.Copied:
-					throw new System.InvalidOperationException ("Copied collection may not be changed");
+					case State.Copied:
+						throw new System.InvalidOperationException ("Copied collection may not be changed");
 
-				case State.Default:
-					return this;
+					case State.Default:
+						return this;
 
-				default:
-					throw new System.NotImplementedException ();
+					default:
+						throw new System.NotImplementedException ();
+				}
 			}
 		}
-
-		private EntityCollection<T> CreateCopyOnWrite()
-		{
-			this.state = State.Copied;
-			return this.container.CopyFieldCollection<T> (id, this);
-		}
-
 
 		private enum State
 		{

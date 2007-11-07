@@ -168,7 +168,7 @@ namespace Epsitec.Cresus.DataLayer
 		DbInfrastructure infrastructure;
 		DbContext context;
 		ResourceManager resourceManager;
-		
+
 		Dictionary<Druid, DbTable> tableDefinitionCache;
 		Dictionary<Druid, DbTypeDef> typeDefinitionCache;
 	}

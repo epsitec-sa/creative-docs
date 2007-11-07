@@ -172,6 +172,7 @@
     <Compile Include="CaptionCacheTest.cs" />
     <Compile Include="CommandTest.cs" />
     <Compile Include="CodeGeneratorTest.cs" />
+    <Compile Include="EntityTest.cs" />
     <Compile Include="ResourceModuleTest.cs" />
     <Compile Include="ResourceAccessorTest.cs" />
     <Compile Include="CultureMapListTest.cs" />

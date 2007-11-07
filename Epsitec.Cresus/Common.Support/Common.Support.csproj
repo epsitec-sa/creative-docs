@@ -140,7 +140,9 @@
     <Compile Include="CodeGeneration\CodeVisibility.cs" />
     <Compile Include="CodeGeneration\CodeAccessibility.cs" />
     <Compile Include="CodeGeneration\Sample.cs" />
+    <Compile Include="EntityEngine\EntityDataState.cs" />
     <Compile Include="EntityEngine\EntityCollection.cs" />
+    <Compile Include="EntityEngine\EntityDataVersion.cs" />
     <Compile Include="EntityEngine\EntityExpression.cs" />
     <Compile Include="EntityEngine\EntityExpressionEncoding.cs" />
     <Compile Include="Platform\Win32\Clipboard.cs" />

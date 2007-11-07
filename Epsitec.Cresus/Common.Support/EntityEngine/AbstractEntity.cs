@@ -19,8 +19,6 @@ namespace Epsitec.Common.Support.EntityEngine
 		protected AbstractEntity()
 		{
 			this.context = EntityContext.Current;
-			this.originalValues = this.context.CreateValueStore (this);
-			this.modifiedValues = null;
 		}
 
 		/// <summary>
@@ -30,21 +28,56 @@ namespace Epsitec.Common.Support.EntityEngine
 		/// <returns>The id of the <see cref="StructuredType"/>.</returns>
 		public abstract Druid GetStructuredTypeId();
 
-		internal IValueStore OriginalValueStore
+
+		public EntityDataState DataState
 		{
 			get
 			{
-				return this.originalValues;
+				if (this.modifiedValues != null)
+				{
+					return EntityDataState.Modified;
+				}
+				else
+				{
+					return EntityDataState.Unchanged;
+				}
 			}
 		}
 
-		internal IValueStore ModifiedValueStore
+		public bool IsDefiningOriginalValues
 		{
 			get
 			{
-				return this.modifiedValues;
+				if (this.defineOriginalValuesCount > 0)
+				{
+					return true;
+				}
+				else
+				{
+					return false;
+				}
 			}
 		}
+
+		public bool ContainsDataVersion(EntityDataVersion version)
+		{
+			switch (version)
+			{
+				case EntityDataVersion.Modified:
+					return this.modifiedValues != null;
+				case EntityDataVersion.Original:
+					return this.originalValues != null;
+				default:
+					throw new System.NotImplementedException ();
+			}
+		}
+
+
+		public System.IDisposable DefineOriginalValues()
+		{
+			return new DefineOriginalValuesHelper (this);
+		}
+		
 
 		public T GetField<T>(string id)
 		{
@@ -53,21 +86,7 @@ namespace Epsitec.Common.Support.EntityEngine
 			System.Diagnostics.Debug.Assert (field != null);
 			System.Diagnostics.Debug.Assert (field.Relation != FieldRelation.Collection);
 
-			object value;
-
-			if (this.modifiedValues != null)
-			{
-				value = this.modifiedValues.GetValue (id);
-
-				if (UndefinedValue.IsUndefinedValue (value))
-				{
-					value = this.originalValues.GetValue (id);
-				}
-			}
-			else
-			{
-				value = this.originalValues.GetValue (id);
-			}
+			object value = this.InternalGetValue (id);
 
 			if (UnknownValue.IsUnknownValue (value))
 			{
@@ -84,22 +103,7 @@ namespace Epsitec.Common.Support.EntityEngine
 
 		public IList<T> GetFieldCollection<T>(string id) where T : AbstractEntity
 		{
-			object value;
-
-			if (this.modifiedValues != null)
-			{
-				value = this.modifiedValues.GetValue (id);
-
-				if (UndefinedValue.IsUndefinedValue (value))
-				{
-					value = this.originalValues.GetValue (id);
-				}
-			}
-			else
-			{
-				value = this.originalValues.GetValue (id);
-			}
-
+			object  value = this.InternalGetValue (id);
 			IList<T> list = value as IList<T>;
 
 			if (list == null)
@@ -109,9 +113,11 @@ namespace Epsitec.Common.Support.EntityEngine
 					//	The value store does not (yet) contain a collection for the
 					//	specified items. We have to allocate one :
 
-					list = new EntityCollection<T> (id, this);
-
-					this.originalValues.SetValue (id, list);
+					using (this.DefineOriginalValues ())
+					{
+						list = new EntityCollection<T> (id, this, true);
+						this.InternalSetValue (id, list);
+					}
 				}
 				else
 				{
@@ -120,17 +126,6 @@ namespace Epsitec.Common.Support.EntityEngine
 			}
 
 			return list;
-		}
-
-		internal EntityCollection<T> CopyFieldCollection<T>(string id, EntityCollection<T> collection) where T : AbstractEntity
-		{
-			EntityCollection<T> copy = new EntityCollection<T> (id, this);
-
-			copy.AddRange (collection);
-
-			this.InternalSetValue (id, copy);
-
-			return copy;
 		}
 
 		public void SetField<T>(string id, T oldValue, T newValue)
@@ -175,23 +170,106 @@ namespace Epsitec.Common.Support.EntityEngine
 			}
 		}
 
-		private void InternalSetValue(string id, object value)
-		{
-			if (this.modifiedValues == null)
-			{
-				this.modifiedValues = this.context.CreateValueStore (this);
-			}
-
-			this.modifiedValues.SetValue (id, value);
-		}
-
+		
+		
 		public static TResult GetCalculation<T, TResult>(T entity, string id, System.Func<T, TResult> func)
 		{
 			return func (entity);
 		}
 
+		
+		
+		private object InternalGetValue(string id)
+		{
+			object value;
+
+			if ((this.modifiedValues != null) &&
+				(this.IsDefiningOriginalValues == false))
+			{
+				value = this.modifiedValues.GetValue (id);
+
+				if ((this.originalValues != null) &&
+					(UndefinedValue.IsUndefinedValue (value)))
+				{
+					value = this.originalValues.GetValue (id);
+				}
+			}
+			else if (this.originalValues != null)
+			{
+				value = this.originalValues.GetValue (id);
+			}
+			else
+			{
+				value = UndefinedValue.Instance;
+			}
+			
+			return value;
+		}
+		
+		private void InternalSetValue(string id, object value)
+		{
+			if (this.IsDefiningOriginalValues)
+			{
+				if (this.originalValues == null)
+				{
+					this.originalValues = this.context.CreateValueStore (this);
+				}
+
+				this.originalValues.SetValue (id, value);
+			}
+			else
+			{
+				if (this.modifiedValues == null)
+				{
+					this.modifiedValues = this.context.CreateValueStore (this);
+				}
+
+				this.modifiedValues.SetValue (id, value);
+			}
+		}
+
+		internal EntityCollection<T> CopyFieldCollection<T>(string id, EntityCollection<T> collection) where T : AbstractEntity
+		{
+			System.Diagnostics.Debug.Assert (this.IsDefiningOriginalValues == false);
+
+			EntityCollection<T> copy = new EntityCollection<T> (id, this, false);
+
+			copy.AddRange (collection);
+
+			this.InternalSetValue (id, copy);
+
+			return copy;
+		}
+
+		internal IStructuredTypeProvider GetStructuredTypeProvider()
+		{
+			return (this.originalValues ?? this.modifiedValues) as IStructuredTypeProvider;
+		}
+
+		private sealed class DefineOriginalValuesHelper : System.IDisposable
+		{
+			public DefineOriginalValuesHelper(AbstractEntity entity)
+			{
+				this.entity = entity;
+				System.Threading.Interlocked.Increment (ref this.entity.defineOriginalValuesCount);
+			}
+
+			#region IDisposable Members
+
+			public void Dispose()
+			{
+				System.Threading.Interlocked.Decrement (ref this.entity.defineOriginalValuesCount);
+			}
+
+			#endregion
+
+			AbstractEntity entity;
+		}
+
+
 		private EntityContext context;
 		private IValueStore originalValues;
 		private IValueStore modifiedValues;
+		private int defineOriginalValuesCount;
 	}
 }
