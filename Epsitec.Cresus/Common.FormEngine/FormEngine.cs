@@ -57,7 +57,7 @@ namespace Epsitec.Common.FormEngine
 
 		private Widget CreateFormContainer(Druid entityId, List<FieldDescription> fields, string container)
 		{
-			//	Crée un conteneur d'un masque de saisie pour une entité donnée.
+			//	Crée un conteneur (super-colonne) d'un masque de saisie pour une entité donnée.
 			Caption entityCaption = this.resourceManager.GetCaption(entityId);
 			StructuredType entity = TypeRosetta.GetTypeObject(entityCaption) as StructuredType;
 
@@ -69,6 +69,7 @@ namespace Epsitec.Common.FormEngine
 			root.DataSource = new UI.DataSource();
 			root.DataSource.AddDataSource("Data", entityData);
 
+			//	Première passe pour déterminer quelles colonnes contiennent des labels.
 			int column = 0, row = 0;
 			bool[] isLabel = new bool[FormEngine.MaxColumnsRequired];
 			foreach (FieldDescription field in fields)
@@ -79,6 +80,7 @@ namespace Epsitec.Common.FormEngine
 				}
 			}
 
+			//	Crée les différentes colonnes.
 			Widgets.Layouts.GridLayoutEngine grid = new Widgets.Layouts.GridLayoutEngine();
 			for (int i=0; i<FormEngine.MaxColumnsRequired; i++)
 			{
@@ -95,6 +97,7 @@ namespace Epsitec.Common.FormEngine
 
 			Widgets.Layouts.LayoutEngine.SetLayoutEngine(root, grid);
 
+			//	Deuxième passe pour générer le contenu.
 			column = 0;
 			row = 0;
 			List<Druid> lastTitle = null;
@@ -112,6 +115,7 @@ namespace Epsitec.Common.FormEngine
 
 		private void PrecreateField(FieldDescription field, bool[] isLabel, ref int column, ref int row)
 		{
+			//	Permière passe pour déterminer quelles colonnes contiennent des labels.
 			int columnsRequired = System.Math.Min(field.ColumnsRequired, FormEngine.MaxColumnsRequired-1);
 
 			if (column+1+columnsRequired > FormEngine.MaxColumnsRequired)  // dépasse à droite ?
@@ -135,16 +139,8 @@ namespace Epsitec.Common.FormEngine
 
 		private void CreateField(UI.Panel root, Widgets.Layouts.GridLayoutEngine grid, string path, FieldDescription field, ref int column, ref int row, ref List<Druid> lastTitle)
 		{
-			//	Crée les widgets pour un champ dans la grille.
+			//	Deuxième passe pour crée les widgets pour un champ dans la grille.
 			FieldDescription.SeparatorType topSeparator = field.TopSeparator;
-
-			if (topSeparator == FieldDescription.SeparatorType.Title)
-			{
-				if (field.FieldIds.Count < 2)
-				{
-					topSeparator = FieldDescription.SeparatorType.Line;
-				}
-			}
 
 			if (topSeparator == FieldDescription.SeparatorType.Title)
 			{
@@ -155,7 +151,7 @@ namespace Epsitec.Common.FormEngine
 				{
 					Druid druid = druids[i];
 
-					if (lastTitle != null && i < lastTitle.Count && lastTitle[i] == druid)
+					if (lastTitle != null && i < lastTitle.Count && lastTitle[i] == druid)  // label déjà mis précédemment ?
 					{
 						continue;
 					}
@@ -169,9 +165,9 @@ namespace Epsitec.Common.FormEngine
 					builder.Append(caption.DefaultLabel);
 				}
 
-				if (builder.Length == 0)
+				if (builder.Length == 0)  // titre sans texte ?
 				{
-					topSeparator = FieldDescription.SeparatorType.Line;
+					topSeparator = FieldDescription.SeparatorType.Line;  // il faudra mettre une simple ligne
 				}
 				else
 				{
@@ -192,7 +188,7 @@ namespace Epsitec.Common.FormEngine
 					row++;
 				}
 
-				lastTitle = druids;
+				lastTitle = druids;  // pour se rappeler du titre précédent
 			}
 
 			if (topSeparator == FieldDescription.SeparatorType.Line ||
