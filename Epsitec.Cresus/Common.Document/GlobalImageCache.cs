@@ -695,9 +695,11 @@ namespace Epsitec.Common.Document
 					this.originalImage = null;
 				}
 
-				System.Diagnostics.Debug.Assert(this.originalImage != null);
-				this.originalSize = this.originalImage.Size;
-				this.SetRecentTimeStamp();
+				if (this.originalImage != null)
+				{
+					this.originalSize = this.originalImage.Size;
+					this.SetRecentTimeStamp ();
+				}
 			}
 
 			protected void TryReadImageData(bool read)

@@ -1797,6 +1797,32 @@ namespace Epsitec.Common.Document.Objects
 								 this.document.Modifier.ActiveViewer.IsFocused);
 			}
 
+			if (this.textFlow.HasActiveTextBox && this.graphics != null && this.internalOperation == InternalOperation.Painting)
+			{
+				Text.ITextFrame frame;
+				double cx, cy, ascender, descender, cursorAngle;
+				this.textFlow.TextNavigator.GetCursorGeometry (out frame, out cx, out cy, out ascender, out descender, out cursorAngle);
+				cursorAngle *= 180.0/System.Math.PI;  // en degrés
+				cursorAngle -= 90.0;
+
+				if (frame == this.textFrame)
+				{
+					Point center;
+					double angle;
+					this.Transform (cx, out center, out angle);
+					// cursorAngle permet de pencher le curseur sur de l'italique.
+					Point c1 = Drawing.Transform.RotatePointDeg (center, angle+cursorAngle, new Point (center.X, center.Y+ascender));
+					Point c2 = Drawing.Transform.RotatePointDeg (center, angle+cursorAngle, new Point (center.X, center.Y+descender));
+
+					if (!this.textFlow.TextNavigator.HasRealSelection)
+					{
+						this.graphics.LineWidth = 3.0/drawingContext.ScaleX;
+						this.graphics.AddLine (c1, c2);
+						this.graphics.RenderSolid (Color.FromAlphaRgb (1, 1, 1, 1));
+					}
+				}
+			}
+			
 			this.textFlow.TextStory.TextContext.ShowControlCharacters = this.textFlow.HasActiveTextBox && this.drawingContext != null && this.drawingContext.TextShowControlCharacters;
 			this.textFlow.TextFitter.RenderTextFrame(this.textFrame, this);
 

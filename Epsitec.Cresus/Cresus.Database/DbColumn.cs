@@ -107,7 +107,7 @@ namespace Epsitec.Cresus.Database
 		/// <summary>
 		/// Initializes a new instance of the <see cref="DbColumn"/> class.
 		/// </summary>
-		/// <param name="name">The name.</param>
+		/// <param name="captionId">The caption id.</param>
 		/// <param name="type">The type.</param>
 		/// <param name="columnClass">The column class.</param>
 		/// <param name="category">The category.</param>
@@ -378,7 +378,11 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 
-		public DbCardinality Cardinality
+		/// <summary>
+		/// Gets the cardinality for the column relation.
+		/// </summary>
+		/// <value>The cardinality.</value>
+		public DbCardinality					Cardinality
 		{
 			get
 			{

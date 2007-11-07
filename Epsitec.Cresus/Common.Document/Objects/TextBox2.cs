@@ -497,6 +497,7 @@ namespace Epsitec.Common.Document.Objects
 		{
 			//	Effectue une opération quelconque sur le texte du pavé.
 			this.internalOperation = op;
+			double angle;
 
 			if ( this.internalOperation == InternalOperation.Painting )
 			{
@@ -525,8 +526,8 @@ namespace Epsitec.Common.Document.Objects
 				ot = port.Transform;
 			}
 
-			//?double angle = Point.ComputeAngleDeg(p1, p2);
-			double angle = this.direction;
+			//?angle = Point.ComputeAngleDeg(p1, p2);
+			angle = this.direction;
 
 			Point pp1 = Transform.RotatePointDeg(p1, -angle, p1);
 			Point pp2 = Transform.RotatePointDeg(p1, -angle, p2);
@@ -566,6 +567,28 @@ namespace Epsitec.Common.Document.Objects
 				this.redrawArea.MergeWith(pbr);
 				this.redrawArea.MergeWith(ptl);
 				this.redrawArea.MergeWith(ptr);
+			}
+
+
+			if (this.textFlow.HasActiveTextBox && this.graphics != null && this.internalOperation == InternalOperation.Painting)
+			{
+				Text.ITextFrame frame;
+				double cx, cy, ascender, descender;
+				this.textFlow.TextNavigator.GetCursorGeometry (out frame, out cx, out cy, out ascender, out descender, out angle);
+
+				if (frame == this.textFrame)
+				{
+					double tan = System.Math.Tan (System.Math.PI/2.0 - angle);
+					Point c1 = new Point (cx+tan*descender, cy+descender);
+					Point c2 = new Point (cx+tan*ascender, cy+ascender);
+
+					if (!this.textFlow.TextNavigator.HasRealSelection)
+					{
+						this.graphics.LineWidth = 3.0/drawingContext.ScaleX;
+						this.graphics.AddLine(c1, c2);
+						this.graphics.RenderSolid(Color.FromAlphaRgb (1, 1, 1, 1));
+					}
+				}
 			}
 
 			this.textFlow.TextStory.TextContext.ShowControlCharacters = this.textFlow.HasActiveTextBox && this.drawingContext != null && this.drawingContext.TextShowControlCharacters;

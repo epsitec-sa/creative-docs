@@ -71,8 +71,7 @@ namespace Epsitec.Cresus.DataLayer.Helpers
 			}
 
 			StructuredType entityType = this.engine.GetEntityType (entityId);
-			string         tableName  = this.engine.GetUserFriendlyTableName (entityId);
-
+			
 			if (entityType == null)
 			{
 				throw new System.ArgumentException ("Invalid entity ID", "entityId");
@@ -82,7 +81,7 @@ namespace Epsitec.Cresus.DataLayer.Helpers
 
 			DbInfrastructure infrastructure = this.engine.Infrastructure;
 			
-			table = infrastructure.CreateDbTable (tableName, DbElementCat.ManagedUserData, DbRevisionMode.TrackChanges);
+			table = infrastructure.CreateDbTable (entityId, DbElementCat.ManagedUserData, DbRevisionMode.TrackChanges);
 
 			table.DefineCaptionId (entityId);
 

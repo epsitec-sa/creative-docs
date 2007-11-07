@@ -1,9 +1,10 @@
 //	Copyright © 2003-2007, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
-using System.Collections.Generic;
-
+using Epsitec.Common.Support;
 using Epsitec.Common.Types;
+
+using System.Collections.Generic;
 
 namespace Epsitec.Cresus.Database
 {
@@ -575,6 +576,29 @@ namespace Epsitec.Cresus.Database
 		}
 
 		/// <summary>
+		/// Creates a minimal database table definition. This will only contain
+		/// the basic id and status columns required by <c>DbInfrastructure</c>.
+		/// </summary>
+		/// <param name="captionId">The table caption id.</param>
+		/// <param name="category">The category.</param>
+		/// <param name="revisionMode">The revision mode.</param>
+		/// <returns>The database table definition.</returns>
+		public DbTable CreateDbTable(Druid captionId, DbElementCat category, DbRevisionMode revisionMode)
+		{
+			switch (category)
+			{
+				case DbElementCat.Internal:
+					throw new Exceptions.GenericException (this.access, string.Format ("Users may not create internal tables (table '{0}')", captionId));
+
+				case DbElementCat.ManagedUserData:
+					return this.CreateTable (captionId, category, revisionMode, DbReplicationMode.Automatic);
+
+				default:
+					throw new Exceptions.GenericException (this.access, string.Format ("Unsupported category {0} specified for table '{1}'", category, captionId));
+			}
+		}
+
+		/// <summary>
 		/// Registers a new table for this database. This creates both the
 		/// metadata and the database table itself.
 		/// </summary>
@@ -1103,28 +1127,50 @@ namespace Epsitec.Cresus.Database
 		/// <returns></returns>
 		internal DbTable CreateTable(string name, DbElementCat category, DbRevisionMode revisionMode, DbReplicationMode replicationMode)
 		{
+			DbTable table = new DbTable (name);
+
+			this.DefineBasicTable (table, category, revisionMode, replicationMode);
+
+			return table;
+		}
+
+		/// <summary>
+		/// Creates a table definition with the minimum id, status and log columns.
+		/// </summary>
+		/// <param name="captionId">The table caption id.</param>
+		/// <param name="category">The table category.</param>
+		/// <param name="revisionMode">The table revision mode.</param>
+		/// <param name="replicationMode">The table replication mode.</param>
+		/// <returns></returns>
+		internal DbTable CreateTable(Druid captionId, DbElementCat category, DbRevisionMode revisionMode, DbReplicationMode replicationMode)
+		{
+			DbTable table = new DbTable (captionId);
+
+			this.DefineBasicTable (table, category, revisionMode, replicationMode);
+
+			return table;
+		}
+
+		private void DefineBasicTable(DbTable table, DbElementCat category, DbRevisionMode revisionMode, DbReplicationMode replicationMode)
+		{
 			System.Diagnostics.Debug.Assert (revisionMode != DbRevisionMode.Unknown);
 			System.Diagnostics.Debug.Assert (replicationMode != DbReplicationMode.Unknown);
-			
-			DbTable table = new DbTable (name);
-			
+
 			DbTypeDef typeDef = this.internalTypes[Tags.TypeKeyId];
-			
-			DbColumn colId   = new DbColumn (Tags.ColumnId,     this.internalTypes[Tags.TypeKeyId],     DbColumnClass.KeyId,       DbElementCat.Internal, DbRevisionMode.Immutable);
-			DbColumn colStat = new DbColumn (Tags.ColumnStatus, this.internalTypes[Tags.TypeKeyStatus], DbColumnClass.KeyStatus,   DbElementCat.Internal);
-			DbColumn colLog  = new DbColumn (Tags.ColumnRefLog, this.internalTypes[Tags.TypeKeyId],     DbColumnClass.RefInternal, DbElementCat.Internal);
-			
+
+			DbColumn colId   = new DbColumn (Tags.ColumnId, this.internalTypes[Tags.TypeKeyId], DbColumnClass.KeyId, DbElementCat.Internal, DbRevisionMode.Immutable);
+			DbColumn colStat = new DbColumn (Tags.ColumnStatus, this.internalTypes[Tags.TypeKeyStatus], DbColumnClass.KeyStatus, DbElementCat.Internal);
+			DbColumn colLog  = new DbColumn (Tags.ColumnRefLog, this.internalTypes[Tags.TypeKeyId], DbColumnClass.RefInternal, DbElementCat.Internal);
+
 			table.DefineCategory (category);
 			table.DefineRevisionMode (revisionMode);
 			table.DefineReplicationMode (replicationMode);
-			
+
 			table.Columns.Add (colId);
 			table.Columns.Add (colStat);
 			table.Columns.Add (colLog);
-			
+
 			table.PrimaryKeys.Add (colId);
-			
-			return table;
 		}
 
 		/// <summary>

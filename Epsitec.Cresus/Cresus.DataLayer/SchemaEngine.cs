@@ -50,23 +50,6 @@ namespace Epsitec.Cresus.DataLayer
 			return TypeRosetta.CreateTypeObject (this.resourceManager, entityId) as StructuredType;
 		}
 
-		internal string GetUserFriendlyTableName(Druid entityId)
-		{
-			Caption entityCaption = this.resourceManager.GetCaption (entityId);
-			string  entityName    = entityCaption.Name;
-
-			return string.Concat (entityName, " ", entityId.ToString ());
-		}
-
-		internal string GetColumnName(Druid columnId)
-		{
-			Caption columnCaption = this.resourceManager.GetCaption (columnId);
-			string  columnDruid   = Druid.ToFullString (columnId.ToLong ());
-			string  columnName    = columnCaption.Name;
-
-			return string.Concat ("@", columnDruid, ":", columnCaption);
-		}
-
 
 		DbInfrastructure infrastructure;
 		DbContext context;

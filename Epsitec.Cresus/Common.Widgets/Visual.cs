@@ -632,7 +632,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public bool								IsFocused
+		public virtual bool						IsFocused
 		{
 			get
 			{
