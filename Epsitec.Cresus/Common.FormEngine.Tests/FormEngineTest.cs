@@ -95,44 +95,57 @@ namespace Epsitec.Common.FormEngine
 			if (name == "Adresse")
 			{
 				itemId = Druid.Parse("[63081]");  // Adresse
-				fields.Add(this.CreateField("[63083]", Color.Empty, FieldDescription.SeparatorType.Line, FieldDescription.SeparatorType.Normal, 9, 2, "First"));  // Rue
-				fields.Add(this.CreateField("[63093]", Color.Empty, FieldDescription.SeparatorType.Normal, FieldDescription.SeparatorType.Normal, 2, 1, "First"));  // Numéro
-				fields.Add(this.CreateField("[630A3]", Color.Empty, FieldDescription.SeparatorType.Normal, FieldDescription.SeparatorType.Line, 5, 1, "First"));  // Case
-				fields.Add(this.CreateField("[630C3]", Color.Empty, FieldDescription.SeparatorType.Normal, FieldDescription.SeparatorType.Append, 2, 1, "First"));  // Npa
-				fields.Add(this.CreateField("[630B3]", Color.Empty, FieldDescription.SeparatorType.Normal, FieldDescription.SeparatorType.Line, 6, 1, "First"));  // Ville
-				fields.Add(this.CreateField("[630D3]", Color.Empty, FieldDescription.SeparatorType.Normal, FieldDescription.SeparatorType.Normal, 9, 1, "First"));  // Etat
-				fields.Add(this.CreateField("[630E3]", Color.Empty, FieldDescription.SeparatorType.Normal, FieldDescription.SeparatorType.Normal, 9, 1, "First"));  // Pays
+
+				fields.Add(this.CreateSeparator(FieldDescription.FieldType.Line, "First"));
+				fields.Add(this.CreateField("[63083]", Color.Empty, FieldDescription.SeparatorType.Normal, 9, 2, "First"));  // Rue
+				fields.Add(this.CreateField("[63093]", Color.Empty, FieldDescription.SeparatorType.Normal, 2, 1, "First"));  // Numéro
+				fields.Add(this.CreateField("[630A3]", Color.Empty, FieldDescription.SeparatorType.Normal, 5, 1, "First"));  // Case
+				fields.Add(this.CreateSeparator(FieldDescription.FieldType.Line, "First"));
+				fields.Add(this.CreateField("[630C3]", Color.Empty, FieldDescription.SeparatorType.Append, 2, 1, "First"));  // Npa
+				fields.Add(this.CreateField("[630B3]", Color.Empty, FieldDescription.SeparatorType.Normal, 6, 1, "First"));  // Ville
+				fields.Add(this.CreateSeparator(FieldDescription.FieldType.Line, "First"));
+				fields.Add(this.CreateField("[630D3]", Color.Empty, FieldDescription.SeparatorType.Normal, 9, 1, "First"));  // Etat
+				fields.Add(this.CreateField("[630E3]", Color.Empty, FieldDescription.SeparatorType.Normal, 9, 1, "First"));  // Pays
 			}
 
 			if (name == "Facture")
 			{
 				itemId = Druid.Parse("[63021]"); // Facture
-				fields.Add(this.CreateField("[630A2]", Color.Empty, FieldDescription.SeparatorType.Normal, FieldDescription.SeparatorType.Normal, 4, 1, "First"));  // Numéro
-				fields.Add(this.CreateField("[630C2]", Color.Empty, FieldDescription.SeparatorType.Normal, FieldDescription.SeparatorType.Normal, 5, 1, "First"));  // DateTravail
-				fields.Add(this.CreateField("[630D2]", Color.Empty, FieldDescription.SeparatorType.Normal, FieldDescription.SeparatorType.Normal, 5, 1, "First"));  // DateFacture
-				fields.Add(this.CreateField("[630E2]", Color.Empty, FieldDescription.SeparatorType.Normal, FieldDescription.SeparatorType.Normal, 5, 1, "First"));  // DateEcheance
 
-				fields.Add(this.CreateField("[630B2].[630S2]", Color.Empty, FieldDescription.SeparatorType.Title, FieldDescription.SeparatorType.Normal, 9, 1, "First"));  // Affaire.Client
-				fields.Add(this.CreateField("[630B2].[630T2]", Color.Empty, FieldDescription.SeparatorType.Normal, FieldDescription.SeparatorType.Normal, 9, 5, "First"));  // Affaire.Désignation
-				fields.Add(this.CreateField("[630B2].[63003].[63043].[63053]", Color.Empty, FieldDescription.SeparatorType.Title, FieldDescription.SeparatorType.Normal, 9, 1, "First"));  // Affaire.Paiements.Valeur.PrixSimple.Montant
-				fields.Add(this.CreateField("[630B2].[63003].[63043].[63063].[630A]", Color.Empty, FieldDescription.SeparatorType.Title, FieldDescription.SeparatorType.Normal, 9, 1, "First"));  // Affaire.Paiements.Valeur.PrixSimple.Monnaie.Désignation
-				fields.Add(this.CreateField("[630B2].[63003].[63043].[63063].[630B]", Color.Empty, FieldDescription.SeparatorType.Normal, FieldDescription.SeparatorType.Normal, 9, 1, "First"));  // Affaire.Paiements.Valeur.PrixSimple.Monnaie.TauxChangeVersChf
+				fields.Add(this.CreateField("[630A2]", Color.Empty, FieldDescription.SeparatorType.Normal, 4, 1, "First"));  // Numéro
+				fields.Add(this.CreateField("[630C2]", Color.Empty, FieldDescription.SeparatorType.Normal, 5, 1, "First"));  // DateTravail
+				fields.Add(this.CreateField("[630D2]", Color.Empty, FieldDescription.SeparatorType.Normal, 5, 1, "First"));  // DateFacture
+				fields.Add(this.CreateField("[630E2]", Color.Empty, FieldDescription.SeparatorType.Normal, 5, 1, "First"));  // DateEcheance
+
+				fields.Add(this.CreateSeparator(FieldDescription.FieldType.Title, "First"));
+				fields.Add(this.CreateField("[630B2].[630S2]", Color.Empty, FieldDescription.SeparatorType.Normal, 9, 1, "First"));  // Affaire.Client
+				fields.Add(this.CreateField("[630B2].[630T2]", Color.Empty, FieldDescription.SeparatorType.Normal, 9, 5, "First"));  // Affaire.Désignation
+				fields.Add(this.CreateSeparator(FieldDescription.FieldType.Title, "First"));
+				fields.Add(this.CreateField("[630B2].[63003].[63043].[63053]", Color.Empty, FieldDescription.SeparatorType.Normal, 9, 1, "First"));  // Affaire.Paiements.Valeur.PrixSimple.Montant
+				fields.Add(this.CreateSeparator(FieldDescription.FieldType.Title, "First"));
+				fields.Add(this.CreateField("[630B2].[63003].[63043].[63063].[630A]", Color.Empty, FieldDescription.SeparatorType.Normal, 9, 1, "First"));  // Affaire.Paiements.Valeur.PrixSimple.Monnaie.Désignation
+				fields.Add(this.CreateField("[630B2].[63003].[63043].[63063].[630B]", Color.Empty, FieldDescription.SeparatorType.Normal, 9, 1, "First"));  // Affaire.Paiements.Valeur.PrixSimple.Monnaie.TauxChangeVersChf
 				
-				fields.Add(this.CreateField("[630B2].[63013].[63053]", Color.Empty, FieldDescription.SeparatorType.Title, FieldDescription.SeparatorType.Append, 3, 1, "Second"));  // Affaire.SoldeDû.Montant
-				fields.Add(this.CreateField("[630B2].[63013].[63063].[630A]", Color.Empty, FieldDescription.SeparatorType.Normal, FieldDescription.SeparatorType.Line, 3, 1, "Second"));  // Affaire.SoldeDû.Monnaie.Designation
+				fields.Add(this.CreateSeparator(FieldDescription.FieldType.Title, "Second"));
+				fields.Add(this.CreateField("[630B2].[63013].[63053]", Color.Empty, FieldDescription.SeparatorType.Append, 3, 1, "Second"));  // Affaire.SoldeDû.Montant
+				fields.Add(this.CreateField("[630B2].[63013].[63063].[630A]", Color.Empty, FieldDescription.SeparatorType.Normal, 3, 1, "Second"));  // Affaire.SoldeDû.Monnaie.Designation
 				
-				fields.Add(this.CreateField("[630L2].[630M].[630H]", Color.FromRgb(1, 0.5, 0.5), FieldDescription.SeparatorType.Title, FieldDescription.SeparatorType.Normal, 3, 1, "Second"));  // TotalFacturé.Prix.Ht
-				fields.Add(this.CreateField("[630L2].[630N]", Color.FromRgb(1, 0.9, 0.5), FieldDescription.SeparatorType.Title, FieldDescription.SeparatorType.Normal, 3, 1, "Second"));  // TotalFacturé.TotalHt
-				fields.Add(this.CreateField("[630L2].[630O]", Color.FromRgb(1, 0.9, 0.5), FieldDescription.SeparatorType.Normal, FieldDescription.SeparatorType.Normal, 3, 1, "Second"));  // TotalFacturé.TotalTtc
-				fields.Add(this.CreateField("[630L2].[630P]", Color.FromRgb(1, 0.9, 0.5), FieldDescription.SeparatorType.Normal, FieldDescription.SeparatorType.Normal, 3, 1, "Second"));  // TotalFacturé.TotalTva
+				fields.Add(this.CreateSeparator(FieldDescription.FieldType.Title, "Second"));
+				fields.Add(this.CreateField("[630L2].[630M].[630H]", Color.FromRgb(1, 0.5, 0.5), FieldDescription.SeparatorType.Normal, 3, 1, "Second"));  // TotalFacturé.Prix.Ht
+				fields.Add(this.CreateSeparator(FieldDescription.FieldType.Title, "Second"));
+				fields.Add(this.CreateField("[630L2].[630N]", Color.FromRgb(1, 0.9, 0.5), FieldDescription.SeparatorType.Normal, 3, 1, "Second"));  // TotalFacturé.TotalHt
+				fields.Add(this.CreateField("[630L2].[630O]", Color.FromRgb(1, 0.9, 0.5), FieldDescription.SeparatorType.Normal, 3, 1, "Second"));  // TotalFacturé.TotalTtc
+				fields.Add(this.CreateField("[630L2].[630P]", Color.FromRgb(1, 0.9, 0.5), FieldDescription.SeparatorType.Normal, 3, 1, "Second"));  // TotalFacturé.TotalTva
 			}
 
 			if (name == "Affaire")
 			{
 				itemId = Druid.Parse("[63051]"); // Affaire
-				fields.Add(this.CreateField("[630S2]", Color.Empty, FieldDescription.SeparatorType.Normal, FieldDescription.SeparatorType.Normal, 4, 1, "First"));  // Client
-				fields.Add(this.CreateField("[630T2]", Color.Empty, FieldDescription.SeparatorType.Normal, FieldDescription.SeparatorType.Extend, 9, 5, "First"));  // Désignation
-				fields.Add(this.CreateField("[63013].[63053]", Color.FromRgb(1, 0.9, 0.5), FieldDescription.SeparatorType.Title, FieldDescription.SeparatorType.Normal, 3, 1, "First"));  // SoldeDû.Montant
+
+				fields.Add(this.CreateField("[630S2]", Color.Empty, FieldDescription.SeparatorType.Normal, 4, 1, "First"));  // Client
+				fields.Add(this.CreateField("[630T2]", Color.Empty, FieldDescription.SeparatorType.Normal, 9, 5, "First"));  // Désignation
+				fields.Add(this.CreateSeparator(FieldDescription.FieldType.Title, "First"));
+				fields.Add(this.CreateField("[63013].[63053]", Color.FromRgb(1, 0.9, 0.5), FieldDescription.SeparatorType.Normal, 3, 1, "First"));  // SoldeDû.Montant
 			}
 
 			System.Console.Out.WriteLine("Génère l'interface pour le DRUID {0}", itemId);
@@ -141,13 +154,23 @@ namespace Epsitec.Common.FormEngine
 			return engine.CreateForm(itemId, fields);
 		}
 
-		protected FieldDescription CreateField(string listDruids, Color backColor, FieldDescription.SeparatorType topSeparator, FieldDescription.SeparatorType bottomSeparator, int columns, int rows, string container)
+		protected FieldDescription CreateSeparator(FieldDescription.FieldType type, string container)
+		{
+			FieldDescription field = new FieldDescription();
+
+			field.Type = type;
+			field.Container = container;
+			
+			return field;
+		}
+
+		protected FieldDescription CreateField(string listDruids, Color backColor, FieldDescription.SeparatorType separator, int columns, int rows, string container)
 		{
 			FieldDescription field = new FieldDescription(listDruids);
 
+			field.Type = FieldDescription.FieldType.Field;
 			field.BackColor = backColor;
-			field.TopSeparator = topSeparator;
-			field.BottomSeparator = bottomSeparator;
+			field.Separator = separator;
 			field.ColumnsRequired = columns;
 			field.RowsRequired = rows;
 			field.Container = container;

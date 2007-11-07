@@ -12,26 +12,44 @@ namespace Epsitec.Common.FormEngine
 	/// </summary>
 	public class FieldDescription
 	{
+		public enum FieldType
+		{
+			Field	= 0,	// champ
+			Line    = 1,	// trait horizontal
+			Title   = 2,	// titre automatique
+		}
+
 		public enum SeparatorType
 		{
-			Normal  = 0,	// petit séparateur standard
-			Compact = 1,	// les champs se touchent (chevauchement d'un pixel)
-			Extend  = 2,	// grand séparateur
-			Line    = 3,	// grand séparateur avec trait horizontal
-			Title   = 4,	// titre automatique
-			Append  = 5,	// le champ suivant sera sur la même ligne
+			Normal	= 0,	// les champs sont proches
+			Compact	= 1,	// les champs se touchent (chevauchement d'un pixel)
+			Extend	= 2,	// les champs sont très espacés
+			Append	= 3,	// le champ suivant sera sur la même ligne
 		}
 
 
 		public FieldDescription()
 		{
 			//	Constructeur.
+			this.type = FieldType.Field;
 			this.fieldIds = new List<Druid>();
 			this.backColor = Color.Empty;
-			this.topSeparator = SeparatorType.Normal;
-			this.bottomSeparator = SeparatorType.Normal;
+			this.separator = SeparatorType.Normal;
 			this.columnsRequired = 10;
 			this.rowsRequired = 1;
+		}
+
+		public FieldType Type
+		{
+			//	Type de cet élément.
+			get
+			{
+				return this.type;
+			}
+			set
+			{
+				this.type = value;
+			}
 		}
 
 		public FieldDescription(string listDruids) : this()
@@ -71,29 +89,16 @@ namespace Epsitec.Common.FormEngine
 			return builder.ToString();
 		}
 
-		public SeparatorType TopSeparator
+		public SeparatorType Separator
 		{
-			//	Type du séparateur avant le champ (donc en dessus).
+			//	Type de séparation après le champ suivant.
 			get
 			{
-				return this.topSeparator;
+				return this.separator;
 			}
 			set
 			{
-				this.topSeparator = value;
-			}
-		}
-
-		public SeparatorType BottomSeparator
-		{
-			//	Type du séparateur après le champ (donc en dessous).
-			get
-			{
-				return this.bottomSeparator;
-			}
-			set
-			{
-				this.bottomSeparator = value;
+				this.separator = value;
 			}
 		}
 
@@ -154,10 +159,10 @@ namespace Epsitec.Common.FormEngine
 		}
 
 
+		protected FieldType type;
 		protected List<Druid> fieldIds;
 		protected Color backColor;
-		protected SeparatorType topSeparator;
-		protected SeparatorType bottomSeparator;
+		protected SeparatorType separator;
 		protected int columnsRequired;
 		protected int rowsRequired;
 		protected string container;

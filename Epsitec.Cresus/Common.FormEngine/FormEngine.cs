@@ -76,7 +76,7 @@ namespace Epsitec.Common.FormEngine
 			{
 				if (field.Container == container)
 				{
-					this.PrecreateField(field, isLabel, ref column, ref row);
+					this.PrecreateField(field, isLabel, ref column);
 				}
 			}
 
@@ -101,50 +101,66 @@ namespace Epsitec.Common.FormEngine
 			column = 0;
 			row = 0;
 			List<Druid> lastTitle = null;
-			foreach (FieldDescription field in fields)
+			for (int i=0; i<fields.Count; i++)
 			{
+				FieldDescription field = fields[i];
+
 				if (field.Container == container)
 				{
-					string path = field.GetPath("Data");
-					this.CreateField(root, grid, path, field, ref column, ref row, ref lastTitle);
+					if (field.Type == FieldDescription.FieldType.Field)
+					{
+						string path = field.GetPath("Data");
+						this.CreateField(root, grid, path, field, ref column, ref row);
+					}
+					else
+					{
+						FieldDescription next = FormEngine.SearchNext(fields, i);
+						this.CreateSeparator(root, grid, field, next, ref column, ref row, ref lastTitle);
+					}
 				}
 			}
 
 			return root;
 		}
 
-		private void PrecreateField(FieldDescription field, bool[] isLabel, ref int column, ref int row)
+		private void PrecreateField(FieldDescription field, bool[] isLabel, ref int column)
 		{
 			//	Permière passe pour déterminer quelles colonnes contiennent des labels.
-			int columnsRequired = System.Math.Min(field.ColumnsRequired, FormEngine.MaxColumnsRequired-1);
-
-			if (column+1+columnsRequired > FormEngine.MaxColumnsRequired)  // dépasse à droite ?
+			if (field.Type == FieldDescription.FieldType.Field)
 			{
-				row++;
-				column = 0;
-			}
+				int columnsRequired = System.Math.Min(field.ColumnsRequired, FormEngine.MaxColumnsRequired-1);
 
-			isLabel[column] = true;
+				if (column+1+columnsRequired > FormEngine.MaxColumnsRequired)  // dépasse à droite ?
+				{
+					column = 0;
+				}
 
-			if (field.BottomSeparator == FieldDescription.SeparatorType.Append)
-			{
-				column += 1+columnsRequired;
-			}
-			else
-			{
-				row++;
-				column = 0;
+				isLabel[column] = true;
+
+				if (field.Separator == FieldDescription.SeparatorType.Append)
+				{
+					column += 1+columnsRequired;
+				}
+				else
+				{
+					column = 0;
+				}
 			}
 		}
 
-		private void CreateField(UI.Panel root, Widgets.Layouts.GridLayoutEngine grid, string path, FieldDescription field, ref int column, ref int row, ref List<Druid> lastTitle)
+		private void CreateSeparator(UI.Panel root, Widgets.Layouts.GridLayoutEngine grid, FieldDescription field, FieldDescription nextField, ref int column, ref int row, ref List<Druid> lastTitle)
 		{
-			//	Deuxième passe pour crée les widgets pour un champ dans la grille.
-			FieldDescription.SeparatorType topSeparator = field.TopSeparator;
+			//	Deuxième passe pour crée les widgets pour un séparateur dans la grille.
+			FieldDescription.FieldType type = field.Type;
 
-			if (topSeparator == FieldDescription.SeparatorType.Title)
+			if (nextField == null)
 			{
-				List<Druid> druids = field.FieldIds;
+				type = FieldDescription.FieldType.Line;
+			}
+
+			if (type == FieldDescription.FieldType.Title)
+			{
+				List<Druid> druids = nextField.FieldIds;
 				System.Text.StringBuilder builder = new System.Text.StringBuilder();
 
 				for (int i=0; i<druids.Count-1; i++)
@@ -167,7 +183,7 @@ namespace Epsitec.Common.FormEngine
 
 				if (builder.Length == 0)  // titre sans texte ?
 				{
-					topSeparator = FieldDescription.SeparatorType.Line;  // il faudra mettre une simple ligne
+					type = FieldDescription.FieldType.Line;  // il faudra mettre une simple ligne
 				}
 				else
 				{
@@ -191,11 +207,11 @@ namespace Epsitec.Common.FormEngine
 				lastTitle = druids;  // pour se rappeler du titre précédent
 			}
 
-			if (topSeparator == FieldDescription.SeparatorType.Line ||
-				topSeparator == FieldDescription.SeparatorType.Title)
+			if (type == FieldDescription.FieldType.Line ||
+				type == FieldDescription.FieldType.Title)
 			{
 				grid.RowDefinitions.Add(new Widgets.Layouts.RowDefinition());
-				grid.RowDefinitions[row].TopBorder = (topSeparator == FieldDescription.SeparatorType.Title) ? 0 : 10;
+				grid.RowDefinitions[row].TopBorder = (type == FieldDescription.FieldType.Title) ? 0 : 10;
 				grid.RowDefinitions[row].BottomBorder = 10;
 
 				Separator sep = new Separator(root);
@@ -207,7 +223,11 @@ namespace Epsitec.Common.FormEngine
 
 				row++;
 			}
+		}
 
+		private void CreateField(UI.Panel root, Widgets.Layouts.GridLayoutEngine grid, string path, FieldDescription field, ref int column, ref int row)
+		{
+			//	Deuxième passe pour crée les widgets pour un champ dans la grille.
 			UI.Placeholder placeholder = new Epsitec.Common.UI.Placeholder(root);
 			placeholder.SetBinding(UI.Placeholder.ValueProperty, new Binding(BindingMode.TwoWay, path));
 			placeholder.BackColor = field.BackColor;
@@ -216,7 +236,7 @@ namespace Epsitec.Common.FormEngine
 			grid.RowDefinitions.Add(new Widgets.Layouts.RowDefinition());
 
 			double m = 2;
-			switch (field.BottomSeparator)
+			switch (field.Separator)
 			{
 				case FieldDescription.SeparatorType.Compact:
 					m = -1;
@@ -224,10 +244,6 @@ namespace Epsitec.Common.FormEngine
 
 				case FieldDescription.SeparatorType.Extend:
 					m = 10;
-					break;
-
-				case FieldDescription.SeparatorType.Line:
-					m = 0;
 					break;
 			}
 			grid.RowDefinitions[row].BottomBorder = m;
@@ -249,7 +265,7 @@ namespace Epsitec.Common.FormEngine
 			Widgets.Layouts.GridLayoutEngine.SetRow(placeholder, row);
 			Widgets.Layouts.GridLayoutEngine.SetColumnSpan(placeholder, 1+columnsRequired);
 
-			if (field.BottomSeparator == FieldDescription.SeparatorType.Append)
+			if (field.Separator == FieldDescription.SeparatorType.Append)
 			{
 				column += 1+columnsRequired;
 			}
@@ -258,22 +274,22 @@ namespace Epsitec.Common.FormEngine
 				row++;
 				column = 0;
 			}
+		}
 
-			if (field.BottomSeparator == FieldDescription.SeparatorType.Line)
+		static private FieldDescription SearchNext(List<FieldDescription> fields, int index)
+		{
+			//	Cherche laprochaine description qui utilise le même container.
+			string container = fields[index].Container;
+
+			for (int i=index+1; i<fields.Count; i++)
 			{
-				grid.RowDefinitions.Add(new Widgets.Layouts.RowDefinition());
-				grid.RowDefinitions[row].TopBorder = 10;
-				grid.RowDefinitions[row].BottomBorder = 10;
-
-				Separator sep = new Separator(root);
-				sep.PreferredHeight = 1;
-
-				Widgets.Layouts.GridLayoutEngine.SetColumn(sep, 0);
-				Widgets.Layouts.GridLayoutEngine.SetRow(sep, row);
-				Widgets.Layouts.GridLayoutEngine.SetColumnSpan(sep, 1+FormEngine.MaxColumnsRequired);
-
-				row++;
+				if (fields[i].Container == container)
+				{
+					return fields[i];
+				}
 			}
+
+			return null;
 		}
 
 
