@@ -97,12 +97,13 @@ namespace Epsitec.Common.FormEngine
 
 			column = 0;
 			row = 0;
+			List<Druid> lastTitle = null;
 			foreach (FieldDescription field in fields)
 			{
 				if (field.Container == container)
 				{
 					string path = field.GetPath("Data");
-					this.CreateField(root, grid, path, field, ref column, ref row);
+					this.CreateField(root, grid, path, field, ref column, ref row, ref lastTitle);
 				}
 			}
 
@@ -132,21 +133,38 @@ namespace Epsitec.Common.FormEngine
 			}
 		}
 
-		private void CreateField(UI.Panel root, Widgets.Layouts.GridLayoutEngine grid, string path, FieldDescription field, ref int column, ref int row)
+		private void CreateField(UI.Panel root, Widgets.Layouts.GridLayoutEngine grid, string path, FieldDescription field, ref int column, ref int row, ref List<Druid> lastTitle)
 		{
 			//	Crée les widgets pour un champ dans la grille.
-			if (field.TopSeparator == FieldDescription.SeparatorType.Title)
+			FieldDescription.SeparatorType topSeparator = field.TopSeparator;
+
+			if (topSeparator == FieldDescription.SeparatorType.Title)
 			{
-				System.Text.StringBuilder builder = new System.Text.StringBuilder();
+				if (field.FieldIds.Count < 2)
+				{
+					topSeparator = FieldDescription.SeparatorType.Line;
+				}
+			}
+
+			if (topSeparator == FieldDescription.SeparatorType.Title)
+			{
 				List<Druid> druids = field.FieldIds;
+				System.Text.StringBuilder builder = new System.Text.StringBuilder();
+
 				for (int i=0; i<druids.Count-1; i++)
 				{
-					if (i > 0)
+					Druid druid = druids[i];
+
+					if (lastTitle != null && i < lastTitle.Count && lastTitle[i] == druid)
+					{
+						continue;
+					}
+
+					if (builder.Length > 0)
 					{
 						builder.Append(", ");
 					}
 
-					Druid druid = druids[i];
 					Caption caption = this.resourceManager.GetCaption(druid);
 					builder.Append(caption.DefaultLabel);
 				}
@@ -165,14 +183,15 @@ namespace Epsitec.Common.FormEngine
 				Widgets.Layouts.GridLayoutEngine.SetRow(text, row);
 				Widgets.Layouts.GridLayoutEngine.SetColumnSpan(text, 1+FormEngine.MaxColumnsRequired);
 
+				lastTitle = druids;
 				row++;
 			}
 
-			if (field.TopSeparator == FieldDescription.SeparatorType.Line ||
-				field.TopSeparator == FieldDescription.SeparatorType.Title)
+			if (topSeparator == FieldDescription.SeparatorType.Line ||
+				topSeparator == FieldDescription.SeparatorType.Title)
 			{
 				grid.RowDefinitions.Add(new Widgets.Layouts.RowDefinition());
-				grid.RowDefinitions[row].TopBorder = (field.TopSeparator == FieldDescription.SeparatorType.Title) ? 0 : 10;
+				grid.RowDefinitions[row].TopBorder = (topSeparator == FieldDescription.SeparatorType.Title) ? 0 : 10;
 				grid.RowDefinitions[row].BottomBorder = 10;
 
 				Separator sep = new Separator(root);
