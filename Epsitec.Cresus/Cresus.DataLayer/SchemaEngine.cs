@@ -12,8 +12,16 @@ using System.Collections.Generic;
 
 namespace Epsitec.Cresus.DataLayer
 {
+	/// <summary>
+	/// The <c>SchemaEngine</c> class manages the mapping between entities and
+	/// database table definitions.
+	/// </summary>
 	public class SchemaEngine
 	{
+		/// <summary>
+		/// Initializes a new instance of the <see cref="SchemaEngine"/> class.
+		/// </summary>
+		/// <param name="infrastructure">The database engine.</param>
 		public SchemaEngine(DbInfrastructure infrastructure)
 		{
 			this.infrastructure  = infrastructure;
@@ -25,6 +33,10 @@ namespace Epsitec.Cresus.DataLayer
 		}
 
 
+		/// <summary>
+		/// Gets the associated database engine.
+		/// </summary>
+		/// <value>The <see cref="DbInfrastructure"/> instance.</value>
 		public DbInfrastructure Infrastructure
 		{
 			get
@@ -33,6 +45,12 @@ namespace Epsitec.Cresus.DataLayer
 			}
 		}
 
+		/// <summary>
+		/// Gets a table definition for the specified entity id, creating it
+		/// if it was not yet known to the engine.
+		/// </summary>
+		/// <param name="entityId">The entity id.</param>
+		/// <returns>The root <see cref="DbTable"/> for the specified entity.</returns>
 		public DbTable CreateTableDefinition(Druid entityId)
 		{
 			SchemaEngineTableBuilder builder = new SchemaEngineTableBuilder (this);
@@ -48,6 +66,12 @@ namespace Epsitec.Cresus.DataLayer
 			return builder.GetRootTable ();
 		}
 
+		/// <summary>
+		/// Finds a table definition for the specified entity id.
+		/// </summary>
+		/// <param name="entityId">The entity id.</param>
+		/// <returns>The root <see cref="DbTable"/> for the specified entity or
+		/// <c>null</c> if the entity is not yet known to the engine.</returns>
 		public DbTable FindTableDefinition(Druid entityId)
 		{
 			DbTable table;
@@ -73,6 +97,12 @@ namespace Epsitec.Cresus.DataLayer
 			}
 		}
 
+		/// <summary>
+		/// Finds the type definition for the specified type object.
+		/// </summary>
+		/// <param name="type">The type object.</param>
+		/// <returns>The <see cref="DbTypeDef"/> instance or <c>null</c> if
+		/// the type is not yet known to the engine.</returns>
 		public DbTypeDef FindTypeDefinition(INamedType type)
 		{
 			DbTypeDef typeDef;
@@ -101,6 +131,8 @@ namespace Epsitec.Cresus.DataLayer
 				return typeDef;
 			}
 		}
+
+		#region Internal Support Methods
 
 		internal StructuredType GetEntityType(Druid entityId)
 		{
@@ -131,6 +163,7 @@ namespace Epsitec.Cresus.DataLayer
 			}
 		}
 
+		#endregion
 
 		DbInfrastructure infrastructure;
 		DbContext context;

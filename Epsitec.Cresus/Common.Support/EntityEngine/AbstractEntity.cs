@@ -10,6 +10,10 @@ using System.Collections.Generic;
 
 namespace Epsitec.Common.Support.EntityEngine
 {
+	/// <summary>
+	/// The <c>AbstractEntity</c> class is the base class used to store the
+	/// data represented by entity instances.
+	/// </summary>
 	public abstract class AbstractEntity
 	{
 		protected AbstractEntity()
@@ -18,6 +22,11 @@ namespace Epsitec.Common.Support.EntityEngine
 			this.values = this.context.CreateValueStore (this);
 		}
 
+		/// <summary>
+		/// Gets the id of the <see cref="StructuredType"/> which describes
+		/// this entity.
+		/// </summary>
+		/// <returns>The id of the <see cref="StructuredType"/>.</returns>
 		public abstract Druid GetStructuredTypeId();
 
 		internal IValueStore ValueStore
