@@ -49,24 +49,11 @@ namespace Epsitec.Common.FormEngine
 		}
 
 
-		public Druid EntityId
-		{
-			//	Druid de l'entité.
-			get
-			{
-				return this.entityId;
-			}
-			set
-			{
-				System.Diagnostics.Debug.Assert(this.type == FieldType.Node);
-				this.entityId = value;
-			}
-		}
-
 		public void SetNode(List<FieldDescription> descriptions)
 		{
 			//	Donne la liste des descriptions du noeud.
 			System.Diagnostics.Debug.Assert(this.type == FieldType.Node);
+
 			this.nodeDescription = new List<FieldDescription>();
 			foreach (FieldDescription description in descriptions)
 			{
@@ -202,7 +189,6 @@ namespace Epsitec.Common.FormEngine
 
 
 		protected FieldType type;
-		protected Druid entityId;
 		protected List<FieldDescription> nodeDescription;
 		protected List<Druid> fieldIds;
 		protected Color backColor;

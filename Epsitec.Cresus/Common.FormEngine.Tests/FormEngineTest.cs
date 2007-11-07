@@ -67,7 +67,7 @@ namespace Epsitec.Common.FormEngine
 			double width = 400;
 			double height = 600;
 
-			if (name == "Facture")
+			if (name == "Facture" || name == "Tree")
 			{
 				width *= 2;
 			}
@@ -92,25 +92,25 @@ namespace Epsitec.Common.FormEngine
 
 		protected Widget CreateForm(string name)
 		{
-			List<FieldDescription> root = new List<FieldDescription>();
+			Druid entityId = Druid.Empty;
 			List<FieldDescription> fields = new List<FieldDescription>();
 
 			if (name == "Adresse")
 			{
+				entityId = Druid.Parse("[63081]");  // Adresse
 				this.CreateFieldsAdresse(fields);
-				root.Add(this.CreateNode(Druid.Parse("[63081]"), fields));  // Adresse
 			}
 
 			if (name == "Facture")
 			{
+				entityId = Druid.Parse("[63021]");  // Facture
 				this.CreateFieldsFacture(fields);
-				root.Add(this.CreateNode(Druid.Parse("[63021]"), fields));  // Facture
 			}
 
 			if (name == "Affaire")
 			{
+				entityId = Druid.Parse("[63051]");  // Affaire
 				this.CreateFieldsAffaire(fields);
-				root.Add(this.CreateNode(Druid.Parse("[63051]"), fields));  // Affaire
 			}
 
 			if (name == "Tree")
@@ -118,7 +118,7 @@ namespace Epsitec.Common.FormEngine
 			}
 
 			FormEngine engine = new FormEngine(this.manager);
-			return engine.CreateForm(root);
+			return engine.CreateForm(entityId, fields);
 		}
 
 		protected void CreateFieldsAdresse(List<FieldDescription> fields)
@@ -175,11 +175,10 @@ namespace Epsitec.Common.FormEngine
 		}
 
 
-		protected FieldDescription CreateNode(Druid entityId, List<FieldDescription> descriptions)
+		protected FieldDescription CreateNode(List<FieldDescription> descriptions)
 		{
 			FieldDescription field = new FieldDescription(FieldDescription.FieldType.Node);
 
-			field.EntityId = entityId;
 			field.SetNode(descriptions);
 			
 			return field;
