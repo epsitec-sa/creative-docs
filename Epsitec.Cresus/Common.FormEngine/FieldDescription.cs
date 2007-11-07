@@ -14,8 +14,8 @@ namespace Epsitec.Common.FormEngine
 	{
 		public enum FieldType
 		{
-			Field	= 0,	// champ
-			Node	= 1,	// noeud
+			Node	= 0,	// noeud
+			Field	= 1,	// champ
 			Line    = 2,	// séparateur trait horizontal
 			Title   = 3,	// séparateur titre automatique
 		}
@@ -45,6 +45,41 @@ namespace Epsitec.Common.FormEngine
 			get
 			{
 				return this.type;
+			}
+		}
+
+
+		public Druid EntityId
+		{
+			//	Druid de l'entité.
+			get
+			{
+				return this.entityId;
+			}
+			set
+			{
+				System.Diagnostics.Debug.Assert(this.type == FieldType.Node);
+				this.entityId = value;
+			}
+		}
+
+		public void SetNode(List<FieldDescription> descriptions)
+		{
+			//	Donne la liste des descriptions du noeud.
+			System.Diagnostics.Debug.Assert(this.type == FieldType.Node);
+			this.nodeDescription = new List<FieldDescription>();
+			foreach (FieldDescription description in descriptions)
+			{
+				this.nodeDescription.Add(description);
+			}
+		}
+
+		public List<FieldDescription> NodeDescription
+		{
+			//	Retourne la liste des descriptions du noeud.
+			get
+			{
+				return this.nodeDescription;
 			}
 		}
 
@@ -92,27 +127,6 @@ namespace Epsitec.Common.FormEngine
 			else
 			{
 				return null;
-			}
-		}
-
-
-		public void SetNode(List<FieldDescription> descriptions)
-		{
-			//	Donne la liste des descriptions du noeud.
-			System.Diagnostics.Debug.Assert(this.type == FieldType.Node);
-			this.nodeDescription = new List<FieldDescription>();
-			foreach (FieldDescription description in descriptions)
-			{
-				this.nodeDescription.Add(description);
-			}
-		}
-
-		public List<FieldDescription> NodeDescription
-		{
-			//	Retourne la liste des descriptions du noeud.
-			get
-			{
-				return this.nodeDescription;
 			}
 		}
 
@@ -188,6 +202,7 @@ namespace Epsitec.Common.FormEngine
 
 
 		protected FieldType type;
+		protected Druid entityId;
 		protected List<FieldDescription> nodeDescription;
 		protected List<Druid> fieldIds;
 		protected Color backColor;

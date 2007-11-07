@@ -18,9 +18,16 @@ namespace Epsitec.Common.FormEngine
 			this.resourceManager = resourceManager;
 		}
 
-		public Widget CreateForm(Druid entityId, List<FieldDescription> fields)
+		public Widget CreateForm(List<FieldDescription> fields)
 		{
 			//	Crée un masque de saisie pour une entité donnée.
+			System.Diagnostics.Debug.Assert(fields != null);
+			System.Diagnostics.Debug.Assert(fields.Count == 1);
+			System.Diagnostics.Debug.Assert(fields[0].Type == FieldDescription.FieldType.Node);
+			System.Diagnostics.Debug.Assert(fields[0].EntityId != Druid.Empty);
+
+			Druid entityId = fields[0].EntityId;
+			fields = fields[0].NodeDescription;
 
 			//	Construit la liste des conteneurs.
 			List<string> containers = new List<string>();
