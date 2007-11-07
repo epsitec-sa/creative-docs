@@ -21,6 +21,8 @@ namespace Epsitec.Common.FormEngine
 		public Widget CreateForm(Druid entityId, List<FieldDescription> fields)
 		{
 			//	Crée un masque de saisie pour une entité donnée.
+
+			//	Construit la liste des conteneurs.
 			List<string> containers = new List<string>();
 			foreach (FieldDescription field in fields)
 			{
@@ -76,7 +78,7 @@ namespace Epsitec.Common.FormEngine
 			{
 				if (field.Container == container)
 				{
-					this.PrecreateField(field, isLabel, ref column);
+					this.SearchFieldLabel(field, isLabel, ref column);
 				}
 			}
 
@@ -105,16 +107,16 @@ namespace Epsitec.Common.FormEngine
 			{
 				FieldDescription field = fields[i];
 
-				if (field.Container == container)
+				if (field.Container == container)  // description pour ce conteneur ?
 				{
-					if (field.Type == FieldDescription.FieldType.Field)
+					if (field.Type == FieldDescription.FieldType.Field)  // champ ?
 					{
 						string path = field.GetPath("Data");
 						this.CreateField(root, grid, path, field, ref column, ref row);
 					}
-					else
+					else  // séparateur ?
 					{
-						FieldDescription next = FormEngine.SearchNextField(fields, i);
+						FieldDescription next = FormEngine.SearchNextField(fields, i);  // cherche le prochain champ
 						this.CreateSeparator(root, grid, field, next, ref column, ref row, ref lastTitle);
 					}
 				}
@@ -123,9 +125,9 @@ namespace Epsitec.Common.FormEngine
 			return root;
 		}
 
-		private void PrecreateField(FieldDescription field, bool[] isLabel, ref int column)
+		private void SearchFieldLabel(FieldDescription field, bool[] isLabel, ref int column)
 		{
-			//	Permière passe pour déterminer quelles colonnes contiennent des labels.
+			//	Détermine quelles colonnes contiennent des labels, lors de la première passe.
 			if (field.Type == FieldDescription.FieldType.Field)
 			{
 				int columnsRequired = System.Math.Min(field.ColumnsRequired, FormEngine.MaxColumnsRequired-1);
@@ -150,7 +152,7 @@ namespace Epsitec.Common.FormEngine
 
 		private void CreateSeparator(UI.Panel root, Widgets.Layouts.GridLayoutEngine grid, FieldDescription field, FieldDescription nextField, ref int column, ref int row, ref List<Druid> lastTitle)
 		{
-			//	Deuxième passe pour crée les widgets pour un séparateur dans la grille.
+			//	Crée les widgets pour un séparateur dans la grille, lors de la deuxième passe.
 			FieldDescription.FieldType type = field.Type;
 
 			if (nextField == null)
@@ -227,7 +229,7 @@ namespace Epsitec.Common.FormEngine
 
 		private void CreateField(UI.Panel root, Widgets.Layouts.GridLayoutEngine grid, string path, FieldDescription field, ref int column, ref int row)
 		{
-			//	Deuxième passe pour crée les widgets pour un champ dans la grille.
+			//	Crée les widgets pour un champ dans la grille, lors de la deuxième passe.
 			UI.Placeholder placeholder = new Epsitec.Common.UI.Placeholder(root);
 			placeholder.SetBinding(UI.Placeholder.ValueProperty, new Binding(BindingMode.TwoWay, path));
 			placeholder.BackColor = field.BackColor;

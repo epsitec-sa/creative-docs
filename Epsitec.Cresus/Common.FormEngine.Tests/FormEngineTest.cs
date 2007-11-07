@@ -137,6 +137,7 @@ namespace Epsitec.Common.FormEngine
 				fields.Add(this.CreateField("[630L2].[630O]", Color.FromRgb(1, 0.9, 0.5), FieldDescription.SeparatorType.Normal, 3, 1, "Second"));  // TotalFacturé.TotalTtc
 				fields.Add(this.CreateField("[630L2].[630P]", Color.FromRgb(1, 0.9, 0.5), FieldDescription.SeparatorType.Normal, 3, 1, "Second"));  // TotalFacturé.TotalTva
 
+				//	Pour tester. Cela n'a pas de sens de mettre un titre suivi d'aucun champ. Doit générer un simple trait.
 				fields.Add(this.CreateSeparator(FieldDescription.FieldType.Title, "Second"));
 			}
 
@@ -156,11 +157,11 @@ namespace Epsitec.Common.FormEngine
 			return engine.CreateForm(itemId, fields);
 		}
 
+
 		protected FieldDescription CreateSeparator(FieldDescription.FieldType type, string container)
 		{
-			FieldDescription field = new FieldDescription();
+			FieldDescription field = new FieldDescription(type);
 
-			field.Type = type;
 			field.Container = container;
 			
 			return field;
@@ -168,9 +169,9 @@ namespace Epsitec.Common.FormEngine
 
 		protected FieldDescription CreateField(string listDruids, Color backColor, FieldDescription.SeparatorType separator, int columns, int rows, string container)
 		{
-			FieldDescription field = new FieldDescription(listDruids);
+			FieldDescription field = new FieldDescription(FieldDescription.FieldType.Field);
 
-			field.Type = FieldDescription.FieldType.Field;
+			field.SetFields(listDruids);
 			field.BackColor = backColor;
 			field.Separator = separator;
 			field.ColumnsRequired = columns;
@@ -179,6 +180,7 @@ namespace Epsitec.Common.FormEngine
 			
 			return field;
 		}
+
 
 		protected void LoadResource()
 		{

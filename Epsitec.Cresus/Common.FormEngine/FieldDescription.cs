@@ -8,15 +8,16 @@ using Epsitec.Common.Types;
 namespace Epsitec.Common.FormEngine
 {
 	/// <summary>
-	/// Décrit un champ dans un masque de saisie.
+	/// Décrit un champ ou un séparateur dans un masque de saisie.
 	/// </summary>
 	public class FieldDescription
 	{
 		public enum FieldType
 		{
 			Field	= 0,	// champ
-			Line    = 1,	// trait horizontal
-			Title   = 2,	// titre automatique
+			Node	= 1,	// noeud
+			Line    = 2,	// séparateur trait horizontal
+			Title   = 3,	// séparateur titre automatique
 		}
 
 		public enum SeparatorType
@@ -28,11 +29,10 @@ namespace Epsitec.Common.FormEngine
 		}
 
 
-		public FieldDescription()
+		public FieldDescription(FieldType type)
 		{
-			//	Constructeur.
-			this.type = FieldType.Field;
-			this.fieldIds = new List<Druid>();
+			//	Constructeur. Le type est toujours déterminé à la création. Il ne pourra plus changer ensuite.
+			this.type = type;
 			this.backColor = Color.Empty;
 			this.separator = SeparatorType.Normal;
 			this.columnsRequired = 10;
@@ -41,21 +41,20 @@ namespace Epsitec.Common.FormEngine
 
 		public FieldType Type
 		{
-			//	Type de cet élément.
+			//	Retourne le type immuable de cet élément.
 			get
 			{
 				return this.type;
 			}
-			set
-			{
-				this.type = value;
-			}
 		}
 
-		public FieldDescription(string listDruids) : this()
+
+		public void SetFields(string listDruids)
 		{
-			//	Constructeur sur la base d'une liste de Druids séparés par des points.
+			//	Donne d'une liste de Druids séparés par des points.
 			//	Par exemple: listDruids = "[630B2].[630S2]"
+			System.Diagnostics.Debug.Assert(this.type == FieldType.Field);
+			this.fieldIds = new List<Druid>();
 			string[] druids = listDruids.Split('.');
 			foreach (string druid in druids)
 			{
@@ -77,17 +76,46 @@ namespace Epsitec.Common.FormEngine
 		{
 			//	Retourne le chemin permettant d'accéder au champ.
 			//	Par exemple, si prefix = "Data": retourne "Data.[630B2].[630S2]"
-			System.Text.StringBuilder builder = new System.Text.StringBuilder();
-			builder.Append(prefix);
-
-			foreach (Druid druid in this.fieldIds)
+			if (this.type == FieldType.Field)
 			{
-				builder.Append(".");
-				builder.Append(druid);
-			}
+				System.Text.StringBuilder builder = new System.Text.StringBuilder();
+				builder.Append(prefix);
 
-			return builder.ToString();
+				foreach (Druid druid in this.fieldIds)
+				{
+					builder.Append(".");
+					builder.Append(druid);
+				}
+
+				return builder.ToString();
+			}
+			else
+			{
+				return null;
+			}
 		}
+
+
+		public void SetNode(List<FieldDescription> descriptions)
+		{
+			//	Donne la liste des descriptions du noeud.
+			System.Diagnostics.Debug.Assert(this.type == FieldType.Node);
+			this.nodeDescription = new List<FieldDescription>();
+			foreach (FieldDescription description in descriptions)
+			{
+				this.nodeDescription.Add(description);
+			}
+		}
+
+		public List<FieldDescription> NodeDescription
+		{
+			//	Retourne la liste des descriptions du noeud.
+			get
+			{
+				return this.nodeDescription;
+			}
+		}
+
 
 		public SeparatorType Separator
 		{
@@ -160,6 +188,7 @@ namespace Epsitec.Common.FormEngine
 
 
 		protected FieldType type;
+		protected List<FieldDescription> nodeDescription;
 		protected List<Druid> fieldIds;
 		protected Color backColor;
 		protected SeparatorType separator;
