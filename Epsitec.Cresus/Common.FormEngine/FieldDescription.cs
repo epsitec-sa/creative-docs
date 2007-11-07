@@ -39,6 +39,20 @@ namespace Epsitec.Common.FormEngine
 			this.rowsRequired = 1;
 		}
 
+		public FieldDescription(FieldDescription model)
+		{
+			//	Constructeur copiant une instance existante.
+			this.type = model.type;
+			this.backColor = model.backColor;
+			this.separator = model.separator;
+			this.columnsRequired = model.columnsRequired;
+			this.rowsRequired = model.rowsRequired;
+			this.container = model.container;
+			this.nodeDescription = model.nodeDescription;
+			this.fieldIds = model.fieldIds;
+		}
+
+
 		public FieldType Type
 		{
 			//	Retourne le type immuable de cet élément.
@@ -185,6 +199,49 @@ namespace Epsitec.Common.FormEngine
 			{
 				this.container = value;
 			}
+		}
+
+
+		public void CopyTo(FieldDescription dst)
+		{
+			//	Copie la description courante vers une destination quelconque.
+			dst.type = this.type;
+			dst.backColor = this.backColor;
+			dst.separator = this.separator;
+			dst.columnsRequired = this.columnsRequired;
+			dst.rowsRequired = this.rowsRequired;
+			dst.container = this.container;
+
+#if false
+			if (this.nodeDescription == null)
+			{
+				dst.nodeDescription = null;
+			}
+			else
+			{
+				dst.nodeDescription = new List<FieldDescription>();
+				foreach (FieldDescription field in this.nodeDescription)
+				{
+					dst.nodeDescription.Add(field);
+				}
+			}
+
+			if (this.fieldIds == null)
+			{
+				dst.fieldIds = null;
+			}
+			else
+			{
+				dst.fieldIds = new List<Druid>();
+				foreach (Druid druid in this.fieldIds)
+				{
+					dst.fieldIds.Add(druid);
+				}
+			}
+#else
+			dst.nodeDescription = this.nodeDescription;
+			dst.fieldIds = this.fieldIds;
+#endif
 		}
 
 

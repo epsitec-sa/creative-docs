@@ -21,8 +21,10 @@ namespace Epsitec.Common.FormEngine
 		public Widget CreateForm(Druid entityId, List<FieldDescription> fields)
 		{
 			//	Crée un masque de saisie pour une entité donnée.
+			List<FieldDescription> flat = this.Develop(fields);
+
 			List<string> containers = new List<string>();
-			foreach (FieldDescription field in fields)
+			foreach (FieldDescription field in flat)
 			{
 				if (!containers.Contains(field.Container))
 				{
@@ -32,7 +34,7 @@ namespace Epsitec.Common.FormEngine
 
 			if (containers.Count == 1)
 			{
-				return this.CreateFormContainer(entityId, fields, containers[0]);
+				return this.CreateFormContainer(entityId, flat, containers[0]);
 			}
 			else
 			{
@@ -41,7 +43,7 @@ namespace Epsitec.Common.FormEngine
 
 				for (int i=0; i<containers.Count; i++)
 				{
-					Widget container = this.CreateFormContainer(entityId, fields, containers[i]);
+					Widget container = this.CreateFormContainer(entityId, flat, containers[i]);
 					container.SetParent(root);
 					container.Dock = DockStyle.StackFill;
 
@@ -54,6 +56,39 @@ namespace Epsitec.Common.FormEngine
 				return root;
 			}
 		}
+
+
+		private List<FieldDescription> Develop(List<FieldDescription> fields)
+		{
+			//	Retourne une liste développée qui ne contient plus de noeuds.
+			List<FieldDescription> dst = new List<FieldDescription>();
+
+			int rank = 0;
+			this.Develop(dst, fields, ref rank);
+			
+			return dst;
+		}
+
+		private void Develop(List<FieldDescription> dst, List<FieldDescription> fields, ref int rank)
+		{
+			foreach (FieldDescription field in fields)
+			{
+				FieldDescription copy = new FieldDescription(field);
+				string prefix = rank.ToString(System.Globalization.CultureInfo.InvariantCulture);
+				copy.Container = string.Concat(prefix, ".", copy.Container);
+
+				if (field.Type == FieldDescription.FieldType.Node)
+				{
+					rank++;
+					this.Develop(dst, field.NodeDescription, ref rank);
+				}
+				else
+				{
+					dst.Add(copy);
+				}
+			}
+		}
+
 
 		private Widget CreateFormContainer(Druid entityId, List<FieldDescription> fields, string container)
 		{
