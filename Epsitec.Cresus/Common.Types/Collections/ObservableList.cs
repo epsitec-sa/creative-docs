@@ -27,10 +27,10 @@ namespace Epsitec.Common.Types.Collections
 			
 			if (items.Length > 0)
 			{
-				this.NotifyBeforeChange ();
-				int index = this.list.Count;
-				this.list.AddRange (collection);
-				this.OnCollectionChanged (new CollectionChangedEventArgs (CollectionChangedAction.Add, index, items));
+				ObservableList<T> that = this.NotifyBeforeChange ();
+				int index = that.list.Count;
+				that.list.AddRange (collection);
+				that.OnCollectionChanged (new CollectionChangedEventArgs (CollectionChangedAction.Add, index, items));
 			}
 		}
 
@@ -49,7 +49,32 @@ namespace Epsitec.Common.Types.Collections
 		/// <param name="comparer">The comparer to use.</param>
 		public void Sort(IComparer<T> comparer)
 		{
-			this.list.Sort (comparer);
+			ObservableList<T> that = this.NotifyBeforeChange ();
+
+			object[] oldItems = Collection.ToObjectArray (that.list);
+
+			that.list.Sort (comparer);
+
+			object[] newItems = Collection.ToObjectArray (that.list);
+
+			that.OnCollectionChanged (new CollectionChangedEventArgs (CollectionChangedAction.Replace, 0, newItems, 0, oldItems));
+		}
+
+		/// <summary>
+		/// Sorts the collection using the specified comparison.
+		/// </summary>
+		/// <param name="comparison">The comparison to use.</param>
+		public void Sort(System.Comparison<T> comparison)
+		{
+			ObservableList<T> that = this.NotifyBeforeChange ();
+
+			object[] oldItems = Collection.ToObjectArray (that.list);
+
+			that.list.Sort (comparison);
+
+			object[] newItems = Collection.ToObjectArray (that.list);
+
+			that.OnCollectionChanged (new CollectionChangedEventArgs (CollectionChangedAction.Replace, 0, newItems, 0, oldItems));
 		}
 
 		/// <summary>
@@ -58,13 +83,15 @@ namespace Epsitec.Common.Types.Collections
 		/// <param name="collection">The collection.</param>
 		public void ReplaceWithRange(IEnumerable<T> collection)
 		{
-			object[] oldItems = Collection.ToObjectArray (this.list);
+			ObservableList<T> that = this.NotifyBeforeChange ();
+
+			object[] oldItems = Collection.ToObjectArray (that.list);
 			object[] newItems = Collection.ToObjectArray (collection);
 
-			this.list.Clear ();
-			this.list.AddRange (collection);
+			that.list.Clear ();
+			that.list.AddRange (collection);
 
-			this.OnCollectionChanged (new CollectionChangedEventArgs (CollectionChangedAction.Replace, 0, newItems, 0, oldItems));
+			that.OnCollectionChanged (new CollectionChangedEventArgs (CollectionChangedAction.Replace, 0, newItems, 0, oldItems));
 		}
 
 		/// <summary>
@@ -185,17 +212,17 @@ namespace Epsitec.Common.Types.Collections
 
 		public void Insert(int index, T item)
 		{
-			this.NotifyBeforeChange ();
-			this.list.Insert (index, item);
-			this.OnCollectionChanged (new CollectionChangedEventArgs (CollectionChangedAction.Add, index, new object[] { item }));
+			ObservableList<T> that = this.NotifyBeforeChange ();
+			that.list.Insert (index, item);
+			that.OnCollectionChanged (new CollectionChangedEventArgs (CollectionChangedAction.Add, index, new object[] { item }));
 		}
 
 		public void RemoveAt(int index)
 		{
-			this.NotifyBeforeChange ();
-			T value = this.list[index];
-			this.list.RemoveAt (index);
-			this.OnCollectionChanged (new CollectionChangedEventArgs (CollectionChangedAction.Remove, -1, null, index, new object[] { value }));
+			ObservableList<T> that = this.NotifyBeforeChange ();
+			T value = that.list[index];
+			that.list.RemoveAt (index);
+			that.OnCollectionChanged (new CollectionChangedEventArgs (CollectionChangedAction.Remove, -1, null, index, new object[] { value }));
 		}
 
 		public T this[int index]
@@ -210,10 +237,10 @@ namespace Epsitec.Common.Types.Collections
 
 				if (EqualityComparer<T>.Default.Equals (oldValue, value) == false)
 				{
-					this.NotifyBeforeSet (index, oldValue, value);
-					this.NotifyBeforeChange ();
-					this.list[index] = value;
-					this.OnCollectionChanged (new CollectionChangedEventArgs (CollectionChangedAction.Replace, index, new object[] { value }, index, new object[] { oldValue }));
+					ObservableList<T> that = this.NotifyBeforeChange ();
+					that.NotifyBeforeSet (index, oldValue, value);
+					that.list[index] = value;
+					that.OnCollectionChanged (new CollectionChangedEventArgs (CollectionChangedAction.Replace, index, new object[] { value }, index, new object[] { oldValue }));
 				}
 			}
 		}
@@ -224,20 +251,20 @@ namespace Epsitec.Common.Types.Collections
 
 		public virtual void Add(T item)
 		{
-			this.NotifyBeforeChange ();
-			int index = this.list.Count;
-			this.list.Add (item);
-			this.OnCollectionChanged (new CollectionChangedEventArgs (CollectionChangedAction.Add, index, new object[] { item }));
+			ObservableList<T> that = this.NotifyBeforeChange ();
+			int index = that.list.Count;
+			that.list.Add (item);
+			that.OnCollectionChanged (new CollectionChangedEventArgs (CollectionChangedAction.Add, index, new object[] { item }));
 		}
 
 		public void Clear()
 		{
 			if (this.list.Count > 0)
 			{
-				this.NotifyBeforeChange ();
-				object[] items = Collection.ToObjectArray (this.list);
-				this.list.Clear ();
-				this.OnCollectionChanged (new CollectionChangedEventArgs (CollectionChangedAction.Remove, -1, null, 0, items));
+				ObservableList<T> that = this.NotifyBeforeChange ();
+				object[] items = Collection.ToObjectArray (that.list);
+				that.list.Clear ();
+				that.OnCollectionChanged (new CollectionChangedEventArgs (CollectionChangedAction.Remove, -1, null, 0, items));
 			}
 		}
 
@@ -248,7 +275,7 @@ namespace Epsitec.Common.Types.Collections
 
 		public void CopyTo(T[] array, int arrayIndex)
 		{
-			list.CopyTo (array, arrayIndex);
+			this.list.CopyTo (array, arrayIndex);
 		}
 
 		public int Count
@@ -272,9 +299,9 @@ namespace Epsitec.Common.Types.Collections
 			int index = this.list.IndexOf (item);
 			if (index >= 0)
 			{
-				this.NotifyBeforeChange ();
-				this.list.RemoveAt (index);
-				this.OnCollectionChanged (new CollectionChangedEventArgs (CollectionChangedAction.Remove, -1, null, index, new object[] { item }));
+				ObservableList<T> that = this.NotifyBeforeChange ();
+				that.list.RemoveAt (index);
+				that.OnCollectionChanged (new CollectionChangedEventArgs (CollectionChangedAction.Remove, -1, null, index, new object[] { item }));
 				return true;
 			}
 			else
@@ -410,14 +437,23 @@ namespace Epsitec.Common.Types.Collections
 		{
 		}
 
-		protected virtual void NotifyBeforeChange()
+		protected ObservableList<T> NotifyBeforeChange()
 		{
-			if (this.IsReadOnly)
+			ObservableList<T> that = this.GetWorkingList ();
+
+			if (that.IsReadOnly)
 			{
 				throw new System.InvalidOperationException ("Read-only list may not be changed");
 			}
 
-			this.OnCollectionChanging ();
+			that.OnCollectionChanging ();
+
+			return that;
+		}
+
+		protected virtual ObservableList<T> GetWorkingList()
+		{
+			return this;
 		}
 
 		protected virtual void OnCollectionChanging()

@@ -1,7 +1,11 @@
 //	Copyright © 2006-2007, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
+using Epsitec.Common.Types;
+using Epsitec.Common.Types.Collections;
+
 using System.Collections.Generic;
+
 using NUnit.Framework;
 
 namespace Epsitec.Common.Types
@@ -662,6 +666,122 @@ namespace Epsitec.Common.Types
 			Assert.IsFalse (type.IsValidValue (new string[0]));
 		}
 
+
+		[Test]
+		public void CheckObservableListCopyOnWrite()
+		{
+			CowList<int> original = new CowList<int> ();
+			IList<int>   copy     = original.GetCopy ();
+
+			Assert.IsNull (copy);
+
+			original.AddRange (new int[] { 1, 2, 3 });
+
+			Assert.IsFalse (original.HasCopy);
+
+			original.Lock ();
+			original.Add (4);
+
+			copy = original.GetCopy ();
+
+			Assert.IsTrue (original.HasCopy);
+			Assert.IsTrue (Collection.CompareEqual (new int[] { 1, 2, 3 }, original));
+			Assert.IsTrue (Collection.CompareEqual (new int[] { 1, 2, 3, 4 }, copy));
+
+			original.Remove (2);
+			original.Insert (0, 8);
+			
+			Assert.IsTrue (Collection.CompareEqual (new int[] { 1, 2, 3 }, original));
+			Assert.IsTrue (Collection.CompareEqual (new int[] { 8, 1, 3, 4 }, copy));
+
+			original.Sort (
+				delegate (int a, int b)
+				{
+					if (a < b)
+					{
+						return -1;
+					}
+					else if (a > b)
+					{
+						return 1;
+					}
+					else
+					{
+						return 0;
+					}
+				});
+
+			Assert.IsTrue (Collection.CompareEqual (new int[] { 1, 2, 3 }, original));
+			Assert.IsTrue (Collection.CompareEqual (new int[] { 1, 3, 4, 8 }, copy));
+		}
+
+		[Test]
+		public void CheckObservableListNotifyBeforeChange()
+		{
+			ObservableList<int> list = new ObservableList<int> ();
+
+			int changeCount = 0;
+
+			list.CollectionChanging +=
+				delegate
+				{
+					changeCount++;
+				};
+
+			list.Add (1);
+			Assert.AreEqual (1, changeCount);
+			
+			list.AddRange (new int[] { 2, 3, 4 });
+			Assert.AreEqual (2, changeCount);
+
+			list.Remove (4);
+			Assert.AreEqual (3, changeCount);
+			list.Remove (4);
+			Assert.AreEqual (3, changeCount);
+
+			list.RemoveAt (0);
+			Assert.AreEqual (4, changeCount);
+
+			list.Clear ();
+			Assert.AreEqual (5, changeCount);
+			list.Clear ();
+			Assert.AreEqual (5, changeCount);
+
+			list.Insert (0, -1);
+			list.Insert (0, -2);
+			list.Insert (0, -3);
+			
+			Assert.AreEqual (8, changeCount);
+
+			int[] numbers = new int[] { 5, 1, 2, 3, 4 };
+
+			list.ReplaceWithRange (numbers);
+			Assert.AreEqual (9, changeCount);
+
+			Assert.IsTrue (Collection.CompareEqual (numbers, list));
+
+			list.Sort (
+				delegate (int a, int b)
+				{
+					if (a < b)
+					{
+						return -1;
+					}
+					else if (a > b)
+					{
+						return 1;
+					}
+					else
+					{
+						return 0;
+					}
+				});
+
+			Assert.AreEqual (10, changeCount);
+			Assert.IsTrue (Collection.CompareEqual (new int[] { 1, 2, 3, 4, 5 }, list));
+		}
+
+
 		[Test]
 		public void CheckPropertyGroupDescription()
 		{
@@ -888,6 +1008,46 @@ namespace Epsitec.Common.Types
 
 
 			public static readonly DependencyProperty NameProperty = DependencyProperty.Register ("Name", typeof (string), typeof (Article));
+		}
+
+		private class CowList<T> : ObservableList<T>
+		{
+			public CowList()
+			{
+			}
+
+			public bool HasCopy
+			{
+				get
+				{
+					return this.copy != null;
+				}
+			}
+
+			public IList<T> GetCopy()
+			{
+				return this.copy;
+			}
+
+			protected override ObservableList<T> GetWorkingList()
+			{
+				if (this.IsReadOnly)
+				{
+					if (this.copy == null)
+					{
+						this.copy = new ObservableList<T> ();
+						this.copy.AddRange (this);
+					}
+
+					return this.copy;
+				}
+				else
+				{
+					return base.GetWorkingList ();
+				}
+			}
+
+			private ObservableList<T> copy;
 		}
 
 		#region MyItem Class

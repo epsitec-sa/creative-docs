@@ -84,11 +84,6 @@ namespace Epsitec.Common.Types.Collections
 
 		#endregion
 
-		protected override void NotifyBeforeChange()
-		{
-			base.NotifyBeforeChange ();
-		}
-
 		protected override void OnCollectionChanged(CollectionChangedEventArgs e)
 		{
 			base.OnCollectionChanged (e);

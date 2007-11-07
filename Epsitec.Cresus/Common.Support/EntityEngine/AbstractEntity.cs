@@ -122,13 +122,15 @@ namespace Epsitec.Common.Support.EntityEngine
 			return list;
 		}
 
-		internal void CopyFieldCollection<T>(string id, EntityCollection<T> collection) where T : AbstractEntity
+		internal EntityCollection<T> CopyFieldCollection<T>(string id, EntityCollection<T> collection) where T : AbstractEntity
 		{
 			EntityCollection<T> copy = new EntityCollection<T> (id, this);
 
 			copy.AddRange (collection);
 
 			this.InternalSetValue (id, copy);
+
+			return copy;
 		}
 
 		public void SetField<T>(string id, T oldValue, T newValue)

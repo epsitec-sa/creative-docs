@@ -14,6 +14,7 @@ namespace Epsitec.Common.Support.EntityEngine
 	{
 		public EntityCollection(string id, AbstractEntity container)
 		{
+			this.id = id;
 			this.container = container;
 		}
 
@@ -29,31 +30,28 @@ namespace Epsitec.Common.Support.EntityEngine
 			}
 		}
 
-		protected override void NotifyBeforeChange()
+		protected override ObservableList<T> GetWorkingList()
 		{
-			base.NotifyBeforeChange ();
-
 			switch (this.state)
 			{
 				case State.CopyOnWrite:
-					this.CreateCopyOnWrite ();
-					break;
+					return this.CreateCopyOnWrite ();
 
 				case State.Copied:
 					throw new System.InvalidOperationException ("Copied collection may not be changed");
 
 				case State.Default:
-					break;
+					return this;
 
 				default:
 					throw new System.NotImplementedException ();
 			}
 		}
 
-		private void CreateCopyOnWrite()
+		private EntityCollection<T> CreateCopyOnWrite()
 		{
 			this.state = State.Copied;
-			this.container.CopyFieldCollection<T> (id, this);
+			return this.container.CopyFieldCollection<T> (id, this);
 		}
 
 
