@@ -49,6 +49,7 @@ namespace Epsitec.Common.FormEngine
 			this.separator = SeparatorType.Normal;
 			this.columnsRequired = 10;
 			this.rowsRequired = 1;
+			this.containerLayoutMode = ContainerLayoutMode.None;
 		}
 
 		public FieldDescription(FieldDescription model) : this()
@@ -61,6 +62,7 @@ namespace Epsitec.Common.FormEngine
 			this.rowsRequired = model.rowsRequired;
 			this.nodeDescription = model.nodeDescription;
 			this.fieldIds = model.fieldIds;
+			this.containerLayoutMode = model.containerLayoutMode;
 		}
 
 
@@ -209,6 +211,20 @@ namespace Epsitec.Common.FormEngine
 			}
 		}
 
+		public ContainerLayoutMode ContainerLayoutMode
+		{
+			//	Mode de layout pour les boîtes contenues dans un BoxBegin.
+			get
+			{
+				return this.containerLayoutMode;
+			}
+			set
+			{
+				System.Diagnostics.Debug.Assert(this.type == FieldType.BoxBegin);
+				this.containerLayoutMode = value;
+			}
+		}
+
 
 		public void CopyTo(FieldDescription dst)
 		{
@@ -260,5 +276,6 @@ namespace Epsitec.Common.FormEngine
 		protected SeparatorType separator;
 		protected int columnsRequired;
 		protected int rowsRequired;
+		protected ContainerLayoutMode containerLayoutMode;
 	}
 }

@@ -74,17 +74,17 @@ namespace Epsitec.Common.FormEngine
 						column.Dock = DockStyle.Fill;
 						column.Margins = new Margins(5, 5, 5, 5);
 						column.Padding = new Margins(5, 5, 5, 5);
-						//stack.Push(column);
+						stack.Push(column);
 
 						this.CreateFormBox(column, flat, i, count);
 
-						//stack.Pop();
+						stack.Pop();
 						i += count;
 						break;
 
 					case FieldDescription.FieldType.BoxBegin:
 						UI.Panel box = new UI.Panel(stack.Peek());
-						box.ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow;
+						box.ContainerLayoutMode = field.ContainerLayoutMode;
 						box.DrawFrameState = FrameState.All;
 						box.Dock = DockStyle.Fill;
 						box.Margins = new Margins(5, 5, 5, 5);

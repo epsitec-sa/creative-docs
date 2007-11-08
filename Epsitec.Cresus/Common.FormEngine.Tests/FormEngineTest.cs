@@ -165,13 +165,15 @@ namespace Epsitec.Common.FormEngine
 			{
 				entityId = Druid.Parse("[63021]");  // Facture
 
+				fields.Add(this.CreateBoxBegin(ContainerLayoutMode.VerticalFlow));
+
 				fields.Add(this.CreateField("[630A2]", Color.Empty, FieldDescription.SeparatorType.Normal, 4, 1));  // Numéro
 
 				fields.Add(this.CreateSeparator(FieldDescription.FieldType.Title));
 				fields.Add(this.CreateField("[630B2].[63013].[63053]", Color.Empty, FieldDescription.SeparatorType.Append, 3, 1));  // Affaire.SoldeDû.Montant
 				fields.Add(this.CreateField("[630B2].[63013].[63063].[630A]", Color.Empty, FieldDescription.SeparatorType.Normal, 3, 1));  // Affaire.SoldeDû.Monnaie.Designation
 				
-				fields.Add(this.CreateSeparator(FieldDescription.FieldType.BoxBegin));
+				fields.Add(this.CreateBoxBegin(ContainerLayoutMode.VerticalFlow));
 
 				List<FieldDescription> subFields = new List<FieldDescription>();
 				subFields.Add(this.CreateSeparator(FieldDescription.FieldType.Title));
@@ -184,6 +186,9 @@ namespace Epsitec.Common.FormEngine
 				subFields.Add(this.CreateField("[630B2].[63003].[63043].[63063].[630B]", Color.Empty, FieldDescription.SeparatorType.Normal, 9, 1));  // Affaire.Paiements.Valeur.PrixSimple.Monnaie.TauxChangeVersChf
 				fields.Add(this.CreateNode(subFields));
 				
+				fields.Add(this.CreateBoxEnd());
+				fields.Add(this.CreateBoxEnd());
+
 				fields.Add(this.CreateSeparator(FieldDescription.FieldType.BreakColumn));
 				fields.Add(this.CreateSeparator(FieldDescription.FieldType.Title));
 				fields.Add(this.CreateField("[630L2].[630M].[630H]", Color.FromRgb(1, 0.5, 0.5), FieldDescription.SeparatorType.Normal, 3, 1));  // TotalFacturé.Prix.Ht
@@ -194,8 +199,6 @@ namespace Epsitec.Common.FormEngine
 
 				//	Pour tester. Cela n'a pas de sens de mettre un titre suivi d'aucun champ. Doit générer un simple trait.
 				fields.Add(this.CreateSeparator(FieldDescription.FieldType.Title));
-
-				fields.Add(this.CreateSeparator(FieldDescription.FieldType.BoxEnd));
 			}
 
 			FormEngine engine = new FormEngine(this.manager);
@@ -215,6 +218,22 @@ namespace Epsitec.Common.FormEngine
 		protected FieldDescription CreateSeparator(FieldDescription.FieldType type)
 		{
 			FieldDescription field = new FieldDescription(type);
+
+			return field;
+		}
+
+		protected FieldDescription CreateBoxBegin(ContainerLayoutMode mode)
+		{
+			FieldDescription field = new FieldDescription(FieldDescription.FieldType.BoxBegin);
+
+			field.ContainerLayoutMode = mode;
+
+			return field;
+		}
+
+		protected FieldDescription CreateBoxEnd()
+		{
+			FieldDescription field = new FieldDescription(FieldDescription.FieldType.BoxEnd);
 
 			return field;
 		}
