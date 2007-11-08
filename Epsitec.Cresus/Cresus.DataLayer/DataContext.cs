@@ -50,6 +50,15 @@ namespace Epsitec.Cresus.DataLayer
 			}
 		}
 
+		/// <summary>
+		/// Counts the managed entities.
+		/// </summary>
+		/// <returns>The number of entities associated to this data context.</returns>
+		public int CountManagedEntities()
+		{
+			return this.entityDataMapping.Count;
+		}
+
 		#region IDisposable Members
 
 		public void Dispose()

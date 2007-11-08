@@ -59,7 +59,7 @@ namespace Epsitec.Cresus.DataLayer
 		{
 			SchemaEngine engine = new SchemaEngine (this.infrastructure);
 			DbTransaction transaction = this.infrastructure.BeginTransaction (DbTransactionMode.ReadWrite);
-			engine.CreateTableDefinition (this.entityId);
+			engine.CreateTableDefinition (this.articleEntityId);
 			transaction.Rollback ();
 			transaction.Dispose ();
 		}
@@ -69,14 +69,14 @@ namespace Epsitec.Cresus.DataLayer
 		{
 			SchemaEngine engine = new SchemaEngine (this.infrastructure);
 
-			Assert.IsNull (engine.FindTableDefinition (this.entityId));
-			DbTable table1 = engine.CreateTableDefinition (this.entityId);
-			DbTable table2 = engine.CreateTableDefinition (this.entityId);
+			Assert.IsNull (engine.FindTableDefinition (this.articleEntityId));
+			DbTable table1 = engine.CreateTableDefinition (this.articleEntityId);
+			DbTable table2 = engine.CreateTableDefinition (this.articleEntityId);
 
 			Assert.AreEqual (table1, table2);
 
 			engine = new SchemaEngine (this.infrastructure);
-			DbTable table3 = engine.FindTableDefinition (this.entityId);
+			DbTable table3 = engine.FindTableDefinition (this.articleEntityId);
 
 			Assert.AreNotEqual (table1, table3);
 			Assert.AreEqual (table1.Name, table3.Name);
@@ -88,7 +88,7 @@ namespace Epsitec.Cresus.DataLayer
 		{
 			DataContext context = new DataContext (this.infrastructure);
 
-			DbTable table = context.SchemaEngine.FindTableDefinition (this.entityId);
+			DbTable table = context.SchemaEngine.FindTableDefinition (this.articleEntityId);
 
 			Assert.AreEqual (0, context.RichCommand.DataSet.Tables.Count);
 
@@ -104,7 +104,9 @@ namespace Epsitec.Cresus.DataLayer
 		{
 			DataContext context = new DataContext (this.infrastructure);
 
-			AbstractEntity entity = context.EntityContext.CreateEntity (this.entityId);
+			AbstractEntity entity = context.EntityContext.CreateEntity (this.articleEntityId);
+
+			Assert.AreEqual (1, context.CountManagedEntities ());
 		}
 
 		#region Helper Methods
@@ -141,6 +143,6 @@ namespace Epsitec.Cresus.DataLayer
 		#endregion
 
 		private DbInfrastructure infrastructure;
-		private Druid entityId = Druid.Parse ("[630Q]");
+		private Druid articleEntityId = Druid.Parse ("[630Q]");
 	}
 }
