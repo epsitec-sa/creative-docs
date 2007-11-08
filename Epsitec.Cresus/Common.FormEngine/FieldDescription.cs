@@ -18,8 +18,8 @@ namespace Epsitec.Common.FormEngine
 			Node			= 2,	// noeud
 			Line			= 10,	// séparateur trait horizontal
 			Title			= 11,	// séparateur titre automatique
-			BreakColumn		= 20,	// saute à la colonne suivante
-			BreakRow		= 21,	// saute à la ligne suivante
+			//?BreakColumn		= 20,	// saute à la colonne suivante
+			//?BreakRow		= 21,	// saute à la ligne suivante
 			BoxBegin		= 30,	// début d'une boîte
 			BoxEnd			= 31,	// fin d'une boîte
 			InsertionPoint	= 40,	// spécifie le point d'insertion, dans un module de patch

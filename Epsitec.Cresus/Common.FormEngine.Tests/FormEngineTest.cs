@@ -74,7 +74,7 @@ namespace Epsitec.Common.FormEngine
 			
 			if (name == "Tree")
 			{
-				width *= 3;
+				width *= 2;
 			}
 			
 			window.ClientSize = new Size(width, height);
@@ -120,6 +120,7 @@ namespace Epsitec.Common.FormEngine
 			{
 				entityId = Druid.Parse("[63021]");  // Facture
 
+				fields.Add(this.CreateBoxBegin(ContainerLayoutMode.VerticalFlow));
 				fields.Add(this.CreateField("[630A2]", Color.Empty, FieldDescription.SeparatorType.Normal, 4, 1));  // Numéro
 				fields.Add(this.CreateField("[630C2]", Color.Empty, FieldDescription.SeparatorType.Normal, 5, 1));  // DateTravail
 				fields.Add(this.CreateField("[630D2]", Color.Empty, FieldDescription.SeparatorType.Normal, 5, 1));  // DateFacture
@@ -133,9 +134,9 @@ namespace Epsitec.Common.FormEngine
 				fields.Add(this.CreateSeparator(FieldDescription.FieldType.Title));
 				fields.Add(this.CreateField("[630B2].[63003].[63043].[63063].[630A]", Color.Empty, FieldDescription.SeparatorType.Normal, 9, 1));  // Affaire.Paiements.Valeur.PrixSimple.Monnaie.Désignation
 				fields.Add(this.CreateField("[630B2].[63003].[63043].[63063].[630B]", Color.Empty, FieldDescription.SeparatorType.Normal, 9, 1));  // Affaire.Paiements.Valeur.PrixSimple.Monnaie.TauxChangeVersChf
+				fields.Add(this.CreateBoxEnd());
 				
-				fields.Add(this.CreateSeparator(FieldDescription.FieldType.BreakColumn));
-
+				fields.Add(this.CreateBoxBegin(ContainerLayoutMode.VerticalFlow));
 				fields.Add(this.CreateSeparator(FieldDescription.FieldType.Title));
 				fields.Add(this.CreateField("[630B2].[63013].[63053]", Color.Empty, FieldDescription.SeparatorType.Append, 3, 1));  // Affaire.SoldeDû.Montant
 				fields.Add(this.CreateField("[630B2].[63013].[63063].[630A]", Color.Empty, FieldDescription.SeparatorType.Normal, 3, 1));  // Affaire.SoldeDû.Monnaie.Designation
@@ -149,6 +150,7 @@ namespace Epsitec.Common.FormEngine
 
 				//	Pour tester. Cela n'a pas de sens de mettre un titre suivi d'aucun champ. Doit générer un simple trait.
 				fields.Add(this.CreateSeparator(FieldDescription.FieldType.Title));
+				fields.Add(this.CreateBoxEnd());
 			}
 
 			if (name == "Affaire")
@@ -166,15 +168,15 @@ namespace Epsitec.Common.FormEngine
 				entityId = Druid.Parse("[63021]");  // Facture
 
 				fields.Add(this.CreateBoxBegin(ContainerLayoutMode.VerticalFlow));
-
+				fields.Add(this.CreateBoxBegin(ContainerLayoutMode.VerticalFlow));
 				fields.Add(this.CreateField("[630A2]", Color.Empty, FieldDescription.SeparatorType.Normal, 4, 1));  // Numéro
 
 				fields.Add(this.CreateSeparator(FieldDescription.FieldType.Title));
 				fields.Add(this.CreateField("[630B2].[63013].[63053]", Color.Empty, FieldDescription.SeparatorType.Append, 3, 1));  // Affaire.SoldeDû.Montant
 				fields.Add(this.CreateField("[630B2].[63013].[63063].[630A]", Color.Empty, FieldDescription.SeparatorType.Normal, 3, 1));  // Affaire.SoldeDû.Monnaie.Designation
+				fields.Add(this.CreateBoxEnd());
 				
 				fields.Add(this.CreateBoxBegin(ContainerLayoutMode.VerticalFlow));
-
 				List<FieldDescription> subFields = new List<FieldDescription>();
 				subFields.Add(this.CreateSeparator(FieldDescription.FieldType.Title));
 				subFields.Add(this.CreateField("[630B2].[630S2]", Color.Empty, FieldDescription.SeparatorType.Normal, 9, 1));  // Affaire.Client
@@ -185,20 +187,17 @@ namespace Epsitec.Common.FormEngine
 				subFields.Add(this.CreateField("[630B2].[63003].[63043].[63063].[630A]", Color.Empty, FieldDescription.SeparatorType.Normal, 9, 1));  // Affaire.Paiements.Valeur.PrixSimple.Monnaie.Désignation
 				subFields.Add(this.CreateField("[630B2].[63003].[63043].[63063].[630B]", Color.Empty, FieldDescription.SeparatorType.Normal, 9, 1));  // Affaire.Paiements.Valeur.PrixSimple.Monnaie.TauxChangeVersChf
 				fields.Add(this.CreateNode(subFields));
-				
 				fields.Add(this.CreateBoxEnd());
 				fields.Add(this.CreateBoxEnd());
 
-				fields.Add(this.CreateSeparator(FieldDescription.FieldType.BreakColumn));
+				fields.Add(this.CreateBoxBegin(ContainerLayoutMode.VerticalFlow));
 				fields.Add(this.CreateSeparator(FieldDescription.FieldType.Title));
 				fields.Add(this.CreateField("[630L2].[630M].[630H]", Color.FromRgb(1, 0.5, 0.5), FieldDescription.SeparatorType.Normal, 3, 1));  // TotalFacturé.Prix.Ht
 				fields.Add(this.CreateSeparator(FieldDescription.FieldType.Title));
 				fields.Add(this.CreateField("[630L2].[630N]", Color.FromRgb(1, 0.9, 0.5), FieldDescription.SeparatorType.Normal, 3, 1));  // TotalFacturé.TotalHt
 				fields.Add(this.CreateField("[630L2].[630O]", Color.FromRgb(1, 0.9, 0.5), FieldDescription.SeparatorType.Normal, 3, 1));  // TotalFacturé.TotalTtc
 				fields.Add(this.CreateField("[630L2].[630P]", Color.FromRgb(1, 0.9, 0.5), FieldDescription.SeparatorType.Normal, 3, 1));  // TotalFacturé.TotalTva
-
-				//	Pour tester. Cela n'a pas de sens de mettre un titre suivi d'aucun champ. Doit générer un simple trait.
-				fields.Add(this.CreateSeparator(FieldDescription.FieldType.Title));
+				fields.Add(this.CreateBoxEnd());
 			}
 
 			FormEngine engine = new FormEngine(this.manager);

@@ -32,16 +32,11 @@ namespace Epsitec.Common.FormEngine
 			Stack<UI.Panel> stack = new Stack<UI.Panel>();
 
 			UI.Panel root = new UI.Panel();
-			root.ContainerLayoutMode = ContainerLayoutMode.VerticalFlow;
+			root.ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow;
 			root.ResourceManager = this.resourceManager;
 			root.DataSource = new UI.DataSource();
 			root.DataSource.AddDataSource("Data", entityData);
 			stack.Push(root);
-
-			UI.Panel row = new UI.Panel(stack.Peek());
-			row.ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow;
-			row.Dock = DockStyle.Fill;
-			stack.Push(row);
 
 			int i = 0;
 			while (i < flat.Count)
@@ -68,17 +63,8 @@ namespace Epsitec.Common.FormEngine
 							}
 						}
 
-						UI.Panel column = new UI.Panel(stack.Peek());
-						column.ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow;
-						column.DrawFrameState = FrameState.All;
-						column.Dock = DockStyle.Fill;
-						column.Margins = new Margins(5, 5, 5, 5);
-						column.Padding = new Margins(5, 5, 5, 5);
-						stack.Push(column);
+						this.CreateFormBox(stack.Peek(), flat, i, count);
 
-						this.CreateFormBox(column, flat, i, count);
-
-						stack.Pop();
 						i += count;
 						break;
 
@@ -98,6 +84,7 @@ namespace Epsitec.Common.FormEngine
 						i++;
 						break;
 
+#if false
 					case FieldDescription.FieldType.BreakColumn:
 						i++;
 						break;
@@ -111,6 +98,7 @@ namespace Epsitec.Common.FormEngine
 						stack.Push(row);
 						i++;
 						break;
+#endif
 
 					default:
 						i++;
