@@ -14,22 +14,34 @@ namespace Epsitec.Common.FormEngine
 	{
 		public enum FieldType
 		{
-			Node	= 0,	// noeud
-			Field	= 1,	// champ
-			Line    = 2,	// séparateur trait horizontal
-			Title   = 3,	// séparateur titre automatique
+			Field			= 1,	// champ
+			Node			= 2,	// noeud
+			Line			= 10,	// séparateur trait horizontal
+			Title			= 11,	// séparateur titre automatique
+			BreakColumn		= 20,	// saute à la colonne suivante
+			BreakRow		= 21,	// saute à la ligne suivante
+			BoxBegin		= 30,	// début d'une boîte
+			BoxEnd			= 31,	// fin d'une boîte
+			InsertionPoint	= 40,	// spécifie le point d'insertion, dans un module de patch
+			Hide			= 41,	// champ du module de référence à cacher, dans un module de patch
 		}
 
 		public enum SeparatorType
 		{
-			Normal	= 0,	// les champs sont proches
-			Compact	= 1,	// les champs se touchent (chevauchement d'un pixel)
-			Extend	= 2,	// les champs sont très espacés
-			Append	= 3,	// le champ suivant sera sur la même ligne
+			Normal			= 0,	// les champs sont proches
+			Compact			= 1,	// les champs se touchent (chevauchement d'un pixel)
+			Extend			= 2,	// les champs sont très espacés
+			Append			= 3,	// le champ suivant sera sur la même ligne
 		}
 
 
-		public FieldDescription(FieldType type)
+		private FieldDescription()
+		{
+			//	Constructeur de base.
+			this.guid = System.Guid.NewGuid();
+		}
+
+		public FieldDescription(FieldType type) : this()
 		{
 			//	Constructeur. Le type est toujours déterminé à la création. Il ne pourra plus changer ensuite.
 			this.type = type;
@@ -39,7 +51,7 @@ namespace Epsitec.Common.FormEngine
 			this.rowsRequired = 1;
 		}
 
-		public FieldDescription(FieldDescription model)
+		public FieldDescription(FieldDescription model) : this()
 		{
 			//	Constructeur copiant une instance existante.
 			this.type = model.type;
@@ -52,6 +64,15 @@ namespace Epsitec.Common.FormEngine
 			this.fieldIds = model.fieldIds;
 		}
 
+
+		public System.Guid Guid
+		{
+			//	Retourne l'identificateur unique.
+			get
+			{
+				return this.guid;
+			}
+		}
 
 		public FieldType Type
 		{
@@ -246,6 +267,7 @@ namespace Epsitec.Common.FormEngine
 		}
 
 
+		protected System.Guid guid;
 		protected FieldType type;
 		protected List<FieldDescription> nodeDescription;
 		protected List<Druid> fieldIds;
