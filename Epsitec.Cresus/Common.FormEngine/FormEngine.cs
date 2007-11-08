@@ -23,97 +23,115 @@ namespace Epsitec.Common.FormEngine
 			//	Crée un masque de saisie pour une entité donnée.
 			List<FieldDescription> flat = this.Develop(fields);
 
-			List<string> containers = new List<string>();
-			foreach (FieldDescription field in flat)
-			{
-				if (!containers.Contains(field.Container))
-				{
-					containers.Add(field.Container);
-				}
-			}
-
-			if (containers.Count == 1)
-			{
-				return this.CreateFormContainer(entityId, flat, containers[0]);
-			}
-			else
-			{
-				Widget root = new FrameBox();
-				root.ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow;
-
-				for (int i=0; i<containers.Count; i++)
-				{
-					Widget container = this.CreateFormContainer(entityId, flat, containers[i]);
-					container.SetParent(root);
-					container.Dock = DockStyle.StackFill;
-
-					if (i < containers.Count-1)
-					{
-						container.Margins = new Margins(0, 20, 0, 0);
-					}
-				}
-
-				return root;
-			}
-		}
-
-
-		private List<FieldDescription> Develop(List<FieldDescription> fields)
-		{
-			//	Retourne une liste développée qui ne contient plus de noeuds.
-			//	On s'assure que les noms des containers soient forcément différents pour le contenu d'un noeud.
-			List<FieldDescription> dst = new List<FieldDescription>();
-
-			int rank = 0;
-			this.Develop(dst, fields, ref rank);
-			
-			return dst;
-		}
-
-		private void Develop(List<FieldDescription> dst, List<FieldDescription> fields, ref int rank)
-		{
-			foreach (FieldDescription field in fields)
-			{
-				FieldDescription copy = new FieldDescription(field);
-				string prefix = rank.ToString(System.Globalization.CultureInfo.InvariantCulture);
-				copy.Container = string.Concat(prefix, ".", copy.Container);
-
-				if (field.Type == FieldDescription.FieldType.Node)
-				{
-					rank++;
-					this.Develop(dst, field.NodeDescription, ref rank);
-				}
-				else
-				{
-					dst.Add(copy);
-				}
-			}
-		}
-
-
-		private Widget CreateFormContainer(Druid entityId, List<FieldDescription> fields, string container)
-		{
-			//	Crée un conteneur (super-colonne) d'un masque de saisie pour une entité donnée.
 			Caption entityCaption = this.resourceManager.GetCaption(entityId);
 			StructuredType entity = TypeRosetta.GetTypeObject(entityCaption) as StructuredType;
 
 			StructuredData entityData = new StructuredData(entity);
 			entityData.UndefinedValueMode = UndefinedValueMode.Default;
 
+			Stack<UI.Panel> stack = new Stack<UI.Panel>();
+
 			UI.Panel root = new UI.Panel();
+			root.ContainerLayoutMode = ContainerLayoutMode.VerticalFlow;
 			root.ResourceManager = this.resourceManager;
 			root.DataSource = new UI.DataSource();
 			root.DataSource.AddDataSource("Data", entityData);
+			stack.Push(root);
+
+			UI.Panel row = new UI.Panel(stack.Peek());
+			row.ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow;
+			row.Dock = DockStyle.Fill;
+			row.Margins = new Margins(10, 10, 10, 10);
+			stack.Push(row);
+
+			int i = 0;
+			while (i < flat.Count)
+			{
+				FieldDescription field = flat[i];
+
+				switch (field.Type)
+				{
+					case FieldDescription.FieldType.Field:
+					case FieldDescription.FieldType.Line:
+					case FieldDescription.FieldType.Title:
+						int count = 0;
+						for (int j=i; j<flat.Count; j++)
+						{
+							if (flat[j].Type == FieldDescription.FieldType.Field ||
+								flat[j].Type == FieldDescription.FieldType.Line  ||
+								flat[j].Type == FieldDescription.FieldType.Title )
+							{
+								count++;
+							}
+							else
+							{
+								break;
+							}
+						}
+
+						UI.Panel column = new UI.Panel(stack.Peek());
+						column.ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow;
+						column.Dock = DockStyle.Fill;
+						column.Margins = new Margins(10, 10, 10, 10);
+						stack.Push(column);
+
+						this.CreateFormBox(column, flat, i, count);
+
+						stack.Pop();
+						i += count;
+						break;
+
+					case FieldDescription.FieldType.BoxBegin:
+						UI.Panel box = new UI.Panel(stack.Peek());
+						box.ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow;
+						box.Dock = DockStyle.Fill;
+						box.Margins = new Margins(10, 10, 10, 10);
+						stack.Push(box);
+						i++;
+						break;
+
+					case FieldDescription.FieldType.BoxEnd:
+						stack.Pop();
+						i++;
+						break;
+
+					case FieldDescription.FieldType.BreakColumn:
+						i++;
+						break;
+
+					case FieldDescription.FieldType.BreakRow:
+						stack.Pop();
+
+						row = new UI.Panel(stack.Peek());
+						row.ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow;
+						row.Dock = DockStyle.Fill;
+						row.Margins = new Margins(10, 10, 10, 10);
+						stack.Push(row);
+						i++;
+						break;
+
+					default:
+						i++;
+						break;
+				}
+			}
+
+			return root;
+		}
+
+
+		private void CreateFormBox(UI.Panel root, List<FieldDescription> fields, int index, int count)
+		{
+			//	Crée tous les champs dans une boîte.
 
 			//	Première passe pour déterminer quelles colonnes contiennent des labels.
 			int column = 0, row = 0;
 			bool[] isLabel = new bool[FormEngine.MaxColumnsRequired];
-			foreach (FieldDescription field in fields)
+			for (int i=index; i<index+count; i++)
 			{
-				if (field.Container == container)
-				{
-					this.SearchFieldLabel(field, isLabel, ref column);
-				}
+				FieldDescription field = fields[i];
+
+				this.SearchFieldLabel(field, isLabel, ref column);
 			}
 
 			//	Crée les différentes colonnes.
@@ -137,27 +155,57 @@ namespace Epsitec.Common.FormEngine
 			column = 0;
 			row = 0;
 			List<Druid> lastTitle = null;
-			for (int i=0; i<fields.Count; i++)
+			for (int i=index; i<index+count; i++)
 			{
 				FieldDescription field = fields[i];
 
-				if (field.Container == container)  // description pour ce conteneur ?
+				if (field.Type == FieldDescription.FieldType.Field)  // champ ?
 				{
-					if (field.Type == FieldDescription.FieldType.Field)  // champ ?
-					{
-						string path = field.GetPath("Data");
-						this.CreateField(root, grid, path, field, ref column, ref row);
-					}
-					else  // séparateur ?
-					{
-						FieldDescription next = FormEngine.SearchNextField(fields, i);  // cherche le prochain champ
-						this.CreateSeparator(root, grid, field, next, ref column, ref row, ref lastTitle);
-					}
+					string path = field.GetPath("Data");
+					this.CreateField(root, grid, path, field, ref column, ref row);
+				}
+				else  // séparateur ?
+				{
+					FieldDescription next = FormEngine.SearchNextField(fields, i);  // cherche le prochain champ
+					this.CreateSeparator(root, grid, field, next, ref column, ref row, ref lastTitle);
 				}
 			}
-
-			return root;
 		}
+
+
+
+		private List<FieldDescription> Develop(List<FieldDescription> fields)
+		{
+			//	Retourne une liste développée qui ne contient plus de noeuds.
+			List<FieldDescription> dst = new List<FieldDescription>();
+
+			this.Develop(dst, fields);
+			
+			return dst;
+		}
+
+		private void Develop(List<FieldDescription> dst, List<FieldDescription> fields)
+		{
+			foreach (FieldDescription field in fields)
+			{
+				if (field.Type == FieldDescription.FieldType.Node)
+				{
+					this.Develop(dst, field.NodeDescription);
+				}
+				else if (field.Type == FieldDescription.FieldType.InsertionPoint)
+				{
+				}
+				else if (field.Type == FieldDescription.FieldType.Hide)
+				{
+				}
+				else
+				{
+					dst.Add(field);
+				}
+			}
+		}
+
+
 
 		private void SearchFieldLabel(FieldDescription field, bool[] isLabel, ref int column)
 		{
@@ -314,12 +362,10 @@ namespace Epsitec.Common.FormEngine
 
 		static private FieldDescription SearchNextField(List<FieldDescription> fields, int index)
 		{
-			//	Cherche la prochaine description de champ (pas de séparateur) qui utilise le même container.
-			string container = fields[index].Container;
-
+			//	Cherche la prochaine description de champ (pas de séparateur).
 			for (int i=index+1; i<fields.Count; i++)
 			{
-				if (fields[i].Type == FieldDescription.FieldType.Field && fields[i].Container == container)
+				if (fields[i].Type == FieldDescription.FieldType.Field)
 				{
 					return fields[i];
 				}

@@ -59,7 +59,6 @@ namespace Epsitec.Common.FormEngine
 			this.separator = model.separator;
 			this.columnsRequired = model.columnsRequired;
 			this.rowsRequired = model.rowsRequired;
-			this.container = model.container;
 			this.nodeDescription = model.nodeDescription;
 			this.fieldIds = model.fieldIds;
 		}
@@ -210,19 +209,6 @@ namespace Epsitec.Common.FormEngine
 			}
 		}
 
-		public string Container
-		{
-			//	Nom du conteneur (sorte de colonne).
-			get
-			{
-				return this.container;
-			}
-			set
-			{
-				this.container = value;
-			}
-		}
-
 
 		public void CopyTo(FieldDescription dst)
 		{
@@ -232,7 +218,6 @@ namespace Epsitec.Common.FormEngine
 			dst.separator = this.separator;
 			dst.columnsRequired = this.columnsRequired;
 			dst.rowsRequired = this.rowsRequired;
-			dst.container = this.container;
 
 #if false
 			if (this.nodeDescription == null)
@@ -275,6 +260,5 @@ namespace Epsitec.Common.FormEngine
 		protected SeparatorType separator;
 		protected int columnsRequired;
 		protected int rowsRequired;
-		protected string container;
 	}
 }
