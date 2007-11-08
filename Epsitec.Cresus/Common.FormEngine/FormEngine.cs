@@ -21,7 +21,7 @@ namespace Epsitec.Common.FormEngine
 		public Widget CreateForm(Druid entityId, List<FieldDescription> fields)
 		{
 			//	Crée un masque de saisie pour une entité donnée.
-			List<FieldDescription> flat = this.Develop(fields);
+			List<FieldDescription> flat = Arrange.Develop(fields);
 
 			Caption entityCaption = this.resourceManager.GetCaption(entityId);
 			StructuredType entity = TypeRosetta.GetTypeObject(entityCaption) as StructuredType;
@@ -173,40 +173,6 @@ namespace Epsitec.Common.FormEngine
 				}
 			}
 		}
-
-
-
-		private List<FieldDescription> Develop(List<FieldDescription> fields)
-		{
-			//	Retourne une liste développée qui ne contient plus de noeuds.
-			List<FieldDescription> dst = new List<FieldDescription>();
-
-			this.Develop(dst, fields);
-			
-			return dst;
-		}
-
-		private void Develop(List<FieldDescription> dst, List<FieldDescription> fields)
-		{
-			foreach (FieldDescription field in fields)
-			{
-				if (field.Type == FieldDescription.FieldType.Node)
-				{
-					this.Develop(dst, field.NodeDescription);
-				}
-				else if (field.Type == FieldDescription.FieldType.InsertionPoint)
-				{
-				}
-				else if (field.Type == FieldDescription.FieldType.Hide)
-				{
-				}
-				else
-				{
-					dst.Add(field);
-				}
-			}
-		}
-
 
 
 		private void SearchFieldLabel(FieldDescription field, bool[] isLabel, ref int column)

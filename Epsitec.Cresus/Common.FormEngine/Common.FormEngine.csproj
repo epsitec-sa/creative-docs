@@ -35,6 +35,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Arrange.cs" />
     <Compile Include="FieldDescription.cs" />
     <Compile Include="FormEngine.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
