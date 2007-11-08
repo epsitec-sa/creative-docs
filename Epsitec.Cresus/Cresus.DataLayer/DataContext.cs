@@ -59,6 +59,65 @@ namespace Epsitec.Cresus.DataLayer
 			return this.entityDataMapping.Count;
 		}
 
+		public void PersistEntity(AbstractEntity entity)
+		{
+			EntityDataMapping mapping = this.GetEntityDataMapping (entity);
+			System.Data.DataRow dataRow;
+
+			if (mapping.RowKey.IsEmpty)
+			{
+				//	Create a new row in the database for this entity.
+
+				dataRow = this.CreateDataRow (mapping);
+			}
+			else
+			{
+				dataRow = this.FindDataRow (mapping);
+			}
+		}
+
+		private System.Data.DataRow FindDataRow(EntityDataMapping mapping)
+		{
+			throw new System.Exception ("The method or operation is not implemented.");
+		}
+
+		private System.Data.DataRow CreateDataRow(EntityDataMapping mapping)
+		{
+			System.Diagnostics.Debug.Assert (mapping.EntityId.IsValid);
+			System.Diagnostics.Debug.Assert (mapping.RowKey.IsEmpty);
+
+			string tableName = this.GetDataTableName (mapping);
+			System.Data.DataRow row = this.richCommand.CreateRow (tableName);
+			mapping.RowKey = new DbKey (row);
+			return row;
+		}
+
+		private string GetDataTableName(EntityDataMapping mapping)
+		{
+			DbTable tableDef = this.schemaEngine.FindTableDefinition (mapping.EntityId);
+			return tableDef == null ? null : tableDef.Name;
+		}
+
+		public EntityDataMapping GetEntityDataMapping(AbstractEntity entity)
+		{
+			if (entity == null)
+			{
+				throw new System.ArgumentNullException ("entity");
+			}
+
+			EntityDataMapping mapping;
+
+			if (this.entityDataMapping.TryGetValue (entity.GetEntitySerialId (), out mapping))
+			{
+				return mapping;
+			}
+			else
+			{
+				throw new System.ArgumentException ("Entity not managed by the DataContext");
+			}
+		}
+
+
 		#region IDisposable Members
 
 		public void Dispose()

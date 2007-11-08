@@ -29,6 +29,5 @@ namespace Epsitec.Cresus.DataLayer
 				}
 			}
 		}
-
 	}
 }

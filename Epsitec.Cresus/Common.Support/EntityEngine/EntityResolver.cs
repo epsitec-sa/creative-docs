@@ -11,8 +11,20 @@ namespace Epsitec.Common.Support.EntityEngine
 {
 	using Assembly=System.Reflection.Assembly;
 
+	/// <summary>
+	/// The <c>EntityResolver</c> class is used to allocate entity instances
+	/// based on entity ids. The mapping between entity id and entity class
+	/// must be marked with the <see cref="EntityAttribute"/> attribute, at
+	/// the <c>assembly</c> level.
+	/// </summary>
 	public static class EntityResolver
 	{
+		/// <summary>
+		/// Creates an empty entity instance.
+		/// </summary>
+		/// <param name="id">The entity id.</param>
+		/// <returns>The new entity instance or <c>null</c> if the id
+		/// cannot be resolved.</returns>
 		public static AbstractEntity CreateEmptyEntity(Druid id)
 		{
 			Record record;

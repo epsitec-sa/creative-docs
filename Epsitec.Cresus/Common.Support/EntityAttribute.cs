@@ -34,6 +34,10 @@ namespace Epsitec.Common.Support
 		}
 
 
+		/// <summary>
+		/// Gets the type of the entity class.
+		/// </summary>
+		/// <value>The type of the entity class.</value>
 		public System.Type EntityType
 		{
 			get
@@ -42,6 +46,10 @@ namespace Epsitec.Common.Support
 			}
 		}
 
+		/// <summary>
+		/// Gets the entity id.
+		/// </summary>
+		/// <value>The entity id.</value>
 		public Druid EntityId
 		{
 			get

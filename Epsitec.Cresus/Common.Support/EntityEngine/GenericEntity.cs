@@ -10,14 +10,29 @@ using System.Collections.Generic;
 
 namespace Epsitec.Common.Support.EntityEngine
 {
+	/// <summary>
+	/// The <c>GenericEntity</c> class provides a default wrapper for entities
+	/// which cannot be resolved by the <see cref="EntityResolver"/> class.
+	/// </summary>
 	public class GenericEntity : AbstractEntity
 	{
+		/// <summary>
+		/// Initializes a new instance of the <see cref="GenericEntity"/> class.
+		/// </summary>
+		/// <param name="entityId">The entity id.</param>
 		public GenericEntity(Druid entityId)
 		{
 			this.entityId = entityId;
 		}
 
 
+		/// <summary>
+		/// Gets the id of the <see cref="StructuredType"/> which describes
+		/// this entity.
+		/// </summary>
+		/// <returns>
+		/// The id of the <see cref="StructuredType"/>.
+		/// </returns>
 		public override Druid GetEntityStructuredTypeId()
 		{
 			return this.entityId;

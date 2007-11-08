@@ -13,7 +13,7 @@ using System.Collections.Generic;
 
 namespace Epsitec.Cresus.DataLayer.Helpers
 {
-	internal class EntityDataMapping
+	public class EntityDataMapping
 	{
 		public EntityDataMapping(AbstractEntity entity)
 		{
@@ -29,11 +29,31 @@ namespace Epsitec.Cresus.DataLayer.Helpers
 			}
 		}
 
+		public Druid EntityId
+		{
+			get
+			{
+				return this.entity == null ? Druid.Empty : this.entity.GetEntityStructuredTypeId ();
+			}
+		}
+
+
 		public DbKey RowKey
 		{
 			get
 			{
 				return this.rowKey;
+			}
+			set
+			{
+				if (this.rowKey.IsEmpty)
+				{
+					this.rowKey = value;
+				}
+				else
+				{
+					throw new System.InvalidOperationException ("RowKey cannot be modified");
+				}
 			}
 		}
 
