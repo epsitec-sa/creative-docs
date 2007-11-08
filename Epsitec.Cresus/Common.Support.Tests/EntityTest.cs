@@ -27,6 +27,17 @@ namespace Epsitec.Common.Support
 			Assert.AreEqual (EntityDataState.Modified, entity.DataState);
 			Assert.IsFalse (entity.ContainsDataVersion (EntityDataVersion.Original));
 			Assert.IsTrue (entity.ContainsDataVersion (EntityDataVersion.Modified));
+			
+			using (entity.DefineOriginalValues ())
+			{
+				entity.SetField (Res.Fields.ResourceBase.Comment.ToString (), null, "Xyz");
+				Assert.AreEqual ("Xyz", entity.GetField<string> (Res.Fields.ResourceBase.Comment.ToString ()));
+			}
+
+			Assert.AreEqual ("Abc", entity.GetField<string> (Res.Fields.ResourceBase.Comment.ToString ()));
+			Assert.AreEqual (EntityDataState.Modified, entity.DataState);
+			Assert.IsTrue (entity.ContainsDataVersion (EntityDataVersion.Original));
+			Assert.IsTrue (entity.ContainsDataVersion (EntityDataVersion.Modified));
 		}
 
 		[Test]

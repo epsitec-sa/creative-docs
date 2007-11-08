@@ -10,35 +10,55 @@ using System.Collections.Generic;
 
 namespace Epsitec.Common.Support.EntityEngine
 {
+	/// <summary>
+	/// The <c>EntityCollection</c> class is used to store and represent lists
+	/// of data for collection fields in a parent entity.
+	/// </summary>
+	/// <typeparam name="T">The type of the list items.</typeparam>
 	public sealed class EntityCollection<T> : ObservableList<T> where T : AbstractEntity
 	{
-		public EntityCollection(string id, AbstractEntity container, bool copyOnWrite)
+		/// <summary>
+		/// Initializes a new instance of the <see cref="EntityCollection&lt;T&gt;"/> class.
+		/// </summary>
+		/// <param name="containerFieldId">The container field id.</param>
+		/// <param name="container">The container entity.</param>
+		/// <param name="copyOnWrite">If set to <c>true</c>, the list will be set into "copy on write" mode.</param>
+		public EntityCollection(string containerFieldId, AbstractEntity container, bool copyOnWrite)
 		{
-			this.id = id;
+			this.id = containerFieldId;
 			this.container = container;
 			this.state = copyOnWrite ? State.CopyOnWrite : State.Default;
 		}
 
-		public void SetCopyOnWrite(bool enable)
+		/// <summary>
+		/// Resets the list to the "copy on write" mode.
+		/// </summary>
+		public void ResetCopyOnWrite()
 		{
-			if (enable)
-			{
-				this.state = State.CopyOnWrite;
-			}
-			else
-			{
-				this.state = State.Default;
-			}
+			this.state = State.CopyOnWrite;
 		}
 
+		/// <summary>
+		/// Gets the observable list on which to apply modifications.
+		/// If in "copy on write" mode, this will return a writable copy of 
+		/// the list instead of the list itself.
+		/// </summary>
+		/// <returns>The list to use.</returns>
 		protected override ObservableList<T> GetWorkingList()
 		{
 			if (this.container.IsDefiningOriginalValues)
 			{
+				//	The container is in the special "original value definition mode"
+				//	and we need not to worry about copy on write.
+
 				return this;
 			}
 			else
 			{
+				//	If this list is in copy on write mode, then we ask the container
+				//	to generate a copy, which will be stored in the modified data
+				//	version of the container field :
+
 				switch (this.state)
 				{
 					case State.CopyOnWrite:
@@ -57,12 +77,16 @@ namespace Epsitec.Common.Support.EntityEngine
 			}
 		}
 
+		#region Private State Enumeration
+
 		private enum State
 		{
 			Default,
 			CopyOnWrite,
 			Copied
 		}
+
+		#endregion
 
 		private string id;
 		private AbstractEntity container;

@@ -437,6 +437,12 @@ namespace Epsitec.Common.Types.Collections
 		{
 		}
 
+		/// <summary>
+		/// Notifies the event handlers before the list changes. This calls
+		/// <see cref="GetWorkingList"/> to decide on which list the changes
+		/// will be applied and then ensures that the collection is writable.
+		/// </summary>
+		/// <returns>The writable list to use.</returns>
 		protected ObservableList<T> NotifyBeforeChange()
 		{
 			ObservableList<T> that = this.GetWorkingList ();
@@ -451,6 +457,12 @@ namespace Epsitec.Common.Types.Collections
 			return that;
 		}
 
+		/// <summary>
+		/// Gets the observable list on which to apply modifications.
+		/// This method should be overridden if a copy on write protection
+		/// needs to be implemented for this list.
+		/// </summary>
+		/// <returns>The list to use.</returns>
 		protected virtual ObservableList<T> GetWorkingList()
 		{
 			return this;

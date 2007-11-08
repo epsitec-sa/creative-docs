@@ -29,6 +29,10 @@ namespace Epsitec.Common.Support.EntityEngine
 		public abstract Druid GetStructuredTypeId();
 
 
+		/// <summary>
+		/// Gets the state of the entity data.
+		/// </summary>
+		/// <value>The state of the entity data.</value>
 		public EntityDataState DataState
 		{
 			get
@@ -44,6 +48,14 @@ namespace Epsitec.Common.Support.EntityEngine
 			}
 		}
 
+		/// <summary>
+		/// Gets a value indicating whether this entity is currently defining
+		/// its original values (see <see cref="DefineOriginalValues"/>).
+		/// </summary>
+		/// <value>
+		/// 	<c>true</c> if this entity is currently defining its original
+		///		values; otherwise, <c>false</c>.
+		/// </value>
 		public bool IsDefiningOriginalValues
 		{
 			get
@@ -59,6 +71,14 @@ namespace Epsitec.Common.Support.EntityEngine
 			}
 		}
 
+		/// <summary>
+		/// Determines whether the entity contains the specified data version.
+		/// </summary>
+		/// <param name="version">The version.</param>
+		/// <returns>
+		/// 	<c>true</c> if the entity contains the specified data version;
+		///		otherwise, <c>false</c>.
+		/// </returns>
 		public bool ContainsDataVersion(EntityDataVersion version)
 		{
 			switch (version)
@@ -73,6 +93,12 @@ namespace Epsitec.Common.Support.EntityEngine
 		}
 
 
+		/// <summary>
+		/// Switches the entity into a mode which allows the caller to define
+		/// the original values. Call this method in a <c>using</c> block.
+		/// </summary>
+		/// <returns>The object which must be disposed of to end the special
+		/// data definition mode.</returns>
 		public System.IDisposable DefineOriginalValues()
 		{
 			return new DefineOriginalValuesHelper (this);
@@ -254,11 +280,21 @@ namespace Epsitec.Common.Support.EntityEngine
 				System.Threading.Interlocked.Increment (ref this.entity.defineOriginalValuesCount);
 			}
 
+			~DefineOriginalValuesHelper()
+			{
+				throw new System.InvalidOperationException ("Caller of DefineOriginalValues forgot to call Dispose");
+			}
+
 			#region IDisposable Members
 
 			public void Dispose()
 			{
-				System.Threading.Interlocked.Decrement (ref this.entity.defineOriginalValuesCount);
+				if (this.entity != null)
+				{
+					System.GC.SuppressFinalize (this);
+					System.Threading.Interlocked.Decrement (ref this.entity.defineOriginalValuesCount);
+					this.entity = null;
+				}
 			}
 
 			#endregion
