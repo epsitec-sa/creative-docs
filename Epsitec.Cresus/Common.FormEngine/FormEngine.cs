@@ -33,7 +33,6 @@ namespace Epsitec.Common.FormEngine
 
 			UI.Panel root = new UI.Panel();
 			root.ContainerLayoutMode = ContainerLayoutMode.VerticalFlow;
-			root.DrawFrameState = FrameState.All;
 			root.ResourceManager = this.resourceManager;
 			root.DataSource = new UI.DataSource();
 			root.DataSource.AddDataSource("Data", entityData);
@@ -41,9 +40,7 @@ namespace Epsitec.Common.FormEngine
 
 			UI.Panel row = new UI.Panel(stack.Peek());
 			row.ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow;
-			row.DrawFrameState = FrameState.All;
 			row.Dock = DockStyle.Fill;
-			row.Margins = new Margins(10, 10, 10, 10);
 			stack.Push(row);
 
 			int i = 0;
@@ -75,12 +72,13 @@ namespace Epsitec.Common.FormEngine
 						column.ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow;
 						column.DrawFrameState = FrameState.All;
 						column.Dock = DockStyle.Fill;
-						column.Margins = new Margins(10, 10, 10, 10);
-						stack.Push(column);
+						column.Margins = new Margins(5, 5, 5, 5);
+						column.Padding = new Margins(5, 5, 5, 5);
+						//stack.Push(column);
 
 						this.CreateFormBox(column, flat, i, count);
 
-						stack.Pop();
+						//stack.Pop();
 						i += count;
 						break;
 
@@ -89,7 +87,8 @@ namespace Epsitec.Common.FormEngine
 						box.ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow;
 						box.DrawFrameState = FrameState.All;
 						box.Dock = DockStyle.Fill;
-						box.Margins = new Margins(10, 10, 10, 10);
+						box.Margins = new Margins(5, 5, 5, 5);
+						box.Padding = new Margins(5, 5, 5, 5);
 						stack.Push(box);
 						i++;
 						break;
@@ -108,9 +107,7 @@ namespace Epsitec.Common.FormEngine
 
 						row = new UI.Panel(stack.Peek());
 						row.ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow;
-						row.DrawFrameState = FrameState.All;
 						row.Dock = DockStyle.Fill;
-						row.Margins = new Margins(10, 10, 10, 10);
 						stack.Push(row);
 						i++;
 						break;

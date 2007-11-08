@@ -67,9 +67,14 @@ namespace Epsitec.Common.FormEngine
 			double width = 400;
 			double height = 600;
 
-			if (name == "Facture" || name == "Tree")
+			if (name == "Facture")
 			{
 				width *= 2;
+			}
+			
+			if (name == "Tree")
+			{
+				width *= 3;
 			}
 			
 			window.ClientSize = new Size(width, height);
@@ -99,7 +104,6 @@ namespace Epsitec.Common.FormEngine
 			{
 				entityId = Druid.Parse("[63081]");  // Adresse
 
-				fields.Add(this.CreateSeparator(FieldDescription.FieldType.Line));
 				fields.Add(this.CreateField("[63083]", Color.Empty, FieldDescription.SeparatorType.Normal, 9, 2));  // Rue
 				fields.Add(this.CreateField("[63093]", Color.Empty, FieldDescription.SeparatorType.Normal, 2, 1));  // Numéro
 				fields.Add(this.CreateField("[630A3]", Color.Empty, FieldDescription.SeparatorType.Normal, 5, 1));  // Case
@@ -109,6 +113,7 @@ namespace Epsitec.Common.FormEngine
 				fields.Add(this.CreateSeparator(FieldDescription.FieldType.Line));
 				fields.Add(this.CreateField("[630D3]", Color.Empty, FieldDescription.SeparatorType.Normal, 9, 1));  // Etat
 				fields.Add(this.CreateField("[630E3]", Color.Empty, FieldDescription.SeparatorType.Normal, 9, 1));  // Pays
+				fields.Add(this.CreateSeparator(FieldDescription.FieldType.Line));
 			}
 
 			if (name == "Facture")
@@ -166,8 +171,9 @@ namespace Epsitec.Common.FormEngine
 				fields.Add(this.CreateField("[630B2].[63013].[63053]", Color.Empty, FieldDescription.SeparatorType.Append, 3, 1));  // Affaire.SoldeDû.Montant
 				fields.Add(this.CreateField("[630B2].[63013].[63063].[630A]", Color.Empty, FieldDescription.SeparatorType.Normal, 3, 1));  // Affaire.SoldeDû.Monnaie.Designation
 				
+				fields.Add(this.CreateSeparator(FieldDescription.FieldType.BoxBegin));
+
 				List<FieldDescription> subFields = new List<FieldDescription>();
-				subFields.Add(this.CreateSeparator(FieldDescription.FieldType.BreakColumn));
 				subFields.Add(this.CreateSeparator(FieldDescription.FieldType.Title));
 				subFields.Add(this.CreateField("[630B2].[630S2]", Color.Empty, FieldDescription.SeparatorType.Normal, 9, 1));  // Affaire.Client
 				subFields.Add(this.CreateField("[630B2].[630T2]", Color.Empty, FieldDescription.SeparatorType.Normal, 9, 5));  // Affaire.Désignation
@@ -188,6 +194,8 @@ namespace Epsitec.Common.FormEngine
 
 				//	Pour tester. Cela n'a pas de sens de mettre un titre suivi d'aucun champ. Doit générer un simple trait.
 				fields.Add(this.CreateSeparator(FieldDescription.FieldType.Title));
+
+				fields.Add(this.CreateSeparator(FieldDescription.FieldType.BoxEnd));
 			}
 
 			FormEngine engine = new FormEngine(this.manager);
