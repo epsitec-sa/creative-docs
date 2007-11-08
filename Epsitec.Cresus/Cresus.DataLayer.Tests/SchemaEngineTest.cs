@@ -94,6 +94,37 @@ namespace Epsitec.Cresus.DataLayer
 			context.LoadSchema (table);
 			
 			Assert.AreEqual (1, context.RichCommand.DataSet.Tables.Count);
+
+			DumpDataSet (context.RichCommand.DataSet);
+		}
+
+		private static void DumpDataSet(System.Data.DataSet dataSet)
+		{
+			foreach (System.Data.DataTable table in dataSet.Tables)
+			{
+				System.Console.Out.WriteLine ("--------------------------------------");
+				System.Console.Out.WriteLine ("Table {0}, {1} columns, {2} rows", table.TableName, table.Columns.Count, table.Rows.Count);
+				
+				foreach (System.Data.DataColumn column in table.Columns)
+				{
+					System.Console.Out.WriteLine ("- Column {0} : {1}{2}", column.ColumnName, column.DataType.Name, column.Unique ? ", unique" : "");
+				}
+				System.Console.Out.WriteLine ("--------------------------------------");
+				foreach (System.Data.DataRow row in table.Rows)
+				{
+					System.Text.StringBuilder buffer = new System.Text.StringBuilder();
+					foreach (object o in row.ItemArray)
+					{
+						if (buffer.Length > 0)
+						{
+							buffer.Append (", ");
+						}
+						buffer.Append (o == null ? "<null>" : o.ToString ());
+					}
+					System.Console.Out.WriteLine (buffer);
+				}
+				System.Console.Out.WriteLine ();
+			}
 		}
 
 		private DbInfrastructure infrastructure;
