@@ -14,7 +14,7 @@ namespace Epsitec.Common.Support.EntityEngine
 	/// The <c>AbstractEntity</c> class is the base class used to store the
 	/// data represented by entity instances.
 	/// </summary>
-	public abstract class AbstractEntity
+	public abstract class AbstractEntity : IStructuredTypeProvider
 	{
 		protected AbstractEntity()
 		{
@@ -276,6 +276,15 @@ namespace Epsitec.Common.Support.EntityEngine
 		{
 			return (this.originalValues ?? this.modifiedValues) as IStructuredTypeProvider;
 		}
+
+		#region IStructuredTypeProvider Members
+
+		IStructuredType IStructuredTypeProvider.GetStructuredType()
+		{
+			return this.context.GetStructuredType (this);
+		}
+
+		#endregion
 
 		private sealed class DefineOriginalValuesHelper : System.IDisposable
 		{

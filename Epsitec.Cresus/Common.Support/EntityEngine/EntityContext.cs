@@ -138,6 +138,8 @@ namespace Epsitec.Common.Support.EntityEngine
 					{
 						this.CreateRelatedEntities (child, parents);
 					}
+
+					entity.SetField<AbstractEntity> (id, null, child);
 				}
 			}
 

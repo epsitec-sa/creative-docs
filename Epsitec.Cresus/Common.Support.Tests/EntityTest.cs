@@ -8,6 +8,8 @@ using System.Collections.Generic;
 
 [assembly: Entity ("[70052]", typeof (Epsitec.Common.Support.EntityTest.MyEnumTypeEntity))]
 [assembly: Entity ("[70062]", typeof (Epsitec.Common.Support.EntityTest.MyEnumValueEntity))]
+[assembly: Entity ("[7013]", typeof (Epsitec.Common.Support.EntityTest.MyTestInterfaceUserEntity))]
+[assembly: Entity ("[7007]", typeof (Epsitec.Common.Support.EntityTest.MyResourceStringEntity))]
 
 namespace Epsitec.Common.Support
 {
@@ -166,6 +168,18 @@ namespace Epsitec.Common.Support
 
 			Assert.IsNotNull (entity);
 			Assert.AreEqual (typeof (MyEnumTypeEntity), entity.GetType ());
+
+			entity = context.CreateEmptyEntity<MyTestInterfaceUserEntity> ();
+
+			Assert.IsNotNull (entity);
+			Assert.AreEqual (typeof (MyTestInterfaceUserEntity), entity.GetType ());
+
+			entity = context.CreateEntity<MyTestInterfaceUserEntity> ();
+
+			Assert.IsNotNull (entity);
+			Assert.IsNotNull (entity.GetField<MyResourceStringEntity> (Res.Fields.TestInterface.Resource.ToString ()));
+
+			Assert.AreEqual (typeof (MyTestInterfaceUserEntity), entity.GetType ());
 		}
 
 
@@ -188,6 +202,30 @@ namespace Epsitec.Common.Support
 			public override Druid GetEntityStructuredTypeId()
 			{
 				return Res.Types.EnumValue.CaptionId;
+			}
+		}
+
+		#endregion
+
+		#region Fake TestInterfaceUser Entity
+
+		internal class MyTestInterfaceUserEntity : AbstractEntity
+		{
+			public override Druid GetEntityStructuredTypeId()
+			{
+				return Res.Types.TestInterfaceUser.CaptionId;
+			}
+		}
+
+		#endregion
+
+		#region Fake ResourceString Entity
+
+		internal class MyResourceStringEntity : AbstractEntity
+		{
+			public override Druid GetEntityStructuredTypeId()
+			{
+				return Res.Types.ResourceString.CaptionId;
 			}
 		}
 
