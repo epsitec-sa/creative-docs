@@ -33,6 +33,7 @@ namespace Epsitec.Common.FormEngine
 
 			UI.Panel root = new UI.Panel();
 			root.ContainerLayoutMode = ContainerLayoutMode.VerticalFlow;
+			root.DrawFrameState = FrameState.All;
 			root.ResourceManager = this.resourceManager;
 			root.DataSource = new UI.DataSource();
 			root.DataSource.AddDataSource("Data", entityData);
@@ -40,6 +41,7 @@ namespace Epsitec.Common.FormEngine
 
 			UI.Panel row = new UI.Panel(stack.Peek());
 			row.ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow;
+			row.DrawFrameState = FrameState.All;
 			row.Dock = DockStyle.Fill;
 			row.Margins = new Margins(10, 10, 10, 10);
 			stack.Push(row);
@@ -71,6 +73,7 @@ namespace Epsitec.Common.FormEngine
 
 						UI.Panel column = new UI.Panel(stack.Peek());
 						column.ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow;
+						column.DrawFrameState = FrameState.All;
 						column.Dock = DockStyle.Fill;
 						column.Margins = new Margins(10, 10, 10, 10);
 						stack.Push(column);
@@ -84,6 +87,7 @@ namespace Epsitec.Common.FormEngine
 					case FieldDescription.FieldType.BoxBegin:
 						UI.Panel box = new UI.Panel(stack.Peek());
 						box.ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow;
+						box.DrawFrameState = FrameState.All;
 						box.Dock = DockStyle.Fill;
 						box.Margins = new Margins(10, 10, 10, 10);
 						stack.Push(box);
@@ -104,6 +108,7 @@ namespace Epsitec.Common.FormEngine
 
 						row = new UI.Panel(stack.Peek());
 						row.ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow;
+						row.DrawFrameState = FrameState.All;
 						row.Dock = DockStyle.Fill;
 						row.Margins = new Margins(10, 10, 10, 10);
 						stack.Push(row);

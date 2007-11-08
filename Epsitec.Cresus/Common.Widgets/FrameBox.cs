@@ -89,6 +89,44 @@ namespace Epsitec.Common.Widgets
 					FrameBox.DrawPathDash (graphics, path, 1, 4, 4, adorner.ColorBorder);
 				}
 			}
+
+			if (this.DrawFrameState != FrameState.None)
+			{
+				IAdorner adorner = Widgets.Adorners.Factory.Active;
+
+				Rectangle rect = this.Client.Bounds;
+				rect.Deflate (0.5);
+
+				using (Path path = new Path ())
+				{
+					if ((this.DrawFrameState & FrameState.Left) != 0)
+					{
+						path.MoveTo(rect.BottomLeft);
+						path.LineTo(rect.TopLeft);
+					}
+
+					if ((this.DrawFrameState & FrameState.Right) != 0)
+					{
+						path.MoveTo(rect.BottomRight);
+						path.LineTo(rect.TopRight);
+					}
+
+					if ((this.DrawFrameState & FrameState.Top) != 0)
+					{
+						path.MoveTo(rect.TopLeft);
+						path.LineTo(rect.TopRight);
+					}
+
+					if ((this.DrawFrameState & FrameState.Bottom) != 0)
+					{
+						path.MoveTo(rect.BottomLeft);
+						path.LineTo(rect.BottomRight);
+					}
+
+					graphics.Rasterizer.AddOutline (path, this.DrawFrameWidth, CapStyle.Square, JoinStyle.Round, 5.0);
+					graphics.RenderSolid (adorner.ColorBorder);
+				}
+			}
 		}
 
 		public override Size GetBestFitSize()
