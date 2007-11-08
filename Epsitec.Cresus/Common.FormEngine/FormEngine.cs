@@ -48,23 +48,8 @@ namespace Epsitec.Common.FormEngine
 					case FieldDescription.FieldType.Field:
 					case FieldDescription.FieldType.Line:
 					case FieldDescription.FieldType.Title:
-						int count = 0;
-						for (int j=i; j<flat.Count; j++)
-						{
-							if (flat[j].Type == FieldDescription.FieldType.Field ||
-								flat[j].Type == FieldDescription.FieldType.Line  ||
-								flat[j].Type == FieldDescription.FieldType.Title )
-							{
-								count++;
-							}
-							else
-							{
-								break;
-							}
-						}
-
+						int count = FormEngine.CountFields(flat, i);
 						this.CreateFormBox(stack.Peek(), flat, i, count);
-
 						i += count;
 						break;
 
@@ -314,6 +299,29 @@ namespace Epsitec.Common.FormEngine
 				row++;
 				column = 0;
 			}
+		}
+
+
+		static private int CountFields(List<FieldDescription> fields, int index)
+		{
+			//	Compte le nombre de descriptions de types champ, séparateur ou titre.
+			int count = 0;
+
+			for (int i=index; i<fields.Count; i++)
+			{
+				if (fields[i].Type == FieldDescription.FieldType.Field ||
+					fields[i].Type == FieldDescription.FieldType.Line  ||
+					fields[i].Type == FieldDescription.FieldType.Title )
+				{
+					count++;
+				}
+				else
+				{
+					break;
+				}
+			}
+
+			return count;
 		}
 
 		static private FieldDescription SearchNextField(List<FieldDescription> fields, int index)

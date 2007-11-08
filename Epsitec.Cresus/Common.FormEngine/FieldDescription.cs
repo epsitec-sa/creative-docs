@@ -43,11 +43,12 @@ namespace Epsitec.Common.FormEngine
 
 		public FieldDescription(FieldType type) : this()
 		{
-			//	Constructeur. Le type est toujours déterminé à la création. Il ne pourra plus changer ensuite.
+			//	Constructeur.
+			//	Le type est toujours déterminé à la création. Il ne pourra plus changer par la suite.
 			this.type = type;
 			this.backColor = Color.Empty;
 			this.separator = SeparatorType.Normal;
-			this.columnsRequired = 10;
+			this.columnsRequired = FormEngine.MaxColumnsRequired;
 			this.rowsRequired = 1;
 			this.containerLayoutMode = ContainerLayoutMode.None;
 		}
