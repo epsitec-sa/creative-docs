@@ -13,11 +13,12 @@ using System.Collections.Generic;
 
 namespace Epsitec.Cresus.DataLayer
 {
-	public sealed class DataContext : System.IDisposable
+	public sealed partial class DataContext : System.IDisposable
 	{
 		public DataContext(DbInfrastructure infrastructure)
 		{
 			this.infrastructure = infrastructure;
+			this.richCommand = new DbRichCommand (this.infrastructure);
 			this.schemaEngine = new SchemaEngine (this.infrastructure);
 			this.entityContext = EntityContext.Current;
 			this.entityDataMapping = new Dictionary<long, EntityDataMapping> ();
@@ -38,6 +39,14 @@ namespace Epsitec.Cresus.DataLayer
 			get
 			{
 				return this.entityContext;
+			}
+		}
+
+		public DbRichCommand RichCommand
+		{
+			get
+			{
+				return this.richCommand;
 			}
 		}
 
@@ -67,6 +76,7 @@ namespace Epsitec.Cresus.DataLayer
 		}
 
 		readonly DbInfrastructure infrastructure;
+		readonly DbRichCommand richCommand;
 		readonly SchemaEngine schemaEngine;
 		readonly EntityContext entityContext;
 		readonly Dictionary<long, EntityDataMapping> entityDataMapping;

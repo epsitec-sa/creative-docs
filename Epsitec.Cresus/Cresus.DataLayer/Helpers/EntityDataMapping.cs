@@ -18,9 +18,26 @@ namespace Epsitec.Cresus.DataLayer.Helpers
 		public EntityDataMapping(AbstractEntity entity)
 		{
 			this.entity = entity;
+			this.rowKey = new DbKey ();
 		}
 
+		public AbstractEntity Entity
+		{
+			get
+			{
+				return this.entity;
+			}
+		}
+
+		public DbKey RowKey
+		{
+			get
+			{
+				return this.rowKey;
+			}
+		}
 
 		private readonly AbstractEntity entity;
+		private DbKey rowKey;
 	}
 }

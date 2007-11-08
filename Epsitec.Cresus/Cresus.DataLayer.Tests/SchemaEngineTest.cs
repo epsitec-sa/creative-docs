@@ -82,6 +82,20 @@ namespace Epsitec.Cresus.DataLayer
 			Assert.AreEqual (table1.Columns.Count, table3.Columns.Count);
 		}
 
+		[Test]
+		public void Check10CreateDataContext()
+		{
+			DataContext context = new DataContext (this.infrastructure);
+
+			DbTable table = context.SchemaEngine.FindTableDefinition (Druid.Parse ("[630Q]"));
+
+			Assert.AreEqual (0, context.RichCommand.DataSet.Tables.Count);
+
+			context.LoadSchema (table);
+			
+			Assert.AreEqual (1, context.RichCommand.DataSet.Tables.Count);
+		}
+
 		private DbInfrastructure infrastructure;
 	}
 }

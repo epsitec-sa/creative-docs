@@ -17,7 +17,8 @@ namespace Epsitec.Cresus.Database
 		public DbRichCommand(DbInfrastructure infrastructure)
 		{
 			this.infrastructure = infrastructure;
-			
+
+			this.dataSet  = new System.Data.DataSet ();
 			this.commands = new Collections.DbCommandList ();
 			this.tables   = new Collections.DbTableList ();
 			this.adapters = new List<System.Data.IDataAdapter> ();
@@ -27,7 +28,7 @@ namespace Epsitec.Cresus.Database
 		/// Gets the individual commands associated with this rich command.
 		/// </summary>
 		/// <value>The commands.</value>
-		public Collections.DbCommandList			Commands
+		public Collections.DbCommandList		Commands
 		{
 			get
 			{
@@ -39,7 +40,7 @@ namespace Epsitec.Cresus.Database
 		/// Gets the individual table definitions associated with this rich command.
 		/// </summary>
 		/// <value>The table definitions.</value>
-		public Collections.DbTableList				Tables
+		public Collections.DbTableList			Tables
 		{
 			get
 			{
@@ -755,11 +756,10 @@ namespace Epsitec.Cresus.Database
 			{
 				throw new Exceptions.MissingTransactionException (access);
 			}
-			
-			if (this.dataSet == null)
+
+			if (this.access.IsEmpty)
 			{
-				this.dataSet = new System.Data.DataSet ();
-				this.access  = access;
+				this.access = access;
 			}
 			
 			//	Fill the data set based on the adapter objects provided by
@@ -773,34 +773,37 @@ namespace Epsitec.Cresus.Database
 			{
 				for (int i = 0; i < this.tables.Count; i++)
 				{
-					DbTable dbTable = this.tables[i];
+					DbTable tableDef = this.tables[i];
 					
 					string  adoNameTable = "Table";
-					string  dbNameTable  = dbTable.Name;
+					string  dbNameTable  = tableDef.Name;
 					
 					//	Ensure that the column and table names match what we expect,
 					//	based on the DbColumn and DbTable names.
 					
 					System.Data.ITableMapping mapping = this.adapters[i].TableMappings.Add (adoNameTable, dbNameTable);
 					
-					foreach (DbColumn dbColumn in dbTable.Columns)
+					foreach (DbColumn columnDef in tableDef.Columns)
 					{
-						if (dbColumn.Localization == DbColumnLocalization.Localized)
+						if (columnDef.Cardinality == DbCardinality.None)
 						{
-							foreach (string localizationSuffix in dbTable.Localizations)
+							if (columnDef.Localization == DbColumnLocalization.Localized)
 							{
-								string dbNameColumn  = dbColumn.MakeLocalizedName (localizationSuffix);
-								string adoNameColumn = dbColumn.MakeLocalizedSqlName (localizationSuffix);
+								foreach (string localizationSuffix in tableDef.Localizations)
+								{
+									string dbNameColumn  = columnDef.MakeLocalizedName (localizationSuffix);
+									string adoNameColumn = columnDef.MakeLocalizedSqlName (localizationSuffix);
+
+									mapping.ColumnMappings.Add (adoNameColumn, dbNameColumn);
+								}
+							}
+							else
+							{
+								string dbNameColumn  = columnDef.Name;
+								string adoNameColumn = columnDef.GetSqlName ();
 
 								mapping.ColumnMappings.Add (adoNameColumn, dbNameColumn);
 							}
-						}
-						else
-						{
-							string dbNameColumn  = dbColumn.Name;
-							string adoNameColumn = dbColumn.GetSqlName ();
-
-							mapping.ColumnMappings.Add (adoNameColumn, dbNameColumn);
 						}
 					}
 					
@@ -930,12 +933,12 @@ namespace Epsitec.Cresus.Database
 				return;
 			}
 			
-			DbTable dbTable = infrastructure.ResolveDbTable (transaction, table.TableName);
+			DbTable tableDef = infrastructure.ResolveDbTable (transaction, table.TableName);
 			
 			//	Allocate real row ids for the temporary rows; thanks to the relations
 			//	defined at the data set level, the foreign keys will be updated too.
 			
-			long id = infrastructure.NewRowIdInTable (transaction, dbTable, list.Count);
+			long id = infrastructure.NewRowIdInTable (transaction, tableDef, list.Count);
 			
 			System.Diagnostics.Debug.WriteLine (string.Format ("Allocating {0} new IDs for table {1} starting at {2}.", list.Count, table.TableName, id));
 			
@@ -1400,11 +1403,11 @@ namespace Epsitec.Cresus.Database
 		/// </summary>
 		/// <param name="transaction">The transaction.</param>
 		/// <param name="dataTable">The data table.</param>
-		/// <param name="dbTable">The table definition.</param>
+		/// <param name="tableDef">The table definition.</param>
 		/// <param name="options">The replace options.</param>
-		private void ReplaceTablesWithoutValidityChecking(DbTransaction transaction, System.Data.DataTable dataTable, DbTable dbTable, IReplaceOptions options)
+		private void ReplaceTablesWithoutValidityChecking(DbTransaction transaction, System.Data.DataTable dataTable, DbTable tableDef, IReplaceOptions options)
 		{
-			string sqlTableName = dbTable.GetSqlName ();
+			string sqlTableName = tableDef.GetSqlName ();
 			
 			IDbAbstraction database  = transaction.Database;
 			ISqlBuilder    builder   = database.SqlBuilder;
@@ -1414,7 +1417,7 @@ namespace Epsitec.Cresus.Database
 			Collections.SqlFieldList sqlInsert = new Collections.SqlFieldList ();
 			Collections.SqlFieldList sqlConds  = new Collections.SqlFieldList ();
 			
-			int colCount = dbTable.GetSqlColumnCount ();
+			int colCount = tableDef.GetSqlColumnCount ();
 			int rowCount = dataTable.Rows.Count;
 			
 			//	For every row in the table, create an SQL representation of it, including the
@@ -1433,11 +1436,20 @@ namespace Epsitec.Cresus.Database
 			//	DbTable may produce several low level SQL columns for every
 			//	single high level DbColumn...
 			
-			foreach (DbColumn column in dbTable.Columns)
+			foreach (DbColumn column in tableDef.Columns)
 			{
+				if (column.Cardinality != DbCardinality.None)
+				{
+					//	Skip columns which do not exist in the database; this is
+					//	the case for relation columns, which are in fact implemented
+					//	using an extra relation table.
+
+					continue;
+				}
+
 				bool ignoreColumn = (options != null) && options.ShouldIgnoreColumn (column);
 				
-				foreach (SqlColumn sqlColumn in dbTable.CreateSqlColumns (converter, column))
+				foreach (SqlColumn sqlColumn in tableDef.CreateSqlColumns (converter, column))
 				{
 					sqlColumns[index] = sqlColumn;
 
@@ -1599,7 +1611,7 @@ namespace Epsitec.Cresus.Database
 
 
 		private DbInfrastructure				infrastructure;
-		private Collections.DbCommandList			commands;
+		private Collections.DbCommandList		commands;
 		private Collections.DbTableList			tables;
 		private System.Data.DataSet				dataSet;
 		private DbAccess						access;
