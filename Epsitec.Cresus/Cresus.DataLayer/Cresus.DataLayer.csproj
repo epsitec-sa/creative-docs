@@ -123,6 +123,7 @@
     </Compile>
     <Compile Include="DataBroker.cs" />
     <Compile Include="DataBrokerRecord.cs" />
+    <Compile Include="DataContext.cs" />
     <Compile Include="DataTableBroker.cs" />
     <Compile Include="DataBrokerItem.cs" />
     <Compile Include="Helpers\SchemaEngineTableBuilder.cs" />
