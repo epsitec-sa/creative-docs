@@ -575,10 +575,10 @@ namespace Epsitec.Common.Types.Collections
 
 		#endregion
 
-		private event Epsitec.Common.Support.EventHandler<CollectionChangedEventArgs> collectionChangedEvent;
-		private event Epsitec.Common.Support.EventHandler collectionChangingEvent;
+		private Epsitec.Common.Support.EventHandler<CollectionChangedEventArgs> collectionChangedEvent;
+		private Epsitec.Common.Support.EventHandler collectionChangingEvent;
 
-		private List<T> list = new List<T> ();
+		private readonly List<T> list = new List<T> ();
 		private int silent;
 		private bool isReadOnly;
 	}

@@ -144,6 +144,7 @@
     <Compile Include="EntityEngine\EntityDataState.cs" />
     <Compile Include="EntityEngine\EntityCollection.cs" />
     <Compile Include="EntityEngine\EntityDataVersion.cs" />
+    <Compile Include="EntityEngine\EntityEventArgs.cs" />
     <Compile Include="EntityEngine\EntityExpression.cs" />
     <Compile Include="EntityEngine\EntityExpressionEncoding.cs" />
     <Compile Include="EntityEngine\EntityResolver.cs" />

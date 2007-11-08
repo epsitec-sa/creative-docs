@@ -1,14 +1,17 @@
 //	Copyright © 2003-2007, EPSITEC SA, CH-1092 BELMONT, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 namespace Epsitec.Common.Support
 {
 	/// <summary>
-	///	The EventArgs class is the base class used to provide event handlers
-	/// with arguments.
+	///	The <c>EventArgs</c> class is the base class used to provide event
+	/// handlers with arguments.
 	/// </summary>
 	public class EventArgs : System.EventArgs
 	{
+		/// <summary>
+		/// Initializes a new instance of the <see cref="EventArgs"/> class.
+		/// </summary>
 		public EventArgs()
 		{
 		}

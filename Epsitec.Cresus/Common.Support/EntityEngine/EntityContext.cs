@@ -89,27 +89,41 @@ namespace Epsitec.Common.Support.EntityEngine
 			}
 		}
 
-		public T CreateEmptyEntity<T>() where T : AbstractEntity, new ()
+		public AbstractEntity CreateEmptyEntity(Druid entityId)
 		{
-			T entity = new T ();
+			AbstractEntity entity = EntityResolver.CreateEmptyEntity (entityId);
+			this.OnEntityCreated (new EntityEventArgs (entity));
 			return entity;
 		}
 
-		public AbstractEntity CreateEmptyEntity(Druid entityId)
+		public T CreateEmptyEntity<T>() where T : AbstractEntity, new ()
 		{
-			return EntityResolver.CreateEmptyEntity (entityId);
+			T entity = new T ();
+			this.OnEntityCreated (new EntityEventArgs (entity));
+			return entity;
 		}
 
-		public T CreateEntity<T>() where T : AbstractEntity, new()
+		public AbstractEntity CreateEntity(Druid entityId)
+		{
+			AbstractEntity entity = this.CreateEmptyEntity (entityId);
+			this.OnEntityCreated (new EntityEventArgs (entity));
+			return entity;
+		}
+
+		public T CreateEntity<T>() where T : AbstractEntity, new ()
 		{
 			T entity = this.CreateEmptyEntity<T> ();
+			this.CreateRelatedEntities (entity);
+			return entity;
+		}
 
+		
+		private void CreateRelatedEntities(AbstractEntity entity)
+		{
 			using (entity.DefineOriginalValues ())
 			{
 				this.CreateRelatedEntities (entity, new Stack<Druid> ());
 			}
-
-			return entity;
 		}
 
 		private void CreateRelatedEntities(AbstractEntity entity, Stack<Druid> parents)
@@ -146,6 +160,20 @@ namespace Epsitec.Common.Support.EntityEngine
 			parents.Pop ();
 		}
 		
+		protected virtual void OnEntityCreated(EntityEventArgs e)
+		{
+			EventHandler<EntityEventArgs> handler;
+
+			lock (this.eventExclusion)
+			{
+				handler = this.entityCreatedEvent;
+			}
+
+			if (handler != null)
+			{
+				handler (this, e);
+			}
+		}
 		
 		protected void EnsureCorrectThread()
 		{
@@ -216,8 +244,30 @@ namespace Epsitec.Common.Support.EntityEngine
 
 		#endregion
 
+		public event EventHandler<EntityEventArgs> EntityCreated
+		{
+			add
+			{
+				lock (this.eventExclusion)
+				{
+					this.entityCreatedEvent += value;
+				}
+			}
+			remove
+			{
+				lock (this.eventExclusion)
+				{
+					this.entityCreatedEvent -= value;
+				}
+			}
+		}
+
 		[System.ThreadStatic]
 		private static EntityContext current;
+
+		private readonly object eventExclusion = new object ();
+
+		private EventHandler<EntityEventArgs> entityCreatedEvent;
 
 		private readonly ResourceManagerPool resourceManagerPool;
 		private readonly ResourceManager resourceManager;
