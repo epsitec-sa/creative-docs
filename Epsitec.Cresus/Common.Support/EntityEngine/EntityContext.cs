@@ -92,6 +92,12 @@ namespace Epsitec.Common.Support.EntityEngine
 		public AbstractEntity CreateEmptyEntity(Druid entityId)
 		{
 			AbstractEntity entity = EntityResolver.CreateEmptyEntity (entityId);
+
+			if (entity == null)
+			{
+				entity = this.CreateGenericEntity (entityId);
+			}
+
 			this.OnEntityCreated (new EntityEventArgs (entity));
 			return entity;
 		}
@@ -117,7 +123,12 @@ namespace Epsitec.Common.Support.EntityEngine
 			return entity;
 		}
 
-		
+
+		private AbstractEntity CreateGenericEntity(Druid entityId)
+		{
+			return new GenericEntity (entityId);
+		}
+
 		private void CreateRelatedEntities(AbstractEntity entity)
 		{
 			using (entity.DefineOriginalValues ())

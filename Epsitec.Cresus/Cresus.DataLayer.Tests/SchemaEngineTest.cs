@@ -2,6 +2,7 @@
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support;
+using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Database;
@@ -58,7 +59,7 @@ namespace Epsitec.Cresus.DataLayer
 		{
 			SchemaEngine engine = new SchemaEngine (this.infrastructure);
 			DbTransaction transaction = this.infrastructure.BeginTransaction (DbTransactionMode.ReadWrite);
-			engine.CreateTableDefinition (Druid.Parse ("[630Q]"));
+			engine.CreateTableDefinition (this.entityId);
 			transaction.Rollback ();
 			transaction.Dispose ();
 		}
@@ -68,14 +69,14 @@ namespace Epsitec.Cresus.DataLayer
 		{
 			SchemaEngine engine = new SchemaEngine (this.infrastructure);
 
-			Assert.IsNull (engine.FindTableDefinition (Druid.Parse ("[630Q]")));
-			DbTable table1 = engine.CreateTableDefinition (Druid.Parse ("[630Q]"));
-			DbTable table2 = engine.CreateTableDefinition (Druid.Parse ("[630Q]"));
+			Assert.IsNull (engine.FindTableDefinition (this.entityId));
+			DbTable table1 = engine.CreateTableDefinition (this.entityId);
+			DbTable table2 = engine.CreateTableDefinition (this.entityId);
 
 			Assert.AreEqual (table1, table2);
 
 			engine = new SchemaEngine (this.infrastructure);
-			DbTable table3 = engine.FindTableDefinition (Druid.Parse ("[630Q]"));
+			DbTable table3 = engine.FindTableDefinition (this.entityId);
 
 			Assert.AreNotEqual (table1, table3);
 			Assert.AreEqual (table1.Name, table3.Name);
@@ -83,20 +84,30 @@ namespace Epsitec.Cresus.DataLayer
 		}
 
 		[Test]
-		public void Check10CreateDataContext()
+		public void Check10LoadTableSchema()
 		{
 			DataContext context = new DataContext (this.infrastructure);
 
-			DbTable table = context.SchemaEngine.FindTableDefinition (Druid.Parse ("[630Q]"));
+			DbTable table = context.SchemaEngine.FindTableDefinition (this.entityId);
 
 			Assert.AreEqual (0, context.RichCommand.DataSet.Tables.Count);
 
-			context.LoadSchema (table);
-			
+			context.LoadTableSchema (table);
+
 			Assert.AreEqual (1, context.RichCommand.DataSet.Tables.Count);
 
 			DumpDataSet (context.RichCommand.DataSet);
 		}
+
+		[Test]
+		public void Check11SaveEntity()
+		{
+			DataContext context = new DataContext (this.infrastructure);
+
+			AbstractEntity entity = context.EntityContext.CreateEntity (this.entityId);
+		}
+
+		#region Helper Methods
 
 		private static void DumpDataSet(System.Data.DataSet dataSet)
 		{
@@ -127,6 +138,9 @@ namespace Epsitec.Cresus.DataLayer
 			}
 		}
 
+		#endregion
+
 		private DbInfrastructure infrastructure;
+		private Druid entityId = Druid.Parse ("[630Q]");
 	}
 }

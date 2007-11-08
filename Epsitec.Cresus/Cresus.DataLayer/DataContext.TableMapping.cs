@@ -15,7 +15,7 @@ namespace Epsitec.Cresus.DataLayer
 {
 	public sealed partial class DataContext
 	{
-		public void LoadSchema(DbTable tableDefinition)
+		public void LoadTableSchema(DbTable tableDefinition)
 		{
 			if (this.richCommand.Tables.Contains (tableDefinition.Name))
 			{
