@@ -16,8 +16,12 @@ namespace Epsitec.Common.Support.EntityEngine
 	/// </summary>
 	public abstract class AbstractEntity : IStructuredTypeProvider
 	{
+		/// <summary>
+		/// Initializes a new instance of the <see cref="AbstractEntity"/> class.
+		/// </summary>
 		protected AbstractEntity()
 		{
+			this.entitySerialId = System.Threading.Interlocked.Increment (ref AbstractEntity.nextSerialId);
 			this.context = EntityContext.Current;
 		}
 
@@ -74,6 +78,15 @@ namespace Epsitec.Common.Support.EntityEngine
 			{
 				return EntityDataState.Unchanged;
 			}
+		}
+
+		/// <summary>
+		/// Gets the (unique) serial id for this entity.
+		/// </summary>
+		/// <returns>The serial id for this entity.</returns>
+		public long GetEntitySerialId()
+		{
+			return this.entitySerialId;
 		}
 
 		/// <summary>
@@ -316,8 +329,10 @@ namespace Epsitec.Common.Support.EntityEngine
 			AbstractEntity entity;
 		}
 
+		private static long nextSerialId = 1;
 
-		private EntityContext context;
+		private readonly EntityContext context;
+		private readonly long entitySerialId;
 		private IValueStore originalValues;
 		private IValueStore modifiedValues;
 		private int defineOriginalValuesCount;

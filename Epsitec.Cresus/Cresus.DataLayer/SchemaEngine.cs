@@ -165,11 +165,11 @@ namespace Epsitec.Cresus.DataLayer
 
 		#endregion
 
-		DbInfrastructure infrastructure;
-		DbContext context;
-		ResourceManager resourceManager;
+		readonly DbInfrastructure infrastructure;
+		readonly DbContext context;
+		readonly ResourceManager resourceManager;
 
-		Dictionary<Druid, DbTable> tableDefinitionCache;
-		Dictionary<Druid, DbTypeDef> typeDefinitionCache;
+		readonly Dictionary<Druid, DbTable> tableDefinitionCache;
+		readonly Dictionary<Druid, DbTypeDef> typeDefinitionCache;
 	}
 }

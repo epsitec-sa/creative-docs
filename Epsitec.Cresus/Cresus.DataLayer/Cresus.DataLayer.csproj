@@ -126,6 +126,7 @@
     <Compile Include="DataContext.cs" />
     <Compile Include="DataTableBroker.cs" />
     <Compile Include="DataBrokerItem.cs" />
+    <Compile Include="Helpers\EntityDataMapping.cs" />
     <Compile Include="Helpers\SchemaEngineTableBuilder.cs" />
     <Compile Include="RequestFactory.cs">
       <SubType>Code</SubType>

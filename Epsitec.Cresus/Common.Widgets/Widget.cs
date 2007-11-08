@@ -51,7 +51,7 @@ namespace Epsitec.Common.Widgets
 		{
 			if (Widget.DebugDispose)
 			{
-				System.Diagnostics.Debug.WriteLine (string.Format ("{1}+ Created {0}", this.GetType ().Name, this.VisualSerialId));
+				System.Diagnostics.Debug.WriteLine (string.Format ("{1}+ Created {0}", this.GetType ().Name, this.GetVisualSerialId ()));
 			}
 
 			this.InternalState |= InternalState.WasValid;
@@ -136,7 +136,7 @@ namespace Epsitec.Common.Widgets
 		{
 			if (Widget.DebugDispose)
 			{
-				System.Diagnostics.Debug.WriteLine (string.Format ("{2}- {0} widget {1}", (disposing ? "Disposing" : "Collecting"), this.ToString (), this.VisualSerialId));
+				System.Diagnostics.Debug.WriteLine (string.Format ("{2}- {0} widget {1}", (disposing ? "Disposing" : "Collecting"), this.ToString (), this.GetVisualSerialId ()));
 			}
 			
 			if (disposing)
@@ -1168,7 +1168,7 @@ namespace Epsitec.Common.Widgets
 		{
 			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
 			
-			buffer.Append (this.VisualSerialId.ToString ());
+			buffer.Append (this.GetVisualSerialId ().ToString ());
 			buffer.Append (":");
 			buffer.Append (this.GetType ().Name);
 			this.BuildFullPathName (buffer);

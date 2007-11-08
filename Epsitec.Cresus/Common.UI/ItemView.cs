@@ -392,7 +392,7 @@ namespace Epsitec.Common.UI
 					}
 				}
 				
-				//-System.Diagnostics.Debug.WriteLine ("Created " + this.index + "/" + this.GetCollectionIndex () + " -> " + this.widget.ToString () + " in " + this.owner.VisualSerialId);
+				//-System.Diagnostics.Debug.WriteLine ("Created " + this.index + "/" + this.GetCollectionIndex () + " -> " + this.widget.ToString () + " in " + this.owner.GetVisualSerialId ());
 
 				this.widget.SetEmbedder (this.owner);
 				this.widget.SetManualBounds (this.bounds);

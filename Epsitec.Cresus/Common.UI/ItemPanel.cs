@@ -1276,7 +1276,9 @@ namespace Epsitec.Common.UI
 				}
 				else
 				{
-					return this.panel.VisualSerialId.CompareTo (other.panel.VisualSerialId);
+					long a = this.panel.GetVisualSerialId ();
+					long b = other.panel.GetVisualSerialId ();
+					return a.CompareTo (b);
 				}
 			}
 

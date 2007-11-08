@@ -47,7 +47,7 @@ namespace Epsitec.Common.Widgets
 			
 			bool enable = ValidationContext.GetVisualValidity (visual);
 			
-			long serialId = visual.VisualSerialId;
+			long serialId = visual.GetVisualSerialId ();
 			string groups = visual.ValidationGroups;
 			
 			//	Find the record for the specified visual. This should be fast, as
@@ -111,7 +111,7 @@ namespace Epsitec.Common.Widgets
 
 					enable = ValidationContext.GetVisualValidity (child);
 
-					records.Add (new Record (child.VisualSerialId, child.ValidationGroups, enable));
+					records.Add (new Record (child.GetVisualSerialId (), child.ValidationGroups, enable));
 				}
 			}
 

@@ -602,7 +602,7 @@ namespace Epsitec.Common.Widgets.Layouts
 			
 			public override int GetHashCode()
 			{
-				return (int) this.visual.VisualSerialId;
+				return (int) this.visual.GetVisualSerialId ();
 			}
 			public override bool Equals(object obj)
 			{

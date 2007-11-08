@@ -43,14 +43,6 @@ namespace Epsitec.Common.Widgets
 			this.height = this.PreferredHeight;
 		}
 		
-		
-		public long								VisualSerialId
-		{
-			get
-			{
-				return this.visualSerialId;
-			}
-		}
 
 		public int								Index
 		{
@@ -957,6 +949,11 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+
+		public long GetVisualSerialId()
+		{
+			return this.visualSerialId;
+		}
 
 		public IEnumerable<Visual> GetAllChildren()
 		{
@@ -2106,7 +2103,7 @@ namespace Epsitec.Common.Widgets
 		private static long						nextSerialId = 1;
 		
 		private int								commandCacheId = -1;
-		private long							visualSerialId;
+		private readonly long					visualSerialId;
 		private bool							dirtyLayout;
 		private bool							dirtyDisplay;
 		private bool							containsFocus;
