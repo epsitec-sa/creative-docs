@@ -467,7 +467,10 @@ namespace Epsitec.Common.Drawing
 
 						if (sampleImage != null)
 						{
-							this.compressedSampleImage = ImageManager.ImageStore.SaveImageData (this.imageId, this.imageFileDate, this.engine.SampleImageSize, this.width, this.height, sampleImage);
+							if (ImageManager.ImageStore != null)
+							{
+								this.compressedSampleImage = ImageManager.ImageStore.SaveImageData (this.imageId, this.imageFileDate, this.engine.SampleImageSize, this.width, this.height, sampleImage);
+							}
 							
 							if (this.compressedSampleImage != null)
 							{

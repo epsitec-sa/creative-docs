@@ -22,33 +22,6 @@ namespace Epsitec.Common.Support.EntityEngine
 		}
 
 		/// <summary>
-		/// Gets the id of the <see cref="StructuredType"/> which describes
-		/// this entity.
-		/// </summary>
-		/// <returns>The id of the <see cref="StructuredType"/>.</returns>
-		public abstract Druid GetStructuredTypeId();
-
-
-		/// <summary>
-		/// Gets the state of the entity data.
-		/// </summary>
-		/// <value>The state of the entity data.</value>
-		public EntityDataState DataState
-		{
-			get
-			{
-				if (this.modifiedValues != null)
-				{
-					return EntityDataState.Modified;
-				}
-				else
-				{
-					return EntityDataState.Unchanged;
-				}
-			}
-		}
-
-		/// <summary>
 		/// Gets a value indicating whether this entity is currently defining
 		/// its original values (see <see cref="DefineOriginalValues"/>).
 		/// </summary>
@@ -68,6 +41,38 @@ namespace Epsitec.Common.Support.EntityEngine
 				{
 					return false;
 				}
+			}
+		}
+
+		/// <summary>
+		/// Gets the id of the <see cref="StructuredType"/> which describes
+		/// this entity.
+		/// </summary>
+		/// <returns>The id of the <see cref="StructuredType"/>.</returns>
+		public abstract Druid GetEntityStructuredTypeId();
+
+		/// <summary>
+		/// Gets the context associated with this entity.
+		/// </summary>
+		/// <returns>The <see cref="EntityContext"/> instance.</returns>
+		public EntityContext GetEntityContext()
+		{
+			return this.context;
+		}
+
+		/// <summary>
+		/// Gets the state of the entity data.
+		/// </summary>
+		/// <value>The state of the entity data.</value>
+		public EntityDataState GetEntityDataState()
+		{
+			if (this.modifiedValues != null)
+			{
+				return EntityDataState.Modified;
+			}
+			else
+			{
+				return EntityDataState.Unchanged;
 			}
 		}
 

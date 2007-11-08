@@ -6,6 +6,9 @@ using NUnit.Framework;
 
 using System.Collections.Generic;
 
+[assembly: Entity ("[70052]", typeof (Epsitec.Common.Support.EntityTest.MyEnumTypeEntity))]
+[assembly: Entity ("[70062]", typeof (Epsitec.Common.Support.EntityTest.MyEnumValueEntity))]
+
 namespace Epsitec.Common.Support
 {
 	[TestFixture]
@@ -17,14 +20,14 @@ namespace Epsitec.Common.Support
 			MyEnumTypeEntity entity = new MyEnumTypeEntity ();
 
 			Assert.AreEqual (null, entity.GetField<string> (Res.Fields.ResourceBase.Comment.ToString ()));
-			Assert.AreEqual (EntityDataState.Unchanged, entity.DataState);
+			Assert.AreEqual (EntityDataState.Unchanged, entity.GetEntityDataState ());
 			Assert.IsFalse (entity.ContainsDataVersion (EntityDataVersion.Original));
 			Assert.IsFalse (entity.ContainsDataVersion (EntityDataVersion.Modified));
 
 			entity.SetField (Res.Fields.ResourceBase.Comment.ToString (), null, "Abc");
 
 			Assert.AreEqual ("Abc", entity.GetField<string> (Res.Fields.ResourceBase.Comment.ToString ()));
-			Assert.AreEqual (EntityDataState.Modified, entity.DataState);
+			Assert.AreEqual (EntityDataState.Modified, entity.GetEntityDataState ());
 			Assert.IsFalse (entity.ContainsDataVersion (EntityDataVersion.Original));
 			Assert.IsTrue (entity.ContainsDataVersion (EntityDataVersion.Modified));
 			
@@ -35,7 +38,7 @@ namespace Epsitec.Common.Support
 			}
 
 			Assert.AreEqual ("Abc", entity.GetField<string> (Res.Fields.ResourceBase.Comment.ToString ()));
-			Assert.AreEqual (EntityDataState.Modified, entity.DataState);
+			Assert.AreEqual (EntityDataState.Modified, entity.GetEntityDataState ());
 			Assert.IsTrue (entity.ContainsDataVersion (EntityDataVersion.Original));
 			Assert.IsTrue (entity.ContainsDataVersion (EntityDataVersion.Modified));
 		}
@@ -46,7 +49,7 @@ namespace Epsitec.Common.Support
 			MyEnumTypeEntity entity = new MyEnumTypeEntity ();
 
 			Assert.AreEqual (null, entity.GetField<string> (Res.Fields.ResourceBase.Comment.ToString ()));
-			Assert.AreEqual (EntityDataState.Unchanged, entity.DataState);
+			Assert.AreEqual (EntityDataState.Unchanged, entity.GetEntityDataState ());
 			Assert.IsFalse (entity.ContainsDataVersion (EntityDataVersion.Original));
 			Assert.IsFalse (entity.ContainsDataVersion (EntityDataVersion.Modified));
 
@@ -56,14 +59,14 @@ namespace Epsitec.Common.Support
 			}
 
 			Assert.AreEqual ("Abc", entity.GetField<string> (Res.Fields.ResourceBase.Comment.ToString ()));
-			Assert.AreEqual (EntityDataState.Unchanged, entity.DataState);
+			Assert.AreEqual (EntityDataState.Unchanged, entity.GetEntityDataState ());
 			Assert.IsTrue (entity.ContainsDataVersion (EntityDataVersion.Original));
 			Assert.IsFalse (entity.ContainsDataVersion (EntityDataVersion.Modified));
 
 			entity.SetField (Res.Fields.ResourceBase.Comment.ToString (), "Abc", "Xyz");
 			
 			Assert.AreEqual ("Xyz", entity.GetField<string> (Res.Fields.ResourceBase.Comment.ToString ()));
-			Assert.AreEqual (EntityDataState.Modified, entity.DataState);
+			Assert.AreEqual (EntityDataState.Modified, entity.GetEntityDataState ());
 			Assert.IsTrue (entity.ContainsDataVersion (EntityDataVersion.Original));
 			Assert.IsTrue (entity.ContainsDataVersion (EntityDataVersion.Modified));
 		}
@@ -73,7 +76,7 @@ namespace Epsitec.Common.Support
 		{
 			MyEnumTypeEntity entity = new MyEnumTypeEntity ();
 
-			Assert.AreEqual (EntityDataState.Unchanged, entity.DataState);
+			Assert.AreEqual (EntityDataState.Unchanged, entity.GetEntityDataState ());
 			Assert.IsFalse (entity.ContainsDataVersion (EntityDataVersion.Original));
 			Assert.IsFalse (entity.ContainsDataVersion (EntityDataVersion.Modified));
 
@@ -84,7 +87,7 @@ namespace Epsitec.Common.Support
 
 			Assert.IsNotNull (list1);
 
-			Assert.AreEqual (EntityDataState.Unchanged, entity.DataState);
+			Assert.AreEqual (EntityDataState.Unchanged, entity.GetEntityDataState ());
 			Assert.IsTrue (entity.ContainsDataVersion (EntityDataVersion.Original));
 			Assert.IsFalse (entity.ContainsDataVersion (EntityDataVersion.Modified));
 
@@ -94,7 +97,7 @@ namespace Epsitec.Common.Support
 			}
 
 			Assert.AreEqual (1, list1.Count);
-			Assert.AreEqual (EntityDataState.Unchanged, entity.DataState);
+			Assert.AreEqual (EntityDataState.Unchanged, entity.GetEntityDataState ());
 			Assert.IsTrue (entity.ContainsDataVersion (EntityDataVersion.Original));
 			Assert.IsFalse (entity.ContainsDataVersion (EntityDataVersion.Modified));
 
@@ -103,7 +106,7 @@ namespace Epsitec.Common.Support
 
 			Assert.AreEqual (1, list1.Count);
 			Assert.AreEqual (2, list2.Count);
-			Assert.AreEqual (EntityDataState.Modified, entity.DataState);
+			Assert.AreEqual (EntityDataState.Modified, entity.GetEntityDataState ());
 			Assert.IsTrue (entity.ContainsDataVersion (EntityDataVersion.Original));
 			Assert.IsTrue (entity.ContainsDataVersion (EntityDataVersion.Modified));
 			Assert.IsTrue (list1 != list2);
@@ -148,12 +151,29 @@ namespace Epsitec.Common.Support
 			list1.Add (new MyEnumValueEntity ());
 		}
 
+		[Test]
+		public void CheckCreation()
+		{
+			AbstractEntity entity;
+			EntityContext context = EntityContext.Current;
+
+			entity = context.CreateEmptyEntity (Res.Types.ResourceEnumType.CaptionId);
+
+			Assert.IsNotNull (entity);
+			Assert.AreEqual (typeof (MyEnumTypeEntity), entity.GetType ());
+
+			entity = context.CreateEmptyEntity<MyEnumTypeEntity> ();
+
+			Assert.IsNotNull (entity);
+			Assert.AreEqual (typeof (MyEnumTypeEntity), entity.GetType ());
+		}
+
 
 		#region Fake EnumType Entity
 
-		private class MyEnumTypeEntity : AbstractEntity
+		internal class MyEnumTypeEntity : AbstractEntity
 		{
-			public override Druid GetStructuredTypeId()
+			public override Druid GetEntityStructuredTypeId()
 			{
 				return Res.Types.ResourceEnumType.CaptionId;
 			}
@@ -163,9 +183,9 @@ namespace Epsitec.Common.Support
 
 		#region Fake EnumValue Entity
 
-		private class MyEnumValueEntity : AbstractEntity
+		internal class MyEnumValueEntity : AbstractEntity
 		{
-			public override Druid GetStructuredTypeId()
+			public override Druid GetEntityStructuredTypeId()
 			{
 				return Res.Types.EnumValue.CaptionId;
 			}

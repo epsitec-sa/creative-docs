@@ -10,6 +10,10 @@ using System.Collections.Generic;
 
 namespace Epsitec.Common.Support.EntityEngine
 {
+	/// <summary>
+	/// The <c>EntityContext</c> class defines the context associated with a
+	/// set of related entities. It is responsible of the value store management.
+	/// </summary>
 	public class EntityContext
 	{
 		private EntityContext()
@@ -18,6 +22,11 @@ namespace Epsitec.Common.Support.EntityEngine
 			this.resourceManagerPool = this.resourceManager.Pool;
 			this.associatedThread    = System.Threading.Thread.CurrentThread;
 			this.structuredTypeMap   = new Dictionary<Druid, IStructuredType> ();
+		}
+
+		static EntityContext()
+		{
+			EntityResolver.Setup ();
 		}
 		
 		
@@ -36,7 +45,7 @@ namespace Epsitec.Common.Support.EntityEngine
 
 		public IValueStore CreateValueStore(AbstractEntity entity)
 		{
-			Druid typeId = entity.GetStructuredTypeId ();
+			Druid typeId = entity.GetEntityStructuredTypeId ();
 			IStructuredType type = this.GetStructuredType (typeId);
 
 			if (type == null)
@@ -72,7 +81,7 @@ namespace Epsitec.Common.Support.EntityEngine
 
 			if (provider == null)
 			{
-				return this.GetStructuredType (entity.GetStructuredTypeId ());
+				return this.GetStructuredType (entity.GetEntityStructuredTypeId ());
 			}
 			else
 			{
@@ -80,8 +89,63 @@ namespace Epsitec.Common.Support.EntityEngine
 			}
 		}
 
+		public T CreateEmptyEntity<T>() where T : AbstractEntity, new ()
+		{
+			T entity = new T ();
+			return entity;
+		}
 
-		private void EnsureCorrectThread()
+		public AbstractEntity CreateEmptyEntity(Druid entityId)
+		{
+			return EntityResolver.CreateEmptyEntity (entityId);
+		}
+
+		public T CreateEntity<T>() where T : AbstractEntity, new()
+		{
+			T entity = this.CreateEmptyEntity<T> ();
+
+			using (entity.DefineOriginalValues ())
+			{
+				this.CreateRelatedEntities (entity, new Stack<Druid> ());
+			}
+
+			return entity;
+		}
+
+		private void CreateRelatedEntities(AbstractEntity entity, Stack<Druid> parents)
+		{
+			parents.Push (entity.GetEntityStructuredTypeId ());
+
+			IStructuredType type = this.GetStructuredType (entity);
+			
+			foreach (string id in type.GetFieldIds ())
+			{
+				StructuredTypeField field = type.GetField (id);
+
+				if ((field.Relation == FieldRelation.Reference) &&
+					(field.IsNullable == false))
+				{
+					Druid entityId = field.TypeId;
+
+					if (parents.Contains (entityId))
+					{
+						throw new System.InvalidOperationException ("Cyclic dependency");
+					}
+					
+					AbstractEntity child = this.CreateEmptyEntity (field.TypeId);
+
+					using (child.DefineOriginalValues ())
+					{
+						this.CreateRelatedEntities (child, parents);
+					}
+				}
+			}
+
+			parents.Pop ();
+		}
+		
+		
+		protected void EnsureCorrectThread()
 		{
 			if (this.associatedThread == System.Threading.Thread.CurrentThread)
 			{
@@ -91,6 +155,12 @@ namespace Epsitec.Common.Support.EntityEngine
 			throw new System.InvalidOperationException ("Invalid thread calling into EntityContext");
 		}
 
+		#region Private Data Class
+
+		/// <summary>
+		/// The <c>Data</c> class is used to store the data contained in the
+		/// entity objects.
+		/// </summary>
 		private class Data : IValueStore, IStructuredTypeProvider
 		{
 			public Data(IStructuredType type)
@@ -141,6 +211,8 @@ namespace Epsitec.Common.Support.EntityEngine
 			IStructuredType type;
 			Dictionary<string, object> store;
 		}
+
+		#endregion
 
 		[System.ThreadStatic]
 		private static EntityContext current;
