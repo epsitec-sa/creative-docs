@@ -112,7 +112,7 @@ namespace Epsitec.Common.Support.EntityEngine
 		public AbstractEntity CreateEntity(Druid entityId)
 		{
 			AbstractEntity entity = this.CreateEmptyEntity (entityId);
-			this.OnEntityCreated (new EntityEventArgs (entity));
+			this.CreateRelatedEntities (entity);
 			return entity;
 		}
 
@@ -154,7 +154,22 @@ namespace Epsitec.Common.Support.EntityEngine
 
 					if (parents.Contains (entityId))
 					{
-						throw new System.InvalidOperationException ("Cyclic dependency");
+						System.Text.StringBuilder cycle = new System.Text.StringBuilder ();
+						Druid[] stack = parents.ToArray ();
+
+						for (int i = stack.Length; i > 0; i--)
+						{
+							if (cycle.Length > 0)
+							{
+								cycle.Append (" > ");
+							}
+							cycle.Append (stack[i-1]);
+						}
+
+						cycle.Append (" > ");
+						cycle.Append (entityId);
+						
+						throw new System.InvalidOperationException ("Cyclic dependency : " + cycle);
 					}
 					
 					AbstractEntity child = this.CreateEmptyEntity (field.TypeId);

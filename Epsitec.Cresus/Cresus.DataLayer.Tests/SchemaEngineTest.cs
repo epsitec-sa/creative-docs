@@ -106,7 +106,7 @@ namespace Epsitec.Cresus.DataLayer
 
 			AbstractEntity entity = context.EntityContext.CreateEntity (this.articleEntityId);
 
-			Assert.AreEqual (1, context.CountManagedEntities ());
+			Assert.AreEqual (6, context.CountManagedEntities ());
 		}
 
 		#region Helper Methods
@@ -144,5 +144,6 @@ namespace Epsitec.Cresus.DataLayer
 
 		private DbInfrastructure infrastructure;
 		private Druid articleEntityId = Druid.Parse ("[630Q]");
+		private Druid adresseEntityId = Druid.Parse ("[63081]");
 	}
 }
