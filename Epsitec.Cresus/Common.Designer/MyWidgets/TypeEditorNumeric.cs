@@ -77,6 +77,14 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.groupLargeStep.Margins = new Margins(0, 0, 0, 0);
 			this.groupLargeStep.ResetButton.Clicked += new MessageEventHandler(this.HandleResetButtonClicked);
 			this.fieldLargeStep.EditionAccepted += new EventHandler(this.HandleTextFieldChanged);
+
+			//	Valeur par défaut.
+			//?this.CreateDecimalLabeled(Res.Strings.Viewers.Types.Numeric.Default, this, out this.groupDefault, out this.fieldDefault);
+			this.CreateDecimalLabeled("Valeur par défaut", left, out this.groupDefault, out this.fieldDefault);
+			this.groupDefault.Dock = DockStyle.StackBegin;
+			this.groupDefault.Margins = new Margins(0, 0, 10, 0);
+			this.groupDefault.ResetButton.Clicked += new MessageEventHandler(this.HandleResetButtonClicked);
+			this.fieldDefault.EditionAccepted += new EventHandler(this.HandleTextFieldChanged);
 		}
 		
 		
@@ -92,6 +100,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				this.groupPreferredRes.ResetButton.Clicked -= new MessageEventHandler(this.HandleResetButtonClicked);
 				this.groupSmallStep.ResetButton.Clicked -= new MessageEventHandler(this.HandleResetButtonClicked);
 				this.groupLargeStep.ResetButton.Clicked -= new MessageEventHandler(this.HandleResetButtonClicked);
+				this.groupDefault.ResetButton.Clicked -= new MessageEventHandler(this.HandleResetButtonClicked);
 				
 				this.fieldMin.EditionAccepted -= new EventHandler(this.HandleTextFieldChanged);
 				this.fieldMax.EditionAccepted -= new EventHandler(this.HandleTextFieldChanged);
@@ -101,6 +110,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				this.fieldPreferredRes.EditionAccepted -= new EventHandler(this.HandleTextFieldChanged);
 				this.fieldSmallStep.EditionAccepted -= new EventHandler(this.HandleTextFieldChanged);
 				this.fieldLargeStep.EditionAccepted -= new EventHandler(this.HandleTextFieldChanged);
+				this.fieldDefault.EditionAccepted -= new EventHandler(this.HandleTextFieldChanged);
 			}
 			
 			base.Dispose(disposing);
@@ -155,6 +165,17 @@ namespace Epsitec.Common.Designer.MyWidgets
 				if (step != 0M)
 				{
 					this.PutSummaryValue(builder, Res.Strings.Viewers.Types.Summary.BigStep, step.ToString());
+				}
+			}
+
+			value = this.structuredData.GetValue(Support.Res.Fields.ResourceBaseType.DefaultValue);
+			if (!UndefinedValue.IsUndefinedValue(value))
+			{
+				decimal def = (decimal) value;
+				if (def != 0M)
+				{
+					//?this.PutSummaryValue(builder, Res.Strings.Viewers.Types.Summary.BigStep, def.ToString());
+					this.PutSummaryValue(builder, "Defaut", def.ToString());
 				}
 			}
 
@@ -263,6 +284,25 @@ namespace Epsitec.Common.Designer.MyWidgets
 				}
 			}
 			
+			value = this.structuredData.GetValue(Support.Res.Fields.ResourceBaseType.DefaultValue, out usesOriginalData);
+			this.ColorizeResetBox(this.groupDefault, source, usesOriginalData);
+			if (UndefinedValue.IsUndefinedValue(value))
+			{
+				this.fieldDefault.Text = "";
+			}
+			else
+			{
+				decimal def = (decimal) value;
+				if (def == 0M)
+				{
+					this.fieldDefault.Text = "";
+				}
+				else
+				{
+					this.SetDecimal(this.fieldDefault, def);
+				}
+			}
+			
 			this.ignoreChange = false;
 		}
 
@@ -351,6 +391,12 @@ namespace Epsitec.Common.Designer.MyWidgets
 				this.structuredData.SetValue(Support.Res.Fields.ResourceNumericType.LargeStep, largeStep);
 			}
 
+			if (sender == this.fieldDefault)
+			{
+				decimal def = this.GetDecimal(this.fieldDefault);
+				this.structuredData.SetValue(Support.Res.Fields.ResourceBaseType.DefaultValue, def);
+			}
+
 			this.OnContentChanged();
 			this.UpdateContent();
 			this.module.AccessTypes.SetLocalDirty();
@@ -434,6 +480,11 @@ namespace Epsitec.Common.Designer.MyWidgets
 				this.ResetToOriginalValue(Support.Res.Fields.ResourceNumericType.LargeStep);
 			}
 
+			if (button == this.groupDefault.ResetButton)
+			{
+				this.ResetToOriginalValue(Support.Res.Fields.ResourceBaseType.DefaultValue);
+			}
+
 			this.OnContentChanged();
 			this.UpdateContent();
 			this.module.AccessTypes.SetLocalDirty();
@@ -456,5 +507,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected TextFieldEx					fieldSmallStep;
 		protected ResetBox						groupLargeStep;
 		protected TextFieldEx					fieldLargeStep;
+		protected ResetBox						groupDefault;
+		protected TextFieldEx					fieldDefault;
 	}
 }
