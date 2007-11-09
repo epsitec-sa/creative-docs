@@ -53,6 +53,7 @@ namespace Epsitec.Common.FormEngine
 			this.containerPadding = Margins.Zero;
 			this.containerBackColor = Color.Empty;
 			this.containerFrameState = FrameState.None;
+			this.containerFrameWidth = 1;
 		}
 
 		public FieldDescription(FieldDescription model) : this()
@@ -70,6 +71,7 @@ namespace Epsitec.Common.FormEngine
 			this.containerPadding = model.containerPadding;
 			this.containerBackColor = model.containerBackColor;
 			this.containerFrameState = model.containerFrameState;
+			this.containerFrameWidth = model.containerFrameWidth;
 		}
 
 
@@ -288,6 +290,20 @@ namespace Epsitec.Common.FormEngine
 			}
 		}
 
+		public double ContainerFrameWidth
+		{
+			//	Epaisseur des bordures d'une boîte.
+			get
+			{
+				return this.containerFrameWidth;
+			}
+			set
+			{
+				System.Diagnostics.Debug.Assert(this.type == FieldType.BoxBegin);
+				this.containerFrameWidth = value;
+			}
+		}
+
 
 		public void CopyTo(FieldDescription dst)
 		{
@@ -344,5 +360,6 @@ namespace Epsitec.Common.FormEngine
 		protected Margins containerPadding;
 		protected Color containerBackColor;
 		protected FrameState containerFrameState;
+		protected double containerFrameWidth;
 	}
 }

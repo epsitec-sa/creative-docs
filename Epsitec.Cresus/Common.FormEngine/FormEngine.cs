@@ -195,6 +195,7 @@ namespace Epsitec.Common.FormEngine
 			box.Padding = field.ContainerPadding;
 			box.BackColor = field.ContainerBackColor;
 			box.DrawFrameState = field.ContainerFrameState;
+			box.DrawFrameWidth = field.ContainerFrameWidth;
 			
 			grid.RowDefinitions.Add(new Widgets.Layouts.RowDefinition());
 
