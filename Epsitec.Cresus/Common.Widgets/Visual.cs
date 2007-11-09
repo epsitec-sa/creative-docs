@@ -864,6 +864,7 @@ namespace Epsitec.Common.Widgets
 
 		public bool								DrawDesignerFrame
 		{
+			//	Détermine s'il faut dessiner un cadre traitillé (utilisé par Designer).
 			get
 			{
 				return (bool) this.GetValue (Visual.DrawDesignerFrameProperty);

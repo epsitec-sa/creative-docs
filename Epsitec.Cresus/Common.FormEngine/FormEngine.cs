@@ -79,6 +79,11 @@ namespace Epsitec.Common.FormEngine
 						this.PreprocessField(field, isLabel, ref column);
 					}
 				}
+				else if (field.Type == FieldDescription.FieldType.Node ||
+						 field.Type == FieldDescription.FieldType.Hide)
+				{
+					throw new System.InvalidOperationException("Type incorrect (la liste de FieldDescription devrait être aplatie).");
+				}
 			}
 
 			//	Crée les différentes colonnes.
