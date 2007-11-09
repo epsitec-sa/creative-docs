@@ -159,6 +159,13 @@ namespace Epsitec.Common.FormEngine
 
 				fields.Add(this.CreateField("[630S2]", Color.Empty, FieldDescription.SeparatorType.Normal, 5, 1));  // Client
 				fields.Add(this.CreateField("[630T2]", Color.Empty, FieldDescription.SeparatorType.Normal, 10, 5));  // Désignation
+
+				fields.Add(this.CreateBoxBegin(ContainerLayoutMode.VerticalFlow, 5, 10, Color.Empty, FrameState.All, 1, 10));
+				fields.Add(this.CreateSeparator(FieldDescription.FieldType.Title));
+				fields.Add(this.CreateField("[630V2].[630M2]", Color.Empty, FieldDescription.SeparatorType.Normal, 2, 1));  // Rappels.Nième
+				fields.Add(this.CreateField("[630V2].[630N2]", Color.Empty, FieldDescription.SeparatorType.Normal, 10, 1));  // Rappels.Texte
+				fields.Add(this.CreateBoxEnd());
+
 				fields.Add(this.CreateSeparator(FieldDescription.FieldType.Title));
 				fields.Add(this.CreateField("[63013].[63053]", Color.FromRgb(1, 0.9, 0.5), FieldDescription.SeparatorType.Normal, 4, 1));  // SoldeDû.Montant
 			}

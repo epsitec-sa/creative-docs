@@ -45,6 +45,7 @@ namespace Epsitec.Common.FormEngine
 		private void CreateFormBox(UI.Panel root, List<FieldDescription> fields, int index)
 		{
 			//	Crée tous les champs dans une boîte.
+			//	Cette méthode est appelée récursivement pour chaque BoxBegin/BoxEnd.
 
 			//	Première passe pour déterminer quelles colonnes contiennent des labels.
 			int column = 0, row = 0;
@@ -86,11 +87,11 @@ namespace Epsitec.Common.FormEngine
 				}
 			}
 
-			//	Crée les différentes colonnes.
+			//	Crée les différentes colonnes, en fonction des résultats de la première passe.
 			Widgets.Layouts.GridLayoutEngine grid = new Widgets.Layouts.GridLayoutEngine();
 			for (int i=0; i<FormEngine.MaxColumnsRequired; i++)
 			{
-				if (isLabel[i])
+				if (isLabel[i])  // est-ce que cette colonne contient un label ?
 				{
 					//	Largeur automatique selon la taille minimale du contenu.
 					grid.ColumnDefinitions.Add(new Widgets.Layouts.ColumnDefinition());
@@ -157,6 +158,8 @@ namespace Epsitec.Common.FormEngine
 		private void PreprocessBoxBegin(FieldDescription field, bool[] isLabel, ref int column)
 		{
 			//	Détermine quelles colonnes contiennent des labels, lors de la première passe.
+			//	Un BoxBegin ne contient jamais de label, mais il faut tout de même faire évoluer
+			//	le numéro de la colonne.
 			int columnsRequired = System.Math.Min(field.ColumnsRequired, FormEngine.MaxColumnsRequired);
 
 			if (column+columnsRequired > FormEngine.MaxColumnsRequired)  // dépasse à droite ?
@@ -217,6 +220,12 @@ namespace Epsitec.Common.FormEngine
 			Widgets.Layouts.GridLayoutEngine.SetColumnSpan(box, columnsRequired);
 
 			column += columnsRequired;
+
+			if (column >= FormEngine.MaxColumnsRequired)  // bord droite atteint ?
+			{
+				row++;
+				column = 0;
+			}
 
 			return box;
 		}
