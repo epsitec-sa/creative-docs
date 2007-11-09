@@ -15,6 +15,20 @@ namespace Epsitec.Cresus.DataLayer
 {
 	public sealed partial class DataContext
 	{
+		public void LoadEntitySchema(Druid entityId)
+		{
+			if (this.entityTableDefinitions.ContainsKey (entityId))
+			{
+				//	Nothing to do. The schema has already been loaded.
+			}
+			else
+			{
+				DbTable tableDef = this.schemaEngine.FindTableDefinition (entityId);
+				this.entityTableDefinitions[entityId] = tableDef;
+				this.LoadTableSchema (tableDef);
+			}
+		}
+
 		public void LoadTableSchema(DbTable tableDefinition)
 		{
 			if (this.richCommand.Tables.Contains (tableDefinition.Name))

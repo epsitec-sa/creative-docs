@@ -22,6 +22,7 @@ namespace Epsitec.Cresus.DataLayer
 			this.schemaEngine = new SchemaEngine (this.infrastructure);
 			this.entityContext = EntityContext.Current;
 			this.entityDataMapping = new Dictionary<long, EntityDataMapping> ();
+			this.entityTableDefinitions = new Dictionary<Druid, DbTable> ();
 
 			this.entityContext.EntityCreated += this.HandleEntityCreated;
 		}
@@ -120,7 +121,9 @@ namespace Epsitec.Cresus.DataLayer
 				}
 			}
 
-			dataRow[fieldDef.Id] = value;
+			string columnName = this.GetDataColumnName (fieldDef);
+
+			dataRow[columnName] = value;
 		}
 
 		private System.Data.DataRow FindDataRow(EntityDataMapping mapping)
@@ -144,6 +147,17 @@ namespace Epsitec.Cresus.DataLayer
 		{
 			DbTable tableDef = this.schemaEngine.FindTableDefinition (mapping.EntityId);
 			return tableDef == null ? null : tableDef.Name;
+		}
+
+		private string GetDataColumnName(StructuredTypeField field)
+		{
+			System.Diagnostics.Debug.Assert (field.Id.StartsWith ("["));
+			System.Diagnostics.Debug.Assert (field.Id.EndsWith ("]"));
+
+			string fieldName = field.Id;
+			string nakedName = fieldName.Substring (1, fieldName.Length-2);
+
+			return nakedName;
 		}
 
 		public EntityDataMapping GetEntityDataMapping(AbstractEntity entity)
@@ -186,9 +200,11 @@ namespace Epsitec.Cresus.DataLayer
 		private void HandleEntityCreated(object sender, EntityEventArgs e)
 		{
 			AbstractEntity entity = e.Entity;
+			Druid entityId = entity.GetEntityStructuredTypeId ();
 			long entitySerialId = entity.GetEntitySerialId ();
 
 			this.entityDataMapping[entitySerialId] = new EntityDataMapping (entity);
+			this.LoadEntitySchema (entityId);
 		}
 
 		readonly DbInfrastructure infrastructure;
@@ -196,5 +212,6 @@ namespace Epsitec.Cresus.DataLayer
 		readonly SchemaEngine schemaEngine;
 		readonly EntityContext entityContext;
 		readonly Dictionary<long, EntityDataMapping> entityDataMapping;
+		readonly Dictionary<Druid, DbTable> entityTableDefinitions;
 	}
 }
