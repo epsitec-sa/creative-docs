@@ -470,4 +470,7 @@
   <data name="Viewers.Types.Numeric.Default" id="2F4">Valeur par défaut</data>
   <data name="Viewers.Types.String.Default" id="2G4">Texte par défaut</data>
   <data name="Viewers.Types.Summary.Default" id="2H4">Défaut</data>
+  <data name="Viewers.Types.Boolean.Default" id="2I4">Etat par défaut</data>
+  <data name="Viewers.Types.Boolean.True" id="2J4">Vrai</data>
+  <data name="Viewers.Types.Boolean.False" id="2K4">Faux</data>
 </bundle>

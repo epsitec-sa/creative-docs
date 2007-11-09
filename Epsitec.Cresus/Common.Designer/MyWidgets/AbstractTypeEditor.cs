@@ -30,6 +30,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			//	Crée le bon widget AbstractTypeEditor pour éditer un type.
 			switch (typeCode)
 			{
+				case TypeCode.Boolean:      return new TypeEditorBoolean(module);
 				case TypeCode.Integer:      return new TypeEditorNumeric(module);
 				case TypeCode.LongInteger:  return new TypeEditorNumeric(module);
 				case TypeCode.Double:       return new TypeEditorNumeric(module);

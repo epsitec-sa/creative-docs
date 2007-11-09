@@ -53,6 +53,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				this.groupMin.ResetButton.Clicked -= new MessageEventHandler(this.HandleResetButtonClicked);
 				this.groupMax.ResetButton.Clicked -= new MessageEventHandler(this.HandleResetButtonClicked);
 				this.groupDefault.ResetButton.Clicked -= new MessageEventHandler(this.HandleResetButtonClicked);
+				this.groupMultilingual.ResetButton.Clicked -= new MessageEventHandler(this.HandleResetButtonClicked);
 
 				this.fieldMin.EditionAccepted -= new EventHandler(this.HandleTextFieldChanged);
 				this.fieldMax.EditionAccepted -= new EventHandler(this.HandleTextFieldChanged);

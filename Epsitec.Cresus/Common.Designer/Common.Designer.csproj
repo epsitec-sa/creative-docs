@@ -46,6 +46,7 @@
     <Compile Include="EntitiesEditor\ObjectInfo.cs" />
     <Compile Include="ModuleSupport\ModuleGenerator.cs" />
     <Compile Include="ModuleSupport\ModuleMerger.cs" />
+    <Compile Include="MyWidgets\TypeEditorBoolean.cs" />
     <Compile Include="MyWidgets\ResetBox.cs" />
     <Compile Include="MyWidgets\TypeEditorNative.cs" />
     <Compile Include="Ribbons\Identity.cs" />

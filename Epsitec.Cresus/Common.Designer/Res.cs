@@ -965,6 +965,13 @@ namespace Epsitec.Common.Designer
 						public static string Mime { get { return global::Epsitec.Common.Designer.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (296)); } }
 					}
 					
+					public static class Boolean
+					{
+						public static string Default { get { return global::Epsitec.Common.Designer.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (33554578)); } }
+						public static string False { get { return global::Epsitec.Common.Designer.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (33554580)); } }
+						public static string True { get { return global::Epsitec.Common.Designer.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (33554579)); } }
+					}
+					
 					public static class Controller
 					{
 						public static string Title { get { return global::Epsitec.Common.Designer.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (241)); } }
