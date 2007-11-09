@@ -1165,7 +1165,7 @@ namespace Epsitec.Common.Types
 		{
 			if (this.IsRefreshDeferred)
 			{
-				throw new System.InvalidOperationException ("Invalid operation while refresh is deferred");
+				throw new System.InvalidOperationException (string.Format ("Invalid operation while refresh is deferred; thread name='{0}'", System.Threading.Thread.CurrentThread.Name ?? "<null>"));
 			}
 		}
 
