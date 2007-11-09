@@ -41,6 +41,14 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.fieldResol.Items.Add(Res.Strings.Viewers.Types.DateTime.Res.Months);
 			this.fieldResol.Items.Add(Res.Strings.Viewers.Types.DateTime.Res.Years);
 
+			//	Valeur par défaut.
+			//?this.CreateDecimalLabeled(Res.Strings.Viewers.Types.DateTime.Default, this, out this.groupDefault, out this.fieldDefault);
+			this.CreateDecimalLabeled("Valeur par défaut", right, out this.groupDefault, out this.fieldDefault);
+			this.groupDefault.Dock = DockStyle.StackBegin;
+			this.groupDefault.Margins = new Margins(0, 0, 0, 10);
+			this.groupDefault.ResetButton.Clicked += new MessageEventHandler(this.HandleResetButtonClicked);
+			this.fieldDefault.EditionAccepted += new EventHandler(this.HandleTextFieldChanged);
+
 			//	Date, à gauche.
 			this.CreateStringLabeled(Res.Strings.Viewers.Types.DateTime.DateMin, left, out this.groupMinDate, out this.fieldMinDate);
 			this.groupMinDate.Dock = DockStyle.StackBegin;
@@ -78,14 +86,6 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.groupTimeStep.Margins = new Margins(0, 0, 0, 10);
 			this.groupTimeStep.ResetButton.Clicked += new MessageEventHandler(this.HandleResetButtonClicked);
 			this.fieldTimeStep.EditionAccepted += new EventHandler(this.HandleTextFieldChanged);
-
-			//	Valeur par défaut.
-			//?this.CreateDecimalLabeled(Res.Strings.Viewers.Types.DateTime.Default, this, out this.groupDefault, out this.fieldDefault);
-			this.CreateDecimalLabeled("Valeur par défaut", left, out this.groupDefault, out this.fieldDefault);
-			this.groupDefault.Dock = DockStyle.StackBegin;
-			this.groupDefault.Margins = new Margins(0, 0, 0, 0);
-			this.groupDefault.ResetButton.Clicked += new MessageEventHandler(this.HandleResetButtonClicked);
-			this.fieldDefault.EditionAccepted += new EventHandler(this.HandleTextFieldChanged);
 		}
 
 		
