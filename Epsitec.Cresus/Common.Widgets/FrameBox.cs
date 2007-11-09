@@ -59,6 +59,23 @@ namespace Epsitec.Common.Widgets
 		}
 
 
+		public override Drawing.Margins GetShapeMargins()
+		{
+			//	Si le cadre est dessiné avec une épaisseur qui dépasse un pixel, il faut augmenter
+			//	la surface à redessiner pour ce widget.
+			double width = this.DrawFrameWidth;
+
+			if (width <= 1 || this.DrawFrameState == FrameState.None)
+			{
+				return base.GetShapeMargins ();
+			}
+			else
+			{
+				double m = (width-1)/2;
+				return new Margins (m, m, m, m);
+			}
+		}
+
 		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
 		{
 			if (this.BackColor.IsVisible)

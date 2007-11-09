@@ -168,7 +168,7 @@ namespace Epsitec.Common.FormEngine
 				entityId = Druid.Parse("[63021]");  // Facture
 
 				fields.Add(this.CreateBoxBegin(ContainerLayoutMode.VerticalFlow, 0, 0, Color.Empty, FrameState.None, 0, 7));
-				fields.Add(this.CreateBoxBegin(ContainerLayoutMode.VerticalFlow, 5, 5, Color.Empty, FrameState.All, 1, 10));
+				fields.Add(this.CreateBoxBegin(ContainerLayoutMode.VerticalFlow, 5, 10, Color.Empty, FrameState.All, 1, 10));
 				fields.Add(this.CreateField("[630A2]", Color.Empty, FieldDescription.SeparatorType.Normal, 5, 1));  // Numéro
 
 				fields.Add(this.CreateSeparator(FieldDescription.FieldType.Title));
@@ -176,7 +176,7 @@ namespace Epsitec.Common.FormEngine
 				fields.Add(this.CreateField("[630B2].[63013].[63063].[630A]", Color.Empty, FieldDescription.SeparatorType.Normal, 4, 1));  // Affaire.SoldeDû.Monnaie.Designation
 				fields.Add(this.CreateBoxEnd());
 				
-				fields.Add(this.CreateBoxBegin(ContainerLayoutMode.VerticalFlow, 5, 5, Color.FromRgb(0.6, 0.8, 0.8), FrameState.All, 3, 10));
+				fields.Add(this.CreateBoxBegin(ContainerLayoutMode.VerticalFlow, 5, 10, Color.FromRgb(0.6, 0.8, 0.8), FrameState.All, 5, 10));
 				List<FieldDescription> subFields = new List<FieldDescription>();
 				subFields.Add(this.CreateSeparator(FieldDescription.FieldType.Title));
 				subFields.Add(this.CreateField("[630B2].[630S2]", Color.Empty, FieldDescription.SeparatorType.Normal, 10, 1));  // Affaire.Client
@@ -190,7 +190,7 @@ namespace Epsitec.Common.FormEngine
 				fields.Add(this.CreateBoxEnd());
 				fields.Add(this.CreateBoxEnd());
 
-				fields.Add(this.CreateBoxBegin(ContainerLayoutMode.VerticalFlow, 5, 5, Color.Empty, FrameState.All, 1, 3));
+				fields.Add(this.CreateBoxBegin(ContainerLayoutMode.VerticalFlow, 5, 10, Color.Empty, FrameState.Left, 1, 3));
 				fields.Add(this.CreateSeparator(FieldDescription.FieldType.Title));
 				fields.Add(this.CreateField("[630L2].[630M].[630H]", Color.FromRgb(1, 0.5, 0.5), FieldDescription.SeparatorType.Normal, 4, 1));  // TotalFacturé.Prix.Ht
 				fields.Add(this.CreateSeparator(FieldDescription.FieldType.Title));
