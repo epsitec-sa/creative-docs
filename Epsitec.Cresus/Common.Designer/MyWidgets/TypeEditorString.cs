@@ -38,8 +38,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.checkMultilingual.Dock = DockStyle.Fill;
 			this.checkMultilingual.Clicked += new MessageEventHandler(this.HandleCheckClicked);
 
-			//?this.CreateDecimalLabeled(Res.Strings.Viewers.Types.String.Default, this, out this.groupDefault, out this.fieldDefault);
-			this.CreateDecimalLabeled("Texte par défaut", this, out this.groupDefault, out this.fieldDefault);
+			this.CreateDecimalLabeled(Res.Strings.Viewers.Types.String.Default, this, out this.groupDefault, out this.fieldDefault);
 			this.groupDefault.Dock = DockStyle.StackBegin;
 			this.groupDefault.Margins = new Margins(0, 0, 10, 0);
 			this.groupDefault.ResetButton.Clicked += new MessageEventHandler(this.HandleResetButtonClicked);
@@ -98,8 +97,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				string def = value as string;
 				if (!string.IsNullOrEmpty(def))
 				{
-					//?this.PutSummaryValue(builder, Res.Strings.Viewers.Types.Summary.Default, def);
-					this.PutSummaryValue(builder, "Defaut", def);
+					this.PutSummaryValue(builder, Res.Strings.Viewers.Types.Summary.Default, def);
 				}
 			}
 

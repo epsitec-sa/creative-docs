@@ -79,8 +79,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.fieldLargeStep.EditionAccepted += new EventHandler(this.HandleTextFieldChanged);
 
 			//	Valeur par défaut.
-			//?this.CreateDecimalLabeled(Res.Strings.Viewers.Types.Numeric.Default, this, out this.groupDefault, out this.fieldDefault);
-			this.CreateDecimalLabeled("Valeur par défaut", left, out this.groupDefault, out this.fieldDefault);
+			this.CreateDecimalLabeled(Res.Strings.Viewers.Types.Numeric.Default, left, out this.groupDefault, out this.fieldDefault);
 			this.groupDefault.Dock = DockStyle.StackBegin;
 			this.groupDefault.Margins = new Margins(0, 0, 10, 0);
 			this.groupDefault.ResetButton.Clicked += new MessageEventHandler(this.HandleResetButtonClicked);
@@ -174,8 +173,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				decimal def = (decimal) value;
 				if (def != 0M)
 				{
-					//?this.PutSummaryValue(builder, Res.Strings.Viewers.Types.Summary.BigStep, def.ToString());
-					this.PutSummaryValue(builder, "Defaut", def.ToString());
+					this.PutSummaryValue(builder, Res.Strings.Viewers.Types.Summary.BigStep, def.ToString());
 				}
 			}
 

@@ -42,8 +42,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.fieldResol.Items.Add(Res.Strings.Viewers.Types.DateTime.Res.Years);
 
 			//	Valeur par défaut.
-			//?this.CreateDecimalLabeled(Res.Strings.Viewers.Types.DateTime.Default, this, out this.groupDefault, out this.fieldDefault);
-			this.CreateDecimalLabeled("Valeur par défaut", right, out this.groupDefault, out this.fieldDefault);
+			this.CreateDecimalLabeled(Res.Strings.Viewers.Types.DateTime.Default, right, out this.groupDefault, out this.fieldDefault);
 			this.groupDefault.Dock = DockStyle.StackBegin;
 			this.groupDefault.Margins = new Margins(0, 0, 0, 10);
 			this.groupDefault.ResetButton.Clicked += new MessageEventHandler(this.HandleResetButtonClicked);
@@ -196,8 +195,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			value = this.structuredData.GetValue(Support.Res.Fields.ResourceBaseType.DefaultValue);
 			if (!UndefinedValue.IsUndefinedValue(value))
 			{
-				//?this.PutSummaryValue(builder, Res.Strings.Viewers.Types.Summary.Default, this.TypeToString(value));
-				this.PutSummaryValue(builder, "Defaut", this.GetString(value));
+				this.PutSummaryValue(builder, Res.Strings.Viewers.Types.Summary.Default, this.TypeToString(value));
 			}
 
 			return builder.ToString();

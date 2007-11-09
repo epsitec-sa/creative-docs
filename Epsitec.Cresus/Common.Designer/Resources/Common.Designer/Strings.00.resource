@@ -466,4 +466,8 @@
   <data name="Viewers.Types.DateTime.Res.Milliseconds" id="2B4">Millisecondes</data>
   <data name="Viewers.Types.DateTime.Res.Years" id="2C4">Années</data>
   <data name="Viewers.Types.Enum.Question.Delete" id="2D4">Voulez-vous supprimer la valeur &lt;b&gt;{0}&lt;/b&gt; de l&amp;apos;énumération ?</data>
+  <data name="Viewers.Types.DateTime.Default" id="2E4">Valeur par défaut</data>
+  <data name="Viewers.Types.Numeric.Default" id="2F4">Valeur par défaut</data>
+  <data name="Viewers.Types.String.Default" id="2G4">Texte par défaut</data>
+  <data name="Viewers.Types.Summary.Default" id="2H4">Défaut</data>
 </bundle>
