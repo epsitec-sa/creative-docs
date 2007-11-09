@@ -120,7 +120,7 @@ namespace Epsitec.Common.FormEngine
 			{
 				entityId = Druid.Parse("[63021]");  // Facture
 
-				fields.Add(this.CreateBoxBegin(ContainerLayoutMode.VerticalFlow, 5));
+				fields.Add(this.CreateBoxBegin(ContainerLayoutMode.VerticalFlow, 9));
 				fields.Add(this.CreateField("[630A2]", Color.Empty, FieldDescription.SeparatorType.Normal, 5, 1));  // Numéro
 				fields.Add(this.CreateField("[630C2]", Color.Empty, FieldDescription.SeparatorType.Normal, 6, 1));  // DateTravail
 				fields.Add(this.CreateField("[630D2]", Color.Empty, FieldDescription.SeparatorType.Normal, 6, 1));  // DateFacture
@@ -136,7 +136,7 @@ namespace Epsitec.Common.FormEngine
 				fields.Add(this.CreateField("[630B2].[63003].[63043].[63063].[630B]", Color.Empty, FieldDescription.SeparatorType.Normal, 10, 1));  // Affaire.Paiements.Valeur.PrixSimple.Monnaie.TauxChangeVersChf
 				fields.Add(this.CreateBoxEnd());
 				
-				fields.Add(this.CreateBoxBegin(ContainerLayoutMode.VerticalFlow, 5));
+				fields.Add(this.CreateBoxBegin(ContainerLayoutMode.VerticalFlow, 1));
 				fields.Add(this.CreateSeparator(FieldDescription.FieldType.Title));
 				fields.Add(this.CreateField("[630B2].[63013].[63053]", Color.Empty, FieldDescription.SeparatorType.Append, 4, 1));  // Affaire.SoldeDû.Montant
 				fields.Add(this.CreateField("[630B2].[63013].[63063].[630A]", Color.Empty, FieldDescription.SeparatorType.Normal, 4, 1));  // Affaire.SoldeDû.Monnaie.Designation
@@ -167,7 +167,7 @@ namespace Epsitec.Common.FormEngine
 			{
 				entityId = Druid.Parse("[63021]");  // Facture
 
-				fields.Add(this.CreateBoxBegin(ContainerLayoutMode.VerticalFlow, 5));
+				fields.Add(this.CreateBoxBegin(ContainerLayoutMode.VerticalFlow, 7));
 				fields.Add(this.CreateBoxBegin(ContainerLayoutMode.VerticalFlow, 10));
 				fields.Add(this.CreateField("[630A2]", Color.Empty, FieldDescription.SeparatorType.Normal, 5, 1));  // Numéro
 
@@ -190,7 +190,7 @@ namespace Epsitec.Common.FormEngine
 				fields.Add(this.CreateBoxEnd());
 				fields.Add(this.CreateBoxEnd());
 
-				fields.Add(this.CreateBoxBegin(ContainerLayoutMode.VerticalFlow, 5));
+				fields.Add(this.CreateBoxBegin(ContainerLayoutMode.VerticalFlow, 3));
 				fields.Add(this.CreateSeparator(FieldDescription.FieldType.Title));
 				fields.Add(this.CreateField("[630L2].[630M].[630H]", Color.FromRgb(1, 0.5, 0.5), FieldDescription.SeparatorType.Normal, 4, 1));  // TotalFacturé.Prix.Ht
 				fields.Add(this.CreateSeparator(FieldDescription.FieldType.Title));
@@ -200,8 +200,10 @@ namespace Epsitec.Common.FormEngine
 				fields.Add(this.CreateBoxEnd());
 			}
 
+			List<FieldDescription> flat = Arrange.Develop(fields);
+
 			FormEngine engine = new FormEngine(this.manager);
-			return engine.CreateForm(entityId, fields);
+			return engine.CreateForm(entityId, flat);
 		}
 
 

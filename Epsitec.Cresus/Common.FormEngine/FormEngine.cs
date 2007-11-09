@@ -21,21 +21,22 @@ namespace Epsitec.Common.FormEngine
 		public Widget CreateForm(Druid entityId, List<FieldDescription> fields)
 		{
 			//	Crée un masque de saisie pour une entité donnée.
-			List<FieldDescription> flat = Arrange.Develop(fields);
-
+			//	La liste de FieldDescription doit être plate (pas de Node).
 			Caption entityCaption = this.resourceManager.GetCaption(entityId);
 			StructuredType entity = TypeRosetta.GetTypeObject(entityCaption) as StructuredType;
 
 			StructuredData entityData = new StructuredData(entity);
 			entityData.UndefinedValueMode = UndefinedValueMode.Default;
 
+			//	Crée le panneau racine, le seul à définir DataSource. Les autres panneaux
+			//	enfants héritent de cette propriété.
 			UI.Panel root = new UI.Panel();
 			root.ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow;
 			root.ResourceManager = this.resourceManager;
 			root.DataSource = new UI.DataSource();
 			root.DataSource.AddDataSource("Data", entityData);
 
-			this.CreateFormBox(root, flat, 0);
+			this.CreateFormBox(root, fields, 0);
 
 			return root;
 		}
@@ -151,7 +152,7 @@ namespace Epsitec.Common.FormEngine
 			//	Détermine quelles colonnes contiennent des labels, lors de la première passe.
 			int columnsRequired = System.Math.Min(field.ColumnsRequired, FormEngine.MaxColumnsRequired);
 
-			if (column+1+columnsRequired > FormEngine.MaxColumnsRequired)  // dépasse à droite ?
+			if (column+columnsRequired > FormEngine.MaxColumnsRequired)  // dépasse à droite ?
 			{
 				column = 0;
 			}
@@ -181,83 +182,6 @@ namespace Epsitec.Common.FormEngine
 			}
 		}
 
-
-		private void CreateSeparator(UI.Panel root, Widgets.Layouts.GridLayoutEngine grid, FieldDescription field, FieldDescription nextField, ref int column, ref int row, ref List<Druid> lastTitle)
-		{
-			//	Crée les widgets pour un séparateur dans la grille, lors de la deuxième passe.
-			FieldDescription.FieldType type = field.Type;
-
-			if (nextField == null)
-			{
-				type = FieldDescription.FieldType.Line;
-			}
-
-			if (type == FieldDescription.FieldType.Title)
-			{
-				List<Druid> druids = nextField.FieldIds;
-				System.Text.StringBuilder builder = new System.Text.StringBuilder();
-
-				for (int i=0; i<druids.Count-1; i++)
-				{
-					Druid druid = druids[i];
-
-					if (lastTitle != null && i < lastTitle.Count && lastTitle[i] == druid)  // label déjà mis précédemment ?
-					{
-						continue;
-					}
-
-					if (builder.Length > 0)
-					{
-						builder.Append(", ");
-					}
-
-					Caption caption = this.resourceManager.GetCaption(druid);
-					builder.Append(caption.DefaultLabel);
-				}
-
-				if (builder.Length == 0)  // titre sans texte ?
-				{
-					type = FieldDescription.FieldType.Line;  // il faudra mettre une simple ligne
-				}
-				else
-				{
-					grid.RowDefinitions.Add(new Widgets.Layouts.RowDefinition());
-					grid.RowDefinitions[row].TopBorder = 5;
-					grid.RowDefinitions[row].BottomBorder = 0;
-
-					double size = System.Math.Max(200-(druids.Count-2)*25, 100);
-
-					StaticText text = new StaticText(root);
-					text.Text = string.Concat("<font size=\"", size.ToString(System.Globalization.CultureInfo.InvariantCulture), "%\"><b>", builder.ToString(), "</b></font>");
-					text.PreferredHeight = size/100*16;
-
-					Widgets.Layouts.GridLayoutEngine.SetColumn(text, 0);
-					Widgets.Layouts.GridLayoutEngine.SetRow(text, row);
-					Widgets.Layouts.GridLayoutEngine.SetColumnSpan(text, 1+FormEngine.MaxColumnsRequired);
-
-					row++;
-				}
-
-				lastTitle = druids;  // pour se rappeler du titre précédent
-			}
-
-			if (type == FieldDescription.FieldType.Line ||
-				type == FieldDescription.FieldType.Title)
-			{
-				grid.RowDefinitions.Add(new Widgets.Layouts.RowDefinition());
-				grid.RowDefinitions[row].TopBorder = (type == FieldDescription.FieldType.Title) ? 0 : 10;
-				grid.RowDefinitions[row].BottomBorder = 10;
-
-				Separator sep = new Separator(root);
-				sep.PreferredHeight = 1;
-
-				Widgets.Layouts.GridLayoutEngine.SetColumn(sep, 0);
-				Widgets.Layouts.GridLayoutEngine.SetRow(sep, row);
-				Widgets.Layouts.GridLayoutEngine.SetColumnSpan(sep, 1+FormEngine.MaxColumnsRequired);
-
-				row++;
-			}
-		}
 
 		private UI.Panel CreateBox(UI.Panel root, Widgets.Layouts.GridLayoutEngine grid, FieldDescription field, ref int column, ref int row)
 		{
@@ -335,6 +259,83 @@ namespace Epsitec.Common.FormEngine
 			{
 				row++;
 				column = 0;
+			}
+		}
+
+		private void CreateSeparator(UI.Panel root, Widgets.Layouts.GridLayoutEngine grid, FieldDescription field, FieldDescription nextField, ref int column, ref int row, ref List<Druid> lastTitle)
+		{
+			//	Crée les widgets pour un séparateur dans la grille, lors de la deuxième passe.
+			FieldDescription.FieldType type = field.Type;
+
+			if (nextField == null)
+			{
+				type = FieldDescription.FieldType.Line;
+			}
+
+			if (type == FieldDescription.FieldType.Title)
+			{
+				List<Druid> druids = nextField.FieldIds;
+				System.Text.StringBuilder builder = new System.Text.StringBuilder();
+
+				for (int i=0; i<druids.Count-1; i++)
+				{
+					Druid druid = druids[i];
+
+					if (lastTitle != null && i < lastTitle.Count && lastTitle[i] == druid)  // label déjà mis précédemment ?
+					{
+						continue;
+					}
+
+					if (builder.Length > 0)
+					{
+						builder.Append(", ");
+					}
+
+					Caption caption = this.resourceManager.GetCaption(druid);
+					builder.Append(caption.DefaultLabel);
+				}
+
+				if (builder.Length == 0)  // titre sans texte ?
+				{
+					type = FieldDescription.FieldType.Line;  // il faudra mettre une simple ligne
+				}
+				else
+				{
+					grid.RowDefinitions.Add(new Widgets.Layouts.RowDefinition());
+					grid.RowDefinitions[row].TopBorder = 5;
+					grid.RowDefinitions[row].BottomBorder = 0;
+
+					double size = System.Math.Max(200-(druids.Count-2)*25, 100);
+
+					StaticText text = new StaticText(root);
+					text.Text = string.Concat("<font size=\"", size.ToString(System.Globalization.CultureInfo.InvariantCulture), "%\"><b>", builder.ToString(), "</b></font>");
+					text.PreferredHeight = size/100*16;
+
+					Widgets.Layouts.GridLayoutEngine.SetColumn(text, 0);
+					Widgets.Layouts.GridLayoutEngine.SetRow(text, row);
+					Widgets.Layouts.GridLayoutEngine.SetColumnSpan(text, 1+FormEngine.MaxColumnsRequired);
+
+					row++;
+				}
+
+				lastTitle = druids;  // pour se rappeler du titre précédent
+			}
+
+			if (type == FieldDescription.FieldType.Line ||
+				type == FieldDescription.FieldType.Title)
+			{
+				grid.RowDefinitions.Add(new Widgets.Layouts.RowDefinition());
+				grid.RowDefinitions[row].TopBorder = (type == FieldDescription.FieldType.Title) ? 0 : 10;
+				grid.RowDefinitions[row].BottomBorder = 10;
+
+				Separator sep = new Separator(root);
+				sep.PreferredHeight = 1;
+
+				Widgets.Layouts.GridLayoutEngine.SetColumn(sep, 0);
+				Widgets.Layouts.GridLayoutEngine.SetRow(sep, row);
+				Widgets.Layouts.GridLayoutEngine.SetColumnSpan(sep, 1+FormEngine.MaxColumnsRequired);
+
+				row++;
 			}
 		}
 
