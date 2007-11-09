@@ -126,8 +126,8 @@ namespace Epsitec.Common.UI.Controllers
 		{
 			string text = "";
 			
-			if ((newValue != UndefinedValue.Instance) &&
-				(newValue != InvalidValue.Instance) &&
+			if ((newValue != UndefinedValue.Value) &&
+				(newValue != InvalidValue.Value) &&
 				(newValue != null))
 			{
 				text = this.ConvertFromValue (newValue);

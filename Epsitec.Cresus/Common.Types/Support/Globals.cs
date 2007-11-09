@@ -132,7 +132,7 @@ namespace Epsitec.Common.Support
 				}
 			}
 
-			return Types.UndefinedValue.Instance;
+			return Types.UndefinedValue.Value;
 		}
 
 		public T GetProperty<T>(string key)

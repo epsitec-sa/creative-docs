@@ -1698,7 +1698,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 					if (string.IsNullOrEmpty(source))  //  pas de source = valeur
 					{
-						dataField.SetValue(Support.Res.Fields.Field.Expression, UndefinedValue.Instance);
+						dataField.SetValue(Support.Res.Fields.Field.Expression, UndefinedValue.Value);
 						dataField.SetValue(Support.Res.Fields.Field.Source, FieldSource.Value);
 					}
 					else
@@ -1712,7 +1712,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			{
 				if (string.IsNullOrEmpty (source))  //  pas de source = valeur
 				{
-					dataField.SetValue(Support.Res.Fields.Field.Expression, UndefinedValue.Instance);
+					dataField.SetValue(Support.Res.Fields.Field.Expression, UndefinedValue.Value);
 					dataField.SetValue(Support.Res.Fields.Field.Source, FieldSource.Value);
 				}
 				else

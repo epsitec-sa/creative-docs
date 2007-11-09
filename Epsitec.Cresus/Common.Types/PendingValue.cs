@@ -22,7 +22,7 @@ namespace Epsitec.Common.Types
 		/// <c>false</c>.</returns>
 		public static bool IsPendingValue(object value)
 		{
-			return (value == PendingValue.Instance);
+			return (value == PendingValue.Value);
 		}
 
 		/// <summary>
@@ -34,6 +34,6 @@ namespace Epsitec.Common.Types
 			return "<PendingValue>";
 		}
 
-		public static readonly PendingValue Instance = new PendingValue ();
+		public static readonly PendingValue Value = new PendingValue ();
 	}
 }

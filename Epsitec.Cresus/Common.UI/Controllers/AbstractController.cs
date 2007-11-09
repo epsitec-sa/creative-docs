@@ -127,7 +127,7 @@ namespace Epsitec.Common.UI.Controllers
 
 		public virtual object GetActualValue()
 		{
-			return UndefinedValue.Instance;
+			return UndefinedValue.Value;
 		}
 
 
@@ -193,7 +193,7 @@ namespace Epsitec.Common.UI.Controllers
 		{
 			object value = this.ConvertBackValue (this.GetActualValue ());
 
-			if (value != InvalidValue.Instance)
+			if (value != InvalidValue.Value)
 			{
 				this.Placeholder.Value = value;
 			}
@@ -238,19 +238,19 @@ namespace Epsitec.Common.UI.Controllers
 			if (UndefinedValue.IsUndefinedValue (value))
 			{
 				expression = null;
-				return InvalidValue.Instance;
+				return InvalidValue.Value;
 			}
 			if (InvalidValue.IsInvalidValue (value))
 			{
 				expression = null;
-				return InvalidValue.Instance;
+				return InvalidValue.Value;
 			}
 			
 			expression = this.GetPlaceholderBindingExpression ();
 
 			if (expression == null)
 			{
-				return InvalidValue.Instance;
+				return InvalidValue.Value;
 			}
 			else if (expression.DataSourceType == DataSourceType.None)
 			{

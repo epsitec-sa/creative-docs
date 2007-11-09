@@ -22,7 +22,7 @@ namespace Epsitec.Common.Types
 		/// <c>false</c>.</returns>
 		public static bool IsInvalidValue(object value)
 		{
-			return (value == InvalidValue.Instance);
+			return (value == InvalidValue.Value);
 		}
 
 		/// <summary>
@@ -34,6 +34,6 @@ namespace Epsitec.Common.Types
 			return "<InvalidValue>";
 		}
 		
-		public static readonly InvalidValue Instance = new InvalidValue ();
+		public static readonly InvalidValue Value = new InvalidValue ();
 	}
 }

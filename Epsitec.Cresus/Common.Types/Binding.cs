@@ -303,7 +303,7 @@ namespace Epsitec.Common.Types
 		{
 			if (binding == null)
 			{
-				return UndefinedValue.Instance;
+				return UndefinedValue.Value;
 			}
 			
 			switch (binding.Mode)
@@ -314,7 +314,7 @@ namespace Epsitec.Common.Types
 					break;
 				
 				default:
-					return UndefinedValue.Instance;
+					return UndefinedValue.Value;
 			}
 
 			Internal.BindingHelper helper = new Internal.BindingHelper ();

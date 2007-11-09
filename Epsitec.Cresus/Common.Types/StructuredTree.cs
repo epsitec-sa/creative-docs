@@ -134,12 +134,12 @@ namespace Epsitec.Common.Types
 					}
 					else
 					{
-						return UndefinedValue.Instance;
+						return UndefinedValue.Value;
 					}
 				}
 				else if (UndefinedValue.IsUndefinedValue (value))
 				{
-					return UndefinedValue.Instance;
+					return UndefinedValue.Value;
 				}
 
 				if (name == path)
@@ -151,7 +151,7 @@ namespace Epsitec.Common.Types
 				path = StructuredTree.GetSubPath (path, 1);
 			}
 
-			return UnknownValue.Instance;
+			return UnknownValue.Value;
 		}
 
 		public static void SetValue(IStructuredData root, string path, object value)
@@ -221,7 +221,7 @@ namespace Epsitec.Common.Types
 
 					if (type == null)
 					{
-						return UndefinedValue.Instance;
+						return UndefinedValue.Value;
 					}
 
 					StructuredTypeField field = type.GetField (name);
@@ -231,7 +231,7 @@ namespace Epsitec.Common.Types
 
 					if (fieldType == null)
 					{
-						return UndefinedValue.Instance;
+						return UndefinedValue.Value;
 					}
 
 					value = fieldType.SampleValue;
@@ -252,7 +252,7 @@ namespace Epsitec.Common.Types
 				path = StructuredTree.GetSubPath (path, 1);
 			}
 
-			return UnknownValue.Instance;
+			return UnknownValue.Value;
 		}
 
 

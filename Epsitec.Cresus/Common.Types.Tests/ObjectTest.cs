@@ -1123,11 +1123,11 @@ namespace Epsitec.Common.Types
 			Assert.IsTrue (MyObject.XyzProperty.IsValidType (1));
 			Assert.IsFalse (MyObject.XyzProperty.IsValidType (1.0));
 			Assert.IsFalse (MyObject.XyzProperty.IsValidType (null));
-			Assert.IsFalse (MyObject.XyzProperty.IsValidType (UndefinedValue.Instance));
+			Assert.IsFalse (MyObject.XyzProperty.IsValidType (UndefinedValue.Value));
 			Assert.IsTrue (MyObject.NameProperty.IsValidType ("x"));
 			Assert.IsTrue (MyObject.NameProperty.IsValidType (null));
 			Assert.IsFalse (MyObject.NameProperty.IsValidType (0));
-			Assert.IsFalse (MyObject.NameProperty.IsValidType (UndefinedValue.Instance));
+			Assert.IsFalse (MyObject.NameProperty.IsValidType (UndefinedValue.Value));
 		}
 
 		[Test]
@@ -2065,7 +2065,7 @@ namespace Epsitec.Common.Types
 			public static DependencyProperty ChildrenProperty = DependencyObjectTree.ChildrenProperty.AddOwner (typeof (TreeTest), new DependencyPropertyMetadata (TreeTest.GetChildrenValue).MakeReadOnlySerializable ());
 			public static DependencyProperty HasChildrenProperty = DependencyObjectTree.HasChildrenProperty.AddOwner (typeof (TreeTest), new DependencyPropertyMetadata (TreeTest.GetHasChildrenValue));
 			public static DependencyProperty ValueProperty = DependencyProperty.Register ("Value", typeof (string), typeof (TreeTest));
-			public static DependencyProperty CascadeProperty = DependencyProperty.Register ("Cascade", typeof (string), typeof (TreeTest), new DependencyPropertyMetadataWithInheritance (UndefinedValue.Instance));
+			public static DependencyProperty CascadeProperty = DependencyProperty.Register ("Cascade", typeof (string), typeof (TreeTest), new DependencyPropertyMetadataWithInheritance (UndefinedValue.Value));
 
 			TreeTest parent;
 			TreeTestChildren children;

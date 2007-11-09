@@ -61,7 +61,7 @@ namespace Epsitec.Common.Types
 		{
 			if (obj.ContainsLocalValue (property) == false)
 			{
-				this.list.Add (new SnapshotValue (obj, property, UndefinedValue.Instance));
+				this.list.Add (new SnapshotValue (obj, property, UndefinedValue.Value));
 				
 				if (DependencyObjectTree.GetHasChildren (obj))
 				{
@@ -133,7 +133,7 @@ namespace Epsitec.Common.Types
 				
 				if (property != null)
 				{
-					this.list.Add (new SnapshotValue (obj, property, UndefinedValue.Instance));
+					this.list.Add (new SnapshotValue (obj, property, UndefinedValue.Value));
 				}
 			}
 		}

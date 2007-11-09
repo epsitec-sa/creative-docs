@@ -202,7 +202,7 @@ namespace Epsitec.Common.Designer.Proxies
 			}
 			else
 			{
-				return UndefinedValue.Instance;
+				return UndefinedValue.Value;
 			}
 		}
 #endif

@@ -13,8 +13,8 @@ namespace Epsitec.Common.Types
 		/// Gets the value for the specified identifier.
 		/// </summary>
 		/// <param name="id">The identifier of the value.</param>
-		/// <returns>The value, or either <see cref="UndefinedValue.Instance"/> if the
-		/// value is currently undefined or <see cref="UnknownValue.Instance"/> if the
+		/// <returns>The value, or either <see cref="UndefinedValue.Value"/> if the
+		/// value is currently undefined or <see cref="UnknownValue.Value"/> if the
 		/// identifier does not map to a known value.</returns>
 		object GetValue(string id);
 
@@ -23,8 +23,8 @@ namespace Epsitec.Common.Types
 		/// </summary>
 		/// <param name="id">The identifier of the value.</param>
 		/// <param name="value">The value to store into the structure record;
-		/// specifying <see cref="UndefinedValue.Instance"/> clears the value.
-		/// <see cref="UnknownValue.Instance"/> may not be specified as a value.</param>
+		/// specifying <see cref="UndefinedValue.Value"/> clears the value.
+		/// <see cref="UnknownValue.Value"/> may not be specified as a value.</param>
 		void SetValue(string id, object value);
 	}
 }

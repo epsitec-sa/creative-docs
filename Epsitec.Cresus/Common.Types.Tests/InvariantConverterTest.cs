@@ -228,7 +228,7 @@ namespace Epsitec.Common.Types
 		{
 			System.Globalization.CultureInfo culture = System.Globalization.CultureInfo.InvariantCulture;
 
-			Assert.AreEqual (InvalidValue.Instance, Converters.AutomaticValueConverter.Instance.Convert ("abc", typeof (int), null, culture));
+			Assert.AreEqual (InvalidValue.Value, Converters.AutomaticValueConverter.Instance.Convert ("abc", typeof (int), null, culture));
 			Assert.AreEqual (10, Converters.AutomaticValueConverter.Instance.Convert ("10", typeof (int), null, culture));
 			Assert.AreEqual ("10", Converters.AutomaticValueConverter.Instance.ConvertBack (10, typeof (string), null, culture));
 
@@ -236,16 +236,16 @@ namespace Epsitec.Common.Types
 			Assert.AreEqual (MyEnum.First, Converters.AutomaticValueConverter.Instance.Convert (MyEnum.First, typeof (MyEnum), null, culture));
 			Assert.AreEqual (MyEnum.First, Converters.AutomaticValueConverter.Instance.Convert ("First", typeof (MyEnum), null, culture));
 			Assert.AreEqual (MyEnum.First, Converters.AutomaticValueConverter.Instance.Convert (1, typeof (MyEnum), null, culture));
-			Assert.AreEqual (InvalidValue.Instance, Converters.AutomaticValueConverter.Instance.Convert ("XXX", typeof (MyEnum), null, culture));
-			Assert.AreEqual (InvalidValue.Instance, Converters.AutomaticValueConverter.Instance.Convert (MyFlags.Flag1, typeof (MyEnum), null, culture));
+			Assert.AreEqual (InvalidValue.Value, Converters.AutomaticValueConverter.Instance.Convert ("XXX", typeof (MyEnum), null, culture));
+			Assert.AreEqual (InvalidValue.Value, Converters.AutomaticValueConverter.Instance.Convert (MyFlags.Flag1, typeof (MyEnum), null, culture));
 			Assert.AreEqual (1.0, Converters.AutomaticValueConverter.Instance.Convert (MyEnum.First, typeof (double), null, culture));
 			Assert.AreEqual (3, Converters.AutomaticValueConverter.Instance.Convert (MyFlags.Flag1 | MyFlags.Flag2, typeof (int), null, culture));
 			Assert.AreEqual (MyFlags.Flag1 | MyFlags.Flag2, Converters.AutomaticValueConverter.Instance.Convert (3, typeof (MyFlags), null, culture));
 			Assert.AreEqual ("Flag1, Flag2", Converters.AutomaticValueConverter.Instance.Convert (MyFlags.Flag1 | MyFlags.Flag2, typeof (string), null, culture));
 			Assert.AreEqual (MyFlags.Flag1 | MyFlags.Flag2, Converters.AutomaticValueConverter.Instance.Convert ("Flag2, Flag1", typeof (MyFlags), null, culture));
-			Assert.AreEqual (InvalidValue.Instance, Converters.AutomaticValueConverter.Instance.Convert (1025, typeof (MyFlags), null, culture));
+			Assert.AreEqual (InvalidValue.Value, Converters.AutomaticValueConverter.Instance.Convert (1025, typeof (MyFlags), null, culture));
 			Assert.AreEqual ("", Converters.AutomaticValueConverter.Instance.Convert ("", typeof (string), null, culture));
-			Assert.AreEqual (InvalidValue.Instance, Converters.AutomaticValueConverter.Instance.Convert ("", typeof (int), null, culture));
+			Assert.AreEqual (InvalidValue.Value, Converters.AutomaticValueConverter.Instance.Convert ("", typeof (int), null, culture));
 		}
 
 		[Test]

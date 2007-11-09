@@ -526,7 +526,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 		/// based on an object representation.
 		/// </summary>
 		/// <param name="field">The resource bundle field.</param>
-		/// <param name="modId">The modification id (which can be an <c>UndefinedValue.Instance</c>).</param>
+		/// <param name="modId">The modification id (which can be an <c>UndefinedValue.Value</c>).</param>
 		internal static void SetModificationId(ResourceBundle.Field field, object modId)
 		{
 			if (UndefinedValue.IsUndefinedValue (modId))
@@ -563,7 +563,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 		/// <param name="data">The structured data record.</param>
 		/// <param name="id">The field id.</param>
 		/// <param name="replace">Set to <c>true</c> if there is a replacement for the original data.</param>
-		/// <returns>The value or <c>UndefinedValue.Instance</c>.</returns>
+		/// <returns>The value or <c>UndefinedValue.Value</c>.</returns>
 		internal static object GetDeltaValue(StructuredData data, Druid id, ref bool replace)
 		{
 			bool usesOriginalData;
@@ -572,7 +572,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 
 			if (usesOriginalData)
 			{
-				return UndefinedValue.Instance;
+				return UndefinedValue.Value;
 			}
 			else
 			{

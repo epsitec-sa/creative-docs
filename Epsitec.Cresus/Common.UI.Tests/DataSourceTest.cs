@@ -98,25 +98,25 @@ namespace Epsitec.Common.UI
 			IStructuredData data = source;
 
 			Assert.AreEqual (rec, data.GetValue ("X"));
-			Assert.AreEqual (UnknownValue.Instance, data.GetValue ("Y"));
+			Assert.AreEqual (UnknownValue.Value, data.GetValue ("Y"));
 
 			Assert.AreEqual (rec, StructuredTree.GetValue (data, "X"));
 			Assert.AreEqual ("a", StructuredTree.GetValue (data, "X.A"));
-			Assert.AreEqual (UndefinedValue.Instance, StructuredTree.GetValue (data, "X.R.R.R.A"));
-			Assert.AreEqual (UndefinedValue.Instance, StructuredTree.GetValue (data, "X.B"));
-			Assert.AreEqual (UnknownValue.Instance, StructuredTree.GetValue (data, "X.C"));
+			Assert.AreEqual (UndefinedValue.Value, StructuredTree.GetValue (data, "X.R.R.R.A"));
+			Assert.AreEqual (UndefinedValue.Value, StructuredTree.GetValue (data, "X.B"));
+			Assert.AreEqual (UnknownValue.Value, StructuredTree.GetValue (data, "X.C"));
 
 			rec.UndefinedValueMode = UndefinedValueMode.Default;
 
 			Assert.AreEqual ("", StructuredTree.GetValue (data, "X.B"));
 			Assert.AreEqual ("", StructuredTree.GetValue (data, "X.R.R.R.A"));
-			Assert.AreEqual (UnknownValue.Instance, StructuredTree.GetValue (data, "X.C"));
+			Assert.AreEqual (UnknownValue.Value, StructuredTree.GetValue (data, "X.C"));
 
 			rec.UndefinedValueMode = UndefinedValueMode.Sample;
 
 			Assert.AreEqual ("Abc", StructuredTree.GetValue (data, "X.B"));
 			Assert.AreEqual ("Abc", StructuredTree.GetValue (data, "X.R.R.R.A"));
-			Assert.AreEqual (UnknownValue.Instance, StructuredTree.GetValue (data, "X.C"));
+			Assert.AreEqual (UnknownValue.Value, StructuredTree.GetValue (data, "X.C"));
 		}
 
 		[Test]

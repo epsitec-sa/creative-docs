@@ -37,7 +37,7 @@ namespace Epsitec.Common.UI
 			panel.SetupSampleDataSource ();
 
 			Assert.AreEqual (null, StructuredTree.GetValue (panel.DataSource, "*.A"));
-			Assert.AreEqual (UnknownValue.Instance, StructuredTree.GetValue (panel.DataSource, "*.X"));
+			Assert.AreEqual (UnknownValue.Value, StructuredTree.GetValue (panel.DataSource, "*.X"));
 		}
 		
 		[Test]

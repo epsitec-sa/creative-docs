@@ -14,7 +14,7 @@ namespace Epsitec.Common.Types
 	public enum UndefinedValueMode
 	{
 		/// <summary>
-		/// Return <see cref="UndefinedValue.Instance"/>.
+		/// Return <see cref="UndefinedValue.Value"/>.
 		/// </summary>
 		Undefined,
 		

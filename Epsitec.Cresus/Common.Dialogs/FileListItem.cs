@@ -988,7 +988,7 @@ namespace Epsitec.Common.Dialogs
 					return this.cachedFileSize;
 				
 				default:
-					return Epsitec.Common.Types.UnknownValue.Instance;
+					return Epsitec.Common.Types.UnknownValue.Value;
 			}
 		}
 

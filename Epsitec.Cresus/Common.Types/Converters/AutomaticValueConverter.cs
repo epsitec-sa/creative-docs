@@ -23,7 +23,7 @@ namespace Epsitec.Common.Types.Converters
 		/// <param name="expectedType">The expected type.</param>
 		/// <param name="parameter">The optional parameter (not used).</param>
 		/// <param name="culture">The culture used for the conversion.</param>
-		/// <returns>The converted value or <see cref="InvalidValue.Instance"/>
+		/// <returns>The converted value or <see cref="InvalidValue.Value"/>
 		/// if the conversion was not possible.</returns>
 		public object Convert(object value, System.Type expectedType, object parameter, System.Globalization.CultureInfo culture)
 		{
@@ -57,7 +57,7 @@ namespace Epsitec.Common.Types.Converters
 			{
 				if (expectedType.IsValueType)
 				{
-					return InvalidValue.Instance;
+					return InvalidValue.Value;
 				}
 				else
 				{
@@ -109,7 +109,7 @@ namespace Epsitec.Common.Types.Converters
 					}
 					else
 					{
-						return InvalidValue.Instance;
+						return InvalidValue.Value;
 					}
 				}
 
@@ -129,7 +129,7 @@ namespace Epsitec.Common.Types.Converters
 					
 					if (text.Length == 0)
 					{
-						return InvalidValue.Instance;
+						return InvalidValue.Value;
 					}
 				}
 
@@ -137,18 +137,18 @@ namespace Epsitec.Common.Types.Converters
 			}
 			catch (System.InvalidCastException)
 			{
-				return InvalidValue.Instance;
+				return InvalidValue.Value;
 			}
 			catch (System.FormatException)
 			{
-				return InvalidValue.Instance;
+				return InvalidValue.Value;
 			}
 			catch (System.Exception ex)
 			{
 				if ((ex.InnerException != null) &&
 					(ex.InnerException is System.FormatException))
 				{
-					return InvalidValue.Instance;
+					return InvalidValue.Value;
 				}
 
 				throw;
@@ -162,7 +162,7 @@ namespace Epsitec.Common.Types.Converters
 		/// <param name="expectedType">The expected type.</param>
 		/// <param name="parameter">The optional parameter (not used).</param>
 		/// <param name="culture">The culture used for the conversion.</param>
-		/// <returns>The converted value or <see cref="InvalidValue.Instance"/>
+		/// <returns>The converted value or <see cref="InvalidValue.Value"/>
 		/// if the conversion was not possible.</returns>
 		public object ConvertBack(object value, System.Type expectedType, object parameter, System.Globalization.CultureInfo culture)
 		{
@@ -178,7 +178,7 @@ namespace Epsitec.Common.Types.Converters
 		/// <param name="sourceType">The source type.</param>
 		/// <param name="expectedType">The expected type.</param>
 		/// <param name="culture">The culture.</param>
-		/// <returns>The converted value or <see cref="InvalidValue.Instance"/>
+		/// <returns>The converted value or <see cref="InvalidValue.Value"/>
 		/// if there is no available converter.</returns>
 		private static object ConvertUsingTypeConverter(object value, System.Type sourceType, System.Type expectedType, System.Globalization.CultureInfo culture)
 		{
@@ -208,7 +208,7 @@ namespace Epsitec.Common.Types.Converters
 
 			//	No converter found -- give up
 
-			return InvalidValue.Instance;
+			return InvalidValue.Value;
 		}
 
 		public static readonly AutomaticValueConverter Instance = new AutomaticValueConverter ();

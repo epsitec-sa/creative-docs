@@ -271,7 +271,7 @@ namespace Epsitec.Common.Types
 					return this.more.TryGetValue (property, out value);
 				}
 
-				value = UndefinedValue.Instance;
+				value = UndefinedValue.Value;
 				return false;
 			}
 			else
@@ -291,7 +291,7 @@ namespace Epsitec.Common.Types
 				}
 			}
 			
-			value = UndefinedValue.Instance;
+			value = UndefinedValue.Value;
 			return false;
 		}
 
@@ -553,7 +553,7 @@ namespace Epsitec.Common.Types
 					return true;
 				}
 				
-				value = UndefinedValue.Instance;
+				value = UndefinedValue.Value;
 				return false;
 			}
 			public override IEnumerable<Epsitec.Common.Types.PropertyValuePair> GetValues(DependencyObject node)

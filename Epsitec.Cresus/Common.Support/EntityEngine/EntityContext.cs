@@ -274,7 +274,7 @@ namespace Epsitec.Common.Support.EntityEngine
 				}
 				else
 				{
-					return UndefinedValue.Instance;
+					return UndefinedValue.Value;
 				}
 			}
 

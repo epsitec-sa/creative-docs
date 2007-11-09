@@ -206,7 +206,7 @@ namespace Epsitec.Common.UI
 			that.HandleValueChanged (oldValue, newValue);
 		}
 
-		public static readonly DependencyProperty ValueProperty = DependencyProperty.Register ("Value", typeof (object), typeof (AbstractPlaceholder), new DependencyPropertyMetadata (UndefinedValue.Instance, AbstractPlaceholder.NotifyValueChanged).MakeNotSerializable ());
+		public static readonly DependencyProperty ValueProperty = DependencyProperty.Register ("Value", typeof (object), typeof (AbstractPlaceholder), new DependencyPropertyMetadata (UndefinedValue.Value, AbstractPlaceholder.NotifyValueChanged).MakeNotSerializable ());
 		
 		private INamedType						valueType;
 		private string							valueName;

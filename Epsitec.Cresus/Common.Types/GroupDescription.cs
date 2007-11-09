@@ -99,7 +99,7 @@ namespace Epsitec.Common.Types
 		/// Gets the value used to derive the group(s).
 		/// </summary>
 		/// <param name="item">The item.</param>
-		/// <returns>The value used to derive the group(s) or <c>UnknownValue.Instance</c> if
+		/// <returns>The value used to derive the group(s) or <c>UnknownValue.Value</c> if
 		/// no value can be found.</returns>
 		protected abstract object GetGroupValue(object item);
 

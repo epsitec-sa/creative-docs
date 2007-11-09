@@ -218,7 +218,7 @@ namespace Epsitec.Common.Types
 			}
 			else
 			{
-				record = new Record (UndefinedValue.Instance, false, handler);
+				record = new Record (UndefinedValue.Value, false, handler);
 			}
 
 			this.values[id] = record;
@@ -238,8 +238,8 @@ namespace Epsitec.Common.Types
 				handler = (PropertyChangedEventHandler) System.Delegate.Remove (record.Handler, handler);
 				record  = new Record (record.Data, record.OriginalData, record.UsesOriginalData, record.IsReadOnly, handler);
 				
-				if ((record.Data == UndefinedValue.Instance) &&
-					(record.OriginalData == UndefinedValue.Instance) &&
+				if ((record.Data == UndefinedValue.Value) &&
+					(record.OriginalData == UndefinedValue.Value) &&
 					(record.Handler == null))
 				{
 					this.values.Remove (id);
@@ -314,13 +314,13 @@ namespace Epsitec.Common.Types
 						handler = record.Handler;
 
 						if ((handler == null) &&
-							(record.OriginalData == UndefinedValue.Instance))
+							(record.OriginalData == UndefinedValue.Value))
 						{
 							this.values.Remove (id);
 						}
 						else
 						{
-							record = new Record (UndefinedValue.Instance, record.OriginalData, false, false, handler);
+							record = new Record (UndefinedValue.Value, record.OriginalData, false, false, handler);
 							this.values[id] = record;
 						}
 					}
@@ -443,7 +443,7 @@ namespace Epsitec.Common.Types
 			if (!this.CheckFieldIdValidity (id, out type))
 			{
 				usesOriginalData = true;
-				return UnknownValue.Instance;
+				return UnknownValue.Value;
 			}
 
 			Record record;
@@ -495,7 +495,7 @@ namespace Epsitec.Common.Types
 					object oldValue = record.Data;
 					object newValue = record.OriginalData;
 
-					this.values[id] = new Record (UndefinedValue.Instance, record.OriginalData, true, record.IsReadOnly, record.Handler);
+					this.values[id] = new Record (UndefinedValue.Value, record.OriginalData, true, record.IsReadOnly, record.Handler);
 					
 					this.InvalidateValue (id, oldValue, newValue, record.Handler);
 				}
@@ -531,7 +531,7 @@ namespace Epsitec.Common.Types
 
 				if (this.values.TryGetValue (id, out record))
 				{
-					this.values[id] = new Record (UndefinedValue.Instance, record.Data, true, record.IsReadOnly, record.Handler);
+					this.values[id] = new Record (UndefinedValue.Value, record.Data, true, record.IsReadOnly, record.Handler);
 					return true;
 				}
 			}
@@ -673,7 +673,7 @@ namespace Epsitec.Common.Types
 		{
 			if (fieldType == null)
 			{
-				return UndefinedValue.Instance;
+				return UndefinedValue.Value;
 			}
 
 			AbstractType type = fieldType.Type as AbstractType;
@@ -686,7 +686,7 @@ namespace Epsitec.Common.Types
 				switch (this.undefinedValueMode)
 				{
 					case UndefinedValueMode.Undefined:
-						value = UndefinedValue.Instance;
+						value = UndefinedValue.Value;
 						break;
 
 					case UndefinedValueMode.Default:
@@ -702,7 +702,7 @@ namespace Epsitec.Common.Types
 				}
 
 				if ((value == null) ||
-					(value == UndefinedValue.Instance))
+					(value == UndefinedValue.Value))
 				{
 					if (this.undefinedValueMode != UndefinedValueMode.Undefined)
 					{
@@ -734,7 +734,7 @@ namespace Epsitec.Common.Types
 				return value;
 			}
 
-			return UndefinedValue.Instance;
+			return UndefinedValue.Value;
 		}
 
 		protected virtual bool CheckFieldIdValidity(string id, out StructuredTypeField type)
@@ -807,7 +807,7 @@ namespace Epsitec.Common.Types
 			public Record(object data, bool readOnly)
 			{
 				this.data = data;
-				this.originalData = UndefinedValue.Instance;
+				this.originalData = UndefinedValue.Value;
 				this.handler = null;
 				this.readOnly = readOnly;
 				this.usesOriginalData = false;
@@ -816,7 +816,7 @@ namespace Epsitec.Common.Types
 			public Record(object data, bool readOnly, PropertyChangedEventHandler handler)
 			{
 				this.data = data;
-				this.originalData = UndefinedValue.Instance;
+				this.originalData = UndefinedValue.Value;
 				this.handler = handler;
 				this.readOnly = readOnly;
 				this.usesOriginalData = false;

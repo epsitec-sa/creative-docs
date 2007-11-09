@@ -228,9 +228,9 @@ namespace Epsitec.Common.UI
 			panel.Children.Add (placeholder3);
 
 			Assert.IsNull (panel.DataSource);
-			Assert.AreEqual (UnknownValue.Instance, StructuredTree.GetValue (panel.DataSource, "Record.A"));
-			Assert.AreEqual (UnknownValue.Instance, StructuredTree.GetValue (panel.DataSource, "Record.B"));
-			Assert.AreEqual (UnknownValue.Instance, StructuredTree.GetValue (panel.DataSource, "Record.R"));
+			Assert.AreEqual (UnknownValue.Value, StructuredTree.GetValue (panel.DataSource, "Record.A"));
+			Assert.AreEqual (UnknownValue.Value, StructuredTree.GetValue (panel.DataSource, "Record.B"));
+			Assert.AreEqual (UnknownValue.Value, StructuredTree.GetValue (panel.DataSource, "Record.R"));
 
 			placeholder1.SetBinding (Placeholder.ValueProperty, new Binding (BindingMode.OneWay, "Record.A"));
 			placeholder2.SetBinding (Placeholder.ValueProperty, new Binding (BindingMode.OneWay, "Record.B"));
@@ -275,10 +275,10 @@ namespace Epsitec.Common.UI
 
 			Assert.IsNull (panel.DataSource);
 			
-			Assert.AreEqual (UnknownValue.Instance, StructuredTree.GetValue (panel.DataSource, "Person.FirstName"));
-			Assert.AreEqual (UnknownValue.Instance, StructuredTree.GetValue (panel.DataSource, "Person.LastName"));
-			Assert.AreEqual (UnknownValue.Instance, StructuredTree.GetValue (panel.DataSource, "Person.Zip"));
-			Assert.AreEqual (UnknownValue.Instance, StructuredTree.GetValue (panel.DataSource, "Person.City"));
+			Assert.AreEqual (UnknownValue.Value, StructuredTree.GetValue (panel.DataSource, "Person.FirstName"));
+			Assert.AreEqual (UnknownValue.Value, StructuredTree.GetValue (panel.DataSource, "Person.LastName"));
+			Assert.AreEqual (UnknownValue.Value, StructuredTree.GetValue (panel.DataSource, "Person.Zip"));
+			Assert.AreEqual (UnknownValue.Value, StructuredTree.GetValue (panel.DataSource, "Person.City"));
 
 			placeholder1.SetBinding (Placeholder.ValueProperty, new Binding (BindingMode.TwoWay, "Person.FirstName"));
 			placeholder2.SetBinding (Placeholder.ValueProperty, new Binding (BindingMode.TwoWay, "Person.LastName"));

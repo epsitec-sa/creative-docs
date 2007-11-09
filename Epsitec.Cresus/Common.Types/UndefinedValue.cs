@@ -22,7 +22,7 @@ namespace Epsitec.Common.Types
 		/// <c>false</c>.</returns>
 		public static bool IsUndefinedValue(object value)
 		{
-			return (value == UndefinedValue.Instance);
+			return (value == UndefinedValue.Value);
 		}
 
 		/// <summary>
@@ -43,7 +43,7 @@ namespace Epsitec.Common.Types
 		/// <returns>Either the casted value or the default value.</returns>
 		public static T GetValue<T>(object value, T defaultValue)
 		{
-			if (value == UndefinedValue.Instance)
+			if (value == UndefinedValue.Value)
 			{
 				return defaultValue;
 			}
@@ -65,7 +65,7 @@ namespace Epsitec.Common.Types
 		/// </returns>
 		public static T GetValue<T>(object value, T defaultValue, bool isNullEqualToUndefined)
 		{
-			if ((value == UndefinedValue.Instance) ||
+			if ((value == UndefinedValue.Value) ||
 				(isNullEqualToUndefined && (value == null)))
 			{
 				return defaultValue;
@@ -76,6 +76,6 @@ namespace Epsitec.Common.Types
 			}
 		}
 		
-		public static readonly UndefinedValue	Instance = new UndefinedValue();
+		public static readonly UndefinedValue	Value = new UndefinedValue();
 	}
 }

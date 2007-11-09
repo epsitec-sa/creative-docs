@@ -22,7 +22,7 @@ namespace Epsitec.Common.Types
 		/// <c>false</c>.</returns>
 		public static bool IsUnknownValue(object value)
 		{
-			return (value == UnknownValue.Instance);
+			return (value == UnknownValue.Value);
 		}
 
 		/// <summary>
@@ -34,6 +34,6 @@ namespace Epsitec.Common.Types
 			return "<UnknownValue>";
 		}
 
-		public static readonly UnknownValue Instance = new UnknownValue ();
+		public static readonly UnknownValue Value = new UnknownValue ();
 	}
 }

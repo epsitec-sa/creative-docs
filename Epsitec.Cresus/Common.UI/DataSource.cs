@@ -179,7 +179,7 @@ namespace Epsitec.Common.UI
 			
 			if (record.IsEmpty)
 			{
-				return UnknownValue.Instance;
+				return UnknownValue.Value;
 			}
 			else
 			{

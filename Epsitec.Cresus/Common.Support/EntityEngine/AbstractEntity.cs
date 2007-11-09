@@ -185,7 +185,7 @@ namespace Epsitec.Common.Support.EntityEngine
 				//	The value is null and the field is nullable; this operation
 				//	is valid and it will clear the field.
 
-				this.InternalSetValue (id, UndefinedValue.Instance);
+				this.InternalSetValue (id, UndefinedValue.Value);
 				return;
 			}
 			
@@ -199,7 +199,7 @@ namespace Epsitec.Common.Support.EntityEngine
 				
 				if (newValue == null)
 				{
-					value = UndefinedValue.Instance;
+					value = UndefinedValue.Value;
 				}
 				else
 				{
@@ -244,7 +244,7 @@ namespace Epsitec.Common.Support.EntityEngine
 			}
 			else
 			{
-				value = UndefinedValue.Instance;
+				value = UndefinedValue.Value;
 			}
 			
 			return value;

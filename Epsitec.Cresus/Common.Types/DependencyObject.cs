@@ -200,7 +200,7 @@ namespace Epsitec.Common.Types
 			//	Si la valeur n'est pas définie localement, il faut déterminer la
 			//	valeur réelle (par défaut, héritée, etc.)
 			
-			if (value == UndefinedValue.Instance)
+			if (value == UndefinedValue.Value)
 			{
 				DependencyPropertyMetadata metadata = property.GetMetadata (this);
 
@@ -308,7 +308,7 @@ namespace Epsitec.Common.Types
 		/// value management.
 		/// </summary>
 		/// <param name="property">The property.</param>
-		/// <returns>The value, or <c>UndefinedValue.Instance</c> if the value
+		/// <returns>The value, or <c>UndefinedValue.Value</c> if the value
 		/// is not defined.</returns>
 		public object GetLocalValue(DependencyProperty property)
 		{
@@ -320,7 +320,7 @@ namespace Epsitec.Common.Types
 			}
 			else
 			{
-				return UndefinedValue.Instance;
+				return UndefinedValue.Value;
 			}
 		}
 
@@ -419,7 +419,7 @@ namespace Epsitec.Common.Types
 			//	Si la valeur n'est pas définie localement, il faut déterminer la
 			//	valeur réelle (par défaut, héritée, etc.)
 
-			if (value == UndefinedValue.Instance)
+			if (value == UndefinedValue.Value)
 			{
 				if ((metadata.InheritsValue) &&
 					(this.inheritedPropertyCache.TryGetValue (this, property, out value)))
@@ -1292,7 +1292,7 @@ namespace Epsitec.Common.Types
 
 			if (property == null)
 			{
-				return UnknownValue.Instance;
+				return UnknownValue.Value;
 			}
 			else
 			{

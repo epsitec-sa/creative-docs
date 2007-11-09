@@ -259,7 +259,7 @@ namespace Epsitec.Common.Types
 			
 			while (item != null)
 			{
-				if (item.GetLocalValue (property) != UndefinedValue.Instance)
+				if (item.GetLocalValue (property) != UndefinedValue.Value)
 				{
 					break;
 				}

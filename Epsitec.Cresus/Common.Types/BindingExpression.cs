@@ -798,7 +798,7 @@ namespace Epsitec.Common.Types
 						//	First, tell the target that the data is still pending. This is
 						//	immediate :
 
-						this.InternalUpdateTarget (PendingValue.Instance);
+						this.InternalUpdateTarget (PendingValue.Value);
 
 						//	Now, queue up an asynchronous call to GetSourceValue followed
 						//	by a call to InternalUpdateTarget, but don't wait for the value

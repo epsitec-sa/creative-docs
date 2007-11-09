@@ -67,8 +67,8 @@ namespace Epsitec.Common.UI.Controllers
 
 		protected override void RefreshUserInterface(object oldValue, object newValue)
 		{
-			if ((newValue != UndefinedValue.Instance) &&
-				(newValue != InvalidValue.Instance) &&
+			if ((newValue != UndefinedValue.Value) &&
+				(newValue != InvalidValue.Value) &&
 				(newValue != null))
 			{
 				this.helper.SetSelectedName (this.ConvertFromValue (newValue));

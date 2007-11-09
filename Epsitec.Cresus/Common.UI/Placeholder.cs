@@ -155,8 +155,8 @@ namespace Epsitec.Common.UI
 			this.SetParent (parent);
 			this.SyncQueuedCalls ();
 
-			if ((this.Value != UndefinedValue.Instance) &&
-				(this.Value != UnknownValue.Instance) &&
+			if ((this.Value != UndefinedValue.Value) &&
+				(this.Value != UnknownValue.Value) &&
 				(this.Value != null))
 			{
 				minColumnSpan = 1;
@@ -304,9 +304,9 @@ namespace Epsitec.Common.UI
 
 					object value = this.Value;
 
-					if (value != UndefinedValue.Instance)
+					if (value != UndefinedValue.Value)
 					{
-						this.controller.RefreshUserInterface (UndefinedValue.Instance, value);
+						this.controller.RefreshUserInterface (UndefinedValue.Value, value);
 					}
 				}
 			}
