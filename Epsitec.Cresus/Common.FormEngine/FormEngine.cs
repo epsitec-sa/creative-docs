@@ -192,6 +192,7 @@ namespace Epsitec.Common.FormEngine
 			box.Margins = field.ContainerMargins;
 			box.Padding = field.ContainerPadding;
 			box.BackColor = field.ContainerBackColor;
+			box.DrawFrameState = field.ContainerFrameState;
 			
 			grid.RowDefinitions.Add(new Widgets.Layouts.RowDefinition());
 
