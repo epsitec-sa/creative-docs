@@ -87,11 +87,13 @@ namespace Epsitec.Common.FormEngine
 			{
 				if (isLabel[i])
 				{
+					//	Largeur automatique selon la taille minimale du contenu.
 					grid.ColumnDefinitions.Add(new Widgets.Layouts.ColumnDefinition());
 				}
 				else
 				{
-					grid.ColumnDefinitions.Add(new Widgets.Layouts.ColumnDefinition(new Widgets.Layouts.GridLength(i, Widgets.Layouts.GridUnitType.Proportional), 20, double.PositiveInfinity));
+					//	Largeur de 10%, 10 pixels au minimum, pas de maximum.
+					grid.ColumnDefinitions.Add(new Widgets.Layouts.ColumnDefinition(new Widgets.Layouts.GridLength(10.0, Widgets.Layouts.GridUnitType.Proportional), 10, double.PositiveInfinity));
 				}
 			}
 			grid.ColumnDefinitions[0].RightBorder = 1;
