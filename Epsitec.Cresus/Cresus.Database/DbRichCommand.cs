@@ -599,6 +599,26 @@ namespace Epsitec.Cresus.Database
 		}
 
 		/// <summary>
+		/// Finds the row in the specified table.
+		/// </summary>
+		/// <param name="tableName">Name of the table.</param>
+		/// <param name="rowId">The row id.</param>
+		/// <returns>
+		/// The row or <c>null</c> if it cannot be found in the table.
+		/// </returns>
+		public System.Data.DataRow FindRow(string tableName, DbId rowId)
+		{
+			System.Data.DataTable table = this.DataSet.Tables[tableName];
+
+			if (table == null)
+			{
+				return null;
+			}
+
+			return DbRichCommand.FindRow (table.Rows, rowId);
+		}
+
+		/// <summary>
 		/// Deletes an existing row.
 		/// </summary>
 		/// <param name="row">The row to delete.</param>
@@ -1167,28 +1187,32 @@ namespace Epsitec.Cresus.Database
 		/// Finds a row in a data table based on a row id.
 		/// </summary>
 		/// <param name="table">The table.</param>
-		/// <param name="id">The id.</param>
-		/// <returns>The row or <c>null</c> if it cannot be found in the table.</returns>
-		public static System.Data.DataRow FindRow(System.Data.DataTable table, DbId id)
+		/// <param name="rowId">The row id.</param>
+		/// <returns>
+		/// The row or <c>null</c> if it cannot be found in the table.
+		/// </returns>
+		public static System.Data.DataRow FindRow(System.Data.DataTable table, DbId rowId)
 		{
-			return DbRichCommand.FindRow (table.Rows, id);
+			return DbRichCommand.FindRow (table.Rows, rowId);
 		}
 
 		/// <summary>
 		/// Finds the row in a collection of rows based on a row id.
 		/// </summary>
 		/// <param name="rows">The rows.</param>
-		/// <param name="id">The id.</param>
-		/// <returns>The row or <c>null</c> if it cannot be found in the collection.</returns>
-		public static System.Data.DataRow FindRow(System.Collections.IEnumerable rows, DbId id)
+		/// <param name="rowId">The row id.</param>
+		/// <returns>
+		/// The row or <c>null</c> if it cannot be found in the collection.
+		/// </returns>
+		public static System.Data.DataRow FindRow(System.Collections.IEnumerable rows, DbId rowId)
 		{
 			foreach (System.Data.DataRow row in rows)
 			{
-				long rowId;
+				long rowIdValue;
 				
 				if (row.RowState == System.Data.DataRowState.Deleted)
 				{
-					rowId = (long) row[Tags.ColumnId, System.Data.DataRowVersion.Original];
+					rowIdValue = (long) row[Tags.ColumnId, System.Data.DataRowVersion.Original];
 				}
 				else if (row.RowState == System.Data.DataRowState.Detached)
 				{
@@ -1196,10 +1220,10 @@ namespace Epsitec.Cresus.Database
 				}
 				else
 				{
-					rowId = (long) row[Tags.ColumnId];
+					rowIdValue = (long) row[Tags.ColumnId];
 				}
 				
-				if (id.Value == rowId)
+				if (rowId.Value == rowIdValue)
 				{
 					return row;
 				}

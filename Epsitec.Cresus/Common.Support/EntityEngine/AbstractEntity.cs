@@ -223,7 +223,7 @@ namespace Epsitec.Common.Support.EntityEngine
 
 		
 		
-		private object InternalGetValue(string id)
+		public object InternalGetValue(string id)
 		{
 			object value;
 

@@ -293,6 +293,31 @@ namespace Epsitec.Common.Types
 			}
 		}
 
+		/// <summary>
+		/// Gets the <see cref="INullableType"/> interface for the associated
+		/// data type, taking in account the nullability of the field itself.
+		/// </summary>
+		/// <returns>The nullable type interface.</returns>
+		public INullableType GetNullableType()
+		{
+			if (this.IsNullable)
+			{
+				INullableType nullableType = this.Type as INullableType;
+
+				if (nullableType == null)
+				{
+					return StructuredTypeField.AlwaysNullableTypeInstance;
+				}
+				else
+				{
+					return new AlwaysNullableType (nullableType);
+				}
+			}
+			else
+			{
+				return this.Type as INullableType ?? StructuredTypeField.NeverNullableTypeInstance;
+			}
+		}
 
 		/// <summary>
 		/// Clones this instance.
@@ -520,6 +545,99 @@ namespace Epsitec.Common.Types
 		}
 
 		#endregion
+
+		#region NeverNullableType Class
+
+		/// <summary>
+		/// The <c>NeverNullableType</c> class provides an implementation of <see cref="INullableType"/>
+		/// for types which are not nullable.
+		/// </summary>
+		private class NeverNullableType : INullableType
+		{
+			#region INullableType Members
+
+			public bool IsNullValue(object value)
+			{
+				return false;
+			}
+
+			public bool IsNullable
+			{
+				get
+				{
+					return false;
+				}
+			}
+
+			#endregion
+		}
+
+		#endregion
+
+		#region AlwaysNullableType Class
+
+		/// <summary>
+		/// The <c>AlwaysNullableType</c> class provides an implementation of <see cref="INullableType"/>
+		/// for fields which are nullable.
+		/// </summary>
+		private class AlwaysNullableType : INullableType
+		{
+			public AlwaysNullableType()
+			{
+			}
+
+			public AlwaysNullableType(INullableType parent)
+			{
+				if ((parent != null) &&
+					(parent.IsNullable))
+				{
+					this.parent = parent;
+				}
+			}
+
+			#region INullableType Members
+
+			public bool IsNullValue(object value)
+			{
+				if (value == null)
+				{
+					return true;
+				}
+				if ((this.parent != null) &&
+					(this.parent.IsNullValue (value)))
+				{
+					return true;
+				}
+
+				INullable nullable = value as INullable;
+
+				if (nullable != null)
+				{
+					return nullable.IsNull;
+				}
+				else
+				{
+					return false;
+				}
+			}
+
+			public bool IsNullable
+			{
+				get
+				{
+					return false;
+				}
+			}
+
+			#endregion
+
+			INullableType parent;
+		}
+
+		#endregion
+
+		public static readonly INullableType NeverNullableTypeInstance = new NeverNullableType ();
+		public static readonly INullableType AlwaysNullableTypeInstance = new AlwaysNullableType ();
 
 
 		const int								RelationShift	= 0;

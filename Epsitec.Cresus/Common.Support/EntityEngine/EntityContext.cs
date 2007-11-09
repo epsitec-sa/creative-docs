@@ -57,6 +57,43 @@ namespace Epsitec.Common.Support.EntityEngine
 		}
 
 
+		public IEnumerable<string> GetEntityFieldIds(AbstractEntity entity)
+		{
+			if (entity == null)
+			{
+				throw new System.ArgumentNullException ("entity");
+			}
+
+			IStructuredType entityType = this.GetStructuredType (entity);
+
+			if (entityType == null)
+			{
+				throw new System.ArgumentException ("Invalid entity; no associted IStructuredType");
+			}
+
+			return entityType.GetFieldIds ();
+		}
+
+		public IEnumerable<StructuredTypeField> GetEntityFieldDefinitions(AbstractEntity entity)
+		{
+			if (entity == null)
+			{
+				throw new System.ArgumentNullException ("entity");
+			}
+
+			IStructuredType entityType = this.GetStructuredType (entity);
+
+			if (entityType == null)
+			{
+				throw new System.ArgumentException ("Invalid entity; no associted IStructuredType");
+			}
+
+			foreach (string fieldId in entityType.GetFieldIds ())
+			{
+				yield return entityType.GetField (fieldId);
+			}
+		}
+
 		public IStructuredType GetStructuredType(Druid id)
 		{
 			this.EnsureCorrectThread ();

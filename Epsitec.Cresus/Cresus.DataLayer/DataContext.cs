@@ -64,21 +64,69 @@ namespace Epsitec.Cresus.DataLayer
 			EntityDataMapping mapping = this.GetEntityDataMapping (entity);
 			System.Data.DataRow dataRow;
 
+			//	Either create and fill a new row in the database for this entity
+			//	or use and update an existing row.
+
 			if (mapping.RowKey.IsEmpty)
 			{
-				//	Create a new row in the database for this entity.
-
 				dataRow = this.CreateDataRow (mapping);
 			}
 			else
 			{
 				dataRow = this.FindDataRow (mapping);
 			}
+
+			dataRow.BeginEdit ();
+			this.PersistEntityIntoDataRow (entity, dataRow);
+			dataRow.EndEdit ();
+		}
+
+		private void PersistEntityIntoDataRow(AbstractEntity entity, System.Data.DataRow dataRow)
+		{
+			foreach (StructuredTypeField fieldDef in this.entityContext.GetEntityFieldDefinitions (entity))
+			{
+				switch (fieldDef.Relation)
+				{
+					case FieldRelation.None:
+						this.PersistFieldValueIntoDataRow (entity, fieldDef, dataRow);
+						break;
+
+					default:
+						//	TODO: ...
+						break;
+				}
+			}
+		}
+
+		private void PersistFieldValueIntoDataRow(AbstractEntity entity, StructuredTypeField fieldDef, System.Data.DataRow dataRow)
+		{
+			object value = entity.InternalGetValue (fieldDef.Id);
+
+			System.Diagnostics.Debug.Assert (!UnknownValue.IsUnknownValue (value));
+
+			AbstractType  fieldType = fieldDef.Type as AbstractType;
+			INullableType nullableType = fieldDef.GetNullableType ();
+
+			if ((UndefinedValue.IsUndefinedValue (value)) ||
+				(nullableType.IsNullValue (value)))
+			{
+				if (nullableType.IsNullable)
+				{
+					value = System.DBNull.Value;
+				}
+				else
+				{
+					value = fieldType.DefaultValue;
+				}
+			}
+
+			dataRow[fieldDef.Id] = value;
 		}
 
 		private System.Data.DataRow FindDataRow(EntityDataMapping mapping)
 		{
-			throw new System.Exception ("The method or operation is not implemented.");
+			string tableName = this.GetDataTableName (mapping);
+			return this.richCommand.FindRow (tableName, mapping.RowKey.Id);
 		}
 
 		private System.Data.DataRow CreateDataRow(EntityDataMapping mapping)
