@@ -78,6 +78,14 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.groupTimeStep.Margins = new Margins(0, 0, 0, 10);
 			this.groupTimeStep.ResetButton.Clicked += new MessageEventHandler(this.HandleResetButtonClicked);
 			this.fieldTimeStep.EditionAccepted += new EventHandler(this.HandleTextFieldChanged);
+
+			//	Valeur par défaut.
+			//?this.CreateDecimalLabeled(Res.Strings.Viewers.Types.DateTime.Default, this, out this.groupDefault, out this.fieldDefault);
+			this.CreateDecimalLabeled("Valeur par défaut", left, out this.groupDefault, out this.fieldDefault);
+			this.groupDefault.Dock = DockStyle.StackBegin;
+			this.groupDefault.Margins = new Margins(0, 0, 0, 0);
+			this.groupDefault.ResetButton.Clicked += new MessageEventHandler(this.HandleResetButtonClicked);
+			this.fieldDefault.EditionAccepted += new EventHandler(this.HandleTextFieldChanged);
 		}
 
 		
@@ -93,6 +101,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				this.groupMinTime.ResetButton.Clicked -= new MessageEventHandler(this.HandleResetButtonClicked);
 				this.groupMaxTime.ResetButton.Clicked -= new MessageEventHandler(this.HandleResetButtonClicked);
 				this.groupTimeStep.ResetButton.Clicked -= new MessageEventHandler(this.HandleResetButtonClicked);
+				this.groupDefault.ResetButton.Clicked -= new MessageEventHandler(this.HandleResetButtonClicked);
 
 				this.fieldMinDate.EditionAccepted -= new EventHandler(this.HandleTextFieldChanged);
 				this.fieldMaxDate.EditionAccepted -= new EventHandler(this.HandleTextFieldChanged);
@@ -100,6 +109,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				this.fieldMinTime.EditionAccepted -= new EventHandler(this.HandleTextFieldChanged);
 				this.fieldMaxTime.EditionAccepted -= new EventHandler(this.HandleTextFieldChanged);
 				this.fieldTimeStep.EditionAccepted -= new EventHandler(this.HandleTextFieldChanged);
+				this.fieldDefault.EditionAccepted -= new EventHandler(this.HandleTextFieldChanged);
 			}
 			
 			base.Dispose(disposing);
@@ -181,6 +191,13 @@ namespace Epsitec.Common.Designer.MyWidgets
 				{
 					this.PutSummaryValue(builder, Res.Strings.Viewers.Types.Summary.TimeStep, TypeEditorDateTime.TimeSpanToString(step));
 				}
+			}
+
+			value = this.structuredData.GetValue(Support.Res.Fields.ResourceBaseType.DefaultValue);
+			if (!UndefinedValue.IsUndefinedValue(value))
+			{
+				//?this.PutSummaryValue(builder, Res.Strings.Viewers.Types.Summary.Default, this.TypeToString(value));
+				this.PutSummaryValue(builder, "Defaut", this.TypeToString(value));
 			}
 
 			return builder.ToString();
@@ -319,6 +336,17 @@ namespace Epsitec.Common.Designer.MyWidgets
 			else
 			{
 				TypeEditorDateTime.TimeSpanToField(this.fieldTimeStep, (System.TimeSpan) value);
+			}
+
+			value = this.structuredData.GetValue(Support.Res.Fields.ResourceBaseType.DefaultValue, out usesOriginalData);
+			this.ColorizeResetBox(this.groupDefault, source, usesOriginalData);
+			if (UndefinedValue.IsUndefinedValue(value))
+			{
+				this.fieldDefault.Text = "";
+			}
+			else
+			{
+				this.fieldDefault.Text = this.TypeToString(value);
 			}
 
 			this.ignoreChange = false;
@@ -581,6 +609,26 @@ namespace Epsitec.Common.Designer.MyWidgets
 				this.structuredData.SetValue(Support.Res.Fields.ResourceDateTimeType.TimeStep, timeSpan);
 			}
 
+			if (sender == this.fieldDefault)
+			{
+				object value = this.structuredData.GetValue(Support.Res.Fields.ResourceBaseType.DefaultValue);
+				if (value is Date)
+				{
+					Date def = TypeEditorDateTime.FieldToDate(this.fieldDefault);
+					this.structuredData.SetValue(Support.Res.Fields.ResourceBaseType.DefaultValue, def);
+				}
+				else if (value is Time)
+				{
+					Time def = TypeEditorDateTime.FieldToTime(this.fieldDefault);
+					this.structuredData.SetValue(Support.Res.Fields.ResourceBaseType.DefaultValue, def);
+				}
+				else
+				{
+					System.DateTime def = TypeEditorDateTime.FieldToDateTime(this.fieldDefault);
+					this.structuredData.SetValue(Support.Res.Fields.ResourceBaseType.DefaultValue, def);
+				}
+			}
+
 			this.OnContentChanged();
 			this.UpdateContent();
 			this.module.AccessTypes.SetLocalDirty();
@@ -625,6 +673,11 @@ namespace Epsitec.Common.Designer.MyWidgets
 				this.ResetToOriginalValue(Support.Res.Fields.ResourceDateTimeType.TimeStep);
 			}
 
+			if (button == this.groupDefault.ResetButton)
+			{
+				this.ResetToOriginalValue(Support.Res.Fields.ResourceBaseType.DefaultValue);
+			}
+
 			this.OnContentChanged();
 			this.UpdateContent();
 			this.module.AccessTypes.SetLocalDirty();
@@ -647,5 +700,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected TextFieldEx					fieldMaxTime;
 		protected ResetBox						groupTimeStep;
 		protected TextFieldEx					fieldTimeStep;
+
+		protected ResetBox						groupDefault;
+		protected TextFieldEx					fieldDefault;
 	}
 }
