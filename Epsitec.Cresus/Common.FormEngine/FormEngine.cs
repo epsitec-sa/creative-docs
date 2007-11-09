@@ -29,84 +29,55 @@ namespace Epsitec.Common.FormEngine
 			StructuredData entityData = new StructuredData(entity);
 			entityData.UndefinedValueMode = UndefinedValueMode.Default;
 
-			Stack<UI.Panel> stack = new Stack<UI.Panel>();
-
 			UI.Panel root = new UI.Panel();
 			root.ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow;
 			root.ResourceManager = this.resourceManager;
 			root.DataSource = new UI.DataSource();
 			root.DataSource.AddDataSource("Data", entityData);
-			stack.Push(root);
 
-			int i = 0;
-			while (i < flat.Count)
-			{
-				FieldDescription field = flat[i];
-
-				switch (field.Type)
-				{
-					case FieldDescription.FieldType.Field:
-					case FieldDescription.FieldType.Line:
-					case FieldDescription.FieldType.Title:
-						int count = FormEngine.CountFields(flat, i);
-						this.CreateFormBox(stack.Peek(), flat, i, count);
-						i += count;
-						break;
-
-					case FieldDescription.FieldType.BoxBegin:
-						UI.Panel box = new UI.Panel(stack.Peek());
-						box.ContainerLayoutMode = field.ContainerLayoutMode;
-						box.DrawFrameState = FrameState.All;
-						box.Dock = DockStyle.Fill;
-						box.Margins = new Margins(5, 5, 5, 5);
-						box.Padding = new Margins(5, 5, 5, 5);
-						stack.Push(box);
-						i++;
-						break;
-
-					case FieldDescription.FieldType.BoxEnd:
-						stack.Pop();
-						i++;
-						break;
-
-#if false
-					case FieldDescription.FieldType.BreakColumn:
-						i++;
-						break;
-
-					case FieldDescription.FieldType.BreakRow:
-						stack.Pop();
-
-						row = new UI.Panel(stack.Peek());
-						row.ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow;
-						row.Dock = DockStyle.Fill;
-						stack.Push(row);
-						i++;
-						break;
-#endif
-
-					default:
-						i++;
-						break;
-				}
-			}
+			this.CreateFormBox(root, flat, 0);
 
 			return root;
 		}
 
 
-		private void CreateFormBox(UI.Panel root, List<FieldDescription> fields, int index, int count)
+		private void CreateFormBox(UI.Panel root, List<FieldDescription> fields, int index)
 		{
 			//	Crée tous les champs dans une boîte.
 
 			//	Première passe pour déterminer quelles colonnes contiennent des labels.
 			int column = 0, row = 0;
+			int level = 0;
 			bool[] isLabel = new bool[FormEngine.MaxColumnsRequired];
-			for (int i=index; i<index+count; i++)
+			for (int i=index; i<fields.Count; i++)
 			{
 				FieldDescription field = fields[i];
 
-				this.SearchFieldLabel(field, isLabel, ref column);
+				if (field.Type == FieldDescription.FieldType.BoxBegin)
+				{
+					if (level == 0)
+					{
+						this.PreprocessBoxBegin(field, isLabel, ref column);
+					}
+
+					level++;
+				}
+				else if (field.Type == FieldDescription.FieldType.BoxEnd)
+				{
+					level--;
+
+					if (level < 0)
+					{
+						break;
+					}
+				}
+				else if (field.Type == FieldDescription.FieldType.Field)  // champ ?
+				{
+					if (level == 0)
+					{
+						this.PreprocessField(field, isLabel, ref column);
+					}
+				}
 			}
 
 			//	Crée les différentes colonnes.
@@ -129,49 +100,87 @@ namespace Epsitec.Common.FormEngine
 			//	Deuxième passe pour générer le contenu.
 			column = 0;
 			row = 0;
+			level = 0;
 			List<Druid> lastTitle = null;
-			for (int i=index; i<index+count; i++)
+			for (int i=index; i<fields.Count; i++)
 			{
 				FieldDescription field = fields[i];
 
-				if (field.Type == FieldDescription.FieldType.Field)  // champ ?
+				if (field.Type == FieldDescription.FieldType.BoxBegin)
 				{
-					string path = field.GetPath("Data");
-					this.CreateField(root, grid, path, field, ref column, ref row);
+					if (level == 0)
+					{
+						UI.Panel box = this.CreateBox(root, grid, field, ref column, ref row);
+						this.CreateFormBox(box, fields, i+1);
+					}
+
+					level++;
 				}
-				else  // séparateur ?
+				else if (field.Type == FieldDescription.FieldType.BoxEnd)
 				{
-					FieldDescription next = FormEngine.SearchNextField(fields, i);  // cherche le prochain champ
-					this.CreateSeparator(root, grid, field, next, ref column, ref row, ref lastTitle);
+					level--;
+
+					if (level < 0)
+					{
+						break;
+					}
+				}
+				else if (field.Type == FieldDescription.FieldType.Field)  // champ ?
+				{
+					if (level == 0)
+					{
+						string path = field.GetPath("Data");
+						this.CreateField(root, grid, path, field, ref column, ref row);
+					}
+				}
+				else if (field.Type == FieldDescription.FieldType.Title ||
+						 field.Type == FieldDescription.FieldType.Line  )  // séparateur ?
+				{
+					if (level == 0)
+					{
+						FieldDescription next = FormEngine.SearchNextField(fields, i);  // cherche le prochain champ
+						this.CreateSeparator(root, grid, field, next, ref column, ref row, ref lastTitle);
+					}
 				}
 			}
 		}
 
 
-		private void SearchFieldLabel(FieldDescription field, bool[] isLabel, ref int column)
+		private void PreprocessBoxBegin(FieldDescription field, bool[] isLabel, ref int column)
 		{
 			//	Détermine quelles colonnes contiennent des labels, lors de la première passe.
-			if (field.Type == FieldDescription.FieldType.Field)
+			int columnsRequired = System.Math.Min(field.ColumnsRequired, FormEngine.MaxColumnsRequired);
+
+			if (column+1+columnsRequired > FormEngine.MaxColumnsRequired)  // dépasse à droite ?
 			{
-				int columnsRequired = System.Math.Min(field.ColumnsRequired, FormEngine.MaxColumnsRequired-1);
+				column = 0;
+			}
 
-				if (column+1+columnsRequired > FormEngine.MaxColumnsRequired)  // dépasse à droite ?
-				{
-					column = 0;
-				}
+			column += columnsRequired;
+		}
 
-				isLabel[column] = true;
+		private void PreprocessField(FieldDescription field, bool[] isLabel, ref int column)
+		{
+			//	Détermine quelles colonnes contiennent des labels, lors de la première passe.
+			int columnsRequired = System.Math.Min(field.ColumnsRequired, FormEngine.MaxColumnsRequired);
 
-				if (field.Separator == FieldDescription.SeparatorType.Append)
-				{
-					column += 1+columnsRequired;
-				}
-				else
-				{
-					column = 0;
-				}
+			if (column+columnsRequired > FormEngine.MaxColumnsRequired)  // dépasse à droite ?
+			{
+				column = 0;
+			}
+
+			isLabel[column] = true;
+
+			if (field.Separator == FieldDescription.SeparatorType.Append)
+			{
+				column += columnsRequired;
+			}
+			else
+			{
+				column = 0;
 			}
 		}
+
 
 		private void CreateSeparator(UI.Panel root, Widgets.Layouts.GridLayoutEngine grid, FieldDescription field, FieldDescription nextField, ref int column, ref int row, ref List<Druid> lastTitle)
 		{
@@ -250,6 +259,34 @@ namespace Epsitec.Common.FormEngine
 			}
 		}
 
+		private UI.Panel CreateBox(UI.Panel root, Widgets.Layouts.GridLayoutEngine grid, FieldDescription field, ref int column, ref int row)
+		{
+			//	Crée les widgets pour une boîte dans la grille, lors de la deuxième passe.
+			UI.Panel box = new UI.Panel(root);
+			box.ContainerLayoutMode = field.ContainerLayoutMode;
+			box.DrawFrameState = FrameState.All;
+			box.Margins = new Margins(5, 5, 5, 5);
+			box.Padding = new Margins(5, 5, 5, 5);
+			
+			grid.RowDefinitions.Add(new Widgets.Layouts.RowDefinition());
+
+			int columnsRequired = System.Math.Min(field.ColumnsRequired, FormEngine.MaxColumnsRequired);
+
+			if (column+columnsRequired > FormEngine.MaxColumnsRequired)  // dépasse à droite ?
+			{
+				row++;
+				column = 0;
+			}
+
+			Widgets.Layouts.GridLayoutEngine.SetColumn(box, column);
+			Widgets.Layouts.GridLayoutEngine.SetRow(box, row);
+			Widgets.Layouts.GridLayoutEngine.SetColumnSpan(box, columnsRequired);
+
+			column += columnsRequired;
+
+			return box;
+		}
+
 		private void CreateField(UI.Panel root, Widgets.Layouts.GridLayoutEngine grid, string path, FieldDescription field, ref int column, ref int row)
 		{
 			//	Crée les widgets pour un champ dans la grille, lors de la deuxième passe.
@@ -273,9 +310,9 @@ namespace Epsitec.Common.FormEngine
 			}
 			grid.RowDefinitions[row].BottomBorder = m;
 
-			int columnsRequired = System.Math.Min(field.ColumnsRequired, FormEngine.MaxColumnsRequired-1);
+			int columnsRequired = System.Math.Min(field.ColumnsRequired, FormEngine.MaxColumnsRequired);
 
-			if (column+1+columnsRequired > FormEngine.MaxColumnsRequired)  // dépasse à droite ?
+			if (column+columnsRequired > FormEngine.MaxColumnsRequired)  // dépasse à droite ?
 			{
 				row++;
 				column = 0;
@@ -288,11 +325,11 @@ namespace Epsitec.Common.FormEngine
 
 			Widgets.Layouts.GridLayoutEngine.SetColumn(placeholder, column);
 			Widgets.Layouts.GridLayoutEngine.SetRow(placeholder, row);
-			Widgets.Layouts.GridLayoutEngine.SetColumnSpan(placeholder, 1+columnsRequired);
+			Widgets.Layouts.GridLayoutEngine.SetColumnSpan(placeholder, columnsRequired);
 
 			if (field.Separator == FieldDescription.SeparatorType.Append)
 			{
-				column += 1+columnsRequired;
+				column += columnsRequired;
 			}
 			else
 			{
