@@ -37,6 +37,13 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.checkMultilingual.Text = Res.Strings.Viewers.Types.String.Multilingual;
 			this.checkMultilingual.Dock = DockStyle.Fill;
 			this.checkMultilingual.Clicked += new MessageEventHandler(this.HandleCheckClicked);
+
+			//?this.CreateDecimalLabeled(Res.Strings.Viewers.Types.String.Default, this, out this.groupDefault, out this.fieldDefault);
+			this.CreateDecimalLabeled("Texte par défaut", this, out this.groupDefault, out this.fieldDefault);
+			this.groupDefault.Dock = DockStyle.StackBegin;
+			this.groupDefault.Margins = new Margins(0, 0, 10, 0);
+			this.groupDefault.ResetButton.Clicked += new MessageEventHandler(this.HandleResetButtonClicked);
+			this.fieldDefault.EditionAccepted += new EventHandler(this.HandleTextFieldChanged);
 		}
 
 		
@@ -46,9 +53,11 @@ namespace Epsitec.Common.Designer.MyWidgets
 			{
 				this.groupMin.ResetButton.Clicked -= new MessageEventHandler(this.HandleResetButtonClicked);
 				this.groupMax.ResetButton.Clicked -= new MessageEventHandler(this.HandleResetButtonClicked);
+				this.groupDefault.ResetButton.Clicked -= new MessageEventHandler(this.HandleResetButtonClicked);
 
 				this.fieldMin.EditionAccepted -= new EventHandler(this.HandleTextFieldChanged);
 				this.fieldMax.EditionAccepted -= new EventHandler(this.HandleTextFieldChanged);
+				this.fieldDefault.EditionAccepted -= new EventHandler(this.HandleTextFieldChanged);
 				this.checkMultilingual.Clicked -= new MessageEventHandler(this.HandleCheckClicked);
 			}
 			
@@ -80,6 +89,17 @@ namespace Epsitec.Common.Designer.MyWidgets
 				if (max != 0)
 				{
 					this.PutSummaryValue(builder, Res.Strings.Viewers.Types.Summary.Max, max.ToString());
+				}
+			}
+
+			value = this.structuredData.GetValue(Support.Res.Fields.ResourceBaseType.DefaultValue);
+			if (!UndefinedValue.IsUndefinedValue(value))
+			{
+				string def = value as string;
+				if (!string.IsNullOrEmpty(def))
+				{
+					//?this.PutSummaryValue(builder, Res.Strings.Viewers.Types.Summary.Default, def);
+					this.PutSummaryValue(builder, "Defaut", def);
 				}
 			}
 
@@ -144,6 +164,25 @@ namespace Epsitec.Common.Designer.MyWidgets
 				}
 			}
 			
+			value = this.structuredData.GetValue(Support.Res.Fields.ResourceBaseType.DefaultValue, out usesOriginalData);
+			this.ColorizeResetBox(this.groupDefault, source, usesOriginalData);
+			if (UndefinedValue.IsUndefinedValue(value))
+			{
+				this.fieldDefault.Text = "";
+			}
+			else
+			{
+				string def = value as string;
+				if (string.IsNullOrEmpty(def))
+				{
+					this.fieldDefault.Text = "";
+				}
+				else
+				{
+					this.fieldDefault.Text = def;
+				}
+			}
+			
 			value = this.structuredData.GetValue(Support.Res.Fields.ResourceStringType.UseMultilingualStorage, out usesOriginalData);
 			this.ColorizeResetBox(this.groupMultilingual, source, usesOriginalData);
 			if (UndefinedValue.IsUndefinedValue(value))
@@ -177,6 +216,12 @@ namespace Epsitec.Common.Designer.MyWidgets
 			{
 				int max = (int) this.GetDecimal(this.fieldMax);
 				this.structuredData.SetValue(Support.Res.Fields.ResourceStringType.MaximumLength, max);
+			}
+
+			if (sender == this.fieldDefault)
+			{
+				string def = this.fieldDefault.Text;
+				this.structuredData.SetValue(Support.Res.Fields.ResourceBaseType.DefaultValue, def);
 			}
 
 			this.OnContentChanged();
@@ -222,6 +267,11 @@ namespace Epsitec.Common.Designer.MyWidgets
 				this.ResetToOriginalValue(Support.Res.Fields.ResourceStringType.MaximumLength);
 			}
 
+			if (button == this.groupDefault.ResetButton)
+			{
+				this.ResetToOriginalValue(Support.Res.Fields.ResourceBaseType.DefaultValue);
+			}
+
 			if (button == this.groupMultilingual.ResetButton)
 			{
 				this.ResetToOriginalValue(Support.Res.Fields.ResourceStringType.UseMultilingualStorage);
@@ -239,5 +289,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected TextFieldEx					fieldMax;
 		protected ResetBox						groupMultilingual;
 		protected CheckButton					checkMultilingual;
+		protected ResetBox						groupDefault;
+		protected TextFieldEx					fieldDefault;
 	}
 }
