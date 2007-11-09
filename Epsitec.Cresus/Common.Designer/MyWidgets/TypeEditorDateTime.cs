@@ -197,10 +197,33 @@ namespace Epsitec.Common.Designer.MyWidgets
 			if (!UndefinedValue.IsUndefinedValue(value))
 			{
 				//?this.PutSummaryValue(builder, Res.Strings.Viewers.Types.Summary.Default, this.TypeToString(value));
-				this.PutSummaryValue(builder, "Defaut", this.TypeToString(value));
+				this.PutSummaryValue(builder, "Defaut", this.GetString(value));
 			}
 
 			return builder.ToString();
+		}
+
+		protected string GetString(object value)
+		{
+			if (this.typeCode == TypeCode.Date)
+			{
+				Date date = (Date) value;
+				return TypeEditorDateTime.DateTimeToDateString(date.ToDateTime());
+			}
+
+			if (this.typeCode == TypeCode.Time)
+			{
+				Time time = (Time) value;
+				return TypeEditorDateTime.DateTimeToTimeString(time.ToDateTime());
+			}
+
+			if (this.typeCode == TypeCode.DateTime)
+			{
+				System.DateTime dt = (System.DateTime) value;
+				return TypeEditorDateTime.DateTimeToDateTimeString(dt);
+			}
+
+			return null;
 		}
 
 		protected override string TypeToString(object value)
@@ -346,7 +369,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 			else
 			{
-				this.fieldDefault.Text = this.TypeToString(value);
+				this.fieldDefault.Text = this.GetString(value);
 			}
 
 			this.ignoreChange = false;
@@ -611,18 +634,19 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			if (sender == this.fieldDefault)
 			{
-				object value = this.structuredData.GetValue(Support.Res.Fields.ResourceBaseType.DefaultValue);
-				if (value is Date)
+				if (this.typeCode == TypeCode.Date)
 				{
 					Date def = TypeEditorDateTime.FieldToDate(this.fieldDefault);
 					this.structuredData.SetValue(Support.Res.Fields.ResourceBaseType.DefaultValue, def);
 				}
-				else if (value is Time)
+
+				if (this.typeCode == TypeCode.Time)
 				{
 					Time def = TypeEditorDateTime.FieldToTime(this.fieldDefault);
 					this.structuredData.SetValue(Support.Res.Fields.ResourceBaseType.DefaultValue, def);
 				}
-				else
+
+				if (this.typeCode == TypeCode.DateTime)
 				{
 					System.DateTime def = TypeEditorDateTime.FieldToDateTime(this.fieldDefault);
 					this.structuredData.SetValue(Support.Res.Fields.ResourceBaseType.DefaultValue, def);
