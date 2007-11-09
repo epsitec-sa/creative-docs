@@ -18,12 +18,10 @@ namespace Epsitec.Common.FormEngine
 			Node			= 2,	// noeud
 			Line			= 10,	// séparateur trait horizontal
 			Title			= 11,	// séparateur titre automatique
-			//?BreakColumn		= 20,	// saute à la colonne suivante
-			//?BreakRow		= 21,	// saute à la ligne suivante
-			BoxBegin		= 30,	// début d'une boîte
-			BoxEnd			= 31,	// fin d'une boîte
-			InsertionPoint	= 40,	// spécifie le point d'insertion, dans un module de patch
-			Hide			= 41,	// champ du module de référence à cacher, dans un module de patch
+			BoxBegin		= 20,	// début d'une boîte
+			BoxEnd			= 21,	// fin d'une boîte
+			InsertionPoint	= 30,	// spécifie le point d'insertion, dans un module de patch
+			Hide			= 31,	// champ du module de référence à cacher, dans un module de patch
 		}
 
 		public enum SeparatorType
@@ -51,6 +49,9 @@ namespace Epsitec.Common.FormEngine
 			this.columnsRequired = FormEngine.MaxColumnsRequired;
 			this.rowsRequired = 1;
 			this.containerLayoutMode = ContainerLayoutMode.None;
+			this.containerMargins = Margins.Zero;
+			this.containerPadding = Margins.Zero;
+			this.containerBackColor = Color.Empty;
 		}
 
 		public FieldDescription(FieldDescription model) : this()
@@ -64,6 +65,9 @@ namespace Epsitec.Common.FormEngine
 			this.nodeDescription = model.nodeDescription;
 			this.fieldIds = model.fieldIds;
 			this.containerLayoutMode = model.containerLayoutMode;
+			this.containerMargins = model.containerMargins;
+			this.containerPadding = model.containerPadding;
+			this.containerBackColor = model.containerBackColor;
 		}
 
 
@@ -226,6 +230,48 @@ namespace Epsitec.Common.FormEngine
 			}
 		}
 
+		public Margins ContainerMargins
+		{
+			//	Marges d'une boîte.
+			get
+			{
+				return this.containerMargins;
+			}
+			set
+			{
+				System.Diagnostics.Debug.Assert(this.type == FieldType.BoxBegin);
+				this.containerMargins = value;
+			}
+		}
+
+		public Margins ContainerPadding
+		{
+			//	Padding d'une boîte.
+			get
+			{
+				return this.containerPadding;
+			}
+			set
+			{
+				System.Diagnostics.Debug.Assert(this.type == FieldType.BoxBegin);
+				this.containerPadding = value;
+			}
+		}
+
+		public Color ContainerBackColor
+		{
+			//	Couleur de fond d'une boîte.
+			get
+			{
+				return this.containerBackColor;
+			}
+			set
+			{
+				System.Diagnostics.Debug.Assert(this.type == FieldType.BoxBegin);
+				this.containerBackColor = value;
+			}
+		}
+
 
 		public void CopyTo(FieldDescription dst)
 		{
@@ -278,5 +324,8 @@ namespace Epsitec.Common.FormEngine
 		protected int columnsRequired;
 		protected int rowsRequired;
 		protected ContainerLayoutMode containerLayoutMode;
+		protected Margins containerMargins;
+		protected Margins containerPadding;
+		protected Color containerBackColor;
 	}
 }

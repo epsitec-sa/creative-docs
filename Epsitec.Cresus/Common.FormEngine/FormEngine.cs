@@ -189,8 +189,9 @@ namespace Epsitec.Common.FormEngine
 			UI.Panel box = new UI.Panel(root);
 			box.ContainerLayoutMode = field.ContainerLayoutMode;
 			box.DrawFrameState = FrameState.All;
-			box.Margins = new Margins(5, 5, 5, 5);
-			box.Padding = new Margins(5, 5, 5, 5);
+			box.Margins = field.ContainerMargins;
+			box.Padding = field.ContainerPadding;
+			box.BackColor = field.ContainerBackColor;
 			
 			grid.RowDefinitions.Add(new Widgets.Layouts.RowDefinition());
 
