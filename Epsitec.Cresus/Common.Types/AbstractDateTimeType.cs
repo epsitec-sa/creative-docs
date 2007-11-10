@@ -160,7 +160,7 @@ namespace Epsitec.Common.Types
 		/// <param name="value">The value.</param>
 		public void DefineMinimumTime(Time value)
 		{
-			if (value == Time.Null)
+			if (value.IsNull)
 			{
 				this.Caption.ClearValue (AbstractDateTimeType.MinimumTimeProperty);
 			}
@@ -176,7 +176,7 @@ namespace Epsitec.Common.Types
 		/// <param name="value">The value.</param>
 		public void DefineMaximumTime(Time value)
 		{
-			if (value == Time.Null)
+			if (value.IsNull)
 			{
 				this.Caption.ClearValue (AbstractDateTimeType.MaximumTimeProperty);
 			}

@@ -97,7 +97,7 @@ namespace Epsitec.Common.Types
 			}
 
 			if ((value.GetType () == typeof (Time)) &&
-				((Time) value == Time.Null))
+				(((Time) value).IsNull))
 			{
 				return true;
 			}

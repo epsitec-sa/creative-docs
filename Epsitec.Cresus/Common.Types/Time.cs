@@ -163,6 +163,11 @@ namespace Epsitec.Common.Types
 		
 		public System.DateTime ToDateTime()
 		{
+			if (this.IsNull)
+			{
+				throw new System.NullReferenceException ("Date is Null.");
+			}
+
 			return new System.DateTime (this.Ticks);
 		}
 		
