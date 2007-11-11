@@ -50,7 +50,8 @@ namespace Epsitec.Common.FormEngine
 			//	Première passe pour déterminer quelles colonnes contiennent des labels.
 			int column = 0, row = 0;
 			int level = 0;
-			bool[] isLabel = new bool[FormEngine.MaxColumnsRequired];
+			int[] labelsId = new int[FormEngine.MaxColumnsRequired];
+			int labelId = 1;
 			for (int i=index; i<fields.Count; i++)
 			{
 				FieldDescription field = fields[i];
@@ -59,7 +60,7 @@ namespace Epsitec.Common.FormEngine
 				{
 					if (level == 0)
 					{
-						this.PreprocessBoxBegin(field, isLabel, ref column);
+						this.PreprocessBoxBegin(field, labelsId, ref labelId, ref column);
 					}
 
 					level++;
@@ -77,7 +78,7 @@ namespace Epsitec.Common.FormEngine
 				{
 					if (level == 0)
 					{
-						this.PreprocessField(field, isLabel, ref column);
+						this.PreprocessField(field, labelsId, ref labelId, ref column);
 					}
 				}
 				else if (field.Type == FieldDescription.FieldType.Node ||
@@ -89,19 +90,27 @@ namespace Epsitec.Common.FormEngine
 
 			//	Crée les différentes colonnes, en fonction des résultats de la première passe.
 			Widgets.Layouts.GridLayoutEngine grid = new Widgets.Layouts.GridLayoutEngine();
+			int lastLabelId = -1;
 			for (int i=0; i<FormEngine.MaxColumnsRequired; i++)
 			{
-				if (isLabel[i])  // est-ce que cette colonne contient un label ?
+				if (lastLabelId != labelsId[i])
 				{
-					//	Largeur automatique selon la taille minimale du contenu.
-					grid.ColumnDefinitions.Add(new Widgets.Layouts.ColumnDefinition());
-				}
-				else
-				{
-					//	Largeur de 10%, 10 pixels au minimum, pas de maximum.
-					grid.ColumnDefinitions.Add(new Widgets.Layouts.ColumnDefinition(new Widgets.Layouts.GridLength(10.0, Widgets.Layouts.GridUnitType.Proportional), 10, double.PositiveInfinity));
+					lastLabelId = labelsId[i];
+
+					if (labelsId[i] < 0)  // est-ce que cette colonne contient un label ?
+					{
+						//	Largeur automatique selon la taille minimale du contenu.
+						grid.ColumnDefinitions.Add(new Widgets.Layouts.ColumnDefinition());
+					}
+					else
+					{
+						//	Largeur de 10%, 10 pixels au minimum, pas de maximum.
+						//	TODO: cummuler les largeurs si optimisation !!!
+						grid.ColumnDefinitions.Add(new Widgets.Layouts.ColumnDefinition(new Widgets.Layouts.GridLength(10.0, Widgets.Layouts.GridUnitType.Proportional), 10, double.PositiveInfinity));
+					}
 				}
 			}
+			System.Console.WriteLine(string.Format("GridLayoutEngine with {0} columns", grid.ColumnDefinitions.Count));
 			grid.ColumnDefinitions[0].RightBorder = 1;
 
 			Widgets.Layouts.LayoutEngine.SetLayoutEngine(root, grid);
@@ -119,7 +128,7 @@ namespace Epsitec.Common.FormEngine
 				{
 					if (level == 0)
 					{
-						UI.Panel box = this.CreateBox(root, grid, field, ref column, ref row);
+						UI.Panel box = this.CreateBox(root, grid, field, labelsId, ref column, ref row);
 						this.CreateFormBox(box, fields, i+1);
 					}
 
@@ -139,7 +148,7 @@ namespace Epsitec.Common.FormEngine
 					if (level == 0)
 					{
 						string path = field.GetPath("Data");
-						this.CreateField(root, grid, path, field, ref column, ref row);
+						this.CreateField(root, grid, path, field, labelsId, ref column, ref row);
 					}
 				}
 				else if (field.Type == FieldDescription.FieldType.Title ||
@@ -148,14 +157,14 @@ namespace Epsitec.Common.FormEngine
 					if (level == 0)
 					{
 						FieldDescription next = FormEngine.SearchNextField(fields, i);  // cherche le prochain champ
-						this.CreateSeparator(root, grid, field, next, ref column, ref row, ref lastTitle);
+						this.CreateSeparator(root, grid, field, next, labelsId, ref column, ref row, ref lastTitle);
 					}
 				}
 			}
 		}
 
 
-		private void PreprocessBoxBegin(FieldDescription field, bool[] isLabel, ref int column)
+		private void PreprocessBoxBegin(FieldDescription field, int[] labelsId, ref int labelId, ref int column)
 		{
 			//	Détermine quelles colonnes contiennent des labels, lors de la première passe.
 			//	Un BoxBegin ne contient jamais de label, mais il faut tout de même faire évoluer
@@ -167,10 +176,12 @@ namespace Epsitec.Common.FormEngine
 				column = 0;
 			}
 
+			this.LabelIdUse(labelsId, labelId++, column, columnsRequired);
+
 			column += columnsRequired;
 		}
 
-		private void PreprocessField(FieldDescription field, bool[] isLabel, ref int column)
+		private void PreprocessField(FieldDescription field, int[] labelsId, ref int labelId, ref int column)
 		{
 			//	Détermine quelles colonnes contiennent des labels, lors de la première passe.
 			int columnsRequired = System.Math.Min(field.ColumnsRequired, FormEngine.MaxColumnsRequired);
@@ -180,7 +191,8 @@ namespace Epsitec.Common.FormEngine
 				column = 0;
 			}
 
-			isLabel[column] = true;
+			this.LabelIdUse(labelsId, -(labelId++), column, 1);
+			this.LabelIdUse(labelsId, labelId++, column+1, columnsRequired-1);
 
 			if (field.Separator == FieldDescription.SeparatorType.Append)
 			{
@@ -192,8 +204,74 @@ namespace Epsitec.Common.FormEngine
 			}
 		}
 
+		private void LabelIdUse(int[] labelsId, int labelId, int column, int count)
+		{
+			//	Indique que les colonnes comprises entre column et column+count-1 ont un contenu commun,
+			//	c'est-à-dire qui ne nécessique qu'une colonne physique dans GridLayoutEngine, si cela est
+			//	en accord avec les autres lignes.
+			int last = column+count-1;
+			int id = labelsId[column];
+			for (int i=column+1; i<=last; i++)
+			{
+				if (labelsId[i] != id)
+				{
+					if (column > 0 && labelsId[column-1] == labelsId[column])
+					{
+						int m = labelsId[column];
+						for (int j=column; j<=last; j++)
+						{
+							if (labelsId[j] != m)
+							{
+								break;
+							}
+							labelsId[j] = labelId;
+						}
+					}
 
-		private UI.Panel CreateBox(UI.Panel root, Widgets.Layouts.GridLayoutEngine grid, FieldDescription field, ref int column, ref int row)
+					if (last < labelsId.Length-1 && labelsId[last+1] == labelsId[last])
+					{
+						int m = labelsId[last];
+						for (int j=last; j>=column; j--)
+						{
+							if (labelsId[j] != m)
+							{
+								break;
+							}
+							labelsId[j] = labelId;
+						}
+					}
+
+					return;
+				}
+			}
+
+			for (int i=column; i<=last; i++)
+			{
+				labelsId[i] = labelId;
+			}
+		}
+
+		private int GetColumnIndex(int[] labelsId, int column)
+		{
+			int index = column;
+			int last = -1;
+			for (int i=0; i<=column; i++)
+			{
+				if (last == labelsId[i])
+				{
+					index--;
+				}
+				else
+				{
+					last = labelsId[i];
+				}
+			}
+
+			return index;
+		}
+
+
+		private UI.Panel CreateBox(UI.Panel root, Widgets.Layouts.GridLayoutEngine grid, FieldDescription field, int[] labelsId, ref int column, ref int row)
 		{
 			//	Crée les widgets pour une boîte dans la grille, lors de la deuxième passe.
 			UI.Panel box = new UI.Panel(root);
@@ -215,9 +293,11 @@ namespace Epsitec.Common.FormEngine
 				column = 0;
 			}
 
-			Widgets.Layouts.GridLayoutEngine.SetColumn(box, column);
+			int i = this.GetColumnIndex(labelsId, column);
+			int j = this.GetColumnIndex(labelsId, column+columnsRequired-1)+1;
+			Widgets.Layouts.GridLayoutEngine.SetColumn(box, i);
 			Widgets.Layouts.GridLayoutEngine.SetRow(box, row);
-			Widgets.Layouts.GridLayoutEngine.SetColumnSpan(box, columnsRequired);
+			Widgets.Layouts.GridLayoutEngine.SetColumnSpan(box, j-i);
 
 			column += columnsRequired;
 
@@ -230,7 +310,7 @@ namespace Epsitec.Common.FormEngine
 			return box;
 		}
 
-		private void CreateField(UI.Panel root, Widgets.Layouts.GridLayoutEngine grid, string path, FieldDescription field, ref int column, ref int row)
+		private void CreateField(UI.Panel root, Widgets.Layouts.GridLayoutEngine grid, string path, FieldDescription field, int[] labelsId, ref int column, ref int row)
 		{
 			//	Crée les widgets pour un champ dans la grille, lors de la deuxième passe.
 			UI.Placeholder placeholder = new Epsitec.Common.UI.Placeholder(root);
@@ -266,9 +346,11 @@ namespace Epsitec.Common.FormEngine
 				placeholder.PreferredHeight = field.RowsRequired*20;
 			}
 
-			Widgets.Layouts.GridLayoutEngine.SetColumn(placeholder, column);
+			int i = this.GetColumnIndex(labelsId, column);
+			int j = this.GetColumnIndex(labelsId, column+columnsRequired-1)+1;
+			Widgets.Layouts.GridLayoutEngine.SetColumn(placeholder, i);
 			Widgets.Layouts.GridLayoutEngine.SetRow(placeholder, row);
-			Widgets.Layouts.GridLayoutEngine.SetColumnSpan(placeholder, columnsRequired);
+			Widgets.Layouts.GridLayoutEngine.SetColumnSpan(placeholder, j-i);
 
 			if (field.Separator == FieldDescription.SeparatorType.Append)
 			{
@@ -281,7 +363,7 @@ namespace Epsitec.Common.FormEngine
 			}
 		}
 
-		private void CreateSeparator(UI.Panel root, Widgets.Layouts.GridLayoutEngine grid, FieldDescription field, FieldDescription nextField, ref int column, ref int row, ref List<Druid> lastTitle)
+		private void CreateSeparator(UI.Panel root, Widgets.Layouts.GridLayoutEngine grid, FieldDescription field, FieldDescription nextField, int[] labelsId, ref int column, ref int row, ref List<Druid> lastTitle)
 		{
 			//	Crée les widgets pour un séparateur dans la grille, lors de la deuxième passe.
 			FieldDescription.FieldType type = field.Type;
@@ -330,9 +412,11 @@ namespace Epsitec.Common.FormEngine
 					text.Text = string.Concat("<font size=\"", size.ToString(System.Globalization.CultureInfo.InvariantCulture), "%\"><b>", builder.ToString(), "</b></font>");
 					text.PreferredHeight = size/100*16;
 
-					Widgets.Layouts.GridLayoutEngine.SetColumn(text, 0);
+					int i = this.GetColumnIndex(labelsId, 0);
+					int j = this.GetColumnIndex(labelsId, FormEngine.MaxColumnsRequired-1)+1;
+					Widgets.Layouts.GridLayoutEngine.SetColumn(text, i);
 					Widgets.Layouts.GridLayoutEngine.SetRow(text, row);
-					Widgets.Layouts.GridLayoutEngine.SetColumnSpan(text, 1+FormEngine.MaxColumnsRequired);
+					Widgets.Layouts.GridLayoutEngine.SetColumnSpan(text, j-i);
 
 					row++;
 				}
@@ -350,9 +434,11 @@ namespace Epsitec.Common.FormEngine
 				Separator sep = new Separator(root);
 				sep.PreferredHeight = 1;
 
-				Widgets.Layouts.GridLayoutEngine.SetColumn(sep, 0);
+				int i = this.GetColumnIndex(labelsId, 0);
+				int j = this.GetColumnIndex(labelsId, FormEngine.MaxColumnsRequired-1)+1;
+				Widgets.Layouts.GridLayoutEngine.SetColumn(sep, i);
 				Widgets.Layouts.GridLayoutEngine.SetRow(sep, row);
-				Widgets.Layouts.GridLayoutEngine.SetColumnSpan(sep, 1+FormEngine.MaxColumnsRequired);
+				Widgets.Layouts.GridLayoutEngine.SetColumnSpan(sep, j-i);
 
 				row++;
 			}
@@ -399,6 +485,6 @@ namespace Epsitec.Common.FormEngine
 		public static readonly int MaxColumnsRequired = 10;
 		public static readonly int MaxRowsRequired = 20;
 
-		ResourceManager resourceManager;
+		protected ResourceManager resourceManager;
 	}
 }
