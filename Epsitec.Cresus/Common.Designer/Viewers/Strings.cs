@@ -200,27 +200,35 @@ namespace Epsitec.Common.Designer.Viewers
 			else
 			{
 				CultureMap item = this.access.CollectionView.CurrentItem as CultureMap;
-				StructuredData data = item.GetCultureData(twoLettersCulture);
 
-				string text = data.GetValue(Support.Res.Fields.ResourceString.Text) as string;
-				if (text == null)
+				if (item == null)
 				{
-					buffer.Append(Misc.Italic("(indéfini)"));
-				}
-				else if (text.Length == 0)
-				{
-					buffer.Append(Misc.Italic("(vide)"));
+					buffer.Append (Misc.Italic ("(indéfini)"));
 				}
 				else
 				{
-					buffer.Append(text);
-				}
+					StructuredData data = item.GetCultureData(twoLettersCulture);
 
-				string comment = data.GetValue(Support.Res.Fields.ResourceBase.Comment) as string;
-				if (!string.IsNullOrEmpty(comment))
-				{
-					buffer.Append("<br/>");
-					buffer.Append(Misc.Italic(comment));
+					string text = data.GetValue(Support.Res.Fields.ResourceString.Text) as string;
+					if (text == null)
+					{
+						buffer.Append(Misc.Italic("(indéfini)"));
+					}
+					else if (text.Length == 0)
+					{
+						buffer.Append(Misc.Italic("(vide)"));
+					}
+					else
+					{
+						buffer.Append(text);
+					}
+
+					string comment = data.GetValue(Support.Res.Fields.ResourceBase.Comment) as string;
+					if (!string.IsNullOrEmpty(comment))
+					{
+						buffer.Append("<br/>");
+						buffer.Append(Misc.Italic(comment));
+					}
 				}
 			}
 
