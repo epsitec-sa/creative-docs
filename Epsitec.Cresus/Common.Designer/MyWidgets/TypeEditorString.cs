@@ -96,7 +96,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			if (!UndefinedValue.IsUndefinedValue(value))
 			{
 				string def = value as string;
-				if (!string.IsNullOrEmpty(def))
+				if (def != null)
 				{
 					this.PutSummaryValue(builder, Res.Strings.Viewers.Types.Summary.Default, def);
 				}
@@ -167,14 +167,14 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.ColorizeResetBox(this.groupDefault, source, usesOriginalData);
 			if (UndefinedValue.IsUndefinedValue(value))
 			{
-				this.fieldDefault.Text = "";
+				this.fieldDefault.Text = ResourceBundle.Field.Null;
 			}
 			else
 			{
 				string def = value as string;
-				if (string.IsNullOrEmpty(def))
+				if (def == null)
 				{
-					this.fieldDefault.Text = "";
+					this.fieldDefault.Text = ResourceBundle.Field.Null;
 				}
 				else
 				{
@@ -220,7 +220,14 @@ namespace Epsitec.Common.Designer.MyWidgets
 			if (sender == this.fieldDefault)
 			{
 				string def = this.fieldDefault.Text;
-				this.structuredData.SetValue(Support.Res.Fields.ResourceBaseType.DefaultValue, def);
+				if (ResourceBundle.Field.IsNullString (def))
+				{
+					this.structuredData.SetValue (Support.Res.Fields.ResourceBaseType.DefaultValue, UndefinedValue.Value);
+				}
+				else
+				{
+					this.structuredData.SetValue (Support.Res.Fields.ResourceBaseType.DefaultValue, def);
+				}
 			}
 
 			this.OnContentChanged();
