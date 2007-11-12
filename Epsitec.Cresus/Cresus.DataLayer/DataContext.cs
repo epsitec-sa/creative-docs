@@ -69,7 +69,7 @@ namespace Epsitec.Cresus.DataLayer
 			}
 		}
 
-		public void PersistEntity(AbstractEntity entity)
+		public void SerializeEntity(AbstractEntity entity)
 		{
 			EntityDataMapping mapping = this.GetEntityDataMapping (entity);
 			System.Data.DataRow dataRow;
@@ -87,11 +87,11 @@ namespace Epsitec.Cresus.DataLayer
 			}
 
 			dataRow.BeginEdit ();
-			this.PersistEntityIntoDataRow (entity, dataRow);
+			this.SerializeEntity (entity, dataRow);
 			dataRow.EndEdit ();
 		}
 
-		private void PersistEntityIntoDataRow(AbstractEntity entity, System.Data.DataRow dataRow)
+		private void SerializeEntity(AbstractEntity entity, System.Data.DataRow dataRow)
 		{
 			dataRow[Tags.ColumnInstanceType] = this.GetInstanceTypeValue (entity);
 			

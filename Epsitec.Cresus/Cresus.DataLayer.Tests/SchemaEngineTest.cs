@@ -114,7 +114,7 @@ namespace Epsitec.Cresus.DataLayer
 			entity.SetField<string> ("[63091]", null, "VI-M3-10");
 			entity.SetField<string> ("[630A1]", null, "Vis M3 10mm, inox");
 
-			context.PersistEntity (entity);
+			context.SerializeEntity (entity);
 			context.SaveChanges ();
 
 			int count = 0;
@@ -126,7 +126,7 @@ namespace Epsitec.Cresus.DataLayer
 				entity = context.EntityContext.CreateEntity (this.articleEntityId);
 				entity.SetField<string> ("[63091]", null, item.Key);
 				entity.SetField<string> ("[630A1]", null, item.Value);
-				context.PersistEntity (entity);
+				context.SerializeEntity (entity);
 				count++;
 			}
 
