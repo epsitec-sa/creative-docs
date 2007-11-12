@@ -250,7 +250,7 @@ namespace Epsitec.Common.Support.EntityEngine
 			return value;
 		}
 		
-		private void InternalSetValue(string id, object value)
+		public void InternalSetValue(string id, object value)
 		{
 			if (this.IsDefiningOriginalValues)
 			{

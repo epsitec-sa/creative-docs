@@ -126,9 +126,11 @@ namespace Epsitec.Cresus.DataLayer
 			int count = 0;
 
 			System.Diagnostics.Debug.WriteLine ("Adding articles");
+			List<AbstractEntity> entities = new List<AbstractEntity> ();
 
 			foreach (AbstractEntity item in this.GetItems (context.EntityContext))
 			{
+				entities.Add (item);
 				context.SerializeEntity (item);
 				count++;
 			}
@@ -139,6 +141,24 @@ namespace Epsitec.Cresus.DataLayer
 
 			System.Diagnostics.Debug.WriteLine ("Saved " + count + " entities");
 			System.Diagnostics.Debug.WriteLine ("------------------------------------------------");
+
+			context.Dispose ();
+
+			Assert.AreEqual (1920, entities.Count);
+			Assert.AreEqual (1000000000001L, context.GetEntityDataMapping (entity).RowKey.Id.Value);
+			Assert.AreEqual (1000000000002L, context.GetEntityDataMapping (entities[0]).RowKey.Id.Value);
+		}
+
+		[Test]
+		public void Check12LoadEntity()
+		{
+			DataContext context = new DataContext (this.infrastructure);
+
+			DbKey key1 = new DbKey (new DbId (1000000000001L));
+			DbKey key2 = new DbKey (new DbId (1000000000002L));
+
+			AbstractEntity entity1 = context.DeserializeEntity (key1, this.articleEntityId);
+			AbstractEntity entity2 = context.DeserializeEntity (key2, this.articleEntityId);
 
 			context.Dispose ();
 		}
