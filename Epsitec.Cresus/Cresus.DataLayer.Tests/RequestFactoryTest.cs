@@ -5,6 +5,7 @@ namespace Epsitec.Cresus.DataLayer
 	[TestFixture]
 	public class RequestFactoryTest
 	{
+#if false
 		[Test]
 		public void Check01NewAndDispose()
 		{
@@ -156,5 +157,6 @@ namespace Epsitec.Cresus.DataLayer
 
 			factory.Dispose ();
 		}
+#endif
 	}
 }

@@ -15,6 +15,7 @@ namespace Epsitec.Cresus.DataLayer
 	[TestFixture]
 	public class AdapterTest
 	{
+#if false
 		[TestFixtureSetUp]
 		public void Setup()
 		{
@@ -132,5 +133,6 @@ namespace Epsitec.Cresus.DataLayer
 		}
 
 		private DbInfrastructure infrastructure;
+#endif
 	}
 }

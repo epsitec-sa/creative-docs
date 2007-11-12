@@ -19,6 +19,7 @@ namespace Epsitec.Cresus.DataLayer
 	[TestFixture]
 	public class DataBrokerTest
 	{
+#if false
 		[TestFixtureSetUp]
 		public void Setup()
 		{
@@ -363,5 +364,6 @@ namespace Epsitec.Cresus.DataLayer
 		}
 
 		private DbInfrastructure infrastructure;
+#endif
 	}
 }
