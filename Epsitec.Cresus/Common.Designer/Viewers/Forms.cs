@@ -14,6 +14,7 @@ namespace Epsitec.Common.Designer.Viewers
 	{
 		public Forms(Module module, PanelsContext context, ResourceAccess access, DesignerApplication designerApplication) : base(module, context, access, designerApplication)
 		{
+			this.UpdateAll();
 		}
 
 		protected override void Dispose(bool disposing)
@@ -42,11 +43,8 @@ namespace Epsitec.Common.Designer.Viewers
 			cultureMapType.Fields.Add("Name", StringType.Default);
 
 			this.table.SourceType = cultureMapType;
-
 			this.table.Columns.Add(new UI.ItemTableColumn("Name", new Widgets.Layouts.GridLength(this.GetColumnWidth(0), Widgets.Layouts.GridUnitType.Proportional)));
-
 			this.table.ColumnHeader.SetColumnText(0, Res.Strings.Viewers.Column.Name);
-
 			this.table.ColumnHeader.SetColumnSort(0, ListSortDirection.Ascending);
 		}
 
