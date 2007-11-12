@@ -104,15 +104,63 @@ namespace Epsitec.Cresus.DataLayer
 		{
 			DataContext context = new DataContext (this.infrastructure);
 
+			System.Diagnostics.Debug.WriteLine ("Check11SaveEntity");
+			System.Diagnostics.Debug.WriteLine ("------------------------------------------------");
+			
 			AbstractEntity entity = context.EntityContext.CreateEntity (this.articleEntityId);
 
 			Assert.AreEqual (6, context.CountManagedEntities ());
 
-			entity.SetField<string> ("[630A1]", null, "Vis M3 10mm, inox");
 			entity.SetField<string> ("[63091]", null, "VI-M3-10");
+			entity.SetField<string> ("[630A1]", null, "Vis M3 10mm, inox");
 
 			context.PersistEntity (entity);
 			context.SaveChanges ();
+
+			int count = 0;
+
+			System.Diagnostics.Debug.WriteLine ("Adding articles");
+
+			foreach (KeyValuePair<string, string> item in SchemaEngineTest.GetItems ())
+			{
+				entity = context.EntityContext.CreateEntity (this.articleEntityId);
+				entity.SetField<string> ("[63091]", null, item.Key);
+				entity.SetField<string> ("[630A1]", null, item.Value);
+				context.PersistEntity (entity);
+				count++;
+			}
+
+			System.Diagnostics.Debug.WriteLine ("Saving");
+
+			context.SaveChanges ();
+
+			System.Diagnostics.Debug.WriteLine ("Saved " + count + " entities");
+			System.Diagnostics.Debug.WriteLine ("------------------------------------------------");
+		}
+
+		private static IEnumerable<KeyValuePair<string, string>> GetItems()
+		{
+			string[] materials = new string[] { "Inox", "Cuivre", "Galvanisé", "Teflon", "POM", "Acier" };
+			string[] categories = new string[] { "Vis", "Ecrou", "Rondelle", "Boulon" };
+			string[] sizes = new string[] { "M3", "M4", "M5", "M6", "M8", "M10", "M12", "M14", "M16", "M20" };
+			string[] lengths = new string[] { "10mm", "12mm", "15mm", "20mm", "25mm", "30mm", "40mm", "50mm" };
+
+			foreach (string mat in materials)
+			{
+				foreach (string cat in categories)
+				{
+					foreach (string size in sizes)
+					{
+						foreach (string len in lengths)
+						{
+							string itemKey = string.Concat (cat.Substring (0, 1), mat.Substring (0, 1), "-", size, "-", len.Substring (0, 2));
+							string itemValue = string.Concat (cat, " ", size, " ", len, ", ", mat);
+
+							yield return new KeyValuePair<string, string> (itemKey, itemValue);
+						}
+					}
+				}
+			}
 		}
 
 		#region Helper Methods
