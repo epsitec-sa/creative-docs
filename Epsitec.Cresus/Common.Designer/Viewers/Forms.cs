@@ -52,27 +52,27 @@ namespace Epsitec.Common.Designer.Viewers
 			container.Dock = DockStyle.Fill;
 
 			//	Sous-conteneur qui a des marges, pour permettre de voir les cotes (Dimension*)
-			//	du PanelEditor qui s'affiche par-dessus.
+			//	du FormEditor qui s'affiche par-dessus.
 			this.panelContainerParent = new FrameBox(container);
-			this.panelContainerParent.Margins = new Margins(Dimension.margin, Dimension.margin, Dimension.margin, Dimension.margin);
+			this.panelContainerParent.Margins = new Margins(PanelEditor.Dimension.margin, PanelEditor.Dimension.margin, PanelEditor.Dimension.margin, PanelEditor.Dimension.margin);
 			this.panelContainerParent.Dock = DockStyle.Fill;
 
 			//	Le UI.Panel est dans le sous-contenur qui a des marges.
 			this.panelContainer = this.access.CreateEmptyPanel();
 			this.panelContainer.SetParent(this.panelContainerParent);
 
-			//	Le PanelEditor est par-dessus le UI.Panel. Il occupe toute la surface (il déborde
+			//	Le FormEditor est par-dessus le UI.Panel. Il occupe toute la surface (il déborde
 			//	donc des marges) et tient compte lui-même du décalage. C'est le seul moyen pour
 			//	pouvoir dessiner dans les marges ET y détecter les événements souris.
-			this.panelEditor = new MyWidgets.PanelEditor(container);
-			this.panelEditor.Initialize(this.module, this.context, this.panelContainer);
-			this.panelEditor.MinWidth = 100;
-			this.panelEditor.MinHeight = 100;
-			this.panelEditor.Anchor = AnchorStyles.All;
-			this.panelEditor.ChildrenAdded += new EventHandler(this.HandlePanelEditorChildrenAdded);
-			this.panelEditor.ChildrenSelected += new EventHandler(this.HandlePanelEditorChildrenSelected);
-			this.panelEditor.ChildrenGeometryChanged += new EventHandler(this.HandlePanelEditorChildrenGeometryChanged);
-			this.panelEditor.UpdateCommands += new EventHandler(this.HandlePanelEditorUpdateCommands);
+			this.formEditor = new MyWidgets.FormEditor(container);
+			this.formEditor.Initialize(this.module, this.context, this.panelContainer);
+			this.formEditor.MinWidth = 100;
+			this.formEditor.MinHeight = 100;
+			this.formEditor.Anchor = AnchorStyles.All;
+			this.formEditor.ChildrenAdded += new EventHandler(this.HandleFormEditorChildrenAdded);
+			this.formEditor.ChildrenSelected += new EventHandler(this.HandleFormEditorChildrenSelected);
+			this.formEditor.ChildrenGeometryChanged += new EventHandler(this.HandleFormEditorChildrenGeometryChanged);
+			this.formEditor.UpdateCommands += new EventHandler(this.HandleFormEditorUpdateCommands);
 
 			//	Crée le groupe droite.
 			this.right = new FrameBox(surface);
@@ -120,7 +120,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.splitter2.Dock = DockStyle.Right;
 
 			this.UpdateAll();
-			this.UpdateViewer(MyWidgets.PanelEditor.Changing.Show);
+			this.UpdateViewer(PanelEditor.Editor.Changing.Show);
 		}
 
 		protected override void Dispose(bool disposing)
@@ -143,11 +143,11 @@ namespace Epsitec.Common.Designer.Viewers
 		}
 
 
-		public MyWidgets.PanelEditor PanelEditor
+		public MyWidgets.FormEditor FormEditor
 		{
 			get
 			{
-				return this.panelEditor;
+				return this.formEditor;
 			}
 		}
 
@@ -213,7 +213,7 @@ namespace Epsitec.Common.Designer.Viewers
 		{
 			if (paintFilter == null)
 			{
-				paintFilter = this.panelEditor;
+				paintFilter = this.formEditor;
 			}
 			
 			base.PaintHandler(graphics, repaint, paintFilter);
@@ -224,7 +224,7 @@ namespace Epsitec.Common.Designer.Viewers
 		{
 			//	Choix de l'outil.
 			base.DoTool(name);
-			this.panelEditor.AdaptAfterToolChanged();
+			this.formEditor.AdaptAfterToolChanged();
 			this.RegenerateProxies();
 		}
 
@@ -240,7 +240,7 @@ namespace Epsitec.Common.Designer.Viewers
 				return;
 			}
 
-			this.panelEditor.DoCommand(name);
+			this.formEditor.DoCommand(name);
 			base.DoCommand(name);
 		}
 
@@ -249,7 +249,7 @@ namespace Epsitec.Common.Designer.Viewers
 			//	Donne le texte d'information sur le visualisateur en cours.
 			get
 			{
-				return this.panelEditor.SelectionInfo;
+				return this.formEditor.SelectionInfo;
 			}
 		}
 
@@ -259,14 +259,14 @@ namespace Epsitec.Common.Designer.Viewers
 			//	Indique s'il faut aiguiller ici une opération delete ou duplicate.
 			get
 			{
-				return (this.panelEditor.SelectedObjects.Count != 0);
+				return (this.formEditor.SelectedObjects.Count != 0);
 			}
 		}
 
 		protected override void PrepareForDelete()
 		{
 			//	Préparation en vue de la suppression de l'interface.
-			this.panelEditor.PrepareForDelete();
+			this.formEditor.PrepareForDelete();
 		}
 
 
@@ -380,17 +380,17 @@ namespace Epsitec.Common.Designer.Viewers
 			
 			if (panel == null || druid.IsEmpty)
 			{
-				this.panelEditor.IsEditEnabled = false;
+				this.formEditor.IsEditEnabled = false;
 			}
 			else
 			{
 				this.panelContainer = panel;
 				this.panelContainer.SetParent(this.panelContainerParent);
-				this.panelContainer.ZOrder = this.panelEditor.ZOrder+1;
+				this.panelContainer.ZOrder = this.formEditor.ZOrder+1;
 				this.panelContainer.DrawDesignerFrame = true;
-				this.panelEditor.Panel = this.panelContainer;
-				this.panelEditor.Druid = druid;
-				this.panelEditor.IsEditEnabled = !this.designerApplication.IsReadonly;
+				this.formEditor.Panel = this.panelContainer;
+				this.formEditor.Druid = druid;
+				this.formEditor.IsEditEnabled = !this.designerApplication.IsReadonly;
 			}
 		}
 
@@ -476,7 +476,7 @@ namespace Epsitec.Common.Designer.Viewers
 		}
 
 
-		public override void UpdateViewer(MyWidgets.PanelEditor.Changing oper)
+		public override void UpdateViewer(PanelEditor.Editor.Changing oper)
 		{
 			//	Met à jour le statut du visualisateur en cours, en fonction de la sélection.
 			//	Met également à jour l'arbre des objets, s'il est visible.
@@ -520,7 +520,7 @@ namespace Epsitec.Common.Designer.Viewers
 		public void RegenerateDimensions()
 		{
 			//	Régénère les cotes s'il y a eu un changement.
-			this.panelEditor.RegenerateDimensions();
+			this.formEditor.RegenerateDimensions();
 		}
 
 		public void RegenerateProxiesAndDimensions()
@@ -532,28 +532,28 @@ namespace Epsitec.Common.Designer.Viewers
 				this.proxyManager.CreateUserInterface(this.propertiesScrollable.Panel);
 			}
 
-			this.panelEditor.RegenerateDimensions();
+			this.formEditor.RegenerateDimensions();
 		}
 		#endregion
 
 
-		private void HandlePanelEditorChildrenAdded(object sender)
+		private void HandleFormEditorChildrenAdded(object sender)
 		{
 			this.UpdateCommands();
 		}
 
-		private void HandlePanelEditorChildrenSelected(object sender)
+		private void HandleFormEditorChildrenSelected(object sender)
 		{
 			this.UpdateCommands();
-			this.DefineProxies(this.panelEditor.SelectedObjects);
+			this.DefineProxies(this.formEditor.SelectedObjects);
 		}
 
-		private void HandlePanelEditorChildrenGeometryChanged(object sender)
+		private void HandleFormEditorChildrenGeometryChanged(object sender)
 		{
 			this.UpdateProxies();
 		}
 
-		private void HandlePanelEditorUpdateCommands(object sender)
+		private void HandleFormEditorUpdateCommands(object sender)
 		{
 			this.UpdateCommands();
 		}
@@ -573,14 +573,14 @@ namespace Epsitec.Common.Designer.Viewers
 		protected static string					softSerialize = null;
 		protected static bool					softDirtySerialization = false;
 
-		protected ProxyManagers.Panels			proxyManager;
+		protected PanelEditor.ProxyManager		proxyManager;
 		protected VSplitter						splitter2;
 		protected Widget						middle;
 		protected VToolBar						vToolBar;
 		protected Scrollable					drawingScrollable;
 		protected FrameBox						panelContainerParent;
 		protected UI.Panel						panelContainer;
-		protected MyWidgets.PanelEditor			panelEditor;
+		protected MyWidgets.FormEditor			formEditor;
 		protected FrameBox						right;
 		protected TabBook						tabBook;
 

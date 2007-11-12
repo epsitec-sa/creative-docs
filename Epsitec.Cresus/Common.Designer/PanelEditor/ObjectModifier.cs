@@ -5,7 +5,7 @@ using Epsitec.Common.Widgets.Layouts;
 using Epsitec.Common.Support;
 using Epsitec.Common.Types;
 
-namespace Epsitec.Common.Designer
+namespace Epsitec.Common.Designer.PanelEditor
 {
 	/// <summary>
 	/// La classe ObjectModifier permet de gérer les 'widgets' de Designer.
@@ -113,7 +113,7 @@ namespace Epsitec.Common.Designer
 		}
 
 
-		public ObjectModifier(MyWidgets.PanelEditor panelEditor)
+		public ObjectModifier(Editor panelEditor)
 		{
 			//	Constructeur unique.
 			this.panelEditor = panelEditor;
@@ -2551,6 +2551,6 @@ namespace Epsitec.Common.Designer
 		}
 
 
-		protected MyWidgets.PanelEditor				panelEditor;
+		protected Editor				panelEditor;
 	}
 }

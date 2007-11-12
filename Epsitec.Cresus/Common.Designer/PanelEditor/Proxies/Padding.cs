@@ -4,11 +4,11 @@ using Epsitec.Common.Types;
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Drawing;
 
-namespace Epsitec.Common.Designer.Proxies
+namespace Epsitec.Common.Designer.PanelEditor.Proxies
 {
 	public class Padding : Abstract
 	{
-		public Padding(ProxyManagers.Panels manager) : base (manager)
+		public Padding(ProxyManager manager) : base (manager)
 		{
 		}
 
@@ -157,10 +157,10 @@ namespace Epsitec.Common.Designer.Proxies
 
 		static Padding()
 		{
-			Padding.LeftPaddingProperty.DefaultMetadata.DefineNamedType(ProxyManagers.Panels.MarginNumericType);
-			Padding.RightPaddingProperty.DefaultMetadata.DefineNamedType(ProxyManagers.Panels.MarginNumericType);
-			Padding.TopPaddingProperty.DefaultMetadata.DefineNamedType(ProxyManagers.Panels.MarginNumericType);
-			Padding.BottomPaddingProperty.DefaultMetadata.DefineNamedType(ProxyManagers.Panels.MarginNumericType);
+			Padding.LeftPaddingProperty.DefaultMetadata.DefineNamedType(ProxyManager.MarginNumericType);
+			Padding.RightPaddingProperty.DefaultMetadata.DefineNamedType(ProxyManager.MarginNumericType);
+			Padding.TopPaddingProperty.DefaultMetadata.DefineNamedType(ProxyManager.MarginNumericType);
+			Padding.BottomPaddingProperty.DefaultMetadata.DefineNamedType(ProxyManager.MarginNumericType);
 
 			Padding.LeftPaddingProperty.DefaultMetadata.DefineCaptionId(Res.Captions.Padding.Left.Id);
 			Padding.RightPaddingProperty.DefaultMetadata.DefineCaptionId(Res.Captions.Padding.Right.Id);

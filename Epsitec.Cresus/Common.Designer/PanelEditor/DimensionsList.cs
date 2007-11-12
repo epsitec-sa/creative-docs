@@ -3,14 +3,14 @@ using Epsitec.Common.Widgets;
 using Epsitec.Common.Support;
 using Epsitec.Common.Drawing;
 
-namespace Epsitec.Common.Designer
+namespace Epsitec.Common.Designer.PanelEditor
 {
 	/// <summary>
 	/// Gestion de la liste des cotes pour PanelEditor.
 	/// </summary>
 	public class DimensionsList
 	{
-		public DimensionsList(MyWidgets.PanelEditor editor)
+		public DimensionsList(Editor editor)
 		{
 			this.editor = editor;
 			this.objectModifier = editor.ObjectModifier;
@@ -613,7 +613,7 @@ namespace Epsitec.Common.Designer
 		}
 
 		
-		protected MyWidgets.PanelEditor		editor;
+		protected Editor					editor;
 		protected ObjectModifier			objectModifier;
 		protected PanelsContext				context;
 		protected List<Dimension>			list = new List<Dimension>();

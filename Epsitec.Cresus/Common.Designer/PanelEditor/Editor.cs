@@ -5,12 +5,12 @@ using Epsitec.Common.Support;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Types;
 
-namespace Epsitec.Common.Designer.MyWidgets
+namespace Epsitec.Common.Designer.PanelEditor
 {
 	/// <summary>
 	/// Widget venant par-dessus le conteneur UI.Panel pour éditer ce dernier.
 	/// </summary>
-	public class PanelEditor : AbstractGroup, IPaintFilter
+	public class Editor : AbstractGroup, IPaintFilter
 	{
 		public enum Changing
 		{
@@ -46,21 +46,21 @@ namespace Epsitec.Common.Designer.MyWidgets
 		}
 
 
-		public PanelEditor() : base()
+		public Editor() : base()
 		{
 			this.AutoFocus = true;
 			this.InternalState |= InternalState.Focusable;
 		}
 
-		public PanelEditor(Widget embedder) : this()
+		public Editor(Widget embedder) : this()
 		{
 			this.SetEmbedder(embedder);
 		}
 
-		static PanelEditor()
+		static Editor()
 		{
 			Widgets.Helpers.VisualPropertyMetadata metadata = new Widgets.Helpers.VisualPropertyMetadata(ContentAlignment.TopLeft, Widgets.Helpers.VisualPropertyMetadataOptions.AffectsTextLayout);
-			Widgets.Visual.ContentAlignmentProperty.OverrideMetadata(typeof(PanelEditor), metadata);
+			Widgets.Visual.ContentAlignmentProperty.OverrideMetadata(typeof(Editor), metadata);
 		}
 
 
@@ -98,7 +98,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		public UI.Panel Panel
 		{
 			//	Panneau associé qui est le conteneur de tous les widgets.
-			//	PanelEditor est frère de Panel et vient par-dessus.
+			//	Editor est frère de Panel et vient par-dessus.
 			get
 			{
 				return this.panel;
@@ -2720,7 +2720,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		{
 			foreach (Widget obj in parent.Children)
 			{
-				if (PanelEditor.IsObjectTabActive(obj) && obj.TabIndex == oldIndex)
+				if (Editor.IsObjectTabActive(obj) && obj.TabIndex == oldIndex)
 				{
 					obj.TabIndex = newIndex;
 					obj.TabNavigationMode = TabNavigationMode.ActivateOnTab;
@@ -2948,7 +2948,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			//	Retourne la chaîne indiquant l'ordre Z, y compris des parents, sous la forme "n.n.n".
 			if (obj.Parent == this.panel)
 			{
-				if (PanelEditor.IsObjectTabActive(obj))
+				if (Editor.IsObjectTabActive(obj))
 				{
 					return (obj.TabIndex+1).ToString();
 				}
@@ -2961,7 +2961,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			List<string> list = new List<string>();
 			while (obj != this.panel)
 			{
-				if (PanelEditor.IsObjectTabActive(obj))
+				if (Editor.IsObjectTabActive(obj))
 				{
 					list.Add((obj.TabIndex+1).ToString());
 				}
@@ -3034,10 +3034,10 @@ namespace Epsitec.Common.Designer.MyWidgets
 			{
 				p1 = new Point(bounds.Left, rect.Center.Y);
 				p2 = new Point(rect.Left, rect.Center.Y);
-				p1a = Point.Scale(p1, p2, PanelEditor.attachmentScale);
-				p2a = Point.Scale(p2, p1, PanelEditor.attachmentScale);
-				p1a.Y -= PanelEditor.attachmentThickness;
-				p2a.Y += PanelEditor.attachmentThickness;
+				p1a = Point.Scale(p1, p2, Editor.attachmentScale);
+				p2a = Point.Scale(p2, p1, Editor.attachmentScale);
+				p1a.Y -= Editor.attachmentThickness;
+				p2a.Y += Editor.attachmentThickness;
 				return new Rectangle(p1a, p2a);
 			}
 
@@ -3045,10 +3045,10 @@ namespace Epsitec.Common.Designer.MyWidgets
 			{
 				p1 = new Point(bounds.Right, rect.Center.Y);
 				p2 = new Point(rect.Right, rect.Center.Y);
-				p1a = Point.Scale(p1, p2, PanelEditor.attachmentScale);
-				p2a = Point.Scale(p2, p1, PanelEditor.attachmentScale);
-				p1a.Y -= PanelEditor.attachmentThickness;
-				p2a.Y += PanelEditor.attachmentThickness;
+				p1a = Point.Scale(p1, p2, Editor.attachmentScale);
+				p2a = Point.Scale(p2, p1, Editor.attachmentScale);
+				p1a.Y -= Editor.attachmentThickness;
+				p2a.Y += Editor.attachmentThickness;
 				return new Rectangle(p1a, p2a);
 			}
 
@@ -3056,10 +3056,10 @@ namespace Epsitec.Common.Designer.MyWidgets
 			{
 				p1 = new Point(rect.Center.X, bounds.Bottom);
 				p2 = new Point(rect.Center.X, rect.Bottom);
-				p1a = Point.Scale(p1, p2, PanelEditor.attachmentScale);
-				p2a = Point.Scale(p2, p1, PanelEditor.attachmentScale);
-				p1a.X -= PanelEditor.attachmentThickness;
-				p2a.X += PanelEditor.attachmentThickness;
+				p1a = Point.Scale(p1, p2, Editor.attachmentScale);
+				p2a = Point.Scale(p2, p1, Editor.attachmentScale);
+				p1a.X -= Editor.attachmentThickness;
+				p2a.X += Editor.attachmentThickness;
 				return new Rectangle(p1a, p2a);
 			}
 
@@ -3067,10 +3067,10 @@ namespace Epsitec.Common.Designer.MyWidgets
 			{
 				p1 = new Point(rect.Center.X, bounds.Top);
 				p2 = new Point(rect.Center.X, rect.Top);
-				p1a = Point.Scale(p1, p2, PanelEditor.attachmentScale);
-				p2a = Point.Scale(p2, p1, PanelEditor.attachmentScale);
-				p1a.X -= PanelEditor.attachmentThickness;
-				p2a.X += PanelEditor.attachmentThickness;
+				p1a = Point.Scale(p1, p2, Editor.attachmentScale);
+				p2a = Point.Scale(p2, p1, Editor.attachmentScale);
+				p1a.X -= Editor.attachmentThickness;
+				p2a.X += Editor.attachmentThickness;
 				return new Rectangle(p1a, p2a);
 			}
 
@@ -4295,8 +4295,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected void DrawSpring(Graphics graphics, Point p1, Point p2, bool rigid, Color color)
 		{
 			//	Dessine un ressort horizontal ou vertical d'un objet.
-			Point p1a = Point.Scale(p1, p2, PanelEditor.attachmentScale);
-			Point p2a = Point.Scale(p2, p1, PanelEditor.attachmentScale);
+			Point p1a = Point.Scale(p1, p2, Editor.attachmentScale);
+			Point p2a = Point.Scale(p2, p1, Editor.attachmentScale);
 
 			Misc.AlignForLine(graphics, ref p1);
 			Misc.AlignForLine(graphics, ref p2);
@@ -4305,7 +4305,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			if (rigid)  // rigide ?
 			{
-				double dim = PanelEditor.attachmentThickness;
+				double dim = Editor.attachmentThickness;
 				Rectangle box = this.GetDrawBox(graphics, p1a, p2a, dim);
 
 				graphics.AddFilledRectangle(box);
@@ -4324,7 +4324,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				graphics.AddLine(p1, p1a);
 				graphics.AddLine(p2, p2a);
 
-				double dim = PanelEditor.attachmentThickness;
+				double dim = Editor.attachmentThickness;
 				double length = Point.Distance(p1a, p2a);
 				int loops = (int) (length/(dim*2));
 				loops = System.Math.Max(loops, 1);

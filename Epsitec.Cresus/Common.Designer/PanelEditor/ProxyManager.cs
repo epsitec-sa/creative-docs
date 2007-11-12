@@ -4,11 +4,11 @@ using Epsitec.Common.Types;
 using Epsitec.Common.UI;
 using Epsitec.Common.Widgets;
 
-namespace Epsitec.Common.Designer.ProxyManagers
+namespace Epsitec.Common.Designer.PanelEditor
 {
-	public sealed class Panels
+	public sealed class ProxyManager
 	{
-		public Panels(Viewers.Panels panel)
+		public ProxyManager(Viewers.Panels panel)
 		{
 			this.panel = panel;
 			this.objectModifier = this.panel.PanelEditor.ObjectModifier;
@@ -152,7 +152,7 @@ namespace Epsitec.Common.Designer.ProxyManagers
 					
 					foreach (IProxy item in proxies)
 					{
-						if (Panels.EqualValues(item, proxy))
+						if (ProxyManager.EqualValues(item, proxy))
 						{
 							//	Trouvé un doublon. On ajoute simplement le widget
 							//	courant au proxy qui existe déjà avec les mêmes
@@ -173,7 +173,7 @@ namespace Epsitec.Common.Designer.ProxyManagers
 			//	Trie les proxies selon leur rang :
 			proxies.Sort(new Comparers.ProxyRank());
 
-			if (Panels.EqualLists(this.proxies, proxies))
+			if (ProxyManager.EqualLists(this.proxies, proxies))
 			{
 				for (int i=0; i<proxies.Count; i++)
 				{
@@ -212,7 +212,7 @@ namespace Epsitec.Common.Designer.ProxyManagers
 				{
 					IProxy item1 = list1[i];
 					IProxy item2 = list2[i];
-					if (!Panels.EqualValues(item1, item2))
+					if (!ProxyManager.EqualValues(item1, item2))
 					{
 						return false;
 					}
@@ -257,43 +257,43 @@ namespace Epsitec.Common.Designer.ProxyManagers
 		}
 
 
-		static Panels()
+		static ProxyManager()
 		{
 			StringType druidCaptionStringType = new StringType();
 			druidCaptionStringType.DefineDefaultController("Druid", "Caption");  // utilise DruidController
-			Panels.DruidCaptionStringType = druidCaptionStringType;
+			ProxyManager.DruidCaptionStringType = druidCaptionStringType;
 
 			StringType druidPanelStringType = new StringType();
 			druidPanelStringType.DefineDefaultController("Druid", "Panel");  // utilise DruidController
-			Panels.DruidPanelStringType = druidPanelStringType;
+			ProxyManager.DruidPanelStringType = druidPanelStringType;
 
 			InternalBindingType bindingType = new InternalBindingType();
 			bindingType.DefineDefaultController("Binding", "");  // utilise BindingController
-			Panels.BindingType = bindingType;
+			ProxyManager.BindingType = bindingType;
 
 			InternalTableType tableType = new InternalTableType();
 			tableType.DefineDefaultController("Table", "");  // utilise TableController
-			Panels.TableType = tableType;
+			ProxyManager.TableType = tableType;
 
 			InternalStructuredType structuredType = new InternalStructuredType();
 			structuredType.DefineDefaultController("Structured", "");  // utilise StructuredController
-			Panels.StructuredType = structuredType;
+			ProxyManager.StructuredType = structuredType;
 
 			DoubleType locationNumericType = new DoubleType(-9999, 9999, 1.0M);
 			locationNumericType.DefinePreferredRange(new DecimalRange(0, 1000, 2));
-			Panels.LocationNumericType = locationNumericType;
+			ProxyManager.LocationNumericType = locationNumericType;
 			
 			DoubleType sizeNumericType = new DoubleType(0, 9999, 1.0M);
 			sizeNumericType.DefinePreferredRange(new DecimalRange(0, 1000, 1));
-			Panels.SizeNumericType = sizeNumericType;
+			ProxyManager.SizeNumericType = sizeNumericType;
 			
 			DoubleType marginNumericType = new DoubleType(-1, 9999, 1.0M);
 			marginNumericType.DefinePreferredRange(new DecimalRange(0, 200, 1));
-			Panels.MarginNumericType = marginNumericType;
+			ProxyManager.MarginNumericType = marginNumericType;
 			
 			IntegerType gridNumericType = new IntegerType(1, 100);
 			gridNumericType.DefinePreferredRange(new DecimalRange(1, 10, 1));
-			Panels.GridNumericType = gridNumericType;
+			ProxyManager.GridNumericType = gridNumericType;
 		}
 
 		private class InternalBindingType : AbstractType

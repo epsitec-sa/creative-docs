@@ -3,14 +3,14 @@ using Epsitec.Common.Widgets;
 using Epsitec.Common.Support;
 using Epsitec.Common.Drawing;
 
-namespace Epsitec.Common.Designer
+namespace Epsitec.Common.Designer.PanelEditor
 {
 	/// <summary>
 	/// Gestion de la liste des poignées pour PanelEditor.
 	/// </summary>
 	public class HandlesList
 	{
-		public HandlesList(MyWidgets.PanelEditor editor)
+		public HandlesList(Editor editor)
 		{
 			this.editor = editor;
 			this.context = editor.Context;
@@ -457,7 +457,7 @@ namespace Epsitec.Common.Designer
 		}
 		
 		
-		protected MyWidgets.PanelEditor		editor;
+		protected Editor					editor;
 		protected PanelsContext				context;
 		protected Widget					widget;
 		protected List<Handle>				list = new List<Handle>();

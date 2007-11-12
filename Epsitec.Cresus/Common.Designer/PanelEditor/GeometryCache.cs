@@ -5,7 +5,7 @@ using Epsitec.Common.Widgets;
 using Epsitec.Common.Support;
 using Epsitec.Common.Drawing;
 
-namespace Epsitec.Common.Designer
+namespace Epsitec.Common.Designer.PanelEditor
 {
 	/// <summary>
 	/// Cache pour la géométrie d'un objet (widget).

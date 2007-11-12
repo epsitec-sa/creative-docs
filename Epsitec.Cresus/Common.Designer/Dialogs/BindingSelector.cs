@@ -156,7 +156,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			this.window.ShowDialog();
 		}
 
-		public void Initialise(Module module, StructuredType type, ObjectModifier.ObjectType objectType, Binding binding)
+		public void Initialise(Module module, StructuredType type, PanelEditor.ObjectModifier.ObjectType objectType, Binding binding)
 		{
 			//	Initialise le dialogue avec le binding actuel.
 			this.module = module;
@@ -262,19 +262,19 @@ namespace Epsitec.Common.Designer.Dialogs
 			{
 				StructuredTypeField field = type.Fields[id];
 
-				if (this.objectType == ObjectModifier.ObjectType.SubPanel &&
+				if (this.objectType == PanelEditor.ObjectModifier.ObjectType.SubPanel &&
 					!(field.Type is StructuredType))
 				{
 					continue;
 				}
 
-				if (this.objectType == ObjectModifier.ObjectType.Placeholder &&
+				if (this.objectType == PanelEditor.ObjectModifier.ObjectType.Placeholder &&
 					(field.Type is StructuredType))
 				{
 					continue;
 				}
 
-				if (this.objectType == ObjectModifier.ObjectType.Table &&
+				if (this.objectType == PanelEditor.ObjectModifier.ObjectType.Table &&
 					field.Relation != FieldRelation.Collection)
 				{
 					continue;
@@ -448,7 +448,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			//	Met à jour le bouton pour le mode.
 			this.ignoreChanged = true;
 
-			this.checkInherit.Visibility = (this.objectType == ObjectModifier.ObjectType.SubPanel);
+			this.checkInherit.Visibility = (this.objectType == PanelEditor.ObjectModifier.ObjectType.SubPanel);
 			this.checkInherit.ActiveState = (this.initialBinding == null) ? ActiveState.Yes : ActiveState.No;
 
 			this.checkReadonly.ActiveState = (this.initialBinding != null && this.Mode == BindingMode.OneWay) ? ActiveState.Yes : ActiveState.No;
@@ -589,7 +589,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		protected Module						module;
 		protected StructuredType				structuredType;
-		protected ObjectModifier.ObjectType		objectType;
+		protected PanelEditor.ObjectModifier.ObjectType objectType;
 		protected List<StructuredTypeField>		fields;
 		protected Binding						initialBinding;
 		protected Binding						selectedBinding;

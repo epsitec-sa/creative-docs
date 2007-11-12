@@ -3,14 +3,14 @@ using Epsitec.Common.Widgets;
 using Epsitec.Common.Support;
 using Epsitec.Common.Drawing;
 
-namespace Epsitec.Common.Designer
+namespace Epsitec.Common.Designer.PanelEditor
 {
 	/// <summary>
 	/// Gestion de la liste des contraintes pour PanelEditor.
 	/// </summary>
 	public class ConstrainsList
 	{
-		public ConstrainsList(MyWidgets.PanelEditor editor)
+		public ConstrainsList(Editor editor)
 		{
 			this.editor = editor;
 			this.context = editor.Context;
@@ -444,7 +444,7 @@ namespace Epsitec.Common.Designer
 		}
 
 
-		protected MyWidgets.PanelEditor		editor;
+		protected Editor					editor;
 		protected PanelsContext				context;
 		protected bool						isStarted;
 		protected bool						isObjectLock;

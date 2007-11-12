@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using Epsitec.Common.Types;
 using Epsitec.Common.Widgets;
 
-namespace Epsitec.Common.Designer.Proxies
+namespace Epsitec.Common.Designer.PanelEditor.Proxies
 {
 	public abstract class Abstract : DependencyObject, IProxy
 	{
-		protected Abstract(ProxyManagers.Panels manager)
+		protected Abstract(ProxyManager manager)
 		{
 			this.manager = manager;
 		}
@@ -208,7 +208,7 @@ namespace Epsitec.Common.Designer.Proxies
 #endif
 
 
-		private ProxyManagers.Panels	manager;
+		private ProxyManager			manager;
 		private List<Widget>			widgets = new List<Widget>();
 		private int						suspendChanges;
 	}

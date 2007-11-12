@@ -4,11 +4,11 @@ using Epsitec.Common.Types;
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Drawing;
 
-namespace Epsitec.Common.Designer.Proxies
+namespace Epsitec.Common.Designer.PanelEditor.Proxies
 {
 	public class Aspect : Abstract
 	{
-		public Aspect(ProxyManagers.Panels manager) : base (manager)
+		public Aspect(ProxyManager manager) : base (manager)
 		{
 		}
 

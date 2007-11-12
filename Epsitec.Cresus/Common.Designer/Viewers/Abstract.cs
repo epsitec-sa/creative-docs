@@ -851,7 +851,7 @@ namespace Epsitec.Common.Designer.Viewers
 		}
 
 
-		public virtual void UpdateViewer(MyWidgets.PanelEditor.Changing oper)
+		public virtual void UpdateViewer(PanelEditor.Editor.Changing oper)
 		{
 			//	Met à jour le visualisateur en cours.
 		}

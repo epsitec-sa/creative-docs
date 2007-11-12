@@ -4,6 +4,7 @@ using Epsitec.Common.Widgets;
 using Epsitec.Common.Support;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Types;
+using Epsitec.Common.Designer.PanelEditor;
 
 namespace Epsitec.Common.Designer.Viewers
 {
@@ -76,7 +77,7 @@ namespace Epsitec.Common.Designer.Viewers
 			//	Le PanelEditor est par-dessus le UI.Panel. Il occupe toute la surface (il déborde
 			//	donc des marges) et tient compte lui-même du décalage. C'est le seul moyen pour
 			//	pouvoir dessiner dans les marges ET y détecter les événements souris.
-			this.panelEditor = new MyWidgets.PanelEditor(container);
+			this.panelEditor = new PanelEditor.Editor(container);
 			this.panelEditor.Initialize(this.module, this.context, this.panelContainer);
 			this.panelEditor.MinWidth = 100;
 			this.panelEditor.MinHeight = 100;
@@ -121,7 +122,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.tabPageProperties.Padding = new Margins(4, 4, 4, 4);
 			this.tabBook.Items.Add(this.tabPageProperties);
 
-			this.proxyManager = new ProxyManagers.Panels(this);
+			this.proxyManager = new PanelEditor.ProxyManager(this);
 
 			this.propertiesScrollable = new Scrollable(this.tabPageProperties);
 			this.propertiesScrollable.Dock = DockStyle.Fill;
@@ -180,7 +181,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.UpdateAll();
 			this.UpdateType();
 			this.UpdateButtons();
-			this.UpdateViewer(MyWidgets.PanelEditor.Changing.Show);
+			this.UpdateViewer(Editor.Changing.Show);
 		}
 
 		protected override void Dispose(bool disposing)
@@ -212,7 +213,7 @@ namespace Epsitec.Common.Designer.Viewers
 		}
 
 
-		public MyWidgets.PanelEditor PanelEditor
+		public PanelEditor.Editor PanelEditor
 		{
 			get
 			{
@@ -584,7 +585,7 @@ namespace Epsitec.Common.Designer.Viewers
 		}
 
 
-		public override void UpdateViewer(MyWidgets.PanelEditor.Changing oper)
+		public override void UpdateViewer(PanelEditor.Editor.Changing oper)
 		{
 			//	Met à jour le statut du visualisateur en cours, en fonction de la sélection.
 			//	Met également à jour l'arbre des objets, s'il est visible.
@@ -866,10 +867,10 @@ namespace Epsitec.Common.Designer.Viewers
 
 
 		#region Tree
-		protected void TreeUpdate(MyWidgets.PanelEditor.Changing oper)
+		protected void TreeUpdate(PanelEditor.Editor.Changing oper)
 		{
 			//	Construit l'arbre des objets.
-			if (oper == MyWidgets.PanelEditor.Changing.Selection)
+			if (oper == Editor.Changing.Selection)
 			{
 				this.TreeUpdateSelection(this.objectsScrollable.Panel.Children);
 			}
@@ -1208,7 +1209,7 @@ namespace Epsitec.Common.Designer.Viewers
 			//	Changement de l'onglet visible.
 			if (this.tabPageObjects.Visibility)  // arbre des objets visible ?
 			{
-				this.TreeUpdate(MyWidgets.PanelEditor.Changing.Show);  // met à jour l'arbre
+				this.TreeUpdate(Editor.Changing.Show);  // met à jour l'arbre
 			}
 			else
 			{
@@ -1226,7 +1227,7 @@ namespace Epsitec.Common.Designer.Viewers
 		protected static string					softSerialize = null;
 		protected static bool					softDirtySerialization = false;
 
-		protected ProxyManagers.Panels			proxyManager;
+		protected PanelEditor.ProxyManager		proxyManager;
 		protected VSplitter						splitter2;
 		protected Widget						middle;
 		protected VToolBar						vToolBar;
@@ -1234,7 +1235,7 @@ namespace Epsitec.Common.Designer.Viewers
 		protected HToolBar						statusBar;
 		protected FrameBox						panelContainerParent;
 		protected UI.Panel						panelContainer;
-		protected MyWidgets.PanelEditor			panelEditor;
+		protected PanelEditor.Editor			panelEditor;
 		protected FrameBox						right;
 		protected HToolBar						hToolBar;
 		protected IconButton					hButtonDefault;

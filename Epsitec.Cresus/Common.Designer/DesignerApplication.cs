@@ -405,7 +405,7 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
-		public void UpdateViewer(MyWidgets.PanelEditor.Changing oper)
+		public void UpdateViewer(PanelEditor.Editor.Changing oper)
 		{
 			//	Met à jour le visualisateur en cours.
 			Module module = this.CurrentModule;
@@ -1932,7 +1932,7 @@ namespace Epsitec.Common.Designer
 
 
 		#region Dialogs
-		public bool DlgBindingSelector(Module baseModule, StructuredType type, ObjectModifier.ObjectType objectType, ref Binding binding)
+		public bool DlgBindingSelector(Module baseModule, StructuredType type, PanelEditor.ObjectModifier.ObjectType objectType, ref Binding binding)
 		{
 			//	Ouvre le dialogue pour choisir une rubrique dans une structure de données.
 			this.dlgBindingSelector.Initialise(baseModule, type, objectType, binding);
