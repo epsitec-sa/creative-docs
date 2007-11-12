@@ -79,14 +79,9 @@ namespace Epsitec.Common.Support.EntityEngine
 			return entityType.GetFieldIds ();
 		}
 
-		public IEnumerable<StructuredTypeField> GetEntityFieldDefinitions(AbstractEntity entity)
+		public IEnumerable<StructuredTypeField> GetEntityFieldDefinitions(Druid id)
 		{
-			if (entity == null)
-			{
-				throw new System.ArgumentNullException ("entity");
-			}
-
-			IStructuredType entityType = this.GetStructuredType (entity);
+			IStructuredType entityType = this.GetStructuredType (id);
 
 			if (entityType == null)
 			{

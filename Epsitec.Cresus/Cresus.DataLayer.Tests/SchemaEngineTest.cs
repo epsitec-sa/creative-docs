@@ -77,10 +77,14 @@ namespace Epsitec.Cresus.DataLayer
 
 			engine = new SchemaEngine (this.infrastructure);
 			DbTable table3 = engine.FindTableDefinition (this.articleEntityId);
+			DbTable table4 = engine.FindTableDefinition (this.articleVisserieEntityId);
 
 			Assert.AreNotEqual (table1, table3);
 			Assert.AreEqual (table1.Name, table3.Name);
 			Assert.AreEqual (table1.Columns.Count, table3.Columns.Count);
+			Assert.IsNull (table4);
+
+			table4 = engine.CreateTableDefinition (this.articleVisserieEntityId);
 		}
 
 		[Test]
@@ -157,12 +161,12 @@ namespace Epsitec.Cresus.DataLayer
 							string itemKey = string.Concat (cat.Substring (0, 1), mat.Substring (0, 1), "-", size, "-", len.Substring (0, 2));
 							string itemValue = string.Concat (cat, " ", size, " ", len, ", ", mat);
 
-							AbstractEntity entity = context.CreateEntity (this.articleEntityId);
+							AbstractEntity entity = context.CreateEntity (this.articleVisserieEntityId);
 
 							entity.SetField<string> ("[63091]", null, itemKey);
 							entity.SetField<string> ("[630A1]", null, itemValue);
-//							entity.SetField<int> ("[6311]", 0, int.Parse (len.Substring (0, 2)));
-//							entity.SetField<string> ("[6312]", null, size);
+							entity.SetField<int> ("[6311]", 0, int.Parse (len.Substring (0, 2)));
+							entity.SetField<string> ("[6312]", null, size);
 
 							yield return entity;
 						}
@@ -205,7 +209,8 @@ namespace Epsitec.Cresus.DataLayer
 		#endregion
 
 		private DbInfrastructure infrastructure;
-		private Druid articleEntityId = Druid.Parse ("[630Q]");
-		private Druid adresseEntityId = Druid.Parse ("[63081]");
+		private readonly Druid articleEntityId = Druid.Parse ("[630Q]");
+		private readonly Druid articleVisserieEntityId = Druid.Parse ("[631]");
+		private readonly Druid adresseEntityId = Druid.Parse ("[63081]");
 	}
 }
