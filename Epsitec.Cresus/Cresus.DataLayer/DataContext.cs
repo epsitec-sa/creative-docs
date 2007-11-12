@@ -60,6 +60,15 @@ namespace Epsitec.Cresus.DataLayer
 			return this.entityDataMapping.Count;
 		}
 
+		public void SaveChanges()
+		{
+			using (DbTransaction transaction = this.infrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadWrite))
+			{
+				this.richCommand.SaveTables (transaction);
+				transaction.Commit ();
+			}
+		}
+
 		public void PersistEntity(AbstractEntity entity)
 		{
 			EntityDataMapping mapping = this.GetEntityDataMapping (entity);
@@ -84,6 +93,8 @@ namespace Epsitec.Cresus.DataLayer
 
 		private void PersistEntityIntoDataRow(AbstractEntity entity, System.Data.DataRow dataRow)
 		{
+			dataRow[Tags.ColumnInstanceType] = this.GetInstanceTypeValue (entity);
+			
 			foreach (StructuredTypeField fieldDef in this.entityContext.GetEntityFieldDefinitions (entity))
 			{
 				switch (fieldDef.Relation)
@@ -97,6 +108,12 @@ namespace Epsitec.Cresus.DataLayer
 						break;
 				}
 			}
+		}
+
+		private object GetInstanceTypeValue(AbstractEntity entity)
+		{
+			Druid entityId = entity.GetEntityStructuredTypeId ();
+			return entityId.ToLong ();
 		}
 
 		private void PersistFieldValueIntoDataRow(AbstractEntity entity, StructuredTypeField fieldDef, System.Data.DataRow dataRow)

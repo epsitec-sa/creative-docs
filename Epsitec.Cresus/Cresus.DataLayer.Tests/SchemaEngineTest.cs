@@ -110,9 +110,9 @@ namespace Epsitec.Cresus.DataLayer
 
 			entity.SetField<string> ("[630A1]", null, "Vis M3 10mm, inox");
 			entity.SetField<string> ("[63091]", null, "VI-M3-10");
-//			entity.SetField<int> ("[630F1]", 0, 100);
 
 			context.PersistEntity (entity);
+			context.SaveChanges ();
 		}
 
 		#region Helper Methods
