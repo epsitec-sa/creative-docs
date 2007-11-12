@@ -8,7 +8,7 @@ namespace Epsitec.Common.Designer.Proxies
 {
 	public class Geometry : Abstract
 	{
-		public Geometry(ProxyManager manager) : base (manager)
+		public Geometry(ProxyManagers.Panels manager) : base (manager)
 		{
 		}
 
@@ -249,15 +249,15 @@ namespace Epsitec.Common.Designer.Proxies
 
 		static Geometry()
 		{
-			Geometry.LeftMarginProperty.DefaultMetadata.DefineNamedType(ProxyManager.MarginNumericType);
-			Geometry.RightMarginProperty.DefaultMetadata.DefineNamedType(ProxyManager.MarginNumericType);
-			Geometry.TopMarginProperty.DefaultMetadata.DefineNamedType(ProxyManager.MarginNumericType);
-			Geometry.BottomMarginProperty.DefaultMetadata.DefineNamedType(ProxyManager.MarginNumericType);
+			Geometry.LeftMarginProperty.DefaultMetadata.DefineNamedType(ProxyManagers.Panels.MarginNumericType);
+			Geometry.RightMarginProperty.DefaultMetadata.DefineNamedType(ProxyManagers.Panels.MarginNumericType);
+			Geometry.TopMarginProperty.DefaultMetadata.DefineNamedType(ProxyManagers.Panels.MarginNumericType);
+			Geometry.BottomMarginProperty.DefaultMetadata.DefineNamedType(ProxyManagers.Panels.MarginNumericType);
 			
-			Geometry.OriginXProperty.DefaultMetadata.DefineNamedType(ProxyManager.LocationNumericType);
-			Geometry.OriginYProperty.DefaultMetadata.DefineNamedType(ProxyManager.LocationNumericType);
-			Geometry.WidthProperty.DefaultMetadata.DefineNamedType(ProxyManager.SizeNumericType);
-			Geometry.HeightProperty.DefaultMetadata.DefineNamedType(ProxyManager.SizeNumericType);
+			Geometry.OriginXProperty.DefaultMetadata.DefineNamedType(ProxyManagers.Panels.LocationNumericType);
+			Geometry.OriginYProperty.DefaultMetadata.DefineNamedType(ProxyManagers.Panels.LocationNumericType);
+			Geometry.WidthProperty.DefaultMetadata.DefineNamedType(ProxyManagers.Panels.SizeNumericType);
+			Geometry.HeightProperty.DefaultMetadata.DefineNamedType(ProxyManagers.Panels.SizeNumericType);
 
 			Geometry.LeftMarginProperty.DefaultMetadata.DefineCaptionId(Res.Captions.Geometry.LeftMargin.Id);
 			Geometry.RightMarginProperty.DefaultMetadata.DefineCaptionId(Res.Captions.Geometry.RightMargin.Id);

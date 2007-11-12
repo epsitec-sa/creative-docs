@@ -8,7 +8,7 @@ namespace Epsitec.Common.Designer.Proxies
 {
 	public class Content : Abstract
 	{
-		public Content(ProxyManager manager) : base (manager)
+		public Content(ProxyManagers.Panels manager) : base (manager)
 		{
 		}
 
@@ -229,11 +229,11 @@ namespace Epsitec.Common.Designer.Proxies
 
 		static Content()
 		{
-			Content.DruidCaptionProperty.DefaultMetadata.DefineNamedType(ProxyManager.DruidCaptionStringType);
-			Content.DruidPanelProperty.DefaultMetadata.DefineNamedType(ProxyManager.DruidPanelStringType);
-			Content.BindingProperty.DefaultMetadata.DefineNamedType(ProxyManager.BindingType);
-			Content.TableProperty.DefaultMetadata.DefineNamedType(ProxyManager.TableType);
-			Content.StructuredTypeProperty.DefaultMetadata.DefineNamedType(ProxyManager.StructuredType);
+			Content.DruidCaptionProperty.DefaultMetadata.DefineNamedType(ProxyManagers.Panels.DruidCaptionStringType);
+			Content.DruidPanelProperty.DefaultMetadata.DefineNamedType(ProxyManagers.Panels.DruidPanelStringType);
+			Content.BindingProperty.DefaultMetadata.DefineNamedType(ProxyManagers.Panels.BindingType);
+			Content.TableProperty.DefaultMetadata.DefineNamedType(ProxyManagers.Panels.TableType);
+			Content.StructuredTypeProperty.DefaultMetadata.DefineNamedType(ProxyManagers.Panels.StructuredType);
 		}
 
 

@@ -8,7 +8,7 @@ namespace Epsitec.Common.Designer.Proxies
 {
 	public class Aspect : Abstract
 	{
-		public Aspect(ProxyManager manager) : base (manager)
+		public Aspect(ProxyManagers.Panels manager) : base (manager)
 		{
 		}
 

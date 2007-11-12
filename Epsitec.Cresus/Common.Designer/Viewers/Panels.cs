@@ -36,10 +36,6 @@ namespace Epsitec.Common.Designer.Viewers
 			this.vToolBar.Dock = DockStyle.Left;
 			this.VToolBarAdd(Widgets.Command.Get("ToolSelect"));
 			this.VToolBarAdd(Widgets.Command.Get("ToolGlobal"));
-			//?this.VToolBarAdd(Widgets.Command.Get("ToolGrid"));
-			//?this.ToolBarAdd(Widgets.Command.Get("ToolEdit"));
-			//?this.ToolBarAdd(Widgets.Command.Get("ToolZoom"));
-			//?this.ToolBarAdd(Widgets.Command.Get("ToolHand"));
 			this.VToolBarAdd(null);
 			this.VToolBarAdd(Widgets.Command.Get("ObjectVLine"));
 			this.VToolBarAdd(Widgets.Command.Get("ObjectHLine"));
@@ -62,7 +58,6 @@ namespace Epsitec.Common.Designer.Viewers
 			this.drawingScrollable.VerticalScrollerMode = ScrollableScrollerMode.ShowAlways;
 			this.drawingScrollable.Panel.IsAutoFitting = true;
 			this.drawingScrollable.PaintForegroundFrame = true;
-			//?this.drawingScrollable.ForegroundFrameMargins = new Margins(0, 1, 0, 1);
 
 			FrameBox container = new FrameBox(this.drawingScrollable.Panel);
 			container.MinWidth = 100;
@@ -106,8 +101,6 @@ namespace Epsitec.Common.Designer.Viewers
 			this.hButtonDefault = this.HToolBarAdd(Res.Captions.PanelMode.Default.Id);
 			this.hButtonEdition = this.HToolBarAdd(Res.Captions.PanelMode.Edition.Id);
 			this.hButtonSearch  = this.HToolBarAdd(Res.Captions.PanelMode.Search.Id);
-			//?this.hToolBar.Items.Add(new IconSeparator());
-			//?this.hButtonType    = this.HToolBarAdd(Res.Captions.PanelMode.Type.Id);
 
 			this.staticType = new StaticText();
 			this.staticType.ContentAlignment = ContentAlignment.MiddleCenter;
@@ -128,7 +121,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.tabPageProperties.Padding = new Margins(4, 4, 4, 4);
 			this.tabBook.Items.Add(this.tabPageProperties);
 
-			this.proxyManager = new ProxyManager(this);
+			this.proxyManager = new ProxyManagers.Panels(this);
 
 			this.propertiesScrollable = new Scrollable(this.tabPageProperties);
 			this.propertiesScrollable.Dock = DockStyle.Fill;
@@ -137,7 +130,6 @@ namespace Epsitec.Common.Designer.Viewers
 			this.propertiesScrollable.Panel.IsAutoFitting = true;
 			this.propertiesScrollable.Panel.Margins = new Margins(10, 10, 10, 10);
 			this.propertiesScrollable.PaintForegroundFrame = true;
-			//?this.propertiesScrollable.ForegroundFrameMargins = new Margins(0, 1, 0, 0);
 
 			//	Crée l'onglet 'objets'.
 			this.tabPageObjects = new TabPage();
@@ -1234,7 +1226,7 @@ namespace Epsitec.Common.Designer.Viewers
 		protected static string					softSerialize = null;
 		protected static bool					softDirtySerialization = false;
 
-		protected ProxyManager					proxyManager;
+		protected ProxyManagers.Panels			proxyManager;
 		protected VSplitter						splitter2;
 		protected Widget						middle;
 		protected VToolBar						vToolBar;

@@ -8,7 +8,7 @@ namespace Epsitec.Common.Designer.Proxies
 {
 	public class Grid : Abstract
 	{
-		public Grid(ProxyManager manager) : base (manager)
+		public Grid(ProxyManagers.Panels manager) : base (manager)
 		{
 		}
 
@@ -824,13 +824,13 @@ namespace Epsitec.Common.Designer.Proxies
 
 		static Grid()
 		{
-			Grid.GridColumnsCountProperty.DefaultMetadata.DefineNamedType(ProxyManager.GridNumericType);
-			Grid.GridRowsCountProperty.DefaultMetadata.DefineNamedType(ProxyManager.GridNumericType);
+			Grid.GridColumnsCountProperty.DefaultMetadata.DefineNamedType(ProxyManagers.Panels.GridNumericType);
+			Grid.GridRowsCountProperty.DefaultMetadata.DefineNamedType(ProxyManagers.Panels.GridNumericType);
 			Grid.GridColumnsCountProperty.DefaultMetadata.DefineCaptionId(Res.Captions.Grid.ColumnsCount.Id);
 			Grid.GridRowsCountProperty.DefaultMetadata.DefineCaptionId(Res.Captions.Grid.RowsCount.Id);
 
-			Grid.GridColumnSpanProperty.DefaultMetadata.DefineNamedType(ProxyManager.GridNumericType);
-			Grid.GridRowSpanProperty.DefaultMetadata.DefineNamedType(ProxyManager.GridNumericType);
+			Grid.GridColumnSpanProperty.DefaultMetadata.DefineNamedType(ProxyManagers.Panels.GridNumericType);
+			Grid.GridRowSpanProperty.DefaultMetadata.DefineNamedType(ProxyManagers.Panels.GridNumericType);
 			Grid.GridColumnSpanProperty.DefaultMetadata.DefineCaptionId(Res.Captions.Grid.ColumnSpan.Id);
 			Grid.GridRowSpanProperty.DefaultMetadata.DefineCaptionId(Res.Captions.Grid.RowSpan.Id);
 
@@ -842,19 +842,19 @@ namespace Epsitec.Common.Designer.Proxies
 			Grid.GridRowModeProperty.DefaultMetadata.DefineNamedType(gridRowModeEnumType);
 			Grid.GridRowModeProperty.DefaultMetadata.DefineCaptionId(Res.Captions.Grid.RowMode.Id);
 
-			Grid.GridColumnValueProperty.DefaultMetadata.DefineNamedType(ProxyManager.SizeNumericType);
-			Grid.GridRowValueProperty.DefaultMetadata.DefineNamedType(ProxyManager.SizeNumericType);
+			Grid.GridColumnValueProperty.DefaultMetadata.DefineNamedType(ProxyManagers.Panels.SizeNumericType);
+			Grid.GridRowValueProperty.DefaultMetadata.DefineNamedType(ProxyManagers.Panels.SizeNumericType);
 			Grid.GridColumnValueProperty.DefaultMetadata.DefineCaptionId(Res.Captions.Grid.ColumnWidth.Id);
 			Grid.GridRowValueProperty.DefaultMetadata.DefineCaptionId(Res.Captions.Grid.RowHeight.Id);
 
-			Grid.GridMinWidthProperty.DefaultMetadata.DefineNamedType(ProxyManager.SizeNumericType);
-			Grid.GridMaxWidthProperty.DefaultMetadata.DefineNamedType(ProxyManager.SizeNumericType);
-			Grid.GridMinHeightProperty.DefaultMetadata.DefineNamedType(ProxyManager.SizeNumericType);
-			Grid.GridMaxHeightProperty.DefaultMetadata.DefineNamedType(ProxyManager.SizeNumericType);
-			Grid.GridLeftBorderProperty.DefaultMetadata.DefineNamedType(ProxyManager.SizeNumericType);
-			Grid.GridRightBorderProperty.DefaultMetadata.DefineNamedType(ProxyManager.SizeNumericType);
-			Grid.GridTopBorderProperty.DefaultMetadata.DefineNamedType(ProxyManager.SizeNumericType);
-			Grid.GridBottomBorderProperty.DefaultMetadata.DefineNamedType(ProxyManager.SizeNumericType);
+			Grid.GridMinWidthProperty.DefaultMetadata.DefineNamedType(ProxyManagers.Panels.SizeNumericType);
+			Grid.GridMaxWidthProperty.DefaultMetadata.DefineNamedType(ProxyManagers.Panels.SizeNumericType);
+			Grid.GridMinHeightProperty.DefaultMetadata.DefineNamedType(ProxyManagers.Panels.SizeNumericType);
+			Grid.GridMaxHeightProperty.DefaultMetadata.DefineNamedType(ProxyManagers.Panels.SizeNumericType);
+			Grid.GridLeftBorderProperty.DefaultMetadata.DefineNamedType(ProxyManagers.Panels.SizeNumericType);
+			Grid.GridRightBorderProperty.DefaultMetadata.DefineNamedType(ProxyManagers.Panels.SizeNumericType);
+			Grid.GridTopBorderProperty.DefaultMetadata.DefineNamedType(ProxyManagers.Panels.SizeNumericType);
+			Grid.GridBottomBorderProperty.DefaultMetadata.DefineNamedType(ProxyManagers.Panels.SizeNumericType);
 			Grid.GridMinWidthProperty.DefaultMetadata.DefineCaptionId(Res.Captions.Grid.MinWidth.Id);
 			Grid.GridMaxWidthProperty.DefaultMetadata.DefineCaptionId(Res.Captions.Grid.MaxWidth.Id);
 			Grid.GridMinHeightProperty.DefaultMetadata.DefineCaptionId(Res.Captions.Grid.MinHeight.Id);

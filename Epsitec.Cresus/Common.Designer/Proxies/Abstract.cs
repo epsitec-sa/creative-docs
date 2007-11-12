@@ -7,7 +7,7 @@ namespace Epsitec.Common.Designer.Proxies
 {
 	public abstract class Abstract : DependencyObject, IProxy
 	{
-		protected Abstract(ProxyManager manager)
+		protected Abstract(ProxyManagers.Panels manager)
 		{
 			this.manager = manager;
 		}
@@ -208,7 +208,7 @@ namespace Epsitec.Common.Designer.Proxies
 #endif
 
 
-		private ProxyManager			manager;
+		private ProxyManagers.Panels	manager;
 		private List<Widget>			widgets = new List<Widget>();
 		private int						suspendChanges;
 	}

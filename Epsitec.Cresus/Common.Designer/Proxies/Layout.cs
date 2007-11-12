@@ -8,7 +8,7 @@ namespace Epsitec.Common.Designer.Proxies
 {
 	public class Layout : Abstract
 	{
-		public Layout(ProxyManager manager) : base (manager)
+		public Layout(ProxyManagers.Panels manager) : base (manager)
 		{
 		}
 

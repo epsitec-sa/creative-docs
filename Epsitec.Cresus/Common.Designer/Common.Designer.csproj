@@ -132,7 +132,7 @@
     <Compile Include="Ribbons\File.cs" />
     <Compile Include="Ribbons\Edit.cs" />
     <Compile Include="Searcher.cs" />
-    <Compile Include="ProxyManager.cs" />
+    <Compile Include="ProxyManagers\Panels.cs" />
     <Compile Include="UserInterface.cs" />
     <Compile Include="Viewers\Abstract.cs" />
     <Compile Include="Viewers\Captions.cs" />
