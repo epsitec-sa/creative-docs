@@ -701,7 +701,7 @@ namespace Epsitec.Common.Widgets
 		
 		protected virtual void SelectAll(bool silent)
 		{
-			this.navigator.TextLayout.SelectAll(this.navigator.Context);
+			this.navigator.SelectAll ();
 			this.OnCursorChanged(silent);
 		}
 
@@ -1888,7 +1888,8 @@ namespace Epsitec.Common.Widgets
 					return;
 				}
 
-				this.host.Text = ResourceBundle.Field.Null;
+				this.host.StartEdition ();
+				this.host.navigator.ReplaceWithText (ResourceBundle.Field.Null);
 			}
 			
 			

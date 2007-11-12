@@ -390,6 +390,20 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+		public void ReplaceWithText(string text)
+		{
+			this.UndoMemorise(UndoType.Insert);
+			this.textLayout.SelectAll (this.context);
+			this.textLayout.ReplaceSelection (this.context, text);
+			this.OnTextInserted(true);
+			this.OnCursorScrolled();
+			this.OnCursorChanged(true);
+		}
+
+		public void SelectAll()
+		{
+			this.textLayout.SelectAll (this.context);
+		}
 
 		public void TabUndoMemorise()
 		{
