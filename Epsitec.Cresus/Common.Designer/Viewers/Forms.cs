@@ -64,7 +64,7 @@ namespace Epsitec.Common.Designer.Viewers
 			//	Le FormEditor est par-dessus le UI.Panel. Il occupe toute la surface (il déborde
 			//	donc des marges) et tient compte lui-même du décalage. C'est le seul moyen pour
 			//	pouvoir dessiner dans les marges ET y détecter les événements souris.
-			this.formEditor = new MyWidgets.FormEditor(container);
+			this.formEditor = new FormEditor.Editor(container);
 			this.formEditor.Initialize(this.module, this.context, this.panelContainer);
 			this.formEditor.MinWidth = 100;
 			this.formEditor.MinHeight = 100;
@@ -143,7 +143,7 @@ namespace Epsitec.Common.Designer.Viewers
 		}
 
 
-		public MyWidgets.FormEditor FormEditor
+		public FormEditor.Editor FormEditor
 		{
 			get
 			{
@@ -580,7 +580,7 @@ namespace Epsitec.Common.Designer.Viewers
 		protected Scrollable					drawingScrollable;
 		protected FrameBox						panelContainerParent;
 		protected UI.Panel						panelContainer;
-		protected MyWidgets.FormEditor			formEditor;
+		protected FormEditor.Editor				formEditor;
 		protected FrameBox						right;
 		protected TabBook						tabBook;
 
