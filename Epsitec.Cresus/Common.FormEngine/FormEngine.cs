@@ -101,12 +101,28 @@ namespace Epsitec.Common.FormEngine
 					{
 						//	Largeur automatique selon la taille minimale du contenu.
 						grid.ColumnDefinitions.Add(new Widgets.Layouts.ColumnDefinition());
+						System.Console.WriteLine(string.Format("Column {0}: automatic", i));
 					}
 					else
 					{
-						//	Largeur de 10%, 10 pixels au minimum, pas de maximum.
-						//	TODO: cummuler les largeurs si optimisation !!!
-						grid.ColumnDefinitions.Add(new Widgets.Layouts.ColumnDefinition(new Widgets.Layouts.GridLength(10.0, Widgets.Layouts.GridUnitType.Proportional), 10, double.PositiveInfinity));
+						//	Largeur de 10%, 10 pixels au minimum, pas de maximum (par colonne virtuelle).
+						double relWidth = 0;
+						double minWidth = 0;
+						for (int j=i; j<FormEngine.MaxColumnsRequired; j++)
+						{
+							if (lastLabelId == labelsId[j])
+							{
+								relWidth += 10;  // largeur relative en %
+								minWidth += 10;  // largeur minimale
+							}
+							else
+							{
+								break;
+							}
+						}
+
+						grid.ColumnDefinitions.Add(new Widgets.Layouts.ColumnDefinition(new Widgets.Layouts.GridLength(relWidth, Widgets.Layouts.GridUnitType.Proportional), minWidth, double.PositiveInfinity));
+						System.Console.WriteLine(string.Format("Column {0}: relWidth={1}%", i, relWidth));
 					}
 				}
 			}
@@ -176,7 +192,7 @@ namespace Epsitec.Common.FormEngine
 				column = 0;
 			}
 
-			this.LabelIdUse(labelsId, labelId++, column, columnsRequired);
+			FormEngine.LabelIdUse(labelsId, labelId++, column, columnsRequired);
 
 			column += columnsRequired;
 		}
@@ -191,8 +207,8 @@ namespace Epsitec.Common.FormEngine
 				column = 0;
 			}
 
-			this.LabelIdUse(labelsId, -(labelId++), column, 1);
-			this.LabelIdUse(labelsId, labelId++, column+1, columnsRequired-1);
+			FormEngine.LabelIdUse(labelsId, -(labelId++), column, 1);
+			FormEngine.LabelIdUse(labelsId, labelId++, column+1, columnsRequired-1);
 
 			if (field.Separator == FieldDescription.SeparatorType.Append)
 			{
@@ -204,11 +220,27 @@ namespace Epsitec.Common.FormEngine
 			}
 		}
 
-		private void LabelIdUse(int[] labelsId, int labelId, int column, int count)
+		static private void LabelIdUse(int[] labelsId, int labelId, int column, int count)
 		{
 			//	Indique que les colonnes comprises entre column et column+count-1 ont un contenu commun,
 			//	c'est-à-dire qui ne nécessique qu'une colonne physique dans GridLayoutEngine, si cela est
 			//	en accord avec les autres lignes.
+			//
+			//	Contenu initial:				0 0 0 0 0 0 0 0 0 0
+			//	labelId=1, column=0, count=1:	1 0 0 0 0 0 0 0 0 0  (cas I)
+			//	labelId=2, column=1, count=9:	1 2 2 2 2 2 2 2 2 2  (cas I)
+			//	labelId=3, column=1, count=2:	1 3 3 2 2 2 2 2 2 2  (cas I)
+			//	labelId=5, column=1, count=5:	1 3 3 5 5 5 2 2 2 2  (cas R)
+			//	labelId=6, column=1, count=2:	1 6 6 4 4 4 2 2 2 2  (cas I)
+			//	labelId=7, column=3, count=1:	1 6 6 7 4 4 2 2 2 2  (cas I)
+			//	labelId=8, column=4, count=6:	1 6 6 7 4 4 2 2 2 2  (cas N)
+			//
+			//	Après cette initialisation, il faudra créer 5 colonnes physiques:
+			//	1) 1
+			//	2) 6 6
+			//	3) 7
+			//	4) 4 4
+			//	5) 2 2 2 2
 			int last = column+count-1;
 			int id = labelsId[column];
 			for (int i=column+1; i<=last; i++)
@@ -217,6 +249,7 @@ namespace Epsitec.Common.FormEngine
 				{
 					if (column > 0 && labelsId[column-1] == labelsId[column])
 					{
+						//	Cas L:
 						int m = labelsId[column];
 						for (int j=column; j<=last; j++)
 						{
@@ -230,6 +263,7 @@ namespace Epsitec.Common.FormEngine
 
 					if (last < labelsId.Length-1 && labelsId[last+1] == labelsId[last])
 					{
+						//	Cas R:
 						int m = labelsId[last];
 						for (int j=last; j>=column; j--)
 						{
@@ -241,18 +275,22 @@ namespace Epsitec.Common.FormEngine
 						}
 					}
 
+					//	Cas N:
 					return;
 				}
 			}
 
+			//	Cas I:
 			for (int i=column; i<=last; i++)
 			{
 				labelsId[i] = labelId;
 			}
 		}
 
-		private int GetColumnIndex(int[] labelsId, int column)
+		static private int GetColumnIndex(int[] labelsId, int column)
 		{
+			//	Conversion d'un numéro de colonne virtuelle (0..9) en un index pour une colonne physique.
+			//	Les colonnes physiques peuvent être moins nombreuses que les virtuelles.
 			int index = column;
 			int last = -1;
 			for (int i=0; i<=column; i++)
@@ -293,8 +331,8 @@ namespace Epsitec.Common.FormEngine
 				column = 0;
 			}
 
-			int i = this.GetColumnIndex(labelsId, column);
-			int j = this.GetColumnIndex(labelsId, column+columnsRequired-1)+1;
+			int i = FormEngine.GetColumnIndex(labelsId, column);
+			int j = FormEngine.GetColumnIndex(labelsId, column+columnsRequired-1)+1;
 			Widgets.Layouts.GridLayoutEngine.SetColumn(box, i);
 			Widgets.Layouts.GridLayoutEngine.SetRow(box, row);
 			Widgets.Layouts.GridLayoutEngine.SetColumnSpan(box, j-i);
@@ -346,8 +384,8 @@ namespace Epsitec.Common.FormEngine
 				placeholder.PreferredHeight = field.RowsRequired*20;
 			}
 
-			int i = this.GetColumnIndex(labelsId, column);
-			int j = this.GetColumnIndex(labelsId, column+columnsRequired-1)+1;
+			int i = FormEngine.GetColumnIndex(labelsId, column);
+			int j = FormEngine.GetColumnIndex(labelsId, column+columnsRequired-1)+1;
 			Widgets.Layouts.GridLayoutEngine.SetColumn(placeholder, i);
 			Widgets.Layouts.GridLayoutEngine.SetRow(placeholder, row);
 			Widgets.Layouts.GridLayoutEngine.SetColumnSpan(placeholder, j-i);
@@ -412,8 +450,8 @@ namespace Epsitec.Common.FormEngine
 					text.Text = string.Concat("<font size=\"", size.ToString(System.Globalization.CultureInfo.InvariantCulture), "%\"><b>", builder.ToString(), "</b></font>");
 					text.PreferredHeight = size/100*16;
 
-					int i = this.GetColumnIndex(labelsId, 0);
-					int j = this.GetColumnIndex(labelsId, FormEngine.MaxColumnsRequired-1)+1;
+					int i = FormEngine.GetColumnIndex(labelsId, 0);
+					int j = FormEngine.GetColumnIndex(labelsId, FormEngine.MaxColumnsRequired-1)+1;
 					Widgets.Layouts.GridLayoutEngine.SetColumn(text, i);
 					Widgets.Layouts.GridLayoutEngine.SetRow(text, row);
 					Widgets.Layouts.GridLayoutEngine.SetColumnSpan(text, j-i);
@@ -434,8 +472,8 @@ namespace Epsitec.Common.FormEngine
 				Separator sep = new Separator(root);
 				sep.PreferredHeight = 1;
 
-				int i = this.GetColumnIndex(labelsId, 0);
-				int j = this.GetColumnIndex(labelsId, FormEngine.MaxColumnsRequired-1)+1;
+				int i = FormEngine.GetColumnIndex(labelsId, 0);
+				int j = FormEngine.GetColumnIndex(labelsId, FormEngine.MaxColumnsRequired-1)+1;
 				Widgets.Layouts.GridLayoutEngine.SetColumn(sep, i);
 				Widgets.Layouts.GridLayoutEngine.SetRow(sep, row);
 				Widgets.Layouts.GridLayoutEngine.SetColumnSpan(sep, j-i);
