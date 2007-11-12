@@ -330,7 +330,8 @@ namespace Epsitec.Common.Types
 			{
 				if (!this.CheckValueValidity (type, value))
 				{
-					throw new System.ArgumentException (string.Format ("The value '{0}' has the wrong type or is not valid", id));
+					System.Diagnostics.Debug.WriteLine (string.Format ("The value '{0}' has the wrong type or is not valid", id));
+	//-				throw new System.ArgumentException (string.Format ("The value '{0}' has the wrong type or is not valid", id));
 				}
 
 				if (this.values == null)
