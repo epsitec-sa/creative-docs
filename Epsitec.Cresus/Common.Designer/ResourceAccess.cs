@@ -23,6 +23,7 @@ namespace Epsitec.Common.Designer
 			Values,
 			Entities,
 			Panels,
+			Forms,
 		}
 
 		public enum FieldType
@@ -95,6 +96,11 @@ namespace Epsitec.Common.Designer
 			if (this.type == Type.Panels)
 			{
 				this.accessor = new Support.ResourceAccessors.PanelResourceAccessor();
+			}
+			if (this.type == Type.Forms)
+			{
+				//?this.accessor = new Support.ResourceAccessors.FormResourceAccessor();
+				this.accessor = new Support.ResourceAccessors.CaptionResourceAccessor();
 			}
 
 			this.collectionView = new CollectionView(this.accessor.Collection);
@@ -172,6 +178,10 @@ namespace Epsitec.Common.Designer
 
 				case Type.Entities:
 					return many ? Res.Strings.BundleType.Entities : Res.Strings.BundleType.Entity;
+
+				case Type.Forms:
+					//?return many ? Res.Strings.BundleType.Entities : Res.Strings.BundleType.Entity;
+					return many ? "Masques" : "Masque";
 			}
 
 			return "?";
@@ -1649,6 +1659,7 @@ namespace Epsitec.Common.Designer
 				case Type.Fields:
 				case Type.Types:
 				case Type.Values:
+				case Type.Forms:
 					return "Captions";
 
 				case Type.Panels:
@@ -1673,6 +1684,7 @@ namespace Epsitec.Common.Designer
 				case Type.Fields:
 				case Type.Types:
 				case Type.Values:
+				case Type.Forms:
 					return "Caption";
 
 				case Type.Panels:

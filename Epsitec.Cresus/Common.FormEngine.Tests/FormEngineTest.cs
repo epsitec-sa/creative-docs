@@ -105,7 +105,7 @@ namespace Epsitec.Common.FormEngine
 				entityId = Druid.Parse("[63081]");  // Adresse
 
 				fields.Add(this.CreateField("[63083]", Color.Empty, FieldDescription.SeparatorType.Normal, 10, 2));  // Rue
-				fields.Add(this.CreateField("[63093]", Color.Empty, FieldDescription.SeparatorType.Normal, 3, 1));  // Numéro
+				fields.Add(this.CreateField("[63093]", Color.Empty, FieldDescription.SeparatorType.Normal, 2, 1));  // Numéro
 				fields.Add(this.CreateField("[630A3]", Color.Empty, FieldDescription.SeparatorType.Normal, 6, 1));  // Case
 				fields.Add(this.CreateSeparator(FieldDescription.FieldType.Line));
 				fields.Add(this.CreateField("[630C3]", Color.Empty, FieldDescription.SeparatorType.Append, 3, 1));  // Npa

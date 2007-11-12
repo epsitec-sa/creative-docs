@@ -302,6 +302,7 @@ namespace Epsitec.Common.Designer.Viewers
 			if (type == ResourceAccess.Type.Values  )  return new Values  (module, context, access, designerApplication);
 			if (type == ResourceAccess.Type.Entities)  return new Entities(module, context, access, designerApplication);
 			if (type == ResourceAccess.Type.Panels  )  return new Panels  (module, context, access, designerApplication);
+			if (type == ResourceAccess.Type.Forms   )  return new Forms   (module, context, access, designerApplication);
 			return null;
 		}
 

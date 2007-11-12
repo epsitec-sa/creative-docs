@@ -47,6 +47,7 @@ namespace Epsitec.Common.Designer
 			this.accessPanels   = new ResourceAccess(ResourceAccess.Type.Panels,   this, this.moduleId);
 			this.accessEntities = new ResourceAccess(ResourceAccess.Type.Entities, this, this.moduleId);
 			this.accessTypes    = new ResourceAccess(ResourceAccess.Type.Types,    this, this.moduleId);
+			this.accessForms    = new ResourceAccess(ResourceAccess.Type.Forms,    this, this.moduleId);
 			this.Load();
 
 			//	Attention: il faut avoir fait le this.accessEntities.Load() avant de créer this.accessFields !
@@ -197,6 +198,14 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
+		public ResourceAccess AccessForms
+		{
+			get
+			{
+				return this.accessForms;
+			}
+		}
+
 		public ResourceAccess GetAccess(ResourceAccess.Type type)
 		{
 			//	Cherche un accès d'après son type.
@@ -225,6 +234,9 @@ namespace Epsitec.Common.Designer
 
 				case ResourceAccess.Type.Types:
 					return this.accessTypes;
+
+				case ResourceAccess.Type.Forms:
+					return this.accessForms;
 			}
 
 			return null;
@@ -315,6 +327,11 @@ namespace Epsitec.Common.Designer
 			if (this.accessEntities.Accessor.Collection[id] != null)
 			{
 				return ResourceAccess.Type.Entities;
+			}
+
+			if (this.accessForms.Accessor.Collection[id] != null)
+			{
+				return ResourceAccess.Type.Forms;
 			}
 
 			return ResourceAccess.Type.Unknown;
@@ -526,6 +543,7 @@ namespace Epsitec.Common.Designer
 				yield return accessValues;
 				yield return accessTypes;
 				yield return accessPanels;
+				yield return accessForms;
 			}
 		}
 
@@ -545,5 +563,6 @@ namespace Epsitec.Common.Designer
 		protected ResourceAccess			accessFields;
 		protected ResourceAccess			accessValues;
 		protected ResourceAccess			accessTypes;
+		protected ResourceAccess			accessForms;
 	}
 }

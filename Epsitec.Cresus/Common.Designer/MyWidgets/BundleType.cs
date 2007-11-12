@@ -110,6 +110,19 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.buttonEntities.Dock = DockStyle.Left;
 			this.buttonEntities.Clicked += new MessageEventHandler(this.HandleButtonClicked);
 
+			this.buttonForms = new IconButtonMark(this);
+			this.buttonForms.Text = ResourceAccess.TypeDisplayName(ResourceAccess.Type.Forms);
+			this.buttonForms.Name = BundleType.Convert(ResourceAccess.Type.Forms);
+			this.buttonForms.ButtonStyle = ButtonStyle.ActivableIcon;
+			this.buttonForms.SiteMark = ButtonMarkDisposition.Below;
+			this.buttonForms.MarkDimension = 5;
+			this.buttonForms.PreferredWidth = width;
+			this.buttonForms.MinHeight = 20+5;
+			this.buttonForms.AutoFocus = false;
+			this.buttonForms.Margins = new Margins(2, 0, 10, 0);
+			this.buttonForms.Dock = DockStyle.Left;
+			this.buttonForms.Clicked += new MessageEventHandler(this.HandleButtonClicked);
+
 			this.buttonPanels = new IconButtonMark(this);
 			this.buttonPanels.Text = ResourceAccess.TypeDisplayName(ResourceAccess.Type.Panels);
 			this.buttonPanels.Name = BundleType.Convert(ResourceAccess.Type.Panels);
@@ -162,6 +175,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.buttonValues.ActiveState   = (this.currentType == ResourceAccess.Type.Values  ) ? ActiveState.Yes : ActiveState.No;
 			this.buttonPanels.ActiveState   = (this.currentType == ResourceAccess.Type.Panels  ) ? ActiveState.Yes : ActiveState.No;
 			this.buttonEntities.ActiveState = (this.currentType == ResourceAccess.Type.Entities) ? ActiveState.Yes : ActiveState.No;
+			this.buttonForms.ActiveState    = (this.currentType == ResourceAccess.Type.Forms   ) ? ActiveState.Yes : ActiveState.No;
 		}
 
 
@@ -224,5 +238,6 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected IconButtonMark			buttonPanels;
 		protected IconButtonMark			buttonTypes;
 		protected IconButtonMark			buttonValues;
+		protected IconButtonMark			buttonForms;
 	}
 }
