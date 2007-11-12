@@ -170,11 +170,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			value = this.structuredData.GetValue(Support.Res.Fields.ResourceBaseType.DefaultValue);
 			if (!UndefinedValue.IsUndefinedValue(value))
 			{
-				decimal def = (decimal) value;
-				if (def != 0M)
-				{
-					this.PutSummaryValue(builder, Res.Strings.Viewers.Types.Summary.BigStep, def.ToString());
-				}
+				this.PutSummaryValue(builder, Res.Strings.Viewers.Types.Summary.Default, value.ToString());
 			}
 
 			return builder.ToString();
@@ -290,15 +286,26 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 			else
 			{
-				decimal def = (decimal) value;
-				if (def == 0M)
+				decimal def;
+				switch (this.typeCode)
 				{
-					this.fieldDefault.Text = "";
+					case TypeCode.Decimal:
+						def = (decimal) value;
+						break;
+					case TypeCode.Double:
+						def = (decimal) (double) value;
+						break;
+					case TypeCode.Integer:
+						def = (decimal) (int) value;
+						break;
+					case TypeCode.LongInteger:
+						def = (decimal) (long) value;
+						break;
+					default:
+						throw new System.NotImplementedException ();
 				}
-				else
-				{
-					this.SetDecimal(this.fieldDefault, def);
-				}
+				
+				this.SetDecimal(this.fieldDefault, def);
 			}
 			
 			this.ignoreChange = false;
@@ -391,8 +398,31 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			if (sender == this.fieldDefault)
 			{
-				decimal def = this.GetDecimal(this.fieldDefault);
-				this.structuredData.SetValue(Support.Res.Fields.ResourceBaseType.DefaultValue, def);
+				decimal? def = this.GetDecimalOrNull(this.fieldDefault);
+				if (def.HasValue)
+				{
+					switch (this.typeCode)
+					{
+						case TypeCode.Decimal:
+							this.structuredData.SetValue (Support.Res.Fields.ResourceBaseType.DefaultValue, def.Value);
+							break;
+						case TypeCode.Double:
+							this.structuredData.SetValue (Support.Res.Fields.ResourceBaseType.DefaultValue, (double) def.Value);
+							break;
+						case TypeCode.Integer:
+							this.structuredData.SetValue (Support.Res.Fields.ResourceBaseType.DefaultValue, (int) def.Value);
+							break;
+						case TypeCode.LongInteger:
+							this.structuredData.SetValue (Support.Res.Fields.ResourceBaseType.DefaultValue, (long) def.Value);
+							break;
+						default:
+							throw new System.NotImplementedException ();
+					}
+				}
+				else
+				{
+					this.structuredData.SetValue (Support.Res.Fields.ResourceBaseType.DefaultValue, UndefinedValue.Value);
+				}
 			}
 
 			this.OnContentChanged();

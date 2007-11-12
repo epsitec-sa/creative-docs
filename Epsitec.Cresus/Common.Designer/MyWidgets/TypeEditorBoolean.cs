@@ -25,6 +25,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.checkDefault.Text = Res.Strings.Viewers.Types.Boolean.Default;
 			this.checkDefault.Dock = DockStyle.Fill;
 			this.checkDefault.Clicked += new MessageEventHandler(this.HandleCheckClicked);
+			this.checkDefault.AcceptThreeState = true;
 		}
 
 		
@@ -71,7 +72,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.ColorizeResetBox(this.groupDefault, source, usesOriginalData);
 			if (UndefinedValue.IsUndefinedValue(value))
 			{
-				this.checkDefault.ActiveState = ActiveState.No;
+				this.checkDefault.ActiveState = ActiveState.Maybe;
 			}
 			else
 			{
@@ -92,6 +93,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			if (sender == this.checkDefault)
 			{
+				this.checkDefault.Toggle();
+#if false
 				bool def = false;
 				object value = this.structuredData.GetValue(Support.Res.Fields.ResourceBaseType.DefaultValue);
 				if (!UndefinedValue.IsUndefinedValue(value))
@@ -100,6 +103,20 @@ namespace Epsitec.Common.Designer.MyWidgets
 				}
 
 				this.structuredData.SetValue(Support.Res.Fields.ResourceBaseType.DefaultValue, !def);
+#else
+				switch(this.checkDefault.ActiveState)
+				{
+					case ActiveState.Yes:
+						this.structuredData.SetValue (Support.Res.Fields.ResourceBaseType.DefaultValue, true);
+						break;
+					case ActiveState.No:
+						this.structuredData.SetValue (Support.Res.Fields.ResourceBaseType.DefaultValue, false);
+						break;
+					case ActiveState.Maybe:
+						this.structuredData.SetValue (Support.Res.Fields.ResourceBaseType.DefaultValue, UndefinedValue.Value);
+						break;
+				}
+#endif
 			}
 
 			this.OnContentChanged();

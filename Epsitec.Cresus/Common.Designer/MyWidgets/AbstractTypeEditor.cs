@@ -369,6 +369,16 @@ namespace Epsitec.Common.Designer.MyWidgets
 			return value;
 		}
 
+		protected decimal? GetDecimalOrNull(TextFieldEx field)
+		{
+			decimal value;
+			if (!decimal.TryParse(field.Text, out value))
+			{
+				return null;
+			}
+			return value;
+		}
+
 		protected void SetDecimal(TextFieldEx field, decimal value)
 		{
 			field.Text = value.ToString();
