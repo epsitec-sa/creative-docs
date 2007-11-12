@@ -67,7 +67,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.primaryNullable = new CheckButton(this.groupNullable.GroupBox);
 			this.primaryNullable.Text = Res.Strings.Viewers.Types.Nullable.CheckButton;
 			this.primaryNullable.Dock = DockStyle.StackBegin;
-			this.primaryNullable.Pressed += new MessageEventHandler(this.HandleNullablePressed);
+			this.primaryNullable.Clicked += new MessageEventHandler(this.HandleNullableClicked);
 			this.primaryNullable.TabIndex = this.tabIndex++;
 			this.primaryNullable.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 
@@ -91,7 +91,7 @@ namespace Epsitec.Common.Designer.Viewers
 			{
 				this.fieldController.TextChanged -= new EventHandler(this.HandleControllerTextChanged);
 				this.fieldControllerParameter.TextChanged -= new EventHandler(this.HandleControllerTextChanged);
-				this.primaryNullable.Pressed -= new MessageEventHandler(this.HandleNullablePressed);
+				this.primaryNullable.Clicked -= new MessageEventHandler(this.HandleNullableClicked);
 			}
 
 			base.Dispose(disposing);
@@ -353,7 +353,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.module.AccessTypes.SetLocalDirty();
 		}
 
-		private void HandleNullablePressed(object sender, MessageEventArgs e)
+		private void HandleNullableClicked(object sender, MessageEventArgs e)
 		{
 			//	Bouton à cocher 'Nullable' pressé.
 			if (this.ignoreChange)
@@ -364,7 +364,7 @@ namespace Epsitec.Common.Designer.Viewers
 			CultureMap item = this.access.CollectionView.CurrentItem as CultureMap;
 			StructuredData data = item.GetCultureData(this.GetTwoLetters(0));
 
-			data.SetValue(Support.Res.Fields.ResourceBaseType.Nullable, this.primaryNullable.ActiveState == ActiveState.No);
+			data.SetValue(Support.Res.Fields.ResourceBaseType.Nullable, this.primaryNullable.ActiveState == ActiveState.Yes);
 
 			CultureMapSource source = this.access.GetCultureMapSource(item);
 			bool usesOriginalData;

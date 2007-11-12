@@ -372,7 +372,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 
 			string controller          = type == null ? null : type.DefaultController;
 			string controllerParameter = type == null ? null : type.DefaultControllerParameter;
-
+			
 			object defaultValue = type == null ? null : type.DefaultValue;
 
 			if (!string.IsNullOrEmpty (controller))
@@ -382,6 +382,10 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			if (!string.IsNullOrEmpty (controllerParameter))
 			{
 				data.SetValue (Res.Fields.ResourceBaseType.DefaultControllerParameter, controllerParameter);
+			}
+			if (type != null)
+			{
+				data.SetValue (Res.Fields.ResourceBaseType.Nullable, type.IsNullable);
 			}
 
 			if (defaultValue != null)
