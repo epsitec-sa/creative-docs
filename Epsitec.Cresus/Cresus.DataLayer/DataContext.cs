@@ -100,7 +100,7 @@ namespace Epsitec.Cresus.DataLayer
 				switch (fieldDef.Relation)
 				{
 					case FieldRelation.None:
-						this.PersistFieldValueIntoDataRow (entity, fieldDef, dataRow);
+						this.WriteFieldValueInDataRow (entity, fieldDef, dataRow);
 						break;
 
 					default:
@@ -110,13 +110,30 @@ namespace Epsitec.Cresus.DataLayer
 			}
 		}
 
+		private AbstractEntity DeserializeEntity(System.Data.DataRow dataRow)
+		{
+			long typeValueId = (long) dataRow[Tags.ColumnInstanceType];
+			Druid entityId = Druid.FromLong (typeValueId);
+			AbstractEntity entity = this.entityContext.CreateEmptyEntity (entityId);
+			this.DeserializeEntity (entity, dataRow);
+			return entity;
+		}
+
+		private void DeserializeEntity(AbstractEntity entity, System.Data.DataRow dataRow)
+		{
+			using (entity.DefineOriginalValues ())
+			{
+				//	TODO: ...
+			}			
+		}
+
 		private object GetInstanceTypeValue(AbstractEntity entity)
 		{
 			Druid entityId = entity.GetEntityStructuredTypeId ();
 			return entityId.ToLong ();
 		}
 
-		private void PersistFieldValueIntoDataRow(AbstractEntity entity, StructuredTypeField fieldDef, System.Data.DataRow dataRow)
+		private void WriteFieldValueInDataRow(AbstractEntity entity, StructuredTypeField fieldDef, System.Data.DataRow dataRow)
 		{
 			object value = entity.InternalGetValue (fieldDef.Id);
 
