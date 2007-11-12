@@ -5,7 +5,7 @@ using Epsitec.Common.Widgets;
 using Epsitec.Common.Support;
 using Epsitec.Common.Drawing;
 
-namespace Epsitec.Common.Designer
+namespace Epsitec.Common.Designer.PanelEditor
 {
 	/// <summary>
 	/// Contient les informations sur la sélection des lignes/colonnes d'un AbstractGroup

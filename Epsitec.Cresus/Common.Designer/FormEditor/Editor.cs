@@ -435,7 +435,7 @@ namespace Epsitec.Common.Designer.FormEditor
 				case MessageType.MouseLeave:
 					this.SetEnteredObjects(null);
 					this.SetHilitedObject(null, null);
-					this.SetHilitedParent(null, GridSelection.Invalid, GridSelection.Invalid, 0, 0);
+					this.SetHilitedParent(null, PanelEditor.GridSelection.Invalid, PanelEditor.GridSelection.Invalid, 0, 0);
 					break;
 
 				case MessageType.KeyDown:
@@ -936,7 +936,7 @@ namespace Epsitec.Common.Designer.FormEditor
 			Widget obj = this.Detect(pos, false, true);  // objet tableau visé par la souris
 			int column, row;
 			this.GridDetect(pos, obj, out column, out row);
-			if (column == GridSelection.Invalid && row == GridSelection.Invalid)
+			if (column == PanelEditor.GridSelection.Invalid && row == PanelEditor.GridSelection.Invalid)
 			{
 				this.selectedObjects.Clear();
 				this.GridClearSelection();
@@ -952,10 +952,10 @@ namespace Epsitec.Common.Designer.FormEditor
 				this.griddingInitial = null;
 				if (isShiftPressed)
 				{
-					GridSelection gs = GridSelection.Get(obj);
+					PanelEditor.GridSelection gs = PanelEditor.GridSelection.Get(obj);
 					if (gs != null)
 					{
-						this.griddingInitial = new GridSelection(obj);
+						this.griddingInitial = new PanelEditor.GridSelection(obj);
 						gs.CopyTo(this.griddingInitial);
 					}
 				}
@@ -1012,20 +1012,20 @@ namespace Epsitec.Common.Designer.FormEditor
 				}
 				else
 				{
-					GridSelection hgs = new GridSelection(obj);
+					PanelEditor.GridSelection hgs = new PanelEditor.GridSelection(obj);
 
 					if (isShiftPressed)
 					{
-						GridSelection ags = GridSelection.Get(obj);
+						PanelEditor.GridSelection ags = PanelEditor.GridSelection.Get(obj);
 
-						if (column != GridSelection.Invalid && (ags == null || !ags.AreOnlyRows))
+						if (column != PanelEditor.GridSelection.Invalid && (ags == null || !ags.AreOnlyRows))
 						{
-							hgs.Add(GridSelection.Unit.Column, column);
+							hgs.Add(PanelEditor.GridSelection.Unit.Column, column);
 						}
 
-						if (row != GridSelection.Invalid && (ags == null || !ags.AreOnlyColumns))
+						if (row != PanelEditor.GridSelection.Invalid && (ags == null || !ags.AreOnlyColumns))
 						{
-							hgs.Add(GridSelection.Unit.Row, row);
+							hgs.Add(PanelEditor.GridSelection.Unit.Row, row);
 						}
 
 						if (ags != null && ags.AreMix)
@@ -1035,14 +1035,14 @@ namespace Epsitec.Common.Designer.FormEditor
 					}
 					else
 					{
-						if (column != GridSelection.Invalid)
+						if (column != PanelEditor.GridSelection.Invalid)
 						{
-							hgs.Add(GridSelection.Unit.Column, column);
+							hgs.Add(PanelEditor.GridSelection.Unit.Column, column);
 						}
 
-						if (row != GridSelection.Invalid)
+						if (row != PanelEditor.GridSelection.Invalid)
 						{
-							hgs.Add(GridSelection.Unit.Row, row);
+							hgs.Add(PanelEditor.GridSelection.Unit.Row, row);
 						}
 					}
 
@@ -1075,14 +1075,14 @@ namespace Epsitec.Common.Designer.FormEditor
 				return;
 			}
 
-			GridSelection gs;
+			PanelEditor.GridSelection gs;
 
 			if (isShiftPressed)
 			{
-				gs = GridSelection.Get(obj);
+				gs = PanelEditor.GridSelection.Get(obj);
 				if (gs != null)
 				{
-					if (gs.AreOnlyColumns && column != GridSelection.Invalid)
+					if (gs.AreOnlyColumns && column != PanelEditor.GridSelection.Invalid)
 					{
 						gs.ChangeColumnSelection(column, this.griddingInitial);
 						this.isGriddingColumn = true;
@@ -1092,7 +1092,7 @@ namespace Epsitec.Common.Designer.FormEditor
 						return;
 					}
 
-					if (gs.AreOnlyRows && row != GridSelection.Invalid)
+					if (gs.AreOnlyRows && row != PanelEditor.GridSelection.Invalid)
 					{
 						gs.ChangeRowSelection(row, this.griddingInitial);
 						this.isGriddingColumn = false;
@@ -1108,86 +1108,86 @@ namespace Epsitec.Common.Designer.FormEditor
 					return;
 				}
 
-				gs = new GridSelection(obj);
+				gs = new PanelEditor.GridSelection(obj);
 				gs.SelectColumnsAndRows(this.griddingColumn, column, this.griddingRow, row);
 
-				if (!GridSelection.EqualValues(gs, GridSelection.Get(obj)))
+				if (!PanelEditor.GridSelection.EqualValues(gs, PanelEditor.GridSelection.Get(obj)))
 				{
-					GridSelection.Attach(obj, gs);
+					PanelEditor.GridSelection.Attach(obj, gs);
 					this.Invalidate();
 				}
 				return;
 			}
 
-			gs = new GridSelection(obj);
+			gs = new PanelEditor.GridSelection(obj);
 
 			if (column == this.griddingColumn && row == this.griddingRow)
 			{
-				if (column != GridSelection.Invalid)
+				if (column != PanelEditor.GridSelection.Invalid)
 				{
-					gs.Add(GridSelection.Unit.Column, column);
+					gs.Add(PanelEditor.GridSelection.Unit.Column, column);
 				}
 
-				if (row != GridSelection.Invalid)
+				if (row != PanelEditor.GridSelection.Invalid)
 				{
-					gs.Add(GridSelection.Unit.Row, row);
+					gs.Add(PanelEditor.GridSelection.Unit.Row, row);
 				}
 
-				this.isGriddingColumn = (row == GridSelection.Invalid);
-				this.isGriddingRow = (column == GridSelection.Invalid);
+				this.isGriddingColumn = (row == PanelEditor.GridSelection.Invalid);
+				this.isGriddingRow = (column == PanelEditor.GridSelection.Invalid);
 			}
-			else if (column == this.griddingColumn && column != GridSelection.Invalid)
+			else if (column == this.griddingColumn && column != PanelEditor.GridSelection.Invalid)
 			{
-				gs.Add(GridSelection.Unit.Column, column);
+				gs.Add(PanelEditor.GridSelection.Unit.Column, column);
 
 				this.isGriddingColumn = true;
 				this.isGriddingRow = false;
 			}
-			else if (row == this.griddingRow && row != GridSelection.Invalid)
+			else if (row == this.griddingRow && row != PanelEditor.GridSelection.Invalid)
 			{
-				gs.Add(GridSelection.Unit.Row, row);
+				gs.Add(PanelEditor.GridSelection.Unit.Row, row);
 
 				this.isGriddingColumn = false;
 				this.isGriddingRow = true;
 			}
-			else if (this.isGriddingColumn && column != GridSelection.Invalid)
+			else if (this.isGriddingColumn && column != PanelEditor.GridSelection.Invalid)
 			{
 				if (column >= this.griddingColumn)
 				{
 					for (int i=column; i>=this.griddingColumn; i--)
 					{
-						gs.Add(GridSelection.Unit.Column, i);
+						gs.Add(PanelEditor.GridSelection.Unit.Column, i);
 					}
 				}
 				else
 				{
 					for (int i=column; i<=this.griddingColumn; i++)
 					{
-						gs.Add(GridSelection.Unit.Column, i);
+						gs.Add(PanelEditor.GridSelection.Unit.Column, i);
 					}
 				}
 			}
-			else if (this.isGriddingRow && row != GridSelection.Invalid)
+			else if (this.isGriddingRow && row != PanelEditor.GridSelection.Invalid)
 			{
 				if (row >= this.griddingRow)
 				{
 					for (int i=row; i>=this.griddingRow; i--)
 					{
-						gs.Add(GridSelection.Unit.Row, i);
+						gs.Add(PanelEditor.GridSelection.Unit.Row, i);
 					}
 				}
 				else
 				{
 					for (int i=row; i<=this.griddingRow; i++)
 					{
-						gs.Add(GridSelection.Unit.Row, i);
+						gs.Add(PanelEditor.GridSelection.Unit.Row, i);
 					}
 				}
 			}
 
-			if (!GridSelection.EqualValues(gs, GridSelection.Get(obj)))
+			if (!PanelEditor.GridSelection.EqualValues(gs, PanelEditor.GridSelection.Get(obj)))
 			{
-				GridSelection.Attach(obj, gs);
+				PanelEditor.GridSelection.Attach(obj, gs);
 				this.Invalidate();
 			}
 		}
@@ -1333,8 +1333,8 @@ namespace Epsitec.Common.Designer.FormEditor
 				Point initialPos = pos;
 				this.isInside = this.IsInside(pos);
 				Widget parent = this.DetectGroup(pos);
-				int column = GridSelection.Invalid;
-				int row = GridSelection.Invalid;
+				int column = PanelEditor.GridSelection.Invalid;
+				int row = PanelEditor.GridSelection.Invalid;
 
 				this.CreateObjectAdjust(ref pos, parent, out this.creatingRectangle);
 
@@ -1384,7 +1384,7 @@ namespace Epsitec.Common.Designer.FormEditor
 				}
 				else
 				{
-					this.SetHilitedParent(null, GridSelection.Invalid, GridSelection.Invalid, 0, 0);
+					this.SetHilitedParent(null, PanelEditor.GridSelection.Invalid, PanelEditor.GridSelection.Invalid, 0, 0);
 				}
 
 				this.module.DesignerApplication.UpdateInfoViewer();
@@ -1462,7 +1462,7 @@ namespace Epsitec.Common.Designer.FormEditor
 
 				this.SetHilitedZOrderRectangle(Rectangle.Empty);
 				this.constrainsList.Ending();
-				this.SetHilitedParent(null, GridSelection.Invalid, GridSelection.Invalid, 0, 0);
+				this.SetHilitedParent(null, PanelEditor.GridSelection.Invalid, PanelEditor.GridSelection.Invalid, 0, 0);
 
 				this.lastCreatedObject = this.creatingObject;
 				this.creatingObject = null;
@@ -1827,8 +1827,8 @@ namespace Epsitec.Common.Designer.FormEditor
 			this.isInside = true;
 			Widget parent = this.DetectGroup(pos);
 
-			int column = GridSelection.Invalid;
-			int row = GridSelection.Invalid;
+			int column = PanelEditor.GridSelection.Invalid;
+			int row = PanelEditor.GridSelection.Invalid;
 			this.draggingSpanColumnOffset = 0;
 			this.draggingSpanRowOffset = 0;
 			this.draggingSpanColumnCount = 1;
@@ -1904,8 +1904,8 @@ namespace Epsitec.Common.Designer.FormEditor
 			//	Mouvement du drag pour déplacer les objets sélectionnés.
 			this.isInside = this.IsInside(pos);
 			Widget parent = this.DetectGroup(pos);
-			int column = GridSelection.Invalid;
-			int row = GridSelection.Invalid;
+			int column = PanelEditor.GridSelection.Invalid;
+			int row = PanelEditor.GridSelection.Invalid;
 			Point adjust = Point.Zero;
 
 			if (this.objectModifier.AreChildrenAnchored(parent))
@@ -2045,7 +2045,7 @@ namespace Epsitec.Common.Designer.FormEditor
 				this.DeleteSelection();
 			}
 
-			this.SetHilitedParent(null, GridSelection.Invalid, GridSelection.Invalid, 0, 0);
+			this.SetHilitedParent(null, PanelEditor.GridSelection.Invalid, PanelEditor.GridSelection.Invalid, 0, 0);
 			this.SetHilitedZOrderRectangle(Rectangle.Empty);
 			this.isDragging = false;
 			this.draggingArraySelected = null;
@@ -2065,7 +2065,7 @@ namespace Epsitec.Common.Designer.FormEditor
 				return false;
 			}
 
-			if (column == GridSelection.Invalid || row == GridSelection.Invalid)
+			if (column == PanelEditor.GridSelection.Invalid || row == PanelEditor.GridSelection.Invalid)
 			{
 				return false;
 			}
@@ -2387,10 +2387,10 @@ namespace Epsitec.Common.Designer.FormEditor
 			this.Invalidate();
 		}
 
-		protected void SetHilitedObject(Widget obj, GridSelection grid)
+		protected void SetHilitedObject(Widget obj, PanelEditor.GridSelection grid)
 		{
 			//	Détermine l'objet à mettre en évidence lors d'un survol.
-			if (this.hilitedObject != obj || !GridSelection.EqualValues(this.hilitedGrid, grid))
+			if (this.hilitedObject != obj || !PanelEditor.GridSelection.EqualValues(this.hilitedGrid, grid))
 			{
 				this.hilitedObject = obj;
 				this.hilitedGrid = grid;
@@ -3410,9 +3410,9 @@ namespace Epsitec.Common.Designer.FormEditor
 		protected void GridClearSelection(Widget exclude)
 		{
 			//	Supprime toutes les sélections de cellules/colonnes/lignes dans les tableaux, sauf une.
-			if (this.panel != exclude && GridSelection.Get(this.panel) != null)
+			if (this.panel != exclude && PanelEditor.GridSelection.Get(this.panel) != null)
 			{
-				GridSelection.Detach(this.panel);
+				PanelEditor.GridSelection.Detach(this.panel);
 				this.panel.Invalidate();
 				this.Invalidate();
 			}
@@ -3428,9 +3428,9 @@ namespace Epsitec.Common.Designer.FormEditor
 				{
 					if (PanelEditor.ObjectModifier.IsAbstractGroup(obj))
 					{
-						if (obj != exclude && GridSelection.Get(obj) != null)
+						if (obj != exclude && PanelEditor.GridSelection.Get(obj) != null)
 						{
-							GridSelection.Detach(obj);
+							PanelEditor.GridSelection.Detach(obj);
 							obj.Invalidate();
 							this.Invalidate();
 						}
@@ -3444,8 +3444,8 @@ namespace Epsitec.Common.Designer.FormEditor
 		protected void GridDetect(Point mouse, Widget parent, out int column, out int row)
 		{
 			//	Détecte la colonne et la ligne visée dans un tableau.
-			column = GridSelection.Invalid;
-			row = GridSelection.Invalid;
+			column = PanelEditor.GridSelection.Invalid;
+			row = PanelEditor.GridSelection.Invalid;
 
 			if (!this.objectModifier.AreChildrenGrid(parent))  return;
 
@@ -3867,7 +3867,7 @@ namespace Epsitec.Common.Designer.FormEditor
 				this.DrawGrid(graphics, obj, PanelsContext.ColorHiliteOutline, 1.0);
 			}
 
-			GridSelection gs = GridSelection.Get(obj);
+			PanelEditor.GridSelection gs = PanelEditor.GridSelection.Get(obj);
 			if (gs != null)
 			{
 				this.DrawGridSelected(graphics, obj, gs, PanelsContext.ColorGridCellOutline, true);
@@ -3921,7 +3921,7 @@ namespace Epsitec.Common.Designer.FormEditor
 			}
 		}
 
-		protected void DrawHilitedObject(Graphics graphics, Widget obj, GridSelection gs)
+		protected void DrawHilitedObject(Graphics graphics, Widget obj, PanelEditor.GridSelection gs)
 		{
 			//	Met en évidence l'objet survolé par la souris.
 			if (this.context.ShowAttachment)
@@ -4005,7 +4005,7 @@ namespace Epsitec.Common.Designer.FormEditor
 				this.DrawGrid(graphics, obj, PanelsContext.ColorHiliteOutline, 1.0);
 			}
 
-			if (column != GridSelection.Invalid && row != GridSelection.Invalid)
+			if (column != PanelEditor.GridSelection.Invalid && row != PanelEditor.GridSelection.Invalid)
 			{
 				Rectangle area = this.objectModifier.GetGridCellArea(obj, column, row, columnCount, rowCount);
 				this.DrawGridHilited(graphics, area, PanelsContext.ColorGridCellOutline);
@@ -4065,7 +4065,7 @@ namespace Epsitec.Common.Designer.FormEditor
 			graphics.RenderSolid(Misc.FactorColor(color, factor));
 		}
 
-		protected void DrawGridSelected(Graphics graphics, Widget obj, GridSelection gs, Color color, bool selection)
+		protected void DrawGridSelected(Graphics graphics, Widget obj, PanelEditor.GridSelection gs, Color color, bool selection)
 		{
 			//	Dessine une ou plusieurs cellules sélectionnées. Le dessin est optimisé
 			//	visuellement lorsqu'une ligne sélectionnée suit une colonne sélectionnée
@@ -4074,14 +4074,14 @@ namespace Epsitec.Common.Designer.FormEditor
 			int i=0;
 			while (i < gs.Count)
 			{
-				GridSelection.OneItem item1 = gs[i];
+				PanelEditor.GridSelection.OneItem item1 = gs[i];
 
 				if (i+1 < gs.Count)
 				{
-					GridSelection.OneItem item2 = gs[i+1];
+					PanelEditor.GridSelection.OneItem item2 = gs[i+1];
 
 					//	Colonne suivie d'une ligne formant une croix ?
-					if (item1.Unit == GridSelection.Unit.Column && item2.Unit == GridSelection.Unit.Row)
+					if (item1.Unit == PanelEditor.GridSelection.Unit.Column && item2.Unit == PanelEditor.GridSelection.Unit.Row)
 					{
 						Rectangle area1 = this.objectModifier.GetGridItemArea(obj, item1);
 						Rectangle area2 = this.objectModifier.GetGridItemArea(obj, item2);
@@ -4105,7 +4105,7 @@ namespace Epsitec.Common.Designer.FormEditor
 						{
 							Rectangle area1 = this.objectModifier.GetGridItemArea(obj, gs[j]);
 
-							if (item1.Unit == GridSelection.Unit.Column)
+							if (item1.Unit == PanelEditor.GridSelection.Unit.Column)
 							{
 								if (j > ii)
 								{
@@ -4135,7 +4135,7 @@ namespace Epsitec.Common.Designer.FormEditor
 						{
 							Rectangle area1 = this.objectModifier.GetGridItemArea(obj, gs[j]);
 
-							if (item1.Unit == GridSelection.Unit.Column)
+							if (item1.Unit == PanelEditor.GridSelection.Unit.Column)
 							{
 								if (j > ii)
 								{
@@ -4473,21 +4473,21 @@ namespace Epsitec.Common.Designer.FormEditor
 				else if (this.selectedObjects.Count == 1)
 				{
 					Widget obj = this.selectedObjects[0];
-					GridSelection gs = GridSelection.Get(obj);
+					PanelEditor.GridSelection gs = PanelEditor.GridSelection.Get(obj);
 					if (gs != null)
 					{
 						List<Widget> list = new List<Widget>();
 						foreach (Widget children in obj.Children)
 						{
 							int column = this.objectModifier.GetGridColumn(children);
-							if (gs.Search(GridSelection.Unit.Column, column) != -1)
+							if (gs.Search(PanelEditor.GridSelection.Unit.Column, column) != -1)
 							{
 								list.Add(children);
 								continue;
 							}
 
 							int row = this.objectModifier.GetGridRow(children);
-							if (gs.Search(GridSelection.Unit.Row, row) != -1)
+							if (gs.Search(PanelEditor.GridSelection.Unit.Row, row) != -1)
 							{
 								list.Add(children);
 								continue;
@@ -4516,14 +4516,14 @@ namespace Epsitec.Common.Designer.FormEditor
 					Widget parent = this.selectedObjects[0].Parent;
 					if (this.objectModifier.AreChildrenGrid(parent))
 					{
-						int c = GridSelection.Invalid;
-						int r = GridSelection.Invalid;
+						int c = PanelEditor.GridSelection.Invalid;
+						int r = PanelEditor.GridSelection.Invalid;
 						bool mc = false;
 						bool mr = false;
 						foreach (Widget children in this.selectedObjects)
 						{
 							int column = this.objectModifier.GetGridColumn(children);
-							if (c == GridSelection.Invalid)
+							if (c == PanelEditor.GridSelection.Invalid)
 							{
 								c = column;
 							}
@@ -4536,7 +4536,7 @@ namespace Epsitec.Common.Designer.FormEditor
 							}
 
 							int row = this.objectModifier.GetGridRow(children);
-							if (r == GridSelection.Invalid)
+							if (r == PanelEditor.GridSelection.Invalid)
 							{
 								r = row;
 							}
@@ -4549,28 +4549,28 @@ namespace Epsitec.Common.Designer.FormEditor
 							}
 						}
 
-						GridSelection gs = new GridSelection(parent);
+						PanelEditor.GridSelection gs = new PanelEditor.GridSelection(parent);
 						foreach (Widget children in this.selectedObjects)
 						{
 							if (mr || (!mc && !mr))
 							{
 								int column = this.objectModifier.GetGridColumn(children);
-								if (gs.Search(GridSelection.Unit.Column, column) == -1)
+								if (gs.Search(PanelEditor.GridSelection.Unit.Column, column) == -1)
 								{
-									gs.Add(GridSelection.Unit.Column, column);
+									gs.Add(PanelEditor.GridSelection.Unit.Column, column);
 								}
 							}
 							else if (mc)
 							{
 								int row = this.objectModifier.GetGridRow(children);
-								if (gs.Search(GridSelection.Unit.Row, row) == -1)
+								if (gs.Search(PanelEditor.GridSelection.Unit.Row, row) == -1)
 								{
-									gs.Add(GridSelection.Unit.Row, row);
+									gs.Add(PanelEditor.GridSelection.Unit.Row, row);
 								}
 							}
 						}
 						this.SelectOneObject(parent);
-						GridSelection.Attach(parent, gs);
+						PanelEditor.GridSelection.Attach(parent, gs);
 					}
 					else
 					{
@@ -4873,10 +4873,10 @@ namespace Epsitec.Common.Designer.FormEditor
 		protected Rectangle					hilitedAttachmentRectangle = Rectangle.Empty;
 		protected Rectangle					hilitedZOrderRectangle = Rectangle.Empty;
 		protected Widget					hilitedObject;
-		protected GridSelection				hilitedGrid;
+		protected PanelEditor.GridSelection				hilitedGrid;
 		protected Widget					hilitedParent;
-		protected int						hilitedParentColumn = GridSelection.Invalid;
-		protected int						hilitedParentRow = GridSelection.Invalid;
+		protected int						hilitedParentColumn = PanelEditor.GridSelection.Invalid;
+		protected int						hilitedParentRow = PanelEditor.GridSelection.Invalid;
 		protected int						hilitedParentColumnCount = 0;
 		protected int						hilitedParentRowCount = 0;
 		protected bool						isHilitedDimension;
@@ -4900,7 +4900,7 @@ namespace Epsitec.Common.Designer.FormEditor
 		protected bool						isGridding;
 		protected bool						isGriddingColumn;
 		protected bool						isGriddingRow;
-		protected GridSelection				griddingInitial;
+		protected PanelEditor.GridSelection				griddingInitial;
 		protected int						griddingColumn;
 		protected int						griddingRow;
 		protected Point						startingPos;

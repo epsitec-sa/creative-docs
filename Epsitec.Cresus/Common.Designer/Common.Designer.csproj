@@ -85,7 +85,7 @@
     <Compile Include="PanelEditor\Proxies\Content.cs" />
     <Compile Include="PanelEditor\Proxies\Aspect.cs" />
     <Compile Include="ResourceAccess.cs" />
-    <Compile Include="GridSelection.cs" />
+    <Compile Include="PanelEditor\GridSelection.cs" />
     <Compile Include="PanelEditor\GeometryCache.cs" />
     <Compile Include="MyWidgets\StringCollection.cs" />
     <Compile Include="MyWidgets\StackedPanel.cs" />
