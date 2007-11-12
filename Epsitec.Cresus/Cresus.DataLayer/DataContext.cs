@@ -69,68 +69,84 @@ namespace Epsitec.Cresus.DataLayer
 			}
 		}
 
+		/// <summary>
+		/// Serializes the entity to the in-memory data set. This will either
+		/// update or create data rows in one or several data tables.
+		/// </summary>
+		/// <param name="entity">The entity.</param>
 		public void SerializeEntity(AbstractEntity entity)
 		{
 			EntityDataMapping mapping = this.GetEntityDataMapping (entity);
-			Stack<Druid> parents = new Stack<Druid> ();
 			Druid entityId = entity.GetEntityStructuredTypeId ();
+			Druid id = entityId;
+			DbKey rowKey = mapping.RowKey;
+			bool createRow;
 
-			parents.Push (entityId);
-
-			for (Druid baseTypeId = this.entityContext.GetEntityBaseTypeId (entity); baseTypeId.IsValid; )
+			if (rowKey.IsEmpty)
 			{
-				StructuredType baseType = this.entityContext.GetStructuredType (baseTypeId) as StructuredType;
-
-				System.Diagnostics.Debug.Assert (baseType != null);
-				System.Diagnostics.Debug.Assert (baseType.CaptionId == baseTypeId);
-
-				parents.Push (baseTypeId);
-
-				baseTypeId = baseType.BaseTypeId;
+				rowKey = new DbKey (DbKey.CreateTemporaryId (), DbRowStatus.Live);
+				mapping.RowKey = rowKey;
+				createRow = true;
 			}
-
-			bool recordInstanceType = true;
-
-			while (parents.Count > 0)
+			else
 			{
-				Druid id = parents.Pop ();
+				createRow = false;
+			}
+			
+
+			while (id.IsValid)
+			{
+				StructuredType entityType = this.entityContext.GetStructuredType (id) as StructuredType;
+				Druid          baseTypeId = entityType.BaseTypeId;
+
+				System.Diagnostics.Debug.Assert (entityType != null);
+				System.Diagnostics.Debug.Assert (entityType.CaptionId == id);
 
 				//	Either create and fill a new row in the database for this entity
 				//	or use and update an existing row.
 
-				System.Data.DataRow dataRow;
-				DbKey rowKey = mapping[id];
-
-				if (rowKey.IsEmpty)
-				{
-					dataRow = this.CreateDataRow (mapping, id);
-				}
-				else
-				{
-					dataRow = this.FindDataRow (mapping, id);
-				}
-
+				System.Data.DataRow dataRow = createRow ? this.CreateDataRow (mapping, id) : this.FindDataRow (mapping, id);
+				
 				dataRow.BeginEdit ();
 
-				if (recordInstanceType)
+				//	If this is the root entity in the entity hierarchy (it has no base
+				//	type), then we will have to save the instance type identifying the
+				//	entity.
+				
+				if (baseTypeId.IsEmpty)
 				{
-					dataRow[Tags.ColumnInstanceType] = this.GetInstanceTypeValue (id);
-					recordInstanceType = false;
+					dataRow[Tags.ColumnInstanceType] = this.GetInstanceTypeValue (entityId);
 				}
 
 				this.SerializeEntityLocal (entity, dataRow, id);
+				
 				dataRow.EndEdit ();
+
+				id = baseTypeId;
 			}
 		}
 
+		/// <summary>
+		/// Serializes fields local to the specified entity into a given data
+		/// row.
+		/// </summary>
+		/// <param name="entity">The entity.</param>
+		/// <param name="dataRow">The data row.</param>
+		/// <param name="entityId">The entity id.</param>
 		private void SerializeEntityLocal(AbstractEntity entity, System.Data.DataRow dataRow, Druid entityId)
 		{
 			foreach (StructuredTypeField fieldDef in this.entityContext.GetEntityFieldDefinitions (entityId))
 			{
+				//	Only process fields which are defined locally, since inherited
+				//	fields do not belong into the same data table.
+
 				if (fieldDef.Membership == FieldMembership.Inherited)
 				{
 					continue;
 				}
+				
+				//	Depending on the relation (and therefore cardinality), write
+				//	the data into the row :
 				
 				switch (fieldDef.Relation)
 				{
@@ -147,19 +163,55 @@ namespace Epsitec.Cresus.DataLayer
 
 		private AbstractEntity DeserializeEntity(System.Data.DataRow dataRow)
 		{
+			DbKey entityKey = new DbKey (dataRow);
 			long typeValueId = (long) dataRow[Tags.ColumnInstanceType];
 			Druid entityId = Druid.FromLong (typeValueId);
 			AbstractEntity entity = this.entityContext.CreateEmptyEntity (entityId);
-			this.DeserializeEntity (entity, dataRow);
+
+			using (entity.DefineOriginalValues ())
+			{
+				this.DeserializeEntity (entity, entityId, entityKey, dataRow);
+			}
+			
 			return entity;
 		}
 
-		private void DeserializeEntity(AbstractEntity entity, System.Data.DataRow dataRow)
+		private void DeserializeEntity(AbstractEntity entity, Druid entityId, DbKey entityKey, System.Data.DataRow dataRow)
 		{
-			using (entity.DefineOriginalValues ())
+			EntityDataMapping mapping = this.GetEntityDataMapping (entity);
+			Druid id = entityId;
+
+			while (id.IsValid)
 			{
-				//	TODO: ...
-			}			
+				StructuredType entityType = this.entityContext.GetStructuredType (id) as StructuredType;
+				Druid baseTypeId = entityType.BaseTypeId;
+
+				System.Diagnostics.Debug.Assert (entityType != null);
+				System.Diagnostics.Debug.Assert (entityType.CaptionId == id);
+
+#if false
+				this.FindDataRow (mapping, 
+
+				DbKey rowKey  = mapping[id];
+				System.Data.DataRow dataRow = rowKey.IsEmpty ? this.CreateDataRow (mapping, id) : this.FindDataRow (mapping, id);
+
+				dataRow.BeginEdit ();
+
+				//	If this is the root entity in the entity hierarchy (it has no base
+				//	type), then we will have to save the instance type identifying the
+				//	entity.
+
+				if (baseTypeId.IsEmpty)
+				{
+					dataRow[Tags.ColumnInstanceType] = this.GetInstanceTypeValue (entityId);
+				}
+
+				this.SerializeEntityLocal (entity, dataRow, id);
+
+				dataRow.EndEdit ();
+#endif
+				id = baseTypeId;
+			}
 		}
 
 		private object GetInstanceTypeValue(Druid entityId)
@@ -196,21 +248,31 @@ namespace Epsitec.Cresus.DataLayer
 
 		private System.Data.DataRow FindDataRow(EntityDataMapping mapping, Druid entityId)
 		{
+			System.Diagnostics.Debug.Assert (mapping.EntityId.IsValid);
+			System.Diagnostics.Debug.Assert (mapping.RowKey.IsEmpty == false);
+			
 			string tableName = this.GetDataTableName (entityId);
-			return this.richCommand.FindRow (tableName, mapping[entityId].Id);
+			return this.richCommand.FindRow (tableName, mapping.RowKey.Id);
 		}
 
 		private System.Data.DataRow CreateDataRow(EntityDataMapping mapping, Druid entityId)
 		{
 			System.Diagnostics.Debug.Assert (mapping.EntityId.IsValid);
-			System.Diagnostics.Debug.Assert (mapping[entityId].IsEmpty);
+			System.Diagnostics.Debug.Assert (mapping.RowKey.IsTemporary);
+
+			DbKey rowKey = mapping.RowKey;
 
 			string tableName = this.GetDataTableName (entityId);
 			System.Data.DataRow row = this.richCommand.CreateRow (tableName);
-			mapping[entityId] = new DbKey (row);
+
+			row.BeginEdit ();
+			DbKey.SetRowId (row, rowKey.Id);
+			DbKey.SetRowStatus (row, rowKey.Status);
+			row.EndEdit ();
+			
 			return row;
 		}
-
+		
 		private string GetDataTableName(Druid entityId)
 		{
 			DbTable tableDef = this.schemaEngine.FindTableDefinition (entityId);

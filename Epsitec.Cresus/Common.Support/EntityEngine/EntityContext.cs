@@ -56,12 +56,6 @@ namespace Epsitec.Common.Support.EntityEngine
 			return new Data (type);
 		}
 
-		public Druid GetEntityBaseTypeId(AbstractEntity entity)
-		{
-			StructuredType entityType = this.GetStructuredType (entity) as StructuredType;
-			return (entityType != null) ? entityType.BaseTypeId : Druid.Empty;
-		}
-
 		public IEnumerable<string> GetEntityFieldIds(AbstractEntity entity)
 		{
 			if (entity == null)
