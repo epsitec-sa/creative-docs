@@ -160,11 +160,21 @@ namespace Epsitec.Common.Designer.Viewers
 			CultureMapSource source = this.access.GetCultureMapSource(item);
 			StructuredData data;
 
-			data = item.GetCultureData(this.GetTwoLetters(0));
-			this.primaryText.Text = data.GetValue(Support.Res.Fields.ResourceString.Text, out usesOriginalData) as string ?? Support.ResourceBundle.Field.Null;
-			this.ColorizeResetBox(this.groupPrimaryText, source, usesOriginalData);
-			this.primaryComment.Text = data.GetValue(Support.Res.Fields.ResourceBase.Comment, out usesOriginalData) as string ?? Support.ResourceBundle.Field.Null;
-			this.ColorizeResetBox(this.groupPrimaryComment, source, usesOriginalData);
+			if (item == null)
+			{
+				this.primaryText.Text = "";
+				this.primaryComment.Text = "";
+				this.groupPrimaryText.Enable = false;
+				this.groupPrimaryComment.Enable = false;
+			}
+			else
+			{
+				data = item.GetCultureData(this.GetTwoLetters(0));
+				this.primaryText.Text = data.GetValue(Support.Res.Fields.ResourceString.Text, out usesOriginalData) as string ?? Support.ResourceBundle.Field.Null;
+				this.ColorizeResetBox(this.groupPrimaryText, source, usesOriginalData);
+				this.primaryComment.Text = data.GetValue(Support.Res.Fields.ResourceBase.Comment, out usesOriginalData) as string ?? Support.ResourceBundle.Field.Null;
+				this.ColorizeResetBox(this.groupPrimaryComment, source, usesOriginalData);
+			}
 
 			if (this.GetTwoLetters(1) == null || this.designerApplication.IsReadonly)
 			{
