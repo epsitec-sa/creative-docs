@@ -180,8 +180,7 @@ namespace Epsitec.Common.Designer
 					return many ? Res.Strings.BundleType.Entities : Res.Strings.BundleType.Entity;
 
 				case Type.Forms:
-					//?return many ? Res.Strings.BundleType.Entities : Res.Strings.BundleType.Entity;
-					return many ? "Masques" : "Masque";
+					return many ? Res.Strings.BundleType.Forms : Res.Strings.BundleType.Form;
 			}
 
 			return "?";

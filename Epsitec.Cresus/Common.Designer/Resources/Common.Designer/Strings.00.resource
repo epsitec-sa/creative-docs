@@ -473,4 +473,6 @@
   <data name="Viewers.Types.Boolean.Default" id="2I4">Etat par défaut</data>
   <data name="Viewers.Types.Boolean.True" id="2J4">Vrai</data>
   <data name="Viewers.Types.Boolean.False" id="2K4">Faux</data>
+  <data name="BundleType.Form" id="2L4">Masque</data>
+  <data name="BundleType.Forms" id="2M4">Masques</data>
 </bundle>
