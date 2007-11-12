@@ -97,6 +97,8 @@ namespace Epsitec.Cresus.DataLayer
 			Assert.AreEqual (1, context.RichCommand.DataSet.Tables.Count);
 
 			DumpDataSet (context.RichCommand.DataSet);
+
+			context.Dispose ();
 		}
 
 		[Test]
@@ -121,12 +123,9 @@ namespace Epsitec.Cresus.DataLayer
 
 			System.Diagnostics.Debug.WriteLine ("Adding articles");
 
-			foreach (KeyValuePair<string, string> item in SchemaEngineTest.GetItems ())
+			foreach (AbstractEntity item in this.GetItems (context.EntityContext))
 			{
-				entity = context.EntityContext.CreateEntity (this.articleEntityId);
-				entity.SetField<string> ("[63091]", null, item.Key);
-				entity.SetField<string> ("[630A1]", null, item.Value);
-				context.SerializeEntity (entity);
+				context.SerializeEntity (item);
 				count++;
 			}
 
@@ -136,9 +135,11 @@ namespace Epsitec.Cresus.DataLayer
 
 			System.Diagnostics.Debug.WriteLine ("Saved " + count + " entities");
 			System.Diagnostics.Debug.WriteLine ("------------------------------------------------");
+
+			context.Dispose ();
 		}
 
-		private static IEnumerable<KeyValuePair<string, string>> GetItems()
+		private IEnumerable<AbstractEntity> GetItems(EntityContext context)
 		{
 			string[] materials = new string[] { "Inox", "Cuivre", "Galvanisé", "Teflon", "POM", "Acier" };
 			string[] categories = new string[] { "Vis", "Ecrou", "Rondelle", "Boulon" };
@@ -156,7 +157,14 @@ namespace Epsitec.Cresus.DataLayer
 							string itemKey = string.Concat (cat.Substring (0, 1), mat.Substring (0, 1), "-", size, "-", len.Substring (0, 2));
 							string itemValue = string.Concat (cat, " ", size, " ", len, ", ", mat);
 
-							yield return new KeyValuePair<string, string> (itemKey, itemValue);
+							AbstractEntity entity = context.CreateEntity (this.articleEntityId);
+
+							entity.SetField<string> ("[63091]", null, itemKey);
+							entity.SetField<string> ("[630A1]", null, itemValue);
+//							entity.SetField<int> ("[6311]", 0, int.Parse (len.Substring (0, 2)));
+//							entity.SetField<string> ("[6312]", null, size);
+
+							yield return entity;
 						}
 					}
 				}

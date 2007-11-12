@@ -18,7 +18,6 @@ namespace Epsitec.Cresus.DataLayer.Helpers
 		public EntityDataMapping(AbstractEntity entity)
 		{
 			this.entity = entity;
-			this.rowKey = new DbKey ();
 		}
 
 		public AbstractEntity Entity
@@ -38,26 +37,45 @@ namespace Epsitec.Cresus.DataLayer.Helpers
 		}
 
 
-		public DbKey RowKey
+		public DbKey this[Druid entityId]
 		{
 			get
 			{
-				return this.rowKey;
-			}
-			set
-			{
-				if (this.rowKey.IsEmpty)
+				if (this.parentRowKeys == null)
 				{
-					this.rowKey = value;
+					return DbKey.Empty;
 				}
 				else
 				{
-					throw new System.InvalidOperationException ("RowKey cannot be modified");
+					DbKey value;
+					
+					if (this.parentRowKeys.TryGetValue (entityId, out value))
+					{
+						return value;
+					}
+					else
+					{
+						return DbKey.Empty;
+					}
 				}
+			}
+			set
+			{
+				if (this.parentRowKeys == null)
+				{
+					this.parentRowKeys = new Dictionary<Druid, DbKey> ();
+				}
+
+				if (this.parentRowKeys.ContainsKey (entityId))
+				{
+					throw new System.InvalidOperationException ("RowKeys cannot be modified");
+				}
+
+				this.parentRowKeys[entityId] = value;
 			}
 		}
 
 		private readonly AbstractEntity entity;
-		private DbKey rowKey;
+		private Dictionary<Druid, DbKey> parentRowKeys;
 	}
 }
