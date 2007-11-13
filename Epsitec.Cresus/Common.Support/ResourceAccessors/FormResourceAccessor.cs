@@ -6,40 +6,36 @@ using System.Collections.Generic;
 
 namespace Epsitec.Common.Support.ResourceAccessors
 {
-	using CultureInfo = System.Globalization.CultureInfo;
+	using CultureInfo=System.Globalization.CultureInfo;
 
-	public class PanelResourceAccessor : AbstractFileResourceAccessor
+	public class FormResourceAccessor : AbstractFileResourceAccessor
 	{
-		public PanelResourceAccessor()
+		public FormResourceAccessor()
 		{
 		}
 
 		protected override string GetResourceFileType()
 		{
-			return Strings.PanelType;
+			return Strings.FormType;
 		}
 
 		protected override IStructuredType GetResourceType()
 		{
-			return Res.Types.ResourcePanel;
+			return Res.Types.ResourceForm;
 		}
 
 		protected override void FillDataFromBundle(StructuredData data, ResourceBundle bundle)
 		{
 			ResourceBundle.Field panelSourceField = bundle[Strings.XmlSource];
-			ResourceBundle.Field panelSizeField   = bundle[Strings.DefaultSize];
 
 			string panelSource = panelSourceField.IsValid ? panelSourceField.AsString : null;
-			string panelSize   = panelSizeField.IsValid   ? panelSizeField.AsString   : null;
 
-			data.SetValue (Res.Fields.ResourcePanel.XmlSource, panelSource);
-			data.SetValue (Res.Fields.ResourcePanel.DefaultSize, panelSize);
+			data.SetValue (Res.Fields.ResourceForm.XmlSource, panelSource);
 		}
 
 		protected override void FillData(StructuredData data)
 		{
-			data.SetValue (Res.Fields.ResourcePanel.DefaultSize, "");
-			data.SetValue (Res.Fields.ResourcePanel.XmlSource, "");
+			data.SetValue (Res.Fields.ResourceForm.XmlSource, "");
 		}
 
 		protected override void SetupBundleFields(ResourceBundle bundle)
@@ -49,26 +45,19 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			field = bundle.CreateField (ResourceFieldType.Data);
 			field.SetName (Strings.XmlSource);
 			bundle.Add (field);
-
-			field = bundle.CreateField (ResourceFieldType.Data);
-			field.SetName (Strings.DefaultSize);
-			bundle.Add (field);
 		}
 
 		protected override void SetBundleFields(ResourceBundle bundle, StructuredData data)
 		{
-			string xmlSource   = data.GetValue (Res.Fields.ResourcePanel.XmlSource) as string;
-			string defaultSize = data.GetValue (Res.Fields.ResourcePanel.DefaultSize) as string;
-			
+			string xmlSource   = data.GetValue (Res.Fields.ResourceForm.XmlSource) as string;
+
 			bundle[Strings.XmlSource].SetXmlValue (xmlSource);
-			bundle[Strings.DefaultSize].SetStringValue (defaultSize);
 		}
 
 		private static class Strings
 		{
-			public const string PanelType = "Panel";
-			public const string XmlSource = "Panel";
-			public const string DefaultSize = "DefaultSize";
+			public const string FormType = "Form";
+			public const string XmlSource = "Source";
 		}
 	}
 }

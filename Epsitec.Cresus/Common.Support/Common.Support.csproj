@@ -150,6 +150,8 @@
     <Compile Include="EntityEngine\EntityResolver.cs" />
     <Compile Include="EntityEngine\GenericEntity.cs" />
     <Compile Include="Platform\Win32\Clipboard.cs" />
+    <Compile Include="ResourceAccessors\AbstractFileResourceAccessor.cs" />
+    <Compile Include="ResourceAccessors\FormResourceAccessor.cs" />
     <Compile Include="ResourceBundleBatchSaver.cs" />
     <Compile Include="CultureMapSource.cs" />
     <Compile Include="EntityEngine\AbstractEntity.cs" />
