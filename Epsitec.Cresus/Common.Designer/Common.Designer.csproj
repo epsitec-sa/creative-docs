@@ -165,6 +165,10 @@
       <Project>{35FFBEF6-6A7D-4FEA-A4C6-AAB784FA709B}</Project>
       <Name>Common.Drawing</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Common.FormEngine\Common.FormEngine.csproj">
+      <Project>{29CBCF29-AA80-43BC-81C7-698DE2A4D88A}</Project>
+      <Name>Common.FormEngine</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Common.Identity\Common.Identity.csproj">
       <Project>{3B21F4C6-9461-4751-9B23-9A9006743D68}</Project>
       <Name>Common.Identity</Name>

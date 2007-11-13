@@ -18,7 +18,7 @@ namespace Epsitec.Common.FormEngine
 			this.resourceManager = resourceManager;
 		}
 
-		public Widget CreateForm(Druid entityId, List<FieldDescription> fields)
+		public UI.Panel CreateForm(Druid entityId, List<FieldDescription> fields)
 		{
 			//	Crée un masque de saisie pour une entité donnée.
 			//	La liste de FieldDescription doit être plate (pas de Node).

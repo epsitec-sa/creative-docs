@@ -1567,6 +1567,7 @@ namespace Epsitec.Common.Designer
 		}
 
 
+		#region Panel
 		public void SetPanel(Druid druid, UI.Panel panel)
 		{
 			//	Sérialise le UI.Panel dans les ressources.
@@ -1642,6 +1643,39 @@ namespace Epsitec.Common.Designer
 			panel.Padding = new Margins(20, 20, 20, 20);
 			panel.DrawDesignerFrame = true;
 		}
+		#endregion
+
+
+		#region Form
+		public void SetForm(Druid druid, List<FormEngine.FieldDescription> form)
+		{
+			//	Sérialise le masque de saisie dans les ressources.
+			if (druid.IsValid)
+			{
+			}
+		}
+
+		public List<FormEngine.FieldDescription> GetForm(Druid druid)
+		{
+			//	Retourne le masque de saisie associé à une ressource.
+			return this.GetForm(this.accessor.Collection[druid]);
+		}
+
+		public List<FormEngine.FieldDescription> GetForm(int index)
+		{
+			return this.GetForm(this.accessor.Collection[index]);
+		}
+		
+		private List<FormEngine.FieldDescription> GetForm(CultureMap item)
+		{
+			if (item == null)
+			{
+				return null;
+			}
+
+			return null;
+		}
+		#endregion
 
 
 		protected string GetBundleName()
