@@ -331,7 +331,7 @@ namespace Epsitec.Common.FormEngine
 
 		public override bool Equals(object obj)
 		{
-			return (obj is FieldDescription) && (this == (FieldDescription) obj);
+			return (obj is FieldDescription) && (FieldDescription.Compare(this, (FieldDescription) obj));
 		}
 
 		public override int GetHashCode()
@@ -339,19 +339,19 @@ namespace Epsitec.Common.FormEngine
 			return base.GetHashCode();
 		}
 		
-		public static bool operator==(FieldDescription a, FieldDescription b)
-		{
-			return FieldDescription.Compare(a, b);
-		}
-
-		public static bool operator!=(FieldDescription a, FieldDescription b)
-		{
-			return !FieldDescription.Compare(a, b);
-		}
-
 		protected static bool Compare(FieldDescription a, FieldDescription b)
 		{
 			//	Retourne true si les deux objets sont égaux.
+			if ((a == null) != (b == null))
+			{
+				return false;
+			}
+
+			if (a == null && b == null)
+			{
+				return true;
+			}
+
 			if (!a.guid.Equals(b.guid) ||
 				a.type != b.type ||
 				!a.backColor.Equals(b.backColor) ||

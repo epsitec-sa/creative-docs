@@ -1313,7 +1313,7 @@ namespace Epsitec.Common.Designer
 				}
 			}
 
-			if (this.type == Type.Panels)
+			if (this.type == Type.Panels || this.type == Type.Forms)
 			{
 				cultureName = null;
 
@@ -1477,7 +1477,7 @@ namespace Epsitec.Common.Designer
 
 		private void CreateEmptyBundle()
 		{
-			if (this.type != Type.Panels)
+			if (this.type != Type.Panels && this.type != Type.Forms)
 			{
 				System.Globalization.CultureInfo culture = Resources.FindCultureInfo(Misc.Cultures[0]);
 				
@@ -1492,7 +1492,7 @@ namespace Epsitec.Common.Designer
 		{
 			System.Globalization.CultureInfo culture = Resources.FindCultureInfo(Misc.Cultures[0]);
 
-			if (this.type == Type.Panels)
+			if (this.type == Type.Panels || this.type == Type.Forms)
 			{
 				this.primaryCulture = culture;
 			}
@@ -1679,22 +1679,18 @@ namespace Epsitec.Common.Designer
 		
 		private FormEngine.FormDescription GetForm(CultureMap item)
 		{
-			if (item == null)
+			if (item != null)
 			{
-				return null;
+				StructuredData data = item.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
+				string xml = data.GetValue(Support.Res.Fields.ResourceForm.XmlSource) as string;
+
+				if (!string.IsNullOrEmpty(xml))
+				{
+					return FormEngine.Serialisation.DeserializeForm(xml, this.resourceManager);
+				}
 			}
 
-			StructuredData data = item.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
-			string xml = data.GetValue(Support.Res.Fields.ResourceForm.XmlSource) as string;
-
-			if (string.IsNullOrEmpty(xml))
-			{
-				return null;
-			}
-			else
-			{
-				return FormEngine.Serialisation.DeserializeForm(xml, this.resourceManager);
-			}
+			return null;
 		}
 		#endregion
 
@@ -1713,10 +1709,10 @@ namespace Epsitec.Common.Designer
 				case Type.Fields:
 				case Type.Types:
 				case Type.Values:
-				case Type.Forms:
 					return "Captions";
 
 				case Type.Panels:
+				case Type.Forms:
 					return null;
 
 				default:
@@ -1738,11 +1734,13 @@ namespace Epsitec.Common.Designer
 				case Type.Fields:
 				case Type.Types:
 				case Type.Values:
-				case Type.Forms:
 					return "Caption";
 
 				case Type.Panels:
 					return "Panel";
+				
+				case Type.Forms:
+					return "Form";
 				
 				default:
 					throw new System.NotImplementedException();

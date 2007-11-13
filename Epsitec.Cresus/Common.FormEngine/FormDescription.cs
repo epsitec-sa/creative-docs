@@ -45,7 +45,7 @@ namespace Epsitec.Common.FormEngine
 
 		public override bool Equals(object obj)
 		{
-			return (obj is FormDescription) && (this == (FormDescription) obj);
+			return (obj is FormDescription) && (FormDescription.Compare(this, (FormDescription) obj));
 		}
 
 		public override int GetHashCode()
@@ -53,19 +53,19 @@ namespace Epsitec.Common.FormEngine
 			return base.GetHashCode();
 		}
 		
-		public static bool operator==(FormDescription a, FormDescription b)
-		{
-			return FormDescription.Compare(a, b);
-		}
-
-		public static bool operator!=(FormDescription a, FormDescription b)
-		{
-			return !FormDescription.Compare(a, b);
-		}
-
 		protected static bool Compare(FormDescription a, FormDescription b)
 		{
 			//	Retourne true si les deux objets sont égaux.
+			if ((a == null) != (b == null))
+			{
+				return false;
+			}
+
+			if (a == null && b == null)
+			{
+				return true;
+			}
+
 			if (a.entityId != b.entityId)
 			{
 				return false;
