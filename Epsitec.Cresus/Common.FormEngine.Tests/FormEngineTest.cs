@@ -59,6 +59,19 @@ namespace Epsitec.Common.FormEngine
 			this.CreateWindow("Tree");
 		}
 
+		[Test]
+		public void CheckSerialisation()
+		{
+			Form form = this.GetForm("Adresse");
+			string data = form.Serialize();
+
+			Form copy = new Form();
+			copy.Deserialize(data);
+
+			bool eq = form.Compare(copy);
+			Assert.IsTrue(eq);
+		}
+
 
 		protected void CreateWindow(string name)
 		{
@@ -99,6 +112,21 @@ namespace Epsitec.Common.FormEngine
 		}
 
 		protected Widget CreateForm(string name)
+		{
+			Form form = this.GetForm(name);
+
+			if (form == null)
+			{
+				return null;
+			}
+			else
+			{
+				FormEngine engine = new FormEngine(this.manager);
+				return engine.CreateForm(form);
+			}
+		}
+
+		protected Form GetForm(string name)
 		{
 			Druid entityId = Druid.Empty;
 			List<FieldDescription> fields = new List<FieldDescription>();
@@ -223,8 +251,7 @@ namespace Epsitec.Common.FormEngine
 					form.Fields.Add(field);
 				}
 
-				FormEngine engine = new FormEngine(this.manager);
-				return engine.CreateForm(form);
+				return form;
 			}
 			else
 			{

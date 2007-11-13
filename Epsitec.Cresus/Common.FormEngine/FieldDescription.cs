@@ -315,6 +315,17 @@ namespace Epsitec.Common.FormEngine
 		}
 
 
+		public bool Compare(FieldDescription field)
+		{
+			return (field.type == this.type &&
+					field.backColor == this.backColor &&
+					field.separator == this.separator &&
+					field.columnsRequired == this.columnsRequired &&
+					field.rowsRequired == this.rowsRequired);
+			//	TODO: finir...
+		}
+
+
 		public void CopyTo(FieldDescription dst)
 		{
 			//	Copie la description courante vers une destination quelconque.

@@ -40,6 +40,31 @@ namespace Epsitec.Common.FormEngine
 			}
 		}
 
+		public bool Compare(Form form)
+		{
+			if (this.entityId != form.entityId)
+			{
+				return false;
+			}
+
+			if (this.fields.Count != form.fields.Count)
+			{
+				return false;
+			}
+
+			for (int i=0; i<this.fields.Count; i++)
+			{
+				FieldDescription f1 = this.fields[i];
+				FieldDescription f2 = form.fields[i];
+				if (!f1.Compare(f2))
+				{
+					return false;
+				}
+			}
+
+			return true;
+		}
+
 
 		#region Serialization
 		public string Serialize()
@@ -89,6 +114,46 @@ namespace Epsitec.Common.FormEngine
 			//	Désérialise tout le masque.
 			this.fields.Clear();
 
+			reader.Read();
+
+			while (true)
+			{
+				if (reader.NodeType == XmlNodeType.Element)
+				{
+					string name = reader.LocalName;
+
+					if (name == Xml.FieldDescription)
+					{
+						FieldDescription field = new FieldDescription(FieldDescription.FieldType.Field);
+						field.ReadXml(reader);
+						this.fields.Add(field);
+					}
+					else
+					{
+						string element = reader.ReadElementString();
+
+						if (name == Xml.EntityId)
+						{
+							this.entityId = Druid.Parse(element);
+						}
+						else
+						{
+							throw new System.NotSupportedException(string.Format("Unexpected XML node {0} found in FieldDescription", name));
+						}
+					}
+				}
+				else if (reader.NodeType == XmlNodeType.EndElement)
+				{
+					System.Diagnostics.Debug.Assert(reader.Name == Xml.Form);
+					break;
+				}
+				else
+				{
+					reader.Read();
+				}
+			}
+			
+#if false
 			while (reader.ReadToFollowing(Xml.FieldDescription))
 			{
 				FieldDescription field = new FieldDescription(FieldDescription.FieldType.Field);
@@ -97,6 +162,7 @@ namespace Epsitec.Common.FormEngine
 			}
 
 			// TODO: désérialiser this.entityId !
+#endif
 		}
 		#endregion
 
