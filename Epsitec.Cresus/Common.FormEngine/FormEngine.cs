@@ -18,7 +18,7 @@ namespace Epsitec.Common.FormEngine
 			this.resourceManager = resourceManager;
 		}
 
-		public UI.Panel CreateForm(Form form)
+		public UI.Panel CreateForm(FormDescription form)
 		{
 			//	Crée un masque de saisie pour une entité donnée.
 			//	La liste de FieldDescription doit être plate (pas de Node).

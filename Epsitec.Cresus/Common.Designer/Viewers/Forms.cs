@@ -331,7 +331,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 			if (Forms.softSerialize == null)
 			{
-				Form form = this.access.GetForm(this.druidToSerialize);
+				FormDescription form = this.access.GetForm(this.druidToSerialize);
 				this.SetForm(form, this.druidToSerialize);
 			}
 			else
@@ -345,7 +345,7 @@ namespace Epsitec.Common.Designer.Viewers
 					this.module.AccessPanels.ClearLocalDirty();
 				}
 
-				Form form = this.XmlToForm(Forms.softSerialize);
+				FormDescription form = this.XmlToForm(Forms.softSerialize);
 				this.SetForm(form, this.druidToSerialize);
 
 				Forms.softDirtySerialization = false;
@@ -353,25 +353,25 @@ namespace Epsitec.Common.Designer.Viewers
 			}
 		}
 
-		protected string FormToXml(Form form)
+		protected string FormToXml(FormDescription form)
 		{
 			//	form -> xml.
 			return FormEngine.Serialisation.SerializeForm(form);
 		}
 
-		protected Form XmlToForm(string xml)
+		protected FormDescription XmlToForm(string xml)
 		{
 			//	xml -> form.
 			return FormEngine.Serialisation.DeserializeForm(xml, this.module.ResourceManager);
 		}
 
-		protected Form GetForm()
+		protected FormDescription GetForm()
 		{
 			//	Retourne le masque de saisie en cours d'édition.
 			return this.form;
 		}
 
-		protected void SetForm(Form form, Druid druid)
+		protected void SetForm(FormDescription form, Druid druid)
 		{
 			//	Spécifie le masque de saisie en cours d'édition.
 			this.form = form;
@@ -602,7 +602,7 @@ namespace Epsitec.Common.Designer.Viewers
 		protected Scrollable					drawingScrollable;
 		protected FrameBox						panelContainerParent;
 		protected UI.Panel						panelContainer;
-		protected Form							form;
+		protected FormDescription							form;
 		protected FormEditor.Editor				formEditor;
 		protected FrameBox						right;
 		protected TabBook						tabBook;

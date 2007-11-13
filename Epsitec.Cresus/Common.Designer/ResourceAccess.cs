@@ -1647,7 +1647,7 @@ namespace Epsitec.Common.Designer
 
 
 		#region Form
-		public void SetForm(Druid druid, FormEngine.Form form)
+		public void SetForm(Druid druid, FormEngine.FormDescription form)
 		{
 			//	Sérialise le masque de saisie dans les ressources.
 			if (druid.IsValid)
@@ -1655,18 +1655,18 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
-		public FormEngine.Form GetForm(Druid druid)
+		public FormEngine.FormDescription GetForm(Druid druid)
 		{
 			//	Retourne le masque de saisie associé à une ressource.
 			return this.GetForm(this.accessor.Collection[druid]);
 		}
 
-		public FormEngine.Form GetForm(int index)
+		public FormEngine.FormDescription GetForm(int index)
 		{
 			return this.GetForm(this.accessor.Collection[index]);
 		}
 		
-		private FormEngine.Form GetForm(CultureMap item)
+		private FormEngine.FormDescription GetForm(CultureMap item)
 		{
 			if (item == null)
 			{

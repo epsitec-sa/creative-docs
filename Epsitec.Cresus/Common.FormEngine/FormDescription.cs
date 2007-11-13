@@ -12,9 +12,9 @@ namespace Epsitec.Common.FormEngine
 	/// <summary>
 	/// Description d'un formulaire.
 	/// </summary>
-	public class Form
+	public class FormDescription
 	{
-		public Form()
+		public FormDescription()
 		{
 			this.entityId = Druid.Empty;
 			this.fields = new List<FieldDescription>();
@@ -40,7 +40,7 @@ namespace Epsitec.Common.FormEngine
 			}
 		}
 
-		public bool Compare(Form form)
+		public bool Compare(FormDescription form)
 		{
 			if (this.entityId != form.entityId)
 			{

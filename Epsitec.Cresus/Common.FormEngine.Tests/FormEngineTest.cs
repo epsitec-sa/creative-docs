@@ -62,10 +62,10 @@ namespace Epsitec.Common.FormEngine
 		[Test]
 		public void CheckSerialisation()
 		{
-			Form form = this.GetForm("Tree");
+			FormDescription form = this.GetForm("Tree");
 			string data = form.Serialize();
 
-			Form copy = new Form();
+			FormDescription copy = new FormDescription();
 			copy.Deserialize(data);
 
 			bool eq = form.Compare(copy);
@@ -113,7 +113,7 @@ namespace Epsitec.Common.FormEngine
 
 		protected Widget CreateForm(string name)
 		{
-			Form form = this.GetForm(name);
+			FormDescription form = this.GetForm(name);
 
 			if (form == null)
 			{
@@ -126,7 +126,7 @@ namespace Epsitec.Common.FormEngine
 			}
 		}
 
-		protected Form GetForm(string name)
+		protected FormDescription GetForm(string name)
 		{
 			Druid entityId = Druid.Empty;
 			List<FieldDescription> fields = new List<FieldDescription>();
@@ -243,7 +243,7 @@ namespace Epsitec.Common.FormEngine
 			string err = Arrange.Check(flat);
 			if (err == null)
 			{
-				Form form = new Form();
+				FormDescription form = new FormDescription();
 				form.EntityId = entityId;
 
 				foreach (FieldDescription field in flat)
