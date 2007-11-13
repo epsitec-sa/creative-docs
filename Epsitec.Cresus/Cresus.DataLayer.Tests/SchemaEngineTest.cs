@@ -190,6 +190,49 @@ namespace Epsitec.Cresus.DataLayer
 			context.Dispose ();
 		}
 
+		[Test]
+		public void Check13LoadEntitySingle()
+		{
+			DataContext context = new DataContext (this.infrastructure);
+
+			System.Diagnostics.Debug.WriteLine ("Check13LoadEntitySingle");
+			System.Diagnostics.Debug.WriteLine ("------------------------------------------------");
+
+			DbTable table1 = context.SchemaEngine.FindTableDefinition (this.articleEntityId);
+			DbTable table2 = context.SchemaEngine.FindTableDefinition (this.articleVisserieEntityId);
+			DbSelectCondition condition1 = new DbSelectCondition (this.infrastructure.Converter, DbSelectRevision.LiveActive);
+			DbSelectCondition condition2 = new DbSelectCondition (this.infrastructure.Converter, DbSelectRevision.LiveActive);
+			condition1.AddCondition (table1.Columns[Tags.ColumnId], DbCompare.Equal, 1000000000002L);
+			condition2.AddCondition (table2.Columns[Tags.ColumnId], DbCompare.Equal, 1000000000002L);
+
+			System.Diagnostics.Debug.WriteLine ("Loading data from database");
+
+			using (DbTransaction transaction = this.infrastructure.BeginTransaction (DbTransactionMode.ReadOnly))
+			{
+				context.RichCommand.ImportTable (transaction, table1, condition1);
+				context.RichCommand.ImportTable (transaction, table2, condition2);
+				transaction.Commit ();
+			}
+
+			System.Diagnostics.Debug.WriteLine ("Done.");
+
+			DbKey key1 = new DbKey (new DbId (1000000000001L));
+			DbKey key2 = new DbKey (new DbId (1000000000002L));
+
+			//AbstractEntity entity1 = context.DeserializeEntity (key1, this.articleEntityId);
+			AbstractEntity entity2 = context.DeserializeEntity (key2, this.articleEntityId);
+
+			System.Diagnostics.Debug.WriteLine ("------------------------------------------------");
+
+			//Assert.IsNull (entity1);
+			
+			Assert.AreEqual (this.articleVisserieEntityId, entity2.GetEntityStructuredTypeId ());
+			Assert.AreEqual ("VI-M3-10", entity2.GetField<string> ("[63091]"));
+			Assert.AreEqual ("M3", entity2.GetField<string> ("[6312]"));
+
+			context.Dispose ();
+		}
+
 		private IEnumerable<AbstractEntity> GetItems(EntityContext context)
 		{
 			string[] materials = new string[] { "Inox", "Cuivre", "Galvanisé", "Teflon", "POM", "Acier" };
