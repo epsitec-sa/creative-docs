@@ -154,6 +154,16 @@ namespace Epsitec.Cresus.DataLayer
 		{
 			DataContext context = new DataContext (this.infrastructure);
 
+			DbTable table = context.SchemaEngine.FindTableDefinition (this.articleEntityId);
+			DbSelectCondition condition = new DbSelectCondition (this.infrastructure.Converter, DbSelectRevision.LiveActive);
+
+			using (DbTransaction transaction = this.infrastructure.BeginTransaction (DbTransactionMode.ReadOnly))
+			{
+				context.RichCommand.ImportTable (transaction, table, condition);
+				transaction.Commit ();
+			}
+			
+
 			DbKey key1 = new DbKey (new DbId (1000000000001L));
 			DbKey key2 = new DbKey (new DbId (1000000000002L));
 

@@ -194,7 +194,7 @@ namespace Epsitec.Cresus.DataLayer
 
 			using (entity.DefineOriginalValues ())
 			{
-				this.DeserializeEntity (entity, entityId, rowKey);
+				this.DeserializeEntity (entity, realEntityId, rowKey);
 			}
 			
 			return entity;
@@ -206,6 +206,8 @@ namespace Epsitec.Cresus.DataLayer
 
 			System.Diagnostics.Debug.Assert (mapping.EntityId == entityId);
 			System.Diagnostics.Debug.Assert (mapping.RowKey.IsEmpty);
+
+			mapping.RowKey = entityKey;
 
 			Druid id = entityId;
 
