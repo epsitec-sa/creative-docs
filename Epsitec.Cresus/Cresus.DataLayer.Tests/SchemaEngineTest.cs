@@ -238,11 +238,11 @@ namespace Epsitec.Cresus.DataLayer
 		}
 
 		[Test]
-		public void Check14LoadEntitySingle()
+		public void Check14LoadAndUpdateEntitySingle()
 		{
 			DataContext context = new DataContext (this.infrastructure);
 
-			System.Diagnostics.Debug.WriteLine ("Check14LoadEntitySingle");
+			System.Diagnostics.Debug.WriteLine ("Check14LoadAndUpdateEntitySingle");
 			System.Diagnostics.Debug.WriteLine ("------------------------------------------------");
 
 			System.Diagnostics.Debug.WriteLine ("Implicit loading of entities");
@@ -255,8 +255,6 @@ namespace Epsitec.Cresus.DataLayer
 
 			System.Diagnostics.Debug.WriteLine ("Done.");
 
-			System.Diagnostics.Debug.WriteLine ("------------------------------------------------");
-
 			Assert.AreEqual (this.articleEntityId, entity1.GetEntityStructuredTypeId ());
 			Assert.AreEqual ("VI-M3-10", entity1.GetField<string> ("[63091]"));
 
@@ -264,6 +262,17 @@ namespace Epsitec.Cresus.DataLayer
 			Assert.AreEqual ("VI-M3-10", entity2.GetField<string> ("[63091]"));
 			Assert.AreEqual ("M3", entity2.GetField<string> ("[6312]"));
 
+			entity1.SetField<string> ("[630A1]", "Vis M3 10mm Inox", "Vis M3 10mm (acier inox)");
+			entity2.SetField<string> ("[630A1]", "Vis M3 10mm Inox", "Vis M3 10mm (acier inox)");
+			entity2.SetField<string> ("[6312]", "M3", "M3.0");
+
+			System.Diagnostics.Debug.WriteLine ("Saving");
+
+			context.SaveChanges ();
+
+			System.Diagnostics.Debug.WriteLine ("Done.");
+			System.Diagnostics.Debug.WriteLine ("------------------------------------------------");
+			
 			context.Dispose ();
 		}
 
