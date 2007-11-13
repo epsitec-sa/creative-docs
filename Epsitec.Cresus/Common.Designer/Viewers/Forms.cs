@@ -510,21 +510,21 @@ namespace Epsitec.Common.Designer.Viewers
 		{
 			//	Crée les proxies et l'interface utilisateur pour les widgets sélectionnés.
 			this.ClearProxies();
-			this.proxyManager.SetSelection(widgets);
-			this.proxyManager.CreateUserInterface(this.propertiesScrollable.Panel);
+			//?this.proxyManager.SetSelection(widgets);
+			//?this.proxyManager.CreateUserInterface(this.propertiesScrollable.Panel);
 		}
 
 		protected void ClearProxies()
 		{
 			//	Supprime l'interface utilisateur pour les widgets sélectionnés.
-			this.proxyManager.ClearUserInterface(this.propertiesScrollable.Panel);
+			//?this.proxyManager.ClearUserInterface(this.propertiesScrollable.Panel);
 		}
 
 		protected void UpdateProxies()
 		{
 			//	Met à jour les proxies et l'interface utilisateur (panneaux), sans changer
 			//	le nombre de propriétés visibles par panneau.
-			this.proxyManager.UpdateUserInterface();
+			//?this.proxyManager.UpdateUserInterface();
 		}
 
 		public void RegenerateProxies()
@@ -532,11 +532,11 @@ namespace Epsitec.Common.Designer.Viewers
 			//	Régénère la liste des proxies et met à jour les panneaux de l'interface
 			//	utilisateur s'il y a eu un changement dans le nombre de propriétés visibles
 			//	par panneau.
-			if (this.proxyManager.RegenerateProxies())
-			{
-				this.ClearProxies();
-				this.proxyManager.CreateUserInterface(this.propertiesScrollable.Panel);
-			}
+			//?if (this.proxyManager.RegenerateProxies())
+			//?{
+			//?	this.ClearProxies();
+			//?	this.proxyManager.CreateUserInterface(this.propertiesScrollable.Panel);
+			//?}
 		}
 
 		public void RegenerateDimensions()
@@ -548,11 +548,11 @@ namespace Epsitec.Common.Designer.Viewers
 		public void RegenerateProxiesAndDimensions()
 		{
 			//	Régénère les proxies et les cotes.
-			if (this.proxyManager.RegenerateProxies())
-			{
-				this.ClearProxies();
-				this.proxyManager.CreateUserInterface(this.propertiesScrollable.Panel);
-			}
+			//?if (this.proxyManager.RegenerateProxies())
+			//?{
+			//?	this.ClearProxies();
+			//?	this.proxyManager.CreateUserInterface(this.propertiesScrollable.Panel);
+			//?}
 
 			this.formEditor.RegenerateDimensions();
 		}
