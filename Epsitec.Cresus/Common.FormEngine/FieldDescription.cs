@@ -149,11 +149,19 @@ namespace Epsitec.Common.FormEngine
 			if (this.type == FieldType.Field)
 			{
 				System.Text.StringBuilder builder = new System.Text.StringBuilder();
-				builder.Append(prefix);
+
+				if (prefix != null)
+				{
+					builder.Append(prefix);
+				}
 
 				foreach (Druid druid in this.fieldIds)
 				{
-					builder.Append(".");
+					if (builder.Length > 0)
+					{
+						builder.Append(".");
+					}
+
 					builder.Append(druid);
 				}
 
@@ -357,6 +365,7 @@ namespace Epsitec.Common.FormEngine
 			
 			writer.WriteElementString(Xml.Guid, this.guid.ToString());
 			writer.WriteElementString(Xml.Type, this.type.ToString());
+			writer.WriteElementString(Xml.FieldIds, this.GetPath(null));
 			writer.WriteElementString(Xml.BackColor, this.backColor.ToString());
 			writer.WriteElementString(Xml.Separator, this.separator.ToString());
 			writer.WriteElementString(Xml.ColumnsRequired, this.columnsRequired.ToString(System.Globalization.CultureInfo.InvariantCulture));
@@ -399,6 +408,10 @@ namespace Epsitec.Common.FormEngine
 						else if (name == Xml.Type)
 						{
 							this.type = (FieldType) System.Enum.Parse(typeof(FieldType), element);
+						}
+						else if (name == Xml.FieldIds)
+						{
+							this.SetFields(element);
 						}
 						else if (name == Xml.BackColor)
 						{

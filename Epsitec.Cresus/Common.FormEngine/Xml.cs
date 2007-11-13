@@ -9,6 +9,7 @@ namespace Epsitec.Common.FormEngine
 		public const string FieldDescription		= "FD";
 		public const string Guid					= "Guid";
 		public const string Type					= "Type";
+		public const string FieldIds				= "FI";
 		public const string BackColor				= "BC";
 		public const string Separator				= "Sep";
 		public const string ColumnsRequired			= "CR";
