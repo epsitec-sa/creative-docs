@@ -154,15 +154,23 @@ namespace Epsitec.Cresus.DataLayer
 		{
 			DataContext context = new DataContext (this.infrastructure);
 
-			DbTable table = context.SchemaEngine.FindTableDefinition (this.articleEntityId);
+			System.Diagnostics.Debug.WriteLine ("Check12LoadEntity");
+			System.Diagnostics.Debug.WriteLine ("------------------------------------------------");
+			
+			DbTable table1 = context.SchemaEngine.FindTableDefinition (this.articleEntityId);
+			DbTable table2 = context.SchemaEngine.FindTableDefinition (this.articleVisserieEntityId);
 			DbSelectCondition condition = new DbSelectCondition (this.infrastructure.Converter, DbSelectRevision.LiveActive);
+
+			System.Diagnostics.Debug.WriteLine ("Loading data from database");
 
 			using (DbTransaction transaction = this.infrastructure.BeginTransaction (DbTransactionMode.ReadOnly))
 			{
-				context.RichCommand.ImportTable (transaction, table, condition);
+				context.RichCommand.ImportTable (transaction, table1, condition);
+				context.RichCommand.ImportTable (transaction, table2, condition);
 				transaction.Commit ();
 			}
-			
+
+			System.Diagnostics.Debug.WriteLine ("Done.");
 
 			DbKey key1 = new DbKey (new DbId (1000000000001L));
 			DbKey key2 = new DbKey (new DbId (1000000000002L));
@@ -170,6 +178,15 @@ namespace Epsitec.Cresus.DataLayer
 			AbstractEntity entity1 = context.DeserializeEntity (key1, this.articleEntityId);
 			AbstractEntity entity2 = context.DeserializeEntity (key2, this.articleEntityId);
 
+			System.Diagnostics.Debug.WriteLine ("------------------------------------------------");
+
+			Assert.AreEqual (this.articleEntityId, entity1.GetEntityStructuredTypeId ());
+			Assert.AreEqual ("VI-M3-10", entity1.GetField<string> ("[63091]"));
+
+			Assert.AreEqual (this.articleVisserieEntityId, entity2.GetEntityStructuredTypeId ());
+			Assert.AreEqual ("VI-M3-10", entity2.GetField<string> ("[63091]"));
+			Assert.AreEqual ("M3", entity2.GetField<string> ("[6312]"));
+			
 			context.Dispose ();
 		}
 
