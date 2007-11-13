@@ -286,56 +286,84 @@ namespace Epsitec.Cresus.Database
 			return command;
 		}
 
+		/// <summary>
+		/// Imports data into the specified table.
+		/// </summary>
+		/// <param name="transaction">The transaction.</param>
+		/// <param name="table">The table.</param>
+		/// <param name="condition">The condition.</param>
 		public void ImportTable(DbTransaction transaction, DbTable table, DbSelectCondition condition)
 		{
-			SqlSelect   select  = new SqlSelect ();
-			ISqlBuilder builder = transaction.SqlBuilder;
-
-			select.Fields.Add (SqlField.CreateAll ());
-			select.Tables.Add (table.Name, SqlField.CreateName (table.GetSqlName ()));
-
-			//	If there is no condition, this means we don't want to get any data
-			//	for the specific table; just fetch the empty table by using an always
-			//	false WHERE clause.
-
-			if (condition == null)
+			if (this.tables.Contains (table.Name))
 			{
-				select.Conditions.Add (new SqlFunction (SqlFunctionCode.CompareFalse));
+				DbRichCommand command = DbRichCommand.CreateFromTable (this.infrastructure, transaction, table, condition);
+
+				foreach (System.Data.DataTable data in command.DataSet.Tables)
+				{
+					this.ImportTable (table, data);
+				}
 			}
 			else
 			{
-				condition.CreateConditions (table, select.Conditions);
+				SqlSelect select  = new SqlSelect ();
+				ISqlBuilder builder = transaction.SqlBuilder;
+
+				select.Fields.Add (SqlField.CreateAll ());
+				select.Tables.Add (table.Name, SqlField.CreateName (table.GetSqlName ()));
+
+				//	If there is no condition, this means we don't want to get any data
+				//	for the specific table; just fetch the empty table by using an always
+				//	false WHERE clause.
+
+				if (condition == null)
+				{
+					select.Conditions.Add (new SqlFunction (SqlFunctionCode.CompareFalse));
+				}
+				else
+				{
+					condition.CreateConditions (table, select.Conditions);
+				}
+
+				this.infrastructure.DefaultSqlBuilder.SelectData (select);
+
+				Collections.DbCommandList oldCommands = this.commands;
+				Collections.DbCommandList newCommands = new Collections.DbCommandList ();
+
+				Collections.DbTableList oldTables = this.tables;
+				Collections.DbTableList newTables = new Collections.DbTableList ();
+
+				List<System.Data.IDataAdapter> oldAdapters = this.adapters;
+				List<System.Data.IDataAdapter> newAdapters = new List<System.Data.IDataAdapter> ();
+
+				this.commands = newCommands;
+				this.tables   = newTables;
+				this.adapters = newAdapters;
+
+				this.commands.Add (builder.Command);
+				this.tables.Add (table);
+
+				this.infrastructure.Execute (transaction, this);
+
+				oldCommands.AddRange (newCommands);
+				oldTables.AddRange (newTables);
+				oldAdapters.AddRange (newAdapters);
+
+				this.commands = oldCommands;
+				this.tables   = oldTables;
+				this.adapters = oldAdapters;
+
+				DbRichCommand.RelaxConstraints (this.dataSet.Tables[this.dataSet.Tables.Count-1]);
 			}
+		}
 
-			this.infrastructure.DefaultSqlBuilder.SelectData (select);
+		private void ImportTable(DbTable tableDef, System.Data.DataTable sourceTable)
+		{
+			System.Data.DataTable table = this.DataSet.Tables[tableDef.Name];
 
-			Collections.DbCommandList oldCommands = this.commands;
-			Collections.DbCommandList newCommands = new Collections.DbCommandList ();
-			
-			Collections.DbTableList oldTables = this.tables;
-			Collections.DbTableList newTables = new Collections.DbTableList ();
-			
-			List<System.Data.IDataAdapter> oldAdapters = this.adapters;
-			List<System.Data.IDataAdapter> newAdapters = new List<System.Data.IDataAdapter> ();
-
-			this.commands = newCommands;
-			this.tables   = newTables;
-			this.adapters = newAdapters;
-			
-			this.commands.Add (builder.Command);
-			this.tables.Add (table);
-
-			this.infrastructure.Execute (transaction, this);
-
-			oldCommands.AddRange (newCommands);
-			oldTables.AddRange (newTables);
-			oldAdapters.AddRange (newAdapters);
-
-			this.commands = oldCommands;
-			this.tables   = oldTables;
-			this.adapters = oldAdapters;
-			
-			DbRichCommand.RelaxConstraints (this.dataSet.Tables[this.dataSet.Tables.Count-1]);
+			foreach (System.Data.DataRow row in sourceTable.Rows)
+			{
+				table.ImportRow (row);
+			}
 		}
 
 		/// <summary>
