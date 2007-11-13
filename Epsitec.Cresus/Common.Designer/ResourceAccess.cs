@@ -99,8 +99,7 @@ namespace Epsitec.Common.Designer
 			}
 			if (this.type == Type.Forms)
 			{
-				//?this.accessor = new Support.ResourceAccessors.FormResourceAccessor();
-				this.accessor = new Support.ResourceAccessors.CaptionResourceAccessor();
+				this.accessor = new Support.ResourceAccessors.FormResourceAccessor();
 			}
 
 			this.collectionView = new CollectionView(this.accessor.Collection);
@@ -1652,6 +1651,18 @@ namespace Epsitec.Common.Designer
 			//	Sérialise le masque de saisie dans les ressources.
 			if (druid.IsValid)
 			{
+				string xml = FormEngine.Serialisation.SerializeForm(form);
+
+				CultureMap item = this.accessor.Collection[druid];
+				System.Diagnostics.Debug.Assert(item != null);
+				StructuredData data = item.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
+
+				string oldXml = data.GetValue(Support.Res.Fields.ResourceForm.XmlSource) as string;
+				
+				if (xml != oldXml)
+				{
+					data.SetValue(Support.Res.Fields.ResourceForm.XmlSource, xml);
+				}
 			}
 		}
 
@@ -1673,7 +1684,17 @@ namespace Epsitec.Common.Designer
 				return null;
 			}
 
-			return null;
+			StructuredData data = item.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
+			string xml = data.GetValue(Support.Res.Fields.ResourceForm.XmlSource) as string;
+
+			if (string.IsNullOrEmpty(xml))
+			{
+				return null;
+			}
+			else
+			{
+				return FormEngine.Serialisation.DeserializeForm(xml, this.resourceManager);
+			}
 		}
 		#endregion
 
