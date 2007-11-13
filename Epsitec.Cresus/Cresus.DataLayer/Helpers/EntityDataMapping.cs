@@ -33,7 +33,12 @@ namespace Epsitec.Cresus.DataLayer.Helpers
 		{
 			get
 			{
-				return this.entity == null ? Druid.Empty : this.entity.GetEntityStructuredTypeId ();
+				if (this.entityId.IsEmpty)
+				{
+					this.entityId = this.entity == null ? Druid.Empty : this.entity.GetEntityStructuredTypeId ();
+				}
+
+				return this.entityId;
 			}
 		}
 
@@ -46,7 +51,8 @@ namespace Epsitec.Cresus.DataLayer.Helpers
 			}
 			set
 			{
-				if (this.rowKey.IsEmpty)
+				if ((this.rowKey.IsEmpty) ||
+					(this.rowKey.IsTemporary))
 				{
 					this.rowKey = value;
 				}
@@ -59,5 +65,6 @@ namespace Epsitec.Cresus.DataLayer.Helpers
 
 		private readonly AbstractEntity entity;
 		private DbKey rowKey;
+		private Druid entityId;
 	}
 }

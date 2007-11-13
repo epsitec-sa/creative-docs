@@ -23,6 +23,7 @@ namespace Epsitec.Cresus.DataLayer
 			this.entityContext = EntityContext.Current;
 			this.entityDataMapping = new Dictionary<long, EntityDataMapping> ();
 			this.entityTableDefinitions = new Dictionary<Druid, DbTable> ();
+			this.temporaryRowCollection = new Dictionary<string, TemporaryRowCollection> ();
 
 			this.entityContext.EntityCreated += this.HandleEntityCreated;
 		}
@@ -64,9 +65,30 @@ namespace Epsitec.Cresus.DataLayer
 		{
 			using (DbTransaction transaction = this.infrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadWrite))
 			{
-				this.richCommand.SaveTables (transaction);
+				this.richCommand.SaveTables (transaction, this.SaveFilter, this.SaveRowIdAssignmentCallback);
 				transaction.Commit ();
 			}
+		}
+
+		private bool SaveFilter(System.Data.DataTable table)
+		{
+			if (table.Columns.Contains (Tags.ColumnInstanceType))
+			{
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}
+
+		private DbKey SaveRowIdAssignmentCallback(System.Data.DataTable table, DbKey oldKey, DbKey newKey)
+		{
+			TemporaryRowCollection rowCollection = this.GetTemporaryRowCollection (table.TableName);
+
+			rowCollection.UpdateRowKey (oldKey, newKey);
+
+			return newKey;
 		}
 
 		/// <summary>
@@ -307,10 +329,34 @@ namespace Epsitec.Cresus.DataLayer
 			DbKey.SetRowId (row, rowKey.Id);
 			DbKey.SetRowStatus (row, rowKey.Status);
 			row.EndEdit ();
+
+			TemporaryRowCollection rowCollection = this.GetTemporaryRowCollection (mapping);
+			rowCollection.Add (mapping, row);
 			
 			return row;
 		}
-		
+
+		private TemporaryRowCollection GetTemporaryRowCollection(string tableName)
+		{
+			TemporaryRowCollection rowCollection;
+
+			if (this.temporaryRowCollection.TryGetValue (tableName, out rowCollection) == false)
+			{
+				rowCollection = new TemporaryRowCollection ();
+				this.temporaryRowCollection[tableName] = rowCollection;
+			}
+
+			return rowCollection;
+		}
+
+		private TemporaryRowCollection GetTemporaryRowCollection(EntityDataMapping mapping)
+		{
+			Druid baseEntityId = this.entityContext.GetBaseEntityId (mapping.EntityId);
+			string baseTableName = this.GetDataTableName (baseEntityId);
+
+			return this.GetTemporaryRowCollection (baseTableName);
+		}
+
 		private string GetDataTableName(Druid entityId)
 		{
 			DbTable tableDef = this.schemaEngine.FindTableDefinition (entityId);
@@ -381,5 +427,6 @@ namespace Epsitec.Cresus.DataLayer
 		readonly EntityContext entityContext;
 		readonly Dictionary<long, EntityDataMapping> entityDataMapping;
 		readonly Dictionary<Druid, DbTable> entityTableDefinitions;
+		readonly Dictionary<string, TemporaryRowCollection> temporaryRowCollection;
 	}
 }

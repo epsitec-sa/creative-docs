@@ -372,7 +372,7 @@ namespace Epsitec.Cresus.Database
 		{
 			this.isReadOnly = true;
 		}
-
+		
 		/// <summary>
 		/// Saves the tables by assigning real row ids to the rows, defining
 		/// their log id and finally calling <c>UpdateTables</c>.
@@ -380,8 +380,20 @@ namespace Epsitec.Cresus.Database
 		/// <param name="transaction">The transaction.</param>
 		public void SaveTables(DbTransaction transaction)
 		{
+			this.SaveTables (transaction, null, null);
+		}
+
+		/// <summary>
+		/// Saves the tables by assigning real row ids to the rows, defining
+		/// their log id and finally calling <c>UpdateTables</c>.
+		/// </summary>
+		/// <param name="transaction">The transaction.</param>
+		/// <param name="filter">The filter.</param>
+		/// <param name="callback">The callback.</param>
+		public void SaveTables(DbTransaction transaction, System.Predicate<System.Data.DataTable> filter, RowIdAssignmentCallback callback)
+		{
 			this.UpdateLogIds ();
-			this.AssignRealRowIds (transaction);
+			this.AssignRealRowIds (transaction, filter, callback);
 			this.UpdateTables (transaction);
 		}
 
@@ -422,12 +434,23 @@ namespace Epsitec.Cresus.Database
 				this.PopCommandTransaction ();
 			}
 		}
-
+		
 		/// <summary>
 		/// Assign real row ids to the new data table rows.
 		/// </summary>
 		/// <param name="transaction">The transaction.</param>
 		public void AssignRealRowIds(DbTransaction transaction)
+		{
+			this.AssignRealRowIds (transaction, null, null);
+		}
+
+		/// <summary>
+		/// Assign real row ids to the new data table rows.
+		/// </summary>
+		/// <param name="transaction">The transaction.</param>
+		/// <param name="filter">The filter.</param>
+		/// <param name="callback">The callback.</param>
+		public void AssignRealRowIds(DbTransaction transaction, System.Predicate<System.Data.DataTable> filter, RowIdAssignmentCallback callback)
 		{
 			if (this.isReadOnly)
 			{
@@ -448,8 +471,12 @@ namespace Epsitec.Cresus.Database
 				{
 					//	If there are temporary rows in the table, assign them real row ids, as
 					//	we may not persist tables with temporary row ids :
-					
-					DbRichCommand.AssignRealRowIds (this.infrastructure, transaction, table);
+
+					if ((filter == null) ||
+						(filter (table)))
+					{
+						this.AssignTableRealRowIds (transaction, table, callback);
+					}
 				}
 			}
 			finally
@@ -941,10 +968,10 @@ namespace Epsitec.Cresus.Database
 		/// <summary>
 		/// Assign real row ids to the new data table rows for a given table.
 		/// </summary>
-		/// <param name="infrastructure">The infrastructure.</param>
 		/// <param name="transaction">The transaction.</param>
 		/// <param name="table">The table.</param>
-		public static void AssignRealRowIds(DbInfrastructure infrastructure, DbTransaction transaction, System.Data.DataTable table)
+		/// <param name="callback">The callback.</param>
+		private void AssignTableRealRowIds(DbTransaction transaction, System.Data.DataTable table, RowIdAssignmentCallback callback)
 		{
 			List<System.Data.DataRow> list = Collection.ToList<System.Data.DataRow> (DbRichCommand.FindRowsUsingTemporaryIds (table.Rows));
 			
@@ -953,29 +980,36 @@ namespace Epsitec.Cresus.Database
 				return;
 			}
 			
-			DbTable tableDef = infrastructure.ResolveDbTable (transaction, table.TableName);
+			DbTable tableDef = this.infrastructure.ResolveDbTable (transaction, table.TableName);
 			
 			//	Allocate real row ids for the temporary rows; thanks to the relations
 			//	defined at the data set level, the foreign keys will be updated too.
 			
-			long id = infrastructure.NewRowIdInTable (transaction, tableDef, list.Count);
+			long id = this.infrastructure.NewRowIdInTable (transaction, tableDef, list.Count);
 			
 			System.Diagnostics.Debug.WriteLine (string.Format ("Allocating {0} new IDs for table {1} starting at {2}.", list.Count, table.TableName, id));
 			
 			foreach (System.Data.DataRow row in list)
 			{
-				DbKey key = new DbKey (row);
-				
-				System.Diagnostics.Debug.Assert (key.IsTemporary);
-				
-				key = new DbKey (id++, key.Status);
+				DbKey oldKey = new DbKey (row);
+				DbKey newKey = new DbKey (id++, oldKey.Status);
+
+				if (callback != null)
+				{
+					newKey = callback (table, oldKey, newKey);
+				}
+
+				System.Diagnostics.Debug.Assert (oldKey.IsTemporary == true);
+				System.Diagnostics.Debug.Assert (newKey.IsTemporary == false);
 				
 				row.BeginEdit ();
-				DbKey.SetRowId (row, key.Id);
-				DbKey.SetRowStatus (row, key.Status);
+				DbKey.SetRowId (row, newKey.Id);
+				DbKey.SetRowStatus (row, newKey.Status);
 				row.EndEdit ();
 			}
 		}
+
+		public delegate DbKey RowIdAssignmentCallback(System.Data.DataTable table, DbKey oldKey, DbKey newKey);
 
 		/// <summary>
 		/// Updates the log ids associated with the table, using the specified log id.
