@@ -6,6 +6,8 @@ namespace Epsitec.Common.FormEngine
 {
 	internal static class Xml
 	{
+		public const string Form					= "Form";
+		public const string EntityId				= "EI";
 		public const string FieldDescription		= "FD";
 		public const string Guid					= "Guid";
 		public const string Type					= "Type";

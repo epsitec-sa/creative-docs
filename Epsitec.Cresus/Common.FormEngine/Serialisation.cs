@@ -12,12 +12,12 @@ namespace Epsitec.Common.FormEngine
 	/// </summary>
 	public class Serialisation
 	{
-		static public string SerializeForm(List<FieldDescription> form)
+		static public string SerializeForm(Form form)
 		{
 			return null;
 		}
 
-		static public List<FieldDescription> DeserializeForm(string xml, ResourceManager manager)
+		static public Form DeserializeForm(string xml, ResourceManager manager)
 		{
 			return null;
 		}

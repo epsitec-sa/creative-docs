@@ -358,7 +358,7 @@ namespace Epsitec.Common.FormEngine
 
 
 		#region Serialisation
-		protected void WriteXml(XmlWriter writer)
+		public void WriteXml(XmlWriter writer)
 		{
 			//	Sérialise toute la description.
 			writer.WriteStartElement(Xml.FieldDescription);
@@ -380,21 +380,18 @@ namespace Epsitec.Common.FormEngine
 			writer.WriteEndElement();
 		}
 
-		protected void ReadXml(XmlReader reader)
+		public void ReadXml(XmlReader reader)
 		{
 			//	Désérialise toute la description.
-			//	Retourne une éventuelle erreur.
 			reader.Read();
+
 			while (true)
 			{
 				if (reader.NodeType == XmlNodeType.Element)
 				{
 					string name = reader.LocalName;
 
-					if (name == "xx")
-					{
-					}
-					else if (name == "yy")
+					if (name == "??")
 					{
 					}
 					else

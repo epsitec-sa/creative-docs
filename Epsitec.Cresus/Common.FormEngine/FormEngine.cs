@@ -18,11 +18,11 @@ namespace Epsitec.Common.FormEngine
 			this.resourceManager = resourceManager;
 		}
 
-		public UI.Panel CreateForm(Druid entityId, List<FieldDescription> fields)
+		public UI.Panel CreateForm(Form form)
 		{
 			//	Crée un masque de saisie pour une entité donnée.
 			//	La liste de FieldDescription doit être plate (pas de Node).
-			Caption entityCaption = this.resourceManager.GetCaption(entityId);
+			Caption entityCaption = this.resourceManager.GetCaption(form.EntityId);
 			StructuredType entity = TypeRosetta.GetTypeObject(entityCaption) as StructuredType;
 
 			StructuredData entityData = new StructuredData(entity);
@@ -36,7 +36,7 @@ namespace Epsitec.Common.FormEngine
 			root.DataSource = new UI.DataSource();
 			root.DataSource.AddDataSource("Data", entityData);
 
-			this.CreateFormBox(root, fields, 0);
+			this.CreateFormBox(root, form.Fields, 0);
 
 			return root;
 		}

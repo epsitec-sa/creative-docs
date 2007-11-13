@@ -215,8 +215,16 @@ namespace Epsitec.Common.FormEngine
 			string err = Arrange.Check(flat);
 			if (err == null)
 			{
+				Form form = new Form();
+				form.EntityId = entityId;
+
+				foreach (FieldDescription field in flat)
+				{
+					form.Fields.Add(field);
+				}
+
 				FormEngine engine = new FormEngine(this.manager);
-				return engine.CreateForm(entityId, flat);
+				return engine.CreateForm(form);
 			}
 			else
 			{

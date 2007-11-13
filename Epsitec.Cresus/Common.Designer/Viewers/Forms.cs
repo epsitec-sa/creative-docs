@@ -331,7 +331,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 			if (Forms.softSerialize == null)
 			{
-				List<FieldDescription> form = this.access.GetForm(this.druidToSerialize);
+				Form form = this.access.GetForm(this.druidToSerialize);
 				this.SetForm(form, this.druidToSerialize);
 			}
 			else
@@ -345,7 +345,7 @@ namespace Epsitec.Common.Designer.Viewers
 					this.module.AccessPanels.ClearLocalDirty();
 				}
 
-				List<FieldDescription> form = this.XmlToForm(Forms.softSerialize);
+				Form form = this.XmlToForm(Forms.softSerialize);
 				this.SetForm(form, this.druidToSerialize);
 
 				Forms.softDirtySerialization = false;
@@ -353,25 +353,25 @@ namespace Epsitec.Common.Designer.Viewers
 			}
 		}
 
-		protected string FormToXml(List<FieldDescription> form)
+		protected string FormToXml(Form form)
 		{
 			//	form -> xml.
 			return FormEngine.Serialisation.SerializeForm(form);
 		}
 
-		protected List<FieldDescription> XmlToForm(string xml)
+		protected Form XmlToForm(string xml)
 		{
 			//	xml -> form.
 			return FormEngine.Serialisation.DeserializeForm(xml, this.module.ResourceManager);
 		}
 
-		protected List<FieldDescription> GetForm()
+		protected Form GetForm()
 		{
 			//	Retourne le masque de saisie en cours d'édition.
 			return this.form;
 		}
 
-		protected void SetForm(List<FieldDescription> form, Druid druid)
+		protected void SetForm(Form form, Druid druid)
 		{
 			//	Spécifie le masque de saisie en cours d'édition.
 			this.form = form;
@@ -394,7 +394,7 @@ namespace Epsitec.Common.Designer.Viewers
 			else
 			{
 				FormEngine.FormEngine engine = new FormEngine.FormEngine(this.module.ResourceManager);
-				this.panelContainer = engine.CreateForm(druid, form);
+				this.panelContainer = engine.CreateForm(form);
 				this.InitializePanel();
 
 				this.formEditor.Panel = this.panelContainer;
@@ -602,7 +602,7 @@ namespace Epsitec.Common.Designer.Viewers
 		protected Scrollable					drawingScrollable;
 		protected FrameBox						panelContainerParent;
 		protected UI.Panel						panelContainer;
-		protected List<FieldDescription>		form;
+		protected Form							form;
 		protected FormEditor.Editor				formEditor;
 		protected FrameBox						right;
 		protected TabBook						tabBook;
