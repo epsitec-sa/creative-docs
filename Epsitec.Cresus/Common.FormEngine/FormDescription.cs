@@ -22,6 +22,7 @@ namespace Epsitec.Common.FormEngine
 
 		public Druid EntityId
 		{
+			//	Druid de l'entité de base du masque de saisie.
 			get
 			{
 				return this.entityId;
@@ -34,29 +35,52 @@ namespace Epsitec.Common.FormEngine
 
 		public List<FieldDescription> Fields
 		{
+			//	Liste des champs, séparateurs, etc.
 			get
 			{
 				return this.fields;
 			}
 		}
 
-		public bool Compare(FormDescription form)
+
+		public override bool Equals(object obj)
 		{
-			if (this.entityId != form.entityId)
+			return (obj is FormDescription) && (this == (FormDescription) obj);
+		}
+
+		public override int GetHashCode()
+		{
+			return base.GetHashCode();
+		}
+		
+		public static bool operator==(FormDescription a, FormDescription b)
+		{
+			return FormDescription.Compare(a, b);
+		}
+
+		public static bool operator!=(FormDescription a, FormDescription b)
+		{
+			return !FormDescription.Compare(a, b);
+		}
+
+		protected static bool Compare(FormDescription a, FormDescription b)
+		{
+			//	Retourne true si les deux objets sont égaux.
+			if (a.entityId != b.entityId)
 			{
 				return false;
 			}
 
-			if (this.fields.Count != form.fields.Count)
+			if (a.fields.Count != b.fields.Count)
 			{
 				return false;
 			}
 
-			for (int i=0; i<this.fields.Count; i++)
+			for (int i=0; i<a.fields.Count; i++)
 			{
-				FieldDescription f1 = this.fields[i];
-				FieldDescription f2 = form.fields[i];
-				if (!f1.Compare(f2))
+				FieldDescription f1 = a.fields[i];
+				FieldDescription f2 = b.fields[i];
+				if (!f1.Equals(f2))
 				{
 					return false;
 				}
@@ -116,7 +140,7 @@ namespace Epsitec.Common.FormEngine
 
 			reader.Read();
 
-			//	TODO: attention, la logique de désérialisation est certainement fausse !
+			//	TODO: attention, la logique de désérialisation est fausse, mais ça marche provisoirement !
 			while (true)
 			{
 				if (reader.NodeType == XmlNodeType.Element)

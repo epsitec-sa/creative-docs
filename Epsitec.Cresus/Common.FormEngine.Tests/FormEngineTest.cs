@@ -72,7 +72,7 @@ namespace Epsitec.Common.FormEngine
 				FormDescription copy = new FormDescription();
 				copy.Deserialize(data);
 
-				bool eq = form.Compare(copy);
+				bool eq = form.Equals(copy);
 				Assert.IsTrue(eq);
 			}
 		}

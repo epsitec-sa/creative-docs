@@ -329,39 +329,60 @@ namespace Epsitec.Common.FormEngine
 		}
 
 
-		public bool Compare(FieldDescription field)
+		public override bool Equals(object obj)
 		{
-			if (!field.guid.Equals(this.guid) ||
-				field.type != this.type ||
-				!field.backColor.Equals(this.backColor) ||
-				field.separator != this.separator ||
-				field.columnsRequired != this.columnsRequired ||
-				field.rowsRequired != this.rowsRequired ||
-				field.containerLayoutMode != this.containerLayoutMode ||
-				!field.containerMargins.Equals(this.containerMargins) ||
-				!field.containerPadding.Equals(this.containerPadding) ||
-				!field.containerBackColor.Equals(this.containerBackColor) ||
-				field.containerFrameState != this.containerFrameState ||
-				field.containerFrameWidth != this.containerFrameWidth)
+			return (obj is FieldDescription) && (this == (FieldDescription) obj);
+		}
+
+		public override int GetHashCode()
+		{
+			return base.GetHashCode();
+		}
+		
+		public static bool operator==(FieldDescription a, FieldDescription b)
+		{
+			return FieldDescription.Compare(a, b);
+		}
+
+		public static bool operator!=(FieldDescription a, FieldDescription b)
+		{
+			return !FieldDescription.Compare(a, b);
+		}
+
+		protected static bool Compare(FieldDescription a, FieldDescription b)
+		{
+			//	Retourne true si les deux objets sont égaux.
+			if (!a.guid.Equals(b.guid) ||
+				a.type != b.type ||
+				!a.backColor.Equals(b.backColor) ||
+				a.separator != b.separator ||
+				a.columnsRequired != b.columnsRequired ||
+				a.rowsRequired != b.rowsRequired ||
+				a.containerLayoutMode != b.containerLayoutMode ||
+				!a.containerMargins.Equals(b.containerMargins) ||
+				!a.containerPadding.Equals(b.containerPadding) ||
+				!a.containerBackColor.Equals(b.containerBackColor) ||
+				a.containerFrameState != b.containerFrameState ||
+				a.containerFrameWidth != b.containerFrameWidth)
 			{
 				return false;
 			}
 
-			if ((field.fieldIds == null) != (this.fieldIds == null))
+			if ((a.fieldIds == null) != (b.fieldIds == null))
 			{
 				return false;
 			}
 
-			if (field.fieldIds != null)
+			if (a.fieldIds != null)
 			{
-				if (field.fieldIds.Count != this.fieldIds.Count)
+				if (a.fieldIds.Count != b.fieldIds.Count)
 				{
 					return false;
 				}
 
-				for (int i=0; i<field.fieldIds.Count; i++)
+				for (int i=0; i<a.fieldIds.Count; i++)
 				{
-					if (field.fieldIds[i] != this.fieldIds[i])
+					if (a.fieldIds[i] != b.fieldIds[i])
 					{
 						return false;
 					}
