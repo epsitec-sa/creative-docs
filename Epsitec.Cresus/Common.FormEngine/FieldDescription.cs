@@ -325,7 +325,7 @@ namespace Epsitec.Common.FormEngine
 		public bool Compare(FieldDescription field)
 		{
 			return (field.type == this.type &&
-					//?field.backColor == this.backColor &&
+					field.backColor == this.backColor &&
 					field.separator == this.separator &&
 					field.columnsRequired == this.columnsRequired &&
 					field.rowsRequired == this.rowsRequired);
@@ -342,14 +342,32 @@ namespace Epsitec.Common.FormEngine
 			writer.WriteElementString(Xml.Guid, this.guid.ToString());
 			writer.WriteElementString(Xml.Type, this.type.ToString());
 			writer.WriteElementString(Xml.FieldIds, this.GetPath(null));
-			writer.WriteElementString(Xml.BackColor, Color.ToString(this.backColor));
+
+			if (!this.backColor.IsEmpty)
+			{
+				writer.WriteElementString(Xml.BackColor, Color.ToString(this.backColor));
+			}
+
 			writer.WriteElementString(Xml.Separator, this.separator.ToString());
 			writer.WriteElementString(Xml.ColumnsRequired, this.columnsRequired.ToString(System.Globalization.CultureInfo.InvariantCulture));
 			writer.WriteElementString(Xml.RowsRequired, this.rowsRequired.ToString(System.Globalization.CultureInfo.InvariantCulture));
 			writer.WriteElementString(Xml.ContainerLayoutMode, this.containerLayoutMode.ToString());
-			writer.WriteElementString(Xml.ContainerMargins, this.containerMargins.ToString());
-			writer.WriteElementString(Xml.ContainerPadding, this.containerPadding.ToString());
-			writer.WriteElementString(Xml.ContainerBackColor, Color.ToString(this.containerBackColor));
+
+			if (this.containerMargins != Margins.Zero)
+			{
+				writer.WriteElementString(Xml.ContainerMargins, this.containerMargins.ToString());
+			}
+
+			if (this.containerPadding != Margins.Zero)
+			{
+				writer.WriteElementString(Xml.ContainerPadding, this.containerPadding.ToString());
+			}
+
+			if (!this.containerBackColor.IsEmpty)
+			{
+				writer.WriteElementString(Xml.ContainerBackColor, Color.ToString(this.containerBackColor));
+			}
+
 			writer.WriteElementString(Xml.ContainerFrameState, this.containerFrameState.ToString());
 			writer.WriteElementString(Xml.ContainerFrameWidth, this.containerFrameWidth.ToString(System.Globalization.CultureInfo.InvariantCulture));
 
