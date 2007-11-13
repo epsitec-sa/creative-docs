@@ -61,11 +61,6 @@ namespace Epsitec.Common.Designer.FormEditor
 			this.context = context;
 			this.panel = panel;
 			this.sizeMark = this.panel.PreferredSize;
-
-			//?this.objectModifier = new PanelEditor.ObjectModifier(this);
-			//?this.constrainsList = new PanelEditor.ConstrainsList(this);
-			//?this.handlesList = new PanelEditor.HandlesList(this);
-			//?this.dimensionsList = new PanelEditor.DimensionsList(this);
 		}
 
 		public Module Module
@@ -97,7 +92,6 @@ namespace Epsitec.Common.Designer.FormEditor
 			set
 			{
 				this.selectedObjects.Clear();
-				this.GridClearSelection();
 				this.UpdateAfterChanging(PanelEditor.Editor.Changing.Show);
 				this.lastCreatedObject = null;
 				
@@ -117,24 +111,6 @@ namespace Epsitec.Common.Designer.FormEditor
 			set
 			{
 				this.druid = value;
-			}
-		}
-
-		public PanelEditor.ObjectModifier ObjectModifier
-		{
-			//	Retourne le modificateur d'objets.
-			get
-			{
-				return this.objectModifier;
-			}
-		}
-
-		public PanelEditor.ConstrainsList ConstrainsList
-		{
-			//	Retourne la liste des contraintes.
-			get
-			{
-				return this.constrainsList;
 			}
 		}
 
@@ -164,7 +140,6 @@ namespace Epsitec.Common.Designer.FormEditor
 		public void UpdateGeometry()
 		{
 			//	Mise à jour après avoir changé la géométrie d'un ou plusieurs objets.
-			this.handlesList.UpdateGeometry();
 		}
 
 
@@ -342,12 +317,6 @@ namespace Epsitec.Common.Designer.FormEditor
 			selected = this.selectedObjects.Count;
 			count = this.panel.Children.Count;
 			isRoot = false;
-
-			if (selected == 1)
-			{
-				PanelEditor.ObjectModifier.ObjectType type = PanelEditor.ObjectModifier.GetObjectType(this.selectedObjects[0]);
-				isRoot = (type == PanelEditor.ObjectModifier.ObjectType.MainPanel);
-			}
 		}
 
 		public string SelectionInfo
@@ -399,9 +368,6 @@ namespace Epsitec.Common.Designer.FormEditor
 
 			pos = this.ConvEditorToPanel(pos);
 
-			//	Informe l'ensemble des cotes de l'état de la touche Shift.
-			this.dimensionsList.IsShiftPressed = message.IsShiftPressed;
-
 			switch (message.MessageType)
 			{
 				case MessageType.MouseDown:
@@ -424,18 +390,12 @@ namespace Epsitec.Common.Designer.FormEditor
 					break;
 
 				case MessageType.MouseWheel:
-					if (this.dimensionsList.Wheel(message.Wheel))
-					{
-						this.OnChildrenGeometryChanged();  // met à jour les proxies
-						this.module.DesignerApplication.UpdateInfoViewer();
-					}
 					message.Consumer = this;
 					break;
 
 				case MessageType.MouseLeave:
 					this.SetEnteredObjects(null);
 					this.SetHilitedObject(null, null);
-					this.SetHilitedParent(null, PanelEditor.GridSelection.Invalid, PanelEditor.GridSelection.Invalid, 0, 0);
 					break;
 
 				case MessageType.KeyDown:
@@ -447,10 +407,6 @@ namespace Epsitec.Common.Designer.FormEditor
 					break;
 
 				case MessageType.KeyPress:
-					if (message.KeyCode == KeyCode.Space)
-					{
-						this.constrainsList.InvertLock();
-					}
 					break;
 			}
 		}
@@ -467,16 +423,6 @@ namespace Epsitec.Common.Designer.FormEditor
 			if (this.context.Tool == "ToolGlobal")
 			{
 				this.GlobalDown(pos, isRightButton, isControlPressed, isShiftPressed);
-			}
-
-			if (this.context.Tool == "ToolGrid")
-			{
-				this.GridDown(pos, isRightButton, isControlPressed, isShiftPressed);
-			}
-
-			if (this.context.Tool == "ToolEdit")
-			{
-				this.EditDown(pos, isRightButton, isControlPressed, isShiftPressed);
 			}
 
 			if (this.context.Tool == "ToolZoom")
@@ -498,8 +444,6 @@ namespace Epsitec.Common.Designer.FormEditor
 		void ProcessMouseMove(Point pos, bool isRightButton, bool isControlPressed, bool isShiftPressed)
 		{
 			//	La souris a été déplacée.
-			this.handlesList.Hilite(pos);
-
 			if (this.context.Tool == "ToolSelect")
 			{
 				this.SelectMove(pos, isRightButton, isControlPressed, isShiftPressed);
@@ -508,16 +452,6 @@ namespace Epsitec.Common.Designer.FormEditor
 			if (this.context.Tool == "ToolGlobal")
 			{
 				this.GlobalMove(pos, isRightButton, isControlPressed, isShiftPressed);
-			}
-
-			if (this.context.Tool == "ToolGrid")
-			{
-				this.GridMove(pos, isRightButton, isControlPressed, isShiftPressed);
-			}
-
-			if (this.context.Tool == "ToolEdit")
-			{
-				this.EditMove(pos, isRightButton, isControlPressed, isShiftPressed);
 			}
 
 			if (this.context.Tool == "ToolZoom")
@@ -549,16 +483,6 @@ namespace Epsitec.Common.Designer.FormEditor
 				this.GlobalUp(pos, isRightButton, isControlPressed, isShiftPressed);
 			}
 
-			if (this.context.Tool == "ToolGrid")
-			{
-				this.GridUp(pos, isRightButton, isControlPressed, isShiftPressed);
-			}
-
-			if (this.context.Tool == "ToolEdit")
-			{
-				this.EditUp(pos, isRightButton, isControlPressed, isShiftPressed);
-			}
-
 			if (this.context.Tool == "ToolZoom")
 			{
 				this.ZoomUp(pos, isRightButton, isControlPressed, isShiftPressed);
@@ -586,16 +510,6 @@ namespace Epsitec.Common.Designer.FormEditor
 			if (this.context.Tool == "ToolGlobal")
 			{
 				this.GlobalKeyChanged(isControlPressed, isShiftPressed);
-			}
-
-			if (this.context.Tool == "ToolGrid")
-			{
-				this.GridKeyChanged(isControlPressed, isShiftPressed);
-			}
-
-			if (this.context.Tool == "ToolEdit")
-			{
-				this.EditKeyChanged(isControlPressed, isShiftPressed);
 			}
 
 			if (this.context.Tool == "ToolZoom")
@@ -626,36 +540,6 @@ namespace Epsitec.Common.Designer.FormEditor
 			this.isRectangling = false;
 			Widget obj;
 
-			if (this.selectedObjects.Count != 0 && !this.isDragging && !this.handlesList.IsDragging)
-			{
-				this.isDraggingDimension = this.dimensionsList.DraggingStart(pos, isControlPressed, isShiftPressed);
-				if (this.isDraggingDimension)
-				{
-					return;
-				}
-			}
-
-#if false
-			if (this.HandlingStart(pos))
-			{
-				return;
-			}
-#endif
-
-#if false
-			if (this.SizeMarkDraggingStart(pos))
-			{
-				return;
-			}
-#endif
-
-			Attachment attachment;
-			if (this.AttachmentDetect(pos, out obj, out attachment))
-			{
-				this.ChangeObjectAttachment(obj, attachment);  // modifie les attachements
-				return;
-			}
-
 			obj = this.Detect(pos, isShiftPressed, false);  // objet visé par la souris
 
 			if (!isShiftPressed)  // touche Shift relâchée ?
@@ -666,7 +550,6 @@ namespace Epsitec.Common.Designer.FormEditor
 					return;
 				}
 				this.selectedObjects.Clear();
-				this.GridClearSelection();
 				this.UpdateAfterChanging(PanelEditor.Editor.Changing.Selection);
 			}
 
@@ -686,7 +569,6 @@ namespace Epsitec.Common.Designer.FormEditor
 				{
 					this.selectedObjects.Add(obj);
 				}
-				this.GridClearSelection();
 				this.UpdateAfterChanging(PanelEditor.Editor.Changing.Selection);
 
 				if (obj != this.panel)
@@ -702,7 +584,7 @@ namespace Epsitec.Common.Designer.FormEditor
 		protected void SelectMove(Point pos, bool isRightButton, bool isControlPressed, bool isShiftPressed)
 		{
 			//	Sélection ponctuelle, souris déplacée.
-			if (this.handlesList.IsFinger || this.isSizeMarkHorizontal || this.isSizeMarkVertical || this.isHilitedDimension || this.isDraggingDimension)
+			if (this.isSizeMarkHorizontal || this.isSizeMarkVertical || this.isHilitedDimension || this.isDraggingDimension)
 			{
 				this.ChangeMouseCursor(MouseCursorType.Finger);
 			}
@@ -723,43 +605,12 @@ namespace Epsitec.Common.Designer.FormEditor
 			{
 				this.SetSelectRectangle(new Rectangle(this.startingPos, pos));
 			}
-			else if (this.handlesList.IsDragging)
-			{
-				this.HandlingMove(pos);
-			}
 			else if (this.SizeMarkDraggingMove(pos))
 			{
-			}
-			else if (this.isDraggingDimension)
-			{
-				this.dimensionsList.DraggingMove(pos, isControlPressed, isShiftPressed);
 			}
 			else
 			{
 				//	Met en évidence la cote survolée par la souris.
-				if (this.selectedObjects.Count != 0 && !this.isDragging && !this.handlesList.IsDragging)
-				{
-					this.isHilitedDimension = this.dimensionsList.Hilite(pos);
-					if (this.isHilitedDimension)
-					{
-						this.SetHilitedObject(null, null);
-						this.SetHilitedAttachmentRectangle(Rectangle.Empty);
-						return;
-					}
-				}
-
-				Widget obj = this.Detect(pos, isShiftPressed, false);
-				this.SetHilitedObject(obj, null);  // met en évidence l'objet survolé par la souris
-
-				Rectangle rect = Rectangle.Empty;
-				Attachment attachment;
-				if (this.AttachmentDetect(pos, out obj, out attachment))
-				{
-					rect = this.GetAttachmentBounds(obj, attachment);
-					rect.Offset(0.5, 0.5);
-					rect.Inflate(3);
-				}
-				this.SetHilitedAttachmentRectangle(rect);  // met en évidence l'attachement survolé par la souris
 			}
 		}
 
@@ -778,14 +629,8 @@ namespace Epsitec.Common.Designer.FormEditor
 				this.isRectangling = false;
 			}
 
-			if (this.handlesList.IsDragging)
-			{
-				this.HandlingEnd(pos);
-			}
-
 			if (this.isDraggingDimension)
 			{
-				this.dimensionsList.DraggingEnd();
 				this.isDraggingDimension = false;
 				this.OnChildrenGeometryChanged();  // met à jour les proxies
 				this.module.DesignerApplication.UpdateInfoViewer();
@@ -818,11 +663,6 @@ namespace Epsitec.Common.Designer.FormEditor
 			this.isDragging = false;
 			this.isRectangling = false;
 
-			if (this.HandlingStart(pos))
-			{
-				return;
-			}
-
 			if (this.SizeMarkDraggingStart(pos))
 			{
 				return;
@@ -838,7 +678,6 @@ namespace Epsitec.Common.Designer.FormEditor
 					return;
 				}
 				this.selectedObjects.Clear();
-				this.GridClearSelection();
 				this.UpdateAfterChanging(PanelEditor.Editor.Changing.Selection);
 			}
 
@@ -852,7 +691,7 @@ namespace Epsitec.Common.Designer.FormEditor
 		protected void GlobalMove(Point pos, bool isRightButton, bool isControlPressed, bool isShiftPressed)
 		{
 			//	Sélection rectangulaire, souris déplacée.
-			if (this.handlesList.IsFinger || this.isSizeMarkHorizontal || this.isSizeMarkVertical)
+			if (this.isSizeMarkHorizontal || this.isSizeMarkVertical)
 			{
 				this.ChangeMouseCursor(MouseCursorType.Finger);
 			}
@@ -872,10 +711,6 @@ namespace Epsitec.Common.Designer.FormEditor
 			else if (this.isRectangling)
 			{
 				this.SetSelectRectangle(new Rectangle(this.startingPos, pos));
-			}
-			else if (this.handlesList.IsDragging)
-			{
-				this.HandlingMove(pos);
 			}
 			else if (this.SizeMarkDraggingMove(pos))
 			{
@@ -897,11 +732,6 @@ namespace Epsitec.Common.Designer.FormEditor
 				this.isRectangling = false;
 			}
 
-			if (this.handlesList.IsDragging)
-			{
-				this.HandlingEnd(pos);
-			}
-
 			this.SizeMarkDraggingStop(pos);
 		}
 
@@ -916,323 +746,6 @@ namespace Epsitec.Common.Designer.FormEditor
 			{
 				this.ChangeMouseCursor(MouseCursorType.Global);
 			}
-		}
-		#endregion
-
-		#region ProcessMouse grid
-		protected void GridDown(Point pos, bool isRightButton, bool isControlPressed, bool isShiftPressed)
-		{
-			//	Sélection de tableaux, souris pressée.
-			this.lastCreatedObject = null;
-
-			this.startingPos = pos;
-			this.isGridding = false;
-
-			if (this.HandlingStart(pos))
-			{
-				return;
-			}
-
-			Widget obj = this.Detect(pos, false, true);  // objet tableau visé par la souris
-			int column, row;
-			this.GridDetect(pos, obj, out column, out row);
-			if (column == PanelEditor.GridSelection.Invalid && row == PanelEditor.GridSelection.Invalid)
-			{
-				this.selectedObjects.Clear();
-				this.GridClearSelection();
-				this.UpdateAfterChanging(PanelEditor.Editor.Changing.Selection);
-			}
-			else
-			{
-				this.selectedObjects.Clear();
-				this.selectedObjects.Add(obj);
-				this.UpdateAfterChanging(PanelEditor.Editor.Changing.Selection);
-				this.SetHilitedObject(null, null);
-
-				this.griddingInitial = null;
-				if (isShiftPressed)
-				{
-					PanelEditor.GridSelection gs = PanelEditor.GridSelection.Get(obj);
-					if (gs != null)
-					{
-						this.griddingInitial = new PanelEditor.GridSelection(obj);
-						gs.CopyTo(this.griddingInitial);
-					}
-				}
-				else
-				{
-					this.GridClearSelection(obj);
-				}
-
-				this.isGridding = true;
-				this.isGriddingColumn = false;
-				this.isGriddingRow = false;
-				this.griddingColumn = column;
-				this.griddingRow = row;
-				this.GridAdaptSelection(obj, column, row, isShiftPressed);
-			}
-
-			this.OnChildrenSelected();
-			this.Invalidate();
-		}
-
-		protected void GridMove(Point pos, bool isRightButton, bool isControlPressed, bool isShiftPressed)
-		{
-			//	Sélection de tableaux, souris déplacée.
-			if (this.handlesList.IsFinger)
-			{
-				this.ChangeMouseCursor(MouseCursorType.Finger);
-			}
-			else if (isShiftPressed)
-			{
-				this.ChangeMouseCursor(MouseCursorType.GridPlus);
-			}
-			else
-			{
-				this.ChangeMouseCursor(MouseCursorType.Grid);
-			}
-
-			Widget obj = this.Detect(pos, false, true);  // objet tableau visé par la souris
-			int column, row;
-			this.GridDetect(pos, obj, out column, out row);
-
-			if (this.isGridding)
-			{
-				this.GridAdaptSelection(obj, column, row, isShiftPressed);
-			}
-			else if (this.handlesList.IsDragging)
-			{
-				this.HandlingMove(pos);
-			}
-			else
-			{
-				if (obj == null)
-				{
-					this.SetHilitedObject(null, null);
-				}
-				else
-				{
-					PanelEditor.GridSelection hgs = new PanelEditor.GridSelection(obj);
-
-					if (isShiftPressed)
-					{
-						PanelEditor.GridSelection ags = PanelEditor.GridSelection.Get(obj);
-
-						if (column != PanelEditor.GridSelection.Invalid && (ags == null || !ags.AreOnlyRows))
-						{
-							hgs.Add(PanelEditor.GridSelection.Unit.Column, column);
-						}
-
-						if (row != PanelEditor.GridSelection.Invalid && (ags == null || !ags.AreOnlyColumns))
-						{
-							hgs.Add(PanelEditor.GridSelection.Unit.Row, row);
-						}
-
-						if (ags != null && ags.AreMix)
-						{
-							hgs.SelectColumnsAndRows(this.griddingColumn, column, this.griddingRow, row);
-						}
-					}
-					else
-					{
-						if (column != PanelEditor.GridSelection.Invalid)
-						{
-							hgs.Add(PanelEditor.GridSelection.Unit.Column, column);
-						}
-
-						if (row != PanelEditor.GridSelection.Invalid)
-						{
-							hgs.Add(PanelEditor.GridSelection.Unit.Row, row);
-						}
-					}
-
-					this.SetHilitedObject(obj, hgs);
-				}
-			}
-		}
-
-		protected void GridUp(Point pos, bool isRightButton, bool isControlPressed, bool isShiftPressed)
-		{
-			//	Sélection de tableaux, souris relâchée.
-			if (this.isGridding)
-			{
-				this.OnChildrenSelected();
-				this.isGridding = false;
-				this.griddingInitial = null;
-			}
-
-			if (this.handlesList.IsDragging)
-			{
-				this.HandlingEnd(pos);
-			}
-		}
-
-		protected void GridAdaptSelection(Widget obj, int column, int row, bool isShiftPressed)
-		{
-			//	Adapte la sélection selon le mouvement de la souris.
-			if (obj == null)
-			{
-				return;
-			}
-
-			PanelEditor.GridSelection gs;
-
-			if (isShiftPressed)
-			{
-				gs = PanelEditor.GridSelection.Get(obj);
-				if (gs != null)
-				{
-					if (gs.AreOnlyColumns && column != PanelEditor.GridSelection.Invalid)
-					{
-						gs.ChangeColumnSelection(column, this.griddingInitial);
-						this.isGriddingColumn = true;
-						this.isGriddingRow = false;
-
-						this.Invalidate();
-						return;
-					}
-
-					if (gs.AreOnlyRows && row != PanelEditor.GridSelection.Invalid)
-					{
-						gs.ChangeRowSelection(row, this.griddingInitial);
-						this.isGriddingColumn = false;
-						this.isGriddingRow = true;
-
-						this.Invalidate();
-						return;
-					}
-				}
-
-				if (this.isGriddingColumn || this.isGriddingRow)
-				{
-					return;
-				}
-
-				gs = new PanelEditor.GridSelection(obj);
-				gs.SelectColumnsAndRows(this.griddingColumn, column, this.griddingRow, row);
-
-				if (!PanelEditor.GridSelection.EqualValues(gs, PanelEditor.GridSelection.Get(obj)))
-				{
-					PanelEditor.GridSelection.Attach(obj, gs);
-					this.Invalidate();
-				}
-				return;
-			}
-
-			gs = new PanelEditor.GridSelection(obj);
-
-			if (column == this.griddingColumn && row == this.griddingRow)
-			{
-				if (column != PanelEditor.GridSelection.Invalid)
-				{
-					gs.Add(PanelEditor.GridSelection.Unit.Column, column);
-				}
-
-				if (row != PanelEditor.GridSelection.Invalid)
-				{
-					gs.Add(PanelEditor.GridSelection.Unit.Row, row);
-				}
-
-				this.isGriddingColumn = (row == PanelEditor.GridSelection.Invalid);
-				this.isGriddingRow = (column == PanelEditor.GridSelection.Invalid);
-			}
-			else if (column == this.griddingColumn && column != PanelEditor.GridSelection.Invalid)
-			{
-				gs.Add(PanelEditor.GridSelection.Unit.Column, column);
-
-				this.isGriddingColumn = true;
-				this.isGriddingRow = false;
-			}
-			else if (row == this.griddingRow && row != PanelEditor.GridSelection.Invalid)
-			{
-				gs.Add(PanelEditor.GridSelection.Unit.Row, row);
-
-				this.isGriddingColumn = false;
-				this.isGriddingRow = true;
-			}
-			else if (this.isGriddingColumn && column != PanelEditor.GridSelection.Invalid)
-			{
-				if (column >= this.griddingColumn)
-				{
-					for (int i=column; i>=this.griddingColumn; i--)
-					{
-						gs.Add(PanelEditor.GridSelection.Unit.Column, i);
-					}
-				}
-				else
-				{
-					for (int i=column; i<=this.griddingColumn; i++)
-					{
-						gs.Add(PanelEditor.GridSelection.Unit.Column, i);
-					}
-				}
-			}
-			else if (this.isGriddingRow && row != PanelEditor.GridSelection.Invalid)
-			{
-				if (row >= this.griddingRow)
-				{
-					for (int i=row; i>=this.griddingRow; i--)
-					{
-						gs.Add(PanelEditor.GridSelection.Unit.Row, i);
-					}
-				}
-				else
-				{
-					for (int i=row; i<=this.griddingRow; i++)
-					{
-						gs.Add(PanelEditor.GridSelection.Unit.Row, i);
-					}
-				}
-			}
-
-			if (!PanelEditor.GridSelection.EqualValues(gs, PanelEditor.GridSelection.Get(obj)))
-			{
-				PanelEditor.GridSelection.Attach(obj, gs);
-				this.Invalidate();
-			}
-		}
-
-		protected void GridKeyChanged(bool isControlPressed, bool isShiftPressed)
-		{
-			//	Sélection de tableaux, touche pressée ou relâchée.
-			if (isShiftPressed)
-			{
-				this.ChangeMouseCursor(MouseCursorType.GridPlus);
-			}
-			else
-			{
-				this.ChangeMouseCursor(MouseCursorType.Grid);
-			}
-		}
-		#endregion
-
-		#region ProcessMouse edit
-		protected void EditDown(Point pos, bool isRightButton, bool isControlPressed, bool isShiftPressed)
-		{
-			//	Edition, souris pressée.
-		}
-
-		protected void EditMove(Point pos, bool isRightButton, bool isControlPressed, bool isShiftPressed)
-		{
-			//	Edition, souris déplacée.
-			this.ChangeMouseCursor(MouseCursorType.Edit);
-
-			this.SetHilitedObject(this.Detect(pos, false, false), null);  // met en évidence l'objet survolé par la souris
-		}
-
-		protected void EditUp(Point pos, bool isRightButton, bool isControlPressed, bool isShiftPressed)
-		{
-			//	Edition, souris relâchée.
-			Widget obj = this.Detect(pos, false, false);
-			if (obj != null)
-			{
-				this.ChangeTextResource(obj);
-			}
-		}
-
-		protected void EditKeyChanged(bool isControlPressed, bool isShiftPressed)
-		{
-			//	Edition, touche pressée ou relâchée.
 		}
 		#endregion
 
@@ -1309,17 +822,6 @@ namespace Epsitec.Common.Designer.FormEditor
 			sep.Alpha = 0;
 			sep.SetParent(this.creatingWindow.Root);  // parent en dernier pour éviter les flashs !
 
-			this.constrainsList.Starting(Rectangle.Empty, false);
-
-			if (this.objectModifier.AreChildrenAnchored(parent))
-			{
-				this.constrainsList.Activate(this.creatingRectangle, this.GetObjectBaseLine(this.creatingObject), null);
-			}
-
-			int column, row;
-			this.GridDetect(initialPos, parent, out column, out row);
-			this.SetHilitedParent(parent, column, row, 1, 1);  // met en évidence le futur parent survolé par la souris
-
 			this.module.DesignerApplication.UpdateInfoViewer();
 		}
 
@@ -1337,42 +839,6 @@ namespace Epsitec.Common.Designer.FormEditor
 				int row = PanelEditor.GridSelection.Invalid;
 
 				this.CreateObjectAdjust(ref pos, parent, out this.creatingRectangle);
-
-				if (this.objectModifier.AreChildrenAnchored(parent))
-				{
-					Rectangle rect = this.isInside ? this.creatingRectangle : Rectangle.Empty;
-					this.constrainsList.Activate(rect, this.GetObjectBaseLine(this.creatingObject), null);
-
-					this.SetHilitedZOrderRectangle(Rectangle.Empty);
-				}
-				else if (this.objectModifier.AreChildrenStacked(parent))
-				{
-					this.constrainsList.Activate(Rectangle.Empty, 0, null);
-
-					Widget group;
-					int order;
-					PanelEditor.ObjectModifier.StackedHorizontalAttachment ha;
-					PanelEditor.ObjectModifier.StackedVerticalAttachment va;
-					Rectangle hilite;
-					this.ZOrderDetect(initialPos, parent, out group, out order, out ha, out va, out hilite);
-					this.SetHilitedZOrderRectangle(hilite);
-				}
-				else if (this.objectModifier.AreChildrenGrid(parent))
-				{
-					this.GridDetect(initialPos, parent, out column, out row);
-					if (!this.objectModifier.IsGridCellEmpty(parent, null, column, row, 1, 1))
-					{
-						this.isInside = false;
-					}
-
-					this.constrainsList.Activate(Rectangle.Empty, 0, null);
-					this.SetHilitedZOrderRectangle(Rectangle.Empty);
-				}
-				else
-				{
-					this.constrainsList.Activate(Rectangle.Empty, 0, null);
-					this.SetHilitedZOrderRectangle(Rectangle.Empty);
-				}
 
 				this.creatingWindow.WindowLocation = this.creatingOrigin + pos;
 				this.creatingWindow.SuperLight = !this.isInside;
@@ -1403,47 +869,6 @@ namespace Epsitec.Common.Designer.FormEditor
 				{
 					Point initialPos = pos;
 					this.CreateObjectAdjust(ref pos, parent, out this.creatingRectangle);
-
-					if (this.objectModifier.AreChildrenAnchored(parent))
-					{
-						this.creatingObject = this.CreateObjectItem();
-						this.creatingObject.SetParent(parent);
-						this.creatingObject.TabNavigationMode = TabNavigationMode.None;
-						this.objectModifier.AdaptFromParent(this.creatingObject, PanelEditor.ObjectModifier.StackedHorizontalAttachment.None, PanelEditor.ObjectModifier.StackedVerticalAttachment.None);
-						this.SetObjectPosition(this.creatingObject, pos);
-					}
-
-					if (this.objectModifier.AreChildrenStacked(parent))
-					{
-						Widget group;
-						int order;
-						PanelEditor.ObjectModifier.StackedHorizontalAttachment ha;
-						PanelEditor.ObjectModifier.StackedVerticalAttachment va;
-						Rectangle hilite;
-						this.ZOrderDetect(initialPos, parent, out group, out order, out ha, out va, out hilite);
-
-						this.creatingObject = this.CreateObjectItem();
-						this.creatingObject.SetParent(group);
-						this.creatingObject.ZOrder = order;
-						this.creatingObject.TabNavigationMode = TabNavigationMode.None;
-						this.objectModifier.AdaptFromParent(this.creatingObject, ha, va);
-					}
-
-					if (this.objectModifier.AreChildrenGrid(parent))
-					{
-						int column, row;
-						this.GridDetect(initialPos, parent, out column, out row);
-
-						if (this.objectModifier.IsGridCellEmpty(parent, null, column, row, 1, 1))
-						{
-							this.creatingObject = this.CreateObjectItem();
-							this.objectModifier.SetGridParentColumnRow(this.creatingObject, parent, column, row);
-						}
-						else
-						{
-							this.isInside = false;
-						}
-					}
 				}
 
 				if (this.isInside)
@@ -1460,8 +885,6 @@ namespace Epsitec.Common.Designer.FormEditor
 					this.creatingObject = null;
 				}
 
-				this.SetHilitedZOrderRectangle(Rectangle.Empty);
-				this.constrainsList.Ending();
 				this.SetHilitedParent(null, PanelEditor.GridSelection.Invalid, PanelEditor.GridSelection.Invalid, 0, 0);
 
 				this.lastCreatedObject = this.creatingObject;
@@ -1517,7 +940,6 @@ namespace Epsitec.Common.Designer.FormEditor
 			{
 				MetaButton button = new MetaButton();
 				button.Text = Misc.Italic("Button");
-				this.objectModifier.SetButtonAspect(button, ButtonAspect.IconButton);
 				button.MinWidth = button.PreferredHeight;  // largeur minimale pour former un carré
 				button.MinHeight = button.PreferredHeight;
 				button.PreferredWidth = button.PreferredHeight;
@@ -1529,7 +951,6 @@ namespace Epsitec.Common.Designer.FormEditor
 			{
 				MetaButton button = new MetaButton();
 				button.Text = Misc.Italic("Button");
-				this.objectModifier.SetButtonAspect(button, ButtonAspect.IconButton);
 				button.MinWidth = button.PreferredHeight;  // largeur minimale pour former un carré
 				button.MinHeight = button.PreferredHeight;
 
@@ -1605,18 +1026,7 @@ namespace Epsitec.Common.Designer.FormEditor
 		protected void CreateObjectAdjust(ref Point pos, Widget parent, out Rectangle bounds)
 		{
 			//	Ajuste la position de l'objet à créer selon les contraintes.
-			pos.X -= System.Math.Floor(this.creatingObject.PreferredWidth/2);
-			pos.Y -= System.Math.Floor(this.creatingObject.PreferredHeight/2);
-
-			bounds = new Rectangle(pos, this.creatingObject.PreferredSize);
-
-			if (this.objectModifier.AreChildrenAnchored(parent) && this.isInside)
-			{
-				Rectangle adjust = this.constrainsList.Snap(bounds, this.GetObjectBaseLine(this.creatingObject));
-				Point corr = adjust.BottomLeft - bounds.BottomLeft;
-				pos += corr;
-				bounds.Offset(corr);
-			}
+			bounds = Rectangle.Empty;
 		}
 
 		protected void CreateObjectKeyChanged(bool isControlPressed, bool isShiftPressed)
@@ -1630,189 +1040,8 @@ namespace Epsitec.Common.Designer.FormEditor
 		{
 			//	Choix de la ressource (un Druid) pour l'objet.
 			//	Retourne false s'il fallait choisir un Druid et que l'utilisateur ne l'a pas fait.
-			if (PanelEditor.ObjectModifier.HasDruid(obj))
-			{
-				ResourceAccess.Type type;
-				List<Druid> exclude = null;
-
-				PanelEditor.ObjectModifier.ObjectType oType = PanelEditor.ObjectModifier.GetObjectType(obj);
-				if (oType == PanelEditor.ObjectModifier.ObjectType.Button)
-				{
-					type = ResourceAccess.Type.Commands;
-				}
-				else if (oType == PanelEditor.ObjectModifier.ObjectType.SubPanel)
-				{
-					type = ResourceAccess.Type.Panels;
-
-					exclude = new List<Druid>();
-					exclude.Add(this.druid);
-				}
-				else
-				{
-					type = ResourceAccess.Type.Captions;
-				}
-
-				StructuredTypeClass typeClass = StructuredTypeClass.None;
-				Druid druid = Druid.Parse(PanelEditor.ObjectModifier.GetDruid(obj));
-				bool isNullable = false;
-				Common.Dialogs.DialogResult result = this.module.DesignerApplication.DlgResourceSelector(Dialogs.ResourceSelector.Operation.Selection, this.module, type, ref typeClass, ref druid, ref isNullable, exclude);
-				PanelEditor.ObjectModifier.SetDruid(obj, druid.ToString());
-
-				if (result != Common.Dialogs.DialogResult.Yes)  // annuler ?
-				{
-					return false;
-				}
-
-				if (type == ResourceAccess.Type.Panels)
-				{
-					UI.PanelPlaceholder panel = obj as UI.PanelPlaceholder;
-					Size size = panel.PanelPreferredSize;
-					Point center = this.objectModifier.GetBounds(obj).Center;
-
-					if (this.objectModifier.HasBounds(obj))
-					{
-						Rectangle bounds = new Rectangle(center-size/2, size);
-						this.objectModifier.SetBounds(obj, bounds);
-					}
-				}
-			}
-
-			if (PanelEditor.ObjectModifier.HasBinding(obj))
-			{
-				//	Choix de la rubrique.
-				StructuredType type = PanelEditor.ObjectModifier.GetStructuredType(this.panel);
-				System.Diagnostics.Debug.Assert(type != null);
-
-				Binding binding = PanelEditor.ObjectModifier.GetBinding(obj);
-				PanelEditor.ObjectModifier.ObjectType oType = PanelEditor.ObjectModifier.GetObjectType(obj);
-				if (!this.module.DesignerApplication.DlgBindingSelector(this.module, type, oType, ref binding))
-				{
-					return false;
-				}
-
-				PanelEditor.ObjectModifier.SetBinding(obj, binding, type);
-
-				if (oType == PanelEditor.ObjectModifier.ObjectType.Table)
-				{
-					PanelEditor.ObjectModifier.TableDefineAllColumns(obj);
-				}
-			}
-
 			return true;
 		}
-
-
-		#region Handling
-		protected bool HandlingStart(Point pos)
-		{
-			//	Début du drag pour déplacer une poignée.
-			this.handlingType = this.handlesList.HandleDetect(pos);
-
-			if (this.handlingType == PanelEditor.Handle.Type.None)
-			{
-				this.isHandling = false;
-				return false;
-			}
-			else
-			{
-				System.Diagnostics.Debug.Assert(this.selectedObjects.Count == 1);
-				Widget obj = this.selectedObjects[0];
-
-				bool isHorizontalSymetry = false;
-				bool isVerticalSymetry = false;
-
-				PanelEditor.ObjectModifier.ChildrenPlacement cp = this.objectModifier.GetChildrenPlacement(obj.Parent);
-
-				if (cp == PanelEditor.ObjectModifier.ChildrenPlacement.VerticalStacked)
-				{
-					if (this.objectModifier.GetStackedVerticalAttachment(obj) == PanelEditor.ObjectModifier.StackedVerticalAttachment.Fill)
-					{
-						isVerticalSymetry = true;
-					}
-
-					if (this.objectModifier.GetStackedHorizontalAlignment(obj) == PanelEditor.ObjectModifier.StackedHorizontalAlignment.Center)
-					{
-						isHorizontalSymetry = true;
-					}
-				}
-
-				if (cp == PanelEditor.ObjectModifier.ChildrenPlacement.HorizontalStacked)
-				{
-					if (this.objectModifier.GetStackedHorizontalAttachment(obj) == PanelEditor.ObjectModifier.StackedHorizontalAttachment.Fill)
-					{
-						isHorizontalSymetry = true;
-					}
-
-					if (this.objectModifier.GetStackedVerticalAlignment(obj) == PanelEditor.ObjectModifier.StackedVerticalAlignment.Center)
-					{
-						isVerticalSymetry = true;
-					}
-				}
-
-				if (cp == PanelEditor.ObjectModifier.ChildrenPlacement.Grid)
-				{
-					PanelEditor.ObjectModifier.StackedHorizontalAlignment ha = this.objectModifier.GetStackedHorizontalAlignment(obj);
-					if (ha == PanelEditor.ObjectModifier.StackedHorizontalAlignment.Center || ha == PanelEditor.ObjectModifier.StackedHorizontalAlignment.Stretch)
-					{
-						isHorizontalSymetry = true;
-					}
-
-					PanelEditor.ObjectModifier.StackedVerticalAlignment va = this.objectModifier.GetStackedVerticalAlignment(obj);
-					if (va == PanelEditor.ObjectModifier.StackedVerticalAlignment.Center || va == PanelEditor.ObjectModifier.StackedVerticalAlignment.Stretch)
-					{
-						isVerticalSymetry = true;
-					}
-				}
-
-				this.isHandling = true;
-				this.handlingRectangle = this.SelectBounds;
-				this.handlesList.DraggingStart(pos, this.handlingType, isHorizontalSymetry, isVerticalSymetry);
-
-				CloneView clone = new CloneView();
-				clone.Model = this.selectedObjects[0];
-
-				this.handlingWindow = new DragWindow();
-				this.handlingWindow.DefineWidget(clone, this.handlingRectangle.Size, Margins.Zero);
-				this.handlingWindow.WindowBounds = this.MapClientToScreen(this.ConvPanelToEditor(this.handlingRectangle));
-				this.handlingWindow.Owner = this.Window;
-				this.handlingWindow.FocusedWidget = clone;
-				this.handlingWindow.Show();
-
-				this.SetEnteredObjects(null);
-				this.SetHilitedObject(null, null);
-				this.SetHilitedAttachmentRectangle(Rectangle.Empty);
-				this.Invalidate();
-				return true;
-			}
-		}
-
-		protected void HandlingMove(Point pos)
-		{
-			//	Mouvement du drag pour déplacer une poignée.
-			if (this.isHandling)
-			{
-				this.handlingRectangle = this.handlesList.DraggingMove(pos);
-				this.handlingWindow.WindowBounds = this.MapClientToScreen(this.ConvPanelToEditor(this.handlingRectangle));
-				this.module.DesignerApplication.UpdateInfoViewer();
-			}
-		}
-
-		protected void HandlingEnd(Point pos)
-		{
-			//	Fin du drag pour déplacer une poignée.
-			if (this.isHandling)
-			{
-				this.handlingWindow.Hide();
-				this.handlingWindow.Dispose();
-				this.handlingWindow = null;
-
-				this.handlesList.DraggingStop(pos);
-				this.isHandling = false;
-				this.OnChildrenGeometryChanged();  // met à jour les proxies
-				this.module.DesignerApplication.UpdateInfoViewer();
-			}
-		}
-		#endregion
 
 
 		#region Dragging
@@ -1834,33 +1063,6 @@ namespace Epsitec.Common.Designer.FormEditor
 			this.draggingSpanColumnCount = 1;
 			this.draggingSpanRowCount = 1;
 
-			if (this.objectModifier.AreChildrenAnchored(parent))
-			{
-				this.constrainsList.Starting(this.draggingRectangle, false);
-			}
-			else if (this.objectModifier.AreChildrenGrid(parent))
-			{
-				this.constrainsList.Starting(Rectangle.Empty, false);
-
-				if (this.selectedObjects.Count == 1)
-				{
-					Widget obj = this.selectedObjects[0];
-					this.GridDetect(pos, parent, out column, out row);
-
-					this.draggingSpanColumnOffset = column - this.objectModifier.GetGridColumn(obj);
-					this.draggingSpanRowOffset = row - this.objectModifier.GetGridRow(obj);
-					this.draggingSpanColumnCount = this.objectModifier.GetGridColumnSpan(obj);
-					this.draggingSpanRowCount = this.objectModifier.GetGridRowSpan(obj);
-
-					column -= this.draggingSpanColumnOffset;
-					row -= this.draggingSpanRowOffset;
-				}
-			}
-			else
-			{
-				this.constrainsList.Starting(Rectangle.Empty, false);
-			}
-
 			this.SetHilitedParent(parent, column, row, this.draggingSpanColumnCount, this.draggingSpanRowCount);  // met en évidence le futur parent survolé par la souris
 
 			FrameBox container = new FrameBox();
@@ -1868,19 +1070,6 @@ namespace Epsitec.Common.Designer.FormEditor
 
 			foreach (Widget obj in this.selectedObjects)
 			{
-				Point origin = this.objectModifier.GetActualBounds(obj).BottomLeft - this.draggingRectangle.BottomLeft;
-				CloneView clone = new CloneView(container);
-				clone.PreferredSize = obj.ActualSize;
-				clone.Margins = new Margins(origin.X, 0, 0, origin.Y);
-				clone.Anchor = AnchorStyles.BottomLeft;
-				clone.Model = obj;
-
-				Separator sep = new Separator(container);
-				sep.PreferredSize = obj.ActualSize;
-				sep.Margins = new Margins(origin.X, 0, 0, origin.Y);
-				sep.Anchor = AnchorStyles.BottomLeft;
-				sep.Color = PanelsContext.ColorOutsideForeground;
-				sep.Alpha = 0;
 			}
 
 			this.draggingOrigin = this.MapClientToScreen(this.ConvPanelToEditor(this.draggingOffset));
@@ -1908,48 +1097,6 @@ namespace Epsitec.Common.Designer.FormEditor
 			int row = PanelEditor.GridSelection.Invalid;
 			Point adjust = Point.Zero;
 
-			if (this.objectModifier.AreChildrenAnchored(parent))
-			{
-				this.draggingRectangle.Offset((this.draggingOffset+pos)-this.draggingRectangle.BottomLeft);
-				Rectangle rect = this.isInside ? this.draggingRectangle : Rectangle.Empty;
-				this.constrainsList.Activate(rect, this.draggingBaseLine, this.draggingArraySelected);
-				this.Invalidate();
-
-				adjust = this.draggingRectangle.BottomLeft;
-				if (this.isInside)
-				{
-					this.draggingRectangle = this.constrainsList.Snap(this.draggingRectangle, this.draggingBaseLine);
-				}
-				adjust = this.draggingRectangle.BottomLeft - adjust;
-
-				this.SetHilitedZOrderRectangle(Rectangle.Empty);
-			}
-			else if (this.objectModifier.AreChildrenStacked(parent))
-			{
-				this.constrainsList.Activate(Rectangle.Empty, 0, null);
-
-				Widget group;
-				int order;
-				PanelEditor.ObjectModifier.StackedHorizontalAttachment ha;
-				PanelEditor.ObjectModifier.StackedVerticalAttachment va;
-				Rectangle hilite;
-				this.ZOrderDetect(pos, parent, out group, out order, out ha, out va, out hilite);
-				this.SetHilitedZOrderRectangle(hilite);
-			}
-			else if (this.objectModifier.AreChildrenGrid(parent))
-			{
-				this.GridDetect(pos, parent, out column, out row);
-				if (!this.IsDraggingGridPossible(parent, ref column, ref row))
-				{
-					this.isInside = false;
-				}
-			}
-			else
-			{
-				this.constrainsList.Activate(Rectangle.Empty, 0, null);
-				this.SetHilitedZOrderRectangle(Rectangle.Empty);
-			}
-
 			this.draggingWindow.WindowLocation = this.draggingOrigin + pos + adjust;
 			this.draggingWindow.SuperLight = !this.isInside;
 
@@ -1968,63 +1115,6 @@ namespace Epsitec.Common.Designer.FormEditor
 			if (this.isInside)
 			{
 				Widget initialParent = this.draggingArraySelected[0].Parent;
-
-				if (this.objectModifier.AreChildrenAnchored(parent))
-				{
-					Rectangle initial = this.SelectBounds;
-					this.MoveSelection(this.draggingRectangle.BottomLeft - initial.BottomLeft, parent);
-					this.OnChildrenGeometryChanged();  // met à jour les proxies
-				}
-
-				if (this.objectModifier.AreChildrenStacked(parent))
-				{
-					Widget group;
-					int order;
-					PanelEditor.ObjectModifier.StackedHorizontalAttachment ha;
-					PanelEditor.ObjectModifier.StackedVerticalAttachment va;
-					Rectangle hilite;
-					this.ZOrderDetect(pos, parent, out group, out order, out ha, out va, out hilite);
-					this.ZOrderChangeSelection(group, order, ha, va);
-					this.OnChildrenGeometryChanged();  // met à jour les proxies
-				}
-
-				if (this.objectModifier.AreChildrenGrid(parent))
-				{
-					int column, row;
-					this.GridDetect(pos, parent, out column, out row);
-
-					if (this.IsDraggingGridPossible(parent, ref column, ref row))
-					{
-						Widget select = this.selectedObjects[0];
-						Widget actual = this.objectModifier.GetGridCellWidget(parent, null, column, row);
-
-						if (select == actual)
-						{
-							this.objectModifier.SetGridParentColumnRow(select, parent, column, row);
-						}
-						else
-						{
-							Widget ip = select.Parent;
-							int ic = this.objectModifier.GetGridColumn(select);
-							int ir = this.objectModifier.GetGridRow(select);
-
-							this.objectModifier.SetGridParentColumnRow(select, parent, column, row);
-							this.objectModifier.AdaptFromParent(select, PanelEditor.ObjectModifier.StackedHorizontalAttachment.None, PanelEditor.ObjectModifier.StackedVerticalAttachment.None);
-
-							if (actual != null)
-							{
-								this.objectModifier.SetGridParentColumnRow(actual, ip, ic, ir);
-							}
-						}
-
-						this.OnChildrenGeometryChanged();  // met à jour les proxies
-					}
-					else
-					{
-						//	Si on relâche l'objet dans une cellule occupée, on ne fait rien.
-						//	L'objet reste ainsi à sa position initiale.
-					}
-				}
 
 				if (initialParent != this.selectedObjects[0].Parent)
 				{
@@ -2046,11 +1136,8 @@ namespace Epsitec.Common.Designer.FormEditor
 			}
 
 			this.SetHilitedParent(null, PanelEditor.GridSelection.Invalid, PanelEditor.GridSelection.Invalid, 0, 0);
-			this.SetHilitedZOrderRectangle(Rectangle.Empty);
 			this.isDragging = false;
 			this.draggingArraySelected = null;
-			this.constrainsList.Ending();
-			this.handlesList.UpdateGeometry();
 			this.Invalidate();
 		}
 
@@ -2074,29 +1161,6 @@ namespace Epsitec.Common.Designer.FormEditor
 			column -= this.draggingSpanColumnOffset;
 			row -= this.draggingSpanRowOffset;
 
-			if (!this.objectModifier.IsGridCellEmpty(parent, obj, column, row, this.draggingSpanColumnCount, this.draggingSpanRowCount))
-			{
-				Widget sourceParent = obj.Parent;
-				if (sourceParent != parent)
-				{
-					return false;
-				}
-
-				Widget actual = this.objectModifier.GetGridCellWidget(obj.Parent, obj, column, row);
-				if (actual == null)
-				{
-					return false;
-				}
-
-				if (this.objectModifier.GetGridColumnSpan(obj) != this.objectModifier.GetGridColumnSpan(actual)||
-					this.objectModifier.GetGridRowSpan(obj) != this.objectModifier.GetGridRowSpan(actual)||
-					column != this.objectModifier.GetGridColumn(actual)||
-					row != this.objectModifier.GetGridRow(actual))
-				{
-					return false;
-				}
-			}
-
 			return true;
 		}
 		#endregion
@@ -2110,7 +1174,7 @@ namespace Epsitec.Common.Designer.FormEditor
 			//	Si sameParent = true, l'objet détecté doit avoir le même parent que
 			//	l'objet éventuellement déjà sélectionné.
 			Widget detected = this.Detect(pos, sameParent, onlyGrid, this.panel);
-			if (detected == null && (!sameParent || this.selectedObjects.Count == 0) && (!onlyGrid || this.objectModifier.AreChildrenGrid(this.panel)))
+			if (detected == null && (!sameParent || this.selectedObjects.Count == 0) && !onlyGrid)
 			{
 				Rectangle rect = this.panel.Client.Bounds;
 				if (rect.Contains(pos))
@@ -2146,26 +1210,12 @@ namespace Epsitec.Common.Designer.FormEditor
 						return deep;
 					}
 
-					if (PanelEditor.ObjectModifier.IsAbstractGroup(widget))
-					{
-						rect.Deflate(this.GetDetectPadding(widget, onlyGrid));
-						if (rect.Contains(pos))
-						{
-							continue;
-						}
-					}
-
 					if (sameParent && this.selectedObjects.Count > 0)
 					{
 						if (widget.Parent != this.selectedObjects[0].Parent)
 						{
 							continue;
 						}
-					}
-
-					if (onlyGrid && !this.objectModifier.AreChildrenGrid(widget))
-					{
-						continue;
 					}
 
 					return widget;
@@ -2178,13 +1228,6 @@ namespace Epsitec.Common.Designer.FormEditor
 		protected Margins GetDetectPadding(Widget obj, bool insideGrid)
 		{
 			//	Retourne les marges intérieures pour la détection du padding.
-			if (insideGrid && this.objectModifier.AreChildrenGrid(obj))
-			{
-				//	On rend des marges maximales pour accepter la détection dans toute
-				//	la surface de l'objet.
-				return new Margins(double.MaxValue, double.MaxValue, double.MaxValue, double.MaxValue);
-			}
-
 			Margins padding = obj.Padding;
 			padding += obj.GetInternalPadding();
 
@@ -2226,7 +1269,6 @@ namespace Epsitec.Common.Designer.FormEditor
 			if (this.selectedObjects.Count > 0)
 			{
 				this.selectedObjects.Clear();
-				this.GridClearSelection();
 				this.UpdateAfterChanging(PanelEditor.Editor.Changing.Selection);
 				this.OnChildrenSelected();
 				this.Invalidate();
@@ -2243,7 +1285,6 @@ namespace Epsitec.Common.Designer.FormEditor
 				this.selectedObjects.Add(obj);
 			}
 
-			this.GridClearSelection();
 			this.UpdateAfterChanging(PanelEditor.Editor.Changing.Selection);
 			this.OnChildrenSelected();
 			this.Invalidate();
@@ -2264,7 +1305,6 @@ namespace Epsitec.Common.Designer.FormEditor
 
 			this.selectedObjects = list;
 
-			this.GridClearSelection();
 			this.UpdateAfterChanging(PanelEditor.Editor.Changing.Selection);
 			this.OnChildrenSelected();
 			this.Invalidate();
@@ -2276,7 +1316,6 @@ namespace Epsitec.Common.Designer.FormEditor
 			this.selectedObjects.Clear();
 			this.selectedObjects.Add(this.panel);
 
-			this.GridClearSelection();
 			this.UpdateAfterChanging(PanelEditor.Editor.Changing.Selection);
 			this.OnChildrenSelected();
 			this.Invalidate();
@@ -2290,7 +1329,6 @@ namespace Epsitec.Common.Designer.FormEditor
 			this.selectedObjects.Clear();
 			this.selectedObjects.Add(parent);
 
-			this.GridClearSelection();
 			this.UpdateAfterChanging(PanelEditor.Editor.Changing.Selection);
 			this.OnChildrenSelected();
 			this.Invalidate();
@@ -2301,7 +1339,6 @@ namespace Epsitec.Common.Designer.FormEditor
 			//	Sélectionne un objet.
 			this.selectedObjects.Clear();
 			this.selectedObjects.Add(obj);
-			this.GridClearSelection();
 			this.UpdateAfterChanging(PanelEditor.Editor.Changing.Selection);
 			this.OnChildrenSelected();
 			this.Invalidate();
@@ -2311,7 +1348,6 @@ namespace Epsitec.Common.Designer.FormEditor
 		{
 			//	Sélectionne une liste d'objets.
 			this.selectedObjects = list;
-			this.GridClearSelection();
 			this.UpdateAfterChanging(PanelEditor.Editor.Changing.Selection);
 			this.OnChildrenSelected();
 			this.Invalidate();
@@ -2322,7 +1358,6 @@ namespace Epsitec.Common.Designer.FormEditor
 			//	Sélectionne tous les objets entièrement inclus dans un rectangle.
 			//	Tous les objets sélectionnés doivent avoir le même parent.
 			this.SelectObjectsInRectangle(sel, this.panel);
-			this.GridClearSelection();
 			this.UpdateAfterChanging(PanelEditor.Editor.Changing.Selection);
 			this.OnChildrenSelected();
 			this.Invalidate();
@@ -2330,43 +1365,16 @@ namespace Epsitec.Common.Designer.FormEditor
 
 		protected void SelectObjectsInRectangle(Rectangle sel, Widget parent)
 		{
-			if (parent.HasChildren)
-			{
-				foreach (Widget obj in parent.Children)
-				{
-					if (sel.Contains(this.objectModifier.GetActualBounds(obj)))
-					{
-						if (this.selectedObjects.Count > 0)
-						{
-							if (obj.Parent != this.selectedObjects[0].Parent)
-							{
-								continue;
-							}
-						}
-
-						this.selectedObjects.Add(obj);
-					}
-					else
-					{
-						if (PanelEditor.ObjectModifier.IsAbstractGroup(obj))
-						{
-							this.SelectObjectsInRectangle(sel, obj);
-						}
-					}
-				}
-			}
 		}
 
 		public void RegenerateDimensions()
 		{
 			//	Régénère les cotes s'il y a eu un changement.
-			this.dimensionsList.UpdateSelection();
 		}
 
 		public void UpdateAfterSelectionGridChanged()
 		{
 			//	Mise à jour après un changement de sélection dans un tableau.
-			this.dimensionsList.UpdateSelection();
 			this.OnChildrenSelected();  // met à jour les panneaux des proxies à droite
 		}
 
@@ -2375,8 +1383,6 @@ namespace Epsitec.Common.Designer.FormEditor
 			//	Mise à jour après un changement de sélection, ou après un changement dans
 			//	l'arbre des objets (création, changement de parenté, etc.).
 			this.module.DesignerApplication.UpdateViewer(oper);
-			this.handlesList.UpdateSelection();
-			this.dimensionsList.UpdateSelection();
 			PanelEditor.GeometryCache.Clear(this.panel);
 		}
 
@@ -2390,12 +1396,6 @@ namespace Epsitec.Common.Designer.FormEditor
 		protected void SetHilitedObject(Widget obj, PanelEditor.GridSelection grid)
 		{
 			//	Détermine l'objet à mettre en évidence lors d'un survol.
-			if (this.hilitedObject != obj || !PanelEditor.GridSelection.EqualValues(this.hilitedGrid, grid))
-			{
-				this.hilitedObject = obj;
-				this.hilitedGrid = grid;
-				this.Invalidate();
-			}
 		}
 
 		protected void SetHilitedParent(Widget obj, int column, int row, int columnCount, int rowCount)
@@ -2447,7 +1447,6 @@ namespace Epsitec.Common.Designer.FormEditor
 			}
 
 			this.selectedObjects.Clear();
-			this.GridClearSelection();
 			this.UpdateAfterChanging(PanelEditor.Editor.Changing.Delete);
 			this.OnChildrenSelected();
 			this.Invalidate();
@@ -2466,33 +1465,12 @@ namespace Epsitec.Common.Designer.FormEditor
 			direction.X *= this.module.DesignerApplication.MoveHorizontal;
 			direction.Y *= this.module.DesignerApplication.MoveVertical;
 			this.MoveSelection(direction, null);
-			this.handlesList.UpdateGeometry();
 			this.SetDirty();
 		}
 
 		protected void MoveSelection(Point move, Widget parent)
 		{
 			//	Déplace et change de parent pour tous les objets sélectionnés.
-			foreach (Widget obj in this.selectedObjects)
-			{
-				Rectangle bounds = this.objectModifier.GetBounds(obj);
-				bounds.Offset(move);
-
-				if (parent != null)
-				{
-					if (obj.Parent != parent)
-					{
-						obj.Parent.Children.Remove(obj);
-						parent.Children.Add(obj);
-					}
-
-					this.objectModifier.AdaptFromParent(obj, PanelEditor.ObjectModifier.StackedHorizontalAttachment.None, PanelEditor.ObjectModifier.StackedVerticalAttachment.None);
-				}
-
-				bounds.Size = this.GetObjectPreferredBounds(obj).Size;
-				this.SetObjectPreferredBounds(obj, bounds);
-			}
-
 			this.Invalidate();
 		}
 
@@ -2671,11 +1649,6 @@ namespace Epsitec.Common.Designer.FormEditor
 			{
 				obj.TabIndex = index++;
 				obj.TabNavigationMode = TabNavigationMode.ActivateOnTab;
-
-				if (PanelEditor.ObjectModifier.IsAbstractGroup(obj))
-				{
-					this.SelectTabIndexRenum(obj);
-				}
 			}
 		}
 
@@ -2725,12 +1698,6 @@ namespace Epsitec.Common.Designer.FormEditor
 			get
 			{
 				Rectangle bounds = Rectangle.Empty;
-
-				foreach (Widget obj in this.selectedObjects)
-				{
-					bounds = Rectangle.Union(bounds, this.objectModifier.GetActualBounds(obj));
-				}
-
 				return bounds;
 			}
 		}
@@ -2755,143 +1722,41 @@ namespace Epsitec.Common.Designer.FormEditor
 		protected void ChangeObjectAttachment(Widget obj, Attachment attachment)
 		{
 			//	Modifie le système d'attachement d'un objet.
-			if (this.objectModifier.AreChildrenAnchored(obj.Parent))
-			{
-				Rectangle bounds = this.objectModifier.GetBounds(obj);
-
-				PanelEditor.ObjectModifier.AnchoredHorizontalAttachment ha = this.objectModifier.GetAnchoredHorizontalAttachment(obj);
-				PanelEditor.ObjectModifier.AnchoredVerticalAttachment   va = this.objectModifier.GetAnchoredVerticalAttachment(obj);
-
-				if (attachment == Attachment.Left)
-				{
-					if (ha == PanelEditor.ObjectModifier.AnchoredHorizontalAttachment.Right)
-					{
-						ha = PanelEditor.ObjectModifier.AnchoredHorizontalAttachment.Fill;
-					}
-					else
-					{
-						ha = PanelEditor.ObjectModifier.AnchoredHorizontalAttachment.Right;
-					}
-				}
-
-				if (attachment == Attachment.Right)
-				{
-					if (ha == PanelEditor.ObjectModifier.AnchoredHorizontalAttachment.Left)
-					{
-						ha = PanelEditor.ObjectModifier.AnchoredHorizontalAttachment.Fill;
-					}
-					else
-					{
-						ha = PanelEditor.ObjectModifier.AnchoredHorizontalAttachment.Left;
-					}
-				}
-
-				if (attachment == Attachment.Bottom)
-				{
-					if (va == PanelEditor.ObjectModifier.AnchoredVerticalAttachment.Top)
-					{
-						va = PanelEditor.ObjectModifier.AnchoredVerticalAttachment.Fill;
-					}
-					else
-					{
-						va = PanelEditor.ObjectModifier.AnchoredVerticalAttachment.Top;
-					}
-				}
-
-				if (attachment == Attachment.Top)
-				{
-					if (va == PanelEditor.ObjectModifier.AnchoredVerticalAttachment.Bottom)
-					{
-						va = PanelEditor.ObjectModifier.AnchoredVerticalAttachment.Fill;
-					}
-					else
-					{
-						va = PanelEditor.ObjectModifier.AnchoredVerticalAttachment.Bottom;
-					}
-				}
-
-				this.objectModifier.SetAnchoredHorizontalAttachment(obj, ha);
-				this.objectModifier.SetAnchoredVerticalAttachment(obj, va);
-				this.objectModifier.SetBounds(obj, bounds);
-
-				this.handlesList.UpdateGeometry();
-				this.OnChildrenGeometryChanged();  // met à jour les proxies
-			}
 		}
 
 		public void SetObjectPositionX(Widget obj, double x)
 		{
-			if (this.objectModifier.AreChildrenAnchored(obj.Parent))
-			{
-				Rectangle bounds = this.objectModifier.GetBounds(obj);
-				bounds.Offset(x-bounds.Left, 0);
-				this.objectModifier.SetBounds(obj, bounds);
-			}
 		}
 
 		public void SetObjectPositionY(Widget obj, double y)
 		{
-			if (this.objectModifier.AreChildrenAnchored(obj.Parent))
-			{
-				Rectangle bounds = this.objectModifier.GetBounds(obj);
-				bounds.Offset(0, y-bounds.Bottom);
-				this.objectModifier.SetBounds(obj, bounds);
-			}
 		}
 
 		public void SetObjectPosition(Widget obj, Point pos)
 		{
-			if (this.objectModifier.AreChildrenAnchored(obj.Parent))
-			{
-				Rectangle bounds = this.objectModifier.GetBounds(obj);
-				bounds.Offset(pos-bounds.BottomLeft);
-				this.objectModifier.SetBounds(obj, bounds);
-			}
 		}
 
 		public Rectangle GetObjectPreferredBounds(Widget obj)
 		{
-			return this.objectModifier.GetBounds(obj);
+			return Rectangle.Empty;
 		}
 
 		public void SetObjectPreferredBounds(Widget obj, Rectangle bounds)
 		{
-			if (this.objectModifier.AreChildrenAnchored(obj.Parent))
-			{
-				this.objectModifier.SetBounds(obj, bounds);
-			}
-
-			if (this.objectModifier.AreChildrenStacked(obj.Parent))
-			{
-				if (this.objectModifier.HasWidth(obj))
-				{
-					this.objectModifier.SetWidth(obj, bounds.Width);
-				}
-
-				if (this.objectModifier.HasHeight(obj))
-				{
-					this.objectModifier.SetHeight(obj, bounds.Height);
-				}
-			}
-
-			if (this.objectModifier.AreChildrenGrid(obj.Parent))
-			{
-				this.objectModifier.SetBounds(obj, bounds);
-			}
 		}
 
 		public bool IsObjectWidthChanging(Widget obj)
 		{
 			//	Indique si la largeur d'un objet peut changer.
 			//	Utilisé par HandlesList pour déterminer quelles poignées sont visibles.
-			return this.objectModifier.HasBounds(obj) || this.objectModifier.HasWidth(obj);
+			return false;
 		}
 
 		public bool IsObjectHeightChanging(Widget obj)
 		{
 			//	Indique si la hauteur d'un objet peut changer.
 			//	Utilisé par HandlesList pour déterminer quelles poignées sont visibles.
-			return this.objectModifier.HasBounds(obj) || this.objectModifier.HasHeight(obj);
+			return false;
 		}
 
 		public double GetObjectBaseLine(Widget obj)
@@ -2979,510 +1844,6 @@ namespace Epsitec.Common.Designer.FormEditor
 		#endregion
 
 
-		#region Attachment
-		protected bool AttachmentDetect(Point mouse, out Widget obj, out Attachment attachment)
-		{
-			//	Détecte dans quel attachement d'un objet est la souris.
-			if (!this.context.ShowAttachment || this.selectedObjects.Count != 1)
-			{
-				obj = null;
-				attachment = Attachment.None;
-				return false;
-			}
-
-			Attachment[] attachments = { Attachment.Left, Attachment.Right, Attachment.Bottom, Attachment.Top };
-
-			foreach (Widget o in this.selectedObjects)
-			{
-				if (this.objectModifier.AreChildrenAnchored(o.Parent))
-				{
-					foreach (Attachment s in attachments)
-					{
-						Rectangle bounds = this.GetAttachmentBounds(o, s);
-						if (bounds.Contains(mouse))
-						{
-							obj = o;
-							attachment = s;
-							return true;
-						}
-					}
-				}
-			}
-
-			obj = null;
-			attachment = Attachment.None;
-			return false;
-		}
-
-		protected Rectangle GetAttachmentBounds(Widget obj, Attachment style)
-		{
-			//	Retourne le rectangle englobant un attachement.
-			Rectangle bounds = this.objectModifier.GetActualBounds(obj.Parent);
-			Rectangle rect = this.objectModifier.GetActualBounds(obj);
-			Point p1, p2, p1a, p2a;
-
-			if (style == Attachment.Left)
-			{
-				p1 = new Point(bounds.Left, rect.Center.Y);
-				p2 = new Point(rect.Left, rect.Center.Y);
-				p1a = Point.Scale(p1, p2, Editor.attachmentScale);
-				p2a = Point.Scale(p2, p1, Editor.attachmentScale);
-				p1a.Y -= Editor.attachmentThickness;
-				p2a.Y += Editor.attachmentThickness;
-				return new Rectangle(p1a, p2a);
-			}
-
-			if (style == Attachment.Right)
-			{
-				p1 = new Point(bounds.Right, rect.Center.Y);
-				p2 = new Point(rect.Right, rect.Center.Y);
-				p1a = Point.Scale(p1, p2, Editor.attachmentScale);
-				p2a = Point.Scale(p2, p1, Editor.attachmentScale);
-				p1a.Y -= Editor.attachmentThickness;
-				p2a.Y += Editor.attachmentThickness;
-				return new Rectangle(p1a, p2a);
-			}
-
-			if (style == Attachment.Bottom)
-			{
-				p1 = new Point(rect.Center.X, bounds.Bottom);
-				p2 = new Point(rect.Center.X, rect.Bottom);
-				p1a = Point.Scale(p1, p2, Editor.attachmentScale);
-				p2a = Point.Scale(p2, p1, Editor.attachmentScale);
-				p1a.X -= Editor.attachmentThickness;
-				p2a.X += Editor.attachmentThickness;
-				return new Rectangle(p1a, p2a);
-			}
-
-			if (style == Attachment.Top)
-			{
-				p1 = new Point(rect.Center.X, bounds.Top);
-				p2 = new Point(rect.Center.X, rect.Top);
-				p1a = Point.Scale(p1, p2, Editor.attachmentScale);
-				p2a = Point.Scale(p2, p1, Editor.attachmentScale);
-				p1a.X -= Editor.attachmentThickness;
-				p2a.X += Editor.attachmentThickness;
-				return new Rectangle(p1a, p2a);
-			}
-
-			return Rectangle.Empty;
-		}
-		#endregion
-
-
-		#region ZOrder
-		protected void ZOrderDetect(Point mouse, Widget parent, out Widget group, out int order, out PanelEditor.ObjectModifier.StackedHorizontalAttachment ha, out PanelEditor.ObjectModifier.StackedVerticalAttachment va, out Rectangle hilite)
-		{
-			//	Détecte le ZOrder à utiliser pour une position donnée, ainsi que le rectangle
-			//	à utiliser pour la mise ne évidence.
-			if (parent == null)
-			{
-				group = null;
-				order = -1;
-				ha = PanelEditor.ObjectModifier.StackedHorizontalAttachment.None;
-				va = PanelEditor.ObjectModifier.StackedVerticalAttachment.None;
-				hilite = Rectangle.Empty;
-				return;
-			}
-
-			group = parent;
-			order = 0;
-			ha = PanelEditor.ObjectModifier.StackedHorizontalAttachment.None;
-			va = PanelEditor.ObjectModifier.StackedVerticalAttachment.None;
-			hilite = Rectangle.Empty;
-
-			double t = this.context.ZOrderThickness;
-
-			Widget obj = this.ZOrderDetectNearest(mouse, parent);  // objet le plus proche
-			if (obj == null)
-			{
-				Rectangle bounds = this.objectModifier.GetActualBounds(parent);
-
-				if (this.objectModifier.AreChildrenHorizontal(parent))
-				{
-					if (mouse.X < bounds.Center.X)
-					{
-						hilite = new Rectangle(bounds.Left, bounds.Bottom, t*2, bounds.Height);
-						ha = PanelEditor.ObjectModifier.StackedHorizontalAttachment.Left;
-					}
-					else
-					{
-						hilite = new Rectangle(bounds.Right-t*2, bounds.Bottom, t*2, bounds.Height);
-						ha = PanelEditor.ObjectModifier.StackedHorizontalAttachment.Right;
-					}
-				}
-				else
-				{
-					if (mouse.Y < bounds.Center.Y)
-					{
-						hilite = new Rectangle(bounds.Left, bounds.Bottom, bounds.Width, t*2);
-						va = PanelEditor.ObjectModifier.StackedVerticalAttachment.Bottom;
-					}
-					else
-					{
-						hilite = new Rectangle(bounds.Left, bounds.Top-t*2, bounds.Width, t*2);
-						va = PanelEditor.ObjectModifier.StackedVerticalAttachment.Top;
-					}
-				}
-
-				order = parent.Children.Count;
-			}
-			else
-			{
-				group = obj.Parent;
-				order = obj.ZOrder;
-
-				Rectangle bounds = this.objectModifier.GetActualBounds(obj);
-				bounds.Inflate(this.objectModifier.GetMargins(obj));
-
-				if (this.objectModifier.AreChildrenHorizontal(parent))
-				{
-					if (this.objectModifier.HasAttachmentLeft(obj))
-					{
-						if (mouse.X > bounds.Center.X)
-						{
-							hilite = new Rectangle(bounds.Right, bounds.Bottom, 0, bounds.Height);
-						}
-						else
-						{
-							order++;
-							hilite = new Rectangle(bounds.Left, bounds.Bottom, 0, bounds.Height);
-						}
-					}
-					else
-					{
-						if (mouse.X < bounds.Center.X)
-						{
-							hilite = new Rectangle(bounds.Left, bounds.Bottom, 0, bounds.Height);
-						}
-						else
-						{
-							order++;
-							hilite = new Rectangle(bounds.Right, bounds.Bottom, 0, bounds.Height);
-						}
-					}
-
-					ha = this.objectModifier.GetStackedHorizontalAttachment(obj);
-				}
-				else
-				{
-					if (this.objectModifier.HasAttachmentBottom(obj))
-					{
-						if (mouse.Y > bounds.Center.Y)
-						{
-							hilite = new Rectangle(bounds.Left, bounds.Top, bounds.Width, 0);
-						}
-						else
-						{
-							order++;
-							hilite = new Rectangle(bounds.Left, bounds.Bottom, bounds.Width, 0);
-						}
-					}
-					else
-					{
-						if (mouse.Y < bounds.Center.Y)
-						{
-							hilite = new Rectangle(bounds.Left, bounds.Bottom, bounds.Width, 0);
-						}
-						else
-						{
-							order++;
-							hilite = new Rectangle(bounds.Left, bounds.Top, bounds.Width, 0);
-						}
-					}
-
-					va = this.objectModifier.GetStackedVerticalAttachment(obj);
-				}
-
-				hilite.Inflate(t);
-			}
-
-			if (this.selectedObjects.Contains(obj))
-			{
-				//	Un objet sélectionné n'est jamais pris en compte.
-				group = null;
-				order = -1;  // aucun changement
-				ha = PanelEditor.ObjectModifier.StackedHorizontalAttachment.None;
-				va = PanelEditor.ObjectModifier.StackedVerticalAttachment.None;
-				hilite = Rectangle.Empty;
-				return;
-			}
-
-			if (this.selectedObjects.Count != 0)
-			{
-				//	Un ZOrder équivalent au ZOrder de l'objet actuellement sélectionné n'est
-				//	pas retourné, pour éviter à l'utilisateur de croire qu'il va changer
-				//	quelque chose.
-				foreach (Widget selectedObj in this.selectedObjects)
-				{
-					if (selectedObj.Parent == parent)
-					{
-						if (selectedObj.ZOrder == order || selectedObj.ZOrder == order-1)
-						{
-							if (this.objectModifier.AreChildrenHorizontal(parent))
-							{
-								if (this.objectModifier.GetStackedHorizontalAttachment(selectedObj) != ha)
-								{
-									continue;
-								}
-							}
-							else
-							{
-								if (this.objectModifier.GetStackedVerticalAttachment(selectedObj) != va)
-								{
-									continue;
-								}
-							}
-
-							group = null;
-							order = -1;  // aucun changement
-							ha = PanelEditor.ObjectModifier.StackedHorizontalAttachment.None;
-							va = PanelEditor.ObjectModifier.StackedVerticalAttachment.None;
-							hilite = Rectangle.Empty;
-							return;
-						}
-					}
-				}
-			}
-		}
-
-		protected Widget ZOrderDetectNearest(Point pos, Widget parent)
-		{
-			//	Détecte l'objet le plus proche de la souris.
-			bool horizontal = (this.objectModifier.GetChildrenPlacement(parent) == PanelEditor.ObjectModifier.ChildrenPlacement.HorizontalStacked);
-			Widget minWidget = null;
-			Widget maxWidget = null;
-
-			//	Cherche les objets aux 'extrémités'. Par exemple, en mode VerticalDocked, minWidget
-			//	sera l'objet docké en bas le plus haut, et maxWidget l'objet docké en haut le plus bas.
-			for (int i=parent.Children.Count-1; i>=0; i--)
-			{
-				Widget obj = parent.Children[i] as Widget;
-
-				if (horizontal)
-				{
-					if (minWidget == null && this.objectModifier.HasAttachmentLeft(obj))
-					{
-						minWidget = obj;
-					}
-
-					if (maxWidget == null && this.objectModifier.HasAttachmentRight(obj))
-					{
-						maxWidget = obj;
-					}
-				}
-				else
-				{
-					if (minWidget == null && this.objectModifier.HasAttachmentBottom(obj))
-					{
-						minWidget = obj;
-					}
-
-					if (maxWidget == null && this.objectModifier.HasAttachmentTop(obj))
-					{
-						maxWidget = obj;
-					}
-				}
-			}
-
-			//	S'il n'existe aucun objet à une 'extrémité', détecte si la position est
-			//	dans cette zone pour retourner null. Cela permettra à ZOrderDetect d'y
-			//	placer un objet.
-			if (minWidget != null && maxWidget == null)
-			{
-				Rectangle box = this.objectModifier.GetActualBounds(parent);
-
-				if (horizontal)
-				{
-					if (pos.X >= box.Right-parent.Padding.Right)
-					{
-						return null;
-					}
-				}
-				else
-				{
-					if (pos.Y >= box.Top-parent.Padding.Top)
-					{
-						return null;
-					}
-				}
-			}
-
-			if (minWidget == null && maxWidget != null)
-			{
-				Rectangle box = this.objectModifier.GetActualBounds(parent);
-
-				if (horizontal)
-				{
-					if (pos.X <= box.Left+parent.Padding.Left)
-					{
-						return null;
-					}
-				}
-				else
-				{
-					if (pos.Y <= box.Bottom+parent.Padding.Bottom)
-					{
-						return null;
-					}
-				}
-			}
-
-			//	Détecte l'objet le plus proche, qu'il soit sélectionné ou non.
-			Widget best = null;
-			double min = 1000000;
-
-			for (int i=parent.Children.Count-1; i>=0; i--)
-			{
-				Widget obj = parent.Children[i] as Widget;
-
-				Rectangle bounds = this.objectModifier.GetActualBounds(obj);
-				double d;
-
-				if (horizontal)
-				{
-					d = System.Math.Abs(bounds.Center.X-pos.X);
-				}
-				else
-				{
-					d = System.Math.Abs(bounds.Center.Y-pos.Y);
-				}
-
-				if (min > d)
-				{
-					min = d;
-					best = obj;
-				}
-			}
-
-			return best;
-		}
-
-		protected void SetHilitedZOrderRectangle(Rectangle rect)
-		{
-			//	Détermine la zone du rectangle d'insertion ZOrder.
-			if (this.hilitedZOrderRectangle != rect)
-			{
-				this.Invalidate(this.ConvPanelToEditor(this.hilitedZOrderRectangle));  // invalide l'ancienne zone
-				this.hilitedZOrderRectangle = rect;
-				this.Invalidate(this.ConvPanelToEditor(this.hilitedZOrderRectangle));  // invalide la nouvelle zone
-			}
-		}
-
-		protected void ZOrderChangeSelection(Widget parent, int order, PanelEditor.ObjectModifier.StackedHorizontalAttachment ha, PanelEditor.ObjectModifier.StackedVerticalAttachment va)
-		{
-			//	Change le ZOrder de tous les objets sélectionnés.
-			if (order == -1 || this.selectedObjects.Contains(parent))
-			{
-				return;
-			}
-
-			foreach (Widget obj in this.selectedObjects)
-			{
-				int newOrder = order;
-
-				if (newOrder > obj.ZOrder && obj.Parent == parent)
-				{
-					newOrder--;
-				}
-
-				bool stacked = this.objectModifier.AreChildrenStacked(obj.Parent);
-
-				obj.SetParent(parent);
-				obj.ZOrder = newOrder;
-
-				if (!stacked)
-				{
-					this.objectModifier.AdaptFromParent(obj, ha, va);
-				}
-			}
-		}
-		#endregion
-
-
-		#region Grid
-		public void GridClearSelection()
-		{
-			//	Supprime toutes les sélections de cellules/colonnes/lignes dans les tableaux.
-			this.GridClearSelection(null);
-		}
-
-		protected void GridClearSelection(Widget exclude)
-		{
-			//	Supprime toutes les sélections de cellules/colonnes/lignes dans les tableaux, sauf une.
-			if (this.panel != exclude && PanelEditor.GridSelection.Get(this.panel) != null)
-			{
-				PanelEditor.GridSelection.Detach(this.panel);
-				this.panel.Invalidate();
-				this.Invalidate();
-			}
-
-			this.GridClearSelection(this.panel, exclude);
-		}
-
-		protected void GridClearSelection(Widget parent, Widget exclude)
-		{
-			if (parent.HasChildren)
-			{
-				foreach (Widget obj in parent.Children)
-				{
-					if (PanelEditor.ObjectModifier.IsAbstractGroup(obj))
-					{
-						if (obj != exclude && PanelEditor.GridSelection.Get(obj) != null)
-						{
-							PanelEditor.GridSelection.Detach(obj);
-							obj.Invalidate();
-							this.Invalidate();
-						}
-
-						this.GridClearSelection(obj, exclude);
-					}
-				}
-			}
-		}
-
-		protected void GridDetect(Point mouse, Widget parent, out int column, out int row)
-		{
-			//	Détecte la colonne et la ligne visée dans un tableau.
-			column = PanelEditor.GridSelection.Invalid;
-			row = PanelEditor.GridSelection.Invalid;
-
-			if (!this.objectModifier.AreChildrenGrid(parent))  return;
-
-			GridLayoutEngine engine = LayoutEngine.GetLayoutEngine(parent) as GridLayoutEngine;
-			if (engine == null)  return;
-
-			Rectangle rect = this.objectModifier.GetFinalPadding(parent);
-
-			int columns = engine.ColumnDefinitions.Count;
-			double x = rect.Left;
-			for (int c=0; c<columns; c++)
-			{
-				ColumnDefinition def = engine.ColumnDefinitions[c];
-				double w = def.LeftBorder + def.ActualWidth + def.RightBorder;
-				if (mouse.X >= x && mouse.X < x+w)
-				{
-					column = c;
-				}
-				x += w;
-			}
-
-			int rows = engine.RowDefinitions.Count;
-			double y = rect.Top;
-			for (int r=0; r<rows; r++)
-			{
-				RowDefinition def = engine.RowDefinitions[r];
-				double h = def.TopBorder + def.ActualHeight + def.BottomBorder;
-				if (mouse.Y < y && mouse.Y >= y-h)
-				{
-					row = r;
-				}
-				y -= h;
-			}
-		}
-		#endregion
-
-
 		#region SizeMark
 		protected bool SizeMarkDraggingStart(Point pos)
 		{
@@ -3522,7 +1883,6 @@ namespace Epsitec.Common.Designer.FormEditor
 				}
 
 				this.panel.PreferredSize = this.sizeMark;
-				this.handlesList.UpdateGeometry();
 				this.Invalidate();
 			}
 			else
@@ -3676,13 +2036,13 @@ namespace Epsitec.Common.Designer.FormEditor
 			}
 
 			//	Dessine les objets sélectionnés.
-			if (this.selectedObjects.Count > 0 && !this.isDragging && !this.handlesList.IsDragging)
+			if (this.selectedObjects.Count > 0 && !this.isDragging)
 			{
 				this.DrawSelectedObjects(graphics);
 			}
 
 			//	Dessine les attachements des objets sélectionnés.
-			if (this.context.ShowAttachment && this.selectedObjects.Count == 1 && !this.isDragging && !this.handlesList.IsDragging)
+			if (this.context.ShowAttachment && this.selectedObjects.Count == 1 && !this.isDragging)
 			{
 				foreach (Widget obj in this.selectedObjects)
 				{
@@ -3690,17 +2050,8 @@ namespace Epsitec.Common.Designer.FormEditor
 				}
 			}
 
-			//	Dessine les contraintes.
-			this.constrainsList.Draw(graphics, bounds);
-
-			//	Dessine les numéros d'ordre.
-			if (this.context.ShowZOrder && !this.isDragging && !this.handlesList.IsDragging)
-			{
-				this.DrawZOrder(graphics, this.panel);
-			}
-
 			//	Dessine les numéros d'index pour la touche Tab.
-			if (this.context.ShowTabIndex && !this.isDragging && !this.handlesList.IsDragging)
+			if (this.context.ShowTabIndex && !this.isDragging)
 			{
 				this.DrawTabIndex(graphics, this.panel);
 			}
@@ -3708,7 +2059,6 @@ namespace Epsitec.Common.Designer.FormEditor
 			//	Dessine l'objet survolé.
 			if (this.hilitedObject != null)
 			{
-				this.DrawHilitedObject(graphics, this.hilitedObject, this.hilitedGrid);
 			}
 
 			//	Dessine l'objet parent survolé.
@@ -3759,18 +2109,6 @@ namespace Epsitec.Common.Designer.FormEditor
 				}
 			}
 
-			//	Dessine les cotes de l'objet sélectionné.
-			if (this.selectedObjects.Count != 0 && !this.isDragging && !this.handlesList.IsDragging)
-			{
-				this.dimensionsList.Draw(graphics);
-			}
-
-			//	Dessine les poignées.
-			if (this.selectedObjects.Count == 1 && !this.isDragging)
-			{
-				//?this.handlesList.Draw(graphics);
-			}
-
 			graphics.Transform = it;
 		}
 
@@ -3817,252 +2155,36 @@ namespace Epsitec.Common.Designer.FormEditor
 				if (obj != this.panel)
 				{
 					this.DrawPadding(graphics, obj.Parent, 0.4);
-
-					if (this.objectModifier.AreChildrenGrid(obj.Parent))
-					{
-						this.DrawGrid(graphics, obj.Parent, PanelsContext.ColorHiliteOutline, 0.4);
-					}
 				}
 			}
 		}
 
 		protected void DrawSelectedObject(Graphics graphics, Widget obj)
 		{
-			Rectangle bounds = this.objectModifier.GetActualBounds(obj);
-			bounds.Deflate(0.5);
-
-#if false
-			if (this.objectModifier.HasBounds(obj))
-			{
-				Rectangle pref = this.objectModifier.GetBounds(obj);
-				pref.Deflate(0.5);
-
-				if (pref != bounds)
-				{
-					Path path = new Path();
-					path.AppendRectangle(pref);
-					Misc.DrawPathDash(graphics, path, 1, 8, 3, PanelsContext.ColorHiliteOutline);
-				}
-			}
-#endif
-
-			graphics.LineWidth = 3;
-			graphics.AddRectangle(bounds);
-			graphics.RenderSolid(PanelsContext.ColorHiliteOutline);
-			graphics.LineWidth = 1;
-
-			if (this.objectModifier.HasMargins(obj))
-			{
-				Rectangle ext = bounds;
-				ext.Inflate(this.objectModifier.GetMargins(obj));
-				ext.Deflate(0.5);
-
-				Path path = new Path();
-				path.AppendRectangle(ext);
-				Misc.DrawPathDash(graphics, path, 2, 0, 4, false, PanelsContext.ColorHiliteOutline);
-			}
-
-			if (this.objectModifier.AreChildrenGrid(obj))
-			{
-				this.DrawGrid(graphics, obj, PanelsContext.ColorHiliteOutline, 1.0);
-			}
-
-			PanelEditor.GridSelection gs = PanelEditor.GridSelection.Get(obj);
-			if (gs != null)
-			{
-				this.DrawGridSelected(graphics, obj, gs, PanelsContext.ColorGridCellOutline, true);
-			}
 		}
 
 		protected void DrawPadding(Graphics graphics, Widget obj, double factor)
 		{
 			//	Dessine les marges de padding d'un objet, sous forme de hachures.
-			if (PanelEditor.ObjectModifier.IsAbstractGroup(obj))
-			{
-				Rectangle bounds = this.objectModifier.GetActualBounds(obj);
-				graphics.Align(ref bounds);
-				bounds.Deflate(0.5);
-
-				Rectangle inside = this.objectModifier.GetFinalPadding(obj);
-				graphics.Align(ref inside);
-				inside.Deflate(0.5);
-
-				Rectangle left   = new Rectangle(bounds.Left, bounds.Bottom, inside.Left-bounds.Left, bounds.Height);
-				Rectangle right  = new Rectangle(inside.Right, bounds.Bottom, bounds.Right-inside.Right, bounds.Height);
-				Rectangle bottom = new Rectangle(inside.Left, bounds.Bottom, inside.Width, inside.Bottom-bounds.Bottom);
-				Rectangle top    = new Rectangle(inside.Left, inside.Top, inside.Width, bounds.Top-inside.Top);
-
-				graphics.Rasterizer.AddOutline(Misc.GetHatchPath(left,   6, bounds.BottomLeft));
-				graphics.Rasterizer.AddOutline(Misc.GetHatchPath(right,  6, bounds.BottomLeft));
-				graphics.Rasterizer.AddOutline(Misc.GetHatchPath(bottom, 6, bounds.BottomLeft));
-				graphics.Rasterizer.AddOutline(Misc.GetHatchPath(top,    6, bounds.BottomLeft));
-
-				graphics.AddRectangle(bounds);
-				graphics.AddRectangle(inside);
-
-				graphics.RenderSolid(Misc.FactorColor(PanelsContext.ColorHiliteOutline, factor));
-			}
 		}
 
 		protected void DrawEnteredObjects(Graphics graphics, List<Widget> list)
 		{
 			//	Dessine l'objet survolé depuis la barre de statut.
-			Color red = Color.FromAlphaRgb(0.7, 255.0/255.0, 80.0/255.0, 60.0/255.0);
-
-			foreach (Widget obj in list)
-			{
-				Rectangle rect = this.objectModifier.GetActualBounds(obj);
-				rect.Deflate(1.5);
-
-				graphics.LineWidth = 3;
-				graphics.AddRectangle(rect);
-				graphics.RenderSolid(red);
-				graphics.LineWidth = 1;
-			}
 		}
 
 		protected void DrawHilitedObject(Graphics graphics, Widget obj, PanelEditor.GridSelection gs)
 		{
 			//	Met en évidence l'objet survolé par la souris.
-			if (this.context.ShowAttachment)
-			{
-				this.DrawAttachment(graphics, obj, PanelsContext.ColorHiliteOutline);
-			}
-
-			Color color = PanelsContext.ColorHiliteSurface;
-
-			if (PanelEditor.ObjectModifier.IsAbstractGroup(obj))
-			{
-				this.DrawPadding(graphics, obj, 1.0);
-
-				Rectangle outline = this.objectModifier.GetActualBounds(obj);
-				outline.Deflate(this.context.GroupOutline/2);
-				graphics.LineWidth = this.context.GroupOutline;
-				graphics.AddRectangle(outline);
-				graphics.RenderSolid(PanelsContext.ColorHiliteOutline);
-				graphics.LineWidth = 1;
-
-				color = Misc.FactorColor(color, 0.25);
-			}
-
-			//	Si le rectangle est trop petit (par exemple objet Separator), il est engraissé.
-			Rectangle rect = this.objectModifier.GetActualBounds(obj);
-
-			double ix = 0;
-			if (rect.Width < this.context.MinimalSize)
-			{
-				ix = this.context.MinimalSize;
-			}
-
-			double iy = 0;
-			if (rect.Height < this.context.MinimalSize)
-			{
-				iy = this.context.MinimalSize;
-			}
-
-			rect.Inflate(ix, iy);
-
-			graphics.AddFilledRectangle(rect);
-			graphics.RenderSolid(color);
-
-			if (this.objectModifier.AreChildrenGrid(obj))
-			{
-				this.DrawGrid(graphics, obj, PanelsContext.ColorHiliteOutline, 1.0);
-			}
-
-			if (gs != null)
-			{
-				this.DrawGridSelected(graphics, obj, gs, PanelsContext.ColorGridCellOutline, false);
-			}
 		}
 
 		protected void DrawHilitedParent(Graphics graphics, Widget obj, int column, int row, int columnCount, int rowCount)
 		{
 			//	Met en évidence l'objet parent survolé par la souris.
-			if (this.context.ShowAttachment && obj != this.panel)
-			{
-				this.DrawAttachment(graphics, obj, PanelsContext.ColorHiliteParent);
-			}
-
-			double thickness = 2.0;
-
-			Rectangle rect = this.objectModifier.GetActualBounds(obj);
-			rect.Deflate(0.5);
-			graphics.AddRectangle(rect);
-			graphics.RenderSolid(PanelsContext.ColorHiliteParent);
-			rect.Deflate(thickness/2+0.5);
-
-			Path path = new Path();
-			path.AppendRectangle(rect);
-			Misc.DrawPathDash(graphics, path, thickness, thickness*2-1, thickness*2+1, false, PanelsContext.ColorHiliteParent);
-
-			rect.Deflate(thickness/2+0.5);
-			graphics.AddRectangle(rect);
-			graphics.RenderSolid(PanelsContext.ColorHiliteParent);
-
-			if (this.objectModifier.AreChildrenGrid(obj))
-			{
-				this.DrawGrid(graphics, obj, PanelsContext.ColorHiliteOutline, 1.0);
-			}
-
-			if (column != PanelEditor.GridSelection.Invalid && row != PanelEditor.GridSelection.Invalid)
-			{
-				Rectangle area = this.objectModifier.GetGridCellArea(obj, column, row, columnCount, rowCount);
-				this.DrawGridHilited(graphics, area, PanelsContext.ColorGridCellOutline);
-			}
 		}
 
 		protected void DrawGrid(Graphics graphics, Widget obj, Color color, double factor)
 		{
-			if (!this.objectModifier.AreChildrenGrid(obj))  return;
-
-			GridLayoutEngine engine = LayoutEngine.GetLayoutEngine(obj) as GridLayoutEngine;
-			if (engine == null)  return;
-
-			Rectangle rect = this.objectModifier.GetFinalPadding(obj);
-			graphics.Align(ref rect);
-
-			int columns = engine.ColumnDefinitions.Count;
-			double x = rect.Left;
-			for (int c=0; c<columns; c++)
-			{
-				ColumnDefinition def = engine.ColumnDefinitions[c];
-				x += def.LeftBorder + def.ActualWidth + def.RightBorder;
-				Point p1 = new Point(x, rect.Bottom+1);
-				Point p2 = new Point(x, rect.Top-1);
-				Misc.AlignForLine(graphics, ref p1);
-				Misc.AlignForLine(graphics, ref p2);
-				graphics.AddLine(p1, p2);
-			}
-
-			int rows = engine.RowDefinitions.Count;
-			double y = rect.Top;
-			for (int r=0; r<rows; r++)
-			{
-				RowDefinition def = engine.RowDefinitions[r];
-				y -= def.TopBorder + def.ActualHeight + def.BottomBorder;
-				Point p1 = new Point(rect.Left+1, y);
-				Point p2 = new Point(rect.Right-1, y);
-				Misc.AlignForLine(graphics, ref p1);
-				Misc.AlignForLine(graphics, ref p2);
-				graphics.AddLine(p1, p2);
-			}
-
-			if (x < rect.Right)  // zone inutilisée à droite ?
-			{
-				Rectangle part = new Rectangle(x, rect.Bottom, rect.Right-x, rect.Height);
-				graphics.Rasterizer.AddOutline(Misc.GetHatchPath(part, 6, rect.BottomLeft));
-			}
-
-			if (y > rect.Bottom)  // zone inutilisée en bas ?
-			{
-				Rectangle part = new Rectangle(rect.Left, rect.Bottom, x-rect.Left, y-rect.Bottom);
-				graphics.Rasterizer.AddOutline(Misc.GetHatchPath(part, 6, rect.BottomLeft));
-			}
-
-			rect.Deflate(0.5);
-			graphics.AddRectangle(rect);
-			graphics.RenderSolid(Misc.FactorColor(color, factor));
 		}
 
 		protected void DrawGridSelected(Graphics graphics, Widget obj, PanelEditor.GridSelection gs, Color color, bool selection)
@@ -4071,216 +2193,26 @@ namespace Epsitec.Common.Designer.FormEditor
 			//	visuellement lorsqu'une ligne sélectionnée suit une colonne sélectionnée
 			//	pour former une croix, ou lorsque plusieurs lignes/colonnes sont sélectionnées
 			//	pour former un seul 'bloc'.
-			int i=0;
-			while (i < gs.Count)
-			{
-				PanelEditor.GridSelection.OneItem item1 = gs[i];
-
-				if (i+1 < gs.Count)
-				{
-					PanelEditor.GridSelection.OneItem item2 = gs[i+1];
-
-					//	Colonne suivie d'une ligne formant une croix ?
-					if (item1.Unit == PanelEditor.GridSelection.Unit.Column && item2.Unit == PanelEditor.GridSelection.Unit.Row)
-					{
-						Rectangle area1 = this.objectModifier.GetGridItemArea(obj, item1);
-						Rectangle area2 = this.objectModifier.GetGridItemArea(obj, item2);
-						this.DrawGridSelected(graphics, area1, area2, color, selection);
-
-						i += 2;
-						continue;
-					}
-
-					//	Plusieurs colonnes ou lignes formant un seul 'bloc' ?
-					if (item1.Unit == item2.Unit && item1.Index+1 == item2.Index)
-					{
-						int ii = i;
-						i += 2;
-						while (i < gs.Count && gs[i].Unit == item1.Unit && gs[i-1].Index+1 == gs[i].Index)
-						{
-							i++;
-						}
-
-						for (int j=ii; j<i; j++)
-						{
-							Rectangle area1 = this.objectModifier.GetGridItemArea(obj, gs[j]);
-
-							if (item1.Unit == PanelEditor.GridSelection.Unit.Column)
-							{
-								if (j > ii)
-								{
-									area1.Left -= 1;
-								}
-								if (j < i-1)
-								{
-									area1.Right += 2;
-								}
-							}
-							else
-							{
-								if (j > ii)
-								{
-									area1.Top += 2;
-								}
-								if (j < i-1)
-								{
-									area1.Bottom -= 1;
-								}
-							}
-
-							this.DrawGridSelected(graphics, area1, color, selection);
-						}
-
-						for (int j=ii; j<i; j++)
-						{
-							Rectangle area1 = this.objectModifier.GetGridItemArea(obj, gs[j]);
-
-							if (item1.Unit == PanelEditor.GridSelection.Unit.Column)
-							{
-								if (j > ii)
-								{
-									graphics.AddLine(area1.Left+0.5, area1.Bottom+1.5, area1.Left+0.5, area1.Top-1.5);
-								}
-							}
-							else
-							{
-								if (j > ii)
-								{
-									graphics.AddLine(area1.Left+1.5, area1.Top+0.5, area1.Right-1.5, area1.Top+0.5);
-								}
-							}
-
-							graphics.RenderSolid(Color.FromBrightness(1));
-						}
-
-						continue;
-					}
-				}
-
-				Rectangle area = this.objectModifier.GetGridItemArea(obj, item1);
-				this.DrawGridSelected(graphics, area, color, selection);
-
-				i += 1;
-			}
-
 		}
 
 		protected void DrawGridSelected(Graphics graphics, Rectangle area1, Rectangle area2, Color color, bool selection)
 		{
 			//	Dessine une ligne et une colonne sélectionnées.
-			area1.Deflate(0.5);
-			area2.Deflate(0.5);
-			Path path;
-
-			if (selection)  // sélection ?
-			{
-				graphics.AddFilledRectangle(area1);
-				graphics.AddFilledRectangle(area2);
-				graphics.RenderSolid(PanelsContext.ColorGridCellSurface);
-
-				path = Misc.GetCrossPath(area1, area2);
-				graphics.Rasterizer.AddOutline(path);
-
-				area1.Deflate(2.0);
-				area2.Deflate(2.0);
-				path = Misc.GetCrossPath(area1, area2);
-				graphics.Rasterizer.AddOutline(path);
-
-				graphics.RenderSolid(color);
-			}
-			else  // hilite ?
-			{
-				path = Misc.GetCrossPath(area1, area2);
-				Misc.DrawPathDash(graphics, path, 1, 8, 3, false, color);
-			}
 		}
 
 		protected void DrawGridSelected(Graphics graphics, Rectangle area, Color color, bool selection)
 		{
 			//	Dessine une ligne ou une colonne sélectionnée.
-			area.Deflate(0.5);
-
-			if (selection)  // sélection ?
-			{
-				graphics.AddFilledRectangle(area);
-				graphics.RenderSolid(PanelsContext.ColorGridCellSurface);
-
-				graphics.AddRectangle(area);
-				area.Deflate(2.0);
-				graphics.AddRectangle(area);
-				graphics.RenderSolid(color);
-			}
-			else  // hilite ?
-			{
-				Path path = new Path();
-				path.AppendRectangle(area);
-				Misc.DrawPathDash(graphics, path, 1, 8, 3, false, color);
-			}
 		}
 
 		protected void DrawGridHilited(Graphics graphics, Rectangle area, Color color)
 		{
 			//	Dessine une cellule survolée.
-			graphics.Rasterizer.AddSurface(Misc.GetCornerPath(area));
-			graphics.RenderSolid(color);
 		}
 
 		protected void DrawAttachment(Graphics graphics, Widget obj, Color color)
 		{
 			//	Dessine tous les attachements d'un objet.
-			if (this.objectModifier.AreChildrenAnchored(obj.Parent))
-			{
-				Rectangle bounds = this.objectModifier.GetActualBounds(obj.Parent);
-				Rectangle rect = this.objectModifier.GetActualBounds(obj);
-				Point p1, p2;
-
-				p1 = new Point(bounds.Left, rect.Center.Y);
-				p2 = new Point(rect.Left, rect.Center.Y);
-				this.DrawSpring(graphics, p1, p2, this.objectModifier.HasAttachmentLeft(obj), color);
-
-				p1 = new Point(rect.Right, rect.Center.Y);
-				p2 = new Point(bounds.Right, rect.Center.Y);
-				this.DrawSpring(graphics, p1, p2, this.objectModifier.HasAttachmentRight(obj), color);
-
-				p1 = new Point(rect.Center.X, bounds.Bottom);
-				p2 = new Point(rect.Center.X, rect.Bottom);
-				this.DrawSpring(graphics, p1, p2, this.objectModifier.HasAttachmentBottom(obj), color);
-
-				p1 = new Point(rect.Center.X, rect.Top);
-				p2 = new Point(rect.Center.X, bounds.Top);
-				this.DrawSpring(graphics, p1, p2, this.objectModifier.HasAttachmentTop(obj), color);
-			}
-
-			if (this.objectModifier.AreChildrenStacked(obj.Parent))
-			{
-				color = PanelsContext.ColorHiliteOutline;
-				Rectangle rect = this.objectModifier.GetActualBounds(obj);
-				Point p;
-
-				if (this.objectModifier.HasAttachmentLeft(obj))
-				{
-					p = new Point(rect.Left, rect.Center.Y);
-					this.DrawTriangleLeft(graphics, p, color);
-				}
-
-				if (this.objectModifier.HasAttachmentRight(obj))
-				{
-					p = new Point(rect.Right, rect.Center.Y);
-					this.DrawTriangleRight(graphics, p, color);
-				}
-
-				if (this.objectModifier.HasAttachmentBottom(obj))
-				{
-					p = new Point(rect.Center.X, rect.Bottom);
-					this.DrawTriangleBottom(graphics, p, color);
-				}
-
-				if (this.objectModifier.HasAttachmentTop(obj))
-				{
-					p = new Point(rect.Center.X, rect.Top);
-					this.DrawTriangleTop(graphics, p, color);
-				}
-			}
 		}
 
 		protected void DrawSpring(Graphics graphics, Point p1, Point p2, bool rigid, Color color)
@@ -4405,54 +2337,9 @@ namespace Epsitec.Common.Designer.FormEditor
 			graphics.RenderSolid(color);
 		}
 
-		protected void DrawZOrder(Graphics graphics, Widget parent)
-		{
-			//	Dessine les numéros d'ordre d'un groupe.
-			if (parent.HasChildren)
-			{
-				foreach (Widget obj in parent.Children)
-				{
-					Rectangle rect = this.objectModifier.GetActualBounds(obj);
-					Rectangle box = new Rectangle(rect.BottomLeft+new Point(1, 1), new Size(20, 10));
-
-					graphics.AddFilledRectangle(box);
-					graphics.RenderSolid(Color.FromBrightness(1));
-
-					string text = this.GetObjectZOrder(obj);
-					graphics.AddText(box.Left, box.Bottom, box.Width, box.Height, text, Font.DefaultFont, 9.0, ContentAlignment.MiddleCenter);
-					graphics.RenderSolid(PanelsContext.ColorZOrder);
-
-					if (PanelEditor.ObjectModifier.IsAbstractGroup(obj))
-					{
-						this.DrawZOrder(graphics, obj);
-					}
-				}
-			}
-		}
-
 		protected void DrawTabIndex(Graphics graphics, Widget parent)
 		{
 			//	Dessine les numéros pour la touche Tab d'un groupe.
-			if (parent.HasChildren)
-			{
-				foreach (Widget obj in parent.Children)
-				{
-					Rectangle rect = this.objectModifier.GetActualBounds(obj);
-					Rectangle box = new Rectangle(rect.BottomRight+new Point(-20-1, 1), new Size(20, 10));
-
-					graphics.AddFilledRectangle(box);
-					graphics.RenderSolid(Color.FromBrightness(1));
-
-					string text = this.GetObjectTabIndex(obj);
-					graphics.AddText(box.Left, box.Bottom, box.Width, box.Height, text, Font.DefaultFont, 9.0, ContentAlignment.MiddleCenter);
-					graphics.RenderSolid(PanelsContext.ColorTabIndex);
-
-					if (PanelEditor.ObjectModifier.IsAbstractGroup(obj))
-					{
-						this.DrawTabIndex(graphics, obj);
-					}
-				}
-			}
 		}
 		#endregion
 
@@ -4461,131 +2348,6 @@ namespace Epsitec.Common.Designer.FormEditor
 		public void AdaptAfterToolChanged()
 		{
 			//	Adaptation après un changement d'outil ou d'objet.
-			if (this.context.Tool == "ToolSelect" || this.context.Tool == "ToolGlobal")
-			{
-
-				if (this.lastCreatedObject != null)
-				{
-					this.GridClearSelection();
-					this.SelectOneObject(this.lastCreatedObject);
-					this.lastCreatedObject = null;
-				}
-				else if (this.selectedObjects.Count == 1)
-				{
-					Widget obj = this.selectedObjects[0];
-					PanelEditor.GridSelection gs = PanelEditor.GridSelection.Get(obj);
-					if (gs != null)
-					{
-						List<Widget> list = new List<Widget>();
-						foreach (Widget children in obj.Children)
-						{
-							int column = this.objectModifier.GetGridColumn(children);
-							if (gs.Search(PanelEditor.GridSelection.Unit.Column, column) != -1)
-							{
-								list.Add(children);
-								continue;
-							}
-
-							int row = this.objectModifier.GetGridRow(children);
-							if (gs.Search(PanelEditor.GridSelection.Unit.Row, row) != -1)
-							{
-								list.Add(children);
-								continue;
-							}
-						}
-						if (list.Count > 0)
-						{
-							this.selectedObjects = list;
-							this.GridClearSelection();
-							this.UpdateAfterChanging(PanelEditor.Editor.Changing.Selection);
-							this.OnChildrenSelected();
-							this.Invalidate();
-						}
-					}
-				}
-				else
-				{
-					this.GridClearSelection();
-				}
-			}
-
-			if (this.context.Tool == "ToolGrid")
-			{
-				if (this.selectedObjects.Count != 0)
-				{
-					Widget parent = this.selectedObjects[0].Parent;
-					if (this.objectModifier.AreChildrenGrid(parent))
-					{
-						int c = PanelEditor.GridSelection.Invalid;
-						int r = PanelEditor.GridSelection.Invalid;
-						bool mc = false;
-						bool mr = false;
-						foreach (Widget children in this.selectedObjects)
-						{
-							int column = this.objectModifier.GetGridColumn(children);
-							if (c == PanelEditor.GridSelection.Invalid)
-							{
-								c = column;
-							}
-							else
-							{
-								if (c != column)
-								{
-									mc = true;
-								}
-							}
-
-							int row = this.objectModifier.GetGridRow(children);
-							if (r == PanelEditor.GridSelection.Invalid)
-							{
-								r = row;
-							}
-							else
-							{
-								if (r != row)
-								{
-									mr = true;
-								}
-							}
-						}
-
-						PanelEditor.GridSelection gs = new PanelEditor.GridSelection(parent);
-						foreach (Widget children in this.selectedObjects)
-						{
-							if (mr || (!mc && !mr))
-							{
-								int column = this.objectModifier.GetGridColumn(children);
-								if (gs.Search(PanelEditor.GridSelection.Unit.Column, column) == -1)
-								{
-									gs.Add(PanelEditor.GridSelection.Unit.Column, column);
-								}
-							}
-							else if (mc)
-							{
-								int row = this.objectModifier.GetGridRow(children);
-								if (gs.Search(PanelEditor.GridSelection.Unit.Row, row) == -1)
-								{
-									gs.Add(PanelEditor.GridSelection.Unit.Row, row);
-								}
-							}
-						}
-						this.SelectOneObject(parent);
-						PanelEditor.GridSelection.Attach(parent, gs);
-					}
-					else
-					{
-						this.DeselectAll();
-					}
-				}
-			}
-
-			if (this.context.Tool.StartsWith("Object"))
-			{
-				this.DeselectAll();
-			}
-
-			this.SizeMarkDeselect();
-			this.Invalidate();
 		}
 
 		public Rectangle RealBounds
@@ -4616,24 +2378,6 @@ namespace Epsitec.Common.Designer.FormEditor
 
 		protected void ChangeSeparatorAlpha(Widget parent, double alpha)
 		{
-			if (parent.HasChildren)
-			{
-				foreach (Widget obj in parent.Children)
-				{
-					PanelEditor.ObjectModifier.ObjectType type = PanelEditor.ObjectModifier.GetObjectType(obj);
-					if (type == PanelEditor.ObjectModifier.ObjectType.HSeparator ||
-						type == PanelEditor.ObjectModifier.ObjectType.VSeparator)
-					{
-						Separator sep = obj as Separator;
-						sep.Alpha = alpha;
-					}
-
-					if (obj.HasChildren)
-					{
-						this.ChangeSeparatorAlpha(obj, alpha);
-					}
-				}
-			}
 		}
 
 		protected void SetDirty()
@@ -4857,10 +2601,6 @@ namespace Epsitec.Common.Designer.FormEditor
 		protected UI.Panel					panel;
 		protected Druid						druid;
 		protected PanelsContext				context;
-		protected PanelEditor.ObjectModifier			objectModifier;
-		protected PanelEditor.ConstrainsList			constrainsList;
-		protected PanelEditor.HandlesList				handlesList;
-		protected PanelEditor.DimensionsList			dimensionsList;
 		protected bool						isEditEnabled = false;
 
 		protected DragWindow				creatingWindow;
@@ -4873,7 +2613,6 @@ namespace Epsitec.Common.Designer.FormEditor
 		protected Rectangle					hilitedAttachmentRectangle = Rectangle.Empty;
 		protected Rectangle					hilitedZOrderRectangle = Rectangle.Empty;
 		protected Widget					hilitedObject;
-		protected PanelEditor.GridSelection				hilitedGrid;
 		protected Widget					hilitedParent;
 		protected int						hilitedParentColumn = PanelEditor.GridSelection.Invalid;
 		protected int						hilitedParentRow = PanelEditor.GridSelection.Invalid;
@@ -4894,13 +2633,11 @@ namespace Epsitec.Common.Designer.FormEditor
 		protected int						draggingSpanRowCount;
 		protected bool						isDraggingDimension;
 		protected bool						isHandling;
-		protected PanelEditor.Handle.Type				handlingType;
 		protected DragWindow				handlingWindow;
 		protected Rectangle					handlingRectangle;
 		protected bool						isGridding;
 		protected bool						isGriddingColumn;
 		protected bool						isGriddingRow;
-		protected PanelEditor.GridSelection				griddingInitial;
 		protected int						griddingColumn;
 		protected int						griddingRow;
 		protected Point						startingPos;
