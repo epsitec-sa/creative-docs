@@ -62,14 +62,19 @@ namespace Epsitec.Common.FormEngine
 		[Test]
 		public void CheckSerialisation()
 		{
-			FormDescription form = this.GetForm("Tree");
-			string data = form.Serialize();
+			string[] names = {"Adresse", "Facture", "Affaire", "Tree"};
 
-			FormDescription copy = new FormDescription();
-			copy.Deserialize(data);
+			foreach (string name in names)
+			{
+				FormDescription form = this.GetForm(name);
+				string data = form.Serialize();
 
-			bool eq = form.Compare(copy);
-			Assert.IsTrue(eq);
+				FormDescription copy = new FormDescription();
+				copy.Deserialize(data);
+
+				bool eq = form.Compare(copy);
+				Assert.IsTrue(eq);
+			}
 		}
 
 
