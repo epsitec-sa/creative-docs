@@ -4,6 +4,7 @@ using Epsitec.Common.Widgets;
 using Epsitec.Common.Support;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Types;
+using Epsitec.Common.FormEngine;
 
 namespace Epsitec.Common.Designer.Viewers
 {
@@ -295,7 +296,7 @@ namespace Epsitec.Common.Designer.Viewers
 				
 				if (this.druidToSerialize.IsValid)
 				{
-					Forms.softSerialize = this.PanelToXml(this.GetPanel());
+					Forms.softSerialize = this.FormToXml(this.GetForm());
 				}
 				else
 				{
@@ -310,9 +311,9 @@ namespace Epsitec.Common.Designer.Viewers
 
 		protected override void PersistChanges()
 		{
-			//	Stocke la version XML (sérialisée) du panneau dans l'accesseur
+			//	Stocke la version XML (sérialisée) du masque de saisie dans l'accesseur
 			//	s'il y a eu des modifications.
-			this.access.SetPanel(this.druidToSerialize, this.GetPanel());
+			this.access.SetForm(this.druidToSerialize, this.GetForm());
 			base.PersistChanges();
 		}
 
@@ -329,8 +330,8 @@ namespace Epsitec.Common.Designer.Viewers
 
 			if (Forms.softSerialize == null)
 			{
-				UI.Panel panel = this.access.GetPanel(this.druidToSerialize);
-				this.SetPanel(panel, this.druidToSerialize);
+				List<FieldDescription> form = this.access.GetForm(this.druidToSerialize);
+				this.SetForm(form, this.druidToSerialize);
 			}
 			else
 			{
@@ -343,48 +344,48 @@ namespace Epsitec.Common.Designer.Viewers
 					this.module.AccessPanels.ClearLocalDirty();
 				}
 
-				UI.Panel panel = this.XmlToPanel(Forms.softSerialize);
-				this.SetPanel(panel, this.druidToSerialize);
+				List<FieldDescription> form = this.XmlToForm(Forms.softSerialize);
+				this.SetForm(form, this.druidToSerialize);
 
 				Forms.softDirtySerialization = false;
 				Forms.softSerialize = null;
 			}
 		}
 
-		protected string PanelToXml(UI.Panel panel)
+		protected string FormToXml(List<FieldDescription> form)
 		{
-			//	UI.Panel -> xml.
-			return UI.Panel.SerializePanel(panel);
+			//	form -> xml.
+			return FormEngine.Serialisation.SerializeForm(form);
 		}
 
-		protected UI.Panel XmlToPanel(string xml)
+		protected List<FieldDescription> XmlToForm(string xml)
 		{
-			//	xml -> UI.Panel.
-			return UI.Panel.DeserializePanel(xml, null, this.module.ResourceManager);
+			//	xml -> form.
+			return FormEngine.Serialisation.DeserializeForm(xml, this.module.ResourceManager);
 		}
 
-		protected UI.Panel GetPanel()
+		protected List<FieldDescription> GetForm()
 		{
-			//	Retourne le UI.Panel en cours d'édition.
-			return this.panelContainer;
+			//	Retourne le masque de saisie en cours d'édition.
+			return this.form;
 		}
 
-		protected void SetPanel(UI.Panel panel, Druid druid)
+		protected void SetForm(List<FieldDescription> form, Druid druid)
 		{
-			//	Spécifie le UI.Panel en cours d'édition.
+			//	Spécifie le masque de saisie en cours d'édition.
 			if (this.panelContainer != null)
 			{
 				this.panelContainer.SetParent(null);
 				this.panelContainer = null;
 			}
 			
-			if (panel == null || druid.IsEmpty)
+			if (form == null || druid.IsEmpty)
 			{
 				this.formEditor.IsEditEnabled = false;
 			}
 			else
 			{
-				this.panelContainer = panel;
+				//?this.panelContainer = panel;
 				this.panelContainer.SetParent(this.panelContainerParent);
 				this.panelContainer.ZOrder = this.formEditor.ZOrder+1;
 				this.panelContainer.DrawDesignerFrame = true;
@@ -580,6 +581,7 @@ namespace Epsitec.Common.Designer.Viewers
 		protected Scrollable					drawingScrollable;
 		protected FrameBox						panelContainerParent;
 		protected UI.Panel						panelContainer;
+		protected List<FieldDescription>		form;
 		protected FormEditor.Editor				formEditor;
 		protected FrameBox						right;
 		protected TabBook						tabBook;
