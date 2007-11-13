@@ -116,6 +116,7 @@ namespace Epsitec.Common.FormEngine
 
 			reader.Read();
 
+			//	TODO: attention, la logique de désérialisation est certainement fausse !
 			while (true)
 			{
 				if (reader.NodeType == XmlNodeType.Element)
@@ -128,8 +129,7 @@ namespace Epsitec.Common.FormEngine
 					}
 					else if (name == Xml.FieldDescription)
 					{
-						FieldDescription field = new FieldDescription(FieldDescription.FieldType.Field);
-						field.ReadXml(reader);
+						FieldDescription field = new FieldDescription(reader);
 						this.fields.Add(field);
 					}
 					else

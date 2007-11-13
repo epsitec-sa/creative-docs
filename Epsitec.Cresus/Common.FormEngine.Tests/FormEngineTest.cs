@@ -62,7 +62,7 @@ namespace Epsitec.Common.FormEngine
 		[Test]
 		public void CheckSerialisation()
 		{
-			Form form = this.GetForm("Adresse");
+			Form form = this.GetForm("Tree");
 			string data = form.Serialize();
 
 			Form copy = new Form();

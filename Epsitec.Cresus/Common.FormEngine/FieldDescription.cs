@@ -35,16 +35,11 @@ namespace Epsitec.Common.FormEngine
 		}
 
 
-		private FieldDescription()
-		{
-			//	Constructeur de base.
-			this.guid = System.Guid.NewGuid();
-		}
-
-		public FieldDescription(FieldType type) : this()
+		public FieldDescription(FieldType type)
 		{
 			//	Constructeur.
 			//	Le type est toujours déterminé à la création. Il ne pourra plus changer par la suite.
+			this.guid = System.Guid.NewGuid();
 			this.type = type;
 			this.backColor = Color.Empty;
 			this.separator = SeparatorType.Normal;
@@ -58,9 +53,10 @@ namespace Epsitec.Common.FormEngine
 			this.containerFrameWidth = 1;
 		}
 
-		public FieldDescription(FieldDescription model) : this()
+		public FieldDescription(FieldDescription model)
 		{
 			//	Constructeur copiant une instance existante.
+			this.guid = model.guid;
 			this.type = model.type;
 			this.backColor = model.backColor;
 			this.separator = model.separator;
@@ -74,6 +70,12 @@ namespace Epsitec.Common.FormEngine
 			this.containerBackColor = model.containerBackColor;
 			this.containerFrameState = model.containerFrameState;
 			this.containerFrameWidth = model.containerFrameWidth;
+		}
+
+		public FieldDescription(XmlReader reader)
+		{
+			//	Constructeur qui désérialise.
+			this.ReadXml(reader);
 		}
 
 
@@ -374,7 +376,7 @@ namespace Epsitec.Common.FormEngine
 			writer.WriteEndElement();
 		}
 
-		public void ReadXml(XmlReader reader)
+		protected void ReadXml(XmlReader reader)
 		{
 			//	Désérialise toute la description.
 			reader.Read();
