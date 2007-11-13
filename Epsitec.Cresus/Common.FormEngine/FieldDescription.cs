@@ -1,4 +1,6 @@
 using System.Collections.Generic;
+using System.Xml;
+using System.Xml.Serialization;
 
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Support;
@@ -345,6 +347,117 @@ namespace Epsitec.Common.FormEngine
 			dst.fieldIds = this.fieldIds;
 #endif
 		}
+
+
+		#region Serialisation
+		protected void WriteXml(XmlWriter writer)
+		{
+			//	Sérialise toute la description.
+			writer.WriteStartElement(Xml.FieldDescription);
+			
+			writer.WriteElementString(Xml.Guid, this.guid.ToString());
+			writer.WriteElementString(Xml.Type, this.type.ToString());
+			writer.WriteElementString(Xml.BackColor, this.backColor.ToString());
+			writer.WriteElementString(Xml.Separator, this.separator.ToString());
+			writer.WriteElementString(Xml.ColumnsRequired, this.columnsRequired.ToString(System.Globalization.CultureInfo.InvariantCulture));
+			writer.WriteElementString(Xml.RowsRequired, this.rowsRequired.ToString(System.Globalization.CultureInfo.InvariantCulture));
+			writer.WriteElementString(Xml.ContainerLayoutMode, this.containerLayoutMode.ToString());
+			writer.WriteElementString(Xml.ContainerMargins, this.containerMargins.ToString());
+			writer.WriteElementString(Xml.ContainerPadding, this.containerPadding.ToString());
+			writer.WriteElementString(Xml.ContainerBackColor, this.containerBackColor.ToString());
+			writer.WriteElementString(Xml.ContainerFrameState, this.containerFrameState.ToString());
+			writer.WriteElementString(Xml.ContainerFrameWidth, this.containerFrameWidth.ToString(System.Globalization.CultureInfo.InvariantCulture));
+
+			writer.WriteEndElement();
+		}
+
+		protected void ReadXml(XmlReader reader)
+		{
+			//	Désérialise toute la description.
+			//	Retourne une éventuelle erreur.
+			reader.Read();
+			while (true)
+			{
+				if (reader.NodeType == XmlNodeType.Element)
+				{
+					string name = reader.LocalName;
+
+					if (name == "xx")
+					{
+					}
+					else if (name == "yy")
+					{
+					}
+					else
+					{
+						string element = reader.ReadElementString();
+
+						if (name == Xml.Guid)
+						{
+							this.guid = new System.Guid(element);
+						}
+						else if (name == Xml.Type)
+						{
+							this.type = (FieldType) System.Enum.Parse(typeof(FieldType), element);
+						}
+						else if (name == Xml.BackColor)
+						{
+							this.backColor = Color.Parse(element);
+						}
+						else if (name == Xml.Separator)
+						{
+							this.separator = (SeparatorType) System.Enum.Parse(typeof(SeparatorType), element);
+						}
+						else if (name == Xml.ColumnsRequired)
+						{
+							this.columnsRequired = int.Parse(element);
+						}
+						else if (name == Xml.RowsRequired)
+						{
+							this.rowsRequired = int.Parse(element);
+						}
+						else if (name == Xml.ContainerLayoutMode)
+						{
+							this.ContainerLayoutMode = (ContainerLayoutMode) System.Enum.Parse(typeof(ContainerLayoutMode), element);
+						}
+						else if (name == Xml.ContainerMargins)
+						{
+							this.containerMargins = Margins.Parse(element);
+						}
+						else if (name == Xml.ContainerPadding)
+						{
+							this.containerPadding = Margins.Parse(element);
+						}
+						else if (name == Xml.ContainerBackColor)
+						{
+							this.containerBackColor = Color.Parse(element);
+						}
+						else if (name == Xml.ContainerFrameState)
+						{
+							this.containerFrameState = (FrameState) System.Enum.Parse(typeof(FrameState), element);
+						}
+						else if (name == Xml.ContainerFrameWidth)
+						{
+							this.containerFrameWidth = double.Parse(element);
+						}
+						else
+						{
+							throw new System.NotSupportedException(string.Format("Unexpected XML node {0} found in FieldDescription", name));
+						}
+					}
+				}
+				else if (reader.NodeType == XmlNodeType.EndElement)
+				{
+					System.Diagnostics.Debug.Assert(reader.Name == Xml.FieldDescription);
+					break;
+				}
+				else
+				{
+					reader.Read();
+				}
+			}
+		}
+		#endregion
 
 
 		protected System.Guid guid;

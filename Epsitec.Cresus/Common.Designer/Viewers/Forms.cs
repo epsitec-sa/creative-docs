@@ -59,8 +59,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.panelContainerParent.Dock = DockStyle.Fill;
 
 			//	Le UI.Panel est dans le sous-contenur qui a des marges.
-			this.panelContainer = this.access.CreateEmptyPanel();
-			this.panelContainer.SetParent(this.panelContainerParent);
+			this.panelContainer = new UI.Panel();
 
 			//	Le FormEditor est par-dessus le UI.Panel. Il occupe toute la surface (il déborde
 			//	donc des marges) et tient compte lui-même du décalage. C'est le seul moyen pour
@@ -74,6 +73,8 @@ namespace Epsitec.Common.Designer.Viewers
 			this.formEditor.ChildrenSelected += new EventHandler(this.HandleFormEditorChildrenSelected);
 			this.formEditor.ChildrenGeometryChanged += new EventHandler(this.HandleFormEditorChildrenGeometryChanged);
 			this.formEditor.UpdateCommands += new EventHandler(this.HandleFormEditorUpdateCommands);
+
+			this.InitializePanel();
 
 			//	Crée le groupe droite.
 			this.right = new FrameBox(surface);
@@ -373,26 +374,46 @@ namespace Epsitec.Common.Designer.Viewers
 		protected void SetForm(List<FieldDescription> form, Druid druid)
 		{
 			//	Spécifie le masque de saisie en cours d'édition.
+			this.form = form;
+
 			if (this.panelContainer != null)
 			{
 				this.panelContainer.SetParent(null);
 				this.panelContainer = null;
 			}
-			
+
 			if (form == null || druid.IsEmpty)
 			{
+				this.panelContainer = new UI.Panel();
+				this.InitializePanel();
+
+				this.formEditor.Panel = this.panelContainer;
+				this.formEditor.Druid = druid;
 				this.formEditor.IsEditEnabled = false;
 			}
 			else
 			{
-				//?this.panelContainer = panel;
-				this.panelContainer.SetParent(this.panelContainerParent);
-				this.panelContainer.ZOrder = this.formEditor.ZOrder+1;
-				this.panelContainer.DrawDesignerFrame = true;
+				FormEngine.FormEngine engine = new FormEngine.FormEngine(this.module.ResourceManager);
+				this.panelContainer = engine.CreateForm(druid, form);
+				this.InitializePanel();
+
 				this.formEditor.Panel = this.panelContainer;
 				this.formEditor.Druid = druid;
 				this.formEditor.IsEditEnabled = !this.designerApplication.IsReadonly;
 			}
+		}
+
+		protected void InitializePanel()
+		{
+			//	Initialise le panneau contenant le masque pour pouvoir être édité.
+			this.panelContainer.ChildrenLayoutMode = Widgets.Layouts.LayoutMode.Stacked;
+			this.panelContainer.ContainerLayoutMode = ContainerLayoutMode.VerticalFlow;
+			this.panelContainer.PreferredSize = new Size(200, 200);
+			this.panelContainer.Anchor = AnchorStyles.BottomLeft;
+			this.panelContainer.Padding = new Margins(10, 10, 10, 10);
+			this.panelContainer.DrawDesignerFrame = true;
+			this.panelContainer.SetParent(this.panelContainerParent);
+			this.panelContainer.ZOrder = this.formEditor.ZOrder+1;
 		}
 
 
