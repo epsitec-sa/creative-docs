@@ -35,12 +35,9 @@ namespace Epsitec.Common.FormEngine
 		}
 
 
-		public FieldDescription(FieldType type)
+		protected FieldDescription()
 		{
-			//	Constructeur.
-			//	Le type est toujours déterminé à la création. Il ne pourra plus changer par la suite.
-			this.guid = System.Guid.NewGuid();
-			this.type = type;
+			//	Constructeur protégé, commun à tous les autres.
 			this.backColor = Color.Empty;
 			this.separator = SeparatorType.Normal;
 			this.columnsRequired = FormEngine.MaxColumnsRequired;
@@ -53,7 +50,15 @@ namespace Epsitec.Common.FormEngine
 			this.containerFrameWidth = 1;
 		}
 
-		public FieldDescription(FieldDescription model)
+		public FieldDescription(FieldType type) : this()
+		{
+			//	Constructeur.
+			//	Le type est toujours déterminé à la création. Il ne pourra plus changer par la suite.
+			this.guid = System.Guid.NewGuid();
+			this.type = type;
+		}
+
+		public FieldDescription(FieldDescription model) : this()
 		{
 			//	Constructeur copiant une instance existante.
 			this.guid = model.guid;
@@ -72,7 +77,7 @@ namespace Epsitec.Common.FormEngine
 			this.containerFrameWidth = model.containerFrameWidth;
 		}
 
-		public FieldDescription(XmlReader reader)
+		public FieldDescription(XmlReader reader) : this()
 		{
 			//	Constructeur qui désérialise.
 			this.ReadXml(reader);
@@ -326,12 +331,44 @@ namespace Epsitec.Common.FormEngine
 
 		public bool Compare(FieldDescription field)
 		{
-			return (field.type == this.type &&
-					field.backColor == this.backColor &&
-					field.separator == this.separator &&
-					field.columnsRequired == this.columnsRequired &&
-					field.rowsRequired == this.rowsRequired);
-			//	TODO: finir...
+			if (!field.guid.Equals(this.guid) ||
+				field.type != this.type ||
+				!field.backColor.Equals(this.backColor) ||
+				field.separator != this.separator ||
+				field.columnsRequired != this.columnsRequired ||
+				field.rowsRequired != this.rowsRequired ||
+				field.containerLayoutMode != this.containerLayoutMode ||
+				!field.containerMargins.Equals(this.containerMargins) ||
+				!field.containerPadding.Equals(this.containerPadding) ||
+				!field.containerBackColor.Equals(this.containerBackColor) ||
+				field.containerFrameState != this.containerFrameState ||
+				field.containerFrameWidth != this.containerFrameWidth)
+			{
+				return false;
+			}
+
+			if ((field.fieldIds == null) != (this.fieldIds == null))
+			{
+				return false;
+			}
+
+			if (field.fieldIds != null)
+			{
+				if (field.fieldIds.Count != this.fieldIds.Count)
+				{
+					return false;
+				}
+
+				for (int i=0; i<field.fieldIds.Count; i++)
+				{
+					if (field.fieldIds[i] != this.fieldIds[i])
+					{
+						return false;
+					}
+				}
+			}
+
+			return true;
 		}
 
 
@@ -339,6 +376,12 @@ namespace Epsitec.Common.FormEngine
 		public void WriteXml(XmlWriter writer)
 		{
 			//	Sérialise toute la description.
+			//	NodeDescription n'est pas sérialisé, car on ne peut sérialiser que des listes (pas d'arbres).
+			if (this.type == FieldType.Node)
+			{
+				throw new System.InvalidOperationException("WriteXml: le type Node ne peut pas être sérialisé.");
+			}
+
 			writer.WriteStartElement(Xml.FieldDescription);
 			
 			writer.WriteElementString(Xml.Guid, this.guid.ToString());
@@ -379,6 +422,7 @@ namespace Epsitec.Common.FormEngine
 		protected void ReadXml(XmlReader reader)
 		{
 			//	Désérialise toute la description.
+			//	NodeDescription n'est pas désérialisé, car on ne peut sérialiser que des listes (pas d'arbres).
 			reader.Read();
 
 			while (true)

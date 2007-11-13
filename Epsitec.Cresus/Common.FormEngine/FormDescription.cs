@@ -10,7 +10,7 @@ using Epsitec.Common.Types;
 namespace Epsitec.Common.FormEngine
 {
 	/// <summary>
-	/// Description d'un formulaire.
+	/// Description complète d'un masque de saisie.
 	/// </summary>
 	public class FormDescription
 	{
