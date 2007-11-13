@@ -23,7 +23,7 @@ namespace Epsitec.Cresus.DataLayer
 			this.entityContext = EntityContext.Current;
 			this.entityDataMapping = new Dictionary<long, EntityDataMapping> ();
 			this.entityTableDefinitions = new Dictionary<Druid, DbTable> ();
-			this.temporaryRowCollection = new Dictionary<string, TemporaryRowCollection> ();
+			this.temporaryRows = new Dictionary<string, TemporaryRowCollection> ();
 
 			this.entityContext.EntityCreated += this.HandleEntityCreated;
 		}
@@ -71,7 +71,8 @@ namespace Epsitec.Cresus.DataLayer
 		}
 
 		/// <summary>
-		/// This is the implementation of the filter for the <see cref="DbRichCommand.SaveTables"/>
+		/// This is the implementation of the filter for the
+		/// <see cref="DbRichCommand.SaveTables(DbTransaction, System.Predicate&lt;System.Data.DataTable&gt;, DbRichCommand.RowIdAssignmentCallback)"/>
 		/// method.
 		/// </summary>
 		/// <param name="table">The data table.</param>
@@ -97,9 +98,9 @@ namespace Epsitec.Cresus.DataLayer
 
 		/// <summary>
 		/// This is the implementation of the raw ID assignment callback for the
-		/// <see cref="DbRichCommand.SaveTables"/> method. When this method is
-		/// called, it updates the <see cref="DbKey"/> for the rows which contain
-		/// the data for the associated entity.
+		/// <see cref="DbRichCommand.SaveTables(DbTransaction, System.Predicate&lt;System.Data.DataTable&gt;, DbRichCommand.RowIdAssignmentCallback)"/>
+		/// method. When this method is called, it updates the <see cref="DbKey"/>
+		/// for the rows which contain the data for the associated entity.
 		/// </summary>
 		/// <param name="table">The data table.</param>
 		/// <param name="oldKey">The old key.</param>
@@ -108,9 +109,9 @@ namespace Epsitec.Cresus.DataLayer
 		/// row keys itself.</returns>
 		private DbKey SaveTablesRowIdAssignmentCallbackImplementation(System.Data.DataTable table, DbKey oldKey, DbKey newKey)
 		{
-			TemporaryRowCollection rowCollection = this.GetTemporaryRowCollection (table.TableName);
-
-			rowCollection.UpdateRowKeys (oldKey, newKey);
+			TemporaryRowCollection temporaryRows;
+			temporaryRows = this.GetTemporaryRows (table.TableName);
+			temporaryRows.UpdateAssociatedRowKeys (oldKey, newKey);
 
 			return DbKey.Empty;
 		}
@@ -151,7 +152,7 @@ namespace Epsitec.Cresus.DataLayer
 				//	Either create and fill a new row in the database for this entity
 				//	or use and update an existing row.
 
-				System.Data.DataRow dataRow = createRow ? this.CreateDataRow (mapping, id) : this.FindDataRow (mapping, id);
+				System.Data.DataRow dataRow = createRow ? this.CreateDataRow (mapping, id) : this.FindDataRow (mapping.RowKey, id);
 				
 				dataRow.BeginEdit ();
 
@@ -211,7 +212,7 @@ namespace Epsitec.Cresus.DataLayer
 		{
 			Druid baseEntityId = this.entityContext.GetBaseEntityId (entityId);
 
-			System.Data.DataRow dataRow = this.FindDataRow (rowKey, baseEntityId);
+			System.Data.DataRow dataRow = this.LoadDataRow (rowKey, baseEntityId);
 			long typeValueId = (long) dataRow[Tags.ColumnInstanceType];
 			Druid realEntityId = Druid.FromLong (typeValueId);
 			AbstractEntity entity = this.entityContext.CreateEmptyEntity (realEntityId);
@@ -243,7 +244,7 @@ namespace Epsitec.Cresus.DataLayer
 				System.Diagnostics.Debug.Assert (entityType != null);
 				System.Diagnostics.Debug.Assert (entityType.CaptionId == id);
 
-				System.Data.DataRow dataRow = this.FindDataRow (mapping, id);
+				System.Data.DataRow dataRow = this.LoadDataRow (mapping.RowKey, id);
 				
 				this.DeserializeEntityLocal (entity, dataRow, id);
 				
@@ -326,61 +327,99 @@ namespace Epsitec.Cresus.DataLayer
 			}
 		}
 
+		/// <summary>
+		/// Finds the data row given a row key and an entity.
+		/// </summary>
+		/// <param name="rowKey">The row key.</param>
+		/// <param name="entityId">The entity id.</param>
+		/// <returns>The data row or <c>null</c>.</returns>
 		private System.Data.DataRow FindDataRow(DbKey rowKey, Druid entityId)
 		{
+			System.Diagnostics.Debug.Assert (entityId.IsValid);
+			System.Diagnostics.Debug.Assert (rowKey.IsEmpty == false);
+			
 			string tableName = this.GetDataTableName (entityId);
 			return this.richCommand.FindRow (tableName, rowKey.Id);
 		}
 
-		private System.Data.DataRow FindDataRow(EntityDataMapping mapping, Druid entityId)
+		private System.Data.DataRow LoadDataRow(DbKey rowKey, Druid entityId)
 		{
-			System.Diagnostics.Debug.Assert (mapping.EntityId.IsValid);
-			System.Diagnostics.Debug.Assert (mapping.RowKey.IsEmpty == false);
+			System.Data.DataRow row;
 			
 			string tableName = this.GetDataTableName (entityId);
-			return this.richCommand.FindRow (tableName, mapping.RowKey.Id);
+			row = this.richCommand.FindRow (tableName, rowKey.Id);
+
+			if (row == null)
+			{
+				using (DbTransaction transaction = this.infrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadOnly))
+				{
+					DbTable tableDef = this.schemaEngine.FindTableDefinition (entityId);
+					DbSelectCondition condition = this.infrastructure.CreateSelectCondition (DbSelectRevision.LiveActive);
+					condition.AddCondition (tableDef.Columns[Tags.ColumnId], DbCompare.Equal, rowKey.Id.Value);
+					this.richCommand.ImportTable (transaction, tableDef, condition);
+					transaction.Commit ();
+				}
+
+				row = this.richCommand.FindRow (tableName, rowKey.Id);
+			}
+
+			return row;
 		}
 
+
+		/// <summary>
+		/// Creates a new data row for the specified entity. The row will store
+		/// data only for the locally defined fields of the given entity.
+		/// </summary>
+		/// <param name="mapping">The entity mapping.</param>
+		/// <param name="entityId">The entity id.</param>
+		/// <returns>A new data row with a temporary ID.</returns>
 		private System.Data.DataRow CreateDataRow(EntityDataMapping mapping, Druid entityId)
 		{
 			System.Diagnostics.Debug.Assert (mapping.EntityId.IsValid);
 			System.Diagnostics.Debug.Assert (mapping.RowKey.IsTemporary);
 
-			DbKey rowKey = mapping.RowKey;
-
 			string tableName = this.GetDataTableName (entityId);
 			System.Data.DataRow row = this.richCommand.CreateRow (tableName);
 
-			row.BeginEdit ();
-			DbKey.SetRowId (row, rowKey.Id);
-			DbKey.SetRowStatus (row, rowKey.Status);
-			row.EndEdit ();
-
-			TemporaryRowCollection rowCollection = this.GetTemporaryRowCollection (mapping);
-			rowCollection.Add (mapping, row);
+			TemporaryRowCollection temporaryRows;
+			temporaryRows = this.GetTemporaryRows (mapping.EntityId);
+			temporaryRows.AssociateRow (mapping, row);
 			
 			return row;
 		}
 
-		private TemporaryRowCollection GetTemporaryRowCollection(string tableName)
+		/// <summary>
+		/// Gets the temporary row collection.
+		/// </summary>
+		/// <param name="tableName">Name of the table.</param>
+		/// <returns>The <see cref="TemporaryRowCollection"/> instance.</returns>
+		private TemporaryRowCollection GetTemporaryRows(string tableName)
 		{
 			TemporaryRowCollection rowCollection;
 
-			if (this.temporaryRowCollection.TryGetValue (tableName, out rowCollection) == false)
+			if (this.temporaryRows.TryGetValue (tableName, out rowCollection) == false)
 			{
 				rowCollection = new TemporaryRowCollection ();
-				this.temporaryRowCollection[tableName] = rowCollection;
+				this.temporaryRows[tableName] = rowCollection;
 			}
 
 			return rowCollection;
 		}
 
-		private TemporaryRowCollection GetTemporaryRowCollection(EntityDataMapping mapping)
+		/// <summary>
+		/// Gets the temporary row collection.
+		/// </summary>
+		/// <param name="entityId">The entity id.</param>
+		/// <returns>
+		/// The <see cref="TemporaryRowCollection"/> instance.
+		/// </returns>
+		private TemporaryRowCollection GetTemporaryRows(Druid entityId)
 		{
-			Druid baseEntityId = this.entityContext.GetBaseEntityId (mapping.EntityId);
+			Druid baseEntityId = this.entityContext.GetBaseEntityId (entityId);
 			string baseTableName = this.GetDataTableName (baseEntityId);
 
-			return this.GetTemporaryRowCollection (baseTableName);
+			return this.GetTemporaryRows (baseTableName);
 		}
 
 		private string GetDataTableName(Druid entityId)
@@ -453,6 +492,6 @@ namespace Epsitec.Cresus.DataLayer
 		readonly EntityContext entityContext;
 		readonly Dictionary<long, EntityDataMapping> entityDataMapping;
 		readonly Dictionary<Druid, DbTable> entityTableDefinitions;
-		readonly Dictionary<string, TemporaryRowCollection> temporaryRowCollection;
+		readonly Dictionary<string, TemporaryRowCollection> temporaryRows;
 	}
 }

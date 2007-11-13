@@ -13,45 +13,74 @@ using System.Collections.Generic;
 
 namespace Epsitec.Cresus.DataLayer.Helpers
 {
-	public class TemporaryRowCollection
+	/// <summary>
+	/// The <c>TemporaryRowCollection</c> class stores one entry for each newly
+	/// created entity.
+	/// </summary>
+	internal class TemporaryRowCollection
 	{
+		/// <summary>
+		/// Initializes a new instance of the <see cref="TemporaryRowCollection"/> class.
+		/// </summary>
 		public TemporaryRowCollection()
 		{
-			this.records = new List<Record> ();
+			this.entries = new List<Entry> ();
 		}
 
-		public void Add(EntityDataMapping mapping, System.Data.DataRow row)
+		/// <summary>
+		/// Associates an entity mapping with a new row. All rows will share the
+		/// same <see cref="DbKey"/>.
+		/// </summary>
+		/// <param name="mapping">The entity mapping.</param>
+		/// <param name="row">The data row.</param>
+		public void AssociateRow(EntityDataMapping mapping, System.Data.DataRow row)
 		{
 			System.Diagnostics.Debug.Assert (mapping.RowKey.IsTemporary);
 
-			foreach (Record record in this.records)
+			DbKey rowKey = mapping.RowKey;
+
+			row.BeginEdit ();
+			DbKey.SetRowId (row, rowKey.Id);
+			DbKey.SetRowStatus (row, rowKey.Status);
+			row.EndEdit ();
+			
+			foreach (Entry entry in this.entries)
 			{
-				if (record.Mapping == mapping)
+				if (entry.Mapping == mapping)
 				{
-					record.Rows.Add (row);
+					entry.Rows.Add (row);
 					return;
 				}
 			}
 
-			this.records.Add (new Record (mapping, row));
+			this.entries.Add (new Entry (mapping, row));
 		}
 
-		public void UpdateRowKeys(DbKey oldKey, DbKey newKey)
+		/// <summary>
+		/// Updates the associated row keys. This will update the entity mapping
+		/// for this entry and all row IDs.
+		/// </summary>
+		/// <param name="oldKey">The old key.</param>
+		/// <param name="newKey">The new key.</param>
+		public void UpdateAssociatedRowKeys(DbKey oldKey, DbKey newKey)
 		{
 			System.Diagnostics.Debug.Assert (oldKey.IsTemporary == true);
 			System.Diagnostics.Debug.Assert (newKey.IsTemporary == false);
 
 			DbId id = oldKey.Id;
 
-			for (int i = 0; i < this.records.Count; i++)
+			for (int i = 0; i < this.entries.Count; i++)
 			{
-				Record record = this.records[i];
+				Entry entry = this.entries[i];
 
-				if (record.Id == id)
+				if (entry.Id == id)
 				{
-					record.Mapping.RowKey = newKey;
+					//	Update the row key for the entity mapping described by
+					//	this entry and then update every row too :
+					
+					entry.Mapping.RowKey = newKey;
 
-					foreach (System.Data.DataRow row in record.Rows)
+					foreach (System.Data.DataRow row in entry.Rows)
 					{
 						row.BeginEdit ();
 						DbKey.SetRowId (row, newKey.Id);
@@ -59,21 +88,35 @@ namespace Epsitec.Cresus.DataLayer.Helpers
 						row.EndEdit ();
 					}
 
-					this.records.RemoveAt (i);
+					//	Remove the entry. It does no longer contain temporary
+					//	key ids and can therefore be discarded.
+					
+					this.entries.RemoveAt (i);
 					break;
 				}
 			}
 		}
 
-		struct Record
+		#region Entry Structure
+
+		struct Entry
 		{
-			public Record(EntityDataMapping mapping, System.Data.DataRow row)
+			/// <summary>
+			/// Initializes a new instance of the <see cref="Entry"/> structure.
+			/// </summary>
+			/// <param name="mapping">The entity mapping.</param>
+			/// <param name="row">The associated row.</param>
+			public Entry(EntityDataMapping mapping, System.Data.DataRow row)
 			{
 				this.mapping = mapping;
 				this.rows = new	List<System.Data.DataRow> ();
 				this.rows.Add (row);
 			}
 
+			/// <summary>
+			/// Gets the id shared among all rows.
+			/// </summary>
+			/// <value>The id.</value>
 			public DbId Id
 			{
 				get
@@ -82,6 +125,10 @@ namespace Epsitec.Cresus.DataLayer.Helpers
 				}
 			}
 
+			/// <summary>
+			/// Gets the entity mapping.
+			/// </summary>
+			/// <value>The entity mapping.</value>
 			public EntityDataMapping Mapping
 			{
 				get
@@ -90,6 +137,10 @@ namespace Epsitec.Cresus.DataLayer.Helpers
 				}
 			}
 
+			/// <summary>
+			/// Gets the collection of rows associated with this entry.
+			/// </summary>
+			/// <value>The collection of rows.</value>
 			public IList<System.Data.DataRow> Rows
 			{
 				get
@@ -102,6 +153,8 @@ namespace Epsitec.Cresus.DataLayer.Helpers
 			readonly List<System.Data.DataRow> rows;
 		}
 
-		readonly List<Record> records;
+		#endregion
+
+		readonly List<Entry> entries;
 	}
 }

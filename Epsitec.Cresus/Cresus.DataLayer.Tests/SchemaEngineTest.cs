@@ -237,6 +237,36 @@ namespace Epsitec.Cresus.DataLayer
 			context.Dispose ();
 		}
 
+		[Test]
+		public void Check14LoadEntitySingle()
+		{
+			DataContext context = new DataContext (this.infrastructure);
+
+			System.Diagnostics.Debug.WriteLine ("Check14LoadEntitySingle");
+			System.Diagnostics.Debug.WriteLine ("------------------------------------------------");
+
+			System.Diagnostics.Debug.WriteLine ("Implicit loading of entities");
+
+			DbKey key1 = new DbKey (new DbId (1000000000001L));
+			DbKey key2 = new DbKey (new DbId (1000000000002L));
+
+			AbstractEntity entity1 = context.DeserializeEntity (key1, this.articleEntityId);
+			AbstractEntity entity2 = context.DeserializeEntity (key2, this.articleEntityId);
+
+			System.Diagnostics.Debug.WriteLine ("Done.");
+
+			System.Diagnostics.Debug.WriteLine ("------------------------------------------------");
+
+			Assert.AreEqual (this.articleEntityId, entity1.GetEntityStructuredTypeId ());
+			Assert.AreEqual ("VI-M3-10", entity1.GetField<string> ("[63091]"));
+
+			Assert.AreEqual (this.articleVisserieEntityId, entity2.GetEntityStructuredTypeId ());
+			Assert.AreEqual ("VI-M3-10", entity2.GetField<string> ("[63091]"));
+			Assert.AreEqual ("M3", entity2.GetField<string> ("[6312]"));
+
+			context.Dispose ();
+		}
+
 		private IEnumerable<AbstractEntity> GetItems(EntityContext context)
 		{
 			string[] materials = new string[] { "Inox", "Cuivre", "Galvanisé", "Teflon", "POM", "Acier" };
