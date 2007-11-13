@@ -82,8 +82,11 @@ namespace Epsitec.Common.FormEngine
 			window.Root.Padding = new Margins(10, 10, 10, 10);
 
 			Widget form = this.CreateForm(name);
-			form.Dock = DockStyle.Fill;
-			window.Root.Children.Add(form);
+			if (form != null)
+			{
+				form.Dock = DockStyle.Fill;
+				window.Root.Children.Add(form);
+			}
 
 			Button a = new Button();
 			a.Text = "OK";
@@ -135,12 +138,12 @@ namespace Epsitec.Common.FormEngine
 				fields.Add(this.CreateField("[630B2].[63003].[63043].[63063].[630A]", Color.Empty, FieldDescription.SeparatorType.Normal, 10, 1));  // Affaire.Paiements.Valeur.PrixSimple.Monnaie.Désignation
 				fields.Add(this.CreateField("[630B2].[63003].[63043].[63063].[630B]", Color.Empty, FieldDescription.SeparatorType.Normal, 10, 1));  // Affaire.Paiements.Valeur.PrixSimple.Monnaie.TauxChangeVersChf
 				fields.Add(this.CreateBoxEnd());
-				
+
 				fields.Add(this.CreateBoxBegin(ContainerLayoutMode.VerticalFlow, 5, 5, Color.Empty, FrameState.All, 1, 3));
 				fields.Add(this.CreateSeparator(FieldDescription.FieldType.Title));
 				fields.Add(this.CreateField("[630B2].[63013].[63053]", Color.Empty, FieldDescription.SeparatorType.Append, 4, 1));  // Affaire.SoldeDû.Montant
 				fields.Add(this.CreateField("[630B2].[63013].[63063].[630A]", Color.Empty, FieldDescription.SeparatorType.Normal, 4, 1));  // Affaire.SoldeDû.Monnaie.Designation
-				
+
 				fields.Add(this.CreateSeparator(FieldDescription.FieldType.Title));
 				fields.Add(this.CreateField("[630L2].[630M].[630H]", Color.FromRgb(1, 0.5, 0.5), FieldDescription.SeparatorType.Normal, 4, 1));  // TotalFacturé.Prix.Ht
 				fields.Add(this.CreateSeparator(FieldDescription.FieldType.Title));
@@ -182,7 +185,7 @@ namespace Epsitec.Common.FormEngine
 				fields.Add(this.CreateField("[630B2].[63013].[63053]", Color.Empty, FieldDescription.SeparatorType.Append, 4, 1));  // Affaire.SoldeDû.Montant
 				fields.Add(this.CreateField("[630B2].[63013].[63063].[630A]", Color.Empty, FieldDescription.SeparatorType.Normal, 4, 1));  // Affaire.SoldeDû.Monnaie.Designation
 				fields.Add(this.CreateBoxEnd());
-				
+
 				fields.Add(this.CreateBoxBegin(ContainerLayoutMode.VerticalFlow, 5, 10, Color.FromRgb(0.6, 0.8, 0.8), FrameState.All, 5, 10));
 				List<FieldDescription> subFields = new List<FieldDescription>();
 				subFields.Add(this.CreateSeparator(FieldDescription.FieldType.Title));
@@ -209,8 +212,17 @@ namespace Epsitec.Common.FormEngine
 
 			List<FieldDescription> flat = Arrange.Develop(fields);
 
-			FormEngine engine = new FormEngine(this.manager);
-			return engine.CreateForm(entityId, flat);
+			string err = Arrange.Check(flat);
+			if (err == null)
+			{
+				FormEngine engine = new FormEngine(this.manager);
+				return engine.CreateForm(entityId, flat);
+			}
+			else
+			{
+				System.Console.WriteLine(string.Format("Erreur {0}", err));
+				return null;
+			}
 		}
 
 
