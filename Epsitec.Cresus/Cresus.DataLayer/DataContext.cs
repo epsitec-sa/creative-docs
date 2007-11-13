@@ -65,13 +65,26 @@ namespace Epsitec.Cresus.DataLayer
 		{
 			using (DbTransaction transaction = this.infrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadWrite))
 			{
-				this.richCommand.SaveTables (transaction, this.SaveFilter, this.SaveRowIdAssignmentCallback);
+				this.richCommand.SaveTables (transaction, this.SaveTablesFilterImplementation, this.SaveTablesRowIdAssignmentCallbackImplementation);
 				transaction.Commit ();
 			}
 		}
 
-		private bool SaveFilter(System.Data.DataTable table)
+		/// <summary>
+		/// This is the implementation of the filter for the <see cref="DbRichCommand.SaveTables"/>
+		/// method.
+		/// </summary>
+		/// <param name="table">The data table.</param>
+		/// <returns><c>true</c> if the table should be processed; otherwise, <c>false</c>.</returns>
+		private bool SaveTablesFilterImplementation(System.Data.DataTable table)
 		{
+			//	If the table contains the data for a root entity (the one which
+			//	has no base type, i.e. no parent class), then let DbRichCommand
+			//	attribute the DbKey for its rows.
+			//	
+			//	Tables which contain the data for derived entities should be
+			//	skipped. See method SaveTablesRowIdAssignmentCallbackImplementation.
+
 			if (table.Columns.Contains (Tags.ColumnInstanceType))
 			{
 				return true;
@@ -82,13 +95,24 @@ namespace Epsitec.Cresus.DataLayer
 			}
 		}
 
-		private DbKey SaveRowIdAssignmentCallback(System.Data.DataTable table, DbKey oldKey, DbKey newKey)
+		/// <summary>
+		/// This is the implementation of the raw ID assignment callback for the
+		/// <see cref="DbRichCommand.SaveTables"/> method. When this method is
+		/// called, it updates the <see cref="DbKey"/> for the rows which contain
+		/// the data for the associated entity.
+		/// </summary>
+		/// <param name="table">The data table.</param>
+		/// <param name="oldKey">The old key.</param>
+		/// <param name="newKey">The new key.</param>
+		/// <returns>Always returns <see cref="DbKey.Empty"/>, since it updates the
+		/// row keys itself.</returns>
+		private DbKey SaveTablesRowIdAssignmentCallbackImplementation(System.Data.DataTable table, DbKey oldKey, DbKey newKey)
 		{
 			TemporaryRowCollection rowCollection = this.GetTemporaryRowCollection (table.TableName);
 
-			rowCollection.UpdateRowKey (oldKey, newKey);
+			rowCollection.UpdateRowKeys (oldKey, newKey);
 
-			return newKey;
+			return DbKey.Empty;
 		}
 
 		/// <summary>

@@ -290,7 +290,7 @@ namespace Epsitec.Cresus.Database
 		/// Imports data into the specified table.
 		/// </summary>
 		/// <param name="transaction">The transaction.</param>
-		/// <param name="table">The table.</param>
+		/// <param name="table">The table definition.</param>
 		/// <param name="condition">The condition.</param>
 		public void ImportTable(DbTransaction transaction, DbTable table, DbSelectCondition condition)
 		{
@@ -356,12 +356,20 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 
+		/// <summary>
+		/// Imports data into the specified table, using a <see cref="System.Data.DataTable"/>
+		/// as the source.
+		/// </summary>
+		/// <param name="tableDef">The table definition.</param>
+		/// <param name="sourceTable">The table used as the data source.</param>
 		private void ImportTable(DbTable tableDef, System.Data.DataTable sourceTable)
 		{
 			System.Data.DataTable table = this.DataSet.Tables[tableDef.Name];
 
 			foreach (System.Data.DataRow row in sourceTable.Rows)
 			{
+				//	TODO: handle duplicate rows; what should be done (replace/update original/throw/...)
+
 				table.ImportRow (row);
 			}
 		}
@@ -1025,6 +1033,11 @@ namespace Epsitec.Cresus.Database
 				if (callback != null)
 				{
 					newKey = callback (table, oldKey, newKey);
+
+					if (newKey.IsEmpty)
+					{
+						continue;
+					}
 				}
 
 				System.Diagnostics.Debug.Assert (oldKey.IsTemporary == true);

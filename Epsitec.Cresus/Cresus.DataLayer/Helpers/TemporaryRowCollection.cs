@@ -36,7 +36,7 @@ namespace Epsitec.Cresus.DataLayer.Helpers
 			this.records.Add (new Record (mapping, row));
 		}
 
-		public void UpdateRowKey(DbKey oldKey, DbKey newKey)
+		public void UpdateRowKeys(DbKey oldKey, DbKey newKey)
 		{
 			System.Diagnostics.Debug.Assert (oldKey.IsTemporary == true);
 			System.Diagnostics.Debug.Assert (newKey.IsTemporary == false);
