@@ -122,7 +122,11 @@ namespace Epsitec.Common.FormEngine
 				{
 					string name = reader.LocalName;
 
-					if (name == Xml.FieldDescription)
+					if (name == Xml.Form)
+					{
+						reader.Read();
+					}
+					else if (name == Xml.FieldDescription)
 					{
 						FieldDescription field = new FieldDescription(FieldDescription.FieldType.Field);
 						field.ReadXml(reader);
@@ -142,9 +146,8 @@ namespace Epsitec.Common.FormEngine
 						}
 					}
 				}
-				else if (reader.NodeType == XmlNodeType.EndElement)
+				else if (reader.NodeType == XmlNodeType.None)
 				{
-					System.Diagnostics.Debug.Assert(reader.Name == Xml.Form);
 					break;
 				}
 				else

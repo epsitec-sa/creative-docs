@@ -122,14 +122,21 @@ namespace Epsitec.Common.FormEngine
 		{
 			//	Donne d'une liste de Druids séparés par des points.
 			//	Par exemple: listDruids = "[630B2].[630S2]"
-			System.Diagnostics.Debug.Assert(this.type == FieldType.Field);
-
-			this.fieldIds = new List<Druid>();
-			string[] druids = listDruids.Split('.');
-			foreach (string druid in druids)
+			if (string.IsNullOrEmpty(listDruids))
 			{
-				Druid id = Druid.Parse(druid);
-				this.fieldIds.Add(id);
+				this.fieldIds = null;
+			}
+			else
+			{
+				System.Diagnostics.Debug.Assert(this.type == FieldType.Field);
+
+				this.fieldIds = new List<Druid>();
+				string[] druids = listDruids.Split('.');
+				foreach (string druid in druids)
+				{
+					Druid id = Druid.Parse(druid);
+					this.fieldIds.Add(id);
+				}
 			}
 		}
 
@@ -318,53 +325,11 @@ namespace Epsitec.Common.FormEngine
 		public bool Compare(FieldDescription field)
 		{
 			return (field.type == this.type &&
-					field.backColor == this.backColor &&
+					//?field.backColor == this.backColor &&
 					field.separator == this.separator &&
 					field.columnsRequired == this.columnsRequired &&
 					field.rowsRequired == this.rowsRequired);
 			//	TODO: finir...
-		}
-
-
-		public void CopyTo(FieldDescription dst)
-		{
-			//	Copie la description courante vers une destination quelconque.
-			dst.type = this.type;
-			dst.backColor = this.backColor;
-			dst.separator = this.separator;
-			dst.columnsRequired = this.columnsRequired;
-			dst.rowsRequired = this.rowsRequired;
-
-#if false
-			if (this.nodeDescription == null)
-			{
-				dst.nodeDescription = null;
-			}
-			else
-			{
-				dst.nodeDescription = new List<FieldDescription>();
-				foreach (FieldDescription field in this.nodeDescription)
-				{
-					dst.nodeDescription.Add(field);
-				}
-			}
-
-			if (this.fieldIds == null)
-			{
-				dst.fieldIds = null;
-			}
-			else
-			{
-				dst.fieldIds = new List<Druid>();
-				foreach (Druid druid in this.fieldIds)
-				{
-					dst.fieldIds.Add(druid);
-				}
-			}
-#else
-			dst.nodeDescription = this.nodeDescription;
-			dst.fieldIds = this.fieldIds;
-#endif
 		}
 
 
@@ -377,14 +342,14 @@ namespace Epsitec.Common.FormEngine
 			writer.WriteElementString(Xml.Guid, this.guid.ToString());
 			writer.WriteElementString(Xml.Type, this.type.ToString());
 			writer.WriteElementString(Xml.FieldIds, this.GetPath(null));
-			writer.WriteElementString(Xml.BackColor, this.backColor.ToString());
+			writer.WriteElementString(Xml.BackColor, Color.ToString(this.backColor));
 			writer.WriteElementString(Xml.Separator, this.separator.ToString());
 			writer.WriteElementString(Xml.ColumnsRequired, this.columnsRequired.ToString(System.Globalization.CultureInfo.InvariantCulture));
 			writer.WriteElementString(Xml.RowsRequired, this.rowsRequired.ToString(System.Globalization.CultureInfo.InvariantCulture));
 			writer.WriteElementString(Xml.ContainerLayoutMode, this.containerLayoutMode.ToString());
 			writer.WriteElementString(Xml.ContainerMargins, this.containerMargins.ToString());
 			writer.WriteElementString(Xml.ContainerPadding, this.containerPadding.ToString());
-			writer.WriteElementString(Xml.ContainerBackColor, this.containerBackColor.ToString());
+			writer.WriteElementString(Xml.ContainerBackColor, Color.ToString(this.containerBackColor));
 			writer.WriteElementString(Xml.ContainerFrameState, this.containerFrameState.ToString());
 			writer.WriteElementString(Xml.ContainerFrameWidth, this.containerFrameWidth.ToString(System.Globalization.CultureInfo.InvariantCulture));
 
@@ -439,7 +404,7 @@ namespace Epsitec.Common.FormEngine
 						}
 						else if (name == Xml.ContainerLayoutMode)
 						{
-							this.ContainerLayoutMode = (ContainerLayoutMode) System.Enum.Parse(typeof(ContainerLayoutMode), element);
+							this.containerLayoutMode = (ContainerLayoutMode) System.Enum.Parse(typeof(ContainerLayoutMode), element);
 						}
 						else if (name == Xml.ContainerMargins)
 						{
