@@ -114,13 +114,18 @@ namespace Epsitec.Cresus.DataLayer
 			System.Diagnostics.Debug.WriteLine ("------------------------------------------------");
 			
 			AbstractEntity entity = context.EntityContext.CreateEntity (this.articleEntityId);
+			AbstractEntity prixVente = entity.GetField<AbstractEntity> ("[630B1]");				//	Article.PrixVente
 
 			Assert.AreEqual (6, context.CountManagedEntities ());
+			Assert.AreEqual (this.prixEntityId, prixVente.GetEntityStructuredTypeId ());
 
-			entity.SetField<string> ("[63091]", "VI-M3-10");
-			entity.SetField<string> ("[630A1]", "Vis M3 10mm, inox");
+			entity.SetField<string> ("[63091]", "VI-M3-10");									//	Article.Numéro
+			entity.SetField<string> ("[630A1]", "Vis M3 10mm, inox");							//	Article.Désignation
+
+			prixVente.SetField<decimal> ("[630H]", 0.05M);										//	Prix.HT pour Article.PrixVente
 
 			context.SerializeEntity (entity);
+			context.SerializeEntity (prixVente);
 			context.SaveChanges ();
 
 			int count = 0;
@@ -349,5 +354,6 @@ namespace Epsitec.Cresus.DataLayer
 		private readonly Druid articleEntityId = Druid.Parse ("[630Q]");
 		private readonly Druid articleVisserieEntityId = Druid.Parse ("[631]");
 		private readonly Druid adresseEntityId = Druid.Parse ("[63081]");
+		private readonly Druid prixEntityId = Druid.Parse ("[6308]");
 	}
 }
