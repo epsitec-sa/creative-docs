@@ -14,12 +14,14 @@ namespace Epsitec.Common.FormEngine
 	{
 		static public string SerializeForm(FormDescription form)
 		{
-			return null;
+			return form.Serialize();
 		}
 
 		static public FormDescription DeserializeForm(string xml, ResourceManager manager)
 		{
-			return null;
+			FormDescription form = new FormDescription();
+			form.Deserialize(xml);
+			return form;
 		}
 	}
 }
