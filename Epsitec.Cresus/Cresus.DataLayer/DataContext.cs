@@ -208,6 +208,19 @@ namespace Epsitec.Cresus.DataLayer
 			}
 		}
 
+		public AbstractEntity ResolveEntity(DbKey rowKey, Druid entityId)
+		{
+			foreach (EntityDataMapping mapping in this.entityDataMapping.Values)
+			{
+				if (mapping.Equals (rowKey, entityId))
+				{
+					return mapping.Entity;
+				}
+			}
+
+			return this.DeserializeEntity (rowKey, entityId);
+		}
+
 		public AbstractEntity DeserializeEntity(DbKey rowKey, Druid entityId)
 		{
 			Druid baseEntityId = this.entityContext.GetBaseEntityId (entityId);

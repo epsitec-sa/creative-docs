@@ -18,7 +18,7 @@ namespace Epsitec.Cresus.DataLayer.Helpers
 	/// row(s) in the <see cref="System.Data.DataSet"/> associated with the live
 	/// <see cref="DataContext"/>.
 	/// </summary>
-	public class EntityDataMapping
+	public sealed class EntityDataMapping : System.IEquatable<EntityDataMapping>, IReadOnly
 	{
 		/// <summary>
 		/// Initializes a new instance of the <see cref="EntityDataMapping"/> class.
@@ -27,6 +27,7 @@ namespace Epsitec.Cresus.DataLayer.Helpers
 		public EntityDataMapping(AbstractEntity entity)
 		{
 			this.entity = entity;
+			this.entityId = this.entity.GetEntityStructuredTypeId ();
 			this.rowKey = new DbKey ();
 		}
 
@@ -50,11 +51,6 @@ namespace Epsitec.Cresus.DataLayer.Helpers
 		{
 			get
 			{
-				if (this.entityId.IsEmpty)
-				{
-					this.entityId = this.entity == null ? Druid.Empty : this.entity.GetEntityStructuredTypeId ();
-				}
-
 				return this.entityId;
 			}
 		}
@@ -85,8 +81,83 @@ namespace Epsitec.Cresus.DataLayer.Helpers
 			}
 		}
 
+		/// <summary>
+		/// Gets a value indicating whether this instance is read only.
+		/// </summary>
+		/// <value>
+		/// 	<c>true</c> if this instance is read only; otherwise, <c>false</c>.
+		/// </value>
+		private bool IsReadOnly
+		{
+			get
+			{
+				return this.rowKey.IsDefinitive;
+			}
+		}
+
+		#region IEquatable<EntityDataMapping> Members
+
+		public bool Equals(EntityDataMapping other)
+		{
+			return this.entityId == other.entityId
+				&& this.rowKey == other.rowKey;
+		}
+
+		#endregion
+
+		#region IReadOnly Members
+
+		bool IReadOnly.IsReadOnly
+		{
+			get
+			{
+				return this.IsReadOnly;
+			}
+		}
+
+		#endregion
+
+		/// <summary>
+		/// Compares this instance with the specified row key and entity id pair.
+		/// </summary>
+		/// <param name="rowKey">The row key.</param>
+		/// <param name="entityId">The entity id.</param>
+		/// <returns><c>true</c> if this instance matches the row key and entity
+		/// id pair; otherwise, <c>false</c>.</returns>
+		public bool Equals(DbKey rowKey, Druid entityId)
+		{
+			return this.rowKey.Id == rowKey.Id
+				&& this.entityId == entityId;
+		}
+		
+		public override bool Equals(object obj)
+		{
+			EntityDataMapping other = obj as EntityDataMapping;
+			
+			if (other != null)
+			{
+				return this.Equals (other);
+			}
+			else
+			{
+				return false;
+			}
+		}
+
+		public override int GetHashCode()
+		{
+			if (this.IsReadOnly)
+			{
+				return this.rowKey.GetHashCode () ^ this.entityId.GetHashCode ();
+			}
+			else
+			{
+				throw new System.InvalidOperationException ("Unstable hash value: object is still mutable");
+			}
+		}
+
 		private readonly AbstractEntity entity;
+		private readonly Druid entityId;
 		private DbKey rowKey;
-		private Druid entityId;
 	}
 }

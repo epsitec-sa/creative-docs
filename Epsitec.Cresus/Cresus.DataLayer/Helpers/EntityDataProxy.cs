@@ -14,7 +14,7 @@ using System.Collections.Generic;
 namespace Epsitec.Cresus.DataLayer.Helpers
 {
 	/// <summary>
-	/// 
+	/// The <c>EntityDataProxy</c> class automatically loads entities on demand.
 	/// </summary>
 	public class EntityDataProxy : IEntityProxy
 	{
@@ -41,7 +41,7 @@ namespace Epsitec.Cresus.DataLayer.Helpers
 
 		private object ResolveEntity(IValueStore store, string id)
 		{
-			object value = this.context.DeserializeEntity (this.rowKey, this.entityId);
+			object value = this.context.ResolveEntity (this.rowKey, this.entityId);
 			store.SetValue (id, value);
 			return value;
 		}
