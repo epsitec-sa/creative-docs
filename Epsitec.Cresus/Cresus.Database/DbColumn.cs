@@ -752,13 +752,14 @@ namespace Epsitec.Cresus.Database
 				DbColumn column = new DbColumn ();
 				bool isEmptyElement = xmlReader.IsEmptyElement;
 
-				column.captionId    = DbTools.ParseDruid (xmlReader.GetAttribute ("capt"));
-				column.category     = DbTools.ParseElementCategory (xmlReader.GetAttribute ("cat"));
-				column.revisionMode = DbTools.ParseRevisionMode (xmlReader.GetAttribute ("rev"));
-				column.columnClass  = DbTools.ParseColumnClass (xmlReader.GetAttribute ("class"));
-				column.cardinality  = DbTools.ParseCardinality (xmlReader.GetAttribute ("card"));
-				column.localization = DbTools.ParseLocalization (xmlReader.GetAttribute ("loc"));
-				column.isPrimaryKey = DbTools.ParseDefaultingToFalseBool (xmlReader.GetAttribute ("pk"));
+				column.captionId       = DbTools.ParseDruid (xmlReader.GetAttribute ("capt"));
+				column.category        = DbTools.ParseElementCategory (xmlReader.GetAttribute ("cat"));
+				column.revisionMode    = DbTools.ParseRevisionMode (xmlReader.GetAttribute ("rev"));
+				column.columnClass     = DbTools.ParseColumnClass (xmlReader.GetAttribute ("class"));
+				column.cardinality     = DbTools.ParseCardinality (xmlReader.GetAttribute ("card"));
+				column.localization    = DbTools.ParseLocalization (xmlReader.GetAttribute ("loc"));
+				column.isPrimaryKey    = DbTools.ParseDefaultingToFalseBool (xmlReader.GetAttribute ("pk"));
+				column.targetTableName = DbTools.ParseString (xmlReader.GetAttribute ("ttab"));
 
 				if (!isEmptyElement)
 				{
@@ -790,6 +791,7 @@ namespace Epsitec.Cresus.Database
 			DbTools.WriteAttribute (xmlWriter, "card", DbTools.CardinalityToString (this.Cardinality));
 			DbTools.WriteAttribute (xmlWriter, "loc", DbTools.ColumnLocalizationToString (this.Localization));
 			DbTools.WriteAttribute (xmlWriter, "pk", DbTools.BoolDefaultingToFalseToString (this.IsPrimaryKey));
+			DbTools.WriteAttribute (xmlWriter, "ttab", DbTools.StringToString (this.TargetTableName));
 			
 			xmlWriter.WriteEndElement ();
 		}

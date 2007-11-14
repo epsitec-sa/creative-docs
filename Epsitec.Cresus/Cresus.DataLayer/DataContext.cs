@@ -111,7 +111,7 @@ namespace Epsitec.Cresus.DataLayer
 		{
 			TemporaryRowCollection temporaryRows;
 			temporaryRows = this.GetTemporaryRows (table.TableName);
-			temporaryRows.UpdateAssociatedRowKeys (oldKey, newKey);
+			temporaryRows.UpdateAssociatedRowKeys (this.richCommand, oldKey, newKey);
 
 			return DbKey.Empty;
 		}
@@ -466,7 +466,7 @@ namespace Epsitec.Cresus.DataLayer
 
 			TemporaryRowCollection temporaryRows;
 			temporaryRows = this.GetTemporaryRows (mapping.BaseEntityId);
-			temporaryRows.AssociateRow (mapping, row);
+			temporaryRows.AssociateRow (this.richCommand, mapping, row);
 			
 			return row;
 		}

@@ -743,6 +743,73 @@ namespace Epsitec.Cresus.Database
 			return row;
 		}
 
+		public void DefineRowKey(System.Data.DataRow row, DbKey newKey)
+		{
+			DbKey oldKey = new DbKey (row);
+
+			row.BeginEdit ();
+			DbKey.SetRowId (row, newKey.Id);
+			DbKey.SetRowStatus (row, newKey.Status);
+			row.EndEdit ();
+
+			if ((oldKey.IsTemporary) &&
+				(oldKey.Id != newKey.Id))
+			{
+				//	Search the relation tables in order to update them, if they
+				//	happen to refer to this row.
+
+				string rowTableName = row.Table.TableName;
+
+				foreach (System.Data.DataTable relationTable in this.EnumerateRelationTables ())
+				{
+					DbTable relationTableDef = this.tables[relationTable.TableName];
+
+					string sourceTableName = relationTableDef.RelationSourceTableName;
+					string targetTableName = relationTableDef.RelationTargetTableName;
+
+					System.Diagnostics.Debug.Assert (!string.IsNullOrEmpty (sourceTableName));
+					System.Diagnostics.Debug.Assert (!string.IsNullOrEmpty (targetTableName));
+
+					if (sourceTableName == rowTableName)
+					{
+						this.UpdateRelation (relationTable, Tags.ColumnRefSourceId, oldKey.Id, newKey.Id);
+					}
+					if (targetTableName == rowTableName)
+					{
+						this.UpdateRelation (relationTable, Tags.ColumnRefTargetId, oldKey.Id, newKey.Id);
+					}
+				}
+			}
+		}
+
+		private void UpdateRelation(System.Data.DataTable relationTable, string columnName, DbId oldId, DbId newId)
+		{
+			long id = oldId.Value;
+
+			foreach (System.Data.DataRow row in relationTable.Rows)
+			{
+				if ((long) row[columnName] == id)
+				{
+					row.BeginEdit ();
+					row[columnName] = newId.Value;
+					row.EndEdit ();
+				}
+			}
+		}
+
+		private IEnumerable<System.Data.DataTable> EnumerateRelationTables()
+		{
+			foreach (System.Data.DataTable table in this.dataSet.Tables)
+			{
+				if ((table.Columns.Contains (Tags.ColumnRefSourceId)) &&
+					(table.Columns.Contains (Tags.ColumnRefTargetId)))
+				{
+					yield return table;
+				}
+			}
+		}
+
+
 		/// <summary>
 		/// Accepts the changes for all the tables attached to this instance.
 		/// </summary>

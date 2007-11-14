@@ -2025,7 +2025,7 @@ namespace Epsitec.Cresus.Database
 				dbColumn.DefineDisplayName (columnDisplayName);
 				dbColumn.DefineKey (new DbKey (columnId));
 				dbColumn.DefineType (typeDef);
-				dbColumn.DefineTargetTableName (targetName);
+//				dbColumn.DefineTargetTableName (targetName ?? dbColumn.TargetTableName);
 				
 				dbTable.Columns.Add (dbColumn);
 				

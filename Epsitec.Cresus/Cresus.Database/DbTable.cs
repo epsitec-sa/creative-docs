@@ -297,6 +297,23 @@ namespace Epsitec.Cresus.Database
 		}
 
 
+		public string							RelationSourceTableName
+		{
+			get
+			{
+				return this.relationSourceTableName;
+			}
+		}
+
+		public string							RelationTargetTableName
+		{
+			get
+			{
+				return this.relationTargetTableName;
+			}
+		}
+
+
 		/// <summary>
 		/// Updates the revision mode based on the column definitions. This method
 		/// overwrites the <c>RevisionMode</c> defined by <c>DefineRevisionMode</c>.
@@ -825,13 +842,16 @@ namespace Epsitec.Cresus.Database
 
 		public static DbTable CreateRelationTable(DbTable sourceTable, DbColumn sourceColumn)
 		{
-			string sourceTableName = sourceTable.Name;
-			string sourceColumnName = sourceColumn.Name;
+			string sourceTableName   = sourceTable.Name;
+			string targetTableName   = sourceColumn.TargetTableName;
+			string sourceColumnName  = sourceColumn.Name;
 			string relationTableName = string.Concat (sourceColumnName, "_", sourceTableName);
 
 			DbTable relationTable = new DbTable (relationTableName);
 
 			relationTable.DefineCategory (DbElementCat.Relation);
+			relationTable.relationSourceTableName = sourceTableName;
+			relationTable.relationTargetTableName = targetTableName;
 
 			DbTypeDef idType = new DbTypeDef (Res.Types.Num.KeyId);
 			DbTypeDef statusType = new DbTypeDef (Res.Types.Num.KeyStatus);
@@ -877,5 +897,7 @@ namespace Epsitec.Cresus.Database
 		private DbElementCat					category;
 		private DbRevisionMode					revisionMode;
 		private DbReplicationMode				replicationMode;
+		private string							relationSourceTableName;
+		private string							relationTargetTableName;
 	}
 }

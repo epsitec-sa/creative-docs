@@ -33,16 +33,13 @@ namespace Epsitec.Cresus.DataLayer.Helpers
 		/// </summary>
 		/// <param name="mapping">The entity mapping.</param>
 		/// <param name="row">The data row.</param>
-		public void AssociateRow(EntityDataMapping mapping, System.Data.DataRow row)
+		public void AssociateRow(DbRichCommand command, EntityDataMapping mapping, System.Data.DataRow row)
 		{
 			System.Diagnostics.Debug.Assert (mapping.RowKey.IsTemporary);
 
 			DbKey rowKey = mapping.RowKey;
 
-			row.BeginEdit ();
-			DbKey.SetRowId (row, rowKey.Id);
-			DbKey.SetRowStatus (row, rowKey.Status);
-			row.EndEdit ();
+			command.DefineRowKey (row, rowKey);
 			
 			foreach (Entry entry in this.entries)
 			{
@@ -62,7 +59,7 @@ namespace Epsitec.Cresus.DataLayer.Helpers
 		/// </summary>
 		/// <param name="oldKey">The old key.</param>
 		/// <param name="newKey">The new key.</param>
-		public void UpdateAssociatedRowKeys(DbKey oldKey, DbKey newKey)
+		public void UpdateAssociatedRowKeys(DbRichCommand command, DbKey oldKey, DbKey newKey)
 		{
 			System.Diagnostics.Debug.Assert (oldKey.IsTemporary == true);
 			System.Diagnostics.Debug.Assert (newKey.IsTemporary == false);
@@ -82,10 +79,7 @@ namespace Epsitec.Cresus.DataLayer.Helpers
 
 					foreach (System.Data.DataRow row in entry.Rows)
 					{
-						row.BeginEdit ();
-						DbKey.SetRowId (row, newKey.Id);
-						DbKey.SetRowStatus (row, newKey.Status);
-						row.EndEdit ();
+						command.DefineRowKey (row, newKey);
 					}
 
 					//	Remove the entry. It does no longer contain temporary
