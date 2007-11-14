@@ -12,7 +12,7 @@ namespace Epsitec.Common.FormEngine
 	/// <summary>
 	/// Décrit un noeud, un champ ou un séparateur dans un masque de saisie.
 	/// </summary>
-	public class FieldDescription
+	public class FieldDescription : System.IEquatable<FieldDescription>
 	{
 		public enum FieldType
 		{
@@ -329,9 +329,18 @@ namespace Epsitec.Common.FormEngine
 		}
 
 
+		#region IEquatable<FieldDescription> Members
+
+		public bool Equals(FieldDescription other)
+		{
+			return FieldDescription.Equals(this, other);
+		}
+
+		#endregion
+
 		public override bool Equals(object obj)
 		{
-			return (obj is FieldDescription) && (FieldDescription.Compare(this, (FieldDescription) obj));
+			return (obj is FieldDescription) && (FieldDescription.Equals(this, (FieldDescription) obj));
 		}
 
 		public override int GetHashCode()
@@ -339,7 +348,7 @@ namespace Epsitec.Common.FormEngine
 			return base.GetHashCode();
 		}
 		
-		protected static bool Compare(FieldDescription a, FieldDescription b)
+		public static bool Equals(FieldDescription a, FieldDescription b)
 		{
 			//	Retourne true si les deux objets sont égaux.
 			if ((a == null) != (b == null))

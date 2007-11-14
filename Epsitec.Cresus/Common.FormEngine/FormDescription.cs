@@ -12,7 +12,7 @@ namespace Epsitec.Common.FormEngine
 	/// <summary>
 	/// Description complète d'un masque de saisie.
 	/// </summary>
-	public class FormDescription
+	public class FormDescription : System.IEquatable<FormDescription>
 	{
 		public FormDescription()
 		{
@@ -43,9 +43,18 @@ namespace Epsitec.Common.FormEngine
 		}
 
 
+		#region IEquatable<FormDescription> Members
+
+		public bool Equals(FormDescription other)
+		{
+			return FormDescription.Equals(this, other);
+		}
+
+		#endregion
+		
 		public override bool Equals(object obj)
 		{
-			return (obj is FormDescription) && (FormDescription.Compare(this, (FormDescription) obj));
+			return (obj is FormDescription) && (FormDescription.Equals(this, (FormDescription) obj));
 		}
 
 		public override int GetHashCode()
@@ -53,7 +62,7 @@ namespace Epsitec.Common.FormEngine
 			return base.GetHashCode();
 		}
 		
-		protected static bool Compare(FormDescription a, FormDescription b)
+		public static bool Equals(FormDescription a, FormDescription b)
 		{
 			//	Retourne true si les deux objets sont égaux.
 			if ((a == null) != (b == null))
