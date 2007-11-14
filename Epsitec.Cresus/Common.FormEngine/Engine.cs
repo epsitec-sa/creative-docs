@@ -36,7 +36,17 @@ namespace Epsitec.Common.FormEngine
 			root.DataSource = new UI.DataSource();
 			root.DataSource.AddDataSource("Data", entityData);
 
+#if false
 			this.CreateFormBox(root, form.Fields, 0);
+#else
+			for (int i=0; i<10; i++)
+			{
+				Button a = new Button(root);
+				a.Text = i.ToString();
+				a.Dock = DockStyle.Fill;
+				a.Margins = new Margins(2, 2, 2, 2);
+			}
+#endif
 
 			return root;
 		}
