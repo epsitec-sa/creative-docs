@@ -172,6 +172,12 @@ namespace Epsitec.Common.Support.EntityEngine
 			return list;
 		}
 
+		public void SetField<T>(string id, T newValue)
+		{
+			T oldValue = this.GetField<T> (id);
+			this.SetField<T> (id, oldValue, newValue);
+		}
+		
 		public void SetField<T>(string id, T oldValue, T newValue)
 		{
 			StructuredTypeField field = this.context.GetStructuredType (this).GetField (id);

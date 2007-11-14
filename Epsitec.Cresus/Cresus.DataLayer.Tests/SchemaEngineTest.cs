@@ -117,8 +117,8 @@ namespace Epsitec.Cresus.DataLayer
 
 			Assert.AreEqual (6, context.CountManagedEntities ());
 
-			entity.SetField<string> ("[63091]", null, "VI-M3-10");
-			entity.SetField<string> ("[630A1]", null, "Vis M3 10mm, inox");
+			entity.SetField<string> ("[63091]", "VI-M3-10");
+			entity.SetField<string> ("[630A1]", "Vis M3 10mm, inox");
 
 			context.SerializeEntity (entity);
 			context.SaveChanges ();
@@ -262,9 +262,9 @@ namespace Epsitec.Cresus.DataLayer
 			Assert.AreEqual ("VI-M3-10", entity2.GetField<string> ("[63091]"));
 			Assert.AreEqual ("M3", entity2.GetField<string> ("[6312]"));
 
-			entity1.SetField<string> ("[630A1]", "Vis M3 10mm Inox", "Vis M3 10mm (acier inox)");
-			entity2.SetField<string> ("[630A1]", "Vis M3 10mm Inox", "Vis M3 10mm (acier inox)");
-			entity2.SetField<string> ("[6312]", "M3", "M3.0");
+			entity1.SetField<string> ("[630A1]", "Vis M3 10mm (acier inox)");
+			entity2.SetField<string> ("[630A1]", "Vis M3 10mm (acier inox)");
+			entity2.SetField<string> ("[6312]", "M3.0");
 
 			System.Diagnostics.Debug.WriteLine ("Saving");
 
@@ -296,10 +296,10 @@ namespace Epsitec.Cresus.DataLayer
 
 							AbstractEntity entity = context.CreateEntity (this.articleVisserieEntityId);
 
-							entity.SetField<string> ("[63091]", null, itemKey);
-							entity.SetField<string> ("[630A1]", null, itemValue);
-							entity.SetField<int> ("[6311]", 0, int.Parse (len.Substring (0, 2)));
-							entity.SetField<string> ("[6312]", null, size);
+							entity.SetField<string> ("[63091]", itemKey);
+							entity.SetField<string> ("[630A1]", itemValue);
+							entity.SetField<int> ("[6311]", int.Parse (len.Substring (0, 2)));
+							entity.SetField<string> ("[6312]", size);
 
 							yield return entity;
 						}
