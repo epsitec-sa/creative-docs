@@ -283,8 +283,11 @@ namespace Epsitec.Common.Support.EntityEngine
 				
 				if (this.store.TryGetValue (id, out value))
 				{
+					//	If the value in the store is a proxy, let it resolve to
+					//	another value, if needed :
+
 					IEntityProxy proxy = value as IEntityProxy;
-					return proxy == null ? value : proxy.GetReadEntityValue ();
+					return proxy == null ? value : proxy.GetReadEntityValue (this, id);
 				}
 				else
 				{
@@ -300,8 +303,11 @@ namespace Epsitec.Common.Support.EntityEngine
 				}
 				else
 				{
+					//	If the value to be stored is a proxy, let it resolve to
+					//	another value, if needed :
+
 					IEntityProxy proxy = value as IEntityProxy;
-					this.store[id] = proxy == null ? value : proxy.GetWriteEntityValue ();
+					this.store[id] = proxy == null ? value : proxy.GetWriteEntityValue (this, id);
 				}
 			}
 

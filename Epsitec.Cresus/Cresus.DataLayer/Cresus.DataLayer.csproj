@@ -128,6 +128,7 @@
     <Compile Include="DataTableBroker.cs" />
     <Compile Include="DataBrokerItem.cs" />
     <Compile Include="Helpers\EntityDataMapping.cs" />
+    <Compile Include="Helpers\EntityDataProxy.cs" />
     <Compile Include="Helpers\SchemaEngineTableBuilder.cs" />
     <Compile Include="Helpers\TemporaryRowCollection.cs" />
     <Compile Include="RequestFactory.cs">

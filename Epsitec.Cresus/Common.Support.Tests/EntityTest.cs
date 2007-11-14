@@ -237,13 +237,13 @@ namespace Epsitec.Common.Support
 
 			#region IEntityProxy Members
 
-			public object GetReadEntityValue()
+			public object GetReadEntityValue(IValueStore store, string id)
 			{
 				this.readCounter++;
 				return this.data;
 			}
 
-			public object GetWriteEntityValue()
+			public object GetWriteEntityValue(IValueStore store, string id)
 			{
 				this.writeCounter++;
 				return this;

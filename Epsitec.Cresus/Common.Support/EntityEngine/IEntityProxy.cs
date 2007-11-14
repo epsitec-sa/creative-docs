@@ -18,13 +18,17 @@ namespace Epsitec.Common.Support.EntityEngine
 		/// <summary>
 		/// Gets the real instance to be used when reading on this proxy.
 		/// </summary>
+		/// <param name="store">The value store.</param>
+		/// <param name="id">The value id.</param>
 		/// <returns>The real instance to be used.</returns>
-		object GetReadEntityValue();
-		
+		object GetReadEntityValue(IValueStore store, string id);
+
 		/// <summary>
 		/// Gets the real instance to be used when writing on this proxy.
 		/// </summary>
+		/// <param name="store">The value store.</param>
+		/// <param name="id">The value id.</param>
 		/// <returns>The real instance to be used.</returns>
-		object GetWriteEntityValue();
+		object GetWriteEntityValue(IValueStore store, string id);
 	}
 }
