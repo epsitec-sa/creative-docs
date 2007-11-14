@@ -66,6 +66,8 @@ namespace Epsitec.Common.FormEngine
 			{
 				FieldDescription field = fields[i];
 
+				field.UniqueId = i;  // assigne l'identificateur unique
+
 				if (field.Type == FieldDescription.FieldType.BoxBegin)
 				{
 					if (level == 0)
@@ -366,6 +368,7 @@ namespace Epsitec.Common.FormEngine
 			//?placeholder.SetBinding(UI.Placeholder.ValueProperty, new Binding(BindingMode.TwoWay, path));
 			placeholder.BackColor = field.BackColor;
 			placeholder.TabIndex = grid.RowDefinitions.Count;
+			placeholder.Index = field.UniqueId;
 #else
 			Button placeholder = new Button(root);
 			placeholder.Text = "Coucou";
@@ -464,6 +467,7 @@ namespace Epsitec.Common.FormEngine
 					StaticText text = new StaticText(root);
 					text.Text = string.Concat("<font size=\"", size.ToString(System.Globalization.CultureInfo.InvariantCulture), "%\"><b>", builder.ToString(), "</b></font>");
 					text.PreferredHeight = size/100*16;
+					text.Index = field.UniqueId;
 
 					int i = Engine.GetColumnIndex(labelsId, 0);
 					int j = Engine.GetColumnIndex(labelsId, Engine.MaxColumnsRequired-1)+1;
@@ -486,6 +490,7 @@ namespace Epsitec.Common.FormEngine
 
 				Separator sep = new Separator(root);
 				sep.PreferredHeight = 1;
+				sep.Index = field.UniqueId;
 
 				int i = Engine.GetColumnIndex(labelsId, 0);
 				int j = Engine.GetColumnIndex(labelsId, Engine.MaxColumnsRequired-1)+1;

@@ -93,6 +93,19 @@ namespace Epsitec.Common.FormEngine
 			}
 		}
 
+		public int UniqueId
+		{
+			//	Identificateur unique, non sérialisé.
+			get
+			{
+				return this.uniqueId;
+			}
+			set
+			{
+				this.uniqueId = value;
+			}
+		}
+
 		public FieldType Type
 		{
 			//	Retourne le type immuable de cet élément.
@@ -541,6 +554,7 @@ namespace Epsitec.Common.FormEngine
 
 
 		protected System.Guid guid;
+		protected int uniqueId;
 		protected FieldType type;
 		protected List<FieldDescription> nodeDescription;
 		protected List<Druid> fieldIds;
