@@ -511,14 +511,14 @@ namespace Epsitec.Common.Designer
 					return;
 				}
 
-				newItem = this.accessor.CreateItem();
-				newItem.Name = newName;
-
 				FormEngine.FormDescription form = new FormEngine.FormDescription();
 				form.EntityId = druid;
-				this.FormInitialize(form);
+				this.FormInitialize(form, ref newName);
 
 				string xml = FormEngine.Serialization.SerializeForm(form);
+
+				newItem = this.accessor.CreateItem();
+				newItem.Name = newName;
 
 				StructuredData data = newItem.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
 				data.SetValue(Support.Res.Fields.ResourceForm.XmlSource, xml);
@@ -560,7 +560,7 @@ namespace Epsitec.Common.Designer
 			this.SetLocalDirty();
 		}
 
-		private void FormInitialize(FormEngine.FormDescription form)
+		private void FormInitialize(FormEngine.FormDescription form, ref string newName)
 		{
 			//	Initialise un masque de saisie avec tous les champs de l'entité de base associée.
 			Module module = this.designerApplication.SearchModule(form.EntityId);
@@ -574,6 +574,9 @@ namespace Epsitec.Common.Designer
 			{
 				return;
 			}
+
+			//	Utilise comme nom du masque le nom de l'entité.
+			newName = this.GetDuplicateName(item.Name);
 
 			StructuredData data = item.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
 			if (data == null)

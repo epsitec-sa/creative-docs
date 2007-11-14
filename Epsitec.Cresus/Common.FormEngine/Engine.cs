@@ -36,7 +36,7 @@ namespace Epsitec.Common.FormEngine
 			root.DataSource = new UI.DataSource();
 			root.DataSource.AddDataSource("Data", entityData);
 
-#if false
+#if true
 			this.CreateFormBox(root, form.Fields, 0);
 #else
 			for (int i=0; i<10; i++)
@@ -361,10 +361,15 @@ namespace Epsitec.Common.FormEngine
 		private void CreateField(UI.Panel root, Widgets.Layouts.GridLayoutEngine grid, string path, FieldDescription field, int[] labelsId, ref int column, ref int row)
 		{
 			//	Crée les widgets pour un champ dans la grille, lors de la deuxième passe.
+#if false
 			UI.Placeholder placeholder = new Epsitec.Common.UI.Placeholder(root);
 			placeholder.SetBinding(UI.Placeholder.ValueProperty, new Binding(BindingMode.TwoWay, path));
 			placeholder.BackColor = field.BackColor;
 			placeholder.TabIndex = grid.RowDefinitions.Count;
+#else
+			Button placeholder = new Button(root);
+			placeholder.Text = "Coucou";
+#endif
 
 			grid.RowDefinitions.Add(new Widgets.Layouts.RowDefinition());
 
