@@ -201,6 +201,10 @@ namespace Epsitec.Cresus.DataLayer
 						this.WriteFieldValueInDataRow (entity, fieldDef, dataRow);
 						break;
 
+					case FieldRelation.Reference:
+						this.WriteFieldReference (entity, entityId, fieldDef);
+						break;
+
 					default:
 						//	TODO: ...
 						break;
@@ -325,6 +329,69 @@ namespace Epsitec.Cresus.DataLayer
 			string columnName = this.GetDataColumnName (fieldDef);
 
 			dataRow[columnName] = value;
+		}
+
+		private void WriteFieldReference(AbstractEntity sourceEntity, Druid entityId, StructuredTypeField fieldDef)
+		{
+			string tableName = this.GetRelationTableName (entityId, fieldDef);
+
+			AbstractEntity targetEntity = sourceEntity.InternalGetValue (fieldDef.Id) as AbstractEntity;
+
+			if (targetEntity != null)
+			{
+				EntityDataMapping sourceMapping = this.GetEntityDataMapping (sourceEntity);
+				EntityDataMapping targetMapping = this.GetEntityDataMapping (targetEntity);
+
+				System.Data.DataRow relationRow = this.richCommand.CreateRow (tableName);
+
+				relationRow.BeginEdit ();
+				relationRow[Tags.ColumnRefSourceId] = sourceMapping.RowKey.Id.Value;
+				relationRow[Tags.ColumnRefTargetId] = targetMapping.RowKey.Id.Value;
+				relationRow.EndEdit ();
+			}
+			else
+			{
+				EntityDataMapping sourceMapping = this.GetEntityDataMapping (sourceEntity);
+				long sourceId = sourceMapping.RowKey.Id.Value;
+
+				System.Data.DataTable relationTable = this.richCommand.DataSet.Tables[tableName];
+
+				for (int i = 0; i < relationTable.Rows.Count; )
+				{
+					System.Data.DataRow relationRow = relationTable.Rows[i];
+
+					if ((long) relationRow[Tags.ColumnRefSourceId] == sourceId)
+					{
+						switch (relationRow.RowState)
+						{
+							case System.Data.DataRowState.Added:
+								relationTable.Rows.RemoveAt (i);
+								break;
+
+							case System.Data.DataRowState.Deleted:
+								i++;
+								break;
+
+							case System.Data.DataRowState.Modified:
+							case System.Data.DataRowState.Unchanged:
+								relationRow.Delete ();
+								i++;
+								break;
+
+							default:
+								throw new System.NotImplementedException ();
+						}
+					}
+				}
+			}
+		}
+
+		private string GetRelationTableName(Druid entityId, StructuredTypeField fieldDef)
+		{
+			string sourceTableName = this.GetDataTableName (entityId);
+			string sourceColumnName = fieldDef.Id.Substring (1, fieldDef.Id.Length-2);
+
+			return string.Concat (sourceColumnName, "_", sourceTableName);
 		}
 
 		private void ReadFieldValueFromDataRow(AbstractEntity entity, StructuredTypeField fieldDef, System.Data.DataRow dataRow)

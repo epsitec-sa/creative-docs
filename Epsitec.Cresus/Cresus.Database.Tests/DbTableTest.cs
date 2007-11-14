@@ -1,6 +1,7 @@
-using NUnit.Framework;
-
+using Epsitec.Common.Support;
 using Epsitec.Common.Types;
+
+using NUnit.Framework;
 
 namespace Epsitec.Cresus.Database
 {
@@ -144,8 +145,10 @@ namespace Epsitec.Cresus.Database
 			Assert.IsNull (table.Columns[column_2.Name]);
 			Assert.IsNull (column_2.Table);
 		}
-		
-		[Test] [ExpectedException (typeof (System.InvalidOperationException))] public void CheckNewDbTableEx1()
+
+		[Test]
+		[ExpectedException (typeof (System.InvalidOperationException))]
+		public void CheckNewDbTableEx1()
 		{
 			DbTable table = new DbTable ("Test");
 			
@@ -280,7 +283,28 @@ namespace Epsitec.Cresus.Database
 			//	exception: colonne b à double
 		}
 #endif
-		
+
+		[Test]
+		public void CheckRelationTable()
+		{
+			DbTable  sourceTable = new DbTable ("A");
+			DbTable  targetTable = new DbTable ("B");
+			DbColumn sourceColumn = DbTable.CreateRelationColumn (null, null, Druid.Parse ("[1234]"), targetTable, DbRevisionMode.IgnoreChanges, DbCardinality.Reference);
+
+			Assert.AreEqual ("1234", sourceColumn.Name);
+
+			DbTable table = DbTable.CreateRelationTable (sourceTable, sourceColumn);
+
+			Assert.AreEqual ("1234_A", table.Name);
+			Assert.AreEqual ("X_1234_A", table.GetSqlName ());
+			Assert.AreEqual (4, table.Columns.Count);
+
+			Assert.AreEqual ("CREF_SOURCE_ID", table.Columns[0].Name);
+			Assert.AreEqual ("CREF_TARGET_ID", table.Columns[1].Name);
+			Assert.AreEqual ("CR_STAT", table.Columns[2].Name);
+			Assert.AreEqual ("CREF_RANK", table.Columns[3].Name);
+		}
+
 		private DbInfrastructure infrastructure;
 	}
 }

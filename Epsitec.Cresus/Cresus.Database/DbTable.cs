@@ -573,7 +573,14 @@ namespace Epsitec.Cresus.Database
 		/// <returns>The SQL name.</returns>
 		public string GetSqlName()
 		{
-			return DbSqlStandard.MakeSqlTableName (this.Name, this.CaptionId.IsEmpty, this.Category, this.Key);
+			if (this.category == DbElementCat.Relation)
+			{
+				return DbSqlStandard.MakeSqlTableName (this.Name, false, this.Category, this.Key);
+			}
+			else
+			{
+				return DbSqlStandard.MakeSqlTableName (this.Name, this.CaptionId.IsEmpty, this.Category, this.Key);
+			}
 		}
 
 		/// <summary>
@@ -816,6 +823,28 @@ namespace Epsitec.Cresus.Database
 			return new DbColumn (columnName, type, DbColumnClass.Data, DbElementCat.ManagedUserData, revisionMode);
 		}
 
+		public static DbTable CreateRelationTable(DbTable sourceTable, DbColumn sourceColumn)
+		{
+			string sourceTableName = sourceTable.Name;
+			string sourceColumnName = sourceColumn.Name;
+			string relationTableName = string.Concat (sourceColumnName, "_", sourceTableName);
+
+			DbTable relationTable = new DbTable (relationTableName);
+
+			relationTable.DefineCategory (DbElementCat.Relation);
+
+			DbTypeDef idType = new DbTypeDef (Res.Types.Num.KeyId);
+			DbTypeDef statusType = new DbTypeDef (Res.Types.Num.KeyStatus);
+			DbTypeDef rankType = new DbTypeDef ("Rank", DbSimpleType.Decimal, DbNumDef.FromRawType (DbRawType.Int32), 0, false, DbNullability.No);
+
+			relationTable.Columns.Add (new DbColumn (Tags.ColumnRefSourceId, idType, DbColumnClass.RefId, DbElementCat.Internal));
+			relationTable.Columns.Add (new DbColumn (Tags.ColumnRefTargetId, idType, DbColumnClass.RefId, DbElementCat.Internal));
+			relationTable.Columns.Add (new DbColumn (Tags.ColumnStatus, statusType, DbColumnClass.KeyStatus, DbElementCat.Internal));
+			relationTable.Columns.Add (new DbColumn (Tags.ColumnRefRank, rankType, DbColumnClass.Data, DbElementCat.Internal));
+
+			return relationTable;
+		}
+		
 		#region Private Methods
 
 		private void HandleColumnInserted(object sender, ValueEventArgs e)
@@ -843,8 +872,8 @@ namespace Epsitec.Cresus.Database
 		private Caption							caption;
 		private string							localizations;
 
-		private Collections.DbColumnList			columns;
-		private Collections.DbColumnList			primaryKeys;
+		private Collections.DbColumnList		columns;
+		private Collections.DbColumnList		primaryKeys;
 		private DbElementCat					category;
 		private DbRevisionMode					revisionMode;
 		private DbReplicationMode				replicationMode;
