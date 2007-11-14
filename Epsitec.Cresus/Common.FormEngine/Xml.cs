@@ -22,7 +22,5 @@ namespace Epsitec.Common.FormEngine
 		public const string ContainerBackColor		= "CBC";
 		public const string ContainerFrameState		= "CFS";
 		public const string ContainerFrameWidth		= "CFW";
-
-		public const string XmlHeader = @"<?xml version=""1.0"" encoding=""utf-16""?>";
 	}
 }
