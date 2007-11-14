@@ -98,7 +98,7 @@ namespace Epsitec.Cresus.DataLayer
 
 			context.LoadTableSchema (table);
 
-			Assert.AreEqual (1, context.RichCommand.DataSet.Tables.Count);
+			Assert.AreEqual (5, context.RichCommand.DataSet.Tables.Count);
 
 			DumpDataSet (context.RichCommand.DataSet);
 

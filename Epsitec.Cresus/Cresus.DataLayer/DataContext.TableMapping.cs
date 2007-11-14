@@ -40,6 +40,16 @@ namespace Epsitec.Cresus.DataLayer
 				using (DbTransaction transaction = this.infrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadOnly))
 				{
 					this.richCommand.ImportTable (transaction, tableDefinition, null);
+
+					foreach (DbColumn columnDefinition in tableDefinition.Columns)
+					{
+						if (columnDefinition.Cardinality != DbCardinality.None)
+						{
+							DbTable relationTableDefinition = DbTable.CreateRelationTable (tableDefinition, columnDefinition);
+							this.richCommand.ImportTable (transaction, relationTableDefinition, null);
+						}
+					}
+
 					transaction.Commit ();
 				}
 			}

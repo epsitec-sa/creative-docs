@@ -837,8 +837,8 @@ namespace Epsitec.Cresus.Database
 			DbTypeDef statusType = new DbTypeDef (Res.Types.Num.KeyStatus);
 			DbTypeDef rankType = new DbTypeDef ("Rank", DbSimpleType.Decimal, DbNumDef.FromRawType (DbRawType.Int32), 0, false, DbNullability.No);
 
-			relationTable.Columns.Add (new DbColumn (Tags.ColumnRefSourceId, idType, DbColumnClass.RefId, DbElementCat.Internal));
-			relationTable.Columns.Add (new DbColumn (Tags.ColumnRefTargetId, idType, DbColumnClass.RefId, DbElementCat.Internal));
+			relationTable.Columns.Add (new DbColumn (Tags.ColumnRefSourceId, idType, DbColumnClass.RefInternal, DbElementCat.Internal));
+			relationTable.Columns.Add (new DbColumn (Tags.ColumnRefTargetId, idType, DbColumnClass.RefInternal, DbElementCat.Internal));
 			relationTable.Columns.Add (new DbColumn (Tags.ColumnStatus, statusType, DbColumnClass.KeyStatus, DbElementCat.Internal));
 			relationTable.Columns.Add (new DbColumn (Tags.ColumnRefRank, rankType, DbColumnClass.Data, DbElementCat.Internal));
 

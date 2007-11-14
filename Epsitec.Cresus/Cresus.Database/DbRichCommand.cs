@@ -381,10 +381,13 @@ namespace Epsitec.Cresus.Database
 		/// <param name="table">The table.</param>
 		internal static void RelaxConstraints(System.Data.DataTable table)
 		{
-			if (table.Columns[Tags.ColumnId].Unique == false)
+			if (table.Columns.Contains (Tags.ColumnName))
 			{
-				System.Diagnostics.Debug.WriteLine (string.Format ("Warning: Table {0} ID not unique, fixing.", table.TableName));
-				table.Columns[Tags.ColumnId].Unique = true;
+				if (table.Columns[Tags.ColumnId].Unique == false)
+				{
+					System.Diagnostics.Debug.WriteLine (string.Format ("Warning: Table {0} ID not unique, fixing.", table.TableName));
+					table.Columns[Tags.ColumnId].Unique = true;
+				}
 			}
 			
 			//	If some columns are declared as non-nullable in the database, we have to
@@ -544,7 +547,10 @@ namespace Epsitec.Cresus.Database
 			
 			foreach (System.Data.DataTable table in this.dataSet.Tables)
 			{
-				DbRichCommand.UpdateLogIds (table, logId);
+				if (table.Columns.Contains (Tags.ColumnRefLog))
+				{
+					DbRichCommand.UpdateLogIds (table, logId);
+				}
 			}
 		}
 
@@ -989,14 +995,34 @@ namespace Epsitec.Cresus.Database
 		/// <param name="table">The table.</param>
 		public static void AssertValidRowIds(System.Data.DataTable table)
 		{
-			foreach (System.Data.DataRow row in table.Rows)
+			if (table.Columns.Contains (Tags.ColumnId))
 			{
-				if (row.RowState != System.Data.DataRowState.Deleted)
+				foreach (System.Data.DataRow row in table.Rows)
 				{
-					DbKey key = new DbKey (row);
-					
-					System.Diagnostics.Debug.Assert (key.IsTemporary == false);
-					System.Diagnostics.Debug.Assert (key.Id.ClientId != 0);
+					if (row.RowState != System.Data.DataRowState.Deleted)
+					{
+						DbKey key = new DbKey (row);
+
+						System.Diagnostics.Debug.Assert (key.IsTemporary == false);
+						System.Diagnostics.Debug.Assert (key.Id.ClientId != 0);
+					}
+				}
+			}
+			if ((table.Columns.Contains (Tags.ColumnRefSourceId)) &&
+				(table.Columns.Contains (Tags.ColumnRefTargetId)))
+			{
+				foreach (System.Data.DataRow row in table.Rows)
+				{
+					if (row.RowState != System.Data.DataRowState.Deleted)
+					{
+						DbKey sourceKey = new DbKey (new DbId ((long) row[Tags.ColumnRefSourceId]));
+						DbKey targetKey = new DbKey (new DbId ((long) row[Tags.ColumnRefTargetId]));
+
+						System.Diagnostics.Debug.Assert (sourceKey.IsTemporary == false);
+						System.Diagnostics.Debug.Assert (sourceKey.Id.ClientId != 0);
+						System.Diagnostics.Debug.Assert (targetKey.IsTemporary == false);
+						System.Diagnostics.Debug.Assert (targetKey.Id.ClientId != 0);
+					}
 				}
 			}
 		}
@@ -1135,13 +1161,16 @@ namespace Epsitec.Cresus.Database
 			//	ligne est temporaire (mais unique); cf. DbKey.CheckTemporaryId.
 
 			System.Data.DataRow row = table.NewRow ();
-			
-			DbKey key = new DbKey (DbKey.CreateTemporaryId (), DbRowStatus.Live);
-			
-			row.BeginEdit ();
-			DbKey.SetRowId (row, key.Id);
-			DbKey.SetRowStatus (row, key.Status);
-			row.EndEdit ();
+
+			if (table.Columns.Contains (Tags.ColumnId))
+			{
+				DbKey key = new DbKey (DbKey.CreateTemporaryId (), DbRowStatus.Live);
+
+				row.BeginEdit ();
+				DbKey.SetRowId (row, key.Id);
+				DbKey.SetRowStatus (row, key.Status);
+				row.EndEdit ();
+			}
 
 			return row;
 		}
