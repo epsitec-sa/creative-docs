@@ -14,11 +14,23 @@ namespace Epsitec.Common.FormEngine
 	{
 		static public string SerializeForm(FormDescription form)
 		{
-			return form.Serialize();
+			string xml = form.Serialize();
+
+			if (xml.StartsWith(Xml.XmlHeader))
+			{
+				xml = xml.Substring(Xml.XmlHeader.Length);
+			}
+
+			return xml;
 		}
 
 		static public FormDescription DeserializeForm(string xml, ResourceManager manager)
 		{
+			if (!xml.StartsWith("<?xml"))
+			{
+				xml = string.Concat(Xml.XmlHeader, xml);
+			}
+
 			FormDescription form = new FormDescription();
 			form.Deserialize(xml);
 			return form;
