@@ -280,7 +280,7 @@ namespace Epsitec.Common.Designer.Viewers
 			
 			base.Terminate(soft);
 
-			if (this.module.AccessPanels.IsLocalDirty)
+			if (this.module.AccessForms.IsLocalDirty)
 			{
 				System.Diagnostics.Debug.Assert (soft);
 				
@@ -293,7 +293,7 @@ namespace Epsitec.Common.Designer.Viewers
 					Forms.softSerialize = null;
 				}
 
-				Forms.softDirtySerialization = this.module.AccessPanels.IsLocalDirty;
+				Forms.softDirtySerialization = this.module.AccessForms.IsLocalDirty;
 			}
 
 			return true;
@@ -325,13 +325,13 @@ namespace Epsitec.Common.Designer.Viewers
 			}
 			else
 			{
-				if (this.module.AccessPanels.IsLocalDirty)
+				if (this.module.AccessForms.IsLocalDirty)
 				{
-					this.module.AccessPanels.SetLocalDirty();
+					this.module.AccessForms.SetLocalDirty();
 				}
 				else
 				{
-					this.module.AccessPanels.ClearLocalDirty();
+					this.module.AccessForms.ClearLocalDirty();
 				}
 
 				FormDescription form = this.XmlToForm(Forms.softSerialize);

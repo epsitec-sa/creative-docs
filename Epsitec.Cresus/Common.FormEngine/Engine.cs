@@ -237,7 +237,7 @@ namespace Epsitec.Common.FormEngine
 		static private void LabelIdUse(int[] labelsId, int labelId, int column, int count)
 		{
 			//	Indique que les colonnes comprises entre column et column+count-1 ont un contenu commun,
-			//	c'est-à-dire qui ne nécessique qu'une colonne physique dans GridLayoutEngine, si cela est
+			//	c'est-à-dire qui ne nécessite qu'une colonne physique dans GridLayoutEngine, si cela est
 			//	en accord avec les autres lignes.
 			//
 			//	Contenu initial:				0 0 0 0 0 0 0 0 0 0
@@ -368,7 +368,7 @@ namespace Epsitec.Common.FormEngine
 			//	Crée les widgets pour un champ dans la grille, lors de la deuxième passe.
 #if true
 			UI.Placeholder placeholder = new Epsitec.Common.UI.Placeholder(root);
-			//?placeholder.SetBinding(UI.Placeholder.ValueProperty, new Binding(BindingMode.TwoWay, path));
+			placeholder.SetBinding(UI.Placeholder.ValueProperty, new Binding(BindingMode.TwoWay, path));
 			placeholder.BackColor = field.BackColor;
 			placeholder.TabIndex = grid.RowDefinitions.Count;
 			placeholder.Index = field.UniqueId;
