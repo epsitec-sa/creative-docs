@@ -182,6 +182,80 @@ namespace Epsitec.Common.Support
 			Assert.AreEqual (typeof (MyTestInterfaceUserEntity), entity.GetType ());
 		}
 
+		[Test]
+		public void CheckProxy()
+		{
+			AbstractEntity entity;
+			AbstractEntity proxyData;
+
+			EntityContext context = EntityContext.Current;
+
+			proxyData = context.CreateEmptyEntity<MyResourceStringEntity> ();
+			entity = context.CreateEmptyEntity<MyTestInterfaceUserEntity> ();
+
+			TestProxy proxy = new TestProxy (proxyData);
+
+			Assert.IsNull (entity.GetField<MyResourceStringEntity> (Res.Fields.TestInterface.Resource.ToString ()));
+
+			Assert.AreEqual (0, proxy.ReadCounter);
+			Assert.AreEqual (0, proxy.WriteCounter);
+			
+			entity.InternalSetValue (Res.Fields.TestInterface.Resource.ToString (), proxy);
+
+			Assert.AreEqual (0, proxy.ReadCounter);
+			Assert.AreEqual (1, proxy.WriteCounter);
+
+			Assert.AreEqual (proxyData, entity.GetField<MyResourceStringEntity> (Res.Fields.TestInterface.Resource.ToString ()));
+			Assert.AreEqual (proxyData, entity.GetField<MyResourceStringEntity> (Res.Fields.TestInterface.Resource.ToString ()));
+			
+			Assert.AreEqual (2, proxy.ReadCounter);
+			Assert.AreEqual (1, proxy.WriteCounter);
+		}
+
+		class TestProxy : IEntityProxy
+		{
+			public TestProxy(object data)
+			{
+				this.data = data;
+			}
+
+			public int ReadCounter
+			{
+				get
+				{
+					return this.readCounter;
+				}
+			}
+
+			public int WriteCounter
+			{
+				get
+				{
+					return this.writeCounter;
+				}
+			}
+
+			#region IEntityProxy Members
+
+			public object GetReadEntityValue()
+			{
+				this.readCounter++;
+				return this.data;
+			}
+
+			public object GetWriteEntityValue()
+			{
+				this.writeCounter++;
+				return this;
+			}
+
+			#endregion
+
+			private readonly object data;
+			private int readCounter;
+			private int writeCounter;
+		}
+
 
 		#region Fake EnumType Entity
 
