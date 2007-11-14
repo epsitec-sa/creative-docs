@@ -145,6 +145,9 @@ namespace Epsitec.Common.UI.Controllers
 				this.label = new StaticText ();
 				this.combo = new TextFieldCombo ();
 
+				this.host.AddWidget (this.label);
+				this.host.AddWidget (this.combo);
+
 				this.label.HorizontalAlignment = HorizontalAlignment.Right;
 				this.label.VerticalAlignment = VerticalAlignment.BaseLine;
 				this.label.ContentAlignment = Drawing.ContentAlignment.MiddleRight;
@@ -196,9 +199,6 @@ namespace Epsitec.Common.UI.Controllers
 
 					this.combo.IsReadOnly = enumType.IsCustomizable ? false : true;
 				}
-
-				this.host.AddWidget (this.label);
-				this.host.AddWidget (this.combo);
 			}
 
 			public override IEnumerable<Widgets.Layouts.PermeableCell> GetChildren(int column, int row, int columnSpan, int rowSpan)
@@ -266,6 +266,9 @@ namespace Epsitec.Common.UI.Controllers
 				this.label = new StaticText ();
 				this.combo = new RadioIconGrid ();
 
+				this.host.AddWidget (this.label);
+				this.host.AddWidget (this.combo);
+
 				this.label.HorizontalAlignment = HorizontalAlignment.Right;
 				this.label.VerticalAlignment = VerticalAlignment.Center;
 				this.label.ContentAlignment = Drawing.ContentAlignment.MiddleRight;
@@ -326,9 +329,6 @@ namespace Epsitec.Common.UI.Controllers
 						}
 					}
 				}
-
-				this.host.AddWidget (this.label);
-				this.host.AddWidget (this.combo);
 			}
 
 			public override IEnumerable<Widgets.Layouts.PermeableCell> GetChildren(int column, int row, int columnSpan, int rowSpan)

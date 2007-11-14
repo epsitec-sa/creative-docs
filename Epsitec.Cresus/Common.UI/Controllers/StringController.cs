@@ -47,6 +47,8 @@ namespace Epsitec.Common.UI.Controllers
 			this.label = new StaticText ();
 			this.field = null;
 
+			this.AddWidget (this.label);
+
 			this.label.HorizontalAlignment = HorizontalAlignment.Stretch;
 			this.label.VerticalAlignment = VerticalAlignment.BaseLine;
 			this.label.ContentAlignment = Drawing.ContentAlignment.MiddleLeft;
@@ -54,14 +56,15 @@ namespace Epsitec.Common.UI.Controllers
 			this.label.Name = caption.Name;
 
 			ToolTip.Default.SetToolTip (this.label, caption.Description);
-
-			this.AddWidget (this.label);
 		}
 
 		private void CreateReadWriteUserInterface(Caption caption)
 		{
 			this.label = new StaticText ();
 			this.field = this.CreateTextField ();
+
+			this.AddWidget (this.label);
+			this.AddWidget (this.field);
 
 			this.label.HorizontalAlignment = HorizontalAlignment.Right;
 			this.label.VerticalAlignment = VerticalAlignment.BaseLine;
@@ -94,9 +97,6 @@ namespace Epsitec.Common.UI.Controllers
 			this.label.Name = null;
 			this.field.Name = caption.Name;
 			
-			this.AddWidget (this.label);
-			this.AddWidget (this.field);
-
 			this.validator = new Validators.ControllerBasedValidator (this.field, this);
 		}
 

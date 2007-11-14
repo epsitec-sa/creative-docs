@@ -46,20 +46,23 @@ namespace Epsitec.Common.UI.Controllers
 			this.label = new StaticText ();
 			this.field = null;
 
+			this.AddWidget (this.label);
+
 			this.label.HorizontalAlignment = HorizontalAlignment.Stretch;
 			this.label.VerticalAlignment = VerticalAlignment.BaseLine;
 			this.label.ContentAlignment = Drawing.ContentAlignment.MiddleLeft;
 			this.label.Dock = DockStyle.Stacked;
 
 			ToolTip.Default.SetToolTip (this.label, caption.Description);
-
-			this.AddWidget (this.label);
 		}
 
 		private void CreateReadWriteUserInterface(Caption caption, INamedType namedType)
 		{
 			this.label = new StaticText ();
 			this.field = new TextFieldSlider ();
+
+			this.AddWidget (this.label);
+			this.AddWidget (this.field);
 
 			this.label.HorizontalAlignment = HorizontalAlignment.Right;
 			this.label.VerticalAlignment = VerticalAlignment.BaseLine;
@@ -105,9 +108,6 @@ namespace Epsitec.Common.UI.Controllers
 					this.field.PreferredRange = numType.PreferredRange;
 				}
 			}
-			
-			this.AddWidget (this.label);
-			this.AddWidget (this.field);
 
 			this.validator = new Validators.ControllerBasedValidator (this.field, this);
 		}
