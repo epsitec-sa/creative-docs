@@ -361,9 +361,9 @@ namespace Epsitec.Common.FormEngine
 		private void CreateField(UI.Panel root, Widgets.Layouts.GridLayoutEngine grid, string path, FieldDescription field, int[] labelsId, ref int column, ref int row)
 		{
 			//	Crée les widgets pour un champ dans la grille, lors de la deuxième passe.
-#if false
+#if true
 			UI.Placeholder placeholder = new Epsitec.Common.UI.Placeholder(root);
-			placeholder.SetBinding(UI.Placeholder.ValueProperty, new Binding(BindingMode.TwoWay, path));
+			//?placeholder.SetBinding(UI.Placeholder.ValueProperty, new Binding(BindingMode.TwoWay, path));
 			placeholder.BackColor = field.BackColor;
 			placeholder.TabIndex = grid.RowDefinitions.Count;
 #else

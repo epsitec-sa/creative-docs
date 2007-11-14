@@ -575,7 +575,7 @@ namespace Epsitec.Common.Designer
 				return;
 			}
 
-			//	Utilise comme nom du masque le nom de l'entité.
+			//	Utilise comme nom du masque le nom de l'entité, éventuellement complété d'un numéro.
 			newName = this.GetDuplicateName(item.Name);
 
 			StructuredData data = item.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
