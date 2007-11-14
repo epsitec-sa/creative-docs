@@ -210,9 +210,11 @@ namespace Epsitec.Cresus.DataLayer
 
 		public AbstractEntity ResolveEntity(DbKey rowKey, Druid entityId)
 		{
+			Druid baseEntityId = this.entityContext.GetBaseEntityId (entityId);
+
 			foreach (EntityDataMapping mapping in this.entityDataMapping.Values)
 			{
-				if (mapping.Equals (rowKey, entityId))
+				if (mapping.Equals (rowKey, baseEntityId))
 				{
 					return mapping.Entity;
 				}
@@ -396,7 +398,7 @@ namespace Epsitec.Cresus.DataLayer
 			System.Data.DataRow row = this.richCommand.CreateRow (tableName);
 
 			TemporaryRowCollection temporaryRows;
-			temporaryRows = this.GetTemporaryRows (mapping.EntityId);
+			temporaryRows = this.GetTemporaryRows (mapping.BaseEntityId);
 			temporaryRows.AssociateRow (mapping, row);
 			
 			return row;
@@ -423,13 +425,12 @@ namespace Epsitec.Cresus.DataLayer
 		/// <summary>
 		/// Gets the temporary row collection.
 		/// </summary>
-		/// <param name="entityId">The entity id.</param>
+		/// <param name="baseEntityId">The base entity id.</param>
 		/// <returns>
 		/// The <see cref="TemporaryRowCollection"/> instance.
 		/// </returns>
-		private TemporaryRowCollection GetTemporaryRows(Druid entityId)
+		private TemporaryRowCollection GetTemporaryRows(Druid baseEntityId)
 		{
-			Druid baseEntityId = this.entityContext.GetBaseEntityId (entityId);
 			string baseTableName = this.GetDataTableName (baseEntityId);
 
 			return this.GetTemporaryRows (baseTableName);
@@ -493,9 +494,10 @@ namespace Epsitec.Cresus.DataLayer
 		{
 			AbstractEntity entity = e.Entity;
 			Druid entityId = entity.GetEntityStructuredTypeId ();
+			Druid baseEntityId = this.entityContext.GetBaseEntityId (entityId);
 			long entitySerialId = entity.GetEntitySerialId ();
 
-			this.entityDataMapping[entitySerialId] = new EntityDataMapping (entity);
+			this.entityDataMapping[entitySerialId] = new EntityDataMapping (entity, entityId, baseEntityId);
 			this.LoadEntitySchema (entityId);
 		}
 

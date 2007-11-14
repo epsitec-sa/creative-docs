@@ -234,6 +234,10 @@ namespace Epsitec.Cresus.DataLayer
 			Assert.AreEqual ("VI-M3-10", entity2.GetField<string> ("[63091]"));
 			Assert.AreEqual ("M3", entity2.GetField<string> ("[6312]"));
 
+			Assert.AreEqual (entity1, context.ResolveEntity (key1, this.articleEntityId));
+			Assert.AreEqual (entity2, context.ResolveEntity (key2, this.articleEntityId));
+			Assert.AreEqual (entity2, context.ResolveEntity (key2, this.articleVisserieEntityId));
+
 			context.Dispose ();
 		}
 

@@ -24,10 +24,13 @@ namespace Epsitec.Cresus.DataLayer.Helpers
 		/// Initializes a new instance of the <see cref="EntityDataMapping"/> class.
 		/// </summary>
 		/// <param name="entity">The entity.</param>
-		public EntityDataMapping(AbstractEntity entity)
+		/// <param name="entityId">The entity id.</param>
+		/// <param name="baseEntityId">The base entity id.</param>
+		public EntityDataMapping(AbstractEntity entity, Druid entityId, Druid baseEntityId)
 		{
 			this.entity = entity;
-			this.entityId = this.entity.GetEntityStructuredTypeId ();
+			this.entityId = entityId;
+			this.baseEntityId = baseEntityId;
 			this.rowKey = new DbKey ();
 		}
 
@@ -52,6 +55,18 @@ namespace Epsitec.Cresus.DataLayer.Helpers
 			get
 			{
 				return this.entityId;
+			}
+		}
+
+		/// <summary>
+		/// Gets the associated base entity id.
+		/// </summary>
+		/// <value>The base entity id.</value>
+		public Druid BaseEntityId
+		{
+			get
+			{
+				return this.baseEntityId;
 			}
 		}
 
@@ -121,13 +136,13 @@ namespace Epsitec.Cresus.DataLayer.Helpers
 		/// Compares this instance with the specified row key and entity id pair.
 		/// </summary>
 		/// <param name="rowKey">The row key.</param>
-		/// <param name="entityId">The entity id.</param>
+		/// <param name="baseEntityId">The base entity id.</param>
 		/// <returns><c>true</c> if this instance matches the row key and entity
 		/// id pair; otherwise, <c>false</c>.</returns>
-		public bool Equals(DbKey rowKey, Druid entityId)
+		public bool Equals(DbKey rowKey, Druid baseEntityId)
 		{
 			return this.rowKey.Id == rowKey.Id
-				&& this.entityId == entityId;
+				&& this.baseEntityId == baseEntityId;
 		}
 		
 		public override bool Equals(object obj)
@@ -158,6 +173,7 @@ namespace Epsitec.Cresus.DataLayer.Helpers
 
 		private readonly AbstractEntity entity;
 		private readonly Druid entityId;
+		private readonly Druid baseEntityId;
 		private DbKey rowKey;
 	}
 }
