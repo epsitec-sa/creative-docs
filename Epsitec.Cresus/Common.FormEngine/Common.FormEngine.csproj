@@ -37,7 +37,7 @@
   <ItemGroup>
     <Compile Include="Arrange.cs" />
     <Compile Include="FormDescription.cs" />
-    <Compile Include="Serialisation.cs" />
+    <Compile Include="Serialization.cs" />
     <Compile Include="FieldDescription.cs" />
     <Compile Include="Engine.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

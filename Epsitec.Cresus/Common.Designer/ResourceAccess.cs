@@ -517,7 +517,7 @@ namespace Epsitec.Common.Designer
 				FormEngine.FormDescription form = new FormEngine.FormDescription();
 				form.EntityId = druid;
 
-				string xml = FormEngine.Serialisation.SerializeForm(form);
+				string xml = FormEngine.Serialization.SerializeForm(form);
 
 				StructuredData data = newItem.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
 				data.SetValue(Support.Res.Fields.ResourceForm.XmlSource, xml);
@@ -1674,7 +1674,7 @@ namespace Epsitec.Common.Designer
 			//	Sérialise le masque de saisie dans les ressources.
 			if (druid.IsValid)
 			{
-				string xml = FormEngine.Serialisation.SerializeForm(form);
+				string xml = FormEngine.Serialization.SerializeForm(form);
 
 				CultureMap item = this.accessor.Collection[druid];
 				System.Diagnostics.Debug.Assert(item != null);
@@ -1709,7 +1709,7 @@ namespace Epsitec.Common.Designer
 
 				if (!string.IsNullOrEmpty(xml))
 				{
-					return FormEngine.Serialisation.DeserializeForm(xml, this.resourceManager);
+					return FormEngine.Serialization.DeserializeForm(xml, this.resourceManager);
 				}
 			}
 

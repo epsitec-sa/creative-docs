@@ -356,13 +356,13 @@ namespace Epsitec.Common.Designer.Viewers
 		protected string FormToXml(FormDescription form)
 		{
 			//	form -> xml.
-			return FormEngine.Serialisation.SerializeForm(form);
+			return FormEngine.Serialization.SerializeForm(form);
 		}
 
 		protected FormDescription XmlToForm(string xml)
 		{
 			//	xml -> form.
-			return FormEngine.Serialisation.DeserializeForm(xml, this.module.ResourceManager);
+			return FormEngine.Serialization.DeserializeForm(xml, this.module.ResourceManager);
 		}
 
 		protected FormDescription GetForm()
