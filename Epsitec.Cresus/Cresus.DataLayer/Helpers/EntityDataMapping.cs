@@ -13,14 +13,27 @@ using System.Collections.Generic;
 
 namespace Epsitec.Cresus.DataLayer.Helpers
 {
+	/// <summary>
+	/// The <c>EntityDataMapping</c> class maps entity instances with their data
+	/// row(s) in the <see cref="System.Data.DataSet"/> associated with the live
+	/// <see cref="DataContext"/>.
+	/// </summary>
 	public class EntityDataMapping
 	{
+		/// <summary>
+		/// Initializes a new instance of the <see cref="EntityDataMapping"/> class.
+		/// </summary>
+		/// <param name="entity">The entity.</param>
 		public EntityDataMapping(AbstractEntity entity)
 		{
 			this.entity = entity;
 			this.rowKey = new DbKey ();
 		}
 
+		/// <summary>
+		/// Gets the associated entity.
+		/// </summary>
+		/// <value>The entity.</value>
 		public AbstractEntity Entity
 		{
 			get
@@ -29,6 +42,10 @@ namespace Epsitec.Cresus.DataLayer.Helpers
 			}
 		}
 
+		/// <summary>
+		/// Gets the associated entity id.
+		/// </summary>
+		/// <value>The entity id.</value>
 		public Druid EntityId
 		{
 			get
@@ -42,7 +59,12 @@ namespace Epsitec.Cresus.DataLayer.Helpers
 			}
 		}
 
-
+		/// <summary>
+		/// Gets or sets the row key for the associated entity.
+		/// </summary>
+		/// <exception cref="System.InvalidOperationException">Thrown when a row
+		/// key is modified after it has become definitive.</exception>
+		/// <value>The row key.</value>
 		public DbKey RowKey
 		{
 			get
@@ -52,13 +74,13 @@ namespace Epsitec.Cresus.DataLayer.Helpers
 			set
 			{
 				if ((this.rowKey.IsEmpty) ||
-					(this.rowKey.IsTemporary))
+					(this.rowKey.IsTemporary && value.IsDefinitive))
 				{
 					this.rowKey = value;
 				}
 				else
 				{
-					throw new System.InvalidOperationException ("RowKeys cannot be modified");
+					throw new System.InvalidOperationException ("RowKey cannot be further modified");
 				}
 			}
 		}

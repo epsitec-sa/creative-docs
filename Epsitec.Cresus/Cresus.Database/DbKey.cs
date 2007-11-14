@@ -107,6 +107,21 @@ namespace Epsitec.Cresus.Database
 		}
 
 		/// <summary>
+		/// Gets a value indicating whether this instance represents a definitive key.
+		/// A definitive key is not empty and not temporary.
+		/// </summary>
+		/// <value>
+		/// 	<c>true</c> if this instance represents a definitive key; otherwise, <c>false</c>.
+		/// </value>
+		public bool								IsDefinitive
+		{
+			get
+			{
+				return !this.IsEmpty && !this.IsTemporary;
+			}
+		}
+
+		/// <summary>
 		/// Gets a value indicating whether this instance represents an empty key.
 		/// </summary>
 		/// <value><c>true</c> if this instance represents an empty key; otherwise, <c>false</c>.</value>
