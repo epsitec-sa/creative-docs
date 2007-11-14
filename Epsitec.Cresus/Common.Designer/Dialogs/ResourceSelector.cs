@@ -17,6 +17,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			TypesOrEntities,
 			InheritEntities,
 			InterfaceEntities,
+			Entities,
 		}
 
 
@@ -329,7 +330,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				}
 			}
 
-			if (this.operation == Operation.InheritEntities)
+			if (this.operation == Operation.InheritEntities || this.operation == Operation.Entities)
 			{
 				StructuredData data = cultureMap.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
 				StructuredTypeClass typeClass = (StructuredTypeClass) data.GetValue(Support.Res.Fields.ResourceStructuredType.Class);

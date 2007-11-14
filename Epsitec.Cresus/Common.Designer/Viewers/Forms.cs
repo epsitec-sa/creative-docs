@@ -140,7 +140,7 @@ namespace Epsitec.Common.Designer.Viewers
 		{
 			get
 			{
-				return ResourceAccess.Type.Panels;
+				return ResourceAccess.Type.Forms;
 			}
 		}
 

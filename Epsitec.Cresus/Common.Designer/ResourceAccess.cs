@@ -499,6 +499,29 @@ namespace Epsitec.Common.Designer
 				data.SetValue(Support.Res.Fields.ResourceStructuredType.BaseType, druid);
 				data.SetValue(Support.Res.Fields.ResourceStructuredType.Class, typeClass);
 			}
+			else if (this.type == Type.Forms && !duplicateContent)
+			{
+				Druid druid = Druid.Empty;
+				bool isNullable = false;
+				StructuredTypeClass typeClass = StructuredTypeClass.Entity;
+
+				Common.Dialogs.DialogResult result = this.designerApplication.DlgResourceSelector(Dialogs.ResourceSelector.Operation.Entities, this.designerApplication.CurrentModule, Type.Entities, ref typeClass, ref druid, ref isNullable, null);
+				if (result != Common.Dialogs.DialogResult.Yes)
+				{
+					return;
+				}
+
+				newItem = this.accessor.CreateItem();
+				newItem.Name = newName;
+
+				FormEngine.FormDescription form = new FormEngine.FormDescription();
+				form.EntityId = druid;
+
+				string xml = FormEngine.Serialisation.SerializeForm(form);
+
+				StructuredData data = newItem.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
+				data.SetValue(Support.Res.Fields.ResourceForm.XmlSource, xml);
+			}
 			else
 			{
 				newItem = this.accessor.CreateItem();
