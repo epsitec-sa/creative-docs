@@ -393,7 +393,7 @@ namespace Epsitec.Common.Designer.Viewers
 			}
 			else
 			{
-				FormEngine.FormEngine engine = new FormEngine.FormEngine(this.module.ResourceManager);
+				FormEngine.Engine engine = new FormEngine.Engine(this.module.ResourceManager);
 				this.panelContainer = engine.CreateForm(form);
 				this.InitializePanel();
 

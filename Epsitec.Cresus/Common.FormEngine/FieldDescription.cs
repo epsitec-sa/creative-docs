@@ -40,7 +40,7 @@ namespace Epsitec.Common.FormEngine
 			//	Constructeur protégé, commun à tous les autres.
 			this.backColor = Color.Empty;
 			this.separator = SeparatorType.Normal;
-			this.columnsRequired = FormEngine.MaxColumnsRequired;
+			this.columnsRequired = Engine.MaxColumnsRequired;
 			this.rowsRequired = 1;
 			this.containerLayoutMode = ContainerLayoutMode.None;
 			this.containerMargins = Margins.Zero;
@@ -224,7 +224,7 @@ namespace Epsitec.Common.FormEngine
 			set
 			{
 				value = System.Math.Max(value, 1);
-				value = System.Math.Min(value, FormEngine.MaxColumnsRequired);
+				value = System.Math.Min(value, Engine.MaxColumnsRequired);
 				this.columnsRequired = value;
 			}
 		}
@@ -239,7 +239,7 @@ namespace Epsitec.Common.FormEngine
 			set
 			{
 				value = System.Math.Max(value, 1);
-				value = System.Math.Min(value, FormEngine.MaxRowsRequired);
+				value = System.Math.Min(value, Engine.MaxRowsRequired);
 				this.rowsRequired = value;
 			}
 		}
