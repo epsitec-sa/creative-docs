@@ -350,6 +350,29 @@ namespace Epsitec.Common.Designer.FormEditor
 		protected void SelectDown(Point pos, bool isRightButton, bool isControlPressed, bool isShiftPressed)
 		{
 			//	Sélection ponctuelle, souris pressée.
+			Widget obj = this.Detect(pos);
+
+			if (!isShiftPressed)  // touche Shift relâchée ?
+			{
+				this.selectedObjects.Clear();
+				this.UpdateAfterChanging(Viewers.Abstract.Changing.Selection);
+			}
+
+			if (obj != null)
+			{
+				if (this.selectedObjects.Contains(obj))
+				{
+					this.selectedObjects.Remove(obj);
+				}
+				else
+				{
+					this.selectedObjects.Add(obj);
+				}
+				this.UpdateAfterChanging(Viewers.Abstract.Changing.Selection);
+			}
+
+			this.OnChildrenSelected();
+			this.Invalidate();
 		}
 
 		protected void SelectMove(Point pos, bool isRightButton, bool isControlPressed, bool isShiftPressed)
@@ -804,6 +827,13 @@ namespace Epsitec.Common.Designer.FormEditor
 
 		protected void DrawSelectedObject(Graphics graphics, Widget obj)
 		{
+			Rectangle bounds = this.GetActualBounds(obj);
+			bounds.Deflate(0.5);
+
+			graphics.LineWidth = 3;
+			graphics.AddRectangle(bounds);
+			graphics.RenderSolid(PanelsContext.ColorHiliteOutline);
+			graphics.LineWidth = 1;
 		}
 
 		protected void DrawPadding(Graphics graphics, Widget obj, double factor)
