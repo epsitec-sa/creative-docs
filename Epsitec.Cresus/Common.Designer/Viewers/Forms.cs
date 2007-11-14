@@ -379,6 +379,7 @@ namespace Epsitec.Common.Designer.Viewers
 				this.formEditor.Panel = this.panelContainer;
 				this.formEditor.Druid = druid;
 				this.formEditor.IsEditEnabled = false;
+				this.formEditor.Form = null;
 			}
 			else
 			{
@@ -389,6 +390,7 @@ namespace Epsitec.Common.Designer.Viewers
 				this.formEditor.Panel = this.panelContainer;
 				this.formEditor.Druid = druid;
 				this.formEditor.IsEditEnabled = !this.designerApplication.IsReadonly;
+				this.formEditor.Form = form;
 			}
 		}
 

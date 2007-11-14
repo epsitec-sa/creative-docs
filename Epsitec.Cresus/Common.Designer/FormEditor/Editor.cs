@@ -71,6 +71,19 @@ namespace Epsitec.Common.Designer.FormEditor
 			}
 		}
 
+		public FormEngine.FormDescription Form
+		{
+			//	Masque de saisie associé.
+			get
+			{
+				return this.form;
+			}
+			set
+			{
+				this.form = value;
+			}
+		}
+
 		public PanelsContext Context
 		{
 			//	Contexte asocié.
@@ -1147,29 +1160,30 @@ namespace Epsitec.Common.Designer.FormEditor
 		#endregion
 
 
-		public static readonly double		margin = 10;
+		public static readonly double			margin = 10;
 
-		protected Module					module;
-		protected UI.Panel					panel;
-		protected Druid						druid;
-		protected PanelsContext				context;
-		protected bool						isEditEnabled = false;
+		protected Module						module;
+		protected FormEngine.FormDescription	form;
+		protected UI.Panel						panel;
+		protected Druid							druid;
+		protected PanelsContext					context;
+		protected bool							isEditEnabled = false;
 
-		protected List<Widget>				selectedObjects = new List<Widget>();
-		protected Rectangle					selectedRectangle = Rectangle.Empty;
-		protected Widget					hilitedObject;
-		protected bool						isDragging;
-		protected MouseCursorType			lastCursor = MouseCursorType.Unknown;
+		protected List<Widget>					selectedObjects = new List<Widget>();
+		protected Rectangle						selectedRectangle = Rectangle.Empty;
+		protected Widget						hilitedObject;
+		protected bool							isDragging;
+		protected MouseCursorType				lastCursor = MouseCursorType.Unknown;
 
-		protected Image						mouseCursorArrow = null;
-		protected Image						mouseCursorArrowPlus = null;
-		protected Image						mouseCursorGlobal = null;
-		protected Image						mouseCursorGrid = null;
-		protected Image						mouseCursorGridPlus = null;
-		protected Image						mouseCursorEdit = null;
-		protected Image						mouseCursorPen = null;
-		protected Image						mouseCursorZoom = null;
-		protected Image						mouseCursorHand = null;
-		protected Image						mouseCursorFinger = null;
+		protected Image							mouseCursorArrow = null;
+		protected Image							mouseCursorArrowPlus = null;
+		protected Image							mouseCursorGlobal = null;
+		protected Image							mouseCursorGrid = null;
+		protected Image							mouseCursorGridPlus = null;
+		protected Image							mouseCursorEdit = null;
+		protected Image							mouseCursorPen = null;
+		protected Image							mouseCursorZoom = null;
+		protected Image							mouseCursorHand = null;
+		protected Image							mouseCursorFinger = null;
 	}
 }
