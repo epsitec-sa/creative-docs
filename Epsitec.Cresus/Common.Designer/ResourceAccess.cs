@@ -516,6 +516,7 @@ namespace Epsitec.Common.Designer
 
 				FormEngine.FormDescription form = new FormEngine.FormDescription();
 				form.EntityId = druid;
+				this.FormInitialize(form);
 
 				string xml = FormEngine.Serialization.SerializeForm(form);
 
@@ -557,6 +558,28 @@ namespace Epsitec.Common.Designer
 			}
 
 			this.SetLocalDirty();
+		}
+
+		private void FormInitialize(FormEngine.FormDescription form)
+		{
+			//	Initialise un masque de saisie avec tous les champs de l'entité de base associée.
+			Module module = this.designerApplication.SearchModule(form.EntityId);
+			CultureMap item = module.AccessEntities.accessor.Collection[form.EntityId];
+			StructuredData data = item.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
+			IList<StructuredData> dataFields = data.GetValue(Support.Res.Fields.ResourceStructuredType.Fields) as IList<StructuredData>;
+			foreach (StructuredData dataField in dataFields)
+			{
+				FieldRelation rel = (FieldRelation) dataField.GetValue(Support.Res.Fields.Field.Relation);
+				if (rel == FieldRelation.None)
+				{
+					FormEngine.FieldDescription field = new FormEngine.FieldDescription(FormEngine.FieldDescription.FieldType.Field);
+
+					Druid fieldCaptionId = (Druid) dataField.GetValue(Support.Res.Fields.Field.CaptionId);
+					field.SetFields(fieldCaptionId.ToString());
+
+					form.Fields.Add(field);
+				}
+			}
 		}
 
 		private static void CopyData(IResourceAccessor accessor, CultureMap dstItem, StructuredData src, StructuredData dst)
