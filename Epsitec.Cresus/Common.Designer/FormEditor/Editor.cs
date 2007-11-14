@@ -386,7 +386,7 @@ namespace Epsitec.Common.Designer.FormEditor
 			this.isRectangling = false;
 			Widget obj;
 
-			obj = this.Detect(pos, isShiftPressed, false);  // objet visé par la souris
+			obj = this.Detect(pos);  // objet visé par la souris
 
 			if (!isShiftPressed)  // touche Shift relâchée ?
 			{
@@ -457,6 +457,8 @@ namespace Epsitec.Common.Designer.FormEditor
 			else
 			{
 				//	Met en évidence la cote survolée par la souris.
+				Widget obj = this.Detect(pos);
+				this.SetHilitedObject(obj, null);  // met en évidence l'objet survolé par la souris
 			}
 		}
 
@@ -507,7 +509,7 @@ namespace Epsitec.Common.Designer.FormEditor
 				return;
 			}
 
-			Widget obj = this.Detect(pos, isShiftPressed, false);  // objet visé par la souris
+			Widget obj = this.Detect(pos);  // objet visé par la souris
 
 			if (!isShiftPressed)  // touche Shift relâchée ?
 			{
@@ -960,19 +962,17 @@ namespace Epsitec.Common.Designer.FormEditor
 
 
 		#region Selection
-		protected Widget Detect(Point pos, bool sameParent, bool onlyGrid)
+		protected Widget Detect(Point pos)
 		{
 			//	Détecte l'objet visé par la souris, avec priorité au dernier objet
 			//	dessiné (donc placé dessus).
-			//	Si sameParent = true, l'objet détecté doit avoir le même parent que
-			//	l'objet éventuellement déjà sélectionné.
-			Widget detected = this.Detect(pos, sameParent, onlyGrid, this.panel);
-			if (detected == null && (!sameParent || this.selectedObjects.Count == 0) && !onlyGrid)
+			Widget detected = this.Detect(pos, this.panel);
+			if (detected == null && this.selectedObjects.Count == 0)
 			{
 				Rectangle rect = this.panel.Client.Bounds;
 				if (rect.Contains(pos))
 				{
-					rect.Deflate(this.GetDetectPadding(this.panel, onlyGrid));
+					rect.Deflate(this.GetDetectPadding(this.panel));
 					if (!rect.Contains(pos))
 					{
 						detected = this.panel;
@@ -982,14 +982,14 @@ namespace Epsitec.Common.Designer.FormEditor
 			return detected;
 		}
 
-		protected Widget Detect(Point pos, bool sameParent, bool onlyGrid, Widget parent)
+		protected Widget Detect(Point pos, Widget parent)
 		{
 			Widget[] children = parent.Children.Widgets;
 			for (int i=children.Length-1; i>=0; i--)
 			{
 				Widget widget = children[i];
 
-				if (!widget.Visibility || widget.IsEmbedded)
+				if (widget.Index == -1)
 				{
 					continue;
 				}
@@ -997,13 +997,13 @@ namespace Epsitec.Common.Designer.FormEditor
 				Rectangle rect = widget.ActualBounds;
 				if (rect.Contains(pos))
 				{
-					Widget deep = this.Detect(widget.MapParentToClient(pos), sameParent, onlyGrid, widget);
+					Widget deep = this.Detect(widget.MapParentToClient(pos), widget);
 					if (deep != null)
 					{
 						return deep;
 					}
 
-					if (sameParent && this.selectedObjects.Count > 0)
+					if (this.selectedObjects.Count > 0)
 					{
 						if (widget.Parent != this.selectedObjects[0].Parent)
 						{
@@ -1018,7 +1018,7 @@ namespace Epsitec.Common.Designer.FormEditor
 			return null;
 		}
 
-		protected Margins GetDetectPadding(Widget obj, bool insideGrid)
+		protected Margins GetDetectPadding(Widget obj)
 		{
 			//	Retourne les marges intérieures pour la détection du padding.
 			Margins padding = obj.Padding;
@@ -1182,6 +1182,11 @@ namespace Epsitec.Common.Designer.FormEditor
 		protected void SetHilitedObject(Widget obj, PanelEditor.GridSelection grid)
 		{
 			//	Détermine l'objet à mettre en évidence lors d'un survol.
+			if (this.hilitedObject != obj)
+			{
+				this.hilitedObject = obj;
+				this.Invalidate();
+			}
 		}
 
 		protected void SetHilitedParent(Widget obj, int column, int row, int columnCount, int rowCount)
@@ -1520,6 +1525,7 @@ namespace Epsitec.Common.Designer.FormEditor
 			//	Dessine l'objet survolé.
 			if (this.hilitedObject != null)
 			{
+				this.DrawHilitedObject(graphics, this.hilitedObject);
 			}
 
 			//	Dessine l'objet parent survolé.
@@ -1604,9 +1610,30 @@ namespace Epsitec.Common.Designer.FormEditor
 			//	Dessine les marges de padding d'un objet, sous forme de hachures.
 		}
 
-		protected void DrawHilitedObject(Graphics graphics, Widget obj, PanelEditor.GridSelection gs)
+		protected void DrawHilitedObject(Graphics graphics, Widget obj)
 		{
 			//	Met en évidence l'objet survolé par la souris.
+			Color color = PanelsContext.ColorHiliteSurface;
+
+			//	Si le rectangle est trop petit (par exemple objet Separator), il est engraissé.
+			Rectangle rect = this.GetActualBounds(obj);
+
+			double ix = 0;
+			if (rect.Width < this.context.MinimalSize)
+			{
+				ix = this.context.MinimalSize;
+			}
+
+			double iy = 0;
+			if (rect.Height < this.context.MinimalSize)
+			{
+				iy = this.context.MinimalSize;
+			}
+
+			rect.Inflate(ix, iy);
+
+			graphics.AddFilledRectangle(rect);
+			graphics.RenderSolid(color);
 		}
 
 		protected void DrawHilitedParent(Graphics graphics, Widget obj, int column, int row, int columnCount, int rowCount)
@@ -1644,6 +1671,22 @@ namespace Epsitec.Common.Designer.FormEditor
 
 
 		#region Misc
+		protected Rectangle GetActualBounds(Widget obj)
+		{
+			//	Retourne la position et les dimensions actuelles de l'objet.
+			//	Le rectangle rendu est toujours valide, quel que soit le mode d'attachement.
+			obj.Window.ForceLayout();
+			Rectangle bounds = obj.Client.Bounds;
+
+			while (obj != null && obj != this.panel)
+			{
+				bounds = obj.MapClientToParent(bounds);
+				obj = obj.Parent;
+			}
+
+			return bounds;
+		}
+
 		public void AdaptAfterToolChanged()
 		{
 			//	Adaptation après un changement d'outil ou d'objet.

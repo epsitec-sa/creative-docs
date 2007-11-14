@@ -36,17 +36,7 @@ namespace Epsitec.Common.FormEngine
 			root.DataSource = new UI.DataSource();
 			root.DataSource.AddDataSource("Data", entityData);
 
-#if true
 			this.CreateFormBox(root, form.Fields, 0);
-#else
-			for (int i=0; i<10; i++)
-			{
-				Button a = new Button(root);
-				a.Text = i.ToString();
-				a.Dock = DockStyle.Fill;
-				a.Margins = new Margins(2, 2, 2, 2);
-			}
-#endif
 
 			return root;
 		}
@@ -67,8 +57,8 @@ namespace Epsitec.Common.FormEngine
 				FieldDescription field = fields[i];
 
 				//	Assigne l'identificateur unique, qui ira dans la propriété Index des widgets.
-				//	La valeur zéro indique un widget non identifié, d'où le '+1'.
-				field.UniqueId = i+1;
+				//	La valeur -1 par défaut indique un widget non identifié.
+				field.UniqueId = i;
 
 				if (field.Type == FieldDescription.FieldType.BoxBegin)
 				{
@@ -366,16 +356,11 @@ namespace Epsitec.Common.FormEngine
 		private void CreateField(UI.Panel root, Widgets.Layouts.GridLayoutEngine grid, string path, FieldDescription field, int[] labelsId, ref int column, ref int row)
 		{
 			//	Crée les widgets pour un champ dans la grille, lors de la deuxième passe.
-#if true
 			UI.Placeholder placeholder = new Epsitec.Common.UI.Placeholder(root);
 			placeholder.SetBinding(UI.Placeholder.ValueProperty, new Binding(BindingMode.TwoWay, path));
 			placeholder.BackColor = field.BackColor;
 			placeholder.TabIndex = grid.RowDefinitions.Count;
 			placeholder.Index = field.UniqueId;
-#else
-			Button placeholder = new Button(root);
-			placeholder.Text = "Coucou";
-#endif
 
 			grid.RowDefinitions.Add(new Widgets.Layouts.RowDefinition());
 
