@@ -2007,7 +2007,7 @@ namespace Epsitec.Common.Designer.FormEditor
 			}
 
 			Transform it = graphics.Transform;
-			graphics.TranslateTransform(PanelEditor.Dimension.margin, PanelEditor.Dimension.margin);
+			graphics.TranslateTransform(Editor.margin, Editor.margin);
 
 			bounds = this.RealBounds;
 
@@ -2355,11 +2355,7 @@ namespace Epsitec.Common.Designer.FormEditor
 			//	Retourne le rectangle englobant de tous les objets contenus dans le panneau.
 			get
 			{
-				Size s1 = this.panel.RealMinSize;
-				Size s2 = this.panel.PreferredSize;
-				double w = System.Math.Max(s1.Width, s2.Width);
-				double h = System.Math.Max(s1.Height, s2.Height);
-				return new Rectangle(0, 0, w, h);
+				return new Rectangle(Point.Zero, this.panel.ActualSize);
 			}
 		}
 
@@ -2387,27 +2383,27 @@ namespace Epsitec.Common.Designer.FormEditor
 
 		protected Point ConvPanelToEditor(Point pos)
 		{
-			pos.X += PanelEditor.Dimension.margin;
-			pos.Y += PanelEditor.Dimension.margin;
+			pos.X += Editor.margin;
+			pos.Y += Editor.margin;
 			return pos;
 		}
 
 		protected Point ConvEditorToPanel(Point pos)
 		{
-			pos.X -= PanelEditor.Dimension.margin;
-			pos.Y -= PanelEditor.Dimension.margin;
+			pos.X -= Editor.margin;
+			pos.Y -= Editor.margin;
 			return pos;
 		}
 
 		protected Rectangle ConvPanelToEditor(Rectangle rect)
 		{
-			rect.Offset(PanelEditor.Dimension.margin, PanelEditor.Dimension.margin);
+			rect.Offset(Editor.margin, Editor.margin);
 			return rect;
 		}
 
 		protected Rectangle ConvEditorToPanel(Rectangle rect)
 		{
-			rect.Offset(-PanelEditor.Dimension.margin, -PanelEditor.Dimension.margin);
+			rect.Offset(-Editor.margin, -Editor.margin);
 			return rect;
 		}
 		#endregion
@@ -2593,6 +2589,8 @@ namespace Epsitec.Common.Designer.FormEditor
 		}
 		#endregion
 
+
+		public static readonly double		margin = 10;
 
 		protected static readonly double	attachmentThickness = 3.0;
 		protected static readonly double	attachmentScale = 0.4;

@@ -398,7 +398,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.panelContainer.ChildrenLayoutMode = Widgets.Layouts.LayoutMode.Stacked;
 			this.panelContainer.ContainerLayoutMode = ContainerLayoutMode.VerticalFlow;
 			this.panelContainer.Dock = DockStyle.Fill;
-			this.panelContainer.Margins = new Margins(10, 10, 10, 10);
+			this.panelContainer.Margins = new Margins(Common.Designer.FormEditor.Editor.margin, Common.Designer.FormEditor.Editor.margin, Common.Designer.FormEditor.Editor.margin, Common.Designer.FormEditor.Editor.margin);
 			this.panelContainer.DrawDesignerFrame = true;
 			this.panelContainer.SetParent(this.panelContainerParent);
 			this.panelContainer.ZOrder = this.formEditor.ZOrder+1;
