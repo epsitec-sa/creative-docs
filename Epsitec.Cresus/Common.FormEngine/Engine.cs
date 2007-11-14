@@ -66,7 +66,9 @@ namespace Epsitec.Common.FormEngine
 			{
 				FieldDescription field = fields[i];
 
-				field.UniqueId = i;  // assigne l'identificateur unique
+				//	Assigne l'identificateur unique, qui ira dans la propriété Index des widgets.
+				//	La valeur zéro indique un widget non identifié, d'où le '+1'.
+				field.UniqueId = i+1;
 
 				if (field.Type == FieldDescription.FieldType.BoxBegin)
 				{
@@ -332,6 +334,7 @@ namespace Epsitec.Common.FormEngine
 			box.BackColor = field.ContainerBackColor;
 			box.DrawFrameState = field.ContainerFrameState;
 			box.DrawFrameWidth = field.ContainerFrameWidth;
+			box.Index = field.UniqueId;
 			
 			grid.RowDefinitions.Add(new Widgets.Layouts.RowDefinition());
 
