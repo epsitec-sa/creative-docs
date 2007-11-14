@@ -149,6 +149,7 @@
     <Compile Include="EntityEngine\EntityExpressionEncoding.cs" />
     <Compile Include="EntityEngine\EntityResolver.cs" />
     <Compile Include="EntityEngine\GenericEntity.cs" />
+    <Compile Include="EntityEngine\IEntityProxy.cs" />
     <Compile Include="Platform\Win32\Clipboard.cs" />
     <Compile Include="ResourceAccessors\AbstractFileResourceAccessor.cs" />
     <Compile Include="ResourceAccessors\FormResourceAccessor.cs" />
