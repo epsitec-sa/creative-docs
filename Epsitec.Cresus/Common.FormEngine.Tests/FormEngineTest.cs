@@ -60,7 +60,7 @@ namespace Epsitec.Common.FormEngine
 		}
 
 		[Test]
-		public void CheckSerialisation()
+		public void CheckSerialization()
 		{
 			string[] names = {"Adresse", "Facture", "Affaire", "Tree"};
 

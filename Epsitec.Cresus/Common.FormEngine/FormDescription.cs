@@ -105,9 +105,11 @@ namespace Epsitec.Common.FormEngine
 			//	Sérialise le masque et retourne le résultat dans un string.
 			System.Text.StringBuilder buffer = new System.Text.StringBuilder();
 			System.IO.StringWriter stringWriter = new System.IO.StringWriter(buffer);
-			XmlTextWriter writer = new XmlTextWriter(stringWriter);
-			writer.Formatting = Formatting.None;
-
+			XmlWriterSettings settings = new XmlWriterSettings();
+			settings.OmitXmlDeclaration = true;
+			settings.Indent = false;
+			XmlWriter writer = XmlWriter.Create(stringWriter, settings);
+			
 			this.WriteXml(writer);
 
 			writer.Flush();
