@@ -14,11 +14,12 @@ namespace Epsitec.Common.FormEngine
 	{
 		static public string SerializeForm(FormDescription form)
 		{
+			//	Retourne la chaîne qui contient la sérialisation d'un masque de saisie.
 			string xml = form.Serialize();
 
-			if (xml.StartsWith(Xml.XmlHeader))
+			if (xml.StartsWith(Xml.XmlHeader))  // commence par l'en-tête "<?xml ...>" ?
 			{
-				xml = xml.Substring(Xml.XmlHeader.Length);
+				xml = xml.Substring(Xml.XmlHeader.Length);  // supprime l'en-tête
 			}
 
 			return xml;
@@ -26,9 +27,10 @@ namespace Epsitec.Common.FormEngine
 
 		static public FormDescription DeserializeForm(string xml, ResourceManager manager)
 		{
-			if (!xml.StartsWith("<?xml"))
+			//	Retourne le masque de saisie désérialisé à partir d'une chaîne.
+			if (!xml.StartsWith("<?xml"))  // manque l'en-tête "<?xml ...>" ?
 			{
-				xml = string.Concat(Xml.XmlHeader, xml);
+				xml = string.Concat(Xml.XmlHeader, xml);  // ajoute l'en-tête
 			}
 
 			FormDescription form = new FormDescription();
