@@ -342,6 +342,11 @@ namespace Epsitec.Cresus.DataLayer
 				EntityDataMapping sourceMapping = this.GetEntityDataMapping (sourceEntity);
 				EntityDataMapping targetMapping = this.GetEntityDataMapping (targetEntity);
 
+				if (targetMapping.RowKey.IsEmpty)
+				{
+					this.SerializeEntity (targetEntity);
+				}
+
 				System.Data.DataRow relationRow = this.richCommand.CreateRow (tableName);
 
 				relationRow.BeginEdit ();
