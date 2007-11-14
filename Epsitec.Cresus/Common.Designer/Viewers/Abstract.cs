@@ -12,6 +12,15 @@ namespace Epsitec.Common.Designer.Viewers
 	/// </summary>
 	public abstract class Abstract : AbstractGroup
 	{
+		public enum Changing
+		{
+			Show,			// changement d'interface
+			Selection,		// sélection ou désélection
+			Create,			// création d'un nouvel objet
+			Delete,			// suppression d'un objet
+			Move,			// déplacement d'un objet dans l'arbre (mais pas un déplacement géométrique)
+		}
+
 		protected enum BandMode
 		{
 			MainSummary,
@@ -851,7 +860,7 @@ namespace Epsitec.Common.Designer.Viewers
 		}
 
 
-		public virtual void UpdateViewer(PanelEditor.Editor.Changing oper)
+		public virtual void UpdateViewer(Viewers.Abstract.Changing oper)
 		{
 			//	Met à jour le visualisateur en cours.
 		}

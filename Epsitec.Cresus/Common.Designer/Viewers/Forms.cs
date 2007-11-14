@@ -111,7 +111,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.splitter2.Dock = DockStyle.Right;
 
 			this.UpdateAll();
-			this.UpdateViewer(PanelEditor.Editor.Changing.Show);
+			this.UpdateViewer(Viewers.Abstract.Changing.Show);
 		}
 
 		protected override void Dispose(bool disposing)
@@ -486,7 +486,7 @@ namespace Epsitec.Common.Designer.Viewers
 		}
 
 
-		public override void UpdateViewer(PanelEditor.Editor.Changing oper)
+		public override void UpdateViewer(Viewers.Abstract.Changing oper)
 		{
 			//	Met à jour le statut du visualisateur en cours, en fonction de la sélection.
 			//	Met également à jour l'arbre des objets, s'il est visible.

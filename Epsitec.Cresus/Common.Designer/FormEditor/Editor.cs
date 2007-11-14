@@ -91,7 +91,7 @@ namespace Epsitec.Common.Designer.FormEditor
 			set
 			{
 				this.selectedObjects.Clear();
-				this.UpdateAfterChanging(PanelEditor.Editor.Changing.Show);
+				this.UpdateAfterChanging(Viewers.Abstract.Changing.Show);
 				
 				this.panel = value;
 				this.Invalidate();
@@ -542,7 +542,7 @@ namespace Epsitec.Common.Designer.FormEditor
 			if (this.selectedObjects.Count > 0)
 			{
 				this.selectedObjects.Clear();
-				this.UpdateAfterChanging(PanelEditor.Editor.Changing.Selection);
+				this.UpdateAfterChanging(Viewers.Abstract.Changing.Selection);
 				this.OnChildrenSelected();
 				this.Invalidate();
 			}
@@ -558,7 +558,7 @@ namespace Epsitec.Common.Designer.FormEditor
 				this.selectedObjects.Add(obj);
 			}
 
-			this.UpdateAfterChanging(PanelEditor.Editor.Changing.Selection);
+			this.UpdateAfterChanging(Viewers.Abstract.Changing.Selection);
 			this.OnChildrenSelected();
 			this.Invalidate();
 		}
@@ -578,7 +578,7 @@ namespace Epsitec.Common.Designer.FormEditor
 
 			this.selectedObjects = list;
 
-			this.UpdateAfterChanging(PanelEditor.Editor.Changing.Selection);
+			this.UpdateAfterChanging(Viewers.Abstract.Changing.Selection);
 			this.OnChildrenSelected();
 			this.Invalidate();
 		}
@@ -589,7 +589,7 @@ namespace Epsitec.Common.Designer.FormEditor
 			this.selectedObjects.Clear();
 			this.selectedObjects.Add(this.panel);
 
-			this.UpdateAfterChanging(PanelEditor.Editor.Changing.Selection);
+			this.UpdateAfterChanging(Viewers.Abstract.Changing.Selection);
 			this.OnChildrenSelected();
 			this.Invalidate();
 		}
@@ -602,7 +602,7 @@ namespace Epsitec.Common.Designer.FormEditor
 			this.selectedObjects.Clear();
 			this.selectedObjects.Add(parent);
 
-			this.UpdateAfterChanging(PanelEditor.Editor.Changing.Selection);
+			this.UpdateAfterChanging(Viewers.Abstract.Changing.Selection);
 			this.OnChildrenSelected();
 			this.Invalidate();
 		}
@@ -612,7 +612,7 @@ namespace Epsitec.Common.Designer.FormEditor
 			//	Sélectionne un objet.
 			this.selectedObjects.Clear();
 			this.selectedObjects.Add(obj);
-			this.UpdateAfterChanging(PanelEditor.Editor.Changing.Selection);
+			this.UpdateAfterChanging(Viewers.Abstract.Changing.Selection);
 			this.OnChildrenSelected();
 			this.Invalidate();
 		}
@@ -621,7 +621,7 @@ namespace Epsitec.Common.Designer.FormEditor
 		{
 			//	Sélectionne une liste d'objets.
 			this.selectedObjects = list;
-			this.UpdateAfterChanging(PanelEditor.Editor.Changing.Selection);
+			this.UpdateAfterChanging(Viewers.Abstract.Changing.Selection);
 			this.OnChildrenSelected();
 			this.Invalidate();
 		}
@@ -631,7 +631,7 @@ namespace Epsitec.Common.Designer.FormEditor
 			//	Sélectionne tous les objets entièrement inclus dans un rectangle.
 			//	Tous les objets sélectionnés doivent avoir le même parent.
 			this.SelectObjectsInRectangle(sel, this.panel);
-			this.UpdateAfterChanging(PanelEditor.Editor.Changing.Selection);
+			this.UpdateAfterChanging(Viewers.Abstract.Changing.Selection);
 			this.OnChildrenSelected();
 			this.Invalidate();
 		}
@@ -651,7 +651,7 @@ namespace Epsitec.Common.Designer.FormEditor
 			this.OnChildrenSelected();  // met à jour les panneaux des proxies à droite
 		}
 
-		protected void UpdateAfterChanging(PanelEditor.Editor.Changing oper)
+		protected void UpdateAfterChanging(Viewers.Abstract.Changing oper)
 		{
 			//	Mise à jour après un changement de sélection, ou après un changement dans
 			//	l'arbre des objets (création, changement de parenté, etc.).

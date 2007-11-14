@@ -405,7 +405,7 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
-		public void UpdateViewer(PanelEditor.Editor.Changing oper)
+		public void UpdateViewer(Viewers.Abstract.Changing oper)
 		{
 			//	Met à jour le visualisateur en cours.
 			Module module = this.CurrentModule;

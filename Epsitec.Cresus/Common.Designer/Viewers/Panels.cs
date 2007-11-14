@@ -181,7 +181,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.UpdateAll();
 			this.UpdateType();
 			this.UpdateButtons();
-			this.UpdateViewer(Editor.Changing.Show);
+			this.UpdateViewer(Viewers.Abstract.Changing.Show);
 		}
 
 		protected override void Dispose(bool disposing)
@@ -585,7 +585,7 @@ namespace Epsitec.Common.Designer.Viewers
 		}
 
 
-		public override void UpdateViewer(PanelEditor.Editor.Changing oper)
+		public override void UpdateViewer(Viewers.Abstract.Changing oper)
 		{
 			//	Met à jour le statut du visualisateur en cours, en fonction de la sélection.
 			//	Met également à jour l'arbre des objets, s'il est visible.
@@ -867,10 +867,10 @@ namespace Epsitec.Common.Designer.Viewers
 
 
 		#region Tree
-		protected void TreeUpdate(PanelEditor.Editor.Changing oper)
+		protected void TreeUpdate(Viewers.Abstract.Changing oper)
 		{
 			//	Construit l'arbre des objets.
-			if (oper == Editor.Changing.Selection)
+			if (oper == Viewers.Abstract.Changing.Selection)
 			{
 				this.TreeUpdateSelection(this.objectsScrollable.Panel.Children);
 			}
@@ -1209,7 +1209,7 @@ namespace Epsitec.Common.Designer.Viewers
 			//	Changement de l'onglet visible.
 			if (this.tabPageObjects.Visibility)  // arbre des objets visible ?
 			{
-				this.TreeUpdate(Editor.Changing.Show);  // met à jour l'arbre
+				this.TreeUpdate(Viewers.Abstract.Changing.Show);  // met à jour l'arbre
 			}
 			else
 			{
