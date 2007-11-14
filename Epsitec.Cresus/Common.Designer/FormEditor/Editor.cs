@@ -182,18 +182,6 @@ namespace Epsitec.Common.Designer.FormEditor
 					this.OnUpdateCommands();
 					break;
 
-				case "PanelShowZOrder":
-					this.context.ShowZOrder = !this.context.ShowZOrder;
-					this.Invalidate();
-					this.OnUpdateCommands();
-					break;
-
-				case "PanelShowTabIndex":
-					this.context.ShowTabIndex = !this.context.ShowTabIndex;
-					this.Invalidate();
-					this.OnUpdateCommands();
-					break;
-
 				case "PanelShowExpand":
 					this.context.ShowExpand = !this.context.ShowExpand;
 					this.Invalidate();
@@ -211,103 +199,6 @@ namespace Epsitec.Common.Designer.FormEditor
 					this.Invalidate();
 					this.OnUpdateCommands();
 					break;
-
-				case "MoveLeft":
-					this.MoveRibbonSelection(new Point(-1, 0));
-					break;
-
-				case "MoveRight":
-					this.MoveRibbonSelection(new Point(1, 0));
-					break;
-
-				case "MoveDown":
-					this.MoveRibbonSelection(new Point(0, -1));
-					break;
-
-				case "MoveUp":
-					this.MoveRibbonSelection(new Point(0, 1));
-					break;
-
-				case "AlignLeft":
-					this.SelectAlign(-1, false);
-					break;
-
-				case "AlignCenterX":
-					this.SelectAlign(0, false);
-					break;
-
-				case "AlignRight":
-					this.SelectAlign(1, false);
-					break;
-
-				case "AlignTop":
-					this.SelectAlign(1, true);
-					break;
-
-				case "AlignCenterY":
-					this.SelectAlign(0, true);
-					break;
-
-				case "AlignBottom":
-					this.SelectAlign(-1, true);
-					break;
-
-				case "AlignBaseLine":
-					this.SelectAlignBaseLine();
-					break;
-
-				case "AdjustWidth":
-					this.SelectAdjust(false);
-					break;
-
-				case "AdjustHeight":
-					this.SelectAdjust(true);
-					break;
-
-				case "AlignGrid":
-					this.SelectAlignGrid();
-					break;
-
-				case "PanelOrderUpAll":
-					this.SelectOrder(-10000);
-					break;
-
-				case "PanelOrderDownAll":
-					this.SelectOrder(10000);
-					break;
-
-				case "PanelOrderUpOne":
-					this.SelectOrder(-1);
-					break;
-
-				case "PanelOrderDownOne":
-					this.SelectOrder(1);
-					break;
-
-				case "TabIndexClear":
-					this.SelectTabIndex(0);
-					break;
-
-				case "TabIndexRenum":
-					this.SelectTabIndexRenum();
-					break;
-
-				case "TabIndexFirst":
-					this.SelectTabIndex(-10000);
-					break;
-
-				case "TabIndexPrev":
-					this.SelectTabIndex(-1);
-					break;
-
-				case "TabIndexNext":
-					this.SelectTabIndex(1);
-					break;
-
-				case "TabIndexLast":
-					this.SelectTabIndex(10000);
-					break;
-
 			}
 		}
 
@@ -334,10 +225,6 @@ namespace Epsitec.Common.Designer.FormEditor
 				else if (this.isDragging)
 				{
 					rect = this.isInside ? this.draggingRectangle : Rectangle.Empty;
-				}
-				else if (this.isHandling)
-				{
-					rect = this.handlingRectangle;
 				}
 				else
 				{
@@ -394,7 +281,6 @@ namespace Epsitec.Common.Designer.FormEditor
 					break;
 
 				case MessageType.MouseLeave:
-					this.SetEnteredObjects(null);
 					this.SetHilitedObject(null, null);
 					break;
 
@@ -425,16 +311,6 @@ namespace Epsitec.Common.Designer.FormEditor
 				this.GlobalDown(pos, isRightButton, isControlPressed, isShiftPressed);
 			}
 
-			if (this.context.Tool == "ToolZoom")
-			{
-				this.ZoomDown(pos, isRightButton, isControlPressed, isShiftPressed);
-			}
-
-			if (this.context.Tool == "ToolHand")
-			{
-				this.HandDown(pos, isRightButton, isControlPressed, isShiftPressed);
-			}
-
 			if (this.context.Tool.StartsWith("Object"))
 			{
 				this.CreateObjectDown(pos, isRightButton, isControlPressed, isShiftPressed);
@@ -452,16 +328,6 @@ namespace Epsitec.Common.Designer.FormEditor
 			if (this.context.Tool == "ToolGlobal")
 			{
 				this.GlobalMove(pos, isRightButton, isControlPressed, isShiftPressed);
-			}
-
-			if (this.context.Tool == "ToolZoom")
-			{
-				this.ZoomMove(pos, isRightButton, isControlPressed, isShiftPressed);
-			}
-
-			if (this.context.Tool == "ToolHand")
-			{
-				this.HandMove(pos, isRightButton, isControlPressed, isShiftPressed);
 			}
 
 			if (this.context.Tool.StartsWith("Object"))
@@ -483,16 +349,6 @@ namespace Epsitec.Common.Designer.FormEditor
 				this.GlobalUp(pos, isRightButton, isControlPressed, isShiftPressed);
 			}
 
-			if (this.context.Tool == "ToolZoom")
-			{
-				this.ZoomUp(pos, isRightButton, isControlPressed, isShiftPressed);
-			}
-
-			if (this.context.Tool == "ToolHand")
-			{
-				this.HandUp(pos, isRightButton, isControlPressed, isShiftPressed);
-			}
-
 			if (this.context.Tool.StartsWith("Object"))
 			{
 				this.CreateObjectUp(pos, isRightButton, isControlPressed, isShiftPressed);
@@ -510,16 +366,6 @@ namespace Epsitec.Common.Designer.FormEditor
 			if (this.context.Tool == "ToolGlobal")
 			{
 				this.GlobalKeyChanged(isControlPressed, isShiftPressed);
-			}
-
-			if (this.context.Tool == "ToolZoom")
-			{
-				this.ZoomKeyChanged(isControlPressed, isShiftPressed);
-			}
-
-			if (this.context.Tool == "ToolHand")
-			{
-				this.HandKeyChanged(isControlPressed, isShiftPressed);
 			}
 
 			if (this.context.Tool.StartsWith("Object"))
@@ -584,7 +430,7 @@ namespace Epsitec.Common.Designer.FormEditor
 		protected void SelectMove(Point pos, bool isRightButton, bool isControlPressed, bool isShiftPressed)
 		{
 			//	Sélection ponctuelle, souris déplacée.
-			if (this.isSizeMarkHorizontal || this.isSizeMarkVertical || this.isHilitedDimension || this.isDraggingDimension)
+			if (this.isSizeMarkHorizontal || this.isSizeMarkVertical || this.isHilitedDimension)
 			{
 				this.ChangeMouseCursor(MouseCursorType.Finger);
 			}
@@ -627,13 +473,6 @@ namespace Epsitec.Common.Designer.FormEditor
 				this.SelectObjectsInRectangle(this.selectedRectangle);
 				this.SetSelectRectangle(Rectangle.Empty);
 				this.isRectangling = false;
-			}
-
-			if (this.isDraggingDimension)
-			{
-				this.isDraggingDimension = false;
-				this.OnChildrenGeometryChanged();  // met à jour les proxies
-				this.module.DesignerApplication.UpdateInfoViewer();
 			}
 
 			this.SizeMarkDraggingStop(pos);
@@ -749,51 +588,6 @@ namespace Epsitec.Common.Designer.FormEditor
 		}
 		#endregion
 
-		#region ProcessMouse zoom
-		protected void ZoomDown(Point pos, bool isRightButton, bool isControlPressed, bool isShiftPressed)
-		{
-			//	Loupe, souris pressée.
-		}
-
-		protected void ZoomMove(Point pos, bool isRightButton, bool isControlPressed, bool isShiftPressed)
-		{
-			//	Loupe, souris déplacée.
-			this.ChangeMouseCursor(MouseCursorType.Zoom);
-		}
-
-		protected void ZoomUp(Point pos, bool isRightButton, bool isControlPressed, bool isShiftPressed)
-		{
-			//	Loupe, souris relâchée.
-		}
-
-		protected void ZoomKeyChanged(bool isControlPressed, bool isShiftPressed)
-		{
-			//	Loupe, touche pressée ou relâchée.
-		}
-		#endregion
-
-		#region ProcessMouse hand
-		protected void HandDown(Point pos, bool isRightButton, bool isControlPressed, bool isShiftPressed)
-		{
-			//	Main, souris pressée.
-		}
-
-		protected void HandMove(Point pos, bool isRightButton, bool isControlPressed, bool isShiftPressed)
-		{
-			//	Main, souris déplacée.
-			this.ChangeMouseCursor(MouseCursorType.Hand);
-		}
-
-		protected void HandUp(Point pos, bool isRightButton, bool isControlPressed, bool isShiftPressed)
-		{
-			//	Main, souris relâchée.
-		}
-
-		protected void HandKeyChanged(bool isControlPressed, bool isShiftPressed)
-		{
-			//	Main, touche pressée ou relâchée.
-		}
-		#endregion
 
 		#region ProcessMouse create object
 		protected void CreateObjectDown(Point pos, bool isRightButton, bool isControlPressed, bool isShiftPressed)
@@ -1081,7 +875,6 @@ namespace Epsitec.Common.Designer.FormEditor
 			this.draggingWindow.FocusedWidget = container;
 			this.draggingWindow.Show();
 
-			this.SetEnteredObjects(null);
 			this.SetHilitedObject(null, null);
 			this.SetHilitedAttachmentRectangle(Rectangle.Empty);
 			this.isDragging = true;
@@ -1386,13 +1179,6 @@ namespace Epsitec.Common.Designer.FormEditor
 			PanelEditor.GeometryCache.Clear(this.panel);
 		}
 
-		public void SetEnteredObjects(List<Widget> list)
-		{
-			//	Détermine l'objet survolé depuis la barre de statut.
-			this.enteredObjects = list;
-			this.Invalidate();
-		}
-
 		protected void SetHilitedObject(Widget obj, PanelEditor.GridSelection grid)
 		{
 			//	Détermine l'objet à mettre en évidence lors d'un survol.
@@ -1457,239 +1243,6 @@ namespace Epsitec.Common.Designer.FormEditor
 		{
 			//	Duplique tous les objets sélectionnés.
 			//	TODO:
-		}
-
-		protected void MoveRibbonSelection(Point direction)
-		{
-			//	Déplace tous les objets sélectionnés selon le ruban 'Move'.
-			direction.X *= this.module.DesignerApplication.MoveHorizontal;
-			direction.Y *= this.module.DesignerApplication.MoveVertical;
-			this.MoveSelection(direction, null);
-			this.SetDirty();
-		}
-
-		protected void MoveSelection(Point move, Widget parent)
-		{
-			//	Déplace et change de parent pour tous les objets sélectionnés.
-			this.Invalidate();
-		}
-
-		protected void SelectAlign(int direction, bool isVertical)
-		{
-			//	Aligne tous les objets sélectionnés.
-			Rectangle bounds = this.SelectBounds;
-
-			if (isVertical)
-			{
-				if (direction < 0)  // en bas ?
-				{
-					foreach (Widget obj in this.selectedObjects)
-					{
-						this.SetObjectPositionY(obj, bounds.Bottom);
-					}
-				}
-				else if (direction > 0)  // en haut ?
-				{
-					foreach (Widget obj in this.selectedObjects)
-					{
-						this.SetObjectPositionY(obj, bounds.Top-this.GetObjectPreferredBounds(obj).Height);
-					}
-				}
-				else  // centré verticalement ?
-				{
-					foreach (Widget obj in this.selectedObjects)
-					{
-						this.SetObjectPositionY(obj, System.Math.Floor(bounds.Center.Y-this.GetObjectPreferredBounds(obj).Height/2));
-					}
-				}
-			}
-			else
-			{
-				if (direction < 0)  // à gauche ?
-				{
-					foreach (Widget obj in this.selectedObjects)
-					{
-						this.SetObjectPositionX(obj, bounds.Left);
-					}
-				}
-				else if (direction > 0)  // à droite ?
-				{
-					foreach (Widget obj in this.selectedObjects)
-					{
-						this.SetObjectPositionX(obj, bounds.Right-this.GetObjectPreferredBounds(obj).Width);
-					}
-				}
-				else  // centré horizontalement ?
-				{
-					foreach (Widget obj in this.selectedObjects)
-					{
-						this.SetObjectPositionX(obj, System.Math.Floor(bounds.Center.X-this.GetObjectPreferredBounds(obj).Width/2));
-					}
-				}
-			}
-
-			this.Invalidate();
-			this.SetDirty();
-		}
-
-		protected void SelectAlignBaseLine()
-		{
-			//	Aligne sur la ligne de base tous les objets sélectionnés.
-#if false
-			Widget model = null;
-			foreach (Widget obj in this.selectedObjects)
-			{
-				double baseLine = this.GetObjectBaseLine(obj);
-				if (baseLine != 0)
-				{
-					model = obj;
-					break;
-				}
-			}
-
-			if (model != null)
-			{
-				foreach (Widget obj in this.selectedObjects)
-				{
-					if (obj != model)
-					{
-						Widget.BaseLineAlign(model, obj);
-					}
-				}
-			}
-
-			this.Invalidate();
-#else
-			Rectangle bounds = this.SelectBounds;
-			double baseLine = bounds.Bottom + 6;  // TODO: faire mieux !!!
-
-			foreach (Widget obj in this.selectedObjects)
-			{
-				this.SetObjectPositionY(obj, baseLine-this.GetObjectBaseLine(obj));
-			}
-
-			this.Invalidate();
-			this.SetDirty();
-#endif
-		}
-
-		protected void SelectAdjust(bool isVertical)
-		{
-			//	Ajuste les dimensions de tous les objets sélectionnés.
-			Rectangle bounds = this.SelectBounds;
-
-			if (isVertical)
-			{
-				foreach (Widget obj in this.selectedObjects)
-				{
-					Rectangle rect = this.GetObjectPreferredBounds(obj);
-					rect.Bottom = bounds.Bottom;
-					rect.Height = bounds.Height;
-					this.SetObjectPreferredBounds(obj, rect);
-				}
-			}
-			else
-			{
-				foreach (Widget obj in this.selectedObjects)
-				{
-					Rectangle rect = this.GetObjectPreferredBounds(obj);
-					rect.Left  = bounds.Left;
-					rect.Width = bounds.Width;
-					this.SetObjectPreferredBounds(obj, rect);
-				}
-			}
-
-			this.Invalidate();
-			this.SetDirty();
-		}
-
-		protected void SelectAlignGrid()
-		{
-			//	Aligne sur la grille tous les objets sélectionnés.
-			//	TODO:
-		}
-
-		protected void SelectOrder(int direction)
-		{
-			//	Modifie l'ordre de tous les objets sélectionnés.
-			foreach (Widget obj in this.selectedObjects)
-			{
-				obj.ZOrder += direction;
-			}
-
-			this.Invalidate();
-			this.context.ShowZOrder = true;
-			this.UpdateAfterChanging(PanelEditor.Editor.Changing.Move);
-			this.OnUpdateCommands();
-			this.SetDirty();
-		}
-
-		protected void SelectTabIndexRenum()
-		{
-			//	Renumérote toutes les touches Tab.
-			this.SelectTabIndexRenum(this.panel);
-
-			this.Invalidate();
-			this.context.ShowTabIndex = true;
-			this.OnUpdateCommands();
-			this.SetDirty();
-		}
-
-		protected void SelectTabIndexRenum(Widget parent)
-		{
-			List<Widget> list = new List<Widget>();
-			foreach (Widget obj in parent.Children)
-			{
-				list.Add(obj);
-			}
-			list.Sort(new Comparers.WidgetDisposition());
-
-			int index = 0;
-			foreach (Widget obj in list)
-			{
-				obj.TabIndex = index++;
-				obj.TabNavigationMode = TabNavigationMode.ActivateOnTab;
-			}
-		}
-
-		protected void SelectTabIndex(int direction)
-		{
-			//	Modifie l'ordre pour la touche Tab de tous les objets sélectionnés.
-			foreach (Widget obj in this.selectedObjects)
-			{
-				if (direction == 0)
-				{
-					obj.ClearValue (Widget.TabNavigationModeProperty);
-					obj.ClearValue (Widget.TabIndexProperty);
-				}
-				else
-				{
-					int oldIndex = obj.TabIndex;
-					int index = obj.TabIndex + direction;
-					index = System.Math.Max(index, 0);
-					index = System.Math.Min(index, obj.Parent.Children.Count-1);
-					this.SelectTabIndex(obj.Parent, index, oldIndex);
-					obj.TabIndex = index;
-					obj.TabNavigationMode = TabNavigationMode.ActivateOnTab;
-				}
-			}
-
-			this.Invalidate();
-			this.context.ShowTabIndex = true;
-			this.OnUpdateCommands();
-			this.SetDirty();
-		}
-
-		protected void SelectTabIndex(Widget parent, int oldIndex, int newIndex)
-		{
-			foreach (Widget obj in parent.Children)
-			{
-				if (Editor.IsObjectTabActive(obj) && obj.TabIndex == oldIndex)
-				{
-					obj.TabIndex = newIndex;
-					obj.TabNavigationMode = TabNavigationMode.ActivateOnTab;
-				}
-			}
 		}
 
 		protected Rectangle SelectBounds
@@ -1763,83 +1316,6 @@ namespace Epsitec.Common.Designer.FormEditor
 		{
 			//	Retourne la position relative de la ligne de base depuis le bas de l'objet.
 			return System.Math.Floor(obj.GetBaseLine().Y);
-		}
-
-		protected static bool IsObjectTabActive(Widget obj)
-		{
-			//	Indique si l'objet à un ordre pour la touche Tab.
-			return (obj.TabNavigationMode & TabNavigationMode.ActivateOnTab) != 0;
-		}
-
-		protected string GetObjectZOrder(Widget obj)
-		{
-			//	Retourne la chaîne indiquant l'ordre Z, y compris des parents, sous la forme "n.n.n".
-			if (obj.Parent == this.panel)
-			{
-				return (obj.ZOrder+1).ToString();
-			}
-
-			List<int> list = new List<int>();
-			while (obj != this.panel)
-			{
-				list.Add(obj.ZOrder);
-				obj = obj.Parent;
-			}
-
-			System.Text.StringBuilder builder = new System.Text.StringBuilder();
-			for (int i=list.Count-1; i>=0; i--)
-			{
-				if (builder.Length > 0)
-				{
-					builder.Append(".");
-				}
-
-				builder.Append((list[i]+1).ToString());
-			}
-			return builder.ToString();
-		}
-
-		protected string GetObjectTabIndex(Widget obj)
-		{
-			//	Retourne la chaîne indiquant l'ordre Z, y compris des parents, sous la forme "n.n.n".
-			if (obj.Parent == this.panel)
-			{
-				if (Editor.IsObjectTabActive(obj))
-				{
-					return (obj.TabIndex+1).ToString();
-				}
-				else
-				{
-					return "x";
-				}
-			}
-
-			List<string> list = new List<string>();
-			while (obj != this.panel)
-			{
-				if (Editor.IsObjectTabActive(obj))
-				{
-					list.Add((obj.TabIndex+1).ToString());
-				}
-				else
-				{
-					list.Add("x");
-				}
-
-				obj = obj.Parent;
-			}
-
-			System.Text.StringBuilder builder = new System.Text.StringBuilder();
-			for (int i=list.Count-1; i>=0; i--)
-			{
-				if (builder.Length > 0)
-				{
-					builder.Append(".");
-				}
-
-				builder.Append(list[i]);
-			}
-			return builder.ToString();
 		}
 		#endregion
 
@@ -2041,21 +1517,6 @@ namespace Epsitec.Common.Designer.FormEditor
 				this.DrawSelectedObjects(graphics);
 			}
 
-			//	Dessine les attachements des objets sélectionnés.
-			if (this.context.ShowAttachment && this.selectedObjects.Count == 1 && !this.isDragging)
-			{
-				foreach (Widget obj in this.selectedObjects)
-				{
-					this.DrawAttachment(graphics, obj, PanelsContext.ColorAttachment);
-				}
-			}
-
-			//	Dessine les numéros d'index pour la touche Tab.
-			if (this.context.ShowTabIndex && !this.isDragging)
-			{
-				this.DrawTabIndex(graphics, this.panel);
-			}
-
 			//	Dessine l'objet survolé.
 			if (this.hilitedObject != null)
 			{
@@ -2065,12 +1526,6 @@ namespace Epsitec.Common.Designer.FormEditor
 			if (this.hilitedParent != null)
 			{
 				this.DrawHilitedParent(graphics, this.hilitedParent, this.hilitedParentColumn, this.hilitedParentRow, this.hilitedParentColumnCount, this.hilitedParentRowCount);
-			}
-
-			//	Dessine l'objet survolé depuis la barre de statut.
-			if (this.enteredObjects != null)
-			{
-				this.DrawEnteredObjects(graphics, this.enteredObjects);
 			}
 
 			//	Dessine le rectangle de sélection.
@@ -2088,25 +1543,6 @@ namespace Epsitec.Common.Designer.FormEditor
 				Rectangle rect = this.hilitedAttachmentRectangle;
 				graphics.AddFilledRectangle(rect);
 				graphics.RenderSolid(PanelsContext.ColorHiliteSurface);
-			}
-
-			//	Dessine le rectangle d'insertion ZOrder survolé.
-			if (!this.hilitedZOrderRectangle.IsEmpty)
-			{
-				Rectangle rect = this.hilitedZOrderRectangle;
-				if (rect.Width > this.context.ZOrderThickness && rect.Height > this.context.ZOrderThickness)
-				{
-					rect.Deflate(1.5);
-					graphics.LineWidth = 3;
-					graphics.AddRectangle(rect);
-					graphics.RenderSolid(PanelsContext.ColorZOrder);
-					graphics.LineWidth = 1;
-				}
-				else
-				{
-					graphics.AddFilledRectangle(rect);
-					graphics.RenderSolid(PanelsContext.ColorZOrder);
-				}
 			}
 
 			graphics.Transform = it;
@@ -2168,11 +1604,6 @@ namespace Epsitec.Common.Designer.FormEditor
 			//	Dessine les marges de padding d'un objet, sous forme de hachures.
 		}
 
-		protected void DrawEnteredObjects(Graphics graphics, List<Widget> list)
-		{
-			//	Dessine l'objet survolé depuis la barre de statut.
-		}
-
 		protected void DrawHilitedObject(Graphics graphics, Widget obj, PanelEditor.GridSelection gs)
 		{
 			//	Met en évidence l'objet survolé par la souris.
@@ -2181,85 +1612,6 @@ namespace Epsitec.Common.Designer.FormEditor
 		protected void DrawHilitedParent(Graphics graphics, Widget obj, int column, int row, int columnCount, int rowCount)
 		{
 			//	Met en évidence l'objet parent survolé par la souris.
-		}
-
-		protected void DrawGrid(Graphics graphics, Widget obj, Color color, double factor)
-		{
-		}
-
-		protected void DrawGridSelected(Graphics graphics, Widget obj, PanelEditor.GridSelection gs, Color color, bool selection)
-		{
-			//	Dessine une ou plusieurs cellules sélectionnées. Le dessin est optimisé
-			//	visuellement lorsqu'une ligne sélectionnée suit une colonne sélectionnée
-			//	pour former une croix, ou lorsque plusieurs lignes/colonnes sont sélectionnées
-			//	pour former un seul 'bloc'.
-		}
-
-		protected void DrawGridSelected(Graphics graphics, Rectangle area1, Rectangle area2, Color color, bool selection)
-		{
-			//	Dessine une ligne et une colonne sélectionnées.
-		}
-
-		protected void DrawGridSelected(Graphics graphics, Rectangle area, Color color, bool selection)
-		{
-			//	Dessine une ligne ou une colonne sélectionnée.
-		}
-
-		protected void DrawGridHilited(Graphics graphics, Rectangle area, Color color)
-		{
-			//	Dessine une cellule survolée.
-		}
-
-		protected void DrawAttachment(Graphics graphics, Widget obj, Color color)
-		{
-			//	Dessine tous les attachements d'un objet.
-		}
-
-		protected void DrawSpring(Graphics graphics, Point p1, Point p2, bool rigid, Color color)
-		{
-			//	Dessine un ressort horizontal ou vertical d'un objet.
-			Point p1a = Point.Scale(p1, p2, Editor.attachmentScale);
-			Point p2a = Point.Scale(p2, p1, Editor.attachmentScale);
-
-			Misc.AlignForLine(graphics, ref p1);
-			Misc.AlignForLine(graphics, ref p2);
-			Misc.AlignForLine(graphics, ref p1a);
-			Misc.AlignForLine(graphics, ref p2a);
-
-			if (rigid)  // rigide ?
-			{
-				double dim = Editor.attachmentThickness;
-				Rectangle box = this.GetDrawBox(graphics, p1a, p2a, dim);
-
-				graphics.AddFilledRectangle(box);
-				graphics.RenderSolid(Color.FromBrightness(1));
-
-				Point delta = (p1.Y == p2.Y) ? new Point(0, 1) : new Point(1, 0);
-				graphics.AddLine(p1+delta, p1a+delta);
-				graphics.AddLine(p2+delta, p2a+delta);
-				graphics.AddLine(p1-delta, p1a-delta);
-				graphics.AddLine(p2-delta, p2a-delta);
-
-				graphics.AddRectangle(box);
-			}
-			else  // élastique (ressort) ?
-			{
-				graphics.AddLine(p1, p1a);
-				graphics.AddLine(p2, p2a);
-
-				double dim = Editor.attachmentThickness;
-				double length = Point.Distance(p1a, p2a);
-				int loops = (int) (length/(dim*2));
-				loops = System.Math.Max(loops, 1);
-				Misc.AddSpring(graphics, p1a, p2a, dim, loops);
-			}
-
-			graphics.RenderSolid(color);
-
-			//	Dessine les extrémités.
-			graphics.AddFilledCircle(p1, 3.0);
-			graphics.AddFilledCircle(p2, 3.0);
-			graphics.RenderSolid(color);
 		}
 
 		protected Rectangle GetDrawBox(Graphics graphics, Point p1, Point p2, double thickness)
@@ -2287,59 +1639,6 @@ namespace Epsitec.Common.Designer.FormEditor
 			{
 				throw new System.Exception("This geometry is not implemented.");
 			}
-		}
-
-		protected void DrawTriangleLeft(Graphics graphics, Point p, Color color)
-		{
-			Path path = new Path();
-			path.MoveTo(p.X-this.context.DockedTriangleLength, p.Y);
-			path.LineTo(p.X, p.Y-this.context.DockedTriangleThickness);
-			path.LineTo(p.X, p.Y+this.context.DockedTriangleThickness);
-			path.Close();
-
-			graphics.PaintSurface(path);
-			graphics.RenderSolid(color);
-		}
-
-		protected void DrawTriangleRight(Graphics graphics, Point p, Color color)
-		{
-			Path path = new Path();
-			path.MoveTo(p.X+this.context.DockedTriangleLength, p.Y);
-			path.LineTo(p.X, p.Y-this.context.DockedTriangleThickness);
-			path.LineTo(p.X, p.Y+this.context.DockedTriangleThickness);
-			path.Close();
-
-			graphics.PaintSurface(path);
-			graphics.RenderSolid(color);
-		}
-
-		protected void DrawTriangleBottom(Graphics graphics, Point p, Color color)
-		{
-			Path path = new Path();
-			path.MoveTo(p.X, p.Y-this.context.DockedTriangleLength);
-			path.LineTo(p.X-this.context.DockedTriangleThickness, p.Y);
-			path.LineTo(p.X+this.context.DockedTriangleThickness, p.Y);
-			path.Close();
-
-			graphics.PaintSurface(path);
-			graphics.RenderSolid(color);
-		}
-
-		protected void DrawTriangleTop(Graphics graphics, Point p, Color color)
-		{
-			Path path = new Path();
-			path.MoveTo(p.X, p.Y+this.context.DockedTriangleLength);
-			path.LineTo(p.X-this.context.DockedTriangleThickness, p.Y);
-			path.LineTo(p.X+this.context.DockedTriangleThickness, p.Y);
-			path.Close();
-
-			graphics.PaintSurface(path);
-			graphics.RenderSolid(color);
-		}
-
-		protected void DrawTabIndex(Graphics graphics, Widget parent)
-		{
-			//	Dessine les numéros pour la touche Tab d'un groupe.
 		}
 		#endregion
 
@@ -2415,7 +1714,7 @@ namespace Epsitec.Common.Designer.FormEditor
 			//	Retourne true pour indiquer que le widget en question ne doit
 			//	pas être peint, ni ses enfants d'ailleurs. Ceci évite que les
 			//	widgets sélectionnés ne soient peints.
-			return (this.isDragging || this.isHandling) && this.selectedObjects.Contains(widget);
+			return this.isDragging && this.selectedObjects.Contains(widget);
 		}
 
 		bool IPaintFilter.IsWidgetPaintDiscarded(Widget widget)
@@ -2609,7 +1908,6 @@ namespace Epsitec.Common.Designer.FormEditor
 		protected List<Widget>				selectedObjects = new List<Widget>();
 		protected Rectangle					selectedRectangle = Rectangle.Empty;
 		protected Rectangle					hilitedAttachmentRectangle = Rectangle.Empty;
-		protected Rectangle					hilitedZOrderRectangle = Rectangle.Empty;
 		protected Widget					hilitedObject;
 		protected Widget					hilitedParent;
 		protected int						hilitedParentColumn = PanelEditor.GridSelection.Invalid;
@@ -2629,8 +1927,6 @@ namespace Epsitec.Common.Designer.FormEditor
 		protected int						draggingSpanRowOffset;
 		protected int						draggingSpanColumnCount;
 		protected int						draggingSpanRowCount;
-		protected bool						isDraggingDimension;
-		protected bool						isHandling;
 		protected DragWindow				handlingWindow;
 		protected Rectangle					handlingRectangle;
 		protected bool						isGridding;
@@ -2646,7 +1942,6 @@ namespace Epsitec.Common.Designer.FormEditor
 		protected bool						isSizeMarkVertical;
 		protected Point						sizeMarkOffset;
 		protected bool						isInside;
-		protected List<Widget>				enteredObjects;
 
 		protected Image						mouseCursorArrow = null;
 		protected Image						mouseCursorArrowPlus = null;
