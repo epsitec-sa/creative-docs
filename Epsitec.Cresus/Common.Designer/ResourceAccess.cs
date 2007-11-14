@@ -564,8 +564,23 @@ namespace Epsitec.Common.Designer
 		{
 			//	Initialise un masque de saisie avec tous les champs de l'entité de base associée.
 			Module module = this.designerApplication.SearchModule(form.EntityId);
+			if (module == null)
+			{
+				return;
+			}
+
 			CultureMap item = module.AccessEntities.accessor.Collection[form.EntityId];
+			if (item == null)
+			{
+				return;
+			}
+
 			StructuredData data = item.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
+			if (data == null)
+			{
+				return;
+			}
+
 			IList<StructuredData> dataFields = data.GetValue(Support.Res.Fields.ResourceStructuredType.Fields) as IList<StructuredData>;
 			foreach (StructuredData dataField in dataFields)
 			{

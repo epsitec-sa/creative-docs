@@ -38,24 +38,13 @@ namespace Epsitec.Common.Designer.Viewers
 			this.VToolBarAdd(Widgets.Command.Get("ObjectHLine"));
 			this.VToolBarAdd(Widgets.Command.Get("ObjectStatic"));
 
-			this.drawingScrollable = new Scrollable(drawing);
-			this.drawingScrollable.MinWidth = 100;
-			this.drawingScrollable.MinHeight = 100;
-			this.drawingScrollable.Margins = new Margins(1, 1, 1, 1);
-			this.drawingScrollable.Dock = DockStyle.Fill;
-			this.drawingScrollable.HorizontalScrollerMode = ScrollableScrollerMode.ShowAlways;
-			this.drawingScrollable.VerticalScrollerMode = ScrollableScrollerMode.ShowAlways;
-			this.drawingScrollable.Panel.IsAutoFitting = true;
-			this.drawingScrollable.PaintForegroundFrame = true;
-
-			FrameBox container = new FrameBox(this.drawingScrollable.Panel);
+			FrameBox container = new FrameBox(drawing);
 			container.MinWidth = 100;
 			container.Dock = DockStyle.Fill;
 
 			//	Sous-conteneur qui a des marges, pour permettre de voir les cotes (Dimension*)
 			//	du FormEditor qui s'affiche par-dessus.
 			this.panelContainerParent = new FrameBox(container);
-			this.panelContainerParent.Margins = new Margins(PanelEditor.Dimension.margin, PanelEditor.Dimension.margin, PanelEditor.Dimension.margin, PanelEditor.Dimension.margin);
 			this.panelContainerParent.Dock = DockStyle.Fill;
 
 			//	Le UI.Panel est dans le sous-contenur qui a des marges.
@@ -408,9 +397,8 @@ namespace Epsitec.Common.Designer.Viewers
 			//	Initialise le panneau contenant le masque pour pouvoir être édité.
 			this.panelContainer.ChildrenLayoutMode = Widgets.Layouts.LayoutMode.Stacked;
 			this.panelContainer.ContainerLayoutMode = ContainerLayoutMode.VerticalFlow;
-			this.panelContainer.PreferredSize = new Size(200, 200);
-			this.panelContainer.Anchor = AnchorStyles.BottomLeft;
-			this.panelContainer.Padding = new Margins(10, 10, 10, 10);
+			this.panelContainer.Dock = DockStyle.Fill;
+			this.panelContainer.Margins = new Margins(10, 10, 10, 10);
 			this.panelContainer.DrawDesignerFrame = true;
 			this.panelContainer.SetParent(this.panelContainerParent);
 			this.panelContainer.ZOrder = this.formEditor.ZOrder+1;
@@ -599,10 +587,9 @@ namespace Epsitec.Common.Designer.Viewers
 		protected VSplitter						splitter2;
 		protected Widget						middle;
 		protected VToolBar						vToolBar;
-		protected Scrollable					drawingScrollable;
 		protected FrameBox						panelContainerParent;
 		protected UI.Panel						panelContainer;
-		protected FormDescription							form;
+		protected FormDescription				form;
 		protected FormEditor.Editor				formEditor;
 		protected FrameBox						right;
 		protected TabBook						tabBook;
