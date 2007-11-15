@@ -40,6 +40,14 @@ namespace Epsitec.Common.Designer.FormEditor.Proxies
 			}
 		}
 
+		public override double RowsSpacing
+		{
+			get
+			{
+				return 3;
+			}
+		}
+
 
 		public int ColumnsRequired
 		{
