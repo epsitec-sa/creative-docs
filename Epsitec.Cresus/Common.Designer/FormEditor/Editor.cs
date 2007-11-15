@@ -61,6 +61,8 @@ namespace Epsitec.Common.Designer.FormEditor
 			this.module = module;
 			this.context = context;
 			this.panel = panel;
+
+			this.objectModifier = new ObjectModifier(this);
 		}
 
 		public Module Module
@@ -122,6 +124,15 @@ namespace Epsitec.Common.Designer.FormEditor
 			set
 			{
 				this.druid = value;
+			}
+		}
+
+		public ObjectModifier ObjectModifier
+		{
+			//	Retourne le modificateur d'objets.
+			get
+			{
+				return this.objectModifier;
 			}
 		}
 
@@ -695,7 +706,7 @@ namespace Epsitec.Common.Designer.FormEditor
 			//	Supprime tous les objets sélectionnés.
 			foreach (Widget obj in this.selectedObjects)
 			{
-				int index = this.GetFormDescription(obj.Index);
+				int index = this.objectModifier.GetFormDescriptionIndex(obj);
 				if (index != -1)
 				{
 					this.form.Fields.RemoveAt(index);
@@ -837,7 +848,7 @@ namespace Epsitec.Common.Designer.FormEditor
 
 		protected void DrawSelectedObject(Graphics graphics, Widget obj)
 		{
-			Rectangle bounds = this.GetActualBounds(obj);
+			Rectangle bounds = this.objectModifier.GetActualBounds(obj);
 			bounds.Deflate(0.5);
 
 			graphics.LineWidth = 3;
@@ -857,7 +868,7 @@ namespace Epsitec.Common.Designer.FormEditor
 			Color color = PanelsContext.ColorHiliteSurface;
 
 			//	Si le rectangle est trop petit (par exemple objet Separator), il est engraissé.
-			Rectangle rect = this.GetActualBounds(obj);
+			Rectangle rect = this.objectModifier.GetActualBounds(obj);
 
 			double ix = 0;
 			if (rect.Width < this.context.MinimalSize)
@@ -907,38 +918,6 @@ namespace Epsitec.Common.Designer.FormEditor
 
 
 		#region Misc
-		protected int GetFormDescription(int uniqueId)
-		{
-			//	Retourne l'index d'un champ d'après son identificateur unique.
-			for (int i=0; i<this.form.Fields.Count; i++)
-			{
-				FieldDescription field = this.form.Fields[i];
-
-				if (field.UniqueId == uniqueId)
-				{
-					return i;
-				}
-			}
-
-			return -1;
-		}
-
-		protected Rectangle GetActualBounds(Widget obj)
-		{
-			//	Retourne la position et les dimensions actuelles de l'objet.
-			//	Le rectangle rendu est toujours valide, quel que soit le mode d'attachement.
-			obj.Window.ForceLayout();
-			Rectangle bounds = obj.Client.Bounds;
-
-			while (obj != null && obj != this.panel)
-			{
-				bounds = obj.MapClientToParent(bounds);
-				obj = obj.Parent;
-			}
-
-			return bounds;
-		}
-
 		public void AdaptAfterToolChanged()
 		{
 			//	Adaptation après un changement d'outil ou d'objet.
@@ -1173,30 +1152,31 @@ namespace Epsitec.Common.Designer.FormEditor
 		#endregion
 
 
-		public static readonly double			margin = 10;
+		public static readonly double		margin = 10;
 
-		protected Module						module;
-		protected FormDescription				form;
-		protected UI.Panel						panel;
-		protected Druid							druid;
-		protected PanelsContext					context;
-		protected bool							isEditEnabled = false;
+		protected Module					module;
+		protected FormDescription			form;
+		protected UI.Panel					panel;
+		protected Druid						druid;
+		protected PanelsContext				context;
+		protected ObjectModifier			objectModifier;
+		protected bool						isEditEnabled = false;
 
-		protected List<Widget>					selectedObjects = new List<Widget>();
-		protected Rectangle						selectedRectangle = Rectangle.Empty;
-		protected Widget						hilitedObject;
-		protected bool							isDragging;
-		protected MouseCursorType				lastCursor = MouseCursorType.Unknown;
+		protected List<Widget>				selectedObjects = new List<Widget>();
+		protected Rectangle					selectedRectangle = Rectangle.Empty;
+		protected Widget					hilitedObject;
+		protected bool						isDragging;
+		protected MouseCursorType			lastCursor = MouseCursorType.Unknown;
 
-		protected Image							mouseCursorArrow = null;
-		protected Image							mouseCursorArrowPlus = null;
-		protected Image							mouseCursorGlobal = null;
-		protected Image							mouseCursorGrid = null;
-		protected Image							mouseCursorGridPlus = null;
-		protected Image							mouseCursorEdit = null;
-		protected Image							mouseCursorPen = null;
-		protected Image							mouseCursorZoom = null;
-		protected Image							mouseCursorHand = null;
-		protected Image							mouseCursorFinger = null;
+		protected Image						mouseCursorArrow = null;
+		protected Image						mouseCursorArrowPlus = null;
+		protected Image						mouseCursorGlobal = null;
+		protected Image						mouseCursorGrid = null;
+		protected Image						mouseCursorGridPlus = null;
+		protected Image						mouseCursorEdit = null;
+		protected Image						mouseCursorPen = null;
+		protected Image						mouseCursorZoom = null;
+		protected Image						mouseCursorHand = null;
+		protected Image						mouseCursorFinger = null;
 	}
 }
