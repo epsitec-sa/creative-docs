@@ -703,8 +703,6 @@ namespace Epsitec.Common.Designer.FormEditor
 			}
 
 			this.SetDirty();
-			this.module.AccessForms.SetForm(this.druid, this.form);
-
 			this.selectedObjects.Clear();
 			this.UpdateAfterChanging(Viewers.Changing.Delete);
 			this.OnChildrenSelected();
