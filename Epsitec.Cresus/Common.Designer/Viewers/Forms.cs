@@ -111,7 +111,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.splitter2.Dock = DockStyle.Right;
 
 			this.UpdateAll();
-			this.UpdateViewer(Viewers.Abstract.Changing.Show);
+			this.UpdateViewer(Viewers.Changing.Show);
 		}
 
 		protected override void Dispose(bool disposing)
@@ -488,10 +488,14 @@ namespace Epsitec.Common.Designer.Viewers
 		}
 
 
-		public override void UpdateViewer(Viewers.Abstract.Changing oper)
+		public override void UpdateViewer(Viewers.Changing oper)
 		{
 			//	Met à jour le statut du visualisateur en cours, en fonction de la sélection.
 			//	Met également à jour l'arbre des objets, s'il est visible.
+			if (oper == Changing.Create || oper == Changing.Delete || oper == Changing.Move)
+			{
+				this.SetForm(this.form, this.druidToSerialize);
+			}
 		}
 
 

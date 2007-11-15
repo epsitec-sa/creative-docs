@@ -98,7 +98,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 			{
 				this.selectedObjects.Clear();
 				this.GridClearSelection();
-				this.UpdateAfterChanging(Viewers.Abstract.Changing.Show);
+				this.UpdateAfterChanging(Viewers.Changing.Show);
 				this.lastCreatedObject = null;
 				
 				this.panel = value;
@@ -667,7 +667,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 				}
 				this.selectedObjects.Clear();
 				this.GridClearSelection();
-				this.UpdateAfterChanging(Viewers.Abstract.Changing.Selection);
+				this.UpdateAfterChanging(Viewers.Changing.Selection);
 			}
 
 			if (obj == null)
@@ -687,7 +687,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 					this.selectedObjects.Add(obj);
 				}
 				this.GridClearSelection();
-				this.UpdateAfterChanging(Viewers.Abstract.Changing.Selection);
+				this.UpdateAfterChanging(Viewers.Changing.Selection);
 
 				if (obj != this.panel)
 				{
@@ -839,7 +839,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 				}
 				this.selectedObjects.Clear();
 				this.GridClearSelection();
-				this.UpdateAfterChanging(Viewers.Abstract.Changing.Selection);
+				this.UpdateAfterChanging(Viewers.Changing.Selection);
 			}
 
 			this.isRectangling = true;
@@ -940,13 +940,13 @@ namespace Epsitec.Common.Designer.PanelEditor
 			{
 				this.selectedObjects.Clear();
 				this.GridClearSelection();
-				this.UpdateAfterChanging(Viewers.Abstract.Changing.Selection);
+				this.UpdateAfterChanging(Viewers.Changing.Selection);
 			}
 			else
 			{
 				this.selectedObjects.Clear();
 				this.selectedObjects.Add(obj);
-				this.UpdateAfterChanging(Viewers.Abstract.Changing.Selection);
+				this.UpdateAfterChanging(Viewers.Changing.Selection);
 				this.SetHilitedObject(null, null);
 
 				this.griddingInitial = null;
@@ -1477,7 +1477,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 				}
 
 				this.module.DesignerApplication.UpdateInfoViewer();
-				this.UpdateAfterChanging(Viewers.Abstract.Changing.Create);
+				this.UpdateAfterChanging(Viewers.Changing.Create);
 				this.OnUpdateCommands();
 			}
 		}
@@ -2028,7 +2028,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 
 				if (initialParent != this.selectedObjects[0].Parent)
 				{
-					this.UpdateAfterChanging(Viewers.Abstract.Changing.Move);
+					this.UpdateAfterChanging(Viewers.Changing.Move);
 				}
 			}
 
@@ -2227,7 +2227,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 			{
 				this.selectedObjects.Clear();
 				this.GridClearSelection();
-				this.UpdateAfterChanging(Viewers.Abstract.Changing.Selection);
+				this.UpdateAfterChanging(Viewers.Changing.Selection);
 				this.OnChildrenSelected();
 				this.Invalidate();
 			}
@@ -2244,7 +2244,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 			}
 
 			this.GridClearSelection();
-			this.UpdateAfterChanging(Viewers.Abstract.Changing.Selection);
+			this.UpdateAfterChanging(Viewers.Changing.Selection);
 			this.OnChildrenSelected();
 			this.Invalidate();
 		}
@@ -2265,7 +2265,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 			this.selectedObjects = list;
 
 			this.GridClearSelection();
-			this.UpdateAfterChanging(Viewers.Abstract.Changing.Selection);
+			this.UpdateAfterChanging(Viewers.Changing.Selection);
 			this.OnChildrenSelected();
 			this.Invalidate();
 		}
@@ -2277,7 +2277,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 			this.selectedObjects.Add(this.panel);
 
 			this.GridClearSelection();
-			this.UpdateAfterChanging(Viewers.Abstract.Changing.Selection);
+			this.UpdateAfterChanging(Viewers.Changing.Selection);
 			this.OnChildrenSelected();
 			this.Invalidate();
 		}
@@ -2291,7 +2291,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 			this.selectedObjects.Add(parent);
 
 			this.GridClearSelection();
-			this.UpdateAfterChanging(Viewers.Abstract.Changing.Selection);
+			this.UpdateAfterChanging(Viewers.Changing.Selection);
 			this.OnChildrenSelected();
 			this.Invalidate();
 		}
@@ -2302,7 +2302,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 			this.selectedObjects.Clear();
 			this.selectedObjects.Add(obj);
 			this.GridClearSelection();
-			this.UpdateAfterChanging(Viewers.Abstract.Changing.Selection);
+			this.UpdateAfterChanging(Viewers.Changing.Selection);
 			this.OnChildrenSelected();
 			this.Invalidate();
 		}
@@ -2312,7 +2312,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 			//	Sélectionne une liste d'objets.
 			this.selectedObjects = list;
 			this.GridClearSelection();
-			this.UpdateAfterChanging(Viewers.Abstract.Changing.Selection);
+			this.UpdateAfterChanging(Viewers.Changing.Selection);
 			this.OnChildrenSelected();
 			this.Invalidate();
 		}
@@ -2323,7 +2323,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 			//	Tous les objets sélectionnés doivent avoir le même parent.
 			this.SelectObjectsInRectangle(sel, this.panel);
 			this.GridClearSelection();
-			this.UpdateAfterChanging(Viewers.Abstract.Changing.Selection);
+			this.UpdateAfterChanging(Viewers.Changing.Selection);
 			this.OnChildrenSelected();
 			this.Invalidate();
 		}
@@ -2370,7 +2370,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 			this.OnChildrenSelected();  // met à jour les panneaux des proxies à droite
 		}
 
-		protected void UpdateAfterChanging(Viewers.Abstract.Changing oper)
+		protected void UpdateAfterChanging(Viewers.Changing oper)
 		{
 			//	Mise à jour après un changement de sélection, ou après un changement dans
 			//	l'arbre des objets (création, changement de parenté, etc.).
@@ -2448,7 +2448,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 
 			this.selectedObjects.Clear();
 			this.GridClearSelection();
-			this.UpdateAfterChanging(Viewers.Abstract.Changing.Delete);
+			this.UpdateAfterChanging(Viewers.Changing.Delete);
 			this.OnChildrenSelected();
 			this.Invalidate();
 			this.SetDirty();
@@ -2641,7 +2641,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 
 			this.Invalidate();
 			this.context.ShowZOrder = true;
-			this.UpdateAfterChanging(Viewers.Abstract.Changing.Move);
+			this.UpdateAfterChanging(Viewers.Changing.Move);
 			this.OnUpdateCommands();
 			this.SetDirty();
 		}
@@ -4497,7 +4497,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 						{
 							this.selectedObjects = list;
 							this.GridClearSelection();
-							this.UpdateAfterChanging(Viewers.Abstract.Changing.Selection);
+							this.UpdateAfterChanging(Viewers.Changing.Selection);
 							this.OnChildrenSelected();
 							this.Invalidate();
 						}

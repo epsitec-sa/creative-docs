@@ -1666,7 +1666,9 @@ namespace Epsitec.Common.Designer
 
 		public UI.Panel GetPanel(int index)
 		{
-			return this.GetPanel(this.accessor.Collection[index]);
+			//?CultureMap item = this.accessor.Collection[index];  // "RunPanel" affiche parfois la mauvaise resource avec cela !
+			CultureMap item = this.collectionView.Items[index] as CultureMap;
+			return this.GetPanel(item);
 		}
 		
 		private UI.Panel GetPanel(CultureMap item)
@@ -1738,7 +1740,9 @@ namespace Epsitec.Common.Designer
 
 		public FormEngine.FormDescription GetForm(int index)
 		{
-			return this.GetForm(this.accessor.Collection[index]);
+			//?CultureMap item = this.accessor.Collection[index];  // "RunPanel" affiche parfois la mauvaise resource avec cela !
+			CultureMap item = this.collectionView.Items[index] as CultureMap;
+			return this.GetForm(item);
 		}
 		
 		private FormEngine.FormDescription GetForm(CultureMap item)

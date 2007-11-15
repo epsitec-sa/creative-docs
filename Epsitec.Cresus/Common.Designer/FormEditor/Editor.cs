@@ -4,6 +4,7 @@ using Epsitec.Common.Widgets.Layouts;
 using Epsitec.Common.Support;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Types;
+using Epsitec.Common.FormEngine;
 
 namespace Epsitec.Common.Designer.FormEditor
 {
@@ -71,7 +72,7 @@ namespace Epsitec.Common.Designer.FormEditor
 			}
 		}
 
-		public FormEngine.FormDescription Form
+		public FormDescription Form
 		{
 			//	Masque de saisie associé.
 			get
@@ -104,7 +105,7 @@ namespace Epsitec.Common.Designer.FormEditor
 			set
 			{
 				this.selectedObjects.Clear();
-				this.UpdateAfterChanging(Viewers.Abstract.Changing.Show);
+				this.UpdateAfterChanging(Viewers.Changing.Show);
 				
 				this.panel = value;
 				this.Invalidate();
@@ -247,7 +248,7 @@ namespace Epsitec.Common.Designer.FormEditor
 					break;
 
 				case MessageType.MouseLeave:
-					this.SetHilitedObject(null, null);
+					this.SetHilitedObject(null);
 					break;
 
 				case MessageType.KeyDown:
@@ -350,7 +351,7 @@ namespace Epsitec.Common.Designer.FormEditor
 			if (!isShiftPressed)  // touche Shift relâchée ?
 			{
 				this.selectedObjects.Clear();
-				this.UpdateAfterChanging(Viewers.Abstract.Changing.Selection);
+				this.UpdateAfterChanging(Viewers.Changing.Selection);
 			}
 
 			if (obj != null)
@@ -363,7 +364,7 @@ namespace Epsitec.Common.Designer.FormEditor
 				{
 					this.selectedObjects.Add(obj);
 				}
-				this.UpdateAfterChanging(Viewers.Abstract.Changing.Selection);
+				this.UpdateAfterChanging(Viewers.Changing.Selection);
 			}
 
 			this.OnChildrenSelected();
@@ -374,7 +375,7 @@ namespace Epsitec.Common.Designer.FormEditor
 		{
 			//	Sélection ponctuelle, souris déplacée.
 			Widget obj = this.Detect(pos);
-			this.SetHilitedObject(obj, null);  // met en évidence l'objet survolé par la souris
+			this.SetHilitedObject(obj);  // met en évidence l'objet survolé par la souris
 		}
 
 		protected void SelectUp(Point pos, bool isRightButton, bool isControlPressed, bool isShiftPressed)
@@ -560,7 +561,7 @@ namespace Epsitec.Common.Designer.FormEditor
 			if (this.selectedObjects.Count > 0)
 			{
 				this.selectedObjects.Clear();
-				this.UpdateAfterChanging(Viewers.Abstract.Changing.Selection);
+				this.UpdateAfterChanging(Viewers.Changing.Selection);
 				this.OnChildrenSelected();
 				this.Invalidate();
 			}
@@ -576,7 +577,7 @@ namespace Epsitec.Common.Designer.FormEditor
 				this.selectedObjects.Add(obj);
 			}
 
-			this.UpdateAfterChanging(Viewers.Abstract.Changing.Selection);
+			this.UpdateAfterChanging(Viewers.Changing.Selection);
 			this.OnChildrenSelected();
 			this.Invalidate();
 		}
@@ -596,7 +597,7 @@ namespace Epsitec.Common.Designer.FormEditor
 
 			this.selectedObjects = list;
 
-			this.UpdateAfterChanging(Viewers.Abstract.Changing.Selection);
+			this.UpdateAfterChanging(Viewers.Changing.Selection);
 			this.OnChildrenSelected();
 			this.Invalidate();
 		}
@@ -607,7 +608,7 @@ namespace Epsitec.Common.Designer.FormEditor
 			this.selectedObjects.Clear();
 			this.selectedObjects.Add(this.panel);
 
-			this.UpdateAfterChanging(Viewers.Abstract.Changing.Selection);
+			this.UpdateAfterChanging(Viewers.Changing.Selection);
 			this.OnChildrenSelected();
 			this.Invalidate();
 		}
@@ -620,7 +621,7 @@ namespace Epsitec.Common.Designer.FormEditor
 			this.selectedObjects.Clear();
 			this.selectedObjects.Add(parent);
 
-			this.UpdateAfterChanging(Viewers.Abstract.Changing.Selection);
+			this.UpdateAfterChanging(Viewers.Changing.Selection);
 			this.OnChildrenSelected();
 			this.Invalidate();
 		}
@@ -630,7 +631,7 @@ namespace Epsitec.Common.Designer.FormEditor
 			//	Sélectionne un objet.
 			this.selectedObjects.Clear();
 			this.selectedObjects.Add(obj);
-			this.UpdateAfterChanging(Viewers.Abstract.Changing.Selection);
+			this.UpdateAfterChanging(Viewers.Changing.Selection);
 			this.OnChildrenSelected();
 			this.Invalidate();
 		}
@@ -639,7 +640,7 @@ namespace Epsitec.Common.Designer.FormEditor
 		{
 			//	Sélectionne une liste d'objets.
 			this.selectedObjects = list;
-			this.UpdateAfterChanging(Viewers.Abstract.Changing.Selection);
+			this.UpdateAfterChanging(Viewers.Changing.Selection);
 			this.OnChildrenSelected();
 			this.Invalidate();
 		}
@@ -649,7 +650,7 @@ namespace Epsitec.Common.Designer.FormEditor
 			//	Sélectionne tous les objets entièrement inclus dans un rectangle.
 			//	Tous les objets sélectionnés doivent avoir le même parent.
 			this.SelectObjectsInRectangle(sel, this.panel);
-			this.UpdateAfterChanging(Viewers.Abstract.Changing.Selection);
+			this.UpdateAfterChanging(Viewers.Changing.Selection);
 			this.OnChildrenSelected();
 			this.Invalidate();
 		}
@@ -669,15 +670,14 @@ namespace Epsitec.Common.Designer.FormEditor
 			this.OnChildrenSelected();  // met à jour les panneaux des proxies à droite
 		}
 
-		protected void UpdateAfterChanging(Viewers.Abstract.Changing oper)
+		protected void UpdateAfterChanging(Viewers.Changing oper)
 		{
 			//	Mise à jour après un changement de sélection, ou après un changement dans
 			//	l'arbre des objets (création, changement de parenté, etc.).
 			this.module.DesignerApplication.UpdateViewer(oper);
-			PanelEditor.GeometryCache.Clear(this.panel);
 		}
 
-		protected void SetHilitedObject(Widget obj, PanelEditor.GridSelection grid)
+		protected void SetHilitedObject(Widget obj)
 		{
 			//	Détermine l'objet à mettre en évidence lors d'un survol.
 			if (this.hilitedObject != obj)
@@ -693,6 +693,23 @@ namespace Epsitec.Common.Designer.FormEditor
 		protected void DeleteSelection()
 		{
 			//	Supprime tous les objets sélectionnés.
+			foreach (Widget obj in this.selectedObjects)
+			{
+				int index = this.GetFormDescription(obj.Index);
+				if (index != -1)
+				{
+					this.form.Fields.RemoveAt(index);
+				}
+			}
+
+			this.SetDirty();
+			this.module.AccessForms.SetForm(this.druid, this.form);
+
+			this.selectedObjects.Clear();
+			this.UpdateAfterChanging(Viewers.Changing.Delete);
+			this.OnChildrenSelected();
+			this.Invalidate();
+			this.SetDirty();
 		}
 
 		protected void DuplicateSelection()
@@ -892,6 +909,22 @@ namespace Epsitec.Common.Designer.FormEditor
 
 
 		#region Misc
+		protected int GetFormDescription(int uniqueId)
+		{
+			//	Retourne l'index d'un champ d'après son identificateur unique.
+			for (int i=0; i<this.form.Fields.Count; i++)
+			{
+				FieldDescription field = this.form.Fields[i];
+
+				if (field.UniqueId == uniqueId)
+				{
+					return i;
+				}
+			}
+
+			return -1;
+		}
+
 		protected Rectangle GetActualBounds(Widget obj)
 		{
 			//	Retourne la position et les dimensions actuelles de l'objet.
@@ -930,7 +963,7 @@ namespace Epsitec.Common.Designer.FormEditor
 
 		protected void SetDirty()
 		{
-			this.module.AccessPanels.SetLocalDirty();
+			this.module.AccessForms.SetLocalDirty();
 		}
 
 		protected Point ConvPanelToEditor(Point pos)
@@ -1145,7 +1178,7 @@ namespace Epsitec.Common.Designer.FormEditor
 		public static readonly double			margin = 10;
 
 		protected Module						module;
-		protected FormEngine.FormDescription	form;
+		protected FormDescription				form;
 		protected UI.Panel						panel;
 		protected Druid							druid;
 		protected PanelsContext					context;
