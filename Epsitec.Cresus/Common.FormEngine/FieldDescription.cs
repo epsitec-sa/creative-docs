@@ -26,6 +26,7 @@ namespace Epsitec.Common.FormEngine
 			Hide			= 31,	// champ du module de référence à cacher, dans un module de patch
 		}
 
+		[DesignerVisible]
 		public enum SeparatorType
 		{
 			Normal			= 0,	// les champs sont proches

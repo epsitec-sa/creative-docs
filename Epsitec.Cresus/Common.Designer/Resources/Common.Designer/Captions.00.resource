@@ -123,4 +123,9 @@
   <data name="Cap.Editor.Type.Create" id="2">&lt;s:data id="_0" f:Name="Editor.Type.Create" f:Description="Créer une nouvelle valeur dans l&amp;amp;apos;énumération" f:Icon="manifest:Epsitec.Common.Designer.Images.StringDuplicate.icon" f:Labels="{Collection {Text 'Créer'}}" /&gt;</data>
   <data name="Cap.Editor.Type.Delete" id="21">&lt;s:data id="_0" f:Name="Editor.Type.Delete" f:Description="Supprimer une valeur dans l&amp;amp;apos;énumération" f:Icon="manifest:Epsitec.Common.Designer.Images.StringRemove.icon" f:Labels="{Collection {Text 'Supprimer'}}" /&gt;</data>
   <data name="Cap.Types.Type.Native" id="22">&lt;s:data id="_0" f:Name="Types.Type.Native" f:Description="Natif .NET" f:Labels="{Collection {Text 'Natif'}}" /&gt;</data>
+  <data name="Val.FieldDescription.SeparatorType.Normal" id="24">&lt;s:data id="_0" f:Name="Normal" /&gt;</data>
+  <data name="Val.FieldDescription.SeparatorType.Compact" id="25">&lt;s:data id="_0" f:Name="Compact" /&gt;</data>
+  <data name="Val.FieldDescription.SeparatorType.Extend" id="26">&lt;s:data id="_0" f:Name="Extend" /&gt;</data>
+  <data name="Val.FieldDescription.SeparatorType.Append" id="27">&lt;s:data id="_0" f:Name="Append" /&gt;</data>
+  <data name="Typ.FieldDescription.SeparatorType" id="23">&lt;s:type id="_1" s:name="*aT" /&gt;&lt;s:type id="_2" s:name="*eT" /&gt;&lt;s:data id="_0" f:Name="FieldDescription.SeparatorType" f:_1.SystemType="E:Epsitec.Common.FormEngine.FieldDescription+SeparatorType, Common.FormEngine" f:_2.EnumValues="{Collection {Text '0 [3024]'}, {Text '1 [3025]'}, {Text '2 [3026]'}, {Text '3 [3027]'}}" f:_1.DefaultController="Enum" f:_1.DefaultControllerParameter="Icons" f:Labels="{Collection {Text 'Type'}}" /&gt;</data>
 </bundle>

@@ -102,6 +102,31 @@ namespace Epsitec.Common.Designer.FormEditor
 		}
 
 
+		public FieldDescription.SeparatorType GetSeparator(Widget obj)
+		{
+			//	Retourne le type du séparateur d'un champ.
+			FieldDescription field = this.GetFormDescription(obj);
+			if (field == null)
+			{
+				return FieldDescription.SeparatorType.Normal;
+			}
+			else
+			{
+				return field.Separator;
+			}
+		}
+
+		public void SetSeparator(Widget obj, FieldDescription.SeparatorType sep)
+		{
+			//	Choix du type du séparateur d'un champ.
+			FieldDescription field = this.GetFormDescription(obj);
+			if (field != null)
+			{
+				field.Separator = sep;
+			}
+		}
+
+
 		public Margins GetMargins(Widget obj)
 		{
 			//	Retourne les marges de l'objet.
