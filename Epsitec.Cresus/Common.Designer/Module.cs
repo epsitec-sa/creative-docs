@@ -402,6 +402,21 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
+		public void RunForm(int index)
+		{
+			//	Montre une ressource 'Form' dans une fenêtre.
+			string name = this.accessForms.GetField(index, null, ResourceAccess.FieldType.Name).String;
+			FormEngine.FormDescription form = this.accessForms.GetForm(index);
+
+			FormEngine.Engine engine = new FormEngine.Engine(this.resourceManager);
+			UI.Panel panel = engine.CreateForm(form);
+
+			if (panel != null)
+			{
+				UserInterface.RunForm(panel, this.designerApplication.Window, new Size(800, 600), name);
+			}
+		}
+
 
 
 

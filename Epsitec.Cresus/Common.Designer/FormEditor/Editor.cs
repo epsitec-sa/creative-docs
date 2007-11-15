@@ -191,24 +191,6 @@ namespace Epsitec.Common.Designer.FormEditor
 					this.Invalidate();
 					this.OnUpdateCommands();
 					break;
-
-				case "PanelShowExpand":
-					this.context.ShowExpand = !this.context.ShowExpand;
-					this.Invalidate();
-					this.OnUpdateCommands();
-					break;
-
-				case "PanelShowAttachment":
-					this.context.ShowAttachment = !this.context.ShowAttachment;
-					this.Invalidate();
-					this.OnUpdateCommands();
-					break;
-
-				case "PanelShowConstrain":
-					this.context.ShowConstrain = !this.context.ShowConstrain;
-					this.Invalidate();
-					this.OnUpdateCommands();
-					break;
 			}
 		}
 

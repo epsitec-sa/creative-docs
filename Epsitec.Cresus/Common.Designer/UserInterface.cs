@@ -139,6 +139,42 @@ namespace Epsitec.Common.Designer
 			UserInterface.runPanelCenter = window.WindowPlacementNormalBounds.Center;
 		}
 		
+		public static void RunForm(UI.Panel panel, Widgets.Window mainWindow, Size size, string name)
+		{
+			UI.PanelStack stack = new UI.PanelStack();
+			Widgets.Window window = new Widgets.Window();
+
+			window.MakeSecondaryWindow();
+			window.ShowWindowIcon = false;
+			window.Root.Children.Add(stack);
+
+			stack.Dock = Widgets.DockStyle.Fill;
+			panel.Dock = Widgets.DockStyle.Fill;
+			panel.Margins = new Margins(10, 10, 10, 10);
+
+			stack.Children.Add(panel);
+
+			window.Owner = mainWindow;
+			window.Text = name;
+			window.ForceLayout();
+			window.ClientSize = size;
+
+			double dx = window.WindowSize.Width;
+			double dy = window.WindowSize.Height;  // taille avec le cadre
+
+			Point center = UserInterface.runPanelCenter;
+			if (center.IsZero)
+			{
+				center = mainWindow.WindowBounds.Center;
+			}
+			Rectangle rect = new Rectangle(center.X-dx/2, center.Y-dy/2, dx, dy);
+			window.WindowBounds = rect;
+
+			window.ShowDialog();  // affiche le dialogue modal...
+			
+			UserInterface.runPanelCenter = window.WindowPlacementNormalBounds.Center;
+		}
+		
 		private class CustomerRecord : Types.DependencyObject
 		{
 			//	Class "bidon" pour avoir au moins un source de données disponible.

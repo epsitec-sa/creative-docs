@@ -1268,7 +1268,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.GetCommandState("Save").Enable = this.module.IsGlobalDirty;
 			this.GetCommandState("SaveAs").Enable = true;
 
-			if (this.designerApplication.IsReadonly || this is Panels)
+			if (this.designerApplication.IsReadonly || this is Panels || this is Forms)
 			{
 				this.GetCommandState("NewCulture").Enable = false;
 				this.GetCommandState("DeleteCulture").Enable = false;
@@ -1316,7 +1316,7 @@ namespace Epsitec.Common.Designer.Viewers
 				this.GetCommandState("CopyToModule").Enable = (sel != -1 && build && !this.designerApplication.IsReadonly);
 			}
 
-			if (this is Panels)
+			if (this is Panels || this is Forms)
 			{
 				this.GetCommandState("ModificationPrev").Enable = false;
 				this.GetCommandState("ModificationNext").Enable = false;
@@ -1340,7 +1340,7 @@ namespace Epsitec.Common.Designer.Viewers
 				this.GetCommandState("ModificationClear").Enable = modified;
 			}
 
-			if (this.designerApplication.IsReadonly || this is Panels)
+			if (this.designerApplication.IsReadonly || this is Panels || this is Forms)
 			{
 				this.GetCommandState("FontBold").Enable = false;
 				this.GetCommandState("FontItalic").Enable = false;
@@ -1417,6 +1417,69 @@ namespace Epsitec.Common.Designer.Viewers
 				this.GetCommandState("TabIndexPrev").Enable = (objSelected != 0);
 				this.GetCommandState("TabIndexNext").Enable = (objSelected != 0);
 				this.GetCommandState("TabIndexFirst").Enable = (objSelected != 0);
+			}
+			else if (this is Forms)
+			{
+				int objSelected, objCount;
+				bool isRoot;
+				Forms forms = this as Forms;
+				forms.FormEditor.GetSelectionInfo(out objSelected, out objCount, out isRoot);
+
+				if (this.IsDeleteOrDuplicateForViewer)
+				{
+					this.GetCommandState("Delete").Enable = (objSelected != 0);
+					this.GetCommandState("Create").Enable = false;
+					this.GetCommandState("Duplicate").Enable = false;
+					this.GetCommandState("CopyToModule").Enable = false;
+				}
+
+				this.GetCommandState("PanelDeselectAll").Enable = (objSelected != 0);
+				this.GetCommandState("PanelSelectAll").Enable = (objSelected < objCount);
+				this.GetCommandState("PanelSelectInvert").Enable = (objCount > 0);
+				this.GetCommandState("PanelSelectRoot").Enable = !isRoot;
+				this.GetCommandState("PanelSelectParent").Enable = (objCount > 0 && !isRoot);
+
+				this.GetCommandState("PanelShowGrid").Enable = true;
+				this.GetCommandState("PanelShowConstrain").Enable = false;
+				this.GetCommandState("PanelShowAttachment").Enable = false;
+				this.GetCommandState("PanelShowExpand").Enable = false;
+				this.GetCommandState("PanelShowZOrder").Enable = false;
+				this.GetCommandState("PanelShowTabIndex").Enable = false;
+				this.GetCommandState("PanelRun").Enable = (sel != -1);
+				this.GetCommandState("PanelShowGrid").ActiveState = this.context.ShowGrid ? ActiveState.Yes : ActiveState.No;
+				this.GetCommandState("PanelShowConstrain").ActiveState = ActiveState.No;
+				this.GetCommandState("PanelShowAttachment").ActiveState = ActiveState.No;
+				this.GetCommandState("PanelShowExpand").ActiveState = ActiveState.No;
+				this.GetCommandState("PanelShowZOrder").ActiveState = ActiveState.No;
+				this.GetCommandState("PanelShowTabIndex").ActiveState = ActiveState.No;
+
+				this.GetCommandState("MoveLeft").Enable = false;
+				this.GetCommandState("MoveRight").Enable = false;
+				this.GetCommandState("MoveDown").Enable = false;
+				this.GetCommandState("MoveUp").Enable = false;
+
+				this.GetCommandState("AlignLeft").Enable = false;
+				this.GetCommandState("AlignCenterX").Enable = false;
+				this.GetCommandState("AlignRight").Enable = false;
+				this.GetCommandState("AlignTop").Enable = false;
+				this.GetCommandState("AlignCenterY").Enable = false;
+				this.GetCommandState("AlignBottom").Enable = false;
+				this.GetCommandState("AlignBaseLine").Enable = false;
+				this.GetCommandState("AdjustWidth").Enable = false;
+				this.GetCommandState("AdjustHeight").Enable = false;
+				this.GetCommandState("AlignGrid").Enable = false;
+
+				this.GetCommandState("PanelOrderUpAll").Enable = false;
+				this.GetCommandState("PanelOrderDownAll").Enable = false;
+				this.GetCommandState("PanelOrderUpOne").Enable = false;
+				this.GetCommandState("PanelOrderDownOne").Enable = false;
+
+				this.GetCommandState("TabIndexClear").Enable = false;
+				this.GetCommandState("TabIndexRenum").Enable = false;
+				this.GetCommandState("TabIndexLast").Enable = false;
+				this.GetCommandState("TabIndexPrev").Enable = false;
+				this.GetCommandState("TabIndexNext").Enable = false;
+				this.GetCommandState("TabIndexFirst").Enable = false;
 			}
 			else
 			{
