@@ -321,7 +321,7 @@ namespace Epsitec.Common.Designer.Viewers
 			if (Forms.softSerialize == null)
 			{
 				FormDescription form = this.access.GetForm(this.druidToSerialize);
-				this.SetForm(form, this.druidToSerialize);
+				this.SetForm(form, this.druidToSerialize, false);
 			}
 			else
 			{
@@ -335,7 +335,7 @@ namespace Epsitec.Common.Designer.Viewers
 				}
 
 				FormDescription form = this.XmlToForm(Forms.softSerialize);
-				this.SetForm(form, this.druidToSerialize);
+				this.SetForm(form, this.druidToSerialize, false);
 
 				Forms.softDirtySerialization = false;
 				Forms.softSerialize = null;
@@ -360,7 +360,7 @@ namespace Epsitec.Common.Designer.Viewers
 			return this.form;
 		}
 
-		protected void SetForm(FormDescription form, Druid druid)
+		protected void SetForm(FormDescription form, Druid druid, bool keepSelection)
 		{
 			//	Spécifie le masque de saisie en cours d'édition.
 			//	Construit physiquement le masque de saisie (UI.Panel contenant des widgets) sur la
@@ -385,6 +385,12 @@ namespace Epsitec.Common.Designer.Viewers
 			}
 			else
 			{
+				List<int> sel = null;
+				if (keepSelection)
+				{
+					sel = this.formEditor.GetSelectedUniqueId();  // id des objets sélectionnés
+				}
+
 				FormEngine.Engine engine = new FormEngine.Engine(this.module.ResourceManager);
 				this.panelContainer = engine.CreateForm(form);
 				this.InitializePanel();
@@ -393,6 +399,15 @@ namespace Epsitec.Common.Designer.Viewers
 				this.formEditor.Druid = druid;
 				this.formEditor.IsEditEnabled = !this.designerApplication.IsReadonly;
 				this.formEditor.Form = form;
+
+				if (keepSelection)
+				{
+					this.formEditor.SetSelectedUniqueId(sel);  // resélectionne les mêmes objets
+				}
+				else
+				{
+					this.formEditor.DeselectAll();
+				}
 			}
 		}
 
@@ -497,7 +512,7 @@ namespace Epsitec.Common.Designer.Viewers
 			if (oper == Changing.Create || oper == Changing.Delete || oper == Changing.Move || oper == Changing.Regenerate)
 			{
 				//	Régénère le panneau contenant le masque de saisie.
-				this.SetForm(this.form, this.druidToSerialize);
+				this.SetForm(this.form, this.druidToSerialize, oper == Changing.Regenerate);
 			}
 		}
 

@@ -126,6 +126,33 @@ namespace Epsitec.Common.Designer.FormEditor
 		}
 
 
+		public Widget GetWidget(int uniqueId)
+		{
+			//	Cherche le widget correspondant à un identificateur unique.
+			return this.GetWidget(this.formEditor.Panel, uniqueId);
+		}
+
+		protected Widget GetWidget(Widget parent, int uniqueId)
+		{
+			if (parent.Index == uniqueId)
+			{
+				return parent;
+			}
+
+			Widget[] children = parent.Children.Widgets;
+			for (int i=0; i<children.Length; i++)
+			{
+				Widget widget = this.GetWidget(children[i], uniqueId);
+				if (widget != null)
+				{
+					return widget;
+				}
+			}
+
+			return null;
+		}
+
+
 		public FieldDescription GetFormDescription(Widget obj)
 		{
 			//	Retourne un champ d'après l'identificateur unique d'un widget.

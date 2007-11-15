@@ -145,6 +145,39 @@ namespace Epsitec.Common.Designer.FormEditor
 			}
 		}
 
+		public List<int> GetSelectedUniqueId()
+		{
+			//	Retourne la liste des identificateurs uniques des objets sélectionnés.
+			List<int> uniqueIds = new List<int>();
+
+			foreach (Widget obj in this.selectedObjects)
+			{
+				if (obj.Index != -1)
+				{
+					uniqueIds.Add(obj.Index);
+				}
+			}
+
+			return uniqueIds;
+		}
+
+		public void SetSelectedUniqueId(List<int> uniqueIds)
+		{
+			//	Sélectionne tous les objets dont on donne les identificateurs uniques.
+			this.selectedObjects.Clear();
+
+			foreach (int uniqueId in uniqueIds)
+			{
+				Widget obj = this.objectModifier.GetWidget(uniqueId);
+				if (obj != null)
+				{
+					this.selectedObjects.Add(obj);
+				}
+			}
+
+			this.Invalidate();
+		}
+
 		public bool IsEditEnabled
 		{
 			//	Est-ce que l'édition est possible ? Pour cela, il faut avoir sélectionné un bundle
