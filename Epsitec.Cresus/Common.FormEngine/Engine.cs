@@ -321,7 +321,7 @@ namespace Epsitec.Common.FormEngine
 			box.DrawFrameState = FrameState.All;
 			box.Margins = field.ContainerMargins;
 			box.Padding = field.ContainerPadding;
-			box.BackColor = field.ContainerBackColor;
+			box.BackColor = field.BackColor;
 			box.DrawFrameState = field.ContainerFrameState;
 			box.DrawFrameWidth = field.ContainerFrameWidth;
 			box.Index = field.UniqueId;

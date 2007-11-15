@@ -289,7 +289,7 @@ namespace Epsitec.Common.FormEngine
 			field.ContainerLayoutMode = mode;
 			field.ContainerMargins = new Margins(margins, margins, margins, margins);
 			field.ContainerPadding = new Margins(padding, padding, padding, padding);
-			field.ContainerBackColor = backColor;
+			field.BackColor = backColor;
 			field.ContainerFrameState = frame;
 			field.ContainerFrameWidth = width;
 			field.ColumnsRequired = columns;

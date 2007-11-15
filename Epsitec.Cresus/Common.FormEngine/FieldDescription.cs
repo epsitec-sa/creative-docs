@@ -45,7 +45,6 @@ namespace Epsitec.Common.FormEngine
 			this.containerLayoutMode = ContainerLayoutMode.None;
 			this.containerMargins = Margins.Zero;
 			this.containerPadding = Margins.Zero;
-			this.containerBackColor = Color.Empty;
 			this.containerFrameState = FrameState.None;
 			this.containerFrameWidth = 1;
 		}
@@ -72,7 +71,6 @@ namespace Epsitec.Common.FormEngine
 			this.containerLayoutMode = model.containerLayoutMode;
 			this.containerMargins = model.containerMargins;
 			this.containerPadding = model.containerPadding;
-			this.containerBackColor = model.containerBackColor;
 			this.containerFrameState = model.containerFrameState;
 			this.containerFrameWidth = model.containerFrameWidth;
 		}
@@ -95,7 +93,8 @@ namespace Epsitec.Common.FormEngine
 
 		public int UniqueId
 		{
-			//	Identificateur unique, non sérialisé.
+			//	Identificateur unique, non sérialisé. Permet le lien avec les widgets (propriété Index) créés
+			//	par le moteur FormEgine.CreateForm().
 			get
 			{
 				return this.uniqueId;
@@ -108,7 +107,7 @@ namespace Epsitec.Common.FormEngine
 
 		public FieldType Type
 		{
-			//	Retourne le type immuable de cet élément.
+			//	Retourne le type immuable de cet élément (déterminé lors de la création de l'objet).
 			get
 			{
 				return this.type;
@@ -138,6 +137,15 @@ namespace Epsitec.Common.FormEngine
 		}
 
 
+		public List<Druid> FieldIds
+		{
+			//	Liste des Druids qui représentent le champ.
+			get
+			{
+				return this.fieldIds;
+			}
+		}
+
 		public void SetFields(string listDruids)
 		{
 			//	Donne d'une liste de Druids séparés par des points.
@@ -160,19 +168,11 @@ namespace Epsitec.Common.FormEngine
 			}
 		}
 
-		public List<Druid> FieldIds
-		{
-			//	Liste des Druids qui représentent le champ.
-			get
-			{
-				return this.fieldIds;
-			}
-		}
-
 		public string GetPath(string prefix)
 		{
 			//	Retourne le chemin permettant d'accéder au champ.
 			//	Par exemple, si prefix = "Data": retourne "Data.[630B2].[630S2]"
+			//	Par exemple, si prefix = null:   retourne "[630B2].[630S2]"
 			if (this.type == FieldType.Field)
 			{
 				System.Text.StringBuilder builder = new System.Text.StringBuilder();
@@ -299,20 +299,6 @@ namespace Epsitec.Common.FormEngine
 			}
 		}
 
-		public Color ContainerBackColor
-		{
-			//	Couleur de fond d'une boîte.
-			get
-			{
-				return this.containerBackColor;
-			}
-			set
-			{
-				System.Diagnostics.Debug.Assert(this.type == FieldType.BoxBegin);
-				this.containerBackColor = value;
-			}
-		}
-
 		public FrameState ContainerFrameState
 		{
 			//	Bordures d'une boîte.
@@ -383,7 +369,6 @@ namespace Epsitec.Common.FormEngine
 				a.containerLayoutMode != b.containerLayoutMode ||
 				!a.containerMargins.Equals(b.containerMargins) ||
 				!a.containerPadding.Equals(b.containerPadding) ||
-				!a.containerBackColor.Equals(b.containerBackColor) ||
 				a.containerFrameState != b.containerFrameState ||
 				a.containerFrameWidth != b.containerFrameWidth)
 			{
@@ -451,11 +436,6 @@ namespace Epsitec.Common.FormEngine
 				writer.WriteElementString(Xml.ContainerPadding, this.containerPadding.ToString());
 			}
 
-			if (!this.containerBackColor.IsEmpty)
-			{
-				writer.WriteElementString(Xml.ContainerBackColor, Color.ToString(this.containerBackColor));
-			}
-
 			writer.WriteElementString(Xml.ContainerFrameState, this.containerFrameState.ToString());
 			writer.WriteElementString(Xml.ContainerFrameWidth, this.containerFrameWidth.ToString(System.Globalization.CultureInfo.InvariantCulture));
 
@@ -521,10 +501,6 @@ namespace Epsitec.Common.FormEngine
 						{
 							this.containerPadding = Margins.Parse(element);
 						}
-						else if (name == Xml.ContainerBackColor)
-						{
-							this.containerBackColor = Color.Parse(element);
-						}
 						else if (name == Xml.ContainerFrameState)
 						{
 							this.containerFrameState = (FrameState) System.Enum.Parse(typeof(FrameState), element);
@@ -565,7 +541,6 @@ namespace Epsitec.Common.FormEngine
 		protected ContainerLayoutMode containerLayoutMode;
 		protected Margins containerMargins;
 		protected Margins containerPadding;
-		protected Color containerBackColor;
 		protected FrameState containerFrameState;
 		protected double containerFrameWidth;
 	}
