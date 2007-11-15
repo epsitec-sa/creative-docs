@@ -494,7 +494,7 @@ namespace Epsitec.Common.Designer.Viewers
 		{
 			//	Met à jour le statut du visualisateur en cours, en fonction de la sélection.
 			//	Met également à jour l'arbre des objets, s'il est visible.
-			if (oper == Changing.Create || oper == Changing.Delete || oper == Changing.Move)
+			if (oper == Changing.Create || oper == Changing.Delete || oper == Changing.Move || oper == Changing.Regenerate)
 			{
 				//	Régénère le panneau contenant le masque de saisie.
 				this.SetForm(this.form, this.druidToSerialize);
@@ -536,22 +536,16 @@ namespace Epsitec.Common.Designer.Viewers
 			}
 		}
 
-		public void RegenerateDimensions()
+		public void RegenerateProxiesAndForm()
 		{
-			//	Régénère les cotes s'il y a eu un changement.
-			this.formEditor.RegenerateDimensions();
-		}
-
-		public void RegenerateProxiesAndDimensions()
-		{
-			//	Régénère les proxies et les cotes.
+			//	Régénère les proxies et le masque de saisie.
 			if (this.proxyManager.RegenerateProxies())
 			{
 				this.ClearProxies();
 				this.proxyManager.CreateUserInterface(this.propertiesScrollable.Panel);
 			}
 
-			this.formEditor.RegenerateDimensions();
+			this.formEditor.RegenerateForm();
 		}
 		#endregion
 

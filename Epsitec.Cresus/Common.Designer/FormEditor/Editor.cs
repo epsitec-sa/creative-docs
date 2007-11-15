@@ -670,9 +670,10 @@ namespace Epsitec.Common.Designer.FormEditor
 		{
 		}
 
-		public void RegenerateDimensions()
+		public void RegenerateForm()
 		{
-			//	Régénère les cotes s'il y a eu un changement.
+			//	Régénère le masque de saisie s'il y a eu un changement.
+			this.UpdateAfterChanging(Viewers.Changing.Regenerate);
 		}
 
 		public void UpdateAfterSelectionGridChanged()

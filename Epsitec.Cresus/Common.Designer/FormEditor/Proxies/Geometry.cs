@@ -96,7 +96,7 @@ namespace Epsitec.Common.Designer.FormEditor.Proxies
 				finally
 				{
 					that.ResumeChanges();
-					that.RegenerateProxiesAndDimensions();
+					that.RegenerateProxiesAndForm();
 				}
 			}
 		}
@@ -120,7 +120,7 @@ namespace Epsitec.Common.Designer.FormEditor.Proxies
 				finally
 				{
 					that.ResumeChanges();
-					that.RegenerateProxiesAndDimensions();
+					that.RegenerateProxiesAndForm();
 				}
 			}
 		}

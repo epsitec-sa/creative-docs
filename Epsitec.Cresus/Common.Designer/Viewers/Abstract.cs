@@ -14,6 +14,7 @@ namespace Epsitec.Common.Designer.Viewers
 		Create,			// création d'un nouvel objet
 		Delete,			// suppression d'un objet
 		Move,			// déplacement d'un objet dans l'arbre (mais pas un déplacement géométrique)
+		Regenerate,		// régénération du contenu
 	}
 
 

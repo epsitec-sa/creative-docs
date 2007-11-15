@@ -153,18 +153,10 @@ namespace Epsitec.Common.Designer.FormEditor.Proxies
 			Application.QueueAsyncCallback(this.manager.FormViewer.RegenerateProxies);
 		}
 
-		protected void RegenerateDimensions()
+		protected void RegenerateProxiesAndForm()
 		{
-			//	Régénère les cotes s'il y a eu un changement.
-			Application.QueueAsyncCallback(this.manager.FormViewer.RegenerateDimensions);
-		}
-
-		protected void RegenerateProxiesAndDimensions()
-		{
-			//	Régénère les proxies et les cotes.
-			//	Il n'est pas possible d'effectuer RegenerateProxies puis RegenerateDimensions
-			//	à cause du mécanisme QueueAsyncCallback !
-			Application.QueueAsyncCallback(this.manager.FormViewer.RegenerateProxiesAndDimensions);
+			//	Régénère les proxies et le masque de saisie.
+			Application.QueueAsyncCallback(this.manager.FormViewer.RegenerateProxiesAndForm);
 		}
 		
 
