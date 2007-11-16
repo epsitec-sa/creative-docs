@@ -61,6 +61,18 @@ namespace Epsitec.Common.Designer.FormEditor.Proxies
 			}
 		}
 
+		public FieldDescription.BackColorType BackColor
+		{
+			get
+			{
+				return (FieldDescription.BackColorType) this.GetValue(FieldMode.BackColorProperty);
+			}
+			set
+			{
+				this.SetValue(FieldMode.BackColorProperty, value);
+			}
+		}
+
 
 		protected override void InitializePropertyValues()
 		{
@@ -70,6 +82,7 @@ namespace Epsitec.Common.Designer.FormEditor.Proxies
 			//	Recopie localement les diverses propriétés du widget sélectionné
 			//	pour pouvoir ensuite travailler dessus :
 			this.Separator = this.ObjectModifier.GetSeparator(this.DefaultWidget);
+			this.BackColor = this.ObjectModifier.GetBackColor(this.DefaultWidget);
 		}
 
 		static FieldMode()
@@ -77,6 +90,10 @@ namespace Epsitec.Common.Designer.FormEditor.Proxies
 			EnumType separatorEnumType = Res.Types.FieldDescription.SeparatorType;
 			FieldMode.SeparatorProperty.DefaultMetadata.DefineNamedType(separatorEnumType);
 			FieldMode.SeparatorProperty.DefaultMetadata.DefineCaptionId(Res.Captions.FieldMode.SeparatorType.Id);
+
+			EnumType backColorEnumType = Res.Types.FieldDescription.BackColorType;
+			FieldMode.BackColorProperty.DefaultMetadata.DefineNamedType(backColorEnumType);
+			FieldMode.BackColorProperty.DefaultMetadata.DefineCaptionId(Res.Captions.FieldMode.BackColorType.Id);
 		}
 
 
@@ -104,7 +121,32 @@ namespace Epsitec.Common.Designer.FormEditor.Proxies
 			}
 		}
 
+		private static void NotifyBackColorChanged(DependencyObject o, object oldValue, object newValue)
+		{
+			FieldDescription.BackColorType value = (FieldDescription.BackColorType) newValue;
+			FieldMode that = (FieldMode) o;
+
+			if (that.IsNotSuspended)
+			{
+				that.SuspendChanges();
+
+				try
+				{
+					foreach (Widget obj in that.Widgets)
+					{
+						that.ObjectModifier.SetBackColor(obj, value);
+					}
+				}
+				finally
+				{
+					that.ResumeChanges();
+					that.RegenerateProxiesAndForm();
+				}
+			}
+		}
+
 
 		public static readonly DependencyProperty SeparatorProperty = DependencyProperty.Register("Separator", typeof(FieldDescription.SeparatorType), typeof(FieldMode), new DependencyPropertyMetadata(FieldDescription.SeparatorType.Normal, FieldMode.NotifySeparatorChanged));
+		public static readonly DependencyProperty BackColorProperty = DependencyProperty.Register("BackColor", typeof(FieldDescription.BackColorType), typeof(FieldMode), new DependencyPropertyMetadata(FieldDescription.BackColorType.None, FieldMode.NotifyBackColorChanged));
 	}
 }

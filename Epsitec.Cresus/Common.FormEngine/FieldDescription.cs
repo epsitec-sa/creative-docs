@@ -541,6 +541,7 @@ namespace Epsitec.Common.FormEngine
 
 		public static Color GetRealColor(BackColorType type)
 		{
+			//	Retourne la couleur réelle d'après son type.
 			switch (type)
 			{
 				case BackColorType.Gray:

@@ -127,6 +127,31 @@ namespace Epsitec.Common.Designer.FormEditor
 		}
 
 
+		public FieldDescription.BackColorType GetBackColor(Widget obj)
+		{
+			//	Retourne la couleur de fond d'un champ.
+			FieldDescription field = this.GetFormDescription(obj);
+			if (field == null)
+			{
+				return FieldDescription.BackColorType.None;
+			}
+			else
+			{
+				return field.BackColor;
+			}
+		}
+
+		public void SetBackColor(Widget obj, FieldDescription.BackColorType color)
+		{
+			//	Choix de la couleur de fond d'un champ.
+			FieldDescription field = this.GetFormDescription(obj);
+			if (field != null)
+			{
+				field.BackColor = color;
+			}
+		}
+
+
 		public Margins GetMargins(Widget obj)
 		{
 			//	Retourne les marges de l'objet.
