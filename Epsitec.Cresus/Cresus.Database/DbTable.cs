@@ -214,6 +214,11 @@ namespace Epsitec.Cresus.Database
 		{
 			get
 			{
+				if (this.serializedIndexTuples != null)
+				{
+					this.DeserializeIndexes ();
+				}
+
 				return (this.indexes != null) && (this.indexes.Count > 0);
 			}
 		}
@@ -832,11 +837,125 @@ namespace Epsitec.Cresus.Database
 			DbTools.WriteAttribute (xmlWriter, "rep", DbTools.ReplicationModeToString (this.replicationMode));
 			DbTools.WriteAttribute (xmlWriter, "l10n", DbTools.StringToString (this.localizations));
 			DbTools.WriteAttribute (xmlWriter, "typ", DbTools.DruidToString (this.captionId));
+			DbTools.WriteAttribute (xmlWriter, "idx", DbTools.StringToString (this.SerializeIndexes (this.indexes)));
 
 			xmlWriter.WriteEndElement ();
 		}
 
 		#endregion
+
+
+		private void DeserializeIndexes()
+		{
+			string source = this.serializedIndexTuples;
+			this.serializedIndexTuples = null;
+
+			if (string.IsNullOrEmpty (source))
+			{
+				//	Nothing to do...
+			}
+			else
+			{
+				string[] sourceTuples = source.Split (';');
+				
+				for (int i = 0; i < sourceTuples.Length; i++)
+				{
+					this.DeserializeIndexTuple (sourceTuples[i]);
+				}
+			}
+		}
+
+		private void DeserializeIndexTuple(string source)
+		{
+			string[] args = source.Split (',');
+
+			SqlSortOrder sortOrder;
+
+			switch (args[0])
+			{
+				case "A":
+					sortOrder = SqlSortOrder.Ascending;
+					break;
+
+				case "D":
+					sortOrder = SqlSortOrder.Descending;
+					break;
+
+				case "N":
+					sortOrder = SqlSortOrder.None;
+					break;
+
+				default:
+					throw new Exceptions.SyntaxException (DbAccess.Empty, "Cannot deserialize index tuple");
+			}
+
+			DbColumn[] columns = new DbColumn[args.Length-1];
+
+			for (int i = 1; i < args.Length; i++)
+			{
+				int columnIndex = int.Parse (args[i], System.Globalization.NumberStyles.Integer, System.Globalization.CultureInfo.InvariantCulture);
+				columns[i-1] = this.Columns[columnIndex];
+			}
+
+			this.AddIndex (sortOrder, columns);
+		}
+
+		private string SerializeIndexes(IEnumerable<DbIndex> indexes)
+		{
+			if (this.indexes == null)
+			{
+				return null;
+			}
+
+			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
+
+			foreach (DbIndex index in indexes)
+			{
+				if (buffer.Length > 0)
+				{
+					buffer.Append (";");
+				}
+				
+				this.SerializeIndexTuple (buffer, index);
+			}
+
+			return buffer.ToString ();
+		}
+
+		private void SerializeIndexTuple(System.Text.StringBuilder buffer, DbIndex index)
+		{
+			switch (index.SortOrder)
+			{
+				case SqlSortOrder.Ascending:
+					buffer.Append ("A");
+					break;
+				
+				case SqlSortOrder.Descending:
+					buffer.Append ("D");
+					break;
+				
+				case SqlSortOrder.None:
+					buffer.Append ("N");
+					break;
+
+				default:
+					throw new System.NotSupportedException ();
+			}
+
+			foreach (DbColumn column in index.Columns)
+			{
+				int i = this.columns.IndexOf (column);
+
+				if (i < 0)
+				{
+					throw new Exceptions.SyntaxException (DbAccess.Empty, string.Format ("Index column '{0}' not in table", column.Name));
+				}
+
+				buffer.Append (",");
+				buffer.Append (i.ToString (System.Globalization.CultureInfo.InvariantCulture));
+			}
+		}
+
 
 		/// <summary>
 		/// Deserializes a <c>DbTable</c> from its XML representation.
@@ -851,12 +970,13 @@ namespace Epsitec.Cresus.Database
 				DbTable table = new DbTable ();
 				bool isEmptyElement = xmlReader.IsEmptyElement;
 
-				table.category        = DbTools.ParseElementCategory (xmlReader.GetAttribute ("cat"));
-				table.revisionMode    = DbTools.ParseRevisionMode (xmlReader.GetAttribute ("rev"));
-				table.replicationMode = DbTools.ParseReplicationMode (xmlReader.GetAttribute ("rep"));
-				table.localizations   = DbTools.ParseString (xmlReader.GetAttribute ("l10n"));
-				table.captionId       = DbTools.ParseDruid (xmlReader.GetAttribute ("typ"));
-
+				table.category              = DbTools.ParseElementCategory (xmlReader.GetAttribute ("cat"));
+				table.revisionMode          = DbTools.ParseRevisionMode (xmlReader.GetAttribute ("rev"));
+				table.replicationMode       = DbTools.ParseReplicationMode (xmlReader.GetAttribute ("rep"));
+				table.localizations         = DbTools.ParseString (xmlReader.GetAttribute ("l10n"));
+				table.captionId             = DbTools.ParseDruid (xmlReader.GetAttribute ("typ"));
+				table.serializedIndexTuples = DbTools.ParseString (xmlReader.GetAttribute ("idx"));
+				
 				if (!isEmptyElement)
 				{
 					xmlReader.ReadEndElement ();
@@ -1007,6 +1127,7 @@ namespace Epsitec.Cresus.Database
 		private Collections.DbColumnList		columns;
 		private Collections.DbColumnList		primaryKeys;
 		private List<DbIndex>					indexes;
+		private string							serializedIndexTuples;
 		private DbElementCat					category;
 		private DbRevisionMode					revisionMode;
 		private DbReplicationMode				replicationMode;

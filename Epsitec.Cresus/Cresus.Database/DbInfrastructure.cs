@@ -1300,23 +1300,13 @@ namespace Epsitec.Cresus.Database
 		/// Creates the relation table for the specified source column.
 		/// </summary>
 		/// <param name="transaction">The transaction.</param>
-		/// <param name="table">The table.</param>
-		/// <param name="column">The column.</param>
-		private void CreateRelationTable(DbTransaction transaction, DbTable table, DbColumn column)
+		/// <param name="sourceTable">The source table.</param>
+		/// <param name="sourceColumn">The source column.</param>
+		private void CreateRelationTable(DbTransaction transaction, DbTable sourceTable, DbColumn sourceColumn)
 		{
-			DbTable relationTable = DbTable.CreateRelationTable (this, table, column);
-			SqlTable sqlTable = relationTable.CreateSqlTable (this.converter);
-
-#if false
-			sqlTable = new SqlTable (table.GetRelationTableName (column));
+			DbTable relationTable = DbTable.CreateRelationTable (this, sourceTable, sourceColumn);
 			
-			sqlTable.Columns.Add (new SqlColumn (Tags.ColumnRefSourceId, DbKey.RawTypeForId,     DbNullability.No));
-			sqlTable.Columns.Add (new SqlColumn (Tags.ColumnRefTargetId, DbKey.RawTypeForId,     DbNullability.No));
-			sqlTable.Columns.Add (new SqlColumn (Tags.ColumnStatus,      DbKey.RawTypeForStatus, DbNullability.No));
-			sqlTable.Columns.Add (new SqlColumn (Tags.ColumnRefRank,     DbRawType.Int32,        DbNullability.No));
-#endif
-
-			transaction.SqlBuilder.InsertTable (sqlTable);
+			transaction.SqlBuilder.InsertTable (relationTable.CreateSqlTable (this.converter));
 			this.ExecuteSilent (transaction);
 		}
 

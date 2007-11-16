@@ -295,7 +295,7 @@ namespace Epsitec.Cresus.Database
 
 			DbTable table = DbTable.CreateRelationTable (this.infrastructure, sourceTable, sourceColumn);
 
-			Assert.AreEqual ("1234_A", table.Name);
+			Assert.AreEqual ("1234:A", table.Name);
 			Assert.AreEqual ("X_1234_A", table.GetSqlName ());
 			Assert.AreEqual (4, table.Columns.Count);
 
