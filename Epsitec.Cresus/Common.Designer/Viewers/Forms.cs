@@ -70,13 +70,52 @@ namespace Epsitec.Common.Designer.Viewers
 			this.right.MinWidth = 150;
 			this.right.PreferredWidth = 240;
 			this.right.MaxWidth = 400;
-			this.right.Padding = new Margins(5, 5, 5, 5);
 			this.right.Dock = DockStyle.Right;
+
+			//	Crée le panneau pour la table des champs.
+			this.panelField = new FrameBox(this.right);
+			this.panelField.Dock = DockStyle.Fill;
+			this.panelField.Margins = new Margins(5, 5, 5, 5);
+
+			this.fieldToolbar = new HToolBar(this.panelField);
+			this.fieldToolbar.Dock = DockStyle.Top;
+			this.fieldToolbar.Margins = new Margins(0, 0, 0, 5);
+
+			this.fieldButtonPrev = new IconButton();
+			this.fieldButtonPrev.AutoFocus = false;
+			this.fieldButtonPrev.CaptionId = Res.Captions.Editor.Type.Prev.Id;
+			//?this.fieldButtonPrev.Clicked += new MessageEventHandler(this.HandleFieldButtonClicked);
+			this.fieldToolbar.Items.Add(this.fieldButtonPrev);
+
+			this.fieldButtonNext = new IconButton();
+			this.fieldButtonNext.AutoFocus = false;
+			this.fieldButtonNext.CaptionId = Res.Captions.Editor.Type.Next.Id;
+			//?this.fieldButtonNext.Clicked += new MessageEventHandler(this.HandleFieldButtonClicked);
+			this.fieldToolbar.Items.Add(this.fieldButtonNext);
+
+			this.fieldToolbar.Items.Add(new IconSeparator());
+
+			this.fieldButtonGoto = new IconButton();
+			this.fieldButtonGoto.AutoFocus = false;
+			this.fieldButtonGoto.CaptionId = Res.Captions.Editor.LocatorGoto.Id;
+			//?this.fieldButtonGoto.Clicked += new MessageEventHandler(this.HandleFieldButtonClicked);
+			this.fieldToolbar.Items.Add(this.fieldButtonGoto);
+
+			this.fieldTable = new MyWidgets.StringArray(this.panelField);
+			this.fieldTable.Columns = 2;
+			this.fieldTable.SetColumnsRelativeWidth(0, 0.20);
+			this.fieldTable.SetColumnsRelativeWidth(1, 0.80);
+			this.fieldTable.SetColumnAlignment(0, ContentAlignment.MiddleLeft);
+			this.fieldTable.SetColumnAlignment(1, ContentAlignment.MiddleLeft);
+			this.fieldTable.Dock = DockStyle.Fill;
+			//?this.fieldTable.SelectedRowChanged += new EventHandler(this.HandleArraySelectedRowChanged);
 
 			//	Crée le tabbook pour les onglets.
 			this.tabBook = new TabBook(this.right);
 			this.tabBook.Arrows = TabBookArrows.Stretch;
-			this.tabBook.Dock = DockStyle.Fill;
+			this.tabBook.PreferredHeight = 200;
+			this.tabBook.Dock = DockStyle.Bottom;
+			this.tabBook.Margins = new Margins(5, 5, 5, 5);
 			this.tabBook.Padding = new Margins(1, 1, 1, 1);
 			this.tabBook.ActivePageChanged += new EventHandler<CancelEventArgs>(this.HandleTabBookActivePageChanged);
 
@@ -107,8 +146,12 @@ namespace Epsitec.Common.Designer.Viewers
 			this.tabBook.ActivePage = this.tabPageProperties;
 
 			this.splitter2 = new VSplitter(surface);
-			this.splitter2.Margins = new Margins(0, 0, 1, 1);
 			this.splitter2.Dock = DockStyle.Right;
+			this.splitter2.Margins = new Margins(0, 0, 1, 1);
+
+			this.splitter3 = new HSplitter(this.right);
+			this.splitter3.Dock = DockStyle.Bottom;
+			this.splitter3.Margins = new Margins(0, 1, 0, 0);
 
 			this.UpdateAll();
 			this.UpdateViewer(Viewers.Changing.Show);
@@ -610,8 +653,16 @@ namespace Epsitec.Common.Designer.Viewers
 		protected FormDescription				form;
 		protected FormEditor.Editor				formEditor;
 		protected FrameBox						right;
-		protected TabBook						tabBook;
+		protected HSplitter						splitter3;
 
+		protected FrameBox						panelField;
+		protected HToolBar						fieldToolbar;
+		protected IconButton					fieldButtonPrev;
+		protected IconButton					fieldButtonNext;
+		protected IconButton					fieldButtonGoto;
+		protected MyWidgets.StringArray			fieldTable;
+
+		protected TabBook						tabBook;
 		protected TabPage						tabPageProperties;
 		protected Scrollable					propertiesScrollable;
 
