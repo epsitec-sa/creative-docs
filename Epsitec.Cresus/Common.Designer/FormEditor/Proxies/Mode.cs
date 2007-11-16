@@ -7,9 +7,9 @@ using Epsitec.Common.FormEngine;
 
 namespace Epsitec.Common.Designer.FormEditor.Proxies
 {
-	public class FieldMode : Abstract
+	public class Mode : Abstract
 	{
-		public FieldMode(ProxyManager manager) : base (manager)
+		public Mode(ProxyManager manager) : base (manager)
 		{
 		}
 
@@ -56,11 +56,11 @@ namespace Epsitec.Common.Designer.FormEditor.Proxies
 		{
 			get
 			{
-				return (FieldDescription.SeparatorType) this.GetValue(FieldMode.SeparatorProperty);
+				return (FieldDescription.SeparatorType) this.GetValue(Mode.SeparatorProperty);
 			}
 			set
 			{
-				this.SetValue(FieldMode.SeparatorProperty, value);
+				this.SetValue(Mode.SeparatorProperty, value);
 			}
 		}
 
@@ -68,11 +68,11 @@ namespace Epsitec.Common.Designer.FormEditor.Proxies
 		{
 			get
 			{
-				return (FieldDescription.BackColorType) this.GetValue(FieldMode.BackColorProperty);
+				return (FieldDescription.BackColorType) this.GetValue(Mode.BackColorProperty);
 			}
 			set
 			{
-				this.SetValue(FieldMode.BackColorProperty, value);
+				this.SetValue(Mode.BackColorProperty, value);
 			}
 		}
 
@@ -93,22 +93,22 @@ namespace Epsitec.Common.Designer.FormEditor.Proxies
 			}
 		}
 
-		static FieldMode()
+		static Mode()
 		{
 			EnumType separatorEnumType = Res.Types.FieldDescription.SeparatorType;
-			FieldMode.SeparatorProperty.DefaultMetadata.DefineNamedType(separatorEnumType);
-			FieldMode.SeparatorProperty.DefaultMetadata.DefineCaptionId(Res.Captions.FieldMode.SeparatorType.Id);
+			Mode.SeparatorProperty.DefaultMetadata.DefineNamedType(separatorEnumType);
+			Mode.SeparatorProperty.DefaultMetadata.DefineCaptionId(Res.Captions.FieldMode.SeparatorType.Id);
 
 			EnumType backColorEnumType = Res.Types.FieldDescription.BackColorType;
-			FieldMode.BackColorProperty.DefaultMetadata.DefineNamedType(backColorEnumType);
-			FieldMode.BackColorProperty.DefaultMetadata.DefineCaptionId(Res.Captions.FieldMode.BackColorType.Id);
+			Mode.BackColorProperty.DefaultMetadata.DefineNamedType(backColorEnumType);
+			Mode.BackColorProperty.DefaultMetadata.DefineCaptionId(Res.Captions.FieldMode.BackColorType.Id);
 		}
 
 
 		private static void NotifySeparatorChanged(DependencyObject o, object oldValue, object newValue)
 		{
 			FieldDescription.SeparatorType value = (FieldDescription.SeparatorType) newValue;
-			FieldMode that = (FieldMode) o;
+			Mode that = (Mode) o;
 
 			if (that.IsNotSuspended)
 			{
@@ -132,7 +132,7 @@ namespace Epsitec.Common.Designer.FormEditor.Proxies
 		private static void NotifyBackColorChanged(DependencyObject o, object oldValue, object newValue)
 		{
 			FieldDescription.BackColorType value = (FieldDescription.BackColorType) newValue;
-			FieldMode that = (FieldMode) o;
+			Mode that = (Mode) o;
 
 			if (that.IsNotSuspended)
 			{
@@ -154,7 +154,7 @@ namespace Epsitec.Common.Designer.FormEditor.Proxies
 		}
 
 
-		public static readonly DependencyProperty SeparatorProperty = DependencyProperty.Register("Separator", typeof(FieldDescription.SeparatorType), typeof(FieldMode), new DependencyPropertyMetadata(FieldDescription.SeparatorType.Normal, FieldMode.NotifySeparatorChanged));
-		public static readonly DependencyProperty BackColorProperty = DependencyProperty.Register("BackColor", typeof(FieldDescription.BackColorType), typeof(FieldMode), new DependencyPropertyMetadata(FieldDescription.BackColorType.None, FieldMode.NotifyBackColorChanged));
+		public static readonly DependencyProperty SeparatorProperty = DependencyProperty.Register("Separator", typeof(FieldDescription.SeparatorType), typeof(Mode), new DependencyPropertyMetadata(FieldDescription.SeparatorType.Normal, Mode.NotifySeparatorChanged));
+		public static readonly DependencyProperty BackColorProperty = DependencyProperty.Register("BackColor", typeof(FieldDescription.BackColorType), typeof(Mode), new DependencyPropertyMetadata(FieldDescription.BackColorType.None, Mode.NotifyBackColorChanged));
 	}
 }

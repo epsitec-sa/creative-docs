@@ -7,9 +7,9 @@ using Epsitec.Common.FormEngine;
 
 namespace Epsitec.Common.Designer.FormEditor.Proxies
 {
-	public class FieldGeometry : Abstract
+	public class Geometry : Abstract
 	{
-		public FieldGeometry(ProxyManager manager) : base (manager)
+		public Geometry(ProxyManager manager) : base (manager)
 		{
 		}
 
@@ -40,11 +40,11 @@ namespace Epsitec.Common.Designer.FormEditor.Proxies
 		{
 			get
 			{
-				return (int) this.GetValue(FieldGeometry.ColumnsRequiredProperty);
+				return (int) this.GetValue(Geometry.ColumnsRequiredProperty);
 			}
 			set
 			{
-				this.SetValue(FieldGeometry.ColumnsRequiredProperty, value);
+				this.SetValue(Geometry.ColumnsRequiredProperty, value);
 			}
 		}
 
@@ -52,11 +52,11 @@ namespace Epsitec.Common.Designer.FormEditor.Proxies
 		{
 			get
 			{
-				return (int) this.GetValue(FieldGeometry.RowsRequiredProperty);
+				return (int) this.GetValue(Geometry.RowsRequiredProperty);
 			}
 			set
 			{
-				this.SetValue(FieldGeometry.RowsRequiredProperty, value);
+				this.SetValue(Geometry.RowsRequiredProperty, value);
 			}
 		}
 
@@ -73,20 +73,20 @@ namespace Epsitec.Common.Designer.FormEditor.Proxies
 			}
 		}
 
-		static FieldGeometry()
+		static Geometry()
 		{
-			FieldGeometry.ColumnsRequiredProperty.DefaultMetadata.DefineNamedType(ProxyManager.ColumnsRequiredNumericType);
-			FieldGeometry.ColumnsRequiredProperty.DefaultMetadata.DefineCaptionId(Res.Captions.FieldGeometry.ColumnsRequired.Id);
+			Geometry.ColumnsRequiredProperty.DefaultMetadata.DefineNamedType(ProxyManager.ColumnsRequiredNumericType);
+			Geometry.ColumnsRequiredProperty.DefaultMetadata.DefineCaptionId(Res.Captions.FieldGeometry.ColumnsRequired.Id);
 
-			FieldGeometry.RowsRequiredProperty.DefaultMetadata.DefineNamedType(ProxyManager.RowsRequiredNumericType);
-			FieldGeometry.RowsRequiredProperty.DefaultMetadata.DefineCaptionId(Res.Captions.FieldGeometry.RowsRequired.Id);
+			Geometry.RowsRequiredProperty.DefaultMetadata.DefineNamedType(ProxyManager.RowsRequiredNumericType);
+			Geometry.RowsRequiredProperty.DefaultMetadata.DefineCaptionId(Res.Captions.FieldGeometry.RowsRequired.Id);
 		}
 
 
 		private static void NotifyColumnsRequiredChanged(DependencyObject o, object oldValue, object newValue)
 		{
 			int value = (int) newValue;
-			FieldGeometry that = (FieldGeometry) o;
+			Geometry that = (Geometry) o;
 
 			if (that.IsNotSuspended)
 			{
@@ -110,7 +110,7 @@ namespace Epsitec.Common.Designer.FormEditor.Proxies
 		private static void NotifyRowsRequiredChanged(DependencyObject o, object oldValue, object newValue)
 		{
 			int value = (int) newValue;
-			FieldGeometry that = (FieldGeometry) o;
+			Geometry that = (Geometry) o;
 
 			if (that.IsNotSuspended)
 			{
@@ -132,7 +132,7 @@ namespace Epsitec.Common.Designer.FormEditor.Proxies
 		}
 
 
-		public static readonly DependencyProperty ColumnsRequiredProperty = DependencyProperty.Register("ColumnsRequired", typeof(int), typeof(FieldGeometry), new DependencyPropertyMetadata(0, FieldGeometry.NotifyColumnsRequiredChanged));
-		public static readonly DependencyProperty RowsRequiredProperty    = DependencyProperty.Register("RowsRequired",    typeof(int), typeof(FieldGeometry), new DependencyPropertyMetadata(0, FieldGeometry.NotifyRowsRequiredChanged));
+		public static readonly DependencyProperty ColumnsRequiredProperty = DependencyProperty.Register("ColumnsRequired", typeof(int), typeof(Geometry), new DependencyPropertyMetadata(0, Geometry.NotifyColumnsRequiredChanged));
+		public static readonly DependencyProperty RowsRequiredProperty    = DependencyProperty.Register("RowsRequired",    typeof(int), typeof(Geometry), new DependencyPropertyMetadata(0, Geometry.NotifyRowsRequiredChanged));
 	}
 }
