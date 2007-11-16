@@ -84,13 +84,13 @@ namespace Epsitec.Common.Designer.Viewers
 			this.fieldButtonPrev = new IconButton();
 			this.fieldButtonPrev.AutoFocus = false;
 			this.fieldButtonPrev.CaptionId = Res.Captions.Editor.Type.Prev.Id;
-			//?this.fieldButtonPrev.Clicked += new MessageEventHandler(this.HandleFieldButtonClicked);
+			this.fieldButtonPrev.Clicked += new MessageEventHandler(this.HandleFieldButtonClicked);
 			this.fieldToolbar.Items.Add(this.fieldButtonPrev);
 
 			this.fieldButtonNext = new IconButton();
 			this.fieldButtonNext.AutoFocus = false;
 			this.fieldButtonNext.CaptionId = Res.Captions.Editor.Type.Next.Id;
-			//?this.fieldButtonNext.Clicked += new MessageEventHandler(this.HandleFieldButtonClicked);
+			this.fieldButtonNext.Clicked += new MessageEventHandler(this.HandleFieldButtonClicked);
 			this.fieldToolbar.Items.Add(this.fieldButtonNext);
 
 			this.fieldToolbar.Items.Add(new IconSeparator());
@@ -98,17 +98,19 @@ namespace Epsitec.Common.Designer.Viewers
 			this.fieldButtonGoto = new IconButton();
 			this.fieldButtonGoto.AutoFocus = false;
 			this.fieldButtonGoto.CaptionId = Res.Captions.Editor.LocatorGoto.Id;
-			//?this.fieldButtonGoto.Clicked += new MessageEventHandler(this.HandleFieldButtonClicked);
+			this.fieldButtonGoto.Clicked += new MessageEventHandler(this.HandleFieldButtonClicked);
 			this.fieldToolbar.Items.Add(this.fieldButtonGoto);
 
 			this.fieldTable = new MyWidgets.StringArray(this.panelField);
 			this.fieldTable.Columns = 2;
-			this.fieldTable.SetColumnsRelativeWidth(0, 0.20);
-			this.fieldTable.SetColumnsRelativeWidth(1, 0.80);
+			this.fieldTable.SetColumnsRelativeWidth(0, 0.10);
+			this.fieldTable.SetColumnsRelativeWidth(1, 0.90);
 			this.fieldTable.SetColumnAlignment(0, ContentAlignment.MiddleLeft);
 			this.fieldTable.SetColumnAlignment(1, ContentAlignment.MiddleLeft);
 			this.fieldTable.Dock = DockStyle.Fill;
-			//?this.fieldTable.SelectedRowChanged += new EventHandler(this.HandleArraySelectedRowChanged);
+			this.fieldTable.CellCountChanged += new EventHandler(this.HandleFieldTableCellCountChanged);
+			this.fieldTable.CellsContentChanged += new EventHandler(this.HandleFieldTableCellsContentChanged);
+			this.fieldTable.SelectedRowChanged += new EventHandler(this.HandleFieldTableSelectedRowChanged);
 
 			//	Crée le tabbook pour les onglets.
 			this.tabBook = new TabBook(this.right);
@@ -161,6 +163,14 @@ namespace Epsitec.Common.Designer.Viewers
 		{
 			if (disposing)
 			{
+				this.fieldButtonPrev.Clicked -= new MessageEventHandler(this.HandleFieldButtonClicked);
+				this.fieldButtonNext.Clicked -= new MessageEventHandler(this.HandleFieldButtonClicked);
+				this.fieldButtonGoto.Clicked -= new MessageEventHandler(this.HandleFieldButtonClicked);
+
+				this.fieldTable.CellCountChanged -= new EventHandler(this.HandleFieldTableCellCountChanged);
+				this.fieldTable.CellsContentChanged -= new EventHandler(this.HandleFieldTableCellsContentChanged);
+				this.fieldTable.SelectedRowChanged -= new EventHandler(this.HandleFieldTableSelectedRowChanged);
+				
 				this.tabBook.ActivePageChanged -= new EventHandler<CancelEventArgs>(this.HandleTabBookActivePageChanged);
 			}
 
@@ -312,8 +322,63 @@ namespace Epsitec.Common.Designer.Viewers
 			bool iic = this.ignoreChange;
 			this.ignoreChange = true;
 			this.Deserialize();
+			this.UpdateFieldTable();
 			this.ignoreChange = iic;
 		}
+
+		protected void UpdateFieldTable()
+		{
+			//	Met à jour la table des champs.
+			IList<StructuredData> dataFields = null;
+
+			Module module = this.designerApplication.SearchModule(this.entityId);
+			if (module != null)
+			{
+				CultureMap item = module.AccessEntities.Accessor.Collection[this.entityId];
+				if (item != null)
+				{
+					StructuredData data = item.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
+					if (data != null)
+					{
+						dataFields = data.GetValue(Support.Res.Fields.ResourceStructuredType.Fields) as IList<StructuredData>;
+					}
+				}
+			}
+			
+			int first = this.fieldTable.FirstVisibleRow;
+			for (int i=0; i<this.fieldTable.LineCount; i++)
+			{
+				if (dataFields == null || first+i >= dataFields.Count)
+				{
+					this.fieldTable.SetLineString(0, first+i, "");
+					this.fieldTable.SetLineState(0, first+i, MyWidgets.StringList.CellState.Disabled);
+					this.fieldTable.SetLineColor(0, first+i, Color.Empty);
+
+					this.fieldTable.SetLineString(1, first+i, "");
+					this.fieldTable.SetLineState(1, first+i, MyWidgets.StringList.CellState.Disabled);
+					this.fieldTable.SetLineColor(1, first+i, Color.Empty);
+				}
+				else
+				{
+					StructuredData dataField = dataFields[first+i];
+					Druid fieldCaptionId = (Druid) dataField.GetValue(Support.Res.Fields.Field.CaptionId);
+
+					Module fieldModule = this.designerApplication.SearchModule(fieldCaptionId);
+					CultureMap fieldItem = fieldModule.AccessFields.Accessor.Collection[fieldCaptionId];
+
+					this.fieldTable.SetLineString(0, first+i, "");
+					this.fieldTable.SetLineState(0, first+i, MyWidgets.StringList.CellState.Normal);
+					this.fieldTable.SetLineColor(0, first+i, Color.Empty);
+
+					this.fieldTable.SetLineString(1, first+i, (fieldItem == null) ? "" : fieldItem.Name);
+					this.fieldTable.SetLineState(1, first+i, MyWidgets.StringList.CellState.Normal);
+					this.fieldTable.SetLineColor(1, first+i, Color.Empty);
+				}
+			}
+
+			this.fieldTable.TotalRows = (dataFields == null) ? 0 : dataFields.Count;
+		}
+
 
 		public override bool Terminate(bool soft)
 		{
@@ -418,6 +483,8 @@ namespace Epsitec.Common.Designer.Viewers
 
 			if (form == null || druid.IsEmpty)
 			{
+				this.entityId = Druid.Empty;
+
 				this.panelContainer = new UI.Panel();
 				this.InitializePanel();
 
@@ -428,6 +495,8 @@ namespace Epsitec.Common.Designer.Viewers
 			}
 			else
 			{
+				this.entityId = form.EntityId;
+
 				List<int> sel = null;
 				if (keepSelection)
 				{
@@ -472,6 +541,7 @@ namespace Epsitec.Common.Designer.Viewers
 			//	Met à jour le contenu du Viewer.
 			this.UpdateArray();
 			this.UpdateEdit();
+			this.UpdateFieldTable();
 			this.UpdateCommands();
 		}
 
@@ -634,6 +704,39 @@ namespace Epsitec.Common.Designer.Viewers
 			//	Changement de l'onglet visible.
 		}
 
+		private void HandleFieldButtonClicked(object sender, MessageEventArgs e)
+		{
+			if (sender == this.fieldButtonPrev)
+			{
+			}
+
+			if (sender == this.fieldButtonNext)
+			{
+			}
+
+			if (sender == this.fieldButtonGoto)
+			{
+			}
+		}
+
+		private void HandleFieldTableCellCountChanged(object sender)
+		{
+			//	Le nombre de lignes a changé.
+			this.UpdateFieldTable();
+		}
+
+		private void HandleFieldTableCellsContentChanged(object sender)
+		{
+			//	Le contenu des cellules a changé.
+			this.UpdateFieldTable();
+		}
+
+		private void HandleFieldTableSelectedRowChanged(object sender)
+		{
+			//	La ligne sélectionnée a changé.
+			//?this.UpdateButtons();
+		}
+
 
 		protected static readonly double		treeButtonWidth = 22;
 		protected static double					treeBranchesHeight = 30;
@@ -651,6 +754,7 @@ namespace Epsitec.Common.Designer.Viewers
 		protected FrameBox						panelContainerParent;
 		protected UI.Panel						panelContainer;
 		protected FormDescription				form;
+		protected Druid							entityId;
 		protected FormEditor.Editor				formEditor;
 		protected FrameBox						right;
 		protected HSplitter						splitter3;
