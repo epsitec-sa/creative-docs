@@ -102,11 +102,13 @@ namespace Epsitec.Common.Designer.Viewers
 			this.fieldToolbar.Items.Add(this.fieldButtonGoto);
 
 			this.fieldTable = new MyWidgets.StringArray(this.panelField);
-			this.fieldTable.Columns = 2;
+			this.fieldTable.Columns = 3;
 			this.fieldTable.SetColumnsRelativeWidth(0, 0.10);
-			this.fieldTable.SetColumnsRelativeWidth(1, 0.90);
+			this.fieldTable.SetColumnsRelativeWidth(1, 0.80);
+			this.fieldTable.SetColumnsRelativeWidth(2, 0.10);
 			this.fieldTable.SetColumnAlignment(0, ContentAlignment.MiddleLeft);
 			this.fieldTable.SetColumnAlignment(1, ContentAlignment.MiddleLeft);
+			this.fieldTable.SetColumnAlignment(2, ContentAlignment.MiddleCenter);
 			this.fieldTable.Dock = DockStyle.Fill;
 			this.fieldTable.CellCountChanged += new EventHandler(this.HandleFieldTableCellCountChanged);
 			this.fieldTable.CellsContentChanged += new EventHandler(this.HandleFieldTableCellsContentChanged);
@@ -357,6 +359,10 @@ namespace Epsitec.Common.Designer.Viewers
 					this.fieldTable.SetLineString(1, first+i, "");
 					this.fieldTable.SetLineState(1, first+i, MyWidgets.StringList.CellState.Disabled);
 					this.fieldTable.SetLineColor(1, first+i, Color.Empty);
+
+					this.fieldTable.SetLineString(2, first+i, "");
+					this.fieldTable.SetLineState(2, first+i, MyWidgets.StringList.CellState.Disabled);
+					this.fieldTable.SetLineColor(2, first+i, Color.Empty);
 				}
 				else
 				{
@@ -366,13 +372,30 @@ namespace Epsitec.Common.Designer.Viewers
 					Module fieldModule = this.designerApplication.SearchModule(fieldCaptionId);
 					CultureMap fieldItem = fieldModule.AccessFields.Accessor.Collection[fieldCaptionId];
 
+					string name = (fieldItem == null) ? "" : fieldItem.Name;
+
+					FieldRelation rel = (FieldRelation) dataField.GetValue(Support.Res.Fields.Field.Relation);
+					string relation = "";
+					if (rel == FieldRelation.Reference)
+					{
+						relation = "<font size=\"200%\">›</font>";
+					}
+					if (rel == FieldRelation.Collection)
+					{
+						relation = "<font size=\"200%\">»</font>";
+					}
+
 					this.fieldTable.SetLineString(0, first+i, "");
 					this.fieldTable.SetLineState(0, first+i, MyWidgets.StringList.CellState.Normal);
 					this.fieldTable.SetLineColor(0, first+i, Color.Empty);
 
-					this.fieldTable.SetLineString(1, first+i, (fieldItem == null) ? "" : fieldItem.Name);
+					this.fieldTable.SetLineString(1, first+i, name);
 					this.fieldTable.SetLineState(1, first+i, MyWidgets.StringList.CellState.Normal);
 					this.fieldTable.SetLineColor(1, first+i, Color.Empty);
+
+					this.fieldTable.SetLineString(2, first+i, relation);
+					this.fieldTable.SetLineState(2, first+i, MyWidgets.StringList.CellState.Normal);
+					this.fieldTable.SetLineColor(2, first+i, Color.Empty);
 				}
 			}
 
