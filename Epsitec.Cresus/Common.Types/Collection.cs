@@ -355,6 +355,20 @@ namespace Epsitec.Common.Types
 			return list;
 		}
 
+		public static IEnumerable<T> Enumerate<T>(IEnumerable<T> collection, System.Comparison<T> comparer)
+		{
+			if (comparer == null)
+			{
+				return collection;
+			}
+			else
+			{
+				List<T> list = new List<T> (collection);
+				list.Sort (comparer);
+				return list;
+			}
+		}
+
 		/// <summary>
 		/// Compares two collections for equality. All items in the collection
 		/// must compare equal (using their <c>IEquatable.Equals</c> method).

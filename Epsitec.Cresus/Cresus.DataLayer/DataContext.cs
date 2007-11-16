@@ -297,15 +297,18 @@ namespace Epsitec.Cresus.DataLayer
 						break;
 
 					case FieldRelation.Collection:
-#if false
-						(entity.InternalGetValue (fieldDef.Id) as System.Collections.IList) this.ReadFieldRelation (entity, entityId, fieldDef, dataRow);
-						entity.InternalSetValue (fieldDef.Id, targetEntity);
-#endif
+						System.Collections.IList collection = entity.InternalGetFieldCollection (fieldDef.Id);
+
+						//	TODO: verify that this really works
+
+						foreach (AbstractEntity childEntity in this.ReadFieldRelation (entity, entityId, fieldDef, dataRow))
+						{
+							collection.Add (childEntity);
+						}
 						break;
 
 					default:
-						//	TODO: ...
-						break;
+						throw new System.NotImplementedException ();
 				}
 			}
 		}
@@ -465,27 +468,38 @@ namespace Epsitec.Cresus.DataLayer
 			EntityDataMapping sourceMapping = this.GetEntityDataMapping (entity);
 			string tableName = this.GetRelationTableName (entityId, fieldDef);
 			bool found = false;
+			System.Comparison<System.Data.DataRow> comparer = null;
 
-			foreach (System.Data.DataRow relationRow in this.richCommand.FindRelationRows (tableName, sourceMapping.RowKey.Id))
+			if (fieldDef.Relation == FieldRelation.Collection)
 			{
-				long relationTargetId = (long) relationRow[Tags.ColumnRefTargetId];
-				AbstractEntity targetEntity = this.ResolveEntity (new DbKey (new DbId (relationTargetId)), fieldDef.TypeId);
-				yield return targetEntity;
-				found = true;
+				//	TODO: check that comparer really works !
+
+				comparer =
+					delegate (System.Data.DataRow a, System.Data.DataRow b)
+					{
+						int valueA = (int) a[Tags.ColumnRefRank];
+						int valueB = (int) b[Tags.ColumnRefRank];
+
+						return valueA.CompareTo (valueB);
+					};
 			}
 
-			if (found)
+			for (int i = 0; i < 2; i++)
 			{
-				yield break;
-			}
+				foreach (System.Data.DataRow relationRow in Collection.Enumerate (this.richCommand.FindRelationRows (tableName, sourceMapping.RowKey.Id), comparer))
+				{
+					long relationTargetId = (long) relationRow[Tags.ColumnRefTargetId];
+					AbstractEntity targetEntity = this.ResolveEntity (new DbKey (new DbId (relationTargetId)), fieldDef.TypeId);
+					yield return targetEntity;
+					found = true;
+				}
 
-			this.LoadRelationRows (entityId, tableName, sourceMapping.RowKey);
-			
-			foreach (System.Data.DataRow relationRow in this.richCommand.FindRelationRows (tableName, sourceMapping.RowKey.Id))
-			{
-				long relationTargetId = (long) relationRow[Tags.ColumnRefTargetId];
-				AbstractEntity targetEntity = this.ResolveEntity (new DbKey (new DbId (relationTargetId)), fieldDef.TypeId);
-				yield return targetEntity;
+				if (found)
+				{
+					yield break;
+				}
+
+				this.LoadRelationRows (entityId, tableName, sourceMapping.RowKey);
 			}
 		}
 
