@@ -124,13 +124,17 @@ namespace Epsitec.Cresus.DataLayer
 
 			prixVente.SetField<decimal> ("[630H]", 0.05M);										//	Prix.HT pour Article.PrixVente
 
+			System.Diagnostics.Debug.WriteLine ("Saving changes.");
 			context.SerializeEntity (entity);
-			context.SerializeEntity (prixVente);
+//-			context.SerializeEntity (prixVente);
 			context.SaveChanges ();
+			System.Diagnostics.Debug.WriteLine ("Done.");
+			System.Diagnostics.Debug.WriteLine ("------------------------------------------------");
+			
 
 			int count = 0;
 
-			System.Diagnostics.Debug.WriteLine ("Adding articles");
+			System.Diagnostics.Debug.WriteLine ("Adding lots of articles");
 			List<AbstractEntity> entities = new List<AbstractEntity> ();
 
 			foreach (AbstractEntity item in this.GetItems (context.EntityContext))

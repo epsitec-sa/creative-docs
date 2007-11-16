@@ -312,7 +312,7 @@ namespace Epsitec.Cresus.Database
 		/// </summary>
 		/// <param name="status">The status.</param>
 		/// <returns>The status represented as an integer.</returns>
-		internal static short ConvertToIntStatus(DbRowStatus status)
+		public static short ConvertToIntStatus(DbRowStatus status)
 		{
 			return (short) status;
 		}
@@ -322,7 +322,7 @@ namespace Epsitec.Cresus.Database
 		/// </summary>
 		/// <param name="status">The value.</param>
 		/// <returns>The status.</returns>
-		internal static DbRowStatus ConvertFromIntStatus(int status)
+		public static DbRowStatus ConvertFromIntStatus(int status)
 		{
 			return (DbRowStatus) status;
 		}

@@ -328,8 +328,42 @@ namespace Epsitec.Cresus.DataLayer
 
 			string columnName = this.GetDataColumnName (fieldDef);
 
-			dataRow[columnName] = value;
+			dataRow[columnName] = this.ConvertToInternal (value, dataRow.Table.TableName, columnName);
 		}
+
+		private object ConvertToInternal(object value, string tableName, string columnName)
+		{
+			if (value == System.DBNull.Value)
+			{
+				//	Nothing to convert : a DBNull value stays a DBNull value.
+			}
+			else
+			{
+				System.Diagnostics.Debug.Assert (value != null);
+
+				DbTable   tableDef  = this.richCommand.Tables[tableName];
+				DbColumn  columnDef = tableDef.Columns[columnName];
+				DbTypeDef typeDef   = columnDef.Type;
+
+				if (typeDef.SimpleType == DbSimpleType.Decimal)
+				{
+					decimal decimalValue;
+
+					if (InvariantConverter.Convert (value, out decimalValue))
+					{
+						value = decimalValue;
+					}
+					else
+					{
+						throw new System.ArgumentException ("Invalid value: not compatible with a numeric type");
+					}
+				}
+
+				value = TypeConverter.ConvertFromSimpleType (value, typeDef.SimpleType, typeDef.NumDef);
+			}
+			return value;
+		}
+
 
 		private void WriteFieldReference(AbstractEntity sourceEntity, Druid entityId, StructuredTypeField fieldDef)
 		{
@@ -352,6 +386,8 @@ namespace Epsitec.Cresus.DataLayer
 				relationRow.BeginEdit ();
 				relationRow[Tags.ColumnRefSourceId] = sourceMapping.RowKey.Id.Value;
 				relationRow[Tags.ColumnRefTargetId] = targetMapping.RowKey.Id.Value;
+				relationRow[Tags.ColumnStatus] = DbKey.ConvertToIntStatus (DbRowStatus.Live);
+				relationRow[Tags.ColumnRefRank] = -1;
 				relationRow.EndEdit ();
 			}
 			else
