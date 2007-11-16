@@ -548,10 +548,10 @@ namespace Epsitec.Common.FormEngine
 					return Color.FromBrightness(0.8);
 
 				case BackColorType.Red:
-					return Color.FromRgb(1, 0.5, 0.5);
+					return Color.FromRgb(1.0, 0.5, 0.5);
 
 				case BackColorType.Yellow:
-					return Color.FromRgb(1, 0.9, 0.5);
+					return Color.FromRgb(1.0, 0.9, 0.5);
 
 				default:
 					return Color.Empty;
