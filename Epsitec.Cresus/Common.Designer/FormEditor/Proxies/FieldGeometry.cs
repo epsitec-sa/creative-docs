@@ -18,9 +18,12 @@ namespace Epsitec.Common.Designer.FormEditor.Proxies
 			//	Retourne le rang de ce proxy parmi la liste de tous les proxies.
 			//	Plus le numéro est petit, plus le proxy apparaîtra haut dans la
 			//	liste.
+			//	Les Proxies de PanelEditor sont numérotés à partir de 0.
+			//	Ceux de FormEditor sont numérotés à partir de 100.
+			//	Ceci évite les collisions dans PanelsContext.IsExtendedProxies !
 			get
 			{
-				return 100+1;
+				return 100+2;
 			}
 		}
 
@@ -62,11 +65,12 @@ namespace Epsitec.Common.Designer.FormEditor.Proxies
 		{
 			//	Cette méthode est appelée par Proxies.Abstract quand on connecte
 			//	le premier widget avec le proxy.
-			
-			//	Recopie localement les diverses propriétés du widget sélectionné
-			//	pour pouvoir ensuite travailler dessus :
-			this.ColumnsRequired = this.ObjectModifier.GetColumnsRequired(this.DefaultWidget);
-			this.RowsRequired = this.ObjectModifier.GetRowsRequired(this.DefaultWidget);
+			if (this.ObjectModifier.IsField(this.DefaultWidget) ||
+				this.ObjectModifier.IsBox(this.DefaultWidget)   )
+			{
+				this.ColumnsRequired = this.ObjectModifier.GetColumnsRequired(this.DefaultWidget);
+				this.RowsRequired = this.ObjectModifier.GetRowsRequired(this.DefaultWidget);
+			}
 		}
 
 		static FieldGeometry()
