@@ -21,6 +21,7 @@ namespace Epsitec.Cresus.Database
 		public const string TypeDictValue		= "K00B"; //"Str.Dict.Value";
 		public const string TypeReqData			= "K00C"; //"Other.ReqData";
 		public const string TypeDateTime		= "K00D"; //"Other.DateTime";
+		public const string TypeCollectionRank  = "K01";  //"Num.CollectionRank";
 		
 		//	Basic CRESUS column names :
 		

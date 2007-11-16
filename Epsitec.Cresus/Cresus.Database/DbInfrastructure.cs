@@ -977,6 +977,25 @@ namespace Epsitec.Cresus.Database
 		/// <summary>
 		/// Resolves a type definition from its name.
 		/// </summary>
+		/// <param name="typeName">Name of the type.</param>
+		/// <returns>The type definition or <c>null</c>.</returns>
+		public DbTypeDef ResolveLoadedDbType(string typeName)
+		{
+			DbTypeDef value;
+
+			if (this.internalTypes.TryGetValue (typeName, out value))
+			{
+				return value;
+			}
+			else
+			{
+				return null;
+			}
+		}
+
+		/// <summary>
+		/// Resolves a type definition from its name.
+		/// </summary>
 		/// <param name="transaction">The transaction.</param>
 		/// <param name="typeName">Name of the type.</param>
 		/// <returns>The type definition or <c>null</c>.</returns>
@@ -1285,14 +1304,17 @@ namespace Epsitec.Cresus.Database
 		/// <param name="column">The column.</param>
 		private void CreateRelationTable(DbTransaction transaction, DbTable table, DbColumn column)
 		{
-			SqlTable sqlTable;
+			DbTable relationTable = DbTable.CreateRelationTable (this, table, column);
+			SqlTable sqlTable = relationTable.CreateSqlTable (this.converter);
 
+#if false
 			sqlTable = new SqlTable (table.GetRelationTableName (column));
 			
 			sqlTable.Columns.Add (new SqlColumn (Tags.ColumnRefSourceId, DbKey.RawTypeForId,     DbNullability.No));
 			sqlTable.Columns.Add (new SqlColumn (Tags.ColumnRefTargetId, DbKey.RawTypeForId,     DbNullability.No));
 			sqlTable.Columns.Add (new SqlColumn (Tags.ColumnStatus,      DbKey.RawTypeForStatus, DbNullability.No));
 			sqlTable.Columns.Add (new SqlColumn (Tags.ColumnRefRank,     DbRawType.Int32,        DbNullability.No));
+#endif
 
 			transaction.SqlBuilder.InsertTable (sqlTable);
 			this.ExecuteSilent (transaction);
@@ -2712,6 +2734,15 @@ namespace Epsitec.Cresus.Database
 				}
 			}
 
+			public DbTypeDef					CollectionRank
+			{
+				get
+				{
+					return this.numTypeCollectionRank;
+				}
+			}
+
+
 			public DbTypeDef					DateTime
 			{
 				get
@@ -2771,23 +2802,25 @@ namespace Epsitec.Cresus.Database
 			
 			public void ResolveTypes(DbTransaction transaction)
 			{
-				this.numTypeKeyId         = this.infrastructure.ResolveDbType (transaction, Tags.TypeKeyId);
-				this.numTypeNullableKeyId = this.infrastructure.ResolveDbType (transaction, Tags.TypeNullableKeyId);
-				this.numTypeKeyStatus     = this.infrastructure.ResolveDbType (transaction, Tags.TypeKeyStatus);
-				this.numTypeReqExState    = this.infrastructure.ResolveDbType (transaction, Tags.TypeReqExState);
+				this.numTypeKeyId          = this.infrastructure.ResolveDbType (transaction, Tags.TypeKeyId);
+				this.numTypeNullableKeyId  = this.infrastructure.ResolveDbType (transaction, Tags.TypeNullableKeyId);
+				this.numTypeKeyStatus      = this.infrastructure.ResolveDbType (transaction, Tags.TypeKeyStatus);
+				this.numTypeReqExState     = this.infrastructure.ResolveDbType (transaction, Tags.TypeReqExState);
+				this.numTypeCollectionRank = this.infrastructure.ResolveDbType (transaction, Tags.TypeCollectionRank);
 				
-				this.strTypeName          = this.infrastructure.ResolveDbType (transaction, Tags.TypeName);
-				this.strTypeInfoXml       = this.infrastructure.ResolveDbType (transaction, Tags.TypeInfoXml);
-				this.strTypeDictKey       = this.infrastructure.ResolveDbType (transaction, Tags.TypeDictKey);
-				this.strTypeDictValue     = this.infrastructure.ResolveDbType (transaction, Tags.TypeDictValue);
+				this.strTypeName           = this.infrastructure.ResolveDbType (transaction, Tags.TypeName);
+				this.strTypeInfoXml        = this.infrastructure.ResolveDbType (transaction, Tags.TypeInfoXml);
+				this.strTypeDictKey        = this.infrastructure.ResolveDbType (transaction, Tags.TypeDictKey);
+				this.strTypeDictValue      = this.infrastructure.ResolveDbType (transaction, Tags.TypeDictValue);
 				
-				this.otherTypeDateTime    = this.infrastructure.ResolveDbType (transaction, Tags.TypeDateTime);
-				this.otherTypeReqData     = this.infrastructure.ResolveDbType (transaction, Tags.TypeReqData);
+				this.otherTypeDateTime     = this.infrastructure.ResolveDbType (transaction, Tags.TypeDateTime);
+				this.otherTypeReqData      = this.infrastructure.ResolveDbType (transaction, Tags.TypeReqData);
 				
 				this.infrastructure.internalTypes.Add (this.numTypeKeyId);
 				this.infrastructure.internalTypes.Add (this.numTypeNullableKeyId);
 				this.infrastructure.internalTypes.Add (this.numTypeKeyStatus);
 				this.infrastructure.internalTypes.Add (this.numTypeReqExState);
+				this.infrastructure.internalTypes.Add (this.numTypeCollectionRank);
 				
 				this.infrastructure.internalTypes.Add (this.strTypeName);
 				this.infrastructure.internalTypes.Add (this.strTypeInfoXml);
@@ -2802,15 +2835,17 @@ namespace Epsitec.Cresus.Database
 
 			private void InitializeNumTypes()
 			{
-				this.numTypeKeyId         = new DbTypeDef (Res.Types.Num.KeyId);
-				this.numTypeNullableKeyId = new DbTypeDef (Res.Types.Num.NullableKeyId);
-				this.numTypeKeyStatus     = new DbTypeDef (Res.Types.Num.KeyStatus);
-				this.numTypeReqExState    = new DbTypeDef (Res.Types.Num.ReqExecState);
+				this.numTypeKeyId          = new DbTypeDef (Res.Types.Num.KeyId);
+				this.numTypeNullableKeyId  = new DbTypeDef (Res.Types.Num.NullableKeyId);
+				this.numTypeKeyStatus      = new DbTypeDef (Res.Types.Num.KeyStatus);
+				this.numTypeReqExState     = new DbTypeDef (Res.Types.Num.ReqExecState);
+				this.numTypeCollectionRank = new DbTypeDef (Res.Types.Num.CollectionRank);
 			
 				this.infrastructure.internalTypes.Add (this.numTypeKeyId);
 				this.infrastructure.internalTypes.Add (this.numTypeNullableKeyId);
 				this.infrastructure.internalTypes.Add (this.numTypeKeyStatus);
 				this.infrastructure.internalTypes.Add (this.numTypeReqExState);
+				this.infrastructure.internalTypes.Add (this.numTypeCollectionRank);
 			}
 
 			private void InitializeOtherTypes()
@@ -2841,6 +2876,7 @@ namespace Epsitec.Cresus.Database
 				System.Diagnostics.Debug.Assert (this.numTypeNullableKeyId != null);
 				System.Diagnostics.Debug.Assert (this.numTypeKeyStatus != null);
 				System.Diagnostics.Debug.Assert (this.numTypeReqExState != null);
+				System.Diagnostics.Debug.Assert (this.numTypeCollectionRank != null);
 				
 				System.Diagnostics.Debug.Assert (this.strTypeName != null);
 				System.Diagnostics.Debug.Assert (this.strTypeInfoXml != null);
@@ -2857,6 +2893,7 @@ namespace Epsitec.Cresus.Database
 			private DbTypeDef					numTypeNullableKeyId;
 			private DbTypeDef					numTypeKeyStatus;
 			private DbTypeDef					numTypeReqExState;
+			private DbTypeDef					numTypeCollectionRank;
 
 			private DbTypeDef					otherTypeDateTime;
 			private DbTypeDef					otherTypeReqData;

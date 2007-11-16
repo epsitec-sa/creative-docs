@@ -617,12 +617,19 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 
-		public string GetRelationTableName(DbColumn column)
+		public string GetRelationTableName(DbColumn sourceColumn)
 		{
-			System.Diagnostics.Debug.Assert (column.Cardinality != DbCardinality.None);
+			System.Diagnostics.Debug.Assert (sourceColumn.Cardinality != DbCardinality.None);
 
-			string relationName = string.Concat (column.Name, ":", this.Name);
-			return DbSqlStandard.MakeSqlTableName (relationName, this.CaptionId.IsEmpty, DbElementCat.Relation, this.Key);
+			return DbTable.GetRelationTableName (this.Name, sourceColumn.Name);
+//			string relationName = string.Concat (sourceColumn.Name, ":", this.Name);
+//			return DbSqlStandard.MakeSqlTableName (relationName, this.CaptionId.IsEmpty, DbElementCat.Relation, this.Key);
+//			return relationName;
+		}
+
+		public static string GetRelationTableName(string sourceTableName, string sourceColumnName)
+		{
+			return string.Concat (sourceColumnName, ":", sourceTableName);
 		}
 		
 		/// <summary>
@@ -840,27 +847,29 @@ namespace Epsitec.Cresus.Database
 			return new DbColumn (columnName, type, DbColumnClass.Data, DbElementCat.ManagedUserData, revisionMode);
 		}
 
-		public static DbTable CreateRelationTable(DbTable sourceTable, DbColumn sourceColumn)
+		public static DbTable CreateRelationTable(DbInfrastructure infrastructure, DbTable sourceTable, DbColumn sourceColumn)
 		{
 			string sourceTableName   = sourceTable.Name;
 			string targetTableName   = sourceColumn.TargetTableName;
 			string sourceColumnName  = sourceColumn.Name;
-			string relationTableName = string.Concat (sourceColumnName, "_", sourceTableName);
+			string relationTableName = sourceTable.GetRelationTableName (sourceColumn);
+			//string.Concat (sourceColumnName, "_", sourceTableName);
 
 			DbTable relationTable = new DbTable (relationTableName);
 
 			relationTable.DefineCategory (DbElementCat.Relation);
+			relationTable.DefineReplicationMode (DbReplicationMode.Automatic);
 			relationTable.relationSourceTableName = sourceTableName;
 			relationTable.relationTargetTableName = targetTableName;
 
-			DbTypeDef idType = new DbTypeDef (Res.Types.Num.KeyId);
-			DbTypeDef statusType = new DbTypeDef (Res.Types.Num.KeyStatus);
-			DbTypeDef rankType = new DbTypeDef ("Rank", DbSimpleType.Decimal, DbNumDef.FromRawType (DbRawType.Int32), 0, false, DbNullability.No);
+			DbTypeDef refIdType  = infrastructure.ResolveLoadedDbType (Tags.TypeKeyId);
+			DbTypeDef statusType = infrastructure.ResolveLoadedDbType (Tags.TypeKeyStatus);
+			DbTypeDef rankType   = infrastructure.ResolveLoadedDbType (Tags.TypeCollectionRank);
 
-			relationTable.Columns.Add (new DbColumn (Tags.ColumnRefSourceId, idType, DbColumnClass.RefInternal, DbElementCat.Internal));
-			relationTable.Columns.Add (new DbColumn (Tags.ColumnRefTargetId, idType, DbColumnClass.RefInternal, DbElementCat.Internal));
-			relationTable.Columns.Add (new DbColumn (Tags.ColumnStatus, statusType, DbColumnClass.KeyStatus, DbElementCat.Internal));
-			relationTable.Columns.Add (new DbColumn (Tags.ColumnRefRank, rankType, DbColumnClass.Data, DbElementCat.Internal));
+			relationTable.Columns.Add (new DbColumn (Tags.ColumnRefSourceId, refIdType,  DbColumnClass.RefInternal, DbElementCat.Internal));
+			relationTable.Columns.Add (new DbColumn (Tags.ColumnRefTargetId, refIdType,  DbColumnClass.RefInternal, DbElementCat.Internal));
+			relationTable.Columns.Add (new DbColumn (Tags.ColumnStatus,      statusType, DbColumnClass.KeyStatus,   DbElementCat.Internal));
+			relationTable.Columns.Add (new DbColumn (Tags.ColumnRefRank,     rankType,   DbColumnClass.Data,        DbElementCat.Internal));
 
 			return relationTable;
 		}

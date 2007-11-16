@@ -430,9 +430,9 @@ namespace Epsitec.Cresus.DataLayer
 		private string GetRelationTableName(Druid entityId, StructuredTypeField fieldDef)
 		{
 			string sourceTableName = this.GetDataTableName (entityId);
-			string sourceColumnName = fieldDef.Id.Substring (1, fieldDef.Id.Length-2);
+			string sourceColumnName = this.GetDataColumnName (fieldDef);
 
-			return string.Concat (sourceColumnName, "_", sourceTableName);
+			return DbTable.GetRelationTableName (sourceTableName, sourceColumnName);
 		}
 
 		private void ReadFieldValueFromDataRow(AbstractEntity entity, StructuredTypeField fieldDef, System.Data.DataRow dataRow)
