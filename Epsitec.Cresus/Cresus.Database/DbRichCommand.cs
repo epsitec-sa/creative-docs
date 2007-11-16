@@ -687,6 +687,39 @@ namespace Epsitec.Cresus.Database
 			return DbRichCommand.FindRow (table.Rows, rowId);
 		}
 
+		public IEnumerable<System.Data.DataRow> FindRelationRows(string tableName, DbId sourceRowId)
+		{
+			System.Data.DataTable table = this.DataSet.Tables[tableName];
+
+			if (table == null)
+			{
+				yield break;
+			}
+
+			foreach (System.Data.DataRow row in table.Rows)
+			{
+				long rowIdValue;
+
+				if (row.RowState == System.Data.DataRowState.Deleted)
+				{
+					rowIdValue = (long) row[Tags.ColumnRefSourceId, System.Data.DataRowVersion.Original];
+				}
+				else if (row.RowState == System.Data.DataRowState.Detached)
+				{
+					continue;
+				}
+				else
+				{
+					rowIdValue = (long) row[Tags.ColumnRefSourceId];
+				}
+
+				if (sourceRowId.Value == rowIdValue)
+				{
+					yield return row;
+				}
+			}
+		}
+
 		/// <summary>
 		/// Deletes an existing row.
 		/// </summary>

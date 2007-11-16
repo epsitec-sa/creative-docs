@@ -40,17 +40,33 @@ namespace Epsitec.Cresus.DataLayer
 				using (DbTransaction transaction = this.infrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadOnly))
 				{
 					this.richCommand.ImportTable (transaction, tableDefinition, null);
-
-					foreach (DbColumn columnDefinition in tableDefinition.Columns)
-					{
-						if (columnDefinition.Cardinality != DbCardinality.None)
-						{
-							DbTable relationTableDefinition = DbTable.CreateRelationTable (this.infrastructure, tableDefinition, columnDefinition);
-							this.richCommand.ImportTable (transaction, relationTableDefinition, null);
-						}
-					}
+					this.LoadTableRelationSchemas (transaction, tableDefinition);
 
 					transaction.Commit ();
+				}
+			}
+		}
+
+		private void LoadTableRelationSchemas(Druid entityId)
+		{
+			DbTable tableDef = this.schemaEngine.FindTableDefinition (entityId);
+
+			using (DbTransaction transaction = this.infrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadOnly))
+			{
+				this.LoadTableRelationSchemas (transaction, tableDef);
+
+				transaction.Commit ();
+			}
+		}
+
+		private void LoadTableRelationSchemas(DbTransaction transaction, DbTable tableDefinition)
+		{
+			foreach (DbColumn columnDefinition in tableDefinition.Columns)
+			{
+				if (columnDefinition.Cardinality != DbCardinality.None)
+				{
+					DbTable relationTableDefinition = DbTable.CreateRelationTable (this.infrastructure, tableDefinition, columnDefinition);
+					this.richCommand.ImportTable (transaction, relationTableDefinition, null);
 				}
 			}
 		}

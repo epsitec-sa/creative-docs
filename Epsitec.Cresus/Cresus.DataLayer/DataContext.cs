@@ -292,6 +292,10 @@ namespace Epsitec.Cresus.DataLayer
 						this.ReadFieldValueFromDataRow (entity, fieldDef, dataRow);
 						break;
 
+					case FieldRelation.Reference:
+						this.ReadFieldReference (entity, entityId, fieldDef, dataRow);
+						break;
+
 					default:
 						//	TODO: ...
 						break;
@@ -363,7 +367,6 @@ namespace Epsitec.Cresus.DataLayer
 			}
 			return value;
 		}
-
 
 		private void WriteFieldReference(AbstractEntity sourceEntity, Druid entityId, StructuredTypeField fieldDef)
 		{
@@ -450,6 +453,30 @@ namespace Epsitec.Cresus.DataLayer
 			}
 		}
 
+		private void ReadFieldReference(AbstractEntity entity, Druid entityId, StructuredTypeField fieldDef, System.Data.DataRow dataRow)
+		{
+			EntityDataMapping sourceMapping = this.GetEntityDataMapping (entity);
+			string tableName = this.GetRelationTableName (entityId, fieldDef);
+
+			foreach (System.Data.DataRow relationRow in this.richCommand.FindRelationRows (tableName, sourceMapping.RowKey.Id))
+			{
+				long relationTargetId = (long) relationRow[Tags.ColumnRefTargetId];
+				AbstractEntity targetEntity = this.ResolveEntity (new DbKey (new DbId (relationTargetId)), fieldDef.TypeId);
+				entity.InternalSetValue (fieldDef.Id, targetEntity);
+				return;
+			}
+
+			this.LoadRelationRows (entityId, tableName, sourceMapping.RowKey);
+			
+			foreach (System.Data.DataRow relationRow in this.richCommand.FindRelationRows (tableName, sourceMapping.RowKey.Id))
+			{
+				long relationTargetId = (long) relationRow[Tags.ColumnRefTargetId];
+				AbstractEntity targetEntity = this.ResolveEntity (new DbKey (new DbId (relationTargetId)), fieldDef.TypeId);
+				entity.InternalSetValue (fieldDef.Id, targetEntity);
+				return;
+			}
+		}
+
 		/// <summary>
 		/// Finds the data row given a row key and an entity.
 		/// </summary>
@@ -468,7 +495,7 @@ namespace Epsitec.Cresus.DataLayer
 		private System.Data.DataRow LoadDataRow(DbKey rowKey, Druid entityId)
 		{
 			System.Data.DataRow row;
-			
+
 			string tableName = this.GetDataTableName (entityId);
 			row = this.richCommand.FindRow (tableName, rowKey.Id);
 
@@ -480,6 +507,7 @@ namespace Epsitec.Cresus.DataLayer
 					DbSelectCondition condition = this.infrastructure.CreateSelectCondition (DbSelectRevision.LiveActive);
 					condition.AddCondition (tableDef.Columns[Tags.ColumnId], DbCompare.Equal, rowKey.Id.Value);
 					this.richCommand.ImportTable (transaction, tableDef, condition);
+					this.LoadTableRelationSchemas (transaction, tableDef);
 					transaction.Commit ();
 				}
 
@@ -487,6 +515,28 @@ namespace Epsitec.Cresus.DataLayer
 			}
 
 			return row;
+		}
+		
+		private void LoadRelationRows(Druid entityId, string tableName, DbKey sourceRowKey)
+		{
+			DbTable relationTableDef = this.richCommand.Tables[tableName];
+
+			if (relationTableDef == null)
+			{
+				this.LoadTableRelationSchemas (entityId);
+
+				relationTableDef = this.richCommand.Tables[tableName];
+
+				System.Diagnostics.Debug.Assert (relationTableDef != null);
+			}
+
+			using (DbTransaction transaction = this.infrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadOnly))
+			{
+				DbSelectCondition condition = this.infrastructure.CreateSelectCondition ();
+				condition.AddCondition (relationTableDef.Columns[Tags.ColumnRefSourceId], DbCompare.Equal, sourceRowKey.Id.Value);
+				this.richCommand.ImportTable (transaction, relationTableDef, condition);
+				transaction.Commit ();
+			}
 		}
 
 

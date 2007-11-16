@@ -195,6 +195,10 @@ namespace Epsitec.Cresus.DataLayer
 			Assert.AreEqual (this.articleVisserieEntityId, entity2.GetEntityStructuredTypeId ());
 			Assert.AreEqual ("VI-M3-10", entity2.GetField<string> ("[63091]"));
 			Assert.AreEqual ("M3", entity2.GetField<string> ("[6312]"));
+
+			AbstractEntity prixVente = entity1.GetField<AbstractEntity> ("[630B1]");				//	Article.PrixVente
+
+			Assert.AreEqual (0.05M, prixVente.GetField<decimal> ("[630H]"));						//	Prix.HT pour Article.PrixVente
 			
 			context.Dispose ();
 		}
