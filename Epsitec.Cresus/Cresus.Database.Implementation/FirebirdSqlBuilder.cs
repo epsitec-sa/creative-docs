@@ -207,6 +207,49 @@ namespace Epsitec.Cresus.Database.Implementation
 			{
 				//	TODO: add the missing foreign key (FK_) constraints
 			}
+
+			int indexNum = 0;
+
+			foreach (SqlIndex index in table.Indexes)
+			{
+				indexNum++;
+				this.commandCount++;
+				
+				string indexName = string.Concat (table.Name, "_IDX", indexNum.ToString (System.Globalization.CultureInfo.InvariantCulture));
+				
+				this.Append ("CREATE ");
+				
+				switch (index.SortOrder)
+				{
+					case SqlSortOrder.Ascending:
+						this.Append ("ASC");
+						break;
+					
+					case SqlSortOrder.Descending:
+						this.Append ("DESC");
+						break;
+				}
+
+				this.Append (" INDEX ");
+				this.Append (indexName);
+				this.Append (" ON ");
+				this.Append (table.Name);
+				this.Append (" (");
+
+				SqlColumn[] columns = index.Columns;
+
+				for (int i = 0; i < columns.Length; i++)
+				{
+					if (i > 0)
+					{
+						this.Append (", ");
+					}
+					
+					this.Append (columns[i].Name);
+				}
+
+				this.Append (");\n");
+			}
 		}
 
 		public void RemoveTable(string tableName)

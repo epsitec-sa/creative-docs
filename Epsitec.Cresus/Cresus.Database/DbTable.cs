@@ -205,6 +205,20 @@ namespace Epsitec.Cresus.Database
 		}
 
 		/// <summary>
+		/// Gets a value indicating whether this table has indexed columns.
+		/// </summary>
+		/// <value>
+		/// 	<c>true</c> if this table has indexed columns; otherwise, <c>false</c>.
+		/// </value>
+		public bool								HasIndexes
+		{
+			get
+			{
+				return (this.indexes != null) && (this.indexes.Count > 0);
+			}
+		}
+
+		/// <summary>
 		/// Gets the primary keys. The tuples formed by the columns must
 		/// be unique.
 		/// </summary>
@@ -239,6 +253,23 @@ namespace Epsitec.Cresus.Database
 							break;
 					}
 				}
+			}
+		}
+
+		/// <summary>
+		/// Gets the table column indexes.
+		/// </summary>
+		/// <value>The table column indexes.</value>
+		public IList<DbIndex>					Indexes
+		{
+			get
+			{
+				if (this.indexes == null)
+				{
+					this.indexes = new List<DbIndex> ();
+				}
+
+				return this.indexes;
 			}
 		}
 
@@ -297,18 +328,28 @@ namespace Epsitec.Cresus.Database
 		}
 
 
+		/// <summary>
+		/// Gets the name of the source table if this table is a relation table.
+		/// </summary>
+		/// <value>The name of the source table.</value>
 		public string							RelationSourceTableName
 		{
 			get
 			{
+				System.Diagnostics.Debug.Assert (this.category == DbElementCat.Relation);
 				return this.relationSourceTableName;
 			}
 		}
 
+		/// <summary>
+		/// Gets the name of the target table if this table is a relation table.
+		/// </summary>
+		/// <value>The name of the target table.</value>
 		public string							RelationTargetTableName
 		{
 			get
 			{
+				System.Diagnostics.Debug.Assert (this.category == DbElementCat.Relation);
 				return this.relationTargetTableName;
 			}
 		}
@@ -471,6 +512,29 @@ namespace Epsitec.Cresus.Database
 		}
 
 		/// <summary>
+		/// Adds an index for the table.
+		/// </summary>
+		/// <param name="sortOrder">The sort order.</param>
+		/// <param name="columns">The columns.</param>
+		public void AddIndex(params DbColumn[] columns)
+		{
+			this.AddIndex (SqlSortOrder.Ascending, columns); 
+		}
+		
+		/// <summary>
+		/// Adds an index for the table.
+		/// </summary>
+		/// <param name="sortOrder">The sort order.</param>
+		/// <param name="columns">The columns.</param>
+		public void AddIndex(SqlSortOrder sortOrder, params DbColumn[] columns)
+		{
+			if (columns.Length > 0)
+			{
+				this.Indexes.Add (new DbIndex (sortOrder, columns));
+			}
+		}
+
+		/// <summary>
 		/// Defines the localizations for this table.
 		/// </summary>
 		/// <param name="localizations">The localizations.</param>
@@ -558,6 +622,31 @@ namespace Epsitec.Cresus.Database
 				sqlTable.PrimaryKey = primaryKeys;
 			}
 
+			if (this.HasIndexes)
+			{
+				foreach (DbIndex index in this.indexes)
+				{
+					int n = index.Columns.Length;
+					SqlColumn[] indexColumns = new SqlColumn[n];
+
+					for (int i = 0; i < n; i++)
+					{
+						DbColumn dbIndexColumn = index.Columns[i];
+						string indexColumnName = dbIndexColumn.GetSqlName ();
+
+						if (sqlTable.Columns.IndexOf (indexColumnName) < 0)
+						{
+							string message = string.Format ("Index column {0} not found", indexColumnName);
+							throw new Exceptions.SyntaxException (DbAccess.Empty, message);
+						}
+
+						indexColumns[i] = sqlTable.Columns[indexColumnName];
+					}
+
+					sqlTable.AddIndex (index.SortOrder, indexColumns);
+				}
+			}
+
 			return sqlTable;
 		}
 
@@ -617,16 +706,23 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 
+		/// <summary>
+		/// Gets the name of the relation table for the specified column.
+		/// </summary>
+		/// <param name="sourceColumn">The source column.</param>
+		/// <returns>The name of the relation table.</returns>
 		public string GetRelationTableName(DbColumn sourceColumn)
 		{
 			System.Diagnostics.Debug.Assert (sourceColumn.Cardinality != DbCardinality.None);
-
 			return DbTable.GetRelationTableName (this.Name, sourceColumn.Name);
-//			string relationName = string.Concat (sourceColumn.Name, ":", this.Name);
-//			return DbSqlStandard.MakeSqlTableName (relationName, this.CaptionId.IsEmpty, DbElementCat.Relation, this.Key);
-//			return relationName;
 		}
 
+		/// <summary>
+		/// Gets the name of the relation table for the specified table and column.
+		/// </summary>
+		/// <param name="sourceTableName">Name of the source table.</param>
+		/// <param name="sourceColumnName">Name of the source column.</param>
+		/// <returns>The name of the relation table.</returns>
 		public static string GetRelationTableName(string sourceTableName, string sourceColumnName)
 		{
 			return string.Concat (sourceColumnName, ":", sourceTableName);
@@ -847,14 +943,19 @@ namespace Epsitec.Cresus.Database
 			return new DbColumn (columnName, type, DbColumnClass.Data, DbElementCat.ManagedUserData, revisionMode);
 		}
 
+		/// <summary>
+		/// Creates the relation table for the specified source table and column.
+		/// </summary>
+		/// <param name="infrastructure">The infrastructure.</param>
+		/// <param name="sourceTable">The source table.</param>
+		/// <param name="sourceColumn">The source column.</param>
+		/// <returns>The relation table.</returns>
 		public static DbTable CreateRelationTable(DbInfrastructure infrastructure, DbTable sourceTable, DbColumn sourceColumn)
 		{
 			string sourceTableName   = sourceTable.Name;
 			string targetTableName   = sourceColumn.TargetTableName;
-			string sourceColumnName  = sourceColumn.Name;
 			string relationTableName = sourceTable.GetRelationTableName (sourceColumn);
-			//string.Concat (sourceColumnName, "_", sourceTableName);
-
+			
 			DbTable relationTable = new DbTable (relationTableName);
 
 			relationTable.DefineCategory (DbElementCat.Relation);
@@ -870,6 +971,8 @@ namespace Epsitec.Cresus.Database
 			relationTable.Columns.Add (new DbColumn (Tags.ColumnRefTargetId, refIdType,  DbColumnClass.RefInternal, DbElementCat.Internal));
 			relationTable.Columns.Add (new DbColumn (Tags.ColumnStatus,      statusType, DbColumnClass.KeyStatus,   DbElementCat.Internal));
 			relationTable.Columns.Add (new DbColumn (Tags.ColumnRefRank,     rankType,   DbColumnClass.Data,        DbElementCat.Internal));
+
+			relationTable.AddIndex (relationTable.Columns[0], relationTable.Columns[1]);
 
 			return relationTable;
 		}
@@ -903,6 +1006,7 @@ namespace Epsitec.Cresus.Database
 
 		private Collections.DbColumnList		columns;
 		private Collections.DbColumnList		primaryKeys;
+		private List<DbIndex>					indexes;
 		private DbElementCat					category;
 		private DbRevisionMode					revisionMode;
 		private DbReplicationMode				replicationMode;

@@ -564,6 +564,10 @@ namespace Epsitec.Cresus.Database
 			this.columnClass = value;
 		}
 
+		/// <summary>
+		/// Defines the column cardinality.
+		/// </summary>
+		/// <param name="value">The cardinality.</param>
 		public void DefineCardinality(DbCardinality value)
 		{
 			if (this.cardinality == value)

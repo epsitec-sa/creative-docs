@@ -16,6 +16,7 @@ namespace Epsitec.Cresus.Database
 		/// </summary>
 		public SqlTable()
 		{
+			this.columns = new Collections.SqlColumnList ();
 		}
 
 		/// <summary>
@@ -23,6 +24,7 @@ namespace Epsitec.Cresus.Database
 		/// </summary>
 		/// <param name="name">The table name.</param>
 		public SqlTable(string name)
+			: this ()
 		{
 			this.Name = name;
 		}
@@ -48,7 +50,7 @@ namespace Epsitec.Cresus.Database
 		/// Gets the columns collection.
 		/// </summary>
 		/// <value>The columns.</value>
-		public Collections.SqlColumnList			Columns
+		public Collections.SqlColumnList		Columns
 		{
 			get
 			{
@@ -154,9 +156,58 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 
+		/// <summary>
+		/// Gets the indexes.
+		/// </summary>
+		/// <value>The indexes.</value>
+		public IEnumerable<SqlIndex>			Indexes
+		{
+			get
+			{
+				if (this.indexes == null)
+				{
+					return Epsitec.Common.Types.Collections.EmptyEnumerable<SqlIndex>.Instance;
+				}
+				else
+				{
+					return this.indexes;
+				}
+			}
+		}
 
+		/// <summary>
+		/// Adds an index for this table.
+		/// </summary>
+		/// <param name="sortOrder">The sort order.</param>
+		/// <param name="columns">The columns.</param>
+		public void AddIndex(SqlSortOrder sortOrder, params SqlColumn[] columns)
+		{
+			System.Diagnostics.Debug.Assert (sortOrder != SqlSortOrder.None);
+			System.Diagnostics.Debug.Assert (columns.Length > 0);
+			
+			if (this.indexes == null)
+			{
+				this.indexes = new List<SqlIndex> ();
+			}
+
+			SqlIndex index = new SqlIndex (sortOrder, columns);
+			string indexName = index.ToString ();
+
+			foreach (SqlIndex item in this.indexes)
+			{
+				if (item.ToString () == indexName)
+				{
+					throw new System.InvalidOperationException (string.Format ("Duplicate index {0}", indexName));
+				}
+			}
+
+			this.indexes.Add (index);
+		}
+
+		
 		private string							name;
-		private Collections.SqlColumnList			columns = new Collections.SqlColumnList ();
-		private Collections.SqlColumnList			primaryKey;
+		private readonly Collections.SqlColumnList columns;
+		private Collections.SqlColumnList		primaryKey;
+		private List<SqlIndex>					indexes;
 	}
 }
