@@ -83,6 +83,20 @@ namespace Epsitec.Common.Types
 			return false;
 		}
 
+		public static T GetFirst<T>(IEnumerable<T> collection, T defaultValue)
+		{
+			T firstItem;
+
+			if (Collection.TryGetFirst (collection, out firstItem))
+			{
+				return firstItem;
+			}
+			else
+			{
+				return defaultValue;
+			}
+		}
+
 		public static T GetFirst<T>(IEnumerable<T> collection)
 		{
 			T firstItem;

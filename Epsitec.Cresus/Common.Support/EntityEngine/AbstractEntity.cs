@@ -278,6 +278,41 @@ namespace Epsitec.Common.Support.EntityEngine
 			}
 		}
 
+		public System.Collections.IList InternalGetFieldCollection(string id)
+		{
+			object value = this.InternalGetValue (id);
+			System.Collections.IList list = value as System.Collections.IList;
+
+			if (list == null)
+			{
+				if (UndefinedValue.IsUndefinedValue (value))
+				{
+					//	The value store does not (yet) contain a collection for the
+					//	specified items. We have to allocate one :
+
+					using (this.DefineOriginalValues ())
+					{
+						IStructuredType     type  = this.context.GetStructuredType (this);
+						StructuredTypeField field = type.GetField (id);
+						AbstractEntity      model = this.context.CreateEmptyEntity (field.TypeId);
+						
+						System.Type itemType = model.GetType ();
+						System.Type genericType = typeof (EntityCollection<>);
+						System.Type collectionType = genericType.MakeGenericType (itemType);
+
+						list = System.Activator.CreateInstance (collectionType, id, this, true) as System.Collections.IList;
+						this.InternalSetValue (id, list);
+					}
+				}
+				else
+				{
+					throw new System.NotSupportedException (string.Format ("Field {0} uses incompatible collection type", id));
+				}
+			}
+
+			return list;
+		}
+
 		internal EntityCollection<T> CopyFieldCollection<T>(string id, EntityCollection<T> collection) where T : AbstractEntity
 		{
 			System.Diagnostics.Debug.Assert (this.IsDefiningOriginalValues == false);

@@ -293,7 +293,14 @@ namespace Epsitec.Cresus.DataLayer
 						break;
 
 					case FieldRelation.Reference:
-						this.ReadFieldReference (entity, entityId, fieldDef, dataRow);
+						entity.InternalSetValue (fieldDef.Id, Collection.GetFirst<AbstractEntity> (this.ReadFieldRelation (entity, entityId, fieldDef, dataRow), null));
+						break;
+
+					case FieldRelation.Collection:
+#if false
+						(entity.InternalGetValue (fieldDef.Id) as System.Collections.IList) this.ReadFieldRelation (entity, entityId, fieldDef, dataRow);
+						entity.InternalSetValue (fieldDef.Id, targetEntity);
+#endif
 						break;
 
 					default:
@@ -453,17 +460,23 @@ namespace Epsitec.Cresus.DataLayer
 			}
 		}
 
-		private void ReadFieldReference(AbstractEntity entity, Druid entityId, StructuredTypeField fieldDef, System.Data.DataRow dataRow)
+		private IEnumerable<AbstractEntity> ReadFieldRelation(AbstractEntity entity, Druid entityId, StructuredTypeField fieldDef, System.Data.DataRow dataRow)
 		{
 			EntityDataMapping sourceMapping = this.GetEntityDataMapping (entity);
 			string tableName = this.GetRelationTableName (entityId, fieldDef);
+			bool found = false;
 
 			foreach (System.Data.DataRow relationRow in this.richCommand.FindRelationRows (tableName, sourceMapping.RowKey.Id))
 			{
 				long relationTargetId = (long) relationRow[Tags.ColumnRefTargetId];
 				AbstractEntity targetEntity = this.ResolveEntity (new DbKey (new DbId (relationTargetId)), fieldDef.TypeId);
-				entity.InternalSetValue (fieldDef.Id, targetEntity);
-				return;
+				yield return targetEntity;
+				found = true;
+			}
+
+			if (found)
+			{
+				yield break;
 			}
 
 			this.LoadRelationRows (entityId, tableName, sourceMapping.RowKey);
@@ -472,8 +485,7 @@ namespace Epsitec.Cresus.DataLayer
 			{
 				long relationTargetId = (long) relationRow[Tags.ColumnRefTargetId];
 				AbstractEntity targetEntity = this.ResolveEntity (new DbKey (new DbId (relationTargetId)), fieldDef.TypeId);
-				entity.InternalSetValue (fieldDef.Id, targetEntity);
-				return;
+				yield return targetEntity;
 			}
 		}
 

@@ -124,6 +124,19 @@ namespace Epsitec.Common.Support
 			
 			Assert.AreEqual (2, list1.Count);
 			Assert.AreEqual (3, list2.Count);
+
+			System.Collections.IList list3;
+
+			entity = new MyEnumTypeEntity ();
+			list3 = entity.InternalGetFieldCollection (Res.Fields.ResourceEnumType.Values.ToString ());
+			list2 = list3 as IList<MyEnumValueEntity>;
+			list1 = entity.GetFieldCollection<MyEnumValueEntity> (Res.Fields.ResourceEnumType.Values.ToString ());
+
+			Assert.IsNotNull (list3);
+			Assert.IsNotNull (list2);
+			Assert.IsNotNull (list1);
+			
+			Assert.AreEqual (list1, list2);
 		}
 
 		[Test]
