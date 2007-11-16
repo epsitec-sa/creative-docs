@@ -2459,11 +2459,20 @@ namespace Epsitec.Common.Widgets.Platform
 			ToolTip.HideAllToolTips ();
 
 			bool preventQuit = this.prevent_quit;
-			this.prevent_quit = true;
-			
-			this.ShowDialog (this.Owner);
+			int wndProcDepth = Window.globalWndProcDepth;
 
-			this.prevent_quit = preventQuit;
+			try
+			{
+				this.prevent_quit = true;
+				Window.globalWndProcDepth = 0;
+
+				this.ShowDialog (this.Owner);
+			}
+			finally
+			{
+				this.prevent_quit = preventQuit;
+				Window.globalWndProcDepth = wndProcDepth;
+			}
 		}
 
 		#region IApplicationThreadInvoker Members
