@@ -106,7 +106,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.fieldTable.SetColumnsRelativeWidth(0, 0.10);
 			this.fieldTable.SetColumnsRelativeWidth(1, 0.80);
 			this.fieldTable.SetColumnsRelativeWidth(2, 0.10);
-			this.fieldTable.SetColumnAlignment(0, ContentAlignment.MiddleLeft);
+			this.fieldTable.SetColumnAlignment(0, ContentAlignment.MiddleCenter);
 			this.fieldTable.SetColumnAlignment(1, ContentAlignment.MiddleLeft);
 			this.fieldTable.SetColumnAlignment(2, ContentAlignment.MiddleCenter);
 			this.fieldTable.Dock = DockStyle.Fill;
@@ -378,11 +378,11 @@ namespace Epsitec.Common.Designer.Viewers
 					string relation = "";
 					if (rel == FieldRelation.Reference)
 					{
-						relation = "<font size=\"200%\">›</font>";
+						relation = "<font size=\"150%\">›</font>";
 					}
 					if (rel == FieldRelation.Collection)
 					{
-						relation = "<font size=\"200%\">»</font>";
+						relation = "<font size=\"150%\">»</font>";
 					}
 
 					this.fieldTable.SetLineString(0, first+i, "");
@@ -528,6 +528,10 @@ namespace Epsitec.Common.Designer.Viewers
 
 				FormEngine.Engine engine = new FormEngine.Engine(this.module.ResourceManager);
 				this.panelContainer = engine.CreateForm(form);
+				if (this.panelContainer == null)
+				{
+					this.panelContainer = new UI.Panel();
+				}
 				this.InitializePanel();
 
 				this.formEditor.Panel = this.panelContainer;

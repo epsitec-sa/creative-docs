@@ -23,6 +23,11 @@ namespace Epsitec.Common.FormEngine
 			//	Crée un masque de saisie pour une entité donnée.
 			//	La liste de FieldDescription doit être plate (pas de Node).
 			Caption entityCaption = this.resourceManager.GetCaption(form.EntityId);
+			if (entityCaption == null)
+			{
+				return null;
+			}
+
 			StructuredType entity = TypeRosetta.GetTypeObject(entityCaption) as StructuredType;
 
 			StructuredData entityData = new StructuredData(entity);
