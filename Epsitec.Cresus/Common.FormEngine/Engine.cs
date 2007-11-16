@@ -321,7 +321,7 @@ namespace Epsitec.Common.FormEngine
 			box.DrawFrameState = FrameState.All;
 			box.Margins = field.ContainerMargins;
 			box.Padding = field.ContainerPadding;
-			box.BackColor = field.BackColor;
+			box.BackColor = FieldDescription.GetRealColor(field.BackColor);
 			box.DrawFrameState = field.ContainerFrameState;
 			box.DrawFrameWidth = field.ContainerFrameWidth;
 			box.Index = field.UniqueId;
@@ -358,7 +358,7 @@ namespace Epsitec.Common.FormEngine
 			//	Crée les widgets pour un champ dans la grille, lors de la deuxième passe.
 			UI.Placeholder placeholder = new Epsitec.Common.UI.Placeholder(root);
 			placeholder.SetBinding(UI.Placeholder.ValueProperty, new Binding(BindingMode.TwoWay, path));
-			placeholder.BackColor = field.BackColor;
+			placeholder.BackColor = FieldDescription.GetRealColor(field.BackColor);
 			placeholder.TabIndex = grid.RowDefinitions.Count;
 			placeholder.Index = field.UniqueId;
 

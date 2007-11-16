@@ -48,7 +48,7 @@ namespace Epsitec.Common.FormEngine
 		protected FieldDescription()
 		{
 			//	Constructeur protégé, commun à tous les autres.
-			this.backColor = Color.Empty;
+			this.backColor = BackColorType.None;
 			this.separator = SeparatorType.Normal;
 			this.columnsRequired = Engine.MaxColumnsRequired;
 			this.rowsRequired = 1;
@@ -224,7 +224,7 @@ namespace Epsitec.Common.FormEngine
 			}
 		}
 
-		public Color BackColor
+		public BackColorType BackColor
 		{
 			//	Couleur de fond pour le champ.
 			get
@@ -372,7 +372,7 @@ namespace Epsitec.Common.FormEngine
 
 			if (!a.guid.Equals(b.guid) ||
 				a.type != b.type ||
-				!a.backColor.Equals(b.backColor) ||
+				a.backColor != b.backColor ||
 				a.separator != b.separator ||
 				a.columnsRequired != b.columnsRequired ||
 				a.rowsRequired != b.rowsRequired ||
@@ -426,9 +426,9 @@ namespace Epsitec.Common.FormEngine
 			writer.WriteElementString(Xml.Type, this.type.ToString());
 			writer.WriteElementString(Xml.FieldIds, this.GetPath(null));
 
-			if (!this.backColor.IsEmpty)
+			if (this.backColor != BackColorType.None)
 			{
-				writer.WriteElementString(Xml.BackColor, Color.ToString(this.backColor));
+				writer.WriteElementString(Xml.BackColor, this.backColor.ToString());
 			}
 
 			writer.WriteElementString(Xml.Separator, this.separator.ToString());
@@ -485,7 +485,7 @@ namespace Epsitec.Common.FormEngine
 						}
 						else if (name == Xml.BackColor)
 						{
-							this.backColor = Color.Parse(element);
+							this.backColor = (BackColorType) System.Enum.Parse(typeof(BackColorType), element);
 						}
 						else if (name == Xml.Separator)
 						{
@@ -539,12 +539,31 @@ namespace Epsitec.Common.FormEngine
 		#endregion
 
 
+		public static Color GetRealColor(BackColorType type)
+		{
+			switch (type)
+			{
+				case BackColorType.Gray:
+					return Color.FromBrightness(0.8);
+
+				case BackColorType.Red:
+					return Color.FromRgb(1, 0.5, 0.5);
+
+				case BackColorType.Yellow:
+					return Color.FromRgb(1, 0.9, 0.5);
+
+				default:
+					return Color.Empty;
+			}
+		}
+
+
 		protected System.Guid guid;
 		protected int uniqueId;
 		protected FieldType type;
 		protected List<FieldDescription> nodeDescription;
 		protected List<Druid> fieldIds;
-		protected Color backColor;
+		protected BackColorType backColor;
 		protected SeparatorType separator;
 		protected int columnsRequired;
 		protected int rowsRequired;
