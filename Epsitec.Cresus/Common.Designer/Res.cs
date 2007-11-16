@@ -86,6 +86,22 @@ namespace Epsitec.Common.Designer
 				}
 			}
 			
+			public static class FieldGeometry
+			{
+				//	designer:cap/302D
+				public static global::Epsitec.Common.Types.Caption ColumnsRequired { get { return Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 2, 13)); } }
+				//	designer:cap/302E
+				public static global::Epsitec.Common.Types.Caption RowsRequired { get { return Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 2, 14)); } }
+			}
+			
+			public static class FieldMode
+			{
+				//	designer:cap/302G
+				public static global::Epsitec.Common.Types.Caption BackColorType { get { return Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 2, 16)); } }
+				//	designer:cap/302F
+				public static global::Epsitec.Common.Types.Caption SeparatorType { get { return Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 2, 15)); } }
+			}
+			
 			public static class Geometry
 			{
 				//	designer:cap/3003
@@ -242,6 +258,8 @@ namespace Epsitec.Common.Designer
 		{
 			public static class FieldDescription
 			{
+				//	designer:cap/3028
+				public static readonly global::Epsitec.Common.Types.EnumType BackColorType = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 2, 8));
 				//	designer:cap/3023
 				public static readonly global::Epsitec.Common.Types.EnumType SeparatorType = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 2, 3));
 			}
@@ -277,6 +295,18 @@ namespace Epsitec.Common.Designer
 		{
 			public static class FieldDescription
 			{
+				public static class BackColorType
+				{
+					//	designer:cap/302A
+					public static global::Epsitec.Common.Types.Caption Gray { get { return Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 2, 10)); } }
+					//	designer:cap/3029
+					public static global::Epsitec.Common.Types.Caption None { get { return Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 2, 9)); } }
+					//	designer:cap/302C
+					public static global::Epsitec.Common.Types.Caption Red { get { return Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 2, 12)); } }
+					//	designer:cap/302B
+					public static global::Epsitec.Common.Types.Caption Yellow { get { return Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 2, 11)); } }
+				}
+				
 				public static class SeparatorType
 				{
 					//	designer:cap/3027

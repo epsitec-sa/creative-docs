@@ -76,7 +76,7 @@ namespace Epsitec.Common.Designer.FormEditor.Proxies
 		{
 			EnumType separatorEnumType = Res.Types.FieldDescription.SeparatorType;
 			FieldMode.SeparatorProperty.DefaultMetadata.DefineNamedType(separatorEnumType);
-			FieldMode.SeparatorProperty.DefaultMetadata.DefineCaptionId(Res.Captions.Grid.ColumnMode.Id);
+			FieldMode.SeparatorProperty.DefaultMetadata.DefineCaptionId(Res.Captions.FieldMode.SeparatorType.Id);
 		}
 
 

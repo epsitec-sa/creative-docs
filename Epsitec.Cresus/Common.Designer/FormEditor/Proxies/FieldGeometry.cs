@@ -72,10 +72,10 @@ namespace Epsitec.Common.Designer.FormEditor.Proxies
 		static FieldGeometry()
 		{
 			FieldGeometry.ColumnsRequiredProperty.DefaultMetadata.DefineNamedType(ProxyManager.ColumnsRequiredNumericType);
-			FieldGeometry.ColumnsRequiredProperty.DefaultMetadata.DefineCaptionId(Res.Captions.Geometry.Width.Id);
+			FieldGeometry.ColumnsRequiredProperty.DefaultMetadata.DefineCaptionId(Res.Captions.FieldGeometry.ColumnsRequired.Id);
 
 			FieldGeometry.RowsRequiredProperty.DefaultMetadata.DefineNamedType(ProxyManager.RowsRequiredNumericType);
-			FieldGeometry.RowsRequiredProperty.DefaultMetadata.DefineCaptionId(Res.Captions.Geometry.Height.Id);
+			FieldGeometry.RowsRequiredProperty.DefaultMetadata.DefineCaptionId(Res.Captions.FieldGeometry.RowsRequired.Id);
 		}
 
 

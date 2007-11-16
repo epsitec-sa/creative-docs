@@ -565,6 +565,30 @@
   <ItemGroup>
     <EmbeddedResource Include="Images\Reset.icon" />
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Images\PropertySeparatorAppend.icon" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Images\PropertySeparatorNormal.icon" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Images\PropertySeparatorCompact.icon" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Images\PropertyColorGray.icon" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Images\PropertyColorYellow.icon" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Images\PropertyColorNone.icon" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Images\PropertyColorRed.icon" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Images\PropertySeparatorExtend.icon" />
+  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -35,6 +35,15 @@ namespace Epsitec.Common.FormEngine
 			Append			= 3,	// le champ suivant sera sur la même ligne
 		}
 
+		[DesignerVisible]
+		public enum BackColorType
+		{
+			None			= 0,	// transparent
+			Gray			= 1,	// gris clair
+			Yellow			= 2,	// jaune pâle
+			Red				= 3,	// rouge pâle
+		}
+
 
 		protected FieldDescription()
 		{
