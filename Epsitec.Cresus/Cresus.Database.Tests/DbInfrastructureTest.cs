@@ -212,6 +212,8 @@ namespace Epsitec.Cresus.Database
 				db_table1.Columns.AddRange (new DbColumn[] { col1, col2, col3, col4, col5 });
 				db_table1.DefineLocalizations (infrastructure.DefaultLocalizations);
 				db_table1.UpdateRevisionMode ();
+				db_table1.AddIndex (col1);
+				db_table1.AddIndex (col2);
 
 				infrastructure.RegisterNewDbTable (db_table1);
 
@@ -329,6 +331,13 @@ namespace Epsitec.Cresus.Database
 					for (int j = 0; j < tables[i].Columns.Count; j++)
 					{
 						System.Console.Out.WriteLine (" {0}: {1}, {2} (type {3}).", j, tables[i].Columns[j].Name, tables[i].Columns[j].Type.Name, tables[i].Columns[j].Type.SimpleType);
+					}
+					if (tables[i].HasIndexes)
+					{
+						foreach (DbIndex index in tables[i].Indexes)
+						{
+							System.Console.Out.WriteLine (" Index {0} on column {1}", index.SortOrder, index.Columns[0].Name);
+						}
 					}
 				}
 			}

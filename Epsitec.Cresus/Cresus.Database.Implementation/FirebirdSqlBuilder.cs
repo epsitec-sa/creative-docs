@@ -216,6 +216,15 @@ namespace Epsitec.Cresus.Database.Implementation
 				this.commandCount++;
 				
 				string indexName = string.Concat (table.Name, "_IDX", indexNum.ToString (System.Globalization.CultureInfo.InvariantCulture));
+
+				if (indexName.Length > 30)
+				{
+					indexName = indexName.Substring (indexName.Length-30);
+					while (indexName[0] == '_')
+					{
+						indexName = indexName.Substring (1);
+					}
+				}
 				
 				this.Append ("CREATE ");
 				
