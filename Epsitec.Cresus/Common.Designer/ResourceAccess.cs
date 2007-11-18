@@ -638,10 +638,17 @@ namespace Epsitec.Common.Designer
 		{
 			//	Initialise un masque de saisie avec tous les champs de l'entité de base associée.
 			List<string> list = this.GetEntityFields(form.EntityId);
-			foreach (string path in list)
+			foreach (string druidsPath in list)
 			{
+#if true
+				if (druidsPath.Contains("."))
+				{
+					continue;
+				}
+#endif
+
 				FormEngine.FieldDescription field = new FormEngine.FieldDescription(FormEngine.FieldDescription.FieldType.Field);
-				field.SetFields(path);
+				field.SetFields(druidsPath);
 
 				form.Fields.Add(field);
 			}
@@ -652,6 +659,9 @@ namespace Epsitec.Common.Designer
 
 		public string GetFieldNames(string druidsPath)
 		{
+			//	Retourne le nom complet d'un champ. Par exemple:
+			//	druidsPath = [6305].[630A]
+			//	retour = Monnaie.Désignation
 			System.Text.StringBuilder builder = new System.Text.StringBuilder();
 
 			string[] druids = druidsPath.Split('.');
@@ -668,7 +678,11 @@ namespace Epsitec.Common.Designer
 				CultureMap item =  module.AccessFields.accessor.Collection[druid];
 				if (item == null)
 				{
-					continue;
+					item =  module.AccessEntities.accessor.Collection[druid];
+					if (item == null)
+					{
+						continue;
+					}
 				}
 
 				if (builder.Length != 0)
@@ -714,15 +728,16 @@ namespace Epsitec.Common.Designer
 			}
 
 			IList<StructuredData> dataFields = data.GetValue(Support.Res.Fields.ResourceStructuredType.Fields) as IList<StructuredData>;
+			List<Druid> alreadyVisited = new List<Druid>();
 			foreach (StructuredData dataField in dataFields)
 			{
-				this.GetEntityFields(list, dataField, null);
+				this.GetEntityFields(list, alreadyVisited, dataField, null);
 			}
 
 			return list;
 		}
 
-		protected void GetEntityFields(List<string> list, StructuredData dataField, string prefix)
+		protected void GetEntityFields(List<string> list, List<Druid> alreadyVisited, StructuredData dataField, string prefix)
 		{
 			FieldRelation rel = (FieldRelation) dataField.GetValue(Support.Res.Fields.Field.Relation);
 			if (rel == FieldRelation.None)
@@ -731,7 +746,7 @@ namespace Epsitec.Common.Designer
 
 				Druid fieldCaptionId = (Druid) dataField.GetValue(Support.Res.Fields.Field.CaptionId);
 
-				string path = (prefix == null) ? fieldCaptionId.ToString() : string.Concat(prefix, ".", fieldCaptionId.ToString());
+				string path = (prefix == null) ? fieldCaptionId.ToString() : string.Concat(prefix, fieldCaptionId.ToString());
 				if (!list.Contains(path))
 				{
 					list.Add(path);
@@ -739,7 +754,27 @@ namespace Epsitec.Common.Designer
 			}
 			else
 			{
-				//	TODO:
+				Druid typeId = (Druid) dataField.GetValue(Support.Res.Fields.Field.TypeId);
+
+				if (!alreadyVisited.Contains(typeId))
+				{
+					alreadyVisited.Add(typeId);
+
+					Module typeModule = this.designerApplication.SearchModule(typeId);
+					if (typeModule != null)
+					{
+						CultureMap typeCultureMap = typeModule.AccessEntities.Accessor.Collection[typeId];
+						if (typeCultureMap != null)
+						{
+							StructuredData typeData = typeCultureMap.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
+							IList<StructuredData> typeDataFields = typeData.GetValue(Support.Res.Fields.ResourceStructuredType.Fields) as IList<StructuredData>;
+							foreach (StructuredData typeDataField in typeDataFields)
+							{
+								this.GetEntityFields(list, alreadyVisited, typeDataField, string.Concat(prefix, typeId.ToString(), "."));
+							}
+						}
+					}
+				}
 			}
 		}
 

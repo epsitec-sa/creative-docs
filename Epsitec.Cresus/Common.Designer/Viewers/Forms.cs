@@ -102,13 +102,12 @@ namespace Epsitec.Common.Designer.Viewers
 			this.fieldToolbar.Items.Add(this.fieldButtonGoto);
 
 			this.fieldTable = new MyWidgets.StringArray(this.panelField);
-			this.fieldTable.Columns = 3;
+			this.fieldTable.Columns = 2;
 			this.fieldTable.SetColumnsRelativeWidth(0, 0.10);
-			this.fieldTable.SetColumnsRelativeWidth(1, 0.80);
-			this.fieldTable.SetColumnsRelativeWidth(2, 0.10);
+			this.fieldTable.SetColumnsRelativeWidth(1, 0.90);
 			this.fieldTable.SetColumnAlignment(0, ContentAlignment.MiddleCenter);
 			this.fieldTable.SetColumnAlignment(1, ContentAlignment.MiddleLeft);
-			this.fieldTable.SetColumnAlignment(2, ContentAlignment.MiddleCenter);
+			this.fieldTable.SetColumnBreakMode(1, TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine);
 			this.fieldTable.Dock = DockStyle.Fill;
 			this.fieldTable.CellCountChanged += new EventHandler(this.HandleFieldTableCellCountChanged);
 			this.fieldTable.CellsContentChanged += new EventHandler(this.HandleFieldTableCellsContentChanged);
@@ -345,36 +344,10 @@ namespace Epsitec.Common.Designer.Viewers
 					this.fieldTable.SetLineString(1, first+i, "");
 					this.fieldTable.SetLineState(1, first+i, MyWidgets.StringList.CellState.Disabled);
 					this.fieldTable.SetLineColor(1, first+i, Color.Empty);
-
-					this.fieldTable.SetLineString(2, first+i, "");
-					this.fieldTable.SetLineState(2, first+i, MyWidgets.StringList.CellState.Disabled);
-					this.fieldTable.SetLineColor(2, first+i, Color.Empty);
 				}
 				else
 				{
 					string name = this.module.AccessFields.GetFieldNames(list[first+i]);
-					string relation = null;
-
-#if false
-					StructuredData dataField = dataFields[first+i];
-					Druid fieldCaptionId = (Druid) dataField.GetValue(Support.Res.Fields.Field.CaptionId);
-
-					Module fieldModule = this.designerApplication.SearchModule(fieldCaptionId);
-					CultureMap fieldItem = fieldModule.AccessFields.Accessor.Collection[fieldCaptionId];
-
-					string name = (fieldItem == null) ? "" : fieldItem.Name;
-
-					FieldRelation rel = (FieldRelation) dataField.GetValue(Support.Res.Fields.Field.Relation);
-					string relation = "";
-					if (rel == FieldRelation.Reference)
-					{
-						relation = "<font size=\"150%\">›</font>";
-					}
-					if (rel == FieldRelation.Collection)
-					{
-						relation = "<font size=\"150%\">»</font>";
-					}
-#endif
 
 					this.fieldTable.SetLineString(0, first+i, "");
 					this.fieldTable.SetLineState(0, first+i, MyWidgets.StringList.CellState.Normal);
@@ -383,10 +356,6 @@ namespace Epsitec.Common.Designer.Viewers
 					this.fieldTable.SetLineString(1, first+i, name);
 					this.fieldTable.SetLineState(1, first+i, MyWidgets.StringList.CellState.Normal);
 					this.fieldTable.SetLineColor(1, first+i, Color.Empty);
-
-					this.fieldTable.SetLineString(2, first+i, relation);
-					this.fieldTable.SetLineState(2, first+i, MyWidgets.StringList.CellState.Normal);
-					this.fieldTable.SetLineColor(2, first+i, Color.Empty);
 				}
 			}
 
