@@ -560,46 +560,6 @@ namespace Epsitec.Common.Designer
 			this.SetLocalDirty();
 		}
 
-		private void FormInitialize(FormEngine.FormDescription form, ref string newName)
-		{
-			//	Initialise un masque de saisie avec tous les champs de l'entité de base associée.
-			Module module = this.designerApplication.SearchModule(form.EntityId);
-			if (module == null)
-			{
-				return;
-			}
-
-			CultureMap item = module.AccessEntities.accessor.Collection[form.EntityId];
-			if (item == null)
-			{
-				return;
-			}
-
-			//	Utilise comme nom du masque le nom de l'entité, éventuellement complété d'un numéro.
-			newName = this.GetDuplicateName(item.Name);
-
-			StructuredData data = item.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
-			if (data == null)
-			{
-				return;
-			}
-
-			IList<StructuredData> dataFields = data.GetValue(Support.Res.Fields.ResourceStructuredType.Fields) as IList<StructuredData>;
-			foreach (StructuredData dataField in dataFields)
-			{
-				FieldRelation rel = (FieldRelation) dataField.GetValue(Support.Res.Fields.Field.Relation);
-				if (rel == FieldRelation.None)
-				{
-					FormEngine.FieldDescription field = new FormEngine.FieldDescription(FormEngine.FieldDescription.FieldType.Field);
-
-					Druid fieldCaptionId = (Druid) dataField.GetValue(Support.Res.Fields.Field.CaptionId);
-					field.SetFields(fieldCaptionId.ToString());
-
-					form.Fields.Add(field);
-				}
-			}
-		}
-
 		private static void CopyData(IResourceAccessor accessor, CultureMap dstItem, StructuredData src, StructuredData dst)
 		{
 			//	Copie les données d'un StructuredData vers un autre, en tenant
@@ -672,6 +632,97 @@ namespace Epsitec.Common.Designer
 				}
 			}
 		}
+
+
+		private void FormInitialize(FormEngine.FormDescription form, ref string newName)
+		{
+			//	Initialise un masque de saisie avec tous les champs de l'entité de base associée.
+			List<string> list = this.GetEntityFields(form.EntityId);
+			foreach (string path in list)
+			{
+				FormEngine.FieldDescription field = new FormEngine.FieldDescription(FormEngine.FieldDescription.FieldType.Field);
+				field.SetFields(path);
+
+				form.Fields.Add(field);
+			}
+
+			//	Utilise comme nom du masque le nom de l'entité, éventuellement complété d'un numéro.
+			newName = this.GetDuplicateName(this.GetEntityName(form.EntityId));
+		}
+
+		public string GetEntityName(Druid entityId)
+		{
+			//	Retourne le nom d'une entité.
+			CultureMap item = this.GetEntityItem(entityId);
+			if (item == null)
+			{
+				return null;
+			}
+			else
+			{
+				return item.Name;
+			}
+		}
+
+		public List<string> GetEntityFields(Druid entityId)
+		{
+			//	Retourne la liste des champs d'une entité.
+			List<string> list = new List<string>();
+
+			CultureMap item = this.GetEntityItem(entityId);
+			if (item == null)
+			{
+				return list;
+			}
+
+			StructuredData data = item.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
+			if (data == null)
+			{
+				return list;
+			}
+
+			IList<StructuredData> dataFields = data.GetValue(Support.Res.Fields.ResourceStructuredType.Fields) as IList<StructuredData>;
+			foreach (StructuredData dataField in dataFields)
+			{
+				this.GetEntityFields(list, dataField, null);
+			}
+
+			return list;
+		}
+
+		protected void GetEntityFields(List<string> list, StructuredData dataField, string prefix)
+		{
+			FieldRelation rel = (FieldRelation) dataField.GetValue(Support.Res.Fields.Field.Relation);
+			if (rel == FieldRelation.None)
+			{
+				FormEngine.FieldDescription field = new FormEngine.FieldDescription(FormEngine.FieldDescription.FieldType.Field);
+
+				Druid fieldCaptionId = (Druid) dataField.GetValue(Support.Res.Fields.Field.CaptionId);
+
+				string path = (prefix == null) ? fieldCaptionId.ToString() : string.Concat(prefix, ".", fieldCaptionId.ToString());
+				if (!list.Contains(path))
+				{
+					list.Add(path);
+				}
+			}
+			else
+			{
+				//	TODO:
+			}
+		}
+
+		protected CultureMap GetEntityItem(Druid entityId)
+		{
+			//	Retourne le CultureMap d'une entité.
+			Module module = this.designerApplication.SearchModule(entityId);
+			if (module == null)
+			{
+				return null;
+			}
+
+			return module.AccessEntities.accessor.Collection[entityId];
+		}
+
 
 		public string GetEnumBaseName(System.Type stype)
 		{
