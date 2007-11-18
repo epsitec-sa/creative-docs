@@ -650,6 +650,38 @@ namespace Epsitec.Common.Designer
 			newName = this.GetDuplicateName(this.GetEntityName(form.EntityId));
 		}
 
+		public string GetFieldNames(string druidsPath)
+		{
+			System.Text.StringBuilder builder = new System.Text.StringBuilder();
+
+			string[] druids = druidsPath.Split('.');
+			foreach (string d in druids)
+			{
+				Druid druid = Druid.Parse(d);
+
+				Module module = this.designerApplication.SearchModule(druid);
+				if (module == null)
+				{
+					continue;
+				}
+
+				CultureMap item =  module.AccessFields.accessor.Collection[druid];
+				if (item == null)
+				{
+					continue;
+				}
+
+				if (builder.Length != 0)
+				{
+					builder.Append(".");
+				}
+
+				builder.Append(item.Name);
+			}
+
+			return builder.ToString();
+		}
+
 		public string GetEntityName(Druid entityId)
 		{
 			//	Retourne le nom d'une entité.

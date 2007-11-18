@@ -331,26 +331,12 @@ namespace Epsitec.Common.Designer.Viewers
 		protected void UpdateFieldTable()
 		{
 			//	Met à jour la table des champs.
-			IList<StructuredData> dataFields = null;
+			List<string> list = this.module.AccessEntities.GetEntityFields(this.entityId);
 
-			Module module = this.designerApplication.SearchModule(this.entityId);
-			if (module != null)
-			{
-				CultureMap item = module.AccessEntities.Accessor.Collection[this.entityId];
-				if (item != null)
-				{
-					StructuredData data = item.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
-					if (data != null)
-					{
-						dataFields = data.GetValue(Support.Res.Fields.ResourceStructuredType.Fields) as IList<StructuredData>;
-					}
-				}
-			}
-			
 			int first = this.fieldTable.FirstVisibleRow;
 			for (int i=0; i<this.fieldTable.LineCount; i++)
 			{
-				if (dataFields == null || first+i >= dataFields.Count)
+				if (first+i >= list.Count)
 				{
 					this.fieldTable.SetLineString(0, first+i, "");
 					this.fieldTable.SetLineState(0, first+i, MyWidgets.StringList.CellState.Disabled);
@@ -366,6 +352,10 @@ namespace Epsitec.Common.Designer.Viewers
 				}
 				else
 				{
+					string name = this.module.AccessFields.GetFieldNames(list[first+i]);
+					string relation = null;
+
+#if false
 					StructuredData dataField = dataFields[first+i];
 					Druid fieldCaptionId = (Druid) dataField.GetValue(Support.Res.Fields.Field.CaptionId);
 
@@ -384,6 +374,7 @@ namespace Epsitec.Common.Designer.Viewers
 					{
 						relation = "<font size=\"150%\">»</font>";
 					}
+#endif
 
 					this.fieldTable.SetLineString(0, first+i, "");
 					this.fieldTable.SetLineState(0, first+i, MyWidgets.StringList.CellState.Normal);
@@ -399,7 +390,7 @@ namespace Epsitec.Common.Designer.Viewers
 				}
 			}
 
-			this.fieldTable.TotalRows = (dataFields == null) ? 0 : dataFields.Count;
+			this.fieldTable.TotalRows = list.Count;
 		}
 
 
