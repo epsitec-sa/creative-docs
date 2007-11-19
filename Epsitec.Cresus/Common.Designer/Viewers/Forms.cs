@@ -325,16 +325,38 @@ namespace Epsitec.Common.Designer.Viewers
 			this.ignoreChange = true;
 			this.Deserialize();
 			this.UpdateFieldTable(true);
+			this.UpdateButtons();
 			this.ignoreChange = iic;
 		}
 
 		protected void UpdateFieldTable(bool newContent)
 		{
 			//	Met à jour la table des champs.
+			List<string> tableDruidsPath = new List<string>();
+
+			if (this.form != null && this.druidsPath != null)
+			{
+				//	Construit la liste des chemins de Druids, en commençant par ceux qui font
+				//	partie du masque de saisie.
+				foreach (FieldDescription field in this.form.Fields)
+				{
+					tableDruidsPath.Add(field.GetPath(null));
+				}
+
+				//	Complète ensuite par tous les autres.
+				foreach (string druidPath in this.druidsPath)
+				{
+					if (!tableDruidsPath.Contains(druidPath))
+					{
+						tableDruidsPath.Add(druidPath);
+					}
+				}
+			}
+
 			int first = this.fieldTable.FirstVisibleRow;
 			for (int i=0; i<this.fieldTable.LineCount; i++)
 			{
-				if (this.druidsPath == null || first+i >= this.druidsPath.Count)
+				if (first+i >= tableDruidsPath.Count)
 				{
 					this.fieldTable.SetLineString(0, first+i, "");
 					this.fieldTable.SetLineState(0, first+i, MyWidgets.StringList.CellState.Disabled);
@@ -346,9 +368,10 @@ namespace Epsitec.Common.Designer.Viewers
 				}
 				else
 				{
-					string name = this.module.AccessFields.GetFieldNames(this.druidsPath[first+i]);
+					string use = (first+i < this.form.Fields.Count) ? "o" : "";
+					string name = this.module.AccessFields.GetFieldNames(tableDruidsPath[first+i]);
 
-					this.fieldTable.SetLineString(0, first+i, "");
+					this.fieldTable.SetLineString(0, first+i, use);
 					this.fieldTable.SetLineState(0, first+i, MyWidgets.StringList.CellState.Normal);
 					this.fieldTable.SetLineColor(0, first+i, Color.Empty);
 
@@ -358,12 +381,47 @@ namespace Epsitec.Common.Designer.Viewers
 				}
 			}
 
-			this.fieldTable.TotalRows = (this.druidsPath == null) ? 0 : this.druidsPath.Count;
+			this.fieldTable.TotalRows = tableDruidsPath.Count;
 
 			if (newContent)
 			{
 				this.fieldTable.FirstVisibleRow = 0;
 			}
+		}
+
+		protected void UpdateButtons()
+		{
+			//	Met à jour les boutons.
+			bool isPrev = false;
+			bool isNext = false;
+
+			if (!this.designerApplication.IsReadonly && this.druidsPath != null)
+			{
+				List<int> sels = this.fieldTable.SelectedRows;
+				if (sels != null && sels.Count > 0)
+				{
+					isPrev = true;
+					isNext = true;
+
+					foreach (int sel in sels)
+					{
+						if (sel == 0)
+						{
+							isPrev = false;
+							break;
+						}
+
+						if (sel == this.druidsPath.Count-1)
+						{
+							isNext = false;
+							break;
+						}
+					}
+				}
+			}
+
+			this.fieldButtonPrev.Enable = isPrev;
+			this.fieldButtonNext.Enable = isNext;
 		}
 
 
@@ -537,6 +595,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.UpdateArray();
 			this.UpdateEdit();
 			this.UpdateFieldTable(true);
+			this.UpdateButtons();
 			this.UpdateCommands();
 		}
 
@@ -620,6 +679,7 @@ namespace Epsitec.Common.Designer.Viewers
 			if (oper == Changing.Selection)
 			{
 				this.ReflectSelectionToList();
+				this.UpdateButtons();
 			}
 
 			if (oper == Changing.Create || oper == Changing.Delete || oper == Changing.Move || oper == Changing.Regenerate)
@@ -666,11 +726,37 @@ namespace Epsitec.Common.Designer.Viewers
 				List<string> druidsPath = new List<string>();
 				foreach (int sel in sels)
 				{
-					druidsPath.Add(this.druidsPath[sel]);
+					if (sel != -1)
+					{
+						druidsPath.Add(this.druidsPath[sel]);
+					}
 				}
 
 				this.formEditor.SelectListObject(druidsPath);
 			}
+		}
+
+
+		protected void SelectedFieldsMove(int direction)
+		{
+			//	Déplace les champs sélectionnés vers le haut ou vers le bas.
+			List<int> sels = this.fieldTable.SelectedRows;
+			sels.Sort();
+			if (direction > 0)
+			{
+				sels.Reverse();
+			}
+
+			foreach (int sel in sels)
+			{
+				FieldDescription field = this.form.Fields[sel];
+				this.form.Fields.RemoveAt(sel);
+				this.form.Fields.Insert(sel+direction, field);
+			}
+
+			this.SetForm(this.form, this.druidToSerialize, false);
+			this.UpdateFieldTable(false);
+			this.UpdateButtons();
 		}
 
 
@@ -752,10 +838,12 @@ namespace Epsitec.Common.Designer.Viewers
 		{
 			if (sender == this.fieldButtonPrev)
 			{
+				this.SelectedFieldsMove(-1);
 			}
 
 			if (sender == this.fieldButtonNext)
 			{
+				this.SelectedFieldsMove(1);
 			}
 
 			if (sender == this.fieldButtonGoto)
@@ -784,6 +872,7 @@ namespace Epsitec.Common.Designer.Viewers
 			}
 
 			this.ReflectSelectionToEditor();
+			this.UpdateButtons();
 		}
 
 
