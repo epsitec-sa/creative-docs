@@ -640,13 +640,6 @@ namespace Epsitec.Common.Designer
 			List<string> list = this.GetEntityFields(form.EntityId);
 			foreach (string druidsPath in list)
 			{
-#if true
-				if (druidsPath.Contains("."))
-				{
-					continue;
-				}
-#endif
-
 				FormEngine.FieldDescription field = new FormEngine.FieldDescription(FormEngine.FieldDescription.FieldType.Field);
 				field.SetFields(druidsPath);
 
@@ -660,7 +653,7 @@ namespace Epsitec.Common.Designer
 		public string GetFieldNames(string druidsPath)
 		{
 			//	Retourne le nom complet d'un champ. Par exemple:
-			//	druidsPath = [6305].[630A]
+			//	druidsPath = [63063].[630A]
 			//	retour = Monnaie.Désignation
 			System.Text.StringBuilder builder = new System.Text.StringBuilder();
 
@@ -728,7 +721,8 @@ namespace Epsitec.Common.Designer
 			}
 
 			IList<StructuredData> dataFields = data.GetValue(Support.Res.Fields.ResourceStructuredType.Fields) as IList<StructuredData>;
-			List<Druid> alreadyVisited = new List<Druid>();
+			Stack<Druid> alreadyVisited = new Stack<Druid>();
+			alreadyVisited.Push(entityId);
 			foreach (StructuredData dataField in dataFields)
 			{
 				this.GetEntityFields(list, alreadyVisited, dataField, null);
@@ -737,7 +731,7 @@ namespace Epsitec.Common.Designer
 			return list;
 		}
 
-		protected void GetEntityFields(List<string> list, List<Druid> alreadyVisited, StructuredData dataField, string prefix)
+		protected void GetEntityFields(List<string> list, Stack<Druid> alreadyVisited, StructuredData dataField, string prefix)
 		{
 			FieldRelation rel = (FieldRelation) dataField.GetValue(Support.Res.Fields.Field.Relation);
 			if (rel == FieldRelation.None)
@@ -755,10 +749,11 @@ namespace Epsitec.Common.Designer
 			else
 			{
 				Druid typeId = (Druid) dataField.GetValue(Support.Res.Fields.Field.TypeId);
+				Druid fieldCaptionId = (Druid) dataField.GetValue(Support.Res.Fields.Field.CaptionId);
 
 				if (!alreadyVisited.Contains(typeId))
 				{
-					alreadyVisited.Add(typeId);
+					alreadyVisited.Push(typeId);
 
 					Module typeModule = this.designerApplication.SearchModule(typeId);
 					if (typeModule != null)
@@ -770,10 +765,12 @@ namespace Epsitec.Common.Designer
 							IList<StructuredData> typeDataFields = typeData.GetValue(Support.Res.Fields.ResourceStructuredType.Fields) as IList<StructuredData>;
 							foreach (StructuredData typeDataField in typeDataFields)
 							{
-								this.GetEntityFields(list, alreadyVisited, typeDataField, string.Concat(prefix, typeId.ToString(), "."));
+								this.GetEntityFields(list, alreadyVisited, typeDataField, string.Concat(prefix, fieldCaptionId.ToString(), "."));
 							}
 						}
 					}
+
+					alreadyVisited.Pop();
 				}
 			}
 		}

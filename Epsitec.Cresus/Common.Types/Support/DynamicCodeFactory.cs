@@ -61,6 +61,11 @@ namespace Epsitec.Common.Support
 		/// </returns>
 		public static PropertySetter CreatePropertySetter(System.Reflection.PropertyInfo propertyInfo)
 		{
+			if (propertyInfo == null)
+			{
+				return null;
+			}
+
 			System.Reflection.MethodInfo method = propertyInfo.GetSetMethod (false);
 
 			if ((method == null) ||

@@ -16,12 +16,18 @@ namespace Epsitec.Common.Support.EntityEngine
 	/// </summary>
 	public class EntityContext
 	{
-		private EntityContext()
+		public EntityContext()
+			: this (Resources.DefaultManager, EntityLoopHandlingMode.Throw)
 		{
-			this.resourceManager     = Resources.DefaultManager;
+		}
+
+		public EntityContext(ResourceManager resourceManager, EntityLoopHandlingMode loopHandlingMode)
+		{
+			this.resourceManager     = resourceManager;
 			this.resourceManagerPool = this.resourceManager.Pool;
 			this.associatedThread    = System.Threading.Thread.CurrentThread;
 			this.structuredTypeMap   = new Dictionary<Druid, IStructuredType> ();
+			this.loopHandlingMode    = loopHandlingMode;
 		}
 
 		static EntityContext()
@@ -41,6 +47,22 @@ namespace Epsitec.Common.Support.EntityEngine
 				
 				return EntityContext.current;
 			}
+		}
+
+		public static void Push(EntityContext context)
+		{
+			if (EntityContext.contextStack == null)
+			{
+				EntityContext.contextStack = new Stack<EntityContext> ();
+			}
+
+			EntityContext.contextStack.Push (EntityContext.current);
+			EntityContext.current = context;
+		}
+
+		public static void Pop()
+		{
+			EntityContext.current = EntityContext.contextStack.Pop ();
 		}
 
 		public IValueStore CreateValueStore(AbstractEntity entity)
@@ -201,39 +223,66 @@ namespace Epsitec.Common.Support.EntityEngine
 					(field.IsNullable == false))
 				{
 					Druid entityId = field.TypeId;
+					AbstractEntity child;
 
 					if (parents.Contains (entityId))
 					{
-						System.Text.StringBuilder cycle = new System.Text.StringBuilder ();
-						Druid[] stack = parents.ToArray ();
-
-						for (int i = stack.Length; i > 0; i--)
-						{
-							if (cycle.Length > 0)
-							{
-								cycle.Append (" > ");
-							}
-							cycle.Append (stack[i-1]);
-						}
-
-						cycle.Append (" > ");
-						cycle.Append (entityId);
-						
-						throw new System.InvalidOperationException ("Cyclic dependency : " + cycle);
+						child = this.HandleGraphLoop (parents, entityId);
 					}
-					
-					AbstractEntity child = this.CreateEmptyEntity (field.TypeId);
-
-					using (child.DefineOriginalValues ())
+					else
 					{
-						this.CreateRelatedEntities (child, parents);
+						child = this.CreateChildEntity (parents, entityId);
 					}
 
-					entity.SetField<AbstractEntity> (id, null, child);
+					if (child != null)
+					{
+						entity.SetField<AbstractEntity> (id, null, child);
+					}
 				}
 			}
 
 			parents.Pop ();
+		}
+
+		private AbstractEntity CreateChildEntity(Stack<Druid> parents, Druid entityId)
+		{
+			AbstractEntity child = this.CreateEmptyEntity (entityId);
+
+			using (child.DefineOriginalValues ())
+			{
+				this.CreateRelatedEntities (child, parents);
+			}
+
+			return child;
+		}
+
+		private AbstractEntity HandleGraphLoop(Stack<Druid> parents, Druid entityId)
+		{
+			if (this.loopHandlingMode == EntityLoopHandlingMode.Throw)
+			{
+				System.Text.StringBuilder cycle = new System.Text.StringBuilder ();
+				Druid[] stack = parents.ToArray ();
+
+				for (int i = stack.Length; i > 0; i--)
+				{
+					if (cycle.Length > 0)
+					{
+						cycle.Append (" > ");
+					}
+					cycle.Append (stack[i-1]);
+				}
+
+				cycle.Append (" > ");
+				cycle.Append (entityId);
+
+				throw new System.InvalidOperationException ("Cyclic dependency : " + cycle);
+			}
+			else
+			{
+				System.Diagnostics.Debug.Assert (this.loopHandlingMode == EntityLoopHandlingMode.Skip);
+
+				return null;
+			}
 		}
 		
 		protected virtual void OnEntityCreated(EntityEventArgs e)
@@ -349,6 +398,9 @@ namespace Epsitec.Common.Support.EntityEngine
 		[System.ThreadStatic]
 		private static EntityContext current;
 
+		[System.ThreadStatic]
+		private static Stack<EntityContext> contextStack;
+
 		private readonly object eventExclusion = new object ();
 
 		private EventHandler<EntityEventArgs> entityCreatedEvent;
@@ -357,5 +409,6 @@ namespace Epsitec.Common.Support.EntityEngine
 		private readonly ResourceManager resourceManager;
 		private readonly System.Threading.Thread associatedThread;
 		private readonly Dictionary<Druid, IStructuredType> structuredTypeMap;
+		private readonly EntityLoopHandlingMode loopHandlingMode;
 	}
 }

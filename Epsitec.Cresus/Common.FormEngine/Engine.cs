@@ -2,6 +2,7 @@ using System.Collections.Generic;
 
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Support;
+using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Types;
 
@@ -16,6 +17,7 @@ namespace Epsitec.Common.FormEngine
 		{
 			//	Constructeur.
 			this.resourceManager = resourceManager;
+			this.entityContext = new EntityContext (this.resourceManager, EntityLoopHandlingMode.Skip);
 		}
 
 		public UI.Panel CreateForm(FormDescription form)
@@ -23,15 +25,24 @@ namespace Epsitec.Common.FormEngine
 			//	Crée un masque de saisie pour une entité donnée.
 			//	La liste de FieldDescription doit être plate (pas de Node).
 			Caption entityCaption = this.resourceManager.GetCaption(form.EntityId);
-			if (entityCaption == null)
+			StructuredType entity = TypeRosetta.GetTypeObject(entityCaption) as StructuredType;
+			if (entity == null)
 			{
 				return null;
 			}
 
-			StructuredType entity = TypeRosetta.GetTypeObject(entityCaption) as StructuredType;
+			AbstractEntity entityData = null;
 
-			StructuredData entityData = new StructuredData(entity);
-			entityData.UndefinedValueMode = UndefinedValueMode.Default;
+			EntityContext.Push(this.entityContext);
+			
+			try
+			{
+				entityData = entityContext.CreateEntity (form.EntityId);
+			}
+			finally
+			{
+				EntityContext.Pop ();
+			}
 
 			//	Crée le panneau racine, le seul à définir DataSource. Les autres panneaux
 			//	enfants héritent de cette propriété.
@@ -536,6 +547,7 @@ namespace Epsitec.Common.FormEngine
 		public static readonly int MaxColumnsRequired = 10;
 		public static readonly int MaxRowsRequired = 20;
 
-		protected ResourceManager resourceManager;
+		protected readonly ResourceManager resourceManager;
+		protected readonly EntityContext entityContext;
 	}
 }

@@ -64,6 +64,10 @@
       <Project>{EAF258A4-E107-4466-A3E1-9FC072557940}</Project>
       <Name>Common.Support.Events</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Common.Support\Common.Support.csproj">
+      <Project>{AC07F95F-9D11-44BE-8ABC-D6E33C3BB10B}</Project>
+      <Name>Common.Support</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Common.Types\Common.Types.csproj">
       <Project>{8960D1EA-3B82-49A1-9D44-F92F467209FF}</Project>
       <Name>Common.Types</Name>

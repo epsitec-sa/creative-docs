@@ -14,7 +14,7 @@ namespace Epsitec.Common.Support.EntityEngine
 	/// The <c>AbstractEntity</c> class is the base class used to store the
 	/// data represented by entity instances.
 	/// </summary>
-	public abstract class AbstractEntity : IStructuredTypeProvider
+	public abstract class AbstractEntity : IStructuredTypeProvider, IStructuredData
 	{
 		/// <summary>
 		/// Initializes a new instance of the <see cref="AbstractEntity"/> class.
@@ -179,6 +179,11 @@ namespace Epsitec.Common.Support.EntityEngine
 		}
 		
 		public void SetField<T>(string id, T oldValue, T newValue)
+		{
+			this.GenericSetValue (id, oldValue, newValue);
+		}
+
+		protected void GenericSetValue(string id, object oldValue, object newValue)
 		{
 			StructuredTypeField field = this.context.GetStructuredType (this).GetField (id);
 
@@ -377,5 +382,52 @@ namespace Epsitec.Common.Support.EntityEngine
 		private IValueStore originalValues;
 		private IValueStore modifiedValues;
 		private int defineOriginalValuesCount;
+
+		#region IStructuredData Members
+
+		void IStructuredData.AttachListener(string id, EventHandler<DependencyPropertyChangedEventArgs> handler)
+		{
+//			throw new System.Exception ("The method or operation is not implemented.");
+		}
+
+		void IStructuredData.DetachListener(string id, EventHandler<DependencyPropertyChangedEventArgs> handler)
+		{
+//			throw new System.Exception ("The method or operation is not implemented.");
+		}
+
+		IEnumerable<string> IStructuredData.GetValueIds()
+		{
+			return this.context.GetEntityFieldIds (this);
+		}
+
+		#endregion
+
+		#region IValueStore Members
+
+		object IValueStore.GetValue(string id)
+		{
+			return this.InternalGetValue (id);
+		}
+
+		void IValueStore.SetValue(string id, object value)
+		{
+			this.DynamicPropertySet (id, value);
+		}
+
+		#endregion
+
+		protected virtual void DynamicPropertySet(string id, object newValue)
+		{
+			PropertySetter setter = DynamicCodeFactory.CreatePropertySetter (this.GetType (), id);
+
+			if (setter == null)
+			{
+				this.GenericSetValue (id, this.InternalGetValue (id), newValue);
+			}
+			else
+			{
+				setter (this, newValue);
+			}
+		}
 	}
 }

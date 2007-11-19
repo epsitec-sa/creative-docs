@@ -147,6 +147,7 @@
     <Compile Include="EntityEngine\EntityEventArgs.cs" />
     <Compile Include="EntityEngine\EntityExpression.cs" />
     <Compile Include="EntityEngine\EntityExpressionEncoding.cs" />
+    <Compile Include="EntityEngine\EntityLoopHandlingMode.cs" />
     <Compile Include="EntityEngine\EntityResolver.cs" />
     <Compile Include="EntityEngine\GenericEntity.cs" />
     <Compile Include="EntityEngine\IEntityProxy.cs" />
