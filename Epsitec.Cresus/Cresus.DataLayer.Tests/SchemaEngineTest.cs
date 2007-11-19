@@ -98,7 +98,7 @@ namespace Epsitec.Cresus.DataLayer
 
 			context.LoadTableSchema (table);
 
-			Assert.AreEqual (5, context.RichCommand.DataSet.Tables.Count);
+			Assert.AreEqual (6, context.RichCommand.DataSet.Tables.Count);
 
 			DumpDataSet (context.RichCommand.DataSet);
 
@@ -116,7 +116,7 @@ namespace Epsitec.Cresus.DataLayer
 			AbstractEntity entity = context.EntityContext.CreateEntity (this.articleEntityId);
 			AbstractEntity prixVente = entity.GetField<AbstractEntity> ("[630B1]");				//	Article.PrixVente
 
-			Assert.AreEqual (6, context.CountManagedEntities ());
+			Assert.AreEqual (9, context.CountManagedEntities ());
 			Assert.AreEqual (this.prixEntityId, prixVente.GetEntityStructuredTypeId ());
 
 			entity.SetField<string> ("[63091]", "VI-M3-10");									//	Article.Numéro
