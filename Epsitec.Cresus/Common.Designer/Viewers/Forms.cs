@@ -615,6 +615,11 @@ namespace Epsitec.Common.Designer.Viewers
 		{
 			//	Met à jour le statut du visualisateur en cours, en fonction de la sélection.
 			//	Met également à jour l'arbre des objets, s'il est visible.
+			if (oper == Changing.Selection)
+			{
+				this.ReflectSelectionToList();
+			}
+
 			if (oper == Changing.Create || oper == Changing.Delete || oper == Changing.Move || oper == Changing.Regenerate)
 			{
 				//	Régénère le panneau contenant le masque de saisie.
@@ -622,6 +627,27 @@ namespace Epsitec.Common.Designer.Viewers
 			}
 		}
 
+
+		protected void ReflectSelectionToList()
+		{
+			//	Reflète les sélections effectuées dans l'éditeur de Forms dans la liste des champs.
+			List<string> druidsPath = this.formEditor.GetSelectedDruidsPath();
+			List<string> list = this.module.AccessEntities.GetEntityFields(this.entityId);
+			List<int> sels = new List<int>();
+
+			foreach (string druidPath in druidsPath)
+			{
+				int sel = list.IndexOf(druidPath);
+				if (sel != -1)
+				{
+					sels.Add(sel);
+				}
+			}
+
+			this.ignoreChange = true;
+			this.fieldTable.SelectedRows = sels;
+			this.ignoreChange = false;
+		}
 
 		protected void ReflectSelectionToEditor()
 		{
@@ -750,6 +776,11 @@ namespace Epsitec.Common.Designer.Viewers
 		private void HandleFieldTableSelectedRowChanged(object sender)
 		{
 			//	La ligne sélectionnée a changé.
+			if (this.ignoreChange)
+			{
+				return;
+			}
+
 			this.ReflectSelectionToEditor();
 		}
 

@@ -391,11 +391,12 @@ namespace Epsitec.Common.Designer.FormEditor
 		{
 			//	Sélection ponctuelle, souris pressée.
 			Widget obj = this.Detect(pos);
+			bool selectionChanged = false;
 
-			if (!isControlPressed)  // touche Ctrl relâchée ?
+			if (!isControlPressed && this.selectedObjects.Count > 0)  // touche Ctrl relâchée ?
 			{
 				this.selectedObjects.Clear();
-				this.UpdateAfterChanging(Viewers.Changing.Selection);
+				selectionChanged = true;
 			}
 
 			if (obj != null)
@@ -408,6 +409,11 @@ namespace Epsitec.Common.Designer.FormEditor
 				{
 					this.selectedObjects.Add(obj);
 				}
+				selectionChanged = true;
+			}
+
+			if (selectionChanged)
+			{
 				this.UpdateAfterChanging(Viewers.Changing.Selection);
 			}
 
@@ -430,7 +436,7 @@ namespace Epsitec.Common.Designer.FormEditor
 		protected void SelectKeyChanged(bool isControlPressed, bool isShiftPressed)
 		{
 			//	Sélection ponctuelle, touche pressée ou relâchée.
-			if (isShiftPressed)
+			if (isControlPressed)
 			{
 				this.ChangeMouseCursor(MouseCursorType.ArrowPlus);
 			}
@@ -460,7 +466,7 @@ namespace Epsitec.Common.Designer.FormEditor
 		protected void GlobalKeyChanged(bool isControlPressed, bool isShiftPressed)
 		{
 			//	Sélection rectangulaire, touche pressée ou relâchée.
-			if (isShiftPressed)
+			if (isControlPressed)
 			{
 				this.ChangeMouseCursor(MouseCursorType.ArrowPlus);
 			}
@@ -597,6 +603,23 @@ namespace Epsitec.Common.Designer.FormEditor
 		{
 			//	Préparation en vue de la suppression de l'interface.
 			this.DeselectAll();
+		}
+
+		public List<string> GetSelectedDruidsPath()
+		{
+			//	Retourne la liste des chemins de Druids de tous les champs sélectionnés.
+			List<string> list = new List<string>();
+
+			foreach (Widget obj in this.selectedObjects)
+			{
+				FieldDescription field = this.objectModifier.GetFormDescription(obj);
+				if (field != null)
+				{
+					list.Add(field.GetPath(null));
+				}
+			}
+
+			return list;
 		}
 
 		public void DeselectAll()
