@@ -793,6 +793,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 			this.SetForm(this.form, this.druidToSerialize, true);
 			this.UpdateFieldTable(false);
+			this.ReflectSelectionToList();
 			this.UpdateButtons();
 		}
 
