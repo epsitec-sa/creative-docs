@@ -109,6 +109,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.fieldTable.SetColumnAlignment(1, ContentAlignment.MiddleLeft);
 			this.fieldTable.SetColumnBreakMode(1, TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine);
 			this.fieldTable.AllowMultipleSelection = true;
+			this.fieldTable.LineHeight = 16;
 			this.fieldTable.Dock = DockStyle.Fill;
 			this.fieldTable.CellCountChanged += new EventHandler(this.HandleFieldTableCellCountChanged);
 			this.fieldTable.CellsContentChanged += new EventHandler(this.HandleFieldTableCellsContentChanged);
@@ -332,7 +333,7 @@ namespace Epsitec.Common.Designer.Viewers
 		protected void UpdateFieldTable(bool newContent)
 		{
 			//	Met à jour la table des champs.
-			this.listDruidsPath = new List<string>();
+			this.tableDruidsPath = new List<string>();
 
 			if (this.form != null && this.entityDruidsPath != null)
 			{
@@ -340,15 +341,15 @@ namespace Epsitec.Common.Designer.Viewers
 				//	partie du masque de saisie.
 				foreach (FieldDescription field in this.form.Fields)
 				{
-					this.listDruidsPath.Add(field.GetPath(null));
+					this.tableDruidsPath.Add(field.GetPath(null));
 				}
 
 				//	Complète ensuite par tous les autres.
 				foreach (string druidPath in this.entityDruidsPath)
 				{
-					if (!this.listDruidsPath.Contains(druidPath))
+					if (!this.tableDruidsPath.Contains(druidPath))
 					{
-						this.listDruidsPath.Add(druidPath);
+						this.tableDruidsPath.Add(druidPath);
 					}
 				}
 			}
@@ -356,7 +357,7 @@ namespace Epsitec.Common.Designer.Viewers
 			int first = this.fieldTable.FirstVisibleRow;
 			for (int i=0; i<this.fieldTable.LineCount; i++)
 			{
-				if (first+i >= this.listDruidsPath.Count)
+				if (first+i >= this.tableDruidsPath.Count)
 				{
 					this.fieldTable.SetLineString(0, first+i, "");
 					this.fieldTable.SetLineState(0, first+i, MyWidgets.StringList.CellState.Disabled);
@@ -368,20 +369,22 @@ namespace Epsitec.Common.Designer.Viewers
 				}
 				else
 				{
-					string use = (first+i < this.form.Fields.Count) ? "o" : "";
-					string name = this.module.AccessFields.GetFieldNames(this.listDruidsPath[first+i]);
+					bool active = (first+i < this.form.Fields.Count);
+					string icon = active ? "ActiveYes" : "ActiveNo";
+					string name = this.module.AccessFields.GetFieldNames(this.tableDruidsPath[first+i]);
+					Color color = active ? Color.Empty : Color.FromBrightness(0.9);
 
-					this.fieldTable.SetLineString(0, first+i, use);
+					this.fieldTable.SetLineString(0, first+i, Misc.Image(icon));
 					this.fieldTable.SetLineState(0, first+i, MyWidgets.StringList.CellState.Normal);
-					this.fieldTable.SetLineColor(0, first+i, Color.Empty);
+					this.fieldTable.SetLineColor(0, first+i, color);
 
 					this.fieldTable.SetLineString(1, first+i, name);
 					this.fieldTable.SetLineState(1, first+i, MyWidgets.StringList.CellState.Normal);
-					this.fieldTable.SetLineColor(1, first+i, Color.Empty);
+					this.fieldTable.SetLineColor(1, first+i, color);
 				}
 			}
 
-			this.fieldTable.TotalRows = this.listDruidsPath.Count;
+			this.fieldTable.TotalRows = this.tableDruidsPath.Count;
 
 			if (newContent)
 			{
@@ -411,7 +414,7 @@ namespace Epsitec.Common.Designer.Viewers
 							break;
 						}
 
-						if (sel == this.listDruidsPath.Count-1)
+						if (sel == this.tableDruidsPath.Count-1)
 						{
 							isNext = false;
 							break;
@@ -699,7 +702,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 			foreach (string druidPath in druidsPath)
 			{
-				int sel = this.listDruidsPath.IndexOf(druidPath);
+				int sel = this.tableDruidsPath.IndexOf(druidPath);
 				if (sel != -1)
 				{
 					sels.Add(sel);
@@ -728,7 +731,7 @@ namespace Epsitec.Common.Designer.Viewers
 				{
 					if (sel != -1)
 					{
-						druidsPath.Add(this.listDruidsPath[sel]);
+						druidsPath.Add(this.tableDruidsPath[sel]);
 					}
 				}
 
@@ -894,7 +897,7 @@ namespace Epsitec.Common.Designer.Viewers
 		protected Druid							entityId;
 		protected FormDescription				form;
 		protected List<string>					entityDruidsPath;
-		protected List<string>					listDruidsPath;
+		protected List<string>					tableDruidsPath;
 		protected FormEditor.Editor				formEditor;
 		protected FrameBox						right;
 		protected HSplitter						splitter3;
