@@ -781,8 +781,7 @@ namespace Epsitec.Cresus.Database
 			DbKey oldKey = new DbKey (row);
 
 			row.BeginEdit ();
-			DbKey.SetRowId (row, newKey.Id);
-			DbKey.SetRowStatus (row, newKey.Status);
+			newKey.SetRowKey (row);
 			row.EndEdit ();
 
 			if ((oldKey.IsTemporary) &&
@@ -1158,7 +1157,7 @@ namespace Epsitec.Cresus.Database
 
 				if (callback != null)
 				{
-					newKey = callback (table, oldKey, newKey);
+					newKey = callback (tableDef, table, oldKey, newKey);
 
 					if (newKey.IsEmpty)
 					{
@@ -1170,13 +1169,12 @@ namespace Epsitec.Cresus.Database
 				System.Diagnostics.Debug.Assert (newKey.IsTemporary == false);
 				
 				row.BeginEdit ();
-				DbKey.SetRowId (row, newKey.Id);
-				DbKey.SetRowStatus (row, newKey.Status);
+				newKey.SetRowKey (row);
 				row.EndEdit ();
 			}
 		}
 
-		public delegate DbKey RowIdAssignmentCallback(System.Data.DataTable table, DbKey oldKey, DbKey newKey);
+		public delegate DbKey RowIdAssignmentCallback(DbTable tableDefinition, System.Data.DataTable table, DbKey oldKey, DbKey newKey);
 
 		/// <summary>
 		/// Updates the log ids associated with the table, using the specified log id.
@@ -1267,8 +1265,7 @@ namespace Epsitec.Cresus.Database
 				DbKey key = new DbKey (DbKey.CreateTemporaryId (), DbRowStatus.Live);
 
 				row.BeginEdit ();
-				DbKey.SetRowId (row, key.Id);
-				DbKey.SetRowStatus (row, key.Status);
+				key.SetRowKey (row);
 				row.EndEdit ();
 			}
 
@@ -1375,8 +1372,7 @@ namespace Epsitec.Cresus.Database
 			
 			DbKey key = new DbKey (DbKey.CreateTemporaryId (), DbRowStatus.Copied);
 
-			DbKey.SetRowId (copy, key.Id);
-			DbKey.SetRowStatus (copy, key.Status);
+			key.SetRowKey (copy);
 			
 			DbKey.SetRowStatus (archive, DbRowStatus.ArchiveCopy);
 			

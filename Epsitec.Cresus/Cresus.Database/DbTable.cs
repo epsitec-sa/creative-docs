@@ -838,6 +838,8 @@ namespace Epsitec.Cresus.Database
 			DbTools.WriteAttribute (xmlWriter, "l10n", DbTools.StringToString (this.localizations));
 			DbTools.WriteAttribute (xmlWriter, "typ", DbTools.DruidToString (this.captionId));
 			DbTools.WriteAttribute (xmlWriter, "idx", DbTools.StringToString (this.SerializeIndexes (this.indexes)));
+			DbTools.WriteAttribute (xmlWriter, "rstn", DbTools.StringToString (this.relationSourceTableName));
+			DbTools.WriteAttribute (xmlWriter, "rttn", DbTools.StringToString (this.relationTargetTableName));
 
 			xmlWriter.WriteEndElement ();
 		}
@@ -970,18 +972,20 @@ namespace Epsitec.Cresus.Database
 				DbTable table = new DbTable ();
 				bool isEmptyElement = xmlReader.IsEmptyElement;
 
-				table.category              = DbTools.ParseElementCategory (xmlReader.GetAttribute ("cat"));
-				table.revisionMode          = DbTools.ParseRevisionMode (xmlReader.GetAttribute ("rev"));
-				table.replicationMode       = DbTools.ParseReplicationMode (xmlReader.GetAttribute ("rep"));
-				table.localizations         = DbTools.ParseString (xmlReader.GetAttribute ("l10n"));
-				table.captionId             = DbTools.ParseDruid (xmlReader.GetAttribute ("typ"));
-				table.serializedIndexTuples = DbTools.ParseString (xmlReader.GetAttribute ("idx"));
+				table.category                = DbTools.ParseElementCategory (xmlReader.GetAttribute ("cat"));
+				table.revisionMode            = DbTools.ParseRevisionMode (xmlReader.GetAttribute ("rev"));
+				table.replicationMode         = DbTools.ParseReplicationMode (xmlReader.GetAttribute ("rep"));
+				table.localizations           = DbTools.ParseString (xmlReader.GetAttribute ("l10n"));
+				table.captionId               = DbTools.ParseDruid (xmlReader.GetAttribute ("typ"));
+				table.relationSourceTableName = DbTools.ParseString (xmlReader.GetAttribute ("rstn"));
+				table.relationTargetTableName = DbTools.ParseString (xmlReader.GetAttribute ("rttn"));
+				table.serializedIndexTuples   = DbTools.ParseString (xmlReader.GetAttribute ("idx"));
 				
 				if (!isEmptyElement)
 				{
 					xmlReader.ReadEndElement ();
 				}
-
+				
 				return table;
 			}
 			else
@@ -1087,12 +1091,14 @@ namespace Epsitec.Cresus.Database
 			DbTypeDef statusType = infrastructure.ResolveLoadedDbType (Tags.TypeKeyStatus);
 			DbTypeDef rankType   = infrastructure.ResolveLoadedDbType (Tags.TypeCollectionRank);
 
+			relationTable.Columns.Add (new DbColumn (Tags.ColumnId,          refIdType,  DbColumnClass.KeyId,       DbElementCat.Internal));
+			relationTable.Columns.Add (new DbColumn (Tags.ColumnStatus,      statusType, DbColumnClass.KeyStatus,   DbElementCat.Internal));
 			relationTable.Columns.Add (new DbColumn (Tags.ColumnRefSourceId, refIdType,  DbColumnClass.RefInternal, DbElementCat.Internal));
 			relationTable.Columns.Add (new DbColumn (Tags.ColumnRefTargetId, refIdType,  DbColumnClass.RefInternal, DbElementCat.Internal));
-			relationTable.Columns.Add (new DbColumn (Tags.ColumnStatus,      statusType, DbColumnClass.KeyStatus,   DbElementCat.Internal));
 			relationTable.Columns.Add (new DbColumn (Tags.ColumnRefRank,     rankType,   DbColumnClass.Data,        DbElementCat.Internal));
 
-			relationTable.AddIndex (relationTable.Columns[0], relationTable.Columns[1]);
+			relationTable.PrimaryKeys.Add (relationTable.Columns[Tags.ColumnId]);
+			relationTable.AddIndex (relationTable.Columns[Tags.ColumnRefSourceId], relationTable.Columns[Tags.ColumnRefTargetId]);
 
 			return relationTable;
 		}

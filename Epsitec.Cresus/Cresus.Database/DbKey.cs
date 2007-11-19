@@ -135,6 +135,16 @@ namespace Epsitec.Cresus.Database
 		
 		public static readonly DbKey			Empty = new DbKey ();
 
+		/// <summary>
+		/// Sets the row key id and status.
+		/// </summary>
+		/// <param name="row">The data row.</param>
+		public void SetRowKey(System.Data.DataRow row)
+		{
+			DbKey.SetRowId (row, this.Id);
+			DbKey.SetRowStatus (row, this.Status);
+		}
+
 		#region IXmlSerializable Members
 
 		/// <summary>

@@ -65,8 +65,9 @@ namespace Epsitec.Cresus.DataLayer
 			{
 				if (columnDefinition.Cardinality != DbCardinality.None)
 				{
-					DbTable relationTableDefinition = DbTable.CreateRelationTable (this.infrastructure, tableDefinition, columnDefinition);
-					this.richCommand.ImportTable (transaction, relationTableDefinition, null);
+					string relationTableName = tableDefinition.GetRelationTableName (columnDefinition);
+					DbTable relationTableDef = this.infrastructure.ResolveDbTable (transaction, relationTableName);
+					this.richCommand.ImportTable (transaction, relationTableDef, null);
 				}
 			}
 		}

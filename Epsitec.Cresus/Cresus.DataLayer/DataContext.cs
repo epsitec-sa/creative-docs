@@ -86,7 +86,8 @@ namespace Epsitec.Cresus.DataLayer
 			//	Tables which contain the data for derived entities should be
 			//	skipped. See method SaveTablesRowIdAssignmentCallbackImplementation.
 
-			if (table.Columns.Contains (Tags.ColumnInstanceType))
+			if ((table.Columns.Contains (Tags.ColumnInstanceType)) ||
+				(table.Columns.Contains (Tags.ColumnRefSourceId)))
 			{
 				return true;
 			}
@@ -107,13 +108,20 @@ namespace Epsitec.Cresus.DataLayer
 		/// <param name="newKey">The new key.</param>
 		/// <returns>Always returns <see cref="DbKey.Empty"/>, since it updates the
 		/// row keys itself.</returns>
-		private DbKey SaveTablesRowIdAssignmentCallbackImplementation(System.Data.DataTable table, DbKey oldKey, DbKey newKey)
+		private DbKey SaveTablesRowIdAssignmentCallbackImplementation(DbTable tableDef, System.Data.DataTable table, DbKey oldKey, DbKey newKey)
 		{
-			TemporaryRowCollection temporaryRows;
-			temporaryRows = this.GetTemporaryRows (table.TableName);
-			temporaryRows.UpdateAssociatedRowKeys (this.richCommand, oldKey, newKey);
+			if (tableDef.Category == DbElementCat.Relation)
+			{
+				return newKey;
+			}
+			else
+			{
+				TemporaryRowCollection temporaryRows;
+				temporaryRows = this.GetTemporaryRows (table.TableName);
+				temporaryRows.UpdateAssociatedRowKeys (this.richCommand, oldKey, newKey);
 
-			return DbKey.Empty;
+				return DbKey.Empty;
+			}
 		}
 
 		/// <summary>
@@ -395,11 +403,12 @@ namespace Epsitec.Cresus.DataLayer
 				}
 
 				System.Data.DataRow relationRow = this.richCommand.CreateRow (tableName);
+				DbKey key = new DbKey (DbKey.CreateTemporaryId (), DbRowStatus.Live);
 
 				relationRow.BeginEdit ();
+				key.SetRowKey (relationRow);
 				relationRow[Tags.ColumnRefSourceId] = sourceMapping.RowKey.Id.Value;
 				relationRow[Tags.ColumnRefTargetId] = targetMapping.RowKey.Id.Value;
-				relationRow[Tags.ColumnStatus] = DbKey.ConvertToIntStatus (DbRowStatus.Live);
 				relationRow[Tags.ColumnRefRank] = -1;
 				relationRow.EndEdit ();
 			}

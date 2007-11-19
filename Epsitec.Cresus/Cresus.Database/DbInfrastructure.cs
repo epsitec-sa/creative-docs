@@ -1305,9 +1305,12 @@ namespace Epsitec.Cresus.Database
 		private void CreateRelationTable(DbTransaction transaction, DbTable sourceTable, DbColumn sourceColumn)
 		{
 			DbTable relationTable = DbTable.CreateRelationTable (this, sourceTable, sourceColumn);
-			
+
+			this.RegisterNewDbTable (transaction, relationTable);
+			/*
 			transaction.SqlBuilder.InsertTable (relationTable.CreateSqlTable (this.converter));
 			this.ExecuteSilent (transaction);
+			 */
 		}
 
 		/// <summary>
