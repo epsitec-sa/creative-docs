@@ -108,6 +108,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.fieldTable.SetColumnAlignment(0, ContentAlignment.MiddleCenter);
 			this.fieldTable.SetColumnAlignment(1, ContentAlignment.MiddleLeft);
 			this.fieldTable.SetColumnBreakMode(1, TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine);
+			this.fieldTable.AllowMultipleSelection = true;
 			this.fieldTable.Dock = DockStyle.Fill;
 			this.fieldTable.CellCountChanged += new EventHandler(this.HandleFieldTableCellCountChanged);
 			this.fieldTable.CellsContentChanged += new EventHandler(this.HandleFieldTableCellsContentChanged);
@@ -622,6 +623,29 @@ namespace Epsitec.Common.Designer.Viewers
 		}
 
 
+		protected void ReflectSelectionToEditor()
+		{
+			//	Reflète les sélections effectuées dans la liste des champs dans l'éditeur de Forms.
+			List<int> sels = this.fieldTable.SelectedRows;
+
+			if (sels == null)
+			{
+				this.formEditor.DeselectAll();
+			}
+			else
+			{
+				List<string> druidsPath = new List<string>();
+				List<string> list = this.module.AccessEntities.GetEntityFields(this.entityId);
+				foreach (int sel in sels)
+				{
+					druidsPath.Add(list[sel]);
+				}
+
+				this.formEditor.SelectListObject(druidsPath);
+			}
+		}
+
+
 		#region Proxies
 		protected void DefineProxies(IEnumerable<Widget> widgets)
 		{
@@ -726,7 +750,7 @@ namespace Epsitec.Common.Designer.Viewers
 		private void HandleFieldTableSelectedRowChanged(object sender)
 		{
 			//	La ligne sélectionnée a changé.
-			//?this.UpdateButtons();
+			this.ReflectSelectionToEditor();
 		}
 
 

@@ -689,6 +689,31 @@ namespace Epsitec.Common.Designer.FormEditor
 			this.Invalidate();
 		}
 
+		public void SelectListObject(List<string> druidsPath)
+		{
+			//	Sélectionne une liste d'objets.
+			this.selectedObjects.Clear();
+
+			foreach (string druidPath in druidsPath)
+			{
+				foreach (FieldDescription field in this.form.Fields)
+				{
+					if (druidPath == field.GetPath(null))
+					{
+						Widget obj = this.objectModifier.GetWidget(field.UniqueId);
+						if (obj != null)
+						{
+							this.selectedObjects.Add(obj);
+						}
+					}
+				}
+			}
+
+			this.UpdateAfterChanging(Viewers.Changing.Selection);
+			this.OnChildrenSelected();
+			this.Invalidate();
+		}
+
 		protected void SelectObjectsInRectangle(Rectangle sel)
 		{
 			//	Sélectionne tous les objets entièrement inclus dans un rectangle.
