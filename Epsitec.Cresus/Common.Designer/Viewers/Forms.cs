@@ -332,23 +332,23 @@ namespace Epsitec.Common.Designer.Viewers
 		protected void UpdateFieldTable(bool newContent)
 		{
 			//	Met à jour la table des champs.
-			List<string> tableDruidsPath = new List<string>();
+			this.listDruidsPath = new List<string>();
 
-			if (this.form != null && this.druidsPath != null)
+			if (this.form != null && this.entityDruidsPath != null)
 			{
 				//	Construit la liste des chemins de Druids, en commençant par ceux qui font
 				//	partie du masque de saisie.
 				foreach (FieldDescription field in this.form.Fields)
 				{
-					tableDruidsPath.Add(field.GetPath(null));
+					this.listDruidsPath.Add(field.GetPath(null));
 				}
 
 				//	Complète ensuite par tous les autres.
-				foreach (string druidPath in this.druidsPath)
+				foreach (string druidPath in this.entityDruidsPath)
 				{
-					if (!tableDruidsPath.Contains(druidPath))
+					if (!this.listDruidsPath.Contains(druidPath))
 					{
-						tableDruidsPath.Add(druidPath);
+						this.listDruidsPath.Add(druidPath);
 					}
 				}
 			}
@@ -356,7 +356,7 @@ namespace Epsitec.Common.Designer.Viewers
 			int first = this.fieldTable.FirstVisibleRow;
 			for (int i=0; i<this.fieldTable.LineCount; i++)
 			{
-				if (first+i >= tableDruidsPath.Count)
+				if (first+i >= this.listDruidsPath.Count)
 				{
 					this.fieldTable.SetLineString(0, first+i, "");
 					this.fieldTable.SetLineState(0, first+i, MyWidgets.StringList.CellState.Disabled);
@@ -369,7 +369,7 @@ namespace Epsitec.Common.Designer.Viewers
 				else
 				{
 					string use = (first+i < this.form.Fields.Count) ? "o" : "";
-					string name = this.module.AccessFields.GetFieldNames(tableDruidsPath[first+i]);
+					string name = this.module.AccessFields.GetFieldNames(this.listDruidsPath[first+i]);
 
 					this.fieldTable.SetLineString(0, first+i, use);
 					this.fieldTable.SetLineState(0, first+i, MyWidgets.StringList.CellState.Normal);
@@ -381,7 +381,7 @@ namespace Epsitec.Common.Designer.Viewers
 				}
 			}
 
-			this.fieldTable.TotalRows = tableDruidsPath.Count;
+			this.fieldTable.TotalRows = this.listDruidsPath.Count;
 
 			if (newContent)
 			{
@@ -395,7 +395,7 @@ namespace Epsitec.Common.Designer.Viewers
 			bool isPrev = false;
 			bool isNext = false;
 
-			if (!this.designerApplication.IsReadonly && this.druidsPath != null)
+			if (!this.designerApplication.IsReadonly)
 			{
 				List<int> sels = this.fieldTable.SelectedRows;
 				if (sels != null && sels.Count > 0)
@@ -411,7 +411,7 @@ namespace Epsitec.Common.Designer.Viewers
 							break;
 						}
 
-						if (sel == this.druidsPath.Count-1)
+						if (sel == this.listDruidsPath.Count-1)
 						{
 							isNext = false;
 							break;
@@ -538,7 +538,7 @@ namespace Epsitec.Common.Designer.Viewers
 				this.formEditor.IsEditEnabled = false;
 				this.formEditor.Form = null;
 
-				this.druidsPath = null;
+				this.entityDruidsPath = null;
 			}
 			else
 			{
@@ -572,7 +572,7 @@ namespace Epsitec.Common.Designer.Viewers
 					this.formEditor.DeselectAll();
 				}
 
-				this.druidsPath = this.module.AccessEntities.GetEntityDruidsPath(this.entityId);
+				this.entityDruidsPath = this.module.AccessEntities.GetEntityDruidsPath(this.entityId);
 			}
 		}
 
@@ -699,7 +699,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 			foreach (string druidPath in druidsPath)
 			{
-				int sel = this.druidsPath.IndexOf(druidPath);
+				int sel = this.listDruidsPath.IndexOf(druidPath);
 				if (sel != -1)
 				{
 					sels.Add(sel);
@@ -728,7 +728,7 @@ namespace Epsitec.Common.Designer.Viewers
 				{
 					if (sel != -1)
 					{
-						druidsPath.Add(this.druidsPath[sel]);
+						druidsPath.Add(this.listDruidsPath[sel]);
 					}
 				}
 
@@ -893,7 +893,8 @@ namespace Epsitec.Common.Designer.Viewers
 		protected UI.Panel						panelContainer;
 		protected Druid							entityId;
 		protected FormDescription				form;
-		protected List<string>					druidsPath;
+		protected List<string>					entityDruidsPath;
+		protected List<string>					listDruidsPath;
 		protected FormEditor.Editor				formEditor;
 		protected FrameBox						right;
 		protected HSplitter						splitter3;
