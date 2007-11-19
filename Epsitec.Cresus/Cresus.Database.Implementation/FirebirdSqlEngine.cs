@@ -130,15 +130,17 @@ namespace Epsitec.Cresus.Database.Implementation
 				//	ce qui permettrait de garantir que l'on utilise le bon objet de transaction;
 				//	en attendant, on détecte la mise à jour via la commande et on s'assure nous-
 				//	même que la transaction est bien correcte :
-				
-				adapter.RowUpdating += delegate (object sender, FbRowUpdatingEventArgs e)
-				{
-					if (e.Command.Transaction == null)
+
+				adapter.RowUpdating +=
+					delegate (object sender, FbRowUpdatingEventArgs e)
 					{
-						System.Diagnostics.Debug.WriteLine (string.Format ("Fixed missing transaction for command:\n   {0}", e.Command.CommandText));
-						e.Command.Transaction = richCommand.GetActiveTransaction ().Transaction as FbTransaction;
-					}
-				};
+						if ((e.Command != null) &&
+							(e.Command.Transaction == null))
+						{
+							System.Diagnostics.Debug.WriteLine (string.Format ("Fixed missing transaction for command:\n   {0}", e.Command.CommandText));
+							e.Command.Transaction = richCommand.GetActiveTransaction ().Transaction as FbTransaction;
+						}
+					};
 #endif
 			}
 				

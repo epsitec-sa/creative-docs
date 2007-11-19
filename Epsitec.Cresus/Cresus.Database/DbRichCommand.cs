@@ -720,6 +720,28 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 
+		public static IEnumerable<System.Data.DataRow> FilterExistingRows(IEnumerable<System.Data.DataRow> collection)
+		{
+			foreach (System.Data.DataRow row in collection)
+			{
+				switch (row.RowState)
+				{
+					case System.Data.DataRowState.Deleted:
+					case System.Data.DataRowState.Detached:
+						break;
+					
+					case System.Data.DataRowState.Added:
+					case System.Data.DataRowState.Modified:
+					case System.Data.DataRowState.Unchanged:
+						yield return row;
+						break;
+
+					default:
+						throw new System.NotImplementedException ();
+				}
+			}
+		}
+
 		/// <summary>
 		/// Deletes an existing row.
 		/// </summary>

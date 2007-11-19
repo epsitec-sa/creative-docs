@@ -391,66 +391,88 @@ namespace Epsitec.Cresus.DataLayer
 
 		private void WriteFieldReference(AbstractEntity sourceEntity, Druid entityId, StructuredTypeField fieldDef)
 		{
-			string tableName = this.GetRelationTableName (entityId, fieldDef);
-
 			AbstractEntity targetEntity = sourceEntity.InternalGetValue (fieldDef.Id) as AbstractEntity;
+			
+			EntityDataMapping sourceMapping = this.GetEntityDataMapping (sourceEntity);
+			EntityDataMapping targetMapping = this.GetEntityDataMapping (targetEntity);
+			
+			string relationTableName = this.GetRelationTableName (entityId, fieldDef);
+
+			System.Data.DataRow[] relationRows = Collection.ToArray (DbRichCommand.FilterExistingRows (this.richCommand.FindRelationRows (relationTableName, sourceMapping.RowKey.Id)));
 
 			if (targetEntity != null)
 			{
-				EntityDataMapping sourceMapping = this.GetEntityDataMapping (sourceEntity);
-				EntityDataMapping targetMapping = this.GetEntityDataMapping (targetEntity);
-
+				System.Diagnostics.Debug.Assert (targetMapping != null);
+				
 				if (targetMapping.RowKey.IsEmpty)
 				{
 					this.SerializeEntity (targetEntity);
 				}
 
-				//	TODO: find row and replace contents if relation already existed previously
-
-				System.Data.DataRow relationRow = this.richCommand.CreateRow (tableName);
-				DbKey key = new DbKey (DbKey.CreateTemporaryId (), DbRowStatus.Live);
-
-				relationRow.BeginEdit ();
-				key.SetRowKey (relationRow);
-				relationRow[Tags.ColumnRefSourceId] = sourceMapping.RowKey.Id.Value;
-				relationRow[Tags.ColumnRefTargetId] = targetMapping.RowKey.Id.Value;
-				relationRow[Tags.ColumnRefRank] = -1;
-				relationRow.EndEdit ();
+				if (relationRows.Length == 0)
+				{
+					this.CreateRelationRow (relationTableName, sourceMapping, targetMapping);
+				}
+				else if (relationRows.Length == 1)
+				{
+					this.UpdateRelationRow (relationRows[0], sourceMapping, targetMapping);
+				}
+				else
+				{
+					throw new System.InvalidOperationException ();
+				}
 			}
 			else
 			{
-				EntityDataMapping sourceMapping = this.GetEntityDataMapping (sourceEntity);
-				long sourceId = sourceMapping.RowKey.Id.Value;
-
-				System.Data.DataTable relationTable = this.richCommand.DataSet.Tables[tableName];
-
-				for (int i = 0; i < relationTable.Rows.Count; )
+				if (relationRows.Length == 1)
 				{
-					System.Data.DataRow relationRow = relationTable.Rows[i];
-
-					if ((long) relationRow[Tags.ColumnRefSourceId] == sourceId)
-					{
-						switch (relationRow.RowState)
-						{
-							case System.Data.DataRowState.Added:
-								relationTable.Rows.RemoveAt (i);
-								break;
-
-							case System.Data.DataRowState.Deleted:
-								i++;
-								break;
-
-							case System.Data.DataRowState.Modified:
-							case System.Data.DataRowState.Unchanged:
-								relationRow.Delete ();
-								i++;
-								break;
-
-							default:
-								throw new System.NotImplementedException ();
-						}
-					}
+					this.DeleteRelationRow (relationRows[0]);
 				}
+				else if (relationRows.Length > 1)
+				{
+					throw new System.InvalidOperationException ();
+				}
+			}
+		}
+
+		private void UpdateRelationRow(System.Data.DataRow relationRow, EntityDataMapping sourceMapping, EntityDataMapping targetMapping)
+		{
+			System.Diagnostics.Debug.Assert (sourceMapping.RowKey.Id.Value == (long) relationRow[Tags.ColumnRefSourceId]);
+			System.Diagnostics.Debug.Assert (-1 == (int) relationRow[Tags.ColumnRefRank]);
+
+			relationRow.BeginEdit ();
+			relationRow[Tags.ColumnRefTargetId] = targetMapping.RowKey.Id.Value;
+			relationRow.EndEdit ();
+		}
+
+		private void CreateRelationRow(string relationTableName, EntityDataMapping sourceMapping, EntityDataMapping targetMapping)
+		{
+			System.Data.DataRow relationRow = this.richCommand.CreateRow (relationTableName);
+			DbKey key = new DbKey (DbKey.CreateTemporaryId (), DbRowStatus.Live);
+
+			relationRow.BeginEdit ();
+			key.SetRowKey (relationRow);
+			relationRow[Tags.ColumnRefSourceId] = sourceMapping.RowKey.Id.Value;
+			relationRow[Tags.ColumnRefTargetId] = targetMapping.RowKey.Id.Value;
+			relationRow[Tags.ColumnRefRank] = -1;
+			relationRow.EndEdit ();
+		}
+
+		private void DeleteRelationRow(System.Data.DataRow relationRow)
+		{
+			switch (relationRow.RowState)
+			{
+				case System.Data.DataRowState.Added:
+					relationRow.Table.Rows.Remove (relationRow);
+					break;
+
+				case System.Data.DataRowState.Modified:
+				case System.Data.DataRowState.Unchanged:
+					relationRow.Delete ();
+					break;
+
+				default:
+					throw new System.InvalidOperationException ();
 			}
 		}
 
@@ -579,6 +601,8 @@ namespace Epsitec.Cresus.DataLayer
 			}
 		}
 
+		
+
 
 		/// <summary>
 		/// Creates a new data row for the specified entity. The row will store
@@ -655,7 +679,7 @@ namespace Epsitec.Cresus.DataLayer
 		{
 			if (entity == null)
 			{
-				throw new System.ArgumentNullException ("entity");
+				return null;
 			}
 
 			EntityDataMapping mapping;
