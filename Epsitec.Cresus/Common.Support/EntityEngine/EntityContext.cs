@@ -33,6 +33,9 @@ namespace Epsitec.Common.Support.EntityEngine
 			this.associatedThread    = System.Threading.Thread.CurrentThread;
 			this.structuredTypeMap   = new Dictionary<Druid, IStructuredType> ();
 			this.loopHandlingMode    = loopHandlingMode;
+
+			this.propertyGetters = new Dictionary<string, PropertyGetter> ();
+			this.propertySetters = new Dictionary<string, PropertySetter> ();
 		}
 
 		/// <summary>
@@ -216,18 +219,56 @@ namespace Epsitec.Common.Support.EntityEngine
 		}
 
 
+		/// <summary>
+		/// Finds the property setter used to write to the specified field.
+		/// This uses an internal cache.
+		/// </summary>
+		/// <param name="entity">The entity.</param>
+		/// <param name="id">The field id.</param>
+		/// <returns>The <see cref="PropertySetter"/> delegate or <c>null</c>.</returns>
 		internal PropertySetter FindPropertySetter(AbstractEntity entity, string id)
 		{
-			System.Reflection.PropertyInfo propertyInfo = this.FindPropertyInfo (entity, id);
-			return DynamicCodeFactory.CreatePropertySetter (propertyInfo);
+			string key = string.Concat (entity.GetEntityStructuredTypeId (), ".", id);
+			PropertySetter setter;
+			
+			if (this.propertySetters.TryGetValue (key, out setter))
+			{
+				return setter;
+			}
+
+			this.propertySetters[key] = setter = DynamicCodeFactory.CreatePropertySetter (this.FindPropertyInfo (entity, id));
+
+			return setter;
 		}
 
+		/// <summary>
+		/// Finds the property getter used to read from the specified field.
+		/// This uses an internal cache.
+		/// </summary>
+		/// <param name="entity">The entity.</param>
+		/// <param name="id">The field id.</param>
+		/// <returns>The <see cref="PropertyGetter"/> delegate or <c>null</c>.</returns>
 		internal PropertyGetter FindPropertyGetter(AbstractEntity entity, string id)
 		{
-			System.Reflection.PropertyInfo propertyInfo = this.FindPropertyInfo (entity, id);
-			return DynamicCodeFactory.CreatePropertyGetter (propertyInfo);
+			string key = string.Concat (entity.GetEntityStructuredTypeId (), ".", id);
+			PropertyGetter getter;
+			
+			if (this.propertyGetters.TryGetValue (key, out getter))
+			{
+				return getter;
+			}
+
+			this.propertyGetters[key] = getter = DynamicCodeFactory.CreatePropertyGetter (this.FindPropertyInfo (entity, id));
+
+			return getter;
 		}
 
+		/// <summary>
+		/// Finds the property info for the matching property.
+		/// </summary>
+		/// <param name="entity">The entity.</param>
+		/// <param name="id">The field id to map to a property.</param>
+		/// <returns>The <see cref="System.Reflection.PropertyInfo"/> or <c>null</c>.</returns>
 		private System.Reflection.PropertyInfo FindPropertyInfo(AbstractEntity entity, string id)
 		{
 			System.Type entityType = entity.GetType ();
@@ -479,5 +520,7 @@ namespace Epsitec.Common.Support.EntityEngine
 		private readonly System.Threading.Thread associatedThread;
 		private readonly Dictionary<Druid, IStructuredType> structuredTypeMap;
 		private readonly EntityLoopHandlingMode loopHandlingMode;
+		private readonly Dictionary<string, PropertyGetter> propertyGetters;
+		private readonly Dictionary<string, PropertySetter> propertySetters;
 	}
 }

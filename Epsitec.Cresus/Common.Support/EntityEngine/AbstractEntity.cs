@@ -183,61 +183,10 @@ namespace Epsitec.Common.Support.EntityEngine
 			this.GenericSetValue (id, oldValue, newValue);
 		}
 
-		protected object GenericGetValue(string id)
-		{
-			return this.InternalGetValue (id);
-		}
-
-		protected void GenericSetValue(string id, object oldValue, object newValue)
-		{
-			StructuredTypeField field = this.context.GetStructuredType (this).GetField (id);
-
-			System.Diagnostics.Debug.Assert (field != null);
-			System.Diagnostics.Debug.Assert (field.Relation != FieldRelation.Collection);
-
-			if ((field.IsNullable) &&
-				(newValue == null))
-			{
-				//	The value is null and the field is nullable; this operation
-				//	is valid and it will clear the field.
-
-				this.InternalSetValue (id, UndefinedValue.Value);
-				return;
-			}
-			
-			IDataConstraint constraint = field.Type as IDataConstraint;
-
-			System.Diagnostics.Debug.Assert (constraint != null);
-
-			if (constraint.IsValidValue (newValue))
-			{
-				object value;
-				
-				if (newValue == null)
-				{
-					value = UndefinedValue.Value;
-				}
-				else
-				{
-					value = (object) newValue;
-				}
-
-				this.InternalSetValue (id, value);
-			}
-			else
-			{
-				throw new System.ArgumentException (string.Format ("Invalid value '{0}' specified for field {1}", newValue, id));
-			}
-		}
-
-		
-		
 		public static TResult GetCalculation<T, TResult>(T entity, string id, System.Func<T, TResult> func)
 		{
 			return func (entity);
 		}
-
-		
 		
 		public object InternalGetValue(string id)
 		{
@@ -341,6 +290,97 @@ namespace Epsitec.Common.Support.EntityEngine
 			return (this.originalValues ?? this.modifiedValues) as IStructuredTypeProvider;
 		}
 
+		protected virtual object DynamicGetField(string id)
+		{
+			PropertyGetter getter = this.context.FindPropertyGetter (this, id);
+
+			if (getter == null)
+			{
+				return this.GenericGetValue (id);
+			}
+			else
+			{
+				return getter (this);
+			}
+		}
+
+		protected virtual void DynamicSetField(string id, object newValue)
+		{
+			PropertySetter setter = this.context.FindPropertySetter (this, id);
+
+			if (setter == null)
+			{
+				this.GenericSetValue (id, this.InternalGetValue (id), newValue);
+			}
+			else
+			{
+				setter (this, newValue);
+			}
+		}
+
+		protected object GenericGetValue(string id)
+		{
+			return this.InternalGetValue (id);
+		}
+
+		protected void GenericSetValue(string id, object oldValue, object newValue)
+		{
+			StructuredTypeField field = this.context.GetStructuredType (this).GetField (id);
+
+			System.Diagnostics.Debug.Assert (field != null);
+			System.Diagnostics.Debug.Assert (field.Relation != FieldRelation.Collection);
+
+			if ((field.IsNullable) &&
+				(newValue == null))
+			{
+				//	The value is null and the field is nullable; this operation
+				//	is valid and it will clear the field.
+
+				this.InternalSetValue (id, UndefinedValue.Value);
+			}
+			else
+			{
+				IDataConstraint constraint = field.Type as IDataConstraint;
+
+				System.Diagnostics.Debug.Assert (constraint != null);
+
+				if (constraint.IsValidValue (newValue))
+				{
+					object value;
+
+					if (newValue == null)
+					{
+						value = UndefinedValue.Value;
+					}
+					else
+					{
+						value = (object) newValue;
+					}
+
+					this.InternalSetValue (id, value);
+				}
+				else
+				{
+					throw new System.ArgumentException (string.Format ("Invalid value '{0}' specified for field {1}", newValue, id));
+				}
+			}
+
+			if (this.eventHandlers != null)
+			{
+				System.Delegate handler;
+				
+				lock (this.eventHandlers)
+				{
+					this.eventHandlers.TryGetValue (id, out handler);
+				}
+
+				if (handler != null)
+				{
+					((EventHandler<DependencyPropertyChangedEventArgs>) handler) (this, new DependencyPropertyChangedEventArgs (id, oldValue, newValue));
+				}
+			}
+		}
+
 		#region IStructuredTypeProvider Members
 
 		IStructuredType IStructuredTypeProvider.GetStructuredType()
@@ -350,6 +390,123 @@ namespace Epsitec.Common.Support.EntityEngine
 
 		#endregion
 
+		#region IStructuredData Members
+
+		/// <summary>
+		/// Attaches a listener to the specified structured value.
+		/// </summary>
+		/// <param name="id">The identifier of the value.</param>
+		/// <param name="handler">The handler which implements the listener.</param>
+		void IStructuredData.AttachListener(string id, EventHandler<DependencyPropertyChangedEventArgs> handler)
+		{
+			this.EnsureEventHandlers ();
+
+			lock (this.eventHandlers)
+			{
+				System.Delegate handlers;
+
+				if (this.eventHandlers.TryGetValue (id, out handlers))
+				{
+					this.eventHandlers[id] = System.Delegate.Combine (handlers, handler);
+				}
+				else
+				{
+					this.eventHandlers[id] = handler;
+				}
+			}
+		}
+
+		/// <summary>
+		/// Detaches a listener from the specified structured value.
+		/// </summary>
+		/// <param name="id">The identifier of the value.</param>
+		/// <param name="handler">The handler which implements the listener.</param>
+		void IStructuredData.DetachListener(string id, EventHandler<DependencyPropertyChangedEventArgs> handler)
+		{
+			this.EnsureEventHandlers ();
+
+			lock (this.eventHandlers)
+			{
+				System.Delegate handlers;
+
+				if (this.eventHandlers.TryGetValue (id, out handlers))
+				{
+					handlers = System.Delegate.Remove (handlers, handler);
+
+					if (handlers == null)
+					{
+						this.eventHandlers.Remove (id);
+					}
+					else
+					{
+						this.eventHandlers[id] = handlers;
+					}
+				}
+			}
+		}
+
+		/// <summary>
+		/// Gets the collection of identifiers used to define the structured values.
+		/// </summary>
+		/// <returns>The collection of identifiers.</returns>
+		IEnumerable<string> IStructuredData.GetValueIds()
+		{
+			return this.context.GetEntityFieldIds (this);
+		}
+
+		#endregion
+
+		#region IValueStore Members
+
+		/// <summary>
+		/// Gets the value for the specified identifier.
+		/// </summary>
+		/// <param name="id">The identifier of the value.</param>
+		/// <returns>
+		/// The value, or either <see cref="UndefinedValue.Value"/> if the
+		/// value is currently undefined or <see cref="UnknownValue.Value"/> if the
+		/// identifier does not map to a known value.
+		/// </returns>
+		object IValueStore.GetValue(string id)
+		{
+			return this.DynamicGetField (id);
+		}
+
+		/// <summary>
+		/// Sets the value for the specified identifier.
+		/// </summary>
+		/// <param name="id">The identifier of the value.</param>
+		/// <param name="value">The value to store into the structure record;
+		/// specifying <see cref="UndefinedValue.Value"/> clears the value.
+		/// <see cref="UnknownValue.Value"/> may not be specified as a value.</param>
+		void IValueStore.SetValue(string id, object value)
+		{
+			this.DynamicSetField (id, value);
+		}
+
+		#endregion
+
+		private void EnsureEventHandlers()
+		{
+			if (this.eventHandlers == null)
+			{
+				lock (AbstractEntity.globalExclusion)
+				{
+					if (this.eventHandlers == null)
+					{
+						this.eventHandlers = new Dictionary<string, System.Delegate> ();
+					}
+				}
+			}
+		}
+
+		#region DefineOriginalValuesHelper Class
+
+		/// <summary>
+		/// The <c>DefineOriginalValuesHelper</c> is used by the <see cref="DefineOriginalValues"/>
+		/// method to manage the end of the definition phase; instances of this class
+		/// are meant to be used in a <c>using</c> block.
+		/// </summary>
 		private sealed class DefineOriginalValuesHelper : System.IDisposable
 		{
 			public DefineOriginalValuesHelper(AbstractEntity entity)
@@ -380,73 +537,16 @@ namespace Epsitec.Common.Support.EntityEngine
 			AbstractEntity entity;
 		}
 
+		#endregion
+
 		private static long nextSerialId = 1;
+		private static readonly object globalExclusion = new object ();
 
 		private readonly EntityContext context;
 		private readonly long entitySerialId;
 		private IValueStore originalValues;
 		private IValueStore modifiedValues;
 		private int defineOriginalValuesCount;
-
-		#region IStructuredData Members
-
-		void IStructuredData.AttachListener(string id, EventHandler<DependencyPropertyChangedEventArgs> handler)
-		{
-//			throw new System.Exception ("The method or operation is not implemented.");
-		}
-
-		void IStructuredData.DetachListener(string id, EventHandler<DependencyPropertyChangedEventArgs> handler)
-		{
-//			throw new System.Exception ("The method or operation is not implemented.");
-		}
-
-		IEnumerable<string> IStructuredData.GetValueIds()
-		{
-			return this.context.GetEntityFieldIds (this);
-		}
-
-		#endregion
-
-		#region IValueStore Members
-
-		object IValueStore.GetValue(string id)
-		{
-			return this.DynamicPropertyGet (id);
-		}
-
-		void IValueStore.SetValue(string id, object value)
-		{
-			this.DynamicPropertySet (id, value);
-		}
-
-		#endregion
-
-		protected virtual object DynamicPropertyGet(string id)
-		{
-			PropertyGetter getter = this.context.FindPropertyGetter (this, id);
-
-			if (getter == null)
-			{
-				return this.GenericGetValue (id);
-			}
-			else
-			{
-				return getter (this);
-			}
-		}
-
-		protected virtual void DynamicPropertySet(string id, object newValue)
-		{
-			PropertySetter setter = this.context.FindPropertySetter (this, id);
-			
-			if (setter == null)
-			{
-				this.GenericSetValue (id, this.InternalGetValue (id), newValue);
-			}
-			else
-			{
-				setter (this, newValue);
-			}
-		}
+		private Dictionary<string, System.Delegate> eventHandlers;
 	}
 }

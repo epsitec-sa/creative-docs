@@ -222,6 +222,29 @@ namespace Epsitec.Common.Support
 			Assert.AreEqual ("Foo", data.GetValue ("[700J2]"));
 			Assert.AreEqual (3, entity.getNameCounter);
 			Assert.AreEqual (1, entity.setNameCounter);
+
+			System.Diagnostics.Stopwatch watch = new System.Diagnostics.Stopwatch ();
+			watch.Start ();
+			const int n = 100*1000;
+
+			for (int i = 0; i < n; i++)
+			{
+				data.SetValue ("[700J2]", i.ToString ());
+			}
+
+			watch.Stop ();
+			System.Console.Out.WriteLine ("SetValue : {1} us ({0} calls)", n, watch.ElapsedMilliseconds * 100 * 1000 / n / 100.0M);
+
+			watch.Reset ();
+			watch.Start ();
+			
+			for (int i = 0; i < n; i++)
+			{
+				entity.SetField<string> ("[700J2]", i.ToString ());
+			}
+
+			watch.Stop ();
+			System.Console.Out.WriteLine ("SetField<string> : {1} us ({0} calls)", n, watch.ElapsedMilliseconds * 100 * 1000 / n / 100.0M);
 		}
 
 		[Test]
