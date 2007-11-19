@@ -323,11 +323,11 @@ namespace Epsitec.Common.Designer.Viewers
 			bool iic = this.ignoreChange;
 			this.ignoreChange = true;
 			this.Deserialize();
-			this.UpdateFieldTable();
+			this.UpdateFieldTable(true);
 			this.ignoreChange = iic;
 		}
 
-		protected void UpdateFieldTable()
+		protected void UpdateFieldTable(bool newContent)
 		{
 			//	Met à jour la table des champs.
 			List<string> list = this.module.AccessEntities.GetEntityFields(this.entityId);
@@ -360,6 +360,11 @@ namespace Epsitec.Common.Designer.Viewers
 			}
 
 			this.fieldTable.TotalRows = list.Count;
+
+			if (newContent)
+			{
+				this.fieldTable.FirstVisibleRow = 0;
+			}
 		}
 
 
@@ -528,7 +533,7 @@ namespace Epsitec.Common.Designer.Viewers
 			//	Met à jour le contenu du Viewer.
 			this.UpdateArray();
 			this.UpdateEdit();
-			this.UpdateFieldTable();
+			this.UpdateFieldTable(true);
 			this.UpdateCommands();
 		}
 
@@ -709,13 +714,13 @@ namespace Epsitec.Common.Designer.Viewers
 		private void HandleFieldTableCellCountChanged(object sender)
 		{
 			//	Le nombre de lignes a changé.
-			this.UpdateFieldTable();
+			this.UpdateFieldTable(false);
 		}
 
 		private void HandleFieldTableCellsContentChanged(object sender)
 		{
 			//	Le contenu des cellules a changé.
-			this.UpdateFieldTable();
+			this.UpdateFieldTable(false);
 		}
 
 		private void HandleFieldTableSelectedRowChanged(object sender)
