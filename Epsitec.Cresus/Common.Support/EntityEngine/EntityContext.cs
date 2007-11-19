@@ -16,11 +16,16 @@ namespace Epsitec.Common.Support.EntityEngine
 	/// </summary>
 	public class EntityContext
 	{
-		public EntityContext()
+		private EntityContext()
 			: this (Resources.DefaultManager, EntityLoopHandlingMode.Throw)
 		{
 		}
 
+		/// <summary>
+		/// Initializes a new instance of the <see cref="EntityContext"/> class.
+		/// </summary>
+		/// <param name="resourceManager">The resource manager.</param>
+		/// <param name="loopHandlingMode">The loop handling mode.</param>
 		public EntityContext(ResourceManager resourceManager, EntityLoopHandlingMode loopHandlingMode)
 		{
 			this.resourceManager     = resourceManager;
@@ -30,12 +35,19 @@ namespace Epsitec.Common.Support.EntityEngine
 			this.loopHandlingMode    = loopHandlingMode;
 		}
 
+		/// <summary>
+		/// Initializes the <see cref="EntityContext"/> class.
+		/// </summary>
 		static EntityContext()
 		{
 			EntityResolver.Setup ();
 		}
-		
-		
+
+
+		/// <summary>
+		/// Gets the current, thread specific, entity context.
+		/// </summary>
+		/// <value>The entity context for this thread.</value>
 		public static EntityContext				Current
 		{
 			get
@@ -49,6 +61,11 @@ namespace Epsitec.Common.Support.EntityEngine
 			}
 		}
 
+		/// <summary>
+		/// Pushes the current context on an internal stack and makes the
+		/// specified context the new current context.
+		/// </summary>
+		/// <param name="context">The context.</param>
 		public static void Push(EntityContext context)
 		{
 			if (EntityContext.contextStack == null)
@@ -60,6 +77,9 @@ namespace Epsitec.Common.Support.EntityEngine
 			EntityContext.current = context;
 		}
 
+		/// <summary>
+		/// Pops the current context from an internal stack. See <see cref="Push"/>.
+		/// </summary>
 		public static void Pop()
 		{
 			EntityContext.current = EntityContext.contextStack.Pop ();
@@ -196,6 +216,41 @@ namespace Epsitec.Common.Support.EntityEngine
 		}
 
 
+		internal PropertySetter FindPropertySetter(AbstractEntity entity, string id)
+		{
+			System.Reflection.PropertyInfo propertyInfo = this.FindPropertyInfo (entity, id);
+			return DynamicCodeFactory.CreatePropertySetter (propertyInfo);
+		}
+
+		internal PropertyGetter FindPropertyGetter(AbstractEntity entity, string id)
+		{
+			System.Reflection.PropertyInfo propertyInfo = this.FindPropertyInfo (entity, id);
+			return DynamicCodeFactory.CreatePropertyGetter (propertyInfo);
+		}
+
+		private System.Reflection.PropertyInfo FindPropertyInfo(AbstractEntity entity, string id)
+		{
+			System.Type entityType = entity.GetType ();
+			System.Reflection.PropertyInfo[] propertyInfos = entityType.GetProperties (System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
+
+			foreach (System.Reflection.PropertyInfo propertyInfo in propertyInfos)
+			{
+				foreach (EntityFieldAttribute attribute in propertyInfo.GetCustomAttributes (typeof (EntityFieldAttribute), true))
+				{
+					if (attribute.FieldId == id)
+					{
+						//	We have found the property which maps to the specified
+						//	field :
+
+						return propertyInfo;
+					}
+				}
+			}
+
+			return null;
+		}
+
+
 		private AbstractEntity CreateGenericEntity(Druid entityId)
 		{
 			return new GenericEntity (entityId);
@@ -244,6 +299,13 @@ namespace Epsitec.Common.Support.EntityEngine
 			parents.Pop ();
 		}
 
+		/// <summary>
+		/// Creates the child entity, with all its child references properly
+		/// initialized.
+		/// </summary>
+		/// <param name="parents">A stack of parents.</param>
+		/// <param name="entityId">The entity id.</param>
+		/// <returns>The child entity.</returns>
 		private AbstractEntity CreateChildEntity(Stack<Druid> parents, Druid entityId)
 		{
 			AbstractEntity child = this.CreateEmptyEntity (entityId);
@@ -256,6 +318,13 @@ namespace Epsitec.Common.Support.EntityEngine
 			return child;
 		}
 
+		/// <summary>
+		/// A loop has been detected in the graph. Decide what to do, based on
+		/// the loop handling mode. This will either throw or skip the field.
+		/// </summary>
+		/// <param name="parents">A stack of parents.</param>
+		/// <param name="entityId">The entity id.</param>
+		/// <returns>The child entity (always <c>null</c>).</returns>
 		private AbstractEntity HandleGraphLoop(Stack<Druid> parents, Druid entityId)
 		{
 			if (this.loopHandlingMode == EntityLoopHandlingMode.Throw)

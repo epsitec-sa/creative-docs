@@ -63,7 +63,7 @@ namespace Epsitec.Common.Support.EntityEngine
 
 		private static void Analyse(Assembly assembly)
 		{
-			foreach (EntityAttribute attribute in EntityAttribute.GetRegisteredAttributes (assembly))
+			foreach (EntityClassAttribute attribute in EntityClassAttribute.GetRegisteredAttributes (assembly))
 			{
 				string name = attribute.EntityType.Name;
 				string suffix = "Entity";

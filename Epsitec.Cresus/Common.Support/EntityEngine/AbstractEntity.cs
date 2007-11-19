@@ -183,6 +183,11 @@ namespace Epsitec.Common.Support.EntityEngine
 			this.GenericSetValue (id, oldValue, newValue);
 		}
 
+		protected object GenericGetValue(string id)
+		{
+			return this.InternalGetValue (id);
+		}
+
 		protected void GenericSetValue(string id, object oldValue, object newValue)
 		{
 			StructuredTypeField field = this.context.GetStructuredType (this).GetField (id);
@@ -406,7 +411,7 @@ namespace Epsitec.Common.Support.EntityEngine
 
 		object IValueStore.GetValue(string id)
 		{
-			return this.InternalGetValue (id);
+			return this.DynamicPropertyGet (id);
 		}
 
 		void IValueStore.SetValue(string id, object value)
@@ -416,10 +421,24 @@ namespace Epsitec.Common.Support.EntityEngine
 
 		#endregion
 
+		protected virtual object DynamicPropertyGet(string id)
+		{
+			PropertyGetter getter = this.context.FindPropertyGetter (this, id);
+
+			if (getter == null)
+			{
+				return this.GenericGetValue (id);
+			}
+			else
+			{
+				return getter (this);
+			}
+		}
+
 		protected virtual void DynamicPropertySet(string id, object newValue)
 		{
-			PropertySetter setter = DynamicCodeFactory.CreatePropertySetter (this.GetType (), id);
-
+			PropertySetter setter = this.context.FindPropertySetter (this, id);
+			
 			if (setter == null)
 			{
 				this.GenericSetValue (id, this.InternalGetValue (id), newValue);

@@ -6,10 +6,10 @@ using NUnit.Framework;
 
 using System.Collections.Generic;
 
-[assembly: Entity ("[70052]", typeof (Epsitec.Common.Support.EntityTest.MyEnumTypeEntity))]
-[assembly: Entity ("[70062]", typeof (Epsitec.Common.Support.EntityTest.MyEnumValueEntity))]
-[assembly: Entity ("[7013]", typeof (Epsitec.Common.Support.EntityTest.MyTestInterfaceUserEntity))]
-[assembly: Entity ("[7007]", typeof (Epsitec.Common.Support.EntityTest.MyResourceStringEntity))]
+[assembly: EntityClass ("[70052]", typeof (Epsitec.Common.Support.EntityTest.MyEnumTypeEntity))]
+[assembly: EntityClass ("[70062]", typeof (Epsitec.Common.Support.EntityTest.MyEnumValueEntity))]
+[assembly: EntityClass ("[7013]", typeof (Epsitec.Common.Support.EntityTest.MyTestInterfaceUserEntity))]
+[assembly: EntityClass ("[7007]", typeof (Epsitec.Common.Support.EntityTest.MyResourceStringEntity))]
 
 namespace Epsitec.Common.Support
 {
@@ -196,6 +196,35 @@ namespace Epsitec.Common.Support
 		}
 
 		[Test]
+		public void CheckIStructuredData()
+		{
+			EntityContext context = EntityContext.Current;
+
+			MyTestInterfaceUserEntity entity = context.CreateEntity<MyTestInterfaceUserEntity> ();
+
+			Assert.IsNotNull (entity);
+			Assert.IsNotNull (entity.GetField<MyResourceStringEntity> (Res.Fields.TestInterface.Resource.ToString ()));
+			Assert.AreEqual (0, entity.getNameCounter);
+			Assert.AreEqual (0, entity.setNameCounter);
+
+			IStructuredData data = entity;
+
+			Assert.AreEqual (UndefinedValue.Value, entity.InternalGetValue ("[700J2]"));
+			Assert.AreEqual (null, entity.GetField<string> ("[700J2]"));
+			Assert.AreEqual (null, data.GetValue ("[700J2]"));
+			Assert.AreEqual (1, entity.getNameCounter);
+			Assert.AreEqual (0, entity.setNameCounter);
+
+			data.SetValue ("[700J2]", "Foo");
+
+			Assert.AreEqual (2, entity.getNameCounter);
+			Assert.AreEqual (1, entity.setNameCounter);
+			Assert.AreEqual ("Foo", data.GetValue ("[700J2]"));
+			Assert.AreEqual (3, entity.getNameCounter);
+			Assert.AreEqual (1, entity.setNameCounter);
+		}
+
+		[Test]
 		public void CheckProxy()
 		{
 			AbstractEntity entity;
@@ -298,10 +327,28 @@ namespace Epsitec.Common.Support
 
 		internal class MyTestInterfaceUserEntity : AbstractEntity
 		{
+			[EntityField ("[700J2]")]
+			public string Name
+			{
+				get
+				{
+					this.getNameCounter++;
+					return this.GetField<string> ("[700J2]");
+				}
+				set
+				{
+					this.setNameCounter++;
+					this.SetField<string> ("[700J2]", this.Name, value);
+				}
+			}
+
 			public override Druid GetEntityStructuredTypeId()
 			{
 				return Res.Types.TestInterfaceUser.CaptionId;
 			}
+
+			public int getNameCounter;
+			public int setNameCounter;
 		}
 
 		#endregion
