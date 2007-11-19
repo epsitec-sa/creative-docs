@@ -273,18 +273,41 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 					if (this.allowMultipleSelection)
 					{
-						if (!message.IsControlPressed)
+						if (!message.IsControlPressed && !message.IsShiftPressed)
 						{
 							this.selectedCells.Clear();
 						}
 
-						if (this.selectedCells.Contains(cell))
+						if (message.IsShiftPressed && this.selectedCells.Count > 0)
 						{
-							this.selectedCells.Remove(cell);
+							int last = this.selectedCells[this.selectedCells.Count-1];
+
+							if (cell > last)
+							{
+								for (int i=last+1; i<=cell; i++)
+								{
+									this.selectedCells.Add(i);
+								}
+							}
+
+							if (cell < last)
+							{
+								for (int i=last-1; i>=cell; i--)
+								{
+									this.selectedCells.Add(i);
+								}
+							}
 						}
 						else
 						{
-							this.selectedCells.Add(cell);
+							if (this.selectedCells.Contains(cell))
+							{
+								this.selectedCells.Remove(cell);
+							}
+							else
+							{
+								this.selectedCells.Add(cell);
+							}
 						}
 
 						this.UpdateSelectedCell();

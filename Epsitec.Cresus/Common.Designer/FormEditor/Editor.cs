@@ -392,7 +392,7 @@ namespace Epsitec.Common.Designer.FormEditor
 			//	Sélection ponctuelle, souris pressée.
 			Widget obj = this.Detect(pos);
 
-			if (!isShiftPressed)  // touche Shift relâchée ?
+			if (!isControlPressed)  // touche Ctrl relâchée ?
 			{
 				this.selectedObjects.Clear();
 				this.UpdateAfterChanging(Viewers.Changing.Selection);
