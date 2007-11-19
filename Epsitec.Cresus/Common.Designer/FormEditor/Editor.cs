@@ -145,30 +145,32 @@ namespace Epsitec.Common.Designer.FormEditor
 			}
 		}
 
-		public List<int> GetSelectedUniqueId()
+
+		public List<string> GetSelectedDruidsPath()
 		{
-			//	Retourne la liste des identificateurs uniques des objets sélectionnés.
-			List<int> uniqueIds = new List<int>();
+			//	Retourne la liste des chemins de Druids de tous les champs sélectionnés.
+			List<string> druidsPath = new List<string>();
 
 			foreach (Widget obj in this.selectedObjects)
 			{
-				if (obj.Index != -1)
+				FieldDescription field = this.objectModifier.GetFormDescription(obj);
+				if (field != null)
 				{
-					uniqueIds.Add(obj.Index);
+					druidsPath.Add(field.GetPath(null));
 				}
 			}
 
-			return uniqueIds;
+			return druidsPath;
 		}
 
-		public void SetSelectedUniqueId(List<int> uniqueIds)
+		public void SetSelectedDruidsPath(List<string> druidsPath)
 		{
-			//	Sélectionne tous les objets dont on donne les identificateurs uniques.
+			//	Sélectionne tous les objets dont on donne les chemins de Druids.
 			this.selectedObjects.Clear();
 
-			foreach (int uniqueId in uniqueIds)
+			foreach (string druidPath in druidsPath)
 			{
-				Widget obj = this.objectModifier.GetWidget(uniqueId);
+				Widget obj = this.objectModifier.GetWidget(druidPath);
 				if (obj != null)
 				{
 					this.selectedObjects.Add(obj);
@@ -177,6 +179,7 @@ namespace Epsitec.Common.Designer.FormEditor
 
 			this.Invalidate();
 		}
+
 
 		public bool IsEditEnabled
 		{
@@ -605,23 +608,6 @@ namespace Epsitec.Common.Designer.FormEditor
 			this.DeselectAll();
 		}
 
-		public List<string> GetSelectedDruidsPath()
-		{
-			//	Retourne la liste des chemins de Druids de tous les champs sélectionnés.
-			List<string> list = new List<string>();
-
-			foreach (Widget obj in this.selectedObjects)
-			{
-				FieldDescription field = this.objectModifier.GetFormDescription(obj);
-				if (field != null)
-				{
-					list.Add(field.GetPath(null));
-				}
-			}
-
-			return list;
-		}
-
 		public void DeselectAll()
 		{
 			//	Désélectionne tous les objets.
@@ -703,15 +689,6 @@ namespace Epsitec.Common.Designer.FormEditor
 			this.Invalidate();
 		}
 
-		public void SelectListObject(List<Widget> list)
-		{
-			//	Sélectionne une liste d'objets.
-			this.selectedObjects = list;
-			this.UpdateAfterChanging(Viewers.Changing.Selection);
-			this.OnChildrenSelected();
-			this.Invalidate();
-		}
-
 		public void SelectListObject(List<string> druidsPath)
 		{
 			//	Sélectionne une liste d'objets d'après une liste de chemins de Druids.
@@ -726,7 +703,7 @@ namespace Epsitec.Common.Designer.FormEditor
 				}
 			}
 
-			this.UpdateAfterChanging(Viewers.Changing.Selection);
+			//?this.UpdateAfterChanging(Viewers.Changing.Selection);
 			this.OnChildrenSelected();
 			this.Invalidate();
 		}

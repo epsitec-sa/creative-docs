@@ -81,15 +81,23 @@ namespace Epsitec.Common.Designer.Viewers
 			this.fieldToolbar.Dock = DockStyle.Top;
 			this.fieldToolbar.Margins = new Margins(0, 0, 0, 5);
 
+			this.fieldButtonUse = new IconButton();
+			this.fieldButtonUse.AutoFocus = false;
+			this.fieldButtonUse.CaptionId = Res.Captions.Editor.Forms.Use.Id;
+			this.fieldButtonUse.Clicked += new MessageEventHandler(this.HandleFieldButtonClicked);
+			this.fieldToolbar.Items.Add(this.fieldButtonUse);
+
+			this.fieldToolbar.Items.Add(new IconSeparator());
+
 			this.fieldButtonPrev = new IconButton();
 			this.fieldButtonPrev.AutoFocus = false;
-			this.fieldButtonPrev.CaptionId = Res.Captions.Editor.Type.Prev.Id;
+			this.fieldButtonPrev.CaptionId = Res.Captions.Editor.Forms.Prev.Id;
 			this.fieldButtonPrev.Clicked += new MessageEventHandler(this.HandleFieldButtonClicked);
 			this.fieldToolbar.Items.Add(this.fieldButtonPrev);
 
 			this.fieldButtonNext = new IconButton();
 			this.fieldButtonNext.AutoFocus = false;
-			this.fieldButtonNext.CaptionId = Res.Captions.Editor.Type.Next.Id;
+			this.fieldButtonNext.CaptionId = Res.Captions.Editor.Forms.Next.Id;
 			this.fieldButtonNext.Clicked += new MessageEventHandler(this.HandleFieldButtonClicked);
 			this.fieldToolbar.Items.Add(this.fieldButtonNext);
 
@@ -166,6 +174,7 @@ namespace Epsitec.Common.Designer.Viewers
 		{
 			if (disposing)
 			{
+				this.fieldButtonUse.Clicked -= new MessageEventHandler(this.HandleFieldButtonClicked);
 				this.fieldButtonPrev.Clicked -= new MessageEventHandler(this.HandleFieldButtonClicked);
 				this.fieldButtonNext.Clicked -= new MessageEventHandler(this.HandleFieldButtonClicked);
 				this.fieldButtonGoto.Clicked -= new MessageEventHandler(this.HandleFieldButtonClicked);
@@ -372,7 +381,8 @@ namespace Epsitec.Common.Designer.Viewers
 					bool active = (first+i < this.form.Fields.Count);
 					string icon = active ? "ActiveYes" : "ActiveNo";
 					string name = this.module.AccessFields.GetFieldNames(this.tableDruidsPath[first+i]);
-					Color color = active ? Color.Empty : Color.FromBrightness(0.9);
+					//?Color color = active ? Color.Empty : Color.FromBrightness(0.9);
+					Color color = Color.Empty;
 
 					this.fieldTable.SetLineString(0, first+i, Misc.Image(icon));
 					this.fieldTable.SetLineState(0, first+i, MyWidgets.StringList.CellState.Normal);
@@ -395,6 +405,7 @@ namespace Epsitec.Common.Designer.Viewers
 		protected void UpdateButtons()
 		{
 			//	Met à jour les boutons.
+			bool isUse = false;
 			bool isPrev = false;
 			bool isNext = false;
 
@@ -403,19 +414,27 @@ namespace Epsitec.Common.Designer.Viewers
 				List<int> sels = this.fieldTable.SelectedRows;
 				if (sels != null && sels.Count > 0)
 				{
+					isUse = true;
 					isPrev = true;
 					isNext = true;
 
 					foreach (int sel in sels)
 					{
-						if (sel == 0)
+						if (sel == 0)  // premier champ utilisé ?
 						{
 							isPrev = false;
 							break;
 						}
 
-						if (sel == this.tableDruidsPath.Count-1)
+						if (sel == this.form.Fields.Count-1)  // dernier champ utilisé ?
 						{
+							isNext = false;
+							break;
+						}
+
+						if (sel >= this.form.Fields.Count)  // champ inutilisé ?
+						{
+							isPrev = false;
 							isNext = false;
 							break;
 						}
@@ -423,6 +442,7 @@ namespace Epsitec.Common.Designer.Viewers
 				}
 			}
 
+			this.fieldButtonUse.Enable = isUse;
 			this.fieldButtonPrev.Enable = isPrev;
 			this.fieldButtonNext.Enable = isNext;
 		}
@@ -547,10 +567,10 @@ namespace Epsitec.Common.Designer.Viewers
 			{
 				this.entityId = form.EntityId;
 
-				List<int> sel = null;
+				List<string> druidsPath = null;
 				if (keepSelection)
 				{
-					sel = this.formEditor.GetSelectedUniqueId();  // id des objets sélectionnés
+					druidsPath = this.formEditor.GetSelectedDruidsPath();  // Druids des objets sélectionnés
 				}
 
 				FormEngine.Engine engine = new FormEngine.Engine(this.module.ResourceManager);
@@ -568,7 +588,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 				if (keepSelection)
 				{
-					this.formEditor.SetSelectedUniqueId(sel);  // resélectionne les mêmes objets
+					this.formEditor.SetSelectedDruidsPath(druidsPath);  // resélectionne les mêmes objets
 				}
 				else
 				{
@@ -689,6 +709,7 @@ namespace Epsitec.Common.Designer.Viewers
 			{
 				//	Régénère le panneau contenant le masque de saisie.
 				this.SetForm(this.form, this.druidToSerialize, oper == Changing.Regenerate);
+				this.UpdateFieldTable(false);
 			}
 		}
 
@@ -720,7 +741,7 @@ namespace Epsitec.Common.Designer.Viewers
 			//	Liste des champs -> Editeur de Forms.
 			List<int> sels = this.fieldTable.SelectedRows;
 
-			if (sels == null)
+			if (sels == null || sels.Count == 0)
 			{
 				this.formEditor.DeselectAll();
 			}
@@ -740,6 +761,19 @@ namespace Epsitec.Common.Designer.Viewers
 		}
 
 
+		protected void SelectedFieldsUse()
+		{
+			//	Utilise ou supprime les champs sélectionnés.
+			List<int> sels = this.fieldTable.SelectedRows;
+			sels.Sort();
+
+			foreach (int sel in sels)
+			{
+				FieldDescription field = this.form.Fields[sel];
+				this.form.Fields.RemoveAt(sel);
+			}
+		}
+
 		protected void SelectedFieldsMove(int direction)
 		{
 			//	Déplace les champs sélectionnés vers le haut ou vers le bas.
@@ -757,7 +791,7 @@ namespace Epsitec.Common.Designer.Viewers
 				this.form.Fields.Insert(sel+direction, field);
 			}
 
-			this.SetForm(this.form, this.druidToSerialize, false);
+			this.SetForm(this.form, this.druidToSerialize, true);
 			this.UpdateFieldTable(false);
 			this.UpdateButtons();
 		}
@@ -839,6 +873,11 @@ namespace Epsitec.Common.Designer.Viewers
 
 		private void HandleFieldButtonClicked(object sender, MessageEventArgs e)
 		{
+			if (sender == this.fieldButtonUse)
+			{
+				this.SelectedFieldsUse();
+			}
+
 			if (sender == this.fieldButtonPrev)
 			{
 				this.SelectedFieldsMove(-1);
@@ -904,6 +943,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 		protected FrameBox						panelField;
 		protected HToolBar						fieldToolbar;
+		protected IconButton					fieldButtonUse;
 		protected IconButton					fieldButtonPrev;
 		protected IconButton					fieldButtonNext;
 		protected IconButton					fieldButtonGoto;

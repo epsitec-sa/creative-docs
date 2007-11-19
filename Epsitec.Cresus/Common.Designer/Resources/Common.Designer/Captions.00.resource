@@ -137,4 +137,7 @@
   <data name="Cap.FieldGeometry.RowsRequired" id="2E">&lt;s:data id="_0" f:Name="FieldGeometry.RowsRequired" f:Description="Nombre de lignes requises" f:Labels="{Collection {Text 'Nb de lignes'}}" /&gt;</data>
   <data name="Cap.FieldMode.SeparatorType" id="2F">&lt;s:data id="_0" f:Name="FieldMode.SeparatorType" f:Description="Lien avec le champ suivant" f:Labels="{Collection {Text 'Suivant'}}" /&gt;</data>
   <data name="Cap.FieldMode.BackColorType" id="2G">&lt;s:data id="_0" f:Name="FieldMode.BackColorType" f:Description="Couleur de fond" f:Labels="{Collection {Text 'Couleur'}}" /&gt;</data>
+  <data name="Cap.Editor.Forms.Use" id="2H">&lt;s:data id="_0" f:Name="Editor.Forms.Use" f:Description="Utilise ou supprime le champ dans le masque de saisie" f:Icon="manifest:Epsitec.Common.Designer.Images.ActiveYes.icon" f:Labels="{Collection {Text 'Utiliser/supprimer'}}" /&gt;</data>
+  <data name="Cap.Editor.Forms.Next" id="2I" mod="1">&lt;s:data id="_0" f:Name="Editor.Forms.Next" f:Description="Descend le champ dans le masque de saisie" f:Icon="manifest:Epsitec.Common.Designer.Images.TypeEnumNext.icon" f:Labels="{Collection {Text 'Descendre'}}" /&gt;</data>
+  <data name="Cap.Editor.Forms.Prev" id="2J" mod="1">&lt;s:data id="_0" f:Name="Editor.Forms.Prev" f:Description="Monte le champ dans le masque de saisie" f:Icon="manifest:Epsitec.Common.Designer.Images.TypeEnumPrev.icon" f:Labels="{Collection {Text 'Monter'}}" /&gt;</data>
 </bundle>
