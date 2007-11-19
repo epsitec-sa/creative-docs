@@ -115,6 +115,7 @@ namespace Epsitec.Cresus.DataLayer
 			
 			AbstractEntity entity = context.EntityContext.CreateEntity (this.articleEntityId);
 			AbstractEntity prixVente = entity.GetField<AbstractEntity> ("[630B1]");				//	Article.PrixVente
+			AbstractEntity prixAchat = entity.GetField<AbstractEntity> ("[6313]");				//	Article.PrixAchat
 
 			Assert.AreEqual (9, context.CountManagedEntities ());
 			Assert.AreEqual (this.prixEntityId, prixVente.GetEntityStructuredTypeId ());
@@ -123,6 +124,7 @@ namespace Epsitec.Cresus.DataLayer
 			entity.SetField<string> ("[630A1]", "Vis M3 10mm, inox");							//	Article.Désignation
 
 			prixVente.SetField<decimal> ("[630H]", 0.05M);										//	Prix.HT pour Article.PrixVente
+			prixAchat.SetField<decimal> ("[630H]", 0.04M);										//	Prix.HT pour Article.PrixAchat
 
 			System.Diagnostics.Debug.WriteLine ("Saving changes.");
 			context.SerializeEntity (entity);
@@ -153,7 +155,7 @@ namespace Epsitec.Cresus.DataLayer
 
 			context.Dispose ();
 
-			Assert.AreEqual (1920, entities.Count);
+			Assert.AreEqual (480, entities.Count);
 			Assert.AreEqual (1000000000001L, context.GetEntityDataMapping (entity).RowKey.Id.Value);
 			Assert.AreEqual (1000000000002L, context.GetEntityDataMapping (entities[0]).RowKey.Id.Value);
 		}
@@ -197,8 +199,10 @@ namespace Epsitec.Cresus.DataLayer
 			Assert.AreEqual ("M3", entity2.GetField<string> ("[6312]"));
 
 			AbstractEntity prixVente = entity1.GetField<AbstractEntity> ("[630B1]");				//	Article.PrixVente
+			AbstractEntity prixAchat = entity1.GetField<AbstractEntity> ("[6313]");					//	Article.PrixAchat
 
 			Assert.AreEqual (0.05M, prixVente.GetField<decimal> ("[630H]"));						//	Prix.HT pour Article.PrixVente
+			Assert.AreEqual (0.04M, prixAchat.GetField<decimal> ("[630H]"));						//	Prix.HT pour Article.PrixAchat
 			
 			context.Dispose ();
 		}
@@ -251,6 +255,12 @@ namespace Epsitec.Cresus.DataLayer
 			Assert.AreEqual (entity2, context.ResolveEntity (key2, this.articleEntityId));
 			Assert.AreEqual (entity2, context.ResolveEntity (key2, this.articleVisserieEntityId));
 
+			AbstractEntity prixVente = entity1.GetField<AbstractEntity> ("[630B1]");				//	Article.PrixVente
+			AbstractEntity prixAchat = entity1.GetField<AbstractEntity> ("[6313]");					//	Article.PrixAchat
+
+			Assert.AreEqual (0.05M, prixVente.GetField<decimal> ("[630H]"));						//	Prix.HT pour Article.PrixVente
+			Assert.AreEqual (0.04M, prixAchat.GetField<decimal> ("[630H]"));						//	Prix.HT pour Article.PrixAchat
+			
 			context.Dispose ();
 		}
 
@@ -270,10 +280,15 @@ namespace Epsitec.Cresus.DataLayer
 			AbstractEntity entity1 = context.DeserializeEntity (key1, this.articleEntityId);
 			AbstractEntity entity2 = context.DeserializeEntity (key2, this.articleEntityId);
 
+			AbstractEntity prixVente = entity1.GetField<AbstractEntity> ("[630B1]");				//	Article.PrixVente
+			AbstractEntity prixAchat = entity1.GetField<AbstractEntity> ("[6313]");					//	Article.PrixAchat
+			
 			System.Diagnostics.Debug.WriteLine ("Done.");
 
 			Assert.AreEqual (this.articleEntityId, entity1.GetEntityStructuredTypeId ());
 			Assert.AreEqual ("VI-M3-10", entity1.GetField<string> ("[63091]"));
+			Assert.AreEqual (0.05M, prixVente.GetField<decimal> ("[630H]"));						//	Prix.HT pour Article.PrixVente
+			Assert.AreEqual (0.04M, prixAchat.GetField<decimal> ("[630H]"));						//	Prix.HT pour Article.PrixAchat
 
 			Assert.AreEqual (this.articleVisserieEntityId, entity2.GetEntityStructuredTypeId ());
 			Assert.AreEqual ("VI-M3-10", entity2.GetField<string> ("[63091]"));
@@ -282,6 +297,20 @@ namespace Epsitec.Cresus.DataLayer
 			entity1.SetField<string> ("[630A1]", "Vis M3 10mm (acier inox)");
 			entity2.SetField<string> ("[630A1]", "Vis M3 10mm (acier inox)");
 			entity2.SetField<string> ("[6312]", "M3.0");
+
+			prixVente.SetField<decimal> ("[630H]", 0.08M);
+			prixAchat.SetField<decimal> ("[630H]", 0.12M);
+
+			//	Swap both entities, in order to check the proper UPDATE of the database
+			//	in case we change reference values :
+
+			entity1.SetField<AbstractEntity> ("[630B1]", prixAchat);
+			entity1.SetField<AbstractEntity> ("[6313]", prixVente);
+
+			context.SerializeEntity (entity1);
+			context.SerializeEntity (entity2);
+			context.SerializeEntity (prixVente);
+			context.SerializeEntity (prixAchat);
 
 			System.Diagnostics.Debug.WriteLine ("Saving");
 
@@ -295,9 +324,9 @@ namespace Epsitec.Cresus.DataLayer
 
 		private IEnumerable<AbstractEntity> GetItems(EntityContext context)
 		{
-			string[] materials = new string[] { "Inox", "Cuivre", "Galvanisé", "Teflon", "POM", "Acier" };
+			string[] materials = new string[] { "Inox", "Cuivre", "Galvanisé" /*"Teflon", "POM", "Acier"*/ };
 			string[] categories = new string[] { "Vis", "Ecrou", "Rondelle", "Boulon" };
-			string[] sizes = new string[] { "M3", "M4", "M5", "M6", "M8", "M10", "M12", "M14", "M16", "M20" };
+			string[] sizes = new string[] { "M3", "M4", "M5", "M6", "M8" /* "M10", "M12", "M14", "M16", "M20" */ };
 			string[] lengths = new string[] { "10mm", "12mm", "15mm", "20mm", "25mm", "30mm", "40mm", "50mm" };
 
 			foreach (string mat in materials)

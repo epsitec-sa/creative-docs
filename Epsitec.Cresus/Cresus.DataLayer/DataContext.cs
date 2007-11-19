@@ -103,11 +103,14 @@ namespace Epsitec.Cresus.DataLayer
 		/// method. When this method is called, it updates the <see cref="DbKey"/>
 		/// for the rows which contain the data for the associated entity.
 		/// </summary>
+		/// <param name="tableDef">The table definition.</param>
 		/// <param name="table">The data table.</param>
 		/// <param name="oldKey">The old key.</param>
 		/// <param name="newKey">The new key.</param>
-		/// <returns>Always returns <see cref="DbKey.Empty"/>, since it updates the
-		/// row keys itself.</returns>
+		/// <returns>
+		/// Always returns <see cref="DbKey.Empty"/>, since it updates the
+		/// row keys itself.
+		/// </returns>
 		private DbKey SaveTablesRowIdAssignmentCallbackImplementation(DbTable tableDef, System.Data.DataTable table, DbKey oldKey, DbKey newKey)
 		{
 			if (tableDef.Category == DbElementCat.Relation)
@@ -401,6 +404,8 @@ namespace Epsitec.Cresus.DataLayer
 				{
 					this.SerializeEntity (targetEntity);
 				}
+
+				//	TODO: find row and replace contents if relation already existed previously
 
 				System.Data.DataRow relationRow = this.richCommand.CreateRow (tableName);
 				DbKey key = new DbKey (DbKey.CreateTemporaryId (), DbRowStatus.Live);
