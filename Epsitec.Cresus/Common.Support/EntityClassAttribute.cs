@@ -17,6 +17,11 @@ namespace Epsitec.Common.Support
 	[System.AttributeUsage (System.AttributeTargets.Assembly, AllowMultiple=true)]
 	public sealed class EntityClassAttribute : System.Attribute
 	{
+		/// <summary>
+		/// Initializes a new instance of the <see cref="EntityClassAttribute"/> class.
+		/// </summary>
+		/// <param name="entityId">The entity id.</param>
+		/// <param name="entityType">Type of the entity.</param>
 		public EntityClassAttribute(string entityId, System.Type entityType)
 		{
 			this.entityId = Druid.Parse (entityId);

@@ -217,7 +217,7 @@ namespace Epsitec.Cresus.DataLayer
 						break;
 
 					default:
-						//	TODO: ...
+						this.WriteFieldCollection (entity, entityId, fieldDef);
 						break;
 				}
 			}
@@ -435,6 +435,76 @@ namespace Epsitec.Cresus.DataLayer
 			}
 		}
 
+		private void WriteFieldCollection(AbstractEntity sourceEntity, Druid entityId, StructuredTypeField fieldDef)
+		{
+			System.Collections.IList collection = sourceEntity.InternalGetFieldCollection (fieldDef.Id);
+
+			System.Diagnostics.Debug.Assert (collection != null);
+
+			EntityDataMapping sourceMapping = this.GetEntityDataMapping (sourceEntity);
+			
+			string relationTableName = this.GetRelationTableName (entityId, fieldDef);
+
+			List<System.Data.DataRow> relationRows = Collection.ToList (DbRichCommand.FilterExistingRows (this.richCommand.FindRelationRows (relationTableName, sourceMapping.RowKey.Id)));
+			List<System.Data.DataRow> resultingRows = new List<System.Data.DataRow> ();
+
+			for (int i = 0; i < collection.Count; i++)
+			{
+				AbstractEntity targetEntity  = collection[i] as AbstractEntity;
+				EntityDataMapping targetMapping = this.GetEntityDataMapping (targetEntity);
+
+				long targetRowId = targetMapping.RowKey.Id.Value;
+
+				System.Diagnostics.Debug.Assert (targetEntity != null);
+				System.Diagnostics.Debug.Assert (targetMapping != null);
+
+				System.Data.DataRow row = DataContext.FindRelationRowForTarget (relationRows, targetRowId);
+
+				if (row == null)
+				{
+					resultingRows.Add (this.CreateRelationRow (relationTableName, sourceMapping, targetMapping));
+				}
+				else
+				{
+					relationRows.Remove (row);
+					resultingRows.Add (row);
+				}
+			}
+
+			foreach (System.Data.DataRow row in relationRows)
+			{
+				this.DeleteRelationRow (row);
+			}
+
+			int rank = -1;
+
+			foreach (System.Data.DataRow row in resultingRows)
+			{
+				rank++;
+
+				int rowRank = (int) row[Tags.ColumnRefRank];
+				
+				if ((rowRank < rank) ||
+					(rowRank > rank+1000))
+				{
+					row[Tags.ColumnRefRank] = rank;
+				}
+			}
+		}
+
+		private static System.Data.DataRow FindRelationRowForTarget(IEnumerable<System.Data.DataRow> relationRows, long targetRowId)
+		{
+			foreach (System.Data.DataRow row in relationRows)
+			{
+				if ((long) row[Tags.ColumnRefTargetId] == targetRowId)
+				{
+					return row;
+				}
+			}
+
+			return null;
+		}
+
 		private void UpdateRelationRow(System.Data.DataRow relationRow, EntityDataMapping sourceMapping, EntityDataMapping targetMapping)
 		{
 			System.Diagnostics.Debug.Assert (sourceMapping.RowKey.Id.Value == (long) relationRow[Tags.ColumnRefSourceId]);
@@ -445,7 +515,7 @@ namespace Epsitec.Cresus.DataLayer
 			relationRow.EndEdit ();
 		}
 
-		private void CreateRelationRow(string relationTableName, EntityDataMapping sourceMapping, EntityDataMapping targetMapping)
+		private System.Data.DataRow CreateRelationRow(string relationTableName, EntityDataMapping sourceMapping, EntityDataMapping targetMapping)
 		{
 			System.Data.DataRow relationRow = this.richCommand.CreateRow (relationTableName);
 			DbKey key = new DbKey (DbKey.CreateTemporaryId (), DbRowStatus.Live);
@@ -456,6 +526,8 @@ namespace Epsitec.Cresus.DataLayer
 			relationRow[Tags.ColumnRefTargetId] = targetMapping.RowKey.Id.Value;
 			relationRow[Tags.ColumnRefRank] = -1;
 			relationRow.EndEdit ();
+
+			return relationRow;
 		}
 
 		private void DeleteRelationRow(System.Data.DataRow relationRow)
