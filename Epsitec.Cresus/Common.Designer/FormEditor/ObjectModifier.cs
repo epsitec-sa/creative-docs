@@ -176,6 +176,24 @@ namespace Epsitec.Common.Designer.FormEditor
 		}
 
 
+		public Widget GetWidget(string druidPath)
+		{
+			//	Cherche le widget correspondant à un chemin de Druids.
+			foreach (FieldDescription field in this.formEditor.Form.Fields)
+			{
+				if (druidPath == field.GetPath(null))
+				{
+					Widget obj = this.GetWidget(field.UniqueId);
+					if (obj != null)
+					{
+						return obj;
+					}
+				}
+			}
+
+			return null;
+		}
+
 		public Widget GetWidget(int uniqueId)
 		{
 			//	Cherche le widget correspondant à un identificateur unique.

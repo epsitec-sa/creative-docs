@@ -691,21 +691,15 @@ namespace Epsitec.Common.Designer.FormEditor
 
 		public void SelectListObject(List<string> druidsPath)
 		{
-			//	Sélectionne une liste d'objets.
+			//	Sélectionne une liste d'objets d'après une liste de chemins de Druids.
 			this.selectedObjects.Clear();
 
 			foreach (string druidPath in druidsPath)
 			{
-				foreach (FieldDescription field in this.form.Fields)
+				Widget obj = this.objectModifier.GetWidget(druidPath);
+				if (obj != null)
 				{
-					if (druidPath == field.GetPath(null))
-					{
-						Widget obj = this.objectModifier.GetWidget(field.UniqueId);
-						if (obj != null)
-						{
-							this.selectedObjects.Add(obj);
-						}
-					}
+					this.selectedObjects.Add(obj);
 				}
 			}
 

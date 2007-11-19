@@ -746,7 +746,7 @@ namespace Epsitec.Common.Designer
 					list.Add(path);
 				}
 			}
-			else
+			else if (rel == FieldRelation.Reference)
 			{
 				Druid typeId = (Druid) dataField.GetValue(Support.Res.Fields.Field.TypeId);
 				Druid fieldCaptionId = (Druid) dataField.GetValue(Support.Res.Fields.Field.CaptionId);
