@@ -286,7 +286,10 @@ namespace Epsitec.Common.Designer.MyWidgets
 							{
 								for (int i=last+1; i<=cell; i++)
 								{
-									this.selectedCells.Add(i);
+									if (!this.selectedCells.Contains(i))
+									{
+										this.selectedCells.Add(i);
+									}
 								}
 							}
 
@@ -294,7 +297,10 @@ namespace Epsitec.Common.Designer.MyWidgets
 							{
 								for (int i=last-1; i>=cell; i--)
 								{
-									this.selectedCells.Add(i);
+									if (!this.selectedCells.Contains(i))
+									{
+										this.selectedCells.Add(i);
+									}
 								}
 							}
 						}
