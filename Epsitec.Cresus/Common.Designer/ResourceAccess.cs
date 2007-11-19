@@ -637,7 +637,7 @@ namespace Epsitec.Common.Designer
 		private void FormInitialize(FormEngine.FormDescription form, ref string newName)
 		{
 			//	Initialise un masque de saisie avec tous les champs de l'entité de base associée.
-			List<string> list = this.GetEntityFields(form.EntityId);
+			List<string> list = this.GetEntityDruidsPath(form.EntityId);
 			foreach (string druidsPath in list)
 			{
 				FormEngine.FieldDescription field = new FormEngine.FieldDescription(FormEngine.FieldDescription.FieldType.Field);
@@ -703,9 +703,9 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
-		public List<string> GetEntityFields(Druid entityId)
+		public List<string> GetEntityDruidsPath(Druid entityId)
 		{
-			//	Retourne la liste des champs d'une entité.
+			//	Retourne la liste des chemins de Druids des champs d'une entité.
 			List<string> list = new List<string>();
 
 			CultureMap item = this.GetEntityItem(entityId);
@@ -725,13 +725,13 @@ namespace Epsitec.Common.Designer
 			alreadyVisited.Push(entityId);
 			foreach (StructuredData dataField in dataFields)
 			{
-				this.GetEntityFields(list, alreadyVisited, dataField, null);
+				this.GetEntityDruidsPath(list, alreadyVisited, dataField, null);
 			}
 
 			return list;
 		}
 
-		protected void GetEntityFields(List<string> list, Stack<Druid> alreadyVisited, StructuredData dataField, string prefix)
+		protected void GetEntityDruidsPath(List<string> list, Stack<Druid> alreadyVisited, StructuredData dataField, string prefix)
 		{
 			FieldRelation rel = (FieldRelation) dataField.GetValue(Support.Res.Fields.Field.Relation);
 			if (rel == FieldRelation.None)
@@ -765,7 +765,7 @@ namespace Epsitec.Common.Designer
 							IList<StructuredData> typeDataFields = typeData.GetValue(Support.Res.Fields.ResourceStructuredType.Fields) as IList<StructuredData>;
 							foreach (StructuredData typeDataField in typeDataFields)
 							{
-								this.GetEntityFields(list, alreadyVisited, typeDataField, string.Concat(prefix, fieldCaptionId.ToString(), "."));
+								this.GetEntityDruidsPath(list, alreadyVisited, typeDataField, string.Concat(prefix, fieldCaptionId.ToString(), "."));
 							}
 						}
 					}

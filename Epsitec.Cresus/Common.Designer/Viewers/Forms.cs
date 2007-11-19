@@ -331,12 +331,10 @@ namespace Epsitec.Common.Designer.Viewers
 		protected void UpdateFieldTable(bool newContent)
 		{
 			//	Met à jour la table des champs.
-			List<string> list = this.module.AccessEntities.GetEntityFields(this.entityId);
-
 			int first = this.fieldTable.FirstVisibleRow;
 			for (int i=0; i<this.fieldTable.LineCount; i++)
 			{
-				if (first+i >= list.Count)
+				if (this.druidsPath == null || first+i >= this.druidsPath.Count)
 				{
 					this.fieldTable.SetLineString(0, first+i, "");
 					this.fieldTable.SetLineState(0, first+i, MyWidgets.StringList.CellState.Disabled);
@@ -348,7 +346,7 @@ namespace Epsitec.Common.Designer.Viewers
 				}
 				else
 				{
-					string name = this.module.AccessFields.GetFieldNames(list[first+i]);
+					string name = this.module.AccessFields.GetFieldNames(this.druidsPath[first+i]);
 
 					this.fieldTable.SetLineString(0, first+i, "");
 					this.fieldTable.SetLineState(0, first+i, MyWidgets.StringList.CellState.Normal);
@@ -360,7 +358,7 @@ namespace Epsitec.Common.Designer.Viewers
 				}
 			}
 
-			this.fieldTable.TotalRows = list.Count;
+			this.fieldTable.TotalRows = (this.druidsPath == null) ? 0 : this.druidsPath.Count;
 
 			if (newContent)
 			{
@@ -481,6 +479,8 @@ namespace Epsitec.Common.Designer.Viewers
 				this.formEditor.Druid = druid;
 				this.formEditor.IsEditEnabled = false;
 				this.formEditor.Form = null;
+
+				this.druidsPath = null;
 			}
 			else
 			{
@@ -513,6 +513,8 @@ namespace Epsitec.Common.Designer.Viewers
 				{
 					this.formEditor.DeselectAll();
 				}
+
+				this.druidsPath = this.module.AccessEntities.GetEntityDruidsPath(this.entityId);
 			}
 		}
 
@@ -631,13 +633,13 @@ namespace Epsitec.Common.Designer.Viewers
 		protected void ReflectSelectionToList()
 		{
 			//	Reflète les sélections effectuées dans l'éditeur de Forms dans la liste des champs.
+			//	Editeur de Forms -> Liste des champs.
 			List<string> druidsPath = this.formEditor.GetSelectedDruidsPath();
-			List<string> list = this.module.AccessEntities.GetEntityFields(this.entityId);
 			List<int> sels = new List<int>();
 
 			foreach (string druidPath in druidsPath)
 			{
-				int sel = list.IndexOf(druidPath);
+				int sel = this.druidsPath.IndexOf(druidPath);
 				if (sel != -1)
 				{
 					sels.Add(sel);
@@ -652,6 +654,7 @@ namespace Epsitec.Common.Designer.Viewers
 		protected void ReflectSelectionToEditor()
 		{
 			//	Reflète les sélections effectuées dans la liste des champs dans l'éditeur de Forms.
+			//	Liste des champs -> Editeur de Forms.
 			List<int> sels = this.fieldTable.SelectedRows;
 
 			if (sels == null)
@@ -661,10 +664,9 @@ namespace Epsitec.Common.Designer.Viewers
 			else
 			{
 				List<string> druidsPath = new List<string>();
-				List<string> list = this.module.AccessEntities.GetEntityFields(this.entityId);
 				foreach (int sel in sels)
 				{
-					druidsPath.Add(list[sel]);
+					druidsPath.Add(this.druidsPath[sel]);
 				}
 
 				this.formEditor.SelectListObject(druidsPath);
@@ -800,8 +802,9 @@ namespace Epsitec.Common.Designer.Viewers
 		protected VToolBar						vToolBar;
 		protected FrameBox						panelContainerParent;
 		protected UI.Panel						panelContainer;
-		protected FormDescription				form;
 		protected Druid							entityId;
+		protected FormDescription				form;
+		protected List<string>					druidsPath;
 		protected FormEditor.Editor				formEditor;
 		protected FrameBox						right;
 		protected HSplitter						splitter3;
