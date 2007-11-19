@@ -273,6 +273,11 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 					if (this.allowMultipleSelection)
 					{
+						if (!message.IsControlPressed)
+						{
+							this.selectedCells.Clear();
+						}
+
 						if (this.selectedCells.Contains(cell))
 						{
 							this.selectedCells.Remove(cell);
