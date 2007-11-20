@@ -489,6 +489,10 @@ namespace Epsitec.Cresus.DataLayer
 				{
 					row[Tags.ColumnRefRank] = rank;
 				}
+				else if (rowRank > rank)
+				{
+					rank = rowRank;
+				}
 			}
 		}
 

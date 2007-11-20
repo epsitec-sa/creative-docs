@@ -140,6 +140,7 @@
     <Compile Include="CodeGeneration\CodeVisibility.cs" />
     <Compile Include="CodeGeneration\CodeAccessibility.cs" />
     <Compile Include="CodeGeneration\Sample.cs" />
+    <Compile Include="EntityEngine\IEntityCollection.cs" />
     <Compile Include="EntityFieldAttribute.cs" />
     <Compile Include="EntityClassAttribute.cs" />
     <Compile Include="EntityEngine\EntityDataState.cs" />

@@ -322,6 +322,59 @@ namespace Epsitec.Cresus.DataLayer
 			context.Dispose ();
 		}
 
+		[Test]
+		public void Check15Collections()
+		{
+			DataContext context = new DataContext (this.infrastructure);
+
+			context.SchemaEngine.CreateTableDefinition (Druid.Parse ("[63001]"));
+//			context.SchemaEngine.CreateTableDefinition (Druid.Parse ("[63011]"));
+
+			AbstractEntity positionEntity = context.EntityContext.CreateEntity (Druid.Parse ("[63001]"));
+			AbstractEntity rabais1Entity = context.EntityContext.CreateEntity (Druid.Parse ("[63011]"));
+			AbstractEntity rabais2Entity = context.EntityContext.CreateEntity (Druid.Parse ("[63011]"));
+			AbstractEntity rabais3Entity = context.EntityContext.CreateEntity (Druid.Parse ("[63011]"));
+
+			IEntityCollection collection = positionEntity.GetFieldCollection<AbstractEntity> ("[63072]") as IEntityCollection;
+
+			collection.CopyOnWrite ();
+			
+			IList<AbstractEntity> list = positionEntity.GetFieldCollection<AbstractEntity> ("[63072]");
+
+			positionEntity.SetField<decimal> ("[63052]", 8.0M);
+			list.Add (rabais1Entity);
+			list.Add (rabais2Entity);
+
+			rabais1Entity.SetField<decimal> ("[63082]", 2.5M);
+			rabais1Entity.SetField<int> ("[63092]", 0);
+			rabais2Entity.SetField<decimal> ("[63082]", 10.0M);
+			rabais2Entity.SetField<int> ("[63092]", 1);
+			rabais3Entity.SetField<decimal> ("[63082]", 5.0M);
+			rabais3Entity.SetField<int> ("[63092]", 2);
+
+			context.SerializeEntity (rabais1Entity);
+			context.SerializeEntity (rabais2Entity);
+			context.SerializeEntity (positionEntity);
+
+			context.SaveChanges ();
+
+			list.Add (rabais3Entity);
+
+			context.SerializeEntity (rabais3Entity);
+			context.SerializeEntity (positionEntity);
+
+			context.SaveChanges ();
+
+			list.RemoveAt (0);
+			list.Add (rabais2Entity);
+			
+			context.SerializeEntity (positionEntity);
+
+			context.SaveChanges ();
+
+			context.Dispose ();
+		}
+
 		private IEnumerable<AbstractEntity> GetItems(EntityContext context)
 		{
 			string[] materials = new string[] { "Inox", "Cuivre", "Galvanisé" /*"Teflon", "POM", "Acier"*/ };

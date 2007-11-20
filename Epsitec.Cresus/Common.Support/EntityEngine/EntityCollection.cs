@@ -15,7 +15,7 @@ namespace Epsitec.Common.Support.EntityEngine
 	/// of data for collection fields in a parent entity.
 	/// </summary>
 	/// <typeparam name="T">The type of the list items.</typeparam>
-	public sealed class EntityCollection<T> : ObservableList<T> where T : AbstractEntity
+	public sealed class EntityCollection<T> : ObservableList<T>, IEntityCollection where T : AbstractEntity
 	{
 		/// <summary>
 		/// Initializes a new instance of the <see cref="EntityCollection&lt;T&gt;"/> class.
@@ -76,6 +76,24 @@ namespace Epsitec.Common.Support.EntityEngine
 				}
 			}
 		}
+
+		#region IEntityCollection Members
+
+		void IEntityCollection.ResetCopyOnWrite()
+		{
+			this.ResetCopyOnWrite ();
+		}
+
+		void IEntityCollection.CopyOnWrite()
+		{
+			if (this.state == State.CopyOnWrite)
+			{
+				this.state = State.Copied;
+				this.container.CopyFieldCollection<T> (this.id, this);
+			}
+		}
+
+		#endregion
 
 		#region Private State Enumeration
 
