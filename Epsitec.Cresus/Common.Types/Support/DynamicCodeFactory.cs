@@ -154,6 +154,11 @@ namespace Epsitec.Common.Support
 		/// </returns>
 		public static PropertyGetter CreatePropertyGetter(System.Reflection.PropertyInfo propertyInfo)
 		{
+			if (propertyInfo == null)
+			{
+				return null;
+			}
+
 			System.Reflection.MethodInfo method = propertyInfo.GetGetMethod ();
 
 			if ((method == null) ||
