@@ -50,12 +50,12 @@ namespace Epsitec.Common.Designer
 				{
 					//	designer:cap/302M
 					public static global::Epsitec.Common.Types.Caption Box { get { return Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 2, 22)); } }
+					//	designer:cap/302K
+					public static global::Epsitec.Common.Types.Caption Line { get { return Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 2, 20)); } }
 					//	designer:cap/302I
 					public static global::Epsitec.Common.Types.Caption Next { get { return Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 2, 18)); } }
 					//	designer:cap/302J
 					public static global::Epsitec.Common.Types.Caption Prev { get { return Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 2, 19)); } }
-					//	designer:cap/302K
-					public static global::Epsitec.Common.Types.Caption Separator { get { return Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 2, 20)); } }
 					//	designer:cap/302L
 					public static global::Epsitec.Common.Types.Caption Title { get { return Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 2, 21)); } }
 					//	designer:cap/302H

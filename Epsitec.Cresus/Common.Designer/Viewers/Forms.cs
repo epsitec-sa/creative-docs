@@ -89,11 +89,11 @@ namespace Epsitec.Common.Designer.Viewers
 
 			this.fieldToolbar.Items.Add(new IconSeparator());
 
-			this.fieldButtonSeparator = new IconButton();
-			this.fieldButtonSeparator.AutoFocus = false;
-			this.fieldButtonSeparator.CaptionId = Res.Captions.Editor.Forms.Separator.Id;
-			this.fieldButtonSeparator.Clicked += new MessageEventHandler(this.HandleFieldButtonClicked);
-			this.fieldToolbar.Items.Add(this.fieldButtonSeparator);
+			this.fieldButtonLine = new IconButton();
+			this.fieldButtonLine.AutoFocus = false;
+			this.fieldButtonLine.CaptionId = Res.Captions.Editor.Forms.Line.Id;
+			this.fieldButtonLine.Clicked += new MessageEventHandler(this.HandleFieldButtonClicked);
+			this.fieldToolbar.Items.Add(this.fieldButtonLine);
 
 			this.fieldButtonTitle = new IconButton();
 			this.fieldButtonTitle.AutoFocus = false;
@@ -195,7 +195,7 @@ namespace Epsitec.Common.Designer.Viewers
 			if (disposing)
 			{
 				this.fieldButtonUse.Clicked -= new MessageEventHandler(this.HandleFieldButtonClicked);
-				this.fieldButtonSeparator.Clicked -= new MessageEventHandler(this.HandleFieldButtonClicked);
+				this.fieldButtonLine.Clicked -= new MessageEventHandler(this.HandleFieldButtonClicked);
 				this.fieldButtonTitle.Clicked -= new MessageEventHandler(this.HandleFieldButtonClicked);
 				this.fieldButtonBox.Clicked -= new MessageEventHandler(this.HandleFieldButtonClicked);
 				this.fieldButtonPrev.Clicked -= new MessageEventHandler(this.HandleFieldButtonClicked);
@@ -475,7 +475,7 @@ namespace Epsitec.Common.Designer.Viewers
 				this.fieldButtonUse.IconName = Misc.Icon("ActiveNo");
 			}
 
-			this.fieldButtonSeparator.Enable = (useCounter > 0 && freeCounter == 0);
+			this.fieldButtonLine.Enable = (useCounter > 0 && freeCounter == 0);
 			this.fieldButtonTitle.Enable = (useCounter > 0 && freeCounter == 0);
 			this.fieldButtonBox.Enable = (useCounter > 0 && freeCounter == 0);
 
@@ -846,9 +846,13 @@ namespace Epsitec.Common.Designer.Viewers
 			this.UpdateButtons();
 		}
 
-		protected void SelectedFieldsSeparator()
+		protected void SelectedFieldsLine()
 		{
 			//	Insère un séparateur avant le champ sélectionné.
+			List<int> sels = this.fieldTable.SelectedRows;
+			sels.Sort();
+
+			FieldDescription field = new FieldDescription(FieldDescription.FieldType.Line);
 		}
 
 		protected void SelectedFieldsTitle()
@@ -971,9 +975,9 @@ namespace Epsitec.Common.Designer.Viewers
 				this.SelectedFieldsUse();
 			}
 
-			if (sender == this.fieldButtonSeparator)
+			if (sender == this.fieldButtonLine)
 			{
-				this.SelectedFieldsSeparator();
+				this.SelectedFieldsLine();
 			}
 
 			if (sender == this.fieldButtonTitle)
@@ -1051,7 +1055,7 @@ namespace Epsitec.Common.Designer.Viewers
 		protected FrameBox						panelField;
 		protected HToolBar						fieldToolbar;
 		protected IconButton					fieldButtonUse;
-		protected IconButton					fieldButtonSeparator;
+		protected IconButton					fieldButtonLine;
 		protected IconButton					fieldButtonTitle;
 		protected IconButton					fieldButtonBox;
 		protected IconButton					fieldButtonPrev;
