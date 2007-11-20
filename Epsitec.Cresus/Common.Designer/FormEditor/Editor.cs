@@ -146,31 +146,31 @@ namespace Epsitec.Common.Designer.FormEditor
 		}
 
 
-		public List<string> GetSelectedDruidsPath()
+		public List<System.Guid> GetSelectedGuids()
 		{
-			//	Retourne la liste des chemins de Druids de tous les champs sélectionnés.
-			List<string> druidsPath = new List<string>();
+			//	Retourne la liste des Guids de tous les champs sélectionnés.
+			List<System.Guid> guids = new List<System.Guid>();
 
 			foreach (Widget obj in this.selectedObjects)
 			{
 				FieldDescription field = this.objectModifier.GetFormDescription(obj);
 				if (field != null)
 				{
-					druidsPath.Add(field.GetPath(null));
+					guids.Add(field.Guid);
 				}
 			}
 
-			return druidsPath;
+			return guids;
 		}
 
-		public void SetSelectedDruidsPath(List<string> druidsPath)
+		public void SetSelectedGuids(List<System.Guid> guids)
 		{
-			//	Sélectionne tous les objets dont on donne les chemins de Druids.
+			//	Sélectionne tous les objets dont on donne les Guids.
 			this.selectedObjects.Clear();
 
-			foreach (string druidPath in druidsPath)
+			foreach (System.Guid guid in guids)
 			{
-				Widget obj = this.objectModifier.GetWidget(druidPath);
+				Widget obj = this.objectModifier.GetWidget(guid);
 				if (obj != null)
 				{
 					this.selectedObjects.Add(obj);
@@ -689,14 +689,14 @@ namespace Epsitec.Common.Designer.FormEditor
 			this.Invalidate();
 		}
 
-		public void SelectListObject(List<string> druidsPath)
+		public void SelectListObject(List<System.Guid> guids)
 		{
-			//	Sélectionne une liste d'objets d'après une liste de chemins de Druids.
+			//	Sélectionne une liste d'objets d'après une liste de Guids.
 			this.selectedObjects.Clear();
 
-			foreach (string druidPath in druidsPath)
+			foreach (System.Guid guid in guids)
 			{
-				Widget obj = this.objectModifier.GetWidget(druidPath);
+				Widget obj = this.objectModifier.GetWidget(guid);
 				if (obj != null)
 				{
 					this.selectedObjects.Add(obj);

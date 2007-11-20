@@ -17,7 +17,10 @@ namespace Epsitec.Common.Designer.FormEditor
 		{
 			//	Constructeur unique.
 			this.formEditor = formEditor;
-			this.tableContent = new List<TableItem>();
+
+			this.formDruid = Druid.Empty;
+			this.tableContentUsed = new List<TableItem>();
+			this.tableContentAll = new List<TableItem>();
 		}
 
 
@@ -25,7 +28,7 @@ namespace Epsitec.Common.Designer.FormEditor
 		{
 			get
 			{
-				return this.tableContent;
+				return this.tableContentUsed;
 			}
 		}
 
@@ -178,12 +181,12 @@ namespace Epsitec.Common.Designer.FormEditor
 		}
 
 
-		public Widget GetWidget(string druidPath)
+		public Widget GetWidget(System.Guid guid)
 		{
-			//	Cherche le widget correspondant à un chemin de Druids.
+			//	Cherche le widget correspondant à un Guid.
 			foreach (FieldDescription field in this.formEditor.Form.Fields)
 			{
-				if (druidPath == field.GetPath(null))
+				if (guid == field.Guid)
 				{
 					Widget obj = this.GetWidget(field.UniqueId);
 					if (obj != null)
@@ -223,6 +226,25 @@ namespace Epsitec.Common.Designer.FormEditor
 		}
 
 
+		public FieldDescription GetFormDescription(TableItem item)
+		{
+			int index = this.GetFormDescriptionIndex(item.Guid);
+
+			if (index == -1)
+			{
+				index = this.GetFormDescriptionIndex(item.DruidsPath);
+			}
+
+			if (index == -1)
+			{
+				return null;
+			}
+			else
+			{
+				return this.formEditor.Form.Fields[index];
+			}
+		}
+
 		public FieldDescription GetFormDescription(Widget obj)
 		{
 			//	Retourne un champ d'après l'identificateur unique d'un widget.
@@ -259,7 +281,23 @@ namespace Epsitec.Common.Designer.FormEditor
 			return -1;
 		}
 
-		public int GetFormDescriptionIndex(string druidsPath)
+		public int GetFormDescriptionIndex(System.Guid guid)
+		{
+			//	Retourne l'index d'un champ d'après le Guid.
+			for (int i=0; i<this.formEditor.Form.Fields.Count; i++)
+			{
+				FieldDescription field = this.formEditor.Form.Fields[i];
+
+				if (field.Guid == guid)
+				{
+					return i;
+				}
+			}
+
+			return -1;
+		}
+
+		protected int GetFormDescriptionIndex(string druidsPath)
 		{
 			//	Retourne l'index d'un champ d'après le chemin de Druis.
 			for (int i=0; i<this.formEditor.Form.Fields.Count; i++)
@@ -294,25 +332,41 @@ namespace Epsitec.Common.Designer.FormEditor
 
 
 		#region TableContent
-		public void UpdateTableContent(List<string> entityDruidsPath)
+		public void UpdateTableContent(Druid formDruid, List<string> entityDruidsPath)
 		{
 			//	Met à jour la liste qui reflète le contenu de la table des champs, visible en haut à droite.
-			this.tableContent.Clear();
-
 			if (this.formEditor.Form == null || entityDruidsPath == null)
 			{
 				return;
 			}
+
+			if (this.formDruid != formDruid)  // a-t-on changé de formulaire ?
+			{
+				this.formDruid = formDruid;
+				this.tableContentAll.Clear();
+
+				foreach (string druidPath in entityDruidsPath)
+				{
+					TableItem item = new TableItem();
+					item.Guid = System.Guid.NewGuid();
+					item.DruidsPath = druidPath;
+
+					this.tableContentAll.Add(item);
+				}
+			}
+
+			this.tableContentUsed.Clear();
 
 			//	Construit la liste des chemins de Druids, en commençant par ceux qui font
 			//	partie du masque de saisie.
 			foreach (FieldDescription field in this.formEditor.Form.Fields)
 			{
 				TableItem item = new TableItem();
+				item.Guid = field.Guid;
 				item.DruidsPath = field.GetPath(null);
 				item.Used = true;
 
-				this.tableContent.Add(item);
+				this.tableContentUsed.Add(item);
 			}
 
 			//	Complète ensuite par tous les autres.
@@ -321,20 +375,21 @@ namespace Epsitec.Common.Designer.FormEditor
 				if (this.GetTableContentIndex(druidPath) == -1)
 				{
 					TableItem item = new TableItem();
+					item.Guid = this.GetTableContentGuid(druidPath);
 					item.DruidsPath = druidPath;
 					item.Used = false;
 
-					this.tableContent.Add(item);
+					this.tableContentUsed.Add(item);
 				}
 			}
 		}
 
-		public int GetTableContentIndex(string druidsPath)
+		public int GetTableContentIndex(System.Guid guid)
 		{
-			//	Cherche l'index d'un chemin de Druids dans la table des champs.
-			for (int i=0; i<this.tableContent.Count; i++)
+			//	Cherche l'index d'un Guid dans la table des champs.
+			for (int i=0; i<this.tableContentUsed.Count; i++)
 			{
-				if (druidsPath == this.tableContent[i].DruidsPath)
+				if (guid == this.tableContentUsed[i].Guid)
 				{
 					return i;
 				}
@@ -343,17 +398,41 @@ namespace Epsitec.Common.Designer.FormEditor
 			return -1;
 		}
 
+		protected int GetTableContentIndex(string druidsPath)
+		{
+			//	Cherche l'index d'un chemin de Druids dans la table des champs.
+			for (int i=0; i<this.tableContentUsed.Count; i++)
+			{
+				if (druidsPath == this.tableContentUsed[i].DruidsPath)
+				{
+					return i;
+				}
+			}
+
+			return -1;
+		}
+
+		protected System.Guid GetTableContentGuid(string druidsPath)
+		{
+			for (int i=0; i<this.tableContentAll.Count; i++)
+			{
+				if (druidsPath == this.tableContentAll[i].DruidsPath)
+				{
+					return this.tableContentAll[i].Guid;
+				}
+			}
+
+			return System.Guid.Empty;
+		}
+
 		public struct TableItem
 		{
 			//	Cette structure représente un élément dans la liste de droite des champs.
-			public string DruidsPath;
-			public bool Used;
-
 			public bool IsEmpty
 			{
 				get
 				{
-					return this.DruidsPath == null;
+					return this.Guid == System.Guid.Empty;
 				}
 			}
 
@@ -364,11 +443,17 @@ namespace Epsitec.Common.Designer.FormEditor
 					return new TableItem();
 				}
 			}
+
+			public System.Guid		Guid;
+			public string			DruidsPath;
+			public bool				Used;
 		}
 		#endregion
 
 
 		protected Editor				formEditor;
-		protected List<TableItem>		tableContent;
+		protected Druid					formDruid;
+		protected List<TableItem>		tableContentUsed;
+		protected List<TableItem>		tableContentAll;
 	}
 }

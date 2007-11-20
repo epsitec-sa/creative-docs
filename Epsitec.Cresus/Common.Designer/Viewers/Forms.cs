@@ -365,7 +365,7 @@ namespace Epsitec.Common.Designer.Viewers
 		protected void UpdateFieldTable(bool newContent)
 		{
 			//	Met à jour la table des champs.
-			this.formEditor.ObjectModifier.UpdateTableContent(this.entityDruidsPath);
+			this.formEditor.ObjectModifier.UpdateTableContent(this.druidToSerialize, this.entityDruidsPath);
 
 			int first = this.fieldTable.FirstVisibleRow;
 			for (int i=0; i<this.fieldTable.LineCount; i++)
@@ -441,12 +441,12 @@ namespace Epsitec.Common.Designer.Viewers
 							next = this.formEditor.ObjectModifier.TableContent[sel+1];
 						}
 
-						if (!curr.Used || prev.IsEmpty || !prev.Used)  // premier champ utilisé ?
+						if (!curr.Used || !prev.Used)  // premier champ utilisé ?
 						{
 							isPrev = false;
 						}
 
-						if (!curr.Used || next.IsEmpty || !next.Used)  // dernier champ utilisé ?
+						if (!curr.Used || !next.Used)  // dernier champ utilisé ?
 						{
 							isNext = false;
 						}
@@ -468,7 +468,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.fieldButtonUse.Enable = (useCounter == 0 && freeCounter > 0) || (useCounter > 0 && freeCounter == 0);
 			if (this.fieldButtonUse.Enable)
 			{
-				this.fieldButtonUse.IconName = (useCounter > 0) ? Misc.Icon("ActiveNo") : Misc.Icon("ActiveYes");
+				this.fieldButtonUse.IconName = (useCounter > 0) ? Misc.Icon("Delete") : Misc.Icon("Create");
 			}
 			else
 			{
@@ -603,10 +603,10 @@ namespace Epsitec.Common.Designer.Viewers
 			{
 				this.entityId = form.EntityId;
 
-				List<string> druidsPath = null;
+				List<System.Guid> guids = null;
 				if (keepSelection)
 				{
-					druidsPath = this.formEditor.GetSelectedDruidsPath();  // Druids des objets sélectionnés
+					guids = this.formEditor.GetSelectedGuids();  // Guid des objets sélectionnés
 				}
 
 				FormEngine.Engine engine = new FormEngine.Engine(this.module.ResourceManager);
@@ -624,7 +624,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 				if (keepSelection)
 				{
-					this.formEditor.SetSelectedDruidsPath(druidsPath);  // resélectionne les mêmes objets
+					this.formEditor.SetSelectedGuids(guids);  // resélectionne les mêmes objets
 				}
 				else
 				{
@@ -754,12 +754,12 @@ namespace Epsitec.Common.Designer.Viewers
 		{
 			//	Reflète les sélections effectuées dans l'éditeur de Forms dans la liste des champs.
 			//	Editeur de Forms -> Liste des champs.
-			List<string> druidsPath = this.formEditor.GetSelectedDruidsPath();
+			List<System.Guid> guids = this.formEditor.GetSelectedGuids();
 			List<int> sels = new List<int>();
 
-			foreach (string druidPath in druidsPath)
+			foreach (System.Guid guid in guids)
 			{
-				int sel = this.formEditor.ObjectModifier.GetTableContentIndex(druidPath);
+				int sel = this.formEditor.ObjectModifier.GetTableContentIndex(guid);
 				if (sel != -1)
 				{
 					sels.Add(sel);
@@ -783,16 +783,16 @@ namespace Epsitec.Common.Designer.Viewers
 			}
 			else
 			{
-				List<string> druidsPath = new List<string>();
+				List<System.Guid> guids = new List<System.Guid>();
 				foreach (int sel in sels)
 				{
 					if (sel != -1)
 					{
-						druidsPath.Add(this.formEditor.ObjectModifier.TableContent[sel].DruidsPath);
+						guids.Add(this.formEditor.ObjectModifier.TableContent[sel].Guid);
 					}
 				}
 
-				this.formEditor.SelectListObject(druidsPath);
+				this.formEditor.SelectListObject(guids);
 			}
 		}
 
@@ -803,21 +803,21 @@ namespace Epsitec.Common.Designer.Viewers
 			List<int> sels = this.fieldTable.SelectedRows;
 			sels.Sort();
 
-			List<string> druidsPaths = new List<string>();
+			List<System.Guid> guids = new List<System.Guid>();
 
 			foreach (int sel in sels)
 			{
 				FormEditor.ObjectModifier.TableItem item = this.formEditor.ObjectModifier.TableContent[sel];
 
-				if (item.Used)
+				if (item.Used)  // supprime le champ du masque ?
 				{
-					int index = this.formEditor.ObjectModifier.GetFormDescriptionIndex(item.DruidsPath);
+					int index = this.formEditor.ObjectModifier.GetFormDescriptionIndex(item.Guid);
 					if (index != -1)
 					{
 						this.form.Fields.RemoveAt(index);
 					}
 				}
-				else
+				else  // ajoute le champ dans le masque ?
 				{
 					FieldDescription field = new FieldDescription(FieldDescription.FieldType.Field);
 					field.SetFields(item.DruidsPath);
@@ -825,16 +825,16 @@ namespace Epsitec.Common.Designer.Viewers
 					this.form.Fields.Add(field);
 				}
 
-				druidsPaths.Add(item.DruidsPath);
+				guids.Add(item.Guid);
 			}
 
 			this.SetForm(this.form, this.druidToSerialize, false);
 			this.UpdateFieldTable(false);
 
 			sels.Clear();
-			foreach (string druidsPath in druidsPaths)
+			foreach (System.Guid guid in guids)
 			{
-				int index = this.formEditor.ObjectModifier.GetTableContentIndex(druidsPath);
+				int index = this.formEditor.ObjectModifier.GetTableContentIndex(guid);
 				if (index != -1)
 				{
 					sels.Add(index);
@@ -848,16 +848,38 @@ namespace Epsitec.Common.Designer.Viewers
 
 		protected void SelectedFieldsLine()
 		{
-			//	Insère un séparateur avant le champ sélectionné.
+			//	Insère une ligne avant le champ sélectionné.
 			List<int> sels = this.fieldTable.SelectedRows;
 			sels.Sort();
 
+			FormEditor.ObjectModifier.TableItem item = this.formEditor.ObjectModifier.TableContent[sels[0]];
+			int index = this.formEditor.ObjectModifier.GetFormDescriptionIndex(item.Guid);
+
 			FieldDescription field = new FieldDescription(FieldDescription.FieldType.Line);
+			this.form.Fields.Insert(index, field);
+
+			this.SetForm(this.form, this.druidToSerialize, false);
+			this.UpdateFieldTable(false);
+			this.ReflectSelectionToList();
+			this.UpdateButtons();
 		}
 
 		protected void SelectedFieldsTitle()
 		{
 			//	Insère un titre avant le champ sélectionné.
+			List<int> sels = this.fieldTable.SelectedRows;
+			sels.Sort();
+
+			FormEditor.ObjectModifier.TableItem item = this.formEditor.ObjectModifier.TableContent[sels[0]];
+			int index = this.formEditor.ObjectModifier.GetFormDescriptionIndex(item.Guid);
+
+			FieldDescription field = new FieldDescription(FieldDescription.FieldType.Title);
+			this.form.Fields.Insert(index, field);
+
+			this.SetForm(this.form, this.druidToSerialize, false);
+			this.UpdateFieldTable(false);
+			this.ReflectSelectionToList();
+			this.UpdateButtons();
 		}
 
 		protected void SelectedFieldsBox()
@@ -878,7 +900,7 @@ namespace Epsitec.Common.Designer.Viewers
 			foreach (int sel in sels)
 			{
 				FormEditor.ObjectModifier.TableItem item = this.formEditor.ObjectModifier.TableContent[sel];
-				int index = this.formEditor.ObjectModifier.GetFormDescriptionIndex(item.DruidsPath);
+				int index = this.formEditor.ObjectModifier.GetFormDescriptionIndex(item.Guid);
 				if (index != -1)
 				{
 					FieldDescription field = this.form.Fields[index];
