@@ -497,10 +497,12 @@ namespace Epsitec.Common.Support.CodeGeneration
 				(trimmed.Length > 0))
 			{
 				if ((trimmed.StartsWith ("#")) ||
-					(trimmed.StartsWith ("//")))
+					(trimmed.StartsWith ("//")) ||
+					(trimmed.StartsWith ("[") && trimmed.EndsWith ("]")))
 				{
 					//	OK, accept # directive or comment start, even if we are currently
 					//	in an abstract construct where no code may be emitted.
+					//	Also accept [attribute] insertion.
 				}
 				else
 				{
