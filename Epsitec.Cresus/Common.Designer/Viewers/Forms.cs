@@ -387,7 +387,8 @@ namespace Epsitec.Common.Designer.Viewers
 		protected void UpdateButtons()
 		{
 			//	Met à jour les boutons.
-			bool isUse = false;
+			int useCounter = 0;
+			int freeCounter = 0;
 			bool isPrev = false;
 			bool isNext = false;
 
@@ -396,14 +397,13 @@ namespace Epsitec.Common.Designer.Viewers
 				List<int> sels = this.fieldTable.SelectedRows;
 				if (sels != null && sels.Count > 0)
 				{
-					isUse = true;
 					isPrev = true;
 					isNext = true;
 
 					foreach (int sel in sels)
 					{
 						FormEditor.ObjectModifier.TableItem prev = Common.Designer.FormEditor.ObjectModifier.TableItem.Empty;
-						FormEditor.ObjectModifier.TableItem item = Common.Designer.FormEditor.ObjectModifier.TableItem.Empty;
+						FormEditor.ObjectModifier.TableItem curr = Common.Designer.FormEditor.ObjectModifier.TableItem.Empty;
 						FormEditor.ObjectModifier.TableItem next = Common.Designer.FormEditor.ObjectModifier.TableItem.Empty;
 
 						if (sel > 0)
@@ -411,25 +411,30 @@ namespace Epsitec.Common.Designer.Viewers
 							prev = this.formEditor.ObjectModifier.TableContent[sel-1];
 						}
 
-						item = this.formEditor.ObjectModifier.TableContent[sel];
+						curr = this.formEditor.ObjectModifier.TableContent[sel];
 
 						if (sel < this.formEditor.ObjectModifier.TableContent.Count-1)
 						{
 							next = this.formEditor.ObjectModifier.TableContent[sel+1];
 						}
 
-						if (!item.Used || prev.IsEmpty || !prev.Used)  // premier champ utilisé ?
+						if (!curr.Used || prev.IsEmpty || !prev.Used)  // premier champ utilisé ?
 						{
 							isPrev = false;
 						}
 
-						if (!item.Used || next.IsEmpty || !next.Used)  // dernier champ utilisé ?
+						if (!curr.Used || next.IsEmpty || !next.Used)  // dernier champ utilisé ?
 						{
 							isNext = false;
 						}
 
-						if (!item.Used)  // champ inutilisé ?
+						if (curr.Used)  // champ utilisé ?
 						{
+							useCounter++;
+						}
+						else  // champ inutilisé ?
+						{
+							freeCounter++;
 							isPrev = false;
 							isNext = false;
 						}
@@ -437,7 +442,16 @@ namespace Epsitec.Common.Designer.Viewers
 				}
 			}
 
-			this.fieldButtonUse.Enable = isUse;
+			this.fieldButtonUse.Enable = (useCounter == 0 && freeCounter > 0) || (useCounter > 0 && freeCounter == 0);
+			if (this.fieldButtonUse.Enable)
+			{
+				this.fieldButtonUse.IconName = (useCounter > 0) ? Misc.Icon("ActiveNo") : Misc.Icon("ActiveYes");
+			}
+			else
+			{
+				this.fieldButtonUse.IconName = Misc.Icon("ActiveNo");
+			}
+
 			this.fieldButtonPrev.Enable = isPrev;
 			this.fieldButtonNext.Enable = isNext;
 		}
@@ -764,9 +778,29 @@ namespace Epsitec.Common.Designer.Viewers
 
 			foreach (int sel in sels)
 			{
-				FieldDescription field = this.form.Fields[sel];
-				this.form.Fields.RemoveAt(sel);
+				FormEditor.ObjectModifier.TableItem item = this.formEditor.ObjectModifier.TableContent[sel];
+
+				if (item.Used)
+				{
+					int index = this.formEditor.ObjectModifier.GetFormDescriptionIndex(item.DruidsPath);
+					if (index != -1)
+					{
+						this.form.Fields.RemoveAt(index);
+					}
+				}
+				else
+				{
+					FieldDescription field = new FieldDescription(FieldDescription.FieldType.Field);
+					field.SetFields(item.DruidsPath);
+
+					this.form.Fields.Add(field);
+				}
 			}
+
+			this.SetForm(this.form, this.druidToSerialize, true);
+			this.UpdateFieldTable(false);
+			this.ReflectSelectionToList();
+			this.UpdateButtons();
 		}
 
 		protected void SelectedFieldsMove(int direction)
@@ -781,9 +815,14 @@ namespace Epsitec.Common.Designer.Viewers
 
 			foreach (int sel in sels)
 			{
-				FieldDescription field = this.form.Fields[sel];
-				this.form.Fields.RemoveAt(sel);
-				this.form.Fields.Insert(sel+direction, field);
+				FormEditor.ObjectModifier.TableItem item = this.formEditor.ObjectModifier.TableContent[sel];
+				int index = this.formEditor.ObjectModifier.GetFormDescriptionIndex(item.DruidsPath);
+				if (index != -1)
+				{
+					FieldDescription field = this.form.Fields[index];
+					this.form.Fields.RemoveAt(index);
+					this.form.Fields.Insert(index+direction, field);
+				}
 			}
 
 			this.SetForm(this.form, this.druidToSerialize, true);

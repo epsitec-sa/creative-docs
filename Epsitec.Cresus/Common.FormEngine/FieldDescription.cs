@@ -156,11 +156,11 @@ namespace Epsitec.Common.FormEngine
 			}
 		}
 
-		public void SetFields(string listDruids)
+		public void SetFields(string druidsPath)
 		{
 			//	Donne d'une liste de Druids séparés par des points.
-			//	Par exemple: listDruids = "[630B2].[630S2]"
-			if (string.IsNullOrEmpty(listDruids))
+			//	Par exemple: druidsPath = "[630B2].[630S2]"
+			if (string.IsNullOrEmpty(druidsPath))
 			{
 				this.fieldIds = null;
 			}
@@ -169,7 +169,7 @@ namespace Epsitec.Common.FormEngine
 				System.Diagnostics.Debug.Assert(this.type == FieldType.Field);
 
 				this.fieldIds = new List<Druid>();
-				string[] druids = listDruids.Split('.');
+				string[] druids = druidsPath.Split('.');
 				foreach (string druid in druids)
 				{
 					Druid id = Druid.Parse(druid);

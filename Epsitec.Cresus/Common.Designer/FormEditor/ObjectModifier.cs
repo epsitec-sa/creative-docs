@@ -259,6 +259,23 @@ namespace Epsitec.Common.Designer.FormEditor
 			return -1;
 		}
 
+		public int GetFormDescriptionIndex(string druidsPath)
+		{
+			//	Retourne l'index d'un champ d'après le chemin de Druis.
+			for (int i=0; i<this.formEditor.Form.Fields.Count; i++)
+			{
+				FieldDescription field = this.formEditor.Form.Fields[i];
+
+				if (field.GetPath(null) == druidsPath)
+				{
+					return i;
+				}
+			}
+
+			return -1;
+		}
+
+
 		public Rectangle GetActualBounds(Widget obj)
 		{
 			//	Retourne la position et les dimensions actuelles de l'objet.
@@ -276,6 +293,7 @@ namespace Epsitec.Common.Designer.FormEditor
 		}
 
 
+		#region TableContent
 		public void UpdateTableContent(List<string> entityDruidsPath)
 		{
 			//	Met à jour la liste qui reflète le contenu de la table des champs, visible en haut à droite.
@@ -327,6 +345,7 @@ namespace Epsitec.Common.Designer.FormEditor
 
 		public struct TableItem
 		{
+			//	Cette structure représente un élément dans la liste de droite des champs.
 			public string DruidsPath;
 			public bool Used;
 
@@ -346,6 +365,7 @@ namespace Epsitec.Common.Designer.FormEditor
 				}
 			}
 		}
+		#endregion
 
 
 		protected Editor				formEditor;
