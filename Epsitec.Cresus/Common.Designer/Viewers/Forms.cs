@@ -776,6 +776,8 @@ namespace Epsitec.Common.Designer.Viewers
 			List<int> sels = this.fieldTable.SelectedRows;
 			sels.Sort();
 
+			List<string> druidsPaths = new List<string>();
+
 			foreach (int sel in sels)
 			{
 				FormEditor.ObjectModifier.TableItem item = this.formEditor.ObjectModifier.TableContent[sel];
@@ -795,11 +797,25 @@ namespace Epsitec.Common.Designer.Viewers
 
 					this.form.Fields.Add(field);
 				}
+
+				druidsPaths.Add(item.DruidsPath);
 			}
 
-			this.SetForm(this.form, this.druidToSerialize, true);
+			this.SetForm(this.form, this.druidToSerialize, false);
 			this.UpdateFieldTable(false);
-			this.ReflectSelectionToList();
+
+			sels.Clear();
+			foreach (string druidsPath in druidsPaths)
+			{
+				int index = this.formEditor.ObjectModifier.GetTableContentIndex(druidsPath);
+				if (index != -1)
+				{
+					sels.Add(index);
+				}
+			}
+			this.fieldTable.SelectedRows = sels;
+			this.ReflectSelectionToEditor();
+
 			this.UpdateButtons();
 		}
 
