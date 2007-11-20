@@ -89,6 +89,26 @@ namespace Epsitec.Common.Designer.Viewers
 
 			this.fieldToolbar.Items.Add(new IconSeparator());
 
+			this.fieldButtonSeparator = new IconButton();
+			this.fieldButtonSeparator.AutoFocus = false;
+			this.fieldButtonSeparator.CaptionId = Res.Captions.Editor.Forms.Separator.Id;
+			this.fieldButtonSeparator.Clicked += new MessageEventHandler(this.HandleFieldButtonClicked);
+			this.fieldToolbar.Items.Add(this.fieldButtonSeparator);
+
+			this.fieldButtonTitle = new IconButton();
+			this.fieldButtonTitle.AutoFocus = false;
+			this.fieldButtonTitle.CaptionId = Res.Captions.Editor.Forms.Title.Id;
+			this.fieldButtonTitle.Clicked += new MessageEventHandler(this.HandleFieldButtonClicked);
+			this.fieldToolbar.Items.Add(this.fieldButtonTitle);
+
+			this.fieldButtonBox = new IconButton();
+			this.fieldButtonBox.AutoFocus = false;
+			this.fieldButtonBox.CaptionId = Res.Captions.Editor.Forms.Box.Id;
+			this.fieldButtonBox.Clicked += new MessageEventHandler(this.HandleFieldButtonClicked);
+			this.fieldToolbar.Items.Add(this.fieldButtonBox);
+
+			this.fieldToolbar.Items.Add(new IconSeparator());
+
 			this.fieldButtonPrev = new IconButton();
 			this.fieldButtonPrev.AutoFocus = false;
 			this.fieldButtonPrev.CaptionId = Res.Captions.Editor.Forms.Prev.Id;
@@ -175,6 +195,9 @@ namespace Epsitec.Common.Designer.Viewers
 			if (disposing)
 			{
 				this.fieldButtonUse.Clicked -= new MessageEventHandler(this.HandleFieldButtonClicked);
+				this.fieldButtonSeparator.Clicked -= new MessageEventHandler(this.HandleFieldButtonClicked);
+				this.fieldButtonTitle.Clicked -= new MessageEventHandler(this.HandleFieldButtonClicked);
+				this.fieldButtonBox.Clicked -= new MessageEventHandler(this.HandleFieldButtonClicked);
 				this.fieldButtonPrev.Clicked -= new MessageEventHandler(this.HandleFieldButtonClicked);
 				this.fieldButtonNext.Clicked -= new MessageEventHandler(this.HandleFieldButtonClicked);
 				this.fieldButtonGoto.Clicked -= new MessageEventHandler(this.HandleFieldButtonClicked);
@@ -451,6 +474,10 @@ namespace Epsitec.Common.Designer.Viewers
 			{
 				this.fieldButtonUse.IconName = Misc.Icon("ActiveNo");
 			}
+
+			this.fieldButtonSeparator.Enable = (useCounter > 0 && freeCounter == 0);
+			this.fieldButtonTitle.Enable = (useCounter > 0 && freeCounter == 0);
+			this.fieldButtonBox.Enable = (useCounter > 0 && freeCounter == 0);
 
 			this.fieldButtonPrev.Enable = isPrev;
 			this.fieldButtonNext.Enable = isNext;
@@ -819,6 +846,21 @@ namespace Epsitec.Common.Designer.Viewers
 			this.UpdateButtons();
 		}
 
+		protected void SelectedFieldsSeparator()
+		{
+			//	Insère un séparateur avant le champ sélectionné.
+		}
+
+		protected void SelectedFieldsTitle()
+		{
+			//	Insère un titre avant le champ sélectionné.
+		}
+
+		protected void SelectedFieldsBox()
+		{
+			//	Groupe/sépare les champs sélectionnés.
+		}
+
 		protected void SelectedFieldsMove(int direction)
 		{
 			//	Déplace les champs sélectionnés vers le haut ou vers le bas.
@@ -929,6 +971,21 @@ namespace Epsitec.Common.Designer.Viewers
 				this.SelectedFieldsUse();
 			}
 
+			if (sender == this.fieldButtonSeparator)
+			{
+				this.SelectedFieldsSeparator();
+			}
+
+			if (sender == this.fieldButtonTitle)
+			{
+				this.SelectedFieldsTitle();
+			}
+
+			if (sender == this.fieldButtonBox)
+			{
+				this.SelectedFieldsBox();
+			}
+
 			if (sender == this.fieldButtonPrev)
 			{
 				this.SelectedFieldsMove(-1);
@@ -994,6 +1051,9 @@ namespace Epsitec.Common.Designer.Viewers
 		protected FrameBox						panelField;
 		protected HToolBar						fieldToolbar;
 		protected IconButton					fieldButtonUse;
+		protected IconButton					fieldButtonSeparator;
+		protected IconButton					fieldButtonTitle;
+		protected IconButton					fieldButtonBox;
 		protected IconButton					fieldButtonPrev;
 		protected IconButton					fieldButtonNext;
 		protected IconButton					fieldButtonGoto;
