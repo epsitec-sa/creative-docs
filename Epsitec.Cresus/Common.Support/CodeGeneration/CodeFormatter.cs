@@ -575,6 +575,70 @@ namespace Epsitec.Common.Support.CodeGeneration
 			this.lineState = LineState.PartialLine;
 		}
 
+		public void WriteAssemblyAttribute(params string[] fragments)
+		{
+			string code = string.Concat (fragments) + Strings.LineSeparator;
+			int    pos  = this.FindCodeStartPos ();
+
+			this.output.Insert (pos, code);
+		}
+
+		private int FindCodeStartPos()
+		{
+			int pos = 0;
+			
+			bool inComment = false;
+			int  inAttribute = 0;
+
+			while (pos < this.output.Length)
+			{
+				switch (this.output[pos])
+				{
+					case ' ':
+					case '\t':
+						pos++;
+						continue;
+
+					case '\r':
+					case '\n':
+						inComment = false;
+						pos++;
+						continue;
+
+					case '/':
+						if ((pos < this.output.Length-1) &&
+							(this.output[pos+1] == '/'))
+						{
+							inComment = true;
+							pos += 2;
+							continue;
+						}
+						break;
+
+					case '[':
+						inAttribute++;
+						pos++;
+						continue;
+
+					case ']':
+						inAttribute--;
+						pos++;
+						continue;
+				}
+
+				if ((inComment) ||
+					(inAttribute > 0))
+				{
+					pos++;
+					continue;
+				}
+
+				break;
+			}
+			
+			return pos;
+		}
+
 		#region IDisposable Members
 
 		public void Dispose()
