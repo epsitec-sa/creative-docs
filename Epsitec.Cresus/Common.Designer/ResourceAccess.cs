@@ -706,6 +706,7 @@ namespace Epsitec.Common.Designer
 		public List<string> GetEntityDruidsPath(Druid entityId)
 		{
 			//	Retourne la liste des chemins de Druids des champs d'une entité.
+			//	Les relations sont explorées récursivement.
 			List<string> list = new List<string>();
 
 			CultureMap item = this.GetEntityItem(entityId);

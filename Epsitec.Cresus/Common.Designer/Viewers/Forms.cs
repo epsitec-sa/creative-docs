@@ -342,31 +342,12 @@ namespace Epsitec.Common.Designer.Viewers
 		protected void UpdateFieldTable(bool newContent)
 		{
 			//	Met à jour la table des champs.
-			this.tableDruidsPath = new List<string>();
-
-			if (this.form != null && this.entityDruidsPath != null)
-			{
-				//	Construit la liste des chemins de Druids, en commençant par ceux qui font
-				//	partie du masque de saisie.
-				foreach (FieldDescription field in this.form.Fields)
-				{
-					this.tableDruidsPath.Add(field.GetPath(null));
-				}
-
-				//	Complète ensuite par tous les autres.
-				foreach (string druidPath in this.entityDruidsPath)
-				{
-					if (!this.tableDruidsPath.Contains(druidPath))
-					{
-						this.tableDruidsPath.Add(druidPath);
-					}
-				}
-			}
+			this.formEditor.ObjectModifier.UpdateTableContent(this.entityDruidsPath);
 
 			int first = this.fieldTable.FirstVisibleRow;
 			for (int i=0; i<this.fieldTable.LineCount; i++)
 			{
-				if (first+i >= this.tableDruidsPath.Count)
+				if (first+i >= this.formEditor.ObjectModifier.TableContent.Count)
 				{
 					this.fieldTable.SetLineString(0, first+i, "");
 					this.fieldTable.SetLineState(0, first+i, MyWidgets.StringList.CellState.Disabled);
@@ -378,10 +359,11 @@ namespace Epsitec.Common.Designer.Viewers
 				}
 				else
 				{
-					bool active = (first+i < this.form.Fields.Count);
-					string icon = active ? "ActiveYes" : "ActiveNo";
-					string name = this.module.AccessFields.GetFieldNames(this.tableDruidsPath[first+i]);
-					//?Color color = active ? Color.Empty : Color.FromBrightness(0.9);
+					FormEditor.ObjectModifier.TableItem item = this.formEditor.ObjectModifier.TableContent[first+i];
+
+					string icon = item.Used ? "ActiveYes" : "ActiveNo";
+					string name = this.module.AccessFields.GetFieldNames(item.DruidsPath);
+					//?Color color = item.Used ? Color.Empty : Color.FromBrightness(0.9);
 					Color color = Color.Empty;
 
 					this.fieldTable.SetLineString(0, first+i, Misc.Image(icon));
@@ -394,7 +376,7 @@ namespace Epsitec.Common.Designer.Viewers
 				}
 			}
 
-			this.fieldTable.TotalRows = this.tableDruidsPath.Count;
+			this.fieldTable.TotalRows = this.formEditor.ObjectModifier.TableContent.Count;
 
 			if (newContent)
 			{
@@ -420,23 +402,36 @@ namespace Epsitec.Common.Designer.Viewers
 
 					foreach (int sel in sels)
 					{
-						if (sel == 0)  // premier champ utilisé ?
+						FormEditor.ObjectModifier.TableItem prev = Common.Designer.FormEditor.ObjectModifier.TableItem.Empty;
+						FormEditor.ObjectModifier.TableItem item = Common.Designer.FormEditor.ObjectModifier.TableItem.Empty;
+						FormEditor.ObjectModifier.TableItem next = Common.Designer.FormEditor.ObjectModifier.TableItem.Empty;
+
+						if (sel > 0)
 						{
-							isPrev = false;
-							break;
+							prev = this.formEditor.ObjectModifier.TableContent[sel-1];
 						}
 
-						if (sel == this.form.Fields.Count-1)  // dernier champ utilisé ?
+						item = this.formEditor.ObjectModifier.TableContent[sel];
+
+						if (sel < this.formEditor.ObjectModifier.TableContent.Count-1)
 						{
-							isNext = false;
-							break;
+							next = this.formEditor.ObjectModifier.TableContent[sel+1];
 						}
 
-						if (sel >= this.form.Fields.Count)  // champ inutilisé ?
+						if (!item.Used || prev.IsEmpty || !prev.Used)  // premier champ utilisé ?
+						{
+							isPrev = false;
+						}
+
+						if (!item.Used || next.IsEmpty || !next.Used)  // dernier champ utilisé ?
+						{
+							isNext = false;
+						}
+
+						if (!item.Used)  // champ inutilisé ?
 						{
 							isPrev = false;
 							isNext = false;
-							break;
 						}
 					}
 				}
@@ -723,7 +718,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 			foreach (string druidPath in druidsPath)
 			{
-				int sel = this.tableDruidsPath.IndexOf(druidPath);
+				int sel = this.formEditor.ObjectModifier.GetTableContentIndex(druidPath);
 				if (sel != -1)
 				{
 					sels.Add(sel);
@@ -752,7 +747,7 @@ namespace Epsitec.Common.Designer.Viewers
 				{
 					if (sel != -1)
 					{
-						druidsPath.Add(this.tableDruidsPath[sel]);
+						druidsPath.Add(this.formEditor.ObjectModifier.TableContent[sel].DruidsPath);
 					}
 				}
 
@@ -937,7 +932,6 @@ namespace Epsitec.Common.Designer.Viewers
 		protected Druid							entityId;
 		protected FormDescription				form;
 		protected List<string>					entityDruidsPath;
-		protected List<string>					tableDruidsPath;
 		protected FormEditor.Editor				formEditor;
 		protected FrameBox						right;
 		protected HSplitter						splitter3;

@@ -17,13 +17,15 @@ namespace Epsitec.Common.Designer.FormEditor
 		{
 			//	Constructeur unique.
 			this.formEditor = formEditor;
+			this.tableContent = new List<TableItem>();
 		}
 
-		protected UI.Panel Container
+
+		public List<TableItem> TableContent
 		{
 			get
 			{
-				return this.formEditor.Panel;
+				return this.tableContent;
 			}
 		}
 
@@ -274,6 +276,79 @@ namespace Epsitec.Common.Designer.FormEditor
 		}
 
 
+		public void UpdateTableContent(List<string> entityDruidsPath)
+		{
+			//	Met à jour la liste qui reflète le contenu de la table des champs, visible en haut à droite.
+			this.tableContent.Clear();
+
+			if (this.formEditor.Form == null || entityDruidsPath == null)
+			{
+				return;
+			}
+
+			//	Construit la liste des chemins de Druids, en commençant par ceux qui font
+			//	partie du masque de saisie.
+			foreach (FieldDescription field in this.formEditor.Form.Fields)
+			{
+				TableItem item = new TableItem();
+				item.DruidsPath = field.GetPath(null);
+				item.Used = true;
+
+				this.tableContent.Add(item);
+			}
+
+			//	Complète ensuite par tous les autres.
+			foreach (string druidPath in entityDruidsPath)
+			{
+				if (this.GetTableContentIndex(druidPath) == -1)
+				{
+					TableItem item = new TableItem();
+					item.DruidsPath = druidPath;
+					item.Used = false;
+
+					this.tableContent.Add(item);
+				}
+			}
+		}
+
+		public int GetTableContentIndex(string druidsPath)
+		{
+			//	Cherche l'index d'un chemin de Druids dans la table des champs.
+			for (int i=0; i<this.tableContent.Count; i++)
+			{
+				if (druidsPath == this.tableContent[i].DruidsPath)
+				{
+					return i;
+				}
+			}
+
+			return -1;
+		}
+
+		public struct TableItem
+		{
+			public string DruidsPath;
+			public bool Used;
+
+			public bool IsEmpty
+			{
+				get
+				{
+					return this.DruidsPath == null;
+				}
+			}
+
+			public static TableItem Empty
+			{
+				get
+				{
+					return new TableItem();
+				}
+			}
+		}
+
+
 		protected Editor				formEditor;
+		protected List<TableItem>		tableContent;
 	}
 }
