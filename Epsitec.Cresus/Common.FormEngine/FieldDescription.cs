@@ -128,6 +128,31 @@ namespace Epsitec.Common.FormEngine
 			}
 		}
 
+		public string Description
+		{
+			//	Retourne un texte de description.
+			get
+			{
+				switch (this.type)
+				{
+					case FieldType.Field:
+						return "Champ";
+
+					case FieldType.Line:
+						return "Séparateur";
+
+					case FieldType.Title:
+						return "Titre";
+
+					case FieldType.BoxBegin:
+						return "Boîte";
+
+					default:
+						return null;
+				}
+			}
+		}
+
 
 		public void SetNode(List<FieldDescription> descriptions)
 		{

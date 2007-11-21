@@ -655,6 +655,11 @@ namespace Epsitec.Common.Designer
 			//	Retourne le nom complet d'un champ. Par exemple:
 			//	druidsPath = [63063].[630A]
 			//	retour = Monnaie.Désignation
+			if (druidsPath == null)
+			{
+				return null;
+			}
+
 			System.Text.StringBuilder builder = new System.Text.StringBuilder();
 
 			string[] druids = druidsPath.Split('.');

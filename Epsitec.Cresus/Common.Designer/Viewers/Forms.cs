@@ -385,10 +385,17 @@ namespace Epsitec.Common.Designer.Viewers
 					FormEditor.ObjectModifier.TableItem item = this.formEditor.ObjectModifier.TableContent[first+i];
 
 					string name = this.module.AccessFields.GetFieldNames(item.DruidsPath);
-					//?string icon = item.Used ? "ActiveYes" : "ActiveNo";
+					if (name == null)
+					{
+						FieldDescription field = this.formEditor.ObjectModifier.GetFormDescription(item);
+						if (field != null)
+						{
+							name = field.Description;
+						}
+					}
+
 					Color color = item.Used ? Color.FromRgb(0,1,0) : Color.FromRgb(1,0,0);
 
-					//?this.fieldTable.SetLineString(0, first+i, Misc.Image(icon));
 					this.fieldTable.SetLineString(0, first+i, "");
 					this.fieldTable.SetLineState(0, first+i, MyWidgets.StringList.CellState.Normal);
 					this.fieldTable.SetLineColor(0, first+i, color);
