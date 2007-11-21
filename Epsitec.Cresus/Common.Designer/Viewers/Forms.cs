@@ -867,7 +867,12 @@ namespace Epsitec.Common.Designer.Viewers
 
 			this.SetForm(this.form, this.druidToSerialize, false);
 			this.UpdateFieldTable(false);
-			this.ReflectSelectionToList();
+
+			sels.Clear();
+			sels.Add(index);
+			this.fieldTable.SelectedRows = sels;
+			this.ReflectSelectionToEditor();
+
 			this.UpdateButtons();
 		}
 
@@ -885,7 +890,12 @@ namespace Epsitec.Common.Designer.Viewers
 
 			this.SetForm(this.form, this.druidToSerialize, false);
 			this.UpdateFieldTable(false);
-			this.ReflectSelectionToList();
+
+			sels.Clear();
+			sels.Add(index);
+			this.fieldTable.SelectedRows = sels;
+			this.ReflectSelectionToEditor();
+
 			this.UpdateButtons();
 		}
 
