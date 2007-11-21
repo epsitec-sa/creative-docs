@@ -19,8 +19,8 @@ namespace Epsitec.Common.Designer.FormEditor
 			this.formEditor = formEditor;
 
 			this.formDruid = Druid.Empty;
-			this.tableContentUsed = new List<TableItem>();
-			this.tableContentAll = new List<TableItem>();
+			this.tableContent = new List<TableItem>();
+			this.dicoLocalGuids = new Dictionary<string, System.Guid>();
 		}
 
 
@@ -28,7 +28,7 @@ namespace Epsitec.Common.Designer.FormEditor
 		{
 			get
 			{
-				return this.tableContentUsed;
+				return this.tableContent;
 			}
 		}
 
@@ -343,25 +343,24 @@ namespace Epsitec.Common.Designer.FormEditor
 			if (this.formDruid != formDruid)  // a-t-on changé de formulaire ?
 			{
 				this.formDruid = formDruid;
-				this.tableContentAll.Clear();
 
+				//	Attribue un nouveau Guid pour chaque champ (défini par un chemin de Druids)
+				//	trouvé dans l'entité. Ceci est fait pour tous les champs de l'entité, et non
+				//	seulement pour ceux qui sont utilisés dans le Form.
+				this.dicoLocalGuids.Clear();
 				foreach (string druidPath in entityDruidsPath)
 				{
-					TableItem item = new TableItem();
-					item.Guid = System.Guid.NewGuid();
-					item.DruidsPath = druidPath;
-
-					this.tableContentAll.Add(item);
+					this.dicoLocalGuids.Add(druidPath, System.Guid.NewGuid());
 				}
 			}
 
-			this.tableContentUsed.Clear();
+			this.tableContent.Clear();
 
 			//	Construit la liste des chemins de Druids, en commençant par ceux qui font
 			//	partie du masque de saisie.
 			foreach (FieldDescription field in this.formEditor.Form.Fields)
 			{
-				System.Guid guid = this.GetTableContentGuid(field.GetPath(null));
+				System.Guid guid = this.GetLocalGuid(field.GetPath(null));
 
 				if (guid == System.Guid.Empty)
 				{
@@ -382,7 +381,7 @@ namespace Epsitec.Common.Designer.FormEditor
 				item.DruidsPath = field.GetPath(null);
 				item.Used = true;
 
-				this.tableContentUsed.Add(item);
+				this.tableContent.Add(item);
 			}
 
 			//	Complète ensuite par tous les autres.
@@ -391,11 +390,11 @@ namespace Epsitec.Common.Designer.FormEditor
 				if (this.GetTableContentIndex(druidPath) == -1)
 				{
 					TableItem item = new TableItem();
-					item.Guid = this.GetTableContentGuid(druidPath);
+					item.Guid = this.GetLocalGuid(druidPath);
 					item.DruidsPath = druidPath;
 					item.Used = false;
 
-					this.tableContentUsed.Add(item);
+					this.tableContent.Add(item);
 				}
 			}
 		}
@@ -403,9 +402,9 @@ namespace Epsitec.Common.Designer.FormEditor
 		public int GetTableContentIndex(System.Guid guid)
 		{
 			//	Cherche l'index d'un Guid dans la table des champs.
-			for (int i=0; i<this.tableContentUsed.Count; i++)
+			for (int i=0; i<this.tableContent.Count; i++)
 			{
-				if (guid == this.tableContentUsed[i].Guid)
+				if (guid == this.tableContent[i].Guid)
 				{
 					return i;
 				}
@@ -417,28 +416,15 @@ namespace Epsitec.Common.Designer.FormEditor
 		protected int GetTableContentIndex(string druidsPath)
 		{
 			//	Cherche l'index d'un chemin de Druids dans la table des champs.
-			for (int i=0; i<this.tableContentUsed.Count; i++)
+			for (int i=0; i<this.tableContent.Count; i++)
 			{
-				if (druidsPath == this.tableContentUsed[i].DruidsPath)
+				if (druidsPath == this.tableContent[i].DruidsPath)
 				{
 					return i;
 				}
 			}
 
 			return -1;
-		}
-
-		protected System.Guid GetTableContentGuid(string druidsPath)
-		{
-			for (int i=0; i<this.tableContentAll.Count; i++)
-			{
-				if (druidsPath == this.tableContentAll[i].DruidsPath)
-				{
-					return this.tableContentAll[i].Guid;
-				}
-			}
-
-			return System.Guid.Empty;
 		}
 
 		public struct TableItem
@@ -464,12 +450,25 @@ namespace Epsitec.Common.Designer.FormEditor
 			public string			DruidsPath;
 			public bool				Used;
 		}
+
+		protected System.Guid GetLocalGuid(string druidsPath)
+		{
+			//	Cherche le Guid défini localement dans le dictionnaire.
+			if (druidsPath == null)
+			{
+				return System.Guid.Empty;
+			}
+			else
+			{
+				return this.dicoLocalGuids[druidsPath];
+			}
+		}
 		#endregion
 
 
-		protected Editor				formEditor;
-		protected Druid					formDruid;
-		protected List<TableItem>		tableContentUsed;
-		protected List<TableItem>		tableContentAll;
+		protected Editor							formEditor;
+		protected Druid								formDruid;
+		protected List<TableItem>					tableContent;
+		protected Dictionary<string, System.Guid>	dicoLocalGuids;
 	}
 }
