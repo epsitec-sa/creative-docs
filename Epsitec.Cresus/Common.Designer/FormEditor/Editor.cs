@@ -207,11 +207,11 @@ namespace Epsitec.Common.Designer.FormEditor
 			switch (name)
 			{
 				case "PanelDelete":
-					this.DeleteSelection();
+					//?this.DeleteSelection();
 					break;
 
 				case "PanelDuplicate":
-					this.DuplicateSelection();
+					//?this.DuplicateSelection();
 					break;
 
 				case "PanelDeselectAll":

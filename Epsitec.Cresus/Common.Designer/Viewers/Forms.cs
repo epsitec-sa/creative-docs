@@ -131,8 +131,8 @@ namespace Epsitec.Common.Designer.Viewers
 
 			this.fieldTable = new MyWidgets.StringArray(this.panelField);
 			this.fieldTable.Columns = 2;
-			this.fieldTable.SetColumnsRelativeWidth(0, 0.10);
-			this.fieldTable.SetColumnsRelativeWidth(1, 0.90);
+			this.fieldTable.SetColumnsRelativeWidth(0, 0.05);
+			this.fieldTable.SetColumnsRelativeWidth(1, 0.95);
 			this.fieldTable.SetColumnAlignment(0, ContentAlignment.MiddleCenter);
 			this.fieldTable.SetColumnAlignment(1, ContentAlignment.MiddleLeft);
 			this.fieldTable.SetColumnBreakMode(1, TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine);
@@ -385,10 +385,11 @@ namespace Epsitec.Common.Designer.Viewers
 					FormEditor.ObjectModifier.TableItem item = this.formEditor.ObjectModifier.TableContent[first+i];
 
 					string name = this.module.AccessFields.GetFieldNames(item.DruidsPath);
-					string icon = item.Used ? "ActiveYes" : "ActiveNo";
+					//?string icon = item.Used ? "ActiveYes" : "ActiveNo";
 					Color color = item.Used ? Color.FromRgb(0,1,0) : Color.FromRgb(1,0,0);
 
-					this.fieldTable.SetLineString(0, first+i, Misc.Image(icon));
+					//?this.fieldTable.SetLineString(0, first+i, Misc.Image(icon));
+					this.fieldTable.SetLineString(0, first+i, "");
 					this.fieldTable.SetLineState(0, first+i, MyWidgets.StringList.CellState.Normal);
 					this.fieldTable.SetLineColor(0, first+i, color);
 

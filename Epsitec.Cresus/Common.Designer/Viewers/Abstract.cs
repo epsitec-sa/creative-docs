@@ -1429,7 +1429,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 				if (this.IsDeleteOrDuplicateForViewer)
 				{
-					this.GetCommandState("Delete").Enable = (objSelected != 0);
+					this.GetCommandState("Delete").Enable = false;
 					this.GetCommandState("Create").Enable = false;
 					this.GetCommandState("Duplicate").Enable = false;
 					this.GetCommandState("CopyToModule").Enable = false;
