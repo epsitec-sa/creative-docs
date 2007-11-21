@@ -365,10 +365,15 @@ namespace Epsitec.Common.Designer.FormEditor
 
 				if (guid == System.Guid.Empty)
 				{
+					// Si le Guid n'a pas été défini localement, parce qu'il s'agit d'un séparateur ou d'un titre,
+					// conserve le Guid défini dans le Form.
 					guid = field.Guid;
 				}
 				else
 				{
+					// Si le Guid a été défini localement, utilise-le à la place de celui défini dans le Form.
+					// On garanti ainsi que le champ aura toujours le même Guid, qu'il soit utilisé (c'est-à-dire
+					// dans le Form) ou non.
 					field.Guid = guid;
 				}
 

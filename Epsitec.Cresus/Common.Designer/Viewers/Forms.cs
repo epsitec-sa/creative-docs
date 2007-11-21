@@ -390,7 +390,7 @@ namespace Epsitec.Common.Designer.Viewers
 						FieldDescription field = this.formEditor.ObjectModifier.GetFormDescription(item);
 						if (field != null)
 						{
-							name = field.Description;
+							name = Misc.Bold(Misc.Italic(field.Description));
 						}
 					}
 
