@@ -902,6 +902,59 @@ namespace Epsitec.Common.Designer.Viewers
 		protected void SelectedFieldsBox()
 		{
 			//	Groupe/sépare les champs sélectionnés.
+			List<int> sels = this.fieldTable.SelectedRows;
+			sels.Sort();
+
+			if (sels.Count == 1)
+			{
+				FormEditor.ObjectModifier.TableItem item = this.formEditor.ObjectModifier.TableContent[sels[0]];
+				FieldDescription field = this.formEditor.ObjectModifier.GetFormDescription(item);
+				if (field.Type == FieldDescription.FieldType.BoxBegin)
+				{
+					//	TODO: sépare...
+					return;
+				}
+			}
+
+			//	Groupe les champs sélectionnés.
+			FormEditor.ObjectModifier.TableItem firstItem = this.formEditor.ObjectModifier.TableContent[sels[0]];
+			int first = this.formEditor.ObjectModifier.GetFormDescriptionIndex(firstItem.Guid);
+
+			List<FieldDescription> content = new List<FieldDescription>();
+			for (int i=sels.Count-1; i>=0; i--)
+			{
+				int sel = sels[i];
+
+				FieldDescription field = this.form.Fields[sel];
+				this.form.Fields.RemoveAt(sel);
+				content.Insert(0, field);
+			}
+
+			int index = first;
+
+			FieldDescription box = new FieldDescription(FieldDescription.FieldType.BoxBegin);
+			box.ContainerMargins = new Margins(5, 5, 5, 5);
+			box.ContainerPadding = new Margins(5, 5, 5, 5);
+			box.ContainerFrameState = FrameState.All;
+			this.form.Fields.Insert(index++, box);
+
+			foreach (FieldDescription field in content)
+			{
+				this.form.Fields.Insert(index++, field);
+			}
+
+			box = new FieldDescription(FieldDescription.FieldType.BoxEnd);
+			this.form.Fields.Insert(index++, box);
+
+			this.SetForm(this.form, this.druidToSerialize, false);
+			this.UpdateFieldTable(false);
+
+			sels.Clear();
+			sels.Add(first);
+			this.fieldTable.SelectedRows = sels;
+			this.ReflectSelectionToEditor();
+
+			this.UpdateButtons();
 		}
 
 		protected void SelectedFieldsMove(int direction)

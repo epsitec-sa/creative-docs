@@ -145,7 +145,10 @@ namespace Epsitec.Common.FormEngine
 						return "Titre";
 
 					case FieldType.BoxBegin:
-						return "Boîte";
+						return "Début de boîte";
+
+					case FieldType.BoxEnd:
+						return "Fin de boîte";
 
 					default:
 						return null;
