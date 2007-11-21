@@ -99,6 +99,10 @@ namespace Epsitec.Common.FormEngine
 			{
 				return this.guid;
 			}
+			set
+			{
+				this.guid = value;
+			}
 		}
 
 		public int UniqueId

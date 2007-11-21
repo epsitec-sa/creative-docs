@@ -361,8 +361,19 @@ namespace Epsitec.Common.Designer.FormEditor
 			//	partie du masque de saisie.
 			foreach (FieldDescription field in this.formEditor.Form.Fields)
 			{
+				System.Guid guid = this.GetTableContentGuid(field.GetPath(null));
+
+				if (guid == System.Guid.Empty)
+				{
+					guid = field.Guid;
+				}
+				else
+				{
+					field.Guid = guid;
+				}
+
 				TableItem item = new TableItem();
-				item.Guid = field.Guid;
+				item.Guid = guid;
 				item.DruidsPath = field.GetPath(null);
 				item.Used = true;
 
