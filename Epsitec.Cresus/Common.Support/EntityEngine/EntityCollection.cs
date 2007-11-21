@@ -15,7 +15,7 @@ namespace Epsitec.Common.Support.EntityEngine
 	/// of data for collection fields in a parent entity.
 	/// </summary>
 	/// <typeparam name="T">The type of the list items.</typeparam>
-	public sealed class EntityCollection<T> : ObservableList<T>, IEntityCollection where T : AbstractEntity
+	public sealed class EntityCollection<T> : ObservableList<T>, IEntityCollection, INotifyCollectionChangedProvider where T : AbstractEntity
 	{
 		/// <summary>
 		/// Initializes a new instance of the <see cref="EntityCollection&lt;T&gt;"/> class.
@@ -25,17 +25,9 @@ namespace Epsitec.Common.Support.EntityEngine
 		/// <param name="copyOnWrite">If set to <c>true</c>, the list will be set into "copy on write" mode.</param>
 		public EntityCollection(string containerFieldId, AbstractEntity container, bool copyOnWrite)
 		{
-			this.id = containerFieldId;
+			this.containerFieldId = containerFieldId;
 			this.container = container;
 			this.state = copyOnWrite ? State.CopyOnWrite : State.Default;
-		}
-
-		/// <summary>
-		/// Resets the list to the "copy on write" mode.
-		/// </summary>
-		public void ResetCopyOnWrite()
-		{
-			this.state = State.CopyOnWrite;
 		}
 
 		/// <summary>
@@ -63,7 +55,7 @@ namespace Epsitec.Common.Support.EntityEngine
 				{
 					case State.CopyOnWrite:
 						this.state = State.Copied;
-						return this.container.CopyFieldCollection<T> (this.id, this);
+						return this.container.CopyFieldCollection<T> (this.containerFieldId, this);
 
 					case State.Copied:
 						throw new System.InvalidOperationException ("Copied collection may not be changed");
@@ -79,26 +71,49 @@ namespace Epsitec.Common.Support.EntityEngine
 
 		#region IEntityCollection Members
 
-		void IEntityCollection.ResetCopyOnWrite()
+		/// <summary>
+		/// Resets the collection to the unchanged copy on write state.
+		/// </summary>
+		public void ResetCopyOnWrite()
 		{
-			this.ResetCopyOnWrite ();
+			this.state = State.CopyOnWrite;
 		}
 
+		/// <summary>
+		/// Copies the collection to a writable instance if the collection is
+		/// still in the unchanged copy on write state.
+		/// </summary>
 		void IEntityCollection.CopyOnWrite()
 		{
 			if (this.state == State.CopyOnWrite)
 			{
 				this.state = State.Copied;
-				this.container.CopyFieldCollection<T> (this.id, this);
+				this.container.CopyFieldCollection<T> (this.containerFieldId, this);
 			}
 		}
 
-		bool IEntityCollection.UsesCopyOnWriteBehavior
+		/// <summary>
+		/// Gets a value indicating whether this collection will create a copy
+		/// before being modified.
+		/// </summary>
+		/// <value>
+		/// 	<c>true</c> if the collection has the copy on write state; otherwise, <c>false</c>.
+		/// </value>
+		bool IEntityCollection.HasCopyOnWriteState
 		{
 			get
 			{
 				return this.state == State.CopyOnWrite;
 			}
+		}
+
+		#endregion
+
+		#region INotifyCollectionChangedProvider Members
+
+		public INotifyCollectionChanged GetNotifyCollectionChangedSource()
+		{
+			return this;
 		}
 
 		#endregion
@@ -114,8 +129,8 @@ namespace Epsitec.Common.Support.EntityEngine
 
 		#endregion
 
-		private string id;
-		private AbstractEntity container;
+		private readonly string containerFieldId;
+		private readonly AbstractEntity container;
 		private State state;
 	}
 }

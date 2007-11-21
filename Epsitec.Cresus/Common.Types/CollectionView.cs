@@ -27,6 +27,19 @@ namespace Epsitec.Common.Types
 
 			INotifyCollectionChanged changed = this.sourceList as INotifyCollectionChanged;
 
+			if (changed == null)
+			{
+				//	The source does not implement INotifyCollectionChanged directly,
+				//	but maybe it has a provider which can vouch for it :
+
+				INotifyCollectionChangedProvider provider = this.sourceList as INotifyCollectionChangedProvider;
+				
+				if (provider != null)
+				{
+					changed = provider.GetNotifyCollectionChangedSource ();
+				}
+			}
+
 			if (changed != null)
 			{
 				//	TODO: use a weak delegate in order to avoid trouble if nobody disposes the view

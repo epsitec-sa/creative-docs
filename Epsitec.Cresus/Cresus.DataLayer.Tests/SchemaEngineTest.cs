@@ -323,7 +323,7 @@ namespace Epsitec.Cresus.DataLayer
 		}
 
 		[Test]
-		public void Check15Collections()
+		public void Check15WriteCollections()
 		{
 			DataContext context = new DataContext (this.infrastructure);
 
@@ -335,10 +335,6 @@ namespace Epsitec.Cresus.DataLayer
 			AbstractEntity rabais2Entity = context.EntityContext.CreateEntity (Druid.Parse ("[63011]"));
 			AbstractEntity rabais3Entity = context.EntityContext.CreateEntity (Druid.Parse ("[63011]"));
 
-			IEntityCollection collection = positionEntity.GetFieldCollection<AbstractEntity> ("[63072]") as IEntityCollection;
-
-			collection.CopyOnWrite ();
-			
 			IList<AbstractEntity> list = positionEntity.GetFieldCollection<AbstractEntity> ("[63072]");
 
 			positionEntity.SetField<decimal> ("[63052]", 8.0M);
@@ -369,11 +365,26 @@ namespace Epsitec.Cresus.DataLayer
 			list.Add (rabais2Entity);
 			
 			context.SerializeEntity (positionEntity);
-
 			context.SaveChanges ();
+
+			this.keyCheck16 = context.GetEntityDataMapping (positionEntity).RowKey;
 
 			context.Dispose ();
 		}
+
+		[Test]
+		public void Check16ReadCollections()
+		{
+			DataContext context = new DataContext (this.infrastructure);
+
+			AbstractEntity entity = context.DeserializeEntity (this.keyCheck16, Druid.Parse ("[63001]"));
+
+			IList<AbstractEntity> list = entity.GetFieldCollection<AbstractEntity> ("[63072]");
+
+			Assert.AreEqual (3, list.Count);
+			Assert.AreEqual (list[0], list[2]);
+		}
+
 
 		private IEnumerable<AbstractEntity> GetItems(EntityContext context)
 		{
@@ -445,5 +456,7 @@ namespace Epsitec.Cresus.DataLayer
 		private readonly Druid articleVisserieEntityId = Druid.Parse ("[631]");
 		private readonly Druid adresseEntityId = Druid.Parse ("[63081]");
 		private readonly Druid prixEntityId = Druid.Parse ("[6308]");
+
+		private DbKey keyCheck16;
 	}
 }

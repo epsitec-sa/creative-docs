@@ -11,22 +11,44 @@ using System.Collections.Generic;
 namespace Epsitec.Common.Support.EntityEngine
 {
 	/// <summary>
-	/// The <c>EntityCollectionProxy</c> 
+	/// The <c>EntityCollectionProxy</c> class is a proxy to an <see cref="EntityCollection"/>.
+	/// It is returned by <see cref="AbstractEntity"/> when the requested collection
+	/// type does not match the real one or if the real collection is still unchanged
+	/// and in copy-on-write mode.
 	/// </summary>
 	/// <typeparam name="T">The type of the list items.</typeparam>
 	public sealed class EntityCollectionProxy<T> : IList<T>, System.Collections.IList, IEntityCollection where T : AbstractEntity
 	{
+		/// <summary>
+		/// Initializes a new instance of the <see cref="EntityCollectionProxy&lt;T&gt;"/> class.
+		/// This constructor is used when the container defines a copy-on-write
+		/// collection which might be replaced by a writable copy, yet the user
+		/// should not be aware of the change.
+		/// </summary>
+		/// <param name="containerFieldId">The container field id.</param>
+		/// <param name="container">The container.</param>
 		public EntityCollectionProxy(string containerFieldId, AbstractEntity container)
 		{
 			this.containerFieldId = containerFieldId;
 			this.container = container;
 		}
 
+		/// <summary>
+		/// Initializes a new instance of the <see cref="EntityCollectionProxy&lt;T&gt;"/> class.
+		/// This constructor is used when the collection requested does not
+		/// implement the requested <see cref="IList&lt;T&gt;"/> interface,
+		/// yet the user should be able to access it through it.
+		/// </summary>
+		/// <param name="entityCollection">The entity collection.</param>
 		public EntityCollectionProxy(System.Collections.IList entityCollection)
 		{
 			this.entityCollection = entityCollection;
 		}
 
+		/// <summary>
+		/// Gets the real entity collection for which this proxy stands in.
+		/// </summary>
+		/// <value>The real entity collection.</value>
 		private System.Collections.IList EntityCollection
 		{
 			get
@@ -218,6 +240,9 @@ namespace Epsitec.Common.Support.EntityEngine
 
 		#region IEntityCollection Members
 
+		/// <summary>
+		/// Resets the collection to the unchanged copy on write state.
+		/// </summary>
 		public void ResetCopyOnWrite()
 		{
 			IEntityCollection collection = this.EntityCollection as IEntityCollection;
@@ -228,6 +253,10 @@ namespace Epsitec.Common.Support.EntityEngine
 			}
 		}
 
+		/// <summary>
+		/// Copies the collection to a writable instance if the collection is
+		/// still in the unchanged copy on write state.
+		/// </summary>
 		public void CopyOnWrite()
 		{
 			IEntityCollection collection = this.EntityCollection as IEntityCollection;
@@ -238,7 +267,14 @@ namespace Epsitec.Common.Support.EntityEngine
 			}
 		}
 
-		public bool UsesCopyOnWriteBehavior
+		/// <summary>
+		/// Gets a value indicating whether this collection will create a copy
+		/// before being modified.
+		/// </summary>
+		/// <value>
+		/// 	<c>true</c> if the collection has the copy on write state; otherwise, <c>false</c>.
+		/// </value>
+		public bool HasCopyOnWriteState
 		{
 			get
 			{
@@ -246,13 +282,34 @@ namespace Epsitec.Common.Support.EntityEngine
 
 				if (collection != null)
 				{
-					return collection.UsesCopyOnWriteBehavior;
+					return collection.HasCopyOnWriteState;
 				}
 				else
 				{
 					return false;
 				}
 			}
+		}
+
+		#endregion
+
+		#region INotifyCollectionChangedProvider Members
+
+		/// <summary>
+		/// Gets the <see cref="INotifyCollectionChanged"/> interface which can
+		/// be used to get the <c>CollectionChanged</c> events for the source.
+		/// </summary>
+		/// <returns>
+		/// The <see cref="INotifyCollectionChanged"/> interface.
+		/// </returns>
+		public INotifyCollectionChanged GetNotifyCollectionChangedSource()
+		{
+			INotifyCollectionChangedProvider provider = this.EntityCollection as INotifyCollectionChangedProvider;
+
+			System.Diagnostics.Debug.Assert (provider != null);
+			System.Diagnostics.Debug.Assert (provider.GetNotifyCollectionChangedSource () != null);
+			
+			return provider.GetNotifyCollectionChangedSource ();
 		}
 
 		#endregion

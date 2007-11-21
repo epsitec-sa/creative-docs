@@ -947,6 +947,7 @@ namespace Epsitec.Cresus.Database
 			//
 			//	xxx --> DbInfrastructure --> ISqlEngine --> DbRichCommand
 			
+#if DEBUG
 			System.Diagnostics.StackTrace trace = new System.Diagnostics.StackTrace (true);
 			System.Diagnostics.StackFrame caller1 = trace.GetFrame (1);
 			System.Diagnostics.StackFrame caller2 = trace.GetFrame (2);
@@ -959,6 +960,7 @@ namespace Epsitec.Cresus.Database
 			{
 				throw new System.InvalidOperationException (string.Format ("Method may not be called by {0}.{1}", callerClassType.FullName, caller1.GetMethod ().Name));
 			}
+#endif
 
 			System.Diagnostics.Debug.Assert (access.IsValid);
 			

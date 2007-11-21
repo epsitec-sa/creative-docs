@@ -176,7 +176,7 @@ namespace Epsitec.Common.Support.EntityEngine
 						throw new System.NotSupportedException (string.Format ("Field {0} uses incompatible collection type", id));
 					}
 
-					if (collection.UsesCopyOnWriteBehavior)
+					if (collection.HasCopyOnWriteState)
 					{
 						list = new EntityCollectionProxy<T> (id, this);
 					}
@@ -195,7 +195,7 @@ namespace Epsitec.Common.Support.EntityEngine
 					throw new System.NotSupportedException (string.Format ("Field {0} uses incompatible collection type", id));
 				}
 
-				if (collection.UsesCopyOnWriteBehavior)
+				if (collection.HasCopyOnWriteState)
 				{
 					list = new EntityCollectionProxy<T> (id, this);
 				}
@@ -314,7 +314,7 @@ namespace Epsitec.Common.Support.EntityEngine
 					throw new System.NotSupportedException (string.Format ("Field {0} uses incompatible collection type", id));
 				}
 
-				if (collection.UsesCopyOnWriteBehavior)
+				if (collection.HasCopyOnWriteState)
 				{
 					System.Type itemType = TypeRosetta.GetCollectionItemType (list.GetType ());
 					System.Type genericType = typeof (EntityCollectionProxy<>);
