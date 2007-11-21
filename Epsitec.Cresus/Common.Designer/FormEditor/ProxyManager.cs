@@ -197,6 +197,7 @@ namespace Epsitec.Common.Designer.FormEditor
 		{
 			yield return new Proxies.Geometry(this);
 			yield return new Proxies.Mode(this);
+			yield return new Proxies.Margins(this);
 		}
 
 		static private bool EqualLists(List<IProxy> list1, List<IProxy> list2)

@@ -42,6 +42,7 @@
     <Compile Include="Comparers\WidgetDisposition.cs" />
     <Compile Include="FormEditor\ObjectModifier.cs" />
     <Compile Include="FormEditor\Proxies\Abstract.cs" />
+    <Compile Include="FormEditor\Proxies\Margins.cs" />
     <Compile Include="FormEditor\Proxies\Mode.cs" />
     <Compile Include="FormEditor\Proxies\Geometry.cs" />
     <Compile Include="FormEditor\ProxyManager.cs" />

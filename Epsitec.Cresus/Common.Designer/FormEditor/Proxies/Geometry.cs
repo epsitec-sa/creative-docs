@@ -31,7 +31,7 @@ namespace Epsitec.Common.Designer.FormEditor.Proxies
 		{
 			get
 			{
-				return "PropertyContent";
+				return "PropertyGeometry";
 			}
 		}
 

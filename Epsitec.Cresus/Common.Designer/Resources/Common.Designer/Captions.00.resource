@@ -143,4 +143,12 @@
   <data name="Cap.Editor.Forms.Line" id="2K">&lt;s:data id="_0" f:Name="Editor.Forms.Line" f:Description="Insère un séparateur avant le champ sélectionné" f:Icon="manifest:Epsitec.Common.Designer.Images.FormLine.icon" f:Labels="{Collection {Text 'Insérer un séparateur'}}" /&gt;</data>
   <data name="Cap.Editor.Forms.Title" id="2L">&lt;s:data id="_0" f:Name="Editor.Forms.Title" f:Description="Insère un titre avant le champ sélectionné" f:Icon="manifest:Epsitec.Common.Designer.Images.FormTitle.icon" f:Labels="{Collection {Text 'Insérer un titre'}}" /&gt;</data>
   <data name="Cap.Editor.Forms.Box" id="2M">&lt;s:data id="_0" f:Name="Editor.Forms.Box" f:Description="Groupe ou sépare les champs" f:Icon="manifest:Epsitec.Common.Designer.Images.FormBox.icon" f:Labels="{Collection {Text 'Grouper/séparer'}}" /&gt;</data>
+  <data name="Cap.FieldMargins.MarginLeft" id="2N">&lt;s:data id="_0" f:Name="FieldMargins.MarginLeft" f:Description="Marge extérieure gauche" f:Labels="{Collection {Text 'Extérieure gauche'}}" /&gt;</data>
+  <data name="Cap.FieldMargins.MarginRight" id="2O">&lt;s:data id="_0" f:Name="FieldMargins.MarginRight" f:Description="Marge extérieure droite" f:Labels="{Collection {Text 'Extérieure droite'}}" /&gt;</data>
+  <data name="Cap.FieldMargins.MarginTop" id="2P">&lt;s:data id="_0" f:Name="FieldMargins.MarginTop" f:Description="Marge extérieure supérieure" f:Labels="{Collection {Text 'Extérieure sup.'}}" /&gt;</data>
+  <data name="Cap.FieldMargins.MarginBottom" id="2Q">&lt;s:data id="_0" f:Name="FieldMargins.MarginBottom" f:Description="Marge extérieure inférieure" f:Labels="{Collection {Text 'Extérieure inf.'}}" /&gt;</data>
+  <data name="Cap.FieldMargins.PaddingBottom" id="2R">&lt;s:data id="_0" f:Name="FieldMargins.PaddingBottom" f:Description="Marge intérieure inférieure" f:Labels="{Collection {Text 'Intérieure inf.'}}" /&gt;</data>
+  <data name="Cap.FieldMargins.PaddingLeft" id="2S">&lt;s:data id="_0" f:Name="FieldMargins.PaddingLeft" f:Description="Marge intérieure gauche" f:Labels="{Collection {Text 'Intérieure gauche'}}" /&gt;</data>
+  <data name="Cap.FieldMargins.PaddingRight" id="2T">&lt;s:data id="_0" f:Name="FieldMargins.PaddingRight" f:Description="Marge intérieure droite" f:Labels="{Collection {Text 'Intérieure droite'}}" /&gt;</data>
+  <data name="Cap.FieldMargins.PaddingTop" id="2U">&lt;s:data id="_0" f:Name="FieldMargins.PaddingTop" f:Description="Marge intérieure supérieure" f:Labels="{Collection {Text 'Intérieure sup.'}}" /&gt;</data>
 </bundle>

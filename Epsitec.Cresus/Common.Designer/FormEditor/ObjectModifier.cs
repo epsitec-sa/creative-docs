@@ -157,7 +157,7 @@ namespace Epsitec.Common.Designer.FormEditor
 		}
 
 
-		public Margins GetMargins(Widget obj)
+		public Margins GetContainerMargins(Widget obj)
 		{
 			//	Retourne les marges de l'objet.
 			//	Uniquement pour les boîtes.
@@ -170,7 +170,7 @@ namespace Epsitec.Common.Designer.FormEditor
 			return Margins.Zero;
 		}
 
-		public void SetMargins(Widget obj, Margins margins)
+		public void SetContainerMargins(Widget obj, Margins margins)
 		{
 			//	Choix des marges de l'objet.
 			//	Uniquement pour les boîtes.
@@ -178,6 +178,29 @@ namespace Epsitec.Common.Designer.FormEditor
 
 			FieldDescription field = this.GetFormDescription(obj);
 			field.ContainerMargins = margins;
+		}
+
+		public Margins GetContainerPadding(Widget obj)
+		{
+			//	Retourne les marges de l'objet.
+			//	Uniquement pour les boîtes.
+			if (this.IsBox(obj))
+			{
+				FieldDescription field = this.GetFormDescription(obj);
+				return field.ContainerPadding;
+			}
+
+			return Margins.Zero;
+		}
+
+		public void SetContainerPadding(Widget obj, Margins margins)
+		{
+			//	Choix des marges de l'objet.
+			//	Uniquement pour les boîtes.
+			System.Diagnostics.Debug.Assert(this.IsBox(obj));
+
+			FieldDescription field = this.GetFormDescription(obj);
+			field.ContainerPadding = margins;
 		}
 
 
