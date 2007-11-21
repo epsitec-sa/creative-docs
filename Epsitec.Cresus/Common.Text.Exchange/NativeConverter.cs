@@ -13,7 +13,7 @@ using System.Text;
 
 namespace Epsitec.Common.Text.Exchange
 {
-	class NativeConverter
+	public class NativeConverter
 	{
 
 		public NativeConverter(CopyPasteContext cpContext, PasteMode pastemode)
@@ -104,7 +104,7 @@ namespace Epsitec.Common.Text.Exchange
 		/// <returns></returns>
 		public string GetDefinedString(bool emitParagraphDefinitions, bool paragraphSep)
 		{
-			StringBuilder output = new StringBuilder();
+			StringBuilder output = new StringBuilder ();
 
 			output.Append ('[');
 
@@ -129,58 +129,79 @@ namespace Epsitec.Common.Text.Exchange
 
 			if (paragraphSep)
 			{
-				output.Append("par/") ;
+				output.Append ("par/");
 			}
 
 			if (emitParagraphDefinitions)
 			{
-				string definedPar = this.GetDefinedParString() ;
+				string definedPar = NativeConverter.GetParagraphDefinitions (this.paraWrapper);
 
 				if (definedPar.Length != 0)
 				{
-					output.AppendFormat (System.Globalization.CultureInfo.InvariantCulture, "pardef:{0}/", definedPar);
+					System.Diagnostics.Debug.Assert (definedPar.Contains ("/") == false);
+					
+					output.Append ("pardef:");
+					output.Append (definedPar);
+					output.Append ("/");
 				}
 			}
 
-			if (this.textWrapper.Defined.IsInvertItalicDefined && this.textWrapper.Defined.InvertItalic)
+			NativeConverter.GetTextDefinitions (this.textWrapper, output);
+
+			output.Append (']');
+			return output.ToString ();
+		}
+
+		public static string GetTextDefinitions(Wrappers.TextWrapper wrapper)
+		{
+			System.Text.StringBuilder buffer = new StringBuilder ();
+			buffer.Append ("[");
+			NativeConverter.GetTextDefinitions (wrapper, buffer);
+			buffer.Append ("]");
+			return buffer.ToString ();
+		}
+
+		private static void GetTextDefinitions(Wrappers.TextWrapper wrapper, StringBuilder output)
+		{
+			if (wrapper.Defined.IsInvertItalicDefined && wrapper.Defined.InvertItalic)
 			{
 				output.Append ("i/");
 			}
 
-			if (this.textWrapper.Defined.IsInvertBoldDefined && this.textWrapper.Defined.InvertBold)
+			if (wrapper.Defined.IsInvertBoldDefined && wrapper.Defined.InvertBold)
 			{
 				output.Append ("b/");
 			}
 
-			if (this.textWrapper.Defined.IsColorDefined)
+			if (wrapper.Defined.IsColorDefined)
 			{
-				output.AppendFormat (System.Globalization.CultureInfo.InvariantCulture, "c:{0}/", this.textWrapper.Defined.Color);
+				output.AppendFormat (System.Globalization.CultureInfo.InvariantCulture, "c:{0}/", wrapper.Defined.Color);
 			}
 
-			if (this.textWrapper.Defined.IsFontFaceDefined)
+			if (wrapper.Defined.IsFontFaceDefined)
 			{
-				output.AppendFormat (System.Globalization.CultureInfo.InvariantCulture, "fface:{0}/", this.textWrapper.Defined.FontFace);
+				output.AppendFormat (System.Globalization.CultureInfo.InvariantCulture, "fface:{0}/", wrapper.Defined.FontFace);
 			}
 
-			if (this.textWrapper.Defined.IsFontStyleDefined)
+			if (wrapper.Defined.IsFontStyleDefined)
 			{
-				output.AppendFormat (System.Globalization.CultureInfo.InvariantCulture, "fstyle:{0}/", this.textWrapper.Defined.FontStyle);
+				output.AppendFormat (System.Globalization.CultureInfo.InvariantCulture, "fstyle:{0}/", wrapper.Defined.FontStyle);
 			}
 
-			if (this.textWrapper.Defined.IsFontSizeDefined)
+			if (wrapper.Defined.IsFontSizeDefined)
 			{
-				if (this.textWrapper.Defined.IsUnitsDefined)
+				if (wrapper.Defined.IsUnitsDefined)
 				{
-					Properties.SizeUnits units = this.textWrapper.Defined.Units;
-					output.AppendFormat (System.Globalization.CultureInfo.InvariantCulture, "funits:{0}/", (byte) this.textWrapper.Defined.Units);
+					Properties.SizeUnits units = wrapper.Defined.Units;
+					output.AppendFormat (System.Globalization.CultureInfo.InvariantCulture, "funits:{0}/", (byte) wrapper.Defined.Units);
 				}
 
-				output.AppendFormat (System.Globalization.CultureInfo.InvariantCulture, "fsize:{0}/", this.textWrapper.Defined.FontSize);
+				output.AppendFormat (System.Globalization.CultureInfo.InvariantCulture, "fsize:{0}/", wrapper.Defined.FontSize);
 			}
 
-			if (this.textWrapper.Defined.IsFontFeaturesDefined)
+			if (wrapper.Defined.IsFontFeaturesDefined)
 			{
-				string [] features = this.textWrapper.Defined.FontFeatures ;
+				string[] features = wrapper.Defined.FontFeatures;
 
 				StringBuilder concatFeatures = new StringBuilder ();
 
@@ -193,52 +214,49 @@ namespace Epsitec.Common.Text.Exchange
 			}
 
 
-			if (this.textWrapper.Defined.IsUnderlineDefined)
+			if (wrapper.Defined.IsUnderlineDefined)
 			{
-				string xlinedef = XlineDefinitionToString (this.textWrapper.Defined.Underline);
+				string xlinedef = XlineDefinitionToString (wrapper.Defined.Underline);
 				output.AppendFormat (System.Globalization.CultureInfo.InvariantCulture, "u:{0}/", xlinedef);
 			}
 
-			if (this.textWrapper.Defined.IsOverlineDefined)
+			if (wrapper.Defined.IsOverlineDefined)
 			{
-				string xlinedef = XlineDefinitionToString (this.textWrapper.Defined.Overline);
+				string xlinedef = XlineDefinitionToString (wrapper.Defined.Overline);
 				output.AppendFormat (System.Globalization.CultureInfo.InvariantCulture, "o:{0}/", xlinedef);
 			}
 
-			if (this.textWrapper.Defined.IsStrikeoutDefined)
+			if (wrapper.Defined.IsStrikeoutDefined)
 			{
-				string xlinedef = XlineDefinitionToString (this.textWrapper.Defined.Strikeout);
+				string xlinedef = XlineDefinitionToString (wrapper.Defined.Strikeout);
 				output.AppendFormat (System.Globalization.CultureInfo.InvariantCulture, "s:{0}/", xlinedef);
 			}
 
-			if (this.textWrapper.Defined.IsXscriptDefined)
+			if (wrapper.Defined.IsXscriptDefined)
 			{
-				string xscriptdef = XScriptDefinitionToString (this.textWrapper.Defined.Xscript);
+				string xscriptdef = XScriptDefinitionToString (wrapper.Defined.Xscript);
 				output.AppendFormat (System.Globalization.CultureInfo.InvariantCulture, "x:{0}/", xscriptdef);
 			}
 
-			if (this.textWrapper.Defined.IsFontGlueDefined)
+			if (wrapper.Defined.IsFontGlueDefined)
 			{
-				output.AppendFormat (System.Globalization.CultureInfo.InvariantCulture, "fontglue:{0}/", this.textWrapper.Defined.FontGlue);
+				output.AppendFormat (System.Globalization.CultureInfo.InvariantCulture, "fontglue:{0}/", wrapper.Defined.FontGlue);
 			}
 
-			if (this.textWrapper.Defined.IsLanguageHyphenationDefined)
+			if (wrapper.Defined.IsLanguageHyphenationDefined)
 			{
-				output.AppendFormat (System.Globalization.CultureInfo.InvariantCulture, "langhyph:{0}/", this.textWrapper.Defined.LanguageHyphenation);
+				output.AppendFormat (System.Globalization.CultureInfo.InvariantCulture, "langhyph:{0}/", wrapper.Defined.LanguageHyphenation);
 			}
 
-			if (this.textWrapper.Defined.IsLanguageLocaleDefined)
+			if (wrapper.Defined.IsLanguageLocaleDefined)
 			{
-				output.AppendFormat (System.Globalization.CultureInfo.InvariantCulture, "langloc:{0}/", this.textWrapper.Defined.LanguageLocale);
+				output.AppendFormat (System.Globalization.CultureInfo.InvariantCulture, "langloc:{0}/", wrapper.Defined.LanguageLocale);
 			}
 
-			if (this.textWrapper.Defined.IsLinkDefined)
+			if (wrapper.Defined.IsLinkDefined)
 			{
-				output.AppendFormat (System.Globalization.CultureInfo.InvariantCulture, "link:{0}/", this.textWrapper.Defined.Link);
+				output.AppendFormat (System.Globalization.CultureInfo.InvariantCulture, "link:{0}/", wrapper.Defined.Link);
 			}
-
-			output.Append (']');
-			return output.ToString() ;
 		}
 
 		public static bool IsParagraphSeparator(string input)
@@ -255,11 +273,28 @@ namespace Epsitec.Common.Text.Exchange
 			return false;
 		}
 
-		public void SetDefined(string input, out bool paragrpahSep)
+		public void SetDefinedString(string input, out bool paragraphSep)
+		{
+			paragraphSep = NativeConverter.SetDefininitions (this, this.textWrapper, this.paraWrapper, this.pasteMode, input);
+		}
+
+		public static bool SetTextDefinitions(Wrappers.TextWrapper textWrapper, string input)
+		{
+			if (string.IsNullOrEmpty (input))
+			{
+				return false;
+			}
+			else
+			{
+				return NativeConverter.SetDefininitions (null, textWrapper, null, PasteMode.KeepSource, input);
+			}
+		}
+
+		private static bool SetDefininitions(NativeConverter that, Wrappers.TextWrapper textWrapper, Wrappers.ParagraphWrapper paraWrapper, PasteMode pasteMode, string input)
 		{
 			char[] separators = new char[] {'/'};
 
-			paragrpahSep = false;
+			bool paragraphSep = false;
 
 			bool invertItalic = false;
 			bool invertBold = false;
@@ -278,7 +313,7 @@ namespace Epsitec.Common.Text.Exchange
 			bool xscript = false;
 			bool link = false;
 
-			this.textWrapper.SuspendSynchronizations ();
+			textWrapper.SuspendSynchronizations ();
 
 			System.Diagnostics.Debug.Assert (input[0] == '[' && input[input.Length-1] == ']');
 			input = input.Substring(1, input.Length - 2) ;
@@ -294,31 +329,31 @@ namespace Epsitec.Common.Text.Exchange
 				switch (subelements[0])
 				{
 					case "i":
-						this.textWrapper.Defined.InvertItalic = true;
+						textWrapper.Defined.InvertItalic = true;
 						invertItalic = true;
 						break;
 					case "b":
-						this.textWrapper.Defined.InvertBold = true;
+						textWrapper.Defined.InvertBold = true;
 						invertBold = true;
 						break;
 					case "u":
-						StringToXlineDefinition (subelements[1], this.textWrapper.Defined.Underline);
+						StringToXlineDefinition (subelements[1], textWrapper.Defined.Underline);
 						underline = true;
 						break;
 					case "o":
-						StringToXlineDefinition (subelements[1], this.textWrapper.Defined.Overline);
+						StringToXlineDefinition (subelements[1], textWrapper.Defined.Overline);
 						overline = true;
 						break;
 					case "s":
-						StringToXlineDefinition (subelements[1], this.textWrapper.Defined.Strikeout);
+						StringToXlineDefinition (subelements[1], textWrapper.Defined.Strikeout);
 						strikeout = true;
 						break;
 					case "x":
-						StringToXScriptDefinition (subelements[1], this.textWrapper.Defined.Xscript);
+						StringToXScriptDefinition (subelements[1], textWrapper.Defined.Xscript);
 						xscript = true;
 						break;
 					case "c":
-						this.textWrapper.Defined.Color = subelements[1];
+						textWrapper.Defined.Color = subelements[1];
 						color = true;
 						break;
 					default:
@@ -327,14 +362,14 @@ namespace Epsitec.Common.Text.Exchange
 						
 				}
 
-				if (notHandled && this.pasteMode == PasteMode.MatchDestination)
+				if (notHandled && pasteMode == PasteMode.MatchDestination)
 				{
 					if (subelements[0] == "par")
 					{
-						paragrpahSep = true;
+						paragraphSep = true;
 					}
 				}
-				else if (notHandled && this.pasteMode == PasteMode.KeepSource)
+				else if (notHandled && pasteMode == PasteMode.KeepSource)
 				{
 					switch (subelements[0])
 					{
@@ -342,71 +377,81 @@ namespace Epsitec.Common.Text.Exchange
 							string styleident = subelements[1];
 
 							//TextStyle thestyle = StyleFromCaption (stylecaption);
-							TextStyle thestyle = this.GetTextStyleToApply (styleident);
+							TextStyle thestyle = that == null ? null : that.GetTextStyleToApply (styleident);
 
 							if (thestyle != null)
 							{
-								this.textWrapper.ResumeSynchronizations ();
-								this.navigator.SetTextStyles (thestyle);
-								this.textWrapper.SuspendSynchronizations ();
+								textWrapper.ResumeSynchronizations ();
+								that.navigator.SetTextStyles (thestyle);
+								textWrapper.SuspendSynchronizations ();
 							}
 							break;
 						case "pstyle":
 							styleident = subelements[1];
 							//thestyle = StyleFromCaption (stylecaption);
-							thestyle = this.GetTextStyleToApply (styleident);
+							thestyle = that == null ? null : that.GetTextStyleToApply (styleident);
 
 							if (thestyle != null)
 							{
-								this.textWrapper.ResumeSynchronizations ();
-								this.navigator.SetParagraphStyles (thestyle);
-								this.textWrapper.SuspendSynchronizations ();
+								textWrapper.ResumeSynchronizations ();
+								that.navigator.SetParagraphStyles (thestyle);
+								textWrapper.SuspendSynchronizations ();
 							}
 							break;
 						case "par":
-							paragrpahSep = true;
+							paragraphSep = true;
 							break;
 						case "pardef":
-							this.SetParagraph (subelements[1]);
+							if (paraWrapper != null)
+							{
+								if (that == null)
+								{
+									NativeConverter.SetParagraph (paraWrapper, subelements[1]);
+								}
+								else
+								{
+									that.savedDefinedParagraph = NativeConverter.SetParagraph (paraWrapper, subelements[1]);
+								}
+							}
 							break;
 						case "fface":
-							this.textWrapper.Defined.FontFace = subelements[1];
+							textWrapper.Defined.FontFace = subelements[1];
 							fontFace = true;
 							break;
 						case "fstyle":
-							this.textWrapper.Defined.FontStyle = subelements[1];
+							textWrapper.Defined.FontStyle = subelements[1];
 							fontStyle = true;
 							break;
 						case "fsize":
 							double size = Misc.ParseDouble (subelements[1]);
-							this.textWrapper.Defined.FontSize = size;
+							textWrapper.Defined.FontSize = size;
 							fontSize = true;
 							break;
 						case "funits":
 							byte theunits = Misc.ParseByte (subelements[1]);
-							this.textWrapper.Defined.Units = (Properties.SizeUnits) theunits;
+							textWrapper.Defined.Units = (Properties.SizeUnits) theunits;
 							units = true;
 							break;
 						case "ffeat":
 							char[] splitchars = { '\\' };
 							string[] thefeatures = subelements[1].Split (splitchars, StringSplitOptions.RemoveEmptyEntries);
-							this.textWrapper.Defined.FontFeatures = thefeatures;
+							textWrapper.Defined.FontFeatures = thefeatures;
 							features = true;
 							break;
 						case "fontglue":
-							this.textWrapper.Defined.FontGlue = Misc.ParseDouble (subelements[1]);
+							textWrapper.Defined.FontGlue = Misc.ParseDouble (subelements[1]);
 							fontglue = true;
 							break;
 						case "langhyph":
-							this.textWrapper.Defined.LanguageHyphenation = Misc.ParseDouble (subelements[1]);
+							textWrapper.Defined.LanguageHyphenation = Misc.ParseDouble (subelements[1]);
 							languageHyphenation = true;
 							break;
 						case "langloc":
-							this.textWrapper.Defined.LanguageLocale = subelements[1];
+							textWrapper.Defined.LanguageLocale = subelements[1];
 							languageLocale = true;
 							break;
 						case "link":
-							this.textWrapper.Defined.Link = subelements[1];
+							textWrapper.Defined.Link = subelements[1];
 							link = true;
 							break;
 					}
@@ -414,58 +459,60 @@ namespace Epsitec.Common.Text.Exchange
 			}
 
 			if (!invertItalic)
-				this.textWrapper.Defined.ClearInvertItalic ();
+				textWrapper.Defined.ClearInvertItalic ();
 
 			if (!invertBold)
-				this.textWrapper.Defined.ClearInvertBold ();
+				textWrapper.Defined.ClearInvertBold ();
 
 			if (!underline)
-				this.textWrapper.Defined.ClearUnderline ();
+				textWrapper.Defined.ClearUnderline ();
 
 			if (!overline)
-				this.textWrapper.Defined.ClearOverline ();
+				textWrapper.Defined.ClearOverline ();
 
 			if (!strikeout)
-				this.textWrapper.Defined.ClearStrikeout ();
+				textWrapper.Defined.ClearStrikeout ();
 
 			if (!xscript)
-				this.textWrapper.Defined.ClearXscript ();
+				textWrapper.Defined.ClearXscript ();
 
 			if (!color)
-				this.textWrapper.Defined.ClearColor ();
+				textWrapper.Defined.ClearColor ();
 
-			if (this.pasteMode == PasteMode.KeepSource)
+			if (pasteMode == PasteMode.KeepSource)
 			{
 
 				if (!fontFace)
-					this.textWrapper.Defined.ClearFontFace ();
+					textWrapper.Defined.ClearFontFace ();
 
 				if (!fontStyle)
-					this.textWrapper.Defined.ClearFontStyle ();
+					textWrapper.Defined.ClearFontStyle ();
 
 				if (!fontSize)
-					this.textWrapper.Defined.ClearFontSize ();
+					textWrapper.Defined.ClearFontSize ();
 
 				if (!fontglue)
-					this.textWrapper.Defined.ClearFontGlue ();
+					textWrapper.Defined.ClearFontGlue ();
 
 				if (!languageHyphenation)
-					this.textWrapper.Defined.ClearLanguageHyphenation ();
+					textWrapper.Defined.ClearLanguageHyphenation ();
 
 				if (!languageLocale)
-					this.textWrapper.Defined.ClearLanguageLocale ();
+					textWrapper.Defined.ClearLanguageLocale ();
 
 				if (!link)
-					this.textWrapper.Defined.ClearLink ();
+					textWrapper.Defined.ClearLink ();
 
 				if (!units)
-					this.textWrapper.Defined.ClearUnits ();
+					textWrapper.Defined.ClearUnits ();
 
 				if (!features)
-					this.textWrapper.Defined.ClearFontFeatures ();
+					textWrapper.Defined.ClearFontFeatures ();
 			}
 
-			this.textWrapper.ResumeSynchronizations ();
+			textWrapper.ResumeSynchronizations ();
+
+			return paragraphSep;
 		}
 
 		public void ResetParagraph()
@@ -546,7 +593,7 @@ namespace Epsitec.Common.Text.Exchange
 			xlinedef.DrawStyle = SerializerSupport.DeserializeString (elements[7]);
 		}
 
-		private void SetParagraph(string parastring)
+		private static object SetParagraph(Wrappers.ParagraphWrapper paraWrapper, string parastring)
 		{
 			char[] seps = { '\\' };
 			char[] innerseps = { '|' };
@@ -577,9 +624,9 @@ namespace Epsitec.Common.Text.Exchange
 			bool hyphenation = false;
 
 
-			this.paraWrapper.SuspendSynchronizations ();
+			paraWrapper.SuspendSynchronizations ();
 
-			this.savedDefinedParagraph = this.paraWrapper.Defined.SaveInternalState ();
+			object savedDefinedParagraph = paraWrapper.Defined.SaveInternalState ();
 
 			foreach (string element in elements)
 			{
@@ -588,95 +635,95 @@ namespace Epsitec.Common.Text.Exchange
 				switch (el[0])
 				{
 					case "align":
-						this.paraWrapper.Defined.AlignMode = (Properties.AlignMode) Misc.ParseByte (el[1]);
+						paraWrapper.Defined.AlignMode = (Properties.AlignMode) Misc.ParseByte (el[1]);
 						alignmode = true;
 						break;
 					case "just":
-						this.paraWrapper.Defined.JustificationMode = (Wrappers.JustificationMode) Misc.ParseByte (el[1]);
+						paraWrapper.Defined.JustificationMode = (Wrappers.JustificationMode) Misc.ParseByte (el[1]);
 						justificationmode = true;
 						break;
 					case "indleva":
-						this.paraWrapper.Defined.IndentationLevelAttribute = SerializerSupport.DeserializeString (el[1]);
+						paraWrapper.Defined.IndentationLevelAttribute = SerializerSupport.DeserializeString (el[1]);
 						indentationlevelattribute = true;
 						break;
 					case "indlev":
-						this.paraWrapper.Defined.IndentationLevel = Misc.ParseInt (el[1]);
+						paraWrapper.Defined.IndentationLevel = Misc.ParseInt (el[1]);
 						indentationlevel = true;
 						break;
 					case "leading":
-						this.paraWrapper.Defined.Leading = Misc.ParseDouble (el[1]);
+						paraWrapper.Defined.Leading = Misc.ParseDouble (el[1]);
 						leading = true;
 						break;
 					case "leadingunit":
-						this.paraWrapper.Defined.LeadingUnits = (Properties.SizeUnits) Misc.ParseByte (el[1]);
+						paraWrapper.Defined.LeadingUnits = (Properties.SizeUnits) Misc.ParseByte (el[1]);
 						leadingunits = true;
 						break;
 					case "leftmbody":
-						this.paraWrapper.Defined.LeftMarginBody = Misc.ParseDouble (el[1]);
+						paraWrapper.Defined.LeftMarginBody = Misc.ParseDouble (el[1]);
 						leftmarginbody = true;
 						break;
 					case "rightmbody":
-						this.paraWrapper.Defined.RightMarginBody = Misc.ParseDouble (el[1]);
+						paraWrapper.Defined.RightMarginBody = Misc.ParseDouble (el[1]);
 						rightmarginbody = true;
 						break;
 					case "leftmfirst":
-						this.paraWrapper.Defined.LeftMarginFirst = Misc.ParseDouble (el[1]);
+						paraWrapper.Defined.LeftMarginFirst = Misc.ParseDouble (el[1]);
 						leftmarginfirst = true;
 						break;
 					case "rightmfirst":
-						this.paraWrapper.Defined.RightMarginFirst = Misc.ParseDouble (el[1]);
+						paraWrapper.Defined.RightMarginFirst = Misc.ParseDouble (el[1]);
 						rightmarginfirst = true;
 						break;
 					case "marginunits":
-						this.paraWrapper.Defined.MarginUnits = (Properties.SizeUnits) Misc.ParseByte (el[1]);
+						paraWrapper.Defined.MarginUnits = (Properties.SizeUnits) Misc.ParseByte (el[1]);
 						marginunits = true;
 						break;
 					case "parstartmode":
-						this.paraWrapper.Defined.ParagraphStartMode = (Properties.ParagraphStartMode) Misc.ParseByte (el[1]);
+						paraWrapper.Defined.ParagraphStartMode = (Properties.ParagraphStartMode) Misc.ParseByte (el[1]);
 						pagargaphstartmode = true;
 						break;
 					case "spaceafter":
-						this.paraWrapper.Defined.SpaceAfter = Misc.ParseDouble(el[1]) ;
+						paraWrapper.Defined.SpaceAfter = Misc.ParseDouble(el[1]) ;
 						spaceafter = true ;
 						break;
 					case "spaceafteru":
-						this.paraWrapper.Defined.SpaceAfterUnits = (Properties.SizeUnits) Misc.ParseByte (el[1]);
+						paraWrapper.Defined.SpaceAfterUnits = (Properties.SizeUnits) Misc.ParseByte (el[1]);
 						spaceafterunits = true;
 						break;
 					case "spacebefore":
-						this.paraWrapper.Defined.SpaceBefore = Misc.ParseDouble (el[1]);
+						paraWrapper.Defined.SpaceBefore = Misc.ParseDouble (el[1]);
 						spacebefore = true;
 						break;
 					case "spacebeforeu":
-						this.paraWrapper.Defined.SpaceBeforeUnits = (Properties.SizeUnits) Misc.ParseByte (el[1]);
+						paraWrapper.Defined.SpaceBeforeUnits = (Properties.SizeUnits) Misc.ParseByte (el[1]);
 						spacebeforeunits = true;
 						break;
 					case "bfa":
-						this.paraWrapper.Defined.BreakFenceAfter = Misc.ParseDouble (el[1]);
+						paraWrapper.Defined.BreakFenceAfter = Misc.ParseDouble (el[1]);
 						breakfenceafter = true;
 						break;
 					case "bfb":
-						this.paraWrapper.Defined.BreakFenceBefore = Misc.ParseDouble (el[1]);
+						paraWrapper.Defined.BreakFenceBefore = Misc.ParseDouble (el[1]);
 						breakfencebefore = true;
 						break;
 					case "keepel":
-						this.paraWrapper.Defined.KeepEndLines = Misc.ParseInt (el[1]);
+						paraWrapper.Defined.KeepEndLines = Misc.ParseInt (el[1]);
 						keependlines = true;
 						break;
 					case "keepsl":
-						this.paraWrapper.Defined.KeepStartLines = Misc.ParseInt (el[1]);
+						paraWrapper.Defined.KeepStartLines = Misc.ParseInt (el[1]);
 						keepstartlines = true;
 						break;
 					case "keepwithnext":
-						this.paraWrapper.Defined.KeepWithNextParagraph = Misc.ParseBool (el[1]);
+						paraWrapper.Defined.KeepWithNextParagraph = Misc.ParseBool (el[1]);
 						keepwithnextparagraph = true;
 						break;
 					case "keepwithprev":
-						this.paraWrapper.Defined.KeepWithPreviousParagraph = Misc.ParseBool (el[1]);
+						paraWrapper.Defined.KeepWithPreviousParagraph = Misc.ParseBool (el[1]);
 						keepwithpreviousparagraph = true;
 						break;
 					case "hyphen":
-						this.paraWrapper.Defined.Hyphenation = Misc.ParseBool (el[1]);
+						paraWrapper.Defined.Hyphenation = Misc.ParseBool (el[1]);
 						hyphenation = true;
 						break;
 
@@ -684,230 +731,232 @@ namespace Epsitec.Common.Text.Exchange
 			}
 
 			if (!hyphenation)
-				this.paraWrapper.Defined.ClearHyphenation ();
+				paraWrapper.Defined.ClearHyphenation ();
 
 			if (!keepwithnextparagraph)
-				this.paraWrapper.Defined.ClearKeepWithNextParagraph ();
+				paraWrapper.Defined.ClearKeepWithNextParagraph ();
 
 			if (!keepwithpreviousparagraph)
-				this.paraWrapper.Defined.ClearKeepWithPreviousParagraph();
+				paraWrapper.Defined.ClearKeepWithPreviousParagraph();
 
 			if (!keependlines)
-				this.paraWrapper.Defined.ClearKeepEndLines ();
+				paraWrapper.Defined.ClearKeepEndLines ();
 
 			if (!keepstartlines)
-				this.paraWrapper.Defined.ClearKeepStartLines ();
+				paraWrapper.Defined.ClearKeepStartLines ();
 
 			if (!breakfenceafter)
-				this.paraWrapper.Defined.ClearBreakFenceAfter ();
+				paraWrapper.Defined.ClearBreakFenceAfter ();
 
 			if (!breakfencebefore)
-				this.paraWrapper.Defined.ClearBreakFenceBefore ();
+				paraWrapper.Defined.ClearBreakFenceBefore ();
 
 			if (!spaceafter)
-				this.paraWrapper.Defined.ClearSpaceAfter() ;
+				paraWrapper.Defined.ClearSpaceAfter() ;
 
 			if (!spaceafterunits)
-				this.paraWrapper.Defined.ClearSpaceAfterUnits ();
+				paraWrapper.Defined.ClearSpaceAfterUnits ();
 
 			if (!spacebefore)
-				this.paraWrapper.Defined.ClearSpaceBefore ();
+				paraWrapper.Defined.ClearSpaceBefore ();
 
 			if (!spacebeforeunits)
-				this.paraWrapper.Defined.ClearSpaceBeforeUnits ();
+				paraWrapper.Defined.ClearSpaceBeforeUnits ();
 
 			if (!pagargaphstartmode)
-				this.paraWrapper.Defined.ClearParagraphStartMode ();
+				paraWrapper.Defined.ClearParagraphStartMode ();
 
 			if (!indentationlevel)
-				this.paraWrapper.Defined.ClearIndentationLevel ();
+				paraWrapper.Defined.ClearIndentationLevel ();
 
 			if (!indentationlevelattribute)
-				this.paraWrapper.Defined.ClearIndentationLevelAttribute ();
+				paraWrapper.Defined.ClearIndentationLevelAttribute ();
 
 			if (!alignmode)
-				this.paraWrapper.Defined.ClearAlignMode ();
+				paraWrapper.Defined.ClearAlignMode ();
 
 			if (!justificationmode)
-				this.paraWrapper.Defined.ClearJustificationMode ();
+				paraWrapper.Defined.ClearJustificationMode ();
 
 			if (!leading)
-				this.paraWrapper.Defined.ClearLeading ();
+				paraWrapper.Defined.ClearLeading ();
 
 			if (!leadingunits)
-				this.paraWrapper.Defined.ClearLeadingUnits ();
+				paraWrapper.Defined.ClearLeadingUnits ();
 
 			if (!leftmarginbody)
-				this.paraWrapper.Defined.ClearLeftMarginBody ();
+				paraWrapper.Defined.ClearLeftMarginBody ();
 
 			if (!rightmarginbody)
-				this.paraWrapper.Defined.ClearRightMarginBody ();
+				paraWrapper.Defined.ClearRightMarginBody ();
 
 			if (!leftmarginfirst)
-				this.paraWrapper.Defined.ClearLeftMarginFirst ();
+				paraWrapper.Defined.ClearLeftMarginFirst ();
 
 			if (!rightmarginfirst)
-				this.paraWrapper.Defined.ClearRightMarginFirst ();
+				paraWrapper.Defined.ClearRightMarginFirst ();
 
 			if (!marginunits)
-				this.paraWrapper.Defined.ClearMarginUnits ();
+				paraWrapper.Defined.ClearMarginUnits ();
 
-			this.paraWrapper.ResumeSynchronizations ();
+			paraWrapper.ResumeSynchronizations ();
+
+			return savedDefinedParagraph;
 		}
 
 
-		private string GetDefinedParString()
+		public static string GetParagraphDefinitions(Wrappers.ParagraphWrapper wrapper)
 		{
 			StringBuilder output = new StringBuilder ();
 
-			if (this.paraWrapper.Defined.IsAlignModeDefined)
+			if (wrapper.Defined.IsAlignModeDefined)
 			{
-				output.AppendFormat (System.Globalization.CultureInfo.InvariantCulture, "align|{0}\\", (byte) this.paraWrapper.Defined.AlignMode);
+				output.AppendFormat (System.Globalization.CultureInfo.InvariantCulture, "align|{0}\\", (byte) wrapper.Defined.AlignMode);
 				output.Append ('\\');
 			}
 
-			if (this.paraWrapper.Defined.IsJustificationModeDefined)
+			if (wrapper.Defined.IsJustificationModeDefined)
 			{
-				output.AppendFormat (System.Globalization.CultureInfo.InvariantCulture, "just|{0}", (byte) this.paraWrapper.Defined.JustificationMode);
+				output.AppendFormat (System.Globalization.CultureInfo.InvariantCulture, "just|{0}", (byte) wrapper.Defined.JustificationMode);
 				output.Append ('\\');
 			}
 
-			if (this.paraWrapper.Defined.IsIndentationLevelAttributeDefined)
+			if (wrapper.Defined.IsIndentationLevelAttributeDefined)
 			{
-				output.AppendFormat (System.Globalization.CultureInfo.InvariantCulture, "indleva|{0}", SerializerSupport.SerializeString (this.paraWrapper.Defined.IndentationLevelAttribute));
+				output.AppendFormat (System.Globalization.CultureInfo.InvariantCulture, "indleva|{0}", SerializerSupport.SerializeString (wrapper.Defined.IndentationLevelAttribute));
 				output.Append ('\\');
 			}
 
-			if (this.paraWrapper.Defined.IsIndentationLevelDefined)
+			if (wrapper.Defined.IsIndentationLevelDefined)
 			{
-				output.AppendFormat (System.Globalization.CultureInfo.InvariantCulture, "indlev|{0}", this.paraWrapper.Defined.IndentationLevel);
+				output.AppendFormat (System.Globalization.CultureInfo.InvariantCulture, "indlev|{0}", wrapper.Defined.IndentationLevel);
 				output.Append ('\\');
 			}
 
-			if (this.paraWrapper.Defined.IsLeadingDefined)
+			if (wrapper.Defined.IsLeadingDefined)
 			{
-				output.AppendFormat (System.Globalization.CultureInfo.InvariantCulture, "leading|{0}", this.paraWrapper.Defined.Leading);
+				output.AppendFormat (System.Globalization.CultureInfo.InvariantCulture, "leading|{0}", wrapper.Defined.Leading);
 				output.Append ('\\');
 			}
 
-			if (this.paraWrapper.Defined.IsLeadingUnitsDefined)
+			if (wrapper.Defined.IsLeadingUnitsDefined)
 			{
-				output.AppendFormat (System.Globalization.CultureInfo.InvariantCulture, "leadingunit|{0}", (byte) this.paraWrapper.Defined.LeadingUnits);
+				output.AppendFormat (System.Globalization.CultureInfo.InvariantCulture, "leadingunit|{0}", (byte) wrapper.Defined.LeadingUnits);
 				output.Append ('\\');
 			}
 
-			if (this.paraWrapper.Defined.IsLeftMarginBodyDefined)
+			if (wrapper.Defined.IsLeftMarginBodyDefined)
 			{
-				output.AppendFormat (System.Globalization.CultureInfo.InvariantCulture, "leftmbody|{0}", this.paraWrapper.Defined.LeftMarginBody);
+				output.AppendFormat (System.Globalization.CultureInfo.InvariantCulture, "leftmbody|{0}", wrapper.Defined.LeftMarginBody);
 				output.Append ('\\');
 			}
 
-			if (this.paraWrapper.Defined.IsRightMarginBodyDefined)
+			if (wrapper.Defined.IsRightMarginBodyDefined)
 			{
-				output.AppendFormat (System.Globalization.CultureInfo.InvariantCulture, "rightmbody|{0}", this.paraWrapper.Defined.RightMarginBody);
+				output.AppendFormat (System.Globalization.CultureInfo.InvariantCulture, "rightmbody|{0}", wrapper.Defined.RightMarginBody);
 				output.Append ('\\');
 			}
 
-			if (this.paraWrapper.Defined.IsLeftMarginFirstDefined)
+			if (wrapper.Defined.IsLeftMarginFirstDefined)
 			{
-				output.AppendFormat (System.Globalization.CultureInfo.InvariantCulture, "leftmfirst|{0}", this.paraWrapper.Defined.LeftMarginFirst);
+				output.AppendFormat (System.Globalization.CultureInfo.InvariantCulture, "leftmfirst|{0}", wrapper.Defined.LeftMarginFirst);
 				output.Append ('\\');
 			}
 
-			if (this.paraWrapper.Defined.IsRightMarginFirstDefined)
+			if (wrapper.Defined.IsRightMarginFirstDefined)
 			{
-				output.AppendFormat (System.Globalization.CultureInfo.InvariantCulture, "rightmfirst|{0}", this.paraWrapper.Defined.RightMarginFirst);
+				output.AppendFormat (System.Globalization.CultureInfo.InvariantCulture, "rightmfirst|{0}", wrapper.Defined.RightMarginFirst);
 				output.Append ('\\');
 			}
 
-			if (this.paraWrapper.Defined.IsMarginUnitsDefined)
+			if (wrapper.Defined.IsMarginUnitsDefined)
 			{
-				output.AppendFormat (System.Globalization.CultureInfo.InvariantCulture, "marginunits|{0}", (byte) this.paraWrapper.Defined.MarginUnits);
+				output.AppendFormat (System.Globalization.CultureInfo.InvariantCulture, "marginunits|{0}", (byte) wrapper.Defined.MarginUnits);
 				output.Append ('\\');
 			}
 
 #if false
-			if (this.paraWrapper.Defined.IsManagedParagraphDefined)
+			if (wrapper.Defined.IsManagedParagraphDefined)
 			{
-				output.AppendFormat (System.Globalization.CultureInfo.InvariantCulture, "managedp|{0}", this.paraWrapper.Defined.ManagedParagraph);
+				output.AppendFormat (System.Globalization.CultureInfo.InvariantCulture, "managedp|{0}", wrapper.Defined.ManagedParagraph);
 			}
 #endif
 
-			if (this.paraWrapper.Defined.IsParagraphStartModeDefined)
+			if (wrapper.Defined.IsParagraphStartModeDefined)
 			{
-				output.AppendFormat (System.Globalization.CultureInfo.InvariantCulture, "parstartmode|{0}", (byte) this.paraWrapper.Defined.ParagraphStartMode);
+				output.AppendFormat (System.Globalization.CultureInfo.InvariantCulture, "parstartmode|{0}", (byte) wrapper.Defined.ParagraphStartMode);
 				output.Append ('\\');
 			}
 
-			if (this.paraWrapper.Defined.IsSpaceAfterDefined)
+			if (wrapper.Defined.IsSpaceAfterDefined)
 			{
-				output.AppendFormat (System.Globalization.CultureInfo.InvariantCulture, "spaceafter|{0}", (byte) this.paraWrapper.Defined.SpaceAfter);
+				output.AppendFormat (System.Globalization.CultureInfo.InvariantCulture, "spaceafter|{0}", (byte) wrapper.Defined.SpaceAfter);
 				output.Append ('\\');
 			}
 
-			if (this.paraWrapper.Defined.IsSpaceAfterUnitsDefined)
+			if (wrapper.Defined.IsSpaceAfterUnitsDefined)
 			{
-				output.AppendFormat (System.Globalization.CultureInfo.InvariantCulture, "spaceafteru|{0}", (byte) this.paraWrapper.Defined.SpaceAfterUnits);
+				output.AppendFormat (System.Globalization.CultureInfo.InvariantCulture, "spaceafteru|{0}", (byte) wrapper.Defined.SpaceAfterUnits);
 				output.Append ('\\');
 			}
 
-			if (this.paraWrapper.Defined.IsSpaceBeforeDefined)
+			if (wrapper.Defined.IsSpaceBeforeDefined)
 			{
-				output.AppendFormat (System.Globalization.CultureInfo.InvariantCulture, "spacebefore|{0}", (byte) this.paraWrapper.Defined.SpaceAfter);
+				output.AppendFormat (System.Globalization.CultureInfo.InvariantCulture, "spacebefore|{0}", (byte) wrapper.Defined.SpaceAfter);
 				output.Append ('\\');
 			}
 
-			if (this.paraWrapper.Defined.IsSpaceAfterUnitsDefined)
+			if (wrapper.Defined.IsSpaceAfterUnitsDefined)
 			{
-				output.AppendFormat (System.Globalization.CultureInfo.InvariantCulture, "spacebeforeu|{0}", (byte) this.paraWrapper.Defined.SpaceBeforeUnits);
+				output.AppendFormat (System.Globalization.CultureInfo.InvariantCulture, "spacebeforeu|{0}", (byte) wrapper.Defined.SpaceBeforeUnits);
 				output.Append ('\\');
 			}
 
-			if (this.paraWrapper.Defined.IsBreakFenceAfterDefined)
+			if (wrapper.Defined.IsBreakFenceAfterDefined)
 			{
-				output.AppendFormat (System.Globalization.CultureInfo.InvariantCulture, "bfa|{0}", this.paraWrapper.Defined.BreakFenceAfter);
+				output.AppendFormat (System.Globalization.CultureInfo.InvariantCulture, "bfa|{0}", wrapper.Defined.BreakFenceAfter);
 				output.Append ('\\');
 			}
 
-			if (this.paraWrapper.Defined.IsBreakFenceBeforeDefined)
+			if (wrapper.Defined.IsBreakFenceBeforeDefined)
 			{
-				output.AppendFormat (System.Globalization.CultureInfo.InvariantCulture, "bfb|{0}", this.paraWrapper.Defined.BreakFenceBefore);
+				output.AppendFormat (System.Globalization.CultureInfo.InvariantCulture, "bfb|{0}", wrapper.Defined.BreakFenceBefore);
 				output.Append ('\\');
 			}
 
-			if (this.paraWrapper.Defined.IsHyphenationDefined)
+			if (wrapper.Defined.IsHyphenationDefined)
 			{
-				output.AppendFormat (System.Globalization.CultureInfo.InvariantCulture, "hyphen|{0}", Misc.BoolToByte (this.paraWrapper.Defined.Hyphenation));
+				output.AppendFormat (System.Globalization.CultureInfo.InvariantCulture, "hyphen|{0}", Misc.BoolToByte (wrapper.Defined.Hyphenation));
 				output.Append ('\\');
 			}
 
-			if (this.paraWrapper.Defined.IsItemListInfoDefined)
+			if (wrapper.Defined.IsItemListInfoDefined)
 			{
-				output.AppendFormat (System.Globalization.CultureInfo.InvariantCulture, "itemli|{0}", this.paraWrapper.Defined.ItemListInfo);
+				output.AppendFormat (System.Globalization.CultureInfo.InvariantCulture, "itemli|{0}", wrapper.Defined.ItemListInfo);
 				output.Append ('\\');
 			}
 
-			if (this.paraWrapper.Defined.IsKeepEndLinesDefined)
+			if (wrapper.Defined.IsKeepEndLinesDefined)
 			{
-				output.AppendFormat (System.Globalization.CultureInfo.InvariantCulture, "keepel|{0}", this.paraWrapper.Defined.KeepEndLines);
+				output.AppendFormat (System.Globalization.CultureInfo.InvariantCulture, "keepel|{0}", wrapper.Defined.KeepEndLines);
 				output.Append ('\\');
 			}
 
-			if (this.paraWrapper.Defined.IsKeepStartLinesDefined)
+			if (wrapper.Defined.IsKeepStartLinesDefined)
 			{
-				output.AppendFormat (System.Globalization.CultureInfo.InvariantCulture, "keepsl|{0}", this.paraWrapper.Defined.KeepStartLines);
+				output.AppendFormat (System.Globalization.CultureInfo.InvariantCulture, "keepsl|{0}", wrapper.Defined.KeepStartLines);
 				output.Append ('\\');
 			}
 
-			if (this.paraWrapper.Defined.IsKeepWithNextParagraphDefined)
+			if (wrapper.Defined.IsKeepWithNextParagraphDefined)
 			{
-				output.AppendFormat (System.Globalization.CultureInfo.InvariantCulture, "keepwithnext|{0}", Misc.BoolToByte (this.paraWrapper.Defined.KeepWithNextParagraph));
+				output.AppendFormat (System.Globalization.CultureInfo.InvariantCulture, "keepwithnext|{0}", Misc.BoolToByte (wrapper.Defined.KeepWithNextParagraph));
 				output.Append ('\\');
 			}
 
-			if (this.paraWrapper.Defined.IsKeepWithPreviousParagraphDefined)
+			if (wrapper.Defined.IsKeepWithPreviousParagraphDefined)
 			{
-				output.AppendFormat (System.Globalization.CultureInfo.InvariantCulture, "keepwithprev|{0}", Misc.BoolToByte (this.paraWrapper.Defined.KeepWithPreviousParagraph));
+				output.AppendFormat (System.Globalization.CultureInfo.InvariantCulture, "keepwithprev|{0}", Misc.BoolToByte (wrapper.Defined.KeepWithPreviousParagraph));
 				output.Append ('\\');
 			}
 
@@ -1066,7 +1115,7 @@ namespace Epsitec.Common.Text.Exchange
 
 		private Dictionary<int,StyleDefinition> styleDefinitions;
 
-		public Dictionary<int, StyleDefinition> StyleDefinitions
+		internal Dictionary<int, StyleDefinition> StyleDefinitions
 		{
 			set
 			{

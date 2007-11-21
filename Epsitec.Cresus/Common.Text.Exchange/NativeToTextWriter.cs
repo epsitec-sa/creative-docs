@@ -52,7 +52,7 @@ namespace Epsitec.Common.Text.Exchange
 				else
 				{
 					bool paragraphSep;
-					this.nativeConverter.SetDefined (formatline, out paragraphSep);
+					this.nativeConverter.SetDefinedString (formatline, out paragraphSep);
 
 					if (paragraphSep)
 					{

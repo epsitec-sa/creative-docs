@@ -14,7 +14,7 @@ using System.Text;
 
 namespace Epsitec.Common.Text.Exchange
 {
-	class CopyPasteContext : IDisposable
+	public class CopyPasteContext : IDisposable
 	{
 		public CopyPasteContext(TextStory story)
 		{
