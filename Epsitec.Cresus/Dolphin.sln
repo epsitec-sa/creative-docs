@@ -1,5 +1,13 @@
-Microsoft Visual Studio Solution File, Format Version 9.00
-# Visual Studio 2005
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{9D718549-67C4-4FEE-BA97-10F50E189F83}"
+	ProjectSection(SolutionItems) = preProject
+		CreateAcrobatDistillerAssembly.bat = CreateAcrobatDistillerAssembly.bat
+		Epsitec.Cresus.snk = Epsitec.Cresus.snk
+		External\uac.manifest = External\uac.manifest
+		Visual.bat = Visual.bat
+	EndProjectSection
+EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.Widgets", "Common.Widgets\Common.Widgets.csproj", "{C84C2E19-04B7-4244-86F6-E4CAFA3FDA7B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.Drawing", "Common.Drawing\Common.Drawing.csproj", "{35FFBEF6-6A7D-4FEA-A4C6-AAB784FA709B}"
@@ -35,14 +43,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.Drawing.Agg", "Common.Drawing.Agg\Common.Drawing.Agg.csproj", "{7D73AD35-D078-4B4C-AF30-434C6A377058}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.Text.Exchange", "Common.Text.Exchange\Common.Text.Exchange.csproj", "{CAE8D21F-CADA-4401-949F-186BB1D4F5D6}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{9D718549-67C4-4FEE-BA97-10F50E189F83}"
-	ProjectSection(SolutionItems) = preProject
-		CreateAcrobatDistillerAssembly.bat = CreateAcrobatDistillerAssembly.bat
-		Epsitec.Cresus.snk = Epsitec.Cresus.snk
-		External\uac.manifest = External\uac.manifest
-		Visual.bat = Visual.bat
-	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Clipboard.Win32", "Common.Text.Exchange\Clipboard.Win32\ClipboardDll.vcproj", "{B4E1087F-2644-430B-A6D4-95B75D62398B}"
 EndProject

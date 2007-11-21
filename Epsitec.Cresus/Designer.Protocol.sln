@@ -1,6 +1,6 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 9.00
-# Visual Studio 2005
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "App.Designer.Protocol", "App.Designer.Protocol\App.Designer.Protocol.csproj", "{FF4203B6-50D1-4915-9BBA-E0B57EA07D13}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "App.Designer.Protocol.Contract", "App.Designer.Protocol.Contract\App.Designer.Protocol.Contract.csproj", "{E5D2658F-7D33-48DF-9263-D740F821AE20}"
