@@ -93,6 +93,14 @@ namespace Epsitec.Common.Support.EntityEngine
 			}
 		}
 
+		bool IEntityCollection.UsesCopyOnWriteBehavior
+		{
+			get
+			{
+				return this.state == State.CopyOnWrite;
+			}
+		}
+
 		#endregion
 
 		#region Private State Enumeration

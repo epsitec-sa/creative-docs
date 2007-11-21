@@ -14,5 +14,10 @@ namespace Epsitec.Common.Support.EntityEngine
 	{
 		void ResetCopyOnWrite();
 		void CopyOnWrite();
+		
+		bool UsesCopyOnWriteBehavior
+		{
+			get;
+		}
 	}
 }

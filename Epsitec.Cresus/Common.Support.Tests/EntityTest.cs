@@ -10,6 +10,8 @@ using System.Collections.Generic;
 [assembly: EntityClass ("[70062]", typeof (Epsitec.Common.Support.EntityTest.MyEnumValueEntity))]
 [assembly: EntityClass ("[7013]", typeof (Epsitec.Common.Support.EntityTest.MyTestInterfaceUserEntity))]
 [assembly: EntityClass ("[7007]", typeof (Epsitec.Common.Support.EntityTest.MyResourceStringEntity))]
+[assembly: EntityClass ("[700G]", typeof (Epsitec.Common.Support.EntityTest.MyResourceCommandEntity))]
+[assembly: EntityClass ("[700Q]", typeof (Epsitec.Common.Support.EntityTest.MyShortcutEntity))]
 
 namespace Epsitec.Common.Support
 {
@@ -106,7 +108,7 @@ namespace Epsitec.Common.Support
 			list1.Add (new MyEnumValueEntity ());
 			list2 = entity.GetFieldCollection<MyEnumValueEntity> (Res.Fields.ResourceEnumType.Values.ToString ());
 
-			Assert.AreEqual (1, list1.Count);
+			Assert.AreEqual (2, list1.Count);
 			Assert.AreEqual (2, list2.Count);
 			Assert.AreEqual (EntityDataState.Modified, entity.GetEntityDataState ());
 			Assert.IsTrue (entity.ContainsDataVersion (EntityDataVersion.Original));
@@ -114,7 +116,7 @@ namespace Epsitec.Common.Support
 			Assert.IsTrue (list1 != list2);
 
 			list2.Add (new MyEnumValueEntity ());
-			Assert.AreEqual (1, list1.Count);
+			Assert.AreEqual (3, list1.Count);
 			Assert.AreEqual (3, list2.Count);
 			
 			using (entity.DefineOriginalValues ())
@@ -122,12 +124,15 @@ namespace Epsitec.Common.Support
 				list1.Add (new MyEnumValueEntity ());
 			}
 			
-			Assert.AreEqual (2, list1.Count);
+			Assert.AreEqual (3, list1.Count);
 			Assert.AreEqual (3, list2.Count);
 
 			System.Collections.IList list3;
 
 			entity = new MyEnumTypeEntity ();
+
+			((IEntityCollection) entity.InternalGetFieldCollection (Res.Fields.ResourceEnumType.Values.ToString ())).CopyOnWrite ();
+
 			list3 = entity.InternalGetFieldCollection (Res.Fields.ResourceEnumType.Values.ToString ());
 			list2 = list3 as IList<MyEnumValueEntity>;
 			list1 = entity.GetFieldCollection<MyEnumValueEntity> (Res.Fields.ResourceEnumType.Values.ToString ());
@@ -145,10 +150,16 @@ namespace Epsitec.Common.Support
 		{
 			MyEnumTypeEntity entity = new MyEnumTypeEntity ();
 
+			IList<MyEnumValueEntity> list0;
 			IList<MyEnumValueEntity> list1;
 			IList<MyEnumValueEntity> list2;
 
 			list1 = entity.GetFieldCollection<MyEnumValueEntity> (Res.Fields.ResourceEnumType.Values.ToString ());
+			list0 = entity.InternalGetValue (Res.Fields.ResourceEnumType.Values.ToString ()) as IList<MyEnumValueEntity>;
+
+			Assert.IsNotNull (list0);
+			Assert.IsNotNull (list1);
+			Assert.AreNotEqual (list1, list0);			//	list1 is a proxy to list0
 			
 			using (entity.DefineOriginalValues ())
 			{
@@ -158,13 +169,128 @@ namespace Epsitec.Common.Support
 			list1.Add (new MyEnumValueEntity ());
 			list2 = entity.GetFieldCollection<MyEnumValueEntity> (Res.Fields.ResourceEnumType.Values.ToString ());
 
-			Assert.AreEqual (1, list1.Count);
+			Assert.AreEqual (1, list0.Count);
+			Assert.AreEqual (2, list1.Count);
 			Assert.AreEqual (2, list2.Count);
 
 			//	We may no longer modify the original list here :
 			
-			list1.Add (new MyEnumValueEntity ());
+			list0.Add (new MyEnumValueEntity ());
 		}
+
+		[Test]
+		public void CheckCollections1()
+		{
+			EntityContext context = EntityContext.Current;
+			
+			MyResourceCommandEntity cmd1 = context.CreateEmptyEntity<MyResourceCommandEntity> ();
+			MyResourceCommandEntity cmd2 = context.CreateEmptyEntity<MyResourceCommandEntity> ();
+			MyResourceCommandEntity cmd3 = context.CreateEmptyEntity<MyResourceCommandEntity> ();
+
+			Assert.IsNotNull (cmd1.Shortcuts);
+			Assert.IsNotNull (cmd2.InternalGetFieldCollection ("[700O]"));
+			Assert.IsNotNull (cmd3.GetFieldCollection<AbstractEntity> ("[700O]"));
+
+			((IEntityCollection) cmd1.Shortcuts).CopyOnWrite ();
+			((IEntityCollection) cmd2.InternalGetFieldCollection ("[700O]")).CopyOnWrite ();
+			((IEntityCollection) cmd3.GetFieldCollection<AbstractEntity> ("[700O]")).CopyOnWrite ();
+
+			Assert.AreEqual (typeof (EntityCollection<MyShortcutEntity>), cmd1.Shortcuts.GetType ());
+			Assert.AreEqual (typeof (EntityCollection<MyShortcutEntity>), cmd2.InternalGetFieldCollection ("[700O]").GetType ());
+			Assert.AreEqual (typeof (EntityCollection<AbstractEntity>),   cmd3.GetFieldCollection<AbstractEntity> ("[700O]").GetType ());
+
+			Assert.AreEqual (typeof (EntityCollection<MyShortcutEntity>), cmd1.Shortcuts.GetType ());
+			Assert.AreEqual (typeof (EntityCollection<MyShortcutEntity>), cmd2.Shortcuts.GetType ());
+			Assert.AreEqual (typeof (EntityCollectionProxy<MyShortcutEntity>), cmd3.Shortcuts.GetType ());
+
+			Assert.AreEqual (typeof (EntityCollection<MyShortcutEntity>), cmd1.InternalGetFieldCollection ("[700O]").GetType ());
+			Assert.AreEqual (typeof (EntityCollection<MyShortcutEntity>), cmd2.InternalGetFieldCollection ("[700O]").GetType ());
+			Assert.AreEqual (typeof (EntityCollection<AbstractEntity>), cmd3.InternalGetFieldCollection ("[700O]").GetType ());
+
+			Assert.AreEqual (typeof (EntityCollectionProxy<AbstractEntity>), cmd1.GetFieldCollection<AbstractEntity> ("[700O]").GetType ());
+			Assert.AreEqual (typeof (EntityCollectionProxy<AbstractEntity>), cmd2.GetFieldCollection<AbstractEntity> ("[700O]").GetType ());
+			Assert.AreEqual (typeof (EntityCollection<AbstractEntity>), cmd3.GetFieldCollection<AbstractEntity> ("[700O]").GetType ());
+
+			IList<MyShortcutEntity> list1 = cmd1.Shortcuts;
+			IList<MyShortcutEntity> list2 = cmd2.Shortcuts;
+			IList<MyShortcutEntity> list3 = cmd3.Shortcuts;
+
+			Assert.AreEqual (list1, cmd1.Shortcuts);
+			Assert.AreEqual (list2, cmd2.Shortcuts);
+			Assert.AreNotEqual (list3, cmd3.Shortcuts);		//	every proxy is different
+			
+			list1.Add (context.CreateEmptyEntity<MyShortcutEntity> ());
+			list2.Add (context.CreateEmptyEntity<MyShortcutEntity> ());
+			list3.Add (context.CreateEmptyEntity<MyShortcutEntity> ());
+
+			Assert.AreEqual (list1, cmd1.Shortcuts);
+			Assert.AreEqual (list2, cmd2.Shortcuts);
+			Assert.AreNotEqual (list3, cmd3.Shortcuts);		//	every proxy is different
+		}
+
+		[Test]
+		public void CheckCollections2()
+		{
+			EntityContext context = EntityContext.Current;
+
+			MyResourceCommandEntity cmd1 = context.CreateEmptyEntity<MyResourceCommandEntity> ();
+			MyResourceCommandEntity cmd2 = context.CreateEmptyEntity<MyResourceCommandEntity> ();
+			MyResourceCommandEntity cmd3 = context.CreateEmptyEntity<MyResourceCommandEntity> ();
+
+			Assert.IsNotNull (cmd1.Shortcuts);
+			Assert.IsNotNull (cmd2.InternalGetFieldCollection ("[700O]"));
+			Assert.IsNotNull (cmd3.GetFieldCollection<AbstractEntity> ("[700O]"));
+
+			//	All collections in copy-on-write mode
+
+			Assert.AreEqual (typeof (EntityCollectionProxy<MyShortcutEntity>), cmd1.Shortcuts.GetType ());
+			Assert.AreEqual (typeof (EntityCollectionProxy<MyShortcutEntity>), cmd2.InternalGetFieldCollection ("[700O]").GetType ());
+			Assert.AreEqual (typeof (EntityCollectionProxy<AbstractEntity>), cmd3.GetFieldCollection<AbstractEntity> ("[700O]").GetType ());
+
+			Assert.AreEqual (typeof (EntityCollectionProxy<MyShortcutEntity>), cmd1.Shortcuts.GetType ());
+			Assert.AreEqual (typeof (EntityCollectionProxy<MyShortcutEntity>), cmd2.Shortcuts.GetType ());
+			Assert.AreEqual (typeof (EntityCollectionProxy<MyShortcutEntity>), cmd3.Shortcuts.GetType ());
+
+			Assert.AreEqual (typeof (EntityCollectionProxy<MyShortcutEntity>), cmd1.InternalGetFieldCollection ("[700O]").GetType ());
+			Assert.AreEqual (typeof (EntityCollectionProxy<MyShortcutEntity>), cmd2.InternalGetFieldCollection ("[700O]").GetType ());
+			Assert.AreEqual (typeof (EntityCollectionProxy<AbstractEntity>), cmd3.InternalGetFieldCollection ("[700O]").GetType ());
+
+			Assert.AreEqual (typeof (EntityCollectionProxy<AbstractEntity>), cmd1.GetFieldCollection<AbstractEntity> ("[700O]").GetType ());
+			Assert.AreEqual (typeof (EntityCollectionProxy<AbstractEntity>), cmd2.GetFieldCollection<AbstractEntity> ("[700O]").GetType ());
+			Assert.AreEqual (typeof (EntityCollectionProxy<AbstractEntity>), cmd3.GetFieldCollection<AbstractEntity> ("[700O]").GetType ());
+
+			IList<MyShortcutEntity> list1 = cmd1.Shortcuts;
+			IList<MyShortcutEntity> list2 = cmd2.Shortcuts;
+			IList<MyShortcutEntity> list3 = cmd3.Shortcuts;
+
+			Assert.AreNotEqual (list1, cmd1.Shortcuts);		//	every proxy is different
+			Assert.AreNotEqual (list2, cmd2.Shortcuts);
+			Assert.AreNotEqual (list3, cmd3.Shortcuts);
+
+			list1.Add (context.CreateEmptyEntity<MyShortcutEntity> ());
+			list2.Add (context.CreateEmptyEntity<MyShortcutEntity> ());
+			list3.Add (context.CreateEmptyEntity<MyShortcutEntity> ());
+
+			//	Now, copy-on-write has been executed on all collections and proxies are
+			//	no longer required :
+
+			Assert.AreEqual (typeof (EntityCollection<MyShortcutEntity>), cmd1.Shortcuts.GetType ());
+			Assert.AreEqual (typeof (EntityCollection<MyShortcutEntity>), cmd2.InternalGetFieldCollection ("[700O]").GetType ());
+			Assert.AreEqual (typeof (EntityCollection<AbstractEntity>), cmd3.GetFieldCollection<AbstractEntity> ("[700O]").GetType ());
+
+			Assert.AreEqual (typeof (EntityCollection<MyShortcutEntity>), cmd1.Shortcuts.GetType ());
+			Assert.AreEqual (typeof (EntityCollection<MyShortcutEntity>), cmd2.Shortcuts.GetType ());
+			Assert.AreEqual (typeof (EntityCollectionProxy<MyShortcutEntity>), cmd3.Shortcuts.GetType ());
+
+			Assert.AreEqual (typeof (EntityCollection<MyShortcutEntity>), cmd1.InternalGetFieldCollection ("[700O]").GetType ());
+			Assert.AreEqual (typeof (EntityCollection<MyShortcutEntity>), cmd2.InternalGetFieldCollection ("[700O]").GetType ());
+			Assert.AreEqual (typeof (EntityCollection<AbstractEntity>), cmd3.InternalGetFieldCollection ("[700O]").GetType ());
+
+			Assert.AreEqual (typeof (EntityCollectionProxy<AbstractEntity>), cmd1.GetFieldCollection<AbstractEntity> ("[700O]").GetType ());
+			Assert.AreEqual (typeof (EntityCollectionProxy<AbstractEntity>), cmd2.GetFieldCollection<AbstractEntity> ("[700O]").GetType ());
+			Assert.AreEqual (typeof (EntityCollection<AbstractEntity>), cmd3.GetFieldCollection<AbstractEntity> ("[700O]").GetType ());
+		}
+
 
 		[Test]
 		public void CheckCreation()
@@ -383,6 +509,38 @@ namespace Epsitec.Common.Support
 			public override Druid GetEntityStructuredTypeId()
 			{
 				return Res.Types.ResourceString.CaptionId;
+			}
+		}
+
+		#endregion
+
+		#region Fake ResourceCommand Entity
+
+		internal class MyResourceCommandEntity : AbstractEntity
+		{
+			public override Druid GetEntityStructuredTypeId()
+			{
+				return Res.Types.ResourceCommand.CaptionId;
+			}
+
+			public IList<MyShortcutEntity> Shortcuts
+			{
+				get
+				{
+					return this.GetFieldCollection<MyShortcutEntity> ("[700O]");
+				}
+			}
+		}
+
+		#endregion
+
+		#region Fake Shortcut Entity
+
+		internal class MyShortcutEntity : AbstractEntity
+		{
+			public override Druid GetEntityStructuredTypeId()
+			{
+				return Res.Types.Shortcut.CaptionId;
 			}
 		}
 

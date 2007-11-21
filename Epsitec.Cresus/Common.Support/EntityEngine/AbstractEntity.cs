@@ -162,10 +162,42 @@ namespace Epsitec.Common.Support.EntityEngine
 						list = new EntityCollection<T> (id, this, true);
 						this.InternalSetValue (id, list);
 					}
+
+					list = new EntityCollectionProxy<T> (id, this);
 				}
 				else
 				{
+					IEntityCollection collection = value as IEntityCollection;
+					System.Collections.IList simpleList = value as System.Collections.IList;
+
+					if ((collection == null) ||
+						(simpleList == null))
+					{
+						throw new System.NotSupportedException (string.Format ("Field {0} uses incompatible collection type", id));
+					}
+
+					if (collection.UsesCopyOnWriteBehavior)
+					{
+						list = new EntityCollectionProxy<T> (id, this);
+					}
+					else
+					{
+						list = new EntityCollectionProxy<T> (simpleList);
+					}
+				}
+			}
+			else
+			{
+				IEntityCollection collection = value as IEntityCollection;
+				
+				if (collection == null)
+				{
 					throw new System.NotSupportedException (string.Format ("Field {0} uses incompatible collection type", id));
+				}
+
+				if (collection.UsesCopyOnWriteBehavior)
+				{
+					list = new EntityCollectionProxy<T> (id, this);
 				}
 			}
 
@@ -254,18 +286,41 @@ namespace Epsitec.Common.Support.EntityEngine
 						IStructuredType     type  = this.context.GetStructuredType (this);
 						StructuredTypeField field = type.GetField (id);
 						AbstractEntity      model = this.context.CreateEmptyEntity (field.TypeId);
-						
+
 						System.Type itemType = model.GetType ();
 						System.Type genericType = typeof (EntityCollection<>);
 						System.Type collectionType = genericType.MakeGenericType (itemType);
 
 						list = System.Activator.CreateInstance (collectionType, id, this, true) as System.Collections.IList;
 						this.InternalSetValue (id, list);
+
+						genericType = typeof (EntityCollectionProxy<>);
+						collectionType = genericType.MakeGenericType (itemType);
+
+						list = System.Activator.CreateInstance (collectionType, id, this) as System.Collections.IList;
 					}
 				}
 				else
 				{
 					throw new System.NotSupportedException (string.Format ("Field {0} uses incompatible collection type", id));
+				}
+			}
+			else
+			{
+				IEntityCollection collection = value as IEntityCollection;
+
+				if (collection == null)
+				{
+					throw new System.NotSupportedException (string.Format ("Field {0} uses incompatible collection type", id));
+				}
+
+				if (collection.UsesCopyOnWriteBehavior)
+				{
+					System.Type itemType = TypeRosetta.GetCollectionItemType (list.GetType ());
+					System.Type genericType = typeof (EntityCollectionProxy<>);
+					System.Type collectionType = genericType.MakeGenericType (itemType);
+
+					list = System.Activator.CreateInstance (collectionType, id, this) as System.Collections.IList;
 				}
 			}
 
