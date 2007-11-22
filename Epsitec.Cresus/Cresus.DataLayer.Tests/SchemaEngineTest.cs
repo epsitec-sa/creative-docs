@@ -383,6 +383,38 @@ namespace Epsitec.Cresus.DataLayer
 
 			Assert.AreEqual (3, list.Count);
 			Assert.AreEqual (list[0], list[2]);
+
+			context.Dispose ();
+		}
+
+		[Test]
+		public void Check17ReadCollections()
+		{
+			DataContext context = new DataContext (this.infrastructure);
+
+			Demo.Demo5juin.Entities.PositionEntity position = context.DeserializeEntity<Demo.Demo5juin.Entities.PositionEntity> (this.keyCheck16);
+
+			IList<Demo.Demo5juin.Entities.RabaisSurArticleEntity> list = position.Rabais;
+
+			Assert.AreEqual (3, list.Count);
+			Assert.AreEqual (list[0], list[2]);
+
+			Assert.AreEqual ( 8.0M, position.Quantité);
+			Assert.AreEqual (10.0M, list[0].Pourcent);
+			Assert.AreEqual ( 5.0M, list[1].Pourcent);
+
+			Demo.Demo5juin.Entities.RabaisSurArticleEntity rabais = context.EntityContext.CreateEntity<Demo.Demo5juin.Entities.RabaisSurArticleEntity> ();
+
+			rabais.CodeRaison = 76;
+			rabais.Pourcent = 0.6M;
+
+			list.Insert (1, rabais);
+
+			context.SerializeEntity (rabais);
+			context.SerializeEntity (position);
+			context.SaveChanges ();
+
+			context.Dispose ();
 		}
 
 

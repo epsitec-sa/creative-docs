@@ -189,6 +189,8 @@
     <Compile Include="AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Demo5juinEntities.cs" />
+    <Compile Include="EntityCodeGeneratorTest.cs" />
     <Compile Include="Helpers.EntityDataMapping.cs" />
     <Compile Include="SchemaEngineTest.cs" />
     <Compile Include="DataBrokerTest.cs" />
@@ -204,7 +206,7 @@ xcopy "$(SolutionDir)Common.Document\Resources\*" "$(ProjectDir)Resources\" /S/Y
 xcopy "$(SolutionDir)Common.Types\Resources\*" "$(ProjectDir)Resources\" /S/Y /EXCLUDE:..\..\..\excludesvn.ini
 xcopy "$(SolutionDir)Common.Widgets\Resources\*" "$(ProjectDir)Resources\" /S/Y /EXCLUDE:..\..\..\excludesvn.ini
 xcopy "$(SolutionDir)Cresus.Database\Resources\*" "$(ProjectDir)Resources\" /S/Y /EXCLUDE:..\..\..\excludesvn.ini
-xcopy "$(SolutionDir)App.CresusDocuments\Resources\Cresus.Tests\*" "$(ProjectDir)Resources\Cresus.Tests\" /S/Y /EXCLUDE:..\..\..\excludesvn.ini
+rem xcopy "$(SolutionDir)App.CresusDocuments\Resources\Cresus.Tests\*" "$(ProjectDir)Resources\Cresus.Tests\" /S/Y /EXCLUDE:..\..\..\excludesvn.ini
 xcopy "$(SolutionDir)Demo\Resources\*" "$(ProjectDir)Resources\" /S/Y /EXCLUDE:..\..\..\excludesvn.ini
 </PreBuildEvent>
     <PostBuildEvent>

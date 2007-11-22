@@ -238,6 +238,12 @@ namespace Epsitec.Cresus.DataLayer
 			return this.DeserializeEntity (rowKey, entityId);
 		}
 
+		public T DeserializeEntity<T>(DbKey rowKey) where T : AbstractEntity, new ()
+		{
+			T entity = new T ();
+			return this.DeserializeEntity (rowKey, entity.GetEntityStructuredTypeId ()) as T;
+		}
+
 		public AbstractEntity DeserializeEntity(DbKey rowKey, Druid entityId)
 		{
 			Druid baseEntityId = this.entityContext.GetBaseEntityId (entityId);
