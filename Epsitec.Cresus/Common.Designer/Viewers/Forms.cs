@@ -378,7 +378,7 @@ namespace Epsitec.Common.Designer.Viewers
 				{
 					FormEditor.ObjectModifier.TableItem item = this.formEditor.ObjectModifier.TableContent[first+i];
 
-					string name = this.formEditor.ObjectModifier.GetTableContentName(item);
+					string name = this.formEditor.ObjectModifier.GetTableContentDescription(item);
 					Color color = item.Used ? Color.FromRgb(0,1,0) : Color.FromRgb(1,0,0);
 
 					this.fieldTable.SetLineString(0, first+i, "");

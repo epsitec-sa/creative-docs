@@ -355,8 +355,10 @@ namespace Epsitec.Common.Designer.FormEditor
 
 
 		#region TableContent
-		public string GetTableContentName(TableItem item)
+		public string GetTableContentDescription(TableItem item)
 		{
+			//	Retourne le texte permettant de décrire un TableItem dans une liste, avec un effet
+			//	d'indentation pour ressembler aux arborescences de Vista.
 			System.Text.StringBuilder builder = new System.Text.StringBuilder();
 
 			for (int i=0; i<item.Level; i++)
@@ -418,11 +420,13 @@ namespace Epsitec.Common.Designer.FormEditor
 			int level = 0;
 			foreach (FieldDescription field in this.formEditor.Form.Fields)
 			{
+#if false
 				if (field.Type == FieldDescription.FieldType.BoxEnd)
 				{
 					level--;
 					continue;
 				}
+#endif
 
 				System.Guid guid = this.GetLocalGuid(field.GetPath(null));
 
@@ -452,6 +456,11 @@ namespace Epsitec.Common.Designer.FormEditor
 				if (field.Type == FieldDescription.FieldType.BoxBegin)
 				{
 					level++;
+				}
+
+				if (field.Type == FieldDescription.FieldType.BoxEnd)
+				{
+					level--;
 				}
 			}
 
