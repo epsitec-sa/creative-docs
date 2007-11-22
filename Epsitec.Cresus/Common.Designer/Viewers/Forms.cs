@@ -404,6 +404,8 @@ namespace Epsitec.Common.Designer.Viewers
 			//	Met à jour les boutons.
 			int useCounter = 0;
 			int freeCounter = 0;
+			int boxBegin = 0;
+			int boxEnd = 0;
 			bool isPrev = false;
 			bool isNext = false;
 
@@ -433,6 +435,16 @@ namespace Epsitec.Common.Designer.Viewers
 							next = this.formEditor.ObjectModifier.TableContent[sel+1];
 						}
 
+						if (curr.FieldType == FieldDescription.FieldType.BoxBegin)
+						{
+							boxBegin++;
+						}
+
+						if (curr.FieldType == FieldDescription.FieldType.BoxEnd)
+						{
+							boxEnd++;
+						}
+
 						if (!curr.Used || !prev.Used)  // premier champ utilisé ?
 						{
 							isPrev = false;
@@ -457,7 +469,15 @@ namespace Epsitec.Common.Designer.Viewers
 				}
 			}
 
-			this.fieldButtonUse.Enable = (useCounter == 0 && freeCounter > 0) || (useCounter > 0 && freeCounter == 0);
+			if (boxBegin == 0 && boxEnd == 0)
+			{
+				this.fieldButtonUse.Enable = (useCounter == 0 && freeCounter > 0) || (useCounter > 0 && freeCounter == 0);
+			}
+			else
+			{
+				this.fieldButtonUse.Enable = false;
+			}
+
 			if (this.fieldButtonUse.Enable)
 			{
 				this.fieldButtonUse.IconName = (useCounter > 0) ? Misc.Icon("Delete") : Misc.Icon("Create");
@@ -866,21 +886,50 @@ namespace Epsitec.Common.Designer.Viewers
 			List<int> sels = this.fieldTable.SelectedRows;
 			sels.Sort();
 
+			FormEditor.ObjectModifier.TableItem firstItem = this.formEditor.ObjectModifier.TableContent[sels[0]];
+			int first = this.formEditor.ObjectModifier.GetFormDescriptionIndex(firstItem.Guid);
+
 			if (sels.Count == 1)
 			{
-				FormEditor.ObjectModifier.TableItem item = this.formEditor.ObjectModifier.TableContent[sels[0]];
-				FieldDescription field = this.formEditor.ObjectModifier.GetFormDescription(item);
-				if (field.Type == FieldDescription.FieldType.BoxBegin)
+				if (firstItem.FieldType == FieldDescription.FieldType.BoxBegin)
 				{
-					//	TODO: sépare...
+					//	Sépare le groupe sélectionné.
+					int level = 0;
+					for (int i=sels[0]; i<this.formEditor.ObjectModifier.TableContent.Count; i++)
+					{
+						FormEditor.ObjectModifier.TableItem item = this.formEditor.ObjectModifier.TableContent[i];
+
+						if (item.FieldType == FieldDescription.FieldType.BoxBegin)
+						{
+							level++;
+						}
+
+						if (item.FieldType == FieldDescription.FieldType.BoxEnd)
+						{
+							level--;
+							if (level == 0)
+							{
+								int last = this.formEditor.ObjectModifier.GetFormDescriptionIndex(item.Guid);
+								this.form.Fields.RemoveAt(last);  // enlève le BoxEnd
+								this.form.Fields.RemoveAt(first);  // enlève le BoxBegin
+
+								this.SetForm(this.form, this.druidToSerialize, false);
+								this.UpdateFieldTable(false);
+
+								sels.Clear();
+								sels.Add(first);
+								this.fieldTable.SelectedRows = sels;
+								this.ReflectSelectionToEditor();
+
+								this.UpdateButtons();
+							}
+						}
+					}
 					return;
 				}
 			}
 
 			//	Groupe les champs sélectionnés.
-			FormEditor.ObjectModifier.TableItem firstItem = this.formEditor.ObjectModifier.TableContent[sels[0]];
-			int first = this.formEditor.ObjectModifier.GetFormDescriptionIndex(firstItem.Guid);
-
 			List<FieldDescription> content = new List<FieldDescription>();
 			for (int i=sels.Count-1; i>=0; i--)
 			{
