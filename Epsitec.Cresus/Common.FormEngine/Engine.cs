@@ -380,10 +380,19 @@ namespace Epsitec.Common.FormEngine
 
 			grid.RowDefinitions.Add(new Widgets.Layouts.RowDefinition());
 
+			int columnsRequired = System.Math.Min(field.ColumnsRequired, Engine.MaxColumnsRequired);
+
+			if (column+columnsRequired > Engine.MaxColumnsRequired)  // dépasse à droite ?
+			{
+				row++;
+				column = 0;
+			}
+
 			double m = 2;
 			switch (field.Separator)
 			{
 				case FieldDescription.SeparatorType.Compact:
+				case FieldDescription.SeparatorType.Append:
 					m = -1;
 					break;
 
@@ -392,14 +401,6 @@ namespace Epsitec.Common.FormEngine
 					break;
 			}
 			grid.RowDefinitions[row].BottomBorder = m;
-
-			int columnsRequired = System.Math.Min(field.ColumnsRequired, Engine.MaxColumnsRequired);
-
-			if (column+columnsRequired > Engine.MaxColumnsRequired)  // dépasse à droite ?
-			{
-				row++;
-				column = 0;
-			}
 
 			if (field.RowsRequired > 1)
 			{
