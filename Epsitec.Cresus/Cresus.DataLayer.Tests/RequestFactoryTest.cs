@@ -2,10 +2,10 @@ using NUnit.Framework;
 
 namespace Epsitec.Cresus.DataLayer
 {
+#if false
 	[TestFixture]
 	public class RequestFactoryTest
 	{
-#if false
 		[Test]
 		public void Check01NewAndDispose()
 		{
@@ -157,6 +157,6 @@ namespace Epsitec.Cresus.DataLayer
 
 			factory.Dispose ();
 		}
-#endif
 	}
+#endif
 }

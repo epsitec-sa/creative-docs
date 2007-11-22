@@ -24,6 +24,21 @@ namespace Epsitec.Cresus.DataLayer
 			else
 			{
 				DbTable tableDef = this.schemaEngine.FindTableDefinition (entityId);
+
+				if (tableDef == null)
+				{
+					StructuredType type = this.entityContext.GetStructuredType (entityId) as StructuredType;
+
+					if (type == null)
+					{
+						throw new System.ArgumentException (string.Format ("No schema nor type information available for EntityId {0}", entityId));
+					}
+					else
+					{
+						throw new System.ArgumentException (string.Format ("No schema available for EntityId {0} ({1})", type.Caption.Name, entityId));
+					}
+				}
+
 				this.entityTableDefinitions[entityId] = tableDef;
 				this.LoadTableSchema (tableDef);
 			}

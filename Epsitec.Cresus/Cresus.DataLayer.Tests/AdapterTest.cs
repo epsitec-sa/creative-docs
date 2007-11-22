@@ -12,10 +12,10 @@ using System.Collections.Generic;
 
 namespace Epsitec.Cresus.DataLayer
 {
+#if false
 	[TestFixture]
 	public class AdapterTest
 	{
-#if false
 		[TestFixtureSetUp]
 		public void Setup()
 		{
@@ -133,6 +133,6 @@ namespace Epsitec.Cresus.DataLayer
 		}
 
 		private DbInfrastructure infrastructure;
-#endif
 	}
+#endif
 }

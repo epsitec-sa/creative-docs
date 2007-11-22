@@ -22,6 +22,7 @@ namespace Epsitec.Cresus.DataLayer
 			this.schemaEngine = new SchemaEngine (this.infrastructure);
 			this.entityContext = EntityContext.Current;
 			this.entityDataMapping = new Dictionary<long, EntityDataMapping> ();
+			this.entities = new List<AbstractEntity> ();
 			this.entityTableDefinitions = new Dictionary<Druid, DbTable> ();
 			this.temporaryRows = new Dictionary<string, TemporaryRowCollection> ();
 
@@ -58,7 +59,7 @@ namespace Epsitec.Cresus.DataLayer
 		/// <returns>The number of entities associated to this data context.</returns>
 		public int CountManagedEntities()
 		{
-			return this.entityDataMapping.Count;
+			return this.entities.Count;
 		}
 
 		public void SerializeChanges()
@@ -82,19 +83,21 @@ namespace Epsitec.Cresus.DataLayer
 
 		public IEnumerable<AbstractEntity> GetManagedEntities()
 		{
-			foreach (EntityDataMapping mapping in this.entityDataMapping.Values)
+			for (int i = 0; i < this.entities.Count; i++)
 			{
-				yield return mapping.Entity;
+				yield return this.entities[i];
 			}
 		}
 		
 		public IEnumerable<AbstractEntity> GetManagedEntities(System.Predicate<AbstractEntity> predicate)
 		{
-			foreach (EntityDataMapping mapping in this.entityDataMapping.Values)
+			for (int i = 0; i < this.entities.Count; i++)
 			{
-				if (predicate (mapping.Entity))
+				AbstractEntity entity = this.entities[i];
+
+				if (predicate (entity))
 				{
-					yield return mapping.Entity;
+					yield return entity;
 				}
 			}
 		}
@@ -281,6 +284,35 @@ namespace Epsitec.Cresus.DataLayer
 			return this.DeserializeEntity (rowKey, entity.GetEntityStructuredTypeId ()) as T;
 		}
 
+
+		public T CreateEntity<T>() where T : AbstractEntity, new ()
+		{
+			return this.entityContext.CreateEntity<T> ();
+		}
+
+		public bool CreateSchema<T>() where T : AbstractEntity, new ()
+		{
+			T entity = new T ();
+			Druid entityId = entity.GetEntityStructuredTypeId ();
+
+			DbTable tableDef = this.schemaEngine.FindTableDefinition (entityId);
+
+			if (tableDef == null)
+			{
+				using (DbTransaction transaction = this.infrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadWrite))
+				{
+					this.schemaEngine.CreateTableDefinition (entityId);
+					transaction.Commit ();
+				}
+
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}
+		
 		public AbstractEntity DeserializeEntity(DbKey rowKey, Druid entityId)
 		{
 			Druid baseEntityId = this.entityContext.GetBaseEntityId (entityId);
@@ -845,8 +877,21 @@ namespace Epsitec.Cresus.DataLayer
 			Druid baseEntityId = this.entityContext.GetBaseEntityId (entityId);
 			long entitySerialId = entity.GetEntitySerialId ();
 
-			this.entityDataMapping[entitySerialId] = new EntityDataMapping (entity, entityId, baseEntityId);
-			this.LoadEntitySchema (entityId);
+			EntityDataMapping mapping = new EntityDataMapping (entity, entityId, baseEntityId);
+
+			this.entities.Add (entity);
+			this.entityDataMapping[entitySerialId] = mapping;
+
+			try
+			{
+				this.LoadEntitySchema (entityId);
+			}
+			catch
+			{
+				this.entities.Remove (entity);
+				this.entityDataMapping.Remove (entitySerialId);
+				throw;
+			}
 		}
 
 		readonly DbInfrastructure infrastructure;
@@ -854,6 +899,7 @@ namespace Epsitec.Cresus.DataLayer
 		readonly SchemaEngine schemaEngine;
 		readonly EntityContext entityContext;
 		readonly Dictionary<long, EntityDataMapping> entityDataMapping;
+		readonly List<AbstractEntity> entities;
 		readonly Dictionary<Druid, DbTable> entityTableDefinitions;
 		readonly Dictionary<string, TemporaryRowCollection> temporaryRows;
 	}
