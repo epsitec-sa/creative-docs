@@ -24,21 +24,23 @@ namespace Epsitec.Common.Designer.Viewers
 
 			//	Crée le groupe central.
 			this.middle = new FrameBox(surface);
-			this.middle.Padding = new Margins(2, 5, 5, 5);
+			this.middle.Padding = new Margins(5, 5, 5, 5);
 			this.middle.Dock = DockStyle.Fill;
 
-			FrameBox drawing = new FrameBox(this.middle);  // conteneur pour vToolBar et scrollable
+			FrameBox drawing = new FrameBox(this.middle);  // conteneur pour scrollable
 			drawing.Dock = DockStyle.Fill;
 
-			this.vToolBar = new VToolBar(drawing);
-			this.vToolBar.Dock = DockStyle.Left;
-			this.VToolBarAdd(Widgets.Command.Get("ToolSelect"));
-			this.VToolBarAdd(Widgets.Command.Get("ToolGlobal"));
-			this.VToolBarAdd(null);
-			this.VToolBarAdd(Widgets.Command.Get("ObjectHLine"));
-			this.VToolBarAdd(Widgets.Command.Get("ObjectStatic"));
+			this.drawingScrollable = new Scrollable(drawing);
+			this.drawingScrollable.MinWidth = 100;
+			this.drawingScrollable.MinHeight = 100;
+			this.drawingScrollable.Margins = new Margins(1, 1, 1, 1);
+			this.drawingScrollable.Dock = DockStyle.Fill;
+			this.drawingScrollable.HorizontalScrollerMode = ScrollableScrollerMode.ShowAlways;
+			this.drawingScrollable.VerticalScrollerMode = ScrollableScrollerMode.ShowAlways;
+			this.drawingScrollable.Panel.IsAutoFitting = true;
+			this.drawingScrollable.PaintForegroundFrame = true;
 
-			FrameBox container = new FrameBox(drawing);
+			FrameBox container = new FrameBox(this.drawingScrollable.Panel);
 			container.MinWidth = 100;
 			container.Dock = DockStyle.Fill;
 
@@ -298,14 +300,6 @@ namespace Epsitec.Common.Designer.Viewers
 			base.PaintHandler(graphics, repaint, paintFilter);
 		}
 
-
-		public override void DoTool(string name)
-		{
-			//	Choix de l'outil.
-			base.DoTool(name);
-			this.formEditor.AdaptAfterToolChanged();
-			this.RegenerateProxies();
-		}
 
 		public override void DoCommand(string name)
 		{
@@ -714,30 +708,6 @@ namespace Epsitec.Common.Designer.Viewers
 		}
 
 
-		protected Widget VToolBarAdd(Command command)
-		{
-			//	Ajoute une icône dans la toolbar verticale.
-			if (command == null)
-			{
-				//	N'utilise pas un IconSeparator, afin d'éviter les confusions
-				//	avec les objets HSeparator et VSeparator !
-				Widget sep = new Widget();
-				sep.PreferredWidth = 20;
-				sep.PreferredHeight = 20;
-				this.vToolBar.Items.Add(sep);
-				return sep;
-			}
-			else
-			{
-				IconButton button = new IconButton(command);
-				button.PreferredWidth = 20;
-				this.vToolBar.Items.Add(button);
-				ToolTip.Default.SetToolTip(button, Misc.GetTextWithShortcut(command));
-				return button;
-			}
-		}
-
-
 		public override void UpdateViewer(Viewers.Changing oper)
 		{
 			//	Met à jour le statut du visualisateur en cours, en fonction de la sélection.
@@ -1134,7 +1104,7 @@ namespace Epsitec.Common.Designer.Viewers
 		protected FormEditor.ProxyManager		proxyManager;
 		protected VSplitter						splitter2;
 		protected Widget						middle;
-		protected VToolBar						vToolBar;
+		protected Scrollable					drawingScrollable;
 		protected FrameBox						panelContainerParent;
 		protected UI.Panel						panelContainer;
 		protected Druid							entityId;
