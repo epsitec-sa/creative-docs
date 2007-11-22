@@ -372,7 +372,7 @@ namespace Epsitec.Common.Designer.FormEditor
 			}
 			else
 			{
-				builder.Append(Misc.Image("TreeSpace"));
+				builder.Append(Misc.Image("TreeMark"));
 			}
 
 			string name = this.formEditor.Module.AccessFields.GetFieldNames(item.DruidsPath);
