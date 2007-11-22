@@ -36,6 +36,8 @@ namespace Epsitec.Common.Support.EntityEngine
 
 			this.propertyGetters = new Dictionary<string, PropertyGetter> ();
 			this.propertySetters = new Dictionary<string, PropertySetter> ();
+
+			this.dataGeneration = 1;
 		}
 
 		/// <summary>
@@ -46,6 +48,18 @@ namespace Epsitec.Common.Support.EntityEngine
 			EntityResolver.Setup ();
 		}
 
+
+		/// <summary>
+		/// Gets the active data generation.
+		/// </summary>
+		/// <value>The active data generation.</value>
+		public long DataGeneration
+		{
+			get
+			{
+				return this.dataGeneration;
+			}
+		}
 
 		/// <summary>
 		/// Gets the current, thread specific, entity context.
@@ -86,6 +100,16 @@ namespace Epsitec.Common.Support.EntityEngine
 		public static void Pop()
 		{
 			EntityContext.current = EntityContext.contextStack.Pop ();
+		}
+
+
+		/// <summary>
+		/// Starts a new data generation. This increments the <see cref="DataGeneration"/>
+		/// property.
+		/// </summary>
+		public void NewDataGeneration()
+		{
+			System.Threading.Interlocked.Increment (ref this.dataGeneration);
 		}
 
 		public IValueStore CreateValueStore(AbstractEntity entity)
@@ -522,5 +546,7 @@ namespace Epsitec.Common.Support.EntityEngine
 		private readonly EntityLoopHandlingMode loopHandlingMode;
 		private readonly Dictionary<string, PropertyGetter> propertyGetters;
 		private readonly Dictionary<string, PropertySetter> propertySetters;
+
+		private long dataGeneration;
 	}
 }

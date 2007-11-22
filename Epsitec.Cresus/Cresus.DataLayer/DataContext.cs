@@ -61,6 +61,16 @@ namespace Epsitec.Cresus.DataLayer
 			return this.entityDataMapping.Count;
 		}
 
+		public void SerializeChanges()
+		{
+			foreach (AbstractEntity entity in this.GetManagedEntities ())
+			{
+				this.SerializeEntity (entity);
+			}
+
+			this.entityContext.NewDataGeneration ();
+		}
+
 		public void SaveChanges()
 		{
 			using (DbTransaction transaction = this.infrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadWrite))
@@ -68,6 +78,33 @@ namespace Epsitec.Cresus.DataLayer
 				this.richCommand.SaveTables (transaction, this.SaveTablesFilterImplementation, this.SaveTablesRowIdAssignmentCallbackImplementation);
 				transaction.Commit ();
 			}
+		}
+
+		public IEnumerable<AbstractEntity> GetManagedEntities()
+		{
+			foreach (EntityDataMapping mapping in this.entityDataMapping.Values)
+			{
+				yield return mapping.Entity;
+			}
+		}
+		
+		public IEnumerable<AbstractEntity> GetManagedEntities(System.Predicate<AbstractEntity> predicate)
+		{
+			foreach (EntityDataMapping mapping in this.entityDataMapping.Values)
+			{
+				if (predicate (mapping.Entity))
+				{
+					yield return mapping.Entity;
+				}
+			}
+		}
+
+		public IEnumerable<AbstractEntity> GetModifiedEntities()
+		{
+			long generation = this.entityContext.DataGeneration;
+
+			return this.GetManagedEntities (entity => entity.GetEntityDataGeneration () >= generation);
+				
 		}
 
 		/// <summary>
@@ -401,7 +438,7 @@ namespace Epsitec.Cresus.DataLayer
 			
 			EntityDataMapping sourceMapping = this.GetEntityDataMapping (sourceEntity);
 			EntityDataMapping targetMapping = this.GetEntityDataMapping (targetEntity);
-			
+
 			string relationTableName = this.GetRelationTableName (entityId, fieldDef);
 
 			System.Data.DataRow[] relationRows = Collection.ToArray (DbRichCommand.FilterExistingRows (this.richCommand.FindRelationRows (relationTableName, sourceMapping.RowKey.Id)));
@@ -459,6 +496,13 @@ namespace Epsitec.Cresus.DataLayer
 				AbstractEntity targetEntity  = collection[i] as AbstractEntity;
 				EntityDataMapping targetMapping = this.GetEntityDataMapping (targetEntity);
 
+				System.Diagnostics.Debug.Assert (targetMapping != null);
+
+				if (targetMapping.RowKey.IsEmpty)
+				{
+					this.SerializeEntity (targetEntity);
+				}
+				
 				long targetRowId = targetMapping.RowKey.Id.Value;
 
 				System.Diagnostics.Debug.Assert (targetEntity != null);

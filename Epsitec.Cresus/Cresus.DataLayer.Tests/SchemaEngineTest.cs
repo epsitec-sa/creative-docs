@@ -405,14 +405,21 @@ namespace Epsitec.Cresus.DataLayer
 
 			Demo.Demo5juin.Entities.RabaisSurArticleEntity rabais = context.EntityContext.CreateEntity<Demo.Demo5juin.Entities.RabaisSurArticleEntity> ();
 
+			Assert.AreEqual (0, Collection.Count (context.GetModifiedEntities ()));
+
 			rabais.CodeRaison = 76;
 			rabais.Pourcent = 0.6M;
 
+			Assert.AreEqual (1, Collection.Count (context.GetModifiedEntities ()));
+
 			list.Insert (1, rabais);
 
-			context.SerializeEntity (rabais);
-			context.SerializeEntity (position);
+			Assert.AreEqual (2, Collection.Count (context.GetModifiedEntities ()));
+
+			context.SerializeChanges ();
 			context.SaveChanges ();
+
+			Assert.AreEqual (0, Collection.Count (context.GetModifiedEntities ()));
 
 			context.Dispose ();
 		}

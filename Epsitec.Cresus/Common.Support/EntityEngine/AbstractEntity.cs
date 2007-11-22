@@ -90,6 +90,15 @@ namespace Epsitec.Common.Support.EntityEngine
 		}
 
 		/// <summary>
+		/// Gets the entity data generation.
+		/// </summary>
+		/// <returns>The entity data generation.</returns>
+		public long GetEntityDataGeneration()
+		{
+			return this.dataGeneration;
+		}
+
+		/// <summary>
 		/// Determines whether the entity contains the specified data version.
 		/// </summary>
 		/// <param name="version">The version.</param>
@@ -392,6 +401,7 @@ namespace Epsitec.Common.Support.EntityEngine
 				//	is valid and it will clear the field.
 
 				this.InternalSetValue (id, UndefinedValue.Value);
+				this.UpdateDataGeneration ();
 			}
 			else
 			{
@@ -413,6 +423,7 @@ namespace Epsitec.Common.Support.EntityEngine
 					}
 
 					this.InternalSetValue (id, value);
+					this.UpdateDataGeneration ();
 				}
 				else
 				{
@@ -555,6 +566,18 @@ namespace Epsitec.Common.Support.EntityEngine
 			}
 		}
 
+		/// <summary>
+		/// Updates the data generation for this entity to match the one of the
+		/// associated context.
+		/// </summary>
+		internal void UpdateDataGeneration()
+		{
+			if (this.defineOriginalValuesCount == 0)
+			{
+				this.dataGeneration = this.context.DataGeneration;
+			}
+		}
+
 		#region DefineOriginalValuesHelper Class
 
 		/// <summary>
@@ -599,6 +622,7 @@ namespace Epsitec.Common.Support.EntityEngine
 
 		private readonly EntityContext context;
 		private readonly long entitySerialId;
+		private long dataGeneration;
 		private IValueStore originalValues;
 		private IValueStore modifiedValues;
 		private int defineOriginalValuesCount;

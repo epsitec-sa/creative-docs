@@ -69,6 +69,16 @@ namespace Epsitec.Common.Support.EntityEngine
 			}
 		}
 
+		/// <summary>
+		/// Called when the collection is changing.
+		/// </summary>
+		protected override void OnCollectionChanging()
+		{
+			base.OnCollectionChanging ();
+
+			this.container.UpdateDataGeneration ();
+		}
+
 		#region IEntityCollection Members
 
 		/// <summary>
