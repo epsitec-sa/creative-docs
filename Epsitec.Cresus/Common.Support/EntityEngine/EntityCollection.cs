@@ -15,7 +15,7 @@ namespace Epsitec.Common.Support.EntityEngine
 	/// of data for collection fields in a parent entity.
 	/// </summary>
 	/// <typeparam name="T">The type of the list items.</typeparam>
-	public sealed class EntityCollection<T> : ObservableList<T>, IEntityCollection, INotifyCollectionChangedProvider where T : AbstractEntity
+	public sealed class EntityCollection<T> : ObservableList<object>, IList<T>, System.Collections.IList, IEntityCollection, INotifyCollectionChangedProvider where T : AbstractEntity
 	{
 		/// <summary>
 		/// Initializes a new instance of the <see cref="EntityCollection&lt;T&gt;"/> class.
@@ -36,7 +36,7 @@ namespace Epsitec.Common.Support.EntityEngine
 		/// the list instead of the list itself.
 		/// </summary>
 		/// <returns>The list to use.</returns>
-		protected override ObservableList<T> GetWorkingList()
+		protected override ObservableList<object> GetWorkingList()
 		{
 			if (this.container.IsDefiningOriginalValues)
 			{
@@ -79,6 +79,245 @@ namespace Epsitec.Common.Support.EntityEngine
 			this.container.UpdateDataGeneration ();
 		}
 
+		#region IList<T> Members
+
+		int IList<T>.IndexOf(T item)
+		{
+			return this.IndexOf (item);
+		}
+
+		void IList<T>.Insert(int index, T item)
+		{
+			this.Insert (index, item);
+		}
+
+		void IList<T>.RemoveAt(int index)
+		{
+			this.RemoveAt (index);
+		}
+
+		T IList<T>.this[int index]
+		{
+			get
+			{
+				return this.Promote (index, this[index]);
+			}
+			set
+			{
+				this[index] = value;
+			}
+		}
+
+		#endregion
+
+		private T Promote(int index, object item)
+		{
+			T promotedItem = item as T;
+
+			if (promotedItem != null)
+			{
+				return promotedItem;
+			}
+
+			IEntityProxy proxy = item as IEntityProxy;
+
+			if (proxy != null)
+			{
+				promotedItem = proxy.PromoteToRealInstance () as T;
+
+				if (promotedItem != null)
+				{
+					this.PatchItem (index, promotedItem);
+
+					return promotedItem;
+				}
+			}
+
+			throw new System.NotImplementedException ();
+		}
+
+		#region ICollection<T> Members
+
+		void ICollection<T>.Add(T item)
+		{
+			this.Add (item);
+		}
+
+		void ICollection<T>.Clear()
+		{
+			this.Clear ();
+		}
+
+		bool ICollection<T>.Contains(T item)
+		{
+			return this.Contains (item);
+		}
+
+		void ICollection<T>.CopyTo(T[] array, int arrayIndex)
+		{
+			object[] items = this.ToArray ();
+
+			for (int i = 0; i < items.Length; i++)
+			{
+				array[arrayIndex+i] = this.Promote (i, items[i]);
+			}
+		}
+
+		int ICollection<T>.Count
+		{
+			get
+			{
+				return this.Count;
+			}
+		}
+
+		bool ICollection<T>.IsReadOnly
+		{
+			get
+			{
+				return this.IsReadOnly;
+			}
+		}
+
+		bool ICollection<T>.Remove(T item)
+		{
+			return this.Remove (item);
+		}
+
+		#endregion
+
+		#region IEnumerable<T> Members
+
+		IEnumerator<T> IEnumerable<T>.GetEnumerator()
+		{
+			int index = 0;
+			foreach (T item in this)
+			{
+				yield return this.Promote (index++, item);
+			}
+		}
+
+		#endregion
+
+		#region IList Members
+
+		int System.Collections.IList.Add(object value)
+		{
+			this.Add (value);
+			return this.Count-1;
+		}
+
+		void System.Collections.IList.Clear()
+		{
+			this.Clear ();
+		}
+
+		bool System.Collections.IList.Contains(object value)
+		{
+			return this.Contains (value);
+		}
+
+		int System.Collections.IList.IndexOf(object value)
+		{
+			return this.IndexOf (value);
+		}
+
+		void System.Collections.IList.Insert(int index, object value)
+		{
+			this.Insert (index, value);
+		}
+
+		bool System.Collections.IList.IsFixedSize
+		{
+			get
+			{
+				return this.IsReadOnly;
+			}
+		}
+
+		bool System.Collections.IList.IsReadOnly
+		{
+			get
+			{
+				return this.IsReadOnly;
+			}
+		}
+
+		void System.Collections.IList.Remove(object value)
+		{
+			this.Remove (value);
+		}
+
+		void System.Collections.IList.RemoveAt(int index)
+		{
+			this.RemoveAt (index);
+		}
+
+		object System.Collections.IList.this[int index]
+		{
+			get
+			{
+				return this.Promote (index, this[index]);
+			}
+			set
+			{
+				this[index] = value;
+			}
+		}
+
+		#endregion
+
+		#region ICollection Members
+
+		void System.Collections.ICollection.CopyTo(System.Array array, int arrayIndex)
+		{
+			object[] items = this.ToArray ();
+
+			for (int i = 0; i < items.Length; i++)
+			{
+				array.SetValue (this.Promote (i, items[i]), arrayIndex+i);
+			}
+		}
+
+		int System.Collections.ICollection.Count
+		{
+			get
+			{
+				return this.Count;
+			}
+		}
+
+		bool System.Collections.ICollection.IsSynchronized
+		{
+			get
+			{
+				return false;
+			}
+		}
+
+		object System.Collections.ICollection.SyncRoot
+		{
+			get
+			{
+				return this.SyncRoot;
+			}
+		}
+
+		#endregion
+
+		#region IEnumerable Members
+
+		System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+		{
+			int index = 0;
+			foreach (T item in this)
+			{
+				yield return this.Promote (index++, item);
+			}
+		}
+
+		#endregion
+
 		#region IEntityCollection Members
 
 		/// <summary>
@@ -117,6 +356,11 @@ namespace Epsitec.Common.Support.EntityEngine
 			}
 		}
 
+		System.Type IEntityCollection.GetItemType()
+		{
+			return typeof (T);
+		}
+		
 		#endregion
 
 		#region INotifyCollectionChangedProvider Members

@@ -432,6 +432,16 @@ namespace Epsitec.Common.Types.Collections
 
 		#endregion
 
+		/// <summary>
+		/// Silently replaces the item. This will not generate any event and
+		/// will not go through the <see cref="GetWorkingList"/> method either.
+		/// </summary>
+		/// <param name="index">The index.</param>
+		/// <param name="item">The item.</param>
+		protected void PatchItem(int index, T item)
+		{
+			this.list[index] = item;
+		}
 
 		protected virtual void NotifyBeforeSet(int index, T oldValue, T newValue)
 		{

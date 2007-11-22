@@ -291,6 +291,12 @@ namespace Epsitec.Common.Support.EntityEngine
 			}
 		}
 
+		System.Type IEntityCollection.GetItemType()
+		{
+			return typeof (T);
+		}
+
+
 		#endregion
 
 		#region INotifyCollectionChangedProvider Members

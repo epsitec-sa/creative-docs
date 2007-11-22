@@ -30,5 +30,12 @@ namespace Epsitec.Common.Support.EntityEngine
 		/// <param name="id">The value id.</param>
 		/// <returns>The real instance to be used.</returns>
 		object GetWriteEntityValue(IValueStore store, string id);
+
+
+		/// <summary>
+		/// Promotes the proxy to its real instance.
+		/// </summary>
+		/// <returns>The real instance.</returns>
+		object PromoteToRealInstance();
 	}
 }

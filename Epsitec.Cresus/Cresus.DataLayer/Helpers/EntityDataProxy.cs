@@ -37,13 +37,23 @@ namespace Epsitec.Cresus.DataLayer.Helpers
 			return this;
 		}
 
+		object IEntityProxy.PromoteToRealInstance()
+		{
+			return this.PromoteToRealInstance ();
+		}
+
 		#endregion
 
 		private object ResolveEntity(IValueStore store, string id)
 		{
-			object value = this.context.ResolveEntity (this.rowKey, this.entityId);
+			object value = this.PromoteToRealInstance ();
 			store.SetValue (id, value);
 			return value;
+		}
+
+		private object PromoteToRealInstance()
+		{
+			return this.context.ResolveEntity (this.rowKey, this.entityId, EntityResolutionMode.Load);
 		}
 
 		readonly DataContext context;

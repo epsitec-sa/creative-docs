@@ -232,13 +232,10 @@ namespace Epsitec.Cresus.DataLayer
 			entity1.SetField<AbstractEntity> ("[630B1]", prixAchat);
 			entity1.SetField<AbstractEntity> ("[6313]", prixVente);
 
-			context.SerializeEntity (entity1);
-			context.SerializeEntity (entity2);
-			context.SerializeEntity (prixVente);
-			context.SerializeEntity (prixAchat);
+			System.Diagnostics.Debug.WriteLine ("Serializing");
+			context.SerializeChanges ();
 
 			System.Diagnostics.Debug.WriteLine ("Saving");
-
 			context.SaveChanges ();
 
 			System.Diagnostics.Debug.WriteLine ("Done.");
@@ -273,23 +270,18 @@ namespace Epsitec.Cresus.DataLayer
 			rabais3Entity.SetField<decimal> ("[63082]", 5.0M);
 			rabais3Entity.SetField<int> ("[63092]", 2);
 
-			context.SerializeEntity (rabais1Entity);
-			context.SerializeEntity (rabais2Entity);
-			context.SerializeEntity (positionEntity);
-
+			context.SerializeChanges ();
 			context.SaveChanges ();
 
 			list.Add (rabais3Entity);
 
-			context.SerializeEntity (rabais3Entity);
-			context.SerializeEntity (positionEntity);
-
+			context.SerializeChanges ();
 			context.SaveChanges ();
 
 			list.RemoveAt (0);
 			list.Add (rabais2Entity);
-			
-			context.SerializeEntity (positionEntity);
+
+			context.SerializeChanges ();
 			context.SaveChanges ();
 
 			this.keyCheck16 = context.GetEntityDataMapping (positionEntity).RowKey;

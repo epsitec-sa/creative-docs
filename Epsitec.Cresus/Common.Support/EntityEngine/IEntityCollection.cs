@@ -39,5 +39,7 @@ namespace Epsitec.Common.Support.EntityEngine
 		{
 			get;
 		}
+
+		System.Type GetItemType();
 	}
 }

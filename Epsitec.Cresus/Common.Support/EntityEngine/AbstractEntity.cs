@@ -325,7 +325,7 @@ namespace Epsitec.Common.Support.EntityEngine
 
 				if (collection.HasCopyOnWriteState)
 				{
-					System.Type itemType = TypeRosetta.GetCollectionItemType (list.GetType ());
+					System.Type itemType = collection.GetItemType ();
 					System.Type genericType = typeof (EntityCollectionProxy<>);
 					System.Type collectionType = genericType.MakeGenericType (itemType);
 

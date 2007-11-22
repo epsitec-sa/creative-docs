@@ -1,7 +1,7 @@
 ﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
   <PropertyGroup>
     <ProjectType>Local</ProjectType>
-    <ProductVersion>8.0.50727</ProductVersion>
+    <ProductVersion>9.0.21022</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{BA604F89-53C1-4228-AC76-5D5E68205029}</ProjectGuid>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -129,6 +129,7 @@
     <Compile Include="DataContext.cs" />
     <Compile Include="DataTableBroker.cs" />
     <Compile Include="DataBrokerItem.cs" />
+    <Compile Include="EntityResolutionMode.cs" />
     <Compile Include="Helpers\EntityDataMapping.cs" />
     <Compile Include="Helpers\EntityDataProxy.cs" />
     <Compile Include="Helpers\SchemaEngineTableBuilder.cs" />

@@ -71,6 +71,16 @@ namespace Epsitec.Cresus.DataLayer.Helpers
 		}
 
 		/// <summary>
+		/// Gets or sets the serialization generation.
+		/// </summary>
+		/// <value>The serialization generation.</value>
+		public long SerialGeneration
+		{
+			get;
+			set;
+		}
+
+		/// <summary>
 		/// Gets or sets the row key for the associated entity.
 		/// </summary>
 		/// <exception cref="System.InvalidOperationException">Thrown when a row
