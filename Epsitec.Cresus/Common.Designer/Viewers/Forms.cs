@@ -378,16 +378,7 @@ namespace Epsitec.Common.Designer.Viewers
 				{
 					FormEditor.ObjectModifier.TableItem item = this.formEditor.ObjectModifier.TableContent[first+i];
 
-					string name = this.module.AccessFields.GetFieldNames(item.DruidsPath);
-					if (name == null)
-					{
-						FieldDescription field = this.formEditor.ObjectModifier.GetFormDescription(item);
-						if (field != null)
-						{
-							name = Misc.Bold(Misc.Italic(field.Description));
-						}
-					}
-
+					string name = this.formEditor.ObjectModifier.GetTableContentName(item);
 					Color color = item.Used ? Color.FromRgb(0,1,0) : Color.FromRgb(1,0,0);
 
 					this.fieldTable.SetLineString(0, first+i, "");

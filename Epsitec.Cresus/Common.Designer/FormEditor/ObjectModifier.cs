@@ -355,6 +355,40 @@ namespace Epsitec.Common.Designer.FormEditor
 
 
 		#region TableContent
+		public string GetTableContentName(TableItem item)
+		{
+			System.Text.StringBuilder builder = new System.Text.StringBuilder();
+
+			for (int i=0; i<item.Level; i++)
+			{
+				builder.Append(Misc.Image("TreeSpace"));
+			}
+
+			if (item.FieldType == FieldDescription.FieldType.BoxBegin)
+			{
+				builder.Append(Misc.Image("TreeBranch"));
+			}
+			else
+			{
+				builder.Append(Misc.Image("TreeSpace"));
+			}
+
+			string name = this.formEditor.Module.AccessFields.GetFieldNames(item.DruidsPath);
+			if (name == null)
+			{
+				FieldDescription field = this.formEditor.ObjectModifier.GetFormDescription(item);
+				if (field != null)
+				{
+					name = Misc.Bold(field.Description);
+				}
+			}
+
+			builder.Append(" ");
+			builder.Append(name);
+
+			return builder.ToString();
+		}
+
 		public void UpdateTableContent(Druid formDruid, List<string> entityDruidsPath)
 		{
 			//	Met à jour la liste qui reflète le contenu de la table des champs, visible en haut à droite.
@@ -381,8 +415,15 @@ namespace Epsitec.Common.Designer.FormEditor
 
 			//	Construit la liste des chemins de Druids, en commençant par ceux qui font
 			//	partie du masque de saisie.
+			int level = 0;
 			foreach (FieldDescription field in this.formEditor.Form.Fields)
 			{
+				if (field.Type == FieldDescription.FieldType.BoxEnd)
+				{
+					level--;
+					continue;
+				}
+
 				System.Guid guid = this.GetLocalGuid(field.GetPath(null));
 
 				if (guid == System.Guid.Empty)
@@ -401,10 +442,17 @@ namespace Epsitec.Common.Designer.FormEditor
 
 				TableItem item = new TableItem();
 				item.Guid = guid;
+				item.FieldType = field.Type;
 				item.DruidsPath = field.GetPath(null);
 				item.Used = true;
+				item.Level = level;
 
 				this.tableContent.Add(item);
+
+				if (field.Type == FieldDescription.FieldType.BoxBegin)
+				{
+					level++;
+				}
 			}
 
 			//	Complète ensuite par tous les autres.
@@ -414,6 +462,7 @@ namespace Epsitec.Common.Designer.FormEditor
 				{
 					TableItem item = new TableItem();
 					item.Guid = this.GetLocalGuid(druidPath);
+					item.FieldType = FieldDescription.FieldType.Field;
 					item.DruidsPath = druidPath;
 					item.Used = false;
 
@@ -469,9 +518,11 @@ namespace Epsitec.Common.Designer.FormEditor
 				}
 			}
 
-			public System.Guid		Guid;
-			public string			DruidsPath;
-			public bool				Used;
+			public System.Guid					Guid;
+			public FieldDescription.FieldType	FieldType;
+			public string						DruidsPath;
+			public bool							Used;
+			public int							Level;
 		}
 
 		protected System.Guid GetLocalGuid(string druidsPath)
