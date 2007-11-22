@@ -157,6 +157,56 @@ namespace Epsitec.Common.Designer.FormEditor
 		}
 
 
+		public FrameState GetContainerFrameState(Widget obj)
+		{
+			//	Retourne la couleur de fond d'un champ.
+			FieldDescription field = this.GetFormDescription(obj);
+			if (field == null)
+			{
+				return FrameState.None;
+			}
+			else
+			{
+				return field.ContainerFrameState;
+			}
+		}
+
+		public void SetContainerFrameState(Widget obj, FrameState state)
+		{
+			//	Choix de la couleur de fond d'un champ.
+			FieldDescription field = this.GetFormDescription(obj);
+			if (field != null)
+			{
+				field.ContainerFrameState = state;
+			}
+		}
+
+
+		public ContainerLayoutMode GetContainerLayoutMode(Widget obj)
+		{
+			//	Retourne la couleur de fond d'un champ.
+			FieldDescription field = this.GetFormDescription(obj);
+			if (field == null)
+			{
+				return ContainerLayoutMode.None;
+			}
+			else
+			{
+				return field.ContainerLayoutMode;
+			}
+		}
+
+		public void SetContainerLayoutMode(Widget obj, ContainerLayoutMode mode)
+		{
+			//	Choix de la couleur de fond d'un champ.
+			FieldDescription field = this.GetFormDescription(obj);
+			if (field != null)
+			{
+				field.ContainerLayoutMode = mode;
+			}
+		}
+
+
 		public Margins GetContainerMargins(Widget obj)
 		{
 			//	Retourne les marges de l'objet.
@@ -381,7 +431,15 @@ namespace Epsitec.Common.Designer.FormEditor
 				FieldDescription field = this.formEditor.ObjectModifier.GetFormDescription(item);
 				if (field != null)
 				{
-					name = Misc.Bold(field.Description);
+					if (field.Type == FieldDescription.FieldType.BoxBegin ||
+						field.Type == FieldDescription.FieldType.BoxEnd)
+					{
+						name = Misc.Bold(field.Description);
+					}
+					else
+					{
+						name = Misc.Italic(field.Description);
+					}
 				}
 			}
 

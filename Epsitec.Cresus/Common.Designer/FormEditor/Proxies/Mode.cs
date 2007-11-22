@@ -76,6 +76,30 @@ namespace Epsitec.Common.Designer.FormEditor.Proxies
 			}
 		}
 
+		public FrameState ContainerFrameState
+		{
+			get
+			{
+				return (FrameState) this.GetValue(Mode.ContainerFrameStateProperty);
+			}
+			set
+			{
+				this.SetValue(Mode.ContainerFrameStateProperty, value);
+			}
+		}
+
+		public ContainerLayoutMode ContainerLayoutMode
+		{
+			get
+			{
+				return (ContainerLayoutMode) this.GetValue(Mode.ContainerLayoutModeProperty);
+			}
+			set
+			{
+				this.SetValue(Mode.ContainerLayoutModeProperty, value);
+			}
+		}
+
 
 		protected override void InitializePropertyValues()
 		{
@@ -91,6 +115,12 @@ namespace Epsitec.Common.Designer.FormEditor.Proxies
 			{
 				this.BackColor = this.ObjectModifier.GetBackColor(this.DefaultWidget);
 			}
+
+			if (this.ObjectModifier.IsBox(this.DefaultWidget))
+			{
+				this.ContainerFrameState = this.ObjectModifier.GetContainerFrameState(this.DefaultWidget);
+				this.ContainerLayoutMode = this.ObjectModifier.GetContainerLayoutMode(this.DefaultWidget);
+			}
 		}
 
 		static Mode()
@@ -102,6 +132,14 @@ namespace Epsitec.Common.Designer.FormEditor.Proxies
 			EnumType backColorEnumType = Res.Types.FieldDescription.BackColorType;
 			Mode.BackColorProperty.DefaultMetadata.DefineNamedType(backColorEnumType);
 			Mode.BackColorProperty.DefaultMetadata.DefineCaptionId(Res.Captions.FieldMode.BackColorType.Id);
+
+			EnumType containerFrameStateEnumType = Res.Types.FieldDescription.FrameState;
+			Mode.ContainerFrameStateProperty.DefaultMetadata.DefineNamedType(containerFrameStateEnumType);
+			Mode.ContainerFrameStateProperty.DefaultMetadata.DefineCaptionId(Res.Captions.FieldMode.ContainerFrameState.Id);
+
+			EnumType containerLayoutModeEnumType = Res.Types.FieldDescription.ContainerLayoutMode;
+			Mode.ContainerLayoutModeProperty.DefaultMetadata.DefineNamedType(containerLayoutModeEnumType);
+			Mode.ContainerLayoutModeProperty.DefaultMetadata.DefineCaptionId(Res.Captions.FieldMode.ContainerLayoutMode.Id);
 		}
 
 
@@ -153,8 +191,58 @@ namespace Epsitec.Common.Designer.FormEditor.Proxies
 			}
 		}
 
+		private static void NotifyContainerFrameStateChanged(DependencyObject o, object oldValue, object newValue)
+		{
+			FrameState value = (FrameState) newValue;
+			Mode that = (Mode) o;
 
-		public static readonly DependencyProperty SeparatorProperty = DependencyProperty.Register("Separator", typeof(FieldDescription.SeparatorType), typeof(Mode), new DependencyPropertyMetadata(FieldDescription.SeparatorType.Normal, Mode.NotifySeparatorChanged));
-		public static readonly DependencyProperty BackColorProperty = DependencyProperty.Register("BackColor", typeof(FieldDescription.BackColorType), typeof(Mode), new DependencyPropertyMetadata(FieldDescription.BackColorType.None, Mode.NotifyBackColorChanged));
+			if (that.IsNotSuspended)
+			{
+				that.SuspendChanges();
+
+				try
+				{
+					foreach (Widget obj in that.Widgets)
+					{
+						that.ObjectModifier.SetContainerFrameState(obj, value);
+					}
+				}
+				finally
+				{
+					that.ResumeChanges();
+					that.RegenerateProxiesAndForm();
+				}
+			}
+		}
+
+		private static void NotifyContainerLayoutModeChanged(DependencyObject o, object oldValue, object newValue)
+		{
+			ContainerLayoutMode value = (ContainerLayoutMode) newValue;
+			Mode that = (Mode) o;
+
+			if (that.IsNotSuspended)
+			{
+				that.SuspendChanges();
+
+				try
+				{
+					foreach (Widget obj in that.Widgets)
+					{
+						that.ObjectModifier.SetContainerLayoutMode(obj, value);
+					}
+				}
+				finally
+				{
+					that.ResumeChanges();
+					that.RegenerateProxiesAndForm();
+				}
+			}
+		}
+
+
+		public static readonly DependencyProperty SeparatorProperty           = DependencyProperty.Register("Separator",           typeof(FieldDescription.SeparatorType), typeof(Mode), new DependencyPropertyMetadata(FieldDescription.SeparatorType.Normal, Mode.NotifySeparatorChanged));
+		public static readonly DependencyProperty BackColorProperty           = DependencyProperty.Register("BackColor",           typeof(FieldDescription.BackColorType), typeof(Mode), new DependencyPropertyMetadata(FieldDescription.BackColorType.None,   Mode.NotifyBackColorChanged));
+		public static readonly DependencyProperty ContainerFrameStateProperty = DependencyProperty.Register("ContainerFrameState", typeof(FrameState),                     typeof(Mode), new DependencyPropertyMetadata(FrameState.None,                       Mode.NotifyContainerFrameStateChanged));
+		public static readonly DependencyProperty ContainerLayoutModeProperty = DependencyProperty.Register("ContainerLayoutMode", typeof(ContainerLayoutMode),            typeof(Mode), new DependencyPropertyMetadata(ContainerLayoutMode.None,              Mode.NotifyContainerLayoutModeChanged));
 	}
 }

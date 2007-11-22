@@ -15,14 +15,16 @@ namespace Epsitec.Common.Widgets
 	using FlatChildrenCollection=Collections.FlatChildrenCollection;
 	using ContentAlignment=Drawing.ContentAlignment;
 	
-	[System.Flags] public enum FrameState : uint
+	[System.Flags]
+	[DesignerVisible]
+	public enum FrameState : uint
 	{
-		None	= 0,
-		Left	= 0x00000001,
-		Right	= 0x00000002,
-		Top		= 0x00000004,
-		Bottom	= 0x00000008,
-		All		= 0x0000000F,
+		[Hidden]	None	= 0,
+					Left	= 0x00000001,
+					Right	= 0x00000002,
+					Top		= 0x00000004,
+					Bottom	= 0x00000008,
+		[Hidden]	All		= 0x0000000F,
 	}
 
 	/// <summary>
