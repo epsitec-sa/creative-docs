@@ -27,8 +27,9 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		public static MouseCursor FromImage(Drawing.Image image, int xhot, int yhot)
+		public static MouseCursor FromImage(Drawing.Image cursorImage, int xhot, int yhot)
 		{
+			Drawing.Image         image      = Drawing.Bitmap.CopyImage (cursorImage);
 			System.Drawing.Bitmap bitmap     = image.BitmapImage.NativeBitmap;
 			System.IntPtr         org_handle = bitmap == null ? System.IntPtr.Zero : bitmap.GetHicon ();
 			Win32Api.IconInfo     icon_info  = new Win32Api.IconInfo ();
@@ -52,8 +53,11 @@ namespace Epsitec.Common.Widgets
 			
 			System.IntPtr               new_handle = Win32Api.CreateIconIndirect (ref icon_info);
 			System.Windows.Forms.Cursor win_cursor = new System.Windows.Forms.Cursor (new_handle);
-			
+
+			Win32Api.DeleteObject (icon_info.BitmapColor);
+			Win32Api.DeleteObject (icon_info.BitmapMask);
 			Win32Api.DestroyIcon (org_handle);
+			image.Dispose ();
 			
 			return new MouseCursor (win_cursor, new_handle);
 		}
@@ -115,7 +119,11 @@ namespace Epsitec.Common.Widgets
 		{
 			if (disposing)
 			{
-				this.cursor = null;
+				if (this.cursor != null)
+				{
+					this.cursor.Dispose ();
+					this.cursor = null;
+				}
 			}
 			
 			if (this.handle != System.IntPtr.Zero)
