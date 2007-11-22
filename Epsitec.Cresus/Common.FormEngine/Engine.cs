@@ -37,11 +37,11 @@ namespace Epsitec.Common.FormEngine
 			
 			try
 			{
-				entityData = entityContext.CreateEntity (form.EntityId);
+				entityData = entityContext.CreateEntity(form.EntityId);
 			}
 			finally
 			{
-				EntityContext.Pop ();
+				EntityContext.Pop();
 			}
 
 			//	Crée le panneau racine, le seul à définir DataSource. Les autres panneaux
@@ -110,7 +110,7 @@ namespace Epsitec.Common.FormEngine
 
 			//	Crée les différentes colonnes, en fonction des résultats de la première passe.
 			Widgets.Layouts.GridLayoutEngine grid = new Widgets.Layouts.GridLayoutEngine();
-			int lastLabelId = -1;
+			int lastLabelId = int.MinValue;
 			for (int i=0; i<Engine.MaxColumnsRequired; i++)
 			{
 				if (lastLabelId != labelsId[i])
@@ -312,7 +312,7 @@ namespace Epsitec.Common.FormEngine
 			//	Conversion d'un numéro de colonne virtuelle (0..9) en un index pour une colonne physique.
 			//	Les colonnes physiques peuvent être moins nombreuses que les virtuelles.
 			int index = column;
-			int last = -1;
+			int last = int.MinValue;
 			for (int i=0; i<=column; i++)
 			{
 				if (last == labelsId[i])
