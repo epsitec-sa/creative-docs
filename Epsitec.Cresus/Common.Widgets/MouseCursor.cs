@@ -1,5 +1,5 @@
 //	Copyright © 2003-2007, EPSITEC SA, CH-1092 BELMONT, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 namespace Epsitec.Common.Widgets
 {
@@ -62,8 +62,9 @@ namespace Epsitec.Common.Widgets
 			return new MouseCursor (win_cursor, new_handle);
 		}
 		
-		public static MouseCursor FromImage(Drawing.Image image)
+		public static MouseCursor FromImage(Drawing.Image cursorImage)
 		{
+			Drawing.Image         image      = Drawing.Bitmap.CopyImage (cursorImage);
 			System.Drawing.Bitmap bitmap     = image.BitmapImage.NativeBitmap;
 			System.IntPtr         org_handle = bitmap == null ? System.IntPtr.Zero : bitmap.GetHicon ();
 			Win32Api.IconInfo     icon_info  = new Win32Api.IconInfo ();
@@ -90,8 +91,11 @@ namespace Epsitec.Common.Widgets
 			
 			System.IntPtr               new_handle = Win32Api.CreateIconIndirect (ref icon_info);
 			System.Windows.Forms.Cursor win_cursor = new System.Windows.Forms.Cursor (new_handle);
-			
+
+			Win32Api.DeleteObject (icon_info.BitmapColor);
+			Win32Api.DeleteObject (icon_info.BitmapMask);
 			Win32Api.DestroyIcon (org_handle);
+			image.Dispose ();
 			
 			return new MouseCursor (win_cursor, new_handle);
 		}
