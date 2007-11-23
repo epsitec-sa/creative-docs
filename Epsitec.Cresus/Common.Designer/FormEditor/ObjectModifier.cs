@@ -390,8 +390,6 @@ namespace Epsitec.Common.Designer.FormEditor
 		public Rectangle GetActualBounds(Widget obj)
 		{
 			//	Retourne la position et les dimensions actuelles de l'objet.
-			//	Le rectangle rendu est toujours valide, quel que soit le mode d'attachement.
-			obj.Window.ForceLayout();
 			Rectangle bounds = obj.Client.Bounds;
 
 			while (obj != null && obj != this.formEditor.Panel)
@@ -478,14 +476,6 @@ namespace Epsitec.Common.Designer.FormEditor
 			int level = 0;
 			foreach (FieldDescription field in this.formEditor.Form.Fields)
 			{
-#if false
-				if (field.Type == FieldDescription.FieldType.BoxEnd)
-				{
-					level--;
-					continue;
-				}
-#endif
-
 				System.Guid guid = this.GetLocalGuid(field.GetPath(null));
 
 				if (guid == System.Guid.Empty)

@@ -315,77 +315,25 @@ namespace Epsitec.Common.Designer.FormEditor
 		void ProcessMouseDown(Point pos, bool isRightButton, bool isControlPressed, bool isShiftPressed)
 		{
 			//	La souris a été pressée.
-			if (this.context.Tool == "ToolSelect")
-			{
-				this.SelectDown(pos, isRightButton, isControlPressed, isShiftPressed);
-			}
-
-			if (this.context.Tool == "ToolGlobal")
-			{
-				this.GlobalDown(pos, isRightButton, isControlPressed, isShiftPressed);
-			}
-
-			if (this.context.Tool.StartsWith("Object"))
-			{
-				this.CreateObjectDown(pos, isRightButton, isControlPressed, isShiftPressed);
-			}
+			this.SelectDown(pos, isRightButton, isControlPressed, isShiftPressed);
 		}
 
 		void ProcessMouseMove(Point pos, bool isRightButton, bool isControlPressed, bool isShiftPressed)
 		{
 			//	La souris a été déplacée.
-			if (this.context.Tool == "ToolSelect")
-			{
-				this.SelectMove(pos, isRightButton, isControlPressed, isShiftPressed);
-			}
-
-			if (this.context.Tool == "ToolGlobal")
-			{
-				this.GlobalMove(pos, isRightButton, isControlPressed, isShiftPressed);
-			}
-
-			if (this.context.Tool.StartsWith("Object"))
-			{
-				this.CreateObjectMove(pos, isRightButton, isControlPressed, isShiftPressed);
-			}
+			this.SelectMove(pos, isRightButton, isControlPressed, isShiftPressed);
 		}
 
 		void ProcessMouseUp(Point pos, bool isRightButton, bool isControlPressed, bool isShiftPressed)
 		{
 			//	La souris a été relâchée.
-			if (this.context.Tool == "ToolSelect")
-			{
-				this.SelectUp(pos, isRightButton, isControlPressed, isShiftPressed);
-			}
-
-			if (this.context.Tool == "ToolGlobal")
-			{
-				this.GlobalUp(pos, isRightButton, isControlPressed, isShiftPressed);
-			}
-
-			if (this.context.Tool.StartsWith("Object"))
-			{
-				this.CreateObjectUp(pos, isRightButton, isControlPressed, isShiftPressed);
-			}
+			this.SelectUp(pos, isRightButton, isControlPressed, isShiftPressed);
 		}
 
 		void ProcessKeyChanged(bool isControlPressed, bool isShiftPressed)
 		{
 			//	La souris a été relâchée.
-			if (this.context.Tool == "ToolSelect")
-			{
-				this.SelectKeyChanged(isControlPressed, isShiftPressed);
-			}
-
-			if (this.context.Tool == "ToolGlobal")
-			{
-				this.GlobalKeyChanged(isControlPressed, isShiftPressed);
-			}
-
-			if (this.context.Tool.StartsWith("Object"))
-			{
-				this.CreateObjectKeyChanged(isControlPressed, isShiftPressed);
-			}
+			this.SelectKeyChanged(isControlPressed, isShiftPressed);
 		}
 		#endregion
 
@@ -447,60 +395,6 @@ namespace Epsitec.Common.Designer.FormEditor
 			{
 				this.ChangeMouseCursor(MouseCursorType.Arrow);
 			}
-		}
-		#endregion
-
-		#region ProcessMouse global
-		protected void GlobalDown(Point pos, bool isRightButton, bool isControlPressed, bool isShiftPressed)
-		{
-			//	Sélection rectangulaire, souris pressée.
-		}
-
-		protected void GlobalMove(Point pos, bool isRightButton, bool isControlPressed, bool isShiftPressed)
-		{
-			//	Sélection rectangulaire, souris déplacée.
-		}
-
-		protected void GlobalUp(Point pos, bool isRightButton, bool isControlPressed, bool isShiftPressed)
-		{
-			//	Sélection rectangulaire, souris relâchée.
-		}
-
-		protected void GlobalKeyChanged(bool isControlPressed, bool isShiftPressed)
-		{
-			//	Sélection rectangulaire, touche pressée ou relâchée.
-			if (isControlPressed)
-			{
-				this.ChangeMouseCursor(MouseCursorType.ArrowPlus);
-			}
-			else
-			{
-				this.ChangeMouseCursor(MouseCursorType.Global);
-			}
-		}
-		#endregion
-
-
-		#region ProcessMouse create object
-		protected void CreateObjectDown(Point pos, bool isRightButton, bool isControlPressed, bool isShiftPressed)
-		{
-			//	Dessin d'un objet, souris pressée.
-		}
-
-		protected void CreateObjectMove(Point pos, bool isRightButton, bool isControlPressed, bool isShiftPressed)
-		{
-			//	Dessin d'un objet, souris déplacée.
-			this.ChangeMouseCursor(MouseCursorType.Pen);
-		}
-
-		protected void CreateObjectUp(Point pos, bool isRightButton, bool isControlPressed, bool isShiftPressed)
-		{
-			//	Dessin d'un objet, souris relâchée.
-		}
-
-		protected void CreateObjectKeyChanged(bool isControlPressed, bool isShiftPressed)
-		{
-			//	Dessin d'un objet, touche pressée ou relâchée.
 		}
 		#endregion
 
