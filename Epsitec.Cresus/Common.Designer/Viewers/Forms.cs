@@ -420,8 +420,11 @@ namespace Epsitec.Common.Designer.Viewers
 			if (!this.designerApplication.IsReadonly)
 			{
 				List<int> sels = this.fieldTable.SelectedRows;
+
 				if (sels != null && sels.Count > 0)
 				{
+					sels.Sort();
+
 					isPrev = true;
 					isNext = true;
 					isGoto = (sels.Count == 1);
