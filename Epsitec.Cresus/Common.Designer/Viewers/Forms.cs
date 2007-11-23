@@ -663,6 +663,7 @@ namespace Epsitec.Common.Designer.Viewers
 		public override void Update()
 		{
 			//	Met à jour le contenu du Viewer.
+			this.formEditor.DeselectAll();
 			this.UpdateArray();
 			this.UpdateEdit();
 			this.UpdateFieldTable(true);

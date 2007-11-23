@@ -272,7 +272,6 @@ namespace Epsitec.Common.Designer.FormEditor
 			switch (message.MessageType)
 			{
 				case MessageType.MouseDown:
-					this.SetDirty();
 					this.ProcessMouseDown(pos, message.IsRightButton, message.IsControlPressed, message.IsShiftPressed);
 					message.Captured = true;
 					message.Consumer = this;
