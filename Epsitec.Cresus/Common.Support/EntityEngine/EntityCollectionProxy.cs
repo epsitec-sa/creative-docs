@@ -291,6 +291,10 @@ namespace Epsitec.Common.Support.EntityEngine
 			}
 		}
 
+		/// <summary>
+		/// Gets the type of the items stored in this collection.
+		/// </summary>
+		/// <returns>The type of the items.</returns>
 		System.Type IEntityCollection.GetItemType()
 		{
 			return typeof (T);

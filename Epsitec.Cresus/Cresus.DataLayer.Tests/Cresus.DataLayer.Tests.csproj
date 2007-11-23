@@ -26,6 +26,7 @@
     <UpgradeBackupLocation>
     </UpgradeBackupLocation>
     <OldToolsVersion>2.0</OldToolsVersion>
+    <SignAssembly>true</SignAssembly>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <OutputPath>bin\Debug\</OutputPath>
@@ -189,6 +190,7 @@
     <Compile Include="AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="DataBrowserTest.cs" />
     <Compile Include="DataContextTest.cs" />
     <Compile Include="Demo5juinEntities.cs" />
     <Compile Include="EntityCodeGeneratorTest.cs" />
@@ -200,6 +202,11 @@
     </Compile>
     <Compile Include="Res.cs" />
     <Compile Include="TestSupport\Database.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\Epsitec.Cresus.snk">
+      <Link>Epsitec.Cresus.snk</Link>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

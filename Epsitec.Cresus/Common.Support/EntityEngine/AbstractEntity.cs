@@ -8,6 +8,9 @@ using Epsitec.Common.Types.Collections;
 
 using System.Collections.Generic;
 
+[assembly: System.Runtime.CompilerServices.InternalsVisibleTo ("Cresus.DataLayer, PublicKey=0024000004800000940000000602000000240000525341310004000001000100731b11e8029bd06117e1fa6ed5f082f9e0438371533e7762442dabe724cb1d3bdbd6bde3245916cc626d730439a0e6781fd473d0ee82ef66c16d4481ca9e2ed6a048f47485f77e3477b4607cdc93741fec09f155f1915504b4340cb471679e81fec4936f8672cccf480be2b82f919231a2db8d377c4e6076a2443cee634d7cc1")]
+[assembly: System.Runtime.CompilerServices.InternalsVisibleTo ("Common.Support.Tests, PublicKey=0024000004800000940000000602000000240000525341310004000001000100731b11e8029bd06117e1fa6ed5f082f9e0438371533e7762442dabe724cb1d3bdbd6bde3245916cc626d730439a0e6781fd473d0ee82ef66c16d4481ca9e2ed6a048f47485f77e3477b4607cdc93741fec09f155f1915504b4340cb471679e81fec4936f8672cccf480be2b82f919231a2db8d377c4e6076a2443cee634d7cc1")]
+
 namespace Epsitec.Common.Support.EntityEngine
 {
 	/// <summary>
@@ -229,7 +232,7 @@ namespace Epsitec.Common.Support.EntityEngine
 			return func (entity);
 		}
 		
-		public object InternalGetValue(string id)
+		internal object InternalGetValue(string id)
 		{
 			object value;
 
@@ -256,7 +259,7 @@ namespace Epsitec.Common.Support.EntityEngine
 			return value;
 		}
 		
-		public void InternalSetValue(string id, object value)
+		internal void InternalSetValue(string id, object value)
 		{
 			if (this.IsDefiningOriginalValues)
 			{
@@ -278,7 +281,7 @@ namespace Epsitec.Common.Support.EntityEngine
 			}
 		}
 
-		public System.Collections.IList InternalGetFieldCollection(string id)
+		internal System.Collections.IList InternalGetFieldCollection(string id)
 		{
 			object value = this.InternalGetValue (id);
 			System.Collections.IList list = value as System.Collections.IList;
@@ -382,12 +385,12 @@ namespace Epsitec.Common.Support.EntityEngine
 			}
 		}
 
-		protected object GenericGetValue(string id)
+		private object GenericGetValue(string id)
 		{
 			return this.InternalGetValue (id);
 		}
 
-		protected void GenericSetValue(string id, object oldValue, object newValue)
+		private void GenericSetValue(string id, object oldValue, object newValue)
 		{
 			StructuredTypeField field = this.context.GetStructuredType (this).GetField (id);
 

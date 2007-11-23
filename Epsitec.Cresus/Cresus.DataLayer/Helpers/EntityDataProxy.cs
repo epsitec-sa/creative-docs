@@ -18,6 +18,12 @@ namespace Epsitec.Cresus.DataLayer.Helpers
 	/// </summary>
 	public class EntityDataProxy : IEntityProxy
 	{
+		/// <summary>
+		/// Initializes a new instance of the <see cref="EntityDataProxy"/> class.
+		/// </summary>
+		/// <param name="context">The context.</param>
+		/// <param name="rowKey">The row key.</param>
+		/// <param name="entityId">The entity id.</param>
 		public EntityDataProxy(DataContext context, DbKey rowKey, Druid entityId)
 		{
 			this.context = context;
@@ -27,16 +33,32 @@ namespace Epsitec.Cresus.DataLayer.Helpers
 
 		#region IEntityProxy Members
 
+		/// <summary>
+		/// Gets the real instance to be used when reading on this proxy.
+		/// </summary>
+		/// <param name="store">The value store.</param>
+		/// <param name="id">The value id.</param>
+		/// <returns>The real instance to be used.</returns>
 		object IEntityProxy.GetReadEntityValue(IValueStore store, string id)
 		{
 			return this.ResolveEntity (store, id);
 		}
 
+		/// <summary>
+		/// Gets the real instance to be used when writing on this proxy.
+		/// </summary>
+		/// <param name="store">The value store.</param>
+		/// <param name="id">The value id.</param>
+		/// <returns>The real instance to be used.</returns>
 		object IEntityProxy.GetWriteEntityValue(IValueStore store, string id)
 		{
 			return this;
 		}
 
+		/// <summary>
+		/// Promotes the proxy to its real instance.
+		/// </summary>
+		/// <returns>The real instance.</returns>
 		object IEntityProxy.PromoteToRealInstance()
 		{
 			return this.PromoteToRealInstance ();
@@ -44,6 +66,13 @@ namespace Epsitec.Cresus.DataLayer.Helpers
 
 		#endregion
 
+		/// <summary>
+		/// Resolves the entity by promoting it and the storing it back into
+		/// the value store.
+		/// </summary>
+		/// <param name="store">The store.</param>
+		/// <param name="id">The id.</param>
+		/// <returns>The real instance.</returns>
 		private object ResolveEntity(IValueStore store, string id)
 		{
 			object value = this.PromoteToRealInstance ();
@@ -51,6 +80,10 @@ namespace Epsitec.Cresus.DataLayer.Helpers
 			return value;
 		}
 
+		/// <summary>
+		/// Promotes the proxy to its real instance.
+		/// </summary>
+		/// <returns>The real instance.</returns>
 		private object PromoteToRealInstance()
 		{
 			return this.context.InternalResolveEntity (this.rowKey, this.entityId, EntityResolutionMode.Load);
