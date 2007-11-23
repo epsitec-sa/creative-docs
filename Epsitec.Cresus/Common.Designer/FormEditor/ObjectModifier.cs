@@ -401,6 +401,25 @@ namespace Epsitec.Common.Designer.FormEditor
 			return bounds;
 		}
 
+		public Rectangle InflateMinimalSize(Rectangle rect)
+		{
+			//	Retourne le rectangle aggrandi pour avoir au moins la taille minimale.
+			double ix = 0;
+			if (rect.Width < this.formEditor.Context.MinimalSize)
+			{
+				ix = this.formEditor.Context.MinimalSize;
+			}
+
+			double iy = 0;
+			if (rect.Height < this.formEditor.Context.MinimalSize)
+			{
+				iy = this.formEditor.Context.MinimalSize;
+			}
+
+			rect.Inflate(ix, iy);
+			return rect;
+		}
+
 
 		#region TableContent
 		public string GetTableContentDescription(TableItem item)

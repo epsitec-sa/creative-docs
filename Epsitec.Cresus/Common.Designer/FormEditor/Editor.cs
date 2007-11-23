@@ -446,6 +446,7 @@ namespace Epsitec.Common.Designer.FormEditor
 				}
 
 				Rectangle rect = widget.ActualBounds;
+				rect = this.objectModifier.InflateMinimalSize(rect);
 				if (rect.Contains(pos))
 				{
 					Widget deep = this.Detect(widget.MapParentToClient(pos), widget);
@@ -782,20 +783,7 @@ namespace Epsitec.Common.Designer.FormEditor
 
 			//	Si le rectangle est trop petit (par exemple objet Separator), il est engraissé.
 			Rectangle rect = this.objectModifier.GetActualBounds(obj);
-
-			double ix = 0;
-			if (rect.Width < this.context.MinimalSize)
-			{
-				ix = this.context.MinimalSize;
-			}
-
-			double iy = 0;
-			if (rect.Height < this.context.MinimalSize)
-			{
-				iy = this.context.MinimalSize;
-			}
-
-			rect.Inflate(ix, iy);
+			rect = this.objectModifier.InflateMinimalSize(rect);
 
 			graphics.AddFilledRectangle(rect);
 			graphics.RenderSolid(color);
