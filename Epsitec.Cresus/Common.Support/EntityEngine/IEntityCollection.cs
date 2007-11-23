@@ -40,6 +40,10 @@ namespace Epsitec.Common.Support.EntityEngine
 			get;
 		}
 
+		/// <summary>
+		/// Gets the type of the items stored in this collection.
+		/// </summary>
+		/// <returns>The type of the items.</returns>
 		System.Type GetItemType();
 	}
 }

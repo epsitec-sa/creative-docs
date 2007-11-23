@@ -59,18 +59,69 @@ namespace Epsitec.Cresus.DataLayer
 			}
 		}
 
-		public void SerializeChanges()
+		public bool CreateSchema<T>() where T : AbstractEntity, new ()
 		{
-			foreach (AbstractEntity entity in this.GetManagedEntities ())
+			T entity = new T ();
+			Druid entityId = entity.GetEntityStructuredTypeId ();
+
+			DbTable tableDef = this.schemaEngine.FindTableDefinition (entityId);
+
+			if (tableDef == null)
+			{
+				using (DbTransaction transaction = this.infrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadWrite))
+				{
+					this.schemaEngine.CreateTableDefinition (entityId);
+					transaction.Commit ();
+				}
+
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}
+
+		public T CreateEntity<T>() where T : AbstractEntity, new ()
+		{
+			return this.entityContext.CreateEntity<T> ();
+		}
+
+		public AbstractEntity ResolveEntity(DbKey rowKey, Druid entityId)
+		{
+			return this.InternalResolveEntity (rowKey, entityId, EntityResolutionMode.Load) as AbstractEntity;
+		}
+
+		public T ResolveEntity<T>(DbKey rowKey) where T : AbstractEntity, new ()
+		{
+			T     entity   = new T ();
+			Druid entityId = entity.GetEntityStructuredTypeId ();
+
+			return this.ResolveEntity (rowKey, entityId) as T;
+		}
+
+		public bool SerializeChanges()
+		{
+			bool containsChanges = false;
+
+			foreach (AbstractEntity entity in this.GetModifiedEntities ())
 			{
 				this.SerializeEntity (entity);
+				containsChanges = true;
 			}
-			
-			this.entityContext.NewDataGeneration ();
+
+			if (containsChanges)
+			{
+				this.entityContext.NewDataGeneration ();
+			}
+
+			return containsChanges;
 		}
 
 		public void SaveChanges()
 		{
+			this.SerializeChanges ();
+
 			using (DbTransaction transaction = this.infrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadWrite))
 			{
 				this.richCommand.SaveTables (transaction, this.SaveTablesFilterImplementation, this.SaveTablesRowIdAssignmentCallbackImplementation);
@@ -85,7 +136,7 @@ namespace Epsitec.Cresus.DataLayer
 				yield return this.entities[i];
 			}
 		}
-		
+
 		public IEnumerable<AbstractEntity> GetManagedEntities(System.Predicate<AbstractEntity> predicate)
 		{
 			for (int i = 0; i < this.entities.Count; i++)
@@ -104,7 +155,7 @@ namespace Epsitec.Cresus.DataLayer
 			long generation = this.entityContext.DataGeneration;
 
 			return this.GetManagedEntities (entity => entity.GetEntityDataGeneration () >= generation);
-				
+
 		}
 
 		/// <summary>
@@ -190,7 +241,7 @@ namespace Epsitec.Cresus.DataLayer
 			{
 				mapping.SerialGeneration = this.entityContext.DataGeneration;
 			}
-			
+
 			Druid entityId = entity.GetEntityStructuredTypeId ();
 			Druid id = entityId;
 			DbKey rowKey = mapping.RowKey;
@@ -206,7 +257,7 @@ namespace Epsitec.Cresus.DataLayer
 			{
 				createRow = false;
 			}
-			
+
 
 			while (id.IsValid)
 			{
@@ -220,20 +271,20 @@ namespace Epsitec.Cresus.DataLayer
 				//	or use and update an existing row.
 
 				System.Data.DataRow dataRow = createRow ? this.CreateDataRow (mapping, id) : this.FindDataRow (mapping.RowKey, id);
-				
+
 				dataRow.BeginEdit ();
 
 				//	If this is the root entity in the entity hierarchy (it has no base
 				//	type), then we will have to save the instance type identifying the
 				//	entity.
-				
+
 				if (baseTypeId.IsEmpty)
 				{
 					dataRow[Tags.ColumnInstanceType] = this.GetInstanceTypeValue (entityId);
 				}
 
 				this.SerializeEntityLocal (entity, dataRow, id);
-				
+
 				dataRow.EndEdit ();
 
 				id = baseTypeId;
@@ -258,10 +309,10 @@ namespace Epsitec.Cresus.DataLayer
 				{
 					continue;
 				}
-				
+
 				//	Depending on the relation (and therefore cardinality), write
 				//	the data into the row :
-				
+
 				switch (fieldDef.Relation)
 				{
 					case FieldRelation.None:
@@ -279,12 +330,8 @@ namespace Epsitec.Cresus.DataLayer
 			}
 		}
 
-		public AbstractEntity ResolveEntity(DbKey rowKey, Druid entityId)
-		{
-			return this.ResolveEntity (rowKey, entityId, EntityResolutionMode.Load) as AbstractEntity;
-		}
 
-		internal object ResolveEntity(DbKey rowKey, Druid entityId, EntityResolutionMode mode)
+		internal object InternalResolveEntity(DbKey rowKey, Druid entityId, EntityResolutionMode mode)
 		{
 			Druid baseEntityId = this.entityContext.GetBaseEntityId (entityId);
 
@@ -312,42 +359,8 @@ namespace Epsitec.Cresus.DataLayer
 			}
 		}
 
-		public T DeserializeEntity<T>(DbKey rowKey) where T : AbstractEntity, new ()
-		{
-			T entity = new T ();
-			return this.DeserializeEntity (rowKey, entity.GetEntityStructuredTypeId ()) as T;
-		}
 
-
-		public T CreateEntity<T>() where T : AbstractEntity, new ()
-		{
-			return this.entityContext.CreateEntity<T> ();
-		}
-
-		public bool CreateSchema<T>() where T : AbstractEntity, new ()
-		{
-			T entity = new T ();
-			Druid entityId = entity.GetEntityStructuredTypeId ();
-
-			DbTable tableDef = this.schemaEngine.FindTableDefinition (entityId);
-
-			if (tableDef == null)
-			{
-				using (DbTransaction transaction = this.infrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadWrite))
-				{
-					this.schemaEngine.CreateTableDefinition (entityId);
-					transaction.Commit ();
-				}
-
-				return true;
-			}
-			else
-			{
-				return false;
-			}
-		}
-		
-		public AbstractEntity DeserializeEntity(DbKey rowKey, Druid entityId)
+		internal AbstractEntity DeserializeEntity(DbKey rowKey, Druid entityId)
 		{
 			Druid baseEntityId = this.entityContext.GetBaseEntityId (entityId);
 
@@ -360,7 +373,7 @@ namespace Epsitec.Cresus.DataLayer
 			{
 				this.DeserializeEntity (entity, realEntityId, rowKey);
 			}
-			
+
 			return entity;
 		}
 
@@ -384,9 +397,9 @@ namespace Epsitec.Cresus.DataLayer
 				System.Diagnostics.Debug.Assert (entityType.CaptionId == id);
 
 				System.Data.DataRow dataRow = this.LoadDataRow (mapping.RowKey, id);
-				
+
 				this.DeserializeEntityLocal (entity, dataRow, id);
-				
+
 				id = baseTypeId;
 			}
 		}
@@ -501,7 +514,7 @@ namespace Epsitec.Cresus.DataLayer
 		private void WriteFieldReference(AbstractEntity sourceEntity, Druid entityId, StructuredTypeField fieldDef)
 		{
 			AbstractEntity targetEntity = sourceEntity.InternalGetValue (fieldDef.Id) as AbstractEntity;
-			
+
 			EntityDataMapping sourceMapping = this.GetEntityDataMapping (sourceEntity);
 			EntityDataMapping targetMapping = this.GetEntityDataMapping (targetEntity);
 
@@ -512,7 +525,7 @@ namespace Epsitec.Cresus.DataLayer
 			if (targetEntity != null)
 			{
 				System.Diagnostics.Debug.Assert (targetMapping != null);
-				
+
 				if (targetMapping.RowKey.IsEmpty)
 				{
 					this.SerializeEntity (targetEntity);
@@ -551,7 +564,7 @@ namespace Epsitec.Cresus.DataLayer
 			System.Diagnostics.Debug.Assert (collection != null);
 
 			EntityDataMapping sourceMapping = this.GetEntityDataMapping (sourceEntity);
-			
+
 			string relationTableName = this.GetRelationTableName (entityId, fieldDef);
 
 			List<System.Data.DataRow> relationRows = Collection.ToList (DbRichCommand.FilterExistingRows (this.richCommand.FindRelationRows (relationTableName, sourceMapping.RowKey.Id)));
@@ -568,7 +581,7 @@ namespace Epsitec.Cresus.DataLayer
 				{
 					this.SerializeEntity (targetEntity);
 				}
-				
+
 				long targetRowId = targetMapping.RowKey.Id.Value;
 
 				System.Diagnostics.Debug.Assert (targetEntity != null);
@@ -599,7 +612,7 @@ namespace Epsitec.Cresus.DataLayer
 				rank++;
 
 				int rowRank = (int) row[Tags.ColumnRefRank];
-				
+
 				if ((rowRank < rank) ||
 					(rowRank > rank+1000))
 				{
@@ -717,7 +730,7 @@ namespace Epsitec.Cresus.DataLayer
 				foreach (System.Data.DataRow relationRow in Collection.Enumerate (this.richCommand.FindRelationRows (tableName, sourceMapping.RowKey.Id), comparer))
 				{
 					long relationTargetId = (long) relationRow[Tags.ColumnRefTargetId];
-					object targetEntity = this.ResolveEntity (new DbKey (new DbId (relationTargetId)), fieldDef.TypeId, EntityResolutionMode.DelayLoad);
+					object targetEntity = this.InternalResolveEntity (new DbKey (new DbId (relationTargetId)), fieldDef.TypeId, EntityResolutionMode.DelayLoad);
 					yield return targetEntity;
 					found = true;
 				}
@@ -741,7 +754,7 @@ namespace Epsitec.Cresus.DataLayer
 		{
 			System.Diagnostics.Debug.Assert (entityId.IsValid);
 			System.Diagnostics.Debug.Assert (rowKey.IsEmpty == false);
-			
+
 			string tableName = this.GetDataTableName (entityId);
 			return this.richCommand.FindRow (tableName, rowKey.Id);
 		}
@@ -770,7 +783,7 @@ namespace Epsitec.Cresus.DataLayer
 
 			return row;
 		}
-		
+
 		private void LoadRelationRows(Druid entityId, string tableName, DbKey sourceRowKey)
 		{
 			DbTable relationTableDef = this.richCommand.Tables[tableName];
@@ -793,7 +806,7 @@ namespace Epsitec.Cresus.DataLayer
 			}
 		}
 
-		
+
 
 
 		/// <summary>
@@ -814,7 +827,7 @@ namespace Epsitec.Cresus.DataLayer
 			TemporaryRowCollection temporaryRows;
 			temporaryRows = this.GetTemporaryRows (mapping.BaseEntityId);
 			temporaryRows.AssociateRow (this.richCommand, mapping, row);
-			
+
 			return row;
 		}
 
@@ -867,7 +880,7 @@ namespace Epsitec.Cresus.DataLayer
 			return nakedName;
 		}
 
-		public EntityDataMapping GetEntityDataMapping(AbstractEntity entity)
+		internal EntityDataMapping GetEntityDataMapping(AbstractEntity entity)
 		{
 			if (entity == null)
 			{

@@ -10,16 +10,17 @@ using Epsitec.Cresus.DataLayer;
 
 namespace Epsitec.Cresus.DataLayer.TestSupport
 {
+	/// <summary>
+	/// The <c>Database</c> class provides database access support for the
+	/// test classes, avoiding to have to manage instances of <see cref="DbInfrastructure"/>
+	/// in the setup and tear down code of the tests.
+	/// </summary>
 	static class Database
 	{
-		public static DbInfrastructure Infrastructure
-		{
-			get
-			{
-				return Database.infrastructure;
-			}
-		}
-
+		/// <summary>
+		/// Dumps the data set to the console.
+		/// </summary>
+		/// <param name="dataSet">The data set.</param>
 		public static void DumpDataSet(System.Data.DataSet dataSet)
 		{
 			foreach (System.Data.DataTable table in dataSet.Tables)
@@ -48,7 +49,11 @@ namespace Epsitec.Cresus.DataLayer.TestSupport
 				System.Console.Out.WriteLine ();
 			}
 		}
-		
+
+		/// <summary>
+		/// Returns a clean database infrastructure instance.
+		/// </summary>
+		/// <returns>The infrastructure.</returns>
 		public static DbInfrastructure NewInfrastructure()
 		{
 			if (Database.infrastructure != null)

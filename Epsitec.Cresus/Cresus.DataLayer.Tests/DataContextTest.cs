@@ -233,7 +233,8 @@ namespace Epsitec.Cresus.DataLayer
 			entity1.SetField<AbstractEntity> ("[6313]", prixVente);
 
 			System.Diagnostics.Debug.WriteLine ("Serializing");
-			context.SerializeChanges ();
+			Assert.IsTrue (context.SerializeChanges ());
+			Assert.IsFalse (context.SerializeChanges ());
 
 			System.Diagnostics.Debug.WriteLine ("Saving");
 			context.SaveChanges ();
@@ -309,7 +310,7 @@ namespace Epsitec.Cresus.DataLayer
 		{
 			DataContext context = new DataContext (this.infrastructure);
 
-			Demo.Demo5juin.Entities.PositionEntity position = context.DeserializeEntity<Demo.Demo5juin.Entities.PositionEntity> (this.keyCheck16);
+			Demo.Demo5juin.Entities.PositionEntity position = context.ResolveEntity<Demo.Demo5juin.Entities.PositionEntity> (this.keyCheck16);
 
 			IList<Demo.Demo5juin.Entities.RabaisSurArticleEntity> list = position.Rabais;
 

@@ -53,7 +53,7 @@ namespace Epsitec.Cresus.DataLayer.Helpers
 
 		private object PromoteToRealInstance()
 		{
-			return this.context.ResolveEntity (this.rowKey, this.entityId, EntityResolutionMode.Load);
+			return this.context.InternalResolveEntity (this.rowKey, this.entityId, EntityResolutionMode.Load);
 		}
 
 		readonly DataContext context;

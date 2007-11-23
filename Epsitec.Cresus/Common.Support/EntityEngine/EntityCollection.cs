@@ -110,25 +110,40 @@ namespace Epsitec.Common.Support.EntityEngine
 
 		#endregion
 
+		/// <summary>
+		/// Promotes the item at the specified index to a real entity, if it is
+		/// currently defined using an <see cref="IEntityProxy"/> instance.
+		/// </summary>
+		/// <param name="index">The index.</param>
+		/// <param name="item">The item.</param>
+		/// <returns>The promoted entity.</returns>
 		private T Promote(int index, object item)
 		{
-			T promotedItem = item as T;
-
-			if (promotedItem != null)
-			{
-				return promotedItem;
-			}
-
 			IEntityProxy proxy = item as IEntityProxy;
 
 			if (proxy != null)
 			{
-				promotedItem = proxy.PromoteToRealInstance () as T;
+				//	If the item is defined using a proxy, ask the proxy to promote
+				//	it to the real entity instance :
+
+				T promotedItem = proxy.PromoteToRealInstance () as T;
 
 				if (promotedItem != null)
 				{
 					this.PatchItem (index, promotedItem);
+					return promotedItem;
+				}
+			}
+			else
+			{
+				//	Hopefully, the item is compatible with the collection type.
+				//	This should always be the case, since we have ruled out the
+				//	only other possibility, which is the entity proxy.
 
+				T promotedItem = item as T;
+
+				if (promotedItem != null)
+				{
 					return promotedItem;
 				}
 			}
@@ -356,6 +371,10 @@ namespace Epsitec.Common.Support.EntityEngine
 			}
 		}
 
+		/// <summary>
+		/// Gets the type of the items stored in this collection.
+		/// </summary>
+		/// <returns>The type of the items.</returns>
 		System.Type IEntityCollection.GetItemType()
 		{
 			return typeof (T);

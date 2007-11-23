@@ -189,7 +189,7 @@
     <Compile Include="AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="DataContextText.cs" />
+    <Compile Include="DataContextTest.cs" />
     <Compile Include="Demo5juinEntities.cs" />
     <Compile Include="EntityCodeGeneratorTest.cs" />
     <Compile Include="Helpers.EntityDataMapping.cs" />
