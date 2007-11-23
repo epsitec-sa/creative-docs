@@ -58,6 +58,7 @@ namespace Epsitec.Cresus.DataLayer.Helpers
 		/// Updates the associated row keys. This will update the entity mapping
 		/// for this entry and all row IDs.
 		/// </summary>
+		/// <param name="command">The command.</param>
 		/// <param name="oldKey">The old key.</param>
 		/// <param name="newKey">The new key.</param>
 		public void UpdateAssociatedRowKeys(DbRichCommand command, DbKey oldKey, DbKey newKey)
