@@ -832,6 +832,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.ReflectSelectionToEditor();
 
 			this.UpdateButtons();
+			this.module.AccessForms.SetLocalDirty();
 		}
 
 		protected void SelectedFieldsLine()
@@ -855,6 +856,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.ReflectSelectionToEditor();
 
 			this.UpdateButtons();
+			this.module.AccessForms.SetLocalDirty();
 		}
 
 		protected void SelectedFieldsTitle()
@@ -878,6 +880,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.ReflectSelectionToEditor();
 
 			this.UpdateButtons();
+			this.module.AccessForms.SetLocalDirty();
 		}
 
 		protected void SelectedFieldsBox()
@@ -922,6 +925,7 @@ namespace Epsitec.Common.Designer.Viewers
 								this.ReflectSelectionToEditor();
 
 								this.UpdateButtons();
+								this.module.AccessForms.SetLocalDirty();
 							}
 						}
 					}
@@ -965,6 +969,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.ReflectSelectionToEditor();
 
 			this.UpdateButtons();
+			this.module.AccessForms.SetLocalDirty();
 		}
 
 		protected void SelectedFieldsMove(int direction)
@@ -993,6 +998,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.UpdateFieldTable(false);
 			this.ReflectSelectionToList();
 			this.UpdateButtons();
+			this.module.AccessForms.SetLocalDirty();
 		}
 
 
@@ -1016,6 +1022,7 @@ namespace Epsitec.Common.Designer.Viewers
 			//	Met à jour les proxies et l'interface utilisateur (panneaux), sans changer
 			//	le nombre de propriétés visibles par panneau.
 			this.proxyManager.UpdateUserInterface();
+			this.module.AccessForms.SetLocalDirty();
 		}
 
 		public void RegenerateProxies()
@@ -1028,6 +1035,7 @@ namespace Epsitec.Common.Designer.Viewers
 				this.ClearProxies();
 				this.proxyManager.CreateUserInterface(this.propertiesScrollable.Panel);
 			}
+			this.module.AccessForms.SetLocalDirty();
 		}
 
 		public void RegenerateProxiesAndForm()
@@ -1040,6 +1048,7 @@ namespace Epsitec.Common.Designer.Viewers
 			}
 
 			this.formEditor.RegenerateForm();
+			this.module.AccessForms.SetLocalDirty();
 		}
 		#endregion
 
