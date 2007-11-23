@@ -23,7 +23,7 @@ namespace Epsitec.Cresus.DataLayer
 		{
 			this.infrastructure = infrastructure;
 			this.richCommand = new DbRichCommand (this.infrastructure);
-			this.schemaEngine = new SchemaEngine (this.infrastructure);
+			this.schemaEngine = SchemaEngine.GetSchemaEngine (this.infrastructure) ?? new SchemaEngine (this.infrastructure);
 			this.entityContext = EntityContext.Current;
 			this.entityDataMapping = new Dictionary<long, EntityDataMapping> ();
 			this.entities = new List<AbstractEntity> ();

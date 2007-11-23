@@ -15,5 +15,13 @@ namespace Epsitec.Cresus.DataLayer
 {
 	public class DataBrowser
 	{
+		public DataBrowser(DbInfrastructure infrastructure)
+		{
+			this.infrastructure = infrastructure;
+			this.schemaEngine = SchemaEngine.GetSchemaEngine (this.infrastructure) ?? new SchemaEngine (this.infrastructure);
+		}
+
+		readonly DbInfrastructure infrastructure;
+		readonly SchemaEngine schemaEngine;
 	}
 }

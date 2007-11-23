@@ -16,7 +16,7 @@ namespace Epsitec.Cresus.DataLayer
 	/// The <c>SchemaEngine</c> class manages the mapping between entities and
 	/// database table definitions.
 	/// </summary>
-	public class SchemaEngine
+	public sealed class SchemaEngine : DependencyObject
 	{
 		/// <summary>
 		/// Initializes a new instance of the <see cref="SchemaEngine"/> class.
@@ -24,12 +24,16 @@ namespace Epsitec.Cresus.DataLayer
 		/// <param name="infrastructure">The database engine.</param>
 		public SchemaEngine(DbInfrastructure infrastructure)
 		{
+			System.Diagnostics.Debug.Assert (SchemaEngine.GetSchemaEngine (infrastructure) == null);
+
 			this.infrastructure  = infrastructure;
 			this.context         = this.infrastructure.DefaultContext;
 			this.resourceManager = this.context.ResourceManager;
 
 			this.tableDefinitionCache = new Dictionary<Druid, DbTable> ();
 			this.typeDefinitionCache  = new Dictionary<Druid, DbTypeDef> ();
+
+			SchemaEngine.SetSchemaEngine (infrastructure, this);
 		}
 
 
@@ -164,6 +168,26 @@ namespace Epsitec.Cresus.DataLayer
 		}
 
 		#endregion
+
+
+		public static void SetSchemaEngine(DependencyObject obj, SchemaEngine value)
+		{
+			if (value == null)
+			{
+				obj.ClearValue (SchemaEngine.SchemaEngineProperty);
+			}
+			else
+			{
+				obj.SetValue (SchemaEngine.SchemaEngineProperty, value);
+			}
+		}
+
+		public static SchemaEngine GetSchemaEngine(DependencyObject obj)
+		{
+			return obj.GetValue (SchemaEngine.SchemaEngineProperty) as SchemaEngine;
+		}
+
+		public static readonly DependencyProperty SchemaEngineProperty = DependencyProperty.RegisterAttached ("SchemaEngine", typeof (SchemaEngine), typeof (SchemaEngine));
 
 		readonly DbInfrastructure infrastructure;
 		readonly DbContext context;

@@ -12,7 +12,7 @@ namespace Epsitec.Cresus.Database
 	/// The <c>DbInfrastructure</c> class provides support for the database
 	/// infrastructure needed by CRESUS (internal tables, metadata, etc.)
 	/// </summary>
-	public sealed class DbInfrastructure : System.IDisposable
+	public sealed class DbInfrastructure : DependencyObject, System.IDisposable
 	{
 		public DbInfrastructure()
 		{
