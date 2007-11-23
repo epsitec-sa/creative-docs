@@ -279,11 +279,15 @@ namespace Epsitec.Common.Designer.FormEditor
 			DoubleType locationNumericType = new DoubleType(-9999, 9999, 1.0M);
 			locationNumericType.DefinePreferredRange(new DecimalRange(0, 1000, 2));
 			ProxyManager.LocationNumericType = locationNumericType;
-			
+
 			DoubleType sizeNumericType = new DoubleType(0, 9999, 1.0M);
 			sizeNumericType.DefinePreferredRange(new DecimalRange(0, 1000, 1));
 			ProxyManager.SizeNumericType = sizeNumericType;
-			
+
+			DoubleType widthNumericType = new DoubleType(1, 5, 1.0M);
+			widthNumericType.DefinePreferredRange(new DecimalRange(1, 5, 1));
+			ProxyManager.WidthNumericType = widthNumericType;
+
 			DoubleType marginNumericType = new DoubleType(-1, 9999, 1.0M);
 			marginNumericType.DefinePreferredRange(new DecimalRange(0, 200, 1));
 			ProxyManager.MarginNumericType = marginNumericType;
@@ -397,6 +401,7 @@ namespace Epsitec.Common.Designer.FormEditor
 		public static readonly INamedType	StructuredType;
 		public static readonly INumericType LocationNumericType;
 		public static readonly INumericType SizeNumericType;
+		public static readonly INumericType WidthNumericType;
 		public static readonly INumericType MarginNumericType;
 		public static readonly INumericType ColumnsRequiredNumericType;
 		public static readonly INumericType RowsRequiredNumericType;

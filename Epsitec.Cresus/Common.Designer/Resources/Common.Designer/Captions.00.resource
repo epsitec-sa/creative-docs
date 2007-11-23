@@ -161,4 +161,5 @@
   <data name="Typ.FieldDescription.ContainerLayoutMode" id="241">&lt;s:type id="_1" s:name="*aT" /&gt;&lt;s:type id="_2" s:name="*eT" /&gt;&lt;s:data id="_0" f:Name="FieldDescription.ContainerLayoutMode" f:_1.SystemType="E:Epsitec.Common.Widgets.ContainerLayoutMode, Common.Widgets" f:_2.EnumValues="{Collection {Text '0 [30251]'}, {Text '1 [30261]'}}" f:_1.DefaultController="Enum" f:_1.DefaultControllerParameter="Icons" f:Labels="{Collection {Text 'Contenu'}}" /&gt;</data>
   <data name="Cap.FieldMode.ContainerFrameState" id="271">&lt;s:data id="_0" f:Name="FieldMode.ContainerFrameState" f:Description="Cadre dans les quatre bords" f:Labels="{Collection {Text 'Cadre'}}" /&gt;</data>
   <data name="Cap.FieldMode.ContainerLayoutMode" id="281">&lt;s:data id="_0" f:Name="FieldMode.ContainerLayoutMode" f:Description="Disposition du contenu" f:Labels="{Collection {Text 'Contenu'}}" /&gt;</data>
+  <data name="Cap.FieldMode.ContainerFrameWidth" id="291">&lt;s:data id="_0" f:Name="FieldMode.ContainerFrameWidth" f:Description="Epaisseur du cadre" f:Labels="{Collection {Text 'Epaisseur'}}" /&gt;</data>
 </bundle>

@@ -182,6 +182,31 @@ namespace Epsitec.Common.Designer.FormEditor
 		}
 
 
+		public double GetContainerFrameWidth(Widget obj)
+		{
+			//	Retourne la couleur de fond d'un champ.
+			FieldDescription field = this.GetFormDescription(obj);
+			if (field == null)
+			{
+				return 0.0;
+			}
+			else
+			{
+				return (field.ContainerFrameWidth+1)/2;
+			}
+		}
+
+		public void SetContainerFrameWidth(Widget obj, double width)
+		{
+			//	Choix de la couleur de fond d'un champ.
+			FieldDescription field = this.GetFormDescription(obj);
+			if (field != null)
+			{
+				field.ContainerFrameWidth = 2*width-1;
+			}
+		}
+
+
 		public ContainerLayoutMode GetContainerLayoutMode(Widget obj)
 		{
 			//	Retourne la couleur de fond d'un champ.
