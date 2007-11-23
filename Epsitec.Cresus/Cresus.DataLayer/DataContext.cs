@@ -13,7 +13,7 @@ using System.Collections.Generic;
 
 namespace Epsitec.Cresus.DataLayer
 {
-	public sealed partial class DataContext : System.IDisposable
+	public sealed class DataContext : System.IDisposable
 	{
 		public DataContext(DbInfrastructure infrastructure)
 		{
@@ -60,6 +60,53 @@ namespace Epsitec.Cresus.DataLayer
 		public int CountManagedEntities()
 		{
 			return this.entities.Count;
+		}
+
+		public void LoadEntitySchema(Druid entityId)
+		{
+			if (this.entityTableDefinitions.ContainsKey (entityId))
+			{
+				//	Nothing to do. The schema has already been loaded.
+			}
+			else
+			{
+				DbTable tableDef = this.schemaEngine.FindTableDefinition (entityId);
+
+				if (tableDef == null)
+				{
+					StructuredType type = this.entityContext.GetStructuredType (entityId) as StructuredType;
+
+					if (type == null)
+					{
+						throw new System.ArgumentException (string.Format ("No schema nor type information available for EntityId {0}", entityId));
+					}
+					else
+					{
+						throw new System.ArgumentException (string.Format ("No schema available for EntityId {0} ({1})", type.Caption.Name, entityId));
+					}
+				}
+
+				this.entityTableDefinitions[entityId] = tableDef;
+				this.LoadTableSchema (tableDef);
+			}
+		}
+
+		public void LoadTableSchema(DbTable tableDefinition)
+		{
+			if (this.richCommand.Tables.Contains (tableDefinition.Name))
+			{
+				//	Nothing to do, we already know this table.
+			}
+			else
+			{
+				using (DbTransaction transaction = this.infrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadOnly))
+				{
+					this.richCommand.ImportTable (transaction, tableDefinition, null);
+					this.LoadTableRelationSchemas (transaction, tableDefinition);
+
+					transaction.Commit ();
+				}
+			}
 		}
 
 		public void SerializeChanges()
@@ -172,7 +219,7 @@ namespace Epsitec.Cresus.DataLayer
 		/// update or create data rows in one or several data tables.
 		/// </summary>
 		/// <param name="entity">The entity.</param>
-		protected void SerializeEntity(AbstractEntity entity)
+		private void SerializeEntity(AbstractEntity entity)
 		{
 			EntityDataMapping mapping = this.GetEntityDataMapping (entity);
 
@@ -880,6 +927,30 @@ namespace Epsitec.Cresus.DataLayer
 			}
 		}
 
+		private void LoadTableRelationSchemas(Druid entityId)
+		{
+			DbTable tableDef = this.schemaEngine.FindTableDefinition (entityId);
+
+			using (DbTransaction transaction = this.infrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadOnly))
+			{
+				this.LoadTableRelationSchemas (transaction, tableDef);
+
+				transaction.Commit ();
+			}
+		}
+
+		private void LoadTableRelationSchemas(DbTransaction transaction, DbTable tableDefinition)
+		{
+			foreach (DbColumn columnDefinition in tableDefinition.Columns)
+			{
+				if (columnDefinition.Cardinality != DbCardinality.None)
+				{
+					string relationTableName = tableDefinition.GetRelationTableName (columnDefinition);
+					DbTable relationTableDef = this.infrastructure.ResolveDbTable (transaction, relationTableName);
+					this.richCommand.ImportTable (transaction, relationTableDef, null);
+				}
+			}
+		}
 
 		#region IDisposable Members
 

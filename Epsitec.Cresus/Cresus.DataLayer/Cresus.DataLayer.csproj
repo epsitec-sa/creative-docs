@@ -119,11 +119,11 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DataBrowser.cs" />
     <Compile Include="Retired sources\Adapter.cs" />
     <Compile Include="AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="DataContext.TableMapping.cs" />
     <Compile Include="Retired sources\DataBroker.cs" />
     <Compile Include="Retired sources\DataBrokerRecord.cs" />
     <Compile Include="DataContext.cs" />
