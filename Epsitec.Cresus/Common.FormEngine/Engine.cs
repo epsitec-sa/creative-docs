@@ -222,7 +222,14 @@ namespace Epsitec.Common.FormEngine
 
 			Engine.LabelIdUse(labelsId, labelId++, column, columnsRequired);
 
-			column += columnsRequired;
+			if (field.Separator == FieldDescription.SeparatorType.Append)
+			{
+				column += columnsRequired;
+			}
+			else
+			{
+				column = 0;
+			}
 		}
 
 		private void PreprocessField(FieldDescription field, List<int> labelsId, ref int labelId, ref int column)
