@@ -112,7 +112,7 @@ namespace Epsitec.Common.Support.EntityEngine
 			System.Threading.Interlocked.Increment (ref this.dataGeneration);
 		}
 
-		public IValueStore CreateValueStore(AbstractEntity entity)
+		internal IValueStore CreateValueStore(AbstractEntity entity)
 		{
 			Druid typeId = entity.GetEntityStructuredTypeId ();
 			IStructuredType type = this.GetStructuredType (typeId);
@@ -125,7 +125,7 @@ namespace Epsitec.Common.Support.EntityEngine
 			return new Data (type);
 		}
 
-		public IEnumerable<string> GetEntityFieldIds(AbstractEntity entity)
+		internal IEnumerable<string> GetEntityFieldIds(AbstractEntity entity)
 		{
 			if (entity == null)
 			{
@@ -142,7 +142,7 @@ namespace Epsitec.Common.Support.EntityEngine
 			return entityType.GetFieldIds ();
 		}
 
-		public IEnumerable<StructuredTypeField> GetEntityFieldDefinitions(Druid id)
+		internal IEnumerable<StructuredTypeField> GetEntityFieldDefinitions(Druid id)
 		{
 			IStructuredType entityType = this.GetStructuredType (id);
 
@@ -157,7 +157,7 @@ namespace Epsitec.Common.Support.EntityEngine
 			}
 		}
 
-		public IStructuredType GetStructuredType(Druid id)
+		internal IStructuredType GetStructuredType(Druid id)
 		{
 			this.EnsureCorrectThread ();
 
@@ -173,7 +173,7 @@ namespace Epsitec.Common.Support.EntityEngine
 			return type;
 		}
 
-		public IStructuredType GetStructuredType(AbstractEntity entity)
+		internal IStructuredType GetStructuredType(AbstractEntity entity)
 		{
 			this.EnsureCorrectThread ();
 
