@@ -1,5 +1,5 @@
 //	Copyright © 2006-2007, EPSITEC SA, CH-1092 BELMONT, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using System.Collections.Generic;
 
@@ -228,29 +228,47 @@ namespace Epsitec.Common.UI.Controllers
 
 			public override string GetSelectedName()
 			{
-				int rank = this.combo.SelectedValue;
-				IEnumValue value = this.enumType[rank];
-
-				if (value != null)
+				if (this.enumType.IsDefinedAsFlags)
 				{
-					return value.Name;
+					int flags = this.combo.SelectedValue;
+					IEnumerable<IEnumValue> values = EnumType.ConvertEnumValuesFromFlags (this.enumType, flags);
+					return EnumType.ConvertToString (values);
 				}
 				else
 				{
-					return null;
+					int rank = this.combo.SelectedValue;
+					IEnumValue value = this.enumType[rank];
+
+					if (value != null)
+					{
+						return value.Name;
+					}
+					else
+					{
+						return null;
+					}
 				}
 			}
 
 			public override void SetSelectedName(string name)
 			{
-				IEnumValue value = this.enumType[name];
-				if (value != null)
+				if (this.enumType.IsDefinedAsFlags)
 				{
-					this.combo.SelectedValue = value.Rank;
+					IEnumerable<IEnumValue> values = EnumType.ConvertFromString (this.enumType, name);
+					int flags = EnumType.ConvertEnumValuesToFlags (values);
+					this.combo.SelectedValue = flags;
 				}
 				else
 				{
-					this.combo.SelectedValue = -1;
+					IEnumValue value = this.enumType[name];
+					if (value != null)
+					{
+						this.combo.SelectedValue = value.Rank;
+					}
+					else
+					{
+						this.combo.SelectedValue = -1;
+					}
 				}
 			}
 
@@ -264,7 +282,7 @@ namespace Epsitec.Common.UI.Controllers
 				this.enumType = enumType;
 				
 				this.label = new StaticText ();
-				this.combo = new RadioIconGrid ();
+				this.combo = enumType.IsDefinedAsFlags ? new CheckIconGrid () : new RadioIconGrid ();
 
 				this.host.AddWidget (this.label);
 				this.host.AddWidget (this.combo);
@@ -325,7 +343,9 @@ namespace Epsitec.Common.UI.Controllers
 							string text = evCaptionText ?? enumValue.Name;
 							string tip  = evCaptionDesc ?? text;
 
-							this.combo.AddRadioIcon (icon, tip, enumValue.Rank, false);
+							int value = this.enumType.IsDefinedAsFlags ? EnumType.ConvertToInt (enumValue.Value) : enumValue.Rank;
+
+							this.combo.AddRadioIcon (icon, tip, value, false);
 						}
 					}
 				}

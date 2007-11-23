@@ -31,6 +31,7 @@ namespace Epsitec.Cresus.DataLayer.Helpers
 		/// Associates an entity mapping with a new row. All rows will share the
 		/// same <see cref="DbKey"/>.
 		/// </summary>
+		/// <param name="command">The command.</param>
 		/// <param name="mapping">The entity mapping.</param>
 		/// <param name="row">The data row.</param>
 		public void AssociateRow(DbRichCommand command, EntityDataMapping mapping, System.Data.DataRow row)

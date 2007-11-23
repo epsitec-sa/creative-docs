@@ -1,90 +1,123 @@
-using Epsitec.Common.Support;
+//	Copyright © 2006-2007, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Author: Daniel ROUX, Maintainer: Pierre ARNAUD
+
 using Epsitec.Common.Drawing;
+using Epsitec.Common.Support;
+using Epsitec.Common.Widgets.Helpers;
+
+using System.Collections.Generic;
 
 namespace Epsitec.Common.Widgets
 {
-	using GroupController = Epsitec.Common.Widgets.Helpers.GroupController;
-	
 	/// <summary>
-	/// La classe RadioIconGrid est un widget affichant une tableau de IconButton,
-	/// dont un seul à la fois est sélectionné.
+	/// The <c>RadioIconGrid</c> class represents and manages a grid of icons
+	/// where only one item can be selected at a given time.
 	/// </summary>
 	public class RadioIconGrid : AbstractGroup
 	{
 		public RadioIconGrid()
 		{
-			this.list = new System.Collections.ArrayList();
+			this.list = new List<RadioIcon> ();
 			this.selectedValue = -1;
 			this.enableEndOfLine = true;
 
-			this.controller = GroupController.GetGroupController(this, "GridGroup");
-			this.controller.Changed += new EventHandler(this.HandleRadioChanged);
+			this.SetupController ();
+
+			if (this.controller != null)
+			{
+				this.controller.Changed += this.HandleRadioChanged;
+			}
 		}
 
-		public RadioIconGrid(Widget embedder) : this()
+		public RadioIconGrid(Widget embedder)
+			: this ()
 		{
-			this.SetEmbedder(embedder);
+			this.SetEmbedder (embedder);
 		}
 
-		
+		protected virtual void SetupController()
+		{
+			this.controller = GroupController.GetGroupController (this, "GridGroup");
+		}
+
+
 		protected override void Dispose(bool disposing)
 		{
-			if ( disposing )
+			if (disposing)
 			{
-				Widget[] items = new Widget[this.list.Count];
-				
-				this.list.CopyTo(items, 0);
-				this.list.Clear();
-				
-				for ( int i=0 ; i<items.Length ; i++ )
+				foreach (RadioIcon icon in this.list)
 				{
-					if ( items[i] is RadioIcon )
-					{
-						RadioIcon icon = items[i] as RadioIcon;
-					}
-					items[i].Dispose();
+					this.DetachRadioIcon (icon);
 				}
 				
-				this.controller.Changed -= new EventHandler(this.HandleRadioChanged);
-				this.list = null;
+				this.list.Clear ();
+
+				if (this.controller != null)
+				{
+					this.controller.Changed -= this.HandleRadioChanged;
+					this.controller = null;
+				}
 			}
-			
-			base.Dispose(disposing);
+
+			base.Dispose (disposing);
 		}
 
 		public void AddRadioIcon(string iconName, string tooltip, int enumValue, bool endOfLine)
 		{
-			Widgets.RadioIcon icon = new Widgets.RadioIcon();
-			icon.IconName = iconName;
-			icon.EnumValue = enumValue;
-			icon.EndOfLine = endOfLine;
-			icon.SetParent(this);
-			icon.TabIndex = this.list.Count;
+			RadioIcon icon = new RadioIcon (this);
+			
+			icon.IconName          = iconName;
+			icon.EnumValue         = enumValue;
+			icon.EndOfLine         = endOfLine;
+			icon.TabIndex          = this.list.Count + 1;
 			icon.TabNavigationMode = TabNavigationMode.ActivateOnTab;
-			icon.Group = this.controller.Group;
-			ToolTip.Default.SetToolTip(icon, tooltip);
-			this.list.Add(icon);
+			icon.Group             = this.controller == null ? null : this.controller.Group;
+			
+			ToolTip.Default.SetToolTip (icon, tooltip);
+			
+			this.list.Add (icon);
+
+			this.AttachRadioIcon (icon);
 		}
+
+		protected virtual void AttachRadioIcon(RadioIcon icon)
+		{
+		}
+		
+		protected virtual void DetachRadioIcon(RadioIcon icon)
+		{
+		}
+
 
 		public RadioIcon SelectedRadioIcon
 		{
 			get
 			{
-				foreach ( RadioIcon icon in this.list )
+				foreach (RadioIcon icon in this.list)
 				{
-					if ( icon == null )  continue;
-
-					if ( icon.EnumValue == this.selectedValue )
+					if (this.IsIconSelected (icon))
 					{
 						return icon;
 					}
 				}
-				
+
 				return null;
 			}
 		}
 
-		public int SelectedValue
+		protected virtual bool IsIconSelected(RadioIcon icon)
+		{
+			if (icon.EnumValue == this.selectedValue)
+			{
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}
+
+		public virtual int SelectedValue
 		{
 			get
 			{
@@ -93,15 +126,13 @@ namespace Epsitec.Common.Widgets
 
 			set
 			{
-				if ( this.selectedValue != value )
+				if (this.selectedValue != value)
 				{
 					this.selectedValue = value;
 
-					foreach ( RadioIcon icon in this.list )
+					foreach (RadioIcon icon in this.list)
 					{
-						if ( icon == null )  continue;
-
-						if ( icon.EnumValue == this.selectedValue )
+						if (this.IsIconSelected (icon))
 						{
 							icon.ActiveState = ActiveState.Yes;
 						}
@@ -111,7 +142,7 @@ namespace Epsitec.Common.Widgets
 						}
 					}
 
-					this.OnSelectionChanged();
+					this.OnSelectionChanged ();
 				}
 			}
 		}
@@ -131,36 +162,34 @@ namespace Epsitec.Common.Widgets
 
 		protected override void UpdateClientGeometry()
 		{
-			base.UpdateClientGeometry();
-			
-			if ( this.list == null )  return;
+			base.UpdateClientGeometry ();
 
-			Rectangle box = this.Client.Bounds;
-			Point corner = this.Client.Bounds.TopLeft;
-			int column = 0;
-			int row = 0;
+			Rectangle bounds = this.Client.Bounds;
+			Point     corner = this.Client.Bounds.TopLeft;
+			int       column = 0;
+			int       row    = 0;
 
-			foreach ( Widgets.RadioIcon icon in this.list )
+			foreach (RadioIcon icon in this.list)
 			{
-				System.Diagnostics.Debug.Assert(icon != null);
+				System.Diagnostics.Debug.Assert (icon != null);
 
-				Rectangle rect = new Rectangle(corner.X, corner.Y-icon.PreferredHeight, icon.PreferredWidth, icon.PreferredHeight);
-				icon.SetManualBounds(rect);
+				Rectangle rect = new Rectangle (corner.X, corner.Y-icon.PreferredHeight, icon.PreferredWidth, icon.PreferredHeight);
+				icon.SetManualBounds (rect);
 				icon.Column = column;
-				icon.Row = row;
-				icon.Index = row * 1000 + column;
-				icon.Visibility = (box.Contains(rect));
+				icon.Row    = row;
+				icon.Index  = row * 1000 + column;
+				icon.Visibility = bounds.Contains (rect);
 
 				corner.X += icon.PreferredWidth;
-				column ++;
+				column++;
 
 				if ((corner.X > this.Client.Bounds.Right-icon.PreferredWidth) ||
 					(icon.EndOfLine && this.enableEndOfLine))
 				{
-					corner.X = this.Client.Bounds.Left;
+					corner.X  = this.Client.Bounds.Left;
 					corner.Y -= icon.PreferredHeight;
-					column = 0;
-					row ++;
+					column    = 0;
+					row++;
 				}
 			}
 		}
@@ -168,45 +197,45 @@ namespace Epsitec.Common.Widgets
 
 		private void HandleRadioChanged(object sender)
 		{
-			System.Diagnostics.Debug.Assert(this.controller == sender);
-			
-			RadioIcon icon = this.controller.FindActiveWidget() as RadioIcon;
-			
-			if ( icon != null &&
-				 this.selectedValue != icon.EnumValue )
+			System.Diagnostics.Debug.Assert (this.controller == sender);
+
+			RadioIcon icon = this.controller.FindActiveWidget () as RadioIcon;
+
+			if ((icon != null) &&
+				(!this.IsIconSelected (icon)))
 			{
 				this.selectedValue = icon.EnumValue;
-				this.OnSelectionChanged();
-			}
-		}
-		
-		protected virtual void OnSelectionChanged()
-		{
-			//	Génère un événement pour dire que la sélection a changé.
-			EventHandler handler = (EventHandler) this.GetUserEventHandler("SelectionChanged");
-			if (handler != null)
-			{
-				handler(this);
+				this.OnSelectionChanged ();
 			}
 		}
 
-		
-		public event EventHandler			SelectionChanged
+		protected virtual void OnSelectionChanged()
+		{
+			EventHandler handler = (EventHandler) this.GetUserEventHandler ("SelectionChanged");
+			
+			if (handler != null)
+			{
+				handler (this);
+			}
+		}
+
+
+		public event EventHandler SelectionChanged
 		{
 			add
 			{
-				this.AddUserEventHandler("SelectionChanged", value);
+				this.AddUserEventHandler ("SelectionChanged", value);
 			}
 			remove
 			{
-				this.RemoveUserEventHandler("SelectionChanged", value);
+				this.RemoveUserEventHandler ("SelectionChanged", value);
 			}
 		}
 
 
+		protected readonly List<RadioIcon>		list;
 		protected GroupController				controller;
-		protected System.Collections.ArrayList	list;
-		protected int							selectedValue;
-		protected bool							enableEndOfLine;
+		private int								selectedValue;
+		private bool							enableEndOfLine;
 	}
 }

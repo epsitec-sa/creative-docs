@@ -502,6 +502,97 @@ namespace Epsitec.Common.Types
 			return (int) number;
 		}
 
+
+		/// <summary>
+		/// Converts a integer which encodes flags into a collection of matching
+		/// enum values.
+		/// </summary>
+		/// <param name="type">The enum type.</param>
+		/// <param name="flags">The flags.</param>
+		/// <returns>The enum values (hidden values are excluded).</returns>
+		public static IEnumerable<IEnumValue> ConvertEnumValuesFromFlags(IEnumType type, int flags)
+		{
+			foreach (IEnumValue enumValue in type.Values)
+			{
+				if (enumValue.IsHidden)
+				{
+					continue;
+				}
+				
+				int value = EnumType.ConvertToInt (enumValue.Value);
+
+				if ((value & flags) == value)
+				{
+					yield return enumValue;
+				}
+			}
+		}
+
+		/// <summary>
+		/// Converts the collection of enum values back to an interger representation
+		/// of the flags.
+		/// </summary>
+		/// <param name="values">The enum values.</param>
+		/// <returns>The flags.</returns>
+		public static int ConvertEnumValuesToFlags(IEnumerable<IEnumValue> values)
+		{
+			int flags = 0;
+
+			foreach (IEnumValue value in values)
+			{
+				int flag = EnumType.ConvertToInt (value.Value);
+				flags |= flag;
+			}
+
+			return flags;
+		}
+
+		/// <summary>
+		/// Converts the collection of enum values to a string. This is similar to
+		/// calling <see cref="System.Enum.ToString()"/> on the equivalent <c>enum</c>.
+		/// </summary>
+		/// <param name="values">The enum values.</param>
+		/// <returns>The string representation.</returns>
+		public static string ConvertToString(IEnumerable<IEnumValue> values)
+		{
+			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
+
+			foreach (IEnumValue value in values)
+			{
+				if (buffer.Length > 0)
+				{
+					buffer.Append (", ");
+				}
+				
+				buffer.Append (value.Name);
+			}
+			
+			return buffer.Length == 0 ? null : buffer.ToString ();
+		}
+
+		/// <summary>
+		/// Converts the string to a collection of enum values. This is similar to
+		/// calling <see cref="System.Enum.Parse(System.Type, string)"/>.
+		/// </summary>
+		/// <param name="type">The enum type.</param>
+		/// <param name="value">The value.</param>
+		/// <returns>The collection of enum values.</returns>
+		public static IEnumerable<IEnumValue> ConvertFromString(IEnumType type, string value)
+		{
+			if (string.IsNullOrEmpty (value))
+			{
+				yield break;
+			}
+
+			string[] tokens = value.Split (',');
+
+			foreach (string token in tokens)
+			{
+				yield return type[token.Trim ()];
+			}
+		}
+
+
 		/// <summary>
 		/// Gets the default <c>EnumType</c> for some enumeration type.
 		/// </summary>

@@ -519,7 +519,6 @@ namespace Epsitec.Cresus.Database
 		/// <summary>
 		/// Adds an index for the table.
 		/// </summary>
-		/// <param name="sortOrder">The sort order.</param>
 		/// <param name="columns">The columns.</param>
 		public void AddIndex(params DbColumn[] columns)
 		{

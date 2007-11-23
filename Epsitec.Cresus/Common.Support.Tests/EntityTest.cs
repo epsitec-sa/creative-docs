@@ -440,6 +440,11 @@ namespace Epsitec.Common.Support
 				return this;
 			}
 
+			public object PromoteToRealInstance()
+			{
+				return this.data;
+			}
+
 			#endregion
 
 			private readonly object data;

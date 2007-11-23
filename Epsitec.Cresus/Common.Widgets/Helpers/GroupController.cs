@@ -1,15 +1,17 @@
 //	Copyright © 2003-2007, EPSITEC SA, CH-1092 BELMONT, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
+
+using Epsitec.Common.Types;
+using Epsitec.Common.Widgets;
 
 using System.Collections.Generic;
-using Epsitec.Common.Types;
 
 namespace Epsitec.Common.Widgets.Helpers
 {
 	/// <summary>
 	/// La classe GroupController permet de gérer des groupes de widgets.
 	/// </summary>
-	public class GroupController : DependencyObject, Types.INotifyChanged
+	public sealed class GroupController : DependencyObject, INotifyChanged
 	{
 		public GroupController(Widget parent, string group)
 		{
@@ -54,7 +56,7 @@ namespace Epsitec.Common.Widgets.Helpers
 		{
 			get
 			{
-				return (Widget[]) this.FindWidgets ().ToArray (typeof (Widget));
+				return Collection.ToArray (this.FindWidgets ());
 			}
 		}
 		
@@ -109,26 +111,22 @@ namespace Epsitec.Common.Widgets.Helpers
 		}
 		
 		
-		public System.Collections.ArrayList FindWidgets()
+		public IEnumerable<Widget> FindWidgets()
 		{
 			//	Trouve tous les boutons radio qui appartiennent à notre groupe.
 			
-			System.Collections.ArrayList list = new System.Collections.ArrayList ();
-			
 			if (this.parent == null)
 			{
-				return list;
+				yield break;
 			}
 			
 			foreach (Widget widget in this.parent.FindAllChildren ())
 			{
 				if (widget.Group == this.group)
 				{
-					list.Add (widget);
+					yield return widget;
 				}
 			}
-			
-			return list;
 		}
 		
 		
@@ -223,7 +221,7 @@ namespace Epsitec.Common.Widgets.Helpers
 		}
 		
 		
-		protected virtual void OnChanged()
+		private void OnChanged()
 		{
 			if (this.Changed != null)
 			{
@@ -270,9 +268,9 @@ namespace Epsitec.Common.Widgets.Helpers
 		#endregion
 
 		private static readonly DependencyProperty ControllerCollectionProperty = DependencyProperty.RegisterAttached ("ControllerCollection", typeof (GroupControllerCollection), typeof (GroupController), new DependencyPropertyMetadata ().MakeNotSerializable ());
-		
-		protected Widget					parent;
-		protected int						index;
-		protected string					group;
+
+		private readonly Widget			parent;
+		private readonly string			group;
+		private int						index;
 	}
 }
