@@ -11,8 +11,14 @@ using Epsitec.Cresus.DataLayer.Helpers;
 
 using System.Collections.Generic;
 
+[assembly: System.Runtime.CompilerServices.InternalsVisibleTo ("Cresus.DataLayer.Tests")]
+
 namespace Epsitec.Cresus.DataLayer
 {
+	/// <summary>
+	/// The <c>DataContext</c> class provides a context in which entities can
+	/// be loaded from the database, modified and then saved back.
+	/// </summary>
 	public sealed class DataContext : System.IDisposable
 	{
 		public DataContext(DbInfrastructure infrastructure)
@@ -50,62 +56,6 @@ namespace Epsitec.Cresus.DataLayer
 			get
 			{
 				return this.richCommand;
-			}
-		}
-
-		/// <summary>
-		/// Counts the managed entities.
-		/// </summary>
-		/// <returns>The number of entities associated to this data context.</returns>
-		public int CountManagedEntities()
-		{
-			return this.entities.Count;
-		}
-
-		public void LoadEntitySchema(Druid entityId)
-		{
-			if (this.entityTableDefinitions.ContainsKey (entityId))
-			{
-				//	Nothing to do. The schema has already been loaded.
-			}
-			else
-			{
-				DbTable tableDef = this.schemaEngine.FindTableDefinition (entityId);
-
-				if (tableDef == null)
-				{
-					StructuredType type = this.entityContext.GetStructuredType (entityId) as StructuredType;
-
-					if (type == null)
-					{
-						throw new System.ArgumentException (string.Format ("No schema nor type information available for EntityId {0}", entityId));
-					}
-					else
-					{
-						throw new System.ArgumentException (string.Format ("No schema available for EntityId {0} ({1})", type.Caption.Name, entityId));
-					}
-				}
-
-				this.entityTableDefinitions[entityId] = tableDef;
-				this.LoadTableSchema (tableDef);
-			}
-		}
-
-		public void LoadTableSchema(DbTable tableDefinition)
-		{
-			if (this.richCommand.Tables.Contains (tableDefinition.Name))
-			{
-				//	Nothing to do, we already know this table.
-			}
-			else
-			{
-				using (DbTransaction transaction = this.infrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadOnly))
-				{
-					this.richCommand.ImportTable (transaction, tableDefinition, null);
-					this.LoadTableRelationSchemas (transaction, tableDefinition);
-
-					transaction.Commit ();
-				}
 			}
 		}
 
@@ -155,6 +105,15 @@ namespace Epsitec.Cresus.DataLayer
 
 			return this.GetManagedEntities (entity => entity.GetEntityDataGeneration () >= generation);
 				
+		}
+
+		/// <summary>
+		/// Counts the managed entities.
+		/// </summary>
+		/// <returns>The number of entities associated to this data context.</returns>
+		public int CountManagedEntities()
+		{
+			return this.entities.Count;
 		}
 
 		/// <summary>
@@ -924,6 +883,53 @@ namespace Epsitec.Cresus.DataLayer
 			else
 			{
 				throw new System.ArgumentException ("Entity not managed by the DataContext");
+			}
+		}
+
+		internal void LoadEntitySchema(Druid entityId)
+		{
+			if (this.entityTableDefinitions.ContainsKey (entityId))
+			{
+				//	Nothing to do. The schema has already been loaded.
+			}
+			else
+			{
+				DbTable tableDef = this.schemaEngine.FindTableDefinition (entityId);
+
+				if (tableDef == null)
+				{
+					StructuredType type = this.entityContext.GetStructuredType (entityId) as StructuredType;
+
+					if (type == null)
+					{
+						throw new System.ArgumentException (string.Format ("No schema nor type information available for EntityId {0}", entityId));
+					}
+					else
+					{
+						throw new System.ArgumentException (string.Format ("No schema available for EntityId {0} ({1})", type.Caption.Name, entityId));
+					}
+				}
+
+				this.entityTableDefinitions[entityId] = tableDef;
+				this.LoadTableSchema (tableDef);
+			}
+		}
+
+		internal void LoadTableSchema(DbTable tableDefinition)
+		{
+			if (this.richCommand.Tables.Contains (tableDefinition.Name))
+			{
+				//	Nothing to do, we already know this table.
+			}
+			else
+			{
+				using (DbTransaction transaction = this.infrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadOnly))
+				{
+					this.richCommand.ImportTable (transaction, tableDefinition, null);
+					this.LoadTableRelationSchemas (transaction, tableDefinition);
+
+					transaction.Commit ();
+				}
 			}
 		}
 
