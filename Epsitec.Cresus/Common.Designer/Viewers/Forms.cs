@@ -408,6 +408,7 @@ namespace Epsitec.Common.Designer.Viewers
 			int boxEnd = 0;
 			bool isPrev = false;
 			bool isNext = false;
+			bool isGoto = false;
 
 			if (!this.designerApplication.IsReadonly)
 			{
@@ -416,6 +417,7 @@ namespace Epsitec.Common.Designer.Viewers
 				{
 					isPrev = true;
 					isNext = true;
+					isGoto = (sels.Count == 1);
 
 					foreach (int sel in sels)
 					{
@@ -465,6 +467,11 @@ namespace Epsitec.Common.Designer.Viewers
 							isPrev = false;
 							isNext = false;
 						}
+
+						if (curr.FieldType != FieldDescription.FieldType.Field)
+						{
+							isGoto = false;
+						}
 					}
 				}
 			}
@@ -493,6 +500,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 			this.fieldButtonPrev.Enable = isPrev;
 			this.fieldButtonNext.Enable = isNext;
+			this.fieldButtonGoto.Enable = isGoto;
 		}
 
 
@@ -1002,6 +1010,28 @@ namespace Epsitec.Common.Designer.Viewers
 			this.module.AccessForms.SetLocalDirty();
 		}
 
+		protected void SelectedFieldsGoto()
+		{
+			//	Va sur la définition du champ sélectionné.
+			List<int> sels = this.fieldTable.SelectedRows;
+			if (sels.Count != 1)
+			{
+				return;
+			}
+
+			FormEditor.ObjectModifier.TableItem item = this.formEditor.ObjectModifier.TableContent[sels[0]];
+			FieldDescription field = this.formEditor.ObjectModifier.GetFormDescription(item);
+			Druid druid = field.FieldIds[field.FieldIds.Count-1];
+
+			Module module = this.designerApplication.SearchModule(druid);
+			if (module == null)
+			{
+				return;
+			}
+
+			this.designerApplication.LocatorGoto(module.ModuleId.Name, ResourceAccess.Type.Fields, -1, druid, this.Window.FocusedWidget);
+		}
+
 
 		#region Proxies
 		protected void DefineProxies(IEnumerable<Widget> widgets)
@@ -1114,6 +1144,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 			if (sender == this.fieldButtonGoto)
 			{
+				this.SelectedFieldsGoto();
 			}
 		}
 
