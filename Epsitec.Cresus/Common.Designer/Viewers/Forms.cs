@@ -91,6 +91,12 @@ namespace Epsitec.Common.Designer.Viewers
 
 			this.fieldToolbar.Items.Add(new IconSeparator());
 
+			this.fieldButtonGlue = new IconButton();
+			this.fieldButtonGlue.AutoFocus = false;
+			this.fieldButtonGlue.CaptionId = Res.Captions.Editor.Forms.Glue.Id;
+			this.fieldButtonGlue.Clicked += new MessageEventHandler(this.HandleFieldButtonClicked);
+			this.fieldToolbar.Items.Add(this.fieldButtonGlue);
+
 			this.fieldButtonLine = new IconButton();
 			this.fieldButtonLine.AutoFocus = false;
 			this.fieldButtonLine.CaptionId = Res.Captions.Editor.Forms.Line.Id;
@@ -197,6 +203,7 @@ namespace Epsitec.Common.Designer.Viewers
 			if (disposing)
 			{
 				this.fieldButtonUse.Clicked -= new MessageEventHandler(this.HandleFieldButtonClicked);
+				this.fieldButtonGlue.Clicked -= new MessageEventHandler(this.HandleFieldButtonClicked);
 				this.fieldButtonLine.Clicked -= new MessageEventHandler(this.HandleFieldButtonClicked);
 				this.fieldButtonTitle.Clicked -= new MessageEventHandler(this.HandleFieldButtonClicked);
 				this.fieldButtonBox.Clicked -= new MessageEventHandler(this.HandleFieldButtonClicked);
@@ -494,6 +501,7 @@ namespace Epsitec.Common.Designer.Viewers
 				this.fieldButtonUse.IconName = Misc.Icon("ActiveNo");
 			}
 
+			this.fieldButtonGlue.Enable = (useCounter > 0 && freeCounter == 0);
 			this.fieldButtonLine.Enable = (useCounter > 0 && freeCounter == 0);
 			this.fieldButtonTitle.Enable = (useCounter > 0 && freeCounter == 0);
 			this.fieldButtonBox.Enable = (useCounter > 0 && freeCounter == 0);
@@ -844,6 +852,30 @@ namespace Epsitec.Common.Designer.Viewers
 			this.module.AccessForms.SetLocalDirty();
 		}
 
+		protected void SelectedFieldsGlue()
+		{
+			//	Insère une "glue" avant le champ sélectionné.
+			List<int> sels = this.fieldTable.SelectedRows;
+			sels.Sort();
+
+			FormEditor.ObjectModifier.TableItem item = this.formEditor.ObjectModifier.TableContent[sels[0]];
+			int index = this.formEditor.ObjectModifier.GetFormDescriptionIndex(item.Guid);
+
+			FieldDescription field = new FieldDescription(FieldDescription.FieldType.Glue);
+			this.form.Fields.Insert(index, field);
+
+			this.SetForm(this.form, this.druidToSerialize, false);
+			this.UpdateFieldTable(false);
+
+			sels.Clear();
+			sels.Add(index);
+			this.fieldTable.SelectedRows = sels;
+			this.ReflectSelectionToEditor();
+
+			this.UpdateButtons();
+			this.module.AccessForms.SetLocalDirty();
+		}
+
 		protected void SelectedFieldsLine()
 		{
 			//	Insère une ligne avant le champ sélectionné.
@@ -1117,6 +1149,11 @@ namespace Epsitec.Common.Designer.Viewers
 				this.SelectedFieldsUse();
 			}
 
+			if (sender == this.fieldButtonGlue)
+			{
+				this.SelectedFieldsGlue();
+			}
+
 			if (sender == this.fieldButtonLine)
 			{
 				this.SelectedFieldsLine();
@@ -1198,6 +1235,7 @@ namespace Epsitec.Common.Designer.Viewers
 		protected FrameBox						panelField;
 		protected HToolBar						fieldToolbar;
 		protected IconButton					fieldButtonUse;
+		protected IconButton					fieldButtonGlue;
 		protected IconButton					fieldButtonLine;
 		protected IconButton					fieldButtonTitle;
 		protected IconButton					fieldButtonBox;

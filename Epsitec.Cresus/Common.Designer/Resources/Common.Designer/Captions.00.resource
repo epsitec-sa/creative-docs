@@ -162,4 +162,5 @@
   <data name="Cap.FieldMode.ContainerFrameState" id="271">&lt;s:data id="_0" f:Name="FieldMode.ContainerFrameState" f:Description="Cadre dans les quatre bords" f:Labels="{Collection {Text 'Cadre'}}" /&gt;</data>
   <data name="Cap.FieldMode.ContainerLayoutMode" id="281">&lt;s:data id="_0" f:Name="FieldMode.ContainerLayoutMode" f:Description="Disposition du contenu" f:Labels="{Collection {Text 'Contenu'}}" /&gt;</data>
   <data name="Cap.FieldMode.ContainerFrameWidth" id="291">&lt;s:data id="_0" f:Name="FieldMode.ContainerFrameWidth" f:Description="Epaisseur du cadre" f:Labels="{Collection {Text 'Epaisseur'}}" /&gt;</data>
+  <data name="Cap.Editor.Forms.Glue" id="2A1">&lt;s:data id="_0" f:Name="Editor.Forms.Glue" f:Description="Colle deux champs sur la même ligne" f:Icon="manifest:Epsitec.Common.Designer.Images.FormGlue.icon" f:Labels="{Collection {Text 'Colle deux champs'}}" /&gt;</data>
 </bundle>

@@ -18,12 +18,13 @@ namespace Epsitec.Common.FormEngine
 		{
 			Field			= 1,	// champ
 			Node			= 2,	// noeud
-			Line			= 10,	// séparateur trait horizontal
-			Title			= 11,	// séparateur titre automatique
-			BoxBegin		= 20,	// début d'une boîte
-			BoxEnd			= 21,	// fin d'une boîte
-			InsertionPoint	= 30,	// spécifie le point d'insertion, dans un module de patch
-			Hide			= 31,	// champ du module de référence à cacher, dans un module de patch
+			Glue			= 10,	// colle deux éléments sur la même ligne
+			Line			= 20,	// séparateur trait horizontal
+			Title			= 21,	// séparateur titre automatique
+			BoxBegin		= 30,	// début d'une boîte
+			BoxEnd			= 31,	// fin d'une boîte
+			InsertionPoint	= 40,	// spécifie le point d'insertion, dans un module de patch
+			Hide			= 41,	// champ du module de référence à cacher, dans un module de patch
 		}
 
 		[DesignerVisible]
@@ -32,7 +33,6 @@ namespace Epsitec.Common.FormEngine
 			Normal			= 0,	// les champs sont proches
 			Compact			= 1,	// les champs se touchent (chevauchement d'un pixel)
 			Extend			= 2,	// les champs sont très espacés
-			Append			= 3,	// le champ suivant sera sur la même ligne
 		}
 
 		[DesignerVisible]
@@ -137,6 +137,9 @@ namespace Epsitec.Common.FormEngine
 				{
 					case FieldType.Field:
 						return "Champ";
+
+					case FieldType.Glue:
+						return "Colle";
 
 					case FieldType.Line:
 						return "Séparateur";
