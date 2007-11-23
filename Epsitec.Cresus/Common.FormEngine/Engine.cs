@@ -271,6 +271,8 @@ namespace Epsitec.Common.FormEngine
 			//	3) 7
 			//	4) 4 4
 			//	5) 2 2 2 2
+			count = System.Math.Max(count, 1);
+
 			int n = (column+count)-labelsId.Count;
 			for (int i=0; i<n; i++)
 			{
