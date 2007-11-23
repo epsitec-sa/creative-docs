@@ -11,6 +11,7 @@ using System.Collections.Generic;
 
 namespace Epsitec.Cresus.DataLayer
 {
+#if false
 	/// <summary>
 	/// The <c>Adapter</c> class is used to merge the gap between the database
 	/// layers and the data binding aware code.
@@ -355,4 +356,5 @@ namespace Epsitec.Cresus.DataLayer
 
 		private DbInfrastructure infrastructure;
 	}
+#endif
 }

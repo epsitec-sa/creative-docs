@@ -11,6 +11,7 @@ using System.Collections.Generic;
 
 namespace Epsitec.Cresus.DataLayer
 {
+#if false
 	public class DataTableBroker : IStructuredType, ICollectionType, System.Collections.IList, INotifyCollectionChanged
 	{
 		public DataTableBroker(IStructuredType structuredType, DbTable tableDefinition, System.Data.DataTable dataTable)
@@ -633,4 +634,5 @@ namespace Epsitec.Cresus.DataLayer
 		private Dictionary<long, DataBrokerItem> items;
 		private DataBroker parentBroker;
 	}
+#endif
 }

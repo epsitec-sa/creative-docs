@@ -10,6 +10,7 @@ using System.Collections.Generic;
 
 namespace Epsitec.Cresus.DataLayer
 {
+#if false
 	/// <summary>
 	/// The <c>DataBrokerItem</c> structure stores a reference to a piece of
 	/// structured data, which can either be read only (in which case it is
@@ -108,4 +109,5 @@ namespace Epsitec.Cresus.DataLayer
 		private Weak<DataBrokerRecord> data;
 		private DataBrokerRecord writableData;
 	}
+#endif
 }

@@ -119,16 +119,16 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Adapter.cs" />
+    <Compile Include="Retired sources\Adapter.cs" />
     <Compile Include="AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="DataContext.TableMapping.cs" />
-    <Compile Include="DataBroker.cs" />
-    <Compile Include="DataBrokerRecord.cs" />
+    <Compile Include="Retired sources\DataBroker.cs" />
+    <Compile Include="Retired sources\DataBrokerRecord.cs" />
     <Compile Include="DataContext.cs" />
-    <Compile Include="DataTableBroker.cs" />
-    <Compile Include="DataBrokerItem.cs" />
+    <Compile Include="Retired sources\DataTableBroker.cs" />
+    <Compile Include="Retired sources\DataBrokerItem.cs" />
     <Compile Include="EntityResolutionMode.cs" />
     <Compile Include="Helpers\EntityDataMapping.cs" />
     <Compile Include="Helpers\EntityDataProxy.cs" />

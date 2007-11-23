@@ -10,6 +10,7 @@ using System.Collections.Generic;
 
 namespace Epsitec.Cresus.DataLayer
 {
+#if false
 	/// <summary>
 	/// The <c>DataBrokerRecord</c> class implements a specialized structured
 	/// data record (<see cref="StructuredData"/>) which links the data to a
@@ -75,4 +76,5 @@ namespace Epsitec.Cresus.DataLayer
 
 		private long id;
 	}
+#endif
 }

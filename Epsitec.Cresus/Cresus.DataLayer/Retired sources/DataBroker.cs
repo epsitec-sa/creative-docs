@@ -12,6 +12,7 @@ using System.Collections.Generic;
 
 namespace Epsitec.Cresus.DataLayer
 {
+#if false
 	/// <summary>
 	/// The <c>DataBroker</c> class is used to make data stored in the database
 	/// available to the user interface binding code.
@@ -210,4 +211,5 @@ namespace Epsitec.Cresus.DataLayer
 		private DbRichCommand richCommand;
 		private Dictionary<string, DataTableBroker> tableBrokers;
 	}
+#endif
 }
