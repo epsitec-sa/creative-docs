@@ -430,20 +430,7 @@ namespace Epsitec.Common.Designer.FormEditor
 		{
 			//	Détecte l'objet visé par la souris, avec priorité au dernier objet
 			//	dessiné (donc placé dessus).
-			Widget detected = this.Detect(pos, this.panel);
-			if (detected == null && this.selectedObjects.Count == 0)
-			{
-				Rectangle rect = this.panel.Client.Bounds;
-				if (rect.Contains(pos))
-				{
-					rect.Deflate(this.GetDetectPadding(this.panel));
-					if (!rect.Contains(pos))
-					{
-						detected = this.panel;
-					}
-				}
-			}
-			return detected;
+			return this.Detect(pos, this.panel);
 		}
 
 		protected Widget Detect(Point pos, Widget parent)
@@ -467,14 +454,6 @@ namespace Epsitec.Common.Designer.FormEditor
 						return deep;
 					}
 
-					if (this.selectedObjects.Count > 0)
-					{
-						if (widget.Parent != this.selectedObjects[0].Parent)
-						{
-							continue;
-						}
-					}
-
 					return widget;
 				}
 			}
@@ -482,19 +461,6 @@ namespace Epsitec.Common.Designer.FormEditor
 			return null;
 		}
 
-		protected Margins GetDetectPadding(Widget obj)
-		{
-			//	Retourne les marges intérieures pour la détection du padding.
-			Margins padding = obj.Padding;
-			padding += obj.GetInternalPadding();
-
-			padding.Left   = System.Math.Max(padding.Left,   this.context.GroupOutline);
-			padding.Right  = System.Math.Max(padding.Right,  this.context.GroupOutline);
-			padding.Bottom = System.Math.Max(padding.Bottom, this.context.GroupOutline);
-			padding.Top    = System.Math.Max(padding.Top,    this.context.GroupOutline);
-
-			return padding;
-		}
 
 		public void PrepareForDelete()
 		{
