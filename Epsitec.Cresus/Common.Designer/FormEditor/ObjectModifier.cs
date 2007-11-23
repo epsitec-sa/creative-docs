@@ -473,8 +473,7 @@ namespace Epsitec.Common.Designer.FormEditor
 				FieldDescription field = this.formEditor.ObjectModifier.GetFormDescription(item);
 				if (field != null)
 				{
-					if (field.Type == FieldDescription.FieldType.BoxBegin ||
-						field.Type == FieldDescription.FieldType.BoxEnd)
+					if (field.Type == FieldDescription.FieldType.BoxBegin)
 					{
 						name = Misc.Bold(field.Description);
 					}

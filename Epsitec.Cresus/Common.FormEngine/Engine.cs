@@ -24,6 +24,19 @@ namespace Epsitec.Common.FormEngine
 		{
 			//	Crée un masque de saisie pour une entité donnée.
 			//	La liste de FieldDescription doit être plate (pas de Node).
+			string err = Arrange.Check(form.Fields);
+			if (err != null)
+			{
+				UI.Panel container = new UI.Panel();
+
+				StaticText warning = new StaticText(container);
+				warning.Text = string.Concat("<i>", err, "</i>");
+				warning.ContentAlignment = ContentAlignment.MiddleCenter;
+				warning.Dock = DockStyle.Fill;
+
+				return container;
+			}
+
 			Caption entityCaption = this.resourceManager.GetCaption(form.EntityId);
 			StructuredType entity = TypeRosetta.GetTypeObject(entityCaption) as StructuredType;
 			if (entity == null)
