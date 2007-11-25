@@ -297,12 +297,19 @@ namespace Epsitec.Common.Document.Properties
 
 		public static Opac.FreeImage.LoadSaveMode FilterQualityToMode(double quality)
 		{
+#if false
 			//	Conversion de la qualité en mode pour FreeImage.SaveToMemory.
 		         if (quality >= 0.87)  return Opac.FreeImage.LoadSaveMode.JpegQualitySuperb;   // nominal = 1.00
 			else if (quality >= 0.62)  return Opac.FreeImage.LoadSaveMode.JpegQualityGood;     // nominal = 0.75
 			else if (quality >= 0.37)  return Opac.FreeImage.LoadSaveMode.JpegQualityNormal;   // nominal = 0.50
 			else if (quality >= 0.17)  return Opac.FreeImage.LoadSaveMode.JpegQualityAverage;  // nominal = 0.25
 			else                       return Opac.FreeImage.LoadSaveMode.JpegQualityBad;      // nominal = 0.10
+#else
+			int n = (int) (quality * 100);
+			n = System.Math.Min (100, n);
+			n = System.Math.Max (10, n);
+			return (Opac.FreeImage.LoadSaveMode) n;
+#endif
 		}
 
 		public static int FilterNameToIndex(string name)

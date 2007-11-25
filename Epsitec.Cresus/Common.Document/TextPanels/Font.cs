@@ -52,14 +52,17 @@ namespace Epsitec.Common.Document.TextPanels
 			this.fontSize.SetRangePercents(this.document, 25.0, 400.0, 100.0, 10.0);
 			this.fontSize.IsUnitPercent = true;
 			this.fontSize.ButtonUnit.Clicked += new MessageEventHandler(this.HandleButtonUnitClicked);
+			this.fontSize.Name = "FontSize Field";
 
 			this.buttonSizeMenu = this.CreateComboButton(null, Res.Strings.TextPanel.Font.Tooltip.Size, new MessageEventHandler(this.HandleButtonSizeMenuClicked));
+			this.buttonSizeMenu.Name = "FontSize Menu";
 
 			this.fontColor = this.CreateColorSample(Res.Strings.Action.FontColor, new MessageEventHandler(this.HandleFieldColorClicked), new EventHandler(this.HandleFieldColorChanged));
 
 			this.fontGlue = this.CreateTextFieldLabelPercent(Res.Strings.TextPanel.Font.Tooltip.Glue, Res.Strings.TextPanel.Font.Short.Glue, Res.Strings.TextPanel.Font.Long.Glue, -50.0, 200.0, 0.0, 5.0, new EventHandler(this.HandleGlueValueChanged));
 
 			this.buttonClear = this.CreateClearButton(new MessageEventHandler(this.HandleClearClicked));
+			this.buttonClear.Name = "Clear";
 
 			this.checkBold = new CheckButton(this);
 			this.checkBold.Text = Res.Strings.Action.FontInvertBold;
