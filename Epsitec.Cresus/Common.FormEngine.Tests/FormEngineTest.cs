@@ -157,7 +157,7 @@ namespace Epsitec.Common.FormEngine
 			{
 				entityId = Druid.Parse("[63021]");  // Facture
 
-				fields.Add(this.CreateBoxBegin(ContainerLayoutMode.VerticalFlow, 5, 5, FieldDescription.BackColorType.None, FrameState.All, 1, 7));
+				fields.Add(this.CreateBoxBegin(FieldDescription.BackColorType.None, FrameState.All, 1, 7));
 				fields.Add(this.CreateField("[630A2]", FieldDescription.BackColorType.None, FieldDescription.SeparatorType.Normal, 5, 1));  // Numéro
 				fields.Add(this.CreateField("[630C2]", FieldDescription.BackColorType.None, FieldDescription.SeparatorType.Normal, 6, 1));  // DateTravail
 				fields.Add(this.CreateField("[630D2]", FieldDescription.BackColorType.None, FieldDescription.SeparatorType.Normal, 6, 1));  // DateFacture
@@ -173,7 +173,7 @@ namespace Epsitec.Common.FormEngine
 				fields.Add(this.CreateField("[630B2].[63003].[63043].[63063].[630B]", FieldDescription.BackColorType.None, FieldDescription.SeparatorType.Normal, 10, 1));  // Affaire.Paiements.Valeur.PrixSimple.Monnaie.TauxChangeVersChf
 				fields.Add(this.CreateBoxEnd());
 
-				fields.Add(this.CreateBoxBegin(ContainerLayoutMode.VerticalFlow, 5, 5, FieldDescription.BackColorType.None, FrameState.All, 1, 3));
+				fields.Add(this.CreateBoxBegin(FieldDescription.BackColorType.None, FrameState.All, 1, 3));
 				fields.Add(this.CreateSeparator(FieldDescription.FieldType.Title));
 				fields.Add(this.CreateField("[630B2].[63013].[63053]", FieldDescription.BackColorType.None, FieldDescription.SeparatorType.Normal, 4, 1));  // Affaire.SoldeDû.Montant
 				fields.Add(this.CreateSeparator(FieldDescription.FieldType.Glue));
@@ -198,7 +198,7 @@ namespace Epsitec.Common.FormEngine
 				fields.Add(this.CreateField("[630S2]", FieldDescription.BackColorType.None, FieldDescription.SeparatorType.Normal, 5, 1));  // Client
 				fields.Add(this.CreateField("[630T2]", FieldDescription.BackColorType.None, FieldDescription.SeparatorType.Normal, 10, 5));  // Désignation
 
-				fields.Add(this.CreateBoxBegin(ContainerLayoutMode.VerticalFlow, 5, 10, FieldDescription.BackColorType.None, FrameState.All, 1, 10));
+				fields.Add(this.CreateBoxBegin(FieldDescription.BackColorType.None, FrameState.All, 1, 10));
 				fields.Add(this.CreateSeparator(FieldDescription.FieldType.Title));
 				fields.Add(this.CreateField("[630V2].[630M2]", FieldDescription.BackColorType.None, FieldDescription.SeparatorType.Normal, 2, 1));  // Rappels.Nième
 				fields.Add(this.CreateField("[630V2].[630N2]", FieldDescription.BackColorType.None, FieldDescription.SeparatorType.Normal, 10, 1));  // Rappels.Texte
@@ -212,8 +212,8 @@ namespace Epsitec.Common.FormEngine
 			{
 				entityId = Druid.Parse("[63021]");  // Facture
 
-				fields.Add(this.CreateBoxBegin(ContainerLayoutMode.VerticalFlow, 0, 0, FieldDescription.BackColorType.None, FrameState.None, 0, 7));
-				fields.Add(this.CreateBoxBegin(ContainerLayoutMode.VerticalFlow, 5, 10, FieldDescription.BackColorType.None, FrameState.All, 1, 10));
+				fields.Add(this.CreateBoxBegin(FieldDescription.BackColorType.None, FrameState.None, 0, 7));
+				fields.Add(this.CreateBoxBegin(FieldDescription.BackColorType.None, FrameState.All, 1, 10));
 				fields.Add(this.CreateField("[630A2]", FieldDescription.BackColorType.None, FieldDescription.SeparatorType.Normal, 5, 1));  // Numéro
 
 				fields.Add(this.CreateSeparator(FieldDescription.FieldType.Title));
@@ -222,7 +222,7 @@ namespace Epsitec.Common.FormEngine
 				fields.Add(this.CreateField("[630B2].[63013].[63063].[630A]", FieldDescription.BackColorType.None, FieldDescription.SeparatorType.Normal, 4, 1));  // Affaire.SoldeDû.Monnaie.Designation
 				fields.Add(this.CreateBoxEnd());
 
-				fields.Add(this.CreateBoxBegin(ContainerLayoutMode.VerticalFlow, 5, 10, FieldDescription.BackColorType.Gray, FrameState.All, 5, 10));
+				fields.Add(this.CreateBoxBegin(FieldDescription.BackColorType.Gray, FrameState.All, 5, 10));
 				List<FieldDescription> subFields = new List<FieldDescription>();
 				subFields.Add(this.CreateSeparator(FieldDescription.FieldType.Title));
 				subFields.Add(this.CreateField("[630B2].[630S2]", FieldDescription.BackColorType.None, FieldDescription.SeparatorType.Normal, 10, 1));  // Affaire.Client
@@ -238,7 +238,7 @@ namespace Epsitec.Common.FormEngine
 
 				fields.Add(this.CreateSeparator(FieldDescription.FieldType.Glue));
 
-				fields.Add(this.CreateBoxBegin(ContainerLayoutMode.VerticalFlow, 5, 10, FieldDescription.BackColorType.None, FrameState.Left, 1, 3));
+				fields.Add(this.CreateBoxBegin(FieldDescription.BackColorType.None, FrameState.Left, 1, 3));
 				fields.Add(this.CreateSeparator(FieldDescription.FieldType.Title));
 				fields.Add(this.CreateField("[630L2].[630M].[630H]", FieldDescription.BackColorType.Red, FieldDescription.SeparatorType.Normal, 4, 1));  // TotalFacturé.Prix.Ht
 				fields.Add(this.CreateSeparator(FieldDescription.FieldType.Title));
@@ -292,13 +292,10 @@ namespace Epsitec.Common.FormEngine
 			return field;
 		}
 
-		protected FieldDescription CreateBoxBegin(ContainerLayoutMode mode, double margins, double padding, FieldDescription.BackColorType backColor, FrameState frame, double width, int columns)
+		protected FieldDescription CreateBoxBegin(FieldDescription.BackColorType backColor, FrameState frame, double width, int columns)
 		{
 			FieldDescription field = new FieldDescription(FieldDescription.FieldType.BoxBegin);
 
-			field.ContainerLayoutMode = mode;
-			field.ContainerMargins = new Margins(margins, margins, margins, margins);
-			field.ContainerPadding = new Margins(padding, padding, padding, padding);
 			field.BackColor = backColor;
 			field.ContainerFrameState = frame;
 			field.ContainerFrameWidth = width;

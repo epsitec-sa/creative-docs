@@ -17,8 +17,6 @@ namespace Epsitec.Common.FormEngine
 		public const string BoxPaddingType			= "BP";
 		public const string ColumnsRequired			= "CR";
 		public const string RowsRequired			= "RR";
-		public const string ContainerLayoutMode		= "CLM";
-		public const string ContainerBackColor		= "CBC";
 		public const string ContainerFrameState		= "CFS";
 		public const string ContainerFrameWidth		= "CFW";
 	}

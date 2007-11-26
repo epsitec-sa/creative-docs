@@ -112,18 +112,6 @@ namespace Epsitec.Common.Designer.FormEditor.Proxies
 			}
 		}
 
-		public ContainerLayoutMode ContainerLayoutMode
-		{
-			get
-			{
-				return (ContainerLayoutMode) this.GetValue(Mode.ContainerLayoutModeProperty);
-			}
-			set
-			{
-				this.SetValue(Mode.ContainerLayoutModeProperty, value);
-			}
-		}
-
 
 		protected override void InitializePropertyValues()
 		{
@@ -151,7 +139,6 @@ namespace Epsitec.Common.Designer.FormEditor.Proxies
 			{
 				this.ContainerFrameState = this.ObjectModifier.GetContainerFrameState(this.DefaultWidget);
 				this.ContainerFrameWidth = this.ObjectModifier.GetContainerFrameWidth(this.DefaultWidget);
-				this.ContainerLayoutMode = this.ObjectModifier.GetContainerLayoutMode(this.DefaultWidget);
 			}
 		}
 
@@ -175,10 +162,6 @@ namespace Epsitec.Common.Designer.FormEditor.Proxies
 
 			Mode.ContainerFrameWidthProperty.DefaultMetadata.DefineNamedType(ProxyManager.WidthNumericType);
 			Mode.ContainerFrameWidthProperty.DefaultMetadata.DefineCaptionId(Res.Captions.FieldMode.ContainerFrameWidth.Id);
-
-			EnumType containerLayoutModeEnumType = Res.Types.FieldDescription.ContainerLayoutMode;
-			Mode.ContainerLayoutModeProperty.DefaultMetadata.DefineNamedType(containerLayoutModeEnumType);
-			Mode.ContainerLayoutModeProperty.DefaultMetadata.DefineCaptionId(Res.Captions.FieldMode.ContainerLayoutMode.Id);
 		}
 
 
@@ -302,36 +285,11 @@ namespace Epsitec.Common.Designer.FormEditor.Proxies
 			}
 		}
 
-		private static void NotifyContainerLayoutModeChanged(DependencyObject o, object oldValue, object newValue)
-		{
-			ContainerLayoutMode value = (ContainerLayoutMode) newValue;
-			Mode that = (Mode) o;
-
-			if (that.IsNotSuspended)
-			{
-				that.SuspendChanges();
-
-				try
-				{
-					foreach (Widget obj in that.Widgets)
-					{
-						that.ObjectModifier.SetContainerLayoutMode(obj, value);
-					}
-				}
-				finally
-				{
-					that.ResumeChanges();
-					that.RegenerateProxiesAndForm();
-				}
-			}
-		}
-
 
 		public static readonly DependencyProperty SeparatorBottomProperty     = DependencyProperty.Register("SeparatorBottom",     typeof(FieldDescription.SeparatorType),  typeof(Mode), new DependencyPropertyMetadata(FieldDescription.SeparatorType.Normal,  Mode.NotifySeparatorBottomChanged));
 		public static readonly DependencyProperty BoxPaddingProperty          = DependencyProperty.Register("BoxPadding",          typeof(FieldDescription.BoxPaddingType), typeof(Mode), new DependencyPropertyMetadata(FieldDescription.BoxPaddingType.Normal, Mode.NotifyBoxPaddingChanged));
 		public static readonly DependencyProperty BackColorProperty           = DependencyProperty.Register("BackColor",           typeof(FieldDescription.BackColorType),  typeof(Mode), new DependencyPropertyMetadata(FieldDescription.BackColorType.None,    Mode.NotifyBackColorChanged));
 		public static readonly DependencyProperty ContainerFrameStateProperty = DependencyProperty.Register("ContainerFrameState", typeof(FrameState),                      typeof(Mode), new DependencyPropertyMetadata(FrameState.None,                        Mode.NotifyContainerFrameStateChanged));
 		public static readonly DependencyProperty ContainerFrameWidthProperty = DependencyProperty.Register("ContainerFrameWidth", typeof(double),                          typeof(Mode), new DependencyPropertyMetadata(1.0,                                    Mode.NotifyContainerFrameWidthChanged));
-		public static readonly DependencyProperty ContainerLayoutModeProperty = DependencyProperty.Register("ContainerLayoutMode", typeof(ContainerLayoutMode),             typeof(Mode), new DependencyPropertyMetadata(ContainerLayoutMode.None,               Mode.NotifyContainerLayoutModeChanged));
 	}
 }

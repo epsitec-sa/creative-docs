@@ -61,7 +61,6 @@ namespace Epsitec.Common.FormEngine
 			this.boxPaddingType = BoxPaddingType.Normal;
 			this.columnsRequired = Engine.MaxColumnsRequired;
 			this.rowsRequired = 1;
-			this.containerLayoutMode = ContainerLayoutMode.None;
 			this.containerFrameState = FrameState.None;
 			this.containerFrameWidth = 1;
 		}
@@ -86,7 +85,6 @@ namespace Epsitec.Common.FormEngine
 			this.rowsRequired = model.rowsRequired;
 			this.nodeDescription = model.nodeDescription;
 			this.fieldIds = model.fieldIds;
-			this.containerLayoutMode = model.containerLayoutMode;
 			this.containerFrameState = model.containerFrameState;
 			this.containerFrameWidth = model.containerFrameWidth;
 		}
@@ -321,20 +319,6 @@ namespace Epsitec.Common.FormEngine
 			}
 		}
 
-		public ContainerLayoutMode ContainerLayoutMode
-		{
-			//	Mode de layout pour les boîtes contenues dans un BoxBegin.
-			get
-			{
-				return this.containerLayoutMode;
-			}
-			set
-			{
-				System.Diagnostics.Debug.Assert(this.type == FieldType.BoxBegin);
-				this.containerLayoutMode = value;
-			}
-		}
-
 		public FrameState ContainerFrameState
 		{
 			//	Bordures d'une boîte.
@@ -403,7 +387,6 @@ namespace Epsitec.Common.FormEngine
 				a.boxPaddingType != b.boxPaddingType ||
 				a.columnsRequired != b.columnsRequired ||
 				a.rowsRequired != b.rowsRequired ||
-				a.containerLayoutMode != b.containerLayoutMode ||
 				a.containerFrameState != b.containerFrameState ||
 				a.containerFrameWidth != b.containerFrameWidth)
 			{
@@ -460,7 +443,6 @@ namespace Epsitec.Common.FormEngine
 			writer.WriteElementString(Xml.BoxPaddingType, this.boxPaddingType.ToString());
 			writer.WriteElementString(Xml.ColumnsRequired, this.columnsRequired.ToString(System.Globalization.CultureInfo.InvariantCulture));
 			writer.WriteElementString(Xml.RowsRequired, this.rowsRequired.ToString(System.Globalization.CultureInfo.InvariantCulture));
-			writer.WriteElementString(Xml.ContainerLayoutMode, this.containerLayoutMode.ToString());
 
 			writer.WriteElementString(Xml.ContainerFrameState, this.containerFrameState.ToString());
 			writer.WriteElementString(Xml.ContainerFrameWidth, this.containerFrameWidth.ToString(System.Globalization.CultureInfo.InvariantCulture));
@@ -518,10 +500,6 @@ namespace Epsitec.Common.FormEngine
 						else if (name == Xml.RowsRequired)
 						{
 							this.rowsRequired = int.Parse(element);
-						}
-						else if (name == Xml.ContainerLayoutMode)
-						{
-							this.containerLayoutMode = (ContainerLayoutMode) System.Enum.Parse(typeof(ContainerLayoutMode), element);
 						}
 						else if (name == Xml.ContainerFrameState)
 						{
@@ -613,7 +591,6 @@ namespace Epsitec.Common.FormEngine
 		protected BoxPaddingType boxPaddingType;
 		protected int columnsRequired;
 		protected int rowsRequired;
-		protected ContainerLayoutMode containerLayoutMode;
 		protected FrameState containerFrameState;
 		protected double containerFrameWidth;
 	}

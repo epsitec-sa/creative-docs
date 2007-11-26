@@ -244,31 +244,6 @@ namespace Epsitec.Common.Designer.FormEditor
 		}
 
 
-		public ContainerLayoutMode GetContainerLayoutMode(Widget obj)
-		{
-			//	Retourne la couleur de fond d'un champ.
-			FieldDescription field = this.GetFormDescription(obj);
-			if (field == null)
-			{
-				return ContainerLayoutMode.None;
-			}
-			else
-			{
-				return field.ContainerLayoutMode;
-			}
-		}
-
-		public void SetContainerLayoutMode(Widget obj, ContainerLayoutMode mode)
-		{
-			//	Choix de la couleur de fond d'un champ.
-			FieldDescription field = this.GetFormDescription(obj);
-			if (field != null)
-			{
-				field.ContainerLayoutMode = mode;
-			}
-		}
-
-
 		public Widget GetWidget(System.Guid guid)
 		{
 			//	Cherche le widget correspondant à un Guid.

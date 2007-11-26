@@ -392,7 +392,6 @@ namespace Epsitec.Common.FormEngine
 		{
 			//	Crée les widgets pour une boîte dans la grille, lors de la deuxième passe.
 			UI.Panel box = new UI.Panel(root);
-			box.ContainerLayoutMode = field.ContainerLayoutMode;
 			box.DrawFrameState = FrameState.All;
 			box.Padding = FieldDescription.GetRealBoxPadding(field.BoxPadding);
 			box.BackColor = FieldDescription.GetRealColor(field.BackColor);
