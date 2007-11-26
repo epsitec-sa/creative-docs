@@ -144,6 +144,31 @@ namespace Epsitec.Common.Designer.FormEditor
 		}
 
 
+		public FieldDescription.BoxPaddingType GetBoxPadding(Widget obj)
+		{
+			//	Retourne le type des marges intérieures d'une boîte.
+			FieldDescription field = this.GetFormDescription(obj);
+			if (field == null)
+			{
+				return FieldDescription.BoxPaddingType.Normal;
+			}
+			else
+			{
+				return field.BoxPadding;
+			}
+		}
+
+		public void SetBoxPadding(Widget obj, FieldDescription.BoxPaddingType type)
+		{
+			//	Choix du type des marges intérieures d'une boîte.
+			FieldDescription field = this.GetFormDescription(obj);
+			if (field != null)
+			{
+				field.BoxPadding = type;
+			}
+		}
+
+
 		public FieldDescription.BackColorType GetBackColor(Widget obj)
 		{
 			//	Retourne la couleur de fond d'un champ.

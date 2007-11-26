@@ -64,6 +64,18 @@ namespace Epsitec.Common.Designer.FormEditor.Proxies
 			}
 		}
 
+		public FieldDescription.BoxPaddingType BoxPadding
+		{
+			get
+			{
+				return (FieldDescription.BoxPaddingType) this.GetValue(Mode.BoxPaddingProperty);
+			}
+			set
+			{
+				this.SetValue(Mode.BoxPaddingProperty, value);
+			}
+		}
+
 		public FieldDescription.BackColorType BackColor
 		{
 			get
@@ -123,6 +135,11 @@ namespace Epsitec.Common.Designer.FormEditor.Proxies
 				this.SeparatorBottom = this.ObjectModifier.GetSeparatorBottom(this.DefaultWidget);
 			}
 
+			if (this.ObjectModifier.IsBox(this.DefaultWidget))
+			{
+				this.BoxPadding = this.ObjectModifier.GetBoxPadding(this.DefaultWidget);
+			}
+
 			if (this.ObjectModifier.IsField(this.DefaultWidget) ||
 				this.ObjectModifier.IsBox(this.DefaultWidget) ||
 				this.ObjectModifier.IsGlue(this.DefaultWidget))
@@ -143,6 +160,10 @@ namespace Epsitec.Common.Designer.FormEditor.Proxies
 			EnumType separatorBottomEnumType = Res.Types.FieldDescription.SeparatorType;
 			Mode.SeparatorBottomProperty.DefaultMetadata.DefineNamedType(separatorBottomEnumType);
 			Mode.SeparatorBottomProperty.DefaultMetadata.DefineCaptionId(Res.Captions.FieldMode.SeparatorBottomType.Id);
+
+			EnumType boxPaddingBottomEnumType = Res.Types.FieldDescription.BoxPaddingType;
+			Mode.BoxPaddingProperty.DefaultMetadata.DefineNamedType(boxPaddingBottomEnumType);
+			Mode.BoxPaddingProperty.DefaultMetadata.DefineCaptionId(Res.Captions.FieldMode.BoxPaddingType.Id);
 
 			EnumType backColorEnumType = Res.Types.FieldDescription.BackColorType;
 			Mode.BackColorProperty.DefaultMetadata.DefineNamedType(backColorEnumType);
@@ -175,6 +196,30 @@ namespace Epsitec.Common.Designer.FormEditor.Proxies
 					foreach (Widget obj in that.Widgets)
 					{
 						that.ObjectModifier.SetSeparatorBottom(obj, value);
+					}
+				}
+				finally
+				{
+					that.ResumeChanges();
+					that.RegenerateProxiesAndForm();
+				}
+			}
+		}
+
+		private static void NotifyBoxPaddingChanged(DependencyObject o, object oldValue, object newValue)
+		{
+			FieldDescription.BoxPaddingType value = (FieldDescription.BoxPaddingType) newValue;
+			Mode that = (Mode) o;
+
+			if (that.IsNotSuspended)
+			{
+				that.SuspendChanges();
+
+				try
+				{
+					foreach (Widget obj in that.Widgets)
+					{
+						that.ObjectModifier.SetBoxPadding(obj, value);
 					}
 				}
 				finally
@@ -282,10 +327,11 @@ namespace Epsitec.Common.Designer.FormEditor.Proxies
 		}
 
 
-		public static readonly DependencyProperty SeparatorBottomProperty     = DependencyProperty.Register("SeparatorBottom",     typeof(FieldDescription.SeparatorType), typeof(Mode), new DependencyPropertyMetadata(FieldDescription.SeparatorType.Normal, Mode.NotifySeparatorBottomChanged));
-		public static readonly DependencyProperty BackColorProperty           = DependencyProperty.Register("BackColor",           typeof(FieldDescription.BackColorType), typeof(Mode), new DependencyPropertyMetadata(FieldDescription.BackColorType.None,   Mode.NotifyBackColorChanged));
-		public static readonly DependencyProperty ContainerFrameStateProperty = DependencyProperty.Register("ContainerFrameState", typeof(FrameState),                     typeof(Mode), new DependencyPropertyMetadata(FrameState.None,                       Mode.NotifyContainerFrameStateChanged));
-		public static readonly DependencyProperty ContainerFrameWidthProperty = DependencyProperty.Register("ContainerFrameWidth", typeof(double),                         typeof(Mode), new DependencyPropertyMetadata(1.0,                                   Mode.NotifyContainerFrameWidthChanged));
-		public static readonly DependencyProperty ContainerLayoutModeProperty = DependencyProperty.Register("ContainerLayoutMode", typeof(ContainerLayoutMode),            typeof(Mode), new DependencyPropertyMetadata(ContainerLayoutMode.None,              Mode.NotifyContainerLayoutModeChanged));
+		public static readonly DependencyProperty SeparatorBottomProperty     = DependencyProperty.Register("SeparatorBottom",     typeof(FieldDescription.SeparatorType),  typeof(Mode), new DependencyPropertyMetadata(FieldDescription.SeparatorType.Normal,  Mode.NotifySeparatorBottomChanged));
+		public static readonly DependencyProperty BoxPaddingProperty          = DependencyProperty.Register("BoxPadding",          typeof(FieldDescription.BoxPaddingType), typeof(Mode), new DependencyPropertyMetadata(FieldDescription.BoxPaddingType.Normal, Mode.NotifyBoxPaddingChanged));
+		public static readonly DependencyProperty BackColorProperty           = DependencyProperty.Register("BackColor",           typeof(FieldDescription.BackColorType),  typeof(Mode), new DependencyPropertyMetadata(FieldDescription.BackColorType.None,    Mode.NotifyBackColorChanged));
+		public static readonly DependencyProperty ContainerFrameStateProperty = DependencyProperty.Register("ContainerFrameState", typeof(FrameState),                      typeof(Mode), new DependencyPropertyMetadata(FrameState.None,                        Mode.NotifyContainerFrameStateChanged));
+		public static readonly DependencyProperty ContainerFrameWidthProperty = DependencyProperty.Register("ContainerFrameWidth", typeof(double),                          typeof(Mode), new DependencyPropertyMetadata(1.0,                                    Mode.NotifyContainerFrameWidthChanged));
+		public static readonly DependencyProperty ContainerLayoutModeProperty = DependencyProperty.Register("ContainerLayoutMode", typeof(ContainerLayoutMode),             typeof(Mode), new DependencyPropertyMetadata(ContainerLayoutMode.None,               Mode.NotifyContainerLayoutModeChanged));
 	}
 }
