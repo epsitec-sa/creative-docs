@@ -119,7 +119,7 @@ namespace Epsitec.Common.Designer.FormEditor
 		}
 
 
-		public FieldDescription.SeparatorType GetSeparator(Widget obj)
+		public FieldDescription.SeparatorType GetSeparatorLeft(Widget obj)
 		{
 			//	Retourne le type du séparateur d'un champ.
 			FieldDescription field = this.GetFormDescription(obj);
@@ -129,17 +129,89 @@ namespace Epsitec.Common.Designer.FormEditor
 			}
 			else
 			{
-				return field.Separator;
+				return field.SeparatorLeft;
 			}
 		}
 
-		public void SetSeparator(Widget obj, FieldDescription.SeparatorType sep)
+		public void SetSeparatorLeft(Widget obj, FieldDescription.SeparatorType sep)
 		{
 			//	Choix du type du séparateur d'un champ.
 			FieldDescription field = this.GetFormDescription(obj);
 			if (field != null)
 			{
-				field.Separator = sep;
+				field.SeparatorLeft = sep;
+			}
+		}
+
+		public FieldDescription.SeparatorType GetSeparatorRight(Widget obj)
+		{
+			//	Retourne le type du séparateur d'un champ.
+			FieldDescription field = this.GetFormDescription(obj);
+			if (field == null)
+			{
+				return FieldDescription.SeparatorType.Normal;
+			}
+			else
+			{
+				return field.SeparatorRight;
+			}
+		}
+
+		public void SetSeparatorRight(Widget obj, FieldDescription.SeparatorType sep)
+		{
+			//	Choix du type du séparateur d'un champ.
+			FieldDescription field = this.GetFormDescription(obj);
+			if (field != null)
+			{
+				field.SeparatorRight = sep;
+			}
+		}
+
+		public FieldDescription.SeparatorType GetSeparatorTop(Widget obj)
+		{
+			//	Retourne le type du séparateur d'un champ.
+			FieldDescription field = this.GetFormDescription(obj);
+			if (field == null)
+			{
+				return FieldDescription.SeparatorType.Normal;
+			}
+			else
+			{
+				return field.SeparatorTop;
+			}
+		}
+
+		public void SetSeparatorTop(Widget obj, FieldDescription.SeparatorType sep)
+		{
+			//	Choix du type du séparateur d'un champ.
+			FieldDescription field = this.GetFormDescription(obj);
+			if (field != null)
+			{
+				field.SeparatorTop = sep;
+			}
+		}
+
+		public FieldDescription.SeparatorType GetSeparatorBottom(Widget obj)
+		{
+			//	Retourne le type du séparateur d'un champ.
+			FieldDescription field = this.GetFormDescription(obj);
+			if (field == null)
+			{
+				return FieldDescription.SeparatorType.Normal;
+			}
+			else
+			{
+				return field.SeparatorBottom;
+			}
+		}
+
+		public void SetSeparatorBottom(Widget obj, FieldDescription.SeparatorType sep)
+		{
+			//	Choix du type du séparateur d'un champ.
+			FieldDescription field = this.GetFormDescription(obj);
+			if (field != null)
+			{
+				field.SeparatorBottom = sep;
 			}
 		}
 

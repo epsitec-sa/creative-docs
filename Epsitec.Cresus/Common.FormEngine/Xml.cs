@@ -13,7 +13,10 @@ namespace Epsitec.Common.FormEngine
 		public const string Type					= "Type";
 		public const string FieldIds				= "FI";
 		public const string BackColor				= "BC";
-		public const string Separator				= "Sep";
+		public const string SeparatorLeft			= "SL";
+		public const string SeparatorRight			= "SR";
+		public const string SeparatorTop			= "ST";
+		public const string SeparatorBottom			= "SB";
 		public const string ColumnsRequired			= "CR";
 		public const string RowsRequired			= "RR";
 		public const string ContainerLayoutMode		= "CLM";

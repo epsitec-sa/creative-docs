@@ -49,7 +49,10 @@ namespace Epsitec.Common.FormEngine
 		{
 			//	Constructeur protégé, commun à tous les autres.
 			this.backColor = BackColorType.None;
-			this.separator = SeparatorType.Normal;
+			this.separatorLeft = SeparatorType.Normal;
+			this.separatorRight = SeparatorType.Normal;
+			this.separatorTop = SeparatorType.Normal;
+			this.separatorBottom = SeparatorType.Normal;
 			this.columnsRequired = Engine.MaxColumnsRequired;
 			this.rowsRequired = 1;
 			this.containerLayoutMode = ContainerLayoutMode.None;
@@ -73,7 +76,10 @@ namespace Epsitec.Common.FormEngine
 			this.guid = model.guid;
 			this.type = model.type;
 			this.backColor = model.backColor;
-			this.separator = model.separator;
+			this.separatorLeft = model.separatorLeft;
+			this.separatorRight = model.separatorRight;
+			this.separatorTop = model.separatorTop;
+			this.separatorBottom = model.separatorBottom;
 			this.columnsRequired = model.columnsRequired;
 			this.rowsRequired = model.rowsRequired;
 			this.nodeDescription = model.nodeDescription;
@@ -246,16 +252,55 @@ namespace Epsitec.Common.FormEngine
 		}
 
 
-		public SeparatorType Separator
+		public SeparatorType SeparatorLeft
 		{
 			//	Type de séparation après le champ suivant.
 			get
 			{
-				return this.separator;
+				return this.separatorLeft;
 			}
 			set
 			{
-				this.separator = value;
+				this.separatorLeft = value;
+			}
+		}
+
+		public SeparatorType SeparatorRight
+		{
+			//	Type de séparation après le champ suivant.
+			get
+			{
+				return this.separatorRight;
+			}
+			set
+			{
+				this.separatorRight = value;
+			}
+		}
+
+		public SeparatorType SeparatorTop
+		{
+			//	Type de séparation après le champ suivant.
+			get
+			{
+				return this.separatorTop;
+			}
+			set
+			{
+				this.separatorTop = value;
+			}
+		}
+
+		public SeparatorType SeparatorBottom
+		{
+			//	Type de séparation après le champ suivant.
+			get
+			{
+				return this.separatorBottom;
+			}
+			set
+			{
+				this.separatorBottom = value;
 			}
 		}
 
@@ -408,7 +453,10 @@ namespace Epsitec.Common.FormEngine
 			if (!a.guid.Equals(b.guid) ||
 				a.type != b.type ||
 				a.backColor != b.backColor ||
-				a.separator != b.separator ||
+				a.separatorLeft != b.separatorLeft ||
+				a.separatorRight != b.separatorRight ||
+				a.separatorTop != b.separatorTop ||
+				a.separatorBottom != b.separatorBottom ||
 				a.columnsRequired != b.columnsRequired ||
 				a.rowsRequired != b.rowsRequired ||
 				a.containerLayoutMode != b.containerLayoutMode ||
@@ -466,7 +514,10 @@ namespace Epsitec.Common.FormEngine
 				writer.WriteElementString(Xml.BackColor, this.backColor.ToString());
 			}
 
-			writer.WriteElementString(Xml.Separator, this.separator.ToString());
+			writer.WriteElementString(Xml.SeparatorLeft, this.separatorLeft.ToString());
+			writer.WriteElementString(Xml.SeparatorRight, this.separatorRight.ToString());
+			writer.WriteElementString(Xml.SeparatorTop, this.separatorTop.ToString());
+			writer.WriteElementString(Xml.SeparatorBottom, this.separatorBottom.ToString());
 			writer.WriteElementString(Xml.ColumnsRequired, this.columnsRequired.ToString(System.Globalization.CultureInfo.InvariantCulture));
 			writer.WriteElementString(Xml.RowsRequired, this.rowsRequired.ToString(System.Globalization.CultureInfo.InvariantCulture));
 			writer.WriteElementString(Xml.ContainerLayoutMode, this.containerLayoutMode.ToString());
@@ -522,9 +573,21 @@ namespace Epsitec.Common.FormEngine
 						{
 							this.backColor = (BackColorType) System.Enum.Parse(typeof(BackColorType), element);
 						}
-						else if (name == Xml.Separator)
+						else if (name == Xml.SeparatorLeft)
 						{
-							this.separator = (SeparatorType) System.Enum.Parse(typeof(SeparatorType), element);
+							this.separatorLeft = (SeparatorType) System.Enum.Parse(typeof(SeparatorType), element);
+						}
+						else if (name == Xml.SeparatorRight)
+						{
+							this.separatorRight = (SeparatorType) System.Enum.Parse(typeof(SeparatorType), element);
+						}
+						else if (name == Xml.SeparatorTop)
+						{
+							this.separatorTop = (SeparatorType) System.Enum.Parse(typeof(SeparatorType), element);
+						}
+						else if (name == Xml.SeparatorBottom)
+						{
+							this.separatorBottom = (SeparatorType) System.Enum.Parse(typeof(SeparatorType), element);
 						}
 						else if (name == Xml.ColumnsRequired)
 						{
@@ -574,6 +637,22 @@ namespace Epsitec.Common.FormEngine
 		#endregion
 
 
+		public static double GetRealSeparator(SeparatorType type)
+		{
+			//	Retourne la valeur réelle d'une marge d'après son type.
+			switch (type)
+			{
+				case SeparatorType.Compact:
+					return -1;
+
+				case SeparatorType.Extend:
+					return 10;
+
+				default:
+					return 2;
+			}
+		}
+
 		public static Color GetRealColor(BackColorType type)
 		{
 			//	Retourne la couleur réelle d'après son type.
@@ -600,7 +679,10 @@ namespace Epsitec.Common.FormEngine
 		protected List<FieldDescription> nodeDescription;
 		protected List<Druid> fieldIds;
 		protected BackColorType backColor;
-		protected SeparatorType separator;
+		protected SeparatorType separatorLeft;
+		protected SeparatorType separatorRight;
+		protected SeparatorType separatorTop;
+		protected SeparatorType separatorBottom;
 		protected int columnsRequired;
 		protected int rowsRequired;
 		protected ContainerLayoutMode containerLayoutMode;

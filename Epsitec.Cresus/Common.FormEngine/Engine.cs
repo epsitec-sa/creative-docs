@@ -86,12 +86,10 @@ namespace Epsitec.Common.FormEngine
 				FieldDescription field = fields[i];
 
 				bool isGlueAfter = false;
-				if (i <fields.Count-1)
+				FieldDescription nextField = Engine.SearchNextElement(fields, i);
+				if (nextField != null && nextField.Type == FieldDescription.FieldType.Glue)
 				{
-					if (fields[i+1].Type == FieldDescription.FieldType.Glue)
-					{
-						isGlueAfter = true;
-					}
+					isGlueAfter = true;
 				}
 
 				//	Assigne l'identificateur unique, qui ira dans la propriété Index des widgets.
@@ -190,12 +188,10 @@ namespace Epsitec.Common.FormEngine
 				FieldDescription field = fields[i];
 
 				bool isGlueAfter = false;
-				if (i <fields.Count-1)
+				FieldDescription nextField = Engine.SearchNextElement(fields, i);
+				if (nextField != null && nextField.Type == FieldDescription.FieldType.Glue)
 				{
-					if (fields[i+1].Type == FieldDescription.FieldType.Glue)
-					{
-						isGlueAfter = true;
-					}
+					isGlueAfter = true;
 				}
 
 				if (field.Type == FieldDescription.FieldType.BoxBegin)  // début de boîte ?
@@ -441,18 +437,8 @@ namespace Epsitec.Common.FormEngine
 
 			int columnsRequired = System.Math.Max(field.ColumnsRequired, 2);
 
-			double m = 2;
-			switch (field.Separator)
-			{
-				case FieldDescription.SeparatorType.Compact:
-					m = -1;
-					break;
-
-				case FieldDescription.SeparatorType.Extend:
-					m = 10;
-					break;
-			}
-			grid.RowDefinitions[row].BottomBorder = m;
+			grid.RowDefinitions[row].TopBorder = FieldDescription.GetRealSeparator(field.SeparatorTop);
+			grid.RowDefinitions[row].BottomBorder = FieldDescription.GetRealSeparator(field.SeparatorBottom);
 
 			if (field.RowsRequired > 1)
 			{
@@ -612,6 +598,43 @@ namespace Epsitec.Common.FormEngine
 			}
 
 			return count;
+		}
+
+		static private FieldDescription SearchNextElement(List<FieldDescription> fields, int index)
+		{
+			//	Cherche le prochain élément.
+			if (fields[index].Type == FieldDescription.FieldType.BoxBegin)
+			{
+				int level = 0;
+
+				for (int i=index; i<fields.Count; i++)
+				{
+					if (fields[i].Type == FieldDescription.FieldType.BoxBegin)
+					{
+						level++;
+					}
+					else if (fields[i].Type == FieldDescription.FieldType.BoxEnd)
+					{
+						level--;
+
+						if (level == 0)
+						{
+							index = i;
+							break;
+						}
+					}
+				}
+			}
+
+			index++;
+			if (index < fields.Count)
+			{
+				return fields[index];
+			}
+			else
+			{
+				return null;
+			}
 		}
 
 		static private FieldDescription SearchNextField(List<FieldDescription> fields, int index)

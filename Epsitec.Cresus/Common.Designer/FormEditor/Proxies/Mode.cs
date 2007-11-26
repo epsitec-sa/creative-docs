@@ -52,15 +52,51 @@ namespace Epsitec.Common.Designer.FormEditor.Proxies
 		}
 
 
-		public FieldDescription.SeparatorType Separator
+		public FieldDescription.SeparatorType SeparatorLeft
 		{
 			get
 			{
-				return (FieldDescription.SeparatorType) this.GetValue(Mode.SeparatorProperty);
+				return (FieldDescription.SeparatorType) this.GetValue(Mode.SeparatorLeftProperty);
 			}
 			set
 			{
-				this.SetValue(Mode.SeparatorProperty, value);
+				this.SetValue(Mode.SeparatorLeftProperty, value);
+			}
+		}
+
+		public FieldDescription.SeparatorType SeparatorRight
+		{
+			get
+			{
+				return (FieldDescription.SeparatorType) this.GetValue(Mode.SeparatorRightProperty);
+			}
+			set
+			{
+				this.SetValue(Mode.SeparatorRightProperty, value);
+			}
+		}
+
+		public FieldDescription.SeparatorType SeparatorTop
+		{
+			get
+			{
+				return (FieldDescription.SeparatorType) this.GetValue(Mode.SeparatorTopProperty);
+			}
+			set
+			{
+				this.SetValue(Mode.SeparatorTopProperty, value);
+			}
+		}
+
+		public FieldDescription.SeparatorType SeparatorBottom
+		{
+			get
+			{
+				return (FieldDescription.SeparatorType) this.GetValue(Mode.SeparatorBottomProperty);
+			}
+			set
+			{
+				this.SetValue(Mode.SeparatorBottomProperty, value);
 			}
 		}
 
@@ -119,7 +155,10 @@ namespace Epsitec.Common.Designer.FormEditor.Proxies
 			//	le premier widget avec le proxy.
 			if (this.ObjectModifier.IsField(this.DefaultWidget))
 			{
-				this.Separator = this.ObjectModifier.GetSeparator(this.DefaultWidget);
+				this.SeparatorLeft = this.ObjectModifier.GetSeparatorLeft(this.DefaultWidget);
+				this.SeparatorRight = this.ObjectModifier.GetSeparatorRight(this.DefaultWidget);
+				this.SeparatorTop = this.ObjectModifier.GetSeparatorTop(this.DefaultWidget);
+				this.SeparatorBottom = this.ObjectModifier.GetSeparatorBottom(this.DefaultWidget);
 			}
 
 			if (this.ObjectModifier.IsField(this.DefaultWidget) ||
@@ -139,9 +178,21 @@ namespace Epsitec.Common.Designer.FormEditor.Proxies
 
 		static Mode()
 		{
-			EnumType separatorEnumType = Res.Types.FieldDescription.SeparatorType;
-			Mode.SeparatorProperty.DefaultMetadata.DefineNamedType(separatorEnumType);
-			Mode.SeparatorProperty.DefaultMetadata.DefineCaptionId(Res.Captions.FieldMode.SeparatorType.Id);
+			EnumType separatorLeftEnumType = Res.Types.FieldDescription.SeparatorType;
+			Mode.SeparatorLeftProperty.DefaultMetadata.DefineNamedType(separatorLeftEnumType);
+			Mode.SeparatorLeftProperty.DefaultMetadata.DefineCaptionId(Res.Captions.FieldMode.SeparatorLeftType.Id);
+
+			EnumType separatorRightEnumType = Res.Types.FieldDescription.SeparatorType;
+			Mode.SeparatorRightProperty.DefaultMetadata.DefineNamedType(separatorRightEnumType);
+			Mode.SeparatorRightProperty.DefaultMetadata.DefineCaptionId(Res.Captions.FieldMode.SeparatorRightType.Id);
+
+			EnumType separatorTopEnumType = Res.Types.FieldDescription.SeparatorType;
+			Mode.SeparatorTopProperty.DefaultMetadata.DefineNamedType(separatorTopEnumType);
+			Mode.SeparatorTopProperty.DefaultMetadata.DefineCaptionId(Res.Captions.FieldMode.SeparatorTopType.Id);
+
+			EnumType separatorBottomEnumType = Res.Types.FieldDescription.SeparatorType;
+			Mode.SeparatorBottomProperty.DefaultMetadata.DefineNamedType(separatorBottomEnumType);
+			Mode.SeparatorBottomProperty.DefaultMetadata.DefineCaptionId(Res.Captions.FieldMode.SeparatorBottomType.Id);
 
 			EnumType backColorEnumType = Res.Types.FieldDescription.BackColorType;
 			Mode.BackColorProperty.DefaultMetadata.DefineNamedType(backColorEnumType);
@@ -160,7 +211,7 @@ namespace Epsitec.Common.Designer.FormEditor.Proxies
 		}
 
 
-		private static void NotifySeparatorChanged(DependencyObject o, object oldValue, object newValue)
+		private static void NotifySeparatorLeftChanged(DependencyObject o, object oldValue, object newValue)
 		{
 			FieldDescription.SeparatorType value = (FieldDescription.SeparatorType) newValue;
 			Mode that = (Mode) o;
@@ -173,7 +224,79 @@ namespace Epsitec.Common.Designer.FormEditor.Proxies
 				{
 					foreach (Widget obj in that.Widgets)
 					{
-						that.ObjectModifier.SetSeparator(obj, value);
+						that.ObjectModifier.SetSeparatorLeft(obj, value);
+					}
+				}
+				finally
+				{
+					that.ResumeChanges();
+					that.RegenerateProxiesAndForm();
+				}
+			}
+		}
+
+		private static void NotifySeparatorRightChanged(DependencyObject o, object oldValue, object newValue)
+		{
+			FieldDescription.SeparatorType value = (FieldDescription.SeparatorType) newValue;
+			Mode that = (Mode) o;
+
+			if (that.IsNotSuspended)
+			{
+				that.SuspendChanges();
+
+				try
+				{
+					foreach (Widget obj in that.Widgets)
+					{
+						that.ObjectModifier.SetSeparatorRight(obj, value);
+					}
+				}
+				finally
+				{
+					that.ResumeChanges();
+					that.RegenerateProxiesAndForm();
+				}
+			}
+		}
+
+		private static void NotifySeparatorTopChanged(DependencyObject o, object oldValue, object newValue)
+		{
+			FieldDescription.SeparatorType value = (FieldDescription.SeparatorType) newValue;
+			Mode that = (Mode) o;
+
+			if (that.IsNotSuspended)
+			{
+				that.SuspendChanges();
+
+				try
+				{
+					foreach (Widget obj in that.Widgets)
+					{
+						that.ObjectModifier.SetSeparatorTop(obj, value);
+					}
+				}
+				finally
+				{
+					that.ResumeChanges();
+					that.RegenerateProxiesAndForm();
+				}
+			}
+		}
+
+		private static void NotifySeparatorBottomChanged(DependencyObject o, object oldValue, object newValue)
+		{
+			FieldDescription.SeparatorType value = (FieldDescription.SeparatorType) newValue;
+			Mode that = (Mode) o;
+
+			if (that.IsNotSuspended)
+			{
+				that.SuspendChanges();
+
+				try
+				{
+					foreach (Widget obj in that.Widgets)
+					{
+						that.ObjectModifier.SetSeparatorBottom(obj, value);
 					}
 				}
 				finally
@@ -281,7 +404,10 @@ namespace Epsitec.Common.Designer.FormEditor.Proxies
 		}
 
 
-		public static readonly DependencyProperty SeparatorProperty           = DependencyProperty.Register("Separator",           typeof(FieldDescription.SeparatorType), typeof(Mode), new DependencyPropertyMetadata(FieldDescription.SeparatorType.Normal, Mode.NotifySeparatorChanged));
+		public static readonly DependencyProperty SeparatorLeftProperty       = DependencyProperty.Register("SeparatorLeft",       typeof(FieldDescription.SeparatorType), typeof(Mode), new DependencyPropertyMetadata(FieldDescription.SeparatorType.Normal, Mode.NotifySeparatorLeftChanged));
+		public static readonly DependencyProperty SeparatorRightProperty      = DependencyProperty.Register("SeparatorRight",      typeof(FieldDescription.SeparatorType), typeof(Mode), new DependencyPropertyMetadata(FieldDescription.SeparatorType.Normal, Mode.NotifySeparatorRightChanged));
+		public static readonly DependencyProperty SeparatorTopProperty        = DependencyProperty.Register("SeparatorTop",        typeof(FieldDescription.SeparatorType), typeof(Mode), new DependencyPropertyMetadata(FieldDescription.SeparatorType.Normal, Mode.NotifySeparatorTopChanged));
+		public static readonly DependencyProperty SeparatorBottomProperty     = DependencyProperty.Register("SeparatorBottom",     typeof(FieldDescription.SeparatorType), typeof(Mode), new DependencyPropertyMetadata(FieldDescription.SeparatorType.Normal, Mode.NotifySeparatorBottomChanged));
 		public static readonly DependencyProperty BackColorProperty           = DependencyProperty.Register("BackColor",           typeof(FieldDescription.BackColorType), typeof(Mode), new DependencyPropertyMetadata(FieldDescription.BackColorType.None,   Mode.NotifyBackColorChanged));
 		public static readonly DependencyProperty ContainerFrameStateProperty = DependencyProperty.Register("ContainerFrameState", typeof(FrameState),                     typeof(Mode), new DependencyPropertyMetadata(FrameState.None,                       Mode.NotifyContainerFrameStateChanged));
 		public static readonly DependencyProperty ContainerFrameWidthProperty = DependencyProperty.Register("ContainerFrameWidth", typeof(double),                         typeof(Mode), new DependencyPropertyMetadata(1.0,                                   Mode.NotifyContainerFrameWidthChanged));
