@@ -116,14 +116,12 @@ namespace Epsitec.Common.Designer
 			{
 				//	designer:cap/302G
 				public static global::Epsitec.Common.Types.Caption BackColorType { get { return Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 2, 16)); } }
+				//	designer:cap/30271
+				public static global::Epsitec.Common.Types.Caption BoxFrameState { get { return Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 2, 39)); } }
+				//	designer:cap/30291
+				public static global::Epsitec.Common.Types.Caption BoxFrameWidth { get { return Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 2, 41)); } }
 				//	designer:cap/302E1
 				public static global::Epsitec.Common.Types.Caption BoxPaddingType { get { return Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 2, 46)); } }
-				//	designer:cap/30271
-				public static global::Epsitec.Common.Types.Caption ContainerFrameState { get { return Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 2, 39)); } }
-				//	designer:cap/30291
-				public static global::Epsitec.Common.Types.Caption ContainerFrameWidth { get { return Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 2, 41)); } }
-				//	designer:cap/30281
-				public static global::Epsitec.Common.Types.Caption ContainerLayoutMode { get { return Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 2, 40)); } }
 				//	designer:cap/302D1
 				public static global::Epsitec.Common.Types.Caption SeparatorBottomType { get { return Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 2, 45)); } }
 			}
@@ -288,8 +286,6 @@ namespace Epsitec.Common.Designer
 				public static readonly global::Epsitec.Common.Types.EnumType BackColorType = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 2, 8));
 				//	designer:cap/302F1
 				public static readonly global::Epsitec.Common.Types.EnumType BoxPaddingType = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 2, 47));
-				//	designer:cap/30241
-				public static readonly global::Epsitec.Common.Types.EnumType ContainerLayoutMode = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 2, 36));
 				//	designer:cap/302V
 				public static readonly global::Epsitec.Common.Types.EnumType FrameState = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 2, 31));
 				//	designer:cap/3023
