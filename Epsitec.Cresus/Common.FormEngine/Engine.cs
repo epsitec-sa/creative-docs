@@ -394,8 +394,7 @@ namespace Epsitec.Common.FormEngine
 			UI.Panel box = new UI.Panel(root);
 			box.ContainerLayoutMode = field.ContainerLayoutMode;
 			box.DrawFrameState = FrameState.All;
-			box.Margins = field.ContainerMargins;
-			box.Padding = field.ContainerPadding;
+			box.Padding = FieldDescription.GetRealBoxPadding(field.BoxPadding);
 			box.BackColor = FieldDescription.GetRealColor(field.BackColor);
 			box.DrawFrameState = field.ContainerFrameState;
 			box.DrawFrameWidth = field.ContainerFrameWidth;
@@ -404,6 +403,8 @@ namespace Epsitec.Common.FormEngine
 			grid.RowDefinitions.Add(new Widgets.Layouts.RowDefinition());
 
 			int columnsRequired = System.Math.Max(field.ColumnsRequired, 1);
+
+			grid.RowDefinitions[row].BottomBorder = FieldDescription.GetRealSeparator(field.SeparatorBottom);
 
 			int i = Engine.GetColumnIndex(labelsId, column);
 			int j = Engine.GetColumnIndex(labelsId, column+columnsRequired-1)+1;
@@ -437,7 +438,6 @@ namespace Epsitec.Common.FormEngine
 
 			int columnsRequired = System.Math.Max(field.ColumnsRequired, 2);
 
-			grid.RowDefinitions[row].TopBorder = FieldDescription.GetRealSeparator(field.SeparatorTop);
 			grid.RowDefinitions[row].BottomBorder = FieldDescription.GetRealSeparator(field.SeparatorBottom);
 
 			if (field.RowsRequired > 1)

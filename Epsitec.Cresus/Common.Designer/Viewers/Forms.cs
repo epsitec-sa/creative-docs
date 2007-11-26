@@ -992,8 +992,6 @@ namespace Epsitec.Common.Designer.Viewers
 			int index = first;
 
 			FieldDescription box = new FieldDescription(FieldDescription.FieldType.BoxBegin);
-			box.ContainerMargins = new Margins(5, 5, 5, 5);
-			box.ContainerPadding = new Margins(5, 5, 5, 5);
 			box.ContainerFrameState = FrameState.All;
 			this.form.Fields.Insert(index++, box);
 

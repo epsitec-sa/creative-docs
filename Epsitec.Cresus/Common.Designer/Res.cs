@@ -112,30 +112,12 @@ namespace Epsitec.Common.Designer
 				public static global::Epsitec.Common.Types.Caption RowsRequired { get { return Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 2, 14)); } }
 			}
 			
-			public static class FieldMargins
-			{
-				//	designer:cap/302Q
-				public static global::Epsitec.Common.Types.Caption MarginBottom { get { return Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 2, 26)); } }
-				//	designer:cap/302N
-				public static global::Epsitec.Common.Types.Caption MarginLeft { get { return Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 2, 23)); } }
-				//	designer:cap/302O
-				public static global::Epsitec.Common.Types.Caption MarginRight { get { return Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 2, 24)); } }
-				//	designer:cap/302P
-				public static global::Epsitec.Common.Types.Caption MarginTop { get { return Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 2, 25)); } }
-				//	designer:cap/302R
-				public static global::Epsitec.Common.Types.Caption PaddingBottom { get { return Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 2, 27)); } }
-				//	designer:cap/302S
-				public static global::Epsitec.Common.Types.Caption PaddingLeft { get { return Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 2, 28)); } }
-				//	designer:cap/302T
-				public static global::Epsitec.Common.Types.Caption PaddingRight { get { return Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 2, 29)); } }
-				//	designer:cap/302U
-				public static global::Epsitec.Common.Types.Caption PaddingTop { get { return Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 2, 30)); } }
-			}
-			
 			public static class FieldMode
 			{
 				//	designer:cap/302G
 				public static global::Epsitec.Common.Types.Caption BackColorType { get { return Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 2, 16)); } }
+				//	designer:cap/302E1
+				public static global::Epsitec.Common.Types.Caption BoxPaddingType { get { return Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 2, 46)); } }
 				//	designer:cap/30271
 				public static global::Epsitec.Common.Types.Caption ContainerFrameState { get { return Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 2, 39)); } }
 				//	designer:cap/30291
@@ -144,12 +126,6 @@ namespace Epsitec.Common.Designer
 				public static global::Epsitec.Common.Types.Caption ContainerLayoutMode { get { return Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 2, 40)); } }
 				//	designer:cap/302D1
 				public static global::Epsitec.Common.Types.Caption SeparatorBottomType { get { return Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 2, 45)); } }
-				//	designer:cap/302F
-				public static global::Epsitec.Common.Types.Caption SeparatorLeftType { get { return Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 2, 15)); } }
-				//	designer:cap/302B1
-				public static global::Epsitec.Common.Types.Caption SeparatorRightType { get { return Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 2, 43)); } }
-				//	designer:cap/302C1
-				public static global::Epsitec.Common.Types.Caption SeparatorTopType { get { return Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 2, 44)); } }
 			}
 			
 			public static class Geometry
@@ -310,6 +286,8 @@ namespace Epsitec.Common.Designer
 			{
 				//	designer:cap/3028
 				public static readonly global::Epsitec.Common.Types.EnumType BackColorType = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 2, 8));
+				//	designer:cap/302F1
+				public static readonly global::Epsitec.Common.Types.EnumType BoxPaddingType = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 2, 47));
 				//	designer:cap/30241
 				public static readonly global::Epsitec.Common.Types.EnumType ContainerLayoutMode = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 2, 36));
 				//	designer:cap/302V
@@ -359,6 +337,16 @@ namespace Epsitec.Common.Designer
 					public static global::Epsitec.Common.Types.Caption Red { get { return Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 2, 12)); } }
 					//	designer:cap/302B
 					public static global::Epsitec.Common.Types.Caption Yellow { get { return Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 2, 11)); } }
+				}
+				
+				public static class BoxPaddingType
+				{
+					//	designer:cap/302H1
+					public static global::Epsitec.Common.Types.Caption Compact { get { return Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 2, 49)); } }
+					//	designer:cap/302I1
+					public static global::Epsitec.Common.Types.Caption Extend { get { return Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 2, 50)); } }
+					//	designer:cap/302G1
+					public static global::Epsitec.Common.Types.Caption Normal { get { return Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 2, 48)); } }
 				}
 				
 				public static class ContainerLayoutMode

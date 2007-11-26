@@ -119,78 +119,6 @@ namespace Epsitec.Common.Designer.FormEditor
 		}
 
 
-		public FieldDescription.SeparatorType GetSeparatorLeft(Widget obj)
-		{
-			//	Retourne le type du séparateur d'un champ.
-			FieldDescription field = this.GetFormDescription(obj);
-			if (field == null)
-			{
-				return FieldDescription.SeparatorType.Normal;
-			}
-			else
-			{
-				return field.SeparatorLeft;
-			}
-		}
-
-		public void SetSeparatorLeft(Widget obj, FieldDescription.SeparatorType sep)
-		{
-			//	Choix du type du séparateur d'un champ.
-			FieldDescription field = this.GetFormDescription(obj);
-			if (field != null)
-			{
-				field.SeparatorLeft = sep;
-			}
-		}
-
-		public FieldDescription.SeparatorType GetSeparatorRight(Widget obj)
-		{
-			//	Retourne le type du séparateur d'un champ.
-			FieldDescription field = this.GetFormDescription(obj);
-			if (field == null)
-			{
-				return FieldDescription.SeparatorType.Normal;
-			}
-			else
-			{
-				return field.SeparatorRight;
-			}
-		}
-
-		public void SetSeparatorRight(Widget obj, FieldDescription.SeparatorType sep)
-		{
-			//	Choix du type du séparateur d'un champ.
-			FieldDescription field = this.GetFormDescription(obj);
-			if (field != null)
-			{
-				field.SeparatorRight = sep;
-			}
-		}
-
-		public FieldDescription.SeparatorType GetSeparatorTop(Widget obj)
-		{
-			//	Retourne le type du séparateur d'un champ.
-			FieldDescription field = this.GetFormDescription(obj);
-			if (field == null)
-			{
-				return FieldDescription.SeparatorType.Normal;
-			}
-			else
-			{
-				return field.SeparatorTop;
-			}
-		}
-
-		public void SetSeparatorTop(Widget obj, FieldDescription.SeparatorType sep)
-		{
-			//	Choix du type du séparateur d'un champ.
-			FieldDescription field = this.GetFormDescription(obj);
-			if (field != null)
-			{
-				field.SeparatorTop = sep;
-			}
-		}
-
 		public FieldDescription.SeparatorType GetSeparatorBottom(Widget obj)
 		{
 			//	Retourne le type du séparateur d'un champ.
@@ -313,53 +241,6 @@ namespace Epsitec.Common.Designer.FormEditor
 			{
 				field.ContainerLayoutMode = mode;
 			}
-		}
-
-
-		public Margins GetContainerMargins(Widget obj)
-		{
-			//	Retourne les marges de l'objet.
-			//	Uniquement pour les boîtes.
-			if (this.IsBox(obj))
-			{
-				FieldDescription field = this.GetFormDescription(obj);
-				return field.ContainerMargins;
-			}
-
-			return Margins.Zero;
-		}
-
-		public void SetContainerMargins(Widget obj, Margins margins)
-		{
-			//	Choix des marges de l'objet.
-			//	Uniquement pour les boîtes.
-			System.Diagnostics.Debug.Assert(this.IsBox(obj));
-
-			FieldDescription field = this.GetFormDescription(obj);
-			field.ContainerMargins = margins;
-		}
-
-		public Margins GetContainerPadding(Widget obj)
-		{
-			//	Retourne les marges de l'objet.
-			//	Uniquement pour les boîtes.
-			if (this.IsBox(obj))
-			{
-				FieldDescription field = this.GetFormDescription(obj);
-				return field.ContainerPadding;
-			}
-
-			return Margins.Zero;
-		}
-
-		public void SetContainerPadding(Widget obj, Margins margins)
-		{
-			//	Choix des marges de l'objet.
-			//	Uniquement pour les boîtes.
-			System.Diagnostics.Debug.Assert(this.IsBox(obj));
-
-			FieldDescription field = this.GetFormDescription(obj);
-			field.ContainerPadding = margins;
 		}
 
 

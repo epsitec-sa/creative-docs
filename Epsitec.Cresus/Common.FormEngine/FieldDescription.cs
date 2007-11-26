@@ -36,6 +36,14 @@ namespace Epsitec.Common.FormEngine
 		}
 
 		[DesignerVisible]
+		public enum BoxPaddingType
+		{
+			Normal			= 0,	// marge standard
+			Compact			= 1,	// marge nulle
+			Extend			= 2,	// marge étendue
+		}
+
+		[DesignerVisible]
 		public enum BackColorType
 		{
 			None			= 0,	// transparent
@@ -49,15 +57,11 @@ namespace Epsitec.Common.FormEngine
 		{
 			//	Constructeur protégé, commun à tous les autres.
 			this.backColor = BackColorType.None;
-			this.separatorLeft = SeparatorType.Normal;
-			this.separatorRight = SeparatorType.Normal;
-			this.separatorTop = SeparatorType.Normal;
 			this.separatorBottom = SeparatorType.Normal;
+			this.boxPaddingType = BoxPaddingType.Normal;
 			this.columnsRequired = Engine.MaxColumnsRequired;
 			this.rowsRequired = 1;
 			this.containerLayoutMode = ContainerLayoutMode.None;
-			this.containerMargins = Margins.Zero;
-			this.containerPadding = Margins.Zero;
 			this.containerFrameState = FrameState.None;
 			this.containerFrameWidth = 1;
 		}
@@ -76,17 +80,13 @@ namespace Epsitec.Common.FormEngine
 			this.guid = model.guid;
 			this.type = model.type;
 			this.backColor = model.backColor;
-			this.separatorLeft = model.separatorLeft;
-			this.separatorRight = model.separatorRight;
-			this.separatorTop = model.separatorTop;
 			this.separatorBottom = model.separatorBottom;
+			this.boxPaddingType = model.boxPaddingType;
 			this.columnsRequired = model.columnsRequired;
 			this.rowsRequired = model.rowsRequired;
 			this.nodeDescription = model.nodeDescription;
 			this.fieldIds = model.fieldIds;
 			this.containerLayoutMode = model.containerLayoutMode;
-			this.containerMargins = model.containerMargins;
-			this.containerPadding = model.containerPadding;
 			this.containerFrameState = model.containerFrameState;
 			this.containerFrameWidth = model.containerFrameWidth;
 		}
@@ -252,45 +252,6 @@ namespace Epsitec.Common.FormEngine
 		}
 
 
-		public SeparatorType SeparatorLeft
-		{
-			//	Type de séparation après le champ suivant.
-			get
-			{
-				return this.separatorLeft;
-			}
-			set
-			{
-				this.separatorLeft = value;
-			}
-		}
-
-		public SeparatorType SeparatorRight
-		{
-			//	Type de séparation après le champ suivant.
-			get
-			{
-				return this.separatorRight;
-			}
-			set
-			{
-				this.separatorRight = value;
-			}
-		}
-
-		public SeparatorType SeparatorTop
-		{
-			//	Type de séparation après le champ suivant.
-			get
-			{
-				return this.separatorTop;
-			}
-			set
-			{
-				this.separatorTop = value;
-			}
-		}
-
 		public SeparatorType SeparatorBottom
 		{
 			//	Type de séparation après le champ suivant.
@@ -301,6 +262,19 @@ namespace Epsitec.Common.FormEngine
 			set
 			{
 				this.separatorBottom = value;
+			}
+		}
+
+		public BoxPaddingType BoxPadding
+		{
+			//	Type de marge intérieure pour les boîtes.
+			get
+			{
+				return this.boxPaddingType;
+			}
+			set
+			{
+				this.boxPaddingType = value;
 			}
 		}
 
@@ -358,34 +332,6 @@ namespace Epsitec.Common.FormEngine
 			{
 				System.Diagnostics.Debug.Assert(this.type == FieldType.BoxBegin);
 				this.containerLayoutMode = value;
-			}
-		}
-
-		public Margins ContainerMargins
-		{
-			//	Marges d'une boîte.
-			get
-			{
-				return this.containerMargins;
-			}
-			set
-			{
-				System.Diagnostics.Debug.Assert(this.type == FieldType.BoxBegin);
-				this.containerMargins = value;
-			}
-		}
-
-		public Margins ContainerPadding
-		{
-			//	Padding d'une boîte.
-			get
-			{
-				return this.containerPadding;
-			}
-			set
-			{
-				System.Diagnostics.Debug.Assert(this.type == FieldType.BoxBegin);
-				this.containerPadding = value;
 			}
 		}
 
@@ -453,15 +399,11 @@ namespace Epsitec.Common.FormEngine
 			if (!a.guid.Equals(b.guid) ||
 				a.type != b.type ||
 				a.backColor != b.backColor ||
-				a.separatorLeft != b.separatorLeft ||
-				a.separatorRight != b.separatorRight ||
-				a.separatorTop != b.separatorTop ||
 				a.separatorBottom != b.separatorBottom ||
+				a.boxPaddingType != b.boxPaddingType ||
 				a.columnsRequired != b.columnsRequired ||
 				a.rowsRequired != b.rowsRequired ||
 				a.containerLayoutMode != b.containerLayoutMode ||
-				!a.containerMargins.Equals(b.containerMargins) ||
-				!a.containerPadding.Equals(b.containerPadding) ||
 				a.containerFrameState != b.containerFrameState ||
 				a.containerFrameWidth != b.containerFrameWidth)
 			{
@@ -514,23 +456,11 @@ namespace Epsitec.Common.FormEngine
 				writer.WriteElementString(Xml.BackColor, this.backColor.ToString());
 			}
 
-			writer.WriteElementString(Xml.SeparatorLeft, this.separatorLeft.ToString());
-			writer.WriteElementString(Xml.SeparatorRight, this.separatorRight.ToString());
-			writer.WriteElementString(Xml.SeparatorTop, this.separatorTop.ToString());
 			writer.WriteElementString(Xml.SeparatorBottom, this.separatorBottom.ToString());
+			writer.WriteElementString(Xml.BoxPaddingType, this.boxPaddingType.ToString());
 			writer.WriteElementString(Xml.ColumnsRequired, this.columnsRequired.ToString(System.Globalization.CultureInfo.InvariantCulture));
 			writer.WriteElementString(Xml.RowsRequired, this.rowsRequired.ToString(System.Globalization.CultureInfo.InvariantCulture));
 			writer.WriteElementString(Xml.ContainerLayoutMode, this.containerLayoutMode.ToString());
-
-			if (this.containerMargins != Margins.Zero)
-			{
-				writer.WriteElementString(Xml.ContainerMargins, this.containerMargins.ToString());
-			}
-
-			if (this.containerPadding != Margins.Zero)
-			{
-				writer.WriteElementString(Xml.ContainerPadding, this.containerPadding.ToString());
-			}
 
 			writer.WriteElementString(Xml.ContainerFrameState, this.containerFrameState.ToString());
 			writer.WriteElementString(Xml.ContainerFrameWidth, this.containerFrameWidth.ToString(System.Globalization.CultureInfo.InvariantCulture));
@@ -573,21 +503,13 @@ namespace Epsitec.Common.FormEngine
 						{
 							this.backColor = (BackColorType) System.Enum.Parse(typeof(BackColorType), element);
 						}
-						else if (name == Xml.SeparatorLeft)
-						{
-							this.separatorLeft = (SeparatorType) System.Enum.Parse(typeof(SeparatorType), element);
-						}
-						else if (name == Xml.SeparatorRight)
-						{
-							this.separatorRight = (SeparatorType) System.Enum.Parse(typeof(SeparatorType), element);
-						}
-						else if (name == Xml.SeparatorTop)
-						{
-							this.separatorTop = (SeparatorType) System.Enum.Parse(typeof(SeparatorType), element);
-						}
 						else if (name == Xml.SeparatorBottom)
 						{
 							this.separatorBottom = (SeparatorType) System.Enum.Parse(typeof(SeparatorType), element);
+						}
+						else if (name == Xml.BoxPaddingType)
+						{
+							this.boxPaddingType = (BoxPaddingType) System.Enum.Parse(typeof(BoxPaddingType), element);
 						}
 						else if (name == Xml.ColumnsRequired)
 						{
@@ -600,14 +522,6 @@ namespace Epsitec.Common.FormEngine
 						else if (name == Xml.ContainerLayoutMode)
 						{
 							this.containerLayoutMode = (ContainerLayoutMode) System.Enum.Parse(typeof(ContainerLayoutMode), element);
-						}
-						else if (name == Xml.ContainerMargins)
-						{
-							this.containerMargins = Margins.Parse(element);
-						}
-						else if (name == Xml.ContainerPadding)
-						{
-							this.containerPadding = Margins.Parse(element);
 						}
 						else if (name == Xml.ContainerFrameState)
 						{
@@ -653,6 +567,22 @@ namespace Epsitec.Common.FormEngine
 			}
 		}
 
+		public static Margins GetRealBoxPadding(BoxPaddingType type)
+		{
+			//	Retourne la valeur réelle d'une marge d'après son type.
+			switch (type)
+			{
+				case BoxPaddingType.Compact:
+					return new Margins(0, 0, 0, 0);
+
+				case BoxPaddingType.Extend:
+					return new Margins(10, 10, 10, 10);
+
+				default:
+					return new Margins(5, 5, 5, 5);
+			}
+		}
+
 		public static Color GetRealColor(BackColorType type)
 		{
 			//	Retourne la couleur réelle d'après son type.
@@ -679,15 +609,11 @@ namespace Epsitec.Common.FormEngine
 		protected List<FieldDescription> nodeDescription;
 		protected List<Druid> fieldIds;
 		protected BackColorType backColor;
-		protected SeparatorType separatorLeft;
-		protected SeparatorType separatorRight;
-		protected SeparatorType separatorTop;
 		protected SeparatorType separatorBottom;
+		protected BoxPaddingType boxPaddingType;
 		protected int columnsRequired;
 		protected int rowsRequired;
 		protected ContainerLayoutMode containerLayoutMode;
-		protected Margins containerMargins;
-		protected Margins containerPadding;
 		protected FrameState containerFrameState;
 		protected double containerFrameWidth;
 	}
