@@ -16,7 +16,6 @@ namespace Epsitec.Common.UI.Controllers
 		public StringController(ControllerParameters parameters)
 			: base (parameters)
 		{
-			this.parameters = parameters;
 		}
 
 		public override object GetActualValue()
@@ -28,7 +27,8 @@ namespace Epsitec.Common.UI.Controllers
 		{
 			this.Placeholder.ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow;
 
-			if (this.Placeholder.IsReadOnlyValueBinding)
+			if ((this.Placeholder.IsReadOnlyValueBinding) ||
+				(this.ControllerParameters.GetParameterValue (AbstractController.ReadOnlyParameter) != null))
 			{
 				this.CreateReadOnlyUserInterface (caption);
 			}
@@ -100,7 +100,7 @@ namespace Epsitec.Common.UI.Controllers
 		{
 			AbstractTextField text;
 
-			switch (this.parameters.GetParameterValue ("Mode"))
+			switch (this.ControllerParameters.GetParameterValue ("Mode"))
 			{
 				case StringController.MultilineMode:
 					text = new TextFieldMulti ();
@@ -166,13 +166,12 @@ namespace Epsitec.Common.UI.Controllers
 			return newValue.ToString ();
 		}
 
-		public const string ModeParameter = "Mode";
-		public const string PasswordMode = "Password";
-		public const string MultilineMode = "Multiline";
+		public const string						ModeParameter	= "Mode";
+		public const string						PasswordMode	= "Password";
+		public const string						MultilineMode	= "Multiline";
 		
-		private AbstractTextField field;
-		private StaticText label;
-		private IValidator validator;
-		private readonly ControllerParameters parameters;
+		private AbstractTextField				field;
+		private StaticText						label;
+		private IValidator						validator;
 	}
 }

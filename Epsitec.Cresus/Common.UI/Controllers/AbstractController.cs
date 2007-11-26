@@ -409,6 +409,7 @@ namespace Epsitec.Common.UI.Controllers
 		public static readonly DependencyProperty PlaceholderProperty = DependencyProperty.Register ("Placeholder", typeof (Placeholder), typeof (AbstractController), new DependencyPropertyMetadata (AbstractController.GetPlaceholderValue, AbstractController.SetPlaceholderValue));
 
 		public const string						NoLabelsParameter = "NoLabels";
+		public const string						ReadOnlyParameter = "ReadOnly";
 
 		private Placeholder						placeholder;
 		private readonly List<WidgetRecord>		widgets;
