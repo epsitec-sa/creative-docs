@@ -123,7 +123,8 @@ namespace Epsitec.Common.Designer.FormEditor.Proxies
 			}
 
 			if (this.ObjectModifier.IsField(this.DefaultWidget) ||
-				this.ObjectModifier.IsBox(this.DefaultWidget)   )
+				this.ObjectModifier.IsBox(this.DefaultWidget) ||
+				this.ObjectModifier.IsGlue(this.DefaultWidget))
 			{
 				this.BackColor = this.ObjectModifier.GetBackColor(this.DefaultWidget);
 			}

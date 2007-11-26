@@ -57,6 +57,18 @@ namespace Epsitec.Common.Designer.FormEditor
 			return field.Type == FieldDescription.FieldType.BoxBegin;
 		}
 
+		public bool IsGlue(Widget obj)
+		{
+			//	Indique si l'objet correspond à de la colle.
+			FieldDescription field = this.GetFormDescription(obj);
+			if (field == null)
+			{
+				return false;
+			}
+
+			return field.Type == FieldDescription.FieldType.Glue;
+		}
+
 
 		public int GetColumnsRequired(Widget obj)
 		{

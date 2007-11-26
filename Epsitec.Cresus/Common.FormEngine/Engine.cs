@@ -98,7 +98,7 @@ namespace Epsitec.Common.FormEngine
 				//	La valeur -1 par défaut indique un widget non identifié.
 				field.UniqueId = i;
 
-				if (field.Type == FieldDescription.FieldType.BoxBegin)
+				if (field.Type == FieldDescription.FieldType.BoxBegin)  // début de boîte ?
 				{
 					if (level == 0)
 					{
@@ -107,7 +107,7 @@ namespace Epsitec.Common.FormEngine
 
 					level++;
 				}
-				else if (field.Type == FieldDescription.FieldType.BoxEnd)
+				else if (field.Type == FieldDescription.FieldType.BoxEnd)  // fin de boîte ?
 				{
 					level--;
 
@@ -121,6 +121,13 @@ namespace Epsitec.Common.FormEngine
 					if (level == 0)
 					{
 						this.PreprocessField(field, labelsId, ref labelId, ref column, isGlueAfter);
+					}
+				}
+				else if (field.Type == FieldDescription.FieldType.Glue)  // colle ?
+				{
+					if (level == 0)
+					{
+						this.PreprocessGlue(field, labelsId, ref labelId, ref column, isGlueAfter);
 					}
 				}
 				else if (field.Type == FieldDescription.FieldType.Node ||
@@ -191,7 +198,7 @@ namespace Epsitec.Common.FormEngine
 					}
 				}
 
-				if (field.Type == FieldDescription.FieldType.BoxBegin)
+				if (field.Type == FieldDescription.FieldType.BoxBegin)  // début de boîte ?
 				{
 					if (level == 0)
 					{
@@ -201,7 +208,7 @@ namespace Epsitec.Common.FormEngine
 
 					level++;
 				}
-				else if (field.Type == FieldDescription.FieldType.BoxEnd)
+				else if (field.Type == FieldDescription.FieldType.BoxEnd)  // fin de boîte ?
 				{
 					level--;
 
@@ -216,6 +223,13 @@ namespace Epsitec.Common.FormEngine
 					{
 						string path = field.GetPath("Data");
 						this.CreateField(root, grid, path, field, labelsId, ref column, ref row, isGlueAfter);
+					}
+				}
+				else if (field.Type == FieldDescription.FieldType.Glue)  // colle ?
+				{
+					if (level == 0)
+					{
+						this.CreateGlue(root, grid, field, labelsId, ref column, ref row, isGlueAfter);
 					}
 				}
 				else if (field.Type == FieldDescription.FieldType.Title ||
@@ -266,6 +280,19 @@ namespace Epsitec.Common.FormEngine
 			{
 				column = 0;
 			}
+		}
+
+		private void PreprocessGlue(FieldDescription field, List<int> labelsId, ref int labelId, ref int column, bool isGlueAfter)
+		{
+			//	Détermine quelles colonnes contiennent des labels, lors de la première passe.
+			int columnsRequired = field.ColumnsRequired;
+
+			for (int i=0; i<columnsRequired; i++)
+			{
+				Engine.LabelIdUse(labelsId, labelId++, column+i, 1);
+			}
+
+			column += columnsRequired;
 		}
 
 		static private void LabelIdUse(List<int> labelsId, int labelId, int column, int count)
@@ -447,6 +474,26 @@ namespace Epsitec.Common.FormEngine
 				row++;
 				column = 0;
 			}
+		}
+
+		private void CreateGlue(UI.Panel root, Widgets.Layouts.GridLayoutEngine grid, FieldDescription field, List<int> labelsId, ref int column, ref int row, bool isGlueAfter)
+		{
+			//	Crée les widgets pour un collage dans la grille, lors de la deuxième passe.
+			FrameBox glue = new FrameBox(root);
+			glue.BackColor = FieldDescription.GetRealColor(field.BackColor);
+			glue.Index = field.UniqueId;
+
+			grid.RowDefinitions.Add(new Widgets.Layouts.RowDefinition());
+
+			int columnsRequired = field.ColumnsRequired;
+
+			int i = Engine.GetColumnIndex(labelsId, column);
+			int j = Engine.GetColumnIndex(labelsId, column+columnsRequired-1)+1;
+			Widgets.Layouts.GridLayoutEngine.SetColumn(glue, i);
+			Widgets.Layouts.GridLayoutEngine.SetRow(glue, row);
+			Widgets.Layouts.GridLayoutEngine.SetColumnSpan(glue, j-i);
+
+			column += columnsRequired;
 		}
 
 		private void CreateSeparator(UI.Panel root, Widgets.Layouts.GridLayoutEngine grid, FieldDescription field, FieldDescription nextField, List<int> labelsId, ref int column, ref int row, bool isGlueAfter, ref List<Druid> lastTitle)
