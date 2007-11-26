@@ -112,7 +112,14 @@ namespace Epsitec.Common.UI
 			}
 			set
 			{
-				this.SetValue (AbstractPlaceholder.ValueProperty, value);
+				if (value == UndefinedValue.Value)
+				{
+					this.ClearValue (AbstractPlaceholder.ValueProperty);
+				}
+				else
+				{
+					this.SetValue (AbstractPlaceholder.ValueProperty, value);
+				}
 			}
 		}
 

@@ -44,8 +44,8 @@ namespace Epsitec.Common.UI
 			Test1Controller tc1 = c1 as Test1Controller;
 			Test1Controller tc2 = c2 as Test1Controller;
 
-			Assert.AreEqual ("x", tc1.Parameter);
-			Assert.AreEqual ("y", tc2.Parameter);
+			Assert.AreEqual ("x", tc1.Parameters);
+			Assert.AreEqual ("y", tc2.Parameters);
 		}
 
 		[Test]
@@ -98,12 +98,12 @@ namespace Epsitec.Common.UI
 
 			Assert.AreEqual ("*", placeholder.Controller);
 			Assert.IsFalse (placeholder.GetMinSpan (null, 0, 0, out minColumnSpan, out minRowSpan));
-			Assert.IsNull (placeholder.Value);
+			Assert.AreEqual (UndefinedValue.Value, placeholder.Value);
 			Assert.IsFalse (placeholder.GetMinSpan (empty, 0, 0, out minColumnSpan, out minRowSpan));
 			Assert.IsTrue (placeholder.GetMinSpan (root, 0, 0, out minColumnSpan, out minRowSpan));
 			Assert.AreEqual (2, minColumnSpan);
 			Assert.AreEqual (1, minRowSpan);
-			Assert.IsNull (placeholder.Value);
+			Assert.AreEqual (UndefinedValue.Value, placeholder.Value);
 		}
 
 		[Test]
@@ -686,16 +686,16 @@ namespace Epsitec.Common.UI
 
 		internal class Test1Controller : UI.Controllers.AbstractController
 		{
-			public Test1Controller(string parameter)
+			public Test1Controller(Controllers.ControllerParameters parameters)
+				: base (parameters)
 			{
-				this.parameter = parameter;
 			}
 
-			public string Parameter
+			public string Parameters
 			{
 				get
 				{
-					return this.parameter;
+					return this.ControllerParameters.ToString ();
 				}
 			}
 
@@ -708,8 +708,6 @@ namespace Epsitec.Common.UI
 			{
 				throw new System.Exception ("The method or operation is not implemented.");
 			}
-
-			private string parameter;
 		}
 
 		#endregion

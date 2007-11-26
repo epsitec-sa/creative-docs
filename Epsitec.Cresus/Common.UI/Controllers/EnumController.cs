@@ -14,6 +14,7 @@ namespace Epsitec.Common.UI.Controllers
 	public class EnumController : AbstractController
 	{
 		public EnumController(ControllerParameters parameters)
+			: base (parameters)
 		{
 			switch (parameters.GetParameterValue ("Mode"))
 			{

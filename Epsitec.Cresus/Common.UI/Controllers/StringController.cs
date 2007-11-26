@@ -14,6 +14,7 @@ namespace Epsitec.Common.UI.Controllers
 	public class StringController : AbstractController
 	{
 		public StringController(ControllerParameters parameters)
+			: base (parameters)
 		{
 			this.parameters = parameters;
 		}

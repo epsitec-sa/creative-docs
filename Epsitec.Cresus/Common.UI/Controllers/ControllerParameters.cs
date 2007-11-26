@@ -12,7 +12,7 @@ namespace Epsitec.Common.UI.Controllers
 	/// The <c>ControllerParameters</c> class stores parameters associated with
 	/// a controller implementing the <see cref="IController"/> interface.
 	/// </summary>
-	public class ControllerParameters : System.IEquatable<ControllerParameters>
+	public class ControllerParameters : System.IEquatable<ControllerParameters>, IReadOnlyLock
 	{
 		/// <summary>
 		/// Initializes a new instance of the <see cref="ControllerParameters"/> class.
@@ -60,6 +60,11 @@ namespace Epsitec.Common.UI.Controllers
 		/// <param name="value">The value.</param>
 		public void SetParameterValue(string key, string value)
 		{
+			if (this.IsReadOnly)
+			{
+				throw new System.InvalidOperationException ("ControllerParameters is read only");
+			}
+
 			if (this.dictionary == null)
 			{
 				this.AllocateDictionary ();
@@ -73,6 +78,79 @@ namespace Epsitec.Common.UI.Controllers
 			{
 				this.dictionary[key] = value;
 			}
+		}
+
+		/// <summary>
+		/// Merges the parameters. This will produce a string concatenation of
+		/// the provided sources.
+		/// </summary>
+		/// <param name="sources">The parameter sources.</param>
+		/// <returns>The merged parameters.</returns>
+		public static string MergeParameters(params string[] sources)
+		{
+			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
+
+			foreach (string source in sources)
+			{
+				if (string.IsNullOrEmpty (source))
+				{
+					continue;
+				}
+				
+				if (buffer.Length > 0)
+				{
+					buffer.Append (" ");
+				}
+
+				buffer.Append (source);
+			}
+
+			return buffer.ToString ();
+		}
+
+		#region IReadOnlyLock Members
+
+		public void Lock()
+		{
+			this.isReadOnly = true;
+		}
+
+		public void Unlock()
+		{
+			throw new System.NotImplementedException ();
+		}
+
+		#endregion
+
+		#region IReadOnly Members
+
+		public bool IsReadOnly
+		{
+			get
+			{
+				return this.isReadOnly;
+			}
+		}
+
+		#endregion
+
+		#region IEquatable<ControllerParameters> Members
+
+		public bool Equals(ControllerParameters other)
+		{
+			return this.ToString () == other.ToString ();
+		}
+
+		#endregion
+
+		public override bool Equals(object obj)
+		{
+			return this.Equals (obj as ControllerParameters);
+		}
+
+		public override int GetHashCode()
+		{
+			return base.GetHashCode ();
 		}
 
 		public override string ToString()
@@ -106,7 +184,7 @@ namespace Epsitec.Common.UI.Controllers
 					System.Diagnostics.Debug.Assert (value.IndexOfAny (new char[] { ' ' }) == -1);
 
 					buffer.Append (key);
-					
+
 					if (value.Length > 0)
 					{
 						buffer.Append ("=");
@@ -118,42 +196,6 @@ namespace Epsitec.Common.UI.Controllers
 			return buffer.ToString ();
 		}
 
-		public static string MergeParameters(params string[] sources)
-		{
-			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
-
-			foreach (string source in sources)
-			{
-				if (string.IsNullOrEmpty (source))
-				{
-					continue;
-				}
-				
-				if (buffer.Length > 0)
-				{
-					buffer.Append (" ");
-				}
-
-				buffer.Append (source);
-			}
-
-			return buffer.ToString ();
-		}
-
-		#region IEquatable<ControllerParameters> Members
-
-		public bool Equals(ControllerParameters other)
-		{
-			return this.ToString () == other.ToString ();
-		}
-
-		#endregion
-
-		public override bool Equals(object obj)
-		{
-			return this.Equals (obj as ControllerParameters);
-		}
-		
 		private void AllocateDictionary()
 		{
 			Dictionary<string, string> dictionary = new Dictionary<string, string> ();
@@ -186,13 +228,25 @@ namespace Epsitec.Common.UI.Controllers
 					}
 
 					string simpleKey = key.TrimStart ('+', '-');
+					string prefix = key.Substring (0, key.Length - simpleKey.Length);
 
 					if (dictionary.ContainsKey (simpleKey))
 					{
-						//	TODO: what to do in case of multiple definitions ?
+						switch (prefix)
+						{
+							case "-":
+								dictionary.Remove (simpleKey);
+								break;
+							
+							default:
+								break;
+						}
 					}
 
-					dictionary[simpleKey] = value;
+					if (prefix != "-")
+					{
+						dictionary[simpleKey] = value;
+					}
 				}
 			}
 
@@ -202,5 +256,6 @@ namespace Epsitec.Common.UI.Controllers
 
 		private readonly string source;
 		private Dictionary<string, string> dictionary;
+		private bool isReadOnly;
 	}
 }

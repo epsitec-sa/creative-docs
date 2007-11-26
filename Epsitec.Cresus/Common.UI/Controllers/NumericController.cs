@@ -14,6 +14,7 @@ namespace Epsitec.Common.UI.Controllers
 	public class NumericController : AbstractController
 	{
 		public NumericController(ControllerParameters parameters)
+			: base (parameters)
 		{
 		}
 

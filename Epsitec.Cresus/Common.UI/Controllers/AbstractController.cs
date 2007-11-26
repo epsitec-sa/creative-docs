@@ -15,9 +15,15 @@ namespace Epsitec.Common.UI.Controllers
 	/// </summary>
 	public abstract class AbstractController : Types.DependencyObject, IController, IGridPermeable
 	{
-		protected AbstractController()
+		protected AbstractController(ControllerParameters parameters)
 		{
 			this.widgets = new List<WidgetRecord> ();
+			this.parameters = parameters;
+
+			if (this.parameters != null)
+			{
+				this.parameters.Lock ();
+			}
 		}
 
 		public Placeholder						Placeholder
@@ -25,6 +31,14 @@ namespace Epsitec.Common.UI.Controllers
 			get
 			{
 				return this.placeholder;
+			}
+		}
+
+		public ControllerParameters				ControllerParameters
+		{
+			get
+			{
+				return this.parameters;
 			}
 		}
 
@@ -364,6 +378,7 @@ namespace Epsitec.Common.UI.Controllers
 
 		private Placeholder						placeholder;
 		private readonly List<WidgetRecord>		widgets;
+		private readonly ControllerParameters	parameters;
 		private bool							isRefreshingUserInterface;
 	}
 }
