@@ -297,8 +297,8 @@ namespace Epsitec.Common.FormEngine
 			FieldDescription field = new FieldDescription(FieldDescription.FieldType.BoxBegin);
 
 			field.BackColor = backColor;
-			field.ContainerFrameState = frame;
-			field.ContainerFrameWidth = width;
+			field.BoxFrameState = frame;
+			field.BoxFrameWidth = width;
 			field.ColumnsRequired = columns;
 
 			return field;

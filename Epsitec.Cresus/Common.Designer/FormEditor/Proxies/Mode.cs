@@ -88,27 +88,27 @@ namespace Epsitec.Common.Designer.FormEditor.Proxies
 			}
 		}
 
-		public FrameState ContainerFrameState
+		public FrameState BoxFrameState
 		{
 			get
 			{
-				return (FrameState) this.GetValue(Mode.ContainerFrameStateProperty);
+				return (FrameState) this.GetValue(Mode.BoxFrameStateProperty);
 			}
 			set
 			{
-				this.SetValue(Mode.ContainerFrameStateProperty, value);
+				this.SetValue(Mode.BoxFrameStateProperty, value);
 			}
 		}
 
-		public double ContainerFrameWidth
+		public double BoxFrameWidth
 		{
 			get
 			{
-				return (double) this.GetValue(Mode.ContainerFrameWidthProperty);
+				return (double) this.GetValue(Mode.BoxFrameWidthProperty);
 			}
 			set
 			{
-				this.SetValue(Mode.ContainerFrameWidthProperty, value);
+				this.SetValue(Mode.BoxFrameWidthProperty, value);
 			}
 		}
 
@@ -137,8 +137,8 @@ namespace Epsitec.Common.Designer.FormEditor.Proxies
 
 			if (this.ObjectModifier.IsBox(this.DefaultWidget))
 			{
-				this.ContainerFrameState = this.ObjectModifier.GetContainerFrameState(this.DefaultWidget);
-				this.ContainerFrameWidth = this.ObjectModifier.GetContainerFrameWidth(this.DefaultWidget);
+				this.BoxFrameState = this.ObjectModifier.GetBoxFrameState(this.DefaultWidget);
+				this.BoxFrameWidth = this.ObjectModifier.GetBoxFrameWidth(this.DefaultWidget);
 			}
 		}
 
@@ -156,12 +156,12 @@ namespace Epsitec.Common.Designer.FormEditor.Proxies
 			Mode.BackColorProperty.DefaultMetadata.DefineNamedType(backColorEnumType);
 			Mode.BackColorProperty.DefaultMetadata.DefineCaptionId(Res.Captions.FieldMode.BackColorType.Id);
 
-			EnumType containerFrameStateEnumType = Res.Types.FieldDescription.FrameState;
-			Mode.ContainerFrameStateProperty.DefaultMetadata.DefineNamedType(containerFrameStateEnumType);
-			Mode.ContainerFrameStateProperty.DefaultMetadata.DefineCaptionId(Res.Captions.FieldMode.ContainerFrameState.Id);
+			EnumType boxFrameStateEnumType = Res.Types.FieldDescription.FrameState;
+			Mode.BoxFrameStateProperty.DefaultMetadata.DefineNamedType(boxFrameStateEnumType);
+			Mode.BoxFrameStateProperty.DefaultMetadata.DefineCaptionId(Res.Captions.FieldMode.ContainerFrameState.Id);
 
-			Mode.ContainerFrameWidthProperty.DefaultMetadata.DefineNamedType(ProxyManager.WidthNumericType);
-			Mode.ContainerFrameWidthProperty.DefaultMetadata.DefineCaptionId(Res.Captions.FieldMode.ContainerFrameWidth.Id);
+			Mode.BoxFrameWidthProperty.DefaultMetadata.DefineNamedType(ProxyManager.WidthNumericType);
+			Mode.BoxFrameWidthProperty.DefaultMetadata.DefineCaptionId(Res.Captions.FieldMode.ContainerFrameWidth.Id);
 		}
 
 
@@ -237,7 +237,7 @@ namespace Epsitec.Common.Designer.FormEditor.Proxies
 			}
 		}
 
-		private static void NotifyContainerFrameStateChanged(DependencyObject o, object oldValue, object newValue)
+		private static void NotifyBoxFrameStateChanged(DependencyObject o, object oldValue, object newValue)
 		{
 			FrameState value = (FrameState) newValue;
 			Mode that = (Mode) o;
@@ -250,7 +250,7 @@ namespace Epsitec.Common.Designer.FormEditor.Proxies
 				{
 					foreach (Widget obj in that.Widgets)
 					{
-						that.ObjectModifier.SetContainerFrameState(obj, value);
+						that.ObjectModifier.SetBoxFrameState(obj, value);
 					}
 				}
 				finally
@@ -261,7 +261,7 @@ namespace Epsitec.Common.Designer.FormEditor.Proxies
 			}
 		}
 
-		private static void NotifyContainerFrameWidthChanged(DependencyObject o, object oldValue, object newValue)
+		private static void NotifyBoxFrameWidthChanged(DependencyObject o, object oldValue, object newValue)
 		{
 			double value = (double) newValue;
 			Mode that = (Mode) o;
@@ -274,7 +274,7 @@ namespace Epsitec.Common.Designer.FormEditor.Proxies
 				{
 					foreach (Widget obj in that.Widgets)
 					{
-						that.ObjectModifier.SetContainerFrameWidth(obj, value);
+						that.ObjectModifier.SetBoxFrameWidth(obj, value);
 					}
 				}
 				finally
@@ -286,10 +286,10 @@ namespace Epsitec.Common.Designer.FormEditor.Proxies
 		}
 
 
-		public static readonly DependencyProperty SeparatorBottomProperty     = DependencyProperty.Register("SeparatorBottom",     typeof(FieldDescription.SeparatorType),  typeof(Mode), new DependencyPropertyMetadata(FieldDescription.SeparatorType.Normal,  Mode.NotifySeparatorBottomChanged));
-		public static readonly DependencyProperty BoxPaddingProperty          = DependencyProperty.Register("BoxPadding",          typeof(FieldDescription.BoxPaddingType), typeof(Mode), new DependencyPropertyMetadata(FieldDescription.BoxPaddingType.Normal, Mode.NotifyBoxPaddingChanged));
-		public static readonly DependencyProperty BackColorProperty           = DependencyProperty.Register("BackColor",           typeof(FieldDescription.BackColorType),  typeof(Mode), new DependencyPropertyMetadata(FieldDescription.BackColorType.None,    Mode.NotifyBackColorChanged));
-		public static readonly DependencyProperty ContainerFrameStateProperty = DependencyProperty.Register("ContainerFrameState", typeof(FrameState),                      typeof(Mode), new DependencyPropertyMetadata(FrameState.None,                        Mode.NotifyContainerFrameStateChanged));
-		public static readonly DependencyProperty ContainerFrameWidthProperty = DependencyProperty.Register("ContainerFrameWidth", typeof(double),                          typeof(Mode), new DependencyPropertyMetadata(1.0,                                    Mode.NotifyContainerFrameWidthChanged));
+		public static readonly DependencyProperty SeparatorBottomProperty = DependencyProperty.Register("SeparatorBottom", typeof(FieldDescription.SeparatorType),  typeof(Mode), new DependencyPropertyMetadata(FieldDescription.SeparatorType.Normal,  Mode.NotifySeparatorBottomChanged));
+		public static readonly DependencyProperty BoxPaddingProperty      = DependencyProperty.Register("BoxPadding",      typeof(FieldDescription.BoxPaddingType), typeof(Mode), new DependencyPropertyMetadata(FieldDescription.BoxPaddingType.Normal, Mode.NotifyBoxPaddingChanged));
+		public static readonly DependencyProperty BackColorProperty       = DependencyProperty.Register("BackColor",       typeof(FieldDescription.BackColorType),  typeof(Mode), new DependencyPropertyMetadata(FieldDescription.BackColorType.None,    Mode.NotifyBackColorChanged));
+		public static readonly DependencyProperty BoxFrameStateProperty   = DependencyProperty.Register("BoxFrameState",   typeof(FrameState),                      typeof(Mode), new DependencyPropertyMetadata(FrameState.None,                        Mode.NotifyBoxFrameStateChanged));
+		public static readonly DependencyProperty BoxFrameWidthProperty   = DependencyProperty.Register("BoxFrameWidth",   typeof(double),                          typeof(Mode), new DependencyPropertyMetadata(1.0,                                    Mode.NotifyBoxFrameWidthChanged));
 	}
 }

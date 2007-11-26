@@ -992,7 +992,7 @@ namespace Epsitec.Common.Designer.Viewers
 			int index = first;
 
 			FieldDescription box = new FieldDescription(FieldDescription.FieldType.BoxBegin);
-			box.ContainerFrameState = FrameState.All;
+			box.BoxFrameState = FrameState.All;
 			this.form.Fields.Insert(index++, box);
 
 			foreach (FieldDescription field in content)

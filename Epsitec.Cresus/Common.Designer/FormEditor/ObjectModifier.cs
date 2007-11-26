@@ -194,7 +194,7 @@ namespace Epsitec.Common.Designer.FormEditor
 		}
 
 
-		public FrameState GetContainerFrameState(Widget obj)
+		public FrameState GetBoxFrameState(Widget obj)
 		{
 			//	Retourne la couleur de fond d'un champ.
 			FieldDescription field = this.GetFormDescription(obj);
@@ -204,22 +204,22 @@ namespace Epsitec.Common.Designer.FormEditor
 			}
 			else
 			{
-				return field.ContainerFrameState;
+				return field.BoxFrameState;
 			}
 		}
 
-		public void SetContainerFrameState(Widget obj, FrameState state)
+		public void SetBoxFrameState(Widget obj, FrameState state)
 		{
 			//	Choix de la couleur de fond d'un champ.
 			FieldDescription field = this.GetFormDescription(obj);
 			if (field != null)
 			{
-				field.ContainerFrameState = state;
+				field.BoxFrameState = state;
 			}
 		}
 
 
-		public double GetContainerFrameWidth(Widget obj)
+		public double GetBoxFrameWidth(Widget obj)
 		{
 			//	Retourne la couleur de fond d'un champ.
 			FieldDescription field = this.GetFormDescription(obj);
@@ -229,17 +229,17 @@ namespace Epsitec.Common.Designer.FormEditor
 			}
 			else
 			{
-				return (field.ContainerFrameWidth+1)/2;
+				return (field.BoxFrameWidth+1)/2;
 			}
 		}
 
-		public void SetContainerFrameWidth(Widget obj, double width)
+		public void SetBoxFrameWidth(Widget obj, double width)
 		{
 			//	Choix de la couleur de fond d'un champ.
 			FieldDescription field = this.GetFormDescription(obj);
 			if (field != null)
 			{
-				field.ContainerFrameWidth = 2*width-1;
+				field.BoxFrameWidth = 2*width-1;
 			}
 		}
 

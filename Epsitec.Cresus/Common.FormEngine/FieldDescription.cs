@@ -58,11 +58,11 @@ namespace Epsitec.Common.FormEngine
 			//	Constructeur protégé, commun à tous les autres.
 			this.backColor = BackColorType.None;
 			this.separatorBottom = SeparatorType.Normal;
-			this.boxPaddingType = BoxPaddingType.Normal;
 			this.columnsRequired = Engine.MaxColumnsRequired;
 			this.rowsRequired = 1;
-			this.containerFrameState = FrameState.None;
-			this.containerFrameWidth = 1;
+			this.boxPaddingType = BoxPaddingType.Normal;
+			this.boxFrameState = FrameState.None;
+			this.boxFrameWidth = 1;
 		}
 
 		public FieldDescription(FieldType type) : this()
@@ -80,13 +80,13 @@ namespace Epsitec.Common.FormEngine
 			this.type = model.type;
 			this.backColor = model.backColor;
 			this.separatorBottom = model.separatorBottom;
-			this.boxPaddingType = model.boxPaddingType;
 			this.columnsRequired = model.columnsRequired;
 			this.rowsRequired = model.rowsRequired;
 			this.nodeDescription = model.nodeDescription;
 			this.fieldIds = model.fieldIds;
-			this.containerFrameState = model.containerFrameState;
-			this.containerFrameWidth = model.containerFrameWidth;
+			this.boxPaddingType = model.boxPaddingType;
+			this.boxFrameState = model.boxFrameState;
+			this.boxFrameWidth = model.boxFrameWidth;
 		}
 
 		public FieldDescription(XmlReader reader) : this()
@@ -263,19 +263,6 @@ namespace Epsitec.Common.FormEngine
 			}
 		}
 
-		public BoxPaddingType BoxPadding
-		{
-			//	Type de marge intérieure pour les boîtes.
-			get
-			{
-				return this.boxPaddingType;
-			}
-			set
-			{
-				this.boxPaddingType = value;
-			}
-		}
-
 		public BackColorType BackColor
 		{
 			//	Couleur de fond pour le champ.
@@ -319,31 +306,45 @@ namespace Epsitec.Common.FormEngine
 			}
 		}
 
-		public FrameState ContainerFrameState
+		public BoxPaddingType BoxPadding
+		{
+			//	Type de marge intérieure pour les boîtes.
+			get
+			{
+				return this.boxPaddingType;
+			}
+			set
+			{
+				System.Diagnostics.Debug.Assert(this.type == FieldType.BoxBegin);
+				this.boxPaddingType = value;
+			}
+		}
+
+		public FrameState BoxFrameState
 		{
 			//	Bordures d'une boîte.
 			get
 			{
-				return this.containerFrameState;
+				return this.boxFrameState;
 			}
 			set
 			{
 				System.Diagnostics.Debug.Assert(this.type == FieldType.BoxBegin);
-				this.containerFrameState = value;
+				this.boxFrameState = value;
 			}
 		}
 
-		public double ContainerFrameWidth
+		public double BoxFrameWidth
 		{
 			//	Epaisseur des bordures d'une boîte.
 			get
 			{
-				return this.containerFrameWidth;
+				return this.boxFrameWidth;
 			}
 			set
 			{
 				System.Diagnostics.Debug.Assert(this.type == FieldType.BoxBegin);
-				this.containerFrameWidth = value;
+				this.boxFrameWidth = value;
 			}
 		}
 
@@ -384,11 +385,11 @@ namespace Epsitec.Common.FormEngine
 				a.type != b.type ||
 				a.backColor != b.backColor ||
 				a.separatorBottom != b.separatorBottom ||
-				a.boxPaddingType != b.boxPaddingType ||
 				a.columnsRequired != b.columnsRequired ||
 				a.rowsRequired != b.rowsRequired ||
-				a.containerFrameState != b.containerFrameState ||
-				a.containerFrameWidth != b.containerFrameWidth)
+				a.boxPaddingType != b.boxPaddingType ||
+				a.boxFrameState != b.boxFrameState ||
+				a.boxFrameWidth != b.boxFrameWidth)
 			{
 				return false;
 			}
@@ -440,12 +441,12 @@ namespace Epsitec.Common.FormEngine
 			}
 
 			writer.WriteElementString(Xml.SeparatorBottom, this.separatorBottom.ToString());
-			writer.WriteElementString(Xml.BoxPaddingType, this.boxPaddingType.ToString());
 			writer.WriteElementString(Xml.ColumnsRequired, this.columnsRequired.ToString(System.Globalization.CultureInfo.InvariantCulture));
 			writer.WriteElementString(Xml.RowsRequired, this.rowsRequired.ToString(System.Globalization.CultureInfo.InvariantCulture));
 
-			writer.WriteElementString(Xml.ContainerFrameState, this.containerFrameState.ToString());
-			writer.WriteElementString(Xml.ContainerFrameWidth, this.containerFrameWidth.ToString(System.Globalization.CultureInfo.InvariantCulture));
+			writer.WriteElementString(Xml.BoxPaddingType, this.boxPaddingType.ToString());
+			writer.WriteElementString(Xml.BoxFrameState, this.boxFrameState.ToString());
+			writer.WriteElementString(Xml.BoxFrameWidth, this.boxFrameWidth.ToString(System.Globalization.CultureInfo.InvariantCulture));
 
 			writer.WriteEndElement();
 		}
@@ -489,10 +490,6 @@ namespace Epsitec.Common.FormEngine
 						{
 							this.separatorBottom = (SeparatorType) System.Enum.Parse(typeof(SeparatorType), element);
 						}
-						else if (name == Xml.BoxPaddingType)
-						{
-							this.boxPaddingType = (BoxPaddingType) System.Enum.Parse(typeof(BoxPaddingType), element);
-						}
 						else if (name == Xml.ColumnsRequired)
 						{
 							this.columnsRequired = int.Parse(element);
@@ -501,13 +498,17 @@ namespace Epsitec.Common.FormEngine
 						{
 							this.rowsRequired = int.Parse(element);
 						}
-						else if (name == Xml.ContainerFrameState)
+						else if (name == Xml.BoxPaddingType)
 						{
-							this.containerFrameState = (FrameState) System.Enum.Parse(typeof(FrameState), element);
+							this.boxPaddingType = (BoxPaddingType) System.Enum.Parse(typeof(BoxPaddingType), element);
 						}
-						else if (name == Xml.ContainerFrameWidth)
+						else if (name == Xml.BoxFrameState)
 						{
-							this.containerFrameWidth = double.Parse(element);
+							this.boxFrameState = (FrameState) System.Enum.Parse(typeof(FrameState), element);
+						}
+						else if (name == Xml.BoxFrameWidth)
+						{
+							this.boxFrameWidth = double.Parse(element);
 						}
 						else
 						{
@@ -588,10 +589,10 @@ namespace Epsitec.Common.FormEngine
 		protected List<Druid> fieldIds;
 		protected BackColorType backColor;
 		protected SeparatorType separatorBottom;
-		protected BoxPaddingType boxPaddingType;
 		protected int columnsRequired;
 		protected int rowsRequired;
-		protected FrameState containerFrameState;
-		protected double containerFrameWidth;
+		protected BoxPaddingType boxPaddingType;
+		protected FrameState boxFrameState;
+		protected double boxFrameWidth;
 	}
 }
