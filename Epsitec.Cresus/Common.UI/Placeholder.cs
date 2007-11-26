@@ -74,7 +74,8 @@ namespace Epsitec.Common.UI
 				if ((this.controller == null) &&
 					(this.controllerName != null))
 				{
-					IController temp = Controllers.Factory.CreateController (this.controllerName, this.controllerParameters);
+					Controllers.ControllerParameters parameters = new Controllers.ControllerParameters (this.controllerParameters);
+					IController temp = Controllers.Factory.CreateController (this.controllerName, parameters);
 
 					if (temp != null)
 					{
@@ -245,6 +246,8 @@ namespace Epsitec.Common.UI
 				if (expression != null)
 				{
 					Controllers.Factory.GetDefaultController (expression, out newControllerName, out newControllerParameters);
+
+					newControllerParameters = Controllers.ControllerParameters.MergeParameters (newControllerParameters, this.ControllerParameters);
 				}
 			}
 			else
@@ -295,7 +298,8 @@ namespace Epsitec.Common.UI
 			if ((this.controller == null) &&
 				(this.controllerName != null))
 			{
-				this.controller = Controllers.Factory.CreateController (this.controllerName, this.controllerParameters);
+				Controllers.ControllerParameters parameters = new Controllers.ControllerParameters (this.controllerParameters);
+				this.controller = Controllers.Factory.CreateController (this.controllerName, parameters);
 
 				if (this.controller != null)
 				{

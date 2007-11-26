@@ -105,7 +105,7 @@
   <data name="Fld.Adresse.Npa" id="0C3" mod="1">&lt;s:data id="_0" f:Name="Npa" f:Labels="{Collection {Text 'Npa'}}" /&gt;</data>
   <data name="Fld.Adresse.Etat" id="0D3" mod="1">&lt;s:data id="_0" f:Name="Etat" f:Labels="{Collection {Text 'Etat'}}" /&gt;</data>
   <data name="Fld.Adresse.Pays" id="0E3" mod="1">&lt;s:data id="_0" f:Name="Pays" f:Labels="{Collection {Text 'Pays'}}" /&gt;</data>
-  <data name="Typ.String.Multiline" id="2">&lt;s:type id="_1" s:name="*aT" /&gt;&lt;s:data id="_0" f:Name="String.Multiline" f:_1.SystemType="C:System.String" f:_1.DefaultController="String" f:_1.DefaultControllerParameter="Multiline" /&gt;</data>
+  <data name="Typ.String.Multiline" id="2">&lt;s:type id="_1" s:name="*aT" /&gt;&lt;s:data id="_0" f:Name="String.Multiline" f:_1.SystemType="C:System.String" f:_1.DefaultController="String" f:_1.DefaultControllerParameters="Mode=Multiline" /&gt;</data>
   <data name="Fld.ArticleVisserie.Longueur" id="11">&lt;s:data id="_0" f:Name="Longueur" /&gt;</data>
   <data name="Fld.ArticleVisserie.Dimension" id="12">&lt;s:data id="_0" f:Name="Dimension" /&gt;</data>
   <data name="Typ.StructuredType.ArticleVisserie" id="1">&lt;objects xmlns:s="*1" xmlns:f="*1"&gt;&lt;s:storage s:root="_1" s:n_ext="0" s:n_typ="3" s:n_obj="2"&gt;&lt;s:type id="_1" s:name="*C" /&gt;&lt;s:type id="_2" s:name="*aT" /&gt;&lt;s:type id="_3" s:name="*S" /&gt;&lt;s:object id="_1" s:type="_1" /&gt;&lt;s:object id="_2" s:type="_3" /&gt;&lt;s:data id="_1" f:Name="ArticleVisserie" f:_2.ComplexType="{ObjRef _2}" /&gt;&lt;s:data id="_2" f:Class="Entity" f:BaseTypeId="[630Q]" f:SerializedDesignerLayouts="" f:Fields="{Collection {Text '[6311];[1006];0;[6311]'}, {Text '[6312];[1008];1;[6312]'}}" /&gt;&lt;/s:storage&gt;&lt;/objects&gt;</data>

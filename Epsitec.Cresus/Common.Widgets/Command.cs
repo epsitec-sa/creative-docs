@@ -537,7 +537,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		string INamedType.DefaultControllerParameter
+		string INamedType.DefaultControllerParameters
 		{
 			get
 			{

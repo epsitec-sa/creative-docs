@@ -1,5 +1,5 @@
 //	Copyright © 2006-2007, EPSITEC SA, CH-1092 BELMONT, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Types;
 using Epsitec.Common.Widgets;
@@ -10,27 +10,40 @@ namespace Epsitec.Common.UI.Controllers
 {
 	using Assembly=System.Reflection.Assembly;
 
+	/// <summary>
+	/// The <c>Controllers.Factory</c> class is used to create and configure
+	/// controller instances used by the <see cref="Placeholder"/> class.
+	/// </summary>
 	public static class Factory
 	{
 		/// <summary>
 		/// Creates the controller based on its name and parameter.
 		/// </summary>
 		/// <param name="name">The controller name.</param>
-		/// <param name="parameter">The optional controller parameter.</param>
-		/// <returns>An object implementing <see cref="T:IController"/> or
+		/// <param name="parameters">The optional controller parameters.</param>
+		/// <returns>An object implementing <see cref="IController"/> or
 		/// <c>null</c> if the specified controller cannot be found.</returns>
-		public static IController CreateController(string name, string parameter)
+		public static IController CreateController(string name, ControllerParameters parameters)
 		{
 			Record record;
 			
 			if (Factory.types.TryGetValue (name, out record))
 			{
-				return record.CreateController (parameter);
+				return record.CreateController (parameters);
 			}
 			
 			return null;
 		}
 
+		/// <summary>
+		/// Gets the default controller and its parameters based on the binding.
+		/// The information is derived from the data type.
+		/// </summary>
+		/// <param name="binding">The binding.</param>
+		/// <param name="controllerName">The controller name.</param>
+		/// <param name="controllerParameter">The controller parameter.</param>
+		/// <returns><c>true</c> if a controller definition could be derived
+		/// from the binding; otherwise, <c>false</c>.</returns>
 		public static bool GetDefaultController(BindingExpression binding, out string controllerName, out string controllerParameter)
 		{
 			controllerName = null;
@@ -49,7 +62,7 @@ namespace Epsitec.Common.UI.Controllers
 			}
 
 			controllerName = type.DefaultController;
-			controllerParameter = type.DefaultControllerParameter;
+			controllerParameter = type.DefaultControllerParameters;
 			
 			return string.IsNullOrEmpty (controllerName) ? false : true;
 		}
@@ -118,7 +131,7 @@ namespace Epsitec.Common.UI.Controllers
 				this.type = type;
 			}
 			
-			public IController CreateController(string parameter)
+			public IController CreateController(ControllerParameters parameters)
 			{
 				if (this.allocator == null)
 				{
@@ -126,23 +139,23 @@ namespace Epsitec.Common.UI.Controllers
 					{
 						if (this.allocator == null)
 						{
-							this.allocator = Support.DynamicCodeFactory.CreateAllocator<IController, string> (this.type);
+							this.allocator = Support.DynamicCodeFactory.CreateAllocator<IController, ControllerParameters> (this.type);
 						}
 					}
 				}
 
-				return this.allocator (parameter);
+				return this.allocator (parameters);
 			}
 
 			private readonly object exclusion;
-			private Support.Allocator<IController, string> allocator;
+			private Support.Allocator<IController, ControllerParameters> allocator;
 			private System.Type type;
 		}
 
 		#endregion
 
-		private static System.AppDomain domain;
-		private static List<Assembly> assemblies;
-		private static Dictionary<string, Record> types;
+		private static readonly System.AppDomain domain;
+		private static readonly List<Assembly> assemblies;
+		private static readonly Dictionary<string, Record> types;
 	}
 }

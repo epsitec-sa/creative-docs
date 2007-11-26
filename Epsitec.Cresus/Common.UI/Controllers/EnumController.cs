@@ -13,9 +13,9 @@ namespace Epsitec.Common.UI.Controllers
 {
 	public class EnumController : AbstractController
 	{
-		public EnumController(string parameter)
+		public EnumController(ControllerParameters parameters)
 		{
-			switch (parameter)
+			switch (parameters.GetParameterValue ("Mode"))
 			{
 				case "Combo":
 					this.helper = new ComboHelper (this);

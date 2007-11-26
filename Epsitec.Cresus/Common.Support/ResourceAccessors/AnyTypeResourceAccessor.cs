@@ -371,7 +371,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			TypeCode code = type == null ? TypeCode.Invalid : type.TypeCode;
 
 			string controller          = type == null ? null : type.DefaultController;
-			string controllerParameter = type == null ? null : type.DefaultControllerParameter;
+			string controllerParameter = type == null ? null : type.DefaultControllerParameters;
 			
 			object defaultValue = type == null ? null : type.DefaultValue;
 
@@ -1433,7 +1433,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 				}
 			}
 
-			public string DefaultControllerParameter
+			public string DefaultControllerParameters
 			{
 				get
 				{

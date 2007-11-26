@@ -23,7 +23,7 @@ namespace Epsitec.Common.Types
 		/// Gets the parameter used with the default controller.
 		/// </summary>
 		/// <value>The default controller parameter.</value>
-		string DefaultControllerParameter
+		string DefaultControllerParameters
 		{
 			get;
 		}

@@ -117,6 +117,7 @@
     <Compile Include="Collections\ItemTableColumnCollection.cs" />
     <Compile Include="ColumnWidthChangeEventArgs.cs" />
     <Compile Include="AbstractItemViewFactory.cs" />
+    <Compile Include="Controllers\ControllerParameters.cs" />
     <Compile Include="Controllers\WidgetRecord.cs" />
     <Compile Include="Controllers\WidgetType.cs" />
     <Compile Include="ItemPanelSelectionChangedEventArgs.cs" />

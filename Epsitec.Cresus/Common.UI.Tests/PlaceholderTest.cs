@@ -32,8 +32,8 @@ namespace Epsitec.Common.UI
 		[Test]
 		public void CheckControllerCreation()
 		{
-			IController c1 = UI.Controllers.Factory.CreateController ("Test1", "x");
-			IController c2 = UI.Controllers.Factory.CreateController ("Test1", "y");
+			IController c1 = UI.Controllers.Factory.CreateController ("Test1", new Controllers.ControllerParameters ("x"));
+			IController c2 = UI.Controllers.Factory.CreateController ("Test1", new Controllers.ControllerParameters ("y"));
 
 			Assert.IsNotNull (c1);
 			Assert.IsNotNull (c2);
@@ -131,7 +131,7 @@ namespace Epsitec.Common.UI
 			Placeholder placeholder4 = new Placeholder ();
 
 			placeholder1.Controller = "String";
-			placeholder1.ControllerParameters = "Multiline";
+			placeholder1.ControllerParameters = "Mode=Multiline";
 			placeholder1.PreferredHeight = 40;
 			placeholder1.TabIndex = 1;
 			Widgets.Layouts.GridLayoutEngine.SetColumn (placeholder1, 0);
@@ -152,7 +152,7 @@ namespace Epsitec.Common.UI
 			Widgets.Layouts.GridLayoutEngine.SetRow (placeholder3, 3);
 
 			placeholder4.Controller = "Enum";
-			placeholder4.ControllerParameters = "Combo";
+			placeholder4.ControllerParameters = "Mode=Combo";
 			placeholder4.PreferredHeight = 20;
 			placeholder4.TabIndex = 4;
 			Widgets.Layouts.GridLayoutEngine.SetColumn (placeholder4, 2);
@@ -299,7 +299,7 @@ namespace Epsitec.Common.UI
 			Widgets.Layouts.GridLayoutEngine.SetRow (placeholder3, 3);
 
 			placeholder4.Controller = "Enum";
-			placeholder4.ControllerParameters = "Combo";
+			placeholder4.ControllerParameters = "Mode=Combo";
 			placeholder4.PreferredHeight = 20;
 			placeholder4.TabIndex = 4;
 			Widgets.Layouts.GridLayoutEngine.SetColumn (placeholder4, 2);

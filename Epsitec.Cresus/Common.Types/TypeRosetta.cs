@@ -920,7 +920,7 @@ namespace Epsitec.Common.Types
 				}
 			}
 
-			public string DefaultControllerParameter
+			public string DefaultControllerParameters
 			{
 				get
 				{

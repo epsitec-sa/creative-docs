@@ -27,7 +27,7 @@
   <data id="0U">&lt;s:data id="_0" f:Labels="{Collection {Text 'Undefined class'}}" /&gt;</data>
   <data id="0V">&lt;s:data id="_0" f:Labels="{Collection {Text 'Entity'}}" /&gt;</data>
   <data id="001">&lt;s:data id="_0" f:Labels="{Collection {Text 'Interface'}}" /&gt;</data>
-  <data id="0B1">&lt;s:type id="_1" s:name="*aT" /&gt;&lt;s:type id="_2" s:name="*eT" /&gt;&lt;s:data id="_0" f:_1.SystemType="E:Epsitec.Common.Types.TimeResolution, Common.Types" f:_2.EnumValues="{Collection {Text '0 [10021]'}, {Text '1 [10031]'}, {Text '2 [10041]'}, {Text '3 [10051]'}, {Text '4 [10061]'}, {Text '5 [10071]'}, {Text '6 [10081]'}, {Text '7 [10091]'}, {Text '8 [100A1]'}}" f:_1.DefaultController="Enum" f:_1.DefaultControllerParameter="Icons" /&gt;</data>
+  <data id="0B1">&lt;s:type id="_1" s:name="*aT" /&gt;&lt;s:type id="_2" s:name="*eT" /&gt;&lt;s:data id="_0" f:_1.SystemType="E:Epsitec.Common.Types.TimeResolution, Common.Types" f:_2.EnumValues="{Collection {Text '0 [10021]'}, {Text '1 [10031]'}, {Text '2 [10041]'}, {Text '3 [10051]'}, {Text '4 [10061]'}, {Text '5 [10071]'}, {Text '6 [10081]'}, {Text '7 [10091]'}, {Text '8 [100A1]'}}" f:_1.DefaultController="Enum" f:_1.DefaultControllerParameters="Mode=Icons" /&gt;</data>
   <data id="071">&lt;s:data id="_0" f:Labels="{Collection {Text 'Day'}}" /&gt;</data>
   <data id="021">&lt;s:data id="_0" f:Labels="{Collection {Text 'Default'}}" /&gt;</data>
   <data id="061">&lt;s:data id="_0" f:Labels="{Collection {Text 'Hour'}}" /&gt;</data>
@@ -40,7 +40,7 @@
   <data id="0C1">&lt;s:data id="_0" f:Labels="{Collection {Text 'DecimalRange Type'}}" /&gt;</data>
   <data id="0D1">&lt;s:data id="_0" f:Labels="{Collection {Text 'TimeSpan Type'}}" /&gt;</data>
   <data id="0E1">&lt;s:data id="_0" f:Labels="{Collection {Text 'DateSpan Type'}}" /&gt;</data>
-  <data id="0V1">&lt;s:type id="_1" s:name="*aT" /&gt;&lt;s:type id="_2" s:name="*eT" /&gt;&lt;s:data id="_0" f:_1.SystemType="E:Epsitec.Common.Types.TypeCode, Common.Types" f:_2.EnumValues="{Collection {Text '0 [100F1]'}, {Text '10 [100G1]'}, {Text '11 [100H1]'}, {Text '12 [100I1]'}, {Text '13 [100J1]'}, {Text '14 [100K1]'}, {Text '20 [100L1]'}, {Text '21 [100M1]'}, {Text '22 [100N1]'}, {Text '30 [100O1]'}, {Text '31 [100P1]'}, {Text '32 [100Q1]'}, {Text '33 [100R1]'}, {Text '34 [100S1]'}, {Text '40 [100T1]'}, {Text '100 [100U1]'}}" f:_1.DefaultController="Enum" f:_1.DefaultControllerParameter="Icons" /&gt;</data>
+  <data id="0V1">&lt;s:type id="_1" s:name="*aT" /&gt;&lt;s:type id="_2" s:name="*eT" /&gt;&lt;s:data id="_0" f:_1.SystemType="E:Epsitec.Common.Types.TypeCode, Common.Types" f:_2.EnumValues="{Collection {Text '0 [100F1]'}, {Text '10 [100G1]'}, {Text '11 [100H1]'}, {Text '12 [100I1]'}, {Text '13 [100J1]'}, {Text '14 [100K1]'}, {Text '20 [100L1]'}, {Text '21 [100M1]'}, {Text '22 [100N1]'}, {Text '30 [100O1]'}, {Text '31 [100P1]'}, {Text '32 [100Q1]'}, {Text '33 [100R1]'}, {Text '34 [100S1]'}, {Text '40 [100T1]'}, {Text '100 [100U1]'}}" f:_1.DefaultController="Enum" f:_1.DefaultControllerParameters="Mode=Icons" /&gt;</data>
   <data id="002">&lt;s:data id="_0" f:Labels="{Collection {Text 'System.Type Type (.NET)'}}" /&gt;</data>
   <data id="032">&lt;s:data id="_0" f:Description="Field source" f:Labels="{Collection {Text 'Source'}}" /&gt;</data>
   <data id="022">&lt;s:data id="_0" f:Description="Value computed by an expression" f:Labels="{Collection {Text 'Expression'}}" /&gt;</data>

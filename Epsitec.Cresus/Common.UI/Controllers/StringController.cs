@@ -13,9 +13,9 @@ namespace Epsitec.Common.UI.Controllers
 {
 	public class StringController : AbstractController
 	{
-		public StringController(string parameter)
+		public StringController(ControllerParameters parameters)
 		{
-			this.parameter = parameter;
+			this.parameters = parameters;
 		}
 
 		public override object GetActualValue()
@@ -99,7 +99,7 @@ namespace Epsitec.Common.UI.Controllers
 		{
 			AbstractTextField text;
 
-			switch (this.parameter)
+			switch (this.parameters.GetParameterValue ("Mode"))
 			{
 				case "Multiline":
 					text = new TextFieldMulti ();
@@ -168,6 +168,6 @@ namespace Epsitec.Common.UI.Controllers
 		private AbstractTextField field;
 		private StaticText label;
 		private IValidator validator;
-		private string parameter;
+		private readonly ControllerParameters parameters;
 	}
 }

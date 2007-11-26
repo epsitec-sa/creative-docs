@@ -55,11 +55,11 @@ namespace Epsitec.Common.Types
 		/// Gets the parameter used with the default controller.
 		/// </summary>
 		/// <value>The default controller parameter.</value>
-		public string DefaultControllerParameter
+		public string DefaultControllerParameters
 		{
 			get
 			{
-				return (string) this.Caption.GetValue (AbstractType.DefaultControllerParameterProperty);
+				return (string) this.Caption.GetValue (AbstractType.DefaultControllerParametersProperty);
 			}
 		}
 
@@ -186,9 +186,9 @@ namespace Epsitec.Common.Types
 			{
 				this.Caption.SetValue (AbstractType.DefaultControllerProperty, controller);
 			}
-			if (this.DefaultControllerParameter != controllerParameter)
+			if (this.DefaultControllerParameters != controllerParameter)
 			{
-				this.Caption.SetValue (AbstractType.DefaultControllerParameterProperty, controllerParameter);
+				this.Caption.SetValue (AbstractType.DefaultControllerParametersProperty, controllerParameter);
 			}
 		}
 
@@ -564,7 +564,7 @@ namespace Epsitec.Common.Types
 
 		
 		public static readonly DependencyProperty DefaultControllerProperty = DependencyProperty.RegisterAttached ("DefaultController", typeof (string), typeof (AbstractType), new DependencyPropertyMetadata ("Numeric"));
-		public static readonly DependencyProperty DefaultControllerParameterProperty = DependencyProperty.RegisterAttached ("DefaultControllerParameter", typeof (string), typeof (AbstractType), new DependencyPropertyMetadata ());
+		public static readonly DependencyProperty DefaultControllerParametersProperty = DependencyProperty.RegisterAttached ("DefaultControllerParameters", typeof (string), typeof (AbstractType), new DependencyPropertyMetadata ());
 		public static readonly DependencyProperty SytemTypeProperty = DependencyProperty.RegisterAttached ("SystemType", typeof (string), typeof (AbstractType));
 		public static readonly DependencyProperty CachedTypeProperty = DependencyProperty.RegisterAttached ("CachedType", typeof (AbstractType), typeof (AbstractType), new DependencyPropertyMetadata ().MakeNotSerializable ());
 		public static readonly DependencyProperty ComplexTypeProperty = DependencyProperty.RegisterAttached ("ComplexType", typeof (AbstractType), typeof (AbstractType));
