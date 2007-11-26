@@ -263,7 +263,7 @@ namespace Epsitec.Common.FormEngine
 		private void PreprocessField(FieldDescription field, List<int> labelsId, ref int labelId, ref int column, bool isGlueAfter)
 		{
 			//	Détermine quelles colonnes contiennent des labels, lors de la première passe.
-			int columnsRequired = System.Math.Max(field.ColumnsRequired, 2);
+			int columnsRequired = System.Math.Max(field.ColumnsRequired, 1);
 
 			Engine.LabelIdUse(labelsId, -(labelId++), column, 1);
 			Engine.LabelIdUse(labelsId, labelId++, column+1, columnsRequired-1);
@@ -435,7 +435,13 @@ namespace Epsitec.Common.FormEngine
 
 			grid.RowDefinitions.Add(new Widgets.Layouts.RowDefinition());
 
-			int columnsRequired = System.Math.Max(field.ColumnsRequired, 2);
+			int columnsRequired = System.Math.Max(field.ColumnsRequired, 1);
+
+			if (columnsRequired == 1)  // tout sur une seule colonne ?
+			{
+				placeholder.Controller = "*";
+				placeholder.ControllerParameters = UI.Controllers.AbstractController.NoLabelsParameter;  // cache le label
+			}
 
 			grid.RowDefinitions[row].BottomBorder = FieldDescription.GetRealSeparator(field.SeparatorBottom);
 
