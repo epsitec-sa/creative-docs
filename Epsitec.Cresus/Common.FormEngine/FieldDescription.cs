@@ -281,7 +281,7 @@ namespace Epsitec.Common.FormEngine
 			}
 			set
 			{
-				value = System.Math.Max(value, 1);
+				value = System.Math.Max(value, 0);
 				value = System.Math.Min(value, Engine.MaxColumnsRequired);
 				this.columnsRequired = value;
 			}

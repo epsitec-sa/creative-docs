@@ -292,8 +292,8 @@ namespace Epsitec.Common.Designer.FormEditor
 			marginNumericType.DefinePreferredRange(new DecimalRange(0, 200, 1));
 			ProxyManager.MarginNumericType = marginNumericType;
 			
-			IntegerType columnsRequiredNumericType = new IntegerType(1, FormEngine.Engine.MaxColumnsRequired);
-			columnsRequiredNumericType.DefinePreferredRange(new DecimalRange(1, FormEngine.Engine.MaxColumnsRequired, 1));
+			IntegerType columnsRequiredNumericType = new IntegerType(0, FormEngine.Engine.MaxColumnsRequired);
+			columnsRequiredNumericType.DefinePreferredRange(new DecimalRange(0, FormEngine.Engine.MaxColumnsRequired, 1));
 			ProxyManager.ColumnsRequiredNumericType = columnsRequiredNumericType;
 			
 			IntegerType rowsRequiredNumericType = new IntegerType(1, FormEngine.Engine.MaxRowsRequired);

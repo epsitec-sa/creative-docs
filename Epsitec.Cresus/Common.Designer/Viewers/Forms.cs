@@ -865,7 +865,7 @@ namespace Epsitec.Common.Designer.Viewers
 			int index = this.formEditor.ObjectModifier.GetFormDescriptionIndex(item.Guid);
 
 			FieldDescription field = new FieldDescription(FieldDescription.FieldType.Glue);
-			field.ColumnsRequired = 1;
+			field.ColumnsRequired = 0;
 			this.form.Fields.Insert(index, field);
 
 			this.SetForm(this.form, this.druidToSerialize, false);

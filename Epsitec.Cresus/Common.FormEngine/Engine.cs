@@ -250,7 +250,7 @@ namespace Epsitec.Common.FormEngine
 			//	Détermine quelles colonnes contiennent des labels, lors de la première passe.
 			//	Un BoxBegin ne contient jamais de label, mais il faut tout de même faire évoluer
 			//	le numéro de la colonne.
-			int columnsRequired = field.ColumnsRequired;
+			int columnsRequired = System.Math.Max(field.ColumnsRequired, 1);
 
 			Engine.LabelIdUse(labelsId, labelId++, column, columnsRequired);
 
@@ -267,7 +267,7 @@ namespace Epsitec.Common.FormEngine
 		private void PreprocessField(FieldDescription field, List<int> labelsId, ref int labelId, ref int column, bool isGlueAfter)
 		{
 			//	Détermine quelles colonnes contiennent des labels, lors de la première passe.
-			int columnsRequired = field.ColumnsRequired;
+			int columnsRequired = System.Math.Max(field.ColumnsRequired, 2);
 
 			Engine.LabelIdUse(labelsId, -(labelId++), column, 1);
 			Engine.LabelIdUse(labelsId, labelId++, column+1, columnsRequired-1);
@@ -407,7 +407,7 @@ namespace Epsitec.Common.FormEngine
 			
 			grid.RowDefinitions.Add(new Widgets.Layouts.RowDefinition());
 
-			int columnsRequired = field.ColumnsRequired;
+			int columnsRequired = System.Math.Max(field.ColumnsRequired, 1);
 
 			int i = Engine.GetColumnIndex(labelsId, column);
 			int j = Engine.GetColumnIndex(labelsId, column+columnsRequired-1)+1;
@@ -439,7 +439,7 @@ namespace Epsitec.Common.FormEngine
 
 			grid.RowDefinitions.Add(new Widgets.Layouts.RowDefinition());
 
-			int columnsRequired = field.ColumnsRequired;
+			int columnsRequired = System.Math.Max(field.ColumnsRequired, 2);
 
 			double m = 2;
 			switch (field.Separator)
@@ -483,15 +483,26 @@ namespace Epsitec.Common.FormEngine
 			glue.BackColor = FieldDescription.GetRealColor(field.BackColor);
 			glue.Index = field.UniqueId;
 
-			grid.RowDefinitions.Add(new Widgets.Layouts.RowDefinition());
-
 			int columnsRequired = field.ColumnsRequired;
 
-			int i = Engine.GetColumnIndex(labelsId, column);
-			int j = Engine.GetColumnIndex(labelsId, column+columnsRequired-1)+1;
-			Widgets.Layouts.GridLayoutEngine.SetColumn(glue, i);
-			Widgets.Layouts.GridLayoutEngine.SetRow(glue, row);
-			Widgets.Layouts.GridLayoutEngine.SetColumnSpan(glue, j-i);
+			if (columnsRequired == 0)
+			{
+				glue.Name = "GlueNull";
+
+				int i = Engine.GetColumnIndex(labelsId, column);
+				Widgets.Layouts.GridLayoutEngine.SetColumn(glue, i);
+				Widgets.Layouts.GridLayoutEngine.SetRow(glue, row);
+			}
+			else
+			{
+				grid.RowDefinitions.Add(new Widgets.Layouts.RowDefinition());
+
+				int i = Engine.GetColumnIndex(labelsId, column);
+				int j = Engine.GetColumnIndex(labelsId, column+columnsRequired-1)+1;
+				Widgets.Layouts.GridLayoutEngine.SetColumn(glue, i);
+				Widgets.Layouts.GridLayoutEngine.SetRow(glue, row);
+				Widgets.Layouts.GridLayoutEngine.SetColumnSpan(glue, j-i);
+			}
 
 			column += columnsRequired;
 		}

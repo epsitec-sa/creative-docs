@@ -445,6 +445,7 @@ namespace Epsitec.Common.Designer.FormEditor
 				}
 
 				Rectangle rect = widget.ActualBounds;
+				rect = this.objectModifier.AdjustBounds(widget, rect);
 				rect = this.objectModifier.InflateMinimalSize(rect);
 				if (rect.Contains(pos))
 				{

@@ -428,11 +428,23 @@ namespace Epsitec.Common.Designer.FormEditor
 		{
 			//	Retourne la position et les dimensions actuelles de l'objet.
 			Rectangle bounds = obj.Client.Bounds;
+			bounds = this.AdjustBounds(obj, bounds);
 
 			while (obj != null && obj != this.formEditor.Panel)
 			{
 				bounds = obj.MapClientToParent(bounds);
 				obj = obj.Parent;
+			}
+
+			return bounds;
+		}
+
+		public Rectangle AdjustBounds(Widget obj, Rectangle bounds)
+		{
+			//	Retourne le rectangle ajusté d'un objet.
+			if (obj.Name == "GlueNull")
+			{
+				bounds.Width = 0;
 			}
 
 			return bounds;
