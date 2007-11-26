@@ -43,11 +43,6 @@ namespace Epsitec.Common.UI.Controllers
 			return this.helper.GetSelectedName ();
 		}
 
-		protected override Widgets.Layouts.IGridPermeable GetGridPermeableLayoutHelper()
-		{
-			return this.helper;
-		}
-
 		protected override void CreateUserInterface(INamedType namedType, Caption caption)
 		{
 			this.Placeholder.ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow;
@@ -90,7 +85,7 @@ namespace Epsitec.Common.UI.Controllers
 			None, Combo, Icons, Radio
 		}
 
-		private abstract class Helper : System.IDisposable, Widgets.Layouts.IGridPermeable
+		private abstract class Helper : System.IDisposable
 		{
 			public Helper(EnumController host)
 			{
@@ -109,13 +104,6 @@ namespace Epsitec.Common.UI.Controllers
 			#endregion
 
 			public abstract void SetSelectedName(string name);
-
-			#region IGridPermeable Members
-
-			public abstract IEnumerable<Widgets.Layouts.PermeableCell> GetChildren(int column, int row, int columnSpan, int rowSpan);
-			public abstract bool UpdateGridSpan(ref int columnSpan, ref int rowSpan);
-
-			#endregion
 		}
 
 		private class ComboHelper : Helper
@@ -199,20 +187,6 @@ namespace Epsitec.Common.UI.Controllers
 
 					this.combo.IsReadOnly = enumType.IsCustomizable ? false : true;
 				}
-			}
-
-			public override IEnumerable<Widgets.Layouts.PermeableCell> GetChildren(int column, int row, int columnSpan, int rowSpan)
-			{
-				yield return new Widgets.Layouts.PermeableCell (this.label, column+0, row+0, 1, 1);
-				yield return new Widgets.Layouts.PermeableCell (this.combo, column+1, row+0, columnSpan-1, 1);
-			}
-
-			public override bool UpdateGridSpan(ref int columnSpan, ref int rowSpan)
-			{
-				columnSpan = System.Math.Max (columnSpan, 2);
-				rowSpan    = System.Math.Max (rowSpan, 1);
-
-				return true;
 			}
 
 			private TextFieldCombo combo;
@@ -349,20 +323,6 @@ namespace Epsitec.Common.UI.Controllers
 						}
 					}
 				}
-			}
-
-			public override IEnumerable<Widgets.Layouts.PermeableCell> GetChildren(int column, int row, int columnSpan, int rowSpan)
-			{
-				yield return new Widgets.Layouts.PermeableCell (this.label, column+0, row+0, 1, 1);
-				yield return new Widgets.Layouts.PermeableCell (this.combo, column+1, row+0, columnSpan-1, 1);
-			}
-
-			public override bool UpdateGridSpan(ref int columnSpan, ref int rowSpan)
-			{
-				columnSpan = System.Math.Max (columnSpan, 2);
-				rowSpan    = System.Math.Max (rowSpan, 1);
-
-				return true;
 			}
 
 			private RadioIconGrid combo;

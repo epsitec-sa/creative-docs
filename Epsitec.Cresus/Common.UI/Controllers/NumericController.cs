@@ -11,7 +11,7 @@ using Epsitec.Common.Types;
 
 namespace Epsitec.Common.UI.Controllers
 {
-	public class NumericController : AbstractController, Widgets.Layouts.IGridPermeable
+	public class NumericController : AbstractController
 	{
 		public NumericController(string parameter)
 		{
@@ -20,11 +20,6 @@ namespace Epsitec.Common.UI.Controllers
 		public override object GetActualValue()
 		{
 			return this.field.Text;
-		}
-
-		protected override Widgets.Layouts.IGridPermeable GetGridPermeableLayoutHelper()
-		{
-			return this;
 		}
 
 		protected override void CreateUserInterface(INamedType namedType, Caption caption)
@@ -156,24 +151,6 @@ namespace Epsitec.Common.UI.Controllers
 		{
 			return newValue.ToString ();
 		}
-		
-		#region IGridPermeable Members
-
-		IEnumerable<Widgets.Layouts.PermeableCell> Widgets.Layouts.IGridPermeable.GetChildren(int column, int row, int columnSpan, int rowSpan)
-		{
-			yield return new Widgets.Layouts.PermeableCell (this.label, column+0, row+0, 1, 1);
-			yield return new Widgets.Layouts.PermeableCell (this.field, column+1, row+0, columnSpan-1, 1);
-		}
-
-		bool Widgets.Layouts.IGridPermeable.UpdateGridSpan(ref int columnSpan, ref int rowSpan)
-		{
-			columnSpan = System.Math.Max (columnSpan, 2);
-			rowSpan    = System.Math.Max (rowSpan, 1);
-			
-			return true;
-		}
-
-		#endregion
 		
 		private TextFieldSlider field;
 		private StaticText label;

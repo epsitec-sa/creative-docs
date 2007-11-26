@@ -3,6 +3,7 @@
 
 using Epsitec.Common.Types;
 using Epsitec.Common.Widgets;
+using Epsitec.Common.Widgets.Layouts;
 
 using System.Collections.Generic;
 
@@ -12,7 +13,7 @@ namespace Epsitec.Common.UI.Controllers
 	/// La classe AbstractController sert de base à tous les contrôleurs qui lient
 	/// des données à des widgets créés dynamiquement dans un widget Placeholder.
 	/// </summary>
-	public abstract class AbstractController : Types.DependencyObject, IController
+	public abstract class AbstractController : Types.DependencyObject, IController, IGridPermeable
 	{
 		protected AbstractController()
 		{
@@ -119,7 +120,7 @@ namespace Epsitec.Common.UI.Controllers
 			}
 		}
 
-		Widgets.Layouts.IGridPermeable IController.GetGridPermeableLayoutHelper()
+		IGridPermeable IController.GetGridPermeableLayoutHelper()
 		{
 			return this.GetGridPermeableLayoutHelper ();
 		}
@@ -132,9 +133,9 @@ namespace Epsitec.Common.UI.Controllers
 		}
 
 
-		protected virtual Widgets.Layouts.IGridPermeable GetGridPermeableLayoutHelper()
+		protected virtual IGridPermeable GetGridPermeableLayoutHelper()
 		{
-			return null;
+			return this;
 		}
 
 		protected abstract void CreateUserInterface(INamedType namedType, Caption caption);
@@ -260,6 +261,40 @@ namespace Epsitec.Common.UI.Controllers
 				return expression.ConvertBackValue (value);
 			}
 		}
+
+		#region IGridPermeable Members
+
+		public virtual IEnumerable<PermeableCell> GetChildren(int column, int row, int columnSpan, int rowSpan)
+		{
+			int count = this.widgets.Count;
+			
+			if (columnSpan < count)
+			{
+				throw new System.ArgumentException (string.Format ("Not enough columns for content; got {0} but at least {1} needed", columnSpan, count));
+			}
+
+			for (int i = 0; i < count; i++)
+			{
+				if (i == count-1)
+				{
+					yield return new Widgets.Layouts.PermeableCell (this.widgets[i].Widget, column+i, row+0, columnSpan-i, 1);
+				}
+				else
+				{
+					yield return new Widgets.Layouts.PermeableCell (this.widgets[i].Widget, column+i, row+0, 1, 1);
+				}
+			}
+		}
+
+		public virtual bool UpdateGridSpan(ref int columnSpan, ref int rowSpan)
+		{
+			columnSpan = System.Math.Max (columnSpan, this.widgets.Count);
+			rowSpan    = System.Math.Max (rowSpan, 1);
+
+			return true;
+		}
+
+		#endregion
 		
 		
 		private void AttachAllWidgets(Placeholder view)
