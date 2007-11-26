@@ -145,8 +145,8 @@ namespace Epsitec.Common.UI.Controllers
 				this.label = new StaticText ();
 				this.combo = new TextFieldCombo ();
 
-				this.host.AddWidget (this.label);
-				this.host.AddWidget (this.combo);
+				this.host.AddWidget (this.label, WidgetType.Label);
+				this.host.AddWidget (this.combo, WidgetType.Input);
 
 				this.label.HorizontalAlignment = HorizontalAlignment.Right;
 				this.label.VerticalAlignment = VerticalAlignment.BaseLine;
@@ -284,8 +284,8 @@ namespace Epsitec.Common.UI.Controllers
 				this.label = new StaticText ();
 				this.combo = enumType.IsDefinedAsFlags ? new CheckIconGrid () : new RadioIconGrid ();
 
-				this.host.AddWidget (this.label);
-				this.host.AddWidget (this.combo);
+				this.host.AddWidget (this.label, WidgetType.Label);
+				this.host.AddWidget (this.combo, WidgetType.Input);
 
 				this.label.HorizontalAlignment = HorizontalAlignment.Right;
 				this.label.VerticalAlignment = VerticalAlignment.Center;

@@ -16,6 +16,7 @@ namespace Epsitec.Common.UI.Controllers
 	{
 		protected AbstractController()
 		{
+			this.widgets = new List<WidgetRecord> ();
 		}
 
 		public Placeholder						Placeholder
@@ -90,13 +91,13 @@ namespace Epsitec.Common.UI.Controllers
 		{
 			this.PrepareUserInterfaceDisposal ();
 			
-			Widget[] copy = this.widgets.ToArray ();
+			WidgetRecord[] copy = this.widgets.ToArray ();
 			
 			this.widgets.Clear ();
 
 			for (int i = 0; i < copy.Length; i++)
 			{
-				copy[i].Dispose ();
+				copy[i].Widget.Dispose ();
 			}
 		}
 
@@ -144,11 +145,9 @@ namespace Epsitec.Common.UI.Controllers
 		{
 		}
 		
-		protected void AddWidget(Widget widget)
+		protected void AddWidget(Widget widget, WidgetType widgetType)
 		{
-			System.Diagnostics.Debug.Assert (this.widgets.Contains (widget) == false);
-			
-			this.widgets.Add (widget);
+			this.widgets.Add (new WidgetRecord (widget, widgetType));
 
 			if (this.placeholder != null)
 			{
@@ -267,9 +266,9 @@ namespace Epsitec.Common.UI.Controllers
 		{
 			if (view != null)
 			{
-				foreach (Widget widget in this.widgets)
+				foreach (WidgetRecord record in this.widgets)
 				{
-					widget.SetEmbedder (view);
+					record.Widget.SetEmbedder (view);
 				}
 			}
 		}
@@ -278,9 +277,9 @@ namespace Epsitec.Common.UI.Controllers
 		{
 			if (view != null)
 			{
-				foreach (Widget widget in this.widgets)
+				foreach (WidgetRecord record in this.widgets)
 				{
-					view.Children.Remove (widget);
+					view.Children.Remove (record.Widget);
 				}
 			}
 		}
@@ -332,7 +331,7 @@ namespace Epsitec.Common.UI.Controllers
 		public static readonly DependencyProperty PlaceholderProperty = DependencyProperty.Register ("Placeholder", typeof (Placeholder), typeof (AbstractController), new DependencyPropertyMetadata (AbstractController.GetPlaceholderValue, AbstractController.SetPlaceholderValue));
 
 		private Placeholder						placeholder;
-		private List<Widget>					widgets = new List<Widget> ();
+		private readonly List<WidgetRecord>		widgets;
 		private bool							isRefreshingUserInterface;
 	}
 }

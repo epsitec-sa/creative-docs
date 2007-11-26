@@ -47,7 +47,7 @@ namespace Epsitec.Common.UI.Controllers
 			this.label = new StaticText ();
 			this.field = null;
 
-			this.AddWidget (this.label);
+			this.AddWidget (this.label, WidgetType.Content);
 
 			this.label.HorizontalAlignment = HorizontalAlignment.Stretch;
 			this.label.VerticalAlignment = VerticalAlignment.BaseLine;
@@ -63,8 +63,8 @@ namespace Epsitec.Common.UI.Controllers
 			this.label = new StaticText ();
 			this.field = this.CreateTextField ();
 
-			this.AddWidget (this.label);
-			this.AddWidget (this.field);
+			this.AddWidget (this.label, WidgetType.Label);
+			this.AddWidget (this.field, WidgetType.Input);
 
 			this.label.HorizontalAlignment = HorizontalAlignment.Right;
 			this.label.VerticalAlignment = VerticalAlignment.BaseLine;
