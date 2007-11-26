@@ -155,6 +155,19 @@ namespace Epsitec.Common.Support
 		}
 
 		[Test]
+		public void CheckTemporaryDruids()
+		{
+			Druid id1 = Druid.CreateTemporaryDruid ();
+			Druid id2 = Druid.CreateTemporaryDruid ();
+
+			System.Console.Out.WriteLine (id1.ToString ());
+
+			Assert.IsTrue (id1.IsTemporary);
+			Assert.AreEqual (id1.Module, id2.Module);
+			Assert.AreEqual (id1.Local+1, id2.Local);
+		}
+
+		[Test]
 		public void CheckTryParse()
 		{
 			Druid druid;

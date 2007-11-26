@@ -102,6 +102,20 @@ namespace Epsitec.Common.Support
 				return this.Type != DruidType.Invalid;
 			}
 		}
+
+		/// <summary>
+		/// Gets a value indicating whether this DRUID is temporary.
+		/// </summary>
+		/// <value>
+		/// 	<c>true</c> if this is a temporary DRUID; otherwise, <c>false</c>.
+		/// </value>
+		public bool								IsTemporary
+		{
+			get
+			{
+				return this.Module == 0xfffff;
+			}
+		}
 		
 		/// <summary>
 		/// Gets the type of the DRUID.
@@ -872,6 +886,21 @@ namespace Epsitec.Common.Support
 			return Druid.IsValidBase32Number (value);
 		}
 
+		/// <summary>
+		/// Creates a temporary druid which is unique during a given session.
+		/// </summary>
+		/// <returns>A temporary DRUID.</returns>
+		public static Druid CreateTemporaryDruid()
+		{
+			long value = System.Threading.Interlocked.Increment (ref Druid.uniqueId);
+
+			int module    = 0xfffff;
+			int local     = (int) ((value >> 0) & 0xfffff);
+			int developer = (int) ((value >> 20) & 0xfffff);
+
+			return new Druid (module, developer, local);
+		}
+
 		#region IEquatable<Druid> Members
 
 		/// <summary>
@@ -981,6 +1010,8 @@ namespace Epsitec.Common.Support
 		#endregion
 
 		public static readonly Druid			Empty = new Druid ();
+
+		private static long						uniqueId;
 
 		private int								module;			//	0 or module id + 1
 		private int								developer;		//	0 or developer id + 1
