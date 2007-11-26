@@ -487,7 +487,8 @@ namespace Epsitec.Common.FormEngine
 
 			if (columnsRequired == 0)
 			{
-				glue.Name = "GlueNull";
+				glue.Name = "GlueNull";  // pour feinter les dimensions lors des détections et du dessin de la sélection
+				glue.PreferredWidth = 0; // pour ne pas perturber le calcul de la largeur d'une colonne contenant un label
 
 				int i = Engine.GetColumnIndex(labelsId, column);
 				Widgets.Layouts.GridLayoutEngine.SetColumn(glue, i);
