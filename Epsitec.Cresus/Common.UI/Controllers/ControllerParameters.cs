@@ -8,14 +8,27 @@ using System.Collections.Generic;
 
 namespace Epsitec.Common.UI.Controllers
 {
-	public class ControllerParameters
+	/// <summary>
+	/// The <c>ControllerParameters</c> class stores parameters associated with
+	/// a controller implementing the <see cref="IController"/> interface.
+	/// </summary>
+	public class ControllerParameters : System.IEquatable<ControllerParameters>
 	{
+		/// <summary>
+		/// Initializes a new instance of the <see cref="ControllerParameters"/> class.
+		/// </summary>
+		/// <param name="source">The source string used to define the parameters.</param>
 		public ControllerParameters(string source)
 		{
 			this.source = string.IsNullOrEmpty (source) ? null : source;
 		}
 
 
+		/// <summary>
+		/// Gets the parameter value.
+		/// </summary>
+		/// <param name="key">The parameter key.</param>
+		/// <returns>The parameter value or <c>null</c> if none is defined.</returns>
 		public string GetParameterValue(string key)
 		{
 			if (source == null)
@@ -40,6 +53,64 @@ namespace Epsitec.Common.UI.Controllers
 			}
 		}
 
+		/// <summary>
+		/// Sets the parameter value.
+		/// </summary>
+		/// <param name="key">The key.</param>
+		/// <param name="value">The value.</param>
+		public void SetParameterValue(string key, string value)
+		{
+			if (this.dictionary == null)
+			{
+				this.AllocateDictionary ();
+			}
+
+			if (value == null)
+			{
+				this.dictionary.Remove (key);
+			}
+			else
+			{
+				this.dictionary[key] = value;
+			}
+		}
+
+		public override string ToString()
+		{
+			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
+
+			if (this.dictionary != null)
+			{
+				List<string> keys = new List<string> (this.dictionary.Keys);
+				keys.Sort ();
+
+				foreach (string key in keys)
+				{
+					string value = this.dictionary[key];
+
+					System.Diagnostics.Debug.Assert (!string.IsNullOrEmpty (key));
+					System.Diagnostics.Debug.Assert (value != null);
+
+					if (buffer.Length > 0)
+					{
+						buffer.Append (" ");
+					}
+
+					System.Diagnostics.Debug.Assert (key.IndexOfAny (new char[] { ' ', '=' }) == -1);
+					System.Diagnostics.Debug.Assert (value.IndexOfAny (new char[] { ' ' }) == -1);
+
+					buffer.Append (key);
+					
+					if (value.Length > 0)
+					{
+						buffer.Append ("=");
+						buffer.Append (value);
+					}
+				}
+			}
+
+			return buffer.ToString ();
+		}
 
 		public static string MergeParameters(params string[] sources)
 		{
@@ -62,48 +133,61 @@ namespace Epsitec.Common.UI.Controllers
 
 			return buffer.ToString ();
 		}
-		
+
+		#region IEquatable<ControllerParameters> Members
+
+		public bool Equals(ControllerParameters other)
+		{
+			return this.ToString () == other.ToString ();
+		}
+
+		#endregion
+
+		public override bool Equals(object obj)
+		{
+			return this.Equals (obj as ControllerParameters);
+		}
 		
 		private void AllocateDictionary()
 		{
-			System.Diagnostics.Debug.Assert (this.source != null);
-			System.Diagnostics.Debug.Assert (this.source.Length > 0);
-
 			Dictionary<string, string> dictionary = new Dictionary<string, string> ();
 
-			string[] tokens = this.source.Split (new char[] { ' ', '\t', '\n', '\r' }, System.StringSplitOptions.RemoveEmptyEntries);
-
-			foreach (string token in tokens)
+			if (this.source != null)
 			{
-				string[] args = token.Split ('=');
+				string[] tokens = this.source.Split (new char[] { ' ', '\t', '\n', '\r' }, System.StringSplitOptions.RemoveEmptyEntries);
 
-				string key;
-				string value;
-
-				if (args.Length > 2)
+				foreach (string token in tokens)
 				{
-					key   = args[0];
-					value = string.Join ("=", args, 1, args.Length-1);
-				}
-				else if (args.Length == 1)
-				{
-					key   = args[0];
-					value = "";
-				}
-				else
-				{
-					key   = args[0];
-					value = args[1];
-				}
+					string[] args = token.Split ('=');
 
-				string simpleKey = key.TrimStart ('+', '-');
+					string key;
+					string value;
 
-				if (dictionary.ContainsKey (simpleKey))
-				{
-					//	TODO: what to do in case of multiple definitions ?
+					if (args.Length > 2)
+					{
+						key   = args[0];
+						value = string.Join ("=", args, 1, args.Length-1);
+					}
+					else if (args.Length == 1)
+					{
+						key   = args[0];
+						value = "";
+					}
+					else
+					{
+						key   = args[0];
+						value = args[1];
+					}
+
+					string simpleKey = key.TrimStart ('+', '-');
+
+					if (dictionary.ContainsKey (simpleKey))
+					{
+						//	TODO: what to do in case of multiple definitions ?
+					}
+
+					dictionary[simpleKey] = value;
 				}
-
-				dictionary[simpleKey] = value;
 			}
 
 			this.dictionary = dictionary;

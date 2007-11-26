@@ -49,6 +49,26 @@ namespace Epsitec.Common.UI
 		}
 
 		[Test]
+		public void CheckControllerParameters()
+		{
+			Controllers.ControllerParameters parameters1 = new Controllers.ControllerParameters (null);
+			Controllers.ControllerParameters parameters2 = new Controllers.ControllerParameters ("");
+			Controllers.ControllerParameters parameters3 = new Controllers.ControllerParameters ("a");
+			Controllers.ControllerParameters parameters4 = new Controllers.ControllerParameters ("a=1 b=2 c=x=y");
+			Controllers.ControllerParameters parameters5 = new Controllers.ControllerParameters ("a=1 b=2 a=3");
+			Controllers.ControllerParameters parameters6 = new Controllers.ControllerParameters ("a=0  c=x=y b=2 a=1 ");
+
+			Assert.AreEqual (parameters1, parameters2);
+			Assert.AreEqual (parameters4, parameters6);
+
+			Assert.AreEqual (null, parameters1.GetParameterValue ("a"));
+			Assert.AreEqual (null, parameters2.GetParameterValue ("a"));
+			Assert.AreEqual ("", parameters3.GetParameterValue ("a"));
+			Assert.AreEqual ("1", parameters4.GetParameterValue ("a"));
+			Assert.AreEqual ("3", parameters5.GetParameterValue ("a"));
+		}
+
+		[Test]
 		public void CheckGetMinSpan()
 		{
 			Widget root = new Widget ();
