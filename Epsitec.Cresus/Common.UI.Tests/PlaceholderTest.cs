@@ -131,7 +131,7 @@ namespace Epsitec.Common.UI
 			Placeholder placeholder4 = new Placeholder ();
 
 			placeholder1.Controller = "String";
-			placeholder1.ControllerParameter = "Multiline";
+			placeholder1.ControllerParameters = "Multiline";
 			placeholder1.PreferredHeight = 40;
 			placeholder1.TabIndex = 1;
 			Widgets.Layouts.GridLayoutEngine.SetColumn (placeholder1, 0);
@@ -152,7 +152,7 @@ namespace Epsitec.Common.UI
 			Widgets.Layouts.GridLayoutEngine.SetRow (placeholder3, 3);
 
 			placeholder4.Controller = "Enum";
-			placeholder4.ControllerParameter = "Combo";
+			placeholder4.ControllerParameters = "Combo";
 			placeholder4.PreferredHeight = 20;
 			placeholder4.TabIndex = 4;
 			Widgets.Layouts.GridLayoutEngine.SetColumn (placeholder4, 2);
@@ -299,7 +299,7 @@ namespace Epsitec.Common.UI
 			Widgets.Layouts.GridLayoutEngine.SetRow (placeholder3, 3);
 
 			placeholder4.Controller = "Enum";
-			placeholder4.ControllerParameter = "Combo";
+			placeholder4.ControllerParameters = "Combo";
 			placeholder4.PreferredHeight = 20;
 			placeholder4.TabIndex = 4;
 			Widgets.Layouts.GridLayoutEngine.SetColumn (placeholder4, 2);

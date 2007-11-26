@@ -26,21 +26,6 @@ namespace Epsitec.Common.UI.Controllers
 			{
 				return this.placeholder;
 			}
-			set
-			{
-				if (this.placeholder != value)
-				{
-					Placeholder oldValue = this.placeholder;
-					Placeholder newValue = value;
-
-					this.placeholder = value;
-
-					this.DetachAllWidgets (oldValue);
-					this.AttachAllWidgets (newValue);
-
-					this.InvalidateProperty (AbstractController.PlaceholderProperty, oldValue, newValue);
-				}
-			}
 		}
 
 		#region IController Members
@@ -51,9 +36,21 @@ namespace Epsitec.Common.UI.Controllers
 			{
 				return this.Placeholder;
 			}
-			set
+		}
+
+		void IController.DefinePlaceholder(Placeholder value)
+		{
+			if (this.placeholder != value)
 			{
-				this.Placeholder = value;
+				Placeholder oldValue = this.placeholder;
+				Placeholder newValue = value;
+
+				this.placeholder = value;
+
+				this.DetachAllWidgets (oldValue);
+				this.AttachAllWidgets (newValue);
+
+				this.InvalidateProperty (AbstractController.PlaceholderProperty, oldValue, newValue);
 			}
 		}
 
@@ -341,7 +338,7 @@ namespace Epsitec.Common.UI.Controllers
 
 			if (that != null)
 			{
-				that.Placeholder = (Placeholder) value;
+				that.DefinePlaceholder ((Placeholder) value);
 			}
 			else
 			{

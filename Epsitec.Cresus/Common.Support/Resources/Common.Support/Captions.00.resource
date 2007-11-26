@@ -57,7 +57,7 @@
   <data name="Fld.ResourceCollectionType.ItemType" id="082" mod="1">&lt;s:data id="_0" f:Name="ItemType" f:Labels="{Collection {Text 'ItemType'}}" /&gt;</data>
   <data name="Fld.ResourceEnumType.Values" id="092" mod="1">&lt;s:data id="_0" f:Name="Values" f:Labels="{Collection {Text 'Values'}}" /&gt;</data>
   <data name="Fld.EnumValue.CaptionId" id="0A2" mod="1">&lt;s:data id="_0" f:Name="CaptionId" f:Labels="{Collection {Text 'CaptionId'}}" /&gt;</data>
-  <data name="Fld.ResourceBaseType.DefaultControllerParameter" id="0B2" mod="1">&lt;s:data id="_0" f:Name="DefaultControllerParameter" f:Labels="{Collection {Text 'DefaultControllerParameter'}}" /&gt;</data>
+  <data name="Fld.ResourceBaseType.DefaultControllerParameters" id="0B2" mod="1">&lt;s:data id="_0" f:Name="DefaultControllerParameters" f:Labels="{Collection {Text 'DefaultControllerParameters'}}" /&gt;</data>
   <data name="Fld.ResourceEnumType.SystemType" id="0C2" mod="1">&lt;s:data id="_0" f:Name="SystemType" f:Labels="{Collection {Text 'SystemType'}}" /&gt;</data>
   <data name="Fld.Field.Source" id="0D2">&lt;s:data id="_0" f:Name="Source" /&gt;</data>
   <data name="Fld.Field.Expression" id="0E2">&lt;s:data id="_0" f:Name="Expression" /&gt;</data>

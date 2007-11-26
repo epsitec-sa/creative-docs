@@ -381,7 +381,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			}
 			if (!string.IsNullOrEmpty (controllerParameter))
 			{
-				data.SetValue (Res.Fields.ResourceBaseType.DefaultControllerParameter, controllerParameter);
+				data.SetValue (Res.Fields.ResourceBaseType.DefaultControllerParameters, controllerParameter);
 			}
 			if (type != null)
 			{
@@ -449,7 +449,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 		{
 			if ((base.IsEmptyCaption (data)) &&
 				(ResourceBundle.Field.IsNullString (data.GetValue (Res.Fields.ResourceBaseType.DefaultController) as string)) &&
-				(ResourceBundle.Field.IsNullString (data.GetValue (Res.Fields.ResourceBaseType.DefaultControllerParameter) as string)) &&
+				(ResourceBundle.Field.IsNullString (data.GetValue (Res.Fields.ResourceBaseType.DefaultControllerParameters) as string)) &&
 				(UndefinedValue.IsUndefinedValue (data.GetValue (Res.Fields.ResourceBaseType.DefaultValue))))
 			{
 				TypeCode code = AnyTypeResourceAccessor.ToTypeCode (data.GetValue (Res.Fields.ResourceBaseType.TypeCode));
@@ -569,7 +569,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			patchData.SetValue (Res.Fields.ResourceBaseType.TypeCode, rawCode);
 
 			AbstractCaptionResourceAccessor.CopyDeltaValue (rawData, patchData, Res.Fields.ResourceBaseType.DefaultController);
-			AbstractCaptionResourceAccessor.CopyDeltaValue (rawData, patchData, Res.Fields.ResourceBaseType.DefaultControllerParameter);
+			AbstractCaptionResourceAccessor.CopyDeltaValue (rawData, patchData, Res.Fields.ResourceBaseType.DefaultControllerParameters);
 			AbstractCaptionResourceAccessor.CopyDeltaValue (rawData, patchData, Res.Fields.ResourceBaseType.Nullable);
 			AbstractCaptionResourceAccessor.CopyDeltaValue (rawData, patchData, Res.Fields.ResourceBaseType.DefaultValue);
 
@@ -799,7 +799,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			}
 
 			string controller = data.GetValue (Res.Fields.ResourceBaseType.DefaultController) as string;
-			string controllerParameter = data.GetValue (Res.Fields.ResourceBaseType.DefaultControllerParameter) as string;
+			string controllerParameter = data.GetValue (Res.Fields.ResourceBaseType.DefaultControllerParameters) as string;
 			object defaultValue = data.GetValue (Res.Fields.ResourceBaseType.DefaultValue);
 
 			if (controller != null)

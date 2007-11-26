@@ -39,13 +39,18 @@ namespace Epsitec.Common.UI
 		Widgets.Layouts.IGridPermeable GetGridPermeableLayoutHelper();
 		
 		/// <summary>
-		/// Gets or sets the placeholder associated with this controller.
+		/// Gets the placeholder associated with this controller.
 		/// </summary>
 		/// <value>The placeholder.</value>
 		Placeholder Placeholder
 		{
 			get;
-			set;
 		}
+
+		/// <summary>
+		/// Defines the placeholder associated with this controller.
+		/// </summary>
+		/// <param name="placeholder">The placeholder.</param>
+		void DefinePlaceholder(Placeholder placeholder);
 	}
 }

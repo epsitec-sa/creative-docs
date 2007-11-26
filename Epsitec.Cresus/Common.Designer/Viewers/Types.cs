@@ -144,7 +144,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 				controller = data.GetValue(Support.Res.Fields.ResourceBaseType.DefaultController, out usesOriginalData) as string;
 				this.ColorizeResetBox(this.groupController, source, usesOriginalData);
-				controllerParameter = data.GetValue(Support.Res.Fields.ResourceBaseType.DefaultControllerParameter) as string;
+				controllerParameter = data.GetValue(Support.Res.Fields.ResourceBaseType.DefaultControllerParameters) as string;
 
 				value = data.GetValue(Support.Res.Fields.ResourceBaseType.Nullable, out usesOriginalData);
 				this.ColorizeResetBox(this.groupNullable, source, usesOriginalData);
@@ -343,7 +343,7 @@ namespace Epsitec.Common.Designer.Viewers
 			StructuredData data = item.GetCultureData(this.GetTwoLetters(0));
 
 			data.SetValue(Support.Res.Fields.ResourceBaseType.DefaultController, this.fieldController.Text);
-			data.SetValue(Support.Res.Fields.ResourceBaseType.DefaultControllerParameter, this.fieldControllerParameter.Text);
+			data.SetValue(Support.Res.Fields.ResourceBaseType.DefaultControllerParameters, this.fieldControllerParameter.Text);
 
 			CultureMapSource source = this.access.GetCultureMapSource(item);
 			bool usesOriginalData;
@@ -389,7 +389,7 @@ namespace Epsitec.Common.Designer.Viewers
 			if (button == this.groupController.ResetButton)
 			{
 				this.access.Accessor.ResetToOriginalValue(item, data, Support.Res.Fields.ResourceBaseType.DefaultController);
-				this.access.Accessor.ResetToOriginalValue(item, data, Support.Res.Fields.ResourceBaseType.DefaultControllerParameter);
+				this.access.Accessor.ResetToOriginalValue(item, data, Support.Res.Fields.ResourceBaseType.DefaultControllerParameters);
 			}
 
 			if (button == this.groupNullable.ResetButton)

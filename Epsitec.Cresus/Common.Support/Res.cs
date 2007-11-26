@@ -146,7 +146,7 @@ namespace Epsitec.Common.Support
 				//	designer:cap/70001
 				public static readonly global::Epsitec.Common.Support.Druid DefaultController = new global::Epsitec.Common.Support.Druid (_moduleId, 0, 32);
 				//	designer:cap/700B2
-				public static readonly global::Epsitec.Common.Support.Druid DefaultControllerParameter = new global::Epsitec.Common.Support.Druid (_moduleId, 0, 75);
+				public static readonly global::Epsitec.Common.Support.Druid DefaultControllerParameters = new global::Epsitec.Common.Support.Druid (_moduleId, 0, 75);
 				//	designer:cap/701O
 				public static readonly global::Epsitec.Common.Support.Druid DefaultValue = new global::Epsitec.Common.Support.Druid (_moduleId, 1, 24);
 				//	designer:cap/70011

@@ -53,15 +53,15 @@ namespace Epsitec.Common.UI
 			}
 		}
 
-		public string							ControllerParameter
+		public string							ControllerParameters
 		{
 			get
 			{
-				return (string) this.GetValue (Placeholder.ControllerParameterProperty);
+				return (string) this.GetValue (Placeholder.ControllerParametersProperty);
 			}
 			set
 			{
-				this.SetValue (Placeholder.ControllerParameterProperty, value);
+				this.SetValue (Placeholder.ControllerParametersProperty, value);
 			}
 		}
 
@@ -74,7 +74,7 @@ namespace Epsitec.Common.UI
 				if ((this.controller == null) &&
 					(this.controllerName != null))
 				{
-					IController temp = Controllers.Factory.CreateController (this.controllerName, this.controllerParameter);
+					IController temp = Controllers.Factory.CreateController (this.controllerName, this.controllerParameters);
 
 					if (temp != null)
 					{
@@ -235,8 +235,8 @@ namespace Epsitec.Common.UI
 		{
 			string oldControllerName = this.controllerName;
 			string newControllerName = null;
-			string oldControllerParameter = this.controllerParameter;
-			string newControllerParameter = null;
+			string oldControllerParameters = this.controllerParameters;
+			string newControllerParameters = null;
 			
 			if (this.Controller == "*")
 			{
@@ -244,20 +244,20 @@ namespace Epsitec.Common.UI
 				
 				if (expression != null)
 				{
-					Controllers.Factory.GetDefaultController (expression, out newControllerName, out newControllerParameter);
+					Controllers.Factory.GetDefaultController (expression, out newControllerName, out newControllerParameters);
 				}
 			}
 			else
 			{
-				newControllerName      = this.Controller;
-				newControllerParameter = this.ControllerParameter;
+				newControllerName       = this.Controller;
+				newControllerParameters = this.ControllerParameters;
 			}
 			
 			if ((newControllerName != oldControllerName) ||
-				(newControllerParameter != oldControllerParameter))
+				(newControllerParameters != oldControllerParameters))
 			{
-				this.controllerName      = newControllerName;
-				this.controllerParameter = newControllerParameter;
+				this.controllerName       = newControllerName;
+				this.controllerParameters = newControllerParameters;
 				
 				if (this.controller == null)
 				{
@@ -295,11 +295,11 @@ namespace Epsitec.Common.UI
 			if ((this.controller == null) &&
 				(this.controllerName != null))
 			{
-				this.controller = Controllers.Factory.CreateController (this.controllerName, this.controllerParameter);
+				this.controller = Controllers.Factory.CreateController (this.controllerName, this.controllerParameters);
 
 				if (this.controller != null)
 				{
-					this.controller.Placeholder = this;
+					this.controller.DefinePlaceholder (this);
 					this.controller.CreateUserInterface ();
 
 					object value = this.Value;
@@ -424,14 +424,14 @@ namespace Epsitec.Common.UI
 		}
 
 		public static readonly DependencyProperty ControllerProperty = DependencyProperty.Register ("Controller", typeof (string), typeof (Placeholder), new DependencyPropertyMetadata ("*", Placeholder.NotifyControllerChanged));
-		public static readonly DependencyProperty ControllerParameterProperty = DependencyProperty.Register ("ControllerParameter", typeof (string), typeof (Placeholder), new DependencyPropertyMetadata (Placeholder.NotifyControllerChanged));
+		public static readonly DependencyProperty ControllerParametersProperty = DependencyProperty.Register ("ControllerParameters", typeof (string), typeof (Placeholder), new DependencyPropertyMetadata (Placeholder.NotifyControllerChanged));
 		public static readonly DependencyProperty VerbosityProperty = DependencyProperty.Register ("Verbosity", typeof (Verbosity), typeof (Placeholder), new DependencyPropertyMetadata (Verbosity.Default, Placeholder.NotifyVerbosityChanged));
 
 		static readonly NoOpGridPermeableHelper	noOpGridPermeableHelper = new NoOpGridPermeableHelper ();
 		
 		private IController						controller;
 		private string							controllerName;
-		private string							controllerParameter;
+		private string							controllerParameters;
 		private MiniPanel						editPanel;
 	}
 }
