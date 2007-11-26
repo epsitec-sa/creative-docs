@@ -102,12 +102,12 @@ namespace Epsitec.Common.UI.Controllers
 
 			switch (this.parameters.GetParameterValue ("Mode"))
 			{
-				case "Multiline":
+				case StringController.MultilineMode:
 					text = new TextFieldMulti ();
 					text.PreferredHeight = this.Placeholder.PreferredHeight;
 					break;
 
-				case "Password":
+				case StringController.PasswordMode:
 					text = new TextField ();
 					text.IsPassword = true;
 					break;
@@ -165,6 +165,10 @@ namespace Epsitec.Common.UI.Controllers
 		{
 			return newValue.ToString ();
 		}
+
+		public const string ModeParameter = "Mode";
+		public const string PasswordMode = "Password";
+		public const string MultilineMode = "Multiline";
 		
 		private AbstractTextField field;
 		private StaticText label;

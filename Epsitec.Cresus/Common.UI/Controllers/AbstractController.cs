@@ -17,6 +17,8 @@ namespace Epsitec.Common.UI.Controllers
 	{
 		protected AbstractController(ControllerParameters parameters)
 		{
+			System.Diagnostics.Debug.Assert (parameters != null);
+
 			this.widgets = new List<WidgetRecord> ();
 			this.parameters = parameters;
 
@@ -161,6 +163,12 @@ namespace Epsitec.Common.UI.Controllers
 		{
 			this.widgets.Add (new WidgetRecord (widget, widgetType));
 
+			if ((widgetType == WidgetType.Label) &&
+				(this.parameters.GetParameterValue (AbstractController.NoLabelsParameter) != null))
+			{
+				widget.Visibility = false;
+			}
+			
 			if (this.placeholder != null)
 			{
 				widget.SetEmbedder (this.placeholder);
@@ -277,35 +285,59 @@ namespace Epsitec.Common.UI.Controllers
 
 		public virtual IEnumerable<PermeableCell> GetChildren(int column, int row, int columnSpan, int rowSpan)
 		{
-			int count = this.widgets.Count;
+			int count = this.CountVisibleWidgets ();
 			
 			if (columnSpan < count)
 			{
 				throw new System.ArgumentException (string.Format ("Not enough columns for content; got {0} but at least {1} needed", columnSpan, count));
 			}
 
-			for (int i = 0; i < count; i++)
+			int index = 0;
+
+			foreach (WidgetRecord record in this.widgets)
 			{
-				if (i == count-1)
+				if (record.Widget.Visibility)
 				{
-					yield return new Widgets.Layouts.PermeableCell (this.widgets[i].Widget, column+i, row+0, columnSpan-i, 1);
-				}
-				else
-				{
-					yield return new Widgets.Layouts.PermeableCell (this.widgets[i].Widget, column+i, row+0, 1, 1);
+					if (index == count-1)
+					{
+						yield return new Widgets.Layouts.PermeableCell (record.Widget, column+index, row+0, columnSpan-index, 1);
+					}
+					else
+					{
+						yield return new Widgets.Layouts.PermeableCell (record.Widget, column+index, row+0, 1, 1);
+					}
+
+					index++;
 				}
 			}
 		}
 
 		public virtual bool UpdateGridSpan(ref int columnSpan, ref int rowSpan)
 		{
-			columnSpan = System.Math.Max (columnSpan, this.widgets.Count);
+			int count = this.CountVisibleWidgets ();
+
+			columnSpan = System.Math.Max (columnSpan, count);
 			rowSpan    = System.Math.Max (rowSpan, 1);
 
 			return true;
 		}
 
 		#endregion
+
+		private int CountVisibleWidgets()
+		{
+			int count = 0;
+
+			foreach (WidgetRecord record in this.widgets)
+			{
+				if (record.Widget.Visibility)
+				{
+					count++;
+				}
+			}
+
+			return count;
+		}
 		
 		
 		private void AttachAllWidgets(Placeholder view)
@@ -375,6 +407,8 @@ namespace Epsitec.Common.UI.Controllers
 		}
 
 		public static readonly DependencyProperty PlaceholderProperty = DependencyProperty.Register ("Placeholder", typeof (Placeholder), typeof (AbstractController), new DependencyPropertyMetadata (AbstractController.GetPlaceholderValue, AbstractController.SetPlaceholderValue));
+
+		public const string						NoLabelsParameter = "NoLabels";
 
 		private Placeholder						placeholder;
 		private readonly List<WidgetRecord>		widgets;
