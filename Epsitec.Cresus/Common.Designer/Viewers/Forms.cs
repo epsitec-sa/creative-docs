@@ -656,6 +656,7 @@ namespace Epsitec.Common.Designer.Viewers
 				if (keepSelection)
 				{
 					this.formEditor.SetSelectedGuids(guids);  // resélectionne les mêmes objets
+					this.DefineProxies(this.formEditor.SelectedObjects);  // met à jour les proxies
 				}
 				else
 				{

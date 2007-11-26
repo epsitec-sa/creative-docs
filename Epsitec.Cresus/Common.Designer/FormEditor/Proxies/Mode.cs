@@ -128,17 +128,17 @@ namespace Epsitec.Common.Designer.FormEditor.Proxies
 				this.BoxPadding = this.ObjectModifier.GetBoxPadding(this.DefaultWidget);
 			}
 
+			if (this.ObjectModifier.IsBox(this.DefaultWidget))
+			{
+				this.BoxFrameState = this.ObjectModifier.GetBoxFrameState(this.DefaultWidget);
+				this.BoxFrameWidth = this.ObjectModifier.GetBoxFrameWidth(this.DefaultWidget);
+			}
+
 			if (this.ObjectModifier.IsField(this.DefaultWidget) ||
 				this.ObjectModifier.IsBox(this.DefaultWidget) ||
 				this.ObjectModifier.IsGlue(this.DefaultWidget))
 			{
 				this.BackColor = this.ObjectModifier.GetBackColor(this.DefaultWidget);
-			}
-
-			if (this.ObjectModifier.IsBox(this.DefaultWidget))
-			{
-				this.BoxFrameState = this.ObjectModifier.GetBoxFrameState(this.DefaultWidget);
-				this.BoxFrameWidth = this.ObjectModifier.GetBoxFrameWidth(this.DefaultWidget);
 			}
 		}
 
@@ -152,16 +152,16 @@ namespace Epsitec.Common.Designer.FormEditor.Proxies
 			Mode.BoxPaddingProperty.DefaultMetadata.DefineNamedType(boxPaddingBottomEnumType);
 			Mode.BoxPaddingProperty.DefaultMetadata.DefineCaptionId(Res.Captions.FieldMode.BoxPaddingType.Id);
 
-			EnumType backColorEnumType = Res.Types.FieldDescription.BackColorType;
-			Mode.BackColorProperty.DefaultMetadata.DefineNamedType(backColorEnumType);
-			Mode.BackColorProperty.DefaultMetadata.DefineCaptionId(Res.Captions.FieldMode.BackColorType.Id);
-
 			EnumType boxFrameStateEnumType = Res.Types.FieldDescription.FrameState;
 			Mode.BoxFrameStateProperty.DefaultMetadata.DefineNamedType(boxFrameStateEnumType);
 			Mode.BoxFrameStateProperty.DefaultMetadata.DefineCaptionId(Res.Captions.FieldMode.BoxFrameState.Id);
 
 			Mode.BoxFrameWidthProperty.DefaultMetadata.DefineNamedType(ProxyManager.WidthNumericType);
 			Mode.BoxFrameWidthProperty.DefaultMetadata.DefineCaptionId(Res.Captions.FieldMode.BoxFrameWidth.Id);
+
+			EnumType backColorEnumType = Res.Types.FieldDescription.BackColorType;
+			Mode.BackColorProperty.DefaultMetadata.DefineNamedType(backColorEnumType);
+			Mode.BackColorProperty.DefaultMetadata.DefineCaptionId(Res.Captions.FieldMode.BackColorType.Id);
 		}
 
 

@@ -395,7 +395,7 @@ namespace Epsitec.Common.Designer.FormEditor
 		public Rectangle AdjustBounds(Widget obj, Rectangle bounds)
 		{
 			//	Retourne le rectangle ajusté d'un objet.
-			if (obj.Name == "GlueNull")  // objet FieldDescription.FieldType.Glue ?
+			if (obj.Name == "GlueNull")  // objet FieldDescription.FieldType.Glue avec un ColumnRequired = 1 ?
 			{
 				bounds.Width = 0;  // fait croire à un trait vertical calé à gauche
 			}
