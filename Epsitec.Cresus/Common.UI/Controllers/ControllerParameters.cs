@@ -79,6 +79,12 @@ namespace Epsitec.Common.UI.Controllers
 		{
 			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
 
+			if ((this.source != null) &&
+				(this.dictionary == null))
+			{
+				this.AllocateDictionary ();
+			}
+
 			if (this.dictionary != null)
 			{
 				List<string> keys = new List<string> (this.dictionary.Keys);

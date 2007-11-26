@@ -66,6 +66,14 @@ namespace Epsitec.Common.UI
 			Assert.AreEqual ("", parameters3.GetParameterValue ("a"));
 			Assert.AreEqual ("1", parameters4.GetParameterValue ("a"));
 			Assert.AreEqual ("3", parameters5.GetParameterValue ("a"));
+
+			Assert.AreEqual ("a=1 b=2 c=x=y", parameters6.ToString ());
+
+			parameters6.SetParameterValue ("a", null);
+			parameters6.SetParameterValue ("foo", "");
+			parameters6.SetParameterValue ("bar", "123");
+			
+			Assert.AreEqual ("b=2 bar=123 c=x=y foo", parameters6.ToString ());
 		}
 
 		[Test]
