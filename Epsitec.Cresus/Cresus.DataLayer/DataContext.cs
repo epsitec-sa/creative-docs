@@ -471,7 +471,7 @@ namespace Epsitec.Cresus.DataLayer
 				}
 			}
 
-			string columnName = this.GetDataColumnName (fieldDef);
+			string columnName = this.schemaEngine.GetDataColumnName (fieldDef.Id);
 
 			dataRow[columnName] = this.ConvertToInternal (value, dataRow.Table.TableName, columnName);
 		}
@@ -681,15 +681,15 @@ namespace Epsitec.Cresus.DataLayer
 
 		private string GetRelationTableName(Druid entityId, StructuredTypeField fieldDef)
 		{
-			string sourceTableName = this.GetDataTableName (entityId);
-			string sourceColumnName = this.GetDataColumnName (fieldDef);
+			string sourceTableName = this.schemaEngine.GetDataTableName (entityId);
+			string sourceColumnName = this.schemaEngine.GetDataColumnName (fieldDef.Id);
 
 			return DbTable.GetRelationTableName (sourceTableName, sourceColumnName);
 		}
 
 		private void ReadFieldValueFromDataRow(AbstractEntity entity, StructuredTypeField fieldDef, System.Data.DataRow dataRow)
 		{
-			string columnName = this.GetDataColumnName (fieldDef);
+			string columnName = this.schemaEngine.GetDataColumnName (fieldDef.Id);
 			object value = dataRow[columnName];
 
 			if (System.DBNull.Value == value)
@@ -753,7 +753,7 @@ namespace Epsitec.Cresus.DataLayer
 			System.Diagnostics.Debug.Assert (entityId.IsValid);
 			System.Diagnostics.Debug.Assert (rowKey.IsEmpty == false);
 
-			string tableName = this.GetDataTableName (entityId);
+			string tableName = this.schemaEngine.GetDataTableName (entityId);
 			return this.richCommand.FindRow (tableName, rowKey.Id);
 		}
 
@@ -761,7 +761,7 @@ namespace Epsitec.Cresus.DataLayer
 		{
 			System.Data.DataRow row;
 
-			string tableName = this.GetDataTableName (entityId);
+			string tableName = this.schemaEngine.GetDataTableName (entityId);
 			row = this.richCommand.FindRow (tableName, rowKey.Id);
 
 			if (row == null)
@@ -819,7 +819,7 @@ namespace Epsitec.Cresus.DataLayer
 			System.Diagnostics.Debug.Assert (mapping.EntityId.IsValid);
 			System.Diagnostics.Debug.Assert (mapping.RowKey.IsTemporary);
 
-			string tableName = this.GetDataTableName (entityId);
+			string tableName = this.schemaEngine.GetDataTableName (entityId);
 			System.Data.DataRow row = this.richCommand.CreateRow (tableName);
 
 			TemporaryRowCollection temporaryRows;
@@ -856,26 +856,9 @@ namespace Epsitec.Cresus.DataLayer
 		/// </returns>
 		private TemporaryRowCollection GetTemporaryRows(Druid baseEntityId)
 		{
-			string baseTableName = this.GetDataTableName (baseEntityId);
+			string baseTableName = this.schemaEngine.GetDataTableName (baseEntityId);
 
 			return this.GetTemporaryRows (baseTableName);
-		}
-
-		private string GetDataTableName(Druid entityId)
-		{
-			DbTable tableDef = this.schemaEngine.FindTableDefinition (entityId);
-			return tableDef == null ? null : tableDef.Name;
-		}
-
-		private string GetDataColumnName(StructuredTypeField field)
-		{
-			System.Diagnostics.Debug.Assert (field.Id.StartsWith ("["));
-			System.Diagnostics.Debug.Assert (field.Id.EndsWith ("]"));
-
-			string fieldName = field.Id;
-			string nakedName = fieldName.Substring (1, fieldName.Length-2);
-
-			return nakedName;
 		}
 
 		internal EntityDataMapping GetEntityDataMapping(AbstractEntity entity)

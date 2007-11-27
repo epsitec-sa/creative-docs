@@ -18,35 +18,61 @@ namespace Epsitec.Common.Support.EntityEngine
 	{
 		public EntityFieldPath()
 		{
+			this.entityId = Druid.Empty;
 			this.path = "";
-		}
-
-		public EntityFieldPath(string path)
-		{
-			this.path = path ?? "";
 		}
 
 		public EntityFieldPath(EntityFieldPath path)
 		{
+			this.entityId = path.entityId;
 			this.path = path.path;
 		}
 
-		public EntityFieldPath(params string[] fields)
+		private EntityFieldPath(Druid entityId, string path)
 		{
-			this.path = string.Join (".", fields);
+			this.entityId = entityId;
+			this.path = path;
 		}
-
-		public EntityFieldPath(IEnumerable<string> fields)
-		{
-			this.path = string.Join (".", Collection.ToArray (fields));
-		}
-
 
 		public bool IsEmpty
 		{
 			get
 			{
-				return this.path.Length == 0;
+				return (this.entityId.IsEmpty)
+					&& (this.path.Length == 0);
+			}
+		}
+
+		public bool IsRelative
+		{
+			get
+			{
+				return (this.path.Length > 0)
+					&& (this.entityId.IsEmpty);
+			}
+		}
+
+		public bool IsAbsolute
+		{
+			get
+			{
+				return this.entityId.IsValid;
+			}
+		}
+
+		public bool ContainsIndex
+		{
+			get
+			{
+				return this.path.Contains ("(");
+			}
+		}
+
+		public Druid EntityId
+		{
+			get
+			{
+				return this.entityId;
 			}
 		}
 
@@ -112,6 +138,219 @@ namespace Epsitec.Common.Support.EntityEngine
 			return true;
 		}
 
+		public bool Navigate(Druid root, out Druid leaf, out string id)
+		{
+			return this.Navigate (EntityContext.Current, root, out leaf, out id);
+		}
+
+		public bool Navigate(out Druid leaf, out string id)
+		{
+			return this.Navigate (EntityContext.Current, this.entityId, out leaf, out id);
+		}
+
+		public bool Navigate(EntityContext context, out Druid leaf, out string id)
+		{
+			return this.Navigate (EntityContext.Current, this.entityId, out leaf, out id);
+		}
+
+		public bool Navigate(EntityContext context, Druid root, out Druid leaf, out string id)
+		{
+			if (root.IsEmpty)
+			{
+				throw new System.ArgumentException ("Invalid root");
+			}
+
+			string[] fields = this.Fields;
+			int      last   = fields.Length - 1;
+
+			leaf = Druid.Empty;
+			id   = null;
+
+			if (last < 0)
+			{
+				return false;
+			}
+
+			Druid node = root;
+
+			for (int i = 0; i < last; i++)
+			{
+				string fieldId = EntityFieldPath.ParseFieldId (fields[i]);
+
+				IStructuredType     type  = context.GetStructuredType (node);
+				StructuredTypeField field = type.GetField (fieldId);
+
+				switch (field.Relation)
+				{
+					case FieldRelation.Collection:
+					case FieldRelation.Reference:
+						node = field.TypeId;
+						break;
+
+					default:
+						node = Druid.Empty;
+						break;
+				}
+
+				if (node.IsEmpty)
+				{
+					return false;
+				}
+			}
+
+			leaf = node;
+			id   = fields[last];
+
+			return true;
+		}
+
+		public static EntityFieldPath CreateAbsolutePath(Druid entityId, params string[] fields)
+		{
+			return new EntityFieldPath (entityId, string.Join (".", fields));
+		}
+
+		public static EntityFieldPath CreateAbsolutePath(Druid entityId, IEnumerable<string> fields)
+		{
+			return new EntityFieldPath (entityId, string.Join (".", Collection.ToArray (fields)));
+		}
+
+		public static EntityFieldPath CreateAbsolutePath(Druid entityId, EntityFieldPath relativePath)
+		{
+			if (relativePath == null)
+			{
+				throw new System.ArgumentNullException ();
+			}
+			if (relativePath.IsRelative == false)
+			{
+				throw new System.ArgumentException ("Relative path expected");
+			}
+
+			return EntityFieldPath.CreateAbsolutePath (entityId, relativePath.path);
+		}
+
+		public static EntityFieldPath CreateRelativePath(params string[] fields)
+		{
+			return new EntityFieldPath (Druid.Empty, string.Join (".", fields));
+		}
+
+		public static EntityFieldPath CreateRelativePath(IEnumerable<string> fields)
+		{
+			return new EntityFieldPath (Druid.Empty, string.Join (".", Collection.ToArray (fields)));
+		}
+
+		public static EntityFieldPath Parse(string path)
+		{
+			if (path == null)
+			{
+				return new EntityFieldPath ();
+			}
+			else
+			{
+				int pos = path.IndexOf (':');
+
+				if (pos < 0)
+				{
+					return new EntityFieldPath (Druid.Empty, path);
+				}
+				else
+				{
+					return new EntityFieldPath (Druid.Parse (path.Substring (0, pos)), path.Substring (pos+1));
+				}
+			}
+		}
+
+		#region IEquatable<EntityFieldPath> Members
+
+		public bool Equals(EntityFieldPath other)
+		{
+			if (object.ReferenceEquals (other, null))
+			{
+				return false;
+			}
+			else
+			{
+				return (this.entityId == other.entityId)
+					&& (this.path == other.path);
+			}
+		}
+
+		#endregion
+
+		#region IComparable<EntityFieldPath> Members
+
+		public int CompareTo(EntityFieldPath other)
+		{
+			if (object.ReferenceEquals (other, null))
+			{
+				return 1;
+			}
+			else
+			{
+				int result = string.CompareOrdinal (this.path, other.path);
+
+				if (result == 0)
+				{
+					long a = this.entityId.ToLong ();
+					long b = other.entityId.ToLong ();
+
+					if (a < b)
+					{
+						return -1;
+					}
+					else if (a > b)
+					{
+						return 1;
+					}
+					else
+					{
+						return 0;
+					}
+				}
+				else
+				{
+					return result;
+				}
+			}
+		}
+
+		#endregion
+
+		public override bool Equals(object obj)
+		{
+			return this.Equals (obj as EntityFieldPath);
+		}
+
+		public override int GetHashCode()
+		{
+			return this.path.GetHashCode ();
+		}
+
+		public override string ToString()
+		{
+			return this.path;
+		}
+
+		public static bool operator==(EntityFieldPath a, EntityFieldPath b)
+		{
+			if (object.ReferenceEquals (a, b))
+			{
+				return true;
+			}
+			else if (object.ReferenceEquals (a, null))
+			{
+				return false;
+			}
+			else
+			{
+				return a.Equals (b);
+			}
+		}
+
+		public static bool operator!=(EntityFieldPath a, EntityFieldPath b)
+		{
+			return (a == b) ? false : true;
+		}
+
 
 		private static int? ParseCollectionIndex(string id)
 		{
@@ -139,7 +378,7 @@ namespace Epsitec.Common.Support.EntityEngine
 						return result;
 					}
 				}
-				
+
 				throw new System.FormatException (string.Format ("Invalid index specified: '{0}'", id));
 			}
 		}
@@ -191,75 +430,8 @@ namespace Epsitec.Common.Support.EntityEngine
 		}
 
 		
-		#region IEquatable<EntityFieldPath> Members
 
-		public bool Equals(EntityFieldPath other)
-		{
-			if (object.ReferenceEquals (other, null))
-			{
-				return false;
-			}
-			else
-			{
-				return this.path == other.path;
-			}
-		}
-
-		#endregion
-
-		#region IComparable<EntityFieldPath> Members
-
-		public int CompareTo(EntityFieldPath other)
-		{
-			if (object.ReferenceEquals (other, null))
-			{
-				return 1;
-			}
-			else
-			{
-				return string.CompareOrdinal (this.path, other.path);
-			}
-		}
-
-		#endregion
-
-		public override bool Equals(object obj)
-		{
-			return this.Equals (obj as EntityFieldPath);
-		}
-
-		public override int GetHashCode()
-		{
-			return this.path.GetHashCode ();
-		}
-
-		public override string ToString()
-		{
-			return this.path;
-		}
-
-		public static bool operator==(EntityFieldPath a, EntityFieldPath b)
-		{
-			if (object.ReferenceEquals (a, b))
-			{
-				return true;
-			}
-			else if (object.ReferenceEquals (a, null))
-			{
-				return false;
-			}
-			else
-			{
-				return a.Equals (b);
-			}
-		}
-
-		public static bool operator!=(EntityFieldPath a, EntityFieldPath b)
-		{
-			return (a == b) ? false : true;
-		}
-
-
+		private readonly Druid entityId;
 		private readonly string path;
 	}
 }

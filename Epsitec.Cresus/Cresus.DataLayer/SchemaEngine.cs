@@ -136,6 +136,23 @@ namespace Epsitec.Cresus.DataLayer
 			}
 		}
 
+		public string GetDataTableName(Druid entityId)
+		{
+			DbTable tableDef = this.FindTableDefinition (entityId);
+			return tableDef == null ? null : tableDef.Name;
+		}
+
+		public string GetDataColumnName(string fieldId)
+		{
+			System.Diagnostics.Debug.Assert (fieldId.StartsWith ("["));
+			System.Diagnostics.Debug.Assert (fieldId.EndsWith ("]"));
+
+			return fieldId.Substring (1, fieldId.Length-2);
+		}
+
+
+		
+
 		#region Internal Support Methods
 
 		internal StructuredType GetEntityType(Druid entityId)
