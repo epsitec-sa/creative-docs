@@ -21,6 +21,18 @@ namespace Epsitec.Cresus.DataLayer
 			this.schemaEngine = SchemaEngine.GetSchemaEngine (this.infrastructure) ?? new SchemaEngine (this.infrastructure);
 		}
 
+
+		public void QueryByExample<T>(T example) where T : AbstractEntity, new ()
+		{
+			this.QueryByExample ((AbstractEntity) example);
+		}
+
+		public void QueryByExample(AbstractEntity example)
+		{
+			
+		}
+
+		
 		readonly DbInfrastructure infrastructure;
 		readonly SchemaEngine schemaEngine;
 	}

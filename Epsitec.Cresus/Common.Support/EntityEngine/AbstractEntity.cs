@@ -278,6 +278,14 @@ namespace Epsitec.Common.Support.EntityEngine
 			}
 		}
 
+		internal FieldRelation InternalGetFieldRelation(string id)
+		{
+			IStructuredType     type  = this.context.GetStructuredType (this);
+			StructuredTypeField field = type == null ? null : type.GetField (id);
+
+			return field == null ? FieldRelation.None : field.Relation;
+		}
+
 		internal System.Collections.IList InternalGetFieldCollection(string id)
 		{
 			object value = this.InternalGetValue (id);

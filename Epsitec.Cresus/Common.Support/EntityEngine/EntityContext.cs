@@ -165,6 +165,11 @@ namespace Epsitec.Common.Support.EntityEngine
 
 			if (!this.structuredTypeMap.TryGetValue (id, out type))
 			{
+				if (id.IsTemporary)
+				{
+					return null;
+				}
+				
 				Caption caption = this.resourceManager.GetCaption (id);
 				type = TypeRosetta.GetTypeObject (caption) as IStructuredType;
 				this.structuredTypeMap[id] = type;
@@ -186,6 +191,25 @@ namespace Epsitec.Common.Support.EntityEngine
 			else
 			{
 				return provider.GetStructuredType ();
+			}
+		}
+
+		/// <summary>
+		/// Defines a structured type.
+		/// </summary>
+		/// <param name="id">The id.</param>
+		/// <param name="type">The type.</param>
+		internal void DefineStructuredType(Druid id, IStructuredType type)
+		{
+			this.EnsureCorrectThread ();
+
+			if (this.structuredTypeMap.ContainsKey (id))
+			{
+				throw new System.InvalidOperationException ("StructuredType cannot be redefined");
+			}
+			else
+			{
+				this.structuredTypeMap[id] = type;
 			}
 		}
 
