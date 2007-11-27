@@ -71,7 +71,8 @@ namespace Epsitec.Common.Widgets
 		public static bool HasToolTip(DependencyObject obj)
 		{
 			if ((obj.ContainsValue (ToolTip.ToolTipTextProperty)) ||
-				(obj.ContainsValue (ToolTip.ToolTipWidgetProperty)))
+				(obj.ContainsValue (ToolTip.ToolTipWidgetProperty)) ||
+				(obj.ContainsValue (ToolTip.ToolTipCaptionProperty)))
 			{
 				return true;
 			}
@@ -161,10 +162,16 @@ namespace Epsitec.Common.Widgets
 			ToolTip.SetToolTipText (widget, caption);
 			this.DefineToolTip (widget, caption);
 		}
-		
+
 		public void SetToolTip(Widget widget, Widget caption)
 		{
 			ToolTip.SetToolTipWidget (widget, caption);
+			this.DefineToolTip (widget, caption);
+		}
+
+		public void SetToolTip(Widget widget, Caption caption)
+		{
+			ToolTip.SetToolTipCaption (widget, caption);
 			this.DefineToolTip (widget, caption);
 		}
 
@@ -444,18 +451,29 @@ namespace Epsitec.Common.Widgets
 		{
 			Widget tip = null;
 			
-			if (caption is string)
+			Caption realCaption = caption as Caption;
+			string  textCaption = caption as string;
+
+			if (realCaption != null)
+			{
+				textCaption = realCaption.Description;
+
+				if (string.IsNullOrEmpty (textCaption))
+				{
+					textCaption = realCaption.DefaultLabel;
+				}
+			}
+			
+			if (textCaption != null)
 			{
 				tip = new Contents ();
 
-				string text = caption as string;
-
-				if (string.IsNullOrEmpty (text))
+				if (string.IsNullOrEmpty (textCaption))
 				{
-					text = " ";
+					textCaption = " ";
 				}
-				
-				tip.Text                 = text;
+
+				tip.Text                 = textCaption;
 				tip.TextLayout.Alignment = Drawing.ContentAlignment.MiddleLeft;
 				
 				Drawing.Size size = tip.TextLayout.SingleLineSize;
@@ -609,15 +627,27 @@ namespace Epsitec.Common.Widgets
 			return obj.ContainsValue (ToolTip.ToolTipWidgetProperty);
 		}
 
+		public static Caption GetToolTipCaption(DependencyObject obj)
+		{
+			return obj.GetValue (ToolTip.ToolTipCaptionProperty) as Caption;
+		}
+
+		public static bool HasToolTipCaption(DependencyObject obj)
+		{
+			return obj.ContainsValue (ToolTip.ToolTipCaptionProperty);
+		}
+
 		public static void SetToolTipText(DependencyObject obj, string value)
 		{
 			if (string.IsNullOrEmpty (value))
 			{
+				obj.ClearValue (ToolTip.ToolTipCaptionProperty);
 				obj.ClearValue (ToolTip.ToolTipTextProperty);
 				obj.ClearValue (ToolTip.ToolTipWidgetProperty);
 			}
 			else
 			{
+				obj.ClearValue (ToolTip.ToolTipCaptionProperty);
 				obj.ClearValue (ToolTip.ToolTipWidgetProperty);
 				obj.SetValue (ToolTip.ToolTipTextProperty, value);
 			}
@@ -627,18 +657,37 @@ namespace Epsitec.Common.Widgets
 		{
 			if (value == null)
 			{
+				obj.ClearValue (ToolTip.ToolTipCaptionProperty);
 				obj.ClearValue (ToolTip.ToolTipTextProperty);
 				obj.ClearValue (ToolTip.ToolTipWidgetProperty);
 			}
 			else
 			{
+				obj.ClearValue (ToolTip.ToolTipCaptionProperty);
 				obj.ClearValue (ToolTip.ToolTipTextProperty);
 				obj.SetValue (ToolTip.ToolTipWidgetProperty, value);
 			}
 		}
 
+		public static void SetToolTipCaption(DependencyObject obj, Caption value)
+		{
+			if (value == null)
+			{
+				obj.ClearValue (ToolTip.ToolTipCaptionProperty);
+				obj.ClearValue (ToolTip.ToolTipTextProperty);
+				obj.ClearValue (ToolTip.ToolTipWidgetProperty);
+			}
+			else
+			{
+				obj.SetValue (ToolTip.ToolTipCaptionProperty, value);
+				obj.ClearValue (ToolTip.ToolTipTextProperty);
+				obj.ClearValue (ToolTip.ToolTipWidgetProperty);
+			}
+		}
+
 		public static readonly DependencyProperty ToolTipTextProperty    = DependencyProperty.RegisterAttached ("ToolTipText", typeof (string), typeof (ToolTip), PrivateDependencyPropertyMetadata.Default);
 		public static readonly DependencyProperty ToolTipWidgetProperty  = DependencyProperty.RegisterAttached ("ToolTipWidget", typeof (Widget), typeof (ToolTip), PrivateDependencyPropertyMetadata.Default);
+		public static readonly DependencyProperty ToolTipCaptionProperty = DependencyProperty.RegisterAttached ("ToolTipCaption", typeof (Caption), typeof (ToolTip), PrivateDependencyPropertyMetadata.Default);
 		
 		protected ToolTipBehaviour				behaviour = ToolTipBehaviour.Normal;
 		

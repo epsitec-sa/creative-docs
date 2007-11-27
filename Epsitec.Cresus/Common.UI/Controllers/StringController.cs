@@ -90,6 +90,8 @@ namespace Epsitec.Common.UI.Controllers
 			this.field.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			this.field.Dock = DockStyle.Stacked;
 
+			ToolTip.Default.SetToolTip (this.field, caption);
+
 			this.label.Name = null;
 			this.field.Name = caption.Name;
 			

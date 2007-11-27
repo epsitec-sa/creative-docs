@@ -950,6 +950,10 @@ namespace Epsitec.Common.Support
 			{
 				return null;
 			}
+			if (druid.IsTemporary)
+			{
+				throw new System.ArgumentException ("Temporary DRUIDs not allowed in GetCaption");
+			}
 
 			culture = culture ?? this.culture;
 
