@@ -409,7 +409,7 @@ namespace Epsitec.Common.Designer
 			FormEngine.FormDescription form = this.accessForms.GetForm(index);
 
 			FormEngine.Engine engine = new FormEngine.Engine(this.resourceManager);
-			UI.Panel panel = engine.CreateForm(form);
+			UI.Panel panel = engine.CreateForm(form, false);
 
 			if (panel != null)
 			{

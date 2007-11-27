@@ -20,10 +20,12 @@ namespace Epsitec.Common.FormEngine
 			this.entityContext = new EntityContext (this.resourceManager, EntityLoopHandlingMode.Skip);
 		}
 
-		public UI.Panel CreateForm(FormDescription form)
+		public UI.Panel CreateForm(FormDescription form, bool forDesigner)
 		{
 			//	Crée un masque de saisie pour une entité donnée.
 			//	La liste de FieldDescription doit être plate (pas de Node).
+			this.forDesigner = forDesigner;
+
 			string err = Arrange.Check(form.Fields);
 			if (err != null)
 			{
@@ -470,30 +472,33 @@ namespace Epsitec.Common.FormEngine
 		private void CreateGlue(UI.Panel root, Widgets.Layouts.GridLayoutEngine grid, FieldDescription field, List<int> labelsId, ref int column, ref int row, bool isGlueAfter)
 		{
 			//	Crée les widgets pour un collage dans la grille, lors de la deuxième passe.
-			FrameBox glue = new FrameBox(root);
-			glue.BackColor = FieldDescription.GetRealColor(field.BackColor);
-			glue.Index = field.UniqueId;
-
 			int columnsRequired = field.ColumnsRequired;
 
-			if (columnsRequired == 0)
+			if (this.forDesigner)
 			{
-				glue.Name = "GlueNull";  // pour feinter les dimensions lors des détections et du dessin de la sélection
-				glue.PreferredWidth = 0; // pour ne pas perturber le calcul de la largeur d'une colonne contenant un label
+				FrameBox glue = new FrameBox(root);
+				glue.BackColor = FieldDescription.GetRealColor(field.BackColor);
+				glue.Index = field.UniqueId;
 
-				int i = Engine.GetColumnIndex(labelsId, column);
-				Widgets.Layouts.GridLayoutEngine.SetColumn(glue, i);
-				Widgets.Layouts.GridLayoutEngine.SetRow(glue, row);
-			}
-			else
-			{
-				grid.RowDefinitions.Add(new Widgets.Layouts.RowDefinition());
+				if (columnsRequired == 0)
+				{
+					glue.Name = "GlueNull";  // pour feinter les dimensions lors des détections et du dessin de la sélection
+					glue.PreferredWidth = 0; // pour ne pas perturber le calcul de la largeur d'une colonne contenant un label
 
-				int i = Engine.GetColumnIndex(labelsId, column);
-				int j = Engine.GetColumnIndex(labelsId, column+columnsRequired-1)+1;
-				Widgets.Layouts.GridLayoutEngine.SetColumn(glue, i);
-				Widgets.Layouts.GridLayoutEngine.SetRow(glue, row);
-				Widgets.Layouts.GridLayoutEngine.SetColumnSpan(glue, j-i);
+					int i = Engine.GetColumnIndex(labelsId, column);
+					Widgets.Layouts.GridLayoutEngine.SetColumn(glue, i);
+					Widgets.Layouts.GridLayoutEngine.SetRow(glue, row);
+				}
+				else
+				{
+					grid.RowDefinitions.Add(new Widgets.Layouts.RowDefinition());
+
+					int i = Engine.GetColumnIndex(labelsId, column);
+					int j = Engine.GetColumnIndex(labelsId, column+columnsRequired-1)+1;
+					Widgets.Layouts.GridLayoutEngine.SetColumn(glue, i);
+					Widgets.Layouts.GridLayoutEngine.SetRow(glue, row);
+					Widgets.Layouts.GridLayoutEngine.SetColumnSpan(glue, j-i);
+				}
 			}
 
 			column += columnsRequired;
@@ -662,5 +667,6 @@ namespace Epsitec.Common.FormEngine
 
 		protected readonly ResourceManager resourceManager;
 		protected readonly EntityContext entityContext;
+		protected bool forDesigner;
 	}
 }

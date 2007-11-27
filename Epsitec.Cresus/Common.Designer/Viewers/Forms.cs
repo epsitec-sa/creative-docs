@@ -641,7 +641,7 @@ namespace Epsitec.Common.Designer.Viewers
 				}
 
 				FormEngine.Engine engine = new FormEngine.Engine(this.module.ResourceManager);
-				this.panelContainer = engine.CreateForm(form);
+				this.panelContainer = engine.CreateForm(form, true);
 				if (this.panelContainer == null)
 				{
 					this.panelContainer = new UI.Panel();
