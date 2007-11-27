@@ -18,6 +18,13 @@ namespace Epsitec.Cresus.Database
 			this.column = column;
 		}
 
+		public DbTableColumn(string tableAlias, DbTable table, string columnAlias, DbColumn column)
+			: this (table, column)
+		{
+			this.tableAlias = tableAlias;
+			this.columnAlias = columnAlias;
+		}
+
 		public DbTable Table
 		{
 			get

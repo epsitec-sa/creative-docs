@@ -29,16 +29,21 @@ namespace Epsitec.Cresus.Database
 		}
 
 
-		internal System.Data.IDbCommand CreateCommand(DbTransaction transaction)
+		public System.Data.IDataReader CreateReader(DbTransaction transaction, IEnumerable<DbTableColumn> tableColumns)
 		{
 			ISqlBuilder builder = transaction.SqlBuilder;
-			
-			
-			
-			return builder.Command;
+			SqlSelect select = this.CreateSelect (tableColumns);
+
+			builder.SelectData (select);
+
+			System.Data.IDbCommand command = builder.Command;
+			command.Transaction = transaction.Transaction;
+			System.Data.IDataReader reader = command.ExecuteReader ();
+
+			return reader;
 		}
 
-		internal SqlSelect CreateSqlSelect(IEnumerable<DbTableColumn> tableColumns)
+		internal SqlSelect CreateSelect(IEnumerable<DbTableColumn> tableColumns)
 		{
 			SqlSelect select = new SqlSelect ();
 
