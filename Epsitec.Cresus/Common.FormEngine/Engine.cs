@@ -39,6 +39,8 @@ namespace Epsitec.Common.FormEngine
 				return container;
 			}
 
+			List<FieldDescription> fields = Arrange.Organize(form.Fields);
+
 			Caption entityCaption = this.resourceManager.GetCaption(form.EntityId);
 			StructuredType entity = TypeRosetta.GetTypeObject(entityCaption) as StructuredType;
 			if (entity == null)
@@ -67,7 +69,7 @@ namespace Epsitec.Common.FormEngine
 			root.DataSource = new UI.DataSource();
 			root.DataSource.AddDataSource("Data", entityData);
 
-			this.CreateFormBox(root, form.Fields, 0);
+			this.CreateFormBox(root, fields, 0);
 
 			return root;
 		}

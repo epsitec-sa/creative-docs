@@ -65,6 +65,71 @@ namespace Epsitec.Common.FormEngine
 		}
 
 
+		static public List<FieldDescription> Organize(List<FieldDescription> fields)
+		{
+			//	Arrange une liste.
+			List<FieldDescription> list = new List<FieldDescription>();
+
+			//	Copie la liste en remplaçant les Glue successifs par un suel.
+			bool isGlue = false;
+			foreach (FieldDescription field in fields)
+			{
+				if (field.Type == FieldDescription.FieldType.Glue)
+				{
+					if (isGlue)
+					{
+						continue;
+					}
+
+					isGlue = true;
+				}
+				else
+				{
+					isGlue = false;
+				}
+
+				list.Add(field);
+			}
+
+			//	Si un séparateur est dans une 'ligne' (Field-Glue-Field-Glue-Field), déplace-le
+			//	au début de la ligne.
+			for (int i=0; i<list.Count; i++)
+			{
+				if (list[i].Type == FieldDescription.FieldType.Line ||
+					list[i].Type == FieldDescription.FieldType.Title)
+				{
+					int j = i;
+					bool recede;
+					do
+					{
+						recede = false;
+
+						if (j > 0 && list[j-1].Type == FieldDescription.FieldType.Glue)
+						{
+							FieldDescription sep = list[j];
+							list.RemoveAt(j);
+							list.Insert(j-1, sep);
+							j--;
+							recede = true;
+						}
+
+						if (j > 0 && j < list.Count-1 && list[j+1].Type == FieldDescription.FieldType.Glue)
+						{
+							FieldDescription sep = list[j];
+							list.RemoveAt(j);
+							list.Insert(j-1, sep);
+							j--;
+							recede = true;
+						}
+					}
+					while (recede);
+				}
+			}
+
+			return list;
+		}
+
+
 		static public List<FieldDescription> Develop(List<FieldDescription> fields)
 		{
 			//	Retourne une liste développée qui ne contient plus de noeuds.
