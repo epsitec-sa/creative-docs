@@ -34,6 +34,22 @@ namespace Epsitec.Cresus.DataLayer
 			AdresseEntity a2 = this.context.CreateEntity<AdresseEntity> ();
 			AdresseEntity a3 = this.context.CreateEntity<AdresseEntity> ();
 
+			int count = 0;
+
+			foreach (string[] cols in this.ReadSampleDataFile ())
+			{
+				AdresseEntity a = this.context.CreateEntity<AdresseEntity> ();
+
+				a.Désignation = cols[0].Length == 0 ? string.Concat (cols[1], " ", cols[3], " ", cols[2]).Trim () : cols[0];
+				a.Rue = cols[4];
+				a.Npa = cols[5];
+				a.Ville = cols[6];
+
+				count++;
+			}
+
+			System.Diagnostics.Debug.WriteLine ("Created " + count + " records");
+
 			a1.Désignation = "Pierre ARNAUD";	//	[63073]
 			a1.Rue = "Ch. du Fontenay";			//	[63083]
 			a1.Numéro = "6";
@@ -56,6 +72,16 @@ namespace Epsitec.Cresus.DataLayer
 			a3.Pays = "CH";
 
 			this.context.SaveChanges ();
+
+			System.Diagnostics.Debug.WriteLine ("Saved");
+		}
+
+		private IEnumerable<string[]> ReadSampleDataFile()
+		{
+			foreach (string line in System.IO.File.ReadAllLines (@"..\..\sample.csv"))
+			{
+				yield return line.Split (';');
+			}
 		}
 
 		[Test]
@@ -74,7 +100,7 @@ namespace Epsitec.Cresus.DataLayer
 			tableColumns.Add (new DbTableColumn ("T1", t1, "Name", c1));
 			tableColumns.Add (new DbTableColumn ("T1", t1, "Street", c2));
 			tableColumns.Add (new DbTableColumn ("T1", t1, "City", c3));
-
+				
 			using (DbTransaction transaction = this.infrastructure.BeginTransaction ())
 			{
 				System.Data.IDataReader dataReader = reader.CreateReader (transaction, tableColumns);
