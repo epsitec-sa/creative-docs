@@ -45,8 +45,7 @@ namespace Epsitec.Cresus.DataLayer
 
 		public void ExecuteQuery(DataQuery query)
 		{
-			Dictionary<string, DbTable> tables = new Dictionary<string, DbTable> ();
-			List<DbColumn> columns = new List<DbColumn> ();
+			List<DbTableColumn> tableColumns = new List<DbTableColumn> ();
 			
 			foreach (EntityFieldPath fieldPath in query.OutputFields)
 			{
@@ -62,16 +61,15 @@ namespace Epsitec.Cresus.DataLayer
 				}
 
 				DbTable  tableDef   = this.schemaEngine.FindTableDefinition (dataEntityId);
-				string   tableName  = tableDef.Name;
 				string   columnName = this.schemaEngine.GetDataColumnName (dataFieldId);
 				DbColumn columnDef  = tableDef == null ? null : tableDef.Columns[columnName];
 
-				if (tables.ContainsKey (tableName) == false)
-				{
-					tables[tableName] = tableDef;
-				}
+				DbTableColumn tableColumn = new DbTableColumn (tableDef, columnDef);
 
-				columns.Add (columnDef);
+				tableColumn.TableAlias  = fieldPath.GetParentPath ().ToString ();
+				tableColumn.ColumnAlias = fieldPath.ToString ();
+
+				tableColumns.Add (tableColumn);
 			}
 
 			

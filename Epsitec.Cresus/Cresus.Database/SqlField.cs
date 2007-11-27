@@ -514,6 +514,28 @@ namespace Epsitec.Cresus.Database
 			return new SqlField (SqlFieldType.All);
 		}
 
+		public static SqlField CreateAliasedName(string name, string alias)
+		{
+			if (DbSqlStandard.ValidateName (name))
+			{
+				return new SqlField (name, alias);
+			}
+
+			throw new Exceptions.FormatException (string.Format ("{0} is not a valid SQL name", name));
+		}
+
+		public static SqlField CreateAliasedName(string tableName, string columnName, string alias)
+		{
+			string name = DbSqlStandard.QualifyName (tableName, columnName);
+
+			if (DbSqlStandard.ValidateQualifiedName (name))
+			{
+				return new SqlField (name, alias);
+			}
+
+			throw new Exceptions.FormatException (string.Format ("{0} is not a valid SQL name.", name));
+		}
+
 		public static SqlField CreateName(string name)
 		{
 			if (DbSqlStandard.ValidateName (name))

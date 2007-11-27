@@ -204,6 +204,23 @@ namespace Epsitec.Common.Support.EntityEngine
 			return true;
 		}
 
+
+		public EntityFieldPath GetParentPath()
+		{
+			string[] fields = this.Fields;
+
+			switch (fields.Length)
+			{
+				case 0:
+					return null;
+				case 1:
+					return new EntityFieldPath (this.entityId, "");
+				default:
+					return new EntityFieldPath (this.entityId, string.Join (".", fields, 0, fields.Length-1));
+			}
+		}
+
+
 		public static EntityFieldPath CreateAbsolutePath(Druid entityId, params string[] fields)
 		{
 			return new EntityFieldPath (entityId, string.Join (".", fields));
