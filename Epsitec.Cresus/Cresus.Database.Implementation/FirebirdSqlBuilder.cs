@@ -1195,25 +1195,21 @@ namespace Epsitec.Cresus.Database.Implementation
 
 				if (isFirstField)
 				{
-					this.Append (" ORDER BY ");
-				}
-
-				//	TODO:	si un alias existe on devrait l'utiliser à la place du nom
-				//	TODO:	sinon faut-il utiliser le nom qualifié de préférence ?
-				this.Append (field.AsName);
-
-				if (field.SortOrder == SqlSortOrder.Descending)
-				{
-					this.Append (" DESC");
-				}
-
-				if (isFirstField)
-				{
 					isFirstField = false;
+					this.Append (" ORDER BY ");
 				}
 				else
 				{
 					this.Append (", ");
+				}
+
+				//	TODO:	si un alias existe on devrait l'utiliser à la place du nom
+				//	TODO:	sinon faut-il utiliser le nom qualifié de préférence ?
+				this.Append (field.AsQualifiedName);
+
+				if (field.SortOrder == SqlSortOrder.Descending)
+				{
+					this.Append (" DESC");
 				}
 			}
 

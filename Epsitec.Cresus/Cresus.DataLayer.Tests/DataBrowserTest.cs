@@ -164,6 +164,8 @@ namespace Epsitec.Cresus.DataLayer
 
 			reader.AddQueryFields (queryFields);
 			reader.AddCondition (condition);
+			reader.AddSortOrder (new DbTableColumn ("T1", "City", c3), SqlSortOrder.Ascending);
+			reader.AddSortOrder (new DbTableColumn ("T1", "Name", c1), SqlSortOrder.Ascending);
 
 			List<string> lines = new List<string> ();
 

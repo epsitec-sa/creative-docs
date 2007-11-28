@@ -22,6 +22,7 @@ namespace Epsitec.Cresus.Database
 			this.shortAliasToColumnMap = new Dictionary<string, DbTableColumn> ();
 			this.renamedTableColumns = new List<DbTableColumn>();
 			this.conditions = new List<DbSelectCondition> ();
+			this.orderByTableColumns = new Dictionary<string, SqlSortOrder> ();
 		}
 
 
@@ -39,6 +40,43 @@ namespace Epsitec.Cresus.Database
 			{
 				this.RegisterTableColumn (queryField);
 			}
+		}
+
+		public void AddSortOrder(DbTableColumn tableColumn, SqlSortOrder order)
+		{
+			string shortColumnAlias = this.FindShortColumnAlias (tableColumn);
+
+			if (shortColumnAlias == null)
+			{
+				throw new System.ArgumentException (string.Format ("Specified sort column '{0}' does not belong to the query fields", tableColumn.ToString ()));
+			}
+
+			this.orderByTableColumns[shortColumnAlias] = order;
+		}
+
+		private string FindShortColumnAlias(DbTableColumn tableColumn)
+		{
+			foreach (KeyValuePair<string, DbTableColumn> pair in this.shortAliasToColumnMap)
+			{
+				if (pair.Value == tableColumn)
+				{
+					return pair.Key;
+				}
+			}
+
+			return null;
+		}
+
+		private string GetShortColumnAlias(DbTableColumn tableColumn)
+		{
+			string shortColumnAlias = this.FindShortColumnAlias (tableColumn);
+
+			if (shortColumnAlias == null)
+			{
+				shortColumnAlias = this.RegisterTableColumn (tableColumn);
+			}
+
+			return shortColumnAlias;
 		}
 
 		public void AddCondition(DbSelectCondition condition)
@@ -79,7 +117,7 @@ namespace Epsitec.Cresus.Database
 			return select;
 		}
 
-		private void RegisterTableColumn(DbTableColumn originalTableColumn)
+		private string RegisterTableColumn(DbTableColumn originalTableColumn)
 		{
 			int columnIndex = this.renamedTableColumns.Count;
 			
@@ -94,6 +132,8 @@ namespace Epsitec.Cresus.Database
 			this.renamedTableColumns.Add (renamedTableColumn);
 
 			this.shortAliasToColumnMap[shortColumnAlias] = originalTableColumn;
+
+			return shortColumnAlias;
 		}
 
 		private string RegisterTable(DbTableColumn originalTableColumn)
@@ -130,6 +170,13 @@ namespace Epsitec.Cresus.Database
 				string   tableName = tableColumn.TableAlias;
 
 				SqlField fieldDefinition = SqlField.CreateAliasedName (tableName, column.GetSqlName (), alias);
+				SqlSortOrder order;
+
+				if (this.orderByTableColumns.TryGetValue (tableColumn.ColumnAlias, out order))
+				{
+					fieldDefinition.SortOrder = order;
+				}
+
 				select.Fields.Add (fieldDefinition);
 			}
 		}
@@ -184,5 +231,6 @@ namespace Epsitec.Cresus.Database
 		private readonly Dictionary<string, DbTableColumn> shortAliasToColumnMap;
 		private readonly List<DbTableColumn> renamedTableColumns;
 		private readonly List<DbSelectCondition> conditions;
+		private readonly Dictionary<string, SqlSortOrder> orderByTableColumns;
 	}
 }
