@@ -36,7 +36,9 @@ namespace Epsitec.Cresus.DataLayer
 
 			int count = 0;
 
-			foreach (string[] cols in this.ReadSampleDataFile ())
+			System.Diagnostics.Debug.WriteLine ("Reading sample data file");
+
+			foreach (string[] cols in this.ReadInfiniteSampleDataFile ())
 			{
 				AdresseEntity a = this.context.CreateEntity<AdresseEntity> ();
 
@@ -46,10 +48,21 @@ namespace Epsitec.Cresus.DataLayer
 				a.Ville = cols[6];
 
 				count++;
+
+				if ((count % 1000) == 0)
+				{
+					this.context.SaveChanges ();
+					System.Console.Out.WriteLine ("{0} created", count);
+				}
+				if (count == 10*1000)
+				{
+					break;
+				}
 			}
 
-			System.Diagnostics.Debug.WriteLine ("Created " + count + " records");
+			System.Diagnostics.Debug.WriteLine ("Created " + count + " address records");
 
+#if false
 			a1.Désignation = "Pierre ARNAUD";	//	[63073]
 			a1.Rue = "Ch. du Fontenay";			//	[63083]
 			a1.Numéro = "6";
@@ -70,17 +83,21 @@ namespace Epsitec.Cresus.DataLayer
 			a3.Npa = "1092";
 			a3.Ville = "Belmont/Lausanne";
 			a3.Pays = "CH";
+#endif
 
 			this.context.SaveChanges ();
 
 			System.Diagnostics.Debug.WriteLine ("Saved");
 		}
 
-		private IEnumerable<string[]> ReadSampleDataFile()
+		private IEnumerable<string[]> ReadInfiniteSampleDataFile()
 		{
-			foreach (string line in System.IO.File.ReadAllLines (@"..\..\sample.csv"))
+			while (true)
 			{
-				yield return line.Split (';');
+				foreach (string line in System.IO.File.ReadAllLines (@"..\..\sample.csv"))
+				{
+					yield return line.Split (';');
+				}
 			}
 		}
 
@@ -100,6 +117,10 @@ namespace Epsitec.Cresus.DataLayer
 			tableColumns.Add (new DbTableColumn ("T1", t1, "Name", c1));
 			tableColumns.Add (new DbTableColumn ("T1", t1, "Street", c2));
 			tableColumns.Add (new DbTableColumn ("T1", t1, "City", c3));
+
+			System.Diagnostics.Debug.WriteLine ("Starting reader");
+
+			List<string> lines = new List<string> ();
 				
 			using (DbTransaction transaction = this.infrastructure.BeginTransaction ())
 			{
@@ -107,12 +128,14 @@ namespace Epsitec.Cresus.DataLayer
 
 				while (dataReader.Read ())
 				{
-					System.Console.Out.WriteLine ("{0}, {1}, {2}", dataReader.GetString (0), dataReader.GetString (1), dataReader.GetString (2));
+					lines.Add (string.Format ("{0}, {1}, {2}", dataReader.GetString (0), dataReader.GetString (1), dataReader.GetString (2)));
 				}
 
 				dataReader.Close ();
 				transaction.Commit ();
 			}
+
+			System.Diagnostics.Debug.WriteLine ("Loaded " + lines.Count + " records");
 		}
 
 		private readonly DbInfrastructure infrastructure = TestSupport.Database.NewInfrastructure ();
