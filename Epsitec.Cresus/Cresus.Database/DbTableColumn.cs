@@ -12,14 +12,20 @@ namespace Epsitec.Cresus.Database
 	/// </summary>
 	public sealed class DbTableColumn
 	{
-		public DbTableColumn(DbTable table, DbColumn column)
+		public DbTableColumn(DbColumn column)
 		{
-			this.table = table;
+			this.table = column.Table;
 			this.column = column;
 		}
 
-		public DbTableColumn(string tableAlias, DbTable table, string columnAlias, DbColumn column)
-			: this (table, column)
+		public DbTableColumn(string tableAlias, DbColumn column)
+			: this (column)
+		{
+			this.tableAlias = tableAlias;
+		}
+
+		public DbTableColumn(string tableAlias, string columnAlias, DbColumn column)
+			: this (column)
 		{
 			this.tableAlias = tableAlias;
 			this.columnAlias = columnAlias;

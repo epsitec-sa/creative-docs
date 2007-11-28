@@ -145,9 +145,9 @@ namespace Epsitec.Cresus.DataLayer
 			DbSelectCondition condition1 = new DbSelectCondition (this.infrastructure.Converter, DbSelectRevision.LiveActive);
 			DbSelectCondition condition2 = new DbSelectCondition (this.infrastructure.Converter, DbSelectRevision.LiveActive);
 			DbSelectCondition condition3 = new DbSelectCondition (this.infrastructure.Converter, DbSelectRevision.LiveActive);
-			condition1.AddCondition (table1.Columns[Tags.ColumnId], DbCompare.Equal, 1000000000002L);
-			condition2.AddCondition (table2.Columns[Tags.ColumnId], DbCompare.Equal, 1000000000002L);
-			condition3.AddCondition (table1.Columns[Tags.ColumnId], DbCompare.Equal, 1000000000001L);
+			condition1.AddCondition (new DbTableColumn (table1.Columns[Tags.ColumnId]), DbCompare.Equal, 1000000000002L);
+			condition2.AddCondition (new DbTableColumn (table2.Columns[Tags.ColumnId]), DbCompare.Equal, 1000000000002L);
+			condition3.AddCondition (new DbTableColumn (table1.Columns[Tags.ColumnId]), DbCompare.Equal, 1000000000001L);
 
 			System.Diagnostics.Debug.WriteLine ("Loading data from database");
 

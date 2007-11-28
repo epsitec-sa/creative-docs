@@ -1,6 +1,8 @@
 //	Copyright © 2004-2007, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using System.Collections.Generic;
+
 namespace Epsitec.Cresus.Database
 {
 	/// <summary>
@@ -27,6 +29,7 @@ namespace Epsitec.Cresus.Database
 		{
 			this.typeConverter = typeConverter;
 			this.sqlFields     = new Collections.SqlFieldList ();
+			this.conditions    = new List<Condition> ();
 			this.revision      = revision;
 		}
 
@@ -70,9 +73,9 @@ namespace Epsitec.Cresus.Database
 		/// <param name="a">The column.</param>
 		/// <param name="comparison">The comparison.</param>
 		/// <param name="value">The value.</param>
-		public void AddCondition(DbColumn a, DbCompare comparison, short value)
+		public void AddCondition(DbTableColumn a, DbCompare comparison, short value)
 		{
-			this.AddConditionWithRawValue (a, comparison, value, DbRawType.Int16);
+			this.conditions.Add (new Condition (a, comparison, value, DbRawType.Int16));
 		}
 
 		/// <summary>
@@ -81,9 +84,9 @@ namespace Epsitec.Cresus.Database
 		/// <param name="a">The column.</param>
 		/// <param name="comparison">The comparison.</param>
 		/// <param name="value">The value.</param>
-		public void AddCondition(DbColumn a, DbCompare comparison, int value)
+		public void AddCondition(DbTableColumn a, DbCompare comparison, int value)
 		{
-			this.AddConditionWithRawValue (a, comparison, value, DbRawType.Int32);
+			this.conditions.Add (new Condition (a, comparison, value, DbRawType.Int32));
 		}
 
 		/// <summary>
@@ -92,9 +95,9 @@ namespace Epsitec.Cresus.Database
 		/// <param name="a">The column.</param>
 		/// <param name="comparison">The comparison.</param>
 		/// <param name="value">The value.</param>
-		public void AddCondition(DbColumn a, DbCompare comparison, long value)
+		public void AddCondition(DbTableColumn a, DbCompare comparison, long value)
 		{
-			this.AddConditionWithRawValue (a, comparison, value, DbRawType.Int64);
+			this.conditions.Add (new Condition (a, comparison, value, DbRawType.Int64));
 		}
 
 		/// <summary>
@@ -104,12 +107,12 @@ namespace Epsitec.Cresus.Database
 		/// <param name="comparison">The comparison.</param>
 		/// <param name="value">The value.</param>
 		/// <param name="numDef">The numeric definition.</param>
-		public void AddCondition(DbColumn a, DbCompare comparison, decimal value, DbNumDef numDef)
+		public void AddCondition(DbTableColumn a, DbCompare comparison, decimal value, DbNumDef numDef)
 		{
 			DbRawType rawType  = TypeConverter.GetRawType (DbSimpleType.Decimal, numDef);
 			object    rawValue = TypeConverter.ConvertFromSimpleType (value, DbSimpleType.Decimal, numDef);
-			
-			this.AddConditionWithRawValue (a, comparison, rawValue, rawType);
+
+			this.conditions.Add (new Condition (a, comparison, rawValue, rawType));
 		}
 
 		/// <summary>
@@ -118,9 +121,9 @@ namespace Epsitec.Cresus.Database
 		/// <param name="a">The column.</param>
 		/// <param name="comparison">The comparison.</param>
 		/// <param name="value">The value.</param>
-		public void AddCondition(DbColumn a, DbCompare comparison, string value)
+		public void AddCondition(DbTableColumn a, DbCompare comparison, string value)
 		{
-			this.AddConditionWithRawValue (a, comparison, value, DbRawType.String);
+			this.conditions.Add (new Condition (a, comparison, value, DbRawType.String));
 		}
 
 		/// <summary>
@@ -129,37 +132,116 @@ namespace Epsitec.Cresus.Database
 		/// <param name="a">The first column.</param>
 		/// <param name="comparison">The comparison.</param>
 		/// <param name="b">The second column.</param>
-		public void AddCondition(DbColumn a, DbCompare comparison, DbColumn b)
+		public void AddCondition(DbTableColumn a, DbCompare comparison, DbTableColumn b)
 		{
-			SqlField    fieldA   = SqlField.CreateName (a);
-			SqlField    fieldB   = SqlField.CreateName (b);
-			SqlFunction function = new SqlFunction (this.MapDbCompareToSqlFunctionType (comparison), fieldA, fieldB);
-			
-			this.sqlFields.Add (SqlField.CreateFunction (function));
+			this.conditions.Add (new Condition (a, comparison, b));
 		}
 
 		/// <summary>
 		/// Adds the "is null" condition.
 		/// </summary>
 		/// <param name="a">The column.</param>
-		public void AddConditionIsNull(DbColumn a)
+		public void AddConditionIsNull(DbTableColumn a)
 		{
-			SqlField    field    = SqlField.CreateName (a);
-			SqlFunction function = new SqlFunction (SqlFunctionCode.CompareIsNull, field);
-			
-			this.sqlFields.Add (SqlField.CreateFunction (function));
+			this.conditions.Add (new Condition (a, DbCompare.IsNull));
 		}
 
 		/// <summary>
 		/// Adds the "is not null" condition.
 		/// </summary>
 		/// <param name="a">The column.</param>
-		public void AddConditionIsNotNull(DbColumn a)
+		public void AddConditionIsNotNull(DbTableColumn a)
 		{
-			SqlField    field    = SqlField.CreateName (a);
-			SqlFunction function = new SqlFunction (SqlFunctionCode.CompareIsNotNull, field);
+			this.conditions.Add (new Condition (a, DbCompare.IsNotNull));
+		}
+
+		private class Condition
+		{
+			public Condition(DbTableColumn column, DbCompare condition)
+			{
+				this.argumentCount = 1;
+				this.ColumnA = column;
+				this.Comparison = condition;
+			}
+
+			public Condition(DbTableColumn columnA, DbCompare comparison, DbTableColumn columnB)
+			{
+				this.argumentCount = 2;
+				this.ColumnA = columnA;
+				this.ColumnB = columnB;
+				this.Comparison = comparison;
+			}
+
+			public Condition(DbTableColumn column, DbCompare comparison, object value, DbRawType valueRawType)
+			{
+				this.argumentCount = 2;
+				this.ColumnA = column;
+				this.Comparison = comparison;
+				this.ConstantValue = value;
+				this.ConstantValueRawType = valueRawType;
+			}
+
+			public DbTableColumn ColumnA
+			{
+				get;
+				set;
+			}
 			
-			this.sqlFields.Add (SqlField.CreateFunction (function));
+			public DbTableColumn ColumnB
+			{
+				get;
+				set;
+			}
+
+			public DbCompare Comparison
+			{
+				get;
+				set;
+			}
+
+			public object ConstantValue
+			{
+				get;
+				set;
+			}
+
+			public DbRawType ConstantValueRawType
+			{
+				get;
+				set;
+			}
+
+			public void Register(Collections.SqlFieldList fields)
+			{
+				if (this.argumentCount == 1)
+				{
+					SqlField field = SqlField.CreateAliasedName (this.ColumnA.TableAlias ?? this.ColumnA.Table.Name, this.ColumnA.Column.Name, this.ColumnA.ColumnAlias);
+					
+					SqlFunction function = new SqlFunction (DbSelectCondition.MapDbCompareToSqlFunctionType (this.Comparison), field);
+
+					fields.Add (SqlField.CreateFunction (function));
+				}
+				else if (this.ColumnB == null)
+				{
+					SqlField fieldA = SqlField.CreateAliasedName (this.ColumnA.TableAlias ?? this.ColumnA.Table.Name, this.ColumnA.Column.Name, this.ColumnA.ColumnAlias);
+					SqlField fieldB = SqlField.CreateConstant (this.ConstantValue, this.ConstantValueRawType);
+
+					SqlFunction function = new SqlFunction (DbSelectCondition.MapDbCompareToSqlFunctionType (this.Comparison), fieldA, fieldB);
+
+					fields.Add (SqlField.CreateFunction (function));
+				}
+				else
+				{
+					SqlField fieldA = SqlField.CreateAliasedName (this.ColumnA.TableAlias ?? this.ColumnA.Table.Name, this.ColumnA.Column.Name, this.ColumnA.ColumnAlias);
+					SqlField fieldB = SqlField.CreateAliasedName (this.ColumnB.TableAlias ?? this.ColumnB.Table.Name, this.ColumnB.Column.Name, this.ColumnB.ColumnAlias);
+					
+					SqlFunction function = new SqlFunction (DbSelectCondition.MapDbCompareToSqlFunctionType (this.Comparison), fieldA, fieldB);
+
+					fields.Add (SqlField.CreateFunction (function));
+				}
+			}
+
+			private readonly int argumentCount;
 		}
 
 
@@ -171,38 +253,41 @@ namespace Epsitec.Cresus.Database
 		/// <param name="fields">The collection to which the conditions will be added.</param>
 		internal void CreateConditions(DbTable mainTable, Collections.SqlFieldList fields)
 		{
-			SqlField revisionCondition = null;
-			
+			this.CreateConditions (mainTable, null, fields);
+		}
+
+		internal void CreateConditions(DbTable mainTable, string mainTableAlias, Collections.SqlFieldList fields)
+		{
+			this.sqlFields.Clear ();
+
+			foreach (Condition condition in this.conditions)
+			{
+				condition.Register (this.sqlFields);
+			}
+
+			Condition revisionCondition = null;
+
 			switch (this.revision)
 			{
 				case DbSelectRevision.LiveAll:
-					
 					//	Select all live revisions of the rows: live (0), copied (1)
 					//	and archive copy (2) are all < deleted (3).
 					
-					this.AddCondition (mainTable.Columns[Tags.ColumnStatus],
-						/* */		   DbCompare.LessThan,
-						/* */		   DbKey.ConvertToIntStatus (DbRowStatus.Deleted));
-
-					revisionCondition = this.sqlFields[this.sqlFields.Count-1];
-					this.sqlFields.Remove (revisionCondition);
+					revisionCondition = new Condition (new DbTableColumn (mainTableAlias, mainTable.Columns[Tags.ColumnStatus]),
+						/* */						   DbCompare.LessThan,
+						/* */						   DbKey.ConvertToIntStatus (DbRowStatus.Deleted), DbRawType.Int16);
 					break;
 				
 				case DbSelectRevision.LiveActive:
-					
 					//	Select only the active revisions of the rows: live (0) and
 					//	copied (1) both describe active rows and are < archive copy (2).
-					
-					this.AddCondition (mainTable.Columns[Tags.ColumnStatus],
-						/* */		   DbCompare.LessThan,
-						/* */		   DbKey.ConvertToIntStatus (DbRowStatus.ArchiveCopy));
 
-					revisionCondition = this.sqlFields[this.sqlFields.Count-1];
-					this.sqlFields.Remove (revisionCondition);
+					revisionCondition = new Condition (new DbTableColumn (mainTableAlias, mainTable.Columns[Tags.ColumnStatus]),
+						/* */						   DbCompare.LessThan,
+						/* */						   DbKey.ConvertToIntStatus (DbRowStatus.ArchiveCopy), DbRawType.Int16);
 					break;
 				
 				case DbSelectRevision.All:
-
 					//	Select all revisions of the rows; there is no need to add an
 					//	additional condition for this !
 					
@@ -217,7 +302,7 @@ namespace Epsitec.Cresus.Database
 				case DbCompareCombiner.And:
 					if (revisionCondition != null)
 					{
-						fields.Add (revisionCondition);
+						revisionCondition.Register (fields);
 					}
 					fields.AddRange (this.sqlFields);
 					break;
@@ -225,7 +310,7 @@ namespace Epsitec.Cresus.Database
 				case DbCompareCombiner.Or:
 					if (revisionCondition != null)
 					{
-						fields.Add (revisionCondition);
+						revisionCondition.Register (fields);
 					}
 					if (this.sqlFields.Count > 0)
 					{
@@ -239,17 +324,7 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 		
-		private void AddConditionWithRawValue(DbColumn a, DbCompare comparison, object rawValue, DbRawType rawType)
-		{
-			SqlField fieldA = SqlField.CreateName (a);
-			SqlField fieldB = SqlField.CreateConstant (rawValue, rawType);
-			
-			SqlFunction function = new SqlFunction (this.MapDbCompareToSqlFunctionType (comparison), fieldA, fieldB);
-			
-			this.sqlFields.Add (SqlField.CreateFunction (function));
-		}
-		
-		private SqlFunctionCode MapDbCompareToSqlFunctionType(DbCompare comparison)
+		private static SqlFunctionCode MapDbCompareToSqlFunctionType(DbCompare comparison)
 		{
 			switch (comparison)
 			{
@@ -261,14 +336,17 @@ namespace Epsitec.Cresus.Database
 				case DbCompare.GreaterThanOrEqual:	return SqlFunctionCode.CompareGreaterThanOrEqual;
 				case DbCompare.Like:				return SqlFunctionCode.CompareLike;
 				case DbCompare.NotLike:				return SqlFunctionCode.CompareNotLike;
+				case DbCompare.IsNull:				return SqlFunctionCode.CompareIsNull;
+				case DbCompare.IsNotNull:			return SqlFunctionCode.CompareIsNotNull;
 			}
 			
 			throw new System.ArgumentException (string.Format ("Unsupported comparison {0}", comparison), "comparison");
 		}
 
-		private ITypeConverter					typeConverter;
-		private Collections.SqlFieldList			sqlFields;
-		private DbSelectRevision				revision;
-		private DbCompareCombiner				combiner = DbCompareCombiner.And;
+		private readonly ITypeConverter				typeConverter;
+		private readonly Collections.SqlFieldList	sqlFields;
+		private readonly List<Condition>			conditions;
+		private DbSelectRevision					revision;
+		private DbCompareCombiner					combiner = DbCompareCombiner.And;
 	}
 }

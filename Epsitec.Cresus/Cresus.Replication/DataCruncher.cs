@@ -22,7 +22,7 @@ namespace Epsitec.Cresus.Replication
 		{
 			DbSelectCondition condition = new DbSelectCondition (this.infrastructure.Converter);
 			
-			condition.AddCondition (table.Columns[Tags.ColumnRefLog], DbCompare.Equal, log_id);
+			condition.AddCondition (new DbTableColumn (table.Columns[Tags.ColumnRefLog]), DbCompare.Equal, log_id);
 			
 			using (DbRichCommand command = DbRichCommand.CreateFromTable (this.infrastructure, this.transaction, table, condition))
 			{
@@ -37,8 +37,8 @@ namespace Epsitec.Cresus.Replication
 			
 			DbSelectCondition condition = new DbSelectCondition (this.infrastructure.Converter);
 			
-			condition.AddCondition (table.Columns[Tags.ColumnRefLog], DbCompare.GreaterThanOrEqual, sync_id_min);
-			condition.AddCondition (table.Columns[Tags.ColumnRefLog], DbCompare.LessThanOrEqual, sync_id_max);
+			condition.AddCondition (new DbTableColumn (table.Columns[Tags.ColumnRefLog]), DbCompare.GreaterThanOrEqual, sync_id_min);
+			condition.AddCondition (new DbTableColumn (table.Columns[Tags.ColumnRefLog]), DbCompare.LessThanOrEqual, sync_id_max);
 			
 			using (DbRichCommand command = DbRichCommand.CreateFromTable (this.infrastructure, this.transaction, table, condition))
 			{
@@ -56,8 +56,8 @@ namespace Epsitec.Cresus.Replication
 			
 			DbSelectCondition condition = new DbSelectCondition (this.infrastructure.Converter);
 			
-			condition.AddCondition (table.Columns[Tags.ColumnId], DbCompare.GreaterThanOrEqual, sync_id_min);
-			condition.AddCondition (table.Columns[Tags.ColumnId], DbCompare.LessThanOrEqual, sync_id_max);
+			condition.AddCondition (new DbTableColumn (table.Columns[Tags.ColumnId]), DbCompare.GreaterThanOrEqual, sync_id_min);
+			condition.AddCondition (new DbTableColumn (table.Columns[Tags.ColumnId]), DbCompare.LessThanOrEqual, sync_id_max);
 			
 			using (DbRichCommand command = DbRichCommand.CreateFromTable (this.infrastructure, this.transaction, table, condition))
 			{
@@ -86,7 +86,7 @@ namespace Epsitec.Cresus.Replication
 			
 			for (int i = 0; i < ids.Length; i++)
 			{
-				condition.AddCondition (id_column, DbCompare.Equal, ids[i]);
+				condition.AddCondition (new DbTableColumn (id_column), DbCompare.Equal, ids[i]);
 			}
 			
 			using (DbRichCommand command = DbRichCommand.CreateFromTable (this.infrastructure, this.transaction, table, condition))

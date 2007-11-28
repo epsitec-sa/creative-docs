@@ -40,7 +40,7 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 
-		public void AddCondition()
+		public void AddCondition(DbSelectCondition condition)
 		{
 		}
 
@@ -90,7 +90,7 @@ namespace Epsitec.Cresus.Database
 				this.shortAliasToTableMap[shortTableAlias] = originalTableColumn.Table;
 			}
 
-			DbTableColumn renamedTableColumn = new DbTableColumn (originalTableColumn.Table, originalTableColumn.Column);
+			DbTableColumn renamedTableColumn = new DbTableColumn (originalTableColumn.Column);
 
 			renamedTableColumn.TableAlias  = shortTableAlias;
 			renamedTableColumn.ColumnAlias = shortColumnAlias;

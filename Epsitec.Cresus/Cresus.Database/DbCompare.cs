@@ -47,6 +47,10 @@ namespace Epsitec.Cresus.Database
 		/// <summary>
 		/// Returns <c>true</c> if both fields are not alike (this uses SQL pattern based string comparison).
 		/// </summary>
-		NotLike
+		NotLike,
+
+
+		IsNull,
+		IsNotNull,
 	}
 }

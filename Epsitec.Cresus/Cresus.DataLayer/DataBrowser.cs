@@ -64,7 +64,11 @@ namespace Epsitec.Cresus.DataLayer
 				string   columnName = this.schemaEngine.GetDataColumnName (dataFieldId);
 				DbColumn columnDef  = tableDef == null ? null : tableDef.Columns[columnName];
 
-				DbTableColumn tableColumn = new DbTableColumn (tableDef, columnDef);
+				System.Diagnostics.Debug.Assert (tableDef != null);
+				System.Diagnostics.Debug.Assert (columnDef != null);
+				System.Diagnostics.Debug.Assert (tableDef == columnDef.Table);
+				
+				DbTableColumn tableColumn = new DbTableColumn (columnDef);
 
 				tableColumn.TableAlias  = fieldPath.GetParentPath ().ToString ();
 				tableColumn.ColumnAlias = fieldPath.ToString ();

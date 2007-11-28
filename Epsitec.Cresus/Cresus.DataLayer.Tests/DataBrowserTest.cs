@@ -112,9 +112,9 @@ namespace Epsitec.Cresus.DataLayer
 			DbColumn c2 = t1.Columns["63083"];
 			DbColumn c3 = t1.Columns["630B3"];
 
-			queryFields.Add (new DbTableColumn ("T1", t1, "Name", c1));
-			queryFields.Add (new DbTableColumn ("T1", t1, "Street", c2));
-			queryFields.Add (new DbTableColumn ("T1", t1, "City", c3));
+			queryFields.Add (new DbTableColumn ("T1", "Name", c1));
+			queryFields.Add (new DbTableColumn ("T1", "Street", c2));
+			queryFields.Add (new DbTableColumn ("T1", "City", c3));
 
 			System.Diagnostics.Debug.WriteLine ("Starting reader");
 
