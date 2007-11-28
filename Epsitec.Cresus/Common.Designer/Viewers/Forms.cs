@@ -561,10 +561,12 @@ namespace Epsitec.Common.Designer.Viewers
 		protected void UpdateRelationsTable(bool newContent)
 		{
 			//	Met à jour la table des relations.
+			List<FormEditor.ObjectModifier.RelationItem> list = this.formEditor.ObjectModifier.TableRelations;
+
 			int first = this.relationsTable.FirstVisibleRow;
 			for (int i=0; i<this.relationsTable.LineCount; i++)
 			{
-				if (this.relationsEntityPath == null || first+i >= this.relationsEntityPath.Count)
+				if (first+i >= list.Count)
 				{
 					this.relationsTable.SetLineString(0, first+i, "");
 					this.relationsTable.SetLineState(0, first+i, MyWidgets.StringList.CellState.Disabled);
@@ -576,32 +578,20 @@ namespace Epsitec.Common.Designer.Viewers
 				}
 				else
 				{
-					string druidsPath = this.relationsEntityPath[first+i];
-					string nextDruidsPath = null;
-					if (first+i+1 < this.relationsEntityPath.Count)
-					{
-						nextDruidsPath = this.relationsEntityPath[first+i+1];
-					}
-					string name = this.formEditor.ObjectModifier.GetTableRelationDescription(druidsPath, nextDruidsPath);
+					string name = this.formEditor.ObjectModifier.GetTableRelationDescription(first+i);
+					string icon = this.formEditor.ObjectModifier.GetTableRelationIcon(first+i);
 
 					this.relationsTable.SetLineString(0, first+i, name);
 					this.relationsTable.SetLineState(0, first+i, MyWidgets.StringList.CellState.Normal);
 					this.relationsTable.SetLineColor(0, first+i, Color.Empty);
 
-					this.relationsTable.SetLineString(1, first+i, "");
+					this.relationsTable.SetLineString(1, first+i, icon);
 					this.relationsTable.SetLineState(1, first+i, MyWidgets.StringList.CellState.Normal);
 					this.relationsTable.SetLineColor(1, first+i, Color.Empty);
 				}
 			}
 
-			if (this.relationsEntityPath == null)
-			{
-				this.relationsTable.TotalRows = 0;
-			}
-			else
-			{
-				this.relationsTable.TotalRows = this.relationsEntityPath.Count;
-			}
+			this.relationsTable.TotalRows = list.Count;
 
 			if (newContent)
 			{
@@ -732,7 +722,6 @@ namespace Epsitec.Common.Designer.Viewers
 				this.formEditor.Form = null;
 
 				this.entityFields = null;
-				this.relationsEntityPath = null;
 			}
 			else
 			{
@@ -768,8 +757,9 @@ namespace Epsitec.Common.Designer.Viewers
 				}
 
 				this.entityFields = this.module.AccessEntities.GetEntityDruidsPath(this.entityId);
-				this.InitializeRelationsEntityPath();
 			}
+
+			this.formEditor.ObjectModifier.UpdateTableRelation(this.entityId, this.entityFields);
 		}
 
 		protected void InitializePanel()
@@ -782,24 +772,6 @@ namespace Epsitec.Common.Designer.Viewers
 			this.panelContainer.DrawDesignerFrame = true;
 			this.panelContainer.SetParent(this.panelContainerParent);
 			this.panelContainer.ZOrder = this.formEditor.ZOrder+1;
-		}
-
-		protected void InitializeRelationsEntityPath()
-		{
-			//	Initialise la table de relations possibles avec le premier niveau.
-			this.relationsEntityPath = new List<string>();
-
-			foreach (StructuredData dataField in this.entityFields)
-			{
-				FieldRelation rel = (FieldRelation) dataField.GetValue(Support.Res.Fields.Field.Relation);
-				if (rel != FieldRelation.None)
-				{
-					Druid fieldCaptionId = (Druid) dataField.GetValue(Support.Res.Fields.Field.CaptionId);
-					string druidPath = fieldCaptionId.ToString();
-
-					this.relationsEntityPath.Add(druidPath);
-				}
-			}
 		}
 
 
@@ -1196,60 +1168,8 @@ namespace Epsitec.Common.Designer.Viewers
 		{
 			//	Etend ou compacte la relation sélectionnée.
 			int sel = this.relationsTable.SelectedRow;
-			string druidsPath = this.relationsEntityPath[sel];
-			IList<StructuredData> dataFields = this.SearchStructuredData(druidsPath);
-
-			foreach (StructuredData dataField in dataFields)
-			{
-				FieldRelation rel = (FieldRelation) dataField.GetValue(Support.Res.Fields.Field.Relation);
-				if (rel != FieldRelation.None)
-				{
-					Druid fieldCaptionId = (Druid) dataField.GetValue(Support.Res.Fields.Field.CaptionId);
-
-					sel++;
-					this.relationsEntityPath.Insert(sel, string.Concat(druidsPath, ".", fieldCaptionId.ToString()));
-				}
-			}
-
+			this.formEditor.ObjectModifier.TableRelationExpand(sel);
 			this.UpdateRelationsTable(true);
-		}
-
-		protected IList<StructuredData> SearchStructuredData(string druidsPath)
-		{
-			string[] druids = druidsPath.Split('.');
-
-			IList<StructuredData> dataFields = this.module.AccessEntities.GetEntityDruidsPath(this.entityId);
-			foreach (string druid in druids)
-			{
-				StructuredData dataField = this.SearchStructuredData(dataFields, Druid.Parse(druid));
-				Druid typeId = (Druid) dataField.GetValue(Support.Res.Fields.Field.TypeId);
-				Module typeModule = this.designerApplication.SearchModule(typeId);
-				if (typeModule != null)
-				{
-					CultureMap typeCultureMap = typeModule.AccessEntities.Accessor.Collection[typeId];
-					if (typeCultureMap != null)
-					{
-						StructuredData typeData = typeCultureMap.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
-						dataFields = typeData.GetValue(Support.Res.Fields.ResourceStructuredType.Fields) as IList<StructuredData>;
-					}
-				}
-			}
-
-			return dataFields;
-		}
-
-		protected StructuredData SearchStructuredData(IList<StructuredData> dataFields, Druid fieldId)
-		{
-			foreach (StructuredData dataField in dataFields)
-			{
-				Druid fieldCaptionId = (Druid) dataField.GetValue(Support.Res.Fields.Field.CaptionId);
-				if (fieldCaptionId == fieldId)
-				{
-					return dataField;
-				}
-			}
-
-			return null;
 		}
 
 
@@ -1442,7 +1362,6 @@ namespace Epsitec.Common.Designer.Viewers
 		protected Druid							entityId;
 		protected FormDescription				form;
 		protected IList<StructuredData>			entityFields;
-		protected List<string>					relationsEntityPath;
 		protected FormEditor.Editor				formEditor;
 		protected FrameBox						right;
 		protected HSplitter						splitter3;

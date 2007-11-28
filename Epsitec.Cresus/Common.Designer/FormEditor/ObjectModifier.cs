@@ -423,14 +423,30 @@ namespace Epsitec.Common.Designer.FormEditor
 		}
 
 
-		public string GetTableRelationDescription(string druidsPath, string nextDruidsPath)
+		#region TableRelation
+		public List<RelationItem> TableRelations
+		{
+			get
+			{
+				return this.tableRelations;
+			}
+		}
+
+		public string GetTableRelationDescription(int index)
 		{
 			//	Retourne le texte permettant de décrire une relation dans une liste, avec un effet
 			//	d'indentation pour ressembler aux arborescences de Vista.
-			string name = this.formEditor.Module.AccessFields.GetFieldNames(druidsPath);
+			string druidsPath = this.tableRelations[index].DruidsPath;
+
+			string nextDruidsPath = null;
+			if (index+1 < this.tableRelations.Count)
+			{
+				nextDruidsPath = this.tableRelations[index+1].DruidsPath;
+			}
 
 			System.Text.StringBuilder builder = new System.Text.StringBuilder();
 
+			string name = this.formEditor.Module.AccessFields.GetFieldNames(druidsPath);
 			string[] parts = name.Split('.');
 
 			for (int i=0; i<parts.Length-1; i++)
@@ -452,6 +468,132 @@ namespace Epsitec.Common.Designer.FormEditor
 
 			return builder.ToString();
 		}
+
+		public string GetTableRelationIcon(int index)
+		{
+			//	Retourne le texte "icône" permettant de décrire une relation dans une liste.
+			FieldRelation rel = this.tableRelations[index].Relation;
+
+			string icon = null;
+
+			if (rel == FieldRelation.Reference)
+			{
+				icon = Misc.Image("TreeRelationReference");
+			}
+			
+			if (rel == FieldRelation.Collection)
+			{
+				icon = Misc.Image("TreeRelationCollection");
+			}
+
+			return icon;
+		}
+
+		public void TableRelationExpand(int index)
+		{
+			//	Etend une relation.
+			string druidsPath = this.tableRelations[index].DruidsPath;
+			IList<StructuredData> dataFields = this.TableRelationSearchStructuredData(druidsPath);
+
+			foreach (StructuredData dataField in dataFields)
+			{
+				FieldRelation rel = (FieldRelation) dataField.GetValue(Support.Res.Fields.Field.Relation);
+				if (rel != FieldRelation.None)
+				{
+					Druid fieldCaptionId = (Druid) dataField.GetValue(Support.Res.Fields.Field.CaptionId);
+
+					RelationItem item = new RelationItem();
+					item.DruidsPath = string.Concat(druidsPath, ".", fieldCaptionId.ToString());
+					item.Relation = rel;
+					item.Expandable = true;
+					item.Expanded = false;
+					item.Level = 0;
+
+					index++;
+					this.tableRelations.Insert(index, item);
+				}
+			}
+		}
+
+		protected IList<StructuredData> TableRelationSearchStructuredData(string druidsPath)
+		{
+			string[] druids = druidsPath.Split('.');
+
+			IList<StructuredData> dataFields = this.formEditor.Module.AccessEntities.GetEntityDruidsPath(this.entityId);
+			foreach (string druid in druids)
+			{
+				StructuredData dataField = this.TableRelationSearchStructuredData(dataFields, Druid.Parse(druid));
+				Druid typeId = (Druid) dataField.GetValue(Support.Res.Fields.Field.TypeId);
+				Module typeModule = this.formEditor.Module.DesignerApplication.SearchModule(typeId);
+				if (typeModule != null)
+				{
+					CultureMap typeCultureMap = typeModule.AccessEntities.Accessor.Collection[typeId];
+					if (typeCultureMap != null)
+					{
+						StructuredData typeData = typeCultureMap.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
+						dataFields = typeData.GetValue(Support.Res.Fields.ResourceStructuredType.Fields) as IList<StructuredData>;
+					}
+				}
+			}
+
+			return dataFields;
+		}
+
+		protected StructuredData TableRelationSearchStructuredData(IList<StructuredData> dataFields, Druid fieldId)
+		{
+			foreach (StructuredData dataField in dataFields)
+			{
+				Druid fieldCaptionId = (Druid) dataField.GetValue(Support.Res.Fields.Field.CaptionId);
+				if (fieldCaptionId == fieldId)
+				{
+					return dataField;
+				}
+			}
+
+			return null;
+		}
+
+		public void UpdateTableRelation(Druid entityId, IList<StructuredData> entityFields)
+		{
+			//	Initialise la table de relations possibles avec le premier niveau.
+			this.entityId = entityId;
+
+			this.tableRelations = new List<RelationItem>();
+
+			if (entityFields == null)
+			{
+				return;
+			}
+
+			foreach (StructuredData dataField in entityFields)
+			{
+				FieldRelation rel = (FieldRelation) dataField.GetValue(Support.Res.Fields.Field.Relation);
+				if (rel != FieldRelation.None)
+				{
+					Druid fieldCaptionId = (Druid) dataField.GetValue(Support.Res.Fields.Field.CaptionId);
+					string druidPath = fieldCaptionId.ToString();
+
+					RelationItem item = new RelationItem();
+					item.DruidsPath = druidPath;
+					item.Relation = rel;
+					item.Expandable = true;
+					item.Expanded = false;
+					item.Level = 0;
+
+					this.tableRelations.Add(item);
+				}
+			}
+		}
+
+		public struct RelationItem
+		{
+			public string						DruidsPath;
+			public FieldRelation				Relation;
+			public bool							Expandable;
+			public bool							Expanded;
+			public int							Level;
+		}
+		#endregion
 
 
 		#region TableContent
@@ -686,7 +828,9 @@ namespace Epsitec.Common.Designer.FormEditor
 
 		protected Editor							formEditor;
 		protected Druid								formDruid;
+		protected Druid								entityId;
 		protected List<TableItem>					tableContent;
 		protected Dictionary<string, System.Guid>	dicoLocalGuids;
+		protected List<RelationItem>				tableRelations;
 	}
 }

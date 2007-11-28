@@ -712,6 +712,42 @@ namespace Epsitec.Common.Designer
 			return builder.ToString();
 		}
 
+		public FieldRelation GetFieldRelation(string druidsPath)
+		{
+			//	Retourne le type de la relation d'un champ.
+			if (druidsPath == null)
+			{
+				return FieldRelation.None;
+			}
+
+			string[] druids = druidsPath.Split('.');
+			Druid druid = Druid.Parse(druids[druids.Length-1]);
+
+			Module module = this.designerApplication.SearchModule(druid);
+			if (module == null)
+			{
+				return FieldRelation.None;
+			}
+
+			CultureMap item =  module.AccessFields.accessor.Collection[druid];
+			if (item == null)
+			{
+				item =  module.AccessEntities.accessor.Collection[druid];
+				if (item == null)
+				{
+					return FieldRelation.None;
+				}
+			}
+
+			StructuredData dataField = item.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
+			if (dataField == null)
+			{
+				return FieldRelation.None;
+			}
+
+			return (FieldRelation) dataField.GetValue(Support.Res.Fields.Field.Relation);
+		}
+
 		public string GetEntityName(Druid entityId)
 		{
 			//	Retourne le nom d'une entité.
