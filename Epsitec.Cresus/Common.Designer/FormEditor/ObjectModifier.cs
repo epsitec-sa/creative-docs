@@ -483,6 +483,17 @@ namespace Epsitec.Common.Designer.FormEditor
 				//	trouvé dans l'entité. Ceci est fait pour tous les champs de l'entité, et non
 				//	seulement pour ceux qui sont utilisés dans le Form.
 				this.dicoLocalGuids.Clear();
+				foreach (StructuredData dataField in entityFields)
+				{
+					FieldRelation rel = (FieldRelation) dataField.GetValue(Support.Res.Fields.Field.Relation);
+					if (rel == FieldRelation.None)
+					{
+						Druid fieldCaptionId = (Druid) dataField.GetValue(Support.Res.Fields.Field.CaptionId);
+						string druidPath = fieldCaptionId.ToString();
+
+						this.dicoLocalGuids.Add(druidPath, System.Guid.NewGuid());
+					}
+				}
 #if false
 				foreach (string druidPath in entityDruidsPath)
 				{
@@ -535,6 +546,26 @@ namespace Epsitec.Common.Designer.FormEditor
 			}
 
 			//	Complète ensuite par tous les autres.
+			foreach (StructuredData dataField in entityFields)
+			{
+				FieldRelation rel = (FieldRelation) dataField.GetValue(Support.Res.Fields.Field.Relation);
+				if (rel == FieldRelation.None)
+				{
+					Druid fieldCaptionId = (Druid) dataField.GetValue(Support.Res.Fields.Field.CaptionId);
+					string druidPath = fieldCaptionId.ToString();
+
+					if (this.GetTableContentIndex(druidPath) == -1)
+					{
+						TableItem item = new TableItem();
+						item.Guid = this.GetLocalGuid(druidPath);
+						item.FieldType = FieldDescription.FieldType.Field;
+						item.DruidsPath = druidPath;
+						item.Used = false;
+
+						this.tableContent.Add(item);
+					}
+				}
+			}
 #if false
 			foreach (string druidPath in entityDruidsPath)
 			{
