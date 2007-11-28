@@ -66,6 +66,48 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 
+		/// <summary>
+		/// Gets the columns used by the conditions.
+		/// </summary>
+		/// <value>The columns.</value>
+		public IEnumerable<DbTableColumn>		Columns
+		{
+			get
+			{
+				foreach (Condition condition in this.conditions)
+				{
+					if (condition.ColumnA != null)
+					{
+						yield return condition.ColumnA;
+					}
+					if (condition.ColumnB != null)
+					{
+						yield return condition.ColumnB;
+					}
+				}
+			}
+		}
+
+
+		/// <summary>
+		/// Replaces the table columns used by the currently defined conditions.
+		/// </summary>
+		/// <param name="replaceOperation">The replace operation.</param>
+		public void ReplaceTableColumns(System.Func<DbTableColumn, DbTableColumn> replaceOperation)
+		{
+			foreach (Condition condition in this.conditions)
+			{
+				if (condition.ColumnA != null)
+				{
+					condition.ColumnA = replaceOperation (condition.ColumnA);
+				}
+				if (condition.ColumnB != null)
+				{
+					condition.ColumnB = replaceOperation (condition.ColumnB);
+				}
+			}
+		}
+
 
 		/// <summary>
 		/// Adds a condition.
@@ -155,6 +197,9 @@ namespace Epsitec.Cresus.Database
 			this.conditions.Add (new Condition (a, DbCompare.IsNotNull));
 		}
 
+
+		#region Condition Class
+
 		private class Condition
 		{
 			public Condition(DbTableColumn column, DbCompare condition)
@@ -196,26 +241,26 @@ namespace Epsitec.Cresus.Database
 			public DbCompare Comparison
 			{
 				get;
-				set;
+				private set;
 			}
 
 			public object ConstantValue
 			{
 				get;
-				set;
+				private set;
 			}
 
 			public DbRawType ConstantValueRawType
 			{
 				get;
-				set;
+				private set;
 			}
 
 			public void Register(Collections.SqlFieldList fields)
 			{
 				if (this.argumentCount == 1)
 				{
-					SqlField field = SqlField.CreateAliasedName (this.ColumnA.TableAlias ?? this.ColumnA.Table.Name, this.ColumnA.Column.Name, this.ColumnA.ColumnAlias);
+					SqlField field = SqlField.CreateAliasedName (this.ColumnA.TableAlias ?? this.ColumnA.Table.GetSqlName (), this.ColumnA.Column.GetSqlName (), this.ColumnA.ColumnAlias);
 					
 					SqlFunction function = new SqlFunction (DbSelectCondition.MapDbCompareToSqlFunctionType (this.Comparison), field);
 
@@ -223,7 +268,7 @@ namespace Epsitec.Cresus.Database
 				}
 				else if (this.ColumnB == null)
 				{
-					SqlField fieldA = SqlField.CreateAliasedName (this.ColumnA.TableAlias ?? this.ColumnA.Table.Name, this.ColumnA.Column.Name, this.ColumnA.ColumnAlias);
+					SqlField fieldA = SqlField.CreateAliasedName (this.ColumnA.TableAlias ?? this.ColumnA.Table.GetSqlName (), this.ColumnA.Column.GetSqlName (), this.ColumnA.ColumnAlias);
 					SqlField fieldB = SqlField.CreateConstant (this.ConstantValue, this.ConstantValueRawType);
 
 					SqlFunction function = new SqlFunction (DbSelectCondition.MapDbCompareToSqlFunctionType (this.Comparison), fieldA, fieldB);
@@ -232,8 +277,8 @@ namespace Epsitec.Cresus.Database
 				}
 				else
 				{
-					SqlField fieldA = SqlField.CreateAliasedName (this.ColumnA.TableAlias ?? this.ColumnA.Table.Name, this.ColumnA.Column.Name, this.ColumnA.ColumnAlias);
-					SqlField fieldB = SqlField.CreateAliasedName (this.ColumnB.TableAlias ?? this.ColumnB.Table.Name, this.ColumnB.Column.Name, this.ColumnB.ColumnAlias);
+					SqlField fieldA = SqlField.CreateAliasedName (this.ColumnA.TableAlias ?? this.ColumnA.Table.GetSqlName (), this.ColumnA.Column.GetSqlName (), this.ColumnA.ColumnAlias);
+					SqlField fieldB = SqlField.CreateAliasedName (this.ColumnB.TableAlias ?? this.ColumnB.Table.GetSqlName (), this.ColumnB.Column.GetSqlName (), this.ColumnB.ColumnAlias);
 					
 					SqlFunction function = new SqlFunction (DbSelectCondition.MapDbCompareToSqlFunctionType (this.Comparison), fieldA, fieldB);
 
@@ -244,6 +289,18 @@ namespace Epsitec.Cresus.Database
 			private readonly int argumentCount;
 		}
 
+		#endregion
+
+
+		/// <summary>
+		/// Creates the conditions based on the previous <c>AddCondition</c>
+		/// calls and using the expected revision.
+		/// </summary>
+		/// <param name="fields">The collection to which the conditions will be added.</param>
+		internal void CreateConditions(Collections.SqlFieldList fields)
+		{
+			this.CreateConditions (null, null, fields);
+		}
 
 		/// <summary>
 		/// Creates the conditions based on the previous <c>AddCondition</c>
@@ -267,34 +324,37 @@ namespace Epsitec.Cresus.Database
 
 			Condition revisionCondition = null;
 
-			switch (this.revision)
+			if (mainTable != null)
 			{
-				case DbSelectRevision.LiveAll:
-					//	Select all live revisions of the rows: live (0), copied (1)
-					//	and archive copy (2) are all < deleted (3).
-					
-					revisionCondition = new Condition (new DbTableColumn (mainTableAlias, mainTable.Columns[Tags.ColumnStatus]),
-						/* */						   DbCompare.LessThan,
-						/* */						   DbKey.ConvertToIntStatus (DbRowStatus.Deleted), DbRawType.Int16);
-					break;
-				
-				case DbSelectRevision.LiveActive:
-					//	Select only the active revisions of the rows: live (0) and
-					//	copied (1) both describe active rows and are < archive copy (2).
+				switch (this.revision)
+				{
+					case DbSelectRevision.LiveAll:
+						//	Select all live revisions of the rows: live (0), copied (1)
+						//	and archive copy (2) are all < deleted (3).
 
-					revisionCondition = new Condition (new DbTableColumn (mainTableAlias, mainTable.Columns[Tags.ColumnStatus]),
-						/* */						   DbCompare.LessThan,
-						/* */						   DbKey.ConvertToIntStatus (DbRowStatus.ArchiveCopy), DbRawType.Int16);
-					break;
-				
-				case DbSelectRevision.All:
-					//	Select all revisions of the rows; there is no need to add an
-					//	additional condition for this !
-					
-					break;
-				
-				default:
-					throw new System.NotSupportedException (string.Format ("DbSelectRevision.{0} not supported", this.revision));
+						revisionCondition = new Condition (new DbTableColumn (mainTableAlias, mainTable.Columns[Tags.ColumnStatus]),
+							/* */						   DbCompare.LessThan,
+							/* */						   DbKey.ConvertToIntStatus (DbRowStatus.Deleted), DbRawType.Int16);
+						break;
+
+					case DbSelectRevision.LiveActive:
+						//	Select only the active revisions of the rows: live (0) and
+						//	copied (1) both describe active rows and are < archive copy (2).
+
+						revisionCondition = new Condition (new DbTableColumn (mainTableAlias, mainTable.Columns[Tags.ColumnStatus]),
+							/* */						   DbCompare.LessThan,
+							/* */						   DbKey.ConvertToIntStatus (DbRowStatus.ArchiveCopy), DbRawType.Int16);
+						break;
+
+					case DbSelectRevision.All:
+						//	Select all revisions of the rows; there is no need to add an
+						//	additional condition for this !
+
+						break;
+
+					default:
+						throw new System.NotSupportedException (string.Format ("DbSelectRevision.{0} not supported", this.revision));
+				}
 			}
 			
 			switch (this.combiner)

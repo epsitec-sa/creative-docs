@@ -21,6 +21,7 @@ namespace Epsitec.Cresus.Database
 			this.shortAliasToTableMap = new Dictionary<string, DbTable> ();
 			this.shortAliasToColumnMap = new Dictionary<string, DbTableColumn> ();
 			this.renamedTableColumns = new List<DbTableColumn>();
+			this.conditions = new List<DbSelectCondition> ();
 		}
 
 
@@ -36,12 +37,18 @@ namespace Epsitec.Cresus.Database
 		{
 			foreach (DbTableColumn queryField in queryFields)
 			{
-				this.RenameTableColumn (queryField);
+				this.RegisterTableColumn (queryField);
 			}
 		}
 
 		public void AddCondition(DbSelectCondition condition)
 		{
+			foreach (DbTableColumn column in condition.Columns)
+			{
+				this.RegisterTable (column);
+			}
+
+			this.conditions.Add (condition);
 		}
 
 
@@ -68,36 +75,50 @@ namespace Epsitec.Cresus.Database
 			this.CreateSelectColumns (select);
 			this.CreateSelectTables (select);
 			this.CreateSelectConditions (select);
-
+			
 			return select;
 		}
 
-		private void RenameTableColumn(DbTableColumn originalTableColumn)
+		private void RegisterTableColumn(DbTableColumn originalTableColumn)
 		{
 			int columnIndex = this.renamedTableColumns.Count;
-			int tableIndex = this.longToShortTableAliasMap.Count;
-
-			string longTableAlias = originalTableColumn.TableAlias;
 			
 			string shortColumnAlias = string.Format (System.Globalization.CultureInfo.InvariantCulture, "C{0}", columnIndex);
+			string shortTableAlias  = this.RegisterTable (originalTableColumn);
+			
+			DbTableColumn renamedTableColumn = new DbTableColumn (originalTableColumn.Column);
+
+			renamedTableColumn.TableAlias  = shortTableAlias;
+			renamedTableColumn.ColumnAlias = shortColumnAlias;
+
+			this.renamedTableColumns.Add (renamedTableColumn);
+
+			this.shortAliasToColumnMap[shortColumnAlias] = originalTableColumn;
+		}
+
+		private string RegisterTable(DbTableColumn originalTableColumn)
+		{
+			string longTableAlias = originalTableColumn.TableAlias;
 			string shortTableAlias;
 
-			if (this.longToShortTableAliasMap.TryGetValue (longTableAlias, out shortTableAlias) == false)
+			if (this.longToShortTableAliasMap.TryGetValue (longTableAlias, out shortTableAlias))
 			{
+				//	The table is already known and has a short name associated to it.
+			}
+			else
+			{
+				//	The table is not yet known; allocate a short name ("T0", "T1", ...)
+				//	which can then be used as an alias for the table.
+
+				int tableIndex = this.longToShortTableAliasMap.Count;
+				
 				shortTableAlias = string.Format (System.Globalization.CultureInfo.InvariantCulture, "T{0}", tableIndex);
 
 				this.longToShortTableAliasMap[longTableAlias] = shortTableAlias;
 				this.shortAliasToTableMap[shortTableAlias] = originalTableColumn.Table;
 			}
 
-			DbTableColumn renamedTableColumn = new DbTableColumn (originalTableColumn.Column);
-
-			renamedTableColumn.TableAlias  = shortTableAlias;
-			renamedTableColumn.ColumnAlias = shortColumnAlias;
-			
-			this.renamedTableColumns.Add (renamedTableColumn);
-
-			this.shortAliasToColumnMap[shortColumnAlias] = originalTableColumn;
+			return shortTableAlias;
 		}
 
 		private void CreateSelectColumns(SqlSelect select)
@@ -128,6 +149,18 @@ namespace Epsitec.Cresus.Database
 
 		private void CreateSelectConditions(SqlSelect select)
 		{
+			foreach (DbSelectCondition condition in this.conditions)
+			{
+				condition.ReplaceTableColumns (this.TranslateToShortTableAlias);
+				condition.CreateConditions (select.Conditions);
+			}
+		}
+
+		private DbTableColumn TranslateToShortTableAlias(DbTableColumn tableColumn)
+		{
+			string tableAlias = this.longToShortTableAliasMap[tableColumn.TableAlias];
+			
+			return new DbTableColumn (tableAlias, tableColumn.Column);
 		}
 
 		private IEnumerable<KeyValuePair<string, DbTable>> GetAliasTables()
@@ -150,5 +183,6 @@ namespace Epsitec.Cresus.Database
 		private readonly Dictionary<string, DbTable> shortAliasToTableMap;
 		private readonly Dictionary<string, DbTableColumn> shortAliasToColumnMap;
 		private readonly List<DbTableColumn> renamedTableColumns;
+		private readonly List<DbSelectCondition> conditions;
 	}
 }

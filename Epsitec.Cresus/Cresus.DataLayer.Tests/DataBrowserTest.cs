@@ -19,8 +19,7 @@ namespace Epsitec.Cresus.DataLayer
 	[TestFixture]
 	public class DataBrowserTest
 	{
-		[SetUp]
-		public void Initialize()
+		public DataBrowserTest()
 		{
 			this.context = new DataContext (this.infrastructure);
 
@@ -61,12 +60,12 @@ namespace Epsitec.Cresus.DataLayer
 			}
 
 			System.Diagnostics.Debug.WriteLine ("Created " + count + " address records");
-
+			
 #if false
 			a1.Désignation = "Pierre ARNAUD";	//	[63073]
 			a1.Rue = "Ch. du Fontenay";			//	[63083]
 			a1.Numéro = "6";
-			a1.Npa = "1400";
+			a1.Npa = "1400";					//	[630C3]
 			a1.Ville = "Yverdon-les-Bains";		//	[630B3]
 			a1.Pays = "CH";
 
@@ -105,9 +104,9 @@ namespace Epsitec.Cresus.DataLayer
 		public void Check01Reader()
 		{
 			List<DbTableColumn> queryFields = new List<DbTableColumn> ();
-			
+
 			DbTable  t1 = this.context.SchemaEngine.FindTableDefinition (Druid.Parse ("[63081]"));
-			
+
 			DbColumn c1 = t1.Columns["63073"];
 			DbColumn c2 = t1.Columns["63083"];
 			DbColumn c3 = t1.Columns["630B3"];
@@ -123,7 +122,7 @@ namespace Epsitec.Cresus.DataLayer
 			reader.AddQueryFields (queryFields);
 
 			List<string> lines = new List<string> ();
-				
+
 			using (DbTransaction transaction = this.infrastructure.BeginTransaction ())
 			{
 				System.Data.IDataReader dataReader = reader.CreateReader (transaction);
@@ -138,6 +137,52 @@ namespace Epsitec.Cresus.DataLayer
 			}
 
 			System.Diagnostics.Debug.WriteLine ("Loaded " + lines.Count + " records");
+		}
+
+		[Test]
+		public void Check02Reader()
+		{
+			List<DbTableColumn> queryFields = new List<DbTableColumn> ();
+
+			DbTable  t1 = this.context.SchemaEngine.FindTableDefinition (Druid.Parse ("[63081]"));
+
+			DbColumn c1 = t1.Columns["63073"];
+			DbColumn c2 = t1.Columns["63083"];
+			DbColumn c3 = t1.Columns["630B3"];
+			DbColumn c4 = t1.Columns["630C3"];
+
+			queryFields.Add (new DbTableColumn ("T1", "Name", c1));
+			queryFields.Add (new DbTableColumn ("T1", "Street", c2));
+			queryFields.Add (new DbTableColumn ("T1", "City", c3));
+
+			System.Diagnostics.Debug.WriteLine ("Starting reader with condition");
+
+			DbReader reader = new DbReader (this.infrastructure);
+			DbSelectCondition condition = new DbSelectCondition (this.infrastructure.Converter);
+
+			condition.AddCondition (new DbTableColumn ("T1", c4), DbCompare.Like, "%14%");
+
+			reader.AddQueryFields (queryFields);
+			reader.AddCondition (condition);
+
+			List<string> lines = new List<string> ();
+
+			using (DbTransaction transaction = this.infrastructure.BeginTransaction ())
+			{
+				System.Data.IDataReader dataReader = reader.CreateReader (transaction);
+
+				while (dataReader.Read ())
+				{
+					lines.Add (string.Format ("{0};{1};{2}", dataReader.GetString (0), dataReader.GetString (1), dataReader.GetString (2)));
+				}
+
+				dataReader.Close ();
+				transaction.Commit ();
+			}
+
+			System.Diagnostics.Debug.WriteLine ("Loaded " + lines.Count + " records");
+
+			System.IO.File.WriteAllLines ("extracted-14xx.csv", lines.ToArray ());
 		}
 
 		private readonly DbInfrastructure infrastructure = TestSupport.Database.NewInfrastructure ();
