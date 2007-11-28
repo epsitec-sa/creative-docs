@@ -83,87 +83,97 @@ namespace Epsitec.Common.Designer.Viewers
 
 			//	Crée l'onglet 'champs'.
 			this.tabPageFields = new TabPage();
-			this.tabPageFields.TabTitle = "Contenu"; //Res.Strings.Viewers.Panels.TabFields;
+			this.tabPageFields.TabTitle = Res.Strings.Viewers.Panels.TabFields;
 			this.tabPageFields.Padding = new Margins(4, 4, 4, 4);
 			this.tabBookPrimary.Items.Add(this.tabPageFields);
 
-			this.fieldToolbar = new HToolBar(this.tabPageFields);
-			this.fieldToolbar.Dock = DockStyle.Top;
-			this.fieldToolbar.Margins = new Margins(0, 0, 0, 5);
+			this.fieldsToolbar = new HToolBar(this.tabPageFields);
+			this.fieldsToolbar.Dock = DockStyle.Top;
+			this.fieldsToolbar.Margins = new Margins(0, 0, 0, 5);
 
-			this.fieldButtonUse = new IconButton();
-			this.fieldButtonUse.AutoFocus = false;
-			this.fieldButtonUse.CaptionId = Res.Captions.Editor.Forms.Use.Id;
-			this.fieldButtonUse.Clicked += new MessageEventHandler(this.HandleFieldButtonClicked);
-			this.fieldToolbar.Items.Add(this.fieldButtonUse);
+			this.fieldsButtonUse = new IconButton();
+			this.fieldsButtonUse.AutoFocus = false;
+			this.fieldsButtonUse.CaptionId = Res.Captions.Editor.Forms.Use.Id;
+			this.fieldsButtonUse.Clicked += new MessageEventHandler(this.HandleFieldsButtonClicked);
+			this.fieldsToolbar.Items.Add(this.fieldsButtonUse);
 
-			this.fieldToolbar.Items.Add(new IconSeparator());
+			this.fieldsToolbar.Items.Add(new IconSeparator());
 
-			this.fieldButtonGlue = new IconButton();
-			this.fieldButtonGlue.AutoFocus = false;
-			this.fieldButtonGlue.CaptionId = Res.Captions.Editor.Forms.Glue.Id;
-			this.fieldButtonGlue.Clicked += new MessageEventHandler(this.HandleFieldButtonClicked);
-			this.fieldToolbar.Items.Add(this.fieldButtonGlue);
+			this.fieldsButtonGlue = new IconButton();
+			this.fieldsButtonGlue.AutoFocus = false;
+			this.fieldsButtonGlue.CaptionId = Res.Captions.Editor.Forms.Glue.Id;
+			this.fieldsButtonGlue.Clicked += new MessageEventHandler(this.HandleFieldsButtonClicked);
+			this.fieldsToolbar.Items.Add(this.fieldsButtonGlue);
 
-			this.fieldButtonLine = new IconButton();
-			this.fieldButtonLine.AutoFocus = false;
-			this.fieldButtonLine.CaptionId = Res.Captions.Editor.Forms.Line.Id;
-			this.fieldButtonLine.Clicked += new MessageEventHandler(this.HandleFieldButtonClicked);
-			this.fieldToolbar.Items.Add(this.fieldButtonLine);
+			this.fieldsButtonLine = new IconButton();
+			this.fieldsButtonLine.AutoFocus = false;
+			this.fieldsButtonLine.CaptionId = Res.Captions.Editor.Forms.Line.Id;
+			this.fieldsButtonLine.Clicked += new MessageEventHandler(this.HandleFieldsButtonClicked);
+			this.fieldsToolbar.Items.Add(this.fieldsButtonLine);
 
-			this.fieldButtonTitle = new IconButton();
-			this.fieldButtonTitle.AutoFocus = false;
-			this.fieldButtonTitle.CaptionId = Res.Captions.Editor.Forms.Title.Id;
-			this.fieldButtonTitle.Clicked += new MessageEventHandler(this.HandleFieldButtonClicked);
-			this.fieldToolbar.Items.Add(this.fieldButtonTitle);
+			this.fieldsButtonTitle = new IconButton();
+			this.fieldsButtonTitle.AutoFocus = false;
+			this.fieldsButtonTitle.CaptionId = Res.Captions.Editor.Forms.Title.Id;
+			this.fieldsButtonTitle.Clicked += new MessageEventHandler(this.HandleFieldsButtonClicked);
+			this.fieldsToolbar.Items.Add(this.fieldsButtonTitle);
 
-			this.fieldButtonBox = new IconButton();
-			this.fieldButtonBox.AutoFocus = false;
-			this.fieldButtonBox.CaptionId = Res.Captions.Editor.Forms.Box.Id;
-			this.fieldButtonBox.Clicked += new MessageEventHandler(this.HandleFieldButtonClicked);
-			this.fieldToolbar.Items.Add(this.fieldButtonBox);
+			this.fieldsButtonBox = new IconButton();
+			this.fieldsButtonBox.AutoFocus = false;
+			this.fieldsButtonBox.CaptionId = Res.Captions.Editor.Forms.Box.Id;
+			this.fieldsButtonBox.Clicked += new MessageEventHandler(this.HandleFieldsButtonClicked);
+			this.fieldsToolbar.Items.Add(this.fieldsButtonBox);
 
-			this.fieldToolbar.Items.Add(new IconSeparator());
+			this.fieldsToolbar.Items.Add(new IconSeparator());
 
-			this.fieldButtonPrev = new IconButton();
-			this.fieldButtonPrev.AutoFocus = false;
-			this.fieldButtonPrev.CaptionId = Res.Captions.Editor.Forms.Prev.Id;
-			this.fieldButtonPrev.Clicked += new MessageEventHandler(this.HandleFieldButtonClicked);
-			this.fieldToolbar.Items.Add(this.fieldButtonPrev);
+			this.fieldsButtonPrev = new IconButton();
+			this.fieldsButtonPrev.AutoFocus = false;
+			this.fieldsButtonPrev.CaptionId = Res.Captions.Editor.Forms.Prev.Id;
+			this.fieldsButtonPrev.Clicked += new MessageEventHandler(this.HandleFieldsButtonClicked);
+			this.fieldsToolbar.Items.Add(this.fieldsButtonPrev);
 
-			this.fieldButtonNext = new IconButton();
-			this.fieldButtonNext.AutoFocus = false;
-			this.fieldButtonNext.CaptionId = Res.Captions.Editor.Forms.Next.Id;
-			this.fieldButtonNext.Clicked += new MessageEventHandler(this.HandleFieldButtonClicked);
-			this.fieldToolbar.Items.Add(this.fieldButtonNext);
+			this.fieldsButtonNext = new IconButton();
+			this.fieldsButtonNext.AutoFocus = false;
+			this.fieldsButtonNext.CaptionId = Res.Captions.Editor.Forms.Next.Id;
+			this.fieldsButtonNext.Clicked += new MessageEventHandler(this.HandleFieldsButtonClicked);
+			this.fieldsToolbar.Items.Add(this.fieldsButtonNext);
 
-			this.fieldToolbar.Items.Add(new IconSeparator());
+			this.fieldsToolbar.Items.Add(new IconSeparator());
 
-			this.fieldButtonGoto = new IconButton();
-			this.fieldButtonGoto.AutoFocus = false;
-			this.fieldButtonGoto.CaptionId = Res.Captions.Editor.LocatorGoto.Id;
-			this.fieldButtonGoto.Clicked += new MessageEventHandler(this.HandleFieldButtonClicked);
-			this.fieldToolbar.Items.Add(this.fieldButtonGoto);
+			this.fieldsButtonGoto = new IconButton();
+			this.fieldsButtonGoto.AutoFocus = false;
+			this.fieldsButtonGoto.CaptionId = Res.Captions.Editor.LocatorGoto.Id;
+			this.fieldsButtonGoto.Clicked += new MessageEventHandler(this.HandleFieldsButtonClicked);
+			this.fieldsToolbar.Items.Add(this.fieldsButtonGoto);
 
-			this.fieldTable = new MyWidgets.StringArray(this.tabPageFields);
-			this.fieldTable.Columns = 2;
-			this.fieldTable.SetColumnsRelativeWidth(0, 0.05);
-			this.fieldTable.SetColumnsRelativeWidth(1, 0.95);
-			this.fieldTable.SetColumnAlignment(0, ContentAlignment.MiddleCenter);
-			this.fieldTable.SetColumnAlignment(1, ContentAlignment.MiddleLeft);
-			this.fieldTable.SetColumnBreakMode(1, TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine);
-			this.fieldTable.AllowMultipleSelection = true;
-			this.fieldTable.LineHeight = 16;
-			this.fieldTable.Dock = DockStyle.Fill;
-			this.fieldTable.CellCountChanged += new EventHandler(this.HandleFieldTableCellCountChanged);
-			this.fieldTable.CellsContentChanged += new EventHandler(this.HandleFieldTableCellsContentChanged);
-			this.fieldTable.SelectedRowChanged += new EventHandler(this.HandleFieldTableSelectedRowChanged);
+			this.fieldsTable = new MyWidgets.StringArray(this.tabPageFields);
+			this.fieldsTable.Columns = 2;
+			this.fieldsTable.SetColumnsRelativeWidth(0, 0.05);
+			this.fieldsTable.SetColumnsRelativeWidth(1, 0.95);
+			this.fieldsTable.SetColumnAlignment(0, ContentAlignment.MiddleCenter);
+			this.fieldsTable.SetColumnAlignment(1, ContentAlignment.MiddleLeft);
+			this.fieldsTable.SetColumnBreakMode(1, TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine);
+			this.fieldsTable.AllowMultipleSelection = true;
+			this.fieldsTable.LineHeight = 16;
+			this.fieldsTable.Dock = DockStyle.Fill;
+			this.fieldsTable.CellCountChanged += new EventHandler(this.HandleFieldTableCellCountChanged);
+			this.fieldsTable.CellsContentChanged += new EventHandler(this.HandleFieldTableCellsContentChanged);
+			this.fieldsTable.SelectedRowChanged += new EventHandler(this.HandleFieldTableSelectedRowChanged);
 
 			//	Crée l'onglet 'relations'.
 			this.tabPageRelations = new TabPage();
-			this.tabPageRelations.TabTitle = "Relations"; //Res.Strings.Viewers.Panels.TabRelations;
+			this.tabPageRelations.TabTitle = Res.Strings.Viewers.Panels.TabRelations;
 			this.tabPageRelations.Padding = new Margins(4, 4, 4, 4);
 			this.tabBookPrimary.Items.Add(this.tabPageRelations);
+
+			this.relationsToolbar = new HToolBar(this.tabPageRelations);
+			this.relationsToolbar.Dock = DockStyle.Top;
+			this.relationsToolbar.Margins = new Margins(0, 0, 0, 5);
+
+			this.relationsButtonExpand = new IconButton();
+			this.relationsButtonExpand.AutoFocus = false;
+			this.relationsButtonExpand.CaptionId = Res.Captions.Editor.Forms.Expand.Id;
+			this.relationsButtonExpand.Clicked += new MessageEventHandler(this.HandleRelationsButtonClicked);
+			this.relationsToolbar.Items.Add(this.relationsButtonExpand);
 
 			this.relationsTable = new MyWidgets.StringArray(this.tabPageRelations);
 			this.relationsTable.Columns = 2;
@@ -230,22 +240,24 @@ namespace Epsitec.Common.Designer.Viewers
 		{
 			if (disposing)
 			{
-				this.fieldButtonUse.Clicked -= new MessageEventHandler(this.HandleFieldButtonClicked);
-				this.fieldButtonGlue.Clicked -= new MessageEventHandler(this.HandleFieldButtonClicked);
-				this.fieldButtonLine.Clicked -= new MessageEventHandler(this.HandleFieldButtonClicked);
-				this.fieldButtonTitle.Clicked -= new MessageEventHandler(this.HandleFieldButtonClicked);
-				this.fieldButtonBox.Clicked -= new MessageEventHandler(this.HandleFieldButtonClicked);
-				this.fieldButtonPrev.Clicked -= new MessageEventHandler(this.HandleFieldButtonClicked);
-				this.fieldButtonNext.Clicked -= new MessageEventHandler(this.HandleFieldButtonClicked);
-				this.fieldButtonGoto.Clicked -= new MessageEventHandler(this.HandleFieldButtonClicked);
+				this.fieldsButtonUse.Clicked -= new MessageEventHandler(this.HandleFieldsButtonClicked);
+				this.fieldsButtonGlue.Clicked -= new MessageEventHandler(this.HandleFieldsButtonClicked);
+				this.fieldsButtonLine.Clicked -= new MessageEventHandler(this.HandleFieldsButtonClicked);
+				this.fieldsButtonTitle.Clicked -= new MessageEventHandler(this.HandleFieldsButtonClicked);
+				this.fieldsButtonBox.Clicked -= new MessageEventHandler(this.HandleFieldsButtonClicked);
+				this.fieldsButtonPrev.Clicked -= new MessageEventHandler(this.HandleFieldsButtonClicked);
+				this.fieldsButtonNext.Clicked -= new MessageEventHandler(this.HandleFieldsButtonClicked);
+				this.fieldsButtonGoto.Clicked -= new MessageEventHandler(this.HandleFieldsButtonClicked);
+
+				this.fieldsTable.CellCountChanged -= new EventHandler(this.HandleFieldTableCellCountChanged);
+				this.fieldsTable.CellsContentChanged -= new EventHandler(this.HandleFieldTableCellsContentChanged);
+				this.fieldsTable.SelectedRowChanged -= new EventHandler(this.HandleFieldTableSelectedRowChanged);
+
+				this.relationsButtonExpand.Clicked -= new MessageEventHandler(this.HandleRelationsButtonClicked);
 
 				this.relationsTable.CellCountChanged -= new EventHandler(this.HandleRelationsTableCellCountChanged);
 				this.relationsTable.CellsContentChanged -= new EventHandler(this.HandleRelationsTableCellsContentChanged);
 				this.relationsTable.SelectedRowChanged -= new EventHandler(this.HandleRelationsTableSelectedRowChanged);
-
-				this.fieldTable.CellCountChanged -= new EventHandler(this.HandleFieldTableCellCountChanged);
-				this.fieldTable.CellsContentChanged -= new EventHandler(this.HandleFieldTableCellsContentChanged);
-				this.fieldTable.SelectedRowChanged -= new EventHandler(this.HandleFieldTableSelectedRowChanged);
 			}
 
 			base.Dispose(disposing);
@@ -388,28 +400,30 @@ namespace Epsitec.Common.Designer.Viewers
 			bool iic = this.ignoreChange;
 			this.ignoreChange = true;
 			this.Deserialize();
-			this.UpdateFieldTable(true);
-			this.UpdateButtons();
+			this.UpdateFieldsTable(true);
+			this.UpdateFieldsButtons();
+			this.UpdateRelationsTable(true);
+			this.UpdateRelationsButtons();
 			this.ignoreChange = iic;
 		}
 
-		protected void UpdateFieldTable(bool newContent)
+		protected void UpdateFieldsTable(bool newContent)
 		{
 			//	Met à jour la table des champs.
 			this.formEditor.ObjectModifier.UpdateTableContent(this.druidToSerialize, this.entityFields);
 
-			int first = this.fieldTable.FirstVisibleRow;
-			for (int i=0; i<this.fieldTable.LineCount; i++)
+			int first = this.fieldsTable.FirstVisibleRow;
+			for (int i=0; i<this.fieldsTable.LineCount; i++)
 			{
 				if (first+i >= this.formEditor.ObjectModifier.TableContent.Count)
 				{
-					this.fieldTable.SetLineString(0, first+i, "");
-					this.fieldTable.SetLineState(0, first+i, MyWidgets.StringList.CellState.Disabled);
-					this.fieldTable.SetLineColor(0, first+i, Color.Empty);
+					this.fieldsTable.SetLineString(0, first+i, "");
+					this.fieldsTable.SetLineState(0, first+i, MyWidgets.StringList.CellState.Disabled);
+					this.fieldsTable.SetLineColor(0, first+i, Color.Empty);
 
-					this.fieldTable.SetLineString(1, first+i, "");
-					this.fieldTable.SetLineState(1, first+i, MyWidgets.StringList.CellState.Disabled);
-					this.fieldTable.SetLineColor(1, first+i, Color.Empty);
+					this.fieldsTable.SetLineString(1, first+i, "");
+					this.fieldsTable.SetLineState(1, first+i, MyWidgets.StringList.CellState.Disabled);
+					this.fieldsTable.SetLineColor(1, first+i, Color.Empty);
 				}
 				else
 				{
@@ -418,27 +432,27 @@ namespace Epsitec.Common.Designer.Viewers
 					string name = this.formEditor.ObjectModifier.GetTableContentDescription(item);
 					Color color = item.Used ? Color.FromRgb(0,1,0) : Color.FromRgb(1,0,0);
 
-					this.fieldTable.SetLineString(0, first+i, "");
-					this.fieldTable.SetLineState(0, first+i, MyWidgets.StringList.CellState.Normal);
-					this.fieldTable.SetLineColor(0, first+i, color);
+					this.fieldsTable.SetLineString(0, first+i, "");
+					this.fieldsTable.SetLineState(0, first+i, MyWidgets.StringList.CellState.Normal);
+					this.fieldsTable.SetLineColor(0, first+i, color);
 
-					this.fieldTable.SetLineString(1, first+i, name);
-					this.fieldTable.SetLineState(1, first+i, MyWidgets.StringList.CellState.Normal);
-					this.fieldTable.SetLineColor(1, first+i, Color.Empty);
+					this.fieldsTable.SetLineString(1, first+i, name);
+					this.fieldsTable.SetLineState(1, first+i, MyWidgets.StringList.CellState.Normal);
+					this.fieldsTable.SetLineColor(1, first+i, Color.Empty);
 				}
 			}
 
-			this.fieldTable.TotalRows = this.formEditor.ObjectModifier.TableContent.Count;
+			this.fieldsTable.TotalRows = this.formEditor.ObjectModifier.TableContent.Count;
 
 			if (newContent)
 			{
-				this.fieldTable.FirstVisibleRow = 0;
+				this.fieldsTable.FirstVisibleRow = 0;
 			}
 		}
 
-		protected void UpdateButtons()
+		protected void UpdateFieldsButtons()
 		{
-			//	Met à jour les boutons.
+			//	Met à jour les boutons dans l'onglet des champs.
 			int useCounter = 0;
 			int freeCounter = 0;
 			int boxBegin = 0;
@@ -449,7 +463,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 			if (!this.designerApplication.IsReadonly)
 			{
-				List<int> sels = this.fieldTable.SelectedRows;
+				List<int> sels = this.fieldsTable.SelectedRows;
 
 				if (sels != null && sels.Count > 0)
 				{
@@ -518,30 +532,84 @@ namespace Epsitec.Common.Designer.Viewers
 
 			if (boxBegin == 0 && boxEnd == 0)
 			{
-				this.fieldButtonUse.Enable = (useCounter == 0 && freeCounter > 0) || (useCounter > 0 && freeCounter == 0);
+				this.fieldsButtonUse.Enable = (useCounter == 0 && freeCounter > 0) || (useCounter > 0 && freeCounter == 0);
 			}
 			else
 			{
-				this.fieldButtonUse.Enable = false;
+				this.fieldsButtonUse.Enable = false;
 			}
 
-			if (this.fieldButtonUse.Enable)
+			if (this.fieldsButtonUse.Enable)
 			{
-				this.fieldButtonUse.IconName = (useCounter > 0) ? Misc.Icon("Delete") : Misc.Icon("Create");
+				this.fieldsButtonUse.IconName = (useCounter > 0) ? Misc.Icon("Delete") : Misc.Icon("Create");
 			}
 			else
 			{
-				this.fieldButtonUse.IconName = Misc.Icon("ActiveNo");
+				this.fieldsButtonUse.IconName = Misc.Icon("ActiveNo");
 			}
 
-			this.fieldButtonGlue.Enable = (useCounter > 0 && freeCounter == 0);
-			this.fieldButtonLine.Enable = (useCounter > 0 && freeCounter == 0);
-			this.fieldButtonTitle.Enable = (useCounter > 0 && freeCounter == 0);
-			this.fieldButtonBox.Enable = (useCounter > 0 && freeCounter == 0);
+			this.fieldsButtonGlue.Enable = (useCounter > 0 && freeCounter == 0);
+			this.fieldsButtonLine.Enable = (useCounter > 0 && freeCounter == 0);
+			this.fieldsButtonTitle.Enable = (useCounter > 0 && freeCounter == 0);
+			this.fieldsButtonBox.Enable = (useCounter > 0 && freeCounter == 0);
 
-			this.fieldButtonPrev.Enable = isPrev;
-			this.fieldButtonNext.Enable = isNext;
-			this.fieldButtonGoto.Enable = isGoto;
+			this.fieldsButtonPrev.Enable = isPrev;
+			this.fieldsButtonNext.Enable = isNext;
+			this.fieldsButtonGoto.Enable = isGoto;
+		}
+
+		protected void UpdateRelationsTable(bool newContent)
+		{
+			//	Met à jour la table des relations.
+			int first = this.relationsTable.FirstVisibleRow;
+			for (int i=0; i<this.relationsTable.LineCount; i++)
+			{
+				if (this.relationsEntityPath == null || first+i >= this.relationsEntityPath.Count)
+				{
+					this.relationsTable.SetLineString(0, first+i, "");
+					this.relationsTable.SetLineState(0, first+i, MyWidgets.StringList.CellState.Disabled);
+					this.relationsTable.SetLineColor(0, first+i, Color.Empty);
+
+					this.relationsTable.SetLineString(1, first+i, "");
+					this.relationsTable.SetLineState(1, first+i, MyWidgets.StringList.CellState.Disabled);
+					this.relationsTable.SetLineColor(1, first+i, Color.Empty);
+				}
+				else
+				{
+					string druidsPath = this.relationsEntityPath[first+i];
+					string name = this.module.AccessFields.GetFieldNames(druidsPath);
+
+					this.relationsTable.SetLineString(0, first+i, name);
+					this.relationsTable.SetLineState(0, first+i, MyWidgets.StringList.CellState.Normal);
+					this.relationsTable.SetLineColor(0, first+i, Color.Empty);
+
+					this.relationsTable.SetLineString(1, first+i, "");
+					this.relationsTable.SetLineState(1, first+i, MyWidgets.StringList.CellState.Normal);
+					this.relationsTable.SetLineColor(1, first+i, Color.Empty);
+				}
+			}
+
+			if (this.relationsEntityPath == null)
+			{
+				this.relationsTable.TotalRows = 0;
+			}
+			else
+			{
+				this.relationsTable.TotalRows = this.relationsEntityPath.Count;
+			}
+
+			if (newContent)
+			{
+				this.relationsTable.FirstVisibleRow = 0;
+			}
+		}
+
+		protected void UpdateRelationsButtons()
+		{
+			//	Met à jour les boutons dans l'onglet des relations.
+			int sel = this.relationsTable.SelectedRow;
+
+			this.relationsButtonExpand.Enable = !this.designerApplication.IsReadonly && sel != -1;
 		}
 
 
@@ -659,6 +727,7 @@ namespace Epsitec.Common.Designer.Viewers
 				this.formEditor.Form = null;
 
 				this.entityFields = null;
+				this.relationsEntityPath = null;
 			}
 			else
 			{
@@ -694,6 +763,7 @@ namespace Epsitec.Common.Designer.Viewers
 				}
 
 				this.entityFields = this.module.AccessEntities.GetEntityDruidsPath(this.entityId);
+				this.InitializeRelationsEntityPath();
 			}
 		}
 
@@ -709,6 +779,24 @@ namespace Epsitec.Common.Designer.Viewers
 			this.panelContainer.ZOrder = this.formEditor.ZOrder+1;
 		}
 
+		protected void InitializeRelationsEntityPath()
+		{
+			//	Initialise la table de relations possibles avec le premier niveau.
+			this.relationsEntityPath = new List<string>();
+
+			foreach (StructuredData dataField in this.entityFields)
+			{
+				FieldRelation rel = (FieldRelation) dataField.GetValue(Support.Res.Fields.Field.Relation);
+				if (rel != FieldRelation.None)
+				{
+					Druid fieldCaptionId = (Druid) dataField.GetValue(Support.Res.Fields.Field.CaptionId);
+					string druidPath = fieldCaptionId.ToString();
+
+					this.relationsEntityPath.Add(druidPath);
+				}
+			}
+		}
+
 
 		public override void Update()
 		{
@@ -716,8 +804,10 @@ namespace Epsitec.Common.Designer.Viewers
 			this.formEditor.DeselectAll();
 			this.UpdateArray();
 			this.UpdateEdit();
-			this.UpdateFieldTable(true);
-			this.UpdateButtons();
+			this.UpdateFieldsTable(true);
+			this.UpdateFieldsButtons();
+			this.UpdateRelationsTable(true);
+			this.UpdateRelationsButtons();
 			this.UpdateCommands();
 		}
 
@@ -777,14 +867,14 @@ namespace Epsitec.Common.Designer.Viewers
 			if (oper == Changing.Selection)
 			{
 				this.ReflectSelectionToList();
-				this.UpdateButtons();
+				this.UpdateFieldsButtons();
 			}
 
 			if (oper == Changing.Create || oper == Changing.Delete || oper == Changing.Move || oper == Changing.Regenerate)
 			{
 				//	Régénère le panneau contenant le masque de saisie.
 				this.SetForm(this.form, this.druidToSerialize, oper == Changing.Regenerate);
-				this.UpdateFieldTable(false);
+				this.UpdateFieldsTable(false);
 			}
 		}
 
@@ -806,7 +896,7 @@ namespace Epsitec.Common.Designer.Viewers
 			}
 
 			this.ignoreChange = true;
-			this.fieldTable.SelectedRows = sels;
+			this.fieldsTable.SelectedRows = sels;
 			this.ignoreChange = false;
 		}
 
@@ -814,7 +904,7 @@ namespace Epsitec.Common.Designer.Viewers
 		{
 			//	Reflète les sélections effectuées dans la liste des champs dans l'éditeur de Forms.
 			//	Liste des champs -> Editeur de Forms.
-			List<int> sels = this.fieldTable.SelectedRows;
+			List<int> sels = this.fieldsTable.SelectedRows;
 
 			if (sels == null || sels.Count == 0)
 			{
@@ -839,7 +929,7 @@ namespace Epsitec.Common.Designer.Viewers
 		protected void SelectedFieldsUse()
 		{
 			//	Utilise ou supprime les champs sélectionnés.
-			List<int> sels = this.fieldTable.SelectedRows;
+			List<int> sels = this.fieldsTable.SelectedRows;
 			sels.Sort();
 
 			List<System.Guid> guids = new List<System.Guid>();
@@ -868,7 +958,7 @@ namespace Epsitec.Common.Designer.Viewers
 			}
 
 			this.SetForm(this.form, this.druidToSerialize, false);
-			this.UpdateFieldTable(false);
+			this.UpdateFieldsTable(false);
 
 			sels.Clear();
 			foreach (System.Guid guid in guids)
@@ -879,17 +969,17 @@ namespace Epsitec.Common.Designer.Viewers
 					sels.Add(index);
 				}
 			}
-			this.fieldTable.SelectedRows = sels;
+			this.fieldsTable.SelectedRows = sels;
 			this.ReflectSelectionToEditor();
 
-			this.UpdateButtons();
+			this.UpdateFieldsButtons();
 			this.module.AccessForms.SetLocalDirty();
 		}
 
 		protected void SelectedFieldsGlue()
 		{
 			//	Insère une "glue" avant le champ sélectionné.
-			List<int> sels = this.fieldTable.SelectedRows;
+			List<int> sels = this.fieldsTable.SelectedRows;
 			sels.Sort();
 
 			FormEditor.ObjectModifier.TableItem item = this.formEditor.ObjectModifier.TableContent[sels[0]];
@@ -900,21 +990,21 @@ namespace Epsitec.Common.Designer.Viewers
 			this.form.Fields.Insert(index, field);
 
 			this.SetForm(this.form, this.druidToSerialize, false);
-			this.UpdateFieldTable(false);
+			this.UpdateFieldsTable(false);
 
 			sels.Clear();
 			sels.Add(index);
-			this.fieldTable.SelectedRows = sels;
+			this.fieldsTable.SelectedRows = sels;
 			this.ReflectSelectionToEditor();
 
-			this.UpdateButtons();
+			this.UpdateFieldsButtons();
 			this.module.AccessForms.SetLocalDirty();
 		}
 
 		protected void SelectedFieldsLine()
 		{
 			//	Insère une ligne avant le champ sélectionné.
-			List<int> sels = this.fieldTable.SelectedRows;
+			List<int> sels = this.fieldsTable.SelectedRows;
 			sels.Sort();
 
 			FormEditor.ObjectModifier.TableItem item = this.formEditor.ObjectModifier.TableContent[sels[0]];
@@ -924,21 +1014,21 @@ namespace Epsitec.Common.Designer.Viewers
 			this.form.Fields.Insert(index, field);
 
 			this.SetForm(this.form, this.druidToSerialize, false);
-			this.UpdateFieldTable(false);
+			this.UpdateFieldsTable(false);
 
 			sels.Clear();
 			sels.Add(index);
-			this.fieldTable.SelectedRows = sels;
+			this.fieldsTable.SelectedRows = sels;
 			this.ReflectSelectionToEditor();
 
-			this.UpdateButtons();
+			this.UpdateFieldsButtons();
 			this.module.AccessForms.SetLocalDirty();
 		}
 
 		protected void SelectedFieldsTitle()
 		{
 			//	Insère un titre avant le champ sélectionné.
-			List<int> sels = this.fieldTable.SelectedRows;
+			List<int> sels = this.fieldsTable.SelectedRows;
 			sels.Sort();
 
 			FormEditor.ObjectModifier.TableItem item = this.formEditor.ObjectModifier.TableContent[sels[0]];
@@ -948,21 +1038,21 @@ namespace Epsitec.Common.Designer.Viewers
 			this.form.Fields.Insert(index, field);
 
 			this.SetForm(this.form, this.druidToSerialize, false);
-			this.UpdateFieldTable(false);
+			this.UpdateFieldsTable(false);
 
 			sels.Clear();
 			sels.Add(index);
-			this.fieldTable.SelectedRows = sels;
+			this.fieldsTable.SelectedRows = sels;
 			this.ReflectSelectionToEditor();
 
-			this.UpdateButtons();
+			this.UpdateFieldsButtons();
 			this.module.AccessForms.SetLocalDirty();
 		}
 
 		protected void SelectedFieldsBox()
 		{
 			//	Groupe/sépare les champs sélectionnés.
-			List<int> sels = this.fieldTable.SelectedRows;
+			List<int> sels = this.fieldsTable.SelectedRows;
 			sels.Sort();
 
 			FormEditor.ObjectModifier.TableItem firstItem = this.formEditor.ObjectModifier.TableContent[sels[0]];
@@ -993,14 +1083,14 @@ namespace Epsitec.Common.Designer.Viewers
 								this.form.Fields.RemoveAt(first);  // enlève le BoxBegin
 
 								this.SetForm(this.form, this.druidToSerialize, false);
-								this.UpdateFieldTable(false);
+								this.UpdateFieldsTable(false);
 
 								sels.Clear();
 								sels.Add(first);
-								this.fieldTable.SelectedRows = sels;
+								this.fieldsTable.SelectedRows = sels;
 								this.ReflectSelectionToEditor();
 
-								this.UpdateButtons();
+								this.UpdateFieldsButtons();
 								this.module.AccessForms.SetLocalDirty();
 							}
 						}
@@ -1035,21 +1125,21 @@ namespace Epsitec.Common.Designer.Viewers
 			this.form.Fields.Insert(index++, box);
 
 			this.SetForm(this.form, this.druidToSerialize, false);
-			this.UpdateFieldTable(false);
+			this.UpdateFieldsTable(false);
 
 			sels.Clear();
 			sels.Add(first);
-			this.fieldTable.SelectedRows = sels;
+			this.fieldsTable.SelectedRows = sels;
 			this.ReflectSelectionToEditor();
 
-			this.UpdateButtons();
+			this.UpdateFieldsButtons();
 			this.module.AccessForms.SetLocalDirty();
 		}
 
 		protected void SelectedFieldsMove(int direction)
 		{
 			//	Déplace les champs sélectionnés vers le haut ou vers le bas.
-			List<int> sels = this.fieldTable.SelectedRows;
+			List<int> sels = this.fieldsTable.SelectedRows;
 			sels.Sort();
 			if (direction > 0)
 			{
@@ -1069,16 +1159,16 @@ namespace Epsitec.Common.Designer.Viewers
 			}
 
 			this.SetForm(this.form, this.druidToSerialize, true);
-			this.UpdateFieldTable(false);
+			this.UpdateFieldsTable(false);
 			this.ReflectSelectionToList();
-			this.UpdateButtons();
+			this.UpdateFieldsButtons();
 			this.module.AccessForms.SetLocalDirty();
 		}
 
 		protected void SelectedFieldsGoto()
 		{
 			//	Va sur la définition du champ sélectionné.
-			List<int> sels = this.fieldTable.SelectedRows;
+			List<int> sels = this.fieldsTable.SelectedRows;
 			if (sels.Count != 1)
 			{
 				return;
@@ -1095,6 +1185,11 @@ namespace Epsitec.Common.Designer.Viewers
 			}
 
 			this.designerApplication.LocatorGoto(module.ModuleId.Name, ResourceAccess.Type.Fields, -1, druid, this.Window.FocusedWidget);
+		}
+
+		protected void SelectedRelationsExpand()
+		{
+			//	Etend ou compacte la relation sélectionnée.
 		}
 
 
@@ -1170,59 +1265,67 @@ namespace Epsitec.Common.Designer.Viewers
 			this.UpdateCommands();
 		}
 
-		private void HandleFieldButtonClicked(object sender, MessageEventArgs e)
+		private void HandleFieldsButtonClicked(object sender, MessageEventArgs e)
 		{
-			if (sender == this.fieldButtonUse)
+			if (sender == this.fieldsButtonUse)
 			{
 				this.SelectedFieldsUse();
 			}
 
-			if (sender == this.fieldButtonGlue)
+			if (sender == this.fieldsButtonGlue)
 			{
 				this.SelectedFieldsGlue();
 			}
 
-			if (sender == this.fieldButtonLine)
+			if (sender == this.fieldsButtonLine)
 			{
 				this.SelectedFieldsLine();
 			}
 
-			if (sender == this.fieldButtonTitle)
+			if (sender == this.fieldsButtonTitle)
 			{
 				this.SelectedFieldsTitle();
 			}
 
-			if (sender == this.fieldButtonBox)
+			if (sender == this.fieldsButtonBox)
 			{
 				this.SelectedFieldsBox();
 			}
 
-			if (sender == this.fieldButtonPrev)
+			if (sender == this.fieldsButtonPrev)
 			{
 				this.SelectedFieldsMove(-1);
 			}
 
-			if (sender == this.fieldButtonNext)
+			if (sender == this.fieldsButtonNext)
 			{
 				this.SelectedFieldsMove(1);
 			}
 
-			if (sender == this.fieldButtonGoto)
+			if (sender == this.fieldsButtonGoto)
 			{
 				this.SelectedFieldsGoto();
+			}
+		}
+
+		private void HandleRelationsButtonClicked(object sender, MessageEventArgs e)
+		{
+			if (sender == this.relationsButtonExpand)
+			{
+				this.SelectedRelationsExpand();
 			}
 		}
 
 		private void HandleRelationsTableCellCountChanged(object sender)
 		{
 			//	Le nombre de lignes a changé.
-			//?this.UpdateRelationsTable(false);
+			this.UpdateRelationsTable(false);
 		}
 
 		private void HandleRelationsTableCellsContentChanged(object sender)
 		{
 			//	Le contenu des cellules a changé.
-			//?this.UpdateRelationsTable(false);
+			this.UpdateRelationsTable(false);
 		}
 
 		private void HandleRelationsTableSelectedRowChanged(object sender)
@@ -1232,18 +1335,20 @@ namespace Epsitec.Common.Designer.Viewers
 			{
 				return;
 			}
+
+			this.UpdateRelationsButtons();
 		}
 
 		private void HandleFieldTableCellCountChanged(object sender)
 		{
 			//	Le nombre de lignes a changé.
-			this.UpdateFieldTable(false);
+			this.UpdateFieldsTable(false);
 		}
 
 		private void HandleFieldTableCellsContentChanged(object sender)
 		{
 			//	Le contenu des cellules a changé.
-			this.UpdateFieldTable(false);
+			this.UpdateFieldsTable(false);
 		}
 
 		private void HandleFieldTableSelectedRowChanged(object sender)
@@ -1255,7 +1360,7 @@ namespace Epsitec.Common.Designer.Viewers
 			}
 
 			this.ReflectSelectionToEditor();
-			this.UpdateButtons();
+			this.UpdateFieldsButtons();
 		}
 
 
@@ -1277,6 +1382,7 @@ namespace Epsitec.Common.Designer.Viewers
 		protected Druid							entityId;
 		protected FormDescription				form;
 		protected IList<StructuredData>			entityFields;
+		protected List<string>					relationsEntityPath;
 		protected FormEditor.Editor				formEditor;
 		protected FrameBox						right;
 		protected HSplitter						splitter3;
@@ -1285,18 +1391,20 @@ namespace Epsitec.Common.Designer.Viewers
 		protected TabBook						tabBookSecondary;
 
 		protected TabPage						tabPageFields;
-		protected HToolBar						fieldToolbar;
-		protected IconButton					fieldButtonUse;
-		protected IconButton					fieldButtonGlue;
-		protected IconButton					fieldButtonLine;
-		protected IconButton					fieldButtonTitle;
-		protected IconButton					fieldButtonBox;
-		protected IconButton					fieldButtonPrev;
-		protected IconButton					fieldButtonNext;
-		protected IconButton					fieldButtonGoto;
-		protected MyWidgets.StringArray			fieldTable;
+		protected HToolBar						fieldsToolbar;
+		protected IconButton					fieldsButtonUse;
+		protected IconButton					fieldsButtonGlue;
+		protected IconButton					fieldsButtonLine;
+		protected IconButton					fieldsButtonTitle;
+		protected IconButton					fieldsButtonBox;
+		protected IconButton					fieldsButtonPrev;
+		protected IconButton					fieldsButtonNext;
+		protected IconButton					fieldsButtonGoto;
+		protected MyWidgets.StringArray			fieldsTable;
 
 		protected TabPage						tabPageRelations;
+		protected HToolBar						relationsToolbar;
+		protected IconButton					relationsButtonExpand;
 		protected MyWidgets.StringArray			relationsTable;
 
 		protected TabPage						tabPageProperties;
