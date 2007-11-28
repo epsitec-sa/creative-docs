@@ -50,6 +50,8 @@ namespace Epsitec.Common.Designer
 				{
 					//	designer:cap/302M
 					public static global::Epsitec.Common.Types.Caption Box { get { return Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 2, 22)); } }
+					//	designer:cap/302K1
+					public static global::Epsitec.Common.Types.Caption Compact { get { return Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 2, 52)); } }
 					//	designer:cap/302J1
 					public static global::Epsitec.Common.Types.Caption Expand { get { return Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 2, 51)); } }
 					//	designer:cap/302A1

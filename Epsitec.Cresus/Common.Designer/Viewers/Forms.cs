@@ -175,6 +175,12 @@ namespace Epsitec.Common.Designer.Viewers
 			this.relationsButtonExpand.Clicked += new MessageEventHandler(this.HandleRelationsButtonClicked);
 			this.relationsToolbar.Items.Add(this.relationsButtonExpand);
 
+			this.relationsButtonCompact = new IconButton();
+			this.relationsButtonCompact.AutoFocus = false;
+			this.relationsButtonCompact.CaptionId = Res.Captions.Editor.Forms.Compact.Id;
+			this.relationsButtonCompact.Clicked += new MessageEventHandler(this.HandleRelationsButtonClicked);
+			this.relationsToolbar.Items.Add(this.relationsButtonCompact);
+
 			this.relationsTable = new MyWidgets.StringArray(this.tabPageRelations);
 			this.relationsTable.Columns = 2;
 			this.relationsTable.SetColumnsRelativeWidth(0, 0.90);
@@ -254,6 +260,7 @@ namespace Epsitec.Common.Designer.Viewers
 				this.fieldsTable.SelectedRowChanged -= new EventHandler(this.HandleFieldTableSelectedRowChanged);
 
 				this.relationsButtonExpand.Clicked -= new MessageEventHandler(this.HandleRelationsButtonClicked);
+				this.relationsButtonCompact.Clicked -= new MessageEventHandler(this.HandleRelationsButtonClicked);
 
 				this.relationsTable.CellCountChanged -= new EventHandler(this.HandleRelationsTableCellCountChanged);
 				this.relationsTable.CellsContentChanged -= new EventHandler(this.HandleRelationsTableCellsContentChanged);
@@ -604,7 +611,8 @@ namespace Epsitec.Common.Designer.Viewers
 			//	Met à jour les boutons dans l'onglet des relations.
 			int sel = this.relationsTable.SelectedRow;
 
-			this.relationsButtonExpand.Enable = !this.designerApplication.IsReadonly && sel != -1;
+			this.relationsButtonExpand.Enable = this.formEditor.ObjectModifier.IsTableRelationExpandable(sel);
+			this.relationsButtonCompact.Enable = this.formEditor.ObjectModifier.IsTableRelationCompactable(sel);
 		}
 
 
@@ -1166,10 +1174,22 @@ namespace Epsitec.Common.Designer.Viewers
 
 		protected void SelectedRelationsExpand()
 		{
-			//	Etend ou compacte la relation sélectionnée.
+			//	Etend la relation sélectionnée.
 			int sel = this.relationsTable.SelectedRow;
 			this.formEditor.ObjectModifier.TableRelationExpand(sel);
+
 			this.UpdateRelationsTable(true);
+			this.UpdateRelationsButtons();
+		}
+
+		protected void SelectedRelationsCompact()
+		{
+			//	Compacte la relation sélectionnée.
+			int sel = this.relationsTable.SelectedRow;
+			this.formEditor.ObjectModifier.TableRelationCompact(sel);
+			
+			this.UpdateRelationsTable(true);
+			this.UpdateRelationsButtons();
 		}
 
 
@@ -1294,6 +1314,11 @@ namespace Epsitec.Common.Designer.Viewers
 			{
 				this.SelectedRelationsExpand();
 			}
+
+			if (sender == this.relationsButtonCompact)
+			{
+				this.SelectedRelationsCompact();
+			}
 		}
 
 		private void HandleRelationsTableCellCountChanged(object sender)
@@ -1384,6 +1409,7 @@ namespace Epsitec.Common.Designer.Viewers
 		protected TabPage						tabPageRelations;
 		protected HToolBar						relationsToolbar;
 		protected IconButton					relationsButtonExpand;
+		protected IconButton					relationsButtonCompact;
 		protected MyWidgets.StringArray			relationsTable;
 
 		protected TabPage						tabPageProperties;

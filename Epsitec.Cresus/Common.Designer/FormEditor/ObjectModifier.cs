@@ -489,11 +489,33 @@ namespace Epsitec.Common.Designer.FormEditor
 			return icon;
 		}
 
+		public bool IsTableRelationExpandable(int index)
+		{
+			if (index == -1 || this.formEditor.Module.DesignerApplication.IsReadonly)
+			{
+				return false;
+			}
+
+			return this.tableRelations[index].Expandable && !this.tableRelations[index].Expanded;
+		}
+
+		public bool IsTableRelationCompactable(int index)
+		{
+			if (index == -1 || this.formEditor.Module.DesignerApplication.IsReadonly)
+			{
+				return false;
+			}
+
+			return this.tableRelations[index].Expanded;
+		}
+
 		public void TableRelationExpand(int index)
 		{
 			//	Etend une relation.
 			string druidsPath = this.tableRelations[index].DruidsPath;
 			IList<StructuredData> dataFields = this.TableRelationSearchStructuredData(druidsPath);
+
+			this.tableRelations[index].Expanded = true;
 
 			foreach (StructuredData dataField in dataFields)
 			{
@@ -507,10 +529,30 @@ namespace Epsitec.Common.Designer.FormEditor
 					item.Relation = rel;
 					item.Expandable = true;
 					item.Expanded = false;
-					item.Level = 0;
 
 					index++;
 					this.tableRelations.Insert(index, item);
+				}
+			}
+		}
+
+		public void TableRelationCompact(int index)
+		{
+			//	Compacte une relation.
+			string druidsPath = this.tableRelations[index].DruidsPath;
+			IList<StructuredData> dataFields = this.TableRelationSearchStructuredData(druidsPath);
+
+			this.tableRelations[index].Expanded = false;
+
+			while (index+1 < this.tableRelations.Count)
+			{
+				if (this.tableRelations[index+1].DruidsPath.StartsWith(this.tableRelations[index].DruidsPath))
+				{
+					this.tableRelations.RemoveAt(index+1);
+				}
+				else
+				{
+					break;
 				}
 			}
 		}
@@ -578,20 +620,18 @@ namespace Epsitec.Common.Designer.FormEditor
 					item.Relation = rel;
 					item.Expandable = true;
 					item.Expanded = false;
-					item.Level = 0;
 
 					this.tableRelations.Add(item);
 				}
 			}
 		}
 
-		public struct RelationItem
+		public class RelationItem
 		{
 			public string						DruidsPath;
 			public FieldRelation				Relation;
 			public bool							Expandable;
 			public bool							Expanded;
-			public int							Level;
 		}
 		#endregion
 
