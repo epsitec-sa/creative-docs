@@ -423,6 +423,27 @@ namespace Epsitec.Common.Designer.FormEditor
 		}
 
 
+		public string GetTableRelationDescription(string name)
+		{
+			//	Retourne le texte permettant de décrire une relation dans une liste, avec un effet
+			//	d'indentation pour ressembler aux arborescences de Vista.
+			System.Text.StringBuilder builder = new System.Text.StringBuilder();
+
+			string[] parts = name.Split('.');
+
+			for (int i=0; i<parts.Length-1; i++)
+			{
+				builder.Append(Misc.Image("TreeSpace"));
+			}
+
+			builder.Append(Misc.Image("TreeMark"));
+			builder.Append(" ");
+			builder.Append(name);
+
+			return builder.ToString();
+		}
+
+
 		#region TableContent
 		public string GetTableContentDescription(TableItem item)
 		{

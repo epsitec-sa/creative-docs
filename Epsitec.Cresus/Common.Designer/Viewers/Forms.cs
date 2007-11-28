@@ -578,6 +578,7 @@ namespace Epsitec.Common.Designer.Viewers
 				{
 					string druidsPath = this.relationsEntityPath[first+i];
 					string name = this.module.AccessFields.GetFieldNames(druidsPath);
+					name = this.formEditor.ObjectModifier.GetTableRelationDescription(name);
 
 					this.relationsTable.SetLineString(0, first+i, name);
 					this.relationsTable.SetLineState(0, first+i, MyWidgets.StringList.CellState.Normal);
@@ -1190,6 +1191,61 @@ namespace Epsitec.Common.Designer.Viewers
 		protected void SelectedRelationsExpand()
 		{
 			//	Etend ou compacte la relation sélectionnée.
+			int sel = this.relationsTable.SelectedRow;
+			string druidsPath = this.relationsEntityPath[sel];
+			IList<StructuredData> dataFields = this.SearchStructuredData(druidsPath);
+
+			foreach (StructuredData dataField in dataFields)
+			{
+				FieldRelation rel = (FieldRelation) dataField.GetValue(Support.Res.Fields.Field.Relation);
+				if (rel != FieldRelation.None)
+				{
+					Druid fieldCaptionId = (Druid) dataField.GetValue(Support.Res.Fields.Field.CaptionId);
+
+					sel++;
+					this.relationsEntityPath.Insert(sel, string.Concat(druidsPath, ".", fieldCaptionId.ToString()));
+				}
+			}
+
+			this.UpdateRelationsTable(true);
+		}
+
+		protected IList<StructuredData> SearchStructuredData(string druidsPath)
+		{
+			string[] druids = druidsPath.Split('.');
+
+			IList<StructuredData> dataFields = this.module.AccessEntities.GetEntityDruidsPath(this.entityId);
+			foreach (string druid in druids)
+			{
+				StructuredData dataField = this.SearchStructuredData(dataFields, Druid.Parse(druid));
+				Druid typeId = (Druid) dataField.GetValue(Support.Res.Fields.Field.TypeId);
+				Module typeModule = this.designerApplication.SearchModule(typeId);
+				if (typeModule != null)
+				{
+					CultureMap typeCultureMap = typeModule.AccessEntities.Accessor.Collection[typeId];
+					if (typeCultureMap != null)
+					{
+						StructuredData typeData = typeCultureMap.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
+						dataFields = typeData.GetValue(Support.Res.Fields.ResourceStructuredType.Fields) as IList<StructuredData>;
+					}
+				}
+			}
+
+			return dataFields;
+		}
+
+		protected StructuredData SearchStructuredData(IList<StructuredData> dataFields, Druid fieldId)
+		{
+			foreach (StructuredData dataField in dataFields)
+			{
+				Druid fieldCaptionId = (Druid) dataField.GetValue(Support.Res.Fields.Field.CaptionId);
+				if (fieldCaptionId == fieldId)
+				{
+					return dataField;
+				}
+			}
+
+			return null;
 		}
 
 
