@@ -51,7 +51,31 @@ namespace Epsitec.Cresus.Database
 				throw new System.ArgumentException (string.Format ("Specified sort column '{0}' does not belong to the query fields", tableColumn.ToString ()));
 			}
 
+			DbTableColumn renamedColumn = this.FindRenamedTableColumn (shortColumnAlias);
+
+			System.Diagnostics.Debug.Assert (renamedColumn != null);
+			System.Diagnostics.Debug.Assert (this.orderByTableColumns.ContainsKey (shortColumnAlias) == false);
+
+			//	Make sure the order of the columns is such that the sort order
+			//	will indeed match what the caller expects :
+			
+			this.renamedTableColumns.Remove (renamedColumn);
+			this.renamedTableColumns.Add (renamedColumn);
+
 			this.orderByTableColumns[shortColumnAlias] = order;
+		}
+
+		private DbTableColumn FindRenamedTableColumn(string shortColumnAlias)
+		{
+			foreach (DbTableColumn tableColumn in this.renamedTableColumns)
+			{
+				if (tableColumn.ColumnAlias == shortColumnAlias)
+				{
+					return tableColumn;
+				}
+			}
+
+			return null;
 		}
 
 		private string FindShortColumnAlias(DbTableColumn tableColumn)
