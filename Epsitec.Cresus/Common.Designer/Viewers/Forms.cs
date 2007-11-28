@@ -74,12 +74,20 @@ namespace Epsitec.Common.Designer.Viewers
 			this.right.MaxWidth = 400;
 			this.right.Dock = DockStyle.Right;
 
-			//	Crée le panneau pour la table des champs.
-			this.panelField = new FrameBox(this.right);
-			this.panelField.Dock = DockStyle.Fill;
-			this.panelField.Margins = new Margins(5, 5, 5, 5);
+			//	Crée le tabbook primaire pour les onglets.
+			this.tabBookPrimary = new TabBook(this.right);
+			this.tabBookPrimary.Arrows = TabBookArrows.Stretch;
+			this.tabBookPrimary.Dock = DockStyle.Fill;
+			this.tabBookPrimary.Margins = new Margins(5, 5, 5, 5);
+			this.tabBookPrimary.Padding = new Margins(1, 1, 1, 1);
 
-			this.fieldToolbar = new HToolBar(this.panelField);
+			//	Crée l'onglet 'champs'.
+			this.tabPageFields = new TabPage();
+			this.tabPageFields.TabTitle = "Contenu"; //Res.Strings.Viewers.Panels.TabFields;
+			this.tabPageFields.Padding = new Margins(4, 4, 4, 4);
+			this.tabBookPrimary.Items.Add(this.tabPageFields);
+
+			this.fieldToolbar = new HToolBar(this.tabPageFields);
 			this.fieldToolbar.Dock = DockStyle.Top;
 			this.fieldToolbar.Margins = new Margins(0, 0, 0, 5);
 
@@ -137,7 +145,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.fieldButtonGoto.Clicked += new MessageEventHandler(this.HandleFieldButtonClicked);
 			this.fieldToolbar.Items.Add(this.fieldButtonGoto);
 
-			this.fieldTable = new MyWidgets.StringArray(this.panelField);
+			this.fieldTable = new MyWidgets.StringArray(this.tabPageFields);
 			this.fieldTable.Columns = 2;
 			this.fieldTable.SetColumnsRelativeWidth(0, 0.05);
 			this.fieldTable.SetColumnsRelativeWidth(1, 0.95);
@@ -151,20 +159,39 @@ namespace Epsitec.Common.Designer.Viewers
 			this.fieldTable.CellsContentChanged += new EventHandler(this.HandleFieldTableCellsContentChanged);
 			this.fieldTable.SelectedRowChanged += new EventHandler(this.HandleFieldTableSelectedRowChanged);
 
-			//	Crée le tabbook pour les onglets.
-			this.tabBook = new TabBook(this.right);
-			this.tabBook.Arrows = TabBookArrows.Stretch;
-			this.tabBook.PreferredHeight = 200;
-			this.tabBook.Dock = DockStyle.Bottom;
-			this.tabBook.Margins = new Margins(5, 5, 5, 5);
-			this.tabBook.Padding = new Margins(1, 1, 1, 1);
-			this.tabBook.ActivePageChanged += new EventHandler<CancelEventArgs>(this.HandleTabBookActivePageChanged);
+			//	Crée l'onglet 'relations'.
+			this.tabPageRelations = new TabPage();
+			this.tabPageRelations.TabTitle = "Relations"; //Res.Strings.Viewers.Panels.TabRelations;
+			this.tabPageRelations.Padding = new Margins(4, 4, 4, 4);
+			this.tabBookPrimary.Items.Add(this.tabPageRelations);
+
+			this.relationsTable = new MyWidgets.StringArray(this.tabPageRelations);
+			this.relationsTable.Columns = 2;
+			this.relationsTable.SetColumnsRelativeWidth(0, 0.90);
+			this.relationsTable.SetColumnsRelativeWidth(1, 0.10);
+			this.relationsTable.SetColumnAlignment(0, ContentAlignment.MiddleLeft);
+			this.relationsTable.SetColumnAlignment(1, ContentAlignment.MiddleCenter);
+			this.relationsTable.SetColumnBreakMode(0, TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine);
+			this.relationsTable.AllowMultipleSelection = false;
+			this.relationsTable.LineHeight = 16;
+			this.relationsTable.Dock = DockStyle.Fill;
+			this.relationsTable.CellCountChanged += new EventHandler(this.HandleRelationsTableCellCountChanged);
+			this.relationsTable.CellsContentChanged += new EventHandler(this.HandleRelationsTableCellsContentChanged);
+			this.relationsTable.SelectedRowChanged += new EventHandler(this.HandleRelationsTableSelectedRowChanged);
+
+			//	Crée le tabbook secondaire pour les onglets.
+			this.tabBookSecondary = new TabBook(this.right);
+			this.tabBookSecondary.Arrows = TabBookArrows.Stretch;
+			this.tabBookSecondary.PreferredHeight = 200;
+			this.tabBookSecondary.Dock = DockStyle.Bottom;
+			this.tabBookSecondary.Margins = new Margins(5, 5, 5, 5);
+			this.tabBookSecondary.Padding = new Margins(1, 1, 1, 1);
 
 			//	Crée l'onglet 'propriétés'.
 			this.tabPageProperties = new TabPage();
 			this.tabPageProperties.TabTitle = Res.Strings.Viewers.Panels.TabProperties;
 			this.tabPageProperties.Padding = new Margins(4, 4, 4, 4);
-			this.tabBook.Items.Add(this.tabPageProperties);
+			this.tabBookSecondary.Items.Add(this.tabPageProperties);
 
 			this.proxyManager = new FormEditor.ProxyManager(this);
 
@@ -180,11 +207,12 @@ namespace Epsitec.Common.Designer.Viewers
 			this.tabPageCultures = new TabPage();
 			this.tabPageCultures.TabTitle = Res.Strings.Viewers.Panels.TabCultures;
 			this.tabPageCultures.Padding = new Margins(10, 10, 10, 10);
-			this.tabBook.Items.Add(this.tabPageCultures);
+			this.tabBookSecondary.Items.Add(this.tabPageCultures);
 
 			this.CreateCultureButtons();
 
-			this.tabBook.ActivePage = this.tabPageProperties;
+			this.tabBookPrimary.ActivePage = this.tabPageFields;
+			this.tabBookSecondary.ActivePage = this.tabPageProperties;
 
 			this.splitter2 = new VSplitter(surface);
 			this.splitter2.Dock = DockStyle.Right;
@@ -211,11 +239,13 @@ namespace Epsitec.Common.Designer.Viewers
 				this.fieldButtonNext.Clicked -= new MessageEventHandler(this.HandleFieldButtonClicked);
 				this.fieldButtonGoto.Clicked -= new MessageEventHandler(this.HandleFieldButtonClicked);
 
+				this.relationsTable.CellCountChanged -= new EventHandler(this.HandleRelationsTableCellCountChanged);
+				this.relationsTable.CellsContentChanged -= new EventHandler(this.HandleRelationsTableCellsContentChanged);
+				this.relationsTable.SelectedRowChanged -= new EventHandler(this.HandleRelationsTableSelectedRowChanged);
+
 				this.fieldTable.CellCountChanged -= new EventHandler(this.HandleFieldTableCellCountChanged);
 				this.fieldTable.CellsContentChanged -= new EventHandler(this.HandleFieldTableCellsContentChanged);
 				this.fieldTable.SelectedRowChanged -= new EventHandler(this.HandleFieldTableSelectedRowChanged);
-				
-				this.tabBook.ActivePageChanged -= new EventHandler<CancelEventArgs>(this.HandleTabBookActivePageChanged);
 			}
 
 			base.Dispose(disposing);
@@ -366,7 +396,7 @@ namespace Epsitec.Common.Designer.Viewers
 		protected void UpdateFieldTable(bool newContent)
 		{
 			//	Met à jour la table des champs.
-			this.formEditor.ObjectModifier.UpdateTableContent(this.druidToSerialize, this.entityDruidsPath);
+			this.formEditor.ObjectModifier.UpdateTableContent(this.druidToSerialize, this.entityFields);
 
 			int first = this.fieldTable.FirstVisibleRow;
 			for (int i=0; i<this.fieldTable.LineCount; i++)
@@ -628,7 +658,7 @@ namespace Epsitec.Common.Designer.Viewers
 				this.formEditor.IsEditEnabled = false;
 				this.formEditor.Form = null;
 
-				this.entityDruidsPath = null;
+				this.entityFields = null;
 			}
 			else
 			{
@@ -663,7 +693,7 @@ namespace Epsitec.Common.Designer.Viewers
 					this.formEditor.DeselectAll();
 				}
 
-				this.entityDruidsPath = this.module.AccessEntities.GetEntityDruidsPath(this.entityId);
+				this.entityFields = this.module.AccessEntities.GetEntityDruidsPath(this.entityId);
 			}
 		}
 
@@ -1140,11 +1170,6 @@ namespace Epsitec.Common.Designer.Viewers
 			this.UpdateCommands();
 		}
 
-		private void HandleTabBookActivePageChanged(object sender, CancelEventArgs e)
-		{
-			//	Changement de l'onglet visible.
-		}
-
 		private void HandleFieldButtonClicked(object sender, MessageEventArgs e)
 		{
 			if (sender == this.fieldButtonUse)
@@ -1185,6 +1210,27 @@ namespace Epsitec.Common.Designer.Viewers
 			if (sender == this.fieldButtonGoto)
 			{
 				this.SelectedFieldsGoto();
+			}
+		}
+
+		private void HandleRelationsTableCellCountChanged(object sender)
+		{
+			//	Le nombre de lignes a changé.
+			//?this.UpdateRelationsTable(false);
+		}
+
+		private void HandleRelationsTableCellsContentChanged(object sender)
+		{
+			//	Le contenu des cellules a changé.
+			//?this.UpdateRelationsTable(false);
+		}
+
+		private void HandleRelationsTableSelectedRowChanged(object sender)
+		{
+			//	La ligne sélectionnée a changé.
+			if (this.ignoreChange)
+			{
+				return;
 			}
 		}
 
@@ -1230,12 +1276,15 @@ namespace Epsitec.Common.Designer.Viewers
 		protected UI.Panel						panelContainer;
 		protected Druid							entityId;
 		protected FormDescription				form;
-		protected List<string>					entityDruidsPath;
+		protected IList<StructuredData>			entityFields;
 		protected FormEditor.Editor				formEditor;
 		protected FrameBox						right;
 		protected HSplitter						splitter3;
 
-		protected FrameBox						panelField;
+		protected TabBook						tabBookPrimary;
+		protected TabBook						tabBookSecondary;
+
+		protected TabPage						tabPageFields;
 		protected HToolBar						fieldToolbar;
 		protected IconButton					fieldButtonUse;
 		protected IconButton					fieldButtonGlue;
@@ -1247,7 +1296,9 @@ namespace Epsitec.Common.Designer.Viewers
 		protected IconButton					fieldButtonGoto;
 		protected MyWidgets.StringArray			fieldTable;
 
-		protected TabBook						tabBook;
+		protected TabPage						tabPageRelations;
+		protected MyWidgets.StringArray			relationsTable;
+
 		protected TabPage						tabPageProperties;
 		protected Scrollable					propertiesScrollable;
 

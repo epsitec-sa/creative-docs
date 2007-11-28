@@ -195,6 +195,13 @@ namespace Epsitec.Common.FormEngine
 			}
 		}
 
+		public void SetField(Druid druid)
+		{
+			//	Donne un seul Druid.
+			this.fieldIds = new List<Druid>();
+			this.fieldIds.Add(druid);
+		}
+
 		public void SetFields(string druidsPath)
 		{
 			//	Donne d'une liste de Druids séparés par des points.

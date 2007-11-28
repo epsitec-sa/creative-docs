@@ -637,6 +637,23 @@ namespace Epsitec.Common.Designer
 		private void FormInitialize(FormEngine.FormDescription form, ref string newName)
 		{
 			//	Initialise un masque de saisie avec tous les champs de l'entité de base associée.
+			IList<StructuredData> list = this.GetEntityDruidsPath(form.EntityId);
+
+			foreach (StructuredData dataField in list)
+			{
+				FieldRelation rel = (FieldRelation) dataField.GetValue(Support.Res.Fields.Field.Relation);
+				if (rel == FieldRelation.None)
+				{
+					Druid fieldCaptionId = (Druid) dataField.GetValue(Support.Res.Fields.Field.CaptionId);
+
+					FormEngine.FieldDescription field = new FormEngine.FieldDescription(FormEngine.FieldDescription.FieldType.Field);
+					field.SetField(fieldCaptionId);
+
+					form.Fields.Add(field);
+				}
+			}
+
+#if false
 			List<string> list = this.GetEntityDruidsPath(form.EntityId);
 			foreach (string druidsPath in list)
 			{
@@ -645,6 +662,7 @@ namespace Epsitec.Common.Designer
 
 				form.Fields.Add(field);
 			}
+#endif
 
 			//	Utilise comme nom du masque le nom de l'entité, éventuellement complété d'un numéro.
 			newName = this.GetDuplicateName(this.GetEntityName(form.EntityId));
@@ -708,6 +726,25 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
+		public IList<StructuredData> GetEntityDruidsPath(Druid entityId)
+		{
+			//	Retourne la liste des chemins de Druids des champs d'une entité.
+			CultureMap item = this.GetEntityItem(entityId);
+			if (item == null)
+			{
+				return null;
+			}
+
+			StructuredData data = item.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
+			if (data == null)
+			{
+				return null;
+			}
+
+			return data.GetValue(Support.Res.Fields.ResourceStructuredType.Fields) as IList<StructuredData>;
+		}
+
+#if false
 		public List<string> GetEntityDruidsPath(Druid entityId)
 		{
 			//	Retourne la liste des chemins de Druids des champs d'une entité.
@@ -780,6 +817,7 @@ namespace Epsitec.Common.Designer
 				}
 			}
 		}
+#endif
 
 		protected CultureMap GetEntityItem(Druid entityId)
 		{

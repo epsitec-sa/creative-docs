@@ -467,10 +467,10 @@ namespace Epsitec.Common.Designer.FormEditor
 			return builder.ToString();
 		}
 
-		public void UpdateTableContent(Druid formDruid, List<string> entityDruidsPath)
+		public void UpdateTableContent(Druid formDruid, IList<StructuredData> entityFields)
 		{
 			//	Met à jour la liste qui reflète le contenu de la table des champs, visible en haut à droite.
-			if (this.formEditor.Form == null || entityDruidsPath == null)
+			if (this.formEditor.Form == null || entityFields == null)
 			{
 				return;
 			}
@@ -483,10 +483,12 @@ namespace Epsitec.Common.Designer.FormEditor
 				//	trouvé dans l'entité. Ceci est fait pour tous les champs de l'entité, et non
 				//	seulement pour ceux qui sont utilisés dans le Form.
 				this.dicoLocalGuids.Clear();
+#if false
 				foreach (string druidPath in entityDruidsPath)
 				{
 					this.dicoLocalGuids.Add(druidPath, System.Guid.NewGuid());
 				}
+#endif
 			}
 
 			this.tableContent.Clear();
@@ -533,6 +535,7 @@ namespace Epsitec.Common.Designer.FormEditor
 			}
 
 			//	Complète ensuite par tous les autres.
+#if false
 			foreach (string druidPath in entityDruidsPath)
 			{
 				if (this.GetTableContentIndex(druidPath) == -1)
@@ -546,6 +549,7 @@ namespace Epsitec.Common.Designer.FormEditor
 					this.tableContent.Add(item);
 				}
 			}
+#endif
 		}
 
 		public int GetTableContentIndex(System.Guid guid)
@@ -583,7 +587,7 @@ namespace Epsitec.Common.Designer.FormEditor
 			{
 				get
 				{
-					return this.Guid == System.Guid.Empty;
+					return this.DataField == null;
 				}
 			}
 
@@ -595,6 +599,7 @@ namespace Epsitec.Common.Designer.FormEditor
 				}
 			}
 
+			public StructuredData				DataField;
 			public System.Guid					Guid;
 			public FieldDescription.FieldType	FieldType;
 			public string						DruidsPath;

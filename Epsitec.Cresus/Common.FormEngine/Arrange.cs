@@ -91,38 +91,40 @@ namespace Epsitec.Common.FormEngine
 				list.Add(field);
 			}
 
-			//	Si un séparateur est dans une 'ligne' (Field-Glue-Field-Glue-Field), déplace-le
-			//	au début de la ligne.
+			//	Si un séparateur est dans une 'ligne', déplace-le au début de la ligne.
+			//	Par exemple:
+			//	'Field-Glue-Field-Glue-Sep-Field' -> 'Sep-Field-Glue-Field-Glue-Field'
+			//	'Field-Glue-Field-Sep-Glue-Field' -> 'Sep-Field-Glue-Field-Glue-Field'
 			for (int i=0; i<list.Count; i++)
 			{
 				if (list[i].Type == FieldDescription.FieldType.Line ||
-					list[i].Type == FieldDescription.FieldType.Title)
+					list[i].Type == FieldDescription.FieldType.Title)  // séparateur ?
 				{
 					int j = i;
-					bool recede;
+					bool move;
 					do
 					{
-						recede = false;
+						move = false;
 
-						if (j > 0 && list[j-1].Type == FieldDescription.FieldType.Glue)
+						if (j > 0 && list[j-1].Type == FieldDescription.FieldType.Glue)  // glue avant ?
 						{
 							FieldDescription sep = list[j];
 							list.RemoveAt(j);
-							list.Insert(j-1, sep);
+							list.Insert(j-1, sep);  // remplace 'Glue-Sep' par 'Sep-Glue'
 							j--;
-							recede = true;
+							move = true;
 						}
 
-						if (j > 0 && j < list.Count-1 && list[j+1].Type == FieldDescription.FieldType.Glue)
+						if (j > 0 && j < list.Count-1 && list[j+1].Type == FieldDescription.FieldType.Glue)  // glue après ?
 						{
 							FieldDescription sep = list[j];
 							list.RemoveAt(j);
-							list.Insert(j-1, sep);
+							list.Insert(j-1, sep);  // remplace 'Xxx-Sep-Glue' par 'Sep-Xxx-Glue'
 							j--;
-							recede = true;
+							move = true;
 						}
 					}
-					while (recede);
+					while (move);  // recommence tant qu'on a pu déplacer
 				}
 			}
 
