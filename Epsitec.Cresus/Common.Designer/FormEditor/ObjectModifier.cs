@@ -423,10 +423,12 @@ namespace Epsitec.Common.Designer.FormEditor
 		}
 
 
-		public string GetTableRelationDescription(string name)
+		public string GetTableRelationDescription(string druidsPath, string nextDruidsPath)
 		{
 			//	Retourne le texte permettant de décrire une relation dans une liste, avec un effet
 			//	d'indentation pour ressembler aux arborescences de Vista.
+			string name = this.formEditor.Module.AccessFields.GetFieldNames(druidsPath);
+
 			System.Text.StringBuilder builder = new System.Text.StringBuilder();
 
 			string[] parts = name.Split('.');
@@ -436,7 +438,15 @@ namespace Epsitec.Common.Designer.FormEditor
 				builder.Append(Misc.Image("TreeSpace"));
 			}
 
-			builder.Append(Misc.Image("TreeMark"));
+			if (nextDruidsPath != null && nextDruidsPath.StartsWith(druidsPath))
+			{
+				builder.Append(Misc.Image("TreeBranch"));
+			}
+			else
+			{
+				builder.Append(Misc.Image("TreeCompact"));
+			}
+
 			builder.Append(" ");
 			builder.Append(name);
 

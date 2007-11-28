@@ -577,8 +577,12 @@ namespace Epsitec.Common.Designer.Viewers
 				else
 				{
 					string druidsPath = this.relationsEntityPath[first+i];
-					string name = this.module.AccessFields.GetFieldNames(druidsPath);
-					name = this.formEditor.ObjectModifier.GetTableRelationDescription(name);
+					string nextDruidsPath = null;
+					if (first+i+1 < this.relationsEntityPath.Count)
+					{
+						nextDruidsPath = this.relationsEntityPath[first+i+1];
+					}
+					string name = this.formEditor.ObjectModifier.GetTableRelationDescription(druidsPath, nextDruidsPath);
 
 					this.relationsTable.SetLineString(0, first+i, name);
 					this.relationsTable.SetLineState(0, first+i, MyWidgets.StringList.CellState.Normal);
