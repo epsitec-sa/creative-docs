@@ -2485,38 +2485,37 @@ namespace Epsitec.Cresus.Database
 			this.ExecuteSilent (transaction);
 		}
 
-		#region IDisposable Members
-
-		public void Dispose()
+		protected override void Dispose(bool disposing)
 		{
-			if (this.globalLock != null)
+			if (disposing)
 			{
-				this.globalLock.ReleaseLock ();
-				this.globalLock = null;
-			}
-			
-			if (this.logger != null)
-			{
-				this.logger.Detach ();
-				this.logger = null;
-			}
-			
-			if (this.abstraction != null)
-			{
-				this.abstraction.Dispose ();
+				if (this.globalLock != null)
+				{
+					this.globalLock.ReleaseLock ();
+					this.globalLock = null;
+				}
 				
-				System.Diagnostics.Debug.Assert (this.abstraction.IsConnectionOpen == false);
+				if (this.logger != null)
+				{
+					this.logger.Detach ();
+					this.logger = null;
+				}
 				
-				this.abstraction = null;
-				this.sqlEngine   = null;
-				this.converter   = null;
+				if (this.abstraction != null)
+				{
+					this.abstraction.Dispose ();
+					
+					System.Diagnostics.Debug.Assert (this.abstraction.IsConnectionOpen == false);
+					
+					this.abstraction = null;
+					this.sqlEngine   = null;
+					this.converter   = null;
+				}
 			}
 			
 			System.Diagnostics.Debug.Assert (this.sqlEngine == null);
 			System.Diagnostics.Debug.Assert (this.converter == null);
 		}
-
-		#endregion
 
 		#region Initialisation
 

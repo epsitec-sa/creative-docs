@@ -13,14 +13,25 @@ using System.Collections.Generic;
 
 namespace Epsitec.Cresus.DataLayer
 {
+	/// <summary>
+	/// The <c>DataQuery</c> class defines a high level query used by the
+	/// <see cref="DataBrowser"/> to define a SQL SELECT statement.
+	/// </summary>
 	public class DataQuery
 	{
+		/// <summary>
+		/// Initializes a new instance of the <see cref="DataQuery"/> class.
+		/// </summary>
 		public DataQuery()
 		{
 			this.outputFields = new List<EntityFieldPath> ();
 		}
 
-		
+
+		/// <summary>
+		/// The collection of output fields.
+		/// </summary>
+		/// <value>The collection of output fields.</value>
 		public IList<EntityFieldPath> OutputFields
 		{
 			get

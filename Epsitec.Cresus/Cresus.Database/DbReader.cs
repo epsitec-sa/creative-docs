@@ -8,6 +8,10 @@ using System.Collections.Generic;
 
 namespace Epsitec.Cresus.Database
 {
+	/// <summary>
+	/// The <c>DbReader</c> class implements a factory which returns instances
+	/// of <see cref="System.Data.IDataReader"/> based on a query definition.
+	/// </summary>
 	public class DbReader
 	{
 		public DbReader(DbInfrastructure infrastructure)
@@ -28,11 +32,23 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 
+		public void AddQueryFields(IEnumerable<DbTableColumn> queryFields)
+		{
+			foreach (DbTableColumn queryField in queryFields)
+			{
+				this.RenameTableColumn (queryField);
+			}
+		}
 
-		public System.Data.IDataReader CreateReader(DbTransaction transaction, IEnumerable<DbTableColumn> tableColumns)
+		public void AddCondition()
+		{
+		}
+
+
+		public System.Data.IDataReader CreateReader(DbTransaction transaction)
 		{
 			ISqlBuilder builder = transaction.SqlBuilder;
-			SqlSelect select = this.CreateSelect (tableColumns);
+			SqlSelect select = this.CreateSelect ();
 
 			builder.SelectData (select);
 
@@ -43,16 +59,11 @@ namespace Epsitec.Cresus.Database
 			return reader;
 		}
 
-		internal SqlSelect CreateSelect(IEnumerable<DbTableColumn> tableColumns)
+
+
+		internal SqlSelect CreateSelect()
 		{
 			SqlSelect select = new SqlSelect ();
-
-			this.longToShortTableAliasMap.Clear ();
-			this.shortAliasToColumnMap.Clear ();
-			this.shortAliasToTableMap.Clear ();
-			this.renamedTableColumns.Clear ();
-
-			this.RenameTableColumns (tableColumns);
 
 			this.CreateSelectColumns (select);
 			this.CreateSelectTables (select);
@@ -61,38 +72,32 @@ namespace Epsitec.Cresus.Database
 			return select;
 		}
 
-		private void RenameTableColumns(IEnumerable<DbTableColumn> originalTableColumns)
+		private void RenameTableColumn(DbTableColumn originalTableColumn)
 		{
-			int columnCount = 0;
-			int tableCount  = 0;
+			int columnIndex = this.renamedTableColumns.Count;
+			int tableIndex = this.longToShortTableAliasMap.Count;
 
-			foreach (DbTableColumn originalTableColumn in originalTableColumns)
+			string longTableAlias = originalTableColumn.TableAlias;
+			
+			string shortColumnAlias = string.Format (System.Globalization.CultureInfo.InvariantCulture, "C{0}", columnIndex);
+			string shortTableAlias;
+
+			if (this.longToShortTableAliasMap.TryGetValue (longTableAlias, out shortTableAlias) == false)
 			{
-				columnCount++;
+				shortTableAlias = string.Format (System.Globalization.CultureInfo.InvariantCulture, "T{0}", tableIndex);
 
-				string longTableAlias = originalTableColumn.TableAlias;
-				
-				string shortColumnAlias = string.Format (System.Globalization.CultureInfo.InvariantCulture, "C{0}", columnCount);
-				string shortTableAlias;
-
-				if (this.longToShortTableAliasMap.TryGetValue (longTableAlias, out shortTableAlias) == false)
-				{
-					tableCount++;
-					shortTableAlias = string.Format (System.Globalization.CultureInfo.InvariantCulture, "T{0}", tableCount);
-
-					this.longToShortTableAliasMap[longTableAlias] = shortTableAlias;
-					this.shortAliasToTableMap[shortTableAlias] = originalTableColumn.Table;
-				}
-
-				DbTableColumn renamedTableColumn = new DbTableColumn (originalTableColumn.Table, originalTableColumn.Column);
-
-				renamedTableColumn.TableAlias  = shortTableAlias;
-				renamedTableColumn.ColumnAlias = shortColumnAlias;
-				
-				this.renamedTableColumns.Add (renamedTableColumn);
-
-				this.shortAliasToColumnMap[shortColumnAlias] = originalTableColumn;
+				this.longToShortTableAliasMap[longTableAlias] = shortTableAlias;
+				this.shortAliasToTableMap[shortTableAlias] = originalTableColumn.Table;
 			}
+
+			DbTableColumn renamedTableColumn = new DbTableColumn (originalTableColumn.Table, originalTableColumn.Column);
+
+			renamedTableColumn.TableAlias  = shortTableAlias;
+			renamedTableColumn.ColumnAlias = shortColumnAlias;
+			
+			this.renamedTableColumns.Add (renamedTableColumn);
+
+			this.shortAliasToColumnMap[shortColumnAlias] = originalTableColumn;
 		}
 
 		private void CreateSelectColumns(SqlSelect select)

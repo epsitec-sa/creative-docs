@@ -16,24 +16,41 @@ namespace Epsitec.Common.Support.EntityEngine
 	/// </summary>
 	public sealed class EntityFieldPath : System.IEquatable<EntityFieldPath>, System.IComparable<EntityFieldPath>
 	{
+		/// <summary>
+		/// Initializes a new instance of the <see cref="EntityFieldPath"/> class.
+		/// </summary>
 		public EntityFieldPath()
 		{
 			this.entityId = Druid.Empty;
 			this.path = "";
 		}
 
+		/// <summary>
+		/// Initializes a new instance of the <see cref="EntityFieldPath"/> class.
+		/// </summary>
+		/// <param name="path">The path.</param>
 		public EntityFieldPath(EntityFieldPath path)
 		{
 			this.entityId = path.entityId;
 			this.path = path.path;
 		}
 
+		/// <summary>
+		/// Initializes a new instance of the <see cref="EntityFieldPath"/> class.
+		/// </summary>
+		/// <param name="entityId">The entity id.</param>
+		/// <param name="path">The path.</param>
 		private EntityFieldPath(Druid entityId, string path)
 		{
 			this.entityId = entityId;
 			this.path = path;
 		}
 
+
+		/// <summary>
+		/// Gets a value indicating whether the path is empty.
+		/// </summary>
+		/// <value><c>true</c> if the path is empty; otherwise, <c>false</c>.</value>
 		public bool IsEmpty
 		{
 			get
@@ -43,6 +60,12 @@ namespace Epsitec.Common.Support.EntityEngine
 			}
 		}
 
+		/// <summary>
+		/// Gets a value indicating whether the path is relative.
+		/// </summary>
+		/// <value>
+		/// 	<c>true</c> if the path is relative; otherwise, <c>false</c>.
+		/// </value>
 		public bool IsRelative
 		{
 			get
@@ -52,6 +75,12 @@ namespace Epsitec.Common.Support.EntityEngine
 			}
 		}
 
+		/// <summary>
+		/// Gets a value indicating whether the path is absolute.
+		/// </summary>
+		/// <value>
+		/// 	<c>true</c> if the path is absolute; otherwise, <c>false</c>.
+		/// </value>
 		public bool IsAbsolute
 		{
 			get
@@ -60,6 +89,10 @@ namespace Epsitec.Common.Support.EntityEngine
 			}
 		}
 
+		/// <summary>
+		/// Gets a value indicating whether the path contains an index.
+		/// </summary>
+		/// <value><c>true</c> if the path contains an index; otherwise, <c>false</c>.</value>
 		public bool ContainsIndex
 		{
 			get
@@ -68,6 +101,10 @@ namespace Epsitec.Common.Support.EntityEngine
 			}
 		}
 
+		/// <summary>
+		/// Gets the entity id if the path is an absolute (rooted) path.
+		/// </summary>
+		/// <value>The entity id.</value>
 		public Druid EntityId
 		{
 			get
@@ -76,6 +113,10 @@ namespace Epsitec.Common.Support.EntityEngine
 			}
 		}
 
+		/// <summary>
+		/// Gets the fields relative to the root entity.
+		/// </summary>
+		/// <value>The fields or an empty array.</value>
 		public string[] Fields
 		{
 			get
@@ -92,6 +133,13 @@ namespace Epsitec.Common.Support.EntityEngine
 		}
 
 
+		/// <summary>
+		/// Navigates from the specified root entity to the leaf entity.
+		/// </summary>
+		/// <param name="root">The root entity.</param>
+		/// <param name="leaf">The leaf entity.</param>
+		/// <param name="id">The id of the field in the leaf entity.</param>
+		/// <returns><c>true</c> if the path could be resolved; otherwise, <c>false</c>.</returns>
 		public bool Navigate(AbstractEntity root, out AbstractEntity leaf, out string id)
 		{
 			string[] fields = this.Fields;
@@ -138,21 +186,57 @@ namespace Epsitec.Common.Support.EntityEngine
 			return true;
 		}
 
+		/// <summary>
+		/// Navigates from the specified root entity to the leaf entity.
+		/// </summary>
+		/// <param name="root">The root entity id.</param>
+		/// <param name="leaf">The leaf entity id.</param>
+		/// <param name="id">The id of the field in the leaf entity.</param>
+		/// <returns><c>true</c> if the path could be resolved; otherwise, <c>false</c>.</returns>
 		public bool Navigate(Druid root, out Druid leaf, out string id)
 		{
 			return this.Navigate (EntityContext.Current, root, out leaf, out id);
 		}
 
+		/// <summary>
+		/// Navigates from the local root entity to the leaf entity. This is
+		/// only possible if the <see cref="IsAbsolute"/> property returns
+		/// <c>true</c>.
+		/// </summary>
+		/// <param name="leaf">The leaf entity id.</param>
+		/// <param name="id">The id of the field in the leaf entity.</param>
+		/// <returns><c>true</c> if the path could be resolved; otherwise, <c>false</c>.</returns>
 		public bool Navigate(out Druid leaf, out string id)
 		{
 			return this.Navigate (EntityContext.Current, this.entityId, out leaf, out id);
 		}
 
+		/// <summary>
+		/// Navigates from the local root entity to the leaf entity. This is
+		/// only possible if the <see cref="IsAbsolute"/> property returns
+		/// <c>true</c>.
+		/// </summary>
+		/// <param name="context">The specific entity context used to resolve entity ids.</param>
+		/// <param name="leaf">The leaf entity id.</param>
+		/// <param name="id">The id of the field in the leaf entity.</param>
+		/// <returns>
+		/// 	<c>true</c> if the path could be resolved; otherwise, <c>false</c>.
+		/// </returns>
 		public bool Navigate(EntityContext context, out Druid leaf, out string id)
 		{
 			return this.Navigate (EntityContext.Current, this.entityId, out leaf, out id);
 		}
 
+		/// <summary>
+		/// Navigates from the root entity to the leaf entity.
+		/// </summary>
+		/// <param name="context">The specific entity context used to resolve entity ids.</param>
+		/// <param name="root">The root entity id.</param>
+		/// <param name="leaf">The leaf entity id.</param>
+		/// <param name="id">The id of the field in the leaf entity.</param>
+		/// <returns>
+		/// 	<c>true</c> if the path could be resolved; otherwise, <c>false</c>.
+		/// </returns>
 		public bool Navigate(EntityContext context, Druid root, out Druid leaf, out string id)
 		{
 			if (root.IsEmpty)
@@ -205,6 +289,10 @@ namespace Epsitec.Common.Support.EntityEngine
 		}
 
 
+		/// <summary>
+		/// Gets the parent path.
+		/// </summary>
+		/// <returns>The parent path or <c>null</c> if the path is empty.</returns>
 		public EntityFieldPath GetParentPath()
 		{
 			string[] fields = this.Fields;
@@ -221,16 +309,34 @@ namespace Epsitec.Common.Support.EntityEngine
 		}
 
 
+		/// <summary>
+		/// Creates an absolute path.
+		/// </summary>
+		/// <param name="entityId">The entity id.</param>
+		/// <param name="fields">The fields.</param>
+		/// <returns>The path instance.</returns>
 		public static EntityFieldPath CreateAbsolutePath(Druid entityId, params string[] fields)
 		{
 			return new EntityFieldPath (entityId, string.Join (".", fields));
 		}
 
+		/// <summary>
+		/// Creates an absolute path.
+		/// </summary>
+		/// <param name="entityId">The entity id.</param>
+		/// <param name="fields">The fields.</param>
+		/// <returns>The path instance.</returns>
 		public static EntityFieldPath CreateAbsolutePath(Druid entityId, IEnumerable<string> fields)
 		{
 			return new EntityFieldPath (entityId, string.Join (".", Collection.ToArray (fields)));
 		}
 
+		/// <summary>
+		/// Creates an absolute path.
+		/// </summary>
+		/// <param name="entityId">The entity id.</param>
+		/// <param name="relativePath">The relative path.</param>
+		/// <returns>The path instance.</returns>
 		public static EntityFieldPath CreateAbsolutePath(Druid entityId, EntityFieldPath relativePath)
 		{
 			if (relativePath == null)
@@ -245,16 +351,31 @@ namespace Epsitec.Common.Support.EntityEngine
 			return EntityFieldPath.CreateAbsolutePath (entityId, relativePath.path);
 		}
 
+		/// <summary>
+		/// Creates a relative path.
+		/// </summary>
+		/// <param name="fields">The fields.</param>
+		/// <returns>The path instance.</returns>
 		public static EntityFieldPath CreateRelativePath(params string[] fields)
 		{
 			return new EntityFieldPath (Druid.Empty, string.Join (".", fields));
 		}
 
+		/// <summary>
+		/// Creates a relative path.
+		/// </summary>
+		/// <param name="fields">The fields.</param>
+		/// <returns>The path instance.</returns>
 		public static EntityFieldPath CreateRelativePath(IEnumerable<string> fields)
 		{
 			return new EntityFieldPath (Druid.Empty, string.Join (".", Collection.ToArray (fields)));
 		}
 
+		/// <summary>
+		/// Parses the specified path.
+		/// </summary>
+		/// <param name="path">The path.</param>
+		/// <returns>The path instance.</returns>
 		public static EntityFieldPath Parse(string path)
 		{
 			if (path == null)

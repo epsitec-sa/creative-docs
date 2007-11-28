@@ -104,9 +104,7 @@ namespace Epsitec.Cresus.DataLayer
 		[Test]
 		public void Check01Reader()
 		{
-			DbReader reader = new DbReader (this.infrastructure);
-
-			List<DbTableColumn> tableColumns = new List<DbTableColumn> ();
+			List<DbTableColumn> queryFields = new List<DbTableColumn> ();
 			
 			DbTable  t1 = this.context.SchemaEngine.FindTableDefinition (Druid.Parse ("[63081]"));
 			
@@ -114,17 +112,21 @@ namespace Epsitec.Cresus.DataLayer
 			DbColumn c2 = t1.Columns["63083"];
 			DbColumn c3 = t1.Columns["630B3"];
 
-			tableColumns.Add (new DbTableColumn ("T1", t1, "Name", c1));
-			tableColumns.Add (new DbTableColumn ("T1", t1, "Street", c2));
-			tableColumns.Add (new DbTableColumn ("T1", t1, "City", c3));
+			queryFields.Add (new DbTableColumn ("T1", t1, "Name", c1));
+			queryFields.Add (new DbTableColumn ("T1", t1, "Street", c2));
+			queryFields.Add (new DbTableColumn ("T1", t1, "City", c3));
 
 			System.Diagnostics.Debug.WriteLine ("Starting reader");
+
+			DbReader reader = new DbReader (this.infrastructure);
+
+			reader.AddQueryFields (queryFields);
 
 			List<string> lines = new List<string> ();
 				
 			using (DbTransaction transaction = this.infrastructure.BeginTransaction ())
 			{
-				System.Data.IDataReader dataReader = reader.CreateReader (transaction, tableColumns);
+				System.Data.IDataReader dataReader = reader.CreateReader (transaction);
 
 				while (dataReader.Read ())
 				{
