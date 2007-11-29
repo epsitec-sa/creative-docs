@@ -459,6 +459,7 @@ namespace Epsitec.Common.Designer.FormEditor
 				if (this.tableRelations[index].Expanded)
 				{
 					builder.Append(Misc.Image("TreeBranch"));
+					name = Misc.Bold(name);
 				}
 				else
 				{
