@@ -1222,7 +1222,10 @@ namespace Epsitec.Common.Designer.Viewers
 		protected void SelectedRelationsAuto()
 		{
 			//	Etend automatiquement les champs utilisés.
-			this.formEditor.ObjectModifier.UpdateTableRelation(this.entityId, this.entityFields);
+			this.formEditor.ObjectModifier.UpdateTableRelation(this.entityId, this.entityFields, this.form);
+
+			this.UpdateRelationsTable(false);
+			this.UpdateRelationsButtons();
 		}
 
 

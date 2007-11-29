@@ -825,6 +825,95 @@ namespace Epsitec.Common.Designer.FormEditor
 			}
 		}
 
+		public void UpdateTableRelation(Druid entityId, IList<StructuredData> entityFields, FormDescription form)
+		{
+			//	Initialise la table des relations possibles avec le premier niveau et les champs du masque.
+			//	Tous les champs frères d'un champ faisant partie du masque sont également pris.
+			this.UpdateTableRelation(entityId, entityFields);
+
+			foreach (FieldDescription field in form.Fields)
+			{
+				string druidsPath = field.GetPath(null);
+
+				int i = druidsPath.LastIndexOf('.');
+				if (i == -1)
+				{
+					continue;
+				}
+
+				druidsPath = druidsPath.Remove(i);
+				IList<StructuredData> dataFields = this.TableRelationSearchStructuredData(druidsPath);
+
+				int index = this.TableRelationSearchIndex(druidsPath);
+				int level = druidsPath.Split('.').Length;
+
+				if (index == -1 || dataFields.Count == 0)
+				{
+					continue;
+				}
+
+				this.tableRelations[index].Expanded = true;
+
+				foreach (StructuredData dataField in dataFields)
+				{
+					FieldRelation rel = (FieldRelation) dataField.GetValue(Support.Res.Fields.Field.Relation);
+					Druid fieldCaptionId = (Druid) dataField.GetValue(Support.Res.Fields.Field.CaptionId);
+
+					RelationItem item = new RelationItem();
+					item.DruidsPath = string.Concat(druidsPath, ".", fieldCaptionId.ToString());
+					item.Relation = rel;
+					item.Expandable = (rel != FieldRelation.None);
+					item.Expanded = false;
+					item.Level = level;
+
+					this.tableRelations.Insert(++index, item);
+				}
+			}
+		}
+
+		public void UpdateTableRelation(Druid entityId, IList<StructuredData> entityFields)
+		{
+			//	Initialise la table des relations possibles avec le premier niveau.
+			this.entityId = entityId;
+
+			this.tableRelations = new List<RelationItem>();
+
+			if (entityFields == null)
+			{
+				return;
+			}
+
+			foreach (StructuredData dataField in entityFields)
+			{
+				FieldRelation rel = (FieldRelation) dataField.GetValue(Support.Res.Fields.Field.Relation);
+				Druid fieldCaptionId = (Druid) dataField.GetValue(Support.Res.Fields.Field.CaptionId);
+				string druidPath = fieldCaptionId.ToString();
+
+				RelationItem item = new RelationItem();
+				item.DruidsPath = druidPath;
+				item.Relation = rel;
+				item.Expandable = (rel != FieldRelation.None);
+				item.Expanded = false;
+				item.Level = 0;
+
+				this.tableRelations.Add(item);
+			}
+		}
+
+		protected int TableRelationSearchIndex(string druidsPath)
+		{
+			//	Cherche l'index correspondant à un chemin de Druids.
+			for (int i=0; i<this.tableRelations.Count; i++)
+			{
+				if (this.tableRelations[i].DruidsPath == druidsPath)
+				{
+					return i;
+				}
+			}
+
+			return -1;
+		}
+
 		protected IList<StructuredData> TableRelationSearchStructuredData(string druidsPath)
 		{
 			string[] druids = druidsPath.Split('.');
@@ -861,35 +950,6 @@ namespace Epsitec.Common.Designer.FormEditor
 			}
 
 			return null;
-		}
-
-		public void UpdateTableRelation(Druid entityId, IList<StructuredData> entityFields)
-		{
-			//	Initialise la table des relations possibles avec le premier niveau.
-			this.entityId = entityId;
-
-			this.tableRelations = new List<RelationItem>();
-
-			if (entityFields == null)
-			{
-				return;
-			}
-
-			foreach (StructuredData dataField in entityFields)
-			{
-				FieldRelation rel = (FieldRelation) dataField.GetValue(Support.Res.Fields.Field.Relation);
-				Druid fieldCaptionId = (Druid) dataField.GetValue(Support.Res.Fields.Field.CaptionId);
-				string druidPath = fieldCaptionId.ToString();
-
-				RelationItem item = new RelationItem();
-				item.DruidsPath = druidPath;
-				item.Relation = rel;
-				item.Expandable = (rel != FieldRelation.None);
-				item.Expanded = false;
-				item.Level = 0;
-
-				this.tableRelations.Add(item);
-			}
 		}
 
 		public class RelationItem
