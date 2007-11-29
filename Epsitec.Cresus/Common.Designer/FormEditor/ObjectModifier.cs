@@ -423,6 +423,265 @@ namespace Epsitec.Common.Designer.FormEditor
 		}
 
 
+		#region TableContent
+		public string GetTableContentDescription(TableItem item)
+		{
+			//	Retourne le texte permettant de décrire un TableItem dans une liste, avec un effet
+			//	d'indentation pour ressembler aux arborescences de Vista.
+			System.Text.StringBuilder builder = new System.Text.StringBuilder();
+
+			for (int i=0; i<item.Level; i++)
+			{
+				builder.Append(Misc.Image("TreeSpace"));
+			}
+
+			if (item.FieldType == FieldDescription.FieldType.BoxBegin)
+			{
+				builder.Append(Misc.Image("TreeBranch"));
+			}
+			else
+			{
+				builder.Append(Misc.Image("TreeMark"));
+			}
+
+			string name = this.formEditor.Module.AccessFields.GetFieldNames(item.DruidsPath);
+			if (name == null)
+			{
+				FieldDescription field = this.formEditor.ObjectModifier.GetFormDescription(item);
+				if (field != null)
+				{
+					if (field.Type == FieldDescription.FieldType.BoxBegin)
+					{
+						name = Misc.Bold(field.Description);
+					}
+					else
+					{
+						name = Misc.Italic(field.Description);
+					}
+				}
+			}
+
+			builder.Append(" ");
+			builder.Append(name);
+
+			return builder.ToString();
+		}
+
+		public void UpdateTableContent(Druid formDruid, List<RelationItem> relations)
+		{
+			//	Met à jour la liste qui reflète le contenu de la table des champs, visible en haut à droite.
+			if (this.formEditor.Form == null || relations == null)
+			{
+				return;
+			}
+
+			if (this.formDruid != formDruid)  // a-t-on changé de formulaire ?
+			{
+				this.formDruid = formDruid;
+
+				//	Attribue un nouveau Guid pour chaque champ (défini par un chemin de Druids)
+				//	trouvé dans l'entité. Ceci est fait pour tous les champs de l'entité, et non
+				//	seulement pour ceux qui sont utilisés dans le Form.
+				this.dicoLocalGuids.Clear();
+				foreach (RelationItem ri in relations)
+				{
+					if (ri.Relation == FieldRelation.None)
+					{
+						this.dicoLocalGuids.Add(ri.DruidsPath, System.Guid.NewGuid());
+					}
+				}
+#if false
+				foreach (StructuredData dataField in entityFields)
+				{
+					FieldRelation rel = (FieldRelation) dataField.GetValue(Support.Res.Fields.Field.Relation);
+					if (rel == FieldRelation.None)
+					{
+						Druid fieldCaptionId = (Druid) dataField.GetValue(Support.Res.Fields.Field.CaptionId);
+						string druidPath = fieldCaptionId.ToString();
+
+						this.dicoLocalGuids.Add(druidPath, System.Guid.NewGuid());
+					}
+				}
+#endif
+#if false
+				foreach (string druidPath in entityDruidsPath)
+				{
+					this.dicoLocalGuids.Add(druidPath, System.Guid.NewGuid());
+				}
+#endif
+			}
+
+			this.tableContent.Clear();
+
+			//	Construit la liste des chemins de Druids, en commençant par ceux qui font
+			//	partie du masque de saisie.
+			int level = 0;
+			foreach (FieldDescription field in this.formEditor.Form.Fields)
+			{
+				System.Guid guid = this.GetLocalGuid(field.GetPath(null));
+
+				if (guid == System.Guid.Empty)
+				{
+					// Si le Guid n'a pas été défini localement, parce qu'il s'agit d'un séparateur ou d'un titre,
+					// conserve le Guid défini dans le Form.
+					guid = field.Guid;
+				}
+				else
+				{
+					// Si le Guid a été défini localement, utilise-le à la place de celui défini dans le Form.
+					// On garanti ainsi que le champ aura toujours le même Guid, qu'il soit utilisé (c'est-à-dire
+					// dans le Form) ou non.
+					field.Guid = guid;
+				}
+
+				TableItem item = new TableItem();
+				item.Guid = guid;
+				item.FieldType = field.Type;
+				item.DruidsPath = field.GetPath(null);
+				item.Used = true;
+				item.Level = level;
+
+				this.tableContent.Add(item);
+
+				if (field.Type == FieldDescription.FieldType.BoxBegin)
+				{
+					level++;
+				}
+
+				if (field.Type == FieldDescription.FieldType.BoxEnd)
+				{
+					level--;
+				}
+			}
+
+			//	Complète ensuite par tous les autres.
+			foreach (RelationItem ri in relations)
+			{
+				if (ri.Relation == FieldRelation.None && this.GetTableContentIndex(ri.DruidsPath) == -1)
+				{
+					TableItem item = new TableItem();
+					item.Guid = this.GetLocalGuid(ri.DruidsPath);
+					item.FieldType = FieldDescription.FieldType.Field;
+					item.DruidsPath = ri.DruidsPath;
+					item.Used = false;
+
+					this.tableContent.Add(item);
+				}
+			}
+#if false
+			foreach (StructuredData dataField in entityFields)
+			{
+				FieldRelation rel = (FieldRelation) dataField.GetValue(Support.Res.Fields.Field.Relation);
+				if (rel == FieldRelation.None)
+				{
+					Druid fieldCaptionId = (Druid) dataField.GetValue(Support.Res.Fields.Field.CaptionId);
+					string druidPath = fieldCaptionId.ToString();
+
+					if (this.GetTableContentIndex(druidPath) == -1)
+					{
+						TableItem item = new TableItem();
+						item.Guid = this.GetLocalGuid(druidPath);
+						item.FieldType = FieldDescription.FieldType.Field;
+						item.DruidsPath = druidPath;
+						item.Used = false;
+
+						this.tableContent.Add(item);
+					}
+				}
+			}
+#endif
+#if false
+			foreach (string druidPath in entityDruidsPath)
+			{
+				if (this.GetTableContentIndex(druidPath) == -1)
+				{
+					TableItem item = new TableItem();
+					item.Guid = this.GetLocalGuid(druidPath);
+					item.FieldType = FieldDescription.FieldType.Field;
+					item.DruidsPath = druidPath;
+					item.Used = false;
+
+					this.tableContent.Add(item);
+				}
+			}
+#endif
+		}
+
+		public int GetTableContentIndex(System.Guid guid)
+		{
+			//	Cherche l'index d'un Guid dans la table des champs.
+			for (int i=0; i<this.tableContent.Count; i++)
+			{
+				if (guid == this.tableContent[i].Guid)
+				{
+					return i;
+				}
+			}
+
+			return -1;
+		}
+
+		protected int GetTableContentIndex(string druidsPath)
+		{
+			//	Cherche l'index d'un chemin de Druids dans la table des champs.
+			for (int i=0; i<this.tableContent.Count; i++)
+			{
+				if (druidsPath == this.tableContent[i].DruidsPath)
+				{
+					return i;
+				}
+			}
+
+			return -1;
+		}
+
+		public struct TableItem
+		{
+			//	Cette structure représente un élément dans la liste de droite des champs.
+			public bool IsEmpty
+			{
+				get
+				{
+					return this.DataField == null;
+				}
+			}
+
+			public static TableItem Empty
+			{
+				get
+				{
+					return new TableItem();
+				}
+			}
+
+			public StructuredData				DataField;
+			public System.Guid					Guid;
+			public FieldDescription.FieldType	FieldType;
+			public string						DruidsPath;
+			public bool							Used;
+			public int							Level;
+		}
+
+		protected System.Guid GetLocalGuid(string druidsPath)
+		{
+			//	Cherche le Guid défini localement dans le dictionnaire.
+			if (druidsPath == null)
+			{
+				return System.Guid.Empty;
+			}
+			else
+			{
+				if (!this.dicoLocalGuids.ContainsKey(druidsPath))
+				{
+					this.dicoLocalGuids.Add(druidsPath, System.Guid.NewGuid());
+				}
+
+				return this.dicoLocalGuids[druidsPath];
+			}
+		}
+		#endregion
+
+
 		#region TableRelation
 		public List<RelationItem> TableRelations
 		{
@@ -488,7 +747,7 @@ namespace Epsitec.Common.Designer.FormEditor
 			{
 				icon = Misc.Image("TreeRelationReference");
 			}
-			
+
 			if (rel == FieldRelation.Collection)
 			{
 				icon = Misc.Image("TreeRelationCollection");
@@ -635,241 +894,12 @@ namespace Epsitec.Common.Designer.FormEditor
 
 		public class RelationItem
 		{
+			//	Cette classe représente une ligne dans la table des relations.
 			public string						DruidsPath;
 			public FieldRelation				Relation;
 			public bool							Expandable;
 			public bool							Expanded;
 			public int							Level;
-		}
-		#endregion
-
-
-		#region TableContent
-		public string GetTableContentDescription(TableItem item)
-		{
-			//	Retourne le texte permettant de décrire un TableItem dans une liste, avec un effet
-			//	d'indentation pour ressembler aux arborescences de Vista.
-			System.Text.StringBuilder builder = new System.Text.StringBuilder();
-
-			for (int i=0; i<item.Level; i++)
-			{
-				builder.Append(Misc.Image("TreeSpace"));
-			}
-
-			if (item.FieldType == FieldDescription.FieldType.BoxBegin)
-			{
-				builder.Append(Misc.Image("TreeBranch"));
-			}
-			else
-			{
-				builder.Append(Misc.Image("TreeMark"));
-			}
-
-			string name = this.formEditor.Module.AccessFields.GetFieldNames(item.DruidsPath);
-			if (name == null)
-			{
-				FieldDescription field = this.formEditor.ObjectModifier.GetFormDescription(item);
-				if (field != null)
-				{
-					if (field.Type == FieldDescription.FieldType.BoxBegin)
-					{
-						name = Misc.Bold(field.Description);
-					}
-					else
-					{
-						name = Misc.Italic(field.Description);
-					}
-				}
-			}
-
-			builder.Append(" ");
-			builder.Append(name);
-
-			return builder.ToString();
-		}
-
-		public void UpdateTableContent(Druid formDruid, IList<StructuredData> entityFields)
-		{
-			//	Met à jour la liste qui reflète le contenu de la table des champs, visible en haut à droite.
-			if (this.formEditor.Form == null || entityFields == null)
-			{
-				return;
-			}
-
-			if (this.formDruid != formDruid)  // a-t-on changé de formulaire ?
-			{
-				this.formDruid = formDruid;
-
-				//	Attribue un nouveau Guid pour chaque champ (défini par un chemin de Druids)
-				//	trouvé dans l'entité. Ceci est fait pour tous les champs de l'entité, et non
-				//	seulement pour ceux qui sont utilisés dans le Form.
-				this.dicoLocalGuids.Clear();
-				foreach (StructuredData dataField in entityFields)
-				{
-					FieldRelation rel = (FieldRelation) dataField.GetValue(Support.Res.Fields.Field.Relation);
-					if (rel == FieldRelation.None)
-					{
-						Druid fieldCaptionId = (Druid) dataField.GetValue(Support.Res.Fields.Field.CaptionId);
-						string druidPath = fieldCaptionId.ToString();
-
-						this.dicoLocalGuids.Add(druidPath, System.Guid.NewGuid());
-					}
-				}
-#if false
-				foreach (string druidPath in entityDruidsPath)
-				{
-					this.dicoLocalGuids.Add(druidPath, System.Guid.NewGuid());
-				}
-#endif
-			}
-
-			this.tableContent.Clear();
-
-			//	Construit la liste des chemins de Druids, en commençant par ceux qui font
-			//	partie du masque de saisie.
-			int level = 0;
-			foreach (FieldDescription field in this.formEditor.Form.Fields)
-			{
-				System.Guid guid = this.GetLocalGuid(field.GetPath(null));
-
-				if (guid == System.Guid.Empty)
-				{
-					// Si le Guid n'a pas été défini localement, parce qu'il s'agit d'un séparateur ou d'un titre,
-					// conserve le Guid défini dans le Form.
-					guid = field.Guid;
-				}
-				else
-				{
-					// Si le Guid a été défini localement, utilise-le à la place de celui défini dans le Form.
-					// On garanti ainsi que le champ aura toujours le même Guid, qu'il soit utilisé (c'est-à-dire
-					// dans le Form) ou non.
-					field.Guid = guid;
-				}
-
-				TableItem item = new TableItem();
-				item.Guid = guid;
-				item.FieldType = field.Type;
-				item.DruidsPath = field.GetPath(null);
-				item.Used = true;
-				item.Level = level;
-
-				this.tableContent.Add(item);
-
-				if (field.Type == FieldDescription.FieldType.BoxBegin)
-				{
-					level++;
-				}
-
-				if (field.Type == FieldDescription.FieldType.BoxEnd)
-				{
-					level--;
-				}
-			}
-
-			//	Complète ensuite par tous les autres.
-			foreach (StructuredData dataField in entityFields)
-			{
-				FieldRelation rel = (FieldRelation) dataField.GetValue(Support.Res.Fields.Field.Relation);
-				if (rel == FieldRelation.None)
-				{
-					Druid fieldCaptionId = (Druid) dataField.GetValue(Support.Res.Fields.Field.CaptionId);
-					string druidPath = fieldCaptionId.ToString();
-
-					if (this.GetTableContentIndex(druidPath) == -1)
-					{
-						TableItem item = new TableItem();
-						item.Guid = this.GetLocalGuid(druidPath);
-						item.FieldType = FieldDescription.FieldType.Field;
-						item.DruidsPath = druidPath;
-						item.Used = false;
-
-						this.tableContent.Add(item);
-					}
-				}
-			}
-#if false
-			foreach (string druidPath in entityDruidsPath)
-			{
-				if (this.GetTableContentIndex(druidPath) == -1)
-				{
-					TableItem item = new TableItem();
-					item.Guid = this.GetLocalGuid(druidPath);
-					item.FieldType = FieldDescription.FieldType.Field;
-					item.DruidsPath = druidPath;
-					item.Used = false;
-
-					this.tableContent.Add(item);
-				}
-			}
-#endif
-		}
-
-		public int GetTableContentIndex(System.Guid guid)
-		{
-			//	Cherche l'index d'un Guid dans la table des champs.
-			for (int i=0; i<this.tableContent.Count; i++)
-			{
-				if (guid == this.tableContent[i].Guid)
-				{
-					return i;
-				}
-			}
-
-			return -1;
-		}
-
-		protected int GetTableContentIndex(string druidsPath)
-		{
-			//	Cherche l'index d'un chemin de Druids dans la table des champs.
-			for (int i=0; i<this.tableContent.Count; i++)
-			{
-				if (druidsPath == this.tableContent[i].DruidsPath)
-				{
-					return i;
-				}
-			}
-
-			return -1;
-		}
-
-		public struct TableItem
-		{
-			//	Cette structure représente un élément dans la liste de droite des champs.
-			public bool IsEmpty
-			{
-				get
-				{
-					return this.DataField == null;
-				}
-			}
-
-			public static TableItem Empty
-			{
-				get
-				{
-					return new TableItem();
-				}
-			}
-
-			public StructuredData				DataField;
-			public System.Guid					Guid;
-			public FieldDescription.FieldType	FieldType;
-			public string						DruidsPath;
-			public bool							Used;
-			public int							Level;
-		}
-
-		protected System.Guid GetLocalGuid(string druidsPath)
-		{
-			//	Cherche le Guid défini localement dans le dictionnaire.
-			if (druidsPath == null)
-			{
-				return System.Guid.Empty;
-			}
-			else
-			{
-				return this.dicoLocalGuids[druidsPath];
-			}
 		}
 		#endregion
 

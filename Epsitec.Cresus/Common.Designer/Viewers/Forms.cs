@@ -417,7 +417,8 @@ namespace Epsitec.Common.Designer.Viewers
 		protected void UpdateFieldsTable(bool newContent)
 		{
 			//	Met à jour la table des champs.
-			this.formEditor.ObjectModifier.UpdateTableContent(this.druidToSerialize, this.entityFields);
+			//?this.formEditor.ObjectModifier.UpdateTableContent(this.druidToSerialize, this.entityFields);
+			this.formEditor.ObjectModifier.UpdateTableContent(this.druidToSerialize, this.formEditor.ObjectModifier.TableRelations);
 
 			int first = this.fieldsTable.FirstVisibleRow;
 			for (int i=0; i<this.fieldsTable.LineCount; i++)
@@ -603,6 +604,14 @@ namespace Epsitec.Common.Designer.Viewers
 			if (newContent)
 			{
 				this.relationsTable.FirstVisibleRow = 0;
+				this.relationsTable.SelectedRow = -1;
+			}
+			else
+			{
+				if (this.relationsTable.TotalRows <= this.relationsTable.LineCount)
+				{
+					this.relationsTable.FirstVisibleRow = 0;
+				}
 			}
 		}
 
@@ -767,7 +776,10 @@ namespace Epsitec.Common.Designer.Viewers
 				this.entityFields = this.module.AccessEntities.GetEntityDruidsPath(this.entityId);
 			}
 
-			this.formEditor.ObjectModifier.UpdateTableRelation(this.entityId, this.entityFields);
+			if (!keepSelection)
+			{
+				this.formEditor.ObjectModifier.UpdateTableRelation(this.entityId, this.entityFields);
+			}
 		}
 
 		protected void InitializePanel()
@@ -942,7 +954,7 @@ namespace Epsitec.Common.Designer.Viewers
 				guids.Add(item.Guid);
 			}
 
-			this.SetForm(this.form, this.druidToSerialize, false);
+			this.SetForm(this.form, this.druidToSerialize, true);
 			this.UpdateFieldsTable(false);
 
 			sels.Clear();
@@ -974,7 +986,7 @@ namespace Epsitec.Common.Designer.Viewers
 			field.ColumnsRequired = 0;
 			this.form.Fields.Insert(index, field);
 
-			this.SetForm(this.form, this.druidToSerialize, false);
+			this.SetForm(this.form, this.druidToSerialize, true);
 			this.UpdateFieldsTable(false);
 
 			sels.Clear();
@@ -998,7 +1010,7 @@ namespace Epsitec.Common.Designer.Viewers
 			FieldDescription field = new FieldDescription(FieldDescription.FieldType.Line);
 			this.form.Fields.Insert(index, field);
 
-			this.SetForm(this.form, this.druidToSerialize, false);
+			this.SetForm(this.form, this.druidToSerialize, true);
 			this.UpdateFieldsTable(false);
 
 			sels.Clear();
@@ -1022,7 +1034,7 @@ namespace Epsitec.Common.Designer.Viewers
 			FieldDescription field = new FieldDescription(FieldDescription.FieldType.Title);
 			this.form.Fields.Insert(index, field);
 
-			this.SetForm(this.form, this.druidToSerialize, false);
+			this.SetForm(this.form, this.druidToSerialize, true);
 			this.UpdateFieldsTable(false);
 
 			sels.Clear();
@@ -1067,7 +1079,7 @@ namespace Epsitec.Common.Designer.Viewers
 								this.form.Fields.RemoveAt(last);  // enlève le BoxEnd
 								this.form.Fields.RemoveAt(first);  // enlève le BoxBegin
 
-								this.SetForm(this.form, this.druidToSerialize, false);
+								this.SetForm(this.form, this.druidToSerialize, true);
 								this.UpdateFieldsTable(false);
 
 								sels.Clear();
@@ -1109,7 +1121,7 @@ namespace Epsitec.Common.Designer.Viewers
 			box = new FieldDescription(FieldDescription.FieldType.BoxEnd);
 			this.form.Fields.Insert(index++, box);
 
-			this.SetForm(this.form, this.druidToSerialize, false);
+			this.SetForm(this.form, this.druidToSerialize, true);
 			this.UpdateFieldsTable(false);
 
 			sels.Clear();
@@ -1178,8 +1190,10 @@ namespace Epsitec.Common.Designer.Viewers
 			int sel = this.relationsTable.SelectedRow;
 			this.formEditor.ObjectModifier.TableRelationExpand(sel);
 
-			this.UpdateRelationsTable(true);
+			this.UpdateRelationsTable(false);
 			this.UpdateRelationsButtons();
+			this.UpdateFieldsTable(false);
+			this.UpdateFieldsButtons();
 		}
 
 		protected void SelectedRelationsCompact()
@@ -1187,9 +1201,11 @@ namespace Epsitec.Common.Designer.Viewers
 			//	Compacte la relation sélectionnée.
 			int sel = this.relationsTable.SelectedRow;
 			this.formEditor.ObjectModifier.TableRelationCompact(sel);
-			
-			this.UpdateRelationsTable(true);
+
+			this.UpdateRelationsTable(false);
 			this.UpdateRelationsButtons();
+			this.UpdateFieldsTable(false);
+			this.UpdateFieldsButtons();
 		}
 
 
