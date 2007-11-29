@@ -194,6 +194,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.relationsTable.CellCountChanged += new EventHandler(this.HandleRelationsTableCellCountChanged);
 			this.relationsTable.CellsContentChanged += new EventHandler(this.HandleRelationsTableCellsContentChanged);
 			this.relationsTable.SelectedRowChanged += new EventHandler(this.HandleRelationsTableSelectedRowChanged);
+			this.relationsTable.SelectedRowDoubleClicked += new EventHandler(this.HandleRelationsTableSelectedRowDoubleClicked);
 
 			//	Crée le tabbook secondaire pour les onglets.
 			this.tabBookSecondary = new TabBook(this.right);
@@ -265,6 +266,7 @@ namespace Epsitec.Common.Designer.Viewers
 				this.relationsTable.CellCountChanged -= new EventHandler(this.HandleRelationsTableCellCountChanged);
 				this.relationsTable.CellsContentChanged -= new EventHandler(this.HandleRelationsTableCellsContentChanged);
 				this.relationsTable.SelectedRowChanged -= new EventHandler(this.HandleRelationsTableSelectedRowChanged);
+				this.relationsTable.SelectedRowDoubleClicked -= new EventHandler(this.HandleRelationsTableSelectedRowDoubleClicked);
 			}
 
 			base.Dispose(disposing);
@@ -1358,6 +1360,25 @@ namespace Epsitec.Common.Designer.Viewers
 			}
 
 			this.UpdateRelationsButtons();
+		}
+
+		private void HandleRelationsTableSelectedRowDoubleClicked(object sender)
+		{
+			//	La ligne sélectionnée a été double-cliquée.
+			int sel = this.relationsTable.SelectedRow;
+			if (sel == -1)
+			{
+				return;
+			}
+
+			if (this.formEditor.ObjectModifier.IsTableRelationExpandable(sel))
+			{
+				this.SelectedRelationsExpand();
+			}
+			else if (this.formEditor.ObjectModifier.IsTableRelationCompactable(sel))
+			{
+				this.SelectedRelationsCompact();
+			}
 		}
 
 		private void HandleFieldTableCellCountChanged(object sender)
