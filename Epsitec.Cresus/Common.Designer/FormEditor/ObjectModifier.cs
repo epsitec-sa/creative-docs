@@ -454,13 +454,21 @@ namespace Epsitec.Common.Designer.FormEditor
 				builder.Append(Misc.Image("TreeSpace"));
 			}
 
-			if (nextDruidsPath != null && nextDruidsPath.StartsWith(druidsPath))
+			if (this.tableRelations[index].Expandable)
 			{
-				builder.Append(Misc.Image("TreeBranch"));
+				if (this.tableRelations[index].Expanded)
+				{
+					builder.Append(Misc.Image("TreeBranch"));
+				}
+				else
+				{
+					builder.Append(Misc.Image("TreeCompact"));
+				}
 			}
 			else
 			{
-				builder.Append(Misc.Image("TreeCompact"));
+				//?builder.Append(Misc.Image("TreeMark"));
+				builder.Append(Misc.Image("TreeSpace"));
 			}
 
 			builder.Append(" ");
@@ -520,19 +528,16 @@ namespace Epsitec.Common.Designer.FormEditor
 			foreach (StructuredData dataField in dataFields)
 			{
 				FieldRelation rel = (FieldRelation) dataField.GetValue(Support.Res.Fields.Field.Relation);
-				if (rel != FieldRelation.None)
-				{
-					Druid fieldCaptionId = (Druid) dataField.GetValue(Support.Res.Fields.Field.CaptionId);
+				Druid fieldCaptionId = (Druid) dataField.GetValue(Support.Res.Fields.Field.CaptionId);
 
-					RelationItem item = new RelationItem();
-					item.DruidsPath = string.Concat(druidsPath, ".", fieldCaptionId.ToString());
-					item.Relation = rel;
-					item.Expandable = true;
-					item.Expanded = false;
+				RelationItem item = new RelationItem();
+				item.DruidsPath = string.Concat(druidsPath, ".", fieldCaptionId.ToString());
+				item.Relation = rel;
+				item.Expandable = (rel != FieldRelation.None);
+				item.Expanded = false;
 
-					index++;
-					this.tableRelations.Insert(index, item);
-				}
+				index++;
+				this.tableRelations.Insert(index, item);
 			}
 		}
 
@@ -597,7 +602,7 @@ namespace Epsitec.Common.Designer.FormEditor
 
 		public void UpdateTableRelation(Druid entityId, IList<StructuredData> entityFields)
 		{
-			//	Initialise la table de relations possibles avec le premier niveau.
+			//	Initialise la table des relations possibles avec le premier niveau.
 			this.entityId = entityId;
 
 			this.tableRelations = new List<RelationItem>();
@@ -610,19 +615,16 @@ namespace Epsitec.Common.Designer.FormEditor
 			foreach (StructuredData dataField in entityFields)
 			{
 				FieldRelation rel = (FieldRelation) dataField.GetValue(Support.Res.Fields.Field.Relation);
-				if (rel != FieldRelation.None)
-				{
-					Druid fieldCaptionId = (Druid) dataField.GetValue(Support.Res.Fields.Field.CaptionId);
-					string druidPath = fieldCaptionId.ToString();
+				Druid fieldCaptionId = (Druid) dataField.GetValue(Support.Res.Fields.Field.CaptionId);
+				string druidPath = fieldCaptionId.ToString();
 
-					RelationItem item = new RelationItem();
-					item.DruidsPath = druidPath;
-					item.Relation = rel;
-					item.Expandable = true;
-					item.Expanded = false;
+				RelationItem item = new RelationItem();
+				item.DruidsPath = druidPath;
+				item.Relation = rel;
+				item.Expandable = (rel != FieldRelation.None);
+				item.Expanded = false;
 
-					this.tableRelations.Add(item);
-				}
+				this.tableRelations.Add(item);
 			}
 		}
 
