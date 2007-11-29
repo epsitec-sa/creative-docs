@@ -181,6 +181,14 @@ namespace Epsitec.Common.Designer.Viewers
 			this.relationsButtonCompact.Clicked += new MessageEventHandler(this.HandleRelationsButtonClicked);
 			this.relationsToolbar.Items.Add(this.relationsButtonCompact);
 
+			this.relationsToolbar.Items.Add(new IconSeparator());
+
+			this.relationsButtonAuto = new IconButton();
+			this.relationsButtonAuto.AutoFocus = false;
+			this.relationsButtonAuto.CaptionId = Res.Captions.Editor.Forms.Auto.Id;
+			this.relationsButtonAuto.Clicked += new MessageEventHandler(this.HandleRelationsButtonClicked);
+			this.relationsToolbar.Items.Add(this.relationsButtonAuto);
+
 			this.relationsTable = new MyWidgets.StringArray(this.tabPageRelations);
 			this.relationsTable.Columns = 2;
 			this.relationsTable.SetColumnsRelativeWidth(0, 0.90);
@@ -262,6 +270,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 				this.relationsButtonExpand.Clicked -= new MessageEventHandler(this.HandleRelationsButtonClicked);
 				this.relationsButtonCompact.Clicked -= new MessageEventHandler(this.HandleRelationsButtonClicked);
+				this.relationsButtonAuto.Clicked -= new MessageEventHandler(this.HandleRelationsButtonClicked);
 
 				this.relationsTable.CellCountChanged -= new EventHandler(this.HandleRelationsTableCellCountChanged);
 				this.relationsTable.CellsContentChanged -= new EventHandler(this.HandleRelationsTableCellsContentChanged);
@@ -1210,6 +1219,12 @@ namespace Epsitec.Common.Designer.Viewers
 			this.UpdateFieldsButtons();
 		}
 
+		protected void SelectedRelationsAuto()
+		{
+			//	Etend automatiquement les champs utilisés.
+			this.formEditor.ObjectModifier.UpdateTableRelation(this.entityId, this.entityFields);
+		}
+
 
 		#region Proxies
 		protected void DefineProxies(IEnumerable<Widget> widgets)
@@ -1337,6 +1352,11 @@ namespace Epsitec.Common.Designer.Viewers
 			{
 				this.SelectedRelationsCompact();
 			}
+
+			if (sender == this.relationsButtonAuto)
+			{
+				this.SelectedRelationsAuto();
+			}
 		}
 
 		private void HandleRelationsTableCellCountChanged(object sender)
@@ -1447,6 +1467,7 @@ namespace Epsitec.Common.Designer.Viewers
 		protected HToolBar						relationsToolbar;
 		protected IconButton					relationsButtonExpand;
 		protected IconButton					relationsButtonCompact;
+		protected IconButton					relationsButtonAuto;
 		protected MyWidgets.StringArray			relationsTable;
 
 		protected TabPage						tabPageProperties;

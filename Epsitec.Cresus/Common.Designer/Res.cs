@@ -48,6 +48,8 @@ namespace Epsitec.Common.Designer
 				public static global::Epsitec.Common.Types.Caption LocatorGoto { get { return Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 0, 419)); } }
 				public static class Forms
 				{
+					//	designer:cap/302L1
+					public static global::Epsitec.Common.Types.Caption Auto { get { return Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 2, 53)); } }
 					//	designer:cap/302M
 					public static global::Epsitec.Common.Types.Caption Box { get { return Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 2, 22)); } }
 					//	designer:cap/302K1
