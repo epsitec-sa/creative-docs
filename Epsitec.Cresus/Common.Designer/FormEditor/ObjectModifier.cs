@@ -426,6 +426,7 @@ namespace Epsitec.Common.Designer.FormEditor
 		#region TableRelation
 		public List<RelationItem> TableRelations
 		{
+			//	Retourne la liste pour la table des relations. Chaque RelationItem correspondra à une ligne dans la table.
 			get
 			{
 				return this.tableRelations;
@@ -437,6 +438,7 @@ namespace Epsitec.Common.Designer.FormEditor
 			//	Retourne le texte permettant de décrire une relation dans une liste, avec un effet
 			//	d'indentation pour ressembler aux arborescences de Vista.
 			string druidsPath = this.tableRelations[index].DruidsPath;
+			string name = this.formEditor.Module.AccessFields.GetFieldNames(druidsPath);
 
 			string nextDruidsPath = null;
 			if (index+1 < this.tableRelations.Count)
@@ -446,10 +448,7 @@ namespace Epsitec.Common.Designer.FormEditor
 
 			System.Text.StringBuilder builder = new System.Text.StringBuilder();
 
-			string name = this.formEditor.Module.AccessFields.GetFieldNames(druidsPath);
-			string[] parts = name.Split('.');
-
-			for (int i=0; i<parts.Length-1; i++)
+			for (int i=0; i<this.tableRelations[index].Level; i++)
 			{
 				builder.Append(Misc.Image("TreeSpace"));
 			}
@@ -500,6 +499,7 @@ namespace Epsitec.Common.Designer.FormEditor
 
 		public bool IsTableRelationExpandable(int index)
 		{
+			//	Indique si l'opération "étendre" est autorisée.
 			if (index == -1 || this.formEditor.Module.DesignerApplication.IsReadonly)
 			{
 				return false;
@@ -510,6 +510,7 @@ namespace Epsitec.Common.Designer.FormEditor
 
 		public bool IsTableRelationCompactable(int index)
 		{
+			//	Indique si l'opération "compacter" est autorisée.
 			if (index == -1 || this.formEditor.Module.DesignerApplication.IsReadonly)
 			{
 				return false;
@@ -525,6 +526,7 @@ namespace Epsitec.Common.Designer.FormEditor
 			IList<StructuredData> dataFields = this.TableRelationSearchStructuredData(druidsPath);
 
 			this.tableRelations[index].Expanded = true;
+			int level = this.tableRelations[index].Level + 1;
 
 			foreach (StructuredData dataField in dataFields)
 			{
@@ -536,6 +538,7 @@ namespace Epsitec.Common.Designer.FormEditor
 				item.Relation = rel;
 				item.Expandable = (rel != FieldRelation.None);
 				item.Expanded = false;
+				item.Level = level;
 
 				index++;
 				this.tableRelations.Insert(index, item);
@@ -624,6 +627,7 @@ namespace Epsitec.Common.Designer.FormEditor
 				item.Relation = rel;
 				item.Expandable = (rel != FieldRelation.None);
 				item.Expanded = false;
+				item.Level = 0;
 
 				this.tableRelations.Add(item);
 			}
@@ -635,6 +639,7 @@ namespace Epsitec.Common.Designer.FormEditor
 			public FieldRelation				Relation;
 			public bool							Expandable;
 			public bool							Expanded;
+			public int							Level;
 		}
 		#endregion
 
