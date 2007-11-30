@@ -49,6 +49,20 @@ namespace Epsitec.Cresus.DataLayer
 
 			using (DbReader reader = this.CreateReader (copy))
 			{
+				if (example != null)
+				{
+					foreach (string id in example.GetEntityContext ().GetDefinedFields (example))
+					{
+						System.Diagnostics.Debug.WriteLine (string.Format ("Field {0} contains {1}", id, example.InternalGetValue (id)));
+						string value = example.GetField<string> (id);
+						DbSelectCondition condition = new DbSelectCondition (this.infrastructure.Converter);
+						EntityFieldPath fieldPath = EntityFieldPath.CreateAbsolutePath (rootEntityId, id);
+						DbTableColumn tableColumn = this.GetTableColumn (fieldPath, rootEntityId, id);
+						condition.AddCondition (tableColumn, DbCompare.Like, value);
+						reader.AddCondition (condition);
+					}
+				}
+
 				reader.CreateDataReader (transaction);
 
 				foreach (object[] values in reader.Rows)
@@ -80,18 +94,7 @@ namespace Epsitec.Cresus.DataLayer
 					throw new System.ArgumentException ("Cannot resolve field " + fieldPath.ToString ());
 				}
 
-				DbTable  tableDef   = this.schemaEngine.FindTableDefinition (dataEntityId);
-				string   columnName = this.schemaEngine.GetDataColumnName (dataFieldId);
-				DbColumn columnDef  = tableDef == null ? null : tableDef.Columns[columnName];
-
-				System.Diagnostics.Debug.Assert (tableDef != null);
-				System.Diagnostics.Debug.Assert (columnDef != null);
-				System.Diagnostics.Debug.Assert (tableDef == columnDef.Table);
-				
-				DbTableColumn tableColumn = new DbTableColumn (columnDef);
-
-				tableColumn.TableAlias  = fieldPath.GetParentPath ().ToString ();
-				tableColumn.ColumnAlias = fieldPath.ToString ();
+				DbTableColumn tableColumn = this.GetTableColumn (fieldPath, dataEntityId, dataFieldId);
 
 				tableColumns.Add (tableColumn);
 				reader.AddQueryField (tableColumn);
@@ -117,6 +120,24 @@ namespace Epsitec.Cresus.DataLayer
 			reader.SelectPredicate = query.Distinct ? SqlSelectPredicate.Distinct : SqlSelectPredicate.All;
 
 			return reader;
+		}
+
+		private DbTableColumn GetTableColumn(EntityFieldPath fieldPath, Druid dataEntityId, string dataFieldId)
+		{
+			DbTableColumn tableColumn;
+			DbTable  tableDef   = this.schemaEngine.FindTableDefinition (dataEntityId);
+			string   columnName = this.schemaEngine.GetDataColumnName (dataFieldId);
+			DbColumn columnDef  = tableDef == null ? null : tableDef.Columns[columnName];
+
+			System.Diagnostics.Debug.Assert (tableDef != null);
+			System.Diagnostics.Debug.Assert (columnDef != null);
+			System.Diagnostics.Debug.Assert (tableDef == columnDef.Table);
+
+			tableColumn = new DbTableColumn (columnDef);
+
+			tableColumn.TableAlias  = fieldPath.GetParentPath ().ToString ();
+			tableColumn.ColumnAlias = fieldPath.ToString ();
+			return tableColumn;
 		}
 
 

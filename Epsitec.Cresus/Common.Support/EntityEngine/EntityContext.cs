@@ -266,6 +266,23 @@ namespace Epsitec.Common.Support.EntityEngine
 			return entity;
 		}
 
+		public IEnumerable<string> GetDefinedFields(AbstractEntity entity)
+		{
+			HashSet<string> ids = new HashSet<string> ();
+
+			foreach (IValueStore store in entity.InternalGetValueStores ())
+			{
+				Data dataStore = store as Data;
+				
+				foreach (string id in dataStore.GetIds ())
+				{
+					ids.Add (id);
+				}
+			}
+
+			return ids;
+		}
+
 
 		/// <summary>
 		/// Finds the property setter used to write to the specified field.
@@ -528,6 +545,11 @@ namespace Epsitec.Common.Support.EntityEngine
 			}
 
 			#endregion
+
+			public IEnumerable<string> GetIds()
+			{
+				return this.store.Keys;
+			}
 
 			IStructuredType type;
 			Dictionary<string, object> store;

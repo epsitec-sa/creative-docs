@@ -192,6 +192,8 @@ namespace Epsitec.Cresus.DataLayer
 		[Test]
 		public void Check03QueryByExample()
 		{
+			System.Diagnostics.Debug.WriteLine ("Query by example");
+
 			DataBrowser browser = new DataBrowser (this.infrastructure);
 			List<string> lines = new List<string> ();
 

@@ -344,6 +344,18 @@ namespace Epsitec.Common.Support.EntityEngine
 			return list;
 		}
 
+		internal IEnumerable<IValueStore> InternalGetValueStores()
+		{
+			if (this.originalValues != null)
+			{
+				yield return this.originalValues;
+			}
+			if (this.modifiedValues != null)
+			{
+				yield return this.modifiedValues;
+			}
+		}
+
 		internal EntityCollection<T> CopyFieldCollection<T>(string id, EntityCollection<T> collection) where T : AbstractEntity
 		{
 			System.Diagnostics.Debug.Assert (this.IsDefiningOriginalValues == false);
