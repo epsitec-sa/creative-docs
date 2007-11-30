@@ -508,6 +508,11 @@ namespace Epsitec.Common.Designer.Viewers
 
 					foreach (int sel in sels)
 					{
+						if (sel >= this.formEditor.ObjectModifier.TableContent.Count)  // ancienne sélection parasite ?
+						{
+							continue;
+						}
+
 						FormEditor.ObjectModifier.TableItem prev = Common.Designer.FormEditor.ObjectModifier.TableItem.Empty;
 						FormEditor.ObjectModifier.TableItem curr = Common.Designer.FormEditor.ObjectModifier.TableItem.Empty;
 						FormEditor.ObjectModifier.TableItem next = Common.Designer.FormEditor.ObjectModifier.TableItem.Empty;
@@ -562,9 +567,17 @@ namespace Epsitec.Common.Designer.Viewers
 					}
 				}
 
-				if (sels != null && sels.Count == 1 && this.formEditor.ObjectModifier.TableContent[sels[0]].FieldType == FieldDescription.FieldType.BoxBegin)
+				if (sels != null && sels.Count == 1)
 				{
-					isUnbox = true;
+					int sel = sels[0];
+
+					if (sel < this.formEditor.ObjectModifier.TableContent.Count)
+					{
+						if (this.formEditor.ObjectModifier.TableContent[sel].FieldType == FieldDescription.FieldType.BoxBegin)
+						{
+							isUnbox = true;
+						}
+					}
 				}
 			}
 
