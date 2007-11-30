@@ -22,33 +22,53 @@ namespace Epsitec.Cresus.DataLayer
 		}
 
 
-		public void QueryByExample<T>(T example, IEnumerable<EntityFieldPath> outputFields) where T : AbstractEntity, new ()
+		public IEnumerable<object[]> QueryByExample<T>(DbTransaction transaction, T example, DataQuery query) where T : AbstractEntity, new ()
 		{
-			this.QueryByExample ((AbstractEntity) example, outputFields);
+			return this.QueryByExample (transaction, (AbstractEntity) example, query);
 		}
 
-		public void QueryByExample(AbstractEntity example, IEnumerable<EntityFieldPath> outputFields)
+		public IEnumerable<object[]> QueryByExample(DbTransaction transaction, AbstractEntity example, DataQuery query)
 		{
 			Druid rootEntityId = example.GetEntityStructuredTypeId ();
 
-			DataQuery query = new DataQuery ();
+			DataQuery copy = new DataQuery ();
 
-			foreach (EntityFieldPath fieldPath in outputFields)
+			copy.Distinct = query.Distinct;
+
+			foreach (DataQueryColumn queryColumn in query.Columns)
 			{
+				EntityFieldPath fieldPath = queryColumn.FieldPath;
+
 				System.Diagnostics.Debug.Assert (fieldPath.IsRelative);
 				System.Diagnostics.Debug.Assert (fieldPath.ContainsIndex == false);
 
-				query.OutputFields.Add (EntityFieldPath.CreateAbsolutePath (rootEntityId, fieldPath));
+				EntityFieldPath absPath = EntityFieldPath.CreateAbsolutePath (rootEntityId, fieldPath);
+
+				copy.Columns.Add (new DataQueryColumn (absPath, queryColumn.SortOrder));
+			}
+
+			using (DbReader reader = this.CreateReader (copy))
+			{
+				reader.CreateDataReader (transaction);
+
+				foreach (object[] values in reader.Rows)
+				{
+					yield return values;
+				}
 			}
 		}
 
 
-		public void ExecuteQuery(DataQuery query)
+		private DbReader CreateReader(DataQuery query)
 		{
+			DbReader reader = new DbReader (this.infrastructure);
+
 			List<DbTableColumn> tableColumns = new List<DbTableColumn> ();
 			
-			foreach (EntityFieldPath fieldPath in query.OutputFields)
+			foreach (DataQueryColumn queryColumn in query.Columns)
 			{
+				EntityFieldPath fieldPath = queryColumn.FieldPath;
+
 				System.Diagnostics.Debug.Assert (fieldPath.IsAbsolute);
 				System.Diagnostics.Debug.Assert (fieldPath.ContainsIndex == false);
 				
@@ -74,9 +94,29 @@ namespace Epsitec.Cresus.DataLayer
 				tableColumn.ColumnAlias = fieldPath.ToString ();
 
 				tableColumns.Add (tableColumn);
+				reader.AddQueryField (tableColumn);
+
+				switch (queryColumn.SortOrder)
+				{
+					case DataQuerySortOrder.None:
+						break;
+
+					case DataQuerySortOrder.Ascending:
+						reader.AddSortOrder (tableColumn, SqlSortOrder.Ascending);
+						break;
+
+					case DataQuerySortOrder.Descending:
+						reader.AddSortOrder (tableColumn, SqlSortOrder.Descending);
+						break;
+
+					default:
+						throw new System.NotSupportedException ("Unsupported sort order");
+				}
 			}
 
-			
+			reader.SelectPredicate = query.Distinct ? SqlSelectPredicate.Distinct : SqlSelectPredicate.All;
+
+			return reader;
 		}
 
 

@@ -190,6 +190,36 @@ namespace Epsitec.Cresus.DataLayer
 		}
 
 		[Test]
+		public void Check03QueryByExample()
+		{
+			DataBrowser browser = new DataBrowser (this.infrastructure);
+			List<string> lines = new List<string> ();
+
+			using (DbTransaction transaction = this.infrastructure.BeginTransaction ())
+			{
+				DataQuery query = new DataQuery();
+
+				query.Distinct = true;
+				
+				query.Columns.Add (new DataQueryColumn (EntityFieldPath.CreateRelativePath ("[63073]")));
+				query.Columns.Add (new DataQueryColumn (EntityFieldPath.CreateRelativePath ("[63083]")));
+				query.Columns.Add (new DataQueryColumn (EntityFieldPath.CreateRelativePath ("[630B3]")));
+				
+				AdresseEntity example = new AdresseEntity ();
+				example.Npa = "%14%";
+
+				foreach (object[] values in browser.QueryByExample<AdresseEntity> (transaction, example, query))
+				{
+					lines.Add (string.Format ("{0}, {1}, {2}", values[0], values[1], values[2]));
+				}
+
+				transaction.Commit ();
+			}
+
+			System.Diagnostics.Debug.WriteLine ("Loaded " + lines.Count + " records");
+		}
+
+		[Test]
 		public void Cleanup()
 		{
 			this.context.Dispose ();

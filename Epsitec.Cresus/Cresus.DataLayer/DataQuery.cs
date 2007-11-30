@@ -24,7 +24,7 @@ namespace Epsitec.Cresus.DataLayer
 		/// </summary>
 		public DataQuery()
 		{
-			this.outputFields = new List<EntityFieldPath> ();
+			this.columns = new List<DataQueryColumn> ();
 		}
 
 
@@ -32,15 +32,21 @@ namespace Epsitec.Cresus.DataLayer
 		/// The collection of output fields.
 		/// </summary>
 		/// <value>The collection of output fields.</value>
-		public IList<EntityFieldPath> OutputFields
+		public IList<DataQueryColumn> Columns
 		{
 			get
 			{
-				return this.outputFields;
+				return this.columns;
 			}
 		}
 
+		public bool Distinct
+		{
+			get;
+			set;
+		}
 
-		private readonly List<EntityFieldPath> outputFields;
+
+		private readonly List<DataQueryColumn> columns;
 	}
 }

@@ -26,7 +26,7 @@ namespace Epsitec.Cresus.Database
 		}
 
 
-		public DbInfrastructure Infrastructure
+		public DbInfrastructure					Infrastructure
 		{
 			get
 			{
@@ -34,17 +34,22 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 
-		public SqlSelectPredicate SelectPredicate
+		public SqlSelectPredicate				SelectPredicate
 		{
 			get;
 			set;
+		}
+
+		public void AddQueryField(DbTableColumn queryField)
+		{
+			this.RegisterTableColumn (queryField);
 		}
 
 		public void AddQueryFields(IEnumerable<DbTableColumn> queryFields)
 		{
 			foreach (DbTableColumn queryField in queryFields)
 			{
-				this.RegisterTableColumn (queryField);
+				this.AddQueryField (queryField);
 			}
 		}
 
@@ -69,44 +74,6 @@ namespace Epsitec.Cresus.Database
 			this.renamedTableColumns.Add (renamedColumn);
 
 			this.orderByTableColumns[shortColumnAlias] = order;
-		}
-
-		private DbTableColumn FindRenamedTableColumn(string shortColumnAlias)
-		{
-			foreach (DbTableColumn tableColumn in this.renamedTableColumns)
-			{
-				if (tableColumn.ColumnAlias == shortColumnAlias)
-				{
-					return tableColumn;
-				}
-			}
-
-			return null;
-		}
-
-		private string FindShortColumnAlias(DbTableColumn tableColumn)
-		{
-			foreach (KeyValuePair<string, DbTableColumn> pair in this.shortAliasToColumnMap)
-			{
-				if (pair.Value == tableColumn)
-				{
-					return pair.Key;
-				}
-			}
-
-			return null;
-		}
-
-		private string GetShortColumnAlias(DbTableColumn tableColumn)
-		{
-			string shortColumnAlias = this.FindShortColumnAlias (tableColumn);
-
-			if (shortColumnAlias == null)
-			{
-				shortColumnAlias = this.RegisterTableColumn (tableColumn);
-			}
-
-			return shortColumnAlias;
 		}
 
 		public void AddCondition(DbSelectCondition condition)
@@ -178,7 +145,7 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 
-		public void CloseDataReader()
+		private void CloseDataReader()
 		{
 			if ((this.dataReader != null) &&
 				(this.dataReaderClosed == false))
@@ -200,6 +167,44 @@ namespace Epsitec.Cresus.Database
 
 		#endregion
 
+
+		private DbTableColumn FindRenamedTableColumn(string shortColumnAlias)
+		{
+			foreach (DbTableColumn tableColumn in this.renamedTableColumns)
+			{
+				if (tableColumn.ColumnAlias == shortColumnAlias)
+				{
+					return tableColumn;
+				}
+			}
+
+			return null;
+		}
+
+		private string FindShortColumnAlias(DbTableColumn tableColumn)
+		{
+			foreach (KeyValuePair<string, DbTableColumn> pair in this.shortAliasToColumnMap)
+			{
+				if (pair.Value == tableColumn)
+				{
+					return pair.Key;
+				}
+			}
+
+			return null;
+		}
+
+		private string GetShortColumnAlias(DbTableColumn tableColumn)
+		{
+			string shortColumnAlias = this.FindShortColumnAlias (tableColumn);
+
+			if (shortColumnAlias == null)
+			{
+				shortColumnAlias = this.RegisterTableColumn (tableColumn);
+			}
+
+			return shortColumnAlias;
+		}
 
 		internal SqlSelect CreateSelect()
 		{
@@ -291,10 +296,13 @@ namespace Epsitec.Cresus.Database
 
 		private void CreateSelectConditions(SqlSelect select)
 		{
-			foreach (DbSelectCondition condition in this.conditions)
+			if (this.conditions.Count > 0)
 			{
-				condition.ReplaceTableColumns (this.TranslateToShortTableAlias);
-				condition.CreateConditions (select.Conditions);
+				foreach (DbSelectCondition condition in this.conditions)
+				{
+					condition.ReplaceTableColumns (this.TranslateToShortTableAlias);
+					condition.CreateConditions (select.Conditions);
+				}
 			}
 		}
 

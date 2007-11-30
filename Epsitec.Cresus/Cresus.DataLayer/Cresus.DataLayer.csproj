@@ -119,6 +119,8 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DataQuerySortOrder.cs" />
+    <Compile Include="DataQueryColumn.cs" />
     <Compile Include="DataBrowser.cs" />
     <Compile Include="DataQuery.cs" />
     <Compile Include="Retired sources\Adapter.cs" />

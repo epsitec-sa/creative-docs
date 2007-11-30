@@ -136,12 +136,23 @@ namespace Epsitec.Cresus.DataLayer
 			}
 		}
 
+		/// <summary>
+		/// Gets the name of the main data table used by an entity.
+		/// </summary>
+		/// <param name="entityId">The entity id.</param>
+		/// <returns>The name of the data table or <c>null</c> if none
+		/// can be found.</returns>
 		public string GetDataTableName(Druid entityId)
 		{
 			DbTable tableDef = this.FindTableDefinition (entityId);
 			return tableDef == null ? null : tableDef.Name;
 		}
 
+		/// <summary>
+		/// Gets the name of the data column given an entity field id.
+		/// </summary>
+		/// <param name="fieldId">The field id.</param>
+		/// <returns>The name of the data column.</returns>
 		public string GetDataColumnName(string fieldId)
 		{
 			System.Diagnostics.Debug.Assert (fieldId.StartsWith ("["));
