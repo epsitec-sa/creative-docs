@@ -117,6 +117,12 @@ namespace Epsitec.Common.Designer.Viewers
 			this.fieldsButtonTitle.Clicked += new MessageEventHandler(this.HandleFieldsButtonClicked);
 			this.fieldsToolbar.Items.Add(this.fieldsButtonTitle);
 
+			this.fieldsButtonForm = new IconButton();
+			this.fieldsButtonForm.AutoFocus = false;
+			this.fieldsButtonForm.CaptionId = Res.Captions.Editor.Forms.Form.Id;
+			this.fieldsButtonForm.Clicked += new MessageEventHandler(this.HandleFieldsButtonClicked);
+			this.fieldsToolbar.Items.Add(this.fieldsButtonForm);
+
 			this.fieldsButtonBox = new IconButton();
 			this.fieldsButtonBox.AutoFocus = false;
 			this.fieldsButtonBox.CaptionId = Res.Captions.Editor.Forms.Box.Id;
@@ -262,6 +268,7 @@ namespace Epsitec.Common.Designer.Viewers
 				this.fieldsButtonGlue.Clicked -= new MessageEventHandler(this.HandleFieldsButtonClicked);
 				this.fieldsButtonLine.Clicked -= new MessageEventHandler(this.HandleFieldsButtonClicked);
 				this.fieldsButtonTitle.Clicked -= new MessageEventHandler(this.HandleFieldsButtonClicked);
+				this.fieldsButtonForm.Clicked -= new MessageEventHandler(this.HandleFieldsButtonClicked);
 				this.fieldsButtonBox.Clicked -= new MessageEventHandler(this.HandleFieldsButtonClicked);
 				this.fieldsButtonPrev.Clicked -= new MessageEventHandler(this.HandleFieldsButtonClicked);
 				this.fieldsButtonNext.Clicked -= new MessageEventHandler(this.HandleFieldsButtonClicked);
@@ -485,6 +492,7 @@ namespace Epsitec.Common.Designer.Viewers
 			bool isPrev = false;
 			bool isNext = false;
 			bool isGoto = false;
+			bool isUnbox = false;
 
 			if (!this.designerApplication.IsReadonly)
 			{
@@ -553,6 +561,11 @@ namespace Epsitec.Common.Designer.Viewers
 						}
 					}
 				}
+
+				if (sels != null && sels.Count == 1 && this.formEditor.ObjectModifier.TableContent[sels[0]].FieldType == FieldDescription.FieldType.BoxBegin)
+				{
+					isUnbox = true;
+				}
 			}
 
 			if (boxBegin == 0 && boxEnd == 0)
@@ -570,12 +583,15 @@ namespace Epsitec.Common.Designer.Viewers
 			}
 			else
 			{
-				this.fieldsButtonUse.IconName = Misc.Icon("ActiveNo");
+				this.fieldsButtonUse.IconName = Misc.Icon("Create");
 			}
+
+			this.fieldsButtonBox.IconName = isUnbox ? Misc.Icon("FormUnbox") : Misc.Icon("FormBox");
 
 			this.fieldsButtonGlue.Enable = (useCounter > 0 && freeCounter == 0);
 			this.fieldsButtonLine.Enable = (useCounter > 0 && freeCounter == 0);
 			this.fieldsButtonTitle.Enable = (useCounter > 0 && freeCounter == 0);
+			this.fieldsButtonForm.Enable = (useCounter > 0 && freeCounter == 0);
 			this.fieldsButtonBox.Enable = (useCounter > 0 && freeCounter == 0);
 
 			this.fieldsButtonPrev.Enable = isPrev;
@@ -1152,6 +1168,11 @@ namespace Epsitec.Common.Designer.Viewers
 			this.module.AccessForms.SetLocalDirty();
 		}
 
+		protected void SelectedFieldsForm()
+		{
+			//	Insère un masque complet.
+		}
+
 		protected void SelectedFieldsMove(int direction)
 		{
 			//	Déplace les champs sélectionnés vers le haut ou vers le bas.
@@ -1345,6 +1366,11 @@ namespace Epsitec.Common.Designer.Viewers
 				this.SelectedFieldsTitle();
 			}
 
+			if (sender == this.fieldsButtonForm)
+			{
+				this.SelectedFieldsForm();
+			}
+
 			if (sender == this.fieldsButtonBox)
 			{
 				this.SelectedFieldsBox();
@@ -1482,6 +1508,7 @@ namespace Epsitec.Common.Designer.Viewers
 		protected IconButton					fieldsButtonGlue;
 		protected IconButton					fieldsButtonLine;
 		protected IconButton					fieldsButtonTitle;
+		protected IconButton					fieldsButtonForm;
 		protected IconButton					fieldsButtonBox;
 		protected IconButton					fieldsButtonPrev;
 		protected IconButton					fieldsButtonNext;

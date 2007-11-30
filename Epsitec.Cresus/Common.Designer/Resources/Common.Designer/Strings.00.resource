@@ -475,6 +475,6 @@
   <data name="Viewers.Types.Boolean.False" id="2K4">Faux</data>
   <data name="BundleType.Form" id="2L4">Masque</data>
   <data name="BundleType.Forms" id="2M4">Masques</data>
-  <data name="Viewers.Panels.TabRelations" id="2N4">Relations</data>
+  <data name="Viewers.Panels.TabRelations" id="2N4">Source</data>
   <data name="Viewers.Panels.TabFields" id="2O4">Contenu</data>
 </bundle>

@@ -160,4 +160,5 @@
   <data name="Cap.Editor.Forms.Expand" id="2J1">&lt;s:data id="_0" f:Name="Editor.Forms.Expand" f:Description="Etend la relation" f:Icon="manifest:Epsitec.Common.Designer.Images.FormExpand.icon" f:Labels="{Collection {Text 'Etendre'}}" /&gt;</data>
   <data name="Cap.Editor.Forms.Compact" id="2K1">&lt;s:data id="_0" f:Name="Editor.Forms.Compact" f:Description="Compacte la relation" f:Icon="manifest:Epsitec.Common.Designer.Images.FormCompact.icon" f:Labels="{Collection {Text 'Compacter'}}" /&gt;</data>
   <data name="Cap.Editor.Forms.Auto" id="2L1">&lt;s:data id="_0" f:Name="Editor.Forms.Auto" f:Description="Etend automatiquement les champs utilisés" f:Icon="manifest:Epsitec.Common.Designer.Images.PropertyGridAuto.icon" f:Labels="{Collection {Text 'Automatique'}}" /&gt;</data>
+  <data name="Cap.Editor.Forms.Form" id="2M1">&lt;s:data id="_0" f:Name="Editor.Forms.Form" f:Description="Insère masque de saisie complet" f:Icon="manifest:Epsitec.Common.Designer.Images.FormForm.icon" f:Labels="{Collection {Text 'Insérer un masque'}}" /&gt;</data>
 </bundle>
