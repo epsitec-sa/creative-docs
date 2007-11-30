@@ -178,7 +178,11 @@ namespace Epsitec.Common.FormEngine
 				}
 			}
 			System.Console.WriteLine(string.Format("GridLayoutEngine with {0} columns", grid.ColumnDefinitions.Count));
-			grid.ColumnDefinitions[0].RightBorder = 1;
+
+			if (grid.ColumnDefinitions.Count != 0)
+			{
+				grid.ColumnDefinitions[0].RightBorder = 1;
+			}
 
 			Widgets.Layouts.LayoutEngine.SetLayoutEngine(root, grid);
 
