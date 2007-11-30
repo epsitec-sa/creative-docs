@@ -571,16 +571,16 @@ namespace Epsitec.Common.Designer.FormEditor
 			//	Retourne la couleur décrivant l'utilisation d'une relation.
 			if (this.tableRelations[index].Relation != FieldRelation.None)
 			{
-				return Color.FromAlphaRgb(0.2, 1, 1, 0);  // jaune = relation
+				return Color.FromAlphaRgb(0.3, 1, 1, 0);  // jaune = relation
 			}
 
 			if (this.IsTableRelationUsed(index))
 			{
-				return Color.FromAlphaRgb(0.2, 0, 1, 0);  // vert = champ utilisé
+				return Color.FromAlphaRgb(0.3, 0, 1, 0);  // vert = champ utilisé
 			}
 			else
 			{
-				return Color.FromAlphaRgb(0.2, 1, 0, 0);  // rouge = champ inutilisé
+				return Color.FromAlphaRgb(0.3, 1, 0, 0);  // rouge = champ inutilisé
 			}
 		}
 

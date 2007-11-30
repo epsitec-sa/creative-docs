@@ -1416,7 +1416,11 @@ namespace Epsitec.Common.Designer.Viewers
 				return;
 			}
 
-			if (this.formEditor.ObjectModifier.IsTableRelationExpandable(sel))
+			if (this.formEditor.ObjectModifier.IsTableRelationUseable(sel))
+			{
+				this.SelectedRelationsUse();
+			}
+			else if (this.formEditor.ObjectModifier.IsTableRelationExpandable(sel))
 			{
 				this.SelectedRelationsExpand();
 			}
