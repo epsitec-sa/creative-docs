@@ -75,27 +75,29 @@ namespace Epsitec.Common.Designer.Viewers
 			this.right.Dock = DockStyle.Right;
 
 			//	Crée le tabbook primaire pour les onglets.
-			this.tabBookPrimary = new TabBook(this.right);
-			this.tabBookPrimary.Arrows = TabBookArrows.Stretch;
-			this.tabBookPrimary.Dock = DockStyle.Fill;
-			this.tabBookPrimary.Margins = new Margins(5, 5, 5, 5);
-			this.tabBookPrimary.Padding = new Margins(1, 1, 1, 1);
+			FrameBox top = new FrameBox(this.right);
+			top.Dock = DockStyle.Fill;
+			top.Margins = new Margins(5, 5, 5, 5);
+			top.Padding = new Margins(1, 1, 1, 1);
+
+			//	Crée le tabbook secondaire pour les onglets.
+			this.tabBookSecondary = new TabBook(this.right);
+			this.tabBookSecondary.Arrows = TabBookArrows.Stretch;
+			this.tabBookSecondary.Dock = DockStyle.Bottom;
+			this.tabBookSecondary.Margins = new Margins(5, 5, 5, 5);
+			this.tabBookSecondary.Padding = new Margins(1, 1, 1, 1);
+			this.tabBookSecondary.PreferredHeight = Forms.bottomPanelHeight;
 
 			//	Crée l'onglet 'champs'.
-			this.tabPageFields = new TabPage();
-			this.tabPageFields.TabTitle = Res.Strings.Viewers.Panels.TabFields;
-			this.tabPageFields.Padding = new Margins(4, 4, 4, 4);
-			this.tabBookPrimary.Items.Add(this.tabPageFields);
-
-			this.fieldsToolbar = new HToolBar(this.tabPageFields);
+			this.fieldsToolbar = new HToolBar(top);
 			this.fieldsToolbar.Dock = DockStyle.Top;
 			this.fieldsToolbar.Margins = new Margins(0, 0, 0, 5);
 
-			this.fieldsButtonUse = new IconButton();
-			this.fieldsButtonUse.AutoFocus = false;
-			this.fieldsButtonUse.CaptionId = Res.Captions.Editor.Forms.Use.Id;
-			this.fieldsButtonUse.Clicked += new MessageEventHandler(this.HandleFieldsButtonClicked);
-			this.fieldsToolbar.Items.Add(this.fieldsButtonUse);
+			this.fieldsButtonRemove = new IconButton();
+			this.fieldsButtonRemove.AutoFocus = false;
+			this.fieldsButtonRemove.CaptionId = Res.Captions.Editor.Forms.Remove.Id;
+			this.fieldsButtonRemove.Clicked += new MessageEventHandler(this.HandleFieldsButtonClicked);
+			this.fieldsToolbar.Items.Add(this.fieldsButtonRemove);
 
 			this.fieldsToolbar.Items.Add(new IconSeparator());
 
@@ -151,13 +153,11 @@ namespace Epsitec.Common.Designer.Viewers
 			this.fieldsButtonGoto.Clicked += new MessageEventHandler(this.HandleFieldsButtonClicked);
 			this.fieldsToolbar.Items.Add(this.fieldsButtonGoto);
 
-			this.fieldsTable = new MyWidgets.StringArray(this.tabPageFields);
-			this.fieldsTable.Columns = 2;
-			this.fieldsTable.SetColumnsRelativeWidth(0, 0.05);
-			this.fieldsTable.SetColumnsRelativeWidth(1, 0.95);
-			this.fieldsTable.SetColumnAlignment(0, ContentAlignment.MiddleCenter);
-			this.fieldsTable.SetColumnAlignment(1, ContentAlignment.MiddleLeft);
-			this.fieldsTable.SetColumnBreakMode(1, TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine);
+			this.fieldsTable = new MyWidgets.StringArray(top);
+			this.fieldsTable.Columns = 1;
+			this.fieldsTable.SetColumnsRelativeWidth(0, 1.00);
+			this.fieldsTable.SetColumnAlignment(0, ContentAlignment.MiddleLeft);
+			this.fieldsTable.SetColumnBreakMode(0, TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine);
 			this.fieldsTable.AllowMultipleSelection = true;
 			this.fieldsTable.LineHeight = 16;
 			this.fieldsTable.Dock = DockStyle.Fill;
@@ -169,11 +169,19 @@ namespace Epsitec.Common.Designer.Viewers
 			this.tabPageRelations = new TabPage();
 			this.tabPageRelations.TabTitle = Res.Strings.Viewers.Panels.TabRelations;
 			this.tabPageRelations.Padding = new Margins(4, 4, 4, 4);
-			this.tabBookPrimary.Items.Add(this.tabPageRelations);
+			this.tabBookSecondary.Items.Add(this.tabPageRelations);
 
 			this.relationsToolbar = new HToolBar(this.tabPageRelations);
 			this.relationsToolbar.Dock = DockStyle.Top;
 			this.relationsToolbar.Margins = new Margins(0, 0, 0, 5);
+
+			this.relationsButtonUse = new IconButton();
+			this.relationsButtonUse.AutoFocus = false;
+			this.relationsButtonUse.CaptionId = Res.Captions.Editor.Forms.Use.Id;
+			this.relationsButtonUse.Clicked += new MessageEventHandler(this.HandleRelationsButtonClicked);
+			this.relationsToolbar.Items.Add(this.relationsButtonUse);
+
+			this.relationsToolbar.Items.Add(new IconSeparator());
 
 			this.relationsButtonExpand = new IconButton();
 			this.relationsButtonExpand.AutoFocus = false;
@@ -210,15 +218,6 @@ namespace Epsitec.Common.Designer.Viewers
 			this.relationsTable.SelectedRowChanged += new EventHandler(this.HandleRelationsTableSelectedRowChanged);
 			this.relationsTable.SelectedRowDoubleClicked += new EventHandler(this.HandleRelationsTableSelectedRowDoubleClicked);
 
-			//	Crée le tabbook secondaire pour les onglets.
-			this.tabBookSecondary = new TabBook(this.right);
-			this.tabBookSecondary.Arrows = TabBookArrows.Stretch;
-			this.tabBookSecondary.PreferredHeight = 200;
-			this.tabBookSecondary.Dock = DockStyle.Bottom;
-			this.tabBookSecondary.Margins = new Margins(5, 5, 5, 5);
-			this.tabBookSecondary.Padding = new Margins(1, 1, 1, 1);
-			this.tabBookSecondary.PreferredHeight = Forms.bottomPanelHeight;
-
 			//	Crée l'onglet 'propriétés'.
 			this.tabPageProperties = new TabPage();
 			this.tabPageProperties.TabTitle = Res.Strings.Viewers.Panels.TabProperties;
@@ -243,8 +242,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 			this.CreateCultureButtons();
 
-			this.tabBookPrimary.ActivePage = this.tabPageFields;
-			this.tabBookSecondary.ActivePage = this.tabPageProperties;
+			this.tabBookSecondary.ActivePage = this.tabPageRelations;
 
 			this.splitter2 = new VSplitter(surface);
 			this.splitter2.Dock = DockStyle.Right;
@@ -264,7 +262,7 @@ namespace Epsitec.Common.Designer.Viewers
 		{
 			if (disposing)
 			{
-				this.fieldsButtonUse.Clicked -= new MessageEventHandler(this.HandleFieldsButtonClicked);
+				this.fieldsButtonRemove.Clicked -= new MessageEventHandler(this.HandleFieldsButtonClicked);
 				this.fieldsButtonGlue.Clicked -= new MessageEventHandler(this.HandleFieldsButtonClicked);
 				this.fieldsButtonLine.Clicked -= new MessageEventHandler(this.HandleFieldsButtonClicked);
 				this.fieldsButtonTitle.Clicked -= new MessageEventHandler(this.HandleFieldsButtonClicked);
@@ -278,6 +276,7 @@ namespace Epsitec.Common.Designer.Viewers
 				this.fieldsTable.CellsContentChanged -= new EventHandler(this.HandleFieldTableCellsContentChanged);
 				this.fieldsTable.SelectedRowChanged -= new EventHandler(this.HandleFieldTableSelectedRowChanged);
 
+				this.relationsButtonUse.Clicked -= new MessageEventHandler(this.HandleRelationsButtonClicked);
 				this.relationsButtonExpand.Clicked -= new MessageEventHandler(this.HandleRelationsButtonClicked);
 				this.relationsButtonCompact.Clicked -= new MessageEventHandler(this.HandleRelationsButtonClicked);
 				this.relationsButtonAuto.Clicked -= new MessageEventHandler(this.HandleRelationsButtonClicked);
@@ -452,25 +451,15 @@ namespace Epsitec.Common.Designer.Viewers
 					this.fieldsTable.SetLineString(0, first+i, "");
 					this.fieldsTable.SetLineState(0, first+i, MyWidgets.StringList.CellState.Disabled);
 					this.fieldsTable.SetLineColor(0, first+i, Color.Empty);
-
-					this.fieldsTable.SetLineString(1, first+i, "");
-					this.fieldsTable.SetLineState(1, first+i, MyWidgets.StringList.CellState.Disabled);
-					this.fieldsTable.SetLineColor(1, first+i, Color.Empty);
 				}
 				else
 				{
 					FormEditor.ObjectModifier.TableItem item = this.formEditor.ObjectModifier.TableContent[first+i];
-
 					string name = this.formEditor.ObjectModifier.GetTableContentDescription(item);
-					Color color = item.Used ? Color.FromRgb(0,1,0) : Color.FromRgb(1,0,0);
 
-					this.fieldsTable.SetLineString(0, first+i, "");
+					this.fieldsTable.SetLineString(0, first+i, name);
 					this.fieldsTable.SetLineState(0, first+i, MyWidgets.StringList.CellState.Normal);
-					this.fieldsTable.SetLineColor(0, first+i, color);
-
-					this.fieldsTable.SetLineString(1, first+i, name);
-					this.fieldsTable.SetLineState(1, first+i, MyWidgets.StringList.CellState.Normal);
-					this.fieldsTable.SetLineColor(1, first+i, Color.Empty);
+					this.fieldsTable.SetLineColor(0, first+i, Color.Empty);
 				}
 			}
 
@@ -485,10 +474,7 @@ namespace Epsitec.Common.Designer.Viewers
 		protected void UpdateFieldsButtons()
 		{
 			//	Met à jour les boutons dans l'onglet des champs.
-			int useCounter = 0;
-			int freeCounter = 0;
-			int boxBegin = 0;
-			int boxEnd = 0;
+			bool isSel = false;
 			bool isPrev = false;
 			bool isNext = false;
 			bool isGoto = false;
@@ -500,8 +486,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 				if (sels != null && sels.Count > 0)
 				{
-					sels.Sort();
-
+					isSel = true;
 					isPrev = true;
 					isNext = true;
 					isGoto = (sels.Count == 1);
@@ -513,54 +498,17 @@ namespace Epsitec.Common.Designer.Viewers
 							continue;
 						}
 
-						FormEditor.ObjectModifier.TableItem prev = Common.Designer.FormEditor.ObjectModifier.TableItem.Empty;
-						FormEditor.ObjectModifier.TableItem curr = Common.Designer.FormEditor.ObjectModifier.TableItem.Empty;
-						FormEditor.ObjectModifier.TableItem next = Common.Designer.FormEditor.ObjectModifier.TableItem.Empty;
-
-						if (sel > 0)
-						{
-							prev = this.formEditor.ObjectModifier.TableContent[sel-1];
-						}
-
-						curr = this.formEditor.ObjectModifier.TableContent[sel];
-
-						if (sel < this.formEditor.ObjectModifier.TableContent.Count-1)
-						{
-							next = this.formEditor.ObjectModifier.TableContent[sel+1];
-						}
-
-						if (curr.FieldType == FieldDescription.FieldType.BoxBegin)
-						{
-							boxBegin++;
-						}
-
-						if (curr.FieldType == FieldDescription.FieldType.BoxEnd)
-						{
-							boxEnd++;
-						}
-
-						if (!curr.Used || !prev.Used)  // premier champ utilisé ?
+						if (sel <= 0)
 						{
 							isPrev = false;
 						}
 
-						if (!curr.Used || !next.Used)  // dernier champ utilisé ?
+						if (sel >= this.formEditor.ObjectModifier.TableContent.Count-1)
 						{
 							isNext = false;
 						}
 
-						if (curr.Used)  // champ utilisé ?
-						{
-							useCounter++;
-						}
-						else  // champ inutilisé ?
-						{
-							freeCounter++;
-							isPrev = false;
-							isNext = false;
-						}
-
-						if (curr.FieldType != FieldDescription.FieldType.Field)
+						if (this.formEditor.ObjectModifier.TableContent[sel].FieldType != FieldDescription.FieldType.Field)
 						{
 							isGoto = false;
 						}
@@ -581,35 +529,18 @@ namespace Epsitec.Common.Designer.Viewers
 				}
 			}
 
-			if (boxBegin == 0 && boxEnd == 0)
-			{
-				this.fieldsButtonUse.Enable = (useCounter == 0 && freeCounter > 0) || (useCounter > 0 && freeCounter == 0);
-			}
-			else
-			{
-				this.fieldsButtonUse.Enable = false;
-			}
-
-			if (this.fieldsButtonUse.Enable)
-			{
-				this.fieldsButtonUse.IconName = (useCounter > 0) ? Misc.Icon("Delete") : Misc.Icon("Create");
-			}
-			else
-			{
-				this.fieldsButtonUse.IconName = Misc.Icon("Create");
-			}
-
-			this.fieldsButtonBox.IconName = isUnbox ? Misc.Icon("FormUnbox") : Misc.Icon("FormBox");
-
-			this.fieldsButtonGlue.Enable = (useCounter > 0 && freeCounter == 0);
-			this.fieldsButtonLine.Enable = (useCounter > 0 && freeCounter == 0);
-			this.fieldsButtonTitle.Enable = (useCounter > 0 && freeCounter == 0);
-			this.fieldsButtonForm.Enable = (useCounter > 0 && freeCounter == 0);
-			this.fieldsButtonBox.Enable = (useCounter > 0 && freeCounter == 0);
+			this.fieldsButtonRemove.Enable = isSel;
+			this.fieldsButtonGlue.Enable = isSel;
+			this.fieldsButtonLine.Enable = isSel;
+			this.fieldsButtonTitle.Enable = isSel;
+			this.fieldsButtonForm.Enable = isSel;
+			this.fieldsButtonBox.Enable = isSel;
 
 			this.fieldsButtonPrev.Enable = isPrev;
 			this.fieldsButtonNext.Enable = isNext;
 			this.fieldsButtonGoto.Enable = isGoto;
+
+			this.fieldsButtonBox.IconName = isUnbox ? Misc.Icon("FormUnbox") : Misc.Icon("FormBox");
 		}
 
 		protected void UpdateRelationsTable(bool newContent)
@@ -634,6 +565,7 @@ namespace Epsitec.Common.Designer.Viewers
 				{
 					string name = this.formEditor.ObjectModifier.GetTableRelationDescription(first+i);
 					string icon = this.formEditor.ObjectModifier.GetTableRelationIcon(first+i);
+					Color color = this.formEditor.ObjectModifier.GetTableRelationColor(first+i);
 
 					this.relationsTable.SetLineString(0, first+i, name);
 					this.relationsTable.SetLineState(0, first+i, MyWidgets.StringList.CellState.Normal);
@@ -641,7 +573,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 					this.relationsTable.SetLineString(1, first+i, icon);
 					this.relationsTable.SetLineState(1, first+i, MyWidgets.StringList.CellState.Normal);
-					this.relationsTable.SetLineColor(1, first+i, Color.Empty);
+					this.relationsTable.SetLineColor(1, first+i, color);
 				}
 			}
 
@@ -666,6 +598,7 @@ namespace Epsitec.Common.Designer.Viewers
 			//	Met à jour les boutons dans l'onglet des relations.
 			int sel = this.relationsTable.SelectedRow;
 
+			this.relationsButtonUse.Enable = this.formEditor.ObjectModifier.IsTableRelationUseable(sel);
 			this.relationsButtonExpand.Enable = this.formEditor.ObjectModifier.IsTableRelationExpandable(sel);
 			this.relationsButtonCompact.Enable = this.formEditor.ObjectModifier.IsTableRelationCompactable(sel);
 
@@ -971,7 +904,7 @@ namespace Epsitec.Common.Designer.Viewers
 		}
 
 
-		protected void SelectedFieldsUse()
+		protected void SelectedFieldsRemove()
 		{
 			//	Utilise ou supprime les champs sélectionnés.
 			List<int> sels = this.fieldsTable.SelectedRows;
@@ -983,20 +916,10 @@ namespace Epsitec.Common.Designer.Viewers
 			{
 				FormEditor.ObjectModifier.TableItem item = this.formEditor.ObjectModifier.TableContent[sel];
 
-				if (item.Used)  // supprime le champ du masque ?
+				int index = this.formEditor.ObjectModifier.GetFormDescriptionIndex(item.Guid);
+				if (index != -1)
 				{
-					int index = this.formEditor.ObjectModifier.GetFormDescriptionIndex(item.Guid);
-					if (index != -1)
-					{
-						this.form.Fields.RemoveAt(index);
-					}
-				}
-				else  // ajoute le champ dans le masque ?
-				{
-					FieldDescription field = new FieldDescription(FieldDescription.FieldType.Field);
-					field.SetFields(item.DruidsPath);
-
-					this.form.Fields.Add(field);
+					this.form.Fields.RemoveAt(index);
 				}
 
 				guids.Add(item.Guid);
@@ -1018,6 +941,8 @@ namespace Epsitec.Common.Designer.Viewers
 			this.ReflectSelectionToEditor();
 
 			this.UpdateFieldsButtons();
+			this.UpdateRelationsTable(false);
+			this.UpdateRelationsButtons();
 			this.module.AccessForms.SetLocalDirty();
 		}
 
@@ -1237,6 +1162,36 @@ namespace Epsitec.Common.Designer.Viewers
 			this.designerApplication.LocatorGoto(module.ModuleId.Name, ResourceAccess.Type.Fields, -1, druid, this.Window.FocusedWidget);
 		}
 
+		protected void SelectedRelationsUse()
+		{
+			//	Utilise la relation sélectionnée.
+			int sel = this.relationsTable.SelectedRow;
+			if (sel == -1)
+			{
+				return;
+			}
+
+			FormEditor.ObjectModifier.RelationItem item = this.formEditor.ObjectModifier.TableRelations[sel];
+
+			FieldDescription field = new FieldDescription(FieldDescription.FieldType.Field);
+			field.SetFields(item.DruidsPath);
+
+			this.form.Fields.Add(field);
+
+			this.SetForm(this.form, this.druidToSerialize, true);
+			this.UpdateFieldsTable(false);
+
+			List<int> sels = new List<int>();
+			sels.Add(this.form.Fields.Count-1);
+			this.fieldsTable.SelectedRows = sels;
+			this.ReflectSelectionToEditor();
+
+			this.UpdateFieldsButtons();
+			this.UpdateRelationsTable(false);
+			this.UpdateRelationsButtons();
+			this.module.AccessForms.SetLocalDirty();
+		}
+
 		protected void SelectedRelationsExpand()
 		{
 			//	Etend la relation sélectionnée.
@@ -1361,9 +1316,9 @@ namespace Epsitec.Common.Designer.Viewers
 
 		private void HandleFieldsButtonClicked(object sender, MessageEventArgs e)
 		{
-			if (sender == this.fieldsButtonUse)
+			if (sender == this.fieldsButtonRemove)
 			{
-				this.SelectedFieldsUse();
+				this.SelectedFieldsRemove();
 			}
 
 			if (sender == this.fieldsButtonGlue)
@@ -1409,6 +1364,11 @@ namespace Epsitec.Common.Designer.Viewers
 
 		private void HandleRelationsButtonClicked(object sender, MessageEventArgs e)
 		{
+			if (sender == this.relationsButtonUse)
+			{
+				this.SelectedRelationsUse();
+			}
+
 			if (sender == this.relationsButtonExpand)
 			{
 				this.SelectedRelationsExpand();
@@ -1514,12 +1474,9 @@ namespace Epsitec.Common.Designer.Viewers
 		protected FrameBox						right;
 		protected HSplitter						splitter3;
 
-		protected TabBook						tabBookPrimary;
-		protected TabBook						tabBookSecondary;
-
 		protected TabPage						tabPageFields;
 		protected HToolBar						fieldsToolbar;
-		protected IconButton					fieldsButtonUse;
+		protected IconButton					fieldsButtonRemove;
 		protected IconButton					fieldsButtonGlue;
 		protected IconButton					fieldsButtonLine;
 		protected IconButton					fieldsButtonTitle;
@@ -1530,8 +1487,11 @@ namespace Epsitec.Common.Designer.Viewers
 		protected IconButton					fieldsButtonGoto;
 		protected MyWidgets.StringArray			fieldsTable;
 
+		protected TabBook						tabBookSecondary;
+
 		protected TabPage						tabPageRelations;
 		protected HToolBar						relationsToolbar;
+		protected IconButton					relationsButtonUse;
 		protected IconButton					relationsButtonExpand;
 		protected IconButton					relationsButtonCompact;
 		protected IconButton					relationsButtonAuto;

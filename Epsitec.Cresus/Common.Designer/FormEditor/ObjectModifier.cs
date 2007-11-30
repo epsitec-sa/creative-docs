@@ -490,25 +490,6 @@ namespace Epsitec.Common.Designer.FormEditor
 						this.dicoLocalGuids.Add(ri.DruidsPath, System.Guid.NewGuid());
 					}
 				}
-#if false
-				foreach (StructuredData dataField in entityFields)
-				{
-					FieldRelation rel = (FieldRelation) dataField.GetValue(Support.Res.Fields.Field.Relation);
-					if (rel == FieldRelation.None)
-					{
-						Druid fieldCaptionId = (Druid) dataField.GetValue(Support.Res.Fields.Field.CaptionId);
-						string druidPath = fieldCaptionId.ToString();
-
-						this.dicoLocalGuids.Add(druidPath, System.Guid.NewGuid());
-					}
-				}
-#endif
-#if false
-				foreach (string druidPath in entityDruidsPath)
-				{
-					this.dicoLocalGuids.Add(druidPath, System.Guid.NewGuid());
-				}
-#endif
 			}
 
 			this.tableContent.Clear();
@@ -554,6 +535,7 @@ namespace Epsitec.Common.Designer.FormEditor
 				}
 			}
 
+#if false
 			//	Complète ensuite par tous les autres.
 			foreach (RelationItem ri in relations)
 			{
@@ -563,42 +545,6 @@ namespace Epsitec.Common.Designer.FormEditor
 					item.Guid = this.GetLocalGuid(ri.DruidsPath);
 					item.FieldType = FieldDescription.FieldType.Field;
 					item.DruidsPath = ri.DruidsPath;
-					item.Used = false;
-
-					this.tableContent.Add(item);
-				}
-			}
-#if false
-			foreach (StructuredData dataField in entityFields)
-			{
-				FieldRelation rel = (FieldRelation) dataField.GetValue(Support.Res.Fields.Field.Relation);
-				if (rel == FieldRelation.None)
-				{
-					Druid fieldCaptionId = (Druid) dataField.GetValue(Support.Res.Fields.Field.CaptionId);
-					string druidPath = fieldCaptionId.ToString();
-
-					if (this.GetTableContentIndex(druidPath) == -1)
-					{
-						TableItem item = new TableItem();
-						item.Guid = this.GetLocalGuid(druidPath);
-						item.FieldType = FieldDescription.FieldType.Field;
-						item.DruidsPath = druidPath;
-						item.Used = false;
-
-						this.tableContent.Add(item);
-					}
-				}
-			}
-#endif
-#if false
-			foreach (string druidPath in entityDruidsPath)
-			{
-				if (this.GetTableContentIndex(druidPath) == -1)
-				{
-					TableItem item = new TableItem();
-					item.Guid = this.GetLocalGuid(druidPath);
-					item.FieldType = FieldDescription.FieldType.Field;
-					item.DruidsPath = druidPath;
 					item.Used = false;
 
 					this.tableContent.Add(item);
@@ -692,6 +638,25 @@ namespace Epsitec.Common.Designer.FormEditor
 			}
 		}
 
+		public Color GetTableRelationColor(int index)
+		{
+			//	Retourne la couleur décrivant l'utilisation d'une relation.
+			if (this.tableRelations[index].Relation != FieldRelation.None)
+			{
+				//?return Color.Empty;
+				return Color.FromRgb(1, 1, 0);  // jaune = relation
+			}
+
+			if (this.IsTableRelationUsed(index))
+			{
+				return Color.FromRgb(0, 1, 0);  // vert = champ utilisé
+			}
+			else
+			{
+				return Color.FromRgb(1, 0, 0);  // rouge = champ inutilisé
+			}
+		}
+
 		public string GetTableRelationDescription(int index)
 		{
 			//	Retourne le texte permettant de décrire une relation dans une liste, avec un effet
@@ -747,13 +712,39 @@ namespace Epsitec.Common.Designer.FormEditor
 			{
 				icon = Misc.Image("TreeRelationReference");
 			}
-
-			if (rel == FieldRelation.Collection)
+			else if (rel == FieldRelation.Collection)
 			{
 				icon = Misc.Image("TreeRelationCollection");
 			}
+			else
+			{
+				if (this.IsTableRelationUsed(index))
+				{
+					icon = Misc.Image("ActiveYes");
+				}
+				else
+				{
+					icon = Misc.Image("ActiveNo");
+				}
+			}
 
 			return icon;
+		}
+
+		public bool IsTableRelationUseable(int index)
+		{
+			//	Indique si l'opération "utiliser" est autorisée.
+			if (index == -1 || this.formEditor.Module.DesignerApplication.IsReadonly)
+			{
+				return false;
+			}
+
+			if (this.tableRelations[index].Relation != FieldRelation.None)
+			{
+				return false;
+			}
+
+			return !this.IsTableRelationUsed(index);
 		}
 
 		public bool IsTableRelationExpandable(int index)
@@ -921,6 +912,22 @@ namespace Epsitec.Common.Designer.FormEditor
 
 				this.tableRelations.Add(item);
 			}
+		}
+
+		protected bool IsTableRelationUsed(int index)
+		{
+			//	Indique si une relation est utilisée dans le masque de saisie.
+			string druidsPath = this.tableRelations[index].DruidsPath;
+
+			foreach (FieldDescription field in this.formEditor.Form.Fields)
+			{
+				if (field.GetPath(null) == druidsPath)
+				{
+					return true;
+				}
+			}
+
+			return false;
 		}
 
 		protected int TableRelationSearchIndex(string druidsPath)
