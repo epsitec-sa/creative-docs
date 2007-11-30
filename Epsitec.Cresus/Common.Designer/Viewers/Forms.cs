@@ -639,6 +639,8 @@ namespace Epsitec.Common.Designer.Viewers
 
 			this.relationsButtonExpand.Enable = this.formEditor.ObjectModifier.IsTableRelationExpandable(sel);
 			this.relationsButtonCompact.Enable = this.formEditor.ObjectModifier.IsTableRelationCompactable(sel);
+
+			this.relationsButtonAuto.Enable = !this.designerApplication.IsReadonly && this.form != null;
 		}
 
 
