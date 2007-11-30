@@ -18,9 +18,7 @@ namespace Epsitec.Common.Designer.FormEditor
 			//	Constructeur unique.
 			this.formEditor = formEditor;
 
-			this.formDruid = Druid.Empty;
 			this.tableContent = new List<TableItem>();
-			this.dicoLocalGuids = new Dictionary<string, System.Guid>();
 		}
 
 
@@ -467,29 +465,12 @@ namespace Epsitec.Common.Designer.FormEditor
 			return builder.ToString();
 		}
 
-		public void UpdateTableContent(Druid formDruid, List<RelationItem> relations)
+		public void UpdateTableContent()
 		{
 			//	Met à jour la liste qui reflète le contenu de la table des champs, visible en haut à droite.
-			if (this.formEditor.Form == null || relations == null)
+			if (this.formEditor.Form == null)
 			{
 				return;
-			}
-
-			if (this.formDruid != formDruid)  // a-t-on changé de formulaire ?
-			{
-				this.formDruid = formDruid;
-
-				//	Attribue un nouveau Guid pour chaque champ (défini par un chemin de Druids)
-				//	trouvé dans l'entité. Ceci est fait pour tous les champs de l'entité, et non
-				//	seulement pour ceux qui sont utilisés dans le Form.
-				this.dicoLocalGuids.Clear();
-				foreach (RelationItem ri in relations)
-				{
-					if (ri.Relation == FieldRelation.None)
-					{
-						this.dicoLocalGuids.Add(ri.DruidsPath, System.Guid.NewGuid());
-					}
-				}
 			}
 
 			this.tableContent.Clear();
@@ -499,27 +480,10 @@ namespace Epsitec.Common.Designer.FormEditor
 			int level = 0;
 			foreach (FieldDescription field in this.formEditor.Form.Fields)
 			{
-				System.Guid guid = this.GetLocalGuid(field.GetPath(null));
-
-				if (guid == System.Guid.Empty)
-				{
-					// Si le Guid n'a pas été défini localement, parce qu'il s'agit d'un séparateur ou d'un titre,
-					// conserve le Guid défini dans le Form.
-					guid = field.Guid;
-				}
-				else
-				{
-					// Si le Guid a été défini localement, utilise-le à la place de celui défini dans le Form.
-					// On garanti ainsi que le champ aura toujours le même Guid, qu'il soit utilisé (c'est-à-dire
-					// dans le Form) ou non.
-					field.Guid = guid;
-				}
-
 				TableItem item = new TableItem();
-				item.Guid = guid;
+				item.Guid = field.Guid;
 				item.FieldType = field.Type;
 				item.DruidsPath = field.GetPath(null);
-				item.Used = true;
 				item.Level = level;
 
 				this.tableContent.Add(item);
@@ -534,23 +498,6 @@ namespace Epsitec.Common.Designer.FormEditor
 					level--;
 				}
 			}
-
-#if false
-			//	Complète ensuite par tous les autres.
-			foreach (RelationItem ri in relations)
-			{
-				if (ri.Relation == FieldRelation.None && this.GetTableContentIndex(ri.DruidsPath) == -1)
-				{
-					TableItem item = new TableItem();
-					item.Guid = this.GetLocalGuid(ri.DruidsPath);
-					item.FieldType = FieldDescription.FieldType.Field;
-					item.DruidsPath = ri.DruidsPath;
-					item.Used = false;
-
-					this.tableContent.Add(item);
-				}
-			}
-#endif
 		}
 
 		public int GetTableContentIndex(System.Guid guid)
@@ -604,26 +551,7 @@ namespace Epsitec.Common.Designer.FormEditor
 			public System.Guid					Guid;
 			public FieldDescription.FieldType	FieldType;
 			public string						DruidsPath;
-			public bool							Used;
 			public int							Level;
-		}
-
-		protected System.Guid GetLocalGuid(string druidsPath)
-		{
-			//	Cherche le Guid défini localement dans le dictionnaire.
-			if (druidsPath == null)
-			{
-				return System.Guid.Empty;
-			}
-			else
-			{
-				if (!this.dicoLocalGuids.ContainsKey(druidsPath))
-				{
-					this.dicoLocalGuids.Add(druidsPath, System.Guid.NewGuid());
-				}
-
-				return this.dicoLocalGuids[druidsPath];
-			}
 		}
 		#endregion
 
@@ -643,17 +571,16 @@ namespace Epsitec.Common.Designer.FormEditor
 			//	Retourne la couleur décrivant l'utilisation d'une relation.
 			if (this.tableRelations[index].Relation != FieldRelation.None)
 			{
-				//?return Color.Empty;
-				return Color.FromRgb(1, 1, 0);  // jaune = relation
+				return Color.FromAlphaRgb(0.2, 1, 1, 0);  // jaune = relation
 			}
 
 			if (this.IsTableRelationUsed(index))
 			{
-				return Color.FromRgb(0, 1, 0);  // vert = champ utilisé
+				return Color.FromAlphaRgb(0.2, 0, 1, 0);  // vert = champ utilisé
 			}
 			else
 			{
-				return Color.FromRgb(1, 0, 0);  // rouge = champ inutilisé
+				return Color.FromAlphaRgb(0.2, 1, 0, 0);  // rouge = champ inutilisé
 			}
 		}
 
@@ -995,10 +922,8 @@ namespace Epsitec.Common.Designer.FormEditor
 
 
 		protected Editor							formEditor;
-		protected Druid								formDruid;
 		protected Druid								entityId;
 		protected List<TableItem>					tableContent;
-		protected Dictionary<string, System.Guid>	dicoLocalGuids;
 		protected List<RelationItem>				tableRelations;
 	}
 }

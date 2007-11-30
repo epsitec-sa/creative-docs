@@ -440,8 +440,7 @@ namespace Epsitec.Common.Designer.Viewers
 		protected void UpdateFieldsTable(bool newContent)
 		{
 			//	Met à jour la table des champs.
-			//?this.formEditor.ObjectModifier.UpdateTableContent(this.druidToSerialize, this.entityFields);
-			this.formEditor.ObjectModifier.UpdateTableContent(this.druidToSerialize, this.formEditor.ObjectModifier.TableRelations);
+			this.formEditor.ObjectModifier.UpdateTableContent();
 
 			int first = this.fieldsTable.FirstVisibleRow;
 			for (int i=0; i<this.fieldsTable.LineCount; i++)
