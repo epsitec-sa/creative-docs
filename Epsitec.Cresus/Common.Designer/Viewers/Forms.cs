@@ -70,7 +70,7 @@ namespace Epsitec.Common.Designer.Viewers
 			//	Crée le groupe droite.
 			this.right = new FrameBox(surface);
 			this.right.MinWidth = 150;
-			this.right.PreferredWidth = 240;
+			this.right.PreferredWidth = Forms.rightPanelWidth;
 			this.right.MaxWidth = 400;
 			this.right.Dock = DockStyle.Right;
 
@@ -211,6 +211,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.tabBookSecondary.Dock = DockStyle.Bottom;
 			this.tabBookSecondary.Margins = new Margins(5, 5, 5, 5);
 			this.tabBookSecondary.Padding = new Margins(1, 1, 1, 1);
+			this.tabBookSecondary.PreferredHeight = Forms.bottomPanelHeight;
 
 			//	Crée l'onglet 'propriétés'.
 			this.tabPageProperties = new TabPage();
@@ -242,10 +243,12 @@ namespace Epsitec.Common.Designer.Viewers
 			this.splitter2 = new VSplitter(surface);
 			this.splitter2.Dock = DockStyle.Right;
 			this.splitter2.Margins = new Margins(0, 0, 1, 1);
+			this.splitter2.SplitterDragged += new EventHandler(this.HandleSplitterDragged);
 
 			this.splitter3 = new HSplitter(this.right);
 			this.splitter3.Dock = DockStyle.Bottom;
 			this.splitter3.Margins = new Margins(0, 1, 0, 0);
+			this.splitter3.SplitterDragged += new EventHandler(this.HandleSplitterDragged);
 
 			this.UpdateAll();
 			this.UpdateViewer(Viewers.Changing.Show);
@@ -276,6 +279,9 @@ namespace Epsitec.Common.Designer.Viewers
 				this.relationsTable.CellsContentChanged -= new EventHandler(this.HandleRelationsTableCellsContentChanged);
 				this.relationsTable.SelectedRowChanged -= new EventHandler(this.HandleRelationsTableSelectedRowChanged);
 				this.relationsTable.SelectedRowDoubleClicked -= new EventHandler(this.HandleRelationsTableSelectedRowDoubleClicked);
+
+				this.splitter2.SplitterDragged -= new EventHandler(this.HandleSplitterDragged);
+				this.splitter3.SplitterDragged -= new EventHandler(this.HandleSplitterDragged);
 			}
 
 			base.Dispose(disposing);
@@ -1280,6 +1286,20 @@ namespace Epsitec.Common.Designer.Viewers
 		#endregion
 
 
+		private void HandleSplitterDragged(object sender)
+		{
+			//	Un splitter a été bougé.
+			if (sender == this.splitter2)
+			{
+				Forms.rightPanelWidth = this.right.ActualWidth;
+			}
+
+			if (sender == this.splitter3)
+			{
+				Forms.bottomPanelHeight = this.tabBookSecondary.ActualHeight;
+			}
+		}
+
 		private void HandleFormEditorChildrenAdded(object sender)
 		{
 			this.UpdateCommands();
@@ -1429,8 +1449,8 @@ namespace Epsitec.Common.Designer.Viewers
 		}
 
 
-		protected static readonly double		treeButtonWidth = 22;
-		protected static double					treeBranchesHeight = 30;
+		protected static double					rightPanelWidth = 280;
+		protected static double					bottomPanelHeight = 200;
 
 		private static double[]					columnWidthHorizontal = {200};
 		private static double[]					columnWidthVertical = {250};
