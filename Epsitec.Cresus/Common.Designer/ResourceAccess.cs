@@ -653,17 +653,6 @@ namespace Epsitec.Common.Designer
 				}
 			}
 
-#if false
-			List<string> list = this.GetEntityDruidsPath(form.EntityId);
-			foreach (string druidsPath in list)
-			{
-				FormEngine.FieldDescription field = new FormEngine.FieldDescription(FormEngine.FieldDescription.FieldType.Field);
-				field.SetFields(druidsPath);
-
-				form.Fields.Add(field);
-			}
-#endif
-
 			//	Utilise comme nom du masque le nom de l'entité, éventuellement complété d'un numéro.
 			newName = this.GetDuplicateName(this.GetEntityName(form.EntityId));
 		}

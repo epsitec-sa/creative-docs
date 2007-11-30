@@ -17,7 +17,8 @@ namespace Epsitec.Common.FormEngine
 		public enum FieldType
 		{
 			Field			= 1,	// champ
-			Node			= 2,	// noeud
+			SubForm			= 2,	// sous-masque
+			Node			= 3,	// noeud
 			Glue			= 10,	// colle deux éléments sur la même ligne
 			Line			= 20,	// séparateur trait horizontal
 			Title			= 21,	// séparateur titre automatique
@@ -56,6 +57,7 @@ namespace Epsitec.Common.FormEngine
 		protected FieldDescription()
 		{
 			//	Constructeur protégé, commun à tous les autres.
+			this.subEntityId = Druid.Empty;
 			this.backColor = BackColorType.None;
 			this.separatorBottom = SeparatorType.Normal;
 			this.columnsRequired = Engine.MaxColumnsRequired;
@@ -84,6 +86,7 @@ namespace Epsitec.Common.FormEngine
 			this.rowsRequired = model.rowsRequired;
 			this.nodeDescription = model.nodeDescription;
 			this.fieldIds = model.fieldIds;
+			this.subEntityId = model.subEntityId;
 			this.boxPaddingType = model.boxPaddingType;
 			this.boxFrameState = model.boxFrameState;
 			this.boxFrameWidth = model.boxFrameWidth;
@@ -141,6 +144,9 @@ namespace Epsitec.Common.FormEngine
 				{
 					case FieldType.Field:
 						return "Champ";
+
+					case FieldType.SubForm:
+						return "Masque de saisie";
 
 					case FieldType.Glue:
 						return "Colle";
@@ -253,6 +259,21 @@ namespace Epsitec.Common.FormEngine
 			else
 			{
 				return null;
+			}
+		}
+
+
+		public Druid SubEntityId
+		{
+			//	Druid de l'entité du sous-masque.
+			get
+			{
+				return this.subEntityId;
+			}
+			set
+			{
+				System.Diagnostics.Debug.Assert(this.type == FieldType.SubForm);
+				this.subEntityId = value;
 			}
 		}
 
@@ -390,6 +411,7 @@ namespace Epsitec.Common.FormEngine
 
 			if (!a.guid.Equals(b.guid) ||
 				a.type != b.type ||
+				a.subEntityId != b.subEntityId ||
 				a.backColor != b.backColor ||
 				a.separatorBottom != b.separatorBottom ||
 				a.columnsRequired != b.columnsRequired ||
@@ -442,6 +464,11 @@ namespace Epsitec.Common.FormEngine
 			writer.WriteElementString(Xml.Type, this.type.ToString());
 			writer.WriteElementString(Xml.FieldIds, this.GetPath(null));
 
+			if (!this.subEntityId.IsEmpty)
+			{
+				writer.WriteElementString(Xml.SubEntityId, this.subEntityId.ToString());
+			}
+
 			if (this.backColor != BackColorType.None)
 			{
 				writer.WriteElementString(Xml.BackColor, this.backColor.ToString());
@@ -488,6 +515,10 @@ namespace Epsitec.Common.FormEngine
 						else if (name == Xml.FieldIds)
 						{
 							this.SetFields(element);
+						}
+						else if (name == Xml.SubEntityId)
+						{
+							this.subEntityId = Druid.Parse(element);
 						}
 						else if (name == Xml.BackColor)
 						{
@@ -589,17 +620,18 @@ namespace Epsitec.Common.FormEngine
 		}
 
 
-		protected System.Guid guid;
-		protected int uniqueId;
-		protected FieldType type;
-		protected List<FieldDescription> nodeDescription;
-		protected List<Druid> fieldIds;
-		protected BackColorType backColor;
-		protected SeparatorType separatorBottom;
-		protected int columnsRequired;
-		protected int rowsRequired;
-		protected BoxPaddingType boxPaddingType;
-		protected FrameState boxFrameState;
-		protected double boxFrameWidth;
+		protected System.Guid				guid;
+		protected int						uniqueId;
+		protected FieldType					type;
+		protected List<FieldDescription>	nodeDescription;
+		protected List<Druid>				fieldIds;
+		protected Druid						subEntityId;
+		protected BackColorType				backColor;
+		protected SeparatorType				separatorBottom;
+		protected int						columnsRequired;
+		protected int						rowsRequired;
+		protected BoxPaddingType			boxPaddingType;
+		protected FrameState				boxFrameState;
+		protected double					boxFrameWidth;
 	}
 }
