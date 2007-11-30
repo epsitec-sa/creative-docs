@@ -21,22 +21,25 @@ namespace Epsitec.Common.Designer
 		{
 			//	Retourne une partie de chemin de Druids.
 			//	Par exemple, druidsPath = "[102].[103].[104].[105]" et count = 2 retourne "[102].[103]".
-			string[] druids = druidsPath.Split('.');
-			count = System.Math.Min(count, druids.Length);
+			int index = 0;
 
-			System.Text.StringBuilder builder = new System.Text.StringBuilder();
-
-			for (int i=0; i<count; i++)
+			while (count > 0)
 			{
-				if (builder.Length > 0)
+				int i = druidsPath.IndexOf('.', index+1);
+				if (i == -1)
 				{
-					builder.Append(".");
+					index = druidsPath.Length;
+					break;
+				}
+				else
+				{
+					index = i;
 				}
 
-				builder.Append(druids[i]);
+				count--;
 			}
 
-			return builder.ToString();
+			return druidsPath.Substring(0, index);
 		}
 
 
