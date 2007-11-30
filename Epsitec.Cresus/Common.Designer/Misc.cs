@@ -10,6 +10,36 @@ namespace Epsitec.Common.Designer
 	/// </summary>
 	public class Misc
 	{
+		static public int DruidsPathLevel(string druidsPath)
+		{
+			//	Retourne le nombre de niveaux dans un chemin de Druids.
+			//	Par exemple, "[102].[103]" retourne 2.
+			return druidsPath.Split('.').Length;
+		}
+
+		static public string DruidsPathPart(string druidsPath, int count)
+		{
+			//	Retourne une partie de chemin de Druids.
+			//	Par exemple, druidsPath = "[102].[103].[104].[105]" et count = 2 retourne "[102].[103]".
+			string[] druids = druidsPath.Split('.');
+			count = System.Math.Min(count, druids.Length);
+
+			System.Text.StringBuilder builder = new System.Text.StringBuilder();
+
+			for (int i=0; i<count; i++)
+			{
+				if (builder.Length > 0)
+				{
+					builder.Append(".");
+				}
+
+				builder.Append(druids[i]);
+			}
+
+			return builder.ToString();
+		}
+
+
 		static public Path GetCrossPath(Rectangle column, Rectangle row)
 		{
 			//	Retourne le chemin d'une croix. Le chemin peut également prendre la forme

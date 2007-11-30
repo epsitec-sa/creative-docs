@@ -1268,6 +1268,8 @@ namespace Epsitec.Common.Designer.Viewers
 
 			this.UpdateRelationsTable(false);
 			this.UpdateRelationsButtons();
+			this.UpdateFieldsTable(false);
+			this.UpdateFieldsButtons();
 		}
 
 

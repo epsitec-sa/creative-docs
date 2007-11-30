@@ -833,40 +833,63 @@ namespace Epsitec.Common.Designer.FormEditor
 
 			foreach (FieldDescription field in form.Fields)
 			{
+				if (field.Type != FieldDescription.FieldType.Field)
+				{
+					continue;
+				}
+
 				string druidsPath = field.GetPath(null);
+				int deep = Misc.DruidsPathLevel(druidsPath)-1;
 
-				int i = druidsPath.LastIndexOf('.');
-				if (i == -1)
+				int existingIndex = this.TableRelationSearchIndex(Misc.DruidsPathPart(druidsPath, deep));
+				if (existingIndex != -1 && this.tableRelations[existingIndex].Expanded)
 				{
 					continue;
 				}
 
-				druidsPath = druidsPath.Remove(i);
-				IList<StructuredData> dataFields = this.TableRelationSearchStructuredData(druidsPath);
+				int first = -1;
+				for (int i=deep; i>0; i--)
+				{
+					string subDruidsPath = Misc.DruidsPathPart(druidsPath, i);
+					int index = this.TableRelationSearchIndex(subDruidsPath);
+					if (index != -1)
+					{
+						first = i;
+					}
+				}
 
-				int index = this.TableRelationSearchIndex(druidsPath);
-				int level = druidsPath.Split('.').Length;
-
-				if (index == -1 || dataFields.Count == 0)
+				if (first == -1)
 				{
 					continue;
 				}
 
-				this.tableRelations[index].Expanded = true;
-
-				foreach (StructuredData dataField in dataFields)
+				for (int i=first; i<=deep; i++)
 				{
-					FieldRelation rel = (FieldRelation) dataField.GetValue(Support.Res.Fields.Field.Relation);
-					Druid fieldCaptionId = (Druid) dataField.GetValue(Support.Res.Fields.Field.CaptionId);
+					string subDruidsPath = Misc.DruidsPathPart(druidsPath, i);
+					int index = this.TableRelationSearchIndex(subDruidsPath);
 
-					RelationItem item = new RelationItem();
-					item.DruidsPath = string.Concat(druidsPath, ".", fieldCaptionId.ToString());
-					item.Relation = rel;
-					item.Expandable = (rel != FieldRelation.None);
-					item.Expanded = false;
-					item.Level = level;
+					if (this.tableRelations[index].Expanded)
+					{
+						continue;
+					}
 
-					this.tableRelations.Insert(++index, item);
+					this.tableRelations[index].Expanded = true;
+
+					IList<StructuredData> dataFields = this.TableRelationSearchStructuredData(subDruidsPath);
+					foreach (StructuredData dataField in dataFields)
+					{
+						FieldRelation rel = (FieldRelation) dataField.GetValue(Support.Res.Fields.Field.Relation);
+						Druid fieldCaptionId = (Druid) dataField.GetValue(Support.Res.Fields.Field.CaptionId);
+
+						RelationItem item = new RelationItem();
+						item.DruidsPath = string.Concat(subDruidsPath, ".", fieldCaptionId.ToString());
+						item.Relation = rel;
+						item.Expandable = (rel != FieldRelation.None);
+						item.Expanded = false;
+						item.Level = i;
+
+						this.tableRelations.Insert(++index, item);
+					}
 				}
 			}
 		}
