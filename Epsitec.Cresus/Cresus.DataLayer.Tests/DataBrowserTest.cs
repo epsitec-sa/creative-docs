@@ -125,18 +125,19 @@ namespace Epsitec.Cresus.DataLayer
 
 			using (DbTransaction transaction = this.infrastructure.BeginTransaction ())
 			{
-				System.Data.IDataReader dataReader = reader.CreateReader (transaction);
-
-				while (dataReader.Read ())
+				reader.CreateDataReader (transaction);
+				
+				foreach (object[] values in reader.Rows)
 				{
-					lines.Add (string.Format ("{0}, {1}, {2}", dataReader.GetString (0), dataReader.GetString (1), dataReader.GetString (2)));
+					lines.Add (string.Format ("{0}, {1}, {2}", values[0], values[1], values[2]));
 				}
 
-				dataReader.Close ();
 				transaction.Commit ();
 			}
 
 			System.Diagnostics.Debug.WriteLine ("Loaded " + lines.Count + " records");
+
+			reader.Dispose ();
 		}
 
 		[Test]
@@ -166,25 +167,33 @@ namespace Epsitec.Cresus.DataLayer
 			reader.AddCondition (condition);
 			reader.AddSortOrder (new DbTableColumn ("T1", "City", c3), SqlSortOrder.Ascending);
 			reader.AddSortOrder (new DbTableColumn ("T1", "Name", c1), SqlSortOrder.Ascending);
+			reader.SelectPredicate = SqlSelectPredicate.Distinct;
 
 			List<string> lines = new List<string> ();
 
 			using (DbTransaction transaction = this.infrastructure.BeginTransaction ())
 			{
-				System.Data.IDataReader dataReader = reader.CreateReader (transaction);
+				reader.CreateDataReader (transaction);
 
-				while (dataReader.Read ())
+				foreach (object[] values in reader.Rows)
 				{
-					lines.Add (string.Format ("{0};{1};{2}", dataReader.GetString (0), dataReader.GetString (1), dataReader.GetString (2)));
+					lines.Add (string.Format ("{0}, {1}, {2}", values[0], values[1], values[2]));
 				}
 
-				dataReader.Close ();
 				transaction.Commit ();
 			}
 
 			System.Diagnostics.Debug.WriteLine ("Loaded " + lines.Count + " records");
+			reader.Dispose ();
 
 			System.IO.File.WriteAllLines ("extracted-14xx.csv", lines.ToArray ());
+		}
+
+		[Test]
+		public void Cleanup()
+		{
+			this.context.Dispose ();
+			this.context = null;
 		}
 
 		private readonly DbInfrastructure infrastructure = TestSupport.Database.NewInfrastructure ();

@@ -170,6 +170,41 @@ namespace Epsitec.Cresus.Database
 		}
 
 		[Test]
+		public void CheckDbColumnConversions()
+		{
+			DbInfrastructure infrastructure = DbInfrastructureTest.GetInfrastructureFromBase ("fiche", false);
+			ITypeConverter   converter      = infrastructure.Converter;
+
+			DbColumn columnGuid = new DbColumn ("unique id", new DbTypeDef ("GUID", DbSimpleType.Guid, null, 0, true, DbNullability.Yes));
+			DbColumn columnDate = new DbColumn ("date", new DbTypeDef (Epsitec.Common.Types.Res.Types.Default.Date));
+
+			Assert.AreEqual (System.DBNull.Value, columnGuid.ConvertAdoToInternal (converter, System.DBNull.Value));
+			Assert.AreEqual (System.DBNull.Value, columnGuid.ConvertInternalToAdo (converter, System.DBNull.Value));
+			Assert.AreEqual (System.DBNull.Value, columnGuid.ConvertAdoToSimple (System.DBNull.Value));
+			Assert.AreEqual (System.DBNull.Value, columnGuid.ConvertSimpleToAdo (System.DBNull.Value));
+
+			Assert.AreEqual (System.DBNull.Value, columnDate.ConvertAdoToInternal (converter, System.DBNull.Value));
+			Assert.AreEqual (System.DBNull.Value, columnDate.ConvertInternalToAdo (converter, System.DBNull.Value));
+			Assert.AreEqual (System.DBNull.Value, columnDate.ConvertAdoToSimple (System.DBNull.Value));
+			Assert.AreEqual (System.DBNull.Value, columnDate.ConvertSimpleToAdo (System.DBNull.Value));
+
+			System.Guid               guid = System.Guid.NewGuid ();
+			Epsitec.Common.Types.Date date = new Epsitec.Common.Types.Date (2007, 12, 31);
+
+			object valueGuid = columnGuid.ConvertAdoToInternal (converter, columnGuid.ConvertSimpleToAdo (guid));
+			object valueDate = columnDate.ConvertAdoToInternal (converter, columnDate.ConvertSimpleToAdo (date));
+
+			System.Console.Out.WriteLine ("Guid: Converted {0} to {1}, type={2}", guid, valueGuid, valueGuid.GetType ().FullName);
+			System.Console.Out.WriteLine ("Date: Converted {0} to {1}, type={2}", date, valueDate, valueDate.GetType ().FullName);
+
+			object resultGuid = columnGuid.ConvertAdoToSimple (columnGuid.ConvertInternalToAdo (converter, valueGuid));
+			object resultDate = columnDate.ConvertAdoToSimple (columnDate.ConvertInternalToAdo (converter, valueDate));
+
+			Assert.AreEqual (resultGuid, guid);
+			Assert.AreEqual (resultDate, date);
+		}
+
+		[Test]
 		public void CheckGetSimpleType()
 		{
 			DbTypeDef type;

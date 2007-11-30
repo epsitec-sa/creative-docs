@@ -401,6 +401,11 @@ namespace Epsitec.Cresus.Database
 		/// <returns>An SQL name.</returns>
 		public static string MakeDelimitedIdentifier(string name)
 		{
+			if (string.IsNullOrEmpty (name))
+			{
+				return name;
+			}
+
 			bool ok  = true;
 			
 			for (int i = 0; i < name.Length; i++)

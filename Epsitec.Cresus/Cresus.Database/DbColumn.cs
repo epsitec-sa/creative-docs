@@ -593,6 +593,112 @@ namespace Epsitec.Cresus.Database
 			this.isPrimaryKey = value;
 		}
 
+		/// <summary>
+		/// Converts a simple value (using a unified type) to an ADO.NET compatible
+		/// value. This will, for instance, convert a <see cref="Date"/> to a
+		/// <see cref="System.DateTime"/> value.
+		/// </summary>
+		/// <param name="simpleValue">The simple value.</param>
+		/// <returns>The ADO.NET compatible value.</returns>
+		public object ConvertSimpleToAdo(object simpleValue)
+		{
+			if (simpleValue == System.DBNull.Value)
+			{
+				return simpleValue;
+			}
+			else
+			{
+				return TypeConverter.ConvertFromSimpleType (simpleValue, this.Type.SimpleType, this.Type.NumDef);
+			}
+		}
+
+		/// <summary>
+		/// Converts an ADO.NET value to a simple value (using a unified type).
+		/// This will, for instance, convert a <see cref="System.DateTime"/> to
+		/// a <see cref="Date"/> value.
+		/// </summary>
+		/// <param name="adoValue">The ADO.NET compatible value.</param>
+		/// <returns>The simple value.</returns>
+		public object ConvertAdoToSimple(object adoValue)
+		{
+			if (adoValue == System.DBNull.Value)
+			{
+				return adoValue;
+			}
+			else
+			{
+				return TypeConverter.ConvertToSimpleType (adoValue, this.Type.SimpleType, this.Type.NumDef);
+			}
+		}
+
+		/// <summary>
+		/// Converts a low level internal value, as stored in the database, to
+		/// a higher level ADO.NET equivalent. This will, for instance, convert
+		/// a <see cref="string"/> back to a <see cref="System.Guid"/> value.
+		/// </summary>
+		/// <param name="typeConverter">The type converter.</param>
+		/// <param name="internalValue">The internal value.</param>
+		/// <returns>The ADO.NET compatible value.</returns>
+		public object ConvertInternalToAdo(ITypeConverter typeConverter, object internalValue)
+		{
+			if (internalValue == System.DBNull.Value)
+			{
+				return internalValue;
+			}
+			else
+			{
+				IRawTypeConverter rawConverter;
+				DbRawType rawType = this.type.RawType;
+
+				if (typeConverter.CheckNativeSupport (rawType))
+				{
+					return internalValue;
+				}
+				else if (typeConverter.GetRawTypeConverter (rawType, out rawConverter))
+				{
+					return rawConverter.ConvertFromInternalType (internalValue);
+				}
+				else
+				{
+					throw new System.InvalidOperationException (string.Format ("Data in column '{0}' cannot be converted", this.Name));
+				}
+			}
+		}
+
+		/// <summary>
+		/// Converts a high level ADO.NET value to a lower level internal value,
+		/// as stored in the database. This will, for instance, convert a
+		/// <see cref="System.Guid"/> value to a <see cref="string"/> if the
+		/// underlying database does not know how to handle GUIDs.
+		/// </summary>
+		/// <param name="typeConverter">The type converter.</param>
+		/// <param name="adoValue">The ADO.NET compatible value.</param>
+		/// <returns>The low level internal value.</returns>
+		public object ConvertAdoToInternal(ITypeConverter typeConverter, object adoValue)
+		{
+			if (adoValue == System.DBNull.Value)
+			{
+				return adoValue;
+			}
+			else
+			{
+				IRawTypeConverter rawConverter;
+				DbRawType rawType = this.type.RawType;
+
+				if (typeConverter.CheckNativeSupport (rawType))
+				{
+					return adoValue;
+				}
+				else if (typeConverter.GetRawTypeConverter (rawType, out rawConverter))
+				{
+					return rawConverter.ConvertToInternalType (adoValue);
+				}
+				else
+				{
+					throw new System.InvalidOperationException (string.Format ("Data in column '{0}' cannot be converted", this.Name));
+				}
+			}
+		}
 
 		/// <summary>
 		/// Creates the SQL column for this column definition.

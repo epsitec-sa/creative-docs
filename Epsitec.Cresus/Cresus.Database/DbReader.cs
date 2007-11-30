@@ -12,7 +12,7 @@ namespace Epsitec.Cresus.Database
 	/// The <c>DbReader</c> class implements a factory which returns instances
 	/// of <see cref="System.Data.IDataReader"/> based on a query definition.
 	/// </summary>
-	public class DbReader
+	public sealed class DbReader : System.IDisposable
 	{
 		public DbReader(DbInfrastructure infrastructure)
 		{
@@ -32,6 +32,12 @@ namespace Epsitec.Cresus.Database
 			{
 				return this.infrastructure;
 			}
+		}
+
+		public SqlSelectPredicate SelectPredicate
+		{
+			get;
+			set;
 		}
 
 		public void AddQueryFields(IEnumerable<DbTableColumn> queryFields)
@@ -114,20 +120,85 @@ namespace Epsitec.Cresus.Database
 		}
 
 
-		public System.Data.IDataReader CreateReader(DbTransaction transaction)
+		public void CreateDataReader(DbTransaction transaction)
 		{
+			System.Diagnostics.Debug.Assert (this.dataReader == null);
+
 			ISqlBuilder builder = transaction.SqlBuilder;
 			SqlSelect select = this.CreateSelect ();
 
+			select.Predicate = this.SelectPredicate;
 			builder.SelectData (select);
 
 			System.Data.IDbCommand command = builder.Command;
 			command.Transaction = transaction.Transaction;
 			System.Data.IDataReader reader = command.ExecuteReader ();
 
-			return reader;
+			this.dataReader = reader;
+			this.dataReaderClosed = false;
 		}
 
+		public IEnumerable<object[]> Rows
+		{
+			get
+			{
+				if (this.dataReaderClosed)
+				{
+					throw new System.InvalidOperationException ("DataReader has been closed");
+				}
+				if (this.dataReader == null)
+				{
+					throw new System.InvalidOperationException ("Call to CreateDataReader is missing");
+				}
+
+				int n = this.renamedTableColumns.Count;
+				int[] reordering = new int[n];
+				object[] values = new object[n];
+
+				for (int i = 0; i < n; i++)
+				{
+					string columnNumber = this.renamedTableColumns[i].ColumnAlias.Substring (1);
+					reordering[i] = int.Parse (columnNumber, System.Globalization.NumberStyles.Integer, System.Globalization.CultureInfo.InvariantCulture);
+				}
+
+				while (this.dataReader.Read ())
+				{
+					object[] output = new object[n];
+					this.dataReader.GetValues (values);
+
+					for (int i = 0; i < n; i++)
+					{
+						output[reordering[i]] = values[i];
+					}
+
+					yield return output;
+				}
+
+				this.CloseDataReader ();
+			}
+		}
+
+		public void CloseDataReader()
+		{
+			if ((this.dataReader != null) &&
+				(this.dataReaderClosed == false))
+			{
+				this.dataReaderClosed = true;
+				this.dataReader.Close ();
+				this.dataReader.Dispose ();
+				this.dataReader = null;
+			}
+		}
+
+
+		#region IDisposable Members
+
+		public void Dispose()
+		{
+			this.CloseDataReader ();
+		}
+
+		#endregion
 
 
 		internal SqlSelect CreateSelect()
@@ -256,5 +327,7 @@ namespace Epsitec.Cresus.Database
 		private readonly List<DbTableColumn> renamedTableColumns;
 		private readonly List<DbSelectCondition> conditions;
 		private readonly Dictionary<string, SqlSortOrder> orderByTableColumns;
+		private System.Data.IDataReader dataReader;
+		private bool dataReaderClosed;
 	}
 }

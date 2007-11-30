@@ -151,6 +151,21 @@ namespace Epsitec.Cresus.DataLayer
 		}
 
 
+		protected override void Dispose(bool disposing)
+		{
+			if (disposing)
+			{
+				if (this.infrastructure != null)
+				{
+					if (SchemaEngine.GetSchemaEngine (this.infrastructure) == this)
+					{
+						SchemaEngine.SetSchemaEngine (this.infrastructure, null);
+					}
+				}
+			}
+			
+			base.Dispose (disposing);
+		}
 		
 
 		#region Internal Support Methods

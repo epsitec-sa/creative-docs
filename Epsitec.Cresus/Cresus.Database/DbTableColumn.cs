@@ -12,18 +12,34 @@ namespace Epsitec.Cresus.Database
 	/// </summary>
 	public sealed class DbTableColumn : System.IEquatable<DbTableColumn>
 	{
+		/// <summary>
+		/// Initializes a new instance of the <see cref="DbTableColumn"/> class.
+		/// </summary>
+		/// <param name="column">The column definition.</param>
 		public DbTableColumn(DbColumn column)
 		{
 			this.table = column.Table;
 			this.column = column;
+			this.tableAlias = this.table.Name;
 		}
 
+		/// <summary>
+		/// Initializes a new instance of the <see cref="DbTableColumn"/> class.
+		/// </summary>
+		/// <param name="tableAlias">The table alias.</param>
+		/// <param name="column">The column definition.</param>
 		public DbTableColumn(string tableAlias, DbColumn column)
 			: this (column)
 		{
 			this.tableAlias = tableAlias;
 		}
 
+		/// <summary>
+		/// Initializes a new instance of the <see cref="DbTableColumn"/> class.
+		/// </summary>
+		/// <param name="tableAlias">The table alias.</param>
+		/// <param name="columnAlias">The column alias.</param>
+		/// <param name="column">The column definition.</param>
 		public DbTableColumn(string tableAlias, string columnAlias, DbColumn column)
 			: this (column)
 		{
@@ -31,6 +47,10 @@ namespace Epsitec.Cresus.Database
 			this.columnAlias = columnAlias;
 		}
 
+		/// <summary>
+		/// Gets the table definition.
+		/// </summary>
+		/// <value>The table definition.</value>
 		public DbTable Table
 		{
 			get
@@ -39,6 +59,10 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 
+		/// <summary>
+		/// Gets the column definition.
+		/// </summary>
+		/// <value>The column definition.</value>
 		public DbColumn Column
 		{
 			get
@@ -47,6 +71,10 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 
+		/// <summary>
+		/// Gets or sets the table alias.
+		/// </summary>
+		/// <value>The table alias.</value>
 		public string TableAlias
 		{
 			get
@@ -59,6 +87,10 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 
+		/// <summary>
+		/// Gets or sets the column alias.
+		/// </summary>
+		/// <value>The column alias.</value>
 		public string ColumnAlias
 		{
 			get

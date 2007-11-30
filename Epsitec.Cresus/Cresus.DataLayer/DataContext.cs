@@ -488,7 +488,18 @@ namespace Epsitec.Cresus.DataLayer
 
 				DbTable   tableDef  = this.richCommand.Tables[tableName];
 				DbColumn  columnDef = tableDef.Columns[columnName];
-				DbTypeDef typeDef   = columnDef.Type;
+				
+				value = DataContext.ConvertToInternal (value, columnDef);
+			}
+			
+			return value;
+		}
+
+		private static object ConvertToInternal(object value, DbColumn columnDef)
+		{
+			if (value != System.DBNull.Value)
+			{
+				DbTypeDef typeDef = columnDef.Type;
 
 				if (typeDef.SimpleType == DbSimpleType.Decimal)
 				{
@@ -506,6 +517,7 @@ namespace Epsitec.Cresus.DataLayer
 
 				value = TypeConverter.ConvertFromSimpleType (value, typeDef.SimpleType, typeDef.NumDef);
 			}
+
 			return value;
 		}
 

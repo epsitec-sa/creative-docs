@@ -262,7 +262,7 @@ namespace Epsitec.Cresus.Database
 				}
 				else
 				{
-					condition.CreateConditions (table, select.Conditions);
+					condition.CreateConditions (table, table.Name, select.Conditions);
 				}
 				
 				builder.SelectData (select);
@@ -321,7 +321,7 @@ namespace Epsitec.Cresus.Database
 				}
 				else
 				{
-					condition.CreateConditions (table, select.Conditions);
+					condition.CreateConditions (table, table.Name, select.Conditions);
 				}
 
 				this.infrastructure.DefaultSqlBuilder.SelectData (select);

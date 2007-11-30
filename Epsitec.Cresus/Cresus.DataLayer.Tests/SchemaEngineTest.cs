@@ -25,6 +25,7 @@ namespace Epsitec.Cresus.DataLayer
 			engine.CreateTableDefinition (this.articleEntityId);
 			transaction.Rollback ();
 			transaction.Dispose ();
+			engine.Dispose ();
 		}
 
 		[Test]
@@ -35,6 +36,7 @@ namespace Epsitec.Cresus.DataLayer
 			Assert.IsNull (engine.FindTableDefinition (this.articleEntityId));
 			DbTable table1 = engine.CreateTableDefinition (this.articleEntityId);
 			DbTable table2 = engine.CreateTableDefinition (this.articleEntityId);
+			engine.Dispose ();
 
 			Assert.AreEqual (table1, table2);
 
@@ -48,6 +50,7 @@ namespace Epsitec.Cresus.DataLayer
 			Assert.IsNull (table4);
 
 			table4 = engine.CreateTableDefinition (this.articleVisserieEntityId);
+			engine.Dispose ();
 		}
 
 		[Test]

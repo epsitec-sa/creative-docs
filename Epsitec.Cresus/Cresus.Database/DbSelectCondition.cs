@@ -219,6 +219,8 @@ namespace Epsitec.Cresus.Database
 
 			public Condition(DbTableColumn column, DbCompare comparison, object value, DbRawType valueRawType)
 			{
+				System.Diagnostics.Debug.Assert (column.Column.Type.RawType == valueRawType);
+
 				this.argumentCount = 2;
 				this.ColumnA = column;
 				this.Comparison = comparison;
@@ -260,7 +262,7 @@ namespace Epsitec.Cresus.Database
 			{
 				if (this.argumentCount == 1)
 				{
-					SqlField field = SqlField.CreateAliasedName (this.ColumnA.TableAlias ?? this.ColumnA.Table.GetSqlName (), this.ColumnA.Column.GetSqlName (), this.ColumnA.ColumnAlias);
+					SqlField field = SqlField.CreateAliasedName (DbSqlStandard.MakeDelimitedIdentifier (this.ColumnA.TableAlias) ?? this.ColumnA.Table.GetSqlName (), this.ColumnA.Column.GetSqlName (), this.ColumnA.ColumnAlias);
 					
 					SqlFunction function = new SqlFunction (DbSelectCondition.MapDbCompareToSqlFunctionType (this.Comparison), field);
 
@@ -268,7 +270,7 @@ namespace Epsitec.Cresus.Database
 				}
 				else if (this.ColumnB == null)
 				{
-					SqlField fieldA = SqlField.CreateAliasedName (this.ColumnA.TableAlias ?? this.ColumnA.Table.GetSqlName (), this.ColumnA.Column.GetSqlName (), this.ColumnA.ColumnAlias);
+					SqlField fieldA = SqlField.CreateAliasedName (DbSqlStandard.MakeDelimitedIdentifier (this.ColumnA.TableAlias) ?? this.ColumnA.Table.GetSqlName (), this.ColumnA.Column.GetSqlName (), this.ColumnA.ColumnAlias);
 					SqlField fieldB = SqlField.CreateConstant (this.ConstantValue, this.ConstantValueRawType);
 
 					SqlFunction function = new SqlFunction (DbSelectCondition.MapDbCompareToSqlFunctionType (this.Comparison), fieldA, fieldB);
@@ -277,8 +279,8 @@ namespace Epsitec.Cresus.Database
 				}
 				else
 				{
-					SqlField fieldA = SqlField.CreateAliasedName (this.ColumnA.TableAlias ?? this.ColumnA.Table.GetSqlName (), this.ColumnA.Column.GetSqlName (), this.ColumnA.ColumnAlias);
-					SqlField fieldB = SqlField.CreateAliasedName (this.ColumnB.TableAlias ?? this.ColumnB.Table.GetSqlName (), this.ColumnB.Column.GetSqlName (), this.ColumnB.ColumnAlias);
+					SqlField fieldA = SqlField.CreateAliasedName (DbSqlStandard.MakeDelimitedIdentifier (this.ColumnA.TableAlias) ?? this.ColumnA.Table.GetSqlName (), this.ColumnA.Column.GetSqlName (), this.ColumnA.ColumnAlias);
+					SqlField fieldB = SqlField.CreateAliasedName (DbSqlStandard.MakeDelimitedIdentifier (this.ColumnB.TableAlias) ?? this.ColumnB.Table.GetSqlName (), this.ColumnB.Column.GetSqlName (), this.ColumnB.ColumnAlias);
 					
 					SqlFunction function = new SqlFunction (DbSelectCondition.MapDbCompareToSqlFunctionType (this.Comparison), fieldA, fieldB);
 

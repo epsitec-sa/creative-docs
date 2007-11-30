@@ -2,6 +2,7 @@
 //	Responsable: Pierre ARNAUD
 
 using FirebirdSql.Data.FirebirdClient;
+
 using System.Collections.Generic;
 
 namespace Epsitec.Cresus.Database.Implementation
@@ -17,6 +18,7 @@ namespace Epsitec.Cresus.Database.Implementation
 			this.fb = fb;
 			this.buffer = new System.Text.StringBuilder ();
 			this.commandParams = new List<SqlField> ();
+			this.tableAliases = new Dictionary<string, string> ();
 		}
 
 		#region ISqlBuilder Members
@@ -91,6 +93,7 @@ namespace Epsitec.Cresus.Database.Implementation
 			this.commandCount  = 0;
 			this.buffer.Length = 0;
 			this.commandParams.Clear ();
+			this.tableAliases.Clear ();
 		}
 		
 		public void AppendMore()
@@ -761,7 +764,7 @@ namespace Epsitec.Cresus.Database.Implementation
 					break;
 				
 				case SqlFieldType.QualifiedName:
-					this.Append (field.AsQualifiedName);
+					this.Append (this.GetQualifiedName (field));
 					break;
 				
 				case SqlFieldType.Aggregate:
@@ -785,6 +788,27 @@ namespace Epsitec.Cresus.Database.Implementation
 				default:
 					throw new Exceptions.SyntaxException (this.fb.DbAccess, string.Format ("Field {0} not supported", field.FieldType));
 			}
+		}
+
+		private string GetQualifiedName(SqlField field)
+		{
+			if (this.tableAliases.Count > 0)
+			{
+				string tableAlias;
+				string tableQualifier;
+				string columnName;
+
+				DbSqlStandard.SplitQualifiedName (field.AsQualifiedName, out tableQualifier, out columnName);
+
+				if (this.tableAliases.TryGetValue (tableQualifier, out tableAlias))
+				{
+					System.Diagnostics.Debug.Fail ("Incorrect table qualifier used",
+						/**/						string.Format ("The qualifier '{0}' was used for an aliased table; '{1}' should have been used instead for '{2}'", tableQualifier, tableAlias, field.AsQualifiedName));
+					return DbSqlStandard.QualifyName (tableAlias, columnName);
+				}
+			}
+
+			return field.AsQualifiedName;
 		}
 		
 		private void Append(SqlAggregate sqlAggregate)
@@ -992,13 +1016,28 @@ namespace Epsitec.Cresus.Database.Implementation
 			}
 
 			this.Append (" ON ");
-			this.Append (sqlJoin.A.AsQualifiedName);
+			this.Append (this.GetQualifiedName (sqlJoin.A));
 			this.Append (" = ");
-			this.Append (sqlJoin.B.AsQualifiedName);
+			this.Append (this.GetQualifiedName (sqlJoin.B));
 		}
 
 		private void Append(SqlSelect sqlQuery)
 		{
+			this.tableAliases.Clear ();
+
+			foreach (SqlField field in sqlQuery.Tables)
+			{
+				if (string.IsNullOrEmpty (field.Alias))
+				{
+					continue;
+				}
+
+				if (field.AsName != field.Alias)
+				{
+					this.tableAliases[field.AsName] = field.Alias;
+				}
+			}
+
 			int	aggregateCount = 0;
 			int	notAggregateCount = 0;
 
@@ -1036,7 +1075,7 @@ namespace Epsitec.Cresus.Database.Implementation
 						break;
 					
 					case SqlFieldType.QualifiedName:
-						this.Append (field.AsQualifiedName);
+						this.Append (this.GetQualifiedName (field));
 						this.AppendAlias (field);
 						notAggregateCount++;
 						break;
@@ -1140,7 +1179,7 @@ namespace Epsitec.Cresus.Database.Implementation
 							break;
 						
 						case SqlFieldType.QualifiedName:
-							this.Append (field.AsQualifiedName);
+							this.Append (this.GetQualifiedName (field));
 							this.AppendAlias (field);
 							break;
 
@@ -1203,9 +1242,7 @@ namespace Epsitec.Cresus.Database.Implementation
 					this.Append (", ");
 				}
 
-				//	TODO:	si un alias existe on devrait l'utiliser à la place du nom
-				//	TODO:	sinon faut-il utiliser le nom qualifié de préférence ?
-				this.Append (field.AsQualifiedName);
+				this.Append (this.GetQualifiedName (field) ?? field.AsName);
 
 				if (field.SortOrder == SqlSortOrder.Descending)
 				{
@@ -1252,27 +1289,6 @@ namespace Epsitec.Cresus.Database.Implementation
 				this.buffer.Append (' ');
 				this.buffer.Append (DbSqlStandard.MakeDelimitedIdentifier (alias));
 				return true;
-			}
-		}
-
-		private void AppendAliasOrName(SqlField field)
-		{
-			//	Utilise le nom d'alias de préférence, sinon le nom qualifié, sinon le nom
-			//	non qualifié.
-
-			string alias = field.Alias;
-			
-			if (string.IsNullOrEmpty (alias) == false)
-			{
-				this.buffer.Append (alias);
-			}
-			else if (field.FieldType == SqlFieldType.QualifiedName)
-			{
-				this.buffer.Append (field.AsQualifiedName);
-			}
-			else
-			{
-				this.buffer.Append (field.AsName);
 			}
 		}
 
@@ -1374,14 +1390,14 @@ namespace Epsitec.Cresus.Database.Implementation
 			throw new Exceptions.SyntaxException (this.fb.DbAccess, string.Format ("Type {0} cannot be mapped to Firebird Type", rawType.ToString ()));
 		}
 
-
-		private FirebirdAbstraction				fb;
-		private bool							autoClear;
-		private bool							expectMore;
-		private FbCommand						commandCache;
-		private System.Text.StringBuilder		buffer;
-		private List<SqlField>					commandParams;
-		private DbCommandType					commandType;
-		private int								commandCount;
+		private readonly FirebirdAbstraction		fb;
+		private readonly System.Text.StringBuilder	buffer;
+		private readonly List<SqlField>				commandParams;
+		private readonly Dictionary<string, string>	tableAliases;
+		private bool								autoClear;
+		private bool								expectMore;
+		private FbCommand							commandCache;
+		private DbCommandType						commandType;
+		private int									commandCount;
 	}
 }
