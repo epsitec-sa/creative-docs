@@ -132,6 +132,42 @@ namespace Epsitec.Common.FormEngine
 		}
 
 
+		static public List<FieldDescription> DevelopSubForm(ResourceManager manager, List<FieldDescription> list)
+		{
+			//	Retourne une liste développée qui ne contient plus de sous-masque.
+			List<FieldDescription> dst = new List<FieldDescription>();
+
+			Arrange.DevelopSubForm(manager, dst, list);
+
+			return dst;
+		}
+
+		static private void DevelopSubForm(ResourceManager resourceManager, List<FieldDescription> dst, List<FieldDescription> fields)
+		{
+			foreach (FieldDescription field in fields)
+			{
+				if (field.Type == FieldDescription.FieldType.SubForm)
+				{
+#if false
+					StructuredData data = function(resourceManager, field.SubEntityId);  // TODO: je ne sais pas comment faire...
+
+					string xml = data.GetValue(Support.Res.Fields.ResourceForm.XmlSource) as string;
+
+					if (!string.IsNullOrEmpty(xml))
+					{
+						FormDescription subForm = Serialization.DeserializeForm(xml, resourceManager);
+						Arrange.DevelopSubForm(resourceManager, dst, subForm.Fields);
+					}
+#endif
+				}
+				else
+				{
+					dst.Add(field);
+				}
+			}
+		}
+
+
 		static public List<FieldDescription> Develop(List<FieldDescription> fields)
 		{
 			//	Retourne une liste développée qui ne contient plus de noeuds.
