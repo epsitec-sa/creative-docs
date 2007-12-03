@@ -317,10 +317,26 @@ namespace Epsitec.Common.Designer.Viewers
 			//	Initialise la table.
 			StructuredType cultureMapType = new StructuredType();
 			cultureMapType.Fields.Add("Name", StringType.Default);
+			cultureMapType.Fields.Add("Druid", StringType.Default);
+			cultureMapType.Fields.Add("Local", StringType.Default);
+			cultureMapType.Fields.Add("Identity", StringType.Default);
 
 			this.table.SourceType = cultureMapType;
+
 			this.table.Columns.Add(new UI.ItemTableColumn("Name", new Widgets.Layouts.GridLength(this.GetColumnWidth(0), Widgets.Layouts.GridUnitType.Proportional)));
+			this.table.Columns.Add(new UI.ItemTableColumn("Druid", new Widgets.Layouts.GridLength(this.GetColumnWidth(1), Widgets.Layouts.GridUnitType.Proportional)));
+			this.table.Columns.Add(new UI.ItemTableColumn("Local", new Widgets.Layouts.GridLength(this.GetColumnWidth(2), Widgets.Layouts.GridUnitType.Proportional)));
+			this.table.Columns.Add(new UI.ItemTableColumn("Identity", new Widgets.Layouts.GridLength(this.GetColumnWidth(3), Widgets.Layouts.GridUnitType.Proportional)));
+
+			this.table.ColumnHeader.SetColumnComparer(1, this.CompareDruid);
+			this.table.ColumnHeader.SetColumnComparer(2, this.CompareLocal);
+			this.table.ColumnHeader.SetColumnComparer(3, this.CompareIdentity);
+
 			this.table.ColumnHeader.SetColumnText(0, Res.Strings.Viewers.Column.Name);
+			this.table.ColumnHeader.SetColumnText(1, Res.Strings.Viewers.Column.Druid);
+			this.table.ColumnHeader.SetColumnText(2, Res.Strings.Viewers.Column.Local);
+			this.table.ColumnHeader.SetColumnText(3, Res.Strings.Viewers.Column.Identity);
+
 			this.table.ColumnHeader.SetColumnSort(0, ListSortDirection.Ascending);
 		}
 
@@ -1494,8 +1510,8 @@ namespace Epsitec.Common.Designer.Viewers
 		protected static double					rightPanelWidth = 280;
 		protected static double					bottomPanelHeight = 200;
 
-		private static double[]					columnWidthHorizontal = {200};
-		private static double[]					columnWidthVertical = {250};
+		private static double[]					columnWidthHorizontal = { 200, 80, 50, 100 };
+		private static double[]					columnWidthVertical = { 250, 80, 50, 100 };
 
 		protected static string					softSerialize = null;
 		protected static bool					softDirtySerialization = false;
