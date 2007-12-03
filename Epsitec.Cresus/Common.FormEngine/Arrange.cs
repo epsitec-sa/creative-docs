@@ -148,7 +148,12 @@ namespace Epsitec.Common.FormEngine
 			{
 				if (field.Type == FieldDescription.FieldType.SubForm)
 				{
-#if false
+#if true
+					string name = field.SubEntityId.ToBundleId();
+					ResourceBundle bundle = resourceManager.GetBundle(name, ResourceLevel.Default, null);
+					ResourceBundle.Field bundleField = bundle["Source"];
+					string source = bundleField.IsValid ? bundleField.AsString : null;
+#else
 					StructuredData data = function(resourceManager, field.SubEntityId);  // TODO: je ne sais pas comment faire...
 
 					string xml = data.GetValue(Support.Res.Fields.ResourceForm.XmlSource) as string;
