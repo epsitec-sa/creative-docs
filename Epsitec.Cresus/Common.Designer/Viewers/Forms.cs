@@ -1018,6 +1018,47 @@ namespace Epsitec.Common.Designer.Viewers
 			this.module.AccessForms.SetLocalDirty();
 		}
 
+		protected void SelectedFieldsForm()
+		{
+			//	Insère un masque complet.
+			List<int> sels = this.fieldsTable.SelectedRows;
+			if (sels == null || sels.Count == 0)
+			{
+				return;
+			}
+			sels.Sort();
+
+			Druid druid = Druid.Empty;
+			bool isNullable = false;
+			Module module = this.designerApplication.SearchModule(this.druidToSerialize);
+			StructuredTypeClass typeClass = StructuredTypeClass.None;
+			List<Druid> exclude = new List<Druid>();
+			exclude.Add(this.druidToSerialize);
+			Common.Dialogs.DialogResult result = this.designerApplication.DlgResourceSelector(Dialogs.ResourceSelector.Operation.Form, module, ResourceAccess.Type.Forms, ref typeClass, ref druid, ref isNullable, exclude);
+			if (result != Common.Dialogs.DialogResult.Yes)
+			{
+				return;
+			}
+
+			FormEditor.ObjectModifier.TableItem item = this.formEditor.ObjectModifier.TableContent[sels[0]];
+			int index = this.formEditor.ObjectModifier.GetFormDescriptionIndex(item.Guid);
+
+			FieldDescription field = new FieldDescription(FieldDescription.FieldType.SubForm);
+			field.SubEntityId = druid;
+			this.form.Fields.Insert(index, field);
+
+			this.SetForm(this.form, this.druidToSerialize, true);
+			this.UpdateFieldsTable(false);
+
+			sels.Clear();
+			sels.Add(index);
+			this.fieldsTable.SelectedRows = sels;
+			this.ReflectSelectionToEditor();
+
+			this.UpdateFieldsButtons();
+			this.module.AccessForms.SetLocalDirty();
+		}
+
 		protected void SelectedFieldsBox()
 		{
 			//	Groupe/sépare les champs sélectionnés.
@@ -1103,11 +1144,6 @@ namespace Epsitec.Common.Designer.Viewers
 
 			this.UpdateFieldsButtons();
 			this.module.AccessForms.SetLocalDirty();
-		}
-
-		protected void SelectedFieldsForm()
-		{
-			//	Insère un masque complet.
 		}
 
 		protected void SelectedFieldsMove(int direction)

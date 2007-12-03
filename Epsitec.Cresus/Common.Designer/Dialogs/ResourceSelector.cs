@@ -18,6 +18,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			InheritEntities,
 			InterfaceEntities,
 			Entities,
+			Form,
 		}
 
 
@@ -187,7 +188,7 @@ namespace Epsitec.Common.Designer.Dialogs
 		{
 			//	Début de l'accès aux ressources pour le dialogue.
 			//	Le type peut être inconnu ou la ressource inconnue, mais pas les deux.
-			System.Diagnostics.Debug.Assert(type == ResourceAccess.Type.Unknown || type == ResourceAccess.Type.Captions || type == ResourceAccess.Type.Fields || type == ResourceAccess.Type.Commands || type == ResourceAccess.Type.Types || type == ResourceAccess.Type.Entities || type == ResourceAccess.Type.Panels);
+			System.Diagnostics.Debug.Assert(type == ResourceAccess.Type.Unknown || type == ResourceAccess.Type.Captions || type == ResourceAccess.Type.Fields || type == ResourceAccess.Type.Commands || type == ResourceAccess.Type.Types || type == ResourceAccess.Type.Entities || type == ResourceAccess.Type.Panels || type == ResourceAccess.Type.Forms);
 			System.Diagnostics.Debug.Assert(resource.Type != Common.Support.DruidType.ModuleRelative);
 
 			this.operation = operation;
@@ -367,7 +368,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			string name = ResourceAccess.TypeDisplayName(this.resourceType);
 			if (this.operation == Operation.InterfaceEntities)
 			{
-				name = "Interfaces";
+				name = Res.Strings.BundleType.Panels;
 			}
 			string text = string.Concat("<font size=\"200%\"><b>", name, "</b></font>");
 			this.title.Text = text;
