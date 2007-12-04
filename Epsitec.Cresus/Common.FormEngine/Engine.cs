@@ -489,6 +489,8 @@ namespace Epsitec.Common.FormEngine
 		private void CreateSubForm(UI.Panel root, Widgets.Layouts.GridLayoutEngine grid, FieldDescription field, List<int> labelsId, UI.Panel box, ref int column, ref int row, bool isGlueAfter)
 		{
 			//	Met les widgets d'un sous-masque dans la grille, lors de la deuxième passe.
+			box.SetParent(root);
+
 			grid.RowDefinitions.Add(new Widgets.Layouts.RowDefinition());
 
 			int columnsRequired = System.Math.Max(field.ColumnsRequired, 1);

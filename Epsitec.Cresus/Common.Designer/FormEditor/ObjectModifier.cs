@@ -569,11 +569,6 @@ namespace Epsitec.Common.Designer.FormEditor
 		public Color GetTableRelationColor(int index)
 		{
 			//	Retourne la couleur décrivant l'utilisation d'une relation.
-			if (this.tableRelations[index].Relation != FieldRelation.None)
-			{
-				return Color.FromAlphaRgb(0.3, 1, 1, 0);  // jaune = relation
-			}
-
 			if (this.IsTableRelationUsed(index))
 			{
 				return Color.FromAlphaRgb(0.3, 0, 1, 0);  // vert = champ utilisé
@@ -643,16 +638,22 @@ namespace Epsitec.Common.Designer.FormEditor
 			{
 				icon = Misc.Image("TreeRelationCollection");
 			}
+
+			return icon;
+		}
+
+		public string GetTableRelationUseIcon(int index)
+		{
+			//	Retourne le texte "icône" permettant de décrire l'utilisation dans une liste.
+			string icon = null;
+
+			if (this.IsTableRelationUsed(index))
+			{
+				icon = Misc.Image("ActiveYes");
+			}
 			else
 			{
-				if (this.IsTableRelationUsed(index))
-				{
-					icon = Misc.Image("ActiveYes");
-				}
-				else
-				{
-					icon = Misc.Image("ActiveNo");
-				}
+				icon = Misc.Image("ActiveNo");
 			}
 
 			return icon;

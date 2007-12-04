@@ -204,11 +204,13 @@ namespace Epsitec.Common.Designer.Viewers
 			this.relationsToolbar.Items.Add(this.relationsButtonAuto);
 
 			this.relationsTable = new MyWidgets.StringArray(this.tabPageRelations);
-			this.relationsTable.Columns = 2;
-			this.relationsTable.SetColumnsRelativeWidth(0, 0.90);
+			this.relationsTable.Columns = 3;
+			this.relationsTable.SetColumnsRelativeWidth(0, 0.80);
 			this.relationsTable.SetColumnsRelativeWidth(1, 0.10);
+			this.relationsTable.SetColumnsRelativeWidth(2, 0.10);
 			this.relationsTable.SetColumnAlignment(0, ContentAlignment.MiddleLeft);
 			this.relationsTable.SetColumnAlignment(1, ContentAlignment.MiddleCenter);
+			this.relationsTable.SetColumnAlignment(2, ContentAlignment.MiddleCenter);
 			this.relationsTable.SetColumnBreakMode(0, TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine);
 			this.relationsTable.AllowMultipleSelection = false;
 			this.relationsTable.LineHeight = 16;
@@ -575,11 +577,16 @@ namespace Epsitec.Common.Designer.Viewers
 					this.relationsTable.SetLineString(1, first+i, "");
 					this.relationsTable.SetLineState(1, first+i, MyWidgets.StringList.CellState.Disabled);
 					this.relationsTable.SetLineColor(1, first+i, Color.Empty);
+
+					this.relationsTable.SetLineString(2, first+i, "");
+					this.relationsTable.SetLineState(2, first+i, MyWidgets.StringList.CellState.Disabled);
+					this.relationsTable.SetLineColor(2, first+i, Color.Empty);
 				}
 				else
 				{
 					string name = this.formEditor.ObjectModifier.GetTableRelationDescription(first+i);
 					string icon = this.formEditor.ObjectModifier.GetTableRelationIcon(first+i);
+					string used = this.formEditor.ObjectModifier.GetTableRelationUseIcon(first+i);
 					Color color = this.formEditor.ObjectModifier.GetTableRelationColor(first+i);
 
 					this.relationsTable.SetLineString(0, first+i, name);
@@ -588,7 +595,11 @@ namespace Epsitec.Common.Designer.Viewers
 
 					this.relationsTable.SetLineString(1, first+i, icon);
 					this.relationsTable.SetLineState(1, first+i, MyWidgets.StringList.CellState.Normal);
-					this.relationsTable.SetLineColor(1, first+i, color);
+					this.relationsTable.SetLineColor(1, first+i, Color.Empty);
+
+					this.relationsTable.SetLineString(2, first+i, used);
+					this.relationsTable.SetLineState(2, first+i, MyWidgets.StringList.CellState.Normal);
+					this.relationsTable.SetLineColor(2, first+i, color);
 				}
 			}
 
