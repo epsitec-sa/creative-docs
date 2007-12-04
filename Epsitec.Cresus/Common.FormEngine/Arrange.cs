@@ -156,22 +156,25 @@ namespace Epsitec.Common.FormEngine
 			{
 				if (field.Type == FieldDescription.FieldType.SubForm)
 				{
-#if true
-					string name = field.SubEntityId.ToBundleId();
-					ResourceBundle bundle = this.resourceManager.GetBundle(name, ResourceLevel.Default, null);
-					ResourceBundle.Field bundleField = bundle["Source"];
-					string source = bundleField.IsValid ? bundleField.AsString : null;
-#else
-					StructuredData data = function(this.resourceManager, field.SubEntityId);  // TODO: je ne sais pas comment faire...
+					string xml;
 
-					string xml = data.GetValue(Support.Res.Fields.ResourceForm.XmlSource) as string;
+					if (this.finder == null)
+					{
+						string name = field.SubEntityId.ToBundleId();
+						ResourceBundle bundle = this.resourceManager.GetBundle(name, ResourceLevel.Default, null);
+						ResourceBundle.Field bundleField = bundle["Source"];
+						xml = bundleField.IsValid ? bundleField.AsString : null;
+					}
+					else
+					{
+						xml = this.finder(field.SubEntityId);
+					}
 
 					if (!string.IsNullOrEmpty(xml))
 					{
 						FormDescription subForm = Serialization.DeserializeForm(xml, this.resourceManager);
-						this.DevelopSubForm(this.resourceManager, dst, subForm.Fields);
+						this.DevelopSubForm(dst, subForm.Fields);
 					}
-#endif
 				}
 				else
 				{
