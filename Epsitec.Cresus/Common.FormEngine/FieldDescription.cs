@@ -218,7 +218,7 @@ namespace Epsitec.Common.FormEngine
 			}
 			else
 			{
-				System.Diagnostics.Debug.Assert(this.type == FieldType.Field);
+				System.Diagnostics.Debug.Assert(this.type == FieldType.Field || this.type == FieldType.SubForm);
 
 				this.fieldIds = new List<Druid>();
 				string[] druids = druidsPath.Split('.');

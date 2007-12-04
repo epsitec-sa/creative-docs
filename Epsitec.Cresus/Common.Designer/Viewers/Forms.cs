@@ -585,9 +585,9 @@ namespace Epsitec.Common.Designer.Viewers
 				else
 				{
 					string name = this.formEditor.ObjectModifier.GetTableRelationDescription(first+i);
-					string icon = this.formEditor.ObjectModifier.GetTableRelationIcon(first+i);
+					string icon = this.formEditor.ObjectModifier.GetTableRelationRelIcon(first+i);
 					string used = this.formEditor.ObjectModifier.GetTableRelationUseIcon(first+i);
-					Color color = this.formEditor.ObjectModifier.GetTableRelationColor(first+i);
+					Color color = this.formEditor.ObjectModifier.GetTableRelationUseColor(first+i);
 
 					this.relationsTable.SetLineString(0, first+i, name);
 					this.relationsTable.SetLineState(0, first+i, MyWidgets.StringList.CellState.Normal);
@@ -1234,9 +1234,19 @@ namespace Epsitec.Common.Designer.Viewers
 			}
 
 			FormEditor.ObjectModifier.RelationItem item = this.formEditor.ObjectModifier.TableRelations[sel];
+			FieldDescription field;
 
-			FieldDescription field = new FieldDescription(FieldDescription.FieldType.Field);
-			field.SetFields(item.DruidsPath);
+			if (item.Relation == FieldRelation.None)  // champ normal ?
+			{
+				field = new FieldDescription(FieldDescription.FieldType.Field);
+				field.SetFields(item.DruidsPath);
+			}
+			else  // relation ?
+			{
+				field = new FieldDescription(FieldDescription.FieldType.SubForm);
+				field.SetFields(item.DruidsPath);
+				field.SubEntityId = Druid.Empty;  // TODO: chercher un masque approprié !
+			}
 
 			this.form.Fields.Add(field);
 

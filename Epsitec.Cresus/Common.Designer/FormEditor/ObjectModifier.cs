@@ -566,19 +566,6 @@ namespace Epsitec.Common.Designer.FormEditor
 			}
 		}
 
-		public Color GetTableRelationColor(int index)
-		{
-			//	Retourne la couleur décrivant l'utilisation d'une relation.
-			if (this.IsTableRelationUsed(index))
-			{
-				return Color.FromAlphaRgb(0.3, 0, 1, 0);  // vert = champ utilisé
-			}
-			else
-			{
-				return Color.FromAlphaRgb(0.3, 1, 0, 0);  // rouge = champ inutilisé
-			}
-		}
-
 		public string GetTableRelationDescription(int index)
 		{
 			//	Retourne le texte permettant de décrire une relation dans une liste, avec un effet
@@ -623,7 +610,7 @@ namespace Epsitec.Common.Designer.FormEditor
 			return builder.ToString();
 		}
 
-		public string GetTableRelationIcon(int index)
+		public string GetTableRelationRelIcon(int index)
 		{
 			//	Retourne le texte "icône" permettant de décrire une relation dans une liste.
 			FieldRelation rel = this.tableRelations[index].Relation;
@@ -659,15 +646,23 @@ namespace Epsitec.Common.Designer.FormEditor
 			return icon;
 		}
 
+		public Color GetTableRelationUseColor(int index)
+		{
+			//	Retourne la couleur décrivant l'utilisation d'une relation.
+			if (this.IsTableRelationUsed(index))
+			{
+				return Color.FromAlphaRgb(0.3, 0, 1, 0);  // vert = champ utilisé
+			}
+			else
+			{
+				return Color.FromAlphaRgb(0.3, 1, 0, 0);  // rouge = champ inutilisé
+			}
+		}
+
 		public bool IsTableRelationUseable(int index)
 		{
 			//	Indique si l'opération "utiliser" est autorisée.
 			if (index == -1 || this.formEditor.Module.DesignerApplication.IsReadonly)
-			{
-				return false;
-			}
-
-			if (this.tableRelations[index].Relation != FieldRelation.None)
 			{
 				return false;
 			}
