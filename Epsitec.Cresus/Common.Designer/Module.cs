@@ -6,6 +6,8 @@ using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Support;
 using Epsitec.Common.Identity;
+using Epsitec.Common.Support.EntityEngine;
+using Epsitec.Common.Support.CodeCompilation;
 
 namespace Epsitec.Common.Designer
 {
@@ -33,6 +35,7 @@ namespace Epsitec.Common.Designer
 
 			this.moduleId = moduleId;
 			this.batchSaver = new ResourceBundleBatchSaver ();
+			this.batchSaver.BundleSaved += this.HandleBatchSaverModuleSaved;
 
 			this.resourceManager = new ResourceManager(pool, moduleId);
 			this.resourceManager.DefineDefaultModuleName(this.moduleId.Name);
@@ -528,6 +531,85 @@ namespace Epsitec.Common.Designer
 							i--;
 						}
 					}
+				}
+			}
+		}
+
+		private void HandleBatchSaverModuleSaved(ResourceManager manager, ResourceBundle bundle, ResourceSetMode mode)
+		{
+			switch (mode)
+			{
+				case ResourceSetMode.CreateOnly:
+				case ResourceSetMode.InMemory:
+				case ResourceSetMode.UpdateOnly:
+				case ResourceSetMode.Write:
+					break;
+
+				case ResourceSetMode.None:
+				case ResourceSetMode.Remove:
+					return;
+
+				default:
+					throw new System.NotSupportedException ();
+			}
+
+			if (bundle.Type == Resources.CaptionTypeName)
+			{
+				foreach (ResourceBundle.Field field in bundle.Fields)
+				{
+					if (field.Name.StartsWith ("Typ.StructuredType."))
+					{
+						try
+						{
+							this.RegenerateSourceCode (manager, bundle);
+						}
+						catch (System.Exception ex)
+						{
+							System.Diagnostics.Debug.WriteLine ("Exception : " + ex.Message);
+						}
+						break;
+					}
+				}
+			}
+		}
+
+		private void RegenerateSourceCode(ResourceManager manager, ResourceBundle bundle)
+		{
+			CodeGenerator generator = new CodeGenerator (manager);
+			generator.Emit ();
+
+			using (BuildDriver driver = new BuildDriver ())
+			{
+				driver.CreateBuildDirectory ();
+
+				generator.Formatter.SaveCodeToTextFile (System.IO.Path.Combine (driver.BuildDirectory, "Entities.cs"), System.Text.Encoding.UTF8);
+				CodeProjectSettings settings = driver.CreateSettings ("Common.Support.Entities");
+
+				settings.References.Add (new CodeProjectReference ("System.Core"));
+				settings.References.Add (CodeProjectReference.FromAssembly (typeof (Common.Support.Res).Assembly));
+				settings.References.Add (CodeProjectReference.FromAssembly (typeof (Common.Types.Res).Assembly));
+
+				settings.Sources.Add (new CodeProjectSource ("Entities.cs"));
+
+				List<string> messages;
+
+				bool result = driver.Compile (new CodeProject (settings));
+
+				messages = Types.Collection.ToList (driver.GetBuildMessages ());
+
+				foreach (string message in messages)
+				{
+					System.Diagnostics.Debug.WriteLine (message);
+				}
+
+				if (messages.Count == 0)
+				{
+				}
+
+				if ((driver.GetCompiledAssemblyPath () != null) &&
+					(driver.GetCompiledAssemblyDebugInfoPath () != null))
+				{
+					//	...
 				}
 			}
 		}

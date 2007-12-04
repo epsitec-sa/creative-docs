@@ -500,6 +500,7 @@ namespace Epsitec.Common.FormEngine
 			Widgets.Layouts.GridLayoutEngine.SetColumn(box, i);
 			Widgets.Layouts.GridLayoutEngine.SetRow(box, row);
 			Widgets.Layouts.GridLayoutEngine.SetColumnSpan(box, j-i);
+			box.SetParent (root);
 
 			if (isGlueAfter)
 			{

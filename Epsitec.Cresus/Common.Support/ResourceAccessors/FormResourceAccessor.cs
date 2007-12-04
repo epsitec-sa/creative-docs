@@ -16,7 +16,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 
 		protected override string GetResourceFileType()
 		{
-			return Strings.FormType;
+			return Resources.FormTypeName;
 		}
 
 		protected override IStructuredType GetResourceType()
@@ -56,7 +56,6 @@ namespace Epsitec.Common.Support.ResourceAccessors
 
 		private static class Strings
 		{
-			public const string FormType = "Form";
 			public const string XmlSource = "Source";
 		}
 	}

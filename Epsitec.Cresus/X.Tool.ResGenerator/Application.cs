@@ -170,11 +170,11 @@ namespace Epsitec.Common.Tool.ResGenerator
 				
 				switch (bundleType)
 				{
-					case "String":
+					case Resources.StringTypeName:
 						Application.GenerateStrings (manager, buffer, generator, defaultNamespace, bundleId, bundle);
 						addLine = true;
 						break;
-					case "Caption":
+					case Resources.CaptionTypeName:
 						Application.GenerateCommandsCaptionsAndTypes (manager, buffer, generator, defaultNamespace, bundleId, bundle);
 						addLine = true;
 						break;

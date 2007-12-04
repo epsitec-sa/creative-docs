@@ -1953,7 +1953,7 @@ namespace Epsitec.Common.Designer
 			switch (this.type)
 			{
 				case Type.Strings:
-					return "Strings";
+					return Resources.StringsBundleName;
 
 				case Type.Captions:
 				case Type.Commands:
@@ -1961,7 +1961,7 @@ namespace Epsitec.Common.Designer
 				case Type.Fields:
 				case Type.Types:
 				case Type.Values:
-					return "Captions";
+					return Resources.CaptionsBundleName;
 
 				case Type.Panels:
 				case Type.Forms:
@@ -1978,7 +1978,7 @@ namespace Epsitec.Common.Designer
 			switch (this.type)
 			{
 				case Type.Strings:
-					return "String";
+					return Resources.StringTypeName;
 
 				case Type.Captions:
 				case Type.Commands:
@@ -1986,13 +1986,13 @@ namespace Epsitec.Common.Designer
 				case Type.Fields:
 				case Type.Types:
 				case Type.Values:
-					return "Caption";
+					return Resources.CaptionTypeName;
 
 				case Type.Panels:
-					return "Panel";
+					return Resources.PanelTypeName;
 				
 				case Type.Forms:
-					return "Form";
+					return Resources.FormTypeName;
 				
 				default:
 					throw new System.NotImplementedException();

@@ -16,7 +16,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 
 		protected override string GetResourceFileType()
 		{
-			return Strings.PanelType;
+			return Resources.PanelTypeName;
 		}
 
 		protected override IStructuredType GetResourceType()
@@ -66,7 +66,6 @@ namespace Epsitec.Common.Support.ResourceAccessors
 
 		private static class Strings
 		{
-			public const string PanelType = "Panel";
 			public const string XmlSource = "Panel";
 			public const string DefaultSize = "DefaultSize";
 		}

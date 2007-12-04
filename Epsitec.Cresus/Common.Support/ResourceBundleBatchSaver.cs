@@ -91,8 +91,10 @@ namespace Epsitec.Common.Support
 				ResourceBundle  bundle  = pair.Key;
 				ResourceSetMode mode    = pair.Value;
 				ResourceManager manager = bundle.ResourceManager;
-				
+
+				this.OnSavingBundle (manager, bundle, mode);
 				manager.SetBundle (bundle, mode);
+				this.OnBundleSaved (manager, bundle, mode);
 			}
 
 			this.bundles.Clear ();
@@ -116,6 +118,25 @@ namespace Epsitec.Common.Support
 				}
 			}
 		}
+
+		private void OnSavingBundle(ResourceManager manager, ResourceBundle bundle, ResourceSetMode mode)
+		{
+			if (this.SavingBundle != null)
+			{
+				this.SavingBundle (manager, bundle, mode);
+			}
+		}
+
+		private void OnBundleSaved(ResourceManager manager, ResourceBundle bundle, ResourceSetMode mode)
+		{
+			if (this.BundleSaved != null)
+			{
+				this.BundleSaved (manager, bundle, mode);
+			}
+		}
+
+		public event ResourceBundleSaver SavingBundle;
+		public event ResourceBundleSaver BundleSaved;
 
 		Dictionary<ResourceBundle, ResourceSetMode> bundles;
 		List<ResourceBundle> blackList;

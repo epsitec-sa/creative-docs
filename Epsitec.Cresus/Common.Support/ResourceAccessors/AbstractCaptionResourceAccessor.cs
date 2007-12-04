@@ -309,7 +309,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 					{
 						ResourceModuleId moduleId = this.ResourceManager.GetModuleFromFullId (item.Id.ToString ());
 						bundle = ResourceBundle.Create (this.ResourceManager, this.ResourceManager.ActivePrefix, moduleId, this.GetBundleName (), level, culture, 0);
-						bundle.DefineType ("Caption");
+						bundle.DefineType (Resources.CaptionTypeName);
 						this.ResourceManager.SetBundle (bundle, ResourceSetMode.InMemory);
 					}
 
