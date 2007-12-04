@@ -746,7 +746,7 @@ namespace Epsitec.Common.Designer.Viewers
 					guids = this.formEditor.GetSelectedGuids();  // Guid des objets sélectionnés
 				}
 
-				FormEngine.Engine engine = new FormEngine.Engine(this.module.ResourceManager, null);
+				FormEngine.Engine engine = new FormEngine.Engine(this.module.ResourceManager, this.access.GetForm);
 				this.panelContainer = engine.CreateForm(form, true);
 				if (this.panelContainer == null)
 				{

@@ -8,7 +8,7 @@ using Epsitec.Common.Types;
 
 namespace Epsitec.Common.FormEngine
 {
-	public delegate string FindResource(Druid id);
+	public delegate FormDescription FindFormDescription(Druid id);
 
 
 	/// <summary>
@@ -16,9 +16,12 @@ namespace Epsitec.Common.FormEngine
 	/// </summary>
 	public class Engine
 	{
-		public Engine(ResourceManager resourceManager, FindResource finder)
+		public Engine(ResourceManager resourceManager, FindFormDescription finder)
 		{
 			//	Constructeur.
+			//	FindFormDescription permet de retrouver le FormDescription correspondant à un Druid,
+			//	lorsque les ressources ne sont pas sérialisées. Pour un usage hors de Designer, avec
+			//	des ressources sérialisées, ce paramètre peut être null.
 			this.resourceManager = resourceManager;
 			this.finder = finder;
 
@@ -688,7 +691,7 @@ namespace Epsitec.Common.FormEngine
 		public static readonly int MaxRowsRequired = 20;
 
 		protected readonly ResourceManager resourceManager;
-		protected FindResource finder;
+		protected FindFormDescription finder;
 		protected readonly EntityContext entityContext;
 		protected Arrange arrange;
 		protected bool forDesigner;

@@ -408,7 +408,7 @@ namespace Epsitec.Common.Designer
 			string name = this.accessForms.GetField(index, null, ResourceAccess.FieldType.Name).String;
 			FormEngine.FormDescription form = this.accessForms.GetForm(index);
 
-			FormEngine.Engine engine = new FormEngine.Engine(this.resourceManager, null);
+			FormEngine.Engine engine = new FormEngine.Engine(this.resourceManager, this.accessForms.GetForm);
 			UI.Panel panel = engine.CreateForm(form, false);
 
 			if (panel != null)

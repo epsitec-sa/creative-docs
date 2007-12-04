@@ -12,7 +12,7 @@ namespace Epsitec.Common.FormEngine
 	/// </summary>
 	public class Arrange
 	{
-		public Arrange(ResourceManager resourceManager, FindResource finder)
+		public Arrange(ResourceManager resourceManager, FindFormDescription finder)
 		{
 			//	Constructeur.
 			this.resourceManager = resourceManager;
@@ -156,23 +156,32 @@ namespace Epsitec.Common.FormEngine
 			{
 				if (field.Type == FieldDescription.FieldType.SubForm)
 				{
-					string xml;
+					FormDescription subForm = null;
 
 					if (this.finder == null)
 					{
 						string name = field.SubEntityId.ToBundleId();
 						ResourceBundle bundle = this.resourceManager.GetBundle(name, ResourceLevel.Default, null);
-						ResourceBundle.Field bundleField = bundle["Source"];
-						xml = bundleField.IsValid ? bundleField.AsString : null;
+						if (bundle != null)
+						{
+							ResourceBundle.Field bundleField = bundle["Source"];
+							if (bundleField.IsValid)
+							{
+								string xml = bundleField.AsString;
+								if (!string.IsNullOrEmpty(xml))
+								{
+									subForm = Serialization.DeserializeForm(xml, this.resourceManager);
+								}
+							}
+						}
 					}
 					else
 					{
-						xml = this.finder(field.SubEntityId);
+						subForm = this.finder(field.SubEntityId);
 					}
 
-					if (!string.IsNullOrEmpty(xml))
+					if (subForm != null)
 					{
-						FormDescription subForm = Serialization.DeserializeForm(xml, this.resourceManager);
 						this.DevelopSubForm(dst, subForm.Fields);
 					}
 				}
@@ -217,6 +226,6 @@ namespace Epsitec.Common.FormEngine
 
 
 		protected readonly ResourceManager resourceManager;
-		protected FindResource finder;
+		protected FindFormDescription finder;
 	}
 }
