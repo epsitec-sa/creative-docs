@@ -12,14 +12,22 @@ namespace Epsitec.Common.FormEngine
 	/// </summary>
 	public class Arrange
 	{
-		static public List<FieldDescription> Merge(List<FieldDescription> reference, List<FieldDescription> patch)
+		public Arrange(ResourceManager resourceManager, FindResource finder)
+		{
+			//	Constructeur.
+			this.resourceManager = resourceManager;
+			this.finder = finder;
+		}
+
+
+		public List<FieldDescription> Merge(List<FieldDescription> reference, List<FieldDescription> patch)
 		{
 			//	Retourne la liste fusionnée.
 			return reference;  // TODO:
 		}
 
 
-		static public string Check(List<FieldDescription> list)
+		public string Check(List<FieldDescription> list)
 		{
 			//	Vérifie une liste. Retourne null si tout est ok, ou un message d'erreur.
 			int level = 0;
@@ -65,7 +73,7 @@ namespace Epsitec.Common.FormEngine
 		}
 
 
-		static public List<FieldDescription> Organize(List<FieldDescription> fields)
+		public List<FieldDescription> Organize(List<FieldDescription> fields)
 		{
 			//	Arrange une liste.
 			List<FieldDescription> list = new List<FieldDescription>();
@@ -132,17 +140,17 @@ namespace Epsitec.Common.FormEngine
 		}
 
 
-		static public List<FieldDescription> DevelopSubForm(ResourceManager manager, List<FieldDescription> list)
+		public List<FieldDescription> DevelopSubForm(List<FieldDescription> list)
 		{
 			//	Retourne une liste développée qui ne contient plus de sous-masque.
 			List<FieldDescription> dst = new List<FieldDescription>();
 
-			Arrange.DevelopSubForm(manager, dst, list);
+			this.DevelopSubForm(dst, list);
 
 			return dst;
 		}
 
-		static private void DevelopSubForm(ResourceManager resourceManager, List<FieldDescription> dst, List<FieldDescription> fields)
+		private void DevelopSubForm(List<FieldDescription> dst, List<FieldDescription> fields)
 		{
 			foreach (FieldDescription field in fields)
 			{
@@ -150,18 +158,18 @@ namespace Epsitec.Common.FormEngine
 				{
 #if true
 					string name = field.SubEntityId.ToBundleId();
-					ResourceBundle bundle = resourceManager.GetBundle(name, ResourceLevel.Default, null);
+					ResourceBundle bundle = this.resourceManager.GetBundle(name, ResourceLevel.Default, null);
 					ResourceBundle.Field bundleField = bundle["Source"];
 					string source = bundleField.IsValid ? bundleField.AsString : null;
 #else
-					StructuredData data = function(resourceManager, field.SubEntityId);  // TODO: je ne sais pas comment faire...
+					StructuredData data = function(this.resourceManager, field.SubEntityId);  // TODO: je ne sais pas comment faire...
 
 					string xml = data.GetValue(Support.Res.Fields.ResourceForm.XmlSource) as string;
 
 					if (!string.IsNullOrEmpty(xml))
 					{
-						FormDescription subForm = Serialization.DeserializeForm(xml, resourceManager);
-						Arrange.DevelopSubForm(resourceManager, dst, subForm.Fields);
+						FormDescription subForm = Serialization.DeserializeForm(xml, this.resourceManager);
+						this.DevelopSubForm(this.resourceManager, dst, subForm.Fields);
 					}
 #endif
 				}
@@ -173,23 +181,23 @@ namespace Epsitec.Common.FormEngine
 		}
 
 
-		static public List<FieldDescription> Develop(List<FieldDescription> fields)
+		public List<FieldDescription> Develop(List<FieldDescription> fields)
 		{
 			//	Retourne une liste développée qui ne contient plus de noeuds.
 			List<FieldDescription> dst = new List<FieldDescription>();
 
-			Arrange.Develop(dst, fields);
+			this.Develop(dst, fields);
 			
 			return dst;
 		}
 
-		static private void Develop(List<FieldDescription> dst, List<FieldDescription> fields)
+		private void Develop(List<FieldDescription> dst, List<FieldDescription> fields)
 		{
 			foreach (FieldDescription field in fields)
 			{
 				if (field.Type == FieldDescription.FieldType.Node)
 				{
-					Arrange.Develop(dst, field.NodeDescription);
+					this.Develop(dst, field.NodeDescription);
 				}
 				else if (field.Type == FieldDescription.FieldType.InsertionPoint)
 				{
@@ -203,5 +211,9 @@ namespace Epsitec.Common.FormEngine
 				}
 			}
 		}
+
+
+		protected readonly ResourceManager resourceManager;
+		protected FindResource finder;
 	}
 }

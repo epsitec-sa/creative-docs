@@ -8,16 +8,31 @@ using Epsitec.Common.Types;
 
 namespace Epsitec.Common.FormEngine
 {
+	public delegate string FindResource(Druid id);
+
+
 	/// <summary>
 	/// Générateur de masques de saisie.
 	/// </summary>
 	public class Engine
 	{
-		public Engine(ResourceManager resourceManager)
+		public Engine(ResourceManager resourceManager, FindResource finder)
 		{
 			//	Constructeur.
 			this.resourceManager = resourceManager;
+			this.finder = finder;
+
+			this.arrange = new Arrange(resourceManager, finder);
+
 			this.entityContext = new EntityContext (this.resourceManager, EntityLoopHandlingMode.Skip);
+		}
+
+		public Arrange Arrange
+		{
+			get
+			{
+				return this.arrange;
+			}
 		}
 
 		public UI.Panel CreateForm(FormDescription form, bool forDesigner)
@@ -26,7 +41,7 @@ namespace Epsitec.Common.FormEngine
 			//	La liste de FieldDescription doit être plate (pas de Node).
 			this.forDesigner = forDesigner;
 
-			string err = Arrange.Check(form.Fields);
+			string err = this.arrange.Check(form.Fields);
 			if (err != null)
 			{
 				UI.Panel container = new UI.Panel();
@@ -39,8 +54,8 @@ namespace Epsitec.Common.FormEngine
 				return container;
 			}
 
-			List<FieldDescription> fields1 = Arrange.DevelopSubForm(this.resourceManager, form.Fields);
-			List<FieldDescription> fields2 = Arrange.Organize(fields1);
+			List<FieldDescription> fields1 = this.arrange.DevelopSubForm(form.Fields);
+			List<FieldDescription> fields2 = this.arrange.Organize(fields1);
 
 			Caption entityCaption = this.resourceManager.GetCaption(form.EntityId);
 			StructuredType entity = TypeRosetta.GetTypeObject(entityCaption) as StructuredType;
@@ -673,7 +688,9 @@ namespace Epsitec.Common.FormEngine
 		public static readonly int MaxRowsRequired = 20;
 
 		protected readonly ResourceManager resourceManager;
+		protected FindResource finder;
 		protected readonly EntityContext entityContext;
+		protected Arrange arrange;
 		protected bool forDesigner;
 	}
 }

@@ -126,8 +126,7 @@ namespace Epsitec.Common.FormEngine
 			}
 			else
 			{
-				Engine engine = new Engine(this.manager);
-				return engine.CreateForm(form, false);
+				return this.engine.CreateForm(form, false);
 			}
 		}
 
@@ -248,9 +247,9 @@ namespace Epsitec.Common.FormEngine
 				fields.Add(this.CreateBoxEnd());
 			}
 
-			List<FieldDescription> flat = Arrange.Develop(fields);
+			List<FieldDescription> flat = this.engine.Arrange.Develop(fields);
 
-			string err = Arrange.Check(flat);
+			string err = this.engine.Arrange.Check(flat);
 			if (err == null)
 			{
 				FormDescription form = new FormDescription();
@@ -335,11 +334,15 @@ namespace Epsitec.Common.FormEngine
 			this.accessor.Load(this.manager);
 
 			this.collection = new CollectionView(this.accessor.Collection);
+
+			this.engine = new Engine(this.manager, null);
 		}
 
 
 		protected ResourceManager manager;
 		protected Support.ResourceAccessors.StructuredTypeResourceAccessor accessor;
 		protected CollectionView collection;
+		protected Engine engine;
+
 	}
 }
