@@ -57,8 +57,7 @@ namespace Epsitec.Common.FormEngine
 				return container;
 			}
 
-			List<FieldDescription> fields1 = this.arrange.DevelopSubForm(form.Fields);
-			List<FieldDescription> fields2 = this.arrange.Organize(fields1);
+			List<FieldDescription> fields = this.arrange.Organize(form.Fields);
 
 			Caption entityCaption = this.resourceManager.GetCaption(form.EntityId);
 			StructuredType entity = TypeRosetta.GetTypeObject(entityCaption) as StructuredType;
@@ -88,7 +87,7 @@ namespace Epsitec.Common.FormEngine
 			root.DataSource = new UI.DataSource();
 			root.DataSource.AddDataSource("Data", entityData);
 
-			this.CreateFormBox(root, fields2, 0);
+			this.CreateFormBox(root, fields, 0);
 
 			return root;
 		}
@@ -135,6 +134,13 @@ namespace Epsitec.Common.FormEngine
 					if (level < 0)
 					{
 						break;
+					}
+				}
+				else if (field.Type == FieldDescription.FieldType.SubForm)  // sous-masque ?
+				{
+					if (level == 0)
+					{
+						this.PreprocessSubForm(field, labelsId, ref labelId, ref column, isGlueAfter);
 					}
 				}
 				else if (field.Type == FieldDescription.FieldType.Field)  // champ ?
@@ -240,6 +246,18 @@ namespace Epsitec.Common.FormEngine
 						break;
 					}
 				}
+				else if (field.Type == FieldDescription.FieldType.SubForm)  // sous-masque ?
+				{
+					if (level == 0)
+					{
+						FormDescription subForm = this.SearchSubForm(field);
+						if (subForm != null)
+						{
+							UI.Panel box = this.CreateForm(subForm, this.forDesigner);
+							this.CreateSubForm(root, grid, field, labelsId, box, ref column, ref row, isGlueAfter);
+						}
+					}
+				}
 				else if (field.Type == FieldDescription.FieldType.Field)  // champ ?
 				{
 					if (level == 0)
@@ -256,7 +274,7 @@ namespace Epsitec.Common.FormEngine
 					}
 				}
 				else if (field.Type == FieldDescription.FieldType.Title ||
-						 field.Type == FieldDescription.FieldType.Line  )  // séparateur ?
+						 field.Type == FieldDescription.FieldType.Line)  // séparateur ?
 				{
 					if (level == 0)
 					{
@@ -273,6 +291,23 @@ namespace Epsitec.Common.FormEngine
 			//	Détermine quelles colonnes contiennent des labels, lors de la première passe.
 			//	Un BoxBegin ne contient jamais de label, mais il faut tout de même faire évoluer
 			//	le numéro de la colonne.
+			int columnsRequired = System.Math.Max(field.ColumnsRequired, 1);
+
+			Engine.LabelIdUse(labelsId, labelId++, column, columnsRequired);
+
+			if (isGlueAfter)
+			{
+				column += columnsRequired;
+			}
+			else
+			{
+				column = 0;
+			}
+		}
+
+		private void PreprocessSubForm(FieldDescription field, List<int> labelsId, ref int labelId, ref int column, bool isGlueAfter)
+		{
+			//	Détermine quelles colonnes contiennent des labels, lors de la première passe.
 			int columnsRequired = System.Math.Max(field.ColumnsRequired, 1);
 
 			Engine.LabelIdUse(labelsId, labelId++, column, columnsRequired);
@@ -451,6 +486,32 @@ namespace Epsitec.Common.FormEngine
 			return box;
 		}
 
+		private void CreateSubForm(UI.Panel root, Widgets.Layouts.GridLayoutEngine grid, FieldDescription field, List<int> labelsId, UI.Panel box, ref int column, ref int row, bool isGlueAfter)
+		{
+			//	Met les widgets d'un sous-masque dans la grille, lors de la deuxième passe.
+			grid.RowDefinitions.Add(new Widgets.Layouts.RowDefinition());
+
+			int columnsRequired = System.Math.Max(field.ColumnsRequired, 1);
+
+			grid.RowDefinitions[row].BottomBorder = FieldDescription.GetRealSeparator(field.SeparatorBottom);
+
+			int i = Engine.GetColumnIndex(labelsId, column);
+			int j = Engine.GetColumnIndex(labelsId, column+columnsRequired-1)+1;
+			Widgets.Layouts.GridLayoutEngine.SetColumn(box, i);
+			Widgets.Layouts.GridLayoutEngine.SetRow(box, row);
+			Widgets.Layouts.GridLayoutEngine.SetColumnSpan(box, j-i);
+
+			if (isGlueAfter)
+			{
+				column += columnsRequired;
+			}
+			else
+			{
+				row++;
+				column = 0;
+			}
+		}
+
 		private void CreateField(UI.Panel root, Widgets.Layouts.GridLayoutEngine grid, string path, FieldDescription field, List<int> labelsId, ref int column, ref int row, bool isGlueAfter)
 		{
 			//	Crée les widgets pour un champ dans la grille, lors de la deuxième passe.
@@ -610,6 +671,37 @@ namespace Epsitec.Common.FormEngine
 
 				row++;
 			}
+		}
+
+
+		protected FormDescription SearchSubForm(FieldDescription field)
+		{
+			//	Cherche un sous-masque dans les ressources.
+			FormDescription subForm = null;
+
+			if (this.finder == null)
+			{
+				string name = field.SubEntityId.ToBundleId();
+				ResourceBundle bundle = this.resourceManager.GetBundle(name, ResourceLevel.Default, null);
+				if (bundle != null)
+				{
+					ResourceBundle.Field bundleField = bundle["Source"];
+					if (bundleField.IsValid)
+					{
+						string xml = bundleField.AsString;
+						if (!string.IsNullOrEmpty(xml))
+						{
+							subForm = Serialization.DeserializeForm(xml, this.resourceManager);
+						}
+					}
+				}
+			}
+			else
+			{
+				subForm = this.finder(field.SubEntityId);
+			}
+
+			return subForm;
 		}
 
 
