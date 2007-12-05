@@ -145,18 +145,18 @@ namespace Epsitec.Common.FormEngine
 			//	Retourne une liste développée qui ne contient plus de sous-masque.
 			List<FieldDescription> dst = new List<FieldDescription>();
 
-			this.DevelopSubForm(dst, list);
+			this.DevelopSubForm(dst, list, null);
 
 			return dst;
 		}
 
-		private void DevelopSubForm(List<FieldDescription> dst, List<FieldDescription> fields)
+		private void DevelopSubForm(List<FieldDescription> dst, List<FieldDescription> fields, string prefix)
 		{
 			foreach (FieldDescription field in fields)
 			{
 				if (field.Type == FieldDescription.FieldType.SubForm)
 				{
-					if (field.SubFormId.IsEmpty)
+					if (field.SubFormId.IsEmpty)  // aucun Form choisi ?
 					{
 						continue;
 					}
@@ -187,12 +187,22 @@ namespace Epsitec.Common.FormEngine
 
 					if (subForm != null)
 					{
-						this.DevelopSubForm(dst, subForm.Fields);
+						string p = string.Concat(prefix, field.GetPath(null), ".");
+						this.DevelopSubForm(dst, subForm.Fields, p);
 					}
 				}
 				else
 				{
-					dst.Add(field);
+					if (prefix == null || (field.Type != FieldDescription.FieldType.Field && field.Type != FieldDescription.FieldType.SubForm))
+					{
+						dst.Add(field);
+					}
+					else
+					{
+						FieldDescription copy = new FieldDescription(field);
+						copy.SetFields(prefix+field.GetPath(null));
+						dst.Add(copy);
+					}
 				}
 			}
 		}
