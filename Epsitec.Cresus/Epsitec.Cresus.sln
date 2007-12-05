@@ -134,6 +134,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.FormEngine.Tests", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cresus.Core", "Cresus.Core\Cresus.Core.csproj", "{543293D0-CAFB-4431-8202-6C6D5FF5403A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "App.Designer.Protocol", "App.Designer.Protocol\App.Designer.Protocol.csproj", "{FF4203B6-50D1-4915-9BBA-E0B57EA07D13}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -728,6 +730,16 @@ Global
 		{543293D0-CAFB-4431-8202-6C6D5FF5403A}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{543293D0-CAFB-4431-8202-6C6D5FF5403A}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{543293D0-CAFB-4431-8202-6C6D5FF5403A}.Release|Win32.ActiveCfg = Release|Any CPU
+		{FF4203B6-50D1-4915-9BBA-E0B57EA07D13}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FF4203B6-50D1-4915-9BBA-E0B57EA07D13}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FF4203B6-50D1-4915-9BBA-E0B57EA07D13}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{FF4203B6-50D1-4915-9BBA-E0B57EA07D13}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{FF4203B6-50D1-4915-9BBA-E0B57EA07D13}.Debug|Win32.ActiveCfg = Debug|Any CPU
+		{FF4203B6-50D1-4915-9BBA-E0B57EA07D13}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FF4203B6-50D1-4915-9BBA-E0B57EA07D13}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FF4203B6-50D1-4915-9BBA-E0B57EA07D13}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{FF4203B6-50D1-4915-9BBA-E0B57EA07D13}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{FF4203B6-50D1-4915-9BBA-E0B57EA07D13}.Release|Win32.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

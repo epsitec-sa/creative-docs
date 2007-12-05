@@ -559,12 +559,12 @@ namespace Epsitec.Common.Support
 
 		#endregion
 
-		public static readonly string			StringsBundleName = "Strings";
-		public static readonly string			CaptionsBundleName = "Captions";
-		public static readonly string			StringTypeName = "String";
-		public static readonly string			CaptionTypeName = "Caption";
-		public static readonly string			PanelTypeName = "Panel";
-		public static readonly string			FormTypeName = "Form";
+		public const string						StringsBundleName = "Strings";
+		public const string						CaptionsBundleName = "Captions";
+		public const string						StringTypeName = "String";
+		public const string						CaptionTypeName = "Caption";
+		public const string						PanelTypeName = "Panel";
+		public const string						FormTypeName = "Form";
 		public static readonly string			DefaultTwoLetterISOLanguageName = "00";
 
 		public static readonly char				PrefixSeparator = ':';

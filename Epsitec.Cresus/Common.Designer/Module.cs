@@ -553,7 +553,8 @@ namespace Epsitec.Common.Designer
 					throw new System.NotSupportedException ();
 			}
 
-			if (bundle.Type == Resources.CaptionTypeName)
+			if ((bundle.Type == Resources.CaptionTypeName) &&
+				(!string.IsNullOrEmpty (this.moduleInfo.SourceNamespace)))
 			{
 				foreach (ResourceBundle.Field field in bundle.Fields)
 				{
@@ -578,6 +579,18 @@ namespace Epsitec.Common.Designer
 			CodeGenerator generator = new CodeGenerator (manager);
 			generator.Emit ();
 
+			string modulePath = this.moduleId.Path;
+			string sourceCodeRoot = System.IO.Path.Combine (modulePath, "SourceCode");
+			string sourceCodePath = System.IO.Path.Combine (sourceCodeRoot, "Entities.cs");
+
+			if (!System.IO.Directory.Exists (sourceCodeRoot))
+			{
+				System.IO.Directory.CreateDirectory (sourceCodeRoot);
+			}
+
+			generator.Formatter.SaveCodeToTextFile (sourceCodePath, System.Text.Encoding.UTF8);
+
+#if false
 			using (BuildDriver driver = new BuildDriver ())
 			{
 				driver.CreateBuildDirectory ();
@@ -612,6 +625,7 @@ namespace Epsitec.Common.Designer
 					//	...
 				}
 			}
+#endif
 		}
 
 		private void HandleAccessDirtyChanged(object sender)

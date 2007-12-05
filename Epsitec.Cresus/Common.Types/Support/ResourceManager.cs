@@ -378,6 +378,11 @@ namespace Epsitec.Common.Support
 				else
 				{
 					module = ResourceModuleId.Parse (moduleName);
+					
+					if (module.Id == this.defaultModuleId)
+					{
+						module = new ResourceModuleId (this.defaultModuleName, this.defaultModulePath, this.defaultModuleId);
+					}
 				}
 			}
 			else

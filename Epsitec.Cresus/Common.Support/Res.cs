@@ -298,14 +298,18 @@ namespace Epsitec.Common.Support
 			}
 		}
 		
-		//	Code mapping for 'Panel' resources
-		
 		//	Code mapping for 'String' resources
 		
 		public static class Strings
 		{
 			//	designer:str/7001
 			public static string Author { get { return global::Epsitec.Common.Support.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (1)); } }
+			public static class CodeGenerator
+			{
+				//	designer:str/701
+				public static string SourceFileHeader { get { return global::Epsitec.Common.Support.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (16777216)); } }
+			}
+			
 			//	designer:str/7003
 			public static string CopyrightHolder { get { return global::Epsitec.Common.Support.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (3)); } }
 			public static class Image
