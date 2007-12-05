@@ -431,7 +431,7 @@ namespace Epsitec.Common.Designer.Viewers
 			//	Indique s'il faut aiguiller ici une opération delete ou duplicate.
 			get
 			{
-				return (this.formEditor.SelectedObjects.Count != 0);
+				return false;
 			}
 		}
 
@@ -1268,6 +1268,7 @@ namespace Epsitec.Common.Designer.Viewers
 				}
 
 				field = new FieldDescription(FieldDescription.FieldType.SubForm);
+				field.BoxFrameState = FrameState.All;
 				field.SetFields(item.DruidsPath);
 				field.SubFormId = formId;
 			}
