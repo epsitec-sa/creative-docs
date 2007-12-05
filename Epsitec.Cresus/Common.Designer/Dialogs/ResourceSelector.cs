@@ -554,6 +554,21 @@ namespace Epsitec.Common.Designer.Dialogs
 		}
 
 
+		protected void Close()
+		{
+			//	Ferme proprement le dialogue.
+			if (this.collectionView != null)
+			{
+				this.collectionView.Filter = null;  // pour éviter un appel ultérieur de CollectionViewFilter !
+				this.collectionView = null;
+			}
+
+			this.parentWindow.MakeActive();
+			this.window.Hide();
+			this.OnClosed();
+		}
+
+
 		private void HandleRadioClicked(object sender, MessageEventArgs e)
 		{
 			//	Changement du type des ressources par un bouton radio.
@@ -661,39 +676,31 @@ namespace Epsitec.Common.Designer.Dialogs
 		private void HandleListResourcesDoubleClicked(object sender, MessageEventArgs e)
 		{
 			//	La liste des ressources a été double-cliquée.
-			this.parentWindow.MakeActive();
-			this.window.Hide();
-			this.OnClosed();
-
 			this.resource = this.SelectedResource;
 			this.result = Common.Dialogs.DialogResult.Yes;
+
+			this.Close();
 		}
 
 		private void HandleWindowCloseClicked(object sender)
 		{
-			this.parentWindow.MakeActive();
-			this.window.Hide();
-			this.OnClosed();
+			this.Close();
 		}
 
 		private void HandleButtonCloseClicked(object sender, MessageEventArgs e)
 		{
-			this.parentWindow.MakeActive();
-			this.window.Hide();
-			this.OnClosed();
-
 			this.resource = Druid.Empty;
 			this.result = Common.Dialogs.DialogResult.Cancel;
+
+			this.Close();
 		}
 
 		private void HandleButtonUseClicked(object sender, MessageEventArgs e)
 		{
-			this.parentWindow.MakeActive();
-			this.window.Hide();
-			this.OnClosed();
-
 			this.resource = this.SelectedResource;
 			this.result = Common.Dialogs.DialogResult.Yes;
+
+			this.Close();
 		}
 
 

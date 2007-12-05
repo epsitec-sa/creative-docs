@@ -1080,7 +1080,10 @@ namespace Epsitec.Common.Designer.Viewers
 			}
 			sels.Sort();
 
-			Druid druid = Druid.Empty;
+			FormEditor.ObjectModifier.TableItem item = this.formEditor.ObjectModifier.TableContent[sels[0]];
+			FieldDescription field = this.formEditor.ObjectModifier.GetFormDescription(item);
+
+			Druid druid = field.SubFormId;
 			bool isNullable = false;
 			Module module = this.designerApplication.SearchModule(this.druidToSerialize);
 			StructuredTypeClass typeClass = StructuredTypeClass.None;
@@ -1092,8 +1095,6 @@ namespace Epsitec.Common.Designer.Viewers
 				return;
 			}
 
-			FormEditor.ObjectModifier.TableItem item = this.formEditor.ObjectModifier.TableContent[sels[0]];
-			FieldDescription field = this.formEditor.ObjectModifier.GetFormDescription(item);
 			field.SubFormId = druid;
 			
 			this.SetForm(this.form, this.druidToSerialize, true);
