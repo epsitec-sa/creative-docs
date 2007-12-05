@@ -117,7 +117,14 @@ namespace Epsitec.Common.FormEngine
 
 				//	Assigne l'identificateur unique, qui ira dans la propriété Index des widgets.
 				//	La valeur -1 par défaut indique un widget non identifié.
-				field.UniqueId = i;
+				if (field.Source == null)
+				{
+					field.UniqueId = i;
+				}
+				else
+				{
+					field.UniqueId = field.Source.UniqueId;
+				}
 
 				if (field.Type == FieldDescription.FieldType.BoxBegin ||  // début de boîte ?
 					field.Type == FieldDescription.FieldType.SubForm)
