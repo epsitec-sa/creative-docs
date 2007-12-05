@@ -58,6 +58,7 @@ namespace Epsitec.Common.FormEngine
 		{
 			//	Constructeur protégé, commun à tous les autres.
 			this.subEntityId = Druid.Empty;
+			this.subFormId = Druid.Empty;
 			this.backColor = BackColorType.None;
 			this.separatorBottom = SeparatorType.Normal;
 			this.columnsRequired = Engine.MaxColumnsRequired;
@@ -87,6 +88,7 @@ namespace Epsitec.Common.FormEngine
 			this.nodeDescription = model.nodeDescription;
 			this.fieldIds = model.fieldIds;
 			this.subEntityId = model.subEntityId;
+			this.subFormId = model.subFormId;
 			this.boxPaddingType = model.boxPaddingType;
 			this.boxFrameState = model.boxFrameState;
 			this.boxFrameWidth = model.boxFrameWidth;
@@ -277,6 +279,20 @@ namespace Epsitec.Common.FormEngine
 			}
 		}
 
+		public Druid SubFormId
+		{
+			//	Druid du formulaire du sous-masque.
+			get
+			{
+				return this.subFormId;
+			}
+			set
+			{
+				System.Diagnostics.Debug.Assert(this.type == FieldType.SubForm);
+				this.subFormId = value;
+			}
+		}
+
 
 		public SeparatorType SeparatorBottom
 		{
@@ -412,6 +428,7 @@ namespace Epsitec.Common.FormEngine
 			if (!a.guid.Equals(b.guid) ||
 				a.type != b.type ||
 				a.subEntityId != b.subEntityId ||
+				a.subFormId != b.subFormId ||
 				a.backColor != b.backColor ||
 				a.separatorBottom != b.separatorBottom ||
 				a.columnsRequired != b.columnsRequired ||
@@ -469,6 +486,11 @@ namespace Epsitec.Common.FormEngine
 				writer.WriteElementString(Xml.SubEntityId, this.subEntityId.ToString());
 			}
 
+			if (!this.subFormId.IsEmpty)
+			{
+				writer.WriteElementString(Xml.SubFormId, this.subFormId.ToString());
+			}
+
 			if (this.backColor != BackColorType.None)
 			{
 				writer.WriteElementString(Xml.BackColor, this.backColor.ToString());
@@ -519,6 +541,10 @@ namespace Epsitec.Common.FormEngine
 						else if (name == Xml.SubEntityId)
 						{
 							this.subEntityId = Druid.Parse(element);
+						}
+						else if (name == Xml.SubFormId)
+						{
+							this.subFormId = Druid.Parse(element);
 						}
 						else if (name == Xml.BackColor)
 						{
@@ -626,6 +652,7 @@ namespace Epsitec.Common.FormEngine
 		protected List<FieldDescription>	nodeDescription;
 		protected List<Druid>				fieldIds;
 		protected Druid						subEntityId;
+		protected Druid						subFormId;
 		protected BackColorType				backColor;
 		protected SeparatorType				separatorBottom;
 		protected int						columnsRequired;

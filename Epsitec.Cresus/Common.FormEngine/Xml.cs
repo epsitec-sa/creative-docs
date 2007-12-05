@@ -13,6 +13,7 @@ namespace Epsitec.Common.FormEngine
 		public const string Type				= "Type";
 		public const string FieldIds			= "FI";
 		public const string SubEntityId			= "SEI";
+		public const string SubFormId			= "SFI";
 		public const string BackColor			= "BC";
 		public const string SeparatorBottom		= "SB";
 		public const string ColumnsRequired		= "CR";
