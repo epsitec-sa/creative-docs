@@ -851,7 +851,11 @@ namespace Epsitec.Common.Designer.MyWidgets
 				this.selectedRows.Clear();
 				foreach (int sel in sels)
 				{
-					this.selectedRows.Add(this.firstVisibleRow+sel);
+					int row = this.firstVisibleRow+sel;
+					if (row < this.TotalRows)
+					{
+						this.selectedRows.Add(row);
+					}
 				}
 
 				for (int i=0; i<this.columns.Length; i++)
@@ -864,19 +868,23 @@ namespace Epsitec.Common.Designer.MyWidgets
 			else
 			{
 				int sel = array.SelectedCell;
-				int column = -1;
-
-				for (int i=0; i<this.columns.Length; i++)
+				int row = this.firstVisibleRow+sel;
+				if (row < this.TotalRows)
 				{
-					this.columns[i].SelectedCell = sel;
+					int column = -1;
 
-					if (this.columns[i] == sender)
+					for (int i=0; i<this.columns.Length; i++)
 					{
-						column = i;
-					}
-				}
+						this.columns[i].SelectedCell = sel;
 
-				this.SetSelectedRow(this.firstVisibleRow+sel, column);
+						if (this.columns[i] == sender)
+						{
+							column = i;
+						}
+					}
+
+					this.SetSelectedRow(this.firstVisibleRow+sel, column);
+				}
 			}
 		}
 
