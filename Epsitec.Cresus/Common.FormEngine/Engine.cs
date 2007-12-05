@@ -647,13 +647,15 @@ namespace Epsitec.Common.FormEngine
 		static private FieldDescription SearchNextElement(List<FieldDescription> fields, int index)
 		{
 			//	Cherche le prochain élément.
-			if (fields[index].Type == FieldDescription.FieldType.BoxBegin)
+			if (fields[index].Type == FieldDescription.FieldType.BoxBegin ||
+				fields[index].Type == FieldDescription.FieldType.SubForm)
 			{
 				int level = 0;
 
 				for (int i=index; i<fields.Count; i++)
 				{
-					if (fields[i].Type == FieldDescription.FieldType.BoxBegin)
+					if (fields[i].Type == FieldDescription.FieldType.BoxBegin ||
+						fields[i].Type == FieldDescription.FieldType.SubForm)
 					{
 						level++;
 					}
