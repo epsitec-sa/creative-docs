@@ -57,7 +57,6 @@ namespace Epsitec.Common.FormEngine
 		protected FieldDescription()
 		{
 			//	Constructeur protégé, commun à tous les autres.
-			this.subEntityId = Druid.Empty;
 			this.subFormId = Druid.Empty;
 			this.backColor = BackColorType.None;
 			this.separatorBottom = SeparatorType.Normal;
@@ -87,7 +86,6 @@ namespace Epsitec.Common.FormEngine
 			this.rowsRequired = model.rowsRequired;
 			this.nodeDescription = model.nodeDescription;
 			this.fieldIds = model.fieldIds;
-			this.subEntityId = model.subEntityId;
 			this.subFormId = model.subFormId;
 			this.boxPaddingType = model.boxPaddingType;
 			this.boxFrameState = model.boxFrameState;
@@ -237,7 +235,7 @@ namespace Epsitec.Common.FormEngine
 			//	Retourne le chemin permettant d'accéder au champ.
 			//	Par exemple, si prefix = "Data": retourne "Data.[630B2].[630S2]"
 			//	Par exemple, si prefix = null:   retourne "[630B2].[630S2]"
-			if (this.type == FieldType.Field)
+			if (this.type == FieldType.Field || this.type == FieldType.SubForm)
 			{
 				System.Text.StringBuilder builder = new System.Text.StringBuilder();
 
@@ -264,20 +262,6 @@ namespace Epsitec.Common.FormEngine
 			}
 		}
 
-
-		public Druid SubEntityId
-		{
-			//	Druid de l'entité du sous-masque.
-			get
-			{
-				return this.subEntityId;
-			}
-			set
-			{
-				System.Diagnostics.Debug.Assert(this.type == FieldType.SubForm);
-				this.subEntityId = value;
-			}
-		}
 
 		public Druid SubFormId
 		{
@@ -427,7 +411,6 @@ namespace Epsitec.Common.FormEngine
 
 			if (!a.guid.Equals(b.guid) ||
 				a.type != b.type ||
-				a.subEntityId != b.subEntityId ||
 				a.subFormId != b.subFormId ||
 				a.backColor != b.backColor ||
 				a.separatorBottom != b.separatorBottom ||
@@ -481,11 +464,6 @@ namespace Epsitec.Common.FormEngine
 			writer.WriteElementString(Xml.Type, this.type.ToString());
 			writer.WriteElementString(Xml.FieldIds, this.GetPath(null));
 
-			if (!this.subEntityId.IsEmpty)
-			{
-				writer.WriteElementString(Xml.SubEntityId, this.subEntityId.ToString());
-			}
-
 			if (!this.subFormId.IsEmpty)
 			{
 				writer.WriteElementString(Xml.SubFormId, this.subFormId.ToString());
@@ -537,10 +515,6 @@ namespace Epsitec.Common.FormEngine
 						else if (name == Xml.FieldIds)
 						{
 							this.SetFields(element);
-						}
-						else if (name == Xml.SubEntityId)
-						{
-							this.subEntityId = Druid.Parse(element);
 						}
 						else if (name == Xml.SubFormId)
 						{
@@ -651,7 +625,6 @@ namespace Epsitec.Common.FormEngine
 		protected FieldType					type;
 		protected List<FieldDescription>	nodeDescription;
 		protected List<Druid>				fieldIds;
-		protected Druid						subEntityId;
 		protected Druid						subFormId;
 		protected BackColorType				backColor;
 		protected SeparatorType				separatorBottom;

@@ -156,11 +156,16 @@ namespace Epsitec.Common.FormEngine
 			{
 				if (field.Type == FieldDescription.FieldType.SubForm)
 				{
+					if (field.SubFormId.IsEmpty)
+					{
+						continue;
+					}
+
 					FormDescription subForm = null;
 
 					if (this.finder == null)
 					{
-						string name = field.SubEntityId.ToBundleId();
+						string name = field.SubFormId.ToBundleId();
 						ResourceBundle bundle = this.resourceManager.GetBundle(name, ResourceLevel.Default, null);
 						if (bundle != null)
 						{
@@ -177,7 +182,7 @@ namespace Epsitec.Common.FormEngine
 					}
 					else
 					{
-						subForm = this.finder(field.SubEntityId);
+						subForm = this.finder(field.SubFormId);
 					}
 
 					if (subForm != null)

@@ -57,7 +57,8 @@ namespace Epsitec.Common.FormEngine
 				return container;
 			}
 
-			List<FieldDescription> fields = this.arrange.Organize(form.Fields);
+			List<FieldDescription> fields1 = this.arrange.DevelopSubForm(form.Fields);
+			List<FieldDescription> fields2 = this.arrange.Organize(fields1);
 
 			Caption entityCaption = this.resourceManager.GetCaption(form.EntityId);
 			StructuredType entity = TypeRosetta.GetTypeObject(entityCaption) as StructuredType;
@@ -87,7 +88,7 @@ namespace Epsitec.Common.FormEngine
 			root.DataSource = new UI.DataSource();
 			root.DataSource.AddDataSource("Data", entityData);
 
-			this.CreateFormBox(root, fields, 0);
+			this.CreateFormBox(root, fields2, 0);
 
 			return root;
 		}
@@ -682,26 +683,29 @@ namespace Epsitec.Common.FormEngine
 			//	Cherche un sous-masque dans les ressources.
 			FormDescription subForm = null;
 
-			if (this.finder == null)
+			if (!field.SubFormId.IsEmpty)
 			{
-				string name = field.SubEntityId.ToBundleId();
-				ResourceBundle bundle = this.resourceManager.GetBundle(name, ResourceLevel.Default, null);
-				if (bundle != null)
+				if (this.finder == null)
 				{
-					ResourceBundle.Field bundleField = bundle["Source"];
-					if (bundleField.IsValid)
+					string name = field.SubFormId.ToBundleId();
+					ResourceBundle bundle = this.resourceManager.GetBundle(name, ResourceLevel.Default, null);
+					if (bundle != null)
 					{
-						string xml = bundleField.AsString;
-						if (!string.IsNullOrEmpty(xml))
+						ResourceBundle.Field bundleField = bundle["Source"];
+						if (bundleField.IsValid)
 						{
-							subForm = Serialization.DeserializeForm(xml, this.resourceManager);
+							string xml = bundleField.AsString;
+							if (!string.IsNullOrEmpty(xml))
+							{
+								subForm = Serialization.DeserializeForm(xml, this.resourceManager);
+							}
 						}
 					}
 				}
-			}
-			else
-			{
-				subForm = this.finder(field.SubEntityId);
+				else
+				{
+					subForm = this.finder(field.SubFormId);
+				}
 			}
 
 			return subForm;

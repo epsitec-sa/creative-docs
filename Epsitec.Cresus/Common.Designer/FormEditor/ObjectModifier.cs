@@ -465,6 +465,19 @@ namespace Epsitec.Common.Designer.FormEditor
 			return builder.ToString();
 		}
 
+		public string GetTableContentIcon(TableItem item)
+		{
+			//	Retourne le texte permettant de décrire larelation d'un TableItem dans une liste.
+			string icon = null;
+
+			if (item.FieldType == FieldDescription.FieldType.SubForm)
+			{
+				icon = Misc.Image("TreeSubForm");
+			}
+
+			return icon;
+		}
+
 		public void UpdateTableContent()
 		{
 			//	Met à jour la liste qui reflète le contenu de la table des champs, visible en haut à droite.
@@ -531,23 +544,6 @@ namespace Epsitec.Common.Designer.FormEditor
 		public struct TableItem
 		{
 			//	Cette structure représente un élément dans la liste de droite des champs.
-			public bool IsEmpty
-			{
-				get
-				{
-					return this.DataField == null;
-				}
-			}
-
-			public static TableItem Empty
-			{
-				get
-				{
-					return new TableItem();
-				}
-			}
-
-			public StructuredData				DataField;
 			public System.Guid					Guid;
 			public FieldDescription.FieldType	FieldType;
 			public string						DruidsPath;
@@ -747,7 +743,8 @@ namespace Epsitec.Common.Designer.FormEditor
 
 			foreach (FieldDescription field in form.Fields)
 			{
-				if (field.Type != FieldDescription.FieldType.Field)
+				if (field.Type != FieldDescription.FieldType.Field &&
+					field.Type != FieldDescription.FieldType.SubForm)
 				{
 					continue;
 				}
@@ -810,7 +807,8 @@ namespace Epsitec.Common.Designer.FormEditor
 
 		public void UpdateTableRelation(Druid entityId, IList<StructuredData> entityFields)
 		{
-			//	Initialise la table des relations possibles avec le premier niveau.
+			//	Initialise la table des relations possibles avec le premier niveau
+			//	(mais seulement les champs sans relation).
 			this.entityId = entityId;
 
 			this.tableRelations = new List<RelationItem>();
