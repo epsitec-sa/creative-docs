@@ -16,6 +16,7 @@ namespace Epsitec.Common.FormEngine
 	{
 		public enum FieldType
 		{
+			None			= 0,	// aucun
 			Field			= 1,	// champ
 			SubForm			= 2,	// sous-masque
 			Node			= 3,	// noeud
@@ -80,6 +81,7 @@ namespace Epsitec.Common.FormEngine
 			//	Constructeur copiant une instance existante.
 			this.guid = model.guid;
 			this.type = model.type;
+			this.source = model.source;
 			this.backColor = model.backColor;
 			this.separatorBottom = model.separatorBottom;
 			this.columnsRequired = model.columnsRequired;
@@ -132,6 +134,35 @@ namespace Epsitec.Common.FormEngine
 			get
 			{
 				return this.type;
+			}
+		}
+
+		public FieldDescription Source
+		{
+			//	Descripteur source, non sérialisé. Est utilisé pour les champs en provenance d'un sous-masque.
+			get
+			{
+				return this.source;
+			}
+			set
+			{
+				this.source = value;
+			}
+		}
+
+		public FieldType SourceType
+		{
+			//	Retourne le type de la source.
+			get
+			{
+				if (this.source == null)
+				{
+					return FieldType.Node;
+				}
+				else
+				{
+					return this.source.type;
+				}
 			}
 		}
 
@@ -411,6 +442,7 @@ namespace Epsitec.Common.FormEngine
 
 			if (!a.guid.Equals(b.guid) ||
 				a.type != b.type ||
+				a.source != b.source ||
 				a.subFormId != b.subFormId ||
 				a.backColor != b.backColor ||
 				a.separatorBottom != b.separatorBottom ||
@@ -623,6 +655,7 @@ namespace Epsitec.Common.FormEngine
 		protected System.Guid				guid;
 		protected int						uniqueId;
 		protected FieldType					type;
+		protected FieldDescription			source;
 		protected List<FieldDescription>	nodeDescription;
 		protected List<Druid>				fieldIds;
 		protected Druid						subFormId;
