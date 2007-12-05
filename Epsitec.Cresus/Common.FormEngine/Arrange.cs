@@ -30,6 +30,7 @@ namespace Epsitec.Common.FormEngine
 		public string Check(List<FieldDescription> list)
 		{
 			//	Vérifie une liste. Retourne null si tout est ok, ou un message d'erreur.
+			//	Les sous-masques (SubForm) n'ont pas encore été développés.
 			int level = 0;
 
 			foreach (FieldDescription field in list)
@@ -143,6 +144,8 @@ namespace Epsitec.Common.FormEngine
 		public List<FieldDescription> DevelopSubForm(List<FieldDescription> list)
 		{
 			//	Retourne une liste développée qui ne contient plus de sous-masque.
+			//	Un sous-masque (SubForm) se comporte alors comme un début de groupe (BoxBegin).
+			//	Un BoxEnd correspond à chaque SubForm.
 			List<FieldDescription> dst = new List<FieldDescription>();
 
 			this.DevelopSubForm(dst, list, null, null);
@@ -187,8 +190,13 @@ namespace Epsitec.Common.FormEngine
 
 					if (subForm != null)
 					{
+						dst.Add(field);
+
 						string p = string.Concat(prefix, field.GetPath(null), ".");
 						this.DevelopSubForm(dst, subForm.Fields, field, p);
+
+						FieldDescription boxEnd = new FieldDescription(FieldDescription.FieldType.BoxEnd);
+						dst.Add(boxEnd);
 					}
 				}
 				else
@@ -201,6 +209,7 @@ namespace Epsitec.Common.FormEngine
 					{
 						FieldDescription copy = new FieldDescription(field);
 						copy.SetFields(prefix+field.GetPath(null));
+						copy.Source = source;
 						dst.Add(copy);
 					}
 				}

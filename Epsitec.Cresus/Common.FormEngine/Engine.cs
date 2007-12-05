@@ -119,7 +119,8 @@ namespace Epsitec.Common.FormEngine
 				//	La valeur -1 par défaut indique un widget non identifié.
 				field.UniqueId = i;
 
-				if (field.Type == FieldDescription.FieldType.BoxBegin)  // début de boîte ?
+				if (field.Type == FieldDescription.FieldType.BoxBegin ||  // début de boîte ?
+					field.Type == FieldDescription.FieldType.SubForm)
 				{
 					if (level == 0)
 					{
@@ -135,13 +136,6 @@ namespace Epsitec.Common.FormEngine
 					if (level < 0)
 					{
 						break;
-					}
-				}
-				else if (field.Type == FieldDescription.FieldType.SubForm)  // sous-masque ?
-				{
-					if (level == 0)
-					{
-						this.PreprocessSubForm(field, labelsId, ref labelId, ref column, isGlueAfter);
 					}
 				}
 				else if (field.Type == FieldDescription.FieldType.Field)  // champ ?
@@ -228,7 +222,8 @@ namespace Epsitec.Common.FormEngine
 					isGlueAfter = true;
 				}
 
-				if (field.Type == FieldDescription.FieldType.BoxBegin)  // début de boîte ?
+				if (field.Type == FieldDescription.FieldType.BoxBegin ||  // début de boîte ?
+					field.Type == FieldDescription.FieldType.SubForm)
 				{
 					if (level == 0)
 					{
@@ -245,18 +240,6 @@ namespace Epsitec.Common.FormEngine
 					if (level < 0)
 					{
 						break;
-					}
-				}
-				else if (field.Type == FieldDescription.FieldType.SubForm)  // sous-masque ?
-				{
-					if (level == 0)
-					{
-						FormDescription subForm = this.SearchSubForm(field);
-						if (subForm != null)
-						{
-							UI.Panel box = this.CreateForm(subForm, this.forDesigner);
-							this.CreateSubForm(root, grid, field, labelsId, box, ref column, ref row, isGlueAfter);
-						}
 					}
 				}
 				else if (field.Type == FieldDescription.FieldType.Field)  // champ ?
@@ -292,23 +275,6 @@ namespace Epsitec.Common.FormEngine
 			//	Détermine quelles colonnes contiennent des labels, lors de la première passe.
 			//	Un BoxBegin ne contient jamais de label, mais il faut tout de même faire évoluer
 			//	le numéro de la colonne.
-			int columnsRequired = System.Math.Max(field.ColumnsRequired, 1);
-
-			Engine.LabelIdUse(labelsId, labelId++, column, columnsRequired);
-
-			if (isGlueAfter)
-			{
-				column += columnsRequired;
-			}
-			else
-			{
-				column = 0;
-			}
-		}
-
-		private void PreprocessSubForm(FieldDescription field, List<int> labelsId, ref int labelId, ref int column, bool isGlueAfter)
-		{
-			//	Détermine quelles colonnes contiennent des labels, lors de la première passe.
 			int columnsRequired = System.Math.Max(field.ColumnsRequired, 1);
 
 			Engine.LabelIdUse(labelsId, labelId++, column, columnsRequired);
@@ -487,35 +453,6 @@ namespace Epsitec.Common.FormEngine
 			return box;
 		}
 
-		private void CreateSubForm(UI.Panel root, Widgets.Layouts.GridLayoutEngine grid, FieldDescription field, List<int> labelsId, UI.Panel box, ref int column, ref int row, bool isGlueAfter)
-		{
-			//	Met les widgets d'un sous-masque dans la grille, lors de la deuxième passe.
-			box.SetParent(root);
-
-			grid.RowDefinitions.Add(new Widgets.Layouts.RowDefinition());
-
-			int columnsRequired = System.Math.Max(field.ColumnsRequired, 1);
-
-			grid.RowDefinitions[row].BottomBorder = FieldDescription.GetRealSeparator(field.SeparatorBottom);
-
-			int i = Engine.GetColumnIndex(labelsId, column);
-			int j = Engine.GetColumnIndex(labelsId, column+columnsRequired-1)+1;
-			Widgets.Layouts.GridLayoutEngine.SetColumn(box, i);
-			Widgets.Layouts.GridLayoutEngine.SetRow(box, row);
-			Widgets.Layouts.GridLayoutEngine.SetColumnSpan(box, j-i);
-			box.SetParent (root);
-
-			if (isGlueAfter)
-			{
-				column += columnsRequired;
-			}
-			else
-			{
-				row++;
-				column = 0;
-			}
-		}
-
 		private void CreateField(UI.Panel root, Widgets.Layouts.GridLayoutEngine grid, string path, FieldDescription field, List<int> labelsId, ref int column, ref int row, bool isGlueAfter)
 		{
 			//	Crée les widgets pour un champ dans la grille, lors de la deuxième passe.
@@ -675,40 +612,6 @@ namespace Epsitec.Common.FormEngine
 
 				row++;
 			}
-		}
-
-
-		protected FormDescription SearchSubForm(FieldDescription field)
-		{
-			//	Cherche un sous-masque dans les ressources.
-			FormDescription subForm = null;
-
-			if (!field.SubFormId.IsEmpty)
-			{
-				if (this.finder == null)
-				{
-					string name = field.SubFormId.ToBundleId();
-					ResourceBundle bundle = this.resourceManager.GetBundle(name, ResourceLevel.Default, null);
-					if (bundle != null)
-					{
-						ResourceBundle.Field bundleField = bundle["Source"];
-						if (bundleField.IsValid)
-						{
-							string xml = bundleField.AsString;
-							if (!string.IsNullOrEmpty(xml))
-							{
-								subForm = Serialization.DeserializeForm(xml, this.resourceManager);
-							}
-						}
-					}
-				}
-				else
-				{
-					subForm = this.finder(field.SubFormId);
-				}
-			}
-
-			return subForm;
 		}
 
 

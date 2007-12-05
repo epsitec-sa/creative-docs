@@ -742,8 +742,6 @@ namespace Epsitec.Common.Designer.Viewers
 			//	Spécifie le masque de saisie en cours d'édition.
 			//	Construit physiquement le masque de saisie (UI.Panel contenant des widgets) sur la
 			//	base de sa description FormDescription.
-			this.form = form;
-
 			if (this.panelContainer != null)
 			{
 				this.panelContainer.SetParent(null);
@@ -752,6 +750,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 			if (form == null || druid.IsEmpty)
 			{
+				this.form = null;
 				this.entityId = Druid.Empty;
 
 				this.panelContainer = new UI.Panel();
@@ -766,7 +765,17 @@ namespace Epsitec.Common.Designer.Viewers
 			}
 			else
 			{
-				this.entityId = form.EntityId;
+				FormEngine.Engine engine = new FormEngine.Engine(this.module.ResourceManager, this.access.GetForm);
+
+#if false
+				FormDescription copy = new FormDescription(form);
+				copy.Fields = engine.Arrange.DevelopSubForm(copy.Fields);
+				this.form = copy;
+#else
+				this.form = form;
+#endif
+
+				this.entityId = this.form.EntityId;
 
 				List<System.Guid> guids = null;
 				if (keepSelection)
@@ -774,8 +783,7 @@ namespace Epsitec.Common.Designer.Viewers
 					guids = this.formEditor.GetSelectedGuids();  // Guid des objets sélectionnés
 				}
 
-				FormEngine.Engine engine = new FormEngine.Engine(this.module.ResourceManager, this.access.GetForm);
-				this.panelContainer = engine.CreateForm(form, true);
+				this.panelContainer = engine.CreateForm(this.form, true);
 				if (this.panelContainer == null)
 				{
 					this.panelContainer = new UI.Panel();
@@ -785,7 +793,7 @@ namespace Epsitec.Common.Designer.Viewers
 				this.formEditor.Panel = this.panelContainer;
 				this.formEditor.Druid = druid;
 				this.formEditor.IsEditEnabled = !this.designerApplication.IsReadonly;
-				this.formEditor.Form = form;
+				this.formEditor.Form = this.form;
 
 				if (keepSelection)
 				{
@@ -1251,9 +1259,17 @@ namespace Epsitec.Common.Designer.Viewers
 			}
 			else  // relation ?
 			{
+				Druid formId = this.module.AccessForms.FormSearch(item.typeId);
+
+				if (formId.IsEmpty)
+				{
+					this.designerApplication.DialogError("Il n'existe aucun masque pour cette relation.");
+					return;
+				}
+
 				field = new FieldDescription(FieldDescription.FieldType.SubForm);
 				field.SetFields(item.DruidsPath);
-				field.SubFormId = Druid.Empty;  // TODO: chercher un masque approprié !
+				field.SubFormId = formId;
 			}
 
 			this.form.Fields.Add(field);

@@ -52,7 +52,7 @@ namespace Epsitec.Common.Designer.FormEditor
 				return false;
 			}
 
-			return field.Type == FieldDescription.FieldType.BoxBegin;
+			return field.Type == FieldDescription.FieldType.BoxBegin || field.Type == FieldDescription.FieldType.SubForm;
 		}
 
 		public bool IsGlue(Widget obj)
@@ -448,7 +448,8 @@ namespace Epsitec.Common.Designer.FormEditor
 				FieldDescription field = this.formEditor.ObjectModifier.GetFormDescription(item);
 				if (field != null)
 				{
-					if (field.Type == FieldDescription.FieldType.BoxBegin)
+					if (field.Type == FieldDescription.FieldType.BoxBegin ||
+						field.Type == FieldDescription.FieldType.SubForm)
 					{
 						name = Misc.Bold(field.Description);
 					}
@@ -496,6 +497,7 @@ namespace Epsitec.Common.Designer.FormEditor
 				TableItem item = new TableItem();
 				item.Guid = field.Guid;
 				item.FieldType = field.Type;
+				item.SourceFieldType = field.SourceType;
 				item.DruidsPath = field.GetPath(null);
 				item.Level = level;
 
@@ -546,6 +548,7 @@ namespace Epsitec.Common.Designer.FormEditor
 			//	Cette structure représente un élément dans la liste de droite des champs.
 			public System.Guid					Guid;
 			public FieldDescription.FieldType	FieldType;
+			public FieldDescription.FieldType	SourceFieldType;
 			public string						DruidsPath;
 			public int							Level;
 		}
@@ -701,9 +704,11 @@ namespace Epsitec.Common.Designer.FormEditor
 			{
 				FieldRelation rel = (FieldRelation) dataField.GetValue(Support.Res.Fields.Field.Relation);
 				Druid fieldCaptionId = (Druid) dataField.GetValue(Support.Res.Fields.Field.CaptionId);
+				Druid typeId = (Druid) dataField.GetValue(Support.Res.Fields.Field.TypeId);
 
 				RelationItem item = new RelationItem();
 				item.DruidsPath = string.Concat(druidsPath, ".", fieldCaptionId.ToString());
+				item.typeId = typeId;
 				item.Relation = rel;
 				item.Expandable = (rel != FieldRelation.None);
 				item.Expanded = false;
@@ -791,9 +796,11 @@ namespace Epsitec.Common.Designer.FormEditor
 					{
 						FieldRelation rel = (FieldRelation) dataField.GetValue(Support.Res.Fields.Field.Relation);
 						Druid fieldCaptionId = (Druid) dataField.GetValue(Support.Res.Fields.Field.CaptionId);
+						Druid typeId = (Druid) dataField.GetValue(Support.Res.Fields.Field.TypeId);
 
 						RelationItem item = new RelationItem();
 						item.DruidsPath = string.Concat(subDruidsPath, ".", fieldCaptionId.ToString());
+						item.typeId = typeId;
 						item.Relation = rel;
 						item.Expandable = (rel != FieldRelation.None);
 						item.Expanded = false;
@@ -822,10 +829,11 @@ namespace Epsitec.Common.Designer.FormEditor
 			{
 				FieldRelation rel = (FieldRelation) dataField.GetValue(Support.Res.Fields.Field.Relation);
 				Druid fieldCaptionId = (Druid) dataField.GetValue(Support.Res.Fields.Field.CaptionId);
-				string druidPath = fieldCaptionId.ToString();
+				Druid typeId = (Druid) dataField.GetValue(Support.Res.Fields.Field.TypeId);
 
 				RelationItem item = new RelationItem();
-				item.DruidsPath = druidPath;
+				item.DruidsPath = fieldCaptionId.ToString();
+				item.typeId = typeId;
 				item.Relation = rel;
 				item.Expandable = (rel != FieldRelation.None);
 				item.Expanded = false;
@@ -907,6 +915,7 @@ namespace Epsitec.Common.Designer.FormEditor
 		{
 			//	Cette classe représente une ligne dans la table des relations.
 			public string						DruidsPath;
+			public Druid						typeId;
 			public FieldRelation				Relation;
 			public bool							Expandable;
 			public bool							Expanded;

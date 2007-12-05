@@ -20,6 +20,12 @@ namespace Epsitec.Common.FormEngine
 			this.fields = new List<FieldDescription>();
 		}
 
+		public FormDescription(FormDescription model) : this()
+		{
+			this.entityId = model.entityId;
+			this.fields = model.fields;
+		}
+
 		public Druid EntityId
 		{
 			//	Druid de l'entité de base du masque de saisie.
@@ -39,6 +45,10 @@ namespace Epsitec.Common.FormEngine
 			get
 			{
 				return this.fields;
+			}
+			set
+			{
+				this.fields = value;
 			}
 		}
 

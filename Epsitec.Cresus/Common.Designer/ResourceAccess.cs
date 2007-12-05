@@ -657,6 +657,22 @@ namespace Epsitec.Common.Designer
 			newName = this.GetDuplicateName(this.GetEntityName(form.EntityId));
 		}
 
+		public Druid FormSearch(Druid typeId)
+		{
+			//	Cherche un Form défini pour un certain type.
+			foreach (CultureMap item in this.accessor.Collection)
+			{
+				FormEngine.FormDescription form = this.GetForm(item);
+
+				if (form.EntityId == typeId)
+				{
+					return item.Id;
+				}
+			}
+
+			return Druid.Empty;
+		}
+
 		public string GetFieldNames(string druidsPath)
 		{
 			//	Retourne le nom complet d'un champ. Par exemple:

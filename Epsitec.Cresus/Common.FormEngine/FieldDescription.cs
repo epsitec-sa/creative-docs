@@ -374,7 +374,7 @@ namespace Epsitec.Common.FormEngine
 			}
 			set
 			{
-				System.Diagnostics.Debug.Assert(this.type == FieldType.BoxBegin);
+				System.Diagnostics.Debug.Assert(this.type == FieldType.BoxBegin || this.type == FieldType.SubForm);
 				this.boxPaddingType = value;
 			}
 		}
@@ -388,7 +388,7 @@ namespace Epsitec.Common.FormEngine
 			}
 			set
 			{
-				System.Diagnostics.Debug.Assert(this.type == FieldType.BoxBegin);
+				System.Diagnostics.Debug.Assert(this.type == FieldType.BoxBegin || this.type == FieldType.SubForm);
 				this.boxFrameState = value;
 			}
 		}
@@ -402,7 +402,7 @@ namespace Epsitec.Common.FormEngine
 			}
 			set
 			{
-				System.Diagnostics.Debug.Assert(this.type == FieldType.BoxBegin);
+				System.Diagnostics.Debug.Assert(this.type == FieldType.BoxBegin || this.type == FieldType.SubForm);
 				this.boxFrameWidth = value;
 			}
 		}
