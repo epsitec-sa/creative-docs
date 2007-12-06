@@ -77,6 +77,8 @@ namespace Epsitec.Common.FormEngine
 		public List<FieldDescription> Organize(List<FieldDescription> fields)
 		{
 			//	Arrange une liste.
+			//	Les sous-masques (SubForm) se comportent comme un début de groupe (BoxBegin),
+			//	car ils ont déjà été développés en SubForm-Field-Field-BoxEnd.
 			List<FieldDescription> list = new List<FieldDescription>();
 
 			//	Copie la liste en remplaçant les Glue successifs par un suel.
@@ -164,9 +166,10 @@ namespace Epsitec.Common.FormEngine
 						continue;
 					}
 
+					//	Cherche le sous-masque avec (dans Designer) ou sans (application finale) finder.
 					FormDescription subForm = null;
 
-					if (this.finder == null)
+					if (this.finder == null)  // pas de finder ?
 					{
 						string name = field.SubFormId.ToBundleId();
 						ResourceBundle bundle = this.resourceManager.GetBundle(name, ResourceLevel.Default, null);
@@ -183,20 +186,20 @@ namespace Epsitec.Common.FormEngine
 							}
 						}
 					}
-					else
+					else  // finder existe ?
 					{
 						subForm = this.finder(field.SubFormId);
 					}
 
 					if (subForm != null)
 					{
-						dst.Add(field);
+						dst.Add(field);  // met le Suborm, qui se comportera comme un BoxBegin
 
 						string p = string.Concat(prefix, field.GetPath(null), ".");
-						this.DevelopSubForm(dst, subForm.Fields, field, p);
+						this.DevelopSubForm(dst, subForm.Fields, field, p);  // met les champs du sous-masque dans la boîte
 
 						FieldDescription boxEnd = new FieldDescription(FieldDescription.FieldType.BoxEnd);
-						dst.Add(boxEnd);
+						dst.Add(boxEnd);  // met le BoxEnd pour terminer la boîte SubForm
 					}
 				}
 				else

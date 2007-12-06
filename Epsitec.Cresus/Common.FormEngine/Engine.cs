@@ -27,7 +27,7 @@ namespace Epsitec.Common.FormEngine
 
 			this.arrange = new Arrange(resourceManager, finder);
 
-			this.entityContext = new EntityContext (this.resourceManager, EntityLoopHandlingMode.Skip);
+			this.entityContext = new EntityContext(this.resourceManager, EntityLoopHandlingMode.Skip);
 		}
 
 		public Arrange Arrange
@@ -123,6 +123,8 @@ namespace Epsitec.Common.FormEngine
 				}
 				else
 				{
+					//	Un champ d'un sous-masque reçoit l'identificateur du SubForm qui l'a initié,
+					//	afin que sa sélection dans l'éditeur sélectionne le SubForm dans la liste.
 					field.UniqueId = field.Source.UniqueId;
 				}
 
