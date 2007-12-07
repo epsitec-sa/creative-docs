@@ -2,5 +2,6 @@
 <ModuleInfo id="103" name="App.Dolphin" layer="A">
   <Versions>
     <Version id="1" build="2" date="2007-12-07T09:39:51.0565000Z" />
+    <Version id="2" build="15" date="2007-12-07T16:09:36.4021240Z" />
   </Versions>
 </ModuleInfo>

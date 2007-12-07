@@ -298,6 +298,8 @@ namespace Epsitec.Common.Support
 			}
 		}
 		
+		//	Code mapping for 'Panel' resources
+		
 		//	Code mapping for 'String' resources
 		
 		public static class Strings

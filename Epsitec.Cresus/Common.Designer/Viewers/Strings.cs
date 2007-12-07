@@ -158,7 +158,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 			CultureMap item = this.access.CollectionView.CurrentItem as CultureMap;
 			CultureMapSource source = this.access.GetCultureMapSource(item);
-			StructuredData data;
+			StructuredData data = null;
 
 			if (item == null)
 			{
@@ -176,7 +176,7 @@ namespace Epsitec.Common.Designer.Viewers
 				this.ColorizeResetBox(this.groupPrimaryComment, source, usesOriginalData);
 			}
 
-			if (this.GetTwoLetters(1) == null || this.designerApplication.IsReadonly)
+			if (data == null || this.GetTwoLetters(1) == null || this.designerApplication.IsReadonly)
 			{
 				this.secondaryText.Text = "";
 				this.secondaryComment.Text = "";

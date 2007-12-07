@@ -5,6 +5,285 @@ namespace Epsitec.App.Dolphin
 {
 	public static class Res
 	{
+		//	Code mapping for 'Caption' resources
+		
+		//	Code mapping for 'String' resources
+		
+		public static class Strings
+		{
+			public static class Bus
+			{
+				public static class Title
+				{
+					//	designer:str/732I
+					public static string Address { get { return global::Epsitec.App.Dolphin.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (33554450)); } }
+					//	designer:str/732H
+					public static string Data { get { return global::Epsitec.App.Dolphin.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (33554449)); } }
+					//	designer:str/732S
+					public static string Register { get { return global::Epsitec.App.Dolphin.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (33554460)); } }
+				}
+			}
+			
+			public static class Calm
+			{
+				public static class Ass
+				{
+					//	designer:str/73231
+					public static string Button { get { return global::Epsitec.App.Dolphin.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (33554467)); } }
+					//	designer:str/73241
+					public static string Tooltip { get { return global::Epsitec.App.Dolphin.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (33554468)); } }
+				}
+				
+				public static class Big
+				{
+					//	designer:str/73211
+					public static string Tooltip { get { return global::Epsitec.App.Dolphin.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (33554465)); } }
+				}
+				
+				public static class Err
+				{
+					//	designer:str/73261
+					public static string Button { get { return global::Epsitec.App.Dolphin.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (33554470)); } }
+					//	designer:str/73251
+					public static string Tooltip { get { return global::Epsitec.App.Dolphin.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (33554469)); } }
+				}
+				
+				public static class Full
+				{
+					//	designer:str/73221
+					public static string Tooltip { get { return global::Epsitec.App.Dolphin.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (33554466)); } }
+				}
+				
+				public static class Open
+				{
+					//	designer:str/732U
+					public static string Tooltip { get { return global::Epsitec.App.Dolphin.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (33554462)); } }
+				}
+				
+				public static class Save
+				{
+					//	designer:str/732V
+					public static string Tooltip { get { return global::Epsitec.App.Dolphin.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (33554463)); } }
+				}
+				
+				public static class Show
+				{
+					//	designer:str/73201
+					public static string Tooltip { get { return global::Epsitec.App.Dolphin.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (33554464)); } }
+				}
+				
+				public static class Title
+				{
+					//	designer:str/732T
+					public static string Main { get { return global::Epsitec.App.Dolphin.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (33554461)); } }
+				}
+			}
+			
+			public static class Code
+			{
+				public static class Add
+				{
+					//	designer:str/732R
+					public static string Tooltip { get { return global::Epsitec.App.Dolphin.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (33554459)); } }
+				}
+				
+				public static class PC
+				{
+					//	designer:str/732K
+					public static string Button { get { return global::Epsitec.App.Dolphin.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (33554452)); } }
+					//	designer:str/732L
+					public static string Tooltip { get { return global::Epsitec.App.Dolphin.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (33554453)); } }
+				}
+				
+				public static class RAM
+				{
+					//	designer:str/732M
+					public static string Button { get { return global::Epsitec.App.Dolphin.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (33554454)); } }
+					//	designer:str/732N
+					public static string Tooltip { get { return global::Epsitec.App.Dolphin.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (33554455)); } }
+				}
+				
+				public static class ROM
+				{
+					//	designer:str/732O
+					public static string Button { get { return global::Epsitec.App.Dolphin.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (33554456)); } }
+					//	designer:str/732P
+					public static string Tooltip { get { return global::Epsitec.App.Dolphin.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (33554457)); } }
+				}
+				
+				public static class Sub
+				{
+					//	designer:str/732Q
+					public static string Tooltip { get { return global::Epsitec.App.Dolphin.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (33554458)); } }
+				}
+				
+				public static class Title
+				{
+					//	designer:str/732J
+					public static string Data { get { return global::Epsitec.App.Dolphin.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (33554451)); } }
+					//	designer:str/732N1
+					public static string Register { get { return global::Epsitec.App.Dolphin.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (33554487)); } }
+				}
+			}
+			
+			public static class Command
+			{
+				//	designer:str/7325
+				public static string About { get { return global::Epsitec.App.Dolphin.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (33554437)); } }
+				//	designer:str/7326
+				public static string Look { get { return global::Epsitec.App.Dolphin.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (33554438)); } }
+				//	designer:str/7322
+				public static string New { get { return global::Epsitec.App.Dolphin.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (33554434)); } }
+				//	designer:str/7323
+				public static string Open { get { return global::Epsitec.App.Dolphin.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (33554435)); } }
+				//	designer:str/7324
+				public static string Save { get { return global::Epsitec.App.Dolphin.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (33554436)); } }
+			}
+			
+			public static class Detail
+			{
+				public static class Display
+				{
+					//	designer:str/732J1
+					public static string Button { get { return global::Epsitec.App.Dolphin.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (33554483)); } }
+					//	designer:str/732K1
+					public static string Tooltip { get { return global::Epsitec.App.Dolphin.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (33554484)); } }
+				}
+				
+				public static class PC
+				{
+					//	designer:str/732B1
+					public static string Button { get { return global::Epsitec.App.Dolphin.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (33554475)); } }
+					//	designer:str/732C1
+					public static string Tooltip { get { return global::Epsitec.App.Dolphin.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (33554476)); } }
+				}
+				
+				public static class Periph
+				{
+					//	designer:str/732I1
+					public static string Button { get { return global::Epsitec.App.Dolphin.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (33554482)); } }
+					//	designer:str/732H1
+					public static string Tooltip { get { return global::Epsitec.App.Dolphin.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (33554481)); } }
+				}
+				
+				public static class RAM
+				{
+					//	designer:str/732E1
+					public static string Button { get { return global::Epsitec.App.Dolphin.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (33554478)); } }
+					//	designer:str/732D1
+					public static string Tooltip { get { return global::Epsitec.App.Dolphin.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (33554477)); } }
+				}
+				
+				public static class Reset
+				{
+					//	designer:str/732M1
+					public static string Button { get { return global::Epsitec.App.Dolphin.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (33554486)); } }
+					//	designer:str/732L1
+					public static string Tooltip { get { return global::Epsitec.App.Dolphin.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (33554485)); } }
+				}
+				
+				public static class ROM
+				{
+					//	designer:str/732F1
+					public static string Button { get { return global::Epsitec.App.Dolphin.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (33554479)); } }
+					//	designer:str/732G1
+					public static string Tooltip { get { return global::Epsitec.App.Dolphin.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (33554480)); } }
+				}
+				
+				public static class Title
+				{
+					//	designer:str/73291
+					public static string Memory { get { return global::Epsitec.App.Dolphin.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (33554473)); } }
+					//	designer:str/732A1
+					public static string Register { get { return global::Epsitec.App.Dolphin.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (33554474)); } }
+				}
+			}
+			
+			public static class Quick
+			{
+				public static class Label
+				{
+					//	designer:str/73281
+					public static string Default { get { return global::Epsitec.App.Dolphin.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (33554472)); } }
+				}
+				
+				public static class Title
+				{
+					//	designer:str/73271
+					public static string Main { get { return global::Epsitec.App.Dolphin.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (33554471)); } }
+				}
+			}
+			
+			public static class TabPage
+			{
+				public static class Bus
+				{
+					//	designer:str/7327
+					public static string Button { get { return global::Epsitec.App.Dolphin.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (33554439)); } }
+					//	designer:str/732C
+					public static string Tooltip { get { return global::Epsitec.App.Dolphin.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (33554444)); } }
+				}
+				
+				public static class Calm
+				{
+					//	designer:str/732A
+					public static string Button { get { return global::Epsitec.App.Dolphin.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (33554442)); } }
+					//	designer:str/732G
+					public static string Tooltip { get { return global::Epsitec.App.Dolphin.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (33554448)); } }
+				}
+				
+				public static class Code
+				{
+					//	designer:str/7329
+					public static string Button { get { return global::Epsitec.App.Dolphin.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (33554441)); } }
+					//	designer:str/732D
+					public static string Tooltip { get { return global::Epsitec.App.Dolphin.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (33554445)); } }
+				}
+				
+				public static class Detail
+				{
+					//	designer:str/7328
+					public static string Button { get { return global::Epsitec.App.Dolphin.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (33554440)); } }
+					//	designer:str/732E
+					public static string Tooltip { get { return global::Epsitec.App.Dolphin.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (33554446)); } }
+				}
+				
+				public static class Quick
+				{
+					//	designer:str/732B
+					public static string Button { get { return global::Epsitec.App.Dolphin.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (33554443)); } }
+					//	designer:str/732F
+					public static string Tooltip { get { return global::Epsitec.App.Dolphin.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (33554447)); } }
+				}
+			}
+			
+			public static class Window
+			{
+				//	designer:str/7321
+				public static string Copyright { get { return global::Epsitec.App.Dolphin.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (33554433)); } }
+				//	designer:str/732
+				public static string Title { get { return global::Epsitec.App.Dolphin.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (33554432)); } }
+			}
+			
+			public static string GetString(params string[] path)
+			{
+				string field = string.Join (".", path);
+				return _stringsBundle[field].AsString;
+			}
+			
+			#region Internal Support Code
+			private static string GetText(string bundle, params string[] path)
+			{
+				string field = string.Join (".", path);
+				return _stringsBundle[field].AsString;
+			}
+			private static string GetText(global::Epsitec.Common.Support.Druid druid)
+			{
+				return _stringsBundle[druid].AsString;
+			}
+			private static global::Epsitec.Common.Support.ResourceBundle _stringsBundle = Res._manager.GetBundle ("Strings");
+			#endregion
+		}
 		
 		static Res()
 		{

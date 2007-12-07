@@ -186,14 +186,14 @@ namespace Epsitec.Common.FormEngine
 							}
 						}
 					}
-					else  // finder existe ?
+					else  // finder existe (on est dans Designer) ?
 					{
 						subForm = this.finder(field.SubFormId);
 					}
 
 					if (subForm != null)
 					{
-						dst.Add(field);  // met le Suborm, qui se comportera comme un BoxBegin
+						dst.Add(field);  // met le SubForm, qui se comportera comme un BoxBegin
 
 						string p = string.Concat(prefix, field.GetPath(null), ".");
 						this.DevelopSubForm(dst, subForm.Fields, field, p);  // met les champs du sous-masque dans la boîte
