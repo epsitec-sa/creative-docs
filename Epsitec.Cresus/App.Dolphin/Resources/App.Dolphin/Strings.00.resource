@@ -2,11 +2,11 @@
 <bundle name="Strings" type="String" culture="fr">
   <data name="Window.Title" id="2">Dauphin</data>
   <data name="Window.Copyright" id="21">© EPSITEC SA</data>
-  <data name="Command.New" id="22">Nouveau programme</data>
-  <data name="Command.Open" id="23">Ouvre un programme binaire .dolphin</data>
-  <data name="Command.Save" id="24">Enregistre le programme binaire .dolphin</data>
-  <data name="Command.About" id="25">A propos du Simulateur de Dauphin</data>
-  <data name="Command.Look" id="26">Change l&amp;apos;aspect de l&amp;apos;interface</data>
+  <data name="Command.New.Tooltip" id="22">Nouveau programme</data>
+  <data name="Command.Open.Tooltip" id="23">Ouvre un programme binaire .dolphin</data>
+  <data name="Command.Save.Tooltip" id="24">Enregistre le programme binaire .dolphin</data>
+  <data name="Command.About.Tooltip" id="25">A propos du Simulateur de Dauphin</data>
+  <data name="Command.Look.Tooltip" id="26">Change l&amp;apos;aspect de l&amp;apos;interface</data>
   <data name="TabPage.Bus.Button" id="27">BUS</data>
   <data name="TabPage.Detail.Button" id="28">CPU+MEM</data>
   <data name="TabPage.Code.Button" id="29">CODE</data>
@@ -56,4 +56,52 @@
   <data name="Detail.Reset.Tooltip" id="2L1">Remise à zéro du processeur</data>
   <data name="Detail.Reset.Button" id="2M1">RESET</data>
   <data name="Code.Title.Register" id="2N1">Registres du microprocesseur</data>
+  <data name="Command.Run.Tooltip" id="2O1">Run/Stop</data>
+  <data name="Command.Clock6.Tooltip" id="2P1">1&amp;apos;000&amp;apos;000 instructions/seconde</data>
+  <data name="Command.Clock6.Button" id="2Q1">1M</data>
+  <data name="Command.Clock5.Button" id="2R1">100&amp;apos;000</data>
+  <data name="Command.Clock4.Button" id="2S1">10&amp;apos;000</data>
+  <data name="Command.Clock3.Button" id="2T1">1&amp;apos;000</data>
+  <data name="Command.Clock2.Button" id="2U1">100</data>
+  <data name="Command.Clock1.Button" id="2V1">10</data>
+  <data name="Command.Clock0.Button" id="202">1</data>
+  <data name="Command.Clock1.Tooltip" id="212">10 instructions/seconde</data>
+  <data name="Command.Clock2.Tooltip" id="222">100 instructions/seconde</data>
+  <data name="Command.Clock3.Tooltip" id="232">1&amp;apos;000 instructions/seconde</data>
+  <data name="Command.Clock4.Tooltip" id="242">10&amp;apos;000 instructions/seconde</data>
+  <data name="Command.Clock5.Tooltip" id="252">100&amp;apos;000 instructions/seconde</data>
+  <data name="Command.Clock0.Tooltip" id="262">1 instruction/seconde</data>
+  <data name="Command.SwitchStep.No" id="272">CONT</data>
+  <data name="Command.SwitchStep.Yes" id="282">STEP</data>
+  <data name="Command.SwitchStep.Tooltip" id="292">Mode &amp;quot;Continuous&amp;quot; ou &amp;quot;Step&amp;quot;</data>
+  <data name="Command.Step.Tooltip" id="2A2">Avance d&amp;apos;un pas (step)</data>
+  <data name="Command.Step.Button" id="2B2">S</data>
+  <data name="Command.SwitchInto.No" id="2C2">OVER</data>
+  <data name="Command.SwitchInto.Tooltip" id="2D2">Mode &amp;quot;Step Over&amp;quot; ou &amp;quot;Step Into&amp;quot; lors d&amp;apos;un CALL</data>
+  <data name="Command.SwitchInto.Yes" id="2E2">INTO</data>
+  <data name="Command.Write.Tooltip" id="2F2">Ecriture en mémoire (write)</data>
+  <data name="Command.Read.Tooltip" id="2G2">Lecture en mémoire (read)</data>
+  <data name="Command.Write.Button" id="2H2">W</data>
+  <data name="Command.Read.Button" id="2I2">R</data>
+  <data name="Command.Run.Button" id="2J2">RUN</data>
+  <data name="Command.Stop.Button" id="2K2">STOP</data>
+  <data name="Command.Display.Techno.CRT" id="2L2">CRT</data>
+  <data name="Command.Display.Techno.LCD" id="2M2">LCD</data>
+  <data name="Command.Keyboear.Arrows" id="2N2">ARR</data>
+  <data name="Command.Keyboear.Numeric" id="2O2">NUM</data>
+  <data name="Dialog.Open.Title" id="2P2">Ouverture d&amp;apos;un programme binaire</data>
+  <data name="Dialog.Save.Title" id="2Q2">Enregistrement d&amp;apos;un programme binaire</data>
+  <data name="Dialog.File.Programs" id="2R2">Programmes</data>
+  <data name="Dialog.AutoSave.Question1" id="2S2">Voulez-vous enregistrer le programme ?</data>
+  <data name="Dialog.AutoSave.Question2" id="2T2">Voulez-vous enregistrer &lt;b&gt;{0}&lt;/b&gt; ?</data>
+  <data name="Error.Open" id="2U2">Impossible d&amp;apos;ouvrir le fichier.</data>
+  <data name="Error.Read.Version" id="2V2">Ce fichier a été réalisé avec une version plus récente.</data>
+  <data name="Error.Read.Format" id="203">Le format du fichier est incorrect.</data>
+  <data name="Error.Save" id="213">Impossible d&amp;apos;écrire le fichier.</data>
+  <data name="Dialog.OpenCalm.Title" id="223">Importation d&amp;apos;un programme source</data>
+  <data name="Dialog.SaveCalm.Title" id="233">Exportation d&amp;apos;un programme source</data>
+  <data name="Question.Assembler.Do" id="243">Voulez-vous assembler le programme source ?</data>
+  <data name="Question.Assembler.Ok" id="253">Le source ne contient aucune erreur.</data>
+  <data name="Window.ApplicationTitle" id="263">Simulateur de Dauphin</data>
+  <data name="Window.Comment" id="273">&lt;br/&gt;&lt;i&gt;Tapez ici les commentaires sur le programme...&lt;/i&gt;</data>
 </bundle>

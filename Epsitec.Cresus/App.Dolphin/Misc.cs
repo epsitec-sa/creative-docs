@@ -232,6 +232,12 @@ namespace Epsitec.App.Dolphin
 		}
 
 
+		static public string FontSize(string text, int size)
+		{
+			//	Retourne le texte dans une autre taille.
+			return string.Format("<font size=\"{1}%\">{0}</font>", text, size.ToString(System.Globalization.CultureInfo.InvariantCulture));
+		}
+
 		static public string Bold(string text)
 		{
 			//	Retourne le texte en gras.
