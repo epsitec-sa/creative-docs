@@ -104,7 +104,7 @@
   <data name="Question.Assembler.Ok" id="253">Le source ne contient aucune erreur.</data>
   <data name="Window.ApplicationTitle" id="263">Simulateur de Dauphin</data>
   <data name="Window.Comment" id="273">&lt;br/&gt;&lt;i&gt;Tapez ici les commentaires sur le programme...&lt;/i&gt;</data>
-  <data name="TabPage.Program.Button" id="283">Comment</data>
+  <data name="TabPage.Right.Program.Button" id="283">Comment</data>
   <data name="Command.Italic.Tooltip" id="293">Italique</data>
   <data name="Command.Underlined.Tooltip" id="2A3">Souligné</data>
   <data name="Command.Bold.Tooltip" id="2B3">Gras</data>
@@ -147,4 +147,24 @@
   <data name="Assembler.Number.Error.Hexa" id="2G4">Nombre hexa incorrect.</data>
   <data name="Assembler.Number.Error.Binary" id="2H4">Nombre binaire incorrect.</data>
   <data name="Assembler.Number.Error.Generic" id="2I4">D&amp;apos; = décimal, H&amp;apos; = hexa et B&amp;apos; = binaire.</data>
+  <data name="Dialog.CodeAccessor.Shift.Message" id="2J4">&lt;b&gt;La mémoire a été décalée de {0} octet(s) à partir de l&amp;apos;adresse {1}h.&lt;/b&gt;&lt;br/&gt;N&amp;apos;oubliez pas d&amp;apos;adapter les adresses des instructions ayant un argument &lt;i&gt;ADDR&lt;/i&gt; (JUMP, MOVE, etc.).</data>
+  <data name="Processor.Error.ZeroArg" id="2O4">L&amp;apos;instuction {0} n&amp;apos;a aucun argument.</data>
+  <data name="Processor.Error.Table.Generic" id="2Q4">TABLE doit être suivi d&amp;apos;une valeur immédiate correspondant au nombre de BYTE contenus dans la table.</data>
+  <data name="Processor.Error.Byte.Generic" id="2R4">BYTE doit être suivi d&amp;apos;une valeur immédiate correspondant à l&amp;apos;octet contenu dans la table.</data>
+  <data name="Processor.Error.AddressMissing" id="2S4">{0} doit être suivi d&amp;apos;une adresse.</data>
+  <data name="Processor.Error.RegisterMissing" id="2U4">{0} doit être suivi d&amp;apos;un nom de registre.</data>
+  <data name="Processor.Error.RegisterOrAddressMissing" id="2V4">{0} doit être suivi d&amp;apos;un nom de registre ou d&amp;apos;une adresse.</data>
+  <data name="Processor.Error.Swap.Generic" id="205">SWAP doit être suivi d&amp;apos;un nom de registre (A ou B).</data>
+  <data name="Processor.Error.Arguments" id="215">Les arguments de l&amp;apos;instruction {0} sont incorrects.</data>
+  <data name="Processor.Error.Generic" id="225">&lt;b&gt;Instruction inconnue.&lt;/b&gt;&lt;br/&gt;&lt;br/&gt;Les instructions connues sont :&lt;br/&gt;{0}JUMP, CALL, RET, PUSH, POP&lt;br/&gt;{0}MOVE, COMP, ADD, SUB, AND, OR, XOR&lt;br/&gt;{0}CLR, NOT, INC, DEC, RL, RR, RLC, RRC&lt;br/&gt;{0}TEST, TSET, TCLR, TNOT&lt;br/&gt;{0}NOP, CLRC, SETC, NOTC, EX, SWAP, HALT&lt;br/&gt;{0}TABLE, BYTE&lt;br/&gt; </data>
+  <data name="Processor.Error.InstructionListOne" id="235">L&amp;apos;instruction suivante est possible :</data>
+  <data name="Processor.Error.InstructionListMany" id="245">Les instructions suivantes sont possibles :</data>
+  <data name="Processor.Error.InstructionRegister4" id="255">&lt;i&gt;r&lt;/i&gt; = registre A, B, X, Y</data>
+  <data name="Processor.Error.InstructionRegister2" id="265">&lt;i&gt;r&amp;apos;&lt;/i&gt; = registre A, B</data>
+  <data name="Processor.Error.InstructionVal" id="275">&lt;i&gt;#val&lt;/i&gt; = valeur immédiate #H&amp;apos;12, #H&amp;apos;C0, #B&amp;apos;0110, #D&amp;apos;99, #99</data>
+  <data name="Processor.Error.InstructionAddr" id="285">&lt;i&gt;ADDR&lt;/i&gt; = adresse H&amp;apos;C00, {PC}+H&amp;apos;DA, {PC}-3, {SP}+2, H&amp;apos;C80+{X}+{Y}</data>
+  <data name="TabPage.Right.Notation.Button" id="295">Notation</data>
+  <data name="TabPage.Right.Oper.Button" id="2A5">Ops</data>
+  <data name="TabPage.Right.ROM.Button" id="2B5">ROM</data>
+  <data name="TabPage.Right.Intro.Button" id="2C5">Intro</data>
 </bundle>

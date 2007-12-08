@@ -302,7 +302,7 @@ namespace Epsitec.App.Dolphin.MyWidgets
 					Application.QueueAsyncCallback(
 						delegate
 						{
-							string title = "Dauphin";
+							string title = TextLayout.ConvertToSimpleText(Res.Strings.Window.Title);
 							string icon = "manifest:Epsitec.Common.Dialogs.Images.Warning.icon";
 							Common.Dialogs.IDialog dialog = Common.Dialogs.MessageDialog.CreateOk(title, icon, err, null, null);
 							dialog.Owner = this.Window;

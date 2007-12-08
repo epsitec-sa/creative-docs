@@ -2267,7 +2267,7 @@ namespace Epsitec.App.Dolphin.Components
 					}
 					else
 					{
-						return "<b>L'instuction NOP n'a aucun argument.</b>";
+						return Misc.Bold(string.Format(Res.Strings.Processor.Error.ZeroArg, "NOP"));
 					}
 					break;
 
@@ -2278,7 +2278,7 @@ namespace Epsitec.App.Dolphin.Components
 					}
 					else
 					{
-						return "<b>L'instuction RET n'a aucun argument.</b>";
+						return Misc.Bold(string.Format(Res.Strings.Processor.Error.ZeroArg, "RET"));
 					}
 					break;
 
@@ -2289,7 +2289,7 @@ namespace Epsitec.App.Dolphin.Components
 					}
 					else
 					{
-						return "<b>L'instuction HALT n'a aucun argument.</b>";
+						return Misc.Bold(string.Format(Res.Strings.Processor.Error.ZeroArg, "HALT"));
 					}
 					break;
 
@@ -2300,7 +2300,7 @@ namespace Epsitec.App.Dolphin.Components
 					}
 					else
 					{
-						return "<b>L'instuction SETC n'a aucun argument.</b>";
+						return Misc.Bold(string.Format(Res.Strings.Processor.Error.ZeroArg, "SETC"));
 					}
 					break;
 
@@ -2311,7 +2311,7 @@ namespace Epsitec.App.Dolphin.Components
 					}
 					else
 					{
-						return "<b>L'instuction CLRC n'a aucun argument.</b>";
+						return Misc.Bold(string.Format(Res.Strings.Processor.Error.ZeroArg, "CLRC"));
 					}
 					break;
 
@@ -2322,7 +2322,7 @@ namespace Epsitec.App.Dolphin.Components
 					}
 					else
 					{
-						return "<b>L'instuction NOTC n'a aucun argument.</b>";
+						return Misc.Bold(string.Format(Res.Strings.Processor.Error.ZeroArg, "NOTC"));
 					}
 					break;
 
@@ -2334,7 +2334,7 @@ namespace Epsitec.App.Dolphin.Components
 					}
 					else
 					{
-						return TinyProcessor.GetCodeError("TABLE doit être suivi d'une valeur immédiate correspondant au nombre de BYTE contenus dans la table.", "TABLE", "v");
+						return TinyProcessor.GetCodeError(Res.Strings.Processor.Error.Table.Generic, "TABLE", "v");
 					}
 					break;
 
@@ -2345,7 +2345,7 @@ namespace Epsitec.App.Dolphin.Components
 					}
 					else
 					{
-						return TinyProcessor.GetCodeError("BYTE doit être suivi d'une valeur immédiate correspondant à l'octet contenu dans la table.", "BYTE", "v");
+						return TinyProcessor.GetCodeError(Res.Strings.Processor.Error.Byte.Generic, "BYTE", "v");
 					}
 					break;
 
@@ -2358,7 +2358,7 @@ namespace Epsitec.App.Dolphin.Components
 					}
 					else
 					{
-						return TinyProcessor.GetCodeError("CALL doit être suivi d'une adresse.", "CALL", "a");
+						return TinyProcessor.GetCodeError(Res.Strings.Processor.Error.AddressMissing, "CALL", "a");
 					}
 					break;
 
@@ -2373,7 +2373,7 @@ namespace Epsitec.App.Dolphin.Components
 					}
 					else
 					{
-						return TinyProcessor.GetCodeError("PUSH doit être suivi d'un nom de registre.", "PUSH", "r");
+						return TinyProcessor.GetCodeError(Res.Strings.Processor.Error.RegisterMissing, "PUSH", "r");
 					}
 					break;
 
@@ -2388,7 +2388,7 @@ namespace Epsitec.App.Dolphin.Components
 					}
 					else
 					{
-						return TinyProcessor.GetCodeError("POP doit être suivi d'un nom de registre.", "POP", "r");
+						return TinyProcessor.GetCodeError(Res.Strings.Processor.Error.RegisterMissing, "POP", "r");
 					}
 					break;
 
@@ -2401,7 +2401,7 @@ namespace Epsitec.App.Dolphin.Components
 					}
 					else
 					{
-						return TinyProcessor.GetCodeError("JUMP doit être suivi d'une adresse.", "JUMP", "a");
+						return TinyProcessor.GetCodeError(Res.Strings.Processor.Error.AddressMissing, "JUMP", "a");
 					}
 					break;
 
@@ -2415,7 +2415,7 @@ namespace Epsitec.App.Dolphin.Components
 					}
 					else
 					{
-						return TinyProcessor.GetCodeError("JUMP,EQ doit être suivi d'une adresse.", "JUMP,EQ", "a");
+						return TinyProcessor.GetCodeError(Res.Strings.Processor.Error.AddressMissing, "JUMP,EQ", "a");
 					}
 					break;
 
@@ -2429,7 +2429,7 @@ namespace Epsitec.App.Dolphin.Components
 					}
 					else
 					{
-						return TinyProcessor.GetCodeError("JUMP,NE doit être suivi d'une adresse.", "JUMP,NE", "a");
+						return TinyProcessor.GetCodeError(Res.Strings.Processor.Error.AddressMissing, "JUMP,NE", "a");
 					}
 					break;
 
@@ -2443,7 +2443,7 @@ namespace Epsitec.App.Dolphin.Components
 					}
 					else
 					{
-						return TinyProcessor.GetCodeError("JUMP,LO doit être suivi d'une adresse.", "JUMP,LO", "a");
+						return TinyProcessor.GetCodeError(Res.Strings.Processor.Error.AddressMissing, "JUMP,LO", "a");
 					}
 					break;
 
@@ -2457,7 +2457,7 @@ namespace Epsitec.App.Dolphin.Components
 					}
 					else
 					{
-						return TinyProcessor.GetCodeError("JUMP,HS doit être suivi d'une adresse.", "JUMP,HS", "a");
+						return TinyProcessor.GetCodeError(Res.Strings.Processor.Error.AddressMissing, "JUMP,HS", "a");
 					}
 					break;
 
@@ -2470,7 +2470,7 @@ namespace Epsitec.App.Dolphin.Components
 					}
 					else
 					{
-						return TinyProcessor.GetCodeError("JUMP,LS doit être suivi d'une adresse.", "JUMP,LS", "a");
+						return TinyProcessor.GetCodeError(Res.Strings.Processor.Error.AddressMissing, "JUMP,LS", "a");
 					}
 					break;
 
@@ -2483,7 +2483,7 @@ namespace Epsitec.App.Dolphin.Components
 					}
 					else
 					{
-						return TinyProcessor.GetCodeError("JUMP,HI doit être suivi d'une adresse.", "JUMP,HI", "a");
+						return TinyProcessor.GetCodeError(Res.Strings.Processor.Error.AddressMissing, "JUMP,HI", "a");
 					}
 					break;
 
@@ -2496,7 +2496,7 @@ namespace Epsitec.App.Dolphin.Components
 					}
 					else
 					{
-						return TinyProcessor.GetCodeError("JUMP,NS doit être suivi d'une adresse.", "JUMP,NS", "a");
+						return TinyProcessor.GetCodeError(Res.Strings.Processor.Error.AddressMissing, "JUMP,NS", "a");
 					}
 					break;
 
@@ -2509,7 +2509,7 @@ namespace Epsitec.App.Dolphin.Components
 					}
 					else
 					{
-						return TinyProcessor.GetCodeError("JUMP,NC doit être suivi d'une adresse.", "JUMP,NC", "a");
+						return TinyProcessor.GetCodeError(Res.Strings.Processor.Error.AddressMissing, "JUMP,NC", "a");
 					}
 					break;
 
@@ -2526,7 +2526,7 @@ namespace Epsitec.App.Dolphin.Components
 					}
 					else
 					{
-						return TinyProcessor.GetCodeError("CLR doit être suivi d'un nom de registre ou d'une adresse.", "CLR", "r,a");
+						return TinyProcessor.GetCodeError(Res.Strings.Processor.Error.RegisterOrAddressMissing, "CLR", "r,a");
 					}
 					break;
 
@@ -2543,7 +2543,7 @@ namespace Epsitec.App.Dolphin.Components
 					}
 					else
 					{
-						return TinyProcessor.GetCodeError("NOT doit être suivi d'un nom de registre ou d'une adresse.", "NOT", "r,a");
+						return TinyProcessor.GetCodeError(Res.Strings.Processor.Error.RegisterOrAddressMissing, "NOT", "r,a");
 					}
 					break;
 
@@ -2560,7 +2560,7 @@ namespace Epsitec.App.Dolphin.Components
 					}
 					else
 					{
-						return TinyProcessor.GetCodeError("INC doit être suivi d'un nom de registre ou d'une adresse.", "INC", "r,a");
+						return TinyProcessor.GetCodeError(Res.Strings.Processor.Error.RegisterOrAddressMissing, "INC", "r,a");
 					}
 					break;
 
@@ -2577,7 +2577,7 @@ namespace Epsitec.App.Dolphin.Components
 					}
 					else
 					{
-						return TinyProcessor.GetCodeError("DEC doit être suivi d'un nom de registre ou d'une adresse.", "DEC", "r,a");
+						return TinyProcessor.GetCodeError(Res.Strings.Processor.Error.RegisterOrAddressMissing, "DEC", "r,a");
 					}
 					break;
 
@@ -2594,7 +2594,7 @@ namespace Epsitec.App.Dolphin.Components
 					}
 					else
 					{
-						return TinyProcessor.GetCodeError("RL doit être suivi d'un nom de registre ou d'une adresse.", "RL", "r,a");
+						return TinyProcessor.GetCodeError(Res.Strings.Processor.Error.RegisterOrAddressMissing, "RL", "r,a");
 					}
 					break;
 
@@ -2611,7 +2611,7 @@ namespace Epsitec.App.Dolphin.Components
 					}
 					else
 					{
-						return TinyProcessor.GetCodeError("RR doit être suivi d'un nom de registre ou d'une adresse.", "RR", "r,a");
+						return TinyProcessor.GetCodeError(Res.Strings.Processor.Error.RegisterOrAddressMissing, "RR", "r,a");
 					}
 					break;
 
@@ -2628,7 +2628,7 @@ namespace Epsitec.App.Dolphin.Components
 					}
 					else
 					{
-						return TinyProcessor.GetCodeError("RLC doit être suivi d'un nom de registre ou d'une adresse.", "RLC", "r,a");
+						return TinyProcessor.GetCodeError(Res.Strings.Processor.Error.RegisterOrAddressMissing, "RLC", "r,a");
 					}
 					break;
 
@@ -2645,7 +2645,7 @@ namespace Epsitec.App.Dolphin.Components
 					}
 					else
 					{
-						return TinyProcessor.GetCodeError("RRC doit être suivi d'un nom de registre ou d'une adresse.", "RRC", "r,a");
+						return TinyProcessor.GetCodeError(Res.Strings.Processor.Error.RegisterOrAddressMissing, "RRC", "r,a");
 					}
 					break;
 
@@ -2656,7 +2656,7 @@ namespace Epsitec.App.Dolphin.Components
 					}
 					else
 					{
-						return TinyProcessor.GetCodeError("SWAP doit être suivi d'un nom de registre (A ou B).", "SWAP", "s");
+						return TinyProcessor.GetCodeError(Res.Strings.Processor.Error.Swap.Generic, "SWAP", "s");
 					}
 					break;
 
@@ -2691,7 +2691,7 @@ namespace Epsitec.App.Dolphin.Components
 					}
 					else
 					{
-						return TinyProcessor.GetCodeError("Les arguments de l'instruction MOVE sont incorrects.", "MOVE", "rr,vr,ar,ra,va");
+						return TinyProcessor.GetCodeError(Res.Strings.Processor.Error.Arguments, "MOVE", "rr,vr,ar,ra,va");
 					}
 					break;
 
@@ -2731,7 +2731,7 @@ namespace Epsitec.App.Dolphin.Components
 					}
 					else
 					{
-						return TinyProcessor.GetCodeError("Les arguments de l'instruction ADD sont incorrects.", "ADD", "rr,vr,ar,ra,va");
+						return TinyProcessor.GetCodeError(Res.Strings.Processor.Error.Arguments, "ADD", "rr,vr,ar,ra,va");
 					}
 					break;
 
@@ -2771,7 +2771,7 @@ namespace Epsitec.App.Dolphin.Components
 					}
 					else
 					{
-						return TinyProcessor.GetCodeError("Les arguments de l'instruction SUB sont incorrects.", "SUB", "rr,vr,ar,ra,va");
+						return TinyProcessor.GetCodeError(Res.Strings.Processor.Error.Arguments, "SUB", "rr,vr,ar,ra,va");
 					}
 					break;
 
@@ -2800,7 +2800,7 @@ namespace Epsitec.App.Dolphin.Components
 					}
 					else
 					{
-						return TinyProcessor.GetCodeError("Les arguments de l'instruction COMP sont incorrects.", "COMP", "rr,vr,ar,va");
+						return TinyProcessor.GetCodeError(Res.Strings.Processor.Error.Arguments, "COMP", "rr,vr,ar,va");
 					}
 					break;
 
@@ -2828,7 +2828,7 @@ namespace Epsitec.App.Dolphin.Components
 					}
 					else
 					{
-						return TinyProcessor.GetCodeError("Les arguments de l'instruction AND sont incorrects.", "AND", "ss,vr,as,sa");
+						return TinyProcessor.GetCodeError(Res.Strings.Processor.Error.Arguments, "AND", "ss,vr,as,sa");
 					}
 					break;
 
@@ -2856,7 +2856,7 @@ namespace Epsitec.App.Dolphin.Components
 					}
 					else
 					{
-						return TinyProcessor.GetCodeError("Les arguments de l'instruction OR sont incorrects.", "OR", "ss,vr,as,sa");
+						return TinyProcessor.GetCodeError(Res.Strings.Processor.Error.Arguments, "OR", "ss,vr,as,sa");
 					}
 					break;
 
@@ -2884,7 +2884,7 @@ namespace Epsitec.App.Dolphin.Components
 					}
 					else
 					{
-						return TinyProcessor.GetCodeError("Les arguments de l'instruction XOR sont incorrects.", "XOR", "ss,vr,as,sa");
+						return TinyProcessor.GetCodeError(Res.Strings.Processor.Error.Arguments, "XOR", "ss,vr,as,sa");
 					}
 					break;
 
@@ -2913,7 +2913,7 @@ namespace Epsitec.App.Dolphin.Components
 					}
 					else
 					{
-						return TinyProcessor.GetCodeError("Les arguments de l'instruction TEST sont incorrects.", "TEST", "tss,tvs,tsa,tva");
+						return TinyProcessor.GetCodeError(Res.Strings.Processor.Error.Arguments, "TEST", "tss,tvs,tsa,tva");
 					}
 					break;
 
@@ -2942,7 +2942,7 @@ namespace Epsitec.App.Dolphin.Components
 					}
 					else
 					{
-						return TinyProcessor.GetCodeError("Les arguments de l'instruction TSET sont incorrects.", "TSET", "tss,tvs,tsa,tva");
+						return TinyProcessor.GetCodeError(Res.Strings.Processor.Error.Arguments, "TSET", "tss,tvs,tsa,tva");
 					}
 					break;
 
@@ -2971,7 +2971,7 @@ namespace Epsitec.App.Dolphin.Components
 					}
 					else
 					{
-						return TinyProcessor.GetCodeError("Les arguments de l'instruction TCLR sont incorrects.", "TCLR", "tss,tvs,tsa,tva");
+						return TinyProcessor.GetCodeError(Res.Strings.Processor.Error.Arguments, "TCLR", "tss,tvs,tsa,tva");
 					}
 					break;
 
@@ -3000,7 +3000,7 @@ namespace Epsitec.App.Dolphin.Components
 					}
 					else
 					{
-						return TinyProcessor.GetCodeError("Les arguments de l'instruction TNOT sont incorrects.", "TNOT", "tss,tvs,tsa,tva");
+						return TinyProcessor.GetCodeError(Res.Strings.Processor.Error.Arguments, "TNOT", "tss,tvs,tsa,tva");
 					}
 					break;
 
@@ -3015,12 +3015,12 @@ namespace Epsitec.App.Dolphin.Components
 					}
 					else
 					{
-						return TinyProcessor.GetCodeError("Les arguments de l'instruction EX sont incorrects.", "EX", "ex");
+						return TinyProcessor.GetCodeError(Res.Strings.Processor.Error.Arguments, "EX", "ex");
 					}
 					break;
 
 				default:
-					return "<b>Instruction inconnue.</b><br/><br/>Les instructions connues sont :<br/><list type=\"fix\"/>JUMP, CALL, RET, PUSH, POP<br/><list type=\"fix\"/>MOVE, COMP, ADD, SUB, AND, OR, XOR<br/><list type=\"fix\"/>CLR, NOT, INC, DEC, RL, RR, RLC, RRC<br/><list type=\"fix\"/>TEST, TSET, TCLR, TNOT<br/><list type=\"fix\"/>NOP, CLRC, SETC, NOTC, EX, SWAP, HALT<br/><list type=\"fix\"/>TABLE, BYTE<br/> ";
+					return string.Format(Res.Strings.Processor.Error.Generic, "<list type=\"fix\"/>");
 			}
 
 			return null;  // ok
@@ -3210,21 +3210,32 @@ namespace Epsitec.App.Dolphin.Components
 			System.Text.StringBuilder builder = new System.Text.StringBuilder();
 
 			builder.Append("<b>");
-			builder.Append(message);  // message principal en gras
+
+			if (message.Contains("{0}"))
+			{
+				builder.Append(string.Format(message, instruction));  // message principal en gras
+			}
+			else
+			{
+				builder.Append(message);  // message principal en gras
+			}
+
 			builder.Append("</b>");
 
 			if (!string.IsNullOrEmpty(types))
 			{
 				string[] list = types.Split(',');
 
+				builder.Append("<br/><br/>");
 				if (list.Length == 1)
 				{
-					builder.Append("<br/><br/>L'instruction suivante est possible :<br/>");
+					builder.Append(Res.Strings.Processor.Error.InstructionListOne);
 				}
 				else
 				{
-					builder.Append("<br/><br/>Les instructions suivantes sont possibles :<br/>");
+					builder.Append(Res.Strings.Processor.Error.InstructionListMany);
 				}
+				builder.Append("<br/>");
 
 				bool r = false;  // r
 				bool s = false;  // r'
@@ -3371,22 +3382,26 @@ namespace Epsitec.App.Dolphin.Components
 
 				if (r)
 				{
-					builder.Append("<i>r</i> = registre A, B, X, Y<br/>");
+					builder.Append(Res.Strings.Processor.Error.InstructionRegister4);
+					builder.Append("<br/>");
 				}
 
 				if (s)
 				{
-					builder.Append("<i>r'</i> = registre A, B<br/>");
+					builder.Append(Res.Strings.Processor.Error.InstructionRegister2);
+					builder.Append("<br/>");
 				}
 
 				if (v)
 				{
-					builder.Append("<i>#val</i> = valeur immédiate #H'12, #H'C0, #B'0110, #D'99, #99<br/>");
+					builder.Append(Res.Strings.Processor.Error.InstructionVal);
+					builder.Append("<br/>");
 				}
 
 				if (a)
 				{
-					builder.Append("<i>ADDR</i> = adresse H'C00, {PC}+H'DA, {PC}-3, {SP}+2, H'C80+{X}+{Y}<br/>");
+					builder.Append(Res.Strings.Processor.Error.InstructionAddr);
+					builder.Append("<br/>");
 				}
 			}
 
@@ -3901,10 +3916,10 @@ namespace Epsitec.App.Dolphin.Components
 			{
 				List<string> chapters = new List<string>();
 				
-				chapters.Add("Intro");
-				chapters.Add("Notation");
-				chapters.Add("Ops");
-				chapters.Add("ROM");
+				chapters.Add(Res.Strings.TabPage.Right.Intro.Button);
+				chapters.Add(Res.Strings.TabPage.Right.Notation.Button);
+				chapters.Add(Res.Strings.TabPage.Right.Oper.Button);
+				chapters.Add(Res.Strings.TabPage.Right.ROM.Button);
 				
 				return chapters;
 			}

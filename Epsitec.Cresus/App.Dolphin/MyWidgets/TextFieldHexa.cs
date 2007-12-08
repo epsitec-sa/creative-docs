@@ -191,7 +191,7 @@ namespace Epsitec.App.Dolphin.MyWidgets
 					//	Numérote les bits 0..n.
 					for (int i=0; i<this.buttons.Count; i++)
 					{
-						this.buttons[i].Text = string.Concat("<font size=\"70%\">", i.ToString(), "</font>");
+						this.buttons[i].Text = Misc.FontSize(i.ToString(), 70);
 					}
 				}
 				else
@@ -202,7 +202,7 @@ namespace Epsitec.App.Dolphin.MyWidgets
 						if (i < this.bitNames.Length)
 						{
 							string letter = this.bitNames.Substring(i, 1);
-							this.buttons[i].Text = string.Concat("<font size=\"90%\"><b>", letter, "</b></font>");
+							this.buttons[i].Text = Misc.FontSize(letter, 90);
 						}
 					}
 				}
