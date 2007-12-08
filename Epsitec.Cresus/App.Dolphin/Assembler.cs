@@ -1061,7 +1061,7 @@ namespace Epsitec.App.Dolphin
 				int index2 = Assembler.LineIndex(program, errorLines[i]+1);
 
 				string balast = Assembler.Balast(program.Substring(index1));
-				string err = string.Concat(balast, "^ ", errorTexts[i], "\n");
+				string err = string.Concat(balast, "^ ", TextLayout.ConvertToSimpleText(errorTexts[i]), "\n");
 				program = program.Insert(index2, err);
 
 				cursor = index2-1;
