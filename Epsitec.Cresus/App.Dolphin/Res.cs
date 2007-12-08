@@ -602,6 +602,21 @@ namespace Epsitec.App.Dolphin
 				}
 			}
 			
+			public static class Help
+			{
+				public static class Intro
+				{
+					//	designer:str/732D5
+					public static string Content { get { return global::Epsitec.App.Dolphin.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (33554605)); } }
+					//	designer:str/732E5
+					public static string Notation { get { return global::Epsitec.App.Dolphin.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (33554606)); } }
+					//	designer:str/732F5
+					public static string Oper { get { return global::Epsitec.App.Dolphin.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (33554607)); } }
+					//	designer:str/732G5
+					public static string ROM { get { return global::Epsitec.App.Dolphin.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (33554608)); } }
+				}
+			}
+			
 			public static class Processor
 			{
 				public static class Error

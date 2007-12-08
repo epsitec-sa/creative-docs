@@ -3928,6 +3928,50 @@ namespace Epsitec.App.Dolphin.Components
 		public override string HelpChapter(string chapter)
 		{
 			//	Retourne le texte d'un chapitre.
+#if true
+			string res = null;
+
+			switch (chapter)
+			{
+				case "Intro":
+					res = Res.Strings.Help.Intro.Content;
+					break;
+
+				case "Notation":
+					res = Res.Strings.Help.Intro.Notation;
+					break;
+
+				case "Ops":
+					res = Res.Strings.Help.Intro.Oper;
+					break;
+
+				case "ROM":
+					res = Res.Strings.Help.Intro.ROM;
+					break;
+			}
+
+			res = res.Replace("&lt;", "<");
+			res = res.Replace("&gt;", ">");
+
+			System.Text.StringBuilder builder = new System.Text.StringBuilder();
+
+			string[] seps = { "<br/>" };
+			string[] lines = res.Split(seps, System.StringSplitOptions.None);
+			foreach (string line in lines)
+			{
+				if (line.StartsWith("T:"))
+				{
+					AbstractProcessor.HelpPutTitle(builder, line.Substring(2));
+				}
+
+				if (line.StartsWith("L:"))
+				{
+					AbstractProcessor.HelpPutLine(builder, line.Substring(2));
+				}
+			}
+
+			return builder.ToString();
+#else
 			System.Text.StringBuilder builder = new System.Text.StringBuilder();
 
 			switch (chapter)
@@ -4320,6 +4364,7 @@ namespace Epsitec.App.Dolphin.Components
 			}
 
 			return builder.ToString();
+#endif
 		}
 		#endregion
 
