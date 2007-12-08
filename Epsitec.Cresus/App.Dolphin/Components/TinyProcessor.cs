@@ -3950,23 +3950,38 @@ namespace Epsitec.App.Dolphin.Components
 					break;
 			}
 
+			System.Diagnostics.Debug.Assert(res != null);
+
 			res = res.Replace("&lt;", "<");
-			res = res.Replace("&gt;", ">");
+			res = res.Replace("&gt;", ">");  // met des vraies commandes <tab/>, <i>, etc.
 
 			System.Text.StringBuilder builder = new System.Text.StringBuilder();
 
 			string[] seps = { "<br/>" };
 			string[] lines = res.Split(seps, System.StringSplitOptions.None);
-			foreach (string line in lines)
+			foreach (string l in lines)
 			{
+				string line = l;
+				if (line.EndsWith(" "))
+				{
+					line = line.Substring(0, line.Length-1);
+				}
+
 				if (line.StartsWith("T:"))
 				{
 					AbstractProcessor.HelpPutTitle(builder, line.Substring(2));
 				}
-
-				if (line.StartsWith("L:"))
+				else if (line.StartsWith("L:"))
 				{
 					AbstractProcessor.HelpPutLine(builder, line.Substring(2));
+				}
+				else if (line == "")
+				{
+					//	ignore ce genre de ligne
+				}
+				else
+				{
+					throw new System.Exception("Text format error.");
 				}
 			}
 
