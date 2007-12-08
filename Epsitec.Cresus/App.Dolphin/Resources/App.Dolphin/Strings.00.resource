@@ -85,10 +85,10 @@
   <data name="Command.Read.Button" id="2I2">R</data>
   <data name="Command.Run.Button" id="2J2">RUN</data>
   <data name="Command.Stop.Button" id="2K2">STOP</data>
-  <data name="Command.Display.Techno.CRT" id="2L2">CRT</data>
-  <data name="Command.Display.Techno.LCD" id="2M2">LCD</data>
-  <data name="Command.Keyboear.Arrows" id="2N2">ARR</data>
-  <data name="Command.Keyboear.Numeric" id="2O2">NUM</data>
+  <data name="Command.Display.Techno.CRT.Button" id="2L2">CRT</data>
+  <data name="Command.Display.Techno.LCD.Button" id="2M2">LCD</data>
+  <data name="Command.Keyboard.Arrows.Button" id="2N2">ARR</data>
+  <data name="Command.Keyboard.Numeric.Button" id="2O2">NUM</data>
   <data name="Dialog.Open.Title" id="2P2">Ouverture d&amp;apos;un programme binaire</data>
   <data name="Dialog.Save.Title" id="2Q2">Enregistrement d&amp;apos;un programme binaire</data>
   <data name="Dialog.File.Programs" id="2R2">Programmes</data>
@@ -117,4 +117,10 @@
   <data name="Dialog.Download.NoUpdate" id="2I3">Aucune mise à jour n&amp;apos;est disponible</data>
   <data name="Dialog.Download.UpdateFound" id="2J3">Mise à jour {0}</data>
   <data name="Dialog.Close.Button" id="2K3">Fermer</data>
+  <data name="Command.Display.Active.Button" id="2L3">DISPLAY</data>
+  <data name="Command.Display.Clear.Button" id="2M3">CLS</data>
+  <data name="Command.Keyboard.Tooltip" id="2N3">Type du clavier &amp;quot;Numeric&amp;quot; ou &amp;quot;Arrows&amp;quot;</data>
+  <data name="Command.Display.Active.Tooltip" id="2O3">Montre ou cache l&amp;apos;écran bitmap</data>
+  <data name="Command.Display.Techno.Tooltip" id="2P3">Type de l&amp;apos;écran bitmap</data>
+  <data name="Command.Display.Clear.Tooltip" id="2Q3">Efface l&amp;apos;écran bitmap</data>
 </bundle>

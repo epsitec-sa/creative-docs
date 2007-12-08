@@ -198,12 +198,37 @@ namespace Epsitec.App.Dolphin
 				
 				public static class Display
 				{
+					public static class Active
+					{
+						//	designer:str/732L3
+						public static string Button { get { return global::Epsitec.App.Dolphin.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (33554549)); } }
+						//	designer:str/732O3
+						public static string Tooltip { get { return global::Epsitec.App.Dolphin.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (33554552)); } }
+					}
+					
+					public static class Clear
+					{
+						//	designer:str/732M3
+						public static string Button { get { return global::Epsitec.App.Dolphin.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (33554550)); } }
+						//	designer:str/732Q3
+						public static string Tooltip { get { return global::Epsitec.App.Dolphin.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (33554554)); } }
+					}
+					
 					public static class Techno
 					{
-						//	designer:str/732L2
-						public static string CRT { get { return global::Epsitec.App.Dolphin.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (33554517)); } }
-						//	designer:str/732M2
-						public static string LCD { get { return global::Epsitec.App.Dolphin.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (33554518)); } }
+						//	designer:str/732P3
+						public static string Tooltip { get { return global::Epsitec.App.Dolphin.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (33554553)); } }
+						public static class CRT
+						{
+							//	designer:str/732L2
+							public static string Button { get { return global::Epsitec.App.Dolphin.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (33554517)); } }
+						}
+						
+						public static class LCD
+						{
+							//	designer:str/732M2
+							public static string Button { get { return global::Epsitec.App.Dolphin.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (33554518)); } }
+						}
 					}
 				}
 				
@@ -213,12 +238,21 @@ namespace Epsitec.App.Dolphin
 					public static string Tooltip { get { return global::Epsitec.App.Dolphin.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (33554537)); } }
 				}
 				
-				public static class Keyboear
+				public static class Keyboard
 				{
-					//	designer:str/732N2
-					public static string Arrows { get { return global::Epsitec.App.Dolphin.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (33554519)); } }
-					//	designer:str/732O2
-					public static string Numeric { get { return global::Epsitec.App.Dolphin.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (33554520)); } }
+					//	designer:str/732N3
+					public static string Tooltip { get { return global::Epsitec.App.Dolphin.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (33554551)); } }
+					public static class Arrows
+					{
+						//	designer:str/732N2
+						public static string Button { get { return global::Epsitec.App.Dolphin.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (33554519)); } }
+					}
+					
+					public static class Numeric
+					{
+						//	designer:str/732O2
+						public static string Button { get { return global::Epsitec.App.Dolphin.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (33554520)); } }
+					}
 				}
 				
 				public static class Look
