@@ -104,4 +104,17 @@
   <data name="Question.Assembler.Ok" id="253">Le source ne contient aucune erreur.</data>
   <data name="Window.ApplicationTitle" id="263">Simulateur de Dauphin</data>
   <data name="Window.Comment" id="273">&lt;br/&gt;&lt;i&gt;Tapez ici les commentaires sur le programme...&lt;/i&gt;</data>
+  <data name="TabPage.Program.Button" id="283">Comment</data>
+  <data name="Command.Italic.Tooltip" id="293">Italique</data>
+  <data name="Command.Underlined.Tooltip" id="2A3">Souligné</data>
+  <data name="Command.Bold.Tooltip" id="2B3">Gras</data>
+  <data name="Dialog.About.Message" id="2C3">Ce logiciel a été créé par :&lt;br/&gt;Daniel Roux&lt;br/&gt;EPSITEC SA&lt;br/&gt;{0}&lt;br/&gt;&lt;br/&gt;Vous pouvez télécharger le manuel ici :&lt;br/&gt;{1}&lt;br/&gt;&lt;br/&gt;&lt;b&gt;Version {2}&lt;/b&gt;</data>
+  <data name="Dialog.OK.Button" id="2D3">OK</data>
+  <data name="Dialog.Download.Title" id="2E3">Télécharger une mise à jour</data>
+  <data name="Dialog.Download.UpToDate" id="2F3">Votre logiciel est à jour.</data>
+  <data name="Dialog.Download.UpdateAvailable" id="2G3">Une mise à jour est disponible:</data>
+  <data name="Dialog.Download.CurrentVersion" id="2H3">Version actuelle {0}</data>
+  <data name="Dialog.Download.NoUpdate" id="2I3">Aucune mise à jour n&amp;apos;est disponible</data>
+  <data name="Dialog.Download.UpdateFound" id="2J3">Mise à jour {0}</data>
+  <data name="Dialog.Close.Button" id="2K3">Fermer</data>
 </bundle>
