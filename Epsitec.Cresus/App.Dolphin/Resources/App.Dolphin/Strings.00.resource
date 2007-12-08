@@ -123,4 +123,28 @@
   <data name="Command.Display.Active.Tooltip" id="2O3">Montre ou cache l&amp;apos;écran bitmap</data>
   <data name="Command.Display.Techno.Tooltip" id="2P3">Type de l&amp;apos;écran bitmap</data>
   <data name="Command.Display.Clear.Tooltip" id="2Q3">Efface l&amp;apos;écran bitmap</data>
+  <data name="Assembler.Message.Empty" id="2R3">&lt;b&gt;Le programme ne contient aucune instruction.&lt;/b&gt;</data>
+  <data name="Assembler.Message.OK" id="2S3">&lt;b&gt;Assemblage correct de {0} instruction(s) pour un total de {1} octet(s).&lt;/b&gt;&lt;br/&gt;Cliquez le bouton [RUN] pour exécuter le programme.</data>
+  <data name="Assembler.Message.Error" id="2T3">&lt;b&gt;Il y a eu {0} erreur(s) lors de l&amp;apos;assemblage.&lt;/b&gt;</data>
+  <data name="Assembler.Pseudo.Error.Title" id="2U3">Il manque le texte du titre.</data>
+  <data name="Assembler.Pseudo.Error.Loc" id="2V3">.LOC doit être suivi d&amp;apos;une adresse.</data>
+  <data name="Assembler.Pseudo.Error.End" id="204">Il ne peut pas y avoir d&amp;apos;argument.</data>
+  <data name="Assembler.Pseudo.Error.Default" id="214">Pseudo-instruction inconnue.</data>
+  <data name="Assembler.Var.Error.Register" id="224">Il n&amp;apos;est pas possible d&amp;apos;utiliser un nom de registre.</data>
+  <data name="Assembler.Var.Error.Name" id="234">Nom de variable incorrect.</data>
+  <data name="Assembler.Var.Error.Redefine" id="244">Variable ou étiquette déjà définie.</data>
+  <data name="Assembler.Var.Error.NoRegister" id="254">Il n&amp;apos;est pas possible d&amp;apos;utiliser un nom de registre.</data>
+  <data name="Assembler.Var.Error.WrongLabel" id="264">Nom d&amp;apos;étiquette incorrect.</data>
+  <data name="Assembler.Var.Error.LabelRedefine" id="274">Variable ou étiquette déjà définie.</data>
+  <data name="Assembler.Instruction.Error.Overflow" id="284">Valeur hors limites.</data>
+  <data name="Assembler.Instruction.Error.RelOverflow" id="294">Déplacement relatif trop grand.</data>
+  <data name="Assembler.Expression.Error.Generic" id="2A4">Expression incorrecte</data>
+  <data name="Assembler.Expression.Error.Unary" id="2B4">Opération unaire inconnue.</data>
+  <data name="Assembler.Expression.Error.Binary.DivZero" id="2C4">Division par zéro.</data>
+  <data name="Assembler.Expression.Error.Binary.Generic" id="2D4">Opération binaire inconnue.</data>
+  <data name="Assembler.Value.Error.Undefined" id="2E4">Variable &amp;quot;{0}&amp;quot; indéfinie.</data>
+  <data name="Assembler.Number.Error.Decimal" id="2F4">Nombre décimal incorrect (H&amp;apos; si hexa).</data>
+  <data name="Assembler.Number.Error.Hexa" id="2G4">Nombre hexa incorrect.</data>
+  <data name="Assembler.Number.Error.Binary" id="2H4">Nombre binaire incorrect.</data>
+  <data name="Assembler.Number.Error.Generic" id="2I4">D&amp;apos; = décimal, H&amp;apos; = hexa et B&amp;apos; = binaire.</data>
 </bundle>

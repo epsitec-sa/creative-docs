@@ -69,12 +69,12 @@ namespace Epsitec.App.Dolphin
 				if (instructionCounter == 0)
 				{
 					icon = "manifest:Epsitec.Common.Dialogs.Images.Warning.icon";
-					message = "<b>Le programme ne contient aucune instruction.</b>";
+					message = Res.Strings.Assembler.Message.Empty;
 				}
 				else
 				{
 					icon = "manifest:Epsitec.Common.Dialogs.Images.Information.icon";
-					message = string.Format("<b>Assemblage correct de {0} instruction(s) pour un total de {1} octet(s).</b><br/>Cliquez le bouton [RUN] pour exécuter le programme.", instructionCounter.ToString(), byteCounter.ToString());
+					message = string.Format(Res.Strings.Assembler.Message.OK, instructionCounter.ToString(), byteCounter.ToString());
 				}
 			}
 			else
@@ -82,12 +82,12 @@ namespace Epsitec.App.Dolphin
 				this.InsertErrors(errorLines, errorTexts);
 
 				icon = "manifest:Epsitec.Common.Dialogs.Images.Warning.icon";
-				message = string.Format("<b>Il y a eu {0} erreur(s) lors de l'assemblage.</b>", errorLines.Count.ToString());
+				message = string.Format(Res.Strings.Assembler.Message.Error, errorLines.Count.ToString());
 			}
 
 			if (verbose || errorLines.Count != 0)
 			{
-				string title = "Dauphin";
+				string title = TextLayout.ConvertToSimpleText(Res.Strings.Window.Title);
 				Common.Dialogs.IDialog dialog = Common.Dialogs.MessageDialog.CreateOk(title, icon, message, null, null);
 				dialog.Owner = this.window;
 				dialog.OpenDialog();
@@ -288,7 +288,7 @@ namespace Epsitec.App.Dolphin
 				case ".TITLE":
 					if (words.Length == 1)
 					{
-						err = "Il manque le texte du titre.";
+						err = Res.Strings.Assembler.Pseudo.Error.Title;
 					}
 					break;
 
@@ -303,7 +303,7 @@ namespace Epsitec.App.Dolphin
 					}
 					else
 					{
-						err = ".LOC doit être suivi d'une adresse.";
+						err = Res.Strings.Assembler.Pseudo.Error.Loc;
 					}
 					break;
 
@@ -314,12 +314,12 @@ namespace Epsitec.App.Dolphin
 					}
 					else
 					{
-						err = "Il ne peut pas y avoir d'argument.";
+						err = Res.Strings.Assembler.Pseudo.Error.End;
 					}
 					break;
 
 				default:
-					err = "Pseudo-instruction inconnue.";
+					err = Res.Strings.Assembler.Pseudo.Error.Default;
 					break;
 			}
 
@@ -342,15 +342,15 @@ namespace Epsitec.App.Dolphin
 
 					if (this.IsRegister(variable))
 					{
-						err = "Il n'est pas possible d'utiliser un nom de registre.";
+						err = Res.Strings.Assembler.Var.Error.Register;
 					}
 					else if (!this.IsVariable(variable))
 					{
-						err = "Nom de variable incorrect.";
+						err = Res.Strings.Assembler.Var.Error.Name;
 					}
 					else if (variables.ContainsKey(variable))
 					{
-						err = "Variable ou étiquette déjà définie.";
+						err = Res.Strings.Assembler.Var.Error.Redefine;
 					}
 					else
 					{
@@ -379,17 +379,17 @@ namespace Epsitec.App.Dolphin
 					{
 						if (this.IsRegister(label))
 						{
-							err = "Il n'est pas possible d'utiliser un nom de registre.";
+							err = Res.Strings.Assembler.Var.Error.NoRegister;
 							return null;
 						}
 						else if (!this.IsVariable(label))
 						{
-							err = "Nom d'étiquette incorrect.";
+							err = Res.Strings.Assembler.Var.Error.WrongLabel;
 							return null;
 						}
 						else if (variables.ContainsKey(label))
 						{
-							err = "Variable ou étiquette déjà définie.";
+							err = Res.Strings.Assembler.Var.Error.LabelRedefine;
 							return null;
 						}
 						else
@@ -442,7 +442,7 @@ namespace Epsitec.App.Dolphin
 						{
 							if (Assembler.IsByteOverflow(value))
 							{
-								err = "Valeur hors limites.";
+								err = Res.Strings.Assembler.Instruction.Error.Overflow;
 								return null;
 							}
 							else
@@ -471,7 +471,7 @@ namespace Epsitec.App.Dolphin
 
 								if (System.Math.Abs(value) > 0x7FF)
 								{
-									err = "Déplacement relatif trop grand.";
+									err = Res.Strings.Assembler.Instruction.Error.RelOverflow;
 									return null;
 								}
 
@@ -594,7 +594,7 @@ namespace Epsitec.App.Dolphin
 
 			if (items.Count != 1 || items[0].Name != "n" || items[0].Value == Misc.undefined)
 			{
-				err = "Expression incorrecte";
+				err = Res.Strings.Assembler.Expression.Error.Generic;
 				return Misc.undefined;
 			}
 
@@ -667,7 +667,7 @@ namespace Epsitec.App.Dolphin
 					return new Item("n", -v);
 			}
 
-			err = "Opération unaire inconnue.";
+			err = Res.Strings.Assembler.Expression.Error.Unary;
 			return new Item(null, Misc.undefined);
 		}
 
@@ -719,13 +719,13 @@ namespace Epsitec.App.Dolphin
 				case "/":
 					if (v2 == 0)
 					{
-						err = "Division par zéro.";
+						err = Res.Strings.Assembler.Expression.Error.Binary.DivZero;
 						return new Item(null, Misc.undefined);
 					}
 					return new Item("n", v1 / v2);
 			}
 
-			err = "Opération binaire inconnue.";
+			err = Res.Strings.Assembler.Expression.Error.Binary.Generic;
 			return new Item(null, Misc.undefined);
 		}
 
@@ -863,7 +863,7 @@ namespace Epsitec.App.Dolphin
 					}
 					else  // deuxième passe ?
 					{
-						err = string.Format("Variable \"{0}\" indéfinie.", variable);
+						err = string.Format(Res.Strings.Assembler.Value.Error.Undefined, variable);
 						return Misc.undefined;
 					}
 				}
@@ -886,7 +886,7 @@ namespace Epsitec.App.Dolphin
 				int value;
 				if (!int.TryParse(word, out value))
 				{
-					err = "Nombre décimal incorrect (H' si hexa).";
+					err = Res.Strings.Assembler.Number.Error.Decimal;
 					return Misc.undefined;
 				}
 				err = null;
@@ -900,7 +900,7 @@ namespace Epsitec.App.Dolphin
 					int value = Misc.ParseHexa(word.Substring(2), Misc.undefined, Misc.undefined);
 					if (value == Misc.undefined)
 					{
-						err = "Nombre hexa incorrect.";
+						err = Res.Strings.Assembler.Number.Error.Hexa;
 						return Misc.undefined;
 					}
 					err = null;
@@ -911,7 +911,7 @@ namespace Epsitec.App.Dolphin
 					int value = Misc.ParseBin(word.Substring(2), Misc.undefined, Misc.undefined);
 					if (value == Misc.undefined)
 					{
-						err = "Nombre binaire incorrect.";
+						err = Res.Strings.Assembler.Number.Error.Binary;
 						return Misc.undefined;
 					}
 					err = null;
@@ -922,7 +922,7 @@ namespace Epsitec.App.Dolphin
 					int value;
 					if (!int.TryParse(word.Substring(2), out value))
 					{
-						err = "Nombre décimal incorrect.";
+						err = Res.Strings.Assembler.Number.Error.Decimal;
 						return Misc.undefined;
 					}
 					err = null;
@@ -930,7 +930,7 @@ namespace Epsitec.App.Dolphin
 				}
 				else
 				{
-					err = "D' = décimal, H' = hexa et B' = binaire.";
+					err = Res.Strings.Assembler.Number.Error.Generic;
 					return Misc.undefined;
 				}
 			}
