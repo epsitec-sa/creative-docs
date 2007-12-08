@@ -608,12 +608,24 @@ namespace Epsitec.App.Dolphin
 				{
 					//	designer:str/732D5
 					public static string Content { get { return global::Epsitec.App.Dolphin.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (33554605)); } }
+				}
+				
+				public static class Notation
+				{
 					//	designer:str/732E5
-					public static string Notation { get { return global::Epsitec.App.Dolphin.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (33554606)); } }
+					public static string Content { get { return global::Epsitec.App.Dolphin.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (33554606)); } }
+				}
+				
+				public static class Oper
+				{
 					//	designer:str/732F5
-					public static string Oper { get { return global::Epsitec.App.Dolphin.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (33554607)); } }
+					public static string Content { get { return global::Epsitec.App.Dolphin.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (33554607)); } }
+				}
+				
+				public static class ROM
+				{
 					//	designer:str/732G5
-					public static string ROM { get { return global::Epsitec.App.Dolphin.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (33554608)); } }
+					public static string Content { get { return global::Epsitec.App.Dolphin.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (33554608)); } }
 				}
 			}
 			

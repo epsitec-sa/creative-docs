@@ -3929,28 +3929,28 @@ namespace Epsitec.App.Dolphin.Components
 		{
 			//	Retourne le texte d'un chapitre.
 #if true
-			string res = null;
+			string res;
 
-			switch (chapter)
+			if (chapter == Res.Strings.TabPage.Right.Intro.Button)
 			{
-				case "Intro":
-					res = Res.Strings.Help.Intro.Content;
-					break;
-
-				case "Notation":
-					res = Res.Strings.Help.Intro.Notation;
-					break;
-
-				case "Ops":
-					res = Res.Strings.Help.Intro.Oper;
-					break;
-
-				case "ROM":
-					res = Res.Strings.Help.Intro.ROM;
-					break;
+				res = Res.Strings.Help.Intro.Content;
 			}
-
-			System.Diagnostics.Debug.Assert(res != null);
+			else if (chapter == Res.Strings.TabPage.Right.Notation.Button)
+			{
+				res = Res.Strings.Help.Notation.Content;
+			}
+			else if (chapter == Res.Strings.TabPage.Right.Oper.Button)
+			{
+				res = Res.Strings.Help.Oper.Content;
+			}
+			else if (chapter == Res.Strings.TabPage.Right.ROM.Button)
+			{
+				res = Res.Strings.Help.ROM.Content;
+			}
+			else
+			{
+				throw new System.Exception("Chapter definition error.");
+			}
 
 			res = res.Replace("&lt;", "<");
 			res = res.Replace("&gt;", ">");  // met des vraies commandes <tab/>, <i>, etc.
