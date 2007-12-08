@@ -43,6 +43,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.groupSecondaryText.ResetButton.Clicked += new MessageEventHandler(this.HandleResetButtonClicked);
 
 			this.primaryText = new TextFieldMulti(this.groupPrimaryText.GroupBox);
+			this.primaryText.MaxChar = 50000;
 			this.primaryText.AcceptsNullValue = true;
 			this.primaryText.PreferredHeight = 10+14*6;
 			this.primaryText.Dock = DockStyle.StackBegin;
@@ -53,6 +54,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.primaryText.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 
 			this.secondaryText = new TextFieldMulti(this.groupSecondaryText.GroupBox);
+			this.secondaryText.MaxChar = 50000;
 			this.secondaryText.AcceptsNullValue = true;
 			this.secondaryText.PreferredHeight = 10+14*6;
 			this.secondaryText.Dock = DockStyle.StackBegin;
