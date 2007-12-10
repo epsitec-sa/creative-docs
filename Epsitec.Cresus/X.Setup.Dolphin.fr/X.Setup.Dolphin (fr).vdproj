@@ -21,14 +21,14 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_1A486C1B3A6D464DBEF8E44BCB16C43D"
-        "OwnerKey" = "8:_99A1ECCB35B241B391BC9274DB770594"
+        "MsmKey" = "8:_59C2CADB4BAF4200AB5061BE85415427"
+        "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_59C2CADB4BAF4200AB5061BE85415427"
-        "OwnerKey" = "8:_UNDEFINED"
+        "MsmKey" = "8:_5A636D43D98341DCA63D48994937084B"
+        "OwnerKey" = "8:_99A1ECCB35B241B391BC9274DB770594"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -254,17 +254,6 @@
                     "Property" = "8:_D8847E80764448C4AC6C2136D77C4FAE"
                         "Folders"
                         {
-                            "{9EF0B969-E518-4E46-987F-47570745A589}:_6A71F96A00C74D17B5C12295B33FC1D0"
-                            {
-                            "Name" = "8:Samples"
-                            "AlwaysCreate" = "11:FALSE"
-                            "Condition" = "8:"
-                            "Transitive" = "11:FALSE"
-                            "Property" = "8:_FD02F85949CE4E91941D7E75DEE35429"
-                                "Folders"
-                                {
-                                }
-                            }
                         }
                     }
                 }
@@ -707,7 +696,7 @@
         }
         "MergeModule"
         {
-            "{CEE29DC0-9FBA-4B99-8D47-5BC643D9B626}:_1A486C1B3A6D464DBEF8E44BCB16C43D"
+            "{CEE29DC0-9FBA-4B99-8D47-5BC643D9B626}:_5A636D43D98341DCA63D48994937084B"
             {
             "UseDynamicProperties" = "11:TRUE"
             "IsDependency" = "11:TRUE"

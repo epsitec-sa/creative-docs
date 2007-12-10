@@ -57,9 +57,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.Identity", "Common.I
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "App.Dolphin", "App.Dolphin\App.Dolphin.csproj", "{C7F4F507-E056-46CB-B403-9EC194A0AF0F}"
 EndProject
-Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "X.Setup.Dolphin (fr)", "X.Setup.Dolphin-(fr)\X.Setup.Dolphin (fr).vdproj", "{B83C6D31-8F6C-4032-A0BA-BE891802DE54}"
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "X.Setup.Dolphin (fr)", "X.Setup.Dolphin.fr\X.Setup.Dolphin (fr).vdproj", "{B83C6D31-8F6C-4032-A0BA-BE891802DE54}"
 EndProject
-Project("{54435604-DBB4-11D2-8724-00A0C9A8B90C}") = "X.Setup.Dolphin (de)", "X.Setup.Dolphin-(de)\X.Setup.Dolphin (de).vdproj", "{B83C6D32-8F6C-4032-A0BA-BE891802DE54}"
+Project("{54435604-DBB4-11D2-8724-00A0C9A8B90C}") = "X.Setup.Dolphin (de)", "X.Setup.Dolphin.de\X.Setup.Dolphin (de).vdproj", "{B83C6D32-8F6C-4032-A0BA-BE891802DE54}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "App.Dolphin.Tests", "App.Dolphin.Tests\App.Dolphin.Tests.csproj", "{DD376A6F-929E-4228-A80C-1BAA20376DA6}"
 EndProject
