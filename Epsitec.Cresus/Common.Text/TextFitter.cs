@@ -77,7 +77,22 @@ namespace Epsitec.Common.Text
 				}
 			}
 		}
-		
+
+
+		public bool CheckNeedsMoreRoomForFullFit()
+		{
+			Cursors.FitterCursor cursor = this.frame_list.FindLastCursor (-1);
+
+			if (cursor != null)
+			{
+				return true;
+			}
+			else
+			{
+				cursor = this.frame_list.FindLastCursor (this.frame_list.Count - 1);
+				return cursor == null ? false : cursor.NeedsMoreRoom;
+			}
+		}
 		
 		public void ClearAllMarks()
 		{

@@ -60,7 +60,30 @@ namespace Epsitec.Common.Text
 		{
 			return this.frames.IndexOf (frame);
 		}
-		
+
+		public Cursors.FitterCursor FindLastCursor(int index)
+		{
+			//	Recherche le dernier curseur contenu dans le texte qui décrit
+			//	un paragraphe occupant au moins partiellement le ITextFrame
+			//	à trouver :
+
+			TextStory          story  = this.TextFitter.TextStory;
+			Internal.TextTable text   = story.TextTable;
+			int                length = story.TextLength;
+			CursorInfo.Filter  filter = Cursors.FitterCursor.GetFrameFilter (index);
+			CursorInfo[]       infos  = text.FindCursors (0, length, filter, false);
+
+			Debug.Assert.IsInBounds (index, 0, this.frames.Count-1);
+
+			if (infos.Length > 0)
+			{
+				return text.GetCursorInstance (infos[infos.Length-1].CursorId) as Cursors.FitterCursor;
+			}
+			else
+			{
+				return null;
+			}
+		}
 		
 		public Cursors.FitterCursor FindFirstCursor(int index)
 		{

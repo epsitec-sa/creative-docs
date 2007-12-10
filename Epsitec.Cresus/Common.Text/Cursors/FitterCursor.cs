@@ -29,6 +29,22 @@ namespace Epsitec.Common.Text.Cursors
 				return this.elements;
 			}
 		}
+
+		public bool								NeedsMoreRoom
+		{
+			get
+			{
+				if ((this.elements.Length > 0) &&
+					(this.elements[this.elements.Length-1].FrameIndex == -1))
+				{
+					return true;
+				}
+				else
+				{
+					return false;
+				}
+			}
+		}
 		
 		public int								ParagraphLength
 		{
