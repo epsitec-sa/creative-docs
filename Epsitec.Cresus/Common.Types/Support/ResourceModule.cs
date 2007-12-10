@@ -252,7 +252,18 @@ namespace Epsitec.Common.Support
 		{
 			if (System.IO.Directory.Exists (rootPath))
 			{
-				foreach (string path in System.IO.Directory.GetDirectories (rootPath))
+				string[] paths = null;
+				
+				try
+				{
+					paths = System.IO.Directory.GetDirectories (rootPath);
+				}
+				catch
+				{
+					paths = new	string[0];
+				}
+
+				foreach (string path in paths)
 				{
 					string name  = System.IO.Path.GetFileName (path);
 					string probe = System.IO.Path.Combine (path, ResourceModule.ManifestFileName);

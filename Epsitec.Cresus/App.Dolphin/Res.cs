@@ -631,6 +631,8 @@ namespace Epsitec.App.Dolphin
 			
 			public static class Path
 			{
+				//	designer:str/7312
+				public static string ApplicationName { get { return global::Epsitec.App.Dolphin.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (16777218)); } }
 				//	designer:str/731
 				public static string OriginalSamples { get { return global::Epsitec.App.Dolphin.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (16777216)); } }
 				//	designer:str/7311

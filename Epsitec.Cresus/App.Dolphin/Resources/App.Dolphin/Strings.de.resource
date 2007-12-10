@@ -4,4 +4,5 @@
   <data id="11">Epsitec\Delphin</data>
   <data id="2">Delphin</data>
   <data id="263">Delphin Simulator</data>
+  <data id="12">Delphin</data>
 </bundle>
