@@ -22,7 +22,6 @@ namespace Epsitec.Common.Dialogs
 			Dialog dialog = new Dialog (Support.Resources.DefaultManager);
 			dialog.Load ("unknown_dialog");
 			
-			Assert.IsTrue (dialog.IsLoaded);
 			Assert.IsFalse (dialog.IsReady);
 			
 			dialog.OpenDialog ();
@@ -66,7 +65,7 @@ namespace Epsitec.Common.Dialogs
 			
 			record.FieldChanged += new Support.EventHandler (this.HandleFieldChanged);
 			
-//			dialog.AddRule (record.Validator, "Ok;Apply");
+//-			dialog.AddRule (record.Validator, "Ok;Apply");
 			dialog.AddController (controller);
 			
 			Assert.AreEqual ("Test", record["UserName"].Value);
@@ -74,14 +73,8 @@ namespace Epsitec.Common.Dialogs
 			Assert.AreEqual (AccessMode.Local, record["AccessMode"].Value);
 			Assert.AreEqual (LoginOptions.None, record["LoginOptions"].Value);
 			
-//			ScriptWrapper script = new ScriptWrapper ();
-//			script.Source = DialogTest.CreateSource (null);
-//			dialog.CommandDispatcher.Register (script);
-			
 			dialog.Load ();
 			dialog.Data = record;
-//			dialog.Script = script;
-//			dialog.IsModal = false;
 			dialog.StoreInitialData ();
 			
 			//	Ouvre le dialogue modal (ce qui bloque !)

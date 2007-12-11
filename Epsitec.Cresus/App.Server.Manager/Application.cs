@@ -23,10 +23,12 @@ namespace Epsitec.Cresus.ServerManager
 			
 			record.AddField ("IsRunning", false);
 			
+#if false
 			dialog.Load ("ServerManager.MainWindow");
 			dialog.AddController (this);
 			dialog.IsModal = false;
 			dialog.Data = record;
+#endif
 			
 			this.main_window = dialog.Window;
 			this.dialog = dialog;
