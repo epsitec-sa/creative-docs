@@ -12,7 +12,7 @@ namespace Epsitec.Common.FormEngine
 	/// <summary>
 	/// Décrit un noeud, un champ ou un séparateur dans un masque de saisie.
 	/// </summary>
-	public class FieldDescription : System.IEquatable<FieldDescription>
+	public sealed class FieldDescription : System.IEquatable<FieldDescription>
 	{
 		public enum FieldType
 		{
@@ -55,7 +55,7 @@ namespace Epsitec.Common.FormEngine
 		}
 
 
-		protected FieldDescription()
+		private FieldDescription()
 		{
 			//	Constructeur protégé, commun à tous les autres.
 			this.subFormId = Druid.Empty;
@@ -517,7 +517,7 @@ namespace Epsitec.Common.FormEngine
 			writer.WriteEndElement();
 		}
 
-		protected void ReadXml(XmlReader reader)
+		private void ReadXml(XmlReader reader)
 		{
 			//	Désérialise toute la description.
 			//	NodeDescription n'est pas désérialisé, car on ne peut sérialiser que des listes (pas d'arbres).
@@ -652,19 +652,19 @@ namespace Epsitec.Common.FormEngine
 		}
 
 
-		protected System.Guid				guid;
-		protected int						uniqueId;
-		protected FieldType					type;
-		protected FieldDescription			source;
-		protected List<FieldDescription>	nodeDescription;
-		protected List<Druid>				fieldIds;
-		protected Druid						subFormId;
-		protected BackColorType				backColor;
-		protected SeparatorType				separatorBottom;
-		protected int						columnsRequired;
-		protected int						rowsRequired;
-		protected BoxPaddingType			boxPaddingType;
-		protected FrameState				boxFrameState;
-		protected double					boxFrameWidth;
+		private System.Guid					guid;
+		private int							uniqueId;
+		private FieldType					type;
+		private FieldDescription			source;
+		private List<FieldDescription>		nodeDescription;
+		private List<Druid>					fieldIds;
+		private Druid						subFormId;
+		private BackColorType				backColor;
+		private SeparatorType				separatorBottom;
+		private int							columnsRequired;
+		private int							rowsRequired;
+		private BoxPaddingType				boxPaddingType;
+		private FrameState					boxFrameState;
+		private double						boxFrameWidth;
 	}
 }

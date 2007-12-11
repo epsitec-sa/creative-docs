@@ -10,7 +10,7 @@ namespace Epsitec.Common.FormEngine
 	/// <summary>
 	/// Procédures de sérialisation et désérialisation de masques de saisie.
 	/// </summary>
-	public class Serialization
+	public static class Serialization
 	{
 		static public string SerializeForm(FormDescription form)
 		{

@@ -14,7 +14,7 @@ namespace Epsitec.Common.FormEngine
 	/// <summary>
 	/// Générateur de masques de saisie.
 	/// </summary>
-	public class Engine
+	public sealed class Engine
 	{
 		public Engine(ResourceManager resourceManager, FindFormDescription finder)
 		{
@@ -30,7 +30,7 @@ namespace Epsitec.Common.FormEngine
 			this.entityContext = new EntityContext(this.resourceManager, EntityLoopHandlingMode.Skip);
 		}
 
-		public Arrange Arrange
+		internal Arrange Arrange
 		{
 			get
 			{
@@ -703,10 +703,10 @@ namespace Epsitec.Common.FormEngine
 		public static readonly int MaxColumnsRequired = 10;
 		public static readonly int MaxRowsRequired = 20;
 
-		protected readonly ResourceManager resourceManager;
-		protected FindFormDescription finder;
-		protected readonly EntityContext entityContext;
-		protected Arrange arrange;
-		protected bool forDesigner;
+		private readonly ResourceManager resourceManager;
+		private FindFormDescription finder;
+		private readonly EntityContext entityContext;
+		private Arrange arrange;
+		private bool forDesigner;
 	}
 }

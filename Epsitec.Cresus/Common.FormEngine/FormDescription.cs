@@ -12,18 +12,21 @@ namespace Epsitec.Common.FormEngine
 	/// <summary>
 	/// Description complète d'un masque de saisie.
 	/// </summary>
-	public class FormDescription : System.IEquatable<FormDescription>
+	public sealed class FormDescription : System.IEquatable<FormDescription>
 	{
-		public FormDescription()
+		public FormDescription() : this(Druid.Empty)
 		{
-			this.entityId = Druid.Empty;
+		}
+
+		public FormDescription(Druid entityId)
+		{
+			this.entityId = entityId;
 			this.fields = new List<FieldDescription>();
 		}
 
-		public FormDescription(FormDescription model) : this()
+		public FormDescription(FormDescription model) : this(model.EntityId)
 		{
-			this.entityId = model.entityId;
-			this.fields = model.fields;
+			this.fields.AddRange(model.Fields);
 		}
 
 		public Druid EntityId
@@ -33,10 +36,6 @@ namespace Epsitec.Common.FormEngine
 			{
 				return this.entityId;
 			}
-			set
-			{
-				this.entityId = value;
-			}
 		}
 
 		public List<FieldDescription> Fields
@@ -45,10 +44,6 @@ namespace Epsitec.Common.FormEngine
 			get
 			{
 				return this.fields;
-			}
-			set
-			{
-				this.fields = value;
 			}
 		}
 
@@ -138,7 +133,7 @@ namespace Epsitec.Common.FormEngine
 			reader.Close();
 		}
 
-		protected void WriteXml(XmlWriter writer)
+		private void WriteXml(XmlWriter writer)
 		{
 			//	Sérialise tout le masque.
 			writer.WriteStartDocument();
@@ -154,7 +149,7 @@ namespace Epsitec.Common.FormEngine
 			writer.WriteEndDocument();
 		}
 
-		protected void ReadXml(XmlReader reader)
+		private void ReadXml(XmlReader reader)
 		{
 			//	Désérialise tout le masque.
 			this.fields.Clear();
@@ -215,7 +210,7 @@ namespace Epsitec.Common.FormEngine
 		#endregion
 
 
-		protected Druid entityId;
-		protected List<FieldDescription> fields;
+		private Druid							entityId;
+		private readonly List<FieldDescription>	fields;
 	}
 }

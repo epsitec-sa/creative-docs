@@ -274,6 +274,11 @@
     <Content Include="Resources\Common.Dialogs\Strings.de.resource" />
     <Content Include="Resources\Common.Dialogs\Strings.en.resource" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="..\Epsitec.Cresus.snk">
+      <Link>Properties\Epsitec.Cresus.snk</Link>
+    </None>
+  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>
