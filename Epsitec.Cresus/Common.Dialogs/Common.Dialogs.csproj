@@ -1,7 +1,7 @@
 ﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
   <PropertyGroup>
     <ProjectType>Local</ProjectType>
-    <ProductVersion>8.0.50727</ProductVersion>
+    <ProductVersion>9.0.21022</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{560DFD49-3052-4F41-A4C3-6216E6135DC9}</ProjectGuid>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -106,6 +106,10 @@
       <Project>{35FFBEF6-6A7D-4FEA-A4C6-AAB784FA709B}</Project>
       <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
     </ProjectReference>
+    <ProjectReference Include="..\Common.FormEngine\Common.FormEngine.csproj">
+      <Project>{29CBCF29-AA80-43BC-81C7-698DE2A4D88A}</Project>
+      <Name>Common.FormEngine</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Common.IO\Common.IO.csproj">
       <Project>{5A67ED63-98AC-4FC2-9E25-0AFA3229B9D0}</Project>
       <Name>Common.IO</Name>
@@ -142,6 +146,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\Properties\AssemblyInfo.Solution.cs">
+      <Link>Properties\AssemblyInfo.Solution.cs</Link>
+    </Compile>
     <Compile Include="AbstractDialog.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -155,7 +162,7 @@
     <Compile Include="AbstractYesNoCancel.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="AssemblyInfo.cs">
+    <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Controllers\FileNavigationController.cs" />
