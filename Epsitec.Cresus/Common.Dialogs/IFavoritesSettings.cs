@@ -13,7 +13,7 @@ namespace Epsitec.Common.Dialogs
 			set;
 		}
 
-		Epsitec.Common.Types.Collections.ObservableList<string> Items
+		IList<string> Items
 		{
 			get;
 		}

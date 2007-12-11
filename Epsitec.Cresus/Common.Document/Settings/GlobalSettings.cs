@@ -414,7 +414,7 @@ namespace Epsitec.Common.Document.Settings
 		}
 
 
-		Epsitec.Common.Types.Collections.ObservableList<string> Epsitec.Common.Dialogs.IFavoritesSettings.Items
+		IList<string> Epsitec.Common.Dialogs.IFavoritesSettings.Items
 		{
 			get
 			{

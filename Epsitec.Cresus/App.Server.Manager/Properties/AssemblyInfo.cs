@@ -3,6 +3,7 @@
 
 using System.Reflection;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 
 [assembly: AssemblyTitle ("Epsitec.Cresus.ServerManager")]
 [assembly: AssemblyDescription ("Crésus Server Manager")]

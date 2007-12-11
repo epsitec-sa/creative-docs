@@ -204,12 +204,6 @@
     <Compile Include="IDialog.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="IDialogDesigner.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="IDialogDesignerFactory.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="IFavoritesSettings.cs" />
     <Compile Include="IWorkInProgressReport.cs" />
     <Compile Include="MessageDialog.cs">

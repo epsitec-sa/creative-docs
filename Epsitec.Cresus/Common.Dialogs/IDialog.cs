@@ -1,5 +1,7 @@
 //	Copyright © 2004-2007, EPSITEC SA, CH-1092 BELMONT, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
+
+using Epsitec.Common.Widgets;
 
 namespace Epsitec.Common.Dialogs
 {
@@ -10,7 +12,7 @@ namespace Epsitec.Common.Dialogs
 	{
 		void OpenDialog();
 		
-		Common.Widgets.Window	Owner	{ get; set; }
-		DialogResult			Result	{ get; }
+		Window			Owner	{ get; set; }
+		DialogResult	Result	{ get; }
 	}
 }
