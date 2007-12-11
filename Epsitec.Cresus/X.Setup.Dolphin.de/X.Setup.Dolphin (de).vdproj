@@ -39,7 +39,7 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_D2064C3D17CB4269BE0641B7088D54B8"
+        "MsmKey" = "8:_DE0712FC51EB4B4A9325556B81418C4B"
         "OwnerKey" = "8:_99A1ECCB35B241B391BC9274DB770594"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -273,8 +273,8 @@
         "Product"
         {
         "Name" = "8:Microsoft Visual Studio"
-        "ProductName" = "8:Delphin"
-        "ProductCode" = "8:{F4130C15-952B-44E9-8274-307FD47DBCAC}"
+        "ProductName" = "8:Dauphin"
+        "ProductCode" = "8:{84DEAA43-59FF-411D-8A0E-660890717806}"
         "PackageCode" = "8:{65E667D4-68AD-4B67-8CAD-494DBF49EDC5}"
         "UpgradeCode" = "8:{3E07DF4F-1854-45A8-86B8-F494ADA98964}"
         "RestartWWWService" = "11:FALSE"
@@ -285,11 +285,11 @@
         "Manufacturer" = "8:Epsitec"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"
-        "Title" = "8:Delphin"
+        "Title" = "8:Dauphin"
         "Subject" = "8:"
         "ARPCONTACT" = "8:EPSITEC"
         "Keywords" = "8:"
-        "ARPCOMMENTS" = "8:Installiert den Delphin Simulator"
+        "ARPCOMMENTS" = "8:Installiert den Dauphin Simulator"
         "ARPURLINFOABOUT" = "8:www.epsitec.ch"
         "ARPPRODUCTICON" = "8:_170D98789BC04CCDB563061349B31586"
         "ARPIconIndex" = "3:0"
@@ -396,7 +396,7 @@
         {
             "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_98350D72C1D8461D87C9023D7F2E918D"
             {
-            "Name" = "8:Delphin Simulator"
+            "Name" = "8:Dauphin Simulator"
             "Arguments" = "8:"
             "Description" = "8:"
             "ShowCmd" = "3:1"
@@ -710,7 +710,7 @@
             "Feature" = "8:"
             "IsolateTo" = "8:"
             }
-            "{CEE29DC0-9FBA-4B99-8D47-5BC643D9B626}:_D2064C3D17CB4269BE0641B7088D54B8"
+            "{CEE29DC0-9FBA-4B99-8D47-5BC643D9B626}:_DE0712FC51EB4B4A9325556B81418C4B"
             {
             "UseDynamicProperties" = "11:TRUE"
             "IsDependency" = "11:TRUE"
