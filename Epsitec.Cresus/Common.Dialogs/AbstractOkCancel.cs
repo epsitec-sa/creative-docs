@@ -71,8 +71,8 @@ namespace Epsitec.Common.Dialogs
 			CommandDispatcher.SetDispatcher (this.window, this.private_dispatcher);
 			CommandContext.SetContext (this.window, this.private_context);
 
-			this.private_context.GetCommandState ("QuitDialog").Enable = true;
-			this.private_context.GetCommandState ("ValidateDialog").Enable = true;
+			this.private_context.GetCommandState (Res.Commands.Dialog.Generic.Cancel).Enable = true;
+			this.private_context.GetCommandState (Res.Commands.Dialog.Generic.Ok).Enable = true;
 			
 			this.window.MakeFixedSizeWindow ();
 			this.window.MakeButtonlessWindow ();
@@ -86,7 +86,7 @@ namespace Epsitec.Common.Dialogs
 			button1               = new Button (this.window.Root);
 			button1.SetManualBounds(new Drawing.Rectangle(this.window.ClientSize.Width - 2*75 - 2*8, 16, 75, button1.PreferredHeight));
 			button1.Text          = string.IsNullOrEmpty(this.ok_text) ? Widgets.Res.Strings.Dialog.Button.OK : this.ok_text;
-			button1.CommandObject = Dialog.ValidateDialogCommand;
+			button1.CommandObject = Res.Commands.Dialog.Generic.Ok;
 			button1.TabIndex      = 2;
 			button1.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			button1.Shortcuts.Add (Widgets.Feel.Factory.Active.AcceptShortcut);
@@ -97,7 +97,7 @@ namespace Epsitec.Common.Dialogs
 				button2.SetManualBounds(new Drawing.Rectangle(this.window.ClientSize.Width - 1*75 - 1*8, 16, 75, button2.PreferredHeight));
 				button2.Text          = string.IsNullOrEmpty(this.cancel_text) ? Widgets.Res.Strings.Dialog.Button.Cancel : this.cancel_text;
 				button2.Name          = "Cancel";
-				button2.CommandObject = Dialog.QuitDialogCommand;
+				button2.CommandObject = Res.Commands.Dialog.Generic.Cancel;
 				button2.TabIndex      = 3;
 				button2.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 				button2.Shortcuts.Add (Widgets.Feel.Factory.Active.CancelShortcut);
@@ -106,14 +106,16 @@ namespace Epsitec.Common.Dialogs
 			AbstractMessageDialog.LayoutButtons (this.window.ClientSize.Width, button1, button2);
 			
 			this.window.FocusedWidget = body.FindTabWidget (TabNavigationDir.Forwards, TabNavigationMode.ActivateOnTab);
-			this.window.WindowCloseClicked += delegate
-			{
-				this.CommandQuitDialog ();
-			};
+			this.window.WindowCloseClicked +=
+				delegate
+				{
+					this.CommandQuitDialog ();
+				};
 		}
-		
-		
-		[Command ("ValidateDialog")] protected void CommandValidateDialog()
+
+
+		[Command (Res.CommandIds.Dialog.Generic.Ok)]
+		protected void CommandValidateDialog()
 		{
 			this.result = DialogResult.Accept;
 			
@@ -124,8 +126,9 @@ namespace Epsitec.Common.Dialogs
 			
 			this.CloseDialog ();
 		}
-		
-		[Command ("QuitDialog")]     protected void CommandQuitDialog()
+
+		[Command (Res.CommandIds.Dialog.Generic.Cancel)]
+		protected void CommandQuitDialog()
 		{
 			this.result = DialogResult.Cancel;
 			

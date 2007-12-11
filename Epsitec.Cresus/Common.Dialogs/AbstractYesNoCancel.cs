@@ -57,9 +57,9 @@ namespace Epsitec.Common.Dialogs
 			CommandDispatcher.SetDispatcher (this.window, this.privateDispatcher);
 			CommandContext.SetContext (this.window, this.privateContext);
 
-			this.privateContext.GetCommandState ("ValidateDialogYes").Enable = true;
-			this.privateContext.GetCommandState ("ValidateDialogNo").Enable = true;
-			this.privateContext.GetCommandState ("QuitDialog").Enable = true;
+			this.privateContext.GetCommandState (Res.Commands.Dialog.Generic.Yes).Enable = true;
+			this.privateContext.GetCommandState (Res.Commands.Dialog.Generic.No).Enable = true;
+			this.privateContext.GetCommandState (Res.Commands.Dialog.Generic.Cancel).Enable = true;
 			
 			this.window.MakeFixedSizeWindow ();
 			this.window.MakeSecondaryWindow ();
@@ -72,7 +72,7 @@ namespace Epsitec.Common.Dialogs
 			button1               = new Button (this.window.Root);
 			button1.SetManualBounds(new Drawing.Rectangle(this.window.ClientSize.Width - 3*75 - 3*8, 16, 75, button1.PreferredHeight));
 			button1.Text          = string.IsNullOrEmpty(this.yes_text) ? Widgets.Res.Strings.Dialog.Button.Yes : this.yes_text;
-			button1.CommandObject = Dialog.ValidateDialogYesCommand;
+			button1.CommandObject = Res.Commands.Dialog.Generic.Yes;
 			button1.TabIndex      = 2;
 			button1.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			button1.ButtonStyle   = ButtonStyle.DefaultAccept;
@@ -80,7 +80,7 @@ namespace Epsitec.Common.Dialogs
 			button2               = new Button (this.window.Root);
 			button2.SetManualBounds(new Drawing.Rectangle(this.window.ClientSize.Width - 2*75 - 2*8, 16, 75, button2.PreferredHeight));
 			button2.Text          = string.IsNullOrEmpty(this.no_text) ? Widgets.Res.Strings.Dialog.Button.No : this.no_text;
-			button2.CommandObject = Dialog.ValidateDialogNoCommand;
+			button2.CommandObject = Res.Commands.Dialog.Generic.No;
 			button2.TabIndex      = 3;
 			button2.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			
@@ -90,7 +90,7 @@ namespace Epsitec.Common.Dialogs
 				button3.SetManualBounds(new Drawing.Rectangle(this.window.ClientSize.Width - 1*75 - 1*8, 16, 75, button3.PreferredHeight));
 				button3.Text          = string.IsNullOrEmpty(this.cancel_text) ? Widgets.Res.Strings.Dialog.Button.Cancel : this.cancel_text;
 				button3.Name          = "Cancel";
-				button3.CommandObject = Dialog.QuitDialogCommand;
+				button3.CommandObject = Res.Commands.Dialog.Generic.Cancel;
 				button3.TabIndex      = 4;
 				button3.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 				button3.ButtonStyle   = ButtonStyle.DefaultCancel;
@@ -99,10 +99,16 @@ namespace Epsitec.Common.Dialogs
 			AbstractMessageDialog.LayoutButtons (this.window.ClientSize.Width, button1, button2, button3);
 			
 			this.window.FocusedWidget = body.FindTabWidget (TabNavigationDir.Forwards, TabNavigationMode.ActivateOnTab);
+			this.window.WindowCloseClicked +=
+				delegate
+				{
+					this.CommandQuitDialog ();
+				};
 		}
 		
 		
-		[Command ("ValidateDialogYes")] protected void CommandValidateDialogYes()
+		[Command (Res.CommandIds.Dialog.Generic.Yes)]
+		protected void CommandValidateDialogYes()
 		{
 			this.result = DialogResult.Yes;
 			
@@ -113,8 +119,9 @@ namespace Epsitec.Common.Dialogs
 			
 			this.CloseDialog ();
 		}
-		
-		[Command ("ValidateDialogNo")]  protected void CommandValidateDialogNo()
+
+		[Command (Res.CommandIds.Dialog.Generic.No)]
+		protected void CommandValidateDialogNo()
 		{
 			this.result = DialogResult.No;
 			
@@ -125,8 +132,9 @@ namespace Epsitec.Common.Dialogs
 			
 			this.CloseDialog ();
 		}
-		
-		[Command ("QuitDialog")]        protected void CommandQuitDialog()
+
+		[Command (Res.CommandIds.Dialog.Generic.Cancel)]
+		protected void CommandQuitDialog()
 		{
 			this.result = DialogResult.Cancel;
 			

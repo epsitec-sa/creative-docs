@@ -37,38 +37,6 @@ namespace Epsitec.Common.Dialogs
 		}
 		
 		
-		public static Command					ValidateDialogCommand
-		{
-			get
-			{
-				return Command.Get ("ValidateDialog");
-			}
-		}
-
-		public static Command					ValidateDialogYesCommand
-		{
-			get
-			{
-				return Command.Get ("ValidateDialogYes");
-			}
-		}
-
-		public static Command					ValidateDialogNoCommand
-		{
-			get
-			{
-				return Command.Get ("ValidateDialogNo");
-			}
-		}
-
-		public static Command					QuitDialogCommand
-		{
-			get
-			{
-				return Command.Get ("QuitDialog");
-			}
-		}
-
 		public static Dialog Load(ResourceManager resourceManager, Druid resourceId)
 		{
 			//	TODO: ...

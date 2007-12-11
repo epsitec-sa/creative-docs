@@ -2048,6 +2048,23 @@ namespace Epsitec.Common.Widgets
 			return null;
 		}
 
+		public Widget	        FindCommandWidget(Command command)
+		{
+			//	Passe en revue tous les widgets de la descendance et retourne le
+			//	premier qui correspond parfaitement.
+			
+			CommandWidgetFinder finder = new CommandWidgetFinder (command);
+			
+			this.WalkChildren (new WidgetWalkChildrenCallback (finder.Analyse));
+			
+			if (finder.Widgets.Length > 0)
+			{
+				return finder.Widgets[0];
+			}
+			
+			return null;
+		}
+
 		public IEnumerable<Widget> FindAllChildren()
 		{
 			List<Widget> list = new List<Widget> ();
@@ -2187,6 +2204,11 @@ namespace Epsitec.Common.Widgets
 			{
 				this.filter = filter;
 			}
+
+			public CommandWidgetFinder(Command command)
+			{
+				this.command = command;
+			}
 			
 			public CommandWidgetFinder(System.Text.RegularExpressions.Regex regex)
 			{
@@ -2200,11 +2222,18 @@ namespace Epsitec.Common.Widgets
 				{
 					if (this.regex == null)
 					{
-						if (this.filter == null)
+						if (this.command == null)
 						{
-							this.list.Add (widget);
+							if (this.filter == null)
+							{
+								this.list.Add (widget);
+							}
+							else if (this.filter == widget.CommandName)
+							{
+								this.list.Add (widget);
+							}
 						}
-						else if (this.filter == widget.CommandName)
+						else if (this.command == widget.CommandObject)
 						{
 							this.list.Add (widget);
 						}
@@ -2235,16 +2264,15 @@ namespace Epsitec.Common.Widgets
 			{
 				get
 				{
-					Widget[] widgets = new Widget[this.list.Count];
-					this.list.CopyTo (widgets);
-					return widgets;
+					return this.list.ToArray ();
 				}
 			}
 			
 			
-			System.Collections.ArrayList			list   = new System.Collections.ArrayList ();
-			System.Text.RegularExpressions.Regex	regex  = null;
-			string									filter = null;
+			List<Widget>							list = new List<Widget> ();
+			System.Text.RegularExpressions.Regex	regex;
+			string									filter;
+			Command									command;
 		}
 		#endregion
 		

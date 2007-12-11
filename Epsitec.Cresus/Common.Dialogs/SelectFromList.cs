@@ -90,7 +90,7 @@ namespace Epsitec.Common.Dialogs
 		
 		private void HandleListDoubleClicked(object sender, MessageEventArgs e)
 		{
-			Widget widget = this.list.Window.Root.FindCommandWidget ("ValidateDialog");
+			Widget widget = this.list.Window.Root.FindCommandWidget (Res.Commands.Dialog.Generic.Ok);
 			
 			System.Diagnostics.Debug.Assert (widget != null);
 			System.Diagnostics.Debug.Assert (widget.Parent == this.list.Window.Root);

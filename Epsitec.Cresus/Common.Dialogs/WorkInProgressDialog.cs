@@ -329,7 +329,7 @@ namespace Epsitec.Common.Dialogs
 			Drawing.Platform.Dispatcher.Invoke (callback);
 		}
 
-		[Command ("QuitDialog")]
+		[Command (Res.CommandIds.Dialog.Generic.Cancel)]
 		protected void CommandQuitDialog()
 		{
 			this.result = DialogResult.Cancel;

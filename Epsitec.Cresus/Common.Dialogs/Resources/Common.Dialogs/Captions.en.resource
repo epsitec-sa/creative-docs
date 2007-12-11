@@ -18,4 +18,8 @@
   <data id="0I">&lt;s:data id="_0" f:Description="Toggle the display mode (list/tiles)" f:Labels="{Collection {Text 'Display mode'}}" /&gt;</data>
   <data id="0J">&lt;s:data id="_0" f:Description="Toggle the preview size in the file list" f:Labels="{Collection {Text 'Size'}}" /&gt;</data>
   <data id="0K">&lt;s:data id="_0" f:Description="Refresh list" f:Labels="{Collection {Text 'Refresh'}}" /&gt;</data>
+  <data id="1">&lt;s:type id="_1" s:name="Epsitec.Common.Widgets.Command" /&gt;&lt;s:type id="_2" s:name="Epsitec.Common.Widgets.Shortcut" /&gt;&lt;s:data id="_0" f:_1.Statefull="False" f:_1.DefaultParameter="{Null}" f:Labels="{Collection {Text 'OK'}}" /&gt;</data>
+  <data id="11">&lt;s:type id="_1" s:name="Epsitec.Common.Widgets.Command" /&gt;&lt;s:type id="_2" s:name="Epsitec.Common.Widgets.Shortcut" /&gt;&lt;s:data id="_0" f:_1.Statefull="False" f:_1.DefaultParameter="{Null}" f:Labels="{Collection {Text 'Yes'}}" /&gt;</data>
+  <data id="12">&lt;s:type id="_1" s:name="Epsitec.Common.Widgets.Command" /&gt;&lt;s:type id="_2" s:name="Epsitec.Common.Widgets.Shortcut" /&gt;&lt;s:data id="_0" f:_1.Statefull="False" f:_1.DefaultParameter="{Null}" f:Labels="{Collection {Text 'Cancel'}}" /&gt;</data>
+  <data id="13">&lt;s:type id="_1" s:name="Epsitec.Common.Widgets.Command" /&gt;&lt;s:type id="_2" s:name="Epsitec.Common.Widgets.Shortcut" /&gt;&lt;s:data id="_0" f:_1.Statefull="False" f:_1.DefaultParameter="{Null}" f:Labels="{Collection {Text 'No'}}" /&gt;</data>
 </bundle>

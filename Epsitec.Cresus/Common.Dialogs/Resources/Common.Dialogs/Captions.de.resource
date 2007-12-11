@@ -18,4 +18,8 @@
   <data id="04" mod="1">&lt;s:data id="_0" f:Description="Datei oder Ordner umbenennen" f:Labels="{Collection {Text 'Umbenennen'}}" /&gt;</data>
   <data id="0I">&lt;s:data id="_0" f:Description="Darstellungsmodus wechseln (Liste / Vorschaubilder)" f:Labels="{Collection {Text 'Darstellungsmodus'}}" /&gt;</data>
   <data id="0J">&lt;s:data id="_0" f:Description="Vorschaugröße in der Listenansicht ändern" f:Labels="{Collection {Text 'Größe'}}" /&gt;</data>
+  <data id="1">&lt;s:type id="_1" s:name="Epsitec.Common.Widgets.Command" /&gt;&lt;s:type id="_2" s:name="Epsitec.Common.Widgets.Shortcut" /&gt;&lt;s:data id="_0" f:_1.Statefull="False" f:_1.DefaultParameter="{Null}" f:Labels="{Collection {Text 'OK'}}" /&gt;</data>
+  <data id="11">&lt;s:type id="_1" s:name="Epsitec.Common.Widgets.Command" /&gt;&lt;s:type id="_2" s:name="Epsitec.Common.Widgets.Shortcut" /&gt;&lt;s:data id="_0" f:_1.Statefull="False" f:_1.DefaultParameter="{Null}" f:Labels="{Collection {Text 'Ja'}}" /&gt;</data>
+  <data id="12">&lt;s:type id="_1" s:name="Epsitec.Common.Widgets.Command" /&gt;&lt;s:type id="_2" s:name="Epsitec.Common.Widgets.Shortcut" /&gt;&lt;s:data id="_0" f:_1.Statefull="False" f:_1.DefaultParameter="{Null}" f:Labels="{Collection {Text 'Abbrechen'}}" /&gt;</data>
+  <data id="13">&lt;s:type id="_1" s:name="Epsitec.Common.Widgets.Command" /&gt;&lt;s:type id="_2" s:name="Epsitec.Common.Widgets.Shortcut" /&gt;&lt;s:data id="_0" f:_1.Statefull="False" f:_1.DefaultParameter="{Null}" f:Labels="{Collection {Text 'Nein'}}" /&gt;</data>
 </bundle>
