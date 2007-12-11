@@ -252,9 +252,8 @@ namespace Epsitec.Common.FormEngine
 			string err = this.engine.Arrange.Check(flat);
 			if (err == null)
 			{
-				FormDescription form = new FormDescription();
-				form.EntityId = entityId;
-
+				FormDescription form = new FormDescription(entityId);
+				
 				foreach (FieldDescription field in flat)
 				{
 					form.Fields.Add(field);

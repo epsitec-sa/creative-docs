@@ -511,8 +511,7 @@ namespace Epsitec.Common.Designer
 					return;
 				}
 
-				FormEngine.FormDescription form = new FormEngine.FormDescription();
-				form.EntityId = druid;
+				FormEngine.FormDescription form = new FormEngine.FormDescription(druid);
 				this.FormInitialize(form, ref newName);
 
 				string xml = FormEngine.Serialization.SerializeForm(form);

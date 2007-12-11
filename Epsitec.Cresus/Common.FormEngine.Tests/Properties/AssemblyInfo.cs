@@ -3,7 +3,6 @@
 
 using System.Reflection;
 using System.Runtime.InteropServices;
-using System.Runtime.CompilerServices;
 
 [assembly: AssemblyTitle ("Epsitec.Common.FormEngine.Tests")]
 [assembly: AssemblyDescription ("Tests for the Form Engine")]
