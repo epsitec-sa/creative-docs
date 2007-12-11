@@ -170,9 +170,6 @@
     <Compile Include="Validators\ControllerBasedValidator.cs" />
     <Compile Include="Verbosity.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Data\" />
-  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>
