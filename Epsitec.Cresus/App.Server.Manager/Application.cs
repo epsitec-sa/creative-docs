@@ -5,7 +5,6 @@ using Epsitec.Common.Dialogs;
 using Epsitec.Common.Support;
 using Epsitec.Common.Widgets;
 using Epsitec.Common.UI;
-using Epsitec.Common.UI.Data;
 
 namespace Epsitec.Cresus.ServerManager
 {
@@ -19,9 +18,9 @@ namespace Epsitec.Cresus.ServerManager
 			this.service_controller = new WindowsServiceController ();
 			
 			Dialog dialog = new Dialog (Epsitec.Common.Support.Resources.DefaultManager);
-			ObsoleteRecord record = new ObsoleteRecord ("Rec");
+//-			ObsoleteRecord record = new ObsoleteRecord ("Rec");
 			
-			record.AddField ("IsRunning", false);
+//-			record.AddField ("IsRunning", false);
 			
 #if false
 			dialog.Load ("ServerManager.MainWindow");
@@ -32,7 +31,7 @@ namespace Epsitec.Cresus.ServerManager
 			
 			this.main_window = dialog.Window;
 			this.dialog = dialog;
-			this.record = record;
+//-			this.record = record;
 			this.timer = new Timer ();
 			
 			this.timer.AutoRepeat = 0.5;
@@ -55,9 +54,11 @@ namespace Epsitec.Cresus.ServerManager
 		
 		private void HandleTimerTimeElapsed(object sender)
 		{
+#if false
 			ObsoleteField field = this.record["IsRunning"];
 			field.Value = this.service_controller.IsRunning;
 			System.Diagnostics.Debug.WriteLine ("field set to " + field.Value);
+#endif
 		}
 		
 		
@@ -97,7 +98,7 @@ namespace Epsitec.Cresus.ServerManager
 		private static Application				application;
 		private Window							main_window;
 		private WindowsServiceController		service_controller;
-		private ObsoleteRecord							record;
+//-		private ObsoleteRecord					record;
 		private Dialog							dialog;
 		private Timer							timer;
 	}
