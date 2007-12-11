@@ -997,8 +997,8 @@ namespace Epsitec.App.Dolphin.Components
 			get
 			{
 				int sp = this.registerSP;
+				this.registerSP &= 0x7ff;  // masque avant l'incrément, pour que H'7FF donne H'800 !
 				this.registerSP++;
-				this.registerSP &= 0x7ff;
 				return sp;
 			}
 		}

@@ -27,7 +27,7 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_5A636D43D98341DCA63D48994937084B"
+        "MsmKey" = "8:_9861B54F181B48ACBA2BB5BD66F22F5F"
         "OwnerKey" = "8:_99A1ECCB35B241B391BC9274DB770594"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -274,14 +274,14 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Dauphin"
-        "ProductCode" = "8:{84DEAA43-59FF-411D-8A0E-660890717806}"
-        "PackageCode" = "8:{1240435D-618D-41E7-97F0-D004F1DAFDEE}"
+        "ProductCode" = "8:{0F21B6F1-C619-4793-99E9-BC57D61CC71B}"
+        "PackageCode" = "8:{30315271-7C2A-4C9A-9E28-75C5098F7FAB}"
         "UpgradeCode" = "8:{3E07DF4F-1854-45A8-86B8-F494ADA98964}"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:TRUE"
-        "ProductVersion" = "8:1.1.0"
+        "ProductVersion" = "8:1.1.1"
         "Manufacturer" = "8:Epsitec"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"
@@ -696,7 +696,7 @@
         }
         "MergeModule"
         {
-            "{CEE29DC0-9FBA-4B99-8D47-5BC643D9B626}:_5A636D43D98341DCA63D48994937084B"
+            "{CEE29DC0-9FBA-4B99-8D47-5BC643D9B626}:_9861B54F181B48ACBA2BB5BD66F22F5F"
             {
             "UseDynamicProperties" = "11:TRUE"
             "IsDependency" = "11:TRUE"
@@ -714,7 +714,7 @@
             {
             "UseDynamicProperties" = "11:TRUE"
             "IsDependency" = "11:FALSE"
-            "SourcePath" = "8:C:\\Program Files\\Common Files\\Merge Modules\\Microsoft_VC80_CRT_x86.msm"
+            "SourcePath" = "8:C:\\Program Files (x86)\\Common Files\\Merge Modules\\Microsoft_VC80_CRT_x86.msm"
                 "Properties"
                 {
                 }

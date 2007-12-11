@@ -181,9 +181,8 @@ namespace Epsitec.App.Dolphin.Components
 				builder.Append("<br/>");
 			}
 
-			builder.Append("<font size=\"150%\"><b>");
-			builder.Append(title);
-			builder.Append("</b></font><br/><br/>");
+			builder.Append(Misc.Bold(Misc.FontSize(title, 150)));
+			builder.Append("<br/><br/>");
 		}
 
 		protected static void HelpPutLine(System.Text.StringBuilder builder, string line)
