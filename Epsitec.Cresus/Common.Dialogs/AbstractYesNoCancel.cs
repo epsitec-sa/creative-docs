@@ -20,12 +20,7 @@ namespace Epsitec.Common.Dialogs
 			this.command_yes_template = command_yes_template;
 			this.command_no_template  = command_no_template;
 			
-			this.privateDispatcher   = new CommandDispatcher ("Dialog", CommandDispatcherLevel.Secondary);
-			this.privateContext      = new CommandContext ();
-			
-			this.privateDispatcher.RegisterController (this);
-
-			CommandDispatcher.SetDispatcher (this, command_dispatcher);
+			this.AddController (this);
 		}
 		
 		
@@ -54,12 +49,9 @@ namespace Epsitec.Common.Dialogs
 			dialogWindow.ClientSize        = new Drawing.Size (dx+2*8, dy+2*16+24+16);
 			dialogWindow.PreventAutoClose  = true;
 
-			CommandDispatcher.SetDispatcher (dialogWindow, this.privateDispatcher);
-			CommandContext.SetContext (dialogWindow, this.privateContext);
-
-			this.privateContext.GetCommandState (Res.Commands.Dialog.Generic.Yes).Enable = true;
-			this.privateContext.GetCommandState (Res.Commands.Dialog.Generic.No).Enable = true;
-			this.privateContext.GetCommandState (Res.Commands.Dialog.Generic.Cancel).Enable = true;
+			this.CommandContext.GetCommandState (Res.Commands.Dialog.Generic.Yes).Enable = true;
+			this.CommandContext.GetCommandState (Res.Commands.Dialog.Generic.No).Enable = true;
+			this.CommandContext.GetCommandState (Res.Commands.Dialog.Generic.Cancel).Enable = true;
 
 			dialogWindow.MakeFixedSizeWindow ();
 			dialogWindow.MakeSecondaryWindow ();
@@ -151,7 +143,5 @@ namespace Epsitec.Common.Dialogs
 		protected string						command_yes_template;
 		protected string						command_no_template;
 		protected CommandDispatcher				command_dispatcher;
-		protected CommandDispatcher				privateDispatcher;
-		protected CommandContext				privateContext;
 	}
 }

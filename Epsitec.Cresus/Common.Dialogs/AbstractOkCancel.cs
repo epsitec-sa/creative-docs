@@ -19,11 +19,8 @@ namespace Epsitec.Common.Dialogs
 			
 			this.command_template   = command_template;
 			this.command_dispatcher = command_dispatcher;
-			
-			this.private_dispatcher = new CommandDispatcher ("Dialog", CommandDispatcherLevel.Secondary);
-			this.private_context    = new CommandContext ();
-			
-			this.private_dispatcher.RegisterController (this);
+
+			this.AddController (this);
 		}
 		
 		
@@ -31,23 +28,6 @@ namespace Epsitec.Common.Dialogs
 		{
 			get;
 		}
-		
-		public CommandDispatcher				CommandDispatcher
-		{
-			get
-			{
-				return this.private_dispatcher;
-			}
-		}
-
-		public CommandContext					CommandContext
-		{
-			get
-			{
-				return this.private_context;
-			}
-		}
-		
 		
 		protected abstract Widget CreateBodyWidget();
 		protected override Window CreateWindow()
@@ -68,11 +48,8 @@ namespace Epsitec.Common.Dialogs
 			dialogWindow.ClientSize       = new Drawing.Size (dx+2*8, dy+2*16+24+16);
 			dialogWindow.PreventAutoClose = true;
 
-			CommandDispatcher.SetDispatcher (dialogWindow, this.private_dispatcher);
-			CommandContext.SetContext (dialogWindow, this.private_context);
-
-			this.private_context.GetCommandState (Res.Commands.Dialog.Generic.Cancel).Enable = true;
-			this.private_context.GetCommandState (Res.Commands.Dialog.Generic.Ok).Enable = true;
+			this.CommandContext.GetCommandState (Res.Commands.Dialog.Generic.Cancel).Enable = true;
+			this.CommandContext.GetCommandState (Res.Commands.Dialog.Generic.Ok).Enable = true;
 
 			dialogWindow.MakeFixedSizeWindow ();
 			dialogWindow.MakeButtonlessWindow ();
@@ -143,7 +120,5 @@ namespace Epsitec.Common.Dialogs
 		protected string						cancel_text;
 		protected string						command_template;
 		protected CommandDispatcher				command_dispatcher;
-		protected CommandDispatcher				private_dispatcher;
-		protected CommandContext				private_context;
 	}
 }

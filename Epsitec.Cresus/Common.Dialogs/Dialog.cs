@@ -23,17 +23,7 @@ namespace Epsitec.Common.Dialogs
 		public Dialog(ResourceManager resourceManager, string name)
 		{
 			this.name            = name;
-			this.dispatcher      = new CommandDispatcher (this.name, CommandDispatcherLevel.Secondary);
 			this.resourceManager = resourceManager;
-		}
-		
-		
-		public CommandDispatcher				CommandDispatcher
-		{
-			get
-			{
-				return this.dispatcher;
-			}
 		}
 		
 		
@@ -46,11 +36,6 @@ namespace Epsitec.Common.Dialogs
 			return dialog;
 		}
 		
-		public void AddController(object controller)
-		{
-			this.CommandDispatcher.RegisterController (controller);
-		}
-
 		protected override Window CreateWindow()
 		{
 			throw new System.NotImplementedException ();
@@ -58,7 +43,6 @@ namespace Epsitec.Common.Dialogs
 		
 		
 		private readonly ResourceManager		resourceManager;
-		private readonly CommandDispatcher		dispatcher;
 		private readonly string					name;
 	}
 }
