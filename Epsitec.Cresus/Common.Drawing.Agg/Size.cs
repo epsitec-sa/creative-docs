@@ -77,7 +77,18 @@ namespace Epsitec.Common.Drawing
 		
 		public override string ToString()
 		{
-			return System.String.Format (System.Globalization.CultureInfo.InvariantCulture, "{0};{1}", this.width, this.height);
+			string arg1 = double.IsNaN (this.width) ?  "*" : this.width.ToString (System.Globalization.CultureInfo.InvariantCulture);
+			string arg2 = double.IsNaN (this.height) ? "*" : this.height.ToString (System.Globalization.CultureInfo.InvariantCulture);
+
+			if ((arg1 == "*") &&
+				(arg2 == "*"))
+			{
+				return "*";
+			}
+			else
+			{
+				return string.Concat (arg1, ";", arg2);
+			}
 		}
 		
 		
@@ -98,6 +109,10 @@ namespace Epsitec.Common.Drawing
 			{
 				return Size.Empty;
 			}
+			if (value == "*")
+			{
+				return new Size (double.NaN, double.NaN);
+			}
 			
 			string[] args = value.Split (';', ':');
 			
@@ -109,14 +124,19 @@ namespace Epsitec.Common.Drawing
 			string arg_x = args[0].Trim ();
 			string arg_y = args[1].Trim ();
 			
-			double x = System.Double.Parse (arg_x, System.Globalization.CultureInfo.InvariantCulture);
-			double y = System.Double.Parse (arg_y, System.Globalization.CultureInfo.InvariantCulture);
-			
+			double x = arg_x == "*" ? double.NaN : System.Double.Parse (arg_x, System.Globalization.CultureInfo.InvariantCulture);
+			double y = arg_y == "*" ? double.NaN : System.Double.Parse (arg_y, System.Globalization.CultureInfo.InvariantCulture);
+
 			return new Size (x, y);
 		}
 		
 		public static Size Parse(string value, Size default_value)
 		{
+			if (value == "*")
+			{
+				return default_value;
+			}
+
 			string[] args = value.Split (new char[] { ';', ':' });
 			
 			if (args.Length != 2)
@@ -127,10 +147,10 @@ namespace Epsitec.Common.Drawing
 			string arg_x = args[0].Trim ();
 			string arg_y = args[1].Trim ();
 			
-			if (arg_x != "*") default_value.Width  = System.Double.Parse (arg_x, System.Globalization.CultureInfo.InvariantCulture);
-			if (arg_y != "*") default_value.Height = System.Double.Parse (arg_y, System.Globalization.CultureInfo.InvariantCulture);
-			
-			return default_value;
+			double x = (arg_x == "*") ? default_value.Width  : System.Double.Parse (arg_x, System.Globalization.CultureInfo.InvariantCulture);
+			double y = (arg_y == "*") ? default_value.Height : System.Double.Parse (arg_y, System.Globalization.CultureInfo.InvariantCulture);
+
+			return new Size (x, y);
 		}
 		
 		
@@ -188,16 +208,6 @@ namespace Epsitec.Common.Drawing
 			{
 				Size size = (Size) value;
 				return size.ToString ();
-			}
-			
-			public static string ToString(object value, bool suppress_width, bool suppress_height)
-			{
-				Size size = (Size) value;
-				
-				string arg1 = suppress_width  ? "*" : size.Width.ToString (System.Globalization.CultureInfo.InvariantCulture);
-				string arg2 = suppress_height ? "*" : size.Height.ToString (System.Globalization.CultureInfo.InvariantCulture);
-				
-				return string.Format (System.Globalization.CultureInfo.InvariantCulture, "{0};{1}", arg1, arg2);
 			}
 		}
 		#endregion
