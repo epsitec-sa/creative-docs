@@ -2,6 +2,7 @@
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support;
+using Epsitec.Common.Support.ResourceAccessors;
 using Epsitec.Common.Types;
 using Epsitec.Common.Widgets;
 
@@ -101,7 +102,7 @@ namespace Epsitec.Common.Dialogs
 
 		private UI.Panel CreateUserInterfaceFromForm(ResourceBundle bundle)
 		{
-			string xmlSource = bundle["Source"].AsString;
+			string xmlSource = bundle[FormResourceAccessor.Strings.XmlSource].AsString;
 
 			FormEngine.FormDescription formDescription = new FormEngine.FormDescription ();
 			FormEngine.Engine formEngine = new FormEngine.Engine (this.resourceManager);

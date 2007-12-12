@@ -558,7 +558,13 @@ namespace Epsitec.Common.Designer
 			{
 				foreach (ResourceBundle.Field field in bundle.Fields)
 				{
-					if (field.Name.StartsWith ("Typ.StructuredType."))
+					if (field.Name == null)
+					{
+						System.Diagnostics.Debug.WriteLine ("Found suspect field (no name)");
+					}
+
+					if ((field.Name != null) &&
+						(field.Name.StartsWith ("Typ.StructuredType.")))
 					{
 						try
 						{

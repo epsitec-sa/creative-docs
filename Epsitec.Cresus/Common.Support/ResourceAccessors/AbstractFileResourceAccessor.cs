@@ -329,6 +329,21 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			}
 		}
 
+		protected static Druid ToDruid(ResourceBundle.Field field)
+		{
+			if (field.IsValid)
+			{
+				string id = field.AsString;
+
+				if (string.IsNullOrEmpty (id) == false)
+				{
+					return Druid.Parse (id);
+				}
+			}
+
+			return Druid.Empty;
+		}
+
 		/// <summary>
 		/// Disables any change notifications until <c>Dispose</c> is called
 		/// on the returned object. Use this with the <c>using</c> construct.

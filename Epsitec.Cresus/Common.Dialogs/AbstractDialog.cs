@@ -212,16 +212,16 @@ namespace Epsitec.Common.Dialogs
 			}
 
 			Window owner = this.OwnerWindow;
-			Drawing.Rectangle owner_bounds;
+			Drawing.Rectangle ownerBounds;
 
 			if ((owner != null) &&
 				(owner.IsMinimized == false))
 			{
-				owner_bounds = owner.WindowBounds;
+				ownerBounds = owner.WindowBounds;
 			}
 			else
 			{
-				owner_bounds = ScreenInfo.AllScreens[0].Bounds;
+				ownerBounds = ScreenInfo.AllScreens[0].Bounds;
 			}
 
 			//	Make sure we release the mouse capture and we don't process
@@ -240,14 +240,14 @@ namespace Epsitec.Common.Dialogs
 				dispatchMessage.Retired = true;
 			}
 
-			Drawing.Rectangle dialog_bounds = window.WindowBounds;
+			Drawing.Rectangle dialogBounds = window.WindowBounds;
 
-			double ox = System.Math.Floor (owner_bounds.Left + (owner_bounds.Width - dialog_bounds.Width) / 2);
-			double oy = System.Math.Floor (owner_bounds.Top  - (owner_bounds.Height - dialog_bounds.Height) / 3 - dialog_bounds.Height);
+			double ox = System.Math.Floor (ownerBounds.Left + (ownerBounds.Width - dialogBounds.Width) / 2);
+			double oy = System.Math.Floor (ownerBounds.Top  - (ownerBounds.Height - dialogBounds.Height) / 3 - dialogBounds.Height);
 
-			dialog_bounds.Location = new Drawing.Point (ox, oy);
+			dialogBounds.Location = new Drawing.Point (ox, oy);
 
-			window.WindowBounds = dialog_bounds;
+			window.WindowBounds = dialogBounds;
 
 			this.OnDialogOpening ();
 

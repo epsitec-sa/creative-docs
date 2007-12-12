@@ -2,6 +2,7 @@ using System.Collections.Generic;
 
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Support;
+using Epsitec.Common.Support.ResourceAccessors;
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Types;
 
@@ -175,14 +176,10 @@ namespace Epsitec.Common.FormEngine
 						ResourceBundle bundle = this.resourceManager.GetBundle(name, ResourceLevel.Default, null);
 						if (bundle != null)
 						{
-							ResourceBundle.Field bundleField = bundle["Source"];
-							if (bundleField.IsValid)
+							string xml = bundle[FormResourceAccessor.Strings.XmlSource].AsString;
+							if (!string.IsNullOrEmpty(xml))
 							{
-								string xml = bundleField.AsString;
-								if (!string.IsNullOrEmpty(xml))
-								{
-									subForm = Serialization.DeserializeForm(xml, this.resourceManager);
-								}
+								subForm = Serialization.DeserializeForm(xml, this.resourceManager);
 							}
 						}
 					}
