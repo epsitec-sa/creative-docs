@@ -82,12 +82,18 @@ namespace Epsitec.Common.Dialogs
 
 			public bool DiscardWriteEntityValue(IValueStore store, string id, object value)
 			{
-				System.Diagnostics.Debug.Assert (this.host.mode == DialogDataMode.RealTime);
-				System.Diagnostics.Debug.Assert (this.host.originalValues.ContainsKey (this.GetFieldPath (id)));
+				if (this.host.mode == DialogDataMode.RealTime)
+				{
+					System.Diagnostics.Debug.Assert (this.host.originalValues.ContainsKey (this.GetFieldPath (id)));
 
-				this.externalData.InternalSetValue (id, value);
+					this.externalData.InternalSetValue (id, value);
 
-				return true;
+					return true;
+				}
+				else
+				{
+					return false;
+				}
 			}
 
 			public object PromoteToRealInstance()
