@@ -25,7 +25,11 @@ namespace Epsitec.Common.Dialogs
 		}
 
 
-		public CommandDispatcher CommandDispatcher
+		/// <summary>
+		/// Gets the command dispatcher for this dialog.
+		/// </summary>
+		/// <value>The command dispatcher.</value>
+		public CommandDispatcher				CommandDispatcher
 		{
 			get
 			{
@@ -33,7 +37,11 @@ namespace Epsitec.Common.Dialogs
 			}
 		}
 
-		public CommandContext CommandContext
+		/// <summary>
+		/// Gets the command context for this dialog.
+		/// </summary>
+		/// <value>The command context.</value>
+		public CommandContext					CommandContext
 		{
 			get
 			{
@@ -41,7 +49,11 @@ namespace Epsitec.Common.Dialogs
 			}
 		}
 
-		
+		/// <summary>
+		/// Gets the window for this dialog. If the window did not exist yet,
+		/// it will be created by calling <see cref="CreateWindow"/>.
+		/// </summary>
+		/// <value>The dialog window.</value>
 		public Window							DialogWindow
 		{
 			get
@@ -60,7 +72,11 @@ namespace Epsitec.Common.Dialogs
 				return this.dialogWindow;
 			}
 		}
-		
+
+		/// <summary>
+		/// Gets or sets the owner window for this dialog.
+		/// </summary>
+		/// <value>The owner window.</value>
 		public Window							OwnerWindow
 		{
 			get
@@ -80,11 +96,15 @@ namespace Epsitec.Common.Dialogs
 					(window.Owner != value))
 				{
 					window.Owner = value;
-					this.OnOwnerChanged ();
+					this.OnWindowOwnerChanged ();
 				}
 			}
 		}
-		
+
+		/// <summary>
+		/// Gets the dialog result.
+		/// </summary>
+		/// <value>The dialog result.</value>
 		public DialogResult						DialogResult
 		{
 			get
@@ -96,7 +116,12 @@ namespace Epsitec.Common.Dialogs
 				this.dialogResult = value;
 			}
 		}
-		
+
+		/// <summary>
+		/// Gets the dispatch window for this dialog. If the dialog has an
+		/// owner, then the dispatch window will be the owner window.
+		/// </summary>
+		/// <value>The dispatch window.</value>
 		public Window							DispatchWindow
 		{
 			get
@@ -107,7 +132,13 @@ namespace Epsitec.Common.Dialogs
 				return owner ?? window;
 			}
 		}
-		
+
+		/// <summary>
+		/// Gets a value indicating whether this dialog is visible.
+		/// </summary>
+		/// <value>
+		/// 	<c>true</c> if this dialog is visible; otherwise, <c>false</c>.
+		/// </value>
 		public bool								IsVisible
 		{
 			get
@@ -122,7 +153,11 @@ namespace Epsitec.Common.Dialogs
 				}
 			}
 		}
-		
+
+		/// <summary>
+		/// Gets or sets a value indicating whether this dialog is modal.
+		/// </summary>
+		/// <value><c>true</c> if this dialog is modal; otherwise, <c>false</c>.</value>
 		public bool								IsModal
 		{
 			get
@@ -136,12 +171,21 @@ namespace Epsitec.Common.Dialogs
 		}
 
 
-		public void AddController(object controller)
+		/// <summary>
+		/// Registers a controller with the dialog's local command dispatcher.
+		/// </summary>
+		/// <param name="controller">The controller.</param>
+		public void RegisterController(object controller)
 		{
 			this.CommandDispatcher.RegisterController (controller);
 		}
 
 
+		/// <summary>
+		/// Opens the dialog (creates the window and makes it visible). If the
+		/// dialog is modal, this method won't return until the user closes
+		/// the dialog.
+		/// </summary>
 		public void OpenDialog()
 		{
 			Window window = this.DialogWindow;
@@ -204,6 +248,9 @@ namespace Epsitec.Common.Dialogs
 			}
 		}
 
+		/// <summary>
+		/// Closes the dialog. The window will be disposed asynchronously.
+		/// </summary>
 		public void CloseDialog()
 		{
 			Window window = this.dialogWindow;
@@ -239,8 +286,15 @@ namespace Epsitec.Common.Dialogs
 		}
 
 
+		/// <summary>
+		/// Creates a window for the current dialog.
+		/// </summary>
+		/// <returns>The window.</returns>
 		protected abstract Window CreateWindow();
 
+		/// <summary>
+		/// Called when the dialog is opening.
+		/// </summary>
 		protected virtual void OnDialogOpening()
 		{
 			if (this.DialogOpening != null)
@@ -248,7 +302,10 @@ namespace Epsitec.Common.Dialogs
 				this.DialogOpening (this);
 			}
 		}
-		
+
+		/// <summary>
+		/// Called when the dialog was opened.
+		/// </summary>
 		protected virtual void OnDialogOpened()
 		{
 			if (this.DialogOpened != null)
@@ -257,6 +314,9 @@ namespace Epsitec.Common.Dialogs
 			}
 		}
 
+		/// <summary>
+		/// Called when the dialog was closed.
+		/// </summary>
 		protected virtual void OnDialogClosed()
 		{
 			if (this.DialogClosed != null)
@@ -265,7 +325,10 @@ namespace Epsitec.Common.Dialogs
 			}
 		}
 
-		protected virtual void OnOwnerChanged()
+		/// <summary>
+		/// Called when the window owner changed.
+		/// </summary>
+		protected virtual void OnWindowOwnerChanged()
 		{
 		}
 		

@@ -20,7 +20,7 @@ namespace Epsitec.Common.Dialogs
 			this.command_template   = command_template;
 			this.command_dispatcher = command_dispatcher;
 
-			this.AddController (this);
+			this.RegisterController (this);
 		}
 		
 		
