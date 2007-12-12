@@ -42,10 +42,25 @@ namespace Epsitec.Common.Dialogs
 		public void Check02DialogModeRealTime()
 		{
 			EntityContext context = EntityContext.Current;
-			AbstractEntity entity = context.CreateEmptyEntity<PrixEntity> ();
-			DialogData data = new DialogData (entity, DialogDataMode.RealTime);
+			PrixEntity prix1 = context.CreateEmptyEntity<PrixEntity> ();
+			prix1.Monnaie = context.CreateEmptyEntity<MonnaieEntity> ();
+			prix1.Ht = 10.0M;
+			prix1.Monnaie.Désignation = "CHF";
 
-			PrixEntity prix = data.Data as PrixEntity;
+			DialogData data = new DialogData (prix1, DialogDataMode.RealTime);
+
+			PrixEntity prix2 = data.Data as PrixEntity;
+
+			Assert.AreEqual (10.0M, prix2.Ht);
+			Assert.AreEqual ("CHF", prix2.Monnaie.Désignation);
+
+			prix2.Ht = 15.0M;
+			prix2.Monnaie.Désignation = "EUR";
+
+			Assert.AreEqual (15.0M, prix1.Ht);
+			Assert.AreEqual ("EUR", prix1.Monnaie.Désignation);
+			Assert.AreEqual (15.0M, prix2.Ht);
+			Assert.AreEqual ("EUR", prix2.Monnaie.Désignation);
 		}
 	}
 }

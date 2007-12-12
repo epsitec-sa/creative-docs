@@ -65,10 +65,13 @@ namespace Epsitec.Common.Dialogs
 
 			public object GetReadEntityValue(IValueStore store, string id)
 			{
-				object value = this.ResolveNode (id);
+				FieldRelation relation = this.externalData.InternalGetFieldRelation (id);
+				object        value    = this.ResolveNode (id, relation);
 				
-				if (this.host.mode == DialogDataMode.Isolated)
+				if ((this.host.mode == DialogDataMode.Isolated) ||
+					(relation != FieldRelation.None))
 				{
+					this.SaveOriginalValue (id, value);
 					store.SetValue (id, value);
 				}
 				
@@ -84,8 +87,7 @@ namespace Epsitec.Common.Dialogs
 			{
 				if (this.host.mode == DialogDataMode.RealTime)
 				{
-					System.Diagnostics.Debug.Assert (this.host.originalValues.ContainsKey (this.GetFieldPath (id)));
-
+					this.SaveOriginalValue (id, this.ResolveValue (id));
 					this.externalData.InternalSetValue (id, value);
 
 					return true;
@@ -103,11 +105,11 @@ namespace Epsitec.Common.Dialogs
 
 			#endregion
 
-			private object ResolveNode(string id)
+			private object ResolveNode(string id, FieldRelation relation)
 			{
 				object value;
 
-				switch (this.externalData.InternalGetFieldRelation (id))
+				switch (relation)
 				{
 					case FieldRelation.None:
 						value = this.ResolveValue (id);
@@ -131,7 +133,6 @@ namespace Epsitec.Common.Dialogs
 			private object ResolveValue(string id)
 			{
 				object value = this.externalData.InternalGetValue (id);
-				this.SaveOriginalValue (id, value);
 				
 				return value;
 			}
@@ -139,8 +140,6 @@ namespace Epsitec.Common.Dialogs
 			private object ResolveReference(string id)
 			{
 				AbstractEntity reference = this.externalData.InternalGetValue (id) as AbstractEntity;
-				this.SaveOriginalValue (id, reference);
-
 				return this.host.CreateProxy (reference, this);
 			}
 
