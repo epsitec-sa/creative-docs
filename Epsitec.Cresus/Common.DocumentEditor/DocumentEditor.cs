@@ -1279,9 +1279,9 @@ namespace Epsitec.Common.DocumentEditor
 			string question2 = Res.Strings.Dialog.Question.Save.Part2;
 			string message = string.Format("<font size=\"100%\">{0}</font><br/><br/>{1}{2}", question1, statistic, question2);
 			Common.Dialogs.IDialog dialog = Common.Dialogs.MessageDialog.CreateYesNoCancel(title, icon, message, null, null, this.commandDispatcher);
-			dialog.Owner = this.Window;
+			dialog.OwnerWindow = this.Window;
 			dialog.OpenDialog();
-			return dialog.Result;
+			return dialog.DialogResult;
 		}
 
 		protected Common.Dialogs.DialogResult DialogWarnings(System.Collections.ArrayList warnings)
@@ -1314,9 +1314,9 @@ namespace Epsitec.Common.DocumentEditor
 			string message = builder.ToString();
 
 			Common.Dialogs.IDialog dialog = Common.Dialogs.MessageDialog.CreateOk(title, icon, message, "", this.commandDispatcher);
-			dialog.Owner = this.Window;
+			dialog.OwnerWindow = this.Window;
 			dialog.OpenDialog();
-			return dialog.Result;
+			return dialog.DialogResult;
 		}
 
 		protected void DialogWarningRedirection()
@@ -1357,9 +1357,9 @@ namespace Epsitec.Common.DocumentEditor
 			string icon = "manifest:Epsitec.Common.Dialogs.Images.Question.icon";
 
 			Common.Dialogs.IDialog dialog = Common.Dialogs.MessageDialog.CreateYesNo(title, icon, message, "", "", this.commandDispatcher);
-			dialog.Owner = this.Window;
+			dialog.OwnerWindow = this.Window;
 			dialog.OpenDialog();
-			return dialog.Result;
+			return dialog.DialogResult;
 		}
 
 		protected static string AdjustFilename(string filename)
@@ -1562,9 +1562,9 @@ namespace Epsitec.Common.DocumentEditor
 					dialog.Title = Res.Strings.Dialog.Save.TitlePic;
 					dialog.Filters.Add("icon", Res.Strings.Dialog.FilePic, "*.icon");
 					dialog.PromptForOverwriting = true;
-					dialog.Owner = this.Window;
+					dialog.OwnerWindow = this.Window;
 					dialog.OpenDialog();
-					if (dialog.Result != Common.Dialogs.DialogResult.Accept)
+					if (dialog.DialogResult != Common.Dialogs.DialogResult.Accept)
 					{
 						return false;
 					}
@@ -2145,9 +2145,9 @@ namespace Epsitec.Common.DocumentEditor
 			dialog.Filters.Add("crcolors", Res.Strings.Dialog.FileCol, "*.crcolors");
 			dialog.FilterIndex = 0;
 			dialog.PromptForOverwriting = true;
-			dialog.Owner = this.Window;
+			dialog.OwnerWindow = this.Window;
 			dialog.OpenDialog();
-			if ( dialog.Result != Common.Dialogs.DialogResult.Accept )  return;
+			if ( dialog.DialogResult != Common.Dialogs.DialogResult.Accept )  return;
 
 			this.CurrentDocument.GlobalSettings.ColorCollectionDirectory = System.IO.Path.GetDirectoryName(dialog.FileName);
 			this.CurrentDocument.GlobalSettings.ColorCollectionFilename = System.IO.Path.GetFileName(dialog.FileName);

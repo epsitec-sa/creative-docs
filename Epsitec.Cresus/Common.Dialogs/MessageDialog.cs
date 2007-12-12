@@ -151,10 +151,10 @@ namespace Epsitec.Common.Dialogs
 
 			IDialog dialog = MessageDialog.CreateOk (MessageDialog.GetDialogTitle (owner), DialogIcon.Warning, formattedErrorMessage);
 
-			dialog.Owner = owner;
+			dialog.OwnerWindow = owner;
 			dialog.OpenDialog ();
 
-			return dialog.Result;
+			return dialog.DialogResult;
 		}
 
 		public static DialogResult ShowMessage(string formattedMessage, Window owner)
@@ -166,10 +166,10 @@ namespace Epsitec.Common.Dialogs
 
 			IDialog dialog = MessageDialog.CreateOk (MessageDialog.GetDialogTitle (owner), DialogIcon.None, formattedMessage);
 
-			dialog.Owner = owner;
+			dialog.OwnerWindow = owner;
 			dialog.OpenDialog ();
 
-			return dialog.Result;
+			return dialog.DialogResult;
 		}
 
 		public static DialogResult ShowQuestion(string formattedQuestion, Window owner)
@@ -181,10 +181,10 @@ namespace Epsitec.Common.Dialogs
 
 			IDialog dialog = MessageDialog.CreateYesNo (MessageDialog.GetDialogTitle (owner), DialogIcon.Question, formattedQuestion);
 
-			dialog.Owner = owner;
+			dialog.OwnerWindow = owner;
 			dialog.OpenDialog ();
 
-			return dialog.Result;
+			return dialog.DialogResult;
 		}
 		
 		protected static string GetIconName(DialogIcon icon)

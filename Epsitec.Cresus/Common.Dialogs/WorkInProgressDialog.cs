@@ -132,7 +132,7 @@ namespace Epsitec.Common.Dialogs
 		{
 			WorkInProgressDialog dialog = new WorkInProgressDialog (title, cancellable);
 			dialog.Operation = action;
-			dialog.Owner = owner;
+			dialog.OwnerWindow = owner;
 			dialog.ProgressIndicatorStyle = style;
 			dialog.OpenDialog ();
 			return dialog.OperationResult;
@@ -271,7 +271,7 @@ namespace Epsitec.Common.Dialogs
 				Window.SuspendAsyncNotify ();
 				Application.SetWaitCursor ();
 
-				this.Window.MouseCursor = MouseCursor.AsWait;
+				this.DialogWindow.MouseCursor = MouseCursor.AsWait;
 
 				System.Threading.Thread thread = new System.Threading.Thread (this.ProcessAction);
 				
@@ -334,7 +334,7 @@ namespace Epsitec.Common.Dialogs
 		[Command (Res.CommandIds.Dialog.Generic.Cancel)]
 		protected void CommandQuitDialog()
 		{
-			this.Result = DialogResult.Cancel;
+			this.DialogResult = DialogResult.Cancel;
 
 			this.CloseDialog ();
 		}

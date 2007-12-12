@@ -112,11 +112,11 @@ namespace Epsitec.Common.Dialogs
 		[Command (Res.CommandIds.Dialog.Generic.Yes)]
 		protected void CommandValidateDialogYes()
 		{
-			this.Result = DialogResult.Yes;
+			this.DialogResult = DialogResult.Yes;
 			
 			if (this.command_yes_template != null)
 			{
-				this.DispatchWindow.QueueCommand (this.Window, string.Format (this.command_yes_template, this.CommandArgs));
+				this.DispatchWindow.QueueCommand (this.DialogWindow, string.Format (this.command_yes_template, this.CommandArgs));
 			}
 			
 			this.CloseDialog ();
@@ -125,11 +125,11 @@ namespace Epsitec.Common.Dialogs
 		[Command (Res.CommandIds.Dialog.Generic.No)]
 		protected void CommandValidateDialogNo()
 		{
-			this.Result = DialogResult.No;
+			this.DialogResult = DialogResult.No;
 			
 			if (this.command_no_template != null)
 			{
-				this.DispatchWindow.QueueCommand (this.Window, string.Format (this.command_no_template, this.CommandArgs));
+				this.DispatchWindow.QueueCommand (this.DialogWindow, string.Format (this.command_no_template, this.CommandArgs));
 			}
 			
 			this.CloseDialog ();
@@ -138,7 +138,7 @@ namespace Epsitec.Common.Dialogs
 		[Command (Res.CommandIds.Dialog.Generic.Cancel)]
 		protected void CommandQuitDialog()
 		{
-			this.Result = DialogResult.Cancel;
+			this.DialogResult = DialogResult.Cancel;
 			
 			this.CloseDialog ();
 		}

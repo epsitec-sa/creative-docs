@@ -29,7 +29,7 @@ namespace Epsitec.Cresus.ServerManager
 			dialog.Data = record;
 #endif
 			
-			this.main_window = dialog.Window;
+			this.main_window = dialog.DialogWindow;
 			this.dialog = dialog;
 //-			this.record = record;
 			this.timer = new Timer ();

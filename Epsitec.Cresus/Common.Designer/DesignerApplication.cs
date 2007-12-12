@@ -2058,9 +2058,9 @@ namespace Epsitec.Common.Designer
 			}
 
 			Common.Dialogs.IDialog dialog = Common.Dialogs.MessageDialog.CreateYesNoCancel(title, icon, message, null, null, this.CommandDispatcher);
-			dialog.Owner = this.Window;
+			dialog.OwnerWindow = this.Window;
 			dialog.OpenDialog();
-			return dialog.Result;
+			return dialog.DialogResult;
 		}
 
 		public Common.Dialogs.DialogResult DialogQuestion(string question)
@@ -2073,9 +2073,9 @@ namespace Epsitec.Common.Designer
 			string message = question;
 
 			Common.Dialogs.IDialog dialog = Common.Dialogs.MessageDialog.CreateYesNo(title, icon, message, "", "", this.CommandDispatcher);
-			dialog.Owner = this.Window;
+			dialog.OwnerWindow = this.Window;
 			dialog.OpenDialog();
-			return dialog.Result;
+			return dialog.DialogResult;
 		}
 
 		public Common.Dialogs.DialogResult DialogQuestion(string question, string yes, string no, string cancel)
@@ -2088,9 +2088,9 @@ namespace Epsitec.Common.Designer
 			string message = question;
 
 			Common.Dialogs.IDialog dialog = Common.Dialogs.MessageDialog.CreateYesNoCancel(title, yes, no, cancel, icon, message, "", "", this.CommandDispatcher);
-			dialog.Owner = this.Window;
+			dialog.OwnerWindow = this.Window;
 			dialog.OpenDialog();
-			return dialog.Result;
+			return dialog.DialogResult;
 		}
 
 		public Common.Dialogs.DialogResult DialogMessage(string message)
@@ -2102,9 +2102,9 @@ namespace Epsitec.Common.Designer
 			string icon = "manifest:Epsitec.Common.Dialogs.Images.Information.icon";
 
 			Common.Dialogs.IDialog dialog = Common.Dialogs.MessageDialog.CreateOk(title, icon, message, "", this.CommandDispatcher);
-			dialog.Owner = this.Window;
+			dialog.OwnerWindow = this.Window;
 			dialog.OpenDialog();
-			return dialog.Result;
+			return dialog.DialogResult;
 		}
 
 		public Common.Dialogs.DialogResult DialogError(string error)
@@ -2119,9 +2119,9 @@ namespace Epsitec.Common.Designer
 			string message = error;
 
 			Common.Dialogs.IDialog dialog = Common.Dialogs.MessageDialog.CreateOk(title, icon, message, "", this.CommandDispatcher);
-			dialog.Owner = this.Window;
+			dialog.OwnerWindow = this.Window;
 			dialog.OpenDialog();
-			return dialog.Result;
+			return dialog.DialogResult;
 		}
 
 		public Common.Dialogs.DialogResult DialogConfirmation(string header, List<string> questions, bool hasCancelButton)
@@ -2131,9 +2131,9 @@ namespace Epsitec.Common.Designer
 
 			string title = Res.Strings.Application.Title;
 			Common.Dialogs.IDialog dialog = Common.Dialogs.MessageDialog.CreateConfirmation(title, header, questions, hasCancelButton);
-			dialog.Owner = this.Window;
+			dialog.OwnerWindow = this.Window;
 			dialog.OpenDialog();
-			return dialog.Result;
+			return dialog.DialogResult;
 		}
 
 		private void HandleDlgClosed(object sender)

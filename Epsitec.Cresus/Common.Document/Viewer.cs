@@ -3942,7 +3942,7 @@ namespace Epsitec.Common.Document
 			string message = error;
 
 			Common.Dialogs.IDialog dialog = Common.Dialogs.MessageDialog.CreateOk(title, icon, message, "", this.GetCommandDispatcher());
-			dialog.Owner = this.Window;
+			dialog.OwnerWindow = this.Window;
 			dialog.OpenDialog();
 		}
 
@@ -3954,9 +3954,9 @@ namespace Epsitec.Common.Document
 			string message = question;
 
 			Common.Dialogs.IDialog dialog = Common.Dialogs.MessageDialog.CreateYesNo(title, icon, message, null, null, this.GetCommandDispatcher());
-			dialog.Owner = this.Window;
+			dialog.OwnerWindow = this.Window;
 			dialog.OpenDialog();
-			return (dialog.Result == Common.Dialogs.DialogResult.Yes);
+			return (dialog.DialogResult == Common.Dialogs.DialogResult.Yes);
 		}
 		#endregion
 

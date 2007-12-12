@@ -21,106 +21,102 @@ namespace Epsitec.Common.Dialogs
 		
 		public void OpenDialog()
 		{
-			if (this.IsReady)
+			Window window = this.DialogWindow;
+
+			if (window == null)
 			{
-				Window window = this.Window;
+				throw new System.InvalidOperationException ("Cannot show window");
+			}
+			
+			Window owner = this.OwnerWindow;
+			Drawing.Rectangle owner_bounds;
+			
+			if ((owner != null) &&
+				(owner.IsMinimized == false))
+			{
+				owner_bounds = owner.WindowBounds;
+			}
+			else
+			{
+				owner_bounds = ScreenInfo.AllScreens[0].Bounds;
+			}
 
-				if (window == null)
-				{
-					throw new System.InvalidOperationException ("Cannot show window");
-				}
-				
-				Window owner = this.Owner;
-				Drawing.Rectangle owner_bounds;
-				
-				if ((owner != null) &&
-					(owner.IsMinimized == false))
-				{
-					owner_bounds = owner.WindowBounds;
-				}
-				else
-				{
-					owner_bounds = ScreenInfo.AllScreens[0].Bounds;
-				}
+			//	Make sure we release the mouse capture and we don't process
+			//	the currently dispatched message (if any) so we don't activate
+			//	a capture after the dialog closes :
+			
+			Window  capturingWindow = Window.FindCapturing ();
+			Message dispatchMessage = Message.GetLastMessage ();
 
-				//	Make sure we release the mouse capture and we don't process
-				//	the currently dispatched message (if any) so we don't activate
-				//	a capture after the dialog closes :
-				
-				Window  capturingWindow = Window.FindCapturing ();
-				Message dispatchMessage = Message.GetLastMessage ();
-
-				if (capturingWindow != null)
-				{
-					capturingWindow.ReleaseCapture ();
-				}
-				if (dispatchMessage != null)
-				{
-					dispatchMessage.Retired = true;
-				}
-				
-				Drawing.Rectangle dialog_bounds = window.WindowBounds;
-				
-				double ox = System.Math.Floor (owner_bounds.Left + (owner_bounds.Width - dialog_bounds.Width) / 2);
-				double oy = System.Math.Floor (owner_bounds.Top  - (owner_bounds.Height - dialog_bounds.Height) / 3 - dialog_bounds.Height);
-				
-				dialog_bounds.Location = new Drawing.Point (ox, oy);
-				
-				window.WindowBounds = dialog_bounds;
-				
-				this.OnDialogOpening ();
-				
-				if (this.isModalDialog)
-				{
-					window.WindowShown += this.HandleWindowShown;
-					window.ShowDialog ();
-					window.WindowShown -= this.HandleWindowShown;
-				}
-				else
-				{
-					window.Show ();
-					this.HandleWindowShown (window);
-				}
+			if (capturingWindow != null)
+			{
+				capturingWindow.ReleaseCapture ();
+			}
+			if (dispatchMessage != null)
+			{
+				dispatchMessage.Retired = true;
+			}
+			
+			Drawing.Rectangle dialog_bounds = window.WindowBounds;
+			
+			double ox = System.Math.Floor (owner_bounds.Left + (owner_bounds.Width - dialog_bounds.Width) / 2);
+			double oy = System.Math.Floor (owner_bounds.Top  - (owner_bounds.Height - dialog_bounds.Height) / 3 - dialog_bounds.Height);
+			
+			dialog_bounds.Location = new Drawing.Point (ox, oy);
+			
+			window.WindowBounds = dialog_bounds;
+			
+			this.OnDialogOpening ();
+			
+			if (this.isModalDialog)
+			{
+				window.WindowShown += this.HandleWindowShown;
+				window.ShowDialog ();
+				window.WindowShown -= this.HandleWindowShown;
+			}
+			else
+			{
+				window.Show ();
+				this.HandleWindowShown (window);
 			}
 		}
 		
 		public void CloseDialog()
 		{
-			if (this.IsReady)
-			{
-				Window window = this.Window;
+			Window window = this.dialogWindow;
 
-				if (window != null)
+			if (window != null)
+			{
+				if (window.IsActive)
 				{
-					if (window.IsActive)
+					//	Si la fenêtre est active, il faut faire attention à rendre d'abord
+					//	le parent actif, avant de cacher la fenêtre, pour éviter que le focus
+					//	ne parte dans le décor.
+					
+					Window owner = this.OwnerWindow;
+					
+					if (owner != null)
 					{
-						//	Si la fenêtre est active, il faut faire attention à rendre d'abord
-						//	le parent actif, avant de cacher la fenêtre, pour éviter que le focus
-						//	ne parte dans le décor.
-						
-						Window owner = this.Owner;
-						
-						if (owner != null)
-						{
-							owner.MakeActive ();
-						}
+						owner.MakeActive ();
 					}
-					
-					window.Hide ();
-					this.OnDialogClosed ();
-					
-					if (this.isModalDialog)
-					{
-						window.Close ();
-					}
-					
-					window.AsyncDispose ();
 				}
+				
+				window.Hide ();
+				this.OnDialogClosed ();
+				
+				if (this.isModalDialog)
+				{
+					window.Close ();
+				}
+				
+				window.AsyncDispose ();
+				
+				this.dialogWindow = null;
 			}
 		}
 
 		
-		public Window							Window
+		public Window							DialogWindow
 		{
 			get
 			{
@@ -133,7 +129,7 @@ namespace Epsitec.Common.Dialogs
 			}
 		}
 		
-		public virtual Window					Owner
+		public Window							OwnerWindow
 		{
 			get
 			{
@@ -146,7 +142,7 @@ namespace Epsitec.Common.Dialogs
 			}
 			set
 			{
-				Window window = this.Window;
+				Window window = this.DialogWindow;
 
 				if ((window != null) &&
 					(window.Owner != value))
@@ -157,7 +153,7 @@ namespace Epsitec.Common.Dialogs
 			}
 		}
 		
-		public DialogResult						Result
+		public DialogResult						DialogResult
 		{
 			get
 			{
@@ -169,11 +165,11 @@ namespace Epsitec.Common.Dialogs
 			}
 		}
 		
-		public virtual Window					DispatchWindow
+		public Window							DispatchWindow
 		{
 			get
 			{
-				Window window = this.Window;
+				Window window = this.DialogWindow;
 				Window owner  = window == null ? null : window.Owner;
 				
 				return owner ?? window;
@@ -188,16 +184,10 @@ namespace Epsitec.Common.Dialogs
 				{
 					return this.dialogWindow.IsVisible;
 				}
-				
-				return false;
-			}
-		}
-		
-		public virtual bool						IsReady
-		{
-			get
-			{
-				return true;
+				else
+				{
+					return false;
+				}
 			}
 		}
 		
@@ -257,7 +247,7 @@ namespace Epsitec.Common.Dialogs
 		public event EventHandler				DialogClosed;
 		
 		private Window							dialogWindow;
-		private bool							isModalDialog;
 		private DialogResult					dialogResult;
+		private bool							isModalDialog;
 	}
 }

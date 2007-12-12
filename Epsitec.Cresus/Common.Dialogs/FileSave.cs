@@ -83,7 +83,7 @@ namespace Epsitec.Common.Dialogs
 			set { this.dialog.Title = value; }
 		}
 		
-		public DialogResult						Result
+		public DialogResult						DialogResult
 		{
 			get
 			{
@@ -114,7 +114,7 @@ namespace Epsitec.Common.Dialogs
 			}
 		}
 		
-		public Common.Widgets.Window	Owner
+		public Common.Widgets.Window	OwnerWindow
 		{
 			get
 			{
