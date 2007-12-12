@@ -1,5 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <bundle name="_631" caption="Adresse1" type="Form" culture="fr" rank="1">
+  <data name="RootEntityId">[63081]</data>
+  <data name="DefaultSize">320;400</data>
   <data name="Source">
     <xml>
       <Form>

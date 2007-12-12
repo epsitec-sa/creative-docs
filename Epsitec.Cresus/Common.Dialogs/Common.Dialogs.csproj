@@ -162,6 +162,8 @@
     <Compile Include="AbstractYesNoCancel.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="DialogDataMode.cs" />
+    <Compile Include="DialogData.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>

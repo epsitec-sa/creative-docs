@@ -80,5 +80,17 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			public const string DefaultSize		= "DefaultSize";
 			public const string RootEntityId	= "RootEntityId";
 		}
+
+		public static Drawing.Size GetFormDefaultSize(ResourceBundle bundle)
+		{
+			if (bundle == null)
+			{
+				return Drawing.Size.Empty;
+			}
+			else
+			{
+				return Drawing.Size.Parse (bundle[Strings.DefaultSize].AsString);
+			}
+		}
 	}
 }

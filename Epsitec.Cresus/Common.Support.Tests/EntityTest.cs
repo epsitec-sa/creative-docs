@@ -390,17 +390,26 @@ namespace Epsitec.Common.Support
 
 			Assert.AreEqual (0, proxy.ReadCounter);
 			Assert.AreEqual (0, proxy.WriteCounter);
+			Assert.AreEqual (0, proxy.DiscardCounter);
 			
 			entity.InternalSetValue (Res.Fields.TestInterface.Resource.ToString (), proxy);
 
 			Assert.AreEqual (0, proxy.ReadCounter);
 			Assert.AreEqual (1, proxy.WriteCounter);
+			Assert.AreEqual (0, proxy.DiscardCounter);
 
 			Assert.AreEqual (proxyData, entity.GetField<MyResourceStringEntity> (Res.Fields.TestInterface.Resource.ToString ()));
 			Assert.AreEqual (proxyData, entity.GetField<MyResourceStringEntity> (Res.Fields.TestInterface.Resource.ToString ()));
 			
 			Assert.AreEqual (2, proxy.ReadCounter);
 			Assert.AreEqual (1, proxy.WriteCounter);
+			Assert.AreEqual (0, proxy.DiscardCounter);
+
+			entity.InternalSetValue (Res.Fields.TestInterface.Resource.ToString (), proxy);
+			
+			Assert.AreEqual (2, proxy.ReadCounter);
+			Assert.AreEqual (2, proxy.WriteCounter);
+			Assert.AreEqual (1, proxy.DiscardCounter);
 		}
 
 		class TestProxy : IEntityProxy
@@ -426,6 +435,14 @@ namespace Epsitec.Common.Support
 				}
 			}
 
+			public int DiscardCounter
+			{
+				get
+				{
+					return this.discardCounter;
+				}
+			}
+
 			#region IEntityProxy Members
 
 			public object GetReadEntityValue(IValueStore store, string id)
@@ -440,6 +457,12 @@ namespace Epsitec.Common.Support
 				return this;
 			}
 
+			public bool DiscardWriteEntityValue(IValueStore store, string id, object value)
+			{
+				this.discardCounter++;
+				return false;
+			}
+
 			public object PromoteToRealInstance()
 			{
 				return this.data;
@@ -450,6 +473,7 @@ namespace Epsitec.Common.Support
 			private readonly object data;
 			private int readCounter;
 			private int writeCounter;
+			private int discardCounter;
 		}
 
 

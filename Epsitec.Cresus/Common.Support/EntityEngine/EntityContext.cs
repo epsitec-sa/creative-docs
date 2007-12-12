@@ -521,6 +521,19 @@ namespace Epsitec.Common.Support.EntityEngine
 
 			public void SetValue(string id, object value)
 			{
+				object oldValue;
+
+				if (this.store.TryGetValue (id, out oldValue))
+				{
+					IEntityProxy proxy = oldValue as IEntityProxy;
+
+					if ((proxy != null) &&
+						(proxy.DiscardWriteEntityValue (this, id, value)))
+					{
+						return;
+					}
+				}
+
 				if (UndefinedValue.IsUndefinedValue (value))
 				{
 					this.store.Remove (id);

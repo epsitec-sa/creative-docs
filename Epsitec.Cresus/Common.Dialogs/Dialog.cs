@@ -2,6 +2,7 @@
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support;
+using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Support.ResourceAccessors;
 using Epsitec.Common.Types;
 using Epsitec.Common.Widgets;
@@ -41,6 +42,14 @@ namespace Epsitec.Common.Dialogs
 				}
 
 				this.userInterfaceResourceId = value;
+			}
+		}
+
+		public DialogData DialogData
+		{
+			get
+			{
+				return this.dialogData;
 			}
 		}
 		
@@ -103,11 +112,15 @@ namespace Epsitec.Common.Dialogs
 		private UI.Panel CreateUserInterfaceFromForm(ResourceBundle bundle)
 		{
 			string xmlSource = bundle[FormResourceAccessor.Strings.XmlSource].AsString;
+			Drawing.Size size = FormResourceAccessor.GetFormDefaultSize (bundle);
 
 			FormEngine.FormDescription formDescription = new FormEngine.FormDescription ();
 			FormEngine.Engine formEngine = new FormEngine.Engine (this.resourceManager);
 			
 			formDescription.Deserialize (xmlSource);
+
+			this.userInterfaceEntityId = formDescription.EntityId;
+
 			return formEngine.CreateForm (formDescription);
 		}
 
@@ -128,5 +141,7 @@ namespace Epsitec.Common.Dialogs
 		private readonly ResourceManager		resourceManager;
 		private readonly string					name;
 		private Druid							userInterfaceResourceId;
+		private Druid							userInterfaceEntityId;
+		private DialogData						dialogData;
 	}
 }

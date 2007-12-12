@@ -31,6 +31,16 @@ namespace Epsitec.Common.Support.EntityEngine
 		/// <returns>The real instance to be used.</returns>
 		object GetWriteEntityValue(IValueStore store, string id);
 
+		/// <summary>
+		/// Checks if the write to the specified entity value should proceed
+		/// normally or be discarded completely.
+		/// </summary>
+		/// <param name="store">The valuestore.</param>
+		/// <param name="id">The value id.</param>
+		/// <param name="value">The value.</param>
+		/// <returns><c>true</c> if the value should be discarded; otherwise, <c>false</c>.</returns>
+		bool DiscardWriteEntityValue(IValueStore store, string id, object value);
+
 
 		/// <summary>
 		/// Promotes the proxy to its real instance.

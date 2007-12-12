@@ -56,6 +56,22 @@ namespace Epsitec.Cresus.DataLayer.Helpers
 		}
 
 		/// <summary>
+		/// Checks if the write to the specified entity value should proceed
+		/// normally or be discarded completely.
+		/// </summary>
+		/// <param name="store">The valuestore.</param>
+		/// <param name="id">The value id.</param>
+		/// <param name="value">The value.</param>
+		/// <returns>
+		/// 	<c>true</c> if the value should be discarded; otherwise, <c>false</c>.
+		/// </returns>
+		public bool DiscardWriteEntityValue(IValueStore store, string id, object value)
+		{
+			return false;
+		}
+
+
+		/// <summary>
 		/// Promotes the proxy to its real instance.
 		/// </summary>
 		/// <returns>The real instance.</returns>
