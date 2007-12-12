@@ -67,20 +67,8 @@ namespace Epsitec.Common.UI.Controllers
 			this.label.ContentAlignment = Drawing.ContentAlignment.MiddleRight;
 			this.label.Dock = DockStyle.Stacked;
 
-			if (caption.HasLabels)
-			{
-				if (caption.Id.IsValid)
-				{
-					this.label.CaptionId = caption.Id;
-				}
-				else
-				{
-					this.label.Text = Collection.Extract<string> (caption.Labels, 0);
-				}
-				this.label.PreferredWidth = this.label.GetBestFitSize ().Width;
-				this.label.Margins = new Drawing.Margins (4, 4, 0, 0);
-			}
-			
+			this.SetupLabelWidget (this.label, caption);
+
 			this.field.HorizontalAlignment = HorizontalAlignment.Stretch;
 			this.field.VerticalAlignment = VerticalAlignment.BaseLine;
 			this.field.TextChanged += this.HandleFieldTextChanged;

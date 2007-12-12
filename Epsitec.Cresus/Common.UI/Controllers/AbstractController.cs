@@ -1,6 +1,7 @@
 //	Copyright © 2006-2007, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
+using Epsitec.Common.Support;
 using Epsitec.Common.Types;
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Widgets.Layouts;
@@ -280,6 +281,49 @@ namespace Epsitec.Common.UI.Controllers
 				return expression.ConvertBackValue (value);
 			}
 		}
+
+		protected bool SetupLabelWidget(Widget labelWidget, Caption caption)
+		{
+			if (labelWidget == null)
+			{
+				return false;
+			}
+			
+			Verbosity verbosity = this.placeholder.Verbosity;
+			Druid labelReplacementCaptionId = this.placeholder.LabelReplacement;
+
+			if (labelReplacementCaptionId.IsValid)
+			{
+				labelWidget.CaptionId = labelReplacementCaptionId;
+			}
+			else if (caption.HasLabels)
+			{
+				if (caption.Id.IsValid)
+				{
+					labelWidget.CaptionId = caption.Id;
+				}
+				else
+				{
+					labelWidget.Text = Collection.GetFirst<string> (caption.Labels);
+				}
+			}
+
+			//	TODO: determine size of widget based on the verbosity
+
+			labelWidget.PreferredWidth = labelWidget.GetBestFitSize ().Width;
+			labelWidget.Margins        = new Drawing.Margins (4, 4, 0, 0);
+
+			if (verbosity == Verbosity.None)
+			{
+				labelWidget.Visibility = false;
+				return false;
+			}
+			else
+			{
+				return true;
+			}
+		}
+
 
 		#region IGridPermeable Members
 

@@ -1,6 +1,7 @@
 //	Copyright © 2006-2007, EPSITEC SA, CH-1092 BELMONT, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using Epsitec.Common.Support;
 using Epsitec.Common.Types;
 using Epsitec.Common.UI;
 using Epsitec.Common.Widgets;
@@ -104,6 +105,18 @@ namespace Epsitec.Common.UI
 			set
 			{
 				this.SetValue (Placeholder.VerbosityProperty, value);
+			}
+		}
+
+		public Druid							LabelReplacement
+		{
+			get
+			{
+				return (Druid) this.GetValue (Placeholder.LabelReplacementProperty);
+			}
+			set
+			{
+				this.SetValue (Placeholder.LabelReplacementProperty, value);
 			}
 		}
 
@@ -284,6 +297,14 @@ namespace Epsitec.Common.UI
 			}
 		}
 
+		private void UpdateLabelReplacement()
+		{
+			if (this.controller != null)
+			{
+				Application.QueueAsyncCallback (this.RecreateUserInterface);
+			}
+		}
+
 		private void DisposeUserInterface()
 		{
 			if (this.controller != null)
@@ -427,9 +448,17 @@ namespace Epsitec.Common.UI
 			that.UpdateVerbosity ();
 		}
 
+		private static void NotifyLabelReplacementChanged(DependencyObject o, object oldValue, object newValue)
+		{
+			Placeholder that = (Placeholder) o;
+			
+			that.UpdateLabelReplacement ();
+		}
+
 		public static readonly DependencyProperty ControllerProperty = DependencyProperty.Register ("Controller", typeof (string), typeof (Placeholder), new DependencyPropertyMetadata ("*", Placeholder.NotifyControllerChanged));
 		public static readonly DependencyProperty ControllerParametersProperty = DependencyProperty.Register ("ControllerParameters", typeof (string), typeof (Placeholder), new DependencyPropertyMetadata (Placeholder.NotifyControllerChanged));
 		public static readonly DependencyProperty VerbosityProperty = DependencyProperty.Register ("Verbosity", typeof (Verbosity), typeof (Placeholder), new DependencyPropertyMetadata (Verbosity.Default, Placeholder.NotifyVerbosityChanged));
+		public static readonly DependencyProperty LabelReplacementProperty = DependencyProperty.Register ("LabelReplacement", typeof (Druid), typeof (Placeholder), new DependencyPropertyMetadata (Druid.Empty, Placeholder.NotifyLabelReplacementChanged));
 
 		static readonly NoOpGridPermeableHelper	noOpGridPermeableHelper = new NoOpGridPermeableHelper ();
 		
