@@ -66,12 +66,12 @@ namespace Epsitec.Common.Dialogs
 			public object GetReadEntityValue(IValueStore store, string id)
 			{
 				object value = this.ResolveNode (id);
-
+				
 				if (this.host.mode == DialogDataMode.Isolated)
 				{
 					store.SetValue (id, value);
 				}
-
+				
 				return value;
 			}
 
@@ -105,20 +105,27 @@ namespace Epsitec.Common.Dialogs
 
 			private object ResolveNode(string id)
 			{
+				object value;
+
 				switch (this.externalData.InternalGetFieldRelation (id))
 				{
 					case FieldRelation.None:
-						return this.ResolveValue (id);
+						value = this.ResolveValue (id);
+						break;
 
 					case FieldRelation.Reference:
-						return this.ResolveReference (id);
+						value = this.ResolveReference (id);
+						break;
 
 					case FieldRelation.Collection:
-						return this.ResolveCollection (id);
+						value = this.ResolveCollection (id);
+						break;
 					
 					default:
 						throw new System.NotSupportedException ();
 				}
+				
+				return value;
 			}
 
 			private object ResolveValue(string id)
@@ -134,7 +141,7 @@ namespace Epsitec.Common.Dialogs
 				AbstractEntity reference = this.externalData.InternalGetValue (id) as AbstractEntity;
 				this.SaveOriginalValue (id, reference);
 
-				return new EntityNodeProxy (this, id, this.host, reference);
+				return this.host.CreateProxy (reference, this);
 			}
 
 			private object ResolveCollection(string id)
@@ -154,7 +161,7 @@ namespace Epsitec.Common.Dialogs
 
 			private EntityFieldPath GetFieldPath(string id)
 			{
-				return EntityFieldPath.CreateRelativePath (this.GetNodeIds (id));
+				return EntityFieldPath.CreateRelativePath (this.GetNodeIds (null));
 			}
 
 			private IEnumerable<string> GetNodeIds(string id)
