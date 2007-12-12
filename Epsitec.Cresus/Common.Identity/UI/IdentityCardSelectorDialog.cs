@@ -37,34 +37,36 @@ namespace Epsitec.Common.Identity.UI
 			}
 		}
 
-		protected override void CreateWindow()
+		protected override Window CreateWindow()
 		{
-			this.window = new Window ();
+			Window dialogWindow = new Window ();
 
-			this.window.Root.Children.Add (this.CreateContents ());
+			dialogWindow.Root.Children.Add (this.CreateContents ());
 
-			this.window.Text = "Sélection de l'identité";
-			this.window.Name = "Dialog";
-			this.window.PreventAutoClose = true;
-			this.window.ClientSize = new Size (395, 300);
-			this.window.MakeSecondaryWindow ();
-			this.window.Root.Padding = new Margins (8, 8, 8, 8);
+			dialogWindow.Text = "Sélection de l'identité";
+			dialogWindow.Name = "Dialog";
+			dialogWindow.PreventAutoClose = true;
+			dialogWindow.ClientSize = new Size (395, 300);
+			dialogWindow.MakeSecondaryWindow ();
+			dialogWindow.Root.Padding = new Margins (8, 8, 8, 8);
 
-			ResizeKnob resize = new ResizeKnob( this.window.Root);
+			ResizeKnob resize = new ResizeKnob (dialogWindow.Root);
 			resize.Anchor = AnchorStyles.BottomRight;
 			resize.Margins = new Margins (0, -8, 0, -8);
 			ToolTip.Default.SetToolTip (resize, "Redimensionner la fenêtre");
 
-			CommandDispatcher.SetDispatcher (this.window, new CommandDispatcher ());
+			CommandDispatcher.SetDispatcher (dialogWindow, new CommandDispatcher ());
 
-			this.window.WindowCloseClicked += delegate
+			dialogWindow.WindowCloseClicked += delegate
 			{
-				this.result = Dialogs.DialogResult.Cancel;
+				this.Result = Dialogs.DialogResult.Cancel;
 				this.CloseDialog ();
 			};
 
-			this.window.Root.SetFocusOnTabWidget ();
-			this.window.AdjustWindowSize ();
+			dialogWindow.Root.SetFocusOnTabWidget ();
+			dialogWindow.AdjustWindowSize ();
+
+			return dialogWindow;
 		}
 
 		private Widget CreateContents()
@@ -147,7 +149,7 @@ namespace Epsitec.Common.Identity.UI
 			button.Clicked +=
 				delegate
 				{
-					this.result = Dialogs.DialogResult.Cancel;
+					this.Result = Dialogs.DialogResult.Cancel;
 					this.CloseDialog ();
 				};
 
@@ -161,7 +163,7 @@ namespace Epsitec.Common.Identity.UI
 			button.Clicked +=
 				delegate
 				{
-					this.result = Dialogs.DialogResult.Accept;
+					this.Result = Dialogs.DialogResult.Accept;
 					this.CloseDialog ();
 				};
 			
@@ -196,7 +198,7 @@ namespace Epsitec.Common.Identity.UI
 				widget.DoubleClicked +=
 					delegate
 					{
-						this.dialog.result = Dialogs.DialogResult.Accept;
+						this.dialog.Result = Dialogs.DialogResult.Accept;
 						this.dialog.CloseDialog ();
 					};
 

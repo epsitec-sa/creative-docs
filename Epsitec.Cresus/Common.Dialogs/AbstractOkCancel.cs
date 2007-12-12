@@ -50,7 +50,7 @@ namespace Epsitec.Common.Dialogs
 		
 		
 		protected abstract Widget CreateBodyWidget();
-		protected override void   CreateWindow()
+		protected override Window CreateWindow()
 		{
 			Widget body = this.CreateBodyWidget ();
 			Button button1;
@@ -61,30 +61,30 @@ namespace Epsitec.Common.Dialogs
 			
 			dx = System.Math.Max (dx, 2*75+3*8);
 			
-			this.window = new Window ();
-			
-			this.window.Text             = this.dialog_title;
-			this.window.Name             = "Dialog";
-			this.window.ClientSize       = new Drawing.Size (dx+2*8, dy+2*16+24+16);
-			this.window.PreventAutoClose = true;
+			Window dialogWindow = new Window ();
 
-			CommandDispatcher.SetDispatcher (this.window, this.private_dispatcher);
-			CommandContext.SetContext (this.window, this.private_context);
+			dialogWindow.Text             = this.dialog_title;
+			dialogWindow.Name             = "Dialog";
+			dialogWindow.ClientSize       = new Drawing.Size (dx+2*8, dy+2*16+24+16);
+			dialogWindow.PreventAutoClose = true;
+
+			CommandDispatcher.SetDispatcher (dialogWindow, this.private_dispatcher);
+			CommandContext.SetContext (dialogWindow, this.private_context);
 
 			this.private_context.GetCommandState (Res.Commands.Dialog.Generic.Cancel).Enable = true;
 			this.private_context.GetCommandState (Res.Commands.Dialog.Generic.Ok).Enable = true;
-			
-			this.window.MakeFixedSizeWindow ();
-			this.window.MakeButtonlessWindow ();
-			this.window.MakeSecondaryWindow ();
-			
-			body.SetParent (this.window.Root);
+
+			dialogWindow.MakeFixedSizeWindow ();
+			dialogWindow.MakeButtonlessWindow ();
+			dialogWindow.MakeSecondaryWindow ();
+
+			body.SetParent (dialogWindow.Root);
 			body.SetManualBounds(new Drawing.Rectangle(8, 16+24+16, dx, dy));
 			body.TabIndex      = 1;
 			body.TabNavigationMode = TabNavigationMode.ForwardTabPassive;
-			
-			button1               = new Button (this.window.Root);
-			button1.SetManualBounds(new Drawing.Rectangle(this.window.ClientSize.Width - 2*75 - 2*8, 16, 75, button1.PreferredHeight));
+
+			button1               = new Button (dialogWindow.Root);
+			button1.SetManualBounds (new Drawing.Rectangle (dialogWindow.ClientSize.Width - 2*75 - 2*8, 16, 75, button1.PreferredHeight));
 			button1.Text          = string.IsNullOrEmpty(this.ok_text) ? Widgets.Res.Strings.Dialog.Button.OK : this.ok_text;
 			button1.CommandObject = Res.Commands.Dialog.Generic.Ok;
 			button1.TabIndex      = 2;
@@ -93,8 +93,8 @@ namespace Epsitec.Common.Dialogs
 			
 			if (this.hide_cancel == false)
 			{
-				button2               = new Button (this.window.Root);
-				button2.SetManualBounds(new Drawing.Rectangle(this.window.ClientSize.Width - 1*75 - 1*8, 16, 75, button2.PreferredHeight));
+				button2               = new Button (dialogWindow.Root);
+				button2.SetManualBounds (new Drawing.Rectangle (dialogWindow.ClientSize.Width - 1*75 - 1*8, 16, 75, button2.PreferredHeight));
 				button2.Text          = string.IsNullOrEmpty(this.cancel_text) ? Widgets.Res.Strings.Dialog.Button.Cancel : this.cancel_text;
 				button2.Name          = "Cancel";
 				button2.CommandObject = Res.Commands.Dialog.Generic.Cancel;
@@ -102,22 +102,24 @@ namespace Epsitec.Common.Dialogs
 				button2.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 				button2.Shortcuts.Add (Widgets.Feel.Factory.Active.CancelShortcut);
 			}
-			
-			AbstractMessageDialog.LayoutButtons (this.window.ClientSize.Width, button1, button2);
-			
-			this.window.FocusedWidget = body.FindTabWidget (TabNavigationDir.Forwards, TabNavigationMode.ActivateOnTab);
-			this.window.WindowCloseClicked +=
+
+			AbstractMessageDialog.LayoutButtons (dialogWindow.ClientSize.Width, button1, button2);
+
+			dialogWindow.FocusedWidget = body.FindTabWidget (TabNavigationDir.Forwards, TabNavigationMode.ActivateOnTab);
+			dialogWindow.WindowCloseClicked +=
 				delegate
 				{
 					this.CommandQuitDialog ();
 				};
+
+			return dialogWindow;
 		}
 
 
 		[Command (Res.CommandIds.Dialog.Generic.Ok)]
 		protected void CommandValidateDialog()
 		{
-			this.result = DialogResult.Accept;
+			this.Result = DialogResult.Accept;
 			
 			if (! string.IsNullOrEmpty (this.command_template))
 			{
@@ -130,7 +132,7 @@ namespace Epsitec.Common.Dialogs
 		[Command (Res.CommandIds.Dialog.Generic.Cancel)]
 		protected void CommandQuitDialog()
 		{
-			this.result = DialogResult.Cancel;
+			this.Result = DialogResult.Cancel;
 			
 			this.CloseDialog ();
 		}

@@ -1,7 +1,9 @@
 //	Copyright © 2004-2007, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using Epsitec.Common.Support;
 using Epsitec.Common.Types;
+using Epsitec.Common.Widgets;
 
 namespace Epsitec.Common.Dialogs
 {
@@ -13,6 +15,7 @@ namespace Epsitec.Common.Dialogs
 	{
 		public AbstractDialog()
 		{
+			this.isModalDialog = true;
 		}
 		
 		
@@ -20,12 +23,14 @@ namespace Epsitec.Common.Dialogs
 		{
 			if (this.IsReady)
 			{
-				if (this.Window == null)
+				Window window = this.Window;
+
+				if (window == null)
 				{
-					throw new System.InvalidOperationException ("Cannot show window.");
+					throw new System.InvalidOperationException ("Cannot show window");
 				}
 				
-				Widgets.Window owner = this.Owner;
+				Window owner = this.Owner;
 				Drawing.Rectangle owner_bounds;
 				
 				if ((owner != null) &&
@@ -35,15 +40,15 @@ namespace Epsitec.Common.Dialogs
 				}
 				else
 				{
-					owner_bounds = Widgets.ScreenInfo.AllScreens[0].Bounds;
+					owner_bounds = ScreenInfo.AllScreens[0].Bounds;
 				}
 
 				//	Make sure we release the mouse capture and we don't process
 				//	the currently dispatched message (if any) so we don't activate
 				//	a capture after the dialog closes :
 				
-				Widgets.Window  capturingWindow = Widgets.Window.FindCapturing ();
-				Widgets.Message dispatchMessage = Widgets.Message.GetLastMessage ();
+				Window  capturingWindow = Window.FindCapturing ();
+				Message dispatchMessage = Message.GetLastMessage ();
 
 				if (capturingWindow != null)
 				{
@@ -54,27 +59,27 @@ namespace Epsitec.Common.Dialogs
 					dispatchMessage.Retired = true;
 				}
 				
-				Drawing.Rectangle dialog_bounds = this.Window.WindowBounds;
+				Drawing.Rectangle dialog_bounds = window.WindowBounds;
 				
 				double ox = System.Math.Floor (owner_bounds.Left + (owner_bounds.Width - dialog_bounds.Width) / 2);
 				double oy = System.Math.Floor (owner_bounds.Top  - (owner_bounds.Height - dialog_bounds.Height) / 3 - dialog_bounds.Height);
 				
 				dialog_bounds.Location = new Drawing.Point (ox, oy);
 				
-				this.Window.WindowBounds = dialog_bounds;
+				window.WindowBounds = dialog_bounds;
 				
 				this.OnDialogOpening ();
 				
-				if (this.is_modal)
+				if (this.isModalDialog)
 				{
-					this.Window.WindowShown += new Support.EventHandler (this.HandleWindowShown);
-					this.Window.ShowDialog ();
-					this.Window.WindowShown -= new Support.EventHandler (this.HandleWindowShown);
+					window.WindowShown += this.HandleWindowShown;
+					window.ShowDialog ();
+					window.WindowShown -= this.HandleWindowShown;
 				}
 				else
 				{
-					this.Window.Show ();
-					this.HandleWindowShown (this.Window);
+					window.Show ();
+					this.HandleWindowShown (window);
 				}
 			}
 		}
@@ -83,15 +88,17 @@ namespace Epsitec.Common.Dialogs
 		{
 			if (this.IsReady)
 			{
-				if (this.Window != null)
+				Window window = this.Window;
+
+				if (window != null)
 				{
-					if (this.Window.IsActive)
+					if (window.IsActive)
 					{
 						//	Si la fenêtre est active, il faut faire attention à rendre d'abord
 						//	le parent actif, avant de cacher la fenêtre, pour éviter que le focus
 						//	ne parte dans le décor.
 						
-						Widgets.Window owner = this.Owner;
+						Window owner = this.Owner;
 						
 						if (owner != null)
 						{
@@ -99,45 +106,52 @@ namespace Epsitec.Common.Dialogs
 						}
 					}
 					
-					this.Window.Hide ();
+					window.Hide ();
 					this.OnDialogClosed ();
 					
-					if (this.is_modal)
+					if (this.isModalDialog)
 					{
-						this.Window.Close ();
+						window.Close ();
 					}
 					
-					this.Window.AsyncDispose ();
+					window.AsyncDispose ();
 				}
 			}
 		}
 
 		
-		public virtual Widgets.Window			Window
+		public Window							Window
 		{
 			get
 			{
-				return this.window;
+				if (this.dialogWindow == null)
+				{
+					this.dialogWindow = this.CreateWindow ();
+				}
+
+				return this.dialogWindow;
 			}
 		}
 		
-		public virtual Widgets.Window			Owner
+		public virtual Window					Owner
 		{
 			get
 			{
-				if (this.window != null)
+				if (this.dialogWindow != null)
 				{
-					return this.window.Owner;
+					return this.dialogWindow.Owner;
 				}
 				
 				return null;
 			}
 			set
 			{
-				if ((this.Window != null) &&
-					(this.Window.Owner != value))
+				Window window = this.Window;
+
+				if ((window != null) &&
+					(window.Owner != value))
 				{
-					this.Window.Owner = value;
+					window.Owner = value;
 					this.OnOwnerChanged ();
 				}
 			}
@@ -147,29 +161,32 @@ namespace Epsitec.Common.Dialogs
 		{
 			get
 			{
-				return this.result;
+				return this.dialogResult;
+			}
+			protected set
+			{
+				this.dialogResult = value;
 			}
 		}
 		
-		public virtual Widgets.Window			DispatchWindow
+		public virtual Window					DispatchWindow
 		{
 			get
 			{
-				Widgets.Window window = this.Window;
-				Widgets.Window owner  = window.Owner;
+				Window window = this.Window;
+				Window owner  = window == null ? null : window.Owner;
 				
-				return owner == null ? window : owner;
+				return owner ?? window;
 			}
 		}
-				
 		
 		public bool								IsVisible
 		{
 			get
 			{
-				if (this.window != null)
+				if (this.dialogWindow != null)
 				{
-					return this.window.IsVisible;
+					return this.dialogWindow.IsVisible;
 				}
 				
 				return false;
@@ -188,15 +205,17 @@ namespace Epsitec.Common.Dialogs
 		{
 			get
 			{
-				return this.is_modal;
+				return this.isModalDialog;
 			}
 			set
 			{
-				this.is_modal = value;
+				this.isModalDialog = value;
 			}
 		}
-		
-		
+
+
+		protected abstract Window CreateWindow();
+
 		protected virtual void OnDialogOpening()
 		{
 			if (this.DialogOpening != null)
@@ -233,12 +252,12 @@ namespace Epsitec.Common.Dialogs
 		
 		
 		
-		public event Support.EventHandler		DialogOpening;
-		public event Support.EventHandler		DialogOpened;
-		public event Support.EventHandler		DialogClosed;
+		public event EventHandler				DialogOpening;
+		public event EventHandler				DialogOpened;
+		public event EventHandler				DialogClosed;
 		
-		protected Widgets.Window window;
-		protected bool							is_modal = true;
-		protected DialogResult					result = DialogResult.None;
+		private Window							dialogWindow;
+		private bool							isModalDialog;
+		private DialogResult					dialogResult;
 	}
 }

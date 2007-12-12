@@ -82,44 +82,46 @@ namespace Epsitec.Common.Dialogs
 			return container;
 		}
 
-		protected override void CreateWindow()
+		protected override Window CreateWindow()
 		{
-			this.window = new Window();
+			Window dialogWindow = new Window ();
 			
 			Widget body = this.CreateBodyWidget();
 			double dx = body.PreferredWidth;
 			double dy = body.PreferredHeight;
-			
-			this.window.Text = this.title;
-			this.window.Name = "Dialog";
-			this.window.ClientSize = new Drawing.Size(dx+ConfirmationDialog.margin*2, dy+ConfirmationDialog.margin*2);
-			this.window.PreventAutoClose = true;
 
-			this.window.MakeFixedSizeWindow();
-			this.window.MakeSecondaryWindow();
+			dialogWindow.Text = this.title;
+			dialogWindow.Name = "Dialog";
+			dialogWindow.ClientSize = new Drawing.Size (dx+ConfirmationDialog.margin*2, dy+ConfirmationDialog.margin*2);
+			dialogWindow.PreventAutoClose = true;
 
-			CommandDispatcher.SetDispatcher (this.window, new CommandDispatcher ());
+			dialogWindow.MakeFixedSizeWindow ();
+			dialogWindow.MakeSecondaryWindow ();
+
+			CommandDispatcher.SetDispatcher (dialogWindow, new CommandDispatcher ());
 
 			if (this.hasCancel)
 			{
-				this.window.WindowCloseClicked += delegate
+				dialogWindow.WindowCloseClicked += delegate
 				{
-					this.result = DialogResult.Cancel;
+					this.Result = DialogResult.Cancel;
 					this.CloseDialog ();
 				};
 			}
 			else
 			{
-				this.window.MakeButtonlessWindow ();
+				dialogWindow.MakeButtonlessWindow ();
 			}
-			
-			body.SetParent(this.window.Root);
+
+			body.SetParent (dialogWindow.Root);
 			body.Dock = DockStyle.Fill;
 
 			body.SetFocusOnTabWidget ();
 			Platform.Beep.MessageBeep(Platform.Beep.MessageType.Warning);
 
-			this.window.AdjustWindowSize ();
+			dialogWindow.AdjustWindowSize ();
+
+			return dialogWindow;
 		}
 
 		
@@ -129,12 +131,12 @@ namespace Epsitec.Common.Dialogs
 
 			if (button.Name == ConfirmationDialog.cancelButtonName)
 			{
-				this.result = DialogResult.Cancel;
+				this.Result = DialogResult.Cancel;
 			}
 			else
 			{
 				int rank = button.Index;
-				this.result = (DialogResult) (DialogResult.Answer1+rank);
+				this.Result = (DialogResult) (DialogResult.Answer1+rank);
 			}
 			this.CloseDialog();
 		}

@@ -172,23 +172,23 @@ namespace Epsitec.Common.Dialogs
 
 		#endregion
 		
-		protected override void CreateWindow()
+		protected override Window CreateWindow()
 		{
-			this.window = new Window ();
+			Window dialogWindow = new Window ();
 
-			this.window.Text             = this.dialogTitle;
-			this.window.Name             = "Dialog";
-			this.window.ClientSize       = new Drawing.Size (400, 150);
-			this.window.PreventAutoClose = true;
+			dialogWindow.Text             = this.dialogTitle;
+			dialogWindow.Name             = "Dialog";
+			dialogWindow.ClientSize       = new Drawing.Size (400, 150);
+			dialogWindow.PreventAutoClose = true;
 
-			CommandDispatcher.SetDispatcher (this.window, this.privateDispatcher);
-			CommandContext.SetContext (this.window, this.privateContext);
+			CommandDispatcher.SetDispatcher (dialogWindow, this.privateDispatcher);
+			CommandContext.SetContext (dialogWindow, this.privateContext);
 
-			this.window.MakeFixedSizeWindow ();
-			this.window.MakeSecondaryWindow ();
-			this.window.MakeButtonlessWindow ();
+			dialogWindow.MakeFixedSizeWindow ();
+			dialogWindow.MakeSecondaryWindow ();
+			dialogWindow.MakeButtonlessWindow ();
 
-			FrameBox frame = new FrameBox (this.window.Root);
+			FrameBox frame = new FrameBox (dialogWindow.Root);
 			frame.DrawFullFrame = false;
 			frame.Dock = DockStyle.Fill;
 			frame.ContainerLayoutMode = ContainerLayoutMode.VerticalFlow;
@@ -257,6 +257,8 @@ namespace Epsitec.Common.Dialogs
 
 			this.timer.AutoRepeat = 0.050;
 			this.timer.Delay      = 0.050;
+
+			return dialogWindow;
 		}
 
 		protected override void OnDialogOpened()
@@ -269,7 +271,7 @@ namespace Epsitec.Common.Dialogs
 				Window.SuspendAsyncNotify ();
 				Application.SetWaitCursor ();
 
-				this.window.MouseCursor = MouseCursor.AsWait;
+				this.Window.MouseCursor = MouseCursor.AsWait;
 
 				System.Threading.Thread thread = new System.Threading.Thread (this.ProcessAction);
 				
@@ -332,7 +334,7 @@ namespace Epsitec.Common.Dialogs
 		[Command (Res.CommandIds.Dialog.Generic.Cancel)]
 		protected void CommandQuitDialog()
 		{
-			this.result = DialogResult.Cancel;
+			this.Result = DialogResult.Cancel;
 
 			this.CloseDialog ();
 		}

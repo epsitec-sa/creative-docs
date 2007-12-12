@@ -50,6 +50,11 @@ namespace Epsitec.Common.Dialogs
 		{
 			this.CommandDispatcher.RegisterController (controller);
 		}
+
+		protected override Window CreateWindow()
+		{
+			throw new System.NotImplementedException ();
+		}
 		
 		
 		private readonly ResourceManager		resourceManager;

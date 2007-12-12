@@ -15,37 +15,6 @@ namespace Epsitec.Common.Dialogs
 		
 		
 		
-		public override Widgets.Window			Window
-		{
-			get
-			{
-				if (this.window == null)
-				{
-					this.CreateWindow ();
-				}
-				
-				return this.window;
-			}
-		}
-		
-		public override Widgets.Window			Owner
-		{
-			get
-			{
-				return base.Owner;
-			}
-			set
-			{
-				if (this.window == null)
-				{
-					this.CreateWindow ();
-				}
-				
-				base.Owner = value;
-			}
-		}
-		
-		
 		internal void HideCancelButton()
 		{
 			this.hide_cancel = true;
@@ -86,8 +55,6 @@ namespace Epsitec.Common.Dialogs
 			}
 		}
 		
-		
-		protected abstract void CreateWindow();
 		
 		protected bool							hide_cancel;
 	}
