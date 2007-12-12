@@ -170,6 +170,22 @@ namespace Epsitec.Common.Dialogs
 			}
 		}
 
+		/// <summary>
+		/// Gets a value indicating whether this dialog has an associated
+		/// window.
+		/// </summary>
+		/// <value>
+		/// 	<c>true</c> if this dialog has an associated window; otherwise,
+		/// 	<c>false</c>.
+		/// </value>
+		public bool								HasWindow
+		{
+			get
+			{
+				return this.dialogWindow == null ? false : true;
+			}
+		}
+
 
 		/// <summary>
 		/// Registers a controller with the dialog's local command dispatcher.

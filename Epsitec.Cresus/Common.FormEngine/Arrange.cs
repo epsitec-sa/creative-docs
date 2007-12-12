@@ -12,7 +12,7 @@ namespace Epsitec.Common.FormEngine
 	/// </summary>
 	internal sealed class Arrange
 	{
-		public Arrange(ResourceManager resourceManager, FindFormDescription finder)
+		public Arrange(ResourceManager resourceManager, FormDescriptionFinder finder)
 		{
 			//	Constructeur.
 			this.resourceManager = resourceManager;
@@ -253,6 +253,6 @@ namespace Epsitec.Common.FormEngine
 
 
 		private readonly ResourceManager resourceManager;
-		private FindFormDescription finder;
+		private FormDescriptionFinder finder;
 	}
 }

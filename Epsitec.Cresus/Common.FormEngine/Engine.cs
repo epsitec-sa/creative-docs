@@ -8,7 +8,7 @@ using Epsitec.Common.Types;
 
 namespace Epsitec.Common.FormEngine
 {
-	public delegate FormDescription FindFormDescription(Druid id);
+	public delegate FormDescription FormDescriptionFinder(Druid id);
 
 
 	/// <summary>
@@ -16,7 +16,12 @@ namespace Epsitec.Common.FormEngine
 	/// </summary>
 	public sealed class Engine
 	{
-		public Engine(ResourceManager resourceManager, FindFormDescription finder)
+		public Engine(ResourceManager resourceManager)
+			: this (resourceManager, null)
+		{
+		}
+
+		public Engine(ResourceManager resourceManager, FormDescriptionFinder finder)
 		{
 			//	Constructeur.
 			//	FindFormDescription permet de retrouver le FormDescription correspondant à un Druid,
@@ -36,6 +41,11 @@ namespace Epsitec.Common.FormEngine
 			{
 				return this.arrange;
 			}
+		}
+
+		public UI.Panel CreateForm(FormDescription form)
+		{
+			return this.CreateForm(form, false);
 		}
 
 		public UI.Panel CreateForm(FormDescription form, bool forDesigner)
@@ -704,7 +714,7 @@ namespace Epsitec.Common.FormEngine
 		public static readonly int MaxRowsRequired = 20;
 
 		private readonly ResourceManager resourceManager;
-		private FindFormDescription finder;
+		private FormDescriptionFinder finder;
 		private readonly EntityContext entityContext;
 		private Arrange arrange;
 		private bool forDesigner;
