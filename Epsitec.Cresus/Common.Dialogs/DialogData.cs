@@ -174,8 +174,18 @@ namespace Epsitec.Common.Dialogs
 				if ((this.host.mode == DialogDataMode.Isolated) ||
 					(relation != FieldRelation.None))
 				{
-					this.SaveOriginalValue (id, value);
-					store.SetValue (id, value);
+					this.SaveOriginalValue (id, () => value);
+
+					System.Threading.Interlocked.Increment (ref this.suspendCounter);
+
+					try
+					{
+						store.SetValue (id, value);
+					}
+					finally
+					{
+						System.Threading.Interlocked.Decrement (ref this.suspendCounter);
+					}
 				}
 				
 				return value;
@@ -188,9 +198,13 @@ namespace Epsitec.Common.Dialogs
 
 			public bool DiscardWriteEntityValue(IValueStore store, string id, object value)
 			{
-				if (this.host.mode == DialogDataMode.RealTime)
+				if (this.suspendCounter > 0)
 				{
-					this.SaveOriginalValue (id, this.ResolveValue (id));
+					return false;
+				}
+				else if (this.host.mode == DialogDataMode.RealTime)
+				{
+					this.SaveOriginalValue (id, () => this.ResolveValue (id));
 					this.externalData.InternalSetValue (id, value);
 
 					return true;
@@ -262,13 +276,13 @@ namespace Epsitec.Common.Dialogs
 				throw new System.NotImplementedException ();
 			}
 
-			private void SaveOriginalValue(string id, object value)
+			private void SaveOriginalValue(string id, System.Func<object> valueGetter)
 			{
 				EntityFieldPath path = this.GetFieldPath (id);
 
 				if (this.host.originalValues.ContainsKey (path) == false)
 				{
-					this.host.originalValues[path] = value;
+					this.host.originalValues[path] = valueGetter ();
 				}
 			}
 
@@ -307,6 +321,7 @@ namespace Epsitec.Common.Dialogs
 			private readonly AbstractEntity externalData;
 			private readonly string nodeId;
 			private AbstractEntity proxy;
+			private int suspendCounter;
 		}
 
 		#endregion
