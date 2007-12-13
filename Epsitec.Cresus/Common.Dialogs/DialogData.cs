@@ -26,7 +26,7 @@ namespace Epsitec.Common.Dialogs
 			this.originalValues = new Dictionary<EntityFieldPath, object> ();
 			this.mode = mode;
 			this.externalData = data;
-			this.internalData = this.CreateProxy (this.externalData, null);
+			this.internalData = this.CreateEntityProxy (this.externalData, null);
 		}
 
 
@@ -236,7 +236,7 @@ namespace Epsitec.Common.Dialogs
 				if (this.proxy == null)
 				{
 					AbstractEntity reference = this.externalData.InternalGetValue (id) as AbstractEntity;
-					this.proxy = this.host.CreateProxy (reference, this);
+					this.proxy = this.host.CreateEntityProxy (reference, this);
 				}
 
 				return this.proxy;
@@ -298,10 +298,20 @@ namespace Epsitec.Common.Dialogs
 
 		#endregion
 
-		private AbstractEntity CreateProxy(AbstractEntity entity, FieldProxy parent)
+		/// <summary>
+		/// Creates an entity filled with field proxies, which mirrors the
+		/// specified source entity.
+		/// </summary>
+		/// <param name="entity">The source entity.</param>
+		/// <param name="parent">The parent proxy (if any).</param>
+		/// <returns>The mirroring entity.</returns>
+		private AbstractEntity CreateEntityProxy(AbstractEntity entity, FieldProxy parent)
 		{
 			if (this.mode == DialogDataMode.Transparent)
 			{
+				//	When the transparent data mode is active, there is no need
+				//	to create a proxy -- just use the source entity itself !
+
 				return entity;
 			}
 
