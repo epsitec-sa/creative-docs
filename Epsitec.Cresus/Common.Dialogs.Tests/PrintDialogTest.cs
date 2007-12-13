@@ -141,7 +141,9 @@ namespace Epsitec.Common.Dialogs
 			dialog.OpenDialog ();
 		}
 		
-		[Test] public void CheckPort()
+		[Test]
+		[Ignore ("Crashes subsequent tests")]
+		public void CheckPort()
 		{
 			Drawing.Graphics preview = new Drawing.Graphics ();
 			preview.SetPixmapSize (250, 120);
