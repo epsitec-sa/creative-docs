@@ -49,6 +49,17 @@ namespace Epsitec.Common.Dialogs
 					"Change [630G].[630A] from CHF to EUR",
 					"Change [630H] from 10.0 to 15.0"
 				});
+
+			Assert.AreEqual (3, Collection.Count (data.Changes));
+			
+			data.RevertChanges ();
+
+			Assert.AreEqual (10.0M, prix1.Ht);
+			Assert.AreEqual ("CHF", prix1.Monnaie.Désignation);
+			Assert.AreEqual (10.0M, prix1.Ht);
+			Assert.AreEqual ("CHF", prix1.Monnaie.Désignation);
+
+			Assert.AreEqual (0, Collection.Count (data.Changes));
 		}
 
 		[Test]
@@ -85,7 +96,19 @@ namespace Epsitec.Common.Dialogs
 					"Change [630G].[630A] from CHF to EUR",
 					"Change [630H] from 10.0 to 15.0"
 				});
+
+			Assert.AreEqual (3, Collection.Count (data.Changes));
+
+			data.RevertChanges ();
+			
+			Assert.AreEqual (10.0M, prix1.Ht);
+			Assert.AreEqual ("CHF", prix1.Monnaie.Désignation);
+			Assert.AreEqual (10.0M, prix1.Ht);
+			Assert.AreEqual ("CHF", prix1.Monnaie.Désignation);
+
+			Assert.AreEqual (0, Collection.Count (data.Changes));
 		}
+
 		[Test]
 		public void Check03DialogModeTransparent()
 		{

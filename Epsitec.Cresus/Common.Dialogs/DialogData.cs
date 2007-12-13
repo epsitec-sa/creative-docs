@@ -95,6 +95,16 @@ namespace Epsitec.Common.Dialogs
 			this.ForEachChange (change => change.Path.NavigateWrite (data, change.NewValue));
 		}
 
+		public void RevertChanges()
+		{
+			while (this.ForEachChange (change => change.Path.NavigateWrite (this.internalData, change.OldValue)))
+			{
+				//	Run until we have processed all changes.
+			}
+
+			this.originalValues.Clear ();
+		}
+
 
 		/// <summary>
 		/// Walks through every change done by the user on the dialog data. This
@@ -102,9 +112,11 @@ namespace Epsitec.Common.Dialogs
 		/// was changed too.
 		/// </summary>
 		/// <param name="action">The action to apply on each change set item.</param>
-		public void ForEachChange(System.Action<DialogDataChangeSet> action)
+		/// <returns><c>true</c> if the action was executed at least once; otherwise, <c>false</c>.</returns>
+		public bool ForEachChange(System.Action<DialogDataChangeSet> action)
 		{
 			List<string> skipList = new List<string> ();
+			int executed = 0;
 
 			foreach (DialogDataChangeSet change in this.Changes)
 			{
@@ -130,8 +142,11 @@ namespace Epsitec.Common.Dialogs
 					skipList.Add (path);
 
 					action (change);
+					executed++;
 				}
 			}
+
+			return executed > 0;
 		}
 
 		#region Private FieldProxy Class
