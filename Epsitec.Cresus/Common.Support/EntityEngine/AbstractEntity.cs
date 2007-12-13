@@ -228,6 +228,28 @@ namespace Epsitec.Common.Support.EntityEngine
 		{
 			return func (entity);
 		}
+
+		internal object InternalGetValueOrFieldCollection(string id)
+		{
+			object value;
+
+			switch (this.InternalGetFieldRelation (id))
+			{
+				case FieldRelation.None:
+				case FieldRelation.Reference:
+					value = this.InternalGetValue (id);
+					break;
+
+				case FieldRelation.Collection:
+					value = this.InternalGetFieldCollection (id);
+					break;
+
+				default:
+					throw new System.NotSupportedException ();
+			}
+
+			return value;
+		}
 		
 		internal object InternalGetValue(string id)
 		{

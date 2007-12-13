@@ -29,6 +29,7 @@
     <OldToolsVersion>2.0</OldToolsVersion>
     <UpgradeBackupLocation>
     </UpgradeBackupLocation>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <OutputPath>bin\Debug\</OutputPath>
@@ -79,6 +80,9 @@
   <ItemGroup>
     <Reference Include="System">
       <Name>System</Name>
+    </Reference>
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
     <Reference Include="System.Data">
       <Name>System.Data</Name>
@@ -162,6 +166,7 @@
     <Compile Include="AbstractYesNoCancel.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="DialogDataChangeSet.cs" />
     <Compile Include="DialogDataMode.cs" />
     <Compile Include="DialogData.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
