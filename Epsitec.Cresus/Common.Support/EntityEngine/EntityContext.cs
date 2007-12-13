@@ -527,6 +527,16 @@ namespace Epsitec.Common.Support.EntityEngine
 				{
 					IEntityProxy proxy = oldValue as IEntityProxy;
 
+					if (proxy == null)
+					{
+						IEntityProxyProvider provider = oldValue as IEntityProxyProvider;
+						
+						if (provider != null)
+						{
+							proxy = provider.GetEntityProxy ();
+						}
+					}
+					
 					if ((proxy != null) &&
 						(proxy.DiscardWriteEntityValue (this, id, value)))
 					{

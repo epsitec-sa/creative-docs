@@ -59,7 +59,31 @@ namespace Epsitec.Common.Dialogs
 			Assert.AreEqual (10.0M, prix1.Ht);
 			Assert.AreEqual ("CHF", prix1.Monnaie.Désignation);
 
-			Assert.AreEqual (0, Collection.Count (data.Changes));
+			Assert.AreEqual (3, Collection.Count (data.Changes));
+
+			MonnaieEntity monnaie = context.CreateEmptyEntity<MonnaieEntity> ();
+			monnaie.Désignation = "USD";
+			monnaie.TauxChangeVersChf = 1.08M;
+
+			prix2.Monnaie = monnaie;
+			prix2.Monnaie.TauxChangeVersChf = 1.06M;
+
+			Assert.AreEqual (3, Collection.Count (data.Changes));
+			
+			results.Clear ();
+			data.ForEachChange (change => results.Add (string.Format ("Change {0} from {1} to {2}", change.Path, change.OldValue, change.NewValue)));
+
+			Assert.AreEqual (1, results.Count);
+			Assert.IsTrue (results[0].StartsWith ("Change [630G] from "));
+			
+			data.RevertChanges ();
+
+			Assert.AreEqual (10.0M, prix1.Ht);
+			Assert.AreEqual ("CHF", prix1.Monnaie.Désignation);
+			Assert.AreEqual (10.0M, prix1.Ht);
+			Assert.AreEqual ("CHF", prix1.Monnaie.Désignation);
+			
+			Assert.AreEqual (3, Collection.Count (data.Changes));
 		}
 
 		[Test]

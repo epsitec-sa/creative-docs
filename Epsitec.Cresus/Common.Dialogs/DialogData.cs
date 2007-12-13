@@ -101,8 +101,6 @@ namespace Epsitec.Common.Dialogs
 			{
 				//	Run until we have processed all changes.
 			}
-
-			this.originalValues.Clear ();
 		}
 
 
@@ -333,6 +331,8 @@ namespace Epsitec.Common.Dialogs
 			EntityContext context = entity.GetEntityContext ();
 			Druid entityId = entity.GetEntityStructuredTypeId ();
 			AbstractEntity copy = context.CreateEmptyEntity (entityId);
+			
+			copy.InternalDefineProxy (parent);
 
 			foreach (string id in context.GetEntityFieldIds (entity))
 			{

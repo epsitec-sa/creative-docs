@@ -14,7 +14,7 @@ namespace Epsitec.Common.Support.EntityEngine
 	/// The <c>AbstractEntity</c> class is the base class used to store the
 	/// data represented by entity instances.
 	/// </summary>
-	public abstract class AbstractEntity : IStructuredTypeProvider, IStructuredData
+	public abstract class AbstractEntity : IStructuredTypeProvider, IStructuredData, IEntityProxyProvider
 	{
 		/// <summary>
 		/// Initializes a new instance of the <see cref="AbstractEntity"/> class.
@@ -227,6 +227,11 @@ namespace Epsitec.Common.Support.EntityEngine
 		public static TResult GetCalculation<T, TResult>(T entity, string id, System.Func<T, TResult> func)
 		{
 			return func (entity);
+		}
+
+		internal void InternalDefineProxy(IEntityProxy proxy)
+		{
+			this.proxy = proxy;
 		}
 
 		internal object InternalGetValueOrFieldCollection(string id)
@@ -594,6 +599,15 @@ namespace Epsitec.Common.Support.EntityEngine
 
 		#endregion
 
+		#region IEntityProxyProvider Members
+
+		IEntityProxy IEntityProxyProvider.GetEntityProxy()
+		{
+			return this.proxy;
+		}
+
+		#endregion
+
 		private void EnsureEventHandlers()
 		{
 			if (this.eventHandlers == null)
@@ -669,5 +683,6 @@ namespace Epsitec.Common.Support.EntityEngine
 		private IValueStore modifiedValues;
 		private int defineOriginalValuesCount;
 		private Dictionary<string, System.Delegate> eventHandlers;
+		private IEntityProxy proxy;
 	}
 }
