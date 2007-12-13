@@ -24,9 +24,9 @@ namespace Epsitec.Common.Dialogs
 		public DialogData(AbstractEntity data, DialogDataMode mode)
 		{
 			this.originalValues = new Dictionary<EntityFieldPath, object> ();
+			this.mode = mode;
 			this.externalData = data;
 			this.internalData = this.CreateProxy (this.externalData, null);
-			this.mode = mode;
 		}
 
 
@@ -79,6 +79,14 @@ namespace Epsitec.Common.Dialogs
 
 
 		/// <summary>
+		/// Applies the changes to the original dialog data.
+		/// </summary>
+		public void ApplyChanges()
+		{
+			this.ApplyChanges (this.externalData);
+		}
+
+		/// <summary>
 		/// Applies the changes to the specified data.
 		/// </summary>
 		/// <param name="data">The data.</param>
@@ -86,6 +94,7 @@ namespace Epsitec.Common.Dialogs
 		{
 			this.ForEachChange (change => change.Path.NavigateWrite (data, change.NewValue));
 		}
+
 
 		/// <summary>
 		/// Walks through every change done by the user on the dialog data. This
@@ -291,6 +300,11 @@ namespace Epsitec.Common.Dialogs
 
 		private AbstractEntity CreateProxy(AbstractEntity entity, FieldProxy parent)
 		{
+			if (this.mode == DialogDataMode.Transparent)
+			{
+				return entity;
+			}
+
 			EntityContext context = entity.GetEntityContext ();
 			Druid entityId = entity.GetEntityStructuredTypeId ();
 			AbstractEntity copy = context.CreateEmptyEntity (entityId);
@@ -305,8 +319,8 @@ namespace Epsitec.Common.Dialogs
 
 
 		private readonly Dictionary<EntityFieldPath, object> originalValues;
-		private AbstractEntity					externalData;
-		private AbstractEntity					internalData;
-		private DialogDataMode					mode;
+		private readonly DialogDataMode			mode;
+		private readonly AbstractEntity			externalData;
+		private readonly AbstractEntity			internalData;
 	}
 }

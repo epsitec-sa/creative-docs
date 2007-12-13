@@ -19,6 +19,13 @@ namespace Epsitec.Common.Dialogs
 		/// The real-time mode updates the data on the fly, as it is being
 		/// edited in the dialog.
 		/// </summary>
-		RealTime
+		RealTime,
+
+		/// <summary>
+		/// The transparent mode does not track changes and binds the dialog
+		/// directly to the provided data. Use this if the user interface must
+		/// reflect external changes in the provided data.
+		/// </summary>
+		Transparent
 	}
 }

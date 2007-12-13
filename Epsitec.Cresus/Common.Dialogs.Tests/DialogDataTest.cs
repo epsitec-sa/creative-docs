@@ -50,7 +50,7 @@ namespace Epsitec.Common.Dialogs
 					"Change [630H] from 10.0 to 15.0"
 				});
 		}
-		
+
 		[Test]
 		public void Check02DialogModeRealTime()
 		{
@@ -85,6 +85,31 @@ namespace Epsitec.Common.Dialogs
 					"Change [630G].[630A] from CHF to EUR",
 					"Change [630H] from 10.0 to 15.0"
 				});
+		}
+		[Test]
+		public void Check03DialogModeTransparent()
+		{
+			EntityContext context = EntityContext.Current;
+			PrixEntity prix1 = context.CreateEmptyEntity<PrixEntity> ();
+			prix1.Monnaie = context.CreateEmptyEntity<MonnaieEntity> ();
+			prix1.Ht = 10.0M;
+			prix1.Monnaie.Désignation = "CHF";
+
+			DialogData data = new DialogData (prix1, DialogDataMode.Transparent);
+
+			PrixEntity prix2 = data.Data as PrixEntity;
+
+			Assert.AreEqual (10.0M, prix2.Ht);
+			Assert.AreEqual ("CHF", prix2.Monnaie.Désignation);
+
+			prix2.Ht = 15.0M;
+			prix2.Monnaie.Désignation = "EUR";
+
+			Assert.AreEqual (15.0M, prix1.Ht);
+			Assert.AreEqual ("EUR", prix1.Monnaie.Désignation);
+
+			Assert.AreEqual (prix1, prix2);
+			Assert.AreEqual (0, Collection.Count (data.Changes));
 		}
 	}
 }
