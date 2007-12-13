@@ -50,6 +50,61 @@ namespace Epsitec.Common.Dialogs
 			}
 		}
 
+		public IEnumerable<DialogDataChangeSet> Changes
+		{
+			get
+			{
+				List<EntityFieldPath> paths = new List<EntityFieldPath> (this.originalValues.Keys);
+
+				paths.Sort ();
+
+				foreach (EntityFieldPath path in paths)
+				{
+					object oldValue = this.originalValues[path];
+					object newValue = path.NavigateRead (this.internalData);
+
+					yield return new DialogDataChangeSet (path, oldValue, newValue);
+				}
+			}
+		}
+
+		public void ApplyChanges(AbstractEntity data)
+		{
+			this.ApplyChanges (change => change.Path.NavigateWrite (data, change.NewValue));
+		}
+
+		public void ApplyChanges(System.Action<DialogDataChangeSet> action)
+		{
+			List<string> skipList = new List<string> ();
+
+			foreach (DialogDataChangeSet change in this.Changes)
+			{
+				if (change.DifferentValues)
+				{
+					bool ignore = false;
+					string path = change.Path.ToString ();
+
+					foreach (string skipPrefix in skipList)
+					{
+						if (path.StartsWith (skipPrefix))
+						{
+							ignore = true;
+							break;
+						}
+					}
+
+					if (ignore)
+					{
+						continue;
+					}
+
+					skipList.Add (path);
+
+					action (change);
+				}
+			}
+		}
+
 
 		private class EntityNodeProxy : IEntityProxy
 		{

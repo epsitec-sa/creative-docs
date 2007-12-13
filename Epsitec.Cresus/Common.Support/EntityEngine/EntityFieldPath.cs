@@ -288,6 +288,49 @@ namespace Epsitec.Common.Support.EntityEngine
 			return true;
 		}
 
+		/// <summary>
+		/// Navigates from the root entity to the leaf entity, then reads the
+		/// value using the dynamic getter and returns the value.
+		/// </summary>
+		/// <param name="root">The root entity.</param>
+		/// <returns>The value or <c>UnknownValue.Value</c>.</returns>
+		public object NavigateRead(AbstractEntity root)
+		{
+			object value = UnknownValue.Value;
+
+			AbstractEntity leaf;
+			string id;
+			
+			if (this.Navigate (root, out leaf, out id))
+			{
+				IValueStore store = leaf;
+				value = store.GetValue (id);
+			}
+
+			return value;
+		}
+
+		/// <summary>
+		/// Navigates from the root entity to the leaf entity, then writes the
+		/// value using the dynamic setter.
+		/// </summary>
+		/// <param name="root">The root entity.</param>
+		/// <returns>The value or <c>UnknownValue.Value</c>.</returns>
+		public bool NavigateWrite(AbstractEntity root, object value)
+		{
+			AbstractEntity leaf;
+			string id;
+
+			if (this.Navigate (root, out leaf, out id))
+			{
+				IValueStore store = leaf;
+				store.SetValue (id, value);
+				return true;
+			}
+
+			return false;
+		}
+
 
 		/// <summary>
 		/// Gets the parent path.
@@ -428,8 +471,8 @@ namespace Epsitec.Common.Support.EntityEngine
 
 				if (result == 0)
 				{
-					long a = this.entityId.ToLong ();
-					long b = other.entityId.ToLong ();
+					long a = this.entityId.IsValid ? this.entityId.ToLong () : -1;
+					long b = other.entityId.IsValid ? other.entityId.ToLong () : -1;
 
 					if (a < b)
 					{

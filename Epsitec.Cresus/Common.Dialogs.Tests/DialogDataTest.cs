@@ -36,6 +36,8 @@ namespace Epsitec.Common.Dialogs
 			Assert.AreEqual ("CHF", prix1.Monnaie.Désignation);
 			Assert.AreEqual (15.0M, prix2.Ht);
 			Assert.AreEqual ("EUR", prix2.Monnaie.Désignation);
+
+			data.ApplyChanges (change => System.Console.Out.WriteLine ("Change {0} from {1} to {2}", change.Path, change.OldValue, change.NewValue));
 		}
 		
 		[Test]
@@ -61,6 +63,8 @@ namespace Epsitec.Common.Dialogs
 			Assert.AreEqual ("EUR", prix1.Monnaie.Désignation);
 			Assert.AreEqual (15.0M, prix2.Ht);
 			Assert.AreEqual ("EUR", prix2.Monnaie.Désignation);
+
+			data.ApplyChanges (change => System.Console.Out.WriteLine ("Change {0} from {1} to {2}", change.Path, change.OldValue, change.NewValue));
 		}
 	}
 }
