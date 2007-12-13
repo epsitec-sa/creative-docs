@@ -6,6 +6,8 @@ using Epsitec.Common.Types;
 using Epsitec.Common.UI;
 using Epsitec.Common.Widgets;
 
+using System.Collections.Generic;
+
 using Demo.Demo5juin.Entities;
 
 namespace Epsitec.Common.Dialogs
@@ -37,7 +39,16 @@ namespace Epsitec.Common.Dialogs
 			Assert.AreEqual (15.0M, prix2.Ht);
 			Assert.AreEqual ("EUR", prix2.Monnaie.Désignation);
 
-			data.ApplyChanges (change => System.Console.Out.WriteLine ("Change {0} from {1} to {2}", change.Path, change.OldValue, change.NewValue));
+			List<string> results = new List<string> ();
+
+			data.ApplyChanges (change => results.Add (string.Format ("Change {0} from {1} to {2}", change.Path, change.OldValue, change.NewValue)));
+
+			Collection.CompareEqual (results,
+				new string[]
+				{
+					"Change [630G].[630A] from CHF to EUR",
+					"Change [630H] from 10.0 to 15.0"
+				});
 		}
 		
 		[Test]
@@ -64,7 +75,16 @@ namespace Epsitec.Common.Dialogs
 			Assert.AreEqual (15.0M, prix2.Ht);
 			Assert.AreEqual ("EUR", prix2.Monnaie.Désignation);
 
-			data.ApplyChanges (change => System.Console.Out.WriteLine ("Change {0} from {1} to {2}", change.Path, change.OldValue, change.NewValue));
+			List<string> results = new List<string> ();
+
+			data.ApplyChanges (change => results.Add (string.Format ("Change {0} from {1} to {2}", change.Path, change.OldValue, change.NewValue)));
+
+			Collection.CompareEqual (results,
+				new string[]
+				{
+					"Change [630G].[630A] from CHF to EUR",
+					"Change [630H] from 10.0 to 15.0"
+				});
 		}
 	}
 }

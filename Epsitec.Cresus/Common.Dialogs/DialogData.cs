@@ -187,6 +187,8 @@ namespace Epsitec.Common.Dialogs
 
 			private object ResolveValue(string id)
 			{
+				System.Diagnostics.Debug.Assert (this.nodeId == id);
+
 				object value = this.externalData.InternalGetValue (id);
 				
 				return value;
@@ -194,12 +196,21 @@ namespace Epsitec.Common.Dialogs
 
 			private object ResolveReference(string id)
 			{
-				AbstractEntity reference = this.externalData.InternalGetValue (id) as AbstractEntity;
-				return this.host.CreateProxy (reference, this);
+				System.Diagnostics.Debug.Assert (this.nodeId == id);
+
+				if (this.proxy == null)
+				{
+					AbstractEntity reference = this.externalData.InternalGetValue (id) as AbstractEntity;
+					this.proxy = this.host.CreateProxy (reference, this);
+				}
+
+				return this.proxy;
 			}
 
 			private object ResolveCollection(string id)
 			{
+				System.Diagnostics.Debug.Assert (this.nodeId == id);
+
 				throw new System.NotImplementedException ();
 			}
 
@@ -247,6 +258,7 @@ namespace Epsitec.Common.Dialogs
 			private readonly DialogData host;
 			private readonly AbstractEntity externalData;
 			private readonly string nodeId;
+			private AbstractEntity proxy;
 		}
 
 
