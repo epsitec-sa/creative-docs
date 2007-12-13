@@ -9,8 +9,18 @@ using System.Collections.Generic;
 
 namespace Epsitec.Common.Dialogs
 {
+	/// <summary>
+	/// The <c>DialogData</c> class describes data associated with a dialog.
+	/// The data is stored in an entity graph and the <c>DialogData</c> class
+	/// manages change tracking.
+	/// </summary>
 	public class DialogData
 	{
+		/// <summary>
+		/// Initializes a new instance of the <see cref="DialogData"/> class.
+		/// </summary>
+		/// <param name="data">The dialog data.</param>
+		/// <param name="mode">The dialog data mode.</param>
 		public DialogData(AbstractEntity data, DialogDataMode mode)
 		{
 			this.originalValues = new Dictionary<EntityFieldPath, object> ();
@@ -19,21 +29,11 @@ namespace Epsitec.Common.Dialogs
 			this.mode = mode;
 		}
 
-		private AbstractEntity CreateProxy(AbstractEntity entity, EntityNodeProxy parent)
-		{
-			EntityContext context = entity.GetEntityContext ();
-			Druid entityId = entity.GetEntityStructuredTypeId ();
-			AbstractEntity copy = context.CreateEmptyEntity (entityId);
 
-			foreach (string id in context.GetEntityFieldIds (entity))
-			{
-				copy.InternalSetValue (id, new EntityNodeProxy (parent, id, this, entity));
-			}
-
-			return copy;
-		}
-
-
+		/// <summary>
+		/// Gets the dialog data mode.
+		/// </summary>
+		/// <value>The dialog data mode.</value>
 		public DialogDataMode Mode
 		{
 			get
@@ -42,6 +42,10 @@ namespace Epsitec.Common.Dialogs
 			}
 		}
 
+		/// <summary>
+		/// Gets the (live) dialog data.
+		/// </summary>
+		/// <value>The dialog data.</value>
 		public AbstractEntity Data
 		{
 			get
@@ -50,6 +54,11 @@ namespace Epsitec.Common.Dialogs
 			}
 		}
 
+		/// <summary>
+		/// Gets the changes. The result is sorted based on the field path of
+		/// every change set item.
+		/// </summary>
+		/// <value>The changes.</value>
 		public IEnumerable<DialogDataChangeSet> Changes
 		{
 			get
@@ -68,12 +77,23 @@ namespace Epsitec.Common.Dialogs
 			}
 		}
 
+
+		/// <summary>
+		/// Applies the changes to the specified data.
+		/// </summary>
+		/// <param name="data">The data.</param>
 		public void ApplyChanges(AbstractEntity data)
 		{
-			this.ApplyChanges (change => change.Path.NavigateWrite (data, change.NewValue));
+			this.ForEachChange (change => change.Path.NavigateWrite (data, change.NewValue));
 		}
 
-		public void ApplyChanges(System.Action<DialogDataChangeSet> action)
+		/// <summary>
+		/// Walks through every change done by the user on the dialog data. This
+		/// filters changes done in referenced entities if the reference itself
+		/// was changed too.
+		/// </summary>
+		/// <param name="action">The action to apply on each change set item.</param>
+		public void ForEachChange(System.Action<DialogDataChangeSet> action)
 		{
 			List<string> skipList = new List<string> ();
 
@@ -105,10 +125,16 @@ namespace Epsitec.Common.Dialogs
 			}
 		}
 
+		#region Private FieldProxy Class
 
-		private class EntityNodeProxy : IEntityProxy
+		/// <summary>
+		/// The <c>FieldProxy</c> class is used to spy on every read or write
+		/// done on fields from an entity, which is used to track changes in
+		/// an entity graph.
+		/// </summary>
+		private class FieldProxy : IEntityProxy
 		{
-			public EntityNodeProxy(EntityNodeProxy parent, string nodeId, DialogData host, AbstractEntity externalData)
+			public FieldProxy(FieldProxy parent, string nodeId, DialogData host, AbstractEntity externalData)
 			{
 				this.parent = parent;
 				this.nodeId = nodeId;
@@ -121,7 +147,7 @@ namespace Epsitec.Common.Dialogs
 			public object GetReadEntityValue(IValueStore store, string id)
 			{
 				FieldRelation relation = this.externalData.InternalGetFieldRelation (id);
-				object        value    = this.ResolveNode (id, relation);
+				object        value    = this.ResolveField (id, relation);
 				
 				if ((this.host.mode == DialogDataMode.Isolated) ||
 					(relation != FieldRelation.None))
@@ -160,7 +186,7 @@ namespace Epsitec.Common.Dialogs
 
 			#endregion
 
-			private object ResolveNode(string id, FieldRelation relation)
+			private object ResolveField(string id, FieldRelation relation)
 			{
 				object value;
 
@@ -242,7 +268,7 @@ namespace Epsitec.Common.Dialogs
 				{
 					nodes.Push (this.nodeId);
 
-					EntityNodeProxy parent = this.parent;
+					FieldProxy parent = this.parent;
 
 					while (parent != null)
 					{
@@ -254,11 +280,27 @@ namespace Epsitec.Common.Dialogs
 				return nodes;
 			}
 
-			private readonly EntityNodeProxy parent;
+			private readonly FieldProxy parent;
 			private readonly DialogData host;
 			private readonly AbstractEntity externalData;
 			private readonly string nodeId;
 			private AbstractEntity proxy;
+		}
+
+		#endregion
+
+		private AbstractEntity CreateProxy(AbstractEntity entity, FieldProxy parent)
+		{
+			EntityContext context = entity.GetEntityContext ();
+			Druid entityId = entity.GetEntityStructuredTypeId ();
+			AbstractEntity copy = context.CreateEmptyEntity (entityId);
+
+			foreach (string id in context.GetEntityFieldIds (entity))
+			{
+				copy.InternalSetValue (id, new FieldProxy (parent, id, this, entity));
+			}
+
+			return copy;
 		}
 
 

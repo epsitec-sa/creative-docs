@@ -41,7 +41,7 @@ namespace Epsitec.Common.Dialogs
 
 			List<string> results = new List<string> ();
 
-			data.ApplyChanges (change => results.Add (string.Format ("Change {0} from {1} to {2}", change.Path, change.OldValue, change.NewValue)));
+			data.ForEachChange (change => results.Add (string.Format ("Change {0} from {1} to {2}", change.Path, change.OldValue, change.NewValue)));
 
 			Collection.CompareEqual (results,
 				new string[]
@@ -77,7 +77,7 @@ namespace Epsitec.Common.Dialogs
 
 			List<string> results = new List<string> ();
 
-			data.ApplyChanges (change => results.Add (string.Format ("Change {0} from {1} to {2}", change.Path, change.OldValue, change.NewValue)));
+			data.ForEachChange (change => results.Add (string.Format ("Change {0} from {1} to {2}", change.Path, change.OldValue, change.NewValue)));
 
 			Collection.CompareEqual (results,
 				new string[]
