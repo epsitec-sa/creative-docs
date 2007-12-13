@@ -305,7 +305,7 @@ namespace Epsitec.App.Dolphin.MyWidgets
 							string title = TextLayout.ConvertToSimpleText(Res.Strings.Window.Title);
 							string icon = "manifest:Epsitec.Common.Dialogs.Images.Warning.icon";
 							Common.Dialogs.IDialog dialog = Common.Dialogs.MessageDialog.CreateOk(title, icon, err, null, null);
-							dialog.Owner = this.Window;
+							dialog.OwnerWindow = this.Window;
 							dialog.OpenDialog();
 							this.isErrorDialogPending = false;
 						});

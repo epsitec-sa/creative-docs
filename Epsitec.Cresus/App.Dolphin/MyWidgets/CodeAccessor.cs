@@ -879,7 +879,7 @@ namespace Epsitec.App.Dolphin.MyWidgets
 				string icon = "manifest:Epsitec.Common.Dialogs.Images.Warning.icon";
 				string err = string.Format(Res.Strings.Dialog.CodeAccessor.Shift.Message, shift.ToString(), address.ToString("X3"));
 				Common.Dialogs.IDialog dialog = Common.Dialogs.MessageDialog.CreateOk(title, icon, err, null, null);
-				dialog.Owner = this.Window;
+				dialog.OwnerWindow = this.Window;
 				dialog.OpenDialog();
 			}
 		}

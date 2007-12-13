@@ -89,7 +89,7 @@ namespace Epsitec.App.Dolphin
 			{
 				string title = TextLayout.ConvertToSimpleText(Res.Strings.Window.Title);
 				Common.Dialogs.IDialog dialog = Common.Dialogs.MessageDialog.CreateOk(title, icon, message, null, null);
-				dialog.Owner = this.window;
+				dialog.OwnerWindow = this.window;
 				dialog.OpenDialog();
 			}
 
