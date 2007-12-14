@@ -65,7 +65,7 @@ namespace Epsitec.Cresus.DataLayer.Helpers
 		/// <returns>
 		/// 	<c>true</c> if the value should be discarded; otherwise, <c>false</c>.
 		/// </returns>
-		public bool DiscardWriteEntityValue(IValueStore store, string id, object value)
+		public bool DiscardWriteEntityValue(IValueStore store, string id, ref object value)
 		{
 			return false;
 		}

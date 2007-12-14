@@ -538,7 +538,7 @@ namespace Epsitec.Common.Support.EntityEngine
 					}
 					
 					if ((proxy != null) &&
-						(proxy.DiscardWriteEntityValue (this, id, value)))
+						(proxy.DiscardWriteEntityValue (this, id, ref value)))
 					{
 						return;
 					}

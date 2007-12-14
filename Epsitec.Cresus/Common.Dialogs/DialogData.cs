@@ -164,12 +164,37 @@ namespace Epsitec.Common.Dialogs
 				this.externalData = externalData;
 			}
 
+
+			public static object GetSourceValue(object value)
+			{
+				IEntityProxyProvider provider = value as IEntityProxyProvider;
+				
+				if (provider != null)
+				{
+					FieldProxy proxy = provider.GetEntityProxy () as FieldProxy;
+
+					if (proxy != null)
+					{
+						System.Diagnostics.Debug.Assert (proxy.proxy == value);
+						System.Diagnostics.Debug.Assert (proxy.proxySource != null);
+
+						value = proxy.proxySource;
+					}
+				}
+
+				return value;
+			}
+			
+
 			#region IEntityProxy Members
 
 			public object GetReadEntityValue(IValueStore store, string id)
 			{
 				FieldRelation relation = this.externalData.InternalGetFieldRelation (id);
 				object        value    = this.ResolveField (id, relation);
+
+				//	If the relation is a reference and the mode is set to real-time, then
+				//	the value will be a proxy for the real entity.
 				
 				if ((this.host.mode == DialogDataMode.Isolated) ||
 					(relation != FieldRelation.None))
@@ -196,7 +221,7 @@ namespace Epsitec.Common.Dialogs
 				return this;
 			}
 
-			public bool DiscardWriteEntityValue(IValueStore store, string id, object value)
+			public bool DiscardWriteEntityValue(IValueStore store, string id, ref object value)
 			{
 				if (this.suspendCounter > 0)
 				{
@@ -204,10 +229,24 @@ namespace Epsitec.Common.Dialogs
 				}
 				else if (this.host.mode == DialogDataMode.RealTime)
 				{
-					this.SaveOriginalValue (id, () => this.ResolveValue (id));
-					this.externalData.InternalSetValue (id, value);
+					//	The value store is about to overwrite our value with the specified
+					//	new value.
 
-					return true;
+					this.SaveOriginalValue (id, () => this.ResolveValue (id));
+					
+					switch (this.externalData.InternalGetFieldRelation (id))
+					{
+						case FieldRelation.None:
+							this.externalData.InternalSetValue (id, value);
+							return true;
+
+						case FieldRelation.Reference:
+							this.externalData.InternalSetValue (id, FieldProxy.GetSourceValue (value));
+							value = this.Wrap (value as AbstractEntity);
+							return false;
+					}
+
+					throw new System.NotSupportedException ();
 				}
 				else
 				{
@@ -221,6 +260,28 @@ namespace Epsitec.Common.Dialogs
 			}
 
 			#endregion
+
+			private AbstractEntity Wrap(AbstractEntity reference)
+			{
+				IEntityProxyProvider provider = reference;
+
+				if (provider == null)
+				{
+					return null;
+				}
+				else
+				{
+					FieldProxy proxy = provider.GetEntityProxy () as FieldProxy;
+
+					if (proxy == null)
+					{
+						proxy = new FieldProxy (this.parent, this.nodeId, this.host, this.externalData);
+						proxy.CreateReferenceProxy (reference);
+					}
+
+					return proxy.proxy;
+				}
+			}
 
 			private object ResolveField(string id, FieldRelation relation)
 			{
@@ -262,11 +323,16 @@ namespace Epsitec.Common.Dialogs
 
 				if (this.proxy == null)
 				{
-					AbstractEntity reference = this.externalData.InternalGetValue (id) as AbstractEntity;
-					this.proxy = this.host.CreateEntityProxy (reference, this);
+					this.CreateReferenceProxy (this.externalData.InternalGetValue (id) as AbstractEntity);
 				}
 
 				return this.proxy;
+			}
+
+			private void CreateReferenceProxy(AbstractEntity reference)
+			{
+				this.proxy = this.host.CreateEntityProxy (reference, this);
+				this.proxySource = reference;
 			}
 
 			private object ResolveCollection(string id)
@@ -321,6 +387,7 @@ namespace Epsitec.Common.Dialogs
 			private readonly AbstractEntity externalData;
 			private readonly string nodeId;
 			private AbstractEntity proxy;
+			private AbstractEntity proxySource;
 			private int suspendCounter;
 		}
 

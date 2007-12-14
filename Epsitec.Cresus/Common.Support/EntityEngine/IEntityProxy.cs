@@ -39,7 +39,7 @@ namespace Epsitec.Common.Support.EntityEngine
 		/// <param name="id">The value id.</param>
 		/// <param name="value">The value.</param>
 		/// <returns><c>true</c> if the value should be discarded; otherwise, <c>false</c>.</returns>
-		bool DiscardWriteEntityValue(IValueStore store, string id, object value);
+		bool DiscardWriteEntityValue(IValueStore store, string id, ref object value);
 
 
 		/// <summary>

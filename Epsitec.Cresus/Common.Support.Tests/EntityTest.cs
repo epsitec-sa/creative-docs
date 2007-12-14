@@ -457,7 +457,7 @@ namespace Epsitec.Common.Support
 				return this;
 			}
 
-			public bool DiscardWriteEntityValue(IValueStore store, string id, object value)
+			public bool DiscardWriteEntityValue(IValueStore store, string id, ref object value)
 			{
 				this.discardCounter++;
 				return false;
