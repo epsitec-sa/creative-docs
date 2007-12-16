@@ -1,4 +1,10 @@
-﻿[assembly: global::Epsitec.Common.Support.EntityClass ("[6305]", typeof (Demo.Demo5juin.Entities.MonnaieEntity))]
+﻿//<tab/>--------------------------------------------------------------------------- 
+//  ATTENTION 
+//  Ce fichier a été généré automatiquement. Ne pas l&apos;éditer manuellement, car 
+//  toute modification sera perdue. 
+//<tab/>--------------------------------------------------------------------------- 
+
+[assembly: global::Epsitec.Common.Support.EntityClass ("[6305]", typeof (Demo.Demo5juin.Entities.MonnaieEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[6307]", typeof (Demo.Demo5juin.Entities.CodeTvaEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[6308]", typeof (Demo.Demo5juin.Entities.PrixEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[6309]", typeof (Demo.Demo5juin.Entities.PrixComposeEntity))]

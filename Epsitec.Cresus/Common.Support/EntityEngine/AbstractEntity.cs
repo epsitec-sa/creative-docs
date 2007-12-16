@@ -292,7 +292,7 @@ namespace Epsitec.Common.Support.EntityEngine
 					this.originalValues = this.context.CreateValueStore (this);
 				}
 
-				this.originalValues.SetValue (id, value);
+				this.originalValues.SetValue (id, value, ValueStoreSetMode.Default);
 			}
 			else
 			{
@@ -301,7 +301,7 @@ namespace Epsitec.Common.Support.EntityEngine
 					this.modifiedValues = this.context.CreateValueStore (this);
 				}
 
-				this.modifiedValues.SetValue (id, value);
+				this.modifiedValues.SetValue (id, value, ValueStoreSetMode.Default);
 			}
 		}
 
@@ -567,6 +567,17 @@ namespace Epsitec.Common.Support.EntityEngine
 			return this.context.GetEntityFieldIds (this);
 		}
 
+		/// <summary>
+		/// Sets the value. See <see cref="IValueStore.SetValue"/> for additional
+		/// details (the default mode will be used).
+		/// </summary>
+		/// <param name="id">The identifier of the value.</param>
+		/// <param name="value">The value.</param>
+		void IStructuredData.SetValue(string id, object value)
+		{
+			this.DynamicSetField (id, value);
+		}
+
 		#endregion
 
 		#region IValueStore Members
@@ -592,7 +603,8 @@ namespace Epsitec.Common.Support.EntityEngine
 		/// <param name="value">The value to store into the structure record;
 		/// specifying <see cref="UndefinedValue.Value"/> clears the value.
 		/// <see cref="UnknownValue.Value"/> may not be specified as a value.</param>
-		void IValueStore.SetValue(string id, object value)
+		/// <param name="mode">The set mode.</param>
+		void IValueStore.SetValue(string id, object value, ValueStoreSetMode mode)
 		{
 			this.DynamicSetField (id, value);
 		}

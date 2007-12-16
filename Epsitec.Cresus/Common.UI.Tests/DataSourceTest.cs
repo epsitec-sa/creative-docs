@@ -328,6 +328,11 @@ namespace Epsitec.Common.UI
 				throw new System.Exception ("The method or operation is not implemented.");
 			}
 
+			public void SetValue(string name, object value)
+			{
+				this.data[name] = value;
+			}
+
 			public IEnumerable<string> GetValueIds()
 			{
 				string[] names = new string[this.data.Keys.Count];
@@ -341,7 +346,7 @@ namespace Epsitec.Common.UI
 				return this.data[name];
 			}
 
-			public void SetValue(string name, object value)
+			public void SetValue(string name, object value, ValueStoreSetMode mode)
 			{
 				this.data[name] = value;
 			}

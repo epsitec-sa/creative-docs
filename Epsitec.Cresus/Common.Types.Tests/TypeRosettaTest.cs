@@ -342,6 +342,11 @@ namespace Epsitec.Common.Types
 				throw new System.Exception ("The method or operation is not implemented.");
 			}
 
+			public void SetValue(string id, object value)
+			{
+				throw new System.Exception ("The method or operation is not implemented.");
+			}
+
 			public IEnumerable<string> GetValueIds()
 			{
 				yield return "Self";
@@ -357,7 +362,7 @@ namespace Epsitec.Common.Types
 				throw new System.ArgumentException ();
 			}
 
-			public void SetValue(string id, object value)
+			public void SetValue(string id, object value, ValueStoreSetMode mode)
 			{
 				throw new System.Exception ("The method or operation is not implemented.");
 			}

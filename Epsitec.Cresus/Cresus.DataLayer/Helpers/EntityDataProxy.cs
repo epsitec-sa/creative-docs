@@ -92,7 +92,7 @@ namespace Epsitec.Cresus.DataLayer.Helpers
 		private object ResolveEntity(IValueStore store, string id)
 		{
 			object value = this.PromoteToRealInstance ();
-			store.SetValue (id, value);
+			store.SetValue (id, value, ValueStoreSetMode.Default);
 			return value;
 		}
 

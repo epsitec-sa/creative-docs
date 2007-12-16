@@ -173,6 +173,12 @@ namespace Epsitec.Common.UI
 			return this.GetFieldIds ();
 		}
 
+		void IStructuredData.SetValue(string id, object value)
+		{
+			IValueStore store = this;
+			store.SetValue (id, value, ValueStoreSetMode.Default);
+		}
+
 		object IValueStore.GetValue(string id)
 		{
 			ItemRecord record = this.GetItemRecord (id);
@@ -187,7 +193,7 @@ namespace Epsitec.Common.UI
 			}
 		}
 
-		void IValueStore.SetValue(string id, object value)
+		void IValueStore.SetValue(string id, object value, ValueStoreSetMode mode)
 		{
 			throw new System.InvalidOperationException ("You cannot modify a DataSource with SetValue");
 		}

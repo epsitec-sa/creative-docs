@@ -95,6 +95,10 @@ namespace Epsitec.Common.Dialogs
 			this.ForEachChange (change => change.Path.NavigateWrite (data, change.NewValue));
 		}
 
+		/// <summary>
+		/// Reverts the changes. This will restore the dialog data fields which
+		/// were modified by the user, since the dialog data was first created.
+		/// </summary>
 		public void RevertChanges()
 		{
 			while (this.ForEachChange (change => change.Path.NavigateWrite (this.internalData, change.OldValue)))
@@ -156,16 +160,36 @@ namespace Epsitec.Common.Dialogs
 		/// </summary>
 		private class FieldProxy : IEntityProxy
 		{
+			/// <summary>
+			/// Initializes a new instance of the <see cref="FieldProxy"/> class.
+			/// </summary>
+			/// <param name="parent">The parent proxy.</param>
+			/// <param name="nodeId">The node id.</param>
+			/// <param name="host">The <see cref="DialogData"/> hosting this proxy.</param>
+			/// <param name="externalData">The external data.</param>
 			public FieldProxy(FieldProxy parent, string nodeId, DialogData host, AbstractEntity externalData)
 			{
+				System.Diagnostics.Debug.Assert (!string.IsNullOrEmpty (nodeId));
+				System.Diagnostics.Debug.Assert (host != null);
+				System.Diagnostics.Debug.Assert (externalData != null);
+				System.Diagnostics.Debug.Assert (host.mode != DialogDataMode.Transparent);
+
 				this.parent = parent;
 				this.nodeId = nodeId;
 				this.host = host;
 				this.externalData = externalData;
+				this.relation = this.externalData.InternalGetFieldRelation (this.nodeId);
 			}
 
 
-			public static object GetSourceValue(object value)
+			/// <summary>
+			/// Unwraps the value. This gets the source data for a value, if it
+			/// is represented by a <c>FieldProxy</c>. Otherwise, it simply
+			/// returns the value, as is.
+			/// </summary>
+			/// <param name="value">The value.</param>
+			/// <returns>The unwrapped value.</returns>
+			public static object Unwrap(object value)
 			{
 				IEntityProxyProvider provider = value as IEntityProxyProvider;
 				
@@ -175,6 +199,9 @@ namespace Epsitec.Common.Dialogs
 
 					if (proxy != null)
 					{
+						//	We have found a proxy, so get the source data used to initialize it;
+						//	this is the "unwrapped" data.
+
 						System.Diagnostics.Debug.Assert (proxy.proxy == value);
 						System.Diagnostics.Debug.Assert (proxy.proxySource != null);
 
@@ -188,65 +215,89 @@ namespace Epsitec.Common.Dialogs
 
 			#region IEntityProxy Members
 
+			/// <summary>
+			/// Gets the real instance to be used when reading on this proxy.
+			/// </summary>
+			/// <param name="store">The value store.</param>
+			/// <param name="id">The value id.</param>
+			/// <returns>The real instance to be used.</returns>
 			public object GetReadEntityValue(IValueStore store, string id)
 			{
-				FieldRelation relation = this.externalData.InternalGetFieldRelation (id);
-				object        value    = this.ResolveField (id, relation);
-
-				//	If the relation is a reference and the mode is set to real-time, then
-				//	the value will be a proxy for the real entity.
+				System.Diagnostics.Debug.Assert (this.nodeId == id);
 				
+				object value = this.ResolveField ();
+
 				if ((this.host.mode == DialogDataMode.Isolated) ||
-					(relation != FieldRelation.None))
+					(this.relation != FieldRelation.None))
 				{
+					//	Record the original value for this node, if we have never done
+					//	so previously, then overwrite the value in the data field.
+					
 					this.SaveOriginalValue (id, () => value);
-
-					System.Threading.Interlocked.Increment (ref this.suspendCounter);
-
-					try
-					{
-						store.SetValue (id, value);
-					}
-					finally
-					{
-						System.Threading.Interlocked.Decrement (ref this.suspendCounter);
-					}
+					store.SetValue (id, value, ValueStoreSetMode.ShortCircuit);
 				}
 				
 				return value;
 			}
 
+			/// <summary>
+			/// This is a no-op.
+			/// </summary>
+			/// <param name="store">The value store.</param>
+			/// <param name="id">The value id.</param>
+			/// <returns>The real instance to be used.</returns>
 			public object GetWriteEntityValue(IValueStore store, string id)
 			{
+				System.Diagnostics.Debug.Assert (this.nodeId == id);
 				return this;
 			}
 
-			public bool DiscardWriteEntityValue(IValueStore store, string id, ref object value)
+			/// <summary>
+			/// Checks if the write to the specified entity value should proceed
+			/// normally or be discarded completely.
+			/// </summary>
+			/// <param name="internalStore">The value store.</param>
+			/// <param name="id">The value id.</param>
+			/// <param name="value">The value.</param>
+			/// <returns>
+			/// 	<c>true</c> if the value should be discarded; otherwise, <c>false</c>.
+			/// </returns>
+			public bool DiscardWriteEntityValue(IValueStore internalStore, string id, ref object value)
 			{
-				if (this.suspendCounter > 0)
-				{
-					return false;
-				}
-				else if (this.host.mode == DialogDataMode.RealTime)
+				System.Diagnostics.Debug.Assert (this.nodeId == id);
+
+				if (this.host.mode == DialogDataMode.RealTime)
 				{
 					//	The value store is about to overwrite our value with the specified
 					//	new value.
 
-					this.SaveOriginalValue (id, () => this.ResolveValue (id));
+					this.SaveOriginalValue (id, () => this.ResolveField ());
+
+					IValueStore externalStore = this.externalData;
 					
 					switch (this.externalData.InternalGetFieldRelation (id))
 					{
 						case FieldRelation.None:
-							this.externalData.InternalSetValue (id, value);
-							return true;
+							//	Update the external data field and keep our proxy in the
+							//	internal data field :
+
+							externalStore.SetValue (id, value, ValueStoreSetMode.ShortCircuit);
+							break;
 
 						case FieldRelation.Reference:
-							this.externalData.InternalSetValue (id, FieldProxy.GetSourceValue (value));
-							value = this.Wrap (value as AbstractEntity);
-							return false;
+							//	Update the external data field to point to the unwrapped
+							//	value and replace the internal data field with the new,
+							//	wrapped, value.
+
+							externalStore.SetValue (id, FieldProxy.Unwrap (value), ValueStoreSetMode.ShortCircuit);
+							internalStore.SetValue (id, this.Wrap (value as AbstractEntity), ValueStoreSetMode.ShortCircuit);
+							break;
+
+						default:
+							throw new System.NotSupportedException ();
 					}
 
-					throw new System.NotSupportedException ();
+					return true;
 				}
 				else
 				{
@@ -263,6 +314,8 @@ namespace Epsitec.Common.Dialogs
 
 			private AbstractEntity Wrap(AbstractEntity reference)
 			{
+				//	TODO: handle wrapping <null> !
+
 				IEntityProxyProvider provider = reference;
 
 				if (provider == null)
@@ -283,47 +336,34 @@ namespace Epsitec.Common.Dialogs
 				}
 			}
 
-			private object ResolveField(string id, FieldRelation relation)
+			private object ResolveField()
 			{
-				object value;
-
-				switch (relation)
+				switch (this.relation)
 				{
 					case FieldRelation.None:
-						value = this.ResolveValue (id);
-						break;
-
-					case FieldRelation.Reference:
-						value = this.ResolveReference (id);
-						break;
-
-					case FieldRelation.Collection:
-						value = this.ResolveCollection (id);
-						break;
+						return this.ResolveValue ();
 					
+					case FieldRelation.Reference:
+						return this.ResolveReference ();
+					
+					case FieldRelation.Collection:
+						return this.ResolveCollection ();
+
 					default:
 						throw new System.NotSupportedException ();
 				}
-				
-				return value;
 			}
 
-			private object ResolveValue(string id)
+			private object ResolveValue()
 			{
-				System.Diagnostics.Debug.Assert (this.nodeId == id);
-
-				object value = this.externalData.InternalGetValue (id);
-				
-				return value;
+				return this.externalData.InternalGetValue (this.nodeId);
 			}
 
-			private object ResolveReference(string id)
+			private object ResolveReference()
 			{
-				System.Diagnostics.Debug.Assert (this.nodeId == id);
-
 				if (this.proxy == null)
 				{
-					this.CreateReferenceProxy (this.externalData.InternalGetValue (id) as AbstractEntity);
+					this.CreateReferenceProxy (this.externalData.InternalGetValue (this.nodeId) as AbstractEntity);
 				}
 
 				return this.proxy;
@@ -335,10 +375,8 @@ namespace Epsitec.Common.Dialogs
 				this.proxySource = reference;
 			}
 
-			private object ResolveCollection(string id)
+			private object ResolveCollection()
 			{
-				System.Diagnostics.Debug.Assert (this.nodeId == id);
-
 				throw new System.NotImplementedException ();
 			}
 
@@ -386,9 +424,9 @@ namespace Epsitec.Common.Dialogs
 			private readonly DialogData host;
 			private readonly AbstractEntity externalData;
 			private readonly string nodeId;
+			private readonly FieldRelation relation;
 			private AbstractEntity proxy;
 			private AbstractEntity proxySource;
-			private int suspendCounter;
 		}
 
 		#endregion

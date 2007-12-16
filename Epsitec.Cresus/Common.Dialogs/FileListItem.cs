@@ -939,6 +939,11 @@ namespace Epsitec.Common.Dialogs
 		{
 		}
 
+		void Epsitec.Common.Types.IStructuredData.SetValue(string id, object value)
+		{
+			throw new System.InvalidOperationException ();
+		}
+
 		IEnumerable<string> Epsitec.Common.Types.IStructuredData.GetValueIds()
 		{
 			//	Retourne la liste des champs définis pour cette structure; voir
@@ -992,7 +997,7 @@ namespace Epsitec.Common.Dialogs
 			}
 		}
 
-		void Epsitec.Common.Types.IValueStore.SetValue(string id, object value)
+		void Epsitec.Common.Types.IValueStore.SetValue(string id, object value, Epsitec.Common.Types.ValueStoreSetMode mode)
 		{
 			throw new System.InvalidOperationException ();
 		}

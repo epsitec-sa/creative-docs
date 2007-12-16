@@ -519,34 +519,41 @@ namespace Epsitec.Common.Support.EntityEngine
 				}
 			}
 
-			public void SetValue(string id, object value)
+			public void SetValue(string id, object value, ValueStoreSetMode mode)
 			{
 				object oldValue;
 
-				if (this.store.TryGetValue (id, out oldValue))
+				if (mode != ValueStoreSetMode.ShortCircuit)
 				{
-					IEntityProxy proxy = oldValue as IEntityProxy;
+					if (this.store.TryGetValue (id, out oldValue))
+					{
+						IEntityProxy proxy = oldValue as IEntityProxy;
 
-					if (proxy == null)
-					{
-						IEntityProxyProvider provider = oldValue as IEntityProxyProvider;
-						
-						if (provider != null)
+						if (proxy == null)
 						{
-							proxy = provider.GetEntityProxy ();
+							IEntityProxyProvider provider = oldValue as IEntityProxyProvider;
+
+							if (provider != null)
+							{
+								proxy = provider.GetEntityProxy ();
+							}
 						}
-					}
-					
-					if ((proxy != null) &&
-						(proxy.DiscardWriteEntityValue (this, id, ref value)))
-					{
-						return;
+
+						if ((proxy != null) &&
+							(proxy.DiscardWriteEntityValue (this, id, ref value)))
+						{
+							return;
+						}
 					}
 				}
 
 				if (UndefinedValue.IsUndefinedValue (value))
 				{
 					this.store.Remove (id);
+				}
+				else if (mode == ValueStoreSetMode.ShortCircuit)
+				{
+					this.store[id] = value;
 				}
 				else
 				{

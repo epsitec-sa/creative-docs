@@ -274,21 +274,15 @@ namespace Epsitec.Common.Types
 			}
 		}
 
-		public object GetValue(string id)
-		{
-			bool usesOriginalData;
-			return this.GetValue (id, out usesOriginalData);
-		}
-
 		public void SetValue(string id, object value)
 		{
 			StructuredTypeField type;
-			
+
 			if (!this.CheckFieldIdValidity (id, out type))
 			{
 				throw new System.Collections.Generic.KeyNotFoundException (string.Format ("The value '{0}' cannot be set; it is not defined by the structure", id));
 			}
-			
+
 			if (UnknownValue.IsUnknownValue (value))
 			{
 				throw new System.ArgumentException ("UnknownValue specified");
@@ -302,7 +296,7 @@ namespace Epsitec.Common.Types
 				if (this.values != null)
 				{
 					Record record;
-					
+
 					if (this.values.TryGetValue (id, out record))
 					{
 						if ((record.IsReadOnly) &&
@@ -330,7 +324,7 @@ namespace Epsitec.Common.Types
 			{
 				if (!this.CheckValueValidity (type, value))
 				{
-//					System.Diagnostics.Debug.WriteLine (string.Format ("The value '{0}' has the wrong type or is not valid", id));
+					//					System.Diagnostics.Debug.WriteLine (string.Format ("The value '{0}' has the wrong type or is not valid", id));
 					throw new System.ArgumentException (string.Format ("The value '{0}' has the wrong type or is not valid", id));
 				}
 
@@ -353,7 +347,7 @@ namespace Epsitec.Common.Types
 					{
 						throw new System.InvalidOperationException (string.Format ("Field {0} is read only", id));
 					}
-					
+
 					handler = record.Handler;
 					record  = new Record (value, record.OriginalData, false, record.IsReadOnly, handler);
 				}
@@ -374,6 +368,21 @@ namespace Epsitec.Common.Types
 			{
 				this.InvalidateValue (id, oldValue, newValue, handler);
 			}
+		}
+
+		#endregion
+
+		#region IValueStore Interface Members
+
+		public object GetValue(string id)
+		{
+			bool usesOriginalData;
+			return this.GetValue (id, out usesOriginalData);
+		}
+
+		void IValueStore.SetValue(string id, object value, ValueStoreSetMode mode)
+		{
+			this.SetValue (id, value);
 		}
 
 		#endregion

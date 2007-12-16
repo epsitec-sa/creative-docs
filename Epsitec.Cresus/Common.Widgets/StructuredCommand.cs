@@ -65,6 +65,11 @@ namespace Epsitec.Common.Widgets
 				this.data.DetachListener (id, handler);
 			}
 
+			void IStructuredData.SetValue(string id, object value)
+			{
+				this.data.SetValue (id, value);
+			}
+
 			IEnumerable<string> IStructuredData.GetValueIds()
 			{
 				return this.data.GetValueIds ();
@@ -75,7 +80,7 @@ namespace Epsitec.Common.Widgets
 				return this.data.GetValue (id);
 			}
 
-			void IValueStore.SetValue(string id, object value)
+			void IValueStore.SetValue(string id, object value, ValueStoreSetMode mode)
 			{
 				this.data.SetValue (id, value);
 			}

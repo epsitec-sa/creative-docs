@@ -324,7 +324,7 @@ namespace Epsitec.Common.Support.EntityEngine
 			if (this.Navigate (root, out leaf, out id))
 			{
 				IValueStore store = leaf;
-				store.SetValue (id, value);
+				store.SetValue (id, value, ValueStoreSetMode.Default);
 				return true;
 			}
 

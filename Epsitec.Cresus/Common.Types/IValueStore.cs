@@ -25,6 +25,7 @@ namespace Epsitec.Common.Types
 		/// <param name="value">The value to store into the structure record;
 		/// specifying <see cref="UndefinedValue.Value"/> clears the value.
 		/// <see cref="UnknownValue.Value"/> may not be specified as a value.</param>
-		void SetValue(string id, object value);
+		/// <param name="mode">The set mode.</param>
+		void SetValue(string id, object value, ValueStoreSetMode mode);
 	}
 }

@@ -21,6 +21,14 @@ namespace Epsitec.Common.Types
 		void AttachListener(string id, PropertyChangedEventHandler handler);
 
 		/// <summary>
+		/// Sets the value. See <see cref="IValueStore.SetValue"/> for additional
+		/// details (the default mode will be used).
+		/// </summary>
+		/// <param name="id">The identifier of the value.</param>
+		/// <param name="value">The value.</param>
+		void SetValue(string id, object value);
+
+		/// <summary>
 		/// Detaches a listener from the specified structured value.
 		/// </summary>
 		/// <param name="id">The identifier of the value.</param>
