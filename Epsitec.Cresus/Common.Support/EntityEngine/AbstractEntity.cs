@@ -417,6 +417,11 @@ namespace Epsitec.Common.Support.EntityEngine
 
 		protected virtual void DynamicSetField(string id, object newValue)
 		{
+			if (UndefinedValue.IsUndefinedValue (newValue))
+			{
+				newValue = null;
+			}
+
 			PropertySetter setter = this.context.FindPropertySetter (this, id);
 
 			if (setter == null)

@@ -511,7 +511,28 @@ namespace Epsitec.Common.Support.EntityEngine
 					//	another value, if needed :
 
 					IEntityProxy proxy = value as IEntityProxy;
-					return proxy == null ? value : proxy.GetReadEntityValue (this, id);
+					
+					if (proxy == null)
+					{
+						IEntityProxyProvider provider = value as IEntityProxyProvider;
+
+						if (provider != null)
+						{
+							INullable nullableProxy = provider.GetEntityProxy () as INullable;
+
+							if ((nullableProxy != null) &&
+								(nullableProxy.IsNull))
+							{
+								return UndefinedValue.Value;
+							}
+						}
+						
+						return value;
+					}
+					else
+					{
+						return proxy.GetReadEntityValue (this, id);
+					}
 				}
 				else
 				{

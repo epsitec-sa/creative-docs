@@ -158,7 +158,7 @@ namespace Epsitec.Common.Dialogs
 		/// done on fields from an entity, which is used to track changes in
 		/// an entity graph.
 		/// </summary>
-		private class FieldProxy : IEntityProxy
+		private class FieldProxy : IEntityProxy, INullable
 		{
 			/// <summary>
 			/// Initializes a new instance of the <see cref="FieldProxy"/> class.
@@ -249,6 +249,7 @@ namespace Epsitec.Common.Dialogs
 			public object GetWriteEntityValue(IValueStore store, string id)
 			{
 				System.Diagnostics.Debug.Assert (this.nodeId == id);
+				
 				return this;
 			}
 
@@ -274,6 +275,7 @@ namespace Epsitec.Common.Dialogs
 					this.SaveOriginalValue (id, () => this.ResolveField ());
 
 					IValueStore externalStore = this.externalData;
+					AbstractEntity dataEntity;
 					
 					switch (this.externalData.InternalGetFieldRelation (id))
 					{
@@ -305,6 +307,10 @@ namespace Epsitec.Common.Dialogs
 				}
 			}
 
+			/// <summary>
+			/// Promotes the proxy to its real instance.
+			/// </summary>
+			/// <returns>The real instance.</returns>
 			public object PromoteToRealInstance()
 			{
 				throw new System.NotImplementedException ();
@@ -312,6 +318,25 @@ namespace Epsitec.Common.Dialogs
 
 			#endregion
 
+			#region INullable Members
+
+			public bool IsNull
+			{
+				get
+				{
+					return (this.proxy != null) && (this.proxySource == null);
+				}
+			}
+
+			#endregion
+			
+			/// <summary>
+			/// Wraps the specified reference within a proxy. This will create a
+			/// copy of the entity, attached to a <c>FieldProxy</c> to manage all
+			/// field accesses (both read and write).
+			/// </summary>
+			/// <param name="reference">The reference data.</param>
+			/// <returns>The wrapped data.</returns>
 			private AbstractEntity Wrap(AbstractEntity reference)
 			{
 				//	TODO: handle wrapping <null> !
@@ -320,7 +345,14 @@ namespace Epsitec.Common.Dialogs
 
 				if (provider == null)
 				{
-					return null;
+					FieldProxy proxy = new FieldProxy (this.parent, this.nodeId, this.host, this.externalData);
+					EntityContext context = this.externalData.GetEntityContext ();
+					IStructuredType type = context.GetStructuredType (this.externalData);
+
+					proxy.proxy = this.host.CreateNullProxy (proxy, context, type.GetField (this.nodeId).TypeId);
+					proxy.proxySource = null;
+					
+					return proxy.proxy;
 				}
 				else
 				{
@@ -371,6 +403,8 @@ namespace Epsitec.Common.Dialogs
 
 			private void CreateReferenceProxy(AbstractEntity reference)
 			{
+				System.Diagnostics.Debug.Assert (reference != null);
+
 				this.proxy = this.host.CreateEntityProxy (reference, this);
 				this.proxySource = reference;
 			}
@@ -458,6 +492,23 @@ namespace Epsitec.Common.Dialogs
 			{
 				copy.InternalSetValue (id, new FieldProxy (parent, id, this, entity));
 			}
+
+			return copy;
+		}
+
+		private AbstractEntity CreateNullProxy(FieldProxy parent, EntityContext context, Druid entityId)
+		{
+			if (this.mode == DialogDataMode.Transparent)
+			{
+				//	When the transparent data mode is active, there is no need
+				//	to create a proxy -- just use the source entity itself !
+
+				return null;
+			}
+
+			AbstractEntity copy = context.CreateEmptyEntity (entityId);
+
+			copy.InternalDefineProxy (parent);
 
 			return copy;
 		}

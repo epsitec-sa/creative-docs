@@ -98,6 +98,12 @@ namespace Epsitec.Common.Dialogs
 			Assert.AreEqual (1.06M, monnaie.TauxChangeVersChf);
 			
 			Assert.AreEqual (4, Collection.Count (data.Changes));
+
+			prix2.Monnaie = null;
+
+			Assert.IsNull (prix2.Monnaie);
+			data.RevertChanges ();
+			Assert.IsNotNull (prix2.Monnaie);
 		}
 
 		[Test]
@@ -193,6 +199,18 @@ namespace Epsitec.Common.Dialogs
 			Assert.AreEqual (1.06M, monnaie.TauxChangeVersChf);
 
 			Assert.AreEqual (4, Collection.Count (data.Changes));
+
+			prix2.Monnaie = null;
+
+			Assert.IsNull (prix1.Monnaie);
+			Assert.IsNull (prix2.Monnaie);
+
+			prix2.Monnaie = monnaie;
+
+			Assert.IsNotNull (prix1.Monnaie);
+			Assert.IsNotNull (prix2.Monnaie);
+			Assert.AreEqual (1.06M, prix1.Monnaie.TauxChangeVersChf);
+			Assert.AreEqual (1.06M, prix2.Monnaie.TauxChangeVersChf);
 		}
 		
 		[Test]
