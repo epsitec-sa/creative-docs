@@ -69,6 +69,14 @@ namespace Epsitec.Common.Dialogs
 				}
 			}
 		}
+
+		public UI.Panel DialogPanel
+		{
+			get
+			{
+				return this.panel;
+			}
+		}
 		
 		
 		public static Dialog Load(ResourceManager resourceManager, Druid resourceId)
@@ -197,7 +205,7 @@ namespace Epsitec.Common.Dialogs
 				return null;
 			}
 		}
-		
+
 		
 		private readonly ResourceManager		resourceManager;
 		private readonly string					name;

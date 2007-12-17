@@ -60,13 +60,7 @@ namespace Epsitec.Common.Dialogs
 			{
 				if (this.dialogWindow == null)
 				{
-					this.dialogWindow = this.CreateWindow ();
-
-					if (this.dialogWindow != null)
-					{
-						CommandDispatcher.SetDispatcher (this.dialogWindow, this.CommandDispatcher);
-						CommandContext.SetContext (this.dialogWindow, this.CommandContext);
-					}
+					this.CreateDialogWindow ();
 				}
 
 				return this.dialogWindow;
@@ -343,6 +337,16 @@ namespace Epsitec.Common.Dialogs
 			}
 		}
 
+		protected virtual void OnDialogWindowCreated()
+		{
+			if (this.DialogWindowCreated != null)
+			{
+				this.DialogWindowCreated (this);
+			}
+		}
+
+
+
 		/// <summary>
 		/// Called when the window owner changed.
 		/// </summary>
@@ -356,8 +360,42 @@ namespace Epsitec.Common.Dialogs
 		protected virtual void SetDefaultFocus()
 		{
 		}
-		
-		
+
+
+		private void CreateDialogWindow()
+		{
+			this.dialogWindow = this.CreateWindow ();
+
+			if (this.dialogWindow != null)
+			{
+				this.OnDialogWindowCreated ();
+
+				this.dialogWindow.MakeSecondaryWindow ();
+				this.dialogWindow.PreventAutoClose = true;
+
+				if (!this.ContainsCommand (Res.Commands.Dialog.Generic.Cancel))
+				{
+					this.dialogWindow.MakeButtonlessWindow ();
+				}
+				
+				CommandDispatcher.SetDispatcher (this.dialogWindow, this.CommandDispatcher);
+				CommandContext.SetContext (this.dialogWindow, this.CommandContext);
+			}
+		}
+
+		private bool ContainsCommand(Command command)
+		{
+			if (this.dialogWindow != null)
+			{
+				if (this.dialogWindow.Root.FindCommandWidget (command) != null)
+				{
+					return true;
+				}
+			}
+
+			return false;
+		}
+
 		private void HandleWindowShown(object sender)
 		{
 			this.OnDialogOpened ();
@@ -369,6 +407,8 @@ namespace Epsitec.Common.Dialogs
 			this.SetDefaultFocus ();
 		}
 
+		public event EventHandler DialogWindowCreated;
+		
 		
 		public event EventHandler				DialogOpening;
 		public event EventHandler				DialogOpened;
