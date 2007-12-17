@@ -109,6 +109,22 @@ namespace Epsitec.Common.Dialogs
 
 
 		/// <summary>
+		/// Binds the dialog data to the specified user interface.
+		/// </summary>
+		/// <param name="panel">The user interface panel.</param>
+		public void BindToUserInterface(UI.Panel panel)
+		{
+			if (panel != null)
+			{
+				IStructuredData data = this.Data;
+				UI.DataSource source = panel.DataSource;
+
+				source.SetDataSource (UI.DataSource.DataName, data);
+			}
+		}
+
+
+		/// <summary>
 		/// Walks through every change done by the user on the dialog data. This
 		/// filters changes done in referenced entities if the reference itself
 		/// was changed too.

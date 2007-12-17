@@ -124,10 +124,7 @@ namespace Epsitec.Common.Dialogs
 		{
 			if (this.panel != null)
 			{
-				IStructuredData data = this.DialogData.Data;
-				UI.DataSource source = this.panel.DataSource;
-
-				source.SetDataSource (UI.DataSource.DataName, data);
+				this.DialogData.BindToUserInterface (this.panel);
 			}
 		}
 
