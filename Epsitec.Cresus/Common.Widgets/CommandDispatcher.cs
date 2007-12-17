@@ -1,5 +1,5 @@
 //	Copyright © 2003-2007, EPSITEC SA, CH-1092 BELMONT, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using System.Text.RegularExpressions;
 using System.Collections.Generic;
@@ -8,6 +8,8 @@ using Epsitec.Common.Types;
 
 namespace Epsitec.Common.Widgets
 {
+	using BindingFlags=System.Reflection.BindingFlags;
+
 	/// <summary>
 	/// La classe CommandDispatcher permet de gérer la distribution des
 	/// commandes de l'interface graphique vers les routines de traitement.
@@ -147,18 +149,20 @@ namespace Epsitec.Common.Widgets
 		/// with the <see cref="Epsitec.Common.Support.CommandAttribute"/> attribute.
 		/// </summary>
 		/// <param name="controller">The controller.</param>
-		public void RegisterController(object controller)
+		public void RegisterController(object target)
 		{
+			object controller = CommandDispatcher.ResolveWeakController (target);
+
 			if (controller != null)
 			{
 				System.Type type = controller.GetType ();
 				
-				foreach (System.Reflection.MemberInfo member in type.GetMembers (System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.NonPublic))
+				foreach (System.Reflection.MemberInfo member in type.GetMembers (BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic))
 				{
 					if ((member.IsDefined (CommandDispatcher.commandAttributeType, true)) &&
 						(member.MemberType == System.Reflection.MemberTypes.Method))
 					{
-						this.RegisterMethod (controller, member as System.Reflection.MethodInfo);
+						this.RegisterMethod (target, member as System.Reflection.MethodInfo);
 					}
 				}
 			}
@@ -181,15 +185,7 @@ namespace Epsitec.Common.Widgets
 		/// <param name="handler">The command handler.</param>
 		public void Register(Command command, CommandEventHandler handler)
 		{
-			EventSlot slot;
-			
-			if (this.eventHandlers.TryGetValue (command, out slot) == false)
-			{
-				slot = new EventSlot (command);
-				this.eventHandlers[command] = slot;
-			}
-			
-			slot.Register (handler);
+			this.Register (command, new DelegateHandler (handler));
 		}
 
 		/// <summary>
@@ -203,12 +199,45 @@ namespace Epsitec.Common.Widgets
 			
 			if (this.eventHandlers.TryGetValue (command, out slot))
 			{
-				slot.Unregister (handler);
+				slot.Unregister (new DelegateHandler (handler));
 				
 				if (slot.IsEmpty)
 				{
 					this.eventHandlers.Remove (command);
 				}
+			}
+		}
+
+		private void Register(Command command, AbstractHandler handler)
+		{
+			EventSlot slot;
+
+			if (this.eventHandlers.TryGetValue (command, out slot) == false)
+			{
+				slot = new EventSlot (command);
+				this.eventHandlers[command] = slot;
+			}
+
+			slot.Register (handler);
+		}
+
+		private void Unregister(MethodHandler handler)
+		{
+			List<Command> list = new List<Command> ();
+
+			foreach (EventSlot slot in this.eventHandlers.Values)
+			{
+				slot.Unregister (handler);
+
+				if (slot.IsEmpty)
+				{
+					list.Add (slot.Command);
+				}
+			}
+
+			foreach (Command command in list)
+			{
+				this.eventHandlers.Remove (command);
 			}
 		}
 
@@ -240,66 +269,6 @@ namespace Epsitec.Common.Widgets
 			base.Dispose (disposing);
 		}
 		
-		#region EventSlot class
-		
-		/// <summary>
-		/// The <c>EventSlot</c> class is used to map a command to one or more
-		/// command handlers. It is a wrapper for the <c>CommandEventHandler</c>
-		/// event.
-		/// </summary>
-		private sealed class EventSlot : ICommandDispatcher
-		{
-			public EventSlot(Command command)
-			{
-				this.command = command;
-			}
-			
-			public bool							IsEmpty
-			{
-				get
-				{
-					return this.handler == null;
-				}
-			}
-
-			public Command						Command
-			{
-				get
-				{
-					return this.command;
-				}
-			}
-			
-			public void Register(CommandEventHandler handler)
-			{
-				this.handler += handler;
-			}
-			
-			public void Unregister(CommandEventHandler handler)
-			{
-				this.handler -= handler;
-			}
-
-			#region ICommandDispatcher Members
-
-			public bool ExecuteCommand(CommandDispatcher sender, CommandEventArgs e)
-			{
-				if (this.handler != null)
-				{
-					this.handler (sender, e);
-					return true;
-				}
-				
-				return false;
-			}
-
-			#endregion
-
-			private Command						command;
-			private event CommandEventHandler	handler;
-		}
-		#endregion
-
 		static CommandDispatcher()
 		{
 #if false
@@ -344,7 +313,21 @@ namespace Epsitec.Common.Widgets
 			System.Diagnostics.Debug.Assert (defaultDispatcher.id == 1);
 		}
 
-		private void RegisterMethod(object controller, System.Reflection.MethodInfo info)
+		private static object ResolveWeakController(object controller)
+		{
+			System.WeakReference weak = controller as System.WeakReference;
+
+			if (weak == null)
+			{
+				return controller;
+			}
+			else
+			{
+				return weak.Target;
+			}
+		}
+		
+		private void RegisterMethod(object target, System.Reflection.MethodInfo info)
 		{
 			//	Ne parcourt que les attributs au niveau d'implémentation actuel (pas les classes dérivées,
 			//	ni les classes parent). Le parcours des parent est assuré par l'appelant.
@@ -353,57 +336,266 @@ namespace Epsitec.Common.Widgets
 			
 			foreach (Support.CommandAttribute attribute in attributes)
 			{
-				this.RegisterMethod (controller, info, attribute);
+				this.RegisterMethod (target, info, attribute);
 			}
 		}
 
-		private void RegisterMethod(object controller, System.Reflection.MethodInfo method_info, Support.CommandAttribute attribute)
+		private void RegisterMethod(object target, System.Reflection.MethodInfo methodInfo, Support.CommandAttribute attribute)
 		{
-			System.Reflection.ParameterInfo[] param_info = method_info.GetParameters ();
-			
-			CommandEventHandler handler = null;
-			
-			switch (param_info.Length)
+			if (string.IsNullOrEmpty (attribute.CommandName))
 			{
-				case 0:		//	void Method()
-					
-					handler = delegate (CommandDispatcher sender, CommandEventArgs e) { method_info.Invoke (controller, null); };
-					break;
-				
-				case 1:		//	void Method(CommandDispatcher)
-					
-					if (param_info[0].ParameterType == typeof (CommandDispatcher))
-					{
-						handler = delegate (CommandDispatcher sender, CommandEventArgs e) { method_info.Invoke (controller, new object[] { sender }); };
-					}
-					break;
-				
-				case 2:		//	void Method(CommandDispatcher, CommandEventArgs)
-					
-					if ((param_info[0].ParameterType == typeof (CommandDispatcher)) &&
-						(param_info[1].ParameterType == typeof (CommandEventArgs)))
-					{
-						handler = delegate (CommandDispatcher sender, CommandEventArgs e) { method_info.Invoke (controller, new object[] { sender, e }); };
-					}
-					break;
-			}
-			
-			if (handler == null)
-			{
-				throw new System.FormatException (string.Format ("{0}.{1} uses invalid signature: {2}.", controller.GetType ().Name, method_info.Name, method_info.ToString ()));
-			}
-
-			string commandName = attribute.CommandName;
-			
-			if (string.IsNullOrEmpty (commandName))
-			{
-				this.Register (Command.Get (Support.Druid.FromLong (attribute.Druid)), handler);
+				this.Register (Command.Get (attribute.CommandId), new MethodHandler (target, methodInfo));
 			}
 			else
 			{
-				this.Register (Command.Get (attribute.CommandName), handler);
+				this.Register (Command.Get (attribute.CommandName), new MethodHandler (target, methodInfo));
 			}
 		}
+
+		#region EventSlot Class
+		
+		/// <summary>
+		/// The <c>EventSlot</c> class is used to map a command to one or more
+		/// command handlers (see <see cref="AbstractHandler"/>).
+		/// </summary>
+		private sealed class EventSlot : ICommandDispatcher
+		{
+			public EventSlot(Command command)
+			{
+				this.command = command;
+				this.handlers = new List<AbstractHandler> ();
+			}
+			
+			public bool							IsEmpty
+			{
+				get
+				{
+					return this.handlers.Count == 0;
+				}
+			}
+
+			public Command						Command
+			{
+				get
+				{
+					return this.command;
+				}
+			}
+
+			/// <summary>
+			/// Registers the specified handler. Duplicates are allowed.
+			/// </summary>
+			/// <param name="handler">The handler.</param>
+			public void Register(AbstractHandler handler)
+			{
+				this.handlers.Add (handler);
+			}
+
+			/// <summary>
+			/// Unregisters the specified handler. The comparison uses instance
+			/// equality, not reference equality.
+			/// </summary>
+			/// <param name="handler">The handler.</param>
+			public void Unregister(AbstractHandler handler)
+			{
+				this.handlers.RemoveAll (x => x.Equals (handler));
+			}
+
+			#region ICommandDispatcher Members
+
+			public bool ExecuteCommand(CommandDispatcher sender, CommandEventArgs e)
+			{
+				AbstractHandler[] handlers = this.handlers.ToArray ();
+				bool executed = false;
+
+				foreach (AbstractHandler handler in handlers)
+				{
+					if (handler.Invoke (sender, e))
+					{
+						executed = true;
+					}
+				}
+				
+				return executed;
+			}
+
+			#endregion
+
+			readonly Command					command;
+			readonly List<AbstractHandler>		handlers;
+		}
+		
+		#endregion
+
+		#region AbstractHandler Class
+
+		/// <summary>
+		/// The <c>AbstractHandler</c> class is an abstract base class used to
+		/// implement <see cref="DelegateHandler"/> and <see cref="MethodHandler"/>.
+		/// </summary>
+		private abstract class AbstractHandler
+		{
+			public abstract bool Invoke(CommandDispatcher dispatcher, CommandEventArgs e);
+
+			public abstract bool Equals(AbstractHandler other);
+		}
+
+		#endregion
+
+		#region DelegateHandler Class
+
+		/// <summary>
+		/// The <c>DelegateHandler</c> class knows how to invoke a delegate
+		/// which maps to a command handler.
+		/// </summary>
+		private class DelegateHandler : AbstractHandler
+		{
+			public DelegateHandler(CommandEventHandler handler)
+			{
+				this.handler = handler;
+			}
+
+			public override bool Invoke(CommandDispatcher dispatcher, CommandEventArgs e)
+			{
+				if (this.handler != null)
+				{
+					this.handler (dispatcher, e);
+					return true;
+				}
+				else
+				{
+					return false;
+				}
+			}
+
+			public override bool Equals(AbstractHandler obj)
+			{
+				DelegateHandler other = obj as DelegateHandler;
+
+				if (other == null)
+				{
+					return false;
+				}
+				else
+				{
+					return this.handler == other.handler;
+				}
+			}
+
+			private readonly CommandEventHandler handler;
+		}
+
+		#endregion
+
+		#region MethodHandler Class
+
+		/// <summary>
+		/// The <c>MethodHandler</c> class knows how to invoke the method of a
+		/// target object, which might be defined as a weak reference.
+		/// </summary>
+		private class MethodHandler : AbstractHandler
+		{
+			public MethodHandler(object controller, System.Reflection.MethodInfo methodInfo)
+			{
+				System.Reflection.ParameterInfo[] paramInfo = methodInfo.GetParameters ();
+				
+				switch (paramInfo.Length)
+				{
+					case 0:		//	void Method()
+						this.methodVersion = MethodVersion.ZeroArgument;
+						break;
+
+					case 1:		//	void Method(CommandDispatcher)
+						if (paramInfo[0].ParameterType == typeof (CommandDispatcher))
+						{
+							this.methodVersion = MethodVersion.DispatcherOnly;
+						}
+						break;
+
+					case 2:		//	void Method(CommandDispatcher, CommandEventArgs)
+						if ((paramInfo[0].ParameterType == typeof (CommandDispatcher)) &&
+							(paramInfo[1].ParameterType == typeof (CommandEventArgs)))
+						{
+							this.methodVersion = MethodVersion.DispatcherAndArgs;
+						}
+						break;
+				}
+
+				if (this.methodVersion == MethodVersion.Undefined)
+				{
+					throw new System.FormatException (string.Format ("{0}.{1} uses invalid signature: {2}.", controller.GetType ().Name, methodInfo.Name, methodInfo.ToString ()));
+				}
+
+				this.controller = controller;
+				this.methodInfo = methodInfo;
+			}
+
+			public object Target
+			{
+				get
+				{
+					return CommandDispatcher.ResolveWeakController (this.controller);
+				}
+			}
+
+			public override bool Invoke(CommandDispatcher dispatcher, CommandEventArgs e)
+			{
+				object target = this.Target;
+
+				if (target == null)
+				{
+					dispatcher.Unregister (this);
+				}
+				else
+				{
+					switch (this.methodVersion)
+					{
+						case MethodVersion.ZeroArgument:
+							this.methodInfo.Invoke (target, null);
+							return true;
+
+						case MethodVersion.DispatcherOnly:
+							this.methodInfo.Invoke (target, new object[] { dispatcher });
+							return true;
+
+						case MethodVersion.DispatcherAndArgs:
+							this.methodInfo.Invoke (target, new object[] { dispatcher, e });
+							return true;
+					}
+				}
+
+				return false;
+			}
+
+			public override bool Equals(AbstractHandler obj)
+			{
+				MethodHandler other = obj as MethodHandler;
+
+				if (other == null)
+				{
+					return false;
+				}
+				else
+				{
+					return this.Target == other.Target
+						&& this.methodInfo == other.methodInfo;
+				}
+			}
+
+			private enum MethodVersion
+			{
+				Undefined,
+				ZeroArgument,
+				DispatcherOnly,
+				DispatcherAndArgs
+			}
+
+			private readonly object controller;
+			private readonly MethodVersion methodVersion;
+			private readonly System.Reflection.MethodInfo methodInfo;
+		}
+
+		#endregion
 
 		private bool DispatchCommand(CommandContextChain contextChain, Command commandObject, object source)
 		{

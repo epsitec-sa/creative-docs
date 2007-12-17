@@ -128,12 +128,40 @@ namespace Epsitec.Common.Dialogs
 			base.OnDialogClosed ();
 		}
 
+		protected override void OnDialogWindowCreated()
+		{
+			base.OnDialogWindowCreated ();
+
+			this.CommandDispatcher.Register (Res.Commands.Dialog.Generic.Cancel, this.HandleCancelCommand);
+			this.CommandDispatcher.Register (Res.Commands.Dialog.Generic.Ok, this.HandleAcceptCommand);
+			this.CommandDispatcher.Register (Res.Commands.Dialog.Generic.Apply, this.HandleApplyCommand);
+		}
+
 		protected override void SetDefaultFocus()
 		{
 			if (this.panel != null)
 			{
 				this.panel.SetFocusOnTabWidget ();
 			}
+		}
+
+		protected virtual void HandleCancelCommand()
+		{
+			this.dialogData.RevertChanges ();
+			this.DialogResult = DialogResult.Cancel;
+			this.CloseDialog ();
+		}
+
+		protected virtual void HandleAcceptCommand()
+		{
+			this.DialogData.ApplyChanges ();
+			this.DialogResult = DialogResult.Accept;
+			this.CloseDialog ();
+		}
+
+		protected virtual void HandleApplyCommand()
+		{
+			this.DialogData.ApplyChanges ();
 		}
 
 		private void InitializeDataBinding()

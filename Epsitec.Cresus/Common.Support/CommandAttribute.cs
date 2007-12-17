@@ -1,5 +1,5 @@
 //	Copyright © 2004-2007, EPSITEC SA, CH-1092 BELMONT, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 namespace Epsitec.Common.Support
 {
@@ -33,10 +33,10 @@ namespace Epsitec.Common.Support
 		/// <summary>
 		/// Initializes a new instance of the <see cref="CommandAttribute"/> class.
 		/// </summary>
-		/// <param name="druid">The DRUID (encoded as a raw <c>long</c> value) of the command.</param>
-		public CommandAttribute(long druid)
+		/// <param name="commandId">The command DRUID (encoded as a raw <c>long</c> value).</param>
+		public CommandAttribute(long commandId)
 		{
-			this.druid = druid;
+			this.commandId = commandId;
 		}
 
 
@@ -56,25 +56,15 @@ namespace Epsitec.Common.Support
 			}
 		}
 
-		/// <summary>
-		/// Gets or sets the DRUID of the command.
-		/// </summary>
-		/// <value>The DRUID of the command.</value>
-		public long								Druid
+		public Druid							CommandId
 		{
 			get
 			{
-				return this.druid;
-			}
-			set
-			{
-				this.druid = value;
+				return Druid.FromLong (this.commandId);
 			}
 		}
-	
-		
-		
+
 		private string							commandName;
-		private long							druid;
+		private long							commandId;
 	}
 }
