@@ -48,7 +48,7 @@ namespace Epsitec.Common.Dialogs
 		{
 			get
 			{
-				return this.oldValue;
+				return this.oldValue ?? UndefinedValue.Value;
 			}
 		}
 
@@ -60,7 +60,7 @@ namespace Epsitec.Common.Dialogs
 		{
 			get
 			{
-				return this.newValue;
+				return this.newValue ?? UndefinedValue.Value;
 			}
 		}
 
@@ -72,13 +72,12 @@ namespace Epsitec.Common.Dialogs
 		{
 			get
 			{
-				if (this.oldValue != this.newValue)
+				object oldValue = this.OldValue;
+				object newValue = this.NewValue;
+				
+				if (oldValue != newValue)
 				{
-					if (this.oldValue == null)
-					{
-						return true;
-					}
-					if (this.oldValue.Equals (this.newValue) == false)
+					if (oldValue.Equals (newValue) == false)
 					{
 						return true;
 					}

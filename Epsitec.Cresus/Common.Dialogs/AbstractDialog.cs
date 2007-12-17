@@ -373,7 +373,11 @@ namespace Epsitec.Common.Dialogs
 				this.dialogWindow.MakeSecondaryWindow ();
 				this.dialogWindow.PreventAutoClose = true;
 
-				if (!this.ContainsCommand (Res.Commands.Dialog.Generic.Cancel))
+				if (this.ContainsCommand (Res.Commands.Dialog.Generic.Cancel))
+				{
+					this.dialogWindow.WindowCloseClicked += this.HandleWindowCloseClicked;
+				}
+				else
 				{
 					this.dialogWindow.MakeButtonlessWindow ();
 				}
@@ -394,6 +398,11 @@ namespace Epsitec.Common.Dialogs
 			}
 
 			return false;
+		}
+
+		private void HandleWindowCloseClicked(object sender)
+		{
+			this.DialogWindow.Root.ExecuteCommand (Res.Commands.Dialog.Generic.Cancel);
 		}
 
 		private void HandleWindowShown(object sender)
