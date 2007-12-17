@@ -229,6 +229,8 @@ namespace Epsitec.Common.Dialogs
 			Assert.AreEqual (10.0M, prix2.Ht);
 			Assert.AreEqual ("CHF", prix2.Monnaie.Désignation);
 
+			MonnaieEntity monnaie = prix2.Monnaie;
+
 			prix2.Ht = 15.0M;
 			prix2.Monnaie.Désignation = "EUR";
 
@@ -237,6 +239,18 @@ namespace Epsitec.Common.Dialogs
 
 			Assert.AreEqual (prix1, prix2);
 			Assert.AreEqual (0, Collection.Count (data.Changes));
+			
+			prix2.Monnaie = null;
+
+			Assert.IsNull (prix1.Monnaie);
+			Assert.IsNull (prix2.Monnaie);
+
+			prix2.Monnaie = monnaie;
+
+			Assert.IsNotNull (prix1.Monnaie);
+			Assert.IsNotNull (prix2.Monnaie);
+			Assert.AreEqual ("EUR", prix1.Monnaie.Désignation);
+			Assert.AreEqual ("EUR", prix2.Monnaie.Désignation);
 		}
 	}
 }

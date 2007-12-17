@@ -514,11 +514,17 @@ namespace Epsitec.Common.Support.EntityEngine
 					
 					if (proxy == null)
 					{
+						//	If the value has an attached proxy, check to see if this
+						//	should be handled as a null value :
+
 						IEntityProxyProvider provider = value as IEntityProxyProvider;
 
 						if (provider != null)
 						{
 							INullable nullableProxy = provider.GetEntityProxy () as INullable;
+
+							//	This trick is needed to properly implement proxying null
+							//	values in the DialogData class.
 
 							if ((nullableProxy != null) &&
 								(nullableProxy.IsNull))

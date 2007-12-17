@@ -232,8 +232,8 @@ namespace Epsitec.Common.Dialogs
 				{
 					//	Record the original value for this node, if we have never done
 					//	so previously, then overwrite the value in the data field.
-					
-					this.SaveOriginalValue (id, () => value);
+
+					this.SaveOriginalValue (() => value);
 					store.SetValue (id, value, ValueStoreSetMode.ShortCircuit);
 				}
 				
@@ -272,7 +272,7 @@ namespace Epsitec.Common.Dialogs
 					//	The value store is about to overwrite our value with the specified
 					//	new value.
 
-					this.SaveOriginalValue (id, () => this.ResolveField ());
+					this.SaveOriginalValue (() => this.ResolveField ());
 
 					IValueStore externalStore = this.externalData;
 					
@@ -319,6 +319,10 @@ namespace Epsitec.Common.Dialogs
 
 			#region INullable Members
 
+			/// <summary>
+			/// Gets a value indicating whether this proxy represents a null value.
+			/// </summary>
+			/// <value><c>true</c> if the value is null; otherwise, <c>false</c>.</value>
 			public bool IsNull
 			{
 				get
@@ -416,9 +420,9 @@ namespace Epsitec.Common.Dialogs
 				throw new System.NotImplementedException ();
 			}
 
-			private void SaveOriginalValue(string id, System.Func<object> valueGetter)
+			private void SaveOriginalValue(System.Func<object> valueGetter)
 			{
-				EntityFieldPath path = this.GetFieldPath (id);
+				EntityFieldPath path = this.GetFieldPath ();
 
 				if (this.host.originalValues.ContainsKey (path) == false)
 				{
@@ -426,19 +430,14 @@ namespace Epsitec.Common.Dialogs
 				}
 			}
 
-			private EntityFieldPath GetFieldPath(string id)
+			private EntityFieldPath GetFieldPath()
 			{
-				return EntityFieldPath.CreateRelativePath (this.GetNodeIds (null));
+				return EntityFieldPath.CreateRelativePath (this.GetNodeIds ());
 			}
 
-			private IEnumerable<string> GetNodeIds(string id)
+			private IEnumerable<string> GetNodeIds()
 			{
 				Stack<string> nodes = new Stack<string> ();
-
-				if (id != null)
-				{
-					nodes.Push (id);
-				}
 
 				if (this.nodeId != null)
 				{
