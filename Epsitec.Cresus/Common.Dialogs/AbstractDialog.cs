@@ -251,6 +251,8 @@ namespace Epsitec.Common.Dialogs
 
 			this.OnDialogOpening ();
 
+			window.WindowFocused += this.HandleWindowFocused;
+
 			if (this.isModalDialog)
 			{
 				window.WindowShown += this.HandleWindowShown;
@@ -347,14 +349,26 @@ namespace Epsitec.Common.Dialogs
 		protected virtual void OnWindowOwnerChanged()
 		{
 		}
+
+		/// <summary>
+		/// Sets the focus on the default widget.
+		/// </summary>
+		protected virtual void SetDefaultFocus()
+		{
+		}
 		
 		
 		private void HandleWindowShown(object sender)
 		{
 			this.OnDialogOpened ();
 		}
-		
-		
+
+		private void HandleWindowFocused(object sender)
+		{
+			this.DialogWindow.WindowFocused -= this.HandleWindowFocused;
+			this.SetDefaultFocus ();
+		}
+
 		
 		public event EventHandler				DialogOpening;
 		public event EventHandler				DialogOpened;

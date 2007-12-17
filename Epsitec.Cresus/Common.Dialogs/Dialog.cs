@@ -120,6 +120,14 @@ namespace Epsitec.Common.Dialogs
 			base.OnDialogClosed ();
 		}
 
+		protected override void SetDefaultFocus()
+		{
+			if (this.panel != null)
+			{
+				this.panel.SetFocusOnTabWidget ();
+			}
+		}
+
 		private void InitializeDataBinding()
 		{
 			if (this.panel != null)

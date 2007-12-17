@@ -158,8 +158,6 @@ namespace Epsitec.Common.Widgets
 			Application.thread = System.Threading.Thread.CurrentThread;
 		}
 		
-		private static System.Threading.Thread thread;
-
 		public static bool HasQueuedAsyncCallback(Support.SimpleCallback callback)
 		{
 			lock (Application.queueExclusion)
@@ -256,11 +254,15 @@ namespace Epsitec.Common.Widgets
 						Application.pendingCallbacks = new Queue<Support.SimpleCallback> ();
 					}
 
+					System.Diagnostics.Debug.WriteLine ("Executing async callbacks, started.");
+
 					while (Application.runningCallbacks.Count > 0)
 					{
 						Support.SimpleCallback callback = Application.runningCallbacks.Dequeue ();
 						callback ();
 					}
+
+					System.Diagnostics.Debug.WriteLine ("Executing async callbacks, done.");
 				}
 				finally
 				{
@@ -303,17 +305,19 @@ namespace Epsitec.Common.Widgets
 		}
 
 		public static readonly DependencyProperty ApplicationProperty = DependencyProperty.RegisterAttached ("Application", typeof (Application), typeof (Application));
-		
-		private static object queueExclusion = new object ();
+
+		private static readonly System.Threading.Thread thread;
+		private static readonly object queueExclusion = new object ();
 		private static Queue<Support.SimpleCallback> pendingCallbacks = new Queue<Support.SimpleCallback> ();
 		private static Queue<Support.SimpleCallback> runningCallbacks = new Queue<Support.SimpleCallback> ();
 		private static bool executingAsyncCallbacks;
 		private static int waitCursorCount;
 
+		private readonly CommandDispatcher commandDispatcher;
+		private readonly CommandContext commandContext;
+		private readonly Support.ResourceManager resourceManager;
+		private readonly Support.ResourceManagerPool resourceManagerPool;
+		
 		private Window window;
-		private CommandDispatcher commandDispatcher;
-		private CommandContext commandContext;
-		private Support.ResourceManager resourceManager;
-		private Support.ResourceManagerPool resourceManagerPool;
 	}
 }
