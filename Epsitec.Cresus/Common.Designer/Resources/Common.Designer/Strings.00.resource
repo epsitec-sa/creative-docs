@@ -23,14 +23,14 @@
   <data name="BundleType.String" id="0J6" mod="1">Texte</data>
   <data name="BundleType.Field" id="02A">Champ</data>
   <data name="BundleType.Fields" id="03A">Champs</data>
-  <data name="BundleType.Panel" id="0K6" mod="1">Interface</data>
+  <data name="BundleType.Panel" id="0K6" mod="1">Panneau</data>
   <data name="BundleType.Script" id="0L6" mod="1">Script</data>
   <data name="BundleType.Caption" id="0M6" mod="1">Légende</data>
   <data name="BundleType.Command" id="0N6" mod="1">Commande</data>
   <data name="BundleType.Type" id="0O6" mod="1">Type</data>
   <data name="BundleType.Value" id="0P6" mod="1">Valeur</data>
   <data name="BundleType.Strings" id="0I">Textes</data>
-  <data name="BundleType.Panels" id="0J">Interfaces</data>
+  <data name="BundleType.Panels" id="0J">Panneaux</data>
   <data name="BundleType.Scripts" id="0K">Scripts</data>
   <data name="BundleType.Captions" id="075" mod="1">Légendes</data>
   <data name="BundleType.Commands" id="085" mod="1">Commandes</data>
@@ -221,7 +221,7 @@
   <data name="Action.ObjectGroup" id="0D3">Groupe invisible</data>
   <data name="Action.ObjectGroupFrame" id="0O9">Groupe avec cadre</data>
   <data name="Action.ObjectGroupBox" id="055" mod="1">Groupe avec cadre et étiquette</data>
-  <data name="Action.ObjectPanel" id="098">Interface imbriquée</data>
+  <data name="Action.ObjectPanel" id="098">Panneau imbriqué</data>
   <data name="Action.ObjectTable" id="0N9">Table de données</data>
   <data name="StringCollection.Add" id="0E5" mod="1">Créer un nouveau texte</data>
   <data name="StringCollection.Duplicate" id="0F5" mod="1">Dupliquer le texte</data>
