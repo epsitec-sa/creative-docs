@@ -275,9 +275,8 @@ namespace Epsitec.Common.Dialogs
 					this.SaveOriginalValue (id, () => this.ResolveField ());
 
 					IValueStore externalStore = this.externalData;
-					AbstractEntity dataEntity;
 					
-					switch (this.externalData.InternalGetFieldRelation (id))
+					switch (this.relation)
 					{
 						case FieldRelation.None:
 							//	Update the external data field and keep our proxy in the
@@ -339,18 +338,21 @@ namespace Epsitec.Common.Dialogs
 			/// <returns>The wrapped data.</returns>
 			private AbstractEntity Wrap(AbstractEntity reference)
 			{
-				//	TODO: handle wrapping <null> !
-
 				IEntityProxyProvider provider = reference;
 
 				if (provider == null)
 				{
-					FieldProxy proxy = new FieldProxy (this.parent, this.nodeId, this.host, this.externalData);
+					//	Wrapping a null entity requires some work; we have to create
+					//	a fake entity in order to attach a proxy to it and then rely
+					//	on IValueStore.GetValue to properly handle the fact that the
+					//	entity should be handled as a null.
+
 					EntityContext context = this.externalData.GetEntityContext ();
 					IStructuredType type = context.GetStructuredType (this.externalData);
 
+					FieldProxy proxy = new FieldProxy (this.parent, this.nodeId, this.host, this.externalData);
+					
 					proxy.proxy = this.host.CreateNullProxy (proxy, context, type.GetField (this.nodeId).TypeId);
-					proxy.proxySource = null;
 					
 					return proxy.proxy;
 				}
