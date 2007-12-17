@@ -6,10 +6,6 @@
     <ProjectGuid>{8960D1EA-3B82-49A1-9D44-F92F467209FF}</ProjectGuid>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ApplicationIcon>
-    </ApplicationIcon>
-    <AssemblyKeyContainerName>
-    </AssemblyKeyContainerName>
     <AssemblyName>Common.Types</AssemblyName>
     <AssemblyOriginatorKeyFile>..\Epsitec.Cresus.snk</AssemblyOriginatorKeyFile>
     <DefaultClientScript>JScript</DefaultClientScript>
@@ -19,14 +15,7 @@
     <OutputType>Library</OutputType>
     <RootNamespace>Epsitec.Common.Types</RootNamespace>
     <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
-    <StartupObject>
-    </StartupObject>
-    <FileUpgradeFlags>
-    </FileUpgradeFlags>
     <SignAssembly>true</SignAssembly>
-    <OldToolsVersion>2.0</OldToolsVersion>
-    <UpgradeBackupLocation>
-    </UpgradeBackupLocation>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <OutputPath>bin\Debug\</OutputPath>
@@ -94,6 +83,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\Properties\AssemblyInfo.Solution.cs">
+      <Link>Properties\AssemblyInfo.Solution.cs</Link>
+    </Compile>
     <Compile Include="AbstractDataCollection.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -204,140 +196,58 @@
     <Compile Include="InheritedPropertyCache.cs" />
     <Compile Include="IStructuredData.cs" />
     <Compile Include="ISerializationConverter.cs" />
-    <Compile Include="AssemblyInfo.cs">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Binding.cs" />
     <Compile Include="BindingExpression.cs" />
-    <Compile Include="BooleanType.cs">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="BooleanType.cs" />
     <Compile Include="Collection.cs" />
     <Compile Include="DependencyClassAttribute.cs" />
     <Compile Include="DependencyPropertyMetadataWithInheritance.cs" />
-    <Compile Include="DependencyObjectCallbacks.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Comparer.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="InvariantConverter.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Copier.cs">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="DependencyObjectCallbacks.cs" />
+    <Compile Include="Comparer.cs" />
+    <Compile Include="InvariantConverter.cs" />
+    <Compile Include="Copier.cs" />
     <Compile Include="BindingMode.cs" />
     <Compile Include="BindingUpdateMode.cs" />
     <Compile Include="DataSourceType.cs" />
     <Compile Include="DependencyObjectTree.cs" />
-    <Compile Include="DataGraph.cs">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="DataGraph.cs" />
     <Compile Include="DataObject.cs" />
-    <Compile Include="Date.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="DecimalRange.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="DecimalType.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="EnumType.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="DependencyPropertyChangedEventArgs.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="HiddenAttribute.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="INotifyChanged.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="IDataCollection.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="IDataConstraint.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="IDataFolder.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="IDataGraph.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="IDataItem.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="IDataValue.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="IEnumType.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="IEnumValue.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="IName.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="ICaption.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="INamedType.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="IntegerType.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="INullable.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="INumericType.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="InvalidValue.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="INotifyPropertyChanged.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="IReadOnly.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="IStringDict.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="IStringType.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="PropertyValuePair.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="LongIntegerType.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="DependencyObject.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="DependencyObjectType.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="OpenEnumType.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="DependencyProperty.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="DependencyPropertyMetadata.cs">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="Date.cs" />
+    <Compile Include="DecimalRange.cs" />
+    <Compile Include="DecimalType.cs" />
+    <Compile Include="EnumType.cs" />
+    <Compile Include="DependencyPropertyChangedEventArgs.cs" />
+    <Compile Include="HiddenAttribute.cs" />
+    <Compile Include="INotifyChanged.cs" />
+    <Compile Include="IDataCollection.cs" />
+    <Compile Include="IDataConstraint.cs" />
+    <Compile Include="IDataFolder.cs" />
+    <Compile Include="IDataGraph.cs" />
+    <Compile Include="IDataItem.cs" />
+    <Compile Include="IDataValue.cs" />
+    <Compile Include="IEnumType.cs" />
+    <Compile Include="IEnumValue.cs" />
+    <Compile Include="IName.cs" />
+    <Compile Include="ICaption.cs" />
+    <Compile Include="INamedType.cs" />
+    <Compile Include="IntegerType.cs" />
+    <Compile Include="INullable.cs" />
+    <Compile Include="INumericType.cs" />
+    <Compile Include="InvalidValue.cs" />
+    <Compile Include="INotifyPropertyChanged.cs" />
+    <Compile Include="IReadOnly.cs" />
+    <Compile Include="IStringDict.cs" />
+    <Compile Include="IStringType.cs" />
+    <Compile Include="PropertyValuePair.cs" />
+    <Compile Include="LongIntegerType.cs" />
+    <Compile Include="DependencyObject.cs" />
+    <Compile Include="DependencyObjectType.cs" />
+    <Compile Include="OpenEnumType.cs" />
+    <Compile Include="DependencyProperty.cs" />
+    <Compile Include="DependencyPropertyMetadata.cs" />
     <Compile Include="DependencyPropertyPath.cs" />
-    <Compile Include="Resources.cs">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="Resources.cs" />
     <Compile Include="Serialization\DeserializerContext.cs" />
     <Compile Include="Serialization\Generic\MapTag.cs" />
     <Compile Include="Serialization\Generic\PropertyValue.cs" />
@@ -353,12 +263,8 @@
     <Compile Include="Serialization\MarkupExtension.cs" />
     <Compile Include="Serialization\SerializerContext.cs" />
     <Compile Include="Storage.cs" />
-    <Compile Include="StringDict.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="StringType.cs">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="StringDict.cs" />
+    <Compile Include="StringType.cs" />
     <Compile Include="StructuredType.cs" />
     <Compile Include="StructuredData.cs" />
     <Compile Include="Support\AssemblyLoader.cs" />
@@ -380,18 +286,12 @@
     <Compile Include="Support\ResourceProviderFactory.cs" />
     <Compile Include="Support\Resources.cs" />
     <Compile Include="Support\ResourceSetMode.cs" />
-    <Compile Include="Time.cs">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="Time.cs" />
     <Compile Include="SerializationConverterAttribute.cs" />
     <Compile Include="TypeRosetta.cs" />
-    <Compile Include="UndefinedValue.cs">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="UndefinedValue.cs" />
     <Compile Include="DependencyObjectTreeSnapshot.cs" />
-    <Compile Include="VoidType.cs">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="VoidType.cs" />
     <Compile Include="Weak.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -400,6 +300,11 @@
     <Content Include="Resources\Common.Types\Captions.en.resource" />
     <Content Include="Resources\Common.Types\Strings.00.resource" />
     <Content Include="Resources\Common.Types\Strings.en.resource" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\Epsitec.Cresus.snk">
+      <Link>Epsitec.Cresus.snk</Link>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
