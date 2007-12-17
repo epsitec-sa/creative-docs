@@ -1084,12 +1084,11 @@ namespace Epsitec.Common.Designer.Viewers
 			FieldDescription field = this.formEditor.ObjectModifier.GetFormDescription(item);
 
 			Druid druid = field.SubFormId;
+			Druid typeId = this.access.FormRelationEntity(this.entityId, field.GetPath(null));
 			bool isNullable = false;
 			Module module = this.designerApplication.SearchModule(this.druidToSerialize);
 			StructuredTypeClass typeClass = StructuredTypeClass.None;
-			List<Druid> exclude = new List<Druid>();
-			exclude.Add(this.druidToSerialize);
-			Common.Dialogs.DialogResult result = this.designerApplication.DlgResourceSelector(Dialogs.ResourceSelector.Operation.Form, module, ResourceAccess.Type.Forms, ref typeClass, ref druid, ref isNullable, exclude);
+			Common.Dialogs.DialogResult result = this.designerApplication.DlgResourceSelector(Dialogs.ResourceSelector.Operation.Form, module, ResourceAccess.Type.Forms, ref typeClass, ref druid, ref isNullable, null, typeId);
 			if (result != Common.Dialogs.DialogResult.Yes)
 			{
 				return;

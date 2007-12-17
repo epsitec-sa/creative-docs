@@ -184,7 +184,7 @@ namespace Epsitec.Common.Designer.Dialogs
 		}
 
 
-		public void AccessOpen(Operation operation, Module baseModule, ResourceAccess.Type type, Druid resource, bool isNullable, List<Druid> exclude)
+		public void AccessOpen(Operation operation, Module baseModule, ResourceAccess.Type type, Druid resource, bool isNullable, List<Druid> exclude, Druid typeId)
 		{
 			//	Début de l'accès aux ressources pour le dialogue.
 			//	Le type peut être inconnu ou la ressource inconnue, mais pas les deux.
@@ -196,6 +196,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			this.resource = resource;
 			this.isNullable = isNullable;
 			this.exclude = exclude;
+			this.typeId = typeId;
 			this.isInherit = false;
 
 			//	Cherche le module contenant le Druid de la ressource.
@@ -348,6 +349,14 @@ namespace Epsitec.Common.Designer.Dialogs
 				if (typeClass != StructuredTypeClass.Interface)
 				{
 					return false;  // ne liste que les interfaces
+				}
+			}
+
+			if (this.operation == Operation.Form && !this.typeId.IsEmpty)
+			{
+				if (!this.access.FormSearch(cultureMap, this.typeId))
+				{
+					return false;
 				}
 			}
 
@@ -713,6 +722,7 @@ namespace Epsitec.Common.Designer.Dialogs
 		protected bool							isInherit;
 		protected ResourceAccess				access;
 		protected Druid							resource;
+		protected Druid							typeId;
 		protected bool							isNullable;
 		protected List<Druid>					exclude;
 		protected CollectionView				collectionView;

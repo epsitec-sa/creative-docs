@@ -486,7 +486,7 @@ namespace Epsitec.Common.Designer
 				bool isNullable = false;
 				StructuredTypeClass typeClass = StructuredTypeClass.Entity;
 
-				Common.Dialogs.DialogResult result = this.designerApplication.DlgResourceSelector(Dialogs.ResourceSelector.Operation.InheritEntities, this.designerApplication.CurrentModule, Type.Entities, ref typeClass, ref druid, ref isNullable, null);
+				Common.Dialogs.DialogResult result = this.designerApplication.DlgResourceSelector(Dialogs.ResourceSelector.Operation.InheritEntities, this.designerApplication.CurrentModule, Type.Entities, ref typeClass, ref druid, ref isNullable, null, Druid.Empty);
 				if (result != Common.Dialogs.DialogResult.Yes)
 				{
 					return;
@@ -505,7 +505,7 @@ namespace Epsitec.Common.Designer
 				bool isNullable = false;
 				StructuredTypeClass typeClass = StructuredTypeClass.Entity;
 
-				Common.Dialogs.DialogResult result = this.designerApplication.DlgResourceSelector(Dialogs.ResourceSelector.Operation.Entities, this.designerApplication.CurrentModule, Type.Entities, ref typeClass, ref druid, ref isNullable, null);
+				Common.Dialogs.DialogResult result = this.designerApplication.DlgResourceSelector(Dialogs.ResourceSelector.Operation.Entities, this.designerApplication.CurrentModule, Type.Entities, ref typeClass, ref druid, ref isNullable, null, Druid.Empty);
 				if (result != Common.Dialogs.DialogResult.Yes)
 				{
 					return;
@@ -661,11 +661,55 @@ namespace Epsitec.Common.Designer
 			//	Cherche un Form défini pour un certain type.
 			foreach (CultureMap item in this.accessor.Collection)
 			{
-				FormEngine.FormDescription form = this.GetForm(item);
-
-				if (form.EntityId == typeId)
+				if (this.FormSearch(item, typeId))
 				{
 					return item.Id;
+				}
+			}
+
+			return Druid.Empty;
+		}
+
+		public bool FormSearch(CultureMap item, Druid typeId)
+		{
+			//	Indique si un Form est défini pour un certain type.
+			FormEngine.FormDescription form = this.GetForm(item);
+			return form.EntityId == typeId;
+		}
+
+		public Druid FormRelationEntity(Druid entityId, string druidsPath)
+		{
+			//	Retourne le Druid de l'entité utilisée par un champ de type relation.
+			//	Par exemple, si entityId correspond à l'entité Affaire et que druidsPath correspond
+			//	aux champs Facture.AdresseFacturation, on retourne le Druid de l'entité Adresse.
+			//	Pour cela, on parcourt tous les champs de l'entité Affaire à la recherche du champ
+			//	Facture. Puis, dans l'entité Facture, on parcourt tous les champs à la recherche du
+			//	champ AdresseFacturation. Lorsqu'il est trouvé, son TypeId est le Druid de l'entité
+			//	Adresse. Ouf !
+			string[] druids = druidsPath.Split('.');
+			return this.FormRelationEntity(entityId, druids, 0);
+		}
+
+		protected Druid FormRelationEntity(Druid entityId, string[] druids, int index)
+		{
+			IList<StructuredData> list = this.GetEntityDruidsPath(entityId);
+			Druid druid = Druid.Parse(druids[index]);
+
+			foreach (StructuredData dataField in list)
+			{
+				Druid fieldCaptionId = (Druid) dataField.GetValue(Support.Res.Fields.Field.CaptionId);
+				if (fieldCaptionId == druid)
+				{
+					Druid fieldTypeId = (Druid) dataField.GetValue(Support.Res.Fields.Field.TypeId);
+
+					if (index == druids.Length-1)
+					{
+						return fieldTypeId;
+					}
+					else
+					{
+						return this.FormRelationEntity(fieldTypeId, druids, index+1);
+					}
 				}
 			}
 

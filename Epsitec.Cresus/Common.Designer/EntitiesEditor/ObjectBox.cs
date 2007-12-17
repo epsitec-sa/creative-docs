@@ -1535,7 +1535,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			bool isNullable = false;
 			Module module = this.editor.Module;
 			StructuredTypeClass typeClass = StructuredTypeClass.Interface;
-			Common.Dialogs.DialogResult result = module.DesignerApplication.DlgResourceSelector(Dialogs.ResourceSelector.Operation.InterfaceEntities, module, ResourceAccess.Type.Entities, ref typeClass, ref druid, ref isNullable, exclude);
+			Common.Dialogs.DialogResult result = module.DesignerApplication.DlgResourceSelector(Dialogs.ResourceSelector.Operation.InterfaceEntities, module, ResourceAccess.Type.Entities, ref typeClass, ref druid, ref isNullable, exclude, Druid.Empty);
 			if (result != Common.Dialogs.DialogResult.Yes)
 			{
 				return;
@@ -1784,7 +1784,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			bool isNullable = options == FieldOptions.Nullable;
 			Module module = this.editor.Module;
 			StructuredTypeClass typeClass = StructuredTypeClass.None;
-			Common.Dialogs.DialogResult result = module.DesignerApplication.DlgResourceSelector(Dialogs.ResourceSelector.Operation.TypesOrEntities, module, ResourceAccess.Type.Types, ref typeClass, ref druid, ref isNullable, null);
+			Common.Dialogs.DialogResult result = module.DesignerApplication.DlgResourceSelector(Dialogs.ResourceSelector.Operation.TypesOrEntities, module, ResourceAccess.Type.Types, ref typeClass, ref druid, ref isNullable, null, Druid.Empty);
 			if (result != Common.Dialogs.DialogResult.Yes)
 			{
 				return;

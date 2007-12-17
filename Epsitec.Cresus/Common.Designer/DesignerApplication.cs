@@ -1941,11 +1941,11 @@ namespace Epsitec.Common.Designer
 			return this.dlgBindingSelector.IsOk;
 		}
 
-		public Common.Dialogs.DialogResult DlgResourceSelector(Dialogs.ResourceSelector.Operation operation, Module baseModule, ResourceAccess.Type type, ref StructuredTypeClass typeClass, ref Druid resource, ref bool isNullable, List<Druid> exclude)
+		public Common.Dialogs.DialogResult DlgResourceSelector(Dialogs.ResourceSelector.Operation operation, Module baseModule, ResourceAccess.Type type, ref StructuredTypeClass typeClass, ref Druid resource, ref bool isNullable, List<Druid> exclude, Druid typeId)
 		{
 			//	Ouvre le dialogue pour choisir une ressource (sous forme d'un Druid)
 			//	d'un type à choix.
-			this.dlgResourceSelector.AccessOpen(operation, baseModule, type, resource, isNullable, exclude);
+			this.dlgResourceSelector.AccessOpen(operation, baseModule, type, resource, isNullable, exclude, typeId);
 			this.dlgResourceSelector.StructuredTypeClass = typeClass;
 			this.dlgResourceSelector.Show();  // choix dans le dialogue...
 			typeClass = this.dlgResourceSelector.StructuredTypeClass;
