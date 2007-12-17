@@ -62,7 +62,34 @@ namespace Epsitec.Common.UI
 				throw new System.InvalidOperationException (string.Format ("Cannot insert duplicate data source with identifier '{0}'", id));
 			}
 			
-			this.items.Add (new ItemRecord (id, source, captionId));
+			this.items.Add (new ItemRecord (id, source, captionId, null));
+		}
+
+
+		/// <summary>
+		/// Sets a named data source. This will replace an existing data source
+		/// if there was already one with the specified id.
+		/// </summary>
+		/// <param name="id">The identifier of the data source.</param>
+		/// <param name="source">The data source.</param>
+		public void SetDataSource(string id, IStructuredData source)
+		{
+			int index = this.GetItemRecordIndex (id);
+
+			if (index < 0)
+			{
+				this.AddDataSource (id, source);
+			}
+			else
+			{
+				ItemRecord model = this.items[index];
+				this.items[index] = new ItemRecord (id, source, model.CaptionId, model.Handlers);
+
+				if (model.Handlers != null)
+				{
+					model.Handlers (this, new DependencyPropertyChangedEventArgs (id, model.Data, source));
+				}
+			}
 		}
 
 		/// <summary>
@@ -146,26 +173,36 @@ namespace Epsitec.Common.UI
 
 		public void AttachListener(string id, EventHandler<DependencyPropertyChangedEventArgs> handler)
 		{
-			ItemRecord record = this.GetItemRecord (id);
+			int index = this.GetItemRecordIndex (id);
 			
-			if (record.IsEmpty)
+			if (index < 0)
 			{
 				throw new System.ArgumentException (string.Format ("Identifier '{0}' cannot be resolved", id));
 			}
+
+			ItemRecord model = this.items[index];
+
+			EventHandler<DependencyPropertyChangedEventArgs> handlers = model.Handlers;
+			handlers = (EventHandler<DependencyPropertyChangedEventArgs>) System.Delegate.Combine (handlers, handler);
 			
-			//	Immutable roots...
+			this.items[index] = new ItemRecord (model.FieldId, model.Data, model.CaptionId, handlers);
 		}
 
 		public void DetachListener(string id, EventHandler<DependencyPropertyChangedEventArgs> handler)
 		{
-			ItemRecord record = this.GetItemRecord (id);
-			
-			if (record.IsEmpty)
+			int index = this.GetItemRecordIndex (id);
+
+			if (index < 0)
 			{
 				throw new System.ArgumentException (string.Format ("Identifier '{0}' cannot be resolved", id));
 			}
+
+			ItemRecord model = this.items[index];
+
+			EventHandler<DependencyPropertyChangedEventArgs> handlers = model.Handlers;
+			handlers = (EventHandler<DependencyPropertyChangedEventArgs>) System.Delegate.Remove (handlers, handler);
 			
-			//	Immutable roots...
+			this.items[index] = new ItemRecord (model.FieldId, model.Data, model.CaptionId, handlers);
 		}
 
 		IEnumerable<string> IStructuredData.GetValueIds()
@@ -223,15 +260,26 @@ namespace Epsitec.Common.UI
 		/// <returns>The item record for the identifier.</returns>
 		protected ItemRecord GetItemRecord(string id)
 		{
+			int index = this.GetItemRecordIndex (id);
+
+			return index < 0 ? ItemRecord.Empty : this.items[index];
+		}
+
+		protected int GetItemRecordIndex(string id)
+		{
+			int index = 0;
+
 			foreach (ItemRecord record in this.items)
 			{
 				if (record.FieldId == id)
 				{
-					return record;
+					return index;
 				}
+
+				index++;
 			}
 
-			return ItemRecord.Empty;
+			return -1;
 		}
 
 		#region ItemRecord Structure
@@ -247,11 +295,13 @@ namespace Epsitec.Common.UI
 			/// <param name="id">The field identifier of the item.</param>
 			/// <param name="data">The data of the item.</param>
 			/// <param name="captionId">The caption id.</param>
-			public ItemRecord(string id, IStructuredData data, Druid captionId)
+			/// <param name="handlers">The event handlers.</param>
+			public ItemRecord(string id, IStructuredData data, Druid captionId, EventHandler<DependencyPropertyChangedEventArgs> handlers)
 			{
 				this.data = data;
 				this.fieldId = id;
 				this.captionId = captionId;
+				this.handlers = handlers;
 			}
 
 			/// <summary>
@@ -301,20 +351,32 @@ namespace Epsitec.Common.UI
 					return (this.data == null) && (this.fieldId == null);
 				}
 			}
+
+			public EventHandler<DependencyPropertyChangedEventArgs> Handlers
+			{
+				get
+				{
+					return this.handlers;
+				}
+			}
 			
 			/// <summary>
 			/// Empty item record.
 			/// </summary>
 			public static readonly ItemRecord Empty = new ItemRecord ();
 
-			private IStructuredData				data;
-			private string						fieldId;
-			private Druid						captionId;
+			private readonly IStructuredData	data;
+			private readonly string				fieldId;
+			private readonly Druid				captionId;
+			private readonly EventHandler<DependencyPropertyChangedEventArgs> handlers;
 		}
 		
 		#endregion
 
-		List<ItemRecord> items = new List<ItemRecord> ();
+
+		public static readonly string DataName = "Data";
+		
+		private readonly List<ItemRecord> items = new List<ItemRecord> ();
 		private DataSourceMetadata metadata;
 	}
 }

@@ -96,7 +96,7 @@ namespace Epsitec.Common.FormEngine
 			root.ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow;
 			root.ResourceManager = this.resourceManager;
 			root.DataSource = new UI.DataSource();
-			root.DataSource.AddDataSource("Data", entityData);
+			root.DataSource.AddDataSource(UI.DataSource.DataName, entityData);
 
 			this.CreateFormBox(root, fields2, 0);
 
@@ -265,7 +265,7 @@ namespace Epsitec.Common.FormEngine
 				{
 					if (level == 0)
 					{
-						string path = field.GetPath("Data");
+						string path = field.GetPath(UI.DataSource.DataName);
 						this.CreateField(root, grid, path, field, labelsId, ref column, ref row, isGlueAfter);
 					}
 				}

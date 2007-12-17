@@ -49,9 +49,27 @@ namespace Epsitec.Common.Dialogs
 		{
 			get
 			{
+				if (this.dialogData == null)
+				{
+					this.dialogData = this.CreateDefaultDialogData ();
+				}
+
 				return this.dialogData;
 			}
+			set
+			{
+				if (this.dialogData != value)
+				{
+					this.dialogData = value;
+
+					if (this.panel != null)
+					{
+						this.InitializeDataBinding ();
+					}
+				}
+			}
 		}
+		
 		
 		public static Dialog Load(ResourceManager resourceManager, Druid resourceId)
 		{
@@ -64,6 +82,7 @@ namespace Epsitec.Common.Dialogs
 			return dialog;
 		}
 		
+		
 		protected override Window CreateWindow()
 		{
 			ResourceBundle bundle = this.LoadBundle ();
@@ -73,20 +92,43 @@ namespace Epsitec.Common.Dialogs
 				return null;
 			}
 
-			UI.Panel panel = this.CreateUserInterface (bundle);
+			this.panel = this.CreateUserInterface (bundle);
 
-			if (panel == null)
+			if (this.panel == null)
 			{
 				return null;
 			}
 			
 			Window window = new Window ();
 
-			window.Root.Children.Add (panel);
+			window.Root.Children.Add (this.panel);
 
-			panel.Dock = DockStyle.Fill;
+			this.panel.Dock = DockStyle.Fill;
 
 			return window;
+		}
+
+		protected override void OnDialogOpening()
+		{
+			this.InitializeDataBinding ();
+
+			base.OnDialogOpening ();
+		}
+
+		protected override void OnDialogClosed()
+		{
+			base.OnDialogClosed ();
+		}
+
+		private void InitializeDataBinding()
+		{
+			if (this.panel != null)
+			{
+				IStructuredData data = this.DialogData.Data;
+				UI.DataSource source = this.panel.DataSource;
+
+				source.SetDataSource (UI.DataSource.DataName, data);
+			}
 		}
 
 		private UI.Panel CreateUserInterface(ResourceBundle bundle)
@@ -124,6 +166,20 @@ namespace Epsitec.Common.Dialogs
 			return formEngine.CreateForm (formDescription);
 		}
 
+		private DialogData CreateDefaultDialogData()
+		{
+			if (this.userInterfaceEntityId.IsValid)
+			{
+				EntityContext context = EntityContext.Current;
+				AbstractEntity data = context.CreateEmptyEntity (this.userInterfaceEntityId);
+
+				return new DialogData (data, DialogDataMode.Isolated);
+			}
+			else
+			{
+				return null;
+			}
+		}
 
 		private ResourceBundle LoadBundle()
 		{
@@ -143,5 +199,6 @@ namespace Epsitec.Common.Dialogs
 		private Druid							userInterfaceResourceId;
 		private Druid							userInterfaceEntityId;
 		private DialogData						dialogData;
+		private UI.Panel						panel;
 	}
 }
