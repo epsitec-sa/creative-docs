@@ -157,6 +157,8 @@ namespace Epsitec.Common.Designer.Viewers
 
 			this.groupPrimaryText.Enable = !this.designerApplication.IsReadonly;
 			this.groupPrimaryComment.Enable = !this.designerApplication.IsReadonly;
+			this.groupSecondaryText.Enable = !this.designerApplication.IsReadonly;
+			this.groupSecondaryComment.Enable = !this.designerApplication.IsReadonly;
 
 			CultureMap item = this.access.CollectionView.CurrentItem as CultureMap;
 			CultureMapSource source = this.access.GetCultureMapSource(item);
@@ -178,7 +180,7 @@ namespace Epsitec.Common.Designer.Viewers
 				this.ColorizeResetBox(this.groupPrimaryComment, source, usesOriginalData);
 			}
 
-			if (data == null || this.GetTwoLetters(1) == null || this.designerApplication.IsReadonly)
+			if (item == null || data == null || this.GetTwoLetters(1) == null)
 			{
 				this.secondaryText.Text = "";
 				this.secondaryComment.Text = "";
@@ -192,8 +194,6 @@ namespace Epsitec.Common.Designer.Viewers
 				this.ColorizeResetBox(this.groupSecondaryText, source, usesOriginalData);
 				this.secondaryComment.Text = data.GetValue(Support.Res.Fields.ResourceBase.Comment, out usesOriginalData) as string ?? Support.ResourceBundle.Field.Null;
 				this.ColorizeResetBox(this.groupSecondaryComment, source, usesOriginalData);
-				this.groupSecondaryText.Enable = true;
-				this.groupSecondaryComment.Enable = true;
 			}
 
 			this.ignoreChange = iic;
