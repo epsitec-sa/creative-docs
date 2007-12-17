@@ -560,6 +560,63 @@ namespace Epsitec.Common.Drawing
 			return bitmap;
 		}
 
+		public static Image FromNativeIcon(PlatformSystemIcon systemIcon)
+		{
+			System.Drawing.Icon icon = null;
+
+			switch (systemIcon)
+			{
+				case PlatformSystemIcon.Application:
+					icon = System.Drawing.SystemIcons.Application;
+					break;
+
+				case PlatformSystemIcon.Asterisk:
+					icon = System.Drawing.SystemIcons.Asterisk;
+					break;
+
+				case PlatformSystemIcon.Error:
+					icon = System.Drawing.SystemIcons.Error;
+					break;
+
+				case PlatformSystemIcon.Exclamation:
+					icon = System.Drawing.SystemIcons.Exclamation;
+					break;
+
+				case PlatformSystemIcon.Hand:
+					icon = System.Drawing.SystemIcons.Hand;
+					break;
+
+				case PlatformSystemIcon.Information:
+					icon = System.Drawing.SystemIcons.Information;
+					break;
+
+				case PlatformSystemIcon.Question:
+					icon = System.Drawing.SystemIcons.Question;
+					break;
+
+				case PlatformSystemIcon.Shield:
+					icon = System.Drawing.SystemIcons.Shield;
+					break;
+
+				case PlatformSystemIcon.Warning:
+					icon = System.Drawing.SystemIcons.Warning;
+					break;
+
+				case PlatformSystemIcon.WinLogo:
+					icon = System.Drawing.SystemIcons.WinLogo;
+					break;
+			}
+
+			if (icon != null)
+			{
+				return Bitmap.FromNativeIcon (icon);
+			}
+			else
+			{
+				return null;
+			}
+		}
+		
 		public static Image FromNativeIcon(System.Drawing.Icon native)
 		{
 			System.Drawing.Bitmap src_bitmap = native.ToBitmap ();

@@ -1,7 +1,7 @@
 ﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
   <PropertyGroup>
     <ProjectType>Local</ProjectType>
-    <ProductVersion>8.0.50727</ProductVersion>
+    <ProductVersion>9.0.21022</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{7D73AD35-D078-4B4C-AF30-434C6A377058}</ProjectGuid>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -141,6 +141,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="ColorSpace.cs" />
+    <Compile Include="PlatformSystemIcon.cs" />
     <Compile Include="SyntheticFontMode.cs" />
     <Compile Include="ImageFilter.cs" />
     <Compile Include="GlyphClass.cs" />
