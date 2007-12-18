@@ -640,14 +640,14 @@ namespace Epsitec.Common.Types
 		public static readonly INullableType AlwaysNullableTypeInstance = new AlwaysNullableType ();
 
 
-		const int								RelationShift	= 0;
-		const int								RelationMask	= 0x0f;
-		const int								MembershipShift	= 4;
-		const int								MembershipMask	= 0x03;
-		const int								SourceShift		= 6;
-		const int								SourceMask		= 0x0f;
-		const int								OptionsShift	= 10;
-		const int								OptionsMask		= 0x3f;
+		const int								RelationShift	= 0;		//	0x0000000f
+		const int								RelationMask	= 0x0f;		//	4-bit, offset 0
+		const int								MembershipShift	= 4;		//	0x00000030
+		const int								MembershipMask	= 0x03;		//	2-bit, offset 4
+		const int								SourceShift		= 6;		//	0x000003c0
+		const int								SourceMask		= 0x0f;		//	4-bit, offset 6
+		const int								OptionsShift	= 10;		//	0x0000fc00
+		const int								OptionsMask		= 0x3f;		//	6-bit, offset 10
 		
 		private readonly string					id;
 		private INamedType						type;

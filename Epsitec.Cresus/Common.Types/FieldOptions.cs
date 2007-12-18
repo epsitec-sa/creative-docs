@@ -4,7 +4,8 @@
 namespace Epsitec.Common.Types
 {
 	/// <summary>
-	/// The <c>FieldOptions</c> enumeration ...
+	/// The <c>FieldOptions</c> enumeration defines a set of options which can
+	/// be attached to a field.
 	/// See <see cref="StructuredTypeField"/>.
 	/// </summary>
 	[DesignerVisible]
@@ -21,5 +22,10 @@ namespace Epsitec.Common.Types
 		/// i.e. have no value at all.
 		/// </summary>
 		Nullable=0x01,
+
+		/// <summary>
+		/// The field relation points to a private (i.e. not shared) target.
+		/// </summary>
+		PrivateRelation=0x02,
 	}
 }
