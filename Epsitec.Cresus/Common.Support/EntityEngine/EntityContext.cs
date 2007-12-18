@@ -283,6 +283,14 @@ namespace Epsitec.Common.Support.EntityEngine
 			return ids;
 		}
 
+		public void DisableCalculations(AbstractEntity entity)
+		{
+			if (entity != null)
+			{
+				entity.DisableCalculations ();
+			}
+		}
+
 
 		/// <summary>
 		/// Finds the property setter used to write to the specified field.

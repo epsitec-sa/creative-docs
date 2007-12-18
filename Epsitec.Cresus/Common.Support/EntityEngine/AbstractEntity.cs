@@ -48,6 +48,7 @@ namespace Epsitec.Common.Support.EntityEngine
 			}
 		}
 
+
 		/// <summary>
 		/// Gets the id of the <see cref="StructuredType"/> which describes
 		/// this entity.
@@ -130,7 +131,12 @@ namespace Epsitec.Common.Support.EntityEngine
 		{
 			return new DefineOriginalValuesHelper (this);
 		}
-		
+
+
+		internal void DisableCalculations()
+		{
+			this.calculationsDisabled = true;
+		}
 
 		public T GetField<T>(string id)
 		{
@@ -226,7 +232,32 @@ namespace Epsitec.Common.Support.EntityEngine
 
 		public static TResult GetCalculation<T, TResult>(T entity, string id, System.Func<T, TResult> func)
 		{
-			return func (entity);
+			AbstractEntity e = entity as AbstractEntity;
+
+			if ((e != null) &&
+				(e.calculationsDisabled))
+			{
+				return e.GetField<TResult> (id);
+			}
+			else
+			{
+				return func (entity);
+			}
+		}
+
+		public static void SetCalculation<T, TResult>(T entity, string id, TResult newValue)
+		{
+			AbstractEntity e = entity as AbstractEntity;
+
+			if ((e != null) &&
+				(e.calculationsDisabled))
+			{
+				e.SetField<TResult> (id, newValue);
+			}
+			else
+			{
+				throw new System.NotSupportedException (string.Format ("Trying to modify calculation {0} for entity {1}", id, typeof (T).Name));
+			}
 		}
 
 		internal void InternalDefineProxy(IEntityProxy proxy)
@@ -699,6 +730,7 @@ namespace Epsitec.Common.Support.EntityEngine
 		private IValueStore originalValues;
 		private IValueStore modifiedValues;
 		private int defineOriginalValuesCount;
+		private bool calculationsDisabled;
 		private Dictionary<string, System.Delegate> eventHandlers;
 		private IEntityProxy proxy;
 	}
