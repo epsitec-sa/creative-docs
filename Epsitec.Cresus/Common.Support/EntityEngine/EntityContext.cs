@@ -194,6 +194,14 @@ namespace Epsitec.Common.Support.EntityEngine
 			}
 		}
 
+		internal StructuredTypeField GetStructuredTypeField(AbstractEntity entity, string fieldId)
+		{
+			IStructuredType     type  = this.GetStructuredType (entity);
+			StructuredTypeField field = type == null ? null : type.GetField (fieldId);
+
+			return field;
+		}
+
 		/// <summary>
 		/// Defines a structured type.
 		/// </summary>

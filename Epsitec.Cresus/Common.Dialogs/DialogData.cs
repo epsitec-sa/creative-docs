@@ -190,11 +190,40 @@ namespace Epsitec.Common.Dialogs
 				System.Diagnostics.Debug.Assert (externalData != null);
 				System.Diagnostics.Debug.Assert (host.mode != DialogDataMode.Transparent);
 
+				EntityContext context = externalData.GetEntityContext ();
+				StructuredTypeField field = context.GetStructuredTypeField (externalData, nodeId);
+
 				this.parent = parent;
 				this.nodeId = nodeId;
 				this.host = host;
 				this.externalData = externalData;
-				this.relation = this.externalData.InternalGetFieldRelation (this.nodeId);
+				this.relation = field.Relation;
+				this.options  = field.Options;
+			}
+
+
+			/// <summary>
+			/// Gets the field relation.
+			/// </summary>
+			/// <value>The field relation.</value>
+			public FieldRelation FieldRelation
+			{
+				get
+				{
+					return this.relation;
+				}
+			}
+
+			/// <summary>
+			/// Gets the field options.
+			/// </summary>
+			/// <value>The field options.</value>
+			public FieldOptions FieldOptions
+			{
+				get
+				{
+					return this.options;
+				}
 			}
 
 
@@ -476,6 +505,7 @@ namespace Epsitec.Common.Dialogs
 			private readonly AbstractEntity externalData;
 			private readonly string nodeId;
 			private readonly FieldRelation relation;
+			private readonly FieldOptions options;
 			private AbstractEntity proxy;
 			private AbstractEntity proxySource;
 		}
@@ -504,6 +534,16 @@ namespace Epsitec.Common.Dialogs
 			AbstractEntity copy = context.CreateEmptyEntity (entityId);
 			
 			copy.InternalDefineProxy (parent);
+
+			if ((parent != null) &&
+				((parent.FieldOptions & FieldOptions.PrivateRelation) == 0))
+			{
+				//	If this entity is accessed through a shared relation, we have
+				//	to disable all calculations so that the user can type in values
+				//	in them to build a search query :
+
+				context.DisableCalculations (copy);
+			}
 
 			foreach (string id in context.GetEntityFieldIds (entity))
 			{
