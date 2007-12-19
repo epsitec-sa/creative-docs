@@ -475,8 +475,8 @@ namespace Epsitec.Common.Support.EntityEngine
 			System.Diagnostics.Debug.Assert (field != null);
 			System.Diagnostics.Debug.Assert (field.Relation != FieldRelation.Collection);
 
-			if ((field.IsNullable) &&
-				(newValue == null))
+			if ((newValue == null) &&
+				((field.IsNullable) || (context.SkipConstraintChecking)))
 			{
 				//	The value is null and the field is nullable; this operation
 				//	is valid and it will clear the field.
@@ -490,7 +490,8 @@ namespace Epsitec.Common.Support.EntityEngine
 
 				System.Diagnostics.Debug.Assert (constraint != null);
 
-				if (constraint.IsValidValue (newValue))
+				if ((context.SkipConstraintChecking) ||
+					(constraint.IsValidValue (newValue)))
 				{
 					object value;
 
@@ -508,7 +509,7 @@ namespace Epsitec.Common.Support.EntityEngine
 				}
 				else
 				{
-					throw new System.ArgumentException (string.Format ("Invalid value '{0}' specified for field {1}", newValue, id));
+					throw new System.ArgumentException (string.Format ("Invalid value '{0}' specified for field {1}", newValue ?? "<null>", id));
 				}
 			}
 

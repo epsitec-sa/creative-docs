@@ -79,7 +79,15 @@ namespace Epsitec.Common.Dialogs
 				{
 					if (oldValue.Equals (newValue) == false)
 					{
-						return true;
+						if ((UndefinedValue.IsUndefinedValue (oldValue) || UnknownValue.IsUnknownValue (oldValue)) &&
+							(UndefinedValue.IsUndefinedValue (newValue) || UnknownValue.IsUnknownValue (newValue)))
+						{
+							return false;
+						}
+						else
+						{
+							return true;
+						}
 					}
 				}
 				

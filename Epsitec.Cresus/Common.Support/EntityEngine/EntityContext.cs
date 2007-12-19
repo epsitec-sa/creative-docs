@@ -53,11 +53,26 @@ namespace Epsitec.Common.Support.EntityEngine
 		/// Gets the active data generation.
 		/// </summary>
 		/// <value>The active data generation.</value>
-		public long DataGeneration
+		public long								DataGeneration
 		{
 			get
 			{
 				return this.dataGeneration;
+			}
+		}
+
+		/// <summary>
+		/// Gets a value indicating whether to skip constraint checking when
+		/// setting a value.
+		/// </summary>
+		/// <value>
+		/// 	<c>true</c> if constraint checkin should be skipped; otherwise, <c>false</c>.
+		/// </value>
+		public bool								SkipConstraintChecking
+		{
+			get
+			{
+				return this.suspendConstraintChecking > 0;
 			}
 		}
 
@@ -110,6 +125,11 @@ namespace Epsitec.Common.Support.EntityEngine
 		public void NewDataGeneration()
 		{
 			System.Threading.Interlocked.Increment (ref this.dataGeneration);
+		}
+
+		public System.IDisposable SuspendConstraintChecking()
+		{
+			return new SuspendConstraintCheckingHelper (this);
 		}
 
 		internal IValueStore CreateValueStore(AbstractEntity entity)
@@ -630,6 +650,35 @@ namespace Epsitec.Common.Support.EntityEngine
 
 		#endregion
 
+		private class SuspendConstraintCheckingHelper : System.IDisposable
+		{
+			public SuspendConstraintCheckingHelper(EntityContext context)
+			{
+				this.context = context;
+				System.Threading.Interlocked.Increment (ref this.context.suspendConstraintChecking);
+			}
+
+			~SuspendConstraintCheckingHelper()
+			{
+				throw new System.InvalidOperationException ("Caller of SuspendConstraintChecking forgot to call Dispose");
+			}
+
+
+			#region IDisposable Members
+
+			public void Dispose()
+			{
+				System.GC.SuppressFinalize (this);
+				System.Threading.Interlocked.Decrement (ref this.context.suspendConstraintChecking);
+			}
+
+			#endregion
+
+
+			private readonly EntityContext context;
+		}
+
+
 		public event EventHandler<EntityEventArgs> EntityCreated
 		{
 			add
@@ -667,5 +716,6 @@ namespace Epsitec.Common.Support.EntityEngine
 		private readonly Dictionary<string, PropertySetter> propertySetters;
 
 		private long dataGeneration;
+		private int suspendConstraintChecking;
 	}
 }

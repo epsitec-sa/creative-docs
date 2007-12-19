@@ -101,9 +101,12 @@ namespace Epsitec.Common.Dialogs
 		/// </summary>
 		public void RevertChanges()
 		{
-			while (this.ForEachChange (change => change.Path.NavigateWrite (this.internalData, change.OldValue)))
+			using (this.internalData.GetEntityContext ().SuspendConstraintChecking ())
 			{
-				//	Run until we have processed all changes.
+				while (this.ForEachChange (change => change.Path.NavigateWrite (this.internalData, change.OldValue)))
+				{
+					//	Run until we have processed all changes.
+				}
 			}
 		}
 
@@ -279,6 +282,22 @@ namespace Epsitec.Common.Dialogs
 					//	so previously, then overwrite the value in the data field.
 
 					this.SaveOriginalValue (() => value);
+
+					if ((value == null) &&
+						(this.relation == FieldRelation.Reference) &&
+						((this.options & FieldOptions.Nullable) == 0))
+					{
+						//	We have just come across a null value in a reference that
+						//	was not defined to be nullable. Let's replace it with an
+						//	empty entity instead.
+
+						EntityContext context = this.externalData.GetEntityContext ();
+						StructuredTypeField field = context.GetStructuredTypeField (this.externalData, this.nodeId);
+						AbstractEntity entity = context.CreateEmptyEntity (field.TypeId);
+
+						value = this.Wrap (entity);
+					}
+
 					store.SetValue (id, value, ValueStoreSetMode.ShortCircuit);
 				}
 				
