@@ -322,6 +322,52 @@ namespace Epsitec.Common.Support
 		}
 
 		[Test]
+		public void CheckEventHandling()
+		{
+			MyEnumTypeEntity entity = EntityContext.Current.CreateEmptyEntity<MyEnumTypeEntity> ();
+			IStructuredData data = entity;
+
+			Assert.IsNotNull (entity);
+			Assert.IsNotNull (data);
+
+			string fieldId = Res.Fields.ResourceBase.Comment.ToString ();
+			List<string> events = new List<string> ();
+
+			data.AttachListener (fieldId,
+				delegate (object sender, DependencyPropertyChangedEventArgs e)
+				{
+					Assert.AreEqual (entity, sender);
+					events.Add (string.Format ("Field modified from {0} to {1}", e.OldValue ?? "<null>", e.NewValue ?? "<null>"));
+				});
+			
+			data.AttachListener ("*",
+				delegate (object sender, DependencyPropertyChangedEventArgs e)
+				{
+					Assert.AreEqual (entity, sender);
+					events.Add (string.Format ("Content modified from {0} to {1}", e.OldValue ?? "<null>", e.NewValue ?? "<null>"));
+				});
+			
+			entity.SetField (fieldId, null, "Abc");
+			entity.SetField (fieldId, "Abc", "Xyz");
+
+			string[] results = new string[]
+			{
+				"Field modified from <null> to Abc",
+				"Content modified from <null> to Abc",
+				"Field modified from Abc to Xyz",
+				"Content modified from Abc to Xyz",
+			};
+
+			int index = 0;
+
+			events.ForEach (
+				delegate (string e)
+				{
+					Assert.AreEqual (results[index++], e);
+				});
+		}
+
+		[Test]
 		public void CheckIStructuredData()
 		{
 			EntityContext context = EntityContext.Current;

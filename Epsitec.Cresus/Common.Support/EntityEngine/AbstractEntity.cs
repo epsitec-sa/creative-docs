@@ -515,16 +515,22 @@ namespace Epsitec.Common.Support.EntityEngine
 
 			if (this.eventHandlers != null)
 			{
-				System.Delegate handler;
+				System.Delegate fieldHandler;
+				System.Delegate contentHandler;
 				
 				lock (this.eventHandlers)
 				{
-					this.eventHandlers.TryGetValue (id, out handler);
+					this.eventHandlers.TryGetValue (id, out fieldHandler);
+					this.eventHandlers.TryGetValue ("*", out contentHandler);
 				}
 
-				if (handler != null)
+				if (fieldHandler != null)
 				{
-					((EventHandler<DependencyPropertyChangedEventArgs>) handler) (this, new DependencyPropertyChangedEventArgs (id, oldValue, newValue));
+					((EventHandler<DependencyPropertyChangedEventArgs>) fieldHandler) (this, new DependencyPropertyChangedEventArgs (id, oldValue, newValue));
+				}
+				if (contentHandler != null)
+				{
+					((EventHandler<DependencyPropertyChangedEventArgs>) contentHandler) (this, new DependencyPropertyChangedEventArgs (id, oldValue, newValue));
 				}
 			}
 		}
