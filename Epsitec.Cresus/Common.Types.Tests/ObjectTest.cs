@@ -403,8 +403,8 @@ namespace Epsitec.Common.Types
 			root.Parent = null;
 			parent.Sibling = sibling1;
 
-			Assert.AreEqual (2, myData.GetValue (MyObject.XyzProperty));
-			Assert.AreEqual ("2", myData.GetValue (MyObject.FooProperty));
+			Assert.AreEqual (null, myData.GetValue (MyObject.XyzProperty));
+			Assert.AreEqual ("[default]", myData.GetValue (MyObject.FooProperty));
 
 			root.Parent = parent;
 

@@ -812,6 +812,10 @@ namespace Epsitec.Common.Types
 					}
 				}
 			}
+			else
+			{
+				this.InternalResetTarget ();
+			}
 		}
 		
 		internal void InternalUpdateTarget(object value)
@@ -827,6 +831,23 @@ namespace Epsitec.Common.Types
 				try
 				{
 					BindingExpression.SetValue (this.targetObject, this.TargetProperty, this.ConvertValue (value));
+				}
+				finally
+				{
+					System.Threading.Interlocked.Decrement (ref this.targetUpdateCounter);
+				}
+			}
+		}
+
+		internal void InternalResetTarget()
+		{
+			if (this.sourceUpdateCounter == 0)
+			{
+				System.Threading.Interlocked.Increment (ref this.targetUpdateCounter);
+
+				try
+				{
+					BindingExpression.ClearValue (this.targetObject, this.TargetProperty);
 				}
 				finally
 				{
@@ -977,6 +998,22 @@ namespace Epsitec.Common.Types
 				{
 					target.SetValue (name, value);
 				}
+			}
+		}
+
+		private static void ClearValue(DependencyObject target, DependencyProperty property)
+		{
+			if (target != null)
+			{
+				target.ClearValue (property);
+			}
+		}
+
+		private static void ClearValue(IStructuredData target, string name)
+		{
+			if (target != null)
+			{
+				target.SetValue (name, UndefinedValue.Value);
 			}
 		}
 		
