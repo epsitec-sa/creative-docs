@@ -458,14 +458,17 @@ namespace Epsitec.Common.Dialogs
 
 			private object ResolveValue()
 			{
-				return this.externalData.InternalGetValue (this.nodeId);
+				IValueStore store = this.externalData;
+
+				return store.GetValue (this.nodeId);
 			}
 
 			private object ResolveReference()
 			{
 				if (this.proxy == null)
 				{
-					AbstractEntity data = this.externalData.InternalGetValue (this.nodeId) as AbstractEntity;
+					IValueStore store = this.externalData;
+					AbstractEntity data = store.GetValue (this.nodeId) as AbstractEntity;
 
 					if (data == null)
 					{
