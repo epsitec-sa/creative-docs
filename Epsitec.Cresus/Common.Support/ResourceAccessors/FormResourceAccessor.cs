@@ -89,7 +89,14 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			}
 			else
 			{
-				return Drawing.Size.Parse (bundle[Strings.DefaultSize].AsString);
+				string size = bundle[Strings.DefaultSize].AsString;
+
+				if (string.IsNullOrEmpty (size))
+				{
+					size = "*";
+				}
+
+				return Drawing.Size.Parse (size);
 			}
 		}
 	}

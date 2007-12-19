@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ModuleInfo id="7" name="Common.Support" layer="s" namespace="Epsitec.Common.Support">
   <Versions>
-    <Version id="1" build="22" date="2007-12-18T14:43:55.8281250Z" />
+    <Version id="1" build="23" date="2007-12-18T14:51:55.5625000Z" />
   </Versions>
 </ModuleInfo>

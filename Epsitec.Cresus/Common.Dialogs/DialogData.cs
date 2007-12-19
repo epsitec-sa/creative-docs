@@ -446,7 +446,16 @@ namespace Epsitec.Common.Dialogs
 			{
 				if (this.proxy == null)
 				{
-					this.CreateReferenceProxy (this.externalData.InternalGetValue (this.nodeId) as AbstractEntity);
+					AbstractEntity data = this.externalData.InternalGetValue (this.nodeId) as AbstractEntity;
+
+					if (data == null)
+					{
+						//	We do not create a proxy when resolving a null entity.
+					}
+					else
+					{
+						this.CreateReferenceProxy (data);
+					}
 				}
 
 				return this.proxy;

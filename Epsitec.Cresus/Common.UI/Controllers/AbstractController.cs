@@ -307,6 +307,13 @@ namespace Epsitec.Common.UI.Controllers
 					labelWidget.Text = Collection.GetFirst<string> (caption.Labels);
 				}
 			}
+			else if (!string.IsNullOrEmpty (caption.Name))
+			{
+				//	We cannot find a label, so use the caption name instead. It
+				//	is a fail-over.
+
+				labelWidget.Text = caption.Name;
+			}
 
 			//	TODO: determine size of widget based on the verbosity
 
