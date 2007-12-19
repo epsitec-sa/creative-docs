@@ -212,7 +212,7 @@ namespace Epsitec.Common.Dialogs
 			if (this.userInterfaceEntityId.IsValid)
 			{
 				EntityContext context = EntityContext.Current;
-				AbstractEntity data = context.CreateEmptyEntity (this.userInterfaceEntityId);
+				AbstractEntity data = context.CreateEntity (this.userInterfaceEntityId);
 
 				return new DialogData (data, DialogDataMode.Isolated);
 			}
