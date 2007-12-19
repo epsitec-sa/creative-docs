@@ -331,6 +331,30 @@ namespace Epsitec.Common.UI.Controllers
 			}
 		}
 
+		protected bool SetupToolTip(Widget widget, Caption caption)
+		{
+			if (string.IsNullOrEmpty (caption.Description))
+			{
+				if (string.IsNullOrEmpty (caption.DefaultLabel))
+				{
+					return false;
+				}
+
+				//	There is no description, just a label for this caption. If the
+				//	label is visible, we don't need to display this information, as
+				//	it would be very helpful :
+
+				if (this.placeholder.Verbosity != Verbosity.None)
+				{
+					return false;
+				}
+			}
+			
+			ToolTip.Default.SetToolTip (widget, caption);
+			
+			return true;
+		}
+
 
 		#region IGridPermeable Members
 

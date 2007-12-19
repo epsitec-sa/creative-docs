@@ -462,6 +462,12 @@ namespace Epsitec.Common.Widgets
 				{
 					textCaption = realCaption.DefaultLabel;
 				}
+
+				if ((textCaption != null) &&
+					(textCaption.Length == 0))
+				{
+					textCaption = null;
+				}
 			}
 			
 			if (textCaption != null)

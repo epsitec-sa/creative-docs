@@ -49,7 +49,7 @@ namespace Epsitec.Common.UI.Controllers
 			this.label.ContentAlignment = Drawing.ContentAlignment.MiddleLeft;
 			this.label.Dock = DockStyle.Stacked;
 
-			ToolTip.Default.SetToolTip (this.label, caption.Description);
+			this.SetupToolTip (this.label, caption);
 		}
 
 		private void CreateReadWriteUserInterface(Caption caption, INamedType namedType)
