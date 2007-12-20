@@ -4,6 +4,9 @@ using Epsitec.Common.Support;
 using Epsitec.Common.Types;
 using Epsitec.Common.UI;
 using Epsitec.Common.Widgets;
+using Epsitec.Common.Support.EntityEngine;
+
+using Epsitec.Cresus.AddressBook.Entities;
 
 namespace Epsitec.Common.Dialogs
 {
@@ -110,6 +113,59 @@ namespace Epsitec.Common.Dialogs
 			dialog.IsModal = false;
 			dialog.OpenDialog ();
 			Window.RunInTestEnvironment (window);
+		}
+
+
+		[Test]
+		public void Check80Speed()
+		{
+			EntityContext context = EntityContext.Current;
+
+			PaysEntity pays = context.CreateEmptyEntity<PaysEntity> ();
+			pays.Code = "CH";
+			pays.Nom = "Suisse";
+
+			LocalitéEntity localité = context.CreateEmptyEntity<LocalitéEntity> ();
+
+			localité.Numéro = "1400";
+			localité.Nom = "Yverdon-les-Bains";
+			localité.Pays = pays;
+
+			System.Diagnostics.Stopwatch watch = new System.Diagnostics.Stopwatch ();
+
+			int n = 1000*1000;
+			string result = localité.Résumé;
+
+			watch.Start ();
+
+			for (int i = 0; i < n; i++)
+			{
+				if (localité.Résumé != result)
+				{
+					break;
+				}
+			}
+
+			watch.Stop ();
+
+			System.Console.WriteLine ("{1} iterations: {0} ms --> {2}", watch.ElapsedMilliseconds, n, result);
+			watch.Reset ();
+			
+			result = localité.Nom;
+
+			watch.Start ();
+
+			for (int i = 0; i < n; i++)
+			{
+				if (localité.Nom != result)
+				{
+					break;
+				}
+			}
+
+			watch.Stop ();
+
+			System.Console.WriteLine ("{1} iterations: {0} ms --> {2}", watch.ElapsedMilliseconds, n, result);
 		}
 
 
