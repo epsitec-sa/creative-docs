@@ -2,17 +2,11 @@
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using System.Reflection;
-using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
-[assembly: AssemblyTitle ("*.Common.UI")]
+[assembly: AssemblyTitle ("Epsitec.Common.UI")]
 [assembly: AssemblyDescription ("User Interface Library (high level)")]
-[assembly: AssemblyConfiguration ("")]
-[assembly: AssemblyCompany ("EPSITEC SA & OPaC bright ideas")]
 [assembly: AssemblyProduct ("Framework")]
 [assembly: AssemblyCopyright ("Copyright © 2004-2007, Pierre Arnaud, EPSITEC SA & OPaC bright ideas, Switzerland")]
-[assembly: AssemblyTrademark ("")]
-[assembly: AssemblyCulture ("")]
 
-[assembly: AssemblyVersion ("2.0.0.0")]
 [assembly: ComVisibleAttribute (false)]
