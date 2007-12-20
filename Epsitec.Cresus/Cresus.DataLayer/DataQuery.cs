@@ -40,6 +40,12 @@ namespace Epsitec.Cresus.DataLayer
 			}
 		}
 
+		/// <summary>
+		/// Gets or sets a value indicating whether this <see cref="DataQuery"/>
+		/// will return only distinct values (i.e. remove duplicates).
+		/// </summary>
+		/// <value><c>true</c> if only distinct values should be returned;
+		/// otherwise, <c>false</c>.</value>
 		public bool Distinct
 		{
 			get;
