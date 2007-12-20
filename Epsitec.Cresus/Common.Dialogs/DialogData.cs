@@ -229,6 +229,24 @@ namespace Epsitec.Common.Dialogs
 				}
 			}
 
+			/// <summary>
+			/// Gets the dialog data.
+			/// </summary>
+			/// <value>The dialog data.</value>
+			public DialogData DialogData
+			{
+				get
+				{
+					return this.host;
+				}
+			}
+
+			
+			public EntityFieldPath GetFieldPath()
+			{
+				return EntityFieldPath.CreateRelativePath (this.GetNodeIds ());
+			}
+
 
 			/// <summary>
 			/// Unwraps the value. This gets the source data for a value, if it
@@ -506,11 +524,6 @@ namespace Epsitec.Common.Dialogs
 				}
 			}
 
-			private EntityFieldPath GetFieldPath()
-			{
-				return EntityFieldPath.CreateRelativePath (this.GetNodeIds ());
-			}
-
 			private IEnumerable<string> GetNodeIds()
 			{
 				Stack<string> nodes = new Stack<string> ();
@@ -539,6 +552,29 @@ namespace Epsitec.Common.Dialogs
 			private readonly FieldOptions options;
 			private AbstractEntity proxy;
 			private AbstractEntity proxySource;
+		}
+
+		#endregion
+
+		#region SearchHandler Class
+
+		private class SearchHandler
+		{
+			public SearchHandler(FieldProxy proxy)
+			{
+				this.proxy = proxy;
+			}
+
+			public void HandleContentsChanged(object sender, DependencyPropertyChangedEventArgs e)
+			{
+				AbstractEntity  entityData = sender as AbstractEntity;
+				DialogData      dialogData = this.proxy.DialogData;
+				EntityFieldPath path = this.proxy.GetFieldPath ();
+
+				dialogData.NotifySearchContentsChanged (entityData, path, e);
+			}
+
+			readonly FieldProxy proxy;
 		}
 
 		#endregion
@@ -574,6 +610,7 @@ namespace Epsitec.Common.Dialogs
 				//	in them to build a search query :
 
 				context.DisableCalculations (copy);
+				this.AttachSearchHandler (copy, parent);
 			}
 
 			foreach (string id in context.GetEntityFieldIds (entity))
@@ -582,6 +619,16 @@ namespace Epsitec.Common.Dialogs
 			}
 
 			return copy;
+		}
+
+		private void AttachSearchHandler(AbstractEntity copy, FieldProxy parent)
+		{
+			//	TODO: use weak events, etc.
+
+			IStructuredData data = copy;
+			SearchHandler handler = new SearchHandler (parent);
+
+			data.AttachListener ("*", handler.HandleContentsChanged);
 		}
 
 		private AbstractEntity CreateNullProxy(FieldProxy parent, EntityContext context, Druid entityId)
@@ -606,5 +653,10 @@ namespace Epsitec.Common.Dialogs
 		private readonly DialogDataMode			mode;
 		private readonly AbstractEntity			externalData;
 		private readonly AbstractEntity			internalData;
+
+		internal void NotifySearchContentsChanged(AbstractEntity entityData, EntityFieldPath path, DependencyPropertyChangedEventArgs e)
+		{
+			System.Diagnostics.Debug.WriteLine (string.Format ("Search contents changed: path={0}, id={1}, value={2}", path, e.PropertyName, e.NewValue ?? "<null>"));
+		}
 	}
 }
