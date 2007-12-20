@@ -45,7 +45,7 @@ namespace Epsitec.Common.Support.EntityEngine
 		/// </summary>
 		static EntityContext()
 		{
-			EntityResolver.Setup ();
+			EntityClassResolver.Setup ();
 		}
 
 
@@ -262,7 +262,7 @@ namespace Epsitec.Common.Support.EntityEngine
 
 		public AbstractEntity CreateEmptyEntity(Druid entityId)
 		{
-			AbstractEntity entity = EntityResolver.CreateEmptyEntity (entityId);
+			AbstractEntity entity = EntityClassResolver.CreateEmptyEntity (entityId);
 
 			if (entity == null)
 			{

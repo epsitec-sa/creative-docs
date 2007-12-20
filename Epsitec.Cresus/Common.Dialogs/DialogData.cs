@@ -77,6 +77,18 @@ namespace Epsitec.Common.Dialogs
 			}
 		}
 
+		public IEntityResolver EntityResolver
+		{
+			get
+			{
+				return this.entityResolver;
+			}
+			set
+			{
+				this.entityResolver = value;
+			}
+		}
+
 
 		/// <summary>
 		/// Applies the changes to the original dialog data.
@@ -681,7 +693,8 @@ namespace Epsitec.Common.Dialogs
 
 		private void NotifySearchContentsChanged(AbstractEntity entityData, EntityFieldPath path, DependencyPropertyChangedEventArgs e)
 		{
-			if (this.suspendSearchHandler > 0)
+			if ((this.suspendSearchHandler > 0) ||
+				(this.entityResolver == null))
 			{
 				return;
 			}
@@ -689,6 +702,14 @@ namespace Epsitec.Common.Dialogs
 			using (this.SuspendSearchHandler ())
 			{
 				System.Diagnostics.Debug.WriteLine (string.Format ("Search contents changed: path={0}, id={1}, value={2}", path, e.PropertyName, e.NewValue ?? "<null>"));
+
+				EntityContext  context  = entityData.GetEntityContext ();
+				AbstractEntity template = context.CreateEmptyEntity (entityData.GetEntityStructuredTypeId ());
+
+				template.DisableCalculations ();
+				template.InternalSetValue (e.PropertyName, e.NewValue);
+
+				//	TODO: ...
 			}
 		}
 
@@ -697,5 +718,6 @@ namespace Epsitec.Common.Dialogs
 		private readonly AbstractEntity			externalData;
 		private readonly AbstractEntity			internalData;
 		private int								suspendSearchHandler;
+		private IEntityResolver					entityResolver;
 	}
 }

@@ -12,12 +12,12 @@ namespace Epsitec.Common.Support.EntityEngine
 	using Assembly=System.Reflection.Assembly;
 
 	/// <summary>
-	/// The <c>EntityResolver</c> class is used to allocate entity instances
+	/// The <c>EntityClassResolver</c> class is used to allocate entity instances
 	/// based on entity ids. The mapping between entity id and entity class
 	/// must be marked with the <see cref="EntityAttribute"/> attribute, at
 	/// the <c>assembly</c> level.
 	/// </summary>
-	public static class EntityResolver
+	public static class EntityClassResolver
 	{
 		/// <summary>
 		/// Creates an empty entity instance.
@@ -29,7 +29,7 @@ namespace Epsitec.Common.Support.EntityEngine
 		{
 			Record record;
 
-			if (EntityResolver.types.TryGetValue (id, out record))
+			if (EntityClassResolver.types.TryGetValue (id, out record))
 			{
 				return record.CreateInstance ();
 			}
@@ -45,19 +45,19 @@ namespace Epsitec.Common.Support.EntityEngine
 
 		#region Setup and Run-Time Analysis Methods
 
-		static EntityResolver()
+		static EntityClassResolver()
 		{
-			EntityResolver.domain     = System.AppDomain.CurrentDomain;
-			EntityResolver.assemblies = new List<Assembly> ();
-			EntityResolver.types      = new Dictionary<Druid, Record> ();
+			EntityClassResolver.domain     = System.AppDomain.CurrentDomain;
+			EntityClassResolver.assemblies = new List<Assembly> ();
+			EntityClassResolver.types      = new Dictionary<Druid, Record> ();
 
-			Assembly[] assemblies = EntityResolver.domain.GetAssemblies ();
+			Assembly[] assemblies = EntityClassResolver.domain.GetAssemblies ();
 
-			EntityResolver.domain.AssemblyLoad += new System.AssemblyLoadEventHandler (EntityResolver.HandleDomainAssemblyLoad);
+			EntityClassResolver.domain.AssemblyLoad += new System.AssemblyLoadEventHandler (EntityClassResolver.HandleDomainAssemblyLoad);
 
 			foreach (Assembly assembly in assemblies)
 			{
-				EntityResolver.Analyse (assembly);
+				EntityClassResolver.Analyse (assembly);
 			}
 		}
 
@@ -71,7 +71,7 @@ namespace Epsitec.Common.Support.EntityEngine
 
 				if (name.EndsWith (suffix))
 				{
-					EntityResolver.types[attribute.EntityId] = record;
+					EntityClassResolver.types[attribute.EntityId] = record;
 				}
 				else
 				{
@@ -84,8 +84,8 @@ namespace Epsitec.Common.Support.EntityEngine
 		{
 			if (!args.LoadedAssembly.ReflectionOnly)
 			{
-				EntityResolver.assemblies.Add (args.LoadedAssembly);
-				EntityResolver.Analyse (args.LoadedAssembly);
+				EntityClassResolver.assemblies.Add (args.LoadedAssembly);
+				EntityClassResolver.Analyse (args.LoadedAssembly);
 			}
 		}
 
