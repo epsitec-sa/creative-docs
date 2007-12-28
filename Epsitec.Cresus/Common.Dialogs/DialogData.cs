@@ -713,7 +713,7 @@ namespace Epsitec.Common.Dialogs
 				template.DisableCalculations ();
 				template.InternalSetValue (e.PropertyName, e.NewValue);
 
-				ienthis.entityResolver.Resolve (template);
+				this.entityResolver.Resolve (template);
 			}
 		}
 
