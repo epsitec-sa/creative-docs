@@ -11,6 +11,11 @@ namespace Epsitec.Common.Support.EntityEngine
 	/// </summary>
 	public interface IEntityResolver
 	{
+		/// <summary>
+		/// Gets a collection of entities matching the specified template.
+		/// </summary>
+		/// <param name="template">The template.</param>
+		/// <returns>The collection of entities.</returns>
 		IEnumerable<AbstractEntity> Resolve(AbstractEntity template);
 	}
 }

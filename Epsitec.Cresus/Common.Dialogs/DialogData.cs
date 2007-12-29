@@ -81,7 +81,7 @@ namespace Epsitec.Common.Dialogs
 		/// Gets or sets the entity resolver.
 		/// </summary>
 		/// <value>The entity resolver.</value>
-		public IEntityResolver EntityResolver
+		public IEntityResolver Resolver
 		{
 			get
 			{
@@ -713,7 +713,12 @@ namespace Epsitec.Common.Dialogs
 				template.DisableCalculations ();
 				template.InternalSetValue (e.PropertyName, e.NewValue);
 
-				this.entityResolver.Resolve (template);
+				AbstractEntity result = EntityResolver.Resolve (this.entityResolver, template);
+
+				if (result != null)
+				{
+					//	TODO: ...
+				}
 			}
 		}
 

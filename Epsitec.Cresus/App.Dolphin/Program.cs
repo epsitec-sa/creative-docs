@@ -13,7 +13,7 @@ namespace Epsitec.App.Dolphin
 		[System.STAThread]
 		static void Main(string[] args)
 		{
-			Epsitec.Common.Support.Resources.OverrideDefaultTwoLetterISOLanguageName("de");
+			//Epsitec.Common.Support.Resources.OverrideDefaultTwoLetterISOLanguageName("de");
 			Epsitec.Common.Widgets.Widget.Initialize();
 			Epsitec.Common.Document.Engine.Initialize();
 

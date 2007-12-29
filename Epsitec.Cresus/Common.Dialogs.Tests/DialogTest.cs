@@ -8,6 +8,8 @@ using Epsitec.Common.Support.EntityEngine;
 
 using Epsitec.Cresus.AddressBook.Entities;
 
+using System.Collections.Generic;
+
 namespace Epsitec.Common.Dialogs
 {
 	[TestFixture]
@@ -110,7 +112,10 @@ namespace Epsitec.Common.Dialogs
 			Assert.IsNotNull (window);
 			Assert.IsTrue (dialog.HasWindow);
 
+			TestResolver resolver = new TestResolver ();
+
 			dialog.IsModal = false;
+			dialog.DialogData.Resolver = resolver;
 			dialog.OpenDialog ();
 			Window.RunInTestEnvironment (window);
 		}
@@ -166,6 +171,34 @@ namespace Epsitec.Common.Dialogs
 			watch.Stop ();
 
 			System.Console.WriteLine ("{1} iterations: {0} ms --> {2}", watch.ElapsedMilliseconds, n, result);
+		}
+
+
+		private class TestResolver : IEntityResolver
+		{
+			public TestResolver()
+			{
+				this.suggestions = new List<AbstractEntity> ();
+			}
+
+			public IList<AbstractEntity> Suggestions
+			{
+				get
+				{
+					return this.suggestions;
+				}
+			}
+
+			#region IEntityResolver Members
+
+			public IEnumerable<AbstractEntity> Resolve(AbstractEntity template)
+			{
+				yield break;
+			}
+
+			#endregion
+
+			private readonly List<AbstractEntity> suggestions;
 		}
 
 
