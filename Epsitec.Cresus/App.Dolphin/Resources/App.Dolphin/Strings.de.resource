@@ -50,7 +50,7 @@
   <data id="2O">ROM</data>
   <data id="2P">Zeigt den Anfang des ROM-Speichers</data>
   <data id="2Q">Löscht die ausgewählte Anweisung</data>
-  <data id="2J">Codierung der Anweisungen</data>
+  <data id="2J">Speicher/Code</data>
   <data id="2N1">Register des Mikroprozessors</data>
   <data id="25">Über den Dauphin-Simulator</data>
   <data id="2B3">Fett</data>
