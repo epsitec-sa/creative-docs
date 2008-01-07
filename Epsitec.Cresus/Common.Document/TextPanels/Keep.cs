@@ -309,7 +309,7 @@ namespace Epsitec.Common.Document.TextPanels
 			this.SetTextFieldRealValue(this.fieldKeepEnd.TextFieldReal,   keepEnd,   Common.Text.Properties.SizeUnits.Points, isKeepEnd,   false);
 
 			this.fieldStartMode.Text = Keep.ModeToString(mode);
-			this.fieldStartMode.TextDisplayMode = isMode ? TextDisplayMode.Defined : TextDisplayMode.Proposal;
+			this.fieldStartMode.TextDisplayMode = isMode ? TextFieldDisplayMode.OverriddenValue : TextFieldDisplayMode.InheritedValue;
 
 			Text.TextStyle currentStyle = this.ParagraphWrapper.AttachedStyle;
 			string nextStyleName = "";

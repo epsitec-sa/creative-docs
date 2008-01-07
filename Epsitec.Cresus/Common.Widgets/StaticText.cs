@@ -98,7 +98,7 @@ namespace Epsitec.Common.Widgets
 			if (this.TextLayout != null)
 			{
 				IAdorner adorner = Widgets.Adorners.Factory.Active;
-				adorner.PaintGeneralTextLayout (graphics, clipRect, pos, this.TextLayout, state, this.paintTextStyle, TextDisplayMode.Default, this.BackColor);
+				adorner.PaintGeneralTextLayout (graphics, clipRect, pos, this.TextLayout, state, this.paintTextStyle, TextFieldDisplayMode.Default, this.BackColor);
 			}
 			
 			base.PaintBackgroundImplementation (graphics, clipRect);

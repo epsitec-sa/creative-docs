@@ -502,12 +502,12 @@ namespace Epsitec.Common.Document.TextPanels
 
 			if ( disabledIfUndefined )
 			{
-				field.TextDisplayMode = isDefined ? TextDisplayMode.Defined : TextDisplayMode.Default;
+				field.TextDisplayMode = isDefined ? TextFieldDisplayMode.OverriddenValue : TextFieldDisplayMode.Default;
 				field.Enable = isDefined;
 			}
 			else
 			{
-				field.TextDisplayMode = isDefined ? TextDisplayMode.Defined : TextDisplayMode.Proposal;
+				field.TextDisplayMode = isDefined ? TextFieldDisplayMode.OverriddenValue : TextFieldDisplayMode.InheritedValue;
 			}
 		}
 
@@ -549,12 +549,12 @@ namespace Epsitec.Common.Document.TextPanels
 
 			if ( disabledIfUndefined )
 			{
-				field.TextDisplayMode = isDefined ? TextDisplayMode.Defined : TextDisplayMode.Default;
+				field.TextDisplayMode = isDefined ? TextFieldDisplayMode.OverriddenValue : TextFieldDisplayMode.Default;
 				field.Enable = isDefined;
 			}
 			else
 			{
-				field.TextDisplayMode = isDefined ? TextDisplayMode.Defined : TextDisplayMode.Proposal;
+				field.TextDisplayMode = isDefined ? TextFieldDisplayMode.OverriddenValue : TextFieldDisplayMode.InheritedValue;
 			}
 		}
 
@@ -576,19 +576,19 @@ namespace Epsitec.Common.Document.TextPanels
 		protected void ProposalTextFieldLabel(Widgets.TextFieldLabel field, bool proposal)
 		{
 			//	Modifie le mode d'un TextFieldLabel.
-			field.TextFieldReal.TextDisplayMode = proposal ? TextDisplayMode.Proposal : TextDisplayMode.Defined;
+			field.TextFieldReal.TextDisplayMode = proposal ? TextFieldDisplayMode.InheritedValue : TextFieldDisplayMode.OverriddenValue;
 		}
 
 		protected void ProposalTextFieldCombo(TextFieldCombo field, bool proposal)
 		{
 			//	Modifie le mode d'un TextFieldCombo.
-			field.TextDisplayMode = proposal ? TextDisplayMode.Proposal : TextDisplayMode.Defined;
+			field.TextDisplayMode = proposal ? TextFieldDisplayMode.InheritedValue : TextFieldDisplayMode.OverriddenValue;
 		}
 
 		protected void ProposalFontFaceCombo(Widgets.FontFaceCombo field, bool proposal)
 		{
 			//	Modifie le mode d'un FontFaceCombo.
-			field.TextDisplayMode = proposal ? TextDisplayMode.Proposal : TextDisplayMode.Defined;
+			field.TextDisplayMode = proposal ? TextFieldDisplayMode.InheritedValue : TextFieldDisplayMode.OverriddenValue;
 		}
 
 

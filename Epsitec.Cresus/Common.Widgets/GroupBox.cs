@@ -143,7 +143,7 @@ namespace Epsitec.Common.Widgets
 #endif
 
 			adorner.PaintGroupBox(graphics, frameRect, titleRect, state);
-			adorner.PaintGeneralTextLayout(graphics, clipRect, pos, this.TextLayout, state, PaintTextStyle.Group, TextDisplayMode.Default, this.BackColor);
+			adorner.PaintGeneralTextLayout(graphics, clipRect, pos, this.TextLayout, state, PaintTextStyle.Group, TextFieldDisplayMode.Default, this.BackColor);
 		}
 	}
 }

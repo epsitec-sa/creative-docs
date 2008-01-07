@@ -310,13 +310,11 @@ namespace Epsitec.Common.Widgets
 					{
 						case TextFieldStyle.Normal:
 						case TextFieldStyle.Simple:
-						case TextFieldStyle.Static:
 						case TextFieldStyle.Flat:
 							switch (value)
 							{
 								case TextFieldStyle.Normal:
 								case TextFieldStyle.Simple:
-								case TextFieldStyle.Static:
 								case TextFieldStyle.Flat:
 									this.textFieldStyle = value;
 									this.Invalidate ();
@@ -449,7 +447,7 @@ namespace Epsitec.Common.Widgets
 		}
 
 
-		public TextDisplayMode TextDisplayMode
+		public TextFieldDisplayMode TextDisplayMode
 		{
 			get
 			{
@@ -466,7 +464,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		public TextDisplayMode InitialTextDisplayMode
+		public TextFieldDisplayMode InitialTextDisplayMode
 		{
 			get
 			{
@@ -657,9 +655,9 @@ namespace Epsitec.Common.Widgets
 
 				this.IsEditing = true;
 
-				if (this.textDisplayMode == TextDisplayMode.Proposal)
+				if (this.textDisplayMode == TextFieldDisplayMode.InheritedValue)
 				{
-					this.textDisplayMode = TextDisplayMode.Defined;
+					this.textDisplayMode = TextFieldDisplayMode.OverriddenValue;
 				}
 
 				this.OnEditionStarted ();
@@ -1534,7 +1532,7 @@ namespace Epsitec.Common.Widgets
 		{
 			//	Décale le texte vers la droite (+) ou la gauche (-), lorsque la
 			//	souris dépasse pendant une sélection.
-			if (this.textFieldStyle == TextFieldStyle.Multi)
+			if (this.textFieldStyle == TextFieldStyle.Multiline)
 				return;
 
 			this.scrollOffset.X += dist;
@@ -1716,7 +1714,7 @@ namespace Epsitec.Common.Widgets
 			}
 			else
 			{
-				if (this.textDisplayMode == TextDisplayMode.Proposal)
+				if (this.textDisplayMode == TextFieldDisplayMode.InheritedValue)
 				{
 
 					TextLayout copy = new TextLayout (original);
@@ -1913,7 +1911,7 @@ namespace Epsitec.Common.Widgets
 				if ((html != null) &&
 					(html.Length > 0))
 				{
-					if (this.host.TextFieldStyle != TextFieldStyle.Multi)
+					if (this.host.TextFieldStyle != TextFieldStyle.Multiline)
 					{
 						html = html.Replace ("<br/>", " ");
 					}
@@ -2121,11 +2119,11 @@ namespace Epsitec.Common.Widgets
 		protected Drawing.Point					lastMousePos;
 		protected TextFieldStyle				textFieldStyle;
 		private double							scrollZone = 0.5;
-		private TextDisplayMode					textDisplayMode;
+		private TextFieldDisplayMode					textDisplayMode;
 		private DefocusAction					defocus_action;
 		private ShowCondition					button_show_condition;
 		protected string						initial_text;
-		protected TextDisplayMode				initial_text_display_mode;
+		protected TextFieldDisplayMode				initial_text_display_mode;
 		private bool							is_editing;
 		private bool							is_modal;
 		private bool							is_password;

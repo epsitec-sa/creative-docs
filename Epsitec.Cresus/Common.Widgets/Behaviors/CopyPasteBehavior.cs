@@ -125,7 +125,7 @@ namespace Epsitec.Common.Widgets.Behaviors
 				
 				if (html != null)
 				{
-					if (text.TextFieldStyle != TextFieldStyle.Multi)
+					if (text.TextFieldStyle != TextFieldStyle.Multiline)
 					{
 						html = html.Replace ("<br/>", " ");
 					}

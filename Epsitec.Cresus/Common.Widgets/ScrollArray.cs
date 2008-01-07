@@ -2281,7 +2281,7 @@ namespace Epsitec.Common.Widgets
 
 		protected virtual void PaintCellContents(int row_line, int column, Drawing.Graphics graphics, IAdorner adorner, Drawing.Point pos, WidgetPaintState state, TextLayout layout)
 		{
-			adorner.PaintGeneralTextLayout (graphics, Drawing.Rectangle.MaxValue, pos, layout, state, PaintTextStyle.Array, TextDisplayMode.Default, this.BackColor);
+			adorner.PaintGeneralTextLayout (graphics, Drawing.Rectangle.MaxValue, pos, layout, state, PaintTextStyle.Array, TextFieldDisplayMode.Default, this.BackColor);
 		}
 
 

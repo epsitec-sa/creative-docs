@@ -97,7 +97,7 @@ namespace Epsitec.Common.Widgets
 			WidgetPaintState state = this.PaintState;
 
 			adorner.PaintCheck (graphics, rect, state);
-			adorner.PaintGeneralTextLayout (graphics, clipRect, this.LabelOffset, this.TextLayout, state, PaintTextStyle.CheckButton, TextDisplayMode.Default, this.BackColor);
+			adorner.PaintGeneralTextLayout (graphics, clipRect, this.LabelOffset, this.TextLayout, state, PaintTextStyle.CheckButton, TextFieldDisplayMode.Default, this.BackColor);
 		}
 
 

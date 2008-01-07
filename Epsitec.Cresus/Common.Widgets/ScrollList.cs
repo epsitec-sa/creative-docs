@@ -663,13 +663,13 @@ namespace Epsitec.Common.Widgets
 			{
 				Drawing.Rectangle menu = rect;
 				menu.Deflate(0, 0, ScrollList.TextOffsetY-this.margins.Top, ScrollList.TextOffsetY-this.margins.Bottom);
-				adorner.PaintTextFieldBackground(graphics, menu, state, TextFieldStyle.Simple, TextDisplayMode.Default, false);
+				adorner.PaintTextFieldBackground(graphics, menu, state, TextFieldStyle.Simple, TextFieldDisplayMode.Default, false);
 			}
 			else
 			{
 				Drawing.Rectangle menu = rect;
 				menu.Deflate(0, 0, ScrollList.TextOffsetY-this.margins.Top, ScrollList.TextOffsetY-this.margins.Bottom);
-				adorner.PaintTextFieldBackground(graphics, menu, state, TextFieldStyle.Multi, TextDisplayMode.Default, false);
+				adorner.PaintTextFieldBackground(graphics, menu, state, TextFieldStyle.Multiline, TextFieldDisplayMode.Default, false);
 			}
 
 			Drawing.Point pos = new Drawing.Point(ScrollList.TextOffsetX, rect.Height-ScrollList.TextOffsetY-this.lineHeight);
@@ -693,7 +693,7 @@ namespace Epsitec.Common.Widgets
 						}
 					};
 
-					adorner.PaintTextSelectionBackground(graphics, areas, state, PaintTextStyle.TextField, TextDisplayMode.Default);
+					adorner.PaintTextSelectionBackground(graphics, areas, state, PaintTextStyle.TextField, TextFieldDisplayMode.Default);
 
 					state |= WidgetPaintState.Selected;
 				}

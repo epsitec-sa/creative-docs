@@ -745,7 +745,7 @@ namespace Epsitec.Common.Widgets.Adorners
 			{
 				state &= ~WidgetPaintState.Focused;
 			}
-			this.PaintGeneralTextLayout(graphics, Drawing.Rectangle.MaxValue, pos, text, state, PaintTextStyle.Button, TextDisplayMode.Default, Drawing.Color.Empty);
+			this.PaintGeneralTextLayout(graphics, Drawing.Rectangle.MaxValue, pos, text, state, PaintTextStyle.Button, TextFieldDisplayMode.Default, Drawing.Color.Empty);
 		}
 
 		public override void PaintButtonForeground(Drawing.Graphics graphics,
@@ -760,7 +760,7 @@ namespace Epsitec.Common.Widgets.Adorners
 											 Drawing.Rectangle rect,
 											 Widgets.WidgetPaintState state,
 											 Widgets.TextFieldStyle style,
-											 TextDisplayMode mode,
+											 TextFieldDisplayMode mode,
 											 bool readOnly)
 		{
 			//	Dessine le fond d'une ligne éditable.
@@ -768,7 +768,7 @@ namespace Epsitec.Common.Widgets.Adorners
 			Drawing.Path path;
 
 			if ( style == TextFieldStyle.Normal ||
-				 style == TextFieldStyle.Multi  ||
+				 style == TextFieldStyle.Multiline  ||
 				 style == TextFieldStyle.Combo  )
 			{
 				if ( (state&WidgetPaintState.Enabled) != 0 )  // bouton enable ?
@@ -864,7 +864,7 @@ namespace Epsitec.Common.Widgets.Adorners
 											 Drawing.Rectangle rect,
 											 Widgets.WidgetPaintState state,
 											 Widgets.TextFieldStyle style,
-											 TextDisplayMode mode,
+											 TextFieldDisplayMode mode,
 											 bool readOnly)
 		{
 		}
@@ -1467,7 +1467,7 @@ namespace Epsitec.Common.Widgets.Adorners
 			state &= ~WidgetPaintState.Selected;
 			state &= ~WidgetPaintState.Focused;
 			PaintTextStyle style = ( type == MenuOrientation.Horizontal ) ? PaintTextStyle.HMenu : PaintTextStyle.VMenu;
-			this.PaintGeneralTextLayout(graphics, Drawing.Rectangle.MaxValue, pos, text, state, style, TextDisplayMode.Default, Drawing.Color.Empty);
+			this.PaintGeneralTextLayout(graphics, Drawing.Rectangle.MaxValue, pos, text, state, style, TextFieldDisplayMode.Default, Drawing.Color.Empty);
 		}
 
 		public override void PaintMenuItemForeground(Drawing.Graphics graphics,
@@ -1664,7 +1664,7 @@ namespace Epsitec.Common.Widgets.Adorners
 			pos.Y = (rect.Height-text.LayoutSize.Height)/2;
 			state &= ~WidgetPaintState.Focused;
 			PaintTextStyle style = PaintTextStyle.HMenu;
-			this.PaintGeneralTextLayout(graphics, Drawing.Rectangle.MaxValue, pos, text, state, style, TextDisplayMode.Default, Drawing.Color.Empty);
+			this.PaintGeneralTextLayout(graphics, Drawing.Rectangle.MaxValue, pos, text, state, style, TextFieldDisplayMode.Default, Drawing.Color.Empty);
 		}
 
 		public override void PaintRibbonSectionBackground(Drawing.Graphics graphics,
@@ -1799,14 +1799,14 @@ namespace Epsitec.Common.Widgets.Adorners
 		
 		public override void PaintTextSelectionBackground(Drawing.Graphics graphics,
 												 TextLayout.SelectedArea[] areas,
-												 WidgetPaintState state, PaintTextStyle style, TextDisplayMode mode)
+												 WidgetPaintState state, PaintTextStyle style, TextFieldDisplayMode mode)
 		{
 			//	Dessine les zones rectanglaires correspondant aux caractères sélectionnés.
 			for ( int i=0 ; i<areas.Length ; i++ )
 			{
 				if ( (state&WidgetPaintState.Focused) != 0 )
 				{
-					if ( mode == TextDisplayMode.Defined )
+					if ( mode == TextFieldDisplayMode.OverriddenValue )
 					{
 						this.PaintImageButton(graphics, areas[i].Rect, 39);
 					}
@@ -1832,7 +1832,7 @@ namespace Epsitec.Common.Widgets.Adorners
 
 		public override void PaintTextSelectionForeground(Drawing.Graphics graphics,
 												 TextLayout.SelectedArea[] areas,
-												 WidgetPaintState state, PaintTextStyle style, TextDisplayMode mode)
+												 WidgetPaintState state, PaintTextStyle style, TextFieldDisplayMode mode)
 		{
 		}
 
@@ -1842,7 +1842,7 @@ namespace Epsitec.Common.Widgets.Adorners
 										   TextLayout text,
 										   WidgetPaintState state,
 										   PaintTextStyle style,
-										   TextDisplayMode mode,
+										   TextFieldDisplayMode mode,
 										   Drawing.Color backColor)
 		{
 			//	Dessine le texte d'un widget.
@@ -2185,13 +2185,13 @@ namespace Epsitec.Common.Widgets.Adorners
 			return this.colorBorder;
 		}
 
-		public override Drawing.Color ColorTextDisplayMode(TextDisplayMode mode)
+		public override Drawing.Color ColorTextDisplayMode(TextFieldDisplayMode mode)
 		{
 			switch ( mode )
 			{
-				case TextDisplayMode.Default:   return Drawing.Color.Empty;
-				case TextDisplayMode.Defined:   return Drawing.Color.FromRgb(255.0/255.0, 236.0/255.0, 171.0/255.0);
-				case TextDisplayMode.Proposal:  return Drawing.Color.FromRgb(186.0/255.0, 220.0/255.0, 255.0/255.0);
+				case TextFieldDisplayMode.Default:   return Drawing.Color.Empty;
+				case TextFieldDisplayMode.OverriddenValue:   return Drawing.Color.FromRgb(255.0/255.0, 236.0/255.0, 171.0/255.0);
+				case TextFieldDisplayMode.InheritedValue:  return Drawing.Color.FromRgb(186.0/255.0, 220.0/255.0, 255.0/255.0);
 			}
 			return Drawing.Color.Empty;
 		}

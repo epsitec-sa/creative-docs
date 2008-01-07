@@ -543,13 +543,13 @@ namespace Epsitec.Common.Document.Containers
 			if ( this.pageSizeWidth != null )
 			{
 				this.pageSizeWidth.InternalValue = (decimal) size.Width;
-				this.pageSizeWidth.TextDisplayMode = widthDefined ? TextDisplayMode.Defined : TextDisplayMode.Proposal;
+				this.pageSizeWidth.TextDisplayMode = widthDefined ? TextFieldDisplayMode.OverriddenValue : TextFieldDisplayMode.InheritedValue;
 			}
 
 			if ( this.pageSizeHeight != null )
 			{
 				this.pageSizeHeight.InternalValue = (decimal) size.Height;
-				this.pageSizeHeight.TextDisplayMode = heightDefined ? TextDisplayMode.Defined : TextDisplayMode.Proposal;
+				this.pageSizeHeight.TextDisplayMode = heightDefined ? TextFieldDisplayMode.OverriddenValue : TextFieldDisplayMode.InheritedValue;
 			}
 
 			if ( this.languageField != null )

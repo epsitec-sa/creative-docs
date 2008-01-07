@@ -31,8 +31,8 @@ namespace Epsitec.Common.Widgets
 		void PaintButtonTextLayout(Drawing.Graphics graphics, Drawing.Point pos, TextLayout text, WidgetPaintState state, ButtonStyle style);
 		void PaintButtonForeground(Drawing.Graphics graphics, Drawing.Rectangle rect, WidgetPaintState state, Direction dir, ButtonStyle style);
 		
-		void PaintTextFieldBackground(Drawing.Graphics graphics, Drawing.Rectangle rect, WidgetPaintState state, TextFieldStyle style, TextDisplayMode mode, bool readOnly);
-		void PaintTextFieldForeground(Drawing.Graphics graphics, Drawing.Rectangle rect, WidgetPaintState state, TextFieldStyle style, TextDisplayMode mode, bool readOnly);
+		void PaintTextFieldBackground(Drawing.Graphics graphics, Drawing.Rectangle rect, WidgetPaintState state, TextFieldStyle style, TextFieldDisplayMode mode, bool readOnly);
+		void PaintTextFieldForeground(Drawing.Graphics graphics, Drawing.Rectangle rect, WidgetPaintState state, TextFieldStyle style, TextFieldDisplayMode mode, bool readOnly);
 		
 		void PaintScrollerBackground(Drawing.Graphics graphics, Drawing.Rectangle frameRect, Drawing.Rectangle thumbRect, Drawing.Rectangle tabRect, WidgetPaintState state, Direction dir);
 		void PaintScrollerHandle(Drawing.Graphics graphics, Drawing.Rectangle thumbRect, Drawing.Rectangle tabRect, WidgetPaintState state, Direction dir);
@@ -107,10 +107,10 @@ namespace Epsitec.Common.Widgets
 		
 		void PaintFocusBox(Drawing.Graphics graphics, Drawing.Rectangle rect);
 		void PaintTextCursor(Drawing.Graphics graphics, Drawing.Point p1, Drawing.Point p2, bool cursorOn);
-		void PaintTextSelectionBackground(Drawing.Graphics graphics, TextLayout.SelectedArea[] areas, WidgetPaintState state, PaintTextStyle style, TextDisplayMode mode);
-		void PaintTextSelectionForeground(Drawing.Graphics graphics, TextLayout.SelectedArea[] areas, WidgetPaintState state, PaintTextStyle style, TextDisplayMode mode);
+		void PaintTextSelectionBackground(Drawing.Graphics graphics, TextLayout.SelectedArea[] areas, WidgetPaintState state, PaintTextStyle style, TextFieldDisplayMode mode);
+		void PaintTextSelectionForeground(Drawing.Graphics graphics, TextLayout.SelectedArea[] areas, WidgetPaintState state, PaintTextStyle style, TextFieldDisplayMode mode);
 		
-		void PaintGeneralTextLayout(Drawing.Graphics graphics, Drawing.Rectangle clipRect, Drawing.Point pos, TextLayout text, WidgetPaintState state, PaintTextStyle style, TextDisplayMode mode, Drawing.Color backColor);
+		void PaintGeneralTextLayout(Drawing.Graphics graphics, Drawing.Rectangle clipRect, Drawing.Point pos, TextLayout text, WidgetPaintState state, PaintTextStyle style, TextFieldDisplayMode mode, Drawing.Color backColor);
 
 		void AdaptPictogramColor(ref Drawing.Color color, Drawing.GlyphPaintStyle paintStyle, Drawing.Color uniqueColor);
 
@@ -123,7 +123,7 @@ namespace Epsitec.Common.Widgets
 		Drawing.Color ColorText(WidgetPaintState state);
 		Drawing.Color ColorTextSliderBorder(bool enabled);
 		Drawing.Color ColorTextFieldBorder(bool enabled);
-		Drawing.Color ColorTextDisplayMode(TextDisplayMode mode);
+		Drawing.Color ColorTextDisplayMode(TextFieldDisplayMode mode);
 
 		double AlphaMenu { get; }
 

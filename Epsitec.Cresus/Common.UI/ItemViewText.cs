@@ -57,7 +57,7 @@ namespace Epsitec.Common.UI
 					state |= WidgetPaintState.Selected;
 				}
 
-				adorner.PaintGeneralTextLayout (graphics, clipRect, pos, this.TextLayout, state, this.paintTextStyle, TextDisplayMode.Default, this.BackColor);
+				adorner.PaintGeneralTextLayout (graphics, clipRect, pos, this.TextLayout, state, this.paintTextStyle, TextFieldDisplayMode.Default, this.BackColor);
 			}
 		}
 

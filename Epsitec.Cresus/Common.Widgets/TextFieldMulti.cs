@@ -10,7 +10,7 @@ namespace Epsitec.Common.Widgets
 			this.TextLayout.BreakMode &= ~Drawing.TextBreakMode.SingleLine;
 			this.TextLayout.BreakMode |=  Drawing.TextBreakMode.Hyphenate;
 			
-			this.textFieldStyle = TextFieldStyle.Multi;
+			this.textFieldStyle = TextFieldStyle.Multiline;
 
 			this.scroller = new VScroller(this);
 			this.scroller.Enable = false;
