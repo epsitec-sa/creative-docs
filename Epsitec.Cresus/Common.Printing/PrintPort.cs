@@ -653,10 +653,15 @@ namespace Epsitec.Common.Printing
 				
 				for (int i = 0; i < n; i++)
 				{
+#if false
 					path.Append (font, glyph[i], ft.XX, ft.XY, ft.YX, ft.YY, ft.TX + x, ft.TY + y);
 					
 					x += (glyph_x[i]-ox) * size;
 					ox = glyph_x[i];
+#else
+					ox = x + glyph_x[i]*size;
+					path.Append(font, glyph[i], ft.XX, ft.XY, ft.YX, ft.YY, ft.TX + ox, ft.TY + y);
+#endif
 				}
 				
 				width = glyph_x[n-1] * size;
