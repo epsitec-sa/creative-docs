@@ -2040,7 +2040,7 @@ namespace Epsitec.Common.Widgets
 				{
 					for ( int j=line.FirstBlock ; j<=line.LastBlock ; j++ )
 					{
-						JustifBlock block = (JustifBlock)this.blocks[j];
+						JustifBlock block = this.blocks[j];
 
 						double before = 0;
 						if ( block.BoL )
@@ -2055,7 +2055,7 @@ namespace Epsitec.Common.Widgets
 						}
 						else
 						{
-							JustifBlock nextBlock = (JustifBlock)this.blocks[j+1];
+							JustifBlock nextBlock = this.blocks[j+1];
 							if ( nextBlock.BoL )
 							{
 								width = this.layoutSize.Width-block.Pos.X;
@@ -2127,7 +2127,7 @@ namespace Epsitec.Common.Widgets
 			//	retourne true, car l'index trouvé correspond à la 2ème position possible.
 			if ( blockRank > 0 )
 			{
-				JustifBlock prevBlock = (JustifBlock)this.blocks[blockRank-1];
+				JustifBlock prevBlock = this.blocks[blockRank-1];
 				if ( index >= prevBlock.BeginIndex && index <= prevBlock.EndIndex )
 				{
 					return true;
@@ -2341,7 +2341,7 @@ namespace Epsitec.Common.Widgets
 			int i = after ? this.blocks.Count-1 : 0;
 			while (i >= 0 && i < this.blocks.Count)
 			{
-				JustifBlock block = (JustifBlock) this.blocks[i];
+				JustifBlock block = this.blocks[i];
 				JustifLine line = (JustifLine) this.lines[block.IndexLine];
 				if (block.Visible && index >= block.BeginIndex && index <= block.EndIndex)
 				{
@@ -2472,7 +2472,7 @@ namespace Epsitec.Common.Widgets
 				return new Drawing.Point();
 			}
 
-			JustifBlock block = (JustifBlock)this.blocks[this.blocks.Count-1];
+			JustifBlock block = this.blocks[this.blocks.Count-1];
 			Drawing.Point pos = new Drawing.Point(block.Pos.X+block.Width, block.Pos.Y+block.Font.Descender*block.FontSize);
 			return pos;
 		}
@@ -2487,8 +2487,8 @@ namespace Epsitec.Common.Widgets
 				return 0;
 			}
 
-			JustifBlock fb = (JustifBlock)this.blocks[0];
-			JustifBlock lb = (JustifBlock)this.blocks[this.blocks.Count-1];
+			JustifBlock fb = this.blocks[0];
+			JustifBlock lb = this.blocks[this.blocks.Count-1];
 			return (fb.Pos.Y+fb.Font.Ascender*fb.FontSize) - (lb.Pos.Y+lb.Font.Descender*lb.FontSize);
 		}
 		
@@ -3621,9 +3621,9 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		private System.Collections.Stack CreateFontStack()
+		private Stack<FontItem> CreateFontStack()
 		{
-			System.Collections.Stack stack = new System.Collections.Stack();
+			Stack<FontItem> stack = new Stack<FontItem> ();
 			FontItem font = new FontItem(this);
 			
 			font.FontName  = TextLayout.CodeDefault + this.DefaultFont.FaceName;
@@ -3647,11 +3647,11 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		private void ProcessFontTag(System.Collections.Stack stack, Dictionary<string, string> parameters)
+		private void ProcessFontTag(Stack<FontItem> stack, Dictionary<string, string> parameters)
 		{
 			if ( parameters != null )
 			{
-				FontItem font = stack.Peek() as FontItem;
+				FontItem font = stack.Peek();
 				font = font.Copy();
 				
 				if ( parameters.ContainsKey("face") )
@@ -3674,7 +3674,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		private bool ProcessFormatTags(Tag tag, System.Collections.Stack fontStack, SupplItem supplItem, Dictionary<string, string> parameters)
+		private bool ProcessFormatTags(Tag tag, Stack<FontItem> fontStack, SupplItem supplItem, Dictionary<string, string> parameters)
 		{
 			switch ( tag )
 			{
@@ -3795,15 +3795,15 @@ namespace Epsitec.Common.Widgets
 			run.WaveColor  = supplItem.WaveColor;
 		}
 
-		private void PutRun(System.Collections.ArrayList runList,
-							  System.Collections.Stack fontStack,
+		private void PutRun(List<Drawing.TextBreak.XRun> runList,
+							  Stack<FontItem> fontStack,
 							  SupplItem supplItem,
 							  int partIndex, ref int startIndex, int currentIndex,
 							  Drawing.Image image, double verticalOffset)
 		{
 			if ( currentIndex-startIndex == 0 )  return;
 
-			FontItem fontItem = (FontItem)fontStack.Peek();
+			FontItem fontItem = fontStack.Peek();
 			Drawing.Font font = fontItem.GetFont(supplItem.Bold>0, supplItem.Italic>0);
 
 			Drawing.TextBreak.XRun run = new Drawing.TextBreak.XRun ();
@@ -3817,12 +3817,12 @@ namespace Epsitec.Common.Widgets
 			startIndex = currentIndex;
 		}
 
-		private void PutTab(System.Collections.Stack fontStack,
+		private void PutTab(Stack<FontItem> fontStack,
 							  SupplItem supplItem,
 							  int startIndex,
 							  Tag tag, Dictionary<string, string> parameters)
 		{
-			FontItem fontItem = (FontItem)fontStack.Peek();
+			FontItem fontItem = fontStack.Peek();
 			Drawing.Font font = fontItem.GetFont(supplItem.Bold>0, supplItem.Italic>0);
 
 			JustifBlock block = new JustifBlock(this);
@@ -3877,7 +3877,7 @@ namespace Epsitec.Common.Widgets
 				this.tabs.Clear();
 			}
 
-			System.Collections.Stack	fontStack = this.CreateFontStack();
+			Stack<FontItem>				fontStack = this.CreateFontStack();
 			Dictionary<string, string>	parameters;
 			SupplItem					supplItem = new SupplItem();
 
@@ -3888,7 +3888,7 @@ namespace Epsitec.Common.Widgets
 			Tag 	tagEnding;
 
 			System.Text.StringBuilder		buffer  = new System.Text.StringBuilder(textLength);
-			System.Collections.ArrayList	runList = new System.Collections.ArrayList();
+			List<Drawing.TextBreak.XRun>	runList = new List<Drawing.TextBreak.XRun> ();
 			do
 			{
 				buffer.Length = 0;
@@ -4425,7 +4425,7 @@ noText:
 				int beginJustifBlock = beginLineBlock;
 				while ( true )
 				{
-					block = (JustifBlock)this.blocks[nextLineBlock];
+					block = this.blocks[nextLineBlock];
 					block.IndexLine = totalLine;
 					width += block.Width;
 					if ( block.IsImage )
@@ -4466,7 +4466,7 @@ noText:
 
 					nextLineBlock ++;
 					if ( nextLineBlock >= this.blocks.Count )  break;
-					block = (JustifBlock)this.blocks[nextLineBlock];
+					block = this.blocks[nextLineBlock];
 					if ( block.BoL )  break;  // break si début nouvelle ligne
 				}
 
@@ -4484,7 +4484,7 @@ noText:
 					visible = false;
 				}
 
-				JustifBlock firstBlock = (JustifBlock)this.blocks[beginLineBlock];
+				JustifBlock firstBlock = this.blocks[beginLineBlock];
 				pos.Y -= ascender;  // sur la ligne de base
 				pos.X = firstBlock.Indent;
 
@@ -4503,7 +4503,7 @@ noText:
 				this.lines.Add(line);
 
 				bool justif = false;
-				JustifBlock lastBlock = (JustifBlock)this.blocks[nextLineBlock-1];
+				JustifBlock lastBlock = this.blocks[nextLineBlock-1];
 				bool lastLine = lastBlock.LineBreak;
 				if ( nextLineBlock-1 >= this.blocks.Count-1 )  lastLine = true;
 				if ( (this.JustifMode == Drawing.TextJustifMode.AllButLast && !lastLine) ||
@@ -4513,7 +4513,7 @@ noText:
 					double e = 0;
 					for ( int i=beginJustifBlock ; i<nextLineBlock ; i++ )
 					{
-						block = (JustifBlock)this.blocks[i];
+						block = this.blocks[i];
 						w += block.InfoWidth * block.FontSize;
 						e += block.InfoElast * block.FontSize;
 					}
@@ -4523,7 +4523,7 @@ noText:
 					{
 						for ( int i=beginLineBlock ; i<nextLineBlock ; i++ )
 						{
-							block = (JustifBlock)this.blocks[i];
+							block = this.blocks[i];
 
 							if ( i < beginJustifBlock )
 							{
@@ -4595,7 +4595,7 @@ noText:
 
 					for ( int i=beginLineBlock ; i<nextLineBlock ; i++ )
 					{
-						block = (JustifBlock)this.blocks[i];
+						block = this.blocks[i];
 						block.Pos = pos;
 						block.Visible = visible;
 						block.Infos = null;
@@ -4636,7 +4636,7 @@ noText:
 			{
 				for ( int i=0 ; i<this.blocks.Count ; i++ )
 				{
-					block = (JustifBlock)this.blocks[i];
+					block = this.blocks[i];
 					block.Pos.Y -= offset;  // descend le bloc
 				}
 				for ( int i=0 ; i<this.lines.Count ; i++ )
