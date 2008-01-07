@@ -105,16 +105,7 @@ namespace Epsitec.Common.Widgets.Adorners
 
 		protected static TextLayout AdaptTextLayout(TextLayout text, TextDisplayMode mode)
 		{
-			if (mode == TextDisplayMode.Proposal)
-			{
-				TextLayout copy = new TextLayout (text);
-				copy.Text = string.Concat ("<i>", text.Text, "</i>");
-				return copy;
-			}
-			else
-			{
-				return text;
-			}
+			return text;
 		}
 		
 		

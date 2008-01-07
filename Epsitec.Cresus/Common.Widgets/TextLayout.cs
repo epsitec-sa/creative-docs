@@ -566,8 +566,7 @@ namespace Epsitec.Common.Widgets
 						blockRect.Top    = block.FontSize*block.Font.Ascender;
 						blockRect.Bottom = block.FontSize*block.Font.Descender;
 					}
-					blockRect.Offset(block.Pos.X, block.Pos.Y);
-					totalRect.MergeWith(blockRect);
+					totalRect.MergeWith(Drawing.Rectangle.Offset (blockRect, block.Pos));
 				}
 				return totalRect;
 			}
@@ -601,8 +600,7 @@ namespace Epsitec.Common.Widgets
 					blockRect = block.Font.GetTextBounds(block.Text);
 					blockRect.Scale(block.FontSize);
 				}
-				blockRect.Offset(block.Pos.X, block.Pos.Y);
-				totalRect.MergeWith(blockRect);
+				totalRect.MergeWith (Drawing.Rectangle.Offset (blockRect, block.Pos));
 			}
 			return totalRect;
 		}
@@ -2312,7 +2310,8 @@ namespace Epsitec.Common.Widgets
 		public bool FindTextCursor(TextLayoutContext context, out Drawing.Point p1, out Drawing.Point p2)
 		{
 			//	Retourne les deux extrémités du curseur.
-			//	Indique également le numéro de la ligne (0..n).
+			//	Indique également le numéro de la ligne (0..n) dans le contexte.
+			
 			this.UpdateLayout();
 
 			int  index = context.CursorTo;
@@ -2321,17 +2320,17 @@ namespace Epsitec.Common.Widgets
 			p2 = new Drawing.Point();
 			context.CursorLine = -1;
 			int i = after ? this.blocks.Count-1 : 0;
-			while ( i >= 0 && i < this.blocks.Count )
+			while (i >= 0 && i < this.blocks.Count)
 			{
-				JustifBlock block = (JustifBlock)this.blocks[i];
-				JustifLine line = (JustifLine)this.lines[block.IndexLine];
-				if ( block.Visible && index >= block.BeginIndex && index <= block.EndIndex )
+				JustifBlock block = (JustifBlock) this.blocks[i];
+				JustifLine line = (JustifLine) this.lines[block.IndexLine];
+				if (block.Visible && index >= block.BeginIndex && index <= block.EndIndex)
 				{
 					p2.Y = line.Pos.Y+line.Ascender;
 					p1.Y = line.Pos.Y+line.Descender;
-					if ( block.IsImage || block.Tab || block.List )
+					if (block.IsImage || block.Tab || block.List)
 					{
-						if ( index == block.BeginIndex )
+						if (index == block.BeginIndex)
 						{
 							p1.X = block.Pos.X;
 							p2.X = p1.X;
@@ -2344,23 +2343,23 @@ namespace Epsitec.Common.Widgets
 					}
 					else
 					{
-						p1.X = this.IndexToPosX(block, line, index);
+						p1.X = this.IndexToPosX (block, line, index);
 						p2.X = p1.X;
 					}
 
 					double angle = 0.0;
-					if ( block.Italic )
+					if (block.Italic)
 					{
 						angle = 90.0-block.Font.CaretSlope;
 					}
-					if ( context.PrepareOffset != -1 )
+					if (context.PrepareOffset != -1)
 					{
-						angle = this.ScanItalic(context.PrepareOffset+context.PrepareLength1) ? Drawing.Font.DefaultObliqueAngle : 0.0;
+						angle = this.ScanItalic (context.PrepareOffset+context.PrepareLength1) ? Drawing.Font.DefaultObliqueAngle : 0.0;
 					}
-					if ( angle != 0.0 )
+					if (angle != 0.0)
 					{
 						angle *= System.Math.PI/180.0;  // en radians
-						double f = System.Math.Sin(angle);
+						double f = System.Math.Sin (angle);
 						p2.X += line.Ascender*f;
 						p1.X += line.Descender*f;
 					}
@@ -3843,7 +3842,7 @@ namespace Epsitec.Common.Widgets
 			//	Crée la liste des parties.
 			if ( this.parts == null )
 			{
-				this.parts = new System.Collections.ArrayList();
+				this.parts = new List<TabPart> ();
 			}
 			else
 			{
@@ -3853,7 +3852,7 @@ namespace Epsitec.Common.Widgets
 			//	Crée la liste des tabulateurs (liste de JustifBlocks).
 			if ( this.tabs == null )
 			{
-				this.tabs = new System.Collections.ArrayList();
+				this.tabs = new List<JustifBlock> ();
 			}
 			else
 			{
@@ -5201,6 +5200,11 @@ noText:
 
 		public struct SelectedArea
 		{
+			public SelectedArea(Drawing.Rectangle rect) : this()
+			{
+				this.Rect = rect;
+			}
+
 			public Drawing.Rectangle Rect
 			{
 				get;
@@ -5264,10 +5268,10 @@ noText:
 		private double							verticalMark;
 		private int								totalLine;
 		private int								visibleLine;
-		private System.Collections.ArrayList	parts  = new System.Collections.ArrayList ();
-		private System.Collections.ArrayList	tabs   = new System.Collections.ArrayList ();
-		private System.Collections.ArrayList	blocks = new System.Collections.ArrayList ();
-		private System.Collections.ArrayList	lines  = new System.Collections.ArrayList ();
+		private List<TabPart>					parts;
+		private List<JustifBlock>				tabs;
+		private readonly List<JustifBlock>		blocks = new List<JustifBlock> ();
+		private readonly List<JustifLine>		lines  = new List<JustifLine> ();
 		private Queue<Support.SimpleCallback>	textChangeEventQueue;
 		
 		public const double						Infinite		= 1000000;

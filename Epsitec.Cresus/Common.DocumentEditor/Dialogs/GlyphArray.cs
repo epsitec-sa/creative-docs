@@ -463,8 +463,7 @@ namespace Epsitec.Common.DocumentEditor.Widgets
 						if ( first == this.selectedIndex && first < this.TotalCell )
 						{
 							TextLayout.SelectedArea[] areas = new TextLayout.SelectedArea[1];
-							areas[0] = new TextLayout.SelectedArea();
-							areas[0].Rect = rect;
+							areas[0] = new TextLayout.SelectedArea (rect);
 							adorner.PaintTextSelectionBackground(graphics, areas, state, PaintTextStyle.TextField, TextDisplayMode.Default);
 
 							cellState |= WidgetPaintState.Selected;

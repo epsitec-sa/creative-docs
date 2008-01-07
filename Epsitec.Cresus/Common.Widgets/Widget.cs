@@ -690,7 +690,7 @@ namespace Epsitec.Common.Widgets
 				}
 				else
 				{
-					if (this.text_layout == null)
+					if (this.textLayout == null)
 					{
 						this.CreateTextLayout ();
 					}
@@ -702,30 +702,33 @@ namespace Epsitec.Common.Widgets
 
 		public virtual TextLayout					TextLayout
 		{
-			get { return this.text_layout; }
+			get
+			{
+				return this.textLayout;
+			}
 		}
 		
 		public Drawing.TextBreakMode				TextBreakMode
 		{
 			get
 			{
-				if (this.text_layout != null)
+				if (this.textLayout != null)
 				{
-					return this.text_layout.BreakMode;
+					return this.textLayout.BreakMode;
 				}
 				
 				return Drawing.TextBreakMode.None;
 			}
 			set
 			{
-				if (this.text_layout == null)
+				if (this.textLayout == null)
 				{
 					this.CreateTextLayout ();
 				}
 				
-				if (this.text_layout.BreakMode != value)
+				if (this.textLayout.BreakMode != value)
 				{
-					this.text_layout.BreakMode = value;
+					this.textLayout.BreakMode = value;
 					this.Invalidate ();
 				}
 			}
@@ -2897,10 +2900,10 @@ namespace Epsitec.Common.Widgets
 		
 		protected virtual void UpdateTextLayout()
 		{
-			if (this.text_layout != null)
+			if (this.textLayout != null)
 			{
-				this.text_layout.Alignment  = this.ContentAlignment;
-				this.text_layout.LayoutSize = this.GetTextLayoutSize ();
+				this.textLayout.Alignment  = this.ContentAlignment;
+				this.textLayout.LayoutSize = this.GetTextLayoutSize ();
 				
 				this.UpdateCaption ();
 			}
@@ -2924,7 +2927,7 @@ namespace Epsitec.Common.Widgets
 
 		public void ForceCaptionUpdate()
 		{
-			if (this.text_layout == null)
+			if (this.textLayout == null)
 			{
 				this.CreateTextLayout ();
 			}
@@ -2934,7 +2937,7 @@ namespace Epsitec.Common.Widgets
 
 		protected virtual void UpdateCaption()
 		{
-			if (this.text_layout == null)
+			if (this.textLayout == null)
 			{
 				//	Create the text layout object first. This will automatically call
 				//	UpdateCaption back again, so we don't need to do anything else
@@ -3561,15 +3564,15 @@ namespace Epsitec.Common.Widgets
 		
 		protected virtual void CreateTextLayout()
 		{
-			if (this.text_layout == null)
+			if (this.textLayout == null)
 			{
-				this.text_layout = new TextLayout ();
+				this.textLayout = new TextLayout ();
 
-				this.text_layout.Embedder        = this;
-				this.text_layout.DefaultFont     = this.DefaultFont;
-				this.text_layout.DefaultFontSize = this.DefaultFontSize;
-				this.text_layout.Anchor         += new AnchorEventHandler (this.HandleTextLayoutAnchor);
-				this.text_layout.ResourceManager = Helpers.VisualTree.GetResourceManager (this);
+				this.textLayout.Embedder        = this;
+				this.textLayout.DefaultFont     = this.DefaultFont;
+				this.textLayout.DefaultFontSize = this.DefaultFontSize;
+				this.textLayout.Anchor         += new AnchorEventHandler (this.HandleTextLayoutAnchor);
+				this.textLayout.ResourceManager = Helpers.VisualTree.GetResourceManager (this);
 				
 				this.UpdateTextLayout ();
 			}
@@ -3577,7 +3580,7 @@ namespace Epsitec.Common.Widgets
 		
 		protected virtual void ModifyText(string text)
 		{
-			System.Diagnostics.Debug.Assert (this.text_layout != null);
+			System.Diagnostics.Debug.Assert (this.textLayout != null);
 			
 			this.SetValueBase (Widget.TextProperty, text);
 			this.OnTextDefined ();
@@ -3585,18 +3588,18 @@ namespace Epsitec.Common.Widgets
 		
 		protected virtual void ModifyTextLayout(string text)
 		{
-			if (this.text_layout != null)
+			if (this.textLayout != null)
 			{
-				this.text_layout.Text = text;
+				this.textLayout.Text = text;
 			}
 		}
 		
 		protected virtual void DisposeTextLayout()
 		{
-			if (this.text_layout != null)
+			if (this.textLayout != null)
 			{
-				this.text_layout.Anchor -= new AnchorEventHandler (this.HandleTextLayoutAnchor);
-				this.text_layout = null;
+				this.textLayout.Anchor -= new AnchorEventHandler (this.HandleTextLayoutAnchor);
+				this.textLayout = null;
 			}
 		}
 		
@@ -3679,9 +3682,9 @@ namespace Epsitec.Common.Widgets
 		
 		protected void HandleTextLayoutAnchor(object sender, AnchorEventArgs e)
 		{
-			System.Diagnostics.Debug.Assert (sender == this.text_layout);
+			System.Diagnostics.Debug.Assert (sender == this.textLayout);
 			
-			HypertextInfo info = new HypertextInfo (this.text_layout, e.Bounds, e.Index);
+			HypertextInfo info = new HypertextInfo (this.textLayout, e.Bounds, e.Index);
 			
 			if (this.hypertext_list == null)
 			{
@@ -4251,7 +4254,7 @@ namespace Epsitec.Common.Widgets
 		private System.Collections.ArrayList	hypertext_list;
 		private HypertextInfo					hypertext;
 		
-		private TextLayout						text_layout;
+		private TextLayout						textLayout;
 		private Collections.ShortcutCollection	shortcuts;
 		private double							default_font_height;
 		private MouseCursor						mouse_cursor;

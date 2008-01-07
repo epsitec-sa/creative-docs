@@ -74,6 +74,14 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+		public bool HasSelection
+		{
+			get
+			{
+				return this.cursorFrom != this.cursorTo;
+			}
+		}
+
 		public bool CursorAfter
 		{
 			get;
