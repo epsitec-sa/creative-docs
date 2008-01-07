@@ -377,6 +377,10 @@ namespace Epsitec.Common.Dialogs
 							}
 						}
 					}
+					catch (System.ArgumentException)
+					{
+						this.cachedDateTime = new System.DateTime (1L);
+					}
 					catch (System.ArgumentOutOfRangeException)
 					{
 						this.cachedDateTime = new System.DateTime (1L);
