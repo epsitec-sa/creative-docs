@@ -1,5 +1,6 @@
 using NUnit.Framework;
 using Epsitec.Common.Drawing;
+using System.Collections.Generic;
 
 namespace Epsitec.Common.Widgets
 {
@@ -286,7 +287,7 @@ namespace Epsitec.Common.Widgets
 					TextLayout.Tag.LineBreak
 				};
 			
-			System.Collections.Hashtable parameters;
+			Dictionary<string, string> parameters;
 
 			int    index = 0;
 			string text  = layout.Text;

@@ -67,12 +67,14 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				if ( (this.textLayout.BreakMode & Drawing.TextBreakMode.SingleLine) == 0 )
+				if (this.textLayout.IsSingleLine)
+				{
+					return false;
+				}
+				else
 				{
 					return true;
 				}
-				
-				return false;
 			}
 		}
 		
@@ -717,16 +719,20 @@ namespace Epsitec.Common.Widgets
 			//	Appelé lorsque la souris est déplacée, bouton pressé.
 			int index;
 			bool after;
-			if ( this.textLayout.DetectIndex(pos, true, out index, out after) )
+			if (this.textLayout.DetectIndex (pos, true, out index, out after))
 			{
 				this.mouseSelZone = true;
-				if ( this.context.CursorTo != index )
+				if (this.context.CursorTo != index)
 				{
 					this.context.CursorTo    = index;
 					this.context.CursorAfter = after;
-					this.textLayout.DefineCursorPosX(this.context);
-					this.OnCursorChanged(true);
+					this.textLayout.DefineCursorPosX (this.context);
+					this.OnCursorChanged (true);
 				}
+			}
+			else
+			{
+				//	Not within the bounds of the text layout...
 			}
 		}
 

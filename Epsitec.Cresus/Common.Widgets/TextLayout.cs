@@ -429,6 +429,14 @@ namespace Epsitec.Common.Widgets
 			this.style.SetTabPosition(rank, pos);
 		}
 
+
+		public bool IsSingleLine
+		{
+			get
+			{
+				return (this.BreakMode & Drawing.TextBreakMode.SingleLine) != 0;
+			}
+		}
 		
 		public Drawing.Size						LayoutSize
 		{
@@ -929,7 +937,7 @@ namespace Epsitec.Common.Widgets
 			//	Cherche si la préparation contient une commande donnée.
 			if ( context.PrepareOffset == -1 )  return "";
 
-			System.Collections.Hashtable parameters;
+			Dictionary<string, string> parameters;
 			string text = this.InternalText;
 			string found = "";  // rien encore trouvé
 			int from = context.PrepareOffset;
@@ -939,7 +947,7 @@ namespace Epsitec.Common.Widgets
 				Tag tag = TextLayout.ParseTag(text, ref from, out parameters);
 				if ( tag == Tag.Put )
 				{
-					if ( parameters.ContainsKey(key) )  found = (string)parameters[key];
+					if ( parameters.ContainsKey(key) )  found = parameters[key];
 				}
 			}
 			return found;  // retourne la *dernière* préparation trouvée
@@ -1034,7 +1042,7 @@ namespace Epsitec.Common.Widgets
 			
 			int cursor = from;
 			string text = this.InternalText;
-			System.Collections.Hashtable parameters;
+			Dictionary<string, string> parameters;
 			while ( cursorFrom <= cursorTo )
 			{
 				text = text.Insert(cursorFrom, cmd);
@@ -1074,7 +1082,7 @@ namespace Epsitec.Common.Widgets
 
 			int cursor = from;
 			string text = this.InternalText;
-			System.Collections.Hashtable parameters;
+			Dictionary<string, string> parameters;
 			while ( cursorFrom <= cursorTo )
 			{
 				int cursorStart = cursorFrom;
@@ -1168,7 +1176,7 @@ namespace Epsitec.Common.Widgets
 			//	Supprime des caractères, tout en conservant les commandes. S'il reste
 			//	des commandes superflues, elles seront supprimées par Symplify().
 			//	Retourne l'index où insérer les éventuels caractères remplaçants.
-			System.Collections.Hashtable parameters;
+			Dictionary<string, string> parameters;
 			string text = this.InternalText;
 
 			int ins = -1;
@@ -1993,20 +2001,31 @@ namespace Epsitec.Common.Widgets
 			{
 				JustifLine line;
 
-				line = this.lines[0] as JustifLine;
-				if ( pos.Y > line.Pos.Y+line.Ascender )  // avant la première ligne ?
-				{
-					index = 0;
-					after = true;
-					return true;
-				}
+				line = this.lines[0];
 
-				line = this.lines[this.lines.Count-1] as JustifLine;
-				if ( pos.Y < line.Pos.Y+line.Descender )  // après la dernière ligne ?
+				if (this.IsSingleLine)
 				{
-					index = this.MaxTextIndex;
-					after = false;
-					return true;
+					//	Don't check [y] coordinate - the line will always be OK
+
+					posLine = 0;
+				}
+				else
+				{
+					if (pos.Y > line.Pos.Y+line.Ascender)  // avant la première ligne ?
+					{
+						index = 0;
+						after = true;
+						return true;
+					}
+
+					line = this.lines[this.lines.Count-1];
+					
+					if (pos.Y < line.Pos.Y+line.Descender)  // après la dernière ligne ?
+					{
+						index = this.MaxTextIndex;
+						after = false;
+						return true;
+					}
 				}
 			}
 
@@ -2375,7 +2394,7 @@ namespace Epsitec.Common.Widgets
 
 		private bool ScanItalic(int offset)
 		{
-			System.Collections.Hashtable parameters;
+			Dictionary<string, string> parameters;
 			string text = this.InternalText;
 
 			int from = 0;
@@ -2399,7 +2418,7 @@ namespace Epsitec.Common.Widgets
 				{
 					if ( parameters.ContainsKey("italic") )
 					{
-						string s = (string)parameters["italic"];
+						string s = parameters["italic"];
 						italic = (s == "yes");
 					}
 				}
@@ -2415,7 +2434,7 @@ namespace Epsitec.Common.Widgets
 
 		private double ScanFontScale(int offset)
 		{
-			System.Collections.Hashtable parameters;
+			Dictionary<string, string> parameters;
 			string text = this.InternalText;
 
 			int from = 0;
@@ -2429,8 +2448,7 @@ namespace Epsitec.Common.Widgets
 				{
 					if ( parameters.ContainsKey("size") )
 					{
-						string s = (string)parameters["size"];
-						scale = this.ParseScale(s);
+						scale = this.ParseScale(parameters["size"]);
 					}
 				}
 				
@@ -2658,7 +2676,7 @@ namespace Epsitec.Common.Widgets
 		}
 
 
-		private static bool DeleteTagsList(string endTag, System.Collections.ArrayList list)
+		private static bool DeleteTagsList(string endTag, List<string> list)
 		{
 			//	Enlève un tag à la fin de la liste.
 			System.Diagnostics.Debug.Assert(endTag.StartsWith("</"));
@@ -2668,7 +2686,7 @@ namespace Epsitec.Common.Widgets
 
 			for ( int i=list.Count-1 ; i>=0 ; i-- )
 			{
-				string s = (string)list[i];
+				string s = list[i];
 				if ( s.IndexOf(endTag) == 1 )
 				{
 					list.RemoveAt(i);
@@ -2743,7 +2761,7 @@ namespace Epsitec.Common.Widgets
 		private static int TagSearchNext(string text, int from, int to, Tag search)
 		{
 			//	Cherche un tag en avant.
-			System.Collections.Hashtable parameters;
+			Dictionary<string, string> parameters;
 			int offset = from;
 			while ( offset < to )
 			{
@@ -2759,7 +2777,7 @@ namespace Epsitec.Common.Widgets
 		private static int TagSearchPrev(string text, int from, int to, Tag search)
 		{
 			//	Cherche un tag en arrière.
-			System.Collections.Hashtable parameters;
+			Dictionary<string, string> parameters;
 			int last = -1;
 			int offset = from;
 			while ( offset < to )
@@ -2786,8 +2804,8 @@ namespace Epsitec.Common.Widgets
 				return false;
 			}
 
-			System.Collections.Hashtable parameters;
-			System.Collections.ArrayList list = new System.Collections.ArrayList();
+			Dictionary<string, string> parameters;
+			List<string> list = new List<string> ();
 			int    beginOffset;
 			int    endOffset = 0;
 			while ( endOffset < offset )
@@ -2872,7 +2890,7 @@ namespace Epsitec.Common.Widgets
 			return text[offset++];
 		}
 		
-		public static Tag ParseTag(string text, ref int offset, out System.Collections.Hashtable parameters)
+		public static Tag ParseTag(string text, ref int offset, out Dictionary<string, string> parameters)
 		{
 			//	Avance d'un caractère ou d'un tag dans le texte.
 			System.Diagnostics.Debug.Assert(text != null);
@@ -2940,7 +2958,7 @@ namespace Epsitec.Common.Widgets
 						
 						//	Enlève la fin du tag, comme ça on n'a réellement plus que les arguments.
 						string arg = end.Remove(end.Length-close.Length, close.Length);
-						parameters = new System.Collections.Hashtable();
+						parameters = new Dictionary<string, string> ();
 						
 						string argName;
 						string argValue;
@@ -2996,7 +3014,7 @@ namespace Epsitec.Common.Widgets
 			//	Trouve la séquence <m>x</m> dans le texte et retourne le premier caractère
 			//	de x comme code mnémonique (en majuscules).
 			System.Diagnostics.Debug.Assert(text != null);
-			System.Collections.Hashtable parameters;
+			Dictionary<string, string> parameters;
 
 			int    offset = 0;
 			while ( offset < text.Length )
@@ -3346,7 +3364,7 @@ namespace Epsitec.Common.Widgets
 			FontDefinition					fontItem;
 			FontDefinition					fontCurrent;
 			System.Text.StringBuilder		buffer;
-			System.Collections.Hashtable	parameters;
+			Dictionary<string, string>		parameters;
 
 			fontStack = new Stack<FontDefinition> ();
 
@@ -3382,9 +3400,9 @@ namespace Epsitec.Common.Widgets
 						if ( parameters != null )
 						{
 							fontItem = fontStack.Peek();
-							if ( parameters.ContainsKey("face")  )  fontItem.DefineFontName  ((string)parameters["face"]);
-							if ( parameters.ContainsKey("size")  )  fontItem.DefineFontScale ((string)parameters["size"]);
-							if ( parameters.ContainsKey("color") )  fontItem.DefineFontColor ((string)parameters["color"]);
+							if ( parameters.ContainsKey("face")  )  fontItem.DefineFontName  (parameters["face"]);
+							if ( parameters.ContainsKey("size")  )  fontItem.DefineFontScale (parameters["size"]);
+							if ( parameters.ContainsKey("color") )  fontItem.DefineFontColor (parameters["color"]);
 							fontStack.Push(fontItem);
 						}
 						break;
@@ -3421,12 +3439,12 @@ namespace Epsitec.Common.Widgets
 					case Tag.Put:
 						if ( parameters != null )
 						{
-							if ( parameters.ContainsKey("face")      )  supplItem.PutFontName   = (string)parameters["face"];
-							if ( parameters.ContainsKey("size")      )  supplItem.PutfontScale  = (string)parameters["size"];
-							if ( parameters.ContainsKey("color")     )  supplItem.PutFontColor  = (string)parameters["color"];
-							if ( parameters.ContainsKey("bold")      )  supplItem.PutBold       = (string)parameters["bold"];
-							if ( parameters.ContainsKey("italic")    )  supplItem.PutItalic     = (string)parameters["italic"];
-							if ( parameters.ContainsKey("underline") )  supplItem.PutUnderline  = (string)parameters["underline"];
+							if ( parameters.ContainsKey("face")      )  supplItem.PutFontName   = parameters["face"];
+							if ( parameters.ContainsKey("size")      )  supplItem.PutfontScale  = parameters["size"];
+							if ( parameters.ContainsKey("color")     )  supplItem.PutFontColor  = parameters["color"];
+							if ( parameters.ContainsKey("bold")      )  supplItem.PutBold       = parameters["bold"];
+							if ( parameters.ContainsKey("italic")    )  supplItem.PutItalic     = parameters["italic"];
+							if ( parameters.ContainsKey("underline") )  supplItem.PutUnderline  = parameters["underline"];
 						}
 						break;
 					case Tag.PutEnd:
@@ -3629,7 +3647,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		private void ProcessFontTag(System.Collections.Stack stack, System.Collections.Hashtable parameters)
+		private void ProcessFontTag(System.Collections.Stack stack, Dictionary<string, string> parameters)
 		{
 			if ( parameters != null )
 			{
@@ -3638,16 +3656,16 @@ namespace Epsitec.Common.Widgets
 				
 				if ( parameters.ContainsKey("face") )
 				{
-					font.FontName = (string)parameters["face"];
+					font.FontName = parameters["face"];
 				}
 				if ( parameters.ContainsKey("size") )
 				{
-					string s = parameters["size"] as string;
+					string s = parameters["size"];
 					font.FontScale = this.ParseScale(s);
 				}
 				if ( parameters.ContainsKey("color") )
 				{
-					string s = parameters["color"] as string;
+					string s = parameters["color"];
 					Drawing.RichColor color = Drawing.RichColor.FromName(s);
 					if ( !color.IsEmpty )  font.FontColor = color;
 				}
@@ -3656,7 +3674,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		private bool ProcessFormatTags(Tag tag, System.Collections.Stack fontStack, SupplItem supplItem, System.Collections.Hashtable parameters)
+		private bool ProcessFormatTags(Tag tag, System.Collections.Stack fontStack, SupplItem supplItem, Dictionary<string, string> parameters)
 		{
 			switch ( tag )
 			{
@@ -3696,7 +3714,7 @@ namespace Epsitec.Common.Widgets
 					{
 						if ( parameters.ContainsKey("color") )
 						{
-							string s = parameters["color"] as string;
+							string s = parameters["color"];
 							supplItem.WaveColor = Drawing.Color.FromName(s);
 						}
 					}
@@ -3713,29 +3731,29 @@ namespace Epsitec.Common.Widgets
 			return true;
 		}
 
-		private double ProcessNum(System.Collections.Hashtable parameters, string key, double def)
+		private double ProcessNum(Dictionary<string, string> parameters, string key, double def)
 		{
 			if ( parameters == null )  return def;
 			if ( !parameters.ContainsKey(key) )  return def;
 
-			string s = parameters[key] as string;
+			string s = parameters[key];
 			return System.Double.Parse(s, System.Globalization.CultureInfo.InvariantCulture);
 		}
 
-		private string ProcessString(System.Collections.Hashtable parameters, string key, string def)
+		private string ProcessString(Dictionary<string, string> parameters, string key, string def)
 		{
 			if ( parameters == null )  return def;
 			if ( !parameters.ContainsKey(key) )  return def;
 
-			return parameters[key] as string;
+			return parameters[key];
 		}
 
-		private Drawing.TextListType ProcessListType(System.Collections.Hashtable parameters, string key, Drawing.TextListType def)
+		private Drawing.TextListType ProcessListType(Dictionary<string, string> parameters, string key, Drawing.TextListType def)
 		{
 			if ( parameters == null )  return def;
 			if ( !parameters.ContainsKey(key) )  return def;
 
-			string s = parameters[key] as string;
+			string s = parameters[key];
 			switch ( s )
 			{
 				case "fix":  return Drawing.TextListType.Fix;
@@ -3744,12 +3762,12 @@ namespace Epsitec.Common.Widgets
 			return def;
 		}
 
-		private Drawing.TextListGlyph ProcessListGlyph(System.Collections.Hashtable parameters, string key, Drawing.TextListGlyph def)
+		private Drawing.TextListGlyph ProcessListGlyph(Dictionary<string, string> parameters, string key, Drawing.TextListGlyph def)
 		{
 			if ( parameters == null )  return def;
 			if ( !parameters.ContainsKey(key) )  return def;
 
-			string s = parameters[key] as string;
+			string s = parameters[key];
 			switch ( s )
 			{
 				case "circle":    return Drawing.TextListGlyph.Circle;
@@ -3802,7 +3820,7 @@ namespace Epsitec.Common.Widgets
 		private void PutTab(System.Collections.Stack fontStack,
 							  SupplItem supplItem,
 							  int startIndex,
-							  Tag tag, System.Collections.Hashtable parameters)
+							  Tag tag, Dictionary<string, string> parameters)
 		{
 			FontItem fontItem = (FontItem)fontStack.Peek();
 			Drawing.Font font = fontItem.GetFont(supplItem.Bold>0, supplItem.Italic>0);
@@ -3859,9 +3877,9 @@ namespace Epsitec.Common.Widgets
 				this.tabs.Clear();
 			}
 
-			System.Collections.Stack		fontStack = this.CreateFontStack();
-			System.Collections.Hashtable	parameters;
-			SupplItem						supplItem = new SupplItem();
+			System.Collections.Stack	fontStack = this.CreateFontStack();
+			Dictionary<string, string>	parameters;
+			SupplItem					supplItem = new SupplItem();
 
 			int		textLength = this.MaxTextOffset;
 			int		beginOffset, endOffset = 0;
@@ -3909,7 +3927,7 @@ namespace Epsitec.Common.Widgets
 						if (tag == Tag.Null)
 						{
 							tag = Tag.Image;
-							parameters = new System.Collections.Hashtable ();
+							parameters = new Dictionary<string, string> ();
 							parameters["src"] = "manifest:Epsitec.Common.Widgets.Images.DefaultValue.icon";
 						}
 
@@ -3917,7 +3935,7 @@ namespace Epsitec.Common.Widgets
 						{
 							case Tag.Image:
 								System.Diagnostics.Debug.Assert( parameters != null && parameters.ContainsKey("src") );
-								string imageName = parameters["src"] as string;
+								string imageName = parameters["src"];
 								double verticalOffset = 0;
 							
 								Drawing.Image image = Support.ImageProvider.Default.GetImage(imageName, this.resourceManager);
@@ -3931,7 +3949,7 @@ namespace Epsitec.Common.Widgets
 
 								if (parameters.ContainsKey("voff"))
 								{
-									string s = (string)parameters["voff"];
+									string s = parameters["voff"];
 									verticalOffset = double.Parse (s, System.Globalization.CultureInfo.InvariantCulture);
 								}
 								
@@ -3942,24 +3960,24 @@ namespace Epsitec.Common.Widgets
 
 									if ( parameters.ContainsKey("dx") )
 									{
-										string s = (string)parameters["dx"];
+										string s = parameters["dx"];
 										key.Size.Width = System.Double.Parse(s, System.Globalization.CultureInfo.InvariantCulture);
 									}
 
 									if ( parameters.ContainsKey("dy") )
 									{
-										string s = (string)parameters["dy"];
+										string s = parameters["dy"];
 										key.Size.Height = System.Double.Parse(s, System.Globalization.CultureInfo.InvariantCulture);
 									}
 
 									if ( parameters.ContainsKey("lang") )
 									{
-										key.Language = (string)parameters["lang"];
+										key.Language = parameters["lang"];
 									}
 
 									if ( parameters.ContainsKey("style") )
 									{
-										key.Style = (string)parameters["style"];
+										key.Style = parameters["style"];
 									}
 
 									image = canvas.GetImageForIconKey(key);  // cherche la meilleure image
@@ -3973,13 +3991,13 @@ namespace Epsitec.Common.Widgets
 									
 									if ( parameters.ContainsKey("dx") )
 									{
-										string s = (string)parameters["dx"];
+										string s = parameters["dx"];
 										width = System.Double.Parse(s, System.Globalization.CultureInfo.InvariantCulture);
 									}
 
 									if ( parameters.ContainsKey("dy") )
 									{
-										string s = (string)parameters["dy"];
+										string s = parameters["dy"];
 										height = System.Double.Parse(s, System.Globalization.CultureInfo.InvariantCulture);
 									}
 									
@@ -4655,8 +4673,8 @@ noText:
 		public static bool CheckSyntax(string text, out int offsetError)
 		{
 			//	Vérifie la syntaxe d'un texte.
-			System.Collections.Hashtable parameters;
-			System.Collections.ArrayList list = new System.Collections.ArrayList();
+			Dictionary<string, string> parameters;
+			List<string> list = new List<string> ();
 			int    beginOffset;
 			for ( int endOffset=0 ; endOffset<text.Length ; )
 			{
@@ -4767,7 +4785,7 @@ noText:
 
 			int from = 0;
 			int to   = this.text.Length;
-			System.Collections.Hashtable parameters;
+			Dictionary<string, string> parameters;
 			while (from < to)
 			{
 				Tag tag = TextLayout.ParseTag(text, ref from, out parameters);
@@ -4775,7 +4793,7 @@ noText:
 				{
 					if (parameters.ContainsKey("face"))
 					{
-						string s = (string) parameters["face"];
+						string s = parameters["face"];
 						OpenType.FontName fontName = new OpenType.FontName(s, "");
 
 						if (!list.Contains(fontName))
@@ -5167,7 +5185,7 @@ noText:
 //-			public double					VerticalOffset;
 			public bool						Tab;		// contient un tabulateur
 			public bool						List;		// contient une puce
-			public System.Collections.Hashtable Parameters;
+			public Dictionary<string, string> Parameters;
 			public bool						Visible;
 			public Drawing.FontClassInfo[]	Infos;
 			public double					InfoWidth;
