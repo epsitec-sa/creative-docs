@@ -6,7 +6,7 @@ using System.Runtime.CompilerServices;
 [assembly: AssemblyConfiguration ("")]
 [assembly: AssemblyCompany ("OPaC bright ideas")]
 [assembly: AssemblyProduct ("Creative Docs .NET")]
-[assembly: AssemblyCopyright ("Copyright © 2002-2007, OPaC bright ideas, CH-1400 Yverdon-les-Bains, Switzerland")]
+[assembly: AssemblyCopyright ("Copyright © 2002-2008, OPaC bright ideas, CH-1400 Yverdon-les-Bains, Switzerland")]
 [assembly: AssemblyTrademark ("")]
 [assembly: AssemblyCulture ("")]
 

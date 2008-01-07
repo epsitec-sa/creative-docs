@@ -1,4 +1,4 @@
-//	Copyright © 2003-2007, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2003-2008, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using System.Reflection;
@@ -8,7 +8,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle ("Epsitec.Cresus.DataLayer")]
 [assembly: AssemblyDescription ("Crésus Data Manipulation Layer")]
 [assembly: AssemblyProduct ("Crésus")]
-[assembly: AssemblyCopyright ("Copyright © 2003-2007, EPSITEC SA, CH-1092 BELMONT, Switzerland")]
+[assembly: AssemblyCopyright ("Copyright © 2003-2008, EPSITEC SA, CH-1092 BELMONT, Switzerland")]
 
 [assembly: ComVisible (false)]
 

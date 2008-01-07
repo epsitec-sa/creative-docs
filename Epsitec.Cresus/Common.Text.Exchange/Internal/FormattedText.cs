@@ -1,4 +1,4 @@
-//	Copyright © 2006-2007, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2006-2008, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Michael WALZ
 
 using System.Collections.Generic;

@@ -10,7 +10,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration ("")]
 [assembly: AssemblyCompany ("EPSITEC SA")]
 [assembly: AssemblyProduct ("Crésus Designer Protocol Handler")]
-[assembly: AssemblyCopyright ("Copyright © 2007, Pierre ARNAUD & EPSITEC SA")]
+[assembly: AssemblyCopyright ("Copyright © 2007-2008, Pierre ARNAUD & EPSITEC SA")]
 [assembly: AssemblyTrademark ("")]
 [assembly: AssemblyCulture ("")]
 

@@ -1,4 +1,4 @@
-//	Copyright © 2004-2007, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2004-2008, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
 using System.Globalization;

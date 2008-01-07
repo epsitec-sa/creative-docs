@@ -1,4 +1,4 @@
-//	Copyright © 2006-2007, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2006-2008, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Author: Daniel ROUX & Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Drawing;
