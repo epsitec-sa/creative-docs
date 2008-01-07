@@ -165,7 +165,7 @@ namespace Epsitec.App.Dolphin.MyWidgets
 
 					this.textField.PreferredWidth = width;
 					this.textField.Margins = new Margins(max-width, 0, 0, 0);
-					this.textField.MaxChar = (this.bitCount+3)/4;
+					this.textField.MaxLength = (this.bitCount+3)/4;
 
 					for (int i=0; i<this.buttons.Count; i++)
 					{

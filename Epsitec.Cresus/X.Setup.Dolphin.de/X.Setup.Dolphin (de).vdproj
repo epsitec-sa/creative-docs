@@ -27,7 +27,7 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_7F31B37983ED4DBE86EFC2AEBFD66E10"
+        "MsmKey" = "8:_71EF00C4E221472C9ACF77442DD89E1F"
         "OwnerKey" = "8:_99A1ECCB35B241B391BC9274DB770594"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -40,6 +40,12 @@
         "Entry"
         {
         "MsmKey" = "8:_B399D289242D48E79C739292E61D9827"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_DD7190A940E94602BC785BE13F8AEFB9"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -184,6 +190,26 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_DD7190A940E94602BC785BE13F8AEFB9"
+            {
+            "SourcePath" = "8:default-language.txt"
+            "TargetName" = "8:default-language.txt"
+            "Tag" = "8:"
+            "Folder" = "8:_EE585F4A4E9341C0834D01A0F2F0DCF6"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
         }
         "FileType"
         {
@@ -273,10 +299,10 @@
         "Product"
         {
         "Name" = "8:Microsoft Visual Studio"
-        "ProductName" = "8:Dauphin"
-        "ProductCode" = "8:{53CEC618-023E-4744-9725-EDBE3E4B8FAA}"
-        "PackageCode" = "8:{7702CDA8-E2B7-4BD2-9F53-EA50E8A9ED52}"
-        "UpgradeCode" = "8:{3E07DF4F-1854-45A8-86B8-F494ADA98964}"
+        "ProductName" = "8:Dauphin-Simulator"
+        "ProductCode" = "8:{768D474B-DD31-4A71-8110-42CBCBB7EAAA}"
+        "PackageCode" = "8:{7910544B-4B7B-4FA8-88CE-6857A5C1B08C}"
+        "UpgradeCode" = "8:{8C9BFBF0-BC27-4D4F-917A-6B7BF4E709A5}"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
@@ -284,12 +310,12 @@
         "ProductVersion" = "8:1.1.1"
         "Manufacturer" = "8:Epsitec"
         "ARPHELPTELEPHONE" = "8:"
-        "ARPHELPLINK" = "8:"
-        "Title" = "8:Dauphin"
+        "ARPHELPLINK" = "8:www.epsitec.ch"
+        "Title" = "8:Dauphin-Simulator"
         "Subject" = "8:"
         "ARPCONTACT" = "8:EPSITEC"
         "Keywords" = "8:"
-        "ARPCOMMENTS" = "8:Installiert den Dauphin Simulator"
+        "ARPCOMMENTS" = "8:Installiert den Dauphin-Simulator"
         "ARPURLINFOABOUT" = "8:www.epsitec.ch"
         "ARPPRODUCTICON" = "8:_170D98789BC04CCDB563061349B31586"
         "ARPIconIndex" = "3:0"
@@ -394,9 +420,9 @@
         }
         "Shortcut"
         {
-            "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_98350D72C1D8461D87C9023D7F2E918D"
+            "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_1950A8A61FC04834B98D5BC4D71CAF72"
             {
-            "Name" = "8:Dauphin Simulator"
+            "Name" = "8:Dauphin-Simulator"
             "Arguments" = "8:"
             "Description" = "8:"
             "ShowCmd" = "3:1"
@@ -404,6 +430,20 @@
             "Transitive" = "11:FALSE"
             "Target" = "8:_B399D289242D48E79C739292E61D9827"
             "Folder" = "8:_2CF27F40AD094C30B47B39F33E37E225"
+            "WorkingFolder" = "8:_EE585F4A4E9341C0834D01A0F2F0DCF6"
+            "Icon" = "8:_170D98789BC04CCDB563061349B31586"
+            "Feature" = "8:"
+            }
+            "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_98350D72C1D8461D87C9023D7F2E918D"
+            {
+            "Name" = "8:Dauphin-Simulator"
+            "Arguments" = "8:"
+            "Description" = "8:"
+            "ShowCmd" = "3:1"
+            "IconIndex" = "3:0"
+            "Transitive" = "11:FALSE"
+            "Target" = "8:_B399D289242D48E79C739292E61D9827"
+            "Folder" = "8:_5D9D0C4A75AD489AB390592D15A3A76F"
             "WorkingFolder" = "8:_EE585F4A4E9341C0834D01A0F2F0DCF6"
             "Icon" = "8:_170D98789BC04CCDB563061349B31586"
             "Feature" = "8:"
@@ -696,7 +736,7 @@
         }
         "MergeModule"
         {
-            "{CEE29DC0-9FBA-4B99-8D47-5BC643D9B626}:_7F31B37983ED4DBE86EFC2AEBFD66E10"
+            "{CEE29DC0-9FBA-4B99-8D47-5BC643D9B626}:_71EF00C4E221472C9ACF77442DD89E1F"
             {
             "UseDynamicProperties" = "11:TRUE"
             "IsDependency" = "11:TRUE"
@@ -714,7 +754,7 @@
             {
             "UseDynamicProperties" = "11:TRUE"
             "IsDependency" = "11:FALSE"
-            "SourcePath" = "8:C:\\Program Files (x86)\\Common Files\\Merge Modules\\Microsoft_VC80_CRT_x86.msm"
+            "SourcePath" = "8:C:\\Program Files\\Common Files\\Merge Modules\\Microsoft_VC80_CRT_x86.msm"
                 "Properties"
                 {
                 }

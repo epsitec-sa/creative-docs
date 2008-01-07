@@ -19,6 +19,20 @@ namespace Epsitec.App.Dolphin
 
 		public void LoadApplication(Opac.Shell.Interfaces.IShellContext context)
 		{
+			string langPath = @"..\..\default-language.txt";
+			
+			try
+			{
+				if (System.IO.File.Exists (langPath))
+				{
+					string languageCode = System.IO.File.ReadAllLines (langPath)[0];
+					Epsitec.Common.Support.Resources.OverrideDefaultTwoLetterISOLanguageName (languageCode);
+				}
+			}
+			catch
+			{
+			}
+
 			Epsitec.Common.Widgets.Widget.Initialize ();
 			Epsitec.Common.Document.Engine.Initialize ();
 
