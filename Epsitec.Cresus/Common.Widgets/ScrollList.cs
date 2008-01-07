@@ -682,11 +682,17 @@ namespace Epsitec.Common.Widgets
 					 (state&WidgetPaintState.Enabled) != 0 )
 				{
 					TextLayout.SelectedArea[] areas = new TextLayout.SelectedArea[1];
-					areas[0] = new TextLayout.SelectedArea();
-					areas[0].Rect.Left   = this.margins.Left;
-					areas[0].Rect.Width  = this.GetTextWidth();
-					areas[0].Rect.Bottom = pos.Y;
-					areas[0].Rect.Height = this.lineHeight;
+					areas[0] = new TextLayout.SelectedArea()
+					{
+						Rect = new Drawing.Rectangle ()
+						{
+							Left   = this.margins.Left,
+							Width  = this.GetTextWidth (),
+							Bottom = pos.Y,
+							Height = this.lineHeight
+						}
+					};
+
 					adorner.PaintTextSelectionBackground(graphics, areas, state, PaintTextStyle.TextField, TextDisplayMode.Default);
 
 					state |= WidgetPaintState.Selected;

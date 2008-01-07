@@ -1,3 +1,6 @@
+//	Copyright © 2004-2008, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Author: Daniel ROUX, Maintainer: Pierre ARNAUD
+
 using Epsitec.Common.Support;
 
 namespace Epsitec.Common.Widgets
@@ -11,11 +14,11 @@ namespace Epsitec.Common.Widgets
 		public TextNavigator(TextLayout textLayout)
 		{
 			this.textLayout = textLayout;
-			this.context = new TextLayout.Context(textLayout);
+			this.context = new TextLayoutContext(textLayout);
 		}
 
 		
-		public TextLayout.Context				Context
+		public TextLayoutContext				Context
 		{
 			get { return this.context; }
 		}
@@ -75,8 +78,8 @@ namespace Epsitec.Common.Widgets
 		
 		public int								MaxChar
 		{
-			get { return this.context.MaxChar; }
-			set { this.context.MaxChar = value; }
+			get { return this.context.MaxLength; }
+			set { this.context.MaxLength = value; }
 		}
 
 		public string							Selection
@@ -828,7 +831,7 @@ namespace Epsitec.Common.Widgets
 				this.host = navigator;
 				this.type = type;
 				this.textCopy = string.Copy(this.host.textLayout.InternalText);
-				this.contextCopy = TextLayout.Context.Copy(this.host.context);
+				this.contextCopy = new TextLayoutContext (this.host.context);
 				this.host.textLayout.Style.TabCopyTo(out this.tabs);
 			}
 
@@ -851,8 +854,8 @@ namespace Epsitec.Common.Widgets
 				this.host.textLayout.Text = undoText;
 				this.textCopy = redoText;
 
-				TextLayout.Context undoContext = TextLayout.Context.Copy(this.contextCopy);
-				TextLayout.Context redoContext = TextLayout.Context.Copy(this.host.context);
+				TextLayoutContext undoContext = new TextLayoutContext (this.contextCopy);
+				TextLayoutContext redoContext = new TextLayoutContext (this.host.context);
 				undoContext.CopyTo(this.host.context);
 				redoContext.CopyTo(this.contextCopy);
 
@@ -907,7 +910,7 @@ namespace Epsitec.Common.Widgets
 			protected TextNavigator				host;
 			protected UndoType					type;
 			protected string					textCopy;
-			protected TextLayout.Context		contextCopy;
+			protected TextLayoutContext			contextCopy;
 			protected Drawing.TextStyle.Tab[]	tabs;
 		}
 
@@ -997,7 +1000,7 @@ namespace Epsitec.Common.Widgets
 
 
 		protected TextLayout					textLayout;
-		protected TextLayout.Context			context;
+		protected TextLayoutContext				context;
 		protected Support.OpletQueue			undoQueue;
 		protected bool							isReadOnly = false;
 		protected bool							isNumeric = false;

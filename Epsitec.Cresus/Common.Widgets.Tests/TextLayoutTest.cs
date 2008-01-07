@@ -415,8 +415,8 @@ namespace Epsitec.Common.Widgets
 		
 		[Test] public void CheckSelectAll()
 		{
-			TextLayout         text    = new TextLayout ();
-			TextLayout.Context context = new TextLayout.Context (text);
+			TextLayout        text    = new TextLayout ();
+			TextLayoutContext context = new TextLayoutContext (text);
 			
 			text.Text = "<b>&lt;x<br/>y&gt;</b>";
 			
@@ -454,8 +454,8 @@ namespace Epsitec.Common.Widgets
 			TextLayout.SelectedArea[] areas = layout.FindTextRange(pos, 0, layout.Text.Length);
 			for ( int i=0 ; i<areas.Length ; i++ )
 			{
-				e.Graphics.Align(ref areas[i].Rect);
-				e.Graphics.AddFilledRectangle(areas[i].Rect.Left, areas[i].Rect.Bottom, areas[i].Rect.Width, areas[i].Rect.Height);
+				Drawing.Rectangle box = e.Graphics.Align(areas[i].Rect);
+				e.Graphics.AddFilledRectangle(box);
 				e.Graphics.RenderSolid(Color.FromRgb(0,1,0));
 			}
 
@@ -480,9 +480,9 @@ namespace Epsitec.Common.Widgets
 			TextLayout.SelectedArea[] areas = layout.FindTextRange(pos, 0, layout.Text.Length);
 			for ( int i=0 ; i<areas.Length ; i++ )
 			{
-				e.Graphics.Align(ref areas[i].Rect);
-				e.Graphics.AddFilledRectangle(areas[i].Rect.Left, areas[i].Rect.Bottom, areas[i].Rect.Width, areas[i].Rect.Height);
-				e.Graphics.RenderSolid(Color.FromRgb(0,1,0));
+				Drawing.Rectangle box = e.Graphics.Align (areas[i].Rect);
+				e.Graphics.AddFilledRectangle (box);
+				e.Graphics.RenderSolid (Color.FromRgb (0, 1, 0));
 			}
 
 			layout.Paint(pos, e.Graphics, e.ClipRectangle, Color.Empty, GlyphPaintStyle.Normal);
@@ -506,8 +506,8 @@ namespace Epsitec.Common.Widgets
 			TextLayout.SelectedArea[] areas = layout.FindTextRange(pos, 0, layout.Text.Length);
 			for ( int i=0 ; i<areas.Length ; i++ )
 			{
-				e.Graphics.Align(ref areas[i].Rect);
-				e.Graphics.AddFilledRectangle(areas[i].Rect.Left, areas[i].Rect.Bottom, areas[i].Rect.Width, areas[i].Rect.Height);
+				Drawing.Rectangle box = e.Graphics.Align (areas[i].Rect);
+				e.Graphics.AddFilledRectangle (box);
 				e.Graphics.RenderSolid(Color.FromRgb(0,1,0));
 			}
 
@@ -532,8 +532,8 @@ namespace Epsitec.Common.Widgets
 			TextLayout.SelectedArea[] areas = layout.FindTextRange(pos, 0, layout.Text.Length);
 			for ( int i=0 ; i<areas.Length ; i++ )
 			{
-				e.Graphics.Align(ref areas[i].Rect);
-				e.Graphics.AddFilledRectangle(areas[i].Rect.Left, areas[i].Rect.Bottom, areas[i].Rect.Width, areas[i].Rect.Height);
+				Drawing.Rectangle box = e.Graphics.Align (areas[i].Rect);
+				e.Graphics.AddFilledRectangle (box);
 				e.Graphics.RenderSolid(Color.FromRgb(0,1,0));
 			}
 

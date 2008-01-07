@@ -608,7 +608,7 @@ namespace Epsitec.Common.Widgets
 		}
 
 
-		internal bool IsSelectionBold(TextLayout.Context context)
+		internal bool IsSelectionBold(TextLayoutContext context)
 		{
 			//	Indique si les caractères sélectionnés sont gras.
 			if ( context.PrepareOffset != -1 )  // préparation pour l'insertion ?
@@ -625,14 +625,14 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		internal void SetSelectionBold(TextLayout.Context context, bool bold)
+		internal void SetSelectionBold(TextLayoutContext context, bool bold)
 		{
 			//	Met en gras ou en normal tous les caractères sélectionnés.
 			string state = bold ? "yes" : "no";
 			this.InsertPutCommand(context, "bold=\"" + state + "\"");
 		}
 
-		internal bool IsSelectionItalic(TextLayout.Context context)
+		internal bool IsSelectionItalic(TextLayoutContext context)
 		{
 			//	Indique si les caractères sélectionnés sont italiques.
 			if ( context.PrepareOffset != -1 )  // préparation pour l'insertion ?
@@ -650,14 +650,14 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		internal void SetSelectionItalic(TextLayout.Context context, bool italic)
+		internal void SetSelectionItalic(TextLayoutContext context, bool italic)
 		{
 			//	Met en italique ou en normal tous les caractères sélectionnés.
 			string state = italic ? "yes" : "no";
 			this.InsertPutCommand(context, "italic=\"" + state + "\"");
 		}
 
-		internal bool IsSelectionUnderline(TextLayout.Context context)
+		internal bool IsSelectionUnderline(TextLayoutContext context)
 		{
 			//	Indique si les caractères sélectionnés sont soulignés.
 			if ( context.PrepareOffset != -1 )  // préparation pour l'insertion ?
@@ -672,14 +672,14 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		internal void SetSelectionUnderline(TextLayout.Context context, bool underline)
+		internal void SetSelectionUnderline(TextLayoutContext context, bool underline)
 		{
 			//	Met en souligné ou en normal tous les caractères sélectionnés.
 			string state = underline ? "yes" : "no";
 			this.InsertPutCommand(context, "underline=\"" + state + "\"");
 		}
 
-		internal string GetSelectionFontName(TextLayout.Context context)
+		internal string GetSelectionFontName(TextLayoutContext context)
 		{
 			//	Indique le nom de la fonte des caractères sélectionnés.
 			//	Une chaîne vide indique la fonte par défaut.
@@ -701,7 +701,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		internal void SetSelectionFontName(TextLayout.Context context, string name)
+		internal void SetSelectionFontName(TextLayoutContext context, string name)
 		{
 			//	Modifie le nom de la fonte des caractères sélectionnés.
 			//	Une chaîne vide indique la fonte par défaut.
@@ -709,7 +709,7 @@ namespace Epsitec.Common.Widgets
 			this.InsertPutCommand(context, "face=\"" + name + "\"");
 		}
 
-		internal double GetSelectionFontScale(TextLayout.Context context)
+		internal double GetSelectionFontScale(TextLayoutContext context)
 		{
 			//	Indique l'échelle des caractères sélectionnés.
 			//	1 indique l'échelle par défaut.
@@ -727,7 +727,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		internal void SetSelectionFontScale(TextLayout.Context context, double scale)
+		internal void SetSelectionFontScale(TextLayoutContext context, double scale)
 		{
 			//	Modifie l'échelle des caractères sélectionnés.
 			//	1 indique l'échelle par défaut.
@@ -736,7 +736,7 @@ namespace Epsitec.Common.Widgets
 			this.InsertPutCommand(context, "size=\"" + scale*100.0 + "%\"");
 		}
 
-		internal Drawing.RichColor GetSelectionFontRichColor(TextLayout.Context context)
+		internal Drawing.RichColor GetSelectionFontRichColor(TextLayoutContext context)
 		{
 			//	Indique la couleur des caractères sélectionnés.
 			//	Une couleur vide indique la couleur par défaut.
@@ -752,8 +752,8 @@ namespace Epsitec.Common.Widgets
 				return block.FontColor;
 			}
 		}
-		
-		internal Drawing.Color GetSelectionFontColor(TextLayout.Context context)
+
+		internal Drawing.Color GetSelectionFontColor(TextLayoutContext context)
 		{
 			//	Indique la couleur des caractères sélectionnés.
 			//	Une couleur vide indique la couleur par défaut.
@@ -769,8 +769,8 @@ namespace Epsitec.Common.Widgets
 				return block.FontColor.Basic;
 			}
 		}
-		
-		internal void SetSelectionFontRichColor(TextLayout.Context context, Drawing.RichColor color)
+
+		internal void SetSelectionFontRichColor(TextLayoutContext context, Drawing.RichColor color)
 		{
 			//	Modifie la couleur des caractères sélectionnés.
 			//	Une couleur vide indique la couleur par défaut.
@@ -786,7 +786,7 @@ namespace Epsitec.Common.Widgets
 			this.InsertPutCommand(context, "color=\"" + s + "\"");
 		}
 
-		internal void SetSelectionFontColor(TextLayout.Context context, Drawing.Color color)
+		internal void SetSelectionFontColor(TextLayoutContext context, Drawing.Color color)
 		{
 			//	Modifie la couleur des caractères sélectionnés.
 			//	Une couleur vide indique la couleur par défaut.
@@ -802,7 +802,7 @@ namespace Epsitec.Common.Widgets
 			this.InsertPutCommand(context, "color=\"" + s + "\"");
 		}
 
-		internal Drawing.TextListType GetSelectionList(TextLayout.Context context)
+		internal Drawing.TextListType GetSelectionList(TextLayoutContext context)
 		{
 			//	Indique si les caractères sélectionnés commencent par une puce.
 			int i = this.SearchJustifBlockRank(context);
@@ -829,7 +829,7 @@ namespace Epsitec.Common.Widgets
 			return Drawing.TextListType.None;
 		}
 
-		internal void SetSelectionList(TextLayout.Context context, Drawing.TextListType list)
+		internal void SetSelectionList(TextLayoutContext context, Drawing.TextListType list)
 		{
 			//	Met ou enlève la puce au début des caractères sélectionnés.
 			this.Simplify(context);
@@ -847,7 +847,7 @@ namespace Epsitec.Common.Widgets
 		}
 
 
-		public bool IsSelectionWaved(TextLayout.Context context)
+		public bool IsSelectionWaved(TextLayoutContext context)
 		{
 			JustifBlock block = this.SearchJustifBlock(context);
 			if ( block == null )  return false;
@@ -861,7 +861,7 @@ namespace Epsitec.Common.Widgets
 		
 		public bool IsSelectionWaved(int index, bool after)
 		{
-			TextLayout.Context context = new TextLayout.Context(this);
+			TextLayoutContext context = new TextLayoutContext (this);
 			context.CursorAfter = after;
 			context.CursorFrom  = index;
 			context.CursorTo    = index;
@@ -869,7 +869,7 @@ namespace Epsitec.Common.Widgets
 		}
 
 		
-		private JustifBlock SearchJustifBlock(Context context)
+		private JustifBlock SearchJustifBlock(TextLayoutContext context)
 		{
 			//	Cherche le premier bloc correspondant à un index.
 			int i = this.SearchJustifBlockRank(context);
@@ -877,7 +877,7 @@ namespace Epsitec.Common.Widgets
 			return this.blocks[i] as JustifBlock;
 		}
 
-		private int SearchJustifBlockRank(Context context)
+		private int SearchJustifBlockRank(TextLayoutContext context)
 		{
 			//	Cherche le premier bloc correspondant à un index.
 			this.UpdateLayout();
@@ -919,14 +919,14 @@ namespace Epsitec.Common.Widgets
 			return -1;
 		}
 
-		private bool IsPrepared(TextLayout.Context context, string key)
+		private bool IsPrepared(TextLayoutContext context, string key)
 		{
 			//	Cherche si la préparation contient une commande donnée.
 			if ( context.PrepareOffset == -1 )  return false;
 			return (this.SearchPrepared(context, key) == "yes");
 		}
 
-		private string SearchPrepared(TextLayout.Context context, string key)
+		private string SearchPrepared(TextLayoutContext context, string key)
 		{
 			//	Cherche si la préparation contient une commande donnée.
 			if ( context.PrepareOffset == -1 )  return "";
@@ -947,7 +947,7 @@ namespace Epsitec.Common.Widgets
 			return found;  // retourne la *dernière* préparation trouvée
 		}
 
-		private void InsertPutCommand(TextLayout.Context context, string cmd)
+		private void InsertPutCommand(TextLayoutContext context, string cmd)
 		{
 			//	Modifie les caractères sélectionnés avec une commande <put..>..</put>.
 			string begin = "<put " + cmd + ">";
@@ -998,7 +998,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		private void DeletePutCommand(TextLayout.Context context, string beginCmd, string endCmd)
+		private void DeletePutCommand(TextLayoutContext context, string beginCmd, string endCmd)
 		{
 			int i, len;
 
@@ -1023,7 +1023,7 @@ namespace Epsitec.Common.Widgets
 			context.PrepareLength2 -= len;
 		}
 
-		private void ListInsert(TextLayout.Context context, string cmd)
+		private void ListInsert(TextLayoutContext context, string cmd)
 		{
 			//	Insère des puces dans tous les paragraphes sélectionnés.
 			int from = System.Math.Min(context.CursorFrom, context.CursorTo);
@@ -1065,7 +1065,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		private void ListDelete(TextLayout.Context context)
+		private void ListDelete(TextLayoutContext context)
 		{
 			//	Supprime les puces dans tous les paragraphes sélectionnés.
 			int from = System.Math.Min(context.CursorFrom, context.CursorTo);
@@ -1124,7 +1124,7 @@ namespace Epsitec.Common.Widgets
 		}
 
 
-		public void SelectAll(TextLayout.Context context)
+		public void SelectAll(TextLayoutContext context)
 		{
 			//	Sélectionne tout le texte.
 			if ( this.text == null )  return;
@@ -1134,7 +1134,7 @@ namespace Epsitec.Common.Widgets
 			context.CursorAfter = false;
 		}
 
-		public void SelectLine(TextLayout.Context context)
+		public void SelectLine(TextLayoutContext context)
 		{
 			//	Sélectionne toute la ligne.
 			this.MoveExtremity(context, -1, false);
@@ -1144,7 +1144,7 @@ namespace Epsitec.Common.Widgets
 			context.CursorAfter = false;
 		}
 
-		public void SelectWord(TextLayout.Context context)
+		public void SelectWord(TextLayoutContext context)
 		{
 			//	Sélectionne tout le mot.
 			string simple = this.InternalSimpleText;
@@ -1196,16 +1196,16 @@ namespace Epsitec.Common.Widgets
 			return (ins == -1) ? to : ins;
 		}
 
-		
-		public bool HasSelection(TextLayout.Context context)
+
+		public bool HasSelection(TextLayoutContext context)
 		{
 			int cursorFrom = this.FindOffsetFromIndex(context.CursorFrom);
 			int cursorTo   = this.FindOffsetFromIndex(context.CursorTo);
 			
 			return cursorFrom != cursorTo;
 		}
-		
-		public bool DeleteSelection(TextLayout.Context context)
+
+		public bool DeleteSelection(TextLayoutContext context)
 		{
 			//	Supprime les caractères sélectionnés dans le texte.
 			bool simplified = false;
@@ -1239,7 +1239,7 @@ namespace Epsitec.Common.Widgets
 			return true;
 		}
 
-		public bool ReplaceSelection(TextLayout.Context context, string ins)
+		public bool ReplaceSelection(TextLayoutContext context, string ins)
 		{
 			//	Insère une chaîne correspondant à un caractère ou un tag (jamais plus).
 			int cursorFrom = this.FindOffsetFromIndex(context.CursorFrom);
@@ -1315,7 +1315,7 @@ namespace Epsitec.Common.Widgets
 			return true;
 		}
 
-		private bool IsPlaceForInsertion(TextLayout.Context context, string ins)
+		private bool IsPlaceForInsertion(TextLayoutContext context, string ins)
 		{
 			//	Indique s'il reste assez de place pour insérer une chaîne.
 			//	Si le texte contient des commandes <put>, elles ne doivent pas être comptées !
@@ -1333,16 +1333,16 @@ namespace Epsitec.Common.Widgets
 				}
 			}
 
-			return (length+ins.Length <= context.MaxChar);
+			return (length+ins.Length <= context.MaxLength);
 		}
 
-		public bool InsertCharacter(TextLayout.Context context, char character)
+		public bool InsertCharacter(TextLayoutContext context, char character)
 		{
 			//	Insère un caractère.
 			return this.ReplaceSelection(context, TextLayout.ConvertToTaggedText(character));
 		}
 
-		public bool DeleteCharacter(TextLayout.Context context, int dir)
+		public bool DeleteCharacter(TextLayoutContext context, int dir)
 		{
 			//	Supprime le caractère à gauche ou à droite du curseur.
 			if ( this.DeleteSelection(context) )  return false;
@@ -1381,7 +1381,7 @@ namespace Epsitec.Common.Widgets
 			return true;
 		}
 
-		private void MemoriseDeletedStyle(TextLayout.Context context, JustifBlock block)
+		private void MemoriseDeletedStyle(TextLayoutContext context, JustifBlock block)
 		{
 			if ( block == null )  return;
 
@@ -1392,9 +1392,9 @@ namespace Epsitec.Common.Widgets
 			this.SetSelectionItalic(context, block.Italic);
 			this.SetSelectionUnderline(context, block.Underline);
 		}
-		
-		
-		public bool MoveLine(TextLayout.Context context, int move, bool select)
+
+
+		public bool MoveLine(TextLayoutContext context, int move, bool select)
 		{
 			//	Déplace le curseur par lignes.
 			int index;
@@ -1414,7 +1414,7 @@ namespace Epsitec.Common.Widgets
 			return true;
 		}
 
-		public bool MoveExtremity(TextLayout.Context context, int move, bool select)
+		public bool MoveExtremity(TextLayoutContext context, int move, bool select)
 		{
 			//	Déplace le curseur au début ou à la fin d'une ligne.
 			double posx;
@@ -1482,8 +1482,8 @@ namespace Epsitec.Common.Widgets
 			return false;
 		}
 
-		
-		public bool MoveCursor(TextLayout.Context context, int move, bool select, bool word)
+
+		public bool MoveCursor(TextLayoutContext context, int move, bool select, bool word)
 		{
 			//	Déplace le curseur.
 			if ( move == 1 && !select && !word &&
@@ -1559,7 +1559,7 @@ namespace Epsitec.Common.Widgets
 			return true;
 		}
 
-		public void DefineCursorPosX(TextLayout.Context context)
+		public void DefineCursorPosX(TextLayoutContext context)
 		{
 			//	Mémorise la position horizontale du curseur, afin de pouvoir y
 			//	revenir en cas de déplacement par lignes.
@@ -2185,12 +2185,18 @@ namespace Epsitec.Common.Widgets
 
 			this.UpdateLayout();
 
-			System.Collections.ArrayList list = new System.Collections.ArrayList();
-			SelectedArea area = new SelectedArea();
-			area.Rect.Top    = -TextLayout.Infinite;
-			area.Rect.Bottom =  TextLayout.Infinite;
-			area.Rect.Left   =  TextLayout.Infinite;
-			area.Rect.Right  = -TextLayout.Infinite;
+			List<SelectedArea> list = new List<SelectedArea> ();
+			SelectedArea area = new SelectedArea ()
+			{
+				Rect = new Drawing.Rectangle ()
+				{
+					Top    = -TextLayout.Infinite,
+					Bottom =  TextLayout.Infinite,
+					Left   =  TextLayout.Infinite,
+					Right  = -TextLayout.Infinite
+				}
+			};
+
 			foreach ( JustifBlock block in this.blocks )
 			{
 				JustifLine line = (JustifLine)this.lines[block.IndexLine];
@@ -2219,23 +2225,32 @@ namespace Epsitec.Common.Widgets
 						list.Add(area);
 					}
 
-					area = new SelectedArea();
-					area.Rect.Top    = top;
-					area.Rect.Bottom = bottom;
-					area.Rect.Left   =  TextLayout.Infinite;
-					area.Rect.Right  = -TextLayout.Infinite;
-					area.Color       = color;
+					area = new SelectedArea ()
+					{
+						Rect = new Drawing.Rectangle ()
+						{
+							Top = top,
+							Bottom = bottom,
+							Left = TextLayout.Infinite,
+							Right = -TextLayout.Infinite
+						},
+						Color = color
+					};
 				}
 
 				if ( block.IsImage || block.Tab || block.List )
 				{
-					area.Rect.Left  = System.Math.Min(area.Rect.Left,  block.Pos.X);
-					area.Rect.Right = System.Math.Max(area.Rect.Right, block.Pos.X+block.Width);
+					Drawing.Rectangle box = area.Rect;
+					box.Left  = System.Math.Min(box.Left,  block.Pos.X);
+					box.Right = System.Math.Max(box.Right, block.Pos.X+block.Width);
+					area.Rect = box;
 				}
 				else
 				{
-					area.Rect.Left  = System.Math.Min(area.Rect.Left,  this.IndexToPosX(block, line, localBegin));
-					area.Rect.Right = System.Math.Max(area.Rect.Right, this.IndexToPosX(block, line, localEnd  ));
+					Drawing.Rectangle box = area.Rect;
+					box.Left  = System.Math.Min(box.Left,  this.IndexToPosX(block, line, localBegin));
+					box.Right = System.Math.Max(box.Right, this.IndexToPosX(block, line, localEnd  ));
+					area.Rect = box;
 				}
 			}
 			
@@ -2244,13 +2259,12 @@ namespace Epsitec.Common.Widgets
 			{
 				list.Add(area);
 			}
-			
-			SelectedArea[] areas = new SelectedArea[list.Count];
-			list.CopyTo(areas);
-			
-			for ( int i=0 ; i<areas.Length ; i++ )
+
+			SelectedArea[] areas = list.ToArray ();
+
+			for (int i = 0; i < areas.Length; i++)
 			{
-				areas[i].Rect.Offset(pos.X, pos.Y);
+				areas[i].Rect = Drawing.Rectangle.Offset (areas[i].Rect, pos);
 			}
 					
 			return areas;
@@ -2295,7 +2309,7 @@ namespace Epsitec.Common.Widgets
 		
 		
 		
-		public bool FindTextCursor(Context context, out Drawing.Point p1, out Drawing.Point p2)
+		public bool FindTextCursor(TextLayoutContext context, out Drawing.Point p1, out Drawing.Point p2)
 		{
 			//	Retourne les deux extrémités du curseur.
 			//	Indique également le numéro de la ligne (0..n).
@@ -3314,7 +3328,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		public void Simplify(TextLayout.Context context)
+		public void Simplify(TextLayoutContext context)
 		{
 			if ( this.text == null )  return;
 			this.SetText (this.GetSimplify());
@@ -5185,89 +5199,19 @@ noText:
 			public Drawing.TextBreak.XRun[] Runs;
 		}
 
-		public class Context
+		public struct SelectedArea
 		{
-			public Context(TextLayout textLayout)
+			public Drawing.Rectangle Rect
 			{
-				this.textLayout = textLayout;
+				get;
+				internal set;
 			}
-
-			public void CopyTo(Context context)
+			
+			public Drawing.Color Color
 			{
-				context.cursorFrom     = this.cursorFrom;
-				context.cursorTo       = this.cursorTo;
-				context.CursorAfter    = this.CursorAfter;
-				context.CursorLine     = this.CursorLine;
-				context.CursorPosX     = this.CursorPosX;
-				context.PrepareOffset  = this.PrepareOffset;
-				context.PrepareLength1 = this.PrepareLength1;
-				context.PrepareLength2 = this.PrepareLength2;
-				context.MaxChar        = this.MaxChar;
-				context.UndoSeparator  = this.UndoSeparator;
+				get;
+				internal set;
 			}
-
-			public static Context Copy(Context context)
-			{
-				Context copy = new Context(context.textLayout);
-				context.CopyTo(copy);
-				return copy;
-			}
-
-			public int CursorFrom
-			{
-				get
-				{
-					return this.cursorFrom;
-				}
-
-				set
-				{
-					this.cursorFrom = value;
-					this.UndoSeparator = true;
-
-					if ( this.PrepareOffset != -1 )
-					{
-						textLayout.Simplify(this);
-					}
-				}
-			}
-
-			public int CursorTo
-			{
-				get
-				{
-					return this.cursorTo;
-				}
-
-				set
-				{
-					this.cursorTo = value;
-					this.UndoSeparator = true;
-
-					if ( this.PrepareOffset != -1 )
-					{
-						textLayout.Simplify(this);
-					}
-				}
-			}
-
-			private TextLayout textLayout;
-			private int cursorFrom     = 0;
-			private int cursorTo       = 0;
-			public bool						CursorAfter    = false;
-			public int						CursorLine     = 0;
-			public double					CursorPosX     = 0;
-			public int						PrepareOffset  = -1;
-			public int						PrepareLength1 = 0;
-			public int						PrepareLength2 = 0;
-			public int						MaxChar        = 1000;
-			public bool						UndoSeparator;
-		}
-
-		public class SelectedArea
-		{
-			public Drawing.Rectangle		Rect;
-			public Drawing.Color			Color;
 		}
 		
 		public event AnchorEventHandler			Anchor;

@@ -1,3 +1,6 @@
+//	Copyright © 2003-2008, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
+
 using Epsitec.Common.Support;
 
 namespace Epsitec.Common.Widgets
@@ -1637,8 +1640,7 @@ namespace Epsitec.Common.Widgets
 
 						for (int i=0; i<areas.Length; i++)
 						{
-							areas[i].Rect.Offset (0, -1);
-							graphics.Align (ref areas[i].Rect);
+							areas[i].Rect = graphics.Align (Drawing.Rectangle.Offset (areas[i].Rect, 0, -1));
 						}
 						WidgetPaintState st = state;
 						if (this.contextMenu != null)

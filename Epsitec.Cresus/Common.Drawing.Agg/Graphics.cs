@@ -750,6 +750,12 @@ namespace Epsitec.Common.Drawing
 			y = System.Math.Floor (y + 0.5);
 			this.transform.TransformInverse (ref x, ref y);
 		}
+
+		public Rectangle Align(Rectangle rect)
+		{
+			this.Align (ref rect);
+			return rect;
+		}
 		
 		public void Align(ref Drawing.Rectangle rect)
 		{

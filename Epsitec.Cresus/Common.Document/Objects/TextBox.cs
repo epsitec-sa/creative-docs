@@ -473,14 +473,14 @@ namespace Epsitec.Common.Document.Objects
 				Graphics graphics = port as Graphics;
 				int from = System.Math.Min(this.textNavigator.Context.CursorFrom, this.textNavigator.Context.CursorTo);
 				int to   = System.Math.Max(this.textNavigator.Context.CursorFrom, this.textNavigator.Context.CursorTo);
-				TextLayout.SelectedArea[] areas = this.textLayout.FindTextRange(new Point(0,0), from, to);
+				TextLayout.SelectedArea[] areas = this.textLayout.FindTextRange(Point.Zero, from, to);
 				for ( int i=0 ; i<areas.Length ; i++ )
 				{
-					graphics.Align(ref areas[i].Rect);
-					graphics.AddFilledRectangle(areas[i].Rect);
+					Drawing.Rectangle box = graphics.Align (areas[i].Rect);
+					graphics.AddFilledRectangle(box);
 					graphics.RenderSolid(DrawingContext.ColorSelectEdit(active));
 
-					Drawing.Rectangle r = new Drawing.Rectangle(this.transform.TransformDirect(areas[i].Rect.BottomLeft), this.transform.TransformDirect(areas[i].Rect.TopRight));
+					Drawing.Rectangle r = new Drawing.Rectangle(this.transform.TransformDirect(box.BottomLeft), this.transform.TransformDirect(box.TopRight));
 					this.selectBox.MergeWith(r);
 				}
 			}

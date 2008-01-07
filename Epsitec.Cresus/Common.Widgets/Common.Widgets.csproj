@@ -153,6 +153,7 @@
     <Compile Include="ConfirmationButton.cs" />
     <Compile Include="ConfirmationStaticText.cs" />
     <Compile Include="CheckIconGrid.cs" />
+    <Compile Include="TextLayoutContext.cs" />
     <Compile Include="Support\ResourceAccessors\CommandResourceAccessor.cs" />
     <Compile Include="ProgressIndicator.cs" />
     <Compile Include="ProgressIndicatorStyle.cs" />
