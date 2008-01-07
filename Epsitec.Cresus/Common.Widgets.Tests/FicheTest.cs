@@ -621,7 +621,7 @@ namespace Epsitec.Common.Widgets
 				tf.Name = fd.name;
 				tf.Text = "";
 				tf.ContentAlignment = fd.alignment;
-				tf.MaxChar = fd.max;
+				tf.MaxLength = fd.max;
 				if ( fd.combo != "" )  this.InitCombo(tf, fd.combo);
 				tf.TextChanged += new EventHandler(this.tf_TextChanged);
 				this.rightPane.Children.Add(tf);

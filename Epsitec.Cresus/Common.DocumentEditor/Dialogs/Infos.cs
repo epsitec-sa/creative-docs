@@ -40,7 +40,7 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 				TextFieldMulti multi = new TextFieldMulti(this.window.Root);
 				multi.Name = "Infos";
 				multi.IsReadOnly = true;
-				multi.MaxChar = 100000;
+				multi.MaxLength = 100000;
 				multi.Dock = DockStyle.Fill;
 				multi.Margins = new Margins (6, 6, 6, 34);
 

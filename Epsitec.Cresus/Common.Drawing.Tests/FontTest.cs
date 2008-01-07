@@ -398,7 +398,7 @@ namespace Epsitec.Common.Drawing
 			
 			multi.Name = "Infos";
 			multi.IsReadOnly = true;
-			multi.MaxChar = 10000;
+			multi.MaxLength = 10000;
 			multi.Dock = Widgets.DockStyle.Fill;
 			multi.Margins = new Margins (6, 6, 6, 34);
 			

@@ -937,7 +937,7 @@ namespace Epsitec.Common.Widgets
 			
 			multi.Name = "Multi";
 //			multi.SetManualBounds(new Rectangle(10, 30, 380, 260));
-			multi.MaxChar = 10000;
+			multi.MaxLength = 10000;
 			
 			string s = "";
 #if true

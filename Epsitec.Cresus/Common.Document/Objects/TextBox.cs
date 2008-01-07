@@ -23,7 +23,7 @@ namespace Epsitec.Common.Document.Objects
 		{
 			this.textLayout = new TextLayout();
 			this.textNavigator = new TextNavigator(this.textLayout);
-			this.textNavigator.MaxChar = 10000;
+			this.textNavigator.MaxLength = 10000;
 			this.textLayout.BreakMode = TextBreakMode.Hyphenate;
 			if ( this.document.Modifier != null )
 			{

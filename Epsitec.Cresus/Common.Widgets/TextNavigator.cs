@@ -76,7 +76,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public int								MaxChar
+		public int								MaxLength
 		{
 			get { return this.context.MaxLength; }
 			set { this.context.MaxLength = value; }

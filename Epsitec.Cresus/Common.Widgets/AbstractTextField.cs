@@ -2,6 +2,7 @@
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support;
+using Epsitec.Common.Types;
 
 namespace Epsitec.Common.Widgets
 {
@@ -156,14 +157,33 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				return this.is_password;
+				return this.isPassword;
 			}
 			set
 			{
-				if (this.is_password != value)
+				if (this.isPassword != value)
 				{
-					this.is_password = value;
+					this.isPassword = value;
 					this.Invalidate ();
+				}
+			}
+		}
+
+		public char PasswordReplacementCharacter
+		{
+			get
+			{
+				return (char) this.GetValue (AbstractTextField.PasswordReplacementCharacterProperty);
+			}
+			set
+			{
+				if (value == TextLayout.CodeNull)
+				{
+					this.ClearValue (AbstractTextField.PasswordReplacementCharacterProperty);
+				}
+				else
+				{
+					this.SetValue (AbstractTextField.PasswordReplacementCharacterProperty, value);
 				}
 			}
 		}
@@ -283,15 +303,15 @@ namespace Epsitec.Common.Widgets
 		}
 
 
-		public int MaxChar
+		public int MaxLength
 		{
 			get
 			{
-				return this.navigator.MaxChar;
+				return this.navigator.MaxLength;
 			}
 			set
 			{
-				this.navigator.MaxChar = value;
+				this.navigator.MaxLength = value;
 			}
 		}
 
@@ -612,9 +632,9 @@ namespace Epsitec.Common.Widgets
 
 		protected override void ModifyTextLayout(string text)
 		{
-			if (text.Length > this.navigator.MaxChar)
+			if (text.Length > this.navigator.MaxLength)
 			{
-				text = text.Substring (0, this.navigator.MaxChar);
+				text = text.Substring (0, this.navigator.MaxLength);
 			}
 
 			base.ModifyTextLayout (text);
@@ -1706,10 +1726,10 @@ namespace Epsitec.Common.Widgets
 		{
 			TextLayout original = this.TextLayout;
 
-			if (this.is_password)
+			if (this.isPassword)
 			{
 				TextLayout layout = new TextLayout (original);
-				layout.Text = new string ('*', original.Text.Length);
+				layout.Text = new string (this.PasswordReplacementCharacter, original.Text.Length);
 				return layout;
 			}
 			else
@@ -2099,6 +2119,10 @@ namespace Epsitec.Common.Widgets
 		}
 
 
+
+		public static readonly DependencyProperty PasswordReplacementCharacterProperty = DependencyProperty.Register ("PasswordReplacementCharacter", typeof (char), typeof (AbstractTextField), new DependencyPropertyMetadata ('*'));
+
+
 		internal const double					TextMargin = 2;
 		internal const double					FrameMargin = 2;
 		internal const double					Infinity = 1000000;
@@ -2126,7 +2150,7 @@ namespace Epsitec.Common.Widgets
 		protected TextFieldDisplayMode				initial_text_display_mode;
 		private bool							is_editing;
 		private bool							is_modal;
-		private bool							is_password;
+		private bool							isPassword;
 		private bool							accepts_null_value;
 		private bool							lastHasSelection;
 		protected bool							has_edited_text;
