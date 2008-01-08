@@ -677,6 +677,13 @@ namespace Epsitec.Common.Designer
 			return form.EntityId == typeId;
 		}
 
+		public bool FormSearch(CultureMap item, List<Druid> typeIds)
+		{
+			//	Indique si un Form est défini pour un certain type.
+			FormEngine.FormDescription form = this.GetForm(item);
+			return typeIds.Contains(form.EntityId);
+		}
+
 		public Druid FormRelationEntity(Druid entityId, string druidsPath)
 		{
 			//	Retourne le Druid de l'entité utilisée par un champ de type relation.

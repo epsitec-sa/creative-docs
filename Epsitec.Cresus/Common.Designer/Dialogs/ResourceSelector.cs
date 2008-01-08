@@ -196,7 +196,6 @@ namespace Epsitec.Common.Designer.Dialogs
 			this.resource = resource;
 			this.isNullable = isNullable;
 			this.exclude = exclude;
-			this.typeId = typeId;
 			this.isInherit = false;
 
 			//	Cherche le module contenant le Druid de la ressource.
@@ -213,6 +212,36 @@ namespace Epsitec.Common.Designer.Dialogs
 				{
 					this.module = this.lastModule;  // utilise le dernier module utilisé
 				}
+			}
+
+			if (this.operation == Operation.Form)
+			{
+				//	Met dans la liste this.listTypeId le Druid de l'entité de base ainsi que tous les Druids
+				//	des entités dont l'entité de base hérite.
+				this.typeIds = new List<Druid>();
+
+				while (!typeId.IsEmpty)
+				{
+					this.typeIds.Add(typeId);
+
+					CultureMap cultureMap = this.module.AccessEntities.Accessor.Collection[typeId];
+					if (cultureMap == null)
+					{
+						break;
+					}
+
+					StructuredData data = cultureMap.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
+					if (data == null)
+					{
+						break;
+					}
+
+					typeId = (Druid) data.GetValue(Support.Res.Fields.ResourceStructuredType.BaseType);
+				}
+			}
+			else
+			{
+				this.typeIds = null;
 			}
 
 			this.UpdateAccess();
@@ -352,9 +381,9 @@ namespace Epsitec.Common.Designer.Dialogs
 				}
 			}
 
-			if (this.operation == Operation.Form && !this.typeId.IsEmpty)
+			if (this.operation == Operation.Form && this.typeIds != null)
 			{
-				if (!this.access.FormSearch(cultureMap, this.typeId))
+				if (!this.access.FormSearch(cultureMap, this.typeIds))
 				{
 					return false;
 				}
@@ -722,7 +751,7 @@ namespace Epsitec.Common.Designer.Dialogs
 		protected bool							isInherit;
 		protected ResourceAccess				access;
 		protected Druid							resource;
-		protected Druid							typeId;
+		protected List<Druid>					typeIds;
 		protected bool							isNullable;
 		protected List<Druid>					exclude;
 		protected CollectionView				collectionView;
