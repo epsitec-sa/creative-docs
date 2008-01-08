@@ -81,12 +81,6 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_178F6D2187DF468EAEE89B004E4C046C"
-        "OwnerKey" = "8:_303C7042A09F44598761ED7F92BB9BD2"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_18E8A44E7DE20AD648C02F818DD7E53D"
         "OwnerKey" = "8:_D92255BAB7921E856C4751B4F5AB1A62"
         "MsmSig" = "8:_UNDEFINED"
@@ -287,6 +281,12 @@
         {
         "MsmKey" = "8:_8263744E1AA74349B0D155BD34927969"
         "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_871FAAA9D208455AB5AFBF960E4F4B73"
+        "OwnerKey" = "8:_303C7042A09F44598761ED7F92BB9BD2"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -1227,7 +1227,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:Common.DocumentEditor, Version=2.1.3.0, Culture=neutral, PublicKeyToken=7344997cc606b490, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:Common.DocumentEditor, Version=2.1.4.0, Culture=neutral, PublicKeyToken=7344997cc606b490, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                     "_64ED71628CC66E6790152236592457E5"
@@ -1626,7 +1626,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:App.CreativeDocs, Version=2.1.3.0, Culture=neutral, PublicKeyToken=7344997cc606b490, processorArchitecture=x86"
+            "AssemblyAsmDisplayName" = "8:App.CreativeDocs, Version=2.1.4.0, Culture=neutral, PublicKeyToken=7344997cc606b490, processorArchitecture=x86"
                 "ScatterAssemblies"
                 {
                     "_B34B4DB7CB984EAC904F1AEA750F03FA"
@@ -1688,7 +1688,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:Common.Document, Version=2.1.3.0, Culture=neutral, PublicKeyToken=7344997cc606b490, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:Common.Document, Version=2.1.4.0, Culture=neutral, PublicKeyToken=7344997cc606b490, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                     "_D92255BAB7921E856C4751B4F5AB1A62"
@@ -1871,14 +1871,14 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Creative Docs .NET"
-        "ProductCode" = "8:{7498F629-96E6-4A0B-AD0D-EEBE58ED4D14}"
-        "PackageCode" = "8:{C4A24405-297E-4F32-9422-1EA439A179D0}"
+        "ProductCode" = "8:{D70B686F-F71F-4193-9D1B-2711D958CB38}"
+        "PackageCode" = "8:{40B56B61-A1CF-4D98-B4E4-65F3CF984883}"
         "UpgradeCode" = "8:{925CE84A-106F-439D-B0AA-6222B871FB71}"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:TRUE"
-        "ProductVersion" = "8:2.1.4"
+        "ProductVersion" = "8:2.1.5"
         "Manufacturer" = "8:OPaC bright ideas"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:http://www.creativedocs.net/"
@@ -2001,6 +2001,20 @@
             "Transitive" = "11:FALSE"
             "Target" = "8:_B34B4DB7CB984EAC904F1AEA750F03FA"
             "Folder" = "8:_AF14FA0C892F4258B55DFCFA71923550"
+            "WorkingFolder" = "8:_6A3C056324D64E9B88C565E2602F90A4"
+            "Icon" = "8:_099FB49C26D445FEB3CCF755D3FD0EB1"
+            "Feature" = "8:"
+            }
+            "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_AEF239C1EA3149C4A61ABAF1B485F10D"
+            {
+            "Name" = "8:Creative Docs .NET"
+            "Arguments" = "8:"
+            "Description" = "8:"
+            "ShowCmd" = "3:1"
+            "IconIndex" = "3:0"
+            "Transitive" = "11:FALSE"
+            "Target" = "8:_B34B4DB7CB984EAC904F1AEA750F03FA"
+            "Folder" = "8:_8C6F12DF2CC84BB9B74A4EB56DC1E956"
             "WorkingFolder" = "8:_6A3C056324D64E9B88C565E2602F90A4"
             "Icon" = "8:_099FB49C26D445FEB3CCF755D3FD0EB1"
             "Feature" = "8:"
@@ -2453,11 +2467,11 @@
         }
         "MergeModule"
         {
-            "{CEE29DC0-9FBA-4B99-8D47-5BC643D9B626}:_178F6D2187DF468EAEE89B004E4C046C"
+            "{CEE29DC0-9FBA-4B99-8D47-5BC643D9B626}:_303C7042A09F44598761ED7F92BB9BD2"
             {
             "UseDynamicProperties" = "11:TRUE"
-            "IsDependency" = "11:TRUE"
-            "SourcePath" = "8:policy_8_0_microsoft_vc80_crt_x86.msm"
+            "IsDependency" = "11:FALSE"
+            "SourcePath" = "8:C:\\Program Files\\Common Files\\Merge Modules\\Microsoft_VC80_CRT_x86.msm"
                 "Properties"
                 {
                 }
@@ -2467,11 +2481,11 @@
             "Feature" = "8:"
             "IsolateTo" = "8:"
             }
-            "{CEE29DC0-9FBA-4B99-8D47-5BC643D9B626}:_303C7042A09F44598761ED7F92BB9BD2"
+            "{CEE29DC0-9FBA-4B99-8D47-5BC643D9B626}:_871FAAA9D208455AB5AFBF960E4F4B73"
             {
             "UseDynamicProperties" = "11:TRUE"
-            "IsDependency" = "11:FALSE"
-            "SourcePath" = "8:C:\\Program Files\\Common Files\\Merge Modules\\Microsoft_VC80_CRT_x86.msm"
+            "IsDependency" = "11:TRUE"
+            "SourcePath" = "8:policy_8_0_microsoft_vc80_crt_x86.msm"
                 "Properties"
                 {
                 }

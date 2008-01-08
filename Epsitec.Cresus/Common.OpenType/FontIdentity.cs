@@ -724,12 +724,14 @@ namespace Epsitec.Common.OpenType
 			this.fontData = null;
 		}
 
+#if false
 		public Platform.IFontHandle GetPlatformFontHandle(int size)
 		{
 			FontSizeInfo info = this.GetSizeInfo (size);
 
 			return info == null ? null : info.Handle;
 		}
+#endif
 		
 		internal static void Serialize(System.IO.Stream stream, FontIdentity fid)
 		{
