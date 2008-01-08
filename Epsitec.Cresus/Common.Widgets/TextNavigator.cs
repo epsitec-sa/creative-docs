@@ -300,15 +300,15 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				return this.textLayout.GetSelectionFontName(this.context);
+				return this.textLayout.GetSelectionFontFace(this.context);
 			}
 
 			set
 			{
-				if ( this.textLayout.GetSelectionFontName(this.context) != value )
+				if ( this.textLayout.GetSelectionFontFace(this.context) != value )
 				{
 					this.UndoMemorise(UndoType.CascadableStyle);
-					this.textLayout.SetSelectionFontName(this.context, value);
+					this.textLayout.SetSelectionFontFace(this.context, value);
 					this.OnStyleChanged();
 				}
 			}

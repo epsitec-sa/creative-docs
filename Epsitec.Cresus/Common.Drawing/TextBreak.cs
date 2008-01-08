@@ -124,7 +124,7 @@ namespace Epsitec.Common.Drawing
 			//	une seule et même typographie.
 			public int Start       = 0;  // index début
 			public int Length      = 0;  // index fin - index début
-			public string FontName    = "";
+			public string FontFace    = "";
 			public Font Font        = null;
 			public double FontSize    = 0.0;
 			public double FontScale   = 0.0;

@@ -623,7 +623,7 @@ namespace Epsitec.Common.Widgets
 			}
 			else
 			{
-				JustifBlock block = this.SearchJustifBlock(context);
+				JustifBlock block = this.FindJustifBlock(context);
 				if ( block == null )  return false;
 				return block.Bold;
 				//?int i = block.Font.StyleName.IndexOf("Bold");
@@ -647,7 +647,7 @@ namespace Epsitec.Common.Widgets
 			}
 			else
 			{
-				JustifBlock block = this.SearchJustifBlock(context);
+				JustifBlock block = this.FindJustifBlock(context);
 				if ( block == null )  return false;
 				return block.Italic;
 				//?int i = block.Font.StyleName.IndexOf("Italic");
@@ -672,7 +672,7 @@ namespace Epsitec.Common.Widgets
 			}
 			else
 			{
-				JustifBlock block = this.SearchJustifBlock(context);
+				JustifBlock block = this.FindJustifBlock(context);
 				if ( block == null )  return false;
 				return block.Underline;
 			}
@@ -685,29 +685,29 @@ namespace Epsitec.Common.Widgets
 			this.InsertPutCommand(context, "underline=\"" + state + "\"");
 		}
 
-		internal string GetSelectionFontName(TextLayoutContext context)
+		internal string GetSelectionFontFace(TextLayoutContext context)
 		{
 			//	Indique le nom de la fonte des caractères sélectionnés.
 			//	Une chaîne vide indique la fonte par défaut.
 			if ( context.PrepareOffset != -1 )  // préparation pour l'insertion ?
 			{
-				string s = this.SearchPrepared(context, "face");
+				string s = this.FindLastPrepared(context, Attributes.Face);
 				if ( s == "" )  return this.DefaultFont.FaceName;
 				return s;
 			}
 			else
 			{
-				JustifBlock block = this.SearchJustifBlock(context);
+				JustifBlock block = this.FindJustifBlock(context);
 				if ( block == null )  return this.DefaultFont.FaceName;
-				if ( block.IsDefaultFontName )
+				if ( block.IsDefaultFontFace )
 				{
 					return "";
 				}
-				return block.FontName;
+				return block.FontFace;
 			}
 		}
 
-		internal void SetSelectionFontName(TextLayoutContext context, string name)
+		internal void SetSelectionFontFace(TextLayoutContext context, string name)
 		{
 			//	Modifie le nom de la fonte des caractères sélectionnés.
 			//	Une chaîne vide indique la fonte par défaut.
@@ -721,13 +721,13 @@ namespace Epsitec.Common.Widgets
 			//	1 indique l'échelle par défaut.
 			if ( context.PrepareOffset != -1 )  // préparation pour l'insertion ?
 			{
-				string s = this.SearchPrepared(context, "size");
+				string s = this.FindLastPrepared (context, Attributes.Size);
 				if ( s == "" )  return 1;
 				return this.ParseScale(s);
 			}
 			else
 			{
-				JustifBlock block = this.SearchJustifBlock(context);
+				JustifBlock block = this.FindJustifBlock(context);
 				if ( block == null )  return 1;
 				return block.FontScale;
 			}
@@ -742,22 +742,69 @@ namespace Epsitec.Common.Widgets
 			this.InsertPutCommand(context, "size=\"" + scale*100.0 + "%\"");
 		}
 
+
+		private static class Attributes
+		{
+			public const string Color = "color";
+			public const string Face = "face";
+			public const string Size = "size";
+		}
+
+
 		internal Drawing.RichColor GetSelectionFontRichColor(TextLayoutContext context)
 		{
 			//	Indique la couleur des caractères sélectionnés.
 			//	Une couleur vide indique la couleur par défaut.
-			if ( context.PrepareOffset != -1 )  // préparation pour l'insertion ?
+			if (context.PrepareOffset != -1)  // préparation pour l'insertion ?
 			{
-				string s = this.SearchPrepared(context, "color");
-				return Drawing.RichColor.FromName(s);
+				return TextLayout.GetRichColorFromName (this.FindLastPrepared (context, Attributes.Color));
 			}
 			else
 			{
-				JustifBlock block = this.SearchJustifBlock(context);
-				if ( block == null )  return Drawing.RichColor.Empty;
-				return block.FontColor;
+				JustifBlock block = this.FindJustifBlock (context);
+				
+				if (block == null)
+				{
+					return Drawing.RichColor.Empty;
+				}
+				else
+				{
+					return block.FontColor;
+				}
 			}
 		}
+
+		private static Drawing.RichColor GetRichColorFromName(string color)
+		{
+			if (color.StartsWith ("."))
+			{
+				return TextLayout.FindLocalColor (color.Substring (1));
+			}
+			else
+			{
+				return Drawing.RichColor.FromName (color);
+			}
+		}
+
+		public static void DefineLocalColor(string colorName, Drawing.RichColor color)
+		{
+			TextLayout.localColors[colorName] = color;
+		}
+
+		public static Drawing.RichColor FindLocalColor(string colorName)
+		{
+			Drawing.RichColor color;
+
+			if (TextLayout.localColors.TryGetValue (colorName, out color))
+			{
+				return color;
+			}
+			else
+			{
+				return Drawing.RichColor.Empty;
+			}
+		}
+
 
 		internal Drawing.Color GetSelectionFontColor(TextLayoutContext context)
 		{
@@ -765,12 +812,12 @@ namespace Epsitec.Common.Widgets
 			//	Une couleur vide indique la couleur par défaut.
 			if ( context.PrepareOffset != -1 )  // préparation pour l'insertion ?
 			{
-				string s = this.SearchPrepared(context, "color");
+				string s = this.FindLastPrepared (context, Attributes.Color);
 				return Drawing.Color.FromName(s);
 			}
 			else
 			{
-				JustifBlock block = this.SearchJustifBlock(context);
+				JustifBlock block = this.FindJustifBlock(context);
 				if ( block == null )  return Drawing.Color.Empty;
 				return block.FontColor.Basic;
 			}
@@ -855,7 +902,7 @@ namespace Epsitec.Common.Widgets
 
 		public bool IsSelectionWaved(TextLayoutContext context)
 		{
-			JustifBlock block = this.SearchJustifBlock(context);
+			JustifBlock block = this.FindJustifBlock(context);
 			if ( block == null )  return false;
 			return block.Wave;
 		}
@@ -875,7 +922,7 @@ namespace Epsitec.Common.Widgets
 		}
 
 		
-		private JustifBlock SearchJustifBlock(TextLayoutContext context)
+		private JustifBlock FindJustifBlock(TextLayoutContext context)
 		{
 			//	Cherche le premier bloc correspondant à un index.
 			int i = this.SearchJustifBlockRank(context);
@@ -929,27 +976,38 @@ namespace Epsitec.Common.Widgets
 		{
 			//	Cherche si la préparation contient une commande donnée.
 			if ( context.PrepareOffset == -1 )  return false;
-			return (this.SearchPrepared(context, key) == "yes");
+			return (this.FindLastPrepared(context, key) == "yes");
 		}
 
-		private string SearchPrepared(TextLayoutContext context, string key)
+		private string FindLastPrepared(TextLayoutContext context, string key)
 		{
-			//	Cherche si la préparation contient une commande donnée.
-			if ( context.PrepareOffset == -1 )  return "";
+			//	Cherche si la préparation contient une commande avec l'attribut donné.
+			if (context.PrepareOffset == -1)
+			{
+				return "";
+			}
 
 			Dictionary<string, string> parameters;
+			
 			string text = this.InternalText;
 			string found = "";  // rien encore trouvé
+			
 			int from = context.PrepareOffset;
 			int to   = context.PrepareOffset + context.PrepareLength1;
-			while ( from < to )
+			
+			while (from < to)
 			{
-				Tag tag = TextLayout.ParseTag(text, ref from, out parameters);
-				if ( tag == Tag.Put )
+				Tag tag = TextLayout.ParseTag (text, ref from, out parameters);
+				
+				if (tag == Tag.Put)
 				{
-					if ( parameters.ContainsKey(key) )  found = parameters[key];
+					if (parameters.ContainsKey (key))
+					{
+						found = parameters[key];
+					}
 				}
 			}
+			
 			return found;  // retourne la *dernière* préparation trouvée
 		}
 
@@ -1221,7 +1279,7 @@ namespace Epsitec.Common.Widgets
 				simplified = true;
 			}
 			context.CursorAfter = false;
-			JustifBlock initialBlock = this.SearchJustifBlock(context);
+			JustifBlock initialBlock = this.FindJustifBlock(context);
 
 			int cursorFrom = this.FindOffsetFromIndex(context.CursorFrom);
 			int cursorTo   = this.FindOffsetFromIndex(context.CursorTo);
@@ -1358,7 +1416,7 @@ namespace Epsitec.Common.Widgets
 				this.Simplify(context);
 			}
 			context.CursorAfter = (dir > 0);
-			JustifBlock initialBlock = this.SearchJustifBlock(context);
+			JustifBlock initialBlock = this.FindJustifBlock(context);
 
 			int from, to;
 			if ( dir < 0 )  // à gauche du curseur ?
@@ -1391,7 +1449,7 @@ namespace Epsitec.Common.Widgets
 		{
 			if ( block == null )  return;
 
-			this.SetSelectionFontName(context, block.FontName);
+			this.SetSelectionFontFace(context, block.FontFace);
 			this.SetSelectionFontScale(context, block.FontScale);
 			this.SetSelectionFontRichColor(context, block.FontColor);
 			this.SetSelectionBold(context, block.Bold);
@@ -1906,7 +1964,7 @@ namespace Epsitec.Common.Widgets
 
 				double radius = rect.Height*0.25;
 				double cy = baseLine+radius;
-				radius *= this.ProcessNum(block.Parameters, "size", 1.0);
+				radius *= this.ProcessNum (block.Parameters, Attributes.Size, 1.0);
 				double cx1 = rect.Left+radius;
 				double cx2 = rect.Right-radius;
 				double cx = cx1+(cx2-cx1)*this.ProcessNum(block.Parameters, "pos", 0.0);
@@ -2446,9 +2504,9 @@ namespace Epsitec.Common.Widgets
 
 				if ( tag == Tag.Put )
 				{
-					if ( parameters.ContainsKey("size") )
+					if (parameters.ContainsKey (Attributes.Size))
 					{
-						scale = this.ParseScale(parameters["size"]);
+						scale = this.ParseScale (parameters[Attributes.Size]);
 					}
 				}
 				
@@ -3400,9 +3458,12 @@ namespace Epsitec.Common.Widgets
 						if ( parameters != null )
 						{
 							fontItem = fontStack.Peek();
-							if ( parameters.ContainsKey("face")  )  fontItem.DefineFontName  (parameters["face"]);
-							if ( parameters.ContainsKey("size")  )  fontItem.DefineFontScale (parameters["size"]);
-							if ( parameters.ContainsKey("color") )  fontItem.DefineFontColor (parameters["color"]);
+							if (parameters.ContainsKey (Attributes.Face))
+								fontItem.DefineFontFace (parameters[Attributes.Face]);
+							if (parameters.ContainsKey (Attributes.Size))
+								fontItem.DefineFontScale (parameters[Attributes.Size]);
+							if (parameters.ContainsKey (Attributes.Color))
+								fontItem.DefineFontColor (parameters[Attributes.Color]);
 							fontStack.Push(fontItem);
 						}
 						break;
@@ -3439,17 +3500,36 @@ namespace Epsitec.Common.Widgets
 					case Tag.Put:
 						if ( parameters != null )
 						{
-							if ( parameters.ContainsKey("face")      )  supplItem.PutFontName   = parameters["face"];
-							if ( parameters.ContainsKey("size")      )  supplItem.PutfontScale  = parameters["size"];
-							if ( parameters.ContainsKey("color")     )  supplItem.PutFontColor  = parameters["color"];
-							if ( parameters.ContainsKey("bold")      )  supplItem.PutBold       = parameters["bold"];
-							if ( parameters.ContainsKey("italic")    )  supplItem.PutItalic     = parameters["italic"];
-							if ( parameters.ContainsKey("underline") )  supplItem.PutUnderline  = parameters["underline"];
+							if (parameters.ContainsKey (Attributes.Face))
+							{
+								supplItem.PutFontFace   = parameters[Attributes.Face];
+							}
+							if (parameters.ContainsKey (Attributes.Size))
+							{
+								supplItem.PutFontScale  = parameters[Attributes.Size];
+							}
+							if (parameters.ContainsKey (Attributes.Color))
+							{
+								supplItem.PutFontColor  = parameters[Attributes.Color];
+							}
+
+							if (parameters.ContainsKey ("bold"))
+							{
+								supplItem.PutBold       = parameters["bold"];
+							}
+							if (parameters.ContainsKey ("italic"))
+							{
+								supplItem.PutItalic     = parameters["italic"];
+							}
+							if (parameters.ContainsKey ("underline"))
+							{
+								supplItem.PutUnderline  = parameters["underline"];
+							}
 						}
 						break;
 					case Tag.PutEnd:
-						supplItem.PutFontName   = "";
-						supplItem.PutfontScale  = "";
+						supplItem.PutFontFace   = "";
+						supplItem.PutFontScale  = "";
 						supplItem.PutFontColor  = "";
 						supplItem.PutBold       = "";
 						supplItem.PutItalic     = "";
@@ -3498,15 +3578,15 @@ namespace Epsitec.Common.Widgets
 			/**/					 SupplSimplify supplCurrent, SupplSimplify supplItem,
 			/**/					 bool fontCmd)
 		{
-			string itemFontName  = (supplItem.PutFontName  != "") ? supplItem.PutFontName  : fontItem.FontName;
-			string itemFontScale = (supplItem.PutfontScale != "") ? supplItem.PutfontScale : fontItem.FontScale;
+			string itemFontFace  = (supplItem.PutFontFace  != "") ? supplItem.PutFontFace  : fontItem.FontFace;
+			string itemFontScale = (supplItem.PutFontScale != "") ? supplItem.PutFontScale : fontItem.FontScale;
 			string itemFontColor = (supplItem.PutFontColor != "") ? supplItem.PutFontColor : fontItem.FontColor;
 
-			string currFontName  = (supplCurrent.PutFontName  != "") ? supplCurrent.PutFontName  : fontCurrent.FontName;
-			string currFontScale = (supplCurrent.PutfontScale != "") ? supplCurrent.PutfontScale : fontCurrent.FontScale;
+			string currFontFace  = (supplCurrent.PutFontFace  != "") ? supplCurrent.PutFontFace  : fontCurrent.FontFace;
+			string currFontScale = (supplCurrent.PutFontScale != "") ? supplCurrent.PutFontScale : fontCurrent.FontScale;
 			string currFontColor = (supplCurrent.PutFontColor != "") ? supplCurrent.PutFontColor : fontCurrent.FontColor;
 
-			if ( itemFontName  != currFontName  ||
+			if ( itemFontFace  != currFontFace  ||
 				 itemFontScale != currFontScale ||
 				 itemFontColor != currFontColor )
 			{
@@ -3515,21 +3595,21 @@ namespace Epsitec.Common.Widgets
 					buffer.Append("</font>");
 					fontCmd = false;
 
-					currFontName  = "";
+					currFontFace  = "";
 					currFontScale = "";
 					currFontColor = "";
 				}
 
-				if ( (itemFontName  != "" && itemFontName  != fontDefault.FontName  && itemFontName  != currFontName ) ||
+				if ( (itemFontFace  != "" && itemFontFace  != fontDefault.FontFace  && itemFontFace  != currFontFace ) ||
 					 (itemFontScale != "" && itemFontScale != fontDefault.FontScale && itemFontScale != currFontScale) ||
 					 (itemFontColor != "" && itemFontColor != fontDefault.FontColor && itemFontColor != currFontColor) )
 				{
 					buffer.Append("<font");
 
-					if ( itemFontName != "" && itemFontName != fontDefault.FontName && itemFontName != currFontName )
+					if ( itemFontFace != "" && itemFontFace != fontDefault.FontFace && itemFontFace != currFontFace )
 					{
 						buffer.Append(" face=\"");
-						buffer.Append(itemFontName);
+						buffer.Append(itemFontFace);
 						buffer.Append("\"");
 					}
 
@@ -3626,7 +3706,7 @@ namespace Epsitec.Common.Widgets
 			Stack<FontItem> stack = new Stack<FontItem> ();
 			FontItem font = new FontItem(this);
 			
-			font.FontName  = TextLayout.CodeDefault + this.DefaultFont.FaceName;
+			font.FontFace  = TextLayout.CodeDefault + this.DefaultFont.FaceName;
 			font.FontScale = 1;  // 100%
 			font.FontColor = Drawing.RichColor.Empty;
 			
@@ -3635,42 +3715,45 @@ namespace Epsitec.Common.Widgets
 		}
 
 
-		private double ParseScale(string scale)
+		private double ParseScale(string size)
 		{
-			if ( scale.EndsWith("%") )
+			if (size.EndsWith ("%"))
 			{
-				return System.Double.Parse(scale.Substring(0, scale.Length-1), System.Globalization.CultureInfo.InvariantCulture) / 100.0;
+				return System.Double.Parse (size.Substring (0, size.Length-1), System.Globalization.CultureInfo.InvariantCulture) / 100.0;
 			}
 			else
 			{
-				return System.Double.Parse(scale, System.Globalization.CultureInfo.InvariantCulture) / this.DefaultFontSize;
+				return System.Double.Parse (size, System.Globalization.CultureInfo.InvariantCulture) / this.DefaultFontSize;
 			}
 		}
 
 		private void ProcessFontTag(Stack<FontItem> stack, Dictionary<string, string> parameters)
 		{
-			if ( parameters != null )
+			if (parameters != null)
 			{
-				FontItem font = stack.Peek();
-				font = font.Copy();
-				
-				if ( parameters.ContainsKey("face") )
+				FontItem font = stack.Peek ();
+				font = font.Copy ();
+
+				if (parameters.ContainsKey (Attributes.Face))
 				{
-					font.FontName = parameters["face"];
+					font.FontFace = parameters[Attributes.Face];
 				}
-				if ( parameters.ContainsKey("size") )
+				if (parameters.ContainsKey (Attributes.Size))
 				{
-					string s = parameters["size"];
-					font.FontScale = this.ParseScale(s);
+					string s = parameters[Attributes.Size];
+					font.FontScale = this.ParseScale (s);
 				}
-				if ( parameters.ContainsKey("color") )
+				if (parameters.ContainsKey (Attributes.Color))
 				{
-					string s = parameters["color"];
-					Drawing.RichColor color = Drawing.RichColor.FromName(s);
-					if ( !color.IsEmpty )  font.FontColor = color;
+					Drawing.RichColor color = TextLayout.GetRichColorFromName (parameters[Attributes.Color]);
+
+					if (!color.IsEmpty)
+					{
+						font.FontColor = color;
+					}
 				}
-				
-				stack.Push(font);
+
+				stack.Push (font);
 			}
 		}
 
@@ -3712,9 +3795,9 @@ namespace Epsitec.Common.Widgets
 					}
 					else
 					{
-						if ( parameters.ContainsKey("color") )
+						if (parameters.ContainsKey (Attributes.Color))
 						{
-							string s = parameters["color"];
+							string s = parameters[Attributes.Color];
 							supplItem.WaveColor = Drawing.Color.FromName(s);
 						}
 					}
@@ -3783,7 +3866,7 @@ namespace Epsitec.Common.Widgets
 		private void FontToRun(Drawing.TextBreak.XRun run, Drawing.Font font, FontItem fontItem, SupplItem supplItem)
 		{
 			run.Font       = font;
-			run.FontName   = fontItem.FontName;
+			run.FontFace   = fontItem.FontFace;
 			run.FontScale  = fontItem.FontScale;
 			run.FontSize   = this.DefaultFontSize*fontItem.FontScale;
 			run.FontColor  = fontItem.FontColor;
@@ -3832,7 +3915,7 @@ namespace Epsitec.Common.Widgets
 			block.Text       = TextLayout.CodeTab.ToString();
 			block.BeginIndex = startIndex;
 			block.EndIndex   = startIndex+1;
-			block.IsDefaultFontName = TextLayout.IsDefaultFontName(fontItem.FontName);
+			block.IsDefaultFontFace = TextLayout.IsDefaultFontFace(fontItem.FontFace);
 			block.Font       = font;
 			block.FontScale  = fontItem.FontScale;
 			block.FontColor  = fontItem.FontColor;
@@ -4074,7 +4157,7 @@ noText:
 				//	Si le texte n'existe pas, met quand même un bloc vide,
 				//	afin de voir apparaître le curseur (FindTextCursor).
 				FontItem fontItem = new FontItem(this);
-				fontItem.FontName  = TextLayout.CodeDefault + this.DefaultFont.FaceName;
+				fontItem.FontFace  = TextLayout.CodeDefault + this.DefaultFont.FaceName;
 				fontItem.FontScale = 1;  // 100%
 				fontItem.FontColor = Drawing.RichColor.Empty;
 				if ( this.isPrepareDirty )
@@ -4087,7 +4170,7 @@ noText:
 				block.BoL       = true;
 				block.LineBreak = false;
 				block.Text      = "";
-				block.IsDefaultFontName = true;
+				block.IsDefaultFontFace = true;
 				block.Font      = font;
 				block.FontScale = fontItem.FontScale;
 				block.FontColor = fontItem.FontColor;
@@ -4259,7 +4342,7 @@ noText:
 							block.BeginIndex = partIndex+start;
 							block.EndIndex   = partIndex+System.Math.Min(end, next);
 							block.Width      = font.GetTextAdvance(text)*run.FontSize;
-							block.IsDefaultFontName = TextLayout.IsDefaultFontName(run.FontName);
+							block.IsDefaultFontFace = TextLayout.IsDefaultFontFace(run.FontFace);
 							block.Font       = font;
 							block.FontScale  = run.FontScale;
 							block.FontColor  = run.FontColor;
@@ -4791,9 +4874,9 @@ noText:
 				Tag tag = TextLayout.ParseTag(text, ref from, out parameters);
 				if (tag == Tag.Font)
 				{
-					if (parameters.ContainsKey("face"))
+					if (parameters.ContainsKey (Attributes.Face))
 					{
-						string s = parameters["face"];
+						string s = parameters[Attributes.Face];
 						OpenType.FontName fontName = new OpenType.FontName(s, "");
 
 						if (!list.Contains(fontName))
@@ -4920,30 +5003,30 @@ noText:
 		//	Un stack de FontDefinition est créé.
 		private struct FontDefinition
 		{
-			internal FontDefinition(string name, string scale, string color)
+			public FontDefinition(string face, string scale, string color)
 			{
-				this.name = name;
+				this.face = face;
 				this.scale = scale;
 				this.color = color;
 			}
 
-			internal string FontName
+			public string FontFace
 			{
 				get
 				{
-					return this.name;
+					return this.face;
 				}
 			}
-			
-			internal string FontScale
+
+			public string FontScale
 			{
 				get
 				{
 					return this.scale;
 				}
 			}
-			
-			internal string FontColor
+
+			public string FontColor
 			{
 				get
 				{
@@ -4951,22 +5034,22 @@ noText:
 				}
 			}
 
-			internal void DefineFontName(string value)
+			public void DefineFontFace(string value)
 			{
-				this.name = value;
+				this.face = value;
 			}
 
-			internal void DefineFontScale(string value)
+			public void DefineFontScale(string value)
 			{
 				this.scale = value;
 			}
 
-			internal void DefineFontColor(string value)
+			public void DefineFontColor(string value)
 			{
 				this.color = value;
 			}
 			
-			private string name;
+			private string face;
 			private string scale;
 			private string color;
 		}
@@ -5018,8 +5101,8 @@ noText:
 			public string	StringAnchor  = "";
 			public int		Wave          = 0;	// vague si > 0
 			public string	WaveColor     = "";
-			public string	PutFontName   = "";
-			public string	PutfontScale  = "";
+			public string	PutFontFace   = "";
+			public string	PutFontScale  = "";
 			public string	PutFontColor  = "";
 			public string	PutBold       = "";
 			public string	PutItalic     = "";
@@ -5043,7 +5126,7 @@ noText:
 			public Drawing.Font GetFont(bool bold, bool italic)
 			{
 				Drawing.Font font     = null;
-				string       fontFace = TextLayout.FontName(this.FontName);
+				string       fontFace = TextLayout.GetFontFace(this.FontFace);
 				
 				Drawing.FontFaceInfo face = Drawing.Font.GetFaceInfo(fontFace);
 				
@@ -5065,19 +5148,23 @@ noText:
 				return font;
 			}
 
-			public double FontSize
-			{
-				get
-				{
-					return host.DefaultFontSize * this.FontScale;
-				}
-			}
-
 			private TextLayout host;
-			
-			public string				FontName;
-			public double				FontScale;
-			public Drawing.RichColor	FontColor;
+
+			public string FontFace
+			{
+				get;
+				set;
+			}
+			public double FontScale
+			{
+				get;
+				set;
+			}
+			public Drawing.RichColor FontColor
+			{
+				get;
+				set;
+			}
 		}
 
 		private class SupplItem
@@ -5114,7 +5201,7 @@ noText:
 
 			public void DefineFont(Drawing.Font blockFont, FontItem fontItem, SupplItem supplItem)
 			{
-				this.IsDefaultFontName = TextLayout.IsDefaultFontName(fontItem.FontName);
+				this.IsDefaultFontFace = TextLayout.IsDefaultFontFace(fontItem.FontFace);
 				this.Font       = blockFont;
 				this.FontScale  = fontItem.FontScale;
 				this.FontColor  = fontItem.FontColor;
@@ -5126,11 +5213,11 @@ noText:
 				this.WaveColor  = supplItem.WaveColor;
 			}
 
-			public string FontName
+			public string FontFace
 			{
 				get
 				{
-					if ( this.IsDefaultFontName )
+					if ( this.IsDefaultFontFace )
 					{
 						return TextLayout.CodeDefault + this.Font.FaceName;
 					}
@@ -5166,7 +5253,7 @@ noText:
 			public int						BeginIndex;
 			public int						EndIndex;
 			public int						IndexLine;	// index dans this.lines
-			public bool						IsDefaultFontName;
+			public bool						IsDefaultFontFace;
 			public Drawing.Font				Font;
 			public double					FontScale;
 			public Drawing.RichColor		FontColor = Drawing.RichColor.Empty;
@@ -5254,20 +5341,21 @@ noText:
 		}
 
 
-		private static bool IsDefaultFontName(string name)
+		private static bool IsDefaultFontFace(string name)
 		{
-			return name.StartsWith(TextLayout.CodeDefault.ToString());
+			return (name.Length > 0) && (name[0] == TextLayout.CodeDefault);
 		}
 
-		private static string FontName(string name)
+		private static string GetFontFace(string name)
 		{
-			if ( TextLayout.IsDefaultFontName(name) )
+			if ( TextLayout.IsDefaultFontFace(name) )
 			{
 				return name.Substring(1);
 			}
 			return name;
 		}
 
+		private static Dictionary<string, Drawing.RichColor> localColors = new Dictionary<string, Epsitec.Common.Drawing.RichColor> ();
 
 		private Widget							embedder;
 		private Support.ResourceManager			resourceManager;

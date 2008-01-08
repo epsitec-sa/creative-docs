@@ -788,7 +788,7 @@ namespace Epsitec.Common.Widgets
 		}
 
 
-		protected Drawing.Point GetTextOriginLocation()
+		private Drawing.Point GetTextOriginLocation()
 		{
 			return this.InnerTextBounds.Location - this.scrollOffset + new Drawing.Point (0, this.GetBaseLineVerticalOffset ());
 		}
@@ -798,7 +798,7 @@ namespace Epsitec.Common.Widgets
 			return this.GetCursorPosition (out p1, out p2, this.GetTextOriginLocation ());
 		}
 
-		protected bool GetCursorPosition(out Drawing.Point p1, out Drawing.Point p2, Drawing.Point offset)
+		private bool GetCursorPosition(out Drawing.Point p1, out Drawing.Point p2, Drawing.Point offset)
 		{
 			TextLayout textLayout = this.GetPaintTextLayout ();
 
@@ -859,7 +859,7 @@ namespace Epsitec.Common.Widgets
 		}
 
 
-		protected static void HandleFlashTimer(object source)
+		private static void HandleFlashTimer(object source)
 		{
 			//	Gère le temps écoulé pour faire clignoter un curseur.
 			TextField.showCursor = !TextField.showCursor;
@@ -871,13 +871,13 @@ namespace Epsitec.Common.Widgets
 		}
 
 
-		protected void FlashCursor()
+		private void FlashCursor()
 		{
 			//	Fait clignoter le curseur.
 			this.Invalidate ();
 		}
 
-		protected void ResetCursor()
+		private void ResetCursor()
 		{
 			//	Allume le curseur au prochain affichage.
 			if (this.IsFocused && TextField.flashTimer != null)
@@ -1073,7 +1073,7 @@ namespace Epsitec.Common.Widgets
 			Up = 8
 		}
 
-		protected void EnableScroll(Drawing.Point pos)
+		private void EnableScroll(Drawing.Point pos)
 		{
 			ScrollDirection dir = ScrollDirection.None;
 			Drawing.Rectangle box = this.Client.Bounds;
