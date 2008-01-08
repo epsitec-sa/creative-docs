@@ -13,7 +13,7 @@ namespace Epsitec.Common.Support
 		/// Preserves the full stack trace for the given exception, when it is
 		/// either being rethrown using <code>throw;</code> or <code>throw ex;</code>.
 		/// </summary>
-		/// <param name="ex">The ex.</param>
+		/// <param name="ex">The exception which will be rethrown.</param>
 		public static void PreserveStackTrace(System.Exception ex)
 		{
 			System.Type exceptionType = typeof (System.Exception);
