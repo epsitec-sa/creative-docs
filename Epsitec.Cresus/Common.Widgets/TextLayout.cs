@@ -153,8 +153,7 @@ namespace Epsitec.Common.Widgets
 		{
 			get { return this.FindIndexFromOffset(this.MaxTextOffset); }
 		}
-		
-		
+
 		public Support.ResourceManager			ResourceManager
 		{
 			get
@@ -807,7 +806,7 @@ namespace Epsitec.Common.Widgets
 		{
 			if (color.StartsWith ("."))
 			{
-				return TextLayout.FindLocalColor (color.Substring (1));
+				return TextLayout.FindLocalColor (color);
 			}
 			else
 			{
@@ -817,6 +816,10 @@ namespace Epsitec.Common.Widgets
 
 		public static void DefineLocalColor(string colorName, Drawing.RichColor color)
 		{
+			System.Diagnostics.Debug.Assert (colorName != null);
+			System.Diagnostics.Debug.Assert (colorName.Length > 1);
+			System.Diagnostics.Debug.Assert (colorName[0] == '.');
+
 			TextLayout.localColors[colorName] = color;
 		}
 
@@ -3278,7 +3281,12 @@ namespace Epsitec.Common.Widgets
 				return buffer.ToString();
 			}
 		}
-		
+
+		/// <summary>
+		/// Converts the tagged text to simple text, without any XML elements.
+		/// </summary>
+		/// <param name="text">The tagged text.</param>
+		/// <returns>The simple text.</returns>
 		public static string ConvertToSimpleText(string text)
 		{
 			return TextLayout.ConvertToSimpleText(text, TextLayout.CodeObject.ToString());

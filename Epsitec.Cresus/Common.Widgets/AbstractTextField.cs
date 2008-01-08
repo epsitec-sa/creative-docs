@@ -77,6 +77,8 @@ namespace Epsitec.Common.Widgets
 
 			Visual.ContentAlignmentProperty.OverrideMetadata (typeof (AbstractTextField), metadataAlign);
 			Visual.PreferredHeightProperty.OverrideMetadata (typeof (AbstractTextField), metadataHeight);
+
+			TextLayout.DefineLocalColor (".hint", new Drawing.RichColor (0.6));
 		}
 
 		#endregion
@@ -190,6 +192,25 @@ namespace Epsitec.Common.Widgets
 				else
 				{
 					this.SetValue (AbstractTextField.PasswordReplacementCharacterProperty, value);
+				}
+			}
+		}
+
+		public string HintText
+		{
+			get
+			{
+				return (string) this.GetValue (AbstractTextField.HintTextProperty);
+			}
+			set
+			{
+				if (value == null)
+				{
+					this.ClearValue (AbstractTextField.HintTextProperty);
+				}
+				else
+				{
+					this.SetValue (AbstractTextField.HintTextProperty, value);
 				}
 			}
 		}
@@ -1771,9 +1792,34 @@ namespace Epsitec.Common.Widgets
 			{
 				if (this.textFieldDisplayMode == TextFieldDisplayMode.InheritedValue)
 				{
-
 					TextLayout copy = new TextLayout (original);
 					copy.Text = string.Concat ("<i>", original.Text, "</i>");
+					return copy;
+				}
+				else if ((this.textFieldDisplayMode == TextFieldDisplayMode.Hint) &&
+					/**/ (this.ContainsValue (AbstractTextField.HintTextProperty)))
+				{
+					TextLayout copy = new TextLayout (original);
+					string     hint = TextLayout.ConvertToSimpleText (this.HintText);
+					string     text = TextLayout.ConvertToSimpleText (original.Text);
+
+					int pos = hint.IndexOf (text);
+
+					string fontBegin = "<font color=\".hint\">";
+					string fontEnd   = "</font>";
+
+					if (pos < 0)
+					{
+						copy.Text = string.Concat (fontBegin, hint, fontEnd);
+					}
+					else
+					{
+						string hintPrefix = hint.Substring (0, pos);
+						string hintSuffix = hint.Substring (pos + text.Length);
+						
+						copy.Text = string.Concat (fontBegin, hintPrefix, fontEnd, text, fontBegin, hintSuffix, fontEnd);
+					}
+
 					return copy;
 				}
 				else
@@ -2156,6 +2202,7 @@ namespace Epsitec.Common.Widgets
 
 
 		public static readonly DependencyProperty PasswordReplacementCharacterProperty = DependencyProperty.Register ("PasswordReplacementCharacter", typeof (char), typeof (AbstractTextField), new DependencyPropertyMetadata ('*'));
+		public static readonly DependencyProperty HintTextProperty = DependencyProperty.Register ("HintText", typeof (string), typeof (AbstractTextField));
 
 
 		internal const double					TextMargin = 2;

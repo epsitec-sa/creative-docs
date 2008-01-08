@@ -595,6 +595,8 @@ namespace Epsitec.Common.Widgets
 			text.Margins = new Margins(160, 0, 0, 190);
 			text.TabIndex = 11;
 			text.TabNavigationMode = TabNavigationMode.ActivateOnTab;
+			text.HintText = "Bonjour !";
+			text.TextDisplayMode = TextFieldDisplayMode.Hint;
 			window.Root.Children.Add(text);
 
 			TextFieldUpDown tud = new TextFieldUpDown();
