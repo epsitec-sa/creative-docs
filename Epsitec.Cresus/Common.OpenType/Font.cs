@@ -1570,7 +1570,7 @@ namespace Epsitec.Common.OpenType
 			if (this.useSystemGlyphSize)
 			{
 				FontSizeInfo info = this.identity.GetSizeInfo ((int)(size + 0.5));
-				return info.Handle.Handle;
+				return info.Handle == null ? System.IntPtr.Zero : info.Handle.Handle;
 			}
 			
 			return System.IntPtr.Zero;
@@ -1585,7 +1585,7 @@ namespace Epsitec.Common.OpenType
 		public System.IntPtr GetFontHandleAtEmSize()
 		{
 			FontSizeInfo info = this.identity.GetSizeInfo (this.ot_head.UnitsPerEm);
-			return info.Handle.Handle;
+            return info.Handle == null ? System.IntPtr.Zero : info.Handle.Handle;
 		}
 
 

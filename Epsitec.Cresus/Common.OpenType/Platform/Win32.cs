@@ -496,7 +496,12 @@ namespace Epsitec.Common.OpenType.Platform
 		public static Platform.IFontHandle GetFontHandle(object system_description, int size)
 		{
 			LogFont lf = system_description as LogFont;
-			
+
+            if (lf == null)
+            {
+                return null;
+            }
+
 			lf.lfHeight = -size;
 			lf.lfWidth  = 0;
 			
@@ -555,7 +560,12 @@ namespace Epsitec.Common.OpenType.Platform
 			
 			internal_leading = 0;
 			external_leading = 0;
-			
+
+            if (font == null)
+            {
+                return false;
+            }
+
 			using (TempDC dc = new TempDC (font.Handle))
 			{
 				TextMetric metric = new TextMetric ();

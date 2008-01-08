@@ -62,12 +62,12 @@ END
 
 3 TEXTINCLUDE 
 BEGIN
-    "\r\n"
+    "\r\0"
 END
 
 2 TEXTINCLUDE 
 BEGIN
-    "#include ""afxres.h""\r\n"
+    "#include ""afxres.h""\r\0"
 END
 
 #endif    // APSTUDIO_INVOKED
@@ -79,7 +79,7 @@ END
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 2,1,3,0
+ FILEVERSION 2,1,5,0
  PRODUCTVERSION 2,0,0,0
  FILEFLAGSMASK 0x17L
 #ifdef _DEBUG
@@ -98,7 +98,7 @@ BEGIN
             VALUE "Comments", "Visit http://www.creativedocs.net/ for detailed information"
             VALUE "CompanyName", "OPaC bright ideas"
             VALUE "FileDescription", "Creative Docs .NET"
-            VALUE "FileVersion", "2, 1, 3, 0"
+            VALUE "FileVersion", "2, 1, 5, 0"
             VALUE "InternalName", "Creative Docs .NET"
             VALUE "LegalCopyright", "Copyright © 2002-2008, OPaC bright ideas, CH-1400 Yverdon-les-Bains & EPSITEC SA, CH-1920 Belmont-sur-Lausanne, Switzerland"
             VALUE "OriginalFilename", "Creative Docs .NET.exe"
@@ -126,3 +126,4 @@ END
 
 /////////////////////////////////////////////////////////////////////////////
 #endif    // not APSTUDIO_INVOKED
+
