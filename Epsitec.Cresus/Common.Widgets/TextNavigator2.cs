@@ -387,6 +387,10 @@ namespace Epsitec.Common.Widgets
 				this.Insert (code);
 				return true;
 			}
+			else if ((int)code == 31)	//	CTRL + dash
+			{
+				this.Insert (Text.Unicode.Code.SoftHyphen);
+			}
 			
 			return false;
 		}
