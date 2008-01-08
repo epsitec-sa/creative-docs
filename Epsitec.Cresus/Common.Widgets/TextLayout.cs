@@ -617,17 +617,22 @@ namespace Epsitec.Common.Widgets
 		internal bool IsSelectionBold(TextLayoutContext context)
 		{
 			//	Indique si les caractères sélectionnés sont gras.
-			if ( context.PrepareOffset != -1 )  // préparation pour l'insertion ?
+			if (context.PrepareOffset != -1)  // préparation pour l'insertion ?
 			{
-				return this.IsPrepared(context, "bold");
+				return this.IsPrepared (context, "bold");
 			}
 			else
 			{
-				JustifBlock block = this.FindJustifBlock(context);
-				if ( block == null )  return false;
-				return block.Bold;
-				//?int i = block.Font.StyleName.IndexOf("Bold");
-				//?return ( i >= 0 );
+				JustifBlock block = this.FindJustifBlock (context);
+				
+				if (block == null)
+				{
+					return false;
+				}
+				else
+				{
+					return block.Bold;
+				}
 			}
 		}
 
@@ -641,18 +646,21 @@ namespace Epsitec.Common.Widgets
 		internal bool IsSelectionItalic(TextLayoutContext context)
 		{
 			//	Indique si les caractères sélectionnés sont italiques.
-			if ( context.PrepareOffset != -1 )  // préparation pour l'insertion ?
+			if (context.PrepareOffset != -1)  // préparation pour l'insertion ?
 			{
-				return this.IsPrepared(context, "italic");
+				return this.IsPrepared (context, "italic");
 			}
 			else
 			{
-				JustifBlock block = this.FindJustifBlock(context);
-				if ( block == null )  return false;
-				return block.Italic;
-				//?int i = block.Font.StyleName.IndexOf("Italic");
-				//?int j = block.Font.StyleName.IndexOf("Oblique");
-				//?return ( i >= 0 || j >= 0 );
+				JustifBlock block = this.FindJustifBlock (context);
+				if (block == null)
+				{
+					return false;
+				}
+				else
+				{
+					return block.Italic;
+				}
 			}
 		}
 
@@ -666,15 +674,21 @@ namespace Epsitec.Common.Widgets
 		internal bool IsSelectionUnderline(TextLayoutContext context)
 		{
 			//	Indique si les caractères sélectionnés sont soulignés.
-			if ( context.PrepareOffset != -1 )  // préparation pour l'insertion ?
+			if (context.PrepareOffset != -1)  // préparation pour l'insertion ?
 			{
-				return this.IsPrepared(context, "underline");
+				return this.IsPrepared (context, "underline");
 			}
 			else
 			{
-				JustifBlock block = this.FindJustifBlock(context);
-				if ( block == null )  return false;
-				return block.Underline;
+				JustifBlock block = this.FindJustifBlock (context);
+				if (block == null)
+				{
+					return false;
+				}
+				else
+				{
+					return block.Underline;
+				}
 			}
 		}
 
@@ -689,21 +703,29 @@ namespace Epsitec.Common.Widgets
 		{
 			//	Indique le nom de la fonte des caractères sélectionnés.
 			//	Une chaîne vide indique la fonte par défaut.
-			if ( context.PrepareOffset != -1 )  // préparation pour l'insertion ?
+			if (context.PrepareOffset != -1)  // préparation pour l'insertion ?
 			{
-				string s = this.FindLastPrepared(context, Attributes.Face);
-				if ( s == "" )  return this.DefaultFont.FaceName;
+				string s = this.FindLastPrepared (context, Attributes.Face);
+				if (s == "")
+					return this.DefaultFont.FaceName;
 				return s;
 			}
 			else
 			{
-				JustifBlock block = this.FindJustifBlock(context);
-				if ( block == null )  return this.DefaultFont.FaceName;
-				if ( block.IsDefaultFontFace )
+				JustifBlock block = this.FindJustifBlock (context);
+
+				if (block == null)
+				{
+					return this.DefaultFont.FaceName;
+				}
+				else if (block.IsDefaultFontFace)
 				{
 					return "";
 				}
-				return block.FontFace;
+				else
+				{
+					return block.FontFace;
+				}
 			}
 		}
 
@@ -719,17 +741,24 @@ namespace Epsitec.Common.Widgets
 		{
 			//	Indique l'échelle des caractères sélectionnés.
 			//	1 indique l'échelle par défaut.
-			if ( context.PrepareOffset != -1 )  // préparation pour l'insertion ?
+			if (context.PrepareOffset != -1)  // préparation pour l'insertion ?
 			{
 				string s = this.FindLastPrepared (context, Attributes.Size);
-				if ( s == "" )  return 1;
-				return this.ParseScale(s);
+				if (s == "")
+					return 1;
+				return this.ParseScale (s);
 			}
 			else
 			{
-				JustifBlock block = this.FindJustifBlock(context);
-				if ( block == null )  return 1;
-				return block.FontScale;
+				JustifBlock block = this.FindJustifBlock (context);
+				if (block == null)
+				{
+					return 1;
+				}
+				else
+				{
+					return block.FontScale;
+				}
 			}
 		}
 
@@ -810,16 +839,22 @@ namespace Epsitec.Common.Widgets
 		{
 			//	Indique la couleur des caractères sélectionnés.
 			//	Une couleur vide indique la couleur par défaut.
-			if ( context.PrepareOffset != -1 )  // préparation pour l'insertion ?
+			if (context.PrepareOffset != -1)  // préparation pour l'insertion ?
 			{
 				string s = this.FindLastPrepared (context, Attributes.Color);
-				return Drawing.Color.FromName(s);
+				return Drawing.Color.FromName (s);
 			}
 			else
 			{
-				JustifBlock block = this.FindJustifBlock(context);
-				if ( block == null )  return Drawing.Color.Empty;
-				return block.FontColor.Basic;
+				JustifBlock block = this.FindJustifBlock (context);
+				if (block == null)
+				{
+					return Drawing.Color.Empty;
+				}
+				else
+				{
+					return block.FontColor.Basic;
+				}
 			}
 		}
 
@@ -858,27 +893,34 @@ namespace Epsitec.Common.Widgets
 		internal Drawing.TextListType GetSelectionList(TextLayoutContext context)
 		{
 			//	Indique si les caractères sélectionnés commencent par une puce.
-			int i = this.SearchJustifBlockRank(context);
-			if ( i == -1 )  return Drawing.TextListType.None;
+			int i = this.FindJustifBlockRank (context);
+
+			if (i == -1)
+			{
+				return Drawing.TextListType.None;
+			}
 
 			bool firstBlock = true;
-			while ( i >= 0 )
-			{
-				JustifBlock block = this.blocks[i] as JustifBlock;
 
-				if ( block.LineBreak && !firstBlock )
+			while (i >= 0)
+			{
+				JustifBlock block = this.blocks[i];
+
+				if (block.LineBreak && !firstBlock)
 				{
 					return Drawing.TextListType.None;
 				}
 
-				if ( block.List )
+				if (block.List)
 				{
-					return this.ProcessListType(block.Parameters, "type", Drawing.TextListType.Fix);
+					return this.ProcessListType (block.Parameters, "type", Drawing.TextListType.Fix);
 				}
 
-				i --;
+				i--;
+				
 				firstBlock = false;
 			}
+
 			return Drawing.TextListType.None;
 		}
 
@@ -902,9 +944,16 @@ namespace Epsitec.Common.Widgets
 
 		public bool IsSelectionWaved(TextLayoutContext context)
 		{
-			JustifBlock block = this.FindJustifBlock(context);
-			if ( block == null )  return false;
-			return block.Wave;
+			JustifBlock block = this.FindJustifBlock (context);
+			
+			if (block == null)
+			{
+				return false;
+			}
+			else
+			{
+				return block.Wave;
+			}
 		}
 		
 		public bool IsSelectionWaved(int index)
@@ -921,37 +970,47 @@ namespace Epsitec.Common.Widgets
 			return this.IsSelectionWaved(context);
 		}
 
-		
+
 		private JustifBlock FindJustifBlock(TextLayoutContext context)
 		{
 			//	Cherche le premier bloc correspondant à un index.
-			int i = this.SearchJustifBlockRank(context);
-			if ( i == -1 )  return null;
-			return this.blocks[i] as JustifBlock;
+			int i = this.FindJustifBlockRank (context);
+			
+			if (i == -1)
+			{
+				return null;
+			}
+			else
+			{
+				return this.blocks[i];
+			}
 		}
 
-		private int SearchJustifBlockRank(TextLayoutContext context)
+		private int FindJustifBlockRank(TextLayoutContext context)
 		{
 			//	Cherche le premier bloc correspondant à un index.
-			this.UpdateLayout();
+			this.UpdateLayout ();
 
 			int  from  = context.CursorFrom;
 			int  to    = context.CursorTo;
 			bool after = context.CursorAfter;
 
-			if ( from != to )  // zone sélectionnée ?
+			if (from != to)  // zone sélectionnée ?
 			{
-				from = System.Math.Min(from, to);  // cherche le début en marche arrière
+				from = System.Math.Min (from, to);  // cherche le début en marche arrière
 				after = true;
 			}
 
-			if ( after )  // cherche en marche arrière ?
+			if (after)  // cherche en marche arrière ?
 			{
 				int index = from;
-				for ( int i=this.blocks.Count-1 ; i>=0 ; i-- )
+				
+				for (int i = this.blocks.Count-1; i >= 0; i--)
 				{
-					JustifBlock block = this.blocks[i] as JustifBlock;
-					if ( index >= block.BeginIndex && index <= block.EndIndex )
+					JustifBlock block = this.blocks[i];
+					
+					if ((index >= block.BeginIndex) &&
+						(index <= block.EndIndex))
 					{
 						return i;
 					}
@@ -960,15 +1019,19 @@ namespace Epsitec.Common.Widgets
 			else	// cherche en marche avant ?
 			{
 				int index = to;
-				for ( int i=0 ; i<this.blocks.Count ; i++ )
+				
+				for (int i = 0; i < this.blocks.Count; i++)
 				{
-					JustifBlock block = this.blocks[i] as JustifBlock;
-					if ( index >= block.BeginIndex && index <= block.EndIndex )
+					JustifBlock block = this.blocks[i];
+					
+					if ((index >= block.BeginIndex) &&
+						(index <= block.EndIndex))
 					{
 						return i;
 					}
 				}
 			}
+			
 			return -1;
 		}
 
@@ -1273,33 +1336,37 @@ namespace Epsitec.Common.Widgets
 		{
 			//	Supprime les caractères sélectionnés dans le texte.
 			bool simplified = false;
-			if ( context.PrepareOffset != -1 )  // préparation pour l'insertion ?
+			if (context.PrepareOffset != -1)  // préparation pour l'insertion ?
 			{
-				this.Simplify(context);
+				this.Simplify (context);
 				simplified = true;
 			}
 			context.CursorAfter = false;
-			JustifBlock initialBlock = this.FindJustifBlock(context);
+			JustifBlock initialBlock = this.FindJustifBlock (context);
 
-			int cursorFrom = this.FindOffsetFromIndex(context.CursorFrom);
-			int cursorTo   = this.FindOffsetFromIndex(context.CursorTo);
-			
-			int from = System.Math.Min(cursorFrom, cursorTo);
-			int to   = System.Math.Max(cursorFrom, cursorTo);
-			
-			if ( from == to )
+			int cursorFrom = this.FindOffsetFromIndex (context.CursorFrom);
+			int cursorTo   = this.FindOffsetFromIndex (context.CursorTo);
+
+			int from = System.Math.Min (cursorFrom, cursorTo);
+			int to   = System.Math.Max (cursorFrom, cursorTo);
+
+			if (from == to)
 			{
-				if ( simplified )  this.MarkLayoutAsDirty();
+				if (simplified)
+				{
+					this.MarkLayoutAsDirty ();
+				}
+
 				return false;
 			}
-			
-			this.DeleteText(from, to);
-			from = this.FindIndexFromOffset(from);
+
+			this.DeleteText (from, to);
+			from = this.FindIndexFromOffset (from);
 			context.CursorTo    = from;
 			context.CursorFrom  = from;
 			context.CursorAfter = false;
 
-			this.MemoriseDeletedStyle(context, initialBlock);
+			this.MemoriseDeletedStyle (context, initialBlock);
 			return true;
 		}
 
@@ -1409,31 +1476,41 @@ namespace Epsitec.Common.Widgets
 		public bool DeleteCharacter(TextLayoutContext context, int dir)
 		{
 			//	Supprime le caractère à gauche ou à droite du curseur.
-			if ( this.DeleteSelection(context) )  return false;
+			if (this.DeleteSelection (context))
+				return false;
 
-			if ( context.PrepareOffset != -1 )  // préparation pour l'insertion ?
+			if (context.PrepareOffset != -1)  // préparation pour l'insertion ?
 			{
-				this.Simplify(context);
+				this.Simplify (context);
 			}
 			context.CursorAfter = (dir > 0);
-			JustifBlock initialBlock = this.FindJustifBlock(context);
+			JustifBlock initialBlock = this.FindJustifBlock (context);
 
 			int from, to;
-			if ( dir < 0 )  // à gauche du curseur ?
+			
+			if (dir < 0)  // à gauche du curseur ?
 			{
-				if ( context.CursorTo == 0 )  return false;
-				from = this.FindOffsetFromIndex(context.CursorTo-1);
-				to   = this.FindOffsetFromIndex(context.CursorTo);
+				if (context.CursorTo == 0)
+				{
+					return false;
+				}
+
+				from = this.FindOffsetFromIndex (context.CursorTo-1);
+				to   = this.FindOffsetFromIndex (context.CursorTo);
 			}
 			else	// à droite du curseur ?
 			{
-				from = this.FindOffsetFromIndex(context.CursorTo);
-				to   = this.FindOffsetFromIndex(context.CursorTo+1);
+				from = this.FindOffsetFromIndex (context.CursorTo);
+				to   = this.FindOffsetFromIndex (context.CursorTo+1);
 			}
 
-			if ( from == to )  return false;
-			this.DeleteText(from, to);
-			int cursor = this.FindIndexFromOffset(from);
+			if (from == to)
+			{
+				return false;
+			}
+
+			this.DeleteText (from, to);
+			int cursor = this.FindIndexFromOffset (from);
 
 			bool us = context.UndoSeparator;
 			context.CursorTo    = cursor;
@@ -1441,7 +1518,7 @@ namespace Epsitec.Common.Widgets
 			context.CursorAfter = (dir < 0);
 			context.UndoSeparator = us;
 
-			this.MemoriseDeletedStyle(context, initialBlock);
+			this.MemoriseDeletedStyle (context, initialBlock);
 			return true;
 		}
 
@@ -4194,7 +4271,7 @@ noText:
 				if ( !beginOfText )  // ajoute un bloc "tab" avant la partie ?
 				{
 					System.Diagnostics.Debug.Assert(tabIndex < this.tabs.Count);
-					JustifBlock tb = this.tabs[tabIndex++] as JustifBlock;
+					JustifBlock tb = this.tabs[tabIndex++];
 
 					Drawing.TextStyle.Tab tab;
 					if ( listEnding )  // partie précédente terminée par <list/> ?
@@ -4275,7 +4352,7 @@ noText:
 
 				if ( tabWidth != 0.0 )  // est-on après un tabulateur spécial ?
 				{
-					JustifBlock block = this.blocks[this.blocks.Count-1] as JustifBlock;
+					JustifBlock block = this.blocks[this.blocks.Count-1];
 					System.Diagnostics.Debug.Assert(block.Tab);
 					Drawing.TextBreak.Line line = lines[0] as Drawing.TextBreak.Line;
 					double dist = 0.0;
@@ -4439,7 +4516,7 @@ noText:
 
 			if ( this.blocks.Count > 0 )
 			{
-				JustifBlock block = this.blocks[this.blocks.Count-1] as JustifBlock;
+				JustifBlock block = this.blocks[this.blocks.Count-1];
 				if ( block.LineBreak )  // texte terminé par un <br/> ?
 				{
 					//	Ajoute un bloc vide afin de pouvoir mettre le curseur au début de
@@ -4908,7 +4985,7 @@ noText:
 
 			if (this.blocks.Count == 1)
 			{
-				JustifBlock block = this.blocks[0] as JustifBlock;
+				JustifBlock block = this.blocks[0];
 
 				if (block.Text.Length == 0)  // texte vide ?
 				{
