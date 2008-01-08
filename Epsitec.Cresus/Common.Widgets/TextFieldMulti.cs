@@ -6,11 +6,10 @@ namespace Epsitec.Common.Widgets
 	public class TextFieldMulti : AbstractTextField
 	{
 		public TextFieldMulti()
+			: base (TextFieldStyle.Multiline)
 		{
 			this.TextLayout.BreakMode &= ~Drawing.TextBreakMode.SingleLine;
 			this.TextLayout.BreakMode |=  Drawing.TextBreakMode.Hyphenate;
-			
-			this.textFieldStyle = TextFieldStyle.Multiline;
 
 			this.scroller = new VScroller(this);
 			this.scroller.Enable = false;

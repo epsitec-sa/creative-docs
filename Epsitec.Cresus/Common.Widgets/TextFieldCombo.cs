@@ -14,8 +14,8 @@ namespace Epsitec.Common.Widgets
 	public class TextFieldCombo : AbstractTextField, Collections.IStringCollectionHost, Support.Data.INamedStringSelection
 	{
 		public TextFieldCombo()
+			: base (TextFieldStyle.Combo)
 		{
-			this.textFieldStyle = TextFieldStyle.Combo;
 			this.ButtonShowCondition = ShowCondition.Always;
 			
 			this.select_item_behavior = new Behaviors.SelectItemBehavior (new Behaviors.SelectItemCallback (this.AutomaticItemSelection));

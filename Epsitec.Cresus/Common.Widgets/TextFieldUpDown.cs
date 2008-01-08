@@ -8,8 +8,8 @@ namespace Epsitec.Common.Widgets
 	public class TextFieldUpDown : AbstractTextField, Support.Data.INumValue
 	{
 		public TextFieldUpDown()
+			: base (TextFieldStyle.UpDown)
 		{
-			this.textFieldStyle = TextFieldStyle.UpDown;
 			this.TextNavigator.IsNumeric = true;
 			this.range = new Types.DecimalRange (0, 100, 1);
 

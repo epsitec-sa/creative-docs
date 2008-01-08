@@ -51,6 +51,12 @@ namespace Epsitec.Common.Widgets
 			this.IsFocusedChanged += this.HandleIsFocusedChanged;
 		}
 
+		protected AbstractTextField(TextFieldStyle textFieldStyle)
+			: this ()
+		{
+			this.textFieldStyle = TextFieldStyle.Combo;
+		}
+
 		public AbstractTextField(Widget embedder)
 			: this ()
 		{
@@ -471,14 +477,14 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				return this.textDisplayMode;
+				return this.textFieldDisplayMode;
 			}
 
 			set
 			{
-				if (this.textDisplayMode != value)
+				if (this.textFieldDisplayMode != value)
 				{
-					this.textDisplayMode = value;
+					this.textFieldDisplayMode = value;
 					this.Invalidate ();
 				}
 			}
@@ -488,12 +494,12 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				return this.initial_text_display_mode;
+				return this.initialTextDisplayMode;
 			}
 
 			set
 			{
-				this.initial_text_display_mode = value;
+				this.initialTextDisplayMode = value;
 			}
 		}
 
@@ -501,11 +507,11 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				return this.initial_text;
+				return this.initialText;
 			}
 			set
 			{
-				this.initial_text = value;
+				this.initialText = value;
 			}
 		}
 
@@ -670,14 +676,14 @@ namespace Epsitec.Common.Widgets
 			if ((this.IsEditing == false) &&
 				((this.DefocusAction != DefocusAction.None) || (this.IsCombo) || (this.ButtonShowCondition != ShowCondition.Never)))
 			{
-				this.initial_text              = this.Text;
-				this.initial_text_display_mode = this.TextDisplayMode;
+				this.initialText              = this.Text;
+				this.initialTextDisplayMode = this.TextDisplayMode;
 
 				this.IsEditing = true;
 
-				if (this.textDisplayMode == TextFieldDisplayMode.InheritedValue)
+				if (this.textFieldDisplayMode == TextFieldDisplayMode.InheritedValue)
 				{
-					this.textDisplayMode = TextFieldDisplayMode.OverriddenValue;
+					this.textFieldDisplayMode = TextFieldDisplayMode.OverriddenValue;
 				}
 
 				this.OnEditionStarted ();
@@ -1057,14 +1063,29 @@ namespace Epsitec.Common.Widgets
 			return this.navigator.ProcessMessage (message, pos);
 		}
 
+		[System.Flags]
+		enum ScrollDirection : byte
+		{
+			None = 0,
+			Left = 1,
+			Right = 2,
+			Down = 4,
+			Up = 8
+		}
+
 		protected void EnableScroll(Drawing.Point pos)
 		{
-			this.scrollLeft   = (pos.X <= this.Client.Bounds.Left);
-			this.scrollRight  = (pos.X >= this.Client.Bounds.Right);
-			this.scrollBottom = (pos.Y <= this.Client.Bounds.Bottom);
-			this.scrollTop    = (pos.Y >= this.Client.Bounds.Top);
+			ScrollDirection dir = ScrollDirection.None;
+			Drawing.Rectangle box = this.Client.Bounds;
+			
+			dir |= (pos.X <= box.Left)   ? ScrollDirection.Left  : ScrollDirection.None;
+			dir |= (pos.X >= box.Right)  ? ScrollDirection.Right : ScrollDirection.None;
+			dir |= (pos.Y <= box.Bottom) ? ScrollDirection.Down  : ScrollDirection.None;
+			dir |= (pos.Y >= box.Top)    ? ScrollDirection.Up    : ScrollDirection.None;
 
-			if (this.scrollLeft || this.scrollRight || this.scrollBottom || this.scrollTop)
+			this.mouseScrollDirection = dir;
+			
+			if (dir != ScrollDirection.None)
 			{
 				this.SetEngaged (true);
 			}
@@ -1263,14 +1284,26 @@ namespace Epsitec.Common.Widgets
 			base.OnStillEngaged ();
 
 			double amplitude = 4;
-			if (this.scrollLeft)
+
+			if ((this.mouseScrollDirection & ScrollDirection.Left) != 0)
+			{
 				this.ScrollHorizontal (-amplitude);
-			if (this.scrollRight)
+			}
+
+			if ((this.mouseScrollDirection & ScrollDirection.Right) != 0)
+			{
 				this.ScrollHorizontal (amplitude);
-			if (this.scrollBottom)
+			}
+
+			if ((this.mouseScrollDirection & ScrollDirection.Down) != 0)
+			{
 				this.ScrollVertical (-amplitude);
-			if (this.scrollTop)
+			}
+
+			if ((this.mouseScrollDirection & ScrollDirection.Up) != 0)
+			{
 				this.ScrollVertical (amplitude);
+			}
 		}
 
 		private void HandleIsFocusedChanged(object sender, Types.DependencyPropertyChangedEventArgs e)
@@ -1553,7 +1586,9 @@ namespace Epsitec.Common.Widgets
 			//	Décale le texte vers la droite (+) ou la gauche (-), lorsque la
 			//	souris dépasse pendant une sélection.
 			if (this.textFieldStyle == TextFieldStyle.Multiline)
+			{
 				return;
+			}
 
 			this.scrollOffset.X += dist;
 			Drawing.Point end = this.TextLayout.FindTextEnd ();
@@ -1629,7 +1664,7 @@ namespace Epsitec.Common.Widgets
 				//	Ne reproduit pas l'état sélectionné si on peint nous-même le fond
 				//	de la ligne éditable.
 				state &= ~WidgetPaintState.Selected;
-				adorner.PaintTextFieldBackground (graphics, fill, state, this.textFieldStyle, this.textDisplayMode, this.navigator.IsReadOnly&&!this.IsCombo);
+				adorner.PaintTextFieldBackground (graphics, fill, state, this.textFieldStyle, this.textFieldDisplayMode, this.navigator.IsReadOnly&&!this.IsCombo);
 			}
 		}
 
@@ -1650,13 +1685,13 @@ namespace Epsitec.Common.Widgets
 					areas[0] = new TextLayout.SelectedArea ();
 					areas[0].Rect = rInside;
 					areas[0].Rect.Deflate (1, 1);
-					adorner.PaintTextSelectionBackground (graphics, areas, state, PaintTextStyle.TextField, this.textDisplayMode);
-					adorner.PaintGeneralTextLayout (graphics, clipRect, pos, textLayout, (state&~WidgetPaintState.Focused)|WidgetPaintState.Selected, PaintTextStyle.TextField, this.textDisplayMode, this.BackColor);
+					adorner.PaintTextSelectionBackground (graphics, areas, state, PaintTextStyle.TextField, this.textFieldDisplayMode);
+					adorner.PaintGeneralTextLayout (graphics, clipRect, pos, textLayout, (state&~WidgetPaintState.Focused)|WidgetPaintState.Selected, PaintTextStyle.TextField, this.textFieldDisplayMode, this.BackColor);
 					adorner.PaintFocusBox (graphics, areas[0].Rect);
 				}
 				else if (from == to)
 				{
-					adorner.PaintGeneralTextLayout (graphics, clipRect, pos, textLayout, state&~WidgetPaintState.Focused, PaintTextStyle.TextField, this.textDisplayMode, this.BackColor);
+					adorner.PaintGeneralTextLayout (graphics, clipRect, pos, textLayout, state&~WidgetPaintState.Focused, PaintTextStyle.TextField, this.textFieldDisplayMode, this.BackColor);
 					visibleCursor = TextField.showCursor && this.Window.IsFocused && !this.Window.IsSubmenuOpen;
 				}
 				else if (this.Window.IsFocused == false)
@@ -1664,7 +1699,7 @@ namespace Epsitec.Common.Widgets
 					//	Il y a une sélection, mais la fenêtre n'a pas le focus; on ne peint
 					//	donc pas la sélection...
 
-					adorner.PaintGeneralTextLayout (graphics, clipRect, pos, textLayout, state&~WidgetPaintState.Focused, PaintTextStyle.TextField, this.textDisplayMode, this.BackColor);
+					adorner.PaintGeneralTextLayout (graphics, clipRect, pos, textLayout, state&~WidgetPaintState.Focused, PaintTextStyle.TextField, this.textFieldDisplayMode, this.BackColor);
 					visibleCursor = false;
 				}
 				else
@@ -1677,12 +1712,12 @@ namespace Epsitec.Common.Widgets
 					TextLayout.SelectedArea[] areas = textLayout.FindTextRange (pos, from, to);
 					if (areas.Length == 0)
 					{
-						adorner.PaintGeneralTextLayout (graphics, clipRect, pos, textLayout, state&~WidgetPaintState.Focused, PaintTextStyle.TextField, this.textDisplayMode, this.BackColor);
+						adorner.PaintGeneralTextLayout (graphics, clipRect, pos, textLayout, state&~WidgetPaintState.Focused, PaintTextStyle.TextField, this.textFieldDisplayMode, this.BackColor);
 						visibleCursor = TextField.showCursor && this.Window.IsFocused && !this.Window.IsSubmenuOpen;
 					}
 					else
 					{
-						adorner.PaintGeneralTextLayout (graphics, clipRect, pos, textLayout, state&~(WidgetPaintState.Focused|WidgetPaintState.Selected), PaintTextStyle.TextField, this.textDisplayMode, this.BackColor);
+						adorner.PaintGeneralTextLayout (graphics, clipRect, pos, textLayout, state&~(WidgetPaintState.Focused|WidgetPaintState.Selected), PaintTextStyle.TextField, this.textFieldDisplayMode, this.BackColor);
 
 						for (int i=0; i<areas.Length; i++)
 						{
@@ -1691,7 +1726,7 @@ namespace Epsitec.Common.Widgets
 						WidgetPaintState st = state;
 						if (this.contextMenu != null)
 							st |= WidgetPaintState.Focused;
-						adorner.PaintTextSelectionBackground (graphics, areas, st, PaintTextStyle.TextField, this.textDisplayMode);
+						adorner.PaintTextSelectionBackground (graphics, areas, st, PaintTextStyle.TextField, this.textFieldDisplayMode);
 
 						Drawing.Rectangle[] rects = new Drawing.Rectangle[areas.Length];
 						for (int i=0; i<areas.Length; i++)
@@ -1700,7 +1735,7 @@ namespace Epsitec.Common.Widgets
 						}
 						graphics.SetClippingRectangles (rects);
 
-						adorner.PaintGeneralTextLayout (graphics, clipRect, pos, textLayout, (state&~WidgetPaintState.Focused)|WidgetPaintState.Selected, PaintTextStyle.TextField, this.textDisplayMode, this.BackColor);
+						adorner.PaintGeneralTextLayout (graphics, clipRect, pos, textLayout, (state&~WidgetPaintState.Focused)|WidgetPaintState.Selected, PaintTextStyle.TextField, this.textFieldDisplayMode, this.BackColor);
 					}
 				}
 
@@ -1718,7 +1753,7 @@ namespace Epsitec.Common.Widgets
 			{
 				//	On n'a pas le focus...
 
-				adorner.PaintGeneralTextLayout (graphics, clipRect, pos, textLayout, state&~WidgetPaintState.Focused, PaintTextStyle.TextField, this.textDisplayMode, this.BackColor);
+				adorner.PaintGeneralTextLayout (graphics, clipRect, pos, textLayout, state&~WidgetPaintState.Focused, PaintTextStyle.TextField, this.textFieldDisplayMode, this.BackColor);
 			}
 		}
 
@@ -1734,7 +1769,7 @@ namespace Epsitec.Common.Widgets
 			}
 			else
 			{
-				if (this.textDisplayMode == TextFieldDisplayMode.InheritedValue)
+				if (this.textFieldDisplayMode == TextFieldDisplayMode.InheritedValue)
 				{
 
 					TextLayout copy = new TextLayout (original);
@@ -2134,20 +2169,17 @@ namespace Epsitec.Common.Widgets
 		protected Drawing.Size					realSize;
 		protected Drawing.Point					scrollOffset;
 
-		protected bool							mouseDown;
-		protected bool							scrollLeft;
-		protected bool							scrollRight;
-		protected bool							scrollBottom;
-		protected bool							scrollTop;
+		private bool							mouseDown;
+		private ScrollDirection					mouseScrollDirection;
 
 		protected Drawing.Point					lastMousePos;
-		protected TextFieldStyle				textFieldStyle;
+		private TextFieldStyle					textFieldStyle;
+		private TextFieldDisplayMode			textFieldDisplayMode;
 		private double							scrollZone = 0.5;
-		private TextFieldDisplayMode					textDisplayMode;
 		private DefocusAction					defocus_action;
 		private ShowCondition					button_show_condition;
-		protected string						initial_text;
-		protected TextFieldDisplayMode				initial_text_display_mode;
+		private string							initialText;
+		private TextFieldDisplayMode			initialTextDisplayMode;
 		private bool							is_editing;
 		private bool							is_modal;
 		private bool							isPassword;
