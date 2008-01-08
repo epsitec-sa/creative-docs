@@ -105,6 +105,7 @@
     <Compile Include="CollectionType.cs" />
     <Compile Include="AbstractDateTimeType.cs" />
     <Compile Include="BinaryType.cs" />
+    <Compile Include="Support\ExceptionHelper.cs" />
     <Compile Include="ValueStoreSetMode.cs" />
     <Compile Include="INotifyCollectionChangedProvider.cs" />
     <Compile Include="FieldOptions.cs" />
