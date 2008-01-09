@@ -25,8 +25,15 @@ namespace Epsitec.Common.Widgets
 		{
 			this.SetEmbedder (embedder);
 		}
-		
-		
+
+
+		protected override bool CanStartEdition
+		{
+			get
+			{
+				return true;
+			}
+		}
 		
 		
 		public override bool AcceptEdition()

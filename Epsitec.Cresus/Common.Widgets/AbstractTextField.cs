@@ -53,7 +53,7 @@ namespace Epsitec.Common.Widgets
 		protected AbstractTextField(TextFieldStyle textFieldStyle)
 			: this ()
 		{
-			this.textFieldStyle = TextFieldStyle.Combo;
+			this.textFieldStyle = textFieldStyle;
 		}
 
 		public AbstractTextField(Widget embedder)
@@ -507,14 +507,7 @@ namespace Epsitec.Common.Widgets
 			}
 			set
 			{
-				if (value == ShowCondition.Always)
-				{
-					this.ClearValue (AbstractTextField.ButtonShowConditionProperty);
-				}
-				else
-				{
-					this.SetValue (AbstractTextField.ButtonShowConditionProperty, value);
-				}
+				this.SetValue (AbstractTextField.ButtonShowConditionProperty, value);
 			}
 		}
 
@@ -731,9 +724,10 @@ namespace Epsitec.Common.Widgets
 		}
 
 
-		public virtual bool StartEdition()
+		public bool StartEdition()
 		{
 			if ((this.IsEditing == false) &&
+				(this.CanStartEdition) &&
 				((this.DefocusAction != DefocusAction.None) || (this.IsCombo) || (this.ButtonShowCondition != ShowCondition.Never)))
 			{
 				this.initialText              = this.Text;
@@ -752,6 +746,14 @@ namespace Epsitec.Common.Widgets
 			}
 
 			return false;
+		}
+
+		protected virtual bool CanStartEdition
+		{
+			get
+			{
+				return false;
+			}
 		}
 
 		public virtual bool AcceptEdition()

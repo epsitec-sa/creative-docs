@@ -81,7 +81,14 @@ namespace Epsitec.Common.Widgets
 				return this.mode;
 			}
 		}
-		
+
+		protected override bool CanStartEdition
+		{
+			get
+			{
+				return true;
+			}
+		}
 		
 		
 		public void StartPassiveEdition(string text)
