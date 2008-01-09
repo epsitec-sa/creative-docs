@@ -4,7 +4,7 @@
   <data id="11">Epsitec\Dauphin</data>
   <data id="2">Dauphin</data>
   <data id="263">Dauphin-Simulator</data>
-  <data id="12">Dauphin</data>
+  <data id="12">Dauphin-d</data>
   <data id="2C4">Teilung durch Null.</data>
   <data id="2D4">Unbekannte binäre Operation.</data>
   <data id="2A4">Fehlerhafter Ausdruck.</data>
