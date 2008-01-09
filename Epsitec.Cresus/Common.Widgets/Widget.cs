@@ -835,6 +835,23 @@ namespace Epsitec.Common.Widgets
 		}
 
 
+		public virtual double						AutoEngageDelay
+		{
+			get
+			{
+				return SystemInformation.InitialKeyboardDelay;
+			}
+		}
+
+		public virtual double						AutoEngageRepeatPeriod
+		{
+			get
+			{
+				return SystemInformation.KeyboardRepeatPeriod;
+			}
+		}
+
+
 		public static readonly IComparer<Widget>	TabIndexComparer = new TabIndexComparerImplementation ();
 
 
@@ -1312,7 +1329,8 @@ namespace Epsitec.Common.Widgets
 			{
 				widget.SetEntered (false);
 
-				if (window.EngagedWidget == widget)
+				if ((window.EngagedWidget == widget) &&
+					(window.CapturingWidget != widget))
 				{
 					window.EngagedWidget = null;
 				}

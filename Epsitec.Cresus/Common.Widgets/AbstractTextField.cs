@@ -22,7 +22,6 @@ namespace Epsitec.Common.Widgets
 			this.InternalState |= InternalState.Focusable;
 			this.InternalState |= InternalState.Engageable;
 
-			this.ResetCursor ();
 			this.MouseCursor = MouseCursor.AsIBeam;
 
 			this.InitializeMargins ();
@@ -43,7 +42,7 @@ namespace Epsitec.Common.Widgets
 			CommandContext    context    = new CommandContext ();
 
 			dispatcher.AutoForwardCommands = true;
-			dispatcher.RegisterController (new Dispatcher (this));
+			dispatcher.RegisterController (new CommandController (this));
 
 			CommandDispatcher.SetDispatcher (this, dispatcher);
 			CommandContext.SetContext (this, context);
@@ -91,14 +90,6 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		public virtual bool IsCombo
-		{
-			get
-			{
-				return false;
-			}
-		}
-
 		public bool IsReadOnly
 		{
 			get
@@ -142,13 +133,13 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				return this.is_modal;
+				return this.isModal;
 			}
 			set
 			{
-				if (this.is_modal != value)
+				if (this.isModal != value)
 				{
-					this.is_modal = value;
+					this.isModal = value;
 
 					Window window = this.Window;
 
@@ -243,7 +234,7 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				return this.has_edited_text;
+				return this.hasEditedText;
 			}
 		}
 
@@ -303,30 +294,30 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		protected bool IsEditing
+		public bool IsEditing
 		{
 			get
 			{
-				return this.is_editing;
+				return this.isEditing;
 			}
-			set
+			private set
 			{
-				if (this.is_editing != value)
+				if (this.isEditing != value)
 				{
-					this.is_editing = value;
+					this.isEditing = value;
 
-					if (this.is_modal)
+					if (this.isModal)
 					{
 						Window window = this.Window;
 
 						if (window != null)
 						{
-							if ((this.is_editing) &&
+							if ((this.isEditing) &&
 								(window.ModalWidget == null))
 							{
 								window.ModalWidget = this;
 							}
-							else if ((this.is_editing == false) &&
+							else if ((this.isEditing == false) &&
 								/**/ (window.ModalWidget == this))
 							{
 								window.ModalWidget = null;
@@ -334,6 +325,14 @@ namespace Epsitec.Common.Widgets
 						}
 					}
 				}
+			}
+		}
+
+		private bool IsCombo
+		{
+			get
+			{
+				return this.textFieldStyle == TextFieldStyle.Combo;
 			}
 		}
 
@@ -357,7 +356,7 @@ namespace Epsitec.Common.Widgets
 				return this.textFieldStyle;
 			}
 
-			set
+			protected set
 			{
 				if (this.textFieldStyle != value)
 				{
@@ -477,11 +476,18 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				return this.defocus_action;
+				return (DefocusAction) this.GetValue (AbstractTextField.DefocusActionProperty);
 			}
 			set
 			{
-				this.defocus_action = value;
+				if (value == DefocusAction.None)
+				{
+					this.ClearValue (AbstractTextField.DefocusActionProperty);
+				}
+				else
+				{
+					this.SetValue (AbstractTextField.DefocusActionProperty, value);
+				}
 			}
 		}
 
@@ -489,14 +495,17 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				return this.button_show_condition;
+				return (ShowCondition) this.GetValue (AbstractTextField.ButtonShowConditionProperty);
 			}
 			set
 			{
-				if (this.button_show_condition != value)
+				if (value == ShowCondition.Always)
 				{
-					this.button_show_condition = value;
-					this.UpdateButtonVisibility ();
+					this.ClearValue (AbstractTextField.ButtonShowConditionProperty);
+				}
+				else
+				{
+					this.SetValue (AbstractTextField.ButtonShowConditionProperty, value);
 				}
 			}
 		}
@@ -544,6 +553,14 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+		public override double AutoEngageDelay
+		{
+			get
+			{
+				return base.AutoEngageDelay / 2;
+			}
+		}
+
 
 		public void ProcessCut()
 		{
@@ -586,6 +603,12 @@ namespace Epsitec.Common.Widgets
 
 			return base.GetBaseLine (width, height, out ascender, out descender);
 		}
+
+		public override Drawing.Margins GetShapeMargins()
+		{
+			return Widgets.Adorners.Factory.Active.GeometryTextFieldShapeMargins;
+		}
+
 
 		protected override double GetBaseLineVerticalOffset()
 		{
@@ -833,7 +856,6 @@ namespace Epsitec.Common.Widgets
 			TextLayoutContext context = this.navigator.Context;
 
 			int hintOffset = this.HintOffset;
-
 			context.OffsetCursor (hintOffset);
 
 			try
@@ -1131,6 +1153,8 @@ namespace Epsitec.Common.Widgets
 			return this.navigator.ProcessMessage (message, pos);
 		}
 
+		#region ScrollDirection Enumeration
+
 		[System.Flags]
 		enum ScrollDirection : byte
 		{
@@ -1141,10 +1165,12 @@ namespace Epsitec.Common.Widgets
 			Up = 8
 		}
 
+		#endregion
+
 		private void EnableScroll(Drawing.Point pos)
 		{
-			ScrollDirection dir = ScrollDirection.None;
-			Drawing.Rectangle box = this.Client.Bounds;
+			ScrollDirection   dir = ScrollDirection.None;
+			Drawing.Rectangle box = Drawing.Rectangle.Deflate (this.Client.Bounds, this.GetInternalPadding ());
 			
 			dir |= (pos.X <= box.Left)   ? ScrollDirection.Left  : ScrollDirection.None;
 			dir |= (pos.X >= box.Right)  ? ScrollDirection.Right : ScrollDirection.None;
@@ -1163,8 +1189,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-
-		protected void ShowContextMenu(bool mouseBased)
+		private void ShowContextMenu(bool mouseBased)
 		{
 			CommandContext context = CommandContext.GetContext (this);
 
@@ -1233,6 +1258,7 @@ namespace Epsitec.Common.Widgets
 			this.contextMenu.ShowAsContextMenu (this, mouse);
 		}
 
+
 		private void HandleContextMenuDisposed(object sender)
 		{
 			this.contextMenu.Disposed -= this.HandleContextMenuDisposed;
@@ -1272,7 +1298,7 @@ namespace Epsitec.Common.Widgets
 		}
 
 
-		protected virtual void HandleFocused()
+		private void HandleFocused()
 		{
 			TextField.blinking = this;
 			this.ResetCursor ();
@@ -1302,7 +1328,7 @@ namespace Epsitec.Common.Widgets
 			this.Invalidate ();
 		}
 
-		protected virtual void HandleDefocused()
+		private void HandleDefocused()
 		{
 			TextField.blinking = null;
 
@@ -1314,7 +1340,7 @@ namespace Epsitec.Common.Widgets
 			this.Invalidate ();
 		}
 
-		private void DefocusAndAcceptOrReject()
+		protected virtual void DefocusAndAcceptOrReject()
 		{
 			switch (this.DefocusAction)
 			{
@@ -1424,7 +1450,7 @@ namespace Epsitec.Common.Widgets
 		protected override void OnTextDefined()
 		{
 			base.OnTextDefined ();
-			this.has_edited_text = false;
+			this.hasEditedText = false;
 		}
 
 		protected override void OnKeyboardFocusChanged(Types.DependencyPropertyChangedEventArgs e)
@@ -1459,9 +1485,9 @@ namespace Epsitec.Common.Widgets
 
 		protected virtual void OnTextEdited()
 		{
-			if (this.has_edited_text == false)
+			if (this.hasEditedText == false)
 			{
-				this.has_edited_text = true;
+				this.hasEditedText = true;
 
 				this.UpdateButtonVisibility ();
 			}
@@ -1932,12 +1958,6 @@ namespace Epsitec.Common.Widgets
 			return false;
 		}
 
-		public override Drawing.Margins GetShapeMargins()
-		{
-			return Widgets.Adorners.Factory.Active.GeometryTextFieldShapeMargins;
-		}
-
-
 		#region IReadOnly Members
 		bool Types.IReadOnly.IsReadOnly
 		{
@@ -1948,9 +1968,11 @@ namespace Epsitec.Common.Widgets
 		}
 		#endregion
 
-		private class Dispatcher
+		#region CommandController Class
+
+		private sealed class CommandController
 		{
-			public Dispatcher(AbstractTextField host)
+			public CommandController(AbstractTextField host)
 			{
 				this.host = host;
 			}
@@ -2091,8 +2113,10 @@ namespace Epsitec.Common.Widgets
 			}
 
 
-			private AbstractTextField			host;
+			private readonly AbstractTextField host;
 		}
+
+		#endregion
 
 
 		public event EventHandler TextEdited
@@ -2253,11 +2277,18 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+		private static void NotifyButtonShowConditionChanged(DependencyObject obj, object oldValue, object newValue)
+		{
+			AbstractTextField textField = (AbstractTextField) obj;
+			textField.UpdateButtonVisibility ();
+		}
 
 
 		public static readonly DependencyProperty PasswordReplacementCharacterProperty = DependencyProperty.Register ("PasswordReplacementCharacter", typeof (char), typeof (AbstractTextField), new DependencyPropertyMetadata ('*'));
-		public static readonly DependencyProperty HintTextProperty = DependencyProperty.Register ("HintText", typeof (string), typeof (AbstractTextField));
-		public static readonly DependencyProperty HintOffsetProperty = DependencyProperty.Register ("HintOffset", typeof (int), typeof (AbstractTextField), new DependencyPropertyMetadata (0));
+		public static readonly DependencyProperty HintTextProperty = DependencyProperty.Register ("HintText", typeof (string), typeof (AbstractTextField), new Helpers.VisualPropertyMetadata (Helpers.VisualPropertyMetadataOptions.AffectsDisplay));
+		public static readonly DependencyProperty HintOffsetProperty = DependencyProperty.RegisterReadOnly ("HintOffset", typeof (int), typeof (AbstractTextField), new DependencyPropertyMetadata (0));
+		public static readonly DependencyProperty DefocusActionProperty = DependencyProperty.Register ("DefocusAction", typeof (DefocusAction), typeof (AbstractTextField), new DependencyPropertyMetadata (DefocusAction.None));
+		public static readonly DependencyProperty ButtonShowConditionProperty = DependencyProperty.Register ("ButtonShowCondition", typeof (ShowCondition), typeof (AbstractTextField), new DependencyPropertyMetadata (ShowCondition.Always, AbstractTextField.NotifyButtonShowConditionChanged));
 
 
 		internal const double					TextMargin = 2;
@@ -2278,16 +2309,14 @@ namespace Epsitec.Common.Widgets
 		private TextFieldStyle					textFieldStyle;
 		private TextFieldDisplayMode			textFieldDisplayMode;
 		private double							scrollZone = 0.5;
-		private DefocusAction					defocus_action;
-		private ShowCondition					button_show_condition;
 		private string							initialText;
 		private TextFieldDisplayMode			initialTextDisplayMode;
-		private bool							is_editing;
-		private bool							is_modal;
+		private bool							isEditing;
+		private bool							isModal;
 		private bool							isPassword;
 		private bool							accepts_null_value;
 		private bool							lastHasSelection;
-		protected bool							has_edited_text;
+		protected bool							hasEditedText;
 		protected bool							swallow_return;
 		protected bool							swallow_escape;
 

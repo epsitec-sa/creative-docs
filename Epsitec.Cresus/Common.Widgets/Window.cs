@@ -600,7 +600,7 @@ namespace Epsitec.Common.Widgets
 						if (new_engage.AutoRepeat)
 						{
 							this.timer.Stop ();
-							this.timer.AutoRepeat = SystemInformation.InitialKeyboardDelay;
+							this.timer.AutoRepeat = new_engage.AutoEngageDelay;
 							this.timer.Start ();
 						}
 					}
@@ -2482,7 +2482,7 @@ namespace Epsitec.Common.Widgets
 		{
 			if (this.engaged_widget != null)
 			{
-				this.timer.AutoRepeat = SystemInformation.KeyboardRepeatPeriod;
+				this.timer.AutoRepeat = this.engaged_widget.AutoEngageRepeatPeriod;
 				
 				if (this.engaged_widget.IsEngaged)
 				{

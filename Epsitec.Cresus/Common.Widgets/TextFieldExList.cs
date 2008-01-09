@@ -249,10 +249,9 @@ namespace Epsitec.Common.Widgets
 			return base.AboutToGetFocus (dir, mode, out focus);
 		}
 
-		protected override void HandleDefocused()
+		protected override void DefocusAndAcceptOrReject()
 		{
-			if ((this.KeyboardFocus == false) &&
-				(this.Mode == TextFieldExListMode.EditActive))
+			if (this.Mode == TextFieldExListMode.EditActive)
 			{
 				switch (this.DefocusAction)
 				{
@@ -283,8 +282,6 @@ namespace Epsitec.Common.Widgets
 						throw new System.NotImplementedException (string.Format ("DefocusAction.{0} not implemented.", this.DefocusAction));
 				}
 			}
-			
-			base.HandleDefocused ();
 		}
 		
 		protected override void CopyItemsToComboList(Epsitec.Common.Widgets.Collections.StringCollection list)

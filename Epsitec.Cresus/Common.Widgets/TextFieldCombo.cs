@@ -57,14 +57,6 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public override bool					IsCombo
-		{
-			get
-			{
-				return true;
-			}
-		}
-
 		public virtual bool						IsComboOpen
 		{
 			get

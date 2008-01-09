@@ -1396,16 +1396,14 @@ namespace Epsitec.Common.Widgets
 					}
 					else if ( x == 2 && y == 5 )
 					{
-						TextField widget = new TextField();
-						widget.TextFieldStyle = TextFieldStyle.Flat;
+						TextField widget = new FormTextField();
 						widget.Text = "Flat";
 						widget.Dock = Widgets.DockStyle.Fill;
 						table[x,y].Insert(widget);
 					}
 					else if ( x == 1 && y == 6 )
 					{
-						TextField widget = new TextField();
-						widget.TextFieldStyle = TextFieldStyle.Flat;
+						TextField widget = new FormTextField();
 						widget.BackColor = Color.Transparent;
 						widget.Text = "Flat/Transparent";
 						widget.Dock = Widgets.DockStyle.Fill;
@@ -1480,8 +1478,7 @@ namespace Epsitec.Common.Widgets
 			{
 				for ( int x=0 ; x<5 ; x++ )
 				{
-					TextField text = new TextField();
-					text.TextFieldStyle = TextFieldStyle.Flat;
+					TextField text = new FormTextField();
 					if ( x != 1 )
 					{
 						text.ContentAlignment = ContentAlignment.MiddleRight;
