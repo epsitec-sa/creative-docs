@@ -9,10 +9,11 @@ namespace Epsitec.Common.Widgets
 	/// La classe TextNavigator permet de naviguer dans un TextLayout,
 	/// d'insérer/supprimer des caractères, etc.
 	/// </summary>
-	public class TextNavigator
+	public sealed class TextNavigator
 	{
-		public TextNavigator(TextLayout textLayout)
+		public TextNavigator(AbstractTextField textField, TextLayout textLayout)
 		{
+			this.textField = textField;
 			this.textLayout = textLayout;
 			this.context = new TextLayoutContext(textLayout);
 		}
@@ -453,6 +454,7 @@ namespace Epsitec.Common.Widgets
 			try
 			{
 				this.textLayout.SuspendTextChangeNotifications ();
+				
 				switch (message.MessageType)
 				{
 					case MessageType.KeyDown:
@@ -479,7 +481,7 @@ namespace Epsitec.Common.Widgets
 					case MessageType.MouseDown:
 						if (message.ButtonDownCount == 1)
 						{
-							this.ProcessBeginPress (pos);
+							this.ProcessMouseDown (pos);
 							this.mouseDrag = true;
 						}
 						this.mouseDown = true;
@@ -488,7 +490,7 @@ namespace Epsitec.Common.Widgets
 					case MessageType.MouseMove:
 						if (this.mouseDrag)
 						{
-							this.ProcessMovePress (pos);
+							this.ProcessMouseDrag (pos);
 							return true;
 						}
 						break;
@@ -496,7 +498,7 @@ namespace Epsitec.Common.Widgets
 					case MessageType.MouseUp:
 						if (this.mouseDown)
 						{
-							this.ProcessEndPress (pos, message.ButtonDownCount);
+							this.ProcessMouseUp (pos, message.ButtonDownCount);
 							this.mouseDown = false;
 							this.mouseDrag = false;
 							return true;
@@ -514,7 +516,7 @@ namespace Epsitec.Common.Widgets
 
 		public void MouseDownMessage(Drawing.Point pos)
 		{
-			this.ProcessBeginPress(pos);
+			this.ProcessMouseDown(pos);
 			this.mouseDown = true;
 		}
 
@@ -522,11 +524,11 @@ namespace Epsitec.Common.Widgets
 		{
 			if ( this.mouseDrag )
 			{
-				this.ProcessMovePress(pos);
+				this.ProcessMouseDrag(pos);
 			}
 		}
 
-		protected bool ProcessKeyDown(KeyCode key, bool isShiftPressed, bool isControlPressed)
+		private bool ProcessKeyDown(KeyCode key, bool isShiftPressed, bool isControlPressed)
 		{
 			//	Gestion d'une touche pressée avec KeyDown dans le texte.
 			this.InitialMemorize();
@@ -662,7 +664,7 @@ namespace Epsitec.Common.Widgets
 			return false;
 		}
 
-		protected bool ProcessKeyPress(int key)
+		private bool ProcessKeyPress(int key)
 		{
 			//	Gestion d'une touche pressée avec KeyPress dans le texte.
 			if ( this.isReadOnly )  return false;
@@ -691,35 +693,47 @@ namespace Epsitec.Common.Widgets
 			return false;
 		}
 
-		protected bool ProcessBeginPress(Drawing.Point pos)
+		private bool ProcessMouseDown(Drawing.Point pos)
 		{
 			//	Appelé lorsque le bouton de la souris est pressé.
 			int index;
 			bool after;
 			this.mouseSelZone = false;
-			if ( this.textLayout.DetectIndex(pos, false, out index, out after) )
+			if (this.DetectIndex (pos, false, out index, out after))
 			{
-				if ( this.context.CursorFrom  != index ||
-					 this.context.CursorTo    != index )
+				if ((this.context.CursorFrom != index) ||
+					(this.context.CursorTo != index))
 				{
 					this.context.CursorFrom  = index;
 					this.context.CursorTo    = index;
 					this.context.CursorAfter = after;
-					this.textLayout.DefineCursorPosX(this.context);
-					this.OnCursorChanged(true);
+					this.textLayout.DefineCursorPosX (this.context);
+					this.OnCursorChanged (true);
 				}
 				return true;
 			}
-			
+
 			return false;
 		}
 
-		protected void ProcessMovePress(Drawing.Point pos)
+		private bool DetectIndex(Epsitec.Common.Drawing.Point pos, bool selZone, out int index, out bool after)
+		{
+			if (this.textField == null)
+			{
+				return this.textLayout.DetectIndex (pos, selZone, out index, out after);
+			}
+			else
+			{
+				return this.textField.DetectIndex (pos, selZone, out index, out after);
+			}
+		}
+
+		private void ProcessMouseDrag(Drawing.Point pos)
 		{
 			//	Appelé lorsque la souris est déplacée, bouton pressé.
 			int index;
 			bool after;
-			if (this.textLayout.DetectIndex (pos, true, out index, out after))
+			if (this.DetectIndex (pos, true, out index, out after))
 			{
 				this.mouseSelZone = true;
 				if (this.context.CursorTo != index)
@@ -736,48 +750,49 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		protected void ProcessEndPress(Drawing.Point pos, int downCount)
+		private void ProcessMouseUp(Drawing.Point pos, int downCount)
 		{
 			//	Appelé lorsque le bouton de la souris est relâché.
-			this.InitialMemorize();
+			this.InitialMemorize ();
 
-			if ( this.IsNumeric )
+			if (this.IsNumeric)
 			{
-				if ( downCount >= 2 )  downCount = 4;  // double clic -> sélectionne tout
+				if (downCount >= 2)
+					downCount = 4;  // double clic -> sélectionne tout
 			}
 
-			if ( downCount >= 4 )  // quadruple clic ?
+			if (downCount >= 4)  // quadruple clic ?
 			{
-				this.textLayout.SelectAll(this.context);
+				this.textLayout.SelectAll (this.context);
 			}
-			else if ( downCount >= 3 )  // triple clic ?
+			else if (downCount >= 3)  // triple clic ?
 			{
-				this.textLayout.SelectLine(this.context);
+				this.textLayout.SelectLine (this.context);
 			}
-			else if ( downCount >= 2 )  // double clic ?
+			else if (downCount >= 2)  // double clic ?
 			{
-				this.textLayout.SelectWord(this.context);
+				this.textLayout.SelectWord (this.context);
 			}
 			else	// simple clic ?
 			{
 				int index;
 				bool after;
-				if ( this.textLayout.DetectIndex(pos, this.mouseSelZone, out index, out after) )
+				if (this.DetectIndex (pos, this.mouseSelZone, out index, out after))
 				{
-					if ( this.context.CursorTo != index )
+					if (this.context.CursorTo != index)
 					{
 						this.context.CursorTo    = index;
 						this.context.CursorAfter = after;
-						this.textLayout.DefineCursorPosX(this.context);
+						this.textLayout.DefineCursorPosX (this.context);
 					}
 				}
 			}
 
-			this.OnCursorChanged(false);
+			this.OnCursorChanged (false);
 		}
 
 
-		protected enum UndoType
+		private enum UndoType
 		{
 			Insert,
 			Delete,
@@ -786,7 +801,7 @@ namespace Epsitec.Common.Widgets
 			Tab,
 		}
 
-		protected void UndoMemorise(UndoType type)
+		private void UndoMemorise(UndoType type)
 		{
 			//	Mémorise l'état actuel complet du texte, pour permettre l'annulation.
 			this.OnAboutToChange ();
@@ -829,7 +844,7 @@ namespace Epsitec.Common.Widgets
 			this.context.UndoSeparator = false;
 		}
 
-		protected class TextOplet : Support.AbstractOplet
+		private class TextOplet : Support.AbstractOplet
 		{
 			public TextOplet(TextNavigator navigator, UndoType type)
 			{
@@ -851,7 +866,7 @@ namespace Epsitec.Common.Widgets
 				get { return this.type; }
 			}
 
-			protected void Swap()
+			private void Swap()
 			{
 				//	Permute le texte et le contexte contenus par l'hôte avec ceux
 				//	contenus dans TextOplet.
@@ -913,15 +928,15 @@ namespace Epsitec.Common.Widgets
 				return this;
 			}
 
-			protected TextNavigator				host;
-			protected UndoType					type;
-			protected string					textCopy;
-			protected TextLayoutContext			contextCopy;
-			protected Drawing.TextStyle.Tab[]	tabs;
+			private TextNavigator				host;
+			private UndoType					type;
+			private string						textCopy;
+			private TextLayoutContext			contextCopy;
+			private Drawing.TextStyle.Tab[]		tabs;
 		}
 
 
-		protected void InitialMemorize()
+		private void InitialMemorize()
 		{
 			//	Mémorise l'état avant une opération quelconque sur le texte.
 			this.iCursorFrom  = this.context.CursorFrom;
@@ -930,7 +945,7 @@ namespace Epsitec.Common.Widgets
 			this.iTextLength  = this.textLayout.Text.Length;
 		}
 
-		protected void OnTextInserted(bool always)
+		private void OnTextInserted(bool always)
 		{
 			//	Génère un événement pour dire que des caractères ont été insérés.
 			if ( !always && this.iTextLength == this.textLayout.Text.Length )  return;
@@ -943,7 +958,7 @@ namespace Epsitec.Common.Widgets
 
 
 		//	Génère un événement pour dire que des caractères ont été détruits.
-		protected void OnTextDeleted(bool always)
+		private void OnTextDeleted(bool always)
 		{
 			if ( !always && this.iTextLength == this.textLayout.Text.Length )  return;
 
@@ -954,7 +969,7 @@ namespace Epsitec.Common.Widgets
 		}
 
 
-		protected void OnCursorChanged(bool always)
+		private void OnCursorChanged(bool always)
 		{
 			//	Génère un événement pour dire que le curseur a bougé.
 			if ( !always                                       &&
@@ -969,7 +984,7 @@ namespace Epsitec.Common.Widgets
 		}
 
 
-		protected void OnCursorScrolled()
+		private void OnCursorScrolled()
 		{
 			//	Génère un événement pour dire que le curseur a scrollé.
 			if ( this.CursorScrolled != null )  // qq'un écoute ?
@@ -979,7 +994,7 @@ namespace Epsitec.Common.Widgets
 		}
 
 
-		protected void OnStyleChanged()
+		private void OnStyleChanged()
 		{
 			//	Génère un événement pour dire que le style a changé.
 			if ( this.StyleChanged != null )  // qq'un écoute ?
@@ -988,8 +1003,8 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		
-		protected void OnAboutToChange()
+
+		private void OnAboutToChange()
 		{
 			if (this.AboutToChange != null)
 			{
@@ -1005,18 +1020,19 @@ namespace Epsitec.Common.Widgets
 		public event EventHandler				StyleChanged;
 
 
-		protected TextLayout					textLayout;
-		protected TextLayoutContext				context;
-		protected Support.OpletQueue			undoQueue;
-		protected bool							isReadOnly = false;
-		protected bool							isNumeric = false;
-		protected bool							allowTabInsertion = false;
-		protected int							iCursorFrom;
-		protected int							iCursorTo;
-		protected bool							iCursorAfter;
-		protected int							iTextLength;
-		protected bool							mouseDown = false;
-		protected bool							mouseDrag = false;
-		protected bool							mouseSelZone = false;
+		private readonly AbstractTextField		textField;
+		private readonly TextLayout				textLayout;
+		private readonly TextLayoutContext		context;
+		private Support.OpletQueue				undoQueue;
+		private bool							isReadOnly;
+		private bool							isNumeric;
+		private bool							allowTabInsertion;
+		private int								iCursorFrom;
+		private int								iCursorTo;
+		private bool							iCursorAfter;
+		private int								iTextLength;
+		private bool							mouseDown;
+		private bool							mouseDrag;
+		private bool							mouseSelZone;
 	}
 }

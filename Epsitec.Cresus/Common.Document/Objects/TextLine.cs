@@ -22,7 +22,7 @@ namespace Epsitec.Common.Document.Objects
 		protected void Initialize()
 		{
 			this.textLayout = new TextLayout();
-			this.textNavigator = new TextNavigator(this.textLayout);
+			this.textNavigator = new TextNavigator(null, this.textLayout);
 			this.textNavigator.StyleChanged += new EventHandler(this.HandleTextChanged);
 			this.textNavigator.TextInserted += new EventHandler(this.HandleTextChanged);
 			this.textNavigator.TextDeleted  += new EventHandler(this.HandleTextChanged);

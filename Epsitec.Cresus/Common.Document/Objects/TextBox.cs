@@ -22,7 +22,7 @@ namespace Epsitec.Common.Document.Objects
 		protected void Initialize()
 		{
 			this.textLayout = new TextLayout();
-			this.textNavigator = new TextNavigator(this.textLayout);
+			this.textNavigator = new TextNavigator(null, this.textLayout);
 			this.textNavigator.MaxLength = 10000;
 			this.textLayout.BreakMode = TextBreakMode.Hyphenate;
 			if ( this.document.Modifier != null )

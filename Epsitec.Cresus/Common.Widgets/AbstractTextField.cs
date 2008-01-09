@@ -28,7 +28,7 @@ namespace Epsitec.Common.Widgets
 			this.InitializeMargins ();
 			this.CreateTextLayout ();
 
-			this.navigator = new TextNavigator (base.TextLayout);
+			this.navigator = new TextNavigator (this, base.TextLayout);
 			this.navigator.AboutToChange += new EventHandler (this.HandleNavigatorAboutToChange);
 			this.navigator.TextDeleted += new EventHandler (this.HandleNavigatorTextDeleted);
 			this.navigator.TextInserted += new EventHandler (this.HandleNavigatorTextInserted);
@@ -845,6 +845,28 @@ namespace Epsitec.Common.Widgets
 			{
 				return false;
 			}
+		}
+
+		internal bool DetectIndex(Epsitec.Common.Drawing.Point pos, bool selZone, out int index, out bool after)
+		{
+			TextLayout        layout  = this.GetPaintTextLayout ();
+			TextLayoutContext context = new TextLayoutContext (this.navigator.Context);
+			
+			bool ok = layout.DetectIndex (pos, selZone, out index, out after);
+			int len = this.Text.Length;
+
+			index -= this.HintOffset;
+
+			if (index < 0)
+			{
+				index = 0;
+			}
+			else if (index > len)
+			{
+				index = len;
+			}
+
+			return ok;
 		}
 
 
