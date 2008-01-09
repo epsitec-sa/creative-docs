@@ -1702,14 +1702,17 @@ namespace Epsitec.Common.Widgets
 
 		protected virtual void PaintTextFieldText(Drawing.Graphics graphics, IAdorner adorner, WidgetPaintState state, Drawing.Rectangle clipRect, Drawing.Rectangle rInside, Drawing.Point pos)
 		{
-			TextLayout textLayout = this.GetPaintTextLayout ();
+			TextLayout        layout  = this.GetPaintTextLayout ();
+			TextLayoutContext context = new TextLayoutContext (this.navigator.Context);
+
+			context.OffsetCursor (this.HintOffset);
 
 			if ((this.KeyboardFocus && this.IsEnabled) || this.contextMenu != null)
 			{
 				bool visibleCursor = false;
 
-				int from = System.Math.Min (this.navigator.Context.CursorFrom, this.navigator.Context.CursorTo);
-				int to   = System.Math.Max (this.navigator.Context.CursorFrom, this.navigator.Context.CursorTo);
+				int from = System.Math.Min (context.CursorFrom, context.CursorTo);
+				int to   = System.Math.Max (context.CursorFrom, context.CursorTo);
 
 				if (this.IsCombo && this.navigator.IsReadOnly)
 				{
@@ -1718,12 +1721,12 @@ namespace Epsitec.Common.Widgets
 					areas[0].Rect = rInside;
 					areas[0].Rect.Deflate (1, 1);
 					adorner.PaintTextSelectionBackground (graphics, areas, state, PaintTextStyle.TextField, this.textFieldDisplayMode);
-					adorner.PaintGeneralTextLayout (graphics, clipRect, pos, textLayout, (state&~WidgetPaintState.Focused)|WidgetPaintState.Selected, PaintTextStyle.TextField, this.textFieldDisplayMode, this.BackColor);
+					adorner.PaintGeneralTextLayout (graphics, clipRect, pos, layout, (state&~WidgetPaintState.Focused)|WidgetPaintState.Selected, PaintTextStyle.TextField, this.textFieldDisplayMode, this.BackColor);
 					adorner.PaintFocusBox (graphics, areas[0].Rect);
 				}
 				else if (from == to)
 				{
-					adorner.PaintGeneralTextLayout (graphics, clipRect, pos, textLayout, state&~WidgetPaintState.Focused, PaintTextStyle.TextField, this.textFieldDisplayMode, this.BackColor);
+					adorner.PaintGeneralTextLayout (graphics, clipRect, pos, layout, state&~WidgetPaintState.Focused, PaintTextStyle.TextField, this.textFieldDisplayMode, this.BackColor);
 					visibleCursor = TextField.showCursor && this.Window.IsFocused && !this.Window.IsSubmenuOpen;
 				}
 				else if (this.Window.IsFocused == false)
@@ -1731,7 +1734,7 @@ namespace Epsitec.Common.Widgets
 					//	Il y a une sélection, mais la fenêtre n'a pas le focus; on ne peint
 					//	donc pas la sélection...
 
-					adorner.PaintGeneralTextLayout (graphics, clipRect, pos, textLayout, state&~WidgetPaintState.Focused, PaintTextStyle.TextField, this.textFieldDisplayMode, this.BackColor);
+					adorner.PaintGeneralTextLayout (graphics, clipRect, pos, layout, state&~WidgetPaintState.Focused, PaintTextStyle.TextField, this.textFieldDisplayMode, this.BackColor);
 					visibleCursor = false;
 				}
 				else
@@ -1741,15 +1744,15 @@ namespace Epsitec.Common.Widgets
 					//	- Peint les rectangles de sélection
 					//	- Peint tout le texte en mode sélectionné, avec clipping
 
-					TextLayout.SelectedArea[] areas = textLayout.FindTextRange (pos, from, to);
+					TextLayout.SelectedArea[] areas = layout.FindTextRange (pos, from, to);
 					if (areas.Length == 0)
 					{
-						adorner.PaintGeneralTextLayout (graphics, clipRect, pos, textLayout, state&~WidgetPaintState.Focused, PaintTextStyle.TextField, this.textFieldDisplayMode, this.BackColor);
+						adorner.PaintGeneralTextLayout (graphics, clipRect, pos, layout, state&~WidgetPaintState.Focused, PaintTextStyle.TextField, this.textFieldDisplayMode, this.BackColor);
 						visibleCursor = TextField.showCursor && this.Window.IsFocused && !this.Window.IsSubmenuOpen;
 					}
 					else
 					{
-						adorner.PaintGeneralTextLayout (graphics, clipRect, pos, textLayout, state&~(WidgetPaintState.Focused|WidgetPaintState.Selected), PaintTextStyle.TextField, this.textFieldDisplayMode, this.BackColor);
+						adorner.PaintGeneralTextLayout (graphics, clipRect, pos, layout, state&~(WidgetPaintState.Focused|WidgetPaintState.Selected), PaintTextStyle.TextField, this.textFieldDisplayMode, this.BackColor);
 
 						for (int i=0; i<areas.Length; i++)
 						{
@@ -1767,7 +1770,7 @@ namespace Epsitec.Common.Widgets
 						}
 						graphics.SetClippingRectangles (rects);
 
-						adorner.PaintGeneralTextLayout (graphics, clipRect, pos, textLayout, (state&~WidgetPaintState.Focused)|WidgetPaintState.Selected, PaintTextStyle.TextField, this.textFieldDisplayMode, this.BackColor);
+						adorner.PaintGeneralTextLayout (graphics, clipRect, pos, layout, (state&~WidgetPaintState.Focused)|WidgetPaintState.Selected, PaintTextStyle.TextField, this.textFieldDisplayMode, this.BackColor);
 					}
 				}
 
@@ -1785,7 +1788,7 @@ namespace Epsitec.Common.Widgets
 			{
 				//	On n'a pas le focus...
 
-				adorner.PaintGeneralTextLayout (graphics, clipRect, pos, textLayout, state&~WidgetPaintState.Focused, PaintTextStyle.TextField, this.textFieldDisplayMode, this.BackColor);
+				adorner.PaintGeneralTextLayout (graphics, clipRect, pos, layout, state&~WidgetPaintState.Focused, PaintTextStyle.TextField, this.textFieldDisplayMode, this.BackColor);
 			}
 		}
 
