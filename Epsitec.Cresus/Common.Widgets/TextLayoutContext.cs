@@ -129,6 +129,12 @@ namespace Epsitec.Common.Widgets
 			get;
 			set;
 		}
+
+		public void OffsetCursor(int offset)
+		{
+			this.cursorFrom += offset;
+			this.cursorTo   += offset;
+		}
 		
 		private readonly TextLayout textLayout;
 		private int cursorFrom;

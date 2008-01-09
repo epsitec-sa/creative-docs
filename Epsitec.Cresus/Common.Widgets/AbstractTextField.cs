@@ -215,6 +215,14 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+		public int HintOffset
+		{
+			get
+			{
+				return (int) this.GetValue (AbstractTextField.HintOffsetProperty);
+			}
+		}
+
 		public bool IsTextEmpty
 		{
 			get
@@ -821,9 +829,12 @@ namespace Epsitec.Common.Widgets
 
 		private bool GetCursorPosition(out Drawing.Point p1, out Drawing.Point p2, Drawing.Point offset)
 		{
-			TextLayout textLayout = this.GetPaintTextLayout ();
+			TextLayout        layout  = this.GetPaintTextLayout ();
+			TextLayoutContext context = new TextLayoutContext (this.navigator.Context);
 
-			if (textLayout.FindTextCursor (this.navigator.Context, out p1, out p2))
+			context.OffsetCursor (this.HintOffset);
+
+			if (layout.FindTextCursor (context, out p1, out p2))
 			{
 				p1 += offset;
 				p2 += offset;
@@ -1782,6 +1793,8 @@ namespace Epsitec.Common.Widgets
 		{
 			TextLayout original = this.TextLayout;
 
+			this.ClearValue (AbstractTextField.HintOffsetProperty);
+
 			if (this.isPassword)
 			{
 				TextLayout layout = new TextLayout (original);
@@ -1818,6 +1831,8 @@ namespace Epsitec.Common.Widgets
 						string hintSuffix = hint.Substring (pos + text.Length);
 						
 						copy.Text = string.Concat (fontBegin, hintPrefix, fontEnd, text, fontBegin, hintSuffix, fontEnd);
+						
+						this.SetValue (AbstractTextField.HintOffsetProperty, pos /*fontBegin.Length + hintPrefix.Length + fontEnd.Length*/);
 					}
 
 					return copy;
@@ -2203,6 +2218,7 @@ namespace Epsitec.Common.Widgets
 
 		public static readonly DependencyProperty PasswordReplacementCharacterProperty = DependencyProperty.Register ("PasswordReplacementCharacter", typeof (char), typeof (AbstractTextField), new DependencyPropertyMetadata ('*'));
 		public static readonly DependencyProperty HintTextProperty = DependencyProperty.Register ("HintText", typeof (string), typeof (AbstractTextField));
+		public static readonly DependencyProperty HintOffsetProperty = DependencyProperty.Register ("HintOffset", typeof (int), typeof (AbstractTextField), new DependencyPropertyMetadata (0));
 
 
 		internal const double					TextMargin = 2;
