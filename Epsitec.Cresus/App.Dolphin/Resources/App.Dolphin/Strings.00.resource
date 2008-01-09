@@ -174,4 +174,6 @@
   <data name="Path.OriginalSamples" id="1" about="Ceci correspond au nom du dossier qui contient les exemples dans le projet.">Samples (fr)</data>
   <data name="Path.UserSamples" id="11" about="Ceci correspond au nom du sous-dossier dans &amp;quot;Mes documents&amp;quot; où les exemples de sources Dauphin seront copiés...">Epsitec\Dauphin</data>
   <data name="Path.ApplicationName" id="12">Dauphin</data>
+  <data name="Dialog.About.Web.Epsitec" id="2H5">www.epsitec.ch</data>
+  <data name="Dialog.About.Web.Dauphin" id="2I5">www.epsitec.ch/dauphin</data>
 </bundle>
