@@ -2113,18 +2113,18 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		public bool DetectIndex(Drawing.Point pos, bool selZone, out int index, out bool after)
+		public bool DetectIndex(Drawing.Point pos, bool select, out int index, out bool after)
 		{
-			return this.DetectIndex(pos, -1, selZone, out index, out after);
+			return this.DetectIndex(pos, -1, select, out index, out after);
 		}
 		
-		public bool DetectIndex(double posx, int posLine, bool selZone, out int index, out bool after)
+		public bool DetectIndex(double posx, int posLine, bool select, out int index, out bool after)
 		{
-			return this.DetectIndex(new Drawing.Point(posx, 0), posLine, selZone, out index, out after);
+			return this.DetectIndex(new Drawing.Point(posx, 0), posLine, select, out index, out after);
 		}
 
 
-		private bool DetectIndex(Drawing.Point pos, int posLine, bool selZone, out int index, out bool after)
+		private bool DetectIndex(Drawing.Point pos, int posLine, bool select, out int index, out bool after)
 		{
 			//	Trouve l'index dans le texte interne qui correspond à la
 			//	position indiquée. Retourne false en cas d'échec.
@@ -2239,7 +2239,7 @@ namespace Epsitec.Common.Widgets
 									left = right;
 								}
 								index = block.BeginIndex+max;
-								if ( selZone && block.LineBreak && pos.X > block.Pos.X+block.Width )
+								if ( select && block.LineBreak && pos.X > block.Pos.X+block.Width )
 								{
 									index ++;  // après le <br/>
 									after = false;

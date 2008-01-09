@@ -6,16 +6,17 @@ using Epsitec.Common.Support;
 namespace Epsitec.Common.Widgets
 {
 	/// <summary>
-	/// La classe TextNavigator permet de naviguer dans un TextLayout,
-	/// d'insérer/supprimer des caractères, etc.
+	/// The <c>TextNavigator</c> class can be used to navigate through a
+	/// <see cref="TextLayout"/> instance, including edition and mouse
+	/// interaction.
 	/// </summary>
 	public sealed class TextNavigator
 	{
 		public TextNavigator(AbstractTextField textField, TextLayout textLayout)
 		{
-			this.textField = textField;
+			this.textField  = textField;
 			this.textLayout = textLayout;
-			this.context = new TextLayoutContext(textLayout);
+			this.context    = new TextLayoutContext(textLayout);
 		}
 
 		
@@ -34,8 +35,14 @@ namespace Epsitec.Common.Widgets
 
 		public Support.OpletQueue				OpletQueue
 		{
-			get { return this.undoQueue; }
-			set { this.undoQueue = value; }
+			get
+			{
+				return this.opletQueue;
+			}
+			set
+			{
+				this.opletQueue = value;
+			}
 		}
 
 		public bool								IsReadOnly
@@ -192,47 +199,6 @@ namespace Epsitec.Common.Widgets
 		}
 
 		
-		public void SetCursors(int from, int to)
-		{
-			this.SetCursors(from, to, this.CursorAfter);
-		}
-		
-		public void SetCursors(int from, int to, bool after)
-		{
-			//	Modifie les deux curseurs en même temps.
-			int len = this.textLayout.MaxTextIndex;
-			
-			from = System.Math.Max(from, 0);
-			from = System.Math.Min(from, len);
-			
-			to = System.Math.Max(to, 0);
-			to = System.Math.Min(to, len);
-			
-			if ( from != this.context.CursorFrom || to != this.context.CursorTo || after != this.context.CursorAfter )
-			{
-				this.context.CursorFrom  = from;
-				this.context.CursorTo    = to;
-				this.context.CursorAfter = after;
-				this.OnCursorScrolled();
-				this.OnCursorChanged(true);
-			}
-		}
-
-		public void ValidateCursors()
-		{
-			int max = this.textLayout.MaxTextIndex;
-
-			if ( this.context.CursorFrom > max )
-			{
-				this.context.CursorFrom = max;
-			}
-
-			if ( this.context.CursorTo > max )
-			{
-				this.context.CursorTo = max;
-			}
-		}
-		
 		
 		public bool								SelectionBold
 		{
@@ -388,6 +354,47 @@ namespace Epsitec.Common.Widgets
 		}
 
 
+		public void SetCursors(int from, int to)
+		{
+			this.SetCursors(from, to, this.CursorAfter);
+		}
+		
+		public void SetCursors(int from, int to, bool after)
+		{
+			//	Modifie les deux curseurs en même temps.
+			int len = this.textLayout.MaxTextIndex;
+			
+			from = System.Math.Max(from, 0);
+			from = System.Math.Min(from, len);
+			
+			to = System.Math.Max(to, 0);
+			to = System.Math.Min(to, len);
+			
+			if ( from != this.context.CursorFrom || to != this.context.CursorTo || after != this.context.CursorAfter )
+			{
+				this.context.CursorFrom  = from;
+				this.context.CursorTo    = to;
+				this.context.CursorAfter = after;
+				this.OnCursorScrolled();
+				this.OnCursorChanged(true);
+			}
+		}
+
+		public void ValidateCursors()
+		{
+			int max = this.textLayout.MaxTextIndex;
+
+			if ( this.context.CursorFrom > max )
+			{
+				this.context.CursorFrom = max;
+			}
+
+			if ( this.context.CursorTo > max )
+			{
+				this.context.CursorTo = max;
+			}
+		}
+		
 		public void DeleteSelection()
 		{
 			if ( this.textLayout.DeleteSelection(this.context) )
@@ -448,7 +455,7 @@ namespace Epsitec.Common.Widgets
 			this.OnStyleChanged();
 		}
 
-
+		
 		public bool ProcessMessage(Message message, Drawing.Point pos)
 		{
 			try
@@ -511,6 +518,7 @@ namespace Epsitec.Common.Widgets
 			finally
 			{
 				this.textLayout.ResumeTextChangeNotifications ();
+//				this.initialInfo = null;
 			}
 		}
 
@@ -528,6 +536,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+		
 		private bool ProcessKeyDown(KeyCode key, bool isShiftPressed, bool isControlPressed)
 		{
 			//	Gestion d'une touche pressée avec KeyDown dans le texte.
@@ -698,8 +707,8 @@ namespace Epsitec.Common.Widgets
 			//	Appelé lorsque le bouton de la souris est pressé.
 			int index;
 			bool after;
-			this.mouseSelZone = false;
-			if (this.DetectIndex (pos, false, out index, out after))
+			this.mouseMoved = false;
+			if (this.DetectIndex (pos, out index, out after))
 			{
 				if ((this.context.CursorFrom != index) ||
 					(this.context.CursorTo != index))
@@ -716,15 +725,15 @@ namespace Epsitec.Common.Widgets
 			return false;
 		}
 
-		private bool DetectIndex(Epsitec.Common.Drawing.Point pos, bool selZone, out int index, out bool after)
+		private bool DetectIndex(Epsitec.Common.Drawing.Point pos, out int index, out bool after)
 		{
 			if (this.textField == null)
 			{
-				return this.textLayout.DetectIndex (pos, selZone, out index, out after);
+				return this.textLayout.DetectIndex (pos, this.mouseMoved, out index, out after);
 			}
 			else
 			{
-				return this.textField.DetectIndex (pos, selZone, out index, out after);
+				return this.textField.DetectIndex (pos, this.mouseMoved, out index, out after);
 			}
 		}
 
@@ -733,9 +742,9 @@ namespace Epsitec.Common.Widgets
 			//	Appelé lorsque la souris est déplacée, bouton pressé.
 			int index;
 			bool after;
-			if (this.DetectIndex (pos, true, out index, out after))
+			this.mouseMoved = true;
+			if (this.DetectIndex (pos, out index, out after))
 			{
-				this.mouseSelZone = true;
 				if (this.context.CursorTo != index)
 				{
 					this.context.CursorTo    = index;
@@ -777,7 +786,7 @@ namespace Epsitec.Common.Widgets
 			{
 				int index;
 				bool after;
-				if (this.DetectIndex (pos, this.mouseSelZone, out index, out after))
+				if (this.DetectIndex (pos, out index, out after))
 				{
 					if (this.context.CursorTo != index)
 					{
@@ -791,6 +800,59 @@ namespace Epsitec.Common.Widgets
 			this.OnCursorChanged (false);
 		}
 
+		private void UndoMemorise(UndoType type)
+		{
+			//	Mémorise l'état actuel complet du texte, pour permettre l'annulation.
+			this.OnAboutToChange ();
+
+			if (this.opletQueue == null)
+				return;
+
+			Support.IOplet[] oplets = this.opletQueue.LastActionOplets;
+			if (!this.opletQueue.CanRedo     &&
+				 oplets.Length == 1          &&
+				 !this.context.UndoSeparator)
+			{
+				TextOplet lastOplet = oplets[0] as TextOplet;
+				if (type != UndoType.AutonomusStyle &&
+					 type != UndoType.Tab            &&
+					 lastOplet != null               &&
+					 lastOplet.Navigator == this     &&
+					 lastOplet.Type == type)
+				{
+					return;  // situation initiale déjà mémorisée
+				}
+			}
+
+			string name = Res.Strings.TextNavigator.Action.Modify;
+			switch (type)
+			{
+				case UndoType.Insert:
+					name = Res.Strings.TextNavigator.Action.Insert;
+					break;
+				case UndoType.Delete:
+					name = Res.Strings.TextNavigator.Action.Delete;
+					break;
+				case UndoType.AutonomusStyle:
+				case UndoType.CascadableStyle:
+					name = Res.Strings.TextNavigator.Action.Style;
+					break;
+				case UndoType.Tab:
+					name = Res.Strings.TextNavigator.Action.Tab;
+					break;
+			}
+
+			using (this.opletQueue.BeginAction (name))
+			{
+				TextOplet oplet = new TextOplet (this, type);
+				this.opletQueue.Insert (oplet);
+				this.opletQueue.ValidateAction ();
+			}
+
+			this.context.UndoSeparator = false;
+		}
+
+		#region UndoType Enumeration
 
 		private enum UndoType
 		{
@@ -801,50 +863,11 @@ namespace Epsitec.Common.Widgets
 			Tab,
 		}
 
-		private void UndoMemorise(UndoType type)
-		{
-			//	Mémorise l'état actuel complet du texte, pour permettre l'annulation.
-			this.OnAboutToChange ();
-			
-			if ( this.undoQueue == null )  return;
+		#endregion
 
-			Support.IOplet[] oplets = this.undoQueue.LastActionOplets;
-			if ( !this.undoQueue.CanRedo     &&
-				 oplets.Length == 1          &&
-				 !this.context.UndoSeparator )
-			{
-				TextOplet lastOplet = oplets[0] as TextOplet;
-				if ( type != UndoType.AutonomusStyle &&
-					 type != UndoType.Tab            &&
-					 lastOplet != null               &&
-					 lastOplet.Navigator == this     &&
-					 lastOplet.Type == type          )
-				{
-					return;  // situation initiale déjà mémorisée
-				}
-			}
+		#region TextOplet Class
 
-			string name = Res.Strings.TextNavigator.Action.Modify;
-			switch ( type )
-			{
-				case UndoType.Insert:           name = Res.Strings.TextNavigator.Action.Insert;  break;
-				case UndoType.Delete:           name = Res.Strings.TextNavigator.Action.Delete;  break;
-				case UndoType.AutonomusStyle:
-				case UndoType.CascadableStyle:  name = Res.Strings.TextNavigator.Action.Style;   break;
-				case UndoType.Tab:              name = Res.Strings.TextNavigator.Action.Tab;     break;
-			}
-
-			using ( this.undoQueue.BeginAction(name) )
-			{
-				TextOplet oplet = new TextOplet(this, type);
-				this.undoQueue.Insert(oplet);
-				this.undoQueue.ValidateAction();
-			}
-
-			this.context.UndoSeparator = false;
-		}
-
-		private class TextOplet : Support.AbstractOplet
+		private sealed class TextOplet : Support.AbstractOplet
 		{
 			public TextOplet(TextNavigator navigator, UndoType type)
 			{
@@ -935,20 +958,26 @@ namespace Epsitec.Common.Widgets
 			private Drawing.TextStyle.Tab[]		tabs;
 		}
 
+		#endregion
+
 
 		private void InitialMemorize()
 		{
 			//	Mémorise l'état avant une opération quelconque sur le texte.
-			this.iCursorFrom  = this.context.CursorFrom;
-			this.iCursorTo    = this.context.CursorTo;
-			this.iCursorAfter = this.context.CursorAfter;
-			this.iTextLength  = this.textLayout.Text.Length;
+
+			this.initialInfo = new CursorInfo ()
+			{
+				CursorFrom  = this.context.CursorFrom,
+				CursorTo    = this.context.CursorTo,
+				CursorAfter = this.context.CursorAfter,
+				TextLength  = this.textLayout.Text.Length
+			};
 		}
 
 		private void OnTextInserted(bool always)
 		{
 			//	Génère un événement pour dire que des caractères ont été insérés.
-			if ( !always && this.iTextLength == this.textLayout.Text.Length )  return;
+			if ( !always && this.initialInfo.TextLength == this.textLayout.Text.Length )  return;
 
 			if ( this.TextInserted != null )  // qq'un écoute ?
 			{
@@ -957,10 +986,11 @@ namespace Epsitec.Common.Widgets
 		}
 
 
-		//	Génère un événement pour dire que des caractères ont été détruits.
 		private void OnTextDeleted(bool always)
 		{
-			if ( !always && this.iTextLength == this.textLayout.Text.Length )  return;
+			//	Génère un événement pour dire que des caractères ont été détruits.
+			if (!always && this.initialInfo.TextLength == this.textLayout.Text.Length)
+				return;
 
 			if ( this.TextDeleted != null )  // qq'un écoute ?
 			{
@@ -968,21 +998,20 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-
 		private void OnCursorChanged(bool always)
 		{
 			//	Génère un événement pour dire que le curseur a bougé.
 			if ( !always                                       &&
-				 this.iCursorFrom  == this.context.CursorFrom  &&
-				 this.iCursorTo    == this.context.CursorTo    &&
-				 this.iCursorAfter == this.context.CursorAfter )  return;
+				 this.initialInfo.CursorFrom  == this.context.CursorFrom  &&
+				 this.initialInfo.CursorTo    == this.context.CursorTo    &&
+				 this.initialInfo.CursorAfter == this.context.CursorAfter)
+				return;
 
 			if ( this.CursorChanged != null )  // qq'un écoute ?
 			{
 				this.textLayout.NotifyTextChangeEvent (this.CursorChanged, this);
 			}
 		}
-
 
 		private void OnCursorScrolled()
 		{
@@ -993,7 +1022,6 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-
 		private void OnStyleChanged()
 		{
 			//	Génère un événement pour dire que le style a changé.
@@ -1003,7 +1031,6 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-
 		private void OnAboutToChange()
 		{
 			if (this.AboutToChange != null)
@@ -1011,6 +1038,39 @@ namespace Epsitec.Common.Widgets
 				this.AboutToChange (this);
 			}
 		}
+
+		private class CursorInfo
+		{
+			public CursorInfo()
+			{
+			}
+
+
+			public int CursorFrom
+			{
+				get;
+				set;
+			}
+
+			public int CursorTo
+			{
+				get;
+				set;
+			}
+
+			public bool CursorAfter
+			{
+				get;
+				set;
+			}
+
+			public int TextLength
+			{
+				get;
+				set;
+			}
+		}
+		
 		
 		public event EventHandler				AboutToChange;
 		public event EventHandler				TextInserted;
@@ -1023,16 +1083,14 @@ namespace Epsitec.Common.Widgets
 		private readonly AbstractTextField		textField;
 		private readonly TextLayout				textLayout;
 		private readonly TextLayoutContext		context;
-		private Support.OpletQueue				undoQueue;
+		private Support.OpletQueue				opletQueue;
 		private bool							isReadOnly;
 		private bool							isNumeric;
 		private bool							allowTabInsertion;
-		private int								iCursorFrom;
-		private int								iCursorTo;
-		private bool							iCursorAfter;
-		private int								iTextLength;
+		private CursorInfo						initialInfo;
+		
 		private bool							mouseDown;
 		private bool							mouseDrag;
-		private bool							mouseSelZone;
+		private bool							mouseMoved;
 	}
 }

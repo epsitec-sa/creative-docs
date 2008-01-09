@@ -830,33 +830,47 @@ namespace Epsitec.Common.Widgets
 		private bool GetCursorPosition(out Drawing.Point p1, out Drawing.Point p2, Drawing.Point offset)
 		{
 			TextLayout        layout  = this.GetPaintTextLayout ();
-			TextLayoutContext context = new TextLayoutContext (this.navigator.Context);
+			TextLayoutContext context = this.navigator.Context;
 
-			context.OffsetCursor (this.HintOffset);
+			int hintOffset = this.HintOffset;
 
-			if (layout.FindTextCursor (context, out p1, out p2))
+			context.OffsetCursor (hintOffset);
+
+			try
 			{
-				p1 += offset;
-				p2 += offset;
+				if (layout.FindTextCursor (context, out p1, out p2))
+				{
+					p1 += offset;
+					p2 += offset;
 
-				return true;
+					return true;
+				}
+				else
+				{
+					return false;
+				}
 			}
-			else
+			finally
 			{
-				return false;
+				context.OffsetCursor (-hintOffset);
 			}
 		}
 
-		internal bool DetectIndex(Epsitec.Common.Drawing.Point pos, bool selZone, out int index, out bool after)
+		internal bool DetectIndex(Epsitec.Common.Drawing.Point pos, bool select, out int index, out bool after)
 		{
-			TextLayout        layout  = this.GetPaintTextLayout ();
-			TextLayoutContext context = new TextLayoutContext (this.navigator.Context);
+			TextLayout layout = this.GetPaintTextLayout ();
 			
-			bool ok = layout.DetectIndex (pos, selZone, out index, out after);
+			//	We use the text as it is displayed on screen, not as it is stored
+			//	internally, since we must account for possible prefixes/suffixes
+			//	related to the HintText property :
+			
+			bool ok = layout.DetectIndex (pos, select, out index, out after);
 			int len = this.Text.Length;
 
 			index -= this.HintOffset;
 
+			//	The index must be constrained to the text typed in by the user :
+			
 			if (index < 0)
 			{
 				index = 0;
