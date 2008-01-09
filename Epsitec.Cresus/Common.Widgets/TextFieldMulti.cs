@@ -132,7 +132,7 @@ namespace Epsitec.Common.Widgets
 			this.Invalidate();
 			this.UpdateScroller();
 
-			Drawing.Point pos = this.lastMousePos;
+			Drawing.Point pos = this.LastMousePosition;
 			pos.X -= AbstractTextField.TextMargin + AbstractTextField.FrameMargin;
 			pos.Y -= AbstractTextField.TextMargin + AbstractTextField.FrameMargin;
 			pos = this.Client.Bounds.Constrain(pos);

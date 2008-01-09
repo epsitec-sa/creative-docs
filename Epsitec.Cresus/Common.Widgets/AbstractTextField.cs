@@ -121,11 +121,11 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				return this.accepts_null_value;
+				return this.acceptsNullValue;
 			}
 			set
 			{
-				this.accepts_null_value = value;
+				this.acceptsNullValue = value;
 			}
 		}
 
@@ -266,11 +266,11 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				return this.swallow_return;
+				return this.swallowReturn;
 			}
 			set
 			{
-				this.swallow_return = value;
+				this.swallowReturn = value;
 			}
 		}
 
@@ -278,11 +278,11 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				return this.swallow_escape;
+				return this.swallowEscape;
 			}
 			set
 			{
-				this.swallow_escape = value;
+				this.swallowEscape = value;
 			}
 		}
 
@@ -291,6 +291,14 @@ namespace Epsitec.Common.Widgets
 			get
 			{
 				return this.GetInnerTextBounds (this.Client.Bounds);
+			}
+		}
+
+		protected Drawing.Point LastMousePosition
+		{
+			get
+			{
+				return this.lastMousePos;
 			}
 		}
 
@@ -1216,7 +1224,7 @@ namespace Epsitec.Common.Widgets
 			this.contextMenu.Items.AddSeparator ();
 			this.contextMenu.Items.AddItem (ApplicationCommands.SelectAll);
 
-			if (this.accepts_null_value)
+			if (this.acceptsNullValue)
 			{
 				context.SetLocalEnable (Res.Commands.UseDefaultValue, readWrite);
 
@@ -2305,7 +2313,7 @@ namespace Epsitec.Common.Widgets
 		private bool							mouseDown;
 		private ScrollDirection					mouseScrollDirection;
 
-		protected Drawing.Point					lastMousePos;
+		private Drawing.Point					lastMousePos;
 		private TextFieldStyle					textFieldStyle;
 		private TextFieldDisplayMode			textFieldDisplayMode;
 		private double							scrollZone = 0.5;
@@ -2314,11 +2322,11 @@ namespace Epsitec.Common.Widgets
 		private bool							isEditing;
 		private bool							isModal;
 		private bool							isPassword;
-		private bool							accepts_null_value;
+		private bool							acceptsNullValue;
 		private bool							lastHasSelection;
-		protected bool							hasEditedText;
-		protected bool							swallow_return;
-		protected bool							swallow_escape;
+		private bool							hasEditedText;
+		private bool							swallowReturn;
+		private bool							swallowEscape;
 
 		private TextNavigator					navigator;
 
