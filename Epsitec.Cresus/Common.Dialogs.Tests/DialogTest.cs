@@ -36,7 +36,7 @@ namespace Epsitec.Common.Dialogs
 		[Test]
 		public void Check01SimpleForm()
 		{
-			Dialog dialog = Dialog.Load (this.resourceManager, Druid.Parse ("_631"));
+			Dialog dialog = Dialog.Load (this.resourceManager, Druid.Parse ("_631"));	//	mask for AdresseEntity, from Demo5juin
 
 			dialog.DialogWindowCreated +=
 				delegate
@@ -78,7 +78,12 @@ namespace Epsitec.Common.Dialogs
 		[Test]
 		public void Check02SimpleForm()
 		{
-			Dialog dialog = Dialog.Load (this.resourceManager, Druid.Parse ("_8V1"));
+			Dialog dialog = Dialog.Load (this.resourceManager, Druid.Parse ("_8V1"));	//	mask for AdresseEntity, from Cresus.AddressBook
+
+			//	Mask with :
+			//	- Rue
+			//	- CasePostale
+			//	- Localité.Résumé
 
 			dialog.DialogWindowCreated +=
 				delegate

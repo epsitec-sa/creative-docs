@@ -130,7 +130,14 @@ namespace Epsitec.Common.UI.Controllers
 			{
 				text = this.ConvertFromValue (newValue);
 			}
-			
+
+			if (this.IsSettingPlaceholderValue)
+			{
+				//	TODO: ...
+
+				return;
+			}
+
 			if (this.field != null)
 			{
 				this.field.Text = text;

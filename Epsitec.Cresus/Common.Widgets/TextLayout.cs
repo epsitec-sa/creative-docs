@@ -3402,7 +3402,8 @@ namespace Epsitec.Common.Widgets
 					}
 				}
 
-				if (this.textChangeEventQueue != null)
+				if ((this.textChangeEventQueue != null) &&
+					(this.textChangeEventQueue.Count > 0))
 				{
 					while (this.textChangeEventQueue.Count > 0)
 					{
