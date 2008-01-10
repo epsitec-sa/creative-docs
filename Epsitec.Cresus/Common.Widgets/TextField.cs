@@ -1,20 +1,30 @@
+//	Copyright © 2003-2008, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 [assembly: Epsitec.Common.Types.DependencyClass (typeof (Epsitec.Common.Widgets.TextField))]
 
 namespace Epsitec.Common.Widgets
 {
 	/// <summary>
-	/// La classe TextField implémente la ligne éditable simple.
+	/// The <c>TextField</c> class implements a simple text field.
 	/// </summary>
 	public class TextField : AbstractTextField
 	{
+		/// <summary>
+		/// Initializes a new instance of the <see cref="TextField"/> class.
+		/// </summary>
 		public TextField()
 		{
 		}
-		
-		public TextField(Widget embedder) : this()
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="TextField"/> class.
+		/// </summary>
+		/// <param name="embedder">The embedder.</param>
+		public TextField(Widget embedder)
+			: this ()
 		{
-			this.SetEmbedder(embedder);
+			this.SetEmbedder (embedder);
 		}
 	}
 }
