@@ -1864,6 +1864,11 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+		/// <summary>
+		/// Gets the text layout used for painting. This can be a synthetic text
+		/// layout object (e.g. a masked password or a hint).
+		/// </summary>
+		/// <returns></returns>
 		protected virtual TextLayout GetPaintTextLayout()
 		{
 			TextLayout original = this.TextLayout;
@@ -1885,7 +1890,7 @@ namespace Epsitec.Common.Widgets
 					return copy;
 				}
 				else if ((this.textFieldDisplayMode == TextFieldDisplayMode.Hint) &&
-					/**/ (this.ContainsValue (AbstractTextField.HintTextProperty)))
+					/**/ (this.HintText != null))
 				{
 					TextLayout copy = new TextLayout (original);
 					string     hint = TextLayout.ConvertToSimpleText (this.HintText);
