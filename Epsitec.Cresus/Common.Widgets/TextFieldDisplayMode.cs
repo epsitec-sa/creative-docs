@@ -1,8 +1,6 @@
 //	Copyright © 2005-2008, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Author: Daniel ROUX, Maintainer: Pierre ARNAUD
 
-using Epsitec.Common.Support;
-
 namespace Epsitec.Common.Widgets
 {
 	/// <summary>

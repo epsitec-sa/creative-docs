@@ -215,13 +215,13 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 			}
 		}
 
-		public void MemoriseTexts()
+		public void MemorizeTexts()
 		{
 			//	Mémorise les textes de recherche et de remplacement.
 			if ( this.fieldFind == null )  return;
 
-			this.ComboMemorise(this.fieldFind);
-			this.ComboMemorise(this.fieldReplace);
+			this.ComboMemorize(this.fieldFind);
+			this.ComboMemorize(this.fieldReplace);
 		}
 
 
@@ -276,7 +276,7 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 			button.ActiveState = active ? Widgets.ActiveState.Yes : Widgets.ActiveState.No;
 		}
 
-		protected void ComboMemorise(TextFieldCombo combo)
+		protected void ComboMemorize(TextFieldCombo combo)
 		{
 			//	Gère la liste d'un combo pour conserver les derniers textes tapés.
 			string text = combo.Text;
@@ -316,7 +316,7 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 
 		private void HandleButtonClicked(object sender, MessageEventArgs e)
 		{
-			this.MemoriseTexts();
+			this.MemorizeTexts();
 
 			string replace = null;
 			if ( sender == this.buttonReplace )

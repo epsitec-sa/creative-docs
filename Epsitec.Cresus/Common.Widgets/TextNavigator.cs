@@ -108,7 +108,7 @@ namespace Epsitec.Common.Widgets
 
 			set
 			{
-				this.UndoMemorise(UndoType.Insert);
+				this.UndoMemorize(UndoType.Insert);
 				this.textLayout.ReplaceSelection(this.context, value);
 				this.OnTextInserted(true);
 				this.OnCursorScrolled();
@@ -211,7 +211,7 @@ namespace Epsitec.Common.Widgets
 			{
 				if ( this.textLayout.IsSelectionBold(this.context) != value )
 				{
-					this.UndoMemorise(UndoType.AutonomusStyle);
+					this.UndoMemorize(UndoType.AutonomusStyle);
 					this.textLayout.SetSelectionBold(this.context, value);
 					this.OnStyleChanged();
 				}
@@ -229,7 +229,7 @@ namespace Epsitec.Common.Widgets
 			{
 				if ( this.textLayout.IsSelectionItalic(this.context) != value )
 				{
-					this.UndoMemorise(UndoType.AutonomusStyle);
+					this.UndoMemorize(UndoType.AutonomusStyle);
 					this.textLayout.SetSelectionItalic(this.context, value);
 					this.OnStyleChanged();
 				}
@@ -247,7 +247,7 @@ namespace Epsitec.Common.Widgets
 			{
 				if ( this.textLayout.IsSelectionUnderline(this.context) != value )
 				{
-					this.UndoMemorise(UndoType.AutonomusStyle);
+					this.UndoMemorize(UndoType.AutonomusStyle);
 					this.textLayout.SetSelectionUnderline(this.context, value);
 					this.OnStyleChanged();
 				}
@@ -274,7 +274,7 @@ namespace Epsitec.Common.Widgets
 			{
 				if ( this.textLayout.GetSelectionFontFace(this.context) != value )
 				{
-					this.UndoMemorise(UndoType.CascadableStyle);
+					this.UndoMemorize(UndoType.CascadableStyle);
 					this.textLayout.SetSelectionFontFace(this.context, value);
 					this.OnStyleChanged();
 				}
@@ -292,7 +292,7 @@ namespace Epsitec.Common.Widgets
 			{
 				if ( this.textLayout.GetSelectionFontScale(this.context) != value )
 				{
-					this.UndoMemorise(UndoType.CascadableStyle);
+					this.UndoMemorize(UndoType.CascadableStyle);
 					this.textLayout.SetSelectionFontScale(this.context, value);
 					this.OnStyleChanged();
 				}
@@ -310,7 +310,7 @@ namespace Epsitec.Common.Widgets
 			{
 				if ( this.textLayout.GetSelectionFontRichColor(this.context) != value )
 				{
-					this.UndoMemorise(UndoType.CascadableStyle);
+					this.UndoMemorize(UndoType.CascadableStyle);
 					this.textLayout.SetSelectionFontRichColor(this.context, value);
 					this.OnStyleChanged();
 				}
@@ -328,7 +328,7 @@ namespace Epsitec.Common.Widgets
 			{
 				if ( this.textLayout.GetSelectionFontColor(this.context) != value )
 				{
-					this.UndoMemorise(UndoType.CascadableStyle);
+					this.UndoMemorize(UndoType.CascadableStyle);
 					this.textLayout.SetSelectionFontColor(this.context, value);
 					this.OnStyleChanged();
 				}
@@ -346,7 +346,7 @@ namespace Epsitec.Common.Widgets
 			{
 				if ( this.textLayout.GetSelectionList(this.context) != value )
 				{
-					this.UndoMemorise(UndoType.AutonomusStyle);
+					this.UndoMemorize(UndoType.AutonomusStyle);
 					this.textLayout.SetSelectionList(this.context, value);
 					this.OnStyleChanged();
 				}
@@ -405,7 +405,7 @@ namespace Epsitec.Common.Widgets
 
 		public void ReplaceWithText(string text)
 		{
-			this.UndoMemorise(UndoType.Insert);
+			this.UndoMemorize(UndoType.Insert);
 			this.textLayout.SelectAll (this.context);
 			this.textLayout.ReplaceSelection (this.context, text);
 			this.OnTextInserted(true);
@@ -418,9 +418,9 @@ namespace Epsitec.Common.Widgets
 			this.textLayout.SelectAll (this.context);
 		}
 
-		public void TabUndoMemorise()
+		public void TabUndoMemorize()
 		{
-			this.UndoMemorise(UndoType.Tab);
+			this.UndoMemorize(UndoType.Tab);
 		}
 
 		public int TabInsert(Drawing.TextStyle.Tab tab)
@@ -548,14 +548,14 @@ namespace Epsitec.Common.Widgets
 				{
 					case KeyCode.Return:
 						if ( this.isReadOnly )  return false;
-						this.UndoMemorise(UndoType.Insert);
+						this.UndoMemorize(UndoType.Insert);
 						this.textLayout.InsertCharacter(this.context, '\n');
 						this.OnTextInserted(false);
 						return true;
 
 					case KeyCode.Tab:
 						if ( this.isReadOnly || !this.allowTabInsertion )  return false;
-						this.UndoMemorise(UndoType.Insert);
+						this.UndoMemorize(UndoType.Insert);
 						this.textLayout.InsertCharacter(this.context, '\t');
 						this.OnTextInserted(false);
 						return true;
@@ -616,7 +616,7 @@ namespace Epsitec.Common.Widgets
 				case KeyCode.Back:
 					if ( this.isReadOnly )  return false;
 					if ( isShiftPressed || isControlPressed )  return false;
-					this.UndoMemorise(UndoType.Delete);
+					this.UndoMemorize(UndoType.Delete);
 					this.textLayout.DeleteCharacter(this.context, -1);
 					this.OnTextDeleted(false);
 					this.OnCursorScrolled();
@@ -626,7 +626,7 @@ namespace Epsitec.Common.Widgets
 				case KeyCode.Delete:
 					if ( this.isReadOnly )  return false;
 					if ( isShiftPressed || isControlPressed )  return false;
-					this.UndoMemorise(UndoType.Delete);
+					this.UndoMemorize(UndoType.Delete);
 					this.textLayout.DeleteCharacter(this.context, 1);
 					this.OnTextDeleted(false);
 					this.OnCursorScrolled();
@@ -683,7 +683,7 @@ namespace Epsitec.Common.Widgets
 			{
 				bool replaced = this.textLayout.HasSelection(this.context);
 				
-				this.UndoMemorise(UndoType.Insert);
+				this.UndoMemorize(UndoType.Insert);
 				this.textLayout.InsertCharacter(this.context, (char)key);
 				
 				if ( replaced )
@@ -800,7 +800,7 @@ namespace Epsitec.Common.Widgets
 			this.OnCursorChanged (false);
 		}
 
-		private void UndoMemorise(UndoType type)
+		private void UndoMemorize(UndoType type)
 		{
 			//	Mémorise l'état actuel complet du texte, pour permettre l'annulation.
 			this.OnAboutToChange ();
@@ -960,91 +960,19 @@ namespace Epsitec.Common.Widgets
 
 		#endregion
 
+		#region CursorInfo Class
 
-		private void InitialMemorize()
-		{
-			//	Mémorise l'état avant une opération quelconque sur le texte.
-
-			this.initialInfo = new CursorInfo ()
-			{
-				CursorFrom  = this.context.CursorFrom,
-				CursorTo    = this.context.CursorTo,
-				CursorAfter = this.context.CursorAfter,
-				TextLength  = this.textLayout.Text.Length
-			};
-		}
-
-		private void OnTextInserted(bool always)
-		{
-			//	Génère un événement pour dire que des caractères ont été insérés.
-			if ( !always && this.initialInfo.TextLength == this.textLayout.Text.Length )  return;
-
-			if ( this.TextInserted != null )  // qq'un écoute ?
-			{
-				this.textLayout.NotifyTextChangeEvent (this.TextInserted, this);
-			}
-		}
-
-
-		private void OnTextDeleted(bool always)
-		{
-			//	Génère un événement pour dire que des caractères ont été détruits.
-			if (!always && this.initialInfo.TextLength == this.textLayout.Text.Length)
-				return;
-
-			if ( this.TextDeleted != null )  // qq'un écoute ?
-			{
-				this.textLayout.NotifyTextChangeEvent (this.TextDeleted, this);
-			}
-		}
-
-		private void OnCursorChanged(bool always)
-		{
-			//	Génère un événement pour dire que le curseur a bougé.
-			if ( !always                                       &&
-				 this.initialInfo.CursorFrom  == this.context.CursorFrom  &&
-				 this.initialInfo.CursorTo    == this.context.CursorTo    &&
-				 this.initialInfo.CursorAfter == this.context.CursorAfter)
-				return;
-
-			if ( this.CursorChanged != null )  // qq'un écoute ?
-			{
-				this.textLayout.NotifyTextChangeEvent (this.CursorChanged, this);
-			}
-		}
-
-		private void OnCursorScrolled()
-		{
-			//	Génère un événement pour dire que le curseur a scrollé.
-			if ( this.CursorScrolled != null )  // qq'un écoute ?
-			{
-				this.textLayout.NotifyTextChangeEvent (this.CursorScrolled, this);
-			}
-		}
-
-		private void OnStyleChanged()
-		{
-			//	Génère un événement pour dire que le style a changé.
-			if ( this.StyleChanged != null )  // qq'un écoute ?
-			{
-				this.textLayout.NotifyTextChangeEvent (this.StyleChanged, this);
-			}
-		}
-
-		private void OnAboutToChange()
-		{
-			if (this.AboutToChange != null)
-			{
-				this.AboutToChange (this);
-			}
-		}
-
+		/// <summary>
+		/// The <c>CursorInfo</c> class is used to store information about the
+		/// initial cursor position outside of the <see cref="TextNavigator"/>
+		/// instance body (this is just temporary information, discarded as
+		/// soon as event processing is done).
+		/// </summary>
 		private class CursorInfo
 		{
 			public CursorInfo()
 			{
 			}
-
 
 			public int CursorFrom
 			{
@@ -1070,8 +998,95 @@ namespace Epsitec.Common.Widgets
 				set;
 			}
 		}
-		
-		
+
+		#endregion
+
+
+		private void InitialMemorize()
+		{
+			//	Mémorise l'état avant une opération quelconque sur le texte.
+
+			this.initialInfo = new CursorInfo ()
+			{
+				CursorFrom  = this.context.CursorFrom,
+				CursorTo    = this.context.CursorTo,
+				CursorAfter = this.context.CursorAfter,
+				TextLength  = this.textLayout.Text.Length
+			};
+		}
+
+		private void OnTextInserted(bool always)
+		{
+			//	Génère un événement pour dire que des caractères ont été insérés.
+			if (!always && this.initialInfo.TextLength == this.textLayout.Text.Length)
+			{
+				return;
+			}
+
+			if (this.TextInserted != null)  // qq'un écoute ?
+			{
+				this.textLayout.NotifyTextChangeEvent (this.TextInserted, this);
+			}
+		}
+
+		private void OnTextDeleted(bool always)
+		{
+			//	Génère un événement pour dire que des caractères ont été détruits.
+			if (!always && this.initialInfo.TextLength == this.textLayout.Text.Length)
+			{
+				return;
+			}
+
+			if (this.TextDeleted != null)  // qq'un écoute ?
+			{
+				this.textLayout.NotifyTextChangeEvent (this.TextDeleted, this);
+			}
+		}
+
+		private void OnCursorChanged(bool always)
+		{
+			//	Génère un événement pour dire que le curseur a bougé.
+			if (!always                                       &&
+				 this.initialInfo.CursorFrom  == this.context.CursorFrom  &&
+				 this.initialInfo.CursorTo    == this.context.CursorTo    &&
+				 this.initialInfo.CursorAfter == this.context.CursorAfter)
+			{
+				return;
+			}
+
+			if (this.CursorChanged != null)  // qq'un écoute ?
+			{
+				this.textLayout.NotifyTextChangeEvent (this.CursorChanged, this);
+			}
+		}
+
+		private void OnCursorScrolled()
+		{
+			//	Génère un événement pour dire que le curseur a scrollé.
+			if (this.CursorScrolled != null)  // qq'un écoute ?
+			{
+				this.textLayout.NotifyTextChangeEvent (this.CursorScrolled, this);
+			}
+		}
+
+		private void OnStyleChanged()
+		{
+			//	Génère un événement pour dire que le style a changé.
+			if (this.StyleChanged != null)  // qq'un écoute ?
+			{
+				this.textLayout.NotifyTextChangeEvent (this.StyleChanged, this);
+			}
+		}
+
+		private void OnAboutToChange()
+		{
+			if (this.AboutToChange != null)
+			{
+				this.AboutToChange (this);
+			}
+		}
+
+
 		public event EventHandler				AboutToChange;
 		public event EventHandler				TextInserted;
 		public event EventHandler				TextDeleted;

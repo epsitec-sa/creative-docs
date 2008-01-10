@@ -2073,7 +2073,7 @@ namespace Epsitec.Common.DocumentEditor
 			if ( isPrev )  mode |= Misc.StringSearch.EndToStart;  // Shift-F3 ?
 			this.dlgReplace.Mode = mode;  // modifie juste la direction de la recherche
 
-			this.dlgReplace.MemoriseTexts();
+			this.dlgReplace.MemorizeTexts();
 
 			this.CurrentDocument.Modifier.TextReplace(this.dlgReplace.FindText, null, mode);
 		}

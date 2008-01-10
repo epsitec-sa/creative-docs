@@ -1369,7 +1369,7 @@ namespace Epsitec.Common.Widgets
 			context.CursorFrom  = from;
 			context.CursorAfter = false;
 
-			this.MemoriseDeletedStyle (context, initialBlock);
+			this.MemorizeDeletedStyle (context, initialBlock);
 			return true;
 		}
 
@@ -1521,11 +1521,11 @@ namespace Epsitec.Common.Widgets
 			context.CursorAfter = (dir < 0);
 			context.UndoSeparator = us;
 
-			this.MemoriseDeletedStyle (context, initialBlock);
+			this.MemorizeDeletedStyle (context, initialBlock);
 			return true;
 		}
 
-		private void MemoriseDeletedStyle(TextLayoutContext context, JustifBlock block)
+		private void MemorizeDeletedStyle(TextLayoutContext context, JustifBlock block)
 		{
 			if ( block == null )  return;
 

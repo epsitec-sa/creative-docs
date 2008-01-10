@@ -346,7 +346,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		public void UpdateConnections()
 		{
 			//	Met à jour la géométrie de toutes les liaisons.
-			this.CommentsMemorise();
+			this.CommentsMemorize();
 
 			foreach (ObjectBox box in this.boxes)
 			{
@@ -672,7 +672,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		public void CreateConnections()
 		{
 			//	Crée (ou recrée) toutes les liaisons nécessaires.
-			this.CommentsMemorise();
+			this.CommentsMemorize();
 
 			//	Supprime tous les commentaires liés aux connections.
 			int j = 0;
@@ -737,7 +737,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			this.Invalidate();
 		}
 
-		protected void CommentsMemorise()
+		protected void CommentsMemorize()
 		{
 			//	Mémorise l'état de tous les commentaires liés à des connections.
 			foreach (ObjectConnection connection in this.connections)

@@ -206,6 +206,18 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+		public System.StringComparison HintTextComparison
+		{
+			get
+			{
+				return (System.StringComparison) this.GetValue (AbstractTextField.HintTextComparisonProperty);
+			}
+			set
+			{
+				this.SetValue (AbstractTextField.HintTextComparisonProperty, value);
+			}
+		}
+
 		public int HintOffset
 		{
 			get
@@ -1896,7 +1908,7 @@ namespace Epsitec.Common.Widgets
 					string     hint = TextLayout.ConvertToSimpleText (this.HintText);
 					string     text = TextLayout.ConvertToSimpleText (original.Text);
 
-					int pos = hint.IndexOf (text);
+					int pos = hint.IndexOf (text, this.HintTextComparison);
 
 					string fontBegin = "<font color=\".hint\">";
 					string fontEnd   = "</font>";
@@ -2301,6 +2313,7 @@ namespace Epsitec.Common.Widgets
 
 		public static readonly DependencyProperty PasswordReplacementCharacterProperty = DependencyProperty.Register ("PasswordReplacementCharacter", typeof (char), typeof (AbstractTextField), new DependencyPropertyMetadata ('*'));
 		public static readonly DependencyProperty HintTextProperty = DependencyProperty.Register ("HintText", typeof (string), typeof (AbstractTextField), new Helpers.VisualPropertyMetadata (Helpers.VisualPropertyMetadataOptions.AffectsDisplay));
+		public static readonly DependencyProperty HintTextComparisonProperty = DependencyProperty.Register ("HintTextComparison", typeof (System.StringComparison), typeof (AbstractTextField), new Helpers.VisualPropertyMetadata (System.StringComparison.CurrentCultureIgnoreCase, Helpers.VisualPropertyMetadataOptions.AffectsDisplay));
 		public static readonly DependencyProperty HintOffsetProperty = DependencyProperty.RegisterReadOnly ("HintOffset", typeof (int), typeof (AbstractTextField), new DependencyPropertyMetadata (0));
 		public static readonly DependencyProperty DefocusActionProperty = DependencyProperty.Register ("DefocusAction", typeof (DefocusAction), typeof (AbstractTextField), new DependencyPropertyMetadata (DefocusAction.None));
 		public static readonly DependencyProperty ButtonShowConditionProperty = DependencyProperty.Register ("ButtonShowCondition", typeof (ButtonShowCondition), typeof (AbstractTextField), new DependencyPropertyMetadata (ButtonShowCondition.Always, AbstractTextField.NotifyButtonShowConditionChanged));

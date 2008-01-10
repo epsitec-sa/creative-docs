@@ -1864,7 +1864,7 @@ namespace Epsitec.Common.Document
 		#endregion
 
 		
-		#region RibbonMemorise
+		#region RibbonMemorize
 		//	C'est ici que sont mémorisés les états des IconButtonsCombo dans les rubans.
 
 		public int RibbonParagraphStyleFirst
