@@ -255,7 +255,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			text.Margins = new Margins(0, 8, 0, 0);
 
 			field = new TextFieldEx(group.GroupBox);
-			field.ButtonShowCondition = ShowCondition.WhenModified;
+			field.ButtonShowCondition = ButtonShowCondition.WhenModified;
 			field.DefocusAction = DefocusAction.AutoAcceptOrRejectEdition;
 			field.MinWidth = 120;
 			field.Dock = DockStyle.Fill;
@@ -302,7 +302,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			text.Margins = new Margins(0, 8, 0, 0);
 
 			field = new TextFieldEx(group.GroupBox);
-			field.ButtonShowCondition = ShowCondition.WhenModified;
+			field.ButtonShowCondition = ButtonShowCondition.WhenModified;
 			field.DefocusAction = DefocusAction.AutoAcceptOrRejectEdition;
 			field.MinWidth = 120;
 			field.Dock = DockStyle.Fill;

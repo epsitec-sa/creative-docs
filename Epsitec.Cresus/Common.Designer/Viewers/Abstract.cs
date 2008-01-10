@@ -94,7 +94,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.labelEdit.Name = "LabelEdit";
 			this.labelEdit.Margins = new Margins(0, 0, 10, 0);
 			this.labelEdit.Dock = DockStyle.Bottom;
-			this.labelEdit.ButtonShowCondition = ShowCondition.WhenModified;
+			this.labelEdit.ButtonShowCondition = ButtonShowCondition.WhenModified;
 			this.labelEdit.DefocusAction = DefocusAction.AutoAcceptOrRejectEdition;
 			this.labelEdit.EditionAccepted += new EventHandler(this.HandleTextChanged);
 			this.labelEdit.EditionRejected += new EventHandler(this.HandleTextRejected);

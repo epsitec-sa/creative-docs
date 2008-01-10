@@ -499,11 +499,11 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		public ShowCondition ButtonShowCondition
+		public ButtonShowCondition ButtonShowCondition
 		{
 			get
 			{
-				return (ShowCondition) this.GetValue (AbstractTextField.ButtonShowConditionProperty);
+				return (ButtonShowCondition) this.GetValue (AbstractTextField.ButtonShowConditionProperty);
 			}
 			set
 			{
@@ -728,7 +728,7 @@ namespace Epsitec.Common.Widgets
 		{
 			if ((this.IsEditing == false) &&
 				(this.CanStartEdition) &&
-				((this.DefocusAction != DefocusAction.None) || (this.IsCombo) || (this.ButtonShowCondition != ShowCondition.Never)))
+				((this.DefocusAction != DefocusAction.None) || (this.IsCombo) || (this.ButtonShowCondition != ButtonShowCondition.Never)))
 			{
 				this.initialText              = this.Text;
 				this.initialTextDisplayMode = this.TextDisplayMode;
@@ -2303,7 +2303,7 @@ namespace Epsitec.Common.Widgets
 		public static readonly DependencyProperty HintTextProperty = DependencyProperty.Register ("HintText", typeof (string), typeof (AbstractTextField), new Helpers.VisualPropertyMetadata (Helpers.VisualPropertyMetadataOptions.AffectsDisplay));
 		public static readonly DependencyProperty HintOffsetProperty = DependencyProperty.RegisterReadOnly ("HintOffset", typeof (int), typeof (AbstractTextField), new DependencyPropertyMetadata (0));
 		public static readonly DependencyProperty DefocusActionProperty = DependencyProperty.Register ("DefocusAction", typeof (DefocusAction), typeof (AbstractTextField), new DependencyPropertyMetadata (DefocusAction.None));
-		public static readonly DependencyProperty ButtonShowConditionProperty = DependencyProperty.Register ("ButtonShowCondition", typeof (ShowCondition), typeof (AbstractTextField), new DependencyPropertyMetadata (ShowCondition.Always, AbstractTextField.NotifyButtonShowConditionChanged));
+		public static readonly DependencyProperty ButtonShowConditionProperty = DependencyProperty.Register ("ButtonShowCondition", typeof (ButtonShowCondition), typeof (AbstractTextField), new DependencyPropertyMetadata (ButtonShowCondition.Always, AbstractTextField.NotifyButtonShowConditionChanged));
 
 
 		internal const double					TextMargin = 2;

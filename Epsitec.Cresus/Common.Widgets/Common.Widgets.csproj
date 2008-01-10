@@ -595,7 +595,7 @@
     <Compile Include="Shortcut.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="ShowCondition.cs">
+    <Compile Include="ButtonShowCondition.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Slider.cs">

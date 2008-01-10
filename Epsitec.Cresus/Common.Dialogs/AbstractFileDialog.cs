@@ -675,7 +675,7 @@ namespace Epsitec.Common.Dialogs
 			//	Normalement, ce widget est caché.
 			this.fieldRename = new TextFieldEx (this.window.Root);
 			this.fieldRename.Visibility = false;
-			this.fieldRename.ButtonShowCondition = ShowCondition.Always;
+			this.fieldRename.ButtonShowCondition = ButtonShowCondition.Always;
 			this.fieldRename.EditionAccepted += new EventHandler (this.HandleRenameAccepted);
 			this.fieldRename.EditionRejected += new EventHandler (this.HandleRenameRejected);
 			this.fieldRename.SwallowEscape = true;

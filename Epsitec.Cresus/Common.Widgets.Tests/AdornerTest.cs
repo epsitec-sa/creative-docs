@@ -252,7 +252,7 @@ namespace Epsitec.Common.Widgets
 			t1.Items.Add("red",   "Rouge");
 			t1.Items.Add("green", "Vert");
 			t1.Items.Add("blue",  "Bleu");
-			t1.ButtonShowCondition = ShowCondition.Always;
+			t1.ButtonShowCondition = ButtonShowCondition.Always;
 			t1.ComboArrowMode = ComboArrowMode.Cycle;
 			t1.IsLiveUpdateEnabled = false;
 			t1.TabIndex = 1;
@@ -264,7 +264,7 @@ namespace Epsitec.Common.Widgets
 			t2.Items.Add("readonly",  "Lecture");
 			t2.Items.Add("writeonly", "Ecriture");
 			t2.Items.Add("readwrite", "Lecture &amp; Ecriture");
-			t2.ButtonShowCondition = ShowCondition.Always;
+			t2.ButtonShowCondition = ButtonShowCondition.Always;
 			t2.ComboArrowMode = ComboArrowMode.Cycle;
 			t2.IsReadOnly = true;
 			t2.TabIndex = 2;
@@ -583,7 +583,7 @@ namespace Epsitec.Common.Widgets
 			combo.Margins = new Margins(160, 0, 0, 220);
 			combo.TabIndex = 10;
 			combo.TabNavigationMode = TabNavigationMode.ActivateOnTab;
-			combo.ButtonShowCondition = ShowCondition.Always;
+			combo.ButtonShowCondition = ButtonShowCondition.Always;
 			combo.ComboArrowMode = ComboArrowMode.Open;
 			window.Root.Children.Add(combo);
 
@@ -720,7 +720,7 @@ namespace Epsitec.Common.Widgets
 			combofix.Margins = new Margins(160, 0, 80, 0);
 			combofix.TabIndex = 2;
 			combofix.TabNavigationMode = TabNavigationMode.ActivateOnTab;
-			combofix.ButtonShowCondition = ShowCondition.Always;
+			combofix.ButtonShowCondition = ButtonShowCondition.Always;
 			page1.Children.Add(combofix);
 
 			//	Crée l'onglet 2.
@@ -796,34 +796,34 @@ namespace Epsitec.Common.Widgets
 			text_ex_4.SetParent (page3);
 			text_ex_4.SetManualBounds(new Drawing.Rectangle(10, page3.ActualHeight-30-28-28-28, 120, text_ex_4.PreferredHeight));
 			text_ex_4.TabIndex = 4;
-			text_ex_4.ButtonShowCondition = ShowCondition.WhenModified;
+			text_ex_4.ButtonShowCondition = ButtonShowCondition.WhenModified;
 			
 			TextFieldEx text_ex_5 = new TextFieldEx();
 			text_ex_5.SetParent (page3);
 			text_ex_5.SetManualBounds(new Drawing.Rectangle(10, page3.ActualHeight-30-28-28-28-28, 120, text_ex_5.PreferredHeight));
 			text_ex_5.TabIndex = 5;
-			text_ex_5.ButtonShowCondition = ShowCondition.WhenFocused;
+			text_ex_5.ButtonShowCondition = ButtonShowCondition.WhenFocused;
 			text_ex_5.DefocusAction       = DefocusAction.AcceptEdition;
 			
 			TextFieldEx text_ex_6 = new TextFieldEx();
 			text_ex_6.SetParent (page3);
 			text_ex_6.SetManualBounds(new Drawing.Rectangle(10+120+5, page3.ActualHeight-30, 120, text_ex_6.PreferredHeight));
 			text_ex_6.TabIndex = 6;
-			text_ex_6.ButtonShowCondition = ShowCondition.WhenModified;
+			text_ex_6.ButtonShowCondition = ButtonShowCondition.WhenModified;
 			text_ex_6.DefocusAction       = DefocusAction.Modal;
 			
 			TextFieldEx text_ex_7 = new TextFieldEx();
 			text_ex_7.SetParent (page3);
 			text_ex_7.SetManualBounds(new Drawing.Rectangle(10+120+5, page3.ActualHeight-30-28, 120, text_ex_7.PreferredHeight));
 			text_ex_7.TabIndex = 7;
-			text_ex_7.ButtonShowCondition = ShowCondition.Never;
+			text_ex_7.ButtonShowCondition = ButtonShowCondition.Never;
 			text_ex_7.DefocusAction       = DefocusAction.AcceptEdition;
 			
 			TextFieldEx text_ex_8 = new TextFieldEx();
 			text_ex_8.SetParent (page3);
 			text_ex_8.SetManualBounds(new Drawing.Rectangle(10+120+5, page3.ActualHeight-30-28-28, 120, text_ex_8.PreferredHeight));
 			text_ex_8.TabIndex = 8;
-			text_ex_8.ButtonShowCondition = ShowCondition.WhenModified;
+			text_ex_8.ButtonShowCondition = ButtonShowCondition.WhenModified;
 			text_ex_8.DefocusAction       = DefocusAction.AutoAcceptOrRejectEdition;
 			
 			new Validators.RegexValidator (text_ex_6, Support.RegexFactory.AlphaName);

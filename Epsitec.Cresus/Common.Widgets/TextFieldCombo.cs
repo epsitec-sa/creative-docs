@@ -16,7 +16,7 @@ namespace Epsitec.Common.Widgets
 		public TextFieldCombo()
 			: base (TextFieldStyle.Combo)
 		{
-			this.ButtonShowCondition = ShowCondition.Always;
+			this.ButtonShowCondition = ButtonShowCondition.Always;
 			
 			this.select_item_behavior = new Behaviors.SelectItemBehavior (new Behaviors.SelectItemCallback (this.AutomaticItemSelection));
 
@@ -218,11 +218,11 @@ namespace Epsitec.Common.Widgets
 			
 			switch (this.ButtonShowCondition)
 			{
-				case ShowCondition.Always:				show = true;										break;
-				case ShowCondition.Never:				show = false;										break;
-				case ShowCondition.WhenFocused:			show = this.IsFocused         || this.IsComboOpen;	break;
-				case ShowCondition.WhenKeyboardFocused:	show = this.KeyboardFocus || this.IsComboOpen;	break;
-				case ShowCondition.WhenModified:		show = this.HasEditedText;							break;
+				case ButtonShowCondition.Always:				show = true;										break;
+				case ButtonShowCondition.Never:				show = false;										break;
+				case ButtonShowCondition.WhenFocused:			show = this.IsFocused         || this.IsComboOpen;	break;
+				case ButtonShowCondition.WhenKeyboardFocused:	show = this.KeyboardFocus || this.IsComboOpen;	break;
+				case ButtonShowCondition.WhenModified:		show = this.HasEditedText;							break;
 				
 				default:
 					throw new System.NotImplementedException (string.Format ("ButtonShowCondition.{0} not implemented.", this.ButtonShowCondition));

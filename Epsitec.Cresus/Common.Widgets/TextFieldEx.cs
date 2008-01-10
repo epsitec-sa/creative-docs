@@ -18,7 +18,7 @@ namespace Epsitec.Common.Widgets
 			this.accept_reject_behavior.AcceptClicked += new Support.EventHandler(this.HandleAcceptRejectAcceptClicked);
 			
 			this.DefocusAction       = DefocusAction.None;
-			this.ButtonShowCondition = ShowCondition.WhenModified;
+			this.ButtonShowCondition = ButtonShowCondition.WhenModified;
 		}
 		
 		public TextFieldEx(Widget embedder) : this ()
@@ -146,22 +146,22 @@ namespace Epsitec.Common.Widgets
 			
 			switch (this.ButtonShowCondition)
 			{
-				case ShowCondition.Always:
+				case ButtonShowCondition.Always:
 					show = true;
 					break;
 				
-				case ShowCondition.Never:
+				case ButtonShowCondition.Never:
 					break;
 				
-				case ShowCondition.WhenFocused:
+				case ButtonShowCondition.WhenFocused:
 					show = this.IsFocused;
 					break;
 				
-				case ShowCondition.WhenKeyboardFocused:
+				case ButtonShowCondition.WhenKeyboardFocused:
 					show = this.KeyboardFocus;
 					break;
 				
-				case ShowCondition.WhenModified:
+				case ButtonShowCondition.WhenModified:
 					show = this.HasEditedText;
 					break;
 				
