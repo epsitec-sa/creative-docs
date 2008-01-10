@@ -12,6 +12,67 @@ namespace Epsitec.Common.UI
 	/// </summary>
 	public static class PlaceholderContext
 	{
+		private static Stack<Record>			RecordStack
+		{
+			get
+			{
+				if (PlaceholderContext.recordStack == null)
+				{
+					PlaceholderContext.recordStack = new Stack<Record> ();
+				}
+				
+				return PlaceholderContext.recordStack;
+			}
+		}
+
+		/// <summary>
+		/// Gets the interactive placeholder, which is the one which started the
+		/// current chain of binding events.
+		/// </summary>
+		/// <value>The interactive placeholder.</value>
+		public static Placeholder				InteractivePlaceholder
+		{
+			get
+			{
+				if (PlaceholderContext.stackRoot == null)
+				{
+					return null;
+				}
+				else
+				{
+					return PlaceholderContext.stackRoot.Placeholder;
+				}
+			}
+		}
+
+		/// <summary>
+		/// Gets the active placeholder, which is the one which is currently
+		/// generating the binding event.
+		/// </summary>
+		/// <value>The active placeholder.</value>
+		public static Placeholder				ActivePlaceholder
+		{
+			get
+			{
+				Stack<Record> stack = PlaceholderContext.RecordStack;
+
+				if (stack.Count == 0)
+				{
+					return null;
+				}
+				else
+				{
+					return stack.Peek ().Placeholder;
+				}
+			}
+		}
+
+
+		/// <summary>
+		/// Pushes the specified controller onto the <see cref="Placeholder"/>
+		/// stack.
+		/// </summary>
+		/// <param name="controller">The controller.</param>
 		public static void Push(Controllers.AbstractController controller)
 		{
 			Stack<Record> stack = PlaceholderContext.RecordStack;
@@ -19,7 +80,7 @@ namespace Epsitec.Common.UI
 
 			if (PlaceholderContext.stackRoot == null)
 			{
-				System.Diagnostics.Debug.Assert (stack.Count == 0));
+				System.Diagnostics.Debug.Assert (stack.Count == 0);
 				
 				PlaceholderContext.stackRoot = record;
 			}
@@ -27,6 +88,11 @@ namespace Epsitec.Common.UI
 			PlaceholderContext.RecordStack.Push (record);
 		}
 
+		/// <summary>
+		/// Pops the specified controller from the <see cref="Placeholder"/>
+		/// stack.
+		/// </summary>
+		/// <param name="controller">The controller.</param>
 		public static void Pop(Controllers.AbstractController controller)
 		{
 			Stack<Record> stack = PlaceholderContext.RecordStack;
@@ -47,45 +113,50 @@ namespace Epsitec.Common.UI
 			}
 		}
 
-		public static Placeholder GetInteractivePlaceholder()
+
+		/// <summary>
+		/// Sets the active.
+		/// </summary>
+		/// <param name="controller">The controller.</param>
+		/// <returns></returns>
+		public static System.IDisposable SetActive(Controllers.AbstractController controller)
 		{
-			if (PlaceholderContext.stackRoot == null)
-			{
-				return null;
-			}
-			else
-			{
-				return PlaceholderContext.stackRoot.Placeholder;
-			}
+			return new ActiveHelper (controller);
 		}
 
-		public static Placeholder GetActivePlaceholder()
-		{
-			Stack<Record> stack = PlaceholderContext.RecordStack;
+		#region ActiveHelper Class
 
-			if (stack.Count == 0)
+		private sealed class ActiveHelper : System.IDisposable
+		{
+			public ActiveHelper(Controllers.AbstractController controller)
 			{
-				return null;
+				this.controller = controller;
+
+				PlaceholderContext.Push (this.controller);
 			}
-			else
+
+			~ActiveHelper()
 			{
-				return stack.Peek ().Placeholder;
+				throw new System.InvalidOperationException ("Caller of SetActive forgot to call Dispose");
 			}
+
+			#region IDisposable Members
+
+			public void Dispose()
+			{
+				PlaceholderContext.Pop (this.controller);
+				System.GC.SuppressFinalize (this);
+			}
+
+			#endregion
+
+			private readonly Controllers.AbstractController controller;
 		}
 
+		#endregion
 
-		private static Stack<Record> RecordStack
-		{
-			get
-			{
-				if (PlaceholderContext.recordStack == null)
-				{
-					PlaceholderContext.recordStack = new Stack<Record> ();
-				}
-				
-				return PlaceholderContext.recordStack;
-			}
-		}
+
+		#region Record Class
 
 		private class Record
 		{
@@ -108,6 +179,8 @@ namespace Epsitec.Common.UI
 			}
 		}
 
+		#endregion
+
 		[System.ThreadStatic]
 		private static Stack<Record>			recordStack;
 
@@ -115,4 +188,3 @@ namespace Epsitec.Common.UI
 		private static Record					stackRoot;
 	}
 }
-     
