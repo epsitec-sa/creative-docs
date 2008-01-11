@@ -355,6 +355,31 @@ namespace Epsitec.Common.Support.EntityEngine
 		}
 
 		/// <summary>
+		/// Strips the start of this path by removing the specified path; the paths
+		/// must match. A new path will be returned.
+		/// </summary>
+		/// <param name="path">The path.</param>
+		/// <returns>The stripped (relative) path.</returns>
+		/// <exception cref="System.ArgumentException">Throws <see cref="System.ArgumentException"/> if the path does not start with the specified path.</exception>
+		public EntityFieldPath StripStart(EntityFieldPath path)
+		{
+			if ((path == null) ||
+				(string.IsNullOrEmpty (path.path)))
+			{
+				return new EntityFieldPath (Druid.Empty, this.path);
+			}
+
+			if (this.StartsWith (path))
+			{
+				return new EntityFieldPath (Druid.Empty, this.path.Substring (System.Math.Min (path.path.Length + 1, this.path.Length)));
+			}
+			else
+			{
+				throw new System.ArgumentException ("This path does not start with given path", "path");
+			}
+		}
+
+		/// <summary>
 		/// Determines whether the beginning of this path matches the specified
 		/// path using an ordinal comparison.
 		/// </summary>

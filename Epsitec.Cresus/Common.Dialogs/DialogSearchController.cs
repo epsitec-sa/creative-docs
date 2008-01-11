@@ -52,28 +52,59 @@ namespace Epsitec.Common.Dialogs
 
 			if (this.ContainsNode (placeholder))
 			{
-				//	The placeholder is already known and an active search element.
+				//	The placeholder is already known as an active search element.
+
+				System.Diagnostics.Debug.Assert (this.searchTemplate != null);
+				System.Diagnostics.Debug.Assert (this.searchRootPath != null);
+				System.Diagnostics.Debug.Assert (this.searchRootData != null);
+
+				this.SetTemplateValue (this.FindNode (placeholder));
 			}
 			else
 			{
+				//	Walk the user interface and search for placeholders which will
+				//	actively participate in the search :
+
+				List<Node> release = new List<Node> ();
+				List<Node> acquire = new List<Node> ();
+
 				foreach (Node node in this.activeNodes)
 				{
-					this.ReleaseNode (node);
+					release.Add (node);
 				}
-
-				List<Node> nodes = new List<Node> ();
 
 				foreach (Node node in this.GetPlaceholderGraph (placeholder.RootParent, path))
 				{
-					nodes.Add (node);
+					release.Remove (node);
+					acquire.Add (node);
+				}
+
+				foreach (Node node in release)
+				{
+					this.activeNodes.Remove (node);
+					this.ReleaseNode (node);
+				}
+
+				foreach (Node node in acquire)
+				{
+					this.activeNodes.Add (node);
 					this.AcquireNode (node);
 				}
 
-				this.activeNodes.Clear ();
-				this.activeNodes.AddRange (nodes);
+				EntityContext context = entityData.GetEntityContext ();
+
+				this.searchRootPath = this.FindNode (placeholder).Path.GetParentPath ();
+				this.searchRootData = entityData;
+				this.searchTemplate = context.CreateEmptyEntity (entityData.GetEntityStructuredTypeId ());
+				this.searchTemplate.DisableCalculations ();
+				
+				foreach (Node node in this.activeNodes)
+				{
+					this.SetTemplateValue (node);
+				}
 			}
 			
-			
+#if false			
 			IEntityProxyProvider  proxyProvider = entityData;
 			DialogData.FieldProxy proxy = proxyProvider.GetEntityProxy () as DialogData.FieldProxy;
 
@@ -95,6 +126,15 @@ namespace Epsitec.Common.Dialogs
 					//	TODO: ...
 				}
 			}
+#endif
+		}
+
+		private void SetTemplateValue(Node node)
+		{
+			EntityFieldPath path = node.Path.StripStart (this.searchRootPath);
+
+			object value = path.NavigateRead (this.searchRootData);
+			path.NavigateWrite (this.searchTemplate, value);
 		}
 
 		private void AcquireNode(Node node)
@@ -175,7 +215,7 @@ namespace Epsitec.Common.Dialogs
 			return this.FindNodeIndex (placeholder) < 0 ? false : true;
 		}
 
-		private struct Node
+		private struct Node : System.IEquatable<Node>
 		{
 			public AbstractPlaceholder Placeholder
 			{
@@ -186,6 +226,32 @@ namespace Epsitec.Common.Dialogs
 			{
 				get;
 				set;
+			}
+
+			#region IEquatable<Node> Members
+
+			public bool Equals(Node other)
+			{
+				return this.Placeholder == other.Placeholder;
+			}
+
+			#endregion
+
+			public override int GetHashCode()
+			{
+				return this.Placeholder == null ? 0 : this.Placeholder.GetHashCode ();
+			}
+
+			public override bool Equals(object obj)
+			{
+				if (obj is Node)
+				{
+					return this.Equals ((Node) obj);
+				}
+				else
+				{
+					return false;
+				}
 			}
 		}
 
@@ -224,5 +290,8 @@ namespace Epsitec.Common.Dialogs
 		private IEntityResolver					entityResolver;
 
 		private readonly List<Node>				activeNodes;
+		private AbstractEntity					searchTemplate;
+		private EntityFieldPath					searchRootPath;
+		private AbstractEntity					searchRootData;
 	}
 }
