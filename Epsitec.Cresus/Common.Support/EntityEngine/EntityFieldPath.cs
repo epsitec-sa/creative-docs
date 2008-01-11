@@ -323,9 +323,12 @@ namespace Epsitec.Common.Support.EntityEngine
 
 			if (this.Navigate (root, out leaf, out id))
 			{
-				IValueStore store = leaf;
-				store.SetValue (id, value, ValueStoreSetMode.Default);
-				return true;
+				if (leaf.InternalGetFieldSource (id) == FieldSource.Value)
+				{
+					IValueStore store = leaf;
+					store.SetValue (id, value, ValueStoreSetMode.Default);
+					return true;
+				}
 			}
 
 			return false;
@@ -412,6 +415,28 @@ namespace Epsitec.Common.Support.EntityEngine
 		public static EntityFieldPath CreateRelativePath(IEnumerable<string> fields)
 		{
 			return new EntityFieldPath (Druid.Empty, string.Join (".", Collection.ToArray (fields)));
+		}
+
+		/// <summary>
+		/// Creates a relative path.
+		/// </summary>
+		/// <param name="path">The original path.</param>
+		/// <param name="fields">The fields.</param>
+		/// <returns>The path instance.</returns>
+		public static EntityFieldPath CreateRelativePath(EntityFieldPath path, params string[] fields)
+		{
+			if (path.IsEmpty)
+			{
+				return EntityFieldPath.CreateRelativePath (fields);
+			}
+			else if (fields.Length == 0)
+			{
+				return new EntityFieldPath (Druid.Empty, path.path);
+			}
+			else
+			{
+				return new EntityFieldPath (Druid.Empty, string.Concat (path.path, ".", string.Join (".", fields)));
+			}
 		}
 
 		/// <summary>

@@ -185,6 +185,7 @@ namespace Epsitec.Common.Dialogs
 			return executed > 0;
 		}
 
+
 		#region Private FieldProxy Class
 
 		/// <summary>
@@ -192,7 +193,7 @@ namespace Epsitec.Common.Dialogs
 		/// done on fields from an entity, which is used to track changes in
 		/// an entity graph.
 		/// </summary>
-		private class FieldProxy : IEntityProxy, INullable
+		internal class FieldProxy : IEntityProxy, INullable
 		{
 			/// <summary>
 			/// Initializes a new instance of the <see cref="FieldProxy"/> class.
@@ -241,6 +242,19 @@ namespace Epsitec.Common.Dialogs
 				get
 				{
 					return this.options;
+				}
+			}
+
+			/// <summary>
+			/// Gets the parent of this field, i.e. the field which refers to
+			/// this field's containing entity.
+			/// </summary>
+			/// <value>The parent.</value>
+			public FieldProxy Parent
+			{
+				get
+				{
+					return this.parent;
 				}
 			}
 
@@ -669,7 +683,7 @@ namespace Epsitec.Common.Dialogs
 		{
 			if (this.searchController != null)
 			{
-				this.searchController.NotifySearchTemplateChanged (entityData, path, e);
+				this.searchController.NotifySearchTemplateChanged (this, entityData, path, e);
 			}
 		}
 

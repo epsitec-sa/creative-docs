@@ -28,7 +28,7 @@ namespace Epsitec.Common.Dialogs
 			}
 		}
 
-		public void NotifySearchTemplateChanged(AbstractEntity entityData, EntityFieldPath path, DependencyPropertyChangedEventArgs e)
+		public void NotifySearchTemplateChanged(DialogData dialogData, AbstractEntity entityData, EntityFieldPath path, DependencyPropertyChangedEventArgs e)
 		{
 			if ((this.suspendSearchHandler > 0) ||
 				(this.entityResolver == null))
@@ -45,12 +45,18 @@ namespace Epsitec.Common.Dialogs
 				return;
 			}
 
-			BindingExpression bindingExpression = placeholder.ValueBindingExpression;
+			IEntityProxyProvider  proxyProvider = entityData;
+			DialogData.FieldProxy proxy = proxyProvider.GetEntityProxy () as DialogData.FieldProxy;
 
 			using (this.SuspendSearchHandler ())
 			{
 				System.Diagnostics.Debug.WriteLine (string.Format ("Search contents changed: path={0}, id={1}, value={2}", path, e.PropertyName, e.NewValue ?? "<null>"));
-				System.Diagnostics.Debug.WriteLine (string.Format (" source: {0}, property: {1}", bindingExpression.GetSourceObject (), bindingExpression.GetSourceProperty ()));
+				System.Diagnostics.Debug.WriteLine (string.Format (" field options={0}, field relation={1}", proxy.FieldOptions, proxy.FieldRelation));
+
+				foreach (Node node in this.GetPlaceholderGraph (placeholder.RootParent, path))
+				{
+					System.Diagnostics.Debug.WriteLine (string.Format (" - {0}", node.Path));
+				}
 
 				EntityContext  context  = entityData.GetEntityContext ();
 				AbstractEntity template = context.CreateEmptyEntity (entityData.GetEntityStructuredTypeId ());
@@ -66,6 +72,65 @@ namespace Epsitec.Common.Dialogs
 				}
 			}
 		}
+
+		private IEnumerable<Node> GetPlaceholderGraph(Widgets.Widget root, EntityFieldPath path)
+		{
+			foreach (AbstractPlaceholder placeholder in root.FindAllChildren (child => child is AbstractPlaceholder))
+			{
+				BindingExpression binding = placeholder.ValueBindingExpression;
+				DataSourceType sourceType = binding.GetSourceType ();
+
+				if (sourceType == DataSourceType.StructuredData)
+				{
+					AbstractEntity entity = binding.GetSourceObject () as AbstractEntity;
+					string         field  = binding.GetSourceProperty () as string;
+
+					if ((entity == null) ||
+						(field == null))
+					{
+						continue;
+					}
+
+					IEntityProxyProvider  proxyProvider = entity;
+					DialogData.FieldProxy proxy = proxyProvider.GetEntityProxy () as DialogData.FieldProxy;
+
+					if (proxy == null)
+					{
+						continue;
+					}
+
+					EntityFieldPath fieldPath = EntityFieldPath.CreateRelativePath (proxy.GetFieldPath (), field);
+
+					yield return new Node ()
+					{
+						Placeholder = placeholder,
+						Path = fieldPath
+					};
+				}
+			}
+		}
+
+		private struct Node
+		{
+			public AbstractPlaceholder Placeholder
+			{
+				get;
+				set;
+			}
+			public EntityFieldPath Path
+			{
+				get;
+				set;
+			}
+		}
+
+		private class GraphAnalyzer
+		{
+			public GraphAnalyzer()
+			{
+			}
+		}
+
 
 		private System.IDisposable SuspendSearchHandler()
 		{
