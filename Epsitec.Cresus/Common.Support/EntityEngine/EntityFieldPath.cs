@@ -354,6 +354,55 @@ namespace Epsitec.Common.Support.EntityEngine
 			}
 		}
 
+		/// <summary>
+		/// Determines whether the beginning of this path matches the specified
+		/// path using an ordinal comparison.
+		/// </summary>
+		/// <param name="path">The path to compare.</param>
+		/// <returns><c>true</c> if the beginning of this path matches the
+		/// specified path; otherwise, <c>false</c>.</returns>
+		public bool StartsWith(EntityFieldPath path)
+		{
+			string x;
+			
+			if ((path == null) ||
+				(string.IsNullOrEmpty (path.path)))
+			{
+				return true;
+			}
+
+			if (System.Object.ReferenceEquals (path.path, this.path))
+			{
+				return true;
+			}
+			
+			string search = path.path;
+			int    length = search.Length;
+
+			if ((this.path == null) ||
+				(this.path.Length < length))
+			{
+				return false;
+			}
+			
+			for (int i = 0; i < length; i++)
+			{
+				if (this.path[i] != search[i])
+				{
+					return false;
+				}
+			}
+
+			if ((this.path.Length == length) ||
+				(this.path[length] == '.'))
+			{
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}
 
 		/// <summary>
 		/// Creates an absolute path.

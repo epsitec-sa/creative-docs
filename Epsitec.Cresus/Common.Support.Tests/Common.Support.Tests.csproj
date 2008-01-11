@@ -1,7 +1,7 @@
 ﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
   <PropertyGroup>
     <ProjectType>Local</ProjectType>
-    <ProductVersion>8.0.50727</ProductVersion>
+    <ProductVersion>9.0.21022</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{99DC1B23-014D-4BE4-8D4D-3FC613360102}</ProjectGuid>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -175,6 +175,7 @@
     <Compile Include="CaptionCacheTest.cs" />
     <Compile Include="CommandTest.cs" />
     <Compile Include="CodeGeneratorTest.cs" />
+    <Compile Include="EntityFieldPathTest.cs" />
     <Compile Include="EntityTest.cs" />
     <Compile Include="ResourceModuleTest.cs" />
     <Compile Include="ResourceAccessorTest.cs" />

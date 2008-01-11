@@ -12,6 +12,11 @@ namespace Epsitec.Common.Dialogs
 {
 	public sealed class DialogSearchController
 	{
+		public DialogSearchController()
+		{
+			this.activeNodes = new List<Node> ();
+		}
+
 		/// <summary>
 		/// Gets or sets the entity resolver.
 		/// </summary>
@@ -45,6 +50,30 @@ namespace Epsitec.Common.Dialogs
 				return;
 			}
 
+			if (this.ContainsNode (placeholder))
+			{
+				//	The placeholder is already known and an active search element.
+			}
+			else
+			{
+				foreach (Node node in this.activeNodes)
+				{
+					this.ReleaseNode (node);
+				}
+
+				List<Node> nodes = new List<Node> ();
+
+				foreach (Node node in this.GetPlaceholderGraph (placeholder.RootParent, path))
+				{
+					nodes.Add (node);
+					this.AcquireNode (node);
+				}
+
+				this.activeNodes.Clear ();
+				this.activeNodes.AddRange (nodes);
+			}
+			
+			
 			IEntityProxyProvider  proxyProvider = entityData;
 			DialogData.FieldProxy proxy = proxyProvider.GetEntityProxy () as DialogData.FieldProxy;
 
@@ -52,11 +81,6 @@ namespace Epsitec.Common.Dialogs
 			{
 				System.Diagnostics.Debug.WriteLine (string.Format ("Search contents changed: path={0}, id={1}, value={2}", path, e.PropertyName, e.NewValue ?? "<null>"));
 				System.Diagnostics.Debug.WriteLine (string.Format (" field options={0}, field relation={1}", proxy.FieldOptions, proxy.FieldRelation));
-
-				foreach (Node node in this.GetPlaceholderGraph (placeholder.RootParent, path))
-				{
-					System.Diagnostics.Debug.WriteLine (string.Format (" - {0}", node.Path));
-				}
 
 				EntityContext  context  = entityData.GetEntityContext ();
 				AbstractEntity template = context.CreateEmptyEntity (entityData.GetEntityStructuredTypeId ());
@@ -71,6 +95,15 @@ namespace Epsitec.Common.Dialogs
 					//	TODO: ...
 				}
 			}
+		}
+
+		private void AcquireNode(Node node)
+		{
+			this.activeNodes.Add (node);
+		}
+
+		private void ReleaseNode(Node node)
+		{
 		}
 
 		private IEnumerable<Node> GetPlaceholderGraph(Widgets.Widget root, EntityFieldPath path)
@@ -101,13 +134,40 @@ namespace Epsitec.Common.Dialogs
 
 					EntityFieldPath fieldPath = EntityFieldPath.CreateRelativePath (proxy.GetFieldPath (), field);
 
-					yield return new Node ()
+					if (fieldPath.StartsWith (path))
 					{
-						Placeholder = placeholder,
-						Path = fieldPath
-					};
+						yield return new Node ()
+						{
+							Placeholder = placeholder,
+							Path = fieldPath
+						};
+					}
 				}
 			}
+		}
+
+		private int FindNodeIndex(AbstractPlaceholder placeholder)
+		{
+			return this.activeNodes.FindIndex (node => node.Placeholder == placeholder);
+		}
+
+		private Node FindNode(AbstractPlaceholder placeholder)
+		{
+			int index = this.FindNodeIndex (placeholder);
+
+			if (index < 0)
+			{
+				return new Node ();
+			}
+			else
+			{
+				return this.activeNodes[index];
+			}
+		}
+
+		private bool ContainsNode(AbstractPlaceholder placeholder)
+		{
+			return this.FindNodeIndex (placeholder) < 0 ? false : true;
 		}
 
 		private struct Node
@@ -123,14 +183,6 @@ namespace Epsitec.Common.Dialogs
 				set;
 			}
 		}
-
-		private class GraphAnalyzer
-		{
-			public GraphAnalyzer()
-			{
-			}
-		}
-
 
 		private System.IDisposable SuspendSearchHandler()
 		{
@@ -165,5 +217,7 @@ namespace Epsitec.Common.Dialogs
 		
 		private int								suspendSearchHandler;
 		private IEntityResolver					entityResolver;
+
+		private readonly List<Node>				activeNodes;
 	}
 }
