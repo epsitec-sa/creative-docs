@@ -42,7 +42,11 @@ namespace Epsitec.Common.Dialogs
 
 			List<string> results = new List<string> ();
 
-			data.ForEachChange (change => results.Add (string.Format ("Change {0} from {1} to {2}", change.Path, change.OldValue, change.NewValue)));
+			data.ForEachChange (change =>
+				{
+					results.Add (string.Format ("Change {0} from {1} to {2}", change.Path, change.OldValue, change.NewValue));
+					return true;
+				});
 
 			Collection.CompareEqual (results,
 				new string[]
@@ -80,7 +84,11 @@ namespace Epsitec.Common.Dialogs
 			Assert.AreEqual (monnaie, prix2.Monnaie);
 			
 			results.Clear ();
-			data.ForEachChange (change => results.Add (string.Format ("Change {0} from {1} to {2}", change.Path, change.OldValue, change.NewValue)));
+			data.ForEachChange (change =>
+				{
+					results.Add (string.Format ("Change {0} from {1} to {2}", change.Path, change.OldValue, change.NewValue));
+					return true;
+				});
 
 			Assert.AreEqual (1, results.Count);
 			Assert.IsTrue (results[0].StartsWith ("Change [630G] from "));
@@ -139,7 +147,11 @@ namespace Epsitec.Common.Dialogs
 
 			List<string> results = new List<string> ();
 
-			data.ForEachChange (change => results.Add (string.Format ("Change {0} from {1} to {2}", change.Path, change.OldValue, change.NewValue)));
+			data.ForEachChange (change =>
+				{
+					results.Add (string.Format ("Change {0} from {1} to {2}", change.Path, change.OldValue, change.NewValue));
+					return true;
+				});
 
 			Collection.CompareEqual (results,
 				new string[]
@@ -178,7 +190,11 @@ namespace Epsitec.Common.Dialogs
 			Assert.IsNotNull ((prix2.Monnaie as IEntityProxyProvider).GetEntityProxy ());
 
 			results.Clear ();
-			data.ForEachChange (change => results.Add (string.Format ("Change {0} from {1} to {2}", change.Path, change.OldValue, change.NewValue)));
+			data.ForEachChange (change =>
+				{
+					results.Add (string.Format ("Change {0} from {1} to {2}", change.Path, change.OldValue, change.NewValue));
+					return true;
+				});
 
 			Assert.AreEqual (1, results.Count);
 			Assert.IsTrue (results[0].StartsWith ("Change [630G] from "));

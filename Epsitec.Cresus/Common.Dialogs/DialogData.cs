@@ -149,7 +149,7 @@ namespace Epsitec.Common.Dialogs
 		/// </summary>
 		/// <param name="action">The action to apply on each change set item.</param>
 		/// <returns><c>true</c> if the action was executed at least once; otherwise, <c>false</c>.</returns>
-		public bool ForEachChange(System.Action<DialogDataChangeSet> action)
+		public bool ForEachChange(System.Predicate<DialogDataChangeSet> action)
 		{
 			List<string> skipList = new List<string> ();
 			int executed = 0;
@@ -177,8 +177,10 @@ namespace Epsitec.Common.Dialogs
 
 					skipList.Add (path);
 
-					action (change);
-					executed++;
+					if (action (change))
+					{
+						executed++;
+					}
 				}
 			}
 

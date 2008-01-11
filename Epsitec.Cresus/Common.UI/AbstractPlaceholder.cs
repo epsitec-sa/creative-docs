@@ -123,6 +123,18 @@ namespace Epsitec.Common.UI
 			}
 		}
 
+		public PlaceholderSuggestionMode		SuggestionMode
+		{
+			get
+			{
+				return (PlaceholderSuggestionMode) this.GetValue (Placeholder.SuggestionModeProperty);
+			}
+			set
+			{
+				this.SetValue (Placeholder.SuggestionModeProperty, value);
+			}
+		}
+
 
 		public virtual DependencyProperty GetValueProperty()
 		{
@@ -214,6 +226,7 @@ namespace Epsitec.Common.UI
 		}
 
 		public static readonly DependencyProperty ValueProperty = DependencyProperty.Register ("Value", typeof (object), typeof (AbstractPlaceholder), new DependencyPropertyMetadata (UndefinedValue.Value, AbstractPlaceholder.NotifyValueChanged).MakeNotSerializable ());
+		public static readonly DependencyProperty SuggestionModeProperty = DependencyProperty.Register ("SuggestionMode", typeof (PlaceholderSuggestionMode), typeof (AbstractPlaceholder), new DependencyPropertyMetadata (PlaceholderSuggestionMode.None));
 		
 		private INamedType						valueType;
 		private string							valueName;

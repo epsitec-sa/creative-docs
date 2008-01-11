@@ -145,10 +145,12 @@ namespace Epsitec.Common.UI.Controllers
 				switch (this.Placeholder.SuggestionMode)
 				{
 					case PlaceholderSuggestionMode.DisplayHint:
+						this.field.TextDisplayMode = TextFieldDisplayMode.Hint;
 						this.field.HintText = text;
 						break;
 
 					default:
+						this.field.TextDisplayMode = TextFieldDisplayMode.Default;
 						this.field.Text = text;
 						break;
 				}

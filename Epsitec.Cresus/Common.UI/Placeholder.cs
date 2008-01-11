@@ -120,18 +120,6 @@ namespace Epsitec.Common.UI
 			}
 		}
 
-		public PlaceholderSuggestionMode		SuggestionMode
-		{
-			get
-			{
-				return (PlaceholderSuggestionMode) this.GetValue (Placeholder.SuggestionModeProperty);
-			}
-			set
-			{
-				this.SetValue (Placeholder.SuggestionModeProperty, value);
-			}
-		}
-
 		public bool								IsReadOnlyValueBinding
 		{
 			get
@@ -471,7 +459,6 @@ namespace Epsitec.Common.UI
 		public static readonly DependencyProperty ControllerParametersProperty = DependencyProperty.Register ("ControllerParameters", typeof (string), typeof (Placeholder), new DependencyPropertyMetadata (Placeholder.NotifyControllerChanged));
 		public static readonly DependencyProperty VerbosityProperty = DependencyProperty.Register ("Verbosity", typeof (Verbosity), typeof (Placeholder), new DependencyPropertyMetadata (Verbosity.Default, Placeholder.NotifyVerbosityChanged));
 		public static readonly DependencyProperty LabelReplacementProperty = DependencyProperty.Register ("LabelReplacement", typeof (Druid), typeof (Placeholder), new DependencyPropertyMetadata (Druid.Empty, Placeholder.NotifyLabelReplacementChanged));
-		public static readonly DependencyProperty SuggestionModeProperty = DependencyProperty.Register ("SuggestionMode", typeof (PlaceholderSuggestionMode), typeof (Placeholder), new DependencyPropertyMetadata (PlaceholderSuggestionMode.None));
 
 		static readonly NoOpGridPermeableHelper	noOpGridPermeableHelper = new NoOpGridPermeableHelper ();
 		
