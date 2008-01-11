@@ -230,10 +230,13 @@ namespace Epsitec.Common.UI.Controllers
 				if (value != InvalidValue.Value)
 				{
 					this.isSettingPlaceholderValue = true;
-					
+
 					try
 					{
-						this.Placeholder.Value = value;
+						using (PlaceholderContext.SetActive (this))
+						{
+							this.Placeholder.Value = value;
+						}
 					}
 					finally
 					{

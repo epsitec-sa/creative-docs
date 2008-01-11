@@ -126,6 +126,10 @@ namespace Epsitec.Common.UI
 
 		#region ActiveHelper Class
 
+		/// <summary>
+		/// The <c>ActiveHelper</c> class is used to automatically push/pop
+		/// the active context and used by method <see cref="SetActive"/>.
+		/// </summary>
 		private sealed class ActiveHelper : System.IDisposable
 		{
 			public ActiveHelper(Controllers.AbstractController controller)
@@ -154,7 +158,6 @@ namespace Epsitec.Common.UI
 		}
 
 		#endregion
-
 
 		#region Record Class
 
