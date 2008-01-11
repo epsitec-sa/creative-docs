@@ -110,7 +110,10 @@ namespace Epsitec.Common.Dialogs
 
 					if (result != null)
 					{
-						this.searchRootPath.NavigateWrite (dialogData.Data, result);
+						foreach (Node node in this.activeNodes)
+						{
+							this.SetSuggestionValue (node, result);
+						}
 					}
 				});
 			
@@ -147,11 +150,11 @@ namespace Epsitec.Common.Dialogs
 			path.NavigateWrite (this.searchTemplate, value);
 		}
 
-		private void SetSuggestionValue(Node node)
+		private void SetSuggestionValue(Node node, AbstractEntity entity)
 		{
 			EntityFieldPath path = node.Path.StripStart (this.searchRootPath);
 
-			object value = path.NavigateRead (this.searchTemplate);
+			object value = path.NavigateRead (entity);
 
 			node.Placeholder.Value = value;
 		}
