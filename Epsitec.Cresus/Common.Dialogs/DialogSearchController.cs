@@ -4,6 +4,7 @@
 using Epsitec.Common.Support;
 using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Types;
+using Epsitec.Common.UI;
 
 using System.Collections.Generic;
 
@@ -34,9 +35,19 @@ namespace Epsitec.Common.Dialogs
 			{
 				return;
 			}
+			
+			Placeholder placeholder = PlaceholderContext.InteractivePlaceholder;
+
+			if (placeholder == null)
+			{
+				//	Non-interactive update of the template; we won't kick in here.
+
+				return;
+			}
 
 			using (this.SuspendSearchHandler ())
 			{
+				System.Diagnostics.Debug.Assert (placeholder != null);
 				System.Diagnostics.Debug.WriteLine (string.Format ("Search contents changed: path={0}, id={1}, value={2}", path, e.PropertyName, e.NewValue ?? "<null>"));
 
 				EntityContext  context  = entityData.GetEntityContext ();
