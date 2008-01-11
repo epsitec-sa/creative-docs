@@ -169,6 +169,7 @@
     <Compile Include="DialogDataChangeSet.cs" />
     <Compile Include="DialogDataMode.cs" />
     <Compile Include="DialogData.cs" />
+    <Compile Include="DialogSearchController.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>

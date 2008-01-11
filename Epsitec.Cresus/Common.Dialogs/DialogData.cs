@@ -31,6 +31,22 @@ namespace Epsitec.Common.Dialogs
 
 
 		/// <summary>
+		/// Gets or sets the search controller for this dialog.
+		/// </summary>
+		/// <value>The search controller.</value>
+		public DialogSearchController SearchController
+		{
+			get
+			{
+				return this.searchController;
+			}
+			set
+			{
+				this.searchController = value;
+			}
+		}
+
+		/// <summary>
 		/// Gets the dialog data mode.
 		/// </summary>
 		/// <value>The dialog data mode.</value>
@@ -76,23 +92,6 @@ namespace Epsitec.Common.Dialogs
 				}
 			}
 		}
-
-		/// <summary>
-		/// Gets or sets the entity resolver.
-		/// </summary>
-		/// <value>The entity resolver.</value>
-		public IEntityResolver Resolver
-		{
-			get
-			{
-				return this.entityResolver;
-			}
-			set
-			{
-				this.entityResolver = value;
-			}
-		}
-
 
 		/// <summary>
 		/// Applies the changes to the original dialog data.
@@ -595,30 +594,6 @@ namespace Epsitec.Common.Dialogs
 
 		#endregion
 
-		#region SuspendSearchHandlerHelper Class
-
-		private sealed class SuspendSearchHandlerHelper : System.IDisposable
-		{
-			public SuspendSearchHandlerHelper(DialogData host)
-			{
-				this.host = host;
-				System.Threading.Interlocked.Increment (ref this.host.suspendSearchHandler);
-			}
-
-			#region IDisposable Members
-
-			public void Dispose()
-			{
-				System.Threading.Interlocked.Decrement (ref this.host.suspendSearchHandler);
-				System.GC.SuppressFinalize (this);
-			}
-
-			#endregion
-
-			private readonly DialogData host;
-		}
-
-		#endregion
 
 
 		/// <summary>
@@ -690,35 +665,11 @@ namespace Epsitec.Common.Dialogs
 			return copy;
 		}
 
-		private System.IDisposable SuspendSearchHandler()
-		{
-			return new SuspendSearchHandlerHelper (this);
-		}
-
 		private void NotifySearchContentsChanged(AbstractEntity entityData, EntityFieldPath path, DependencyPropertyChangedEventArgs e)
 		{
-			if ((this.suspendSearchHandler > 0) ||
-				(this.entityResolver == null))
+			if (this.searchController != null)
 			{
-				return;
-			}
-
-			using (this.SuspendSearchHandler ())
-			{
-				System.Diagnostics.Debug.WriteLine (string.Format ("Search contents changed: path={0}, id={1}, value={2}", path, e.PropertyName, e.NewValue ?? "<null>"));
-
-				EntityContext  context  = entityData.GetEntityContext ();
-				AbstractEntity template = context.CreateEmptyEntity (entityData.GetEntityStructuredTypeId ());
-
-				template.DisableCalculations ();
-				template.InternalSetValue (e.PropertyName, e.NewValue);
-
-				AbstractEntity result = EntityResolver.Resolve (this.entityResolver, template);
-
-				if (result != null)
-				{
-					//	TODO: ...
-				}
+				this.searchController.NotifySearchTemplateChanged (entityData, path, e);
 			}
 		}
 
@@ -726,7 +677,6 @@ namespace Epsitec.Common.Dialogs
 		private readonly DialogDataMode			mode;
 		private readonly AbstractEntity			externalData;
 		private readonly AbstractEntity			internalData;
-		private int								suspendSearchHandler;
-		private IEntityResolver					entityResolver;
+		private DialogSearchController			searchController;
 	}
 }

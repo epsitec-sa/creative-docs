@@ -117,10 +117,11 @@ namespace Epsitec.Common.Dialogs
 			Assert.IsNotNull (window);
 			Assert.IsTrue (dialog.HasWindow);
 
-			TestResolver resolver = new TestResolver ();
+			DialogSearchController searchController = new DialogSearchController ();
+			searchController.Resolver = new TestResolver ();
 
 			dialog.IsModal = false;
-			dialog.DialogData.Resolver = resolver;
+			dialog.DialogData.SearchController = searchController;
 			dialog.OpenDialog ();
 			Window.RunInTestEnvironment (window);
 		}
