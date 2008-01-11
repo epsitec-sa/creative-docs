@@ -323,7 +323,8 @@ namespace Epsitec.Common.Support.EntityEngine
 
 			if (this.Navigate (root, out leaf, out id))
 			{
-				if (leaf.InternalGetFieldSource (id) == FieldSource.Value)
+				if ((leaf.InternalGetFieldSource (id) == FieldSource.Value) ||
+					(leaf.CalculationsDisabled))
 				{
 					IValueStore store = leaf;
 					store.SetValue (id, value, ValueStoreSetMode.Default);

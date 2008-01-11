@@ -48,6 +48,18 @@ namespace Epsitec.Common.Support.EntityEngine
 			}
 		}
 
+		/// <summary>
+		/// Gets a value indicating whether calculations are disabled.
+		/// </summary>
+		/// <value><c>true</c> if calculations are disabled; otherwise, <c>false</c>.</value>
+		internal bool CalculationsDisabled
+		{
+			get
+			{
+				return this.calculationsDisabled;
+			}
+		}
+
 
 		/// <summary>
 		/// Gets the id of the <see cref="StructuredType"/> which describes
@@ -131,7 +143,6 @@ namespace Epsitec.Common.Support.EntityEngine
 		{
 			return new DefineOriginalValuesHelper (this);
 		}
-
 
 		internal void DisableCalculations()
 		{

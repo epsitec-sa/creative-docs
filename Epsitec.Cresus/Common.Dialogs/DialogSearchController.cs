@@ -103,6 +103,16 @@ namespace Epsitec.Common.Dialogs
 					this.SetTemplateValue (node);
 				}
 			}
+
+			Widgets.Application.QueueAsyncCallback (delegate
+				{
+					AbstractEntity result = EntityResolver.Resolve (this.entityResolver, this.searchTemplate);
+
+					if (result != null)
+					{
+						this.searchRootPath.NavigateWrite (dialogData.Data, result);
+					}
+				});
 			
 #if false			
 			IEntityProxyProvider  proxyProvider = entityData;
@@ -135,6 +145,15 @@ namespace Epsitec.Common.Dialogs
 
 			object value = path.NavigateRead (this.searchRootData);
 			path.NavigateWrite (this.searchTemplate, value);
+		}
+
+		private void SetSuggestionValue(Node node)
+		{
+			EntityFieldPath path = node.Path.StripStart (this.searchRootPath);
+
+			object value = path.NavigateRead (this.searchTemplate);
+
+			node.Placeholder.Value = value;
 		}
 
 		private void AcquireNode(Node node)
