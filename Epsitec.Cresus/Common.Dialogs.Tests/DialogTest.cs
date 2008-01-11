@@ -118,12 +118,53 @@ namespace Epsitec.Common.Dialogs
 			Assert.IsTrue (dialog.HasWindow);
 
 			DialogSearchController searchController = new DialogSearchController ();
-			searchController.Resolver = new TestResolver ();
+			searchController.Resolver = DialogTest.CreateSuggestions ();
 
 			dialog.IsModal = false;
 			dialog.DialogData.SearchController = searchController;
 			dialog.OpenDialog ();
 			Window.RunInTestEnvironment (window);
+		}
+
+		private static IEntityResolver CreateSuggestions()
+		{
+			TestResolver resolver = new TestResolver ();
+
+			PaysEntity country = new PaysEntity ()
+				{
+					Code = "CH",
+					Nom = "Suisse"
+				};
+
+			resolver.Suggestions.Add (new LocalitéEntity ()
+			{
+				Nom = "Yverdon-les-Bains",
+				Numéro = "1400",
+				Pays = country
+			});
+
+			resolver.Suggestions.Add (new LocalitéEntity ()
+			{
+				Nom = "Suscévaz",
+				Numéro = "1437",
+				Pays = country
+			});
+
+			resolver.Suggestions.Add (new LocalitéEntity ()
+			{
+				Nom = "Treycovagnes",
+				Numéro = "1436",
+				Pays = country
+			});
+
+			resolver.Suggestions.Add (new LocalitéEntity ()
+			{
+				Nom = "Yvonand",
+				Numéro = "1462",
+				Pays = country
+			});
+			
+			return resolver;
 		}
 
 
@@ -199,7 +240,15 @@ namespace Epsitec.Common.Dialogs
 
 			public IEnumerable<AbstractEntity> Resolve(AbstractEntity template)
 			{
-				yield break;
+				LocalitéEntity loc = template as LocalitéEntity;
+
+				foreach (LocalitéEntity item in this.suggestions)
+				{
+					if (item.Résumé.Contains (loc.Résumé))
+					{
+						yield return item;
+					}
+				}
 			}
 
 			#endregion
