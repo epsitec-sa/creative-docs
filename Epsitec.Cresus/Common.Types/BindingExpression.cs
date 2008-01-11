@@ -938,7 +938,22 @@ namespace Epsitec.Common.Types
 			this.InternalUpdateSource (e.NewValue);
 		}
 
-		internal object GetSourceValue()
+		public object GetSourceObject()
+		{
+			return this.sourceObject;
+		}
+
+		public DataSourceType GetSourceType()
+		{
+			return this.sourceType;
+		}
+
+		public object GetSourceProperty()
+		{
+			return this.sourceProperty;
+		}
+
+		public object GetSourceValue()
 		{
 			DependencyObject doSource;
 			IStructuredData sdSource;

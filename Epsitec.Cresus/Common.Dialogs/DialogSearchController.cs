@@ -45,10 +45,12 @@ namespace Epsitec.Common.Dialogs
 				return;
 			}
 
+			BindingExpression bindingExpression = placeholder.ValueBindingExpression;
+
 			using (this.SuspendSearchHandler ())
 			{
-				System.Diagnostics.Debug.Assert (placeholder != null);
 				System.Diagnostics.Debug.WriteLine (string.Format ("Search contents changed: path={0}, id={1}, value={2}", path, e.PropertyName, e.NewValue ?? "<null>"));
+				System.Diagnostics.Debug.WriteLine (string.Format (" source: {0}, property: {1}", bindingExpression.GetSourceObject (), bindingExpression.GetSourceProperty ()));
 
 				EntityContext  context  = entityData.GetEntityContext ();
 				AbstractEntity template = context.CreateEmptyEntity (entityData.GetEntityStructuredTypeId ());
