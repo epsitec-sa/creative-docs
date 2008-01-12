@@ -130,38 +130,54 @@ namespace Epsitec.Common.Dialogs
 		{
 			TestResolver resolver = new TestResolver ();
 
-			PaysEntity country = new PaysEntity ()
-				{
-					Code = "CH",
-					Nom = "Suisse"
-				};
+			PaysEntity countryCh = new PaysEntity ()
+			{
+				Code = "CH",
+				Nom = "Suisse"
+			};
 
-			resolver.Suggestions.Add (new LocalitéEntity ()
+			PaysEntity countryF = new PaysEntity ()
+			{
+				Code = "F",
+				Nom = "France"
+			};
+
+			PaysEntity countryDe = new PaysEntity ()
+			{
+				Code = "DE",
+				Nom = "Deutschland"
+			};
+
+			resolver.PaysSuggestions.Add (countryCh);
+			resolver.PaysSuggestions.Add (countryF);
+			resolver.PaysSuggestions.Add (countryDe);
+
+			resolver.LocalitéSuggestions.Add (new LocalitéEntity ()
 			{
 				Nom = "Yverdon-les-Bains",
 				Numéro = "1400",
-				Pays = country
+				Pays = countryCh
 			});
 
-			resolver.Suggestions.Add (new LocalitéEntity ()
+			resolver.LocalitéSuggestions.Add (new LocalitéEntity ()
 			{
 				Nom = "Suscévaz",
 				Numéro = "1437",
-				Pays = country
+				Pays = countryCh
 			});
 
-			resolver.Suggestions.Add (new LocalitéEntity ()
+			resolver.LocalitéSuggestions.Add (new LocalitéEntity ()
 			{
 				Nom = "Treycovagnes",
 				Numéro = "1436",
-				Pays = country
+				Pays = countryCh
 			});
 
-			resolver.Suggestions.Add (new LocalitéEntity ()
+			resolver.LocalitéSuggestions.Add (new LocalitéEntity ()
 			{
 				Nom = "Yvonand",
 				Numéro = "1462",
-				Pays = country
+				Pays = countryCh
 			});
 			
 			return resolver;
@@ -225,14 +241,23 @@ namespace Epsitec.Common.Dialogs
 		{
 			public TestResolver()
 			{
-				this.suggestions = new List<AbstractEntity> ();
+				this.localitéSuggestions = new List<LocalitéEntity> ();
+				this.paysSuggestions = new List<PaysEntity> ();
 			}
 
-			public IList<AbstractEntity> Suggestions
+			public IList<LocalitéEntity> LocalitéSuggestions
 			{
 				get
 				{
-					return this.suggestions;
+					return this.localitéSuggestions;
+				}
+			}
+
+			public IList<PaysEntity> PaysSuggestions
+			{
+				get
+				{
+					return this.paysSuggestions;
 				}
 			}
 
@@ -240,20 +265,36 @@ namespace Epsitec.Common.Dialogs
 
 			public IEnumerable<AbstractEntity> Resolve(AbstractEntity template)
 			{
-				LocalitéEntity loc = template as LocalitéEntity;
+				LocalitéEntity loc  = template as LocalitéEntity;
+				PaysEntity     pays = template as PaysEntity;
 
-				foreach (LocalitéEntity item in this.suggestions)
+				if (loc != null)
 				{
-					if (item.Résumé.Contains (loc.Résumé))
+					foreach (LocalitéEntity item in this.localitéSuggestions)
 					{
-						yield return item;
+						if (item.Résumé.Contains (loc.Résumé))
+						{
+							yield return item;
+						}
+					}
+				}
+
+				if (pays != null)
+				{
+					foreach (PaysEntity item in this.paysSuggestions)
+					{
+						if (item.Nom.Contains (pays.Nom))
+						{
+							yield return item;
+						}
 					}
 				}
 			}
 
 			#endregion
 
-			private readonly List<AbstractEntity> suggestions;
+			private readonly List<LocalitéEntity> localitéSuggestions;
+			private readonly List<PaysEntity> paysSuggestions;
 		}
 
 

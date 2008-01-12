@@ -102,6 +102,35 @@ namespace Epsitec.Common.Support.EntityEngine
 		}
 
 		/// <summary>
+		/// Gets the field count. An empty path will return zero.
+		/// </summary>
+		/// <value>The count.</value>
+		public int Count
+		{
+			get
+			{
+				if (string.IsNullOrEmpty (this.path))
+				{
+					return 0;
+				}
+				else
+				{
+					int count = 1;
+
+					for (int i = 0; i < this.path.Length; i++)
+					{
+						if (this.path[i] == '.')
+						{
+							count++;
+						}
+					}
+
+					return count;
+				}
+			}
+		}
+
+		/// <summary>
 		/// Gets the entity id if the path is an absolute (rooted) path.
 		/// </summary>
 		/// <value>The entity id.</value>
@@ -159,14 +188,14 @@ namespace Epsitec.Common.Support.EntityEngine
 			{
 				string fieldId = EntityFieldPath.ParseFieldId (fields[i]);
 
-				switch (root.InternalGetFieldRelation (fieldId))
+				switch (node.InternalGetFieldRelation (fieldId))
 				{
 					case FieldRelation.Collection:
 						node = EntityFieldPath.NavigateCollection (node, fieldId, EntityFieldPath.ParseCollectionIndex (fields[i]));
 						break;
 
 					case FieldRelation.Reference:
-						node = root.GetField<AbstractEntity> (fieldId);
+						node = node.GetField<AbstractEntity> (fieldId);
 						break;
 
 					default:
@@ -333,6 +362,49 @@ namespace Epsitec.Common.Support.EntityEngine
 			}
 
 			return false;
+		}
+
+		public void CreateMissingNodes(AbstractEntity root)
+		{
+			EntityContext context = root.GetEntityContext ();
+
+			string[] fields = this.Fields;
+			int      last   = fields.Length - 1;
+
+			AbstractEntity node = root;
+			AbstractEntity next = null; 
+
+			for (int i = 0; i < last; i++)
+			{
+				string              fieldId   = EntityFieldPath.ParseFieldId (fields[i]);
+				StructuredTypeField fieldType = context.GetStructuredTypeField (node, fieldId);
+
+				switch (node.InternalGetFieldRelation (fieldId))
+				{
+					case FieldRelation.Collection:
+						throw new System.NotImplementedException ();
+
+					case FieldRelation.Reference:
+						next = node.GetField<AbstractEntity> (fieldId);
+
+						if (next == null)
+						{
+							next = context.CreateEmptyEntity (fieldType.TypeId);
+							node.SetField<AbstractEntity> (fieldId, next);
+						}
+
+						node = next;
+						break;
+
+					default:
+						throw new System.NotSupportedException ();
+				}
+				
+				if (node == null)
+				{
+					throw new System.ArgumentException (string.Format ("Unresolved node type for node {0} in {1}", fieldId, this.path));
+				}
+			}
 		}
 
 

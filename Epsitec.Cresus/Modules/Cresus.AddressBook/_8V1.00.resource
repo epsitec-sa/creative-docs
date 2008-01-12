@@ -44,7 +44,18 @@
           <Type>Field</Type>
           <FI>[8V15].[8V19]</FI>
           <SB>Normal</SB>
-          <CR>10</CR>
+          <CR>2</CR>
+          <RR>1</RR>
+          <BPT>Normal</BPT>
+          <BFS>None</BFS>
+          <BFW>1</BFW>
+        </FD>
+        <FD>
+          <Guid>e692dee8-df45-423c-90fe-bda9df6ac62b</Guid>
+          <Type>Glue</Type>
+          <FI />
+          <SB>Normal</SB>
+          <CR>0</CR>
           <RR>1</RR>
           <BPT>Normal</BPT>
           <BFS>None</BFS>
@@ -55,7 +66,7 @@
           <Type>Field</Type>
           <FI>[8V15].[8V1A]</FI>
           <SB>Normal</SB>
-          <CR>10</CR>
+          <CR>8</CR>
           <RR>1</RR>
           <BPT>Normal</BPT>
           <BFS>None</BFS>
@@ -65,6 +76,28 @@
           <Guid>44ed5f5e-53c4-460a-8170-73ad778b969d</Guid>
           <Type>Field</Type>
           <FI>[8V15].[8V1F]</FI>
+          <SB>Normal</SB>
+          <CR>10</CR>
+          <RR>1</RR>
+          <BPT>Normal</BPT>
+          <BFS>None</BFS>
+          <BFW>1</BFW>
+        </FD>
+        <FD>
+          <Guid>4731638f-0bd2-4dd4-a303-d7058e6a89a2</Guid>
+          <Type>Title</Type>
+          <FI />
+          <SB>Normal</SB>
+          <CR>10</CR>
+          <RR>1</RR>
+          <BPT>Normal</BPT>
+          <BFS>None</BFS>
+          <BFW>1</BFW>
+        </FD>
+        <FD>
+          <Guid>d766d106-820e-452e-aeaf-2d883bc71a0a</Guid>
+          <Type>Field</Type>
+          <FI>[8V15].[8V1B].[8V1E]</FI>
           <SB>Normal</SB>
           <CR>10</CR>
           <RR>1</RR>

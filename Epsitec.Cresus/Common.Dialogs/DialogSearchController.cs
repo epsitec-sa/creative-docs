@@ -50,7 +50,8 @@ namespace Epsitec.Common.Dialogs
 				return;
 			}
 
-			if (this.ContainsNode (placeholder))
+			if ((this.ContainsNode (placeholder)) &&
+				(this.FindNode (placeholder).Path.Count == this.searchRootPath.Count+1))
 			{
 				//	The placeholder is already known as an active search element.
 
@@ -75,20 +76,27 @@ namespace Epsitec.Common.Dialogs
 
 				foreach (Node node in this.GetPlaceholderGraph (placeholder.RootParent, path))
 				{
-					release.Remove (node);
+					if (release.Remove (node))
+					{
+						continue;
+					}
+
 					acquire.Add (node);
 				}
 
-				foreach (Node node in release)
+				using (this.SuspendSearchHandler ())
 				{
-					this.activeNodes.Remove (node);
-					this.ReleaseNode (node);
-				}
+					foreach (Node node in release)
+					{
+						this.activeNodes.Remove (node);
+						this.ReleaseNode (node);
+					}
 
-				foreach (Node node in acquire)
-				{
-					this.activeNodes.Add (node);
-					this.AcquireNode (node);
+					foreach (Node node in acquire)
+					{
+						this.activeNodes.Add (node);
+						this.AcquireNode (node);
+					}
 				}
 
 				EntityContext context = entityData.GetEntityContext ();
@@ -144,6 +152,8 @@ namespace Epsitec.Common.Dialogs
 			EntityFieldPath path = node.Path.StripStart (this.searchRootPath);
 
 			object value = path.NavigateRead (this.searchRootData);
+			
+			path.CreateMissingNodes (this.searchTemplate);
 			path.NavigateWrite (this.searchTemplate, value);
 		}
 
@@ -166,7 +176,8 @@ namespace Epsitec.Common.Dialogs
 		private void ReleaseNode(Node node)
 		{
 			System.Diagnostics.Debug.Assert (node.Placeholder.SuggestionMode == PlaceholderSuggestionMode.DisplayHint);
-			
+
+			node.Placeholder.Value = UndefinedValue.Value;
 			node.Placeholder.SuggestionMode = PlaceholderSuggestionMode.None;
 		}
 
