@@ -122,7 +122,7 @@ namespace Epsitec.Common.UI.Controllers
 
 		protected override void RefreshUserInterface(object oldValue, object newValue)
 		{
-			string text = "";
+			string text = null;
 			
 			if ((newValue != UndefinedValue.Value) &&
 				(newValue != InvalidValue.Value) &&

@@ -108,12 +108,9 @@ namespace Epsitec.Common.Dialogs
 				{
 					AbstractEntity result = EntityResolver.Resolve (this.entityResolver, this.searchTemplate);
 
-					if (result != null)
+					foreach (Node node in this.activeNodes)
 					{
-						foreach (Node node in this.activeNodes)
-						{
-							this.SetSuggestionValue (node, result);
-						}
+						this.SetSuggestionValue (node, result);
 					}
 				});
 			
@@ -154,7 +151,7 @@ namespace Epsitec.Common.Dialogs
 		{
 			EntityFieldPath path = node.Path.StripStart (this.searchRootPath);
 
-			object value = path.NavigateRead (entity);
+			object value = entity == null ? UndefinedValue.Value : path.NavigateRead (entity);
 
 			node.Placeholder.Value = value;
 		}

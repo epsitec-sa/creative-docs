@@ -29,6 +29,39 @@
           <BFW>1</BFW>
         </FD>
         <FD>
+          <Guid>6cf5b9b1-e5b8-4692-97e4-370f6e3f5b2f</Guid>
+          <Type>Line</Type>
+          <FI />
+          <SB>Normal</SB>
+          <CR>10</CR>
+          <RR>1</RR>
+          <BPT>Normal</BPT>
+          <BFS>None</BFS>
+          <BFW>1</BFW>
+        </FD>
+        <FD>
+          <Guid>e6eb0b82-586d-42aa-b604-232d260202df</Guid>
+          <Type>Field</Type>
+          <FI>[8V15].[8V19]</FI>
+          <SB>Normal</SB>
+          <CR>10</CR>
+          <RR>1</RR>
+          <BPT>Normal</BPT>
+          <BFS>None</BFS>
+          <BFW>1</BFW>
+        </FD>
+        <FD>
+          <Guid>3b7716a2-b8c4-4661-b186-e6d520e626c9</Guid>
+          <Type>Field</Type>
+          <FI>[8V15].[8V1A]</FI>
+          <SB>Normal</SB>
+          <CR>10</CR>
+          <RR>1</RR>
+          <BPT>Normal</BPT>
+          <BFS>None</BFS>
+          <BFW>1</BFW>
+        </FD>
+        <FD>
           <Guid>44ed5f5e-53c4-460a-8170-73ad778b969d</Guid>
           <Type>Field</Type>
           <FI>[8V15].[8V1F]</FI>
