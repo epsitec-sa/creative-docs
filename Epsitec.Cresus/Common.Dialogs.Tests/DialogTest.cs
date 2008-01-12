@@ -128,11 +128,15 @@ namespace Epsitec.Common.Dialogs
 			adresse.Localité.Pays.Code = "CH";
 			adresse.Localité.Pays.Nom = "Suisse";
 
+			System.Console.Out.WriteLine (adresse.Dump ());
+
 			dialog.IsModal = false;
 			dialog.DefaultDialogDataEntity = adresse;
 			dialog.DialogData.SearchController = searchController;
 			dialog.OpenDialog ();
 			Window.RunInTestEnvironment (window);
+
+			System.Console.Out.WriteLine (adresse.Dump ());
 		}
 
 		private static IEntityResolver CreateSuggestions()

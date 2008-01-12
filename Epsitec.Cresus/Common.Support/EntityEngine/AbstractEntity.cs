@@ -132,6 +132,73 @@ namespace Epsitec.Common.Support.EntityEngine
 			}
 		}
 
+		public string Dump()
+		{
+			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
+			this.Dump (buffer, 0, new HashSet<AbstractEntity> ());
+			return buffer.ToString ();
+		}
+
+		private void Dump(System.Text.StringBuilder buffer, int level, HashSet<AbstractEntity> history)
+		{
+			string indent = new string (' ', level*2);
+			
+			if (history.Add (this))
+			{
+				ResourceManager manager = Resources.DefaultManager;
+
+				foreach (string id in this.context.GetEntityFieldIds (this))
+				{
+					string name = manager.GetCaption (this.context.GetStructuredTypeField (this, id).CaptionId).Name;
+					object value = this.DynamicGetField (id);
+					AbstractEntity child = value as AbstractEntity;
+
+					switch (this.InternalGetFieldRelation (id))
+					{
+						case FieldRelation.None:
+							buffer.AppendFormat ("{0}{1}: {2}\n", indent, name, value == null ? "null" : value.ToString ());
+							break;
+
+						case FieldRelation.Reference:
+							if (child == null)
+							{
+								buffer.AppendFormat ("{0}{1}: null\n", indent, name);
+							}
+							else
+							{
+								buffer.AppendFormat ("{0}{1}:\n", indent, name);
+								child.Dump (buffer, level+1, history);
+							}
+							break;
+
+						case FieldRelation.Collection:
+							buffer.AppendFormat ("{0}{1}:\n", indent, name);
+							buffer.AppendFormat ("{0}{\n", indent, name);
+							int index = 0;
+							foreach (object item in (System.Collections.IList) value)
+							{
+								child = item as AbstractEntity;
+								if (child == null)
+								{
+									buffer.AppendFormat ("{0}  {1}: null\n", indent, index);
+								}
+								else
+								{
+									buffer.AppendFormat ("{0}  {1}:\n", indent, index);
+									child.Dump (buffer, level+2, history);
+								}
+							}
+							buffer.AppendFormat ("{0}}\n", indent, name);
+							break;
+					}
+				}
+			}
+			else
+			{
+				buffer.AppendFormat ("{0}--> ...", indent);
+			}
+		}
+
 
 		/// <summary>
 		/// Switches the entity into a mode which allows the caller to define
