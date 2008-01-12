@@ -70,8 +70,7 @@ namespace Epsitec.Common.FormEngine
 			List<FieldDescription> fields1 = this.arrange.DevelopSubForm(form.Fields);
 			List<FieldDescription> fields2 = this.arrange.Organize(fields1);
 
-			Caption entityCaption = this.resourceManager.GetCaption(form.EntityId);
-			StructuredType entity = TypeRosetta.GetTypeObject(entityCaption) as StructuredType;
+			StructuredType entity = this.GetEntityDefinition(form.EntityId);
 			if (entity == null)
 			{
 				return null;
@@ -98,13 +97,60 @@ namespace Epsitec.Common.FormEngine
 			root.DataSource = new UI.DataSource();
 			root.DataSource.AddDataSource(UI.DataSource.DataName, entityData);
 
-			this.CreateFormBox(root, fields2, 0);
+			this.CreateFormBox(root, form.EntityId, fields2, 0);
 
 			return root;
 		}
 
+		private StructuredType GetEntityDefinition(Druid entityId)
+		{
+			//	Trouve la définition de l'entité spécifiée par son id.
+			Caption entityCaption = this.resourceManager.GetCaption(entityId);
+			return TypeRosetta.GetTypeObject (entityCaption) as StructuredType;
+		}
 
-		private void CreateFormBox(UI.Panel root, List<FieldDescription> fields, int index)
+		private enum FieldEditionMode
+		{
+			Unknown,
+			Data,							//	le champ contient des données
+			Search							//	le champ sert à réaliser des recherches
+		}
+
+		private FieldEditionMode GetFieldEditionMode(Druid entityId, IList<Druid> fieldIds)
+		{
+			//	Détermine comment un champ doit être traité. Il peut soit être
+			//	considéré comme une donnée, soit comme un critère de recherche.
+			foreach (Druid fieldId in fieldIds)
+			{
+				StructuredType entityDef = this.GetEntityDefinition (entityId);
+				if (entityDef == null)
+				{
+					return FieldEditionMode.Unknown;
+				}
+
+				StructuredTypeField fieldDef = entityDef.GetField (fieldId.ToString ());
+				if (fieldDef == null)
+				{
+					return FieldEditionMode.Unknown;
+				}
+
+				if (fieldDef.Relation == FieldRelation.None)
+				{
+					return FieldEditionMode.Data;
+				}
+
+				if (fieldDef.IsSharedRelation)
+				{
+					return FieldEditionMode.Search;
+				}
+				
+				entityId = fieldDef.TypeId;
+			}
+
+			return FieldEditionMode.Data;
+		}
+
+		private void CreateFormBox(UI.Panel root, Druid entityId, List<FieldDescription> fields, int index)
 		{
 			//	Crée tous les champs dans une boîte.
 			//	Cette méthode est appelée récursivement pour chaque BoxBegin/BoxEnd.
@@ -247,7 +293,7 @@ namespace Epsitec.Common.FormEngine
 					if (level == 0)
 					{
 						UI.Panel box = this.CreateBox(root, grid, field, labelsId, ref column, ref row, isGlueAfter);
-						this.CreateFormBox(box, fields, i+1);
+						this.CreateFormBox (box, entityId, fields, i+1);
 					}
 
 					level++;
@@ -265,8 +311,7 @@ namespace Epsitec.Common.FormEngine
 				{
 					if (level == 0)
 					{
-						string path = field.GetPath(UI.DataSource.DataName);
-						this.CreateField(root, grid, path, field, labelsId, ref column, ref row, isGlueAfter);
+						this.CreateField(root, entityId, grid, field, labelsId, ref column, ref row, isGlueAfter);
 					}
 				}
 				else if (field.Type == FieldDescription.FieldType.Glue)  // colle ?
@@ -472,14 +517,29 @@ namespace Epsitec.Common.FormEngine
 			return box;
 		}
 
-		private void CreateField(UI.Panel root, Widgets.Layouts.GridLayoutEngine grid, string path, FieldDescription field, List<int> labelsId, ref int column, ref int row, bool isGlueAfter)
+		private void CreateField(UI.Panel root, Druid entityId, Widgets.Layouts.GridLayoutEngine grid, FieldDescription field, List<int> labelsId, ref int column, ref int row, bool isGlueAfter)
 		{
 			//	Crée les widgets pour un champ dans la grille, lors de la deuxième passe.
 			UI.Placeholder placeholder = new UI.Placeholder(root);
-			placeholder.SetBinding(UI.Placeholder.ValueProperty, new Binding(BindingMode.TwoWay, path));
+			placeholder.SetBinding(UI.Placeholder.ValueProperty, new Binding(BindingMode.TwoWay, field.GetPath(UI.DataSource.DataName)));
 			placeholder.BackColor = FieldDescription.GetRealColor(field.BackColor);
 			placeholder.TabIndex = grid.RowDefinitions.Count;
 			placeholder.Index = field.UniqueId;
+
+			//	Détermine si le placeholder doit être utilisé pour saisir du texte ou pour
+			//	saisir un critère de recherche et le configure en conséquence.
+			FieldEditionMode editionMode = this.GetFieldEditionMode(entityId, field.FieldIds);
+			switch (editionMode)
+			{
+				case FieldEditionMode.Data:
+					placeholder.SuggestionMode = Epsitec.Common.UI.PlaceholderSuggestionMode.None;
+					break;
+				case FieldEditionMode.Search:
+					placeholder.SuggestionMode = Epsitec.Common.UI.PlaceholderSuggestionMode.DisplayHint;
+					break;
+				default:
+					throw new System.InvalidOperationException(string.Format("Invalid edition mode {0}", editionMode));
+			}
 
 			grid.RowDefinitions.Add(new Widgets.Layouts.RowDefinition());
 

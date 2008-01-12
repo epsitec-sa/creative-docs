@@ -120,7 +120,16 @@ namespace Epsitec.Common.Dialogs
 			DialogSearchController searchController = new DialogSearchController ();
 			searchController.Resolver = DialogTest.CreateSuggestions ();
 
+			AdresseEntity adresse = EntityContext.Current.CreateEntity<AdresseEntity> ();
+
+			adresse.Rue = "Ch. du Fontenay 6";
+			adresse.Localité.Nom = "Yverdon-les-Bains";
+			adresse.Localité.Numéro = "1400";
+			adresse.Localité.Pays.Code = "CH";
+			adresse.Localité.Pays.Nom = "Suisse";
+
 			dialog.IsModal = false;
+			dialog.DefaultDialogDataEntity = adresse;
 			dialog.DialogData.SearchController = searchController;
 			dialog.OpenDialog ();
 			Window.RunInTestEnvironment (window);

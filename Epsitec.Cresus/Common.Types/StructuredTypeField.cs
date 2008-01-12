@@ -294,6 +294,34 @@ namespace Epsitec.Common.Types
 		}
 
 		/// <summary>
+		/// Gets a value indicating whether this field defines a shared relation.
+		/// </summary>
+		/// <value>
+		/// 	<c>true</c> if this field defines a shared relation; otherwise, <c>false</c>.
+		/// </value>
+		public bool								IsSharedRelation
+		{
+			get
+			{
+				return (this.relation != FieldRelation.None) && ((this.options & FieldOptions.PrivateRelation) == 0);
+			}
+		}
+
+		/// <summary>
+		/// Gets a value indicating whether this field defines a private relation.
+		/// </summary>
+		/// <value>
+		/// 	<c>true</c> if this field defines a private relation; otherwise, <c>false</c>.
+		/// </value>
+		public bool								IsPrivateRelation
+		{
+			get
+			{
+				return (this.relation != FieldRelation.None) && ((this.options & FieldOptions.PrivateRelation) != 0);
+			}
+		}
+
+		/// <summary>
 		/// Gets the <see cref="INullableType"/> interface for the associated
 		/// data type, taking in account the nullability of the field itself.
 		/// </summary>

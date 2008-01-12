@@ -168,17 +168,17 @@ namespace Epsitec.Common.Dialogs
 
 		private void AcquireNode(Node node)
 		{
-			System.Diagnostics.Debug.Assert (node.Placeholder.SuggestionMode == PlaceholderSuggestionMode.None);
+//			System.Diagnostics.Debug.Assert (node.Placeholder.SuggestionMode == PlaceholderSuggestionMode.None);
 
-			node.Placeholder.SuggestionMode = PlaceholderSuggestionMode.DisplayHint;
+//			node.Placeholder.SuggestionMode = PlaceholderSuggestionMode.DisplayHint;
 		}
 
 		private void ReleaseNode(Node node)
 		{
-			System.Diagnostics.Debug.Assert (node.Placeholder.SuggestionMode == PlaceholderSuggestionMode.DisplayHint);
+//			System.Diagnostics.Debug.Assert (node.Placeholder.SuggestionMode == PlaceholderSuggestionMode.DisplayHint);
 
-			node.Placeholder.Value = UndefinedValue.Value;
-			node.Placeholder.SuggestionMode = PlaceholderSuggestionMode.None;
+//			node.Placeholder.Value = UndefinedValue.Value;
+//			node.Placeholder.SuggestionMode = PlaceholderSuggestionMode.None;
 		}
 
 		private IEnumerable<Node> GetPlaceholderGraph(Widgets.Widget root, EntityFieldPath path)
