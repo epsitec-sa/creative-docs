@@ -153,6 +153,12 @@ namespace Epsitec.Common.Designer.Viewers
 			this.fieldsButtonGoto.Clicked += new MessageEventHandler(this.HandleFieldsButtonClicked);
 			this.fieldsToolbar.Items.Add(this.fieldsButtonGoto);
 
+			this.fieldsButtonShowPrefix = new IconButton();
+			this.fieldsButtonShowPrefix.AutoFocus = false;
+			this.fieldsButtonShowPrefix.CaptionId = Res.Captions.Editor.Forms.ShowPrefix.Id;
+			this.fieldsButtonShowPrefix.Clicked += new MessageEventHandler(this.HandleFieldsButtonClicked);
+			this.fieldsToolbar.Items.Add(this.fieldsButtonShowPrefix);
+
 			this.fieldsTable = new MyWidgets.StringArray(top);
 			this.fieldsTable.Columns = 2;
 			this.fieldsTable.SetColumnsRelativeWidth(0, 0.90);
@@ -275,6 +281,7 @@ namespace Epsitec.Common.Designer.Viewers
 				this.fieldsButtonPrev.Clicked -= new MessageEventHandler(this.HandleFieldsButtonClicked);
 				this.fieldsButtonNext.Clicked -= new MessageEventHandler(this.HandleFieldsButtonClicked);
 				this.fieldsButtonGoto.Clicked -= new MessageEventHandler(this.HandleFieldsButtonClicked);
+				this.fieldsButtonShowPrefix.Clicked -= new MessageEventHandler(this.HandleFieldsButtonClicked);
 
 				this.fieldsTable.CellCountChanged -= new EventHandler(this.HandleFieldTableCellCountChanged);
 				this.fieldsTable.CellsContentChanged -= new EventHandler(this.HandleFieldTableCellsContentChanged);
@@ -478,7 +485,7 @@ namespace Epsitec.Common.Designer.Viewers
 				else
 				{
 					FormEditor.ObjectModifier.TableItem item = this.formEditor.ObjectModifier.TableContent[first+i];
-					string name = this.formEditor.ObjectModifier.GetTableContentDescription(item);
+					string name = this.formEditor.ObjectModifier.GetTableContentDescription(item, Forms.showPrefix);
 					string icon = this.formEditor.ObjectModifier.GetTableContentIcon(item);
 
 					this.fieldsTable.SetLineString(0, first+i, name);
@@ -575,6 +582,8 @@ namespace Epsitec.Common.Designer.Viewers
 			this.fieldsButtonGoto.Enable = isGoto;
 
 			this.fieldsButtonBox.IconName = isUnbox ? Misc.Icon("FormUnbox") : Misc.Icon("FormBox");
+
+			this.fieldsButtonShowPrefix.ActiveState = Forms.showPrefix ? ActiveState.Yes : ActiveState.No;
 		}
 
 		protected void UpdateRelationsTable(bool newContent)
@@ -1457,6 +1466,13 @@ namespace Epsitec.Common.Designer.Viewers
 			{
 				this.SelectedFieldsGoto();
 			}
+
+			if (sender == this.fieldsButtonShowPrefix)
+			{
+				Forms.showPrefix = !Forms.showPrefix;
+				this.UpdateFieldsTable(false);
+				this.UpdateFieldsButtons();
+			}
 		}
 
 		private void HandleRelationsButtonClicked(object sender, MessageEventArgs e)
@@ -1561,6 +1577,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 		protected static string					softSerialize = null;
 		protected static bool					softDirtySerialization = false;
+		protected static bool					showPrefix = false;
 
 		protected FormEditor.ProxyManager		proxyManager;
 		protected VSplitter						splitter2;
@@ -1586,6 +1603,7 @@ namespace Epsitec.Common.Designer.Viewers
 		protected IconButton					fieldsButtonPrev;
 		protected IconButton					fieldsButtonNext;
 		protected IconButton					fieldsButtonGoto;
+		protected IconButton					fieldsButtonShowPrefix;
 		protected MyWidgets.StringArray			fieldsTable;
 
 		protected TabBook						tabBookSecondary;

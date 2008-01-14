@@ -422,7 +422,7 @@ namespace Epsitec.Common.Designer.FormEditor
 
 
 		#region TableContent
-		public string GetTableContentDescription(TableItem item)
+		public string GetTableContentDescription(TableItem item, bool showPrefix)
 		{
 			//	Retourne le texte permettant de décrire un TableItem dans une liste, avec un effet
 			//	d'indentation pour ressembler aux arborescences de Vista.
@@ -461,7 +461,7 @@ namespace Epsitec.Common.Designer.FormEditor
 			}
 			else
 			{
-				if (item.Prefix != null)
+				if (item.Prefix != null && showPrefix)
 				{
 					name = string.Concat(item.Prefix, name);
 				}
