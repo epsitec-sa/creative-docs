@@ -817,14 +817,11 @@ namespace Epsitec.Common.Types
 				this.InternalResetTarget ();
 			}
 		}
-		
+
 		internal void InternalUpdateTarget(object value)
 		{
 			if ((this.sourceUpdateCounter == 0) &&
-				(value != Binding.DoNothing) &&
-				(!InvalidValue.IsInvalidValue (value)) &&
-				(!UndefinedValue.IsUndefinedValue (value)) &&
-				(!PendingValue.IsPendingValue (value)))
+				(Binding.IsRealValue (value)))
 			{
 				System.Threading.Interlocked.Increment (ref this.targetUpdateCounter);
 				
@@ -992,10 +989,7 @@ namespace Epsitec.Common.Types
 		{
 			if (target != null)
 			{
-				if ((value != Binding.DoNothing) &&
-					(!InvalidValue.IsInvalidValue (value)) &&
-					(!UndefinedValue.IsUndefinedValue (value)) &&
-					(!PendingValue.IsPendingValue (value)))
+				if (Binding.IsRealValue (value))
 				{
 					target.SetValue (property, value);
 				}
@@ -1006,10 +1000,7 @@ namespace Epsitec.Common.Types
 		{
 			if (target != null)
 			{
-				if ((value != Binding.DoNothing) &&
-					(!InvalidValue.IsInvalidValue (value)) &&
-					(!UndefinedValue.IsUndefinedValue (value)) &&
-					(!PendingValue.IsPendingValue (value)))
+				if (Binding.IsRealValue (value))
 				{
 					target.SetValue (name, value);
 				}

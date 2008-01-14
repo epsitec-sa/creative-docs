@@ -518,7 +518,7 @@ namespace Epsitec.Common.Types
 
 		/// <summary>
 		/// Adds the event handler for a <c>DependencyPropertyChanged</c> event
-		/// on the specified proeprty.
+		/// on the specified property.
 		/// </summary>
 		/// <param name="property">The property.</param>
 		/// <param name="handler">The handler.</param>

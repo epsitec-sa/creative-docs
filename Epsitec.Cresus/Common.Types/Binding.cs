@@ -345,16 +345,19 @@ namespace Epsitec.Common.Types
 
 		internal object ConvertBackValue(object value, System.Type type)
 		{
-			if (type != null)
+			if (Binding.IsRealValue (value))
 			{
-				if ((value == null) ||
-					(value.GetType () != type))
+				if (type != null)
 				{
-					IValueConverter converter = this.converter ?? Converters.AutomaticValueConverter.Instance;
-					CultureInfo culture   = this.converterCulture ?? CultureInfo.CurrentCulture;
-					object parameter = this.converter == null ? null : this.converterParameter;
-					
-					value = converter.ConvertBack (value, type, parameter, culture);
+					if ((value == null) ||
+						(value.GetType () != type))
+					{
+						IValueConverter converter = this.converter ?? Converters.AutomaticValueConverter.Instance;
+						CultureInfo culture   = this.converterCulture ?? CultureInfo.CurrentCulture;
+						object parameter = this.converter == null ? null : this.converterParameter;
+
+						value = converter.ConvertBack (value, type, parameter, culture);
+					}
 				}
 			}
 
@@ -586,6 +589,21 @@ namespace Epsitec.Common.Types
 			else if (this.sourceState == SourceState.AsyncAttaching)
 			{
 				System.Diagnostics.Debug.Fail ("Attaching while previous asynchronous attach is still running");
+			}
+		}
+
+		internal static bool IsRealValue(object value)
+		{
+			if ((value != Binding.DoNothing) &&
+				(!InvalidValue.IsInvalidValue (value)) &&
+				(!UndefinedValue.IsUndefinedValue (value)) &&
+				(!PendingValue.IsPendingValue (value)))
+			{
+				return true;
+			}
+			else
+			{
+				return false;
 			}
 		}
 
