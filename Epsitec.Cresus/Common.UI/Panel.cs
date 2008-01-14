@@ -526,6 +526,29 @@ namespace Epsitec.Common.UI
 			return panel.PreferredSize;
 		}
 
+		/// <summary>
+		/// Gets the parent panel of a widget.
+		/// </summary>
+		/// <param name="widget">The widget.</param>
+		/// <returns>The parent panel or <c>null</c> if there is no <see cref="Panel"/>
+		/// the widget's ancestors.</returns>
+		public static Panel GetParentPanel(Widgets.Visual widget)
+		{
+			while (widget != null)
+			{
+				Panel panel = widget as Panel;
+
+				if (panel != null)
+				{
+					return panel;
+				}
+
+				widget = widget.Parent;
+			}
+
+			return null;
+		}
+
 		
 		protected override bool PreProcessMessage(Widgets.Message message, Drawing.Point pos)
 		{

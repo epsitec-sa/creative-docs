@@ -123,6 +123,10 @@ namespace Epsitec.Common.UI
 			}
 		}
 
+		/// <summary>
+		/// Gets or sets the placeholder suggestion mode.
+		/// </summary>
+		/// <value>The suggestion mode.</value>
 		public PlaceholderSuggestionMode		SuggestionMode
 		{
 			get

@@ -84,7 +84,12 @@ namespace Epsitec.Common.Dialogs
 
 					EntityFieldPath rootPath   = proxy.GetFieldPath ().GetRootPath ();
 					AbstractEntity  rootData   = proxy.DialogData.Data;
-					Widgets.Widget  rootWidget = placeholder.RootParent;
+					Widgets.Widget  rootWidget = Panel.GetParentPanel (placeholder);
+
+					System.Diagnostics.Debug.Assert (rootPath != null);
+					System.Diagnostics.Debug.Assert (rootPath.Count == 1);
+					System.Diagnostics.Debug.Assert (rootData != null);
+					System.Diagnostics.Debug.Assert (rootWidget != null);
 
 					newContext = new SearchContext (rootData, rootPath);
 					newContext.AnalysePlaceholderGraph (rootWidget);
