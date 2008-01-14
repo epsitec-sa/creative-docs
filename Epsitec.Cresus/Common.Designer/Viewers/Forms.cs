@@ -475,6 +475,7 @@ namespace Epsitec.Common.Designer.Viewers
 				if (first+i >= this.formEditor.ObjectModifier.TableContent.Count)
 				{
 					this.fieldsTable.SetLineString(0, first+i, "");
+					this.fieldsTable.SetLineTooltip(0, first+i, "");
 					this.fieldsTable.SetLineState(0, first+i, MyWidgets.StringList.CellState.Disabled);
 					this.fieldsTable.SetLineColor(0, first+i, Color.Empty);
 
