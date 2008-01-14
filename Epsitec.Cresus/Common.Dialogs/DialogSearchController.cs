@@ -88,12 +88,15 @@ namespace Epsitec.Common.Dialogs
 
 					newContext = new SearchContext (rootData, rootPath);
 					newContext.AnalysePlaceholderGraph (rootWidget);
+
+					this.searchContexts.Add (newContext);
 				}
 
 				if (oldContext != newContext)
 				{
 					this.activeSearchContext = newContext;
 					this.activeSearchContext.SetTemplateValue (placeholder);
+					this.OnSearchContextChanged (new DependencyPropertyChangedEventArgs ("SearchContext", oldContext, newContext));
 				}
 			}
 
@@ -130,6 +133,10 @@ namespace Epsitec.Common.Dialogs
 #endif
 		}
 
+		private void OnSearchContextChanged(DependencyPropertyChangedEventArgs e)
+		{
+		}
+
 		public void ClearSuggestions()
 		{
 			using (this.SuspendSearchHandler ())
@@ -140,6 +147,16 @@ namespace Epsitec.Common.Dialogs
 				}
 
 				this.searchContexts.Clear ();
+
+				if (this.activeSearchContext != null)
+				{
+					SearchContext oldContext = this.activeSearchContext;
+					SearchContext newContext = null;
+
+					this.activeSearchContext = null;
+					
+					this.OnSearchContextChanged (new DependencyPropertyChangedEventArgs ("SearchContext", oldContext, newContext));
+				}
 			}
 		}
 
@@ -265,7 +282,11 @@ namespace Epsitec.Common.Dialogs
 			{
 				foreach (Node node in this.activeNodes)
 				{
+					System.Diagnostics.Debug.Assert (node.Placeholder.SuggestionMode == PlaceholderSuggestionMode.DisplayHint);
+
+					node.Placeholder.SuggestionMode = PlaceholderSuggestionMode.DisplayHintResetText;
 					node.Placeholder.Value = UndefinedValue.Value;
+					node.Placeholder.SuggestionMode = PlaceholderSuggestionMode.DisplayHint;
 				}
 			}
 

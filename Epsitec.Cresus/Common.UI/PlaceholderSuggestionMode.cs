@@ -20,6 +20,12 @@ namespace Epsitec.Common.UI
 		/// Suggestion mode; the placeholder value defines the hint text.
 		/// </summary>
 		DisplayHint,
+
+		/// <summary>
+		/// Suggestion mode; the placeholder value defines the text; this is a
+		/// special mode used only to reset what the user typed into the fields.
+		/// </summary>
+		DisplayHintResetText,
 	}
 }
      

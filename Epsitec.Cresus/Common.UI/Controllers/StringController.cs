@@ -149,6 +149,11 @@ namespace Epsitec.Common.UI.Controllers
 						this.field.HintText = text;
 						break;
 
+					case PlaceholderSuggestionMode.DisplayHintResetText:
+						this.field.TextDisplayMode = TextFieldDisplayMode.Hint;
+						this.field.Text = text;
+						break;
+
 					default:
 						this.field.TextDisplayMode = TextFieldDisplayMode.Default;
 						this.field.Text = text;
