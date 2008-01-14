@@ -144,6 +144,7 @@ namespace Epsitec.Common.Dialogs
 				foreach (SearchContext context in this.searchContexts)
 				{
 					context.Clear ();
+					context.Resolve (this.entityResolver);
 				}
 
 				this.searchContexts.Clear ();
@@ -287,6 +288,8 @@ namespace Epsitec.Common.Dialogs
 					node.Placeholder.SuggestionMode = PlaceholderSuggestionMode.DisplayHintResetText;
 					node.Placeholder.Value = UndefinedValue.Value;
 					node.Placeholder.SuggestionMode = PlaceholderSuggestionMode.DisplayHint;
+
+					this.SetTemplateValue (node, UndefinedValue.Value);
 				}
 			}
 
@@ -295,11 +298,15 @@ namespace Epsitec.Common.Dialogs
 				Node node = this.FindNode (placeholder);
 
 				System.Diagnostics.Debug.Assert (node.IsEmpty == false);
-				
-				EntityFieldPath readPath  = node.Path;
-				EntityFieldPath writePath = node.Path.StripStart (this.searchRootPath);
 
-				object value = readPath.NavigateRead (this.searchRootData);
+				EntityFieldPath readPath = node.Path;
+
+				this.SetTemplateValue (node, readPath.NavigateRead (this.searchRootData));
+			}
+
+			public void SetTemplateValue(Node node, object value)
+			{
+				EntityFieldPath writePath = node.Path.StripStart (this.searchRootPath);
 
 				writePath.CreateMissingNodes (this.searchTemplate);
 				writePath.NavigateWrite (this.searchTemplate, value);
