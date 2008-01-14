@@ -82,7 +82,7 @@ namespace Epsitec.Common.Dialogs
 
 					System.Diagnostics.Debug.Assert (proxy != null);
 
-					EntityFieldPath rootPath   = proxy.GetFieldPath ();
+					EntityFieldPath rootPath   = proxy.GetFieldPath ().GetRootPath ();
 					AbstractEntity  rootData   = proxy.DialogData.Data;
 					Widgets.Widget  rootWidget = placeholder.RootParent;
 

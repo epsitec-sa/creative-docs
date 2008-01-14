@@ -310,7 +310,9 @@ namespace Epsitec.Common.Dialogs
 					
 					foreach (LocalitéEntity item in this.localitéSuggestions)
 					{
-						if (item.Résumé.Contains (loc.Résumé))
+						if ((TestResolver.Match (item.Numéro, loc.Numéro)) &&
+							(TestResolver.Match (item.Nom, loc.Nom)) &&
+							(TestResolver.Match (item.Résumé, loc.Résumé)))
 						{
 							yield return item;
 						}
@@ -328,6 +330,18 @@ namespace Epsitec.Common.Dialogs
 							yield return item;
 						}
 					}
+				}
+			}
+
+			private static bool Match(string a, string b)
+			{
+				if (string.IsNullOrEmpty (b))
+				{
+					return true;
+				}
+				else
+				{
+					return a.Contains (b);
 				}
 			}
 
