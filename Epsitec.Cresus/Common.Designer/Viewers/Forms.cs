@@ -168,6 +168,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.fieldsTable.SetColumnBreakMode(0, TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine);
 			this.fieldsTable.AllowMultipleSelection = true;
 			this.fieldsTable.LineHeight = 16;
+			//?this.fieldsTable.SetDynamicToolTips(0, true);
 			this.fieldsTable.Dock = DockStyle.Fill;
 			this.fieldsTable.CellCountChanged += new EventHandler(this.HandleFieldTableCellCountChanged);
 			this.fieldsTable.CellsContentChanged += new EventHandler(this.HandleFieldTableCellsContentChanged);

@@ -502,14 +502,17 @@ namespace Epsitec.Common.Designer.FormEditor
 			foreach (FieldDescription field in this.formEditor.Form.Fields)
 			{
 				string prefix = null;
-				Druid druid = field.FieldIds[0];
-				Module module = this.formEditor.Module.DesignerApplication.SearchModule(druid);
-				if (module != null)
+				if (field.FieldIds != null)
 				{
-					CultureMap cultureMap = module.AccessFields.Accessor.Collection[druid];
-					if (cultureMap != null)
+					Druid druid = field.FieldIds[0];
+					Module module = this.formEditor.Module.DesignerApplication.SearchModule(druid);
+					if (module != null)
 					{
-						prefix = string.Concat(module.ModuleInfo.SourceNamespace, ".", cultureMap.Prefix, ".");
+						CultureMap cultureMap = module.AccessFields.Accessor.Collection[druid];
+						if (cultureMap != null)
+						{
+							prefix = string.Concat(module.ModuleInfo.SourceNamespace, ".", cultureMap.Prefix, ".");
+						}
 					}
 				}
 
