@@ -139,6 +139,27 @@ namespace Epsitec.Common.Designer.MyWidgets
 			return this.cells[index].TextLayout.Text;
 		}
 
+		public void SetLineTooltip(int index, string text)
+		{
+			//	Spécifie le tooltip d'une ligne.
+			if ( this.cells == null )  return;
+			if ( index < 0 || index >= this.cells.Length )  return;
+
+			if (this.cells[index].Tooltip != text)
+			{
+				this.cells[index].Tooltip = text;
+				this.Invalidate();
+			}
+		}
+
+		public string GetLineTooltip(int index)
+		{
+			//	Retourne le tooltip d'une ligne.
+			if ( this.cells == null )  return null;
+			if ( index < 0 || index >= this.cells.Length )  return null;
+			return this.cells[index].Tooltip;
+		}
+
 		public void SetLineState(int index, CellState state)
 		{
 			//	Spécifie l'état d'une ligne.
@@ -577,8 +598,14 @@ namespace Epsitec.Common.Designer.MyWidgets
 			int row = this.Detect(pos, false);
 			if ( row != -1 )
 			{
-				string text = this.GetLineString(row);
-				if (text != "")
+				string text = this.GetLineTooltip(row);
+				if (!string.IsNullOrEmpty(text))
+				{
+					return text;
+				}
+
+				text = this.GetLineString(row);
+				if (!string.IsNullOrEmpty(text))
 				{
 					return text;
 				}
@@ -667,6 +694,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			public CellState				State;
 			public Color					Color;
 			public bool						Selected;
+			public string					Tooltip;
 		}
 		#endregion
 

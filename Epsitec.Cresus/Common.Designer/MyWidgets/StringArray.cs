@@ -218,6 +218,28 @@ namespace Epsitec.Common.Designer.MyWidgets
 			return this.columns[column].GetLineString(row-this.firstVisibleRow);
 		}
 
+		public void SetLineTooltip(int column, int row, string text)
+		{
+			//	Spécifie le tooltip d'une ligne.
+			if (this.columns == null || column < 0 || column >= this.columns.Length)
+			{
+				return;
+			}
+
+			this.columns[column].SetLineTooltip(row-this.firstVisibleRow, text);
+		}
+
+		public string GetLineTooltip(int column, int row)
+		{
+			//	Retourne le texte d'une ligne.
+			if (this.columns == null || column < 0 || column >= this.columns.Length)
+			{
+				return null;
+			}
+
+			return this.columns[column].GetLineTooltip(row-this.firstVisibleRow);
+		}
+
 		public void SetLineState(int column, int row, StringList.CellState state)
 		{
 			//	Spécifie l'état d'une ligne.

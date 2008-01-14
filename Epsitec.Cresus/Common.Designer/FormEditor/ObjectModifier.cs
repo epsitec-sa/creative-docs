@@ -422,24 +422,29 @@ namespace Epsitec.Common.Designer.FormEditor
 
 
 		#region TableContent
-		public string GetTableContentDescription(TableItem item, bool showPrefix)
+		public string GetTableContentDescription(TableItem item, bool isImage, bool isShowPrefix)
 		{
 			//	Retourne le texte permettant de décrire un TableItem dans une liste, avec un effet
 			//	d'indentation pour ressembler aux arborescences de Vista.
 			System.Text.StringBuilder builder = new System.Text.StringBuilder();
 
-			for (int i=0; i<item.Level; i++)
+			if (isImage)
 			{
-				builder.Append(Misc.Image("TreeSpace"));
-			}
+				for (int i=0; i<item.Level; i++)
+				{
+					builder.Append(Misc.Image("TreeSpace"));
+				}
 
-			if (item.FieldType == FieldDescription.FieldType.BoxBegin)
-			{
-				builder.Append(Misc.Image("TreeBranch"));
-			}
-			else
-			{
-				builder.Append(Misc.Image("TreeMark"));
+				if (item.FieldType == FieldDescription.FieldType.BoxBegin)
+				{
+					builder.Append(Misc.Image("TreeBranch"));
+				}
+				else
+				{
+					builder.Append(Misc.Image("TreeMark"));
+				}
+
+				builder.Append(" ");
 			}
 
 			string name = this.formEditor.Module.AccessFields.GetFieldNames(item.DruidsPath);
@@ -461,13 +466,12 @@ namespace Epsitec.Common.Designer.FormEditor
 			}
 			else
 			{
-				if (item.Prefix != null && showPrefix)
+				if (item.Prefix != null && isShowPrefix)
 				{
 					name = string.Concat(item.Prefix, name);
 				}
 			}
 
-			builder.Append(" ");
 			builder.Append(name);
 
 			return builder.ToString();

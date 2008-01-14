@@ -168,7 +168,6 @@ namespace Epsitec.Common.Designer.Viewers
 			this.fieldsTable.SetColumnBreakMode(0, TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine);
 			this.fieldsTable.AllowMultipleSelection = true;
 			this.fieldsTable.LineHeight = 16;
-			//?this.fieldsTable.SetDynamicToolTips(0, true);
 			this.fieldsTable.Dock = DockStyle.Fill;
 			this.fieldsTable.CellCountChanged += new EventHandler(this.HandleFieldTableCellCountChanged);
 			this.fieldsTable.CellsContentChanged += new EventHandler(this.HandleFieldTableCellsContentChanged);
@@ -486,12 +485,22 @@ namespace Epsitec.Common.Designer.Viewers
 				else
 				{
 					FormEditor.ObjectModifier.TableItem item = this.formEditor.ObjectModifier.TableContent[first+i];
-					string name = this.formEditor.ObjectModifier.GetTableContentDescription(item, Forms.showPrefix);
+					string name = this.formEditor.ObjectModifier.GetTableContentDescription(item, true, Forms.showPrefix);
 					string icon = this.formEditor.ObjectModifier.GetTableContentIcon(item);
 
 					this.fieldsTable.SetLineString(0, first+i, name);
 					this.fieldsTable.SetLineState(0, first+i, MyWidgets.StringList.CellState.Normal);
 					this.fieldsTable.SetLineColor(0, first+i, Color.Empty);
+
+					if (Forms.showPrefix)
+					{
+						this.fieldsTable.SetLineTooltip(0, first+i, null);
+					}
+					else
+					{
+						string tooltip = this.formEditor.ObjectModifier.GetTableContentDescription(item, false, true);
+						this.fieldsTable.SetLineTooltip(0, first+i, tooltip);
+					}
 
 					this.fieldsTable.SetLineString(1, first+i, icon);
 					this.fieldsTable.SetLineState(1, first+i, MyWidgets.StringList.CellState.Normal);
@@ -505,6 +514,8 @@ namespace Epsitec.Common.Designer.Viewers
 			{
 				this.fieldsTable.FirstVisibleRow = 0;
 			}
+
+			this.fieldsTable.SetDynamicToolTips(0, !Forms.showPrefix);
 		}
 
 		protected void UpdateFieldsButtons()
