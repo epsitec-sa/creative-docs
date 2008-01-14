@@ -85,17 +85,38 @@ namespace Epsitec.Common.Dialogs
 			//	- CasePostale
 			//	- Localité.Résumé
 
+			DialogSearchController searchController = new DialogSearchController ();
+			searchController.Resolver = DialogTest.CreateSuggestions ();
+
 			dialog.DialogWindowCreated +=
 				delegate
 				{
-					Button buttonCancel = new Button ();
 					Button buttonOk     = new Button ();
+					Button buttonCancel = new Button ();
+					Button buttonClear  = new Button ();
+					Button buttonDump   = new Button ();
 
-					buttonCancel.CommandObject = Res.Commands.Dialog.Generic.Cancel;
 					buttonOk.CommandObject     = Res.Commands.Dialog.Generic.Ok;
+					buttonCancel.CommandObject = Res.Commands.Dialog.Generic.Cancel;
+					
+					buttonClear.Text = "Clear";
+					buttonClear.Clicked +=
+						delegate
+						{
+							searchController.ClearSuggestions ();
+						};
 
-					buttonCancel.Dock = DockStyle.Stacked;
+					buttonDump.Text = "Dump";
+					buttonDump.Clicked +=
+						delegate
+						{
+							System.Console.Out.WriteLine (dialog.DialogData.Data.Dump ());
+						};
+
 					buttonOk.Dock     = DockStyle.Stacked;
+					buttonCancel.Dock = DockStyle.Stacked;
+					buttonClear.Dock  = DockStyle.Stacked;
+					buttonDump.Dock   = DockStyle.Stacked;
 
 					FrameBox frame = new FrameBox ();
 
@@ -103,6 +124,8 @@ namespace Epsitec.Common.Dialogs
 
 					frame.Children.Add (buttonOk);
 					frame.Children.Add (buttonCancel);
+					frame.Children.Add (buttonClear);
+					frame.Children.Add (buttonDump);
 					frame.PreferredHeight = 30;
 					frame.Dock = DockStyle.Bottom;
 
@@ -117,9 +140,17 @@ namespace Epsitec.Common.Dialogs
 			Assert.IsNotNull (window);
 			Assert.IsTrue (dialog.HasWindow);
 
-			DialogSearchController searchController = new DialogSearchController ();
-			searchController.Resolver = DialogTest.CreateSuggestions ();
+			dialog.IsModal = false;
+			dialog.DialogData = DialogTest.CreateDefaultDialogData ();
+			dialog.DialogData.SearchController = searchController;
+			dialog.OpenDialog ();
+			Window.RunInTestEnvironment (window);
 
+			System.Console.Out.WriteLine (dialog.DialogData.Data.Dump ());
+		}
+
+		private static DialogData CreateDefaultDialogData()
+		{
 			AdresseEntity adresse = EntityContext.Current.CreateEntity<AdresseEntity> ();
 
 			adresse.Rue = "Ch. du Fontenay 6";
@@ -128,15 +159,7 @@ namespace Epsitec.Common.Dialogs
 			adresse.Localité.Pays.Code = "CH";
 			adresse.Localité.Pays.Nom = "Suisse";
 
-			System.Console.Out.WriteLine (adresse.Dump ());
-
-			dialog.IsModal = false;
-			dialog.DefaultDialogDataEntity = adresse;
-			dialog.DialogData.SearchController = searchController;
-			dialog.OpenDialog ();
-			Window.RunInTestEnvironment (window);
-
-			System.Console.Out.WriteLine (adresse.Dump ());
+			return new DialogData (adresse, DialogDataMode.Isolated);
 		}
 
 		private static IEntityResolver CreateSuggestions()
@@ -283,6 +306,8 @@ namespace Epsitec.Common.Dialogs
 
 				if (loc != null)
 				{
+					System.Diagnostics.Debug.WriteLine ("Search for Localité :\n" + loc.Dump ());
+					
 					foreach (LocalitéEntity item in this.localitéSuggestions)
 					{
 						if (item.Résumé.Contains (loc.Résumé))
@@ -294,6 +319,8 @@ namespace Epsitec.Common.Dialogs
 
 				if (pays != null)
 				{
+					System.Diagnostics.Debug.WriteLine ("Search for Pays :\n" + pays.Dump ());
+
 					foreach (PaysEntity item in this.paysSuggestions)
 					{
 						if (item.Nom.Contains (pays.Nom))

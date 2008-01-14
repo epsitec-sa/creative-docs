@@ -428,6 +428,24 @@ namespace Epsitec.Common.Support.EntityEngine
 		}
 
 		/// <summary>
+		/// Gets the root path. This is the path defined by the first field.
+		/// </summary>
+		/// <returns>The root path or <c>null</c> if the path is empty.</returns>
+		public EntityFieldPath GetRootPath()
+		{
+			string[] fields = this.Fields;
+
+			if (fields.Length == 0)
+			{
+				return null;
+			}
+			else
+			{
+				return new EntityFieldPath (this.entityId, fields[0]);
+			}
+		}
+
+		/// <summary>
 		/// Strips the start of this path by removing the specified path; the paths
 		/// must match. A new path will be returned.
 		/// </summary>

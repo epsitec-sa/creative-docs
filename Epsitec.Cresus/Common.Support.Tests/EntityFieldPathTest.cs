@@ -40,7 +40,7 @@ namespace Epsitec.Common.Support
 			Assert.IsTrue (p0.StartsWith (p0));
 			Assert.IsFalse (p0.StartsWith (p1));
 		}
-		
+
 		[Test]
 		public void Check02CreateRelativePath()
 		{
@@ -56,6 +56,20 @@ namespace Epsitec.Common.Support
 			Assert.AreEqual ("a.b.c", p4.ToString ());
 			Assert.AreEqual ("a.b.c", p5.ToString ());
 			Assert.AreEqual ("a.b.c", p6.ToString ());
+		}
+		
+		[Test]
+		public void Check03Count()
+		{
+			EntityFieldPath p0 = new EntityFieldPath ();
+			EntityFieldPath p1 = EntityFieldPath.CreateRelativePath ("a");
+			EntityFieldPath p2 = EntityFieldPath.CreateRelativePath ("a", "b");
+			EntityFieldPath p3 = EntityFieldPath.CreateRelativePath ("a", "b", "c");
+
+			Assert.AreEqual (0, p0.Count);
+			Assert.AreEqual (1, p1.Count);
+			Assert.AreEqual (2, p2.Count);
+			Assert.AreEqual (3, p3.Count);
 		}
 	}
 }

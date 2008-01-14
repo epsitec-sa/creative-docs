@@ -14,7 +14,7 @@ namespace Epsitec.Common.Dialogs
 	{
 		public DialogSearchController()
 		{
-			this.activeNodes = new List<Node> ();
+			this.searchContexts = new List<SearchContext> ();
 		}
 
 		/// <summary>
@@ -50,75 +50,58 @@ namespace Epsitec.Common.Dialogs
 				return;
 			}
 
-			if ((this.ContainsNode (placeholder)) &&
-				(this.FindNode (placeholder).Path.Count == this.searchRootPath.Count+1))
+			if ((this.activeSearchContext != null) &&
+				(this.activeSearchContext.ContainsNode (placeholder)))
 			{
-				//	The placeholder is already known as an active search element.
+				//	The placeholder already belongs to the active search context.
 
-				System.Diagnostics.Debug.Assert (this.searchTemplate != null);
-				System.Diagnostics.Debug.Assert (this.searchRootPath != null);
-				System.Diagnostics.Debug.Assert (this.searchRootData != null);
-
-				this.SetTemplateValue (this.FindNode (placeholder));
+				this.activeSearchContext.SetTemplateValue (placeholder);
 			}
 			else
 			{
-				//	Walk the user interface and search for placeholders which will
-				//	actively participate in the search :
+				//	The placeholder does not belong to the active search context:
+				//	activate the matching search context or create a new one if
+				//	required.
 
-				List<Node> release = new List<Node> ();
-				List<Node> acquire = new List<Node> ();
-
-				foreach (Node node in this.activeNodes)
-				{
-					release.Add (node);
-				}
-
-				foreach (Node node in this.GetPlaceholderGraph (placeholder.RootParent, path))
-				{
-					if (release.Remove (node))
-					{
-						continue;
-					}
-
-					acquire.Add (node);
-				}
-
-				using (this.SuspendSearchHandler ())
-				{
-					foreach (Node node in release)
-					{
-						this.activeNodes.Remove (node);
-						this.ReleaseNode (node);
-					}
-
-					foreach (Node node in acquire)
-					{
-						this.activeNodes.Add (node);
-						this.AcquireNode (node);
-					}
-				}
-
-				EntityContext context = entityData.GetEntityContext ();
-
-				this.searchRootPath = this.FindNode (placeholder).Path.GetParentPath ();
-				this.searchRootData = entityData;
-				this.searchTemplate = context.CreateEmptyEntity (entityData.GetEntityStructuredTypeId ());
-				this.searchTemplate.DisableCalculations ();
+				SearchContext oldContext = this.activeSearchContext;
+				SearchContext newContext = null;
 				
-				foreach (Node node in this.activeNodes)
+				foreach (SearchContext context in this.searchContexts)
 				{
-					this.SetTemplateValue (node);
+					if (context.ContainsNode (placeholder))
+					{
+						newContext = context;
+						break;
+					}
+				}
+
+				if (newContext == null)
+				{
+					IEntityProxyProvider  proxyProvider = entityData;
+					DialogData.FieldProxy proxy = proxyProvider.GetEntityProxy () as DialogData.FieldProxy;
+
+					System.Diagnostics.Debug.Assert (proxy != null);
+
+					EntityFieldPath rootPath   = proxy.GetFieldPath ();
+					AbstractEntity  rootData   = proxy.DialogData.Data;
+					Widgets.Widget  rootWidget = placeholder.RootParent;
+
+					newContext = new SearchContext (rootData, rootPath);
+					newContext.AnalysePlaceholderGraph (rootWidget);
+				}
+
+				if (oldContext != newContext)
+				{
+					this.activeSearchContext = newContext;
+					this.activeSearchContext.SetTemplateValue (placeholder);
 				}
 			}
 
 			Widgets.Application.QueueAsyncCallback (delegate
 				{
-					AbstractEntity result = EntityResolver.Resolve (this.entityResolver, this.searchTemplate);
-
-					foreach (Node node in this.activeNodes)
+					if (this.activeSearchContext != null)
 					{
-						this.SetSuggestionValue (node, result);
+						this.activeSearchContext.Resolve (this.entityResolver);
 					}
 				});
 			
@@ -147,103 +130,25 @@ namespace Epsitec.Common.Dialogs
 #endif
 		}
 
-		private void SetTemplateValue(Node node)
+		public void ClearSuggestions()
 		{
-			EntityFieldPath path = node.Path.StripStart (this.searchRootPath);
-
-			object value = path.NavigateRead (this.searchRootData);
-			
-			path.CreateMissingNodes (this.searchTemplate);
-			path.NavigateWrite (this.searchTemplate, value);
-		}
-
-		private void SetSuggestionValue(Node node, AbstractEntity entity)
-		{
-			EntityFieldPath path = node.Path.StripStart (this.searchRootPath);
-
-			object value = entity == null ? UndefinedValue.Value : path.NavigateRead (entity);
-
-			node.Placeholder.Value = value;
-		}
-
-		private void AcquireNode(Node node)
-		{
-//			System.Diagnostics.Debug.Assert (node.Placeholder.SuggestionMode == PlaceholderSuggestionMode.None);
-
-//			node.Placeholder.SuggestionMode = PlaceholderSuggestionMode.DisplayHint;
-		}
-
-		private void ReleaseNode(Node node)
-		{
-//			System.Diagnostics.Debug.Assert (node.Placeholder.SuggestionMode == PlaceholderSuggestionMode.DisplayHint);
-
-//			node.Placeholder.Value = UndefinedValue.Value;
-//			node.Placeholder.SuggestionMode = PlaceholderSuggestionMode.None;
-		}
-
-		private IEnumerable<Node> GetPlaceholderGraph(Widgets.Widget root, EntityFieldPath path)
-		{
-			foreach (AbstractPlaceholder placeholder in root.FindAllChildren (child => child is AbstractPlaceholder))
+			using (this.SuspendSearchHandler ())
 			{
-				BindingExpression binding = placeholder.ValueBindingExpression;
-				DataSourceType sourceType = binding.GetSourceType ();
-
-				if (sourceType == DataSourceType.StructuredData)
+				foreach (SearchContext context in this.searchContexts)
 				{
-					AbstractEntity entity = binding.GetSourceObject () as AbstractEntity;
-					string         field  = binding.GetSourceProperty () as string;
-
-					if ((entity == null) ||
-						(field == null))
-					{
-						continue;
-					}
-
-					IEntityProxyProvider  proxyProvider = entity;
-					DialogData.FieldProxy proxy = proxyProvider.GetEntityProxy () as DialogData.FieldProxy;
-
-					if (proxy == null)
-					{
-						continue;
-					}
-
-					EntityFieldPath fieldPath = EntityFieldPath.CreateRelativePath (proxy.GetFieldPath (), field);
-
-					if (fieldPath.StartsWith (path))
-					{
-						yield return new Node ()
-						{
-							Placeholder = placeholder,
-							Path = fieldPath
-						};
-					}
+					context.Clear ();
 				}
+
+				this.searchContexts.Clear ();
 			}
 		}
 
-		private int FindNodeIndex(AbstractPlaceholder placeholder)
+		private System.IDisposable SuspendSearchHandler()
 		{
-			return this.activeNodes.FindIndex (node => node.Placeholder == placeholder);
+			return new SuspendSearchHandlerHelper (this);
 		}
 
-		private Node FindNode(AbstractPlaceholder placeholder)
-		{
-			int index = this.FindNodeIndex (placeholder);
-
-			if (index < 0)
-			{
-				return new Node ();
-			}
-			else
-			{
-				return this.activeNodes[index];
-			}
-		}
-
-		private bool ContainsNode(AbstractPlaceholder placeholder)
-		{
-			return this.FindNodeIndex (placeholder) < 0 ? false : true;
-		}
+		#region Node Structure
 
 		private struct Node : System.IEquatable<Node>
 		{
@@ -256,6 +161,19 @@ namespace Epsitec.Common.Dialogs
 			{
 				get;
 				set;
+			}
+			public SearchContext Context
+			{
+				get;
+				set;
+			}
+
+			public bool IsEmpty
+			{
+				get
+				{
+					return this.Placeholder == null;
+				}
 			}
 
 			#region IEquatable<Node> Members
@@ -285,11 +203,7 @@ namespace Epsitec.Common.Dialogs
 			}
 		}
 
-		private System.IDisposable SuspendSearchHandler()
-		{
-			return new SuspendSearchHandlerHelper (this);
-		}
-
+		#endregion
 
 		#region SuspendSearchHandlerHelper Class
 
@@ -315,13 +229,155 @@ namespace Epsitec.Common.Dialogs
 		}
 
 		#endregion
+
+		private sealed class SearchContext
+		{
+			public SearchContext(AbstractEntity rootData, EntityFieldPath rootPath)
+			{
+				this.activeNodes = new List<Node> ();
+				this.searchRootData = rootData;
+				this.searchRootPath = rootPath;
+			}
+
+			public IList<Node> Nodes
+			{
+				get
+				{
+					return this.activeNodes;
+				}
+			}
+
+			public void AnalysePlaceholderGraph(Widgets.Widget root)
+			{
+				foreach (Node node in this.GetPlaceholderGraph (root))
+				{
+					this.activeNodes.Add (node);
+				}
+
+				AbstractEntity entityData = this.searchRootPath.NavigateRead (this.searchRootData) as AbstractEntity;
+				EntityContext  context = entityData.GetEntityContext ();
+
+				this.searchTemplate = context.CreateEmptyEntity (entityData.GetEntityStructuredTypeId ());
+				this.searchTemplate.DisableCalculations ();
+			}
+
+			public void Clear()
+			{
+				foreach (Node node in this.activeNodes)
+				{
+					node.Placeholder.Value = UndefinedValue.Value;
+				}
+			}
+
+			public void SetTemplateValue(AbstractPlaceholder placeholder)
+			{
+				Node node = this.FindNode (placeholder);
+
+				System.Diagnostics.Debug.Assert (node.IsEmpty == false);
+				
+				EntityFieldPath readPath  = node.Path;
+				EntityFieldPath writePath = node.Path.StripStart (this.searchRootPath);
+
+				object value = readPath.NavigateRead (this.searchRootData);
+
+				writePath.CreateMissingNodes (this.searchTemplate);
+				writePath.NavigateWrite (this.searchTemplate, value);
+			}
+
+			public void SetSuggestionValue(Node node, AbstractEntity entity)
+			{
+				EntityFieldPath readPath = node.Path.StripStart (this.searchRootPath);
+				
+				object value = entity == null ? UndefinedValue.Value : readPath.NavigateRead (entity);
+
+				node.Placeholder.Value = value;
+			}
+
+			public int FindNodeIndex(AbstractPlaceholder placeholder)
+			{
+				return this.activeNodes.FindIndex (node => node.Placeholder == placeholder);
+			}
+
+			public Node FindNode(AbstractPlaceholder placeholder)
+			{
+				int index = this.FindNodeIndex (placeholder);
+
+				if (index < 0)
+				{
+					return new Node ();
+				}
+				else
+				{
+					return this.activeNodes[index];
+				}
+			}
+
+			public bool ContainsNode(AbstractPlaceholder placeholder)
+			{
+				return this.FindNodeIndex (placeholder) < 0 ? false : true;
+			}
+
+			public void Resolve(IEntityResolver entityResolver)
+			{
+				AbstractEntity result = EntityResolver.Resolve (entityResolver, this.searchTemplate);
+
+				foreach (Node node in this.activeNodes)
+				{
+					this.SetSuggestionValue (node, result);
+				}
+			}
+			
+			private IEnumerable<Node> GetPlaceholderGraph(Widgets.Widget root)
+			{
+				foreach (AbstractPlaceholder placeholder in root.FindAllChildren (child => child is AbstractPlaceholder))
+				{
+					BindingExpression binding = placeholder.ValueBindingExpression;
+					DataSourceType sourceType = binding.GetSourceType ();
+
+					if (sourceType == DataSourceType.StructuredData)
+					{
+						AbstractEntity entity = binding.GetSourceObject () as AbstractEntity;
+						string         field  = binding.GetSourceProperty () as string;
+
+						if ((entity == null) ||
+							(field == null))
+						{
+							continue;
+						}
+
+						IEntityProxyProvider  proxyProvider = entity;
+						DialogData.FieldProxy proxy = proxyProvider.GetEntityProxy () as DialogData.FieldProxy;
+
+						if (proxy == null)
+						{
+							continue;
+						}
+
+						EntityFieldPath fieldPath = EntityFieldPath.CreateRelativePath (proxy.GetFieldPath (), field);
+
+						if (fieldPath.StartsWith (this.searchRootPath))
+						{
+							yield return new Node ()
+							{
+								Placeholder = placeholder,
+								Path = fieldPath,
+								Context = this
+							};
+						}
+					}
+				}
+			}
+
+			private readonly List<Node>			activeNodes;
+			private AbstractEntity				searchTemplate;
+			private EntityFieldPath				searchRootPath;
+			private AbstractEntity				searchRootData;
+		}
 		
 		private int								suspendSearchHandler;
 		private IEntityResolver					entityResolver;
 
-		private readonly List<Node>				activeNodes;
-		private AbstractEntity					searchTemplate;
-		private EntityFieldPath					searchRootPath;
-		private AbstractEntity					searchRootData;
+		private readonly List<SearchContext>	searchContexts;
+		private SearchContext					activeSearchContext;
 	}
 }

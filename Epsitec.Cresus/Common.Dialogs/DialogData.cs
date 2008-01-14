@@ -141,6 +141,20 @@ namespace Epsitec.Common.Dialogs
 			}
 		}
 
+		/// <summary>
+		/// Unbinds the dialog data from the specified user interface.
+		/// </summary>
+		/// <param name="panel">The user interface panel.</param>
+		public void UnbindFromUserInterface(UI.Panel panel)
+		{
+			if (panel != null)
+			{
+				UI.DataSource source = panel.DataSource;
+
+				source.SetDataSource (UI.DataSource.DataName, null);
+			}
+		}
+
 
 		/// <summary>
 		/// Walks through every change done by the user on the dialog data. This

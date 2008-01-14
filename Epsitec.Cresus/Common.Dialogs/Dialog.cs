@@ -60,6 +60,12 @@ namespace Epsitec.Common.Dialogs
 			{
 				if (this.dialogData != value)
 				{
+					if ((this.dialogData != null) &&
+						(this.panel != null))
+					{
+						this.dialogData.UnbindFromUserInterface (this.panel);
+					}
+
 					this.dialogData = value;
 
 					if (this.panel != null)
@@ -67,18 +73,6 @@ namespace Epsitec.Common.Dialogs
 						this.InitializeDataBinding ();
 					}
 				}
-			}
-		}
-
-		public AbstractEntity DefaultDialogDataEntity
-		{
-			get
-			{
-				return this.defaultDialogDataEntity;
-			}
-			set
-			{
-				this.defaultDialogDataEntity = value;
 			}
 		}
 
@@ -223,13 +217,10 @@ namespace Epsitec.Common.Dialogs
 		{
 			if (this.userInterfaceEntityId.IsValid)
 			{
-				if (this.defaultDialogDataEntity == null)
-				{
-					EntityContext context = EntityContext.Current;
-					this.defaultDialogDataEntity = context.CreateEntity (this.userInterfaceEntityId);
-				}
-
-				return new DialogData (this.defaultDialogDataEntity, DialogDataMode.Isolated);
+				EntityContext context = EntityContext.Current;
+				AbstractEntity entity = context.CreateEntity (this.userInterfaceEntityId);
+				
+				return new DialogData (entity, DialogDataMode.Isolated);
 			}
 			else
 			{
@@ -255,7 +246,6 @@ namespace Epsitec.Common.Dialogs
 		private Druid							userInterfaceResourceId;
 		private Druid							userInterfaceEntityId;
 		private DialogData						dialogData;
-		private AbstractEntity					defaultDialogDataEntity;
 		private UI.Panel						panel;
 	}
 }
