@@ -459,6 +459,13 @@ namespace Epsitec.Common.Designer.FormEditor
 					}
 				}
 			}
+			else
+			{
+				if (item.Prefix != null)
+				{
+					name = string.Concat(item.Prefix, name);
+				}
+			}
 
 			builder.Append(" ");
 			builder.Append(name);
@@ -494,10 +501,23 @@ namespace Epsitec.Common.Designer.FormEditor
 			int level = 0;
 			foreach (FieldDescription field in this.formEditor.Form.Fields)
 			{
+				string prefix = null;
+				Druid druid = field.FieldIds[0];
+				Module module = this.formEditor.Module.DesignerApplication.SearchModule(druid);
+				if (module != null)
+				{
+					CultureMap cultureMap = module.AccessFields.Accessor.Collection[druid];
+					if (cultureMap != null)
+					{
+						prefix = string.Concat(module.ModuleInfo.SourceNamespace, ".", cultureMap.Prefix, ".");
+					}
+				}
+
 				TableItem item = new TableItem();
 				item.Guid = field.Guid;
 				item.FieldType = field.Type;
 				item.SourceFieldType = field.SourceType;
+				item.Prefix = prefix;
 				item.DruidsPath = field.GetPath(null);
 				item.Level = level;
 
@@ -549,6 +569,7 @@ namespace Epsitec.Common.Designer.FormEditor
 			public System.Guid					Guid;
 			public FieldDescription.FieldType	FieldType;
 			public FieldDescription.FieldType	SourceFieldType;
+			public string						Prefix;
 			public string						DruidsPath;
 			public int							Level;
 		}
