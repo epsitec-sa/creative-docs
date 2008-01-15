@@ -381,7 +381,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				}
 			}
 
-			if (this.operation == Operation.Form && this.typeIds != null)
+			if (this.operation == Operation.Form && this.typeIds != null && this.typeIds.Count != 0)
 			{
 				if (!this.access.FormSearch(cultureMap, this.typeIds))
 				{

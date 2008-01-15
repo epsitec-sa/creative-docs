@@ -442,7 +442,7 @@ namespace Epsitec.Common.Designer
 		public void Duplicate(string newName, bool duplicateContent)
 		{
 			//	Duplique la ressource courante.
-			CultureMap newItem;
+			CultureMap newItem = null;
 			bool generateMissingValues = false;
 
 			if (this.type == Type.Types && !duplicateContent)
@@ -515,34 +515,51 @@ namespace Epsitec.Common.Designer
 
 				if (result == Epsitec.Common.Dialogs.DialogResult.Answer1)  // normal ?
 				{
+					Druid druid = Druid.Empty;
+					bool isNullable = false;
+					StructuredTypeClass typeClass = StructuredTypeClass.Entity;
+
+					Common.Dialogs.DialogResult subResult = this.designerApplication.DlgResourceSelector(Dialogs.ResourceSelector.Operation.Entities, this.designerApplication.CurrentModule, Type.Entities, ref typeClass, ref druid, ref isNullable, null, Druid.Empty);
+					if (subResult != Common.Dialogs.DialogResult.Yes)
+					{
+						return;
+					}
+
+					FormEngine.FormDescription form = new FormEngine.FormDescription(druid);
+					this.FormInitialize(form, ref newName);
+
+					string xml = FormEngine.Serialization.SerializeForm(form);
+
+					newItem = this.accessor.CreateItem();
+					newItem.Name = newName;
+
+					StructuredData data = newItem.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
+					data.SetValue(Support.Res.Fields.ResourceForm.XmlSource, xml);
 				}
 
 				if (result == Epsitec.Common.Dialogs.DialogResult.Answer2)  // patch ?
 				{
+					Druid druid = Druid.Empty;
+					bool isNullable = false;
+					StructuredTypeClass typeClass = StructuredTypeClass.None;
+
+					Common.Dialogs.DialogResult subResult = this.designerApplication.DlgResourceSelector(Dialogs.ResourceSelector.Operation.Form, this.designerApplication.CurrentModule, Type.Forms, ref typeClass, ref druid, ref isNullable, null, Druid.Empty);
+					if (subResult != Common.Dialogs.DialogResult.Yes)
+					{
+						return;
+					}
+
+					FormEngine.FormDescription form = new FormEngine.FormDescription(druid);
+					this.FormInitialize(form, ref newName);
+
+					string xml = FormEngine.Serialization.SerializeForm(form);
+
+					newItem = this.accessor.CreateItem();
+					newItem.Name = newName;
+
+					StructuredData data = newItem.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
+					data.SetValue(Support.Res.Fields.ResourceForm.XmlSource, xml);
 				}
-
-
-
-				Druid druid = Druid.Empty;
-				bool isNullable = false;
-				StructuredTypeClass typeClass = StructuredTypeClass.Entity;
-
-				result = this.designerApplication.DlgResourceSelector(Dialogs.ResourceSelector.Operation.Entities, this.designerApplication.CurrentModule, Type.Entities, ref typeClass, ref druid, ref isNullable, null, Druid.Empty);
-				if (result != Common.Dialogs.DialogResult.Yes)
-				{
-					return;
-				}
-
-				FormEngine.FormDescription form = new FormEngine.FormDescription(druid);
-				this.FormInitialize(form, ref newName);
-
-				string xml = FormEngine.Serialization.SerializeForm(form);
-
-				newItem = this.accessor.CreateItem();
-				newItem.Name = newName;
-
-				StructuredData data = newItem.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
-				data.SetValue(Support.Res.Fields.ResourceForm.XmlSource, xml);
 			}
 			else
 			{
