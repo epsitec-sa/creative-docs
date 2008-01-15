@@ -611,31 +611,6 @@ namespace Epsitec.Common.Dialogs
 
 		#endregion
 
-		#region SearchHandler Class
-
-		private class SearchHandler
-		{
-			public SearchHandler(FieldProxy proxy)
-			{
-				this.proxy = proxy;
-			}
-
-			public void HandleContentsChanged(object sender, DependencyPropertyChangedEventArgs e)
-			{
-				AbstractEntity  entityData = sender as AbstractEntity;
-				DialogData      dialogData = this.proxy.DialogData;
-				EntityFieldPath path = this.proxy.GetFieldPath ();
-
-				dialogData.NotifySearchContentsChanged (entityData, path, e);
-			}
-
-			readonly FieldProxy proxy;
-		}
-
-		#endregion
-
-
-
 		/// <summary>
 		/// Creates an entity filled with field proxies, which mirrors the
 		/// specified source entity.
@@ -667,7 +642,6 @@ namespace Epsitec.Common.Dialogs
 				//	in them to build a search query :
 
 				context.DisableCalculations (copy);
-				this.AttachSearchHandler (copy, parent);
 			}
 
 			foreach (string id in context.GetEntityFieldIds (entity))
@@ -676,18 +650,6 @@ namespace Epsitec.Common.Dialogs
 			}
 
 			return copy;
-		}
-
-		private void AttachSearchHandler(AbstractEntity copy, FieldProxy parent)
-		{
-#if false
-			//	TODO: use weak events, etc.
-
-			IStructuredData data = copy;
-			SearchHandler handler = new SearchHandler (parent);
-
-			data.AttachListener ("*", handler.HandleContentsChanged);
-#endif
 		}
 
 		private AbstractEntity CreateNullProxy(FieldProxy parent, EntityContext context, Druid entityId)
@@ -707,13 +669,6 @@ namespace Epsitec.Common.Dialogs
 			return copy;
 		}
 
-		private void NotifySearchContentsChanged(AbstractEntity entityData, EntityFieldPath path, DependencyPropertyChangedEventArgs e)
-		{
-			if (this.searchController != null)
-			{
-//				this.searchController.NotifySearchTemplateChanged (this, entityData, path, e);
-			}
-		}
 
 		private readonly Dictionary<EntityFieldPath, object> originalValues;
 		private readonly DialogDataMode			mode;

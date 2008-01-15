@@ -215,14 +215,14 @@ namespace Epsitec.Common.UI
 		{
 			public ThreadData()
 			{
-				this.recordStack = new Stack<Record> ();
+				this.stack = new Stack<Record> ();
 			}
 
 			public Stack<Record> Stack
 			{
 				get
 				{
-					return this.recordStack;
+					return this.stack;
 				}
 			}
 
@@ -240,7 +240,7 @@ namespace Epsitec.Common.UI
 
 			public void Push(Controllers.AbstractController controller)
 			{
-				Stack<Record> stack = this.recordStack;
+				Stack<Record> stack = this.stack;
 				Record record = new Record (controller);
 
 				if (this.stackRoot == null)
@@ -250,17 +250,14 @@ namespace Epsitec.Common.UI
 					this.stackRoot = record;
 				}
 
-				this.recordStack.Push (record);
-
-				if (this.StackPushed != null)
-				{
-					this.StackPushed (controller);
-				}
+				this.stack.Push (record);
+				
+				this.OnStackPushed (controller);
 			}
 
 			public void Pop(Controllers.AbstractController controller)
 			{
-				Stack<Record> stack = this.recordStack;
+				Stack<Record> stack = this.stack;
 
 				if ((stack.Count == 0) ||
 					(stack.Peek ().Controller != controller))
@@ -277,17 +274,30 @@ namespace Epsitec.Common.UI
 					this.stackRoot = null;
 				}
 
+				this.OnStackPopped (controller);
+			}
+
+			private void OnStackPushed(Controllers.AbstractController controller)
+			{
+				if (this.StackPushed != null)
+				{
+					this.StackPushed (controller);
+				}
+			}
+
+			private void OnStackPopped(Controllers.AbstractController controller)
+			{
 				if (this.StackPopped != null)
 				{
 					this.StackPopped (controller);
 				}
 			}
 
-			public event Support.EventHandler StackPushed;
-			public event Support.EventHandler StackPopped;
+			public event Support.EventHandler	StackPushed;
+			public event Support.EventHandler	StackPopped;
 			
-			private readonly Stack<Record> recordStack;
-			private Record stackRoot;
+			private readonly Stack<Record>		stack;
+			private Record						stackRoot;
 		}
 
 		#endregion

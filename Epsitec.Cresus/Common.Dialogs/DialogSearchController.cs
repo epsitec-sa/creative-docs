@@ -64,21 +64,26 @@ namespace Epsitec.Common.Dialogs
 		{
 			if (PlaceholderContext.Depth == 1)
 			{
-				AbstractPlaceholder placeholder = PlaceholderContext.InteractivePlaceholder;
-				BindingExpression   binding     = placeholder.ValueBindingExpression;
-				DataSourceType      sourceType  = binding.GetSourceType ();
-
-				if (sourceType == DataSourceType.StructuredData)
-				{
-					AbstractEntity entity = binding.GetSourceObject () as AbstractEntity;
-					string         field  = binding.GetSourceProperty () as string;
-
-					this.NotifySearchTemplateChanged (this.dialogData, entity, EntityFieldPath.CreateRelativePath (field), null);
-				}
+				this.NotifySearchTemplateChanged (PlaceholderContext.InteractivePlaceholder);
 			}
 		}
 
-		public void NotifySearchTemplateChanged(DialogData dialogData, AbstractEntity entityData, EntityFieldPath path, DependencyPropertyChangedEventArgs e)
+		private static KeyValuePair<AbstractEntity, string> GetEntityDataAndField(AbstractPlaceholder placeholder)
+		{
+			BindingExpression   binding     = placeholder.ValueBindingExpression;
+			DataSourceType      sourceType  = binding.GetSourceType ();
+
+			if (sourceType == DataSourceType.StructuredData)
+			{
+				return new KeyValuePair<AbstractEntity, string> (binding.GetSourceObject () as AbstractEntity, binding.GetSourceProperty () as string);
+			}
+			else
+			{
+				return new KeyValuePair<AbstractEntity, string> ();
+			}
+		}
+
+		private void NotifySearchTemplateChanged(AbstractPlaceholder placeholder)
 		{
 			if ((this.suspendSearchHandler > 0) ||
 				(this.entityResolver == null))
@@ -86,8 +91,6 @@ namespace Epsitec.Common.Dialogs
 				return;
 			}
 			
-			Placeholder placeholder = PlaceholderContext.InteractivePlaceholder;
-
 			if (placeholder == null)
 			{
 				//	Non-interactive update of the template; we won't kick in here.
@@ -122,30 +125,36 @@ namespace Epsitec.Common.Dialogs
 
 				if (newContext == null)
 				{
-					IEntityProxyProvider  proxyProvider = entityData;
+					IEntityProxyProvider  proxyProvider = DialogSearchController.GetEntityDataAndField (placeholder).Key;
 					DialogData.FieldProxy proxy = proxyProvider.GetEntityProxy () as DialogData.FieldProxy;
 
-					System.Diagnostics.Debug.Assert (proxy != null);
+					if (proxy != null)
+					{
+						EntityFieldPath rootPath   = proxy.GetFieldPath ().GetRootPath ();
+						AbstractEntity  rootData   = proxy.DialogData.Data;
+						Widgets.Widget  rootWidget = Panel.GetParentPanel (placeholder);
 
-					EntityFieldPath rootPath   = proxy.GetFieldPath ().GetRootPath ();
-					AbstractEntity  rootData   = proxy.DialogData.Data;
-					Widgets.Widget  rootWidget = Panel.GetParentPanel (placeholder);
+						System.Diagnostics.Debug.Assert (rootPath != null);
+						System.Diagnostics.Debug.Assert (rootPath.Count == 1);
+						System.Diagnostics.Debug.Assert (rootData != null);
+						System.Diagnostics.Debug.Assert (rootWidget != null);
 
-					System.Diagnostics.Debug.Assert (rootPath != null);
-					System.Diagnostics.Debug.Assert (rootPath.Count == 1);
-					System.Diagnostics.Debug.Assert (rootData != null);
-					System.Diagnostics.Debug.Assert (rootWidget != null);
+						newContext = new SearchContext (rootData, rootPath);
+						newContext.AnalysePlaceholderGraph (rootWidget);
 
-					newContext = new SearchContext (rootData, rootPath);
-					newContext.AnalysePlaceholderGraph (rootWidget);
-
-					this.searchContexts.Add (newContext);
+						this.searchContexts.Add (newContext);
+					}
 				}
 
 				if (oldContext != newContext)
 				{
 					this.activeSearchContext = newContext;
-					this.activeSearchContext.SetTemplateValue (placeholder);
+					
+					if (this.activeSearchContext != null)
+					{
+						this.activeSearchContext.SetTemplateValue (placeholder);
+					}
+					
 					this.OnSearchContextChanged (new DependencyPropertyChangedEventArgs ("SearchContext", oldContext, newContext));
 				}
 			}
@@ -409,39 +418,35 @@ namespace Epsitec.Common.Dialogs
 			{
 				foreach (AbstractPlaceholder placeholder in root.FindAllChildren (child => child is AbstractPlaceholder))
 				{
-					BindingExpression binding = placeholder.ValueBindingExpression;
-					DataSourceType sourceType = binding.GetSourceType ();
+					KeyValuePair<AbstractEntity, string> info = DialogSearchController.GetEntityDataAndField (placeholder);
+					
+					AbstractEntity entity = info.Key;
+					string         field  = info.Value;
 
-					if (sourceType == DataSourceType.StructuredData)
+					if ((entity == null) ||
+						(field == null))
 					{
-						AbstractEntity entity = binding.GetSourceObject () as AbstractEntity;
-						string         field  = binding.GetSourceProperty () as string;
+						continue;
+					}
 
-						if ((entity == null) ||
-							(field == null))
+					IEntityProxyProvider  proxyProvider = entity;
+					DialogData.FieldProxy proxy = proxyProvider.GetEntityProxy () as DialogData.FieldProxy;
+
+					if (proxy == null)
+					{
+						continue;
+					}
+
+					EntityFieldPath fieldPath = EntityFieldPath.CreateRelativePath (proxy.GetFieldPath (), field);
+
+					if (fieldPath.StartsWith (this.searchRootPath))
+					{
+						yield return new Node ()
 						{
-							continue;
-						}
-
-						IEntityProxyProvider  proxyProvider = entity;
-						DialogData.FieldProxy proxy = proxyProvider.GetEntityProxy () as DialogData.FieldProxy;
-
-						if (proxy == null)
-						{
-							continue;
-						}
-
-						EntityFieldPath fieldPath = EntityFieldPath.CreateRelativePath (proxy.GetFieldPath (), field);
-
-						if (fieldPath.StartsWith (this.searchRootPath))
-						{
-							yield return new Node ()
-							{
-								Placeholder = placeholder,
-								Path = fieldPath,
-								Context = this
-							};
-						}
+							Placeholder = placeholder,
+							Path = fieldPath,
+							Context = this
+						};
 					}
 				}
 			}
