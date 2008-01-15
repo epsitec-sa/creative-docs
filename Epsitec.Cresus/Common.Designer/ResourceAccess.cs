@@ -515,17 +515,17 @@ namespace Epsitec.Common.Designer
 
 				if (result == Epsitec.Common.Dialogs.DialogResult.Answer1)  // normal ?
 				{
-					Druid druid = Druid.Empty;
+					Druid entityId = Druid.Empty;
 					bool isNullable = false;
 					StructuredTypeClass typeClass = StructuredTypeClass.Entity;
 
-					Common.Dialogs.DialogResult subResult = this.designerApplication.DlgResourceSelector(Dialogs.ResourceSelector.Operation.Entities, this.designerApplication.CurrentModule, Type.Entities, ref typeClass, ref druid, ref isNullable, null, Druid.Empty);
+					Common.Dialogs.DialogResult subResult = this.designerApplication.DlgResourceSelector(Dialogs.ResourceSelector.Operation.Entities, this.designerApplication.CurrentModule, Type.Entities, ref typeClass, ref entityId, ref isNullable, null, Druid.Empty);
 					if (subResult != Common.Dialogs.DialogResult.Yes)
 					{
 						return;
 					}
 
-					FormEngine.FormDescription form = new FormEngine.FormDescription(druid, Druid.Empty);
+					FormEngine.FormDescription form = new FormEngine.FormDescription(entityId, Druid.Empty);
 					this.FormInitialize(form, ref newName);
 
 					string xml = FormEngine.Serialization.SerializeForm(form);
@@ -539,20 +539,28 @@ namespace Epsitec.Common.Designer
 
 				if (result == Epsitec.Common.Dialogs.DialogResult.Answer2)  // patch ?
 				{
-					Druid druid = Druid.Empty;
+					Druid formId = Druid.Empty;
 					bool isNullable = false;
 					StructuredTypeClass typeClass = StructuredTypeClass.None;
 
-					Common.Dialogs.DialogResult subResult = this.designerApplication.DlgResourceSelector(Dialogs.ResourceSelector.Operation.Form, this.designerApplication.CurrentModule, Type.Forms, ref typeClass, ref druid, ref isNullable, null, Druid.Empty);
+					Common.Dialogs.DialogResult subResult = this.designerApplication.DlgResourceSelector(Dialogs.ResourceSelector.Operation.Form, this.designerApplication.CurrentModule, Type.Forms, ref typeClass, ref formId, ref isNullable, null, Druid.Empty);
 					if (subResult != Common.Dialogs.DialogResult.Yes)
 					{
 						return;
 					}
 
-					// TODO:
-					return;
-#if false
-					FormEngine.FormDescription form = new FormEngine.FormDescription(druid);
+					// TODO: empêcher de choisir une entité pas en accord avec le Form choisi précédemment !
+					Druid entityId = Druid.Empty;
+					isNullable = false;
+					typeClass = StructuredTypeClass.Entity;
+
+					subResult = this.designerApplication.DlgResourceSelector(Dialogs.ResourceSelector.Operation.Entities, this.designerApplication.CurrentModule, Type.Entities, ref typeClass, ref entityId, ref isNullable, null, Druid.Empty);
+					if (subResult != Common.Dialogs.DialogResult.Yes)
+					{
+						return;
+					}
+
+					FormEngine.FormDescription form = new FormEngine.FormDescription(entityId, formId);
 					this.FormInitialize(form, ref newName);
 
 					string xml = FormEngine.Serialization.SerializeForm(form);
@@ -562,7 +570,6 @@ namespace Epsitec.Common.Designer
 
 					StructuredData data = newItem.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
 					data.SetValue(Support.Res.Fields.ResourceForm.XmlSource, xml);
-#endif
 				}
 			}
 			else
