@@ -160,11 +160,22 @@ namespace Epsitec.Common.UI
 		/// Sets the value of this placeholder; called by <see cref="Controllers.AbstractController"/>.
 		/// </summary>
 		/// <param name="value">The value.</param>
-		internal void InternalControllerSetValue(object value)
+		public void InternalControllerSetValue(object value)
 		{
 			this.Value = value;
 		}
 
+		/// <summary>
+		/// Forces an update as if the placeholder changed from the old value
+		/// to the new value.
+		/// </summary>
+		/// <param name="oldValue">The old value.</param>
+		/// <param name="newValue">The new value.</param>
+		public void InternalUpdateValue(object oldValue, object newValue)
+		{
+			this.UpdateValue (oldValue, newValue);
+		}
+		
 		protected override void OnBindingChanged(DependencyProperty property)
 		{
 			if (property == AbstractPlaceholder.ValueProperty)

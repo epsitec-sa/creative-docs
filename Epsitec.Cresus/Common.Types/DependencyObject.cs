@@ -453,16 +453,38 @@ namespace Epsitec.Common.Types
 
 				object new_value = this.GetValue (property);
 
-				if (old_value == new_value)
+				if (DependencyObject.EqualValues (old_value, new_value))
 				{
 					//	C'est exactement la même valeur -- on ne signale donc rien ici.
 				}
-				else if ((old_value == null) || (!old_value.Equals (new_value)))
+				else
 				{
 					this.InvalidateProperty (property, old_value, new_value, metadata);
 				}
 			}
 		}
+
+		public static bool EqualValues(object valueA, object valueB)
+		{
+				if (valueA == valueB)
+				{
+					return true;
+				}
+				else if ((valueA == null) || (valueB == null))
+				{
+					return false;
+				}
+				else if (valueA.Equals (valueB))
+				{
+					return true;
+				}
+				else
+				{
+					return false;
+				}
+
+		}
+		
 		private void ClearValue(DependencyProperty property, DependencyPropertyMetadata metadata)
 		{
 			if (metadata.InheritsValue)
@@ -479,11 +501,11 @@ namespace Epsitec.Common.Types
 
 				object new_value = this.GetValue (property);
 
-				if (old_value == new_value)
+				if (DependencyObject.EqualValues (old_value, new_value))
 				{
 					//	C'est exactement la même valeur -- on ne signale donc rien ici.
 				}
-				else if ((old_value == null) || (!old_value.Equals (new_value)))
+				else
 				{
 					this.InvalidateProperty (property, old_value, new_value, metadata);
 				}
@@ -998,19 +1020,17 @@ namespace Epsitec.Common.Types
 				object va = entry.Value;
 				object vb = b.GetValue (entry.Property);
 
-				if (va == vb)
+				if (DependencyObject.EqualValues (va, vb))
 				{
 					continue;
 				}
+				
 				if ((va == null) ||
 					(vb == null))
 				{
 					return false;
 				}
-				if (va.Equals (vb))
-				{
-					continue;
-				}
+				
 				if ((va is System.Collections.ICollection) &&
 					(vb is System.Collections.ICollection))
 				{

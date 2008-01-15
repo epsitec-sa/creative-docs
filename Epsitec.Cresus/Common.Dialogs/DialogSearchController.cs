@@ -64,7 +64,10 @@ namespace Epsitec.Common.Dialogs
 		{
 			if (PlaceholderContext.Depth == 1)
 			{
-				this.NotifySearchTemplateChanged (PlaceholderContext.InteractivePlaceholder);
+				UI.Controllers.AbstractController controller = sender as UI.Controllers.AbstractController;
+				object value = controller.GetActualValue ();
+
+				this.NotifySearchTemplateChanged (PlaceholderContext.InteractivePlaceholder, value);
 			}
 		}
 
@@ -83,7 +86,7 @@ namespace Epsitec.Common.Dialogs
 			}
 		}
 
-		private void NotifySearchTemplateChanged(AbstractPlaceholder placeholder)
+		private void NotifySearchTemplateChanged(AbstractPlaceholder placeholder, object value)
 		{
 			if ((this.suspendSearchHandler > 0) ||
 				(this.entityResolver == null))
@@ -103,7 +106,7 @@ namespace Epsitec.Common.Dialogs
 			{
 				//	The placeholder already belongs to the active search context.
 
-				this.activeSearchContext.SetTemplateValue (placeholder);
+				this.activeSearchContext.SetTemplateValue (placeholder, value);
 			}
 			else
 			{
@@ -152,7 +155,7 @@ namespace Epsitec.Common.Dialogs
 					
 					if (this.activeSearchContext != null)
 					{
-						this.activeSearchContext.SetTemplateValue (placeholder);
+						this.activeSearchContext.SetTemplateValue (placeholder, value);
 					}
 					
 					this.OnSearchContextChanged (new DependencyPropertyChangedEventArgs ("SearchContext", oldContext, newContext));
@@ -352,19 +355,15 @@ namespace Epsitec.Common.Dialogs
 				}
 			}
 
-			public void SetTemplateValue(AbstractPlaceholder placeholder)
+			public void SetTemplateValue(AbstractPlaceholder placeholder, object value)
 			{
-				Node node = this.FindNode (placeholder);
-
-				System.Diagnostics.Debug.Assert (node.IsEmpty == false);
-
-				EntityFieldPath readPath = node.Path;
-
-				this.SetTemplateValue (node, readPath.NavigateRead (this.searchRootData));
+				this.SetTemplateValue (this.FindNode (placeholder), value);
 			}
 
 			public void SetTemplateValue(Node node, object value)
 			{
+				System.Diagnostics.Debug.Assert (node.IsEmpty == false);
+
 				EntityFieldPath writePath = node.Path.StripStart (this.searchRootPath);
 
 				writePath.CreateMissingNodes (this.searchTemplate);
@@ -375,9 +374,15 @@ namespace Epsitec.Common.Dialogs
 			{
 				EntityFieldPath readPath = node.Path.StripStart (this.searchRootPath);
 				
-				object value = entity == null ? UndefinedValue.Value : readPath.NavigateRead (entity);
+				object oldValue = node.Placeholder.Value;
+				object newValue = entity == null ? UndefinedValue.Value : readPath.NavigateRead (entity);
 
-				node.Placeholder.Value = value;
+				node.Placeholder.Value = newValue;
+
+				if (DependencyObject.EqualValues (oldValue, newValue))
+				{
+					node.Placeholder.InternalUpdateValue (oldValue, newValue);
+				}
 			}
 
 			public int FindNodeIndex(AbstractPlaceholder placeholder)
