@@ -477,4 +477,9 @@
   <data name="BundleType.Forms" id="2M4">Masques</data>
   <data name="Viewers.Panels.TabRelations" id="2N4">Source</data>
   <data name="Viewers.Panels.TabFields" id="2O4">Contenu</data>
+  <data name="Forms.Question.Create.Base" id="2P4">Quelle sorte de masque voulez-vous créer ?</data>
+  <data name="Forms.Question.Create.Long.Normal" id="2Q4">Masque normal, basé sur une entité à choix.</data>
+  <data name="Forms.Question.Create.Long.Patch" id="2R4">Masque de patch, basé sur un masque existant.</data>
+  <data name="Forms.Question.Create.Quick.Normal" id="2S4">Normal</data>
+  <data name="Forms.Question.Create.Quick.Patch" id="2T4">Patch</data>
 </bundle>

@@ -501,11 +501,33 @@ namespace Epsitec.Common.Designer
 			}
 			else if (this.type == Type.Forms && !duplicateContent)
 			{
+				string header = Res.Strings.Forms.Question.Create.Base;
+
+				List<string> questions = new List<string>();
+				questions.Add(ConfirmationButton.FormatContent(Res.Strings.Forms.Question.Create.Quick.Normal, Res.Strings.Forms.Question.Create.Long.Normal));
+				questions.Add(ConfirmationButton.FormatContent(Res.Strings.Forms.Question.Create.Quick.Patch, Res.Strings.Forms.Question.Create.Long.Patch));
+				
+				Common.Dialogs.DialogResult result = this.designerApplication.DialogConfirmation(header, questions, true);
+				if (result == Epsitec.Common.Dialogs.DialogResult.Cancel)
+				{
+					return;
+				}
+
+				if (result == Epsitec.Common.Dialogs.DialogResult.Answer1)  // normal ?
+				{
+				}
+
+				if (result == Epsitec.Common.Dialogs.DialogResult.Answer2)  // patch ?
+				{
+				}
+
+
+
 				Druid druid = Druid.Empty;
 				bool isNullable = false;
 				StructuredTypeClass typeClass = StructuredTypeClass.Entity;
 
-				Common.Dialogs.DialogResult result = this.designerApplication.DlgResourceSelector(Dialogs.ResourceSelector.Operation.Entities, this.designerApplication.CurrentModule, Type.Entities, ref typeClass, ref druid, ref isNullable, null, Druid.Empty);
+				result = this.designerApplication.DlgResourceSelector(Dialogs.ResourceSelector.Operation.Entities, this.designerApplication.CurrentModule, Type.Entities, ref typeClass, ref druid, ref isNullable, null, Druid.Empty);
 				if (result != Common.Dialogs.DialogResult.Yes)
 				{
 					return;
