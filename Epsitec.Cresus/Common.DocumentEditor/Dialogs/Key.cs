@@ -65,7 +65,7 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 				this.keyLabel.Dock = DockStyle.Top;
 				this.keyLabel.Margins = new Margins (6, 6, 20, 0);
 
-				Panel keys = new Panel(this.window.Root);
+				Viewport keys = new Viewport(this.window.Root);
 				keys.PreferredHeight = 20;
 				keys.Dock = DockStyle.Top;
 				keys.Margins = new Margins (6, 0, 6, 0);

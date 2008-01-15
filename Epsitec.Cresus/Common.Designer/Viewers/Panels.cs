@@ -57,10 +57,10 @@ namespace Epsitec.Common.Designer.Viewers
 			this.drawingScrollable.Dock = DockStyle.Fill;
 			this.drawingScrollable.HorizontalScrollerMode = ScrollableScrollerMode.ShowAlways;
 			this.drawingScrollable.VerticalScrollerMode = ScrollableScrollerMode.ShowAlways;
-			this.drawingScrollable.Panel.IsAutoFitting = true;
+			this.drawingScrollable.Viewport.IsAutoFitting = true;
 			this.drawingScrollable.PaintForegroundFrame = true;
 
-			FrameBox container = new FrameBox(this.drawingScrollable.Panel);
+			FrameBox container = new FrameBox(this.drawingScrollable.Viewport);
 			container.MinWidth = 100;
 			container.Dock = DockStyle.Fill;
 
@@ -128,8 +128,8 @@ namespace Epsitec.Common.Designer.Viewers
 			this.propertiesScrollable.Dock = DockStyle.Fill;
 			this.propertiesScrollable.HorizontalScrollerMode = ScrollableScrollerMode.ShowAlways;
 			this.propertiesScrollable.VerticalScrollerMode = ScrollableScrollerMode.ShowAlways;
-			this.propertiesScrollable.Panel.IsAutoFitting = true;
-			this.propertiesScrollable.Panel.Margins = new Margins(10, 10, 10, 10);
+			this.propertiesScrollable.Viewport.IsAutoFitting = true;
+			this.propertiesScrollable.Viewport.Margins = new Margins(10, 10, 10, 10);
 			this.propertiesScrollable.PaintForegroundFrame = true;
 
 			//	Crée l'onglet 'objets'.
@@ -160,8 +160,8 @@ namespace Epsitec.Common.Designer.Viewers
 			this.objectsScrollable.Dock = DockStyle.Fill;
 			this.objectsScrollable.HorizontalScrollerMode = ScrollableScrollerMode.ShowAlways;
 			this.objectsScrollable.VerticalScrollerMode = ScrollableScrollerMode.ShowAlways;
-			this.objectsScrollable.Panel.IsAutoFitting = true;
-			this.objectsScrollable.Panel.Padding = new Margins(6, 6, 6, 6);
+			this.objectsScrollable.Viewport.IsAutoFitting = true;
+			this.objectsScrollable.Viewport.Padding = new Margins(6, 6, 6, 6);
 			this.objectsScrollable.PaintForegroundFrame = true;
 
 			//	Crée l'onglet 'cultures'.
@@ -872,7 +872,7 @@ namespace Epsitec.Common.Designer.Viewers
 			//	Construit l'arbre des objets.
 			if (oper == Viewers.Changing.Selection)
 			{
-				this.TreeUpdateSelection(this.objectsScrollable.Panel.Children);
+				this.TreeUpdateSelection(this.objectsScrollable.Viewport.Children);
 			}
 			else
 			{
@@ -889,7 +889,7 @@ namespace Epsitec.Common.Designer.Viewers
 		{
 			//	Supprime et libère l'arbre des objets.
 			this.TreeDispose();
-			this.objectsScrollable.Panel.Children.Clear();  // supprime tous les boutons
+			this.objectsScrollable.Viewport.Children.Clear();  // supprime tous les boutons
 		}
 
 		protected void TreeUpdateSelection(Widgets.Collections.FlatChildrenCollection childrens)
@@ -916,12 +916,12 @@ namespace Epsitec.Common.Designer.Viewers
 			if (deep >= bands.Count)
 			{
 				//	Crée le conteneur horizonal pour les boutons.
-				FrameBox band = new FrameBox(this.objectsScrollable.Panel);
+				FrameBox band = new FrameBox(this.objectsScrollable.Viewport);
 				band.Dock = DockStyle.Top;
 				bands.Add(band);
 
 				//	Crée le conteneur horizontal pour les liaisons.
-				MyWidgets.TreeBranches tb = new MyWidgets.TreeBranches(this.objectsScrollable.Panel);
+				MyWidgets.TreeBranches tb = new MyWidgets.TreeBranches(this.objectsScrollable.Viewport);
 				tb.PreferredHeight = Panels.treeBranchesHeight;
 				tb.Dock = DockStyle.Top;
 				branches.Add(tb);
@@ -1017,7 +1017,7 @@ namespace Epsitec.Common.Designer.Viewers
 			HSlider slider = sender as HSlider;
 			Panels.treeBranchesHeight = (double) slider.Value;
 
-			foreach (Widget widget in this.objectsScrollable.Panel.Children)
+			foreach (Widget widget in this.objectsScrollable.Viewport.Children)
 			{
 				if (widget is MyWidgets.TreeBranches)
 				{
@@ -1029,7 +1029,7 @@ namespace Epsitec.Common.Designer.Viewers
 		protected void TreeDispose()
 		{
 			//	Libère tout l'arbre des objets.
-			this.TreeDispose(this.objectsScrollable.Panel.Children);
+			this.TreeDispose(this.objectsScrollable.Viewport.Children);
 		}
 
 		protected void TreeDispose(Widgets.Collections.FlatChildrenCollection childrens)
@@ -1059,13 +1059,13 @@ namespace Epsitec.Common.Designer.Viewers
 			//	Crée les proxies et l'interface utilisateur pour les widgets sélectionnés.
 			this.ClearProxies();
 			this.proxyManager.SetSelection(widgets);
-			this.proxyManager.CreateUserInterface(this.propertiesScrollable.Panel);
+			this.proxyManager.CreateUserInterface(this.propertiesScrollable.Viewport);
 		}
 
 		protected void ClearProxies()
 		{
 			//	Supprime l'interface utilisateur pour les widgets sélectionnés.
-			this.proxyManager.ClearUserInterface(this.propertiesScrollable.Panel);
+			this.proxyManager.ClearUserInterface(this.propertiesScrollable.Viewport);
 		}
 
 		protected void UpdateProxies()
@@ -1083,7 +1083,7 @@ namespace Epsitec.Common.Designer.Viewers
 			if (this.proxyManager.RegenerateProxies())
 			{
 				this.ClearProxies();
-				this.proxyManager.CreateUserInterface(this.propertiesScrollable.Panel);
+				this.proxyManager.CreateUserInterface(this.propertiesScrollable.Viewport);
 			}
 		}
 
@@ -1099,7 +1099,7 @@ namespace Epsitec.Common.Designer.Viewers
 			if (this.proxyManager.RegenerateProxies())
 			{
 				this.ClearProxies();
-				this.proxyManager.CreateUserInterface(this.propertiesScrollable.Panel);
+				this.proxyManager.CreateUserInterface(this.propertiesScrollable.Viewport);
 			}
 
 			this.panelEditor.RegenerateDimensions();

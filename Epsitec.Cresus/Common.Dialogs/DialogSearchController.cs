@@ -378,7 +378,7 @@ namespace Epsitec.Common.Dialogs
 				object oldValue = node.Placeholder.Value;
 				object newValue = entity == null ? UndefinedValue.Value : readPath.NavigateRead (entity);
 
-				if (DependencyObject.EqualValues (oldValue, newValue))
+				if (DependencyObject.EqualObjectValues (oldValue, newValue))
 				{
 					//	This is the same value as previously. Since setting the
 					//	value would not refresh the user interface, we force the

@@ -94,13 +94,13 @@ namespace Epsitec.Common.Document.Containers
 			this.bottomScrollable.Dock = DockStyle.Fill;
 			this.bottomScrollable.HorizontalScrollerMode = ScrollableScrollerMode.HideAlways;
 			this.bottomScrollable.VerticalScrollerMode = ScrollableScrollerMode.ShowAlways;
-			this.bottomScrollable.Panel.IsAutoFitting = true;
+			this.bottomScrollable.Viewport.IsAutoFitting = true;
 			this.bottomScrollable.PaintForegroundFrame = true;
 			this.bottomScrollable.ForegroundFrameMargins = new Margins(0, 1, 0, 0);
 			this.bottomScrollable.SetParent(this.bottomPage);
 
 			//	Conteneur du panneau.
-			this.panelContainer = new Widget(this.bottomScrollable.Panel);
+			this.panelContainer = new Widget(this.bottomScrollable.Viewport);
 			this.panelContainer.PreferredHeight = 0.0;
 			this.panelContainer.Dock = DockStyle.Top;
 			this.panelContainer.Margins = new Margins(0, 1, 0, 0);
@@ -113,7 +113,7 @@ namespace Epsitec.Common.Document.Containers
 			this.colorSelector.CloseButtonVisibility = true;
 			this.colorSelector.ColorChanged += new EventHandler<DependencyPropertyChangedEventArgs>(this.HandleColorSelectorChanged);
 			this.colorSelector.CloseClicked += new EventHandler(this.HandleColorSelectorClosed);
-			this.colorSelector.SetParent(this.bottomScrollable.Panel);
+			this.colorSelector.SetParent(this.bottomScrollable.Viewport);
 			this.colorSelector.Dock = DockStyle.Top;
 			this.colorSelector.Margins = new Margins(1, 3, 5, 2);
 			this.colorSelector.TabIndex = 100;

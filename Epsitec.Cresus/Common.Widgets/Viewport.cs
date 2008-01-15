@@ -6,18 +6,18 @@ using Epsitec.Common.Support;
 namespace Epsitec.Common.Widgets
 {
 	/// <summary>
-	/// La classe Panel représente un widget qui permet de grouper d'autres widgets
-	/// tout en limitant la surface affichée à une ouverture (aperture). Un Panel
+	/// La classe Viewport représente un widget qui permet de grouper d'autres widgets
+	/// tout en limitant la surface affichée à une ouverture (aperture). Un Viewport
 	/// s'utilise en principe en association avec un Scrollable.
 	/// </summary>
-	public class Panel : AbstractGroup
+	public class Viewport : AbstractGroup
 	{
-		public Panel()
+		public Viewport()
 		{
 			this.aperture = Drawing.Rectangle.MaxValue;
 		}
 		
-		public Panel(Widget embedder) : this()
+		public Viewport(Widget embedder) : this()
 		{
 			this.SetEmbedder (embedder);
 		}
@@ -34,41 +34,17 @@ namespace Epsitec.Common.Widgets
 			
 			get
 			{
-				return this.surface_size;
+				return this.surfaceSize;
 			}
 			set
 			{
-				if (this.surface_size != value)
+				if (this.surfaceSize != value)
 				{
-					this.surface_size = value;
+					this.surfaceSize = value;
 					this.OnSurfaceSizeChanged ();
 				}
 			}
 		}
-		
-		public bool								IsAutoFitting
-		{
-			get
-			{
-				return this.is_auto_fitting;
-			}
-			set
-			{
-				if (this.is_auto_fitting != value)
-				{
-					this.is_auto_fitting = value;
-					
-					this.OnIsAutoFittingChanged ();
-					
-					if (this.is_auto_fitting)
-					{
-//-						this.ForceLayout ();
-					}
-				}
-				
-			}
-		}
-		
 		
 		public double							SurfaceWidth
 		{
@@ -78,7 +54,7 @@ namespace Epsitec.Common.Widgets
 			}
 			set
 			{
-				this.SurfaceSize = new Drawing.Size (value, this.surface_size.Height);
+				this.SurfaceSize = new Drawing.Size (value, this.surfaceSize.Height);
 			}
 		}
 		
@@ -90,25 +66,24 @@ namespace Epsitec.Common.Widgets
 			}
 			set
 			{
-				this.SurfaceSize = new Drawing.Size (this.surface_size.Width, value);
+				this.SurfaceSize = new Drawing.Size (this.surfaceSize.Width, value);
 			}
 		}
-		
-		
+
 		public Drawing.Rectangle				Aperture
 		{
 			//	L'ouverture, si elle est définie pour un panel, permet de définir quelle
 			//	partie est actuellement visible, relativement au système de coordonnées
 			//	client du panel.
-			
+
 			//	Pour indiquer que le panel complet est visible, il faut assigner à Aperture
 			//	la valeur Drawing.Rectangle.MaxValue.
-			
+
 			get
 			{
 				return this.aperture;
 			}
-			
+
 			set
 			{
 				if (this.aperture != value)
@@ -119,6 +94,30 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+		public bool								IsAutoFitting
+		{
+			get
+			{
+				return this.isAutoFitting;
+			}
+			set
+			{
+				if (this.isAutoFitting != value)
+				{
+					this.isAutoFitting = value;
+
+					this.OnIsAutoFittingChanged ();
+
+					if (this.isAutoFitting)
+					{
+						//-						this.ForceLayout ();
+					}
+				}
+
+			}
+		}
+		
+		
 		public override bool HitTest(Drawing.Point point)
 		{
 			if (this.aperture == Drawing.Rectangle.MaxValue)
@@ -163,7 +162,7 @@ namespace Epsitec.Common.Widgets
 		{
  			base.ArrangeOverride(context);
 			
-			if (this.is_auto_fitting)
+			if (this.isAutoFitting)
 			{
 				Layouts.LayoutMeasure measureDx = Layouts.LayoutMeasure.GetWidth (this);
 				Layouts.LayoutMeasure measureDy = Layouts.LayoutMeasure.GetHeight (this);
@@ -177,7 +176,6 @@ namespace Epsitec.Common.Widgets
 				}
 			}
 		}
-
 		
 		protected virtual void OnSurfaceSizeChanged()
 		{
@@ -225,7 +223,7 @@ namespace Epsitec.Common.Widgets
 		
 		
 		protected Drawing.Rectangle				aperture;
-		protected Drawing.Size					surface_size;
-		protected bool							is_auto_fitting;
+		protected Drawing.Size					surfaceSize;
+		protected bool							isAutoFitting;
 	}
 }

@@ -481,7 +481,7 @@ namespace Epsitec.Common.Widgets
 			this.toolBar.Items.Add (new IconButton (@"file:images/paste.png"));
 			this.toolBar.SetParent (this.window.Root);
 
-			Widget root = new Panel();
+			Widget root = new Viewport();
 //			root.SetClientAngle(0);
 //			root.SetClientZoom(1.0);
 //-			root.Location = new Point(0, 0);

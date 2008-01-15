@@ -66,7 +66,7 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 				this.window.Text = Res.Strings.Dialog.Export.Type.Title;
 				this.window.WindowCloseClicked += new EventHandler(this.HandleWindowExportCloseClicked);
 
-				Panel panel = new Panel(this.window.Root);
+				Viewport panel = new Viewport(this.window.Root);
 				panel.Anchor = AnchorStyles.LeftAndRight | AnchorStyles.TopAndBottom;
 				panel.Margins = new Margins(6, 6, 6, 32);
 

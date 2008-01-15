@@ -543,7 +543,7 @@ namespace Epsitec.Common.Document
                 this.windowExportICO = window;
 
 				Widget parent = this.windowExportICO.Root.FindChild("Panel");
-				Panel container = new Panel(parent);
+				Viewport container = new Viewport(parent);
 				container.Name = "Container";
 				container.Dock = DockStyle.Fill;
 
@@ -647,7 +647,7 @@ namespace Epsitec.Common.Document
 		public static void CreateLabel(Widget parent, string label, string info)
 		{
 			//	Crée des widgets pour afficher un texte fixe.
-			Panel container = new Panel(parent);
+			Viewport container = new Viewport(parent);
 			container.PreferredHeight = 18;
 			container.Dock = DockStyle.Top;
 			container.Margins = new Margins(10, 10, 0, 0);
@@ -738,7 +738,7 @@ namespace Epsitec.Common.Document
 			Settings.Double sDouble = settings as Settings.Double;
 			if ( sDouble == null )  return;
 
-			Panel container = new Panel(parent);
+			Viewport container = new Viewport(parent);
 			container.PreferredHeight = 22;
 			container.TabIndex = this.tabIndex++;
 			container.Dock = DockStyle.Top;
@@ -779,7 +779,7 @@ namespace Epsitec.Common.Document
 
 			if ( sDouble.Info )
 			{
-				container = new Panel(parent);
+				container = new Viewport(parent);
 				container.PreferredHeight = 18;
 				container.TabIndex = this.tabIndex++;
 				container.Dock = DockStyle.Top;
@@ -799,7 +799,7 @@ namespace Epsitec.Common.Document
 				Size size = this.document.Printer.ImagePixelSize;
 
 				//	Ligne supplémentaire pour la largeur.
-				container = new Panel(parent);
+				container = new Viewport(parent);
 				container.PreferredHeight = 22;
 				container.TabIndex = this.tabIndex++;
 				container.Dock = DockStyle.Top;
@@ -829,7 +829,7 @@ namespace Epsitec.Common.Document
 				this.WidgetsTableAdd(field, "");
 
 				//	Ligne supplémentaire pour la hauteur.
-				container = new Panel(parent);
+				container = new Viewport(parent);
 				container.PreferredHeight = 22;
 				container.TabIndex = this.tabIndex++;
 				container.Dock = DockStyle.Top;
@@ -973,20 +973,20 @@ namespace Epsitec.Common.Document
 			StaticText text;
 			TextFieldReal field;
 
-			Panel container = new Panel(parent);
+			Viewport container = new Viewport(parent);
 			container.PreferredHeight = 22+2+22;
 			container.TabIndex = this.tabIndex++;
 			container.Dock = DockStyle.Top;
 			container.Margins = new Margins(10, 10, 0, 5);
 
-			Panel containerXY = new Panel(container);
+			Viewport containerXY = new Viewport(container);
 			containerXY.PreferredWidth = 120+60;
 			containerXY.PreferredHeight = container.PreferredHeight;
 			containerXY.TabIndex = this.tabIndex++;
 			containerXY.Dock = DockStyle.Left;
 			containerXY.Margins = new Margins(0, 0, 0, 0);
 
-			Panel containerX = new Panel(containerXY);
+			Viewport containerX = new Viewport(containerXY);
 			containerX.PreferredWidth = containerXY.PreferredWidth;
 			containerX.PreferredHeight = 22;
 			containerX.TabIndex = this.tabIndex++;
@@ -1024,7 +1024,7 @@ namespace Epsitec.Common.Document
 			field.Margins = new Margins(0, 0, 0, 0);
 			this.WidgetsTableAdd(field, ".X");
 
-			Panel containerY = new Panel(containerXY);
+			Viewport containerY = new Viewport(containerXY);
 			containerY.PreferredWidth = containerXY.PreferredWidth;
 			containerY.PreferredHeight = 22;
 			containerY.TabIndex = this.tabIndex++;
@@ -1086,13 +1086,13 @@ namespace Epsitec.Common.Document
 			{
 				Button button;
 
-				Panel containerD = new Panel(container);
+				Viewport containerD = new Viewport(container);
 				containerD.PreferredWidth = 33;
 				containerD.TabIndex = this.tabIndex++;
 				containerD.Dock = DockStyle.Left;
 				containerD.Margins = new Margins(0, 0, 0, 0);
 
-				Panel containerDX = new Panel(containerD);
+				Viewport containerDX = new Viewport(containerD);
 				containerDX.PreferredWidth = containerD.PreferredWidth;
 				containerDX.PreferredHeight = 22;
 				containerDX.TabIndex = this.tabIndex++;
@@ -1125,7 +1125,7 @@ namespace Epsitec.Common.Document
 				button.Clicked += new MessageEventHandler(HandleDoublerPointMulXClicked);
 				this.WidgetsTableAdd(button, ".DoublerMulX");
 
-				Panel containerDY = new Panel(containerD);
+				Viewport containerDY = new Viewport(containerD);
 				containerDY.PreferredWidth = containerD.PreferredWidth;
 				containerDY.PreferredHeight = 22;
 				containerDY.TabIndex = this.tabIndex++;
@@ -1273,7 +1273,7 @@ namespace Epsitec.Common.Document
 			Settings.Integer sInteger = settings as Settings.Integer;
 			if ( sInteger == null )  return;
 
-			Panel container = new Panel(parent);
+			Viewport container = new Viewport(parent);
 			container.PreferredHeight = 22;
 			container.TabIndex = this.tabIndex++;
 			container.Dock = DockStyle.Top;
@@ -1345,7 +1345,7 @@ namespace Epsitec.Common.Document
 			Settings.String sString = settings as Settings.String;
 			if ( sString == null )  return;
 
-			Panel container = new Panel(parent);
+			Viewport container = new Viewport(parent);
 			container.PreferredHeight = 22;
 			container.TabIndex = this.tabIndex++;
 			container.Dock = DockStyle.Top;
@@ -1405,7 +1405,7 @@ namespace Epsitec.Common.Document
 		protected void CreatePaper(Widget parent)
 		{
 			//	Crée un widget combo pour éditer le format d'une page.
-			Panel container = new Panel(parent);
+			Viewport container = new Viewport(parent);
 			container.PreferredHeight = 22;
 			container.TabIndex = this.tabIndex++;
 			container.Dock = DockStyle.Top;
@@ -1440,7 +1440,7 @@ namespace Epsitec.Common.Document
 			radio.Index = 2;
 			this.WidgetsTableAdd(radio, "");
 
-			container = new Panel(parent);
+			container = new Viewport(parent);
 			container.PreferredHeight = 22;
 			container.TabIndex = this.tabIndex++;
 			container.Dock = DockStyle.Top;
@@ -1664,7 +1664,7 @@ namespace Epsitec.Common.Document
 			Settings.String sString = settings as Settings.String;
 			if ( sString == null )  return;
 
-			Panel container = new Panel(parent);
+			Viewport container = new Viewport(parent);
 			container.PreferredHeight = 22;
 			container.TabIndex = this.tabIndex++;
 			container.Dock = DockStyle.Top;
@@ -1777,7 +1777,7 @@ namespace Epsitec.Common.Document
 			this.WidgetsTableAdd(radio, ".All");
 			
 			//	début from-to
-			Panel container = new Panel(parent);
+			Viewport container = new Viewport(parent);
 			container.PreferredHeight = 20;
 			container.TabIndex = this.tabIndex++;
 			container.Dock = DockStyle.Top;

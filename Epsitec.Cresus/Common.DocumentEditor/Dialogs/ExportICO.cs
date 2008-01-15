@@ -29,7 +29,7 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 				this.window.Owner = this.editor.Window;
 				this.window.WindowCloseClicked += new EventHandler(this.HandleWindowExportCloseClicked);
 
-				Panel panel = new Panel(this.window.Root);
+				Viewport panel = new Viewport(this.window.Root);
 				panel.Name = "Panel";
 				panel.Anchor = AnchorStyles.LeftAndRight | AnchorStyles.TopAndBottom;
 				panel.Margins = new Margins(10, 10, 10, 40);

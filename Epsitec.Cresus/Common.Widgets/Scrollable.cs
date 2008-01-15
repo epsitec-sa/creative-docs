@@ -18,7 +18,7 @@ namespace Epsitec.Common.Widgets
 	}
 	
 	/// <summary>
-	/// La classe Scrollable permet de représenter un Panel de taille
+	/// La classe Scrollable permet de représenter un Viewport de taille
 	/// quelconque dans une surface de taille déterminée, en ajoutant
 	/// au besoin des ascenceurs.
 	/// </summary>
@@ -45,7 +45,7 @@ namespace Epsitec.Common.Widgets
 			this.hScroller.ValueChanged += new Support.EventHandler (this.HandleHScrollerValueChanged);
 			this.vScroller.ValueChanged += new Support.EventHandler (this.HandleVScrollerValueChanged);
 
-			this.Panel = new Panel ();
+			this.Viewport = new Viewport ();
 		}
 		
 		public Scrollable(Widget embedder) : this ()
@@ -54,46 +54,46 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		public Panel							Panel
+		public Viewport							Viewport
 		{
 			get
 			{
-				return (Panel) this.GetValue (Scrollable.PanelProperty);
+				return (Viewport) this.GetValue (Scrollable.ViewportProperty);
 			}
-			set
+			private set
 			{
-				this.SetValue (Scrollable.PanelProperty, value);
+				this.SetValue (Scrollable.ViewportProperty, value);
 			}
 		}
 
-		public double							PanelOffsetX
+		public double ViewportOffsetX
 		{
 			get
 			{
-				return this.panelOffset.X;
+				return this.viewportOffset.X;
 			}
 			set
 			{
-				if (this.panelOffset.X != value)
+				if (this.viewportOffset.X != value)
 				{
-					this.panelOffset.X = value;
-					this.UpdatePanelLocation ();
+					this.viewportOffset.X = value;
+					this.UpdateViewportLocation ();
 				}
 			}
 		}
 
-		public double							PanelOffsetY
+		public double ViewportOffsetY
 		{
 			get
 			{
-				return this.panelOffset.Y;
+				return this.viewportOffset.Y;
 			}
 			set
 			{
-				if (this.panelOffset.Y != value)
+				if (this.viewportOffset.Y != value)
 				{
-					this.panelOffset.Y = value;
-					this.UpdatePanelLocation ();
+					this.viewportOffset.Y = value;
+					this.UpdateViewportLocation ();
 				}
 			}
 		}
@@ -163,7 +163,7 @@ namespace Epsitec.Common.Widgets
 		{
 			if (disposing)
 			{
-				this.Panel = null;
+				this.Viewport = null;
 				
 				this.hScroller.ValueChanged -= new Support.EventHandler (this.HandleHScrollerValueChanged);
 				this.vScroller.ValueChanged -= new Support.EventHandler (this.HandleVScrollerValueChanged);
@@ -183,45 +183,45 @@ namespace Epsitec.Common.Widgets
 			base.SetBoundsOverride(oldRect, newRect);
 			this.UpdateGeometry ();
 		}
-		
-		
-		protected void AttachPanel(Panel panel)
+
+
+		protected void AttachViewport(Viewport viewport)
 		{
-			if (panel != null)
+			if (viewport != null)
 			{
-				panel.SetEmbedder (this);
-				panel.Aperture = Drawing.Rectangle.Empty;
-				
-				panel.SurfaceSizeChanged += new Support.EventHandler (this.HandlePanelSurfaceSizeChanged);
+				viewport.SetEmbedder (this);
+				viewport.Aperture = Drawing.Rectangle.Empty;
+
+				viewport.SurfaceSizeChanged += new Support.EventHandler (this.HandleViewportSurfaceSizeChanged);
 			}
 		}
-		
-		protected void DetachPanel(Panel panel)
+
+		protected void DetachViewport(Viewport viewport)
 		{
-			if (panel != null)
+			if (viewport != null)
 			{
-				panel.SurfaceSizeChanged -= new Support.EventHandler (this.HandlePanelSurfaceSizeChanged);
-				
-				panel.SetEmbedder (null);
-				panel.Aperture = Drawing.Rectangle.MaxValue;
+				viewport.SurfaceSizeChanged -= new Support.EventHandler (this.HandleViewportSurfaceSizeChanged);
+
+				viewport.SetEmbedder (null);
+				viewport.Aperture = Drawing.Rectangle.MaxValue;
 			}
 		}
 		
 		
 		protected void UpdateGeometry()
 		{
-			//	Met à jour la géométrie du panel et des ascenceurs.
+			//	Met à jour la géométrie du viewport et des ascenceurs.
 			
 			if ((this.hScroller == null) ||
 				(this.vScroller == null))
 			{
 				return;
 			}
-			
-			//	Met à jour la position du panel dans la surface disponible; ceci détermine aussi
+
+			//	Met à jour la position du viewport dans la surface disponible; ceci détermine aussi
 			//	du même coup la visibilité des ascenceurs.
-			
-			this.UpdatePanelLocation ();
+
+			this.UpdateViewportLocation ();
 			this.UpdateScrollerLocation ();
 		}
 
@@ -258,11 +258,11 @@ namespace Epsitec.Common.Widgets
 			this.hScroller.SetManualBounds (bounds);
 		}
 
-		protected virtual void UpdatePanelLocation()
+		protected virtual void UpdateViewportLocation()
 		{
-			Panel panel = this.Panel;
-			
-			if (panel == null)
+			Viewport viewport = this.Viewport;
+
+			if (viewport == null)
 			{
 				this.hScroller.Hide ();
 				this.vScroller.Hide ();
@@ -272,8 +272,8 @@ namespace Epsitec.Common.Widgets
 			
 			double total_dx = this.Client.Size.Width;
 			double total_dy = this.Client.Size.Height;
-			double panel_dx = panel.SurfaceWidth;
-			double panel_dy = panel.SurfaceHeight;
+			double viewport_dx = viewport.SurfaceWidth;
+			double viewport_dy = viewport.SurfaceHeight;
 			double margin_x = (this.vScrollerMode == ScrollableScrollerMode.ShowAlways) ? this.vScroller.PreferredWidth : 0;
 			double margin_y = (this.hScrollerMode == ScrollableScrollerMode.ShowAlways) ? this.hScroller.PreferredHeight : 0;
 			
@@ -285,8 +285,8 @@ namespace Epsitec.Common.Widgets
 			
 			for (;;)
 			{
-				delta_dx = panel_dx - total_dx + margin_x;
-				delta_dy = panel_dy - total_dy + margin_y;
+				delta_dx = viewport_dx - total_dx + margin_x;
+				delta_dy = viewport_dy - total_dy + margin_y;
 				
 				if ((delta_dx > 0) &&
 					(this.hScrollerMode != ScrollableScrollerMode.HideAlways))
@@ -320,75 +320,75 @@ namespace Epsitec.Common.Widgets
 			
 			double offset_x = 0;
 			double offset_y = 0;
-			
-			panel_dx = System.Math.Max (panel_dx, vis_dx);
-			panel_dy = System.Math.Max (panel_dy, vis_dy);
+
+			viewport_dx = System.Math.Max (viewport_dx, vis_dx);
+			viewport_dy = System.Math.Max (viewport_dy, vis_dy);
 			
 			//	Détermine l'aspect des ascenceurs ainsi que les offsets [x] et [y] qui
-			//	doivent s'appliquer à l'ouverture (aperture) qui permet de voir le panel.
-			
-			if ((panel_dx > 0) &&
+			//	doivent s'appliquer à l'ouverture (aperture) qui permet de voir le viewport.
+
+			if ((viewport_dx > 0) &&
 				(delta_dx > 0) &&
 				(vis_dx > 0))
 			{
 				this.hScroller.MaxValue          = (decimal) (delta_dx);
-				this.hScroller.VisibleRangeRatio = (decimal) (vis_dx / panel_dx);
+				this.hScroller.VisibleRangeRatio = (decimal) (vis_dx / viewport_dx);
 				this.hScroller.SmallChange       = (decimal) (Scrollable.SmallScrollPixels);
 				this.hScroller.LargeChange       = (decimal) (vis_dx * Scrollable.LargeScrollPercent / 100);
-			
-				offset_x = System.Math.Min (this.panelOffset.X, delta_dx);
+
+				offset_x = System.Math.Min (this.viewportOffset.X, delta_dx);
 				
 				this.hScrollerValue  = (decimal) offset_x;
 				this.hScroller.Value = (decimal) offset_x;
 			}
 			else
 			{
-				panel_dx = vis_dx;
+				viewport_dx = vis_dx;
 				
 				this.hScrollerValue = 0;
-				this.panelOffset.X  = 0;
+				this.viewportOffset.X  = 0;
 				
 				this.hScroller.MaxValue          = 1.0M;
 				this.hScroller.Value             = 0.0M;
 				this.hScroller.VisibleRangeRatio = 1.0M;
 			}
-			
-			if ((panel_dy > 0) &&
+
+			if ((viewport_dy > 0) &&
 				(delta_dy > 0) &&
 				(vis_dy > 0))
 			{
 				this.vScroller.MaxValue          = (decimal) (delta_dy);
-				this.vScroller.VisibleRangeRatio = (decimal) (vis_dy / panel_dy);
+				this.vScroller.VisibleRangeRatio = (decimal) (vis_dy / viewport_dy);
 				this.vScroller.SmallChange       = (decimal) (Scrollable.SmallScrollPixels);
 				this.vScroller.LargeChange       = (decimal) (vis_dy * Scrollable.LargeScrollPercent / 100);
-				
-				offset_y = System.Math.Min (this.panelOffset.Y, delta_dy);
+
+				offset_y = System.Math.Min (this.viewportOffset.Y, delta_dy);
 				
 				this.vScrollerValue = (decimal) offset_y;
 				this.vScroller.Value = (decimal) offset_y;
 			}
 			else
 			{
-				panel_dy = vis_dy;
+				viewport_dy = vis_dy;
 				
 				this.vScrollerValue = 0;
-				this.panelOffset.Y  = 0;
+				this.viewportOffset.Y  = 0;
 				
 				this.vScroller.MaxValue          = 1.0M;
 				this.vScroller.Value             = 0.0M;
 				this.vScroller.VisibleRangeRatio = 1.0M;
 			}
-			
-			//	Met à jour l'ouverture (aperture) qui permet de voir le panel et ajuste
+
+			//	Met à jour l'ouverture (aperture) qui permet de voir le viewport et ajuste
 			//	ce dernier pour que la partie qui intéresse l'utilisateur soit en face de
 			//	l'ouverture.
 
 			this.hScroller.Visibility = (margin_y > 0);
 			this.vScroller.Visibility = (margin_x > 0);
 
-			this.panelAperture = new Drawing.Rectangle (0, margin_y, vis_dx, vis_dy);
-			panel.SetManualBounds (new Drawing.Rectangle (-offset_x, total_dy - panel_dy + offset_y, panel_dx, panel_dy));
-			panel.Aperture = panel.MapParentToClient (this.panelAperture);
+			this.viewportAperture = new Drawing.Rectangle (0, margin_y, vis_dx, vis_dy);
+			viewport.SetManualBounds (new Drawing.Rectangle (-offset_x, total_dy - viewport_dy + offset_y, viewport_dx, viewport_dy));
+			viewport.Aperture = viewport.MapParentToClient (this.viewportAperture);
 			
 			this.Invalidate ();
 		}
@@ -400,8 +400,8 @@ namespace Epsitec.Common.Widgets
 			
 			if (this.hScroller.Value != this.hScrollerValue)
 			{
-				this.panelOffset.X = System.Math.Floor (this.hScroller.DoubleValue);
-				this.UpdatePanelLocation ();
+				this.viewportOffset.X = System.Math.Floor (this.hScroller.DoubleValue);
+				this.UpdateViewportLocation ();
 			}
 		}
 		
@@ -411,14 +411,14 @@ namespace Epsitec.Common.Widgets
 			
 			if (this.vScroller.Value != this.vScrollerValue)
 			{
-				this.panelOffset.Y = System.Math.Floor (this.vScroller.DoubleValue);
-				this.UpdatePanelLocation ();
+				this.viewportOffset.Y = System.Math.Floor (this.vScroller.DoubleValue);
+				this.UpdateViewportLocation ();
 			}
 		}
-		
-		private void HandlePanelSurfaceSizeChanged(object sender)
+
+		private void HandleViewportSurfaceSizeChanged(object sender)
 		{
-			System.Diagnostics.Debug.Assert (this.Panel == sender);
+			System.Diagnostics.Debug.Assert (this.Viewport == sender);
 			
 			this.UpdateGeometry ();
 		}
@@ -445,55 +445,55 @@ namespace Epsitec.Common.Widgets
 			graphics.RenderSolid (adorner.ColorBorder);
 		}
 
-		private static void HandlePanelChanged(DependencyObject o, object oldValue, object newValue)
+		private static void HandleViewportChanged(DependencyObject o, object oldValue, object newValue)
 		{
 			Scrollable that = (Scrollable) o;
 
-			Panel oldPanel = oldValue as Panel;
-			Panel newPanel = newValue as Panel;
-			
-			if (oldPanel != null)
+			Viewport oldViewport = oldValue as Viewport;
+			Viewport newViewport = newValue as Viewport;
+
+			if (oldViewport != null)
 			{
-				that.DetachPanel (oldPanel);
+				that.DetachViewport (oldViewport);
 			}
-			if (newPanel != null)
+			if (newViewport != null)
 			{
-				that.AttachPanel (newPanel);
+				that.AttachViewport (newViewport);
 			}
 
 			that.UpdateGeometry ();
 		}
 
-		private static object GetPanelOffsetXValue(DependencyObject o)
+		private static object GetViewportOffsetXValue(DependencyObject o)
 		{
 			Scrollable that = (Scrollable) o;
-			return that.PanelOffsetX;
+			return that.ViewportOffsetX;
 		}
 
-		private static object GetPanelOffsetYValue(DependencyObject o)
+		private static object GetViewportOffsetYValue(DependencyObject o)
 		{
 			Scrollable that = (Scrollable) o;
-			return that.PanelOffsetY;
+			return that.ViewportOffsetY;
 		}
 
-		private static void SetPanelOffsetXValue(DependencyObject o, object value)
+		private static void SetViewportOffsetXValue(DependencyObject o, object value)
 		{
 			Scrollable that = (Scrollable) o;
-			that.PanelOffsetX = (double) value;
+			that.ViewportOffsetX = (double) value;
 		}
 
-		private static void SetPanelOffsetYValue(DependencyObject o, object value)
+		private static void SetViewportOffsetYValue(DependencyObject o, object value)
 		{
 			Scrollable that = (Scrollable) o;
-			that.PanelOffsetX = (double) value;
+			that.ViewportOffsetX = (double) value;
 		}
 
-		public static readonly DependencyProperty PanelProperty = DependencyProperty.Register ("Panel", typeof (Panel), typeof (Scrollable), new DependencyPropertyMetadata (null, Scrollable.HandlePanelChanged));
-		public static readonly DependencyProperty PanelOffsetXProperty = DependencyProperty.Register ("PanelOffsetX", typeof (double), typeof (Scrollable), new DependencyPropertyMetadata (Scrollable.GetPanelOffsetXValue, Scrollable.SetPanelOffsetXValue));
-		public static readonly DependencyProperty PanelOffsetYProperty = DependencyProperty.Register ("PanelOffsetY", typeof (double), typeof (Scrollable), new DependencyPropertyMetadata (Scrollable.GetPanelOffsetYValue, Scrollable.SetPanelOffsetYValue));
+		public static readonly DependencyProperty ViewportProperty = DependencyProperty.Register ("Viewport", typeof (Viewport), typeof (Scrollable), new DependencyPropertyMetadata (null, Scrollable.HandleViewportChanged));
+		public static readonly DependencyProperty ViewportOffsetXProperty = DependencyProperty.Register ("ViewportOffsetX", typeof (double), typeof (Scrollable), new DependencyPropertyMetadata (Scrollable.GetViewportOffsetXValue, Scrollable.SetViewportOffsetXValue));
+		public static readonly DependencyProperty ViewportOffsetYProperty = DependencyProperty.Register ("ViewportOffsetY", typeof (double), typeof (Scrollable), new DependencyPropertyMetadata (Scrollable.GetViewportOffsetYValue, Scrollable.SetViewportOffsetYValue));
 
-		private Drawing.Rectangle				panelAperture;
-		private Drawing.Point					panelOffset;
+		private Drawing.Rectangle				viewportAperture;
+		private Drawing.Point					viewportOffset;
 		
 		protected VScroller						vScroller;
 		protected HScroller						hScroller;

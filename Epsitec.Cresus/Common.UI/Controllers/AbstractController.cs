@@ -149,6 +149,11 @@ namespace Epsitec.Common.UI.Controllers
 
 		#endregion
 
+		/// <summary>
+		/// Gets the actual value, i.e. the value currently represented by the
+		/// user interface.
+		/// </summary>
+		/// <returns>The actual value or <c>UndefindeValue.Value</c>.</returns>
 		public virtual object GetActualValue()
 		{
 			return UndefinedValue.Value;
@@ -205,6 +210,10 @@ namespace Epsitec.Common.UI.Controllers
 			}
 		}
 
+		/// <summary>
+		/// Called when the actual value has changed because the user interacted
+		/// with the user interface.
+		/// </summary>
 		protected virtual void OnActualValueChanged()
 		{
 			Support.EventHandler handler = (Support.EventHandler) this.GetUserEventHandler (EventNames.ActualValueChanged);
@@ -217,6 +226,10 @@ namespace Epsitec.Common.UI.Controllers
 			this.SetPlaceholderValue ();
 		}
 
+		/// <summary>
+		/// Sets the placeholder value in order to synchronize the data model
+		/// with the user interface.
+		/// </summary>
 		protected virtual void SetPlaceholderValue()
 		{
 			if (this.isSettingPlaceholderValue)

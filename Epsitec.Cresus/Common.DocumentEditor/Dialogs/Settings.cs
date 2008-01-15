@@ -37,7 +37,7 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 				resize.Margins = new Margins(0, 0, 0, 0);
 				ToolTip.Default.SetToolTip(resize, Res.Strings.Dialog.Tooltip.Resize);
 
-				Panel topPart = new Panel(this.window.Root);
+				Viewport topPart = new Viewport(this.window.Root);
 				topPart.PreferredHeight = 20;
 				topPart.Anchor = AnchorStyles.LeftAndRight | AnchorStyles.Top;
 				topPart.Margins = new Margins(6, 6, 6, 0);
@@ -344,7 +344,7 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 		protected TextFieldCombo CreateCombo(Widget parent, string name, string label)
 		{
 			//	Crée un widget combo.
-			Panel container = new Panel(parent);
+			Viewport container = new Viewport(parent);
 			container.PreferredHeight = 22;
 			container.TabIndex = this.tabIndex++;
 			container.Dock = DockStyle.Top;
@@ -371,7 +371,7 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 		protected TextFieldSlider CreateField(Widget parent, string name, string label)
 		{
 			//	Crée un widget textfield.
-			Panel container = new Panel(parent);
+			Viewport container = new Viewport(parent);
 			container.PreferredHeight = 22;
 			container.TabIndex = this.tabIndex++;
 			container.Dock = DockStyle.Top;

@@ -437,7 +437,7 @@ namespace Epsitec.Common.Dialogs
 			this.favorites.PreferredWidth = AbstractFileDialog.LeftColumnWidth-5;
 			this.favorites.HorizontalScrollerMode = ScrollableScrollerMode.HideAlways;
 			this.favorites.VerticalScrollerMode = ScrollableScrollerMode.Auto;
-			this.favorites.Panel.IsAutoFitting = true;
+			this.favorites.Viewport.IsAutoFitting = true;
 			this.favorites.PaintForegroundFrame = true;
 			this.favorites.Margins = new Margins (0, 5, 0, 0);
 			this.favorites.Dock = DockStyle.Left;
@@ -983,7 +983,7 @@ namespace Epsitec.Common.Dialogs
 			//	Met à jour le panneau de gauche des favoris.
 			this.favoritesBigState.ActiveState = this.FavoritesSettings.UseLargeIcons ? ActiveState.Yes : ActiveState.No;
 
-			foreach (Widget widget in this.favorites.Panel.Children.Widgets)
+			foreach (Widget widget in this.favorites.Viewport.Children.Widgets)
 			{
 				if (widget is FileButton)
 				{
@@ -1069,7 +1069,7 @@ namespace Epsitec.Common.Dialogs
 				ToolTip.Default.SetToolTip (f, tooltip);
 			}
 
-			this.favorites.Panel.Children.Add (f);
+			this.favorites.Viewport.Children.Add (f);
 			this.favoritesList.Add (item);
 		}
 
@@ -1083,7 +1083,7 @@ namespace Epsitec.Common.Dialogs
 			//	Met à jour le favoris sélectionné selon le chemin d'accès en cours.
 			this.favoritesSelected = -1;
 
-			foreach (Widget widget in this.favorites.Panel.Children.Widgets)
+			foreach (Widget widget in this.favorites.Viewport.Children.Widgets)
 			{
 				if (widget is FileButton)
 				{
@@ -1872,7 +1872,7 @@ namespace Epsitec.Common.Dialogs
 				this.FavoritesSettings.UseLargeIcons = false;
 			}
 
-			foreach (Widget widget in this.favorites.Panel.Children.Widgets)
+			foreach (Widget widget in this.favorites.Viewport.Children.Widgets)
 			{
 				if (widget is FileButton)
 				{

@@ -1,7 +1,7 @@
 ﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
   <PropertyGroup>
     <ProjectType>Local</ProjectType>
-    <ProductVersion>8.0.50727</ProductVersion>
+    <ProductVersion>9.0.21022</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{DD959763-7F9E-4170-ABEE-4CEE60C14468}</ProjectGuid>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -182,7 +182,7 @@
     <Compile Include="MessageTest.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="PanelTest.cs">
+    <Compile Include="ViewportTest.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="ScreenInfoTest.cs">

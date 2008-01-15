@@ -544,7 +544,7 @@
     <Compile Include="PaneButton.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Panel.cs">
+    <Compile Include="Viewport.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="PanePage.cs">

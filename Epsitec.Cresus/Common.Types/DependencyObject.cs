@@ -453,7 +453,7 @@ namespace Epsitec.Common.Types
 
 				object new_value = this.GetValue (property);
 
-				if (DependencyObject.EqualValues (old_value, new_value))
+				if (DependencyObject.EqualObjectValues (old_value, new_value))
 				{
 					//	C'est exactement la même valeur -- on ne signale donc rien ici.
 				}
@@ -464,27 +464,6 @@ namespace Epsitec.Common.Types
 			}
 		}
 
-		public static bool EqualValues(object valueA, object valueB)
-		{
-				if (valueA == valueB)
-				{
-					return true;
-				}
-				else if ((valueA == null) || (valueB == null))
-				{
-					return false;
-				}
-				else if (valueA.Equals (valueB))
-				{
-					return true;
-				}
-				else
-				{
-					return false;
-				}
-
-		}
-		
 		private void ClearValue(DependencyProperty property, DependencyPropertyMetadata metadata)
 		{
 			if (metadata.InheritsValue)
@@ -501,7 +480,7 @@ namespace Epsitec.Common.Types
 
 				object new_value = this.GetValue (property);
 
-				if (DependencyObject.EqualValues (old_value, new_value))
+				if (DependencyObject.EqualObjectValues (old_value, new_value))
 				{
 					//	C'est exactement la même valeur -- on ne signale donc rien ici.
 				}
@@ -749,6 +728,95 @@ namespace Epsitec.Common.Types
 
 
 		/// <summary>
+		/// Compares two dependency objects based on their values.
+		/// </summary>
+		/// <param name="a">Dependency object.</param>
+		/// <param name="b">Dependency object.</param>
+		/// <returns><c>true</c> if both objects contain the same values; otherwise, <c>false</c>.</returns>
+		public static bool EqualValues(DependencyObject a, DependencyObject b)
+		{
+			if (a == b)
+			{
+				return true;
+			}
+
+			if ((a == null) ||
+				(b == null))
+			{
+				return false;
+			}
+
+			List<PropertyValuePair> aValues = new List<PropertyValuePair> (a.DefinedEntries);
+			List<PropertyValuePair> bValues = new List<PropertyValuePair> (b.DefinedEntries);
+
+			if (aValues.Count != bValues.Count)
+			{
+				return false;
+			}
+
+			foreach (PropertyValuePair entry in aValues)
+			{
+				object va = entry.Value;
+				object vb = b.GetValue (entry.Property);
+
+				if (DependencyObject.EqualObjectValues (va, vb))
+				{
+					continue;
+				}
+
+				if ((va == null) ||
+					(vb == null))
+				{
+					return false;
+				}
+
+				if ((va is System.Collections.ICollection) &&
+					(vb is System.Collections.ICollection))
+				{
+					System.Collections.ICollection ca = va as System.Collections.ICollection;
+					System.Collections.ICollection cb = vb as System.Collections.ICollection;
+
+					if ((ca.Count == 0) &&
+						(cb.Count == 0))
+					{
+						continue;
+					}
+				}
+
+				return false;
+			}
+
+			return true;
+		}
+
+		/// <summary>
+		/// Compares two objects for equality.
+		/// </summary>
+		/// <param name="valueA">Object value.</param>
+		/// <param name="valueB">Object value.</param>
+		/// <returns><c>true</c> if both objects are equal; otherwise, <c>false</c>.</returns>
+		public static bool EqualObjectValues(object valueA, object valueB)
+		{
+			if (valueA == valueB)
+			{
+				return true;
+			}
+			else if ((valueA == null) || (valueB == null))
+			{
+				return false;
+			}
+			else if (valueA.Equals (valueB))
+			{
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+
+		}
+
+		/// <summary>
 		/// Copies the attached properties from the source to the destination.
 		/// This is a shallow copy (it copies just the references, not the
 		/// objects themselves for reference types).
@@ -988,68 +1056,6 @@ namespace Epsitec.Common.Types
 			}
 		}
 
-		/// <summary>
-		/// Compares two dependency objects based on their values.
-		/// </summary>
-		/// <param name="a">Dependency object.</param>
-		/// <param name="b">Dependency object.</param>
-		/// <returns><c>true</c> if both objects contain the same values; otherwise, <c>false</c>.</returns>
-		public static bool EqualValues(DependencyObject a, DependencyObject b)
-		{
-			if (a == b)
-			{
-				return true;
-			}
-			
-			if ((a == null) ||
-				(b == null))
-			{
-				return false;
-			}
-
-			List<PropertyValuePair> aValues = new List<PropertyValuePair> (a.DefinedEntries);
-			List<PropertyValuePair> bValues = new List<PropertyValuePair> (b.DefinedEntries);
-
-			if (aValues.Count != bValues.Count)
-			{
-				return false;
-			}
-
-			foreach (PropertyValuePair entry in aValues)
-			{
-				object va = entry.Value;
-				object vb = b.GetValue (entry.Property);
-
-				if (DependencyObject.EqualValues (va, vb))
-				{
-					continue;
-				}
-				
-				if ((va == null) ||
-					(vb == null))
-				{
-					return false;
-				}
-				
-				if ((va is System.Collections.ICollection) &&
-					(vb is System.Collections.ICollection))
-				{
-					System.Collections.ICollection ca = va as System.Collections.ICollection;
-					System.Collections.ICollection cb = vb as System.Collections.ICollection;
-
-					if ((ca.Count == 0) &&
-						(cb.Count == 0))
-					{
-						continue;
-					}
-				}
-				
-				return false;
-			}
-			
-			return true;
-		}
-		
 		protected void AddUserEventHandler(string name, System.Delegate handler)
 		{
 			if (this.userEvents == null)
@@ -1069,6 +1075,7 @@ namespace Epsitec.Common.Types
 				this.userEvents[name] = handler;
 			}
 		}
+		
 		protected void RemoveUserEventHandler(string name, System.Delegate handler)
 		{
 			if ((this.userEvents != null) &&

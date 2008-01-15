@@ -2,7 +2,7 @@ using NUnit.Framework;
 
 namespace Epsitec.Common.Widgets
 {
-	[TestFixture] public class PanelTest
+	[TestFixture] public class ViewportTest
 	{
 		[Test]
 		public void AutomatedTestEnvironment()
@@ -11,11 +11,11 @@ namespace Epsitec.Common.Widgets
 		}
 
 		[Test]
-		public void CheckScrollablePanel()
+		public void CheckScrollableViewport()
 		{
 			Window window = new Window ();
-			
-			window.Text = "PanelTest.CheckScrollablePanel";
+
+			window.Text = "ViewportTest.CheckScrollableViewport";
 			window.ClientSize = new Drawing.Size (400, 300);
 			
 			Scrollable surface = new Scrollable ();
@@ -24,14 +24,14 @@ namespace Epsitec.Common.Widgets
 			surface.SetManualBounds(window.Root.Client.Bounds);
 			surface.Dock   = DockStyle.Fill;
 			
-			surface.Panel.SurfaceSize = new Drawing.Size (400, 300);
-			surface.Panel.MinSize     = new Drawing.Size (200, 150);
+			surface.Viewport.SurfaceSize = new Drawing.Size (400, 300);
+			surface.Viewport.MinSize     = new Drawing.Size (200, 150);
 			
 			Button b1 = new Button ("Button 1");
 			Button b2 = new Button ("Button 2");
 			
-			b1.SetParent (surface.Panel);
-			b2.SetParent (surface.Panel);
+			b1.SetParent (surface.Viewport);
+			b2.SetParent (surface.Viewport);
 			b1.Margins = new Epsitec.Common.Drawing.Margins (10, 0, 0, 10);
 			b2.Margins = new Epsitec.Common.Drawing.Margins (10 + b1.PreferredWidth + 10, 0, 0, 10);
 			b1.Anchor = AnchorStyles.BottomLeft;
@@ -40,14 +40,14 @@ namespace Epsitec.Common.Widgets
 			StaticText  text;
 			RadioButton radio;
 			
-			surface.Panel.Padding = new Drawing.Margins (8, 8, 16, 16);
+			surface.Viewport.Padding = new Drawing.Margins (8, 8, 16, 16);
 			
-			text  = new StaticText (surface.Panel);
+			text  = new StaticText (surface.Viewport);
 			text.Dock = DockStyle.Top;
 			text.Text = "Horizontal scroller mode :";
 			text.Margins = new Drawing.Margins (0, 0, 0, 4);
 			
-			radio = new RadioButton (surface.Panel);
+			radio = new RadioButton (surface.Viewport);
 			radio.Dock = DockStyle.Top;
 			radio.Text = "Auto";
 			radio.Group = "h";
@@ -55,26 +55,26 @@ namespace Epsitec.Common.Widgets
 			radio.ActiveState = ActiveState.Yes;
 			radio.ActiveStateChanged += new Support.EventHandler (this.HandleRadioActiveStateChanged);
 			
-			radio = new RadioButton (surface.Panel);
+			radio = new RadioButton (surface.Viewport);
 			radio.Dock = DockStyle.Top;
 			radio.Text = "Hide";
 			radio.Group = "h";
 			radio.Index = (int) ScrollableScrollerMode.HideAlways;
 			radio.ActiveStateChanged += new Support.EventHandler (this.HandleRadioActiveStateChanged);
 			
-			radio = new RadioButton (surface.Panel);
+			radio = new RadioButton (surface.Viewport);
 			radio.Dock = DockStyle.Top;
 			radio.Text = "Show";
 			radio.Group = "h";
 			radio.Index = (int) ScrollableScrollerMode.ShowAlways;
 			radio.ActiveStateChanged += new Support.EventHandler (this.HandleRadioActiveStateChanged);
 			
-			text  = new StaticText (surface.Panel);
+			text  = new StaticText (surface.Viewport);
 			text.Dock = DockStyle.Top;
 			text.Text = "Vertical scroller mode :";
 			text.Margins = new Drawing.Margins (0, 0, 16, 4);
 			
-			radio = new RadioButton (surface.Panel);
+			radio = new RadioButton (surface.Viewport);
 			radio.Dock = DockStyle.Top;
 			radio.Text = "Auto";
 			radio.Group = "v";
@@ -82,56 +82,56 @@ namespace Epsitec.Common.Widgets
 			radio.ActiveState = ActiveState.Yes;
 			radio.ActiveStateChanged += new Support.EventHandler (this.HandleRadioActiveStateChanged);
 			
-			radio = new RadioButton (surface.Panel);
+			radio = new RadioButton (surface.Viewport);
 			radio.Dock = DockStyle.Top;
 			radio.Text = "Hide";
 			radio.Group = "v";
 			radio.Index = (int) ScrollableScrollerMode.HideAlways;
 			radio.ActiveStateChanged += new Support.EventHandler (this.HandleRadioActiveStateChanged);
 			
-			radio = new RadioButton (surface.Panel);
+			radio = new RadioButton (surface.Viewport);
 			radio.Dock = DockStyle.Top;
 			radio.Text = "Show";
 			radio.Group = "v";
 			radio.Index = (int) ScrollableScrollerMode.ShowAlways;
 			radio.ActiveStateChanged += new Support.EventHandler (this.HandleRadioActiveStateChanged);
 			
-			Assert.IsTrue (b1.Parent == surface.Panel);
-			Assert.IsTrue (b2.Parent == surface.Panel);
-			Assert.IsTrue (surface.Panel.Parent == surface);
-			Assert.IsTrue (surface.Panel.Children.Count == 2+4+4);
-			
-			System.Console.Out.WriteLine ("Panel SurfaceSize = {0}", surface.Panel.SurfaceSize);
-			System.Console.Out.WriteLine ("Panel Bounds = {0}", surface.Panel.ActualBounds);
+			Assert.IsTrue (b1.Parent == surface.Viewport);
+			Assert.IsTrue (b2.Parent == surface.Viewport);
+			Assert.IsTrue (surface.Viewport.Parent == surface);
+			Assert.IsTrue (surface.Viewport.Children.Count == 2+4+4);
+
+			System.Console.Out.WriteLine ("Viewport SurfaceSize = {0}", surface.Viewport.SurfaceSize);
+			System.Console.Out.WriteLine ("Viewport Bounds = {0}", surface.Viewport.ActualBounds);
 			System.Console.Out.WriteLine ("Button Bounds = {0}, {1}", b1.ActualBounds, b2.ActualBounds);
 			System.Console.Out.WriteLine ("Button Bounds (root relative) = {0}, {1}", b1.MapClientToRoot (b1.Client.Bounds), b2.MapClientToRoot (b2.Client.Bounds));
 			
 			window.Show ();
 			window.SynchronousRepaint ();
-			
-			System.Console.Out.WriteLine ("Panel SurfaceSize = {0}", surface.Panel.SurfaceSize);
-			System.Console.Out.WriteLine ("Panel Bounds = {0}", surface.Panel.ActualBounds);
+
+			System.Console.Out.WriteLine ("Viewport SurfaceSize = {0}", surface.Viewport.SurfaceSize);
+			System.Console.Out.WriteLine ("Viewport Bounds = {0}", surface.Viewport.ActualBounds);
 			System.Console.Out.WriteLine ("Button Bounds = {0}, {1}", b1.ActualBounds, b2.ActualBounds);
 			System.Console.Out.WriteLine ("Button Bounds (root relative) = {0}, {1}", b1.MapClientToRoot (b1.Client.Bounds), b2.MapClientToRoot (b2.Client.Bounds));
 
-			surface.Panel.Clicked += new MessageEventHandler (this.HandlePanelClicked);
+			surface.Viewport.Clicked += new MessageEventHandler (this.HandleViewportClicked);
 
 			Window.RunInTestEnvironment (window);
 		}
 
-		private void HandlePanelClicked(object sender, MessageEventArgs e)
+		private void HandleViewportClicked(object sender, MessageEventArgs e)
 		{
-			Panel panel = sender as Panel;
-			Scrollable scrollable = panel.Parent as Scrollable;
+			Viewport   viewport   = sender as Viewport;
+			Scrollable scrollable = viewport.Parent as Scrollable;
 
-			scrollable.PanelOffsetY += (e.Message.Button == MouseButtons.Left) ? 10 : -10;
+			scrollable.ViewportOffsetY += (e.Message.Button == MouseButtons.Left) ? 10 : -10;
 		}
 
 		private void HandleRadioActiveStateChanged(object sender)
 		{
 			RadioButton radio   = sender as RadioButton;
-			Panel       panel   = radio.Parent as Panel;
-			Scrollable  surface = panel.Parent as Scrollable;
+			Viewport    viewport= radio.Parent as Viewport;
+			Scrollable  surface = viewport.Parent as Scrollable;
 			
 			if (radio.ActiveState == ActiveState.Yes)
 			{

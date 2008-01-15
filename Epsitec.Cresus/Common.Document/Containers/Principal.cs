@@ -34,7 +34,7 @@ namespace Epsitec.Common.Document.Containers
 			this.scrollable.Dock = DockStyle.Fill;
 			this.scrollable.HorizontalScrollerMode = ScrollableScrollerMode.HideAlways;
 			this.scrollable.VerticalScrollerMode = ScrollableScrollerMode.ShowAlways;
-			this.scrollable.Panel.IsAutoFitting = true;
+			this.scrollable.Viewport.IsAutoFitting = true;
 			this.scrollable.PaintForegroundFrame = true;
 			this.scrollable.ForegroundFrameMargins = new Margins(0, 1, 0, 0);
 			this.scrollable.SetParent(this);
@@ -295,7 +295,7 @@ namespace Epsitec.Common.Document.Containers
 		protected void CreateSelectorPanel()
 		{
 			//	Crée le panneau pour les sélections.
-			this.selectorPanel = new Panel(this);
+			this.selectorPanel = new Viewport(this);
 			this.selectorPanel.Dock = DockStyle.Top;
 			this.selectorPanel.Margins = new Margins(0, 0, 0, 5);
 			this.selectorPanel.Hide();
@@ -346,7 +346,7 @@ namespace Epsitec.Common.Document.Containers
 			//	Met en évidence l'objet survolé par la souris.
 			if ( !this.IsVisible )  return;
 
-			foreach ( Widget widget in this.scrollable.Panel.Children.Widgets )
+			foreach ( Widget widget in this.scrollable.Viewport.Children.Widgets )
 			{
 				if ( widget is Panels.Abstract )
 				{
@@ -441,7 +441,7 @@ namespace Epsitec.Common.Document.Containers
 
 			//	Supprime tous les panneaux ou boutons.
 
-			foreach ( Widget widget in this.scrollable.Panel.Children.Widgets )
+			foreach ( Widget widget in this.scrollable.Viewport.Children.Widgets )
 			{
 				if ( widget is Panels.Abstract )
 				{
@@ -481,7 +481,7 @@ namespace Epsitec.Common.Document.Containers
 						button.ContentAlignment = ContentAlignment.MiddleLeft;
 						button.Dock = DockStyle.Top;
 						button.Margins = new Margins(10, 10, topMargin, 0);
-						button.SetParent(this.scrollable.Panel);
+						button.SetParent(this.scrollable.Viewport);
 					}
 
 					topMargin = (cmd == "") ? 20 : 4;
@@ -507,7 +507,7 @@ namespace Epsitec.Common.Document.Containers
 							panel.Margins = new Margins(0, 1, tm, -1);
 							panel.IsExtendedSize = this.document.Modifier.IsTextPanelExtended(panel);
 							panel.OriginColorChanged += new EventHandler(this.HandleOriginColorChanged);
-							panel.SetParent(this.scrollable.Panel);
+							panel.SetParent(this.scrollable.Viewport);
 						}
 					}
 				}
@@ -548,7 +548,7 @@ namespace Epsitec.Common.Document.Containers
 					panel.TabNavigationMode = TabNavigationMode.ActivateOnTab | TabNavigationMode.ForwardToChildren | TabNavigationMode.ForwardOnly;
 					panel.Dock = DockStyle.Top;
 					panel.Margins = new Margins(0, 1, topMargin, -1);
-					panel.SetParent(this.scrollable.Panel);
+					panel.SetParent(this.scrollable.Viewport);
 
 					if ( panel.Property.Type == this.originColorType )
 					{
@@ -564,7 +564,7 @@ namespace Epsitec.Common.Document.Containers
 		protected bool IsTextPanelsExtended()
 		{
 			//	Indique si tous les panneaux pour le texte sont étendus.
-			foreach ( Widget widget in this.scrollable.Panel.Children.Widgets )
+			foreach ( Widget widget in this.scrollable.Viewport.Children.Widgets )
 			{
 				if ( widget is TextPanels.Abstract )
 				{
@@ -578,7 +578,7 @@ namespace Epsitec.Common.Document.Containers
 		protected bool IsTextPanelsReduced()
 		{
 			//	Indique si tous les panneaux pour le texte sont réduits.
-			foreach ( Widget widget in this.scrollable.Panel.Children.Widgets )
+			foreach ( Widget widget in this.scrollable.Viewport.Children.Widgets )
 			{
 				if ( widget is TextPanels.Abstract )
 				{
@@ -592,7 +592,7 @@ namespace Epsitec.Common.Document.Containers
 		protected void TextPanelsExtend(bool extend)
 		{
 			//	Etend ou réduit tous les panneaux pour le texte.
-			foreach ( Widget widget in this.scrollable.Panel.Children.Widgets )
+			foreach ( Widget widget in this.scrollable.Viewport.Children.Widgets )
 			{
 				if ( widget is TextPanels.Abstract )
 				{
@@ -606,7 +606,7 @@ namespace Epsitec.Common.Document.Containers
 		{
 			//	Effectue la mise à jour des propriétés.
 			Widget originColorLastPanel = null;
-			foreach ( Widget widget in this.scrollable.Panel.Children.Widgets )
+			foreach ( Widget widget in this.scrollable.Viewport.Children.Widgets )
 			{
 				Panels.Abstract panel = widget as Panels.Abstract;
 				if ( panel != null )
@@ -629,7 +629,7 @@ namespace Epsitec.Common.Document.Containers
 		protected override void DoUpdateGeometry()
 		{
 			//	Effectue la mise à jour après un changement de géométrie.
-			foreach ( Widget widget in this.scrollable.Panel.Children.Widgets )
+			foreach ( Widget widget in this.scrollable.Viewport.Children.Widgets )
 			{
 				Panels.Abstract panel = widget as Panels.Abstract;
 				if ( panel != null )
@@ -678,7 +678,7 @@ namespace Epsitec.Common.Document.Containers
 			Widget wSender = sender as Widget;
 			Color backColor = Color.Empty;
 
-			foreach ( Widget widget in this.scrollable.Panel.Children.Widgets )
+			foreach ( Widget widget in this.scrollable.Viewport.Children.Widgets )
 			{
 				if ( widget is Panels.Abstract )
 				{
@@ -764,7 +764,7 @@ namespace Epsitec.Common.Document.Containers
 			this.originColorTextPanel = null;
 			this.originColorType = Properties.Type.None;
 
-			foreach ( Widget widget in this.scrollable.Panel.Children.Widgets )
+			foreach ( Widget widget in this.scrollable.Viewport.Children.Widgets )
 			{
 				if ( widget is Panels.Abstract )
 				{
@@ -935,7 +935,7 @@ namespace Epsitec.Common.Document.Containers
 		protected IconButton					selectorPartial;
 		protected IconButton					selectorAdaptLine;
 		protected IconButton					selectorAdaptText;
-		protected Panel							selectorPanel;
+		protected Viewport							selectorPanel;
 		protected TextFieldCombo				selectorName;
 		protected Button						selectorGo;
 

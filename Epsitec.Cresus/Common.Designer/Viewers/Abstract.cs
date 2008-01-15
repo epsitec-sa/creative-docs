@@ -175,9 +175,9 @@ namespace Epsitec.Common.Designer.Viewers
 			this.scrollable.Dock = DockStyle.Fill;
 			this.scrollable.HorizontalScrollerMode = ScrollableScrollerMode.HideAlways;
 			this.scrollable.VerticalScrollerMode = ScrollableScrollerMode.ShowAlways;
-			this.scrollable.Panel.IsAutoFitting = true;
+			this.scrollable.Viewport.IsAutoFitting = true;
 			this.scrollable.PaintForegroundFrame = true;
-			this.scrollable.Panel.ContainerLayoutMode = ContainerLayoutMode.VerticalFlow;
+			this.scrollable.Viewport.ContainerLayoutMode = ContainerLayoutMode.VerticalFlow;
 			this.scrollable.TabIndex = this.tabIndex++;
 			this.scrollable.TabNavigationMode = TabNavigationMode.ForwardTabPassive;
 
@@ -1728,7 +1728,7 @@ namespace Epsitec.Common.Designer.Viewers
 		{
 			//	Crée une bande horizontale avec deux containers gauche/droite pour les
 			//	ressources primaire/secondaire.
-			FrameBox band = new FrameBox(this.scrollable.Panel);
+			FrameBox band = new FrameBox(this.scrollable.Viewport);
 			band.Name = "BandForLeftAndRight";
 			band.Dock = DockStyle.StackBegin;
 			band.ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow;
@@ -1763,7 +1763,7 @@ namespace Epsitec.Common.Designer.Viewers
 		{
 			//	Crée une bande horizontale avec un seul container gauche pour la
 			//	ressource primaire.
-			FrameBox band = new FrameBox(this.scrollable.Panel);
+			FrameBox band = new FrameBox(this.scrollable.Viewport);
 			band.Name = "BandForLeft";
 			band.Dock = DockStyle.StackBegin;
 			band.ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow;
