@@ -207,7 +207,7 @@ namespace Epsitec.Common.UI.Controllers
 
 		protected virtual void OnActualValueChanged()
 		{
-			Support.EventHandler handler = (Support.EventHandler) this.GetUserEventHandler ("ActualValueChanged");
+			Support.EventHandler handler = (Support.EventHandler) this.GetUserEventHandler (EventNames.ActualValueChanged);
 
 			if (handler != null)
 			{
@@ -235,6 +235,7 @@ namespace Epsitec.Common.UI.Controllers
 					{
 						using (PlaceholderContext.SetActive (this))
 						{
+							this.Placeholder.InternalControllerSetValue (value);
 							this.Placeholder.Value = value;
 						}
 					}
@@ -500,13 +501,22 @@ namespace Epsitec.Common.UI.Controllers
 		{
 			add
 			{
-				this.AddUserEventHandler ("ActualValueChanged", value);
+				this.AddUserEventHandler (EventNames.ActualValueChanged, value);
 			}
 			remove
 			{
-				this.RemoveUserEventHandler ("ActualValueChanged", value);
+				this.RemoveUserEventHandler (EventNames.ActualValueChanged, value);
 			}
 		}
+
+		#region EventNames Class
+
+		private static class EventNames
+		{
+			public const string ActualValueChanged = "ActualValueChanged";
+		}
+
+		#endregion
 
 		public static readonly DependencyProperty PlaceholderProperty = DependencyProperty.Register ("Placeholder", typeof (Placeholder), typeof (AbstractController), new DependencyPropertyMetadata (AbstractController.GetPlaceholderValue, AbstractController.SetPlaceholderValue));
 

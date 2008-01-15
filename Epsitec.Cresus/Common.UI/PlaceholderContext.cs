@@ -12,19 +12,6 @@ namespace Epsitec.Common.UI
 	/// </summary>
 	public static class PlaceholderContext
 	{
-		private static Stack<Record>			RecordStack
-		{
-			get
-			{
-				if (PlaceholderContext.recordStack == null)
-				{
-					PlaceholderContext.recordStack = new Stack<Record> ();
-				}
-				
-				return PlaceholderContext.recordStack;
-			}
-		}
-
 		/// <summary>
 		/// Gets the interactive placeholder, which is the one which started the
 		/// current chain of binding events.
@@ -34,13 +21,15 @@ namespace Epsitec.Common.UI
 		{
 			get
 			{
-				if (PlaceholderContext.stackRoot == null)
+				PlaceholderContext.EnsureData ();
+				
+				if (PlaceholderContext.data.StackRoot == null)
 				{
 					return null;
 				}
 				else
 				{
-					return PlaceholderContext.stackRoot.Placeholder;
+					return PlaceholderContext.data.StackRoot.Placeholder;
 				}
 			}
 		}
@@ -54,7 +43,9 @@ namespace Epsitec.Common.UI
 		{
 			get
 			{
-				Stack<Record> stack = PlaceholderContext.RecordStack;
+				PlaceholderContext.EnsureData ();
+				
+				Stack<Record> stack = PlaceholderContext.data.RecordStack;
 
 				if (stack.Count == 0)
 				{
@@ -69,23 +60,49 @@ namespace Epsitec.Common.UI
 
 
 		/// <summary>
+		/// Occurs when a context is activated.
+		/// </summary>
+		public static event Support.EventHandler ContextActivated
+		{
+			add
+			{
+				PlaceholderContext.EnsureData ();
+				PlaceholderContext.data.StackPushed += value;
+			}
+			remove
+			{
+				PlaceholderContext.EnsureData ();
+				PlaceholderContext.data.StackPushed -= value;
+			}
+		}
+
+		/// <summary>
+		/// Occurs when a context is deactivated.
+		/// </summary>
+		public static event Support.EventHandler ContextDeactivated
+		{
+			add
+			{
+				PlaceholderContext.EnsureData ();
+				PlaceholderContext.data.StackPopped += value;
+			}
+			remove
+			{
+				PlaceholderContext.EnsureData ();
+				PlaceholderContext.data.StackPopped -= value;
+			}
+		}
+
+
+		/// <summary>
 		/// Pushes the specified controller onto the <see cref="Placeholder"/>
 		/// stack.
 		/// </summary>
 		/// <param name="controller">The controller.</param>
 		public static void Push(Controllers.AbstractController controller)
 		{
-			Stack<Record> stack = PlaceholderContext.RecordStack;
-			Record record = new Record (controller);
-
-			if (PlaceholderContext.stackRoot == null)
-			{
-				System.Diagnostics.Debug.Assert (stack.Count == 0);
-				
-				PlaceholderContext.stackRoot = record;
-			}
-
-			PlaceholderContext.RecordStack.Push (record);
+			PlaceholderContext.EnsureData ();
+			PlaceholderContext.data.Push (controller);
 		}
 
 		/// <summary>
@@ -95,23 +112,10 @@ namespace Epsitec.Common.UI
 		/// <param name="controller">The controller.</param>
 		public static void Pop(Controllers.AbstractController controller)
 		{
-			Stack<Record> stack = PlaceholderContext.RecordStack;
-
-			if ((stack.Count == 0) ||
-				(stack.Peek ().Controller != controller))
-			{
-				throw new System.InvalidOperationException ("Pop does not match Push");
-			}
-
-			Record record = stack.Pop ();
-
-			if (stack.Count == 0)
-			{
-				System.Diagnostics.Debug.Assert (PlaceholderContext.stackRoot == record);
-
-				PlaceholderContext.stackRoot = null;
-			}
+			PlaceholderContext.EnsureData ();
+			PlaceholderContext.data.Pop (controller);
 		}
+
 
 
 		/// <summary>
@@ -122,6 +126,17 @@ namespace Epsitec.Common.UI
 		public static System.IDisposable SetActive(Controllers.AbstractController controller)
 		{
 			return new ActiveHelper (controller);
+		}
+
+		/// <summary>
+		/// Ensures the thread static data is initialized.
+		/// </summary>
+		private static void EnsureData()
+		{
+			if (PlaceholderContext.data	== null)
+			{
+				PlaceholderContext.data = new ThreadData ();
+			}
 		}
 
 		#region ActiveHelper Class
@@ -184,10 +199,80 @@ namespace Epsitec.Common.UI
 
 		#endregion
 
-		[System.ThreadStatic]
-		private static Stack<Record>			recordStack;
+		#region ThreadData Class
+		
+		private class ThreadData
+		{
+			public ThreadData()
+			{
+				this.recordStack = new Stack<Record> ();
+			}
+
+			public Stack<Record> RecordStack
+			{
+				get
+				{
+					return this.recordStack;
+				}
+			}
+
+			public Record StackRoot
+			{
+				get
+				{
+					return this.stackRoot;
+				}
+				set
+				{
+					this.stackRoot = value;
+				}
+			}
+
+			public void Push(Controllers.AbstractController controller)
+			{
+				Stack<Record> stack = this.recordStack;
+				Record record = new Record (controller);
+
+				if (this.stackRoot == null)
+				{
+					System.Diagnostics.Debug.Assert (stack.Count == 0);
+
+					this.stackRoot = record;
+				}
+
+				this.recordStack.Push (record);
+			}
+
+			public void Pop(Controllers.AbstractController controller)
+			{
+				Stack<Record> stack = this.recordStack;
+
+				if ((stack.Count == 0) ||
+					(stack.Peek ().Controller != controller))
+				{
+					throw new System.InvalidOperationException ("Pop does not match Push");
+				}
+
+				Record record = stack.Pop ();
+
+				if (stack.Count == 0)
+				{
+					System.Diagnostics.Debug.Assert (this.stackRoot == record);
+
+					this.stackRoot = null;
+				}
+			}
+
+			public event Support.EventHandler StackPushed;
+			public event Support.EventHandler StackPopped;
+			
+			private readonly Stack<Record> recordStack;
+			private Record stackRoot;
+		}
+
+		#endregion
 
 		[System.ThreadStatic]
-		private static Record					stackRoot;
+		private static ThreadData				data;
 	}
 }

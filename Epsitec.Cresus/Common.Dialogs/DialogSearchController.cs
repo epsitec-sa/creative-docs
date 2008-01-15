@@ -253,7 +253,7 @@ namespace Epsitec.Common.Dialogs
 
 		#endregion
 
-		private sealed class SearchContext
+		private sealed class SearchContext : System.IDisposable
 		{
 			public SearchContext(AbstractEntity rootData, EntityFieldPath rootPath)
 			{
@@ -405,6 +405,15 @@ namespace Epsitec.Common.Dialogs
 			private AbstractEntity				searchTemplate;
 			private EntityFieldPath				searchRootPath;
 			private AbstractEntity				searchRootData;
+
+			#region IDisposable Members
+
+			public void Dispose()
+			{
+				throw new System.NotImplementedException ();
+			}
+
+			#endregion
 		}
 		
 		private int								suspendSearchHandler;
