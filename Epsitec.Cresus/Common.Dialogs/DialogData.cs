@@ -138,6 +138,11 @@ namespace Epsitec.Common.Dialogs
 				UI.DataSource source = panel.DataSource;
 
 				source.SetDataSource (UI.DataSource.DataName, data);
+
+				if (this.searchController != null)
+				{
+					this.searchController.Attach (this);
+				}
 			}
 		}
 
@@ -152,6 +157,11 @@ namespace Epsitec.Common.Dialogs
 				UI.DataSource source = panel.DataSource;
 
 				source.SetDataSource (UI.DataSource.DataName, null);
+
+				if (this.searchController != null)
+				{
+					this.searchController.Detach (this);
+				}
 			}
 		}
 
@@ -670,12 +680,14 @@ namespace Epsitec.Common.Dialogs
 
 		private void AttachSearchHandler(AbstractEntity copy, FieldProxy parent)
 		{
+#if false
 			//	TODO: use weak events, etc.
 
 			IStructuredData data = copy;
 			SearchHandler handler = new SearchHandler (parent);
 
 			data.AttachListener ("*", handler.HandleContentsChanged);
+#endif
 		}
 
 		private AbstractEntity CreateNullProxy(FieldProxy parent, EntityContext context, Druid entityId)
@@ -699,7 +711,7 @@ namespace Epsitec.Common.Dialogs
 		{
 			if (this.searchController != null)
 			{
-				this.searchController.NotifySearchTemplateChanged (this, entityData, path, e);
+//				this.searchController.NotifySearchTemplateChanged (this, entityData, path, e);
 			}
 		}
 

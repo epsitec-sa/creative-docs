@@ -17,6 +17,33 @@ namespace Epsitec.Common.Dialogs
 			this.searchContexts = new List<SearchContext> ();
 		}
 
+		internal void Attach(DialogData data)
+		{
+			if (this.dialogData == data)
+			{
+				return;
+			}
+
+			if (this.dialogData != null)
+			{
+				this.Detach (this.dialogData);
+			}
+
+			this.dialogData = data;
+
+			PlaceholderContext.ContextActivated += this.HandlePlaceholderContextActivated;
+		}
+
+		internal void Detach(DialogData data)
+		{
+			if (this.dialogData != data)
+			{
+				throw new System.ArgumentException ("Invalid dialog data", "data");
+			}
+
+			PlaceholderContext.ContextActivated -= this.HandlePlaceholderContextActivated;
+		}
+
 		/// <summary>
 		/// Gets or sets the entity resolver.
 		/// </summary>
@@ -30,6 +57,24 @@ namespace Epsitec.Common.Dialogs
 			set
 			{
 				this.entityResolver = value;
+			}
+		}
+
+		private void HandlePlaceholderContextActivated(object sender)
+		{
+			if (PlaceholderContext.Depth == 1)
+			{
+				AbstractPlaceholder placeholder = PlaceholderContext.InteractivePlaceholder;
+				BindingExpression   binding     = placeholder.ValueBindingExpression;
+				DataSourceType      sourceType  = binding.GetSourceType ();
+
+				if (sourceType == DataSourceType.StructuredData)
+				{
+					AbstractEntity entity = binding.GetSourceObject () as AbstractEntity;
+					string         field  = binding.GetSourceProperty () as string;
+
+					this.NotifySearchTemplateChanged (this.dialogData, entity, EntityFieldPath.CreateRelativePath (field), null);
+				}
 			}
 		}
 
@@ -421,5 +466,6 @@ namespace Epsitec.Common.Dialogs
 
 		private readonly List<SearchContext>	searchContexts;
 		private SearchContext					activeSearchContext;
+		private DialogData						dialogData;
 	}
 }

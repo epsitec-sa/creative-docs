@@ -53,7 +53,7 @@ namespace Epsitec.Common.Dialogs
 				{
 					this.dialogData = this.CreateDefaultDialogData ();
 				}
-
+				
 				return this.dialogData;
 			}
 			set
@@ -63,15 +63,10 @@ namespace Epsitec.Common.Dialogs
 					if ((this.dialogData != null) &&
 						(this.panel != null))
 					{
-						this.dialogData.UnbindFromUserInterface (this.panel);
+						this.DisposeDataBinding ();
 					}
 
 					this.dialogData = value;
-
-					if (this.panel != null)
-					{
-						this.InitializeDataBinding ();
-					}
 				}
 			}
 		}
@@ -131,6 +126,8 @@ namespace Epsitec.Common.Dialogs
 
 		protected override void OnDialogClosed()
 		{
+			this.DisposeDataBinding ();
+
 			base.OnDialogClosed ();
 		}
 
@@ -172,9 +169,28 @@ namespace Epsitec.Common.Dialogs
 
 		private void InitializeDataBinding()
 		{
-			if (this.panel != null)
+			if (this.dialogData == null)
 			{
-				this.DialogData.BindToUserInterface (this.panel);
+				this.dialogData = this.CreateDefaultDialogData ();
+			}
+
+			if ((this.panel != null) &&
+				(this.dialogData != null) &&
+				(this.dialogDataBoundToUserInterface == false))
+			{
+				this.dialogData.BindToUserInterface (this.panel);
+				this.dialogDataBoundToUserInterface = true;
+			}
+		}
+
+		private void DisposeDataBinding()
+		{
+			if ((this.panel != null) &&
+				(this.dialogData != null) &&
+				(this.dialogDataBoundToUserInterface))
+			{
+				this.dialogData.UnbindFromUserInterface (this.panel);
+				this.dialogDataBoundToUserInterface = false;
 			}
 		}
 
@@ -246,6 +262,7 @@ namespace Epsitec.Common.Dialogs
 		private Druid							userInterfaceResourceId;
 		private Druid							userInterfaceEntityId;
 		private DialogData						dialogData;
+		private bool							dialogDataBoundToUserInterface;
 		private UI.Panel						panel;
 	}
 }

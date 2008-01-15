@@ -45,7 +45,7 @@ namespace Epsitec.Common.UI
 			{
 				PlaceholderContext.EnsureData ();
 				
-				Stack<Record> stack = PlaceholderContext.data.RecordStack;
+				Stack<Record> stack = PlaceholderContext.data.Stack;
 
 				if (stack.Count == 0)
 				{
@@ -58,6 +58,19 @@ namespace Epsitec.Common.UI
 			}
 		}
 
+		/// <summary>
+		/// Gets the context depth.
+		/// </summary>
+		/// <value>The context depth.</value>
+		public static int						Depth
+		{
+			get
+			{
+				PlaceholderContext.EnsureData ();
+
+				return PlaceholderContext.data.Stack.Count;
+			}
+		}
 
 		/// <summary>
 		/// Occurs when a context is activated.
@@ -93,7 +106,6 @@ namespace Epsitec.Common.UI
 			}
 		}
 
-
 		/// <summary>
 		/// Pushes the specified controller onto the <see cref="Placeholder"/>
 		/// stack.
@@ -115,8 +127,6 @@ namespace Epsitec.Common.UI
 			PlaceholderContext.EnsureData ();
 			PlaceholderContext.data.Pop (controller);
 		}
-
-
 
 		/// <summary>
 		/// Sets the active.
@@ -208,7 +218,7 @@ namespace Epsitec.Common.UI
 				this.recordStack = new Stack<Record> ();
 			}
 
-			public Stack<Record> RecordStack
+			public Stack<Record> Stack
 			{
 				get
 				{
@@ -241,6 +251,11 @@ namespace Epsitec.Common.UI
 				}
 
 				this.recordStack.Push (record);
+
+				if (this.StackPushed != null)
+				{
+					this.StackPushed (controller);
+				}
 			}
 
 			public void Pop(Controllers.AbstractController controller)
@@ -260,6 +275,11 @@ namespace Epsitec.Common.UI
 					System.Diagnostics.Debug.Assert (this.stackRoot == record);
 
 					this.stackRoot = null;
+				}
+
+				if (this.StackPopped != null)
+				{
+					this.StackPopped (controller);
 				}
 			}
 
