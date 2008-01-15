@@ -32,7 +32,7 @@ namespace Epsitec.Common.FormEngine
 
 		public Druid EntityId
 		{
-			//	Druid de l'entité de base du masque de saisie, utilisé pour un masque normal.
+			//	Druid de l'entité de base du masque de saisie, utilisé pour un masque normal/patch.
 			get
 			{
 				return this.entityId;
@@ -54,6 +54,15 @@ namespace Epsitec.Common.FormEngine
 			get
 			{
 				return this.fields;
+			}
+		}
+
+		public bool IsPatch
+		{
+			//	Indique s'il s'agit d'un formulaire de patch.
+			get
+			{
+				return !this.formId.IsEmpty;
 			}
 		}
 
