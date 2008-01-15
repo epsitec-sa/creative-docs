@@ -525,7 +525,7 @@ namespace Epsitec.Common.Designer
 						return;
 					}
 
-					FormEngine.FormDescription form = new FormEngine.FormDescription(druid);
+					FormEngine.FormDescription form = new FormEngine.FormDescription(druid, Druid.Empty);
 					this.FormInitialize(form, ref newName);
 
 					string xml = FormEngine.Serialization.SerializeForm(form);
@@ -549,6 +549,9 @@ namespace Epsitec.Common.Designer
 						return;
 					}
 
+					// TODO:
+					return;
+#if false
 					FormEngine.FormDescription form = new FormEngine.FormDescription(druid);
 					this.FormInitialize(form, ref newName);
 
@@ -559,6 +562,7 @@ namespace Epsitec.Common.Designer
 
 					StructuredData data = newItem.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
 					data.SetValue(Support.Res.Fields.ResourceForm.XmlSource, xml);
+#endif
 				}
 			}
 			else

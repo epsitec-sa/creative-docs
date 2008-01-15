@@ -252,7 +252,7 @@ namespace Epsitec.Common.FormEngine
 			string err = this.engine.Arrange.Check(flat);
 			if (err == null)
 			{
-				FormDescription form = new FormDescription(entityId);
+				FormDescription form = new FormDescription(entityId, Druid.Empty);
 				
 				foreach (FieldDescription field in flat)
 				{

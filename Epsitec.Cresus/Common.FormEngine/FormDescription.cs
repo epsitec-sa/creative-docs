@@ -14,27 +14,37 @@ namespace Epsitec.Common.FormEngine
 	/// </summary>
 	public sealed class FormDescription : System.IEquatable<FormDescription>
 	{
-		public FormDescription() : this(Druid.Empty)
+		public FormDescription() : this(Druid.Empty, Druid.Empty)
 		{
 		}
 
-		public FormDescription(Druid entityId)
+		public FormDescription(Druid entityId, Druid formId)
 		{
 			this.entityId = entityId;
+			this.formId = formId;
 			this.fields = new List<FieldDescription>();
 		}
 
-		public FormDescription(FormDescription model) : this(model.EntityId)
+		public FormDescription(FormDescription model) : this(model.EntityId, model.FormId)
 		{
 			this.fields.AddRange(model.Fields);
 		}
 
 		public Druid EntityId
 		{
-			//	Druid de l'entité de base du masque de saisie.
+			//	Druid de l'entité de base du masque de saisie, utilisé pour un masque normal.
 			get
 			{
 				return this.entityId;
+			}
+		}
+
+		public Druid FormId
+		{
+			//	Druid du masque de base du masque de saisie, utilisé pour un masque de patch.
+			get
+			{
+				return this.formId;
 			}
 		}
 
@@ -81,6 +91,11 @@ namespace Epsitec.Common.FormEngine
 			}
 
 			if (a.entityId != b.entityId)
+			{
+				return false;
+			}
+
+			if (a.formId != b.formId)
 			{
 				return false;
 			}
@@ -140,6 +155,7 @@ namespace Epsitec.Common.FormEngine
 
 			writer.WriteStartElement(Xml.Form);
 			writer.WriteElementString(Xml.EntityId, this.entityId.ToString());
+			writer.WriteElementString(Xml.FormId, this.formId.ToString());
 			foreach (FieldDescription field in this.fields)
 			{
 				field.WriteXml(writer);
@@ -180,6 +196,10 @@ namespace Epsitec.Common.FormEngine
 						{
 							this.entityId = Druid.Parse(element);
 						}
+						else if (name == Xml.FormId)
+						{
+							this.formId = Druid.Parse(element);
+						}
 						else
 						{
 							throw new System.NotSupportedException(string.Format("Unexpected XML node {0} found in FieldDescription", name));
@@ -211,6 +231,7 @@ namespace Epsitec.Common.FormEngine
 
 
 		private Druid							entityId;
+		private Druid							formId;
 		private readonly List<FieldDescription>	fields;
 	}
 }
