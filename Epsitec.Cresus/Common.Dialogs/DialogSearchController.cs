@@ -372,16 +372,32 @@ namespace Epsitec.Common.Dialogs
 
 			public void SetSuggestionValue(Node node, AbstractEntity entity)
 			{
+				System.Diagnostics.Debug.Assert (node.Placeholder.SuggestionMode == PlaceholderSuggestionMode.DisplayHint);
 				EntityFieldPath readPath = node.Path.StripStart (this.searchRootPath);
 				
 				object oldValue = node.Placeholder.Value;
 				object newValue = entity == null ? UndefinedValue.Value : readPath.NavigateRead (entity);
 
-				node.Placeholder.Value = newValue;
-
 				if (DependencyObject.EqualValues (oldValue, newValue))
 				{
+					//	This is the same value as previously. Since setting the
+					//	value would not refresh the user interface, we force the
+					//	update manually.
+
+					//	Note: this is required since the value can map both to the
+					//	user entered value or to the hint value; one might change
+					//	while the other stays the same. However, when the value does
+					//	not change in a visible manner, the controller associated
+					//	with the placeholder cannot be informed of the change.
+
 					node.Placeholder.InternalUpdateValue (oldValue, newValue);
+				}
+				else
+				{
+					//	Update the value displayed by the placeholder. This will
+					//	use the "hint" display mode.
+
+					node.Placeholder.Value = newValue;
 				}
 			}
 

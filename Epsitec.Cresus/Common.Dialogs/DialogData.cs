@@ -31,22 +31,6 @@ namespace Epsitec.Common.Dialogs
 
 
 		/// <summary>
-		/// Gets or sets the search controller for this dialog.
-		/// </summary>
-		/// <value>The search controller.</value>
-		public DialogSearchController SearchController
-		{
-			get
-			{
-				return this.searchController;
-			}
-			set
-			{
-				this.searchController = value;
-			}
-		}
-
-		/// <summary>
 		/// Gets the dialog data mode.
 		/// </summary>
 		/// <value>The dialog data mode.</value>
@@ -138,11 +122,6 @@ namespace Epsitec.Common.Dialogs
 				UI.DataSource source = panel.DataSource;
 
 				source.SetDataSource (UI.DataSource.DataName, data);
-
-				if (this.searchController != null)
-				{
-					this.searchController.Attach (this);
-				}
 			}
 		}
 
@@ -157,11 +136,6 @@ namespace Epsitec.Common.Dialogs
 				UI.DataSource source = panel.DataSource;
 
 				source.SetDataSource (UI.DataSource.DataName, null);
-
-				if (this.searchController != null)
-				{
-					this.searchController.Detach (this);
-				}
 			}
 		}
 
@@ -674,6 +648,5 @@ namespace Epsitec.Common.Dialogs
 		private readonly DialogDataMode			mode;
 		private readonly AbstractEntity			externalData;
 		private readonly AbstractEntity			internalData;
-		private DialogSearchController			searchController;
 	}
 }

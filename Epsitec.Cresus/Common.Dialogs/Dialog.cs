@@ -45,7 +45,7 @@ namespace Epsitec.Common.Dialogs
 			}
 		}
 
-		public DialogData DialogData
+		public DialogData Data
 		{
 			get
 			{
@@ -68,6 +68,22 @@ namespace Epsitec.Common.Dialogs
 
 					this.dialogData = value;
 				}
+			}
+		}
+
+		/// <summary>
+		/// Gets or sets the search controller for this dialog.
+		/// </summary>
+		/// <value>The search controller.</value>
+		public DialogSearchController SearchController
+		{
+			get
+			{
+				return this.dialogSearchController;
+			}
+			set
+			{
+				this.dialogSearchController = value;
 			}
 		}
 
@@ -157,14 +173,14 @@ namespace Epsitec.Common.Dialogs
 
 		protected virtual void HandleAcceptCommand()
 		{
-			this.DialogData.ApplyChanges ();
+			this.Data.ApplyChanges ();
 			this.DialogResult = DialogResult.Accept;
 			this.CloseDialog ();
 		}
 
 		protected virtual void HandleApplyCommand()
 		{
-			this.DialogData.ApplyChanges ();
+			this.Data.ApplyChanges ();
 		}
 
 		private void InitializeDataBinding()
@@ -176,10 +192,15 @@ namespace Epsitec.Common.Dialogs
 
 			if ((this.panel != null) &&
 				(this.dialogData != null) &&
-				(this.dialogDataBoundToUserInterface == false))
+				(this.isDataBound == false))
 			{
+				this.isDataBound = true;
 				this.dialogData.BindToUserInterface (this.panel);
-				this.dialogDataBoundToUserInterface = true;
+
+				if (this.dialogSearchController != null)
+				{
+					this.dialogSearchController.Attach (this.dialogData);
+				}
 			}
 		}
 
@@ -187,10 +208,16 @@ namespace Epsitec.Common.Dialogs
 		{
 			if ((this.panel != null) &&
 				(this.dialogData != null) &&
-				(this.dialogDataBoundToUserInterface))
+				(this.isDataBound))
 			{
+				this.isDataBound = false;
+				
+				if (this.dialogSearchController != null)
+				{
+					this.dialogSearchController.Detach (this.dialogData);
+				}
+				
 				this.dialogData.UnbindFromUserInterface (this.panel);
-				this.dialogDataBoundToUserInterface = false;
 			}
 		}
 
@@ -262,7 +289,8 @@ namespace Epsitec.Common.Dialogs
 		private Druid							userInterfaceResourceId;
 		private Druid							userInterfaceEntityId;
 		private DialogData						dialogData;
-		private bool							dialogDataBoundToUserInterface;
+		private DialogSearchController			dialogSearchController;
+		private bool							isDataBound;
 		private UI.Panel						panel;
 	}
 }

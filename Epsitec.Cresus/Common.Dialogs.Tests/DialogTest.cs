@@ -110,7 +110,7 @@ namespace Epsitec.Common.Dialogs
 					buttonDump.Clicked +=
 						delegate
 						{
-							System.Console.Out.WriteLine (dialog.DialogData.Data.Dump ());
+							System.Console.Out.WriteLine (dialog.Data.Data.Dump ());
 						};
 
 					buttonOk.Dock     = DockStyle.Stacked;
@@ -141,12 +141,12 @@ namespace Epsitec.Common.Dialogs
 			Assert.IsTrue (dialog.HasWindow);
 
 			dialog.IsModal = false;
-			dialog.DialogData = DialogTest.CreateDefaultDialogData ();
-			dialog.DialogData.SearchController = searchController;
+			dialog.Data = DialogTest.CreateDefaultDialogData ();
+			dialog.SearchController = searchController;
 			dialog.OpenDialog ();
 			Window.RunInTestEnvironment (window);
 
-			System.Console.Out.WriteLine (dialog.DialogData.Data.Dump ());
+			System.Console.Out.WriteLine (dialog.Data.Data.Dump ());
 		}
 
 		private static DialogData CreateDefaultDialogData()
