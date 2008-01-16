@@ -308,7 +308,7 @@ namespace Epsitec.Common.Dialogs
 			loc.Nom = "Lausanne";
 			loc.Numéro = "1007";
 
-			dialogAdr.Localité.Nom = "Yverdon-les-Bains VD";
+			dialogAdr.Localité.Nom = "Yverdon";
 			
 			count = 0;
 
@@ -320,7 +320,7 @@ namespace Epsitec.Common.Dialogs
 
 			Assert.AreEqual (1, count);
 			Assert.AreEqual ("Yverdon-les-Bains", originalAdr.Localité.Nom);
-			Assert.AreEqual ("Yverdon-les-Bains VD", dialogAdr.Localité.Nom);
+			Assert.AreEqual ("Yverdon", dialogAdr.Localité.Nom);
 
 			data.ApplyChanges ();
 			
@@ -333,8 +333,8 @@ namespace Epsitec.Common.Dialogs
 			});
 
 			Assert.AreEqual (1, count);
-			Assert.AreEqual ("Yverdon-les-Bains VD", originalAdr.Localité.Nom);
-			Assert.AreEqual ("Yverdon-les-Bains VD", dialogAdr.Localité.Nom);
+			Assert.AreEqual ("Yverdon", originalAdr.Localité.Nom);
+			Assert.AreEqual ("Yverdon", dialogAdr.Localité.Nom);
 
 			data.SetReferenceReplacement (EntityFieldPath.CreateRelativePath ("[8V15]"), loc);
 			
@@ -347,13 +347,19 @@ namespace Epsitec.Common.Dialogs
 			});
 
 			Assert.AreEqual (1, count);
-			Assert.AreEqual ("Yverdon-les-Bains VD", originalAdr.Localité.Nom);
-			Assert.AreEqual ("Yverdon-les-Bains VD", dialogAdr.Localité.Nom);
+			Assert.AreEqual ("Yverdon", originalAdr.Localité.Nom);
+			Assert.AreEqual ("Yverdon", dialogAdr.Localité.Nom);
 
 			data.ApplyChanges ();
 
 			Assert.AreEqual ("Lausanne", originalAdr.Localité.Nom);
-			Assert.AreEqual ("Yverdon-les-Bains VD", dialogAdr.Localité.Nom);	//	!
+			Assert.AreEqual ("Yverdon", dialogAdr.Localité.Nom);	//	!
+
+			data.RevertChanges ();
+			
+			Assert.AreEqual ("Lausanne", originalAdr.Localité.Nom);
+			Assert.AreEqual ("Yverdon-les-Bains", dialogAdr.Localité.Nom);	//	!
+			Assert.AreEqual ("Lausanne", loc.Nom);
 		}
 	}
 }

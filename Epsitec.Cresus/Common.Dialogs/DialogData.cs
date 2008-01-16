@@ -70,11 +70,7 @@ namespace Epsitec.Common.Dialogs
 
 				foreach (EntityFieldPath path in this.replacements.Keys)
 				{
-					if (paths.Contains (path))
-					{
-						continue;
-					}
-					
+					paths.RemoveAll (item => item.StartsWith (path));
 					paths.Add (path);
 				}
 
@@ -91,10 +87,6 @@ namespace Epsitec.Common.Dialogs
 					{
 						oldValue = this.originalValues[path];
 						newValue = replacement;
-					}
-					else if (this.HasReplacement (path))
-					{
-						continue;
 					}
 					else
 					{
@@ -154,7 +146,14 @@ namespace Epsitec.Common.Dialogs
 
 		public void SetReferenceReplacement(EntityFieldPath path, AbstractEntity suggestion)
 		{
-			this.replacements[path] = suggestion;
+			if (suggestion == null)
+			{
+				this.replacements.Remove (path);
+			}
+			else
+			{
+				this.replacements[path] = suggestion;
+			}
 		}
 
 		/// <summary>
