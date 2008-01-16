@@ -75,7 +75,7 @@ namespace Epsitec.Common.Dialogs
 				}
 
 				this.searchContexts.Clear ();
-				this.SetSearchContext (null);
+				this.ActivateSearchContext (null);
 			}
 		}
 
@@ -122,6 +122,12 @@ namespace Epsitec.Common.Dialogs
 			PlaceholderContext.ContextActivated -= this.HandlePlaceholderContextActivated;
 		}
 
+		/// <summary>
+		/// Handles the activation of a placeholder context. If this is the first
+		/// activation on the placeholder context stack, then it originates from
+		/// a direct user interaction.
+		/// </summary>
+		/// <param name="sender">The controller which gets activated.</param>
 		private void HandlePlaceholderContextActivated(object sender)
 		{
 			if (PlaceholderContext.Depth == 1)
@@ -133,6 +139,12 @@ namespace Epsitec.Common.Dialogs
 			}
 		}
 
+		/// <summary>
+		/// Updates the search template based on the contents of the specified
+		/// <see cref="Placeholder"/> widget.
+		/// </summary>
+		/// <param name="placeholder">The placeholder.</param>
+		/// <param name="value">The actual value of the placeholder.</param>
 		private void UpdateSearchTemplate(AbstractPlaceholder placeholder, object value)
 		{
 			if ((this.suspendSearchHandler > 0) ||
@@ -195,7 +207,7 @@ namespace Epsitec.Common.Dialogs
 					}
 				}
 
-				this.SetSearchContext (newContext);
+				this.ActivateSearchContext (newContext);
 				
 				if (this.activeSearchContext != null)
 				{
@@ -236,7 +248,11 @@ namespace Epsitec.Common.Dialogs
 #endif
 		}
 
-		private void SetSearchContext(SearchContext newContext)
+		/// <summary>
+		/// Activates the specified search context.
+		/// </summary>
+		/// <param name="newContext">The new context.</param>
+		private void ActivateSearchContext(SearchContext newContext)
 		{
 			SearchContext oldContext = this.activeSearchContext;
 
@@ -248,10 +264,20 @@ namespace Epsitec.Common.Dialogs
 			}
 		}
 
+		/// <summary>
+		/// Raises the <see cref="E:SearchContextChanged"/> event when the active
+		/// search context changes.
+		/// </summary>
+		/// <param name="e">The <see cref="DependencyPropertyChangedEventArgs"/> instance
+		/// containing the event data.</param>
 		private void OnSearchContextChanged(DependencyPropertyChangedEventArgs e)
 		{
 		}
 
+		/// <summary>
+		/// Temporarily disables the search handler.
+		/// </summary>
+		/// <returns>A disposable object which must be used in a <c>using</c> block.</returns>
 		private System.IDisposable SuspendSearchHandler()
 		{
 			return new SuspendSearchHandlerHelper (this);
