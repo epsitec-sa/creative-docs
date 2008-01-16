@@ -24,7 +24,26 @@ namespace Epsitec.Common.FormEngine
 		public List<FieldDescription> Merge(List<FieldDescription> reference, List<FieldDescription> patch)
 		{
 			//	Retourne la liste fusionnée.
-			return reference;  // TODO:
+			List<FieldDescription> merged = new List<FieldDescription>();
+
+			foreach (FieldDescription field in reference)
+			{
+				merged.Add(field);
+			}
+
+			foreach (FieldDescription field in patch)
+			{
+				if (field.Type == FieldDescription.FieldType.Hide)
+				{
+					int index = Arrange.IndexOfGuid(merged, field.Guid);
+					if (index != -1)
+					{
+						merged.RemoveAt(index);
+					}
+				}
+			}
+
+			return merged;
 		}
 
 
@@ -246,6 +265,22 @@ namespace Epsitec.Common.FormEngine
 					dst.Add(field);
 				}
 			}
+		}
+
+
+		static private int IndexOfGuid(List<FieldDescription> list, System.Guid guid)
+		{
+			//	Retourne l'index de l'élément utilisant un Guid donné.
+			//	Retourne -1 s'il n'en existe aucun.
+			for (int i=0; i<list.Count; i++)
+			{
+				if (list[i].Guid == guid)
+				{
+					return i;
+				}
+			}
+
+			return -1;
 		}
 
 
