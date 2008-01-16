@@ -660,6 +660,12 @@ namespace Epsitec.Common.Designer
 		}
 
 
+		static public string GetMenuIconState(bool state)
+		{
+			//	Retourne l'icône à utiliser dans un menu, pour un item booléen.
+			return state ? Misc.Icon("ActiveYes") : Misc.Icon("ActiveNo");
+		}
+
 		static public void GetIconNames(string fullName, out string moduleName, out string shortName)
 		{
 			//	Fractionne un nom du type "manifest:Epsitec.Common.Designer.Images.xxx.icon".

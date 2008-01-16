@@ -153,11 +153,11 @@ namespace Epsitec.Common.Designer.Viewers
 			this.fieldsButtonGoto.Clicked += new MessageEventHandler(this.HandleFieldsButtonClicked);
 			this.fieldsToolbar.Items.Add(this.fieldsButtonGoto);
 
-			this.fieldsButtonShowPrefix = new IconButton();
-			this.fieldsButtonShowPrefix.AutoFocus = false;
-			this.fieldsButtonShowPrefix.CaptionId = Res.Captions.Editor.Forms.ShowPrefix.Id;
-			this.fieldsButtonShowPrefix.Clicked += new MessageEventHandler(this.HandleFieldsButtonClicked);
-			this.fieldsToolbar.Items.Add(this.fieldsButtonShowPrefix);
+			this.fieldsButtonMenu = new GlyphButton();
+			this.fieldsButtonMenu.GlyphShape = GlyphShape.Menu;
+			this.fieldsButtonMenu.AutoFocus = false;
+			this.fieldsButtonMenu.Clicked += new MessageEventHandler(this.HandleFieldsButtonClicked);
+			this.fieldsToolbar.Items.Add(this.fieldsButtonMenu);
 
 			this.fieldsTable = new MyWidgets.StringArray(top);
 			this.fieldsTable.Columns = 2;
@@ -281,7 +281,7 @@ namespace Epsitec.Common.Designer.Viewers
 				this.fieldsButtonPrev.Clicked -= new MessageEventHandler(this.HandleFieldsButtonClicked);
 				this.fieldsButtonNext.Clicked -= new MessageEventHandler(this.HandleFieldsButtonClicked);
 				this.fieldsButtonGoto.Clicked -= new MessageEventHandler(this.HandleFieldsButtonClicked);
-				this.fieldsButtonShowPrefix.Clicked -= new MessageEventHandler(this.HandleFieldsButtonClicked);
+				this.fieldsButtonMenu.Clicked -= new MessageEventHandler(this.HandleFieldsButtonClicked);
 
 				this.fieldsTable.CellCountChanged -= new EventHandler(this.HandleFieldTableCellCountChanged);
 				this.fieldsTable.CellsContentChanged -= new EventHandler(this.HandleFieldTableCellsContentChanged);
@@ -416,6 +416,13 @@ namespace Epsitec.Common.Designer.Viewers
 				this.Terminate(false);
 				this.module.RunForm(this.access.AccessIndex);
 				this.module.DesignerApplication.ActiveButton("PanelRun", false);
+				return;
+			}
+
+			if (name == "FormFieldsShowPrefix")
+			{
+				Forms.showPrefix = !Forms.showPrefix;
+				this.UpdateFieldsTable(false);
 				return;
 			}
 
@@ -595,8 +602,6 @@ namespace Epsitec.Common.Designer.Viewers
 			this.fieldsButtonGoto.Enable = isGoto;
 
 			this.fieldsButtonBox.IconName = isUnbox ? Misc.Icon("FormUnbox") : Misc.Icon("FormBox");
-
-			this.fieldsButtonShowPrefix.ActiveState = Forms.showPrefix ? ActiveState.Yes : ActiveState.No;
 		}
 
 		protected void UpdateRelationsTable(bool newContent)
@@ -1435,6 +1440,8 @@ namespace Epsitec.Common.Designer.Viewers
 
 		private void HandleFieldsButtonClicked(object sender, MessageEventArgs e)
 		{
+			AbstractButton button = sender as AbstractButton;
+
 			if (sender == this.fieldsButtonRemove)
 			{
 				this.SelectedFieldsRemove();
@@ -1480,12 +1487,23 @@ namespace Epsitec.Common.Designer.Viewers
 				this.SelectedFieldsGoto();
 			}
 
-			if (sender == this.fieldsButtonShowPrefix)
+			if (sender == this.fieldsButtonMenu)
 			{
-				Forms.showPrefix = !Forms.showPrefix;
-				this.UpdateFieldsTable(false);
-				this.UpdateFieldsButtons();
+				VMenu menu = this.CreateFieldsMenu();
+				menu.Host = button.Window;
+				TextFieldCombo.AdjustComboSize(button, menu, false);
+				menu.ShowAsComboList(button, Point.Zero, button);
 			}
+		}
+
+		protected VMenu CreateFieldsMenu()
+		{
+			VMenu menu = new VMenu();
+
+			MenuItem item = new MenuItem("FormFieldsShowPrefix", Misc.GetMenuIconState(Forms.showPrefix), Res.Strings.Viewers.Forms.Menu.ShowPrefix, "", "FormFieldsShowPrefix");
+			menu.Items.Add(item);
+
+			return menu;
 		}
 
 		private void HandleRelationsButtonClicked(object sender, MessageEventArgs e)
@@ -1616,7 +1634,7 @@ namespace Epsitec.Common.Designer.Viewers
 		protected IconButton					fieldsButtonPrev;
 		protected IconButton					fieldsButtonNext;
 		protected IconButton					fieldsButtonGoto;
-		protected IconButton					fieldsButtonShowPrefix;
+		protected GlyphButton					fieldsButtonMenu;
 		protected MyWidgets.StringArray			fieldsTable;
 
 		protected TabBook						tabBookSecondary;

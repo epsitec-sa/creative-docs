@@ -1558,6 +1558,12 @@ namespace Epsitec.Common.Designer
 				
 				public static class Forms
 				{
+					public static class Menu
+					{
+						//	designer:str/30215
+						public static string ShowPrefix { get { return global::Epsitec.Common.Designer.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (33554593)); } }
+					}
+					
 					public static class Title
 					{
 						//	designer:str/302U4

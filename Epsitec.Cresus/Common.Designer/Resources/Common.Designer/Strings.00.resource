@@ -485,4 +485,5 @@
   <data name="Viewers.Forms.Title.Normal" id="2U4"> ― basé sur l&amp;apos;entité &lt;b&gt;{0}&lt;/b&gt;</data>
   <data name="Viewers.Forms.Title.Patch" id="2V4"> ― patch basé sur le masque &lt;b&gt;{0}&lt;/b&gt;</data>
   <data name="Viewers.Forms.Title.PatchNormal" id="205"> ― patch basé sur le masque &lt;b&gt;{0}&lt;/b&gt; et l&amp;apos;entité &lt;b&gt;{1}&lt;/b&gt;</data>
+  <data name="Viewers.Forms.Menu.ShowPrefix" id="215">Afficher les préfixes</data>
 </bundle>

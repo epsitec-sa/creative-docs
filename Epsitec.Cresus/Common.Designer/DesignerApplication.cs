@@ -812,6 +812,7 @@ namespace Epsitec.Common.Designer
 		[Command("TabIndexNext")]
 		[Command("TabIndexLast")]
 		[Command("TabIndexRenum")]
+		[Command("FormFieldsShowPrefix")]
 		void CommandCommand(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
 			if (!this.IsCurrentModule)
