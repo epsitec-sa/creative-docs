@@ -89,9 +89,12 @@ namespace Epsitec.Common.Designer.Viewers
 			this.tabBookSecondary.PreferredHeight = Forms.bottomPanelHeight;
 
 			//	Crée l'onglet 'champs'.
-			this.fieldsToolbar = new HToolBar(top);
-			this.fieldsToolbar.Dock = DockStyle.Top;
-			this.fieldsToolbar.Margins = new Margins(0, 0, 0, 5);
+			FrameBox topToolBar = new FrameBox(top);
+			topToolBar.Dock = DockStyle.Top;
+			topToolBar.Margins = new Margins(0, 0, 0, 5);
+
+			this.fieldsToolbar = new HToolBar(topToolBar);
+			this.fieldsToolbar.Dock = DockStyle.Fill;
 
 			this.fieldsButtonRemove = new IconButton();
 			this.fieldsButtonRemove.AutoFocus = false;
@@ -153,11 +156,13 @@ namespace Epsitec.Common.Designer.Viewers
 			this.fieldsButtonGoto.Clicked += new MessageEventHandler(this.HandleFieldsButtonClicked);
 			this.fieldsToolbar.Items.Add(this.fieldsButtonGoto);
 
-			this.fieldsButtonMenu = new GlyphButton();
+			this.fieldsButtonMenu = new GlyphButton(topToolBar);
 			this.fieldsButtonMenu.GlyphShape = GlyphShape.Menu;
+			this.fieldsButtonMenu.ButtonStyle = ButtonStyle.ToolItem;
 			this.fieldsButtonMenu.AutoFocus = false;
 			this.fieldsButtonMenu.Clicked += new MessageEventHandler(this.HandleFieldsButtonClicked);
-			this.fieldsToolbar.Items.Add(this.fieldsButtonMenu);
+			this.fieldsButtonMenu.Margins = new Margins(0, 0, 3, 3);
+			this.fieldsButtonMenu.Dock = DockStyle.Right;
 
 			this.fieldsTable = new MyWidgets.StringArray(top);
 			this.fieldsTable.Columns = 2;
