@@ -10,42 +10,42 @@ using System.Collections.Generic;
 
 namespace Epsitec.Common.Dialogs
 {
-	public sealed class DialogSearchController
+	/// <summary>
+	/// The <c>DialogSearchController</c> class manages searches based on
+	/// <see cref="DialogData"/> and a set of <see cref="Placeholder"/>
+	/// instances.
+	/// </summary>
+	public sealed class DialogSearchController : System.IDisposable
 	{
+		/// <summary>
+		/// Initializes a new instance of the <see cref="DialogSearchController"/> class.
+		/// </summary>
 		public DialogSearchController()
 		{
 			this.searchContexts = new List<SearchContext> ();
 		}
 
-		internal void Attach(DialogData data)
+		/// <summary>
+		/// Gets or sets the dialog data atteched to this search controller.
+		/// </summary>
+		/// <value>The dialog data.</value>
+		public DialogData DialogData
 		{
-			if (this.dialogData == data)
+			get
 			{
-				return;
+				return this.dialogData;
 			}
-
-			if (this.dialogData != null)
+			set
 			{
-				this.Detach (this.dialogData);
+				if (this.dialogData != value)
+				{
+					this.Attach (value);
+				}
 			}
-
-			this.dialogData = data;
-
-			PlaceholderContext.ContextActivated += this.HandlePlaceholderContextActivated;
-		}
-
-		internal void Detach(DialogData data)
-		{
-			if (this.dialogData != data)
-			{
-				throw new System.ArgumentException ("Invalid dialog data", "data");
-			}
-
-			PlaceholderContext.ContextActivated -= this.HandlePlaceholderContextActivated;
 		}
 
 		/// <summary>
-		/// Gets or sets the entity resolver.
+		/// Gets or sets the entity resolver for this search controller.
 		/// </summary>
 		/// <value>The entity resolver.</value>
 		public IEntityResolver Resolver
@@ -60,6 +60,77 @@ namespace Epsitec.Common.Dialogs
 			}
 		}
 
+		/// <summary>
+		/// Clears the suggestions and the text typed in by the user in the
+		/// associated <see cref="Placeholder"/> widgets.
+		/// </summary>
+		public void ClearSuggestions()
+		{
+			using (this.SuspendSearchHandler ())
+			{
+				foreach (SearchContext context in this.searchContexts)
+				{
+					context.Clear ();
+					context.Resolve (this.entityResolver);
+				}
+
+				this.searchContexts.Clear ();
+
+				if (this.activeSearchContext != null)
+				{
+					SearchContext oldContext = this.activeSearchContext;
+					SearchContext newContext = null;
+
+					this.activeSearchContext = null;
+					
+					this.OnSearchContextChanged (new DependencyPropertyChangedEventArgs ("SearchContext", oldContext, newContext));
+				}
+			}
+		}
+
+		#region IDisposable Members
+
+		public void Dispose()
+		{
+			this.DialogData = null;
+			this.Resolver = null;
+		}
+
+		#endregion
+
+		/// <summary>
+		/// Attaches the search controller to the specified dialog data.
+		/// </summary>
+		/// <param name="data">The dialog data.</param>
+		private void Attach(DialogData data)
+		{
+			if (this.dialogData != null)
+			{
+				this.Detach (this.dialogData);
+			}
+
+			this.dialogData = data;
+
+			if (this.dialogData != null)
+			{
+				PlaceholderContext.ContextActivated += this.HandlePlaceholderContextActivated;
+			}
+		}
+
+		/// <summary>
+		/// Detaches the search controller from the specified dialog data.
+		/// </summary>
+		/// <param name="data">The dialog data.</param>
+		private void Detach(DialogData data)
+		{
+			if (this.dialogData != data)
+			{
+				throw new System.ArgumentException ("Invalid dialog data", "data");
+			}
+
+			PlaceholderContext.ContextActivated -= this.HandlePlaceholderContextActivated;
+		}
+
 		private void HandlePlaceholderContextActivated(object sender)
 		{
 			if (PlaceholderContext.Depth == 1)
@@ -67,26 +138,11 @@ namespace Epsitec.Common.Dialogs
 				UI.Controllers.AbstractController controller = sender as UI.Controllers.AbstractController;
 				object value = controller.GetActualValue ();
 
-				this.NotifySearchTemplateChanged (PlaceholderContext.InteractivePlaceholder, value);
+				this.UpdateSearchTemplate (PlaceholderContext.InteractivePlaceholder, value);
 			}
 		}
 
-		private static KeyValuePair<AbstractEntity, string> GetEntityDataAndField(AbstractPlaceholder placeholder)
-		{
-			BindingExpression   binding     = placeholder.ValueBindingExpression;
-			DataSourceType      sourceType  = binding.GetSourceType ();
-
-			if (sourceType == DataSourceType.StructuredData)
-			{
-				return new KeyValuePair<AbstractEntity, string> (binding.GetSourceObject () as AbstractEntity, binding.GetSourceProperty () as string);
-			}
-			else
-			{
-				return new KeyValuePair<AbstractEntity, string> ();
-			}
-		}
-
-		private void NotifySearchTemplateChanged(AbstractPlaceholder placeholder, object value)
+		private void UpdateSearchTemplate(AbstractPlaceholder placeholder, object value)
 		{
 			if ((this.suspendSearchHandler > 0) ||
 				(this.entityResolver == null))
@@ -128,7 +184,7 @@ namespace Epsitec.Common.Dialogs
 
 				if (newContext == null)
 				{
-					IEntityProxyProvider  proxyProvider = DialogSearchController.GetEntityDataAndField (placeholder).Key;
+					IEntityProxyProvider  proxyProvider = DialogSearchController.GetEntityDataAndField (placeholder).Entity;
 					DialogData.FieldProxy proxy = proxyProvider.GetEntityProxy () as DialogData.FieldProxy;
 
 					if (proxy != null)
@@ -199,33 +255,34 @@ namespace Epsitec.Common.Dialogs
 		{
 		}
 
-		public void ClearSuggestions()
-		{
-			using (this.SuspendSearchHandler ())
-			{
-				foreach (SearchContext context in this.searchContexts)
-				{
-					context.Clear ();
-					context.Resolve (this.entityResolver);
-				}
-
-				this.searchContexts.Clear ();
-
-				if (this.activeSearchContext != null)
-				{
-					SearchContext oldContext = this.activeSearchContext;
-					SearchContext newContext = null;
-
-					this.activeSearchContext = null;
-					
-					this.OnSearchContextChanged (new DependencyPropertyChangedEventArgs ("SearchContext", oldContext, newContext));
-				}
-			}
-		}
-
 		private System.IDisposable SuspendSearchHandler()
 		{
 			return new SuspendSearchHandlerHelper (this);
+		}
+
+		/// <summary>
+		/// Gets the entity data and associated field name for the specified
+		/// placeholder. This uses binding analysis to retrieve the information.
+		/// </summary>
+		/// <param name="placeholder">The placeholder.</param>
+		/// <returns>The entity data and field.</returns>
+		private static EntityField GetEntityDataAndField(AbstractPlaceholder placeholder)
+		{
+			BindingExpression   binding     = placeholder.ValueBindingExpression;
+			DataSourceType      sourceType  = binding.GetSourceType ();
+
+			if (sourceType == DataSourceType.StructuredData)
+			{
+				return new EntityField ()
+				{
+					Entity = binding.GetSourceObject () as AbstractEntity,
+					Field = binding.GetSourceProperty () as string
+				};
+			}
+			else
+			{
+				return new EntityField ();
+			}
 		}
 
 		#region Node Structure
@@ -285,6 +342,24 @@ namespace Epsitec.Common.Dialogs
 
 		#endregion
 
+		#region EntityField Structure
+
+		public struct EntityField
+		{
+			public AbstractEntity Entity
+			{
+				get;
+				set;
+			}
+			public string Field
+			{
+				get;
+				set;
+			}
+		}
+
+		#endregion
+
 		#region SuspendSearchHandlerHelper Class
 
 		private sealed class SuspendSearchHandlerHelper : System.IDisposable
@@ -310,6 +385,12 @@ namespace Epsitec.Common.Dialogs
 
 		#endregion
 
+		#region SearchContext Class
+
+		/// <summary>
+		/// The <c>SearchContext</c> class maintains information about a (sub-)search
+		/// in a dialog.
+		/// </summary>
 		private sealed class SearchContext : System.IDisposable
 		{
 			public SearchContext(AbstractEntity rootData, EntityFieldPath rootPath)
@@ -439,10 +520,10 @@ namespace Epsitec.Common.Dialogs
 			{
 				foreach (AbstractPlaceholder placeholder in root.FindAllChildren (child => child is AbstractPlaceholder))
 				{
-					KeyValuePair<AbstractEntity, string> info = DialogSearchController.GetEntityDataAndField (placeholder);
+					EntityField info = DialogSearchController.GetEntityDataAndField (placeholder);
 					
-					AbstractEntity entity = info.Key;
-					string         field  = info.Value;
+					AbstractEntity entity = info.Entity;
+					string         field  = info.Field;
 
 					if ((entity == null) ||
 						(field == null))
@@ -486,7 +567,9 @@ namespace Epsitec.Common.Dialogs
 
 			#endregion
 		}
-		
+
+		#endregion
+
 		private int								suspendSearchHandler;
 		private IEntityResolver					entityResolver;
 

@@ -199,7 +199,7 @@ namespace Epsitec.Common.Dialogs
 
 				if (this.dialogSearchController != null)
 				{
-					this.dialogSearchController.Attach (this.dialogData);
+					this.dialogSearchController.DialogData = this.dialogData;
 				}
 			}
 		}
@@ -214,7 +214,7 @@ namespace Epsitec.Common.Dialogs
 				
 				if (this.dialogSearchController != null)
 				{
-					this.dialogSearchController.Detach (this.dialogData);
+					this.dialogSearchController.DialogData = null;
 				}
 				
 				this.dialogData.UnbindFromUserInterface (this.panel);

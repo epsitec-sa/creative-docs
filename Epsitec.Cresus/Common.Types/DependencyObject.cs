@@ -126,7 +126,7 @@ namespace Epsitec.Common.Types
 			}
 		}
 
-		public IEnumerable<DependencyProperty> LocalProperties
+		public IEnumerable<DependencyProperty>	LocalProperties
 		{
 			get
 			{
@@ -137,7 +137,7 @@ namespace Epsitec.Common.Types
 			}
 		}
 
-		public IEnumerable<DependencyProperty> AttachedProperties
+		public IEnumerable<DependencyProperty>	AttachedProperties
 		{
 			get
 			{
