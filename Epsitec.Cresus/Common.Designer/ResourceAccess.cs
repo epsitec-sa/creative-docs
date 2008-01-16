@@ -773,6 +773,32 @@ namespace Epsitec.Common.Designer
 			return Druid.Empty;
 		}
 
+		public string GetFormName(Druid formId)
+		{
+			//	Retourne le nom d'un masque.
+			CultureMap item = this.GetFormItem(formId);
+			if (item == null)
+			{
+				return null;
+			}
+			else
+			{
+				return item.Name;
+			}
+		}
+
+		protected CultureMap GetFormItem(Druid formId)
+		{
+			//	Retourne le CultureMap d'un masque.
+			Module module = this.designerApplication.SearchModule(formId);
+			if (module == null)
+			{
+				return null;
+			}
+
+			return module.AccessForms.accessor.Collection[formId];
+		}
+
 		public string GetFieldNames(string druidsPath)
 		{
 			//	Retourne le nom complet d'un champ. Par exemple:

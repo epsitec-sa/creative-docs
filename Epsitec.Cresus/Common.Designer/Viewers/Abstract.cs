@@ -990,10 +990,33 @@ namespace Epsitec.Common.Designer.Viewers
 					FormEngine.FormDescription form = this.access.GetForm(item.Id);
 					if (form != null)
 					{
-						string entityName = this.module.AccessEntities.GetEntityName(form.EntityId);
-						if (!string.IsNullOrEmpty(entityName))
+						string formName = null;
+						string entityName = null;
+
+						if (form.IsPatch)
 						{
-							based = string.Format(" basé sur l'entité {0}", entityName);
+							formName = this.module.AccessForms.GetFormName(form.FormIdToPatch);
+						}
+
+						entityName = this.module.AccessEntities.GetEntityName(form.EntityId);
+
+						if (!string.IsNullOrEmpty(formName))
+						{
+							if (string.IsNullOrEmpty(entityName))
+							{
+								based = string.Format(" patch basé sur le masque {0}", formName);
+							}
+							else
+							{
+								based = string.Format(" patch basé sur le masque {0} et l'entité {1}", formName, entityName);
+							}
+						}
+						else
+						{
+							if (!string.IsNullOrEmpty(entityName))
+							{
+								based = string.Format(" basé sur l'entité {0}", entityName);
+							}
 						}
 					}
 				}
