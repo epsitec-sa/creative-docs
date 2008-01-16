@@ -55,6 +55,14 @@ namespace Epsitec.Common.Dialogs
 			}
 		}
 
+		public AbstractEntity ExternalData
+		{
+			get
+			{
+				return this.externalData;
+			}
+		}
+
 		/// <summary>
 		/// Gets the changes. The result is sorted based on the field path of
 		/// every change set item.
@@ -126,6 +134,11 @@ namespace Epsitec.Common.Dialogs
 		/// <param name="data">The data.</param>
 		public void ApplyChanges(AbstractEntity data)
 		{
+			if (this.AreReferenceReplacementsValid ())
+			{
+				throw new System.InvalidOperationException ("Cannot apply invalid changes");
+			}
+
 			this.ForEachChange (change => change.Path.NavigateWrite (data, change.NewValue));
 		}
 
@@ -135,6 +148,8 @@ namespace Epsitec.Common.Dialogs
 		/// </summary>
 		public void RevertChanges()
 		{
+			this.replacements.Clear ();
+
 			using (this.internalData.GetEntityContext ().SuspendConstraintChecking ())
 			{
 				while (this.ForEachChange (change => change.Path.NavigateWrite (this.internalData, change.OldValue)))
@@ -144,16 +159,42 @@ namespace Epsitec.Common.Dialogs
 			}
 		}
 
+		public bool AreReferenceReplacementsValid()
+		{
+			EntityContext         context = this.externalData.GetEntityContext ();
+			List<EntityFieldPath> paths   = new List<EntityFieldPath> (this.replacements.Keys);
+
+			paths.Sort ();
+
+			foreach (EntityFieldPath path in paths)
+			{
+				AbstractEntity value = this.replacements[path];
+
+				if (value == null)
+				{
+					Druid  entityId;
+					string fieldId;
+					
+					path.Navigate (context, out entityId, out fieldId);
+
+					if (context.IsNullable (entityId, fieldId) == false)
+					{
+						return false;
+					}
+				}
+			}
+
+			return true;
+		}
+		
 		public void SetReferenceReplacement(EntityFieldPath path, AbstractEntity suggestion)
 		{
-			if (suggestion == null)
-			{
-				this.replacements.Remove (path);
-			}
-			else
-			{
-				this.replacements[path] = suggestion;
-			}
+			this.replacements[path] = suggestion;
+		}
+
+		public void ClearReferenceReplacement(EntityFieldPath path)
+		{
+			this.replacements.Remove (path);
 		}
 
 		/// <summary>

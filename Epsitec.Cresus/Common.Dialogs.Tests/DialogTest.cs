@@ -146,7 +146,22 @@ namespace Epsitec.Common.Dialogs
 			dialog.OpenDialog ();
 			Window.RunInTestEnvironment (window);
 
+			System.Console.Out.WriteLine ("Raw dialog data:");
 			System.Console.Out.WriteLine (dialog.Data.Data.Dump ());
+			
+			switch (dialog.DialogResult)
+			{
+				case DialogResult.Accept:
+					dialog.Data.ApplyChanges ();
+					break;
+
+				case DialogResult.Cancel:
+					dialog.Data.RevertChanges ();
+					break;
+			}
+
+			System.Console.Out.WriteLine ("Resulting dialog data:");
+			System.Console.Out.WriteLine (dialog.Data.ExternalData.Dump ());
 		}
 
 		internal static AdresseEntity CreateDefaultAdresseEntity()

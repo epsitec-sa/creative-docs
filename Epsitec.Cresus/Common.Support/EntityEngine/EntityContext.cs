@@ -319,6 +319,52 @@ namespace Epsitec.Common.Support.EntityEngine
 			}
 		}
 
+		public bool IsNullable(Druid entityId, string fieldId)
+		{
+			IStructuredType type = this.GetStructuredType (entityId);
+
+			if (type == null)
+			{
+				throw new System.ArgumentException ("Entity id cannot be resolved to a type");
+			}
+
+			StructuredTypeField field = type.GetField (fieldId);
+
+			if (field == null)
+			{
+				throw new System.ArgumentException ("Field cannot be resolved");
+			}
+			
+			return this.IsNullable (field);
+		}
+		
+		public bool IsNullable(AbstractEntity entity, string fieldId)
+		{
+			StructuredTypeField field = this.GetStructuredTypeField (entity, fieldId);
+
+			return this.IsNullable (field);
+		}
+
+		private bool IsNullable(StructuredTypeField field)
+		{
+			if (field.IsNullable)
+			{
+				return true;
+			}
+
+			INullableType nullableType = field.Type as INullableType;
+
+			if ((nullableType != null) &&
+				(nullableType.IsNullable))
+			{
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}
+
 
 		/// <summary>
 		/// Finds the property setter used to write to the specified field.
