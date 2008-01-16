@@ -981,6 +981,8 @@ namespace Epsitec.Common.Designer.Viewers
 			CultureMap item = this.access.CollectionView.CurrentItem as CultureMap;
 			if (item != null)
 			{
+				Color backColor = Color.Empty;
+
 				string name = item.FullName;
 				string based = null;
 				string mode = null;
@@ -996,6 +998,7 @@ namespace Epsitec.Common.Designer.Viewers
 						if (form.IsPatch)
 						{
 							formName = this.module.AccessForms.GetFormName(form.FormIdToPatch);
+							backColor = Misc.SourceColor(CultureMapSource.DynamicMerge);
 						}
 
 						entityName = this.module.AccessEntities.GetEntityName(form.EntityId);
@@ -1024,7 +1027,7 @@ namespace Epsitec.Common.Designer.Viewers
 				if (this.module.IsPatch)
 				{
 					CultureMapSource source = this.access.GetCultureMapSource(item);
-					this.titleBox.BackColor = Misc.SourceColor(source);
+					backColor = Misc.SourceColor(source);
 					mode = Misc.SourceText(source);
 					if (!string.IsNullOrEmpty(mode))
 					{
@@ -1033,6 +1036,7 @@ namespace Epsitec.Common.Designer.Viewers
 				}
 
 				this.titleText.Text = string.Concat("<font size=\"150%\">", name, "</font>", based, mode);
+				this.titleBox.BackColor = backColor;
 			}
 		}
 
