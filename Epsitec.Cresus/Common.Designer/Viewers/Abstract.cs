@@ -1004,18 +1004,18 @@ namespace Epsitec.Common.Designer.Viewers
 						{
 							if (string.IsNullOrEmpty(entityName))
 							{
-								based = string.Format(" patch basé sur le masque {0}", formName);
+								based = string.Format(Res.Strings.Viewers.Forms.Title.Patch, formName);
 							}
 							else
 							{
-								based = string.Format(" patch basé sur le masque {0} et l'entité {1}", formName, entityName);
+								based = string.Format(Res.Strings.Viewers.Forms.Title.PatchNormal, formName, entityName);
 							}
 						}
 						else
 						{
 							if (!string.IsNullOrEmpty(entityName))
 							{
-								based = string.Format(" basé sur l'entité {0}", entityName);
+								based = string.Format(Res.Strings.Viewers.Forms.Title.Normal, entityName);
 							}
 						}
 					}
