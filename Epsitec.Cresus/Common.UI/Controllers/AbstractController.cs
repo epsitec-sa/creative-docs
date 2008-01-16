@@ -120,6 +120,17 @@ namespace Epsitec.Common.UI.Controllers
 		{
 			//	Avoid update loops :
 			
+			if (PlaceholderContext.Contains (this))
+			{
+				//	Do nothing; this is called because the user typed in some data,
+				//	which produced a call to OnActualValueChanged, which in turn
+				//	updated the placeholder value.
+
+				return;
+			}
+
+			System.Diagnostics.Debug.Assert (this.isRefreshingUserInterface == false);
+			
 			if (this.isRefreshingUserInterface == false)
 			{
 				try

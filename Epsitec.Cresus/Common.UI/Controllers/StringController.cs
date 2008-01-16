@@ -131,15 +131,6 @@ namespace Epsitec.Common.UI.Controllers
 				text = this.ConvertFromValue (newValue);
 			}
 
-			if (this.IsSettingPlaceholderValue)
-			{
-				//	Do nothing; this is called because the user typed in some data,
-				//	which produced a call to OnActualValueChanged, which in turn
-				//	updated the placeholder value.
-
-				return;
-			}
-
 			if (this.field != null)
 			{
 				switch (this.Placeholder.SuggestionMode)
