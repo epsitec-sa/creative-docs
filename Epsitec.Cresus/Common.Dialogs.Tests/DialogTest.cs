@@ -149,7 +149,7 @@ namespace Epsitec.Common.Dialogs
 			System.Console.Out.WriteLine (dialog.Data.Data.Dump ());
 		}
 
-		private static DialogData CreateDefaultDialogData()
+		internal static AdresseEntity CreateDefaultAdresseEntity()
 		{
 			AdresseEntity adresse = EntityContext.Current.CreateEntity<AdresseEntity> ();
 
@@ -159,7 +159,12 @@ namespace Epsitec.Common.Dialogs
 			adresse.Localité.Pays.Code = "CH";
 			adresse.Localité.Pays.Nom = "Suisse";
 
-			return new DialogData (adresse, DialogDataMode.Isolated);
+			return adresse;
+		}
+
+		internal static DialogData CreateDefaultDialogData()
+		{
+			return new DialogData (DialogTest.CreateDefaultAdresseEntity (), DialogDataMode.Isolated);
 		}
 
 		private static IEntityResolver CreateSuggestions()

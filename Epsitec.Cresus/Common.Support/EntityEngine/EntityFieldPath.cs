@@ -407,6 +407,26 @@ namespace Epsitec.Common.Support.EntityEngine
 			}
 		}
 
+		public string GetRoot()
+		{
+			if (string.IsNullOrEmpty (this.path))
+			{
+				return null;
+			}
+			else
+			{
+				int pos = this.path.IndexOf ('.');
+				
+				if (pos < 0)
+				{
+					return this.path;
+				}
+				else
+				{
+					return this.path.Substring (0, pos);
+				}
+			}
+		}
 
 		/// <summary>
 		/// Gets the parent path.

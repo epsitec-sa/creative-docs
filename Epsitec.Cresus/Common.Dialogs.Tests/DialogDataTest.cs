@@ -1,3 +1,6 @@
+//	Copyright © 2007-2008, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
+
 using NUnit.Framework;
 
 using Epsitec.Common.Support;
@@ -267,6 +270,90 @@ namespace Epsitec.Common.Dialogs
 			Assert.IsNotNull (prix2.Monnaie);
 			Assert.AreEqual ("EUR", prix1.Monnaie.Désignation);
 			Assert.AreEqual ("EUR", prix2.Monnaie.Désignation);
+		}
+
+		[Test]
+		public void Check04ReferenceReplacement()
+		{
+			Epsitec.Cresus.AddressBook.Entities.AdresseEntity originalAdr = DialogTest.CreateDefaultAdresseEntity ();
+			Epsitec.Cresus.AddressBook.Entities.LocalitéEntity loc = EntityContext.Current.CreateEmptyEntity<Epsitec.Cresus.AddressBook.Entities.LocalitéEntity> ();
+			
+			DialogData data = new DialogData (originalAdr, DialogDataMode.Isolated);
+
+			Epsitec.Cresus.AddressBook.Entities.AdresseEntity dialogAdr = data.Data as Epsitec.Cresus.AddressBook.Entities.AdresseEntity;
+
+			Assert.IsNotNull (originalAdr);
+			Assert.IsNotNull (originalAdr.Localité);
+			Assert.IsNotNull (originalAdr.Localité.Pays);
+			Assert.AreEqual (0, Collection.Count (data.Changes));
+
+			Assert.IsNotNull (dialogAdr);
+			Assert.AreEqual (0, Collection.Count (data.Changes));
+			Assert.IsNotNull (dialogAdr.Localité);
+			Assert.AreEqual (1, Collection.Count (data.Changes));
+			Assert.IsNotNull (dialogAdr.Localité.Pays);
+			Assert.AreEqual (2, Collection.Count (data.Changes));
+
+			int count = 0;
+
+			data.ForEachChange (change =>
+			{
+				count++;
+				return true;
+			});
+
+			Assert.AreEqual (0, count);
+
+			loc.Pays = originalAdr.Localité.Pays;
+			loc.Nom = "Lausanne";
+			loc.Numéro = "1007";
+
+			dialogAdr.Localité.Nom = "Yverdon-les-Bains VD";
+			
+			count = 0;
+
+			data.ForEachChange (change =>
+				{
+					count++;
+					return true;
+				});
+
+			Assert.AreEqual (1, count);
+			Assert.AreEqual ("Yverdon-les-Bains", originalAdr.Localité.Nom);
+			Assert.AreEqual ("Yverdon-les-Bains VD", dialogAdr.Localité.Nom);
+
+			data.ApplyChanges ();
+			
+			count = 0;
+
+			data.ForEachChange (change =>
+			{
+				count++;
+				return true;
+			});
+
+			Assert.AreEqual (1, count);
+			Assert.AreEqual ("Yverdon-les-Bains VD", originalAdr.Localité.Nom);
+			Assert.AreEqual ("Yverdon-les-Bains VD", dialogAdr.Localité.Nom);
+
+			data.SetReferenceReplacement (EntityFieldPath.CreateRelativePath ("[8V15]"), loc);
+			
+			count = 0;
+
+			data.ForEachChange (change =>
+			{
+				count++;
+				return true;
+			});
+
+			Assert.AreEqual (1, count);
+			Assert.AreEqual ("Yverdon-les-Bains VD", originalAdr.Localité.Nom);
+			Assert.AreEqual ("Yverdon-les-Bains VD", dialogAdr.Localité.Nom);
+
+			data.ApplyChanges ();
+
+			Assert.AreEqual ("Lausanne", originalAdr.Localité.Nom);
+			Assert.AreEqual ("Yverdon-les-Bains VD", dialogAdr.Localité.Nom);	//	!
 		}
 	}
 }

@@ -37,5 +37,11 @@ namespace Epsitec.Common.Dialogs
 		/// </summary>
 		/// <returns>A collection of <see cref="AbstractPlaceholder"/> instances.</returns>
 		IEnumerable<AbstractPlaceholder> GetActivePlaceholders();
+
+		/// <summary>
+		/// Sets the suggestion.
+		/// </summary>
+		/// <param name="suggestion">The suggestion.</param>
+		void SetSuggestion(AbstractEntity suggestion);
 	}
 }

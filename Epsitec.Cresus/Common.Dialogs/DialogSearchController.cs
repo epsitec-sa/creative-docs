@@ -534,11 +534,7 @@ namespace Epsitec.Common.Dialogs
 			public void Resolve(IEntityResolver entityResolver)
 			{
 				AbstractEntity result = EntityResolver.Resolve (entityResolver, this.searchTemplate);
-
-				foreach (Node node in this.activeNodes)
-				{
-					this.SetSuggestionValue (node, result);
-				}
+				this.SetSuggestion (result);
 			}
 
 			#region IDisposable Members
@@ -574,6 +570,18 @@ namespace Epsitec.Common.Dialogs
 				{
 					yield return node.Placeholder;
 				}
+			}
+
+			public void SetSuggestion(AbstractEntity suggestion)
+			{
+				foreach (Node node in this.activeNodes)
+				{
+					this.SetSuggestionValue (node, suggestion);
+				}
+
+				System.Diagnostics.Debug.WriteLine ("Suggestion set to " + (suggestion == null ? "<null>" : suggestion.Dump ()));
+
+				this.searchController.dialogData.SetReferenceReplacement (this.searchRootPath, suggestion);
 			}
 
 			#endregion

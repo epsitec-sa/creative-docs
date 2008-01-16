@@ -24,6 +24,7 @@ namespace Epsitec.Common.Dialogs
 		public DialogData(AbstractEntity data, DialogDataMode mode)
 		{
 			this.originalValues = new Dictionary<EntityFieldPath, object> ();
+			this.replacements = new Dictionary<EntityFieldPath, AbstractEntity> ();
 			this.mode = mode;
 			this.externalData = data;
 			this.internalData = this.CreateEntityProxy (this.externalData, null);
@@ -63,18 +64,60 @@ namespace Epsitec.Common.Dialogs
 		{
 			get
 			{
-				List<EntityFieldPath> paths = new List<EntityFieldPath> (this.originalValues.Keys);
+				List<EntityFieldPath> paths = new List<EntityFieldPath> ();
+				
+				paths.AddRange (this.originalValues.Keys);
+
+				foreach (EntityFieldPath path in this.replacements.Keys)
+				{
+					if (paths.Contains (path))
+					{
+						continue;
+					}
+					
+					paths.Add (path);
+				}
 
 				paths.Sort ();
 
 				foreach (EntityFieldPath path in paths)
 				{
-					object oldValue = this.originalValues[path];
-					object newValue = path.NavigateRead (this.internalData);
+					object oldValue;
+					object newValue;
+					
+					AbstractEntity replacement;
+
+					if (this.replacements.TryGetValue (path, out replacement))
+					{
+						oldValue = this.originalValues[path];
+						newValue = replacement;
+					}
+					else if (this.HasReplacement (path))
+					{
+						continue;
+					}
+					else
+					{
+						oldValue = this.originalValues[path];
+						newValue = path.NavigateRead (this.internalData);
+					}
 
 					yield return new DialogDataChangeSet (path, oldValue, newValue);
 				}
 			}
+		}
+
+		public bool HasReplacement(EntityFieldPath path)
+		{
+			foreach (EntityFieldPath prefix in this.replacements.Keys)
+			{
+				if (path.StartsWith (prefix))
+				{
+					return true;
+				}
+			}
+
+			return false;
 		}
 
 		/// <summary>
@@ -109,6 +152,10 @@ namespace Epsitec.Common.Dialogs
 			}
 		}
 
+		public void SetReferenceReplacement(EntityFieldPath path, AbstractEntity suggestion)
+		{
+			this.replacements[path] = suggestion;
+		}
 
 		/// <summary>
 		/// Binds the dialog data to the specified user interface.
@@ -608,8 +655,7 @@ namespace Epsitec.Common.Dialogs
 			
 			copy.InternalDefineProxy (parent);
 
-			if ((parent != null) &&
-				((parent.FieldOptions & FieldOptions.PrivateRelation) == 0))
+			if (DialogData.IsSharedRelation (parent))
 			{
 				//	If this entity is accessed through a shared relation, we have
 				//	to disable all calculations so that the user can type in values
@@ -624,6 +670,22 @@ namespace Epsitec.Common.Dialogs
 			}
 
 			return copy;
+		}
+
+		private static bool IsSharedRelation(FieldProxy parent)
+		{
+			if (parent == null)
+			{
+				return false;
+			}
+			else if ((parent.FieldOptions & FieldOptions.PrivateRelation) == 0)
+			{
+				return true;
+			}
+			else
+			{
+				return DialogData.IsSharedRelation (parent.Parent);
+			}
 		}
 
 		private AbstractEntity CreateNullProxy(FieldProxy parent, EntityContext context, Druid entityId)
@@ -645,6 +707,7 @@ namespace Epsitec.Common.Dialogs
 
 
 		private readonly Dictionary<EntityFieldPath, object> originalValues;
+		private readonly Dictionary<EntityFieldPath, AbstractEntity> replacements;
 		private readonly DialogDataMode			mode;
 		private readonly AbstractEntity			externalData;
 		private readonly AbstractEntity			internalData;
