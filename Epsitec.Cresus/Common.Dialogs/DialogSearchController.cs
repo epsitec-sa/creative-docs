@@ -61,6 +61,18 @@ namespace Epsitec.Common.Dialogs
 		}
 
 		/// <summary>
+		/// Gets the active search context.
+		/// </summary>
+		/// <value>The active search context.</value>
+		public ISearchContext ActiveSearchContext
+		{
+			get
+			{
+				return this.activeSearchContext;
+			}
+		}
+
+		/// <summary>
 		/// Clears the suggestions and the text typed in by the user in the
 		/// associated <see cref="Placeholder"/> widgets.
 		/// </summary>
@@ -200,7 +212,7 @@ namespace Epsitec.Common.Dialogs
 						System.Diagnostics.Debug.Assert (rootData != null);
 						System.Diagnostics.Debug.Assert (rootWidget != null);
 
-						newContext = new SearchContext (rootData, rootPath);
+						newContext = new SearchContext (this, rootData, rootPath);
 						newContext.AnalysePlaceholderGraph (rootWidget);
 
 						this.searchContexts.Add (newContext);
@@ -215,50 +227,33 @@ namespace Epsitec.Common.Dialogs
 				}
 			}
 
-			Widgets.Application.QueueAsyncCallback (delegate
-				{
-					if (this.activeSearchContext != null)
-					{
-						this.activeSearchContext.Resolve (this.entityResolver);
-					}
-				});
-			
-#if false			
-			IEntityProxyProvider  proxyProvider = entityData;
-			DialogData.FieldProxy proxy = proxyProvider.GetEntityProxy () as DialogData.FieldProxy;
-
-			using (this.SuspendSearchHandler ())
+			if (this.activeSearchContext != null)
 			{
-				System.Diagnostics.Debug.WriteLine (string.Format ("Search contents changed: path={0}, id={1}, value={2}", path, e.PropertyName, e.NewValue ?? "<null>"));
-				System.Diagnostics.Debug.WriteLine (string.Format (" field options={0}, field relation={1}", proxy.FieldOptions, proxy.FieldRelation));
-
-				EntityContext  context  = entityData.GetEntityContext ();
-				AbstractEntity template = context.CreateEmptyEntity (entityData.GetEntityStructuredTypeId ());
-
-				template.DisableCalculations ();
-				template.InternalSetValue (e.PropertyName, e.NewValue);
-
-				AbstractEntity result = EntityResolver.Resolve (this.entityResolver, template);
-
-				if (result != null)
-				{
-					//	TODO: ...
-				}
+				Widgets.Application.QueueAsyncCallback (this.AsyncResolveSearch);
 			}
-#endif
+		}
+
+		private void AsyncResolveSearch()
+		{
+			if ((this.activeSearchContext != null) &&
+				(this.entityResolver != null))
+			{
+				this.activeSearchContext.Resolve (this.entityResolver);
+			}
 		}
 
 		/// <summary>
 		/// Activates the specified search context.
 		/// </summary>
 		/// <param name="newContext">The new context.</param>
-		private void ActivateSearchContext(SearchContext newContext)
+		private void ActivateSearchContext(SearchContext context)
 		{
-			SearchContext oldContext = this.activeSearchContext;
+			ISearchContext newContext = context;
+			ISearchContext oldContext = this.activeSearchContext;
 
 			if (oldContext != newContext)
 			{
-				this.activeSearchContext = newContext;
+				this.activeSearchContext = context;
 
 				this.OnSearchContextChanged (new DependencyPropertyChangedEventArgs ("SearchContext", oldContext, newContext));
 			}
@@ -272,6 +267,10 @@ namespace Epsitec.Common.Dialogs
 		/// containing the event data.</param>
 		private void OnSearchContextChanged(DependencyPropertyChangedEventArgs e)
 		{
+			if (this.SearchContextChanged != null)
+			{
+				this.SearchContextChanged (this, e);
+			}
 		}
 
 		/// <summary>
@@ -414,10 +413,11 @@ namespace Epsitec.Common.Dialogs
 		/// The <c>SearchContext</c> class maintains information about a (sub-)search
 		/// in a dialog.
 		/// </summary>
-		private sealed class SearchContext : System.IDisposable
+		private sealed class SearchContext : System.IDisposable, ISearchContext
 		{
-			public SearchContext(AbstractEntity rootData, EntityFieldPath rootPath)
+			public SearchContext(DialogSearchController searchController, AbstractEntity rootData, EntityFieldPath rootPath)
 			{
+				this.searchController = searchController;
 				this.activeNodes = new List<Node> ();
 				this.searchRootData = rootData;
 				this.searchRootPath = rootPath;
@@ -472,6 +472,8 @@ namespace Epsitec.Common.Dialogs
 
 				writePath.CreateMissingNodes (this.searchTemplate);
 				writePath.NavigateWrite (this.searchTemplate, value);
+
+				DialogSearchController.globalContext.NotifyActivity (this);
 			}
 
 			public void SetSuggestionValue(Node node, AbstractEntity entity)
@@ -538,13 +540,50 @@ namespace Epsitec.Common.Dialogs
 					this.SetSuggestionValue (node, result);
 				}
 			}
-			
+
+			#region IDisposable Members
+
+			public void Dispose()
+			{
+				throw new System.NotImplementedException ();
+			}
+
+			#endregion
+
+			#region ISearchContext Members
+
+			public DialogSearchController SearchController
+			{
+				get
+				{
+					return this.searchController;
+				}
+			}
+
+			public AbstractEntity SearchTemplate
+			{
+				get
+				{
+					return this.searchTemplate;
+				}
+			}
+
+			public IEnumerable<AbstractPlaceholder> GetActivePlaceholders()
+			{
+				foreach (Node node in this.activeNodes)
+				{
+					yield return node.Placeholder;
+				}
+			}
+
+			#endregion
+
 			private IEnumerable<Node> GetPlaceholderGraph(Widgets.Widget root)
 			{
 				foreach (AbstractPlaceholder placeholder in root.FindAllChildren (child => child is AbstractPlaceholder))
 				{
 					EntityField info = DialogSearchController.GetEntityDataAndField (placeholder);
-					
+
 					AbstractEntity entity = info.Entity;
 					string         field  = info.Field;
 
@@ -577,21 +616,119 @@ namespace Epsitec.Common.Dialogs
 			}
 
 			private readonly List<Node>			activeNodes;
+			private readonly DialogSearchController searchController;
 			private AbstractEntity				searchTemplate;
 			private EntityFieldPath				searchRootPath;
 			private AbstractEntity				searchRootData;
-
-			#region IDisposable Members
-
-			public void Dispose()
-			{
-				throw new System.NotImplementedException ();
-			}
-
-			#endregion
 		}
 
 		#endregion
+
+		#region GlobalContext Class
+
+		/// <summary>
+		/// The <c>GlobalContext</c> class manages thread safe global settings
+		/// for the <see cref="DialogSearchController"/>.
+		/// </summary>
+		private sealed class GlobalContext
+		{
+			/// <summary>
+			/// Notifies activity with the specified search context.
+			/// </summary>
+			/// <param name="context">The active search context.</param>
+			public void NotifyActivity(ISearchContext context)
+			{
+				ISearchContext oldContext;
+				ISearchContext newContext;
+				
+				lock (this)
+				{
+					oldContext = this.activeContext;
+					newContext = context;
+					
+					this.activeContext = context;
+				}
+
+				if (oldContext != newContext)
+				{
+					this.OnActiveContextChanged (new DependencyPropertyChangedEventArgs ("ActiveContext", oldContext, newContext));
+				}
+			}
+
+			/// <summary>
+			/// Gets the active search context.
+			/// </summary>
+			/// <value>The active search context.</value>
+			public ISearchContext ActiveContext
+			{
+				get
+				{
+					return this.activeContext;
+				}
+			}
+
+			private void OnActiveContextChanged(DependencyPropertyChangedEventArgs e)
+			{
+				EventHandler<DependencyPropertyChangedEventArgs> handler;
+
+				lock (this)
+				{
+					handler = this.contextChanged;
+				}
+
+				if (handler != null)
+				{
+					handler (this, e);
+				}
+			}
+
+			public event EventHandler<DependencyPropertyChangedEventArgs> ContextChanged
+			{
+				add
+				{
+					lock (this)
+					{
+						this.contextChanged += value;
+					}
+				}
+				remove
+				{
+					lock (this)
+					{
+						this.ContextChanged -= value;
+					}
+				}
+			}
+
+			private EventHandler<DependencyPropertyChangedEventArgs> contextChanged;
+			private ISearchContext				activeContext;
+		}
+
+		#endregion
+
+		/// <summary>
+		/// Occurs when the search context changed within this instance of
+		/// <see cref="DialogSearchController"/>.
+		/// </summary>
+		public event EventHandler<DependencyPropertyChangedEventArgs> SearchContextChanged;
+
+		/// <summary>
+		/// Occurs when the search context changed, globally.
+		/// </summary>
+		public static event EventHandler<DependencyPropertyChangedEventArgs> GlobalSearchContextChanged
+		{
+			add
+			{
+				DialogSearchController.globalContext.ContextChanged += value;
+			}
+			remove
+			{
+				DialogSearchController.globalContext.ContextChanged -= value;
+			}
+		}
+
+
+		private static readonly GlobalContext	globalContext = new GlobalContext ();
 
 		private int								suspendSearchHandler;
 		private IEntityResolver					entityResolver;
