@@ -75,16 +75,7 @@ namespace Epsitec.Common.Dialogs
 				}
 
 				this.searchContexts.Clear ();
-
-				if (this.activeSearchContext != null)
-				{
-					SearchContext oldContext = this.activeSearchContext;
-					SearchContext newContext = null;
-
-					this.activeSearchContext = null;
-					
-					this.OnSearchContextChanged (new DependencyPropertyChangedEventArgs ("SearchContext", oldContext, newContext));
-				}
+				this.SetSearchContext (null);
 			}
 		}
 
@@ -170,7 +161,6 @@ namespace Epsitec.Common.Dialogs
 				//	activate the matching search context or create a new one if
 				//	required.
 
-				SearchContext oldContext = this.activeSearchContext;
 				SearchContext newContext = null;
 				
 				foreach (SearchContext context in this.searchContexts)
@@ -205,16 +195,11 @@ namespace Epsitec.Common.Dialogs
 					}
 				}
 
-				if (oldContext != newContext)
+				this.SetSearchContext (newContext);
+				
+				if (this.activeSearchContext != null)
 				{
-					this.activeSearchContext = newContext;
-					
-					if (this.activeSearchContext != null)
-					{
-						this.activeSearchContext.SetTemplateValue (placeholder, value);
-					}
-					
-					this.OnSearchContextChanged (new DependencyPropertyChangedEventArgs ("SearchContext", oldContext, newContext));
+					this.activeSearchContext.SetTemplateValue (placeholder, value);
 				}
 			}
 
@@ -249,6 +234,18 @@ namespace Epsitec.Common.Dialogs
 				}
 			}
 #endif
+		}
+
+		private void SetSearchContext(SearchContext newContext)
+		{
+			SearchContext oldContext = this.activeSearchContext;
+
+			if (oldContext != newContext)
+			{
+				this.activeSearchContext = newContext;
+
+				this.OnSearchContextChanged (new DependencyPropertyChangedEventArgs ("SearchContext", oldContext, newContext));
+			}
 		}
 
 		private void OnSearchContextChanged(DependencyPropertyChangedEventArgs e)
