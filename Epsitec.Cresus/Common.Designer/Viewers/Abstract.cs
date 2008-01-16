@@ -368,7 +368,7 @@ namespace Epsitec.Common.Designer.Viewers
 			}
 			else
 			{
-				this.module.DesignerApplication.DialogError(Res.Strings.Dialog.Search.Message.Error);
+				this.designerApplication.DialogError(Res.Strings.Dialog.Search.Message.Error);
 			}
 		}
 
@@ -384,12 +384,12 @@ namespace Epsitec.Common.Designer.Viewers
 			int count = searcher.Count(search);
 			if (count == 0)
 			{
-				this.module.DesignerApplication.DialogError(Res.Strings.Dialog.Search.Message.Error);
+				this.designerApplication.DialogError(Res.Strings.Dialog.Search.Message.Error);
 			}
 			else
 			{
 				string message = string.Format(Res.Strings.Dialog.Search.Message.Count, count.ToString());
-				this.module.DesignerApplication.DialogMessage(message);
+				this.designerApplication.DialogMessage(message);
 			}
 		}
 
@@ -439,7 +439,7 @@ namespace Epsitec.Common.Designer.Viewers
 			}
 			else
 			{
-				this.module.DesignerApplication.DialogError(Res.Strings.Dialog.Search.Message.Error);
+				this.designerApplication.DialogError(Res.Strings.Dialog.Search.Message.Error);
 			}
 		}
 
@@ -473,7 +473,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 			if (count == 0)
 			{
-				this.module.DesignerApplication.DialogError(Res.Strings.Dialog.Search.Message.Error);
+				this.designerApplication.DialogError(Res.Strings.Dialog.Search.Message.Error);
 			}
 			else
 			{
@@ -483,7 +483,7 @@ namespace Epsitec.Common.Designer.Viewers
 				this.UpdateCommands();
 
 				string text = string.Format(Res.Strings.Dialog.Search.Message.Replace, count.ToString());
-				this.module.DesignerApplication.DialogMessage(text);
+				this.designerApplication.DialogMessage(text);
 			}
 		}
 
@@ -546,7 +546,7 @@ namespace Epsitec.Common.Designer.Viewers
 					{
 						this.access.SetField(searcher.Row, cultureName, fieldType, new ResourceAccess.Field(initialName));
 
-						this.module.DesignerApplication.DialogError(err);
+						this.designerApplication.DialogError(err);
 						return null;
 					}
 				}
@@ -750,7 +750,7 @@ namespace Epsitec.Common.Designer.Viewers
 		public void DoNewCulture()
 		{
 			//	Crée une nouvelle culture.
-			string name = this.module.DesignerApplication.DlgNewCulture(this.access);
+			string name = this.designerApplication.DlgNewCulture(this.access);
 			if (name == null)  return;
 			this.access.CreateCulture(name);
 
@@ -766,7 +766,7 @@ namespace Epsitec.Common.Designer.Viewers
 			//	Supprime la culture courante.
 			System.Globalization.CultureInfo culture = this.access.GetCulture(this.secondaryCulture);
 			string question = string.Format(Res.Strings.Dialog.DeleteCulture.Question, Misc.CultureName(culture));
-			Common.Dialogs.DialogResult result = this.module.DesignerApplication.DialogQuestion(question);
+			Common.Dialogs.DialogResult result = this.designerApplication.DialogQuestion(question);
 			if (result != Epsitec.Common.Dialogs.DialogResult.Yes)  return;
 
 			this.access.DeleteCulture(this.secondaryCulture);
@@ -982,7 +982,21 @@ namespace Epsitec.Common.Designer.Viewers
 			if (item != null)
 			{
 				string name = item.FullName;
+				string based = null;
 				string mode = null;
+
+				if (this.access.ResourceType == ResourceAccess.Type.Forms)
+				{
+					FormEngine.FormDescription form = this.access.GetForm(item.Id);
+					if (form != null)
+					{
+						string entityName = this.module.AccessEntities.GetEntityName(form.EntityId);
+						if (!string.IsNullOrEmpty(entityName))
+						{
+							based = string.Format(" basé sur l'entité {0}", entityName);
+						}
+					}
+				}
 
 				if (this.module.IsPatch)
 				{
@@ -995,7 +1009,7 @@ namespace Epsitec.Common.Designer.Viewers
 					}
 				}
 
-				this.titleText.Text = string.Concat("<font size=\"150%\">", name, "</font>", mode);
+				this.titleText.Text = string.Concat("<font size=\"150%\">", name, "</font>", based, mode);
 			}
 		}
 
@@ -1119,7 +1133,7 @@ namespace Epsitec.Common.Designer.Viewers
 				edit.SelectAll();
 				this.ignoreChange = false;
 
-				this.module.DesignerApplication.DialogError(err);
+				this.designerApplication.DialogError(err);
 				return;
 			}
 
@@ -1281,7 +1295,7 @@ namespace Epsitec.Common.Designer.Viewers
 				this.GetCommandState("DeleteCulture").Enable = (this.access.CultureCount > 1);
 			}
 
-			bool search = this.module.DesignerApplication.DialogSearch.IsActionsEnabled;
+			bool search = this.designerApplication.DialogSearch.IsActionsEnabled;
 			this.GetCommandState("Search").Enable = true;
 			this.GetCommandState("SearchPrev").Enable = search;
 			this.GetCommandState("SearchNext").Enable = search;
@@ -1528,9 +1542,9 @@ namespace Epsitec.Common.Designer.Viewers
 				this.GetCommandState("TabIndexFirst").Enable = false;
 			}
 
-			this.module.DesignerApplication.UpdateInfoCurrentModule();
-			this.module.DesignerApplication.UpdateInfoAccess();
-			this.module.DesignerApplication.UpdateInfoViewer();
+			this.designerApplication.UpdateInfoCurrentModule();
+			this.designerApplication.UpdateInfoAccess();
+			this.designerApplication.UpdateInfoViewer();
 		}
 
 		protected void UpdateCommandTool(string name)
@@ -1549,7 +1563,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 		protected CommandState GetCommandState(string command)
 		{
-			return this.module.DesignerApplication.GetCommandState(command);
+			return this.designerApplication.GetCommandState(command);
 		}
 
 		protected virtual string GetSummary(string twoLettersCulture)
