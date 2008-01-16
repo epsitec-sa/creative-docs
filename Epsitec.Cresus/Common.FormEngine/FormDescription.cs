@@ -18,14 +18,14 @@ namespace Epsitec.Common.FormEngine
 		{
 		}
 
-		public FormDescription(Druid entityId, Druid formId)
+		public FormDescription(Druid entityId, Druid formIdToPatch)
 		{
 			this.entityId = entityId;
-			this.formId = formId;
+			this.formIdToPatch = formIdToPatch;
 			this.fields = new List<FieldDescription>();
 		}
 
-		public FormDescription(FormDescription model) : this(model.EntityId, model.FormId)
+		public FormDescription(FormDescription model) : this(model.EntityId, model.FormIdToPatch)
 		{
 			this.fields.AddRange(model.Fields);
 		}
@@ -39,12 +39,12 @@ namespace Epsitec.Common.FormEngine
 			}
 		}
 
-		public Druid FormId
+		public Druid FormIdToPatch
 		{
-			//	Druid du masque de base du masque de saisie, utilisé pour un masque de patch.
+			//	Druid du masque de base à patcher.
 			get
 			{
-				return this.formId;
+				return this.formIdToPatch;
 			}
 		}
 
@@ -62,7 +62,7 @@ namespace Epsitec.Common.FormEngine
 			//	Indique s'il s'agit d'un formulaire de patch.
 			get
 			{
-				return !this.formId.IsEmpty;
+				return !this.formIdToPatch.IsEmpty;
 			}
 		}
 
@@ -104,7 +104,7 @@ namespace Epsitec.Common.FormEngine
 				return false;
 			}
 
-			if (a.formId != b.formId)
+			if (a.formIdToPatch != b.formIdToPatch)
 			{
 				return false;
 			}
@@ -164,7 +164,7 @@ namespace Epsitec.Common.FormEngine
 
 			writer.WriteStartElement(Xml.Form);
 			writer.WriteElementString(Xml.EntityId, this.entityId.ToString());
-			writer.WriteElementString(Xml.FormId, this.formId.ToString());
+			writer.WriteElementString(Xml.FormIdToPatch, this.formIdToPatch.ToString());
 			foreach (FieldDescription field in this.fields)
 			{
 				field.WriteXml(writer);
@@ -205,9 +205,9 @@ namespace Epsitec.Common.FormEngine
 						{
 							this.entityId = Druid.Parse(element);
 						}
-						else if (name == Xml.FormId)
+						else if (name == Xml.FormIdToPatch)
 						{
-							this.formId = Druid.Parse(element);
+							this.formIdToPatch = Druid.Parse(element);
 						}
 						else
 						{
@@ -240,7 +240,7 @@ namespace Epsitec.Common.FormEngine
 
 
 		private Druid							entityId;
-		private Druid							formId;
+		private Druid							formIdToPatch;
 		private readonly List<FieldDescription>	fields;
 	}
 }

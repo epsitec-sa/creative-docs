@@ -539,11 +539,11 @@ namespace Epsitec.Common.Designer
 
 				if (result == Epsitec.Common.Dialogs.DialogResult.Answer2)  // patch ?
 				{
-					Druid formId = Druid.Empty;
+					Druid formIdToPatch = Druid.Empty;
 					bool isNullable = false;
 					StructuredTypeClass typeClass = StructuredTypeClass.None;
 
-					Common.Dialogs.DialogResult subResult = this.designerApplication.DlgResourceSelector(Dialogs.ResourceSelector.Operation.Form, this.designerApplication.CurrentModule, Type.Forms, ref typeClass, ref formId, ref isNullable, null, Druid.Empty);
+					Common.Dialogs.DialogResult subResult = this.designerApplication.DlgResourceSelector(Dialogs.ResourceSelector.Operation.Form, this.designerApplication.CurrentModule, Type.Forms, ref typeClass, ref formIdToPatch, ref isNullable, null, Druid.Empty);
 					if (subResult != Common.Dialogs.DialogResult.Yes)
 					{
 						return;
@@ -560,7 +560,7 @@ namespace Epsitec.Common.Designer
 						return;
 					}
 
-					FormEngine.FormDescription form = new FormEngine.FormDescription(entityId, formId);
+					FormEngine.FormDescription form = new FormEngine.FormDescription(entityId, formIdToPatch);
 					this.FormInitialize(form, ref newName);
 
 					string xml = FormEngine.Serialization.SerializeForm(form);

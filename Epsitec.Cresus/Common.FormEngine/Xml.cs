@@ -4,7 +4,7 @@ namespace Epsitec.Common.FormEngine
 	{
 		public const string Form				= "Form";
 		public const string EntityId			= "EI";
-		public const string FormId				= "FoI";
+		public const string FormIdToPatch		= "FIP";
 		public const string FieldDescription	= "FD";
 		public const string Guid				= "Guid";
 		public const string Type				= "Type";
