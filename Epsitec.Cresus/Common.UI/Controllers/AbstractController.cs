@@ -45,14 +45,6 @@ namespace Epsitec.Common.UI.Controllers
 			}
 		}
 
-		protected bool							IsSettingPlaceholderValue
-		{
-			get
-			{
-				return this.isSettingPlaceholderValue;
-			}
-		}
-
 		#region IController Members
 
 		Placeholder IController.Placeholder
@@ -232,9 +224,9 @@ namespace Epsitec.Common.UI.Controllers
 		/// </summary>
 		protected virtual void SetPlaceholderValue()
 		{
-			if (this.isSettingPlaceholderValue)
+			if (PlaceholderContext.Contains (this))
 			{
-				//	Should never happen... Recursive set !?
+				//	Should not happen... Recursive set !?
 			}
 			else
 			{
@@ -242,19 +234,13 @@ namespace Epsitec.Common.UI.Controllers
 				
 				if (value != InvalidValue.Value)
 				{
-					this.isSettingPlaceholderValue = true;
-
-					try
+					//	Set the value of the placeholder in a specific context, so
+					//	that observers can get information about what is going on
+					//	in a very detailed manner, by querying PlaceholderContext.
+					
+					using (PlaceholderContext.SetActive (this))
 					{
-						using (PlaceholderContext.SetActive (this))
-						{
-							this.Placeholder.InternalControllerSetValue (value);
-							this.Placeholder.Value = value;
-						}
-					}
-					finally
-					{
-						this.isSettingPlaceholderValue = false;
+						this.Placeholder.InternalControllerSetValue (value);
 					}
 				}
 			}
@@ -540,6 +526,5 @@ namespace Epsitec.Common.UI.Controllers
 		private readonly List<WidgetRecord>		widgets;
 		private readonly ControllerParameters	parameters;
 		private bool							isRefreshingUserInterface;
-		private bool							isSettingPlaceholderValue;
 	}
 }

@@ -8,7 +8,7 @@ namespace Epsitec.Common.UI
 	/// <summary>
 	/// The <c>PlaceholderContext</c> class provides information about the
 	/// <see cref="Placeholder"/> which is currently being edited by the
-	/// user.
+	/// user (see <see cref="Controllers.AbstractController"/>).
 	/// </summary>
 	public static class PlaceholderContext
 	{
@@ -136,6 +136,28 @@ namespace Epsitec.Common.UI
 		public static System.IDisposable SetActive(Controllers.AbstractController controller)
 		{
 			return new ActiveHelper (controller);
+		}
+
+		/// <summary>
+		/// Determines whether the context contains the specified controller.
+		/// </summary>
+		/// <param name="controller">The controller.</param>
+		/// <returns>
+		/// 	<c>true</c> if the context contains the specified controller; otherwise, <c>false</c>.
+		/// </returns>
+		internal static bool Contains(Controllers.AbstractController controller)
+		{
+			PlaceholderContext.EnsureData ();
+
+			foreach (Record record in PlaceholderContext.data.Stack)
+			{
+				if (record.Controller == controller)
+				{
+					return true;
+				}
+			}
+
+			return false;
 		}
 
 		/// <summary>

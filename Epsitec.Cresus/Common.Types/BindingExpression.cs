@@ -312,6 +312,7 @@ namespace Epsitec.Common.Types
 		#endregion
 
 		#region IDisposable Members
+		
 		public void Dispose()
 		{
 			//	Detach from the target, and from the source.
@@ -327,6 +328,7 @@ namespace Epsitec.Common.Types
 			this.targetObject = null;
 			this.targetPropery = null;
 		}
+		
 		#endregion
 		
 		private void AssertBinding()
@@ -700,6 +702,7 @@ namespace Epsitec.Common.Types
 		{
 			this.InternalUpdateSource (this.targetObject.GetValue (this.targetPropery));
 		}
+		
 		private void InternalUpdateSource(object value)
 		{
 			if (this.targetUpdateCounter == 0)
@@ -871,6 +874,7 @@ namespace Epsitec.Common.Types
 					break;
 			}
 		}
+		
 		private void InternalDetachFromSource()
 		{
 			if (this.sourceObject != null)
@@ -911,6 +915,7 @@ namespace Epsitec.Common.Types
 					break;
 			}
 		}
+		
 		private void InternalDetachFromTarget()
 		{
 			switch (this.binding.Mode)
@@ -926,10 +931,12 @@ namespace Epsitec.Common.Types
 		{
 			this.InternalUpdateTarget (e.NewValue);
 		}
+		
 		private void HandleBreadcrumbsChanged(object sender, DependencyPropertyChangedEventArgs e)
 		{
 			this.RefreshSourceBinding ();
 		}
+		
 		private void HandleTargetPropertyChanged(object sender, DependencyPropertyChangedEventArgs e)
 		{
 			this.InternalUpdateSource (e.NewValue);
@@ -1027,6 +1034,7 @@ namespace Epsitec.Common.Types
 		{
 			source.AddEventHandler (property, expression.HandleSourcePropertyChanged);
 		}
+		
 		private static void Detach(BindingExpression expression, DependencyObject source, DependencyProperty property)
 		{
 			source.RemoveEventHandler (property, expression.HandleSourcePropertyChanged);
@@ -1036,6 +1044,7 @@ namespace Epsitec.Common.Types
 		{
 			source.AttachListener (name, expression.HandleSourcePropertyChanged);
 		}
+		
 		private static void Detach(BindingExpression expression, IStructuredData source, string name)
 		{
 			source.DetachListener (name, expression.HandleSourcePropertyChanged);
