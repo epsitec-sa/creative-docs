@@ -482,7 +482,7 @@
   <data name="Forms.Question.Create.Long.Patch" id="2R4">Masque de patch, basé sur un masque existant.</data>
   <data name="Forms.Question.Create.Quick.Normal" id="2S4">Normal</data>
   <data name="Forms.Question.Create.Quick.Patch" id="2T4">Patch</data>
-  <data name="Viewers.Forms.Title.Normal" id="2U4"> basé sur l&amp;apos;entité {0}</data>
-  <data name="Viewers.Forms.Title.Patch" id="2V4"> patch basé sur le masque {0}</data>
-  <data name="Viewers.Forms.Title.PatchNormal" id="205"> patch basé sur le masque {0} et l&amp;apos;entité {1}</data>
+  <data name="Viewers.Forms.Title.Normal" id="2U4"> ― basé sur l&amp;apos;entité &lt;b&gt;{0}&lt;/b&gt;</data>
+  <data name="Viewers.Forms.Title.Patch" id="2V4"> ― patch basé sur le masque &lt;b&gt;{0}&lt;/b&gt;</data>
+  <data name="Viewers.Forms.Title.PatchNormal" id="205"> ― patch basé sur le masque &lt;b&gt;{0}&lt;/b&gt; et l&amp;apos;entité &lt;b&gt;{1}&lt;/b&gt;</data>
 </bundle>

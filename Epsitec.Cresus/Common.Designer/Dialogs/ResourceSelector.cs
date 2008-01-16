@@ -218,25 +218,21 @@ namespace Epsitec.Common.Designer.Dialogs
 			{
 				//	Met dans la liste this.listTypeId le Druid de l'entité de base ainsi que tous les Druids
 				//	des entités dont l'entité de base hérite.
-				this.typeIds = new List<Druid>();
+				this.typeIds = this.module.AccessEntities.GetInheriedEntities(typeId);
+			}
+			else if (this.operation == Operation.Entities)
+			{
+				this.typeIds = null;
 
-				while (!typeId.IsEmpty)
+				if (!typeId.IsEmpty)
 				{
-					this.typeIds.Add(typeId);
-
-					CultureMap cultureMap = this.module.AccessEntities.Accessor.Collection[typeId];
-					if (cultureMap == null)
+					//	Dans ce cas, typeId correspond au Druid du Form de patch. Il ne faudra donc lister
+					//	que les entités qui héritent de l'entité de base de ce masque.
+					FormEngine.FormDescription form = this.module.AccessForms.GetForm(typeId);
+					if (form != null)
 					{
-						break;
+						this.typeIds = this.module.AccessEntities.GetInheritedEntitiesBack(form.EntityId);
 					}
-
-					StructuredData data = cultureMap.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
-					if (data == null)
-					{
-						break;
-					}
-
-					typeId = (Druid) data.GetValue(Support.Res.Fields.ResourceStructuredType.BaseType);
 				}
 			}
 			else
@@ -359,6 +355,11 @@ namespace Epsitec.Common.Designer.Dialogs
 				{
 					return false;  // ne liste pas les interfaces
 				}
+			}
+
+			if (this.operation == Operation.Entities && this.typeIds != null)
+			{
+				return this.typeIds.Contains(cultureMap.Id);
 			}
 
 			if (this.operation == Operation.InheritEntities || this.operation == Operation.Entities)

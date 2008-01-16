@@ -515,6 +515,7 @@ namespace Epsitec.Common.Designer
 
 				if (result == Epsitec.Common.Dialogs.DialogResult.Answer1)  // normal ?
 				{
+					//	On demande l'entité sur laquelle sera basée le masque.
 					Druid entityId = Druid.Empty;
 					bool isNullable = false;
 					StructuredTypeClass typeClass = StructuredTypeClass.Entity;
@@ -539,6 +540,7 @@ namespace Epsitec.Common.Designer
 
 				if (result == Epsitec.Common.Dialogs.DialogResult.Answer2)  // patch ?
 				{
+					//	On demande le masque sur lequel sera basé le masque de patch.
 					Druid formIdToPatch = Druid.Empty;
 					bool isNullable = false;
 					StructuredTypeClass typeClass = StructuredTypeClass.None;
@@ -549,12 +551,13 @@ namespace Epsitec.Common.Designer
 						return;
 					}
 
-					// TODO: empêcher de choisir une entité pas en accord avec le Form choisi précédemment !
+					//	On demande ensuite l'entité sur laquelle sera basée le masque. Le dialogue ne montrera
+					//	que les entités qui héritent de l'entité de base du masque choisi précédemment.
 					Druid entityId = Druid.Empty;
 					isNullable = false;
 					typeClass = StructuredTypeClass.Entity;
 
-					subResult = this.designerApplication.DlgResourceSelector(Dialogs.ResourceSelector.Operation.Entities, this.designerApplication.CurrentModule, Type.Entities, ref typeClass, ref entityId, ref isNullable, null, Druid.Empty);
+					subResult = this.designerApplication.DlgResourceSelector(Dialogs.ResourceSelector.Operation.Entities, this.designerApplication.CurrentModule, Type.Entities, ref typeClass, ref entityId, ref isNullable, null, formIdToPatch);
 					if (subResult != Common.Dialogs.DialogResult.Yes)
 					{
 						return;
@@ -879,6 +882,66 @@ namespace Epsitec.Common.Designer
 			return (FieldRelation) dataField.GetValue(Support.Res.Fields.Field.Relation);
 		}
 
+		public List<Druid> GetInheritedEntitiesBack(Druid entityId)
+		{
+			//	Retourne la liste de toutes les entités qui héritent d'une entité.
+			//	Par exemple:
+			//		AdressePlus hérite de Adresse
+			//		Adresse n'hérite de personne
+			//	Si entityId = Adresse, retourne les Druids de AdressePlus et Adresse
+			System.Diagnostics.Debug.Assert(this.type == Type.Entities);
+			List<Druid> list = new List<Druid>();
+
+			foreach (CultureMap item in this.accessor.Collection)
+			{
+				List<Druid> sub = this.GetInheriedEntities(item.Id);
+				if (sub.Contains(entityId))
+				{
+					foreach (Druid druid in sub)
+					{
+						if (!list.Contains(druid))
+						{
+							list.Add(druid);
+						}
+					}
+				}
+			}
+
+			return list;
+		}
+
+		public List<Druid> GetInheriedEntities(Druid entityId)
+		{
+			//	Retourne la liste de toutes les entités dont hérite une entité, à commencer par elle-même.
+			//	Par exemple:
+			//		AdressePlus hérite de Adresse
+			//		Adresse n'hérite de personne
+			//	Si entityId = AdressePlus, retourne les Druids de AdressePlus et Adresse
+			System.Diagnostics.Debug.Assert(this.type == Type.Entities);
+			List<Druid> list = new List<Druid>();
+
+			while (!entityId.IsEmpty)
+			{
+				list.Add(entityId);
+
+				CultureMap cultureMap = this.accessor.Collection[entityId];
+				if (cultureMap == null)
+				{
+					break;
+				}
+
+				StructuredData data = cultureMap.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
+				if (data == null)
+				{
+					break;
+				}
+
+				entityId = (Druid) data.GetValue(Support.Res.Fields.ResourceStructuredType.BaseType);
+			}
+
+			return list;
+		}
+
 		public string GetEntityName(Druid entityId)
 		{
 			//	Retourne le nom d'une entité.
@@ -910,81 +973,6 @@ namespace Epsitec.Common.Designer
 
 			return data.GetValue(Support.Res.Fields.ResourceStructuredType.Fields) as IList<StructuredData>;
 		}
-
-#if false
-		public List<string> GetEntityDruidsPath(Druid entityId)
-		{
-			//	Retourne la liste des chemins de Druids des champs d'une entité.
-			//	Les relations sont explorées récursivement.
-			List<string> list = new List<string>();
-
-			CultureMap item = this.GetEntityItem(entityId);
-			if (item == null)
-			{
-				return list;
-			}
-
-			StructuredData data = item.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
-			if (data == null)
-			{
-				return list;
-			}
-
-			IList<StructuredData> dataFields = data.GetValue(Support.Res.Fields.ResourceStructuredType.Fields) as IList<StructuredData>;
-			Stack<Druid> alreadyVisited = new Stack<Druid>();
-			alreadyVisited.Push(entityId);
-			foreach (StructuredData dataField in dataFields)
-			{
-				this.GetEntityDruidsPath(list, alreadyVisited, dataField, null);
-			}
-
-			return list;
-		}
-
-		protected void GetEntityDruidsPath(List<string> list, Stack<Druid> alreadyVisited, StructuredData dataField, string prefix)
-		{
-			FieldRelation rel = (FieldRelation) dataField.GetValue(Support.Res.Fields.Field.Relation);
-			if (rel == FieldRelation.None)
-			{
-				FormEngine.FieldDescription field = new FormEngine.FieldDescription(FormEngine.FieldDescription.FieldType.Field);
-
-				Druid fieldCaptionId = (Druid) dataField.GetValue(Support.Res.Fields.Field.CaptionId);
-
-				string path = (prefix == null) ? fieldCaptionId.ToString() : string.Concat(prefix, fieldCaptionId.ToString());
-				if (!list.Contains(path))
-				{
-					list.Add(path);
-				}
-			}
-			else if (rel == FieldRelation.Reference)
-			{
-				Druid typeId = (Druid) dataField.GetValue(Support.Res.Fields.Field.TypeId);
-				Druid fieldCaptionId = (Druid) dataField.GetValue(Support.Res.Fields.Field.CaptionId);
-
-				if (!alreadyVisited.Contains(typeId))
-				{
-					alreadyVisited.Push(typeId);
-
-					Module typeModule = this.designerApplication.SearchModule(typeId);
-					if (typeModule != null)
-					{
-						CultureMap typeCultureMap = typeModule.AccessEntities.Accessor.Collection[typeId];
-						if (typeCultureMap != null)
-						{
-							StructuredData typeData = typeCultureMap.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
-							IList<StructuredData> typeDataFields = typeData.GetValue(Support.Res.Fields.ResourceStructuredType.Fields) as IList<StructuredData>;
-							foreach (StructuredData typeDataField in typeDataFields)
-							{
-								this.GetEntityDruidsPath(list, alreadyVisited, typeDataField, string.Concat(prefix, fieldCaptionId.ToString(), "."));
-							}
-						}
-					}
-
-					alreadyVisited.Pop();
-				}
-			}
-		}
-#endif
 
 		protected CultureMap GetEntityItem(Druid entityId)
 		{
