@@ -66,6 +66,7 @@ namespace Epsitec.Common.FormEngine
 			this.boxPaddingType = BoxPaddingType.Normal;
 			this.boxFrameState = FrameState.None;
 			this.boxFrameWidth = 1;
+			this.hidden = false;
 		}
 
 		public FieldDescription(FieldType type) : this()
@@ -92,6 +93,7 @@ namespace Epsitec.Common.FormEngine
 			this.boxPaddingType = model.boxPaddingType;
 			this.boxFrameState = model.boxFrameState;
 			this.boxFrameWidth = model.boxFrameWidth;
+			this.hidden = model.hidden;
 		}
 
 		public FieldDescription(XmlReader reader) : this()
@@ -407,6 +409,19 @@ namespace Epsitec.Common.FormEngine
 			}
 		}
 
+		public bool Hidden
+		{
+			//	Si on est dans un module de patch, indique un champ présent dans la liste finale, mais qu'il faut cacher.
+			get
+			{
+				return this.hidden;
+			}
+			set
+			{
+				this.hidden = value;
+			}
+		}
+
 
 		#region IEquatable<FieldDescription> Members
 
@@ -450,7 +465,8 @@ namespace Epsitec.Common.FormEngine
 				a.rowsRequired != b.rowsRequired ||
 				a.boxPaddingType != b.boxPaddingType ||
 				a.boxFrameState != b.boxFrameState ||
-				a.boxFrameWidth != b.boxFrameWidth)
+				a.boxFrameWidth != b.boxFrameWidth ||
+				a.hidden != b.hidden)
 			{
 				return false;
 			}
@@ -513,6 +529,11 @@ namespace Epsitec.Common.FormEngine
 			writer.WriteElementString(Xml.BoxPaddingType, this.boxPaddingType.ToString());
 			writer.WriteElementString(Xml.BoxFrameState, this.boxFrameState.ToString());
 			writer.WriteElementString(Xml.BoxFrameWidth, this.boxFrameWidth.ToString(System.Globalization.CultureInfo.InvariantCulture));
+
+			if (this.hidden)
+			{
+				writer.WriteElementString(Xml.Hidden, this.hidden.ToString());
+			}
 
 			writer.WriteEndElement();
 		}
@@ -579,6 +600,10 @@ namespace Epsitec.Common.FormEngine
 						else if (name == Xml.BoxFrameWidth)
 						{
 							this.boxFrameWidth = double.Parse(element);
+						}
+						else if (name == Xml.Hidden)
+						{
+							this.hidden = bool.Parse(element);
 						}
 						else
 						{
@@ -666,5 +691,6 @@ namespace Epsitec.Common.FormEngine
 		private BoxPaddingType				boxPaddingType;
 		private FrameState					boxFrameState;
 		private double						boxFrameWidth;
+		private bool						hidden;
 	}
 }

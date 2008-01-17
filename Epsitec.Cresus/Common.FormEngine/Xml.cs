@@ -17,5 +17,6 @@ namespace Epsitec.Common.FormEngine
 		public const string BoxPaddingType		= "BPT";
 		public const string BoxFrameState		= "BFS";
 		public const string BoxFrameWidth		= "BFW";
+		public const string Hidden				= "HD";
 	}
 }

@@ -28,19 +28,18 @@ namespace Epsitec.Common.FormEngine
 
 			foreach (FieldDescription field in reference)
 			{
-				merged.Add(field);
-			}
+				FieldDescription copy = new FieldDescription(field);
 
-			foreach (FieldDescription field in patch)
-			{
-				if (field.Type == FieldDescription.FieldType.Hide)
+				int index = Arrange.IndexOfGuid(patch, field.Guid);
+				if (index != -1)
 				{
-					int index = Arrange.IndexOfGuid(merged, field.Guid);
-					if (index != -1)
+					if (reference[index].Type == FieldDescription.FieldType.Hide)
 					{
-						merged.RemoveAt(index);
+						copy.Hidden = true;
 					}
 				}
+
+				merged.Add(copy);
 			}
 
 			return merged;
