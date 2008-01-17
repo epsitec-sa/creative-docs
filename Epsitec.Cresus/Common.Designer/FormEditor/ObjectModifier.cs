@@ -18,6 +18,8 @@ namespace Epsitec.Common.Designer.FormEditor
 			//	Constructeur unique.
 			this.formEditor = formEditor;
 
+			this.tableReference = new List<TableItem>();
+			this.tablePatch = new List<TableItem>();
 			this.tableContent = new List<TableItem>();
 		}
 
@@ -490,6 +492,22 @@ namespace Epsitec.Common.Designer.FormEditor
 			return icon;
 		}
 
+		public bool IsPatch
+		{
+			//	Indique si l'on est dans un masque de patch.
+			get
+			{
+				if (this.formEditor.Form == null)
+				{
+					return false;
+				}
+				else
+				{
+					return this.formEditor.Form.IsPatch;
+				}
+			}
+		}
+
 		public void UpdateTableContent()
 		{
 			//	Met à jour la liste qui reflète le contenu de la table des champs, visible en haut à droite.
@@ -498,6 +516,8 @@ namespace Epsitec.Common.Designer.FormEditor
 				return;
 			}
 
+			this.tableReference.Clear();
+			this.tablePatch.Clear();
 			this.tableContent.Clear();
 
 			//	Construit la liste des chemins de Druids, en commençant par ceux qui font
@@ -954,6 +974,8 @@ namespace Epsitec.Common.Designer.FormEditor
 
 		protected Editor							formEditor;
 		protected Druid								entityId;
+		protected List<TableItem>					tableReference;
+		protected List<TableItem>					tablePatch;
 		protected List<TableItem>					tableContent;
 		protected List<RelationItem>				tableRelations;
 	}

@@ -693,24 +693,32 @@ namespace Epsitec.Common.Designer
 		private void FormInitialize(FormEngine.FormDescription form, ref string newName)
 		{
 			//	Initialise un masque de saisie avec tous les champs de l'entité de base associée.
-			IList<StructuredData> list = this.GetEntityDruidsPath(form.EntityId);
-
-			foreach (StructuredData dataField in list)
+			//	S'il s'agit d'un masque de patch, on laisse vide la liste des champs.
+			if (form.IsPatch)
 			{
-				FieldRelation rel = (FieldRelation) dataField.GetValue(Support.Res.Fields.Field.Relation);
-				if (rel == FieldRelation.None)
-				{
-					Druid fieldCaptionId = (Druid) dataField.GetValue(Support.Res.Fields.Field.CaptionId);
-
-					FormEngine.FieldDescription field = new FormEngine.FieldDescription(FormEngine.FieldDescription.FieldType.Field);
-					field.SetField(fieldCaptionId);
-
-					form.Fields.Add(field);
-				}
+				newName = this.GetDuplicateName(this.GetFormName(form.FormIdToPatch));
 			}
+			else
+			{
+				IList<StructuredData> list = this.GetEntityDruidsPath(form.EntityId);
 
-			//	Utilise comme nom du masque le nom de l'entité, éventuellement complété d'un numéro.
-			newName = this.GetDuplicateName(this.GetEntityName(form.EntityId));
+				foreach (StructuredData dataField in list)
+				{
+					FieldRelation rel = (FieldRelation) dataField.GetValue(Support.Res.Fields.Field.Relation);
+					if (rel == FieldRelation.None)
+					{
+						Druid fieldCaptionId = (Druid) dataField.GetValue(Support.Res.Fields.Field.CaptionId);
+
+						FormEngine.FieldDescription field = new FormEngine.FieldDescription(FormEngine.FieldDescription.FieldType.Field);
+						field.SetField(fieldCaptionId);
+
+						form.Fields.Add(field);
+					}
+				}
+
+				//	Utilise comme nom du masque le nom de l'entité, éventuellement complété d'un numéro.
+				newName = this.GetDuplicateName(this.GetEntityName(form.EntityId));
+			}
 		}
 
 		public Druid FormSearch(Druid typeId)
