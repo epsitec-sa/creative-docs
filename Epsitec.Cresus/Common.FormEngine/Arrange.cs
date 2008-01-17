@@ -31,9 +31,9 @@ namespace Epsitec.Common.FormEngine
 				FieldDescription copy = new FieldDescription(field);
 
 				int index = Arrange.IndexOfGuid(patch, field.Guid);
-				if (index != -1)
+				if (index != -1)  // champ patché ?
 				{
-					if (reference[index].Type == FieldDescription.FieldType.Hide)
+					if (reference[index].Type == FieldDescription.FieldType.Hide)  // champ à cacher ?
 					{
 						copy.Hidden = true;
 					}

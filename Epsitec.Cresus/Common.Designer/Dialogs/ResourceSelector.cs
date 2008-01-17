@@ -151,7 +151,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.buttonIsNullable.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 
 				this.buttonIsPrivateRelation = new CheckButton(footer);
-				this.buttonIsPrivateRelation.Text = "Relation privée *";
+				this.buttonIsPrivateRelation.Text = "Relation privée";
 				this.buttonIsPrivateRelation.PreferredWidth = 140;
 				this.buttonIsPrivateRelation.Dock = DockStyle.Left;
 				this.buttonIsPrivateRelation.TabIndex = 10;

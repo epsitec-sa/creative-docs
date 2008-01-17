@@ -623,7 +623,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				this.DrawArrowBase(graphics, p1, p2);
 			}
 
-			if (isPrivateRelation)
+			if (!isPrivateRelation)
 			{
 				this.DrawArrowStar(graphics, start, end);
 			}
