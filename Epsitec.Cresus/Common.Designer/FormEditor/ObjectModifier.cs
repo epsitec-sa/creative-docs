@@ -18,8 +18,6 @@ namespace Epsitec.Common.Designer.FormEditor
 			//	Constructeur unique.
 			this.formEditor = formEditor;
 
-			this.tableReference = new List<TableItem>();
-			this.tablePatch = new List<TableItem>();
 			this.tableContent = new List<TableItem>();
 		}
 
@@ -247,7 +245,7 @@ namespace Epsitec.Common.Designer.FormEditor
 		public Widget GetWidget(System.Guid guid)
 		{
 			//	Cherche le widget correspondant à un Guid.
-			foreach (FieldDescription field in this.formEditor.Form.Fields)
+			foreach (FieldDescription field in this.fields)
 			{
 				if (guid == field.Guid)
 				{
@@ -304,7 +302,7 @@ namespace Epsitec.Common.Designer.FormEditor
 			}
 			else
 			{
-				return this.formEditor.Form.Fields[index];
+				return this.fields[index];
 			}
 		}
 
@@ -319,7 +317,7 @@ namespace Epsitec.Common.Designer.FormEditor
 			}
 			else
 			{
-				return this.formEditor.Form.Fields[index];
+				return this.fields[index];
 			}
 		}
 
@@ -330,9 +328,9 @@ namespace Epsitec.Common.Designer.FormEditor
 
 			if (uniqueId != -1)
 			{
-				for (int i=0; i<this.formEditor.Form.Fields.Count; i++)
+				for (int i=0; i<this.fields.Count; i++)
 				{
-					FieldDescription field = this.formEditor.Form.Fields[i];
+					FieldDescription field = this.fields[i];
 
 					if (field.UniqueId == uniqueId)
 					{
@@ -347,9 +345,9 @@ namespace Epsitec.Common.Designer.FormEditor
 		public int GetFormDescriptionIndex(System.Guid guid)
 		{
 			//	Retourne l'index d'un champ d'après le Guid.
-			for (int i=0; i<this.formEditor.Form.Fields.Count; i++)
+			for (int i=0; i<this.fields.Count; i++)
 			{
-				FieldDescription field = this.formEditor.Form.Fields[i];
+				FieldDescription field = this.fields[i];
 
 				if (field.Guid == guid)
 				{
@@ -363,9 +361,9 @@ namespace Epsitec.Common.Designer.FormEditor
 		protected int GetFormDescriptionIndex(string druidsPath)
 		{
 			//	Retourne l'index d'un champ d'après le chemin de Druis.
-			for (int i=0; i<this.formEditor.Form.Fields.Count; i++)
+			for (int i=0; i<this.fields.Count; i++)
 			{
-				FieldDescription field = this.formEditor.Form.Fields[i];
+				FieldDescription field = this.fields[i];
 
 				if (field.GetPath(null) == druidsPath)
 				{
@@ -516,14 +514,24 @@ namespace Epsitec.Common.Designer.FormEditor
 				return;
 			}
 
-			this.tableReference.Clear();
-			this.tablePatch.Clear();
+			if (this.IsPatch)
+			{
+				FormEngine.FormDescription refForm = this.formEditor.Module.AccessForms.GetForm(this.formEditor.Form.FormIdToPatch);
+
+				FormEngine.Engine engine = new FormEngine.Engine(this.formEditor.Module.ResourceManager);
+				this.fields = engine.Arrange.Merge(refForm.Fields, this.formEditor.Form.Fields);
+			}
+			else
+			{
+				this.fields = this.formEditor.Form.Fields;
+			}
+
 			this.tableContent.Clear();
 
 			//	Construit la liste des chemins de Druids, en commençant par ceux qui font
 			//	partie du masque de saisie.
 			int level = 0;
-			foreach (FieldDescription field in this.formEditor.Form.Fields)
+			foreach (FieldDescription field in this.fields)
 			{
 				string prefix = null;
 				if (field.FieldIds != null)
@@ -896,7 +904,7 @@ namespace Epsitec.Common.Designer.FormEditor
 			//	Indique si une relation est utilisée dans le masque de saisie.
 			string druidsPath = this.tableRelations[index].DruidsPath;
 
-			foreach (FieldDescription field in this.formEditor.Form.Fields)
+			foreach (FieldDescription field in this.fields)
 			{
 				if (field.GetPath(null) == druidsPath)
 				{
@@ -974,8 +982,7 @@ namespace Epsitec.Common.Designer.FormEditor
 
 		protected Editor							formEditor;
 		protected Druid								entityId;
-		protected List<TableItem>					tableReference;
-		protected List<TableItem>					tablePatch;
+		protected List<FieldDescription>			fields;
 		protected List<TableItem>					tableContent;
 		protected List<RelationItem>				tableRelations;
 	}

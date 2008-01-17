@@ -11,7 +11,7 @@ namespace Epsitec.Common.FormEngine
 	/// <summary>
 	/// Procédures de manipulation et d'arrangement de listes et d'arbres.
 	/// </summary>
-	internal sealed class Arrange
+	public class Arrange
 	{
 		public Arrange(ResourceManager resourceManager, FormDescriptionFinder finder)
 		{

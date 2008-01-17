@@ -34,7 +34,7 @@ namespace Epsitec.Common.FormEngine
 			this.entityContext = new EntityContext(this.resourceManager, EntityLoopHandlingMode.Skip);
 		}
 
-		internal Arrange Arrange
+		public Arrange Arrange
 		{
 			get
 			{
@@ -61,8 +61,8 @@ namespace Epsitec.Common.FormEngine
 				string xml = bundle[Support.ResourceAccessors.FormResourceAccessor.Strings.XmlSource].AsString;
 				if (!string.IsNullOrEmpty(xml))
 				{
-					FormDescription patch = Serialization.DeserializeForm(xml, this.resourceManager);
-					fields0 = this.arrange.Merge(fields0, patch.Fields);
+					FormDescription refForm = Serialization.DeserializeForm(xml, this.resourceManager);
+					fields0 = this.arrange.Merge(refForm.Fields, fields0);
 				}
 			}
 
