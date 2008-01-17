@@ -165,11 +165,13 @@ namespace Epsitec.Common.Designer.Viewers
 			this.fieldsButtonMenu.Dock = DockStyle.Right;
 
 			this.fieldsTable = new MyWidgets.StringArray(top);
-			this.fieldsTable.Columns = 2;
-			this.fieldsTable.SetColumnsRelativeWidth(0, 0.90);
+			this.fieldsTable.Columns = 3;
+			this.fieldsTable.SetColumnsRelativeWidth(0, 0.80);
 			this.fieldsTable.SetColumnsRelativeWidth(1, 0.10);
+			this.fieldsTable.SetColumnsRelativeWidth(2, 0.10);
 			this.fieldsTable.SetColumnAlignment(0, ContentAlignment.MiddleLeft);
 			this.fieldsTable.SetColumnAlignment(1, ContentAlignment.MiddleCenter);
+			this.fieldsTable.SetColumnAlignment(2, ContentAlignment.MiddleCenter);
 			this.fieldsTable.SetColumnBreakMode(0, TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine);
 			this.fieldsTable.AllowMultipleSelection = true;
 			this.fieldsTable.LineHeight = 16;
@@ -494,12 +496,17 @@ namespace Epsitec.Common.Designer.Viewers
 					this.fieldsTable.SetLineString(1, first+i, "");
 					this.fieldsTable.SetLineState(1, first+i, MyWidgets.StringList.CellState.Disabled);
 					this.fieldsTable.SetLineColor(1, first+i, Color.Empty);
+
+					this.fieldsTable.SetLineString(2, first+i, "");
+					this.fieldsTable.SetLineState(2, first+i, MyWidgets.StringList.CellState.Disabled);
+					this.fieldsTable.SetLineColor(2, first+i, Color.Empty);
 				}
 				else
 				{
 					FormEditor.ObjectModifier.TableItem item = this.formEditor.ObjectModifier.TableContent[first+i];
 					string name = this.formEditor.ObjectModifier.GetTableContentDescription(item, true, Forms.showPrefix);
-					string icon = this.formEditor.ObjectModifier.GetTableContentIcon(item);
+					string icon1 = this.formEditor.ObjectModifier.GetTableContentIcon1(item);
+					string icon2 = this.formEditor.ObjectModifier.GetTableContentIcon2(item);
 
 					this.fieldsTable.SetLineString(0, first+i, name);
 					this.fieldsTable.SetLineState(0, first+i, MyWidgets.StringList.CellState.Normal);
@@ -515,9 +522,13 @@ namespace Epsitec.Common.Designer.Viewers
 						this.fieldsTable.SetLineTooltip(0, first+i, tooltip);
 					}
 
-					this.fieldsTable.SetLineString(1, first+i, icon);
+					this.fieldsTable.SetLineString(1, first+i, icon1);
 					this.fieldsTable.SetLineState(1, first+i, MyWidgets.StringList.CellState.Normal);
 					this.fieldsTable.SetLineColor(1, first+i, Color.Empty);
+
+					this.fieldsTable.SetLineString(2, first+i, icon2);
+					this.fieldsTable.SetLineState(2, first+i, MyWidgets.StringList.CellState.Normal);
+					this.fieldsTable.SetLineColor(2, first+i, Color.Empty);
 				}
 			}
 

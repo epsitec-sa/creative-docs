@@ -477,9 +477,26 @@ namespace Epsitec.Common.Designer.FormEditor
 			return builder.ToString();
 		}
 
-		public string GetTableContentIcon(TableItem item)
+		public string GetTableContentIcon1(TableItem item)
 		{
-			//	Retourne le texte permettant de décrire larelation d'un TableItem dans une liste.
+			//	Retourne le texte permettant de décrire l'opération de patch d'un TableItem dans une liste.
+			string icon = null;
+
+			if (this.IsPatch)
+			{
+				int index = FormEngine.Arrange.IndexOfGuid(this.formEditor.Form.Fields, item.Guid);
+				if (index != -1)
+				{
+					icon = Misc.Image("Delete");
+				}
+			}
+
+			return icon;
+		}
+
+		public string GetTableContentIcon2(TableItem item)
+		{
+			//	Retourne le texte permettant de décrire la relation d'un TableItem dans une liste.
 			string icon = null;
 
 			if (item.FieldType == FieldDescription.FieldType.SubForm)
