@@ -751,25 +751,11 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			//	Met à jour le nom du type.
 			if (this.isNullable)
 			{
-				if (this.isPrivateRelation)
-				{
-					this.textLayoutType.Text = string.Concat("(", this.typeName, ")*");
-				}
-				else
-				{
-					this.textLayoutType.Text = string.Concat("(", this.typeName, ")");
-				}
+				this.textLayoutType.Text = string.Concat("(", this.typeName, ")");
 			}
 			else
 			{
-				if (this.isPrivateRelation)
-				{
-					this.textLayoutType.Text = string.Concat(this.typeName, "*");
-				}
-				else
-				{
-					this.textLayoutType.Text = this.typeName;
-				}
+				this.textLayoutType.Text = this.typeName;
 			}
 		}
 

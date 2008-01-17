@@ -475,7 +475,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 					if (i == this.points.Count-2)
 					{
-						this.DrawEndingArrow(graphics, p1, p2, this.field.Relation);
+						this.DrawEndingArrow(graphics, p1, p2, this.field.Relation, this.field.IsPrivateRelation);
 					}
 				}
 				graphics.LineWidth = 1;
@@ -497,7 +497,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 				graphics.LineWidth = 2;
 				graphics.AddLine(start, end);
-				this.DrawEndingArrow(graphics, start, end, this.field.Relation);
+				this.DrawEndingArrow(graphics, start, end, this.field.Relation, this.field.IsPrivateRelation);
 				graphics.LineWidth = 1;
 
 				Color color = this.GetColor(0);

@@ -2478,7 +2478,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				p2.X = this.bounds.Left-1;
 				graphics.LineWidth = 2;
 				graphics.AddLine(p1, p2);
-				this.DrawEndingArrow(graphics, p1, p2, FieldRelation.Reference);
+				this.DrawEndingArrow(graphics, p1, p2, FieldRelation.Reference, false);
 				graphics.LineWidth = 1;
 				graphics.RenderSolid(colorFrame);
 			}
