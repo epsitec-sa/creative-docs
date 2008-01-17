@@ -508,7 +508,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.buttonIsNullable.Visibility = true;
 				this.buttonIsNullable.ActiveState = this.isNullable ? ActiveState.Yes : ActiveState.No;
 
-				this.buttonIsPrivateRelation.Visibility = true;
+				this.buttonIsPrivateRelation.Visibility = (this.resourceType == ResourceAccess.Type.Entities);
 				this.buttonIsPrivateRelation.ActiveState = this.isPrivateRelation ? ActiveState.Yes : ActiveState.No;
 
 				this.buttonUse.Text = Res.Strings.Dialog.ResourceSelector.Button.Use;
