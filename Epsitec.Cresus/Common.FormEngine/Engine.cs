@@ -16,8 +16,7 @@ namespace Epsitec.Common.FormEngine
 	/// </summary>
 	public sealed class Engine
 	{
-		public Engine(ResourceManager resourceManager)
-			: this (resourceManager, null)
+		public Engine(ResourceManager resourceManager) : this (resourceManager, null)
 		{
 		}
 
@@ -54,7 +53,20 @@ namespace Epsitec.Common.FormEngine
 			//	La liste de FieldDescription doit être plate (pas de Node).
 			this.forDesigner = forDesigner;
 
-			string err = this.arrange.Check(form.Fields);
+			List<FieldDescription> fields0 = form.Fields;
+
+			if (form.IsPatch)
+			{
+				ResourceBundle bundle = this.resourceManager.GetBundle(form.FormIdToPatch);
+				string xml = bundle[Support.ResourceAccessors.FormResourceAccessor.Strings.XmlSource].AsString;
+				if (!string.IsNullOrEmpty(xml))
+				{
+					FormDescription patch = Serialization.DeserializeForm(xml, this.resourceManager);
+					fields0 = this.arrange.Merge(fields0, patch.Fields);
+				}
+			}
+
+			string err = this.arrange.Check(fields0);
 			if (err != null)
 			{
 				UI.Panel container = new UI.Panel();
@@ -67,7 +79,7 @@ namespace Epsitec.Common.FormEngine
 				return container;
 			}
 
-			List<FieldDescription> fields1 = this.arrange.DevelopSubForm(form.Fields);
+			List<FieldDescription> fields1 = this.arrange.DevelopSubForm(fields0);
 			List<FieldDescription> fields2 = this.arrange.Organize(fields1);
 
 			StructuredType entity = this.GetEntityDefinition(form.EntityId);
@@ -106,7 +118,7 @@ namespace Epsitec.Common.FormEngine
 		{
 			//	Trouve la définition de l'entité spécifiée par son id.
 			Caption entityCaption = this.resourceManager.GetCaption(entityId);
-			return TypeRosetta.GetTypeObject (entityCaption) as StructuredType;
+			return TypeRosetta.GetTypeObject(entityCaption) as StructuredType;
 		}
 
 		private enum FieldEditionMode
@@ -122,13 +134,13 @@ namespace Epsitec.Common.FormEngine
 			//	considéré comme une donnée, soit comme un critère de recherche.
 			foreach (Druid fieldId in fieldIds)
 			{
-				StructuredType entityDef = this.GetEntityDefinition (entityId);
+				StructuredType entityDef = this.GetEntityDefinition(entityId);
 				if (entityDef == null)
 				{
 					return FieldEditionMode.Unknown;
 				}
 
-				StructuredTypeField fieldDef = entityDef.GetField (fieldId.ToString ());
+				StructuredTypeField fieldDef = entityDef.GetField(fieldId.ToString());
 				if (fieldDef == null)
 				{
 					return FieldEditionMode.Unknown;
