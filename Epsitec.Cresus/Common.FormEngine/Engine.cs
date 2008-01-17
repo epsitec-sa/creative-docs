@@ -176,6 +176,11 @@ namespace Epsitec.Common.FormEngine
 			{
 				FieldDescription field = fields[i];
 
+				if (field.Hidden)
+				{
+					continue;
+				}
+
 				bool isGlueAfter = false;
 				FieldDescription nextField = Engine.SearchNextElement(fields, i);
 				if (nextField != null && nextField.Type == FieldDescription.FieldType.Glue)
@@ -291,6 +296,11 @@ namespace Epsitec.Common.FormEngine
 			for (int i=index; i<fields.Count; i++)
 			{
 				FieldDescription field = fields[i];
+
+				if (field.Hidden)
+				{
+					continue;
+				}
 
 				bool isGlueAfter = false;
 				FieldDescription nextField = Engine.SearchNextElement(fields, i);

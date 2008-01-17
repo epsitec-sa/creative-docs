@@ -990,43 +990,92 @@ namespace Epsitec.Common.Designer.Viewers
 		protected void SelectedFieldsRemove()
 		{
 			//	Utilise ou supprime les champs sélectionnés.
-			List<int> sels = this.fieldsTable.SelectedRows;
-			sels.Sort();
-
-			List<System.Guid> guids = new List<System.Guid>();
-
-			foreach (int sel in sels)
+			if (this.formEditor.ObjectModifier.IsPatch)
 			{
-				FormEditor.ObjectModifier.TableItem item = this.formEditor.ObjectModifier.TableContent[sel];
+				List<int> sels = this.fieldsTable.SelectedRows;
+				sels.Sort();
 
-				int index = this.formEditor.ObjectModifier.GetFormDescriptionIndex(item.Guid);
-				if (index != -1)
+				List<System.Guid> guids = new List<System.Guid>();
+
+				foreach (int sel in sels)
 				{
-					this.form.Fields.RemoveAt(index);
+					FormEditor.ObjectModifier.TableItem item = this.formEditor.ObjectModifier.TableContent[sel];
+
+					int index = FormEngine.Arrange.IndexOfGuid(this.form.Fields, item.Guid);
+					if (index == -1)  // champ visible ?
+					{
+						FieldDescription field = new FieldDescription(FieldDescription.FieldType.Hide);
+						field.Guid = item.Guid;
+						this.form.Fields.Add(field);
+					}
+					else  // champ caché ?
+					{
+						this.form.Fields.RemoveAt(index);
+					}
+
+					guids.Add(item.Guid);
 				}
 
-				guids.Add(item.Guid);
-			}
+				this.SetForm(this.form, this.druidToSerialize, true);
+				this.UpdateFieldsTable(false);
 
-			this.SetForm(this.form, this.druidToSerialize, true);
-			this.UpdateFieldsTable(false);
-
-			sels.Clear();
-			foreach (System.Guid guid in guids)
-			{
-				int index = this.formEditor.ObjectModifier.GetTableContentIndex(guid);
-				if (index != -1)
+				sels.Clear();
+				foreach (System.Guid guid in guids)
 				{
-					sels.Add(index);
+					int index = this.formEditor.ObjectModifier.GetTableContentIndex(guid);
+					if (index != -1)
+					{
+						sels.Add(index);
+					}
 				}
-			}
-			this.fieldsTable.SelectedRows = sels;
-			this.ReflectSelectionToEditor();
+				this.fieldsTable.SelectedRows = sels;
+				this.ReflectSelectionToEditor();
 
-			this.UpdateFieldsButtons();
-			this.UpdateRelationsTable(false);
-			this.UpdateRelationsButtons();
-			this.module.AccessForms.SetLocalDirty();
+				this.UpdateFieldsButtons();
+				this.UpdateRelationsTable(false);
+				this.UpdateRelationsButtons();
+				this.module.AccessForms.SetLocalDirty();
+			}
+			else
+			{
+				List<int> sels = this.fieldsTable.SelectedRows;
+				sels.Sort();
+
+				List<System.Guid> guids = new List<System.Guid>();
+
+				foreach (int sel in sels)
+				{
+					FormEditor.ObjectModifier.TableItem item = this.formEditor.ObjectModifier.TableContent[sel];
+
+					int index = this.formEditor.ObjectModifier.GetFormDescriptionIndex(item.Guid);
+					if (index != -1)
+					{
+						this.form.Fields.RemoveAt(index);
+					}
+
+					guids.Add(item.Guid);
+				}
+
+				this.SetForm(this.form, this.druidToSerialize, true);
+				this.UpdateFieldsTable(false);
+
+				sels.Clear();
+				foreach (System.Guid guid in guids)
+				{
+					int index = this.formEditor.ObjectModifier.GetTableContentIndex(guid);
+					if (index != -1)
+					{
+						sels.Add(index);
+					}
+				}
+				this.fieldsTable.SelectedRows = sels;
+				this.ReflectSelectionToEditor();
+
+				this.UpdateFieldsButtons();
+				this.UpdateRelationsTable(false);
+				this.UpdateRelationsButtons();
+				this.module.AccessForms.SetLocalDirty();
+			}
 		}
 
 		protected void SelectedFieldsGlue()

@@ -33,7 +33,7 @@ namespace Epsitec.Common.FormEngine
 				int index = Arrange.IndexOfGuid(patch, field.Guid);
 				if (index != -1)  // champ patché ?
 				{
-					if (reference[index].Type == FieldDescription.FieldType.Hide)  // champ à cacher ?
+					if (patch[index].Type == FieldDescription.FieldType.Hide)  // champ à cacher ?
 					{
 						copy.Hidden = true;
 					}
@@ -267,7 +267,7 @@ namespace Epsitec.Common.FormEngine
 		}
 
 
-		static private int IndexOfGuid(List<FieldDescription> list, System.Guid guid)
+		static public int IndexOfGuid(List<FieldDescription> list, System.Guid guid)
 		{
 			//	Retourne l'index de l'élément utilisant un Guid donné.
 			//	Retourne -1 s'il n'en existe aucun.
