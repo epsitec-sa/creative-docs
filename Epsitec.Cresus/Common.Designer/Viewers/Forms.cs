@@ -507,10 +507,11 @@ namespace Epsitec.Common.Designer.Viewers
 					string name = this.formEditor.ObjectModifier.GetTableContentDescription(item, true, Forms.showPrefix);
 					string icon1 = this.formEditor.ObjectModifier.GetTableContentIcon1(item);
 					string icon2 = this.formEditor.ObjectModifier.GetTableContentIcon2(item);
+					Color color = this.formEditor.ObjectModifier.GetTableContentUseColor(item);
 
 					this.fieldsTable.SetLineString(0, first+i, name);
 					this.fieldsTable.SetLineState(0, first+i, MyWidgets.StringList.CellState.Normal);
-					this.fieldsTable.SetLineColor(0, first+i, Color.Empty);
+					this.fieldsTable.SetLineColor(0, first+i, color);
 
 					if (Forms.showPrefix)
 					{
@@ -524,11 +525,11 @@ namespace Epsitec.Common.Designer.Viewers
 
 					this.fieldsTable.SetLineString(1, first+i, icon1);
 					this.fieldsTable.SetLineState(1, first+i, MyWidgets.StringList.CellState.Normal);
-					this.fieldsTable.SetLineColor(1, first+i, Color.Empty);
+					this.fieldsTable.SetLineColor(1, first+i, color);
 
 					this.fieldsTable.SetLineString(2, first+i, icon2);
 					this.fieldsTable.SetLineState(2, first+i, MyWidgets.StringList.CellState.Normal);
-					this.fieldsTable.SetLineColor(2, first+i, Color.Empty);
+					this.fieldsTable.SetLineColor(2, first+i, color);
 				}
 			}
 

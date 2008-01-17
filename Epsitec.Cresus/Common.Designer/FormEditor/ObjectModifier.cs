@@ -507,6 +507,23 @@ namespace Epsitec.Common.Designer.FormEditor
 			return icon;
 		}
 
+		public Color GetTableContentUseColor(TableItem item)
+		{
+			//	Retourne la couleur décrivant un TableItem dans une liste.
+			Color color = Color.Empty;
+
+			if (this.IsPatch)
+			{
+				int index = FormEngine.Arrange.IndexOfGuid(this.formEditor.Form.Fields, item.Guid);
+				if (index != -1)
+				{
+					color = Color.FromAlphaRgb(0.3, 1, 0, 0);  // rouge = champ caché
+				}
+			}
+
+			return color;
+		}
+
 		public bool IsPatch
 		{
 			//	Indique si l'on est dans un masque de patch.
