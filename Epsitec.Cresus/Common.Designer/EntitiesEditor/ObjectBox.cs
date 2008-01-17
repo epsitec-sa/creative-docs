@@ -1533,9 +1533,10 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 			Druid druid = Druid.Empty;
 			bool isNullable = false;
+			bool isPrivateRelation = false;
 			Module module = this.editor.Module;
 			StructuredTypeClass typeClass = StructuredTypeClass.Interface;
-			Common.Dialogs.DialogResult result = module.DesignerApplication.DlgResourceSelector(Dialogs.ResourceSelector.Operation.InterfaceEntities, module, ResourceAccess.Type.Entities, ref typeClass, ref druid, ref isNullable, exclude, Druid.Empty);
+			Common.Dialogs.DialogResult result = module.DesignerApplication.DlgResourceSelector(Dialogs.ResourceSelector.Operation.InterfaceEntities, module, ResourceAccess.Type.Entities, ref typeClass, ref druid, ref isNullable, ref isPrivateRelation, exclude, Druid.Empty);
 			if (result != Common.Dialogs.DialogResult.Yes)
 			{
 				return;
@@ -1781,10 +1782,11 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			Druid druid = (Druid) dataField.GetValue(Support.Res.Fields.Field.TypeId);
 			FieldOptions options = (FieldOptions) dataField.GetValue(Support.Res.Fields.Field.Options);
 
-			bool isNullable = options == FieldOptions.Nullable;
+			bool isNullable = (options & FieldOptions.Nullable) != 0;
+			bool isPrivateRelation = (options & FieldOptions.PrivateRelation) != 0;
 			Module module = this.editor.Module;
 			StructuredTypeClass typeClass = StructuredTypeClass.None;
-			Common.Dialogs.DialogResult result = module.DesignerApplication.DlgResourceSelector(Dialogs.ResourceSelector.Operation.TypesOrEntities, module, ResourceAccess.Type.Types, ref typeClass, ref druid, ref isNullable, null, Druid.Empty);
+			Common.Dialogs.DialogResult result = module.DesignerApplication.DlgResourceSelector(Dialogs.ResourceSelector.Operation.TypesOrEntities, module, ResourceAccess.Type.Types, ref typeClass, ref druid, ref isNullable, ref isPrivateRelation, null, Druid.Empty);
 			if (result != Common.Dialogs.DialogResult.Yes)
 			{
 				return;
@@ -1813,8 +1815,11 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			{
 				dataField.SetValue(Support.Res.Fields.Field.Relation, FieldRelation.None);
 			}
-			
-			dataField.SetValue(Support.Res.Fields.Field.Options, isNullable ? FieldOptions.Nullable : FieldOptions.None);
+
+			FieldOptions fieldOptions = FieldOptions.None;
+			if (isNullable)  fieldOptions |= FieldOptions.Nullable;
+			if (isPrivateRelation)  fieldOptions |= FieldOptions.PrivateRelation;
+			dataField.SetValue(Support.Res.Fields.Field.Options, fieldOptions);
 
 			this.UpdateField(dataField, this.fields[rank]);
 			this.editor.Module.AccessEntities.SetLocalDirty();
@@ -1863,7 +1868,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			field.DefiningTypeId = definingTypeId;
 			field.DeepDefiningTypeId = deepDefiningTypeId;
 			field.Expression = sourceCode;
-			field.IsNullable = options == FieldOptions.Nullable;
+			field.IsNullable = (options & FieldOptions.Nullable) != 0;
+			field.IsPrivateRelation = (options & FieldOptions.PrivateRelation) != 0;
 			field.CultureMapSource = source;
 			field.FieldName = (fieldCultureMap == null) ? "" : fieldCultureMap.Name;
 			field.TypeName = (typeCultureMap == null) ? "" : typeCultureMap.Name;

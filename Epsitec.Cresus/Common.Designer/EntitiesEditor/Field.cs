@@ -92,6 +92,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			this.deepDefiningTypeId = Druid.Empty;
 			this.destination = Druid.Empty;
 			this.isNullable = false;
+			this.isPrivateRelation = false;
 			this.cultureMapSource = CultureMapSource.Invalid;
 			this.rank = -1;
 			this.index = -1;
@@ -332,6 +333,23 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				if (this.isNullable != value)
 				{
 					this.isNullable = value;
+					this.UpdateTypeName();
+				}
+			}
+		}
+
+		public bool IsPrivateRelation
+		{
+			//	Indique si la relation du champ est privée.
+			get
+			{
+				return this.isPrivateRelation;
+			}
+			set
+			{
+				if (this.isPrivateRelation != value)
+				{
+					this.isPrivateRelation = value;
 					this.UpdateTypeName();
 				}
 			}
@@ -733,11 +751,25 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			//	Met à jour le nom du type.
 			if (this.isNullable)
 			{
-				this.textLayoutType.Text = string.Concat("(", this.typeName, ")");
+				if (this.isPrivateRelation)
+				{
+					this.textLayoutType.Text = string.Concat("(", this.typeName, ")*");
+				}
+				else
+				{
+					this.textLayoutType.Text = string.Concat("(", this.typeName, ")");
+				}
 			}
 			else
 			{
-				this.textLayoutType.Text = this.typeName;
+				if (this.isPrivateRelation)
+				{
+					this.textLayoutType.Text = string.Concat(this.typeName, "*");
+				}
+				else
+				{
+					this.textLayoutType.Text = this.typeName;
+				}
 			}
 		}
 
@@ -942,6 +974,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		protected Druid deepDefiningTypeId;
 		protected Druid destination;
 		protected bool isNullable;
+		protected bool isPrivateRelation;
 		protected CultureMapSource cultureMapSource;
 		protected int rank;
 		protected int index;

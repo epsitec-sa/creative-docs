@@ -1118,9 +1118,10 @@ namespace Epsitec.Common.Designer.Viewers
 			Druid druid = field.SubFormId;
 			Druid typeId = this.access.FormRelationEntity(this.entityId, field.GetPath(null));
 			bool isNullable = false;
+			bool isPrivateRelation = false;
 			Module module = this.designerApplication.SearchModule(this.druidToSerialize);
 			StructuredTypeClass typeClass = StructuredTypeClass.None;
-			Common.Dialogs.DialogResult result = this.designerApplication.DlgResourceSelector(Dialogs.ResourceSelector.Operation.Form, module, ResourceAccess.Type.Forms, ref typeClass, ref druid, ref isNullable, null, typeId);
+			Common.Dialogs.DialogResult result = this.designerApplication.DlgResourceSelector(Dialogs.ResourceSelector.Operation.Form, module, ResourceAccess.Type.Forms, ref typeClass, ref druid, ref isNullable, ref isPrivateRelation, null, typeId);
 			if (result != Common.Dialogs.DialogResult.Yes)
 			{
 				return;
