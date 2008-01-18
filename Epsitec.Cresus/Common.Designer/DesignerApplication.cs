@@ -169,7 +169,7 @@ namespace Epsitec.Common.Designer
 		public CommandState GetCommandState(string command)
 		{
 			CommandContext context = this.CommandContext;
-			CommandState state = context.GetCommandState (command);
+			CommandState state = context.GetCommandState (Command.Get (command));
 
 			return state;
 		}

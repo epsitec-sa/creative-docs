@@ -2259,7 +2259,7 @@ namespace Epsitec.Common.DocumentEditor
 		void CommandCombo(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
 			IconButtonCombo combo = e.Source as IconButtonCombo;
-			CommandState cs = this.commandContext.GetCommandState (e.Command.CommandId);
+			CommandState cs = this.commandContext.GetCommandState (e.Command);
 			if ( combo != null && cs != null )
 			{
 				cs.AdvancedState = combo.SelectedName;

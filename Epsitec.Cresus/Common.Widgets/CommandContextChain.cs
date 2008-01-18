@@ -91,7 +91,9 @@ namespace Epsitec.Common.Widgets
 		}
 
 		/// <summary>
-		/// Gets the local enable state of the command.
+		/// Gets the local enable state of the command. This walks all command
+		/// contexts until either a local disable is found or a fence context
+		/// is reached.
 		/// </summary>
 		/// <param name="command">The command.</param>
 		/// <returns><c>false</c> if the command is disabled locally, <c>true</c> otherwise.</returns>
@@ -102,6 +104,10 @@ namespace Epsitec.Common.Widgets
 				if (context.GetLocalEnable (command) == false)
 				{
 					return false;
+				}
+				if (context.Fence)
+				{
+					return true;
 				}
 			}
 
@@ -200,6 +206,11 @@ namespace Epsitec.Common.Widgets
 				}
 
 				root = item;
+
+				if (item.Fence)
+				{
+					break;
+				}
 			}
 
 			if (root != null)

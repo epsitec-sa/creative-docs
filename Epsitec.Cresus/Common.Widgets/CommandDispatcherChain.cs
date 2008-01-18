@@ -1,5 +1,5 @@
 //	Copyright © 2006-2008, EPSITEC SA, CH-1092 BELMONT, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using System.Text.RegularExpressions;
 using System.Collections.Generic;
@@ -116,14 +116,6 @@ namespace Epsitec.Common.Widgets
 			return selected;
 		}
 		
-
-		public static IEnumerable<CommandDispatcher> EmptyDispatcherEnumeration
-		{
-			get
-			{
-				yield break;
-			}
-		}
 
 		public static CommandDispatcherChain BuildChain(Visual visual)
 		{

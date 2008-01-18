@@ -1,9 +1,9 @@
 //	Copyright © 2006-2008, EPSITEC SA, CH-1092 BELMONT, Switzerland
-//	Responsable: Pierre ARNAUD
-
-using System.Collections.Generic;
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Types;
+
+using System.Collections.Generic;
 
 namespace Epsitec.Common.Widgets
 {
@@ -18,19 +18,36 @@ namespace Epsitec.Common.Widgets
 		/// </summary>
 		public CommandContext()
 		{
+			this.localDisables = new HashSet<int> ();
+			this.groupDisables = new Dictionary<string, int> ();
+			this.validations = new Dictionary<long, Validation> ();
+			this.states = new Dictionary<long, CommandState> ();
 		}
 
 		/// <summary>
-		/// Gets the dispatchers.
+		/// Initializes a new instance of the <see cref="CommandContext"/> class.
 		/// </summary>
-		/// <value>The dispatcher enumeration.</value>
-		public IEnumerable<CommandDispatcher> Dispatchers
+		/// <param name="fence">If set to <c>true</c>, this command context will
+		/// be handled as a fence.</param>
+		public CommandContext(bool fence)
+			: this ()
+		{
+			this.fence = fence;
+		}
+
+#if false
+		/// <summary>
+		/// Gets the dispatchers in the dispatcher chain associated with this
+		/// command context.
+		/// </summary>
+		/// <value>The dispatchers.</value>
+		public IEnumerable<CommandDispatcher>	Dispatchers
 		{
 			get
 			{
 				if (this.dispatcherChain == null)
 				{
-					return CommandDispatcherChain.EmptyDispatcherEnumeration;
+					return Collections.EmptyEnumerable<CommandDispatcher>.Instance;
 				}
 				else
 				{
@@ -38,9 +55,26 @@ namespace Epsitec.Common.Widgets
 				}
 			}
 		}
+#endif
 
 		/// <summary>
-		/// Sets the local enable state of the command.
+		/// Gets a value indicating whether this <see cref="CommandContext"/> is
+		/// a fence. When a <see cref="CommandContextChain"/> is evaluating the
+		/// state of a command and it reaches a fence, it stops. This basically
+		/// means that any command states defined in parent contexts will become
+		/// invisible.
+		/// </summary>
+		/// <value><c>true</c> if this is a fence; otherwise, <c>false</c>.</value>
+		public bool Fence
+		{
+			get
+			{
+				return this.fence;
+			}
+		}
+
+		/// <summary>
+		/// Sets the local enable state of the specified command.
 		/// </summary>
 		/// <param name="command">The command.</param>
 		/// <param name="value">Enable if set to <c>true</c>, disable otherwise.</param>
@@ -51,41 +85,26 @@ namespace Epsitec.Common.Widgets
 				return;
 			}
 			
-			bool oldValue;
+			bool oldValue = this.localDisables.Contains (command.SerialId) ? false : true;
 			bool newValue = value;
-
-			if (this.commandEnables.TryGetValue (command.SerialId, out oldValue))
-			{
-				System.Diagnostics.Debug.Assert (oldValue == false);
-			}
-			else
-			{
-				oldValue = true;
-			}
 
 			if (newValue != oldValue)
 			{
+				//	The local enable is in fact implemented as a local disable;
+				//	when the local disable is required, just put the command into
+				//	the local disables hash set :
+				
 				if (newValue)
 				{
-					this.commandEnables.Remove (command.SerialId);
+					this.localDisables.Remove (command.SerialId);
 				}
 				else
 				{
-					this.commandEnables[command.SerialId] = false;
+					this.localDisables.Add (command.SerialId);
 				}
 
 				this.NotifyCommandEnableChanged (command);
 			}
-		}
-
-		/// <summary>
-		/// Sets the local enable state of the command.
-		/// </summary>
-		/// <param name="commandName">The command name.</param>
-		/// <param name="value">Enable if set to <c>true</c>, disable otherwise.</param>
-		public void SetLocalEnable(string commandName, bool value)
-		{
-			this.SetLocalEnable (Command.Find (commandName), value);
 		}
 
 		/// <summary>
@@ -95,13 +114,9 @@ namespace Epsitec.Common.Widgets
 		/// <returns><c>false</c> if the command is disabled locally, <c>true</c> otherwise.</returns>
 		public bool GetLocalEnable(Command command)
 		{
-			bool value;
-
-			if (this.commandEnables.TryGetValue (command.SerialId, out value))
+			if (this.localDisables.Contains (command.SerialId))
 			{
-				System.Diagnostics.Debug.Assert (value == false);
-
-				return value;
+				return false;
 			}
 			else
 			{
@@ -123,87 +138,70 @@ namespace Epsitec.Common.Widgets
 		}
 
 		/// <summary>
-		/// Sets the group enable state.
+		/// Sets the group enable state based on a validation context.
 		/// </summary>
 		/// <param name="context">The validation context.</param>
 		/// <param name="group">The command group.</param>
-		/// <param name="value">Enable group if set to <c>true</c>, otherwise disable.</param>
-		public void SetGroupEnable(ValidationContext context, string group, bool value)
+		/// <param name="enable">Enable group if set to <c>true</c>, otherwise disable.</param>
+		public void SetGroupEnable(ValidationContext context, string group, bool enable)
 		{
 			long id = context.UniqueId;
-			Record record;
+			Validation record;
 
-			if (this.records.TryGetValue (id, out record) == false)
+			if (this.validations.TryGetValue (id, out record) == false)
 			{
 				//	There is no record for the specifed context. If the caller is
 				//	specifying that the group is enabled for the context, we have
 				//	nothing to record, as this is the default.
-				
-				if (value == true)
+
+				if (enable == false)
 				{
-					return;
+					record = new Validation (context);
+					this.validations[id] = record;
+
+					record.GroupDisables.Add (group);
+					this.IncrementGroupDisable (group);
 				}
-
-				record = new Record (context);
-				this.records[id] = record;
-				record.GroupEnable[group] = false;
-
-				this.IncrementGroupDisable (group);
 			}
 			else
 			{
-				bool enable;
-
 				System.Diagnostics.Debug.Assert (record.Context == context);
-				System.Diagnostics.Debug.Assert (record.GroupEnable.Count > 0);
+				System.Diagnostics.Debug.Assert (record.GroupDisables.Count > 0);
 				
-				if (record.GroupEnable.TryGetValue (group, out enable))
+				if (record.GroupDisables.Contains (group))
 				{
-					System.Diagnostics.Debug.Assert (enable == false);
-
-					if (value == true)
+					if (enable)
 					{
 						//	Remove the disable for the specified group if we have
 						//	found a current disable (the caller wants to revoke the
 						//	disable).
 
-						record.GroupEnable.Remove (group);
-
+						record.GroupDisables.Remove (group);
 						this.DecrementGroupDisable (group);
 
-						if (record.GroupEnable.Count == 0)
+						if (record.GroupDisables.Count == 0)
 						{
 							//	We no longer need the record. Just release the memory
 							//	associated to it.
 
-							this.records.Remove (id);
+							this.validations.Remove (id);
 						}
 					}
 				}
-				else if (value == false)
+				else if (enable == false)
 				{
 					//	Create a disable for the specified group, as it is not yet
 					//	disabled.
 
-					record.GroupEnable[group] = false;
-					
+					record.GroupDisables.Add (group);
 					this.IncrementGroupDisable (group);
 				}
 			}
 		}
 
 		/// <summary>
-		/// Gets the state of the command.
-		/// </summary>
-		/// <param name="commandName">Name of the command.</param>
-		/// <returns>The command state.</returns>
-		public CommandState GetCommandState(string commandName)
-		{
-			return this.GetCommandState (Command.Get (commandName));
-		}
-
-		/// <summary>
-		/// Gets the state of the command.
+		/// Gets the command state for the specified command. If there is no
+		/// matching command state in this context, a new one will be created.
 		/// </summary>
 		/// <param name="command">The command.</param>
 		/// <returns>The command state.</returns>
@@ -211,18 +209,13 @@ namespace Epsitec.Common.Widgets
 		{
 			CommandState state = this.FindCommandState (command);
 
-			if (state != null)
-			{
-				return state;
-			}
-			else
+			if (state == null)
 			{
 				state = command.CreateDefaultState (this);
-
 				this.SetCommandState (command, state);
-
-				return state;
 			}
+			
+			return state;
 		}
 
 		/// <summary>
@@ -265,10 +258,12 @@ namespace Epsitec.Common.Widgets
 			CommandCache.Instance.InvalidateCommand (command);
 		}
 		
+#if false
 		internal void UpdateDispatcherChain(Visual visual)
 		{
 			this.dispatcherChain = CommandDispatcherChain.BuildChain (visual);
 		}
+#endif
 
 		#endregion
 
@@ -336,17 +331,21 @@ namespace Epsitec.Common.Widgets
 
 		#endregion
 
-		#region Private Record Structure
+		#region Private Validation Structure
 		
-		private struct Record
+		/// <summary>
+		/// The <c>Validation</c> structure associates a validation context with
+		/// a set of disabled groups.
+		/// </summary>
+		private struct Validation
 		{
-			public Record(ValidationContext context)
+			public Validation(ValidationContext context)
 			{
-				this.weakContext = new Types.Weak<ValidationContext> (context);
-				this.groupEnable = new Dictionary<string, bool> ();
+				this.weakContext = new Weak<ValidationContext> (context);
+				this.groupDisables = new HashSet<string> ();
 			}
 
-			public ValidationContext Context
+			public ValidationContext			Context
 			{
 				get
 				{
@@ -354,16 +353,16 @@ namespace Epsitec.Common.Widgets
 				}
 			}
 
-			public Dictionary<string, bool> GroupEnable
+			public HashSet<string>				GroupDisables
 			{
 				get
 				{
-					return this.groupEnable;
+					return this.groupDisables;
 				}
 			}
 
-			Types.Weak<ValidationContext> weakContext;
-			Dictionary<string, bool> groupEnable;
+			readonly Weak<ValidationContext>	weakContext;
+			readonly HashSet<string>			groupDisables;
 		}
 
 		#endregion
@@ -417,10 +416,14 @@ namespace Epsitec.Common.Widgets
 		public static readonly DependencyProperty ContextProperty = DependencyProperty.RegisterAttached ("Context", typeof (CommandContext), typeof (CommandContext), new DependencyPropertyMetadata ().MakeNotSerializable ());
 
 		
-		private Dictionary<int, bool> commandEnables = new Dictionary<int, bool> ();
-		private Dictionary<string, int> groupDisables = new Dictionary<string, int> ();
-		private Dictionary<long, Record> records = new Dictionary<long, Record> ();
-		private Dictionary<long, CommandState> states = new Dictionary<long, CommandState> ();
+		readonly HashSet<int>					localDisables;
+		readonly Dictionary<string, int>		groupDisables;
+		readonly Dictionary<long, Validation>	validations;
+		readonly Dictionary<long, CommandState>	states;
+		readonly bool							fence;
+
+#if false
 		private CommandDispatcherChain dispatcherChain;
+#endif
 	}
 }
