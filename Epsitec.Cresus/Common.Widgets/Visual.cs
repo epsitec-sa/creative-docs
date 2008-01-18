@@ -1001,12 +1001,19 @@ namespace Epsitec.Common.Widgets
 
 		internal int GetCommandCacheId()
 		{
-			return this.commandCacheId;
+			return (int) this.GetValue (Visual.CommandCacheIdProperty);
 		}
 		
 		internal void SetCommandCacheId(int value)
 		{
-			this.commandCacheId = value;
+			if (value == -1)
+			{
+				this.ClearValue (Visual.CommandCacheIdProperty);
+			}
+			else
+			{
+				this.SetValue (Visual.CommandCacheIdProperty, value);
+			}
 		}
 
 		#endregion
@@ -2102,10 +2109,10 @@ namespace Epsitec.Common.Widgets
 
 		public static readonly DependencyProperty CommandObjectProperty			= DependencyProperty.Register ("CommandObject", typeof (Command), typeof (Visual), new VisualPropertyMetadata (null, new PropertyInvalidatedCallback (Visual.NotifyCommandObjectChanged), VisualPropertyMetadataOptions.AffectsDisplay));
 		public static readonly DependencyProperty CaptionIdProperty				= DependencyProperty.Register ("CaptionId", typeof (Support.Druid), typeof (Visual), new VisualPropertyMetadata (Support.Druid.Empty, new PropertyInvalidatedCallback (Visual.NotifyCaptionIdChanged), VisualPropertyMetadataOptions.AffectsDisplay));
+		private static readonly DependencyProperty CommandCacheIdProperty		= DependencyProperty.Register ("CommandCacheId", typeof (int), typeof (Visual), new VisualPropertyMetadata (-1));
 
 		private static long						nextSerialId = 1;
 		
-		private int								commandCacheId = -1;
 		private readonly long					visualSerialId;
 		private bool							dirtyLayout;
 		private bool							dirtyDisplay;

@@ -12,7 +12,7 @@ namespace Epsitec.Common.Widgets
 	/// maintains information about user interface value validity, on a group
 	/// basis. This is thightly bound to the <see cref="CommandContext"/>.
 	/// </summary>
-	public class ValidationContext : DependencyObject, System.IEquatable<ValidationContext>
+	public sealed class ValidationContext : DependencyObject, System.IEquatable<ValidationContext>
 	{
 		/// <summary>
 		/// Initializes a new instance of the <see cref="ValidationContext"/> class.

@@ -1,56 +1,73 @@
 //	Copyright © 2006-2008, EPSITEC SA, CH-1092 BELMONT, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
+
+using Epsitec.Common.Types;
+using Epsitec.Common.Widgets.Collections;
 
 using System.Collections.Generic;
 
-using Epsitec.Common.Widgets.Collections;
-using Epsitec.Common.Types;
-
 namespace Epsitec.Common.Widgets
 {
+	/// <summary>
+	/// The <c>CommandState</c> class stores the state of a command, i.e. if a
+	/// command is currently enabled and the active state of the associated UI
+	/// visuals.
+	/// </summary>
 	public class CommandState : DependencyObject
 	{
-		internal CommandState()
+		protected CommandState()
 		{
 		}
-		
-		public CommandState(Command command)
-		{
-			this.DefineCommand (command);
-		}
-		
+
+		/// <summary>
+		/// Gets the associated command.
+		/// </summary>
+		/// <value>The command.</value>
 		public Command							Command
 		{
 			get
 			{
-				return this.command;
+				return (Command) this.GetValue (CommandState.CommandProperty);
 			}
 		}
 
+		/// <summary>
+		/// Gets the associated command context.
+		/// </summary>
+		/// <value>The command context.</value>
 		public CommandContext					CommandContext
 		{
 			get
 			{
-				return this.context;
+				return (CommandContext) this.GetValue (CommandState.CommandContextProperty);
 			}
 		}
-		
+
+		/// <summary>
+		/// Gets or sets a value indicating whether the associated command is
+		/// currently enabled.
+		/// </summary>
+		/// <value><c>true</c> if the command is enabled; otherwise, <c>false</c>.</value>
 		public bool								Enable
 		{
 			get
 			{
-				return this.enable;
+				return !this.disable;
 			}
 			set
 			{
-				if (this.enable != value)
+				if (this.disable == value)
 				{
-					this.enable = value;
+					this.disable = !value;
 					this.Synchronize ();
 				}
 			}
 		}
-		
+
+		/// <summary>
+		/// Gets or sets the active state of the associated command.
+		/// </summary>
+		/// <value>The active state of the command.</value>
 		public ActiveState						ActiveState
 		{
 			get
@@ -66,7 +83,11 @@ namespace Epsitec.Common.Widgets
 				}
 			}
 		}
-		
+
+		/// <summary>
+		/// Gets or sets the advanced state of the command.
+		/// </summary>
+		/// <value>The advanced state of the command.</value>
 		public string							AdvancedState
 		{
 			get
@@ -85,30 +106,55 @@ namespace Epsitec.Common.Widgets
 
 		#region Internal Methods
 
+		/// <summary>
+		/// Defines the associated command.
+		/// </summary>
+		/// <param name="command">The command.</param>
 		internal void DefineCommand(Command command)
 		{
-			this.command = command;
-			this.command.Freeze ();
+			command.Freeze ();
+			this.SetValue (CommandState.CommandProperty, command);
 
 			this.OverrideDefineCommand ();
 		}
 
+		/// <summary>
+		/// Defines the associated command context.
+		/// </summary>
+		/// <param name="context">The context.</param>
 		internal void DefineCommandContext(CommandContext context)
 		{
-			this.context = context;
+			System.Diagnostics.Debug.Assert (this.Command != null);
+			System.Diagnostics.Debug.Assert (this.Command.IsReadOnly);
+
+			this.SetValue (CommandState.CommandContextProperty, context);
 		}
 		
-#endregion
+		#endregion
 
+		/// <summary>
+		/// Called immediately after a command is defined for this command state.
+		/// This method is meant to be overridden.
+		/// </summary>
 		protected virtual void OverrideDefineCommand()
 		{
 		}
-		
-		protected void Synchronize()
+
+		/// <summary>
+		/// Synchronizes the command state; this will let the command cache handle
+		/// the (asynchronous) synchronization.
+		/// </summary>
+		private void Synchronize()
 		{
 			CommandCache.Instance.InvalidateState (this);
 		}
-		
+
+
+		/// <summary>
+		/// Sets the advanced state for the specified object.
+		/// </summary>
+		/// <param name="obj">The object.</param>
+		/// <param name="value">The advanced state.</param>
 		public static void SetAdvancedState(DependencyObject obj, string value)
 		{
 			if (value == null)
@@ -120,18 +166,22 @@ namespace Epsitec.Common.Widgets
 				obj.SetValue (CommandState.AdvancedStateProperty, value);
 			}
 		}
-		
+
+		/// <summary>
+		/// Gets the advanced state for the specified object.
+		/// </summary>
+		/// <param name="obj">The object.</param>
+		/// <returns>The advanced state or <c>null</c>.</returns>
 		public static string GetAdvancedState(DependencyObject obj)
 		{
 			return obj.GetValue (CommandState.AdvancedStateProperty) as string;
 		}
 
-		public static readonly DependencyProperty AdvancedStateProperty = DependencyProperty.RegisterAttached ("AdvancedState", typeof (string), typeof (CommandState), new DependencyPropertyMetadata ());
-		public static readonly DependencyProperty CommandProperty = DependencyProperty.RegisterReadOnly ("Command", typeof (Command), typeof (CommandState));
+		public static readonly DependencyProperty AdvancedStateProperty  = DependencyProperty.RegisterAttached ("AdvancedState", typeof (string), typeof (CommandState), new DependencyPropertyMetadata ());
+		public static readonly DependencyProperty CommandProperty        = DependencyProperty.RegisterReadOnly ("Command", typeof (Command), typeof (CommandState), new DependencyPropertyMetadata ());
+		public static readonly DependencyProperty CommandContextProperty = DependencyProperty.RegisterReadOnly ("CommandContext", typeof (CommandContext), typeof (CommandState), new DependencyPropertyMetadata ());
 
-		private Command							command;
-		private CommandContext					context;
-		private ActiveState						activeState = ActiveState.No;
-		private bool							enable = true;
+		private ActiveState						activeState;
+		private bool							disable;
 	}
 }

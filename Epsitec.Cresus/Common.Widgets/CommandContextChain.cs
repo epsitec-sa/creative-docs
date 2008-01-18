@@ -1,10 +1,10 @@
 //	Copyright © 2006-2008, EPSITEC SA, CH-1092 BELMONT, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
+
+using Epsitec.Common.Types;
 
 using System.Text.RegularExpressions;
 using System.Collections.Generic;
-
-using Epsitec.Common.Types;
 
 namespace Epsitec.Common.Widgets
 {
@@ -21,24 +21,24 @@ namespace Epsitec.Common.Widgets
 		/// </summary>
 		private CommandContextChain()
 		{
+			this.chain = new List<Weak<CommandContext>> ();
 		}
 
 		/// <summary>
 		/// Gets the command contexts.
 		/// </summary>
 		/// <value>The context enumeration.</value>
-		public IEnumerable<CommandContext> Contexts
+		public IEnumerable<CommandContext>		Contexts
 		{
 			get
 			{
-				if ((this.chain != null) &&
-					(this.chain.Count > 0))
+				if (this.chain.Count > 0)
 				{
-					System.WeakReference[] chain = this.chain.ToArray ();
+					Weak<CommandContext>[] chain = this.chain.ToArray ();
 
 					for (int i = 0; i < chain.Length; i++)
 					{
-						CommandContext context = chain[i].Target as CommandContext;
+						CommandContext context = chain[i].Target;
 
 						if (context == null)
 						{
@@ -57,7 +57,7 @@ namespace Epsitec.Common.Widgets
 		/// Gets the first context in the context chain.
 		/// </summary>
 		/// <value>The first context or <c>null</c> if the chain is empty.</value>
-		public CommandContext FirstContext
+		public CommandContext					FirstContext
 		{
 			get
 			{
@@ -74,7 +74,7 @@ namespace Epsitec.Common.Widgets
 		/// Gets a value indicating whether this chain is empty.
 		/// </summary>
 		/// <value><c>true</c> if this chain is empty; otherwise, <c>false</c>.</value>
-		public bool IsEmpty
+		public bool								IsEmpty
 		{
 			get
 			{
@@ -154,42 +154,6 @@ namespace Epsitec.Common.Widgets
 			return that;
 		}
 
-		public static CommandContextChain BuildChain(DependencyObject obj, ref CommandContextChain chain)
-		{
-			Visual visual = obj as Visual;
-			Window window = obj as Window;
-
-			if (visual != null)
-			{
-				CommandContextChain.BuildChain (visual, ref chain);
-				return chain;
-			}
-			if (window != null)
-			{
-				CommandContextChain.BuildChain (window, ref chain);
-				return chain;
-			}
-
-			CommandContextChain that = null;
-
-			if (obj != null)
-			{
-				CommandContext context = CommandContext.GetContext (obj);
-
-				if (context != null)
-				{
-					if (that == null)
-					{
-						that = new CommandContextChain ();
-					}
-
-					that.chain.Add (new System.WeakReference (context));
-				}
-			}
-			
-			return that;
-		}
-
 		/// <summary>
 		/// Gets the state of the command.
 		/// </summary>
@@ -222,42 +186,72 @@ namespace Epsitec.Common.Widgets
 		/// <returns>The command state.</returns>
 		public CommandState GetCommandState(Command command, out CommandContext context)
 		{
-			if ((this.chain != null) &&
-				(this.chain.Count > 0))
+			CommandContext root = null;
+			CommandState   state;
+
+			foreach (CommandContext item in this.Contexts)
 			{
-				CommandContext root = null;
+				state = item.FindCommandState (command);
 				
-				foreach (System.WeakReference item in this.chain)
+				if (state != null)
 				{
-					context = item.Target as CommandContext;
-
-					if (context != null)
-					{
-						CommandState state = context.FindCommandState (command);
-						
-						if (state != null)
-						{
-							return state;
-						}
-
-						root = context;
-					}
+					context = item;
+					return state;
 				}
 
-				if (root != null)
-				{
-					//	Create the command state in the root-level context.
+				root = item;
+			}
 
-					context = root;
-					CommandState state = context.GetCommandState (command);
-					
-					return state;
+			if (root != null)
+			{
+				//	Create the command state in the root-level context.
+
+				context = root;
+				state   = context.GetCommandState (command);
+			}
+			else
+			{
+				context = null;
+				state   = null;
+			}
+			
+			return state;
+		}
+
+		private static CommandContextChain BuildChain(DependencyObject obj, ref CommandContextChain chain)
+		{
+			Visual visual = obj as Visual;
+			Window window = obj as Window;
+
+			if (visual != null)
+			{
+				CommandContextChain.BuildChain (visual, ref chain);
+				return chain;
+			}
+			if (window != null)
+			{
+				CommandContextChain.BuildChain (window, ref chain);
+				return chain;
+			}
+
+			CommandContextChain that = null;
+
+			if (obj != null)
+			{
+				CommandContext context = CommandContext.GetContext (obj);
+
+				if (context != null)
+				{
+					if (that == null)
+					{
+						that = new CommandContextChain ();
+					}
+
+					that.chain.Add (new Weak<CommandContext> (context));
 				}
 			}
 
-			context = null;
-			
-			return null;
+			return that;
 		}
 
 		private static void BuildChain(Visual visual, ref CommandContextChain that)
@@ -273,7 +267,7 @@ namespace Epsitec.Common.Widgets
 						that = new CommandContextChain ();
 					}
 
-					that.chain.Add (new System.WeakReference (context));
+					that.chain.Add (new Weak<CommandContext> (context));
 				}
 
 				AbstractMenu menu = visual as AbstractMenu;
@@ -300,7 +294,7 @@ namespace Epsitec.Common.Widgets
 						that = new CommandContextChain ();
 					}
 
-					that.chain.Add (new System.WeakReference (context));
+					that.chain.Add (new Weak<CommandContext> (context));
 				}
 
 				window = window.Owner;
@@ -309,6 +303,6 @@ namespace Epsitec.Common.Widgets
 			//	TODO: ajouter ici la notion d'application/module/document
 		}
 
-		List<System.WeakReference> chain = new List<System.WeakReference> ();
+		readonly List<Weak<CommandContext>>		chain;
 	}
 }
