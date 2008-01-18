@@ -607,13 +607,15 @@ namespace Epsitec.Common.Designer.Viewers
 				}
 			}
 
-			this.fieldsButtonRemove.Enable = isSel;
-			this.fieldsButtonGlue.Enable = isSel;
-			this.fieldsButtonLine.Enable = isSel;
-			this.fieldsButtonTitle.Enable = isSel;
-			this.fieldsButtonBox.Enable = isSel;
+			bool isPatch = this.formEditor.ObjectModifier.IsPatch;
 
-			this.fieldsButtonForm.Enable = isForm;
+			this.fieldsButtonRemove.Enable = isSel;
+			this.fieldsButtonGlue.Enable = isSel && !isPatch;
+			this.fieldsButtonLine.Enable = isSel && !isPatch;
+			this.fieldsButtonTitle.Enable = isSel && !isPatch;
+			this.fieldsButtonBox.Enable = isSel && !isPatch;
+
+			this.fieldsButtonForm.Enable = isForm && !isPatch;
 			this.fieldsButtonPrev.Enable = isPrev;
 			this.fieldsButtonNext.Enable = isNext;
 			this.fieldsButtonGoto.Enable = isGoto;
@@ -685,7 +687,9 @@ namespace Epsitec.Common.Designer.Viewers
 			//	Met à jour les boutons dans l'onglet des relations.
 			int sel = this.relationsTable.SelectedRow;
 
-			this.relationsButtonUse.Enable = this.formEditor.ObjectModifier.IsTableRelationUseable(sel);
+			bool isPatch = this.formEditor.ObjectModifier.IsPatch;
+
+			this.relationsButtonUse.Enable = this.formEditor.ObjectModifier.IsTableRelationUseable(sel) && !isPatch;
 			this.relationsButtonExpand.Enable = this.formEditor.ObjectModifier.IsTableRelationExpandable(sel);
 			this.relationsButtonCompact.Enable = this.formEditor.ObjectModifier.IsTableRelationCompactable(sel);
 
@@ -1007,7 +1011,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 			List<System.Guid> guids = new List<System.Guid>();
 
-			if (this.formEditor.ObjectModifier.IsPatch)
+			if (this.formEditor.ObjectModifier.IsPatch)  // module de patch ?
 			{
 				foreach (int sel in sels)
 				{
@@ -1028,7 +1032,7 @@ namespace Epsitec.Common.Designer.Viewers
 					guids.Add(item.Guid);
 				}
 			}
-			else
+			else  // module normal ?
 			{
 				foreach (int sel in sels)
 				{
@@ -1268,15 +1272,21 @@ namespace Epsitec.Common.Designer.Viewers
 				sels.Reverse();
 			}
 
-			foreach (int sel in sels)
+			if (this.formEditor.ObjectModifier.IsPatch)  // module de patch ?
 			{
-				FormEditor.ObjectModifier.TableItem item = this.formEditor.ObjectModifier.TableContent[sel];
-				int index = this.formEditor.ObjectModifier.GetFormDescriptionIndex(item.Guid);
-				if (index != -1)
+			}
+			else  // module normal ?
+			{
+				foreach (int sel in sels)
 				{
-					FieldDescription field = this.form.Fields[index];
-					this.form.Fields.RemoveAt(index);
-					this.form.Fields.Insert(index+direction, field);
+					FormEditor.ObjectModifier.TableItem item = this.formEditor.ObjectModifier.TableContent[sel];
+					int index = this.formEditor.ObjectModifier.GetFormDescriptionIndex(item.Guid);
+					if (index != -1)
+					{
+						FieldDescription field = this.form.Fields[index];
+						this.form.Fields.RemoveAt(index);
+						this.form.Fields.Insert(index+direction, field);
+					}
 				}
 			}
 
