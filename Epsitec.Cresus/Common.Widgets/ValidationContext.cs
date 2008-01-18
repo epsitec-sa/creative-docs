@@ -41,6 +41,8 @@ namespace Epsitec.Common.Widgets
 		/// Updates the command enable based on the visual validity. This will
 		/// also store a tracking record about the visual state, if the visual
 		/// is not yet known by the validation context.
+		/// This method is invoked indirectly by <see cref="M:Widget.Validate"/>
+		/// whenever the validity of the widget changes.
 		/// </summary>
 		/// <param name="visual">The visual.</param>
 		public void UpdateCommandEnableBasedOnVisualValidity(Visual visual)
@@ -61,6 +63,9 @@ namespace Epsitec.Common.Widgets
 				state   = null;
 				context = Helpers.VisualTree.GetCommandContext (visual);
 			}
+			
+			//	Check if the visual is valid (it will always be if it is disabled;
+			//	otherwise, this just checks the visual's Valid property) :
 			
 			bool enable = ValidationContext.GetVisualValidity (visual);
 			

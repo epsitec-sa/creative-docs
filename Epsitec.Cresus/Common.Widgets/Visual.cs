@@ -1833,6 +1833,12 @@ namespace Epsitec.Common.Widgets
 			that.Visibility = (bool) value;
 		}
 
+		private static void NotifyValidationGroupsChanged(DependencyObject o, object oldValue, object newValue)
+		{
+			Visual that = o as Visual;
+			that.OnValidationGroupsChanged (new DependencyPropertyChangedEventArgs (Visual.ValidationGroupsProperty, oldValue, newValue));
+		}
+
 		private static void NotifyParentChanged(DependencyObject o, object oldValue, object newValue)
 		{
 			Visual that = o as Visual;
@@ -1896,10 +1902,17 @@ namespace Epsitec.Common.Widgets
 			Visual that = o as Visual;
 			that.OnActiveStateChanged ();
 		}
+
+		protected virtual void OnValidationGroupsChanged(Types.DependencyPropertyChangedEventArgs e)
+		{
+			//	TODO: should invalidate the validation contexts
+			//	TODO: should also listen to the IsEnabledChanged and update validation context
+		}
 		
 		protected virtual void OnParentChanged(Types.DependencyPropertyChangedEventArgs e)
 		{
 			Helpers.VisualTree.InvalidateCommandDispatcher (this);
+			//	TODO: should invalidate the validation contexts
 		}
 		
 		protected virtual void OnKeyboardFocusChanged(Types.DependencyPropertyChangedEventArgs e)
@@ -2092,7 +2105,7 @@ namespace Epsitec.Common.Widgets
 
 		public static readonly DependencyProperty IsValidProperty				= DependencyProperty.RegisterReadOnly ("IsValid", typeof (bool), typeof (Visual), new DependencyPropertyMetadata (Visual.GetIsValidValue));
 		public static readonly DependencyProperty ValidatorProperty				= DependencyProperty.RegisterReadOnly ("Validator", typeof (IValidator), typeof (Visual), new DependencyPropertyMetadata ());
-		public static readonly DependencyProperty ValidationGroupsProperty		= DependencyProperty.Register ("ValidationGroups", typeof (string), typeof (Visual), new DependencyPropertyMetadata ());
+		public static readonly DependencyProperty ValidationGroupsProperty		= DependencyProperty.Register ("ValidationGroups", typeof (string), typeof (Visual), new DependencyPropertyMetadata (Visual.NotifyValidationGroupsChanged));
 
 		public static readonly DependencyProperty SyncPaintProperty				= DependencyProperty.Register ("SyncPaint", typeof (bool), typeof (Visual), new DependencyPropertyMetadata (false));
 		public static readonly DependencyProperty AutoCaptureProperty			= DependencyProperty.Register ("AutoCapture", typeof (bool), typeof (Visual), new DependencyPropertyMetadata (true));

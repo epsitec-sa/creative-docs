@@ -4,6 +4,7 @@
 using Epsitec.Common.Support;
 using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Types;
+using Epsitec.Common.Widgets;
 
 using System.Collections.Generic;
 
@@ -28,6 +29,7 @@ namespace Epsitec.Common.Dialogs
 			this.mode = mode;
 			this.externalData = data;
 			this.internalData = this.CreateEntityProxy (this.externalData, null);
+			this.validationContext = new ValidationContext ();
 		}
 
 
@@ -60,6 +62,14 @@ namespace Epsitec.Common.Dialogs
 			get
 			{
 				return this.externalData;
+			}
+		}
+
+		public ValidationContext ValidationContext
+		{
+			get
+			{
+				return this.validationContext;
 			}
 		}
 
@@ -751,5 +761,6 @@ namespace Epsitec.Common.Dialogs
 		private readonly DialogDataMode			mode;
 		private readonly AbstractEntity			externalData;
 		private readonly AbstractEntity			internalData;
+		private readonly ValidationContext		validationContext;
 	}
 }
