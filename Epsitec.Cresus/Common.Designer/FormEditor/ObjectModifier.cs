@@ -471,7 +471,15 @@ namespace Epsitec.Common.Designer.FormEditor
 				int index = FormEngine.Arrange.IndexOfGuid(this.formEditor.Form.Fields, item.Guid);
 				if (index != -1)
 				{
-					icon = Misc.Image("Delete");
+					if (this.formEditor.Form.Fields[index].Type == FieldDescription.FieldType.Hide)
+					{
+						icon = Misc.Image("FormPatchHidden");
+					}
+
+					if (this.formEditor.Form.Fields[index].Type == FieldDescription.FieldType.Attach)
+					{
+						icon = Misc.Image("FormPatchMoved");
+					}
 				}
 			}
 
@@ -501,7 +509,10 @@ namespace Epsitec.Common.Designer.FormEditor
 				int index = FormEngine.Arrange.IndexOfGuid(this.formEditor.Form.Fields, item.Guid);
 				if (index != -1)
 				{
-					color = Color.FromAlphaRgb(0.3, 1, 0, 0);  // rouge = champ caché
+					if (this.formEditor.Form.Fields[index].Type == FieldDescription.FieldType.Hide)
+					{
+						color = Color.FromAlphaRgb(0.3, 1, 0, 0);  // rouge = champ caché
+					}
 				}
 			}
 

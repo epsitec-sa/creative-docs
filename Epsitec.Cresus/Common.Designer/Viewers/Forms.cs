@@ -620,6 +620,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.fieldsButtonNext.Enable = isNext;
 			this.fieldsButtonGoto.Enable = isGoto;
 
+			this.fieldsButtonRemove.IconName = isPatch ? Misc.Icon("FormPatchHide") : Misc.Icon("Delete");
 			this.fieldsButtonBox.IconName = isUnbox ? Misc.Icon("FormUnbox") : Misc.Icon("FormBox");
 		}
 
@@ -1026,7 +1027,7 @@ namespace Epsitec.Common.Designer.Viewers
 					}
 					else  // champ caché ?
 					{
-						this.form.Fields.RemoveAt(index);
+						this.form.Fields.RemoveAt(index);  // enlève l'élément Hide
 					}
 
 					guids.Add(item.Guid);
@@ -1274,6 +1275,38 @@ namespace Epsitec.Common.Designer.Viewers
 
 			if (this.formEditor.ObjectModifier.IsPatch)  // module de patch ?
 			{
+				foreach (int sel in sels)
+				{
+					FormEditor.ObjectModifier.TableItem item = this.formEditor.ObjectModifier.TableContent[sel];
+					int index = this.formEditor.ObjectModifier.GetFormDescriptionIndex(item.Guid);
+					if (index != -1)
+					{
+						int i = FormEngine.Arrange.IndexOfGuid(this.form.Fields, item.Guid);
+						if (i != -1)
+						{
+							this.form.Fields.RemoveAt(i);  // enlève l'élément Attach
+						}
+
+						System.Guid ag = System.Guid.Empty;
+						if (direction < 0)
+						{
+							//	System.Guid.Empty correspond à un déplacement en tête de liste.
+							if (index+direction-1 >= 0)
+							{
+								ag = this.formEditor.ObjectModifier.TableContent[index+direction-1].Guid;
+							}
+						}
+						else
+						{
+							ag = this.formEditor.ObjectModifier.TableContent[index+direction].Guid;
+						}
+
+						FieldDescription field = new FieldDescription(FieldDescription.FieldType.Attach);
+						field.Guid = item.Guid;
+						field.AttachGuid = ag;
+						this.form.Fields.Add(field);
+					}
+				}
 			}
 			else  // module normal ?
 			{

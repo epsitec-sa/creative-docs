@@ -52,15 +52,18 @@ namespace Epsitec.Common.FormEngine
 					int src = Arrange.IndexOfGuid(merged, field.Guid);  // cherche le champ à déplacer
 					if (src != -1)
 					{
+						//	field.AttachGuid vaut System.Guid.Empty lorsqu'il faut déplacer l'élément en tête
+						//	de liste. Par hazard, IndexOfGuid retourne -1 dans dst, ce qui correspond exactement
+						//	à la valeur requise !
 						int dst = Arrange.IndexOfGuid(merged, field.AttachGuid);  // cherche où le déplacer
-						if (dst != -1)
-						{
-							FieldDescription temp = merged[src];
-							merged.RemoveAt(src);
-							dst = Arrange.IndexOfGuid(merged, field.AttachGuid);  // recalcule le "où" après suppression
-							merged.Insert(dst, temp);
-							temp.Moved = true;
-						}
+
+						FieldDescription temp = merged[src];
+						merged.RemoveAt(src);
+
+						dst = Arrange.IndexOfGuid(merged, field.AttachGuid);  // recalcule le "où" après suppression
+						merged.Insert(dst+1, temp);  // remet l'élément après dst
+						
+						temp.Moved = true;
 					}
 				}
 			}
