@@ -8,10 +8,16 @@ using Epsitec.Common.Types;
 
 namespace Epsitec.Common.Widgets
 {
+	/// <summary>
+	/// The <c>CommandDispatcherChain</c> class represents a chain of
+	/// <see cref="CommandDispatcher"/>, which are visible from a given starting
+	/// point in the visual tree (for instance).
+	/// </summary>
 	public sealed class CommandDispatcherChain
 	{
 		public CommandDispatcherChain()
 		{
+			this.chain = new List<Weak<CommandDispatcher>> ();
 		}
 
 		/// <summary>
@@ -42,12 +48,12 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				System.WeakReference[] chain = this.chain.ToArray ();
+				Weak<CommandDispatcher>[] chain = this.chain.ToArray ();
 				bool enableForwarding = true;
 
 				for (int i = 0; i < chain.Length; i++)
 				{
-					CommandDispatcher dispatcher = chain[i].Target as CommandDispatcher;
+					CommandDispatcher dispatcher = chain[i].Target;
 
 					if (dispatcher == null)
 					{
@@ -72,14 +78,15 @@ namespace Epsitec.Common.Widgets
 		/// </summary>
 		/// <param name="command">The command.</param>
 		/// <param name="depth">The depth at which the dispatcher was found.</param>
-		/// <returns><c>true</c> if the command is known; <c>false</c> otherwise.</returns>
-		public bool Knows(Command command, out int depth)
+		/// <returns><c>true</c> if the chain contains a handler for the command;
+		/// <c>false</c> otherwise.</returns>
+		public bool Contains(Command command, out int depth)
 		{
 			depth = 0;
 			
 			foreach (CommandDispatcher dispatcher in this.Dispatchers)
 			{
-				if (dispatcher.Knows (command))
+				if (dispatcher.Contains (command))
 				{
 					return true;
 				}
@@ -91,12 +98,14 @@ namespace Epsitec.Common.Widgets
 		}
 
 		/// <summary>
-		/// Selects the best command in an enumeration. In this case, best means
-		/// the command which is topmost in the chain.
+		/// Gets the best command in an enumeration. In this case, best means
+		/// the command which is topmost in the chain. This is used by the
+		/// <see cref="WindowRoot"/> class to decide which command to map to a
+		/// multiply assigned keyboard shortcut, for instance.
 		/// </summary>
 		/// <param name="commands">The commands.</param>
 		/// <returns>The best command found or <c>null</c>.</returns>
-		public Command SelectBestCommand(IEnumerable<Command> commands)
+		public Command GetBestCommand(IEnumerable<Command> commands)
 		{
 			int     nearest  = int.MaxValue;
 			Command selected = null;
@@ -105,7 +114,7 @@ namespace Epsitec.Common.Widgets
 			{
 				int depth;
 				
-				if ((this.Knows (command, out depth)) &&
+				if ((this.Contains (command, out depth)) &&
 					(depth < nearest))
 				{
 					nearest  = depth;
@@ -115,8 +124,13 @@ namespace Epsitec.Common.Widgets
 			
 			return selected;
 		}
-		
 
+
+		/// <summary>
+		/// Builds the dispatcher chain starting from the specified visual.
+		/// </summary>
+		/// <param name="visual">The visual.</param>
+		/// <returns>The dispatcher chain or <c>null</c>.</returns>
 		public static CommandDispatcherChain BuildChain(Visual visual)
 		{
 			CommandDispatcherChain that = null;
@@ -127,6 +141,11 @@ namespace Epsitec.Common.Widgets
 			return that;
 		}
 
+		/// <summary>
+		/// Builds the dispatcher chain starting from the specified window.
+		/// </summary>
+		/// <param name="window">The window.</param>
+		/// <returns>The dispatcher chain or <c>null</c>.</returns>
 		public static CommandDispatcherChain BuildChain(Window window)
 		{
 			CommandDispatcherChain that = null;
@@ -136,6 +155,11 @@ namespace Epsitec.Common.Widgets
 			return that;
 		}
 
+		/// <summary>
+		/// Builds the dispatcher chain starting from the specified object.
+		/// </summary>
+		/// <param name="obj">The object.</param>
+		/// <returns>The dispatcher chain or <c>null</c>.</returns>
 		public static CommandDispatcherChain BuildChain(DependencyObject obj)
 		{
 			Visual visual = obj as Visual;
@@ -163,14 +187,16 @@ namespace Epsitec.Common.Widgets
 						that = new CommandDispatcherChain ();
 					}
 					
-					that.chain.Add (new System.WeakReference (dispatcher));
+					that.chain.Add (new Weak<CommandDispatcher> (dispatcher));
 				}
 			}
 			
 			return that;
 		}
 
-		public static void BuildChain(DependencyObject obj, ref CommandDispatcherChain that)
+		#region Private Methods
+
+		private static void BuildChain(DependencyObject obj, ref CommandDispatcherChain that)
 		{
 			Visual visual = obj as Visual;
 			Window window = obj as Window;
@@ -200,7 +226,7 @@ namespace Epsitec.Common.Widgets
 
 					if (CommandDispatcherChain.Contains (that.chain, dispatcher) == false)
 					{
-						that.chain.Add (new System.WeakReference (dispatcher));
+						that.chain.Add (new Weak<CommandDispatcher> (dispatcher));
 					}
 				}
 
@@ -230,7 +256,7 @@ namespace Epsitec.Common.Widgets
 
 					if (CommandDispatcherChain.Contains (that.chain, dispatcher) == false)
 					{
-						that.chain.Add (new System.WeakReference (dispatcher));
+						that.chain.Add (new Weak<CommandDispatcher> (dispatcher));
 					}
 				}
 
@@ -240,9 +266,9 @@ namespace Epsitec.Common.Widgets
 			//	TODO: ajouter ici la notion d'application/module/document
 		}
 
-		private static bool Contains(IEnumerable<System.WeakReference> chain, CommandDispatcher dispatcher)
+		private static bool Contains(IEnumerable<Weak<CommandDispatcher>> chain, CommandDispatcher dispatcher)
 		{
-			foreach (System.WeakReference item in chain)
+			foreach (Weak<CommandDispatcher> item in chain)
 			{
 				if (item.Target == dispatcher)
 				{
@@ -253,6 +279,8 @@ namespace Epsitec.Common.Widgets
 			return false;
 		}
 
-		List<System.WeakReference> chain = new List<System.WeakReference> ();
+		#endregion
+
+		readonly List<Weak<CommandDispatcher>>	chain;
 	}
 }

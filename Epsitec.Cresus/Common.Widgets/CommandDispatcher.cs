@@ -242,12 +242,12 @@ namespace Epsitec.Common.Widgets
 		}
 
 		/// <summary>
-		/// Checks if the dispatcher knows how to execute the specified command.
+		/// Checks if the dispatcher contains a handler for the specified command.
 		/// </summary>
 		/// <param name="command">The command.</param>
 		/// <returns><c>true</c> if the dispatcher knows how to execute the command;
 		/// otherwise, <c>false</c>.</returns>
-		public bool Knows(Command command)
+		public bool Contains(Command command)
 		{
 			if (this.eventHandlers.ContainsKey (command))
 			{
