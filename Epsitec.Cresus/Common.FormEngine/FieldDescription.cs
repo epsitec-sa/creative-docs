@@ -25,8 +25,8 @@ namespace Epsitec.Common.FormEngine
 			Title			= 21,	// séparateur titre automatique
 			BoxBegin		= 30,	// début d'une boîte
 			BoxEnd			= 31,	// fin d'une boîte
-			InsertionPoint	= 40,	// spécifie le point d'insertion, dans un module de patch
-			Hide			= 41,	// champ du module de référence à cacher, dans un module de patch
+			Hide			= 40,	// Guid du champ du module de référence à cacher, dans un module de patch
+			Attach			= 41,	// Guid du champ du module de référence à déplacer, dans un module de patch
 		}
 
 		[DesignerVisible]
@@ -67,6 +67,7 @@ namespace Epsitec.Common.FormEngine
 			this.boxFrameState = FrameState.None;
 			this.boxFrameWidth = 1;
 			this.hidden = false;
+			this.moved = false;
 		}
 
 		public FieldDescription(FieldType type) : this()
@@ -94,6 +95,7 @@ namespace Epsitec.Common.FormEngine
 			this.boxFrameState = model.boxFrameState;
 			this.boxFrameWidth = model.boxFrameWidth;
 			this.hidden = model.hidden;
+			this.moved = model.moved;
 		}
 
 		public FieldDescription(XmlReader reader) : this()
@@ -422,6 +424,32 @@ namespace Epsitec.Common.FormEngine
 			}
 		}
 
+		public bool Moved
+		{
+			//	Si on est dans un module de patch, indique un champ déplacé dans la liste finale.
+			get
+			{
+				return this.moved;
+			}
+			set
+			{
+				this.moved = value;
+			}
+		}
+
+		public System.Guid AttachGuid
+		{
+			//	Retourne l'identificateur unique après lequel est attaché un champ déplacé par un patch.
+			get
+			{
+				return this.attachGuid;
+			}
+			set
+			{
+				this.attachGuid = value;
+			}
+		}
+
 
 		#region IEquatable<FieldDescription> Members
 
@@ -466,7 +494,9 @@ namespace Epsitec.Common.FormEngine
 				a.boxPaddingType != b.boxPaddingType ||
 				a.boxFrameState != b.boxFrameState ||
 				a.boxFrameWidth != b.boxFrameWidth ||
-				a.hidden != b.hidden)
+				a.hidden != b.hidden ||
+				a.moved != b.moved ||
+				!a.attachGuid.Equals(b.attachGuid) )
 			{
 				return false;
 			}
@@ -533,6 +563,16 @@ namespace Epsitec.Common.FormEngine
 			if (this.hidden)
 			{
 				writer.WriteElementString(Xml.Hidden, this.hidden.ToString());
+			}
+
+			if (this.moved)
+			{
+				writer.WriteElementString(Xml.Moved, this.moved.ToString());
+			}
+
+			if (this.type == FieldType.Attach)
+			{
+				writer.WriteElementString(Xml.AttachGuid, this.attachGuid.ToString());
 			}
 
 			writer.WriteEndElement();
@@ -604,6 +644,14 @@ namespace Epsitec.Common.FormEngine
 						else if (name == Xml.Hidden)
 						{
 							this.hidden = bool.Parse(element);
+						}
+						else if (name == Xml.Moved)
+						{
+							this.moved = bool.Parse(element);
+						}
+						else if (name == Xml.AttachGuid)
+						{
+							this.attachGuid = new System.Guid(element);
 						}
 						else
 						{
@@ -692,5 +740,7 @@ namespace Epsitec.Common.FormEngine
 		private FrameState					boxFrameState;
 		private double						boxFrameWidth;
 		private bool						hidden;
+		private bool						moved;
+		private System.Guid					attachGuid;
 	}
 }

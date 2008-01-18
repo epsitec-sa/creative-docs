@@ -26,6 +26,8 @@ namespace Epsitec.Common.FormEngine
 			//	Retourne la liste fusionnée.
 			List<FieldDescription> merged = new List<FieldDescription>();
 
+			//	Génère la liste fusionnée de tous les champs. Les champs cachés sont quand même dans la liste,
+			//	mais avec la propriété Hidden = true.
 			foreach (FieldDescription field in reference)
 			{
 				FieldDescription copy = new FieldDescription(field);
@@ -42,6 +44,27 @@ namespace Epsitec.Common.FormEngine
 				merged.Add(copy);
 			}
 
+			//	Déplace les champs dans la liste fusionnée.
+			foreach (FieldDescription field in patch)
+			{
+				if (field.Type == FieldDescription.FieldType.Attach)  // champ à déplacer ?
+				{
+					int src = Arrange.IndexOfGuid(merged, field.Guid);  // cherche le champ à déplacer
+					if (src != -1)
+					{
+						int dst = Arrange.IndexOfGuid(merged, field.AttachGuid);  // cherche où le déplacer
+						if (dst != -1)
+						{
+							FieldDescription temp = merged[src];
+							merged.RemoveAt(src);
+							dst = Arrange.IndexOfGuid(merged, field.AttachGuid);  // recalcule le "où" après suppression
+							merged.Insert(dst, temp);
+							temp.Moved = true;
+						}
+					}
+				}
+			}
+
 			return merged;
 		}
 
@@ -54,14 +77,14 @@ namespace Epsitec.Common.FormEngine
 
 			foreach (FieldDescription field in list)
 			{
-				if (field.Type == FieldDescription.FieldType.InsertionPoint)
-				{
-					return "La liste ne doit pas contenir de InsertionPoint";
-				}
-
 				if (field.Type == FieldDescription.FieldType.Hide)
 				{
 					return "La liste ne doit pas contenir de Hide";
+				}
+
+				if (field.Type == FieldDescription.FieldType.Attach)
+				{
+					return "La liste ne doit pas contenir de Attach";
 				}
 
 				if (field.Type == FieldDescription.FieldType.Node)
@@ -253,10 +276,10 @@ namespace Epsitec.Common.FormEngine
 				{
 					this.Develop(dst, field.NodeDescription);
 				}
-				else if (field.Type == FieldDescription.FieldType.InsertionPoint)
+				else if (field.Type == FieldDescription.FieldType.Hide)
 				{
 				}
-				else if (field.Type == FieldDescription.FieldType.Hide)
+				else if (field.Type == FieldDescription.FieldType.Attach)
 				{
 				}
 				else

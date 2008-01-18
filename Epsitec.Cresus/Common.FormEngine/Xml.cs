@@ -18,5 +18,7 @@ namespace Epsitec.Common.FormEngine
 		public const string BoxFrameState		= "BFS";
 		public const string BoxFrameWidth		= "BFW";
 		public const string Hidden				= "HD";
+		public const string Moved				= "MV";
+		public const string AttachGuid			= "AG";
 	}
 }
