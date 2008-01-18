@@ -433,6 +433,17 @@ namespace Epsitec.Common.Designer.Viewers
 				return;
 			}
 
+			if (name == "FormFieldsClearPatch")
+			{
+				this.form.Fields.Clear();
+				this.SetForm(this.form, this.druidToSerialize, false);
+				this.UpdateFieldsTable(true);
+				this.ReflectSelectionToList();
+				this.UpdateFieldsButtons();
+				this.module.AccessForms.SetLocalDirty();
+				return;
+			}
+
 			this.formEditor.DoCommand(name);
 			base.DoCommand(name);
 		}
@@ -1493,6 +1504,26 @@ namespace Epsitec.Common.Designer.Viewers
 		#endregion
 
 
+		protected VMenu CreateFieldsMenu()
+		{
+			//	Crée le petit menu contextuel associé au bouton "v" de la liste des champs.
+			VMenu menu = new VMenu();
+
+			MenuItem item1 = new MenuItem("FormFieldsShowPrefix", Misc.GetMenuIconState(Forms.showPrefix), Res.Strings.Viewers.Forms.Menu.ShowPrefix, "", "FormFieldsShowPrefix");
+			menu.Items.Add(item1);
+
+			if (this.formEditor.ObjectModifier.IsPatch && !this.designerApplication.IsReadonly)
+			{
+				menu.Items.Add(new MenuSeparator());
+
+				MenuItem item2 = new MenuItem("FormFieldsClearPatch", Misc.Icon("Delete"), "Effacer tout le masque de patch", "", "FormFieldsClearPatch");
+				menu.Items.Add(item2);
+			}
+
+			return menu;
+		}
+
+
 		private void HandleSplitterDragged(object sender)
 		{
 			//	Un splitter a été bougé.
@@ -1584,16 +1615,6 @@ namespace Epsitec.Common.Designer.Viewers
 				TextFieldCombo.AdjustComboSize(button, menu, false);
 				menu.ShowAsComboList(button, Point.Zero, button);
 			}
-		}
-
-		protected VMenu CreateFieldsMenu()
-		{
-			VMenu menu = new VMenu();
-
-			MenuItem item = new MenuItem("FormFieldsShowPrefix", Misc.GetMenuIconState(Forms.showPrefix), Res.Strings.Viewers.Forms.Menu.ShowPrefix, "", "FormFieldsShowPrefix");
-			menu.Items.Add(item);
-
-			return menu;
 		}
 
 		private void HandleRelationsButtonClicked(object sender, MessageEventArgs e)
