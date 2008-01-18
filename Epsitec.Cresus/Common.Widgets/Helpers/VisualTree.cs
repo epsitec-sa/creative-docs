@@ -506,7 +506,7 @@ namespace Epsitec.Common.Widgets.Helpers
 
 			if (context != null)
 			{
-				context.UpdateCommandEnableBasedOnVisualValidity (this);
+				context.UpdateCommandEnableBasedOnVisualValidity (visual);
 			}
 		}
 
