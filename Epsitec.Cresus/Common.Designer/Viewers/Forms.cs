@@ -538,6 +538,7 @@ namespace Epsitec.Common.Designer.Viewers
 			if (newContent)
 			{
 				this.fieldsTable.FirstVisibleRow = 0;
+				this.fieldsTable.SelectedRows = new List<int>();  // désélectionne tout
 			}
 
 			this.fieldsTable.SetDynamicToolTips(0, !Forms.showPrefix);
