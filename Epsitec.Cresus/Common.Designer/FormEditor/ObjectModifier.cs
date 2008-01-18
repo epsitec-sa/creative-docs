@@ -406,6 +406,24 @@ namespace Epsitec.Common.Designer.FormEditor
 
 
 		#region TableContent
+		public int GetTableContentPatchInitialIndex(TableItem item)
+		{
+			//	Retourne l'index initial d'un champ dans la liste de référence d'un masque de patch.
+			if (this.referenceFields != null)
+			{
+				for (int i=0; i<this.referenceFields.Count; i++)
+				{
+					FieldDescription field = this.referenceFields[i];
+					if (field.Guid == item.Guid)
+					{
+						return i;
+					}
+				}
+			}
+
+			return -1;
+		}
+
 		public string GetTableContentDescription(TableItem item, bool isImage, bool isShowPrefix)
 		{
 			//	Retourne le texte permettant de décrire un TableItem dans une liste, avec un effet
@@ -546,13 +564,15 @@ namespace Epsitec.Common.Designer.FormEditor
 			if (this.IsPatch)
 			{
 				FormEngine.FormDescription refForm = this.formEditor.Module.AccessForms.GetForm(this.formEditor.Form.FormIdToPatch);
+				this.referenceFields = refForm.Fields;
 
 				FormEngine.Engine engine = new FormEngine.Engine(this.formEditor.Module.ResourceManager);
-				this.fields = engine.Arrange.Merge(refForm.Fields, this.formEditor.Form.Fields);
+				this.fields = engine.Arrange.Merge(this.referenceFields, this.formEditor.Form.Fields);
 			}
 			else
 			{
 				this.fields = this.formEditor.Form.Fields;
+				this.referenceFields = null;
 			}
 
 			this.tableContent.Clear();
@@ -1012,6 +1032,7 @@ namespace Epsitec.Common.Designer.FormEditor
 		protected Editor							formEditor;
 		protected Druid								entityId;
 		protected List<FieldDescription>			fields;
+		protected List<FieldDescription>			referenceFields;
 		protected List<TableItem>					tableContent;
 		protected List<RelationItem>				tableRelations;
 	}

@@ -1287,24 +1287,28 @@ namespace Epsitec.Common.Designer.Viewers
 							this.form.Fields.RemoveAt(i);  // enlève l'élément Attach
 						}
 
-						System.Guid ag = System.Guid.Empty;
-						if (direction < 0)
+						int ii = this.formEditor.ObjectModifier.GetTableContentPatchInitialIndex(item);
+						if (ii != index+direction)
 						{
-							//	System.Guid.Empty correspond à un déplacement en tête de liste.
-							if (index+direction-1 >= 0)
+							System.Guid ag = System.Guid.Empty;
+							if (direction < 0)
 							{
-								ag = this.formEditor.ObjectModifier.TableContent[index+direction-1].Guid;
+								//	System.Guid.Empty correspond à un déplacement en tête de liste.
+								if (index+direction-1 >= 0)
+								{
+									ag = this.formEditor.ObjectModifier.TableContent[index+direction-1].Guid;
+								}
 							}
-						}
-						else
-						{
-							ag = this.formEditor.ObjectModifier.TableContent[index+direction].Guid;
-						}
+							else
+							{
+								ag = this.formEditor.ObjectModifier.TableContent[index+direction].Guid;
+							}
 
-						FieldDescription field = new FieldDescription(FieldDescription.FieldType.Attach);
-						field.Guid = item.Guid;
-						field.AttachGuid = ag;
-						this.form.Fields.Add(field);
+							FieldDescription field = new FieldDescription(FieldDescription.FieldType.Attach);
+							field.Guid = item.Guid;
+							field.AttachGuid = ag;
+							this.form.Fields.Add(field);
+						}
 					}
 				}
 			}
