@@ -118,20 +118,6 @@ namespace Epsitec.Common.FormEngine
 			}
 		}
 
-		public int UniqueId
-		{
-			//	Identificateur unique, non sérialisé. Permet le lien avec les widgets (propriété Index) créés
-			//	par le moteur FormEgine.CreateForm().
-			get
-			{
-				return this.uniqueId;
-			}
-			set
-			{
-				this.uniqueId = value;
-			}
-		}
-
 		public FieldType Type
 		{
 			//	Retourne le type immuable de cet élément (déterminé lors de la création de l'objet).
@@ -726,7 +712,6 @@ namespace Epsitec.Common.FormEngine
 
 
 		private System.Guid					guid;
-		private int							uniqueId;
 		private FieldType					type;
 		private FieldDescription			source;
 		private List<FieldDescription>		nodeDescription;

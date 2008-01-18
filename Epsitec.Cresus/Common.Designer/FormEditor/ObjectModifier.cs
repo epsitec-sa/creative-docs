@@ -249,7 +249,7 @@ namespace Epsitec.Common.Designer.FormEditor
 			{
 				if (guid == field.Guid)
 				{
-					Widget obj = this.GetWidget(field.UniqueId);
+					Widget obj = this.GetWidget(this.formEditor.Panel, field.Guid);
 					if (obj != null)
 					{
 						return obj;
@@ -260,15 +260,9 @@ namespace Epsitec.Common.Designer.FormEditor
 			return null;
 		}
 
-		public Widget GetWidget(int uniqueId)
+		protected Widget GetWidget(Widget parent, System.Guid guid)
 		{
-			//	Cherche le widget correspondant à un identificateur unique.
-			return this.GetWidget(this.formEditor.Panel, uniqueId);
-		}
-
-		protected Widget GetWidget(Widget parent, int uniqueId)
-		{
-			if (parent.Index == uniqueId)
+			if (parent.Name == guid.ToString())
 			{
 				return parent;
 			}
@@ -276,7 +270,7 @@ namespace Epsitec.Common.Designer.FormEditor
 			Widget[] children = parent.Children.Widgets;
 			for (int i=0; i<children.Length; i++)
 			{
-				Widget widget = this.GetWidget(children[i], uniqueId);
+				Widget widget = this.GetWidget(children[i], guid);
 				if (widget != null)
 				{
 					return widget;
@@ -310,7 +304,6 @@ namespace Epsitec.Common.Designer.FormEditor
 		{
 			//	Retourne un champ d'après l'identificateur unique d'un widget.
 			int index = this.GetFormDescriptionIndex(obj);
-
 			if (index == -1)
 			{
 				return null;
@@ -324,22 +317,13 @@ namespace Epsitec.Common.Designer.FormEditor
 		public int GetFormDescriptionIndex(Widget obj)
 		{
 			//	Retourne l'index d'un champ d'après l'identificateur unique d'un widget.
-			int uniqueId = obj.Index;
-
-			if (uniqueId != -1)
+			if (string.IsNullOrEmpty(obj.Name))
 			{
-				for (int i=0; i<this.fields.Count; i++)
-				{
-					FieldDescription field = this.fields[i];
-
-					if (field.UniqueId == uniqueId)
-					{
-						return i;
-					}
-				}
+				return -1;
 			}
 
-			return -1;
+			System.Guid guid = new System.Guid(obj.Name);
+			return this.GetFormDescriptionIndex(guid);
 		}
 
 		public int GetFormDescriptionIndex(System.Guid guid)

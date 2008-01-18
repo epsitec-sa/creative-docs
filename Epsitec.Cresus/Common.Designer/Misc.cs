@@ -10,6 +10,36 @@ namespace Epsitec.Common.Designer
 	/// </summary>
 	public class Misc
 	{
+		static public bool IsValidGuid(string guid)
+		{
+			//	Retourne true si la chaîne correspond à un Guid valide.
+			//	TODO: faire mieux !
+			//	Le Guid doit contenir 32 chiffres et 4 tirets (xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx).
+			if (string.IsNullOrEmpty(guid))
+			{
+				return false;
+			}
+
+			if (guid.Length != 32+4)
+			{
+				return false;
+			}
+
+			string[] parts = guid.Split('-');
+			if (parts.Length != 5)
+			{
+				return false;
+			}
+
+			if (parts[0].Length != 8 || parts[1].Length != 4 || parts[2].Length != 4 || parts[3].Length != 4 || parts[4].Length != 12)
+			{
+				return false;
+			}
+
+			return true;
+		}
+
+
 		static public int DruidsPathLevel(string druidsPath)
 		{
 			//	Retourne le nombre de niveaux dans un chemin de Druids.

@@ -439,7 +439,7 @@ namespace Epsitec.Common.Designer.FormEditor
 			{
 				Widget widget = children[i];
 
-				if (widget.Index == -1)  // objet sans UniqueId ?
+				if (!Misc.IsValidGuid(widget.Name))  // objet sans Guid valide ?
 				{
 					continue;
 				}

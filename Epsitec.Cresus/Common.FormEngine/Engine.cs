@@ -188,19 +188,6 @@ namespace Epsitec.Common.FormEngine
 					isGlueAfter = true;
 				}
 
-				//	Assigne l'identificateur unique, qui ira dans la propriété Index des widgets.
-				//	La valeur -1 par défaut indique un widget non identifié.
-				if (field.Source == null)
-				{
-					field.UniqueId = i;
-				}
-				else
-				{
-					//	Un champ d'un sous-masque reçoit l'identificateur du SubForm qui l'a initié,
-					//	afin que sa sélection dans l'éditeur sélectionne le SubForm dans la liste.
-					field.UniqueId = field.Source.UniqueId;
-				}
-
 				if (field.Type == FieldDescription.FieldType.BoxBegin ||  // début de boîte ?
 					field.Type == FieldDescription.FieldType.SubForm)
 				{
@@ -309,13 +296,27 @@ namespace Epsitec.Common.FormEngine
 					isGlueAfter = true;
 				}
 
+				//	Assigne l'identificateur unique, qui ira dans la propriété Index des widgets.
+				//	La valeur -1 par défaut indique un widget non identifié.
+				System.Guid guid;
+				if (field.Source == null)
+				{
+					guid = field.Guid;
+				}
+				else
+				{
+					//	Un champ d'un sous-masque reçoit l'identificateur du SubForm qui l'a initié,
+					//	afin que sa sélection dans l'éditeur sélectionne le SubForm dans la liste.
+					guid = field.Source.Guid;
+				}
+
 				if (field.Type == FieldDescription.FieldType.BoxBegin ||  // début de boîte ?
 					field.Type == FieldDescription.FieldType.SubForm)
 				{
 					if (level == 0)
 					{
-						UI.Panel box = this.CreateBox(root, grid, field, labelsId, ref column, ref row, isGlueAfter);
-						this.CreateFormBox (box, entityId, fields, i+1);
+						UI.Panel box = this.CreateBox(root, grid, field, guid, labelsId, ref column, ref row, isGlueAfter);
+						this.CreateFormBox(box, entityId, fields, i+1);
 					}
 
 					level++;
@@ -333,14 +334,14 @@ namespace Epsitec.Common.FormEngine
 				{
 					if (level == 0)
 					{
-						this.CreateField(root, entityId, grid, field, labelsId, ref column, ref row, isGlueAfter);
+						this.CreateField(root, entityId, grid, field, guid, labelsId, ref column, ref row, isGlueAfter);
 					}
 				}
 				else if (field.Type == FieldDescription.FieldType.Glue)  // colle ?
 				{
 					if (level == 0)
 					{
-						this.CreateGlue(root, grid, field, labelsId, ref column, ref row, isGlueAfter);
+						this.CreateGlue(root, grid, field, guid, labelsId, ref column, ref row, isGlueAfter);
 					}
 				}
 				else if (field.Type == FieldDescription.FieldType.Title ||
@@ -349,7 +350,7 @@ namespace Epsitec.Common.FormEngine
 					if (level == 0)
 					{
 						FieldDescription next = Engine.SearchNextField(fields, i);  // cherche le prochain champ
-						this.CreateSeparator(root, grid, field, next, labelsId, ref column, ref row, isGlueAfter, ref lastTitle);
+						this.CreateSeparator(root, grid, field, guid, next, labelsId, ref column, ref row, isGlueAfter, ref lastTitle);
 					}
 				}
 			}
@@ -503,7 +504,7 @@ namespace Epsitec.Common.FormEngine
 		}
 
 
-		private UI.Panel CreateBox(UI.Panel root, Widgets.Layouts.GridLayoutEngine grid, FieldDescription field, List<int> labelsId, ref int column, ref int row, bool isGlueAfter)
+		private UI.Panel CreateBox(UI.Panel root, Widgets.Layouts.GridLayoutEngine grid, FieldDescription field, System.Guid guid, List<int> labelsId, ref int column, ref int row, bool isGlueAfter)
 		{
 			//	Crée les widgets pour une boîte dans la grille, lors de la deuxième passe.
 			UI.Panel box = new UI.Panel(root);
@@ -512,7 +513,7 @@ namespace Epsitec.Common.FormEngine
 			box.BackColor = FieldDescription.GetRealColor(field.BackColor);
 			box.DrawFrameState = field.BoxFrameState;
 			box.DrawFrameWidth = field.BoxFrameWidth;
-			box.Index = field.UniqueId;
+			box.Name = guid.ToString();
 			
 			grid.RowDefinitions.Add(new Widgets.Layouts.RowDefinition());
 
@@ -539,14 +540,14 @@ namespace Epsitec.Common.FormEngine
 			return box;
 		}
 
-		private void CreateField(UI.Panel root, Druid entityId, Widgets.Layouts.GridLayoutEngine grid, FieldDescription field, List<int> labelsId, ref int column, ref int row, bool isGlueAfter)
+		private void CreateField(UI.Panel root, Druid entityId, Widgets.Layouts.GridLayoutEngine grid, FieldDescription field, System.Guid guid, List<int> labelsId, ref int column, ref int row, bool isGlueAfter)
 		{
 			//	Crée les widgets pour un champ dans la grille, lors de la deuxième passe.
 			UI.Placeholder placeholder = new UI.Placeholder(root);
 			placeholder.SetBinding(UI.Placeholder.ValueProperty, new Binding(BindingMode.TwoWay, field.GetPath(UI.DataSource.DataName)));
 			placeholder.BackColor = FieldDescription.GetRealColor(field.BackColor);
 			placeholder.TabIndex = grid.RowDefinitions.Count;
-			placeholder.Index = field.UniqueId;
+			placeholder.Name = guid.ToString();
 
 			//	Détermine si le placeholder doit être utilisé pour saisir du texte ou pour
 			//	saisir un critère de recherche et le configure en conséquence.
@@ -597,7 +598,7 @@ namespace Epsitec.Common.FormEngine
 			}
 		}
 
-		private void CreateGlue(UI.Panel root, Widgets.Layouts.GridLayoutEngine grid, FieldDescription field, List<int> labelsId, ref int column, ref int row, bool isGlueAfter)
+		private void CreateGlue(UI.Panel root, Widgets.Layouts.GridLayoutEngine grid, FieldDescription field, System.Guid guid, List<int> labelsId, ref int column, ref int row, bool isGlueAfter)
 		{
 			//	Crée les widgets pour un collage dans la grille, lors de la deuxième passe.
 			int columnsRequired = field.ColumnsRequired;
@@ -606,7 +607,7 @@ namespace Epsitec.Common.FormEngine
 			{
 				FrameBox glue = new FrameBox(root);
 				glue.BackColor = FieldDescription.GetRealColor(field.BackColor);
-				glue.Index = field.UniqueId;
+				glue.Name = guid.ToString();
 
 				if (columnsRequired == 0)
 				{
@@ -632,7 +633,7 @@ namespace Epsitec.Common.FormEngine
 			column += columnsRequired;
 		}
 
-		private void CreateSeparator(UI.Panel root, Widgets.Layouts.GridLayoutEngine grid, FieldDescription field, FieldDescription nextField, List<int> labelsId, ref int column, ref int row, bool isGlueAfter, ref List<Druid> lastTitle)
+		private void CreateSeparator(UI.Panel root, Widgets.Layouts.GridLayoutEngine grid, FieldDescription field, System.Guid guid, FieldDescription nextField, List<int> labelsId, ref int column, ref int row, bool isGlueAfter, ref List<Druid> lastTitle)
 		{
 			//	Crée les widgets pour un séparateur dans la grille, lors de la deuxième passe.
 			FieldDescription.FieldType type = field.Type;
@@ -680,7 +681,7 @@ namespace Epsitec.Common.FormEngine
 					StaticText text = new StaticText(root);
 					text.Text = string.Concat("<font size=\"", size.ToString(System.Globalization.CultureInfo.InvariantCulture), "%\"><b>", builder.ToString(), "</b></font>");
 					text.PreferredHeight = size/100*16;
-					text.Index = field.UniqueId;
+					text.Name = guid.ToString();
 
 					int i = Engine.GetColumnIndex(labelsId, 0);
 					int j = Engine.GetColumnIndex(labelsId, labelsId.Count-1)+1;
@@ -703,7 +704,7 @@ namespace Epsitec.Common.FormEngine
 
 				Separator sep = new Separator(root);
 				sep.PreferredHeight = 1;
-				sep.Index = field.UniqueId;
+				sep.Name = guid.ToString();
 
 				int i = Engine.GetColumnIndex(labelsId, 0);
 				int j = Engine.GetColumnIndex(labelsId, labelsId.Count-1)+1;
