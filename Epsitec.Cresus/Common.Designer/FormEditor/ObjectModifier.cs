@@ -486,7 +486,7 @@ namespace Epsitec.Common.Designer.FormEditor
 
 			if (this.IsPatch)
 			{
-				int index = FormEngine.Arrange.IndexOfGuid(this.formEditor.Form.Fields, item.Guid);
+				int index = FormEngine.Arrange.IndexOfGuid(this.formEditor.Form.Fields, FieldDescription.FieldType.None, item.Guid);
 				if (index != -1)
 				{
 					if (this.formEditor.Form.Fields[index].Type == FieldDescription.FieldType.Hide)
@@ -524,13 +524,10 @@ namespace Epsitec.Common.Designer.FormEditor
 
 			if (this.IsPatch)
 			{
-				int index = FormEngine.Arrange.IndexOfGuid(this.formEditor.Form.Fields, item.Guid);
+				int index = FormEngine.Arrange.IndexOfGuid(this.formEditor.Form.Fields, FieldDescription.FieldType.Hide, item.Guid);
 				if (index != -1)
 				{
-					if (this.formEditor.Form.Fields[index].Type == FieldDescription.FieldType.Hide)
-					{
-						color = Color.FromAlphaRgb(0.3, 1, 0, 0);  // rouge = champ caché
-					}
+					color = Color.FromAlphaRgb(0.3, 1, 0, 0);  // rouge = champ caché
 				}
 			}
 

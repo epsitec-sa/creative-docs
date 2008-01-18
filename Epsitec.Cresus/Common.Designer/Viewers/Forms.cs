@@ -1018,7 +1018,7 @@ namespace Epsitec.Common.Designer.Viewers
 				{
 					FormEditor.ObjectModifier.TableItem item = this.formEditor.ObjectModifier.TableContent[sel];
 
-					int index = FormEngine.Arrange.IndexOfGuid(this.form.Fields, item.Guid);
+					int index = FormEngine.Arrange.IndexOfGuid(this.form.Fields, FieldDescription.FieldType.Hide, item.Guid);
 					if (index == -1)  // champ visible ?
 					{
 						FieldDescription field = new FieldDescription(FieldDescription.FieldType.Hide);
@@ -1281,7 +1281,7 @@ namespace Epsitec.Common.Designer.Viewers
 					int index = this.formEditor.ObjectModifier.GetFormDescriptionIndex(item.Guid);
 					if (index != -1)
 					{
-						int i = FormEngine.Arrange.IndexOfGuid(this.form.Fields, item.Guid);
+						int i = FormEngine.Arrange.IndexOfGuid(this.form.Fields, FieldDescription.FieldType.Attach, item.Guid);
 						if (i != -1)
 						{
 							this.form.Fields.RemoveAt(i);  // enlève l'élément Attach

@@ -32,13 +32,10 @@ namespace Epsitec.Common.FormEngine
 			{
 				FieldDescription copy = new FieldDescription(field);
 
-				int index = Arrange.IndexOfGuid(patch, field.Guid);
+				int index = Arrange.IndexOfGuid(patch, FieldDescription.FieldType.Hide, field.Guid);
 				if (index != -1)  // champ patché ?
 				{
-					if (patch[index].Type == FieldDescription.FieldType.Hide)  // champ à cacher ?
-					{
-						copy.Hidden = true;
-					}
+					copy.Hidden = true;  // champ à cacher
 				}
 
 				merged.Add(copy);
@@ -49,18 +46,18 @@ namespace Epsitec.Common.FormEngine
 			{
 				if (field.Type == FieldDescription.FieldType.Attach)  // champ à déplacer ?
 				{
-					int src = Arrange.IndexOfGuid(merged, field.Guid);  // cherche le champ à déplacer
+					int src = Arrange.IndexOfGuid(merged, FieldDescription.FieldType.None, field.Guid);  // cherche le champ à déplacer
 					if (src != -1)
 					{
 						//	field.AttachGuid vaut System.Guid.Empty lorsqu'il faut déplacer l'élément en tête
 						//	de liste. Par hazard, IndexOfGuid retourne -1 dans dst, ce qui correspond exactement
 						//	à la valeur requise !
-						int dst = Arrange.IndexOfGuid(merged, field.AttachGuid);  // cherche où le déplacer
+						int dst = Arrange.IndexOfGuid(merged, FieldDescription.FieldType.None, field.AttachGuid);  // cherche où le déplacer
 
 						FieldDescription temp = merged[src];
 						merged.RemoveAt(src);
 
-						dst = Arrange.IndexOfGuid(merged, field.AttachGuid);  // recalcule le "où" après suppression
+						dst = Arrange.IndexOfGuid(merged, FieldDescription.FieldType.None, field.AttachGuid);  // recalcule le "où" après suppression
 						merged.Insert(dst+1, temp);  // remet l'élément après dst
 						
 						temp.Moved = true;
@@ -293,15 +290,25 @@ namespace Epsitec.Common.FormEngine
 		}
 
 
-		static public int IndexOfGuid(List<FieldDescription> list, System.Guid guid)
+		static public int IndexOfGuid(List<FieldDescription> list, FieldDescription.FieldType type, System.Guid guid)
 		{
 			//	Retourne l'index de l'élément utilisant un Guid donné.
 			//	Retourne -1 s'il n'en existe aucun.
 			for (int i=0; i<list.Count; i++)
 			{
-				if (list[i].Guid == guid)
+				if (type == FieldDescription.FieldType.None)
 				{
-					return i;
+					if (list[i].Guid == guid)
+					{
+						return i;
+					}
+				}
+				else
+				{
+					if (list[i].Type == type && list[i].Guid == guid)
+					{
+						return i;
+					}
 				}
 			}
 
