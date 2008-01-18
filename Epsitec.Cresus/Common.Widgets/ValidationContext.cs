@@ -1,19 +1,34 @@
 //	Copyright © 2006-2008, EPSITEC SA, CH-1092 BELMONT, Switzerland
-//	Responsable: Pierre ARNAUD
-
-using System.Collections.Generic;
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Types;
 
+using System.Collections.Generic;
+
 namespace Epsitec.Common.Widgets
 {
-	public class ValidationContext : DependencyObject
+	/// <summary>
+	/// The <c>ValidationContext</c> class defines a validation context, which
+	/// maintains information about user interface value validity, on a group
+	/// basis. This is thightly bound to the <see cref="CommandContext"/>.
+	/// </summary>
+	public class ValidationContext : DependencyObject, System.IEquatable<ValidationContext>
 	{
+		/// <summary>
+		/// Initializes a new instance of the <see cref="ValidationContext"/> class.
+		/// </summary>
 		public ValidationContext()
 		{
 			this.uniqueId = System.Threading.Interlocked.Increment (ref ValidationContext.nextUniqueId);
+			this.records = new List<Record> ();
+			this.groupDisables = new Dictionary<string, int> ();
 		}
 
+
+		/// <summary>
+		/// Gets the unique id associated with this validation context.
+		/// </summary>
+		/// <value>The unique id.</value>
 		public long UniqueId
 		{
 			get
@@ -23,7 +38,9 @@ namespace Epsitec.Common.Widgets
 		}
 
 		/// <summary>
-		/// Updates the command enable based on the visual validity.
+		/// Updates the command enable based on the visual validity. This will
+		/// also store a tracking record about the visual state, if the visual
+		/// is not yet known by the validation context.
 		/// </summary>
 		/// <param name="visual">The visual.</param>
 		public void UpdateCommandEnableBasedOnVisualValidity(Visual visual)
@@ -64,12 +81,16 @@ namespace Epsitec.Common.Widgets
 				
 				if (enable == false)
 				{
-					this.DisableGroups (context, record.Groups);
+					this.DisableGroups (context, groups);
 				}
 
-				//	Insert the record at its position :
-				
-				this.records.Insert (~index, record);
+				//	Insert the record at its position (note -1 => 0, -2 => 1, etc.,
+				//	hence the bitwise not operator "~" below) :
+
+				if (!string.IsNullOrEmpty (groups))
+				{
+					this.records.Insert (~index, record);
+				}
 			}
 			else
 			{
@@ -91,19 +112,36 @@ namespace Epsitec.Common.Widgets
 					{
 						this.DisableGroups (context, newRecord.Groups);
 					}
+
+					//	If the visual has no validation groups associated with it,
+					//	we can safely remove the tracking record :
 					
-					this.records[index] = newRecord;
+					if (string.IsNullOrEmpty (groups))
+					{
+						this.records.RemoveAt (index);
+					}
+					else
+					{
+						this.records[index] = newRecord;
+					}
 				}
 			}
 		}
 
+		/// <summary>
+		/// Refreshes the validation information starting at the specified root
+		/// in the visual tree.
+		/// </summary>
+		/// <param name="root">The root of the visual tree.</param>
 		public void Refresh(Visual root)
 		{
-			List<Record> records = new List<Record> ();
+			List<Record>   records = new List<Record> ();
 			CommandContext context = Helpers.VisualTree.GetCommandContext (root);
 			
 			foreach (Visual child in root.GetAllChildren ())
 			{
+				System.Diagnostics.Debug.Assert (ValidationContext.GetContext (child) == null);
+
 				if ((child.HasValidator) &&
 					(child.HasValidationGroups))
 				{
@@ -117,6 +155,10 @@ namespace Epsitec.Common.Widgets
 
 			records.Sort ();
 
+			//	Walk the record list and check for outdated and new tracking records,
+			//	using the information to update the group disables in an efficient
+			//	way :
+			
 			List<Record> oldRecords = this.records;
 			List<Record> newRecords = records;
 			
@@ -154,7 +196,8 @@ namespace Epsitec.Common.Widgets
 				}
 				else if (newRecord.Visual < oldRecord.Visual)
 				{
-					//	There is a new record, not known to the command context.
+					//	There is a new record, not yet known to the command context.
+					//	Synchronize the disable information.
 
 					if (newRecord.Enable == false)
 					{
@@ -166,6 +209,7 @@ namespace Epsitec.Common.Widgets
 				else
 				{
 					//	There is an old record which effect must be undone.
+					//	Synchronize the disable information.
 
 					if (oldRecord.Enable == false)
 					{
@@ -175,8 +219,8 @@ namespace Epsitec.Common.Widgets
 					j++;
 				}
 			}
-			
-			while (i < newRecords.Count)
+
+			for (; i < newRecords.Count; i++)
 			{
 				Record newRecord = newRecords[i];
 
@@ -184,34 +228,71 @@ namespace Epsitec.Common.Widgets
 				{
 					this.DisableGroups (context, newRecord.Groups);
 				}
-
-				i++;
 			}
-			
-			while (j < oldRecords.Count)
+
+			for (; j < oldRecords.Count; j++)
 			{
-				Record oldRecord = oldRecords[i];
+				Record oldRecord = oldRecords[j];
 
 				if (oldRecord.Enable == false)
 				{
 					this.EnableGroups (context, oldRecord.Groups);
 				}
-
-				i++;
 			}
 
-			this.records = records;
+			this.records.Clear ();
+			this.records.AddRange (records);
 		}
 
-		private static bool GetVisualValidity(Visual visual)
+		/// <summary>
+		/// Gets the visual validity. A visual is also considered to be valid
+		/// if it is disabled; a disabled widget cannot break the validity, as
+		/// the user wouldn't have any means of fixing the problem
+		/// </summary>
+		/// <param name="visual">The visual.</param>
+		/// <returns><c>true</c> if the visual is valid; otherwise, <c>false</c>.</returns>
+		public static bool GetVisualValidity(Visual visual)
 		{
-			//	Return true if the visual is valid or disabled (a disabled widget
-			//	cannot break the validity, as the user wouldn't have any means of
-			//	fixing the problem).
-			
 			return visual.IsEnabled ? visual.IsValid : true;
 		}
 
+		#region IEquatable<ValidationContext> Members
+
+		public bool Equals(ValidationContext other)
+		{
+			if (other == null)
+			{
+				return false;
+			}
+			else
+			{
+				return this.uniqueId == other.uniqueId;
+			}
+		}
+
+		#endregion
+
+		public override int GetHashCode()
+		{
+			return this.uniqueId.GetHashCode ();
+		}
+
+		public override bool Equals(object obj)
+		{
+			return this.Equals (obj as ValidationContext);
+		}
+
+		public override string ToString()
+		{
+			return string.Format (System.Globalization.CultureInfo.InvariantCulture, "{0}", this.uniqueId);
+		}
+
+
+		/// <summary>
+		/// Enables the specified command groups.
+		/// </summary>
+		/// <param name="context">The command context.</param>
+		/// <param name="groups">The command groups.</param>
 		private void EnableGroups(CommandContext context, string groups)
 		{
 			int disables;
@@ -233,6 +314,11 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+		/// <summary>
+		/// Disables the specified command groups.
+		/// </summary>
+		/// <param name="context">The command context.</param>
+		/// <param name="groups">The command groups.</param>
 		private void DisableGroups(CommandContext context, string groups)
 		{
 			int disables;
@@ -262,7 +348,7 @@ namespace Epsitec.Common.Widgets
 				this.enable = enable;
 			}
 
-			public long Visual
+			public long							Visual
 			{
 				get
 				{
@@ -270,7 +356,7 @@ namespace Epsitec.Common.Widgets
 				}
 			}
 			
-			public bool Enable
+			public bool							Enable
 			{
 				get
 				{
@@ -278,7 +364,7 @@ namespace Epsitec.Common.Widgets
 				}
 			}
 			
-			public string Groups
+			public string						Groups
 			{
 				get
 				{
@@ -315,35 +401,47 @@ namespace Epsitec.Common.Widgets
 
 			#endregion
 
-			private long visual;
-			private string groups;
-			private bool enable;
+			private readonly long				visual;
+			private readonly string				groups;
+			private readonly bool				enable;
 		}
 		
 		#endregion
 
+		/// <summary>
+		/// Gets the validation context associated with an object.
+		/// </summary>
+		/// <param name="obj">The object.</param>
+		/// <returns>The <see cref="ValidationContext"/> or <c>null</c>.</returns>
 		public static ValidationContext GetContext(DependencyObject obj)
 		{
 			return (ValidationContext) obj.GetValue (ValidationContext.ContextProperty);
 		}
 
+		/// <summary>
+		/// Sets (or clears) the validation context associated with an object.
+		/// </summary>
+		/// <param name="obj">The object.</param>
+		/// <param name="context">The validation context.</param>
 		public static void SetContext(DependencyObject obj, ValidationContext context)
 		{
-			obj.SetValue (ValidationContext.ContextProperty, context);
-		}
-
-		public static void ClearContext(DependencyObject obj)
-		{
-			obj.ClearValue (ValidationContext.ContextProperty);
+			if (context == null)
+			{
+				obj.ClearValue (ValidationContext.ContextProperty);
+			}
+			else
+			{
+				obj.SetValue (ValidationContext.ContextProperty, context);
+			}
 		}
 
 
 		public static readonly DependencyProperty ContextProperty = DependencyProperty.RegisterAttached ("Context", typeof (ValidationContext), typeof (ValidationContext));
 
-		private static long nextUniqueId;
+		static long								nextUniqueId;
 		
-		private long uniqueId;
-		private List<Record> records = new List<Record> ();
-		private Dictionary<string, int> groupDisables = new Dictionary<string, int> ();
+		readonly long							uniqueId;
+		readonly List<Record>					records;
+		readonly Dictionary<string, int>		groupDisables;
 	}
 }

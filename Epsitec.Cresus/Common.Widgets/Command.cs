@@ -1,13 +1,14 @@
 //	Copyright © 2003-2008, EPSITEC SA, CH-1092 BELMONT, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
+
+using Epsitec.Common.Support;
+using Epsitec.Common.Types;
+using Epsitec.Common.Widgets;
+using Epsitec.Common.Widgets.Collections;
 
 using System.Collections.Generic;
 
-using Epsitec.Common.Widgets.Collections;
-using Epsitec.Common.Types;
-
-[assembly: Epsitec.Common.Types.DependencyClass (typeof (Epsitec.Common.Widgets.Command),
-	/**/										 Converter = typeof (Epsitec.Common.Widgets.Command.SerializationConverter))]
+[assembly: DependencyClass (typeof (Command), Converter = typeof (Command.SerializationConverter))]
 
 namespace Epsitec.Common.Widgets
 {
@@ -231,10 +232,7 @@ namespace Epsitec.Common.Widgets
 
 		public void ManuallyDefineCommand(string description, string icon, string group, bool statefull)
 		{
-			if (this.frozen)
-			{
-				throw new Exceptions.CommandLockedException (this.CommandId);
-			}
+			this.EnsureWriteable ();
 
 			this.caption.Description = description;
 			this.caption.Icon        = icon;
@@ -245,71 +243,41 @@ namespace Epsitec.Common.Widgets
 
 		public void DefineGroup(string value)
 		{
-			if (this.frozen)
-			{
-				throw new Exceptions.CommandLockedException (this.CommandId);
-			}
-			if (this.temporary == false)
-			{
-				throw new System.InvalidOperationException (string.Format ("Command {0} may not be modified", this.CommandId));
-			}
+			this.EnsureWriteable ();
+			this.EnsureTemporary ();
 
 			Command.SetGroup (this.caption, value);
 		}
 
 		public void DefineStatefull(bool value)
 		{
-			if (this.frozen)
-			{
-				throw new Exceptions.CommandLockedException (this.CommandId);
-			}
-			if (this.temporary == false)
-			{
-				throw new System.InvalidOperationException (string.Format ("Command {0} may not be modified", this.CommandId));
-			}
+			this.EnsureWriteable ();
+			this.EnsureTemporary ();
 
 			Command.SetStatefull (this.caption, value);
 		}
 
 		public void DefineCommandType(CommandType value)
 		{
-			if (this.frozen)
-			{
-				throw new Exceptions.CommandLockedException (this.CommandId);
-			}
-			if (this.temporary == false)
-			{
-				throw new System.InvalidOperationException (string.Format ("Command {0} may not be modified", this.CommandId));
-			}
+			this.EnsureWriteable ();
+			this.EnsureTemporary ();
 
 			Command.SetCommandType (this.caption, value);
 		}
 
 		public void DefineDefaultParameter(string value)
 		{
-			if (this.frozen)
-			{
-				throw new Exceptions.CommandLockedException (this.CommandId);
-			}
-			if (this.temporary == false)
-			{
-				throw new System.InvalidOperationException (string.Format ("Command {0} may not be modified", this.CommandId));
-			}
+			this.EnsureWriteable ();
+			this.EnsureTemporary ();
 
 			Command.SetDefaultParameter (this.caption, value);
 		}
 
 		public void DefineShortcuts(Collections.ShortcutCollection value)
 		{
-			if (this.frozen)
-			{
-				throw new Exceptions.CommandLockedException (this.CommandId);
-			}
-			if (this.temporary == false)
-			{
-				throw new System.InvalidOperationException (string.Format ("Command {0} may not be modified", this.CommandId));
-			}
-
+			this.EnsureWriteable ();
+			this.EnsureTemporary ();
+			
 			Collections.ShortcutCollection shortcuts = Shortcut.GetShortcuts (this.caption);
 
 			shortcuts.Clear ();
@@ -323,15 +291,9 @@ namespace Epsitec.Common.Widgets
 
 		public void DefineMultiCommands(Collections.CommandCollection value)
 		{
-			if (this.frozen)
-			{
-				throw new Exceptions.CommandLockedException (this.CommandId);
-			}
-			if (this.temporary == false)
-			{
-				throw new System.InvalidOperationException (string.Format ("Command {0} may not be modified", this.CommandId));
-			}
-
+			this.EnsureWriteable ();
+			this.EnsureTemporary ();
+			
 			Collections.CommandCollection commands = MultiCommand.GetCommands (this.caption);
 
 			commands.Clear ();
@@ -752,6 +714,22 @@ namespace Epsitec.Common.Widgets
 			this.stateObjectType = type;
 		}
 
+		private void EnsureWriteable()
+		{
+			if (this.frozen)
+			{
+				throw new Exceptions.CommandLockedException (this.CommandId);
+			}
+		}
+
+		private void EnsureTemporary()
+		{
+			if (this.temporary == false)
+			{
+				throw new System.InvalidOperationException (string.Format ("Command {0} may not be modified", this.CommandId));
+			}
+		}
+
 		public static string[] SplitGroupNames(string groups)
 		{
 			if (string.IsNullOrEmpty (groups))
@@ -857,7 +835,7 @@ namespace Epsitec.Common.Widgets
 		private bool							temporary;
 		
 		private string							commandId;
-		private Support.Druid					captionId;
-		private Types.Caption					caption;
+		private Druid							captionId;
+		private Caption							caption;
 	}
 }

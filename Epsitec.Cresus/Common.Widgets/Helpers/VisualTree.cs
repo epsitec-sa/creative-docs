@@ -500,6 +500,16 @@ namespace Epsitec.Common.Widgets.Helpers
 			}
 		}
 
+		public static void UpdateCommandEnable(Visual visual)
+		{
+			ValidationContext context = VisualTree.GetValidationContext (visual);
+
+			if (context != null)
+			{
+				context.UpdateCommandEnableBasedOnVisualValidity (this);
+			}
+		}
+
 		public static Application GetApplication(Window window)
 		{
 			while (window != null)

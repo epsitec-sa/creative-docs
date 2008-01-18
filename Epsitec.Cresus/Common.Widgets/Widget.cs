@@ -946,12 +946,7 @@ namespace Epsitec.Common.Widgets
 				
 				if (this.HasValidationGroups)
 				{
-					ValidationContext context = Helpers.VisualTree.GetValidationContext (this);
-
-					if (context != null)
-					{
-						context.UpdateCommandEnableBasedOnVisualValidity (this);
-					}
+					Helpers.VisualTree.UpdateCommandEnable (this);
 				}
 			}
 		}
