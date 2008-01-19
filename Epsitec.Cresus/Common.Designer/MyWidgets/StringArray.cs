@@ -89,7 +89,14 @@ namespace Epsitec.Common.Designer.MyWidgets
 		public void SetColumnsRelativeWidth(int column, double width)
 		{
 			//	Modifie la largeur relative d'une colonne.
-			this.columns[column].RelativeWidth = width;
+			if (this.columns[column].RelativeWidth != width)
+			{
+				this.columns[column].RelativeWidth = width;
+
+				this.UpdateClientGeometry();
+				this.Invalidate();
+				this.OnColumnsWidthChanged();
+			}
 		}
 
 		public double GetColumnsRelativeWidth(int column)

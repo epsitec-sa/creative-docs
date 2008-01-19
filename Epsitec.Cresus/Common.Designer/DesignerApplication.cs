@@ -813,6 +813,8 @@ namespace Epsitec.Common.Designer
 		[Command("TabIndexLast")]
 		[Command("TabIndexRenum")]
 		[Command("FormFieldsShowPrefix")]
+		[Command("FormFieldsShowColumn1")]
+		[Command("FormFieldsShowColumn2")]
 		[Command("FormFieldsClearPatch")]
 		void CommandCommand(CommandDispatcher dispatcher, CommandEventArgs e)
 		{

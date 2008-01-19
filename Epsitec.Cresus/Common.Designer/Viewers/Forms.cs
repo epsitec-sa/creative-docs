@@ -166,9 +166,6 @@ namespace Epsitec.Common.Designer.Viewers
 
 			this.fieldsTable = new MyWidgets.StringArray(top);
 			this.fieldsTable.Columns = 3;
-			this.fieldsTable.SetColumnsRelativeWidth(0, 0.80);
-			this.fieldsTable.SetColumnsRelativeWidth(1, 0.10);
-			this.fieldsTable.SetColumnsRelativeWidth(2, 0.10);
 			this.fieldsTable.SetColumnAlignment(0, ContentAlignment.MiddleLeft);
 			this.fieldsTable.SetColumnAlignment(1, ContentAlignment.MiddleCenter);
 			this.fieldsTable.SetColumnAlignment(2, ContentAlignment.MiddleCenter);
@@ -179,6 +176,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.fieldsTable.CellCountChanged += new EventHandler(this.HandleFieldTableCellCountChanged);
 			this.fieldsTable.CellsContentChanged += new EventHandler(this.HandleFieldTableCellsContentChanged);
 			this.fieldsTable.SelectedRowChanged += new EventHandler(this.HandleFieldTableSelectedRowChanged);
+			this.UpdateFieldsTableColumns();
 
 			//	Crée l'onglet 'relations'.
 			this.tabPageRelations = new TabPage();
@@ -433,6 +431,20 @@ namespace Epsitec.Common.Designer.Viewers
 				return;
 			}
 
+			if (name == "FormFieldsShowColumn1")
+			{
+				Forms.showColumn1 = !Forms.showColumn1;
+				this.UpdateFieldsTableColumns();
+				return;
+			}
+
+			if (name == "FormFieldsShowColumn2")
+			{
+				Forms.showColumn2 = !Forms.showColumn2;
+				this.UpdateFieldsTableColumns();
+				return;
+			}
+
 			if (name == "FormFieldsClearPatch")
 			{
 				this.form.Fields.Clear();
@@ -487,6 +499,17 @@ namespace Epsitec.Common.Designer.Viewers
 			this.UpdateRelationsTable(true);
 			this.UpdateRelationsButtons();
 			this.ignoreChange = iic;
+		}
+
+		protected void UpdateFieldsTableColumns()
+		{
+			//	Met à jour la largeur des colonnes de la table des champs.
+			double w1 = Forms.showColumn1 ? 0.10 : 0.00;
+			double w2 = Forms.showColumn2 ? 0.10 : 0.00;
+
+			this.fieldsTable.SetColumnsRelativeWidth(0, 1.00-w1-w2);
+			this.fieldsTable.SetColumnsRelativeWidth(1, w1);
+			this.fieldsTable.SetColumnsRelativeWidth(2, w2);
 		}
 
 		protected void UpdateFieldsTable(bool newContent)
@@ -1508,16 +1531,23 @@ namespace Epsitec.Common.Designer.Viewers
 		{
 			//	Crée le petit menu contextuel associé au bouton "v" de la liste des champs.
 			VMenu menu = new VMenu();
+			MenuItem item;
 
-			MenuItem item1 = new MenuItem("FormFieldsShowPrefix", Misc.GetMenuIconState(Forms.showPrefix), Res.Strings.Viewers.Forms.Menu.ShowPrefix, "", "FormFieldsShowPrefix");
-			menu.Items.Add(item1);
+			item = new MenuItem("FormFieldsShowPrefix", Misc.GetMenuIconState(Forms.showPrefix), Res.Strings.Viewers.Forms.Menu.ShowPrefix, "", "FormFieldsShowPrefix");
+			menu.Items.Add(item);
+
+			item = new MenuItem("FormFieldsShowColumn1", Misc.GetMenuIconState(Forms.showColumn1), "Afficher la deuxième colonne", "", "FormFieldsShowColumn1");
+			menu.Items.Add(item);
+
+			item = new MenuItem("FormFieldsShowColumn2", Misc.GetMenuIconState(Forms.showColumn2), "Afficher la troisième colonne", "", "FormFieldsShowColumn2");
+			menu.Items.Add(item);
 
 			if (this.formEditor.ObjectModifier.IsPatch && !this.designerApplication.IsReadonly)
 			{
 				menu.Items.Add(new MenuSeparator());
 
-				MenuItem item2 = new MenuItem("FormFieldsClearPatch", Misc.Icon("Delete"), "Effacer tout le masque de patch", "", "FormFieldsClearPatch");
-				menu.Items.Add(item2);
+				item = new MenuItem("FormFieldsClearPatch", Misc.Icon("Delete"), "Effacer tout le masque de patch", "", "FormFieldsClearPatch");
+				menu.Items.Add(item);
 			}
 
 			return menu;
@@ -1720,6 +1750,8 @@ namespace Epsitec.Common.Designer.Viewers
 		protected static string					softSerialize = null;
 		protected static bool					softDirtySerialization = false;
 		protected static bool					showPrefix = false;
+		protected static bool					showColumn1 = true;
+		protected static bool					showColumn2 = true;
 
 		protected FormEditor.ProxyManager		proxyManager;
 		protected VSplitter						splitter2;
