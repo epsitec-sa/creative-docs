@@ -19,9 +19,7 @@ namespace Epsitec.Common.Designer
 				return false;
 			}
 
-			System.Text.RegularExpressions.Regex r = new System.Text.RegularExpressions.Regex("[0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f]-[0-9a-f][0-9a-f][0-9a-f][0-9a-f]-[0-9a-f][0-9a-f][0-9a-f][0-9a-f]-[0-9a-f][0-9a-f][0-9a-f][0-9a-f]-[0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f]");
-			System.Text.RegularExpressions.Match m = r.Match(guid);
-			return m.Success;
+			return Misc.guidRegex.IsMatch(guid);
 		}
 
 
@@ -917,5 +915,7 @@ namespace Epsitec.Common.Designer
 			a = b;
 			b = t;
 		}
+
+		static readonly System.Text.RegularExpressions.Regex guidRegex = new System.Text.RegularExpressions.Regex ("^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{8}$", System.Text.RegularExpressions.RegexOptions.IgnoreCase | System.Text.RegularExpressions.RegexOptions.Compiled);
 	}
 }
