@@ -486,28 +486,19 @@ namespace Epsitec.Common.Designer.FormEditor
 
 			if (this.IsPatch)
 			{
-				//	Si les deux icônes Hidden et Moved devraient être visible, donne la priorité à Moved,
-				//	puisque le fond rouge donne de toute façon l'indication "Hidden".
-				int index = FormEngine.Arrange.IndexOfGuid(this.formEditor.Form.Fields, FieldDescription.FieldType.PatchInsert, item.Guid);
-				if (index == -1)
+				if (FormEngine.Arrange.IndexOfGuid(this.formEditor.Form.Fields, FieldDescription.FieldType.PatchHide, item.Guid) != -1)
 				{
-					index = FormEngine.Arrange.IndexOfGuid(this.formEditor.Form.Fields, FieldDescription.FieldType.PatchAttach, item.Guid);
-					if (index == -1)
-					{
-						index = FormEngine.Arrange.IndexOfGuid(this.formEditor.Form.Fields, FieldDescription.FieldType.PatchHide, item.Guid);
-						if (index != -1)
-						{
-							icon = Misc.Image("FormPatchHidden");
-						}
-					}
-					else
-					{
-						icon = Misc.Image("FormPatchMoved");
-					}
+					icon = Misc.Image("FormPatchHidden");  // peu prioritaire à cause du fond rouge
 				}
-				else
+
+				if (FormEngine.Arrange.IndexOfGuid(this.formEditor.Form.Fields, FieldDescription.FieldType.PatchInsert, item.Guid) != -1)
 				{
-					icon = Misc.Image("FormPatchInserted");
+					icon = Misc.Image("FormPatchInserted");  // peu prioritaire à cause du fond vert
+				}
+
+				if (FormEngine.Arrange.IndexOfGuid(this.formEditor.Form.Fields, FieldDescription.FieldType.PatchAttach, item.Guid) != -1)
+				{
+					icon = Misc.Image("FormPatchMoved");  // prioritaire, car pas de fond coloré
 				}
 			}
 
@@ -538,6 +529,12 @@ namespace Epsitec.Common.Designer.FormEditor
 				if (index != -1)
 				{
 					color = Color.FromAlphaRgb(0.3, 1, 0, 0);  // rouge = champ caché
+				}
+
+				index = FormEngine.Arrange.IndexOfGuid(this.formEditor.Form.Fields, FieldDescription.FieldType.PatchInsert, item.Guid);
+				if (index != -1)
+				{
+					color = Color.FromAlphaRgb(0.3, 0, 1, 0);  // vert = champ inséré
 				}
 			}
 
