@@ -281,8 +281,18 @@ namespace Epsitec.Common.Designer.FormEditor
 		}
 
 
+		public int GetFormCount
+		{
+			//	Retourne le nombre de champs.
+			get
+			{
+				return this.fields.Count;
+			}
+		}
+
 		public FieldDescription GetFormDescription(TableItem item)
 		{
+			//	Retourne un champ d'après son TableItem.
 			int index = this.GetFormDescriptionIndex(item.Guid);
 
 			if (index == -1)

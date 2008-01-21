@@ -1466,7 +1466,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.UpdateFieldsTable(false);
 
 			List<int> sels = new List<int>();
-			sels.Add(this.form.Fields.Count-1);
+			sels.Add(this.formEditor.ObjectModifier.GetFormCount-1);
 			this.fieldsTable.SelectedRows = sels;
 			this.ReflectSelectionToEditor();
 

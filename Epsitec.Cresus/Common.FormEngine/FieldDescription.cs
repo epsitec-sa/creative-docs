@@ -266,7 +266,7 @@ namespace Epsitec.Common.FormEngine
 			//	Retourne le chemin permettant d'accéder au champ.
 			//	Par exemple, si prefix = "Data": retourne "Data.[630B2].[630S2]"
 			//	Par exemple, si prefix = null:   retourne "[630B2].[630S2]"
-			if (this.type == FieldType.Field || this.type == FieldType.SubForm)
+			if (this.type == FieldType.Field || this.type == FieldType.SubForm || this.type == FieldType.PatchInsert)
 			{
 				System.Text.StringBuilder builder = new System.Text.StringBuilder();
 
