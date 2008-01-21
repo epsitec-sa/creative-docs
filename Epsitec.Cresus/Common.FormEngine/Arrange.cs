@@ -76,6 +76,7 @@ namespace Epsitec.Common.FormEngine
 					int dst = Arrange.IndexOfGuid(merged, FieldDescription.FieldType.None, field.PatchAttachGuid);  // cherche où l'insérer
 
 					FieldDescription copy = new FieldDescription(field);
+					copy.ChangeTypePatchInsertToField();
 					copy.PatchInserted = true;
 					merged.Insert(dst+1, copy);  // insère l'élément après dst
 				}

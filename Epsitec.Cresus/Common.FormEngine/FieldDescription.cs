@@ -130,6 +130,13 @@ namespace Epsitec.Common.FormEngine
 			}
 		}
 
+		public void ChangeTypePatchInsertToField()
+		{
+			//	Change le type de FieldType.PatchInsert en FieldType.Field.
+			System.Diagnostics.Debug.Assert(this.type == FieldType.PatchInsert);
+			this.type = FieldType.Field;
+		}
+
 		public FieldDescription Source
 		{
 			//	Descripteur source, non sérialisé. Est utilisé pour les champs en provenance d'un sous-masque.
@@ -242,7 +249,7 @@ namespace Epsitec.Common.FormEngine
 			}
 			else
 			{
-				System.Diagnostics.Debug.Assert(this.type == FieldType.Field || this.type == FieldType.SubForm);
+				System.Diagnostics.Debug.Assert(this.type == FieldType.Field || this.type == FieldType.SubForm || this.type == FieldType.PatchInsert);
 
 				this.fieldIds = new List<Druid>();
 				string[] druids = druidsPath.Split('.');

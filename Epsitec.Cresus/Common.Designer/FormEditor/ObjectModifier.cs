@@ -488,18 +488,26 @@ namespace Epsitec.Common.Designer.FormEditor
 			{
 				//	Si les deux icônes Hidden et Moved devraient être visible, donne la priorité à Moved,
 				//	puisque le fond rouge donne de toute façon l'indication "Hidden".
-				int index = FormEngine.Arrange.IndexOfGuid(this.formEditor.Form.Fields, FieldDescription.FieldType.PatchAttach, item.Guid);
+				int index = FormEngine.Arrange.IndexOfGuid(this.formEditor.Form.Fields, FieldDescription.FieldType.PatchInsert, item.Guid);
 				if (index == -1)
 				{
-					index = FormEngine.Arrange.IndexOfGuid(this.formEditor.Form.Fields, FieldDescription.FieldType.PatchHide, item.Guid);
-					if (index != -1)
+					index = FormEngine.Arrange.IndexOfGuid(this.formEditor.Form.Fields, FieldDescription.FieldType.PatchAttach, item.Guid);
+					if (index == -1)
 					{
-						icon = Misc.Image("FormPatchHidden");
+						index = FormEngine.Arrange.IndexOfGuid(this.formEditor.Form.Fields, FieldDescription.FieldType.PatchHide, item.Guid);
+						if (index != -1)
+						{
+							icon = Misc.Image("FormPatchHidden");
+						}
+					}
+					else
+					{
+						icon = Misc.Image("FormPatchMoved");
 					}
 				}
 				else
 				{
-					icon = Misc.Image("FormPatchMoved");
+					icon = Misc.Image("ActiveYes");
 				}
 			}
 

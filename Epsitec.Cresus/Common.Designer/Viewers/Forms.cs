@@ -723,9 +723,7 @@ namespace Epsitec.Common.Designer.Viewers
 			//	Met à jour les boutons dans l'onglet des relations.
 			int sel = this.relationsTable.SelectedRow;
 
-			bool isPatch = this.formEditor.ObjectModifier.IsPatch;
-
-			this.relationsButtonUse.Enable = this.formEditor.ObjectModifier.IsTableRelationUseable(sel) && !isPatch;
+			this.relationsButtonUse.Enable = this.formEditor.ObjectModifier.IsTableRelationUseable(sel);
 			this.relationsButtonExpand.Enable = this.formEditor.ObjectModifier.IsTableRelationExpandable(sel);
 			this.relationsButtonCompact.Enable = this.formEditor.ObjectModifier.IsTableRelationCompactable(sel);
 
@@ -1403,28 +1401,41 @@ namespace Epsitec.Common.Designer.Viewers
 			FormEditor.ObjectModifier.RelationItem item = this.formEditor.ObjectModifier.TableRelations[sel];
 			FieldDescription field;
 
-			if (item.Relation == FieldRelation.None)  // champ normal ?
+			if (this.formEditor.ObjectModifier.IsPatch)  // module de patch ?
 			{
-				field = new FieldDescription(FieldDescription.FieldType.Field);
+				FormEditor.ObjectModifier.TableItem ti = this.formEditor.ObjectModifier.TableContent[this.fieldsTable.TotalRows-1];
+					
+				field = new FieldDescription(FieldDescription.FieldType.PatchInsert);
 				field.SetFields(item.DruidsPath);
+				field.PatchInserted = true;
+				field.PatchAttachGuid = ti.Guid;
+				this.form.Fields.Add(field);
 			}
-			else  // relation ?
+			else  // module normal ?
 			{
-				Druid formId = this.module.AccessForms.FormSearch(item.typeId);
-
-				if (formId.IsEmpty)
+				if (item.Relation == FieldRelation.None)  // champ normal ?
 				{
-					this.designerApplication.DialogError("Il n'existe aucun masque pour cette relation.");
-					return;
+					field = new FieldDescription(FieldDescription.FieldType.Field);
+					field.SetFields(item.DruidsPath);
+				}
+				else  // relation ?
+				{
+					Druid formId = this.module.AccessForms.FormSearch(item.typeId);
+
+					if (formId.IsEmpty)
+					{
+						this.designerApplication.DialogError("Il n'existe aucun masque pour cette relation.");
+						return;
+					}
+
+					field = new FieldDescription(FieldDescription.FieldType.SubForm);
+					field.BoxFrameState = FrameState.All;
+					field.SetFields(item.DruidsPath);
+					field.SubFormId = formId;
 				}
 
-				field = new FieldDescription(FieldDescription.FieldType.SubForm);
-				field.BoxFrameState = FrameState.All;
-				field.SetFields(item.DruidsPath);
-				field.SubFormId = formId;
+				this.form.Fields.Add(field);
 			}
-
-			this.form.Fields.Add(field);
 
 			this.SetForm(this.form, this.druidToSerialize, true);
 			this.UpdateFieldsTable(false);
