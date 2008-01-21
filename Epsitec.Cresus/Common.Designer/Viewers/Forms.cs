@@ -1319,36 +1319,53 @@ namespace Epsitec.Common.Designer.Viewers
 				foreach (int sel in sels)
 				{
 					FormEditor.ObjectModifier.TableItem item = this.formEditor.ObjectModifier.TableContent[sel];
+
 					int index = this.formEditor.ObjectModifier.GetFormDescriptionIndex(item.Guid);
+					FieldDescription field = this.formEditor.ObjectModifier.GetFormDescription(item);
+					
 					if (index != -1)
 					{
-						int i = FormEngine.Arrange.IndexOfGuid(this.form.Fields, FieldDescription.FieldType.PatchAttach, item.Guid);
-						if (i != -1)
+						//	Calcule le Guid *après* lequel sera attaché l'élément déplacé.
+						System.Guid ag = System.Guid.Empty;
+						if (direction < 0)
 						{
-							this.form.Fields.RemoveAt(i);  // enlève l'élément Attach
+							//	System.Guid.Empty correspond à un déplacement en tête de liste.
+							if (index+direction-1 >= 0)
+							{
+								ag = this.formEditor.ObjectModifier.TableContent[index+direction-1].Guid;
+							}
+						}
+						else
+						{
+							ag = this.formEditor.ObjectModifier.TableContent[index+direction].Guid;
 						}
 
-						int ii = this.formEditor.ObjectModifier.GetTableContentPatchInitialIndex(item);
-						if (ii != index+direction)
+						if (field.PatchInserted)
 						{
-							System.Guid ag = System.Guid.Empty;
-							if (direction < 0)
+							//	Déplace l'élément PatchInsert.
+							int i = FormEngine.Arrange.IndexOfGuid(this.form.Fields, FieldDescription.FieldType.PatchInsert, item.Guid);
+							if (i != -1)
 							{
-								//	System.Guid.Empty correspond à un déplacement en tête de liste.
-								if (index+direction-1 >= 0)
-								{
-									ag = this.formEditor.ObjectModifier.TableContent[index+direction-1].Guid;
-								}
+								this.form.Fields[i].PatchAttachGuid = ag;
 							}
-							else
+						}
+						else
+						{
+							//	Déplace l'élément PatchAttach.
+							int i = FormEngine.Arrange.IndexOfGuid(this.form.Fields, FieldDescription.FieldType.PatchAttach, item.Guid);
+							if (i != -1)
 							{
-								ag = this.formEditor.ObjectModifier.TableContent[index+direction].Guid;
+								this.form.Fields.RemoveAt(i);  // enlève l'élément PatchAttach
 							}
 
-							FieldDescription field = new FieldDescription(FieldDescription.FieldType.PatchAttach);
-							field.Guid = item.Guid;
-							field.PatchAttachGuid = ag;
-							this.form.Fields.Add(field);
+							int ii = this.formEditor.ObjectModifier.GetTableContentPatchInitialIndex(item);
+							if (ii != index+direction)
+							{
+								FieldDescription newAttach = new FieldDescription(FieldDescription.FieldType.PatchAttach);
+								newAttach.Guid = item.Guid;
+								newAttach.PatchAttachGuid = ag;
+								this.form.Fields.Add(newAttach);
+							}
 						}
 					}
 				}

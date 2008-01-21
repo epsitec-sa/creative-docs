@@ -563,7 +563,7 @@ namespace Epsitec.Common.Designer.FormEditor
 				return;
 			}
 
-			if (this.IsPatch)
+			if (this.IsPatch)  // masque de patch ?
 			{
 				FormEngine.FormDescription refForm = this.formEditor.Module.AccessForms.GetForm(this.formEditor.Form.FormIdToPatch);
 				this.referenceFields = refForm.Fields;
@@ -571,7 +571,7 @@ namespace Epsitec.Common.Designer.FormEditor
 				FormEngine.Engine engine = new FormEngine.Engine(this.formEditor.Module.ResourceManager);
 				this.fields = engine.Arrange.Merge(this.referenceFields, this.formEditor.Form.Fields);
 			}
-			else
+			else  // masque normal ?
 			{
 				this.fields = this.formEditor.Form.Fields;
 				this.referenceFields = null;
