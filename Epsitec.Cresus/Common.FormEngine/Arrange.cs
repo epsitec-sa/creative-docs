@@ -32,10 +32,10 @@ namespace Epsitec.Common.FormEngine
 			{
 				FieldDescription copy = new FieldDescription(field);
 
-				int index = Arrange.IndexOfGuid(patch, FieldDescription.FieldType.Hide, field.Guid);
+				int index = Arrange.IndexOfGuid(patch, FieldDescription.FieldType.PatchHide, field.Guid);
 				if (index != -1)  // champ patché ?
 				{
-					copy.Hidden = true;  // champ à cacher
+					copy.PatchHidden = true;  // champ à cacher
 				}
 
 				merged.Add(copy);
@@ -44,7 +44,7 @@ namespace Epsitec.Common.FormEngine
 			//	Déplace les champs dans la liste fusionnée.
 			foreach (FieldDescription field in patch)
 			{
-				if (field.Type == FieldDescription.FieldType.Attach)  // champ à déplacer ?
+				if (field.Type == FieldDescription.FieldType.PatchAttach)  // champ à déplacer ?
 				{
 					int src = Arrange.IndexOfGuid(merged, FieldDescription.FieldType.None, field.Guid);  // cherche le champ à déplacer
 					if (src != -1)
@@ -52,16 +52,32 @@ namespace Epsitec.Common.FormEngine
 						//	field.AttachGuid vaut System.Guid.Empty lorsqu'il faut déplacer l'élément en tête
 						//	de liste. Par hazard, IndexOfGuid retourne -1 dans dst, ce qui correspond exactement
 						//	à la valeur requise !
-						int dst = Arrange.IndexOfGuid(merged, FieldDescription.FieldType.None, field.AttachGuid);  // cherche où le déplacer
+						int dst = Arrange.IndexOfGuid(merged, FieldDescription.FieldType.None, field.PatchAttachGuid);  // cherche où le déplacer
 
 						FieldDescription temp = merged[src];
 						merged.RemoveAt(src);
 
-						dst = Arrange.IndexOfGuid(merged, FieldDescription.FieldType.None, field.AttachGuid);  // recalcule le "où" après suppression
+						dst = Arrange.IndexOfGuid(merged, FieldDescription.FieldType.None, field.PatchAttachGuid);  // recalcule le "où" après suppression
 						merged.Insert(dst+1, temp);  // remet l'élément après dst
-						
-						temp.Moved = true;
+
+						temp.PatchMoved = true;
 					}
+				}
+			}
+
+			//	Insère les champs dans la liste fusionnée.
+			foreach (FieldDescription field in patch)
+			{
+				if (field.Type == FieldDescription.FieldType.PatchInsert)  // champ à insérer ?
+				{
+					//	field.AttachGuid vaut System.Guid.Empty lorsqu'il faut déplacer l'élément en tête
+					//	de liste. Par hazard, IndexOfGuid retourne -1 dans dst, ce qui correspond exactement
+					//	à la valeur requise !
+					int dst = Arrange.IndexOfGuid(merged, FieldDescription.FieldType.None, field.PatchAttachGuid);  // cherche où l'insérer
+
+					FieldDescription copy = new FieldDescription(field);
+					copy.PatchInserted = true;
+					merged.Insert(dst+1, copy);  // insère l'élément après dst
 				}
 			}
 
@@ -77,12 +93,12 @@ namespace Epsitec.Common.FormEngine
 
 			foreach (FieldDescription field in list)
 			{
-				if (field.Type == FieldDescription.FieldType.Hide)
+				if (field.Type == FieldDescription.FieldType.PatchHide)
 				{
 					return "La liste ne doit pas contenir de Hide";
 				}
 
-				if (field.Type == FieldDescription.FieldType.Attach)
+				if (field.Type == FieldDescription.FieldType.PatchAttach)
 				{
 					return "La liste ne doit pas contenir de Attach";
 				}
@@ -276,10 +292,10 @@ namespace Epsitec.Common.FormEngine
 				{
 					this.Develop(dst, field.NodeDescription);
 				}
-				else if (field.Type == FieldDescription.FieldType.Hide)
+				else if (field.Type == FieldDescription.FieldType.PatchHide)
 				{
 				}
-				else if (field.Type == FieldDescription.FieldType.Attach)
+				else if (field.Type == FieldDescription.FieldType.PatchAttach)
 				{
 				}
 				else

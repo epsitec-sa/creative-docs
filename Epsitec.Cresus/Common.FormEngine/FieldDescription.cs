@@ -25,8 +25,9 @@ namespace Epsitec.Common.FormEngine
 			Title			= 21,	// séparateur titre automatique
 			BoxBegin		= 30,	// début d'une boîte
 			BoxEnd			= 31,	// fin d'une boîte
-			Hide			= 40,	// Guid du champ du module de référence à cacher, dans un module de patch
-			Attach			= 41,	// Guid du champ du module de référence à déplacer, dans un module de patch
+			PatchHide		= 40,	// Guid du champ du module de référence à cacher, dans un module de patch
+			PatchAttach		= 41,	// Guid du champ du module de référence à déplacer, dans un module de patch
+			PatchInsert		= 42,	// champ du module de référence inséré dans un module de patch
 		}
 
 		[DesignerVisible]
@@ -66,8 +67,9 @@ namespace Epsitec.Common.FormEngine
 			this.boxPaddingType = BoxPaddingType.Normal;
 			this.boxFrameState = FrameState.None;
 			this.boxFrameWidth = 1;
-			this.hidden = false;
-			this.moved = false;
+			this.patchHidden = false;
+			this.patchMoved = false;
+			this.patchInserted = false;
 		}
 
 		public FieldDescription(FieldType type) : this()
@@ -94,8 +96,9 @@ namespace Epsitec.Common.FormEngine
 			this.boxPaddingType = model.boxPaddingType;
 			this.boxFrameState = model.boxFrameState;
 			this.boxFrameWidth = model.boxFrameWidth;
-			this.hidden = model.hidden;
-			this.moved = model.moved;
+			this.patchHidden = model.patchHidden;
+			this.patchMoved = model.patchMoved;
+			this.patchInserted = model.patchInserted;
 		}
 
 		public FieldDescription(XmlReader reader) : this()
@@ -397,43 +400,56 @@ namespace Epsitec.Common.FormEngine
 			}
 		}
 
-		public bool Hidden
+		public bool PatchHidden
 		{
 			//	Si on est dans un module de patch, indique un champ présent dans la liste finale, mais qu'il faut cacher.
 			get
 			{
-				return this.hidden;
+				return this.patchHidden;
 			}
 			set
 			{
-				this.hidden = value;
+				this.patchHidden = value;
 			}
 		}
 
-		public bool Moved
+		public bool PatchMoved
 		{
 			//	Si on est dans un module de patch, indique un champ déplacé dans la liste finale.
 			get
 			{
-				return this.moved;
+				return this.patchMoved;
 			}
 			set
 			{
-				this.moved = value;
+				this.patchMoved = value;
 			}
 		}
 
-		public System.Guid AttachGuid
+		public bool PatchInserted
 		{
-			//	Retourne l'identificateur unique après lequel est attaché un champ déplacé par un patch.
-			//	Utilisé uniquement si this.type == FieldType.Attach !
+			//	Si on est dans un module de patch, indique un champ inséré dans la liste finale.
 			get
 			{
-				return this.attachGuid;
+				return this.patchInserted;
 			}
 			set
 			{
-				this.attachGuid = value;
+				this.patchInserted = value;
+			}
+		}
+
+		public System.Guid PatchAttachGuid
+		{
+			//	Retourne l'identificateur unique après lequel est attaché un champ déplacé par un patch.
+			//	Utilisé uniquement si this.type == FieldType.PatchAttach ou PatchInsert !
+			get
+			{
+				return this.patchAttachGuid;
+			}
+			set
+			{
+				this.patchAttachGuid = value;
 			}
 		}
 
@@ -481,9 +497,10 @@ namespace Epsitec.Common.FormEngine
 				a.boxPaddingType != b.boxPaddingType ||
 				a.boxFrameState != b.boxFrameState ||
 				a.boxFrameWidth != b.boxFrameWidth ||
-				a.hidden != b.hidden ||
-				a.moved != b.moved ||
-				!a.attachGuid.Equals(b.attachGuid) )
+				a.patchHidden != b.patchHidden ||
+				a.patchMoved != b.patchMoved ||
+				a.patchInserted != b.patchInserted ||
+				!a.patchAttachGuid.Equals(b.patchAttachGuid) )
 			{
 				return false;
 			}
@@ -547,19 +564,24 @@ namespace Epsitec.Common.FormEngine
 			writer.WriteElementString(Xml.BoxFrameState, this.boxFrameState.ToString());
 			writer.WriteElementString(Xml.BoxFrameWidth, this.boxFrameWidth.ToString(System.Globalization.CultureInfo.InvariantCulture));
 
-			if (this.hidden)
+			if (this.patchHidden)
 			{
-				writer.WriteElementString(Xml.Hidden, this.hidden.ToString());
+				writer.WriteElementString(Xml.PatchHidden, this.patchHidden.ToString());
 			}
 
-			if (this.moved)
+			if (this.patchMoved)
 			{
-				writer.WriteElementString(Xml.Moved, this.moved.ToString());
+				writer.WriteElementString(Xml.PatchMoved, this.patchMoved.ToString());
 			}
 
-			if (this.type == FieldType.Attach)
+			if (this.patchInserted)
 			{
-				writer.WriteElementString(Xml.AttachGuid, this.attachGuid.ToString());
+				writer.WriteElementString(Xml.PatchInserted, this.patchInserted.ToString());
+			}
+
+			if (this.type == FieldType.PatchAttach || this.type == FieldType.PatchInsert)
+			{
+				writer.WriteElementString(Xml.PatchAttachGuid, this.patchAttachGuid.ToString());
 			}
 
 			writer.WriteEndElement();
@@ -628,17 +650,21 @@ namespace Epsitec.Common.FormEngine
 						{
 							this.boxFrameWidth = double.Parse(element);
 						}
-						else if (name == Xml.Hidden)
+						else if (name == Xml.PatchHidden)
 						{
-							this.hidden = bool.Parse(element);
+							this.patchHidden = bool.Parse(element);
 						}
-						else if (name == Xml.Moved)
+						else if (name == Xml.PatchMoved)
 						{
-							this.moved = bool.Parse(element);
+							this.patchMoved = bool.Parse(element);
 						}
-						else if (name == Xml.AttachGuid)
+						else if (name == Xml.PatchInserted)
 						{
-							this.attachGuid = new System.Guid(element);
+							this.patchInserted = bool.Parse(element);
+						}
+						else if (name == Xml.PatchAttachGuid)
+						{
+							this.patchAttachGuid = new System.Guid(element);
 						}
 						else
 						{
@@ -725,8 +751,9 @@ namespace Epsitec.Common.FormEngine
 		private BoxPaddingType				boxPaddingType;
 		private FrameState					boxFrameState;
 		private double						boxFrameWidth;
-		private bool						hidden;
-		private bool						moved;
-		private System.Guid					attachGuid;
+		private bool						patchHidden;
+		private bool						patchMoved;
+		private bool						patchInserted;
+		private System.Guid					patchAttachGuid;
 	}
 }

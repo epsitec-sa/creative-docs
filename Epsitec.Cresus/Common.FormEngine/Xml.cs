@@ -17,8 +17,9 @@ namespace Epsitec.Common.FormEngine
 		public const string BoxPaddingType		= "BPT";
 		public const string BoxFrameState		= "BFS";
 		public const string BoxFrameWidth		= "BFW";
-		public const string Hidden				= "HD";
-		public const string Moved				= "MV";
-		public const string AttachGuid			= "AG";
+		public const string PatchHidden			= "PHi";
+		public const string PatchMoved			= "PMo";
+		public const string PatchInserted		= "PIn";
+		public const string PatchAttachGuid		= "PAG";
 	}
 }

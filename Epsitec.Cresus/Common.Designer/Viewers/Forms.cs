@@ -1053,10 +1053,10 @@ namespace Epsitec.Common.Designer.Viewers
 				{
 					FormEditor.ObjectModifier.TableItem item = this.formEditor.ObjectModifier.TableContent[sel];
 
-					int index = FormEngine.Arrange.IndexOfGuid(this.form.Fields, FieldDescription.FieldType.Hide, item.Guid);
+					int index = FormEngine.Arrange.IndexOfGuid(this.form.Fields, FieldDescription.FieldType.PatchHide, item.Guid);
 					if (index == -1)  // champ visible ?
 					{
-						FieldDescription field = new FieldDescription(FieldDescription.FieldType.Hide);
+						FieldDescription field = new FieldDescription(FieldDescription.FieldType.PatchHide);
 						field.Guid = item.Guid;
 						this.form.Fields.Add(field);
 					}
@@ -1316,7 +1316,7 @@ namespace Epsitec.Common.Designer.Viewers
 					int index = this.formEditor.ObjectModifier.GetFormDescriptionIndex(item.Guid);
 					if (index != -1)
 					{
-						int i = FormEngine.Arrange.IndexOfGuid(this.form.Fields, FieldDescription.FieldType.Attach, item.Guid);
+						int i = FormEngine.Arrange.IndexOfGuid(this.form.Fields, FieldDescription.FieldType.PatchAttach, item.Guid);
 						if (i != -1)
 						{
 							this.form.Fields.RemoveAt(i);  // enlève l'élément Attach
@@ -1339,9 +1339,9 @@ namespace Epsitec.Common.Designer.Viewers
 								ag = this.formEditor.ObjectModifier.TableContent[index+direction].Guid;
 							}
 
-							FieldDescription field = new FieldDescription(FieldDescription.FieldType.Attach);
+							FieldDescription field = new FieldDescription(FieldDescription.FieldType.PatchAttach);
 							field.Guid = item.Guid;
-							field.AttachGuid = ag;
+							field.PatchAttachGuid = ag;
 							this.form.Fields.Add(field);
 						}
 					}

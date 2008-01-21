@@ -176,7 +176,7 @@ namespace Epsitec.Common.FormEngine
 			{
 				FieldDescription field = fields[i];
 
-				if (field.Hidden)
+				if (field.PatchHidden)
 				{
 					continue;
 				}
@@ -222,7 +222,7 @@ namespace Epsitec.Common.FormEngine
 					}
 				}
 				else if (field.Type == FieldDescription.FieldType.Node ||
-						 field.Type == FieldDescription.FieldType.Hide)
+						 field.Type == FieldDescription.FieldType.PatchHide)
 				{
 					throw new System.InvalidOperationException("Type incorrect (la liste de FieldDescription devrait être aplatie).");
 				}
@@ -284,7 +284,7 @@ namespace Epsitec.Common.FormEngine
 			{
 				FieldDescription field = fields[i];
 
-				if (field.Hidden)
+				if (field.PatchHidden)
 				{
 					continue;
 				}
