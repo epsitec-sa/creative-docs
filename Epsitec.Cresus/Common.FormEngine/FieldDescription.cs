@@ -448,7 +448,7 @@ namespace Epsitec.Common.FormEngine
 
 		public System.Guid PatchAttachGuid
 		{
-			//	Retourne l'identificateur unique après lequel est attaché un champ déplacé par un patch.
+			//	Retourne l'identificateur unique *après* lequel est attaché un champ déplacé par un patch.
 			//	Utilisé uniquement si this.type == FieldType.PatchAttach ou PatchInsert !
 			get
 			{

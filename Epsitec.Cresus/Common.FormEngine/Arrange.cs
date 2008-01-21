@@ -41,7 +41,25 @@ namespace Epsitec.Common.FormEngine
 				merged.Add(copy);
 			}
 
-			//	Déplace les champs dans la liste fusionnée.
+			//	Insère les champs dans la liste fusionnée.
+			foreach (FieldDescription field in patch)
+			{
+				if (field.Type == FieldDescription.FieldType.PatchInsert)  // champ à insérer ?
+				{
+					//	field.AttachGuid vaut System.Guid.Empty lorsqu'il faut déplacer l'élément en tête
+					//	de liste. Par hazard, IndexOfGuid retourne -1 dans dst, ce qui correspond exactement
+					//	à la valeur requise !
+					int dst = Arrange.IndexOfGuid(merged, FieldDescription.FieldType.None, field.PatchAttachGuid);  // cherche où l'insérer
+
+					FieldDescription copy = new FieldDescription(field);
+					copy.ChangeTypePatchInsertToField();
+					copy.PatchInserted = true;
+					merged.Insert(dst+1, copy);  // insère l'élément après dst
+				}
+			}
+
+			//	Déplace les champs dans la liste fusionnée. Il faut déplacer les champs après avoir inséré
+			//	les champs PatchInsert, car un champ peut être positionné par-rapport à un champ PatchInsert !
 			foreach (FieldDescription field in patch)
 			{
 				if (field.Type == FieldDescription.FieldType.PatchAttach)  // champ à déplacer ?
@@ -62,23 +80,6 @@ namespace Epsitec.Common.FormEngine
 
 						temp.PatchMoved = true;
 					}
-				}
-			}
-
-			//	Insère les champs dans la liste fusionnée.
-			foreach (FieldDescription field in patch)
-			{
-				if (field.Type == FieldDescription.FieldType.PatchInsert)  // champ à insérer ?
-				{
-					//	field.AttachGuid vaut System.Guid.Empty lorsqu'il faut déplacer l'élément en tête
-					//	de liste. Par hazard, IndexOfGuid retourne -1 dans dst, ce qui correspond exactement
-					//	à la valeur requise !
-					int dst = Arrange.IndexOfGuid(merged, FieldDescription.FieldType.None, field.PatchAttachGuid);  // cherche où l'insérer
-
-					FieldDescription copy = new FieldDescription(field);
-					copy.ChangeTypePatchInsertToField();
-					copy.PatchInserted = true;
-					merged.Insert(dst+1, copy);  // insère l'élément après dst
 				}
 			}
 

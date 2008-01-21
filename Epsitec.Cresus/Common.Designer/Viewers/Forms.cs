@@ -1326,19 +1326,7 @@ namespace Epsitec.Common.Designer.Viewers
 					if (index != -1)
 					{
 						//	Calcule le Guid *après* lequel sera attaché l'élément déplacé.
-						System.Guid ag = System.Guid.Empty;
-						if (direction < 0)
-						{
-							//	System.Guid.Empty correspond à un déplacement en tête de liste.
-							if (index+direction-1 >= 0)
-							{
-								ag = this.formEditor.ObjectModifier.TableContent[index+direction-1].Guid;
-							}
-						}
-						else
-						{
-							ag = this.formEditor.ObjectModifier.TableContent[index+direction].Guid;
-						}
+						System.Guid ag = this.formEditor.ObjectModifier.GetPatchAttachGuid(index, direction);
 
 						if (field.PatchInserted)
 						{
@@ -1358,8 +1346,8 @@ namespace Epsitec.Common.Designer.Viewers
 								this.form.Fields.RemoveAt(i);  // enlève l'élément PatchAttach
 							}
 
-							int ii = this.formEditor.ObjectModifier.GetTableContentPatchInitialIndex(item);
-							if (ii != index+direction)
+							System.Guid iag = this.formEditor.ObjectModifier.GetReferencePatchAttachGuid(item);
+							if (iag != ag)
 							{
 								FieldDescription newAttach = new FieldDescription(FieldDescription.FieldType.PatchAttach);
 								newAttach.Guid = item.Guid;

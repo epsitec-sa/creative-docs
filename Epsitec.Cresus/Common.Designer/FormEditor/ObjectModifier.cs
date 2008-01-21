@@ -416,9 +416,30 @@ namespace Epsitec.Common.Designer.FormEditor
 
 
 		#region TableContent
-		public int GetTableContentPatchInitialIndex(TableItem item)
+		public System.Guid GetPatchAttachGuid(int index, int direction)
 		{
-			//	Retourne l'index initial d'un champ dans la liste de référence d'un masque de patch.
+			//	Retourne le Guid *après* lequel un champ sera attaché.
+			System.Guid ag = System.Guid.Empty;
+
+			if (direction < 0)
+			{
+				//	System.Guid.Empty correspond à un déplacement en tête de liste.
+				if (index+direction-1 >= 0)
+				{
+					ag = this.fields[index+direction-1].Guid;
+				}
+			}
+			else
+			{
+				ag = this.fields[index+direction].Guid;
+			}
+
+			return ag;
+		}
+
+		public System.Guid GetReferencePatchAttachGuid(TableItem item)
+		{
+			//	Retourne le Guid d'un champ dans la liste de référence d'un masque de patch *après* lequel s'attache un TableItem.
 			if (this.referenceFields != null)
 			{
 				for (int i=0; i<this.referenceFields.Count; i++)
@@ -426,12 +447,19 @@ namespace Epsitec.Common.Designer.FormEditor
 					FieldDescription field = this.referenceFields[i];
 					if (field.Guid == item.Guid)
 					{
-						return i;
+						if (i == 0)
+						{
+							return System.Guid.Empty;
+						}
+						else
+						{
+							return this.referenceFields[i-1].Guid;
+						}
 					}
 				}
 			}
 
-			return -1;
+			return System.Guid.Empty;
 		}
 
 		public string GetTableContentDescription(TableItem item, bool isImage, bool isShowPrefix)
