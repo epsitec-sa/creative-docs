@@ -507,7 +507,7 @@ namespace Epsitec.Common.Designer.FormEditor
 				}
 				else
 				{
-					icon = Misc.Image("ActiveYes");
+					icon = Misc.Image("FormPatchInserted");
 				}
 			}
 
