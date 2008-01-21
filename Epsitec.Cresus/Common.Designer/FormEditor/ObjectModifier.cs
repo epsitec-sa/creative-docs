@@ -525,14 +525,12 @@ namespace Epsitec.Common.Designer.FormEditor
 
 			if (this.IsPatch)
 			{
-				int index = FormEngine.Arrange.IndexOfGuid(this.formEditor.Form.Fields, FieldDescription.FieldType.PatchHide, item.Guid);
-				if (index != -1)
+				if (FormEngine.Arrange.IndexOfGuid(this.formEditor.Form.Fields, FieldDescription.FieldType.PatchHide, item.Guid) != -1)
 				{
 					color = Color.FromAlphaRgb(0.3, 1, 0, 0);  // rouge = champ caché
 				}
 
-				index = FormEngine.Arrange.IndexOfGuid(this.formEditor.Form.Fields, FieldDescription.FieldType.PatchInsert, item.Guid);
-				if (index != -1)
+				if (FormEngine.Arrange.IndexOfGuid(this.formEditor.Form.Fields, FieldDescription.FieldType.PatchInsert, item.Guid) != -1)
 				{
 					color = Color.FromAlphaRgb(0.3, 0, 1, 0);  // vert = champ inséré
 				}

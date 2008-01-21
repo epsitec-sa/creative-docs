@@ -424,28 +424,28 @@ namespace Epsitec.Common.Designer.Viewers
 				return;
 			}
 
-			if (name == "FormFieldsShowPrefix")
+			if (name == "FormFieldsShowPrefix")  // affiche/cache les préfixes ?
 			{
 				Forms.showPrefix = !Forms.showPrefix;
 				this.UpdateFieldsTable(false);
 				return;
 			}
 
-			if (name == "FormFieldsShowColumn1")
+			if (name == "FormFieldsShowColumn1")  // affiche/cache la 2ème colonne ?
 			{
 				Forms.showColumn1 = !Forms.showColumn1;
 				this.UpdateFieldsTableColumns();
 				return;
 			}
 
-			if (name == "FormFieldsShowColumn2")
+			if (name == "FormFieldsShowColumn2")  // affiche/cache la 3ème colonne ?
 			{
 				Forms.showColumn2 = !Forms.showColumn2;
 				this.UpdateFieldsTableColumns();
 				return;
 			}
 
-			if (name == "FormFieldsClearPatch")
+			if (name == "FormFieldsClearPatch")  // efface tout le masque de patch ?
 			{
 				this.form.Fields.Clear();
 				this.SetForm(this.form, this.druidToSerialize, false);
@@ -1051,16 +1051,24 @@ namespace Epsitec.Common.Designer.Viewers
 				{
 					FormEditor.ObjectModifier.TableItem item = this.formEditor.ObjectModifier.TableContent[sel];
 
-					int index = FormEngine.Arrange.IndexOfGuid(this.form.Fields, FieldDescription.FieldType.PatchHide, item.Guid);
-					if (index == -1)  // champ visible ?
+					int index = FormEngine.Arrange.IndexOfGuid(this.form.Fields, FieldDescription.FieldType.PatchInsert, item.Guid);
+					if (index == -1)
 					{
-						FieldDescription field = new FieldDescription(FieldDescription.FieldType.PatchHide);
-						field.Guid = item.Guid;
-						this.form.Fields.Add(field);
+						index = FormEngine.Arrange.IndexOfGuid(this.form.Fields, FieldDescription.FieldType.PatchHide, item.Guid);
+						if (index == -1)  // champ visible ?
+						{
+							FieldDescription field = new FieldDescription(FieldDescription.FieldType.PatchHide);
+							field.Guid = item.Guid;
+							this.form.Fields.Add(field);
+						}
+						else  // champ caché ?
+						{
+							this.form.Fields.RemoveAt(index);  // enlève l'élément PatchHide
+						}
 					}
-					else  // champ caché ?
+					else
 					{
-						this.form.Fields.RemoveAt(index);  // enlève l'élément Hide
+						this.form.Fields.RemoveAt(index);  // enlève l'élément PatchInsert
 					}
 
 					guids.Add(item.Guid);
