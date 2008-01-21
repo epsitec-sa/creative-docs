@@ -916,6 +916,7 @@ namespace Epsitec.Common.Designer
 			b = t;
 		}
 
-		static readonly System.Text.RegularExpressions.Regex guidRegex = new System.Text.RegularExpressions.Regex ("^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{8}$", System.Text.RegularExpressions.RegexOptions.IgnoreCase | System.Text.RegularExpressions.RegexOptions.Compiled);
+
+		static private readonly System.Text.RegularExpressions.Regex guidRegex = new System.Text.RegularExpressions.Regex("^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$", System.Text.RegularExpressions.RegexOptions.IgnoreCase | System.Text.RegularExpressions.RegexOptions.Compiled);
 	}
 }
