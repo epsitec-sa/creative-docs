@@ -201,6 +201,8 @@ namespace Epsitec.Common.Dialogs
 				{
 					this.dialogSearchController.DialogData = this.dialogData;
 				}
+
+				ValidationContext.SetContext (this.panel, this.dialogData.ValidationContext);
 			}
 		}
 
@@ -218,6 +220,8 @@ namespace Epsitec.Common.Dialogs
 				}
 				
 				this.dialogData.UnbindFromUserInterface (this.panel);
+
+				ValidationContext.SetContext (this.panel, null);
 			}
 		}
 
