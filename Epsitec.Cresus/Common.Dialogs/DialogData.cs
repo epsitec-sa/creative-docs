@@ -182,10 +182,11 @@ namespace Epsitec.Common.Dialogs
 
 				if (value == null)
 				{
+					Druid  rootId = this.externalData.GetEntityStructuredTypeId ();
 					Druid  entityId;
 					string fieldId;
 					
-					path.Navigate (context, out entityId, out fieldId);
+					path.Navigate (context, rootId, out entityId, out fieldId);
 
 					if (context.IsNullable (entityId, fieldId) == false)
 					{
@@ -199,7 +200,22 @@ namespace Epsitec.Common.Dialogs
 		
 		public void SetReferenceReplacement(EntityFieldPath path, AbstractEntity suggestion)
 		{
+			bool oldValid = this.AreReferenceReplacementsValid ();
+			
 			this.replacements[path] = suggestion;
+
+			bool newValid = this.AreReferenceReplacementsValid ();
+
+			if ((oldValid != newValid) &&
+				(this.panel != null))
+			{
+				CommandContext context = Widgets.Helpers.VisualTree.GetCommandContext (this.panel);
+
+				if (context != null)
+				{
+					context.SetGroupEnable (this.validationContext, "Accept", newValid);
+				}
+			}
 		}
 
 		public void ClearReferenceReplacement(EntityFieldPath path)
@@ -213,12 +229,16 @@ namespace Epsitec.Common.Dialogs
 		/// <param name="panel">The user interface panel.</param>
 		public void BindToUserInterface(UI.Panel panel)
 		{
+			System.Diagnostics.Debug.Assert (this.panel == null);
+
 			if (panel != null)
 			{
 				IStructuredData data = this.Data;
 				UI.DataSource source = panel.DataSource;
 
 				source.SetDataSource (UI.DataSource.DataName, data);
+
+				this.panel = panel;
 			}
 		}
 
@@ -228,11 +248,15 @@ namespace Epsitec.Common.Dialogs
 		/// <param name="panel">The user interface panel.</param>
 		public void UnbindFromUserInterface(UI.Panel panel)
 		{
+			System.Diagnostics.Debug.Assert (this.panel == panel);
+
 			if (panel != null)
 			{
 				UI.DataSource source = panel.DataSource;
 
 				source.SetDataSource (UI.DataSource.DataName, null);
+
+				this.panel = null;
 			}
 		}
 
@@ -762,5 +786,6 @@ namespace Epsitec.Common.Dialogs
 		private readonly AbstractEntity			externalData;
 		private readonly AbstractEntity			internalData;
 		private readonly ValidationContext		validationContext;
+		private UI.Panel						panel;
 	}
 }

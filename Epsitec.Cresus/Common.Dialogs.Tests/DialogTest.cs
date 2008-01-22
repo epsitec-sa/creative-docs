@@ -164,6 +164,7 @@ namespace Epsitec.Common.Dialogs
 			System.Console.Out.WriteLine (dialog.Data.ExternalData.Dump ());
 		}
 
+		
 		internal static AdresseEntity CreateDefaultAdresseEntity()
 		{
 			AdresseEntity adresse = EntityContext.Current.CreateEntity<AdresseEntity> ();
