@@ -81,6 +81,12 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_15F4D6CD25CC4A2BAF9D58E90EB38B74"
+        "OwnerKey" = "8:_303C7042A09F44598761ED7F92BB9BD2"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_18E8A44E7DE20AD648C02F818DD7E53D"
         "OwnerKey" = "8:_D92255BAB7921E856C4751B4F5AB1A62"
         "MsmSig" = "8:_UNDEFINED"
@@ -479,12 +485,6 @@
         {
         "MsmKey" = "8:_B34B4DB7CB984EAC904F1AEA750F03FA"
         "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_BAF3643DFD6540CF84B37499A911F6AE"
-        "OwnerKey" = "8:_303C7042A09F44598761ED7F92BB9BD2"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -1866,14 +1866,14 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Creative Docs .NET"
-        "ProductCode" = "8:{D70B686F-F71F-4193-9D1B-2711D958CB38}"
-        "PackageCode" = "8:{52A775BF-27DF-41F2-B369-23E073696270}"
+        "ProductCode" = "8:{A3AC0652-1E99-4B9D-8116-239486FABE04}"
+        "PackageCode" = "8:{7ECCDC57-8BCF-44FB-8A08-32442291DCC7}"
         "UpgradeCode" = "8:{925CE84A-106F-439D-B0AA-6222B871FB71}"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:TRUE"
-        "ProductVersion" = "8:2.1.5"
+        "ProductVersion" = "8:2.1.6"
         "Manufacturer" = "8:OPaC bright ideas"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:http://www.creativedocs.net/"
@@ -2462,11 +2462,11 @@
         }
         "MergeModule"
         {
-            "{CEE29DC0-9FBA-4B99-8D47-5BC643D9B626}:_303C7042A09F44598761ED7F92BB9BD2"
+            "{CEE29DC0-9FBA-4B99-8D47-5BC643D9B626}:_15F4D6CD25CC4A2BAF9D58E90EB38B74"
             {
             "UseDynamicProperties" = "11:TRUE"
-            "IsDependency" = "11:FALSE"
-            "SourcePath" = "8:C:\\Program Files\\Common Files\\Merge Modules\\Microsoft_VC80_CRT_x86.msm"
+            "IsDependency" = "11:TRUE"
+            "SourcePath" = "8:policy_8_0_microsoft_vc80_crt_x86.msm"
                 "Properties"
                 {
                 }
@@ -2476,11 +2476,11 @@
             "Feature" = "8:"
             "IsolateTo" = "8:"
             }
-            "{CEE29DC0-9FBA-4B99-8D47-5BC643D9B626}:_BAF3643DFD6540CF84B37499A911F6AE"
+            "{CEE29DC0-9FBA-4B99-8D47-5BC643D9B626}:_303C7042A09F44598761ED7F92BB9BD2"
             {
             "UseDynamicProperties" = "11:TRUE"
-            "IsDependency" = "11:TRUE"
-            "SourcePath" = "8:policy_8_0_microsoft_vc80_crt_x86.msm"
+            "IsDependency" = "11:FALSE"
+            "SourcePath" = "8:C:\\Program Files\\Common Files\\Merge Modules\\Microsoft_VC80_CRT_x86.msm"
                 "Properties"
                 {
                 }
