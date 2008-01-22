@@ -44,7 +44,8 @@ namespace Epsitec.Common.FormEngine
 			//	Insère les champs dans la liste fusionnée.
 			foreach (FieldDescription field in patch)
 			{
-				if (field.Type == FieldDescription.FieldType.PatchInsert)  // champ à insérer ?
+				if (field.Type != FieldDescription.FieldType.PatchHide &&
+					field.Type != FieldDescription.FieldType.PatchAttach)  // champ à insérer ?
 				{
 					//	field.AttachGuid vaut System.Guid.Empty lorsqu'il faut déplacer l'élément en tête
 					//	de liste. Par hazard, IndexOfGuid retourne -1 dans dst, ce qui correspond exactement
@@ -52,7 +53,6 @@ namespace Epsitec.Common.FormEngine
 					int dst = Arrange.IndexOfGuid(merged, FieldDescription.FieldType.None, field.PatchAttachGuid);  // cherche où l'insérer
 
 					FieldDescription copy = new FieldDescription(field);
-					copy.ChangeTypePatchInsertToField();
 					copy.PatchInserted = true;
 					merged.Insert(dst+1, copy);  // insère l'élément après dst
 				}
@@ -307,6 +307,25 @@ namespace Epsitec.Common.FormEngine
 			}
 		}
 
+
+		static public int IndexOfNoPatchGuid(List<FieldDescription> list, System.Guid guid)
+		{
+			//	Retourne l'index de l'élément utilisant un Guid donné.
+			//	Retourne -1 s'il n'en existe aucun.
+			for (int i=0; i<list.Count; i++)
+			{
+				if (list[i].Type != FieldDescription.FieldType.PatchHide &&
+					list[i].Type != FieldDescription.FieldType.PatchAttach)
+				{
+					if (list[i].Guid == guid)
+					{
+						return i;
+					}
+				}
+			}
+
+			return -1;
+		}
 
 		static public int IndexOfGuid(List<FieldDescription> list, FieldDescription.FieldType type, System.Guid guid)
 		{

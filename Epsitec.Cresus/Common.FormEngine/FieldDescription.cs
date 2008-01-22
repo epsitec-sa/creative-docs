@@ -27,7 +27,6 @@ namespace Epsitec.Common.FormEngine
 			BoxEnd			= 31,	// fin d'une boîte
 			PatchHide		= 40,	// Guid du champ du module de référence à cacher, dans un module de patch
 			PatchAttach		= 41,	// Guid du champ du module de référence à déplacer, dans un module de patch
-			PatchInsert		= 42,	// champ du module de référence inséré dans un module de patch
 		}
 
 		[DesignerVisible]
@@ -128,13 +127,6 @@ namespace Epsitec.Common.FormEngine
 			{
 				return this.type;
 			}
-		}
-
-		public void ChangeTypePatchInsertToField()
-		{
-			//	Change le type de FieldType.PatchInsert en FieldType.Field.
-			System.Diagnostics.Debug.Assert(this.type == FieldType.PatchInsert);
-			this.type = FieldType.Field;
 		}
 
 		public FieldDescription Source
@@ -249,7 +241,7 @@ namespace Epsitec.Common.FormEngine
 			}
 			else
 			{
-				System.Diagnostics.Debug.Assert(this.type == FieldType.Field || this.type == FieldType.SubForm || this.type == FieldType.PatchInsert);
+				System.Diagnostics.Debug.Assert(this.type == FieldType.Field || this.type == FieldType.SubForm);
 
 				this.fieldIds = new List<Druid>();
 				string[] druids = druidsPath.Split('.');
@@ -266,7 +258,7 @@ namespace Epsitec.Common.FormEngine
 			//	Retourne le chemin permettant d'accéder au champ.
 			//	Par exemple, si prefix = "Data": retourne "Data.[630B2].[630S2]"
 			//	Par exemple, si prefix = null:   retourne "[630B2].[630S2]"
-			if (this.type == FieldType.Field || this.type == FieldType.SubForm || this.type == FieldType.PatchInsert)
+			if (this.type == FieldType.Field || this.type == FieldType.SubForm)
 			{
 				System.Text.StringBuilder builder = new System.Text.StringBuilder();
 
@@ -586,7 +578,7 @@ namespace Epsitec.Common.FormEngine
 				writer.WriteElementString(Xml.PatchInserted, this.patchInserted.ToString());
 			}
 
-			if (this.type == FieldType.PatchAttach || this.type == FieldType.PatchInsert)
+			if (this.patchAttachGuid != System.Guid.Empty)
 			{
 				writer.WriteElementString(Xml.PatchAttachGuid, this.patchAttachGuid.ToString());
 			}

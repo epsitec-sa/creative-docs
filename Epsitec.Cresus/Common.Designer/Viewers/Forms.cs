@@ -646,7 +646,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 			this.fieldsButtonRemove.Enable = isSel;
 			this.fieldsButtonGlue.Enable = isSel && !isPatch;
-			this.fieldsButtonLine.Enable = isSel && !isPatch;
+			this.fieldsButtonLine.Enable = isSel;
 			this.fieldsButtonTitle.Enable = isSel && !isPatch;
 			this.fieldsButtonBox.Enable = isSel && !isPatch;
 
@@ -1051,7 +1051,7 @@ namespace Epsitec.Common.Designer.Viewers
 				{
 					FormEditor.ObjectModifier.TableItem item = this.formEditor.ObjectModifier.TableContent[sel];
 
-					int index = FormEngine.Arrange.IndexOfGuid(this.form.Fields, FieldDescription.FieldType.PatchInsert, item.Guid);
+					int index = FormEngine.Arrange.IndexOfNoPatchGuid(this.form.Fields, item.Guid);
 					if (index == -1)
 					{
 						index = FormEngine.Arrange.IndexOfGuid(this.form.Fields, FieldDescription.FieldType.PatchHide, item.Guid);
@@ -1144,9 +1144,26 @@ namespace Epsitec.Common.Designer.Viewers
 
 			FormEditor.ObjectModifier.TableItem item = this.formEditor.ObjectModifier.TableContent[sels[0]];
 			int index = this.formEditor.ObjectModifier.GetFormDescriptionIndex(item.Guid);
+			FieldDescription field;
 
-			FieldDescription field = new FieldDescription(FieldDescription.FieldType.Line);
-			this.form.Fields.Insert(index, field);
+			if (this.formEditor.ObjectModifier.IsPatch)  // module de patch ?
+			{
+				System.Guid ag = System.Guid.Empty;
+				if (sels[0] > 0)
+				{
+					ag = this.formEditor.ObjectModifier.TableContent[sels[0]-1].Guid;
+				}
+
+				field = new FieldDescription(FieldDescription.FieldType.Line);
+				field.PatchInserted = true;
+				field.PatchAttachGuid = ag;
+				this.form.Fields.Add(field);
+			}
+			else  // module normal ?
+			{
+				field = new FieldDescription(FieldDescription.FieldType.Line);
+				this.form.Fields.Insert(index, field);
+			}
 
 			this.SetForm(this.form, this.druidToSerialize, true);
 			this.UpdateFieldsTable(false);
@@ -1336,7 +1353,7 @@ namespace Epsitec.Common.Designer.Viewers
 						if (field.PatchInserted)
 						{
 							//	Déplace l'élément PatchInsert.
-							int i = FormEngine.Arrange.IndexOfGuid(this.form.Fields, FieldDescription.FieldType.PatchInsert, item.Guid);
+							int i = FormEngine.Arrange.IndexOfNoPatchGuid(this.form.Fields, item.Guid);
 							if (i != -1)
 							{
 								this.form.Fields[i].PatchAttachGuid = ag;
@@ -1423,7 +1440,7 @@ namespace Epsitec.Common.Designer.Viewers
 			{
 				FormEditor.ObjectModifier.TableItem ti = this.formEditor.ObjectModifier.TableContent[this.fieldsTable.TotalRows-1];
 					
-				field = new FieldDescription(FieldDescription.FieldType.PatchInsert);
+				field = new FieldDescription(FieldDescription.FieldType.Field);
 				field.SetFields(item.DruidsPath);
 				field.PatchInserted = true;
 				field.PatchAttachGuid = ti.Guid;

@@ -528,7 +528,7 @@ namespace Epsitec.Common.Designer.FormEditor
 					icon = Misc.Image("FormPatchHidden");  // peu prioritaire à cause du fond rouge
 				}
 
-				if (FormEngine.Arrange.IndexOfGuid(this.formEditor.Form.Fields, FieldDescription.FieldType.PatchInsert, item.Guid) != -1)
+				if (FormEngine.Arrange.IndexOfNoPatchGuid(this.formEditor.Form.Fields, item.Guid) != -1)
 				{
 					icon = Misc.Image("FormPatchInserted");  // peu prioritaire à cause du fond vert
 				}
@@ -567,7 +567,7 @@ namespace Epsitec.Common.Designer.FormEditor
 					color = Color.FromAlphaRgb(0.3, 1, 0, 0);  // rouge = champ caché
 				}
 
-				if (FormEngine.Arrange.IndexOfGuid(this.formEditor.Form.Fields, FieldDescription.FieldType.PatchInsert, item.Guid) != -1)
+				if (FormEngine.Arrange.IndexOfNoPatchGuid(this.formEditor.Form.Fields, item.Guid) != -1)
 				{
 					color = Color.FromAlphaRgb(0.3, 0, 1, 0);  // vert = champ inséré
 				}
