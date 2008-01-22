@@ -59,7 +59,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "App.Dolphin", "App.Dolphin\
 EndProject
 Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "X.Setup.Dolphin (fr)", "X.Setup.Dolphin.fr\X.Setup.Dolphin (fr).vdproj", "{B83C6D31-8F6C-4032-A0BA-BE891802DE54}"
 EndProject
-Project("{54435604-DBB4-11D2-8724-00A0C9A8B90C}") = "X.Setup.Dolphin (de)", "X.Setup.Dolphin.de\X.Setup.Dolphin (de).vdproj", "{B83C6D32-8F6C-4032-A0BA-BE891802DE54}"
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "X.Setup.Dolphin (de)", "X.Setup.Dolphin.de\X.Setup.Dolphin (de).vdproj", "{B83C6D32-8F6C-4032-A0BA-BE891802DE54}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "App.Dolphin.Tests", "App.Dolphin.Tests\App.Dolphin.Tests.csproj", "{DD376A6F-929E-4228-A80C-1BAA20376DA6}"
 EndProject
@@ -75,6 +75,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "App.Dolphin.Executable", "A
 	ProjectSection(ProjectDependencies) = postProject
 		{57C124C2-BE7E-42C0-AD03-0455373C48E6} = {57C124C2-BE7E-42C0-AD03-0455373C48E6}
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.FormEngine", "Common.FormEngine\Common.FormEngine.csproj", "{29CBCF29-AA80-43BC-81C7-698DE2A4D88A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -368,6 +370,16 @@ Global
 		{B6FF1855-D7B4-45AB-A121-897B37DD00E2}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{B6FF1855-D7B4-45AB-A121-897B37DD00E2}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{B6FF1855-D7B4-45AB-A121-897B37DD00E2}.Release|Win32.ActiveCfg = Release|Any CPU
+		{29CBCF29-AA80-43BC-81C7-698DE2A4D88A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{29CBCF29-AA80-43BC-81C7-698DE2A4D88A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{29CBCF29-AA80-43BC-81C7-698DE2A4D88A}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{29CBCF29-AA80-43BC-81C7-698DE2A4D88A}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{29CBCF29-AA80-43BC-81C7-698DE2A4D88A}.Debug|Win32.ActiveCfg = Debug|Any CPU
+		{29CBCF29-AA80-43BC-81C7-698DE2A4D88A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{29CBCF29-AA80-43BC-81C7-698DE2A4D88A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{29CBCF29-AA80-43BC-81C7-698DE2A4D88A}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{29CBCF29-AA80-43BC-81C7-698DE2A4D88A}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{29CBCF29-AA80-43BC-81C7-698DE2A4D88A}.Release|Win32.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

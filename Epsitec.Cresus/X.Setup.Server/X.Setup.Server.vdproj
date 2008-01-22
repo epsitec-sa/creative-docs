@@ -532,12 +532,6 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_DF685B0E322AF16A1E6EA3650FA53542"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_3179C27B06A096D7FF01B53AA5C7EA60"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -599,6 +593,12 @@
         {
         "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_7E5FA7FA9849C802F200AD1D7F57F0AC"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_DF685B0E322AF16A1E6EA3650FA53542"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -710,11 +710,6 @@
                     {
                     "Name" = "8:.NET Framework 2.0 (x86)"
                     "ProductCode" = "8:Microsoft.Net.Framework.2.0"
-                    }
-                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:Microsoft.Net.Framework.3.5"
-                    {
-                    "Name" = "8:.NET Framework 3.5"
-                    "ProductCode" = "8:Microsoft.Net.Framework.3.5"
                     }
                     "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:Microsoft.Windows.Installer.3.1"
                     {
@@ -948,7 +943,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:Cresus.DataLayer, Version=2.0.0.0, Culture=neutral, PublicKeyToken=7344997cc606b490, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:Cresus.DataLayer, Version=2.2.0.0, Culture=neutral, PublicKeyToken=7344997cc606b490, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                     "_1828F076ACC27C286342F0ED142E9638"
@@ -1320,7 +1315,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:Common.Types, Version=2.0.0.0, Culture=neutral, PublicKeyToken=7344997cc606b490, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:Common.Types, Version=2.2.0.0, Culture=neutral, PublicKeyToken=7344997cc606b490, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                     "_9BCDA28DC8E50C812E509EAA8C30FFCB"
@@ -1413,7 +1408,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:Common.Support, Version=2.0.0.0, Culture=neutral, PublicKeyToken=7344997cc606b490, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:Common.Support, Version=2.2.0.0, Culture=neutral, PublicKeyToken=7344997cc606b490, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                     "_DF685B0E322AF16A1E6EA3650FA53542"

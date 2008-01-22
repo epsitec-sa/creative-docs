@@ -273,12 +273,6 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_4FC049618D3D4C7DBD52A52093C302DF"
-        "OwnerKey" = "8:_B0FC9A5706914E848F9F20C897BFA22A"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_572309C9F2DE58F1756F492B8F647B1F"
         "OwnerKey" = "8:_D072788192480C3080C41D0B8CDB4EB7"
         "MsmSig" = "8:_UNDEFINED"
@@ -389,6 +383,12 @@
         {
         "MsmKey" = "8:_6F97EB555C7D96C206386E4633B9AA0D"
         "OwnerKey" = "8:_8C83F6D6089DBEF8E5B2F58D42655F51"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_7432C2A5D74C4F8EA6813724BD8F4B21"
+        "OwnerKey" = "8:_B0FC9A5706914E848F9F20C897BFA22A"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -927,7 +927,7 @@
         "DisplayName" = "8:Debug"
         "IsDebugOnly" = "11:TRUE"
         "IsReleaseOnly" = "11:FALSE"
-        "OutputFilename" = "8:Debug\\X.Setup.CresusDocuments.msi"
+        "OutputFilename" = "8:Debug\\CresusDocuments.msi"
         "PackageFilesAs" = "3:2"
         "PackageFileSize" = "3:-2147483648"
         "CabType" = "3:1"
@@ -941,7 +941,7 @@
             {
             "Enabled" = "11:TRUE"
             "PromptEnabled" = "11:TRUE"
-            "PrerequisitesLocation" = "2:2"
+            "PrerequisitesLocation" = "2:1"
             "Url" = "8:"
             "ComponentsUrl" = "8:"
                 "Items"
@@ -950,11 +950,6 @@
                     {
                     "Name" = "8:.NET Framework 2.0 (x86)"
                     "ProductCode" = "8:Microsoft.Net.Framework.2.0"
-                    }
-                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:Microsoft.Net.Framework.3.5"
-                    {
-                    "Name" = "8:.NET Framework 3.5"
-                    "ProductCode" = "8:Microsoft.Net.Framework.3.5"
                     }
                     "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:Microsoft.Windows.Installer.3.1"
                     {
@@ -1677,7 +1672,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:Common.Document, Version=2.1.4.0, Culture=neutral, PublicKeyToken=7344997cc606b490, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:Common.Document, Version=2.1.5.0, Culture=neutral, PublicKeyToken=7344997cc606b490, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                     "_D072788192480C3080C41D0B8CDB4EB7"
@@ -1708,7 +1703,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:Common.DocumentEditor, Version=2.1.4.0, Culture=neutral, PublicKeyToken=7344997cc606b490, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:Common.DocumentEditor, Version=2.1.5.0, Culture=neutral, PublicKeyToken=7344997cc606b490, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                     "_D5816E49C05BF416FAAAF9897C2E85CC"
@@ -2014,7 +2009,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Crésus Documents"
         "ProductCode" = "8:{9F552CAB-E28C-47F8-9372-681F9697DC5E}"
-        "PackageCode" = "8:{30FBF86A-1B0B-4075-A218-0366608DA279}"
+        "PackageCode" = "8:{8AB0781C-D6B2-4E9E-B485-445314D9C766}"
         "UpgradeCode" = "8:{028E66AB-AF47-419F-A2DE-8EDC1BC9C240}"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
@@ -2036,7 +2031,7 @@
         "UseSystemSearchPath" = "11:TRUE"
         "TargetPlatform" = "3:0"
         "PreBuildEvent" = "8:"
-        "PostBuildEvent" = "8:$(ProjectDir)..\\External\\CodeSigning\\sign.bat \"$(ProjectDir)$(Configuration)\\*\" \"Cresus Documents\""
+        "PostBuildEvent" = "8:$(ProjectDir)..\\External\\CodeSigning\\sign.bat \"$(ProjectDir)$(Configuration)\\*\" \"Cresus Documents\"\r\n$(ProjectDir)build-installer.bat\r\n"
         "RunPostBuildEvent" = "3:0"
         }
         "Registry"
@@ -2610,7 +2605,7 @@
         }
         "MergeModule"
         {
-            "{CEE29DC0-9FBA-4B99-8D47-5BC643D9B626}:_4FC049618D3D4C7DBD52A52093C302DF"
+            "{CEE29DC0-9FBA-4B99-8D47-5BC643D9B626}:_7432C2A5D74C4F8EA6813724BD8F4B21"
             {
             "UseDynamicProperties" = "11:TRUE"
             "IsDependency" = "11:TRUE"

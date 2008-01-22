@@ -2065,7 +2065,7 @@ namespace Epsitec.Common.Document.PDF
 		protected byte[] CreateImageSurfaceChannel(Opac.FreeImage.Image fi, Opac.FreeImage.ColorChannel channel, ImageFilter filter)
 		{
 			Opac.FreeImage.Image plan = fi.GetChannel(channel);
-			return plan.GetRawImageSource8Bits(false);
+			return plan.GetRawImageSource8Bits(true);
 		}
 
 		protected void FlushImageSurface()

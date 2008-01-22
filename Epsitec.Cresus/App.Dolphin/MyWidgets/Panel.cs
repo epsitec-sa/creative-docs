@@ -6,6 +6,7 @@ using Epsitec.Common.Types;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Widgets.Helpers;
+using Epsitec.App.Dolphin.MyWidgets;
 
 [assembly: DependencyClass (typeof(Panel))]
 

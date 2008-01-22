@@ -78,7 +78,7 @@ namespace Epsitec.Common.Drawing
 			System.IO.File.WriteAllBytes ("rgba-A.png", imageA.SaveToMemory (FileFormat.Png));
 			System.IO.File.WriteAllBytes ("rgba-T.png", imageT.SaveToMemory (FileFormat.Png));
 			
-			byte[] memory = image.GetChannel (ColorChannel.Alpha).GetRawImageSource8Bits (false);
+			byte[] memory = image.GetChannel (ColorChannel.Alpha).GetRawImageSource8Bits (true);
 
 			Assert.AreEqual (128*128, memory.Length);
 

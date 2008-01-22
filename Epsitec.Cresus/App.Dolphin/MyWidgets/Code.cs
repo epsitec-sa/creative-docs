@@ -44,7 +44,7 @@ namespace Epsitec.App.Dolphin.MyWidgets
 			}
 
 			this.widgetInstruction = new TextFieldEx(this);
-			this.widgetInstruction.ButtonShowCondition = ShowCondition.WhenModified;
+			this.widgetInstruction.ButtonShowCondition = ButtonShowCondition.WhenModified;
 			this.widgetInstruction.DefocusAction = DefocusAction.AutoAcceptOrRejectEdition;
 			this.widgetInstruction.TextNavigator.AllowTabInsertion = true;
 			this.widgetInstruction.PreferredHeight = 20;

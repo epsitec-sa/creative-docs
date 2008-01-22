@@ -141,6 +141,7 @@
     <Content Include="Executable\1.0.0\Resources\App.Dolphin\module.info" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Executable\1.0.0\Common.FormEngine.dll" />
     <Content Include="Executable\1.0.0\Resources\App.Dolphin\Strings.00.resource" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
