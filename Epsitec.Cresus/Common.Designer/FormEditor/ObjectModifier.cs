@@ -419,42 +419,43 @@ namespace Epsitec.Common.Designer.FormEditor
 		public System.Guid GetPatchAttachGuid(int index, int direction)
 		{
 			//	Retourne le Guid *après* lequel un champ sera attaché.
-			System.Guid ag = System.Guid.Empty;
-
 			if (direction < 0)
 			{
-				//	System.Guid.Empty correspond à un déplacement en tête de liste.
-				if (index+direction-1 >= 0)
+				if (index+direction-1 < 0)
 				{
-					ag = this.fields[index+direction-1].Guid;
+					return System.Guid.Empty;  // System.Guid.Empty correspond à un déplacement en tête de liste
+				}
+				else
+				{
+					return this.fields[index+direction-1].Guid;
 				}
 			}
 			else
 			{
-				ag = this.fields[index+direction].Guid;
+				return this.fields[index+direction].Guid;
 			}
 
-			return ag;
+			return System.Guid.Empty;
 		}
 
 		public System.Guid GetReferencePatchAttachGuid(TableItem item)
 		{
 			//	Retourne le Guid d'un champ dans la liste de référence d'un masque de patch *après* lequel s'attache un TableItem.
-			if (this.referenceFields != null)
+			FormEngine.Engine engine = new FormEngine.Engine(this.formEditor.Module.ResourceManager);
+			List<FieldDescription> merged = engine.Arrange.Merge(this.referenceFields, this.formEditor.Form.Fields);
+
+			for (int i=0; i<merged.Count; i++)
 			{
-				for (int i=0; i<this.referenceFields.Count; i++)
+				FieldDescription field = merged[i];
+				if (field.Guid == item.Guid)
 				{
-					FieldDescription field = this.referenceFields[i];
-					if (field.Guid == item.Guid)
+					if (i == 0)
 					{
-						if (i == 0)
-						{
-							return System.Guid.Empty;
-						}
-						else
-						{
-							return this.referenceFields[i-1].Guid;
-						}
+						return System.Guid.Empty;
+					}
+					else
+					{
+						return merged[i-1].Guid;
 					}
 				}
 			}

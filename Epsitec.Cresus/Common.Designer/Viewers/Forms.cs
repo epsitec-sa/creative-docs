@@ -1316,10 +1316,15 @@ namespace Epsitec.Common.Designer.Viewers
 
 			if (this.formEditor.ObjectModifier.IsPatch)  // module de patch ?
 			{
+				List<FormEditor.ObjectModifier.TableItem> items = new List<Epsitec.Common.Designer.FormEditor.ObjectModifier.TableItem>();
+
 				foreach (int sel in sels)
 				{
-					FormEditor.ObjectModifier.TableItem item = this.formEditor.ObjectModifier.TableContent[sel];
+					items.Add(this.formEditor.ObjectModifier.TableContent[sel]);
+				}
 
+				foreach (FormEditor.ObjectModifier.TableItem item in items)
+				{
 					int index = this.formEditor.ObjectModifier.GetFormDescriptionIndex(item.Guid);
 					FieldDescription field = this.formEditor.ObjectModifier.GetFormDescription(item);
 					
