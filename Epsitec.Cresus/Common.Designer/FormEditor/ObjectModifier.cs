@@ -434,8 +434,6 @@ namespace Epsitec.Common.Designer.FormEditor
 			{
 				return this.fields[index+direction].Guid;
 			}
-
-			return System.Guid.Empty;
 		}
 
 		public System.Guid GetReferencePatchAttachGuid(TableItem item)
