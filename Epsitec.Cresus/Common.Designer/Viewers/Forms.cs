@@ -645,9 +645,9 @@ namespace Epsitec.Common.Designer.Viewers
 			bool isPatch = this.formEditor.ObjectModifier.IsPatch;
 
 			this.fieldsButtonRemove.Enable = isSel;
-			this.fieldsButtonGlue.Enable = isSel && !isPatch;
+			this.fieldsButtonGlue.Enable = isSel;
 			this.fieldsButtonLine.Enable = isSel;
-			this.fieldsButtonTitle.Enable = isSel && !isPatch;
+			this.fieldsButtonTitle.Enable = isSel;
 			this.fieldsButtonBox.Enable = isSel && !isPatch;
 
 			this.fieldsButtonForm.Enable = isForm && !isPatch;
@@ -1119,10 +1119,28 @@ namespace Epsitec.Common.Designer.Viewers
 
 			FormEditor.ObjectModifier.TableItem item = this.formEditor.ObjectModifier.TableContent[sels[0]];
 			int index = this.formEditor.ObjectModifier.GetFormDescriptionIndex(item.Guid);
+			FieldDescription field;
 
-			FieldDescription field = new FieldDescription(FieldDescription.FieldType.Glue);
-			field.ColumnsRequired = 0;
-			this.form.Fields.Insert(index, field);
+			if (this.formEditor.ObjectModifier.IsPatch)  // module de patch ?
+			{
+				System.Guid ag = System.Guid.Empty;
+				if (sels[0] > 0)
+				{
+					ag = this.formEditor.ObjectModifier.TableContent[sels[0]-1].Guid;
+				}
+
+				field = new FieldDescription(FieldDescription.FieldType.Glue);
+				field.ColumnsRequired = 0;
+				field.PatchInserted = true;
+				field.PatchAttachGuid = ag;
+				this.form.Fields.Add(field);
+			}
+			else  // module normal ?
+			{
+				field = new FieldDescription(FieldDescription.FieldType.Glue);
+				field.ColumnsRequired = 0;
+				this.form.Fields.Insert(index, field);
+			}
 
 			this.SetForm(this.form, this.druidToSerialize, true);
 			this.UpdateFieldsTable(false);
@@ -1185,9 +1203,26 @@ namespace Epsitec.Common.Designer.Viewers
 
 			FormEditor.ObjectModifier.TableItem item = this.formEditor.ObjectModifier.TableContent[sels[0]];
 			int index = this.formEditor.ObjectModifier.GetFormDescriptionIndex(item.Guid);
+			FieldDescription field;
 
-			FieldDescription field = new FieldDescription(FieldDescription.FieldType.Title);
-			this.form.Fields.Insert(index, field);
+			if (this.formEditor.ObjectModifier.IsPatch)  // module de patch ?
+			{
+				System.Guid ag = System.Guid.Empty;
+				if (sels[0] > 0)
+				{
+					ag = this.formEditor.ObjectModifier.TableContent[sels[0]-1].Guid;
+				}
+
+				field = new FieldDescription(FieldDescription.FieldType.Title);
+				field.PatchInserted = true;
+				field.PatchAttachGuid = ag;
+				this.form.Fields.Add(field);
+			}
+			else  // module normal ?
+			{
+				field = new FieldDescription(FieldDescription.FieldType.Title);
+				this.form.Fields.Insert(index, field);
+			}
 
 			this.SetForm(this.form, this.druidToSerialize, true);
 			this.UpdateFieldsTable(false);
