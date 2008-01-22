@@ -143,6 +143,7 @@
   <ItemGroup>
     <Content Include="Executable\1.0.0\Common.FormEngine.dll" />
     <Content Include="Executable\1.0.0\Resources\App.Dolphin\Strings.00.resource" />
+    <Content Include="Executable\1.0.0\System.Core.dll" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
@@ -171,6 +172,8 @@ del "$(SolutionDir)App.Dolphin.Core\Executable\1.0.0\Resources\*.xml"
 call "$(SolutionDir)External\CodeSigning\sign-epsitec.bat" "$(SolutionDir)App.Dolphin.Core\Executable\*.exe" "Dauphin"
 call "$(SolutionDir)External\CodeSigning\sign-epsitec.bat" "$(SolutionDir)App.Dolphin.Core\Executable\1.0.0\*.exe" "Dauphin"
 call "$(SolutionDir)External\CodeSigning\sign-epsitec.bat" "$(SolutionDir)App.Dolphin.Core\Executable\1.0.0\*.dll" "Dauphin"
+
+xcopy "$(SolutionDir)External\System.Core.dll" "$(SolutionDir)App.Dolphin.Core\Executable\1.0.0\" /Y
 </PostBuildEvent>
   </PropertyGroup>
 </Project>

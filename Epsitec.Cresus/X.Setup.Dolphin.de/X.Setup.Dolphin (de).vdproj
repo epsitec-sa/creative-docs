@@ -21,14 +21,14 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_59C2CADB4BAF4200AB5061BE85415427"
-        "OwnerKey" = "8:_UNDEFINED"
+        "MsmKey" = "8:_42896CC3A644456FB28DD35EB952582E"
+        "OwnerKey" = "8:_99A1ECCB35B241B391BC9274DB770594"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_71EF00C4E221472C9ACF77442DD89E1F"
-        "OwnerKey" = "8:_99A1ECCB35B241B391BC9274DB770594"
+        "MsmKey" = "8:_59C2CADB4BAF4200AB5061BE85415427"
+        "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -300,23 +300,23 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Dauphin-Simulator"
-        "ProductCode" = "8:{768D474B-DD31-4A71-8110-42CBCBB7EAAA}"
-        "PackageCode" = "8:{7910544B-4B7B-4FA8-88CE-6857A5C1B08C}"
+        "ProductCode" = "8:{708DDFB8-30EE-46E2-AAF4-EF85A760BD31}"
+        "PackageCode" = "8:{DE9EBDB5-08CB-4641-BB82-931EA529FFBC}"
         "UpgradeCode" = "8:{8C9BFBF0-BC27-4D4F-917A-6B7BF4E709A5}"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:TRUE"
-        "ProductVersion" = "8:1.1.1"
+        "ProductVersion" = "8:1.1.2"
         "Manufacturer" = "8:Epsitec"
         "ARPHELPTELEPHONE" = "8:"
-        "ARPHELPLINK" = "8:www.epsitec.ch"
+        "ARPHELPLINK" = "8:http://www.epsitec.ch"
         "Title" = "8:Dauphin-Simulator"
         "Subject" = "8:"
         "ARPCONTACT" = "8:EPSITEC"
         "Keywords" = "8:"
         "ARPCOMMENTS" = "8:Installiert den Dauphin-Simulator"
-        "ARPURLINFOABOUT" = "8:www.epsitec.ch"
+        "ARPURLINFOABOUT" = "8:http://www.epsitec.ch"
         "ARPPRODUCTICON" = "8:_170D98789BC04CCDB563061349B31586"
         "ARPIconIndex" = "3:0"
         "SearchPath" = "8:"
@@ -736,7 +736,7 @@
         }
         "MergeModule"
         {
-            "{CEE29DC0-9FBA-4B99-8D47-5BC643D9B626}:_71EF00C4E221472C9ACF77442DD89E1F"
+            "{CEE29DC0-9FBA-4B99-8D47-5BC643D9B626}:_42896CC3A644456FB28DD35EB952582E"
             {
             "UseDynamicProperties" = "11:TRUE"
             "IsDependency" = "11:TRUE"
