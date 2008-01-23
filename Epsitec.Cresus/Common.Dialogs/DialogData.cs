@@ -146,10 +146,12 @@ namespace Epsitec.Common.Dialogs
 		{
 			if (this.AreReferenceReplacementsValid ())
 			{
+				this.ForEachChange (change => change.Path.NavigateWrite (data, change.NewValue));
+			}
+			else
+			{
 				throw new System.InvalidOperationException ("Cannot apply invalid changes");
 			}
-
-			this.ForEachChange (change => change.Path.NavigateWrite (data, change.NewValue));
 		}
 
 		/// <summary>

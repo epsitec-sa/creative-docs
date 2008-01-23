@@ -265,7 +265,7 @@ namespace Epsitec.Common.Widgets
 				}
 			}
 
-			if (count > 0)
+			if (this.dirtyCount > 0)
 			{
 				this.RequestAsyncSynchronization ();
 			}
