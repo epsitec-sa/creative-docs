@@ -459,6 +459,8 @@ namespace Epsitec.Common.Designer.Viewers
 				this.UpdateFieldsTable(true);
 				this.ReflectSelectionToList();
 				this.UpdateFieldsButtons();
+				this.UpdateRelationsTable(false);
+				this.UpdateRelationsButtons();
 				this.module.AccessForms.SetLocalDirty();
 				return;
 			}
