@@ -92,6 +92,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.ico" />
+    <Content Include="..\External\System.Core.dll">
+      <Link>System.Core.dll</Link>
+    </Content>
     <Content Include="Exemples originaux\normal.crmod" />
     <Compile Include="Application.cs">
       <SubType>Code</SubType>
@@ -128,13 +131,6 @@
     <Content Include="Exemples originaux\title.crdoc" />
     <Content Include="Exemples originaux\transparency.crdoc" />
     <Content Include="Exemples originaux\warning.crdoc" />
-  </ItemGroup>
-  <ItemGroup>
-    <Reference Include="System.Core, Version=3.5.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\external\System.Core.dll</HintPath>
-      <RequiredTargetFramework>3.5</RequiredTargetFramework>
-    </Reference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
