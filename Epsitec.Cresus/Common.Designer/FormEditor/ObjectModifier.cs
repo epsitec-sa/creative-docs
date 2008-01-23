@@ -569,12 +569,12 @@ namespace Epsitec.Common.Designer.FormEditor
 						icon = Misc.Image("FormPatchHidden");  // peu prioritaire à cause du fond rouge
 					}
 
-					if (this.formEditor.Form.Fields[index].PatchModified)
+					if (this.formEditor.Form.Fields[index].PatchInserted)
 					{
 						icon = Misc.Image("FormPatchInserted");  // peu prioritaire à cause du fond vert
 					}
 
-					if (this.formEditor.Form.Fields[index].PatchInserted)
+					if (this.formEditor.Form.Fields[index].PatchMoved)
 					{
 						icon = Misc.Image("FormPatchMoved");  // prioritaire, car pas de fond coloré
 					}

@@ -1400,8 +1400,6 @@ namespace Epsitec.Common.Designer.Viewers
 						else
 						{
 							//	Déplace l'élément.
-							System.Guid iag = this.formEditor.ObjectModifier.GetReferencePatchAttachGuid(item);
-
 							int i = FormEngine.Arrange.IndexOfGuid(this.form.Fields, item.Guid);
 							if (i == -1)
 							{
@@ -1412,7 +1410,27 @@ namespace Epsitec.Common.Designer.Viewers
 							}
 							else
 							{
-								this.form.Fields[i].PatchAttachGuid = ag;
+								FieldDescription actual = this.form.Fields[i];
+
+								actual.PatchMoved = false;
+								System.Guid iag = this.formEditor.ObjectModifier.GetReferencePatchAttachGuid(item);
+								actual.PatchMoved = true;
+
+								if (iag == ag)
+								{
+									actual.PatchMoved = false;
+									actual.PatchAttachGuid = System.Guid.Empty;
+								}
+								else
+								{
+									actual.PatchMoved = true;
+									actual.PatchAttachGuid = ag;
+								}
+
+								if (!actual.PatchMoved && !actual.PatchModified)
+								{
+									this.form.Fields.RemoveAt(i);
+								}
 
 #if false
 								System.Guid iag = this.formEditor.ObjectModifier.GetReferencePatchAttachGuid(item);
