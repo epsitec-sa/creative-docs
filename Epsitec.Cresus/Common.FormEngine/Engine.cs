@@ -221,8 +221,7 @@ namespace Epsitec.Common.FormEngine
 						this.PreprocessGlue(field, labelsId, ref labelId, ref column, isGlueAfter);
 					}
 				}
-				else if (field.Type == FieldDescription.FieldType.Node ||
-						 field.Type == FieldDescription.FieldType.PatchHide)
+				else if (field.Type == FieldDescription.FieldType.Node)
 				{
 					throw new System.InvalidOperationException("Type incorrect (la liste de FieldDescription devrait être aplatie).");
 				}

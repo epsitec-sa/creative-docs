@@ -254,16 +254,23 @@ namespace Epsitec.Common.Designer.FormEditor
 			//	Si on est dans un module de patch, le champ modifié doit être répercuté dans le masque de patch.
 			if (this.IsPatch)
 			{
-				int index = FormEngine.Arrange.IndexOfNoPatchGuid(this.formEditor.Form.Fields, field.Guid);
-				if (index != -1)
+				int index = FormEngine.Arrange.IndexOfGuid(this.formEditor.Form.Fields, field.Guid);
+				if (index == -1)
 				{
-					this.formEditor.Form.Fields.RemoveAt(index);  // supprime l'élément avec PatchModified = true
+					FieldDescription copy = new FieldDescription(field);
+					copy.PatchModified = true;
+					this.formEditor.Form.Fields.Add(copy);
 				}
+				else
+				{
+					FieldDescription original = this.formEditor.Form.Fields[index];
 
-				FieldDescription patch = new FieldDescription(field);
-				patch.PatchModified = true;
-
-				this.formEditor.Form.Fields.Add(patch);  // puis réinsère-le
+					FieldDescription copy = new FieldDescription(field);
+					copy.PatchModified = true;
+					copy.PatchMoved = original.PatchMoved;
+					copy.PatchAttachGuid = original.PatchAttachGuid;
+					this.formEditor.Form.Fields[index] = copy;
+				}
 			}
 		}
 
@@ -554,20 +561,24 @@ namespace Epsitec.Common.Designer.FormEditor
 
 			if (this.IsPatch)
 			{
-				if (FormEngine.Arrange.IndexOfGuid(this.formEditor.Form.Fields, FieldDescription.FieldType.PatchHide, item.Guid) != -1)
+				int index = FormEngine.Arrange.IndexOfGuid(this.formEditor.Form.Fields, item.Guid);
+				if (index != -1)
 				{
-					icon = Misc.Image("FormPatchHidden");  // peu prioritaire à cause du fond rouge
-				}
+					if (this.formEditor.Form.Fields[index].PatchHidden)
+					{
+						icon = Misc.Image("FormPatchHidden");  // peu prioritaire à cause du fond rouge
+					}
 
-				int index = FormEngine.Arrange.IndexOfNoPatchGuid(this.formEditor.Form.Fields, item.Guid);
-				if (index != -1 && !this.formEditor.Form.Fields[index].PatchModified)
-				{
-					icon = Misc.Image("FormPatchInserted");  // peu prioritaire à cause du fond vert
-				}
+					if (this.formEditor.Form.Fields[index].PatchModified)
+					{
+						icon = Misc.Image("FormPatchInserted");  // peu prioritaire à cause du fond vert
+					}
 
-				if (FormEngine.Arrange.IndexOfGuid(this.formEditor.Form.Fields, FieldDescription.FieldType.PatchAttach, item.Guid) != -1)
-				{
-					icon = Misc.Image("FormPatchMoved");  // prioritaire, car pas de fond coloré
+					if (this.formEditor.Form.Fields[index].PatchInserted)
+					{
+						icon = Misc.Image("FormPatchMoved");  // prioritaire, car pas de fond coloré
+					}
+
 				}
 			}
 
@@ -594,22 +605,24 @@ namespace Epsitec.Common.Designer.FormEditor
 
 			if (this.IsPatch)
 			{
-				if (FormEngine.Arrange.IndexOfGuid(this.formEditor.Form.Fields, FieldDescription.FieldType.PatchHide, item.Guid) != -1)
-				{
-					color = Color.FromAlphaRgb(0.3, 1, 0, 0);  // rouge = champ caché
-				}
-
-				int index = FormEngine.Arrange.IndexOfNoPatchGuid(this.formEditor.Form.Fields, item.Guid);
+				int index = FormEngine.Arrange.IndexOfGuid(this.formEditor.Form.Fields, item.Guid);
 				if (index != -1)
 				{
+					if (this.formEditor.Form.Fields[index].PatchHidden)
+					{
+						color = Color.FromAlphaRgb(0.3, 1, 0, 0);  // rouge = champ caché
+					}
+
 					if (this.formEditor.Form.Fields[index].PatchModified)
 					{
 						color = Color.FromAlphaRgb(0.3, 1, 1, 0);  // jaune = champ modifié
 					}
-					else
+
+					if (this.formEditor.Form.Fields[index].PatchInserted)
 					{
 						color = Color.FromAlphaRgb(0.3, 0, 1, 0);  // vert = champ inséré
 					}
+
 				}
 			}
 

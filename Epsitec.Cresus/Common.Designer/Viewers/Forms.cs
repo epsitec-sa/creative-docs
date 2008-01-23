@@ -1057,25 +1057,21 @@ namespace Epsitec.Common.Designer.Viewers
 				foreach (int sel in sels)
 				{
 					FormEditor.ObjectModifier.TableItem item = this.formEditor.ObjectModifier.TableContent[sel];
+					FieldDescription field = this.formEditor.ObjectModifier.GetFormDescription(item);
 
-					int index = FormEngine.Arrange.IndexOfNoPatchGuid(this.form.Fields, item.Guid);
+					int index = FormEngine.Arrange.IndexOfGuid(this.form.Fields, item.Guid);
 					if (index == -1)
 					{
-						index = FormEngine.Arrange.IndexOfGuid(this.form.Fields, FieldDescription.FieldType.PatchHide, item.Guid);
-						if (index == -1)  // champ visible ?
-						{
-							FieldDescription field = new FieldDescription(FieldDescription.FieldType.PatchHide);
-							field.Guid = item.Guid;
-							this.form.Fields.Add(field);
-						}
-						else  // champ caché ?
-						{
-							this.form.Fields.RemoveAt(index);  // enlève l'élément PatchHide
-						}
+						FieldDescription copy = new FieldDescription(field);
+						copy.PatchHidden = true;
+						this.form.Fields.Add(copy);  // ajoute l'élément pour dire "caché"
 					}
 					else
 					{
-						this.form.Fields.RemoveAt(index);  // enlève l'élément PatchInsert
+						//	Enlève l'élément.
+						//	Si c'est un élément PatchHidden, cela revient à rendre l'élément de nouveau visible.
+						//	Si c'est un autre élément, cela le supprime.
+						this.form.Fields.RemoveAt(index);
 					}
 
 					guids.Add(item.Guid);
@@ -1394,8 +1390,8 @@ namespace Epsitec.Common.Designer.Viewers
 
 						if (field.PatchInserted)
 						{
-							//	Déplace l'élément PatchInsert.
-							int i = FormEngine.Arrange.IndexOfNoPatchGuid(this.form.Fields, item.Guid);
+							//	Déplace l'élément PatchInserted.
+							int i = FormEngine.Arrange.IndexOfGuid(this.form.Fields, item.Guid);
 							if (i != -1)
 							{
 								this.form.Fields[i].PatchAttachGuid = ag;
@@ -1403,20 +1399,30 @@ namespace Epsitec.Common.Designer.Viewers
 						}
 						else
 						{
-							//	Déplace l'élément PatchAttach.
-							int i = FormEngine.Arrange.IndexOfGuid(this.form.Fields, FieldDescription.FieldType.PatchAttach, item.Guid);
-							if (i != -1)
-							{
-								this.form.Fields.RemoveAt(i);  // enlève l'élément PatchAttach
-							}
-
+							//	Déplace l'élément.
 							System.Guid iag = this.formEditor.ObjectModifier.GetReferencePatchAttachGuid(item);
-							if (iag != ag)
+
+							int i = FormEngine.Arrange.IndexOfGuid(this.form.Fields, item.Guid);
+							if (i == -1)
 							{
-								FieldDescription newAttach = new FieldDescription(FieldDescription.FieldType.PatchAttach);
-								newAttach.Guid = item.Guid;
-								newAttach.PatchAttachGuid = ag;
-								this.form.Fields.Add(newAttach);
+								FieldDescription copy = new FieldDescription(field);
+								copy.PatchMoved = true;
+								copy.PatchAttachGuid = ag;
+								this.form.Fields.Add(copy);
+							}
+							else
+							{
+								this.form.Fields[i].PatchAttachGuid = ag;
+
+#if false
+								System.Guid iag = this.formEditor.ObjectModifier.GetReferencePatchAttachGuid(item);
+								if (iag == ag)
+								{
+								}
+								else
+								{
+								}
+#endif
 							}
 						}
 					}

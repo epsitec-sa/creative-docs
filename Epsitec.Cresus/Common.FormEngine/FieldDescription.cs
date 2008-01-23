@@ -25,8 +25,6 @@ namespace Epsitec.Common.FormEngine
 			Title			= 21,	// séparateur titre automatique
 			BoxBegin		= 30,	// début d'une boîte
 			BoxEnd			= 31,	// fin d'une boîte
-			PatchHide		= 40,	// Guid du champ du module de référence à cacher, dans un module de patch
-			PatchAttach		= 41,	// Guid du champ du module de référence à déplacer, dans un module de patch
 		}
 
 		[DesignerVisible]

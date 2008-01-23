@@ -27,13 +27,13 @@ namespace Epsitec.Common.FormEngine
 			List<FieldDescription> merged = new List<FieldDescription>();
 
 			//	Génère la liste fusionnée de tous les champs. Les champs cachés sont quand même dans la liste,
-			//	mais avec la propriété Hidden = true.
+			//	mais avec la propriété PatchHidden = true.
 			foreach (FieldDescription field in reference)
 			{
 				FieldDescription copy = new FieldDescription(field);
 
-				int index = Arrange.IndexOfGuid(patch, FieldDescription.FieldType.PatchHide, field.Guid);
-				if (index != -1)  // champ patché ?
+				int index = Arrange.IndexOfGuid(patch, field.Guid);
+				if (index != -1 && patch[index].PatchHidden)
 				{
 					copy.PatchHidden = true;  // champ à cacher
 				}
@@ -43,50 +43,48 @@ namespace Epsitec.Common.FormEngine
 
 			foreach (FieldDescription field in patch)
 			{
-				if (field.Type == FieldDescription.FieldType.PatchAttach)  // champ à déplacer ?
+				if (field.PatchMoved)  // champ à déplacer ?
 				{
-					int src = Arrange.IndexOfGuid(merged, FieldDescription.FieldType.None, field.Guid);  // cherche le champ à déplacer
+					int src = Arrange.IndexOfGuid(merged, field.Guid);  // cherche le champ à déplacer
 					if (src != -1)
 					{
 						//	field.AttachGuid vaut System.Guid.Empty lorsqu'il faut déplacer l'élément en tête
 						//	de liste. Par hazard, IndexOfGuid retourne -1 dans dst, ce qui correspond exactement
 						//	à la valeur requise !
-						int dst = Arrange.IndexOfGuid(merged, FieldDescription.FieldType.None, field.PatchAttachGuid);  // cherche où le déplacer
+						int dst = Arrange.IndexOfGuid(merged, field.PatchAttachGuid);  // cherche où le déplacer
 
 						FieldDescription temp = merged[src];
 						merged.RemoveAt(src);
 
-						dst = Arrange.IndexOfGuid(merged, FieldDescription.FieldType.None, field.PatchAttachGuid);  // recalcule le "où" après suppression
+						dst = Arrange.IndexOfGuid(merged, field.PatchAttachGuid);  // recalcule le "où" après suppression
 						merged.Insert(dst+1, temp);  // remet l'élément après dst
 
 						temp.PatchMoved = true;
 					}
 				}
 
-				if (field.Type != FieldDescription.FieldType.PatchHide &&
-					field.Type != FieldDescription.FieldType.PatchAttach)  // champ à insérer ?
+				if (field.PatchInserted)  // champ à insérer ?
 				{
-					if (field.PatchModified)  // champ modifié ?
-					{
-						int index = Arrange.IndexOfGuid(merged, FieldDescription.FieldType.None, field.Guid);
-						if (index != -1)
-						{
-							merged.RemoveAt(index);  // supprime le champ original
+					//	field.AttachGuid vaut System.Guid.Empty lorsqu'il faut déplacer l'élément en tête
+					//	de liste. Par hazard, IndexOfGuid retourne -1 dans dst, ce qui correspond exactement
+					//	à la valeur requise !
+					int dst = Arrange.IndexOfGuid(merged, field.PatchAttachGuid);  // cherche où l'insérer
 
-							FieldDescription copy = new FieldDescription(field);
-							merged.Insert(index, copy);  // et remplace-le par le champ modifié
-						}
-					}
-					else
+					FieldDescription copy = new FieldDescription(field);
+					copy.PatchInserted = true;
+					merged.Insert(dst+1, copy);  // insère l'élément après dst
+				}
+
+				if (field.PatchModified)  // champ à modifier ?
+				{
+					int index = Arrange.IndexOfGuid(merged, field.Guid);
+					if (index != -1)
 					{
-						//	field.AttachGuid vaut System.Guid.Empty lorsqu'il faut déplacer l'élément en tête
-						//	de liste. Par hazard, IndexOfGuid retourne -1 dans dst, ce qui correspond exactement
-						//	à la valeur requise !
-						int dst = Arrange.IndexOfGuid(merged, FieldDescription.FieldType.None, field.PatchAttachGuid);  // cherche où l'insérer
+						merged.RemoveAt(index);  // supprime le champ original
 
 						FieldDescription copy = new FieldDescription(field);
-						copy.PatchInserted = true;
-						merged.Insert(dst+1, copy);  // insère l'élément après dst
+						copy.PatchModified = true;
+						merged.Insert(index, copy);  // et remplace-le par le champ modifié
 					}
 				}
 			}
@@ -103,16 +101,6 @@ namespace Epsitec.Common.FormEngine
 
 			foreach (FieldDescription field in list)
 			{
-				if (field.Type == FieldDescription.FieldType.PatchHide)
-				{
-					return "La liste ne doit pas contenir de Hide";
-				}
-
-				if (field.Type == FieldDescription.FieldType.PatchAttach)
-				{
-					return "La liste ne doit pas contenir de Attach";
-				}
-
 				if (field.Type == FieldDescription.FieldType.Node)
 				{
 					return "La liste ne doit pas contenir de Node";
@@ -302,12 +290,6 @@ namespace Epsitec.Common.FormEngine
 				{
 					this.Develop(dst, field.NodeDescription);
 				}
-				else if (field.Type == FieldDescription.FieldType.PatchHide)
-				{
-				}
-				else if (field.Type == FieldDescription.FieldType.PatchAttach)
-				{
-				}
 				else
 				{
 					dst.Add(field);
@@ -316,44 +298,15 @@ namespace Epsitec.Common.FormEngine
 		}
 
 
-		static public int IndexOfNoPatchGuid(List<FieldDescription> list, System.Guid guid)
+		static public int IndexOfGuid(List<FieldDescription> list, System.Guid guid)
 		{
 			//	Retourne l'index de l'élément utilisant un Guid donné.
 			//	Retourne -1 s'il n'en existe aucun.
 			for (int i=0; i<list.Count; i++)
 			{
-				if (list[i].Type != FieldDescription.FieldType.PatchHide &&
-					list[i].Type != FieldDescription.FieldType.PatchAttach)
+				if (list[i].Guid == guid)
 				{
-					if (list[i].Guid == guid)
-					{
-						return i;
-					}
-				}
-			}
-
-			return -1;
-		}
-
-		static public int IndexOfGuid(List<FieldDescription> list, FieldDescription.FieldType type, System.Guid guid)
-		{
-			//	Retourne l'index de l'élément utilisant un Guid donné.
-			//	Retourne -1 s'il n'en existe aucun.
-			for (int i=0; i<list.Count; i++)
-			{
-				if (type == FieldDescription.FieldType.None)
-				{
-					if (list[i].Guid == guid)
-					{
-						return i;
-					}
-				}
-				else
-				{
-					if (list[i].Type == type && list[i].Guid == guid)
-					{
-						return i;
-					}
+					return i;
 				}
 			}
 
