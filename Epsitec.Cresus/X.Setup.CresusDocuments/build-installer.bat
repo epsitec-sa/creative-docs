@@ -8,7 +8,7 @@ S:\Epsitec.Cresus\External\CodeSigning\signtool.exe sign /a /n Epsitec /d "EPSIT
 S:\Epsitec.Cresus\External\CodeSigning\signtool.exe sign /a /n Epsitec /d "EPSITEC SA" /t http://timestamp.verisign.com/scripts/timstamp.dll "Debug\Setup.exe"
 S:\Epsitec.Cresus\External\CodeSigning\signtool.exe sign /a /n Epsitec /d "EPSITEC SA" /t http://timestamp.verisign.com/scripts/timstamp.dll "Debug\CresusDocuments.msi"
 
-iexpress /N Installer.sed
+S:\Epsitec.Cresus\External\iexpress /N Installer.sed
 
 S:\Epsitec.Cresus\External\CodeSigning\signtool.exe sign /a /n Epsitec /d "EPSITEC SA" /t http://timestamp.verisign.com/scripts/timstamp.dll "CrDoc-Installer.exe"
 

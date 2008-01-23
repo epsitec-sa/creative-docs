@@ -8,7 +8,7 @@ S:\Epsitec.Cresus\External\CodeSigning\signtool.exe sign /a /n OPaC /d "OPaC bri
 S:\Epsitec.Cresus\External\CodeSigning\signtool.exe sign /a /n OPaC /d "OPaC bright ideas" /t http://timestamp.verisign.com/scripts/timstamp.dll "Debug\Setup.exe"
 S:\Epsitec.Cresus\External\CodeSigning\signtool.exe sign /a /n OPaC /d "OPaC bright ideas" /t http://timestamp.verisign.com/scripts/timstamp.dll "Debug\CreativeDocs.msi"
 
-iexpress /N Installer.sed
+S:\Epsitec.Cresus\External\iexpress /N Installer.sed
 
 S:\Epsitec.Cresus\External\CodeSigning\signtool.exe sign /a /n OPaC /d "OPaC bright ideas" /t http://timestamp.verisign.com/scripts/timstamp.dll "CrDoc-Installer.exe"
 
