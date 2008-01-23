@@ -20,6 +20,7 @@ namespace Epsitec.Common.FormEngine
 		public const string PatchHidden			= "PHi";
 		public const string PatchMoved			= "PMo";
 		public const string PatchInserted		= "PIn";
+		public const string PatchModified		= "PMd";
 		public const string PatchAttachGuid		= "PAG";
 	}
 }

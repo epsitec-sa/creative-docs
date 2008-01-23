@@ -69,6 +69,7 @@ namespace Epsitec.Common.FormEngine
 			this.patchHidden = false;
 			this.patchMoved = false;
 			this.patchInserted = false;
+			this.patchModified = false;
 		}
 
 		public FieldDescription(FieldType type) : this()
@@ -98,6 +99,7 @@ namespace Epsitec.Common.FormEngine
 			this.patchHidden = model.patchHidden;
 			this.patchMoved = model.patchMoved;
 			this.patchInserted = model.patchInserted;
+			this.patchModified = model.patchModified;
 		}
 
 		public FieldDescription(XmlReader reader) : this()
@@ -438,6 +440,19 @@ namespace Epsitec.Common.FormEngine
 			}
 		}
 
+		public bool PatchModified
+		{
+			//	Si on est dans un module de patch, indique un champ modifié dans la liste finale.
+			get
+			{
+				return this.patchModified;
+			}
+			set
+			{
+				this.patchModified = value;
+			}
+		}
+
 		public System.Guid PatchAttachGuid
 		{
 			//	Retourne l'identificateur unique *après* lequel est attaché un champ déplacé par un patch.
@@ -499,6 +514,7 @@ namespace Epsitec.Common.FormEngine
 				a.patchHidden != b.patchHidden ||
 				a.patchMoved != b.patchMoved ||
 				a.patchInserted != b.patchInserted ||
+				a.patchModified != b.patchModified ||
 				!a.patchAttachGuid.Equals(b.patchAttachGuid) )
 			{
 				return false;
@@ -576,6 +592,11 @@ namespace Epsitec.Common.FormEngine
 			if (this.patchInserted)
 			{
 				writer.WriteElementString(Xml.PatchInserted, this.patchInserted.ToString());
+			}
+
+			if (this.patchModified)
+			{
+				writer.WriteElementString(Xml.PatchModified, this.patchModified.ToString());
 			}
 
 			if (this.patchAttachGuid != System.Guid.Empty)
@@ -660,6 +681,10 @@ namespace Epsitec.Common.FormEngine
 						else if (name == Xml.PatchInserted)
 						{
 							this.patchInserted = bool.Parse(element);
+						}
+						else if (name == Xml.PatchModified)
+						{
+							this.patchModified = bool.Parse(element);
 						}
 						else if (name == Xml.PatchAttachGuid)
 						{
@@ -753,6 +778,7 @@ namespace Epsitec.Common.FormEngine
 		private bool						patchHidden;
 		private bool						patchMoved;
 		private bool						patchInserted;
+		private bool						patchModified;
 		private System.Guid					patchAttachGuid;
 	}
 }
