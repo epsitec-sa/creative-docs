@@ -257,13 +257,13 @@ namespace Epsitec.Common.Designer.FormEditor
 				int index = FormEngine.Arrange.IndexOfNoPatchGuid(this.formEditor.Form.Fields, field.Guid);
 				if (index != -1)
 				{
-					this.formEditor.Form.Fields.RemoveAt(index);
+					this.formEditor.Form.Fields.RemoveAt(index);  // supprime l'élément avec PatchModified = true
 				}
 
 				FieldDescription patch = new FieldDescription(field);
 				patch.PatchModified = true;
 
-				this.formEditor.Form.Fields.Add(patch);
+				this.formEditor.Form.Fields.Add(patch);  // puis réinsère-le
 			}
 		}
 
@@ -465,8 +465,20 @@ namespace Epsitec.Common.Designer.FormEditor
 		public System.Guid GetReferencePatchAttachGuid(TableItem item)
 		{
 			//	Retourne le Guid d'un champ dans la liste de référence d'un masque de patch *après* lequel s'attache un TableItem.
+			List<FieldDescription> partial = new List<FieldDescription>();
+
+			foreach (FieldDescription field in this.formEditor.Form.Fields)
+			{
+				if (field.Guid == item.Guid)
+				{
+					break;
+				}
+
+				partial.Add(field);
+			}
+
 			FormEngine.Engine engine = new FormEngine.Engine(this.formEditor.Module.ResourceManager);
-			List<FieldDescription> merged = engine.Arrange.Merge(this.referenceFields, this.formEditor.Form.Fields);
+			List<FieldDescription> merged = engine.Arrange.Merge(this.referenceFields, partial);
 
 			for (int i=0; i<merged.Count; i++)
 			{
@@ -487,7 +499,7 @@ namespace Epsitec.Common.Designer.FormEditor
 			return System.Guid.Empty;
 		}
 
-		public string GetTableContentDescription(TableItem item, bool isImage, bool isShowPrefix)
+		public string GetTableContentDescription(TableItem item, bool isImage, bool isShowPrefix, bool isShowGuid)
 		{
 			//	Retourne le texte permettant de décrire un TableItem dans une liste, avec un effet
 			//	d'indentation pour ressembler aux arborescences de Vista.
@@ -534,6 +546,11 @@ namespace Epsitec.Common.Designer.FormEditor
 				if (item.Prefix != null && isShowPrefix)
 				{
 					name = string.Concat(item.Prefix, name);
+				}
+
+				if (isShowGuid)
+				{
+					name = string.Concat(item.Guid.ToString(), " ", name);
 				}
 			}
 

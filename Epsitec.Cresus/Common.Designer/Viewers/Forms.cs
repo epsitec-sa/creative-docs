@@ -431,6 +431,13 @@ namespace Epsitec.Common.Designer.Viewers
 				return;
 			}
 
+			if (name == "FormFieldsShowGuid")  // affiche/cache les Guids ?
+			{
+				Forms.showGuid = !Forms.showGuid;
+				this.UpdateFieldsTable(false);
+				return;
+			}
+
 			if (name == "FormFieldsShowColumn1")  // affiche/cache la 2ème colonne ?
 			{
 				Forms.showColumn1 = !Forms.showColumn1;
@@ -538,7 +545,7 @@ namespace Epsitec.Common.Designer.Viewers
 				else
 				{
 					FormEditor.ObjectModifier.TableItem item = this.formEditor.ObjectModifier.TableContent[first+i];
-					string name = this.formEditor.ObjectModifier.GetTableContentDescription(item, true, Forms.showPrefix);
+					string name = this.formEditor.ObjectModifier.GetTableContentDescription(item, true, Forms.showPrefix, Forms.showGuid);
 					string icon1 = this.formEditor.ObjectModifier.GetTableContentIcon1(item);
 					string icon2 = this.formEditor.ObjectModifier.GetTableContentIcon2(item);
 					Color color = this.formEditor.ObjectModifier.GetTableContentUseColor(item);
@@ -553,7 +560,7 @@ namespace Epsitec.Common.Designer.Viewers
 					}
 					else
 					{
-						string tooltip = this.formEditor.ObjectModifier.GetTableContentDescription(item, false, true);
+						string tooltip = this.formEditor.ObjectModifier.GetTableContentDescription(item, false, true, false);
 						this.fieldsTable.SetLineTooltip(0, first+i, tooltip);
 					}
 
@@ -1617,6 +1624,11 @@ namespace Epsitec.Common.Designer.Viewers
 			item = new MenuItem("FormFieldsShowPrefix", Misc.GetMenuIconState(Forms.showPrefix), Res.Strings.Viewers.Forms.Menu.ShowPrefix, "", "FormFieldsShowPrefix");
 			menu.Items.Add(item);
 
+#if true
+			item = new MenuItem("FormFieldsShowGuid", Misc.GetMenuIconState(Forms.showGuid), "Afficher les Guids (debug)", "", "FormFieldsShowGuid");
+			menu.Items.Add(item);
+#endif
+
 			item = new MenuItem("FormFieldsShowColumn1", Misc.GetMenuIconState(Forms.showColumn1), "Afficher la deuxième colonne", "", "FormFieldsShowColumn1");
 			menu.Items.Add(item);
 
@@ -1831,6 +1843,7 @@ namespace Epsitec.Common.Designer.Viewers
 		protected static string					softSerialize = null;
 		protected static bool					softDirtySerialization = false;
 		protected static bool					showPrefix = false;
+		protected static bool					showGuid = false;
 		protected static bool					showColumn1 = true;
 		protected static bool					showColumn2 = true;
 

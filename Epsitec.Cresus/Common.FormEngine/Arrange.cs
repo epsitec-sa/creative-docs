@@ -47,15 +47,15 @@ namespace Epsitec.Common.FormEngine
 				if (field.Type != FieldDescription.FieldType.PatchHide &&
 					field.Type != FieldDescription.FieldType.PatchAttach)  // champ à insérer ?
 				{
-					if (field.PatchModified)
+					if (field.PatchModified)  // champ modifié ?
 					{
 						int index = Arrange.IndexOfGuid(merged, FieldDescription.FieldType.None, field.Guid);
 						if (index != -1)
 						{
-							merged.RemoveAt(index);
+							merged.RemoveAt(index);  // supprime le champ original
 
 							FieldDescription copy = new FieldDescription(field);
-							merged.Insert(index, copy);
+							merged.Insert(index, copy);  // et remplace-le par le champ modifié
 						}
 					}
 					else
