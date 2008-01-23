@@ -47,14 +47,28 @@ namespace Epsitec.Common.FormEngine
 				if (field.Type != FieldDescription.FieldType.PatchHide &&
 					field.Type != FieldDescription.FieldType.PatchAttach)  // champ à insérer ?
 				{
-					//	field.AttachGuid vaut System.Guid.Empty lorsqu'il faut déplacer l'élément en tête
-					//	de liste. Par hazard, IndexOfGuid retourne -1 dans dst, ce qui correspond exactement
-					//	à la valeur requise !
-					int dst = Arrange.IndexOfGuid(merged, FieldDescription.FieldType.None, field.PatchAttachGuid);  // cherche où l'insérer
+					if (field.PatchModified)
+					{
+						int index = Arrange.IndexOfGuid(merged, FieldDescription.FieldType.None, field.Guid);
+						if (index != -1)
+						{
+							merged.RemoveAt(index);
 
-					FieldDescription copy = new FieldDescription(field);
-					copy.PatchInserted = true;
-					merged.Insert(dst+1, copy);  // insère l'élément après dst
+							FieldDescription copy = new FieldDescription(field);
+							merged.Insert(index, copy);
+						}
+					}
+					else
+					{
+						//	field.AttachGuid vaut System.Guid.Empty lorsqu'il faut déplacer l'élément en tête
+						//	de liste. Par hazard, IndexOfGuid retourne -1 dans dst, ce qui correspond exactement
+						//	à la valeur requise !
+						int dst = Arrange.IndexOfGuid(merged, FieldDescription.FieldType.None, field.PatchAttachGuid);  // cherche où l'insérer
+
+						FieldDescription copy = new FieldDescription(field);
+						copy.PatchInserted = true;
+						merged.Insert(dst+1, copy);  // insère l'élément après dst
+					}
 				}
 			}
 

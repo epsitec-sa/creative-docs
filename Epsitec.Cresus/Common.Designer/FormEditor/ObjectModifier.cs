@@ -89,6 +89,7 @@ namespace Epsitec.Common.Designer.FormEditor
 			if (field != null)
 			{
 				field.ColumnsRequired = columnsRequired;
+				this.PatchUpdate(field);
 			}
 		}
 
@@ -113,6 +114,7 @@ namespace Epsitec.Common.Designer.FormEditor
 			if (field != null)
 			{
 				field.RowsRequired = rowsRequired;
+				this.PatchUpdate(field);
 			}
 		}
 
@@ -138,6 +140,7 @@ namespace Epsitec.Common.Designer.FormEditor
 			if (field != null)
 			{
 				field.SeparatorBottom = sep;
+				this.PatchUpdate(field);
 			}
 		}
 
@@ -163,6 +166,7 @@ namespace Epsitec.Common.Designer.FormEditor
 			if (field != null)
 			{
 				field.BoxPadding = type;
+				this.PatchUpdate(field);
 			}
 		}
 
@@ -188,6 +192,7 @@ namespace Epsitec.Common.Designer.FormEditor
 			if (field != null)
 			{
 				field.BackColor = color;
+				this.PatchUpdate(field);
 			}
 		}
 
@@ -213,6 +218,7 @@ namespace Epsitec.Common.Designer.FormEditor
 			if (field != null)
 			{
 				field.BoxFrameState = state;
+				this.PatchUpdate(field);
 			}
 		}
 
@@ -238,6 +244,26 @@ namespace Epsitec.Common.Designer.FormEditor
 			if (field != null)
 			{
 				field.BoxFrameWidth = 2*width-1;
+				this.PatchUpdate(field);
+			}
+		}
+
+
+		protected void PatchUpdate(FieldDescription field)
+		{
+			//	Si on est dans un module de patch, le champ modifié doit être répercuté dans le masque de patch.
+			if (this.IsPatch)
+			{
+				int index = FormEngine.Arrange.IndexOfNoPatchGuid(this.formEditor.Form.Fields, field.Guid);
+				if (index != -1)
+				{
+					this.formEditor.Form.Fields.RemoveAt(index);
+				}
+
+				FieldDescription patch = new FieldDescription(field);
+				patch.PatchModified = true;
+
+				this.formEditor.Form.Fields.Add(patch);
 			}
 		}
 
@@ -528,7 +554,8 @@ namespace Epsitec.Common.Designer.FormEditor
 					icon = Misc.Image("FormPatchHidden");  // peu prioritaire à cause du fond rouge
 				}
 
-				if (FormEngine.Arrange.IndexOfNoPatchGuid(this.formEditor.Form.Fields, item.Guid) != -1)
+				int index = FormEngine.Arrange.IndexOfNoPatchGuid(this.formEditor.Form.Fields, item.Guid);
+				if (index != -1 && !this.formEditor.Form.Fields[index].PatchModified)
 				{
 					icon = Misc.Image("FormPatchInserted");  // peu prioritaire à cause du fond vert
 				}
@@ -567,9 +594,17 @@ namespace Epsitec.Common.Designer.FormEditor
 					color = Color.FromAlphaRgb(0.3, 1, 0, 0);  // rouge = champ caché
 				}
 
-				if (FormEngine.Arrange.IndexOfNoPatchGuid(this.formEditor.Form.Fields, item.Guid) != -1)
+				int index = FormEngine.Arrange.IndexOfNoPatchGuid(this.formEditor.Form.Fields, item.Guid);
+				if (index != -1)
 				{
-					color = Color.FromAlphaRgb(0.3, 0, 1, 0);  // vert = champ inséré
+					if (this.formEditor.Form.Fields[index].PatchModified)
+					{
+						color = Color.FromAlphaRgb(0.3, 1, 1, 0);  // jaune = champ modifié
+					}
+					else
+					{
+						color = Color.FromAlphaRgb(0.3, 0, 1, 0);  // vert = champ inséré
+					}
 				}
 			}
 
