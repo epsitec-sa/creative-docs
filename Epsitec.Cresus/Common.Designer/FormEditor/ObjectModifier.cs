@@ -465,20 +465,8 @@ namespace Epsitec.Common.Designer.FormEditor
 		public System.Guid GetReferencePatchAttachGuid(TableItem item)
 		{
 			//	Retourne le Guid d'un champ dans la liste de référence d'un masque de patch *après* lequel s'attache un TableItem.
-			List<FieldDescription> partial = new List<FieldDescription>();
-
-			foreach (FieldDescription field in this.formEditor.Form.Fields)
-			{
-				if (field.Guid == item.Guid)
-				{
-					break;
-				}
-
-				partial.Add(field);
-			}
-
 			FormEngine.Engine engine = new FormEngine.Engine(this.formEditor.Module.ResourceManager);
-			List<FieldDescription> merged = engine.Arrange.Merge(this.referenceFields, partial);
+			List<FieldDescription> merged = engine.Arrange.Merge(this.referenceFields, formEditor.Form.Fields);
 
 			for (int i=0; i<merged.Count; i++)
 			{

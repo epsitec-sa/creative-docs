@@ -41,9 +41,28 @@ namespace Epsitec.Common.FormEngine
 				merged.Add(copy);
 			}
 
-			//	Insère les champs dans la liste fusionnée.
 			foreach (FieldDescription field in patch)
 			{
+				if (field.Type == FieldDescription.FieldType.PatchAttach)  // champ à déplacer ?
+				{
+					int src = Arrange.IndexOfGuid(merged, FieldDescription.FieldType.None, field.Guid);  // cherche le champ à déplacer
+					if (src != -1)
+					{
+						//	field.AttachGuid vaut System.Guid.Empty lorsqu'il faut déplacer l'élément en tête
+						//	de liste. Par hazard, IndexOfGuid retourne -1 dans dst, ce qui correspond exactement
+						//	à la valeur requise !
+						int dst = Arrange.IndexOfGuid(merged, FieldDescription.FieldType.None, field.PatchAttachGuid);  // cherche où le déplacer
+
+						FieldDescription temp = merged[src];
+						merged.RemoveAt(src);
+
+						dst = Arrange.IndexOfGuid(merged, FieldDescription.FieldType.None, field.PatchAttachGuid);  // recalcule le "où" après suppression
+						merged.Insert(dst+1, temp);  // remet l'élément après dst
+
+						temp.PatchMoved = true;
+					}
+				}
+
 				if (field.Type != FieldDescription.FieldType.PatchHide &&
 					field.Type != FieldDescription.FieldType.PatchAttach)  // champ à insérer ?
 				{
@@ -68,31 +87,6 @@ namespace Epsitec.Common.FormEngine
 						FieldDescription copy = new FieldDescription(field);
 						copy.PatchInserted = true;
 						merged.Insert(dst+1, copy);  // insère l'élément après dst
-					}
-				}
-			}
-
-			//	Déplace les champs dans la liste fusionnée. Il faut déplacer les champs après avoir inséré
-			//	les champs PatchInsert, car un champ peut être positionné par-rapport à un champ PatchInsert !
-			foreach (FieldDescription field in patch)
-			{
-				if (field.Type == FieldDescription.FieldType.PatchAttach)  // champ à déplacer ?
-				{
-					int src = Arrange.IndexOfGuid(merged, FieldDescription.FieldType.None, field.Guid);  // cherche le champ à déplacer
-					if (src != -1)
-					{
-						//	field.AttachGuid vaut System.Guid.Empty lorsqu'il faut déplacer l'élément en tête
-						//	de liste. Par hazard, IndexOfGuid retourne -1 dans dst, ce qui correspond exactement
-						//	à la valeur requise !
-						int dst = Arrange.IndexOfGuid(merged, FieldDescription.FieldType.None, field.PatchAttachGuid);  // cherche où le déplacer
-
-						FieldDescription temp = merged[src];
-						merged.RemoveAt(src);
-
-						dst = Arrange.IndexOfGuid(merged, FieldDescription.FieldType.None, field.PatchAttachGuid);  // recalcule le "où" après suppression
-						merged.Insert(dst+1, temp);  // remet l'élément après dst
-
-						temp.PatchMoved = true;
 					}
 				}
 			}
