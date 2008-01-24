@@ -80,6 +80,8 @@ namespace Epsitec.Common.Dialogs
 		{
 			Dialog dialog = Dialog.Load (this.resourceManager, Druid.Parse ("_8V1"));	//	mask for AdresseEntity, from Cresus.AddressBook
 
+			StringType.Default.DefineMaximumLength (25);
+
 			//	Mask with :
 			//	- Rue
 			//	- CasePostale
@@ -91,10 +93,12 @@ namespace Epsitec.Common.Dialogs
 			dialog.DialogWindowCreated +=
 				delegate
 				{
-					Button buttonOk     = new Button ();
-					Button buttonCancel = new Button ();
-					Button buttonClear  = new Button ();
-					Button buttonDump   = new Button ();
+					FrameBox frame = new FrameBox ();
+
+					Button buttonOk     = new Button (frame);
+					Button buttonCancel = new Button (frame);
+					Button buttonClear  = new Button (frame);
+					Button buttonDump   = new Button (frame);
 
 					buttonOk.CommandObject     = Res.Commands.Dialog.Generic.Ok;
 					buttonCancel.CommandObject = Res.Commands.Dialog.Generic.Cancel;
@@ -118,14 +122,8 @@ namespace Epsitec.Common.Dialogs
 					buttonClear.Dock  = DockStyle.Stacked;
 					buttonDump.Dock   = DockStyle.Stacked;
 
-					FrameBox frame = new FrameBox ();
-
 					frame.ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow;
 
-					frame.Children.Add (buttonOk);
-					frame.Children.Add (buttonCancel);
-					frame.Children.Add (buttonClear);
-					frame.Children.Add (buttonDump);
 					frame.PreferredHeight = 30;
 					frame.Dock = DockStyle.Bottom;
 

@@ -241,17 +241,22 @@ namespace Epsitec.Common.UI.Controllers
 			}
 			else
 			{
-				object value = this.ConvertBackValue (this.GetActualValue ());
-				
-				if (value != InvalidValue.Value)
+				object value = this.GetActualValue ();
+
+				if (this.IsValidValue (value))
 				{
-					//	Set the value of the placeholder in a specific context, so
-					//	that observers can get information about what is going on
-					//	in a very detailed manner, by querying PlaceholderContext.
-					
-					using (PlaceholderContext.SetActive (this))
+					value = this.ConvertBackValue (value);
+
+					if (value != InvalidValue.Value)
 					{
-						this.Placeholder.InternalControllerSetValue (value);
+						//	Set the value of the placeholder in a specific context, so
+						//	that observers can get information about what is going on
+						//	in a very detailed manner, by querying PlaceholderContext.
+
+						using (PlaceholderContext.SetActive (this))
+						{
+							this.Placeholder.InternalControllerSetValue (value);
+						}
 					}
 				}
 			}

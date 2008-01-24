@@ -490,6 +490,44 @@ namespace Epsitec.Common.Widgets.Helpers
 			return null;
 		}
 
+		/// <summary>
+		/// Gets the validation groups for the specified visual, including all
+		/// its parents, stopping at the window root.
+		/// </summary>
+		/// <param name="visual">The visual.</param>
+		/// <returns>The concatenated validation groups or <c>null</c> if no
+		/// validation group can be found at all.</returns>
+		public static string GetValidationGroups(Visual visual)
+		{
+			HashSet<string> groups = new HashSet<string> ();
+			
+			while (visual != null)
+			{
+				if (visual.HasValidationGroups)
+				{
+					foreach (string group in Command.SplitGroupNames (visual.ValidationGroups))
+					{
+						groups.Add (group);
+					}
+				}
+
+				visual = visual.Parent;
+			}
+
+			if (groups.Count > 0)
+			{
+				string[] names = Types.Collection.ToArray (groups);
+
+				System.Array.Sort (names);
+
+				return Command.JoinGroupNames (names);
+			}
+			else
+			{
+				return null;
+			}
+		}
+
 		public static void RefreshValidationContext(Visual visual)
 		{
 			ValidationContext context = VisualTree.GetValidationContext (visual);

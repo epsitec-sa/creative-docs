@@ -241,6 +241,8 @@ namespace Epsitec.Common.Dialogs
 				source.SetDataSource (UI.DataSource.DataName, data);
 
 				this.panel = panel;
+				this.validationContext.CommandContext = Widgets.Helpers.VisualTree.GetCommandContext (this.panel);
+				this.validationContext.Refresh (this.panel);
 			}
 		}
 
@@ -259,6 +261,7 @@ namespace Epsitec.Common.Dialogs
 				source.SetDataSource (UI.DataSource.DataName, null);
 
 				this.panel = null;
+				this.validationContext.CommandContext = null;
 			}
 		}
 

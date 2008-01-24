@@ -686,7 +686,8 @@ namespace Epsitec.Common.Widgets
 			{
 				IValidator validator = this.Validator;
 				
-				if (validator != null)
+				if ((validator != null) &&
+					(validator.State != ValidationState.Unknown))
 				{
 					return validator.IsValid;
 				}

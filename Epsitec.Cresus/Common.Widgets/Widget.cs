@@ -927,7 +927,12 @@ namespace Epsitec.Common.Widgets
 		public virtual void Validate()
 		{
 			bool oldValid = (this.internal_state & InternalState.WasValid) != 0;
-			bool newValid = this.IsValid;
+			bool newValid;
+
+			using (ValidationContext.ValidationInProgress (this))
+			{
+				newValid = this.IsValid;
+			}
 
 			if (oldValid != newValid)
 			{
@@ -943,8 +948,10 @@ namespace Epsitec.Common.Widgets
 				this.InvalidateProperty (Visual.IsValidProperty, oldValid, newValid);
 				
 				this.SetError (newValid == false);
+
+				string validationGroups = Helpers.VisualTree.GetValidationGroups (this);
 				
-				if (this.HasValidationGroups)
+				if (validationGroups != null)
 				{
 					Helpers.VisualTree.UpdateCommandEnable (this);
 				}

@@ -60,7 +60,28 @@ namespace Epsitec.Common.Widgets.Validators
 
 		protected virtual void SetState(ValidationState state)
 		{
-			this.state = state;
+			if (this.state != state)
+			{
+				this.state = state;
+
+				if (this.widget != null)
+				{
+					if (ValidationContext.IsValidationInProgress (this.widget))
+					{
+						//	Do nothing, this was called because we were validating the
+						//	widget associated with this validator...
+					}
+					else
+					{
+						this.widget.AsyncValidation ();
+					}
+				}
+
+				if (this.state == ValidationState.Dirty)
+				{
+					this.OnBecameDirty ();
+				}
+			}
 		}
 		
 		#region IValidator Members
@@ -76,8 +97,7 @@ namespace Epsitec.Common.Widgets.Validators
 		
 		public void MakeDirty(bool deep)
 		{
-			this.state = ValidationState.Dirty;
-			this.OnBecameDirty ();
+			this.SetState (ValidationState.Dirty);
 		}
 		
 		public bool								IsValid
@@ -106,11 +126,6 @@ namespace Epsitec.Common.Widgets.Validators
 		
 		protected virtual void OnBecameDirty()
 		{
-			if (this.widget != null)
-			{
-				this.widget.AsyncValidation ();
-			}
-			
 			if (this.BecameDirty != null)
 			{
 				this.BecameDirty (this);

@@ -381,6 +381,8 @@ namespace Epsitec.Common.Dialogs
 				{
 					this.dialogWindow.MakeButtonlessWindow ();
 				}
+
+				this.dialogWindow.Root.ValidationGroups = "Accept";
 				
 				CommandDispatcher.SetDispatcher (this.dialogWindow, this.CommandDispatcher);
 				CommandContext.SetContext (this.dialogWindow, this.CommandContext);

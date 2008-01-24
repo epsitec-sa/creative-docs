@@ -38,6 +38,26 @@ namespace Epsitec.Common.Widgets
 		}
 
 		/// <summary>
+		/// Gets or sets the command context associated with this validation
+		/// context.
+		/// </summary>
+		/// <value>The command context.</value>
+		public CommandContext CommandContext
+		{
+			get
+			{
+				return this.commandContext;
+			}
+			set
+			{
+				if (this.commandContext != value)
+				{
+					this.commandContext = value;
+				}
+			}
+		}
+
+		/// <summary>
 		/// Updates the command enable based on the visual validity. This will
 		/// also store a tracking record about the visual state, if the visual
 		/// is not yet known by the validation context.
@@ -56,12 +76,12 @@ namespace Epsitec.Common.Widgets
 			if (visual.HasCommand)
 			{
 				state   = visual.CommandState;
-				context = state.CommandContext;
+				context = this.commandContext ?? state.CommandContext;
 			}
 			else
 			{
 				state   = null;
-				context = Helpers.VisualTree.GetCommandContext (visual);
+				context = this.commandContext ?? Helpers.VisualTree.GetCommandContext (visual);
 			}
 			
 			//	Check if the visual is valid (it will always be if it is disabled;
@@ -70,7 +90,7 @@ namespace Epsitec.Common.Widgets
 			bool enable = ValidationContext.GetVisualValidity (visual);
 			
 			long serialId = visual.GetVisualSerialId ();
-			string groups = visual.ValidationGroups;
+			string groups = Helpers.VisualTree.GetValidationGroups (visual);
 			
 			//	Find the record for the specified visual. This should be fast, as
 			//	we work with a sorted record list :
@@ -147,14 +167,18 @@ namespace Epsitec.Common.Widgets
 			{
 				System.Diagnostics.Debug.Assert (ValidationContext.GetContext (child) == null);
 
-				if ((child.HasValidator) &&
-					(child.HasValidationGroups))
+				if (child.HasValidator)
 				{
-					bool enable;
+					string validationGroups = Helpers.VisualTree.GetValidationGroups (child);
 
-					enable = ValidationContext.GetVisualValidity (child);
+					if (validationGroups != null)
+					{
+						bool enable;
 
-					records.Add (new Record (child.GetVisualSerialId (), child.ValidationGroups, enable));
+						enable = ValidationContext.GetVisualValidity (child);
+
+						records.Add (new Record (child.GetVisualSerialId (), validationGroups, enable));
+					}
 				}
 			}
 
@@ -260,6 +284,38 @@ namespace Epsitec.Common.Widgets
 		{
 			return visual.IsEnabled ? visual.IsValid : true;
 		}
+
+
+		/// <summary>
+		/// Signals that a validation is being done on the specified visual. Call
+		/// this method in a <c>using</c> block.
+		/// </summary>
+		/// <param name="visual">The visual.</param>
+		/// <returns>The object which must be disposed of to end the validation
+		/// mode for the specified visual.</returns>
+		public static System.IDisposable ValidationInProgress(Visual visual)
+		{
+			return new ValidationInProgressHelper (visual);
+		}
+
+		/// <summary>
+		/// Determines whether a validation is in progress for the specified visual.
+		/// </summary>
+		/// <param name="visual">The visual.</param>
+		/// <returns><c>true</c> if a validation is in progress for the specified visual;
+		/// otherwise, <c>false</c>.</returns>
+		public static bool IsValidationInProgress(Visual visual)
+		{
+			if (ValidationContext.validatingVisuals.Contains (visual))
+			{
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}
+
 
 		#region IEquatable<ValidationContext> Members
 
@@ -413,6 +469,36 @@ namespace Epsitec.Common.Widgets
 		
 		#endregion
 
+		private sealed class ValidationInProgressHelper : System.IDisposable
+		{
+			public ValidationInProgressHelper(Visual visual)
+			{
+				this.visual = visual;
+				ValidationContext.validatingVisuals.Push (visual);
+			}
+
+			~ValidationInProgressHelper()
+			{
+				throw new System.InvalidOperationException ("Caller of ValidationInProgress forgot to call Dispose");
+			}
+
+			#region IDisposable Members
+
+			public void Dispose()
+			{
+				System.GC.SuppressFinalize (this);
+
+				Visual item = ValidationContext.validatingVisuals.Pop ();
+
+				System.Diagnostics.Debug.Assert (item == this.visual);
+			}
+
+			#endregion
+
+			private readonly Visual				visual;
+		}
+
+
 		/// <summary>
 		/// Gets the validation context associated with an object.
 		/// </summary>
@@ -444,9 +530,12 @@ namespace Epsitec.Common.Widgets
 		public static readonly DependencyProperty ContextProperty = DependencyProperty.RegisterAttached ("Context", typeof (ValidationContext), typeof (ValidationContext));
 
 		static long								nextUniqueId;
+		static readonly Stack<Visual>			validatingVisuals = new Stack<Visual> ();
 		
 		readonly long							uniqueId;
 		readonly List<Record>					records;
 		readonly Dictionary<string, int>		groupDisables;
+
+		private	CommandContext					commandContext;
 	}
 }

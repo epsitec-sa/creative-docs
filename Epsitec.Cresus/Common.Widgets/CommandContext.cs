@@ -187,6 +187,10 @@ namespace Epsitec.Common.Widgets
 							this.validations.Remove (id);
 						}
 					}
+					else
+					{
+						this.IncrementGroupDisable (group);
+					}
 				}
 				else if (enable == false)
 				{
