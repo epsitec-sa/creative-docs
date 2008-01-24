@@ -1416,7 +1416,6 @@ namespace Epsitec.Common.Designer.Viewers
 
 								actual.PatchMoved = false;
 								System.Guid iag = this.formEditor.ObjectModifier.GetReferencePatchAttachGuid(item);
-								actual.PatchMoved = true;
 
 								if (iag == ag)
 								{
@@ -1429,20 +1428,10 @@ namespace Epsitec.Common.Designer.Viewers
 									actual.PatchAttachGuid = ag;
 								}
 
-								if (!actual.PatchMoved && !actual.PatchModified)
+								if (!actual.PatchMoved && !actual.PatchModified && !actual.PatchHidden)
 								{
 									this.form.Fields.RemoveAt(i);
 								}
-
-#if false
-								System.Guid iag = this.formEditor.ObjectModifier.GetReferencePatchAttachGuid(item);
-								if (iag == ag)
-								{
-								}
-								else
-								{
-								}
-#endif
 							}
 						}
 					}
