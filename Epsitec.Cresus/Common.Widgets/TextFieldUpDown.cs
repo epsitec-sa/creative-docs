@@ -251,6 +251,14 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+		protected override bool CanStartEdition
+		{
+			get
+			{
+				return true;
+			}
+		}
+
 
 		public void ClearDefaultValue()
 		{
