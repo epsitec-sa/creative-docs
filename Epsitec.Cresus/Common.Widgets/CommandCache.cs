@@ -5,10 +5,14 @@ namespace Epsitec.Common.Widgets
 {
 	/// <summary>
 	/// The <c>CommandCache</c> class maintains the relationship between visuals
-	/// and their commands and command states.
+	/// and their commands and command states. This is a singleton.
 	/// </summary>
 	internal sealed class CommandCache
 	{
+		/// <summary>
+		/// Initializes a new instance of the <see cref="CommandCache"/> class.
+		/// This is a singleton instance, available throught <see cref="CommandCache.Instance"/>.
+		/// </summary>
 		private CommandCache()
 		{
 			this.records = new Record[0];

@@ -400,6 +400,10 @@ namespace Epsitec.Common.Widgets
 
 		#region Private Record Structure
 
+		/// <summary>
+		/// The <c>Record</c> structure stores the associations between a visual,
+		/// its enable state and its validation groups.
+		/// </summary>
 		private struct Record : System.IComparable<Record>, System.IEquatable<Record>
 		{
 			public Record(long visual, string groups, bool enable)
@@ -469,6 +473,11 @@ namespace Epsitec.Common.Widgets
 		
 		#endregion
 
+		/// <summary>
+		/// The <c>ValidationInProgressHelper</c> class is used by the <see cref="M:ValidationContext.ValidationInProgress"/>
+		/// method, in order to make sure the global stack of validating visuals
+		/// is always properly cleaned up.
+		/// </summary>
 		private sealed class ValidationInProgressHelper : System.IDisposable
 		{
 			public ValidationInProgressHelper(Visual visual)

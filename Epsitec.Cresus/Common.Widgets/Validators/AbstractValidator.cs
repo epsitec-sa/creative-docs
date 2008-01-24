@@ -19,17 +19,7 @@ namespace Epsitec.Common.Widgets.Validators
 			}
 		}
 		
-		
-		internal void InternalAttach(Widget widget)
-		{
-			System.Diagnostics.Debug.Assert (this.widget == null);
-			System.Diagnostics.Debug.Assert (widget != null);
-			
-			this.widget = widget;
-			this.AttachWidget (this.widget);
-		}
-
-		public Widget Widget
+		public Widget							Widget
 		{
 			get
 			{
@@ -37,12 +27,56 @@ namespace Epsitec.Common.Widgets.Validators
 			}
 		}
 		
+		#region IValidator Members
+		
+		public ValidationState					State
+		{
+			get
+			{
+				return this.state;
+			}
+		}
+		
+		public abstract void Validate();
+		
+		public void MakeDirty(bool deep)
+		{
+			this.SetState (ValidationState.Dirty);
+		}
+		
+		public bool								IsValid
+		{
+			get
+			{
+				if (this.state == ValidationState.Dirty)
+				{
+					this.Validate ();
+				}
+				
+				return (this.state == ValidationState.Ok);
+			}
+		}
+
+		public string							ErrorMessage
+		{
+			get
+			{
+				return null;
+			}
+		}
+		
+		public event Support.EventHandler		BecameDirty;
+		
+		#endregion
+		
 		#region IDisposable Members
+		
 		public void Dispose()
 		{
 			this.Dispose (true);
 			System.GC.SuppressFinalize (this);
 		}
+		
 		#endregion
 		
 		protected virtual void Dispose(bool disposing)
@@ -83,46 +117,6 @@ namespace Epsitec.Common.Widgets.Validators
 				}
 			}
 		}
-		
-		#region IValidator Members
-		public ValidationState					State
-		{
-			get
-			{
-				return this.state;
-			}
-		}
-		
-		public abstract void Validate();
-		
-		public void MakeDirty(bool deep)
-		{
-			this.SetState (ValidationState.Dirty);
-		}
-		
-		public bool								IsValid
-		{
-			get
-			{
-				if (this.state == ValidationState.Dirty)
-				{
-					this.Validate ();
-				}
-				
-				return (this.state == ValidationState.Ok);
-			}
-		}
-
-		public string							ErrorMessage
-		{
-			get
-			{
-				return null;
-			}
-		}
-		
-		public event Support.EventHandler		BecameDirty;
-		#endregion
 		
 		protected virtual void OnBecameDirty()
 		{
