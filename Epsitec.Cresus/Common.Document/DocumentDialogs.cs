@@ -1076,7 +1076,7 @@ namespace Epsitec.Common.Document
 			ib.TabIndex = this.tabIndex++;
 			ib.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			ib.Dock = DockStyle.Left;
-			double m = System.Math.Floor ((container.PreferredHeight-ib.PreferredHeight)/2);
+			double m = System.Math.Floor((container.PreferredHeight-ib.PreferredHeight)/2);
 			ib.Margins = new Margins(-1, 8, m, m);
 			ib.Clicked += new MessageEventHandler(HandlePointActiveStateChanged);
 			ToolTip.Default.SetToolTip(ib, Res.Strings.Dialog.Point.Link);
@@ -1088,6 +1088,7 @@ namespace Epsitec.Common.Document
 
 				Viewport containerD = new Viewport(container);
 				containerD.PreferredWidth = 33;
+				containerD.PreferredHeight = container.PreferredHeight;
 				containerD.TabIndex = this.tabIndex++;
 				containerD.Dock = DockStyle.Left;
 				containerD.Margins = new Margins(0, 0, 0, 0);
@@ -1102,6 +1103,7 @@ namespace Epsitec.Common.Document
 				button = new Button(containerDX);
 				button.ButtonStyle = ButtonStyle.Icon;
 				button.PreferredWidth = 17;
+				button.PreferredHeight = 22-2-2;
 				button.Name = sPoint.Name;
 				button.Text = @"<font size=""80%"">" + "\u00F72</font>";  // /2
 //-				button.SetClientZoom(0.8);
@@ -1115,6 +1117,7 @@ namespace Epsitec.Common.Document
 				button = new Button(containerDX);
 				button.ButtonStyle = ButtonStyle.Icon;
 				button.PreferredWidth = 17;
+				button.PreferredHeight = 22-2-2;
 				button.Name = sPoint.Name;
 				button.Text = @"<font size=""80%"">" + "\u00D72</font>";  // x2
 //-				button.SetClientZoom(0.8);
@@ -1135,6 +1138,7 @@ namespace Epsitec.Common.Document
 				button = new Button(containerDY);
 				button.ButtonStyle = ButtonStyle.Icon;
 				button.PreferredWidth = 17;
+				button.PreferredHeight = 22-2-2;
 				button.Name = sPoint.Name;
 				button.Text = @"<font size=""80%"">" + "\u00F72</font>";  // /2
 //-				button.SetClientZoom(0.8);
@@ -1148,6 +1152,7 @@ namespace Epsitec.Common.Document
 				button = new Button(containerDY);
 				button.ButtonStyle = ButtonStyle.Icon;
 				button.PreferredWidth = 17;
+				button.PreferredHeight = 22-2-2;
 				button.Name = sPoint.Name;
 				button.Text = @"<font size=""80%"">" + "\u00D72</font>";  // x2
 //-				button.SetClientZoom(0.8);
