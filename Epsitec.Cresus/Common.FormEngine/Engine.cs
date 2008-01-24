@@ -489,6 +489,11 @@ namespace Epsitec.Common.FormEngine
 			int last = int.MinValue;
 			for (int i=0; i<=column; i++)
 			{
+				if (i >= labelsId.Count)
+				{
+					break;
+				}
+
 				if (last == labelsId[i])
 				{
 					index--;
