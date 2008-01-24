@@ -401,7 +401,10 @@ namespace Epsitec.Common.FormEngine
 
 		public bool PatchHidden
 		{
-			//	Si on est dans un module de patch, indique un champ présent dans la liste finale, mais qu'il faut cacher.
+			//	Dans un Form de patch, indique un champ qu'il faut cacher dans la liste finale.
+			//	Dans un Form final, indique un champ caché. Il est important que le champ soit là, même si
+			//	FormEngine ne générera pas les widgets correspondant.
+			//	Guid = champ à cacher
 			get
 			{
 				return this.patchHidden;
@@ -414,7 +417,10 @@ namespace Epsitec.Common.FormEngine
 
 		public bool PatchMoved
 		{
-			//	Si on est dans un module de patch, indique un champ déplacé dans la liste finale.
+			//	Dans un Form de patch, indique un champ qu'il faut déplacer dans la liste finale.
+			//	Guid = champ à déplacer
+			//	PatchAttachGuid = champ *après* lequel on s'attache
+			//	... = paramètres du champ
 			get
 			{
 				return this.patchMoved;
@@ -427,7 +433,10 @@ namespace Epsitec.Common.FormEngine
 
 		public bool PatchInserted
 		{
-			//	Si on est dans un module de patch, indique un champ inséré dans la liste finale.
+			//	Dans un Form de patch, indique un champ supplémentaire qu'il faut insérer dans la liste finale.
+			//	Guid = champ inséré dans le masque de patch
+			//	PatchAttachGuid = champ *après* lequel on s'attache
+			//	... = paramètres du champ
 			get
 			{
 				return this.patchInserted;
@@ -440,7 +449,9 @@ namespace Epsitec.Common.FormEngine
 
 		public bool PatchModified
 		{
-			//	Si on est dans un module de patch, indique un champ modifié dans la liste finale.
+			//	Dans un Form de patch, indique un champ qu'il faut modifier dans la liste finale.
+			//	Guid = champ modifié
+			//	... = paramètres du champ
 			get
 			{
 				return this.patchModified;
