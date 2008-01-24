@@ -1070,10 +1070,21 @@ namespace Epsitec.Common.Designer.Viewers
 					}
 					else
 					{
-						//	Enlève l'élément.
-						//	Si c'est un élément PatchHidden, cela revient à rendre l'élément de nouveau visible.
-						//	Si c'est un autre élément, cela le supprime.
-						this.form.Fields.RemoveAt(index);
+						FieldDescription actual = this.form.Fields[index];
+
+						if (actual.PatchHidden)  // champ caché ?
+						{
+							actual.PatchHidden = false;  // rend le champ visible
+						}
+						else  // champ visible ?
+						{
+							actual.PatchHidden = true;  // cache le champ
+						}
+
+						if (!actual.PatchMoved && !actual.PatchModified && !actual.PatchHidden)
+						{
+							this.form.Fields.RemoveAt(index);
+						}
 					}
 
 					guids.Add(item.Guid);
