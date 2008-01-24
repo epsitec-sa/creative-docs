@@ -610,7 +610,7 @@ namespace Epsitec.Common.FormEngine
 
 				if (columnsRequired == 0)
 				{
-					glue.Name = "GlueNull";  // pour feinter les dimensions lors des détections et du dessin de la sélection
+					glue.Index = Engine.GlueNull;  // pour feinter les dimensions lors des détections et du dessin de la sélection
 					glue.PreferredWidth = 0; // pour ne pas perturber le calcul de la largeur d'une colonne contenant un label
 
 					int i = Engine.GetColumnIndex(labelsId, column);
@@ -794,6 +794,7 @@ namespace Epsitec.Common.FormEngine
 
 		public static readonly int MaxColumnsRequired = 10;
 		public static readonly int MaxRowsRequired = 20;
+		public static readonly int GlueNull = 1;
 
 		private readonly ResourceManager resourceManager;
 		private FormDescriptionFinder finder;
