@@ -1451,6 +1451,9 @@ namespace Epsitec.Common.Designer.Viewers
 				{
 					int index = this.formEditor.ObjectModifier.GetFormDescriptionIndex(item.Guid);
 					this.formEditor.ObjectModifier.FormPatchMove(index, direction);
+
+					this.SetForm(this.form, this.druidToSerialize, true);
+					this.UpdateFieldsTable(false);
 				}
 			}
 			else  // module normal ?
@@ -1466,10 +1469,11 @@ namespace Epsitec.Common.Designer.Viewers
 						this.form.Fields.Insert(index+direction, field);
 					}
 				}
+
+				this.SetForm(this.form, this.druidToSerialize, true);
+				this.UpdateFieldsTable(false);
 			}
 
-			this.SetForm(this.form, this.druidToSerialize, true);
-			this.UpdateFieldsTable(false);
 			this.ReflectSelectionToList();
 			this.UpdateFieldsButtons();
 			this.module.AccessForms.SetLocalDirty();

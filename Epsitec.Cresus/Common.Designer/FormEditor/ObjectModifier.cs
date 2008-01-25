@@ -261,7 +261,7 @@ namespace Epsitec.Common.Designer.FormEditor
 					copy.PatchModified = true;
 					this.formEditor.Form.Fields.Add(copy);
 
-					this.formEditor.OnUpdateCommands();
+					this.formEditor.OnUpdateCommands();  // pour mettre à jour le bouton fieldsButtonReset
 				}
 				else
 				{
@@ -478,7 +478,9 @@ namespace Epsitec.Common.Designer.FormEditor
 
 			//	Construit la liste de tous les éléments déplacés.
 			List<System.Guid> moved = new List<System.Guid>();
-			moved.Add(guid);
+
+			moved.Add(guid);  // ce n'est pas grave si cet élément est 2x dans la liste
+
 			foreach (FieldDescription field in this.formEditor.Form.Fields)
 			{
 				if (field.PatchMoved || field.PatchInserted)
@@ -488,7 +490,7 @@ namespace Epsitec.Common.Designer.FormEditor
 			}
 
 			//	Génére la liste des opérations de déplacement nécessaires.
-			//	Traite d'abord les éléments qu'on sait devoir déplacer (selon la liste moved).
+			//	1) Traite d'abord les éléments qu'on sait devoir déplacer (selon la liste moved).
 			List<LinkAfter> oper = new List<LinkAfter>();
 			index = 0;
 			while (index < final.Count)
@@ -514,7 +516,7 @@ namespace Epsitec.Common.Designer.FormEditor
 				}
 			}
 
-			//	Traite ensuite les éventuels autres éléments.
+			//	2) Traite ensuite les éventuels autres éléments.
 			index = 0;
 			while (index < final.Count)
 			{
