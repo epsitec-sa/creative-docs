@@ -499,8 +499,6 @@ namespace Epsitec.Common.Support.EntityEngine
 		/// specified path; otherwise, <c>false</c>.</returns>
 		public bool StartsWith(EntityFieldPath path)
 		{
-			string x;
-			
 			if ((path == null) ||
 				(string.IsNullOrEmpty (path.path)))
 			{
