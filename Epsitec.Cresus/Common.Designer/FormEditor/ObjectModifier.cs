@@ -449,53 +449,6 @@ namespace Epsitec.Common.Designer.FormEditor
 
 
 		#region TableContent
-#if false
-		public System.Guid GetPatchAttachGuid(int index, int direction)
-		{
-			//	Retourne le Guid *après* lequel un champ sera attaché.
-			if (direction < 0)
-			{
-				if (index+direction-1 < 0)
-				{
-					return System.Guid.Empty;  // System.Guid.Empty correspond à un déplacement en tête de liste
-				}
-				else
-				{
-					return this.fields[index+direction-1].Guid;
-				}
-			}
-			else
-			{
-				return this.fields[index+direction].Guid;
-			}
-		}
-
-		public System.Guid GetReferencePatchAttachGuid(TableItem item)
-		{
-			//	Retourne le Guid d'un champ dans la liste de référence d'un masque de patch *après* lequel s'attache un TableItem.
-			FormEngine.Engine engine = new FormEngine.Engine(this.formEditor.Module.ResourceManager);
-			List<FieldDescription> merged = engine.Arrange.Merge(this.referenceFields, this.formEditor.Form.Fields);
-
-			for (int i=0; i<merged.Count; i++)
-			{
-				FieldDescription field = merged[i];
-				if (field.Guid == item.Guid)
-				{
-					if (i == 0)
-					{
-						return System.Guid.Empty;
-					}
-					else
-					{
-						return merged[i-1].Guid;
-					}
-				}
-			}
-
-			return System.Guid.Empty;
-		}
-#endif
-
 		public void FormPatchMove(int index, int direction)
 		{
 			//	Déplace un élément en le montant ou en le descendant d'une ligne. Pour cela, les déplacements

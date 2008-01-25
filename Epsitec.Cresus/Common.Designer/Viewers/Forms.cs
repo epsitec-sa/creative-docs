@@ -1393,64 +1393,8 @@ namespace Epsitec.Common.Designer.Viewers
 
 				foreach (FormEditor.ObjectModifier.TableItem item in items)
 				{
-#if true
 					int index = this.formEditor.ObjectModifier.GetFormDescriptionIndex(item.Guid);
 					this.formEditor.ObjectModifier.FormPatchMove(index, direction);
-#else
-					int index = this.formEditor.ObjectModifier.GetFormDescriptionIndex(item.Guid);
-					FieldDescription field = this.formEditor.ObjectModifier.GetFormDescription(item);
-					
-					if (index != -1)
-					{
-						//	Calcule le Guid *après* lequel sera attaché l'élément déplacé.
-						System.Guid ag = this.formEditor.ObjectModifier.GetPatchAttachGuid(index, direction);
-
-						if (field.PatchInserted)
-						{
-							//	Déplace l'élément PatchInserted.
-							int i = FormEngine.Arrange.IndexOfGuid(this.form.Fields, item.Guid);
-							if (i != -1)
-							{
-								this.form.Fields[i].PatchAttachGuid = ag;
-							}
-						}
-						else
-						{
-							//	Déplace l'élément.
-							int i = FormEngine.Arrange.IndexOfGuid(this.form.Fields, item.Guid);
-							if (i == -1)
-							{
-								FieldDescription copy = new FieldDescription(field);
-								copy.PatchMoved = true;
-								copy.PatchAttachGuid = ag;
-								this.form.Fields.Add(copy);
-							}
-							else
-							{
-								FieldDescription actual = this.form.Fields[i];
-
-								actual.PatchMoved = false;
-								System.Guid iag = this.formEditor.ObjectModifier.GetReferencePatchAttachGuid(item);
-
-								if (iag == ag)
-								{
-									actual.PatchMoved = false;
-									actual.PatchAttachGuid = System.Guid.Empty;
-								}
-								else
-								{
-									actual.PatchMoved = true;
-									actual.PatchAttachGuid = ag;
-								}
-
-								if (!actual.PatchMoved && !actual.PatchModified && !actual.PatchHidden)
-								{
-									this.form.Fields.RemoveAt(i);
-								}
-							}
-						}
-					}
-#endif
 				}
 			}
 			else  // module normal ?
