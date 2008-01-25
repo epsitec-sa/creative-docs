@@ -1,12 +1,13 @@
 //	Copyright © 2004-2008, EPSITEC SA, CH-1092 BELMONT, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using System.Globalization;
 using System.Collections.Generic;
 
+using Epsitec.Common.Support;
 using Epsitec.Common.Types;
 
-[assembly: Epsitec.Common.Types.DependencyClass (typeof (Epsitec.Common.Support.ResourceManager))]
+[assembly: DependencyClass (typeof (ResourceManager))]
 
 namespace Epsitec.Common.Support
 {
@@ -18,7 +19,7 @@ namespace Epsitec.Common.Support
 	/// accessed through its full resource id ("provider/module:bundle#field")
 	/// or by specifying a DRUID.
 	/// </summary>
-	public sealed class ResourceManager : DependencyObject, System.IComparable<ResourceManager>, System.IEquatable<ResourceManager>
+	public sealed class ResourceManager : DependencyObject, System.IComparable<ResourceManager>, System.IEquatable<ResourceManager>, IStructuredTypeProviderId
 	{
 		public ResourceManager()
 			: this (null, Support.Globals.Directories.ExecutableRoot, null)
@@ -897,6 +898,16 @@ namespace Epsitec.Common.Support
 			return this.GetCaption (druid, level, culture, true);
 		}
 
+		#region IStructuredTypeProviderId Members
+
+		public StructuredType GetStructuredType(Druid id)
+		{
+			Caption caption = this.GetCaption (id);
+			return TypeRosetta.GetTypeObject (caption) as StructuredType;
+		}
+
+		#endregion
+
 		/// <summary>
 		/// Clears the caption cache for the specified caption.
 		/// </summary>
@@ -1748,7 +1759,7 @@ namespace Epsitec.Common.Support
 
 			#region IResourceBoundSource Members
 
-			object Epsitec.Common.Types.IResourceBoundSource.GetValue(string id)
+			object IResourceBoundSource.GetValue(string id)
 			{
 				System.Diagnostics.Debug.Assert (this.bundle != null);
 				System.Diagnostics.Debug.Assert (this.bundle.Contains (id));

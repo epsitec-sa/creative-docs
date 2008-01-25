@@ -10,7 +10,7 @@ namespace Epsitec.Common.Types
 	/// pair, when serializing a <see cref="StructuredType"/>.
 	/// </summary>
 	[SerializationConverter (typeof (StructuredTypeField.SerializationConverter))]
-	public sealed class StructuredTypeField
+	public class StructuredTypeField
 	{
 		/// <summary>
 		/// Initializes a new instance of the <see cref="StructuredTypeField"/> class.
@@ -154,7 +154,7 @@ namespace Epsitec.Common.Types
 		/// Gets the field type.
 		/// </summary>
 		/// <value>The field type.</value>
-		public INamedType						Type
+		public virtual INamedType				Type
 		{
 			get
 			{
@@ -678,8 +678,8 @@ namespace Epsitec.Common.Types
 		const int								OptionsMask		= 0x3f;		//	6-bit, offset 10
 		
 		private readonly string					id;
-		private INamedType						type;
-		private Support.Druid					typeId;
+		protected INamedType					type;
+		protected Support.Druid					typeId;
 		private readonly Support.Druid			captionId;
 		private int								rank;
 		private Support.Druid					definingTypeId;		//	not serialized

@@ -334,7 +334,7 @@ namespace Epsitec.Common.FormEngine
 
 			this.collection = new CollectionView(this.accessor.Collection);
 
-			this.engine = new Engine(this.manager, null);
+			this.engine = new Engine(new DefaultResourceProvider(this.manager));
 		}
 
 

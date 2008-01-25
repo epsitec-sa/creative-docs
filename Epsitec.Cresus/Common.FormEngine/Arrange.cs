@@ -13,11 +13,10 @@ namespace Epsitec.Common.FormEngine
 	/// </summary>
 	public class Arrange
 	{
-		public Arrange(ResourceManager resourceManager, FormDescriptionFinder finder)
+		public Arrange(IFormResourceProvider resourceProvider)
 		{
 			//	Constructeur.
-			this.resourceManager = resourceManager;
-			this.finder = finder;
+			this.resourceProvider = resourceProvider;
 		}
 
 
@@ -222,25 +221,12 @@ namespace Epsitec.Common.FormEngine
 						continue;
 					}
 
-					//	Cherche le sous-masque avec (dans Designer) ou sans (application finale) finder.
+					//	Cherche le sous-masque
 					FormDescription subForm = null;
-
-					if (this.finder == null)  // pas de finder ?
+					string xml = this.resourceProvider.GetXmlSource(field.SubFormId);
+					if (!string.IsNullOrEmpty(xml))
 					{
-						string name = field.SubFormId.ToBundleId();
-						ResourceBundle bundle = this.resourceManager.GetBundle(name, ResourceLevel.Default, null);
-						if (bundle != null)
-						{
-							string xml = bundle[FormResourceAccessor.Strings.XmlSource].AsString;
-							if (!string.IsNullOrEmpty(xml))
-							{
-								subForm = Serialization.DeserializeForm(xml, this.resourceManager);
-							}
-						}
-					}
-					else  // finder existe (on est dans Designer) ?
-					{
-						subForm = this.finder(field.SubFormId);
+						subForm = Serialization.DeserializeForm(xml);
 					}
 
 					if (subForm != null)
@@ -314,7 +300,6 @@ namespace Epsitec.Common.FormEngine
 		}
 
 
-		private readonly ResourceManager resourceManager;
-		private FormDescriptionFinder finder;
+		private readonly IFormResourceProvider resourceProvider;
 	}
 }

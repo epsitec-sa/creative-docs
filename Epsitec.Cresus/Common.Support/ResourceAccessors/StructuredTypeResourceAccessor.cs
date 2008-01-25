@@ -223,6 +223,17 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			}
 		}
 
+		
+		public StructuredType GetStructuredTypeViewOfData(CultureMap item, string twoLetterISOLanguageName, System.Func<Druid, INamedType> namedTypeResolver)
+		{
+			StructuredData data = item.GetCultureData (twoLetterISOLanguageName);
+			string  capName = item.Name;
+			Caption caption = base.CreateCaptionFromData (null, data, capName, twoLetterISOLanguageName);
+
+			return this.CreateTypeFromData (data, caption, namedTypeResolver);
+		}
+
+
 		/// <summary>
 		/// Resets the specified field to its original value. This is the
 		/// internal implementation which can be overridden.
@@ -322,7 +333,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			
 			if (twoLetterISOLanguageName == Resources.DefaultTwoLetterISOLanguageName)
 			{
-				StructuredType type = this.CreateTypeFromData (data, caption);
+				StructuredType type = this.CreateTypeFromData (data, caption, null);
 
 				System.Diagnostics.Debug.Assert (AbstractType.GetComplexType (caption) == type);
 				AbstractType.SetComplexType (caption, type);
@@ -593,7 +604,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 		/// <param name="data">The data record.</param>
 		/// <param name="caption">The caption.</param>
 		/// <returns>The structured type.</returns>
-		private StructuredType CreateTypeFromData(StructuredData data, Caption caption)
+		private StructuredType CreateTypeFromData(StructuredData data, Caption caption, System.Func<Druid, INamedType> namedTypeResolver)
 		{
 			if (UndefinedValue.IsUndefinedValue (data.GetValue (Res.Fields.ResourceStructuredType.Class)))
 			{
@@ -605,7 +616,12 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			string              layouts   = data.GetValue (Res.Fields.ResourceStructuredType.SerializedDesignerLayouts) as string;
 
 			StructuredType type = new StructuredType (typeClass, baseType);
-			type.DefineCaption (caption);
+
+			if (caption != null)
+			{
+				type.DefineCaption (caption);
+			}
+
 			type.SerializedDesignerLayouts = layouts;
 			type.FreezeInheritance ();
 
@@ -642,16 +658,46 @@ namespace Epsitec.Common.Support.ResourceAccessors
 					//	if it redefines the expression for a local interface field.
 
 					if (((membership == FieldMembership.Local) && (fieldDefiningType.IsEmpty)) ||
-						((membership == FieldMembership.Local) && (interfaceDefinition.HasValue) && (interfaceDefinition.Value == false)))
+						((membership == FieldMembership.Local) && (interfaceDefinition.HasValue) && (interfaceDefinition.Value == false)) ||
+						(namedTypeResolver != null))
 					{
-						StructuredTypeField field = new StructuredTypeField (null, null, fieldCaption, rank++, relation, membership, source, options, expression);
-						field.DefineTypeId (fieldType);
+						StructuredTypeField field = new CustomField (fieldType, fieldCaption, rank++, relation, membership, source, options, expression, namedTypeResolver);
 						type.Fields.Add (field);
 					}
 				}
 			}
 
 			return type;
+		}
+
+		private class CustomField : StructuredTypeField
+		{
+			public CustomField(Druid typeId, Druid captionId, int rank, FieldRelation relation, FieldMembership membership, FieldSource source, FieldOptions options, string expression, System.Func<Druid, INamedType> namedTypeResolver)
+				: base (null, null, captionId, rank, relation, membership, source, options, expression)
+			{
+				this.namedTypeResolver = namedTypeResolver;
+				this.DefineTypeId (typeId);
+			}
+
+			public override INamedType Type
+			{
+				get
+				{
+					if (this.type == null)
+					{
+						if (this.namedTypeResolver == null)
+						{
+							throw new System.InvalidOperationException ("Trying to read inexistant type information");
+						}
+
+						this.type = this.namedTypeResolver (this.typeId);
+					}
+
+					return this.type;
+				}
+			}
+
+			private readonly System.Func<Druid, INamedType> namedTypeResolver;
 		}
 
 		/// <summary>

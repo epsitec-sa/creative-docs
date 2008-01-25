@@ -16,22 +16,16 @@ namespace Epsitec.Common.FormEngine
 	/// </summary>
 	public sealed class Engine
 	{
-		public Engine(ResourceManager resourceManager) : this (resourceManager, null)
-		{
-		}
-
-		public Engine(ResourceManager resourceManager, FormDescriptionFinder finder)
+		public Engine(IFormResourceProvider resourceProvider)
 		{
 			//	Constructeur.
 			//	FindFormDescription permet de retrouver le FormDescription correspondant à un Druid,
 			//	lorsque les ressources ne sont pas sérialisées. Pour un usage hors de Designer, avec
 			//	des ressources sérialisées, ce paramètre peut être null.
-			this.resourceManager = resourceManager;
-			this.finder = finder;
+			this.resourceProvider = resourceProvider;
 
-			this.arrange = new Arrange(resourceManager, finder);
-
-			this.entityContext = new EntityContext(this.resourceManager, EntityLoopHandlingMode.Skip);
+			this.arrange = new Arrange(this.resourceProvider);
+			this.entityContext = new EntityContext(this.resourceProvider, EntityLoopHandlingMode.Skip);
 		}
 
 		public Arrange Arrange
@@ -57,11 +51,10 @@ namespace Epsitec.Common.FormEngine
 
 			if (form.IsPatch)
 			{
-				ResourceBundle bundle = this.resourceManager.GetBundle(form.FormIdToPatch);
-				string xml = bundle[Support.ResourceAccessors.FormResourceAccessor.Strings.XmlSource].AsString;
+				string xml = this.resourceProvider.GetXmlSource(form.FormIdToPatch);
 				if (!string.IsNullOrEmpty(xml))
 				{
-					FormDescription refForm = Serialization.DeserializeForm(xml, this.resourceManager);
+					FormDescription refForm = Serialization.DeserializeForm(xml);
 					fields0 = this.arrange.Merge(refForm.Fields, fields0);
 				}
 			}
@@ -82,8 +75,7 @@ namespace Epsitec.Common.FormEngine
 			List<FieldDescription> fields1 = this.arrange.DevelopSubForm(fields0);
 			List<FieldDescription> fields2 = this.arrange.Organize(fields1);
 
-			StructuredType entity = this.GetEntityDefinition(form.EntityId);
-			if (entity == null)
+			if (this.GetEntityDefinition(form.EntityId) == null)
 			{
 				return null;
 			}
@@ -105,7 +97,7 @@ namespace Epsitec.Common.FormEngine
 			//	enfants héritent de cette propriété.
 			UI.Panel root = new UI.Panel();
 			root.ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow;
-			root.ResourceManager = this.resourceManager;
+			root.ResourceManager = this.resourceProvider.ResourceManager;
 			root.DataSource = new UI.DataSource();
 			root.DataSource.AddDataSource(UI.DataSource.DataName, entityData);
 
@@ -117,8 +109,7 @@ namespace Epsitec.Common.FormEngine
 		private StructuredType GetEntityDefinition(Druid entityId)
 		{
 			//	Trouve la définition de l'entité spécifiée par son id.
-			Caption entityCaption = this.resourceManager.GetCaption(entityId);
-			return TypeRosetta.GetTypeObject(entityCaption) as StructuredType;
+			return this.resourceProvider.GetStructuredType(entityId);
 		}
 
 		private enum FieldEditionMode
@@ -666,8 +657,7 @@ namespace Epsitec.Common.FormEngine
 						builder.Append(", ");
 					}
 
-					Caption caption = this.resourceManager.GetCaption(druid);
-					builder.Append(caption.DefaultLabel);
+					builder.Append(this.resourceProvider.GetCaptionDefaultLabel(druid));
 				}
 
 				if (builder.Length == 0)  // titre sans texte ?
@@ -801,8 +791,7 @@ namespace Epsitec.Common.FormEngine
 		public static readonly int MaxRowsRequired = 20;
 		public static readonly int GlueNull = 1;
 
-		private readonly ResourceManager resourceManager;
-		private FormDescriptionFinder finder;
+		private readonly IFormResourceProvider resourceProvider;
 		private readonly EntityContext entityContext;
 		private Arrange arrange;
 		private bool forDesigner;

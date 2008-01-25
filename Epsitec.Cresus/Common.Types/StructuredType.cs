@@ -508,9 +508,32 @@ namespace Epsitec.Common.Types
 				return false;
 			}
 
-			//	TODO: really compare contents of types...
+			StructuredType typeA = a as StructuredType;
+			StructuredType typeB = b as StructuredType;
 
-			return false;
+			if ((typeA != null) &&
+				(typeB != null))
+			{
+				if ((typeA.BaseTypeId != typeB.BaseTypeId) ||
+					(typeA.Class != typeB.Class))
+				{
+					return false;
+				}
+
+				if (!Collection.CompareEqual (typeA.InterfaceIds, typeB.InterfaceIds))
+				{
+					return false;
+				}
+			}
+
+			if (!Collection.CompareEqual (a.GetFieldIds (), b.GetFieldIds ()))
+			{
+				return false;
+			}
+
+			//	TODO: should really make sure by comparing the field types ?
+			
+			return true;
 		}
 
 		/// <summary>

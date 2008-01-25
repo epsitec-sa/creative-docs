@@ -335,6 +335,16 @@ namespace Epsitec.Common.Support.ResourceAccessors
 				Listener.FindListener<EnumValueListener> (enumValues).HandleCollectionChanging (enumValues);
 			}
 		}
+
+		public INamedType GetAnyTypeViewOfData(CultureMap item, string twoLetterISOLanguageName, System.Func<Druid, INamedType> namedTypeResolver)
+		{
+			StructuredData data = item.GetCultureData (twoLetterISOLanguageName);
+			string  capName = item.Name;
+			Caption caption = base.CreateCaptionFromData (null, data, capName, twoLetterISOLanguageName);
+			this.FillCaptionWithData (caption, data);
+			return TypeRosetta.CreateTypeObject (caption, false);
+		}
+
 		
 		/// <summary>
 		/// Creates a caption based on the definitions stored in a data record.

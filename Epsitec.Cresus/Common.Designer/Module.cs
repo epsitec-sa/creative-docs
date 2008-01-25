@@ -5,12 +5,17 @@ using System.Collections.Generic;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Support;
+using Epsitec.Common.Types;
 using Epsitec.Common.Identity;
 using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Support.CodeCompilation;
 
 namespace Epsitec.Common.Designer
 {
+	using AbstractResourceAccessor=Support.ResourceAccessors.AbstractResourceAccessor;
+	using StructuredTypeResourceAccessor=Support.ResourceAccessors.StructuredTypeResourceAccessor;
+	using AnyTypeResourceAccessor=Support.ResourceAccessors.AnyTypeResourceAccessor;
+
 	/// <summary>
 	/// Description d'un module de ressources ouvert par l'application Designer.
 	/// </summary>
@@ -411,7 +416,7 @@ namespace Epsitec.Common.Designer
 			string name = this.accessForms.GetField(index, null, ResourceAccess.FieldType.Name).String;
 			FormEngine.FormDescription form = this.accessForms.GetForm(index);
 
-			FormEngine.Engine engine = new FormEngine.Engine(this.resourceManager, this.accessForms.GetForm);
+			FormEngine.Engine engine = new FormEngine.Engine(this.FormResourceProvider);
 			UI.Panel panel = engine.CreateForm(form, false);
 
 			if (panel != null)
@@ -421,13 +426,186 @@ namespace Epsitec.Common.Designer
 		}
 
 
+		internal FormEngine.IFormResourceProvider FormResourceProvider
+		{
+			get
+			{
+				return new InternalFormResourceProvider(this);
+			}
+		}
+
+		private class InternalFormResourceProvider : FormEngine.IFormResourceProvider
+		{
+			public InternalFormResourceProvider(Module module)
+			{
+				this.module = module;
+				this.typeDict = new Dictionary<Druid, INamedType> ();
+			}
+
+			#region IFormResourceProvider Members
+
+			public string GetXmlSource(Druid id)
+			{
+				Module module = this.module.designerApplication.SearchModule (id);
+
+				if (module == null)
+				{
+					return null;
+				}
+
+				CultureMap item = module.accessForms.Accessor.Collection[id];
+
+				if (item != null)
+				{
+					StructuredData data = item.GetCultureData (Resources.DefaultTwoLetterISOLanguageName);
+					return data.GetValue (Support.Res.Fields.ResourceForm.XmlSource) as string;
+				}
+				else
+				{
+					return null;
+				}
+			}
+
+			public string GetCaptionDefaultLabel(Druid id)
+			{
+				Module module = this.module.designerApplication.SearchModule (id);
+
+				if (module == null)
+				{
+					return null;
+				}
+
+				CultureMap item = module.accessCaptions.Accessor.Collection[id] ??
+					/**/		  module.accessCommands.Accessor.Collection[id] ??
+					/**/		  module.accessEntities.Accessor.Collection[id] ??
+					/**/		  module.accessFields.Accessor.Collection[id] ??
+					/**/		  module.accessTypes.Accessor.Collection[id] ??
+					/**/		  module.accessValues.Accessor.Collection[id];
+
+				if (item == null)
+				{
+					return null;
+				}
+				else
+				{
+					StructuredData data = item.GetCultureData (Resources.DefaultTwoLetterISOLanguageName);
+					IList<string> labels = data.GetValue (Support.Res.Fields.ResourceCaption.Labels) as IList<string>;
+
+					if ((labels != null) &&
+						(labels.Count > 0))
+					{
+						return labels[0];
+					}
+					else
+					{
+						return "";
+					}
+				}
+			}
+
+			public ResourceManager ResourceManager
+			{
+				get
+				{
+					return this.module.resourceManager;
+				}
+			}
+
+			#endregion
+
+			#region IStructuredTypeProviderId Members
+
+			public StructuredType GetStructuredType(Druid id)
+			{
+				INamedType type;
+
+				if (this.typeDict.TryGetValue (id, out type))
+				{
+					return type as StructuredType;
+				}
+
+				Module module = this.module.designerApplication.SearchModule (id);
+
+				if (module == null)
+				{
+					type = null;
+				}
+				else
+				{
+					CultureMap item = module.accessEntities.Accessor.Collection[id];
+
+					if (item == null)
+					{
+						type = null;
+					}
+					else
+					{
+						StructuredTypeResourceAccessor accessor = module.accessEntities.Accessor as StructuredTypeResourceAccessor;
+						string culture = Resources.DefaultTwoLetterISOLanguageName;
+						type = accessor.GetStructuredTypeViewOfData (item, culture, this.GetAnyType);
+					}
+				}
+
+				this.typeDict[id] = type;
+
+				return type as StructuredType;
+			}
+
+			#endregion
+
+			private INamedType GetAnyType(Druid id)
+			{
+				INamedType type;
+
+				if (this.typeDict.TryGetValue (id, out type))
+				{
+					return type;
+				}
+
+				Module module = this.module.designerApplication.SearchModule (id);
+
+				if (module == null)
+				{
+					type = null;
+				}
+				else
+				{
+					CultureMap item;
+
+					item = module.accessTypes.Accessor.Collection[id];
+
+					if (item != null)
+					{
+						AnyTypeResourceAccessor accessor = module.accessTypes.Accessor as AnyTypeResourceAccessor;
+						string culture = Resources.DefaultTwoLetterISOLanguageName;
+						type = accessor.GetAnyTypeViewOfData (item, culture, this.GetAnyType);
+					}
+					else
+					{
+						item = module.accessEntities.Accessor.Collection[id];
+
+						if (item != null)
+						{
+							type = this.GetStructuredType (id);
+						}
+					}
+				}
+
+				this.typeDict[id] = type;
+
+				return type;
+			}
+
+			private readonly Module module;
+			private readonly Dictionary<Druid, INamedType> typeDict;
+		}
 
 
 		internal void Regenerate()
 		{
 			foreach (ResourceAccess access in this.Accesses)
 			{
-				Support.ResourceAccessors.AbstractResourceAccessor accessor = access.Accessor as Support.ResourceAccessors.AbstractResourceAccessor;
+				AbstractResourceAccessor accessor = access.Accessor as AbstractResourceAccessor;
 
 				if (accessor != null)
 				{

@@ -26,10 +26,9 @@ namespace Epsitec.Common.Support.EntityEngine
 		/// </summary>
 		/// <param name="resourceManager">The resource manager.</param>
 		/// <param name="loopHandlingMode">The loop handling mode.</param>
-		public EntityContext(ResourceManager resourceManager, EntityLoopHandlingMode loopHandlingMode)
+		public EntityContext(IStructuredTypeProviderId resourceManager, EntityLoopHandlingMode loopHandlingMode)
 		{
 			this.resourceManager     = resourceManager;
-			this.resourceManagerPool = this.resourceManager.Pool;
 			this.associatedThread    = System.Threading.Thread.CurrentThread;
 			this.structuredTypeMap   = new Dictionary<Druid, IStructuredType> ();
 			this.loopHandlingMode    = loopHandlingMode;
@@ -190,8 +189,7 @@ namespace Epsitec.Common.Support.EntityEngine
 					return null;
 				}
 				
-				Caption caption = this.resourceManager.GetCaption (id);
-				type = TypeRosetta.GetTypeObject (caption) as IStructuredType;
+				type = this.resourceManager.GetStructuredType (id);
 				this.structuredTypeMap[id] = type;
 			}
 			
@@ -753,8 +751,7 @@ namespace Epsitec.Common.Support.EntityEngine
 
 		private EventHandler<EntityEventArgs> entityCreatedEvent;
 
-		private readonly ResourceManagerPool resourceManagerPool;
-		private readonly ResourceManager resourceManager;
+		private readonly IStructuredTypeProviderId resourceManager;
 		private readonly System.Threading.Thread associatedThread;
 		private readonly Dictionary<Druid, IStructuredType> structuredTypeMap;
 		private readonly EntityLoopHandlingMode loopHandlingMode;

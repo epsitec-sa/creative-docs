@@ -44,7 +44,9 @@
       <Link>Properties\AssemblyInfo.Solution.cs</Link>
     </Compile>
     <Compile Include="Arrange.cs" />
+    <Compile Include="DefaultResourceProvider.cs" />
     <Compile Include="FormDescription.cs" />
+    <Compile Include="IFormResourceProvider.cs" />
     <Compile Include="Serialization.cs" />
     <Compile Include="FieldDescription.cs" />
     <Compile Include="Engine.cs" />

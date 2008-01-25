@@ -2080,7 +2080,7 @@ namespace Epsitec.Common.Designer
 
 				if (!string.IsNullOrEmpty(xml))
 				{
-					return FormEngine.Serialization.DeserializeForm(xml, this.resourceManager);
+					return FormEngine.Serialization.DeserializeForm(xml);
 				}
 			}
 

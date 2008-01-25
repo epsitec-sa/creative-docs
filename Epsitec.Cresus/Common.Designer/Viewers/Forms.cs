@@ -826,7 +826,7 @@ namespace Epsitec.Common.Designer.Viewers
 		protected FormDescription XmlToForm(string xml)
 		{
 			//	xml -> form.
-			return FormEngine.Serialization.DeserializeForm(xml, this.module.ResourceManager);
+			return FormEngine.Serialization.DeserializeForm(xml);
 		}
 
 		protected FormDescription GetForm()
@@ -863,7 +863,7 @@ namespace Epsitec.Common.Designer.Viewers
 			}
 			else
 			{
-				FormEngine.Engine engine = new FormEngine.Engine(this.module.ResourceManager, this.access.GetForm);
+				FormEngine.Engine engine = new FormEngine.Engine(this.module.FormResourceProvider);
 
 #if false
 				FormDescription copy = new FormDescription(form);

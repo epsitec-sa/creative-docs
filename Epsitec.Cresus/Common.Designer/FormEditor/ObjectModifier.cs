@@ -774,7 +774,7 @@ namespace Epsitec.Common.Designer.FormEditor
 				FormEngine.FormDescription refForm = this.formEditor.Module.AccessForms.GetForm(this.formEditor.Form.FormIdToPatch);
 				this.referenceFields = refForm.Fields;
 
-				FormEngine.Engine engine = new FormEngine.Engine(this.formEditor.Module.ResourceManager);
+				FormEngine.Engine engine = new FormEngine.Engine(this.formEditor.Module.FormResourceProvider);
 				this.fields = engine.Arrange.Merge(this.referenceFields, this.formEditor.Form.Fields);
 			}
 			else  // masque normal ?

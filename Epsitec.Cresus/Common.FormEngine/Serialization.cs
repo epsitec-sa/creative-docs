@@ -18,7 +18,7 @@ namespace Epsitec.Common.FormEngine
 			return form.Serialize();
 		}
 
-		static public FormDescription DeserializeForm(string xml, ResourceManager manager)
+		static public FormDescription DeserializeForm(string xml)
 		{
 			//	Retourne le masque de saisie désérialisé à partir d'une chaîne.
 			FormDescription form = new FormDescription();
