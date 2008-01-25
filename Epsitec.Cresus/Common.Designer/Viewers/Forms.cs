@@ -1393,6 +1393,10 @@ namespace Epsitec.Common.Designer.Viewers
 
 				foreach (FormEditor.ObjectModifier.TableItem item in items)
 				{
+#if true
+					int index = this.formEditor.ObjectModifier.GetFormDescriptionIndex(item.Guid);
+					this.formEditor.ObjectModifier.FormPatchMove(index, direction);
+#else
 					int index = this.formEditor.ObjectModifier.GetFormDescriptionIndex(item.Guid);
 					FieldDescription field = this.formEditor.ObjectModifier.GetFormDescription(item);
 					
@@ -1446,6 +1450,7 @@ namespace Epsitec.Common.Designer.Viewers
 							}
 						}
 					}
+#endif
 				}
 			}
 			else  // module normal ?

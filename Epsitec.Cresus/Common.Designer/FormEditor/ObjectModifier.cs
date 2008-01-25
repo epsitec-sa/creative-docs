@@ -251,7 +251,7 @@ namespace Epsitec.Common.Designer.FormEditor
 
 		protected void PatchUpdate(FieldDescription field)
 		{
-			//	Si on est dans un module de patch, le champ modifié doit être répercuté dans le masque de patch.
+			//	Si on est dans un masque de patch, le champ modifié doit être copié dans la liste de patch.
 			if (this.IsPatch)
 			{
 				int index = FormEngine.Arrange.IndexOfGuid(this.formEditor.Form.Fields, field.Guid);
@@ -449,6 +449,7 @@ namespace Epsitec.Common.Designer.FormEditor
 
 
 		#region TableContent
+#if false
 		public System.Guid GetPatchAttachGuid(int index, int direction)
 		{
 			//	Retourne le Guid *après* lequel un champ sera attaché.
@@ -473,7 +474,7 @@ namespace Epsitec.Common.Designer.FormEditor
 		{
 			//	Retourne le Guid d'un champ dans la liste de référence d'un masque de patch *après* lequel s'attache un TableItem.
 			FormEngine.Engine engine = new FormEngine.Engine(this.formEditor.Module.ResourceManager);
-			List<FieldDescription> merged = engine.Arrange.Merge(this.referenceFields, formEditor.Form.Fields);
+			List<FieldDescription> merged = engine.Arrange.Merge(this.referenceFields, this.formEditor.Form.Fields);
 
 			for (int i=0; i<merged.Count; i++)
 			{
@@ -492,6 +493,127 @@ namespace Epsitec.Common.Designer.FormEditor
 			}
 
 			return System.Guid.Empty;
+		}
+#endif
+
+		public void FormPatchMove(int index, int direction)
+		{
+			//	Déplace un élément en le montant ou en le descendant d'une ligne. Pour cela, les déplacements
+			//	de tous les éléments sont recalculés, à partir de la situation initiale (non patchée).
+			//	this.referenceFields		= liste initiale non patchée
+			//	this.formEditor.Form.Fields	= liste de patch
+			//	this.fields					= liste résultante
+
+			//	Construit la liste originale.
+			List<System.Guid> original = new List<System.Guid>();
+			foreach (FieldDescription field in this.referenceFields)
+			{
+				original.Add(field.Guid);
+			}
+
+			//	Construit la liste finale souhaitée.
+			List<System.Guid> final = new List<System.Guid>();
+			foreach (FieldDescription field in this.fields)
+			{
+				final.Add(field.Guid);
+			}
+			System.Guid guid = final[index];
+			final.RemoveAt(index);
+			final.Insert(index+direction, guid);  // effectue le mouvement (monter ou descendre un élément)
+
+			//	Génére la liste des opérations de déplacement nécessaires.
+			List<LinkAfter> oper = new List<LinkAfter>();
+			index = 0;
+			while (index < final.Count)
+			{
+				if (index < original.Count && final[index] == original[index])  // élément en place ?
+				{
+					index++;  // passe au suivant
+				}
+				else  // élément déplacé ?
+				{
+					System.Guid element = final[index];  // élément à déplacer
+					System.Guid link = (index==0) ? System.Guid.Empty : final[index-1];  // *après* cet élément
+					bool isInserted = !original.Contains(element);  // true = nouvel élément, false = élément existant
+					oper.Insert(0, new LinkAfter(element, link, isInserted));  // insère au début
+
+					final.RemoveAt(index);  // supprime l'élément déplacé
+
+					int i = original.IndexOf(element);
+					if (i != -1)
+					{
+						original.RemoveAt(i);  // supprime l'élément déplacé
+					}
+				}
+			}
+
+			//	Supprime tous les déplacements dans la liste de patch actuelle, mais en conservant les éléments.
+			foreach (FieldDescription field in this.formEditor.Form.Fields)
+			{
+				field.PatchMoved = false;
+				field.PatchInserted = false;
+			}
+
+			//	Remet tous les déplacements selon la liste des opérations.
+			foreach (LinkAfter item in oper)
+			{
+				int i = FormEngine.Arrange.IndexOfGuid(this.formEditor.Form.Fields, item.Element);
+				if (i == -1)  // élément pas (ou pas encore) patché ?
+				{
+					i = FormEngine.Arrange.IndexOfGuid(this.referenceFields, item.Element);
+					if (i != -1)  // élément dans la liste de référence ?
+					{
+						FieldDescription field = new FieldDescription(this.referenceFields[i]);  // copie de l'élément
+
+						field.PatchMoved = !item.IsInserted;
+						field.PatchInserted = item.IsInserted;
+						field.PatchAttachGuid = item.Link;
+
+						this.formEditor.Form.Fields.Add(field);  // met l'élément à la fin de la liste de patch
+					}
+				}
+				else  // élément déjà dans la liste de patch ?
+				{
+					FieldDescription field = this.formEditor.Form.Fields[i];
+					this.formEditor.Form.Fields.RemoveAt(i);  // supprime l'élément dans la liste de patch
+
+					field.PatchMoved = !item.IsInserted;
+					field.PatchInserted = item.IsInserted;
+					field.PatchAttachGuid = item.Link;
+
+					this.formEditor.Form.Fields.Add(field);  // remet l'élément à la fin de la liste de patch
+				}
+			}
+
+			//	Supprime réellement tous les éléments dans la liste de patch qui n'ont plus aucune fonction.
+			index = 0;
+			while (index < this.formEditor.Form.Fields.Count)
+			{
+				FieldDescription field = this.formEditor.Form.Fields[index];
+
+				if (!field.PatchMoved && !field.PatchInserted && !field.PatchModified && !field.PatchHidden)
+				{
+					this.formEditor.Form.Fields.RemoveAt(index);
+				}
+				else
+				{
+					index++;
+				}
+			}
+		}
+
+		protected struct LinkAfter
+		{
+			public LinkAfter(System.Guid element, System.Guid link, bool isInserted)
+			{
+				this.Element = element;
+				this.Link = link;
+				this.IsInserted = isInserted;
+			}
+
+			public System.Guid Element;  // élément à déplacer
+			public System.Guid Link;  // *après* cet élément
+			public bool IsInserted;  // true = nouvel élément, false = élément existant 
 		}
 
 		public string GetTableContentDescription(TableItem item, bool isImage, bool isShowPrefix, bool isShowGuid)
